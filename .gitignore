@@ -1,3 +1,17 @@
+# idea
+out
+*.ipr
+*.iws
+*.iml
+
+.idea/gradle.xml
+.idea/tasks.xml
+.idea/workspace.xml
+
+.idea/codeStyles
+.idea/inspectionProfiles
+.idea/libraries
+
 # eclipse
 bin
 *.launch
@@ -5,13 +19,6 @@ bin
 .metadata
 .classpath
 .project
-
-# idea
-out
-*.ipr
-*.iws
-*.iml
-.idea
 
 # gradle
 build
