@@ -1,0 +1,50 @@
+buildscript{
+    ext.kotlin_version = "1.2.21"
+    
+    repositories{
+        jcenter()
+        mavenCentral()
+        
+        maven{
+            url = "http://files.minecraftforge.net/maven"
+        }
+    }
+    
+    dependencies{
+        classpath "net.minecraftforge.gradle:ForgeGradle:2.3-SNAPSHOT"
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:${kotlin_version}"
+    }
+}
+
+apply plugin: "net.minecraftforge.gradle.forge"
+apply plugin: "kotlin"
+
+sourceCompatibility = targetCompatibility = "1.8"
+
+compileJava{
+    sourceCompatibility = targetCompatibility = "1.8"
+}
+
+minecraft{
+    version = "1.12.2-14.23.1.2606"
+    runDir = "run"
+    mappings = "snapshot_20180129"
+    makeObfSourceJar = false
+}
+
+dependencies{
+    compile "org.jetbrains.kotlin:kotlin-stdlib"
+    compile "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
+    compile "org.jetbrains.kotlin:kotlin-reflect"
+}
+
+def modinfo = null
+
+processResources{
+    File file = new File(sourceSets.main.resources.srcDirs.iterator().next(), "mcmod.info")
+    modinfo = new groovy.json.JsonSlurper().parseText(file.getText())[0]
+}
+
+jar{
+    archiveName = "HardcoreEnderExpansion  MC-${project.minecraft.version}  v${modinfo.version}.jar"
+}
