@@ -7,16 +7,16 @@ import java.lang.reflect.Field
 import java.lang.reflect.Method
 
 @Suppress("unused")
-class KotlinAdapter : ILanguageAdapter {
-	override fun setProxy(target: Field, proxyTarget: Class<*>, proxy: Any) {
+class KotlinAdapter : ILanguageAdapter{
+	override fun setProxy(target: Field, proxyTarget: Class<*>, proxy: Any){
 		target.set(proxyTarget.kotlin.objectInstance, proxy)
 	}
 	
-	override fun getNewInstance(container: FMLModContainer, objectClass: Class<*>, classLoader: ClassLoader, factoryMarkedAnnotation: Method?): Any {
+	override fun getNewInstance(container: FMLModContainer, objectClass: Class<*>, classLoader: ClassLoader, factoryMarkedAnnotation: Method?): Any{
 		return objectClass.kotlin.objectInstance ?: objectClass.newInstance()
 	}
 	
 	override fun supportsStatics(): Boolean = false
 	
-	override fun setInternalProxies(mod: ModContainer?, side: Side?, loader: ClassLoader?) {}
+	override fun setInternalProxies(mod: ModContainer?, side: Side?, loader: ClassLoader?){}
 }
