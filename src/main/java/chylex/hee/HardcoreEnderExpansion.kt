@@ -3,6 +3,7 @@ import chylex.hee.init.ModConfig
 import chylex.hee.proxy.ModCommonProxy
 import net.minecraftforge.fml.common.Mod
 import net.minecraftforge.fml.common.Mod.EventHandler
+import net.minecraftforge.fml.common.SidedProxy
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent
 import net.minecraftforge.fml.common.event.FMLServerStartingEvent
 import net.minecraftforge.fml.common.network.NetworkCheckHandler
@@ -17,7 +18,10 @@ object HardcoreEnderExpansion{
 	lateinit var version: String
 	lateinit var config: ModConfig
 	
-    @EventHandler
+	@SidedProxy(clientSide = "chylex.hee.proxy.ModClientProxy", serverSide = "chylex.hee.proxy.ModCommonProxy")
+	lateinit var proxy: ModCommonProxy
+	
+	@EventHandler
 	fun onPreInit(e: FMLPreInitializationEvent){
 		log = e.modLog
 		version = e.modMetadata.version
