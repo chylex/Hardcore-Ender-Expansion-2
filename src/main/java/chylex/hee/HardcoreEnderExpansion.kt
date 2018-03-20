@@ -1,6 +1,7 @@
 package chylex.hee
 import chylex.hee.init.ModConfig
 import chylex.hee.proxy.ModCommonProxy
+import chylex.hee.system.Debug
 import net.minecraftforge.fml.common.Mod
 import net.minecraftforge.fml.common.Mod.EventHandler
 import net.minecraftforge.fml.common.SidedProxy
@@ -26,6 +27,8 @@ object HardcoreEnderExpansion{
 		log = e.modLog
 		version = e.modMetadata.version
 		config = ModConfig(e.suggestedConfigurationFile)
+		
+		Debug.initialize()
 	}
 	
 	@NetworkCheckHandler

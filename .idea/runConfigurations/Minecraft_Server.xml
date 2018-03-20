@@ -2,7 +2,7 @@
   <configuration default="false" name="Minecraft Server" type="Application" factoryName="Application" singleton="true">
     <extension enabled="false" name="coverage" runner="idea" sample_coverage="true" />
     <option name="MAIN_CLASS_NAME" value="GradleStartServer" />
-    <option name="VM_PARAMETERS" value="" />
+    <option name="VM_PARAMETERS" value="-Dhee.debug" />
     <option name="PROGRAM_PARAMETERS" value="" />
     <option name="WORKING_DIRECTORY" value="file://$PROJECT_DIR$/run" />
     <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
