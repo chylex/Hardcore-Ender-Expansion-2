@@ -8,8 +8,10 @@ import java.io.FileOutputStream
 import java.util.Properties
 
 object Debug{
+	val enabled = System.getProperty("hee.debug") != null
+	
 	fun initialize(){
-		if (System.getProperty("hee.debug") != null){
+		if (enabled){
 			when(FMLCommonHandler.instance().side!!){
 				CLIENT -> {
 					Display.setTitle("${Display.getTitle()} - Hardcore Ender Expansion ${HardcoreEnderExpansion.version}")
