@@ -1,10 +1,12 @@
 package chylex.hee
+import chylex.hee.game.commands.HeeServerCommand
 import chylex.hee.init.ModConfig
 import chylex.hee.proxy.ModCommonProxy
 import chylex.hee.system.Debug
 import net.minecraftforge.fml.common.Mod
 import net.minecraftforge.fml.common.Mod.EventHandler
 import net.minecraftforge.fml.common.SidedProxy
+import net.minecraftforge.fml.common.event.FMLInitializationEvent
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent
 import net.minecraftforge.fml.common.event.FMLServerStartingEvent
 import net.minecraftforge.fml.common.network.NetworkCheckHandler
@@ -29,6 +31,16 @@ object HardcoreEnderExpansion{
 		config = ModConfig(e.suggestedConfigurationFile)
 		
 		Debug.initialize()
+	}
+	
+	@EventHandler
+	fun onInit(e: FMLInitializationEvent){
+		proxy.onInit()
+	}
+	
+	@EventHandler
+	fun onServerStarting(e: FMLServerStartingEvent){
+		e.registerServerCommand(HeeServerCommand)
 	}
 	
 	@NetworkCheckHandler
