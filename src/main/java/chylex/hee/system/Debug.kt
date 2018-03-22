@@ -19,7 +19,7 @@ object Debug{
 				
 				SERVER -> {
 					try{
-						FileOutputStream("eula.txt").use{
+						FileOutputStream("eula.txt").use {
 							val properties = Properties()
 							properties["eula"] = "true"
 							properties.store(it, "End User License Annoyance")
