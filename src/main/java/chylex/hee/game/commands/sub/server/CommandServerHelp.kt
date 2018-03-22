@@ -25,7 +25,8 @@ internal object CommandServerHelp : ISubCommand{
 	private const val COMMANDS_PER_PAGE = 7
 	
 	override fun executeCommand(server: MinecraftServer?, sender: ICommandSender, args: Array<out String>){
-		var displayPage = if (args.isEmpty()) 1 else args[0].toIntOrNull() ?: throw WrongUsageException(usage)
+		val displayPage = if (args.isEmpty()) 1 else args[0].toIntOrNull() ?: throw WrongUsageException(usage)
+		
 		var totalPages = ceil(availableAdminCommands.size.toFloat() / COMMANDS_PER_PAGE).toInt()
 		var debugPage = -1
 		
@@ -34,11 +35,14 @@ internal object CommandServerHelp : ISubCommand{
 			debugPage = totalPages
 		}
 		
-		var actualPage = displayPage
+		val actualPage: Int
 		
 		if (sender is EntityPlayer){
+			actualPage = displayPage - 1
 			totalPages++
-			actualPage--
+		}
+		else{
+			actualPage = displayPage
 		}
 		
 		if (displayPage < 1 || displayPage > totalPages){
@@ -64,14 +68,10 @@ internal object CommandServerHelp : ISubCommand{
 		val emptyLine = TextComponentString("")
 		
 		sender.sendMessage(emptyLine)
-		
 		sender.sendMessage(TextComponentTranslation(headerKey, currentPage, totalPages).also {
 			it.style.color = GREEN // required to set a custom color on tokens
 		})
-		
 		sender.sendMessage(emptyLine)
-		
-		var emptyCommands = COMMANDS_PER_PAGE
 		
 		for(command in commands){
 			with(command){
@@ -85,18 +85,12 @@ internal object CommandServerHelp : ISubCommand{
 						it.style.color = GRAY
 					}
 				))
-				
-				--emptyCommands
 			}
 		}
 		
 		if (sender is EntityPlayer){
-			repeat(emptyCommands * 2 + 1){
-				sender.sendMessage(emptyLine)
-			}
-			
+			sender.sendMessage(emptyLine)
 			sendInteractiveNavigation(sender, currentPage, totalPages)
-			
 			sender.sendMessage(emptyLine)
 		}
 	}
