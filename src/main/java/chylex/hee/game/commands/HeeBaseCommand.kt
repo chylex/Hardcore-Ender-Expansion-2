@@ -17,7 +17,7 @@ internal abstract class HeeBaseCommand : CommandBase(){
 	
 	abstract override fun getRequiredPermissionLevel(): Int
 	
-	final override fun execute(server: MinecraftServer, sender: ICommandSender, args: Array<out String>){
+	final override fun execute(server: MinecraftServer?, sender: ICommandSender, args: Array<out String>){
 		val noArgs = args.isEmpty()
 		val subCommand = if (noArgs) defaultSubCommand else allSubCommands[args[0]]
 		
@@ -29,7 +29,7 @@ internal abstract class HeeBaseCommand : CommandBase(){
 		}
 	}
 	
-	final override fun getTabCompletions(server: MinecraftServer, sender: ICommandSender, args: Array<out String>, targetPos: BlockPos?): MutableList<String>{
+	final override fun getTabCompletions(server: MinecraftServer?, sender: ICommandSender, args: Array<out String>, targetPos: BlockPos?): MutableList<String>{
 		return when(args.size){
 			0 -> Collections.emptyList()
 			1 -> allSubCommands.mapNotNull { if (it.value !== defaultSubCommand && it.key.startsWith(args[0])) it.key else null }.toMutableList()

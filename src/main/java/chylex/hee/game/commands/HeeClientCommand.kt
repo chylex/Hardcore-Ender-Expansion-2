@@ -13,16 +13,11 @@ import net.minecraftforge.fml.relauncher.SideOnly
 @SideOnly(Side.CLIENT)
 @EventBusSubscriber(Side.CLIENT, modid = HardcoreEnderExpansion.ID)
 internal object HeeClientCommand : HeeBaseCommand(), IClientCommand{
-	override val allSubCommands = subCommandMapOf(
+	public override val allSubCommands = subCommandMapOf(
 		CommandClientHelp,
 	)
 	
 	override val defaultSubCommand = CommandClientHelp
-	
-	private val allAvailableCommandNames = linkedSetOf(
-		*allSubCommands.keys.toTypedArray(),
-		*HeeServerCommand.allSubCommands.keys.toTypedArray()
-	)
 	
 	override fun getRequiredPermissionLevel(): Int = 0
 	

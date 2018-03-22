@@ -1,1 +1,13 @@
 commands.hee.usage=/hee [page=1]
+commands.hee.info=shows command list
+
+commands.hee.help.failed=Page must be between 1 and %s
+commands.hee.help.header.client=§2--- Showing §aclient§2 commands, page %s §2(§a/hee <page>§2) ---
+commands.hee.help.header.admin=§2--- Showing §aadmin§2 commands, page %s §2of %s §2(§a/hee <page>§2) ---
+commands.hee.help.header.debug=§2--- Showing §adebug§2 commands, page %s §2of %s §2(§a/hee <page>§2) ---
+commands.hee.help.footer.start=§2--- Navigate to: §r
+commands.hee.help.footer.admin=§a§nadmin commands
+commands.hee.help.footer.prev=§a§nprevious page
+commands.hee.help.footer.middle=§2 / §r
+commands.hee.help.footer.next=§a§nnext page
+commands.hee.help.footer.end=§2 ---
