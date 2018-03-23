@@ -1,6 +1,7 @@
 package chylex.hee
 import chylex.hee.game.commands.HeeServerCommand
 import chylex.hee.init.ModConfig
+import chylex.hee.init.ModNetwork
 import chylex.hee.proxy.ModCommonProxy
 import chylex.hee.system.Debug
 import net.minecraftforge.fml.common.Mod
@@ -31,6 +32,7 @@ object HardcoreEnderExpansion{
 		config = ModConfig(e.suggestedConfigurationFile)
 		
 		Debug.initialize()
+		ModNetwork.initialize()
 	}
 	
 	@EventHandler
