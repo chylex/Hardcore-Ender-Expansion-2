@@ -11,3 +11,6 @@ commands.hee.help.footer.prev=§a§nprevious page
 commands.hee.help.footer.middle=§2 / §r
 commands.hee.help.footer.next=§a§nnext page
 commands.hee.help.footer.end=§2 ---
+
+commands.hee.testworld.usage=/hee testworld
+commands.hee.testworld.info=converts overworld into a test world

@@ -1,6 +1,6 @@
 package chylex.hee.game.commands
-import chylex.hee.game.commands.sub.ISubCommand
 import chylex.hee.game.commands.sub.ISubCommand.Companion.subCommandMapOf
+import chylex.hee.game.commands.sub.server.CommandDebugTestWorld
 import chylex.hee.game.commands.sub.server.CommandServerHelp
 import chylex.hee.system.Debug
 
@@ -9,7 +9,8 @@ internal object HeeServerCommand : HeeBaseCommand(){
 		CommandServerHelp
 	)
 	
-	val availableDebugCommands = if (Debug.enabled) arrayOf<ISubCommand>(
+	val availableDebugCommands = if (Debug.enabled) arrayOf(
+		CommandDebugTestWorld
 	) else emptyArray()
 	
 	public override val allSubCommands = subCommandMapOf(
