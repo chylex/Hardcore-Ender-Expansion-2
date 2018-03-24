@@ -3,7 +3,6 @@ import chylex.hee.HardcoreEnderExpansion
 import chylex.hee.network.BaseClientPacket
 import chylex.hee.network.BaseServerPacket
 import chylex.hee.network.IPacket
-import chylex.hee.network.ModPackets
 import gnu.trove.impl.Constants.DEFAULT_CAPACITY
 import gnu.trove.impl.Constants.DEFAULT_LOAD_FACTOR
 import gnu.trove.map.hash.TByteObjectHashMap
