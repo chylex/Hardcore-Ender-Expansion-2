@@ -5,19 +5,27 @@ import net.minecraftforge.common.config.ConfigElement
 import net.minecraftforge.common.config.Configuration
 import net.minecraftforge.fml.client.config.IConfigElement
 import net.minecraftforge.fml.client.event.ConfigChangedEvent
+import net.minecraftforge.fml.common.FMLCommonHandler
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent
+import net.minecraftforge.fml.relauncher.Side.CLIENT
 import java.io.File
 
-private const val CATEGORY_GENERAL = "general"
-private const val CATEGORY_CLIENT = "client"
-
 class ModConfig(file: File){
+	
 	// Options
 	
-	var testOptionClient: Boolean = true // TODO remove
+	class Client(config: Configuration, cat: String){
+		val testOptionClient = config[cat, "testOptionClient", true].boolean // TODO remove
+	}
+	
+	class General(config: Configuration, cat: String){
+		val testOptionGeneral = config[cat, "testOptionGeneral", true].boolean // TODO remove
+	}
+	
+	lateinit var client: Client
 		private set
 	
-	var testOptionGeneral: Boolean = true // TODO remove
+	lateinit var general: General
 		private set
 	
 	// GUI
@@ -29,6 +37,11 @@ class ModConfig(file: File){
 		get() = ConfigElement(config.getCategory(CATEGORY_CLIENT)).childElements
 	
 	// Internal
+	
+	companion object{
+		private const val CATEGORY_GENERAL = "general"
+		private const val CATEGORY_CLIENT = "client"
+	}
 	
 	private val config = Configuration(file)
 	
@@ -45,8 +58,10 @@ class ModConfig(file: File){
 	}
 	
 	private fun reload(){
-		testOptionClient = config[CATEGORY_CLIENT, "testOptionClient", testOptionClient].boolean
-		testOptionGeneral = config[CATEGORY_GENERAL, "testOptionGeneral", testOptionGeneral].boolean
+		val clientOrDummy = if (FMLCommonHandler.instance().side == CLIENT) config else Configuration()
+		
+		client = Client(clientOrDummy, CATEGORY_CLIENT)
+		general = General(config, CATEGORY_GENERAL)
 		
 		if (config.hasChanged()){
 			config.save()
