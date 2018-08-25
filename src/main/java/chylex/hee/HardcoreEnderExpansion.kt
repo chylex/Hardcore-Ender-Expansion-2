@@ -35,6 +35,8 @@ object HardcoreEnderExpansion{
 		Debug.initialize()
 		ModNetwork.initialize()
 		ModCreativeTabs.initialize()
+		
+		proxy.onPreInit()
 	}
 	
 	@EventHandler

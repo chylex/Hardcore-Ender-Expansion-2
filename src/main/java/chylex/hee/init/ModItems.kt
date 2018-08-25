@@ -7,9 +7,6 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent
 
 @EventBusSubscriber(modid = HardcoreEnderExpansion.ID)
 object ModItems{
-	/* TODO val testItem = Item().apply {
-		setName("testitem", "test")
-	}*/
 	
 	// Registry
 	
@@ -23,8 +20,12 @@ object ModItems{
 	
 	// Utilities
 	
-	private fun Item.setName(registryName: String, unlocalizedName: String){
+	private fun Item.setup(registryName: String, unlocalizedName: String = "", inCreativeTab: Boolean = true){
 		this.setRegistryName(HardcoreEnderExpansion.ID, registryName)
-		this.unlocalizedName = "item.hee.$unlocalizedName"
+		this.unlocalizedName = "hee.${if (unlocalizedName.isEmpty()) registryName else unlocalizedName}"
+		
+		if (inCreativeTab){
+			this.creativeTab = ModCreativeTabs.main
+		}
 	}
 }
