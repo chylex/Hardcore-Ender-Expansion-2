@@ -1,0 +1,12 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    { "item": "minecraft:diamond" },
+    { "item": "minecraft:ender_eye" },
+    { "item": "hee:ancient_dust" },
+    { "item": "hee:ethereum" }
+  ],
+  "result": {
+    "item": "hee:alteration_nexus"
+  }
+}
