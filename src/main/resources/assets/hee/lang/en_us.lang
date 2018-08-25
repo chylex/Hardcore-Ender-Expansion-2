@@ -1,3 +1,5 @@
+itemGroup.hee=Hardcore Ender Expansion
+
 commands.hee.usage=/hee [page=1]
 commands.hee.info=shows command list
 
