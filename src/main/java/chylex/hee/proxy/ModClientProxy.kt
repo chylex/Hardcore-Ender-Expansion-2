@@ -1,5 +1,6 @@
 package chylex.hee.proxy
 import chylex.hee.game.commands.HeeClientCommand
+import chylex.hee.init.ModItems
 import net.minecraft.client.Minecraft
 import net.minecraft.client.renderer.block.model.ModelResourceLocation
 import net.minecraft.entity.player.EntityPlayer
@@ -34,6 +35,9 @@ class ModClientProxy : ModCommonProxy(){
 		}
 		
 		register(
+			ModItems.ETHEREUM,
+			ModItems.ANCIENT_DUST,
+			ModItems.ALTERATION_NEXUS
 		)
 	}
 }

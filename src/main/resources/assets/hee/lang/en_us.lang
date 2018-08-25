@@ -1,3 +1,7 @@
+item.hee.alteration_nexus.name=Alteration Nexus
+item.hee.ancient_dust.name=Ancient Dust
+item.hee.ethereum.name=Ethereum
+
 itemGroup.hee=Hardcore Ender Expansion
 
 commands.hee.usage=/hee [page=1]
