@@ -1,5 +1,5 @@
 buildscript{
-    ext.kotlin_version = "1.2.30"
+    ext.kotlin_version = "1.2.51"
     
     repositories{
         jcenter()
@@ -41,7 +41,6 @@ minecraft{
 }
 
 dependencies{
-    compile "org.jetbrains.kotlin:kotlin-stdlib"
     compile "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
     compile "org.jetbrains.kotlin:kotlin-reflect"
 }
@@ -49,7 +48,7 @@ dependencies{
 def modinfo = null
 
 processResources{
-    File file = new File(sourceSets.main.resources.srcDirs.iterator().next(), "mcmod.info")
+    File file = new File(++sourceSets.main.resources.srcDirs.iterator(), "mcmod.info")
     modinfo = new groovy.json.JsonSlurper().parseText(file.getText())[0]
 }
 
