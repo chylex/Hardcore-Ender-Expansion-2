@@ -1,6 +1,8 @@
 package chylex.hee.proxy
 import chylex.hee.game.commands.HeeClientCommand
+import chylex.hee.init.ModBlocks
 import chylex.hee.init.ModItems
+import net.minecraft.block.Block
 import net.minecraft.client.Minecraft
 import net.minecraft.client.renderer.block.model.ModelResourceLocation
 import net.minecraft.entity.player.EntityPlayer
@@ -28,6 +30,12 @@ class ModClientProxy : ModCommonProxy(){
 	
 	@SubscribeEvent
 	fun onModels(e: ModelRegistryEvent){
+		fun register(vararg blocks: Block){
+			for(itemblock in blocks.map(Item::getItemFromBlock)){
+				ModelLoader.setCustomModelResourceLocation(itemblock, 0, ModelResourceLocation(itemblock.registryName!!, "inventory"))
+			}
+		}
+		
 		fun register(vararg items: Item){
 			for(item in items){
 				ModelLoader.setCustomModelResourceLocation(item, 0, ModelResourceLocation(item.registryName!!, "inventory"))
