@@ -43,6 +43,8 @@ class ModClientProxy : ModCommonProxy(){
 		}
 		
 		register(
+			ModBlocks.STONE_BRICK_WALL,
+			
 			ModBlocks.GLOOMROCK,
 			ModBlocks.GLOOMROCK_BRICKS,
 			ModBlocks.GLOOMROCK_BRICK_STAIRS,

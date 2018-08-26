@@ -3,6 +3,7 @@ import chylex.hee.HardcoreEnderExpansion
 import chylex.hee.game.block.BlockSimple
 import chylex.hee.game.block.BlockSlabCustom
 import chylex.hee.game.block.BlockStairsCustom
+import chylex.hee.game.block.BlockWallCustom
 import chylex.hee.game.item.util.Tool.Level.WOOD
 import chylex.hee.game.item.util.Tool.Type.PICKAXE
 import chylex.hee.init.ModCreativeTabs.OrderedCreativeTab
@@ -10,6 +11,7 @@ import net.minecraft.block.Block
 import net.minecraft.block.SoundType
 import net.minecraft.block.material.MapColor
 import net.minecraft.block.material.Material
+import net.minecraft.init.Blocks
 import net.minecraft.item.Item
 import net.minecraft.item.ItemBlock
 import net.minecraft.item.ItemSlab
@@ -20,6 +22,10 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent
 
 @EventBusSubscriber(modid = HardcoreEnderExpansion.ID)
 object ModBlocks{
+	
+	// Blocks: Building (Uncategorized)
+	
+	@JvmField val STONE_BRICK_WALL = BlockWallCustom(Blocks.STONEBRICK).apply { setup("stone_brick_wall") }
 	
 	// Blocks: Gloomrock
 	
@@ -69,6 +75,8 @@ object ModBlocks{
 	@SubscribeEvent
 	fun onRegister(e: RegistryEvent.Register<Block>){
 		with(e.registry){
+			register(STONE_BRICK_WALL with basicItemBlock)
+			
 			register(GLOOMROCK with basicItemBlock)
 			register(GLOOMROCK_BRICKS with basicItemBlock)
 			register(GLOOMROCK_BRICK_STAIRS with basicItemBlock)
