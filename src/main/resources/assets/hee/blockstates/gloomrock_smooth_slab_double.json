@@ -1,0 +1,5 @@
+{
+  "variants": {
+    "variant=default": { "model": "hee:gloomrock_smooth" }
+  }
+}

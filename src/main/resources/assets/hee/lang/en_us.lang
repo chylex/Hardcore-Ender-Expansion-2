@@ -1,3 +1,20 @@
+tile.hee.gloomrock.name=Gloomrock
+tile.hee.gloomrock_bricks.name=Gloomrock Bricks
+tile.hee.gloomrock_brick_slab.name=Gloomrock Brick Slab
+tile.hee.gloomrock_brick_stairs.name=Gloomrock Brick Stairs
+tile.hee.gloomrock_smooth.name=Smooth Gloomrock
+tile.hee.gloomrock_smooth_slab.name=Smooth Gloomrock Slab
+tile.hee.gloomrock_smooth_stairs.name=Smooth Gloomrock Stairs
+tile.hee.gloomrock_smooth_red.name=Red Gloomrock
+tile.hee.gloomrock_smooth_orange.name=Orange Gloomrock
+tile.hee.gloomrock_smooth_yellow.name=Yellow Gloomrock
+tile.hee.gloomrock_smooth_green.name=Green Gloomrock
+tile.hee.gloomrock_smooth_cyan.name=Cyan Gloomrock
+tile.hee.gloomrock_smooth_blue.name=Blue Gloomrock
+tile.hee.gloomrock_smooth_purple.name=Purple Gloomrock
+tile.hee.gloomrock_smooth_magenta.name=Magenta Gloomrock
+tile.hee.gloomrock_smooth_white.name=White Gloomrock
+
 item.hee.alteration_nexus.name=Alteration Nexus
 item.hee.ancient_dust.name=Ancient Dust
 item.hee.ethereum.name=Ethereum

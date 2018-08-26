@@ -1,0 +1,6 @@
+{
+  "variants": {
+    "half=bottom,variant=default": { "model": "hee:gloomrock_brick_slab_bottom" },
+    "half=top,variant=default": { "model": "hee:gloomrock_brick_slab_top" }
+  }
+}
