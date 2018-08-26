@@ -3,6 +3,7 @@ import chylex.hee.game.commands.HeeServerCommand
 import chylex.hee.init.ModConfig
 import chylex.hee.init.ModCreativeTabs
 import chylex.hee.init.ModNetwork
+import chylex.hee.init.ModRecipes
 import chylex.hee.proxy.ModCommonProxy
 import chylex.hee.system.Debug
 import net.minecraftforge.fml.common.Mod
@@ -35,12 +36,12 @@ object HardcoreEnderExpansion{
 		Debug.initialize()
 		ModNetwork.initialize()
 		ModCreativeTabs.initialize()
-		
 		proxy.onPreInit()
 	}
 	
 	@EventHandler
 	fun onInit(e: FMLInitializationEvent){
+		ModRecipes.initialize()
 		proxy.onInit()
 	}
 	
