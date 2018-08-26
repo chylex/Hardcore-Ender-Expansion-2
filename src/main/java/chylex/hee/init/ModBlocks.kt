@@ -5,6 +5,7 @@ import chylex.hee.game.block.BlockSlabCustom
 import chylex.hee.game.block.BlockStairsCustom
 import chylex.hee.game.item.util.Tool.Level.WOOD
 import chylex.hee.game.item.util.Tool.Type.PICKAXE
+import chylex.hee.init.ModCreativeTabs.OrderedCreativeTab
 import net.minecraft.block.Block
 import net.minecraft.block.SoundType
 import net.minecraft.block.material.MapColor
@@ -43,13 +44,13 @@ object ModBlocks{
 	
 	@JvmField val GLOOMROCK                    = BlockSimple(buildGloomrock).apply { setup("gloomrock") }
 	@JvmField val GLOOMROCK_BRICKS             = BlockSimple(buildGloomrockBricks).apply { setup("gloomrock_bricks") }
+	@JvmField val GLOOMROCK_BRICK_STAIRS       = BlockStairsCustom(GLOOMROCK_BRICKS).apply { setup("gloomrock_brick_stairs") }
 	@JvmField val GLOOMROCK_BRICK_SLAB         = BlockSlabCustom.Half(buildGloomrockBricks).apply { setup("gloomrock_brick_slab") }
 	@JvmField val GLOOMROCK_BRICK_DOUBLE_SLAB  = BlockSlabCustom.Full(buildGloomrockBricks, GLOOMROCK_BRICK_SLAB).apply { setup("gloomrock_brick_slab_double", "gloomrock_brick_slab") }
-	@JvmField val GLOOMROCK_BRICK_STAIRS       = BlockStairsCustom(GLOOMROCK_BRICKS).apply { setup("gloomrock_brick_stairs") }
 	@JvmField val GLOOMROCK_SMOOTH             = BlockSimple(buildGloomrockSmooth).apply { setup("gloomrock_smooth") }
+	@JvmField val GLOOMROCK_SMOOTH_STAIRS      = BlockStairsCustom(GLOOMROCK_SMOOTH).apply { setup("gloomrock_smooth_stairs") }
 	@JvmField val GLOOMROCK_SMOOTH_SLAB        = BlockSlabCustom.Half(buildGloomrockSmooth).apply { setup("gloomrock_smooth_slab") }
 	@JvmField val GLOOMROCK_SMOOTH_DOUBLE_SLAB = BlockSlabCustom.Full(buildGloomrockSmooth, GLOOMROCK_SMOOTH_SLAB).apply { setup("gloomrock_smooth_slab_double", "gloomrock_smooth_slab") }
-	@JvmField val GLOOMROCK_SMOOTH_STAIRS      = BlockStairsCustom(GLOOMROCK_SMOOTH).apply { setup("gloomrock_smooth_stairs") }
 	@JvmField val GLOOMROCK_SMOOTH_RED         = BlockSimple(buildGloomrockSmooth).apply { setup("gloomrock_smooth_red") }
 	@JvmField val GLOOMROCK_SMOOTH_ORANGE      = BlockSimple(buildGloomrockSmooth).apply { setup("gloomrock_smooth_orange") }
 	@JvmField val GLOOMROCK_SMOOTH_YELLOW      = BlockSimple(buildGloomrockSmooth).apply { setup("gloomrock_smooth_yellow") }
@@ -70,13 +71,13 @@ object ModBlocks{
 		with(e.registry){
 			register(GLOOMROCK with basicItemBlock)
 			register(GLOOMROCK_BRICKS with basicItemBlock)
+			register(GLOOMROCK_BRICK_STAIRS with basicItemBlock)
 			register(GLOOMROCK_BRICK_SLAB with ItemSlab(GLOOMROCK_BRICK_SLAB, GLOOMROCK_BRICK_SLAB, GLOOMROCK_BRICK_DOUBLE_SLAB))
 			register(GLOOMROCK_BRICK_DOUBLE_SLAB)
-			register(GLOOMROCK_BRICK_STAIRS with basicItemBlock)
 			register(GLOOMROCK_SMOOTH with basicItemBlock)
+			register(GLOOMROCK_SMOOTH_STAIRS with basicItemBlock)
 			register(GLOOMROCK_SMOOTH_SLAB with ItemSlab(GLOOMROCK_SMOOTH_SLAB, GLOOMROCK_SMOOTH_SLAB, GLOOMROCK_SMOOTH_DOUBLE_SLAB))
 			register(GLOOMROCK_SMOOTH_DOUBLE_SLAB)
-			register(GLOOMROCK_SMOOTH_STAIRS with basicItemBlock)
 			register(GLOOMROCK_SMOOTH_RED with basicItemBlock)
 			register(GLOOMROCK_SMOOTH_ORANGE with basicItemBlock)
 			register(GLOOMROCK_SMOOTH_YELLOW with basicItemBlock)
@@ -111,6 +112,7 @@ object ModBlocks{
 	
 	private infix fun Block.with(itemBlock: ItemBlock): Block{
 		temporaryItemBlocks.add(itemBlock.apply { this.registryName = this@with.registryName })
+		(itemBlock.creativeTab as OrderedCreativeTab?)?.registerOrder(itemBlock)
 		return this
 	}
 	

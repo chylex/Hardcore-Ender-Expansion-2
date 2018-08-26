@@ -33,7 +33,7 @@ object ModItems{
 		this.unlocalizedName = "hee.${if (unlocalizedName.isEmpty()) registryName else unlocalizedName}"
 		
 		if (inCreativeTab){
-			this.creativeTab = ModCreativeTabs.main
+			this.creativeTab = ModCreativeTabs.main.also { it.registerOrder(this) }
 		}
 	}
 }
