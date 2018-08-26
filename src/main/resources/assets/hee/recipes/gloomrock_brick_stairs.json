@@ -1,0 +1,15 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "#  ",
+    "## ",
+    "###"
+  ],
+  "key": {
+    "#": { "item": "hee:gloomrock_bricks" }
+  },
+  "result": {
+    "item": "hee:gloomrock_brick_stairs",
+    "count": 4
+  }
+}

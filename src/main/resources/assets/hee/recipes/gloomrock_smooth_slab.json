@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "###"
+  ],
+  "key": {
+    "#": { "item": "hee:gloomrock_smooth" }
+  },
+  "result": {
+    "item": "hee:gloomrock_smooth_slab",
+    "count": 6
+  }
+}

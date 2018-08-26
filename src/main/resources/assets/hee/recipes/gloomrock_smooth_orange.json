@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "###",
+    "#X#",
+    "###"
+  ],
+  "key": {
+    "#": { "item": "hee:gloomrock_smooth" },
+    "X": { "item": "minecraft:dye", "data": 14 }
+  },
+  "result": {
+    "item": "hee:gloomrock_smooth_orange",
+    "count": 8
+  }
+}
