@@ -1,4 +1,6 @@
 package chylex.hee.game.block
+import chylex.hee.game.block.BlockSimple.Builder
+import chylex.hee.game.block.BlockSimple.Builder.Companion.setHarvestTool
 import chylex.hee.game.block.state.PropertyDefault
 import chylex.hee.game.block.state.PropertyDefault.DEFAULT
 import net.minecraft.block.Block
@@ -15,20 +17,30 @@ import net.minecraft.util.math.BlockPos
 import net.minecraft.world.World
 import java.util.Random
 
-abstract class BlockSlabCustom(sourceBlock: Block) : BlockSlab(sourceBlock.getMaterial(null), sourceBlock.getMapColor(null, null, null)){ // TODO redo for 1.13
+abstract class BlockSlabCustom(builder: Builder) : BlockSlab(builder.material, builder.mapColor){
 	companion object{
 		@JvmStatic val VARIANT: PropertyEnum<PropertyDefault> = PropertyEnum.create<PropertyDefault>("variant", PropertyDefault::class.java)
 	}
 	
-	class Half(sourceBlock: Block): BlockSlabCustom(sourceBlock){
+	init{
+		setHarvestTool(builder.harvestTool)
+		setDefaultSlipperiness(builder.slipperiness)
+		
+		soundType = builder.soundType
+	}
+	
+	class Half(builder: Builder): BlockSlabCustom(builder){
 		init{
 			defaultState = blockState.baseState.withProperty(VARIANT, DEFAULT).withProperty(HALF, BOTTOM)
 			
-			blockHardness = sourceBlock.getBlockHardness(null, null, null) * 0.5F
-			blockResistance = sourceBlock.getExplosionResistance(null) * 0.5F
-			blockSoundType = sourceBlock.soundType
-			
-			setHarvestLevel(sourceBlock.getHarvestTool(defaultState), sourceBlock.getHarvestLevel(defaultState))
+			if (builder.isIndestructible){
+				blockHardness = builder.harvestHardness
+				blockResistance = builder.explosionResistance
+			}
+			else{
+				blockHardness = builder.harvestHardness * 0.5F
+				blockResistance = builder.explosionResistance * 0.5F
+			}
 		}
 		
 		override fun getItemDropped(state: IBlockState, rand: Random, fortune: Int): Item = Item.getItemFromBlock(this)
@@ -44,14 +56,12 @@ abstract class BlockSlabCustom(sourceBlock: Block) : BlockSlab(sourceBlock.getMa
 		override fun isDouble() = false
 	}
 	
-	class Full(sourceBlock: Block, private val slabBlock: Block): BlockSlabCustom(sourceBlock){
+	class Full(builder: Builder, private val slabBlock: Block): BlockSlabCustom(builder){
 		init{
 			defaultState = blockState.baseState.withProperty(VARIANT, DEFAULT)
-			blockHardness = sourceBlock.getBlockHardness(null, null, null)
-			blockResistance = sourceBlock.getExplosionResistance(null)
-			blockSoundType = sourceBlock.soundType
 			
-			setHarvestLevel(sourceBlock.getHarvestTool(defaultState), sourceBlock.getHarvestLevel(defaultState))
+			blockHardness = builder.harvestHardness
+			blockResistance = builder.explosionResistance
 		}
 		
 		override fun getItemDropped(state: IBlockState, rand: Random, fortune: Int): Item = Item.getItemFromBlock(slabBlock)
