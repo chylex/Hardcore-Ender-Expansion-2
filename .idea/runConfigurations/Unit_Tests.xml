@@ -1,0 +1,14 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="Unit Tests" type="JUnit" factoryName="JUnit" singleton="true">
+    <module name="Hardcore-Ender-Expansion-2_test" />
+    <option name="PACKAGE_NAME" value="chylex.hee.test" />
+    <option name="MAIN_CLASS_NAME" value="" />
+    <option name="METHOD_NAME" value="" />
+    <option name="TEST_OBJECT" value="package" />
+    <option name="PARAMETERS" value="" />
+    <option name="WORKING_DIRECTORY" value="./run" />
+    <method v="2">
+      <option name="Make" enabled="true" />
+    </method>
+  </configuration>
+</component>
