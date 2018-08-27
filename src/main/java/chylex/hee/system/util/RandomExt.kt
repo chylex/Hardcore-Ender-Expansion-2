@@ -1,7 +1,5 @@
-package chylex.hee.system.extensions
+package chylex.hee.system.util
 import java.util.Random
-import kotlin.math.ceil
-import kotlin.math.floor
 
 /**
  * Returns a random integer between `min` and `max` (both inclusive).
@@ -21,8 +19,7 @@ fun Random.nextInt(min: Int, max: Int): Int{
  */
 fun Random.nextRounded(value: Float): Int{
 	val decimalPart = value - value.toInt()
-	val roundedResult = if (this.nextFloat() < decimalPart) ceil(value) else floor(value)
-	return roundedResult.toInt()
+	return if (this.nextFloat() < decimalPart) value.ceilToInt() else value.floorToInt()
 }
 
 /**
