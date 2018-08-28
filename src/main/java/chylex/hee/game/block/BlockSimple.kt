@@ -8,8 +8,8 @@ import net.minecraft.block.material.Material
 class BlockSimple(builder: Builder) : Block(builder.material, builder.mapColor){
 	init{
 		setHarvestTool(builder.harvestTool)
-		blockHardness = builder.harvestHardness
-		blockResistance = builder.explosionResistance
+		setHardness(builder.harvestHardness)
+		setResistance(builder.explosionResistance) // multiplies the real value by 3
 		
 		lightValue = builder.lightLevel
 		builder.lightOpacity?.let { lightOpacity = it }
