@@ -1,6 +1,5 @@
 package chylex.hee.init
-import gnu.trove.impl.Constants
-import gnu.trove.map.hash.TObjectShortHashMap
+import it.unimi.dsi.fastutil.objects.Object2ShortOpenHashMap
 import net.minecraft.creativetab.CreativeTabs
 import net.minecraft.item.Item
 import net.minecraft.item.ItemBlock
@@ -17,10 +16,10 @@ object ModCreativeTabs{
 	}
 	
 	class OrderedCreativeTab(label: String) : CreativeTabs(label){
-		private val itemOrder = TObjectShortHashMap<Item>(Constants.DEFAULT_CAPACITY, Constants.DEFAULT_LOAD_FACTOR, Short.MAX_VALUE)
+		private val itemOrder = Object2ShortOpenHashMap<Item>().apply { defaultReturnValue(Short.MAX_VALUE) }
 		
 		fun registerOrder(item: Item){
-			itemOrder.put(item, (itemOrder.size() + 1).toShort())
+			itemOrder[item] = (itemOrder.size + 1).toShort()
 		}
 		
 		@SideOnly(Side.CLIENT)
@@ -29,7 +28,7 @@ object ModCreativeTabs{
 		@SideOnly(Side.CLIENT)
 		override fun displayAllRelevantItems(items: NonNullList<ItemStack>){
 			super.displayAllRelevantItems(items)
-			items.sortWith(compareBy({ it.item is ItemBlock }, { itemOrder[it.item] }))
+			items.sortWith(compareBy({ it.item is ItemBlock }, { itemOrder.getShort(it.item) }))
 		}
 	}
 }

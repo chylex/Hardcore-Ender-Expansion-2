@@ -3,11 +3,9 @@ import chylex.hee.HardcoreEnderExpansion
 import chylex.hee.network.BaseClientPacket
 import chylex.hee.network.BaseServerPacket
 import chylex.hee.network.IPacket
-import gnu.trove.impl.Constants.DEFAULT_CAPACITY
-import gnu.trove.impl.Constants.DEFAULT_LOAD_FACTOR
-import gnu.trove.map.hash.TByteObjectHashMap
-import gnu.trove.map.hash.TObjectByteHashMap
 import io.netty.buffer.Unpooled
+import it.unimi.dsi.fastutil.bytes.Byte2ObjectOpenHashMap
+import it.unimi.dsi.fastutil.objects.Object2ByteOpenHashMap
 import net.minecraft.entity.player.EntityPlayerMP
 import net.minecraft.network.NetHandlerPlayServer
 import net.minecraft.network.PacketBuffer
@@ -32,9 +30,9 @@ object ModNetwork{
 		network.register(this)
 		
 		for((cls, constructor) in ModPackets.getAllPackets()){
-			val id = mapPacketIdToConstructor.size().toByte()
-			mapPacketIdToConstructor.put(id, constructor)
-			mapPacketClassToId.put(cls, id)
+			val id = mapPacketIdToConstructor.size.toByte()
+			mapPacketIdToConstructor[id] = constructor
+			mapPacketClassToId[cls] = id
 		}
 	}
 	
@@ -44,8 +42,8 @@ object ModNetwork{
 	
 	private lateinit var network: FMLEventChannel
 	
-	private val mapPacketIdToConstructor = TByteObjectHashMap<Supplier<IPacket>>()
-	private val mapPacketClassToId = TObjectByteHashMap<Class<out IPacket>>(DEFAULT_CAPACITY, DEFAULT_LOAD_FACTOR, MISSING_ID)
+	private val mapPacketIdToConstructor = Byte2ObjectOpenHashMap<Supplier<IPacket>>()
+	private val mapPacketClassToId = Object2ByteOpenHashMap<Class<out IPacket>>().apply { defaultReturnValue(MISSING_ID) }
 	
 	// Packet receiving
 	
@@ -92,7 +90,7 @@ object ModNetwork{
 	}
 	
 	private fun writePacket(packet: IPacket): FMLProxyPacket{
-		val id = mapPacketClassToId[packet::class.java]
+		val id = mapPacketClassToId.getByte(packet::class.java)
 		
 		if (id == MISSING_ID){
 			throw IllegalArgumentException("packet is not registered: ${packet.javaClass.simpleName}")
