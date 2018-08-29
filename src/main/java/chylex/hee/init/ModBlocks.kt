@@ -4,13 +4,13 @@ import chylex.hee.game.block.BlockSimple
 import chylex.hee.game.block.BlockSlabCustom
 import chylex.hee.game.block.BlockStairsCustom
 import chylex.hee.game.block.BlockWallCustom
+import chylex.hee.game.block.material.Materials
 import chylex.hee.game.item.util.Tool.Level.WOOD
 import chylex.hee.game.item.util.Tool.Type.PICKAXE
 import chylex.hee.init.ModCreativeTabs.OrderedCreativeTab
 import net.minecraft.block.Block
 import net.minecraft.block.SoundType
 import net.minecraft.block.material.MapColor
-import net.minecraft.block.material.Material
 import net.minecraft.init.Blocks
 import net.minecraft.item.Item
 import net.minecraft.item.ItemBlock
@@ -30,7 +30,7 @@ object ModBlocks{
 	
 	// Blocks: Gloomrock
 	
-	private val buildGloomrock = BlockSimple.Builder(Material.ROCK).apply {
+	private val buildGloomrock = BlockSimple.Builder(Materials.SOLID_WITH_TOOL).apply {
 		harvestTool = Pair(WOOD, PICKAXE)
 		harvestHardness = 1.6F
 		explosionResistance = 7.0F

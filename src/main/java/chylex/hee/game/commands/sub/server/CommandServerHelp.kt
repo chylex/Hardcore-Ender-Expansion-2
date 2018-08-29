@@ -2,6 +2,7 @@ package chylex.hee.game.commands.sub.server
 import chylex.hee.game.commands.HeeServerCommand.availableAdminCommands
 import chylex.hee.game.commands.HeeServerCommand.availableDebugCommands
 import chylex.hee.game.commands.sub.ISubCommand
+import chylex.hee.system.util.ceilToInt
 import net.minecraft.command.CommandException
 import net.minecraft.command.ICommandSender
 import net.minecraft.command.WrongUsageException
@@ -15,7 +16,6 @@ import net.minecraft.util.text.TextFormatting.GREEN
 import net.minecraft.util.text.event.ClickEvent
 import net.minecraft.util.text.event.ClickEvent.Action.RUN_COMMAND
 import net.minecraft.util.text.event.ClickEvent.Action.SUGGEST_COMMAND
-import kotlin.math.ceil
 
 internal object CommandServerHelp : ISubCommand{
 	override val name = "1"
@@ -27,7 +27,7 @@ internal object CommandServerHelp : ISubCommand{
 	override fun executeCommand(server: MinecraftServer?, sender: ICommandSender, args: Array<out String>){
 		val displayPage = if (args.isEmpty()) 1 else args[0].toIntOrNull() ?: throw WrongUsageException(usage)
 		
-		var totalPages = ceil(availableAdminCommands.size.toFloat() / COMMANDS_PER_PAGE).toInt()
+		var totalPages = (availableAdminCommands.size.toFloat() / COMMANDS_PER_PAGE).ceilToInt()
 		var debugPage = -1
 		
 		if (availableDebugCommands.isNotEmpty()){

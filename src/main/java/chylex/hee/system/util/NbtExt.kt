@@ -151,7 +151,7 @@ class NBTPrimitiveList(tagList: NBTTagList) : NBTList<NBTPrimitive>(tagList){
 		return when(tag){
 			is NBTPrimitive -> tag
 			is NBTTagEnd    -> throw IndexOutOfBoundsException()
-			else            -> throw IllegalArgumentException("Unhandled NBT type: ${tag::class.java.simpleName}")
+			else            -> throw IllegalArgumentException("unhandled NBT type: ${tag::class.java.simpleName}")
 		}
 	}
 }
@@ -164,7 +164,7 @@ class NBTObjectList<T : Any>(tagList: NBTTagList) : NBTList<T>(tagList){
 			is ByteArray      -> NBTTagByteArray(element)
 			is IntArray       -> NBTTagIntArray(element)
 			is LongArray      -> NBTTagLongArray(element)
-			else              -> throw IllegalArgumentException("Unknown NBT type: ${element::class.java.simpleName}")
+			else              -> throw IllegalArgumentException("unknown NBT type: ${element::class.java.simpleName}")
 		})
 	}
 	
@@ -179,7 +179,7 @@ class NBTObjectList<T : Any>(tagList: NBTTagList) : NBTList<T>(tagList){
 			is NBTTagIntArray  -> tag.intArray as T
 			// UPDATE: check if this is available | is NBTTagLongArray -> tag.longArray as T
 			is NBTTagEnd       -> throw IndexOutOfBoundsException()
-			else               -> throw IllegalArgumentException("Unhandled NBT type: ${tag::class.java.simpleName}")
+			else               -> throw IllegalArgumentException("unhandled NBT type: ${tag::class.java.simpleName}")
 		}
 	}
 }
