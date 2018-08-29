@@ -15,6 +15,7 @@ import net.minecraft.nbt.NBTTagLongArray
 import net.minecraft.nbt.NBTTagShort
 import net.minecraft.nbt.NBTTagString
 import net.minecraftforge.common.util.Constants.NBT
+import java.util.Locale
 
 // Items
 
@@ -29,6 +30,21 @@ inline val ItemStack.nbt: NBTTagCompound
  */
 inline val ItemStack.nbtOrNull: NBTTagCompound?
 	get() = this.tagCompound
+
+// Enums
+
+inline fun <reified T : Enum<T>> NBTTagCompound.setEnum(key: String, value: T?){
+	setString(key, value?.name?.toLowerCase(Locale.ROOT) ?: "")
+}
+
+inline fun <reified T : Enum<T>> NBTTagCompound.getEnum(key: String): T?{
+	val value = getString(key)
+	
+	return if (value.isEmpty())
+		null
+	else
+		java.lang.Enum.valueOf(T::class.java, value.toUpperCase(Locale.ROOT))
+}
 
 // Lists
 
