@@ -1,6 +1,8 @@
 package chylex.hee.game.block.entity
+import chylex.hee.HardcoreEnderExpansion
 import chylex.hee.game.block.entity.TileEntityBase.Context.NETWORK
 import chylex.hee.game.block.entity.TileEntityBase.Context.STORAGE
+import chylex.hee.system.util.getState
 import net.minecraft.nbt.NBTTagCompound
 import net.minecraft.network.NetworkManager
 import net.minecraft.network.play.server.SPacketUpdateTileEntity
@@ -9,14 +11,6 @@ import kotlin.properties.ObservableProperty
 import kotlin.reflect.KProperty
 
 abstract class TileEntityBase : TileEntity(){
-	protected companion object{
-		private const val TAG_NAME = "hee"
-		
-		@JvmStatic protected val FLAG_NOTIFY_NEIGHBORS = 1
-		@JvmStatic protected val FLAG_SYNC_CLIENT      = 2
-		@JvmStatic protected val FLAG_SKIP_RENDER      = 4
-		@JvmStatic protected val FLAG_RENDER_IMMEDIATE = 8
-	}
 	
 	// Synchronization
 	
@@ -35,12 +29,16 @@ abstract class TileEntityBase : TileEntity(){
 	}
 	
 	protected fun notifyUpdate(flags: Int){
-		val pos = pos // TODO refactor with BlockPos extensions
-		val state = world.getBlockState(pos)
+		val pos = pos
+		val state = pos.getState(world)
 		world.notifyBlockUpdate(pos, state, state, flags)
 	}
 	
 	// NBT
+	
+	private companion object{
+		const val TAG_NAME = HardcoreEnderExpansion.ID
+	}
 	
 	protected enum class Context{
 		STORAGE, NETWORK
