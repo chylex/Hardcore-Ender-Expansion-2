@@ -1,9 +1,11 @@
 package chylex.hee.init
 import chylex.hee.HardcoreEnderExpansion
+import chylex.hee.game.block.BlockEnergyCluster
 import chylex.hee.game.block.BlockSimple
 import chylex.hee.game.block.BlockSlabCustom
 import chylex.hee.game.block.BlockStairsCustom
 import chylex.hee.game.block.BlockWallCustom
+import chylex.hee.game.block.entity.TileEntityEnergyCluster
 import chylex.hee.game.block.material.Materials
 import chylex.hee.game.item.util.Tool.Level.WOOD
 import chylex.hee.game.item.util.Tool.Type.PICKAXE
@@ -68,6 +70,10 @@ object ModBlocks{
 	@JvmField val GLOOMROCK_SMOOTH_MAGENTA     = BlockSimple(buildGloomrockSmooth).apply { setup("gloomrock_smooth_magenta") }
 	@JvmField val GLOOMROCK_SMOOTH_WHITE       = BlockSimple(buildGloomrockSmooth).apply { setup("gloomrock_smooth_white") }
 	
+	// Blocks: Energy
+	
+	@JvmField val ENERGY_CLUSTER = BlockEnergyCluster().apply { setup("energy_cluster") }
+	
 	// Registry
 	
 	private val basicItemBlock = ::ItemBlock
@@ -96,7 +102,11 @@ object ModBlocks{
 			register(GLOOMROCK_SMOOTH_PURPLE with basicItemBlock)
 			register(GLOOMROCK_SMOOTH_MAGENTA with basicItemBlock)
 			register(GLOOMROCK_SMOOTH_WHITE with basicItemBlock)
+			
+			register(ENERGY_CLUSTER with basicItemBlock)
 		}
+		
+		tile<TileEntityEnergyCluster>("energy_cluster")
 	}
 	
 	@JvmStatic
