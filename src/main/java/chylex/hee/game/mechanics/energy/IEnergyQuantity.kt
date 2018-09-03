@@ -20,6 +20,10 @@ interface IEnergyQuantity: Comparable<IEnergyQuantity>{
 		return Internal(internal.value - rightSide.internal.value)
 	}
 	
+	operator fun times(rightSide: Float): IEnergyQuantity{
+		return Internal((internal.value * rightSide).floorToInt())
+	}
+	
 	override fun compareTo(other: IEnergyQuantity): Int{
 		return internal.value.compareTo(other.internal.value)
 	}

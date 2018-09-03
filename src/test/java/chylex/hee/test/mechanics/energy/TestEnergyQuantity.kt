@@ -114,8 +114,8 @@ class TestEnergyQuantity{
 		}
 	}
 	
-	@Nested inner class AdditionSubtraction{
-		@Test fun `arithmetic operations with same representations have correct results`(){
+	@Nested inner class ArithmeticOperations{
+		@Test fun `addition and subtraction with same representations have correct results`(){
 			assertEquals(Internal(40_000_000), Internal(30_000_000) + Internal(10_000_000))
 			assertEquals(Internal(20_000_000), Internal(30_000_000) - Internal(10_000_000))
 			
@@ -126,7 +126,7 @@ class TestEnergyQuantity{
 			assertEquals(Units(400), Units(600) - Units(200))
 		}
 		
-		@Test fun `arithmetic operations with different representations have correct results`(){
+		@Test fun `addition and subtraction with different representations have correct results`(){
 			assertEquals(Internal(40_000_000), Internal(30_000_000) + Floating(10F))
 			assertEquals(Internal(20_000_000), Internal(30_000_000) - Floating(10F))
 			assertEquals(Internal(40_000_000), Internal(30_000_000) + Units(200))
@@ -143,12 +143,23 @@ class TestEnergyQuantity{
 			assertEquals(Internal(20_000_000), Units(600) - Floating(10F))
 		}
 		
-		@Test fun `arithmetic operations with 'Units' preserve 'Internal' and 'Floating' precision`(){
-			assertEquals(Floating(5.105F), Floating(5.055F) + Units(1))
-			assertEquals(Floating(5.005F), Floating(5.055F) - Units(1))
-			
+		@Test fun `addition and subtraction with 'Units' preserve 'Internal' and 'Floating' precision`(){
 			assertEquals(Internal(5_105_000), Internal(5_055_000) + Units(1))
 			assertEquals(Internal(5_005_000), Internal(5_055_000) - Units(1))
+			
+			assertEquals(Floating(5.105F), Floating(5.055F) + Units(1))
+			assertEquals(Floating(5.005F), Floating(5.055F) - Units(1))
+		}
+		
+		@Test fun `scalar multiplication with same representations has correct results`(){
+			assertEquals(Internal(5_000_000), Internal(2_500_000) * 2F)
+			assertEquals(Internal(1_250_000), Internal(2_500_000) * 0.5F)
+			
+			assertEquals(Floating(5F), Floating(2.5F) * 2F)
+			assertEquals(Floating(1.25F), Floating(2.5F) * 0.5F)
+			
+			assertEquals(Units(100), Units(50) * 2F)
+			assertEquals(Units(25), Units(50) * 0.5F)
 		}
 	}
 }
