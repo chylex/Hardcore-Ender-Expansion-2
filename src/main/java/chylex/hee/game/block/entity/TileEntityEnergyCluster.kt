@@ -94,7 +94,7 @@ class TileEntityEnergyCluster : TileEntityBase(), ITickable{
 		}
 		
 		if (energyLevel < energyRegenCapacity && --ticksToRegen < 0){
-			energyLevel += Floating(((1 + energyBaseCapacity.floating.value).pow(0.004F) - 0.997F) * 0.5F) * currentHealth.regenAmountMp
+			energyLevel = minOf(energyRegenCapacity, energyLevel + Floating(((1 + energyBaseCapacity.floating.value).pow(0.004F) - 0.997F) * 0.5F) * currentHealth.regenAmountMp)
 			ticksToRegen = (20F / currentHealth.regenSpeedMp).ceilToInt()
 		}
 	}
