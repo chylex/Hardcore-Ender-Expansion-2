@@ -32,16 +32,19 @@ interface IEnergyQuantity: Comparable<IEnergyQuantity>{
 	override fun hashCode(): Int
 	override fun toString(): String
 	
-	private companion object{
-		fun equals(left: IEnergyQuantity, right: Any?): Boolean{
+	companion object{
+		val MAX_POSSIBLE_VALUE = Units(2000)
+		val MAX_REGEN_CAPACITY = Units(1000)
+		
+		private fun equals(left: IEnergyQuantity, right: Any?): Boolean{
 			return right is IEnergyQuantity && left.internal.value == right.internal.value
 		}
 		
-		fun hashCode(obj: IEnergyQuantity): Int{
+		private fun hashCode(obj: IEnergyQuantity): Int{
 			return obj.internal.value.hashCode()
 		}
 		
-		fun toString(obj: IEnergyQuantity): String{
+		private fun toString(obj: IEnergyQuantity): String{
 			return "Energy (internal = ${obj.internal.value}, floating = ${obj.floating.value}, units = ${obj.units.value})"
 		}
 	}
