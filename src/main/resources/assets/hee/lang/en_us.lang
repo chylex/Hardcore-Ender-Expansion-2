@@ -21,6 +21,9 @@ item.hee.alteration_nexus.name=Alteration Nexus
 item.hee.ancient_dust.name=Ancient Dust
 item.hee.ethereum.name=Ethereum
 
+item.tooltip.hee.energy.level=Energy: %s / %s
+item.tooltip.hee.energy.uses=Uses left: %s
+
 itemGroup.hee=Hardcore Ender Expansion
 
 hee.energy.overlay.health=%s ENERGY CLUSTER
