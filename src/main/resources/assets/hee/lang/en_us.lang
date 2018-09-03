@@ -23,6 +23,17 @@ item.hee.ethereum.name=Ethereum
 
 itemGroup.hee=Hardcore Ender Expansion
 
+hee.energy.overlay.health=%s ENERGY CLUSTER
+hee.energy.overlay.level=HOLDING %s OUT OF %s ENERGY
+
+hee.energy.health.powered=POWERED
+hee.energy.health.healthy=HEALTHY
+hee.energy.health.weakened=WEAKENED
+hee.energy.health.tired=TIRED
+hee.energy.health.damaged=DAMAGED
+hee.energy.health.unstable=UNSTABLE
+hee.energy.health.revitalizing=REVITALIZING
+
 commands.hee.usage=/hee [page=1]
 commands.hee.info=shows command list
 
