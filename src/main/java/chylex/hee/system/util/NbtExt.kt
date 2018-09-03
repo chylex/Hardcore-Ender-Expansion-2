@@ -1,4 +1,5 @@
 package chylex.hee.system.util
+import chylex.hee.HardcoreEnderExpansion
 import net.minecraft.item.ItemStack
 import net.minecraft.nbt.NBTPrimitive
 import net.minecraft.nbt.NBTTagByte
@@ -19,6 +20,8 @@ import java.util.Locale
 
 // Items
 
+private const val HEE_TAG_NAME = HardcoreEnderExpansion.ID
+
 /**
  * Returns the ItemStack's NBT tag. If the ItemStack has no tag, it will be created.
  */
@@ -30,6 +33,34 @@ inline val ItemStack.nbt: NBTTagCompound
  */
 inline val ItemStack.nbtOrNull: NBTTagCompound?
 	get() = this.tagCompound
+
+/**
+ * Returns the ItemStack's HEE tag from its main NBT tag. If the ItemStack has neither the main NBT tag nor the HEE tag, they will be created.
+ */
+val ItemStack.heeTag: NBTTagCompound
+	get(){
+		val nbt = this.nbt
+		
+		return if (nbt.hasKey(HEE_TAG_NAME)){
+			nbt.getCompoundTag(HEE_TAG_NAME)
+		}
+		else{
+			NBTTagCompound().also { nbt.setTag(HEE_TAG_NAME, it) }
+		}
+	}
+
+/**
+ * Returns the ItemStack's HEE tag from its main NBT tag. If the ItemStack has neither the main NBT tag nor the HEE tag, null is returned instead.
+ */
+val ItemStack.heeTagOrNull: NBTTagCompound?
+	get(){
+		val nbt = this.nbtOrNull
+		
+		return if (nbt != null && nbt.hasKey(HEE_TAG_NAME))
+			nbt.getCompoundTag(HEE_TAG_NAME)
+		else
+			null
+	}
 
 // Enums
 
