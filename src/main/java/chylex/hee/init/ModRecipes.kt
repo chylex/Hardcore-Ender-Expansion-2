@@ -15,6 +15,8 @@ object ModRecipes{
 	fun initialize(){ // UPDATE: Move smelting recipes to JSON
 		with(FurnaceRecipes.instance()){
 			addSmeltingRecipeForBlock(ModBlocks.GLOOMROCK, ItemStack(ModBlocks.GLOOMROCK_SMOOTH), 0.1F)
+			addSmeltingRecipeForBlock(ModBlocks.END_POWDER_ORE, ItemStack(ModItems.END_POWDER), 0.15F)
+			addSmeltingRecipeForBlock(ModBlocks.ENDIUM_ORE, ItemStack(ModItems.ENDIUM_INGOT), 1.0F)
 		}
 	}
 	

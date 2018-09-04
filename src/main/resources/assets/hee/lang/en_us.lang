@@ -20,6 +20,9 @@ tile.hee.gloomrock_smooth_purple.name=Purple Gloomrock
 tile.hee.gloomrock_smooth_magenta.name=Magenta Gloomrock
 tile.hee.gloomrock_smooth_white.name=White Gloomrock
 
+tile.hee.end_powder_ore.name=End Powder Ore
+tile.hee.endium_ore.name=Endium Ore
+
 item.hee.ancient_dust.name=Ancient Dust
 item.hee.ethereum.name=Ethereum
 item.hee.end_powder.name=End Powder

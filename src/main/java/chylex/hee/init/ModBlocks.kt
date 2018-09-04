@@ -1,6 +1,7 @@
 package chylex.hee.init
 import chylex.hee.HardcoreEnderExpansion
 import chylex.hee.game.block.BlockAncientCobweb
+import chylex.hee.game.block.BlockEndPowderOre
 import chylex.hee.game.block.BlockEndium
 import chylex.hee.game.block.BlockEnergyCluster
 import chylex.hee.game.block.BlockSimple
@@ -11,6 +12,7 @@ import chylex.hee.game.block.entity.TileEntityEnergyCluster
 import chylex.hee.game.block.material.Materials
 import chylex.hee.game.item.ItemAncientCobweb
 import chylex.hee.game.item.util.Tool.Level.IRON
+import chylex.hee.game.item.util.Tool.Level.STONE
 import chylex.hee.game.item.util.Tool.Level.WOOD
 import chylex.hee.game.item.util.Tool.Type.PICKAXE
 import chylex.hee.init.ModCreativeTabs.OrderedCreativeTab
@@ -88,6 +90,28 @@ object ModBlocks{
 	@JvmField val GLOOMROCK_SMOOTH_MAGENTA     = BlockSimple(buildGloomrockSmooth).apply { setup("gloomrock_smooth_magenta") }
 	@JvmField val GLOOMROCK_SMOOTH_WHITE       = BlockSimple(buildGloomrockSmooth).apply { setup("gloomrock_smooth_white") }
 	
+	// Blocks: Ores
+	
+	private val buildEndOre = BlockSimple.Builder(Materials.SOLID_WITH_TOOL).apply {
+		soundType = SoundType.STONE
+		mapColor = MapColor.SAND
+	}
+	
+	private val buildEndPowderOre = buildEndOre.clone {
+		harvestTool = Pair(STONE, PICKAXE)
+		harvestHardness = 2.0F
+		explosionResistance = 9.0F
+	}
+	
+	private val buildEndiumOre = buildEndOre.clone {
+		harvestTool = Pair(IRON, PICKAXE)
+		harvestHardness = 5.0F
+		explosionResistance = 16.5F
+	}
+	
+	@JvmField val END_POWDER_ORE = BlockEndPowderOre(buildEndPowderOre).apply { setup("end_powder_ore") }
+	@JvmField val ENDIUM_ORE     = BlockEndium(buildEndiumOre).apply { setup("endium_ore") }
+	
 	// Blocks: Energy
 	
 	@JvmField val ENERGY_CLUSTER = BlockEnergyCluster().apply { setup("energy_cluster") }
@@ -123,6 +147,9 @@ object ModBlocks{
 			register(GLOOMROCK_SMOOTH_PURPLE with basicItemBlock)
 			register(GLOOMROCK_SMOOTH_MAGENTA with basicItemBlock)
 			register(GLOOMROCK_SMOOTH_WHITE with basicItemBlock)
+			
+			register(END_POWDER_ORE with basicItemBlock)
+			register(ENDIUM_ORE with basicItemBlock)
 			
 			register(ENERGY_CLUSTER with basicItemBlock)
 		}
