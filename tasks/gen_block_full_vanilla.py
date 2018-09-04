@@ -30,7 +30,9 @@ def create_file(relative_path, contents, title):
 
 contents_blockstate = f"""{{
   "variants": {{
-    "normal": {{ "model": "hee:{registry_name}" }}
+    "normal": {{
+      "model": "hee:{registry_name}"
+    }}
   }}
 }}
 """
