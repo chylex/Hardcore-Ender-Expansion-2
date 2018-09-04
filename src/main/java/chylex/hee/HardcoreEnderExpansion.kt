@@ -2,6 +2,7 @@ package chylex.hee
 import chylex.hee.game.commands.HeeServerCommand
 import chylex.hee.init.ModConfig
 import chylex.hee.init.ModCreativeTabs
+import chylex.hee.init.ModLoot
 import chylex.hee.init.ModNetwork
 import chylex.hee.init.ModRecipes
 import chylex.hee.proxy.ModCommonProxy
@@ -41,6 +42,7 @@ object HardcoreEnderExpansion{
 	
 	@EventHandler
 	fun onInit(e: FMLInitializationEvent){
+		ModLoot.initialize()
 		ModRecipes.initialize()
 		proxy.onInit()
 	}
