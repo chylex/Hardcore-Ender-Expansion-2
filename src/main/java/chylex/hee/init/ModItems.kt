@@ -15,7 +15,7 @@ object ModItems{
 	@JvmField val END_POWDER   = Item().apply { setup("end_powder") }
 	@JvmField val STARDUST     = Item().apply { setup("stardust") }
 	
-	// Items: Crafted resources
+	// Items: Manufactured resources
 	
 	@JvmField val ALTERATION_NEXUS = Item().apply { setup("alteration_nexus") }
 	@JvmField val VOID_ESSENCE     = Item().apply { setup("void_essence") }

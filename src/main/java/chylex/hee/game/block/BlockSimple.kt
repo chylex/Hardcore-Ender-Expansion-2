@@ -5,7 +5,7 @@ import net.minecraft.block.SoundType
 import net.minecraft.block.material.MapColor
 import net.minecraft.block.material.Material
 
-class BlockSimple(builder: Builder) : Block(builder.material, builder.mapColor){
+open class BlockSimple(builder: Builder) : Block(builder.material, builder.mapColor){
 	init{
 		setHarvestTool(builder.harvestTool)
 		setHardness(builder.harvestHardness)
