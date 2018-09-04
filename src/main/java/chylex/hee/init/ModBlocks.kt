@@ -128,6 +128,10 @@ object ModBlocks{
 		}
 		
 		tile<TileEntityEnergyCluster>("energy_cluster")
+		
+		// vanilla modifications
+		
+		Blocks.END_BRICKS.setHardness(1.0F).setResistance(4.0F)
 	}
 	
 	@JvmStatic
