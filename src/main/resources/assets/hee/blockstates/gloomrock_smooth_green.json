@@ -1,5 +1,13 @@
 {
+  "forge_marker": 1,
+  "defaults": {
+    "model": "cube_all",
+    "textures": {
+      "all": "hee:block/gloomrock_smooth_green"
+    }
+  },
   "variants": {
-    "normal": { "model": "hee:gloomrock_smooth_green" }
+    "normal": [{}],
+    "inventory": [{}]
   }
 }

@@ -1,5 +1,13 @@
 {
+  "forge_marker": 1,
+  "defaults": {
+    "model": "cube_all",
+    "textures": {
+      "all": "hee:block/gloomrock_smooth_magenta"
+    }
+  },
   "variants": {
-    "normal": { "model": "hee:gloomrock_smooth_magenta" }
+    "normal": [{}],
+    "inventory": [{}]
   }
 }
