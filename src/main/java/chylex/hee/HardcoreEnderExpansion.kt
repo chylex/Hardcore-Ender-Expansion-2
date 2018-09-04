@@ -7,10 +7,12 @@ import chylex.hee.init.ModNetwork
 import chylex.hee.init.ModRecipes
 import chylex.hee.proxy.ModCommonProxy
 import chylex.hee.system.Debug
+import chylex.hee.system.IntegrityCheck
 import net.minecraftforge.fml.common.Mod
 import net.minecraftforge.fml.common.Mod.EventHandler
 import net.minecraftforge.fml.common.SidedProxy
 import net.minecraftforge.fml.common.event.FMLInitializationEvent
+import net.minecraftforge.fml.common.event.FMLLoadCompleteEvent
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent
 import net.minecraftforge.fml.common.event.FMLServerStartingEvent
 import net.minecraftforge.fml.common.network.NetworkCheckHandler
@@ -45,6 +47,11 @@ object HardcoreEnderExpansion{
 		ModLoot.initialize()
 		ModRecipes.initialize()
 		proxy.onInit()
+	}
+	
+	@EventHandler
+	fun onLoadComplete(e: FMLLoadCompleteEvent){
+		IntegrityCheck.verify()
 	}
 	
 	@EventHandler
