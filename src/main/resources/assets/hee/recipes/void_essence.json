@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    { "item": "hee:stardust" },
+    { "item": "hee:stardust" },
+    { "item": "hee:stardust" },
+    { "item": "hee:stardust" },
+    { "item": "hee:stardust" },
+    { "item": "hee:ancient_dust" },
+    { "item": "hee:ancient_dust" },
+    { "item": "hee:ethereum" }
+  ],
+  "result": {
+    "item": "hee:void_essence"
+  }
+}

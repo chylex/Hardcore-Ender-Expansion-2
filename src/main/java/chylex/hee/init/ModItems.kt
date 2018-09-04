@@ -8,11 +8,17 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent
 @EventBusSubscriber(modid = HardcoreEnderExpansion.ID)
 object ModItems{
 	
-	// Items: Resources
+	// Items: Raw resources
 	
-	@JvmField val ETHEREUM         = Item().apply { setup("ethereum") }
-	@JvmField val ANCIENT_DUST     = Item().apply { setup("ancient_dust") }
+	@JvmField val ETHEREUM     = Item().apply { setup("ethereum") }
+	@JvmField val ANCIENT_DUST = Item().apply { setup("ancient_dust") }
+	@JvmField val END_POWDER   = Item().apply { setup("end_powder") }
+	@JvmField val STARDUST     = Item().apply { setup("stardust") }
+	
+	// Items: Crafted resources
+	
 	@JvmField val ALTERATION_NEXUS = Item().apply { setup("alteration_nexus") }
+	@JvmField val VOID_ESSENCE     = Item().apply { setup("void_essence") }
 	
 	// Registry
 	
@@ -22,7 +28,11 @@ object ModItems{
 		with(e.registry){
 			register(ETHEREUM)
 			register(ANCIENT_DUST)
+			register(END_POWDER)
+			register(STARDUST)
+			
 			register(ALTERATION_NEXUS)
+			register(VOID_ESSENCE)
 		}
 	}
 	

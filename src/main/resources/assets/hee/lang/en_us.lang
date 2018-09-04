@@ -19,9 +19,13 @@ tile.hee.gloomrock_smooth_purple.name=Purple Gloomrock
 tile.hee.gloomrock_smooth_magenta.name=Magenta Gloomrock
 tile.hee.gloomrock_smooth_white.name=White Gloomrock
 
-item.hee.alteration_nexus.name=Alteration Nexus
 item.hee.ancient_dust.name=Ancient Dust
 item.hee.ethereum.name=Ethereum
+item.hee.end_powder.name=End Powder
+item.hee.stardust.name=Stardust
+
+item.hee.alteration_nexus.name=Alteration Nexus
+item.hee.void_essence.name=Void Essence
 
 item.tooltip.hee.energy.level=Energy: %s / %s
 item.tooltip.hee.energy.uses=Uses left: %s
