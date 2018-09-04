@@ -10,10 +10,12 @@ object ModItems{
 	
 	// Items: Raw resources
 	
-	@JvmField val ETHEREUM     = Item().apply { setup("ethereum") }
-	@JvmField val ANCIENT_DUST = Item().apply { setup("ancient_dust") }
-	@JvmField val END_POWDER   = Item().apply { setup("end_powder") }
-	@JvmField val STARDUST     = Item().apply { setup("stardust") }
+	@JvmField val ETHEREUM      = Item().apply { setup("ethereum") }
+	@JvmField val ANCIENT_DUST  = Item().apply { setup("ancient_dust") }
+	@JvmField val END_POWDER    = Item().apply { setup("end_powder") }
+	@JvmField val STARDUST      = Item().apply { setup("stardust") }
+	@JvmField val ENDIUM_INGOT  = Item().apply { setup("endium_ingot") }
+	@JvmField val ENDIUM_NUGGET = Item().apply { setup("endium_nugget") }
 	
 	// Items: Manufactured resources
 	
@@ -30,6 +32,8 @@ object ModItems{
 			register(ANCIENT_DUST)
 			register(END_POWDER)
 			register(STARDUST)
+			register(ENDIUM_INGOT)
+			register(ENDIUM_NUGGET)
 			
 			register(ALTERATION_NEXUS)
 			register(VOID_ESSENCE)

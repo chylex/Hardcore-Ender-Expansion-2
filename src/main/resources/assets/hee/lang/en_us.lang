@@ -1,4 +1,5 @@
 tile.hee.stone_brick_wall.name=Stone Brick Wall
+tile.hee.endium_block.name=Endium Block
 
 tile.hee.ancient_cobweb.name=Ancient Cobweb
 
@@ -23,6 +24,8 @@ item.hee.ancient_dust.name=Ancient Dust
 item.hee.ethereum.name=Ethereum
 item.hee.end_powder.name=End Powder
 item.hee.stardust.name=Stardust
+item.hee.endium_ingot.name=Endium Ingot
+item.hee.endium_nugget.name=Endium Nugget
 
 item.hee.alteration_nexus.name=Alteration Nexus
 item.hee.void_essence.name=Void Essence

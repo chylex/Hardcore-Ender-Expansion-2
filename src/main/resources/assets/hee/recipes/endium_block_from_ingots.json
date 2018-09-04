@@ -1,0 +1,14 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "###",
+    "###",
+    "###"
+  ],
+  "key": {
+    "#": { "item": "hee:endium_ingot" }
+  },
+  "result": {
+    "item": "hee:endium_block"
+  }
+}
