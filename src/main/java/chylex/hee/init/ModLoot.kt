@@ -7,7 +7,11 @@ import net.minecraft.world.storage.loot.LootTableList
 import net.minecraft.world.storage.loot.conditions.LootConditionManager
 
 object ModLoot{
+	lateinit var ANCIENT_COBWEB: BlockLootTable
+	
 	fun initialize(){
 		LootConditionManager.registerCondition(ConditionFortune.Serializer)
+		
+		ANCIENT_COBWEB = BlockLootTable(LootTableList.register(ResourceLocation(HardcoreEnderExpansion.ID, "blocks/ancient_cobweb")))
 	}
 }

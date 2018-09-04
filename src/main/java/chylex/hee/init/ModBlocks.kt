@@ -1,5 +1,6 @@
 package chylex.hee.init
 import chylex.hee.HardcoreEnderExpansion
+import chylex.hee.game.block.BlockAncientCobweb
 import chylex.hee.game.block.BlockEnergyCluster
 import chylex.hee.game.block.BlockSimple
 import chylex.hee.game.block.BlockSlabCustom
@@ -7,6 +8,7 @@ import chylex.hee.game.block.BlockStairsCustom
 import chylex.hee.game.block.BlockWallCustom
 import chylex.hee.game.block.entity.TileEntityEnergyCluster
 import chylex.hee.game.block.material.Materials
+import chylex.hee.game.item.ItemAncientCobweb
 import chylex.hee.game.item.util.Tool.Level.WOOD
 import chylex.hee.game.item.util.Tool.Type.PICKAXE
 import chylex.hee.init.ModCreativeTabs.OrderedCreativeTab
@@ -29,6 +31,10 @@ object ModBlocks{
 	// Blocks: Building (Uncategorized)
 	
 	@JvmField val STONE_BRICK_WALL = BlockWallCustom(Blocks.STONEBRICK).apply { setup("stone_brick_wall") }
+	
+	// Blocks: Decorative (Uncategorized)
+	
+	@JvmField val ANCIENT_COBWEB = BlockAncientCobweb().apply { setup("ancient_cobweb") }
 	
 	// Blocks: Gloomrock
 	
@@ -83,6 +89,8 @@ object ModBlocks{
 	fun onRegister(e: RegistryEvent.Register<Block>){
 		with(e.registry){
 			register(STONE_BRICK_WALL with basicItemBlock)
+			
+			register(ANCIENT_COBWEB with ItemAncientCobweb(ANCIENT_COBWEB))
 			
 			register(GLOOMROCK with basicItemBlock)
 			register(GLOOMROCK_BRICKS with basicItemBlock)

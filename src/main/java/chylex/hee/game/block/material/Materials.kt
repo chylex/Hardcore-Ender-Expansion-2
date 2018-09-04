@@ -9,6 +9,11 @@ object Materials{
 		requiresTool = true
 	}
 	
+	val ANCIENT_COBWEB = CustomMaterial().apply {
+		blocksMovement = false
+		destroyWhenPushed()
+	}
+	
 	val ENERGY_CLUSTER = CustomMaterial().apply {
 		solid = false
 		replaceable = true
