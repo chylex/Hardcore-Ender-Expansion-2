@@ -12,6 +12,10 @@ object ModLoot{
 	fun initialize(){
 		LootConditionManager.registerCondition(ConditionFortune.Serializer)
 		
-		ANCIENT_COBWEB = BlockLootTable(LootTableList.register(ResourceLocation(HardcoreEnderExpansion.ID, "blocks/ancient_cobweb")))
+		ANCIENT_COBWEB = registerBlock("ancient_cobweb")
+	}
+	
+	private fun registerBlock(name: String): BlockLootTable{
+		return BlockLootTable(LootTableList.register(ResourceLocation(HardcoreEnderExpansion.ID, "blocks/$name")))
 	}
 }
