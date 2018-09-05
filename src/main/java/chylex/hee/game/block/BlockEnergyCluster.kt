@@ -39,8 +39,8 @@ class BlockEnergyCluster : Block(Materials.ENERGY_CLUSTER, MapColor.SNOW), ITile
 		enableStats = false
 	}
 	
-	companion object{
-		private val SELECTION_AABB = AxisAlignedBB(0.35, 0.35, 0.35, 0.65, 0.65, 0.65)
+	private companion object{
+		val SELECTION_AABB = AxisAlignedBB(0.35, 0.35, 0.35, 0.65, 0.65, 0.65)
 	}
 	
 	override fun createNewTileEntity(world: World, meta: Int): TileEntity?{

@@ -94,7 +94,7 @@ abstract class RenderTileAbstractPortal<T: TileEntity> : TileEntitySpecialRender
 		GL.blendFunc(SRC_ALPHA, ONE_MINUS_SRC_ALPHA)
 		
 		generateNextColor(tile)
-		transformColor{ 0.1F }
+		transformColor { 0.1F }
 		
 		renderLayer(
 			x, y, z,
@@ -116,7 +116,7 @@ abstract class RenderTileAbstractPortal<T: TileEntity> : TileEntitySpecialRender
 			val colorMultiplier = 1F / (layerIndexRev + 1F)
 			
 			generateNextColor(tile)
-			transformColor{ it * colorMultiplier }
+			transformColor { it * colorMultiplier }
 			
 			if (layerIndexRev <= layerCount){
 				renderLayer(
