@@ -1,0 +1,16 @@
+{
+  "forge_marker": 1,
+  "defaults": {
+    "model": "cube_bottom_top",
+    "textures": {
+      "particle": "hee:block/end_stone_enchanted_top",
+      "bottom": "minecraft:blocks/end_stone",
+      "top": "hee:block/end_stone_enchanted_top",
+      "side": "hee:block/end_stone_enchanted_side"
+    }
+  },
+  "variants": {
+    "normal": [{}],
+    "inventory": [{}]
+  }
+}

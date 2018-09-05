@@ -26,6 +26,10 @@ tile.hee.obsidian_smooth_lit.name=Smooth Obsidian (Lit)
 tile.hee.obsidian_chiseled_lit.name=Chiseled Obsidian (Lit)
 tile.hee.obsidian_pillar_lit.name=Obsidian Pillar (Lit)
 
+tile.hee.end_stone_infested.name=Infested End Stone
+tile.hee.end_stone_burned.name=Burned End Stone
+tile.hee.end_stone_enchanted.name=Enchanted End Stone
+
 tile.hee.end_powder_ore.name=End Powder Ore
 tile.hee.endium_ore.name=Endium Ore
 

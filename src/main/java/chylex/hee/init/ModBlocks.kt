@@ -111,6 +111,21 @@ object ModBlocks{
 	@JvmField val OBSIDIAN_CHISELED_LIT = BlockSimple(buildObsidianCustomLit).apply { setup("obsidian_chiseled_lit") }
 	@JvmField val OBSIDIAN_PILLAR_LIT   = BlockPillarCustom(buildObsidianCustomLit).apply { setup("obsidian_pillar_lit") }
 	
+	// Blocks: Building (End Stone)
+	
+	private val buildEndStone = BlockSimple.Builder(Materials.SOLID_WITH_TOOL).apply {
+		harvestTool = Pair(WOOD, PICKAXE)
+		harvestHardness = 3.0F
+		explosionResistance = 15.0F
+		
+		soundType = SoundType.STONE
+		mapColor = MapColor.SAND
+	}
+	
+	@JvmField val END_STONE_INFESTED  = BlockSimple(buildEndStone).apply { setup("end_stone_infested") }
+	@JvmField val END_STONE_BURNED    = BlockSimple(buildEndStone).apply { setup("end_stone_burned") }
+	@JvmField val END_STONE_ENCHANTED = BlockSimple(buildEndStone).apply { setup("end_stone_enchanted") }
+	
 	// Blocks: Ores
 	
 	private val buildEndOre = BlockSimple.Builder(Materials.SOLID_WITH_TOOL).apply {
@@ -178,6 +193,10 @@ object ModBlocks{
 			register(OBSIDIAN_SMOOTH_LIT with basicItemBlock)
 			register(OBSIDIAN_CHISELED_LIT with basicItemBlock)
 			register(OBSIDIAN_PILLAR_LIT with basicItemBlock)
+			
+			register(END_STONE_INFESTED with basicItemBlock)
+			register(END_STONE_BURNED with basicItemBlock)
+			register(END_STONE_ENCHANTED with basicItemBlock)
 			
 			register(END_POWDER_ORE with basicItemBlock)
 			register(ENDIUM_ORE with basicItemBlock)
