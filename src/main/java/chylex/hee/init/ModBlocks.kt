@@ -4,6 +4,7 @@ import chylex.hee.game.block.BlockAncientCobweb
 import chylex.hee.game.block.BlockEndPowderOre
 import chylex.hee.game.block.BlockEndium
 import chylex.hee.game.block.BlockEnergyCluster
+import chylex.hee.game.block.BlockPillarCustom
 import chylex.hee.game.block.BlockSimple
 import chylex.hee.game.block.BlockSlabCustom
 import chylex.hee.game.block.BlockStairsCustom
@@ -11,6 +12,7 @@ import chylex.hee.game.block.BlockWallCustom
 import chylex.hee.game.block.entity.TileEntityEnergyCluster
 import chylex.hee.game.block.material.Materials
 import chylex.hee.game.item.ItemAncientCobweb
+import chylex.hee.game.item.util.Tool.Level.DIAMOND
 import chylex.hee.game.item.util.Tool.Level.IRON
 import chylex.hee.game.item.util.Tool.Level.STONE
 import chylex.hee.game.item.util.Tool.Level.WOOD
@@ -46,11 +48,7 @@ object ModBlocks{
 	@JvmField val STONE_BRICK_WALL = BlockWallCustom(Blocks.STONEBRICK).apply { setup("stone_brick_wall") }
 	@JvmField val ENDIUM_BLOCK     = BlockEndium(buildEndiumBlock).apply { setup("endium_block") }
 	
-	// Blocks: Decorative (Uncategorized)
-	
-	@JvmField val ANCIENT_COBWEB = BlockAncientCobweb().apply { setup("ancient_cobweb") }
-	
-	// Blocks: Gloomrock
+	// Blocks: Building (Gloomrock)
 	
 	private val buildGloomrock = BlockSimple.Builder(Materials.SOLID_WITH_TOOL).apply {
 		harvestTool = Pair(WOOD, PICKAXE)
@@ -90,6 +88,29 @@ object ModBlocks{
 	@JvmField val GLOOMROCK_SMOOTH_MAGENTA     = BlockSimple(buildGloomrockSmooth).apply { setup("gloomrock_smooth_magenta") }
 	@JvmField val GLOOMROCK_SMOOTH_WHITE       = BlockSimple(buildGloomrockSmooth).apply { setup("gloomrock_smooth_white") }
 	
+	// Blocks: Building (Obsidian)
+	
+	private val buildObsidianCustom = BlockSimple.Builder(Materials.SOLID_WITH_TOOL).apply {
+		harvestTool = Pair(DIAMOND, PICKAXE)
+		harvestHardness = 20F
+		explosionResistance = 500F
+		
+		soundType = SoundType.STONE
+		mapColor = MapColor.BLACK
+	}
+	
+	private val buildObsidianCustomLit = buildObsidianCustom.clone {
+		lightLevel = 15
+	}
+	
+	@JvmField val OBSIDIAN_STAIRS       = BlockStairsCustom(Blocks.OBSIDIAN).apply { setup("obsidian_stairs") }
+	@JvmField val OBSIDIAN_SMOOTH       = BlockSimple(buildObsidianCustom).apply { setup("obsidian_smooth") }
+	@JvmField val OBSIDIAN_CHISELED     = BlockSimple(buildObsidianCustom).apply { setup("obsidian_chiseled") }
+	@JvmField val OBSIDIAN_PILLAR       = BlockPillarCustom(buildObsidianCustom).apply { setup("obsidian_pillar") }
+	@JvmField val OBSIDIAN_SMOOTH_LIT   = BlockSimple(buildObsidianCustomLit).apply { setup("obsidian_smooth_lit") }
+	@JvmField val OBSIDIAN_CHISELED_LIT = BlockSimple(buildObsidianCustomLit).apply { setup("obsidian_chiseled_lit") }
+	@JvmField val OBSIDIAN_PILLAR_LIT   = BlockPillarCustom(buildObsidianCustomLit).apply { setup("obsidian_pillar_lit") }
+	
 	// Blocks: Ores
 	
 	private val buildEndOre = BlockSimple.Builder(Materials.SOLID_WITH_TOOL).apply {
@@ -112,6 +133,10 @@ object ModBlocks{
 	@JvmField val END_POWDER_ORE = BlockEndPowderOre(buildEndPowderOre).apply { setup("end_powder_ore") }
 	@JvmField val ENDIUM_ORE     = BlockEndium(buildEndiumOre).apply { setup("endium_ore") }
 	
+	// Blocks: Decorative (Uncategorized)
+	
+	@JvmField val ANCIENT_COBWEB = BlockAncientCobweb().apply { setup("ancient_cobweb") }
+	
 	// Blocks: Energy
 	
 	@JvmField val ENERGY_CLUSTER = BlockEnergyCluster().apply { setup("energy_cluster") }
@@ -126,8 +151,6 @@ object ModBlocks{
 		with(e.registry){
 			register(STONE_BRICK_WALL with basicItemBlock)
 			register(ENDIUM_BLOCK with basicItemBlock)
-			
-			register(ANCIENT_COBWEB with ItemAncientCobweb(ANCIENT_COBWEB))
 			
 			register(GLOOMROCK with basicItemBlock)
 			register(GLOOMROCK_BRICKS with basicItemBlock)
@@ -148,8 +171,18 @@ object ModBlocks{
 			register(GLOOMROCK_SMOOTH_MAGENTA with basicItemBlock)
 			register(GLOOMROCK_SMOOTH_WHITE with basicItemBlock)
 			
+			register(OBSIDIAN_STAIRS with basicItemBlock)
+			register(OBSIDIAN_SMOOTH with basicItemBlock)
+			register(OBSIDIAN_CHISELED with basicItemBlock)
+			register(OBSIDIAN_PILLAR with basicItemBlock)
+			register(OBSIDIAN_SMOOTH_LIT with basicItemBlock)
+			register(OBSIDIAN_CHISELED_LIT with basicItemBlock)
+			register(OBSIDIAN_PILLAR_LIT with basicItemBlock)
+			
 			register(END_POWDER_ORE with basicItemBlock)
 			register(ENDIUM_ORE with basicItemBlock)
+			
+			register(ANCIENT_COBWEB with ItemAncientCobweb(ANCIENT_COBWEB))
 			
 			register(ENERGY_CLUSTER with basicItemBlock)
 		}

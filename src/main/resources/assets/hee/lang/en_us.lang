@@ -1,8 +1,6 @@
 tile.hee.stone_brick_wall.name=Stone Brick Wall
 tile.hee.endium_block.name=Endium Block
 
-tile.hee.ancient_cobweb.name=Ancient Cobweb
-
 tile.hee.gloomrock.name=Gloomrock
 tile.hee.gloomrock_bricks.name=Gloomrock Bricks
 tile.hee.gloomrock_brick_slab.name=Gloomrock Brick Slab
@@ -20,8 +18,18 @@ tile.hee.gloomrock_smooth_purple.name=Purple Gloomrock
 tile.hee.gloomrock_smooth_magenta.name=Magenta Gloomrock
 tile.hee.gloomrock_smooth_white.name=White Gloomrock
 
+tile.hee.obsidian_stairs.name=Obsidian Stairs
+tile.hee.obsidian_smooth.name=Smooth Obsidian
+tile.hee.obsidian_chiseled.name=Chiseled Obsidian
+tile.hee.obsidian_pillar.name=Obsidian Pillar
+tile.hee.obsidian_smooth_lit.name=Smooth Obsidian (Lit)
+tile.hee.obsidian_chiseled_lit.name=Chiseled Obsidian (Lit)
+tile.hee.obsidian_pillar_lit.name=Obsidian Pillar (Lit)
+
 tile.hee.end_powder_ore.name=End Powder Ore
 tile.hee.endium_ore.name=Endium Ore
+
+tile.hee.ancient_cobweb.name=Ancient Cobweb
 
 item.hee.ancient_dust.name=Ancient Dust
 item.hee.ethereum.name=Ethereum
@@ -29,9 +37,11 @@ item.hee.end_powder.name=End Powder
 item.hee.stardust.name=Stardust
 item.hee.endium_ingot.name=Endium Ingot
 item.hee.endium_nugget.name=Endium Nugget
+item.hee.obsidian_fragment.name=Obsidian Fragment
 
 item.hee.alteration_nexus.name=Alteration Nexus
 item.hee.void_essence.name=Void Essence
+item.hee.obsidian_rod.name=Obsidian Rod
 
 item.tooltip.hee.energy.level=Energy: %s / %s
 item.tooltip.hee.energy.uses=Uses left: %s

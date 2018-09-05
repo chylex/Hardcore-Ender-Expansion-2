@@ -1,0 +1,14 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "###",
+    "###",
+    "###"
+  ],
+  "key": {
+    "#": { "item": "hee:obsidian_fragment" }
+  },
+  "result": {
+    "item": "minecraft:obsidian"
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "group": "hee:obsidian_rod",
+  "pattern": [
+    "##"
+  ],
+  "key": {
+    "#": { "item": "hee:obsidian_fragment" }
+  },
+  "result": {
+    "item": "hee:obsidian_rod"
+  }
+}

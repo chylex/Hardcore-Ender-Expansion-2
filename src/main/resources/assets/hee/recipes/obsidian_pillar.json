@@ -1,0 +1,15 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "###",
+    "#X#",
+    "###"
+  ],
+  "key": {
+    "#": { "item": "hee:obsidian_fragment" },
+    "X": { "item": "minecraft:quartz_block", "data": 2 }
+  },
+  "result": {
+    "item": "hee:obsidian_pillar"
+  }
+}
