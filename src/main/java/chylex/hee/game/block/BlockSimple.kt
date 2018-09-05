@@ -77,8 +77,8 @@ open class BlockSimple(builder: Builder) : Block(builder.material, builder.mapCo
 					this.setHardness(harvestHardness * multiplier)
 				}
 				
-				if (explosionResistance == INDESTRUCTIBLE_RESISTANCE){ // setResistance multiplies the real value by 3
-					this.setResistance(INDESTRUCTIBLE_RESISTANCE / 3.0F)
+				if (explosionResistance == INDESTRUCTIBLE_RESISTANCE){ // UPDATE: check if setResistance still multiplies the provided value by 3
+					this.setResistance(explosionResistance)
 				}
 				else{
 					this.setResistance(explosionResistance * multiplier)
