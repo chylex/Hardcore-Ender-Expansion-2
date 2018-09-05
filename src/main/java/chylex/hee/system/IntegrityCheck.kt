@@ -2,10 +2,12 @@ package chylex.hee.system
 import chylex.hee.HardcoreEnderExpansion
 
 object IntegrityCheck{
+	var removedEnderChestRecipe: Boolean = false
 	var removedPurpurRecipe: Boolean = false
 	var removedEndRodRecipe: Boolean = false
 	
 	fun verify(){
+		warnIfFalse(removedEnderChestRecipe, "could not remove vanilla Ender Chest recipe")
 		warnIfFalse(removedPurpurRecipe, "could not remove vanilla Purpur Block recipe")
 		warnIfFalse(removedEndRodRecipe, "could not remove vanilla End Rod recipe")
 	}

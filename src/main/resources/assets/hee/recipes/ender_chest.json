@@ -1,0 +1,15 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "###",
+    "#X#",
+    "###"
+  ],
+  "key": {
+    "#": { "item": "minecraft:obsidian" },
+    "X": { "item": "hee:alteration_nexus" }
+  },
+  "result": {
+    "item": "minecraft:ender_chest"
+  }
+}

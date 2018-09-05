@@ -26,6 +26,7 @@ object ModRecipes{
 		with(e.registry as? IForgeRegistryModifiable<IRecipe> ?: return){
 			fun removeVanilla(name: String): Boolean = remove(ResourceLocation("minecraft", name)) != null
 			
+			IntegrityCheck.removedEnderChestRecipe = removeVanilla("ender_chest")
 			IntegrityCheck.removedPurpurRecipe = removeVanilla("purpur_block")
 			IntegrityCheck.removedEndRodRecipe = removeVanilla("end_rod")
 			// TODO figure out what to do with the broken advancements
