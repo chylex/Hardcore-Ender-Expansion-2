@@ -233,6 +233,14 @@ object ModBlocks{
 		}
 	}
 	
+	private fun Block.override(vanillaBlock: Block, hideFromCreativeTab: Boolean = true){
+		this.registryName = vanillaBlock.registryName
+		
+		if (hideFromCreativeTab){
+			this.setCreativeTab(null)
+		}
+	}
+	
 	private infix fun Block.with(itemBlock: ItemBlock): Block{
 		temporaryItemBlocks.add(itemBlock.also { it.registryName = this.registryName })
 		(itemBlock.creativeTab as OrderedCreativeTab?)?.registerOrder(itemBlock)
