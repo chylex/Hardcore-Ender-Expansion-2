@@ -1,4 +1,5 @@
 package chylex.hee.game.block
+import chylex.hee.game.block.BlockSimple.Builder.Companion.setHardnessWithResistance
 import chylex.hee.game.block.BlockSimple.Builder.Companion.setHarvestTool
 import net.minecraft.block.Block
 import net.minecraft.block.SoundType
@@ -8,13 +9,12 @@ import net.minecraft.block.material.Material
 open class BlockSimple(builder: Builder) : Block(builder.material, builder.mapColor){
 	init{
 		setHarvestTool(builder.harvestTool)
-		setHardness(builder.harvestHardness)
-		setResistance(builder.explosionResistance) // multiplies the real value by 3
+		setHardnessWithResistance(builder.harvestHardness, builder.explosionResistance)
+		
+		slipperiness = builder.slipperiness
 		
 		lightValue = builder.lightLevel
 		builder.lightOpacity?.let { lightOpacity = it }
-		
-		setDefaultSlipperiness(builder.slipperiness)
 		
 		soundType = builder.soundType
 	}
@@ -24,21 +24,21 @@ open class BlockSimple(builder: Builder) : Block(builder.material, builder.mapCo
 		var harvestHardness: Float = 0F
 		var explosionResistance: Float = 0F
 		
+		var slipperiness: Float = 0.6F
+		
 		var lightLevel: Int = 0
 		var lightOpacity: Int? = null
-		
-		var slipperiness: Float = 0.6F
 		
 		var mapColor: MapColor = material.materialMapColor
 		var soundType: SoundType = SoundType.STONE
 		
 		val isIndestructible: Boolean
-			get() = harvestHardness == -1F
+			get() = harvestHardness == INDESTRUCTIBLE_HARDNESS
 		
 		fun makeIndestructible(){
 			harvestTool = Pair(-1, null)
-			harvestHardness = -1F
-			explosionResistance = 6000000F
+			harvestHardness = INDESTRUCTIBLE_HARDNESS
+			explosionResistance = INDESTRUCTIBLE_RESISTANCE
 		}
 		
 		fun clone(modify: Builder.() -> Unit): Builder{
@@ -47,10 +47,10 @@ open class BlockSimple(builder: Builder) : Block(builder.material, builder.mapCo
 				harvestHardness = this@Builder.harvestHardness
 				explosionResistance = this@Builder.explosionResistance
 				
+				slipperiness = this@Builder.slipperiness
+				
 				lightLevel = this@Builder.lightLevel
 				lightOpacity = this@Builder.lightOpacity
-				
-				slipperiness = this@Builder.slipperiness
 				
 				mapColor = this@Builder.mapColor
 				soundType = this@Builder.soundType
@@ -58,11 +58,30 @@ open class BlockSimple(builder: Builder) : Block(builder.material, builder.mapCo
 		}
 		
 		companion object{
+			const val INDESTRUCTIBLE_HARDNESS = -1F
+			const val INDESTRUCTIBLE_RESISTANCE = 6000000F
+			
 			fun Block.setHarvestTool(tool: Pair<Int, String?>){
 				val toolType = tool.second
 				
 				if (toolType != null){
 					this.setHarvestLevel(toolType, tool.first)
+				}
+			}
+			
+			fun Block.setHardnessWithResistance(harvestHardness: Float, explosionResistance: Float, multiplier: Float = 1F){
+				if (harvestHardness == INDESTRUCTIBLE_HARDNESS){
+					this.setHardness(harvestHardness)
+				}
+				else{
+					this.setHardness(harvestHardness * multiplier)
+				}
+				
+				if (explosionResistance == INDESTRUCTIBLE_RESISTANCE){ // setResistance multiplies the real value by 3
+					this.setResistance(INDESTRUCTIBLE_RESISTANCE / 3.0F)
+				}
+				else{
+					this.setResistance(explosionResistance * multiplier)
 				}
 			}
 		}

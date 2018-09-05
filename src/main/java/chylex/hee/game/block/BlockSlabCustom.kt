@@ -1,5 +1,6 @@
 package chylex.hee.game.block
 import chylex.hee.game.block.BlockSimple.Builder
+import chylex.hee.game.block.BlockSimple.Builder.Companion.setHardnessWithResistance
 import chylex.hee.game.block.BlockSimple.Builder.Companion.setHarvestTool
 import chylex.hee.game.block.state.PropertyDefault
 import chylex.hee.game.block.state.PropertyDefault.DEFAULT
@@ -24,8 +25,7 @@ abstract class BlockSlabCustom(builder: Builder) : BlockSlab(builder.material, b
 	
 	init{
 		setHarvestTool(builder.harvestTool)
-		setDefaultSlipperiness(builder.slipperiness)
-		
+		slipperiness = builder.slipperiness
 		soundType = builder.soundType
 	}
 	
@@ -33,14 +33,7 @@ abstract class BlockSlabCustom(builder: Builder) : BlockSlab(builder.material, b
 		init{
 			defaultState = blockState.baseState.withProperty(VARIANT, DEFAULT).withProperty(HALF, BOTTOM)
 			
-			if (builder.isIndestructible){
-				blockHardness = builder.harvestHardness
-				blockResistance = builder.explosionResistance
-			}
-			else{
-				blockHardness = builder.harvestHardness * 0.5F
-				blockResistance = builder.explosionResistance * 0.5F
-			}
+			setHardnessWithResistance(builder.harvestHardness, builder.explosionResistance, 0.5F)
 		}
 		
 		override fun getItemDropped(state: IBlockState, rand: Random, fortune: Int): Item = Item.getItemFromBlock(this)
@@ -60,8 +53,7 @@ abstract class BlockSlabCustom(builder: Builder) : BlockSlab(builder.material, b
 		init{
 			defaultState = blockState.baseState.withProperty(VARIANT, DEFAULT)
 			
-			blockHardness = builder.harvestHardness
-			blockResistance = builder.explosionResistance
+			setHardnessWithResistance(builder.harvestHardness, builder.explosionResistance)
 		}
 		
 		override fun getItemDropped(state: IBlockState, rand: Random, fortune: Int): Item = Item.getItemFromBlock(slabBlock)
