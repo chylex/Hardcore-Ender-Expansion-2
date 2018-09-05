@@ -1,10 +1,10 @@
 {
   "type": "minecraft:crafting_shapeless",
   "ingredients": [
-    { "item": "hee:endium_block" }
+    { "item": "hee:endium_ingot" }
   ],
   "result": {
-    "item": "hee:endium_ingot",
+    "item": "hee:endium_nugget",
     "count": 9
   }
 }
