@@ -1,13 +1,16 @@
 package chylex.hee.proxy
 import chylex.hee.HardcoreEnderExpansion
 import chylex.hee.game.commands.HeeClientCommand
+import chylex.hee.render.block.RenderTileEndPortal
 import net.minecraft.client.Minecraft
 import net.minecraft.client.renderer.block.model.ModelResourceLocation
 import net.minecraft.entity.player.EntityPlayer
+import net.minecraft.tileentity.TileEntityEndPortal
 import net.minecraftforge.client.ClientCommandHandler
 import net.minecraftforge.client.event.ModelRegistryEvent
 import net.minecraftforge.client.model.ModelLoader
 import net.minecraftforge.common.MinecraftForge
+import net.minecraftforge.fml.client.registry.ClientRegistry
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent
 import net.minecraftforge.fml.common.registry.ForgeRegistries
 import net.minecraftforge.fml.relauncher.Side
@@ -24,6 +27,8 @@ class ModClientProxy : ModCommonProxy(){
 	
 	override fun onInit(){
 		ClientCommandHandler.instance.registerCommand(HeeClientCommand)
+		
+		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityEndPortal::class.java, RenderTileEndPortal)
 	}
 	
 	@SubscribeEvent
