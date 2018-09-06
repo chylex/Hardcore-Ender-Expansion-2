@@ -9,7 +9,7 @@ object RenderTileEndPortal : RenderTileAbstractPortal<TileEntityEndPortal>(){
 	private const val seed = 31100L
 	private val rand = Random(seed)
 	
-	override fun generateNextColor(tile: TileEntityEndPortal){
+	override fun generateNextColor(layer: Int){
 		color[0] = (rand.nextFloat() * 0.5F) + 0.1F
 		color[1] = (rand.nextFloat() * 0.5F) + 0.4F
 		color[2] = (rand.nextFloat() * 0.5F) + 0.5F

@@ -21,11 +21,13 @@ import chylex.hee.init.ModCreativeTabs.OrderedCreativeTab
 import net.minecraft.block.Block
 import net.minecraft.block.SoundType
 import net.minecraft.block.material.MapColor
+import net.minecraft.block.material.Material
 import net.minecraft.init.Blocks
 import net.minecraft.item.Item
 import net.minecraft.item.ItemBlock
 import net.minecraft.item.ItemSlab
 import net.minecraft.tileentity.TileEntity
+import net.minecraft.util.math.AxisAlignedBB
 import net.minecraftforge.event.RegistryEvent
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent
@@ -151,6 +153,21 @@ object ModBlocks{
 	// Blocks: Decorative (Uncategorized)
 	
 	@JvmField val ANCIENT_COBWEB = BlockAncientCobweb().apply { setup("ancient_cobweb") }
+	
+	// Blocks: Portals
+	
+	private val buildPortalInner = BlockSimple.Builder(Material.PORTAL).apply {
+		makeIndestructible()
+		lightLevel = 15
+		mapColor = MapColor.BLACK
+	}
+	
+	private val buildPortalFrame = BlockSimple.Builder(Material.PORTAL).apply {
+		makeIndestructible()
+		mapColor = MapColor.SAND
+	}
+	
+	private val portalFrameAABB = AxisAlignedBB(0.0, 0.0, 0.0, 1.0, 0.8125, 1.0)
 	
 	// Blocks: Energy
 	

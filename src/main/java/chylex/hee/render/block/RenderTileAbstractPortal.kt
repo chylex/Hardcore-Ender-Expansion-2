@@ -47,7 +47,7 @@ abstract class RenderTileAbstractPortal<T: TileEntity> : TileEntitySpecialRender
 		}
 		
 		private fun getLayerCount(distSq: Double): Int = when{
-			distSq > square(60) ->  5 // TODO maybe extend the max render distance
+			distSq > square(60) ->  5
 			distSq > square(48) ->  7
 			distSq > square(38) ->  9
 			distSq > square(30) -> 11
@@ -64,7 +64,7 @@ abstract class RenderTileAbstractPortal<T: TileEntity> : TileEntitySpecialRender
 	
 	protected val color = FloatArray(3)
 	
-	protected abstract fun generateNextColor(tile: T)
+	protected abstract fun generateNextColor(layer: Int)
 	
 	// Rendering
 	
@@ -93,7 +93,7 @@ abstract class RenderTileAbstractPortal<T: TileEntity> : TileEntitySpecialRender
 		
 		GL.blendFunc(SRC_ALPHA, ONE_MINUS_SRC_ALPHA)
 		
-		generateNextColor(tile)
+		generateNextColor(0)
 		transformColor { 0.1F }
 		
 		renderLayer(
@@ -115,7 +115,7 @@ abstract class RenderTileAbstractPortal<T: TileEntity> : TileEntitySpecialRender
 			val layerIndexRev = 16 - layer
 			val colorMultiplier = 1F / (layerIndexRev + 1F)
 			
-			generateNextColor(tile)
+			generateNextColor(layer)
 			transformColor { it * colorMultiplier }
 			
 			if (layerIndexRev <= layerCount){
