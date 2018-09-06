@@ -15,10 +15,7 @@ object Materials{
 	}
 	
 	val ENERGY_CLUSTER = CustomMaterial().apply {
-		solid = false
-		replaceable = true
-		blocksMovement = false
-		blocksLight = false
+		makeTransparent()
 		destroyWhenPushed()
 	}
 }

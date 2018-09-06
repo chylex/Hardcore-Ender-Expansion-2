@@ -14,12 +14,16 @@ class CustomMaterial : Material(MapColor.AIR){
 	var blocksMovement = true
 	var blocksLight = true
 	
-	fun destroyWhenPushed() = setNoPushMobility()
-	fun blockWhenPushed() = setImmovableMobility()
+	fun destroyWhenPushed(){
+		setNoPushMobility()
+	}
+	
+	fun blockWhenPushed(){
+		setImmovableMobility()
+	}
 	
 	fun makeTransparent(){
 		solid = false
-		replaceable = true
 		blocksMovement = false
 		blocksLight = false
 	}
