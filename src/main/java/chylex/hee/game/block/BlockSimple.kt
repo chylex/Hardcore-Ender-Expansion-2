@@ -10,6 +10,7 @@ open class BlockSimple(builder: Builder) : Block(builder.material, builder.mapCo
 	init{
 		setHarvestTool(builder.harvestTool)
 		setHardnessWithResistance(builder.harvestHardness, builder.explosionResistance)
+		enableStats = builder.miningStats
 		
 		slipperiness = builder.slipperiness
 		
@@ -23,6 +24,7 @@ open class BlockSimple(builder: Builder) : Block(builder.material, builder.mapCo
 		var harvestTool: Pair<Int, String?> = Pair(-1, null)
 		var harvestHardness: Float = 0F
 		var explosionResistance: Float = 0F
+		var miningStats: Boolean = true
 		
 		var slipperiness: Float = 0.6F
 		
@@ -39,6 +41,7 @@ open class BlockSimple(builder: Builder) : Block(builder.material, builder.mapCo
 			harvestTool = Pair(-1, null)
 			harvestHardness = INDESTRUCTIBLE_HARDNESS
 			explosionResistance = INDESTRUCTIBLE_RESISTANCE
+			miningStats = false
 		}
 		
 		fun clone(modify: Builder.() -> Unit): Builder{
@@ -46,6 +49,7 @@ open class BlockSimple(builder: Builder) : Block(builder.material, builder.mapCo
 				harvestTool = this@Builder.harvestTool
 				harvestHardness = this@Builder.harvestHardness
 				explosionResistance = this@Builder.explosionResistance
+				miningStats = this@Builder.miningStats
 				
 				slipperiness = this@Builder.slipperiness
 				
