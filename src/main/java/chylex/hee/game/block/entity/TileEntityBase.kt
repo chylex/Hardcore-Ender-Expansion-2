@@ -52,7 +52,7 @@ abstract class TileEntityBase : TileEntity(){
 	// NBT: Storage
 	
 	final override fun writeToNBT(nbt: NBTTagCompound): NBTTagCompound = super.writeToNBT(nbt).apply {
-		val heeTag = getCompoundTag(TAG_NAME)
+		val heeTag = NBTTagCompound()
 		writeNBT(heeTag, STORAGE)
 		setTag(TAG_NAME, heeTag)
 	}
@@ -62,16 +62,16 @@ abstract class TileEntityBase : TileEntity(){
 		readNBT(nbt.getCompoundTag(TAG_NAME), STORAGE)
 	}
 	
-	// NBT: Network load
+	// NBT: Network load (Note: do not use super.getUpdateTag/handleUpdateTag to prevent a duplicate client-side call)
 	
-	final override fun getUpdateTag(): NBTTagCompound = super.getUpdateTag().apply {
-		val heeTag = getCompoundTag(TAG_NAME)
+	final override fun getUpdateTag(): NBTTagCompound = super.writeToNBT(NBTTagCompound()).apply {
+		val heeTag = NBTTagCompound()
 		writeNBT(heeTag, NETWORK)
 		setTag(TAG_NAME, heeTag)
 	}
 	
 	final override fun handleUpdateTag(nbt: NBTTagCompound){
-		super.handleUpdateTag(nbt)
+		super.readFromNBT(nbt)
 		readNBT(nbt.getCompoundTag(TAG_NAME), NETWORK)
 	}
 	
