@@ -11,6 +11,7 @@ import kotlin.properties.ObservableProperty
 import kotlin.reflect.KProperty
 
 abstract class TileEntityBase : TileEntity(){
+	protected open fun firstTick(){}
 	
 	// Synchronization
 	
@@ -26,6 +27,7 @@ abstract class TileEntityBase : TileEntity(){
 	
 	final override fun onLoad(){
 		isLoaded = true
+		firstTick()
 	}
 	
 	protected fun notifyUpdate(flags: Int){
