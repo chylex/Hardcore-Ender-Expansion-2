@@ -1,16 +1,12 @@
 package chylex.hee.game.block
 import chylex.hee.game.block.entity.TileEntityEnergyCluster
-import chylex.hee.game.block.material.Materials
 import chylex.hee.init.ModItems
 import chylex.hee.system.util.ceilToInt
 import chylex.hee.system.util.floorToInt
 import chylex.hee.system.util.getTile
 import chylex.hee.system.util.nextFloat
 import chylex.hee.system.util.setAir
-import net.minecraft.block.Block
 import net.minecraft.block.ITileEntityProvider
-import net.minecraft.block.SoundType.GLASS
-import net.minecraft.block.material.MapColor
 import net.minecraft.block.state.BlockFaceShape
 import net.minecraft.block.state.BlockFaceShape.UNDEFINED
 import net.minecraft.block.state.IBlockState
@@ -30,15 +26,7 @@ import net.minecraft.world.World
 import java.util.Random
 import kotlin.math.pow
 
-class BlockEnergyCluster : Block(Materials.ENERGY_CLUSTER, MapColor.SNOW), ITileEntityProvider{
-	init{
-		blockSoundType = GLASS
-		lightValue = 13
-		lightOpacity = 0
-		fullBlock = false
-		enableStats = false
-	}
-	
+class BlockEnergyCluster(builder: BlockSimple.Builder) : BlockSimple(builder), ITileEntityProvider{
 	private companion object{
 		val SELECTION_AABB = AxisAlignedBB(0.35, 0.35, 0.35, 0.65, 0.65, 0.65)
 	}

@@ -154,7 +154,15 @@ object ModBlocks{
 	
 	// Blocks: Energy
 	
-	@JvmField val ENERGY_CLUSTER = BlockEnergyCluster().apply { setup("energy_cluster") }
+	private val buildEnergyCluster = BlockSimple.Builder(Materials.ENERGY_CLUSTER).apply {
+		lightLevel = 13
+		lightOpacity = 0
+		
+		soundType = SoundType.GLASS
+		mapColor = MapColor.SNOW
+	}
+	
+	@JvmField val ENERGY_CLUSTER = BlockEnergyCluster(buildEnergyCluster).apply { setup("energy_cluster") }
 	
 	// Registry
 	
