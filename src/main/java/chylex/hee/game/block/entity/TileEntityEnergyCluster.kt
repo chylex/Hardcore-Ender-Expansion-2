@@ -47,10 +47,10 @@ class TileEntityEnergyCluster : TileEntityBase(), ITickable{
 	
 	// Variables
 	
-	private var ticksToRegen: Int = 20
-	private var isInactive: Boolean = false
+	private var ticksToRegen = 20
+	private var isInactive = false
 	
-	var breakWithoutExplosion: Boolean = false
+	var breakWithoutExplosion = false
 	
 	// Methods
 	

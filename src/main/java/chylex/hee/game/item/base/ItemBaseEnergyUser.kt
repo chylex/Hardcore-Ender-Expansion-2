@@ -25,7 +25,7 @@ import net.minecraft.util.math.MathHelper
 import net.minecraft.util.text.TextFormatting
 import net.minecraft.util.text.translation.I18n
 import net.minecraft.world.World
-import net.minecraftforge.fml.relauncher.Side.CLIENT
+import net.minecraftforge.fml.relauncher.Side
 import net.minecraftforge.fml.relauncher.SideOnly
 import org.apache.commons.lang3.math.Fraction
 import kotlin.math.max
@@ -145,7 +145,7 @@ abstract class ItemBaseEnergyUser : Item(){
 		return slotChanged && super.shouldCauseReequipAnimation(oldStack, newStack, slotChanged)
 	}
 	
-	@SideOnly(CLIENT)
+	@SideOnly(Side.CLIENT)
 	override fun addInformation(stack: ItemStack, world: World?, lines: MutableList<String>, flags: ITooltipFlag){
 		super.addInformation(stack, world, lines, flags)
 		

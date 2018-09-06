@@ -113,8 +113,8 @@ abstract class NBTList<T : Any>(protected val tagList: NBTTagList) : Iterable<T>
 	abstract fun get(index: Int) : T
 	
 	override fun iterator(): MutableIterator<T> = object : MutableIterator<T>{
-		private var cursor: Int = 0
-		private var canRemove: Boolean = false
+		private var cursor = 0
+		private var canRemove = false
 		
 		override fun hasNext(): Boolean{
 			return cursor != size

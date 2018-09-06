@@ -25,7 +25,7 @@ object OverlayRenderer{
 	private const val BORDER_SIZE  = 4
 	private const val LINE_SPACING = 7
 	
-	private val mc: Minecraft = Minecraft.getMinecraft()
+	private val mc = Minecraft.getMinecraft()
 	
 	private var clusterLookedAt: TileEntityEnergyCluster? = null
 	
