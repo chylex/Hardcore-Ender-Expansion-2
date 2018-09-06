@@ -69,7 +69,7 @@ class BlockAncientCobweb : Block(Materials.ANCIENT_COBWEB, MapColor.CLOTH){
 	override fun getCollisionBoundingBox(state: IBlockState, world: IBlockAccess, pos: BlockPos): AxisAlignedBB? = NULL_AABB
 	override fun getBlockFaceShape(world: IBlockAccess, state: IBlockState, pos: BlockPos, face: EnumFacing): BlockFaceShape = UNDEFINED
 	
-	override fun isFullCube(state: IBlockState?): Boolean = false
-	override fun isOpaqueCube(state: IBlockState?): Boolean = false
+	override fun isFullCube(state: IBlockState): Boolean = false
+	override fun isOpaqueCube(state: IBlockState): Boolean = false
 	override fun getBlockLayer(): BlockRenderLayer = CUTOUT
 }

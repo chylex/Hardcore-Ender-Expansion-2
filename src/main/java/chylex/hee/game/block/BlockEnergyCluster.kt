@@ -43,7 +43,7 @@ class BlockEnergyCluster : Block(Materials.ENERGY_CLUSTER, MapColor.SNOW), ITile
 		val SELECTION_AABB = AxisAlignedBB(0.35, 0.35, 0.35, 0.65, 0.65, 0.65)
 	}
 	
-	override fun createNewTileEntity(world: World, meta: Int): TileEntity?{
+	override fun createNewTileEntity(world: World, meta: Int): TileEntity{
 		return TileEntityEnergyCluster()
 	}
 	
@@ -89,7 +89,7 @@ class BlockEnergyCluster : Block(Materials.ENERGY_CLUSTER, MapColor.SNOW), ITile
 	override fun getSelectedBoundingBox(state: IBlockState, world: World, pos: BlockPos): AxisAlignedBB = SELECTION_AABB.offset(pos)
 	override fun getBlockFaceShape(world: IBlockAccess, state: IBlockState, pos: BlockPos, face: EnumFacing): BlockFaceShape = UNDEFINED
 	
-	override fun isFullCube(state: IBlockState?): Boolean = false
-	override fun isOpaqueCube(state: IBlockState?): Boolean = false
-	override fun getRenderType(state: IBlockState?): EnumBlockRenderType = INVISIBLE
+	override fun isFullCube(state: IBlockState): Boolean = false
+	override fun isOpaqueCube(state: IBlockState): Boolean = false
+	override fun getRenderType(state: IBlockState): EnumBlockRenderType = INVISIBLE
 }
