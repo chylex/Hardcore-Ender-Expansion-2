@@ -1,15 +1,21 @@
 package chylex.hee.init
 import chylex.hee.HardcoreEnderExpansion
 import chylex.hee.game.block.BlockAncientCobweb
+import chylex.hee.game.block.BlockEndPortalAcceptor
+import chylex.hee.game.block.BlockEndPortalCustom
+import chylex.hee.game.block.BlockEndPortalOverride
 import chylex.hee.game.block.BlockEndPowderOre
 import chylex.hee.game.block.BlockEndium
 import chylex.hee.game.block.BlockEnergyCluster
 import chylex.hee.game.block.BlockPillarCustom
 import chylex.hee.game.block.BlockSimple
+import chylex.hee.game.block.BlockSimpleShaped
 import chylex.hee.game.block.BlockSlabCustom
 import chylex.hee.game.block.BlockStairsCustom
 import chylex.hee.game.block.BlockWallCustom
+import chylex.hee.game.block.entity.TileEntityEndPortalAcceptor
 import chylex.hee.game.block.entity.TileEntityEnergyCluster
+import chylex.hee.game.block.entity.TileEntityPortalInner
 import chylex.hee.game.block.material.Materials
 import chylex.hee.game.item.ItemAncientCobweb
 import chylex.hee.game.item.util.Tool.Level.DIAMOND
@@ -169,6 +175,10 @@ object ModBlocks{
 	
 	private val portalFrameAABB = AxisAlignedBB(0.0, 0.0, 0.0, 1.0, 0.8125, 1.0)
 	
+	@JvmField val END_PORTAL_INNER    = BlockEndPortalCustom(buildPortalInner).apply { setup("end_portal_inner", inCreativeTab = false) }
+	@JvmField val END_PORTAL_FRAME    = BlockSimpleShaped(buildPortalFrame, portalFrameAABB).apply { setup("end_portal_frame") }
+	@JvmField val END_PORTAL_ACCEPTOR = BlockEndPortalAcceptor(buildPortalFrame, portalFrameAABB).apply { setup("end_portal_acceptor") }
+	
 	// Blocks: Energy
 	
 	private val buildEnergyCluster = BlockSimple.Builder(Materials.ENERGY_CLUSTER).apply {
@@ -228,14 +238,25 @@ object ModBlocks{
 			
 			register(ANCIENT_COBWEB with ItemAncientCobweb(ANCIENT_COBWEB))
 			
+			register(END_PORTAL_INNER with basicItemBlock)
+			register(END_PORTAL_FRAME with basicItemBlock)
+			register(END_PORTAL_ACCEPTOR with basicItemBlock)
+			
 			register(ENERGY_CLUSTER with basicItemBlock)
 		}
 		
+		tile<TileEntityPortalInner>("end_portal_inner")
+		tile<TileEntityEndPortalAcceptor>("end_portal_acceptor")
 		tile<TileEntityEnergyCluster>("energy_cluster")
 		
 		// vanilla modifications
 		
 		Blocks.END_BRICKS.setHardness(1.0F).setResistance(4.0F)
+		Blocks.END_PORTAL_FRAME.setCreativeTab(null)
+		
+		with(e.registry){
+			register(BlockEndPortalOverride().apply { override(Blocks.END_PORTAL) })
+		}
 	}
 	
 	@JvmStatic

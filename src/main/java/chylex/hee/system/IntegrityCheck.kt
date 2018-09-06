@@ -1,5 +1,7 @@
 package chylex.hee.system
 import chylex.hee.HardcoreEnderExpansion
+import chylex.hee.game.block.BlockEndPortalOverride
+import net.minecraft.init.Blocks
 
 object IntegrityCheck{
 	var removedEnderChestRecipe: Boolean = false
@@ -10,6 +12,8 @@ object IntegrityCheck{
 		warnIfFalse(removedEnderChestRecipe, "could not remove vanilla Ender Chest recipe")
 		warnIfFalse(removedPurpurRecipe, "could not remove vanilla Purpur Block recipe")
 		warnIfFalse(removedEndRodRecipe, "could not remove vanilla End Rod recipe")
+		
+		crashIfFalse(Blocks.END_PORTAL::class.java == BlockEndPortalOverride::class.java, "invalid End Portal block: ${Blocks.END_PORTAL::class.java}")
 	}
 	
 	// Utilities

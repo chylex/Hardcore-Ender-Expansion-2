@@ -35,6 +35,10 @@ tile.hee.endium_ore.name=Endium Ore
 
 tile.hee.ancient_cobweb.name=Ancient Cobweb
 
+tile.hee.end_portal_inner.name=End Portal
+tile.hee.end_portal_frame.name=End Portal Frame
+tile.hee.end_portal_acceptor.name=End Portal Acceptor
+
 item.hee.ancient_dust.name=Ancient Dust
 item.hee.ethereum.name=Ethereum
 item.hee.end_powder.name=End Powder
