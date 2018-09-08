@@ -24,6 +24,14 @@ import kotlin.math.pow
 class TileEntityEnergyCluster : TileEntityBase(), ITickable{
 	private companion object{
 		const val DEFAULT_NOTIFY_FLAGS = FLAG_SYNC_CLIENT or FLAG_SKIP_RENDER
+		
+		const val ENERGY_LEVEL_TAG = "EnergyLevel"
+		const val ENERGY_CAPACITY_TAG = "EnergyCapacity"
+		
+		const val HEALTH_STATUS_TAG = "HealthStatus"
+		const val HEALTH_OVERRIDE_TAG = "HealthOverride"
+		
+		const val INACTIVE_TAG = "Inactive"
 	}
 	
 	// Properties (State)
@@ -100,25 +108,25 @@ class TileEntityEnergyCluster : TileEntityBase(), ITickable{
 	}
 	
 	override fun writeNBT(nbt: NBTTagCompound, context: Context) = with(nbt){
-		setInteger("EnergyLevel", energyLevel.internal.value)
-		setInteger("EnergyCapacity", energyBaseCapacity.internal.value)
+		setInteger(ENERGY_LEVEL_TAG, energyLevel.internal.value)
+		setInteger(ENERGY_CAPACITY_TAG, energyBaseCapacity.internal.value)
 		
-		setEnum("HealthStatus", internalHealthStatus)
-		setEnum("HealthOverride", internalHealthOverride)
+		setEnum(HEALTH_STATUS_TAG, internalHealthStatus)
+		setEnum(HEALTH_OVERRIDE_TAG, internalHealthOverride)
 		
-		isInactive = getBoolean("Inactive")
+		if (isInactive){
+			setBoolean(INACTIVE_TAG, true)
+		}
 	}
 	
 	override fun readNBT(nbt: NBTTagCompound, context: Context) = with(nbt){
-		energyLevel = Internal(getInteger("EnergyLevel"))
-		energyBaseCapacity = Internal(getInteger("EnergyCapacity"))
+		energyLevel = Internal(getInteger(ENERGY_LEVEL_TAG))
+		energyBaseCapacity = Internal(getInteger(ENERGY_CAPACITY_TAG))
 		
-		internalHealthStatus = getEnum<HealthStatus>("HealthStatus") ?: HEALTHY
-		internalHealthOverride = getEnum<HealthOverride>("HealthOverride")
+		internalHealthStatus = getEnum<HealthStatus>(HEALTH_STATUS_TAG) ?: HEALTHY
+		internalHealthOverride = getEnum<HealthOverride>(HEALTH_OVERRIDE_TAG)
 		
-		if (isInactive){
-			setBoolean("Inactive", true)
-		}
+		isInactive = getBoolean(INACTIVE_TAG)
 	}
 	
 	override fun hasFastRenderer(): Boolean = true
