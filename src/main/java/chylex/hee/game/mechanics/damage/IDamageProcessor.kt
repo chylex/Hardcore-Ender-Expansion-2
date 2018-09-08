@@ -162,5 +162,25 @@ interface IDamageProcessor{
 				properties.setDealCreative()
 			}
 		}
+		
+		fun RAPID_DAMAGE(reduceByTicks: Int) = object: IDamageProcessor{
+			override fun afterDamage(target: Entity, properties: Reader){
+				target.hurtResistantTime = (target.hurtResistantTime - reduceByTicks).coerceAtLeast(1)
+			}
+		}
+		
+		fun IGNORE_INVINCIBILITY() = object: IDamageProcessor{
+			private var prevHurtResistantTime = 0
+			
+			override fun modifyDamage(amount: Float, target: Entity, properties: Reader): Float{
+				prevHurtResistantTime = target.hurtResistantTime
+				target.hurtResistantTime = 0
+				return amount
+			}
+			
+			override fun afterDamage(target: Entity, properties: Reader){
+				target.hurtResistantTime = prevHurtResistantTime
+			}
+		}
 	}
 }
