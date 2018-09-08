@@ -4,7 +4,7 @@ import net.minecraft.enchantment.EnchantmentHelper
 import net.minecraft.entity.Entity
 import net.minecraft.entity.EntityLivingBase
 import net.minecraft.entity.player.EntityPlayer
-import net.minecraft.init.MobEffects
+import net.minecraft.init.MobEffects.RESISTANCE
 import net.minecraft.item.ItemArmor
 import net.minecraft.potion.PotionEffect
 import net.minecraft.util.CombatRules
@@ -12,7 +12,6 @@ import net.minecraft.world.EnumDifficulty.EASY
 import net.minecraft.world.EnumDifficulty.HARD
 import net.minecraft.world.EnumDifficulty.NORMAL
 import net.minecraft.world.EnumDifficulty.PEACEFUL
-import kotlin.math.min
 import kotlin.math.nextUp
 
 interface IDamageProcessor{
@@ -47,7 +46,7 @@ interface IDamageProcessor{
 			override fun setup(properties: DamageProperties.Writer) = properties.addType(DamageType.MAGIC)
 		}
 		
-		// Difficulty or game mode
+		// Difficulty
 		
 		val PEACEFUL_EXCLUSION = object: IDamageProcessor{
 			override fun modifyDamage(amount: Float, target: Entity, properties: DamageProperties.Reader): Float{
@@ -78,12 +77,6 @@ interface IDamageProcessor{
 					NORMAL   -> amount
 					HARD     -> amount * 1.4F
 				}
-			}
-		}
-		
-		val DEAL_CREATIVE = object: IDamageProcessor{
-			override fun setup(properties: DamageProperties.Writer){
-				properties.setDealCreative()
 			}
 		}
 		
@@ -150,7 +143,7 @@ interface IDamageProcessor{
 				return if (target !is EntityLivingBase)
 					amount
 				else
-					amount * (1F - (0.15F * min(5, target.getActivePotionEffect(MobEffects.RESISTANCE)?.amplifier?.plus(1) ?: 0)))
+					amount * (1F - (0.15F * (target.getActivePotionEffect(RESISTANCE)?.amplifier?.plus(1)?.coerceAtMost(5) ?: 0)))
 			}
 		}
 		
@@ -159,6 +152,14 @@ interface IDamageProcessor{
 				if (target is EntityLivingBase){
 					target.addPotionEffect(effect)
 				}
+			}
+		}
+		
+		// Invincibility
+		
+		val DEAL_CREATIVE = object: IDamageProcessor{
+			override fun setup(properties: DamageProperties.Writer){
+				properties.setDealCreative()
 			}
 		}
 	}
