@@ -1,7 +1,13 @@
 package chylex.hee.game.mechanics.damage
 import net.minecraft.entity.Entity
+import net.minecraft.entity.EntityLivingBase
+import net.minecraft.item.ItemStack
 import net.minecraft.util.DamageSource
+import net.minecraft.util.EnumHand.MAIN_HAND
 import net.minecraft.util.math.Vec3d
+import net.minecraft.util.text.ITextComponent
+import net.minecraft.util.text.TextComponentTranslation
+import net.minecraft.util.text.translation.I18n
 
 class DamageProperties{
 	private var typeBits = 0
@@ -55,7 +61,7 @@ class DamageProperties{
 	
 	fun createDamageSource(damageTitle: String, triggeringSource: Entity?, remoteSource: Entity?): DamageSource = CustomDamageSource(damageTitle, triggeringSource, remoteSource)
 	
-	private inner class CustomDamageSource(damageTitle: String, val triggeringSource: Entity?, val remoteSource: Entity?) : DamageSource(damageTitle){ // TODO customize death messages?
+	private inner class CustomDamageSource(damageTitle: String, val triggeringSource: Entity?, val remoteSource: Entity?) : DamageSource(damageTitle){
 		override fun isDamageAbsolute(): Boolean = true // ignore potions and enchantments by default
 		override fun isDifficultyScaled(): Boolean = false // ignore difficulty by default
 		
@@ -75,5 +81,22 @@ class DamageProperties{
 				null
 			else
 				triggeringSource?.let { Vec3d(it.posX, it.posY, it.posZ) }
+		
+		override fun getDeathMessage(victim: EntityLivingBase): ITextComponent{
+			if (triggeringSource == null){
+				return super.getDeathMessage(victim)
+			}
+			
+			val realSource = remoteSource ?: triggeringSource
+			val heldItem = (realSource as? EntityLivingBase)?.getHeldItem(MAIN_HAND) ?: ItemStack.EMPTY
+			
+			val translationKeyGeneric = "death.attack.$damageType"
+			val translationKeyItem = "$translationKeyGeneric.item"
+			
+			return if (!heldItem.isEmpty && heldItem.hasDisplayName() && I18n.canTranslate(translationKeyItem))
+				TextComponentTranslation(translationKeyItem, victim.displayName, realSource.displayName, heldItem.textComponent)
+			else
+				TextComponentTranslation(translationKeyGeneric, victim.displayName, realSource.displayName)
+		}
 	}
 }
