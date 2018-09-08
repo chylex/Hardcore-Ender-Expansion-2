@@ -24,6 +24,6 @@ bin
 build
 .gradle
 
-# other
-eclipse
-run
+# game
+run/*
+!run/maximize.ps1
