@@ -45,6 +45,10 @@ class DamageProperties{
 		fun hasType(type: DamageType): Boolean{
 			return this@DamageProperties.hasType(type)
 		}
+		
+		fun createDamageSourceForCalculations(): DamageSource{
+			return createDamageSource("", null, null)
+		}
 	}
 	
 	// Damage source

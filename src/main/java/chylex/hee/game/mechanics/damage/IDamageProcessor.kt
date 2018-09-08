@@ -1,10 +1,13 @@
 package chylex.hee.game.mechanics.damage
+import chylex.hee.game.mechanics.damage.DamageProperties.Reader
+import net.minecraft.enchantment.EnchantmentHelper
 import net.minecraft.entity.Entity
 import net.minecraft.entity.EntityLivingBase
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.init.MobEffects
 import net.minecraft.item.ItemArmor
 import net.minecraft.potion.PotionEffect
+import net.minecraft.util.CombatRules
 import net.minecraft.world.EnumDifficulty.EASY
 import net.minecraft.world.EnumDifficulty.HARD
 import net.minecraft.world.EnumDifficulty.NORMAL
@@ -19,6 +22,30 @@ interface IDamageProcessor{
 	
 	companion object{ // TODO make static fields in kotlin 1.3 and use default methods
 		const val CANCEL_DAMAGE = 0F
+		
+		// Types
+		
+		val PROJECTILE_TYPE = object: IDamageProcessor{
+			override fun setup(properties: DamageProperties.Writer) = properties.addType(DamageType.PROJECTILE)
+		}
+		
+		fun FIRE_TYPE(setOnFireSeconds: Int = 0) = object: IDamageProcessor{
+			override fun setup(properties: DamageProperties.Writer) = properties.addType(DamageType.FIRE)
+			
+			override fun afterDamage(target: Entity, properties: Reader){
+				if (setOnFireSeconds > 0){
+					target.setFire(setOnFireSeconds)
+				}
+			}
+		}
+		
+		val BLAST_TYPE = object: IDamageProcessor{
+			override fun setup(properties: DamageProperties.Writer) = properties.addType(DamageType.BLAST)
+		}
+		
+		val MAGIC_TYPE = object: IDamageProcessor{
+			override fun setup(properties: DamageProperties.Writer) = properties.addType(DamageType.MAGIC)
+		}
 		
 		// Difficulty or game mode
 		
@@ -70,6 +97,21 @@ interface IDamageProcessor{
 				else{
 					properties.setAllowArmor()
 				}
+			}
+		}
+		
+		val ENCHANTMENT_PROTECTION = object: IDamageProcessor{
+			override fun modifyDamage(amount: Float, target: Entity, properties: DamageProperties.Reader): Float{
+				if (target !is EntityLivingBase){
+					return amount
+				}
+				
+				val enchantmentProtection = EnchantmentHelper.getEnchantmentModifierDamage(target.armorInventoryList, properties.createDamageSourceForCalculations())
+				
+				return if (enchantmentProtection <= 0)
+					amount
+				else
+					CombatRules.getDamageAfterMagicAbsorb(amount, enchantmentProtection.toFloat())
 			}
 		}
 		
