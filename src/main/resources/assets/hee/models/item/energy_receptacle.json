@@ -1,0 +1,12 @@
+{
+  "parent": "item/generated",
+  "textures": {
+    "layer0": "hee:item/energy_receptacle"
+  },
+  "overrides": [
+    {
+      "predicate": { "hee:has_cluster": 1 },
+      "model": "hee:item/energy_receptacle_with_cluster"
+    }
+  ]
+}

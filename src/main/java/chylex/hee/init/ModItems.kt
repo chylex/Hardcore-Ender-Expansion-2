@@ -1,5 +1,6 @@
 package chylex.hee.init
 import chylex.hee.HardcoreEnderExpansion
+import chylex.hee.game.item.ItemEnergyReceptacle
 import net.minecraft.item.Item
 import net.minecraftforge.event.RegistryEvent
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber
@@ -24,6 +25,10 @@ object ModItems{
 	@JvmField val VOID_ESSENCE     = Item().apply { setup("void_essence") }
 	@JvmField val OBSIDIAN_ROD     = Item().apply { setup("obsidian_rod") }
 	
+	// Items: Energy
+	
+	@JvmField val ENERGY_RECEPTACLE = ItemEnergyReceptacle().apply { setup("energy_receptacle") }
+	
 	// Registry
 	
 	@JvmStatic
@@ -41,6 +46,8 @@ object ModItems{
 			register(ALTERATION_NEXUS)
 			register(VOID_ESSENCE)
 			register(OBSIDIAN_ROD)
+			
+			register(ENERGY_RECEPTACLE)
 		}
 	}
 	

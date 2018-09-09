@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "X#X",
+    "#D#",
+    "X#X"
+  ],
+  "key": {
+    "#": { "item": "minecraft:gold_ingot" },
+    "X": { "item": "minecraft:obsidian" },
+    "D": { "item": "hee:ancient_dust" }
+  },
+  "result": {
+    "item": "hee:energy_receptacle"
+  }
+}
