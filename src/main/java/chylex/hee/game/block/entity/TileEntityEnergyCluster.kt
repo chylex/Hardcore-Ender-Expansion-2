@@ -78,6 +78,10 @@ class TileEntityEnergyCluster : TileEntityBase(), ITickable{
 		return true
 	}
 	
+	fun deteriorateHealth(): Boolean{
+		return currentHealth.deterioratesTo?.let { internalHealthStatus = it; true } ?: false
+	}
+	
 	// Overrides
 	
 	override fun update(){

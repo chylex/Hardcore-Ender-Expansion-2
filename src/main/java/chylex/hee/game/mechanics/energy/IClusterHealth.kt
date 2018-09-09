@@ -11,7 +11,7 @@ interface IClusterHealth{
 	val regenSpeedMp: Float
 	val regenCapacityMp: Float
 	
-	val deterioratesTo: IClusterHealth?
+	val deterioratesTo: HealthStatus?
 	
 	fun getLeakChance(cluster: TileEntityEnergyCluster): Float
 	
@@ -28,7 +28,7 @@ interface IClusterHealth{
 		DAMAGED ("hee.energy.health.damaged",  HCL( 18.0, 90, 66).toInt(), regenAmountMp = 0.4F,  regenSpeedMp = 0.5F, regenCapacityMp = 0.75F, leakChance = 0.7F / 100F),
 		UNSTABLE("hee.energy.health.unstable", HCL(  0.0,  0, 70).toInt(), regenAmountMp = 0.15F, regenSpeedMp = 0.2F, regenCapacityMp = 0.6F,  leakChance = 1.5F / 100F);
 		
-		override val deterioratesTo: IClusterHealth?
+		override val deterioratesTo: HealthStatus?
 			get() = if (canDeteriorate) values().getOrNull(ordinal + 1) else null
 		
 		override fun getLeakChance(cluster: TileEntityEnergyCluster): Float = leakChance
@@ -52,6 +52,6 @@ interface IClusterHealth{
 			override fun getLeakChance(cluster: TileEntityEnergyCluster): Float = 0F
 		};
 		
-		override val deterioratesTo: IClusterHealth? = null
+		override val deterioratesTo: HealthStatus? = null
 	}
 }
