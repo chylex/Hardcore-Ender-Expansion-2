@@ -22,7 +22,6 @@ import net.minecraft.util.EnumHand
 import net.minecraft.util.EnumHand.OFF_HAND
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.MathHelper
-import net.minecraft.util.text.TextFormatting
 import net.minecraft.util.text.translation.I18n
 import net.minecraft.world.World
 import net.minecraftforge.fml.relauncher.Side
@@ -150,9 +149,9 @@ abstract class ItemBaseEnergyUser : Item(){
 		super.addInformation(stack, world, lines, flags)
 		
 		if (flags.isAdvanced){
-			lines.add(TextFormatting.BLUE.toString() + I18n.translateToLocalFormatted("item.tooltip.hee.energy.level", getEnergyLevel(stack), internalEnergyCapacity))
+			lines.add(I18n.translateToLocalFormatted("item.tooltip.hee.energy.level", getEnergyLevel(stack), internalEnergyCapacity))
 		}
 		
-		lines.add(TextFormatting.BLUE.toString() + I18n.translateToLocalFormatted("item.tooltip.hee.energy.uses", (getEnergyLevel(stack).toDouble() / energyPerUse.numerator).ceilToInt()))
+		lines.add(I18n.translateToLocalFormatted("item.tooltip.hee.energy.uses", (getEnergyLevel(stack).toDouble() / energyPerUse.numerator).ceilToInt()))
 	}
 }

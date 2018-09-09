@@ -36,6 +36,9 @@ interface IEnergyQuantity: Comparable<IEnergyQuantity>{
 		val MAX_POSSIBLE_VALUE = Units(2000)
 		val MAX_REGEN_CAPACITY = Units(1000)
 		
+		val IEnergyQuantity.displayString
+			get() = "%.2f".format((this.floating.value * 100F).floorToInt() * 0.01F)
+		
 		private fun equals(left: IEnergyQuantity, right: Any?): Boolean{
 			return right is IEnergyQuantity && left.internal.value == right.internal.value
 		}

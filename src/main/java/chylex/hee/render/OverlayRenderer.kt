@@ -3,9 +3,9 @@ import chylex.hee.HardcoreEnderExpansion
 import chylex.hee.game.block.entity.TileEntityEnergyCluster
 import chylex.hee.game.mechanics.energy.IEnergyQuantity
 import chylex.hee.game.mechanics.energy.IEnergyQuantity.Companion.MAX_POSSIBLE_VALUE
+import chylex.hee.game.mechanics.energy.IEnergyQuantity.Companion.displayString
 import chylex.hee.init.ModBlocks
 import chylex.hee.render.util.RGB
-import chylex.hee.system.util.floorToInt
 import chylex.hee.system.util.getBlock
 import chylex.hee.system.util.getTile
 import net.minecraft.client.Minecraft
@@ -56,7 +56,7 @@ object OverlayRenderer{
 				return if (it.energyLevel == MAX_POSSIBLE_VALUE)
 					"${TextFormatting.OBFUSCATED}##${TextFormatting.RESET}"
 				else
-					"%.2f".format((quantity.floating.value * 100F).floorToInt() * 0.01F)
+					quantity.displayString
 			}
 			
 			val health = it.currentHealth
