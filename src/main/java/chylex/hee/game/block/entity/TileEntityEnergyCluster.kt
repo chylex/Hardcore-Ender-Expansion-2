@@ -1,4 +1,6 @@
 package chylex.hee.game.block.entity
+import chylex.hee.game.block.entity.TileEntityBase.Context.STORAGE
+import chylex.hee.game.mechanics.energy.ClusterSnapshot
 import chylex.hee.game.mechanics.energy.IClusterHealth
 import chylex.hee.game.mechanics.energy.IClusterHealth.HealthOverride
 import chylex.hee.game.mechanics.energy.IClusterHealth.HealthStatus
@@ -14,9 +16,8 @@ import chylex.hee.system.util.FLAG_SKIP_RENDER
 import chylex.hee.system.util.FLAG_SYNC_CLIENT
 import chylex.hee.system.util.breakBlock
 import chylex.hee.system.util.ceilToInt
-import chylex.hee.system.util.getEnum
 import chylex.hee.system.util.isAnyPlayerWithinRange
-import chylex.hee.system.util.setEnum
+import chylex.hee.system.util.nextItem
 import net.minecraft.nbt.NBTTagCompound
 import net.minecraft.util.ITickable
 import kotlin.math.pow
@@ -25,12 +26,7 @@ class TileEntityEnergyCluster : TileEntityBase(), ITickable{
 	private companion object{
 		const val DEFAULT_NOTIFY_FLAGS = FLAG_SYNC_CLIENT or FLAG_SKIP_RENDER
 		
-		const val ENERGY_LEVEL_TAG = "EnergyLevel"
-		const val ENERGY_CAPACITY_TAG = "EnergyCapacity"
-		
-		const val HEALTH_STATUS_TAG = "HealthStatus"
-		const val HEALTH_OVERRIDE_TAG = "HealthOverride"
-		
+		const val SNAPSHOT_TAG = "Snapshot"
 		const val INACTIVE_TAG = "Inactive"
 	}
 	
@@ -82,6 +78,24 @@ class TileEntityEnergyCluster : TileEntityBase(), ITickable{
 		return currentHealth.deterioratesTo?.let { internalHealthStatus = it; true } ?: false
 	}
 	
+	// Snapshot
+	
+	fun getClusterSnapshot(): ClusterSnapshot = ClusterSnapshot(
+		energyLevel    = this.energyLevel,
+		energyCapacity = this.energyBaseCapacity,
+		healthStatus   = this.internalHealthStatus,
+		healthOverride = this.internalHealthOverride
+	)
+	
+	fun loadClusterSnapshot(data: ClusterSnapshot){
+		energyLevel = data.energyLevel
+		energyBaseCapacity = data.energyCapacity
+		internalHealthStatus = data.healthStatus
+		internalHealthOverride = data.healthOverride
+		
+		ticksToRegen = 40
+	}
+	
 	// Overrides
 	
 	override fun update(){
@@ -112,24 +126,15 @@ class TileEntityEnergyCluster : TileEntityBase(), ITickable{
 	}
 	
 	override fun writeNBT(nbt: NBTTagCompound, context: Context) = with(nbt){
-		setInteger(ENERGY_LEVEL_TAG, energyLevel.internal.value)
-		setInteger(ENERGY_CAPACITY_TAG, energyBaseCapacity.internal.value)
+		setTag(SNAPSHOT_TAG, getClusterSnapshot().tag)
 		
-		setEnum(HEALTH_STATUS_TAG, internalHealthStatus)
-		setEnum(HEALTH_OVERRIDE_TAG, internalHealthOverride)
-		
-		if (isInactive){
+		if (context == STORAGE && isInactive){
 			setBoolean(INACTIVE_TAG, true)
 		}
 	}
 	
 	override fun readNBT(nbt: NBTTagCompound, context: Context) = with(nbt){
-		energyLevel = Internal(getInteger(ENERGY_LEVEL_TAG))
-		energyBaseCapacity = Internal(getInteger(ENERGY_CAPACITY_TAG))
-		
-		internalHealthStatus = getEnum<HealthStatus>(HEALTH_STATUS_TAG) ?: HEALTHY
-		internalHealthOverride = getEnum<HealthOverride>(HEALTH_OVERRIDE_TAG)
-		
+		loadClusterSnapshot(ClusterSnapshot(nbt.getCompoundTag(SNAPSHOT_TAG)))
 		isInactive = getBoolean(INACTIVE_TAG)
 	}
 	
