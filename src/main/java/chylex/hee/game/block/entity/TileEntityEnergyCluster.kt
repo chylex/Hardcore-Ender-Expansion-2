@@ -18,7 +18,6 @@ import chylex.hee.system.util.FLAG_SYNC_CLIENT
 import chylex.hee.system.util.breakBlock
 import chylex.hee.system.util.ceilToInt
 import chylex.hee.system.util.isAnyPlayerWithinRange
-import chylex.hee.system.util.nextItem
 import net.minecraft.nbt.NBTTagCompound
 import net.minecraft.util.ITickable
 import kotlin.math.pow
@@ -92,14 +91,18 @@ class TileEntityEnergyCluster : TileEntityBase(), ITickable{
 		color          = this.color
 	)
 	
-	fun loadClusterSnapshot(data: ClusterSnapshot){
-		energyLevel = data.energyLevel
-		energyBaseCapacity = data.energyCapacity
-		internalHealthStatus = data.healthStatus
-		internalHealthOverride = data.healthOverride
-		color = data.color
+	fun loadClusterSnapshot(snapshot: ClusterSnapshot){
+		energyLevel = snapshot.energyLevel
+		energyBaseCapacity = snapshot.energyCapacity
+		internalHealthStatus = snapshot.healthStatus
+		internalHealthOverride = snapshot.healthOverride
+		color = snapshot.color
 		
 		ticksToRegen = 40
+	}
+	
+	fun setInactive(){
+		isInactive = true
 	}
 	
 	// Overrides
@@ -141,7 +144,10 @@ class TileEntityEnergyCluster : TileEntityBase(), ITickable{
 	
 	override fun readNBT(nbt: NBTTagCompound, context: Context) = with(nbt){
 		loadClusterSnapshot(ClusterSnapshot(nbt.getCompoundTag(SNAPSHOT_TAG)))
-		isInactive = getBoolean(INACTIVE_TAG)
+		
+		if (getBoolean(INACTIVE_TAG)){
+			setInactive()
+		}
 	}
 	
 	override fun hasFastRenderer(): Boolean = true
