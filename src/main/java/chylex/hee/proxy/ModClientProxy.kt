@@ -1,6 +1,8 @@
 package chylex.hee.proxy
 import chylex.hee.HardcoreEnderExpansion
 import chylex.hee.game.commands.HeeClientCommand
+import chylex.hee.game.item.ItemEnergyReceptacle
+import chylex.hee.init.ModItems
 import chylex.hee.render.block.RenderTileEndPortal
 import net.minecraft.client.Minecraft
 import net.minecraft.client.renderer.block.model.ModelResourceLocation
@@ -29,6 +31,10 @@ class ModClientProxy : ModCommonProxy(){
 		ClientCommandHandler.instance.registerCommand(HeeClientCommand)
 		
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityEndPortal::class.java, RenderTileEndPortal)
+		
+		with(Minecraft.getMinecraft().itemColors){
+			registerItemColorHandler(ItemEnergyReceptacle.Color, ModItems.ENERGY_RECEPTACLE)
+		}
 	}
 	
 	@SubscribeEvent

@@ -8,10 +8,12 @@ import chylex.hee.game.mechanics.energy.IEnergyQuantity.Companion.displayString
 import chylex.hee.game.mechanics.energy.IEnergyQuantity.Floating
 import chylex.hee.game.mechanics.energy.IEnergyQuantity.Internal
 import chylex.hee.init.ModBlocks
+import chylex.hee.render.util.RGB
 import chylex.hee.system.util.breakBlock
 import chylex.hee.system.util.getTile
 import chylex.hee.system.util.heeTag
 import chylex.hee.system.util.heeTagOrNull
+import net.minecraft.client.renderer.color.IItemColor
 import net.minecraft.client.util.ITooltipFlag
 import net.minecraft.entity.Entity
 import net.minecraft.entity.player.EntityPlayer
@@ -28,6 +30,7 @@ import net.minecraft.util.math.BlockPos
 import net.minecraft.util.text.translation.I18n
 import net.minecraft.world.World
 import net.minecraftforge.fml.relauncher.Side
+import net.minecraftforge.fml.relauncher.Side.CLIENT
 import net.minecraftforge.fml.relauncher.SideOnly
 import kotlin.math.pow
 
@@ -35,6 +38,7 @@ class ItemEnergyReceptacle : Item(){
 	private companion object{
 		const val CLUSTER_SNAPSHOT_TAG = "Cluster"
 		const val UPDATE_TIME_TAG = "UpdateTime"
+		const val RENDER_COLOR_TAG = "RenderColor"
 		
 		const val INITIAL_LEVEL_TAG = "OrigLevel"
 		const val INITIAL_DIMENSION_TAG = "OrigDim"
@@ -71,7 +75,7 @@ class ItemEnergyReceptacle : Item(){
 			stack, _, _ -> if (stack.heeTagOrNull?.hasKey(CLUSTER_SNAPSHOT_TAG) == true) 1F else 0F
 		}
 		
-		// TODO add color and tweak animation
+		// TODO tweak animation
 	}
 	
 	override fun onItemUse(player: EntityPlayer, world: World, pos: BlockPos, hand: EnumHand, facing: EnumFacing, hitX: Float, hitY: Float, hitZ: Float): EnumActionResult{
@@ -96,6 +100,7 @@ class ItemEnergyReceptacle : Item(){
 					
 					removeTag(CLUSTER_SNAPSHOT_TAG)
 					removeTag(UPDATE_TIME_TAG)
+					removeTag(RENDER_COLOR_TAG)
 					removeTag(INITIAL_LEVEL_TAG)
 					removeTag(INITIAL_DIMENSION_TAG)
 					
@@ -112,7 +117,9 @@ class ItemEnergyReceptacle : Item(){
 				
 				if (cluster != null){
 					setTag(CLUSTER_SNAPSHOT_TAG, cluster.getClusterSnapshot().tag)
+					
 					setLong(UPDATE_TIME_TAG, world.totalWorldTime)
+					setInteger(RENDER_COLOR_TAG, cluster.color.forReceptacle.toInt())
 					
 					setInteger(INITIAL_LEVEL_TAG, cluster.energyLevel.internal.value)
 					setInteger(INITIAL_DIMENSION_TAG, world.provider.dimension) // TODO handle moving across territories too
@@ -180,6 +187,17 @@ class ItemEnergyReceptacle : Item(){
 			val level = calculateNewEnergyLevel(snapshot, world.totalWorldTime - tag.getLong(UPDATE_TIME_TAG))
 			
 			lines.add(I18n.translateToLocalFormatted("item.hee.energy_receptacle.tooltip.holding", level.displayString))
+		}
+	}
+	
+	@SideOnly(CLIENT)
+	object Color: IItemColor{
+		private const val NONE = -1
+		private val WHITE = RGB(255, 255, 255).toInt()
+		
+		override fun colorMultiplier(stack: ItemStack, tintIndex: Int): Int = when(tintIndex){
+			1 -> stack.heeTagOrNull?.getInteger(RENDER_COLOR_TAG) ?: WHITE
+			else -> NONE
 		}
 	}
 }
