@@ -3,7 +3,7 @@ import chylex.hee.HardcoreEnderExpansion
 import chylex.hee.game.commands.HeeClientCommand
 import chylex.hee.game.item.ItemEnergyReceptacle
 import chylex.hee.init.ModItems
-import chylex.hee.render.block.RenderTileEndPortal
+import chylex.hee.game.render.block.RenderTileEndPortal
 import net.minecraft.client.Minecraft
 import net.minecraft.client.renderer.block.model.ModelResourceLocation
 import net.minecraft.entity.player.EntityPlayer

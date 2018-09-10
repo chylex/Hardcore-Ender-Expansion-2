@@ -1,4 +1,4 @@
-package chylex.hee.render.util
+package chylex.hee.game.render.util
 import chylex.hee.system.util.floorToInt
 import org.lwjgl.util.Color
 import kotlin.math.cos
@@ -23,7 +23,7 @@ interface IColor{
  * @param[blue] value between 0-255
  */
 data class RGB(val red: Int, val green: Int, val blue: Int) : IColor{
-	constructor(rgb: Int) : this(rgb, rgb, rgb)
+	constructor(rgb: Int) : this(rgb, rgb, rgb) // TODO change to unsigned byte to avoid confusion
 	
 	override fun toRGB(): Color{
 		return Color(red, green, blue)

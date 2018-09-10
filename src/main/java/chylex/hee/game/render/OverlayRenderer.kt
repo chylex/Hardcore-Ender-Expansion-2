@@ -1,11 +1,11 @@
-package chylex.hee.render
+package chylex.hee.game.render
 import chylex.hee.HardcoreEnderExpansion
 import chylex.hee.game.block.entity.TileEntityEnergyCluster
 import chylex.hee.game.mechanics.energy.IEnergyQuantity
 import chylex.hee.game.mechanics.energy.IEnergyQuantity.Companion.MAX_POSSIBLE_VALUE
 import chylex.hee.game.mechanics.energy.IEnergyQuantity.Companion.displayString
 import chylex.hee.init.ModBlocks
-import chylex.hee.render.util.RGB
+import chylex.hee.game.render.util.RGB
 import chylex.hee.system.util.getBlock
 import chylex.hee.system.util.getTile
 import net.minecraft.client.Minecraft

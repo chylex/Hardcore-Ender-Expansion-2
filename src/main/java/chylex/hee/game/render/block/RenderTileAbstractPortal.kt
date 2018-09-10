@@ -1,5 +1,5 @@
-package chylex.hee.render.block
-import chylex.hee.render.util.GL
+package chylex.hee.game.render.block
+import chylex.hee.game.render.util.GL
 import chylex.hee.system.util.square
 import net.minecraft.client.Minecraft
 import net.minecraft.client.renderer.ActiveRenderInfo
