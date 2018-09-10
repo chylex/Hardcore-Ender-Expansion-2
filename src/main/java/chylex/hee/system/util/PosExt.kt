@@ -35,7 +35,7 @@ inline fun BlockPos.getState(world: IBlockAccess): IBlockState{
 	return world.getBlockState(this)
 }
 
-inline fun <reified T: TileEntity> BlockPos.getTile(world: IBlockAccess): T?{
+inline fun <reified T : TileEntity> BlockPos.getTile(world: IBlockAccess): T?{
 	return world.getTileEntity(this) as? T
 }
 
@@ -85,7 +85,7 @@ inline fun BlockPos.distanceTo(entity: Entity): Double = sqrt(distanceSqTo(entit
 
 // Distance utilities
 
-inline fun <reified T: TileEntity> BlockPos.closestTickingTile(world: World, maxDistance: Double = Double.MAX_VALUE): T?{
+inline fun <reified T : TileEntity> BlockPos.closestTickingTile(world: World, maxDistance: Double = Double.MAX_VALUE): T?{
 	var closestTile: T? = null
 	var closestDistSq = if (maxDistance == Double.MAX_VALUE) maxDistance else square(maxDistance)
 	

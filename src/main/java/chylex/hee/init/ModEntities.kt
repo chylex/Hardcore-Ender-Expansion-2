@@ -22,7 +22,7 @@ object ModEntities{
 	
 	// Utilities
 	
-	private inline fun <reified T: Entity> register(entityId: Int, registryName: String): EntityEntryBuilder<T>{
+	private inline fun <reified T : Entity> register(entityId: Int, registryName: String): EntityEntryBuilder<T>{
 		return EntityEntryBuilder
 			.create<T>()
 			.entity(T::class.java)
@@ -31,7 +31,7 @@ object ModEntities{
 	}
 	
 	@Suppress("NOTHING_TO_INLINE")
-	private inline fun <T: Entity> EntityEntryBuilder<T>.to(registry: IForgeRegistry<EntityEntry>){
+	private inline fun <T : Entity> EntityEntryBuilder<T>.to(registry: IForgeRegistry<EntityEntry>){
 		registry.register(this.build())
 	}
 }

@@ -297,7 +297,7 @@ object ModBlocks{
 		return with(itemBlockConstructor(this))
 	}
 	
-	private inline fun <reified T: TileEntity> tile(registryName: String){
+	private inline fun <reified T : TileEntity> tile(registryName: String){
 		GameRegistry.registerTileEntity(T::class.java, "${HardcoreEnderExpansion.ID}:$registryName")
 	}
 }

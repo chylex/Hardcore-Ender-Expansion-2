@@ -30,7 +30,7 @@ import org.lwjgl.opengl.GL11.GL_TEXTURE
 import java.nio.FloatBuffer
 
 @SideOnly(Side.CLIENT)
-abstract class RenderTileAbstractPortal<T: TileEntity> : TileEntitySpecialRenderer<T>(){
+abstract class RenderTileAbstractPortal<T : TileEntity> : TileEntitySpecialRenderer<T>(){
 	private companion object{
 		@JvmStatic private val TEX_BACKGROUND = ResourceLocation("minecraft", "textures/environment/end_sky.png")
 		@JvmStatic private val TEX_PARTICLE_LAYER = ResourceLocation("minecraft", "textures/entity/end_portal.png")
