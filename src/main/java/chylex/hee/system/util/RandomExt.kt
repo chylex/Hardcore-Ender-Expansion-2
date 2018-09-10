@@ -1,5 +1,18 @@
 package chylex.hee.system.util
 import java.util.Random
+import kotlin.math.abs
+
+/**
+ * Returns a random long integer between `min` and `max` (both inclusive).
+ * @throws IllegalArgumentException if `min` is greater than `max`
+ */
+fun Random.nextLong(bound: Long): Long{
+	if (bound <= 0){
+		throw IllegalArgumentException("bound must be positive")
+	}
+	
+	return abs(this.nextLong()) % bound
+}
 
 /**
  * Returns a random integer between `min` and `max` (both inclusive).
@@ -11,6 +24,18 @@ fun Random.nextInt(min: Int, max: Int): Int{
 	}
 	
 	return min + this.nextInt(max - min + 1)
+}
+
+/**
+ * Returns a random long integer between `min` and `max` (both inclusive).
+ * @throws IllegalArgumentException if `min` is greater than `max`
+ */
+fun Random.nextLong(min: Long, max: Long): Long{
+	if (min > max){
+		throw IllegalArgumentException("min must be smaller than or equal to max")
+	}
+	
+	return min + this.nextLong(max - min + 1)
 }
 
 /**
