@@ -1,5 +1,6 @@
 package chylex.hee.game.block.entity
 import chylex.hee.game.block.entity.TileEntityBase.Context.STORAGE
+import chylex.hee.game.mechanics.energy.ClusterColor
 import chylex.hee.game.mechanics.energy.ClusterSnapshot
 import chylex.hee.game.mechanics.energy.IClusterHealth
 import chylex.hee.game.mechanics.energy.IClusterHealth.HealthOverride
@@ -40,6 +41,9 @@ class TileEntityEnergyCluster : TileEntityBase(), ITickable{
 	
 	private var internalHealthStatus: HealthStatus by Notifying(HEALTHY, DEFAULT_NOTIFY_FLAGS)
 	private var internalHealthOverride: HealthOverride? by Notifying(null, DEFAULT_NOTIFY_FLAGS)
+	
+	var color: ClusterColor by Notifying(ClusterColor(0, 0), DEFAULT_NOTIFY_FLAGS)
+		private set
 	
 	// Properties (Calculated)
 	
@@ -84,7 +88,8 @@ class TileEntityEnergyCluster : TileEntityBase(), ITickable{
 		energyLevel    = this.energyLevel,
 		energyCapacity = this.energyBaseCapacity,
 		healthStatus   = this.internalHealthStatus,
-		healthOverride = this.internalHealthOverride
+		healthOverride = this.internalHealthOverride,
+		color          = this.color
 	)
 	
 	fun loadClusterSnapshot(data: ClusterSnapshot){
@@ -92,6 +97,7 @@ class TileEntityEnergyCluster : TileEntityBase(), ITickable{
 		energyBaseCapacity = data.energyCapacity
 		internalHealthStatus = data.healthStatus
 		internalHealthOverride = data.healthOverride
+		color = data.color
 		
 		ticksToRegen = 40
 	}
