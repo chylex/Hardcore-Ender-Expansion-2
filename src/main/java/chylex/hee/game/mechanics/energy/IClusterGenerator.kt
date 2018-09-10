@@ -37,5 +37,36 @@ interface IClusterGenerator{
 				)
 			}
 		}
+		
+		// Overworld
+		
+		val OVERWORLD: IClusterGenerator = SimpleGenerator(
+			level    = 0 to  7,
+			capacity = 8 to 13,
+			health   = weightedListOf(
+				25 to HEALTHY,
+				50 to WEAKENED,
+				25 to TIRED
+			)
+		)
+		
+		val STRONGHOLD: IClusterGenerator = SimpleGenerator(
+			level    =  4 to 23,
+			capacity = 18 to 35,
+			health   = weightedListOf(
+				 5 to HEALTHY,
+				25 to WEAKENED,
+				35 to TIRED,
+				35 to DAMAGED
+			)
+		)
+		
+		val ENERGY_SHRINE: IClusterGenerator = SimpleGenerator(
+			level    =  60 to 150,
+			capacity = 100 to 175,
+			health   = weightedListOf(
+				100 to HEALTHY
+			)
+		)
 	}
 }
