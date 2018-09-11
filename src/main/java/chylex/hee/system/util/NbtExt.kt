@@ -96,6 +96,8 @@ fun NBTTagCompound.getListOfByteArrays(key: String) = NBTObjectList<ByteArray>(t
 fun NBTTagCompound.getListOfIntArrays(key: String)  = NBTObjectList<IntArray>(this.getTagList(key, NBT.TAG_INT_ARRAY))
 // UPDATE: see below | fun NBTTagCompound.getListOfLongArrays(key: String) = NBTObjectList<LongArray>(this.getTagList(key, NBT.TAG_LONG_ARRAY))
 
+inline fun <reified T : Enum<T>> NBTTagCompound.getListOfEnums(key: String) = NBTEnumList(T::class.java, this.getTagList(key, NBT.TAG_STRING))
+
 abstract class NBTList<T : Any>(protected val tagList: NBTTagList) : Iterable<T>{
 	companion object{
 		fun <T : Any> NBTTagCompound.setList(key: String, list: NBTList<T>){
@@ -212,5 +214,15 @@ class NBTObjectList<T : Any>(tagList: NBTTagList) : NBTList<T>(tagList){
 			is NBTTagEnd       -> throw IndexOutOfBoundsException()
 			else               -> throw IllegalArgumentException("unhandled NBT type: ${tag::class.java.simpleName}")
 		}
+	}
+}
+
+class NBTEnumList<T : Enum<T>>(private val cls: Class<T>, tagList: NBTTagList) : NBTList<T>(tagList){
+	override fun append(element: T){
+		tagList.appendTag(NBTTagString(element.name.toLowerCase(Locale.ROOT)))
+	}
+	
+	override fun get(index: Int): T{
+		return java.lang.Enum.valueOf(cls, tagList.getStringTagAt(index).toUpperCase(Locale.ROOT))
 	}
 }
