@@ -58,6 +58,10 @@ item.hee.energy_receptacle.tooltip.holding=§9Holding §3%s§9 Energy
 item.tooltip.hee.energy.level=§9Energy: §3%s§9 / §3%s
 item.tooltip.hee.energy.uses=§9Uses Left: §3%s
 
+hee.infusions.title=§aInfusions
+hee.infusions.item=§2- %s
+hee.infusions.none=§7None
+
 itemGroup.hee=Hardcore Ender Expansion
 
 hee.energy.overlay.health=%s ENERGY CLUSTER
