@@ -4,38 +4,30 @@ import chylex.hee.system.util.getListOfEnums
 import chylex.hee.system.util.heeTag
 import chylex.hee.system.util.heeTagOrNull
 import net.minecraft.item.ItemStack
-import net.minecraft.nbt.NBTTagCompound
 
 object InfusionTag{
 	private const val TAG_NAME = "Infusions"
 	
-	fun hasAny(stackNBT: NBTTagCompound): Boolean{
-		return stackNBT.hasKey(TAG_NAME)
-	}
-	
 	fun hasAny(stack: ItemStack): Boolean{
 		val tag = stack.heeTagOrNull
-		return tag != null && hasAny(tag)
-	}
-	
-	fun getList(stackNBT: NBTTagCompound): InfusionList{
-		return InfusionList(stackNBT.getListOfEnums(TAG_NAME))
+		return tag != null && tag.hasKey(TAG_NAME)
 	}
 	
 	fun getList(stack: ItemStack): InfusionList{
-		return stack.heeTagOrNull?.let { getList(it) } ?: InfusionList.EMPTY
-	}
-	
-	fun setList(stackNBT: NBTTagCompound, infusions: InfusionList){
-		if (infusions.isEmpty){
-			stackNBT.removeTag(TAG_NAME)
-		}
-		else{
-			stackNBT.setList(TAG_NAME, infusions.tag)
-		}
+		val tag = stack.heeTagOrNull
+		
+		return if (tag != null && tag.hasKey(TAG_NAME))
+			InfusionList(tag.getListOfEnums(TAG_NAME))
+		else
+			InfusionList.EMPTY
 	}
 	
 	fun setList(stack: ItemStack, infusions: InfusionList){
-		setList(stack.heeTag, infusions)
+		if (infusions.isEmpty){
+			stack.heeTagOrNull?.removeTag(TAG_NAME)
+		}
+		else{
+			stack.heeTag.setList(TAG_NAME, infusions.tag)
+		}
 	}
 }
