@@ -1,6 +1,11 @@
 package chylex.hee.game.item
 import chylex.hee.HardcoreEnderExpansion
 import chylex.hee.game.block.entity.TileEntityEnergyCluster
+import chylex.hee.game.item.base.ItemBaseInfusable
+import chylex.hee.game.item.infusion.Infusion.SAFETY
+import chylex.hee.game.item.infusion.Infusion.STABILITY
+import chylex.hee.game.item.infusion.InfusionList
+import chylex.hee.game.item.infusion.InfusionTag
 import chylex.hee.game.item.util.BlockEditor
 import chylex.hee.game.mechanics.energy.ClusterSnapshot
 import chylex.hee.game.mechanics.energy.IEnergyQuantity
@@ -17,7 +22,6 @@ import net.minecraft.client.renderer.color.IItemColor
 import net.minecraft.client.util.ITooltipFlag
 import net.minecraft.entity.Entity
 import net.minecraft.entity.player.EntityPlayer
-import net.minecraft.item.Item
 import net.minecraft.item.ItemStack
 import net.minecraft.nbt.NBTTagCompound
 import net.minecraft.util.EnumActionResult
@@ -34,7 +38,7 @@ import net.minecraftforge.fml.relauncher.Side.CLIENT
 import net.minecraftforge.fml.relauncher.SideOnly
 import kotlin.math.pow
 
-class ItemEnergyReceptacle : Item(){
+class ItemEnergyReceptacle : ItemBaseInfusable(){
 	private companion object{
 		const val CLUSTER_SNAPSHOT_TAG = "Cluster"
 		const val UPDATE_TIME_TAG = "UpdateTime"
@@ -46,14 +50,21 @@ class ItemEnergyReceptacle : Item(){
 		const val ENERGY_LOSS_TICK_RATE = 10L
 		const val ITEM_COOLDOWN = 16
 		
-		fun calculateNewEnergyLevel(snapshot: ClusterSnapshot, elapsedTicks: Long): IEnergyQuantity{
-			val decreasePerCycle = Floating(snapshot.energyCapacity.floating.value.pow(0.001F) - 1F)
+		fun calculateNewEnergyLevel(snapshot: ClusterSnapshot, elapsedTicks: Long, infusions: InfusionList): IEnergyQuantity{
+			// TODO make sure Table Pedestals keep updating the item, or at least perform an update just before the infusion
+			val power = if (infusions.has(STABILITY)) 0.0003F else 0.001F
+			
+			val decreasePerCycle = Floating(snapshot.energyCapacity.floating.value.pow(power) - 1F)
 			val elapsedCycles = elapsedTicks / ENERGY_LOSS_TICK_RATE
 			
 			return snapshot.energyLevel - (decreasePerCycle * elapsedCycles.toFloat())
 		}
 		
-		fun shouldLoseHealth(cluster: TileEntityEnergyCluster, nbt: NBTTagCompound): Boolean{
+		fun shouldLoseHealth(cluster: TileEntityEnergyCluster, nbt: NBTTagCompound, infusions: InfusionList): Boolean{
+			if (infusions.has(SAFETY)){
+				return false
+			}
+			
 			if (cluster.world.provider.dimension != nbt.getInteger(INITIAL_DIMENSION_TAG)){
 				return true
 			}
@@ -93,7 +104,7 @@ class ItemEnergyReceptacle : Item(){
 					finalPos.getTile<TileEntityEnergyCluster>(world)?.let {
 						it.loadClusterSnapshot(ClusterSnapshot(getCompoundTag(CLUSTER_SNAPSHOT_TAG)))
 						
-						if (shouldLoseHealth(it, this)){
+						if (shouldLoseHealth(it, this, InfusionTag.getList(stack))){
 							it.deteriorateHealth()
 						}
 					}
@@ -154,7 +165,7 @@ class ItemEnergyReceptacle : Item(){
 			}
 			
 			val snapshot = ClusterSnapshot(getCompoundTag(CLUSTER_SNAPSHOT_TAG))
-			val newLevel = calculateNewEnergyLevel(snapshot, ticksElapsed)
+			val newLevel = calculateNewEnergyLevel(snapshot, ticksElapsed, InfusionTag.getList(stack))
 			
 			setTag(CLUSTER_SNAPSHOT_TAG, snapshot.clone(energyLevel = newLevel).tag)
 			setLong(UPDATE_TIME_TAG, currentTime)
@@ -171,23 +182,21 @@ class ItemEnergyReceptacle : Item(){
 	
 	@SideOnly(Side.CLIENT)
 	override fun addInformation(stack: ItemStack, world: World?, lines: MutableList<String>, flags: ITooltipFlag){
-		super.addInformation(stack, world, lines, flags)
-		
-		if (world == null){
-			return
-		}
-		
-		val tag = stack.heeTagOrNull
-		
-		if (tag == null || !tag.hasKey(CLUSTER_SNAPSHOT_TAG)){
-			lines.add(I18n.translateToLocal("item.hee.energy_receptacle.tooltip.empty"))
-		}
-		else{
-			val snapshot = ClusterSnapshot(tag.getCompoundTag(CLUSTER_SNAPSHOT_TAG))
-			val level = calculateNewEnergyLevel(snapshot, world.totalWorldTime - tag.getLong(UPDATE_TIME_TAG))
+		if (world != null){
+			val tag = stack.heeTagOrNull
 			
-			lines.add(I18n.translateToLocalFormatted("item.hee.energy_receptacle.tooltip.holding", level.displayString))
+			if (tag == null || !tag.hasKey(CLUSTER_SNAPSHOT_TAG)){
+				lines.add(I18n.translateToLocal("item.hee.energy_receptacle.tooltip.empty"))
+			}
+			else{
+				val snapshot = ClusterSnapshot(tag.getCompoundTag(CLUSTER_SNAPSHOT_TAG))
+				val level = calculateNewEnergyLevel(snapshot, world.totalWorldTime - tag.getLong(UPDATE_TIME_TAG), InfusionTag.getList(stack))
+				
+				lines.add(I18n.translateToLocalFormatted("item.hee.energy_receptacle.tooltip.holding", level.displayString))
+			}
 		}
+		
+		super.addInformation(stack, world, lines, flags)
 	}
 	
 	@SideOnly(CLIENT)

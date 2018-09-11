@@ -62,6 +62,9 @@ hee.infusions.title=§aInfusions
 hee.infusions.item=§2- %s
 hee.infusions.none=§7None
 
+hee.infusion.stability=Stability
+hee.infusion.safety=Safety
+
 itemGroup.hee=Hardcore Ender Expansion
 
 hee.energy.overlay.health=%s ENERGY CLUSTER
