@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "###",
+    "#X#",
+    "###"
+  ],
+  "key": {
+    "#": { "item": "hee:obsidian_fragment" },
+    "X": { "item": "hee:void_essence" }
+  },
+  "result": {
+    "item": "hee:vantablock",
+    "count": 6
+  }
+}

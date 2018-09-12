@@ -44,6 +44,15 @@ object ModBlocks{
 	
 	// Blocks: Building (Uncategorized)
 	
+	private val buildVantablock = BlockSimple.Builder(Materials.SOLID_WITH_TOOL).apply {
+		harvestTool = Pair(IRON, PICKAXE)
+		harvestHardness = 10.0F
+		explosionResistance = 1.0F
+		
+		soundType = SoundType.CLOTH
+		mapColor = MapColor.BLACK
+	}
+	
 	private val buildEndiumBlock = BlockSimple.Builder(Materials.SOLID_WITH_TOOL).apply {
 		harvestTool = Pair(IRON, PICKAXE)
 		harvestHardness = 6.2F
@@ -54,6 +63,7 @@ object ModBlocks{
 	}
 	
 	@JvmField val STONE_BRICK_WALL = BlockWallCustom(Blocks.STONEBRICK).apply { setup("stone_brick_wall") }
+	@JvmField val VANTABLOCK       = BlockSimple(buildVantablock).apply { setup("vantablock") }
 	@JvmField val ENDIUM_BLOCK     = BlockEndium(buildEndiumBlock).apply { setup("endium_block") }
 	
 	// Blocks: Building (Gloomrock)
@@ -200,6 +210,7 @@ object ModBlocks{
 	fun onRegister(e: RegistryEvent.Register<Block>){
 		with(e.registry){
 			register(STONE_BRICK_WALL with basicItemBlock)
+			register(VANTABLOCK with basicItemBlock)
 			register(ENDIUM_BLOCK with basicItemBlock)
 			
 			register(GLOOMROCK with basicItemBlock)
