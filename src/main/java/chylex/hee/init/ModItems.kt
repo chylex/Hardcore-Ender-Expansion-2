@@ -18,6 +18,10 @@ object ModItems{
 	@JvmField val ENDIUM_INGOT      = Item().apply { setup("endium_ingot") }
 	@JvmField val ENDIUM_NUGGET     = Item().apply { setup("endium_nugget") }
 	@JvmField val OBSIDIAN_FRAGMENT = Item().apply { setup("obsidian_fragment") }
+	@JvmField val PUZZLE_MEDALLION  = Item().apply { setup("puzzle_medallion") }
+	@JvmField val INFERNIUM         = Item().apply { setup("infernium") }
+	@JvmField val AURICION          = Item().apply { setup("auricion") }
+	@JvmField val DRAGON_SCALE      = Item().apply { setup("dragon_scale") }
 	
 	// Items: Manufactured resources
 	
@@ -42,6 +46,10 @@ object ModItems{
 			register(ENDIUM_INGOT)
 			register(ENDIUM_NUGGET)
 			register(OBSIDIAN_FRAGMENT)
+			register(PUZZLE_MEDALLION)
+			register(INFERNIUM)
+			register(AURICION)
+			register(DRAGON_SCALE)
 			
 			register(ALTERATION_NEXUS)
 			register(VOID_ESSENCE)

@@ -46,6 +46,10 @@ item.hee.stardust.name=Stardust
 item.hee.endium_ingot.name=Endium Ingot
 item.hee.endium_nugget.name=Endium Nugget
 item.hee.obsidian_fragment.name=Obsidian Fragment
+item.hee.puzzle_medallion.name=Puzzle Medallion
+item.hee.infernium.name=Infernium
+item.hee.auricion.name=Auricion
+item.hee.dragon_scale.name=Dragon Scale
 
 item.hee.alteration_nexus.name=Alteration Nexus
 item.hee.void_essence.name=Void Essence
