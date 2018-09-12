@@ -1,6 +1,7 @@
 package chylex.hee.system.util
 import java.util.Random
 import kotlin.math.abs
+import kotlin.math.pow
 
 /**
  * Returns a random long integer between `min` and `max` (both inclusive).
@@ -57,6 +58,20 @@ fun Random.nextFloat(min: Float, max: Float): Float{
 fun Random.nextRounded(value: Float): Int{
 	val decimalPart = value - value.toInt()
 	return if (this.nextFloat() < decimalPart) value.ceilToInt() else value.floorToInt()
+}
+
+/**
+ * Returns a random floating point number between 0 and 1, with bias towards lower values.
+ * @param[biasSoftener] represents how much the bias will be reduced, starting at 1 for full bias, and ending at theoretical infinity for no bias
+ * @throws IllegalArgumentException if `biasSoftener` is lower than 1
+ */
+fun Random.nextBiasedFloat(biasSoftener: Float): Float{
+	if (biasSoftener < 1F){
+		throw IllegalArgumentException("biasSoftener must be at least 1")
+	}
+	
+	val unbiased = this.nextFloat()
+	return unbiased - (unbiased * this.nextFloat().pow(biasSoftener))
 }
 
 /**
