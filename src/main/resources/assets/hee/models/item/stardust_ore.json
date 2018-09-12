@@ -1,0 +1,12 @@
+{
+  "parent": "hee:block/cube_overlay",
+  "textures": {
+    "base": "minecraft:blocks/end_stone",
+    "down": "hee:block/stardust_ore_1",
+    "up": "hee:block/stardust_ore_7",
+    "north": "hee:block/stardust_ore_9",
+    "south": "hee:block/stardust_ore_1",
+    "west": "hee:block/stardust_ore_10",
+    "east": "hee:block/stardust_ore_5"
+  }
+}

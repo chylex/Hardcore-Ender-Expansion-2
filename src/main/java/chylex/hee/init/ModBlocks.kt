@@ -12,6 +12,7 @@ import chylex.hee.game.block.BlockSimple
 import chylex.hee.game.block.BlockSimpleShaped
 import chylex.hee.game.block.BlockSlabCustom
 import chylex.hee.game.block.BlockStairsCustom
+import chylex.hee.game.block.BlockStardustOre
 import chylex.hee.game.block.BlockWallCustom
 import chylex.hee.game.block.entity.TileEntityEndPortalAcceptor
 import chylex.hee.game.block.entity.TileEntityEnergyCluster
@@ -163,8 +164,15 @@ object ModBlocks{
 		explosionResistance = 16.5F
 	}
 	
+	private val buildStardustOre = buildEndOre.clone {
+		harvestTool = Pair(STONE, PICKAXE)
+		harvestHardness = 2.8F
+		explosionResistance = 14.0F
+	}
+	
 	@JvmField val END_POWDER_ORE = BlockEndPowderOre(buildEndPowderOre).apply { setup("end_powder_ore") }
 	@JvmField val ENDIUM_ORE     = BlockEndium(buildEndiumOre).apply { setup("endium_ore") }
+	@JvmField val STARDUST_ORE   = BlockStardustOre(buildStardustOre).apply { setup("stardust_ore") }
 	
 	// Blocks: Decorative (Uncategorized)
 	
@@ -246,6 +254,7 @@ object ModBlocks{
 			
 			register(END_POWDER_ORE with basicItemBlock)
 			register(ENDIUM_ORE with basicItemBlock)
+			register(STARDUST_ORE with basicItemBlock)
 			
 			register(ANCIENT_COBWEB with ItemAncientCobweb(ANCIENT_COBWEB))
 			
