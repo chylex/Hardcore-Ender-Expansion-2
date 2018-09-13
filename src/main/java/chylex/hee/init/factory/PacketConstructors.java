@@ -1,19 +1,13 @@
-package chylex.hee.init;
-
+package chylex.hee.init.factory;
 import chylex.hee.network.IPacket;
 import kotlin.Pair;
-
 import javax.annotation.Nonnull;
 import java.util.Arrays;
 import java.util.function.Supplier;
 
-final class ModPackets{
-	/**
-	 * Kotlin can't figure out how to use parameterless constructors.
-	 * On the other hand, Java can't really figure out the whole generics thing.
-	 */
+public final class PacketConstructors{
 	@SuppressWarnings({"UnusedReturnValue", "unchecked"})
-	public static @Nonnull Iterable<Pair<Class<? extends IPacket>, Supplier<IPacket>>> getAllPackets(){
+	public static @Nonnull Iterable<Pair<Class<? extends IPacket>, Supplier<IPacket>>> getAll(){
 		return Arrays.asList(
 		);
 	}
@@ -25,5 +19,5 @@ final class ModPackets{
 		return new Pair<>(cls, constructor);
 	}
 	
-	private ModPackets(){}
+	private PacketConstructors(){}
 }

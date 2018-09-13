@@ -1,5 +1,6 @@
 package chylex.hee.init
 import chylex.hee.HardcoreEnderExpansion
+import chylex.hee.init.factory.PacketConstructors
 import chylex.hee.network.BaseClientPacket
 import chylex.hee.network.BaseServerPacket
 import chylex.hee.network.IPacket
@@ -29,7 +30,7 @@ object ModNetwork{
 		network = NetworkRegistry.INSTANCE.newEventDrivenChannel(HardcoreEnderExpansion.ID)
 		network.register(this)
 		
-		for((cls, constructor) in ModPackets.getAllPackets()){
+		for((cls, constructor) in PacketConstructors.getAll()){
 			val id = mapPacketIdToConstructor.size.toByte()
 			mapPacketIdToConstructor[id] = constructor
 			mapPacketClassToId[cls] = id
