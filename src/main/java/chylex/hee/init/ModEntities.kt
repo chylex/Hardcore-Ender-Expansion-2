@@ -1,6 +1,9 @@
 package chylex.hee.init
 import chylex.hee.HardcoreEnderExpansion
+import chylex.hee.game.entity.item.EntityItemIgneousRock
+import chylex.hee.init.factory.EntityConstructors
 import net.minecraft.entity.Entity
+import net.minecraft.util.ResourceLocation
 import net.minecraftforge.event.RegistryEvent
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent
@@ -10,28 +13,30 @@ import net.minecraftforge.registries.IForgeRegistry
 
 @EventBusSubscriber(modid = HardcoreEnderExpansion.ID)
 object ModEntities{
+	private var networkID = -1
+	
 	@JvmStatic
 	@SubscribeEvent
 	fun onRegister(e: RegistryEvent.Register<EntityEntry>){
-		var id = 0
+		networkID = 0
 		
 		with(e.registry){
-			// TODO register<EntityChicken>(++id, "Test").to(this)
 		}
 	}
 	
 	// Utilities
 	
-	private inline fun <reified T : Entity> register(entityId: Int, registryName: String): EntityEntryBuilder<T>{
+	private inline fun <reified T : Entity> register(registryName: String): EntityEntryBuilder<T>{
 		return EntityEntryBuilder
 			.create<T>()
 			.entity(T::class.java)
-			.id("${HardcoreEnderExpansion.ID}:$registryName", entityId)
+			.factory(EntityConstructors.get(T::class.java))
+			.id(ResourceLocation(HardcoreEnderExpansion.ID, registryName), networkID++)
 			.name("entity.hee.$registryName")
 	}
 	
 	@Suppress("NOTHING_TO_INLINE")
-	private inline fun <T : Entity> EntityEntryBuilder<T>.to(registry: IForgeRegistry<EntityEntry>){
+	private inline infix fun <T : Entity> EntityEntryBuilder<T>.to(registry: IForgeRegistry<EntityEntry>){
 		registry.register(this.build())
 	}
 }
