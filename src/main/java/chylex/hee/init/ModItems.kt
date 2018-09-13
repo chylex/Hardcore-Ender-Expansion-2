@@ -1,6 +1,7 @@
 package chylex.hee.init
 import chylex.hee.HardcoreEnderExpansion
 import chylex.hee.game.item.ItemEnergyReceptacle
+import chylex.hee.game.item.ItemIgneousRock
 import net.minecraft.item.Item
 import net.minecraftforge.event.RegistryEvent
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber
@@ -18,6 +19,7 @@ object ModItems{
 	@JvmField val ENDIUM_INGOT      = Item().apply { setup("endium_ingot") }
 	@JvmField val ENDIUM_NUGGET     = Item().apply { setup("endium_nugget") }
 	@JvmField val OBSIDIAN_FRAGMENT = Item().apply { setup("obsidian_fragment") }
+	@JvmField val IGNEOUS_ROCK      = ItemIgneousRock().apply { setup("igneous_rock") }
 	@JvmField val PUZZLE_MEDALLION  = Item().apply { setup("puzzle_medallion") }
 	@JvmField val INFERNIUM         = Item().apply { setup("infernium") }
 	@JvmField val AURICION          = Item().apply { setup("auricion") }
@@ -46,6 +48,7 @@ object ModItems{
 			register(ENDIUM_INGOT)
 			register(ENDIUM_NUGGET)
 			register(OBSIDIAN_FRAGMENT)
+			register(IGNEOUS_ROCK)
 			register(PUZZLE_MEDALLION)
 			register(INFERNIUM)
 			register(AURICION)

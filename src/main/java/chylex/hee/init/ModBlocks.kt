@@ -7,6 +7,7 @@ import chylex.hee.game.block.BlockEndPortalOverride
 import chylex.hee.game.block.BlockEndPowderOre
 import chylex.hee.game.block.BlockEndium
 import chylex.hee.game.block.BlockEnergyCluster
+import chylex.hee.game.block.BlockIgneousRockOre
 import chylex.hee.game.block.BlockPillarCustom
 import chylex.hee.game.block.BlockSimple
 import chylex.hee.game.block.BlockSimpleShaped
@@ -170,9 +171,16 @@ object ModBlocks{
 		explosionResistance = 14.0F
 	}
 	
-	@JvmField val END_POWDER_ORE = BlockEndPowderOre(buildEndPowderOre).apply { setup("end_powder_ore") }
-	@JvmField val ENDIUM_ORE     = BlockEndium(buildEndiumOre).apply { setup("endium_ore") }
-	@JvmField val STARDUST_ORE   = BlockStardustOre(buildStardustOre).apply { setup("stardust_ore") }
+	private val buildIgneousRockOre = buildEndOre.clone {
+		harvestTool = Pair(DIAMOND, PICKAXE)
+		harvestHardness = 1.6F
+		explosionResistance = 6.0F
+	}
+	
+	@JvmField val END_POWDER_ORE   = BlockEndPowderOre(buildEndPowderOre).apply { setup("end_powder_ore") }
+	@JvmField val ENDIUM_ORE       = BlockEndium(buildEndiumOre).apply { setup("endium_ore") }
+	@JvmField val STARDUST_ORE     = BlockStardustOre(buildStardustOre).apply { setup("stardust_ore") }
+	@JvmField val IGNEOUS_ROCK_ORE = BlockIgneousRockOre(buildIgneousRockOre).apply { setup("igneous_rock_ore") }
 	
 	// Blocks: Decorative (Uncategorized)
 	
@@ -255,6 +263,7 @@ object ModBlocks{
 			register(END_POWDER_ORE with basicItemBlock)
 			register(ENDIUM_ORE with basicItemBlock)
 			register(STARDUST_ORE with basicItemBlock)
+			register(IGNEOUS_ROCK_ORE with basicItemBlock)
 			
 			register(ANCIENT_COBWEB with ItemAncientCobweb(ANCIENT_COBWEB))
 			

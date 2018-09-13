@@ -34,6 +34,7 @@ tile.hee.end_stone_enchanted.name=Enchanted End Stone
 tile.hee.end_powder_ore.name=End Powder Ore
 tile.hee.endium_ore.name=Endium Ore
 tile.hee.stardust_ore.name=Stardust Ore
+tile.hee.igneous_rock_ore.name=Igneous Rock Ore
 
 tile.hee.ancient_cobweb.name=Ancient Cobweb
 
@@ -48,6 +49,7 @@ item.hee.stardust.name=Stardust
 item.hee.endium_ingot.name=Endium Ingot
 item.hee.endium_nugget.name=Endium Nugget
 item.hee.obsidian_fragment.name=Obsidian Fragment
+item.hee.igneous_rock.name=Igneous Rock
 item.hee.puzzle_medallion.name=Puzzle Medallion
 item.hee.infernium.name=Infernium
 item.hee.auricion.name=Auricion
