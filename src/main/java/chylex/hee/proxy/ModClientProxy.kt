@@ -10,8 +10,10 @@ import chylex.hee.init.factory.RendererConstructors
 import net.minecraft.client.Minecraft
 import net.minecraft.client.renderer.block.model.ModelResourceLocation
 import net.minecraft.client.renderer.entity.Render
+import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer
 import net.minecraft.entity.Entity
 import net.minecraft.entity.player.EntityPlayer
+import net.minecraft.tileentity.TileEntity
 import net.minecraft.tileentity.TileEntityEndPortal
 import net.minecraftforge.client.ClientCommandHandler
 import net.minecraftforge.client.event.ModelRegistryEvent
@@ -24,7 +26,7 @@ import net.minecraftforge.fml.common.registry.ForgeRegistries
 import net.minecraftforge.fml.relauncher.Side
 import net.minecraftforge.fml.relauncher.SideOnly
 
-@Suppress("unused")
+@Suppress("unused", "RemoveExplicitTypeArguments")
 @SideOnly(Side.CLIENT)
 class ModClientProxy : ModCommonProxy(){
 	override fun getClientSidePlayer(): EntityPlayer? = Minecraft.getMinecraft().player
@@ -38,7 +40,7 @@ class ModClientProxy : ModCommonProxy(){
 	override fun onInit(){
 		ClientCommandHandler.instance.registerCommand(HeeClientCommand)
 		
-		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityEndPortal::class.java, RenderTileEndPortal)
+		registerTileRenderer<TileEntityEndPortal>(RenderTileEndPortal)
 		
 		with(Minecraft.getMinecraft().itemColors){
 			registerItemColorHandler(ItemEnergyReceptacle.Color, ModItems.ENERGY_RECEPTACLE)
@@ -56,5 +58,9 @@ class ModClientProxy : ModCommonProxy(){
 	
 	private inline fun <reified T : Entity, reified R : Render<in T>> registerEntityRenderer(){
 		RenderingRegistry.registerEntityRenderingHandler(T::class.java, RendererConstructors.get(R::class.java))
+	}
+	
+	private inline fun <reified T : TileEntity> registerTileRenderer(renderer: TileEntitySpecialRenderer<in T>){
+		ClientRegistry.bindTileEntitySpecialRenderer(T::class.java, renderer)
 	}
 }
