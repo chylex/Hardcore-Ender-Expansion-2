@@ -1,8 +1,11 @@
 package chylex.hee.system.util
+import net.minecraft.enchantment.EnchantmentProtection
 import net.minecraft.entity.Entity
+import net.minecraft.entity.EntityLivingBase
 import net.minecraft.entity.item.EntityItem
-import net.minecraft.nbt.NBTTagCompound
 import net.minecraft.util.math.Vec3d
+
+// Properties
 
 var Entity.posVec
 	get() = this.positionVector
@@ -23,6 +26,22 @@ var Entity.motionVec
 val Entity.lookVec
 	get() = this.getLook(0F)
 
+// Methods
+
+fun Entity.setFireTicks(ticks: Int){
+	val prevFire = this.fire
+	this.setFire(ticks / 20) // in case something overrides it
+	
+	val finalTicks = when{
+		this is EntityLivingBase -> EnchantmentProtection.getFireTimeForEntity(this, ticks)
+		else -> ticks
+	}
+	
+	if (finalTicks > prevFire){
+		this.fire = finalTicks
+	}
+}
+
 fun EntityItem.cloneFrom(source: Entity){
 	motionX = source.motionX
 	motionY = source.motionY
@@ -31,7 +50,7 @@ fun EntityItem.cloneFrom(source: Entity){
 	
 	if (source is EntityItem){
 		lifespan = source.lifespan
-		setPickupDelay(NBTTagCompound().also { source.writeEntityToNBT(it) }.getInteger("PickupDelay")) // UPDATE: replace with an AT
+		pickupDelay = source.pickupDelay
 		
 		thrower = source.thrower
 		owner = source.owner
