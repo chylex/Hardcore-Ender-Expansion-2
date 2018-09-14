@@ -1,4 +1,5 @@
 package chylex.hee.init.factory;
+import chylex.hee.game.entity.item.EntityItemIgneousRock;
 import net.minecraft.entity.Entity;
 import net.minecraft.world.World;
 import java.util.HashMap;
@@ -9,6 +10,7 @@ public final class EntityConstructors{
 	private static final Map<Class<? extends Entity>, Function<World, ? extends Entity>> all = new HashMap<>();
 	
 	static{
+		add(EntityItemIgneousRock.class, EntityItemIgneousRock::new);
 	}
 	
 	@SuppressWarnings("unchecked")

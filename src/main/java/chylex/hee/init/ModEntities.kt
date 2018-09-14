@@ -21,6 +21,7 @@ object ModEntities{
 		networkID = 0
 		
 		with(e.registry){
+			register<EntityItemIgneousRock>("ItemIgneousRock").tracker(64, 3, true) to this
 		}
 	}
 	

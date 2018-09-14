@@ -1,8 +1,10 @@
 package chylex.hee.proxy
 import chylex.hee.HardcoreEnderExpansion
 import chylex.hee.game.commands.HeeClientCommand
+import chylex.hee.game.entity.item.EntityItemIgneousRock
 import chylex.hee.game.item.ItemEnergyReceptacle
 import chylex.hee.game.render.block.RenderTileEndPortal
+import chylex.hee.game.render.entity.RenderEntityItemNoBob
 import chylex.hee.init.ModItems
 import chylex.hee.init.factory.RendererConstructors
 import net.minecraft.client.Minecraft
@@ -29,6 +31,8 @@ class ModClientProxy : ModCommonProxy(){
 	
 	override fun onPreInit(){
 		MinecraftForge.EVENT_BUS.register(this)
+		
+		registerEntityRenderer<EntityItemIgneousRock, RenderEntityItemNoBob>()
 	}
 	
 	override fun onInit(){
