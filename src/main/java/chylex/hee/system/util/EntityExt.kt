@@ -1,9 +1,13 @@
 package chylex.hee.system.util
+import chylex.hee.game.entity.utils.EntitySelector
+import com.google.common.base.Predicates
 import net.minecraft.enchantment.EnchantmentProtection
 import net.minecraft.entity.Entity
 import net.minecraft.entity.EntityLivingBase
 import net.minecraft.entity.item.EntityItem
+import net.minecraft.util.EntitySelectors
 import net.minecraft.util.math.Vec3d
+import net.minecraft.world.World
 
 // Properties
 
@@ -56,3 +60,33 @@ fun EntityItem.cloneFrom(source: Entity){
 		owner = source.owner
 	}
 }
+
+// Selectors
+
+private val predicateAliveAndNotSpectating = Predicates.and(EntitySelectors.IS_ALIVE, EntitySelectors.NOT_SPECTATING)
+private val predicateAliveAndTargetable = Predicates.and(EntitySelectors.IS_ALIVE, EntitySelectors.CAN_AI_TARGET) // UPDATE: Make sure CAN_AI_TARGET still only checks creative/spectator mode
+private val predicateAlwaysTrue = Predicates.alwaysTrue<Entity>()
+
+/**
+ * Selects all entities which are not spectators.
+ */
+val World.selectEntities
+	get() = EntitySelector(this, EntitySelectors.NOT_SPECTATING)
+
+/**
+ * Selects all entities which have not been removed from the world, and are not spectators.
+ */
+val World.selectExistingEntities
+	get() = EntitySelector(this, predicateAliveAndNotSpectating)
+
+/**
+ * Selects all entities which have not been removed from the world, and are not spectators or creative mode players.
+ */
+val World.selectVulnerableEntities
+	get() = EntitySelector(this, predicateAliveAndTargetable)
+
+/**
+ * Selects all entities and spectators.
+ */
+val World.selectEntitiesAndSpectators
+	get() = EntitySelector(this, predicateAlwaysTrue)
