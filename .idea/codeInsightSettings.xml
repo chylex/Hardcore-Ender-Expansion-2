@@ -11,6 +11,7 @@
       <name>javafx</name>
       <name>javax.rmi</name>
       <name>javax.swing</name>
+      <name>net.java.games.input.Component.Identifier.Key</name>
       <name>org.ietf</name>
       <name>org.omg</name>
       <name>org.w3c</name>
