@@ -1,5 +1,6 @@
 package chylex.hee.game.mechanics.damage
 import chylex.hee.game.mechanics.damage.DamageProperties.Reader
+import chylex.hee.system.util.setFireTicks
 import net.minecraft.enchantment.EnchantmentHelper
 import net.minecraft.entity.Entity
 import net.minecraft.entity.EntityLivingBase
@@ -28,12 +29,12 @@ interface IDamageProcessor{
 			override fun setup(properties: DamageProperties.Writer) = properties.addType(DamageType.PROJECTILE)
 		}
 		
-		fun FIRE_TYPE(setOnFireSeconds: Int = 0) = object: IDamageProcessor{
+		fun FIRE_TYPE(setOnFireTicks: Int = 0) = object: IDamageProcessor{
 			override fun setup(properties: DamageProperties.Writer) = properties.addType(DamageType.FIRE)
 			
 			override fun afterDamage(target: Entity, properties: Reader){
-				if (setOnFireSeconds > 0){
-					target.setFire(setOnFireSeconds)
+				if (setOnFireTicks > 0){
+					target.setFireTicks(setOnFireTicks)
 				}
 			}
 		}

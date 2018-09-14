@@ -72,7 +72,7 @@ class BlockIgneousRockOre(builder: BlockSimple.Builder) : BlockSimple(builder){
 	override fun canSilkHarvest(): Boolean = true
 	
 	private companion object{
-		val DAMAGE_MINING = Damage(FIRE_TYPE(1), PEACEFUL_EXCLUSION) // TODO maybe reduce fire to 15 ticks
+		val DAMAGE_MINING = Damage(FIRE_TYPE(15), PEACEFUL_EXCLUSION)
 		
 		fun causeMiningDamage(player: EntityPlayer){
 			DAMAGE_MINING.dealTo(2F, player, Damage.TITLE_IN_FIRE)
