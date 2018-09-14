@@ -56,8 +56,14 @@ def modinfo = null
 processResources{
     File file = new File(++sourceSets.main.resources.srcDirs.iterator(), "mcmod.info")
     modinfo = new groovy.json.JsonSlurper().parseText(file.getText())[0]
+
+    rename("hee_at.cfg", "META-INF/hee_at.cfg")
 }
 
 jar{
     archiveName = "HardcoreEnderExpansion  MC-${project.minecraft.version}  v${modinfo.version}.jar"
+
+    manifest{
+        attributes "FMLAT": "hee_at.cfg"
+    }
 }
