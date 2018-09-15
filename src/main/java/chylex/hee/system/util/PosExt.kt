@@ -1,9 +1,12 @@
 package chylex.hee.system.util
 import net.minecraft.block.Block
+import net.minecraft.block.state.BlockFaceShape
 import net.minecraft.block.state.IBlockState
 import net.minecraft.entity.Entity
 import net.minecraft.tileentity.TileEntity
+import net.minecraft.util.EnumFacing
 import net.minecraft.util.math.BlockPos
+import net.minecraft.util.math.Vec3d
 import net.minecraft.world.IBlockAccess
 import net.minecraft.world.World
 import kotlin.math.pow
@@ -11,6 +14,7 @@ import kotlin.math.sqrt
 
 inline fun Pos(x: Int, y: Int, z: Int) = BlockPos(x, y, z)
 inline fun Pos(x: Double, y: Double, z: Double) = BlockPos(x, y, z)
+inline fun Pos(vector: Vec3d) = BlockPos(vector)
 inline fun Pos(entity: Entity) = BlockPos(entity)
 inline fun Pos(packed: Long) = BlockPos.fromLong(packed)
 
@@ -63,6 +67,32 @@ inline fun BlockPos.setState(world: World, state: IBlockState, flags: Int){
 
 inline fun BlockPos.breakBlock(world: World, drops: Boolean): Boolean{
 	return world.destroyBlock(this, drops)
+}
+
+// Block properties
+
+inline fun BlockPos.getFaceShape(world: World, side: EnumFacing): BlockFaceShape{
+	return this.getState(world).getBlockFaceShape(world, this, side)
+}
+
+// Block predicates
+
+/**
+ * Offsets the block position in [offsetRange] distances a the direction of [facing] until [testPredicate] returns true.
+ * Returns the first [BlockPos] for which [testPredicate] returned true, or null if [testPredicate] didn't return true for any blocks within the [offsetRange].
+ */
+inline fun BlockPos.offsetUntil(facing: EnumFacing, offsetRange: IntRange, testPredicate: (BlockPos) -> Boolean): BlockPos?{
+	var testPos = this
+	
+	for(offset in offsetRange){
+		testPos = testPos.offset(facing)
+		
+		if (testPredicate(testPos)){
+			return testPos
+		}
+	}
+	
+	return null
 }
 
 // Distance calculations
