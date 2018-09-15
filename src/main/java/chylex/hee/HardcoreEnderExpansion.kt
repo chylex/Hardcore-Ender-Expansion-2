@@ -1,5 +1,6 @@
 package chylex.hee
 import chylex.hee.game.commands.HeeServerCommand
+import chylex.hee.game.entity.item.EntityItemIgneousRock
 import chylex.hee.init.ModConfig
 import chylex.hee.init.ModCreativeTabs
 import chylex.hee.init.ModLoot
@@ -13,6 +14,7 @@ import net.minecraftforge.fml.common.Mod.EventHandler
 import net.minecraftforge.fml.common.SidedProxy
 import net.minecraftforge.fml.common.event.FMLInitializationEvent
 import net.minecraftforge.fml.common.event.FMLLoadCompleteEvent
+import net.minecraftforge.fml.common.event.FMLPostInitializationEvent
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent
 import net.minecraftforge.fml.common.event.FMLServerStartingEvent
 import net.minecraftforge.fml.common.network.NetworkCheckHandler
@@ -47,6 +49,11 @@ object HardcoreEnderExpansion{
 		ModLoot.initialize()
 		ModRecipes.initialize()
 		proxy.onInit()
+	}
+	
+	@EventHandler
+	fun onPostInit(e: FMLPostInitializationEvent){
+		EntityItemIgneousRock.setupSmeltingTransformations()
 	}
 	
 	@EventHandler
