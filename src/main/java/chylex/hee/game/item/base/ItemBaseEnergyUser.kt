@@ -41,10 +41,10 @@ abstract class ItemBaseEnergyUser : Item(){
 	// Energy storage
 	
 	private companion object{
-		const val ENERGY_LEVEL_TAG = "EnergyLevel"
+		private const val ENERGY_LEVEL_TAG = "EnergyLevel"
 		
-		const val CLUSTER_POS_TAG = "ClusterPos"
-		const val CLUSTER_TICK_OFFSET_TAG = "ClusterTick"
+		private const val CLUSTER_POS_TAG = "ClusterPos"
+		private const val CLUSTER_TICK_OFFSET_TAG = "ClusterTick"
 		
 		private fun removeClusterTags(nbt: NBTTagCompound){
 			nbt.removeTag(CLUSTER_POS_TAG)

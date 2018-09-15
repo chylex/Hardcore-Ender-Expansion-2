@@ -28,7 +28,7 @@ import kotlin.math.pow
 
 class BlockEnergyCluster(builder: BlockSimple.Builder) : BlockSimple(builder), ITileEntityProvider{
 	private companion object{
-		val SELECTION_AABB = AxisAlignedBB(0.35, 0.35, 0.35, 0.65, 0.65, 0.65)
+		private val SELECTION_AABB = AxisAlignedBB(0.35, 0.35, 0.35, 0.65, 0.65, 0.65)
 	}
 	
 	override fun createNewTileEntity(world: World, meta: Int): TileEntity{

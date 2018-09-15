@@ -24,10 +24,10 @@ import kotlin.math.pow
 
 class TileEntityEnergyCluster : TileEntityBase(), ITickable{
 	private companion object{
-		const val DEFAULT_NOTIFY_FLAGS = FLAG_SYNC_CLIENT or FLAG_SKIP_RENDER
+		private const val DEFAULT_NOTIFY_FLAGS = FLAG_SYNC_CLIENT or FLAG_SKIP_RENDER
 		
-		const val SNAPSHOT_TAG = "Snapshot"
-		const val INACTIVE_TAG = "Inactive"
+		private const val SNAPSHOT_TAG = "Snapshot"
+		private const val INACTIVE_TAG = "Inactive"
 	}
 	
 	// Properties (State)

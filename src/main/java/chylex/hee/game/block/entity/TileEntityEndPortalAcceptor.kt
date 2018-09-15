@@ -24,15 +24,15 @@ import kotlin.math.min
 
 class TileEntityEndPortalAcceptor : TileEntityBase(), ITickable{
 	private companion object{
-		const val NO_REFRESH = Int.MAX_VALUE
+		private const val NO_REFRESH = Int.MAX_VALUE
 		
-		const val WAITING_REFRESH_RATE = 20
-		const val CHARGING_REFRESH_RATE = 2
+		private const val WAITING_REFRESH_RATE = 20
+		private const val CHARGING_REFRESH_RATE = 2
 		
-		val ENERGY_REQUIRED = Units(100)
-		val ENERGY_PER_UPDATE = Units(1)
+		private val ENERGY_REQUIRED = Units(100)
+		private val ENERGY_PER_UPDATE = Units(1)
 		
-		val ANIMATION_PROGRESS_PER_UPDATE = 1F / (CHARGING_REFRESH_RATE.toFloat() * ENERGY_REQUIRED.units.value / ENERGY_PER_UPDATE.units.value)
+		private val ANIMATION_PROGRESS_PER_UPDATE = 1F / (CHARGING_REFRESH_RATE.toFloat() * ENERGY_REQUIRED.units.value / ENERGY_PER_UPDATE.units.value)
 	}
 	
 	// Client animation

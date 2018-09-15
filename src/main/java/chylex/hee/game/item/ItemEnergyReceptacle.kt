@@ -40,17 +40,17 @@ import kotlin.math.pow
 
 class ItemEnergyReceptacle : ItemBaseInfusable(){
 	private companion object{
-		const val CLUSTER_SNAPSHOT_TAG = "Cluster"
-		const val UPDATE_TIME_TAG = "UpdateTime"
-		const val RENDER_COLOR_TAG = "RenderColor"
+		private const val CLUSTER_SNAPSHOT_TAG = "Cluster"
+		private const val UPDATE_TIME_TAG = "UpdateTime"
+		private const val RENDER_COLOR_TAG = "RenderColor"
 		
-		const val INITIAL_LEVEL_TAG = "OrigLevel"
-		const val INITIAL_DIMENSION_TAG = "OrigDim"
+		private const val INITIAL_LEVEL_TAG = "OrigLevel"
+		private const val INITIAL_DIMENSION_TAG = "OrigDim"
 		
-		const val ENERGY_LOSS_TICK_RATE = 10L
-		const val ITEM_COOLDOWN = 16
+		private const val ENERGY_LOSS_TICK_RATE = 10L
+		private const val ITEM_COOLDOWN = 16
 		
-		fun calculateNewEnergyLevel(snapshot: ClusterSnapshot, elapsedTicks: Long, infusions: InfusionList): IEnergyQuantity{
+		private fun calculateNewEnergyLevel(snapshot: ClusterSnapshot, elapsedTicks: Long, infusions: InfusionList): IEnergyQuantity{
 			// TODO make sure Table Pedestals keep updating the item, or at least perform an update just before the infusion
 			val power = if (infusions.has(STABILITY)) 0.0003F else 0.001F
 			
@@ -60,7 +60,7 @@ class ItemEnergyReceptacle : ItemBaseInfusable(){
 			return snapshot.energyLevel - (decreasePerCycle * elapsedCycles.toFloat())
 		}
 		
-		fun shouldLoseHealth(cluster: TileEntityEnergyCluster, nbt: NBTTagCompound, infusions: InfusionList): Boolean{
+		private fun shouldLoseHealth(cluster: TileEntityEnergyCluster, nbt: NBTTagCompound, infusions: InfusionList): Boolean{
 			if (infusions.has(SAFETY)){
 				return false
 			}

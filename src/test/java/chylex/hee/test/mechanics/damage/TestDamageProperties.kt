@@ -13,7 +13,7 @@ import org.junit.jupiter.api.Test
 
 class TestDamageProperties{
 	private companion object{
-		fun DamageProperties.createDamageSource(triggeringSource: Entity? = null, remoteSource: Entity? = triggeringSource): DamageSource{
+		private fun DamageProperties.createDamageSource(triggeringSource: Entity? = null, remoteSource: Entity? = triggeringSource): DamageSource{
 			return createDamageSource("", triggeringSource, remoteSource)
 		}
 	}

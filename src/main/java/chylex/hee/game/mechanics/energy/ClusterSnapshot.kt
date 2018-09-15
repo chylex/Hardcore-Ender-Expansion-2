@@ -15,12 +15,12 @@ class ClusterSnapshot(
 	val color: ClusterColor
 ){
 	private companion object{
-		const val ENERGY_LEVEL_TAG = "EnergyLevel"
-		const val ENERGY_CAPACITY_TAG = "EnergyCapacity"
-		const val HEALTH_STATUS_TAG = "HealthStatus"
-		const val HEALTH_OVERRIDE_TAG = "HealthOverride"
-		const val COLOR_PRIMARY_TAG = "ColorPrimary"
-		const val COLOR_SECONDARY_TAG = "ColorSecondary"
+		private const val ENERGY_LEVEL_TAG = "EnergyLevel"
+		private const val ENERGY_CAPACITY_TAG = "EnergyCapacity"
+		private const val HEALTH_STATUS_TAG = "HealthStatus"
+		private const val HEALTH_OVERRIDE_TAG = "HealthOverride"
+		private const val COLOR_PRIMARY_TAG = "ColorPrimary"
+		private const val COLOR_SECONDARY_TAG = "ColorSecondary"
 	}
 	
 	val tag

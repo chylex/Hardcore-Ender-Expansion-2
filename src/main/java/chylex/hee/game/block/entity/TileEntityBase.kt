@@ -39,7 +39,7 @@ abstract class TileEntityBase : TileEntity(){
 	// NBT
 	
 	private companion object{
-		const val TAG_NAME = HardcoreEnderExpansion.ID
+		private const val TAG_NAME = HardcoreEnderExpansion.ID
 	}
 	
 	protected enum class Context{
