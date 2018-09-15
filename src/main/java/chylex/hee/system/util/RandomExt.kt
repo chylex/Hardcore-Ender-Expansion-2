@@ -1,4 +1,5 @@
 package chylex.hee.system.util
+import net.minecraft.util.math.Vec3d
 import java.util.Random
 import kotlin.math.abs
 import kotlin.math.pow
@@ -94,4 +95,11 @@ fun <T> Random.nextItem(collection: Array<T>): T?{
  */
 fun Random.nextItem(collection: IntArray, default: Int): Int{
 	return if (collection.isEmpty()) default else collection[this.nextInt(collection.size)]
+}
+
+/**
+ * Returns a random point inside a sphere, represented by a vector.
+ */
+fun Random.nextVector(scale: Double): Vec3d{
+	return Vec3d(this.nextDouble() * 2.0 - 1.0, this.nextDouble() * 2.0 - 1.0, this.nextDouble() * 2.0 - 1.0).normalize().scale(scale)
 }
