@@ -25,11 +25,11 @@ interface IDamageProcessor{
 		
 		// Types
 		
-		val PROJECTILE_TYPE = object: IDamageProcessor{
+		val PROJECTILE_TYPE = object : IDamageProcessor{
 			override fun setup(properties: DamageProperties.Writer) = properties.addType(DamageType.PROJECTILE)
 		}
 		
-		fun FIRE_TYPE(setOnFireTicks: Int = 0) = object: IDamageProcessor{
+		fun FIRE_TYPE(setOnFireTicks: Int = 0) = object : IDamageProcessor{
 			override fun setup(properties: DamageProperties.Writer) = properties.addType(DamageType.FIRE)
 			
 			override fun afterDamage(target: Entity, properties: Reader){
@@ -39,17 +39,17 @@ interface IDamageProcessor{
 			}
 		}
 		
-		val BLAST_TYPE = object: IDamageProcessor{
+		val BLAST_TYPE = object : IDamageProcessor{
 			override fun setup(properties: DamageProperties.Writer) = properties.addType(DamageType.BLAST)
 		}
 		
-		val MAGIC_TYPE = object: IDamageProcessor{
+		val MAGIC_TYPE = object : IDamageProcessor{
 			override fun setup(properties: DamageProperties.Writer) = properties.addType(DamageType.MAGIC)
 		}
 		
 		// Difficulty
 		
-		val PEACEFUL_EXCLUSION = object: IDamageProcessor{
+		val PEACEFUL_EXCLUSION = object : IDamageProcessor{
 			override fun modifyDamage(amount: Float, target: Entity, properties: DamageProperties.Reader): Float{
 				return if (target.world.difficulty != PEACEFUL || target !is EntityPlayer)
 					amount
@@ -58,7 +58,7 @@ interface IDamageProcessor{
 			}
 		}
 		
-		val PEACEFUL_KNOCKBACK = object: IDamageProcessor{
+		val PEACEFUL_KNOCKBACK = object : IDamageProcessor{
 			override fun modifyDamage(amount: Float, target: Entity, properties: DamageProperties.Reader): Float{
 				return if (target.world.difficulty != PEACEFUL || target !is EntityPlayer)
 					amount
@@ -67,7 +67,7 @@ interface IDamageProcessor{
 			}
 		}
 		
-		val DIFFICULTY_SCALING = object: IDamageProcessor{
+		val DIFFICULTY_SCALING = object : IDamageProcessor{
 			override fun modifyDamage(amount: Float, target: Entity, properties: DamageProperties.Reader): Float{
 				return if (target !is EntityPlayer){
 					amount
@@ -83,7 +83,7 @@ interface IDamageProcessor{
 		
 		// Equipment
 		
-		fun ARMOR_PROTECTION(allowShield: Boolean) = object: IDamageProcessor{
+		fun ARMOR_PROTECTION(allowShield: Boolean) = object : IDamageProcessor{
 			override fun setup(properties: DamageProperties.Writer){
 				if (allowShield){
 					properties.setAllowArmorAndShield()
@@ -94,7 +94,7 @@ interface IDamageProcessor{
 			}
 		}
 		
-		val ENCHANTMENT_PROTECTION = object: IDamageProcessor{
+		val ENCHANTMENT_PROTECTION = object : IDamageProcessor{
 			override fun modifyDamage(amount: Float, target: Entity, properties: DamageProperties.Reader): Float{
 				if (target !is EntityLivingBase){
 					return amount
@@ -109,7 +109,7 @@ interface IDamageProcessor{
 			}
 		}
 		
-		val NUDITY_DANGER = object: IDamageProcessor{
+		val NUDITY_DANGER = object : IDamageProcessor{
 			override fun modifyDamage(amount: Float, target: Entity, properties: DamageProperties.Reader): Float{
 				val bodyCoverageFactor = target.armorInventoryList.sumBy {
 					if (it.item is ItemArmor)
@@ -136,7 +136,7 @@ interface IDamageProcessor{
 		
 		// Status effects
 		
-		val POTION_PROTECTION = object: IDamageProcessor{
+		val POTION_PROTECTION = object : IDamageProcessor{
 			/**
 			 * [EntityLivingBase.applyPotionDamageCalculations]
 			 */
@@ -148,7 +148,7 @@ interface IDamageProcessor{
 			}
 		}
 		
-		fun STATUS(effect: PotionEffect) = object: IDamageProcessor{
+		fun STATUS(effect: PotionEffect) = object : IDamageProcessor{
 			override fun afterDamage(target: Entity, properties: DamageProperties.Reader){
 				if (target is EntityLivingBase){
 					target.addPotionEffect(effect)
@@ -158,19 +158,19 @@ interface IDamageProcessor{
 		
 		// Invincibility
 		
-		val DEAL_CREATIVE = object: IDamageProcessor{
+		val DEAL_CREATIVE = object : IDamageProcessor{
 			override fun setup(properties: DamageProperties.Writer){
 				properties.setDealCreative()
 			}
 		}
 		
-		fun RAPID_DAMAGE(reduceByTicks: Int) = object: IDamageProcessor{
+		fun RAPID_DAMAGE(reduceByTicks: Int) = object : IDamageProcessor{
 			override fun afterDamage(target: Entity, properties: Reader){
 				target.hurtResistantTime = (target.hurtResistantTime - reduceByTicks).coerceAtLeast(1)
 			}
 		}
 		
-		fun IGNORE_INVINCIBILITY() = object: IDamageProcessor{
+		fun IGNORE_INVINCIBILITY() = object : IDamageProcessor{
 			private var prevHurtResistantTime = 0
 			
 			override fun modifyDamage(amount: Float, target: Entity, properties: Reader): Float{

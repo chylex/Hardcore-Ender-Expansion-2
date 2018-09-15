@@ -48,7 +48,7 @@ class EntityItemIgneousRock : EntityItem{
 		
 		private const val MIN_ENTITY_BURN_DURATION_TICKS = 40
 		
-		@JvmStatic private lateinit var smeltingTransformations: Map<IBlockState, IBlockState>
+		private lateinit var smeltingTransformations: Map<IBlockState, IBlockState>
 		
 		fun setupSmeltingTransformations(){
 			smeltingTransformations = FurnaceRecipes.instance().smeltingList.map(::convertToBlockStatePair).filterNotNull().toMap()
