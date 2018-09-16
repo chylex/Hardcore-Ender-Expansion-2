@@ -1,5 +1,6 @@
 package chylex.hee.game.item.base
 import chylex.hee.game.block.entity.TileEntityEnergyCluster
+import chylex.hee.game.mechanics.energy.IEnergyQuantity
 import chylex.hee.game.mechanics.energy.IEnergyQuantity.Units
 import chylex.hee.system.util.Pos
 import chylex.hee.system.util.ceilToInt
@@ -35,8 +36,8 @@ abstract class ItemBaseEnergyUser : Item(){
 		maxStackSize = 1
 	}
 	
-	protected abstract val energyCapacity: Units
-	protected abstract val energyPerUse: Fraction
+	protected abstract fun getEnergyCapacity(stack: ItemStack): Units
+	protected abstract fun getEnergyPerUse(stack: ItemStack): Fraction
 	
 	// Energy storage
 	
@@ -52,8 +53,9 @@ abstract class ItemBaseEnergyUser : Item(){
 		}
 	}
 	
-	private val internalEnergyCapacity
-		get() = energyCapacity.value * energyPerUse.denominator
+	private fun calculateInternalEnergyCapacity(stack: ItemStack): Int{
+		return getEnergyCapacity(stack).value * getEnergyPerUse(stack).denominator
+	}
 	
 	private fun getEnergyLevel(stack: ItemStack): Short{
 		return stack.heeTagOrNull?.getShort(ENERGY_LEVEL_TAG) ?: 0
@@ -62,22 +64,34 @@ abstract class ItemBaseEnergyUser : Item(){
 	private fun offsetEnergyLevel(stack: ItemStack, byAmount: Int): Boolean{
 		with(stack.heeTag){
 			val prevLevel = getShort(ENERGY_LEVEL_TAG)
-			val newLevel = (prevLevel + byAmount).coerceIn(0, internalEnergyCapacity).toShort()
+			val newLevel = (prevLevel + byAmount).coerceIn(0, calculateInternalEnergyCapacity(stack)).toShort()
 			
 			setShort(ENERGY_LEVEL_TAG, newLevel)
 			return prevLevel != newLevel
 		}
 	}
 	
-	fun chargeEnergyUnit(stack: ItemStack): Boolean = offsetEnergyLevel(stack, energyPerUse.denominator)
+	// Energy handling
 	
-	fun useEnergyUnit(stack: ItemStack): Boolean = offsetEnergyLevel(stack, -energyPerUse.numerator)
-	
-	fun setChargePercentage(stack: ItemStack, percentage: Float){
-		stack.heeTag.setShort(ENERGY_LEVEL_TAG, (internalEnergyCapacity * percentage).floorToInt().coerceIn(0, internalEnergyCapacity).toShort())
+	fun hasAnyEnergy(stack: ItemStack): Boolean{
+		return getEnergyLevel(stack) > 0
 	}
 	
-	// Energy handling
+	fun chargeEnergyUnit(stack: ItemStack): Boolean = offsetEnergyLevel(stack, getEnergyPerUse(stack).denominator)
+	
+	fun useEnergyUnit(stack: ItemStack): Boolean = offsetEnergyLevel(stack, -getEnergyPerUse(stack).numerator) // TODO add FX when all Energy is used
+	
+	fun setEnergyChargePercentage(stack: ItemStack, percentage: Float){
+		val internalCapacity = calculateInternalEnergyCapacity(stack)
+		stack.heeTag.setShort(ENERGY_LEVEL_TAG, (internalCapacity * percentage).floorToInt().coerceIn(0, internalCapacity).toShort())
+	}
+	
+	fun setEnergyChargeLevel(stack: ItemStack, level: IEnergyQuantity){
+		val internalCapacity = calculateInternalEnergyCapacity(stack)
+		stack.heeTag.setShort(ENERGY_LEVEL_TAG, (level.units.value * getEnergyPerUse(stack).denominator).coerceIn(0, internalCapacity).toShort())
+	}
+	
+	// Energy charging
 	
 	override fun onItemUse(player: EntityPlayer, world: World, pos: BlockPos, hand: EnumHand, facing: EnumFacing, hitX: Float, hitY: Float, hitZ: Float): EnumActionResult{
 		val tile = pos.getTile<TileEntityEnergyCluster>(world)
@@ -114,7 +128,7 @@ abstract class ItemBaseEnergyUser : Item(){
 				val tile = pos.getTile<TileEntityEnergyCluster>(world)
 				
 				if ((isSelected || entity.getHeldItem(OFF_HAND) == stack) &&
-					getShort(ENERGY_LEVEL_TAG) < internalEnergyCapacity &&
+					getShort(ENERGY_LEVEL_TAG) < calculateInternalEnergyCapacity(stack) &&
 					pos.distanceTo(entity) <= entity.getEntityAttribute(EntityPlayer.REACH_DISTANCE).attributeValue &&
 					tile != null &&
 					tile.drainEnergy(Units(1))
@@ -133,7 +147,7 @@ abstract class ItemBaseEnergyUser : Item(){
 	
 	override fun showDurabilityBar(stack: ItemStack): Boolean = true
 	
-	override fun getDurabilityForDisplay(stack: ItemStack): Double = 1.0 - (getEnergyLevel(stack).toDouble() / internalEnergyCapacity)
+	override fun getDurabilityForDisplay(stack: ItemStack): Double = 1.0 - (getEnergyLevel(stack).toDouble() / calculateInternalEnergyCapacity(stack))
 	
 	override fun getRGBDurabilityForDisplay(stack: ItemStack): Int{
 		val level = 1F - getDurabilityForDisplay(stack).pow(2.0).toFloat()
@@ -149,9 +163,9 @@ abstract class ItemBaseEnergyUser : Item(){
 		super.addInformation(stack, world, lines, flags)
 		
 		if (flags.isAdvanced){
-			lines.add(I18n.translateToLocalFormatted("item.tooltip.hee.energy.level", getEnergyLevel(stack), internalEnergyCapacity))
+			lines.add(I18n.translateToLocalFormatted("item.tooltip.hee.energy.level", getEnergyLevel(stack), calculateInternalEnergyCapacity(stack)))
 		}
 		
-		lines.add(I18n.translateToLocalFormatted("item.tooltip.hee.energy.uses", (getEnergyLevel(stack).toDouble() / energyPerUse.numerator).ceilToInt()))
+		lines.add(I18n.translateToLocalFormatted("item.tooltip.hee.energy.uses", (getEnergyLevel(stack).toDouble() / getEnergyPerUse(stack).numerator).ceilToInt()))
 	}
 }
