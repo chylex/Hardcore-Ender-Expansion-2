@@ -1,5 +1,6 @@
 package chylex.hee.game.render.util
 import chylex.hee.system.util.floorToInt
+import chylex.hee.system.util.toRadians
 import org.lwjgl.util.Color
 import kotlin.math.cos
 import kotlin.math.pow
@@ -37,7 +38,7 @@ data class RGB(val red: Int, val green: Int, val blue: Int) : IColor{
  * @param[chroma] value between 0-100
  * @param[luminance] value between 0-100
  */
-data class HCL(val hue: Double, val chroma: Int, val luminance: Int) : IColor{
+data class HCL(val hue: Double, val chroma: Float, val luminance: Float) : IColor{
 	companion object{
 		private const val X_NORMALIZED =  95.047
 		private const val Y_NORMALIZED = 100.000
@@ -48,13 +49,13 @@ data class HCL(val hue: Double, val chroma: Int, val luminance: Int) : IColor{
 	}
 	
 	override fun toRGB(): Color{
-		val hueRad = Math.toRadians(hue)
+		val hueRad = hue.toRadians()
 		
 		val l = luminance
 		val u = chroma * cos(hueRad)
 		val v = chroma * sin(hueRad)
 		
-		if (luminance == 0){
+		if (luminance == 0F){
 			return Color(0, 0, 0)
 		}
 		

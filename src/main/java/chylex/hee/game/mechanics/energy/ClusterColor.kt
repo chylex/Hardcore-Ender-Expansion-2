@@ -5,7 +5,7 @@ import java.util.Random
 
 class ClusterColor(val primaryHue: Short, val secondaryHue: Short){
 	val forReceptacle: IColor
-		get() = HCL(primaryHue.toDouble(), 75, 80)
+		get() = HCL(primaryHue.toDouble(), 75F, 80F)
 	
 	companion object{
 		fun generate(rand: Random): ClusterColor{
