@@ -13,4 +13,7 @@ inline fun square(value: Int) = value * value
 inline fun square(value: Float) = value * value
 inline fun square(value: Double) = value * value
 
+inline fun Double.toDegrees() = Math.toDegrees(this)
+inline fun Double.toRadians() = Math.toRadians(this)
+
 infix fun Int.over(denominator: Int): Fraction = Fraction.getFraction(this, denominator)

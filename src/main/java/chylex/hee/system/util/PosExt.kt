@@ -18,6 +18,9 @@ inline fun Pos(vector: Vec3d) = BlockPos(vector)
 inline fun Pos(entity: Entity) = BlockPos(entity)
 inline fun Pos(packed: Long) = BlockPos.fromLong(packed)
 
+inline val BlockPos.center
+	get() = Vec3d(x + 0.5, y + 0.5, z + 0.5)
+
 // Constants
 
 const val FLAG_NOTIFY_NEIGHBORS = 1
