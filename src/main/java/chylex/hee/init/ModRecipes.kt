@@ -1,5 +1,6 @@
 package chylex.hee.init
 import chylex.hee.HardcoreEnderExpansion
+import chylex.hee.game.item.ItemEnergyOracle
 import chylex.hee.system.IntegrityCheck
 import net.minecraft.item.ItemStack
 import net.minecraft.item.crafting.FurnaceRecipes
@@ -31,6 +32,8 @@ object ModRecipes{
 			IntegrityCheck.removedPurpurRecipe = removeVanilla("purpur_block")
 			IntegrityCheck.removedEndRodRecipe = removeVanilla("end_rod")
 			// TODO figure out what to do with the broken advancements
+			
+			ItemEnergyOracle.setupRecipeNBT(getValue(ResourceLocation(HardcoreEnderExpansion.ID, "energy_oracle"))!!)
 		}
 	}
 }

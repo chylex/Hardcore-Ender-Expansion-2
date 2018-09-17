@@ -44,6 +44,9 @@ class TileEntityEnergyCluster : TileEntityBase(), ITickable{
 	var color: ClusterColor by Notifying(ClusterColor(0, 0), DEFAULT_NOTIFY_FLAGS)
 		private set
 	
+	var affectedByProximity: Boolean by Notifying(false, DEFAULT_NOTIFY_FLAGS) // TODO implement proximity
+		private set
+	
 	// Properties (Calculated)
 	
 	val currentHealth: IClusterHealth

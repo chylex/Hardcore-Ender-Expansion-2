@@ -59,6 +59,7 @@ item.hee.alteration_nexus.name=Alteration Nexus
 item.hee.void_essence.name=Void Essence
 item.hee.obsidian_rod.name=Obsidian Rod
 
+item.hee.energy_oracle.name=Energy Oracle
 item.hee.energy_receptacle.name=Energy Receptacle
 item.hee.energy_receptacle.tooltip.empty=§9Empty
 item.hee.energy_receptacle.tooltip.holding=§9Holding §3%s§9 Energy

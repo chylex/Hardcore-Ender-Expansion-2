@@ -1,5 +1,6 @@
 package chylex.hee.init
 import chylex.hee.HardcoreEnderExpansion
+import chylex.hee.game.item.ItemEnergyOracle
 import chylex.hee.game.item.ItemEnergyReceptacle
 import chylex.hee.game.item.ItemIgneousRock
 import net.minecraft.item.Item
@@ -33,6 +34,7 @@ object ModItems{
 	
 	// Items: Energy
 	
+	@JvmField val ENERGY_ORACLE     = ItemEnergyOracle().apply { setup("energy_oracle") }
 	@JvmField val ENERGY_RECEPTACLE = ItemEnergyReceptacle().apply { setup("energy_receptacle") }
 	
 	// Registry
@@ -58,6 +60,7 @@ object ModItems{
 			register(VOID_ESSENCE)
 			register(OBSIDIAN_ROD)
 			
+			register(ENERGY_ORACLE)
 			register(ENERGY_RECEPTACLE)
 		}
 	}

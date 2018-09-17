@@ -2,6 +2,7 @@ package chylex.hee.proxy
 import chylex.hee.HardcoreEnderExpansion
 import chylex.hee.game.commands.HeeClientCommand
 import chylex.hee.game.entity.item.EntityItemIgneousRock
+import chylex.hee.game.item.ItemEnergyOracle
 import chylex.hee.game.item.ItemEnergyReceptacle
 import chylex.hee.game.render.block.RenderTileEndPortal
 import chylex.hee.game.render.entity.RenderEntityItemNoBob
@@ -43,6 +44,7 @@ class ModClientProxy : ModCommonProxy(){
 		registerTileRenderer<TileEntityEndPortal>(RenderTileEndPortal)
 		
 		with(Minecraft.getMinecraft().itemColors){
+			registerItemColorHandler(ItemEnergyOracle.Color, ModItems.ENERGY_ORACLE)
 			registerItemColorHandler(ItemEnergyReceptacle.Color, ModItems.ENERGY_RECEPTACLE)
 		}
 	}
