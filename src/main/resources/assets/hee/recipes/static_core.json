@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "###",
+    "#X#",
+    "GQG"
+  ],
+  "key": {
+    "#": { "item": "hee:endium_ingot" },
+    "X": { "item": "hee:alteration_nexus" },
+    "G": { "item": "minecraft:gold_ingot" },
+    "Q": { "item": "minecraft:quartz" }
+  },
+  "result": {
+    "item": "hee:static_core"
+  }
+}

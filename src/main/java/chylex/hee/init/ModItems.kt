@@ -31,6 +31,7 @@ object ModItems{
 	@JvmField val ALTERATION_NEXUS = Item().apply { setup("alteration_nexus") }
 	@JvmField val VOID_ESSENCE     = Item().apply { setup("void_essence") }
 	@JvmField val OBSIDIAN_ROD     = Item().apply { setup("obsidian_rod") }
+	@JvmField val STATIC_CORE      = Item().apply { setup("static_core") }
 	
 	// Items: Energy
 	
@@ -59,6 +60,7 @@ object ModItems{
 			register(ALTERATION_NEXUS)
 			register(VOID_ESSENCE)
 			register(OBSIDIAN_ROD)
+			register(STATIC_CORE)
 			
 			register(ENERGY_ORACLE)
 			register(ENERGY_RECEPTACLE)
