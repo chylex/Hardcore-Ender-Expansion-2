@@ -1,5 +1,7 @@
 package chylex.hee.game.item.util
 import chylex.hee.system.util.getBlock
+import chylex.hee.system.util.getState
+import chylex.hee.system.util.isAir
 import net.minecraft.block.Block
 import net.minecraft.block.state.IBlockState
 import net.minecraft.entity.player.EntityPlayer
@@ -16,6 +18,11 @@ object BlockEditor{
 	
 	fun canEdit(pos: BlockPos, player: EntityPlayer, stack: ItemStack): Boolean{
 		return player.canPlayerEdit(pos.offset(UP), UP, stack)
+	}
+	
+	fun canBreak(pos: BlockPos, player: EntityPlayer): Boolean{
+		val world = player.world
+		return (pos.isAir(world) || pos.getState(world).getBlockHardness(world, pos) >= 0F) && player.capabilities.allowEdit
 	}
 	
 	// Placement

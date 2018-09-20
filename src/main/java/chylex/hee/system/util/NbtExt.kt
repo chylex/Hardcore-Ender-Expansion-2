@@ -1,5 +1,6 @@
 package chylex.hee.system.util
 import chylex.hee.HardcoreEnderExpansion
+import net.minecraft.entity.Entity
 import net.minecraft.item.ItemStack
 import net.minecraft.nbt.NBTPrimitive
 import net.minecraft.nbt.NBTTagByte
@@ -61,6 +62,17 @@ val ItemStack.heeTagOrNull: NBTTagCompound?
 		else
 			null
 	}
+
+// Entities
+
+fun Entity.heeTag(root: NBTTagCompound): NBTTagCompound{
+	return if (root.hasKey(HEE_TAG_NAME)){
+		root.getCompoundTag(HEE_TAG_NAME)
+	}
+	else{
+		NBTTagCompound().also { root.setTag(HEE_TAG_NAME, it) }
+	}
+}
 
 // Enums
 

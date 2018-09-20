@@ -1,5 +1,6 @@
 package chylex.hee.system.util
 import net.minecraft.block.Block
+import net.minecraft.block.material.Material
 import net.minecraft.block.state.BlockFaceShape
 import net.minecraft.block.state.IBlockState
 import net.minecraft.entity.Entity
@@ -36,6 +37,10 @@ inline fun BlockPos.isAir(world: IBlockAccess): Boolean{
 
 inline fun BlockPos.getBlock(world: IBlockAccess): Block{
 	return world.getBlockState(this).block
+}
+
+inline fun BlockPos.getMaterial(world: IBlockAccess): Material{
+	return world.getBlockState(this).material
 }
 
 inline fun BlockPos.getState(world: IBlockAccess): IBlockState{
@@ -108,12 +113,17 @@ fun BlockPos.distanceSqTo(pos: BlockPos): Double{
 	return distanceSqTo(pos.x, pos.y, pos.z)
 }
 
+fun BlockPos.distanceSqTo(vec: Vec3d): Double{
+	return (vec.x - (this.x + 0.5)).pow(2) + (vec.y - (this.y + 0.5)).pow(2) + (vec.z - (this.z + 0.5)).pow(2)
+}
+
 fun BlockPos.distanceSqTo(entity: Entity): Double{
 	return (entity.posX - (this.x + 0.5)).pow(2) + (entity.posY - (this.y + 0.5)).pow(2) + (entity.posZ - (this.z + 0.5)).pow(2)
 }
 
 inline fun BlockPos.distanceTo(x: Int, y: Int, z: Int): Double = sqrt(distanceSqTo(x, y, z))
 inline fun BlockPos.distanceTo(pos: BlockPos): Double = sqrt(distanceSqTo(pos))
+inline fun BlockPos.distanceTo(vec: Vec3d): Double = sqrt(distanceSqTo(vec))
 inline fun BlockPos.distanceTo(entity: Entity): Double = sqrt(distanceSqTo(entity))
 
 // Distance utilities
