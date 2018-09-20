@@ -1,6 +1,7 @@
 package chylex.hee.init
 import chylex.hee.HardcoreEnderExpansion
 import chylex.hee.game.entity.item.EntityItemIgneousRock
+import chylex.hee.game.entity.projectile.EntityProjectileSpatialDash
 import chylex.hee.init.factory.EntityConstructors
 import net.minecraft.entity.Entity
 import net.minecraft.util.ResourceLocation
@@ -22,6 +23,8 @@ object ModEntities{
 		
 		with(e.registry){
 			register<EntityItemIgneousRock>("ItemIgneousRock").tracker(64, 3, true) to this
+			
+			register<EntityProjectileSpatialDash>("ProjectileSpatialDash").tracker(64, 10, true) to this
 		}
 	}
 	

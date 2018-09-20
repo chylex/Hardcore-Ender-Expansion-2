@@ -3,6 +3,7 @@ import chylex.hee.HardcoreEnderExpansion
 import chylex.hee.game.item.ItemEnergyOracle
 import chylex.hee.game.item.ItemEnergyReceptacle
 import chylex.hee.game.item.ItemIgneousRock
+import chylex.hee.game.item.ItemSpatialDashGem
 import net.minecraft.item.Item
 import net.minecraftforge.event.RegistryEvent
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber
@@ -38,6 +39,10 @@ object ModItems{
 	@JvmField val ENERGY_ORACLE     = ItemEnergyOracle().apply { setup("energy_oracle") }
 	@JvmField val ENERGY_RECEPTACLE = ItemEnergyReceptacle().apply { setup("energy_receptacle") }
 	
+	// Items: Gems
+	
+	@JvmField val SPATIAL_DASH_GEM = ItemSpatialDashGem().apply { setup("spatial_dash_gem") }
+	
 	// Registry
 	
 	@JvmStatic
@@ -64,6 +69,8 @@ object ModItems{
 			
 			register(ENERGY_ORACLE)
 			register(ENERGY_RECEPTACLE)
+			
+			register(SPATIAL_DASH_GEM)
 		}
 	}
 	

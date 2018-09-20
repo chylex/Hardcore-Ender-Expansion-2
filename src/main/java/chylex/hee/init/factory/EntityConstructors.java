@@ -1,5 +1,6 @@
 package chylex.hee.init.factory;
 import chylex.hee.game.entity.item.EntityItemIgneousRock;
+import chylex.hee.game.entity.projectile.EntityProjectileSpatialDash;
 import net.minecraft.entity.Entity;
 import net.minecraft.world.World;
 import java.util.HashMap;
@@ -11,6 +12,8 @@ public final class EntityConstructors{
 	
 	static{
 		add(EntityItemIgneousRock.class, EntityItemIgneousRock::new);
+		
+		add(EntityProjectileSpatialDash.class, EntityProjectileSpatialDash::new);
 	}
 	
 	@SuppressWarnings("unchecked")

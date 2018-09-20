@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "X#X",
+    "#C#",
+    "X#X"
+  ],
+  "key": {
+    "#": { "item": "minecraft:ender_pearl" },
+    "X": { "item": "hee:obsidian_fragment" },
+    "C": { "item": "hee:static_core" }
+  },
+  "result": {
+    "item": "hee:spatial_dash_gem"
+  }
+}
