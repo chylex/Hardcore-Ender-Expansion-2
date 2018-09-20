@@ -79,7 +79,7 @@ abstract class ItemBaseEnergyUser : Item(){
 	
 	fun chargeEnergyUnit(stack: ItemStack): Boolean = offsetEnergyLevel(stack, getEnergyPerUse(stack).denominator)
 	
-	fun useEnergyUnit(stack: ItemStack): Boolean = offsetEnergyLevel(stack, -getEnergyPerUse(stack).numerator) // TODO add FX when all Energy is used
+	fun useEnergyUnit(stack: ItemStack): Boolean = offsetEnergyLevel(stack, -getEnergyPerUse(stack).numerator) // TODO add FX when all Energy is used, maybe don't use any in creative mode
 	
 	fun setEnergyChargePercentage(stack: ItemStack, percentage: Float){
 		val internalCapacity = calculateInternalEnergyCapacity(stack)

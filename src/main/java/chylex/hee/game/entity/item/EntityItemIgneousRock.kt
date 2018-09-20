@@ -6,6 +6,7 @@ import chylex.hee.system.util.cloneFrom
 import chylex.hee.system.util.distanceSqTo
 import chylex.hee.system.util.floorToInt
 import chylex.hee.system.util.getFaceShape
+import chylex.hee.system.util.getMaterial
 import chylex.hee.system.util.getState
 import chylex.hee.system.util.isAir
 import chylex.hee.system.util.motionVec
@@ -119,7 +120,7 @@ class EntityItemIgneousRock : EntityItem{
 		val currentPos = Pos(posX, posY, posZ)
 		
 		if (Pos(prevPosX, prevPosY, prevPosZ) != currentPos || ticksExisted % 25 == 0){
-			if (currentPos.getState(world).material == Material.WATER){
+			if (currentPos.getMaterial(world) == Material.WATER){
 				motionY = 0.2
 				motionX = rand.nextFloat(-0.2F, 0.2F).toDouble()
 				motionZ = rand.nextFloat(-0.2F, 0.2F).toDouble()

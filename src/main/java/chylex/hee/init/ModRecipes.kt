@@ -36,6 +36,7 @@ object ModRecipes{
 			
 			ItemEnergyOracle.setupRecipeNBT(getValue(ResourceLocation(HardcoreEnderExpansion.ID, "energy_oracle"))!!)
 			ItemSpatialDashGem.setupRecipeNBT(getValue(ResourceLocation(HardcoreEnderExpansion.ID, "spatial_dash_gem"))!!)
+			// UPDATE: hopfully figure out a better way to do this
 		}
 	}
 }
