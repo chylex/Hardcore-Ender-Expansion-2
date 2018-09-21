@@ -32,6 +32,7 @@ import net.minecraft.block.Block
 import net.minecraft.block.SoundType
 import net.minecraft.block.material.MapColor
 import net.minecraft.block.material.Material
+import net.minecraft.creativetab.CreativeTabs
 import net.minecraft.init.Blocks
 import net.minecraft.item.Item
 import net.minecraft.item.ItemBlock
@@ -296,7 +297,7 @@ object ModBlocks{
 		Blocks.END_PORTAL_FRAME.setCreativeTab(null)
 		
 		with(e.registry){
-			register(BlockEndPortalOverride().apply { override(Blocks.END_PORTAL) })
+			register(BlockEndPortalOverride().apply { override(Blocks.END_PORTAL, newCreativeTab = null) })
 		}
 	}
 	
@@ -311,20 +312,21 @@ object ModBlocks{
 	
 	private val temporaryItemBlocks = mutableListOf<ItemBlock>()
 	
-	private fun Block.setup(registryName: String, unlocalizedName: String = "", inCreativeTab: Boolean = true){
+	private fun Block.setup(registryName: String, unlocalizedName: String = registryName, inCreativeTab: Boolean = true){
 		this.setRegistryName(HardcoreEnderExpansion.ID, registryName)
-		this.unlocalizedName = "hee.${if (unlocalizedName.isEmpty()) registryName else unlocalizedName}"
+		this.unlocalizedName = "hee.$unlocalizedName"
 		
 		if (inCreativeTab){
 			this.setCreativeTab(ModCreativeTabs.main)
 		}
 	}
 	
-	private fun Block.override(vanillaBlock: Block, hideFromCreativeTab: Boolean = true){
+	private fun Block.override(vanillaBlock: Block, newCreativeTab: CreativeTabs? = ModCreativeTabs.main){
 		this.registryName = vanillaBlock.registryName
+		this.setCreativeTab(newCreativeTab)
 		
-		if (hideFromCreativeTab){
-			this.setCreativeTab(null)
+		if (newCreativeTab is OrderedCreativeTab){
+			newCreativeTab.registerOrder(Item.getItemFromBlock(vanillaBlock))
 		}
 	}
 	

@@ -24,6 +24,7 @@ inline val BlockPos.center
 
 // Constants
 
+const val FLAG_NONE             = 0
 const val FLAG_NOTIFY_NEIGHBORS = 1
 const val FLAG_SYNC_CLIENT      = 2
 const val FLAG_SKIP_RENDER      = 4
@@ -78,6 +79,10 @@ inline fun BlockPos.breakBlock(world: World, drops: Boolean): Boolean{
 }
 
 // Block properties
+
+inline fun BlockPos.blocksMovement(world: IBlockAccess): Boolean{
+	return world.getBlockState(this).material.blocksMovement()
+}
 
 inline fun BlockPos.getFaceShape(world: World, side: EnumFacing): BlockFaceShape{
 	return this.getState(world).getBlockFaceShape(world, this, side)

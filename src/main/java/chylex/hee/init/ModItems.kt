@@ -4,6 +4,9 @@ import chylex.hee.game.item.ItemEnergyOracle
 import chylex.hee.game.item.ItemEnergyReceptacle
 import chylex.hee.game.item.ItemIgneousRock
 import chylex.hee.game.item.ItemSpatialDashGem
+import chylex.hee.init.ModCreativeTabs.OrderedCreativeTab
+import net.minecraft.creativetab.CreativeTabs
+import net.minecraft.init.Items
 import net.minecraft.item.Item
 import net.minecraftforge.event.RegistryEvent
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber
@@ -76,12 +79,21 @@ object ModItems{
 	
 	// Utilities
 	
-	private fun Item.setup(registryName: String, unlocalizedName: String = "", inCreativeTab: Boolean = true){
+	private fun Item.setup(registryName: String, unlocalizedName: String = registryName, inCreativeTab: Boolean = true){
 		this.setRegistryName(HardcoreEnderExpansion.ID, registryName)
-		this.unlocalizedName = "hee.${if (unlocalizedName.isEmpty()) registryName else unlocalizedName}"
+		this.unlocalizedName = "hee.$unlocalizedName"
 		
 		if (inCreativeTab){
 			this.creativeTab = ModCreativeTabs.main.also { it.registerOrder(this) }
+		}
+	}
+	
+	private fun Item.override(vanillaItem: Item, newCreativeTab: CreativeTabs? = ModCreativeTabs.main){
+		this.registryName = vanillaItem.registryName
+		this.creativeTab = newCreativeTab
+		
+		if (newCreativeTab is OrderedCreativeTab){
+			newCreativeTab.registerOrder(this)
 		}
 	}
 }
