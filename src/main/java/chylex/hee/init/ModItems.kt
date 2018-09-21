@@ -1,5 +1,6 @@
 package chylex.hee.init
 import chylex.hee.HardcoreEnderExpansion
+import chylex.hee.game.item.ItemChorusBerry
 import chylex.hee.game.item.ItemEnergyOracle
 import chylex.hee.game.item.ItemEnergyReceptacle
 import chylex.hee.game.item.ItemIgneousRock
@@ -74,6 +75,14 @@ object ModItems{
 			register(ENERGY_RECEPTACLE)
 			
 			register(SPATIAL_DASH_GEM)
+		}
+		
+		// vanilla modifications
+		
+		Items.CHORUS_FRUIT_POPPED.creativeTab = null
+		
+		with(e.registry){
+			register(ItemChorusBerry().apply { override(Items.CHORUS_FRUIT) })
 		}
 	}
 	

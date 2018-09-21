@@ -1,6 +1,8 @@
 package chylex.hee.init
 import chylex.hee.HardcoreEnderExpansion
 import chylex.hee.game.block.BlockAncientCobweb
+import chylex.hee.game.block.BlockChorusFlowerOverride
+import chylex.hee.game.block.BlockChorusPlantOverride
 import chylex.hee.game.block.BlockEndPortalAcceptor
 import chylex.hee.game.block.BlockEndPortalCustom
 import chylex.hee.game.block.BlockEndPortalOverride
@@ -298,6 +300,8 @@ object ModBlocks{
 		
 		with(e.registry){
 			register(BlockEndPortalOverride().apply { override(Blocks.END_PORTAL, newCreativeTab = null) })
+			register(BlockChorusFlowerOverride().apply { override(Blocks.CHORUS_FLOWER) })
+			register(BlockChorusPlantOverride().apply { override(Blocks.CHORUS_PLANT) })
 		}
 	}
 	

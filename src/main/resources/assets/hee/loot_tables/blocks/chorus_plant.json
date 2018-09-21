@@ -1,0 +1,12 @@
+{
+  "pools": [
+    {
+      "rolls": 1,
+      "name": "pool",
+      "entries": [
+        { "type": "item", "name": "minecraft:chorus_fruit", "weight": 90, "functions": [{ "function": "set_count", "count": 0 }], "entryName": "#0" },
+        { "type": "item", "name": "minecraft:chorus_fruit", "weight": 10, "functions": [{ "function": "set_count", "count": 1 }], "entryName": "#1" }
+      ]
+    }
+  ]
+}

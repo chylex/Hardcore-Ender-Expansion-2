@@ -3,6 +3,7 @@ import chylex.hee.HardcoreEnderExpansion
 import chylex.hee.game.item.ItemEnergyOracle
 import chylex.hee.game.item.ItemSpatialDashGem
 import chylex.hee.system.IntegrityCheck
+import net.minecraft.init.Items
 import net.minecraft.item.ItemStack
 import net.minecraft.item.crafting.FurnaceRecipes
 import net.minecraft.item.crafting.IRecipe
@@ -20,6 +21,8 @@ object ModRecipes{
 			addSmeltingRecipeForBlock(ModBlocks.END_POWDER_ORE, ItemStack(ModItems.END_POWDER), 0.15F)
 			addSmeltingRecipeForBlock(ModBlocks.ENDIUM_ORE, ItemStack(ModItems.ENDIUM_INGOT), 1.0F)
 			addSmeltingRecipeForBlock(ModBlocks.IGNEOUS_ROCK_ORE, ItemStack(ModItems.IGNEOUS_ROCK), 0.2F)
+			
+			IntegrityCheck.removedChorusFruitRecipe = smeltingList.remove(smeltingList.keys.find { it.item == Items.CHORUS_FRUIT }) != null
 		}
 	}
 	
