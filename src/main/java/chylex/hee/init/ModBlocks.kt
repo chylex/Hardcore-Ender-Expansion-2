@@ -7,6 +7,7 @@ import chylex.hee.game.block.BlockEndPortalOverride
 import chylex.hee.game.block.BlockEndPowderOre
 import chylex.hee.game.block.BlockEndium
 import chylex.hee.game.block.BlockEnergyCluster
+import chylex.hee.game.block.BlockHumus
 import chylex.hee.game.block.BlockIgneousRockOre
 import chylex.hee.game.block.BlockPillarCustom
 import chylex.hee.game.block.BlockSimple
@@ -25,6 +26,7 @@ import chylex.hee.game.item.util.Tool.Level.IRON
 import chylex.hee.game.item.util.Tool.Level.STONE
 import chylex.hee.game.item.util.Tool.Level.WOOD
 import chylex.hee.game.item.util.Tool.Type.PICKAXE
+import chylex.hee.game.item.util.Tool.Type.SHOVEL
 import chylex.hee.init.ModCreativeTabs.OrderedCreativeTab
 import net.minecraft.block.Block
 import net.minecraft.block.SoundType
@@ -64,9 +66,18 @@ object ModBlocks{
 		mapColor = MapColor.BLUE
 	}
 	
+	private val buildHumus = BlockSimple.Builder(Materials.SOLID_NO_TOOL).apply {
+		harvestTool = Pair(WOOD, SHOVEL)
+		harvestHardness = 0.3F
+		
+		soundType = SoundType.GROUND
+		mapColor = MapColor.BLACK
+	}
+	
 	@JvmField val STONE_BRICK_WALL = BlockWallCustom(Blocks.STONEBRICK).apply { setup("stone_brick_wall") }
 	@JvmField val VANTABLOCK       = BlockSimple(buildVantablock).apply { setup("vantablock") }
 	@JvmField val ENDIUM_BLOCK     = BlockEndium(buildEndiumBlock).apply { setup("endium_block") }
+	@JvmField val HUMUS            = BlockHumus(buildHumus).apply { setup("humus") }
 	
 	// Blocks: Building (Gloomrock)
 	
@@ -228,6 +239,7 @@ object ModBlocks{
 			register(STONE_BRICK_WALL with basicItemBlock)
 			register(VANTABLOCK with basicItemBlock)
 			register(ENDIUM_BLOCK with basicItemBlock)
+			register(HUMUS with basicItemBlock)
 			
 			register(GLOOMROCK with basicItemBlock)
 			register(GLOOMROCK_BRICKS with basicItemBlock)
