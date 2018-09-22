@@ -183,5 +183,11 @@ interface IDamageProcessor{
 				target.hurtResistantTime = prevHurtResistantTime
 			}
 		}
+		
+		// Helpers
+		
+		val ALL_PROTECTIONS = arrayOf(ARMOR_PROTECTION(false), ENCHANTMENT_PROTECTION, POTION_PROTECTION)
+		
+		val ALL_PROTECTIONS_WITH_SHIELD = arrayOf(ARMOR_PROTECTION(true), ENCHANTMENT_PROTECTION, POTION_PROTECTION)
 	}
 }

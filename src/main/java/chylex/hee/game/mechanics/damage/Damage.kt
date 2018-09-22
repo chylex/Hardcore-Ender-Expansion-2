@@ -12,13 +12,16 @@ class Damage(private vararg val processors: IDamageProcessor){
 		processors.forEach { it.setup(writer) }
 	}
 	
-	private fun dealToInternal(amount: Float, target: Entity, triggeringSource: Entity?, remoteSource: Entity?, damageTitle: String){
+	private fun dealToInternal(amount: Float, target: Entity, triggeringSource: Entity?, remoteSource: Entity?, damageTitle: String): Boolean{
 		val reader = properties.Reader()
 		val finalAmount = processors.fold(amount){ acc, processor -> processor.modifyDamage(acc, target, reader) }
 		
-		if (finalAmount != CANCEL_DAMAGE && target.attackEntityFrom(properties.createDamageSource(damageTitle, triggeringSource, remoteSource), finalAmount)){
-			processors.forEach { it.afterDamage(target, reader) }
+		if (finalAmount == CANCEL_DAMAGE || !target.attackEntityFrom(properties.createDamageSource(damageTitle, triggeringSource, remoteSource), finalAmount)){
+			return false
 		}
+		
+		processors.forEach { it.afterDamage(target, reader) }
+		return true
 	}
 	
 	fun dealTo(amount: Float, target: Entity, title: String = TITLE_GENERIC) =
