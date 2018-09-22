@@ -1,19 +1,23 @@
 package chylex.hee.proxy
 import chylex.hee.HardcoreEnderExpansion
+import chylex.hee.game.block.BlockDryVines
 import chylex.hee.game.commands.HeeClientCommand
 import chylex.hee.game.entity.item.EntityItemIgneousRock
 import chylex.hee.game.item.ItemEnergyOracle
 import chylex.hee.game.item.ItemEnergyReceptacle
 import chylex.hee.game.render.block.RenderTileEndPortal
 import chylex.hee.game.render.entity.RenderEntityItemNoBob
+import chylex.hee.init.ModBlocks
 import chylex.hee.init.ModItems
 import chylex.hee.init.factory.RendererConstructors
 import net.minecraft.client.Minecraft
 import net.minecraft.client.renderer.block.model.ModelResourceLocation
+import net.minecraft.client.renderer.color.IItemColor
 import net.minecraft.client.renderer.entity.Render
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer
 import net.minecraft.entity.Entity
 import net.minecraft.entity.player.EntityPlayer
+import net.minecraft.item.ItemBlock
 import net.minecraft.tileentity.TileEntity
 import net.minecraft.tileentity.TileEntityEndPortal
 import net.minecraftforge.client.ClientCommandHandler
@@ -43,7 +47,18 @@ class ModClientProxy : ModCommonProxy(){
 		
 		registerTileRenderer<TileEntityEndPortal>(RenderTileEndPortal)
 		
-		with(Minecraft.getMinecraft().itemColors){
+		val blockColors = Minecraft.getMinecraft().blockColors
+		val itemColors = Minecraft.getMinecraft().itemColors
+		
+		with(blockColors){
+			registerBlockColorHandler(BlockDryVines.Color, ModBlocks.DRY_VINES)
+		}
+		
+		with(itemColors){
+			registerItemColorHandler(IItemColor {
+				stack, tintIndex -> blockColors.colorMultiplier((stack.item as ItemBlock).block.getStateFromMeta(stack.metadata), null, null, tintIndex) // UPDATE
+			}, ModBlocks.DRY_VINES)
+			
 			registerItemColorHandler(ItemEnergyOracle.Color, ModItems.ENERGY_ORACLE)
 			registerItemColorHandler(ItemEnergyReceptacle.Color, ModItems.ENERGY_RECEPTACLE)
 		}

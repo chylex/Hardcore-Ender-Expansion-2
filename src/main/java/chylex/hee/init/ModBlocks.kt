@@ -3,6 +3,7 @@ import chylex.hee.HardcoreEnderExpansion
 import chylex.hee.game.block.BlockAncientCobweb
 import chylex.hee.game.block.BlockChorusFlowerOverride
 import chylex.hee.game.block.BlockChorusPlantOverride
+import chylex.hee.game.block.BlockDryVines
 import chylex.hee.game.block.BlockEndPortalAcceptor
 import chylex.hee.game.block.BlockEndPortalCustom
 import chylex.hee.game.block.BlockEndPortalOverride
@@ -199,6 +200,7 @@ object ModBlocks{
 	// Blocks: Decorative (Uncategorized)
 	
 	@JvmField val ANCIENT_COBWEB = BlockAncientCobweb().apply { setup("ancient_cobweb") }
+	@JvmField val DRY_VINES      = BlockDryVines().apply { setup("dry_vines") }
 	
 	// Blocks: Portals
 	
@@ -281,6 +283,7 @@ object ModBlocks{
 			register(IGNEOUS_ROCK_ORE with basicItemBlock)
 			
 			register(ANCIENT_COBWEB with ::ItemAncientCobweb)
+			register(DRY_VINES with basicItemBlock)
 			
 			register(END_PORTAL_INNER with basicItemBlock)
 			register(END_PORTAL_FRAME with basicItemBlock)
