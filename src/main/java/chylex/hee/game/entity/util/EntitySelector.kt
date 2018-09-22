@@ -1,4 +1,4 @@
-package chylex.hee.game.entity.utils
+package chylex.hee.game.entity.util
 import chylex.hee.system.util.posVec
 import chylex.hee.system.util.square
 import com.google.common.base.Predicate

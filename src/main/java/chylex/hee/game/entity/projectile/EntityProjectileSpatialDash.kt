@@ -1,5 +1,5 @@
 package chylex.hee.game.entity.projectile
-import chylex.hee.game.entity.utils.SerializedEntity
+import chylex.hee.game.entity.util.SerializedEntity
 import chylex.hee.game.item.util.BlockEditor
 import chylex.hee.game.item.util.Teleporter
 import chylex.hee.system.util.Pos

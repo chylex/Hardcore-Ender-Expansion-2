@@ -1,5 +1,5 @@
 package chylex.hee.system.util
-import chylex.hee.game.entity.utils.EntitySelector
+import chylex.hee.game.entity.util.EntitySelector
 import com.google.common.base.Predicates
 import net.minecraft.enchantment.EnchantmentProtection
 import net.minecraft.entity.Entity

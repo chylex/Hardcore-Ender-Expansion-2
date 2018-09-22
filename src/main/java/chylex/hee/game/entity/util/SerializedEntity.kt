@@ -1,4 +1,4 @@
-package chylex.hee.game.entity.utils
+package chylex.hee.game.entity.util
 import net.minecraft.entity.Entity
 import net.minecraft.nbt.NBTTagCompound
 import net.minecraft.world.World
