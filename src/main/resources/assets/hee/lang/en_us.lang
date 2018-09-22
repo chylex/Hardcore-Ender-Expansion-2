@@ -66,6 +66,8 @@ item.hee.energy_receptacle.name=Energy Receptacle
 item.hee.energy_receptacle.tooltip.empty=§9Empty
 item.hee.energy_receptacle.tooltip.holding=§9Holding §3%s§9 Energy
 
+item.hee.spatial_dash_gem.name=Spatial Dash Gem
+
 item.hee.chorus_berry.name=Chorus Berry
 
 item.tooltip.hee.energy.level=§9Energy: §3%s§9 / §3%s

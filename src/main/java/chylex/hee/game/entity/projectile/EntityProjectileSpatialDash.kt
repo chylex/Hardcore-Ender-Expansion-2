@@ -1,12 +1,12 @@
 package chylex.hee.game.entity.projectile
 import chylex.hee.game.entity.utils.SerializedEntity
 import chylex.hee.game.item.util.BlockEditor
+import chylex.hee.game.item.util.Teleporter
 import chylex.hee.system.util.Pos
 import chylex.hee.system.util.add
-import chylex.hee.system.util.center
+import chylex.hee.system.util.blocksMovement
 import chylex.hee.system.util.distanceSqTo
 import chylex.hee.system.util.floorToInt
-import chylex.hee.system.util.getMaterial
 import chylex.hee.system.util.heeTag
 import chylex.hee.system.util.motionVec
 import chylex.hee.system.util.posVec
@@ -24,9 +24,7 @@ import net.minecraft.util.math.RayTraceResult.Type.BLOCK
 import net.minecraft.util.math.RayTraceResult.Type.MISS
 import net.minecraft.util.math.Vec3d
 import net.minecraft.world.World
-import net.minecraftforge.common.MinecraftForge
 import net.minecraftforge.event.ForgeEventFactory
-import net.minecraftforge.event.entity.living.EnderTeleportEvent
 import kotlin.math.cos
 import kotlin.math.sin
 
@@ -36,6 +34,7 @@ class EntityProjectileSpatialDash : Entity, IProjectile{
 		private const val PROJECTILE_DISTANCE = 32
 		
 		private val TELEPORT_OFFSETS: Array<BlockPos>
+		private val TELEPORT = Teleporter(resetFall = true)
 		
 		init{
 			val offsets = mutableListOf<BlockPos>()
@@ -49,12 +48,12 @@ class EntityProjectileSpatialDash : Entity, IProjectile{
 		}
 		
 		private fun canTeleportPlayerOnTop(pos: BlockPos, world: World): Boolean{
-			return pos.getMaterial(world).blocksMovement() && !pos.up().getMaterial(world).blocksMovement() && !pos.up(2).getMaterial(world).blocksMovement()
+			return pos.blocksMovement(world) && !pos.up().blocksMovement(world) && !pos.up(2).blocksMovement(world)
 		}
 		
 		private fun handleBlockHit(entity: EntityLivingBase, hit: Vec3d, motion: Vec3d, pos: BlockPos){
 			if (canTeleportPlayerOnTop(pos, entity.world)){
-				teleportEntityTo(entity, pos.center.add(0.0, 0.51, 0.0))
+				TELEPORT.toBlock(entity, pos.up())
 			}
 			else if (!(entity is EntityPlayer && BlockEditor.canBreak(pos, entity))){
 				handleGenericHit(entity, hit, motion)
@@ -76,29 +75,16 @@ class EntityProjectileSpatialDash : Entity, IProjectile{
 				.sortedBy { it.distanceSqTo(target) }
 				.firstOrNull { canTeleportPlayerOnTop(it, world) }
 			
-			if (finalBlock == null && !fallback){
-				return false
+			if (finalBlock != null){
+				TELEPORT.toBlock(entity, finalBlock.up())
+				return true
+			}
+			else if (fallback){
+				TELEPORT.toLocation(entity, target)
+				return true
 			}
 			
-			teleportEntityTo(entity, finalBlock?.center?.add(0.0, 0.51, 0.0) ?: target)
-			return true
-		}
-		
-		private fun teleportEntityTo(entity: EntityLivingBase, position: Vec3d){
-			val event = EnderTeleportEvent(entity, position.x, position.y, position.z, 0F)
-			
-			if (!MinecraftForge.EVENT_BUS.post(event)){
-				if (entity.isRiding){
-					entity.dismountRidingEntity()
-				}
-				
-				if (entity.isPlayerSleeping && entity is EntityPlayer){
-					entity.wakeUpPlayer(true, true, false)
-				}
-				
-				entity.setPositionAndUpdate(event.targetX, event.targetY, event.targetZ)
-				entity.fallDistance = 0F
-			}
+			return false
 		}
 	}
 	

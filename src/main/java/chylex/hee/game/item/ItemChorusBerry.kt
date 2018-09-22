@@ -1,4 +1,5 @@
 package chylex.hee.game.item
+import chylex.hee.game.item.util.Teleporter
 import chylex.hee.game.mechanics.damage.Damage
 import chylex.hee.game.mechanics.damage.IDamageProcessor.Companion.MAGIC_TYPE
 import chylex.hee.game.mechanics.damage.IDamageProcessor.Companion.PEACEFUL_EXCLUSION
@@ -13,14 +14,14 @@ import net.minecraft.item.ItemStack
 import net.minecraft.potion.PotionEffect
 import net.minecraft.util.EnumFacing.DOWN
 import net.minecraft.world.World
-import net.minecraftforge.common.MinecraftForge
-import net.minecraftforge.event.entity.living.EnderTeleportEvent
 import java.util.Random
 
 class ItemChorusBerry : ItemFood(0, 0F, false){
 	private companion object{
 		private const val MIN_TELEPORT_DISTANCE = 8
 		private const val MIN_TELEPORT_DISTANCE_SQ = MIN_TELEPORT_DISTANCE * MIN_TELEPORT_DISTANCE
+		
+		private val TELEPORT = Teleporter(resetFall = true)
 		
 		private val DAMAGE_TELEPORT_FAIL = Damage(PEACEFUL_EXCLUSION, MAGIC_TYPE)
 		
@@ -45,19 +46,7 @@ class ItemChorusBerry : ItemFood(0, 0F, false){
 					val finalPos = targetPos.offsetUntil(DOWN, 1..teleportYSearchRange){ it.blocksMovement(world) }?.up() ?: targetPos.down(teleportYSearchRange)
 					
 					if (finalPos.distanceSqTo(player) > MIN_TELEPORT_DISTANCE_SQ){
-						val event = EnderTeleportEvent(player, finalPos.x + 0.5, finalPos.y + 0.01, finalPos.z + 0.5, 0F)
-						
-						if (MinecraftForge.EVENT_BUS.post(event)){
-							return false
-						}
-						
-						if (player.isRiding){
-							player.dismountRidingEntity()
-						}
-						
-						player.setPositionAndUpdate(event.targetX, event.targetY, event.targetZ) // TODO fx
-						player.fallDistance = 0F
-						return true
+						return TELEPORT.toBlock(player, finalPos)
 					}
 				}
 				
