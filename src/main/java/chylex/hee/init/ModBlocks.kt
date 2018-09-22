@@ -280,7 +280,7 @@ object ModBlocks{
 			register(STARDUST_ORE with basicItemBlock)
 			register(IGNEOUS_ROCK_ORE with basicItemBlock)
 			
-			register(ANCIENT_COBWEB with ItemAncientCobweb(ANCIENT_COBWEB))
+			register(ANCIENT_COBWEB with ::ItemAncientCobweb)
 			
 			register(END_PORTAL_INNER with basicItemBlock)
 			register(END_PORTAL_FRAME with basicItemBlock)
@@ -340,7 +340,7 @@ object ModBlocks{
 		return this
 	}
 	
-	private infix fun Block.with(itemBlockConstructor: (Block) -> ItemBlock): Block{
+	private infix fun <T : Block> T.with(itemBlockConstructor: (T) -> ItemBlock): Block{
 		return with(itemBlockConstructor(this))
 	}
 	
