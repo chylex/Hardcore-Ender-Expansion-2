@@ -22,9 +22,9 @@ object ModEntities{
 		networkID = 0
 		
 		with(e.registry){
-			register<EntityItemIgneousRock>("ItemIgneousRock").tracker(64, 3, true) to this
+			register<EntityItemIgneousRock>("item_igneous_rock").tracker(64, 3, true) to this
 			
-			register<EntityProjectileSpatialDash>("ProjectileSpatialDash").tracker(64, 10, true) to this
+			register<EntityProjectileSpatialDash>("projectile_spatial_dash").tracker(64, 10, true) to this
 		}
 	}
 	
