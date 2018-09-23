@@ -32,11 +32,9 @@ class InfusionList private constructor(private val infusions: ImmutableSet<Infus
 	}
 	
 	override fun iterator(): Iterator<Infusion>{
-		return if (infusions.isEmpty()){
+		return if (infusions.isEmpty())
 			EmptyIterator.get()
-		}
-		else{
+		else
 			infusions.asSequence().sortedBy { it.ordinal }.iterator()
-		}
 	}
 }

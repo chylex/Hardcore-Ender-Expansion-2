@@ -42,12 +42,10 @@ val ItemStack.heeTag: NBTTagCompound
 	get(){
 		val nbt = this.nbt
 		
-		return if (nbt.hasKey(HEE_TAG_NAME)){
+		return if (nbt.hasKey(HEE_TAG_NAME))
 			nbt.getCompoundTag(HEE_TAG_NAME)
-		}
-		else{
+		else
 			NBTTagCompound().also { nbt.setTag(HEE_TAG_NAME, it) }
-		}
 	}
 
 /**
@@ -66,12 +64,10 @@ val ItemStack.heeTagOrNull: NBTTagCompound?
 // Entities
 
 fun Entity.heeTag(root: NBTTagCompound): NBTTagCompound{
-	return if (root.hasKey(HEE_TAG_NAME)){
+	return if (root.hasKey(HEE_TAG_NAME))
 		root.getCompoundTag(HEE_TAG_NAME)
-	}
-	else{
+	else
 		NBTTagCompound().also { root.setTag(HEE_TAG_NAME, it) }
-	}
 }
 
 // Enums
@@ -94,12 +90,10 @@ inline fun <reified T : Enum<T>> NBTTagCompound.getEnum(key: String): T?{
 fun NBTTagCompound.getListOfPrimitives(key: String): NBTPrimitiveList{
 	val tag = this.getTag(key)
 	
-	return if (tag is NBTTagList && (tag.hasNoTags() || tag.get(0) is NBTPrimitive)){
+	return if (tag is NBTTagList && (tag.hasNoTags() || tag.get(0) is NBTPrimitive))
 		NBTPrimitiveList(tag)
-	}
-	else{
+	else
 		NBTPrimitiveList(NBTTagList())
-	}
 }
 
 fun NBTTagCompound.getListOfCompounds(key: String)  = NBTObjectList<NBTTagCompound>(this.getTagList(key, NBT.TAG_COMPOUND))
