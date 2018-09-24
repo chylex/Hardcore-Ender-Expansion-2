@@ -6,7 +6,7 @@ import chylex.hee.system.util.selectVulnerableEntities
 import net.minecraft.entity.EntityCreature
 import net.minecraft.entity.EntityLivingBase
 
-class AITargetRandom_<T : EntityLivingBase>(
+class AITargetRandom<T : EntityLivingBase>(
 	entity: EntityCreature,
 	checkSight: Boolean,
 	easilyReachableOnly: Boolean,

@@ -8,7 +8,7 @@ import chylex.hee.system.util.selectVulnerableEntities
 import net.minecraft.entity.EntityCreature
 import net.minecraft.entity.EntityLivingBase
 
-class AITargetSwarmSwitch_<T : EntityLivingBase>(
+class AITargetSwarmSwitch<T : EntityLivingBase>(
 	entity: EntityCreature,
 	checkSight: Boolean,
 	easilyReachableOnly: Boolean,

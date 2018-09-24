@@ -2,6 +2,7 @@ package chylex.hee.game.entity.living
 import chylex.hee.HardcoreEnderExpansion
 import chylex.hee.game.entity.living.ai.AIHideInBlock
 import chylex.hee.game.entity.living.ai.AISummonFromBlock
+import chylex.hee.game.entity.living.ai.AITargetSwarmSwitch
 import chylex.hee.game.entity.util.ICritTracker
 import chylex.hee.game.mechanics.damage.Damage
 import chylex.hee.game.mechanics.damage.IDamageProcessor.Companion.ALL_PROTECTIONS

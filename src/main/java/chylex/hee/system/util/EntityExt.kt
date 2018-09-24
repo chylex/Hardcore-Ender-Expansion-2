@@ -1,6 +1,6 @@
 package chylex.hee.system.util
-import chylex.hee.game.entity.living.ai.AITargetRandom_
-import chylex.hee.game.entity.living.ai.AITargetSwarmSwitch_
+import chylex.hee.game.entity.living.ai.AITargetRandom
+import chylex.hee.game.entity.living.ai.AITargetSwarmSwitch
 import chylex.hee.game.entity.util.EntitySelector
 import com.google.common.base.Predicate
 import com.google.common.base.Predicates
@@ -76,9 +76,6 @@ fun EntityItem.cloneFrom(source: Entity){
 // AI
 
 typealias AIBase = EntityAIBase
-
-typealias AITargetRandom<T> = AITargetRandom_<T>
-typealias AITargetSwarmSwitch<T> = AITargetSwarmSwitch_<T>
 
 /** Makes the AI compatible with everything. */
 const val AI_FLAG_NONE = 0
