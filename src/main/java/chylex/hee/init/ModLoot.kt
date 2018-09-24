@@ -14,6 +14,8 @@ object ModLoot{
 	lateinit var IGNEOUS_ROCK_ORE: BlockLootTable
 	lateinit var CHORUS_PLANT: BlockLootTable
 	
+	lateinit var SILVERFISH: ResourceLocation
+	
 	fun initialize(){
 		LootConditionManager.registerCondition(ConditionFortune.Serializer)
 		LootConditionManager.registerCondition(ConditionCriticalHit.Serializer)
@@ -23,6 +25,8 @@ object ModLoot{
 		STARDUST_ORE = registerBlock("stardust_ore")
 		IGNEOUS_ROCK_ORE = registerBlock("igneous_rock_ore")
 		CHORUS_PLANT = registerBlock("chorus_plant")
+		
+		SILVERFISH = registerEntity("silverfish")
 	}
 	
 	private fun registerBlock(name: String): BlockLootTable{

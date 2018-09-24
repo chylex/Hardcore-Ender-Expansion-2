@@ -1,6 +1,7 @@
 package chylex.hee.init
 import chylex.hee.HardcoreEnderExpansion
 import chylex.hee.game.entity.item.EntityItemIgneousRock
+import chylex.hee.game.entity.living.EntityMobSilverfish
 import chylex.hee.game.entity.projectile.EntityProjectileSpatialDash
 import chylex.hee.init.factory.EntityConstructors
 import net.minecraft.entity.Entity
@@ -10,7 +11,9 @@ import net.minecraftforge.fml.common.Mod.EventBusSubscriber
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent
 import net.minecraftforge.fml.common.registry.EntityEntry
 import net.minecraftforge.fml.common.registry.EntityEntryBuilder
+import net.minecraftforge.fml.common.registry.ForgeRegistries
 import net.minecraftforge.registries.IForgeRegistry
+import java.util.function.Function
 
 @EventBusSubscriber(modid = HardcoreEnderExpansion.ID)
 object ModEntities{
@@ -25,6 +28,16 @@ object ModEntities{
 			register<EntityItemIgneousRock>("item_igneous_rock").tracker(64, 3, true) to this
 			
 			register<EntityProjectileSpatialDash>("projectile_spatial_dash").tracker(64, 10, true) to this
+		}
+		
+		// vanilla modifications
+		
+		ForgeRegistries.ENTITIES.getValue(ResourceLocation("minecraft", "silverfish"))!!.apply { // TODO is there a better way?
+			val mobClass = EntityMobSilverfish::class.java
+			val entryFields = this::class.java.declaredFields
+			
+			entryFields.first { it.type == Class::class.java }.also { it.isAccessible = true }.set(this, mobClass)
+			entryFields.first { it.type == Function::class.java }.also { it.isAccessible = true }.set(this, EntityConstructors.get(mobClass))
 		}
 	}
 	
