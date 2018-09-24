@@ -1,5 +1,8 @@
 package chylex.hee.system.util
+import chylex.hee.game.entity.living.ai.AITargetRandom_
+import chylex.hee.game.entity.living.ai.AITargetSwarmSwitch_
 import chylex.hee.game.entity.util.EntitySelector
+import com.google.common.base.Predicate
 import com.google.common.base.Predicates
 import net.minecraft.enchantment.EnchantmentProtection
 import net.minecraft.entity.Entity
@@ -74,6 +77,9 @@ fun EntityItem.cloneFrom(source: Entity){
 
 typealias AIBase = EntityAIBase
 
+typealias AITargetRandom<T> = AITargetRandom_<T>
+typealias AITargetSwarmSwitch<T> = AITargetSwarmSwitch_<T>
+
 /** Makes the AI compatible with everything. */
 const val AI_FLAG_NONE = 0
 
@@ -112,8 +118,14 @@ inline fun AIAttackMelee(entity: EntityCreature, movementSpeed: Double, chaseAft
 inline fun AITargetAttacker(entity: EntityCreature, callReinforcements: Boolean) =
 	EntityAIHurtByTarget(entity, callReinforcements)
 
-inline fun <reified T : EntityLivingBase> AITargetNearby(entity: EntityCreature, checkSight: Boolean, easilyReachableOnly: Boolean) =
-	EntityAINearestAttackableTarget<T>(entity, T::class.java, checkSight, easilyReachableOnly)
+inline fun <reified T : EntityLivingBase> AITargetNearby(entity: EntityCreature, checkSight: Boolean, easilyReachableOnly: Boolean, chancePerTick: Int, targetPredicate: Predicate<T>? = null) =
+	EntityAINearestAttackableTarget<T>(entity, T::class.java, chancePerTick, checkSight, easilyReachableOnly, targetPredicate)
+
+inline fun <reified T : EntityLivingBase> AITargetRandom(entity: EntityCreature, checkSight: Boolean, easilyReachableOnly: Boolean, chancePerTick: Int, noinline targetPredicate: ((T) -> Boolean)? = null) =
+	AITargetRandom(entity, checkSight, easilyReachableOnly, chancePerTick, T::class.java, targetPredicate)
+
+inline fun <reified T : EntityLivingBase> AITargetSwarmSwitch(entity: EntityCreature, checkSight: Boolean, easilyReachableOnly: Boolean, rangeMultiplier: Float, noinline targetPredicate: ((T) -> Boolean)? = null) =
+	AITargetSwarmSwitch(entity, checkSight, easilyReachableOnly, rangeMultiplier, T::class.java, targetPredicate)
 
 // Selectors
 
