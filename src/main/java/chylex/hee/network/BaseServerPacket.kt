@@ -11,7 +11,7 @@ import net.minecraftforge.fml.relauncher.SideOnly
 abstract class BaseServerPacket : IPacket{
 	final override fun handle(side: Side, player: EntityPlayer){
 		when(side){
-			CLIENT -> throw UnsupportedOperationException("tried handling a server packet on client side: ${javaClass.simpleName}")
+			CLIENT -> throw UnsupportedOperationException("tried handling a server packet on client side: ${this::class.java.simpleName}")
 			SERVER -> (player.world as WorldServer).addScheduledTask { handle(player as EntityPlayerMP) }
 		}
 	}

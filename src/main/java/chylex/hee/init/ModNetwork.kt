@@ -94,7 +94,7 @@ object ModNetwork{
 		val id = mapPacketClassToId.getByte(packet::class.java)
 		
 		if (id == MISSING_ID){
-			throw IllegalArgumentException("packet is not registered: ${packet.javaClass.simpleName}")
+			throw IllegalArgumentException("packet is not registered: ${packet::class.java.simpleName}")
 		}
 		
 		return PacketBuffer(Unpooled.buffer()).let {

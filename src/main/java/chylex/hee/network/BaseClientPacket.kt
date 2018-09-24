@@ -18,7 +18,7 @@ abstract class BaseClientPacket : IPacket{
 	final override fun handle(side: Side, player: EntityPlayer){
 		when(side){
 			CLIENT -> Minecraft.getMinecraft().addScheduledTask { handle(player as EntityPlayerSP) }
-			SERVER -> throw UnsupportedOperationException("tried handling a client packet on server side: ${javaClass.simpleName}")
+			SERVER -> throw UnsupportedOperationException("tried handling a client packet on server side: ${this::class.java.simpleName}")
 		}
 	}
 	
