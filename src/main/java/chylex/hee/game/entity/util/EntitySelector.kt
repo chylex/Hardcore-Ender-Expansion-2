@@ -7,18 +7,25 @@ import net.minecraft.util.math.AxisAlignedBB
 import net.minecraft.util.math.Vec3d
 import net.minecraft.world.World
 
-class EntitySelector(val world: World, val predicate: Predicate<in Entity>){
-	inline fun <reified T : Entity> inBox(aabb: AxisAlignedBB): Sequence<T>{
-		return world.getEntitiesWithinAABB(T::class.java, aabb, predicate).asSequence()
+class EntitySelector(private val world: World, private val predicate: Predicate<in Entity>){
+	fun <T : Entity> inBox(cls: Class<T>, aabb: AxisAlignedBB): Sequence<T>{
+		return world.getEntitiesWithinAABB(cls, aabb, predicate).asSequence()
 	}
 	
-	inline fun <reified T : Entity> inRange(point: Vec3d, range: Double): Sequence<T>{
+	fun <T : Entity> inRange(cls: Class<T>, point: Vec3d, range: Double): Sequence<T>{
 		val aabb = AxisAlignedBB(point.x - range, point.y - range, point.z - range, point.x + range, point.y + range, point.z + range)
 		val rangeSquared = square(range)
 		
-		return inBox<T>(aabb).filter { it.posVec.squareDistanceTo(point) <= rangeSquared }
+		return inBox(cls, aabb).filter { it.posVec.squareDistanceTo(point) <= rangeSquared }
 	}
 	
-	fun allInBox(aabb: AxisAlignedBB) = inBox<Entity>(aabb)
-	fun allInRange(point: Vec3d, range: Double) = inRange<Entity>(point, range)
+	// Reified
+	
+	inline fun <reified T : Entity> inBox(aabb: AxisAlignedBB): Sequence<T> = inBox(T::class.java, aabb)
+	inline fun <reified T : Entity> inRange(point: Vec3d, range: Double): Sequence<T> = inRange(T::class.java, point, range)
+	
+	// General
+	
+	inline fun allInBox(aabb: AxisAlignedBB) = inBox(Entity::class.java, aabb)
+	inline fun allInRange(point: Vec3d, range: Double) = inRange(Entity::class.java, point, range)
 }
