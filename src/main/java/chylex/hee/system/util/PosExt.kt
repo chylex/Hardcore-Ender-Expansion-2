@@ -95,10 +95,8 @@ inline fun BlockPos.getFaceShape(world: World, side: EnumFacing): BlockFaceShape
  * Returns the first [BlockPos] for which [testPredicate] returned true, or null if [testPredicate] didn't return true for any blocks within the [offsetRange].
  */
 inline fun BlockPos.offsetUntil(facing: EnumFacing, offsetRange: IntRange, testPredicate: (BlockPos) -> Boolean): BlockPos?{
-	var testPos = this
-	
 	for(offset in offsetRange){
-		testPos = testPos.offset(facing)
+		val testPos = this.offset(facing, offset)
 		
 		if (testPredicate(testPos)){
 			return testPos
