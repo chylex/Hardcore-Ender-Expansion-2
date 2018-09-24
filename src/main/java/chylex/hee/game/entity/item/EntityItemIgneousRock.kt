@@ -39,7 +39,7 @@ import net.minecraft.util.math.Vec3d
 import net.minecraft.world.World
 import kotlin.collections.Map.Entry
 
-class EntityItemIgneousRock : EntityItem{
+class EntityItemIgneousRock : EntityItemNoBob{
 	companion object{
 		private const val BURN_DISTANCE = 3.5
 		private const val BURN_DISTANCE_SQ = BURN_DISTANCE * BURN_DISTANCE
@@ -76,8 +76,7 @@ class EntityItemIgneousRock : EntityItem{
 	@Suppress("unused")
 	constructor(world: World) : super(world)
 	
-	constructor(world: World, stack: ItemStack, replacee: Entity) : super(world, replacee.posX, replacee.posY, replacee.posZ, stack){
-		this.cloneFrom(replacee)
+	constructor(world: World, stack: ItemStack, replacee: Entity) : super(world, stack, replacee){
 		lifespan = 1200 + (world.rand.nextBiasedFloat(3F) * 1200F).floorToInt()
 	}
 	

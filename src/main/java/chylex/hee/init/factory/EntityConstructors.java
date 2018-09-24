@@ -1,5 +1,6 @@
 package chylex.hee.init.factory;
 import chylex.hee.game.entity.item.EntityItemIgneousRock;
+import chylex.hee.game.entity.item.EntityItemNoBob;
 import chylex.hee.game.entity.living.EntityMobSilverfish;
 import chylex.hee.game.entity.projectile.EntityProjectileSpatialDash;
 import net.minecraft.entity.Entity;
@@ -12,6 +13,7 @@ public final class EntityConstructors{
 	private static final Map<Class<? extends Entity>, Function<World, ? extends Entity>> all = new HashMap<>();
 	
 	static{
+		add(EntityItemNoBob.class, EntityItemNoBob::new);
 		add(EntityItemIgneousRock.class, EntityItemIgneousRock::new);
 		
 		add(EntityMobSilverfish.class, EntityMobSilverfish::new);
