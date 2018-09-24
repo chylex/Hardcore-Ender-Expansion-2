@@ -3,7 +3,16 @@ import chylex.hee.game.entity.util.EntitySelector
 import com.google.common.base.Predicates
 import net.minecraft.enchantment.EnchantmentProtection
 import net.minecraft.entity.Entity
+import net.minecraft.entity.EntityCreature
 import net.minecraft.entity.EntityLivingBase
+import net.minecraft.entity.ai.EntityAIAttackMelee
+import net.minecraft.entity.ai.EntityAIBase
+import net.minecraft.entity.ai.EntityAIHurtByTarget
+import net.minecraft.entity.ai.EntityAILookIdle
+import net.minecraft.entity.ai.EntityAINearestAttackableTarget
+import net.minecraft.entity.ai.EntityAISwimming
+import net.minecraft.entity.ai.EntityAIWander
+import net.minecraft.entity.ai.EntityAIWatchClosest
 import net.minecraft.entity.item.EntityItem
 import net.minecraft.util.EntitySelectors
 import net.minecraft.util.math.Vec3d
@@ -60,6 +69,51 @@ fun EntityItem.cloneFrom(source: Entity){
 		owner = source.owner
 	}
 }
+
+// AI
+
+typealias AIBase = EntityAIBase
+
+/** Makes the AI compatible with everything. */
+const val AI_FLAG_NONE = 0
+
+/** Prevents other movement AI tasks from running (mutex 1, 3, 5, 7). */
+const val AI_FLAG_MOVEMENT = 0b001
+
+/** Prevents other looking AI tasks from running (mutex 2, 3, 6, 7). */
+const val AI_FLAG_LOOKING = 0b010
+
+/** Prevents other swimming AI tasks from running (mutex 4, 5, 6, 7). */
+const val AI_FLAG_SWIMMING = 0b100
+
+// AI (Movement)
+
+inline fun AISwim(entity: EntityCreature) =
+	EntityAISwimming(entity)
+
+inline fun AIWander(entity: EntityCreature, movementSpeed: Double, chancePerTick: Int) =
+	EntityAIWander(entity, movementSpeed, chancePerTick)
+
+// AI (Looking)
+
+inline fun AIWatchIdle(entity: EntityCreature) =
+	EntityAILookIdle(entity)
+
+inline fun <reified T : EntityLivingBase> AIWatchClosest(entity: EntityCreature, maxDistance: Float) =
+	EntityAIWatchClosest(entity, T::class.java, maxDistance)
+
+// AI (Actions)
+
+inline fun AIAttackMelee(entity: EntityCreature, movementSpeed: Double, chaseAfterLosingSight: Boolean) =
+	EntityAIAttackMelee(entity, movementSpeed, chaseAfterLosingSight)
+
+// AI (Targeting)
+
+inline fun AITargetAttacker(entity: EntityCreature, callReinforcements: Boolean) =
+	EntityAIHurtByTarget(entity, callReinforcements)
+
+inline fun <reified T : EntityLivingBase> AITargetNearby(entity: EntityCreature, checkSight: Boolean, easilyReachableOnly: Boolean) =
+	EntityAINearestAttackableTarget<T>(entity, T::class.java, checkSight, easilyReachableOnly)
 
 // Selectors
 
