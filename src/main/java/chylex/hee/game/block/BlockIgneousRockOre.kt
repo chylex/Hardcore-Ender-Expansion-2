@@ -56,7 +56,7 @@ class BlockIgneousRockOre(builder: BlockSimple.Builder) : BlockSimple(builder){
 	
 	@SubscribeEvent
 	fun onBlockBreak(e: BreakEvent){
-		if (e.state.block == this){
+		if (e.state.block === this){
 			val harvestLevel = getToolHarvestLevel(e.player.getHeldItem(MAIN_HAND)) ?: 0
 			
 			if (harvestLevel < super.getHarvestLevel(e.state)){

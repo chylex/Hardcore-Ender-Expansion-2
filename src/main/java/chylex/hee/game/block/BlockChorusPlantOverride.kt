@@ -31,26 +31,26 @@ class BlockChorusPlantOverride : BlockChorusPlant(){
 		val isAirAboveAndBelow = pos.up().isAir(world) && supportPos.isAir(world)
 		
 		for(adjacentPlantPos in Facing4.map(pos::offset)){
-			if (adjacentPlantPos.getBlock(world) == this){
+			if (adjacentPlantPos.getBlock(world) === this){
 				if (!isAirAboveAndBelow){
 					return false
 				}
 				
 				val blockBelowAdjacent = adjacentPlantPos.down().getBlock(world)
 				
-				if (blockBelowAdjacent == this || blockBelowAdjacent == ModBlocks.HUMUS){
+				if (blockBelowAdjacent === this || blockBelowAdjacent === ModBlocks.HUMUS){
 					return true
 				}
 			}
 		}
 		
 		val supportBlock = supportPos.getBlock(world)
-		return supportBlock == this || supportBlock == ModBlocks.HUMUS
+		return supportBlock === this || supportBlock === ModBlocks.HUMUS
 	}
 	
 	override fun getActualState(state: IBlockState, world: IBlockAccess, pos: BlockPos): IBlockState{
 		return super.getActualState(state, world, pos).let {
-			if (it.getValue(DOWN)) it else it.withProperty(DOWN, pos.down().getBlock(world) == ModBlocks.HUMUS)
+			if (it.getValue(DOWN)) it else it.withProperty(DOWN, pos.down().getBlock(world) === ModBlocks.HUMUS)
 		}
 	}
 }

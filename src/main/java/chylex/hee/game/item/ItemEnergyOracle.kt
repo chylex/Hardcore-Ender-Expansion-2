@@ -48,7 +48,7 @@ class ItemEnergyOracle : ItemBaseEnergyUser(){
 		}
 		
 		private fun isPlayerHolding(entity: Entity?, stack: ItemStack): Boolean{
-			return entity is EntityPlayer && (entity.getHeldItem(MAIN_HAND) == stack || entity.getHeldItem(OFF_HAND) == stack)
+			return entity is EntityPlayer && (entity.getHeldItem(MAIN_HAND) === stack || entity.getHeldItem(OFF_HAND) === stack)
 		}
 		
 		private fun getActivityIntensityProp(stack: ItemStack, entity: EntityLivingBase?): Float{
@@ -169,11 +169,11 @@ class ItemEnergyOracle : ItemBaseEnergyUser(){
 		private var transitionIdentifier = 0L
 		
 		private fun itemMatches(identifier: Long, renderer: ItemStack, held: ItemStack): Boolean{
-			if (renderer == held){
+			if (renderer === held){
 				return true
 			}
 			
-			if (renderer.item == held.item){
+			if (renderer.item === held.item){
 				return identifier == held.heeTagOrNull?.getLong(ORACLE_IDENTIFIER_TAG)
 			}
 			

@@ -127,7 +127,7 @@ abstract class ItemBaseEnergyUser : Item(){
 				val pos = Pos(getLong(CLUSTER_POS_TAG))
 				val tile = pos.getTile<TileEntityEnergyCluster>(world)
 				
-				if ((isSelected || entity.getHeldItem(OFF_HAND) == stack) &&
+				if ((isSelected || entity.getHeldItem(OFF_HAND) === stack) &&
 					getShort(ENERGY_LEVEL_TAG) < calculateInternalEnergyCapacity(stack) &&
 					pos.distanceTo(entity) <= entity.getEntityAttribute(EntityPlayer.REACH_DISTANCE).attributeValue &&
 					tile != null &&

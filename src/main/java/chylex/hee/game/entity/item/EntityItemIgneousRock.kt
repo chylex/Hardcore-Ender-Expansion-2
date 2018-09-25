@@ -2,7 +2,6 @@ package chylex.hee.game.entity.item
 import chylex.hee.HardcoreEnderExpansion
 import chylex.hee.system.util.Pos
 import chylex.hee.system.util.ceilToInt
-import chylex.hee.system.util.cloneFrom
 import chylex.hee.system.util.distanceSqTo
 import chylex.hee.system.util.floorToInt
 import chylex.hee.system.util.getFaceShape
@@ -24,7 +23,6 @@ import net.minecraft.block.state.BlockFaceShape.SOLID
 import net.minecraft.block.state.IBlockState
 import net.minecraft.entity.Entity
 import net.minecraft.entity.MoverType
-import net.minecraft.entity.item.EntityItem
 import net.minecraft.init.Blocks
 import net.minecraft.init.SoundEvents.ENTITY_GENERIC_BURN
 import net.minecraft.item.ItemBlock
@@ -119,7 +117,7 @@ class EntityItemIgneousRock : EntityItemNoBob{
 		val currentPos = Pos(posX, posY, posZ)
 		
 		if (Pos(prevPosX, prevPosY, prevPosZ) != currentPos || ticksExisted % 25 == 0){
-			if (currentPos.getMaterial(world) == Material.WATER){
+			if (currentPos.getMaterial(world) === Material.WATER){
 				motionY = 0.2
 				motionX = rand.nextFloat(-0.2F, 0.2F).toDouble()
 				motionZ = rand.nextFloat(-0.2F, 0.2F).toDouble()
@@ -148,7 +146,7 @@ class EntityItemIgneousRock : EntityItemNoBob{
 	}
 	
 	override fun playSound(sound: SoundEvent, volume: Float, pitch: Float){
-		if (sound == ENTITY_GENERIC_BURN && volume == 0.4F && pitch >= 2.0F){ // UPDATE: find a better way, all item handling has changed anyway
+		if (sound === ENTITY_GENERIC_BURN && volume == 0.4F && pitch >= 2.0F){ // UPDATE: find a better way, all item handling has changed anyway
 			motionVec = prevMotionVec // this disables vanilla lava handling, but also breaks hasNoGravity
 			return
 		}

@@ -4,8 +4,8 @@ import chylex.hee.game.block.entity.TileEntityEnergyCluster
 import chylex.hee.game.mechanics.energy.IEnergyQuantity
 import chylex.hee.game.mechanics.energy.IEnergyQuantity.Companion.MAX_POSSIBLE_VALUE
 import chylex.hee.game.mechanics.energy.IEnergyQuantity.Companion.displayString
-import chylex.hee.init.ModBlocks
 import chylex.hee.game.render.util.RGB
+import chylex.hee.init.ModBlocks
 import chylex.hee.system.util.getBlock
 import chylex.hee.system.util.getTile
 import net.minecraft.client.Minecraft
@@ -75,7 +75,7 @@ object OverlayRenderer{
 			val world = e.player.world
 			val pos = e.target.blockPos
 			
-			if (pos.getBlock(world) == ModBlocks.ENERGY_CLUSTER){
+			if (pos.getBlock(world) === ModBlocks.ENERGY_CLUSTER){
 				clusterLookedAt = pos.getTile(world)
 			}
 		}

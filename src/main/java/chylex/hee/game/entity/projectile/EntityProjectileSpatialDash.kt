@@ -133,7 +133,7 @@ class EntityProjectileSpatialDash : Entity, IProjectile{
 			if (hitObject != null && hitObject.typeOfHit != MISS){
 				val ownerEntity = owner.get(world)
 				
-				if (ownerEntity is EntityLivingBase && ownerEntity.world == world){
+				if (ownerEntity is EntityLivingBase && ownerEntity.world === world){
 					if (hitObject.typeOfHit == BLOCK){
 						handleBlockHit(ownerEntity, hitObject.hitVec, motionVec, hitObject.blockPos)
 					}

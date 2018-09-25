@@ -1,7 +1,7 @@
 package chylex.hee.game.item.util
-import chylex.hee.system.util.getBlock
-import chylex.hee.system.util.getState
+import chylex.hee.system.util.getHardness
 import chylex.hee.system.util.isAir
+import chylex.hee.system.util.isReplaceable
 import net.minecraft.block.Block
 import net.minecraft.block.state.IBlockState
 import net.minecraft.entity.player.EntityPlayer
@@ -22,7 +22,7 @@ object BlockEditor{
 	
 	fun canBreak(pos: BlockPos, player: EntityPlayer): Boolean{
 		val world = player.world
-		return (pos.isAir(world) || pos.getState(world).getBlockHardness(world, pos) >= 0F) && player.capabilities.allowEdit
+		return (pos.isAir(world) || pos.getHardness(world) >= 0F) && player.capabilities.allowEdit
 	}
 	
 	// Placement
@@ -31,7 +31,7 @@ object BlockEditor{
 		val block = blockState.block
 		val world = player.world
 		
-		val targetPos = if (clickedPos.getBlock(world).isReplaceable(world, clickedPos))
+		val targetPos = if (clickedPos.isReplaceable(world))
 			clickedPos
 		else
 			clickedPos.offset(clickedFacing)

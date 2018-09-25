@@ -7,6 +7,6 @@ import net.minecraft.world.IBlockAccess
 
 class BlockEndium(builder: BlockSimple.Builder): BlockSimple(builder){
 	override fun canHarvestBlock(world: IBlockAccess, pos: BlockPos, player: EntityPlayer): Boolean{
-		return super.canHarvestBlock(world, pos, player) || player.getHeldItem(MAIN_HAND).item == Items.GOLDEN_PICKAXE
+		return super.canHarvestBlock(world, pos, player) || player.getHeldItem(MAIN_HAND).item === Items.GOLDEN_PICKAXE
 	}
 }

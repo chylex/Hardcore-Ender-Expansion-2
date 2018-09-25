@@ -40,8 +40,8 @@ object ModEntities{
 			val mobClass = EntityMobSilverfish::class.java
 			val entryFields = this::class.java.declaredFields
 			
-			entryFields.first { it.type == Class::class.java }.also { it.isAccessible = true }.set(this, mobClass)
-			entryFields.first { it.type == Function::class.java }.also { it.isAccessible = true }.set(this, EntityConstructors.get(mobClass))
+			entryFields.first { it.type === Class::class.java }.also { it.isAccessible = true }.set(this, mobClass)
+			entryFields.first { it.type === Function::class.java }.also { it.isAccessible = true }.set(this, EntityConstructors.get(mobClass))
 		}
 	}
 	

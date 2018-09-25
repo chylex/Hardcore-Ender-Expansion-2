@@ -49,7 +49,7 @@ class EntityMobSilverfish(world: World) : EntitySilverfish(world), ICritTracker{
 		fun onEntityJoinWorld(e: EntityJoinWorldEvent){
 			val entity = e.entity
 			
-			if (entity::class.java == EntitySilverfish::class.java){
+			if (entity::class.java === EntitySilverfish::class.java){
 				e.isCanceled = true
 				
 				val world = e.world

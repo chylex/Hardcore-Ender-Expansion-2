@@ -19,7 +19,7 @@ class ItemAncientCobweb(private val sourceBlock: BlockAncientCobweb) : ItemBlock
 			return
 		}
 		
-		if (!(isSelected || (entity is EntityLivingBase && entity.getHeldItem(OFF_HAND) == stack))){
+		if (!(isSelected || (entity is EntityLivingBase && entity.getHeldItem(OFF_HAND) === stack))){
 			return
 		}
 		
@@ -37,10 +37,11 @@ class ItemAncientCobweb(private val sourceBlock: BlockAncientCobweb) : ItemBlock
 			val front = entity.positionVector.add(entity.lookVec.scale(0.6))
 			
 			for(drop in drops){
-				val droppedItem = EntityItem(world, front.x, entity.posY + entity.height * 0.45, front.z, drop)
-				droppedItem.motionY = 0.0
-				droppedItem.setDefaultPickupDelay()
-				world.spawnEntity(droppedItem)
+				EntityItem(world, front.x, entity.posY + entity.height * 0.45, front.z, drop).apply {
+					motionY = 0.0
+					setDefaultPickupDelay()
+					world.spawnEntity(this)
+				}
 			}
 		}
 	}

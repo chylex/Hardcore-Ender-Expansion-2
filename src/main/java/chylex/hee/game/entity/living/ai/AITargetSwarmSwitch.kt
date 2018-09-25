@@ -39,7 +39,7 @@ class AITargetSwarmSwitch<T : EntityLivingBase>(
 		val currentTarget = entity.attackTarget
 		
 		val friendsInRange = world.selectExistingEntities.inRange(entity::class.java, position, maxRange * 2.0).filter { it != entity }
-		val friendsAttackingCurrentTarget = friendsInRange.count { it.attackTarget == currentTarget }
+		val friendsAttackingCurrentTarget = friendsInRange.count { it.attackTarget === currentTarget }
 		
 		if (friendsAttackingCurrentTarget == 0){
 			return false
@@ -48,7 +48,7 @@ class AITargetSwarmSwitch<T : EntityLivingBase>(
 		val otherTargetsInRange = world.selectVulnerableEntities.inRange(targetClass, position, maxRange * rangeMultiplier).filter {
 			it != currentTarget &&
 			isSuitableTarget(it, false) &&
-			friendsInRange.count { friend -> friend.attackTarget == it } < friendsAttackingCurrentTarget
+			friendsInRange.count { friend -> friend.attackTarget === it } < friendsAttackingCurrentTarget
 		}
 		
 		val filteredTargets = if (targetPredicate == null) otherTargetsInRange else otherTargetsInRange.filter(targetPredicate)

@@ -25,7 +25,7 @@ object ModRecipes{
 			
 			addSmeltingRecipeForBlock(Blocks.VINE, ItemStack(ModBlocks.DRY_VINES), 0.1F)
 			
-			IntegrityCheck.removedChorusFruitRecipe = smeltingList.remove(smeltingList.keys.find { it.item == Items.CHORUS_FRUIT }) != null
+			IntegrityCheck.removedChorusFruitRecipe = smeltingList.remove(smeltingList.keys.find { it.item === Items.CHORUS_FRUIT }) != null
 		}
 	}
 	

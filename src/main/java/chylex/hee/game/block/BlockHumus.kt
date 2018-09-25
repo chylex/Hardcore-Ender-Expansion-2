@@ -33,9 +33,9 @@ class BlockHumus(builder: BlockSimple.Builder) : BlockSimple(builder){
 	
 	@SubscribeEvent
 	fun onHarvestDrops(e: HarvestDropsEvent){
-		if (e.state.block == Blocks.POTATOES && e.pos.down().getBlock(e.world) == this){
+		if (e.state.block === Blocks.POTATOES && e.pos.down().getBlock(e.world) == this){
 			e.drops.replaceAll {
-				if (it.item == Items.POISONOUS_POTATO)
+				if (it.item === Items.POISONOUS_POTATO)
 					ItemStack(Items.POTATO, it.count).apply { deserializeNBT(it.serializeNBT()) }
 				else
 					it

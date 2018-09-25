@@ -15,7 +15,7 @@ class ItemIgneousRock : Item(){
 	
 	@SubscribeEvent
 	fun onFuelBurnTime(e: FurnaceFuelBurnTimeEvent){
-		if (e.itemStack.item == this){
+		if (e.itemStack.item === this){
 			e.burnTime = 1300
 		}
 	}

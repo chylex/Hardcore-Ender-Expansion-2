@@ -2,7 +2,6 @@ package chylex.hee.proxy
 import chylex.hee.HardcoreEnderExpansion
 import chylex.hee.game.block.BlockDryVines
 import chylex.hee.game.commands.HeeClientCommand
-import chylex.hee.game.entity.item.EntityItemIgneousRock
 import chylex.hee.game.entity.item.EntityItemNoBob
 import chylex.hee.game.item.ItemEnergyOracle
 import chylex.hee.game.item.ItemEnergyReceptacle

@@ -29,7 +29,7 @@ class BlockChorusFlowerOverride : BlockChorusFlower(){
 		val supportPos = pos.down()
 		val supportBlock = supportPos.getBlock(world)
 		
-		if (supportBlock == Blocks.CHORUS_PLANT || supportBlock == ModBlocks.HUMUS){
+		if (supportBlock === Blocks.CHORUS_PLANT || supportBlock === ModBlocks.HUMUS){
 			return true
 		}
 		else if (!supportPos.isAir(world)){
@@ -38,7 +38,7 @@ class BlockChorusFlowerOverride : BlockChorusFlower(){
 		else{
 			val adjacentPlants = Facing4.map(pos::offset).sumBy {
 				when{
-					it.getBlock(world) == Blocks.CHORUS_PLANT -> 1
+					it.getBlock(world) === Blocks.CHORUS_PLANT -> 1
 					it.isAir(world) -> 0
 					else -> return false
 				}
@@ -53,11 +53,11 @@ class BlockChorusFlowerOverride : BlockChorusFlower(){
 	
 	@SubscribeEvent(priority = LOWEST)
 	fun onCropGrowPre(e: CropGrowEvent.Pre){
-		if (e.state.block == this){
+		if (e.state.block === this){
 			val world = e.world
 			val supportingPos = e.pos.down(2) // the Pre event uses block above the actual plant
 			
-			if (supportingPos.getBlock(world) == ModBlocks.HUMUS){
+			if (supportingPos.getBlock(world) === ModBlocks.HUMUS){
 				supportingPos.setBlock(world, Blocks.END_STONE, FLAG_NONE)
 			}
 		}
@@ -65,11 +65,11 @@ class BlockChorusFlowerOverride : BlockChorusFlower(){
 	
 	@SubscribeEvent(receiveCanceled = true) // TODO this will still not trigger if Pre is canceled, which is a serious issue but not during dev
 	fun onCropGrowPost(e: CropGrowEvent.Post){
-		if (e.originalState.block == this){
+		if (e.originalState.block === this){
 			val world = e.world
 			val supportingPos = e.pos.down()
 			
-			if (supportingPos.getBlock(world) == Blocks.END_STONE){
+			if (supportingPos.getBlock(world) === Blocks.END_STONE){
 				supportingPos.setBlock(world, ModBlocks.HUMUS, FLAG_NONE)
 			}
 		}

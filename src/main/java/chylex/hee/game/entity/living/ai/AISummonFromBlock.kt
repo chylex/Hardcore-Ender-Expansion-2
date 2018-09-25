@@ -1,7 +1,7 @@
 package chylex.hee.game.entity.living.ai
 import chylex.hee.system.util.AIBase
 import chylex.hee.system.util.breakBlock
-import chylex.hee.system.util.getState
+import chylex.hee.system.util.getBlock
 import chylex.hee.system.util.nextInt
 import net.minecraft.block.Block
 import net.minecraft.entity.EntityCreature
@@ -51,7 +51,7 @@ class AISummonFromBlock(
 				rand.nextInt(-searchDistance, searchDistance)
 			)
 			
-			if (checkedPos.getState(world).block == searchingFor){
+			if (checkedPos.getBlock(world) === searchingFor){
 				checkedPos.breakBlock(world, true)
 				
 				if (--remainingSpawns == 0){

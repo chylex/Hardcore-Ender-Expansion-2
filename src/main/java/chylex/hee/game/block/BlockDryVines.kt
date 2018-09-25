@@ -37,7 +37,7 @@ class BlockDryVines : BlockVine(){
 	
 	override fun canAttachTo(world: World, pos: BlockPos, facing: EnumFacing): Boolean{
 		val above = pos.up()
-		return isAcceptableNeighbor(world, pos.offset(facing.opposite), facing) && (above.isAir(world) || above.getBlock(world) == this || isAcceptableNeighbor(world, above, EnumFacing.UP))
+		return isAcceptableNeighbor(world, pos.offset(facing.opposite), facing) && (above.isAir(world) || above.getBlock(world) === this || isAcceptableNeighbor(world, above, EnumFacing.UP))
 	}
 	
 	private fun isAcceptableNeighbor(world: World, pos: BlockPos, facing: EnumFacing): Boolean{
