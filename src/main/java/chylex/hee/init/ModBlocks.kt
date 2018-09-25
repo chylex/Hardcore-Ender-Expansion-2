@@ -3,6 +3,7 @@ import chylex.hee.HardcoreEnderExpansion
 import chylex.hee.game.block.BlockAncientCobweb
 import chylex.hee.game.block.BlockChorusFlowerOverride
 import chylex.hee.game.block.BlockChorusPlantOverride
+import chylex.hee.game.block.BlockDragonEggOverride
 import chylex.hee.game.block.BlockDryVines
 import chylex.hee.game.block.BlockEndPortalAcceptor
 import chylex.hee.game.block.BlockEndPortalCustom
@@ -24,6 +25,7 @@ import chylex.hee.game.block.entity.TileEntityEnergyCluster
 import chylex.hee.game.block.entity.TileEntityPortalInner
 import chylex.hee.game.block.material.Materials
 import chylex.hee.game.item.ItemAncientCobweb
+import chylex.hee.game.item.ItemDragonEgg
 import chylex.hee.game.item.util.Tool.Level.DIAMOND
 import chylex.hee.game.item.util.Tool.Level.IRON
 import chylex.hee.game.item.util.Tool.Level.STONE
@@ -305,6 +307,7 @@ object ModBlocks{
 			register(BlockEndPortalOverride().apply { override(Blocks.END_PORTAL, newCreativeTab = null) })
 			register(BlockChorusFlowerOverride().apply { override(Blocks.CHORUS_FLOWER) })
 			register(BlockChorusPlantOverride().apply { override(Blocks.CHORUS_PLANT) })
+			register(BlockDragonEggOverride().apply { override(Blocks.DRAGON_EGG) } with ::ItemDragonEgg)
 		}
 	}
 	
