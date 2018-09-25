@@ -15,6 +15,7 @@ import chylex.hee.system.util.heeTag
 import chylex.hee.system.util.heeTagOrNull
 import chylex.hee.system.util.over
 import chylex.hee.system.util.toDegrees
+import net.minecraft.client.Minecraft
 import net.minecraft.client.renderer.color.IItemColor
 import net.minecraft.entity.Entity
 import net.minecraft.entity.EntityLivingBase
@@ -231,7 +232,13 @@ class ItemEnergyOracle : ItemBaseEnergyUser(){
 			}
 			
 			val tag = stack.heeTagOrNull ?: return INACTIVE_INT
-			val player = HardcoreEnderExpansion.proxy.getClientSidePlayer() ?: return INACTIVE_INT
+			
+			val mc = Minecraft.getMinecraft()
+			val player = mc.player
+			
+			if (player == null || !mc.renderManager.isRenderShadow){ // do not render on player model in inventory // UPDATE: make sure RenderManager.renderShadow is still only affected by GuiInventory
+				return INACTIVE_INT
+			}
 			
 			val identifier = tag.getLong(ORACLE_IDENTIFIER_TAG)
 			
