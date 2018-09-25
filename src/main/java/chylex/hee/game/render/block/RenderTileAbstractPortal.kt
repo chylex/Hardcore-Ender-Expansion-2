@@ -159,6 +159,10 @@ abstract class RenderTileAbstractPortal<T : TileEntity> : TileEntitySpecialRende
 		
 		// texture
 		
+		if (texture != TEX_BACKGROUND){
+			bindTexture(TEX_BACKGROUND) // force re-bind to fix a bug in older AMD drivers
+		}
+		
 		bindTexture(texture)
 		
 		GL.pushMatrix()
