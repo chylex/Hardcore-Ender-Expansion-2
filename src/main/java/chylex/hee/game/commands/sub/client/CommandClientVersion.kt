@@ -1,5 +1,5 @@
 package chylex.hee.game.commands.sub.client
-import chylex.hee.HardcoreEnderExpansion
+import chylex.hee.HEE
 import chylex.hee.game.commands.sub.ISubCommand
 import net.minecraft.command.ICommandSender
 import net.minecraft.server.MinecraftServer
@@ -21,7 +21,7 @@ internal object CommandClientVersion : ISubCommand{
 		})
 		sender.sendMessage(emptyLine)
 		
-		sender.sendMessage(TextComponentTranslation("commands.hee.version.data.version", HardcoreEnderExpansion.version))
+		sender.sendMessage(TextComponentTranslation("commands.hee.version.data.version", HEE.version))
 		sender.sendMessage(emptyLine)
 		// TODO update information
 	}

@@ -1,5 +1,5 @@
 package chylex.hee.game.item
-import chylex.hee.HardcoreEnderExpansion
+import chylex.hee.HEE
 import chylex.hee.game.block.entity.TileEntityEnergyCluster
 import chylex.hee.game.item.base.ItemBaseInfusable
 import chylex.hee.game.item.infusion.Infusion.SAFETY
@@ -82,7 +82,7 @@ class ItemEnergyReceptacle : ItemBaseInfusable(){
 	init{
 		maxStackSize = 1
 		
-		addPropertyOverride(ResourceLocation(HardcoreEnderExpansion.ID, "has_cluster")){
+		addPropertyOverride(ResourceLocation(HEE.ID, "has_cluster")){
 			stack, _, _ -> if (stack.heeTagOrNull?.hasKey(CLUSTER_SNAPSHOT_TAG) == true) 1F else 0F
 		}
 		

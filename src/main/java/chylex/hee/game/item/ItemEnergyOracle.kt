@@ -1,5 +1,5 @@
 package chylex.hee.game.item
-import chylex.hee.HardcoreEnderExpansion
+import chylex.hee.HEE
 import chylex.hee.game.block.entity.TileEntityEnergyCluster
 import chylex.hee.game.item.base.ItemBaseEnergyUser
 import chylex.hee.game.mechanics.energy.IEnergyQuantity.Units
@@ -75,7 +75,7 @@ class ItemEnergyOracle : ItemBaseEnergyUser(){
 	}
 	
 	init{
-		addPropertyOverride(ResourceLocation(HardcoreEnderExpansion.ID, "activity_intensity")){
+		addPropertyOverride(ResourceLocation(HEE.ID, "activity_intensity")){
 			stack, _, entity -> getActivityIntensityProp(stack, entity)
 		}
 	}

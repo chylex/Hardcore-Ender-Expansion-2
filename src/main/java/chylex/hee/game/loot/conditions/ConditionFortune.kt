@@ -1,5 +1,5 @@
 package chylex.hee.game.loot.conditions
-import chylex.hee.HardcoreEnderExpansion
+import chylex.hee.HEE
 import chylex.hee.game.loot.BlockLootTable.BlockLootContext
 import com.google.gson.JsonDeserializationContext
 import com.google.gson.JsonObject
@@ -15,7 +15,7 @@ class ConditionFortune(private val minLevel: Int, private val maxLevel: Int): Lo
 		return context is BlockLootContext && context.fortune in minLevel..maxLevel
 	}
 	
-	object Serializer: LootCondition.Serializer<ConditionFortune>(ResourceLocation(HardcoreEnderExpansion.ID, "fortune"), ConditionFortune::class.java){
+	object Serializer: LootCondition.Serializer<ConditionFortune>(ResourceLocation(HEE.ID, "fortune"), ConditionFortune::class.java){
 		private const val MIN_FORTUNE = 0
 		private const val MAX_FORTUNE = Int.MAX_VALUE
 		

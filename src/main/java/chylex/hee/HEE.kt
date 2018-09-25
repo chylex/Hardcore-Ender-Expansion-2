@@ -21,8 +21,8 @@ import net.minecraftforge.fml.common.network.NetworkCheckHandler
 import net.minecraftforge.fml.relauncher.Side
 import org.apache.logging.log4j.Logger
 
-@Mod(modid = HardcoreEnderExpansion.ID, useMetadata = true, modLanguageAdapter = "chylex.hee.system.core.KotlinAdapter", guiFactory = "chylex.hee.init.factory.ConfigGuiFactory")
-object HardcoreEnderExpansion{
+@Mod(modid = HEE.ID, useMetadata = true, modLanguageAdapter = "chylex.hee.system.core.KotlinAdapter", guiFactory = "chylex.hee.init.factory.ConfigGuiFactory")
+object HEE{
 	const val ID = "hee"
 	
 	lateinit var log: Logger

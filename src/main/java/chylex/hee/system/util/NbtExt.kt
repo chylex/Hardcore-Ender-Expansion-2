@@ -1,5 +1,5 @@
 package chylex.hee.system.util
-import chylex.hee.HardcoreEnderExpansion
+import chylex.hee.HEE
 import net.minecraft.entity.Entity
 import net.minecraft.item.ItemStack
 import net.minecraft.nbt.NBTPrimitive
@@ -21,7 +21,7 @@ import java.util.Locale
 
 // Items
 
-private const val HEE_TAG_NAME = HardcoreEnderExpansion.ID
+private const val HEE_TAG_NAME = HEE.ID
 
 /**
  * Returns the ItemStack's NBT tag. If the ItemStack has no tag, it will be created.

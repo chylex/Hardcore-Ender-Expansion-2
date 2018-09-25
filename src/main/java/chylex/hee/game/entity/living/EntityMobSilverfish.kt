@@ -1,5 +1,5 @@
 package chylex.hee.game.entity.living
-import chylex.hee.HardcoreEnderExpansion
+import chylex.hee.HEE
 import chylex.hee.game.entity.living.ai.AIHideInBlock
 import chylex.hee.game.entity.living.ai.AISummonFromBlock
 import chylex.hee.game.entity.living.ai.AITargetSwarmSwitch
@@ -38,7 +38,7 @@ import net.minecraftforge.fml.common.eventhandler.EventPriority.LOWEST
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent
 import kotlin.math.floor
 
-@EventBusSubscriber(modid = HardcoreEnderExpansion.ID)
+@EventBusSubscriber(modid = HEE.ID)
 class EntityMobSilverfish(world: World) : EntitySilverfish(world), ICritTracker{
 	companion object{
 		private val DAMAGE_GENERAL          = Damage(DIFFICULTY_SCALING, PEACEFUL_EXCLUSION, *ALL_PROTECTIONS, RAPID_DAMAGE(5))

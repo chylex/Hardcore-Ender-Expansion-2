@@ -1,5 +1,5 @@
 package chylex.hee.system
-import chylex.hee.HardcoreEnderExpansion
+import chylex.hee.HEE
 import net.minecraftforge.fml.common.FMLCommonHandler
 import net.minecraftforge.fml.relauncher.Side.CLIENT
 import net.minecraftforge.fml.relauncher.Side.SERVER
@@ -19,7 +19,7 @@ object Debug{
 		if (enabled){
 			when(FMLCommonHandler.instance().side!!){
 				CLIENT -> {
-					Display.setTitle("${Display.getTitle()} - Hardcore Ender Expansion ${HardcoreEnderExpansion.version}")
+					Display.setTitle("${Display.getTitle()} - Hardcore Ender Expansion ${HEE.version}")
 				}
 				
 				SERVER -> {

@@ -1,5 +1,5 @@
 package chylex.hee.system
-import chylex.hee.HardcoreEnderExpansion
+import chylex.hee.HEE
 import chylex.hee.game.block.BlockEndPortalOverride
 import net.minecraft.init.Blocks
 
@@ -35,7 +35,7 @@ object IntegrityCheck{
 	}
 	
 	private fun failIntegrityCheck(message: String, crash: Boolean){
-		HardcoreEnderExpansion.log.error("[IntegrityCheck] $message")
+		HEE.log.error("[IntegrityCheck] $message")
 		
 		if (crash){
 			throw IllegalStateException("Integrity check failed: $message")

@@ -1,5 +1,5 @@
 package chylex.hee.init
-import chylex.hee.HardcoreEnderExpansion
+import chylex.hee.HEE
 import chylex.hee.game.loot.BlockLootTable
 import chylex.hee.game.loot.conditions.ConditionCriticalHit
 import chylex.hee.game.loot.conditions.ConditionFortune
@@ -30,10 +30,10 @@ object ModLoot{
 	}
 	
 	private fun registerBlock(name: String): BlockLootTable{
-		return BlockLootTable(LootTableList.register(ResourceLocation(HardcoreEnderExpansion.ID, "blocks/$name")))
+		return BlockLootTable(LootTableList.register(ResourceLocation(HEE.ID, "blocks/$name")))
 	}
 	
 	private fun registerEntity(name: String): ResourceLocation{
-		return LootTableList.register(ResourceLocation(HardcoreEnderExpansion.ID, "entities/$name"))
+		return LootTableList.register(ResourceLocation(HEE.ID, "entities/$name"))
 	}
 }

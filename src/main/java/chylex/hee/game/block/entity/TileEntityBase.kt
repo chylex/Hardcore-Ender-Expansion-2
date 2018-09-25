@@ -1,5 +1,5 @@
 package chylex.hee.game.block.entity
-import chylex.hee.HardcoreEnderExpansion
+import chylex.hee.HEE
 import chylex.hee.game.block.entity.TileEntityBase.Context.NETWORK
 import chylex.hee.game.block.entity.TileEntityBase.Context.STORAGE
 import chylex.hee.system.util.getState
@@ -39,7 +39,7 @@ abstract class TileEntityBase : TileEntity(){
 	// NBT
 	
 	private companion object{
-		private const val TAG_NAME = HardcoreEnderExpansion.ID
+		private const val TAG_NAME = HEE.ID
 	}
 	
 	protected enum class Context{

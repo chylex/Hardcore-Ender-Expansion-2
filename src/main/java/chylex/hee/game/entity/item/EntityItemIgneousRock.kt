@@ -1,5 +1,5 @@
 package chylex.hee.game.entity.item
-import chylex.hee.HardcoreEnderExpansion
+import chylex.hee.HEE
 import chylex.hee.system.util.Pos
 import chylex.hee.system.util.ceilToInt
 import chylex.hee.system.util.distanceSqTo
@@ -51,7 +51,7 @@ class EntityItemIgneousRock : EntityItemNoBob{
 		
 		fun setupSmeltingTransformations(){
 			smeltingTransformations = FurnaceRecipes.instance().smeltingList.map(::convertToBlockStatePair).filterNotNull().toMap()
-			HardcoreEnderExpansion.log.info(smeltingTransformations)
+			HEE.log.info(smeltingTransformations)
 		}
 		
 		private fun convertToBlockState(stack: ItemStack): IBlockState?{
@@ -61,7 +61,7 @@ class EntityItemIgneousRock : EntityItemNoBob{
 			return try{
 				item.block.getStateForPlacement(null, null, UP, 0F, 0F, 0F, meta, null, null) // UPDATE: rewrite once block states are flattened and sane
 			}catch(e: Exception){
-				HardcoreEnderExpansion.log.warn("Faking getStateForPlacement to retrieve IBlockState from ItemStack caused a crash:", e) // UPDATE: currently crashes on BlockGlazedTerracotta
+				HEE.log.warn("Faking getStateForPlacement to retrieve IBlockState from ItemStack caused a crash:", e) // UPDATE: currently crashes on BlockGlazedTerracotta
 				null
 			}
 		}

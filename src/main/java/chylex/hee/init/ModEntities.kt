@@ -1,5 +1,5 @@
 package chylex.hee.init
-import chylex.hee.HardcoreEnderExpansion
+import chylex.hee.HEE
 import chylex.hee.game.entity.item.EntityFallingBlockHeavy
 import chylex.hee.game.entity.item.EntityItemIgneousRock
 import chylex.hee.game.entity.item.EntityItemNoBob
@@ -17,7 +17,7 @@ import net.minecraftforge.fml.common.registry.ForgeRegistries
 import net.minecraftforge.registries.IForgeRegistry
 import java.util.function.Function
 
-@EventBusSubscriber(modid = HardcoreEnderExpansion.ID)
+@EventBusSubscriber(modid = HEE.ID)
 object ModEntities{
 	private var networkID = -1
 	
@@ -52,7 +52,7 @@ object ModEntities{
 			.create<T>()
 			.entity(T::class.java)
 			.factory(EntityConstructors.get(T::class.java))
-			.id(ResourceLocation(HardcoreEnderExpansion.ID, registryName), networkID++)
+			.id(ResourceLocation(HEE.ID, registryName), networkID++)
 			.name("entity.hee.$registryName")
 	}
 	

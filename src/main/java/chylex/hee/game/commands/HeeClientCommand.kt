@@ -1,5 +1,5 @@
 package chylex.hee.game.commands
-import chylex.hee.HardcoreEnderExpansion
+import chylex.hee.HEE
 import chylex.hee.game.commands.sub.ISubCommand.Companion.subCommandMapOf
 import chylex.hee.game.commands.sub.client.CommandClientHelp
 import chylex.hee.game.commands.sub.client.CommandClientVersion
@@ -12,7 +12,7 @@ import net.minecraftforge.fml.relauncher.Side
 import net.minecraftforge.fml.relauncher.SideOnly
 
 @SideOnly(Side.CLIENT)
-@EventBusSubscriber(Side.CLIENT, modid = HardcoreEnderExpansion.ID)
+@EventBusSubscriber(Side.CLIENT, modid = HEE.ID)
 internal object HeeClientCommand : HeeBaseCommand(), IClientCommand{
 	public override val allSubCommands = subCommandMapOf(
 		CommandClientHelp,

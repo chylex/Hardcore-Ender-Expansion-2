@@ -1,5 +1,5 @@
 package chylex.hee.init
-import chylex.hee.HardcoreEnderExpansion
+import chylex.hee.HEE
 import chylex.hee.game.block.BlockAncientCobweb
 import chylex.hee.game.block.BlockChorusFlowerOverride
 import chylex.hee.game.block.BlockChorusPlantOverride
@@ -49,7 +49,7 @@ import net.minecraftforge.fml.common.Mod.EventBusSubscriber
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent
 import net.minecraftforge.fml.common.registry.GameRegistry
 
-@EventBusSubscriber(modid = HardcoreEnderExpansion.ID)
+@EventBusSubscriber(modid = HEE.ID)
 object ModBlocks{
 	
 	// Blocks: Building (Uncategorized)
@@ -323,7 +323,7 @@ object ModBlocks{
 	private val temporaryItemBlocks = mutableListOf<ItemBlock>()
 	
 	private fun Block.setup(registryName: String, unlocalizedName: String = registryName, inCreativeTab: Boolean = true){
-		this.setRegistryName(HardcoreEnderExpansion.ID, registryName)
+		this.setRegistryName(HEE.ID, registryName)
 		this.unlocalizedName = "hee.$unlocalizedName"
 		
 		if (inCreativeTab){
@@ -351,6 +351,6 @@ object ModBlocks{
 	}
 	
 	private inline fun <reified T : TileEntity> tile(registryName: String){
-		GameRegistry.registerTileEntity(T::class.java, "${HardcoreEnderExpansion.ID}:$registryName")
+		GameRegistry.registerTileEntity(T::class.java, "${HEE.ID}:$registryName")
 	}
 }

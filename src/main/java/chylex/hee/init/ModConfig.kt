@@ -1,5 +1,5 @@
 package chylex.hee.init
-import chylex.hee.HardcoreEnderExpansion
+import chylex.hee.HEE
 import net.minecraftforge.common.MinecraftForge
 import net.minecraftforge.common.config.ConfigElement
 import net.minecraftforge.common.config.Configuration
@@ -52,7 +52,7 @@ class ModConfig(file: File){
 	
 	@SubscribeEvent
 	fun onConfigChanged(e: ConfigChangedEvent.OnConfigChangedEvent){
-		if (e.modID == HardcoreEnderExpansion.ID){
+		if (e.modID == HEE.ID){
 			reload()
 		}
 	}

@@ -1,5 +1,5 @@
 package chylex.hee.init
-import chylex.hee.HardcoreEnderExpansion
+import chylex.hee.HEE
 import chylex.hee.game.item.ItemEnergyOracle
 import chylex.hee.game.item.ItemSpatialDashGem
 import chylex.hee.system.IntegrityCheck
@@ -14,7 +14,7 @@ import net.minecraftforge.fml.common.Mod.EventBusSubscriber
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent
 import net.minecraftforge.registries.IForgeRegistryModifiable
 
-@EventBusSubscriber(modid = HardcoreEnderExpansion.ID)
+@EventBusSubscriber(modid = HEE.ID)
 object ModRecipes{
 	fun initialize(){ // UPDATE: Move smelting recipes to JSON
 		with(FurnaceRecipes.instance()){
@@ -40,8 +40,8 @@ object ModRecipes{
 			IntegrityCheck.removedEndRodRecipe = removeVanilla("end_rod")
 			// TODO figure out what to do with the broken advancements
 			
-			ItemEnergyOracle.setupRecipeNBT(getValue(ResourceLocation(HardcoreEnderExpansion.ID, "energy_oracle"))!!)
-			ItemSpatialDashGem.setupRecipeNBT(getValue(ResourceLocation(HardcoreEnderExpansion.ID, "spatial_dash_gem"))!!)
+			ItemEnergyOracle.setupRecipeNBT(getValue(ResourceLocation(HEE.ID, "energy_oracle"))!!)
+			ItemSpatialDashGem.setupRecipeNBT(getValue(ResourceLocation(HEE.ID, "spatial_dash_gem"))!!)
 			// UPDATE: hopfully figure out a better way to do this
 		}
 	}

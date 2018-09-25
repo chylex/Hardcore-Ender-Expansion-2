@@ -1,5 +1,5 @@
 package chylex.hee.init
-import chylex.hee.HardcoreEnderExpansion
+import chylex.hee.HEE
 import chylex.hee.init.factory.PacketConstructors
 import chylex.hee.network.BaseClientPacket
 import chylex.hee.network.BaseServerPacket
@@ -27,7 +27,7 @@ object ModNetwork{
 			throw UnsupportedOperationException("cannot initialize ModNetwork multiple times")
 		}
 		
-		network = NetworkRegistry.INSTANCE.newEventDrivenChannel(HardcoreEnderExpansion.ID)
+		network = NetworkRegistry.INSTANCE.newEventDrivenChannel(HEE.ID)
 		network.register(this)
 		
 		for((cls, constructor) in PacketConstructors.getAll()){
@@ -50,7 +50,7 @@ object ModNetwork{
 	
 	@SubscribeEvent
 	fun onClientPacket(e: ClientCustomPacketEvent){
-		readPacket(e.packet).handle(CLIENT, HardcoreEnderExpansion.proxy.getClientSidePlayer()!!)
+		readPacket(e.packet).handle(CLIENT, HEE.proxy.getClientSidePlayer()!!)
 	}
 	
 	@SubscribeEvent
@@ -100,7 +100,7 @@ object ModNetwork{
 		return PacketBuffer(Unpooled.buffer()).let {
 			it.writeByte(id.toInt())
 			packet.write(it)
-			FMLProxyPacket(it, HardcoreEnderExpansion.ID)
+			FMLProxyPacket(it, HEE.ID)
 		}
 	}
 }

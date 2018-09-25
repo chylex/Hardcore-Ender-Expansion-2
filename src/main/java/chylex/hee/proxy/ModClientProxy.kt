@@ -1,5 +1,5 @@
 package chylex.hee.proxy
-import chylex.hee.HardcoreEnderExpansion
+import chylex.hee.HEE
 import chylex.hee.game.block.BlockDryVines
 import chylex.hee.game.commands.HeeClientCommand
 import chylex.hee.game.entity.item.EntityItemNoBob
@@ -67,7 +67,7 @@ class ModClientProxy : ModCommonProxy(){
 	@SubscribeEvent
 	fun onModels(e: ModelRegistryEvent){
 		with(ForgeRegistries.ITEMS){
-			for(item in keys.asSequence().filter { it.resourceDomain == HardcoreEnderExpansion.ID }.map(::getValue)){
+			for(item in keys.asSequence().filter { it.resourceDomain == HEE.ID }.map(::getValue)){
 				ModelLoader.setCustomModelResourceLocation(item!!, 0, ModelResourceLocation(item.registryName!!, "inventory"))
 			}
 		}

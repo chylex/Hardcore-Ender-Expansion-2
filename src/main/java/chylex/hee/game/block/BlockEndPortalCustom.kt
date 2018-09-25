@@ -1,5 +1,5 @@
 package chylex.hee.game.block
-import chylex.hee.HardcoreEnderExpansion
+import chylex.hee.HEE
 import chylex.hee.game.block.entity.TileEntityEndPortalAcceptor
 import chylex.hee.system.util.closestTickingTile
 import net.minecraft.entity.Entity
@@ -11,7 +11,7 @@ class BlockEndPortalCustom(builder: BlockSimple.Builder) : BlockAbstractPortal(b
 		val acceptor = pos.closestTickingTile<TileEntityEndPortalAcceptor>(world, MAX_DISTANCE_FROM_FRAME)
 		
 		if (acceptor != null && acceptor.isCharged){
-			HardcoreEnderExpansion.log.info("teleporting") // TODO
+			HEE.log.info("teleporting") // TODO
 		}
 	}
 }

@@ -1,5 +1,5 @@
 package chylex.hee.init
-import chylex.hee.HardcoreEnderExpansion
+import chylex.hee.HEE
 import chylex.hee.game.item.ItemChorusBerry
 import chylex.hee.game.item.ItemEnergyOracle
 import chylex.hee.game.item.ItemEnergyReceptacle
@@ -13,7 +13,7 @@ import net.minecraftforge.event.RegistryEvent
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent
 
-@EventBusSubscriber(modid = HardcoreEnderExpansion.ID)
+@EventBusSubscriber(modid = HEE.ID)
 object ModItems{
 	
 	// Items: Raw resources
@@ -89,7 +89,7 @@ object ModItems{
 	// Utilities
 	
 	private fun Item.setup(registryName: String, unlocalizedName: String = registryName, inCreativeTab: Boolean = true){
-		this.setRegistryName(HardcoreEnderExpansion.ID, registryName)
+		this.setRegistryName(HEE.ID, registryName)
 		this.unlocalizedName = "hee.$unlocalizedName"
 		
 		if (inCreativeTab){

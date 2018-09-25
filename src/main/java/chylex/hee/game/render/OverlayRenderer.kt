@@ -1,5 +1,5 @@
 package chylex.hee.game.render
-import chylex.hee.HardcoreEnderExpansion
+import chylex.hee.HEE
 import chylex.hee.game.block.entity.TileEntityEnergyCluster
 import chylex.hee.game.mechanics.energy.IEnergyQuantity
 import chylex.hee.game.mechanics.energy.IEnergyQuantity.Companion.MAX_POSSIBLE_VALUE
@@ -20,7 +20,7 @@ import net.minecraftforge.fml.common.Mod.EventBusSubscriber
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent
 import net.minecraftforge.fml.relauncher.Side
 
-@EventBusSubscriber(Side.CLIENT, modid = HardcoreEnderExpansion.ID)
+@EventBusSubscriber(Side.CLIENT, modid = HEE.ID)
 object OverlayRenderer{
 	private const val BORDER_SIZE  = 4
 	private const val LINE_SPACING = 7
