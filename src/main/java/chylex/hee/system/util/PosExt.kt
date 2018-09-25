@@ -54,24 +54,24 @@ inline fun <reified T : TileEntity> BlockPos.getTile(world: IBlockAccess): T?{
 
 // Block setters
 
-inline fun BlockPos.setAir(world: World){
-	world.setBlockToAir(this)
+inline fun BlockPos.setAir(world: World): Boolean{
+	return world.setBlockToAir(this)
 }
 
-inline fun BlockPos.setBlock(world: World, block: Block){
-	world.setBlockState(this, block.defaultState)
+inline fun BlockPos.setBlock(world: World, block: Block): Boolean{
+	return world.setBlockState(this, block.defaultState)
 }
 
-inline fun BlockPos.setBlock(world: World, block: Block, flags: Int){
-	world.setBlockState(this, block.defaultState, flags)
+inline fun BlockPos.setBlock(world: World, block: Block, flags: Int): Boolean{
+	return world.setBlockState(this, block.defaultState, flags)
 }
 
-inline fun BlockPos.setState(world: World, state: IBlockState){
-	world.setBlockState(this, state)
+inline fun BlockPos.setState(world: World, state: IBlockState): Boolean{
+	return world.setBlockState(this, state)
 }
 
-inline fun BlockPos.setState(world: World, state: IBlockState, flags: Int){
-	world.setBlockState(this, state, flags)
+inline fun BlockPos.setState(world: World, state: IBlockState, flags: Int): Boolean{
+	return world.setBlockState(this, state, flags)
 }
 
 inline fun BlockPos.breakBlock(world: World, drops: Boolean): Boolean{
@@ -81,7 +81,15 @@ inline fun BlockPos.breakBlock(world: World, drops: Boolean): Boolean{
 // Block properties
 
 inline fun BlockPos.blocksMovement(world: IBlockAccess): Boolean{
-	return world.getBlockState(this).material.blocksMovement()
+	return this.getState(world).material.blocksMovement()
+}
+
+inline fun BlockPos.isReplaceable(world: IBlockAccess): Boolean{
+	return this.getBlock(world).isReplaceable(world, this)
+}
+
+inline fun BlockPos.getHardness(world: World): Float{
+	return this.getState(world).getBlockHardness(world, this)
 }
 
 inline fun BlockPos.getFaceShape(world: World, side: EnumFacing): BlockFaceShape{
