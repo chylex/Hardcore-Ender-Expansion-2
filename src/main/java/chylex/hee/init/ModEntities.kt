@@ -1,5 +1,6 @@
 package chylex.hee.init
 import chylex.hee.HardcoreEnderExpansion
+import chylex.hee.game.entity.item.EntityFallingBlockHeavy
 import chylex.hee.game.entity.item.EntityItemIgneousRock
 import chylex.hee.game.entity.item.EntityItemNoBob
 import chylex.hee.game.entity.living.EntityMobSilverfish
@@ -28,6 +29,7 @@ object ModEntities{
 		with(e.registry){
 			register<EntityItemNoBob>("item_no_bob").tracker(64, 3, true) to this
 			register<EntityItemIgneousRock>("item_igneous_rock").tracker(64, 3, true) to this
+			register<EntityFallingBlockHeavy>("falling_block_heavy").tracker(160, 20, true) to this
 			
 			register<EntityProjectileSpatialDash>("projectile_spatial_dash").tracker(64, 10, true) to this
 		}
