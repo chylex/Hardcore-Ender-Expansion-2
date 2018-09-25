@@ -1,8 +1,8 @@
 package chylex.hee.init
-import chylex.hee.HEE
 import chylex.hee.game.loot.BlockLootTable
 import chylex.hee.game.loot.conditions.ConditionCriticalHit
 import chylex.hee.game.loot.conditions.ConditionFortune
+import chylex.hee.system.Resource
 import net.minecraft.util.ResourceLocation
 import net.minecraft.world.storage.loot.LootTableList
 import net.minecraft.world.storage.loot.conditions.LootConditionManager
@@ -30,10 +30,10 @@ object ModLoot{
 	}
 	
 	private fun registerBlock(name: String): BlockLootTable{
-		return BlockLootTable(LootTableList.register(ResourceLocation(HEE.ID, "blocks/$name")))
+		return BlockLootTable(LootTableList.register(Resource.Custom("blocks/$name")))
 	}
 	
 	private fun registerEntity(name: String): ResourceLocation{
-		return LootTableList.register(ResourceLocation(HEE.ID, "entities/$name"))
+		return LootTableList.register(Resource.Custom("entities/$name"))
 	}
 }

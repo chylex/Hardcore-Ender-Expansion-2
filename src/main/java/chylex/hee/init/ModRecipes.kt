@@ -3,12 +3,12 @@ import chylex.hee.HEE
 import chylex.hee.game.item.ItemEnergyOracle
 import chylex.hee.game.item.ItemSpatialDashGem
 import chylex.hee.system.IntegrityCheck
+import chylex.hee.system.Resource
 import net.minecraft.init.Blocks
 import net.minecraft.init.Items
 import net.minecraft.item.ItemStack
 import net.minecraft.item.crafting.FurnaceRecipes
 import net.minecraft.item.crafting.IRecipe
-import net.minecraft.util.ResourceLocation
 import net.minecraftforge.event.RegistryEvent
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent
@@ -33,15 +33,15 @@ object ModRecipes{
 	@SubscribeEvent
 	fun onRegister(e: RegistryEvent.Register<IRecipe>){
 		with(e.registry as? IForgeRegistryModifiable<IRecipe> ?: return){
-			fun removeVanilla(name: String): Boolean = remove(ResourceLocation("minecraft", name)) != null
+			fun removeVanilla(name: String): Boolean = remove(Resource.Vanilla(name)) != null
 			
 			IntegrityCheck.removedEnderChestRecipe = removeVanilla("ender_chest")
 			IntegrityCheck.removedPurpurRecipe = removeVanilla("purpur_block")
 			IntegrityCheck.removedEndRodRecipe = removeVanilla("end_rod")
 			// TODO figure out what to do with the broken advancements
 			
-			ItemEnergyOracle.setupRecipeNBT(getValue(ResourceLocation(HEE.ID, "energy_oracle"))!!)
-			ItemSpatialDashGem.setupRecipeNBT(getValue(ResourceLocation(HEE.ID, "spatial_dash_gem"))!!)
+			ItemEnergyOracle.setupRecipeNBT(getValue(Resource.Custom("energy_oracle"))!!)
+			ItemSpatialDashGem.setupRecipeNBT(getValue(Resource.Custom("spatial_dash_gem"))!!)
 			// UPDATE: hopfully figure out a better way to do this
 		}
 	}

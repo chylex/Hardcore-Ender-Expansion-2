@@ -1,5 +1,6 @@
 package chylex.hee.game.render.block
 import chylex.hee.game.render.util.GL
+import chylex.hee.system.Resource
 import chylex.hee.system.util.square
 import net.minecraft.client.Minecraft
 import net.minecraft.client.renderer.ActiveRenderInfo
@@ -32,8 +33,8 @@ import java.nio.FloatBuffer
 @SideOnly(Side.CLIENT)
 abstract class RenderTileAbstractPortal<T : TileEntity> : TileEntitySpecialRenderer<T>(){
 	private companion object{
-		@JvmStatic private val TEX_BACKGROUND = ResourceLocation("minecraft", "textures/environment/end_sky.png")
-		@JvmStatic private val TEX_PARTICLE_LAYER = ResourceLocation("minecraft", "textures/entity/end_portal.png")
+		@JvmStatic private val TEX_BACKGROUND = Resource.Vanilla("textures/environment/end_sky.png")
+		@JvmStatic private val TEX_PARTICLE_LAYER = Resource.Vanilla("textures/entity/end_portal.png")
 		
 		@JvmStatic private val BUFFER = GLAllocation.createDirectFloatBuffer(16)
 		

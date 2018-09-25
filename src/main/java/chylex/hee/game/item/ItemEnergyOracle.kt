@@ -1,11 +1,11 @@
 package chylex.hee.game.item
-import chylex.hee.HEE
 import chylex.hee.game.block.entity.TileEntityEnergyCluster
 import chylex.hee.game.item.base.ItemBaseEnergyUser
 import chylex.hee.game.mechanics.energy.IEnergyQuantity.Units
 import chylex.hee.game.render.util.ColorTransition
 import chylex.hee.game.render.util.HCL
 import chylex.hee.init.ModItems
+import chylex.hee.system.Resource
 import chylex.hee.system.util.Pos
 import chylex.hee.system.util.angleBetween
 import chylex.hee.system.util.center
@@ -25,7 +25,6 @@ import net.minecraft.item.crafting.IRecipe
 import net.minecraft.nbt.NBTTagCompound
 import net.minecraft.util.EnumHand.MAIN_HAND
 import net.minecraft.util.EnumHand.OFF_HAND
-import net.minecraft.util.ResourceLocation
 import net.minecraft.world.World
 import net.minecraftforge.fml.relauncher.Side.CLIENT
 import net.minecraftforge.fml.relauncher.SideOnly
@@ -75,7 +74,7 @@ class ItemEnergyOracle : ItemBaseEnergyUser(){
 	}
 	
 	init{
-		addPropertyOverride(ResourceLocation(HEE.ID, "activity_intensity")){
+		addPropertyOverride(Resource.Custom("activity_intensity")){
 			stack, _, entity -> getActivityIntensityProp(stack, entity)
 		}
 	}

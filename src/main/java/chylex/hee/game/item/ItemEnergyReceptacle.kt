@@ -1,5 +1,4 @@
 package chylex.hee.game.item
-import chylex.hee.HEE
 import chylex.hee.game.block.entity.TileEntityEnergyCluster
 import chylex.hee.game.item.base.ItemBaseInfusable
 import chylex.hee.game.item.infusion.Infusion.SAFETY
@@ -14,6 +13,7 @@ import chylex.hee.game.mechanics.energy.IEnergyQuantity.Floating
 import chylex.hee.game.mechanics.energy.IEnergyQuantity.Internal
 import chylex.hee.game.render.util.RGB
 import chylex.hee.init.ModBlocks
+import chylex.hee.system.Resource
 import chylex.hee.system.util.breakBlock
 import chylex.hee.system.util.getTile
 import chylex.hee.system.util.heeTag
@@ -29,7 +29,6 @@ import net.minecraft.util.EnumActionResult.FAIL
 import net.minecraft.util.EnumActionResult.SUCCESS
 import net.minecraft.util.EnumFacing
 import net.minecraft.util.EnumHand
-import net.minecraft.util.ResourceLocation
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.text.translation.I18n
 import net.minecraft.world.World
@@ -82,7 +81,7 @@ class ItemEnergyReceptacle : ItemBaseInfusable(){
 	init{
 		maxStackSize = 1
 		
-		addPropertyOverride(ResourceLocation(HEE.ID, "has_cluster")){
+		addPropertyOverride(Resource.Custom("has_cluster")){
 			stack, _, _ -> if (stack.heeTagOrNull?.hasKey(CLUSTER_SNAPSHOT_TAG) == true) 1F else 0F
 		}
 		

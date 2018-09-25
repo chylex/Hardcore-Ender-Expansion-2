@@ -1,11 +1,10 @@
 package chylex.hee.game.loot.conditions
-import chylex.hee.HEE
 import chylex.hee.game.loot.BlockLootTable.BlockLootContext
+import chylex.hee.system.Resource
 import com.google.gson.JsonDeserializationContext
 import com.google.gson.JsonObject
 import com.google.gson.JsonSerializationContext
 import net.minecraft.util.JsonUtils
-import net.minecraft.util.ResourceLocation
 import net.minecraft.world.storage.loot.LootContext
 import net.minecraft.world.storage.loot.conditions.LootCondition
 import java.util.Random
@@ -15,7 +14,7 @@ class ConditionFortune(private val minLevel: Int, private val maxLevel: Int): Lo
 		return context is BlockLootContext && context.fortune in minLevel..maxLevel
 	}
 	
-	object Serializer: LootCondition.Serializer<ConditionFortune>(ResourceLocation(HEE.ID, "fortune"), ConditionFortune::class.java){
+	object Serializer: LootCondition.Serializer<ConditionFortune>(Resource.Custom("fortune"), ConditionFortune::class.java){
 		private const val MIN_FORTUNE = 0
 		private const val MAX_FORTUNE = Int.MAX_VALUE
 		

@@ -6,8 +6,8 @@ import chylex.hee.game.entity.item.EntityItemNoBob
 import chylex.hee.game.entity.living.EntityMobSilverfish
 import chylex.hee.game.entity.projectile.EntityProjectileSpatialDash
 import chylex.hee.init.factory.EntityConstructors
+import chylex.hee.system.Resource
 import net.minecraft.entity.Entity
-import net.minecraft.util.ResourceLocation
 import net.minecraftforge.event.RegistryEvent
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent
@@ -36,7 +36,7 @@ object ModEntities{
 		
 		// vanilla modifications
 		
-		ForgeRegistries.ENTITIES.getValue(ResourceLocation("minecraft", "silverfish"))!!.apply { // TODO is there a better way?
+		ForgeRegistries.ENTITIES.getValue(Resource.Vanilla("silverfish"))!!.apply { // TODO is there a better way?
 			val mobClass = EntityMobSilverfish::class.java
 			val entryFields = this::class.java.declaredFields
 			
@@ -52,7 +52,7 @@ object ModEntities{
 			.create<T>()
 			.entity(T::class.java)
 			.factory(EntityConstructors.get(T::class.java))
-			.id(ResourceLocation(HEE.ID, registryName), networkID++)
+			.id(Resource.Custom(registryName), networkID++)
 			.name("entity.hee.$registryName")
 	}
 	
