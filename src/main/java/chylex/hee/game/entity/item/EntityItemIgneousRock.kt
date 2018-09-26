@@ -1,5 +1,8 @@
 package chylex.hee.game.entity.item
 import chylex.hee.HEE
+import chylex.hee.game.particle.spawner.ParticleSpawnerVanilla
+import chylex.hee.game.particle.util.IOffset.InBox
+import chylex.hee.game.particle.util.IShape.Point
 import chylex.hee.system.util.Pos
 import chylex.hee.system.util.ceilToInt
 import chylex.hee.system.util.distanceSqTo
@@ -31,11 +34,13 @@ import net.minecraft.item.crafting.FurnaceRecipes
 import net.minecraft.util.DamageSource
 import net.minecraft.util.EnumFacing.DOWN
 import net.minecraft.util.EnumFacing.UP
+import net.minecraft.util.EnumParticleTypes.LAVA
 import net.minecraft.util.SoundEvent
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.Vec3d
 import net.minecraft.world.World
 import kotlin.collections.Map.Entry
+import kotlin.math.log2
 
 class EntityItemIgneousRock : EntityItemNoBob{
 	companion object{
@@ -46,6 +51,11 @@ class EntityItemIgneousRock : EntityItemNoBob{
 		private const val INITIAL_FIRE_UNTIL_TICKS = ACTIVITY_DELAY_TICKS + 10
 		
 		private const val MIN_ENTITY_BURN_DURATION_TICKS = 40
+		
+		private val PARTICLE_TICK = ParticleSpawnerVanilla(
+			type = LAVA,
+			pos = InBox(0.1F)
+		)
 		
 		private lateinit var smeltingTransformations: Map<IBlockState, IBlockState>
 		
@@ -88,7 +98,7 @@ class EntityItemIgneousRock : EntityItemNoBob{
 		prevMotionVec = motionVec
 		super.onUpdate()
 		
-		if (age >= ACTIVITY_DELAY_TICKS && !world.isRemote){
+		if (!world.isRemote && age >= ACTIVITY_DELAY_TICKS){
 			if (ticksExisted % 5 == 0){
 				updateBurnNearbyEntities()
 			}
@@ -114,14 +124,15 @@ class EntityItemIgneousRock : EntityItemNoBob{
 			}
 		}
 		
-		val currentPos = Pos(posX, posY, posZ)
+		val currentPos = Pos(this)
 		
-		if (Pos(prevPosX, prevPosY, prevPosZ) != currentPos || ticksExisted % 25 == 0){
+		if (currentPos != Pos(prevPosX, prevPosY, prevPosZ) || ticksExisted % 25 == 0){
 			if (currentPos.getMaterial(world) === Material.WATER){
 				motionY = 0.2
 				motionX = rand.nextFloat(-0.2F, 0.2F).toDouble()
 				motionZ = rand.nextFloat(-0.2F, 0.2F).toDouble()
-				super.playSound(ENTITY_GENERIC_BURN, 0.4F, rand.nextFloat(2.0F, 2.4F))
+				// spawns bubble particles via Entity.doWaterSplashEffect
+				// plays hissing sound (ENTITY_GENERIC_EXTINGUISH_FIRE) via Entity.move, as the entity is on fire
 			}
 		}
 		
@@ -133,7 +144,14 @@ class EntityItemIgneousRock : EntityItemNoBob{
 			motionZ *= 0.9
 		}
 		
-		// TODO FX
+		if (world.isRemote){
+			val stackSize = item.count.toFloat()
+			val particleChance = if (stackSize < 1F) 0F else 0.13F + (stackSize / 110F) + (log2(stackSize) / 18F)
+			
+			if (rand.nextFloat() < particleChance){
+				PARTICLE_TICK.spawn(Point(this, 1), rand)
+			}
+		}
 	}
 	
 	override fun move(type: MoverType, x: Double, y: Double, z: Double){
@@ -148,10 +166,10 @@ class EntityItemIgneousRock : EntityItemNoBob{
 	override fun playSound(sound: SoundEvent, volume: Float, pitch: Float){
 		if (sound === ENTITY_GENERIC_BURN && volume == 0.4F && pitch >= 2.0F){ // UPDATE: find a better way, all item handling has changed anyway
 			motionVec = prevMotionVec // this disables vanilla lava handling, but also breaks hasNoGravity
-			return
 		}
-		
-		super.playSound(sound, volume, pitch)
+		else{
+			super.playSound(sound, volume, pitch)
+		}
 	}
 	
 	override fun isEntityInvulnerable(source: DamageSource): Boolean{

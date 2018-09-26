@@ -2,6 +2,9 @@ package chylex.hee.game.block
 import chylex.hee.game.mechanics.damage.Damage
 import chylex.hee.game.mechanics.damage.IDamageProcessor.Companion.FIRE_TYPE
 import chylex.hee.game.mechanics.damage.IDamageProcessor.Companion.PEACEFUL_EXCLUSION
+import chylex.hee.game.particle.spawner.ParticleSpawnerVanilla
+import chylex.hee.game.particle.util.IOffset.InBox
+import chylex.hee.game.particle.util.IShape.Point
 import chylex.hee.init.ModLoot
 import net.minecraft.block.state.IBlockState
 import net.minecraft.entity.player.EntityPlayer
@@ -10,6 +13,7 @@ import net.minecraft.item.ItemStack
 import net.minecraft.item.ItemTool
 import net.minecraft.tileentity.TileEntity
 import net.minecraft.util.EnumHand.MAIN_HAND
+import net.minecraft.util.EnumParticleTypes.LAVA
 import net.minecraft.util.NonNullList
 import net.minecraft.util.math.BlockPos
 import net.minecraft.world.IBlockAccess
@@ -22,6 +26,29 @@ import net.minecraftforge.fml.relauncher.SideOnly
 import java.util.Random
 
 class BlockIgneousRockOre(builder: BlockSimple.Builder) : BlockSimple(builder){
+	private companion object{
+		private val DAMAGE_MINING = Damage(FIRE_TYPE(15), PEACEFUL_EXCLUSION)
+		
+		private val PARTICLE_TICK = ParticleSpawnerVanilla(
+			type = LAVA,
+			pos = InBox(0.825F)
+		)
+		
+		private fun causeMiningDamage(player: EntityPlayer){
+			DAMAGE_MINING.dealTo(2F, player, Damage.TITLE_IN_FIRE)
+		}
+		
+		private fun getToolHarvestLevel(stack: ItemStack): Int?{
+			return (stack.item as? ItemTool)?.let {
+				try{
+					ToolMaterial.valueOf(it.toolMaterialName).harvestLevel
+				}catch(e: IllegalArgumentException){
+					null
+				}
+			}
+		}
+	}
+	
 	init{
 		MinecraftForge.EVENT_BUS.register(this)
 	}
@@ -71,28 +98,12 @@ class BlockIgneousRockOre(builder: BlockSimple.Builder) : BlockSimple(builder){
 	
 	override fun canSilkHarvest(): Boolean = true
 	
-	private companion object{
-		private val DAMAGE_MINING = Damage(FIRE_TYPE(15), PEACEFUL_EXCLUSION)
-		
-		private fun causeMiningDamage(player: EntityPlayer){
-			DAMAGE_MINING.dealTo(2F, player, Damage.TITLE_IN_FIRE)
-		}
-		
-		private fun getToolHarvestLevel(stack: ItemStack): Int?{
-			return (stack.item as? ItemTool)?.let {
-				try{
-					ToolMaterial.valueOf(it.toolMaterialName).harvestLevel
-				}catch(e: IllegalArgumentException){
-					null
-				}
-			}
-		}
-	}
-	
 	// Client side
 	
 	@SideOnly(Side.CLIENT)
 	override fun randomDisplayTick(state: IBlockState, world: World, pos: BlockPos, rand: Random){
-		// TODO FX
+		if (rand.nextInt(4) != 0){
+			PARTICLE_TICK.spawn(Point(pos, 1), rand)
+		}
 	}
 }
