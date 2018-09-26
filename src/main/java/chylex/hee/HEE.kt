@@ -68,6 +68,6 @@ object HEE{
 	
 	@NetworkCheckHandler
 	fun onNetworkCheck(mods: Map<String, String>, @Suppress("UNUSED_PARAMETER") side: Side): Boolean{
-		return mods[ID] == version
+		return mods.isNotEmpty() && mods[ID] == version
 	}
 }
