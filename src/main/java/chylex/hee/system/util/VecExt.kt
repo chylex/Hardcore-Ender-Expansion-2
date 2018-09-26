@@ -13,3 +13,11 @@ inline fun Vec3d.length(): Double{ // UPDATE: remove if the name was changed
 fun Vec3d.angleBetween(other: Vec3d): Double{
 	return acos(this.dotProduct(other) / (this.length() * other.length()))
 }
+
+fun Vec3d.offsetTowards(other: Vec3d, progress: Double): Vec3d{
+	return Vec3d(
+		x + (other.x - x) * progress,
+		y + (other.y - y) * progress,
+		z + (other.z - z) * progress
+	)
+}
