@@ -7,6 +7,7 @@ import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.entity.player.EntityPlayerMP
 import net.minecraft.tileentity.TileEntity
 import net.minecraft.util.math.BlockPos
+import net.minecraft.util.math.Vec3d
 import net.minecraft.world.World
 import net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint
 import net.minecraftforge.fml.relauncher.Side
@@ -41,6 +42,10 @@ abstract class BaseClientPacket : IPacket{
 	
 	inline fun sendToAllAround(x: Double, y: Double, z: Double, dimension: Int, range: Double){
 		ModNetwork.sendToAllAround(this, TargetPoint(dimension, x, y, z, range))
+	}
+	
+	inline fun sendToAllAround(world: World, vec: Vec3d, range: Double){
+		this.sendToAllAround(vec.x, vec.y, vec.z, world.provider.dimension, range)
 	}
 	
 	inline fun sendToAllAround(world: World, pos: BlockPos, range: Double){

@@ -87,7 +87,7 @@ object ModNetwork{
 		val id = buffer.readByte()
 		
 		val constructor = mapPacketIdToConstructor[id] ?: throw IllegalArgumentException("unknown packet id: $id")
-		return constructor.get().also { it.read(PacketBuffer(buffer.slice())) }
+		return constructor.get().also { it.read(buffer.slice()) }
 	}
 	
 	private fun writePacket(packet: IPacket): FMLProxyPacket{
@@ -97,10 +97,10 @@ object ModNetwork{
 			throw IllegalArgumentException("packet is not registered: ${packet::class.java.simpleName}")
 		}
 		
-		return PacketBuffer(Unpooled.buffer()).let {
-			it.writeByte(id.toInt())
-			packet.write(it)
-			FMLProxyPacket(it, HEE.ID)
-		}
+		val buffer = Unpooled.buffer()
+		buffer.writeByte(id.toInt())
+		packet.write(buffer)
+		
+		return FMLProxyPacket(PacketBuffer(buffer), HEE.ID)
 	}
 }
