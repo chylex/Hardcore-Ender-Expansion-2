@@ -1,4 +1,5 @@
 package chylex.hee.network.client
+import chylex.hee.game.item.util.Teleporter
 import chylex.hee.network.BaseClientPacket
 import chylex.hee.system.Debug
 import io.netty.buffer.ByteBuf
@@ -12,7 +13,8 @@ class PacketClientFX() : BaseClientPacket(){
 	private companion object{
 		private val RAND = Random()
 		
-		private val HANDLERS = arrayOf<IFXHandler>(
+		private val HANDLERS = arrayOf(
+			Teleporter.FX_TELEPORT,
 		)
 	}
 	

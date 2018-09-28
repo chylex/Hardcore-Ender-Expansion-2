@@ -13,6 +13,7 @@ import net.minecraft.item.ItemFood
 import net.minecraft.item.ItemStack
 import net.minecraft.potion.PotionEffect
 import net.minecraft.util.EnumFacing.DOWN
+import net.minecraft.util.SoundCategory
 import net.minecraft.world.World
 import java.util.Random
 
@@ -46,7 +47,7 @@ class ItemChorusBerry : ItemFood(0, 0F, false){
 					val finalPos = targetPos.offsetUntil(DOWN, 1..teleportYSearchRange){ it.blocksMovement(world) }?.up() ?: targetPos.down(teleportYSearchRange)
 					
 					if (finalPos.distanceSqTo(player) > MIN_TELEPORT_DISTANCE_SQ){
-						return TELEPORT.toBlock(player, finalPos)
+						return TELEPORT.toBlock(player, finalPos, SoundCategory.PLAYERS)
 					}
 				}
 				
