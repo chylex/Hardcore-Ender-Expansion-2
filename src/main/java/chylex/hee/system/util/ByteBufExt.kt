@@ -10,6 +10,10 @@ import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.Vec3d
 import net.minecraftforge.fml.common.network.ByteBufUtils
 
+inline fun ByteBuf.use(block: ByteBuf.() -> Unit){
+	block()
+}
+
 // BlockPos
 
 inline fun ByteBuf.writePos(pos: BlockPos){
@@ -52,6 +56,16 @@ inline fun ByteBuf.writeVarInt(value: Int, maxBytes: Int = 5){
 
 inline fun ByteBuf.readVarInt(maxBytes: Int = 5): Int{
 	return ByteBufUtils.readVarInt(this, maxBytes)
+}
+
+// Strings
+
+inline fun ByteBuf.writeString(str: String){
+	ByteBufUtils.writeUTF8String(this, str)
+}
+
+inline fun ByteBuf.readString(): String{
+	return ByteBufUtils.readUTF8String(this)
 }
 
 // NBT

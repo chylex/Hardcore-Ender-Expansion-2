@@ -9,6 +9,7 @@ import chylex.hee.system.util.readLongArray
 import chylex.hee.system.util.readPos
 import chylex.hee.system.util.readShortArray
 import chylex.hee.system.util.readStack
+import chylex.hee.system.util.readString
 import chylex.hee.system.util.readTag
 import chylex.hee.system.util.readVarInt
 import chylex.hee.system.util.readVec
@@ -21,6 +22,7 @@ import chylex.hee.system.util.writeLongArray
 import chylex.hee.system.util.writePos
 import chylex.hee.system.util.writeShortArray
 import chylex.hee.system.util.writeStack
+import chylex.hee.system.util.writeString
 import chylex.hee.system.util.writeTag
 import chylex.hee.system.util.writeVarInt
 import chylex.hee.system.util.writeVec
@@ -88,6 +90,17 @@ class TestByteBufExt{
 			).forEach {
 				writeVarInt(it)
 				assertEquals(it, readVarInt())
+			}
+		}
+		
+		@Test fun `writing and reading 'String' works`() = with(Unpooled.buffer()){
+			arrayOf(
+				"",
+				"hello world!",
+				"ᐊᓕᒍᖅ ᓂᕆᔭᕌᖓᒃᑯ ᓱᕋᙱᑦᑐᓐᓇᖅᑐᖓ"
+			).forEach {
+				writeString(it)
+				assertEquals(it, readString())
 			}
 		}
 	}
