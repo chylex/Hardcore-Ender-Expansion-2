@@ -2,15 +2,27 @@ package chylex.hee.game.block
 import chylex.hee.game.block.BlockSimple.Builder.Companion.INDESTRUCTIBLE_HARDNESS
 import chylex.hee.game.block.BlockSimple.Builder.Companion.setHardnessWithResistance
 import chylex.hee.game.entity.item.EntityFallingBlockHeavy
+import chylex.hee.game.item.util.Teleporter
+import chylex.hee.game.particle.ParticleTeleport
+import chylex.hee.game.particle.spawner.ParticleSpawnerCustom
+import chylex.hee.game.particle.util.IOffset.InBox
+import chylex.hee.game.particle.util.IShape.Point
+import chylex.hee.network.client.PacketClientFX
+import chylex.hee.network.client.PacketClientFX.IFXData
+import chylex.hee.network.client.PacketClientFX.IFXHandler
 import chylex.hee.system.util.blocksMovement
+import chylex.hee.system.util.center
 import chylex.hee.system.util.getState
 import chylex.hee.system.util.isAir
 import chylex.hee.system.util.motionVec
 import chylex.hee.system.util.nextInt
 import chylex.hee.system.util.offsetUntil
+import chylex.hee.system.util.readPos
 import chylex.hee.system.util.setAir
 import chylex.hee.system.util.setState
-import net.minecraft.block.Block
+import chylex.hee.system.util.use
+import chylex.hee.system.util.writePos
+import io.netty.buffer.ByteBuf
 import net.minecraft.block.BlockDragonEgg
 import net.minecraft.block.BlockFalling
 import net.minecraft.block.state.IBlockState
@@ -21,6 +33,7 @@ import net.minecraft.item.ItemStack
 import net.minecraft.util.EnumFacing
 import net.minecraft.util.EnumFacing.DOWN
 import net.minecraft.util.EnumHand
+import net.minecraft.util.SoundCategory
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.Vec3d
 import net.minecraft.world.World
@@ -28,6 +41,32 @@ import net.minecraftforge.common.MinecraftForge
 import java.util.Random
 
 class BlockDragonEggOverride : BlockDragonEgg(){
+	companion object{
+		private val PARTICLE_BREAK = ParticleSpawnerCustom(
+			type = ParticleTeleport,
+			data = ParticleTeleport.Data(minLifespan = 7, maxLifespan = 14, minScale = 2.7F, maxScale = 3.4F),
+			pos = InBox(0.66F),
+			mot = InBox(0.025F)
+		)
+		
+		class FxBreakData(private val pos: BlockPos) : IFXData{
+			override fun write(buffer: ByteBuf) = buffer.use {
+				writePos(pos)
+			}
+		}
+		
+		@JvmStatic
+		val FX_BREAK = object : IFXHandler{
+			override fun handle(buffer: ByteBuf, world: World, rand: Random) = buffer.use {
+				val pos = readPos()
+				val sound = Blocks.DRAGON_EGG.soundType
+				
+				PARTICLE_BREAK.spawn(Point(pos, 30), rand)
+				world.playSound(pos.x + 0.5, pos.y + 0.5, pos.z + 0.5, sound.breakSound, SoundCategory.BLOCKS, (sound.getVolume() + 1F) / 2F, sound.getPitch() * 0.8F, false)
+			}
+		}
+	}
+	
 	init{
 		val source = Blocks.DRAGON_EGG
 		
@@ -73,7 +112,8 @@ class BlockDragonEggOverride : BlockDragonEgg(){
 					
 					finalPos.setState(world, realState)
 					pos.setAir(world)
-					// TODO fx
+					
+					Teleporter.sendTeleportFX(world, pos.center, finalPos.center, SoundCategory.BLOCKS, 0.7F)
 					return true
 				}
 			}
@@ -89,12 +129,10 @@ class BlockDragonEggOverride : BlockDragonEgg(){
 			return
 		}
 		
-		world.playEvent(2001, pos, Block.getStateId(state)) // TODO move this to fx
 		pos.setAir(world)
+		PacketClientFX(FX_BREAK, FxBreakData(pos)).sendToAllAround(world, pos, 32.0)
 		
 		if (world.gameRules.getBoolean("doTileDrops") && !world.restoringBlockSnapshots){
-			// TODO fx
-			
 			EntityItem(world, pos.x + 0.5, pos.y.toDouble(), pos.z + 0.5, ItemStack(this)).apply {
 				motionVec = Vec3d.ZERO
 				setDefaultPickupDelay()

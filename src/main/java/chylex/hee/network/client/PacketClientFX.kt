@@ -1,4 +1,5 @@
 package chylex.hee.network.client
+import chylex.hee.game.block.BlockDragonEggOverride
 import chylex.hee.game.item.util.Teleporter
 import chylex.hee.network.BaseClientPacket
 import chylex.hee.system.Debug
@@ -15,6 +16,7 @@ class PacketClientFX() : BaseClientPacket(){
 		
 		private val HANDLERS = arrayOf(
 			Teleporter.FX_TELEPORT,
+			BlockDragonEggOverride.FX_BREAK
 		)
 	}
 	
