@@ -1,4 +1,5 @@
 package chylex.hee.game.particle
+import chylex.hee.game.particle.base.ParticleBaseFloating
 import chylex.hee.game.particle.spawner.factory.IParticleData
 import chylex.hee.game.particle.spawner.factory.IParticleMaker
 import chylex.hee.system.util.floorToInt
@@ -32,18 +33,12 @@ object ParticleTeleport : IParticleMaker{
 	private val DEFAULT_DATA = Data()
 	
 	@SideOnly(Side.CLIENT)
-	private class Instance(world: World, posX: Double, posY: Double, posZ: Double, motX: Double, motY: Double, motZ: Double, unsafeData: IntArray) : Particle(world, posX, posY, posZ, motX, motY, motZ){
+	private class Instance(world: World, posX: Double, posY: Double, posZ: Double, motX: Double, motY: Double, motZ: Double, unsafeData: IntArray) : ParticleBaseFloating(world, posX, posY, posZ, motX, motY, motZ){
 		private val initialScale: Float
 		
 		init{
 			val data = DEFAULT_DATA.validate(unsafeData)
 			initialScale = rand.nextFloat(data[2] * 0.01F, data[3] * 0.01F)
-			
-			motionX = motX
-			motionY = motY
-			motionZ = motZ
-			
-			particleGravity = 0F
 			
 			particleTextureIndexX = rand.nextInt(8)
 			particleTextureIndexY = 0
@@ -53,11 +48,6 @@ object ParticleTeleport : IParticleMaker{
 			particleRed = particleBlue * 0.9F
 			
 			particleMaxAge = rand.nextInt(data[0], data[1])
-		}
-		
-		override fun move(x: Double, y: Double, z: Double){ // skips collision checking
-			boundingBox = boundingBox.offset(x, y, z)
-			resetPositionToBB()
 		}
 		
 		override fun renderParticle(buffer: BufferBuilder, entity: Entity, partialTicks: Float, rotationX: Float, rotationZ: Float, rotationYZ: Float, rotationXY: Float, rotationXZ: Float){
