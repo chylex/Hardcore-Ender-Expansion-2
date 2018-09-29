@@ -1,4 +1,5 @@
 package chylex.hee.game.block.entity
+import chylex.hee.game.block.entity.TileEntityBase.Context.NETWORK
 import chylex.hee.game.block.entity.TileEntityBase.Context.STORAGE
 import chylex.hee.game.mechanics.energy.ClusterColor
 import chylex.hee.game.mechanics.energy.ClusterSnapshot
@@ -13,6 +14,12 @@ import chylex.hee.game.mechanics.energy.IEnergyQuantity.Companion.MAX_POSSIBLE_V
 import chylex.hee.game.mechanics.energy.IEnergyQuantity.Companion.MAX_REGEN_CAPACITY
 import chylex.hee.game.mechanics.energy.IEnergyQuantity.Floating
 import chylex.hee.game.mechanics.energy.IEnergyQuantity.Internal
+import chylex.hee.game.particle.ParticleEnergyCluster
+import chylex.hee.game.particle.spawner.IParticleSpawner
+import chylex.hee.game.particle.spawner.ParticleSpawnerCustom
+import chylex.hee.game.particle.util.IOffset.InBox
+import chylex.hee.game.particle.util.IShape
+import chylex.hee.game.particle.util.IShape.Point
 import chylex.hee.system.util.FLAG_SKIP_RENDER
 import chylex.hee.system.util.FLAG_SYNC_CLIENT
 import chylex.hee.system.util.breakBlock
@@ -59,6 +66,9 @@ class TileEntityEnergyCluster : TileEntityBase(), ITickable{
 	
 	private var ticksToRegen = 20
 	private var isInactive = false
+	
+	private var particle: Pair<IParticleSpawner, IShape>? = null
+	private val particleSkipTest = ParticleEnergyCluster.newCountingSkipTest()
 	
 	var breakWithoutExplosion = false
 	
@@ -112,6 +122,10 @@ class TileEntityEnergyCluster : TileEntityBase(), ITickable{
 	
 	override fun update(){
 		if (world.isRemote){
+			if (world.totalWorldTime % 3L == 0L){
+				particle?.let { it.first.spawn(it.second, world.rand) }
+			}
+			
 			return
 		}
 		
@@ -150,6 +164,22 @@ class TileEntityEnergyCluster : TileEntityBase(), ITickable{
 		
 		if (getBoolean(INACTIVE_TAG)){
 			setInactive()
+		}
+		
+		if (context == NETWORK){
+			val particleSpawner = ParticleSpawnerCustom(
+				type = ParticleEnergyCluster,
+				data = ParticleEnergyCluster.Data(this@TileEntityEnergyCluster),
+				pos = InBox(0.003F),
+				mot = InBox(0.0015F),
+				skipTest = particleSkipTest
+			)
+			
+			if (particle == null){
+				particleSpawner.spawn(Point(pos, 3), world.rand) // small quick burst when placed down
+			}
+			
+			particle = Pair(particleSpawner, Point(pos, 1))
 		}
 	}
 	
