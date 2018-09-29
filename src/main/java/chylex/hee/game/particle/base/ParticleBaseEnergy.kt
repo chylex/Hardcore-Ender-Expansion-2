@@ -2,6 +2,7 @@ package chylex.hee.game.particle.base
 import chylex.hee.game.render.util.GL
 import chylex.hee.system.Resource
 import net.minecraft.client.Minecraft
+import net.minecraft.client.particle.Particle
 import net.minecraft.client.renderer.BufferBuilder
 import net.minecraft.client.renderer.GlStateManager.DestFactor.ONE
 import net.minecraft.client.renderer.GlStateManager.SourceFactor.SRC_ALPHA
@@ -26,6 +27,9 @@ abstract class ParticleBaseEnergy(world: World, posX: Double, posY: Double, posZ
 			override fun getMaxU(): Float = 1F
 			override fun getMaxV(): Float = 1F
 		}
+		
+		private val mc = Minecraft.getMinecraft()
+		private var lastInterpolationFixTime = 0L
 	}
 	
 	init{
@@ -33,7 +37,17 @@ abstract class ParticleBaseEnergy(world: World, posX: Double, posY: Double, posZ
 	}
 	
 	override fun renderParticle(buffer: BufferBuilder, entity: Entity, partialTicks: Float, rotationX: Float, rotationZ: Float, rotationYZ: Float, rotationXY: Float, rotationXZ: Float){
-		val mc = Minecraft.getMinecraft()
+		val currentTime = Minecraft.getSystemTime()
+		
+		if (currentTime != lastInterpolationFixTime){
+			lastInterpolationFixTime = currentTime
+			
+			// ParticleManager.renderLitParticles uses interpolation values from previous tick // UPDATE: did it get fixed?
+			Particle.interpPosX = entity.lastTickPosX + (entity.posX - entity.lastTickPosX) * partialTicks
+			Particle.interpPosY = entity.lastTickPosY + (entity.posY - entity.lastTickPosY) * partialTicks
+			Particle.interpPosZ = entity.lastTickPosZ + (entity.posZ - entity.lastTickPosZ) * partialTicks
+			Particle.cameraViewDir = entity.getLook(partialTicks)
+		}
 		
 		GL.enableBlend()
 		GL.blendFunc(SRC_ALPHA, ONE)
