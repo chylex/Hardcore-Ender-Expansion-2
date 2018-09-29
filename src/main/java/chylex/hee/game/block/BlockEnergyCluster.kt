@@ -10,6 +10,7 @@ import net.minecraft.block.ITileEntityProvider
 import net.minecraft.block.state.BlockFaceShape
 import net.minecraft.block.state.BlockFaceShape.UNDEFINED
 import net.minecraft.block.state.IBlockState
+import net.minecraft.client.particle.ParticleManager
 import net.minecraft.entity.Entity
 import net.minecraft.entity.EntityLivingBase
 import net.minecraft.entity.IProjectile
@@ -21,14 +22,18 @@ import net.minecraft.util.EnumBlockRenderType.INVISIBLE
 import net.minecraft.util.EnumFacing
 import net.minecraft.util.math.AxisAlignedBB
 import net.minecraft.util.math.BlockPos
+import net.minecraft.util.math.RayTraceResult
 import net.minecraft.world.IBlockAccess
 import net.minecraft.world.World
+import net.minecraft.world.WorldServer
+import net.minecraftforge.fml.relauncher.Side
+import net.minecraftforge.fml.relauncher.SideOnly
 import java.util.Random
 import kotlin.math.pow
 
 class BlockEnergyCluster(builder: BlockSimple.Builder) : BlockSimple(builder), ITileEntityProvider{
 	private companion object{
-		private val SELECTION_AABB = AxisAlignedBB(0.35, 0.35, 0.35, 0.65, 0.65, 0.65)
+		private val SELECTION_AABB = AxisAlignedBB(0.2, 0.2, 0.2, 0.8, 0.8, 0.8)
 	}
 	
 	override fun createNewTileEntity(world: World, meta: Int): TileEntity{
@@ -73,8 +78,13 @@ class BlockEnergyCluster(builder: BlockSimple.Builder) : BlockSimple(builder), I
 	
 	override fun quantityDropped(rand: Random): Int = 0
 	
+	@SideOnly(Side.CLIENT) override fun addHitEffects(state: IBlockState, world: World, target: RayTraceResult, manager: ParticleManager): Boolean = true
+	@SideOnly(Side.CLIENT) override fun addDestroyEffects(world: World, pos: BlockPos, manager: ParticleManager): Boolean = true
+	@SideOnly(Side.CLIENT) override fun addRunningEffects(state: IBlockState, world: World, pos: BlockPos, entity: Entity): Boolean = true
+	@SideOnly(Side.CLIENT) override fun addLandingEffects(state: IBlockState, world: WorldServer, pos: BlockPos, stateAgain: IBlockState, entity: EntityLivingBase, particleAmount: Int): Boolean = true
+	
+	override fun getBoundingBox(state: IBlockState, source: IBlockAccess, pos: BlockPos): AxisAlignedBB = SELECTION_AABB
 	override fun getCollisionBoundingBox(state: IBlockState, world: IBlockAccess, pos: BlockPos): AxisAlignedBB? = NULL_AABB
-	override fun getSelectedBoundingBox(state: IBlockState, world: World, pos: BlockPos): AxisAlignedBB = SELECTION_AABB.offset(pos)
 	override fun getBlockFaceShape(world: IBlockAccess, state: IBlockState, pos: BlockPos, face: EnumFacing): BlockFaceShape = UNDEFINED
 	
 	override fun isFullCube(state: IBlockState): Boolean = false

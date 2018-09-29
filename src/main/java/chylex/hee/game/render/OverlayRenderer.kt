@@ -77,6 +77,7 @@ object OverlayRenderer{
 			
 			if (pos.getBlock(world) === ModBlocks.ENERGY_CLUSTER){
 				clusterLookedAt = pos.getTile(world)
+				e.isCanceled = true
 			}
 		}
 	}
