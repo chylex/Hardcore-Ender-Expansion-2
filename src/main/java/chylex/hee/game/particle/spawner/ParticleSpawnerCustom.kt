@@ -7,6 +7,10 @@ import chylex.hee.game.particle.util.IOffset
 import chylex.hee.game.particle.util.IOffset.MutableOffsetPoint
 import chylex.hee.game.particle.util.IOffset.None
 import chylex.hee.game.particle.util.IShape
+import chylex.hee.game.particle.util.ParticleSetting
+import chylex.hee.game.particle.util.ParticleSetting.ALL
+import chylex.hee.game.particle.util.ParticleSetting.DECREASED
+import chylex.hee.game.particle.util.ParticleSetting.MINIMAL
 import chylex.hee.system.util.posVec
 import chylex.hee.system.util.square
 import java.util.Random
@@ -16,11 +20,16 @@ class ParticleSpawnerCustom(
 	private val data: IParticleData = Empty,
 	private val pos: IOffset = None,
 	private val mot: IOffset = None,
-	maxRange: Double = 32.0,
-	hideOnMinimalSetting: Boolean = true
+	private val skipTest: (Double, ParticleSetting, Random) -> Boolean
 ) : IParticleSpawner{
-	private val maxRangeSq = square(maxRange)
-	private val showSomeParticlesEvenOnMinimalSetting = !hideOnMinimalSetting
+	constructor(
+		type: IParticleMaker,
+		data: IParticleData = Empty,
+		pos: IOffset = None,
+		mot: IOffset = None,
+		maxRange: Double = 32.0,
+		hideOnMinimalSetting: Boolean = true
+	) : this(type, data, pos, mot, defaultSkipTest(maxRange, hideOnMinimalSetting))
 	
 	private val tmpOffsetPos = MutableOffsetPoint()
 	private val tmpOffsetMot = MutableOffsetPoint()
@@ -32,13 +41,13 @@ class ParticleSpawnerCustom(
 		val playerPos = mc.renderViewEntity?.posVec ?: return
 		
 		val particleManager = mc.effectRenderer ?: return
-		val particleSetting = mc.gameSettings.particleSetting
+		val particleSetting = ParticleSetting.get(mc.gameSettings)
 		
 		for(point in shape.points){
 			pos.next(tmpOffsetPos, rand)
 			mot.next(tmpOffsetMot, rand)
 			
-			if (shouldSkipParticle(particleSetting, rand) || playerPos.squareDistanceTo(point.x, point.y, point.z) > maxRangeSq){
+			if (skipTest(playerPos.squareDistanceTo(point), particleSetting, rand)){
 				continue
 			}
 			
@@ -55,17 +64,26 @@ class ParticleSpawnerCustom(
 		}
 	}
 	
-	private fun shouldSkipParticle(particleSetting: Int, rand: Random): Boolean{
-		var adjustedSetting = particleSetting
-		
-		if (showSomeParticlesEvenOnMinimalSetting && adjustedSetting == 2 && rand.nextInt(10) == 0){
-			adjustedSetting = 1
+	private companion object{
+		private fun defaultSkipTest(maxRange: Double, hideOnMinimalSetting: Boolean): (Double, ParticleSetting, Random) -> Boolean{
+			val maxRangeSq = square(maxRange)
+			val showSomeParticlesEvenOnMinimalSetting = !hideOnMinimalSetting
+			
+			fun shouldSkipParticle(particleSetting: ParticleSetting, rand: Random): Boolean{
+				var adjustedSetting = particleSetting
+				
+				if (showSomeParticlesEvenOnMinimalSetting && adjustedSetting == MINIMAL && rand.nextInt(10) == 0){
+					adjustedSetting = DECREASED
+				}
+				
+				if (adjustedSetting == DECREASED && rand.nextInt(3) == 0){
+					adjustedSetting = ALL
+				}
+				
+				return adjustedSetting != ALL
+			}
+			
+			return { distanceSq, particleSetting, rand -> distanceSq > maxRangeSq || shouldSkipParticle(particleSetting, rand) }
 		}
-		
-		if (adjustedSetting == 1 && rand.nextInt(3) == 0){
-			adjustedSetting = 2
-		}
-		
-		return adjustedSetting > 1
 	}
 }
