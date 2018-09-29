@@ -1,11 +1,10 @@
 package chylex.hee.game.mechanics.energy
 import chylex.hee.game.render.util.HCL
-import chylex.hee.game.render.util.IColor
 import java.util.Random
 
 class ClusterColor(val primaryHue: Short, val secondaryHue: Short){
-	val forReceptacle: IColor
-		get() = HCL(primaryHue.toDouble(), 75F, 80F)
+	fun primary(chroma: Float, luminance: Float) = HCL(primaryHue.toDouble(), chroma, luminance)
+	fun secondary(chroma: Float, luminance: Float) = HCL(secondaryHue.toDouble(), chroma, luminance)
 	
 	companion object{
 		fun generate(rand: Random): ClusterColor{

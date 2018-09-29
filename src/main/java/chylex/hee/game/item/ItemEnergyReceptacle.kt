@@ -129,7 +129,7 @@ class ItemEnergyReceptacle : ItemBaseInfusable(){
 					setTag(CLUSTER_SNAPSHOT_TAG, cluster.getClusterSnapshot().tag)
 					
 					setLong(UPDATE_TIME_TAG, world.totalWorldTime)
-					setInteger(RENDER_COLOR_TAG, cluster.color.forReceptacle.toInt())
+					setInteger(RENDER_COLOR_TAG, cluster.color.primary(75F, 80F).toInt())
 					
 					setInteger(INITIAL_LEVEL_TAG, cluster.energyLevel.internal.value)
 					setInteger(INITIAL_DIMENSION_TAG, world.provider.dimension) // TODO handle moving across territories too
