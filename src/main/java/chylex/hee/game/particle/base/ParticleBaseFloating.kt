@@ -20,4 +20,10 @@ abstract class ParticleBaseFloating(world: World, posX: Double, posY: Double, po
 		boundingBox = boundingBox.offset(x, y, z)
 		resetPositionToBB()
 	}
+	
+	override fun multiplyVelocity(multiplier: Float): Particle = apply {
+		motionX *= multiplier
+		motionY *= multiplier
+		motionZ *= multiplier
+	}
 }
