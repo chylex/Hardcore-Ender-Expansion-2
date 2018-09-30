@@ -1,0 +1,27 @@
+{
+  "forge_marker": 1,
+  "defaults": {
+    "model": "hee:gloomtorch",
+    "textures": {
+      "particle": "hee:block/gloomtorch",
+      "texture": "hee:block/gloomtorch"
+    }
+  },
+  "variants": {
+    "facing": {
+      "up": {},
+      "down": { "x": 180 },
+      "north": { "y": 0, "x": 90 },
+      "south": { "y": 180, "x": 90 },
+      "east": { "y": 90, "x": 90 },
+      "west": { "y": 270, "x": 90 }
+    },
+    "inventory": {
+      "model": "builtin/generated",
+      "transform": "forge:default-item",
+      "textures": {
+        "layer0": "hee:item/gloomtorch"
+      }
+    }
+  }
+}

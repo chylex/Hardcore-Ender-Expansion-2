@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    " D ",
+    "DXD",
+    " # "
+  ],
+  "key": {
+    "#": { "item": "hee:gloomrock_smooth" },
+    "X": { "item": "hee:ethereum" },
+    "D": { "item": "minecraft:glowstone_dust" }
+  },
+  "result": {
+    "item": "hee:gloomtorch",
+    "count": 8
+  }
+}

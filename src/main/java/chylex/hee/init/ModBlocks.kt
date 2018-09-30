@@ -12,6 +12,7 @@ import chylex.hee.game.block.BlockEndPortalOverride
 import chylex.hee.game.block.BlockEndPowderOre
 import chylex.hee.game.block.BlockEndium
 import chylex.hee.game.block.BlockEnergyCluster
+import chylex.hee.game.block.BlockGloomtorch
 import chylex.hee.game.block.BlockHumus
 import chylex.hee.game.block.BlockIgneousRockOre
 import chylex.hee.game.block.BlockPillarCustom
@@ -107,6 +108,15 @@ object ModBlocks{
 		explosionResistance = 8.0F
 	}
 	
+	private val buildGloomtorch = BlockSimple.Builder(Materials.SOLID_NO_TOOL).apply {
+		explosionResistance = 0.5F
+		
+		lightLevel = 13
+		
+		soundType = SoundType.STONE
+		mapColor = MapColor.BLACK
+	}
+	
 	@JvmField val GLOOMROCK                    = BlockSimple(buildGloomrock).apply { setup("gloomrock") }
 	@JvmField val GLOOMROCK_BRICKS             = BlockSimple(buildGloomrockBricks).apply { setup("gloomrock_bricks") }
 	@JvmField val GLOOMROCK_BRICK_STAIRS       = BlockStairsCustom(GLOOMROCK_BRICKS).apply { setup("gloomrock_brick_stairs") }
@@ -125,6 +135,7 @@ object ModBlocks{
 	@JvmField val GLOOMROCK_SMOOTH_PURPLE      = BlockSimple(buildGloomrockSmooth).apply { setup("gloomrock_smooth_purple") }
 	@JvmField val GLOOMROCK_SMOOTH_MAGENTA     = BlockSimple(buildGloomrockSmooth).apply { setup("gloomrock_smooth_magenta") }
 	@JvmField val GLOOMROCK_SMOOTH_WHITE       = BlockSimple(buildGloomrockSmooth).apply { setup("gloomrock_smooth_white") }
+	@JvmField val GLOOMTORCH                   = BlockGloomtorch(buildGloomtorch).apply { setup("gloomtorch") }
 	
 	// Blocks: Building (Obsidian)
 	
@@ -272,6 +283,7 @@ object ModBlocks{
 			register(GLOOMROCK_SMOOTH_PURPLE with basicItemBlock)
 			register(GLOOMROCK_SMOOTH_MAGENTA with basicItemBlock)
 			register(GLOOMROCK_SMOOTH_WHITE with basicItemBlock)
+			register(GLOOMTORCH with basicItemBlock)
 			
 			register(OBSIDIAN_STAIRS with basicItemBlock)
 			register(OBSIDIAN_SMOOTH with basicItemBlock)
