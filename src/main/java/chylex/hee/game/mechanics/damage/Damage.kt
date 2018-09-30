@@ -45,14 +45,15 @@ class Damage(private vararg val processors: IDamageProcessor){
 		const val TITLE_MAGIC   = "magic"
 		const val TITLE_IN_FIRE = "inFire"
 		
-		private fun determineTitleDirect(source: Entity): String = when(source){
+		fun determineTitleDirect(source: Entity): String = when(source){
 			is EntityPlayer -> TITLE_PLAYER
 			else            -> TITLE_MOB
 		}
 		
-		private fun determineTitleIndirect(triggeringSource: Entity, remoteSource: Entity) = when(triggeringSource){
+		fun determineTitleIndirect(triggeringSource: Entity, remoteSource: Entity) = when(triggeringSource){
 			is EntityThrowable -> TITLE_THROWN
 			else               -> determineTitleDirect(remoteSource)
 		}
 	}
 }
+
