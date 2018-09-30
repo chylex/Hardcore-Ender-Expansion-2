@@ -14,6 +14,7 @@ import chylex.hee.game.mechanics.energy.IEnergyQuantity.Companion.MAX_POSSIBLE_V
 import chylex.hee.game.mechanics.energy.IEnergyQuantity.Companion.MAX_REGEN_CAPACITY
 import chylex.hee.game.mechanics.energy.IEnergyQuantity.Floating
 import chylex.hee.game.mechanics.energy.IEnergyQuantity.Internal
+import chylex.hee.game.mechanics.energy.IEnergyQuantity.Units
 import chylex.hee.game.particle.ParticleEnergyCluster
 import chylex.hee.game.particle.spawner.IParticleSpawner
 import chylex.hee.game.particle.spawner.ParticleSpawnerCustom
@@ -25,6 +26,7 @@ import chylex.hee.system.util.FLAG_SYNC_CLIENT
 import chylex.hee.system.util.breakBlock
 import chylex.hee.system.util.ceilToInt
 import chylex.hee.system.util.isAnyPlayerWithinRange
+import chylex.hee.system.util.nextFloat
 import net.minecraft.nbt.NBTTagCompound
 import net.minecraft.util.ITickable
 import kotlin.math.pow
@@ -88,6 +90,14 @@ class TileEntityEnergyCluster : TileEntityBase(), ITickable{
 		
 		isInactive = false
 		return true
+	}
+	
+	fun deteriorateCapacity(corruptionLevel: Int){
+		energyBaseCapacity -= maxOf(energyBaseCapacity * world.rand.nextFloat(0.025F, 0.035F), Units(corruptionLevel))
+		
+		if (energyLevel > energyRegenCapacity){
+			energyLevel = energyRegenCapacity
+		}
 	}
 	
 	fun deteriorateHealth(): Boolean{

@@ -18,4 +18,10 @@ object Materials{
 		makeTransparent()
 		destroyWhenPushed()
 	}
+	
+	val CORRUPTED_ENERGY = CustomMaterial().apply {
+		replaceable = true
+		makeTransparent()
+		destroyWhenPushed()
+	}
 }

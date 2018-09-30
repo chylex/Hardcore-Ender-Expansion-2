@@ -3,6 +3,7 @@ import chylex.hee.HEE
 import chylex.hee.game.block.BlockAncientCobweb
 import chylex.hee.game.block.BlockChorusFlowerOverride
 import chylex.hee.game.block.BlockChorusPlantOverride
+import chylex.hee.game.block.BlockCorruptedEnergy
 import chylex.hee.game.block.BlockDragonEggOverride
 import chylex.hee.game.block.BlockDryVines
 import chylex.hee.game.block.BlockEndPortalAcceptor
@@ -233,7 +234,12 @@ object ModBlocks{
 		mapColor = MapColor.SNOW
 	}
 	
-	@JvmField val ENERGY_CLUSTER = BlockEnergyCluster(buildEnergyCluster).apply { setup("energy_cluster") }
+	private val buildCorruptedEnergy = BlockSimple.Builder(Materials.CORRUPTED_ENERGY).apply {
+		mapColor = MapColor.PURPLE
+	}
+	
+	@JvmField val ENERGY_CLUSTER   = BlockEnergyCluster(buildEnergyCluster).apply { setup("energy_cluster") }
+	@JvmField val CORRUPTED_ENERGY = BlockCorruptedEnergy(buildCorruptedEnergy).apply { setup("corrupted_energy") }
 	
 	// Registry
 	
@@ -292,6 +298,7 @@ object ModBlocks{
 			register(END_PORTAL_ACCEPTOR with basicItemBlock)
 			
 			register(ENERGY_CLUSTER with basicItemBlock)
+			register(CORRUPTED_ENERGY)
 		}
 		
 		tile<TileEntityPortalInner>("end_portal_inner")
