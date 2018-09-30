@@ -1,11 +1,15 @@
 package chylex.hee.game.block
 import chylex.hee.game.block.entity.TileEntityEnergyCluster
+import chylex.hee.init.ModBlocks
 import chylex.hee.init.ModItems
+import chylex.hee.system.util.allInCenteredBoxMutable
 import chylex.hee.system.util.ceilToInt
+import chylex.hee.system.util.distanceSqTo
 import chylex.hee.system.util.floorToInt
 import chylex.hee.system.util.getTile
 import chylex.hee.system.util.nextFloat
 import chylex.hee.system.util.setAir
+import chylex.hee.system.util.square
 import net.minecraft.block.ITileEntityProvider
 import net.minecraft.block.state.BlockFaceShape
 import net.minecraft.block.state.BlockFaceShape.UNDEFINED
@@ -58,12 +62,19 @@ class BlockEnergyCluster(builder: BlockSimple.Builder) : BlockSimple(builder), I
 		
 		val explosionStength = 2.5F + (units.pow(0.6F) * 0.1F)
 		val corruptedEnergyRadius = 2F + (units.pow(0.75F) / 75F)
-		val corruptedEnergyLevel = (3F + (units.pow(0.75F) * 0.1F)).ceilToInt().coerceAtMost(20) // TODO replace with a BlockCorruptedEnergy constant
+		val corruptedEnergyLevel = (3F + (units.pow(0.75F) * 0.1F)).ceilToInt()
 		val ethereumToDrop = (world.rand.nextFloat(1.6F, 2.0F) * (units * 0.01F).pow(1.4F)).floorToInt()
 		
 		world.newExplosion(null, pos.x + 0.5, pos.y + 0.5, pos.z + 0.5, explosionStength, false, true)
 		
-		// TODO spawn corrupted energy
+		val energyRadiusInteger = corruptedEnergyRadius.ceilToInt()
+		val energyRadiusSq = square(corruptedEnergyRadius)
+		
+		pos.allInCenteredBoxMutable(energyRadiusInteger, energyRadiusInteger, energyRadiusInteger).forEach {
+			if (it.distanceSqTo(pos) <= energyRadiusSq){
+				ModBlocks.CORRUPTED_ENERGY.spawnCorruptedEnergy(world, it, corruptedEnergyLevel)
+			}
+		}
 		
 		repeat(ethereumToDrop){
 			spawnAsEntity(world, pos, ItemStack(ModItems.ETHEREUM))
