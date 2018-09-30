@@ -7,6 +7,7 @@ import net.minecraft.entity.Entity
 import net.minecraft.tileentity.TileEntity
 import net.minecraft.util.EnumFacing
 import net.minecraft.util.math.BlockPos
+import net.minecraft.util.math.BlockPos.MutableBlockPos
 import net.minecraft.util.math.Vec3d
 import net.minecraft.world.IBlockAccess
 import net.minecraft.world.World
@@ -112,6 +113,24 @@ inline fun BlockPos.offsetUntil(facing: EnumFacing, offsetRange: IntRange, testP
 	}
 	
 	return null
+}
+
+// Areas
+
+fun BlockPos.allInBox(otherBound: BlockPos): Iterable<BlockPos>{
+	return BlockPos.getAllInBox(this, otherBound)
+}
+
+fun BlockPos.allInCenteredBox(offsetX: Int, offsetY: Int, offsetZ: Int): Iterable<BlockPos>{
+	return BlockPos.getAllInBox(this.x - offsetX, this.y - offsetY, this.z - offsetZ, this.x + offsetX, this.y + offsetY, this.z + offsetZ)
+}
+
+fun BlockPos.allInBoxMutable(otherBound: BlockPos): Iterable<MutableBlockPos>{
+	return BlockPos.getAllInBoxMutable(this, otherBound)
+}
+
+fun BlockPos.allInCenteredBoxMutable(offsetX: Int, offsetY: Int, offsetZ: Int): Iterable<MutableBlockPos>{
+	return BlockPos.getAllInBoxMutable(this.x - offsetX, this.y - offsetY, this.z - offsetZ, this.x + offsetX, this.y + offsetY, this.z + offsetZ)
 }
 
 // Distance calculations
