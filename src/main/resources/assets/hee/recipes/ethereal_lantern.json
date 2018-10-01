@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "G#G",
+    "#X#",
+    "G#G"
+  ],
+  "key": {
+    "#": { "item": "minecraft:stonebrick", "data": 3 },
+    "X": { "item": "hee:ethereum" },
+    "G": { "item": "minecraft:gold_nugget" }
+  },
+  "result": {
+    "item": "hee:ethereal_lantern",
+    "count": 4
+  }
+}

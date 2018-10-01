@@ -56,6 +56,16 @@ object ModBlocks{
 	
 	// Blocks: Building (Uncategorized)
 	
+	private val buildEtherealLantern = BlockSimple.Builder(Materials.SOLID_NO_TOOL).apply {
+		harvestTool = Pair(WOOD, PICKAXE)
+		harvestHardness = 0.9F
+		
+		lightLevel = 15
+		
+		soundType = SoundType.GLASS
+		mapColor = MapColor.PURPLE
+	}
+	
 	private val buildVantablock = BlockSimple.Builder(Materials.SOLID_WITH_TOOL).apply {
 		harvestTool = Pair(IRON, PICKAXE)
 		harvestHardness = 10.0F
@@ -82,6 +92,7 @@ object ModBlocks{
 		mapColor = MapColor.BLACK
 	}
 	
+	@JvmField val ETHEREAL_LANTERN = BlockSimple(buildEtherealLantern).apply { setup("ethereal_lantern") }
 	@JvmField val STONE_BRICK_WALL = BlockWallCustom(Blocks.STONEBRICK).apply { setup("stone_brick_wall") }
 	@JvmField val VANTABLOCK       = BlockSimple(buildVantablock).apply { setup("vantablock") }
 	@JvmField val ENDIUM_BLOCK     = BlockEndium(buildEndiumBlock).apply { setup("endium_block") }
@@ -260,6 +271,7 @@ object ModBlocks{
 	@SubscribeEvent
 	fun onRegister(e: RegistryEvent.Register<Block>){
 		with(e.registry){
+			register(ETHEREAL_LANTERN with basicItemBlock)
 			register(STONE_BRICK_WALL with basicItemBlock)
 			register(VANTABLOCK with basicItemBlock)
 			register(ENDIUM_BLOCK with basicItemBlock)
