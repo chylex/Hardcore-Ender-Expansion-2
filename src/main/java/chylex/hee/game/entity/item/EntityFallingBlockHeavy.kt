@@ -1,4 +1,7 @@
 package chylex.hee.game.entity.item
+import chylex.hee.game.entity.item.EntityFallingBlockHeavy.PlacementResult.FAIL
+import chylex.hee.game.entity.item.EntityFallingBlockHeavy.PlacementResult.RELOCATION
+import chylex.hee.game.entity.item.EntityFallingBlockHeavy.PlacementResult.SUCCESS
 import chylex.hee.system.util.Pos
 import chylex.hee.system.util.add
 import chylex.hee.system.util.breakBlock
@@ -33,6 +36,10 @@ open class EntityFallingBlockHeavy : EntityFallingBlock, IEntityAdditionalSpawnD
 			val state = pos.getState(world)
 			return BlockFalling.canFallThrough(state) || state.block.isReplaceable(world, pos) || (state.getBlockHardness(world, pos) == 0F && state.getCollisionBoundingBox(world, pos) == NULL_AABB)
 		}
+	}
+	
+	protected enum class PlacementResult{
+		SUCCESS, RELOCATION, FAIL
 	}
 	
 	@Suppress("unused")
@@ -100,12 +107,15 @@ open class EntityFallingBlockHeavy : EntityFallingBlock, IEntityAdditionalSpawnD
 				
 				if (collidingWith.block !== Blocks.PISTON_EXTENSION){
 					val landedOnPos = if (canFallThrough(world, pos)) pos else pos.up() // allow landing on non-full solid blocks, even if it's kinda ugly
+					val placementResult = placeAfterLanding(landedOnPos, collidingWith)
 					
-					if (!placeAfterLanding(landedOnPos, collidingWith)){
+					if (placementResult == FAIL){
 						dropBlockIfPossible()
 					}
 					
-					setDead()
+					if (placementResult != RELOCATION){
+						setDead()
+					}
 				}
 			}
 			else if ((fallTime > 100 && (pos.y < 1 || pos.y > 256)) || fallTime > 600){
@@ -119,9 +129,9 @@ open class EntityFallingBlockHeavy : EntityFallingBlock, IEntityAdditionalSpawnD
 		motionZ *= 0.98
 	}
 	
-	protected open fun placeAfterLanding(pos: BlockPos, collidingWith: IBlockState): Boolean{
+	protected open fun placeAfterLanding(pos: BlockPos, collidingWith: IBlockState): PlacementResult{
 		if (!canFallThrough(world, pos.down()) && canFallThrough(world, pos)){
-			val state = block ?: return false
+			val state = block ?: return FAIL
 			val block = state.block
 			
 			if (pos.getHardness(world) == 0F){
@@ -148,11 +158,11 @@ open class EntityFallingBlockHeavy : EntityFallingBlock, IEntityAdditionalSpawnD
 					}
 				}
 				
-				return true
+				return SUCCESS
 			}
 		}
 		
-		return false
+		return FAIL
 	}
 	
 	protected open fun dropBlockIfPossible(){
