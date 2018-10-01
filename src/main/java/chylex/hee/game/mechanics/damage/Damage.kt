@@ -42,8 +42,9 @@ class Damage(private vararg val processors: IDamageProcessor){
 		const val TITLE_MOB     = "mob"
 		const val TITLE_THROWN  = "thrown"
 		
-		const val TITLE_MAGIC   = "magic"
-		const val TITLE_IN_FIRE = "inFire"
+		const val TITLE_MAGIC         = "magic"
+		const val TITLE_IN_FIRE       = "inFire"
+		const val TITLE_FALLING_BLOCK = "fallingBlock"
 		
 		fun determineTitleDirect(source: Entity): String = when(source){
 			is EntityPlayer -> TITLE_PLAYER

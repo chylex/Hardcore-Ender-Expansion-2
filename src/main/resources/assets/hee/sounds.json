@@ -1,2 +1,6 @@
 {
+  "block.obsidian.land": {
+    "category": "block",
+    "sounds": [ "hee:block/obsidian_land" ]
+  }
 }

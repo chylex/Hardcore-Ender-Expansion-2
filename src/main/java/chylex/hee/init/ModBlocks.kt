@@ -15,6 +15,7 @@ import chylex.hee.game.block.BlockEnergyCluster
 import chylex.hee.game.block.BlockGloomtorch
 import chylex.hee.game.block.BlockHumus
 import chylex.hee.game.block.BlockIgneousRockOre
+import chylex.hee.game.block.BlockFallingObsidian
 import chylex.hee.game.block.BlockPillarCustom
 import chylex.hee.game.block.BlockSimple
 import chylex.hee.game.block.BlockSimpleShaped
@@ -150,26 +151,32 @@ object ModBlocks{
 	
 	// Blocks: Building (Obsidian)
 	
-	private val buildObsidianCustom = BlockSimple.Builder(Materials.SOLID_WITH_TOOL).apply {
+	private val buildObsidian = BlockSimple.Builder(Materials.SOLID_WITH_TOOL).apply {
 		harvestTool = Pair(DIAMOND, PICKAXE)
-		harvestHardness = 20F
-		explosionResistance = 500F
+		harvestHardness = 50F
+		explosionResistance = 2000F
 		
 		soundType = SoundType.STONE
 		mapColor = MapColor.BLACK
 	}
 	
-	private val buildObsidianCustomLit = buildObsidianCustom.clone {
+	private val buildObsidianVariation = buildObsidian.clone {
+		harvestHardness = 20F
+		explosionResistance = 500F
+	}
+	
+	private val buildObsidianVariationLit = buildObsidianVariation.clone {
 		lightLevel = 15
 	}
 	
 	@JvmField val OBSIDIAN_STAIRS       = BlockStairsCustom(Blocks.OBSIDIAN).apply { setup("obsidian_stairs") }
-	@JvmField val OBSIDIAN_SMOOTH       = BlockSimple(buildObsidianCustom).apply { setup("obsidian_smooth") }
-	@JvmField val OBSIDIAN_CHISELED     = BlockSimple(buildObsidianCustom).apply { setup("obsidian_chiseled") }
-	@JvmField val OBSIDIAN_PILLAR       = BlockPillarCustom(buildObsidianCustom).apply { setup("obsidian_pillar") }
-	@JvmField val OBSIDIAN_SMOOTH_LIT   = BlockSimple(buildObsidianCustomLit).apply { setup("obsidian_smooth_lit") }
-	@JvmField val OBSIDIAN_CHISELED_LIT = BlockSimple(buildObsidianCustomLit).apply { setup("obsidian_chiseled_lit") }
-	@JvmField val OBSIDIAN_PILLAR_LIT   = BlockPillarCustom(buildObsidianCustomLit).apply { setup("obsidian_pillar_lit") }
+	@JvmField val OBSIDIAN_FALLING      = BlockFallingObsidian(buildObsidian).apply { setup("obsidian_falling") }
+	@JvmField val OBSIDIAN_SMOOTH       = BlockSimple(buildObsidianVariation).apply { setup("obsidian_smooth") }
+	@JvmField val OBSIDIAN_CHISELED     = BlockSimple(buildObsidianVariation).apply { setup("obsidian_chiseled") }
+	@JvmField val OBSIDIAN_PILLAR       = BlockPillarCustom(buildObsidianVariation).apply { setup("obsidian_pillar") }
+	@JvmField val OBSIDIAN_SMOOTH_LIT   = BlockSimple(buildObsidianVariationLit).apply { setup("obsidian_smooth_lit") }
+	@JvmField val OBSIDIAN_CHISELED_LIT = BlockSimple(buildObsidianVariationLit).apply { setup("obsidian_chiseled_lit") }
+	@JvmField val OBSIDIAN_PILLAR_LIT   = BlockPillarCustom(buildObsidianVariationLit).apply { setup("obsidian_pillar_lit") }
 	
 	// Blocks: Building (End Stone)
 	
@@ -298,6 +305,7 @@ object ModBlocks{
 			register(GLOOMTORCH with basicItemBlock)
 			
 			register(OBSIDIAN_STAIRS with basicItemBlock)
+			register(OBSIDIAN_FALLING with basicItemBlock)
 			register(OBSIDIAN_SMOOTH with basicItemBlock)
 			register(OBSIDIAN_CHISELED with basicItemBlock)
 			register(OBSIDIAN_PILLAR with basicItemBlock)
