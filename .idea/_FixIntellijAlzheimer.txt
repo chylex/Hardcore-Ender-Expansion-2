@@ -1,0 +1,9 @@
+-------------
+workspace.xml
+-------------
+
+  <component name="PropertiesComponent">
+    (...)
+    <property name="GoToClass.includeLibraries" value="true" />
+    <property name="GoToClass.toSaveIncludeLibraries" value="true" />
+  </component>
