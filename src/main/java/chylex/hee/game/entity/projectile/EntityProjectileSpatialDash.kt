@@ -7,11 +7,11 @@ import chylex.hee.system.util.add
 import chylex.hee.system.util.blocksMovement
 import chylex.hee.system.util.distanceSqTo
 import chylex.hee.system.util.floorToInt
-import chylex.hee.system.util.heeTag
 import chylex.hee.system.util.motionVec
 import chylex.hee.system.util.posVec
 import chylex.hee.system.util.selectEntities
 import chylex.hee.system.util.toRadians
+import chylex.hee.system.util.useHeeTag
 import net.minecraft.entity.Entity
 import net.minecraft.entity.EntityLivingBase
 import net.minecraft.entity.IProjectile
@@ -176,17 +176,13 @@ class EntityProjectileSpatialDash : Entity, IProjectile{
 		return (entityResult ?: blockResult)?.takeUnless { ForgeEventFactory.onProjectileImpact(this, it) }
 	}
 	
-	override fun writeEntityToNBT(nbt: NBTTagCompound){
-		with(this.heeTag(nbt)){
-			owner.writeToNBT(this, "Owner")
-			setShort("Lifespan", lifespan)
-		}
+	override fun writeEntityToNBT(nbt: NBTTagCompound) = useHeeTag(nbt){
+		owner.writeToNBT(this, "Owner")
+		setShort("Lifespan", lifespan)
 	}
 	
-	override fun readEntityFromNBT(nbt: NBTTagCompound){
-		with(this.heeTag(nbt)){
-			owner.readFromNBT(this, "Owner")
-			lifespan = getShort("Lifespan")
-		}
+	override fun readEntityFromNBT(nbt: NBTTagCompound) = useHeeTag(nbt){
+		owner.readFromNBT(this, "Owner")
+		lifespan = getShort("Lifespan")
 	}
 }

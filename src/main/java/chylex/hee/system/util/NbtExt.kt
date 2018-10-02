@@ -70,6 +70,10 @@ fun Entity.heeTag(root: NBTTagCompound): NBTTagCompound{
 		NBTTagCompound().also { root.setTag(HEE_TAG_NAME, it) }
 }
 
+inline fun Entity.useHeeTag(root: NBTTagCompound, block: NBTTagCompound.() -> Unit){
+	this.heeTag(root).block()
+}
+
 // Enums
 
 inline fun <reified T : Enum<T>> NBTTagCompound.setEnum(key: String, value: T?){
