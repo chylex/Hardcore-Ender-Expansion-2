@@ -76,6 +76,8 @@ class ModClientProxy : ModCommonProxy(){
 			it.blockState.validStates.associate { state -> Pair(state, ModelResourceLocation(it.registryName!!, "normal")) }
 		}
 		
+		ModelLoader.setCustomStateMapper(ModBlocks.CORRUPTED_ENERGY, emptyStateMapper)
+		
 		// item models
 		
 		with(ForgeRegistries.ITEMS){
