@@ -12,6 +12,7 @@ import chylex.hee.init.ModItems
 import chylex.hee.init.factory.RendererConstructors
 import net.minecraft.client.Minecraft
 import net.minecraft.client.renderer.block.model.ModelResourceLocation
+import net.minecraft.client.renderer.block.statemap.IStateMapper
 import net.minecraft.client.renderer.color.IItemColor
 import net.minecraft.client.renderer.entity.Render
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer
@@ -47,6 +48,8 @@ class ModClientProxy : ModCommonProxy(){
 		
 		registerTileRenderer<TileEntityEndPortal>(RenderTileEndPortal)
 		
+		// colors
+		
 		val blockColors = Minecraft.getMinecraft().blockColors
 		val itemColors = Minecraft.getMinecraft().itemColors
 		
@@ -66,6 +69,15 @@ class ModClientProxy : ModCommonProxy(){
 	
 	@SubscribeEvent
 	fun onModels(e: ModelRegistryEvent){
+		
+		// block state mappers
+		
+		val emptyStateMapper = IStateMapper {
+			it.blockState.validStates.associate { state -> Pair(state, ModelResourceLocation(it.registryName!!, "normal")) }
+		}
+		
+		// item models
+		
 		with(ForgeRegistries.ITEMS){
 			for(item in keys.asSequence().filter { it.resourceDomain == HEE.ID }.map(::getValue)){
 				ModelLoader.setCustomModelResourceLocation(item!!, 0, ModelResourceLocation(item.registryName!!, "inventory"))

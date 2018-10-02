@@ -361,9 +361,9 @@ object ModBlocks{
 	
 	private val temporaryItemBlocks = mutableListOf<ItemBlock>()
 	
-	private fun Block.setup(registryName: String, unlocalizedName: String = registryName, inCreativeTab: Boolean = true){
+	private fun Block.setup(registryName: String, unlocalizedName: String = "hee.$registryName", inCreativeTab: Boolean = true){
 		this.setRegistryName(HEE.ID, registryName)
-		this.unlocalizedName = "hee.$unlocalizedName"
+		this.unlocalizedName = unlocalizedName
 		
 		if (inCreativeTab){
 			this.setCreativeTab(ModCreativeTabs.main)
@@ -381,7 +381,7 @@ object ModBlocks{
 	
 	private infix fun Block.with(itemBlock: ItemBlock): Block{
 		temporaryItemBlocks.add(itemBlock.also { it.registryName = this.registryName })
-		(itemBlock.creativeTab as OrderedCreativeTab?)?.registerOrder(itemBlock)
+		(itemBlock.creativeTab as? OrderedCreativeTab)?.registerOrder(itemBlock)
 		return this
 	}
 	
