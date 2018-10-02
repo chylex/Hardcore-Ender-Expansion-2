@@ -9,28 +9,37 @@ import net.minecraftforge.fml.relauncher.Side
 import net.minecraftforge.fml.relauncher.SideOnly
 
 abstract class ItemBaseInfusable : Item(){
-	@SideOnly(Side.CLIENT)
-	override fun addInformation(stack: ItemStack, world: World?, lines: MutableList<String>, flags: ITooltipFlag){
-		super.addInformation(stack, world, lines, flags)
-		
-		if (lines.isNotEmpty()){
-			lines.add("")
-		}
-		
-		lines.add(I18n.translateToLocal("hee.infusions.title"))
-		
-		if (InfusionTag.hasAny(stack)){
-			for(infusion in InfusionTag.getList(stack)){
-				lines.add(I18n.translateToLocalFormatted("hee.infusions.item", I18n.translateToLocal(infusion.translationKey)))
+	companion object{
+		fun onAddInformation(stack: ItemStack, lines: MutableList<String>){
+			if (lines.size > 1){ // first line is item name
+				lines.add("")
+			}
+			
+			lines.add(I18n.translateToLocal("hee.infusions.title"))
+			
+			if (InfusionTag.hasAny(stack)){
+				for(infusion in InfusionTag.getList(stack)){
+					lines.add(I18n.translateToLocalFormatted("hee.infusions.item", I18n.translateToLocal(infusion.translationKey)))
+				}
+			}
+			else{
+				lines.add(I18n.translateToLocal("hee.infusions.none"))
 			}
 		}
-		else{
-			lines.add(I18n.translateToLocal("hee.infusions.none"))
+		
+		fun onHasEffect(stack: ItemStack): Boolean{
+			return InfusionTag.hasAny(stack) // TODO use a custom milder and slower texture
 		}
 	}
 	
 	@SideOnly(Side.CLIENT)
+	override fun addInformation(stack: ItemStack, world: World?, lines: MutableList<String>, flags: ITooltipFlag){
+		super.addInformation(stack, world, lines, flags)
+		onAddInformation(stack, lines)
+	}
+	
+	@SideOnly(Side.CLIENT)
 	override fun hasEffect(stack: ItemStack): Boolean{
-		return super.hasEffect(stack) || InfusionTag.hasAny(stack) // TODO use a custom milder and slower texture
+		return super.hasEffect(stack) || onHasEffect(stack)
 	}
 }
