@@ -38,7 +38,7 @@ abstract class BlockSlabCustom(builder: Builder) : BlockSlab(builder.material, b
 		
 		override fun getItemDropped(state: IBlockState, rand: Random, fortune: Int): Item = Item.getItemFromBlock(this)
 		
-		override fun getItem(worldIn: World, pos: BlockPos, state: IBlockState): ItemStack = ItemStack(this)
+		override fun getItem(world: World, pos: BlockPos, state: IBlockState): ItemStack = ItemStack(this)
 		
 		override fun getMetaFromState(state: IBlockState): Int = if (state.getValue(HALF) == BOTTOM) 0 else 8
 		
@@ -58,7 +58,7 @@ abstract class BlockSlabCustom(builder: Builder) : BlockSlab(builder.material, b
 		
 		override fun getItemDropped(state: IBlockState, rand: Random, fortune: Int): Item = Item.getItemFromBlock(slabBlock)
 		
-		override fun getItem(worldIn: World, pos: BlockPos, state: IBlockState): ItemStack = ItemStack(slabBlock)
+		override fun getItem(world: World, pos: BlockPos, state: IBlockState): ItemStack = ItemStack(slabBlock)
 		
 		override fun getMetaFromState(state: IBlockState): Int = 0
 		

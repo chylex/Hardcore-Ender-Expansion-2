@@ -98,14 +98,14 @@ class BlockCorruptedEnergy(builder: BlockSimple.Builder) : BlockSimple(builder){
 		val currentBlock = currentState.block
 		var updateFlags = FLAG_SYNC_CLIENT
 		
-		if (currentBlock == this){
+		if (currentBlock === this){
 			if (level - currentState.getValue(LEVEL) < 3 || world.rand.nextBoolean()){
 				return FAIL
 			}
 			
 			updateFlags = FLAG_NONE
 		}
-		else if (currentBlock == ModBlocks.ENERGY_CLUSTER){
+		else if (currentBlock === ModBlocks.ENERGY_CLUSTER){
 			if (world.rand.nextInt(100) < 5 * level){
 				pos.getTile<TileEntityEnergyCluster>(world)?.deteriorateCapacity(level)
 			}
