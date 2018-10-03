@@ -129,8 +129,8 @@ class EntityItemIgneousRock : EntityItemNoBob{
 		if (currentPos != Pos(prevPosX, prevPosY, prevPosZ) || ticksExisted % 25 == 0){
 			if (currentPos.getMaterial(world) === Material.WATER){
 				motionY = 0.2
-				motionX = rand.nextFloat(-0.2F, 0.2F).toDouble()
-				motionZ = rand.nextFloat(-0.2F, 0.2F).toDouble()
+				motionX = rand.nextFloat(-0.2, 0.2)
+				motionZ = rand.nextFloat(-0.2, 0.2)
 				// spawns bubble particles via Entity.doWaterSplashEffect
 				// plays hissing sound (ENTITY_GENERIC_EXTINGUISH_FIRE) via Entity.move, as the entity is on fire
 			}

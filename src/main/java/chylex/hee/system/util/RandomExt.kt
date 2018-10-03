@@ -53,6 +53,18 @@ fun Random.nextFloat(min: Float, max: Float): Float{
 }
 
 /**
+ * Returns a random floating point number between `min` and `max`, but returns a [Double] for convenience.
+ * @throws IllegalArgumentException if `min` is greater than `max`
+ */
+fun Random.nextFloat(min: Double, max: Double): Double{
+	if (min > max){
+		throw IllegalArgumentException("min must be smaller than or equal to max")
+	}
+	
+	return min + (this.nextFloat() * (max - min))
+}
+
+/**
  * Uses the decimal part of a number as a probability of rounding the number up.
  * For example, when the provided value is 3.8, the function will have an 80% chance to return 4, and a 20% chance to return 3.
  */
