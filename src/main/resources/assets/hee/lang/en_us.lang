@@ -115,5 +115,8 @@ commands.hee.version.usage=/hee version
 commands.hee.version.info=version and update info
 commands.hee.version.data.version=§aVersion:§r %s
 
+commands.hee.infusions.usage=/hee infusions {reset|add [infusion]}
+commands.hee.infusions.info=adds or resets infusions on held item
+
 commands.hee.testworld.usage=/hee testworld
 commands.hee.testworld.info=converts overworld into a test world
