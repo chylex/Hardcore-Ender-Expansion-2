@@ -20,3 +20,11 @@ inline fun Double.toDegrees() = Math.toDegrees(this)
 inline fun Double.toRadians() = Math.toRadians(this)
 
 infix fun Int.over(denominator: Int): Fraction = Fraction.getFraction(this, denominator)
+
+/**
+ * Maps a range of values in [from] range to values in [to] range using linear interpolation.
+ */
+fun remapRange(value: Float, from: ClosedFloatingPointRange<Float>, to: ClosedFloatingPointRange<Float>): Float{
+	val remappedBetween0And1 = (value - from.start) / (from.endInclusive - from.start)
+	return to.start + remappedBetween0And1 * (to.endInclusive - to.start)
+}
