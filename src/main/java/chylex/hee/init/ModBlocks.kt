@@ -12,10 +12,11 @@ import chylex.hee.game.block.BlockEndPortalOverride
 import chylex.hee.game.block.BlockEndPowderOre
 import chylex.hee.game.block.BlockEndium
 import chylex.hee.game.block.BlockEnergyCluster
+import chylex.hee.game.block.BlockFallingObsidian
 import chylex.hee.game.block.BlockGloomtorch
 import chylex.hee.game.block.BlockHumus
 import chylex.hee.game.block.BlockIgneousRockOre
-import chylex.hee.game.block.BlockFallingObsidian
+import chylex.hee.game.block.BlockInfusedTNT
 import chylex.hee.game.block.BlockPillarCustom
 import chylex.hee.game.block.BlockSimple
 import chylex.hee.game.block.BlockSimpleShaped
@@ -25,10 +26,12 @@ import chylex.hee.game.block.BlockStardustOre
 import chylex.hee.game.block.BlockWallCustom
 import chylex.hee.game.block.entity.TileEntityEndPortalAcceptor
 import chylex.hee.game.block.entity.TileEntityEnergyCluster
+import chylex.hee.game.block.entity.TileEntityInfusedTNT
 import chylex.hee.game.block.entity.TileEntityPortalInner
 import chylex.hee.game.block.material.Materials
 import chylex.hee.game.item.ItemAncientCobweb
 import chylex.hee.game.item.ItemDragonEgg
+import chylex.hee.game.item.ItemInfusedTNT
 import chylex.hee.game.item.util.Tool.Level.DIAMOND
 import chylex.hee.game.item.util.Tool.Level.IRON
 import chylex.hee.game.item.util.Tool.Level.STONE
@@ -193,6 +196,10 @@ object ModBlocks{
 	@JvmField val END_STONE_BURNED    = BlockSimple(buildEndStone).apply { setup("end_stone_burned") }
 	@JvmField val END_STONE_ENCHANTED = BlockSimple(buildEndStone).apply { setup("end_stone_enchanted") }
 	
+	// Blocks: Interactive (Uncategorized)
+	
+	@JvmField val INFUSED_TNT = BlockInfusedTNT().apply { setup("infused_tnt", unlocalizedName = "tnt", inCreativeTab = false) }
+	
 	// Blocks: Ores
 	
 	private val buildEndOre = BlockSimple.Builder(Materials.SOLID_WITH_TOOL).apply {
@@ -317,6 +324,8 @@ object ModBlocks{
 			register(END_STONE_BURNED with basicItemBlock)
 			register(END_STONE_ENCHANTED with basicItemBlock)
 			
+			register(INFUSED_TNT with ::ItemInfusedTNT)
+			
 			register(END_POWDER_ORE with basicItemBlock)
 			register(ENDIUM_ORE with basicItemBlock)
 			register(STARDUST_ORE with basicItemBlock)
@@ -336,6 +345,7 @@ object ModBlocks{
 		tile<TileEntityPortalInner>("end_portal_inner")
 		tile<TileEntityEndPortalAcceptor>("end_portal_acceptor")
 		tile<TileEntityEnergyCluster>("energy_cluster")
+		tile<TileEntityInfusedTNT>("infused_tnt")
 		
 		// vanilla modifications
 		

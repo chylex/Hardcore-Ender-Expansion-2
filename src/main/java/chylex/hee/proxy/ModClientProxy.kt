@@ -77,6 +77,7 @@ class ModClientProxy : ModCommonProxy(){
 		}
 		
 		ModelLoader.setCustomStateMapper(ModBlocks.CORRUPTED_ENERGY, emptyStateMapper)
+		ModelLoader.setCustomStateMapper(ModBlocks.INFUSED_TNT, emptyStateMapper)
 		
 		// item models
 		

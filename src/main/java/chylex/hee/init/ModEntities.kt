@@ -2,6 +2,7 @@ package chylex.hee.init
 import chylex.hee.HEE
 import chylex.hee.game.entity.item.EntityFallingBlockHeavy
 import chylex.hee.game.entity.item.EntityFallingObsidian
+import chylex.hee.game.entity.item.EntityInfusedTNT
 import chylex.hee.game.entity.item.EntityItemIgneousRock
 import chylex.hee.game.entity.item.EntityItemNoBob
 import chylex.hee.game.entity.living.EntityMobSilverfish
@@ -32,6 +33,7 @@ object ModEntities{
 			register<EntityItemIgneousRock>("item_igneous_rock").tracker(64, 3, true) to this
 			register<EntityFallingBlockHeavy>("falling_block_heavy").tracker(160, 20, true) to this
 			register<EntityFallingObsidian>("falling_obsidian").tracker(160, 20, true) to this
+			register<EntityInfusedTNT>("infused_tnt").tracker(160, 10, true) to this
 			
 			register<EntityProjectileSpatialDash>("projectile_spatial_dash").tracker(64, 10, true) to this
 		}
