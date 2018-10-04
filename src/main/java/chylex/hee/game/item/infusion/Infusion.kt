@@ -7,6 +7,7 @@ enum class Infusion(
 	FIRE("hee.infusion.fire"),
 	TRAP("hee.infusion.trap"),
 	HARMLESS("hee.infusion.harmless"),
+	PHASING("hee.infusion.phasing"),
 	MINING("hee.infusion.mining"),
 	
 	STABILITY("hee.infusion.stability"),
