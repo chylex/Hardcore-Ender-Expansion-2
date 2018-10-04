@@ -81,6 +81,10 @@ hee.infusions.title=§aInfusions
 hee.infusions.item=§2- %s
 hee.infusions.none=§7None
 
+hee.infusion.power=Power
+hee.infusion.fire=Fire
+hee.infusion.trap=Trap
+hee.infusion.harmless=Harmless
 hee.infusion.stability=Stability
 hee.infusion.safety=Safety
 

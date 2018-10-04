@@ -1,4 +1,7 @@
 package chylex.hee.game.entity.item
+import chylex.hee.game.item.infusion.Infusion.FIRE
+import chylex.hee.game.item.infusion.Infusion.HARMLESS
+import chylex.hee.game.item.infusion.Infusion.POWER
 import chylex.hee.game.item.infusion.InfusionList
 import chylex.hee.game.item.infusion.InfusionTag
 import chylex.hee.game.mechanics.ExplosionBuilder
@@ -55,20 +58,37 @@ class EntityInfusedTNT : EntityTNTPrimed{
 		
 		if (--fuse <= 0){
 			setDead()
-			
-			if (!world.isRemote){
-				val strength = 4F
-				
-				with(ExplosionBuilder()){
-					trigger(world, this@EntityInfusedTNT, posX, posY + (height / 16.0), posZ, strength)
-				}
-			}
+			blowUp()
 		}
 		else{
 			handleWaterMovement()
 			PARTICLE_TICK.spawn(Point(posX, posY + 0.5, posZ, 1), rand)
 		}
 	}
+	
+	// Explosion handling
+	
+	private fun blowUp(){
+		if (world.isRemote){
+			return
+		}
+		
+		val strength = if (infusions.has(POWER)) 6F else 4F
+		
+		val isFiery = infusions.has(FIRE)
+		val isHarmless = infusions.has(HARMLESS)
+		
+		with(ExplosionBuilder()){
+			this.destroyBlocks = !isHarmless
+			this.damageEntities = !isHarmless
+			
+			this.spawnFire = isFiery
+			
+			trigger(world, this@EntityInfusedTNT, posX, posY + (height / 16.0), posZ, strength)
+		}
+	}
+	
+	// Serialization
 	
 	override fun writeEntityToNBT(nbt: NBTTagCompound) = useHeeTag(nbt){
 		InfusionTag.setList(this, infusions)

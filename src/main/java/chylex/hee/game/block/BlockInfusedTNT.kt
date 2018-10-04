@@ -1,6 +1,7 @@
 package chylex.hee.game.block
 import chylex.hee.game.block.entity.TileEntityInfusedTNT
 import chylex.hee.game.entity.item.EntityInfusedTNT
+import chylex.hee.game.item.infusion.Infusion.TRAP
 import chylex.hee.game.item.infusion.InfusionTag
 import chylex.hee.system.util.getTile
 import chylex.hee.system.util.setAir
@@ -56,6 +57,12 @@ class BlockInfusedTNT : BlockTNT(), ITileEntityProvider{
 	}
 	
 	override fun removedByPlayer(state: IBlockState, world: World, pos: BlockPos, player: EntityPlayer, willHarvest: Boolean): Boolean{
+		if (pos.getTile<TileEntityInfusedTNT>(world)?.infusions?.has(TRAP) == true && !player.isCreative){
+			explode(world, pos, state.withProperty(EXPLODE, true), player)
+			pos.setAir(world)
+			return false
+		}
+		
 		if (willHarvest){
 			return true // skip super call before drops
 		}
@@ -90,9 +97,14 @@ class BlockInfusedTNT : BlockTNT(), ITileEntityProvider{
 		val infusions = pos.getTile<TileEntityInfusedTNT>(world)?.infusions
 		
 		if (infusions != null && state.getValue(EXPLODE)){
+			if (infusions.has(TRAP) && world.isBlockPowered(pos)){
+				dropBlockAsItem(world, pos, state, 0)
+			}
+			else{
 				EntityInfusedTNT(world, pos, infusions, igniter).apply {
 					world.playSound(null, posX, posY, posZ, SoundEvents.ENTITY_TNT_PRIMED, SoundCategory.BLOCKS, 1F, 1F)
 					world.spawnEntity(this)
+				}
 			}
 		}
 	}
