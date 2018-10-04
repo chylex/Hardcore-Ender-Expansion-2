@@ -2,6 +2,7 @@ package chylex.hee.init.factory;
 import chylex.hee.game.entity.item.EntityFallingBlockHeavy;
 import chylex.hee.game.entity.item.EntityFallingObsidian;
 import chylex.hee.game.entity.item.EntityInfusedTNT;
+import chylex.hee.game.entity.item.EntityItemFreshlyCooked;
 import chylex.hee.game.entity.item.EntityItemIgneousRock;
 import chylex.hee.game.entity.item.EntityItemNoBob;
 import chylex.hee.game.entity.living.EntityMobSilverfish;
@@ -18,6 +19,8 @@ public final class EntityConstructors{
 	static{
 		add(EntityItemNoBob.class, EntityItemNoBob::new);
 		add(EntityItemIgneousRock.class, EntityItemIgneousRock::new);
+		add(EntityItemFreshlyCooked.class, EntityItemFreshlyCooked::new);
+		
 		add(EntityFallingBlockHeavy.class, EntityFallingBlockHeavy::new);
 		add(EntityFallingObsidian.class, EntityFallingObsidian::new);
 		add(EntityInfusedTNT.class, EntityInfusedTNT::new);
