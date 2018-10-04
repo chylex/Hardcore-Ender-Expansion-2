@@ -25,6 +25,7 @@ import net.minecraft.world.World
 import net.minecraftforge.common.MinecraftForge
 import net.minecraftforge.event.entity.player.PlayerEvent.BreakSpeed
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent
+import java.util.Random
 
 class BlockAncientCobweb : Block(Materials.ANCIENT_COBWEB, MapColor.CLOTH){
 	init{
@@ -50,6 +51,10 @@ class BlockAncientCobweb : Block(Materials.ANCIENT_COBWEB, MapColor.CLOTH){
 		}
 	}
 	
+	override fun updateTick(world: World, pos: BlockPos, state: IBlockState, rand: Random){
+		pos.breakBlock(world, true)
+	}
+	
 	override fun getDrops(drops: NonNullList<ItemStack>, world: IBlockAccess, pos: BlockPos, state: IBlockState, fortune: Int){
 		ModLoot.ANCIENT_COBWEB.generateDrops(drops, world, fortune)
 	}
@@ -61,8 +66,8 @@ class BlockAncientCobweb : Block(Materials.ANCIENT_COBWEB, MapColor.CLOTH){
 			entity.setInWeb()
 			entity.motionY = -0.25
 		}
-		else if (!(entity is EntityPlayer && entity.capabilities.isFlying)){
-			pos.breakBlock(world, true)
+		else if (!world.isRemote && !(entity is EntityPlayer && entity.capabilities.isFlying)){
+			world.scheduleUpdate(pos, this, 1) // delay required to avoid client-side particle crash
 		}
 	}
 	
