@@ -20,6 +20,10 @@ inline fun Pos(vector: Vec3d) = BlockPos(vector)
 inline fun Pos(entity: Entity) = BlockPos(entity)
 inline fun Pos(packed: Long) = BlockPos.fromLong(packed)
 
+operator fun BlockPos.component1() = x
+operator fun BlockPos.component2() = y
+operator fun BlockPos.component3() = z
+
 inline val BlockPos.center
 	get() = Vec3d(x + 0.5, y + 0.5, z + 0.5)
 

@@ -2,6 +2,10 @@ package chylex.hee.system.util
 import net.minecraft.util.math.Vec3d
 import kotlin.math.acos
 
+operator fun Vec3d.component1() = x
+operator fun Vec3d.component2() = y
+operator fun Vec3d.component3() = z
+
 inline fun Vec3d.add(x: Double, y: Double, z: Double): Vec3d{ // UPDATE: remove if the name was changed
 	return this.addVector(x, y, z)
 }
