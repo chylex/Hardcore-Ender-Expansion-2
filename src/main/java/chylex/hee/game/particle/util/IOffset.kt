@@ -8,6 +8,8 @@ import java.util.Random
 interface IOffset{
 	fun next(out: MutableOffsetPoint, rand: Random)
 	
+	operator fun plus(other: IOffset) = Sum(this, other)
+	
 	data class MutableOffsetPoint(var x: Float, var y: Float, var z: Float){
 		constructor() : this(0F, 0F, 0F)
 	}
@@ -83,6 +85,23 @@ interface IOffset{
 			out.x = vec.x.toFloat()
 			out.y = vec.y.toFloat()
 			out.z = vec.z.toFloat()
+		}
+	}
+	
+	// Math
+	
+	class Sum(
+		private val offset1: IOffset,
+		private val offset2: IOffset
+	) : IOffset{
+		override fun next(out: MutableOffsetPoint, rand: Random){
+			offset1.next(out, rand)
+			val (firstX, firstY, firstZ) = out
+			
+			offset2.next(out, rand)
+			out.x += firstX
+			out.y += firstY
+			out.z += firstZ
 		}
 	}
 }
