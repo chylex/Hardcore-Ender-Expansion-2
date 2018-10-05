@@ -2,6 +2,7 @@ package chylex.hee.init
 import chylex.hee.HEE
 import chylex.hee.game.item.ItemEnergyOracle
 import chylex.hee.game.item.ItemSpatialDashGem
+import chylex.hee.game.recipe.RecipeEndPowderRepair
 import chylex.hee.system.IntegrityCheck
 import chylex.hee.system.Resource
 import net.minecraft.init.Blocks
@@ -43,6 +44,8 @@ object ModRecipes{
 			ItemEnergyOracle.setupRecipeNBT(getValue(Resource.Custom("energy_oracle"))!!)
 			ItemSpatialDashGem.setupRecipeNBT(getValue(Resource.Custom("spatial_dash_gem"))!!)
 			// UPDATE: hopfully figure out a better way to do this
+			
+			register(RecipeEndPowderRepair.setRegistryName(Resource.Custom("end_powder_repair")))
 		}
 	}
 }
