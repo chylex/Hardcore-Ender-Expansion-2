@@ -22,6 +22,13 @@ inline fun Double.toRadians() = Math.toRadians(this)
 infix fun Int.over(denominator: Int): Fraction = Fraction.getFraction(this, denominator)
 
 /**
+ * Extremely necessary utility method to bit shift an [Int] into a [Long].
+ */
+infix fun Int.shlong(bitCount: Int): Long{
+	return this.toLong() shl bitCount
+}
+
+/**
  * Maps a range of values in [from] range to values in [to] range using linear interpolation.
  */
 fun remapRange(value: Float, from: ClosedFloatingPointRange<Float>, to: ClosedFloatingPointRange<Float>): Float{
