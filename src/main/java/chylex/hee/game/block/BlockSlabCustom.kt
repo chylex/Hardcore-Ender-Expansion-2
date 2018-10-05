@@ -27,6 +27,7 @@ abstract class BlockSlabCustom(builder: Builder) : BlockSlab(builder.material, b
 		setHarvestTool(builder.harvestTool)
 		slipperiness = builder.slipperiness
 		soundType = builder.soundType
+		useNeighborBrightness = true
 	}
 	
 	class Half(builder: Builder): BlockSlabCustom(builder){
