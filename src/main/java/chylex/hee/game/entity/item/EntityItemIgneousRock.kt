@@ -21,6 +21,7 @@ import chylex.hee.system.util.selectVulnerableEntities
 import chylex.hee.system.util.setBlock
 import chylex.hee.system.util.setFireTicks
 import chylex.hee.system.util.setState
+import chylex.hee.system.util.size
 import net.minecraft.block.material.Material
 import net.minecraft.block.state.BlockFaceShape.SOLID
 import net.minecraft.block.state.IBlockState
@@ -103,7 +104,7 @@ class EntityItemIgneousRock : EntityItemNoBob{
 				updateBurnNearbyEntities()
 			}
 			
-			repeat(item.count){ // TODO maybe figure out some system to decrease the stack count after changing lots of blocks, to make big stacks lossy
+			repeat(item.size){ // TODO maybe figure out some system to decrease the stack count after changing lots of blocks, to make big stacks lossy
 				if (rand.nextInt(6) == 0 || age < INITIAL_FIRE_UNTIL_TICKS){
 					val checkRange = (BURN_DISTANCE * 2).ceilToInt()
 					
@@ -145,7 +146,7 @@ class EntityItemIgneousRock : EntityItemNoBob{
 		}
 		
 		if (world.isRemote){
-			val stackSize = item.count.toFloat()
+			val stackSize = item.size.toFloat()
 			val particleChance = if (stackSize < 1F) 0F else 0.13F + (stackSize / 110F) + (log2(stackSize) / 18F)
 			
 			if (rand.nextFloat() < particleChance){

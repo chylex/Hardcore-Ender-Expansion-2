@@ -3,6 +3,7 @@ import chylex.hee.game.commands.sub.ISubCommand
 import chylex.hee.game.item.infusion.Infusion
 import chylex.hee.game.item.infusion.InfusionList
 import chylex.hee.game.item.infusion.InfusionTag
+import chylex.hee.system.util.isNotEmpty
 import net.minecraft.command.ICommandSender
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.server.MinecraftServer
@@ -17,7 +18,7 @@ object CommandServerInfusions : ISubCommand{
 		if (sender is EntityPlayer){
 			val heldItem = sender.getHeldItem(MAIN_HAND)
 			
-			if (!heldItem.isEmpty){
+			if (heldItem.isNotEmpty){
 				if (args.size == 1 && args[0] == "reset"){
 					InfusionTag.setList(heldItem, InfusionList.EMPTY)
 				}

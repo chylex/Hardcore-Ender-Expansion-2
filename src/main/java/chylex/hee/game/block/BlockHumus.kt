@@ -2,6 +2,7 @@ package chylex.hee.game.block
 import chylex.hee.system.util.getBlock
 import chylex.hee.system.util.getState
 import chylex.hee.system.util.setAir
+import chylex.hee.system.util.size
 import net.minecraft.block.BlockBush
 import net.minecraft.block.BlockReed
 import net.minecraft.block.BlockSapling
@@ -36,7 +37,7 @@ class BlockHumus(builder: BlockSimple.Builder) : BlockSimple(builder){
 		if (e.state.block === Blocks.POTATOES && e.pos.down().getBlock(e.world) == this){
 			e.drops.replaceAll {
 				if (it.item === Items.POISONOUS_POTATO)
-					ItemStack(Items.POTATO, it.count).apply { deserializeNBT(it.serializeNBT()) }
+					ItemStack(Items.POTATO, it.size).apply { deserializeNBT(it.serializeNBT()) }
 				else
 					it
 			}
