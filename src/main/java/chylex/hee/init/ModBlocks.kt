@@ -196,6 +196,20 @@ object ModBlocks{
 	@JvmField val END_STONE_BURNED    = BlockSimple(buildEndStone).apply { setup("end_stone_burned") }
 	@JvmField val END_STONE_ENCHANTED = BlockSimple(buildEndStone).apply { setup("end_stone_enchanted") }
 	
+	// Blocks: Building (Dark Loam)
+	
+	private val buildDarkLoam = BlockSimple.Builder(Materials.SOLID_NO_TOOL).apply {
+		harvestTool = Pair(WOOD, SHOVEL)
+		harvestHardness = 0.6F
+		
+		soundType = SoundType.GROUND
+		mapColor = MapColor.BLACK
+	}
+	
+	@JvmField val DARK_LOAM             = BlockSimple(buildDarkLoam).apply { setup("dark_loam") }
+	@JvmField val DARK_LOAM_SLAB        = BlockSlabCustom.Half(buildDarkLoam).apply { setup("dark_loam_slab") }
+	@JvmField val DARK_LOAM_DOUBLE_SLAB = BlockSlabCustom.Full(buildDarkLoam, DARK_LOAM_SLAB).apply { setup("dark_loam_slab_double", "hee.dark_loam_slab") }
+	
 	// Blocks: Interactive (Uncategorized)
 	
 	@JvmField val INFUSED_TNT = BlockInfusedTNT().apply { setup("infused_tnt", unlocalizedName = "tnt", inCreativeTab = false) }
@@ -327,6 +341,10 @@ object ModBlocks{
 			register(END_STONE_INFESTED with basicItemBlock)
 			register(END_STONE_BURNED with basicItemBlock)
 			register(END_STONE_ENCHANTED with basicItemBlock)
+			
+			register(DARK_LOAM with basicItemBlock)
+			register(DARK_LOAM_SLAB with slabItemBlock(DARK_LOAM_SLAB, DARK_LOAM_DOUBLE_SLAB))
+			register(DARK_LOAM_DOUBLE_SLAB)
 			
 			register(INFUSED_TNT with ::ItemInfusedTNT)
 			

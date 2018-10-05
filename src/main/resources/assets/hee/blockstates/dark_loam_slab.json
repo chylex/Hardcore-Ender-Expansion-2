@@ -1,0 +1,26 @@
+{
+  "forge_marker": 1,
+  "defaults": {
+    "textures": {
+      "bottom": "hee:block/dark_loam",
+      "top": "hee:block/dark_loam",
+      "side": "hee:block/dark_loam"
+    }
+  },
+  "variants": {
+    "variant": {
+      "default": {}
+    },
+    "half": {
+      "bottom": {
+        "model": "half_slab"
+      },
+      "top": {
+        "model": "upper_slab"
+      }
+    },
+    "inventory": {
+      "model": "half_slab"
+    }
+  }
+}

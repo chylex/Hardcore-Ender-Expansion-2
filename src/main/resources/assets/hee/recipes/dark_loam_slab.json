@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "###"
+  ],
+  "key": {
+    "#": { "item": "hee:dark_loam" }
+  },
+  "result": {
+    "item": "hee:dark_loam_slab",
+    "count": 6
+  }
+}
