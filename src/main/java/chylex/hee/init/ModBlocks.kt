@@ -10,6 +10,7 @@ import chylex.hee.game.block.BlockEndPortalAcceptor
 import chylex.hee.game.block.BlockEndPortalCustom
 import chylex.hee.game.block.BlockEndPortalOverride
 import chylex.hee.game.block.BlockEndPowderOre
+import chylex.hee.game.block.BlockEnderGoo
 import chylex.hee.game.block.BlockEndium
 import chylex.hee.game.block.BlockEnergyCluster
 import chylex.hee.game.block.BlockFallingObsidian
@@ -51,12 +52,16 @@ import net.minecraft.item.ItemSlab
 import net.minecraft.tileentity.TileEntity
 import net.minecraft.util.math.AxisAlignedBB
 import net.minecraftforge.event.RegistryEvent
+import net.minecraftforge.fluids.FluidRegistry
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent
 import net.minecraftforge.fml.common.registry.GameRegistry
 
 @EventBusSubscriber(modid = HEE.ID)
 object ModBlocks{
+	init{
+		FluidRegistry.registerFluid(BlockEnderGoo.FLUID)
+	}
 	
 	// Blocks: Building (Uncategorized)
 	
@@ -212,6 +217,7 @@ object ModBlocks{
 	
 	// Blocks: Interactive (Uncategorized)
 	
+	@JvmField val ENDER_GOO   = BlockEnderGoo().apply { setup("ender_goo") }
 	@JvmField val INFUSED_TNT = BlockInfusedTNT().apply { setup("infused_tnt", unlocalizedName = "tnt", inCreativeTab = false) }
 	
 	// Blocks: Ores
@@ -346,6 +352,7 @@ object ModBlocks{
 			register(DARK_LOAM_SLAB with slabItemBlock(DARK_LOAM_SLAB, DARK_LOAM_DOUBLE_SLAB))
 			register(DARK_LOAM_DOUBLE_SLAB)
 			
+			register(ENDER_GOO)
 			register(INFUSED_TNT with ::ItemInfusedTNT)
 			
 			register(END_POWDER_ORE with basicItemBlock)

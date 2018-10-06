@@ -24,4 +24,8 @@ object Materials{
 		makeTransparent()
 		destroyWhenPushed()
 	}
+	
+	val ENDER_GOO = CustomMaterial().apply {
+		makeLiquid()
+	}
 }

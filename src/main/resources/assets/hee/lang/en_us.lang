@@ -68,6 +68,8 @@ item.hee.void_essence.name=Void Essence
 item.hee.obsidian_rod.name=Obsidian Rod
 item.hee.static_core.name=Static Core
 
+item.hee.ender_goo_bucket.name=Ender Goo Bucket
+
 item.hee.energy_oracle.name=Energy Oracle
 item.hee.energy_receptacle.name=Energy Receptacle
 item.hee.energy_receptacle.tooltip.empty=§9Empty
@@ -79,6 +81,8 @@ item.hee.chorus_berry.name=Chorus Berry
 
 item.tooltip.hee.energy.level=§9Energy: §3%s§9 / §3%s
 item.tooltip.hee.energy.uses=§9Uses Left: §3%s
+
+fluid.ender_goo=Ender Goo
 
 hee.infusions.title=§aInfusions
 hee.infusions.item=§2- %s

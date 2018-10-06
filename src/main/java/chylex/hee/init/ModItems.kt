@@ -9,6 +9,7 @@ import chylex.hee.init.ModCreativeTabs.OrderedCreativeTab
 import net.minecraft.creativetab.CreativeTabs
 import net.minecraft.init.Items
 import net.minecraft.item.Item
+import net.minecraft.item.ItemBucket
 import net.minecraftforge.event.RegistryEvent
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent
@@ -37,6 +38,10 @@ object ModItems{
 	@JvmField val VOID_ESSENCE     = Item().apply { setup("void_essence") }
 	@JvmField val OBSIDIAN_ROD     = Item().apply { setup("obsidian_rod") }
 	@JvmField val STATIC_CORE      = Item().apply { setup("static_core") }
+	
+	// Items: Buckets
+	
+	@JvmField val ENDER_GOO_BUCKET = ItemBucket(ModBlocks.ENDER_GOO).apply { setup("ender_goo_bucket"); containerItem = Items.BUCKET }
 	
 	// Items: Energy
 	
@@ -70,6 +75,8 @@ object ModItems{
 			register(VOID_ESSENCE)
 			register(OBSIDIAN_ROD)
 			register(STATIC_CORE)
+			
+			register(ENDER_GOO_BUCKET)
 			
 			register(ENERGY_ORACLE)
 			register(ENERGY_RECEPTACLE)
