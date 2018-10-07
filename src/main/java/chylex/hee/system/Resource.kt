@@ -2,12 +2,11 @@ package chylex.hee.system
 import chylex.hee.HEE
 import net.minecraft.util.ResourceLocation
 
-object Resource{
-	inline fun Vanilla(path: String): ResourceLocation{
-		return ResourceLocation("minecraft", path)
-	}
+sealed class Resource(private val domain: String){
+	object Vanilla : Resource("minecraft")
+	object Custom  : Resource(HEE.ID)
 	
-	inline fun Custom(path: String): ResourceLocation{
-		return ResourceLocation(HEE.ID, path)
+	operator fun invoke(path: String): ResourceLocation{
+		return ResourceLocation(domain, path)
 	}
 }
