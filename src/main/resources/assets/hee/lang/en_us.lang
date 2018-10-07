@@ -110,6 +110,8 @@ hee.energy.health.damaged=DAMAGED
 hee.energy.health.unstable=UNSTABLE
 hee.energy.health.revitalizing=REVITALIZING
 
+effect.hee.lifeless=Lifeless
+
 commands.hee.usage=/hee [page=1]
 commands.hee.info=shows command list
 

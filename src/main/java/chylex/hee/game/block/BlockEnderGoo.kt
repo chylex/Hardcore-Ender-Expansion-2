@@ -35,7 +35,7 @@ import net.minecraftforge.fml.relauncher.SideOnly
 
 class BlockEnderGoo : BlockFluidClassic(FLUID, Materials.ENDER_GOO){
 	companion object{
-		private val COLOR = RGB(136, 26, 190)
+		val COLOR = RGB(136, 26, 190)
 		private val COLOR_VEC = COLOR.let { (r, g, b) -> Vec3d(r / 255.0, g / 255.0, b / 255.0) }
 		
 		val FLUID = Fluid("ender_goo", Resource.Custom("block/ender_goo_still"), Resource.Custom("block/ender_goo_flowing")).apply {
