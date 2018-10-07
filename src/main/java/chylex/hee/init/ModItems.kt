@@ -6,6 +6,7 @@ import chylex.hee.game.item.ItemEnergyReceptacle
 import chylex.hee.game.item.ItemIgneousRock
 import chylex.hee.game.item.ItemSpatialDashGem
 import chylex.hee.init.ModCreativeTabs.OrderedCreativeTab
+import chylex.hee.system.Resource
 import net.minecraft.creativetab.CreativeTabs
 import net.minecraft.init.Items
 import net.minecraft.item.Item
@@ -96,7 +97,7 @@ object ModItems{
 	// Utilities
 	
 	private fun Item.setup(registryName: String, unlocalizedName: String = registryName, inCreativeTab: Boolean = true){
-		this.setRegistryName(HEE.ID, registryName)
+		this.registryName = Resource.Custom(registryName)
 		this.unlocalizedName = "hee.$unlocalizedName"
 		
 		if (inCreativeTab){

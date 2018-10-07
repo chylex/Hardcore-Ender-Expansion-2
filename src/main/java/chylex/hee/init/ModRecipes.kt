@@ -45,7 +45,13 @@ object ModRecipes{
 			ItemSpatialDashGem.setupRecipeNBT(getValue(Resource.Custom("spatial_dash_gem"))!!)
 			// UPDATE: hopfully figure out a better way to do this
 			
-			register(RecipeEndPowderRepair.setRegistryName(Resource.Custom("end_powder_repair")))
+			register(RecipeEndPowderRepair named "end_powder_repair")
 		}
+	}
+	
+	// Utilities
+	
+	private infix fun IRecipe.named(registryName: String) = apply {
+		setRegistryName(Resource.Custom(registryName))
 	}
 }

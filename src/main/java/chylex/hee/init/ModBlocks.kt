@@ -418,10 +418,9 @@ object ModBlocks{
 		}
 	}
 	
-	private infix fun Block.with(itemBlock: ItemBlock): Block{
+	private infix fun Block.with(itemBlock: ItemBlock) = apply {
 		temporaryItemBlocks.add(itemBlock.also { it.registryName = this.registryName })
 		(itemBlock.creativeTab as? OrderedCreativeTab)?.registerOrder(itemBlock)
-		return this
 	}
 	
 	private infix fun <T : Block> T.with(itemBlockConstructor: (T) -> ItemBlock): Block{
