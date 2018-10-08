@@ -72,7 +72,7 @@ class BlockGloomtorch(builder: BlockSimple.Builder) : BlockSimple(builder){
 	}
 	
 	override fun neighborChanged(state: IBlockState, world: World, pos: BlockPos, neighborBlock: Block, neighborPos: BlockPos){
-		if (!canPlaceGloomtorchAt(world, pos, state.getValue(FACING)) && pos.getBlock(world) == this){
+		if (!canPlaceGloomtorchAt(world, pos, state.getValue(FACING)) && pos.getBlock(world) === this){
 			dropBlockAsItem(world, pos, state, 0)
 			pos.setAir(world)
 		}

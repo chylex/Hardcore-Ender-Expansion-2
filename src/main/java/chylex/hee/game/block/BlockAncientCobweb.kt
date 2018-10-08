@@ -37,7 +37,7 @@ class BlockAncientCobweb : Block(Materials.ANCIENT_COBWEB, MapColor.CLOTH){
 	
 	@SubscribeEvent
 	fun onBreakSpeed(e: BreakSpeed){
-		if (e.state.block != this){
+		if (e.state.block !== this){
 			return
 		}
 		

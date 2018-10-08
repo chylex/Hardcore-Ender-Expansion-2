@@ -91,7 +91,7 @@ class BlockDragonEggOverride : BlockDragonEgg(){
 	override fun onBlockActivated(world: World, pos: BlockPos, state: IBlockState, player: EntityPlayer, hand: EnumHand, facing: EnumFacing, hitX: Float, hitY: Float, hitZ: Float): Boolean{
 		val realState = pos.getState(world)
 		
-		if (world.isRemote || realState.block != this){
+		if (world.isRemote || realState.block !== this){
 			return true
 		}
 		
@@ -125,7 +125,7 @@ class BlockDragonEggOverride : BlockDragonEgg(){
 	override fun onBlockClicked(world: World, pos: BlockPos, player: EntityPlayer){
 		val state = pos.getState(world)
 		
-		if (world.isRemote || state.block != this){
+		if (world.isRemote || state.block !== this){
 			return
 		}
 		

@@ -73,7 +73,7 @@ class BlockEnderGoo : BlockFluidClassic(FLUID, Materials.ENDER_GOO){
 		
 		val state = pos.getState(world)
 		
-		if (state.block != this || state.getValue(LEVEL) != 0){
+		if (state.block !== this || state.getValue(LEVEL) != 0){
 			return
 		}
 		
