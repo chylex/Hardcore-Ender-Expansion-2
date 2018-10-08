@@ -17,12 +17,14 @@ import net.minecraft.client.gui.ScaledResolution
 import net.minecraft.client.renderer.ActiveRenderInfo
 import net.minecraft.client.renderer.GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA
 import net.minecraft.client.renderer.GlStateManager.DestFactor.ZERO
+import net.minecraft.client.renderer.GlStateManager.FogMode.EXP
 import net.minecraft.client.renderer.GlStateManager.SourceFactor.ONE
 import net.minecraft.client.renderer.GlStateManager.SourceFactor.SRC_ALPHA
 import net.minecraft.client.resources.I18n
 import net.minecraft.util.math.RayTraceResult.Type.BLOCK
 import net.minecraft.util.text.TextFormatting
 import net.minecraftforge.client.event.DrawBlockHighlightEvent
+import net.minecraftforge.client.event.EntityViewRenderEvent.FogDensity
 import net.minecraftforge.client.event.RenderGameOverlayEvent
 import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType.HELMET
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber
@@ -41,6 +43,19 @@ object OverlayRenderer{
 	private var clusterLookedAt: TileEntityEnergyCluster? = null
 	
 	// Ender Goo
+	
+	@JvmStatic
+	@SubscribeEvent
+	fun onFogDensity(e: FogDensity){
+		val entity = e.entity
+		val insideOf = ActiveRenderInfo.getBlockStateAtEntityViewpoint(entity.world, entity, e.renderPartialTicks.toFloat())
+		
+		if (insideOf.material === Materials.ENDER_GOO){
+			GL.setFog(EXP)
+			e.density = 0.66F
+			e.isCanceled = true // otherwise the event is ignored
+		}
+	}
 	
 	@JvmStatic
 	@SubscribeEvent

@@ -29,6 +29,7 @@ import chylex.hee.game.block.entity.TileEntityEndPortalAcceptor
 import chylex.hee.game.block.entity.TileEntityEnergyCluster
 import chylex.hee.game.block.entity.TileEntityInfusedTNT
 import chylex.hee.game.block.entity.TileEntityPortalInner
+import chylex.hee.game.block.fluid.FluidEnderGoo
 import chylex.hee.game.block.material.Materials
 import chylex.hee.game.item.ItemAncientCobweb
 import chylex.hee.game.item.ItemDragonEgg
@@ -60,7 +61,7 @@ import net.minecraftforge.fml.common.registry.GameRegistry
 @EventBusSubscriber(modid = HEE.ID)
 object ModBlocks{
 	init{
-		FluidRegistry.registerFluid(BlockEnderGoo.FLUID)
+		FluidRegistry.registerFluid(FluidEnderGoo)
 	}
 	
 	// Blocks: Building (Uncategorized)
