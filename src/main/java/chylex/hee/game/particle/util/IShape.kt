@@ -14,7 +14,7 @@ interface IShape{
 	
 	class Point(point: Vec3d, amount: Int) : IShape{
 		constructor(pos: BlockPos, amount: Int) : this(pos.center, amount)
-		constructor(entity: Entity, amount: Int) : this(Vec3d(entity.posX, entity.posY + entity.height * 0.5, entity.posZ), amount)
+		constructor(entity: Entity, heightMp: Float, amount: Int) : this(Vec3d(entity.posX, entity.posY + entity.height * heightMp, entity.posZ), amount)
 		constructor(x: Double, y: Double, z: Double, amount: Int) : this(Vec3d(x, y, z), amount)
 		
 		override val points: Collection<Vec3d> = Collections.nCopies(amount, point)

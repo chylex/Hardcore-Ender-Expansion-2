@@ -46,7 +46,7 @@ class EntityItemFreshlyCooked : EntityItem, IEntityAdditionalSpawnData{
 				val chance = 1F - 0.75F * square(age.toFloat() / STOP_SMOKING_AFTER_TICKS)
 				
 				if (rand.nextFloat() < chance){
-					PARTICLE_TICK.spawn(Point(this, 1), rand)
+					PARTICLE_TICK.spawn(Point(this, heightMp = 0.5F, amount = 1), rand)
 				}
 			}
 		}

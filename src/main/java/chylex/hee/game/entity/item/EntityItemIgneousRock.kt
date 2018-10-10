@@ -150,7 +150,7 @@ class EntityItemIgneousRock : EntityItemNoBob{
 			val particleChance = if (stackSize < 1F) 0F else 0.13F + (stackSize / 110F) + (log2(stackSize) / 18F)
 			
 			if (rand.nextFloat() < particleChance){
-				PARTICLE_TICK.spawn(Point(this, 1), rand)
+				PARTICLE_TICK.spawn(Point(this, heightMp = 0.5F, amount = 1), rand)
 			}
 		}
 	}
