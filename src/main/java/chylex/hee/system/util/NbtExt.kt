@@ -19,7 +19,7 @@ import net.minecraft.nbt.NBTTagString
 import net.minecraftforge.common.util.Constants.NBT
 import java.util.Locale
 
-// Items
+// Item NBT
 
 private const val HEE_TAG_NAME = HEE.ID
 
@@ -61,7 +61,7 @@ val ItemStack.heeTagOrNull: NBTTagCompound?
 			null
 	}
 
-// Entities
+// Entity NBT
 
 fun Entity.heeTag(root: NBTTagCompound): NBTTagCompound{
 	return if (root.hasKey(HEE_TAG_NAME))
@@ -72,6 +72,29 @@ fun Entity.heeTag(root: NBTTagCompound): NBTTagCompound{
 
 inline fun Entity.useHeeTag(root: NBTTagCompound, block: NBTTagCompound.() -> Unit){
 	this.heeTag(root).block()
+}
+
+// ItemStacks
+
+inline fun NBTTagCompound.writeStack(stack: ItemStack){
+	if (stack.isNotEmpty){
+		stack.writeToNBT(this)
+	}
+}
+
+inline fun NBTTagCompound.readStack(): ItemStack{
+	return if (this.size == 0)
+		ItemStack.EMPTY
+	else
+		ItemStack(this)
+}
+
+fun NBTTagCompound.setStack(key: String, stack: ItemStack){
+	setTag(key, NBTTagCompound().apply { writeStack(stack) })
+}
+
+fun NBTTagCompound.getStack(key: String): ItemStack{
+	return getCompoundTag(key).readStack()
 }
 
 // Enums
