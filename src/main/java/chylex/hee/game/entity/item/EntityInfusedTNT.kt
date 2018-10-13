@@ -19,12 +19,12 @@ import chylex.hee.system.util.distanceSqTo
 import chylex.hee.system.util.floorToInt
 import chylex.hee.system.util.getMaterial
 import chylex.hee.system.util.getState
+import chylex.hee.system.util.heeTag
 import chylex.hee.system.util.motionVec
 import chylex.hee.system.util.nextFloat
 import chylex.hee.system.util.nextItem
 import chylex.hee.system.util.nextRounded
 import chylex.hee.system.util.remapRange
-import chylex.hee.system.util.useHeeTag
 import net.minecraft.block.material.Material
 import net.minecraft.entity.EntityLivingBase
 import net.minecraft.entity.MoverType
@@ -308,12 +308,12 @@ class EntityInfusedTNT : EntityTNTPrimed{
 	
 	// Serialization
 	
-	override fun writeEntityToNBT(nbt: NBTTagCompound) = useHeeTag(nbt){
+	override fun writeEntityToNBT(nbt: NBTTagCompound) = with(nbt.heeTag){
 		InfusionTag.setList(this, infusions)
 		setBoolean("HasPhased", hasPhasedIntoWall)
 	}
 	
-	override fun readEntityFromNBT(nbt: NBTTagCompound) = useHeeTag(nbt){
+	override fun readEntityFromNBT(nbt: NBTTagCompound) = with(nbt.heeTag){
 		loadInfusions(InfusionTag.getList(this))
 		hasPhasedIntoWall = getBoolean("HasPhased")
 	}

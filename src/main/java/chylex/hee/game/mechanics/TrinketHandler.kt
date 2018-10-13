@@ -5,6 +5,8 @@ import chylex.hee.system.Resource
 import chylex.hee.system.util.forge.capabilities.CapabilityProvider
 import chylex.hee.system.util.forge.capabilities.NullFactory
 import chylex.hee.system.util.forge.capabilities.NullStorage
+import chylex.hee.system.util.readStack
+import chylex.hee.system.util.writeStack
 import net.minecraft.entity.Entity
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.item.ItemStack
@@ -80,15 +82,12 @@ object TrinketHandler{
 			get()      = getStackInSlot(0)
 			set(value) = setStackInSlot(0, value)
 		
-		override fun serializeNBT(): NBTTagCompound = NBTTagCompound().apply {
-			item.takeUnless { it.isEmpty }?.writeToNBT(this)
+		override fun serializeNBT(): NBTTagCompound{
+			return NBTTagCompound().apply { writeStack(item) }
 		}
 		
 		override fun deserializeNBT(nbt: NBTTagCompound){
-			item = if (nbt.size == 0)
-				ItemStack.EMPTY
-			else
-				ItemStack(nbt)
+			item = nbt.readStack()
 		}
 		
 		class Provider : CapabilityProvider<TrinketCapability, NBTTagCompound>(CAP_TRINKET_SLOT!!, TrinketCapability())
