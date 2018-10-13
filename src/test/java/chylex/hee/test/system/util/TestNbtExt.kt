@@ -7,6 +7,8 @@ import chylex.hee.system.util.getListOfCompounds
 import chylex.hee.system.util.getListOfIntArrays
 import chylex.hee.system.util.getListOfPrimitives
 import chylex.hee.system.util.getListOfStrings
+import chylex.hee.system.util.heeTag
+import chylex.hee.system.util.heeTagOrNull
 import chylex.hee.system.util.nbt
 import chylex.hee.system.util.nbtOrNull
 import net.minecraft.init.Bootstrap
@@ -37,14 +39,44 @@ class TestNbtExt{
 		Bootstrap.register()
 	}
 	
+	@Nested inner class General{
+		@Nested inner class HeeTag{
+			@Test fun `'heeTag' returns an existing tag`(){
+				val nbt = NBTTagCompound().apply { setTag("hee", NBTTagCompound().apply { setString("key", "Hello") }) }
+				assertEquals("Hello", nbt.heeTag.getString("key"))
+			}
+			
+			@Test fun `'heeTag' assigns a new tag if missing`(){
+				val nbt = NBTTagCompound()
+				assertFalse(nbt.hasKey("hee"))
+				
+				nbt.heeTag.setString("key", "Hello")
+				assertTrue(nbt.hasKey("hee"))
+				assertEquals("Hello", nbt.heeTag.getString("key"))
+			}
+		}
+		
+		@Nested inner class HeeTagOrNull{
+			@Test fun `'heeTagOrNull' returns an existing tag`(){
+				val nbt = NBTTagCompound().apply { setTag("hee", NBTTagCompound().apply { setString("key", "Hello") }) }
+				assertEquals("Hello", nbt.heeTagOrNull?.getString("key"))
+			}
+			
+			@Test fun `'heeTagOrNull' returns null if tag is missing`(){
+				val nbt = NBTTagCompound()
+				assertNull(nbt.heeTagOrNull)
+			}
+		}
+	}
+	
 	@Nested inner class ItemStacks{
 		@Nested inner class Nbt{
-			@Test fun `'nbt' returns an existing tag`(){
+			@Test fun `'nbt' returns an existing ItemStack tag`(){
 				val stack = ItemStack(Items.BOW).apply { setStackDisplayName("Hello") }
 				assertEquals("Hello", stack.nbt.getCompoundTag("display").getString("Name"))
 			}
 			
-			@Test fun `'nbt' assigns a new tag if missing`(){
+			@Test fun `'nbt' assigns a new ItemStack tag if missing`(){
 				val stack = ItemStack(Items.BOW)
 				assertNull(stack.tagCompound)
 				
@@ -57,15 +89,44 @@ class TestNbtExt{
 		}
 		
 		@Nested inner class NbtOrNull{
-			@Test fun `'nbtOrNull' returns an existing tag`(){
+			@Test fun `'nbtOrNull' returns an existing ItemStack tag`(){
 				val stack = ItemStack(Items.BOW).apply { setStackDisplayName("Hello") }
 				assertEquals("Hello", stack.nbtOrNull?.getCompoundTag("display")?.getString("Name"))
 			}
 			
-			@Test fun `'nbtOrNull' returns null if tag is missing`(){
+			@Test fun `'nbtOrNull' returns null if ItemStack tag is missing`(){
 				val stack = ItemStack(Items.BOW)
 				assertNull(stack.nbtOrNull)
 				assertNull(stack.tagCompound)
+			}
+		}
+		
+		@Nested inner class HeeTag{
+			@Test fun `'heeTag' returns an existing tag`(){
+				val stack = ItemStack(Items.BOW).apply { nbt.setTag("hee", NBTTagCompound().apply { setString("key", "Hello") }) }
+				assertEquals("Hello", stack.heeTag.getString("key"))
+			}
+			
+			@Test fun `'heeTag' assigns a new tag if missing`(){
+				val stack = ItemStack(Items.BOW).apply { heeTag.setString("key", "Hello") }
+				assertEquals("Hello", stack.tagCompound?.getCompoundTag("hee")?.getString("key"))
+			}
+		}
+		
+		@Nested inner class HeeTagOrNull{
+			@Test fun `'heeTagOrNull' returns an existing 'heeTag'`(){
+				val stack = ItemStack(Items.BOW).apply { heeTag.setString("key", "Hello") }
+				assertEquals("Hello", stack.heeTagOrNull?.getString("key"))
+			}
+			
+			@Test fun `'heeTagOrNull' returns null if ItemStack tag is missing`(){
+				val stack = ItemStack(Items.BOW)
+				assertNull(stack.heeTagOrNull)
+			}
+			
+			@Test fun `'heeTagOrNull' returns null if ItemStack tag is present but has no 'heeTag'`(){
+				val stack = ItemStack(Items.BOW).apply { nbt.setBoolean("testing", true) }
+				assertNull(stack.heeTagOrNull)
 			}
 		}
 	}

@@ -1,6 +1,5 @@
 package chylex.hee.system.util
 import chylex.hee.HEE
-import net.minecraft.entity.Entity
 import net.minecraft.item.ItemStack
 import net.minecraft.nbt.NBTPrimitive
 import net.minecraft.nbt.NBTTagByte
@@ -19,9 +18,25 @@ import net.minecraft.nbt.NBTTagString
 import net.minecraftforge.common.util.Constants.NBT
 import java.util.Locale
 
-// Item NBT
-
 private const val HEE_TAG_NAME = HEE.ID
+
+val NBTTagCompound.heeTag: NBTTagCompound
+	get(){
+		return if (hasKey(HEE_TAG_NAME))
+			getCompoundTag(HEE_TAG_NAME)
+		else
+			NBTTagCompound().also { setTag(HEE_TAG_NAME, it) }
+	}
+
+val NBTTagCompound.heeTagOrNull: NBTTagCompound?
+	get(){
+		return if (hasKey(HEE_TAG_NAME))
+			getCompoundTag(HEE_TAG_NAME)
+		else
+			null
+	}
+
+// ItemStack NBT
 
 /**
  * Returns the ItemStack's NBT tag. If the ItemStack has no tag, it will be created.
@@ -39,40 +54,13 @@ inline val ItemStack.nbtOrNull: NBTTagCompound?
  * Returns the ItemStack's HEE tag from its main NBT tag. If the ItemStack has neither the main NBT tag nor the HEE tag, they will be created.
  */
 val ItemStack.heeTag: NBTTagCompound
-	get(){
-		val nbt = this.nbt
-		
-		return if (nbt.hasKey(HEE_TAG_NAME))
-			nbt.getCompoundTag(HEE_TAG_NAME)
-		else
-			NBTTagCompound().also { nbt.setTag(HEE_TAG_NAME, it) }
-	}
+	get() = this.nbt.heeTag
 
 /**
  * Returns the ItemStack's HEE tag from its main NBT tag. If the ItemStack has neither the main NBT tag nor the HEE tag, null is returned instead.
  */
 val ItemStack.heeTagOrNull: NBTTagCompound?
-	get(){
-		val nbt = this.nbtOrNull
-		
-		return if (nbt != null && nbt.hasKey(HEE_TAG_NAME))
-			nbt.getCompoundTag(HEE_TAG_NAME)
-		else
-			null
-	}
-
-// Entity NBT
-
-fun Entity.heeTag(root: NBTTagCompound): NBTTagCompound{
-	return if (root.hasKey(HEE_TAG_NAME))
-		root.getCompoundTag(HEE_TAG_NAME)
-	else
-		NBTTagCompound().also { root.setTag(HEE_TAG_NAME, it) }
-}
-
-inline fun Entity.useHeeTag(root: NBTTagCompound, block: NBTTagCompound.() -> Unit){
-	this.heeTag(root).block()
-}
+	get() = this.nbtOrNull?.heeTagOrNull
 
 // ItemStacks
 
