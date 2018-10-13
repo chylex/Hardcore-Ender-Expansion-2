@@ -26,7 +26,7 @@ import net.minecraft.nbt.NBTTagCompound
 import net.minecraft.util.EnumHand.MAIN_HAND
 import net.minecraft.util.EnumHand.OFF_HAND
 import net.minecraft.world.World
-import net.minecraftforge.fml.relauncher.Side.CLIENT
+import net.minecraftforge.fml.relauncher.Side
 import net.minecraftforge.fml.relauncher.SideOnly
 
 class ItemEnergyOracle : ItemBaseEnergyUser(){
@@ -150,12 +150,12 @@ class ItemEnergyOracle : ItemBaseEnergyUser(){
 		}
 	}
 	
-	// Client
+	// Client side
 	
 	// TODO tooltip could maybe show remaining time?
 	// TODO re-equip animation seems too fast, there is very mild animation glitching
 	
-	@SideOnly(CLIENT)
+	@SideOnly(Side.CLIENT)
 	object Color: IItemColor{
 		private const val NONE = -1
 		
