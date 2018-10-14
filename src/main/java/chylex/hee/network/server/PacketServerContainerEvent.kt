@@ -3,8 +3,6 @@ import chylex.hee.HEE
 import chylex.hee.network.BaseServerPacket
 import io.netty.buffer.ByteBuf
 import net.minecraft.entity.player.EntityPlayerMP
-import net.minecraftforge.fml.relauncher.Side
-import net.minecraftforge.fml.relauncher.SideOnly
 
 class PacketServerContainerEvent() : BaseServerPacket(){
 	interface IContainerWithEvents{
@@ -27,7 +25,6 @@ class PacketServerContainerEvent() : BaseServerPacket(){
 		eventId = buffer.readByte()
 	}
 	
-	@SideOnly(Side.SERVER)
 	override fun handle(player: EntityPlayerMP){
 		val container = player.openContainer
 		

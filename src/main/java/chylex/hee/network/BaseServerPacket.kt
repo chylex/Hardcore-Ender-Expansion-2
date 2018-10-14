@@ -6,7 +6,6 @@ import net.minecraft.world.WorldServer
 import net.minecraftforge.fml.relauncher.Side
 import net.minecraftforge.fml.relauncher.Side.CLIENT
 import net.minecraftforge.fml.relauncher.Side.SERVER
-import net.minecraftforge.fml.relauncher.SideOnly
 
 abstract class BaseServerPacket : IPacket{
 	final override fun handle(side: Side, player: EntityPlayer){
@@ -16,7 +15,6 @@ abstract class BaseServerPacket : IPacket{
 		}
 	}
 	
-	@SideOnly(SERVER)
 	abstract fun handle(player: EntityPlayerMP)
 	
 	// External utility functions
