@@ -4,6 +4,7 @@ import chylex.hee.game.entity.item.EntityItemIgneousRock
 import chylex.hee.game.mechanics.TrinketHandler
 import chylex.hee.init.ModConfig
 import chylex.hee.init.ModCreativeTabs
+import chylex.hee.init.ModGuiHandler
 import chylex.hee.init.ModLoot
 import chylex.hee.init.ModNetwork
 import chylex.hee.init.ModRecipes
@@ -41,6 +42,7 @@ object HEE{
 		
 		Debug.initialize()
 		ModNetwork.initialize()
+		ModGuiHandler.initialize()
 		ModCreativeTabs.initialize()
 		TrinketHandler.register()
 		proxy.onPreInit()

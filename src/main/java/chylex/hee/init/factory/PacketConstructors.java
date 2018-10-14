@@ -1,6 +1,7 @@
 package chylex.hee.init.factory;
 import chylex.hee.network.IPacket;
 import chylex.hee.network.client.PacketClientFX;
+import chylex.hee.network.server.PacketServerContainerEvent;
 import kotlin.Pair;
 import javax.annotation.Nonnull;
 import java.util.Arrays;
@@ -10,7 +11,9 @@ public final class PacketConstructors{
 	@SuppressWarnings({"UnusedReturnValue", "unchecked"})
 	public static @Nonnull Iterable<Pair<Class<? extends IPacket>, Supplier<IPacket>>> getAll(){
 		return Arrays.asList(
-			packet(PacketClientFX.class, PacketClientFX::new)
+			packet(PacketClientFX.class, PacketClientFX::new),
+			
+			packet(PacketServerContainerEvent.class, PacketServerContainerEvent::new)
 		);
 	}
 	
