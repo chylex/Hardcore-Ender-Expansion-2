@@ -57,8 +57,8 @@ abstract class ItemBaseEnergyUser : Item(){
 		return getEnergyCapacity(stack).value * getEnergyPerUse(stack).denominator
 	}
 	
-	private fun getEnergyLevel(stack: ItemStack): Short{
-		return stack.heeTagOrNull?.getShort(ENERGY_LEVEL_TAG) ?: 0
+	private fun getEnergyLevel(stack: ItemStack): Int{
+		return stack.heeTagOrNull?.getShort(ENERGY_LEVEL_TAG)?.toInt() ?: 0
 	}
 	
 	private fun offsetEnergyLevel(stack: ItemStack, byAmount: Int): Boolean{
@@ -73,22 +73,24 @@ abstract class ItemBaseEnergyUser : Item(){
 	
 	// Energy handling
 	
-	fun hasAnyEnergy(stack: ItemStack): Boolean{
-		return getEnergyLevel(stack) > 0
-	}
+	fun hasAnyEnergy    (stack: ItemStack): Boolean = getEnergyLevel(stack) > 0
+	fun hasMaximumEnergy(stack: ItemStack): Boolean = getEnergyLevel(stack) >= calculateInternalEnergyCapacity(stack)
 	
-	fun chargeEnergyUnit(stack: ItemStack): Boolean = offsetEnergyLevel(stack, getEnergyPerUse(stack).denominator)
+	open fun chargeEnergyUnit(stack: ItemStack): Boolean = offsetEnergyLevel(stack, getEnergyPerUse(stack).denominator)
+	open fun useEnergyUnit   (stack: ItemStack): Boolean = offsetEnergyLevel(stack, -getEnergyPerUse(stack).numerator) // TODO add FX when all Energy is used, maybe don't use any in creative mode
 	
-	fun useEnergyUnit(stack: ItemStack): Boolean = offsetEnergyLevel(stack, -getEnergyPerUse(stack).numerator) // TODO add FX when all Energy is used, maybe don't use any in creative mode
-	
-	fun setEnergyChargePercentage(stack: ItemStack, percentage: Float){
-		val internalCapacity = calculateInternalEnergyCapacity(stack)
-		stack.heeTag.setShort(ENERGY_LEVEL_TAG, (internalCapacity * percentage).floorToInt().coerceIn(0, internalCapacity).toShort())
+	fun getEnergyChargeLevel(stack: ItemStack): IEnergyQuantity{
+		return Units(getEnergyLevel(stack) / getEnergyPerUse(stack).denominator)
 	}
 	
 	fun setEnergyChargeLevel(stack: ItemStack, level: IEnergyQuantity){
 		val internalCapacity = calculateInternalEnergyCapacity(stack)
 		stack.heeTag.setShort(ENERGY_LEVEL_TAG, (level.units.value * getEnergyPerUse(stack).denominator).coerceIn(0, internalCapacity).toShort())
+	}
+	
+	fun setEnergyChargePercentage(stack: ItemStack, percentage: Float){
+		val internalCapacity = calculateInternalEnergyCapacity(stack)
+		stack.heeTag.setShort(ENERGY_LEVEL_TAG, (internalCapacity * percentage).floorToInt().coerceIn(0, internalCapacity).toShort())
 	}
 	
 	// Energy charging
