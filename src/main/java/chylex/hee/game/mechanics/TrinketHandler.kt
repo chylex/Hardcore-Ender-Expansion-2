@@ -32,6 +32,10 @@ object TrinketHandler{
 		return player.getCapability(CAP_TRINKET_SLOT!!, null)?.item ?: ItemStack.EMPTY
 	}
 	
+	fun setCurrentItem(player: EntityPlayer, stack: ItemStack){
+		player.getCapability(CAP_TRINKET_SLOT!!, null)?.item = stack
+	}
+	
 	// Internal handling
 	
 	private val CAP_KEY = Resource.Custom("trinket")
