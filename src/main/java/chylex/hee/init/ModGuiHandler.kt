@@ -1,6 +1,9 @@
 package chylex.hee.init
 import chylex.hee.HEE
+import chylex.hee.game.gui.ContainerAmuletOfRecovery
+import chylex.hee.game.gui.GuiAmuletOfRecovery
 import net.minecraft.entity.player.EntityPlayer
+import net.minecraft.util.EnumHand
 import net.minecraft.world.World
 import net.minecraftforge.fml.common.network.IGuiHandler
 import net.minecraftforge.fml.common.network.NetworkRegistry
@@ -16,7 +19,10 @@ object ModGuiHandler : IGuiHandler{
 		val createInterface: (player: EntityPlayer, Int, Int, Int) -> Any,
 		val createContainer: (player: EntityPlayer, Int, Int, Int) -> Any
 	){
-		;
+		AMULET_OF_RECOVERY(
+			createInterface = { player, hand, _, _ -> GuiAmuletOfRecovery(player, EnumHand.values()[hand]) },
+			createContainer = { player, hand, _, _ -> ContainerAmuletOfRecovery(player, EnumHand.values()[hand]) }
+		);
 		
 		fun open(player: EntityPlayer, x: Int = 0, y: Int = 0, z: Int = 0){
 			player.openGui(HEE, ordinal, player.world, x, y, z)

@@ -1,5 +1,6 @@
 package chylex.hee.init
 import chylex.hee.HEE
+import chylex.hee.game.item.ItemAmuletOfRecovery
 import chylex.hee.game.item.ItemChorusBerry
 import chylex.hee.game.item.ItemEnergyOracle
 import chylex.hee.game.item.ItemEnergyReceptacle
@@ -53,6 +54,10 @@ object ModItems{
 	
 	@JvmField val SPATIAL_DASH_GEM = ItemSpatialDashGem().apply { setup("spatial_dash_gem") }
 	
+	// Items: Trinkets
+	
+	@JvmField val AMULET_OF_RECOVERY = ItemAmuletOfRecovery().apply { setup("amulet_of_recovery") }
+	
 	// Registry
 	
 	@JvmStatic
@@ -83,6 +88,8 @@ object ModItems{
 			register(ENERGY_RECEPTACLE)
 			
 			register(SPATIAL_DASH_GEM)
+			
+			register(AMULET_OF_RECOVERY)
 		}
 		
 		// vanilla modifications

@@ -77,6 +77,8 @@ item.hee.energy_receptacle.tooltip.holding=§9Holding §3%s§9 Energy
 
 item.hee.spatial_dash_gem.name=Spatial Dash Gem
 
+item.hee.amulet_of_recovery.name=Amulet of Recovery
+
 item.hee.chorus_berry.name=Chorus Berry
 
 item.tooltip.hee.energy.level=§9Energy: §3%s§9 / §3%s
@@ -116,6 +118,9 @@ hee.energy.health.unstable=UNSTABLE
 hee.energy.health.revitalizing=REVITALIZING
 
 effect.hee.lifeless=Lifeless
+
+gui.hee.amulet_of_recovery.title=Amulet of Recovery
+gui.hee.amulet_of_recovery.move_all=Move All
 
 commands.hee.usage=/hee [page=1]
 commands.hee.info=shows command list

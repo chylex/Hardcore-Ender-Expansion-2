@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    " GG",
+    "I#I",
+    "NSN"
+  ],
+  "key": {
+    "#": { "item": "hee:static_core" },
+    "S": { "item": "minecraft:shulker_shell" },
+    "I": { "item": "minecraft:gold_ingot" },
+    "N": { "item": "minecraft:gold_nugget" },
+    "G": { "item": "minecraft:string" }
+  },
+  "result": {
+    "item": "hee:amulet_of_recovery"
+  }
+}

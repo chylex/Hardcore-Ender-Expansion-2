@@ -7,6 +7,7 @@ import chylex.hee.game.item.ItemEnergyOracle
 import chylex.hee.game.item.ItemEnergyReceptacle
 import chylex.hee.game.render.block.RenderTileEndPortal
 import chylex.hee.game.render.entity.RenderEntityItemNoBob
+import chylex.hee.game.render.model.ModelItemAmuletOfRecovery
 import chylex.hee.init.ModBlocks
 import chylex.hee.init.ModItems
 import chylex.hee.init.factory.RendererConstructors
@@ -87,6 +88,8 @@ class ModClientProxy : ModCommonProxy(){
 				ModelLoader.setCustomModelResourceLocation(item!!, 0, ModelResourceLocation(item.registryName!!, "inventory"))
 			}
 		}
+		
+		ModelItemAmuletOfRecovery.register()
 	}
 	
 	private inline fun <reified T : Entity, reified R : Render<in T>> registerEntityRenderer(){
