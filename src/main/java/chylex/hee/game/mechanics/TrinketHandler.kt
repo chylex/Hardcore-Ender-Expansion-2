@@ -18,6 +18,7 @@ import net.minecraftforge.common.capabilities.CapabilityManager
 import net.minecraftforge.event.AttachCapabilitiesEvent
 import net.minecraftforge.event.entity.EntityJoinWorldEvent
 import net.minecraftforge.event.entity.player.PlayerDropsEvent
+import net.minecraftforge.event.entity.player.PlayerEvent
 import net.minecraftforge.fml.common.eventhandler.EventPriority.HIGHEST
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent
 import net.minecraftforge.items.ItemStackHandler
@@ -79,6 +80,16 @@ object TrinketHandler{
 		player.captureDrops = false
 		
 		handler.item = ItemStack.EMPTY
+	}
+	
+	@SubscribeEvent(priority = HIGHEST)
+	fun onPlayerClone(e: PlayerEvent.Clone){
+		val oldPlayer = e.original
+		val newPlayer = e.entityPlayer
+		
+		if (oldPlayer.world.gameRules.getBoolean("keepInventory")){
+			setCurrentItem(newPlayer, getCurrentItem(oldPlayer))
+		}
 	}
 	
 	private class TrinketCapability private constructor() : ItemStackHandler(1){
