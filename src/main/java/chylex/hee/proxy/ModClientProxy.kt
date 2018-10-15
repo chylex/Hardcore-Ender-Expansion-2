@@ -84,7 +84,7 @@ class ModClientProxy : ModCommonProxy(){
 		// item models
 		
 		with(ForgeRegistries.ITEMS){
-			for(item in keys.asSequence().filter { it.resourceDomain == HEE.ID }.map(::getValue)){
+			for(item in keys.asSequence().filter { it.namespace == HEE.ID }.map(::getValue)){
 				ModelLoader.setCustomModelResourceLocation(item!!, 0, ModelResourceLocation(item.registryName!!, "inventory"))
 			}
 		}

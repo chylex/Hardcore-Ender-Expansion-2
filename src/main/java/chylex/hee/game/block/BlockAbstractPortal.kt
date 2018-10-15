@@ -28,7 +28,7 @@ abstract class BlockAbstractPortal(builder: BlockSimple.Builder) : BlockSimple(b
 		return TileEntityPortalInner()
 	}
 	
-	final override fun onEntityCollidedWithBlock(world: World, pos: BlockPos, state: IBlockState, entity: Entity){
+	final override fun onEntityCollision(world: World, pos: BlockPos, state: IBlockState, entity: Entity){
 		if (!world.isRemote && !entity.isRiding && !entity.isBeingRidden && entity.isNonBoss && entity.posY <= pos.y + 0.05){
 			onEntityInside(world, pos, entity)
 		}

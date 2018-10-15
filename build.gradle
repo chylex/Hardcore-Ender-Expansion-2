@@ -34,9 +34,9 @@ tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile){
 }
 
 minecraft{
-    version = "1.12.2-14.23.1.2606"
+    version = "1.12.2-14.23.5.2768"
     runDir = "run"
-    mappings = "snapshot_20180129"
+    mappings = "stable_39"
     makeObfSourceJar = false
 }
 

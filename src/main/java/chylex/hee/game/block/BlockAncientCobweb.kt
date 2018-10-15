@@ -61,7 +61,7 @@ class BlockAncientCobweb : Block(Materials.ANCIENT_COBWEB, MapColor.CLOTH){
 	
 	override fun canSilkHarvest(): Boolean = true
 	
-	override fun onEntityCollidedWithBlock(world: World, pos: BlockPos, state: IBlockState, entity: Entity){
+	override fun onEntityCollision(world: World, pos: BlockPos, state: IBlockState, entity: Entity){
 		if (entity is EntityItem){
 			entity.setInWeb()
 			entity.motionY = -0.25
@@ -76,5 +76,5 @@ class BlockAncientCobweb : Block(Materials.ANCIENT_COBWEB, MapColor.CLOTH){
 	
 	override fun isFullCube(state: IBlockState): Boolean = false
 	override fun isOpaqueCube(state: IBlockState): Boolean = false
-	override fun getBlockLayer(): BlockRenderLayer = CUTOUT
+	override fun getRenderLayer(): BlockRenderLayer = CUTOUT
 }

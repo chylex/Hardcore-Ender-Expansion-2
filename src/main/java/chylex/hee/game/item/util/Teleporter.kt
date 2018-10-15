@@ -6,7 +6,6 @@ import chylex.hee.game.particle.util.IShape.Line
 import chylex.hee.network.client.PacketClientFX
 import chylex.hee.network.client.PacketClientFX.IFXData
 import chylex.hee.network.client.PacketClientFX.IFXHandler
-import chylex.hee.system.util.add
 import chylex.hee.system.util.center
 import chylex.hee.system.util.floorToInt
 import chylex.hee.system.util.offsetTowards

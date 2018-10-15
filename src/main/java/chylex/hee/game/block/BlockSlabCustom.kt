@@ -70,7 +70,7 @@ abstract class BlockSlabCustom(builder: Builder) : BlockSlab(builder.material, b
 		override fun isDouble() = true
 	}
 	
-	override fun getUnlocalizedName(meta: Int): String = super.getUnlocalizedName()
+	override fun getTranslationKey(meta: Int): String = super.getTranslationKey()
 	
 	override fun getVariantProperty(): IProperty<*> = VARIANT
 	

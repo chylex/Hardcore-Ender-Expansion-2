@@ -30,9 +30,9 @@ interface IOffset{
 		private val offsetZ: Float
 	) : IOffset{
 		constructor(offset: Float, towards: EnumFacing) : this(
-			offsetX = offset * towards.frontOffsetX,
-			offsetY = offset * towards.frontOffsetY,
-			offsetZ = offset * towards.frontOffsetZ
+			offsetX = offset * towards.xOffset,
+			offsetY = offset * towards.yOffset,
+			offsetZ = offset * towards.zOffset
 		)
 		
 		override fun next(out: MutableOffsetPoint, rand: Random){

@@ -73,7 +73,7 @@ class BlockDragonEggOverride : BlockDragonEgg(){
 		setHardnessWithResistance(INDESTRUCTIBLE_HARDNESS, 15F)
 		lightValue = 2
 		soundType = source.soundType
-		unlocalizedName = source.unlocalizedName.removePrefix("tile.") // UPDATE: there must be a better way?
+		translationKey = source.translationKey.removePrefix("tile.") // UPDATE: there must be a better way?
 		
 		MinecraftForge.EVENT_BUS.register(this)
 	}

@@ -77,7 +77,7 @@ class BlockInfusedTNT : BlockTNT(), ITileEntityProvider{
 	
 	// TNT overrides
 	
-	override fun onBlockDestroyedByExplosion(world: World, pos: BlockPos, explosion: Explosion){
+	override fun onExplosionDestroy(world: World, pos: BlockPos, explosion: Explosion){
 		if (world.isRemote){
 			return
 		}

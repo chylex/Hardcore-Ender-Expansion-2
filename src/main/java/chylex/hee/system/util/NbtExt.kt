@@ -105,7 +105,7 @@ inline fun <reified T : Enum<T>> NBTTagCompound.getEnum(key: String): T?{
 fun NBTTagCompound.getListOfPrimitives(key: String): NBTPrimitiveList{
 	val tag = this.getTag(key)
 	
-	return if (tag is NBTTagList && (tag.hasNoTags() || tag.get(0) is NBTPrimitive))
+	return if (tag is NBTTagList && (tag.isEmpty || tag.get(0) is NBTPrimitive))
 		NBTPrimitiveList(tag)
 	else
 		NBTPrimitiveList(NBTTagList())
@@ -130,7 +130,7 @@ abstract class NBTList<T : Any>(protected val tagList: NBTTagList) : Iterable<T>
 		get() = tagList.tagCount()
 	
 	val isEmpty
-		get() = tagList.hasNoTags()
+		get() = tagList.isEmpty
 	
 	abstract fun append(element: T)
 	abstract fun get(index: Int) : T

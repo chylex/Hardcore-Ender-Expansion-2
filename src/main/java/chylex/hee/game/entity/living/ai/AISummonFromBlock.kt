@@ -42,7 +42,7 @@ class AISummonFromBlock(
 		val rand = entity.rng
 		val pos = entity.position
 		
-		var remainingSpawns = 1 + rand.nextInt(0, difficulty.difficultyId)
+		var remainingSpawns = 1 + rand.nextInt(0, difficulty.id)
 		
 		repeat(searchAttempts){
 			val checkedPos = pos.add(

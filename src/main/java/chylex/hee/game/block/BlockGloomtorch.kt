@@ -89,7 +89,7 @@ class BlockGloomtorch(builder: BlockSimple.Builder) : BlockSimple(builder){
 	}
 	
 	override fun getMetaFromState(state: IBlockState): Int = state.getValue(FACING).index
-	override fun getStateFromMeta(meta: Int): IBlockState = defaultState.withProperty(FACING, EnumFacing.getFront(meta))
+	override fun getStateFromMeta(meta: Int): IBlockState = defaultState.withProperty(FACING, EnumFacing.byIndex(meta))
 	
 	// Shape and rendering
 	
@@ -101,5 +101,5 @@ class BlockGloomtorch(builder: BlockSimple.Builder) : BlockSimple(builder){
 	
 	override fun isFullCube(state: IBlockState): Boolean = false
 	override fun isOpaqueCube(state: IBlockState): Boolean = false
-	override fun getBlockLayer(): BlockRenderLayer = CUTOUT
+	override fun getRenderLayer(): BlockRenderLayer = CUTOUT
 }

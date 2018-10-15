@@ -3,7 +3,6 @@ import chylex.hee.game.entity.util.SerializedEntity
 import chylex.hee.game.item.util.BlockEditor
 import chylex.hee.game.item.util.Teleporter
 import chylex.hee.system.util.Pos
-import chylex.hee.system.util.add
 import chylex.hee.system.util.blocksMovement
 import chylex.hee.system.util.distanceSqTo
 import chylex.hee.system.util.floorToInt

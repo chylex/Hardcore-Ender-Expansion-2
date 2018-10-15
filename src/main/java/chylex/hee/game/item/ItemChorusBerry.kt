@@ -59,7 +59,7 @@ class ItemChorusBerry : ItemFood(0, 0F, false){
 	}
 	
 	init{
-		unlocalizedName = "hee.chorus_berry"
+		translationKey = "hee.chorus_berry"
 		setAlwaysEdible()
 	}
 	

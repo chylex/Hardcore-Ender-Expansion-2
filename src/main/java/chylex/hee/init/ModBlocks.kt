@@ -219,7 +219,7 @@ object ModBlocks{
 	// Blocks: Interactive (Uncategorized)
 	
 	@JvmField val ENDER_GOO   = BlockEnderGoo().apply { setup("ender_goo") }
-	@JvmField val INFUSED_TNT = BlockInfusedTNT().apply { setup("infused_tnt", unlocalizedName = "tnt", inCreativeTab = false) }
+	@JvmField val INFUSED_TNT = BlockInfusedTNT().apply { setup("infused_tnt", translationKey = "tnt", inCreativeTab = false) }
 	
 	// Blocks: Ores
 	
@@ -401,18 +401,18 @@ object ModBlocks{
 	
 	private val temporaryItemBlocks = mutableListOf<ItemBlock>()
 	
-	private fun Block.setup(registryName: String, unlocalizedName: String = "hee.$registryName", inCreativeTab: Boolean = true){
+	private fun Block.setup(registryName: String, translationKey: String = "hee.$registryName", inCreativeTab: Boolean = true){
 		this.setRegistryName(HEE.ID, registryName)
-		this.unlocalizedName = unlocalizedName
+		this.translationKey = translationKey
 		
 		if (inCreativeTab){
-			this.setCreativeTab(ModCreativeTabs.main)
+			this.creativeTab = ModCreativeTabs.main
 		}
 	}
 	
 	private fun Block.override(vanillaBlock: Block, newCreativeTab: CreativeTabs? = ModCreativeTabs.main){
 		this.registryName = vanillaBlock.registryName
-		this.setCreativeTab(newCreativeTab)
+		this.creativeTab = newCreativeTab
 		
 		if (newCreativeTab is OrderedCreativeTab){
 			newCreativeTab.registerOrder(Item.getItemFromBlock(vanillaBlock))

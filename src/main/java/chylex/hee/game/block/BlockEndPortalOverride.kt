@@ -22,7 +22,7 @@ class BlockEndPortalOverride : BlockEndPortal(Material.PORTAL){
 		pos.setAir(world)
 	}
 	
-	override fun onEntityCollidedWithBlock(world: World, pos: BlockPos, state: IBlockState, entity: Entity){
+	override fun onEntityCollision(world: World, pos: BlockPos, state: IBlockState, entity: Entity){
 		pos.setAir(world)
 	}
 }

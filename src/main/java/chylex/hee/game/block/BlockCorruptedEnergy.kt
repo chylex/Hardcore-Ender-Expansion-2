@@ -183,7 +183,7 @@ class BlockCorruptedEnergy(builder: BlockSimple.Builder) : BlockSimple(builder){
 		return false
 	}
 	
-	override fun onEntityCollidedWithBlock(world: World, pos: BlockPos, state: IBlockState, entity: Entity){
+	override fun onEntityCollision(world: World, pos: BlockPos, state: IBlockState, entity: Entity){
 		if (entity is EntityLivingBase && !isEntityTolerant(entity)){
 			CombinedDamage(
 				DAMAGE_PART_NORMAL to 0.75F,
@@ -216,5 +216,5 @@ class BlockCorruptedEnergy(builder: BlockSimple.Builder) : BlockSimple(builder){
 	override fun getRenderType(state: IBlockState): EnumBlockRenderType = INVISIBLE
 	
 	// Debugging
-	// override fun getBlockLayer(): BlockRenderLayer = CUTOUT
+	// override fun getRenderLayer(): BlockRenderLayer = CUTOUT
 }

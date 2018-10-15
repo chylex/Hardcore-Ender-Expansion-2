@@ -91,7 +91,7 @@ class BlockHumus(builder: BlockSimple.Builder) : BlockSimple(builder){
 		return false
 	}
 	
-	override fun onBlockDestroyedByExplosion(world: World, pos: BlockPos, explosion: Explosion){
+	override fun onExplosionDestroy(world: World, pos: BlockPos, explosion: Explosion){
 		if (!world.isRemote){
 			// TODO drop compost
 		}

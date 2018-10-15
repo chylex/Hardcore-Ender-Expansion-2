@@ -13,7 +13,6 @@ import chylex.hee.game.particle.util.IShape.Point
 import chylex.hee.init.ModItems
 import chylex.hee.system.Resource
 import chylex.hee.system.util.Pos
-import chylex.hee.system.util.add
 import chylex.hee.system.util.forge.capabilities.CapabilityProvider
 import chylex.hee.system.util.forge.capabilities.NullFactory
 import chylex.hee.system.util.forge.capabilities.NullStorage
@@ -160,8 +159,8 @@ open class BlockEnderGoo : BlockAbstractGoo(FluidEnderGoo, Materials.ENDER_GOO){
 		entity.motionZ *= 0.8 - (0.75 * strength)
 	}
 	
-	override fun onEntityCollidedWithBlock(world: World, pos: BlockPos, state: IBlockState, entity: Entity){
-		super.onEntityCollidedWithBlock(world, pos, state, entity)
+	override fun onEntityCollision(world: World, pos: BlockPos, state: IBlockState, entity: Entity){
+		super.onEntityCollision(world, pos, state, entity)
 		
 		if (entity is EntityLivingBase){
 			if (!world.isRemote && !CustomCreatureType.isEnder(entity)){

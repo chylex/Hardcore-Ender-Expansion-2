@@ -81,7 +81,7 @@ class BlockEnergyCluster(builder: BlockSimple.Builder) : BlockSimple(builder), I
 		}
 	}
 	
-	override fun onEntityCollidedWithBlock(world: World, pos: BlockPos, state: IBlockState, entity: Entity){
+	override fun onEntityCollision(world: World, pos: BlockPos, state: IBlockState, entity: Entity){
 		if (entity is IProjectile){
 			pos.setAir(world)
 		}

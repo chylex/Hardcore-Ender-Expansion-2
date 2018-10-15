@@ -20,7 +20,7 @@ class BlockChorusFlowerOverride : BlockChorusFlower(){
 		
 		setHardness(source.getBlockHardness(null, null, null)) // UPDATE
 		soundType = source.soundType
-		unlocalizedName = source.unlocalizedName.removePrefix("tile.") // UPDATE: there must be a better way?
+		translationKey = source.translationKey.removePrefix("tile.") // UPDATE: there must be a better way?
 		
 		MinecraftForge.EVENT_BUS.register(this)
 	}

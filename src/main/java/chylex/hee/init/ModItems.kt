@@ -103,9 +103,9 @@ object ModItems{
 	
 	// Utilities
 	
-	private fun Item.setup(registryName: String, unlocalizedName: String = registryName, inCreativeTab: Boolean = true){
+	private fun Item.setup(registryName: String, translationKey: String = registryName, inCreativeTab: Boolean = true){
 		this.registryName = Resource.Custom(registryName)
-		this.unlocalizedName = "hee.$unlocalizedName"
+		this.translationKey = "hee.$translationKey"
 		
 		if (inCreativeTab){
 			this.creativeTab = ModCreativeTabs.main.also { it.registerOrder(this) }

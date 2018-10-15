@@ -23,7 +23,7 @@ object ModCreativeTabs{
 		}
 		
 		@SideOnly(Side.CLIENT)
-		override fun getTabIconItem() = ItemStack(ModItems.ETHEREUM)
+		override fun createIcon() = ItemStack(ModItems.ETHEREUM)
 		
 		@SideOnly(Side.CLIENT)
 		override fun displayAllRelevantItems(items: NonNullList<ItemStack>){

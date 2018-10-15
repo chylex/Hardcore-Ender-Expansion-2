@@ -132,13 +132,13 @@ abstract class BlockAbstractGoo(private val fluid: FluidBase, material: Material
 		e.result = ALLOW
 	}
 	
-	override fun onEntityCollidedWithBlock(world: World, pos: BlockPos, state: IBlockState, entity: Entity){
+	override fun onEntityCollision(world: World, pos: BlockPos, state: IBlockState, entity: Entity){
 		if (!(entity is EntityPlayer && entity.capabilities.isFlying)){
 			
 			/*
 			 * this prevents calling modifyEntityMotion multiple times if the entity is touching 2 or more goo blocks
 			 *
-			 * because onEntityCollidedWithBlock is always called in succession for all blocks colliding with an entity,
+			 * because onEntityCollision is always called in succession for all blocks colliding with an entity,
 			 * it is enough to compare if either the world time or the entity has changed since last call (on the same thread)
 			 */
 			

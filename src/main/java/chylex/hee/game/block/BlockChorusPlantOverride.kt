@@ -19,7 +19,7 @@ class BlockChorusPlantOverride : BlockChorusPlant(){
 		
 		setHardness(source.getBlockHardness(null, null, null)) // UPDATE
 		soundType = source.soundType
-		unlocalizedName = source.unlocalizedName.removePrefix("tile.") // UPDATE: there must be a better way?
+		translationKey = source.translationKey.removePrefix("tile.") // UPDATE: there must be a better way?
 	}
 	
 	override fun getDrops(drops: NonNullList<ItemStack>, world: IBlockAccess, pos: BlockPos, state: IBlockState, fortune: Int){

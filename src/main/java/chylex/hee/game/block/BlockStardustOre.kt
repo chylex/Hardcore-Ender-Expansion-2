@@ -22,5 +22,5 @@ class BlockStardustOre(builder: BlockSimple.Builder) : BlockSimple(builder){
 	
 	override fun canSilkHarvest(): Boolean = true
 	
-	override fun getBlockLayer(): BlockRenderLayer = CUTOUT
+	override fun getRenderLayer(): BlockRenderLayer = CUTOUT
 }
