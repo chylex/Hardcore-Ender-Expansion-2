@@ -1,5 +1,6 @@
 package chylex.hee.system.util
 import chylex.hee.HEE
+import net.minecraft.inventory.IInventory
 import net.minecraft.item.ItemStack
 import net.minecraft.nbt.NBTPrimitive
 import net.minecraft.nbt.NBTTagByte
@@ -83,6 +84,29 @@ fun NBTTagCompound.setStack(key: String, stack: ItemStack){
 
 fun NBTTagCompound.getStack(key: String): ItemStack{
 	return getCompoundTag(key).readStack()
+}
+
+// Inventories
+
+fun NBTTagCompound.saveInventory(key: String, inventory: IInventory){
+	val list = NBTTagList()
+	
+	for((slot, stack) in inventory.nonEmptySlots){
+		list.appendTag(NBTTagCompound().also {
+			stack.writeToNBT(it)
+			it.setInteger("Slot", slot)
+		})
+	}
+	
+	setTag(key, list)
+}
+
+fun NBTTagCompound.loadInventory(key: String, inventory: IInventory){
+	inventory.clear()
+	
+	for(tag in getListOfCompounds(key)){
+		inventory.setStack(tag.getInteger("Slot"), ItemStack(tag))
+	}
 }
 
 // Enums
