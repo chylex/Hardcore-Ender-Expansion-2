@@ -242,7 +242,7 @@ class NBTObjectList<T : Any>(tagList: NBTTagList) : NBTList<T>(tagList){
 			is ByteArray      -> NBTTagByteArray(element)
 			is IntArray       -> NBTTagIntArray(element)
 			is LongArray      -> NBTTagLongArray(element)
-			else              -> throw IllegalArgumentException("unknown NBT type: ${element::class.java.simpleName}")
+			else              -> throw IllegalArgumentException("unhandled NBT type conversion: ${element::class.java.simpleName}")
 		})
 	}
 	
@@ -257,12 +257,24 @@ class NBTObjectList<T : Any>(tagList: NBTTagList) : NBTList<T>(tagList){
 			is NBTTagIntArray  -> tag.intArray as T
 			// UPDATE: check if this is available | is NBTTagLongArray -> tag.longArray as T
 			is NBTTagEnd       -> throw IndexOutOfBoundsException()
-			else               -> throw IllegalArgumentException("unhandled NBT type: ${tag::class.java.simpleName}")
+			else               -> throw IllegalArgumentException("unhandled NBT type conversion: ${tag::class.java.simpleName}")
 		}
 	}
 }
 
 class NBTEnumList<T : Enum<T>>(private val cls: Class<T>, tagList: NBTTagList) : NBTList<T>(tagList){
+	private constructor(cls: Class<T>) : this(cls, NBTTagList())
+	
+	companion object{
+		fun <T : Enum<T>> of(cls: Class<T>, elements: Iterable<T>): NBTEnumList<T>{
+			return NBTEnumList(cls).apply { elements.forEach(::append) }
+		}
+		
+		inline fun <reified T : Enum<T>> of(elements: Iterable<T>): NBTEnumList<T>{
+			return of(T::class.java, elements)
+		}
+	}
+	
 	override fun append(element: T){
 		tagList.appendTag(NBTTagString(element.name.toLowerCase(Locale.ROOT)))
 	}
