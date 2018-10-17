@@ -2,7 +2,10 @@ package chylex.hee.init
 import chylex.hee.HEE
 import chylex.hee.game.gui.ContainerAmuletOfRecovery
 import chylex.hee.game.gui.GuiAmuletOfRecovery
+import chylex.hee.system.util.Pos
+import chylex.hee.system.util.getTile
 import net.minecraft.entity.player.EntityPlayer
+import net.minecraft.tileentity.TileEntity
 import net.minecraft.util.EnumHand
 import net.minecraft.world.World
 import net.minecraftforge.fml.common.network.IGuiHandler
@@ -16,8 +19,8 @@ object ModGuiHandler : IGuiHandler{
 	// Types
 	
 	enum class GuiType(
-		val createInterface: (player: EntityPlayer, Int, Int, Int) -> Any,
-		val createContainer: (player: EntityPlayer, Int, Int, Int) -> Any
+		val createInterface: (player: EntityPlayer, Int, Int, Int) -> Any?,
+		val createContainer: (player: EntityPlayer, Int, Int, Int) -> Any?
 	){
 		AMULET_OF_RECOVERY(
 			createInterface = { player, hand, _, _ -> GuiAmuletOfRecovery(player, EnumHand.values()[hand]) },
@@ -27,6 +30,12 @@ object ModGuiHandler : IGuiHandler{
 		fun open(player: EntityPlayer, x: Int = 0, y: Int = 0, z: Int = 0){
 			player.openGui(HEE, ordinal, player.world, x, y, z)
 		}
+	}
+	
+	// Utilities
+	
+	private inline fun <reified T : TileEntity> forTileEntity(crossinline mapTo: (EntityPlayer, T) -> Any): (player: EntityPlayer, Int, Int, Int) -> Any?{
+		return { player, x, y, z -> Pos(x, y, z).getTile<T>(player.world)?.let { mapTo(player, it) } }
 	}
 	
 	// Overrides
