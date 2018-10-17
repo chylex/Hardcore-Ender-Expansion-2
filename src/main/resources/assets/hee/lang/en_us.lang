@@ -38,6 +38,9 @@ tile.hee.end_stone_enchanted.name=Enchanted End Stone
 tile.hee.dark_loam.name=Dark Loam
 tile.hee.dark_loam_slab.name=Dark Loam Slab
 
+tile.hee.loot_chest.name=Loot Chest
+tile.hee.loot_chest.tooltip=§5§o(Editable in creative mode)
+
 tile.hee.end_powder_ore.name=End Powder Ore
 tile.hee.endium_ore.name=Endium Ore
 tile.hee.stardust_ore.name=Stardust Ore
@@ -121,6 +124,9 @@ effect.hee.lifeless=Lifeless
 
 gui.hee.amulet_of_recovery.title=Amulet of Recovery
 gui.hee.amulet_of_recovery.move_all=Move All
+
+gui.hee.loot_chest.title=Loot Chest
+gui.hee.loot_chest.title.creative=Loot Chest (Editing)
 
 commands.hee.usage=/hee [page=1]
 commands.hee.info=shows command list

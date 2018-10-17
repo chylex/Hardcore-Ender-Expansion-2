@@ -1,7 +1,10 @@
 package chylex.hee.init
 import chylex.hee.HEE
+import chylex.hee.game.block.entity.TileEntityLootChest
 import chylex.hee.game.gui.ContainerAmuletOfRecovery
+import chylex.hee.game.gui.ContainerLootChest
 import chylex.hee.game.gui.GuiAmuletOfRecovery
+import chylex.hee.game.gui.GuiLootChest
 import chylex.hee.system.util.Pos
 import chylex.hee.system.util.getTile
 import net.minecraft.entity.player.EntityPlayer
@@ -25,6 +28,11 @@ object ModGuiHandler : IGuiHandler{
 		AMULET_OF_RECOVERY(
 			createInterface = { player, hand, _, _ -> GuiAmuletOfRecovery(player, EnumHand.values()[hand]) },
 			createContainer = { player, hand, _, _ -> ContainerAmuletOfRecovery(player, EnumHand.values()[hand]) }
+		),
+		
+		LOOT_CHEST(
+			createInterface = forTileEntity<TileEntityLootChest> { player, tile -> GuiLootChest(player, tile) },
+			createContainer = forTileEntity<TileEntityLootChest> { player, tile -> ContainerLootChest(player, tile) }
 		);
 		
 		fun open(player: EntityPlayer, x: Int = 0, y: Int = 0, z: Int = 0){

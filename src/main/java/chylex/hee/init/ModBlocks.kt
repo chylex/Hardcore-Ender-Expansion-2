@@ -18,6 +18,7 @@ import chylex.hee.game.block.BlockGloomtorch
 import chylex.hee.game.block.BlockHumus
 import chylex.hee.game.block.BlockIgneousRockOre
 import chylex.hee.game.block.BlockInfusedTNT
+import chylex.hee.game.block.BlockLootChest
 import chylex.hee.game.block.BlockPillarCustom
 import chylex.hee.game.block.BlockSimple
 import chylex.hee.game.block.BlockSimpleShaped
@@ -28,6 +29,7 @@ import chylex.hee.game.block.BlockWallCustom
 import chylex.hee.game.block.entity.TileEntityEndPortalAcceptor
 import chylex.hee.game.block.entity.TileEntityEnergyCluster
 import chylex.hee.game.block.entity.TileEntityInfusedTNT
+import chylex.hee.game.block.entity.TileEntityLootChest
 import chylex.hee.game.block.entity.TileEntityPortalInner
 import chylex.hee.game.block.fluid.FluidEnderGoo
 import chylex.hee.game.block.material.Materials
@@ -218,8 +220,18 @@ object ModBlocks{
 	
 	// Blocks: Interactive (Uncategorized)
 	
+	private val buildLootChest = BlockSimple.Builder(Materials.SOLID_NO_TOOL).apply {
+		makeIndestructible()
+		
+		lightLevel = 13
+		
+		soundType = SoundType.METAL
+		mapColor = MapColor.BLACK
+	}
+	
 	@JvmField val ENDER_GOO   = BlockEnderGoo().apply { setup("ender_goo") }
 	@JvmField val INFUSED_TNT = BlockInfusedTNT().apply { setup("infused_tnt", translationKey = "tnt", inCreativeTab = false) }
+	@JvmField val LOOT_CHEST  = BlockLootChest(buildLootChest).apply { setup("loot_chest") }
 	
 	// Blocks: Ores
 	
@@ -355,6 +367,7 @@ object ModBlocks{
 			
 			register(ENDER_GOO)
 			register(INFUSED_TNT with ::ItemInfusedTNT)
+			register(LOOT_CHEST with basicItemBlock)
 			
 			register(END_POWDER_ORE with basicItemBlock)
 			register(ENDIUM_ORE with basicItemBlock)
@@ -376,6 +389,7 @@ object ModBlocks{
 		tile<TileEntityEndPortalAcceptor>("end_portal_acceptor")
 		tile<TileEntityEnergyCluster>("energy_cluster")
 		tile<TileEntityInfusedTNT>("infused_tnt")
+		tile<TileEntityLootChest>("loot_chest")
 		
 		// vanilla modifications
 		
