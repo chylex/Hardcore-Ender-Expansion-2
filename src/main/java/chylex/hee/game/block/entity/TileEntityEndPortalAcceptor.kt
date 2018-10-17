@@ -117,6 +117,7 @@ class TileEntityEndPortalAcceptor : TileEntityBase(), ITickable{
 							FINISHED
 						}
 						else{
+							markDirty()
 							CHARGING
 						}
 					}
@@ -131,6 +132,7 @@ class TileEntityEndPortalAcceptor : TileEntityBase(), ITickable{
 		if (chargeState != newChargeState){
 			chargeState = newChargeState
 			notifyUpdate(FLAG_SYNC_CLIENT or FLAG_SKIP_RENDER)
+			markDirty()
 		}
 		
 		isRefreshing = false
