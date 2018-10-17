@@ -9,4 +9,5 @@ class SlotReadOnly(inventory: IInventory, index: Int, x: Int, y: Int) : Slot(inv
 	}
 	
 	override fun isItemValid(stack: ItemStack): Boolean = false
+	override fun getSlotStackLimit(): Int = 0
 }
