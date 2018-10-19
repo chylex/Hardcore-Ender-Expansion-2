@@ -3,7 +3,6 @@ import chylex.hee.system.collection.EmptyIterator
 import chylex.hee.system.util.NBTEnumList
 import com.google.common.collect.ImmutableSet
 import com.google.common.collect.Sets
-import net.minecraft.nbt.NBTTagList
 
 class InfusionList private constructor(private val infusions: ImmutableSet<Infusion>) : Iterable<Infusion>{
 	constructor(infusion: Infusion, vararg moreInfusions: Infusion) : this(Sets.immutableEnumSet<Infusion>(infusion, *moreInfusions))
@@ -17,11 +16,7 @@ class InfusionList private constructor(private val infusions: ImmutableSet<Infus
 		get() = infusions.isEmpty()
 	
 	val tag
-		get() = NBTEnumList(Infusion::class.java, NBTTagList()).apply {
-			for(infusion in infusions){
-				append(infusion)
-			}
-		}
+		get() = NBTEnumList.of(infusions)
 	
 	fun has(infusion: Infusion): Boolean{
 		return infusions.contains(infusion)
