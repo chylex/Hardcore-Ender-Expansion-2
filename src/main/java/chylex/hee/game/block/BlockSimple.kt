@@ -1,6 +1,5 @@
 package chylex.hee.game.block
-import chylex.hee.game.block.BlockSimple.Builder.Companion.setHardnessWithResistance
-import chylex.hee.game.block.BlockSimple.Builder.Companion.setHarvestTool
+import chylex.hee.game.block.BlockSimple.Builder.Companion.setupBlockProperties
 import net.minecraft.block.Block
 import net.minecraft.block.SoundType
 import net.minecraft.block.material.MapColor
@@ -8,16 +7,7 @@ import net.minecraft.block.material.Material
 
 open class BlockSimple(builder: Builder) : Block(builder.material, builder.mapColor){
 	init{
-		setHarvestTool(builder.harvestTool)
-		setHardnessWithResistance(builder.harvestHardness, builder.explosionResistance)
-		enableStats = builder.miningStats
-		
-		slipperiness = builder.slipperiness
-		
-		lightValue = builder.lightLevel
-		builder.lightOpacity?.let { lightOpacity = it }
-		
-		soundType = builder.soundType
+		setupBlockProperties(builder, replaceMaterialAndColor = false)
 	}
 	
 	class Builder(val material: Material){
@@ -87,6 +77,26 @@ open class BlockSimple(builder: Builder) : Block(builder.material, builder.mapCo
 				else{
 					this.setResistance(explosionResistance * multiplier)
 				}
+			}
+			
+			fun Block.setupBlockProperties(builder: Builder, replaceMaterialAndColor: Boolean){ // UPDATE: temporary AT workarounds before 1.13 block builder
+				if (replaceMaterialAndColor){
+					this.material = builder.material
+					this.translucent = !this.material.blocksLight()
+					
+					this.blockMapColor = builder.mapColor
+				}
+				
+				setHarvestTool(builder.harvestTool)
+				setHardnessWithResistance(builder.harvestHardness, builder.explosionResistance)
+				this.enableStats = builder.miningStats
+				
+				this.slipperiness = builder.slipperiness
+				
+				this.lightValue = builder.lightLevel
+				builder.lightOpacity?.let { this.lightOpacity = it }
+				
+				this.blockSoundType = builder.soundType
 			}
 		}
 	}

@@ -1,7 +1,7 @@
 package chylex.hee.game.block
 import chylex.hee.game.block.BlockSimple.Builder
 import chylex.hee.game.block.BlockSimple.Builder.Companion.setHardnessWithResistance
-import chylex.hee.game.block.BlockSimple.Builder.Companion.setHarvestTool
+import chylex.hee.game.block.BlockSimple.Builder.Companion.setupBlockProperties
 import chylex.hee.game.block.state.PropertyDefault
 import chylex.hee.game.block.state.PropertyDefault.DEFAULT
 import net.minecraft.block.Block
@@ -24,17 +24,18 @@ abstract class BlockSlabCustom(builder: Builder) : BlockSlab(builder.material, b
 	}
 	
 	init{
-		setHarvestTool(builder.harvestTool)
-		slipperiness = builder.slipperiness
-		soundType = builder.soundType
+		setupBlockProperties(builder, replaceMaterialAndColor = false)
 		useNeighborBrightness = true
+		
+		if (!isDouble){
+			setHardnessWithResistance(builder.harvestHardness, builder.explosionResistance, 0.5F)
+		}
 	}
 	
 	class Half(builder: Builder): BlockSlabCustom(builder){
 		init{
 			defaultState = blockState.baseState.withProperty(VARIANT, DEFAULT).withProperty(HALF, BOTTOM)
 			
-			setHardnessWithResistance(builder.harvestHardness, builder.explosionResistance, 0.5F)
 		}
 		
 		override fun getItemDropped(state: IBlockState, rand: Random, fortune: Int): Item = Item.getItemFromBlock(this)
@@ -53,8 +54,6 @@ abstract class BlockSlabCustom(builder: Builder) : BlockSlab(builder.material, b
 	class Full(builder: Builder, private val slabBlock: Block): BlockSlabCustom(builder){
 		init{
 			defaultState = blockState.baseState.withProperty(VARIANT, DEFAULT)
-			
-			setHardnessWithResistance(builder.harvestHardness, builder.explosionResistance)
 		}
 		
 		override fun getItemDropped(state: IBlockState, rand: Random, fortune: Int): Item = Item.getItemFromBlock(slabBlock)
