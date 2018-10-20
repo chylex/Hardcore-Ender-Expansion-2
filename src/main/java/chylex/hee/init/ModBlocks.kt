@@ -4,6 +4,7 @@ import chylex.hee.game.block.BlockAncientCobweb
 import chylex.hee.game.block.BlockChorusFlowerOverride
 import chylex.hee.game.block.BlockChorusPlantOverride
 import chylex.hee.game.block.BlockCorruptedEnergy
+import chylex.hee.game.block.BlockDarkChest
 import chylex.hee.game.block.BlockDragonEggOverride
 import chylex.hee.game.block.BlockDryVines
 import chylex.hee.game.block.BlockEndPortalAcceptor
@@ -26,6 +27,7 @@ import chylex.hee.game.block.BlockSlabCustom
 import chylex.hee.game.block.BlockStairsCustom
 import chylex.hee.game.block.BlockStardustOre
 import chylex.hee.game.block.BlockWallCustom
+import chylex.hee.game.block.entity.TileEntityDarkChest
 import chylex.hee.game.block.entity.TileEntityEndPortalAcceptor
 import chylex.hee.game.block.entity.TileEntityEnergyCluster
 import chylex.hee.game.block.entity.TileEntityInfusedTNT
@@ -231,6 +233,7 @@ object ModBlocks{
 	
 	@JvmField val ENDER_GOO   = BlockEnderGoo().apply { setup("ender_goo") }
 	@JvmField val INFUSED_TNT = BlockInfusedTNT().apply { setup("infused_tnt", translationKey = "tnt", inCreativeTab = false) }
+	@JvmField val DARK_CHEST  = BlockDarkChest(buildGloomrock).apply { setup("dark_chest") } // UPDATE: update recipe json to include tag to allow either slab variation
 	@JvmField val LOOT_CHEST  = BlockLootChest(buildLootChest).apply { setup("loot_chest") }
 	
 	// Blocks: Ores
@@ -367,6 +370,7 @@ object ModBlocks{
 			
 			register(ENDER_GOO)
 			register(INFUSED_TNT with ::ItemInfusedTNT)
+			register(DARK_CHEST with basicItemBlock)
 			register(LOOT_CHEST with basicItemBlock)
 			
 			register(END_POWDER_ORE with basicItemBlock)
@@ -389,6 +393,7 @@ object ModBlocks{
 		tile<TileEntityEndPortalAcceptor>("end_portal_acceptor")
 		tile<TileEntityEnergyCluster>("energy_cluster")
 		tile<TileEntityInfusedTNT>("infused_tnt")
+		tile<TileEntityDarkChest>("dark_chest")
 		tile<TileEntityLootChest>("loot_chest")
 		
 		// vanilla modifications

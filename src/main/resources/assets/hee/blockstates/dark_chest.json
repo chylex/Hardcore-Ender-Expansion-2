@@ -1,0 +1,12 @@
+{
+  "forge_marker": 1,
+  "defaults": {
+    "model": "block",
+    "textures": {
+      "particle": "hee:block/gloomrock_smooth"
+    }
+  },
+  "variants": {
+    "normal": [{}]
+  }
+}

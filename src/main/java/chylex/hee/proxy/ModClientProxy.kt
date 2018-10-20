@@ -1,11 +1,13 @@
 package chylex.hee.proxy
 import chylex.hee.HEE
 import chylex.hee.game.block.BlockDryVines
+import chylex.hee.game.block.entity.TileEntityDarkChest
 import chylex.hee.game.block.entity.TileEntityLootChest
 import chylex.hee.game.commands.HeeClientCommand
 import chylex.hee.game.entity.item.EntityItemNoBob
 import chylex.hee.game.item.ItemEnergyOracle
 import chylex.hee.game.item.ItemEnergyReceptacle
+import chylex.hee.game.render.block.RenderTileDarkChest
 import chylex.hee.game.render.block.RenderTileEndPortal
 import chylex.hee.game.render.block.RenderTileLootChest
 import chylex.hee.game.render.entity.RenderEntityItemNoBob
@@ -51,8 +53,10 @@ class ModClientProxy : ModCommonProxy(){
 		ClientCommandHandler.instance.registerCommand(HeeClientCommand)
 		
 		registerTileRenderer<TileEntityEndPortal>(RenderTileEndPortal)
+		registerTileRenderer<TileEntityDarkChest>(RenderTileDarkChest)
 		registerTileRenderer<TileEntityLootChest>(RenderTileLootChest)
 		
+		Item.getItemFromBlock(ModBlocks.DARK_CHEST).tileEntityItemStackRenderer = RenderTileDarkChest.AsItem
 		Item.getItemFromBlock(ModBlocks.LOOT_CHEST).tileEntityItemStackRenderer = RenderTileLootChest.AsItem
 		
 		// colors
@@ -86,6 +90,7 @@ class ModClientProxy : ModCommonProxy(){
 		ModelLoader.setCustomStateMapper(ModBlocks.CORRUPTED_ENERGY, emptyStateMapper)
 		ModelLoader.setCustomStateMapper(ModBlocks.ENDER_GOO, emptyStateMapper)
 		ModelLoader.setCustomStateMapper(ModBlocks.INFUSED_TNT, emptyStateMapper)
+		ModelLoader.setCustomStateMapper(ModBlocks.DARK_CHEST, emptyStateMapper)
 		ModelLoader.setCustomStateMapper(ModBlocks.LOOT_CHEST, emptyStateMapper)
 		
 		// item models
