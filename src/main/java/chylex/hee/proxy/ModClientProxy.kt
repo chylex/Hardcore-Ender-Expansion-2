@@ -1,5 +1,6 @@
 package chylex.hee.proxy
 import chylex.hee.HEE
+import chylex.hee.game.block.BlockAbstractTable
 import chylex.hee.game.block.BlockDryVines
 import chylex.hee.game.block.entity.TileEntityDarkChest
 import chylex.hee.game.block.entity.TileEntityLootChest
@@ -98,6 +99,17 @@ class ModClientProxy : ModCommonProxy(){
 		with(ForgeRegistries.ITEMS){
 			for(item in keys.asSequence().filter { it.namespace == HEE.ID }.map(::getValue)){
 				ModelLoader.setCustomModelResourceLocation(item!!, 0, ModelResourceLocation(item.registryName!!, "inventory"))
+			}
+		}
+		
+		for(block in arrayOf(
+			ModBlocks.TABLE_BASE
+		)){
+			val item = Item.getItemFromBlock(block)
+			val registryName = item.registryName!!
+			
+			for(tier in BlockAbstractTable.MIN_TIER..BlockAbstractTable.MAX_TIER){
+				ModelLoader.setCustomModelResourceLocation(item, tier, ModelResourceLocation(registryName, "tier=$tier"))
 			}
 		}
 		

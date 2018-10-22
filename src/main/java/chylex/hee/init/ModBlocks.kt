@@ -26,6 +26,7 @@ import chylex.hee.game.block.BlockSimpleShaped
 import chylex.hee.game.block.BlockSlabCustom
 import chylex.hee.game.block.BlockStairsCustom
 import chylex.hee.game.block.BlockStardustOre
+import chylex.hee.game.block.BlockTableBase
 import chylex.hee.game.block.BlockWallCustom
 import chylex.hee.game.block.entity.TileEntityDarkChest
 import chylex.hee.game.block.entity.TileEntityEndPortalAcceptor
@@ -36,6 +37,7 @@ import chylex.hee.game.block.entity.TileEntityPortalInner
 import chylex.hee.game.block.fluid.FluidEnderGoo
 import chylex.hee.game.block.material.Materials
 import chylex.hee.game.item.ItemAncientCobweb
+import chylex.hee.game.item.ItemBlockWithMetadata
 import chylex.hee.game.item.ItemDragonEgg
 import chylex.hee.game.item.ItemInfusedTNT
 import chylex.hee.game.item.util.Tool.Level.DIAMOND
@@ -313,9 +315,23 @@ object ModBlocks{
 	@JvmField val ENERGY_CLUSTER   = BlockEnergyCluster(buildEnergyCluster).apply { setup("energy_cluster") }
 	@JvmField val CORRUPTED_ENERGY = BlockCorruptedEnergy(buildCorruptedEnergy).apply { setup("corrupted_energy") }
 	
+	// Blocks: Tables
+	
+	private val buildTable = BlockSimple.Builder(Materials.SOLID_WITH_TOOL).apply {
+		harvestTool = Pair(STONE, PICKAXE)
+		harvestHardness = 20.0F
+		explosionResistance = 25.0F
+		
+		soundType = SoundType.METAL
+		mapColor = MapColor.GRAY
+	}
+	
+	@JvmField val TABLE_BASE = BlockTableBase(buildTable).apply { setup("table_base") }
+	
 	// Registry
 	
 	private val basicItemBlock = ::ItemBlock
+	private val metaItemBlock = ::ItemBlockWithMetadata
 	
 	private fun slabItemBlock(half: BlockSlabCustom.Half, full: BlockSlabCustom.Full): ItemBlock{
 		return ItemSlab(half, half, full).apply { hasSubtypes = false }
@@ -387,6 +403,8 @@ object ModBlocks{
 			
 			register(ENERGY_CLUSTER with basicItemBlock)
 			register(CORRUPTED_ENERGY)
+			
+			register(TABLE_BASE with metaItemBlock)
 		}
 		
 		tile<TileEntityPortalInner>("end_portal_inner")

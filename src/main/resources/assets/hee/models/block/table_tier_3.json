@@ -1,0 +1,9 @@
+{
+  "parent": "hee:block/table",
+  "textures": {
+    "particle": "hee:block/table_base",
+    "bottom": "hee:block/table_base",
+    "top": "hee:block/table_base",
+    "side": "hee:block/table_base_side_3"
+  }
+}

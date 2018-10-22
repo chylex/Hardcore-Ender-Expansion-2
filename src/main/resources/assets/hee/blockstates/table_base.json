@@ -1,0 +1,22 @@
+{
+  "forge_marker": 1,
+  "defaults": {
+    "textures": {
+      "overlay_top": "hee:block/transparent",
+      "overlay_side": "hee:block/transparent"
+    }
+  },
+  "variants": {
+    "tier": {
+      "1": {
+        "model": "hee:table_tier_1"
+      },
+      "2": {
+        "model": "hee:table_tier_2"
+      },
+      "3": {
+        "model": "hee:table_tier_3"
+      }
+    }
+  }
+}

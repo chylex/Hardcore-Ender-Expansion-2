@@ -54,6 +54,10 @@ tile.hee.end_portal_inner.name=End Portal
 tile.hee.end_portal_frame.name=End Portal Frame
 tile.hee.end_portal_acceptor.name=End Portal Acceptor
 
+tile.hee.table_base.name=Table Base
+
+tile.tooltip.hee.table_base.tier=Tier %s
+
 item.hee.ancient_dust.name=Ancient Dust
 item.hee.ethereum.name=Ethereum
 item.hee.end_powder.name=End Powder
