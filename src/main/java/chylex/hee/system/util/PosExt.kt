@@ -57,6 +57,10 @@ inline fun <reified T : TileEntity> BlockPos.getTile(world: IBlockAccess): T?{
 	return world.getTileEntity(this) as? T
 }
 
+fun BlockPos.isLoaded(world: World): Boolean{
+	return world.isBlockLoaded(this)
+}
+
 // Block setters
 
 inline fun BlockPos.setAir(world: World): Boolean{

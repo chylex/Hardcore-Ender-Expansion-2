@@ -5,8 +5,9 @@ import net.minecraft.item.ItemStack
 
 // Size
 
-inline val ItemStack.size
+inline var ItemStack.size: Int
 	get() = count
+	set(value){ count = value }
 
 inline val ItemStack.isNotEmpty
 	get() = !isEmpty

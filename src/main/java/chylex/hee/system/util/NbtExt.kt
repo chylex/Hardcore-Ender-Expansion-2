@@ -17,6 +17,7 @@ import net.minecraft.nbt.NBTTagLongArray
 import net.minecraft.nbt.NBTTagShort
 import net.minecraft.nbt.NBTTagString
 import net.minecraftforge.common.util.Constants.NBT
+import org.apache.commons.lang3.ArrayUtils.EMPTY_LONG_ARRAY
 import java.util.Locale
 
 private const val HEE_TAG_NAME = HEE.ID
@@ -109,6 +110,19 @@ fun NBTTagCompound.loadInventory(key: String, inventory: IInventory){
 	}
 }
 
+// Long arrays
+
+fun NBTTagCompound.setLongArray(key: String, array: LongArray){
+	setTag(key, NBTTagLongArray(array))
+}
+
+fun NBTTagCompound.getLongArray(key: String): LongArray{
+	return if (hasKey(key, NBT.TAG_LONG_ARRAY))
+		(getTag(key) as? NBTTagLongArray)?.data ?: EMPTY_LONG_ARRAY
+	else
+		EMPTY_LONG_ARRAY
+}
+
 // Enums
 
 inline fun <reified T : Enum<T>> NBTTagCompound.setEnum(key: String, value: T?){
@@ -139,7 +153,7 @@ fun NBTTagCompound.getListOfCompounds(key: String)  = NBTObjectList<NBTTagCompou
 fun NBTTagCompound.getListOfStrings(key: String)    = NBTObjectList<String>(this.getTagList(key, NBT.TAG_STRING))
 fun NBTTagCompound.getListOfByteArrays(key: String) = NBTObjectList<ByteArray>(this.getTagList(key, NBT.TAG_BYTE_ARRAY))
 fun NBTTagCompound.getListOfIntArrays(key: String)  = NBTObjectList<IntArray>(this.getTagList(key, NBT.TAG_INT_ARRAY))
-// UPDATE: see below | fun NBTTagCompound.getListOfLongArrays(key: String) = NBTObjectList<LongArray>(this.getTagList(key, NBT.TAG_LONG_ARRAY))
+fun NBTTagCompound.getListOfLongArrays(key: String) = NBTObjectList<LongArray>(this.getTagList(key, NBT.TAG_LONG_ARRAY))
 
 inline fun <reified T : Enum<T>> NBTTagCompound.getListOfEnums(key: String) = NBTEnumList(T::class.java, this.getTagList(key, NBT.TAG_STRING))
 
@@ -255,7 +269,7 @@ class NBTObjectList<T : Any>(tagList: NBTTagList) : NBTList<T>(tagList){
 			is NBTTagString    -> tag.string as T
 			is NBTTagByteArray -> tag.byteArray as T
 			is NBTTagIntArray  -> tag.intArray as T
-			// UPDATE: check if this is available | is NBTTagLongArray -> tag.longArray as T
+			is NBTTagLongArray -> tag.data as T
 			is NBTTagEnd       -> throw IndexOutOfBoundsException()
 			else               -> throw IllegalArgumentException("unhandled NBT type conversion: ${tag::class.java.simpleName}")
 		}
