@@ -12,7 +12,6 @@ import net.minecraft.block.state.IBlockState
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.init.SoundEvents
 import net.minecraft.inventory.IInventory
-import net.minecraft.item.ItemStack
 import net.minecraft.nbt.NBTTagCompound
 import net.minecraft.util.EnumFacing
 import net.minecraft.util.EnumFacing.UP
@@ -78,7 +77,7 @@ abstract class TileEntityBaseChest : TileEntityBase(), ITickable, IWorldNameable
 	fun getChestInventoryFor(player: EntityPlayer): IInventory{
 		val wrapped = getInventoryFor(player)
 		
-		return object : IInventory{
+		return object : IInventory by wrapped{
 			override fun openInventory(player: EntityPlayer){
 				wrapped.openInventory(player)
 				++viewerCount
@@ -97,28 +96,6 @@ abstract class TileEntityBaseChest : TileEntityBase(), ITickable, IWorldNameable
 			override fun isUsableByPlayer(player: EntityPlayer): Boolean{
 				return this@TileEntityBaseChest.isUsableByPlayer(player)
 			}
-			
-			// Delegates
-			
-			override fun getName()        = wrapped.name
-			override fun hasCustomName()  = wrapped.hasCustomName()
-			override fun getDisplayName() = wrapped.displayName
-			
-			override fun isEmpty()                = wrapped.isEmpty
-			override fun getSizeInventory()       = wrapped.sizeInventory
-			override fun getInventoryStackLimit() = wrapped.inventoryStackLimit
-			
-			override fun clear() = wrapped.clear()
-			
-			override fun isItemValidForSlot(slot: Int, stack: ItemStack)       = wrapped.isItemValidForSlot(slot, stack)
-			override fun getStackInSlot(slot: Int)                             = wrapped.getStackInSlot(slot)
-			override fun removeStackFromSlot(slot: Int)                        = wrapped.removeStackFromSlot(slot)
-			override fun setInventorySlotContents(slot: Int, stack: ItemStack) = wrapped.setInventorySlotContents(slot, stack)
-			override fun decrStackSize(slot: Int, count: Int)                  = wrapped.decrStackSize(slot, count)
-			
-			override fun setField(id: Int, value: Int) = wrapped.setField(id, value)
-			override fun getField(id: Int)             = wrapped.getField(id)
-			override fun getFieldCount()               = wrapped.fieldCount
 		}
 	}
 	
