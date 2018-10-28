@@ -2,6 +2,7 @@ package chylex.hee.game.mechanics
 import chylex.hee.system.util.getState
 import chylex.hee.system.util.isAir
 import chylex.hee.system.util.nextFloat
+import chylex.hee.system.util.playServer
 import chylex.hee.system.util.setBlock
 import chylex.hee.system.util.square
 import net.minecraft.block.material.Material
@@ -221,7 +222,7 @@ class ExplosionBuilder{
 		}
 		
 		override fun doExplosionB(spawnParticles: Boolean){
-			world.playSound(null, centerX, centerY, centerZ, SoundEvents.ENTITY_GENERIC_EXPLODE, SoundCategory.BLOCKS, 4F, rand.nextFloat(0.56F, 0.84F))
+			SoundEvents.ENTITY_GENERIC_EXPLODE.playServer(world, centerX, centerY, centerZ, SoundCategory.BLOCKS, volume = 4F, pitch = rand.nextFloat(0.56F, 0.84F))
 			destroyAffectedBlocks()
 		}
 	}

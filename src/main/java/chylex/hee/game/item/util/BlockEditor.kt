@@ -2,6 +2,7 @@ package chylex.hee.game.item.util
 import chylex.hee.system.util.getHardness
 import chylex.hee.system.util.isAir
 import chylex.hee.system.util.isReplaceable
+import chylex.hee.system.util.playUniversal
 import net.minecraft.block.Block
 import net.minecraft.block.state.IBlockState
 import net.minecraft.entity.player.EntityPlayer
@@ -45,7 +46,7 @@ object BlockEditor{
 		}
 		
 		val sound = block.getSoundType(blockState, world, targetPos, player)
-		world.playSound(player, targetPos, sound.placeSound, SoundCategory.BLOCKS, (sound.volume + 1F) / 2F, sound.pitch * 0.8F)
+		sound.placeSound.playUniversal(player, targetPos, SoundCategory.BLOCKS, volume = (sound.volume + 1F) / 2F, pitch = sound.pitch * 0.8F)
 		
 		return targetPos
 	}

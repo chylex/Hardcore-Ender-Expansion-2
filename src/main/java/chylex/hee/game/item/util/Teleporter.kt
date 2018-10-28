@@ -9,6 +9,7 @@ import chylex.hee.network.client.PacketClientFX.IFXHandler
 import chylex.hee.system.util.center
 import chylex.hee.system.util.floorToInt
 import chylex.hee.system.util.offsetTowards
+import chylex.hee.system.util.playClient
 import chylex.hee.system.util.posVec
 import chylex.hee.system.util.readCompactVec
 import chylex.hee.system.util.readString
@@ -60,8 +61,8 @@ class Teleporter(
 				
 				PARTICLE_TELEPORT.spawn(Line(startPoint, endPoint, 0.5), rand)
 				
-				world.playSound(startPoint.x, startPoint.y, startPoint.z, SoundEvents.ENTITY_ENDERMEN_TELEPORT, soundCategory, soundVolume, 1F, false)
-				world.playSound(endPoint.x, endPoint.y, endPoint.z, SoundEvents.ENTITY_ENDERMEN_TELEPORT, soundCategory, soundVolume, 1F, false)
+				SoundEvents.ENTITY_ENDERMEN_TELEPORT.playClient(startPoint, soundCategory, volume = soundVolume)
+				SoundEvents.ENTITY_ENDERMEN_TELEPORT.playClient(endPoint, soundCategory, volume = soundVolume)
 			}
 		}
 		

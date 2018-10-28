@@ -17,6 +17,7 @@ import chylex.hee.system.util.isAir
 import chylex.hee.system.util.motionVec
 import chylex.hee.system.util.nextInt
 import chylex.hee.system.util.offsetUntil
+import chylex.hee.system.util.playClient
 import chylex.hee.system.util.readPos
 import chylex.hee.system.util.setAir
 import chylex.hee.system.util.setState
@@ -62,7 +63,7 @@ class BlockDragonEggOverride : BlockDragonEgg(){
 				val sound = Blocks.DRAGON_EGG.soundType
 				
 				PARTICLE_BREAK.spawn(Point(pos, 30), rand)
-				world.playSound(pos.x + 0.5, pos.y + 0.5, pos.z + 0.5, sound.breakSound, SoundCategory.BLOCKS, (sound.getVolume() + 1F) / 2F, sound.getPitch() * 0.8F, false)
+				sound.breakSound.playClient(pos, SoundCategory.BLOCKS, volume = (sound.getVolume() + 1F) / 2F, pitch = sound.getPitch() * 0.8F)
 			}
 		}
 	}

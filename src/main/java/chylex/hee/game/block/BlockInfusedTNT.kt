@@ -4,6 +4,8 @@ import chylex.hee.game.entity.item.EntityInfusedTNT
 import chylex.hee.game.item.infusion.Infusion.TRAP
 import chylex.hee.game.item.infusion.InfusionTag
 import chylex.hee.system.util.getTile
+import chylex.hee.system.util.playServer
+import chylex.hee.system.util.posVec
 import chylex.hee.system.util.setAir
 import net.minecraft.block.BlockTNT
 import net.minecraft.block.ITileEntityProvider
@@ -102,7 +104,7 @@ class BlockInfusedTNT : BlockTNT(), ITileEntityProvider{
 			}
 			else{
 				EntityInfusedTNT(world, pos, infusions, igniter).apply {
-					world.playSound(null, posX, posY, posZ, SoundEvents.ENTITY_TNT_PRIMED, SoundCategory.BLOCKS, 1F, 1F)
+					SoundEvents.ENTITY_TNT_PRIMED.playServer(world, posVec, SoundCategory.BLOCKS)
 					world.spawnEntity(this)
 				}
 			}

@@ -4,6 +4,7 @@ import chylex.hee.game.block.entity.TileEntityBase.Context.STORAGE
 import chylex.hee.init.ModSounds
 import chylex.hee.system.util.loadInventory
 import chylex.hee.system.util.nonEmptySlots
+import chylex.hee.system.util.playServer
 import chylex.hee.system.util.saveInventory
 import chylex.hee.system.util.setStack
 import net.minecraft.entity.player.EntityPlayer
@@ -34,7 +35,7 @@ class TileEntityLootChest : TileEntityBaseChest(){
 	private val playerInventories = mutableMapOf<UUID, IInventory>()
 	
 	override fun playChestSound(sound: SoundEvent){
-		world.playSound(null, pos.x + 0.5, pos.y + 0.5, pos.z + 0.5, sound, SoundCategory.BLOCKS, 0.5F, 1F)
+		sound.playServer(world, pos, SoundCategory.BLOCKS, volume = 0.5F)
 	}
 	
 	override fun getInventoryFor(player: EntityPlayer): IInventory{

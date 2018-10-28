@@ -15,6 +15,7 @@ import chylex.hee.system.util.Pos
 import chylex.hee.system.util.allInCenteredBox
 import chylex.hee.system.util.distanceSqTo
 import chylex.hee.system.util.nextFloat
+import chylex.hee.system.util.playClient
 import chylex.hee.system.util.readPos
 import chylex.hee.system.util.selectVulnerableEntities
 import chylex.hee.system.util.use
@@ -48,7 +49,7 @@ class EntityFallingObsidian : EntityFallingBlockHeavy{
 				val volume = readFloat()
 				
 				repeat(2){
-					world.playSound(pos.x + 0.5, pos.y + 0.5, pos.z + 0.5, ModSounds.BLOCK_OBSIDIAN_LAND, SoundCategory.BLOCKS, volume, rand.nextFloat(0.8F, 1.2F), false)
+					ModSounds.BLOCK_OBSIDIAN_LAND.playClient(pos, SoundCategory.BLOCKS, volume = volume, pitch = rand.nextFloat(0.8F, 1.2F))
 				}
 			}
 		}

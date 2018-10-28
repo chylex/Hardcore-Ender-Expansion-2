@@ -7,6 +7,7 @@ import chylex.hee.system.util.distanceSqTo
 import chylex.hee.system.util.getState
 import chylex.hee.system.util.getTile
 import chylex.hee.system.util.nextFloat
+import chylex.hee.system.util.playServer
 import net.minecraft.block.BlockDirectional.FACING
 import net.minecraft.block.state.IBlockState
 import net.minecraft.entity.player.EntityPlayer
@@ -63,7 +64,7 @@ abstract class TileEntityBaseChest : TileEntityBase(), ITickable, IWorldNameable
 	}
 	
 	protected open fun playChestSound(sound: SoundEvent){
-		world.playSound(null, pos.x + 0.5, pos.y + 0.5, pos.z + 0.5, sound, SoundCategory.BLOCKS, 0.5F, world.rand.nextFloat(0.9F, 1.0F))
+		sound.playServer(world, pos, SoundCategory.BLOCKS, volume = 0.5F, pitch = world.rand.nextFloat(0.9F, 1.0F))
 	}
 	
 	// Inventory handling
