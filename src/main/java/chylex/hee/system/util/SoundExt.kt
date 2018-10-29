@@ -10,9 +10,7 @@ import net.minecraft.world.World
 // Client
 
 fun SoundEvent.playClient(x: Double, y: Double, z: Double, category: SoundCategory, volume: Float = 1F, pitch: Float = 1F, distanceDelay: Boolean = false){
-	HEE.proxy.getClientSidePlayer()?.world?.let {
-		it.playSound(x, y, z, this, category, volume, pitch, distanceDelay)
-	}
+	HEE.proxy.getClientSidePlayer()?.world?.playSound(x, y, z, this, category, volume, pitch, distanceDelay)
 }
 
 fun SoundEvent.playClient(pos: Vec3d, category: SoundCategory, volume: Float = 1F, pitch: Float = 1F, distanceDelay: Boolean = false) =

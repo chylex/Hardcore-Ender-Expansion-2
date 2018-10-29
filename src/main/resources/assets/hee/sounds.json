@@ -1,10 +1,8 @@
 {
   "block.obsidian.land": {
-    "category": "block",
     "sounds": [ "hee:block/obsidian_land" ]
   },
   "block.loot_chest.open": {
-    "category": "block",
     "sounds": [ "hee:block/loot_chest_open" ]
   }
 }

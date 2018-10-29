@@ -13,7 +13,7 @@ import net.minecraft.entity.Entity
 import net.minecraft.world.World
 import net.minecraftforge.fml.relauncher.Side
 import net.minecraftforge.fml.relauncher.SideOnly
-import org.lwjgl.opengl.GL11
+import org.lwjgl.opengl.GL11.GL_QUADS
 
 @SideOnly(Side.CLIENT)
 abstract class ParticleBaseEnergy(world: World, posX: Double, posY: Double, posZ: Double, motX: Double, motY: Double, motZ: Double) : ParticleBaseFloating(world, posX, posY, posZ, motX, motY, motZ){
@@ -61,7 +61,7 @@ abstract class ParticleBaseEnergy(world: World, posX: Double, posY: Double, posZ
 		mc.entityRenderer.setupFogColor(true)
 		mc.renderEngine.bindTexture(TEX_PARTICLE)
 		
-		buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.PARTICLE_POSITION_TEX_COLOR_LMAP)
+		buffer.begin(GL_QUADS, DefaultVertexFormats.PARTICLE_POSITION_TEX_COLOR_LMAP)
 		super.renderParticle(buffer, entity, partialTicks, rotationX, rotationZ, rotationYZ, rotationXY, rotationXZ)
 		Tessellator.getInstance().draw()
 		

@@ -47,6 +47,7 @@ import chylex.hee.game.item.util.Tool.Level.WOOD
 import chylex.hee.game.item.util.Tool.Type.PICKAXE
 import chylex.hee.game.item.util.Tool.Type.SHOVEL
 import chylex.hee.init.ModCreativeTabs.OrderedCreativeTab
+import chylex.hee.system.Resource
 import net.minecraft.block.Block
 import net.minecraft.block.SoundType
 import net.minecraft.block.material.MapColor
@@ -417,7 +418,7 @@ object ModBlocks{
 		// vanilla modifications
 		
 		Blocks.END_BRICKS.setHardness(1.0F).setResistance(4.0F)
-		Blocks.END_PORTAL_FRAME.setCreativeTab(null)
+		Blocks.END_PORTAL_FRAME.creativeTab = null
 		
 		with(e.registry){
 			register(BlockEndPortalOverride().apply { override(Blocks.END_PORTAL, newCreativeTab = null) })
@@ -466,6 +467,6 @@ object ModBlocks{
 	}
 	
 	private inline fun <reified T : TileEntity> tile(registryName: String){
-		GameRegistry.registerTileEntity(T::class.java, "${HEE.ID}:$registryName")
+		GameRegistry.registerTileEntity(T::class.java, Resource.Custom(registryName))
 	}
 }

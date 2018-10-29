@@ -4,7 +4,6 @@ import net.minecraft.client.Minecraft
 import net.minecraft.client.entity.EntityPlayerSP
 import net.minecraft.entity.Entity
 import net.minecraft.entity.player.EntityPlayer
-import net.minecraft.entity.player.EntityPlayerMP
 import net.minecraft.tileentity.TileEntity
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.Vec3d
@@ -32,7 +31,7 @@ abstract class BaseClientPacket : IPacket{
 		ModNetwork.sendToAll(this)
 	}
 	
-	inline fun sendToPlayer(player: EntityPlayerMP){
+	inline fun sendToPlayer(player: EntityPlayer){
 		ModNetwork.sendToPlayer(this, player)
 	}
 	

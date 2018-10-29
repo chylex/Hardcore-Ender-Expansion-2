@@ -27,7 +27,7 @@ import java.util.Random
 class BlockInfusedTNT : BlockTNT(), ITileEntityProvider{
 	init{
 		soundType = SoundType.PLANT
-		setCreativeTab(null)
+		creativeTab = null
 	}
 	
 	override fun createNewTileEntity(world: World, meta: Int): TileEntity{
