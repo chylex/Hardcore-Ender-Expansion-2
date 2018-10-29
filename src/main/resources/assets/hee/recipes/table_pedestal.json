@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "#X#",
+    " A ",
+    " G "
+  ],
+  "key": {
+    "#": { "item": "hee:gloomrock_smooth_slab" },
+    "X": { "item": "minecraft:ender_eye" },
+    "A": { "item": "hee:auricion" },
+    "G": { "item": "hee:gloomrock_smooth" }
+  },
+  "result": {
+    "item": "hee:table_pedestal",
+    "count": 3
+  }
+}

@@ -27,6 +27,7 @@ import chylex.hee.game.block.BlockSlabCustom
 import chylex.hee.game.block.BlockStairsCustom
 import chylex.hee.game.block.BlockStardustOre
 import chylex.hee.game.block.BlockTableBase
+import chylex.hee.game.block.BlockTablePedestal
 import chylex.hee.game.block.BlockWallCustom
 import chylex.hee.game.block.entity.TileEntityDarkChest
 import chylex.hee.game.block.entity.TileEntityEndPortalAcceptor
@@ -34,6 +35,7 @@ import chylex.hee.game.block.entity.TileEntityEnergyCluster
 import chylex.hee.game.block.entity.TileEntityInfusedTNT
 import chylex.hee.game.block.entity.TileEntityLootChest
 import chylex.hee.game.block.entity.TileEntityPortalInner
+import chylex.hee.game.block.entity.TileEntityTablePedestal
 import chylex.hee.game.block.fluid.FluidEnderGoo
 import chylex.hee.game.block.material.Materials
 import chylex.hee.game.item.ItemAncientCobweb
@@ -318,6 +320,11 @@ object ModBlocks{
 	
 	// Blocks: Tables
 	
+	private val buildTablePedestal = buildGloomrock.clone {
+		harvestHardness     = buildGloomrock.harvestHardness * 0.75F
+		explosionResistance = buildGloomrock.explosionResistance * 0.5F
+	}
+	
 	private val buildTable = BlockSimple.Builder(Materials.SOLID_WITH_TOOL).apply {
 		harvestTool = Pair(STONE, PICKAXE)
 		harvestHardness = 20.0F
@@ -327,7 +334,8 @@ object ModBlocks{
 		mapColor = MapColor.GRAY
 	}
 	
-	@JvmField val TABLE_BASE = BlockTableBase(buildTable).apply { setup("table_base") }
+	@JvmField val TABLE_PEDESTAL     = BlockTablePedestal(buildTablePedestal).apply { setup("table_pedestal") } // UPDATE: update recipe json to include tag to allow all gloomrock variations
+	@JvmField val TABLE_BASE         = BlockTableBase(buildTable).apply { setup("table_base") }
 	
 	// Registry
 	
@@ -405,6 +413,7 @@ object ModBlocks{
 			register(ENERGY_CLUSTER with basicItemBlock)
 			register(CORRUPTED_ENERGY)
 			
+			register(TABLE_PEDESTAL with basicItemBlock)
 			register(TABLE_BASE with metaItemBlock)
 		}
 		
@@ -414,6 +423,7 @@ object ModBlocks{
 		tile<TileEntityInfusedTNT>("infused_tnt")
 		tile<TileEntityDarkChest>("dark_chest")
 		tile<TileEntityLootChest>("loot_chest")
+		tile<TileEntityTablePedestal>("table_pedestal")
 		
 		// vanilla modifications
 		
