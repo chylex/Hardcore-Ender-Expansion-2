@@ -2,6 +2,7 @@ package chylex.hee.test.system.util
 import chylex.hee.system.util.NBTList.Companion.setList
 import chylex.hee.system.util.NBTObjectList
 import chylex.hee.system.util.NBTPrimitiveList
+import chylex.hee.system.util.cleanupNBT
 import chylex.hee.system.util.getListOfByteArrays
 import chylex.hee.system.util.getListOfCompounds
 import chylex.hee.system.util.getListOfIntArrays
@@ -127,6 +128,51 @@ class TestNbtExt{
 			@Test fun `'heeTagOrNull' returns null if ItemStack tag is present but has no 'heeTag'`(){
 				val stack = ItemStack(Items.BOW).apply { nbt.setBoolean("testing", true) }
 				assertNull(stack.heeTagOrNull)
+			}
+		}
+		
+		@Nested inner class CleanupNBT{
+			@Test fun `'cleanupNBT' keeps a non-empty ItemStack tag`(){
+				val stack = ItemStack(Items.BOW).apply { nbt.setString("key", "Hello") }
+				assertEquals("Hello", stack.nbtOrNull?.getString("key"))
+				
+				stack.cleanupNBT()
+				assertEquals("Hello", stack.nbtOrNull?.getString("key"))
+			}
+			
+			@Test fun `'cleanupNBT' removes an empty ItemStack tag`(){
+				val stack = ItemStack(Items.BOW).apply { nbt }
+				assertNotNull(stack.nbtOrNull)
+				
+				stack.cleanupNBT()
+				assertNull(stack.nbtOrNull)
+			}
+			
+			@Test fun `'cleanupNBT' removes an empty 'heeTag' and consequently empty ItemStack tag`(){
+				val stack = ItemStack(Items.BOW).apply { heeTag }
+				assertNotNull(stack.heeTagOrNull)
+				
+				stack.cleanupNBT()
+				assertNull(stack.heeTagOrNull)
+				assertNull(stack.nbtOrNull)
+			}
+			
+			@Test fun `'cleanupNBT' correctly processes a tag with mixed data`(){
+				val stack = ItemStack(Items.BOW).apply {
+					nbt.setTag("a", NBTTagCompound())
+					nbt.setTag("b", NBTTagCompound().also { it.setTag("bb", NBTTagCompound()) })
+					nbt.setTag("c", NBTTagCompound().also { it.setString("key", "Hello"); it.setTag("cc", NBTTagCompound()) })
+				}
+				
+				assertEquals(3, stack.nbt.size)
+				
+				stack.cleanupNBT()
+				assertEquals(1, stack.nbt.size)
+				assertFalse(stack.nbt.hasKey("a"))
+				assertFalse(stack.nbt.hasKey("b"))
+				assertTrue(stack.nbt.hasKey("c"))
+				assertFalse(stack.nbt.getCompoundTag("c").hasKey("cc"))
+				assertEquals("Hello", stack.nbt.getCompoundTag("c").getString("key"))
 			}
 		}
 	}

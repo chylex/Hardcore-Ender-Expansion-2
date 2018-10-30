@@ -64,6 +64,24 @@ val ItemStack.heeTag: NBTTagCompound
 val ItemStack.heeTagOrNull: NBTTagCompound?
 	get() = this.nbtOrNull?.heeTagOrNull
 
+/**
+ * Recursively deletes all empty compound tags in the ItemStack.
+ */
+fun ItemStack.cleanupNBT(){
+	fun cleanupTag(tag: NBTTagCompound){
+		tag.keySet.removeIf {
+			val nested = tag.getTag(it) as? NBTTagCompound
+			nested != null && nested.apply(::cleanupTag).isEmpty
+		}
+	}
+	
+	val nbt = this.nbtOrNull
+	
+	if (nbt != null && nbt.apply(::cleanupTag).isEmpty){
+		this.tagCompound = null
+	}
+}
+
 // ItemStacks
 
 inline fun NBTTagCompound.writeStack(stack: ItemStack){
