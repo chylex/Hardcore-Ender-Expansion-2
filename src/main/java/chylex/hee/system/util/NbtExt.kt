@@ -16,6 +16,7 @@ import net.minecraft.nbt.NBTTagLong
 import net.minecraft.nbt.NBTTagLongArray
 import net.minecraft.nbt.NBTTagShort
 import net.minecraft.nbt.NBTTagString
+import net.minecraft.util.math.BlockPos
 import net.minecraftforge.common.util.Constants.NBT
 import org.apache.commons.lang3.ArrayUtils.EMPTY_LONG_ARRAY
 import java.util.Locale
@@ -24,16 +25,16 @@ private const val HEE_TAG_NAME = HEE.ID
 
 val NBTTagCompound.heeTag: NBTTagCompound
 	get(){
-		return if (hasKey(HEE_TAG_NAME))
-			getCompoundTag(HEE_TAG_NAME)
+		return if (this.hasKey(HEE_TAG_NAME))
+			this.getCompoundTag(HEE_TAG_NAME)
 		else
 			NBTTagCompound().also { setTag(HEE_TAG_NAME, it) }
 	}
 
 val NBTTagCompound.heeTagOrNull: NBTTagCompound?
 	get(){
-		return if (hasKey(HEE_TAG_NAME))
-			getCompoundTag(HEE_TAG_NAME)
+		return if (this.hasKey(HEE_TAG_NAME))
+			this.getCompoundTag(HEE_TAG_NAME)
 		else
 			null
 	}
@@ -98,11 +99,11 @@ inline fun NBTTagCompound.readStack(): ItemStack{
 }
 
 fun NBTTagCompound.setStack(key: String, stack: ItemStack){
-	setTag(key, NBTTagCompound().apply { writeStack(stack) })
+	this.setTag(key, NBTTagCompound().also { it.writeStack(stack) })
 }
 
 fun NBTTagCompound.getStack(key: String): ItemStack{
-	return getCompoundTag(key).readStack()
+	return this.getCompoundTag(key).readStack()
 }
 
 // Inventories
@@ -117,13 +118,13 @@ fun NBTTagCompound.saveInventory(key: String, inventory: IInventory){
 		})
 	}
 	
-	setTag(key, list)
+	this.setTag(key, list)
 }
 
 fun NBTTagCompound.loadInventory(key: String, inventory: IInventory){
 	inventory.clear()
 	
-	for(tag in getListOfCompounds(key)){
+	for(tag in this.getListOfCompounds(key)){
 		inventory.setStack(tag.getInteger("Slot"), ItemStack(tag))
 	}
 }
@@ -131,30 +132,74 @@ fun NBTTagCompound.loadInventory(key: String, inventory: IInventory){
 // Long arrays
 
 fun NBTTagCompound.setLongArray(key: String, array: LongArray){
-	setTag(key, NBTTagLongArray(array))
+	this.setTag(key, NBTTagLongArray(array))
 }
 
 fun NBTTagCompound.getLongArray(key: String): LongArray{
-	return if (hasKey(key, NBT.TAG_LONG_ARRAY))
-		(getTag(key) as? NBTTagLongArray)?.data ?: EMPTY_LONG_ARRAY
+	return if (this.hasKey(key, NBT.TAG_LONG_ARRAY))
+		(this.getTag(key) as? NBTTagLongArray)?.data ?: EMPTY_LONG_ARRAY
 	else
 		EMPTY_LONG_ARRAY
+}
+
+// BlockPos
+
+inline fun NBTTagCompound.setPos(key: String, pos: BlockPos){
+	this.setLong(key, pos.toLong())
+}
+
+inline fun NBTTagCompound.getPos(key: String): BlockPos{
+	return if (this.hasKey(key, NBT.TAG_LONG))
+		Pos(this.getLong(key))
+	else
+		BlockPos.ORIGIN
 }
 
 // Enums
 
 inline fun <reified T : Enum<T>> NBTTagCompound.setEnum(key: String, value: T?){
-	setString(key, value?.name?.toLowerCase(Locale.ROOT) ?: "")
+	this.setString(key, value?.name?.toLowerCase(Locale.ROOT) ?: "")
 }
 
 inline fun <reified T : Enum<T>> NBTTagCompound.getEnum(key: String): T?{
-	val value = getString(key)
+	val value = this.getString(key)
 	
 	return if (value.isEmpty())
 		null
 	else
 		java.lang.Enum.valueOf(T::class.java, value.toUpperCase(Locale.ROOT))
 }
+
+// Presence checks
+
+inline fun NBTTagCompound?.hasKey(key: String): Boolean{ // TODO add contract in kotlin 1.3
+	return this != null && this.hasKey(key)
+}
+
+inline fun NBTTagCompound?.hasKey(key: String, type: Int): Boolean{ // TODO add contract in kotlin 1.3
+	return this != null && this.hasKey(key, type)
+}
+
+inline fun <T> NBTTagCompound?.ifPresent(key: String, type: Int, getter: (String) -> T): T?{
+	return if (this.hasKey(key, type))
+		getter(key)
+	else
+		null
+}
+
+fun NBTTagCompound.getByteOrNull(key: String): Byte?               = ifPresent(key, NBT.TAG_BYTE, ::getByte)
+fun NBTTagCompound.getShortOrNull(key: String): Short?             = ifPresent(key, NBT.TAG_SHORT, ::getShort)
+fun NBTTagCompound.getIntegerOrNull(key: String): Int?             = ifPresent(key, NBT.TAG_INT, ::getInteger)
+fun NBTTagCompound.getLongOrNull(key: String): Long?               = ifPresent(key, NBT.TAG_LONG, ::getLong)
+fun NBTTagCompound.getFloatOrNull(key: String): Float?             = ifPresent(key, NBT.TAG_FLOAT, ::getFloat)
+fun NBTTagCompound.getDoubleOrNull(key: String): Double?           = ifPresent(key, NBT.TAG_DOUBLE, ::getDouble)
+fun NBTTagCompound.getStringOrNull(key: String): String?           = ifPresent(key, NBT.TAG_STRING, ::getString)
+fun NBTTagCompound.getCompoundOrNull(key: String): NBTTagCompound? = ifPresent(key, NBT.TAG_COMPOUND, ::getCompoundTag)
+fun NBTTagCompound.getByteArrayOrNull(key: String): ByteArray?     = ifPresent(key, NBT.TAG_BYTE_ARRAY, ::getByteArray)
+fun NBTTagCompound.getIntArrayOrNull(key: String): IntArray?       = ifPresent(key, NBT.TAG_INT_ARRAY, ::getIntArray)
+fun NBTTagCompound.getLongArrayOrNull(key: String): LongArray?     = ifPresent(key, NBT.TAG_LONG_ARRAY, ::getLongArray)
+
+fun NBTTagCompound.getPosOrNull(key: String): BlockPos? = ifPresent(key, NBT.TAG_LONG, ::getPos)
 
 // Lists
 
