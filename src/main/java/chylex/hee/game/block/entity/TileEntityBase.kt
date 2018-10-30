@@ -21,13 +21,7 @@ abstract class TileEntityBase : TileEntity(){
 	
 	protected inner class Notifying<T>(initialValue: T, private val notifyFlags: Int) : ObservableProperty<T>(initialValue){
 		override fun afterChange(property: KProperty<*>, oldValue: T, newValue: T){
-			if (isLoaded && hasWorld() && !world.isRemote){
-				notifyUpdate(notifyFlags and FLAG_MARK_DIRTY.inv())
-				
-				if (notifyFlags and FLAG_MARK_DIRTY != 0){
-					markDirty()
-				}
-			}
+			notifyUpdate(notifyFlags)
 		}
 	}
 	
@@ -39,9 +33,18 @@ abstract class TileEntityBase : TileEntity(){
 	}
 	
 	protected fun notifyUpdate(flags: Int){
+		if (world == null || world.isRemote || !isLoaded){
+			return
+		}
+		
 		val pos = pos
 		val state = pos.getState(world)
-		world.notifyBlockUpdate(pos, state, state, flags)
+		
+		world.notifyBlockUpdate(pos, state, state, flags and FLAG_MARK_DIRTY.inv())
+		
+		if (flags and FLAG_MARK_DIRTY != 0){
+			markDirty()
+		}
 	}
 	
 	// NBT
