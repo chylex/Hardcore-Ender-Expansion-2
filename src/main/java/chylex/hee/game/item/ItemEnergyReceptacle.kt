@@ -16,6 +16,7 @@ import chylex.hee.init.ModBlocks
 import chylex.hee.system.Resource
 import chylex.hee.system.util.breakBlock
 import chylex.hee.system.util.getTile
+import chylex.hee.system.util.hasKey
 import chylex.hee.system.util.heeTag
 import chylex.hee.system.util.heeTagOrNull
 import net.minecraft.client.renderer.color.IItemColor
@@ -81,7 +82,7 @@ class ItemEnergyReceptacle : ItemBaseInfusable(){
 		maxStackSize = 1
 		
 		addPropertyOverride(Resource.Custom("has_cluster")){
-			stack, _, _ -> if (stack.heeTagOrNull?.hasKey(CLUSTER_SNAPSHOT_TAG) == true) 1F else 0F
+			stack, _, _ -> if (stack.heeTagOrNull.hasKey(CLUSTER_SNAPSHOT_TAG)) 1F else 0F
 		}
 		
 		// TODO tweak animation

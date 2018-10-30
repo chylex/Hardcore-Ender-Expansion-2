@@ -7,8 +7,10 @@ import chylex.hee.game.mechanics.energy.IEnergyQuantity.Units
 import chylex.hee.init.ModGuiHandler.GuiType
 import chylex.hee.system.util.allSlots
 import chylex.hee.system.util.enchantmentMap
+import chylex.hee.system.util.getIntegerOrNull
 import chylex.hee.system.util.getListOfCompounds
 import chylex.hee.system.util.getStack
+import chylex.hee.system.util.hasKey
 import chylex.hee.system.util.heeTag
 import chylex.hee.system.util.heeTagOrNull
 import chylex.hee.system.util.isNotEmpty
@@ -59,7 +61,7 @@ class ItemAmuletOfRecovery : ItemBaseEnergyUser(), ITrinketItem{
 		}
 		
 		private fun hasAnyContents(stack: ItemStack): Boolean{
-			return stack.heeTagOrNull?.hasKey(CONTENTS_TAG) == true
+			return stack.heeTagOrNull.hasKey(CONTENTS_TAG)
 		}
 		
 		private fun processPlayerInventory(player: EntityPlayer, block: (inventory: NonNullList<ItemStack>, vanillaSlot: Int, savedSlot: Int) -> Unit){
@@ -107,7 +109,7 @@ class ItemAmuletOfRecovery : ItemBaseEnergyUser(), ITrinketItem{
 			val newList = NBTTagList()
 			
 			for((_, stack) in allSlots){
-				newList.appendTag(NBTTagCompound().apply { writeStack(stack) })
+				newList.appendTag(NBTTagCompound().also { it.writeStack(stack) })
 				
 				if (stack.isNotEmpty){
 					isEmpty = false
@@ -136,7 +138,7 @@ class ItemAmuletOfRecovery : ItemBaseEnergyUser(), ITrinketItem{
 	// Energy properties
 	
 	override fun getEnergyCapacity(stack: ItemStack) =
-		Units(stack.heeTagOrNull?.takeIf { it.hasKey(RETRIEVAL_ENERGY_TAG) }?.getInteger(RETRIEVAL_ENERGY_TAG) ?: 30)
+		Units(stack.heeTagOrNull?.getIntegerOrNull(RETRIEVAL_ENERGY_TAG) ?: 30)
 	
 	override fun getEnergyPerUse(stack: ItemStack) =
 		1 over 1
@@ -207,7 +209,7 @@ class ItemAmuletOfRecovery : ItemBaseEnergyUser(), ITrinketItem{
 			var sumOfFilteredTagSizes = 0
 			
 			for(stack in saved){
-				list.appendTag(NBTTagCompound().apply { writeStack(stack) })
+				list.appendTag(NBTTagCompound().also { it.writeStack(stack) })
 				
 				if (stack.isNotEmpty){
 					sumOfSlots += 1

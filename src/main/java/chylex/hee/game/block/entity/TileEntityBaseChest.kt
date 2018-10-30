@@ -5,6 +5,7 @@ import chylex.hee.system.util.FLAG_SKIP_RENDER
 import chylex.hee.system.util.FLAG_SYNC_CLIENT
 import chylex.hee.system.util.distanceSqTo
 import chylex.hee.system.util.getState
+import chylex.hee.system.util.getStringOrNull
 import chylex.hee.system.util.getTile
 import chylex.hee.system.util.nextFloat
 import chylex.hee.system.util.playServer
@@ -135,9 +136,7 @@ abstract class TileEntityBaseChest : TileEntityBase(), ITickable, IWorldNameable
 	}
 	
 	override fun readNBT(nbt: NBTTagCompound, context: Context) = with(nbt){
-		if (hasKey("CustomName")){
-			customName = getString("CustomName")
-		}
+		customName = getStringOrNull("CustomName")
 		
 		if (context == NETWORK){
 			viewerCount = getShort("ViewerCount").toInt()

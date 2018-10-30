@@ -98,7 +98,7 @@ object TrinketHandler{
 			set(value) = setStackInSlot(0, value)
 		
 		override fun serializeNBT(): NBTTagCompound{
-			return NBTTagCompound().apply { writeStack(item) }
+			return NBTTagCompound().also { it.writeStack(item) }
 		}
 		
 		override fun deserializeNBT(nbt: NBTTagCompound){

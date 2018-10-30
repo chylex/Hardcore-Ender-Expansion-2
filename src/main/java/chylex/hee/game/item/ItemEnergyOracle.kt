@@ -11,9 +11,13 @@ import chylex.hee.system.util.angleBetween
 import chylex.hee.system.util.center
 import chylex.hee.system.util.closestTickingTile
 import chylex.hee.system.util.distanceTo
+import chylex.hee.system.util.getPos
+import chylex.hee.system.util.getPosOrNull
+import chylex.hee.system.util.hasKey
 import chylex.hee.system.util.heeTag
 import chylex.hee.system.util.heeTagOrNull
 import chylex.hee.system.util.over
+import chylex.hee.system.util.setPos
 import chylex.hee.system.util.toDegrees
 import net.minecraft.client.Minecraft
 import net.minecraft.client.renderer.color.IItemColor
@@ -85,7 +89,7 @@ class ItemEnergyOracle : ItemBaseEnergyUser(){
 		Units(75)
 	
 	override fun getEnergyPerUse(stack: ItemStack) =
-		if (stack.heeTagOrNull?.hasKey(TRACKED_CLUSTER_POS_TAG) == true)
+		if (stack.heeTagOrNull.hasKey(TRACKED_CLUSTER_POS_TAG))
 			3 over 20
 		else
 			2 over 20
@@ -104,10 +108,12 @@ class ItemEnergyOracle : ItemBaseEnergyUser(){
 			return
 		}
 		
+		val tag = stack.heeTag
+		
 		// unique identifier
 		
-		if (!stack.heeTag.hasKey(ORACLE_IDENTIFIER_TAG)){
-			stack.heeTag.setLong(ORACLE_IDENTIFIER_TAG, world.rand.nextLong())
+		if (!tag.hasKey(ORACLE_IDENTIFIER_TAG)){
+			tag.setLong(ORACLE_IDENTIFIER_TAG, world.rand.nextLong())
 		}
 		
 		// cluster detection
@@ -117,11 +123,11 @@ class ItemEnergyOracle : ItemBaseEnergyUser(){
 			val closestCluster = holderPos.closestTickingTile<TileEntityEnergyCluster>(world, CLUSTER_DETECTION_RANGE)
 			
 			if (closestCluster == null){
-				stack.heeTagOrNull?.let(::removeTrackedClusterTags)
+				tag.let(::removeTrackedClusterTags)
 			}
 			else{
-				with(stack.heeTag){
-					setLong(TRACKED_CLUSTER_POS_TAG, closestCluster.pos.toLong())
+				with(tag){
+					setPos(TRACKED_CLUSTER_POS_TAG, closestCluster.pos)
 					
 					if (closestCluster.affectedByProximity && holderPos.distanceTo(closestCluster.pos) < CLUSTER_DETECTION_RANGE * CLUSTER_PROXIMITY_RANGE_MP){
 						setShort(TRACKED_CLUSTER_HUE_TAG, CLUSTER_HUE_PROXIMITY_OVERRIDE)
@@ -138,9 +144,9 @@ class ItemEnergyOracle : ItemBaseEnergyUser(){
 		if (world.totalWorldTime % 20L == 0L){
 			val holderPos = Pos(entity)
 			
-			with(stack.heeTag){
-				if (!hasKey(LAST_UPDATE_POS_TAG) || Pos(getLong(LAST_UPDATE_POS_TAG)) != holderPos){
-					setLong(LAST_UPDATE_POS_TAG, holderPos.toLong())
+			with(tag){
+				if (getPosOrNull(LAST_UPDATE_POS_TAG) != holderPos){
+					setPos(LAST_UPDATE_POS_TAG, holderPos)
 					
 					if (getShort(TRACKED_CLUSTER_HUE_TAG) != CLUSTER_HUE_PROXIMITY_OVERRIDE && !useEnergyUnit(stack)){
 						removeTrackedClusterTags(this)
@@ -210,7 +216,7 @@ class ItemEnergyOracle : ItemBaseEnergyUser(){
 			}
 			
 			val vecLook = player.lookVec
-			val vecTarget = Pos(tag.getLong(TRACKED_CLUSTER_POS_TAG)).center.subtract(player.posX, player.posY + player.getEyeHeight(), player.posZ)
+			val vecTarget = tag.getPos(TRACKED_CLUSTER_POS_TAG).center.subtract(player.posX, player.posY + player.getEyeHeight(), player.posZ)
 			
 			val angleDifference = vecLook.angleBetween(vecTarget).toDegrees()
 			

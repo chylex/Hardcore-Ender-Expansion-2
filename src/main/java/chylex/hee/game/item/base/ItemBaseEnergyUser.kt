@@ -2,13 +2,14 @@ package chylex.hee.game.item.base
 import chylex.hee.game.block.entity.TileEntityEnergyCluster
 import chylex.hee.game.mechanics.energy.IEnergyQuantity
 import chylex.hee.game.mechanics.energy.IEnergyQuantity.Units
-import chylex.hee.system.util.Pos
 import chylex.hee.system.util.ceilToInt
 import chylex.hee.system.util.distanceTo
 import chylex.hee.system.util.floorToInt
+import chylex.hee.system.util.getPos
 import chylex.hee.system.util.getTile
 import chylex.hee.system.util.heeTag
 import chylex.hee.system.util.heeTagOrNull
+import chylex.hee.system.util.setPos
 import net.minecraft.client.util.ITooltipFlag
 import net.minecraft.entity.Entity
 import net.minecraft.entity.player.EntityPlayer
@@ -111,7 +112,7 @@ abstract class ItemBaseEnergyUser : Item(){
 				removeClusterTags(this)
 			}
 			else if (pos.distanceTo(player) <= player.getEntityAttribute(EntityPlayer.REACH_DISTANCE).attributeValue){
-				setLong(CLUSTER_POS_TAG, pos.toLong())
+				setPos(CLUSTER_POS_TAG, pos)
 				setByte(CLUSTER_TICK_OFFSET_TAG, (4L - (world.totalWorldTime % 4L)).toByte())
 			}
 		}
@@ -126,7 +127,7 @@ abstract class ItemBaseEnergyUser : Item(){
 		
 		with(stack.heeTagOrNull ?: return){
 			if (hasKey(CLUSTER_POS_TAG) && (world.totalWorldTime + getByte(CLUSTER_TICK_OFFSET_TAG)) % 4L == 0L){
-				val pos = Pos(getLong(CLUSTER_POS_TAG))
+				val pos = getPos(CLUSTER_POS_TAG)
 				val tile = pos.getTile<TileEntityEnergyCluster>(world)
 				
 				if ((isSelected || entity.getHeldItem(OFF_HAND) === stack) &&
