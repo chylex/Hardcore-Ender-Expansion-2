@@ -2,8 +2,10 @@ package chylex.hee.proxy
 import chylex.hee.HEE
 import chylex.hee.game.block.BlockAbstractTable
 import chylex.hee.game.block.BlockDryVines
+import chylex.hee.game.block.BlockTablePedestal
 import chylex.hee.game.block.entity.TileEntityDarkChest
 import chylex.hee.game.block.entity.TileEntityLootChest
+import chylex.hee.game.block.entity.TileEntityTablePedestal
 import chylex.hee.game.commands.HeeClientCommand
 import chylex.hee.game.entity.item.EntityItemNoBob
 import chylex.hee.game.item.ItemEnergyOracle
@@ -11,6 +13,7 @@ import chylex.hee.game.item.ItemEnergyReceptacle
 import chylex.hee.game.render.block.RenderTileDarkChest
 import chylex.hee.game.render.block.RenderTileEndPortal
 import chylex.hee.game.render.block.RenderTileLootChest
+import chylex.hee.game.render.block.RenderTileTablePedestal
 import chylex.hee.game.render.entity.RenderEntityItemNoBob
 import chylex.hee.game.render.model.ModelItemAmuletOfRecovery
 import chylex.hee.init.ModBlocks
@@ -56,6 +59,7 @@ class ModClientProxy : ModCommonProxy(){
 		registerTileRenderer<TileEntityEndPortal>(RenderTileEndPortal)
 		registerTileRenderer<TileEntityDarkChest>(RenderTileDarkChest)
 		registerTileRenderer<TileEntityLootChest>(RenderTileLootChest)
+		registerTileRenderer<TileEntityTablePedestal>(RenderTileTablePedestal)
 		
 		Item.getItemFromBlock(ModBlocks.DARK_CHEST).tileEntityItemStackRenderer = RenderTileDarkChest.AsItem
 		Item.getItemFromBlock(ModBlocks.LOOT_CHEST).tileEntityItemStackRenderer = RenderTileLootChest.AsItem
@@ -67,6 +71,7 @@ class ModClientProxy : ModCommonProxy(){
 		
 		with(blockColors){
 			registerBlockColorHandler(BlockDryVines.Color, ModBlocks.DRY_VINES)
+			registerBlockColorHandler(BlockTablePedestal.Color, ModBlocks.TABLE_PEDESTAL)
 		}
 		
 		with(itemColors){

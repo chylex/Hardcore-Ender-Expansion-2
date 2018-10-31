@@ -4,6 +4,7 @@ import chylex.hee.game.block.entity.TileEntityTablePedestal
 import chylex.hee.game.render.util.GL
 import chylex.hee.system.Resource
 import chylex.hee.system.util.nextFloat
+import chylex.hee.system.util.size
 import chylex.hee.system.util.square
 import chylex.hee.system.util.toRadians
 import net.minecraft.client.Minecraft
@@ -14,6 +15,7 @@ import net.minecraft.client.renderer.GlStateManager.SourceFactor.SRC_ALPHA
 import net.minecraft.client.renderer.RenderHelper
 import net.minecraft.client.renderer.RenderItem
 import net.minecraft.client.renderer.Tessellator
+import net.minecraft.client.renderer.block.model.IBakedModel
 import net.minecraft.client.renderer.block.model.ItemCameraTransforms.TransformType
 import net.minecraft.client.renderer.texture.TextureManager
 import net.minecraft.client.renderer.texture.TextureMap
@@ -39,15 +41,25 @@ object RenderTileTablePedestal : TileEntitySpecialRenderer<TileEntityTablePedest
 	private const val SHADOW_XZ_MAX = 0.675
 	private val SHADOW_Y = BlockTablePedestal.COMBINED_BOX.maxY + 0.0015625 // between the top of the pedestal and the status indicator
 	
+	private const val SPREAD_DEPTH_PER_2D_MODEL = 0.09375F
+	private const val SPREAD_RAND_2D = 0.13125F
+	private const val SPREAD_RAND_3D_XZ = 0.2625F
+	private const val SPREAD_RAND_3D_Y = 0.39375F
+	
 	private val ITEM_ANGLES = (1..10).run {
 		val section = 360F / endInclusive
 		map { (it - 0.5F) * section }
 	}
 	
+	private fun getItemModelCount(stackSize: Int) = when{
+		stackSize > 48 -> 5
+		stackSize > 32 -> 4
+		stackSize > 16 -> 3
+		stackSize >  1 -> 2
+		else           -> 1
+	}
+	
 	override fun render(tile: TileEntityTablePedestal, x: Double, y: Double, z: Double, partialTicks: Float, destroyStage: Int, alpha: Float){
-		val pos = tile.pos
-		val stacks = tile.stacksForRendering
-		
 		val mc = Minecraft.getMinecraft()
 		val textureManager = mc.renderEngine
 		val itemRenderer = mc.renderItem
@@ -63,6 +75,9 @@ object RenderTileTablePedestal : TileEntitySpecialRenderer<TileEntityTablePedest
 		GL.enableRescaleNormal()
 		GL.enableBlend()
 		GL.tryBlendFuncSeparate(SRC_ALPHA, ONE_MINUS_SRC_ALPHA, ONE, ZERO)
+		
+		val pos = tile.pos
+		val stacks = tile.stacksForRendering
 		
 		val itemRotation = (Minecraft.getSystemTime() % 360000L) / 20F
 		val baseSeed = pos.toLong()
@@ -121,13 +136,51 @@ object RenderTileTablePedestal : TileEntitySpecialRenderer<TileEntityTablePedest
 		}
 		
 		val baseModel = renderer.getItemModelWithOverrides(stack, world, null)
-		val baseY = if (baseModel.isGui3d) 0.8325F else 1F
+		val isModel3D = baseModel.isGui3d
+		
+		val baseY = if (isModel3D) 0.8325F else 1F
 		
 		GL.translate(0.5F, baseY + offsetY, 0.5F)
 		GL.rotate(baseRotation * rotationMp, 0F, 1F, 0F)
-		renderer.renderItem(stack, ForgeHooksClient.handleCameraTransforms(baseModel, TransformType.GROUND, false))
+		renderItemWithSpread(renderer, stack, ForgeHooksClient.handleCameraTransforms(baseModel, TransformType.GROUND, false), isModel3D)
 		
 		GL.popMatrix()
+	}
+	
+	private fun renderItemWithSpread(renderer: RenderItem, stack: ItemStack, model: IBakedModel, isModel3D: Boolean){
+		val extraModels = getItemModelCount(stack.size) - 1
+		
+		if (extraModels > 0){
+			RAND.setSeed((Item.getIdFromItem(stack.item) + stack.metadata).toLong())
+			
+			if (!isModel3D){
+				GL.translate(0F, 0F, -SPREAD_DEPTH_PER_2D_MODEL * (extraModels / 2F))
+			}
+		}
+		
+		renderer.renderItem(stack, model)
+		
+		repeat(extraModels){
+			GL.pushMatrix()
+			
+			if (isModel3D){
+				GL.translate(
+					RAND.nextFloat(-SPREAD_RAND_3D_XZ, SPREAD_RAND_3D_XZ),
+					RAND.nextFloat(-SPREAD_RAND_3D_Y, SPREAD_RAND_3D_Y),
+					RAND.nextFloat(-SPREAD_RAND_3D_XZ, SPREAD_RAND_3D_XZ)
+				)
+			}
+			else{
+				GL.translate(
+					RAND.nextFloat(-SPREAD_RAND_2D, SPREAD_RAND_2D),
+					RAND.nextFloat(-SPREAD_RAND_2D, SPREAD_RAND_2D),
+					SPREAD_DEPTH_PER_2D_MODEL * (it + 1)
+				)
+			}
+			
+			renderer.renderItem(stack, model)
+			GL.popMatrix()
+		}
 	}
 	
 	private fun renderShadow(alpha: Float){
