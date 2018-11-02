@@ -1,17 +1,25 @@
 package chylex.hee.game.block.entity
 import chylex.hee.game.block.BlockTablePedestal
+import chylex.hee.game.block.BlockTablePedestal.Companion.IS_LINKED
 import chylex.hee.game.block.entity.TileEntityBase.Context.NETWORK
 import chylex.hee.game.gui.util.InvReverseWrapper
+import chylex.hee.init.ModBlocks
 import chylex.hee.system.util.FLAG_SYNC_CLIENT
+import chylex.hee.system.util.getPosOrNull
 import chylex.hee.system.util.getStack
+import chylex.hee.system.util.getTile
+import chylex.hee.system.util.isLoaded
 import chylex.hee.system.util.isNotEmpty
 import chylex.hee.system.util.loadInventory
 import chylex.hee.system.util.motionVec
 import chylex.hee.system.util.nonEmptySlots
 import chylex.hee.system.util.saveInventory
 import chylex.hee.system.util.selectExistingEntities
+import chylex.hee.system.util.setPos
 import chylex.hee.system.util.setStack
 import chylex.hee.system.util.size
+import chylex.hee.system.util.updateState
+import net.minecraft.block.state.IBlockState
 import net.minecraft.entity.item.EntityItem
 import net.minecraft.entity.player.InventoryPlayer
 import net.minecraft.inventory.InventoryBasic
@@ -21,13 +29,34 @@ import net.minecraft.nbt.NBTTagCompound
 import net.minecraft.util.EnumFacing
 import net.minecraft.util.EnumFacing.DOWN
 import net.minecraft.util.math.AxisAlignedBB
+import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.Vec3d
+import net.minecraft.world.World
 import net.minecraftforge.common.capabilities.Capability
 import net.minecraftforge.items.CapabilityItemHandler.ITEM_HANDLER_CAPABILITY
 import net.minecraftforge.items.ItemHandlerHelper
 import kotlin.math.min
+import kotlin.properties.Delegates
 
 class TileEntityTablePedestal : TileEntityBase(){
+	
+	// Properties (Linking)
+	
+	private var linkedTable: BlockPos? by Delegates.observable<BlockPos?>(null){
+		_, oldValue, newValue -> if (oldValue != newValue) onLinkedStatusChanged()
+	}
+	
+	private val linkedTableTile: TileEntityBaseTable?
+		get() = linkedTable?.getTile(world)
+	
+	private val linkedTableTileIfLoaded: TileEntityBaseTable?
+		get() = linkedTable?.takeIf { it.isLoaded(world) }?.getTile(world)
+	
+	val hasLinkedTable
+		get() = linkedTable != null
+	
+	val tableIndicatorColor: Int?
+		get() = linkedTableTileIfLoaded?.tableIndicatorColor
 	
 	// Properties (Inventory)
 	
@@ -40,6 +69,61 @@ class TileEntityTablePedestal : TileEntityBase(){
 	
 	var stacksForRendering = emptyArray<ItemStack>()
 		private set
+	
+	// Behavior (General)
+	
+	fun onPedestalDestroyed(dropTableLink: Boolean){
+		linkedTableTile?.let {
+			it.notifyPedestalUnlinked(this)
+			
+			if (dropTableLink){
+				spawnTableLinkAt(pos)
+			}
+		}
+		
+		dropAllItems()
+		linkedTable = null // must reset state because the method is called twice if the player is in creative mode
+	}
+	
+	// Behavior (Linking)
+	
+	fun setLinkedTable(tile: TileEntityBaseTable){
+		val currentlyLinkedTable = linkedTableTile
+		
+		if (tile !== currentlyLinkedTable){
+			currentlyLinkedTable?.notifyPedestalUnlinked(this)
+			linkedTable = tile.pos
+		}
+	}
+	
+	fun resetLinkedTable(dropTableLink: Boolean){
+		linkedTableTile?.let {
+			it.notifyPedestalUnlinked(this)
+			
+			if (dropTableLink){
+				spawnTableLinkAt(pos.up())
+			}
+			
+			linkedTable = null
+		}
+	}
+	
+	fun onTableDestroyed(dropTableLink: Boolean){
+		if (dropTableLink){
+			linkedTable?.let(::spawnTableLinkAt)
+		}
+		
+		linkedTable = null
+	}
+	
+	private fun spawnTableLinkAt(pos: BlockPos){
+	}
+	
+	private fun onLinkedStatusChanged(){
+		if (world != null){
+			pos.updateState(world, ModBlocks.TABLE_PEDESTAL, FLAG_SYNC_CLIENT){ it.withProperty(IS_LINKED, linkedTable != null) }
+		}
+	}
 	
 	// Behavior (Inventory)
 	
@@ -135,12 +219,22 @@ class TileEntityTablePedestal : TileEntityBase(){
 	
 	// Serialization
 	
+	override fun shouldRefresh(world: World, pos: BlockPos, oldState: IBlockState, newState: IBlockState): Boolean{
+		return newState.block != oldState.block
+	}
+	
 	override fun writeNBT(nbt: NBTTagCompound, context: Context) = with(nbt){
+		linkedTable?.let {
+			setPos("TablePos", it)
+		}
+		
 		setStack("Input", itemInput)
 		saveInventory("Output", itemOutput)
 	}
 	
 	override fun readNBT(nbt: NBTTagCompound, context: Context) = with(nbt){
+		linkedTable = getPosOrNull("TablePos")
+		
 		itemInput = getStack("Input")
 		loadInventory("Output", itemOutput)
 		

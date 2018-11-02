@@ -171,7 +171,10 @@ class BlockTablePedestal(builder: BlockSimple.Builder) : BlockSimpleShaped(build
 		val heldItem = player.getHeldItem(hand)
 		
 		if (heldItem.isEmpty){
-			if (!player.isSneaking){
+			if (player.isSneaking){
+				tile.resetLinkedTable(true)
+			}
+			else{
 				tile.dropAllItems()
 			}
 		}
@@ -187,9 +190,15 @@ class BlockTablePedestal(builder: BlockSimple.Builder) : BlockSimpleShaped(build
 		return true
 	}
 	
+	override fun onBlockHarvested(world: World, pos: BlockPos, state: IBlockState, player: EntityPlayer){
+		if (!world.isRemote && player.isCreative){
+			pos.getTile<TileEntityTablePedestal>(world)?.onPedestalDestroyed(dropTableLink = false)
+		}
+	}
+	
 	override fun breakBlock(world: World, pos: BlockPos, state: IBlockState){
 		if (!world.isRemote){
-			pos.getTile<TileEntityTablePedestal>(world)?.dropAllItems()
+			pos.getTile<TileEntityTablePedestal>(world)?.onPedestalDestroyed(dropTableLink = true)
 		}
 		
 		super.breakBlock(world, pos, state)
@@ -219,6 +228,7 @@ class BlockTablePedestal(builder: BlockSimple.Builder) : BlockSimpleShaped(build
 			}
 			
 			return when(tintIndex){
+				1 -> pos.getTile<TileEntityTablePedestal>(world)?.tableIndicatorColor ?: NONE
 				else -> NONE
 			}
 		}
