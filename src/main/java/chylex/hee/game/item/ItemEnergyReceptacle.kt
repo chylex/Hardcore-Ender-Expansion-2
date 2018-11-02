@@ -93,7 +93,7 @@ class ItemEnergyReceptacle : ItemBaseInfusable(){
 		
 		with(stack.heeTag){
 			if (hasKey(CLUSTER_SNAPSHOT_TAG)){
-				val finalPos = BlockEditor.place(ModBlocks.ENERGY_CLUSTER, player, stack, pos, facing)
+				val finalPos = BlockEditor.place(ModBlocks.ENERGY_CLUSTER, player, stack, pos, facing, hitX, hitY, hitZ)
 				
 				if (world.isRemote){
 					return SUCCESS

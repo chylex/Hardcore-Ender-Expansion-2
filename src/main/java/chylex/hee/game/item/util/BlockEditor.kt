@@ -12,6 +12,7 @@ import net.minecraft.util.EnumFacing
 import net.minecraft.util.EnumFacing.UP
 import net.minecraft.util.SoundCategory
 import net.minecraft.util.math.BlockPos
+import net.minecraft.world.World
 
 object BlockEditor{
 	
@@ -28,30 +29,40 @@ object BlockEditor{
 	
 	// Placement
 	
-	fun place(blockState: IBlockState, player: EntityPlayer, stack: ItemStack, clickedPos: BlockPos, clickedFacing: EnumFacing): BlockPos?{
-		val block = blockState.block
+	private fun placeInternal(state: IBlockState, player: EntityPlayer, stack: ItemStack, targetPos: BlockPos, clickedFacing: EnumFacing, hitX: Float, hitY: Float, hitZ: Float): BlockPos?{
+		val block = state.block
 		val world = player.world
-		
-		val targetPos = if (clickedPos.isReplaceable(world))
-			clickedPos
-		else
-			clickedPos.offset(clickedFacing)
 		
 		if (!player.canPlayerEdit(targetPos, clickedFacing, stack) || !world.mayPlace(block, targetPos, false, clickedFacing, null)){
 			return null
 		}
 		
-		if (!ItemBlock(block).placeBlockAt(stack, player, world, targetPos, clickedFacing, 0.5F, 0.5F, 0.5F, blockState)){
+		if (!ItemBlock(block).placeBlockAt(stack, player, world, targetPos, clickedFacing, hitX, hitY, hitZ, state)){
 			return null
 		}
 		
-		val sound = block.getSoundType(blockState, world, targetPos, player)
+		val sound = block.getSoundType(state, world, targetPos, player)
 		sound.placeSound.playUniversal(player, targetPos, SoundCategory.BLOCKS, volume = (sound.volume + 1F) / 2F, pitch = sound.pitch * 0.8F)
 		
 		return targetPos
 	}
 	
-	fun place(block: Block, player: EntityPlayer, stack: ItemStack, clickedPos: BlockPos, clickedFacing: EnumFacing): BlockPos?{
-		return place(block.defaultState, player, stack, clickedPos, clickedFacing)
+	private fun getTargetPos(world: World, clickedPos: BlockPos, clickedFacing: EnumFacing): BlockPos{
+		return if (clickedPos.isReplaceable(world))
+			clickedPos
+		else
+			clickedPos.offset(clickedFacing)
+	}
+	
+	fun place(state: IBlockState, player: EntityPlayer, stack: ItemStack, clickedPos: BlockPos, clickedFacing: EnumFacing, hitX: Float, hitY: Float, hitZ: Float): BlockPos?{
+		return placeInternal(state, player, stack, getTargetPos(player.world, clickedPos, clickedFacing), clickedFacing, hitX, hitY, hitZ)
+	}
+	
+	fun place(block: Block, player: EntityPlayer, stack: ItemStack, clickedPos: BlockPos, clickedFacing: EnumFacing, hitX: Float, hitY: Float, hitZ: Float): BlockPos?{
+		val world = player.world
+		val targetPos = getTargetPos(world, clickedPos, clickedFacing)
+		val placedState = block.getStateForPlacement(world, targetPos, clickedFacing, hitX, hitY, hitZ, stack.metadata, player)
+		
+		return placeInternal(placedState, player, stack, targetPos, clickedFacing, hitX, hitY, hitZ)
 	}
 }
