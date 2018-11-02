@@ -1,0 +1,14 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "#EG"
+  ],
+  "key": {
+    "#": { "item": "hee:ethereum" },
+    "E": { "item": "hee:endium_ingot" },
+    "G": { "item": "minecraft:gold_nugget" }
+  },
+  "result": {
+    "item": "hee:table_link"
+  }
+}

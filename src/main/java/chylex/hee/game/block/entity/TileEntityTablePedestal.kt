@@ -4,6 +4,7 @@ import chylex.hee.game.block.BlockTablePedestal.Companion.IS_LINKED
 import chylex.hee.game.block.entity.TileEntityBase.Context.NETWORK
 import chylex.hee.game.gui.util.InvReverseWrapper
 import chylex.hee.init.ModBlocks
+import chylex.hee.init.ModItems
 import chylex.hee.system.util.FLAG_SYNC_CLIENT
 import chylex.hee.system.util.getPosOrNull
 import chylex.hee.system.util.getStack
@@ -12,6 +13,7 @@ import chylex.hee.system.util.isLoaded
 import chylex.hee.system.util.isNotEmpty
 import chylex.hee.system.util.loadInventory
 import chylex.hee.system.util.motionVec
+import chylex.hee.system.util.nextFloat
 import chylex.hee.system.util.nonEmptySlots
 import chylex.hee.system.util.saveInventory
 import chylex.hee.system.util.selectExistingEntities
@@ -117,6 +119,13 @@ class TileEntityTablePedestal : TileEntityBase(){
 	}
 	
 	private fun spawnTableLinkAt(pos: BlockPos){
+		val rand = world.rand
+		
+		EntityItem(world, pos.x + rand.nextFloat(0.25, 0.75), pos.y + rand.nextFloat(0.25, 0.75), pos.z + rand.nextFloat(0.25, 0.75), ItemStack(ModItems.TABLE_LINK)).apply {
+			setDefaultPickupDelay()
+			thrower = BlockTablePedestal.DROPPED_ITEM_THROWER_NAME
+			world.spawnEntity(this)
+		}
 	}
 	
 	private fun onLinkedStatusChanged(){
@@ -193,7 +202,7 @@ class TileEntityTablePedestal : TileEntityBase(){
 			if (!previousItemEntities.contains(itemEntity)){
 				itemEntity.setNoPickupDelay()
 				itemEntity.motionVec = Vec3d.ZERO
-				itemEntity.thrower = "[Pedestal]"
+				itemEntity.thrower = BlockTablePedestal.DROPPED_ITEM_THROWER_NAME
 			}
 		}
 		

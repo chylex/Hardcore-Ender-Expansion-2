@@ -4,5 +4,11 @@
   },
   "block.loot_chest.open": {
     "sounds": [ "hee:block/loot_chest_open" ]
+  },
+  "item.table_link.use": {
+    "sounds": [ "hee:item/table_link_use" ]
+  },
+  "item.table_link.use.fail": {
+    "sounds": [ "hee:item/table_link_use_fail" ]
   }
 }

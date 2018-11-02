@@ -6,6 +6,7 @@ import chylex.hee.game.item.ItemEnergyOracle
 import chylex.hee.game.item.ItemEnergyReceptacle
 import chylex.hee.game.item.ItemIgneousRock
 import chylex.hee.game.item.ItemSpatialDashGem
+import chylex.hee.game.item.ItemTableLink
 import chylex.hee.init.ModCreativeTabs.OrderedCreativeTab
 import chylex.hee.system.Resource
 import net.minecraft.creativetab.CreativeTabs
@@ -40,6 +41,7 @@ object ModItems{
 	@JvmField val VOID_ESSENCE     = Item().apply { setup("void_essence") }
 	@JvmField val OBSIDIAN_ROD     = Item().apply { setup("obsidian_rod") }
 	@JvmField val STATIC_CORE      = Item().apply { setup("static_core") }
+	@JvmField val TABLE_LINK       = ItemTableLink().apply { setup("table_link") }
 	
 	// Items: Buckets
 	
@@ -81,6 +83,7 @@ object ModItems{
 			register(VOID_ESSENCE)
 			register(OBSIDIAN_ROD)
 			register(STATIC_CORE)
+			register(TABLE_LINK)
 			
 			register(ENDER_GOO_BUCKET)
 			
