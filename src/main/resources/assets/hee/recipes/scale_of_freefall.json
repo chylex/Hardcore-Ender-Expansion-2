@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "SSS",
+    "#X#",
+    " # "
+  ],
+  "key": {
+    "#": { "item": "hee:dragon_scale" },
+    "X": { "item": "hee:static_core" },
+    "S": { "item": "minecraft:string" }
+  },
+  "result": {
+    "item": "hee:scale_of_freefall"
+  }
+}
