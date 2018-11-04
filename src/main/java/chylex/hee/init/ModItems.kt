@@ -5,6 +5,7 @@ import chylex.hee.game.item.ItemChorusBerry
 import chylex.hee.game.item.ItemEnergyOracle
 import chylex.hee.game.item.ItemEnergyReceptacle
 import chylex.hee.game.item.ItemIgneousRock
+import chylex.hee.game.item.ItemRingOfPreservation
 import chylex.hee.game.item.ItemSpatialDashGem
 import chylex.hee.game.item.ItemTableLink
 import chylex.hee.init.ModCreativeTabs.OrderedCreativeTab
@@ -58,7 +59,8 @@ object ModItems{
 	
 	// Items: Trinkets
 	
-	@JvmField val AMULET_OF_RECOVERY = ItemAmuletOfRecovery().apply { setup("amulet_of_recovery") }
+	@JvmField val AMULET_OF_RECOVERY   = ItemAmuletOfRecovery().apply { setup("amulet_of_recovery") }
+	@JvmField val RING_OF_PRESERVATION = ItemRingOfPreservation().apply { setup("ring_of_preservation") }
 	
 	// Registry
 	
@@ -93,6 +95,7 @@ object ModItems{
 			register(SPATIAL_DASH_GEM)
 			
 			register(AMULET_OF_RECOVERY)
+			register(RING_OF_PRESERVATION)
 		}
 		
 		// vanilla modifications
