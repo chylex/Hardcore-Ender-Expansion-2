@@ -8,6 +8,7 @@ import chylex.hee.game.particle.util.IShape.Point
 import chylex.hee.network.client.PacketClientFX
 import chylex.hee.network.client.PacketClientFX.IFXData
 import chylex.hee.network.client.PacketClientFX.IFXHandler
+import chylex.hee.system.util.copyIf
 import chylex.hee.system.util.getState
 import chylex.hee.system.util.getTile
 import chylex.hee.system.util.nextFloat
@@ -179,12 +180,7 @@ class BlockTablePedestal(builder: BlockSimple.Builder) : BlockSimpleShaped(build
 			}
 		}
 		else{
-			val modifiableStack = if (player.isCreative)
-				heldItem.copy()
-			else
-				heldItem
-			
-			tile.addToInput(modifiableStack)
+			tile.addToInput(heldItem.copyIf { player.isCreative })
 		}
 		
 		return true

@@ -11,7 +11,7 @@ import net.minecraft.world.World
 import net.minecraftforge.fml.relauncher.Side
 import net.minecraftforge.fml.relauncher.SideOnly
 
-class ItemBaseTrinket : Item(), ITrinketItem{
+open class ItemBaseTrinket : Item(), ITrinketItem{
 	companion object{
 		fun onGetRarity(): EnumRarity{
 			return CustomRarity.TRINKET
