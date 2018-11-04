@@ -33,7 +33,7 @@ object RecipeEndPowderRepair : RecipeBaseDynamic(){
 		val item2Durability = durability - repairItem2.itemDamage
 		
 		val newDurability = item1Durability + item2Durability + (durability / 20) + (durability * endPowderCount / 10)
-		val repairedStack = ItemStack(item, 1, (durability - newDurability).coerceAtLeast(0))
+		val repairedStack = ItemStack(item, 1, durability - newDurability) // itemDamage < 0 is handled in Item.setDamage
 		
 		val allEnchantments = (repairItem1.enchantmentList + repairItem2.enchantmentList).sortedWith(ENCHANTMENT_COMPARATOR).toList()
 		

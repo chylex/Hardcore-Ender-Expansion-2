@@ -37,7 +37,7 @@ import net.minecraft.world.World
 import net.minecraftforge.common.MinecraftForge
 import net.minecraftforge.event.entity.living.LivingDeathEvent
 import net.minecraftforge.event.entity.player.PlayerEvent
-import net.minecraftforge.fml.common.eventhandler.EventPriority.HIGHEST
+import net.minecraftforge.fml.common.eventhandler.EventPriority.HIGH
 import net.minecraftforge.fml.common.eventhandler.EventPriority.LOWEST
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent
 import net.minecraftforge.fml.relauncher.Side
@@ -174,7 +174,7 @@ class ItemAmuletOfRecovery : ItemBaseEnergyUser(), ITrinketItem{
 	
 	// Death events
 	
-	@SubscribeEvent(priority = HIGHEST)
+	@SubscribeEvent(priority = HIGH)
 	fun onLivingDeath(e: LivingDeathEvent){
 		val player = e.entityLiving as? EntityPlayer ?: return
 		val world = player.world
@@ -183,12 +183,7 @@ class ItemAmuletOfRecovery : ItemBaseEnergyUser(), ITrinketItem{
 			return
 		}
 		
-		val trinketItem = TrinketHandler.getCurrentItem(player)
-		
-		if (trinketItem.item !== this || hasAnyContents(trinketItem)){
-			return
-		}
-		
+		val trinketItem = TrinketHandler.getCurrentActiveItem(player, this) ?: return
 		val saved = Array<ItemStack>(SLOT_COUNT){ ItemStack.EMPTY }
 		
 		fun moveFromInventory(sourceInventory: NonNullList<ItemStack>, sourceSlot: Int, savedSlot: Int){

@@ -12,10 +12,8 @@ import net.minecraft.util.NonNullList
 import net.minecraftforge.common.MinecraftForge
 import net.minecraftforge.event.AnvilUpdateEvent
 import net.minecraftforge.event.entity.living.LivingDamageEvent
-import net.minecraftforge.event.entity.living.LivingEvent
 import net.minecraftforge.event.entity.living.LivingHurtEvent
 import net.minecraftforge.event.entity.player.PlayerDestroyItemEvent
-import net.minecraftforge.event.entity.player.PlayerEvent
 import net.minecraftforge.fml.common.eventhandler.EventPriority.HIGHEST
 import net.minecraftforge.fml.common.eventhandler.EventPriority.LOWEST
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent
@@ -44,25 +42,18 @@ class ItemRingOfPreservation : ItemBaseTrinket(){
 		return !stack.isItemDamaged
 	}
 	
-	private fun isTrinketActive(trinketItem: ItemStack): Boolean{
-		return trinketItem.item === this && canPlaceIntoTrinketSlot(trinketItem)
-	}
-	
 	private fun onItemDestroyed(player: EntityPlayer, stack: ItemStack, info: Pair<NonNullList<ItemStack>, Int>){
 		if (!stack.isItemStackDamageable){
 			return
 		}
 		
-		val trinketItem = TrinketHandler.getCurrentItem(player)
-		
-		if (!isTrinketActive(trinketItem)){
-			return
-		}
-		
+		val trinketItem = TrinketHandler.getCurrentActiveItem(player, this) ?: return
 		val (inventory, slot) = info
-		inventory[slot] = stack.also { it.itemDamage = (it.maxDamage * 4) / 5 }
 		
+		inventory[slot] = stack.also { it.itemDamage = (it.maxDamage * 4) / 5 }
 		trinketItem.itemDamage = 1
+		
+		// TODO sound effect
 	}
 	
 	// Repair handling
@@ -81,17 +72,11 @@ class ItemRingOfPreservation : ItemBaseTrinket(){
 	
 	// Item destruction handling
 	
-	private inline fun getServerEventPlayer(e: LivingEvent): EntityPlayer? =
-		(e.entity as? EntityPlayer)?.takeUnless { it.world.isRemote }
-	
-	private inline fun getServerEventPlayer(e: PlayerEvent): EntityPlayer? =
-		e.entityPlayer.takeUnless { it.world.isRemote }
-	
 	// UPDATE: check if EntityLivingBase.damageEntity still triggers the events in the same order to allow detecting armor breaking, or if PlayerDestroyItemEvent gets fixed
 	
 	@SubscribeEvent(priority = HIGHEST)
 	fun onPlayerDestroyItem(e: PlayerDestroyItemEvent){
-		val player = getServerEventPlayer(e) ?: return
+		val player = e.entityPlayer
 		val inventory = player.inventory
 		
 		val info = when(e.hand){
@@ -105,9 +90,9 @@ class ItemRingOfPreservation : ItemBaseTrinket(){
 	
 	@SubscribeEvent(priority = LOWEST)
 	fun onLivingHurt(e: LivingHurtEvent){
-		val player = getServerEventPlayer(e)
+		val player = e.entity as? EntityPlayer
 		
-		if (player == null || !isTrinketActive(TrinketHandler.getCurrentItem(player))){
+		if (player == null || TrinketHandler.getCurrentActiveItem(player, this) == null){
 			return
 		}
 		
@@ -123,7 +108,7 @@ class ItemRingOfPreservation : ItemBaseTrinket(){
 	@SubscribeEvent(priority = HIGHEST, receiveCanceled = true)
 	fun onLivingDamage(e: LivingDamageEvent){
 		val (hurtInfo, prevArmor) = lastHurtPlayerArmor ?: return
-		val player = getServerEventPlayer(e) ?: return
+		val player = e.entity as? EntityPlayer ?: return
 		
 		if (hurtInfo.matches(player)){
 			val armorInventory = player.inventory.armorInventory
