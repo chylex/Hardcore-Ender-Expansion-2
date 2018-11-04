@@ -12,6 +12,15 @@ inline var ItemStack.size: Int
 inline val ItemStack.isNotEmpty
 	get() = !isEmpty
 
+// Copy
+
+inline fun ItemStack.copyIf(predicate: (ItemStack) -> Boolean): ItemStack{
+	return if (predicate(this))
+		this.copy()
+	else
+		this
+}
+
 // Enchantments
 
 inline val ItemStack.enchantmentMap: Map<Enchantment, Int>
