@@ -1,5 +1,6 @@
 package chylex.hee.game.mechanics
 import chylex.hee.game.gui.slot.SlotTrinketItem
+import chylex.hee.game.item.base.ITrinketItem
 import chylex.hee.game.mechanics.TrinketHandler.TrinketCapability.Provider
 import chylex.hee.system.Resource
 import chylex.hee.system.util.forge.capabilities.CapabilityProvider
@@ -29,12 +30,16 @@ object TrinketHandler{
 		MinecraftForge.EVENT_BUS.register(this)
 	}
 	
+	fun setCurrentItem(player: EntityPlayer, stack: ItemStack){
+		player.getCapability(CAP_TRINKET_SLOT!!, null)?.item = stack
+	}
+	
 	fun getCurrentItem(player: EntityPlayer): ItemStack{
 		return player.getCapability(CAP_TRINKET_SLOT!!, null)?.item ?: ItemStack.EMPTY
 	}
 	
-	fun setCurrentItem(player: EntityPlayer, stack: ItemStack){
-		player.getCapability(CAP_TRINKET_SLOT!!, null)?.item = stack
+	fun getCurrentActiveItem(player: EntityPlayer, item: ITrinketItem): ItemStack?{
+		return getCurrentItem(player).takeIf { it.item === item && item.canPlaceIntoTrinketSlot(it) }
 	}
 	
 	// Internal handling
