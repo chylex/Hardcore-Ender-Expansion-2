@@ -1,5 +1,7 @@
 package chylex.hee.game.block
 import chylex.hee.game.block.entity.TileEntityEnergyCluster
+import chylex.hee.game.mechanics.energy.IClusterGenerator
+import chylex.hee.game.mechanics.energy.IEnergyQuantity
 import chylex.hee.init.ModBlocks
 import chylex.hee.init.ModItems
 import chylex.hee.system.util.allInCenteredBoxMutable
@@ -36,8 +38,24 @@ import java.util.Random
 import kotlin.math.pow
 
 class BlockEnergyCluster(builder: BlockSimple.Builder) : BlockSimple(builder), ITileEntityProvider{
-	private companion object{
+	companion object{
 		private val SELECTION_AABB = AxisAlignedBB(0.2, 0.2, 0.2, 0.8, 0.8, 0.8)
+		
+		fun createLeak(world: World, pos: BlockPos, level: IEnergyQuantity){
+			val units = level.units.value.toFloat()
+			
+			val corruptedEnergyRadius = 1.5F + (units.pow(0.77F) / 70F)
+			val corruptedEnergyLevel = (2F + (units.pow(0.74F) / 9F)).ceilToInt()
+			
+			val energyRadiusInteger = corruptedEnergyRadius.ceilToInt()
+			val energyRadiusSq = square(corruptedEnergyRadius)
+			
+			pos.allInCenteredBoxMutable(energyRadiusInteger, energyRadiusInteger, energyRadiusInteger).forEach {
+				if (it.distanceSqTo(pos) <= energyRadiusSq){
+					ModBlocks.CORRUPTED_ENERGY.spawnCorruptedEnergy(world, it, corruptedEnergyLevel)
+				}
+			}
+		}
 	}
 	
 	override fun createNewTileEntity(world: World, meta: Int): TileEntity{
@@ -58,23 +76,14 @@ class BlockEnergyCluster(builder: BlockSimple.Builder) : BlockSimple(builder), I
 			return
 		}
 		
-		val units = tile.energyLevel.units.value.toFloat()
+		val level = tile.energyLevel
+		val units = level.units.value.toFloat()
 		
 		val explosionStength = 2.5F + (units.pow(0.6F) * 0.1F)
-		val corruptedEnergyRadius = 2F + (units.pow(0.75F) / 75F)
-		val corruptedEnergyLevel = (3F + (units.pow(0.75F) * 0.1F)).ceilToInt()
 		val ethereumToDrop = (world.rand.nextFloat(1.6F, 2.0F) * (units * 0.01F).pow(1.4F)).floorToInt()
 		
 		world.newExplosion(null, pos.x + 0.5, pos.y + 0.5, pos.z + 0.5, explosionStength, false, true)
-		
-		val energyRadiusInteger = corruptedEnergyRadius.ceilToInt()
-		val energyRadiusSq = square(corruptedEnergyRadius)
-		
-		pos.allInCenteredBoxMutable(energyRadiusInteger, energyRadiusInteger, energyRadiusInteger).forEach {
-			if (it.distanceSqTo(pos) <= energyRadiusSq){
-				ModBlocks.CORRUPTED_ENERGY.spawnCorruptedEnergy(world, it, corruptedEnergyLevel)
-			}
-		}
+		createLeak(world, pos, level)
 		
 		repeat(ethereumToDrop){
 			spawnAsEntity(world, pos, ItemStack(ModItems.ETHEREUM))

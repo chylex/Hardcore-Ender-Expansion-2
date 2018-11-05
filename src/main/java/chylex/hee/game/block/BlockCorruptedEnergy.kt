@@ -184,7 +184,7 @@ class BlockCorruptedEnergy(builder: BlockSimple.Builder) : BlockSimple(builder){
 	}
 	
 	override fun onEntityCollision(world: World, pos: BlockPos, state: IBlockState, entity: Entity){
-		if (entity is EntityLivingBase && !isEntityTolerant(entity)){
+		if (!world.isRemote && entity is EntityLivingBase && !isEntityTolerant(entity)){
 			CombinedDamage(
 				DAMAGE_PART_NORMAL to 0.75F,
 				DAMAGE_PART_MAGIC to (0.75F + state.getValue(LEVEL) / 10F)
