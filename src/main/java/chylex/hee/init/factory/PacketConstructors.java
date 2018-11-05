@@ -2,6 +2,7 @@ package chylex.hee.init.factory;
 import chylex.hee.network.IPacket;
 import chylex.hee.network.client.PacketClientFX;
 import chylex.hee.network.server.PacketServerContainerEvent;
+import chylex.hee.network.server.PacketServerShiftClickTrinket;
 import kotlin.Pair;
 import javax.annotation.Nonnull;
 import java.util.Arrays;
@@ -13,7 +14,8 @@ public final class PacketConstructors{
 		return Arrays.asList(
 			packet(PacketClientFX.class, PacketClientFX::new),
 			
-			packet(PacketServerContainerEvent.class, PacketServerContainerEvent::new)
+			packet(PacketServerContainerEvent.class, PacketServerContainerEvent::new),
+			packet(PacketServerShiftClickTrinket.class, PacketServerShiftClickTrinket::new)
 		);
 	}
 	

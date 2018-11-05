@@ -6,9 +6,11 @@ import chylex.hee.game.gui.slot.SlotTrinketItem.Client.TEX_SLOT_H
 import chylex.hee.game.gui.slot.SlotTrinketItem.Client.TEX_SLOT_W
 import chylex.hee.game.gui.slot.SlotTrinketItem.Client.isRenderingGUI
 import chylex.hee.game.item.base.ITrinketItem
+import chylex.hee.network.server.PacketServerShiftClickTrinket
 import chylex.hee.system.Resource
 import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.Gui
+import net.minecraft.client.gui.GuiScreen
 import net.minecraft.client.gui.inventory.GuiInventory
 import net.minecraft.client.renderer.RenderHelper
 import net.minecraft.client.renderer.texture.TextureAtlasSprite
@@ -25,8 +27,19 @@ import net.minecraftforge.fml.relauncher.Side
 import net.minecraftforge.fml.relauncher.SideOnly
 import net.minecraftforge.items.IItemHandler
 import net.minecraftforge.items.SlotItemHandler
+import org.lwjgl.input.Mouse
 
 class SlotTrinketItem(trinketHandler: IItemHandler, inventoryIndex: Int) : SlotItemHandler(trinketHandler, 0, -2000, -2000){
+	companion object{
+		fun findTrinketSlot(allSlots: List<Slot>): Slot?{
+			return allSlots.asReversed().firstOrNull { it is SlotTrinketItem }
+		}
+		
+		fun canShiftClickTrinket(sourceSlot: Slot, trinketSlot: Slot): Boolean{
+			return sourceSlot.hasStack && !trinketSlot.hasStack && trinketSlot.isItemValid(sourceSlot.stack)
+		}
+	}
+	
 	init{
 		slotNumber = inventoryIndex
 	}
@@ -97,10 +110,23 @@ class SlotTrinketItem(trinketHandler: IItemHandler, inventoryIndex: Int) : SlotI
 			
 			if (gui is GuiInventory){
 				val allSlots = gui.inventorySlots.inventorySlots
-				val trinketSlot = allSlots.asReversed().firstOrNull { it is SlotTrinketItem }
+				findTrinketSlot(allSlots)?.moveSlotToEmptyPos(allSlots, SURVIVAL_INVENTORY_SLOT_POSITIONS)
+			}
+		}
+		
+		@JvmStatic
+		@SubscribeEvent(priority = LOWEST)
+		fun onMouseInputPre(e: GuiScreenEvent.MouseInputEvent.Pre){
+			val gui = e.gui
+			
+			if (gui is GuiInventory && Mouse.getEventButton() in 0..1 && Mouse.getEventButtonState() && GuiScreen.isShiftKeyDown()){
+				val hoveredSlot = gui.slotUnderMouse ?: return
+				val trinketSlot = findTrinketSlot(gui.inventorySlots.inventorySlots) ?: return
 				
-				trinketSlot?.moveSlotToEmptyPos(allSlots, SURVIVAL_INVENTORY_SLOT_POSITIONS)
-				// TODO maybe figure out how to support shift+click
+				if (canShiftClickTrinket(hoveredSlot, trinketSlot)){
+					PacketServerShiftClickTrinket(hoveredSlot.slotNumber).sendToServer()
+					e.isCanceled = true
+				}
 			}
 		}
 		
