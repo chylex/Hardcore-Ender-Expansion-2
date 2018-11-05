@@ -1,9 +1,18 @@
 package chylex.hee.game.mechanics.damage
 import chylex.hee.game.mechanics.damage.Damage.Companion.TITLE_GENERIC
 import net.minecraft.entity.Entity
+import net.minecraft.entity.EntityLivingBase
 
 class CombinedDamage(private vararg val definitions: Pair<Damage, Float>){
 	private fun dealToInternal(target: Entity, damageCall: (Pair<Damage, Float>) -> Boolean): Boolean{
+		if (target is EntityLivingBase && target.hurtResistantTime > (target.maxHurtResistantTime / 2F)){
+			val lastDamage = target.lastDamage
+			
+			if (definitions.all { it.second <= lastDamage }){
+				return false
+			}
+		}
+		
 		var causedAnyDamage = false
 		var finalHurtResistantTime = target.hurtResistantTime
 		
