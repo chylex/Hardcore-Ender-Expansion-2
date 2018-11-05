@@ -1,4 +1,5 @@
 package chylex.hee.game.block.entity
+import chylex.hee.game.block.BlockEnergyCluster
 import chylex.hee.game.block.entity.TileEntityBase.Context.NETWORK
 import chylex.hee.game.block.entity.TileEntityBase.Context.STORAGE
 import chylex.hee.game.block.entity.TileEntityEndPortalAcceptor.ChargeState.CHARGING
@@ -81,7 +82,9 @@ class TileEntityEndPortalAcceptor : TileEntityBase(), ITickable{
 		isRefreshing = true // required to ignore a neighborChanged call when breaking the Cluster
 		
 		val newChargeState: ChargeState
-		val cluster = pos.up().getTile<TileEntityEnergyCluster>(world)
+		
+		val posAbove = pos.up()
+		val cluster = posAbove.getTile<TileEntityEnergyCluster>(world)
 		
 		if (cluster == null){
 			newChargeState = when(chargeState){
@@ -90,7 +93,7 @@ class TileEntityEndPortalAcceptor : TileEntityBase(), ITickable{
 				WAITING  -> IDLE
 				
 				CHARGING -> {
-					// TODO leak energy
+					BlockEnergyCluster.createLeak(world, posAbove, chargedEnergy)
 					chargedEnergy = Units(0)
 					IDLE
 				}
