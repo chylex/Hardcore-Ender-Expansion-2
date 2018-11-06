@@ -64,9 +64,13 @@ class ItemRingOfPreservation : ItemBaseTrinket(){
 	
 	@SubscribeEvent
 	fun onAnvilUpdate(e: AnvilUpdateEvent){
-		if (e.left.item === this && e.right.item === Items.DIAMOND){
-			e.output = e.left.copy().also { it.itemDamage = 0 }
+		val target = e.left
+		val ingredient = e.right
+		
+		if (target.item === this && getIsRepairable(target, ingredient)){
+			e.output = target.copy().also { it.itemDamage = 0 } // TODO cannot repair & change name at the same time, but CBA
 			e.cost = 4
+			e.materialCost = 1
 		}
 	}
 	
