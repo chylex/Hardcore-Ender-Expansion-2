@@ -23,7 +23,7 @@ import net.minecraft.world.World
 
 // Properties
 
-var Entity.posVec
+var Entity.posVec: Vec3d
 	get() = this.positionVector
 	set(value){
 		this.posX = value.x
@@ -31,7 +31,7 @@ var Entity.posVec
 		this.posZ = value.z
 	}
 
-var Entity.motionVec
+var Entity.motionVec: Vec3d
 	get() = Vec3d(this.motionX, this.motionY, this.motionZ)
 	set(value){
 		this.motionX = value.x
@@ -39,8 +39,11 @@ var Entity.motionVec
 		this.motionZ = value.z
 	}
 
-val Entity.lookVec
-	get() = this.getLook(0F)
+val Entity.lookPosVec: Vec3d
+	get() = this.getPositionEyes(1F)
+
+val Entity.lookDirVec: Vec3d
+	get() = this.getLook(1F)
 
 // Methods
 
