@@ -9,6 +9,7 @@ import chylex.hee.game.item.ItemRingOfPreservation
 import chylex.hee.game.item.ItemScaleOfFreefall
 import chylex.hee.game.item.ItemSpatialDashGem
 import chylex.hee.game.item.ItemTableLink
+import chylex.hee.game.item.ItemVoidMiner
 import chylex.hee.init.ModCreativeTabs.OrderedCreativeTab
 import chylex.hee.system.Resource
 import net.minecraft.creativetab.CreativeTabs
@@ -45,6 +46,9 @@ object ModItems{
 	@JvmField val STATIC_CORE      = Item().apply { setup("static_core") }
 	@JvmField val TABLE_LINK       = ItemTableLink().apply { setup("table_link") }
 	
+	// Items: Tools
+	
+	@JvmField val VOID_MINER  = ItemVoidMiner().apply { setup("void_miner") }
 	// Items: Buckets
 	
 	@JvmField val ENDER_GOO_BUCKET = ItemBucket(ModBlocks.ENDER_GOO).apply { setup("ender_goo_bucket"); containerItem = Items.BUCKET }
@@ -89,6 +93,7 @@ object ModItems{
 			register(STATIC_CORE)
 			register(TABLE_LINK)
 			
+			register(VOID_MINER)
 			register(ENDER_GOO_BUCKET)
 			
 			register(ENERGY_ORACLE)

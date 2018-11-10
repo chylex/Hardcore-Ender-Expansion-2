@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "EGE",
+    "X#X",
+    " # "
+  ],
+  "key": {
+    "#": { "item": "hee:obsidian_rod" },
+    "X": { "item": "hee:void_essence" },
+    "E": { "item": "hee:endium_ingot" },
+    "G": { "item": "minecraft:gold_ingot" }
+  },
+  "result": {
+    "item": "hee:void_miner"
+  }
+}
