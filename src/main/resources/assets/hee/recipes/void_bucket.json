@@ -1,0 +1,14 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "#X#",
+    " # "
+  ],
+  "key": {
+    "#": { "item": "hee:endium_ingot" },
+    "X": { "item": "hee:void_essence" }
+  },
+  "result": {
+    "item": "hee:void_bucket"
+  }
+}

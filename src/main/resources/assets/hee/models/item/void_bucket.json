@@ -1,0 +1,24 @@
+{
+  "parent": "item/generated",
+  "textures": {
+    "layer0": "hee:item/void_bucket"
+  },
+  "overrides": [
+    {
+      "predicate": { "cooldown": 0.01 },
+      "model": "hee:item/void_bucket_fluid_level_1"
+    },
+    {
+      "predicate": { "cooldown": 0.3 },
+      "model": "hee:item/void_bucket_fluid_level_2"
+    },
+    {
+      "predicate": { "cooldown": 0.5 },
+      "model": "hee:item/void_bucket_fluid_level_3"
+    },
+    {
+      "predicate": { "cooldown": 0.7 },
+      "model": "hee:item/void_bucket_fluid_level_4"
+    }
+  ]
+}

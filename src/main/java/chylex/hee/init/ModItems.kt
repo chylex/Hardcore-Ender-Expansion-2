@@ -9,6 +9,7 @@ import chylex.hee.game.item.ItemRingOfPreservation
 import chylex.hee.game.item.ItemScaleOfFreefall
 import chylex.hee.game.item.ItemSpatialDashGem
 import chylex.hee.game.item.ItemTableLink
+import chylex.hee.game.item.ItemVoidBucket
 import chylex.hee.game.item.ItemVoidMiner
 import chylex.hee.init.ModCreativeTabs.OrderedCreativeTab
 import chylex.hee.system.Resource
@@ -49,6 +50,8 @@ object ModItems{
 	// Items: Tools
 	
 	@JvmField val VOID_MINER  = ItemVoidMiner().apply { setup("void_miner") }
+	@JvmField val VOID_BUCKET = ItemVoidBucket().apply { setup("void_bucket") }
+	
 	// Items: Buckets
 	
 	@JvmField val ENDER_GOO_BUCKET = ItemBucket(ModBlocks.ENDER_GOO).apply { setup("ender_goo_bucket"); containerItem = Items.BUCKET }
@@ -94,6 +97,8 @@ object ModItems{
 			register(TABLE_LINK)
 			
 			register(VOID_MINER)
+			register(VOID_BUCKET)
+			
 			register(ENDER_GOO_BUCKET)
 			
 			register(ENERGY_ORACLE)
