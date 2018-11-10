@@ -1,4 +1,4 @@
-package chylex.hee.game.item.util
+package chylex.hee.game.world.util
 import chylex.hee.game.particle.ParticleTeleport
 import chylex.hee.game.particle.spawner.ParticleSpawnerCustom
 import chylex.hee.game.particle.util.IOffset.InBox

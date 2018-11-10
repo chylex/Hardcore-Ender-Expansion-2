@@ -1,4 +1,4 @@
-package chylex.hee.game.item.util
+package chylex.hee.game.world.util
 import chylex.hee.system.util.getHardness
 import chylex.hee.system.util.isAir
 import chylex.hee.system.util.isReplaceable

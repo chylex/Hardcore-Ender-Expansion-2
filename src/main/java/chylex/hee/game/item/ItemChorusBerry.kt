@@ -1,5 +1,5 @@
 package chylex.hee.game.item
-import chylex.hee.game.item.util.Teleporter
+import chylex.hee.game.world.util.Teleporter
 import chylex.hee.game.mechanics.damage.Damage
 import chylex.hee.game.mechanics.damage.IDamageProcessor.Companion.MAGIC_TYPE
 import chylex.hee.game.mechanics.damage.IDamageProcessor.Companion.PEACEFUL_EXCLUSION

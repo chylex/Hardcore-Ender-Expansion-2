@@ -1,6 +1,6 @@
 package chylex.hee.game.block
 import chylex.hee.game.block.fluid.FluidBase
-import chylex.hee.game.item.util.BlockEditor
+import chylex.hee.game.world.util.BlockEditor
 import chylex.hee.system.util.FLAG_NOTIFY_NEIGHBORS
 import chylex.hee.system.util.FLAG_RENDER_IMMEDIATE
 import chylex.hee.system.util.FLAG_SYNC_CLIENT

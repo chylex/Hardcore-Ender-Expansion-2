@@ -2,7 +2,7 @@ package chylex.hee.game.block
 import chylex.hee.game.block.BlockSimple.Builder.Companion.INDESTRUCTIBLE_HARDNESS
 import chylex.hee.game.block.BlockSimple.Builder.Companion.setHardnessWithResistance
 import chylex.hee.game.entity.item.EntityFallingBlockHeavy
-import chylex.hee.game.item.util.Teleporter
+import chylex.hee.game.world.util.Teleporter
 import chylex.hee.game.particle.ParticleTeleport
 import chylex.hee.game.particle.spawner.ParticleSpawnerCustom
 import chylex.hee.game.particle.util.IOffset.InBox

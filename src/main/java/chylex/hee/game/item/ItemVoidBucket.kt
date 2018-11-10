@@ -1,8 +1,8 @@
 package chylex.hee.game.item
 import chylex.hee.game.block.fluid.FluidBase
 import chylex.hee.game.item.base.ItemBaseVoidTool
-import chylex.hee.game.item.util.BlockEditor
-import chylex.hee.game.mechanics.RayTracer
+import chylex.hee.game.world.util.BlockEditor
+import chylex.hee.game.world.util.RayTracer
 import chylex.hee.game.render.util.RGB
 import chylex.hee.system.util.allInCenteredBox
 import chylex.hee.system.util.getBlock

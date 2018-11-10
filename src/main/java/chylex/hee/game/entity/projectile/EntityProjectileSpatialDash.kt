@@ -1,7 +1,7 @@
 package chylex.hee.game.entity.projectile
 import chylex.hee.game.entity.util.SerializedEntity
-import chylex.hee.game.item.util.BlockEditor
-import chylex.hee.game.item.util.Teleporter
+import chylex.hee.game.world.util.BlockEditor
+import chylex.hee.game.world.util.Teleporter
 import chylex.hee.system.util.Pos
 import chylex.hee.system.util.blocksMovement
 import chylex.hee.system.util.distanceSqTo

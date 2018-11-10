@@ -3,7 +3,7 @@ import chylex.hee.game.block.BlockDragonEggOverride
 import chylex.hee.game.block.BlockTablePedestal
 import chylex.hee.game.entity.item.EntityFallingObsidian
 import chylex.hee.game.item.ItemTableLink
-import chylex.hee.game.item.util.Teleporter
+import chylex.hee.game.world.util.Teleporter
 import chylex.hee.network.BaseClientPacket
 import chylex.hee.system.Debug
 import io.netty.buffer.ByteBuf

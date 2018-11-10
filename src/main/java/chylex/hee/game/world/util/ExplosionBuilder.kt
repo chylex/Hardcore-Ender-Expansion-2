@@ -1,4 +1,4 @@
-package chylex.hee.game.mechanics
+package chylex.hee.game.world.util
 import chylex.hee.system.util.getState
 import chylex.hee.system.util.isAir
 import chylex.hee.system.util.nextFloat

@@ -7,7 +7,7 @@ import chylex.hee.game.item.infusion.Infusion.PHASING
 import chylex.hee.game.item.infusion.Infusion.POWER
 import chylex.hee.game.item.infusion.InfusionList
 import chylex.hee.game.item.infusion.InfusionTag
-import chylex.hee.game.mechanics.ExplosionBuilder
+import chylex.hee.game.world.util.ExplosionBuilder
 import chylex.hee.game.particle.spawner.ParticleSpawnerVanilla
 import chylex.hee.game.particle.util.IShape.Point
 import chylex.hee.system.util.allInCenteredBoxMutable

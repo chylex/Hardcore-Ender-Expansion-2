@@ -5,7 +5,7 @@ import chylex.hee.game.item.infusion.Infusion.SAFETY
 import chylex.hee.game.item.infusion.Infusion.STABILITY
 import chylex.hee.game.item.infusion.InfusionList
 import chylex.hee.game.item.infusion.InfusionTag
-import chylex.hee.game.item.util.BlockEditor
+import chylex.hee.game.world.util.BlockEditor
 import chylex.hee.game.mechanics.energy.ClusterSnapshot
 import chylex.hee.game.mechanics.energy.IEnergyQuantity
 import chylex.hee.game.mechanics.energy.IEnergyQuantity.Companion.displayString

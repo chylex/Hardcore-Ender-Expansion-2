@@ -1,4 +1,4 @@
-package chylex.hee.game.mechanics
+package chylex.hee.game.world.util
 import chylex.hee.system.util.Pos
 import chylex.hee.system.util.component1
 import chylex.hee.system.util.component2
