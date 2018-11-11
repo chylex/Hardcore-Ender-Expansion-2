@@ -133,6 +133,7 @@ hee.energy.health.unstable=UNSTABLE
 hee.energy.health.revitalizing=REVITALIZING
 
 effect.hee.lifeless=Lifeless
+effect.hee.purity=Purity
 
 gui.hee.amulet_of_recovery.title=Amulet of Recovery
 gui.hee.amulet_of_recovery.move_all=Move All

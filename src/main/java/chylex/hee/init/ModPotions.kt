@@ -1,6 +1,7 @@
 package chylex.hee.init
 import chylex.hee.HEE
 import chylex.hee.game.mechanics.potion.PotionLifeless
+import chylex.hee.game.mechanics.potion.PotionPurity
 import chylex.hee.system.Resource
 import net.minecraft.potion.Potion
 import net.minecraftforge.event.RegistryEvent
@@ -14,6 +15,7 @@ object ModPotions{
 	fun onRegister(e: RegistryEvent.Register<Potion>){
 		with(e.registry){
 			register(PotionLifeless named "lifeless")
+			register(PotionPurity named "purity")
 		}
 	}
 	
