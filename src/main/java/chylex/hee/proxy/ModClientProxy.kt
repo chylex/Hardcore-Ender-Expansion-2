@@ -11,6 +11,7 @@ import chylex.hee.game.entity.item.EntityItemNoBob
 import chylex.hee.game.item.ItemEnergyOracle
 import chylex.hee.game.item.ItemEnergyReceptacle
 import chylex.hee.game.item.ItemVoidBucket
+import chylex.hee.game.item.ItemVoidSalad
 import chylex.hee.game.render.block.RenderTileDarkChest
 import chylex.hee.game.render.block.RenderTileEndPortal
 import chylex.hee.game.render.block.RenderTileLootChest
@@ -20,6 +21,7 @@ import chylex.hee.game.render.model.ModelItemAmuletOfRecovery
 import chylex.hee.init.ModBlocks
 import chylex.hee.init.ModItems
 import chylex.hee.init.factory.RendererConstructors
+import chylex.hee.system.Resource
 import net.minecraft.client.Minecraft
 import net.minecraft.client.renderer.block.model.ModelResourceLocation
 import net.minecraft.client.renderer.block.statemap.IStateMapper
@@ -107,6 +109,9 @@ class ModClientProxy : ModCommonProxy(){
 			for(item in keys.asSequence().filter { it.namespace == HEE.ID }.map(::getValue)){
 				ModelLoader.setCustomModelResourceLocation(item!!, 0, ModelResourceLocation(item.registryName!!, "inventory"))
 			}
+			
+			ModelLoader.setCustomModelResourceLocation(ModItems.VOID_SALAD, ItemVoidSalad.Type.DOUBLE.ordinal, ModelResourceLocation(Resource.Custom("void_void_salad"), "inventory"))
+			ModelLoader.setCustomModelResourceLocation(ModItems.VOID_SALAD, ItemVoidSalad.Type.MEGA.ordinal, ModelResourceLocation(Resource.Custom("mega_void_salad"), "inventory"))
 		}
 		
 		for(block in arrayOf(

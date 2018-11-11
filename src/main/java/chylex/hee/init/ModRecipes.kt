@@ -4,6 +4,7 @@ import chylex.hee.game.item.ItemEnergyOracle
 import chylex.hee.game.item.ItemSpatialDashGem
 import chylex.hee.game.recipe.RecipeEndPowderRepair
 import chylex.hee.game.recipe.RecipeScaleOfFreefallRepair
+import chylex.hee.game.recipe.RecipeVoidSalad
 import chylex.hee.system.IntegrityCheck
 import chylex.hee.system.Resource
 import net.minecraft.init.Blocks
@@ -48,6 +49,7 @@ object ModRecipes{
 			
 			register(RecipeEndPowderRepair named "end_powder_repair")
 			register(RecipeScaleOfFreefallRepair named "scale_of_freefall_repair")
+			register(RecipeVoidSalad named "void_salad")
 		}
 	}
 	
