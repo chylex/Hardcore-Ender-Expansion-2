@@ -184,6 +184,19 @@ interface IDamageProcessor{
 			}
 		}
 		
+		val NON_LETHAL = object : IDamageProcessor{
+			override fun setup(properties: DamageProperties.Writer){
+				properties.setNonLethal()
+			}
+			
+			override fun modifyDamage(amount: Float, target: Entity, properties: DamageProperties.Reader): Float{
+				return if (target is EntityLivingBase)
+					amount
+				else
+					CANCEL_DAMAGE
+			}
+		}
+		
 		// Helpers
 		
 		val ALL_PROTECTIONS = arrayOf(ARMOR_PROTECTION(false), ENCHANTMENT_PROTECTION, POTION_PROTECTION)

@@ -1,4 +1,6 @@
 package chylex.hee.game.mechanics.damage
+import chylex.hee.HEE
+import chylex.hee.system.util.floorToInt
 import net.minecraft.entity.Entity
 import net.minecraft.entity.EntityLivingBase
 import net.minecraft.item.ItemStack
@@ -8,11 +10,18 @@ import net.minecraft.util.math.Vec3d
 import net.minecraft.util.text.ITextComponent
 import net.minecraft.util.text.TextComponentTranslation
 import net.minecraft.util.text.translation.I18n
+import net.minecraftforge.event.entity.living.LivingDamageEvent
+import net.minecraftforge.fml.common.Mod.EventBusSubscriber
+import net.minecraftforge.fml.common.eventhandler.EventPriority.HIGHEST
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent
+import kotlin.math.max
+import kotlin.math.min
 
 class DamageProperties{
 	private var typeBits = 0
 	private var ignoreArmorAndConsequentlyShield = true // due to how vanilla handles unblockable damage, isUnblockable controls both armor and shield
 	private var ignoreShield = true
+	private var nonLethal = false
 	private var dealCreative = false
 	
 	private inline fun hasType(type: DamageType): Boolean{
@@ -27,6 +36,10 @@ class DamageProperties{
 		fun setAllowArmorAndShield(){
 			ignoreArmorAndConsequentlyShield = false
 			ignoreShield = false
+		}
+		
+		fun setNonLethal(){
+			nonLethal = true
 		}
 		
 		fun setDealCreative(){
@@ -45,6 +58,9 @@ class DamageProperties{
 		val ignoreShield
 			get() = this@DamageProperties.ignoreShield
 		
+		val nonLethal
+			get() = this@DamageProperties.nonLethal
+		
 		val dealCreative
 			get() = this@DamageProperties.dealCreative
 		
@@ -62,6 +78,9 @@ class DamageProperties{
 	fun createDamageSource(damageTitle: String, triggeringSource: Entity?, remoteSource: Entity?): DamageSource = CustomDamageSource(damageTitle, triggeringSource, remoteSource)
 	
 	private inner class CustomDamageSource(damageTitle: String, val triggeringSource: Entity?, val remoteSource: Entity?) : DamageSource(damageTitle){
+		val isNonLethal
+			get() = nonLethal
+		
 		override fun isDamageAbsolute(): Boolean = true // ignore potions and enchantments by default
 		override fun isDifficultyScaled(): Boolean = false // ignore difficulty by default
 		
@@ -97,6 +116,21 @@ class DamageProperties{
 				TextComponentTranslation(translationKeyItem, victim.displayName, realSource.displayName, heldItem.textComponent)
 			else
 				TextComponentTranslation(translationKeyGeneric, victim.displayName, realSource.displayName)
+		}
+	}
+	
+	// Non-lethal damage handling
+	
+	@EventBusSubscriber(modid = HEE.ID)
+	object NonLethalDamageEventHandler{
+		@JvmStatic
+		@SubscribeEvent(priority = HIGHEST)
+		fun onLivingDamage(e: LivingDamageEvent){
+			val source = e.source as? CustomDamageSource ?: return
+			
+			if (source.isNonLethal){
+				e.amount = max(0F, min(e.amount, e.entityLiving.health.floorToInt() - 1F))
+			}
 		}
 	}
 }
