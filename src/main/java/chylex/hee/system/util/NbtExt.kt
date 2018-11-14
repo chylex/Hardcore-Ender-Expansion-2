@@ -218,6 +218,8 @@ fun NBTTagCompound.getListOfByteArrays(key: String) = NBTObjectList<ByteArray>(t
 fun NBTTagCompound.getListOfIntArrays(key: String)  = NBTObjectList<IntArray>(this.getTagList(key, NBT.TAG_INT_ARRAY))
 fun NBTTagCompound.getListOfLongArrays(key: String) = NBTObjectList<LongArray>(this.getTagList(key, NBT.TAG_LONG_ARRAY))
 
+fun NBTTagCompound.getListOfItemStacks(key: String) = NBTItemStackList(this.getTagList(key, NBT.TAG_COMPOUND))
+
 inline fun <reified T : Enum<T>> NBTTagCompound.getListOfEnums(key: String) = NBTEnumList(T::class.java, this.getTagList(key, NBT.TAG_STRING))
 
 abstract class NBTList<T : Any>(protected val tagList: NBTTagList) : Iterable<T>{
@@ -270,7 +272,7 @@ abstract class NBTList<T : Any>(protected val tagList: NBTTagList) : Iterable<T>
 	override fun toString(): String = tagList.toString()
 }
 
-class NBTPrimitiveList(tagList: NBTTagList) : NBTList<NBTPrimitive>(tagList){
+class NBTPrimitiveList(tagList: NBTTagList = NBTTagList()) : NBTList<NBTPrimitive>(tagList){
 	val allBytes
 		get() = iterator().asSequence().map(NBTPrimitive::getByte)
 	
@@ -311,7 +313,7 @@ class NBTPrimitiveList(tagList: NBTTagList) : NBTList<NBTPrimitive>(tagList){
 	}
 }
 
-class NBTObjectList<T : Any>(tagList: NBTTagList) : NBTList<T>(tagList){
+class NBTObjectList<T : Any>(tagList: NBTTagList = NBTTagList()) : NBTList<T>(tagList){
 	override fun append(element: T){
 		tagList.appendTag(when(element){
 			is NBTTagCompound -> element
@@ -337,19 +339,36 @@ class NBTObjectList<T : Any>(tagList: NBTTagList) : NBTList<T>(tagList){
 			else               -> throw IllegalArgumentException("unhandled NBT type conversion: ${tag::class.java.simpleName}")
 		}
 	}
+	
+	companion object{
+		@JvmName("ofCompounds")  fun of(elements: Iterable<NBTTagCompound>) = NBTObjectList<NBTTagCompound>().apply { elements.forEach(::append) }
+		@JvmName("ofStrings")    fun of(elements: Iterable<String>)         = NBTObjectList<String>().apply         { elements.forEach(::append) }
+		@JvmName("ofByteArrays") fun of(elements: Iterable<ByteArray>)      = NBTObjectList<ByteArray>().apply      { elements.forEach(::append) }
+		@JvmName("ofIntArrays")  fun of(elements: Iterable<IntArray>)       = NBTObjectList<IntArray>().apply       { elements.forEach(::append) }
+		@JvmName("ofLongArrays") fun of(elements: Iterable<LongArray>)      = NBTObjectList<LongArray>().apply      { elements.forEach(::append) }
+	}
+}
+
+class NBTItemStackList(tagList: NBTTagList = NBTTagList()) : NBTList<ItemStack>(tagList){
+	override fun append(element: ItemStack){
+		tagList.appendTag(NBTTagCompound().also { it.writeStack(element) })
+	}
+	
+	override fun get(index: Int): ItemStack{
+		return tagList.getCompoundTagAt(index).readStack()
+	}
+	
+	companion object{
+		fun of(elements: Iterable<ItemStack>) = NBTItemStackList().apply { elements.forEach(::append) }
+	}
 }
 
 class NBTEnumList<T : Enum<T>>(private val cls: Class<T>, tagList: NBTTagList) : NBTList<T>(tagList){
 	private constructor(cls: Class<T>) : this(cls, NBTTagList())
 	
 	companion object{
-		fun <T : Enum<T>> of(cls: Class<T>, elements: Iterable<T>): NBTEnumList<T>{
-			return NBTEnumList(cls).apply { elements.forEach(::append) }
-		}
-		
-		inline fun <reified T : Enum<T>> of(elements: Iterable<T>): NBTEnumList<T>{
-			return of(T::class.java, elements)
-		}
+		fun <T : Enum<T>> of(cls: Class<T>, elements: Iterable<T>) = NBTEnumList(cls).apply { elements.forEach(::append) }
+		inline fun <reified T : Enum<T>> of(elements: Iterable<T>) = of(T::class.java, elements)
 	}
 	
 	override fun append(element: T){
