@@ -29,7 +29,7 @@ data class InventorySlot(val slot: Int, val stack: ItemStack)
 
 val IInventory.allSlots
 	get() = object : Iterator<InventorySlot>{
-		private val totalSlots = sizeInventory
+		private val totalSlots = size
 		private var nextSlot = 0
 		
 		override fun hasNext(): Boolean{
@@ -44,7 +44,7 @@ val IInventory.allSlots
 
 val IInventory.nonEmptySlots
 	get() = object : AbstractIterator<InventorySlot>(){
-		private val totalSlots = sizeInventory
+		private val totalSlots = size
 		private var nextSlot = 0
 		
 		override fun computeNext(){
@@ -61,3 +61,17 @@ val IInventory.nonEmptySlots
 			done()
 		}
 	}
+
+// Snapshot
+
+fun IInventory.createSnapshot(): Array<ItemStack>{
+	return Array(this.size){
+		slot -> this.getStack(slot).copyIf { it.isNotEmpty }
+	}
+}
+
+fun IInventory.restoreSnapshot(backup: Array<ItemStack>){
+	for((slot, stack) in backup.withIndex()){
+		this.setStack(slot, stack)
+	}
+}
