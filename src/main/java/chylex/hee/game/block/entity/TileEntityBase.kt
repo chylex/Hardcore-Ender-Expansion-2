@@ -21,11 +21,14 @@ abstract class TileEntityBase : TileEntity(){
 	
 	protected inner class Notifying<T>(initialValue: T, private val notifyFlags: Int) : ObservableProperty<T>(initialValue){
 		override fun afterChange(property: KProperty<*>, oldValue: T, newValue: T){
-			notifyUpdate(notifyFlags)
+			if (oldValue != newValue){
+				notifyUpdate(notifyFlags)
+			}
 		}
 	}
 	
-	private var isLoaded = false
+	protected var isLoaded = false
+		private set
 	
 	final override fun onLoad(){
 		isLoaded = true
