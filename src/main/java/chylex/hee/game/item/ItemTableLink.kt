@@ -79,9 +79,9 @@ class ItemTableLink : Item(){
 			return block is BlockAbstractTableTile<*> || (block === ModBlocks.TABLE_PEDESTAL && pos.getTile<TileEntityTablePedestal>(world)?.hasLinkedTable == false)
 		}
 		
-		private fun getTablePedestalPair(world: World, pos1: BlockPos, pos2: BlockPos): Pair<TileEntityTablePedestal, TileEntityBaseTable>?{
+		private fun getTablePedestalPair(world: World, pos1: BlockPos, pos2: BlockPos): Pair<TileEntityTablePedestal, TileEntityBaseTable<*>>?{
 			val pedestal: TileEntityTablePedestal
-			val table: TileEntityBaseTable
+			val table: TileEntityBaseTable<*>
 			
 			if (pos1.getBlock(world) === ModBlocks.TABLE_PEDESTAL){
 				pedestal = pos1.getTile(world) ?: return null

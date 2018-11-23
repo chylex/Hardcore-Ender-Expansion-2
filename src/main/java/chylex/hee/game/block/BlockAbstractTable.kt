@@ -21,7 +21,7 @@ abstract class BlockAbstractTable(builder: BlockSimple.Builder) : BlockSimple(bu
 		val TIER = PropertyInteger.create("tier", MIN_TIER, MAX_TIER)!!
 	}
 	
-	protected open val minAllowedTier = MIN_TIER
+	open val minAllowedTier = MIN_TIER
 	
 	init{
 		defaultState = blockState.baseState.withProperty(TIER, MIN_TIER)

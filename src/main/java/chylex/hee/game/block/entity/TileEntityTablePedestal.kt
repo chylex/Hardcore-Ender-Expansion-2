@@ -48,10 +48,10 @@ class TileEntityTablePedestal : TileEntityBase(){
 		_, oldValue, newValue -> if (oldValue != newValue) onLinkedStatusChanged()
 	}
 	
-	private val linkedTableTile: TileEntityBaseTable?
+	private val linkedTableTile: TileEntityBaseTable<*>?
 		get() = linkedTable?.getTile(world)
 	
-	private val linkedTableTileIfLoaded: TileEntityBaseTable?
+	private val linkedTableTileIfLoaded: TileEntityBaseTable<*>?
 		get() = linkedTable?.takeIf { it.isLoaded(world) }?.getTile(world)
 	
 	val hasLinkedTable
@@ -89,7 +89,7 @@ class TileEntityTablePedestal : TileEntityBase(){
 	
 	// Behavior (Linking)
 	
-	fun setLinkedTable(tile: TileEntityBaseTable){
+	fun setLinkedTable(tile: TileEntityBaseTable<*>){
 		val currentlyLinkedTable = linkedTableTile
 		
 		if (tile !== currentlyLinkedTable){

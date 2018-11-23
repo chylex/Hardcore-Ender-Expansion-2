@@ -4,6 +4,7 @@ import chylex.hee.game.block.BlockAbstractTable.Companion.TIER
 import chylex.hee.system.util.Pos
 import chylex.hee.system.util.distanceSqTo
 import chylex.hee.system.util.getLongArray
+import chylex.hee.game.mechanics.table.process.ITableProcess
 import chylex.hee.system.util.getState
 import chylex.hee.system.util.getTile
 import chylex.hee.system.util.setLongArray
@@ -11,7 +12,7 @@ import net.minecraft.nbt.NBTTagCompound
 import net.minecraft.util.ITickable
 import net.minecraft.util.math.BlockPos
 
-abstract class TileEntityBaseTable : TileEntityBase(), ITickable{
+abstract class TileEntityBaseTable<T : ITableProcess> : TileEntityBase(), ITickable{
 	private companion object{
 		private const val MAX_PEDESTAL_DISTANCE = 6
 		private const val MAX_PEDESTAL_DISTANCE_SQ = MAX_PEDESTAL_DISTANCE * MAX_PEDESTAL_DISTANCE
