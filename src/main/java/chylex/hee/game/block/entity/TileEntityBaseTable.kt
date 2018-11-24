@@ -2,6 +2,7 @@ package chylex.hee.game.block.entity
 import chylex.hee.game.block.BlockAbstractTable
 import chylex.hee.game.block.BlockAbstractTable.Companion.TIER
 import chylex.hee.game.block.entity.TileEntityBase.Context.STORAGE
+import chylex.hee.game.mechanics.table.TableEnergyClusterHandler
 import chylex.hee.game.mechanics.table.TableLinkedPedestalHandler
 import chylex.hee.game.mechanics.table.process.ITableProcess
 import chylex.hee.system.util.getState
@@ -10,6 +11,7 @@ import net.minecraft.util.ITickable
 
 abstract class TileEntityBaseTable<T : ITableProcess> : TileEntityBase(), ITickable{
 	private companion object{
+		private const val MAX_CLUSTER_DISTANCE = 12
 		private const val MAX_PEDESTAL_DISTANCE = 6
 	}
 	
@@ -20,6 +22,9 @@ abstract class TileEntityBaseTable<T : ITableProcess> : TileEntityBase(), ITicka
 	
 	@Suppress("LeakingThis")
 	private val pedestalHandler = TableLinkedPedestalHandler(this, MAX_PEDESTAL_DISTANCE)
+	
+	@Suppress("LeakingThis")
+	private val clusterHandler = TableEnergyClusterHandler(this, MAX_CLUSTER_DISTANCE)
 	
 	// Behavior
 	
@@ -56,12 +61,14 @@ abstract class TileEntityBaseTable<T : ITableProcess> : TileEntityBase(), ITicka
 	override fun writeNBT(nbt: NBTTagCompound, context: Context) = with(nbt){
 		if (context == STORAGE){
 			setTag("PedestalInfo", pedestalHandler.serializeNBT())
+			setTag("ClusterInfo", clusterHandler.serializeNBT())
 		}
 	}
 	
 	override fun readNBT(nbt: NBTTagCompound, context: Context) = with(nbt){
 		if (context == STORAGE){
 			pedestalHandler.deserializeNBT(getCompoundTag("PedestalInfo"))
+			clusterHandler.deserializeNBT(getCompoundTag("ClusterInfo"))
 		}
 	}
 }

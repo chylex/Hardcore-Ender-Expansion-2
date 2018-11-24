@@ -64,9 +64,13 @@ class TileEntityEnergyCluster : TileEntityBase(), ITickable{
 	val energyRegenCapacity: IEnergyQuantity
 		get() = minOf(energyBaseCapacity * currentHealth.regenCapacityMp, MAX_REGEN_CAPACITY)
 	
+	val wasUsedRecently: Boolean
+		get() = world.totalWorldTime - lastUseTick < 20L
+	
 	// Variables
 	
 	private var ticksToRegen = 20
+	private var lastUseTick = 0L
 	private var isInactive = false
 	
 	private var particle: Pair<IParticleSpawner, IShape>? = null
@@ -88,6 +92,7 @@ class TileEntityEnergyCluster : TileEntityBase(), ITickable{
 		energyLevel -= quantity
 		ticksToRegen = 20 + (40F / currentHealth.regenSpeedMp).ceilToInt()
 		
+		lastUseTick = world.totalWorldTime
 		isInactive = false
 		return true
 	}
