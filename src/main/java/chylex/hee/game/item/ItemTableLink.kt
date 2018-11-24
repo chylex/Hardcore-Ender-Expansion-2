@@ -110,7 +110,7 @@ class ItemTableLink : Item(){
 			return FAIL
 		}
 		
-		player.cooldownTracker.setCooldown(this, 7)
+		player.cooldownTracker.setCooldown(this, 5)
 		
 		if (world.isRemote){
 			return SUCCESS
@@ -145,7 +145,7 @@ class ItemTableLink : Item(){
 				setLong(TIME_TAG, world.totalWorldTime)
 			}
 			
-			PacketClientFX(FX_USE, FxUseData(pos, soundType)).sendToPlayer(player)
+			PacketClientFX(FX_USE, FxUseData(pos, soundType)).sendToAllAround(world, pos, 16.0)
 		}
 		
 		return SUCCESS
