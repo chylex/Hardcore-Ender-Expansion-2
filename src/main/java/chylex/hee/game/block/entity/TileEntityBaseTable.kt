@@ -1,82 +1,67 @@
 package chylex.hee.game.block.entity
 import chylex.hee.game.block.BlockAbstractTable
 import chylex.hee.game.block.BlockAbstractTable.Companion.TIER
-import chylex.hee.system.util.Pos
-import chylex.hee.system.util.distanceSqTo
-import chylex.hee.system.util.getLongArray
+import chylex.hee.game.block.entity.TileEntityBase.Context.STORAGE
+import chylex.hee.game.mechanics.table.TableLinkedPedestalHandler
 import chylex.hee.game.mechanics.table.process.ITableProcess
 import chylex.hee.system.util.getState
-import chylex.hee.system.util.getTile
-import chylex.hee.system.util.setLongArray
 import net.minecraft.nbt.NBTTagCompound
 import net.minecraft.util.ITickable
-import net.minecraft.util.math.BlockPos
 
 abstract class TileEntityBaseTable<T : ITableProcess> : TileEntityBase(), ITickable{
 	private companion object{
 		private const val MAX_PEDESTAL_DISTANCE = 6
-		private const val MAX_PEDESTAL_DISTANCE_SQ = MAX_PEDESTAL_DISTANCE * MAX_PEDESTAL_DISTANCE
 	}
+	
+	var maxInputPedestals = 0
+		private set
 	
 	abstract val tableIndicatorColor: Int
 	
-	private val linkedPedestals = HashSet<BlockPos>(/*initialCapacity */ 4, /*loadFactor */ 1F)
+	@Suppress("LeakingThis")
+	private val pedestalHandler = TableLinkedPedestalHandler(this, MAX_PEDESTAL_DISTANCE)
 	
-	private val linkedPedestalSeq
-		get() = linkedPedestals.asSequence().mapNotNull { it.getTile<TileEntityTablePedestal>(world) }
-	
-	// Behavior (General)
-	
-	abstract fun tickTable()
+	// Behavior
 	
 	override fun firstTick(){
+		val state = pos.getState(world)
+		val block = state.block as? BlockAbstractTable ?: return // TODO
+		
+		maxInputPedestals = when(state.getValue(TIER) - block.minAllowedTier){
+			2 -> 7
+			1 -> 5
+			0 -> 3
+			else -> 0
+		}
 	}
 	
 	final override fun update(){
 	}
 	
 	fun onTableDestroyed(dropTableLink: Boolean){
-		for(pos in linkedPedestals){
-			pos.getTile<TileEntityTablePedestal>(world)?.onTableDestroyed(dropTableLink)
-		}
-		
-		linkedPedestals.clear() // must reset state because the method is called twice if the player is in creative mode
+		pedestalHandler.pedestalTiles.forEach { it.onTableDestroyed(this, dropTableLink) }
+		pedestalHandler.onAllPedestalsUnlinked() // must reset state because the method is called twice if the player is in creative mode
 	}
-	
-	// Behavior (Linking)
 	
 	fun tryLinkPedestal(pedestal: TileEntityTablePedestal): Boolean{
-		if (pedestal.hasLinkedTable){
-			return false
-		}
-		
-		val pedestalPos = pedestal.pos
-		
-		if (linkedPedestals.contains(pedestalPos) || pedestalPos.y != pos.y || pedestalPos.distanceSqTo(pos) > MAX_PEDESTAL_DISTANCE_SQ){
-			return false
-		}
-		
-		linkedPedestals.add(pedestalPos)
-		pedestal.setLinkedTable(this)
-		
-		markDirty()
-		return true
+		return pedestalHandler.tryLinkPedestal(pedestal)
 	}
 	
-	fun notifyPedestalUnlinked(pedestal: TileEntityTablePedestal){
-		if (linkedPedestals.remove(pedestal.pos)){
-			markDirty()
-		}
+	fun tryUnlinkPedestal(pedestal: TileEntityTablePedestal, dropTableLink: Boolean): Boolean{
+		return pedestalHandler.tryUnlinkPedestal(pedestal, dropTableLink)
 	}
 	
 	// Serialization
 	
 	override fun writeNBT(nbt: NBTTagCompound, context: Context) = with(nbt){
-		setLongArray("PedestalPos", linkedPedestals.map(BlockPos::toLong).toLongArray())
+		if (context == STORAGE){
+			setTag("PedestalInfo", pedestalHandler.serializeNBT())
+		}
 	}
 	
 	override fun readNBT(nbt: NBTTagCompound, context: Context) = with(nbt){
-		linkedPedestals.clear()
-		getLongArray("PedestalPos").forEach { linkedPedestals.add(Pos(it)) }
+		if (context == STORAGE){
+			pedestalHandler.deserializeNBT(getCompoundTag("PedestalInfo"))
+		}
 	}
 }

@@ -75,16 +75,10 @@ class TileEntityTablePedestal : TileEntityBase(){
 	// Behavior (General)
 	
 	fun onPedestalDestroyed(dropTableLink: Boolean){
-		linkedTableTile?.let {
-			it.notifyPedestalUnlinked(this)
-			
-			if (dropTableLink){
-				spawnTableLinkAt(pos)
-			}
-		}
+		linkedTableTile?.tryUnlinkPedestal(this, dropTableLink)
+		linkedTable = null // must reset state because the method is called twice if the player is in creative mode
 		
 		dropAllItems()
-		linkedTable = null // must reset state because the method is called twice if the player is in creative mode
 	}
 	
 	// Behavior (Linking)
@@ -93,29 +87,28 @@ class TileEntityTablePedestal : TileEntityBase(){
 		val currentlyLinkedTable = linkedTableTile
 		
 		if (tile !== currentlyLinkedTable){
-			currentlyLinkedTable?.notifyPedestalUnlinked(this)
+			currentlyLinkedTable?.tryUnlinkPedestal(this, dropTableLink = false)
 			linkedTable = tile.pos
 		}
 	}
 	
 	fun resetLinkedTable(dropTableLink: Boolean){
-		linkedTableTile?.let {
-			it.notifyPedestalUnlinked(this)
-			
-			if (dropTableLink){
-				spawnTableLinkAt(pos.up())
-			}
-			
-			linkedTable = null
-		}
+		linkedTableTile?.tryUnlinkPedestal(this, dropTableLink)
 	}
 	
-	fun onTableDestroyed(dropTableLink: Boolean){
-		if (dropTableLink){
-			linkedTable?.let(::spawnTableLinkAt)
+	fun onTableUnlinked(tile: TileEntityBaseTable<*>, dropTableLink: Boolean){
+		unlinkTableInternal(tile, if (dropTableLink) pos.up() else null)
+	}
+	
+	fun onTableDestroyed(tile: TileEntityBaseTable<*>, dropTableLink: Boolean){
+		unlinkTableInternal(tile, if (dropTableLink) tile.pos else null)
+	}
+	
+	private fun unlinkTableInternal(tile: TileEntityBaseTable<*>, dropTableLinkAt: BlockPos?){
+		linkedTable?.takeIf { it == tile.pos }?.let {
+			dropTableLinkAt?.let(::spawnTableLinkAt)
+			linkedTable = null
 		}
-		
-		linkedTable = null
 	}
 	
 	private fun spawnTableLinkAt(pos: BlockPos){
