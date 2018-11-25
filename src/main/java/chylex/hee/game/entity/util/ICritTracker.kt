@@ -11,7 +11,7 @@ interface ICritTracker{
 	var wasLastHitCritical: Boolean
 	
 	@EventBusSubscriber(modid = HEE.ID)
-	object EventHandler{ // TODO make companion object in kotlin 1.3
+	object EventHandler{
 		@JvmStatic
 		@SubscribeEvent(priority = LOWEST, receiveCanceled = true)
 		fun onCriticalHit(e: CriticalHitEvent){

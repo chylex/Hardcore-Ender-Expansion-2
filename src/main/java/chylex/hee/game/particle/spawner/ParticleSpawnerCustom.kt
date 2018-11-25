@@ -1,5 +1,4 @@
 package chylex.hee.game.particle.spawner
-import chylex.hee.game.particle.spawner.IParticleSpawner.Companion.mc
 import chylex.hee.game.particle.spawner.factory.IParticleData
 import chylex.hee.game.particle.spawner.factory.IParticleData.Empty
 import chylex.hee.game.particle.spawner.factory.IParticleMaker
@@ -13,6 +12,7 @@ import chylex.hee.game.particle.util.ParticleSetting.DECREASED
 import chylex.hee.game.particle.util.ParticleSetting.MINIMAL
 import chylex.hee.system.util.posVec
 import chylex.hee.system.util.square
+import net.minecraft.client.Minecraft
 import java.util.Random
 
 class ParticleSpawnerCustom(
@@ -35,7 +35,7 @@ class ParticleSpawnerCustom(
 	private val tmpOffsetMot = MutableOffsetPoint()
 	
 	override fun spawn(shape: IShape, rand: Random){
-		val mc = mc
+		val mc = Minecraft.getMinecraft()
 		
 		val world = mc.world ?: return
 		val playerPos = mc.renderViewEntity?.posVec ?: return

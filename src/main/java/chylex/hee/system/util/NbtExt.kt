@@ -20,6 +20,8 @@ import net.minecraft.util.math.BlockPos
 import net.minecraftforge.common.util.Constants.NBT
 import org.apache.commons.lang3.ArrayUtils.EMPTY_LONG_ARRAY
 import java.util.Locale
+import kotlin.contracts.ExperimentalContracts
+import kotlin.contracts.contract
 
 private const val HEE_TAG_NAME = HEE.ID
 
@@ -172,11 +174,15 @@ inline fun <reified T : Enum<T>> NBTTagCompound.getEnum(key: String): T?{
 
 // Presence checks
 
-inline fun NBTTagCompound?.hasKey(key: String): Boolean{ // TODO add contract in kotlin 1.3
+@UseExperimental(ExperimentalContracts::class)
+inline fun NBTTagCompound?.hasKey(key: String): Boolean{
+	contract { returns(true) implies (this@hasKey != null) }
 	return this != null && this.hasKey(key)
 }
 
-inline fun NBTTagCompound?.hasKey(key: String, type: Int): Boolean{ // TODO add contract in kotlin 1.3
+@UseExperimental(ExperimentalContracts::class)
+inline fun NBTTagCompound?.hasKey(key: String, type: Int): Boolean{
+	contract { returns(true) implies (this@hasKey != null) }
 	return this != null && this.hasKey(key, type)
 }
 

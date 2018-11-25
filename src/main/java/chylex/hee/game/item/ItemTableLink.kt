@@ -158,7 +158,7 @@ class ItemTableLink : Item(){
 		
 		val tag = stack.heeTagOrNull
 		
-		if (tag != null && tag.hasKey(TIME_TAG) && world.totalWorldTime - tag.getLong(TIME_TAG) >= RESET_TIME_TICKS){
+		if (tag.hasKey(TIME_TAG) && world.totalWorldTime - tag.getLong(TIME_TAG) >= RESET_TIME_TICKS){
 			removeLinkingTags(stack)
 		}
 	}

@@ -16,11 +16,11 @@ import net.minecraft.world.EnumDifficulty.PEACEFUL
 import kotlin.math.nextUp
 
 interface IDamageProcessor{
-	fun setup(properties: DamageProperties.Writer){}
-	fun modifyDamage(amount: Float, target: Entity, properties: DamageProperties.Reader): Float = amount
-	fun afterDamage(target: Entity, properties: DamageProperties.Reader){}
+	@JvmDefault fun setup(properties: DamageProperties.Writer){}
+	@JvmDefault fun modifyDamage(amount: Float, target: Entity, properties: DamageProperties.Reader): Float = amount
+	@JvmDefault fun afterDamage(target: Entity, properties: DamageProperties.Reader){}
 	
-	companion object{ // TODO make static fields in kotlin 1.3 and use default methods
+	companion object{ // TODO make static fields in kotlin 1.3
 		const val CANCEL_DAMAGE = 0F
 		
 		// Types

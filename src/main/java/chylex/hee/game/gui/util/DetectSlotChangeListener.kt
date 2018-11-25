@@ -12,9 +12,9 @@ class DetectSlotChangeListener : IContainerListener{
 		hasTriggered = true
 	}
 	
-	override fun sendWindowProperty(container: Container, varToUpdate: Int, newValue: Int){}
+	override fun sendAllContents(container: Container, items: NonNullList<ItemStack>){}
+	override fun sendWindowProperty(container: Container, variable: Int, value: Int){}
 	override fun sendAllWindowProperties(container: Container, inventory: IInventory){}
-	override fun sendAllContents(container: Container, itemsList: NonNullList<ItemStack>){}
 	
 	/**
 	 * Temporarily adds itself into the list of [Container]'s [listeners], and returns true if it reported a slot modification while executing the [block].

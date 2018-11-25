@@ -5,13 +5,13 @@ import chylex.hee.game.item.infusion.Infusion.SAFETY
 import chylex.hee.game.item.infusion.Infusion.STABILITY
 import chylex.hee.game.item.infusion.InfusionList
 import chylex.hee.game.item.infusion.InfusionTag
-import chylex.hee.game.world.util.BlockEditor
 import chylex.hee.game.mechanics.energy.ClusterSnapshot
 import chylex.hee.game.mechanics.energy.IEnergyQuantity
 import chylex.hee.game.mechanics.energy.IEnergyQuantity.Companion.displayString
 import chylex.hee.game.mechanics.energy.IEnergyQuantity.Floating
 import chylex.hee.game.mechanics.energy.IEnergyQuantity.Internal
 import chylex.hee.game.render.util.RGB
+import chylex.hee.game.world.util.BlockEditor
 import chylex.hee.init.ModBlocks
 import chylex.hee.system.Resource
 import chylex.hee.system.util.breakBlock
@@ -184,7 +184,7 @@ class ItemEnergyReceptacle : ItemBaseInfusable(){
 		if (world != null){
 			val tag = stack.heeTagOrNull
 			
-			if (tag == null || !tag.hasKey(CLUSTER_SNAPSHOT_TAG)){
+			if (!tag.hasKey(CLUSTER_SNAPSHOT_TAG)){
 				lines.add(I18n.translateToLocal("item.hee.energy_receptacle.tooltip.empty"))
 			}
 			else{
