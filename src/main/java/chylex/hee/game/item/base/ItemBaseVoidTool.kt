@@ -53,7 +53,7 @@ abstract class ItemBaseVoidTool : ItemTool(CustomToolMaterial.VOID, emptySet()){
 	
 	override fun getRGBDurabilityForDisplay(stack: ItemStack): Int{
 		return if (stack.itemDamage >= stack.maxDamage)
-			RGB(160).toInt()
+			RGB(160u).toInt()
 		else
 			super.getRGBDurabilityForDisplay(stack)
 	}

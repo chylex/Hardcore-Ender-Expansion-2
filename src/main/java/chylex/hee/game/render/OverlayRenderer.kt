@@ -118,7 +118,7 @@ object OverlayRenderer{
 			
 			val level = getQuantityString(it.energyLevel)
 			val capacity = getQuantityString(it.energyRegenCapacity)
-			drawTextOffScreenCenter(0, -40 + LINE_SPACING + mc.fontRenderer.FONT_HEIGHT, I18n.format("hee.energy.overlay.level", level, capacity), RGB(220).toInt())
+			drawTextOffScreenCenter(0, -40 + LINE_SPACING + mc.fontRenderer.FONT_HEIGHT, I18n.format("hee.energy.overlay.level", level, capacity), RGB(220u).toInt())
 		}
 	}
 	

@@ -37,7 +37,7 @@ object ParticleEnergyCluster : IParticleMaker{
 	
 	class Data(cluster: TileEntityEnergyCluster) : IParticleData{
 		private companion object{
-			private val COLOR_GRAY = adjustColorComponents(RGB(60))
+			private val COLOR_GRAY = adjustColorComponents(RGB(60u))
 			
 			private fun adjustColorComponents(color: IColor): Int{
 				val rgb = color.toRGB()

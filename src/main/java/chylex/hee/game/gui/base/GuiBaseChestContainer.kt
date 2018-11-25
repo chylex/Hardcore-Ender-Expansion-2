@@ -13,7 +13,7 @@ import net.minecraftforge.fml.relauncher.SideOnly
 abstract class GuiBaseChestContainer(container: ContainerChest) : GuiContainer(container){
 	private companion object{
 		private val TEX_BACKGROUND = Resource.Vanilla("textures/gui/container/generic_54.png")
-		private val COLOR_TEXT = RGB(64).toInt()
+		private val COLOR_TEXT = RGB(64u).toInt()
 	}
 	
 	private val containerRows = container.lowerChestInventory.size / 9
