@@ -91,19 +91,27 @@ abstract class TileEntityBaseTable<T : ITableProcess> : TileEntityBase(), ITicka
 					currentProcesses.add(newProcess)
 					newProcess.initialize()
 				}
+				
+				markDirty()
 			}
 		}
 		
-		currentProcesses.removeIf { !it.revalidate() }
+		if (currentProcesses.removeIf { !it.revalidate() }){
+			markDirty()
+		}
 		
 		if (++tickCounterProcessing >= processTickRate){
 			tickCounterProcessing = 0
 			
-			val iterator = currentProcesses.iterator()
-			
-			while(iterator.hasNext()){
-				val process = iterator.next()
-				process.tick(createProcessingContext(process, iterator))
+			if (currentProcesses.isNotEmpty()){
+				val iterator = currentProcesses.iterator()
+				
+				while(iterator.hasNext()){
+					val process = iterator.next()
+					process.tick(createProcessingContext(process, iterator))
+				}
+				
+				markDirty()
 			}
 		}
 	}

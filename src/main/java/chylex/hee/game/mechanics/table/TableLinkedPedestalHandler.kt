@@ -18,6 +18,8 @@ class TableLinkedPedestalHandler(private val table: TileEntityBaseTable<*>, maxD
 	val pedestalTiles
 		get() = pedestalPositions.asSequence().mapNotNull { it.getTile<TileEntityTablePedestal>(table.world) }
 	
+	// Behavior
+	
 	fun tryLinkPedestal(pedestal: TileEntityTablePedestal): Boolean{
 		if (pedestal.hasLinkedTable){
 			return false
