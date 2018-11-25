@@ -10,6 +10,7 @@ import kotlin.math.sin
 interface IColor{
 	fun toRGB(): Color
 	
+	@JvmDefault
 	fun toInt(alpha: Float? = null): Int{
 		val rgb = toRGB()
 		return (if (alpha == null) 0 else ((alpha * 255).floorToInt() shl 24)) or (rgb.red shl 16) or (rgb.green shl 8) or rgb.blue

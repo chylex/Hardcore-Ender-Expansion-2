@@ -8,5 +8,5 @@ interface ITrinketItem{
 	/**
 	 * Returns true if the Trinket can be activated, i.e. it can be inserted into a Trinket slot and is then returned by [TrinketHandler.getCurrentActiveItem][chylex.hee.game.mechanics.TrinketHandler.getCurrentActiveItem].
 	 */
-	fun canPlaceIntoTrinketSlot(stack: ItemStack): Boolean = true
+	@JvmDefault fun canPlaceIntoTrinketSlot(stack: ItemStack): Boolean = true
 }
