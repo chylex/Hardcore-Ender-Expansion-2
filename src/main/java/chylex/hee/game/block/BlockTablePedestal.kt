@@ -89,7 +89,7 @@ class BlockTablePedestal(builder: BlockSimple.Builder) : BlockSimpleShaped(build
 			return (entity.posY - pos.y) >= PICKUP_TOP_Y && abs(pos.x + 0.5 - entity.posX) <= PICKUP_DIST_XZ && abs(pos.z + 0.5 - entity.posZ) <= PICKUP_DIST_XZ
 		}
 		
-		fun isItemAreaBlocked(world: World, pos: BlockPos): Boolean{
+		private fun isItemAreaBlocked(world: World, pos: BlockPos): Boolean{
 			return pos.up().let { it.getState(world).getCollisionBoundingBox(world, it) != NULL_AABB }
 		}
 		
@@ -179,7 +179,7 @@ class BlockTablePedestal(builder: BlockSimple.Builder) : BlockSimpleShaped(build
 				tile.dropAllItems()
 			}
 		}
-		else{
+		else if (!BlockTablePedestal.isItemAreaBlocked(world, pos)){
 			tile.addToInput(heldItem.copyIf { player.isCreative })
 		}
 		

@@ -81,7 +81,7 @@ abstract class ProcessManyPedestals(private val world: World, pos: Array<BlockPo
 				currentState = onWorkTick(context, inputs)
 				
 				for((index, tile) in tiles.withIndex()){
-					if (tile.updateInput(inputs[index])){
+					if (tile.replaceInput(inputs[index])){
 						lastInputStacks[index] = tile.itemInputCopy
 						lastInputModCounters[index] = tile.inputModCounter
 					}

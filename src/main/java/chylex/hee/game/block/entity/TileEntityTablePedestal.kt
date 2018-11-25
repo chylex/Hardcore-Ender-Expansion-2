@@ -2,44 +2,28 @@ package chylex.hee.game.block.entity
 import chylex.hee.game.block.BlockTablePedestal
 import chylex.hee.game.block.BlockTablePedestal.Companion.IS_LINKED
 import chylex.hee.game.block.entity.TileEntityBase.Context.NETWORK
-import chylex.hee.game.gui.util.InvReverseWrapper
+import chylex.hee.game.mechanics.table.PedestalInventoryHandler
 import chylex.hee.init.ModBlocks
 import chylex.hee.init.ModItems
 import chylex.hee.system.util.FLAG_SYNC_CLIENT
-import chylex.hee.system.util.createSnapshot
 import chylex.hee.system.util.getPosOrNull
-import chylex.hee.system.util.getStack
 import chylex.hee.system.util.getTile
 import chylex.hee.system.util.isLoaded
 import chylex.hee.system.util.isNotEmpty
-import chylex.hee.system.util.loadInventory
-import chylex.hee.system.util.motionVec
 import chylex.hee.system.util.nextFloat
-import chylex.hee.system.util.nonEmptySlots
-import chylex.hee.system.util.restoreSnapshot
-import chylex.hee.system.util.saveInventory
-import chylex.hee.system.util.selectExistingEntities
 import chylex.hee.system.util.setPos
-import chylex.hee.system.util.setStack
-import chylex.hee.system.util.size
 import chylex.hee.system.util.updateState
 import net.minecraft.block.state.IBlockState
 import net.minecraft.entity.item.EntityItem
 import net.minecraft.entity.player.InventoryPlayer
-import net.minecraft.inventory.InventoryBasic
-import net.minecraft.inventory.InventoryHelper
 import net.minecraft.item.ItemStack
 import net.minecraft.nbt.NBTTagCompound
 import net.minecraft.util.EnumFacing
 import net.minecraft.util.EnumFacing.DOWN
-import net.minecraft.util.math.AxisAlignedBB
 import net.minecraft.util.math.BlockPos
-import net.minecraft.util.math.Vec3d
 import net.minecraft.world.World
 import net.minecraftforge.common.capabilities.Capability
 import net.minecraftforge.items.CapabilityItemHandler.ITEM_HANDLER_CAPABILITY
-import net.minecraftforge.items.ItemHandlerHelper
-import kotlin.math.min
 import kotlin.properties.Delegates
 
 class TileEntityTablePedestal : TileEntityBase(){
@@ -64,17 +48,13 @@ class TileEntityTablePedestal : TileEntityBase(){
 	
 	// Properties (Inventory)
 	
-	private var itemInput = ItemStack.EMPTY
-	private val itemOutput = InventoryBasic("[Output]", false, 9).apply { addInventoryChangeListener { onInventoryUpdated(updateInputModCounter = false) } }
-	private val itemOutputCap = InvReverseWrapper(itemOutput)
+	private val inventoryHandler = PedestalInventoryHandler(::onInventoryUpdated)
 	
 	val hasInputItem
-		get() = itemInput.isNotEmpty
+		get() = inventoryHandler.itemInput.isNotEmpty
 	
 	val itemInputCopy: ItemStack
-		get() = itemInput.copy()
-	
-	private var pauseInventoryUpdates = false
+		get() = inventoryHandler.itemInput.copy()
 	
 	var inputModCounter = 0
 		private set
@@ -140,116 +120,26 @@ class TileEntityTablePedestal : TileEntityBase(){
 	// Behavior (Inventory)
 	
 	fun addToInput(stack: ItemStack): Boolean{
-		if (stack.isEmpty || BlockTablePedestal.isItemAreaBlocked(world, pos)){
-			return false
-		}
-		
-		var success = false
-		
-		if (itemInput.isEmpty){
-			itemInput = stack.copy()
-			stack.size = 0
-			success = true
-		}
-		else if (ItemHandlerHelper.canItemStacksStack(stack, itemInput)){
-			val movedAmount = min(itemInput.maxStackSize - itemInput.size, stack.size)
-			
-			if (movedAmount > 0){
-				itemInput.size += movedAmount
-				stack.size -= movedAmount
-				success = true
-			}
-		}
-		
-		if (!success){
-			return false
-		}
-		
-		onInventoryUpdated(updateInputModCounter = true)
-		return true
-	}
-	
-	fun updateInput(newInput: ItemStack): Boolean{
-		if (ItemStack.areItemStacksEqual(itemInput, newInput)){
-			return false
-		}
-		
-		itemInput = newInput.copy()
-		onInventoryUpdated(updateInputModCounter = true)
-		return true
+		return inventoryHandler.addToInput(stack)
 	}
 	
 	fun addToOutput(stacks: Array<ItemStack>): Boolean{
-		pauseInventoryUpdates = true
-		
-		val prevOutput = itemOutput.createSnapshot()
-		val hasStoredEverything = stacks.all { itemOutput.addItem(it).isEmpty }
-		
-		if (!hasStoredEverything){
-			itemOutput.restoreSnapshot(prevOutput)
-		}
-		
-		pauseInventoryUpdates = false
-		
-		if (hasStoredEverything){
-			itemInput = ItemStack.EMPTY
-			onInventoryUpdated(updateInputModCounter = true)
-			return true
-		}
-		
-		return false
+		return inventoryHandler.addToOutput(stacks)
+	}
+	
+	fun replaceInput(newInput: ItemStack): Boolean{
+		return inventoryHandler.replaceInput(newInput)
 	}
 	
 	fun moveOutputToPlayerInventory(inventory: InventoryPlayer): Boolean{
-		if (BlockTablePedestal.isItemAreaBlocked(world, pos)){
-			return false
-		}
-		
-		var hasTransferedAnything = false
-		
-		for((_, stack) in itemOutput.nonEmptySlots){
-			val prevStackSize = stack.size
-			
-			if (inventory.addItemStackToInventory(stack) || stack.size != prevStackSize){ // addItemStackToInventory returns false if combined w/ existing slot
-				hasTransferedAnything = true
-			}
-		}
-		
-		if (!hasTransferedAnything){
-			return false
-		}
-		
-		onInventoryUpdated(updateInputModCounter = false)
-		return true
+		return inventoryHandler.moveOutputToPlayerInventory(inventory)
 	}
 	
 	fun dropAllItems(){
-		val posAbove = pos.up()
-		val itemArea = AxisAlignedBB(posAbove)
-		val previousItemEntities = world.selectExistingEntities.inBox<EntityItem>(itemArea).toSet()
-		
-		// UPDATE: see if 1.13 fixes itemstacks spawning and spazzing out all over the fucking place
-		InventoryHelper.spawnItemStack(world, posAbove.x.toDouble(), posAbove.y.toDouble(), posAbove.z.toDouble(), itemInput)
-		InventoryHelper.dropInventoryItems(world, posAbove, itemOutput)
-		
-		for(itemEntity in world.selectExistingEntities.inBox<EntityItem>(itemArea)){
-			if (!previousItemEntities.contains(itemEntity)){
-				itemEntity.setNoPickupDelay()
-				itemEntity.motionVec = Vec3d.ZERO
-				itemEntity.thrower = BlockTablePedestal.DROPPED_ITEM_THROWER_NAME
-			}
-		}
-		
-		itemInput = ItemStack.EMPTY
-		itemOutput.clear()
-		onInventoryUpdated(updateInputModCounter = true)
+		inventoryHandler.dropAllItems(world, pos)
 	}
 	
 	private fun onInventoryUpdated(updateInputModCounter: Boolean){
-		if (pauseInventoryUpdates){
-			return
-		}
-		
 		notifyUpdate(FLAG_SYNC_CLIENT or FLAG_MARK_DIRTY)
 		
 		if (updateInputModCounter){
@@ -263,7 +153,7 @@ class TileEntityTablePedestal : TileEntityBase(){
 	
 	override fun <T : Any?> getCapability(capability: Capability<T>, facing: EnumFacing?): T?{
 		return if (capability === ITEM_HANDLER_CAPABILITY && facing == DOWN)
-			ITEM_HANDLER_CAPABILITY.cast(itemOutputCap)
+			ITEM_HANDLER_CAPABILITY.cast(inventoryHandler.itemOutputCap)
 		else
 			super.getCapability(capability, facing)
 	}
@@ -279,28 +169,18 @@ class TileEntityTablePedestal : TileEntityBase(){
 			setPos("TablePos", it)
 		}
 		
-		setStack("Input", itemInput)
-		saveInventory("Output", itemOutput)
+		setTag("Inventory", inventoryHandler.serializeNBT())
 	}
 	
 	override fun readNBT(nbt: NBTTagCompound, context: Context) = with(nbt){
 		linkedTable = getPosOrNull("TablePos")
 		
-		itemInput = getStack("Input")
-		loadInventory("Output", itemOutput)
+		inventoryHandler.deserializeNBT(nbt.getCompoundTag("Inventory"))
 		
 		if (context == NETWORK){
-			val nonEmptyStacks = ArrayList<ItemStack>(10).apply {
-				if (itemInput.isNotEmpty){
-					add(itemInput)
-				}
-				
-				for((_, stack) in itemOutput.nonEmptySlots){
-					add(stack)
-				}
 			}
 			
-			stacksForRendering = nonEmptyStacks.toTypedArray()
+			stacksForRendering = inventoryHandler.nonEmptyStacks.toTypedArray()
 		}
 	}
 }
