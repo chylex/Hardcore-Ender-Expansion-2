@@ -8,6 +8,8 @@ import chylex.hee.game.mechanics.table.process.ITableProcess
 import chylex.hee.system.util.getState
 import net.minecraft.nbt.NBTTagCompound
 import net.minecraft.util.ITickable
+import kotlin.properties.ObservableProperty
+import kotlin.reflect.KProperty
 
 abstract class TileEntityBaseTable<T : ITableProcess> : TileEntityBase(), ITickable{
 	private companion object{
@@ -25,6 +27,16 @@ abstract class TileEntityBaseTable<T : ITableProcess> : TileEntityBase(), ITicka
 	
 	@Suppress("LeakingThis")
 	private val clusterHandler = TableEnergyClusterHandler(this, MAX_CLUSTER_DISTANCE)
+	
+	// Utilities
+	
+	inner class MarkDirtyOnChange<T>(initialValue: T) : ObservableProperty<T>(initialValue){
+		override fun afterChange(property: KProperty<*>, oldValue: T, newValue: T){
+			if (isLoaded && oldValue != newValue){
+				markDirty()
+			}
+		}
+	}
 	
 	// Behavior
 	
