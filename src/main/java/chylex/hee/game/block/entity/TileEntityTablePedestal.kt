@@ -6,6 +6,7 @@ import chylex.hee.game.gui.util.InvReverseWrapper
 import chylex.hee.init.ModBlocks
 import chylex.hee.init.ModItems
 import chylex.hee.system.util.FLAG_SYNC_CLIENT
+import chylex.hee.system.util.createSnapshot
 import chylex.hee.system.util.getPosOrNull
 import chylex.hee.system.util.getStack
 import chylex.hee.system.util.getTile
@@ -15,6 +16,7 @@ import chylex.hee.system.util.loadInventory
 import chylex.hee.system.util.motionVec
 import chylex.hee.system.util.nextFloat
 import chylex.hee.system.util.nonEmptySlots
+import chylex.hee.system.util.restoreSnapshot
 import chylex.hee.system.util.saveInventory
 import chylex.hee.system.util.selectExistingEntities
 import chylex.hee.system.util.setPos
@@ -63,11 +65,19 @@ class TileEntityTablePedestal : TileEntityBase(){
 	// Properties (Inventory)
 	
 	private var itemInput = ItemStack.EMPTY
-	private val itemOutput = InventoryBasic("[Output]", false, 9).apply { addInventoryChangeListener { onInventoryUpdated() } }
+	private val itemOutput = InventoryBasic("[Output]", false, 9).apply { addInventoryChangeListener { onInventoryUpdated(updateInputModCounter = false) } }
 	private val itemOutputCap = InvReverseWrapper(itemOutput)
 	
-	private val hasNoItems
-		get() = itemInput.isEmpty && !itemOutput.nonEmptySlots.hasNext()
+	val hasInputItem
+		get() = itemInput.isNotEmpty
+	
+	val itemInputCopy: ItemStack
+		get() = itemInput.copy()
+	
+	private var pauseInventoryUpdates = false
+	
+	var inputModCounter = 0
+		private set
 	
 	var stacksForRendering = emptyArray<ItemStack>()
 		private set
@@ -155,8 +165,39 @@ class TileEntityTablePedestal : TileEntityBase(){
 			return false
 		}
 		
-		onInventoryUpdated()
+		onInventoryUpdated(updateInputModCounter = true)
 		return true
+	}
+	
+	fun updateInput(newInput: ItemStack): Boolean{
+		if (ItemStack.areItemStacksEqual(itemInput, newInput)){
+			return false
+		}
+		
+		itemInput = newInput.copy()
+		onInventoryUpdated(updateInputModCounter = true)
+		return true
+	}
+	
+	fun addToOutput(stacks: Array<ItemStack>): Boolean{
+		pauseInventoryUpdates = true
+		
+		val prevOutput = itemOutput.createSnapshot()
+		val hasStoredEverything = stacks.all { itemOutput.addItem(it).isEmpty }
+		
+		if (!hasStoredEverything){
+			itemOutput.restoreSnapshot(prevOutput)
+		}
+		
+		pauseInventoryUpdates = false
+		
+		if (hasStoredEverything){
+			itemInput = ItemStack.EMPTY
+			onInventoryUpdated(updateInputModCounter = true)
+			return true
+		}
+		
+		return false
 	}
 	
 	fun moveOutputToPlayerInventory(inventory: InventoryPlayer): Boolean{
@@ -178,7 +219,7 @@ class TileEntityTablePedestal : TileEntityBase(){
 			return false
 		}
 		
-		onInventoryUpdated()
+		onInventoryUpdated(updateInputModCounter = false)
 		return true
 	}
 	
@@ -201,11 +242,19 @@ class TileEntityTablePedestal : TileEntityBase(){
 		
 		itemInput = ItemStack.EMPTY
 		itemOutput.clear()
-		onInventoryUpdated()
+		onInventoryUpdated(updateInputModCounter = true)
 	}
 	
-	private fun onInventoryUpdated(){
+	private fun onInventoryUpdated(updateInputModCounter: Boolean){
+		if (pauseInventoryUpdates){
+			return
+		}
+		
 		notifyUpdate(FLAG_SYNC_CLIENT or FLAG_MARK_DIRTY)
+		
+		if (updateInputModCounter){
+			++inputModCounter
+		}
 	}
 	
 	override fun hasCapability(capability: Capability<*>, facing: EnumFacing?): Boolean{
