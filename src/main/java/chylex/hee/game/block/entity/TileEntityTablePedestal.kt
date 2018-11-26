@@ -6,6 +6,7 @@ import chylex.hee.game.mechanics.table.PedestalInventoryHandler
 import chylex.hee.init.ModBlocks
 import chylex.hee.init.ModItems
 import chylex.hee.system.util.FLAG_SYNC_CLIENT
+import chylex.hee.system.util.delegate.NotifyOnChange
 import chylex.hee.system.util.getPosOrNull
 import chylex.hee.system.util.getTile
 import chylex.hee.system.util.isLoaded
@@ -24,15 +25,12 @@ import net.minecraft.util.math.BlockPos
 import net.minecraft.world.World
 import net.minecraftforge.common.capabilities.Capability
 import net.minecraftforge.items.CapabilityItemHandler.ITEM_HANDLER_CAPABILITY
-import kotlin.properties.Delegates
 
 class TileEntityTablePedestal : TileEntityBase(){
 	
 	// Properties (Linking)
 	
-	private var linkedTable: BlockPos? by Delegates.observable<BlockPos?>(null){
-		_, oldValue, newValue -> if (oldValue != newValue) onLinkedStatusChanged()
-	}
+	private var linkedTable by NotifyOnChange<BlockPos?>(null, ::onLinkedStatusChanged)
 	
 	private val linkedTableTile: TileEntityBaseTable<*>?
 		get() = linkedTable?.getTile(world)

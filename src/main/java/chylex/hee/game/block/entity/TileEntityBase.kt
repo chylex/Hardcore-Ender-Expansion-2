@@ -1,14 +1,13 @@
 package chylex.hee.game.block.entity
 import chylex.hee.game.block.entity.TileEntityBase.Context.NETWORK
 import chylex.hee.game.block.entity.TileEntityBase.Context.STORAGE
+import chylex.hee.system.util.delegate.NotifyOnChange
 import chylex.hee.system.util.getState
 import chylex.hee.system.util.heeTag
 import net.minecraft.nbt.NBTTagCompound
 import net.minecraft.network.NetworkManager
 import net.minecraft.network.play.server.SPacketUpdateTileEntity
 import net.minecraft.tileentity.TileEntity
-import kotlin.properties.ObservableProperty
-import kotlin.reflect.KProperty
 
 abstract class TileEntityBase : TileEntity(){
 	protected companion object{
@@ -19,12 +18,8 @@ abstract class TileEntityBase : TileEntity(){
 	
 	// Synchronization
 	
-	protected inner class Notifying<T>(initialValue: T, private val notifyFlags: Int) : ObservableProperty<T>(initialValue){
-		override fun afterChange(property: KProperty<*>, oldValue: T, newValue: T){
-			if (oldValue != newValue){
-				notifyUpdate(notifyFlags)
-			}
-		}
+	protected fun <T> Notifying(initialValue: T, notifyFlags: Int) = NotifyOnChange(initialValue){
+		-> notifyUpdate(notifyFlags)
 	}
 	
 	protected var isLoaded = false

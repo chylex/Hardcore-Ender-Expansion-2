@@ -9,13 +9,12 @@ import chylex.hee.game.mechanics.table.process.ITableProcess
 import chylex.hee.game.mechanics.table.process.ITableProcessSerializer
 import chylex.hee.system.util.NBTList.Companion.setList
 import chylex.hee.system.util.NBTObjectList
+import chylex.hee.system.util.delegate.NotifyOnChange
 import chylex.hee.system.util.getListOfCompounds
 import chylex.hee.system.util.getState
 import net.minecraft.nbt.NBTTagCompound
 import net.minecraft.util.ITickable
 import net.minecraft.world.World
-import kotlin.properties.ObservableProperty
-import kotlin.reflect.KProperty
 
 abstract class TileEntityBaseTable<T : ITableProcess> : TileEntityBase(), ITickable{
 	private companion object{
@@ -46,12 +45,8 @@ abstract class TileEntityBaseTable<T : ITableProcess> : TileEntityBase(), ITicka
 	
 	// Utilities
 	
-	inner class MarkDirtyOnChange<T>(initialValue: T) : ObservableProperty<T>(initialValue){
-		override fun afterChange(property: KProperty<*>, oldValue: T, newValue: T){
-			if (isLoaded && oldValue != newValue){
-				markDirty()
-			}
-		}
+	fun <T> MarkDirtyOnChange(initialValue: T) = NotifyOnChange(initialValue){
+		-> if (isLoaded) markDirty()
 	}
 	
 	private val predicatePedestalBusy: (TileEntityTablePedestal) -> Boolean =
