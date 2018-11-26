@@ -101,6 +101,7 @@ abstract class ProcessManyPedestals(private val world: World, pos: Array<BlockPo
 				val targetPedestal = tiles.find { it.pos == state.pedestal }
 				
 				if (targetPedestal?.addToOutput(state.stacks) == true){
+					tiles.forEach { it.replaceInputSilently(ItemStack.EMPTY) } // TODO handle processes w/ partial stack handling
 					setStatusIndicator(tiles, null)
 					context.markProcessFinished()
 				}

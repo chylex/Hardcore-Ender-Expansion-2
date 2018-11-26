@@ -30,7 +30,7 @@ import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.init.SoundEvents
 import net.minecraft.tileentity.TileEntity
 import net.minecraft.util.BlockRenderLayer
-import net.minecraft.util.BlockRenderLayer.CUTOUT_MIPPED
+import net.minecraft.util.BlockRenderLayer.CUTOUT
 import net.minecraft.util.EnumFacing
 import net.minecraft.util.EnumFacing.DOWN
 import net.minecraft.util.EnumHand
@@ -212,7 +212,7 @@ class BlockTablePedestal(builder: BlockSimple.Builder) : BlockSimpleShaped(build
 	
 	// Client
 	
-	override fun getRenderLayer(): BlockRenderLayer = CUTOUT_MIPPED
+	override fun getRenderLayer(): BlockRenderLayer = CUTOUT
 	
 	@SideOnly(Side.CLIENT)
 	object Color : IBlockColor{

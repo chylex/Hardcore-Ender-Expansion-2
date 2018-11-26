@@ -32,7 +32,6 @@ class PedestalStatusIndicator(private val pedestal: TileEntityTablePedestal) : I
 	
 	var contents by NotifyOnChange(Contents.NONE, ::onColorUpdated)
 	var process by NotifyOnChange<Process?>(null, ::onColorUpdated)
-	var override by NotifyOnChange<Override?>(null, ::onColorUpdated)
 	
 	var currentColor: IColor by pedestal.SyncOnChange(Contents.NONE.color)
 		private set
