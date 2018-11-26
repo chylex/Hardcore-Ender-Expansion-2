@@ -28,7 +28,7 @@ import net.minecraftforge.items.CapabilityItemHandler.ITEM_HANDLER_CAPABILITY
 
 class TileEntityTablePedestal : TileEntityBase(){
 	
-	// Properties (Linking)
+	// Properties (Tables)
 	
 	private var linkedTable by NotifyOnChange<BlockPos?>(null, ::onLinkedStatusChanged)
 	
@@ -54,6 +54,9 @@ class TileEntityTablePedestal : TileEntityBase(){
 	val itemInputCopy: ItemStack
 		get() = inventoryHandler.itemInput.copy()
 	
+	var inputModTime = 0L
+		private set
+	
 	var inputModCounter = 0
 		private set
 	
@@ -69,7 +72,7 @@ class TileEntityTablePedestal : TileEntityBase(){
 		dropAllItems()
 	}
 	
-	// Behavior (Linking)
+	// Behavior (Tables)
 	
 	fun setLinkedTable(tile: TileEntityBaseTable<*>){
 		val currentlyLinkedTable = linkedTableTile
@@ -125,8 +128,8 @@ class TileEntityTablePedestal : TileEntityBase(){
 		return inventoryHandler.addToOutput(stacks)
 	}
 	
-	fun replaceInput(newInput: ItemStack): Boolean{
-		return inventoryHandler.replaceInput(newInput)
+	fun replaceInputSilently(newInput: ItemStack): Boolean{
+		return inventoryHandler.replaceInputSilently(newInput)
 	}
 	
 	fun moveOutputToPlayerInventory(inventory: InventoryPlayer): Boolean{
@@ -142,6 +145,7 @@ class TileEntityTablePedestal : TileEntityBase(){
 		
 		if (updateInputModCounter){
 			++inputModCounter
+			inputModTime = world.totalWorldTime
 		}
 	}
 	

@@ -75,15 +75,17 @@ abstract class ProcessManyPedestals(private val world: World, pos: Array<BlockPo
 		
 		when(state){
 			Work -> {
-				setStatusIndicator(tiles, StatusIndicatorColor.PROCESSING)
-				
-				val inputs = Array(tiles.size){ tiles[it].itemInputCopy }
-				currentState = onWorkTick(context, inputs)
-				
-				for((index, tile) in tiles.withIndex()){
-					if (tile.replaceInput(inputs[index])){
-						lastInputStacks[index] = tile.itemInputCopy
-						lastInputModCounters[index] = tile.inputModCounter
+				if (tiles.any { world.totalWorldTime - it.inputModTime < 20L }){
+				}
+				else{
+					val inputs = Array(tiles.size){ tiles[it].itemInputCopy }
+					currentState = onWorkTick(context, inputs)
+					
+					for((index, tile) in tiles.withIndex()){
+						if (tile.replaceInputSilently(inputs[index])){
+							lastInputStacks[index] = tile.itemInputCopy
+							lastInputModCounters[index] = tile.inputModCounter
+						}
 					}
 				}
 			}
