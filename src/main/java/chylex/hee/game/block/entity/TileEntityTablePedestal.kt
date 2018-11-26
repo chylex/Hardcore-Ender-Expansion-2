@@ -4,6 +4,10 @@ import chylex.hee.game.block.BlockTablePedestal.Companion.IS_LINKED
 import chylex.hee.game.block.entity.TileEntityBase.Context.NETWORK
 import chylex.hee.game.block.entity.TileEntityBase.Context.STORAGE
 import chylex.hee.game.mechanics.table.PedestalInventoryHandler
+import chylex.hee.game.mechanics.table.PedestalStatusIndicator
+import chylex.hee.game.mechanics.table.PedestalStatusIndicator.Contents.NONE
+import chylex.hee.game.mechanics.table.PedestalStatusIndicator.Contents.OUTPUTTED
+import chylex.hee.game.mechanics.table.PedestalStatusIndicator.Contents.WITH_INPUT
 import chylex.hee.init.ModBlocks
 import chylex.hee.init.ModItems
 import chylex.hee.system.util.FLAG_SYNC_CLIENT
@@ -91,6 +95,7 @@ class TileEntityTablePedestal : TileEntityBase(){
 		if (tile !== currentlyLinkedTable){
 			currentlyLinkedTable?.tryUnlinkPedestal(this, dropTableLink = false)
 			linkedTable = tile.pos
+			statusIndicator.process = null
 		}
 	}
 	
@@ -129,6 +134,10 @@ class TileEntityTablePedestal : TileEntityBase(){
 		}
 	}
 	
+	fun updateProcessStatus(newStatus: PedestalStatusIndicator.Process?){
+		statusIndicator.process = newStatus
+	}
+	
 	// Behavior (Inventory)
 	
 	fun addToInput(stack: ItemStack): Boolean{
@@ -152,6 +161,12 @@ class TileEntityTablePedestal : TileEntityBase(){
 	}
 	
 	private fun onInventoryUpdated(updateInputModCounter: Boolean){
+		statusIndicator.contents = when{
+			inventoryHandler.hasOutput -> OUTPUTTED
+			hasInputItem -> WITH_INPUT
+			else -> NONE
+		}
+		
 		notifyUpdate(FLAG_SYNC_CLIENT or FLAG_MARK_DIRTY)
 		
 		if (updateInputModCounter){

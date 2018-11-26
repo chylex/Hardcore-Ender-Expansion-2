@@ -36,6 +36,9 @@ class PedestalInventoryHandler(private val updateCallback: (Boolean) -> Unit) : 
 	
 	val itemOutputCap = InvReverseWrapper(itemOutput)
 	
+	val hasOutput
+		get() = itemOutput.nonEmptySlots.hasNext()
+	
 	val nonEmptyStacks
 		get() = ArrayList<ItemStack>(10).apply {
 			if (itemInput.isNotEmpty){

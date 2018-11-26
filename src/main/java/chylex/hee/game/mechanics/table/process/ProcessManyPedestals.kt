@@ -1,6 +1,9 @@
 package chylex.hee.game.mechanics.table.process
 import chylex.hee.game.block.entity.TileEntityTablePedestal
-import chylex.hee.game.block.entity.TileEntityTablePedestal.StatusIndicatorColor
+import chylex.hee.game.mechanics.table.PedestalStatusIndicator
+import chylex.hee.game.mechanics.table.PedestalStatusIndicator.Process.BLOCKED
+import chylex.hee.game.mechanics.table.PedestalStatusIndicator.Process.PAUSED
+import chylex.hee.game.mechanics.table.PedestalStatusIndicator.Process.WORKING
 import chylex.hee.game.mechanics.table.process.ProcessManyPedestals.State.Cancel
 import chylex.hee.game.mechanics.table.process.ProcessManyPedestals.State.Output
 import chylex.hee.game.mechanics.table.process.ProcessManyPedestals.State.Work
@@ -58,6 +61,7 @@ abstract class ProcessManyPedestals(private val world: World, pos: Array<BlockPo
 		val newInputs = Array(tiles.size){ tiles[it].itemInputCopy }
 		
 		if (newInputs.any { it.isEmpty } || !isInputStillValid(lastInputStacks, newInputs)){
+			setStatusIndicator(tiles, null)
 			return false
 		}
 		
@@ -76,8 +80,11 @@ abstract class ProcessManyPedestals(private val world: World, pos: Array<BlockPo
 		when(state){
 			Work -> {
 				if (tiles.any { world.totalWorldTime - it.inputModTime < 20L }){
+					setStatusIndicator(tiles, PAUSED)
 				}
 				else{
+					setStatusIndicator(tiles, WORKING)
+					
 					val inputs = Array(tiles.size){ tiles[it].itemInputCopy }
 					currentState = onWorkTick(context, inputs)
 					
@@ -95,11 +102,10 @@ abstract class ProcessManyPedestals(private val world: World, pos: Array<BlockPo
 				
 				if (targetPedestal?.addToOutput(state.stacks) == true){
 					setStatusIndicator(tiles, null)
-					targetPedestal.statusIndicatorColor = StatusIndicatorColor.PROCESSING_FINISHED
 					context.markProcessFinished()
 				}
 				else{
-					setStatusIndicator(tiles, StatusIndicatorColor.PROCESSING_BLOCKED)
+					setStatusIndicator(tiles, BLOCKED)
 				}
 			}
 			
@@ -156,8 +162,8 @@ abstract class ProcessManyPedestals(private val world: World, pos: Array<BlockPo
 			return constructor(world, nbt.getLongArray("PedestalPos").map(::Pos).toTypedArray()).also { it.deserializeNBT(nbt) }
 		}
 		
-		private fun setStatusIndicator(pedestals: Array<TileEntityTablePedestal>, color: StatusIndicatorColor?){
-			pedestals.forEach { it.statusIndicatorColor = color }
+		private fun setStatusIndicator(pedestals: Array<TileEntityTablePedestal>, newStatus: PedestalStatusIndicator.Process?){
+			pedestals.forEach { it.updateProcessStatus(newStatus) }
 		}
 	}
 }
