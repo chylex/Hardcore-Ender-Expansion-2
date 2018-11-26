@@ -46,7 +46,7 @@ object RenderTileTablePedestal : TileEntitySpecialRenderer<TileEntityTablePedest
 	private const val SPREAD_RAND_3D_XZ = 0.2625F
 	private const val SPREAD_RAND_3D_Y = 0.39375F
 	
-	private val ITEM_ANGLES = (1..10).run {
+	private val ITEM_ANGLES = (1..9).run {
 		val section = 360F / endInclusive
 		map { (it - 0.5F) * section }
 	}
