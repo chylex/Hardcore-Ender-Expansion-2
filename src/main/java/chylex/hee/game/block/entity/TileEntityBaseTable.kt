@@ -77,7 +77,7 @@ abstract class TileEntityBaseTable<T : ITableProcess> : TileEntityBase(), ITicka
 		if (++tickCounterRefresh >= PROCESS_REFRESH_RATE){
 			tickCounterRefresh = 0
 			
-			val unassignedPedestals = pedestalHandler.pedestalTiles.filter(predicatePedestalHasInput).filterNot(predicatePedestalBusy).toList()
+			val unassignedPedestals = pedestalHandler.inputPedestalTiles.filter(predicatePedestalHasInput).filterNot(predicatePedestalBusy).toList()
 			
 			if (unassignedPedestals.isNotEmpty()){
 				tickCounterProcessing = 0
@@ -112,7 +112,8 @@ abstract class TileEntityBaseTable<T : ITableProcess> : TileEntityBase(), ITicka
 	}
 	
 	fun onTableDestroyed(dropTableLink: Boolean){
-		pedestalHandler.pedestalTiles.forEach { it.onTableDestroyed(this, dropTableLink) }
+		pedestalHandler.inputPedestalTiles.forEach { it.onTableDestroyed(this, dropTableLink) }
+		pedestalHandler.dedicatedOutputPedestalTile?.onTableDestroyed(this, dropTableLink)
 		pedestalHandler.onAllPedestalsUnlinked() // must reset state because the method is called twice if the player is in creative mode
 	}
 	
@@ -124,6 +125,10 @@ abstract class TileEntityBaseTable<T : ITableProcess> : TileEntityBase(), ITicka
 		return pedestalHandler.tryUnlinkPedestal(pedestal, dropTableLink)
 	}
 	
+	fun tryMarkInputPedestalAsOutput(pedestal: TileEntityTablePedestal): Boolean{
+		return pedestalHandler.tryMarkInputPedestalAsOutput(pedestal)
+	}
+	
 	// Processing
 	
 	protected abstract fun createNewProcesses(unassignedPedestals: List<TileEntityTablePedestal>): List<T>
@@ -131,6 +136,10 @@ abstract class TileEntityBaseTable<T : ITableProcess> : TileEntityBase(), ITicka
 	private fun createProcessingContext(process: ITableProcess, iterator: MutableIterator<ITableProcess>) = object : ITableContext{
 		override fun requestUseResources(): Boolean{
 			return clusterHandler.drainEnergy(process.energyPerTick)
+		}
+		
+		override fun getOutputPedestal(candidate: TileEntityTablePedestal): TileEntityTablePedestal{
+			return pedestalHandler.dedicatedOutputPedestalTile ?: candidate
 		}
 		
 		override fun markProcessFinished(){

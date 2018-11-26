@@ -3,6 +3,7 @@ import chylex.hee.game.block.BlockAbstractTableTile
 import chylex.hee.game.block.entity.TileEntityBaseTable
 import chylex.hee.game.block.entity.TileEntityTablePedestal
 import chylex.hee.game.item.ItemTableLink.Companion.SoundType.LINK_FAIL
+import chylex.hee.game.item.ItemTableLink.Companion.SoundType.LINK_OUTPUT
 import chylex.hee.game.item.ItemTableLink.Companion.SoundType.LINK_RESTART
 import chylex.hee.game.item.ItemTableLink.Companion.SoundType.LINK_SUCCESS
 import chylex.hee.init.ModBlocks
@@ -51,7 +52,7 @@ class ItemTableLink : Item(){
 		private const val RESET_TIME_TICKS = 20 * 8
 		
 		enum class SoundType{
-			LINK_FAIL, LINK_RESTART, LINK_SUCCESS
+			LINK_FAIL, LINK_OUTPUT, LINK_RESTART, LINK_SUCCESS
 		}
 		
 		class FxUseData(private val pos: BlockPos, private val type: SoundType) : IFXData{
@@ -69,6 +70,7 @@ class ItemTableLink : Item(){
 				when(SoundType.values().getOrNull(readByte().toInt())){
 					LINK_SUCCESS -> ModSounds.ITEM_TABLE_LINK_USE.playClient(pos, SoundCategory.PLAYERS, pitch = rand.nextFloat(0.49F, 0.51F))
 					LINK_RESTART -> ModSounds.ITEM_TABLE_LINK_USE.playClient(pos, SoundCategory.PLAYERS, pitch = rand.nextFloat(0.69F, 0.71F))
+					LINK_OUTPUT -> ModSounds.ITEM_TABLE_LINK_USE.playClient(pos, SoundCategory.PLAYERS, volume = 0.9F, pitch = 0.63F)
 					else -> ModSounds.ITEM_TABLE_LINK_USE_FAIL.playClient(pos, SoundCategory.PLAYERS, volume = 0.9F, pitch = rand.nextFloat(0.72F, 0.73F))
 				}
 			}
@@ -107,6 +109,16 @@ class ItemTableLink : Item(){
 	
 	override fun onItemUse(player: EntityPlayer, world: World, pos: BlockPos, hand: EnumHand, facing: EnumFacing, hitX: Float, hitY: Float, hitZ: Float): EnumActionResult{
 		if (!player.isSneaking || !isValidTarget(world, pos)){
+			val pedestal = pos.getTile<TileEntityTablePedestal>(world)
+			
+			if (pedestal != null){
+				if (!world.isRemote && pedestal.requestMarkAsOutput()){
+					PacketClientFX(FX_USE, FxUseData(pos, LINK_OUTPUT)).sendToAllAround(world, pos, 16.0)
+				}
+				
+				return SUCCESS
+			}
+			
 			return FAIL
 		}
 		
@@ -131,7 +143,7 @@ class ItemTableLink : Item(){
 					if (table.tryLinkPedestal(pedestal)){
 						heldItem.shrink(1)
 						newStoredPos = table.pos
-						soundType = LINK_SUCCESS
+						soundType = if (pedestal.isDedicatedOutput) LINK_OUTPUT else LINK_SUCCESS
 					}
 					else{
 						newStoredPos = oldStoredPos

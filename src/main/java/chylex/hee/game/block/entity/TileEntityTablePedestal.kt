@@ -8,6 +8,7 @@ import chylex.hee.game.mechanics.table.PedestalStatusIndicator
 import chylex.hee.game.mechanics.table.PedestalStatusIndicator.Contents.NONE
 import chylex.hee.game.mechanics.table.PedestalStatusIndicator.Contents.OUTPUTTED
 import chylex.hee.game.mechanics.table.PedestalStatusIndicator.Contents.WITH_INPUT
+import chylex.hee.game.mechanics.table.PedestalStatusIndicator.Process.DEDICATED_OUTPUT
 import chylex.hee.init.ModBlocks
 import chylex.hee.init.ModItems
 import chylex.hee.system.util.FLAG_SYNC_CLIENT
@@ -53,6 +54,18 @@ class TileEntityTablePedestal : TileEntityBase(){
 		-> world.markBlockRangeForRenderUpdate(pos, pos)
 	}
 	
+	var isDedicatedOutput
+		get() = statusIndicator.process == DEDICATED_OUTPUT
+		set(value){
+			if (value){
+				statusIndicator.process = DEDICATED_OUTPUT
+				inventoryHandler.dropInputItem(world, pos.up())
+			}
+			else{
+				statusIndicator.process = null
+			}
+		}
+	
 	// Properties (Inventory)
 	
 	private val inventoryHandler = PedestalInventoryHandler(::onInventoryUpdated)
@@ -95,12 +108,15 @@ class TileEntityTablePedestal : TileEntityBase(){
 		if (tile !== currentlyLinkedTable){
 			currentlyLinkedTable?.tryUnlinkPedestal(this, dropTableLink = false)
 			linkedTable = tile.pos
-			statusIndicator.process = null
 		}
 	}
 	
 	fun resetLinkedTable(dropTableLink: Boolean){
 		linkedTableTile?.tryUnlinkPedestal(this, dropTableLink)
+	}
+	
+	fun requestMarkAsOutput(): Boolean{
+		return linkedTableTile?.tryMarkInputPedestalAsOutput(this) == true
 	}
 	
 	fun onTableUnlinked(tile: TileEntityBaseTable<*>, dropTableLink: Boolean){
@@ -131,6 +147,7 @@ class TileEntityTablePedestal : TileEntityBase(){
 	private fun onLinkedStatusChanged(){
 		if (world != null){
 			pos.updateState(world, ModBlocks.TABLE_PEDESTAL, FLAG_SYNC_CLIENT){ it.withProperty(IS_LINKED, linkedTable != null) }
+			statusIndicator.process = null
 		}
 	}
 	
@@ -141,7 +158,7 @@ class TileEntityTablePedestal : TileEntityBase(){
 	// Behavior (Inventory)
 	
 	fun addToInput(stack: ItemStack): Boolean{
-		return inventoryHandler.addToInput(stack)
+		return !isDedicatedOutput && inventoryHandler.addToInput(stack)
 	}
 	
 	fun addToOutput(stacks: Array<ItemStack>): Boolean{
@@ -157,7 +174,7 @@ class TileEntityTablePedestal : TileEntityBase(){
 	}
 	
 	fun dropAllItems(){
-		inventoryHandler.dropAllItems(world, pos)
+		inventoryHandler.dropAllItems(world, pos.up())
 	}
 	
 	private fun onInventoryUpdated(updateInputModCounter: Boolean){

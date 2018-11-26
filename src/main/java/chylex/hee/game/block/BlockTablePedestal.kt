@@ -5,6 +5,7 @@ import chylex.hee.game.particle.spawner.ParticleSpawnerVanilla
 import chylex.hee.game.particle.util.IOffset.Constant
 import chylex.hee.game.particle.util.IOffset.InBox
 import chylex.hee.game.particle.util.IShape.Point
+import chylex.hee.init.ModItems
 import chylex.hee.network.client.PacketClientFX
 import chylex.hee.network.client.PacketClientFX.IFXData
 import chylex.hee.network.client.PacketClientFX.IFXHandler
@@ -170,6 +171,10 @@ class BlockTablePedestal(builder: BlockSimple.Builder) : BlockSimpleShaped(build
 		
 		val tile = pos.getTile<TileEntityTablePedestal>(world) ?: return true
 		val heldItem = player.getHeldItem(hand)
+		
+		if (heldItem.item === ModItems.TABLE_LINK){
+			return false
+		}
 		
 		if (heldItem.isEmpty){
 			if (player.isSneaking){

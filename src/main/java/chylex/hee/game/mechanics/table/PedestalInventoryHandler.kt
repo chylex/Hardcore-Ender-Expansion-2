@@ -134,14 +134,36 @@ class PedestalInventoryHandler(private val updateCallback: (Boolean) -> Unit) : 
 		return true
 	}
 	
+	fun dropInputItem(world: World, pos: BlockPos){
+		if (itemInput.isEmpty){
+			return
+		}
+		
+		guardDroppedItems(world, pos){
+			InventoryHelper.spawnItemStack(world, pos.x.toDouble(), pos.y.toDouble(), pos.z.toDouble(), itemInput)
+		}
+		
+		itemInput = ItemStack.EMPTY
+		onInventoryUpdated(updateInputModCounter = true)
+	}
+	
 	fun dropAllItems(world: World, pos: BlockPos){
-		val posAbove = pos.up()
-		val itemArea = AxisAlignedBB(posAbove)
+		guardDroppedItems(world, pos){
+			InventoryHelper.spawnItemStack(world, pos.x.toDouble(), pos.y.toDouble(), pos.z.toDouble(), itemInput)
+			InventoryHelper.dropInventoryItems(world, pos, itemOutput)
+		}
+		
+		itemInput = ItemStack.EMPTY
+		itemOutput.clear()
+		onInventoryUpdated(updateInputModCounter = true)
+	}
+	
+	private fun guardDroppedItems(world: World, pos: BlockPos, dropper: () -> Unit){
+		val itemArea = AxisAlignedBB(pos)
 		val previousItemEntities = world.selectExistingEntities.inBox<EntityItem>(itemArea).toSet()
 		
 		// UPDATE: see if 1.13 fixes itemstacks spawning and spazzing out all over the fucking place
-		InventoryHelper.spawnItemStack(world, posAbove.x.toDouble(), posAbove.y.toDouble(), posAbove.z.toDouble(), itemInput)
-		InventoryHelper.dropInventoryItems(world, posAbove, itemOutput)
+		dropper()
 		
 		for(itemEntity in world.selectExistingEntities.inBox<EntityItem>(itemArea)){
 			if (!previousItemEntities.contains(itemEntity)){
@@ -150,10 +172,6 @@ class PedestalInventoryHandler(private val updateCallback: (Boolean) -> Unit) : 
 				itemEntity.thrower = BlockTablePedestal.DROPPED_ITEM_THROWER_NAME
 			}
 		}
-		
-		itemInput = ItemStack.EMPTY
-		itemOutput.clear()
-		onInventoryUpdated(updateInputModCounter = true)
 	}
 	
 	private fun onInventoryUpdated(updateInputModCounter: Boolean){
