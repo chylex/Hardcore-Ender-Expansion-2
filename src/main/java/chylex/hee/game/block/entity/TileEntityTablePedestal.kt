@@ -2,11 +2,13 @@ package chylex.hee.game.block.entity
 import chylex.hee.game.block.BlockTablePedestal
 import chylex.hee.game.block.BlockTablePedestal.Companion.IS_LINKED
 import chylex.hee.game.block.entity.TileEntityBase.Context.NETWORK
+import chylex.hee.game.block.entity.TileEntityBase.Context.STORAGE
 import chylex.hee.game.mechanics.table.PedestalInventoryHandler
 import chylex.hee.init.ModBlocks
 import chylex.hee.init.ModItems
 import chylex.hee.system.util.FLAG_SYNC_CLIENT
 import chylex.hee.system.util.delegate.NotifyOnChange
+import chylex.hee.system.util.getIntegerOrNull
 import chylex.hee.system.util.getPosOrNull
 import chylex.hee.system.util.getTile
 import chylex.hee.system.util.isLoaded
@@ -35,14 +37,17 @@ class TileEntityTablePedestal : TileEntityBase(){
 	private val linkedTableTile: TileEntityBaseTable<*>?
 		get() = linkedTable?.getTile(world)
 	
-	private val linkedTableTileIfLoaded: TileEntityBaseTable<*>?
-		get() = linkedTable?.takeIf { it.isLoaded(world) }?.getTile(world)
-	
 	val hasLinkedTable
 		get() = linkedTable != null
 	
 	val tableIndicatorColor: Int?
-		get() = linkedTableTileIfLoaded?.tableIndicatorColor
+		get() = linkedTable?.takeIf { it.isLoaded(world) }?.getTile<TileEntityBaseTable<*>>(world)?.tableIndicatorColor
+	
+	private val statusIndicator = PedestalStatusIndicator(this)
+	
+	var statusIndicatorColorClient by NotifyOnChange<Int?>(null){
+		-> world.markBlockRangeForRenderUpdate(pos, pos)
+	}
 	
 	// Properties (Inventory)
 	
@@ -62,6 +67,12 @@ class TileEntityTablePedestal : TileEntityBase(){
 	
 	var stacksForRendering = emptyArray<ItemStack>()
 		private set
+	
+	// Utilities
+	
+	fun <T> SyncOnChange(initialValue: T) = NotifyOnChange(initialValue){
+		-> if (isLoaded) notifyUpdate(FLAG_SYNC_CLIENT or FLAG_MARK_DIRTY)
+	}
 	
 	// Behavior (General)
 	
@@ -172,6 +183,15 @@ class TileEntityTablePedestal : TileEntityBase(){
 		}
 		
 		setTag("Inventory", inventoryHandler.serializeNBT())
+		
+		if (context == STORAGE){
+			setTag("Status", statusIndicator.serializeNBT())
+		}
+		else if (context == NETWORK){
+			linkedTable?.let {
+				setInteger("StatusColor", statusIndicator.currentColor.toInt())
+			}
+		}
 	}
 	
 	override fun readNBT(nbt: NBTTagCompound, context: Context) = with(nbt){
@@ -179,10 +199,12 @@ class TileEntityTablePedestal : TileEntityBase(){
 		
 		inventoryHandler.deserializeNBT(nbt.getCompoundTag("Inventory"))
 		
-		if (context == NETWORK){
-			}
-			
+		if (context == STORAGE){
+			statusIndicator.deserializeNBT(nbt.getCompoundTag("Status"))
+		}
+		else if (context == NETWORK){
 			stacksForRendering = inventoryHandler.nonEmptyStacks.toTypedArray()
+			statusIndicatorColorClient = getIntegerOrNull("StatusColor")
 		}
 	}
 }

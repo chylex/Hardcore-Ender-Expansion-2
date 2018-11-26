@@ -225,6 +225,7 @@ class BlockTablePedestal(builder: BlockSimple.Builder) : BlockSimpleShaped(build
 			
 			return when(tintIndex){
 				1 -> pos.getTile<TileEntityTablePedestal>(world)?.tableIndicatorColor ?: NONE
+				2 -> pos.getTile<TileEntityTablePedestal>(world)?.statusIndicatorColorClient ?: NONE
 				else -> NONE
 			}
 		}
