@@ -1,5 +1,6 @@
 package chylex.hee.init
 import chylex.hee.HEE
+import chylex.hee.game.block.BlockAccumulationTable
 import chylex.hee.game.block.BlockAncientCobweb
 import chylex.hee.game.block.BlockChorusFlowerOverride
 import chylex.hee.game.block.BlockChorusPlantOverride
@@ -29,6 +30,7 @@ import chylex.hee.game.block.BlockStardustOre
 import chylex.hee.game.block.BlockTableBase
 import chylex.hee.game.block.BlockTablePedestal
 import chylex.hee.game.block.BlockWallCustom
+import chylex.hee.game.block.entity.TileEntityAccumulationTable
 import chylex.hee.game.block.entity.TileEntityDarkChest
 import chylex.hee.game.block.entity.TileEntityEndPortalAcceptor
 import chylex.hee.game.block.entity.TileEntityEnergyCluster
@@ -336,6 +338,7 @@ object ModBlocks{
 	
 	@JvmField val TABLE_PEDESTAL     = BlockTablePedestal(buildTablePedestal).apply { setup("table_pedestal") } // UPDATE: update recipe json to include tag to allow all gloomrock variations
 	@JvmField val TABLE_BASE         = BlockTableBase(buildTable).apply { setup("table_base") }
+	@JvmField val ACCUMULATION_TABLE = BlockAccumulationTable(buildTable).apply { setup("accumulation_table") }
 	
 	// Registry
 	
@@ -415,6 +418,7 @@ object ModBlocks{
 			
 			register(TABLE_PEDESTAL with basicItemBlock)
 			register(TABLE_BASE with metaItemBlock)
+			register(ACCUMULATION_TABLE with metaItemBlock)
 		}
 		
 		tile<TileEntityPortalInner>("end_portal_inner")
@@ -424,6 +428,7 @@ object ModBlocks{
 		tile<TileEntityDarkChest>("dark_chest")
 		tile<TileEntityLootChest>("loot_chest")
 		tile<TileEntityTablePedestal>("table_pedestal")
+		tile<TileEntityAccumulationTable>("accumulation_table")
 		
 		// vanilla modifications
 		

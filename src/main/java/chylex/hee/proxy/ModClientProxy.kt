@@ -115,7 +115,8 @@ class ModClientProxy : ModCommonProxy(){
 		}
 		
 		for(block in arrayOf(
-			ModBlocks.TABLE_BASE
+			ModBlocks.TABLE_BASE,
+			ModBlocks.ACCUMULATION_TABLE
 		)){
 			val item = Item.getItemFromBlock(block)
 			val registryName = item.registryName!!

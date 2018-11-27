@@ -56,6 +56,7 @@ tile.hee.end_portal_acceptor.name=End Portal Acceptor
 
 tile.hee.table_pedestal.name=Table Pedestal
 tile.hee.table_base.name=Table Base
+tile.hee.accumulation_table.name=Accumulation Table
 
 tile.tooltip.hee.table_base.tier=Tier %s
 

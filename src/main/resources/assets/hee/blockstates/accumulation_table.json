@@ -1,0 +1,22 @@
+{
+  "forge_marker": 1,
+  "defaults": {
+    "textures": {
+      "overlay_top": "hee:block/accumulation_table_top",
+      "overlay_side": "hee:block/accumulation_table_side"
+    }
+  },
+  "variants": {
+    "tier": {
+      "1": {
+        "model": "hee:table_tier_1"
+      },
+      "2": {
+        "model": "hee:table_tier_2"
+      },
+      "3": {
+        "model": "hee:table_tier_3"
+      }
+    }
+  }
+}
