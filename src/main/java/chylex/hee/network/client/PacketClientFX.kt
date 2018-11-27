@@ -1,6 +1,6 @@
 package chylex.hee.network.client
 import chylex.hee.game.block.BlockDragonEggOverride
-import chylex.hee.game.block.BlockTablePedestal
+import chylex.hee.game.block.entity.TileEntityTablePedestal
 import chylex.hee.game.entity.item.EntityFallingObsidian
 import chylex.hee.game.item.ItemTableLink
 import chylex.hee.game.world.util.Teleporter
@@ -20,7 +20,7 @@ class PacketClientFX() : BaseClientPacket(){
 		private val HANDLERS = arrayOf(
 			Teleporter.FX_TELEPORT,
 			BlockDragonEggOverride.FX_BREAK,
-			BlockTablePedestal.FX_ITEM_PICKUP,
+			TileEntityTablePedestal.FX_ITEM_UPDATE,
 			ItemTableLink.FX_USE,
 			EntityFallingObsidian.FX_FALL
 		)

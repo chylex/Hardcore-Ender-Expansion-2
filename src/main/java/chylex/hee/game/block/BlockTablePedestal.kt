@@ -1,24 +1,9 @@
 package chylex.hee.game.block
-import chylex.hee.HEE
 import chylex.hee.game.block.entity.TileEntityTablePedestal
-import chylex.hee.game.particle.spawner.ParticleSpawnerVanilla
-import chylex.hee.game.particle.util.IOffset.Constant
-import chylex.hee.game.particle.util.IOffset.InBox
-import chylex.hee.game.particle.util.IShape.Point
 import chylex.hee.init.ModItems
-import chylex.hee.network.client.PacketClientFX
-import chylex.hee.network.client.PacketClientFX.IFXData
-import chylex.hee.network.client.PacketClientFX.IFXHandler
 import chylex.hee.system.util.copyIf
 import chylex.hee.system.util.getState
 import chylex.hee.system.util.getTile
-import chylex.hee.system.util.nextFloat
-import chylex.hee.system.util.playClient
-import chylex.hee.system.util.posVec
-import chylex.hee.system.util.readPos
-import chylex.hee.system.util.use
-import chylex.hee.system.util.writePos
-import io.netty.buffer.ByteBuf
 import net.minecraft.block.Block
 import net.minecraft.block.ITileEntityProvider
 import net.minecraft.block.properties.PropertyBool
@@ -28,22 +13,17 @@ import net.minecraft.client.renderer.color.IBlockColor
 import net.minecraft.entity.Entity
 import net.minecraft.entity.item.EntityItem
 import net.minecraft.entity.player.EntityPlayer
-import net.minecraft.init.SoundEvents
 import net.minecraft.tileentity.TileEntity
 import net.minecraft.util.BlockRenderLayer
 import net.minecraft.util.BlockRenderLayer.CUTOUT
 import net.minecraft.util.EnumFacing
-import net.minecraft.util.EnumFacing.DOWN
 import net.minecraft.util.EnumHand
-import net.minecraft.util.EnumParticleTypes.SMOKE_NORMAL
-import net.minecraft.util.SoundCategory
 import net.minecraft.util.math.AxisAlignedBB
 import net.minecraft.util.math.BlockPos
 import net.minecraft.world.IBlockAccess
 import net.minecraft.world.World
 import net.minecraftforge.fml.relauncher.Side
 import net.minecraftforge.fml.relauncher.SideOnly
-import java.util.Random
 import kotlin.math.abs
 import kotlin.math.max
 
@@ -93,30 +73,6 @@ class BlockTablePedestal(builder: BlockSimple.Builder) : BlockSimpleShaped(build
 		private fun isItemAreaBlocked(world: World, pos: BlockPos): Boolean{
 			return pos.up().let { it.getState(world).getCollisionBoundingBox(world, it) != NULL_AABB }
 		}
-		
-		// Item pickup
-		
-		class FxItemPickupData(private val pedestalPos: BlockPos) : IFXData{
-			override fun write(buffer: ByteBuf) = buffer.use {
-				writePos(pedestalPos)
-			}
-		}
-		
-		@JvmStatic
-		val FX_ITEM_PICKUP = object : IFXHandler{
-			override fun handle(buffer: ByteBuf, world: World, rand: Random) = buffer.use {
-				val player = HEE.proxy.getClientSidePlayer() ?: return
-				val pedestalPos = buffer.readPos()
-				
-				PARTICLE_ITEM_PICKUP.spawn(Point(pedestalPos.up(), 10), rand)
-				SoundEvents.ENTITY_ITEM_PICKUP.playClient(player.posVec, SoundCategory.PLAYERS, volume = 0.2F, pitch = rand.nextFloat(0.6F, 3.4F))
-			}
-		}
-		
-		private val PARTICLE_ITEM_PICKUP = ParticleSpawnerVanilla(
-			type = SMOKE_NORMAL,
-			pos = Constant(0.15F, DOWN) + InBox(0.425F)
-		)
 	}
 	
 	// Instance
@@ -154,9 +110,7 @@ class BlockTablePedestal(builder: BlockSimple.Builder) : BlockSimpleShaped(build
 			}
 		}
 		else if (entity is EntityPlayer && entity.posY >= pos.y && !entity.isCreative){
-			if (pos.getTile<TileEntityTablePedestal>(world)?.moveOutputToPlayerInventory(entity.inventory) == true){
-				PacketClientFX(FX_ITEM_PICKUP, FxItemPickupData(pos)).sendToPlayer(entity)
-			}
+			pos.getTile<TileEntityTablePedestal>(world)?.moveOutputToPlayerInventory(entity.inventory)
 		}
 	}
 	

@@ -1,4 +1,5 @@
 package chylex.hee.game.block.entity
+import chylex.hee.HEE
 import chylex.hee.game.block.BlockTablePedestal
 import chylex.hee.game.block.BlockTablePedestal.Companion.IS_LINKED
 import chylex.hee.game.block.entity.TileEntityBase.Context.NETWORK
@@ -9,8 +10,16 @@ import chylex.hee.game.mechanics.table.PedestalStatusIndicator.Contents.NONE
 import chylex.hee.game.mechanics.table.PedestalStatusIndicator.Contents.OUTPUTTED
 import chylex.hee.game.mechanics.table.PedestalStatusIndicator.Contents.WITH_INPUT
 import chylex.hee.game.mechanics.table.PedestalStatusIndicator.Process.DEDICATED_OUTPUT
+import chylex.hee.game.particle.ParticleSmokeCustom
+import chylex.hee.game.particle.spawner.ParticleSpawnerCustom
+import chylex.hee.game.particle.util.IOffset.Constant
+import chylex.hee.game.particle.util.IOffset.InBox
+import chylex.hee.game.particle.util.IShape.Point
 import chylex.hee.init.ModBlocks
 import chylex.hee.init.ModItems
+import chylex.hee.network.client.PacketClientFX
+import chylex.hee.network.client.PacketClientFX.IFXData
+import chylex.hee.network.client.PacketClientFX.IFXHandler
 import chylex.hee.system.util.FLAG_SYNC_CLIENT
 import chylex.hee.system.util.delegate.NotifyOnChange
 import chylex.hee.system.util.getIntegerOrNull
@@ -19,21 +28,54 @@ import chylex.hee.system.util.getTile
 import chylex.hee.system.util.isLoaded
 import chylex.hee.system.util.isNotEmpty
 import chylex.hee.system.util.nextFloat
+import chylex.hee.system.util.playClient
+import chylex.hee.system.util.posVec
+import chylex.hee.system.util.readPos
 import chylex.hee.system.util.setPos
 import chylex.hee.system.util.updateState
+import chylex.hee.system.util.use
+import chylex.hee.system.util.writePos
+import io.netty.buffer.ByteBuf
 import net.minecraft.block.state.IBlockState
 import net.minecraft.entity.item.EntityItem
 import net.minecraft.entity.player.InventoryPlayer
+import net.minecraft.init.SoundEvents
 import net.minecraft.item.ItemStack
 import net.minecraft.nbt.NBTTagCompound
 import net.minecraft.util.EnumFacing
 import net.minecraft.util.EnumFacing.DOWN
+import net.minecraft.util.SoundCategory
 import net.minecraft.util.math.BlockPos
 import net.minecraft.world.World
 import net.minecraftforge.common.capabilities.Capability
 import net.minecraftforge.items.CapabilityItemHandler.ITEM_HANDLER_CAPABILITY
+import java.util.Random
 
 class TileEntityTablePedestal : TileEntityBase(){
+	companion object{
+		class FxItemUpdateData(private val pedestalPos: BlockPos) : IFXData{
+			override fun write(buffer: ByteBuf) = buffer.use {
+				writePos(pedestalPos)
+			}
+		}
+		
+		@JvmStatic
+		val FX_ITEM_UPDATE = object : IFXHandler{
+			override fun handle(buffer: ByteBuf, world: World, rand: Random) = buffer.use {
+				val player = HEE.proxy.getClientSidePlayer() ?: return
+				val pedestalPos = buffer.readPos()
+				
+				PARTICLE_ITEM_UPDATE.spawn(Point(pedestalPos.up(), 12), rand)
+				SoundEvents.ENTITY_ITEM_PICKUP.playClient(player.posVec, SoundCategory.PLAYERS, volume = 0.22F, pitch = rand.nextFloat(0.6F, 3.4F))
+			}
+		}
+		
+		private val PARTICLE_ITEM_UPDATE = ParticleSpawnerCustom(
+			type = ParticleSmokeCustom,
+			data = ParticleSmokeCustom.Data(scale = 1.33F),
+			pos = Constant(0.15F, DOWN) + InBox(0.45F)
+		)
+	}
 	
 	// Properties (Tables)
 	
@@ -88,19 +130,21 @@ class TileEntityTablePedestal : TileEntityBase(){
 	var stacksForRendering = emptyArray<ItemStack>()
 		private set
 	
-	// Utilities
+	// Behavior (General)
 	
 	fun <T> SyncOnChange(initialValue: T) = NotifyOnChange(initialValue){
 		-> if (isLoaded) notifyUpdate(FLAG_SYNC_CLIENT or FLAG_MARK_DIRTY)
 	}
-	
-	// Behavior (General)
 	
 	fun onPedestalDestroyed(dropTableLink: Boolean){
 		linkedTableTile?.tryUnlinkPedestal(this, dropTableLink)
 		linkedTable = null // must reset state because the method is called twice if the player is in creative mode
 		
 		dropAllItems()
+	}
+	
+	private fun spawnSmokeParticles(){
+		PacketClientFX(FX_ITEM_UPDATE, FxItemUpdateData(pos)).sendToAllAround(this, 16.0)
 	}
 	
 	// Behavior (Tables)
@@ -161,19 +205,31 @@ class TileEntityTablePedestal : TileEntityBase(){
 	// Behavior (Inventory)
 	
 	fun addToInput(stack: ItemStack): Boolean{
-		return !isDedicatedOutput && inventoryHandler.addToInput(stack)
+		if (!isDedicatedOutput && inventoryHandler.addToInput(stack)){
+			spawnSmokeParticles()
+			return true
+		}
+		
+		return false
 	}
 	
 	fun addToOutput(stacks: Array<ItemStack>): Boolean{
-		return inventoryHandler.addToOutput(stacks)
+		if (inventoryHandler.addToOutput(stacks)){
+			spawnSmokeParticles()
+			return true
+		}
+		
+		return false
 	}
 	
 	fun replaceInputSilently(newInput: ItemStack): Boolean{
 		return inventoryHandler.replaceInputSilently(newInput)
 	}
 	
-	fun moveOutputToPlayerInventory(inventory: InventoryPlayer): Boolean{
-		return inventoryHandler.moveOutputToPlayerInventory(inventory)
+	fun moveOutputToPlayerInventory(inventory: InventoryPlayer){
+		if (inventoryHandler.moveOutputToPlayerInventory(inventory)){
+			spawnSmokeParticles()
+		}
 	}
 	
 	fun dropAllItems(){
