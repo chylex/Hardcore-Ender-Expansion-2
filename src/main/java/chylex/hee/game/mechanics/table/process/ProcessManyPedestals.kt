@@ -24,6 +24,8 @@ import net.minecraft.world.World
 abstract class ProcessManyPedestals(private val world: World, pos: Array<BlockPos>) : ITableProcess{
 	final override val pedestals = pos
 	
+	protected abstract val whenFinished: ITableInputTransformer
+	
 	private var currentState: State = Work
 	
 	private var lastInputStacks = Array(pos.size){ ItemStack.EMPTY }
@@ -102,7 +104,10 @@ abstract class ProcessManyPedestals(private val world: World, pos: Array<BlockPo
 					setStatusIndicator(tiles, PAUSED)
 				}
 				else if (tiles.find { it.pos == state.pedestal }?.let(context::getOutputPedestal)?.addToOutput(state.stacks) == true){
-					tiles.forEach { it.replaceInputSilently(ItemStack.EMPTY) } // TODO handle processes w/ partial stack handling
+					tiles.forEach {
+						it.replaceInputSilently(it.itemInputCopy.apply(whenFinished::transform))
+					}
+					
 					setStatusIndicator(tiles, null)
 					context.markProcessFinished()
 				}
