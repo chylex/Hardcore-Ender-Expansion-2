@@ -15,6 +15,7 @@ import chylex.hee.system.util.setStack
 import chylex.hee.system.util.size
 import net.minecraft.entity.item.EntityItem
 import net.minecraft.entity.player.InventoryPlayer
+import net.minecraft.inventory.Container
 import net.minecraft.inventory.InventoryBasic
 import net.minecraft.inventory.InventoryHelper
 import net.minecraft.item.ItemStack
@@ -39,6 +40,9 @@ class PedestalInventoryHandler(private val updateCallback: (Boolean) -> Unit) : 
 	
 	val hasOutput
 		get() = itemOutput.nonEmptySlots.hasNext()
+	
+	val outputComparatorStrength
+		get() = Container.calcRedstoneFromInventory(itemOutput)
 	
 	val nonEmptyStacks
 		get() = ArrayList<ItemStack>(10).apply {

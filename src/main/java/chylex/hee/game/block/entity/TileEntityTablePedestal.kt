@@ -82,6 +82,9 @@ class TileEntityTablePedestal : TileEntityBase(){
 	var inputModCounter = 0
 		private set
 	
+	val outputComparatorStrength
+		get() = inventoryHandler.outputComparatorStrength
+	
 	var stacksForRendering = emptyArray<ItemStack>()
 		private set
 	

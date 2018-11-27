@@ -134,6 +134,8 @@ class BlockTablePedestal(builder: BlockSimple.Builder) : BlockSimpleShaped(build
 		return TileEntityTablePedestal()
 	}
 	
+	// Interaction
+	
 	override fun onEntityCollision(world: World, pos: BlockPos, state: IBlockState, entity: Entity){
 		if (world.isRemote){
 			return
@@ -213,6 +215,16 @@ class BlockTablePedestal(builder: BlockSimple.Builder) : BlockSimpleShaped(build
 	
 	override fun addCollisionBoxToList(state: IBlockState, world: World, pos: BlockPos, entityBox: AxisAlignedBB, collidingBoxes: MutableList<AxisAlignedBB>, entity: Entity?, isActualState: Boolean){
 		COLLISION_BOXES.forEach { addCollisionBoxToList(pos, entityBox, collidingBoxes, it) }
+	}
+	
+	// Redstone
+	
+	override fun hasComparatorInputOverride(state: IBlockState): Boolean{
+		return true
+	}
+	
+	override fun getComparatorInputOverride(state: IBlockState, world: World, pos: BlockPos): Int{
+		return pos.getTile<TileEntityTablePedestal>(world)?.outputComparatorStrength ?: 0
 	}
 	
 	// Client
