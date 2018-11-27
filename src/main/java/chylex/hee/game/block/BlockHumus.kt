@@ -1,4 +1,5 @@
 package chylex.hee.game.block
+import chylex.hee.init.ModLoot
 import chylex.hee.system.util.getBlock
 import chylex.hee.system.util.getState
 import chylex.hee.system.util.setAir
@@ -13,6 +14,7 @@ import net.minecraft.init.Items
 import net.minecraft.item.ItemStack
 import net.minecraft.util.EnumFacing
 import net.minecraft.util.EnumFacing.UP
+import net.minecraft.util.NonNullList
 import net.minecraft.util.math.BlockPos
 import net.minecraft.world.Explosion
 import net.minecraft.world.IBlockAccess
@@ -93,7 +95,12 @@ class BlockHumus(builder: BlockSimple.Builder) : BlockSimple(builder){
 	
 	override fun onExplosionDestroy(world: World, pos: BlockPos, explosion: Explosion){
 		if (!world.isRemote){
-			// TODO drop compost
+			val drops = NonNullList.create<ItemStack>()
+			ModLoot.HUMUS_EXPLODED.generateDrops(drops, world, 0)
+			
+			for(drop in drops){
+				spawnAsEntity(world, pos, drop)
+			}
 		}
 	}
 }

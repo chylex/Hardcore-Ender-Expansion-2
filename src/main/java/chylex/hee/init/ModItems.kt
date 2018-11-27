@@ -2,6 +2,7 @@ package chylex.hee.init
 import chylex.hee.HEE
 import chylex.hee.game.item.ItemAmuletOfRecovery
 import chylex.hee.game.item.ItemChorusBerry
+import chylex.hee.game.item.ItemCompost
 import chylex.hee.game.item.ItemEnergyOracle
 import chylex.hee.game.item.ItemEnergyReceptacle
 import chylex.hee.game.item.ItemIgneousRock
@@ -48,8 +49,9 @@ object ModItems{
 	@JvmField val STATIC_CORE      = Item().apply { setup("static_core") }
 	@JvmField val TABLE_LINK       = ItemTableLink().apply { setup("table_link") }
 	
-	// Items: Food
+	// Items: Nature & food
 	
+	@JvmField val COMPOST    = ItemCompost().apply { setup("compost") }
 	@JvmField val VOID_SALAD = ItemVoidSalad().apply { setup("void_salad") }
 	
 	// Items: Tools
@@ -101,6 +103,7 @@ object ModItems{
 			register(STATIC_CORE)
 			register(TABLE_LINK)
 			
+			register(COMPOST)
 			register(VOID_SALAD)
 			
 			register(VOID_MINER)

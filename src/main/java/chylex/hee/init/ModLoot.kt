@@ -8,6 +8,7 @@ import net.minecraft.world.storage.loot.LootTableList
 import net.minecraft.world.storage.loot.conditions.LootConditionManager
 
 object ModLoot{
+	lateinit var HUMUS_EXPLODED: BlockLootTable
 	lateinit var ANCIENT_COBWEB: BlockLootTable
 	lateinit var END_POWDER_ORE: BlockLootTable
 	lateinit var STARDUST_ORE: BlockLootTable
@@ -20,6 +21,7 @@ object ModLoot{
 		LootConditionManager.registerCondition(ConditionFortune.Serializer)
 		LootConditionManager.registerCondition(ConditionCriticalHit.Serializer)
 		
+		HUMUS_EXPLODED = registerBlock("humus_exploded")
 		ANCIENT_COBWEB = registerBlock("ancient_cobweb")
 		END_POWDER_ORE = registerBlock("end_powder_ore")
 		STARDUST_ORE = registerBlock("stardust_ore")
