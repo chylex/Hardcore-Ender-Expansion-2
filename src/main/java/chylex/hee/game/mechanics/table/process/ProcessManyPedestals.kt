@@ -79,7 +79,7 @@ abstract class ProcessManyPedestals(private val world: World, pos: Array<BlockPo
 		
 		when(state){
 			Work -> {
-				if (tiles.any { world.totalWorldTime - it.inputModTime < 20L }){
+				if (tiles.any { world.totalWorldTime - it.inputModTime < 20L } || context.isPaused){
 					setStatusIndicator(tiles, PAUSED)
 				}
 				else{
@@ -98,7 +98,10 @@ abstract class ProcessManyPedestals(private val world: World, pos: Array<BlockPo
 			}
 			
 			is Output -> {
-				if (tiles.find { it.pos == state.pedestal }?.let(context::getOutputPedestal)?.addToOutput(state.stacks) == true){
+				if (context.isPaused){
+					setStatusIndicator(tiles, PAUSED)
+				}
+				else if (tiles.find { it.pos == state.pedestal }?.let(context::getOutputPedestal)?.addToOutput(state.stacks) == true){
 					tiles.forEach { it.replaceInputSilently(ItemStack.EMPTY) } // TODO handle processes w/ partial stack handling
 					setStatusIndicator(tiles, null)
 					context.markProcessFinished()

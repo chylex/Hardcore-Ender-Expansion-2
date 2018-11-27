@@ -100,10 +100,11 @@ abstract class TileEntityBaseTable<T : ITableProcess> : TileEntityBase(), ITicka
 			
 			if (currentProcesses.isNotEmpty()){
 				val iterator = currentProcesses.iterator()
+				val isPaused = world.getRedstonePowerFromNeighbors(pos) > 0
 				
 				while(iterator.hasNext()){
 					val process = iterator.next()
-					process.tick(createProcessingContext(process, iterator))
+					process.tick(createProcessingContext(process, iterator, isPaused))
 				}
 				
 				markDirty()
@@ -133,7 +134,9 @@ abstract class TileEntityBaseTable<T : ITableProcess> : TileEntityBase(), ITicka
 	
 	protected abstract fun createNewProcesses(unassignedPedestals: List<TileEntityTablePedestal>): List<T>
 	
-	private fun createProcessingContext(process: ITableProcess, iterator: MutableIterator<ITableProcess>) = object : ITableContext{
+	private fun createProcessingContext(process: ITableProcess, iterator: MutableIterator<ITableProcess>, isPaused: Boolean) = object : ITableContext{
+		override val isPaused = isPaused
+		
 		override fun requestUseResources(): Boolean{
 			return clusterHandler.drainEnergy(process.energyPerTick)
 		}
