@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="Statistic">
+    <option name="fileTypes" value="cfg;info;md" />
+    <option name="separateTabsFileTypes" value="java;json;kt;lang;mcmeta;py" />
+    <option name="excludedDirectories">
+      <list>
+        <option value="$PROJECT_DIR$/.gradle" />
+        <option value="$PROJECT_DIR$/gradle" />
+        <option value="$PROJECT_DIR$/.idea" />
+        <option value="$PROJECT_DIR$/run" />
+        <option value="$PROJECT_DIR$/bin" />
+        <option value="$PROJECT_DIR$/assets" />
+        <option value="$PROJECT_DIR$/build" />
+      </list>
+    </option>
+  </component>
+</project>
