@@ -26,7 +26,9 @@ object CommandServerInfusions : ISubCommand{
 					Infusion.values().firstOrNull {
 						it.name.equals(args[1], true)
 					}?.let {
-						InfusionTag.setList(heldItem, InfusionTag.getList(heldItem).with(it))
+						it.tryInfuse(heldItem)
+					}?.let {
+						sender.setHeldItem(MAIN_HAND, it)
 					}
 				}
 			}

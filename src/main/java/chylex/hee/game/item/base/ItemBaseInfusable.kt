@@ -1,4 +1,5 @@
 package chylex.hee.game.item.base
+import chylex.hee.game.item.infusion.Infusion
 import chylex.hee.game.item.infusion.InfusionTag
 import net.minecraft.client.util.ITooltipFlag
 import net.minecraft.item.Item
@@ -8,8 +9,12 @@ import net.minecraft.world.World
 import net.minecraftforge.fml.relauncher.Side
 import net.minecraftforge.fml.relauncher.SideOnly
 
-abstract class ItemBaseInfusable : Item(){
+abstract class ItemBaseInfusable : Item(), IInfusableItem{
 	companion object{
+		fun onCanApplyInfusion(item: Item, infusion: Infusion): Boolean{
+			return infusion.targetItems.contains(item)
+		}
+		
 		fun onAddInformation(stack: ItemStack, lines: MutableList<String>){
 			if (lines.size > 1){ // first line is item name
 				lines.add("")
@@ -30,6 +35,10 @@ abstract class ItemBaseInfusable : Item(){
 		fun onHasEffect(stack: ItemStack): Boolean{
 			return InfusionTag.hasAny(stack) // TODO use a custom milder and slower texture
 		}
+	}
+	
+	override fun canApplyInfusion(infusion: Infusion): Boolean{
+		return onCanApplyInfusion(this, infusion)
 	}
 	
 	@SideOnly(Side.CLIENT)
