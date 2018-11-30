@@ -2,6 +2,7 @@ package chylex.hee.init
 import chylex.hee.HEE
 import chylex.hee.game.item.ItemEnergyOracle
 import chylex.hee.game.item.ItemSpatialDashGem
+import chylex.hee.game.recipe.RecipeBindingEssence
 import chylex.hee.game.recipe.RecipeEndPowderRepair
 import chylex.hee.game.recipe.RecipeScaleOfFreefallRepair
 import chylex.hee.game.recipe.RecipeVoidSalad
@@ -47,6 +48,7 @@ object ModRecipes{
 			ItemSpatialDashGem.setupRecipeNBT(getValue(Resource.Custom("spatial_dash_gem"))!!)
 			// UPDATE: hopfully figure out a better way to do this
 			
+			register(RecipeBindingEssence named "binding_essence")
 			register(RecipeEndPowderRepair named "end_powder_repair")
 			register(RecipeScaleOfFreefallRepair named "scale_of_freefall_repair")
 			register(RecipeVoidSalad named "void_salad")

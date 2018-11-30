@@ -78,6 +78,7 @@ item.hee.void_essence.name=Void Essence
 item.hee.obsidian_rod.name=Obsidian Rod
 item.hee.static_core.name=Static Core
 item.hee.table_link.name=Table Link
+item.hee.binding_essence.name=Binding Essence
 
 item.hee.compost.name=Compost
 item.hee.void_salad.single.name=Void Salad
@@ -112,9 +113,11 @@ item.tooltip.hee.trinket.not_in_slot.uncharged=§cMust be charged and placed in 
 
 fluid.ender_goo=Ender Goo
 
-hee.infusions.title=§aInfusions
-hee.infusions.item=§2- %s
-hee.infusions.none=§7None
+hee.infusions.list.title=§aInfusions
+hee.infusions.list.item=§2- %s
+hee.infusions.list.none=§7None
+hee.infusions.applicable.title=§aApplicable To
+hee.infusions.applicable.item=§2- %s §3[%s]
 
 hee.infusion.power=Power
 hee.infusion.fire=Fire

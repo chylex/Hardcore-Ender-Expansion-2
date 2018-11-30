@@ -15,6 +15,9 @@ class InfusionList private constructor(private val infusions: ImmutableSet<Infus
 	val isEmpty
 		get() = infusions.isEmpty()
 	
+	val size
+		get() = infusions.size
+	
 	val tag
 		get() = NBTEnumList.of(infusions)
 	

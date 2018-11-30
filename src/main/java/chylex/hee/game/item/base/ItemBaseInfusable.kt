@@ -20,15 +20,15 @@ abstract class ItemBaseInfusable : Item(), IInfusableItem{
 				lines.add("")
 			}
 			
-			lines.add(I18n.translateToLocal("hee.infusions.title"))
+			lines.add(I18n.translateToLocal("hee.infusions.list.title"))
 			
 			if (InfusionTag.hasAny(stack)){
 				for(infusion in InfusionTag.getList(stack)){
-					lines.add(I18n.translateToLocalFormatted("hee.infusions.item", I18n.translateToLocal(infusion.translationKey)))
+					lines.add(I18n.translateToLocalFormatted("hee.infusions.list.item", I18n.translateToLocal(infusion.translationKey)))
 				}
 			}
 			else{
-				lines.add(I18n.translateToLocal("hee.infusions.none"))
+				lines.add(I18n.translateToLocal("hee.infusions.list.none"))
 			}
 		}
 		

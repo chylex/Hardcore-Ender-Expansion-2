@@ -1,6 +1,7 @@
 package chylex.hee.init
 import chylex.hee.HEE
 import chylex.hee.game.item.ItemAmuletOfRecovery
+import chylex.hee.game.item.ItemBindingEssence
 import chylex.hee.game.item.ItemChorusBerry
 import chylex.hee.game.item.ItemCompost
 import chylex.hee.game.item.ItemEnergyOracle
@@ -48,6 +49,7 @@ object ModItems{
 	@JvmField val OBSIDIAN_ROD     = Item().apply { setup("obsidian_rod") }
 	@JvmField val STATIC_CORE      = Item().apply { setup("static_core") }
 	@JvmField val TABLE_LINK       = ItemTableLink().apply { setup("table_link") }
+	@JvmField val BINDING_ESSENCE  = ItemBindingEssence().apply { setup("binding_essence") }
 	
 	// Items: Nature & food
 	
@@ -102,6 +104,7 @@ object ModItems{
 			register(OBSIDIAN_ROD)
 			register(STATIC_CORE)
 			register(TABLE_LINK)
+			register(BINDING_ESSENCE)
 			
 			register(COMPOST)
 			register(VOID_SALAD)

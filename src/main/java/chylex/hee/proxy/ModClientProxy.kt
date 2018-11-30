@@ -8,6 +8,7 @@ import chylex.hee.game.block.entity.TileEntityLootChest
 import chylex.hee.game.block.entity.TileEntityTablePedestal
 import chylex.hee.game.commands.HeeClientCommand
 import chylex.hee.game.entity.item.EntityItemNoBob
+import chylex.hee.game.item.ItemBindingEssence
 import chylex.hee.game.item.ItemEnergyOracle
 import chylex.hee.game.item.ItemEnergyReceptacle
 import chylex.hee.game.item.ItemVoidBucket
@@ -82,6 +83,7 @@ class ModClientProxy : ModCommonProxy(){
 				stack, tintIndex -> blockColors.colorMultiplier((stack.item as ItemBlock).block.getStateFromMeta(stack.metadata), null, null, tintIndex) // UPDATE
 			}, ModBlocks.DRY_VINES)
 			
+			registerItemColorHandler(ItemBindingEssence.Color, ModItems.BINDING_ESSENCE)
 			registerItemColorHandler(ItemEnergyOracle.Color, ModItems.ENERGY_ORACLE)
 			registerItemColorHandler(ItemEnergyReceptacle.Color, ModItems.ENERGY_RECEPTACLE)
 			registerItemColorHandler(ItemVoidBucket.Color, ModItems.VOID_BUCKET)
