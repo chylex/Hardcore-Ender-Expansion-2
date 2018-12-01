@@ -45,9 +45,12 @@ import net.minecraft.nbt.NBTTagCompound
 import net.minecraft.util.EnumFacing
 import net.minecraft.util.EnumFacing.DOWN
 import net.minecraft.util.SoundCategory
+import net.minecraft.util.math.AxisAlignedBB
 import net.minecraft.util.math.BlockPos
 import net.minecraft.world.World
 import net.minecraftforge.common.capabilities.Capability
+import net.minecraftforge.fml.relauncher.Side
+import net.minecraftforge.fml.relauncher.SideOnly
 import net.minecraftforge.items.CapabilityItemHandler.ITEM_HANDLER_CAPABILITY
 import java.util.Random
 
@@ -260,6 +263,13 @@ class TileEntityTablePedestal : TileEntityBase(){
 			ITEM_HANDLER_CAPABILITY.cast(inventoryHandler.itemOutputCap)
 		else
 			super.getCapability(capability, facing)
+	}
+	
+	// Client
+	
+	@SideOnly(Side.CLIENT)
+	override fun getRenderBoundingBox(): AxisAlignedBB{
+		return AxisAlignedBB(pos, pos.add(1, 2, 1))
 	}
 	
 	// Serialization
