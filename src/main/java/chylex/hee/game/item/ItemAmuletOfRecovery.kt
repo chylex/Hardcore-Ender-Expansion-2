@@ -1,7 +1,7 @@
 package chylex.hee.game.item
-import chylex.hee.game.item.base.ITrinketItem
 import chylex.hee.game.item.base.ItemBaseEnergyUser
 import chylex.hee.game.item.base.ItemBaseTrinket
+import chylex.hee.game.item.trinket.ITrinketItem
 import chylex.hee.game.mechanics.TrinketHandler
 import chylex.hee.game.mechanics.energy.IEnergyQuantity.Units
 import chylex.hee.init.ModGuiHandler.GuiType
@@ -69,6 +69,69 @@ class ItemAmuletOfRecovery : ItemBaseEnergyUser(), ITrinketItem{
 				SLOTS_MAIN.forEachIndexed    { vanillaSlot, savedSlot -> block(mainInventory, vanillaSlot, savedSlot) }
 				SLOTS_ARMOR.forEachIndexed   { vanillaSlot, savedSlot -> block(armorInventory, vanillaSlot, savedSlot) }
 				SLOTS_OFFHAND.forEachIndexed { vanillaSlot, savedSlot -> block(offHandInventory, vanillaSlot, savedSlot) }
+			}
+		}
+		
+		private fun movePlayerInventoryToTrinket(player: EntityPlayer, trinketItem: ItemStack){
+			val saved = Array<ItemStack>(SLOT_COUNT){ ItemStack.EMPTY }
+			
+			fun moveFromInventory(sourceInventory: NonNullList<ItemStack>, sourceSlot: Int, savedSlot: Int){
+				saved[savedSlot] = sourceInventory[sourceSlot]
+				sourceInventory[sourceSlot] = ItemStack.EMPTY
+			}
+			
+			processPlayerInventory(player, ::moveFromInventory) // TODO handle modded items... and make sure those that *fill in* empty spots aren't placed into wrong slots w/ Move All
+			
+			with(trinketItem.heeTag){
+				val list = NBTTagList()
+				val buffer = Unpooled.buffer()
+				
+				var sumOfSlots = 0
+				var sumOfSizes = 0
+				var sumOfEnchantments = 0
+				var sumOfFilteredTagSizes = 0
+				
+				for(stack in saved){
+					list.appendTag(NBTTagCompound().also { it.writeStack(stack) })
+					
+					if (stack.isNotEmpty){
+						sumOfSlots += 1
+						sumOfSizes += stack.count
+						sumOfEnchantments += stack.enchantmentMap.values.sum()
+						
+						val nbtCopy = stack.nbtOrNull?.copy()
+						
+						if (nbtCopy != null){ // UPDATE: many changes in 1.13
+							// general
+							nbtCopy.removeTag("Unbreakable")
+							nbtCopy.removeTag("CanDestroy")
+							nbtCopy.removeTag("CanPlaceOn")
+							
+							// enchantments
+							nbtCopy.removeTag("ench")
+							nbtCopy.removeTag("StoredEnchantments")
+							nbtCopy.removeTag("RepairCost")
+							
+							// attributes
+							nbtCopy.removeTag("AttributeModifiers")
+							
+							// calculation & cleanup
+							try{
+								buffer.writeTag(nbtCopy)
+								sumOfFilteredTagSizes += buffer.writerIndex().coerceAtMost(2500)
+							}catch(e: Exception){
+								// TODO handle
+							}
+							
+							buffer.clear()
+						}
+					}
+				}
+				
+				val retrievalCapacity = 10 + (sumOfSlots / 2) + (sumOfSizes / 50) + (sumOfEnchantments / 6) + (sumOfFilteredTagSizes / 100)
+				
+				setTag(CONTENTS_TAG, list)
+				setInteger(RETRIEVAL_ENERGY_TAG, retrievalCapacity)
 			}
 		}
 	}
@@ -183,71 +246,15 @@ class ItemAmuletOfRecovery : ItemBaseEnergyUser(), ITrinketItem{
 			return
 		}
 		
-		val trinketItem = TrinketHandler.getCurrentActiveItem(player, this) ?: return
-		val saved = Array<ItemStack>(SLOT_COUNT){ ItemStack.EMPTY }
-		
-		fun moveFromInventory(sourceInventory: NonNullList<ItemStack>, sourceSlot: Int, savedSlot: Int){
-			saved[savedSlot] = sourceInventory[sourceSlot]
-			sourceInventory[sourceSlot] = ItemStack.EMPTY
+		TrinketHandler.get(player).transformIfActive(this){
+			val trinketItem = it.copy()
+			it.count = 0 // effectively removes the item from the trinket slot
+			
+			movePlayerInventoryToTrinket(player, trinketItem)
+			setEnergyChargeLevel(trinketItem, Units(0))
+			
+			player.entityData.heeTag.setStack(PLAYER_RESPAWN_ITEM_TAG, trinketItem)
 		}
-		
-		processPlayerInventory(player, ::moveFromInventory) // TODO handle modded items... and make sure those that *fill in* empty spots aren't placed into wrong slots w/ Move All
-		TrinketHandler.setCurrentItem(player, ItemStack.EMPTY)
-		
-		with(trinketItem.heeTag){
-			val list = NBTTagList()
-			val buffer = Unpooled.buffer()
-			
-			var sumOfSlots = 0
-			var sumOfSizes = 0
-			var sumOfEnchantments = 0
-			var sumOfFilteredTagSizes = 0
-			
-			for(stack in saved){
-				list.appendTag(NBTTagCompound().also { it.writeStack(stack) })
-				
-				if (stack.isNotEmpty){
-					sumOfSlots += 1
-					sumOfSizes += stack.count
-					sumOfEnchantments += stack.enchantmentMap.values.sum()
-					
-					val nbtCopy = stack.nbtOrNull?.copy()
-					
-					if (nbtCopy != null){ // UPDATE: many changes in 1.13
-						// general
-						nbtCopy.removeTag("Unbreakable")
-						nbtCopy.removeTag("CanDestroy")
-						nbtCopy.removeTag("CanPlaceOn")
-						
-						// enchantments
-						nbtCopy.removeTag("ench")
-						nbtCopy.removeTag("StoredEnchantments")
-						nbtCopy.removeTag("RepairCost")
-						
-						// attributes
-						nbtCopy.removeTag("AttributeModifiers")
-						
-						// calculation & cleanup
-						try{
-							buffer.writeTag(nbtCopy)
-							sumOfFilteredTagSizes += buffer.writerIndex().coerceAtMost(2500)
-						}catch(e: Exception){
-							// TODO handle
-						}
-						
-						buffer.clear()
-					}
-				}
-			}
-			
-			val retrievalCapacity = 10 + (sumOfSlots / 2) + (sumOfSizes / 50) + (sumOfEnchantments / 6) + (sumOfFilteredTagSizes / 100)
-			
-			setTag(CONTENTS_TAG, list)
-			setInteger(RETRIEVAL_ENERGY_TAG, retrievalCapacity)
-		}
-		
-		setEnergyChargeLevel(trinketItem, Units(0))
-		player.entityData.heeTag.setStack(PLAYER_RESPAWN_ITEM_TAG, trinketItem)
 	}
 	
 	@SubscribeEvent(priority = LOWEST)

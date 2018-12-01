@@ -1,5 +1,6 @@
 package chylex.hee.game.item.base
 import chylex.hee.HEE
+import chylex.hee.game.item.trinket.ITrinketItem
 import chylex.hee.game.item.util.CustomRarity
 import chylex.hee.game.mechanics.TrinketHandler
 import net.minecraft.client.util.ITooltipFlag
@@ -24,7 +25,7 @@ open class ItemBaseTrinket : Item(), ITrinketItem{
 				lines.add("")
 			}
 			
-			val keyInSlot = if (TrinketHandler.getCurrentItem(player) === stack) "in_slot" else "not_in_slot"
+			val keyInSlot = if (TrinketHandler.get(player).isInTrinketSlot(stack)) "in_slot" else "not_in_slot"
 			val keyIsCharged = if (trinket.canPlaceIntoTrinketSlot(stack)) "charged" else "uncharged"
 			
 			lines.add(I18n.translateToLocal("item.tooltip.hee.trinket.$keyInSlot.$keyIsCharged"))

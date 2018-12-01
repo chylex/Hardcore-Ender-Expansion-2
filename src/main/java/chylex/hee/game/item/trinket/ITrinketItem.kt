@@ -1,4 +1,4 @@
-package chylex.hee.game.item.base
+package chylex.hee.game.item.trinket
 import net.minecraft.item.ItemStack
 
 /**

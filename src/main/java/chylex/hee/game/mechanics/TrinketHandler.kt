@@ -1,6 +1,7 @@
 package chylex.hee.game.mechanics
 import chylex.hee.game.gui.slot.SlotTrinketItem
-import chylex.hee.game.item.base.ITrinketItem
+import chylex.hee.game.item.trinket.ITrinketHandler
+import chylex.hee.game.item.trinket.ITrinketItem
 import chylex.hee.game.mechanics.TrinketHandler.TrinketCapability.Provider
 import chylex.hee.system.Resource
 import chylex.hee.system.util.forge.capabilities.CapabilityProvider
@@ -30,25 +31,45 @@ object TrinketHandler{
 		MinecraftForge.EVENT_BUS.register(this)
 	}
 	
-	fun setCurrentItem(player: EntityPlayer, stack: ItemStack){
-		player.getCapability(CAP_TRINKET_SLOT!!, null)?.item = stack
+	fun get(player: EntityPlayer) : ITrinketHandler{
+		return InternalHandlerFor(player)
 	}
 	
-	fun getCurrentItem(player: EntityPlayer): ItemStack{
-		return player.getCapability(CAP_TRINKET_SLOT!!, null)?.item ?: ItemStack.EMPTY
+	// Handler implementation
+	
+	private class InternalHandlerFor(private val player: EntityPlayer) : ITrinketHandler{
+		override fun isInTrinketSlot(stack: ItemStack): Boolean{
+			return getCurrentItem(player) === stack
+		}
+		
+		override fun isItemActive(item: ITrinketItem): Boolean{
+			return getItemIfActive(item) != null
+		}
+		
+		override fun transformIfActive(item: ITrinketItem, transformer: (ItemStack) -> Unit){
+			getItemIfActive(item)?.apply(transformer) // no need to refresh the stack
+		}
+		
+		private fun getItemIfActive(item: ITrinketItem): ItemStack?{
+			return getCurrentItem(player).takeIf { it.item === item && item.canPlaceIntoTrinketSlot(it) }
+		}
 	}
 	
-	fun getCurrentActiveItem(player: EntityPlayer, item: ITrinketItem): ItemStack?{
-		return getCurrentItem(player).takeIf { it.item === item && item.canPlaceIntoTrinketSlot(it) }
-	}
-	
-	// Internal handling
+	// Capability handling
 	
 	private val CAP_KEY = Resource.Custom("trinket")
 	
 	@JvmStatic
 	@CapabilityInject(TrinketCapability::class)
 	private var CAP_TRINKET_SLOT: Capability<TrinketCapability>? = null
+	
+	private fun setCurrentItem(player: EntityPlayer, stack: ItemStack){
+		player.getCapability(CAP_TRINKET_SLOT!!, null)?.item = stack
+	}
+	
+	private fun getCurrentItem(player: EntityPlayer): ItemStack{
+		return player.getCapability(CAP_TRINKET_SLOT!!, null)?.item ?: ItemStack.EMPTY
+	}
 	
 	@SubscribeEvent
 	fun onAttachCapabilities(e: AttachCapabilitiesEvent<Entity>){

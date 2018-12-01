@@ -47,13 +47,14 @@ class ItemRingOfPreservation : ItemBaseTrinket(){
 			return
 		}
 		
-		val trinketItem = TrinketHandler.getCurrentActiveItem(player, this) ?: return
-		val (inventory, slot) = info
-		
-		inventory[slot] = stack.also { it.itemDamage = (it.maxDamage * 4) / 5 }
-		trinketItem.itemDamage = 1
-		
-		// TODO sound effect
+		TrinketHandler.get(player).transformIfActive(this){
+			it.itemDamage = 1
+			
+			val (inventory, slot) = info
+			inventory[slot] = stack.apply { itemDamage = (maxDamage * 4) / 5 }
+			
+			// TODO sound effect
+		}
 	}
 	
 	// Repair handling
@@ -96,7 +97,7 @@ class ItemRingOfPreservation : ItemBaseTrinket(){
 	fun onLivingHurt(e: LivingHurtEvent){
 		val player = e.entity as? EntityPlayer
 		
-		if (player == null || TrinketHandler.getCurrentActiveItem(player, this) == null){
+		if (player == null || !TrinketHandler.get(player).isItemActive(this)){
 			return
 		}
 		

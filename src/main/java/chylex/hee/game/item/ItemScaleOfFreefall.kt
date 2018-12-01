@@ -29,7 +29,7 @@ class ItemScaleOfFreefall : ItemBaseTrinket(){
 		
 		val entity = e.entity
 		
-		if (entity is EntityPlayer && TrinketHandler.getCurrentActiveItem(entity, this) != null){
+		if (entity is EntityPlayer && TrinketHandler.get(entity).isItemActive(this)){
 			e.amount *= 0.8F
 		}
 	}
@@ -41,12 +41,14 @@ class ItemScaleOfFreefall : ItemBaseTrinket(){
 		}
 		
 		val player = e.entity as? EntityPlayer ?: return
-		val trinketItem = TrinketHandler.getCurrentActiveItem(player, this) ?: return
 		
-		player.health = 1F
-		++trinketItem.itemDamage
-		
-		// TODO sound effect
-		e.isCanceled = true
+		TrinketHandler.get(player).transformIfActive(this){
+			++it.itemDamage
+			
+			player.health = 1F
+			e.isCanceled = true
+			
+			// TODO sound effect
+		}
 	}
 }

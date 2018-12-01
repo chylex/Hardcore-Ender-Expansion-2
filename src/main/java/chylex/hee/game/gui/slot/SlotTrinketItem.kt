@@ -5,7 +5,7 @@ import chylex.hee.game.gui.slot.SlotTrinketItem.Client.TEX_SLOT
 import chylex.hee.game.gui.slot.SlotTrinketItem.Client.TEX_SLOT_H
 import chylex.hee.game.gui.slot.SlotTrinketItem.Client.TEX_SLOT_W
 import chylex.hee.game.gui.slot.SlotTrinketItem.Client.isRenderingGUI
-import chylex.hee.game.item.base.ITrinketItem
+import chylex.hee.game.item.trinket.ITrinketItem
 import chylex.hee.network.server.PacketServerShiftClickTrinket
 import chylex.hee.system.Resource
 import net.minecraft.client.Minecraft
