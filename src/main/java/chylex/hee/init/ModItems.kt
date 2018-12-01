@@ -4,6 +4,7 @@ import chylex.hee.game.item.ItemAmuletOfRecovery
 import chylex.hee.game.item.ItemBindingEssence
 import chylex.hee.game.item.ItemChorusBerry
 import chylex.hee.game.item.ItemCompost
+import chylex.hee.game.item.ItemElytraOverride
 import chylex.hee.game.item.ItemEnergyOracle
 import chylex.hee.game.item.ItemEnergyReceptacle
 import chylex.hee.game.item.ItemIgneousRock
@@ -127,9 +128,11 @@ object ModItems{
 		// vanilla modifications
 		
 		Items.CHORUS_FRUIT_POPPED.creativeTab = null
+		Items.ELYTRA.creativeTab = null
 		
 		with(e.registry){
 			register(ItemChorusBerry().apply { override(Items.CHORUS_FRUIT) })
+			register(ItemElytraOverride().apply { override(Items.ELYTRA) })
 		}
 	}
 	
