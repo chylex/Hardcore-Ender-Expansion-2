@@ -6,10 +6,10 @@ import net.minecraft.item.ItemStack
 import net.minecraft.util.NonNullList
 
 class DetectSlotChangeListener : IContainerListener{
-	private var hasTriggered = false
+	private var lastModifiedSlot = -1
 	
 	override fun sendSlotContents(container: Container, slot: Int, stack: ItemStack){
-		hasTriggered = true
+		lastModifiedSlot = slot
 	}
 	
 	override fun sendAllContents(container: Container, items: NonNullList<ItemStack>){}
@@ -19,11 +19,11 @@ class DetectSlotChangeListener : IContainerListener{
 	/**
 	 * Temporarily adds itself into the list of [Container]'s [listeners], and returns true if it reported a slot modification while executing the [block].
 	 */
-	fun restart(listeners: MutableList<IContainerListener>, block: () -> Unit): Boolean{
-		hasTriggered = false
+	fun restart(listeners: MutableList<IContainerListener>, block: () -> Unit): Int?{
+		lastModifiedSlot = -1
 		listeners.add(this)
 		block()
 		listeners.remove(this)
-		return hasTriggered
+		return lastModifiedSlot.takeIf { it != -1 }
 	}
 }
