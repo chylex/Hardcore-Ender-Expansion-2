@@ -1,5 +1,5 @@
 package chylex.hee.game.mechanics
-import chylex.hee.game.gui.slot.SlotTrinketItem
+import chylex.hee.game.gui.slot.SlotTrinketItemInventory
 import chylex.hee.game.item.trinket.ITrinketHandler
 import chylex.hee.game.item.trinket.ITrinketItem
 import chylex.hee.game.mechanics.TrinketHandler.TrinketCapability.Provider
@@ -86,7 +86,7 @@ object TrinketHandler{
 			val handler = entity.getCapability(CAP_TRINKET_SLOT!!, null) ?: return
 			
 			with(entity.inventoryContainer){
-				inventorySlots.add(SlotTrinketItem(handler, inventorySlots.size))
+				inventorySlots.add(SlotTrinketItemInventory(handler, inventorySlots.size))
 				inventoryItemStacks.add(handler.item)
 			}
 		}

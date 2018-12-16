@@ -1,5 +1,5 @@
 package chylex.hee.network.server
-import chylex.hee.game.gui.slot.SlotTrinketItem
+import chylex.hee.game.gui.slot.SlotTrinketItemInventory
 import chylex.hee.network.BaseServerPacket
 import io.netty.buffer.ByteBuf
 import net.minecraft.entity.player.EntityPlayerMP
@@ -26,9 +26,9 @@ class PacketServerShiftClickTrinket() : BaseServerPacket(){
 		val allSlots = player.inventoryContainer.inventorySlots
 		
 		val hoveredSlot = sourceSlot?.let(allSlots::getOrNull) ?: return
-		val trinketSlot = SlotTrinketItem.findTrinketSlot(allSlots) ?: return
+		val trinketSlot = SlotTrinketItemInventory.findTrinketSlot(allSlots) ?: return
 		
-		if (SlotTrinketItem.canShiftClickTrinket(hoveredSlot, trinketSlot)){
+		if (SlotTrinketItemInventory.canShiftClickTrinket(hoveredSlot, trinketSlot)){
 			trinketSlot.putStack(hoveredSlot.stack)
 			hoveredSlot.putStack(ItemStack.EMPTY)
 		}
