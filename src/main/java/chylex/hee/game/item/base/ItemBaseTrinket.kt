@@ -25,7 +25,7 @@ open class ItemBaseTrinket : Item(), ITrinketItem{
 				lines.add("")
 			}
 			
-			val keyInSlot = if (TrinketHandler.get(player).isInTrinketSlot(stack)) "in_slot" else "not_in_slot"
+			val keyInSlot = if (TrinketHandler.isInTrinketSlot(player, stack)) "in_slot" else "not_in_slot"
 			val keyIsCharged = if (trinket.canPlaceIntoTrinketSlot(stack)) "charged" else "uncharged"
 			
 			lines.add(I18n.translateToLocal("item.tooltip.hee.trinket.$keyInSlot.$keyIsCharged"))

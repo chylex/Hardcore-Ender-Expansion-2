@@ -1,6 +1,7 @@
 package chylex.hee.game.mechanics
 import chylex.hee.game.gui.slot.SlotTrinketItemInventory
 import chylex.hee.game.item.trinket.ITrinketHandler
+import chylex.hee.game.item.trinket.ITrinketHandlerProvider
 import chylex.hee.game.item.trinket.ITrinketItem
 import chylex.hee.game.mechanics.TrinketHandler.TrinketCapability.Provider
 import chylex.hee.system.Resource
@@ -32,14 +33,28 @@ object TrinketHandler{
 	}
 	
 	fun get(player: EntityPlayer) : ITrinketHandler{
-		return InternalHandlerFor(player)
+		val currentItem = getTrinketSlotItem(player)
+		val handlerProvider = currentItem.item as? ITrinketHandlerProvider
+		
+		return if (handlerProvider != null && handlerProvider.canPlaceIntoTrinketSlot(currentItem))
+			handlerProvider.createTrinketHandler(player)
+		else
+			InternalHandlerFor(player)
 	}
 	
-	// Handler implementation
+	fun getTrinketSlotItem(player: EntityPlayer): ItemStack{
+		return player.getCapability(CAP_TRINKET_SLOT!!, null)?.item ?: ItemStack.EMPTY
+	}
+	
+	fun isInTrinketSlot(player: EntityPlayer, stack: ItemStack): Boolean{
+		return getTrinketSlotItem(player) === stack || get(player).isInTrinketSlot(stack)
+	}
+	
+	// Default handler implementation
 	
 	private class InternalHandlerFor(private val player: EntityPlayer) : ITrinketHandler{
 		override fun isInTrinketSlot(stack: ItemStack): Boolean{
-			return getCurrentItem(player) === stack
+			return getTrinketSlotItem(player) === stack
 		}
 		
 		override fun isItemActive(item: ITrinketItem): Boolean{
@@ -51,7 +66,7 @@ object TrinketHandler{
 		}
 		
 		private fun getItemIfActive(item: ITrinketItem): ItemStack?{
-			return getCurrentItem(player).takeIf { it.item === item && item.canPlaceIntoTrinketSlot(it) }
+			return getTrinketSlotItem(player).takeIf { it.item === item && item.canPlaceIntoTrinketSlot(it) }
 		}
 	}
 	
@@ -63,12 +78,8 @@ object TrinketHandler{
 	@CapabilityInject(TrinketCapability::class)
 	private var CAP_TRINKET_SLOT: Capability<TrinketCapability>? = null
 	
-	private fun setCurrentItem(player: EntityPlayer, stack: ItemStack){
+	private fun setTrinketSlotItem(player: EntityPlayer, stack: ItemStack){
 		player.getCapability(CAP_TRINKET_SLOT!!, null)?.item = stack
-	}
-	
-	private fun getCurrentItem(player: EntityPlayer): ItemStack{
-		return player.getCapability(CAP_TRINKET_SLOT!!, null)?.item ?: ItemStack.EMPTY
 	}
 	
 	@SubscribeEvent
@@ -114,7 +125,7 @@ object TrinketHandler{
 		val newPlayer = e.entityPlayer
 		
 		if (oldPlayer.world.gameRules.getBoolean("keepInventory")){
-			setCurrentItem(newPlayer, getCurrentItem(oldPlayer))
+			setTrinketSlotItem(newPlayer, getTrinketSlotItem(oldPlayer))
 		}
 	}
 	
