@@ -97,6 +97,8 @@ item.hee.energy_receptacle.tooltip.holding=§9Holding §3%s§9 Energy
 
 item.hee.spatial_dash_gem.name=Spatial Dash Gem
 
+item.hee.trinket_pouch.name=Trinket Pouch
+item.hee.trinket_pouch.tooltip=Right-click to open
 item.hee.amulet_of_recovery.name=Amulet of Recovery
 item.hee.ring_of_preservation.name=Ring of Preservation
 item.hee.scale_of_freefall.name=Scale of Freefall
@@ -149,6 +151,8 @@ gui.hee.amulet_of_recovery.move_all=Move All
 
 gui.hee.loot_chest.title=Loot Chest
 gui.hee.loot_chest.title.creative=Loot Chest (Editing)
+
+gui.hee.trinket_pouch.title=Trinket Pouch
 
 commands.hee.usage=/hee [page=1]
 commands.hee.info=shows command list

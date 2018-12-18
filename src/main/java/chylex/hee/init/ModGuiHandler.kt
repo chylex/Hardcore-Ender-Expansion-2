@@ -3,8 +3,10 @@ import chylex.hee.HEE
 import chylex.hee.game.block.entity.TileEntityLootChest
 import chylex.hee.game.gui.ContainerAmuletOfRecovery
 import chylex.hee.game.gui.ContainerLootChest
+import chylex.hee.game.gui.ContainerTrinketPouch
 import chylex.hee.game.gui.GuiAmuletOfRecovery
 import chylex.hee.game.gui.GuiLootChest
+import chylex.hee.game.gui.GuiTrinketPouch
 import chylex.hee.system.util.Pos
 import chylex.hee.system.util.getTile
 import net.minecraft.entity.player.EntityPlayer
@@ -28,6 +30,11 @@ object ModGuiHandler : IGuiHandler{
 		AMULET_OF_RECOVERY(
 			createInterface = { player, hand, _, _ -> GuiAmuletOfRecovery(player, EnumHand.values()[hand]) },
 			createContainer = { player, hand, _, _ -> ContainerAmuletOfRecovery(player, EnumHand.values()[hand]) }
+		),
+		
+		TRINKET_POUCH(
+			createInterface = { player, slot, _, _ -> GuiTrinketPouch(player, slot) },
+			createContainer = { player, slot, _, _ -> ContainerTrinketPouch(player, slot) }
 		),
 		
 		LOOT_CHEST(
