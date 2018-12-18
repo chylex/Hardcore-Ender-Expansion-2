@@ -25,7 +25,9 @@ enum class Infusion(
 	MINING  ("hee.infusion.mining",   Colors(primaryHue =  70.0, secondaryBrightness = 140u), Matching(ModBlocks.INFUSED_TNT)),
 	
 	STABILITY("hee.infusion.stability", Colors(primaryHue = 130.0, secondaryHue = 275.0), Matching(ModItems.ENERGY_RECEPTACLE)),
-	SAFETY   ("hee.infusion.safety",    Colors(primaryHue = 180.0, secondaryHue = 275.0), Matching(ModItems.ENERGY_RECEPTACLE));
+	SAFETY   ("hee.infusion.safety",    Colors(primaryHue = 180.0, secondaryHue = 275.0), Matching(ModItems.ENERGY_RECEPTACLE)),
+	
+	EXPANSION("hee.infusion.expansion", Colors(primaryHue = 55.0, secondaryCustom = HCL(45.0, 80F, 60F)), Matching(ModItems.TRINKET_POUCH));
 	
 	// Construction helpers
 	

@@ -129,6 +129,7 @@ hee.infusion.phasing=Phasing
 hee.infusion.mining=Mining
 hee.infusion.stability=Stability
 hee.infusion.safety=Safety
+hee.infusion.expansion=Expansion
 
 itemGroup.hee=Hardcore Ender Expansion
 

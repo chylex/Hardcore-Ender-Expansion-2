@@ -1,7 +1,12 @@
 package chylex.hee.game.item
 import chylex.hee.game.gui.ContainerTrinketPouch
 import chylex.hee.game.gui.slot.SlotTrinketItemInventory
+import chylex.hee.game.item.base.IInfusableItem
+import chylex.hee.game.item.base.ItemBaseInfusable
 import chylex.hee.game.item.base.ItemBaseTrinket
+import chylex.hee.game.item.infusion.Infusion
+import chylex.hee.game.item.infusion.Infusion.EXPANSION
+import chylex.hee.game.item.infusion.InfusionTag
 import chylex.hee.game.item.trinket.ITrinketHandler
 import chylex.hee.game.item.trinket.ITrinketHandlerProvider
 import chylex.hee.game.item.trinket.ITrinketItem
@@ -43,7 +48,7 @@ import net.minecraftforge.fml.relauncher.Side
 import net.minecraftforge.fml.relauncher.SideOnly
 import org.lwjgl.input.Mouse
 
-class ItemTrinketPouch : ItemBaseTrinket(), ITrinketHandlerProvider{
+class ItemTrinketPouch : ItemBaseTrinket(), ITrinketHandlerProvider, IInfusableItem{
 	private companion object{
 		private const val CONTENTS_TAG = "Contents"
 		private const val MOD_COUNTER_TAG = "Version"
@@ -60,6 +65,7 @@ class ItemTrinketPouch : ItemBaseTrinket(), ITrinketHandlerProvider{
 		}
 		
 		private fun getSlotCount(stack: ItemStack) = when{
+			InfusionTag.getList(stack).has(EXPANSION) -> 5
 			else -> 3
 		}
 	}
@@ -163,6 +169,10 @@ class ItemTrinketPouch : ItemBaseTrinket(), ITrinketHandlerProvider{
 		return (player.openContainer as? ContainerTrinketPouch)?.containerInventory ?: Inventory(player, INVENTORY_SLOT_TRINKET) // helpfully updates the opened GUI too
 	}
 	
+	override fun canApplyInfusion(infusion: Infusion): Boolean{
+		return ItemBaseInfusable.onCanApplyInfusion(this, infusion)
+	}
+	
 	override fun onItemRightClick(world: World, player: EntityPlayer, hand: EnumHand): ActionResult<ItemStack>{
 		val stack = player.getHeldItem(hand)
 		val slot = player.inventory.nonEmptySlots.asSequence().find { it.stack === stack }
@@ -188,6 +198,13 @@ class ItemTrinketPouch : ItemBaseTrinket(), ITrinketHandlerProvider{
 		if (Minecraft.getMinecraft().currentScreen is GuiInventory){
 			lines.add(I18n.format("item.hee.trinket_pouch.tooltip"))
 		}
+		
+		ItemBaseInfusable.onAddInformation(stack, lines)
+	}
+	
+	@SideOnly(Side.CLIENT)
+	override fun hasEffect(stack: ItemStack): Boolean{
+		return super.hasEffect(stack) || ItemBaseInfusable.onHasEffect(stack)
 	}
 	
 	@SideOnly(Side.CLIENT)
