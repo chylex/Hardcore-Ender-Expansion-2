@@ -1,4 +1,4 @@
-package chylex.hee.game.item.base
+package chylex.hee.game.item
 import chylex.hee.HEE
 import chylex.hee.game.item.trinket.ITrinketItem
 import chylex.hee.game.item.util.CustomRarity
@@ -12,7 +12,7 @@ import net.minecraft.world.World
 import net.minecraftforge.fml.relauncher.Side
 import net.minecraftforge.fml.relauncher.SideOnly
 
-open class ItemBaseTrinket : Item(), ITrinketItem{
+open class ItemAbstractTrinket : Item(), ITrinketItem{
 	companion object{
 		fun onGetRarity(): EnumRarity{
 			return CustomRarity.TRINKET

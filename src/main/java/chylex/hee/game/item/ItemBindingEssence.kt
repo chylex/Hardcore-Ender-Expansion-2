@@ -1,5 +1,4 @@
 package chylex.hee.game.item
-import chylex.hee.game.item.base.ItemBaseInfusable
 import chylex.hee.game.item.infusion.Infusion
 import chylex.hee.game.item.infusion.InfusionList
 import chylex.hee.game.item.infusion.InfusionTag
@@ -16,7 +15,7 @@ import net.minecraft.world.World
 import net.minecraftforge.fml.relauncher.Side
 import net.minecraftforge.fml.relauncher.SideOnly
 
-class ItemBindingEssence : ItemBaseInfusable(){
+class ItemBindingEssence : ItemAbstractInfusable(){
 	init{
 		maxStackSize = 16
 	}

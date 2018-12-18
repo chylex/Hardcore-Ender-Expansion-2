@@ -1,6 +1,5 @@
 package chylex.hee.game.item
 import chylex.hee.game.block.fluid.FluidBase
-import chylex.hee.game.item.base.ItemBaseVoidTool
 import chylex.hee.game.render.util.RGB
 import chylex.hee.game.world.util.BlockEditor
 import chylex.hee.game.world.util.RayTracer
@@ -32,7 +31,7 @@ import net.minecraft.util.math.RayTraceResult.Type.BLOCK
 import net.minecraft.world.World
 import net.minecraftforge.fluids.IFluidBlock
 
-class ItemVoidBucket : ItemBaseVoidTool(){
+class ItemVoidBucket : ItemAbstractVoidTool(){
 	private companion object{
 		private const val COLOR_TAG = "Color"
 		

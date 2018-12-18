@@ -1,4 +1,4 @@
-package chylex.hee.game.item.base
+package chylex.hee.game.item
 import chylex.hee.game.block.entity.TileEntityEnergyCluster
 import chylex.hee.game.mechanics.energy.IEnergyQuantity
 import chylex.hee.game.mechanics.energy.IEnergyQuantity.Units
@@ -32,7 +32,7 @@ import org.apache.commons.lang3.math.Fraction
 import kotlin.math.max
 import kotlin.math.pow
 
-abstract class ItemBaseEnergyUser : Item(){
+abstract class ItemAbstractEnergyUser : Item(){
 	init{
 		maxStackSize = 1
 	}

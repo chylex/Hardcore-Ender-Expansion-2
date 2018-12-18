@@ -1,6 +1,5 @@
 package chylex.hee.game.item
 import chylex.hee.game.block.entity.TileEntityEnergyCluster
-import chylex.hee.game.item.base.ItemBaseInfusable
 import chylex.hee.game.item.infusion.Infusion.SAFETY
 import chylex.hee.game.item.infusion.Infusion.STABILITY
 import chylex.hee.game.item.infusion.InfusionList
@@ -37,7 +36,7 @@ import net.minecraftforge.fml.relauncher.Side
 import net.minecraftforge.fml.relauncher.SideOnly
 import kotlin.math.pow
 
-class ItemEnergyReceptacle : ItemBaseInfusable(){
+class ItemEnergyReceptacle : ItemAbstractInfusable(){
 	private companion object{
 		private const val CLUSTER_SNAPSHOT_TAG = "Cluster"
 		private const val UPDATE_TIME_TAG = "UpdateTime"

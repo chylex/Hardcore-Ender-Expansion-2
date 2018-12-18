@@ -1,5 +1,4 @@
 package chylex.hee.game.item
-import chylex.hee.game.item.base.ItemBaseVoidTool
 import chylex.hee.game.item.util.Tool.Type.AXE
 import chylex.hee.game.item.util.Tool.Type.PICKAXE
 import chylex.hee.game.item.util.Tool.Type.SHOVEL
@@ -20,7 +19,7 @@ import net.minecraftforge.fml.common.eventhandler.EventPriority.HIGHEST
 import net.minecraftforge.fml.common.eventhandler.EventPriority.LOWEST
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent
 
-class ItemVoidMiner : ItemBaseVoidTool(){
+class ItemVoidMiner : ItemAbstractVoidTool(){
 	init{
 		toolMaterial.harvestLevel.let {
 			setHarvestLevel(PICKAXE, it)

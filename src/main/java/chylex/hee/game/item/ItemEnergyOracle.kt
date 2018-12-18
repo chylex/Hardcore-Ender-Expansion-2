@@ -1,6 +1,5 @@
 package chylex.hee.game.item
 import chylex.hee.game.block.entity.TileEntityEnergyCluster
-import chylex.hee.game.item.base.ItemBaseEnergyUser
 import chylex.hee.game.mechanics.energy.IEnergyQuantity.Units
 import chylex.hee.game.render.util.ColorTransition
 import chylex.hee.game.render.util.HCL
@@ -33,7 +32,7 @@ import net.minecraft.world.World
 import net.minecraftforge.fml.relauncher.Side
 import net.minecraftforge.fml.relauncher.SideOnly
 
-class ItemEnergyOracle : ItemBaseEnergyUser(){
+class ItemEnergyOracle : ItemAbstractEnergyUser(){
 	companion object{
 		private const val ORACLE_IDENTIFIER_TAG = "ID"
 		

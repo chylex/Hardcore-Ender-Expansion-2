@@ -1,4 +1,4 @@
-package chylex.hee.game.item.base
+package chylex.hee.game.item.infusion
 import chylex.hee.game.item.infusion.Infusion
 import net.minecraft.item.Item
 

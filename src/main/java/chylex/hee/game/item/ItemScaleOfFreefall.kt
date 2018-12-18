@@ -1,5 +1,4 @@
 package chylex.hee.game.item
-import chylex.hee.game.item.base.ItemBaseTrinket
 import chylex.hee.game.mechanics.TrinketHandler
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.item.ItemStack
@@ -10,7 +9,7 @@ import net.minecraftforge.event.entity.living.LivingDeathEvent
 import net.minecraftforge.fml.common.eventhandler.EventPriority.HIGHEST
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent
 
-class ItemScaleOfFreefall : ItemBaseTrinket(){
+class ItemScaleOfFreefall : ItemAbstractTrinket(){
 	init{
 		maxDamage = 8
 		

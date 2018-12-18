@@ -1,4 +1,5 @@
-package chylex.hee.game.item.base
+package chylex.hee.game.item
+import chylex.hee.game.item.infusion.IInfusableItem
 import chylex.hee.game.item.infusion.Infusion
 import chylex.hee.game.item.infusion.InfusionTag
 import net.minecraft.client.util.ITooltipFlag
@@ -9,7 +10,7 @@ import net.minecraft.world.World
 import net.minecraftforge.fml.relauncher.Side
 import net.minecraftforge.fml.relauncher.SideOnly
 
-abstract class ItemBaseInfusable : Item(), IInfusableItem{
+abstract class ItemAbstractInfusable : Item(), IInfusableItem{
 	companion object{
 		fun onCanApplyInfusion(item: Item, infusion: Infusion): Boolean{
 			return infusion.targetItems.contains(item)

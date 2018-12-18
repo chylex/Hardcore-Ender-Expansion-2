@@ -1,5 +1,4 @@
 package chylex.hee.game.item.infusion
-import chylex.hee.game.item.base.IInfusableItem
 import chylex.hee.game.render.util.HCL
 import chylex.hee.game.render.util.IColor
 import chylex.hee.game.render.util.RGB

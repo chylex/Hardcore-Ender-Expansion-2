@@ -1,6 +1,5 @@
 package chylex.hee.game.item
 import chylex.hee.game.entity.projectile.EntityProjectileSpatialDash
-import chylex.hee.game.item.base.ItemBaseEnergyUser
 import chylex.hee.game.mechanics.energy.IEnergyQuantity.Units
 import chylex.hee.init.ModItems
 import chylex.hee.system.util.over
@@ -14,7 +13,7 @@ import net.minecraft.util.EnumActionResult.SUCCESS
 import net.minecraft.util.EnumHand
 import net.minecraft.world.World
 
-class ItemSpatialDashGem : ItemBaseEnergyUser(){
+class ItemSpatialDashGem : ItemAbstractEnergyUser(){
 	companion object{
 		fun setupRecipeNBT(recipe: IRecipe){
 			ModItems.SPATIAL_DASH_GEM.setEnergyChargePercentage(recipe.recipeOutput, 1F)

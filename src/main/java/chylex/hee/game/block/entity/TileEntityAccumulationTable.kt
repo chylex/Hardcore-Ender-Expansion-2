@@ -1,6 +1,6 @@
 package chylex.hee.game.block.entity
 import chylex.hee.game.block.entity.TileEntityAccumulationTable.Process
-import chylex.hee.game.item.base.ItemBaseEnergyUser
+import chylex.hee.game.item.ItemAbstractEnergyUser
 import chylex.hee.game.mechanics.energy.IEnergyQuantity.Units
 import chylex.hee.game.mechanics.table.process.ITableContext
 import chylex.hee.game.mechanics.table.process.ITableInputTransformer.Companion.CONSUME_STACK
@@ -25,7 +25,7 @@ class TileEntityAccumulationTable : TileEntityBaseTable<Process>(){
 		val newProcesses = ArrayList<Process>(1)
 		
 		for(pedestal in unassignedPedestals){
-			if (pedestal.itemInputCopy.item is ItemBaseEnergyUser){
+			if (pedestal.itemInputCopy.item is ItemAbstractEnergyUser){
 				newProcesses.add(Process(world, pedestal.pos))
 			}
 		}
@@ -60,7 +60,7 @@ class TileEntityAccumulationTable : TileEntityBaseTable<Process>(){
 		override fun onWorkTick(context: ITableContext, input: ItemStack): State{
 			val item = input.item
 			
-			if (item !is ItemBaseEnergyUser){
+			if (item !is ItemAbstractEnergyUser){
 				return Cancel
 			}
 			

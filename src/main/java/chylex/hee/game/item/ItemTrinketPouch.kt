@@ -1,9 +1,7 @@
 package chylex.hee.game.item
 import chylex.hee.game.gui.ContainerTrinketPouch
 import chylex.hee.game.gui.slot.SlotTrinketItemInventory
-import chylex.hee.game.item.base.IInfusableItem
-import chylex.hee.game.item.base.ItemBaseInfusable
-import chylex.hee.game.item.base.ItemBaseTrinket
+import chylex.hee.game.item.infusion.IInfusableItem
 import chylex.hee.game.item.infusion.Infusion
 import chylex.hee.game.item.infusion.Infusion.EXPANSION
 import chylex.hee.game.item.infusion.InfusionTag
@@ -48,7 +46,7 @@ import net.minecraftforge.fml.relauncher.Side
 import net.minecraftforge.fml.relauncher.SideOnly
 import org.lwjgl.input.Mouse
 
-class ItemTrinketPouch : ItemBaseTrinket(), ITrinketHandlerProvider, IInfusableItem{
+class ItemTrinketPouch : ItemAbstractTrinket(), ITrinketHandlerProvider, IInfusableItem{
 	private companion object{
 		private const val CONTENTS_TAG = "Contents"
 		private const val MOD_COUNTER_TAG = "Version"
@@ -170,7 +168,7 @@ class ItemTrinketPouch : ItemBaseTrinket(), ITrinketHandlerProvider, IInfusableI
 	}
 	
 	override fun canApplyInfusion(infusion: Infusion): Boolean{
-		return ItemBaseInfusable.onCanApplyInfusion(this, infusion)
+		return ItemAbstractInfusable.onCanApplyInfusion(this, infusion)
 	}
 	
 	override fun onItemRightClick(world: World, player: EntityPlayer, hand: EnumHand): ActionResult<ItemStack>{
@@ -199,12 +197,12 @@ class ItemTrinketPouch : ItemBaseTrinket(), ITrinketHandlerProvider, IInfusableI
 			lines.add(I18n.format("item.hee.trinket_pouch.tooltip"))
 		}
 		
-		ItemBaseInfusable.onAddInformation(stack, lines)
+		ItemAbstractInfusable.onAddInformation(stack, lines)
 	}
 	
 	@SideOnly(Side.CLIENT)
 	override fun hasEffect(stack: ItemStack): Boolean{
-		return super.hasEffect(stack) || ItemBaseInfusable.onHasEffect(stack)
+		return super.hasEffect(stack) || ItemAbstractInfusable.onHasEffect(stack)
 	}
 	
 	@SideOnly(Side.CLIENT)

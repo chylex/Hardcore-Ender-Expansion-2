@@ -1,4 +1,4 @@
-package chylex.hee.game.item.base
+package chylex.hee.game.item
 import chylex.hee.game.item.util.CustomToolMaterial
 import chylex.hee.game.render.util.RGB
 import net.minecraft.entity.EntityLivingBase
@@ -11,7 +11,7 @@ import net.minecraftforge.event.AnvilUpdateEvent
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent
 import kotlin.math.min
 
-abstract class ItemBaseVoidTool : ItemTool(CustomToolMaterial.VOID, emptySet()){
+abstract class ItemAbstractVoidTool : ItemTool(CustomToolMaterial.VOID, emptySet()){
 	init{
 		@Suppress("LeakingThis")
 		setNoRepair()

@@ -1,6 +1,4 @@
 package chylex.hee.game.item
-import chylex.hee.game.item.base.ItemBaseEnergyUser
-import chylex.hee.game.item.base.ItemBaseTrinket
 import chylex.hee.game.item.trinket.ITrinketItem
 import chylex.hee.game.mechanics.TrinketHandler
 import chylex.hee.game.mechanics.energy.IEnergyQuantity.Units
@@ -43,7 +41,7 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent
 import net.minecraftforge.fml.relauncher.Side
 import net.minecraftforge.fml.relauncher.SideOnly
 
-class ItemAmuletOfRecovery : ItemBaseEnergyUser(), ITrinketItem{
+class ItemAmuletOfRecovery : ItemAbstractEnergyUser(), ITrinketItem{
 	private companion object{
 		private const val CONTENTS_TAG = "Contents"
 		private const val RETRIEVAL_ENERGY_TAG = "RetrievalEnergy"
@@ -286,13 +284,13 @@ class ItemAmuletOfRecovery : ItemBaseEnergyUser(), ITrinketItem{
 	}
 	
 	override fun getRarity(stack: ItemStack): EnumRarity{
-		return ItemBaseTrinket.onGetRarity()
+		return ItemAbstractTrinket.onGetRarity()
 	}
 	
 	@SideOnly(Side.CLIENT)
 	override fun addInformation(stack: ItemStack, world: World?, lines: MutableList<String>, flags: ITooltipFlag){
 		if (!hasAnyContents(stack)){
-			ItemBaseTrinket.onAddInformation(stack, this, lines)
+			ItemAbstractTrinket.onAddInformation(stack, this, lines)
 		}
 		
 		lines.add(I18n.translateToLocalFormatted("item.tooltip.hee.energy.level", getEnergyChargeLevel(stack).units.value, getEnergyCapacity(stack).units.value))

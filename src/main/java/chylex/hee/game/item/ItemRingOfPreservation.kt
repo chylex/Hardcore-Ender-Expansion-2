@@ -1,5 +1,4 @@
 package chylex.hee.game.item
-import chylex.hee.game.item.base.ItemBaseTrinket
 import chylex.hee.game.mechanics.TrinketHandler
 import chylex.hee.system.util.copyIf
 import chylex.hee.system.util.isNotEmpty
@@ -19,7 +18,7 @@ import net.minecraftforge.fml.common.eventhandler.EventPriority.LOWEST
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent
 import java.util.UUID
 
-class ItemRingOfPreservation : ItemBaseTrinket(){
+class ItemRingOfPreservation : ItemAbstractTrinket(){
 	private class HurtPlayerInfo private constructor(val playerId: UUID, val worldTime: Long){
 		constructor(player: EntityPlayer) : this(player.uniqueID, player.world.totalWorldTime)
 		
