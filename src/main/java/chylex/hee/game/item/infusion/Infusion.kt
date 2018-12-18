@@ -33,8 +33,8 @@ enum class Infusion(
 	
 	private class Colors(val primary: IColor, val secondary: IColor){
 		constructor(primaryHue: Double, secondaryHue: Double) : this(HCL(primaryHue, 100F, 75F), HCL(secondaryHue, 100F, 75F))
-		constructor(primaryBrightness: UByte, secondaryHue: Double) : this(RGB(primaryBrightness), HCL(secondaryHue, 100F, 75F))
-		constructor(primaryHue: Double, secondaryBrightness: UByte) : this(HCL(primaryHue, 100F, 75F), RGB(secondaryBrightness))
+		constructor(primaryHue: Double, secondaryCustom: IColor) : this(HCL(primaryHue, 100F, 75F), secondaryCustom)
+		constructor(primaryHue: Double, secondaryBrightness: UByte) : this(primaryHue, RGB(secondaryBrightness))
 	}
 	
 	private class Matching(vararg val items: Item){
