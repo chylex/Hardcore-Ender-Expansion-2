@@ -8,8 +8,7 @@ import net.minecraft.potion.PotionEffect
 import kotlin.math.max
 
 object PotionPurity : PotionBase(color = RGB(34, 204, 252), isNegative = false){
-	private const val MIN_DURATION =    60 // allow animations to finish, must be > 10
-	private const val MAX_DURATION = 32147 // rough threshold for infinite duration
+	private const val MIN_DURATION = 60 // allow animations to finish, must be > 10
 	
 	val PURITY = this
 	
@@ -24,7 +23,7 @@ object PotionPurity : PotionBase(color = RGB(34, 204, 252), isNegative = false){
 		val purityLevel = amplifier + 1
 		
 		for((type, effect) in entity.activePotionMap){
-			if (type.isBadEffect && effect.duration in MIN_DURATION..MAX_DURATION){ // TODO handle eternal torment
+			if (type.isBadEffect && effect.duration in MIN_DURATION..INFINITE_DURATION_THRESHOLD){ // TODO handle eternal torment
 				when(type){ // UPDATE make sure all potion types with special needs are handled, and the frequencies have not changed
 					POISON -> purifySpecial(effect, 25, purityLevel)
 					WITHER -> purifySpecial(effect, 40, purityLevel)
