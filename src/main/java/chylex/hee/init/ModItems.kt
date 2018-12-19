@@ -8,6 +8,7 @@ import chylex.hee.game.item.ItemElytraOverride
 import chylex.hee.game.item.ItemEnergyOracle
 import chylex.hee.game.item.ItemEnergyReceptacle
 import chylex.hee.game.item.ItemIgneousRock
+import chylex.hee.game.item.ItemRingOfHunger
 import chylex.hee.game.item.ItemRingOfPreservation
 import chylex.hee.game.item.ItemScaleOfFreefall
 import chylex.hee.game.item.ItemSpatialDashGem
@@ -80,6 +81,7 @@ object ModItems{
 	
 	@JvmField val TRINKET_POUCH        = ItemTrinketPouch().apply { setup("trinket_pouch") }
 	@JvmField val AMULET_OF_RECOVERY   = ItemAmuletOfRecovery().apply { setup("amulet_of_recovery") }
+	@JvmField val RING_OF_HUNGER       = ItemRingOfHunger().apply { setup("ring_of_hunger") }
 	@JvmField val RING_OF_PRESERVATION = ItemRingOfPreservation().apply { setup("ring_of_preservation") }
 	@JvmField val SCALE_OF_FREEFALL    = ItemScaleOfFreefall().apply { setup("scale_of_freefall") }
 	
@@ -124,6 +126,7 @@ object ModItems{
 			
 			register(TRINKET_POUCH)
 			register(AMULET_OF_RECOVERY)
+			register(RING_OF_HUNGER)
 			register(RING_OF_PRESERVATION)
 			register(SCALE_OF_FREEFALL)
 		}
