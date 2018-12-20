@@ -113,7 +113,7 @@ object TrinketHandler{
 		}
 		
 		player.captureDrops = true
-		e.drops.add(player.dropItem(handler.item, true, false))
+		player.dropItem(handler.item, true, false)
 		player.captureDrops = false
 		
 		handler.item = ItemStack.EMPTY
