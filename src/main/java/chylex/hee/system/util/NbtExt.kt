@@ -2,6 +2,7 @@ package chylex.hee.system.util
 import chylex.hee.HEE
 import net.minecraft.inventory.IInventory
 import net.minecraft.item.ItemStack
+import net.minecraft.nbt.NBTBase
 import net.minecraft.nbt.NBTPrimitive
 import net.minecraft.nbt.NBTTagByte
 import net.minecraft.nbt.NBTTagByteArray
@@ -241,7 +242,16 @@ abstract class NBTList<T : Any>(protected val tagList: NBTTagList) : Iterable<T>
 	val isEmpty
 		get() = tagList.isEmpty
 	
-	abstract fun append(element: T)
+	protected abstract fun convert(element: T): NBTBase
+	
+	open fun append(element: T){
+		tagList.appendTag(convert(element))
+	}
+	
+	open fun set(index: Int, element: T){
+		tagList.set(index, convert(element))
+	}
+	
 	abstract fun get(index: Int) : T
 	
 	override fun iterator(): MutableIterator<T> = object : MutableIterator<T>{
@@ -304,9 +314,7 @@ class NBTPrimitiveList(tagList: NBTTagList = NBTTagList()) : NBTList<NBTPrimitiv
 	fun append(value: Float)  = tagList.appendTag(NBTTagFloat(value))
 	fun append(value: Double) = tagList.appendTag(NBTTagDouble(value))
 	
-	override fun append(element: NBTPrimitive){
-		tagList.appendTag(element)
-	}
+	override fun convert(element: NBTPrimitive) = element
 	
 	override fun get(index: Int): NBTPrimitive{
 		val tag = tagList.get(index)
@@ -320,15 +328,13 @@ class NBTPrimitiveList(tagList: NBTTagList = NBTTagList()) : NBTList<NBTPrimitiv
 }
 
 class NBTObjectList<T : Any>(tagList: NBTTagList = NBTTagList()) : NBTList<T>(tagList){
-	override fun append(element: T){
-		tagList.appendTag(when(element){
-			is NBTTagCompound -> element
-			is String         -> NBTTagString(element)
-			is ByteArray      -> NBTTagByteArray(element)
-			is IntArray       -> NBTTagIntArray(element)
-			is LongArray      -> NBTTagLongArray(element)
-			else              -> throw IllegalArgumentException("unhandled NBT type conversion: ${element::class.java.simpleName}")
-		})
+	override fun convert(element: T) = when(element){
+		is NBTTagCompound -> element
+		is String         -> NBTTagString(element)
+		is ByteArray      -> NBTTagByteArray(element)
+		is IntArray       -> NBTTagIntArray(element)
+		is LongArray      -> NBTTagLongArray(element)
+		else              -> throw IllegalArgumentException("unhandled NBT type conversion: ${element::class.java.simpleName}")
 	}
 	
 	override fun get(index: Int): T{
@@ -356,8 +362,8 @@ class NBTObjectList<T : Any>(tagList: NBTTagList = NBTTagList()) : NBTList<T>(ta
 }
 
 class NBTItemStackList(tagList: NBTTagList = NBTTagList()) : NBTList<ItemStack>(tagList){
-	override fun append(element: ItemStack){
-		tagList.appendTag(NBTTagCompound().also { it.writeStack(element) })
+	override fun convert(element: ItemStack): NBTBase{
+		return NBTTagCompound().also { it.writeStack(element) }
 	}
 	
 	override fun get(index: Int): ItemStack{
@@ -377,8 +383,8 @@ class NBTEnumList<T : Enum<T>>(private val cls: Class<T>, tagList: NBTTagList) :
 		inline fun <reified T : Enum<T>> of(elements: Iterable<T>) = of(T::class.java, elements)
 	}
 	
-	override fun append(element: T){
-		tagList.appendTag(NBTTagString(element.name.toLowerCase(Locale.ROOT)))
+	override fun convert(element: T): NBTBase{
+		return NBTTagString(element.name.toLowerCase(Locale.ROOT))
 	}
 	
 	override fun get(index: Int): T{
