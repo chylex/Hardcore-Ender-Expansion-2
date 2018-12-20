@@ -231,7 +231,7 @@ class ItemAmuletOfRecovery : ItemAbstractEnergyUser(), ITrinketItem{
 	override fun onItemRightClick(world: World, player: EntityPlayer, hand: EnumHand): ActionResult<ItemStack>{
 		val stack = player.getHeldItem(hand)
 		
-		if (!hasAnyContents(stack)){
+		if (!hasAnyContents(stack) || !hasMaximumEnergy(stack)){
 			return super.onItemRightClick(world, player, hand)
 		}
 		
