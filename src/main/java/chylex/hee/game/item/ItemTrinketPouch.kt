@@ -13,16 +13,16 @@ import chylex.hee.init.ModGuiHandler.GuiType
 import chylex.hee.init.ModGuiHandler.GuiType.TRINKET_POUCH
 import chylex.hee.network.server.PacketServerOpenGui
 import chylex.hee.system.util.InventorySlot
+import chylex.hee.system.util.NBTItemStackList
+import chylex.hee.system.util.NBTList.Companion.setList
 import chylex.hee.system.util.allSlots
-import chylex.hee.system.util.getListOfCompounds
+import chylex.hee.system.util.getListOfItemStacks
 import chylex.hee.system.util.getStack
 import chylex.hee.system.util.heeTag
 import chylex.hee.system.util.heeTagOrNull
 import chylex.hee.system.util.isNotEmpty
 import chylex.hee.system.util.nonEmptySlots
-import chylex.hee.system.util.readStack
 import chylex.hee.system.util.setStack
-import chylex.hee.system.util.writeStack
 import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.GuiScreen
 import net.minecraft.client.gui.inventory.GuiInventory
@@ -31,8 +31,6 @@ import net.minecraft.client.util.ITooltipFlag
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.inventory.InventoryBasic
 import net.minecraft.item.ItemStack
-import net.minecraft.nbt.NBTTagCompound
-import net.minecraft.nbt.NBTTagList
 import net.minecraft.util.ActionResult
 import net.minecraft.util.EnumActionResult.PASS
 import net.minecraft.util.EnumActionResult.SUCCESS
@@ -77,7 +75,7 @@ class ItemTrinketPouch : ItemAbstractTrinket(), ITrinketHandlerProvider, IInfusa
 			
 			if (isStackValid(pouchItem)){
 				pouchItem.heeTagOrNull?.let {
-					it.getListOfCompounds(CONTENTS_TAG).forEachIndexed { slot, tag -> setStack(slot, tag.readStack()) }
+					it.getListOfItemStacks(CONTENTS_TAG).forEachIndexed(::setStack)
 					modCounter = it.getInteger(MOD_COUNTER_TAG)
 				}
 			}
@@ -104,10 +102,10 @@ class ItemTrinketPouch : ItemAbstractTrinket(), ITrinketHandlerProvider, IInfusa
 			val pouchItem = getPouchIfValid() ?: return false
 			
 			var isEmpty = true
-			val newList = NBTTagList()
+			val newList = NBTItemStackList()
 			
 			for((_, stack) in allSlots){
-				newList.appendTag(NBTTagCompound().also { it.writeStack(stack) })
+				newList.append(stack)
 				
 				if (stack.isNotEmpty){
 					isEmpty = false
@@ -119,7 +117,7 @@ class ItemTrinketPouch : ItemAbstractTrinket(), ITrinketHandlerProvider, IInfusa
 					removeTag(CONTENTS_TAG)
 				}
 				else{
-					setTag(CONTENTS_TAG, newList)
+					setList(CONTENTS_TAG, newList)
 				}
 				
 				if (updateModCounter){
