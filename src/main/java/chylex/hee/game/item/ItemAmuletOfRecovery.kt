@@ -3,10 +3,13 @@ import chylex.hee.game.item.trinket.ITrinketItem
 import chylex.hee.game.mechanics.TrinketHandler
 import chylex.hee.game.mechanics.energy.IEnergyQuantity.Units
 import chylex.hee.init.ModGuiHandler.GuiType
+import chylex.hee.system.util.NBTItemStackList
+import chylex.hee.system.util.NBTList.Companion.setList
 import chylex.hee.system.util.allSlots
 import chylex.hee.system.util.enchantmentMap
 import chylex.hee.system.util.getIntegerOrNull
 import chylex.hee.system.util.getListOfCompounds
+import chylex.hee.system.util.getListOfItemStacks
 import chylex.hee.system.util.getStack
 import chylex.hee.system.util.hasKey
 import chylex.hee.system.util.heeTag
@@ -14,9 +17,7 @@ import chylex.hee.system.util.heeTagOrNull
 import chylex.hee.system.util.isNotEmpty
 import chylex.hee.system.util.nbtOrNull
 import chylex.hee.system.util.over
-import chylex.hee.system.util.readStack
 import chylex.hee.system.util.setStack
-import chylex.hee.system.util.writeStack
 import chylex.hee.system.util.writeTag
 import io.netty.buffer.Unpooled
 import net.minecraft.client.util.ITooltipFlag
@@ -24,8 +25,6 @@ import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.inventory.InventoryBasic
 import net.minecraft.item.EnumRarity
 import net.minecraft.item.ItemStack
-import net.minecraft.nbt.NBTTagCompound
-import net.minecraft.nbt.NBTTagList
 import net.minecraft.util.ActionResult
 import net.minecraft.util.EnumActionResult.SUCCESS
 import net.minecraft.util.EnumHand
@@ -34,8 +33,10 @@ import net.minecraft.util.text.translation.I18n
 import net.minecraft.world.World
 import net.minecraftforge.common.MinecraftForge
 import net.minecraftforge.event.entity.living.LivingDeathEvent
+import net.minecraftforge.event.entity.player.PlayerDropsEvent
 import net.minecraftforge.event.entity.player.PlayerEvent
 import net.minecraftforge.fml.common.eventhandler.EventPriority.HIGH
+import net.minecraftforge.fml.common.eventhandler.EventPriority.LOW
 import net.minecraftforge.fml.common.eventhandler.EventPriority.LOWEST
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent
 import net.minecraftforge.fml.relauncher.Side
@@ -53,6 +54,13 @@ class ItemAmuletOfRecovery : ItemAbstractEnergyUser(), ITrinketItem{
 		private val SLOTS_MAIN    = ((9 * 0) + 0) until ((9 * 4) + 0)
 		private val SLOTS_ARMOR   = ((9 * 4) + 0) until ((9 * 4) + 4)
 		private val SLOTS_OFFHAND = ((9 * 4) + 4) until ((9 * 4) + 5)
+		private val SLOTS_EXTRA   = ((9 * 4) + 5) until ((9 * 5) + 0)
+		
+		private val SLOTS_MAIN_HOTBAR = ((9 * 0) + 0) until ((9 * 1) + 0)
+		private val SLOTS_MAIN_BULK   = ((9 * 1) + 0) until ((9 * 4) + 0)
+		
+		private val BACKFILL_SLOT_ORDER
+			get() = sequenceOf(SLOTS_EXTRA, SLOTS_MAIN_BULK, SLOTS_MAIN_HOTBAR, SLOTS_OFFHAND).flatten() // no armor slots because contents aren't checked
 		
 		private fun isStackValid(stack: ItemStack): Boolean{
 			return stack.item is ItemAmuletOfRecovery
@@ -78,20 +86,20 @@ class ItemAmuletOfRecovery : ItemAbstractEnergyUser(), ITrinketItem{
 				sourceInventory[sourceSlot] = ItemStack.EMPTY
 			}
 			
-			processPlayerInventory(player, ::moveFromInventory) // TODO handle modded items... and make sure those that *fill in* empty spots aren't placed into wrong slots w/ Move All
+			processPlayerInventory(player, ::moveFromInventory)
+			trinketItem.heeTag.setList(CONTENTS_TAG, NBTItemStackList.of(saved.asIterable()))
+		}
+		
+		private fun updateRetrievalCost(trinketItem: ItemStack){
+			val buffer = Unpooled.buffer()
+			
+			var sumOfSlots = 0
+			var sumOfSizes = 0
+			var sumOfEnchantments = 0
+			var sumOfFilteredTagSizes = 0
 			
 			with(trinketItem.heeTag){
-				val list = NBTTagList()
-				val buffer = Unpooled.buffer()
-				
-				var sumOfSlots = 0
-				var sumOfSizes = 0
-				var sumOfEnchantments = 0
-				var sumOfFilteredTagSizes = 0
-				
-				for(stack in saved){
-					list.appendTag(NBTTagCompound().also { it.writeStack(stack) })
-					
+				for(stack in getListOfItemStacks(CONTENTS_TAG)){
 					if (stack.isNotEmpty){
 						sumOfSlots += 1
 						sumOfSizes += stack.count
@@ -126,10 +134,8 @@ class ItemAmuletOfRecovery : ItemAbstractEnergyUser(), ITrinketItem{
 					}
 				}
 				
-				val retrievalCapacity = 10 + (sumOfSlots / 2) + (sumOfSizes / 50) + (sumOfEnchantments / 6) + (sumOfFilteredTagSizes / 100)
-				
-				setTag(CONTENTS_TAG, list)
-				setInteger(RETRIEVAL_ENERGY_TAG, retrievalCapacity)
+				val totalCost = 10 + (sumOfSlots / 2) + (sumOfSizes / 50) + (sumOfEnchantments / 6) + (sumOfFilteredTagSizes / 100)
+				setInteger(RETRIEVAL_ENERGY_TAG, totalCost)
 			}
 		}
 	}
@@ -139,7 +145,7 @@ class ItemAmuletOfRecovery : ItemAbstractEnergyUser(), ITrinketItem{
 			val heldItem = player.getHeldItem(itemHeldIn)
 			
 			if (isStackValid(heldItem)){
-				heldItem.heeTag.getListOfCompounds(CONTENTS_TAG).forEachIndexed { slot, tag -> setStack(slot, tag.readStack()) }
+				heldItem.heeTag.getListOfItemStacks(CONTENTS_TAG).forEachIndexed(::setStack)
 			}
 		}
 		
@@ -167,10 +173,10 @@ class ItemAmuletOfRecovery : ItemAbstractEnergyUser(), ITrinketItem{
 			}
 			
 			var isEmpty = true
-			val newList = NBTTagList()
+			val newList = NBTItemStackList()
 			
 			for((_, stack) in allSlots){
-				newList.appendTag(NBTTagCompound().also { it.writeStack(stack) })
+				newList.append(stack)
 				
 				if (stack.isNotEmpty){
 					isEmpty = false
@@ -181,7 +187,7 @@ class ItemAmuletOfRecovery : ItemAbstractEnergyUser(), ITrinketItem{
 				heldItem.heeTag.removeTag(CONTENTS_TAG)
 			}
 			else{
-				heldItem.heeTag.setTag(CONTENTS_TAG, newList)
+				heldItem.heeTag.setList(CONTENTS_TAG, newList)
 			}
 			
 			return true
@@ -255,6 +261,30 @@ class ItemAmuletOfRecovery : ItemAbstractEnergyUser(), ITrinketItem{
 		}
 	}
 	
+	@SubscribeEvent(priority = LOW)
+	fun onPlayerDrops(e: PlayerDropsEvent){
+		val player = e.entityPlayer
+		val drops = e.drops
+		
+		if (player.world.isRemote || drops.isEmpty()){
+			return
+		}
+		
+		with(player.entityData.heeTagOrNull?.getStack(PLAYER_RESPAWN_ITEM_TAG)?.heeTag ?: return){
+			val list = getListOfItemStacks(CONTENTS_TAG)
+			
+			for(slot in BACKFILL_SLOT_ORDER){
+				if (list.get(slot).isEmpty){
+					list.set(slot, drops.removeAt(0).item)
+					
+					if (drops.isEmpty()){
+						break
+					}
+				}
+			}
+		}
+	}
+	
 	@SubscribeEvent(priority = LOWEST)
 	fun onPlayerClone(e: PlayerEvent.Clone){
 		if (!e.isWasDeath){
@@ -268,6 +298,8 @@ class ItemAmuletOfRecovery : ItemAbstractEnergyUser(), ITrinketItem{
 			val trinketItem = getStack(PLAYER_RESPAWN_ITEM_TAG)
 			
 			if (trinketItem.isNotEmpty){
+				updateRetrievalCost(trinketItem)
+				
 				if (!newPlayer.inventory.addItemStackToInventory(trinketItem)){
 					newPlayer.dropItem(trinketItem, false, false)
 				}
