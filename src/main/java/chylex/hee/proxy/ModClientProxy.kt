@@ -138,4 +138,24 @@ class ModClientProxy : ModCommonProxy(){
 	private inline fun <reified T : TileEntity> registerTileRenderer(renderer: TileEntitySpecialRenderer<in T>){
 		ClientRegistry.bindTileEntitySpecialRenderer(T::class.java, renderer)
 	}
+	
+	// Particles
+	
+	private var prevParticleSetting = Int.MAX_VALUE
+	
+	override fun pauseParticles(){
+		val settings = Minecraft.getMinecraft().gameSettings
+		
+		if (settings.particleSetting != Int.MAX_VALUE){
+			prevParticleSetting = settings.particleSetting
+		}
+		
+		settings.particleSetting = Int.MAX_VALUE
+	}
+	
+	override fun resumeParticles(){
+		if (prevParticleSetting != Int.MAX_VALUE){
+			Minecraft.getMinecraft().gameSettings.particleSetting = prevParticleSetting
+		}
+	}
 }

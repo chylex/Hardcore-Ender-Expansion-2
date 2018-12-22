@@ -6,4 +6,7 @@ open class ModCommonProxy{
 	
 	open fun onPreInit(){}
 	open fun onInit(){}
+	
+	open fun pauseParticles(){}
+	open fun resumeParticles(){}
 }
