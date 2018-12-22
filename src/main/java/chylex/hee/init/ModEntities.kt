@@ -56,7 +56,7 @@ object ModEntities{
 			.entity(T::class.java)
 			.factory(EntityConstructors.get(T::class.java))
 			.id(Resource.Custom(registryName), networkID++)
-			.name("entity.hee.$registryName")
+			.name("hee.$registryName")
 	}
 	
 	@Suppress("NOTHING_TO_INLINE")
