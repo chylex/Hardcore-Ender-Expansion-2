@@ -43,13 +43,7 @@ object ModEntities{
 		
 		// vanilla modifications
 		
-		ForgeRegistries.ENTITIES.getValue(Resource.Vanilla("silverfish"))!!.apply { // TODO is there a better way?
-			val mobClass = EntityMobSilverfish::class.java
-			val entryFields = this::class.java.declaredFields
-			
-			entryFields.first { it.type === Class::class.java }.also { it.isAccessible = true }.set(this, mobClass)
-			entryFields.first { it.type === Function::class.java }.also { it.isAccessible = true }.set(this, EntityConstructors.get(mobClass))
-		}
+		override<EntityMobSilverfish>("silverfish")
 	}
 	
 	// Utilities
@@ -66,5 +60,18 @@ object ModEntities{
 	@Suppress("NOTHING_TO_INLINE")
 	private inline infix fun <T : Entity> EntityEntryBuilder<T>.to(registry: IForgeRegistry<EntityEntry>){
 		registry.register(this.build())
+	}
+	
+	private fun override(vanillaName: String, mobClass: Class<out Entity>){
+		ForgeRegistries.ENTITIES.getValue(Resource.Vanilla(vanillaName))!!.apply { // TODO is there a better way?
+			val entryFields = this::class.java.declaredFields
+			
+			entryFields.first { it.type === Class::class.java }.also { it.isAccessible = true }.set(this, mobClass)
+			entryFields.first { it.type === Function::class.java }.also { it.isAccessible = true }.set(this, EntityConstructors.get(mobClass))
+		}
+	}
+	
+	private inline fun <reified T : Entity> override(vanillaName: String){
+		override(vanillaName, T::class.java)
 	}
 }
