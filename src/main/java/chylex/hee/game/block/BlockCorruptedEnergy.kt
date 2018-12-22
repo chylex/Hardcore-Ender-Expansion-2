@@ -13,7 +13,7 @@ import chylex.hee.game.mechanics.damage.IDamageProcessor.Companion.ENCHANTMENT_P
 import chylex.hee.game.mechanics.damage.IDamageProcessor.Companion.MAGIC_TYPE
 import chylex.hee.game.mechanics.damage.IDamageProcessor.Companion.NUDITY_DANGER
 import chylex.hee.game.mechanics.damage.IDamageProcessor.Companion.RAPID_DAMAGE
-import chylex.hee.game.particle.ParticleTeleport
+import chylex.hee.game.particle.ParticleCorruptedEnergy
 import chylex.hee.game.particle.ParticleTeleport.Data
 import chylex.hee.game.particle.spawner.ParticleSpawnerCustom
 import chylex.hee.game.particle.util.IOffset.InBox
@@ -59,7 +59,7 @@ class BlockCorruptedEnergy(builder: BlockSimple.Builder) : BlockSimple(builder){
 		private val DAMAGE_PART_MAGIC = Damage(MAGIC_TYPE, NUDITY_DANGER, RAPID_DAMAGE(2))
 		
 		private val PARTICLE_CORRUPTION = ParticleSpawnerCustom(
-			type = ParticleTeleport,
+			type = ParticleCorruptedEnergy,
 			data = Data(minLifespan = 8, maxLifespan = 12, minScale = 2.5F, maxScale = 5.0F),
 			pos = InBox(0.75F),
 			mot = InBox(0.05F),
@@ -141,10 +141,6 @@ class BlockCorruptedEnergy(builder: BlockSimple.Builder) : BlockSimple(builder){
 	}
 	
 	override fun updateTick(world: World, pos: BlockPos, state: IBlockState, rand: Random){
-		if (world.isRemote){
-			return
-		}
-		
 		val level = state.getValue(LEVEL)
 		val remainingFacings = Facing6.toMutableList()
 		
