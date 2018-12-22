@@ -106,11 +106,15 @@ class EntityMobEndermite(world: World) : EntityEndermite(world){
 	}
 	
 	override fun writeEntityToNBT(nbt: NBTTagCompound) = with(nbt.heeTag){
+		super.writeEntityToNBT(nbt)
+		
 		setInteger("Age", realLifetime)
 		setShort("Idle", idleDespawnTimer)
 	}
 	
 	override fun readEntityFromNBT(nbt: NBTTagCompound) = with(nbt.heeTag){
+		super.readEntityFromNBT(nbt)
+		
 		realLifetime = getInteger("Age")
 		idleDespawnTimer = getShort("Idle")
 	}

@@ -7,9 +7,9 @@ import chylex.hee.game.item.infusion.Infusion.PHASING
 import chylex.hee.game.item.infusion.Infusion.POWER
 import chylex.hee.game.item.infusion.InfusionList
 import chylex.hee.game.item.infusion.InfusionTag
-import chylex.hee.game.world.util.ExplosionBuilder
 import chylex.hee.game.particle.spawner.ParticleSpawnerVanilla
 import chylex.hee.game.particle.util.IShape.Point
+import chylex.hee.game.world.util.ExplosionBuilder
 import chylex.hee.system.util.allInCenteredBoxMutable
 import chylex.hee.system.util.ceilToInt
 import chylex.hee.system.util.component1
@@ -309,11 +309,15 @@ class EntityInfusedTNT : EntityTNTPrimed{
 	// Serialization
 	
 	override fun writeEntityToNBT(nbt: NBTTagCompound) = with(nbt.heeTag){
+		super.writeEntityToNBT(nbt)
+		
 		InfusionTag.setList(this, infusions)
 		setBoolean("HasPhased", hasPhasedIntoWall)
 	}
 	
 	override fun readEntityFromNBT(nbt: NBTTagCompound) = with(nbt.heeTag){
+		super.readEntityFromNBT(nbt)
+		
 		loadInfusions(InfusionTag.getList(this))
 		hasPhasedIntoWall = getBoolean("HasPhased")
 	}
