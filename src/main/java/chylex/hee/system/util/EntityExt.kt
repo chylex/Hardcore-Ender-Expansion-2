@@ -15,6 +15,7 @@ import net.minecraft.entity.ai.EntityAILookIdle
 import net.minecraft.entity.ai.EntityAINearestAttackableTarget
 import net.minecraft.entity.ai.EntityAISwimming
 import net.minecraft.entity.ai.EntityAIWander
+import net.minecraft.entity.ai.EntityAIWanderAvoidWater
 import net.minecraft.entity.ai.EntityAIWatchClosest
 import net.minecraft.entity.item.EntityItem
 import net.minecraft.util.EntitySelectors
@@ -99,6 +100,13 @@ inline fun AISwim(entity: EntityCreature) =
 
 inline fun AIWander(entity: EntityCreature, movementSpeed: Double, chancePerTick: Int) =
 	EntityAIWander(entity, movementSpeed, chancePerTick)
+
+inline fun AIWanderNoWater(entity: EntityCreature, movementSpeed: Double, chancePerTick: Int) =
+	object : EntityAIWanderAvoidWater(entity, movementSpeed, 0F){
+		init{
+			executionChance = chancePerTick
+		}
+	}
 
 // AI (Looking)
 
