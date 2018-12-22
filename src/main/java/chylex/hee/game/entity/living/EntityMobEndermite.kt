@@ -1,4 +1,5 @@
 package chylex.hee.game.entity.living
+import chylex.hee.HEE
 import chylex.hee.game.entity.living.ai.AIForceWanderTiming
 import chylex.hee.game.mechanics.damage.Damage
 import chylex.hee.game.mechanics.damage.IDamageProcessor.Companion.ALL_PROTECTIONS
@@ -21,7 +22,7 @@ import net.minecraft.nbt.NBTTagCompound
 import net.minecraft.util.ResourceLocation
 import net.minecraft.world.World
 
-class EntityMobEndermite(world: World) : EntityEndermite(world){
+open class EntityMobEndermite(world: World) : EntityEndermite(world){
 	private companion object{
 		private val DAMAGE_GENERAL = Damage(DIFFICULTY_SCALING, PEACEFUL_EXCLUSION, *ALL_PROTECTIONS)
 	}
@@ -60,7 +61,11 @@ class EntityMobEndermite(world: World) : EntityEndermite(world){
 		lifetime = 0
 		++realLifetime
 		
-		super.onLivingUpdate()
+		with(HEE.proxy){
+			pauseParticles()
+			super.onLivingUpdate()
+			resumeParticles()
+		}
 	}
 	
 	override fun attackEntityAsMob(entity: Entity): Boolean{

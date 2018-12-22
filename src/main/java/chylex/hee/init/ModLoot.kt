@@ -17,6 +17,7 @@ object ModLoot{
 	
 	lateinit var SILVERFISH: ResourceLocation
 	lateinit var ENDERMITE_NATURAL: ResourceLocation
+	lateinit var ENDERMITE_INSTABILITY: ResourceLocation
 	
 	fun initialize(){
 		LootConditionManager.registerCondition(ConditionFortune.Serializer)
@@ -31,6 +32,7 @@ object ModLoot{
 		
 		SILVERFISH = registerEntity("silverfish")
 		ENDERMITE_NATURAL = registerEntity("endermite_natural")
+		ENDERMITE_INSTABILITY = registerEntity("endermite_instability")
 	}
 	
 	private fun registerBlock(name: String): BlockLootTable{

@@ -7,8 +7,10 @@ import chylex.hee.game.entity.item.EntityItemFreshlyCooked
 import chylex.hee.game.entity.item.EntityItemIgneousRock
 import chylex.hee.game.entity.item.EntityItemNoBob
 import chylex.hee.game.entity.living.EntityMobEndermite
+import chylex.hee.game.entity.living.EntityMobEndermiteInstability
 import chylex.hee.game.entity.living.EntityMobSilverfish
 import chylex.hee.game.entity.projectile.EntityProjectileSpatialDash
+import chylex.hee.game.render.util.RGB
 import chylex.hee.init.factory.EntityConstructors
 import chylex.hee.system.Resource
 import net.minecraft.entity.Entity
@@ -38,6 +40,8 @@ object ModEntities{
 			register<EntityFallingBlockHeavy>("falling_block_heavy").tracker(160, 20, true) to this
 			register<EntityFallingObsidian>("falling_obsidian").tracker(160, 20, true) to this
 			register<EntityInfusedTNT>("infused_tnt").tracker(160, 10, true) to this
+			
+			register<EntityMobEndermiteInstability>("endermite_instability").tracker(80, 3, true).egg(RGB(21u).toInt(), RGB(94, 122, 108).toInt()) to this
 			
 			register<EntityProjectileSpatialDash>("projectile_spatial_dash").tracker(64, 10, true) to this
 		}

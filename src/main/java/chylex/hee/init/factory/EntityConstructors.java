@@ -6,6 +6,7 @@ import chylex.hee.game.entity.item.EntityItemFreshlyCooked;
 import chylex.hee.game.entity.item.EntityItemIgneousRock;
 import chylex.hee.game.entity.item.EntityItemNoBob;
 import chylex.hee.game.entity.living.EntityMobEndermite;
+import chylex.hee.game.entity.living.EntityMobEndermiteInstability;
 import chylex.hee.game.entity.living.EntityMobSilverfish;
 import chylex.hee.game.entity.projectile.EntityProjectileSpatialDash;
 import net.minecraft.entity.Entity;
@@ -27,6 +28,7 @@ public final class EntityConstructors{
 		add(EntityInfusedTNT.class, EntityInfusedTNT::new);
 		
 		add(EntityMobEndermite.class, EntityMobEndermite::new);
+		add(EntityMobEndermiteInstability.class, EntityMobEndermiteInstability::new);
 		add(EntityMobSilverfish.class, EntityMobSilverfish::new);
 		
 		add(EntityProjectileSpatialDash.class, EntityProjectileSpatialDash::new);

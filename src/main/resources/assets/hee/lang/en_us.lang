@@ -145,6 +145,8 @@ hee.energy.health.damaged=DAMAGED
 hee.energy.health.unstable=UNSTABLE
 hee.energy.health.revitalizing=REVITALIZING
 
+entity.hee.endermite_instability.name=Endermite (Instability)
+
 effect.hee.lifeless=Lifeless
 effect.hee.purity=Purity
 
