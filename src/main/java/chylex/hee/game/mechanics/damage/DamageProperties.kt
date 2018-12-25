@@ -1,6 +1,5 @@
 package chylex.hee.game.mechanics.damage
 import chylex.hee.HEE
-import chylex.hee.system.util.floorToInt
 import net.minecraft.entity.Entity
 import net.minecraft.entity.EntityLivingBase
 import net.minecraft.item.ItemStack
@@ -127,7 +126,7 @@ class DamageProperties{
 			val source = e.source as? CustomDamageSource ?: return
 			
 			if (source.isNonLethal){
-				e.amount = e.amount.coerceIn(0F, e.entityLiving.health.floorToInt() - 1F)
+				e.amount = e.amount.coerceIn(0F, e.entityLiving.health - 1F)
 			}
 		}
 	}
