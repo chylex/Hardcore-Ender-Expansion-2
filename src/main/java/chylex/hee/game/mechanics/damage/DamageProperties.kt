@@ -14,8 +14,6 @@ import net.minecraftforge.event.entity.living.LivingDamageEvent
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber
 import net.minecraftforge.fml.common.eventhandler.EventPriority.HIGHEST
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent
-import kotlin.math.max
-import kotlin.math.min
 
 class DamageProperties{
 	private var typeBits = 0
@@ -129,7 +127,7 @@ class DamageProperties{
 			val source = e.source as? CustomDamageSource ?: return
 			
 			if (source.isNonLethal){
-				e.amount = max(0F, min(e.amount, e.entityLiving.health.floorToInt() - 1F))
+				e.amount = e.amount.coerceIn(0F, e.entityLiving.health.floorToInt() - 1F)
 			}
 		}
 	}

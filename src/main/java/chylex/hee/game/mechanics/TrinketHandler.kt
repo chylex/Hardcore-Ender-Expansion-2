@@ -134,12 +134,12 @@ object TrinketHandler{
 			get()      = getStackInSlot(0)
 			set(value) = setStackInSlot(0, value)
 		
-		override fun serializeNBT(): NBTTagCompound{
-			return NBTTagCompound().also { it.writeStack(item) }
+		override fun serializeNBT() = NBTTagCompound().apply {
+			writeStack(item)
 		}
 		
-		override fun deserializeNBT(nbt: NBTTagCompound){
-			item = nbt.readStack()
+		override fun deserializeNBT(nbt: NBTTagCompound) = with(nbt){
+			item = readStack()
 		}
 		
 		class Provider : CapabilityProvider<TrinketCapability, NBTTagCompound>(CAP_TRINKET_SLOT!!, TrinketCapability())

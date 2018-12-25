@@ -19,7 +19,7 @@ object ModCreativeTabs{
 		private val itemOrder = Object2ShortOpenHashMap<Item>().apply { defaultReturnValue(Short.MAX_VALUE) }
 		
 		fun registerOrder(item: Item){
-			itemOrder[item] = (itemOrder.size + 1).toShort()
+			itemOrder.put(item, (itemOrder.size + 1).toShort()) // kotlin indexer boxes the values
 		}
 		
 		@SideOnly(Side.CLIENT)

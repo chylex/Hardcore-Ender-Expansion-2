@@ -33,8 +33,9 @@ object ModNetwork{
 		
 		for((cls, constructor) in PacketConstructors.getAll()){
 			val id = mapPacketIdToConstructor.size.toByte()
-			mapPacketIdToConstructor[id] = constructor
-			mapPacketClassToId[cls] = id
+			// kotlin indexer boxes the values
+			mapPacketIdToConstructor.put(id, constructor)
+			mapPacketClassToId.put(cls, id)
 		}
 	}
 	
