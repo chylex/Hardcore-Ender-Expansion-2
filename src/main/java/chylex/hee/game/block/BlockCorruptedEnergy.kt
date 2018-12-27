@@ -4,6 +4,7 @@ import chylex.hee.game.block.BlockCorruptedEnergy.SpawnResult.PASSTHROUGH
 import chylex.hee.game.block.BlockCorruptedEnergy.SpawnResult.SUCCESS
 import chylex.hee.game.block.entity.TileEntityEnergyCluster
 import chylex.hee.game.entity.CustomCreatureType
+import chylex.hee.game.entity.IImmuneToCorruptedEnergy
 import chylex.hee.game.mechanics.damage.CombinedDamage
 import chylex.hee.game.mechanics.damage.Damage
 import chylex.hee.game.mechanics.damage.Damage.Companion.TITLE_MAGIC
@@ -71,7 +72,7 @@ class BlockCorruptedEnergy(builder: BlockSimple.Builder) : BlockSimple(builder){
 		}
 		
 		private fun isEntityTolerant(entity: EntityLivingBase): Boolean{
-			return CustomCreatureType.isDemon(entity) || CustomCreatureType.isShadow(entity)
+			return CustomCreatureType.isDemon(entity) || CustomCreatureType.isShadow(entity) || entity is IImmuneToCorruptedEnergy
 		}
 	}
 	
