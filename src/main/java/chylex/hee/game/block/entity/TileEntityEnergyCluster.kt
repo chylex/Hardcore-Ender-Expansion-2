@@ -1,4 +1,5 @@
 package chylex.hee.game.block.entity
+import chylex.hee.game.block.BlockEnergyCluster
 import chylex.hee.game.block.entity.TileEntityBase.Context.NETWORK
 import chylex.hee.game.block.entity.TileEntityBase.Context.STORAGE
 import chylex.hee.game.mechanics.energy.ClusterColor
@@ -23,8 +24,10 @@ import chylex.hee.game.particle.util.IShape
 import chylex.hee.game.particle.util.IShape.Point
 import chylex.hee.system.util.FLAG_SKIP_RENDER
 import chylex.hee.system.util.FLAG_SYNC_CLIENT
+import chylex.hee.system.util.allInCenteredBox
 import chylex.hee.system.util.breakBlock
 import chylex.hee.system.util.ceilToInt
+import chylex.hee.system.util.isAir
 import chylex.hee.system.util.isAnyPlayerWithinRange
 import chylex.hee.system.util.nextFloat
 import net.minecraft.nbt.NBTTagCompound
@@ -95,6 +98,16 @@ class TileEntityEnergyCluster : TileEntityBase(), ITickable{
 		lastUseTick = world.totalWorldTime
 		isInactive = false
 		return true
+	}
+	
+	fun leakEnergy(quantity: IEnergyQuantity){
+		energyLevel -= minOf(energyLevel, quantity)
+		
+		val leakPos = pos.allInCenteredBox(1, 1, 1).shuffled().firstOrNull { it.isAir(world) }
+		
+		if (leakPos != null){
+			BlockEnergyCluster.createLeak(world, leakPos, quantity)
+		}
 	}
 	
 	fun deteriorateCapacity(corruptionLevel: Int){
