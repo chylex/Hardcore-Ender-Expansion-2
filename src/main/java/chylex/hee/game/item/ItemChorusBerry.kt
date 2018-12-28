@@ -1,8 +1,8 @@
 package chylex.hee.game.item
-import chylex.hee.game.world.util.Teleporter
 import chylex.hee.game.mechanics.damage.Damage
 import chylex.hee.game.mechanics.damage.IDamageProcessor.Companion.MAGIC_TYPE
 import chylex.hee.game.mechanics.damage.IDamageProcessor.Companion.PEACEFUL_EXCLUSION
+import chylex.hee.game.world.util.Teleporter
 import chylex.hee.system.util.blocksMovement
 import chylex.hee.system.util.distanceSqTo
 import chylex.hee.system.util.nextInt
@@ -22,7 +22,7 @@ class ItemChorusBerry : ItemFood(0, 0F, false){
 		private const val MIN_TELEPORT_DISTANCE = 8
 		private const val MIN_TELEPORT_DISTANCE_SQ = MIN_TELEPORT_DISTANCE * MIN_TELEPORT_DISTANCE
 		
-		private val TELEPORT = Teleporter(resetFall = true)
+		private val TELEPORT = Teleporter(resetFall = true, causedInstability = 10u)
 		
 		private val DAMAGE_TELEPORT_FAIL = Damage(PEACEFUL_EXCLUSION, MAGIC_TYPE)
 		

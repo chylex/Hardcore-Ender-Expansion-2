@@ -1,5 +1,6 @@
 package chylex.hee.game.world.util
 import chylex.hee.HEE
+import chylex.hee.game.mechanics.instability.Instability
 import chylex.hee.game.particle.ParticleTeleport
 import chylex.hee.game.particle.spawner.ParticleSpawnerCustom
 import chylex.hee.game.particle.util.IOffset.InBox
@@ -35,6 +36,7 @@ class Teleporter(
 	private val resetFall: Boolean,
 	private val resetPathfinding: Boolean = true,
 	private val damageDealt: Float = 0F,
+	private val causedInstability: UShort = 0u,
 	private val extendedEffectRange: Float = 0F
 ){
 	companion object{
@@ -135,6 +137,10 @@ class Teleporter(
 		
 		if (resetPathfinding && entity is EntityCreature){
 			entity.navigator.clearPath()
+		}
+		
+		if (causedInstability > 0u){
+			Instability.get(entity.world).triggerAction(causedInstability, Pos(position))
 		}
 		
 		return true

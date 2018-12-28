@@ -34,7 +34,7 @@ class EntityProjectileSpatialDash : Entity, IProjectile{
 		private const val PROJECTILE_DISTANCE = 32
 		
 		private val TELEPORT_OFFSETS: Array<BlockPos>
-		private val TELEPORT = Teleporter(resetFall = true)
+		private val TELEPORT = Teleporter(resetFall = true, causedInstability = 15u)
 		
 		init{
 			val offsets = mutableListOf<BlockPos>()
