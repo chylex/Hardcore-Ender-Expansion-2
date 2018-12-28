@@ -41,7 +41,7 @@ object ModEntities{
 			register<EntityFallingObsidian>("falling_obsidian").tracker(160, 20, true) to this
 			register<EntityInfusedTNT>("infused_tnt").tracker(160, 10, true) to this
 			
-			register<EntityMobEndermiteInstability>("endermite_instability").tracker(80, 3, true).egg(RGB(21u).toInt(), RGB(94, 122, 108).toInt()) to this
+			register<EntityMobEndermiteInstability>("endermite_instability").tracker(96, 3, true).egg(RGB(21u).toInt(), RGB(94, 122, 108).toInt()) to this
 			
 			register<EntityProjectileSpatialDash>("projectile_spatial_dash").tracker(64, 10, true) to this
 		}
