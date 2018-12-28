@@ -2,6 +2,7 @@ package chylex.hee
 import chylex.hee.game.commands.HeeServerCommand
 import chylex.hee.game.entity.item.EntityItemIgneousRock
 import chylex.hee.game.mechanics.TrinketHandler
+import chylex.hee.game.mechanics.instability.Instability
 import chylex.hee.init.ModConfig
 import chylex.hee.init.ModCreativeTabs
 import chylex.hee.init.ModGuiHandler
@@ -45,6 +46,7 @@ object HEE{
 		ModGuiHandler.initialize()
 		ModCreativeTabs.initialize()
 		TrinketHandler.register()
+		Instability.register()
 		proxy.onPreInit()
 	}
 	
