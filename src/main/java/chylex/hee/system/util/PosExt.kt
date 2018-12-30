@@ -8,6 +8,7 @@ import net.minecraft.tileentity.TileEntity
 import net.minecraft.util.EnumFacing
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.BlockPos.MutableBlockPos
+import net.minecraft.util.math.ChunkPos
 import net.minecraft.util.math.Vec3d
 import net.minecraft.world.IBlockAccess
 import net.minecraft.world.World
@@ -23,6 +24,9 @@ inline fun Pos(packed: Long) = BlockPos.fromLong(packed)
 operator fun BlockPos.component1() = x
 operator fun BlockPos.component2() = y
 operator fun BlockPos.component3() = z
+
+operator fun ChunkPos.component1() = x
+operator fun ChunkPos.component2() = z
 
 inline val BlockPos.center
 	get() = Vec3d(x + 0.5, y + 0.5, z + 0.5)
