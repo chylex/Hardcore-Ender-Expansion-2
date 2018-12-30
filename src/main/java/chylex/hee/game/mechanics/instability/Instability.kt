@@ -1,15 +1,19 @@
 package chylex.hee.game.mechanics.instability
 import chylex.hee.game.mechanics.instability.Instability.InstabilityCapability.Provider
+import chylex.hee.game.mechanics.instability.dimension.DimensionInstabilityEndTerritory
+import chylex.hee.game.mechanics.instability.dimension.DimensionInstabilityGlobal
 import chylex.hee.game.mechanics.instability.dimension.DimensionInstabilityNull
 import chylex.hee.game.mechanics.instability.dimension.IDimensionInstability
+import chylex.hee.game.mechanics.instability.dimension.components.EndermiteSpawnLogicOverworld
 import chylex.hee.game.mechanics.instability.region.RegionInstability
+import chylex.hee.game.mechanics.instability.region.entry.types.Entry5x5
 import chylex.hee.system.Resource
 import chylex.hee.system.util.forge.capabilities.CapabilityProvider
 import chylex.hee.system.util.forge.capabilities.NullFactory
 import chylex.hee.system.util.forge.capabilities.NullStorage
 import net.minecraft.nbt.NBTTagCompound
 import net.minecraft.world.World
-import net.minecraft.world.WorldProviderSurface
+import net.minecraft.world.WorldProviderEnd
 import net.minecraftforge.common.MinecraftForge
 import net.minecraftforge.common.capabilities.Capability
 import net.minecraftforge.common.capabilities.CapabilityInject
@@ -17,7 +21,7 @@ import net.minecraftforge.common.capabilities.CapabilityManager
 import net.minecraftforge.common.util.INBTSerializable
 import net.minecraftforge.event.AttachCapabilitiesEvent
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent
-import net.minecraftforge.fml.common.gameevent.TickEvent.Phase.START
+import net.minecraftforge.fml.common.gameevent.TickEvent.Phase
 import net.minecraftforge.fml.common.gameevent.TickEvent.WorldTickEvent
 
 object Instability{
@@ -34,7 +38,7 @@ object Instability{
 	
 	@SubscribeEvent
 	fun onWorldTick(e: WorldTickEvent){
-		if (e.phase == START){
+		if (e.phase == Phase.START){
 			e.world.getCapability(CAP_INSTABILITY!!, null)?.region?.update()
 		}
 	}
@@ -52,7 +56,11 @@ object Instability{
 		val world = e.`object`
 		
 		when(world.provider){
-			// TODO
+			is WorldProviderEnd ->
+				e.addCapability(CAP_KEY, Provider(DimensionInstabilityEndTerritory(world), RegionInstability(world, Entry5x5.Constructor)))
+			
+			else ->
+				e.addCapability(CAP_KEY, Provider(DimensionInstabilityGlobal(world, EndermiteSpawnLogicOverworld), RegionInstability(world, Entry5x5.Constructor)))
 		}
 	}
 	
