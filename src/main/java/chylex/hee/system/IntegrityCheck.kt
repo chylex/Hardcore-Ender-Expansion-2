@@ -1,7 +1,9 @@
 package chylex.hee.system
 import chylex.hee.HEE
 import chylex.hee.game.block.BlockEndPortalOverride
+import chylex.hee.game.world.provider.WorldProviderEndCustom
 import net.minecraft.init.Blocks
+import net.minecraft.world.DimensionType
 
 object IntegrityCheck{
 	var removedEnderChestRecipe: Boolean = false
@@ -18,6 +20,8 @@ object IntegrityCheck{
 		warnIfFalse(removedChorusFruitRecipe, "could not remove vanilla Chorus Fruit smelting recipe")
 		
 		crashIfFalse(Blocks.END_PORTAL::class.java === BlockEndPortalOverride::class.java, "invalid End Portal block: ${Blocks.END_PORTAL::class.java}")
+		
+		crashIfFalse(DimensionType.THE_END.clazz.isAssignableFrom(WorldProviderEndCustom::class.java), "invalid End world provider: ${DimensionType.THE_END.clazz}")
 	}
 	
 	// Utilities
