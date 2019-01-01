@@ -13,6 +13,7 @@ import chylex.hee.game.item.ItemRingOfPreservation
 import chylex.hee.game.item.ItemScaleOfFreefall
 import chylex.hee.game.item.ItemSpatialDashGem
 import chylex.hee.game.item.ItemTableLink
+import chylex.hee.game.item.ItemTalismanOfGriefing
 import chylex.hee.game.item.ItemTrinketPouch
 import chylex.hee.game.item.ItemVoidBucket
 import chylex.hee.game.item.ItemVoidMiner
@@ -83,6 +84,7 @@ object ModItems{
 	@JvmField val AMULET_OF_RECOVERY   = ItemAmuletOfRecovery().apply { setup("amulet_of_recovery") }
 	@JvmField val RING_OF_HUNGER       = ItemRingOfHunger().apply { setup("ring_of_hunger") }
 	@JvmField val RING_OF_PRESERVATION = ItemRingOfPreservation().apply { setup("ring_of_preservation") }
+	@JvmField val TALISMAN_OF_GRIEFING = ItemTalismanOfGriefing().apply { setup("talisman_of_griefing") }
 	@JvmField val SCALE_OF_FREEFALL    = ItemScaleOfFreefall().apply { setup("scale_of_freefall") }
 	
 	// Registry
@@ -128,6 +130,7 @@ object ModItems{
 			register(AMULET_OF_RECOVERY)
 			register(RING_OF_HUNGER)
 			register(RING_OF_PRESERVATION)
+			register(TALISMAN_OF_GRIEFING)
 			register(SCALE_OF_FREEFALL)
 		}
 		
