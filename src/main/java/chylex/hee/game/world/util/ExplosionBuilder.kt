@@ -1,4 +1,7 @@
 package chylex.hee.game.world.util
+import chylex.hee.system.util.component1
+import chylex.hee.system.util.component2
+import chylex.hee.system.util.component3
 import chylex.hee.system.util.getState
 import chylex.hee.system.util.isAir
 import chylex.hee.system.util.nextFloat
@@ -61,13 +64,18 @@ class ExplosionBuilder{
 		}
 	}
 	
+	fun clone(explosion: Explosion, source: Entity? = explosion.explosivePlacedBy, strength: Float = explosion.size){
+		val (x, y, z) = explosion.position
+		trigger(explosion.world, source, x, y, z, strength)
+	}
+	
 	private class CustomExplosion(
-		private val world: World,
+		world: World,
 		private val source: Entity?,
 		private val centerX: Double,
 		private val centerY: Double,
 		private val centerZ: Double,
-		private val strength: Float,
+		strength: Float,
 		private val builder: ExplosionBuilder
 	) : Explosion(world, @Suppress("NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS") source, centerX, centerY, centerZ, strength, false, false){ // UPDATE
 		private val rand = Random()
@@ -85,7 +93,7 @@ class ExplosionBuilder{
 								(pZ / 15.0) * 2.0 - 1.0
 							).normalize()
 							
-							var remainingPower = strength * rand.nextFloat(0.7F, 1.3F)
+							var remainingPower = size * rand.nextFloat(0.7F, 1.3F)
 							var testX = centerX
 							var testY = centerY
 							var testZ = centerZ
@@ -126,19 +134,19 @@ class ExplosionBuilder{
 			}
 			
 			val centerVec = position
-			val doubleStrength = strength * 2.0
+			val doubleSize = size * 2.0
 			
 			val affectedArea = AxisAlignedBB(
-				floor(centerX - doubleStrength - 1.0),
-				floor(centerY - doubleStrength - 1.0),
-				floor(centerZ - doubleStrength - 1.0),
-				floor(centerX + doubleStrength + 1.0),
-				floor(centerY + doubleStrength + 1.0),
-				floor(centerZ + doubleStrength + 1.0)
+				floor(centerX - doubleSize - 1.0),
+				floor(centerY - doubleSize - 1.0),
+				floor(centerZ - doubleSize - 1.0),
+				floor(centerX + doubleSize + 1.0),
+				floor(centerY + doubleSize + 1.0),
+				floor(centerZ + doubleSize + 1.0)
 			)
 			
 			val entitiesInArea = world.getEntitiesWithinAABBExcludingEntity(source, affectedArea)
-			ForgeEventFactory.onExplosionDetonate(world, this, entitiesInArea, doubleStrength)
+			ForgeEventFactory.onExplosionDetonate(world, this, entitiesInArea, doubleSize)
 			
 			for(entity in entitiesInArea){
 				if (entity.isImmuneToExplosions){
@@ -151,7 +159,7 @@ class ExplosionBuilder{
 					}
 				}
 				
-				val distanceScaled = entity.getDistance(centerX, centerY, centerZ) / doubleStrength
+				val distanceScaled = entity.getDistance(centerX, centerY, centerZ) / doubleSize
 				
 				if (distanceScaled > 1){
 					continue
@@ -160,7 +168,7 @@ class ExplosionBuilder{
 				val blastPower = (1 - distanceScaled) * world.getBlockDensity(centerVec, entity.entityBoundingBox)
 				
 				if (damageEntities){
-					val finalDamage = 1F + ((square(blastPower) + blastPower) * strength * 7).toInt()
+					val finalDamage = 1F + ((square(blastPower) + blastPower) * size * 7).toInt()
 					entity.attackEntityFrom(DamageSource.causeExplosionDamage(this), finalDamage)
 				}
 				
@@ -181,7 +189,7 @@ class ExplosionBuilder{
 		
 		private fun destroyAffectedBlocks(){
 			if (builder.destroyBlocks){
-				val blockDropRate = builder.blockDropRate ?: 1F / strength
+				val blockDropRate = builder.blockDropRate ?: 1F / size
 				val blockDropFortune = builder.blockDropFortune
 				
 				for(pos in affectedBlockPositions){
