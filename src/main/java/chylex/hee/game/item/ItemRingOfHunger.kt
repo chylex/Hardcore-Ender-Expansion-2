@@ -20,7 +20,6 @@ class ItemRingOfHunger : ItemAbstractTrinket(){
 	private val foodUseTracker = mutableMapOf<UUID, Map<Potion, PotionEffect>>()
 	
 	init{
-		maxStackSize = 1
 		maxDamage = 120
 		
 		MinecraftForge.EVENT_BUS.register(this)

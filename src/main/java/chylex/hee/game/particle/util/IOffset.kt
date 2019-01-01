@@ -61,10 +61,10 @@ interface IOffset{
 		
 		constructor(maxOffset: Float) : this(maxOffset, maxOffset, maxOffset)
 		
-		constructor(entity: Entity, horizontalMp: Float = 1F, verticalMp: Float = 1F) : this(
-			maxOffsetX = entity.width * 0.5F * horizontalMp,
-			maxOffsetY = entity.height * 0.5F * verticalMp,
-			maxOffsetZ = entity.width * 0.5F * horizontalMp
+		constructor(entity: Entity, extraOffset: Float = 0F) : this(
+			maxOffsetX = (entity.width * 0.5F) + extraOffset,
+			maxOffsetY = (entity.height * 0.5F) + extraOffset,
+			maxOffsetZ = (entity.width * 0.5F) + extraOffset
 		)
 		
 		override fun next(out: MutableOffsetPoint, rand: Random){

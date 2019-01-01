@@ -57,7 +57,7 @@ class ExplosionBuilder{
 		val playerKnockback = explosion.playerKnockbackMap
 		
 		for(player in world.playerEntities){
-			if (player.getDistanceSq(x, y, z) < 4096){
+			if (player.getDistanceSq(x, y, z) < square(64)){
 				@Suppress("NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS") // UPDATE
 				(player as EntityPlayerMP).connection.sendPacket(SPacketExplosion(x, y, z, strength, destroyedBlocks, playerKnockback[player]))
 			}

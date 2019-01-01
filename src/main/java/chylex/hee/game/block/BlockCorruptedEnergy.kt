@@ -26,6 +26,7 @@ import chylex.hee.system.util.Facing6
 import chylex.hee.system.util.getState
 import chylex.hee.system.util.getTile
 import chylex.hee.system.util.nextInt
+import chylex.hee.system.util.removeItem
 import chylex.hee.system.util.setAir
 import chylex.hee.system.util.setState
 import net.minecraft.block.properties.PropertyInteger
@@ -146,7 +147,7 @@ class BlockCorruptedEnergy(builder: BlockSimple.Builder) : BlockSimple(builder){
 		val remainingFacings = Facing6.toMutableList()
 		
 		repeat(rand.nextInt(3, 5).coerceAtMost(level)){
-			val facing = remainingFacings.removeAt(rand.nextInt(remainingFacings.size))
+			val facing = rand.removeItem(remainingFacings)!!
 			val adjacentPos = pos.offset(facing)
 			
 			val spreadDecrease = if (rand.nextInt(3) == 0) 0 else 1
