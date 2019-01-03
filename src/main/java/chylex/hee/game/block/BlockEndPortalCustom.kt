@@ -12,6 +12,7 @@ class BlockEndPortalCustom(builder: BlockSimple.Builder) : BlockAbstractPortal(b
 		
 		if (acceptor != null && acceptor.isCharged){
 			HEE.log.info("teleporting") // TODO
+			entity.changeDimension(1)
 		}
 	}
 }

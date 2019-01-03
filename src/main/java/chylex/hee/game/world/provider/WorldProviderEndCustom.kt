@@ -17,5 +17,9 @@ class WorldProviderEndCustom : WorldProviderEnd(){
 		(world as? WorldServer)?.let { dragonFightManager = DragonFightManagerNull(it) }
 	}
 	
+	override fun createChunkGenerator(): IChunkGenerator{
+		return ChunkGeneratorEndDebug(world)
+	}
+	
 	override fun onWorldUpdateEntities(){}
 }
