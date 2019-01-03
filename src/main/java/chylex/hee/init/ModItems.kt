@@ -43,17 +43,19 @@ object ModItems{
 	@JvmField val IGNEOUS_ROCK      = ItemIgneousRock().apply { setup("igneous_rock") }
 	@JvmField val PUZZLE_MEDALLION  = Item().apply { setup("puzzle_medallion") }
 	@JvmField val INFERNIUM         = Item().apply { setup("infernium") }
+	@JvmField val INFERNIUM_INGOT   = Item().apply { setup("infernium_ingot") }
 	@JvmField val AURICION          = Item().apply { setup("auricion") }
 	@JvmField val DRAGON_SCALE      = Item().apply { setup("dragon_scale") }
 	
 	// Items: Manufactured resources
 	
-	@JvmField val ALTERATION_NEXUS = Item().apply { setup("alteration_nexus") }
-	@JvmField val VOID_ESSENCE     = Item().apply { setup("void_essence") }
-	@JvmField val OBSIDIAN_ROD     = Item().apply { setup("obsidian_rod") }
-	@JvmField val STATIC_CORE      = Item().apply { setup("static_core") }
-	@JvmField val TABLE_LINK       = ItemTableLink().apply { setup("table_link") }
-	@JvmField val BINDING_ESSENCE  = ItemBindingEssence().apply { setup("binding_essence") }
+	@JvmField val ALTERATION_NEXUS      = Item().apply { setup("alteration_nexus") }
+	@JvmField val VOID_ESSENCE          = Item().apply { setup("void_essence") }
+	@JvmField val OBSIDIAN_ROD          = Item().apply { setup("obsidian_rod") }
+	@JvmField val STATIC_CORE           = Item().apply { setup("static_core") }
+	@JvmField val TABLE_LINK            = ItemTableLink().apply { setup("table_link") }
+	@JvmField val DIRTY_INFERNIUM_INGOT = Item().apply { setup("dirty_infernium_ingot") }
+	@JvmField val BINDING_ESSENCE       = ItemBindingEssence().apply { setup("binding_essence") }
 	
 	// Items: Nature & food
 	
@@ -103,6 +105,7 @@ object ModItems{
 			register(IGNEOUS_ROCK)
 			register(PUZZLE_MEDALLION)
 			register(INFERNIUM)
+			register(INFERNIUM_INGOT)
 			register(AURICION)
 			register(DRAGON_SCALE)
 			
@@ -111,6 +114,7 @@ object ModItems{
 			register(OBSIDIAN_ROD)
 			register(STATIC_CORE)
 			register(TABLE_LINK)
+			register(DIRTY_INFERNIUM_INGOT)
 			register(BINDING_ESSENCE)
 			
 			register(COMPOST)

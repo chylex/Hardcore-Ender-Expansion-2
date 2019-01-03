@@ -70,6 +70,7 @@ item.hee.obsidian_fragment.name=Obsidian Fragment
 item.hee.igneous_rock.name=Igneous Rock
 item.hee.puzzle_medallion.name=Puzzle Medallion
 item.hee.infernium.name=Infernium
+item.hee.infernium_ingot.name=Infernium Ingot
 item.hee.auricion.name=Auricion
 item.hee.dragon_scale.name=Dragon Scale
 
@@ -78,6 +79,7 @@ item.hee.void_essence.name=Void Essence
 item.hee.obsidian_rod.name=Obsidian Rod
 item.hee.static_core.name=Static Core
 item.hee.table_link.name=Table Link
+item.hee.dirty_infernium_ingot.name=Dirty Infernium Ingot
 item.hee.binding_essence.name=Binding Essence
 
 item.hee.compost.name=Compost
