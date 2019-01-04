@@ -13,6 +13,7 @@ import chylex.hee.game.block.BlockEndPortalCustom
 import chylex.hee.game.block.BlockEndPortalOverride
 import chylex.hee.game.block.BlockEndPowderOre
 import chylex.hee.game.block.BlockEnderGoo
+import chylex.hee.game.block.BlockEndersol
 import chylex.hee.game.block.BlockEndium
 import chylex.hee.game.block.BlockEnergyCluster
 import chylex.hee.game.block.BlockFallingObsidian
@@ -52,6 +53,7 @@ import chylex.hee.game.item.util.Tool.Type.PICKAXE
 import chylex.hee.game.item.util.Tool.Type.SHOVEL
 import chylex.hee.init.ModCreativeTabs.OrderedCreativeTab
 import chylex.hee.system.Resource
+import chylex.hee.system.util.clone
 import net.minecraft.block.Block
 import net.minecraft.block.SoundType
 import net.minecraft.block.material.MapColor
@@ -105,6 +107,14 @@ object ModBlocks{
 		mapColor = MapColor.BLUE
 	}
 	
+	private val buildEnderSol = BlockSimple.Builder(Materials.SOLID_WITH_TOOL).apply {
+		harvestTool = Pair(WOOD, SHOVEL)
+		harvestHardness = 1.9F
+		
+		soundType = SoundType.GROUND.clone(pitch = 0.85F)
+		mapColor = MapColor.WOOD
+	}
+	
 	private val buildHumus = BlockSimple.Builder(Materials.SOLID_NO_TOOL).apply {
 		harvestTool = Pair(WOOD, SHOVEL)
 		harvestHardness = 0.3F
@@ -117,6 +127,7 @@ object ModBlocks{
 	@JvmField val STONE_BRICK_WALL = BlockWallCustom(Blocks.STONEBRICK).apply { setup("stone_brick_wall") }
 	@JvmField val VANTABLOCK       = BlockSimple(buildVantablock).apply { setup("vantablock") }
 	@JvmField val ENDIUM_BLOCK     = BlockEndium(buildEndiumBlock).apply { setup("endium_block") }
+	@JvmField val ENDERSOL         = BlockEndersol(buildEnderSol).apply { setup("endersol") }
 	@JvmField val HUMUS            = BlockHumus(buildHumus).apply { setup("humus") }
 	
 	// Blocks: Building (Gloomrock)
@@ -357,6 +368,7 @@ object ModBlocks{
 			register(STONE_BRICK_WALL with basicItemBlock)
 			register(VANTABLOCK with basicItemBlock)
 			register(ENDIUM_BLOCK with basicItemBlock)
+			register(ENDERSOL with basicItemBlock)
 			register(HUMUS with basicItemBlock)
 			
 			register(GLOOMROCK with basicItemBlock)
