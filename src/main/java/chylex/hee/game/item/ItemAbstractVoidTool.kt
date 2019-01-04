@@ -1,4 +1,7 @@
 package chylex.hee.game.item
+import chylex.hee.game.item.repair.ICustomRepairBehavior
+import chylex.hee.game.item.repair.RepairHandler
+import chylex.hee.game.item.repair.RepairInstance
 import chylex.hee.game.item.util.CustomToolMaterial
 import chylex.hee.game.render.util.RGB
 import net.minecraft.entity.EntityLivingBase
@@ -7,11 +10,9 @@ import net.minecraft.item.ItemStack
 import net.minecraft.item.ItemTool
 import net.minecraft.stats.StatList
 import net.minecraftforge.common.MinecraftForge
-import net.minecraftforge.event.AnvilUpdateEvent
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent
 import kotlin.math.min
 
-abstract class ItemAbstractVoidTool : ItemTool(CustomToolMaterial.VOID, emptySet()){
+abstract class ItemAbstractVoidTool : ItemTool(CustomToolMaterial.VOID, emptySet()), ICustomRepairBehavior{
 	init{
 		@Suppress("LeakingThis")
 		setNoRepair()
@@ -64,27 +65,8 @@ abstract class ItemAbstractVoidTool : ItemTool(CustomToolMaterial.VOID, emptySet
 		return toRepair.isItemDamaged && repairWith.item === toolMaterial.repairItemStack.item
 	}
 	
-	@SubscribeEvent
-	fun onAnvilUpdate(e: AnvilUpdateEvent){
-		val target = e.left
-		val ingredient = e.right
-		
-		if (target.item === this && getIsRepairable(target, ingredient)){
-			val totalCost = target.repairCost + 1
-			
-			if (totalCost >= 40){ // TODO check if player is in creative, but I can't even do that with the event... replace all this shit with ASM
-				e.output = ItemStack.EMPTY
-				e.cost = 0
-			}
-			else{
-				e.output = target.copy().also { // TODO cannot repair & change name at the same time, but CBA
-					it.itemDamage = 0
-					it.repairCost++
-				}
-				
-				e.cost = totalCost
-				e.materialCost = 1
-			}
-		}
+	final override fun onRepairUpdate(instance: RepairInstance) = with(instance){
+		repairFully()
+		repairCost = min(repairCost + 1, RepairHandler.MAX_EXPERIENCE_COST)
 	}
 }

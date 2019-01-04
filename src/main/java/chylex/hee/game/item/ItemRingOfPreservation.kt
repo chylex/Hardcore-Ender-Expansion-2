@@ -1,4 +1,6 @@
 package chylex.hee.game.item
+import chylex.hee.game.item.repair.ICustomRepairBehavior
+import chylex.hee.game.item.repair.RepairInstance
 import chylex.hee.game.mechanics.TrinketHandler
 import chylex.hee.system.util.copyIf
 import chylex.hee.system.util.isNotEmpty
@@ -9,7 +11,6 @@ import net.minecraft.util.EnumHand.MAIN_HAND
 import net.minecraft.util.EnumHand.OFF_HAND
 import net.minecraft.util.NonNullList
 import net.minecraftforge.common.MinecraftForge
-import net.minecraftforge.event.AnvilUpdateEvent
 import net.minecraftforge.event.entity.living.LivingDamageEvent
 import net.minecraftforge.event.entity.living.LivingHurtEvent
 import net.minecraftforge.event.entity.player.PlayerDestroyItemEvent
@@ -18,7 +19,7 @@ import net.minecraftforge.fml.common.eventhandler.EventPriority.LOWEST
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent
 import java.util.UUID
 
-class ItemRingOfPreservation : ItemAbstractTrinket(){
+class ItemRingOfPreservation : ItemAbstractTrinket(), ICustomRepairBehavior{
 	private class HurtPlayerInfo private constructor(val playerId: UUID, val worldTime: Long){
 		constructor(player: EntityPlayer) : this(player.uniqueID, player.world.totalWorldTime)
 		
@@ -62,16 +63,9 @@ class ItemRingOfPreservation : ItemAbstractTrinket(){
 		return toRepair.isItemDamaged && repairWith.item === Items.DIAMOND
 	}
 	
-	@SubscribeEvent
-	fun onAnvilUpdate(e: AnvilUpdateEvent){
-		val target = e.left
-		val ingredient = e.right
-		
-		if (target.item === this && getIsRepairable(target, ingredient)){
-			e.output = target.copy().also { it.itemDamage = 0 } // TODO cannot repair & change name at the same time, but CBA
-			e.cost = 4
-			e.materialCost = 1
-		}
+	override fun onRepairUpdate(instance: RepairInstance) = with(instance){
+		repairFully()
+		experienceCost = 4
 	}
 	
 	// Item destruction handling
