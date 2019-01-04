@@ -11,6 +11,7 @@ import chylex.hee.game.item.ItemIgneousRock
 import chylex.hee.game.item.ItemRingOfHunger
 import chylex.hee.game.item.ItemRingOfPreservation
 import chylex.hee.game.item.ItemScaleOfFreefall
+import chylex.hee.game.item.ItemScorchingTool
 import chylex.hee.game.item.ItemSpatialDashGem
 import chylex.hee.game.item.ItemTableLink
 import chylex.hee.game.item.ItemTalismanOfGriefing
@@ -18,6 +19,9 @@ import chylex.hee.game.item.ItemTrinketPouch
 import chylex.hee.game.item.ItemVoidBucket
 import chylex.hee.game.item.ItemVoidMiner
 import chylex.hee.game.item.ItemVoidSalad
+import chylex.hee.game.item.util.Tool.Type.AXE
+import chylex.hee.game.item.util.Tool.Type.PICKAXE
+import chylex.hee.game.item.util.Tool.Type.SHOVEL
 import chylex.hee.init.ModCreativeTabs.OrderedCreativeTab
 import chylex.hee.system.Resource
 import net.minecraft.creativetab.CreativeTabs
@@ -64,8 +68,11 @@ object ModItems{
 	
 	// Items: Tools
 	
-	@JvmField val VOID_MINER  = ItemVoidMiner().apply { setup("void_miner") }
-	@JvmField val VOID_BUCKET = ItemVoidBucket().apply { setup("void_bucket") }
+	@JvmField val VOID_MINER        = ItemVoidMiner().apply { setup("void_miner") }
+	@JvmField val VOID_BUCKET       = ItemVoidBucket().apply { setup("void_bucket") }
+	@JvmField val SCORCHING_PICKAXE = ItemScorchingTool(PICKAXE).apply { setup("scorching_pickaxe") }
+	@JvmField val SCORCHING_SHOVEL  = ItemScorchingTool(SHOVEL).apply { setup("scorching_shovel") }
+	@JvmField val SCORCHING_AXE     = ItemScorchingTool(AXE).apply { setup("scorching_axe") } // TODO remove?
 	
 	// Items: Buckets
 	
@@ -122,6 +129,9 @@ object ModItems{
 			
 			register(VOID_MINER)
 			register(VOID_BUCKET)
+			register(SCORCHING_PICKAXE)
+			register(SCORCHING_SHOVEL)
+			register(SCORCHING_AXE)
 			
 			register(ENDER_GOO_BUCKET)
 			

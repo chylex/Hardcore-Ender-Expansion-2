@@ -89,6 +89,9 @@ item.hee.void_salad.mega.name=Mega Void Salad
 
 item.hee.void_miner.name=Void Miner
 item.hee.void_bucket.name=Void Bucket
+item.hee.scorching_pickaxe.name=Scorching Pickaxe
+item.hee.scorching_shovel.name=Scorching Shovel
+item.hee.scorching_axe.name=Scorching Axe
 
 item.hee.ender_goo_bucket.name=Ender Goo Bucket
 
