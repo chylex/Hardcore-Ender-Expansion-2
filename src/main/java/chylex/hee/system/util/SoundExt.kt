@@ -1,5 +1,6 @@
 package chylex.hee.system.util
 import chylex.hee.HEE
+import net.minecraft.block.SoundType
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.util.SoundCategory
 import net.minecraft.util.SoundEvent
@@ -42,3 +43,15 @@ fun SoundEvent.playUniversal(clientPlayer: EntityPlayer, pos: Vec3d, category: S
 
 fun SoundEvent.playUniversal(clientPlayer: EntityPlayer, pos: Vec3i, category: SoundCategory, volume: Float = 1F, pitch: Float = 1F) =
 	clientPlayer.world.playSound(clientPlayer, pos.x + 0.5, pos.y + 0.5, pos.z + 0.5, this, category, volume, pitch)
+
+// Utilities
+
+fun SoundType.clone(
+	volume: Float = this.volume,
+	pitch: Float = this.pitch,
+	breakSound: SoundEvent = this.breakSound,
+	stepSound: SoundEvent = this.stepSound,
+	placeSound: SoundEvent = this.placeSound,
+	hitSound: SoundEvent = this.hitSound,
+	fallSound: SoundEvent = this.fallSound
+) = SoundType(volume, pitch, breakSound, stepSound, placeSound, hitSound, fallSound)
