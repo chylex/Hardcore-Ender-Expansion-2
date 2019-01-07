@@ -1,5 +1,8 @@
 package chylex.hee.game.world.util
 import chylex.hee.HEE
+import chylex.hee.game.mechanics.damage.Damage
+import chylex.hee.game.mechanics.damage.Damage.Companion.TITLE_FALL
+import chylex.hee.game.mechanics.damage.IDamageProcessor.Companion.MAGIC_TYPE
 import chylex.hee.game.mechanics.instability.Instability
 import chylex.hee.game.particle.ParticleTeleport
 import chylex.hee.game.particle.spawner.ParticleSpawnerCustom
@@ -36,10 +39,13 @@ class Teleporter(
 	private val resetFall: Boolean,
 	private val resetPathfinding: Boolean = true,
 	private val damageDealt: Float = 0F,
+	private val damageTitle: String = TITLE_FALL,
 	private val causedInstability: UShort = 0u,
 	private val extendedEffectRange: Float = 0F
 ){
 	companion object{
+		private val DAMAGE = Damage(MAGIC_TYPE)
+		
 		private const val EXTENDED_MINIMUM_VOLUME = 0.1F
 		private const val RANGE_FOR_MINIMUM_VOLUME = 16.0 - (16.0 * EXTENDED_MINIMUM_VOLUME)
 		
@@ -133,6 +139,10 @@ class Teleporter(
 		
 		if (resetFall){
 			entity.fallDistance = 0F
+		}
+		
+		if (damageDealt > 0F){
+			DAMAGE.dealTo(damageDealt, entity, damageTitle)
 		}
 		
 		if (resetPathfinding && entity is EntityCreature){
