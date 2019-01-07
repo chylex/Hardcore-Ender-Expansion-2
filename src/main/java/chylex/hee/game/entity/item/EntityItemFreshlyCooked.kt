@@ -4,6 +4,7 @@ import chylex.hee.game.particle.util.IOffset.Constant
 import chylex.hee.game.particle.util.IOffset.InBox
 import chylex.hee.game.particle.util.IShape.Point
 import chylex.hee.system.util.square
+import chylex.hee.system.util.use
 import io.netty.buffer.ByteBuf
 import net.minecraft.entity.item.EntityItem
 import net.minecraft.item.ItemStack
@@ -28,12 +29,12 @@ class EntityItemFreshlyCooked : EntityItem, IEntityAdditionalSpawnData{
 	
 	constructor(world: World, x: Double, y: Double, z: Double, stack: ItemStack) : super(world, x, y, z, stack)
 	
-	override fun writeSpawnData(buffer: ByteBuf){
-		buffer.writeShort(age)
+	override fun writeSpawnData(buffer: ByteBuf) = buffer.use {
+		writeShort(age)
 	}
 	
-	override fun readSpawnData(buffer: ByteBuf){
-		age = buffer.readShort().toInt()
+	override fun readSpawnData(buffer: ByteBuf) = buffer.use {
+		age = readShort().toInt()
 	}
 	
 	override fun onUpdate(){

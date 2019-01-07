@@ -11,6 +11,7 @@ import chylex.hee.system.util.getTile
 import chylex.hee.system.util.posVec
 import chylex.hee.system.util.setAir
 import chylex.hee.system.util.setState
+import chylex.hee.system.util.use
 import io.netty.buffer.ByteBuf
 import net.minecraft.block.Block
 import net.minecraft.block.Block.NULL_AABB
@@ -46,12 +47,12 @@ open class EntityFallingBlockHeavy : EntityFallingBlock, IEntityAdditionalSpawnD
 	
 	constructor(world: World, pos: BlockPos, state: IBlockState) : super(world, pos.x + 0.5, pos.y.toDouble(), pos.z + 0.5, state)
 	
-	override fun writeSpawnData(buffer: ByteBuf){
-		buffer.writeInt(block?.let(Block::getStateId) ?: 0)
+	override fun writeSpawnData(buffer: ByteBuf) = buffer.use {
+		writeInt(block?.let(Block::getStateId) ?: 0)
 	}
 	
-	override fun readSpawnData(buffer: ByteBuf){
-		fallTile = Block.getStateById(buffer.readInt())
+	override fun readSpawnData(buffer: ByteBuf) = buffer.use {
+		fallTile = Block.getStateById(readInt())
 	}
 	
 	override fun onUpdate(){
