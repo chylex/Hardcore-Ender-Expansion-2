@@ -1,7 +1,7 @@
 package chylex.hee.game.item
 import chylex.hee.HEE
 import chylex.hee.game.mechanics.damage.Damage
-import chylex.hee.game.mechanics.damage.Damage.Companion.TITLE_MAGIC
+import chylex.hee.game.mechanics.damage.Damage.Companion.TITLE_STARVE
 import chylex.hee.game.mechanics.damage.IDamageProcessor.Companion.MAGIC_TYPE
 import chylex.hee.game.mechanics.damage.IDamageProcessor.Companion.NON_LETHAL
 import chylex.hee.system.util.heeTag
@@ -82,16 +82,16 @@ class ItemVoidSalad : ItemFood(0, 0F, false){
 		
 		when(type){
 			Type.SINGLE ->
-				DAMAGE_SAFE.dealTo(2F, player, TITLE_MAGIC)
+				DAMAGE_SAFE.dealTo(2F, player, TITLE_STARVE)
 			
 			Type.DOUBLE -> {
-				DAMAGE_SAFE.dealTo(10F, player, TITLE_MAGIC)
+				DAMAGE_SAFE.dealTo(10F, player, TITLE_STARVE)
 				player.addPotionEffect(PotionEffect(NAUSEA, 20 * 15, 0))
 			}
 			
 			Type.MEGA -> {
 				player.entityData.heeTag.setBoolean(PLAYER_RESPAWN_HUNGRY_TAG, true)
-				DAMAGE_LETHAL.dealTo(Float.MAX_VALUE, player, TITLE_MAGIC)
+				DAMAGE_LETHAL.dealTo(Float.MAX_VALUE, player, TITLE_STARVE)
 			}
 		}
 		
