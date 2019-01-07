@@ -12,11 +12,11 @@ class Damage(private vararg val processors: IDamageProcessor){
 		processors.forEach { it.setup(writer) }
 	}
 	
-	private fun dealToInternal(amount: Float, target: Entity, triggeringSource: Entity?, remoteSource: Entity?, damageTitle: String): Boolean{
+	private fun dealToInternal(amount: Float, target: Entity, directSource: Entity?, remoteSource: Entity?, damageTitle: String): Boolean{
 		val reader = properties.Reader()
 		val finalAmount = processors.fold(amount){ acc, processor -> processor.modifyDamage(acc, target, reader) }
 		
-		if (finalAmount == CANCEL_DAMAGE || !target.attackEntityFrom(properties.createDamageSource(damageTitle, triggeringSource, remoteSource), finalAmount)){
+		if (finalAmount == CANCEL_DAMAGE || !target.attackEntityFrom(properties.createDamageSource(damageTitle, directSource, remoteSource), finalAmount)){
 			return false
 		}
 		
@@ -33,8 +33,8 @@ class Damage(private vararg val processors: IDamageProcessor){
 	fun dealToFrom(amount: Float, target: Entity, source: Entity, title: String = determineTitleDirect(source)) =
 		dealToInternal(amount, target, source, source, title)
 	
-	fun dealToIndirectly(amount: Float, target: Entity, triggeringSource: Entity, remoteSource: Entity, title: String = determineTitleIndirect(triggeringSource, remoteSource)) =
-		dealToInternal(amount, target, triggeringSource, remoteSource, title)
+	fun dealToIndirectly(amount: Float, target: Entity, directSource: Entity, remoteSource: Entity?, title: String = determineTitleIndirect(directSource, remoteSource)) =
+		dealToInternal(amount, target, directSource, remoteSource, title)
 	
 	companion object{
 		const val TITLE_GENERIC = "generic"
@@ -43,15 +43,18 @@ class Damage(private vararg val processors: IDamageProcessor){
 		const val TITLE_THROWN  = "thrown"
 		
 		const val TITLE_MAGIC         = "magic"
+		const val TITLE_FALL          = "fall"
+		const val TITLE_STARVE        = "starve"
 		const val TITLE_IN_FIRE       = "inFire"
 		const val TITLE_FALLING_BLOCK = "fallingBlock"
 		
-		fun determineTitleDirect(source: Entity): String = when(source){
+		fun determineTitleDirect(source: Entity?): String = when(source){
 			is EntityPlayer -> TITLE_PLAYER
+			null            -> TITLE_GENERIC
 			else            -> TITLE_MOB
 		}
 		
-		fun determineTitleIndirect(triggeringSource: Entity, remoteSource: Entity) = when(triggeringSource){
+		fun determineTitleIndirect(directSource: Entity, remoteSource: Entity?) = when(directSource){
 			is EntityThrowable -> TITLE_THROWN
 			else               -> determineTitleDirect(remoteSource)
 		}

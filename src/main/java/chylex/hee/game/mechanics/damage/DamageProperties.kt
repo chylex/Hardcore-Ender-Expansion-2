@@ -14,6 +14,7 @@ import net.minecraftforge.fml.common.Mod.EventBusSubscriber
 import net.minecraftforge.fml.common.eventhandler.EventPriority.HIGHEST
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent
 
+@EventBusSubscriber(modid = HEE.ID)
 class DamageProperties{
 	private var typeBits = 0
 	private var ignoreArmorAndConsequentlyShield = true // due to how vanilla handles unblockable damage, isUnblockable controls both armor and shield
@@ -72,9 +73,9 @@ class DamageProperties{
 	
 	// Damage source
 	
-	fun createDamageSource(damageTitle: String, triggeringSource: Entity?, remoteSource: Entity?): DamageSource = CustomDamageSource(damageTitle, triggeringSource, remoteSource)
+	fun createDamageSource(damageTitle: String, directSource: Entity?, remoteSource: Entity?): DamageSource = CustomDamageSource(damageTitle, directSource, remoteSource)
 	
-	private inner class CustomDamageSource(damageTitle: String, val triggeringSource: Entity?, val remoteSource: Entity?) : DamageSource(damageTitle){
+	private inner class CustomDamageSource(damageTitle: String, val directSource: Entity?, val remoteSource: Entity?) : DamageSource(damageTitle){
 		val isNonLethal
 			get() = nonLethal
 		
@@ -89,21 +90,21 @@ class DamageProperties{
 		override fun isUnblockable(): Boolean = ignoreArmorAndConsequentlyShield
 		override fun canHarmInCreative(): Boolean = dealCreative
 		
-		override fun getImmediateSource(): Entity? = triggeringSource
+		override fun getImmediateSource(): Entity? = directSource
 		override fun getTrueSource(): Entity? = remoteSource
 		
 		override fun getDamageLocation(): Vec3d? = // UPDATE: Make sure this is still only used for shield checking
 			if (ignoreShield)
 				null
 			else
-				triggeringSource?.let { Vec3d(it.posX, it.posY, it.posZ) }
+				directSource?.let { Vec3d(it.posX, it.posY, it.posZ) }
 		
 		override fun getDeathMessage(victim: EntityLivingBase): ITextComponent{
-			if (triggeringSource == null){
+			if (directSource == null){
 				return super.getDeathMessage(victim)
 			}
 			
-			val realSource = remoteSource ?: triggeringSource
+			val realSource = remoteSource ?: directSource
 			val heldItem = (realSource as? EntityLivingBase)?.getHeldItem(MAIN_HAND) ?: ItemStack.EMPTY
 			
 			val translationKeyGeneric = "death.attack.$damageType"
@@ -118,8 +119,7 @@ class DamageProperties{
 	
 	// Non-lethal damage handling
 	
-	@EventBusSubscriber(modid = HEE.ID)
-	object NonLethalDamageEventHandler{
+	private companion object{
 		@JvmStatic
 		@SubscribeEvent(priority = HIGHEST)
 		fun onLivingDamage(e: LivingDamageEvent){
