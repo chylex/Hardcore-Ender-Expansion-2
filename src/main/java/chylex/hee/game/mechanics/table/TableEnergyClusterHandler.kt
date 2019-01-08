@@ -8,7 +8,6 @@ import chylex.hee.init.ModBlocks
 import chylex.hee.system.util.center
 import chylex.hee.system.util.distanceSqTo
 import chylex.hee.system.util.getPosOrNull
-import chylex.hee.system.util.getState
 import chylex.hee.system.util.getTile
 import chylex.hee.system.util.setPos
 import chylex.hee.system.util.square
@@ -38,11 +37,11 @@ class TableEnergyClusterHandler(private val table: TileEntityBaseTable<*>, maxDi
 	
 	// Behavior
 	
-	private fun canCollideCheck(state: IBlockState): Boolean{
+	private fun canCollideCheck(state: IBlockState, pos: BlockPos): Boolean{
 		val block = state.block
 		
 		return if (block is BlockAbstractTableTile<*>)
-			state !== table.pos.getState(table.world)
+			pos != table.pos
 		else
 			block !== ModBlocks.ENERGY_CLUSTER && block.canCollideCheck(state, false)
 	}

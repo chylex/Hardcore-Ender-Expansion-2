@@ -63,7 +63,7 @@ class ItemVoidBucket : ItemAbstractVoidTool(){
 		}
 		
 		private val RAY_TRACE_FLUID = RayTracer(
-			canCollideCheck = { val block = it.block; block.canCollideCheck(it, true) || isFluid(block) }
+			canCollideCheck = { state, _ -> val block = state.block; block.canCollideCheck(state, true) || isFluid(block) }
 		)
 	}
 	
