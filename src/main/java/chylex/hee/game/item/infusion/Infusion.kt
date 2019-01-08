@@ -21,9 +21,10 @@ enum class Infusion(
 	POWER   ("hee.infusion.power",    Colors(primaryHue =  15.0, secondaryBrightness = 140u), Matching(ModBlocks.INFUSED_TNT)),
 	FIRE    ("hee.infusion.fire",     Colors(primaryHue =  30.0, secondaryBrightness = 140u), Matching(ModBlocks.INFUSED_TNT)),
 	TRAP    ("hee.infusion.trap",     Colors(primaryHue = 340.0, secondaryBrightness = 140u), Matching(ModBlocks.INFUSED_TNT)),
-	HARMLESS("hee.infusion.harmless", Colors(primaryHue = 180.0, secondaryBrightness = 140u), Matching(ModBlocks.INFUSED_TNT)),
-	PHASING ("hee.infusion.phasing",  Colors(primaryHue = 285.0, secondaryBrightness = 140u), Matching(ModBlocks.INFUSED_TNT)),
 	MINING  ("hee.infusion.mining",   Colors(primaryHue =  70.0, secondaryBrightness = 140u), Matching(ModBlocks.INFUSED_TNT)),
+	HARMLESS("hee.infusion.harmless", Colors(primaryHue = 180.0, secondaryCustom = HCL(165.0, 10F, 70F)), Matching(ModBlocks.INFUSED_TNT, ModItems.INFUSED_ENDER_PEARL)),
+	PHASING ("hee.infusion.phasing",  Colors(primaryHue = 285.0, secondaryCustom = HCL(165.0, 10F, 70F)), Matching(ModBlocks.INFUSED_TNT, ModItems.INFUSED_ENDER_PEARL)),
+	SLOW    ("hee.infusion.slow",     Colors(primaryHue = 110.0, secondaryCustom = HCL(165.0, 32F, 70F)), Matching(ModItems.INFUSED_ENDER_PEARL)),
 	
 	STABILITY("hee.infusion.stability", Colors(primaryHue = 130.0, secondaryHue = 275.0), Matching(ModItems.ENERGY_RECEPTACLE)),
 	SAFETY   ("hee.infusion.safety",    Colors(primaryHue = 180.0, secondaryHue = 275.0), Matching(ModItems.ENERGY_RECEPTACLE)),
