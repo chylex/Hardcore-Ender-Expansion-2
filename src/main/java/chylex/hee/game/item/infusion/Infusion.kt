@@ -8,6 +8,7 @@ import chylex.hee.system.util.nbtOrNull
 import chylex.hee.system.util.size
 import net.minecraft.block.Block
 import net.minecraft.init.Blocks
+import net.minecraft.init.Items
 import net.minecraft.item.Item
 import net.minecraft.item.ItemStack
 
@@ -47,7 +48,8 @@ enum class Infusion(
 	
 	private companion object{
 		private val TRANSFORMATIONS = arrayOf(
-			Item.getItemFromBlock(Blocks.TNT) to Item.getItemFromBlock(ModBlocks.INFUSED_TNT)
+			Item.getItemFromBlock(Blocks.TNT) to Item.getItemFromBlock(ModBlocks.INFUSED_TNT),
+			Items.ENDER_PEARL to ModItems.INFUSED_ENDER_PEARL
 		)
 	}
 	

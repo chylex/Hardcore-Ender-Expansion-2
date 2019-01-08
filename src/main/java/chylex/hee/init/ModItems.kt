@@ -8,6 +8,7 @@ import chylex.hee.game.item.ItemElytraOverride
 import chylex.hee.game.item.ItemEnergyOracle
 import chylex.hee.game.item.ItemEnergyReceptacle
 import chylex.hee.game.item.ItemIgneousRock
+import chylex.hee.game.item.ItemInfusedEnderPearl
 import chylex.hee.game.item.ItemRingOfHunger
 import chylex.hee.game.item.ItemRingOfPreservation
 import chylex.hee.game.item.ItemScaleOfFreefall
@@ -83,9 +84,10 @@ object ModItems{
 	@JvmField val ENERGY_ORACLE     = ItemEnergyOracle().apply { setup("energy_oracle") }
 	@JvmField val ENERGY_RECEPTACLE = ItemEnergyReceptacle().apply { setup("energy_receptacle") }
 	
-	// Items: Gems
+	// Items: Gems & teleportation
 	
-	@JvmField val SPATIAL_DASH_GEM = ItemSpatialDashGem().apply { setup("spatial_dash_gem") }
+	@JvmField val INFUSED_ENDER_PEARL = ItemInfusedEnderPearl().apply { setup("infused_ender_pearl", translationKey = "enderPearl", inCreativeTab = false) }
+	@JvmField val SPATIAL_DASH_GEM    = ItemSpatialDashGem().apply { setup("spatial_dash_gem") }
 	
 	// Items: Trinkets
 	
@@ -138,6 +140,7 @@ object ModItems{
 			register(ENERGY_ORACLE)
 			register(ENERGY_RECEPTACLE)
 			
+			register(INFUSED_ENDER_PEARL)
 			register(SPATIAL_DASH_GEM)
 			
 			register(TRINKET_POUCH)

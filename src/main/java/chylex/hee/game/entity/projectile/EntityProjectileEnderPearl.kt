@@ -1,5 +1,7 @@
 package chylex.hee.game.entity.projectile
 import chylex.hee.HEE
+import chylex.hee.game.item.infusion.InfusionList
+import chylex.hee.game.item.infusion.InfusionTag
 import chylex.hee.game.mechanics.damage.Damage
 import chylex.hee.game.mechanics.damage.IDamageProcessor.Companion.ALL_PROTECTIONS_WITH_SHIELD
 import chylex.hee.game.mechanics.damage.IDamageProcessor.Companion.PEACEFUL_EXCLUSION
@@ -30,7 +32,7 @@ class EntityProjectileEnderPearl : EntityEnderPearl{
 			
 			if (original is EntityEnderPearl && original !is EntityProjectileEnderPearl){
 				e.isCanceled = true
-				e.world.spawnEntity(EntityProjectileEnderPearl(original.thrower!!))
+				e.world.spawnEntity(EntityProjectileEnderPearl(original.thrower!!, InfusionList.EMPTY))
 			}
 		}
 	}
@@ -38,11 +40,20 @@ class EntityProjectileEnderPearl : EntityEnderPearl{
 	@Suppress("unused")
 	constructor(world: World) : super(world)
 	
-	constructor(thrower: EntityLivingBase) : super(thrower.world, thrower){
+	constructor(thrower: EntityLivingBase, infusions: InfusionList) : super(thrower.world, thrower){
+		loadInfusions(infusions)
 		shoot(thrower, thrower.rotationPitch, thrower.rotationYaw, 0F, 1.5F, 1F)
 	}
 	
-	// Impact
+	private var infusions = InfusionList.EMPTY
+	// Initialization
+	
+	private fun loadInfusions(infusions: InfusionList){
+		this.infusions = infusions
+	}
+	
+	// Behavior
+	
 	
 	override fun onImpact(result: RayTraceResult){
 		val thrower: EntityLivingBase? = thrower
@@ -76,9 +87,13 @@ class EntityProjectileEnderPearl : EntityEnderPearl{
 	
 	override fun writeEntityToNBT(nbt: NBTTagCompound) = with(nbt.heeTag){
 		super.writeEntityToNBT(nbt)
+		
+		InfusionTag.setList(this, infusions)
 	}
 	
 	override fun readEntityFromNBT(nbt: NBTTagCompound) = with(nbt.heeTag){
 		super.readEntityFromNBT(nbt)
+		
+		loadInfusions(InfusionTag.getList(this))
 	}
 }
