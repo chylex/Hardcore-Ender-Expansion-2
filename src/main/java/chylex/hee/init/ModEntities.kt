@@ -9,6 +9,7 @@ import chylex.hee.game.entity.item.EntityItemNoBob
 import chylex.hee.game.entity.living.EntityMobEndermite
 import chylex.hee.game.entity.living.EntityMobEndermiteInstability
 import chylex.hee.game.entity.living.EntityMobSilverfish
+import chylex.hee.game.entity.projectile.EntityProjectileEnderPearl
 import chylex.hee.game.entity.projectile.EntityProjectileSpatialDash
 import chylex.hee.game.render.util.RGB
 import chylex.hee.init.factory.EntityConstructors
@@ -43,6 +44,7 @@ object ModEntities{
 			
 			register<EntityMobEndermiteInstability>("endermite_instability").tracker(96, 3, true).egg(RGB(21u).toInt(), RGB(94, 122, 108).toInt()) to this
 			
+			register<EntityProjectileEnderPearl>("ender_pearl").tracker(64, 10, true) to this
 			register<EntityProjectileSpatialDash>("projectile_spatial_dash").tracker(64, 10, true) to this
 		}
 		
