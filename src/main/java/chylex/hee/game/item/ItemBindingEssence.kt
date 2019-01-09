@@ -71,7 +71,7 @@ class ItemBindingEssence : ItemAbstractInfusable(){
 	@SideOnly(Side.CLIENT)
 	object Color: IItemColor{
 		private const val NONE = -1
-		private val EMPTY = RGB(248u).toInt()
+		private val EMPTY = RGB(255u).toInt()
 		
 		override fun colorMultiplier(stack: ItemStack, tintIndex: Int): Int{
 			val list = InfusionTag.getList(stack).toList()

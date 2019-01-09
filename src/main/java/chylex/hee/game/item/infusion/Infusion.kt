@@ -1,4 +1,7 @@
 package chylex.hee.game.item.infusion
+import chylex.hee.game.item.infusion.Infusion.Colors.Companion.Gray
+import chylex.hee.game.item.infusion.Infusion.Colors.Companion.Hcl
+import chylex.hee.game.item.infusion.Infusion.Colors.Companion.Hue
 import chylex.hee.game.render.util.HCL
 import chylex.hee.game.render.util.IColor
 import chylex.hee.game.render.util.RGB
@@ -18,27 +21,32 @@ enum class Infusion(
 	val secondaryColor: Int,
 	val targetItems: Array<out Item>
 ){
-	POWER   ("hee.infusion.power",    Colors(primaryHue =  15.0, secondaryBrightness = 140u), Matching(ModBlocks.INFUSED_TNT)),
-	FIRE    ("hee.infusion.fire",     Colors(primaryHue =  30.0, secondaryBrightness = 140u), Matching(ModBlocks.INFUSED_TNT)),
-	TRAP    ("hee.infusion.trap",     Colors(primaryHue = 340.0, secondaryBrightness = 140u), Matching(ModBlocks.INFUSED_TNT)),
-	MINING  ("hee.infusion.mining",   Colors(primaryHue =  70.0, secondaryBrightness = 140u), Matching(ModBlocks.INFUSED_TNT)),
-	HARMLESS("hee.infusion.harmless", Colors(primaryHue = 180.0, secondaryCustom = HCL(165.0, 10F, 70F)), Matching(ModBlocks.INFUSED_TNT, ModItems.INFUSED_ENDER_PEARL)),
-	PHASING ("hee.infusion.phasing",  Colors(primaryHue = 285.0, secondaryCustom = HCL(165.0, 10F, 70F)), Matching(ModBlocks.INFUSED_TNT, ModItems.INFUSED_ENDER_PEARL)),
-	SLOW    ("hee.infusion.slow",     Colors(primaryHue = 110.0, secondaryCustom = HCL(165.0, 32F, 70F)), Matching(ModItems.INFUSED_ENDER_PEARL)),
+	POWER   (Name("power"),    Colors(primary = Hcl( 15, l = 60F), secondary = Gray(144u)),        Matching(ModBlocks.INFUSED_TNT)),
+	FIRE    (Name("fire"),     Colors(primary = Hue( 35), secondary = Gray(144u)),                 Matching(ModBlocks.INFUSED_TNT)),
+	TRAP    (Name("trap"),     Colors(primary = Hue(340), secondary = Gray(144u)),                 Matching(ModBlocks.INFUSED_TNT)),
+	MINING  (Name("mining"),   Colors(primary = Hue( 70), secondary = Gray(144u)),                 Matching(ModBlocks.INFUSED_TNT)),
+	HARMLESS(Name("harmless"), Colors(primary = Hue(180), secondary = Hcl(165, c = 10F, l = 70F)), Matching(ModBlocks.INFUSED_TNT, ModItems.INFUSED_ENDER_PEARL)),
+	PHASING (Name("phasing"),  Colors(primary = Hue(285), secondary = Hcl(165, c = 10F, l = 70F)), Matching(ModBlocks.INFUSED_TNT, ModItems.INFUSED_ENDER_PEARL)),
+	SLOW    (Name("slow"),     Colors(primary = Hue(110), secondary = Hcl(165, c = 32F, l = 70F)), Matching(ModItems.INFUSED_ENDER_PEARL)),
 	
-	STABILITY("hee.infusion.stability", Colors(primaryHue = 130.0, secondaryHue = 275.0), Matching(ModItems.ENERGY_RECEPTACLE)),
-	SAFETY   ("hee.infusion.safety",    Colors(primaryHue = 180.0, secondaryHue = 275.0), Matching(ModItems.ENERGY_RECEPTACLE)),
 	
-	EXPANSION("hee.infusion.expansion", Colors(primaryHue = 55.0, secondaryCustom = HCL(45.0, 80F, 60F)), Matching(ModItems.TRINKET_POUCH));
+	STABILITY(Name("stability"), Colors(primary = Hue(130), secondary = Hue(275)), Matching(ModItems.ENERGY_RECEPTACLE)),
+	SAFETY   (Name("safety"),    Colors(primary = Hue(180), secondary = Hue(275)), Matching(ModItems.ENERGY_RECEPTACLE)),
+	
+	EXPANSION(Name("expansion"), Colors(primary = Hue(55), secondary = Hcl(45, c = 80F, l = 60F)), Matching(ModItems.TRINKET_POUCH));
 	
 	// Construction helpers
 	
-	constructor(translationKey: String, colors: Colors, matching: Matching) : this(translationKey, colors.primary.toInt(), colors.secondary.toInt(), matching.items)
+	constructor(name: Name, colors: Colors, matching: Matching) : this("hee.infusion.${name.name}", colors.primary.toInt(), colors.secondary.toInt(), matching.items)
+	
+	private class Name(val name: String)
 	
 	private class Colors(val primary: IColor, val secondary: IColor){
-		constructor(primaryHue: Double, secondaryHue: Double) : this(HCL(primaryHue, 100F, 75F), HCL(secondaryHue, 100F, 75F))
-		constructor(primaryHue: Double, secondaryCustom: IColor) : this(HCL(primaryHue, 100F, 75F), secondaryCustom)
-		constructor(primaryHue: Double, secondaryBrightness: UByte) : this(primaryHue, RGB(secondaryBrightness))
+		companion object{
+			inline fun Hcl(hue: Int, c: Float = 100F, l: Float = 75F) = HCL(hue.toDouble(), c, l)
+			inline fun Hue(hue: Int) = Hcl(hue)
+			inline fun Gray(brightness: UByte) = RGB(brightness)
+		}
 	}
 	
 	private class Matching(vararg val items: Item){
