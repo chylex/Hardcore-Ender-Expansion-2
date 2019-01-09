@@ -32,14 +32,15 @@ class ItemInfusedEnderPearl : ItemEnderPearl(), IInfusableItem{
 			heldItem.shrink(1)
 		}
 		
-		SoundEvents.ENTITY_ENDERPEARL_THROW.playServer(world, player.posVec, SoundCategory.NEUTRAL, volume = 0.5F, pitch = 0.4F / itemRand.nextFloat(0.8F, 1.2F))
-		player.cooldownTracker.setCooldown(this, 20)
-		
 		if (!world.isRemote){
 			world.spawnEntity(EntityProjectileEnderPearl(player, InfusionTag.getList(heldItem)))
 		}
 		
+		SoundEvents.ENTITY_ENDERPEARL_THROW.playServer(world, player.posVec, SoundCategory.NEUTRAL, volume = 0.5F, pitch = 0.4F / itemRand.nextFloat(0.8F, 1.2F))
+		
+		player.cooldownTracker.setCooldown(this, 20)
 		player.addStat(StatList.getObjectUseStats(this)!!)
+		
 		return ActionResult(SUCCESS, heldItem)
 	}
 	

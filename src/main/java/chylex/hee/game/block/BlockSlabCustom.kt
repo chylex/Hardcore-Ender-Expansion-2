@@ -35,7 +35,6 @@ abstract class BlockSlabCustom(builder: Builder) : BlockSlab(builder.material, b
 	class Half(builder: Builder): BlockSlabCustom(builder){
 		init{
 			defaultState = blockState.baseState.withProperty(VARIANT, DEFAULT).withProperty(HALF, BOTTOM)
-			
 		}
 		
 		override fun getItemDropped(state: IBlockState, rand: Random, fortune: Int): Item = Item.getItemFromBlock(this)

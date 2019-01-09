@@ -149,7 +149,7 @@ open class BlockEnderGoo : BlockAbstractGoo(FluidEnderGoo, Materials.ENDER_GOO){
 				val posVec = entity.posVec.add(entity.motionX * motionMp, 0.0, entity.motionZ * motionMp)
 				
 				if (Pos(posVec).getBlock(world) === this){
-					PARTICLE_COLLISION.spawn(Point(posVec, amount = 2), rand) // only triggered for the client player itself
+					PARTICLE_COLLISION.spawn(Point(posVec, 2), rand) // only triggered for the client player itself
 				}
 			}
 		}

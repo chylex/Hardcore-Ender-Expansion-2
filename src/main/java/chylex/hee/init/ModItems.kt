@@ -73,7 +73,7 @@ object ModItems{
 	@JvmField val VOID_BUCKET       = ItemVoidBucket().apply { setup("void_bucket") }
 	@JvmField val SCORCHING_PICKAXE = ItemScorchingTool(PICKAXE).apply { setup("scorching_pickaxe") }
 	@JvmField val SCORCHING_SHOVEL  = ItemScorchingTool(SHOVEL).apply { setup("scorching_shovel") }
-	@JvmField val SCORCHING_AXE     = ItemScorchingTool(AXE).apply { setup("scorching_axe") } // TODO remove?
+	@JvmField val SCORCHING_AXE     = ItemScorchingTool(AXE).apply { setup("scorching_axe") }
 	
 	// Items: Buckets
 	

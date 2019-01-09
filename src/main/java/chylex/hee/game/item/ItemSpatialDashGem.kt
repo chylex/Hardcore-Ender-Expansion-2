@@ -42,7 +42,7 @@ class ItemSpatialDashGem : ItemAbstractEnergyUser(){
 		}
 		
 		player.cooldownTracker.setCooldown(this, 24)
-		player.addStat(StatList.getObjectUseStats(this))
+		player.addStat(StatList.getObjectUseStats(this)!!)
 		
 		return ActionResult(SUCCESS, stack)
 	}
