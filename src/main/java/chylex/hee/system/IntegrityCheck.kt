@@ -9,6 +9,7 @@ object IntegrityCheck{
 	var removedEnderChestRecipe: Boolean = false
 	var removedPurpurRecipe: Boolean = false
 	var removedEndRodRecipe: Boolean = false
+	var removedEyeOfEnderRecipe: Boolean = false
 	
 	var removedChorusFruitRecipe: Boolean = false
 	
@@ -16,6 +17,7 @@ object IntegrityCheck{
 		warnIfFalse(removedEnderChestRecipe, "could not remove vanilla Ender Chest recipe")
 		warnIfFalse(removedPurpurRecipe, "could not remove vanilla Purpur Block recipe")
 		warnIfFalse(removedEndRodRecipe, "could not remove vanilla End Rod recipe")
+		warnIfFalse(removedEyeOfEnderRecipe, "could not remove vanilla Eye of Ender recipe")
 		
 		warnIfFalse(removedChorusFruitRecipe, "could not remove vanilla Chorus Fruit smelting recipe")
 		

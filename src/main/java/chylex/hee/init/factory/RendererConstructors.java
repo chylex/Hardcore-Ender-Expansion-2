@@ -1,5 +1,6 @@
 package chylex.hee.init.factory;
 import chylex.hee.game.render.entity.RenderEntityItemNoBob;
+import chylex.hee.game.render.entity.RenderEntityProjectileEyeOfEnder;
 import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.entity.Entity;
 import net.minecraftforge.fml.client.registry.IRenderFactory;
@@ -11,6 +12,7 @@ public final class RendererConstructors{
 	
 	static{
 		all.put(RenderEntityItemNoBob.class, RenderEntityItemNoBob::new);
+		all.put(RenderEntityProjectileEyeOfEnder.class, RenderEntityProjectileEyeOfEnder::new);
 	}
 	
 	public static <T extends Entity, R extends Render<? super T>> IRenderFactory get(Class<R> cls){

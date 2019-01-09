@@ -8,6 +8,7 @@ import chylex.hee.game.block.entity.TileEntityLootChest
 import chylex.hee.game.block.entity.TileEntityTablePedestal
 import chylex.hee.game.commands.HeeClientCommand
 import chylex.hee.game.entity.item.EntityItemNoBob
+import chylex.hee.game.entity.projectile.EntityProjectileEyeOfEnder
 import chylex.hee.game.item.ItemBindingEssence
 import chylex.hee.game.item.ItemEnergyOracle
 import chylex.hee.game.item.ItemEnergyReceptacle
@@ -18,6 +19,7 @@ import chylex.hee.game.render.block.RenderTileEndPortal
 import chylex.hee.game.render.block.RenderTileLootChest
 import chylex.hee.game.render.block.RenderTileTablePedestal
 import chylex.hee.game.render.entity.RenderEntityItemNoBob
+import chylex.hee.game.render.entity.RenderEntityProjectileEyeOfEnder
 import chylex.hee.game.render.model.ModelItemAmuletOfRecovery
 import chylex.hee.init.ModBlocks
 import chylex.hee.init.ModItems
@@ -55,6 +57,7 @@ class ModClientProxy : ModCommonProxy(){
 		MinecraftForge.EVENT_BUS.register(this)
 		
 		registerEntityRenderer<EntityItemNoBob, RenderEntityItemNoBob>()
+		registerEntityRenderer<EntityProjectileEyeOfEnder, RenderEntityProjectileEyeOfEnder>()
 	}
 	
 	override fun onInit(){

@@ -42,6 +42,7 @@ object ModRecipes{
 			IntegrityCheck.removedEnderChestRecipe = removeVanilla("ender_chest")
 			IntegrityCheck.removedPurpurRecipe = removeVanilla("purpur_block")
 			IntegrityCheck.removedEndRodRecipe = removeVanilla("end_rod")
+			IntegrityCheck.removedEyeOfEnderRecipe = removeVanilla("ender_eye")
 			// TODO figure out what to do with the broken advancements
 			
 			ItemEnergyOracle.setupRecipeNBT(getValue(Resource.Custom("energy_oracle"))!!)

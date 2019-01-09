@@ -7,6 +7,7 @@ import chylex.hee.game.item.ItemCompost
 import chylex.hee.game.item.ItemElytraOverride
 import chylex.hee.game.item.ItemEnergyOracle
 import chylex.hee.game.item.ItemEnergyReceptacle
+import chylex.hee.game.item.ItemEyeOfEnderOverride
 import chylex.hee.game.item.ItemIgneousRock
 import chylex.hee.game.item.ItemInfusedEnderPearl
 import chylex.hee.game.item.ItemRingOfHunger
@@ -159,6 +160,7 @@ object ModItems{
 		with(e.registry){
 			register(ItemChorusBerry().apply { override(Items.CHORUS_FRUIT) })
 			register(ItemElytraOverride().apply { override(Items.ELYTRA) })
+			register(ItemEyeOfEnderOverride().apply { override(Items.ENDER_EYE) })
 		}
 	}
 	

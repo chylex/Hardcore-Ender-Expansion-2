@@ -9,6 +9,7 @@ import chylex.hee.game.entity.living.EntityMobEndermite;
 import chylex.hee.game.entity.living.EntityMobEndermiteInstability;
 import chylex.hee.game.entity.living.EntityMobSilverfish;
 import chylex.hee.game.entity.projectile.EntityProjectileEnderPearl;
+import chylex.hee.game.entity.projectile.EntityProjectileEyeOfEnder;
 import chylex.hee.game.entity.projectile.EntityProjectileSpatialDash;
 import net.minecraft.entity.Entity;
 import net.minecraft.world.World;
@@ -33,6 +34,7 @@ public final class EntityConstructors{
 		add(EntityMobSilverfish.class, EntityMobSilverfish::new);
 		
 		add(EntityProjectileSpatialDash.class, EntityProjectileSpatialDash::new);
+		add(EntityProjectileEyeOfEnder.class, EntityProjectileEyeOfEnder::new);
 		add(EntityProjectileEnderPearl.class, EntityProjectileEnderPearl::new);
 	}
 	
