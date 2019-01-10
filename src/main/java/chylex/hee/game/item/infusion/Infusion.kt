@@ -29,6 +29,10 @@ enum class Infusion(
 	PHASING (Name("phasing"),  Colors(primary = Hue(285), secondary = Hcl(165, c = 10F, l = 70F)), Matching(ModBlocks.INFUSED_TNT, ModItems.INFUSED_ENDER_PEARL)),
 	SLOW    (Name("slow"),     Colors(primary = Hue(110), secondary = Hcl(165, c = 32F, l = 70F)), Matching(ModItems.INFUSED_ENDER_PEARL)),
 	
+	VIGOR   (Name("vigor"),    Colors(primary = Gray(244u), secondary = Hue(115)),        Matching()),
+	CAPACITY(Name("capacity"), Colors(primary = Hue(350), secondary = Hue(210)),          Matching()),
+	DISTANCE(Name("distance"), Colors(primary = Hcl( 70, l = 85F), secondary = Hue(210)), Matching()),
+	SPEED   (Name("speed"),    Colors(primary = Hue( 28), secondary = Hue(210)),          Matching()),
 	
 	STABILITY(Name("stability"), Colors(primary = Hue(130), secondary = Hue(275)), Matching(ModItems.ENERGY_RECEPTACLE)),
 	SAFETY   (Name("safety"),    Colors(primary = Hue(180), secondary = Hue(275)), Matching(ModItems.ENERGY_RECEPTACLE)),

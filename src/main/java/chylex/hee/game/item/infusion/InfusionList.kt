@@ -1,6 +1,8 @@
 package chylex.hee.game.item.infusion
+import chylex.hee.game.item.infusion.Infusion.VIGOR
 import chylex.hee.system.collection.EmptyIterator
 import chylex.hee.system.util.NBTEnumList
+import chylex.hee.system.util.square
 import com.google.common.collect.ImmutableSet
 import com.google.common.collect.Sets
 
@@ -27,6 +29,25 @@ class InfusionList private constructor(private val infusions: ImmutableSet<Infus
 	
 	fun with(infusion: Infusion): InfusionList{
 		return InfusionList(infusion, *infusions.toTypedArray())
+	}
+	
+	fun determineLevel(infusion: Infusion): Int{
+		val vigor = has(VIGOR)
+		val itself = has(infusion)
+		
+		return when{
+			vigor && itself -> 2
+			vigor || itself -> 1
+			else -> 0
+		}
+	}
+	
+	fun calculateLevelMultiplier(infusion: Infusion, multiplier: Float): Float{
+		return when(determineLevel(infusion)){
+			2 -> square(multiplier)
+			1 -> multiplier
+			else -> 1F
+		}
 	}
 	
 	override fun iterator(): Iterator<Infusion>{
