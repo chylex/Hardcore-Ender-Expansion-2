@@ -11,6 +11,7 @@ import chylex.hee.game.particle.util.IShape.Line
 import chylex.hee.network.client.PacketClientFX
 import chylex.hee.network.client.PacketClientFX.IFXData
 import chylex.hee.network.client.PacketClientFX.IFXHandler
+import chylex.hee.network.client.PacketClientMoveYourAss
 import chylex.hee.system.util.Pos
 import chylex.hee.system.util.center
 import chylex.hee.system.util.floorToInt
@@ -26,6 +27,7 @@ import io.netty.buffer.ByteBuf
 import net.minecraft.entity.EntityCreature
 import net.minecraft.entity.EntityLivingBase
 import net.minecraft.entity.player.EntityPlayer
+import net.minecraft.entity.player.EntityPlayerMP
 import net.minecraft.init.SoundEvents
 import net.minecraft.util.SoundCategory
 import net.minecraft.util.math.BlockPos
@@ -127,6 +129,10 @@ class Teleporter(
 		
 		if (entity.isRiding){
 			entity.dismountRidingEntity()
+			
+			if (entity is EntityPlayerMP){
+				PacketClientMoveYourAss(position).sendToPlayer(entity) // dismounting client ignores any attempts at teleporting
+			}
 		}
 		
 		if (entity.isPlayerSleeping && entity is EntityPlayer){
