@@ -2,6 +2,7 @@ package chylex.hee.init
 import chylex.hee.game.loot.BlockLootTable
 import chylex.hee.game.loot.conditions.ConditionCriticalHit
 import chylex.hee.game.loot.conditions.ConditionFortune
+import chylex.hee.game.loot.conditions.ConditionLooting
 import chylex.hee.system.Resource
 import net.minecraft.util.ResourceLocation
 import net.minecraft.world.storage.loot.LootTableList
@@ -21,6 +22,7 @@ object ModLoot{
 	
 	fun initialize(){
 		LootConditionManager.registerCondition(ConditionFortune.Serializer)
+		LootConditionManager.registerCondition(ConditionLooting.Serializer)
 		LootConditionManager.registerCondition(ConditionCriticalHit.Serializer)
 		
 		HUMUS_EXPLODED = registerBlock("humus_exploded")
