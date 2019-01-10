@@ -4,8 +4,8 @@ import chylex.hee.game.world.util.BlockEditor
 import chylex.hee.game.world.util.Teleporter
 import chylex.hee.system.util.Pos
 import chylex.hee.system.util.blocksMovement
+import chylex.hee.system.util.ceilToInt
 import chylex.hee.system.util.distanceSqTo
-import chylex.hee.system.util.floorToInt
 import chylex.hee.system.util.heeTag
 import chylex.hee.system.util.motionVec
 import chylex.hee.system.util.posVec
@@ -30,8 +30,8 @@ import kotlin.math.sin
 
 class EntityProjectileSpatialDash : Entity, IProjectile{
 	private companion object{
-		private const val PROJECTILE_SPEED = 1.5F
-		private const val PROJECTILE_DISTANCE = 32
+		private const val PROJECTILE_SPEED_BASE = 1.5F
+		private const val PROJECTILE_DISTANCE_BASE = 32
 		
 		private val TELEPORT_OFFSETS: Array<BlockPos>
 		private val TELEPORT = Teleporter(resetFall = true, causedInstability = 15u)
@@ -92,9 +92,10 @@ class EntityProjectileSpatialDash : Entity, IProjectile{
 	constructor(world: World) : super(world){
 		this.owner = SerializedEntity()
 		this.lifespan = 0
+		this.range = 0F
 	}
 	
-	constructor(world: World, owner: EntityLivingBase) : super(world){
+	constructor(world: World, owner: EntityLivingBase, speedMp: Float, distanceMp: Float) : super(world){
 		this.owner = SerializedEntity(owner)
 		this.setPosition(owner.posX, owner.posY + owner.eyeHeight - 0.1, owner.posZ)
 		
@@ -102,13 +103,18 @@ class EntityProjectileSpatialDash : Entity, IProjectile{
 		val dirY = -sin(owner.rotationPitch.toRadians())
 		val dirZ = cos(owner.rotationYaw.toRadians()) * cos(owner.rotationPitch.toRadians())
 		
-		shoot(dirX, dirY, dirZ, PROJECTILE_SPEED, 0F)
+		val realSpeed = PROJECTILE_SPEED_BASE * speedMp
+		val realDistance = PROJECTILE_DISTANCE_BASE * distanceMp
 		
-		this.lifespan = (PROJECTILE_DISTANCE / PROJECTILE_SPEED).floorToInt().toShort()
+		shoot(dirX, dirY, dirZ, realSpeed, 0F)
+		
+		this.lifespan = (realDistance / realSpeed).ceilToInt().toShort()
+		this.range = realDistance
 	}
 	
 	private var owner: SerializedEntity
 	private var lifespan: Short
+	private var range: Float
 	
 	init{
 		noClip = true
@@ -150,6 +156,8 @@ class EntityProjectileSpatialDash : Entity, IProjectile{
 				setDead()
 				return
 			}
+			
+			range -= motionVec.length().toFloat()
 		}
 		
 		move(SELF, motionX, motionY, motionZ)
@@ -157,8 +165,14 @@ class EntityProjectileSpatialDash : Entity, IProjectile{
 	
 	private fun determineHitObject(): RayTraceResult?{
 		val currentPos = posVec
-		val nextPos = currentPos.add(motionVec)
+		val currentMot = motionVec
 		
+		val nextMot = if (currentMot.length() <= range)
+			currentMot
+		else
+			currentMot.normalize().scale(range.toDouble())
+		
+		val nextPos = currentPos.add(nextMot)
 		val blockResult = world.rayTraceBlocks(currentPos, nextPos)
 		
 		val ownerEntity = owner.get(world)
@@ -178,10 +192,12 @@ class EntityProjectileSpatialDash : Entity, IProjectile{
 	override fun writeEntityToNBT(nbt: NBTTagCompound) = with(nbt.heeTag){
 		owner.writeToNBT(this, "Owner")
 		setShort("Lifespan", lifespan)
+		setFloat("Range", range)
 	}
 	
 	override fun readEntityFromNBT(nbt: NBTTagCompound) = with(nbt.heeTag){
 		owner.readFromNBT(this, "Owner")
 		lifespan = getShort("Lifespan")
+		range = getFloat("Range")
 	}
 }

@@ -1,8 +1,16 @@
 package chylex.hee.game.item
 import chylex.hee.game.entity.projectile.EntityProjectileSpatialDash
+import chylex.hee.game.item.infusion.IInfusableItem
+import chylex.hee.game.item.infusion.Infusion
+import chylex.hee.game.item.infusion.Infusion.CAPACITY
+import chylex.hee.game.item.infusion.Infusion.DISTANCE
+import chylex.hee.game.item.infusion.Infusion.SPEED
+import chylex.hee.game.item.infusion.InfusionTag
 import chylex.hee.game.mechanics.energy.IEnergyQuantity.Units
 import chylex.hee.init.ModItems
+import chylex.hee.system.util.floorToInt
 import chylex.hee.system.util.over
+import net.minecraft.client.util.ITooltipFlag
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.item.ItemStack
 import net.minecraft.item.crafting.IRecipe
@@ -12,9 +20,13 @@ import net.minecraft.util.EnumActionResult.FAIL
 import net.minecraft.util.EnumActionResult.SUCCESS
 import net.minecraft.util.EnumHand
 import net.minecraft.world.World
+import net.minecraftforge.fml.relauncher.Side
+import net.minecraftforge.fml.relauncher.SideOnly
 
-class ItemSpatialDashGem : ItemAbstractEnergyUser(){
+class ItemSpatialDashGem : ItemAbstractEnergyUser(), IInfusableItem{
 	companion object{
+		private const val INSTANT_SPEED_MP = 100F // just above the maximum possible distance
+		
 		fun setupRecipeNBT(recipe: IRecipe){
 			ModItems.SPATIAL_DASH_GEM.setEnergyChargePercentage(recipe.recipeOutput, 1F)
 		}
@@ -23,27 +35,54 @@ class ItemSpatialDashGem : ItemAbstractEnergyUser(){
 	// Energy properties
 	
 	override fun getEnergyCapacity(stack: ItemStack) =
-		Units(90)
+		Units((90 * InfusionTag.getList(stack).calculateLevelMultiplier(CAPACITY, 1.75F)).floorToInt())
 	
 	override fun getEnergyPerUse(stack: ItemStack) =
 		3 over 2
 	
 	// Item handling
 	
+	override fun canApplyInfusion(infusion: Infusion): Boolean{
+		return ItemAbstractInfusable.onCanApplyInfusion(this, infusion)
+	}
+	
 	override fun onItemRightClick(world: World, player: EntityPlayer, hand: EnumHand): ActionResult<ItemStack>{
-		val stack = player.getHeldItem(hand)
+		val heldItem = player.getHeldItem(hand)
 		
-		if (!useEnergyUnit(stack)){
-			return ActionResult(FAIL, stack)
+		if (!useEnergyUnit(heldItem)){
+			return ActionResult(FAIL, heldItem)
 		}
 		
 		if (!world.isRemote){
-			world.spawnEntity(EntityProjectileSpatialDash(world, player))
+			val infusions = InfusionTag.getList(heldItem)
+			
+			val speedMp = when(infusions.determineLevel(SPEED)){
+				2 -> INSTANT_SPEED_MP
+				1 -> 1.75F
+				else -> 1F
+			}
+			
+			val distanceMp = infusions.calculateLevelMultiplier(DISTANCE, 1.75F)
+			
+			world.spawnEntity(EntityProjectileSpatialDash(world, player, speedMp, distanceMp))
 		}
 		
 		player.cooldownTracker.setCooldown(this, 24)
 		player.addStat(StatList.getObjectUseStats(this)!!)
 		
-		return ActionResult(SUCCESS, stack)
+		return ActionResult(SUCCESS, heldItem)
+	}
+	
+	// Client side
+	
+	@SideOnly(Side.CLIENT)
+	override fun addInformation(stack: ItemStack, world: World?, lines: MutableList<String>, flags: ITooltipFlag){
+		super.addInformation(stack, world, lines, flags)
+		ItemAbstractInfusable.onAddInformation(stack, lines)
+	}
+	
+	@SideOnly(Side.CLIENT)
+	override fun hasEffect(stack: ItemStack): Boolean{
+		return super.hasEffect(stack) || ItemAbstractInfusable.onHasEffect(stack)
 	}
 }
