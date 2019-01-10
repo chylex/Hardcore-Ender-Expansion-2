@@ -49,16 +49,25 @@ class EntityProjectileEnderPearl : EntityEnderPearl, IEntityAdditionalSpawnData{
 	}
 	
 	@Suppress("unused")
-	constructor(world: World) : super(world)
+	constructor(world: World) : super(world){
+		setSize(0.35F, 0.35F)
+	}
 	
 	constructor(thrower: EntityLivingBase, infusions: InfusionList) : super(thrower.world, thrower){
+		setSize(0.35F, 0.35F)
 		loadInfusions(infusions)
 		shoot(thrower, thrower.rotationPitch, thrower.rotationYaw, 0F, 1.5F, 1F)
 	}
 	
 	private var infusions = InfusionList.EMPTY
-	private var lastPhasingImpactTime = Long.MIN_VALUE
+	private var hasPhasedIntoWall = false
 	private var hasPhasingFinished = false
+	
+	private val rayTraceIndestructible by lazy(LazyThreadSafetyMode.NONE){
+		RayTracer(
+			canCollideCheck = { state, pos -> state.getBlockHardness(world, pos) == INDESTRUCTIBLE_HARDNESS }
+		)
+	}
 	
 	// Initialization
 	
@@ -97,41 +106,41 @@ class EntityProjectileEnderPearl : EntityEnderPearl, IEntityAdditionalSpawnData{
 	// Behavior
 	
 	override fun onUpdate(){
-		val prevMotionVec = motionVec
+		val prevPos = posVec
+		val prevMot = motionVec
 		super.onUpdate()
 		
-		if (lastPhasingImpactTime != Long.MIN_VALUE && lastPhasingImpactTime != world.totalWorldTime && !world.checkBlockCollision(entityBoundingBox)){
-			hasPhasingFinished = true
-			onImpact(RayTraceResult(MISS, posVec, null, Pos(this)))
-		}
-		
 		if (infusions.has(SLOW)){
-			motionVec = prevMotionVec.scale(0.999)
+			motionVec = prevMot.scale(0.999)
 			motionY -= gravityVelocity * 0.01F
 		}
 		else if (!hasNoGravity()){
-			motionVec = prevMotionVec.scale(0.99)
+			motionVec = prevMot.scale(0.99)
 			motionY -= gravityVelocity
+		}
+		
+		if (!world.isRemote && infusions.has(PHASING) && hasPhasedIntoWall){
+			val airCheckBox = entityBoundingBox.grow(0.15, 0.15, 0.15)
+			
+			if (!world.checkBlockCollision(airCheckBox) || rayTraceIndestructible.traceBlocksBetweenVectors(world, prevPos, prevPos.add(prevMot)) != null){
+				hasPhasingFinished = true
+				posVec = prevPos
+				onImpact(RayTraceResult(MISS, prevPos, null, Pos(this)))
+			}
 		}
 	}
 	
 	override fun onImpact(result: RayTraceResult){
+		if (infusions.has(PHASING) && !hasPhasingFinished){
+			hasPhasedIntoWall = true
+			return
+		}
+		
 		val thrower: EntityLivingBase? = thrower
 		val hitEntity: Entity? = result.entityHit
 		
 		if (hitEntity === thrower){
 			return
-		}
-		
-		if (infusions.has(PHASING) && !hasPhasingFinished){
-			val rayTracer = RayTracer(
-				canCollideCheck = { state, pos -> state.getBlockHardness(world, pos) == INDESTRUCTIBLE_HARDNESS }
-			)
-			
-			if (rayTracer.traceBlocksBetweenVectors(world, posVec, posVec.add(motionVec)) == null){
-				lastPhasingImpactTime = world.totalWorldTime
-				return
-			}
 		}
 		
 		if (hitEntity != null && !infusions.has(HARMLESS)){
@@ -161,13 +170,13 @@ class EntityProjectileEnderPearl : EntityEnderPearl, IEntityAdditionalSpawnData{
 		super.writeEntityToNBT(nbt)
 		
 		InfusionTag.setList(this, infusions)
-		setLong("PhaseTime", lastPhasingImpactTime)
+		setBoolean("HasPhased", hasPhasedIntoWall)
 	}
 	
 	override fun readEntityFromNBT(nbt: NBTTagCompound) = with(nbt.heeTag){
 		super.readEntityFromNBT(nbt)
 		
 		loadInfusions(InfusionTag.getList(this))
-		lastPhasingImpactTime = getLong("PhaseTime")
+		hasPhasedIntoWall = getBoolean("HasPhased")
 	}
 }
