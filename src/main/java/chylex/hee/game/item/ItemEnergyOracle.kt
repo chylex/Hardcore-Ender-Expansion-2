@@ -1,5 +1,10 @@
 package chylex.hee.game.item
 import chylex.hee.game.block.entity.TileEntityEnergyCluster
+import chylex.hee.game.item.infusion.IInfusableItem
+import chylex.hee.game.item.infusion.Infusion
+import chylex.hee.game.item.infusion.Infusion.CAPACITY
+import chylex.hee.game.item.infusion.Infusion.DISTANCE
+import chylex.hee.game.item.infusion.InfusionTag
 import chylex.hee.game.mechanics.energy.IEnergyQuantity.Units
 import chylex.hee.game.render.util.ColorTransition
 import chylex.hee.game.render.util.HCL
@@ -10,6 +15,7 @@ import chylex.hee.system.util.angleBetween
 import chylex.hee.system.util.center
 import chylex.hee.system.util.closestTickingTile
 import chylex.hee.system.util.distanceTo
+import chylex.hee.system.util.floorToInt
 import chylex.hee.system.util.getPos
 import chylex.hee.system.util.getPosOrNull
 import chylex.hee.system.util.hasKey
@@ -20,6 +26,7 @@ import chylex.hee.system.util.setPos
 import chylex.hee.system.util.toDegrees
 import net.minecraft.client.Minecraft
 import net.minecraft.client.renderer.color.IItemColor
+import net.minecraft.client.util.ITooltipFlag
 import net.minecraft.entity.Entity
 import net.minecraft.entity.EntityLivingBase
 import net.minecraft.entity.player.EntityPlayer
@@ -32,7 +39,7 @@ import net.minecraft.world.World
 import net.minecraftforge.fml.relauncher.Side
 import net.minecraftforge.fml.relauncher.SideOnly
 
-class ItemEnergyOracle : ItemAbstractEnergyUser(){
+class ItemEnergyOracle : ItemAbstractEnergyUser(), IInfusableItem{
 	companion object{
 		private const val ORACLE_IDENTIFIER_TAG = "ID"
 		
@@ -40,7 +47,7 @@ class ItemEnergyOracle : ItemAbstractEnergyUser(){
 		private const val TRACKED_CLUSTER_HUE_TAG = "TrackingHue"
 		private const val LAST_UPDATE_POS_TAG = "UpdatePos"
 		
-		private const val CLUSTER_DETECTION_RANGE = 96.0
+		private const val CLUSTER_DETECTION_RANGE_BASE = 96.0
 		private const val CLUSTER_PROXIMITY_RANGE_MP = 1.0 / 6.0
 		
 		private const val CLUSTER_HUE_PROXIMITY_OVERRIDE = Short.MAX_VALUE
@@ -85,7 +92,7 @@ class ItemEnergyOracle : ItemAbstractEnergyUser(){
 	// Energy properties
 	
 	override fun getEnergyCapacity(stack: ItemStack) =
-		Units(75)
+		Units((75 * InfusionTag.getList(stack).calculateLevelMultiplier(CAPACITY, 2F)).floorToInt())
 	
 	override fun getEnergyPerUse(stack: ItemStack) =
 		if (stack.heeTagOrNull.hasKey(TRACKED_CLUSTER_POS_TAG))
@@ -94,6 +101,13 @@ class ItemEnergyOracle : ItemAbstractEnergyUser(){
 			2 over 20
 	
 	// Item handling
+	
+	private fun getClusterDetectionRange(stack: ItemStack) =
+		CLUSTER_DETECTION_RANGE_BASE * InfusionTag.getList(stack).calculateLevelMultiplier(DISTANCE, 1.5F)
+	
+	override fun canApplyInfusion(infusion: Infusion): Boolean{
+		return ItemAbstractInfusable.onCanApplyInfusion(this, infusion)
+	}
 	
 	override fun onUpdate(stack: ItemStack, world: World, entity: Entity, itemSlot: Int, isSelected: Boolean){
 		super.onUpdate(stack, world, entity, itemSlot, isSelected)
@@ -119,7 +133,8 @@ class ItemEnergyOracle : ItemAbstractEnergyUser(){
 		
 		if (world.totalWorldTime % 4L == 0L && hasAnyEnergy(stack)){
 			val holderPos = Pos(entity)
-			val closestCluster = holderPos.closestTickingTile<TileEntityEnergyCluster>(world, CLUSTER_DETECTION_RANGE)
+			val detectionRange = getClusterDetectionRange(stack)
+			val closestCluster = holderPos.closestTickingTile<TileEntityEnergyCluster>(world, detectionRange)
 			
 			if (closestCluster == null){
 				tag.let(::removeTrackedClusterTags)
@@ -128,7 +143,7 @@ class ItemEnergyOracle : ItemAbstractEnergyUser(){
 				with(tag){
 					setPos(TRACKED_CLUSTER_POS_TAG, closestCluster.pos)
 					
-					if (closestCluster.affectedByProximity && holderPos.distanceTo(closestCluster.pos) < CLUSTER_DETECTION_RANGE * CLUSTER_PROXIMITY_RANGE_MP){
+					if (closestCluster.affectedByProximity && holderPos.distanceTo(closestCluster.pos) < detectionRange * CLUSTER_PROXIMITY_RANGE_MP){
 						setShort(TRACKED_CLUSTER_HUE_TAG, CLUSTER_HUE_PROXIMITY_OVERRIDE)
 					}
 					else{
@@ -159,6 +174,17 @@ class ItemEnergyOracle : ItemAbstractEnergyUser(){
 	
 	// TODO tooltip could maybe show remaining time?
 	// TODO re-equip animation seems too fast, there is very mild animation glitching
+	
+	@SideOnly(Side.CLIENT)
+	override fun addInformation(stack: ItemStack, world: World?, lines: MutableList<String>, flags: ITooltipFlag){
+		super.addInformation(stack, world, lines, flags)
+		ItemAbstractInfusable.onAddInformation(stack, lines)
+	}
+	
+	@SideOnly(Side.CLIENT)
+	override fun hasEffect(stack: ItemStack): Boolean{
+		return super.hasEffect(stack) // infusion glint is way too strong and obscures the core
+	}
 	
 	@SideOnly(Side.CLIENT)
 	object Color: IItemColor{
