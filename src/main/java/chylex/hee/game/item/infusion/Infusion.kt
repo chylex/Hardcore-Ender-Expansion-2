@@ -28,6 +28,7 @@ enum class Infusion(
 	HARMLESS(Name("harmless"), Colors(primary = Hue(180), secondary = Hcl(165, c = 10F, l = 70F)), Matching(ModBlocks.INFUSED_TNT, ModItems.INFUSED_ENDER_PEARL)),
 	PHASING (Name("phasing"),  Colors(primary = Hue(285), secondary = Hcl(165, c = 10F, l = 70F)), Matching(ModBlocks.INFUSED_TNT, ModItems.INFUSED_ENDER_PEARL)),
 	SLOW    (Name("slow"),     Colors(primary = Hue(110), secondary = Hcl(165, c = 32F, l = 70F)), Matching(ModItems.INFUSED_ENDER_PEARL)),
+	RIDING  (Name("riding"),   Colors(primary = Hcl( 82, c = 50F), secondary = Hcl(165, c = 32F, l = 70F)), Matching(ModItems.INFUSED_ENDER_PEARL)),
 	
 	VIGOR   (Name("vigor"),    Colors(primary = Gray(244u), secondary = Hue(115)),        Matching(ModItems.ENERGY_ORACLE, ModItems.SPATIAL_DASH_GEM)),
 	CAPACITY(Name("capacity"), Colors(primary = Hue(350), secondary = Hue(210)),          Matching(ModItems.ENERGY_ORACLE, ModItems.SPATIAL_DASH_GEM)),

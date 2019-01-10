@@ -3,6 +3,7 @@ import chylex.hee.HEE
 import chylex.hee.game.block.BlockSimple.Builder.Companion.INDESTRUCTIBLE_HARDNESS
 import chylex.hee.game.item.infusion.Infusion.HARMLESS
 import chylex.hee.game.item.infusion.Infusion.PHASING
+import chylex.hee.game.item.infusion.Infusion.RIDING
 import chylex.hee.game.item.infusion.Infusion.SLOW
 import chylex.hee.game.item.infusion.InfusionList
 import chylex.hee.game.item.infusion.InfusionTag
@@ -22,12 +23,15 @@ import net.minecraft.entity.EntityLivingBase
 import net.minecraft.entity.item.EntityEnderPearl
 import net.minecraft.entity.player.EntityPlayerMP
 import net.minecraft.nbt.NBTTagCompound
+import net.minecraft.util.DamageSource
 import net.minecraft.util.SoundCategory
 import net.minecraft.util.math.RayTraceResult
 import net.minecraft.util.math.RayTraceResult.Type.MISS
 import net.minecraft.world.World
 import net.minecraftforge.event.entity.EntityJoinWorldEvent
+import net.minecraftforge.event.entity.living.LivingAttackEvent
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber
+import net.minecraftforge.fml.common.eventhandler.EventPriority.LOWEST
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent
 import net.minecraftforge.fml.common.registry.IEntityAdditionalSpawnData
 
@@ -44,6 +48,18 @@ class EntityProjectileEnderPearl : EntityEnderPearl, IEntityAdditionalSpawnData{
 			if (original is EntityEnderPearl && original !is EntityProjectileEnderPearl){
 				e.isCanceled = true
 				e.world.spawnEntity(EntityProjectileEnderPearl(original.thrower!!, InfusionList.EMPTY))
+			}
+		}
+		
+		@JvmStatic
+		@SubscribeEvent(priority = LOWEST)
+		fun onLivingAttack(e: LivingAttackEvent){
+			if (e.source === DamageSource.IN_WALL && !e.entity.world.isRemote){
+				val riding = e.entityLiving.ridingEntity
+				
+				if (riding is EntityProjectileEnderPearl && riding.infusions.has(HARMLESS)){
+					e.isCanceled = true
+				}
 			}
 		}
 	}
@@ -74,6 +90,10 @@ class EntityProjectileEnderPearl : EntityEnderPearl, IEntityAdditionalSpawnData{
 	private fun loadInfusions(infusions: InfusionList){
 		this.infusions = infusions
 		this.noClip = infusions.has(PHASING)
+		
+		if (infusions.has(RIDING)){
+			thrower?.startRiding(this, true)
+		}
 	}
 	
 	override fun writeSpawnData(buffer: ByteBuf) = buffer.use {
@@ -148,6 +168,8 @@ class EntityProjectileEnderPearl : EntityEnderPearl, IEntityAdditionalSpawnData{
 		}
 		
 		if (!world.isRemote){
+			setDead()
+			
 			val damage = if (infusions.has(HARMLESS)) 0F else 1F + world.difficulty.id
 			val teleporter = Teleporter(resetFall = true, damageDealt = damage, causedInstability = 20u)
 			
@@ -159,8 +181,14 @@ class EntityProjectileEnderPearl : EntityEnderPearl, IEntityAdditionalSpawnData{
 			else if (thrower != null){
 				teleporter.toLocation(thrower, posVec, SoundCategory.NEUTRAL)
 			}
-			
-			setDead()
+		}
+	}
+	
+	override fun removePassenger(passenger: Entity){
+		super.removePassenger(passenger)
+		
+		if (passenger === thrower && !isDead){
+			onImpact(RayTraceResult(MISS, posVec, null, Pos(this)))
 		}
 	}
 	
