@@ -1,4 +1,5 @@
 package chylex.hee.system.util
+import chylex.hee.game.entity.living.ai.AITargetEyeContact
 import chylex.hee.game.entity.living.ai.AITargetRandom
 import chylex.hee.game.entity.living.ai.AITargetSwarmSwitch
 import chylex.hee.game.entity.util.EntitySelector
@@ -129,6 +130,8 @@ inline fun AITargetAttacker(entity: EntityCreature, callReinforcements: Boolean)
 inline fun <reified T : EntityLivingBase> AITargetNearby(entity: EntityCreature, chancePerTick: Int, checkSight: Boolean, easilyReachableOnly: Boolean, targetPredicate: Predicate<T>? = null) =
 	EntityAINearestAttackableTarget<T>(entity, T::class.java, chancePerTick, checkSight, easilyReachableOnly, targetPredicate)
 
+inline fun <reified T : EntityLivingBase> AITargetEyeContact(entity: EntityCreature, fieldOfView: Float, headRadius: Float, minStareTicks: Int, easilyReachableOnly: Boolean, noinline targetPredicate: ((T) -> Boolean)? = null) =
+	AITargetEyeContact(entity, easilyReachableOnly, T::class.java, targetPredicate, fieldOfView, headRadius, minStareTicks)
 
 inline fun <reified T : EntityLivingBase> AITargetRandom(entity: EntityCreature, chancePerTick: Int, checkSight: Boolean, easilyReachableOnly: Boolean, noinline targetPredicate: ((T) -> Boolean)? = null) =
 	AITargetRandom(entity, checkSight, easilyReachableOnly, T::class.java, targetPredicate, chancePerTick)
