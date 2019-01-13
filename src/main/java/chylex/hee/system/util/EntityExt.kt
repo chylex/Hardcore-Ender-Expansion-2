@@ -126,14 +126,15 @@ inline fun AIAttackMelee(entity: EntityCreature, movementSpeed: Double, chaseAft
 inline fun AITargetAttacker(entity: EntityCreature, callReinforcements: Boolean) =
 	EntityAIHurtByTarget(entity, callReinforcements)
 
-inline fun <reified T : EntityLivingBase> AITargetNearby(entity: EntityCreature, checkSight: Boolean, easilyReachableOnly: Boolean, chancePerTick: Int, targetPredicate: Predicate<T>? = null) =
+inline fun <reified T : EntityLivingBase> AITargetNearby(entity: EntityCreature, chancePerTick: Int, checkSight: Boolean, easilyReachableOnly: Boolean, targetPredicate: Predicate<T>? = null) =
 	EntityAINearestAttackableTarget<T>(entity, T::class.java, chancePerTick, checkSight, easilyReachableOnly, targetPredicate)
 
-inline fun <reified T : EntityLivingBase> AITargetRandom(entity: EntityCreature, checkSight: Boolean, easilyReachableOnly: Boolean, chancePerTick: Int, noinline targetPredicate: ((T) -> Boolean)? = null) =
-	AITargetRandom(entity, checkSight, easilyReachableOnly, chancePerTick, T::class.java, targetPredicate)
 
-inline fun <reified T : EntityLivingBase> AITargetSwarmSwitch(entity: EntityCreature, checkSight: Boolean, easilyReachableOnly: Boolean, rangeMultiplier: Float, noinline targetPredicate: ((T) -> Boolean)? = null) =
-	AITargetSwarmSwitch(entity, checkSight, easilyReachableOnly, rangeMultiplier, T::class.java, targetPredicate)
+inline fun <reified T : EntityLivingBase> AITargetRandom(entity: EntityCreature, chancePerTick: Int, checkSight: Boolean, easilyReachableOnly: Boolean, noinline targetPredicate: ((T) -> Boolean)? = null) =
+	AITargetRandom(entity, checkSight, easilyReachableOnly, T::class.java, targetPredicate, chancePerTick)
+
+inline fun <reified T : EntityLivingBase> AITargetSwarmSwitch(entity: EntityCreature, rangeMultiplier: Float, checkSight: Boolean, easilyReachableOnly: Boolean, noinline targetPredicate: ((T) -> Boolean)? = null) =
+	AITargetSwarmSwitch(entity, checkSight, easilyReachableOnly, T::class.java, targetPredicate, rangeMultiplier)
 
 // Selectors
 
