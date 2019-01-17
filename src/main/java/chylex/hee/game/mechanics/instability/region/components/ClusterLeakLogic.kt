@@ -1,5 +1,6 @@
 package chylex.hee.game.mechanics.instability.region.components
 import chylex.hee.game.block.entity.TileEntityEnergyCluster
+import chylex.hee.game.block.entity.TileEntityEnergyCluster.LeakType
 import chylex.hee.game.mechanics.energy.IClusterHealth.HealthStatus.HEALTHY
 import chylex.hee.game.mechanics.energy.IClusterHealth.HealthStatus.TIRED
 import chylex.hee.game.mechanics.energy.IClusterHealth.HealthStatus.WEAKENED
@@ -39,7 +40,7 @@ internal object ClusterLeakLogic{
 		
 		for((cluster, group) in assignedClusters){
 			val percent = group + rand.nextInt(-5, 4)
-			cluster.leakEnergy(cluster.energyLevel.units * (percent * 0.01F))
+			cluster.leakEnergy(cluster.energyLevel.units * (percent * 0.01F), LeakType.INSTABILITY)
 		}
 	}
 	
