@@ -11,13 +11,15 @@ import kotlin.math.pow
 
 open class DimensionInstabilityGlobal(private val world: World, private val endermiteSpawnLogic: EndermiteSpawnLogic) : IDimensionInstability{
 	private companion object{
+		private const val INITIAL_ENDERMITE_SPAWN_TIME = -300L
+		
 		private fun calculatePassiveRelief(ticksSinceLastAction: Long): UShort{
 			return (5 * (ticksSinceLastAction / (20L * 20L))).toUShort()
 		}
 		
-		private fun calculateActionMultiplier(ticksSinceFullRelief: Long): Float{
-			return if (ticksSinceFullRelief < 300L)
-				remapRange(ticksSinceFullRelief.toFloat(), (0F)..(300F), (0.2F)..(1F))
+		private fun calculateActionMultiplier(ticksSinceEndermiteSpawn: Long): Float{
+			return if (ticksSinceEndermiteSpawn < 300L)
+				remapRange(ticksSinceEndermiteSpawn.toFloat(), (0F)..(300F), (0.2F)..(1F))
 			else
 				1F
 		}
@@ -30,22 +32,26 @@ open class DimensionInstabilityGlobal(private val world: World, private val ende
 	private var level = 0
 	
 	private var lastActionTime = 0L
-	private var lastFullReliefTime = -300L
+	private var lastEndermiteSpawnTime = INITIAL_ENDERMITE_SPAWN_TIME
+	
+	override fun resetActionMultiplier(pos: BlockPos){
+		lastEndermiteSpawnTime = INITIAL_ENDERMITE_SPAWN_TIME
+	}
 	
 	override fun triggerAction(amount: UShort, pos: BlockPos){
 		val currentTime = world.totalWorldTime
 		val ticksSinceLastAction = currentTime - lastActionTime
-		val ticksSinceFullRelief = currentTime - lastFullReliefTime
+		val ticksSinceEndermiteSpawn = currentTime - lastEndermiteSpawnTime
 		
 		triggerRelief(calculatePassiveRelief(ticksSinceLastAction), pos)
 		lastActionTime = currentTime
 		
-		level += (amount.toInt() * calculateActionMultiplier(ticksSinceFullRelief)).ceilToInt()
+		level += (amount.toInt() * calculateActionMultiplier(ticksSinceEndermiteSpawn)).ceilToInt()
 		
 		if (level >= 200 && level >= 200 + calculateExtraLevelRequired(endermiteSpawnLogic.countExisting(world, pos))){
 			if (endermiteSpawnLogic.trySpawnNear(world, pos)){
 				triggerReliefMultiplier(0.9F)
-				lastFullReliefTime = currentTime
+				lastEndermiteSpawnTime = currentTime
 			}
 			else{
 				triggerReliefMultiplier(0.45F)
@@ -66,12 +72,12 @@ open class DimensionInstabilityGlobal(private val world: World, private val ende
 	override fun serializeNBT() = NBTTagCompound().apply {
 		setInteger("Level", level)
 		setLong("LastAction", lastActionTime)
-		setLong("LastFullRelief", lastFullReliefTime)
+		setLong("LastEndermiteSpawn", lastEndermiteSpawnTime)
 	}
 	
 	override fun deserializeNBT(nbt: NBTTagCompound) = with(nbt){
 		level = getInteger("Level")
 		lastActionTime = getLong("LastAction")
-		lastFullReliefTime = getLong("LastFullRelief")
+		lastEndermiteSpawnTime = getLong("LastEndermiteSpawn")
 	}
 }

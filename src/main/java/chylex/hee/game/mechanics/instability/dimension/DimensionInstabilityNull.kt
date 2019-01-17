@@ -3,6 +3,7 @@ import net.minecraft.nbt.NBTTagCompound
 import net.minecraft.util.math.BlockPos
 
 object DimensionInstabilityNull : IDimensionInstability{
+	override fun resetActionMultiplier(pos: BlockPos){}
 	override fun triggerAction(amount: UShort, pos: BlockPos){}
 	override fun triggerRelief(amount: UShort, pos: BlockPos){}
 	
