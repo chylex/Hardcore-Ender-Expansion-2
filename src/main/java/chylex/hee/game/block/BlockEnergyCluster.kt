@@ -2,6 +2,7 @@ package chylex.hee.game.block
 import chylex.hee.game.block.entity.TileEntityEnergyCluster
 import chylex.hee.game.mechanics.energy.IClusterGenerator
 import chylex.hee.game.mechanics.energy.IEnergyQuantity
+import chylex.hee.game.mechanics.instability.Instability
 import chylex.hee.init.ModBlocks
 import chylex.hee.init.ModItems
 import chylex.hee.system.util.allInCenteredBoxMutable
@@ -41,11 +42,15 @@ class BlockEnergyCluster(builder: BlockSimple.Builder) : BlockSimple(builder), I
 	companion object{
 		private val SELECTION_AABB = AxisAlignedBB(0.2, 0.2, 0.2, 0.8, 0.8, 0.8)
 		
-		fun createSmallLeak(world: World, pos: BlockPos, amount: IEnergyQuantity){
+		fun createSmallLeak(world: World, pos: BlockPos, amount: IEnergyQuantity, causeInstability: Boolean = false){
 			val units = amount.units.value.toFloat()
 			val corruptedEnergyLevel = (2F + (units.pow(0.74F) / 9F)).ceilToInt()
 			
 			ModBlocks.CORRUPTED_ENERGY.spawnCorruptedEnergy(world, pos, corruptedEnergyLevel)
+			
+			if (causeInstability){
+				Instability.get(world).triggerAction((10 + 2 * corruptedEnergyLevel).toUShort(), pos)
+			}
 		}
 		
 		fun createFullLeak(world: World, pos: BlockPos, amount: IEnergyQuantity){
@@ -90,6 +95,8 @@ class BlockEnergyCluster(builder: BlockSimple.Builder) : BlockSimple(builder), I
 		val ethereumToDrop = (world.rand.nextFloat(1.6F, 2.0F) * (units * 0.01F).pow(1.4F)).floorToInt()
 		
 		world.newExplosion(null, pos.x + 0.5, pos.y + 0.5, pos.z + 0.5, explosionStength, false, true)
+		
+		Instability.get(world).triggerAction((100F + units.pow(0.785F)).ceilToInt().toUShort(), pos)
 		createFullLeak(world, pos, level)
 		
 		repeat(ethereumToDrop){

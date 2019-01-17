@@ -48,10 +48,10 @@ class TileEntityEnergyCluster : TileEntityBase(), ITickable{
 		private const val PROXIMITY_TAG = "Proximity"
 	}
 	
-	enum class LeakType(val regenDelayTicks: Int, val corruptedEnergyDistance: Int){
-		HEALTH(regenDelayTicks = 25, corruptedEnergyDistance = 4),
-		PROXIMITY(regenDelayTicks = 15, corruptedEnergyDistance = 4),
-		INSTABILITY(regenDelayTicks = 200, corruptedEnergyDistance = 12),
+	enum class LeakType(val regenDelayTicks: Int, val corruptedEnergyDistance: Int, val causesInstability: Boolean){
+		HEALTH(regenDelayTicks = 25, corruptedEnergyDistance = 4, causesInstability = true),
+		PROXIMITY(regenDelayTicks = 15, corruptedEnergyDistance = 4, causesInstability = false),
+		INSTABILITY(regenDelayTicks = 200, corruptedEnergyDistance = 12, causesInstability = false),
 	}
 	
 	// Properties (State)
@@ -128,7 +128,7 @@ class TileEntityEnergyCluster : TileEntityBase(), ITickable{
 		ticksToRegen = max(ticksToRegen, type.regenDelayTicks)
 		
 		findLeakPos(type.corruptedEnergyDistance)?.let {
-			BlockEnergyCluster.createSmallLeak(world, it, finalQuantity)
+			BlockEnergyCluster.createSmallLeak(world, it, finalQuantity, type.causesInstability)
 		}
 	}
 	
