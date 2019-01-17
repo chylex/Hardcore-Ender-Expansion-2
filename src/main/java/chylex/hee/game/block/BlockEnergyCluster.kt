@@ -41,8 +41,15 @@ class BlockEnergyCluster(builder: BlockSimple.Builder) : BlockSimple(builder), I
 	companion object{
 		private val SELECTION_AABB = AxisAlignedBB(0.2, 0.2, 0.2, 0.8, 0.8, 0.8)
 		
-		fun createLeak(world: World, pos: BlockPos, level: IEnergyQuantity){
-			val units = level.units.value.toFloat()
+		fun createSmallLeak(world: World, pos: BlockPos, amount: IEnergyQuantity){
+			val units = amount.units.value.toFloat()
+			val corruptedEnergyLevel = (2F + (units.pow(0.74F) / 9F)).ceilToInt()
+			
+			ModBlocks.CORRUPTED_ENERGY.spawnCorruptedEnergy(world, pos, corruptedEnergyLevel)
+		}
+		
+		fun createFullLeak(world: World, pos: BlockPos, amount: IEnergyQuantity){
+			val units = amount.units.value.toFloat()
 			
 			val corruptedEnergyRadius = 1.5F + (units.pow(0.77F) / 70F)
 			val corruptedEnergyLevel = (2F + (units.pow(0.74F) / 9F)).ceilToInt()
@@ -83,7 +90,7 @@ class BlockEnergyCluster(builder: BlockSimple.Builder) : BlockSimple(builder), I
 		val ethereumToDrop = (world.rand.nextFloat(1.6F, 2.0F) * (units * 0.01F).pow(1.4F)).floorToInt()
 		
 		world.newExplosion(null, pos.x + 0.5, pos.y + 0.5, pos.z + 0.5, explosionStength, false, true)
-		createLeak(world, pos, level)
+		createFullLeak(world, pos, level)
 		
 		repeat(ethereumToDrop){
 			spawnAsEntity(world, pos, ItemStack(ModItems.ETHEREUM))

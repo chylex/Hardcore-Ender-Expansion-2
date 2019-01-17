@@ -93,7 +93,7 @@ class TileEntityEndPortalAcceptor : TileEntityBase(), ITickable{
 				WAITING  -> IDLE
 				
 				CHARGING -> {
-					BlockEnergyCluster.createLeak(world, posAbove, chargedEnergy)
+					BlockEnergyCluster.createSmallLeak(world, posAbove, chargedEnergy)
 					chargedEnergy = Units(0)
 					IDLE
 				}
