@@ -16,6 +16,7 @@ import chylex.hee.game.mechanics.energy.IEnergyQuantity.Companion.MAX_REGEN_CAPA
 import chylex.hee.game.mechanics.energy.IEnergyQuantity.Floating
 import chylex.hee.game.mechanics.energy.IEnergyQuantity.Internal
 import chylex.hee.game.mechanics.energy.IEnergyQuantity.Units
+import chylex.hee.game.mechanics.energy.ProximityHandler
 import chylex.hee.game.particle.ParticleEnergyCluster
 import chylex.hee.game.particle.spawner.IParticleSpawner
 import chylex.hee.game.particle.spawner.ParticleSpawnerCustom
@@ -44,9 +45,11 @@ class TileEntityEnergyCluster : TileEntityBase(), ITickable{
 		private const val REGEN_TICKS_TAG = "TicksToRegen"
 		private const val SNAPSHOT_TAG = "Snapshot"
 		private const val INACTIVE_TAG = "Inactive"
+		private const val PROXIMITY_TAG = "Proximity"
 	}
 	
 	enum class LeakType(val regenDelayTicks: Int, val corruptedEnergyDistance: Int){
+		PROXIMITY(regenDelayTicks = 15, corruptedEnergyDistance = 4),
 		INSTABILITY(regenDelayTicks = 200, corruptedEnergyDistance = 12),
 	}
 	
@@ -64,9 +67,6 @@ class TileEntityEnergyCluster : TileEntityBase(), ITickable{
 	var color: ClusterColor by Notifying(ClusterColor(0, 0), DEFAULT_NOTIFY_FLAGS)
 		private set
 	
-	var affectedByProximity: Boolean by Notifying(false, DEFAULT_NOTIFY_FLAGS) // TODO implement proximity
-		private set
-	
 	// Properties (Calculated)
 	
 	val currentHealth: IClusterHealth
@@ -78,6 +78,9 @@ class TileEntityEnergyCluster : TileEntityBase(), ITickable{
 	val baseLeakSize: IEnergyQuantity
 		get() = Floating(world.rand.nextFloat(0.5F, 1F) * ((1F + energyBaseCapacity.floating.value).pow(0.12F) + energyLevel.floating.value.pow(0.05F) - 2F))
 	
+	val affectedByProximity: Boolean
+		get() = proximityHandler.affectedByProximity
+	
 	val wasUsedRecently: Boolean
 		get() = world.totalWorldTime - lastUseTick < 20L
 	
@@ -86,6 +89,8 @@ class TileEntityEnergyCluster : TileEntityBase(), ITickable{
 	private var ticksToRegen = 20
 	private var lastUseTick = 0L
 	private var isInactive = false
+	
+	private val proximityHandler = ProximityHandler(this)
 	
 	private var particle: Pair<IParticleSpawner, IShape>? = null
 	private val particleSkipTest = ParticleEnergyCluster.newCountingSkipTest()
@@ -174,6 +179,7 @@ class TileEntityEnergyCluster : TileEntityBase(), ITickable{
 		color = snapshot.color
 		
 		ticksToRegen = 40
+		proximityHandler.reset()
 	}
 	
 	fun setInactive(){
@@ -211,6 +217,13 @@ class TileEntityEnergyCluster : TileEntityBase(), ITickable{
 			energyLevel = minOf(energyRegenCapacity, energyLevel + Floating(((1 + energyBaseCapacity.floating.value).pow(0.004F) - 0.997F) * 0.5F) * currentHealth.regenAmountMp)
 			ticksToRegen = (20F / currentHealth.regenSpeedMp).ceilToInt()
 		}
+		
+		if (currentHealth.affectedByProximity){
+			proximityHandler.tick()
+		}
+		else{
+			proximityHandler.reset()
+		}
 	}
 	
 	// Serialization
@@ -219,8 +232,13 @@ class TileEntityEnergyCluster : TileEntityBase(), ITickable{
 		setShort(REGEN_TICKS_TAG, ticksToRegen.toShort())
 		setTag(SNAPSHOT_TAG, getClusterSnapshot().tag)
 		
-		if (context == STORAGE && isInactive){
-			setBoolean(INACTIVE_TAG, true)
+		if (context == STORAGE){
+			if (isInactive){
+				setBoolean(INACTIVE_TAG, true)
+			}
+			else{
+				setTag(PROXIMITY_TAG, proximityHandler.serializeNBT())
+			}
 		}
 	}
 	
@@ -228,11 +246,15 @@ class TileEntityEnergyCluster : TileEntityBase(), ITickable{
 		ticksToRegen = getShort(REGEN_TICKS_TAG).toInt()
 		loadClusterSnapshot(ClusterSnapshot(nbt.getCompoundTag(SNAPSHOT_TAG)))
 		
-		if (getBoolean(INACTIVE_TAG)){
-			setInactive()
+		if (context == STORAGE){
+			if (getBoolean(INACTIVE_TAG)){
+				setInactive()
+			}
+			else{
+				proximityHandler.deserializeNBT(getCompoundTag(PROXIMITY_TAG))
+			}
 		}
-		
-		if (context == NETWORK){
+		else if (context == NETWORK){
 			val particleSpawner = ParticleSpawnerCustom(
 				type = ParticleEnergyCluster,
 				data = ParticleEnergyCluster.Data(this@TileEntityEnergyCluster),
