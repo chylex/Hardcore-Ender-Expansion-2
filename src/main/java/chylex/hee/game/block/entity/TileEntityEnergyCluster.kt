@@ -49,6 +49,7 @@ class TileEntityEnergyCluster : TileEntityBase(), ITickable{
 	}
 	
 	enum class LeakType(val regenDelayTicks: Int, val corruptedEnergyDistance: Int){
+		HEALTH(regenDelayTicks = 25, corruptedEnergyDistance = 4),
 		PROXIMITY(regenDelayTicks = 15, corruptedEnergyDistance = 4),
 		INSTABILITY(regenDelayTicks = 200, corruptedEnergyDistance = 12),
 	}
@@ -76,7 +77,7 @@ class TileEntityEnergyCluster : TileEntityBase(), ITickable{
 		get() = minOf(energyBaseCapacity * currentHealth.regenCapacityMp, MAX_REGEN_CAPACITY)
 	
 	val baseLeakSize: IEnergyQuantity
-		get() = Floating(world.rand.nextFloat(0.5F, 1F) * ((1F + energyBaseCapacity.floating.value).pow(0.12F) + energyLevel.floating.value.pow(0.05F) - 2F))
+		get() = Floating(world.rand.nextFloat(0.4F, 0.8F) * ((1F + energyBaseCapacity.floating.value).pow(0.09F) + energyLevel.floating.value.pow(0.05F) - 2.1F))
 	
 	val affectedByProximity: Boolean
 		get() = proximityHandler.affectedByProximity
@@ -119,7 +120,7 @@ class TileEntityEnergyCluster : TileEntityBase(), ITickable{
 	fun leakEnergy(quantity: IEnergyQuantity, type: LeakType){
 		val finalQuantity = minOf(energyLevel, quantity)
 		
-		if (finalQuantity <= Units(0)){
+		if (finalQuantity < Units(1)){
 			return
 		}
 		
@@ -216,6 +217,10 @@ class TileEntityEnergyCluster : TileEntityBase(), ITickable{
 		if (energyLevel < energyRegenCapacity && --ticksToRegen < 0){
 			energyLevel = minOf(energyRegenCapacity, energyLevel + Floating(((1 + energyBaseCapacity.floating.value).pow(0.004F) - 0.997F) * 0.5F) * currentHealth.regenAmountMp)
 			ticksToRegen = (20F / currentHealth.regenSpeedMp).ceilToInt()
+		}
+		
+		if (currentHealth.getLeakChance(this).let { it > 0F && world.rand.nextFloat() < it }){
+			leakEnergy(baseLeakSize, LeakType.HEALTH)
 		}
 		
 		if (currentHealth.affectedByProximity){
