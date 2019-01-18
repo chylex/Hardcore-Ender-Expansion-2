@@ -2,14 +2,16 @@ package chylex.hee.game.block
 import chylex.hee.game.block.BlockSimple.Builder.Companion.INDESTRUCTIBLE_HARDNESS
 import chylex.hee.game.block.BlockSimple.Builder.Companion.setHardnessWithResistance
 import chylex.hee.game.entity.item.EntityFallingBlockHeavy
+import chylex.hee.game.fx.FxBlockData
+import chylex.hee.game.fx.FxBlockHandler
 import chylex.hee.game.world.util.Teleporter
 import chylex.hee.game.particle.ParticleTeleport
 import chylex.hee.game.particle.spawner.ParticleSpawnerCustom
 import chylex.hee.game.particle.util.IOffset.InBox
 import chylex.hee.game.particle.util.IShape.Point
 import chylex.hee.network.client.PacketClientFX
-import chylex.hee.network.client.PacketClientFX.IFXData
-import chylex.hee.network.client.PacketClientFX.IFXHandler
+import chylex.hee.game.fx.IFxData
+import chylex.hee.game.fx.IFxHandler
 import chylex.hee.system.util.blocksMovement
 import chylex.hee.system.util.center
 import chylex.hee.system.util.getState
@@ -50,20 +52,14 @@ class BlockDragonEggOverride : BlockDragonEgg(){
 			mot = InBox(0.025F)
 		)
 		
-		class FxBreakData(private val pos: BlockPos) : IFXData{
-			override fun write(buffer: ByteBuf) = buffer.use {
-				writePos(pos)
-			}
-		}
-		
 		@JvmStatic
-		val FX_BREAK = object : IFXHandler{
-			override fun handle(buffer: ByteBuf, world: World, rand: Random) = buffer.use {
-				val pos = readPos()
-				val sound = Blocks.DRAGON_EGG.soundType
-				
+		val FX_BREAK = object : FxBlockHandler(){
+			override fun handle(pos: BlockPos, world: World, rand: Random){
 				PARTICLE_BREAK.spawn(Point(pos, 30), rand)
-				sound.breakSound.playClient(pos, SoundCategory.BLOCKS, volume = (sound.getVolume() + 1F) / 2F, pitch = sound.getPitch() * 0.8F)
+				
+				Blocks.DRAGON_EGG.soundType.let {
+					it.breakSound.playClient(pos, SoundCategory.BLOCKS, volume = (it.getVolume() + 1F) / 2F, pitch = it.getPitch() * 0.8F)
+				}
 			}
 		}
 	}
@@ -131,7 +127,7 @@ class BlockDragonEggOverride : BlockDragonEgg(){
 		}
 		
 		pos.setAir(world)
-		PacketClientFX(FX_BREAK, FxBreakData(pos)).sendToAllAround(world, pos, 32.0)
+		PacketClientFX(FX_BREAK, FxBlockData(pos)).sendToAllAround(world, pos, 32.0)
 		
 		if (world.gameRules.getBoolean("doTileDrops") && !world.restoringBlockSnapshots){
 			EntityItem(world, pos.x + 0.5, pos.y.toDouble(), pos.z + 0.5, ItemStack(this)).apply {

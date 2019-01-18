@@ -1,5 +1,7 @@
 package chylex.hee.game.world.util
 import chylex.hee.HEE
+import chylex.hee.game.fx.IFxData
+import chylex.hee.game.fx.IFxHandler
 import chylex.hee.game.mechanics.damage.Damage
 import chylex.hee.game.mechanics.damage.Damage.Companion.TITLE_FALL
 import chylex.hee.game.mechanics.damage.IDamageProcessor.Companion.MAGIC_TYPE
@@ -9,8 +11,6 @@ import chylex.hee.game.particle.spawner.ParticleSpawnerCustom
 import chylex.hee.game.particle.util.IOffset.InBox
 import chylex.hee.game.particle.util.IShape.Line
 import chylex.hee.network.client.PacketClientFX
-import chylex.hee.network.client.PacketClientFX.IFXData
-import chylex.hee.network.client.PacketClientFX.IFXHandler
 import chylex.hee.network.client.PacketClientMoveYourAss
 import chylex.hee.system.util.Pos
 import chylex.hee.system.util.center
@@ -60,7 +60,7 @@ class Teleporter(
 			private val soundCategory: SoundCategory,
 			private val soundVolume: Float,
 			private val extendedRange: Float
-		) : IFXData{
+		) : IFxData{
 			override fun write(buffer: ByteBuf) = buffer.use {
 				writeCompactVec(startPoint)
 				writeCompactVec(endPoint)
@@ -71,7 +71,7 @@ class Teleporter(
 		}
 		
 		@JvmStatic
-		val FX_TELEPORT = object : IFXHandler{
+		val FX_TELEPORT = object : IFxHandler<FxTeleportData>{
 			override fun handle(buffer: ByteBuf, world: World, rand: Random) = buffer.use {
 				val player = HEE.proxy.getClientSidePlayer() ?: return
 				val playerPos = player.posVec

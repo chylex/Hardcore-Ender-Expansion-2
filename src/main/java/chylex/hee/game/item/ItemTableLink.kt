@@ -2,6 +2,8 @@ package chylex.hee.game.item
 import chylex.hee.game.block.BlockAbstractTableTile
 import chylex.hee.game.block.entity.TileEntityBaseTable
 import chylex.hee.game.block.entity.TileEntityTablePedestal
+import chylex.hee.game.fx.IFxData
+import chylex.hee.game.fx.IFxHandler
 import chylex.hee.game.item.ItemTableLink.Companion.SoundType.LINK_FAIL
 import chylex.hee.game.item.ItemTableLink.Companion.SoundType.LINK_OUTPUT
 import chylex.hee.game.item.ItemTableLink.Companion.SoundType.LINK_RESTART
@@ -9,8 +11,6 @@ import chylex.hee.game.item.ItemTableLink.Companion.SoundType.LINK_SUCCESS
 import chylex.hee.init.ModBlocks
 import chylex.hee.init.ModSounds
 import chylex.hee.network.client.PacketClientFX
-import chylex.hee.network.client.PacketClientFX.IFXData
-import chylex.hee.network.client.PacketClientFX.IFXHandler
 import chylex.hee.system.util.cleanupNBT
 import chylex.hee.system.util.cloneFrom
 import chylex.hee.system.util.getBlock
@@ -55,7 +55,7 @@ class ItemTableLink : Item(){
 			LINK_FAIL, LINK_OUTPUT, LINK_RESTART, LINK_SUCCESS
 		}
 		
-		class FxUseData(private val pos: BlockPos, private val type: SoundType) : IFXData{
+		class FxUseData(private val pos: BlockPos, private val type: SoundType) : IFxData{
 			override fun write(buffer: ByteBuf) = buffer.use {
 				writePos(pos)
 				writeByte(type.ordinal)
@@ -63,7 +63,7 @@ class ItemTableLink : Item(){
 		}
 		
 		@JvmStatic
-		val FX_USE = object : IFXHandler{
+		val FX_USE = object : IFxHandler<FxUseData>{
 			override fun handle(buffer: ByteBuf, world: World, rand: Random) = buffer.use {
 				val pos = readPos()
 				

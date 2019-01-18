@@ -2,6 +2,8 @@ package chylex.hee.network.client
 import chylex.hee.game.block.BlockDragonEggOverride
 import chylex.hee.game.block.entity.TileEntityTablePedestal
 import chylex.hee.game.entity.item.EntityFallingObsidian
+import chylex.hee.game.fx.IFxData
+import chylex.hee.game.fx.IFxHandler
 import chylex.hee.game.item.ItemCompost
 import chylex.hee.game.item.ItemScorchingTool
 import chylex.hee.game.item.ItemTableLink
@@ -10,12 +12,11 @@ import chylex.hee.network.BaseClientPacket
 import chylex.hee.system.Debug
 import io.netty.buffer.ByteBuf
 import net.minecraft.client.entity.EntityPlayerSP
-import net.minecraft.world.World
 import net.minecraftforge.fml.relauncher.Side
 import net.minecraftforge.fml.relauncher.SideOnly
 import java.util.Random
 
-class PacketClientFX() : BaseClientPacket(){
+class PacketClientFX<T : IFxData>() : BaseClientPacket(){
 	private companion object{
 		private val RAND = Random()
 		
@@ -31,23 +32,15 @@ class PacketClientFX() : BaseClientPacket(){
 		)
 	}
 	
-	interface IFXHandler{
-		fun handle(buffer: ByteBuf, world: World, rand: Random)
-	}
-	
-	interface IFXData{
-		fun write(buffer: ByteBuf)
-	}
-	
 	// Instance
 	
-	constructor(handler: IFXHandler, data: IFXData) : this(){
+	constructor(handler: IFxHandler<T>, data: T) : this(){
 		this.handler = handler
 		this.data = data
 	}
 	
-	private lateinit var handler: IFXHandler
-	private lateinit var data: IFXData
+	private lateinit var handler: IFxHandler<T>
+	private lateinit var data: IFxData
 	
 	private var buffer: ByteBuf? = null
 	
@@ -56,6 +49,7 @@ class PacketClientFX() : BaseClientPacket(){
 		data.write(buffer)
 	}
 	
+	@Suppress("UNCHECKED_CAST")
 	override fun read(buffer: ByteBuf){
 		val index = buffer.readInt()
 		
@@ -65,7 +59,7 @@ class PacketClientFX() : BaseClientPacket(){
 			}
 		}
 		else{
-			this.handler = HANDLERS[index]
+			this.handler = HANDLERS[index] as IFxHandler<T>
 			this.buffer = buffer.slice()
 		}
 	}

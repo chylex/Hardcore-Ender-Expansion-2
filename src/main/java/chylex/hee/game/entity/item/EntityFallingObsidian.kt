@@ -2,6 +2,8 @@ package chylex.hee.game.entity.item
 import chylex.hee.game.entity.item.EntityFallingBlockHeavy.PlacementResult.FAIL
 import chylex.hee.game.entity.item.EntityFallingBlockHeavy.PlacementResult.RELOCATION
 import chylex.hee.game.entity.item.EntityFallingBlockHeavy.PlacementResult.SUCCESS
+import chylex.hee.game.fx.IFxData
+import chylex.hee.game.fx.IFxHandler
 import chylex.hee.game.mechanics.damage.Damage
 import chylex.hee.game.mechanics.damage.Damage.Companion.TITLE_FALLING_BLOCK
 import chylex.hee.game.mechanics.damage.IDamageProcessor.Companion.ARMOR_PROTECTION
@@ -9,8 +11,6 @@ import chylex.hee.game.mechanics.damage.IDamageProcessor.Companion.ENCHANTMENT_P
 import chylex.hee.game.mechanics.damage.IDamageProcessor.Companion.PEACEFUL_EXCLUSION
 import chylex.hee.init.ModSounds
 import chylex.hee.network.client.PacketClientFX
-import chylex.hee.network.client.PacketClientFX.IFXData
-import chylex.hee.network.client.PacketClientFX.IFXHandler
 import chylex.hee.system.util.Pos
 import chylex.hee.system.util.allInCenteredBox
 import chylex.hee.system.util.distanceSqTo
@@ -35,7 +35,7 @@ class EntityFallingObsidian : EntityFallingBlockHeavy{
 	companion object{
 		private val DAMAGE = Damage(PEACEFUL_EXCLUSION, ARMOR_PROTECTION(false), ENCHANTMENT_PROTECTION)
 		
-		class FxFallData(private val pos: BlockPos, private val volume: Float) : IFXData{
+		class FxFallData(private val pos: BlockPos, private val volume: Float) : IFxData{
 			override fun write(buffer: ByteBuf) = buffer.use {
 				writePos(pos)
 				writeFloat(volume)
@@ -43,7 +43,7 @@ class EntityFallingObsidian : EntityFallingBlockHeavy{
 		}
 		
 		@JvmStatic
-		val FX_FALL = object : IFXHandler{
+		val FX_FALL = object : IFxHandler<FxFallData>{
 			override fun handle(buffer: ByteBuf, world: World, rand: Random) = buffer.use {
 				val pos = readPos()
 				val volume = readFloat()

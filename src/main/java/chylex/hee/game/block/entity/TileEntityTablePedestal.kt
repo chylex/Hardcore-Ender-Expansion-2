@@ -4,6 +4,8 @@ import chylex.hee.game.block.BlockTablePedestal
 import chylex.hee.game.block.BlockTablePedestal.Companion.IS_LINKED
 import chylex.hee.game.block.entity.TileEntityBase.Context.NETWORK
 import chylex.hee.game.block.entity.TileEntityBase.Context.STORAGE
+import chylex.hee.game.fx.FxBlockData
+import chylex.hee.game.fx.FxBlockHandler
 import chylex.hee.game.mechanics.table.PedestalInventoryHandler
 import chylex.hee.game.mechanics.table.PedestalStatusIndicator
 import chylex.hee.game.mechanics.table.PedestalStatusIndicator.Contents.NONE
@@ -18,8 +20,6 @@ import chylex.hee.game.particle.util.IShape.Point
 import chylex.hee.init.ModBlocks
 import chylex.hee.init.ModItems
 import chylex.hee.network.client.PacketClientFX
-import chylex.hee.network.client.PacketClientFX.IFXData
-import chylex.hee.network.client.PacketClientFX.IFXHandler
 import chylex.hee.system.util.FLAG_SYNC_CLIENT
 import chylex.hee.system.util.delegate.NotifyOnChange
 import chylex.hee.system.util.getIntegerOrNull
@@ -30,12 +30,8 @@ import chylex.hee.system.util.isNotEmpty
 import chylex.hee.system.util.nextFloat
 import chylex.hee.system.util.playClient
 import chylex.hee.system.util.posVec
-import chylex.hee.system.util.readPos
 import chylex.hee.system.util.setPos
 import chylex.hee.system.util.updateState
-import chylex.hee.system.util.use
-import chylex.hee.system.util.writePos
-import io.netty.buffer.ByteBuf
 import net.minecraft.block.state.IBlockState
 import net.minecraft.entity.item.EntityItem
 import net.minecraft.entity.player.InventoryPlayer
@@ -56,19 +52,12 @@ import java.util.Random
 
 class TileEntityTablePedestal : TileEntityBase(){
 	companion object{
-		class FxItemUpdateData(private val pedestalPos: BlockPos) : IFXData{
-			override fun write(buffer: ByteBuf) = buffer.use {
-				writePos(pedestalPos)
-			}
-		}
-		
 		@JvmStatic
-		val FX_ITEM_UPDATE = object : IFXHandler{
-			override fun handle(buffer: ByteBuf, world: World, rand: Random) = buffer.use {
+		val FX_ITEM_UPDATE = object : FxBlockHandler(){
+			override fun handle(pos: BlockPos, world: World, rand: Random){
 				val player = HEE.proxy.getClientSidePlayer() ?: return
-				val pedestalPos = buffer.readPos()
 				
-				PARTICLE_ITEM_UPDATE.spawn(Point(pedestalPos.up(), 12), rand)
+				PARTICLE_ITEM_UPDATE.spawn(Point(pos.up(), 12), rand)
 				SoundEvents.ENTITY_ITEM_PICKUP.playClient(player.posVec, SoundCategory.PLAYERS, volume = 0.22F, pitch = rand.nextFloat(0.6F, 3.4F))
 			}
 		}
@@ -147,7 +136,7 @@ class TileEntityTablePedestal : TileEntityBase(){
 	}
 	
 	private fun spawnSmokeParticles(){
-		PacketClientFX(FX_ITEM_UPDATE, FxItemUpdateData(pos)).sendToAllAround(this, 16.0)
+		PacketClientFX(FX_ITEM_UPDATE, FxBlockData(pos)).sendToAllAround(this, 16.0)
 	}
 	
 	// Behavior (Tables)

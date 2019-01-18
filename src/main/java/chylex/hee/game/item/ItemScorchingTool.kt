@@ -1,4 +1,8 @@
 package chylex.hee.game.item
+import chylex.hee.game.fx.FxBlockData
+import chylex.hee.game.fx.FxBlockHandler
+import chylex.hee.game.fx.FxEntityData
+import chylex.hee.game.fx.FxEntityHandler
 import chylex.hee.game.item.repair.ICustomRepairBehavior
 import chylex.hee.game.item.repair.RepairInstance
 import chylex.hee.game.item.util.CustomToolMaterial
@@ -11,13 +15,7 @@ import chylex.hee.game.particle.util.IOffset.InBox
 import chylex.hee.game.particle.util.IShape.Point
 import chylex.hee.init.ModItems
 import chylex.hee.network.client.PacketClientFX
-import chylex.hee.network.client.PacketClientFX.IFXData
-import chylex.hee.network.client.PacketClientFX.IFXHandler
 import chylex.hee.system.util.isNotEmpty
-import chylex.hee.system.util.readPos
-import chylex.hee.system.util.use
-import chylex.hee.system.util.writePos
-import io.netty.buffer.ByteBuf
 import net.minecraft.block.state.IBlockState
 import net.minecraft.entity.Entity
 import net.minecraft.entity.EntityLivingBase
@@ -51,31 +49,17 @@ class ItemScorchingTool(private val toolClass: String) : ItemTool(CustomToolMate
 			pos = Constant(0.2F, UP) + InBox(target, 0.4F)
 		)
 		
-		class FxBlockBreakData(private val pos: BlockPos) : IFXData{
-			override fun write(buffer: ByteBuf) = buffer.use {
-				writePos(pos)
+		@JvmStatic
+		val FX_BLOCK_BREAK = object : FxBlockHandler(){
+			override fun handle(pos: BlockPos, world: World, rand: Random){
+				PARTICLE_MINING.spawn(Point(pos, 15), rand)
 			}
 		}
 		
 		@JvmStatic
-		val FX_BLOCK_BREAK = object : IFXHandler{
-			override fun handle(buffer: ByteBuf, world: World, rand: Random) = buffer.use {
-				PARTICLE_MINING.spawn(Point(readPos(), 15), rand)
-			}
-		}
-		
-		class FxEntityHitData(private val entity: Int) : IFXData{
-			override fun write(buffer: ByteBuf) = buffer.use {
-				writeInt(entity)
-			}
-		}
-		
-		@JvmStatic
-		val FX_ENTITY_HIT = object : IFXHandler{
-			override fun handle(buffer: ByteBuf, world: World, rand: Random) = buffer.use {
-				world.getEntityByID(readInt())?.let {
-					PARTICLE_HITTING(it).spawn(Point(it, 0.5F, 20), rand)
-				}
+		val FX_ENTITY_HIT = object : FxEntityHandler(){
+			override fun handle(entity: Entity, rand: Random){
+				PARTICLE_HITTING(entity).spawn(Point(entity, 0.5F, 20), rand)
 			}
 		}
 	}
@@ -114,7 +98,7 @@ class ItemScorchingTool(private val toolClass: String) : ItemTool(CustomToolMate
 		if (!world.isRemote && state.getBlockHardness(world, pos) != 0F){
 			if (isBlockValid(state)){
 				stack.damageItem(1, entity)
-				PacketClientFX(FX_BLOCK_BREAK, FxBlockBreakData(pos)).sendToAllAround(world, pos, 32.0)
+				PacketClientFX(FX_BLOCK_BREAK, FxBlockData(pos)).sendToAllAround(world, pos, 32.0)
 			}
 			else{
 				stack.damageItem(2, entity)
@@ -147,7 +131,7 @@ class ItemScorchingTool(private val toolClass: String) : ItemTool(CustomToolMate
 	
 	override fun hitEntity(stack: ItemStack, target: EntityLivingBase, attacker: EntityLivingBase): Boolean{
 		target.setFire(1)
-		PacketClientFX(FX_ENTITY_HIT, FxEntityHitData(target.entityId)).sendToAllAround(target, 32.0)
+		PacketClientFX(FX_ENTITY_HIT, FxEntityData(target)).sendToAllAround(target, 32.0)
 		
 		stack.damageItem(1, attacker)
 		return true

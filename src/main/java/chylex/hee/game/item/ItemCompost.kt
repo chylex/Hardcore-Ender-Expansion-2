@@ -1,14 +1,10 @@
 package chylex.hee.game.item
+import chylex.hee.game.fx.FxBlockData
+import chylex.hee.game.fx.FxBlockHandler
 import chylex.hee.game.world.util.BlockEditor
 import chylex.hee.init.ModItems
 import chylex.hee.network.client.PacketClientFX
-import chylex.hee.network.client.PacketClientFX.IFXData
-import chylex.hee.network.client.PacketClientFX.IFXHandler
-import chylex.hee.system.util.readPos
 import chylex.hee.system.util.size
-import chylex.hee.system.util.use
-import chylex.hee.system.util.writePos
-import io.netty.buffer.ByteBuf
 import net.minecraft.block.BlockDispenser
 import net.minecraft.block.BlockDispenser.FACING
 import net.minecraft.dispenser.IBlockSource
@@ -31,16 +27,10 @@ class ItemCompost : Item(){
 	companion object{
 		private const val BONE_MEAL_EQUIVALENT = 2
 		
-		class FxUseData(private val pos: BlockPos) : IFXData{
-			override fun write(buffer: ByteBuf) = buffer.use {
-				writePos(pos)
-			}
-		}
-		
 		@JvmStatic
-		val FX_USE = object : IFXHandler{
-			override fun handle(buffer: ByteBuf, world: World, rand: Random) = buffer.use {
-				ItemDye.spawnBonemealParticles(world, readPos(), 25)
+		val FX_USE = object : FxBlockHandler(){
+			override fun handle(pos: BlockPos, world: World, rand: Random){
+				ItemDye.spawnBonemealParticles(world, pos, 25)
 			}
 		}
 		
@@ -61,7 +51,7 @@ class ItemCompost : Item(){
 			}
 			
 			if (!world.isRemote){
-				PacketClientFX(FX_USE, FxUseData(pos)).sendToAllAround(world, pos, 64.0)
+				PacketClientFX(FX_USE, FxBlockData(pos)).sendToAllAround(world, pos, 64.0)
 			}
 			
 			return true
