@@ -1,8 +1,17 @@
 package chylex.hee.game.entity.item
 import chylex.hee.HEE
+import chylex.hee.game.fx.FxBlockData
+import chylex.hee.game.fx.FxBlockHandler
+import chylex.hee.game.fx.FxEntityData
+import chylex.hee.game.fx.FxEntityHandler
+import chylex.hee.game.particle.ParticleFlameCustom
+import chylex.hee.game.particle.ParticleFlameCustom.Data
+import chylex.hee.game.particle.spawner.ParticleSpawnerCustom
 import chylex.hee.game.particle.spawner.ParticleSpawnerVanilla
+import chylex.hee.game.particle.util.IOffset.Constant
 import chylex.hee.game.particle.util.IOffset.InBox
 import chylex.hee.game.particle.util.IShape.Point
+import chylex.hee.network.client.PacketClientFX
 import chylex.hee.system.util.Pos
 import chylex.hee.system.util.ceilToInt
 import chylex.hee.system.util.distanceSqTo
@@ -16,6 +25,7 @@ import chylex.hee.system.util.nextBiasedFloat
 import chylex.hee.system.util.nextFloat
 import chylex.hee.system.util.nextVector
 import chylex.hee.system.util.offsetUntil
+import chylex.hee.system.util.playClient
 import chylex.hee.system.util.posVec
 import chylex.hee.system.util.selectVulnerableEntities
 import chylex.hee.system.util.setBlock
@@ -28,6 +38,7 @@ import net.minecraft.block.state.IBlockState
 import net.minecraft.entity.Entity
 import net.minecraft.entity.MoverType
 import net.minecraft.init.Blocks
+import net.minecraft.init.SoundEvents
 import net.minecraft.init.SoundEvents.ENTITY_GENERIC_BURN
 import net.minecraft.item.ItemBlock
 import net.minecraft.item.ItemStack
@@ -36,10 +47,12 @@ import net.minecraft.util.DamageSource
 import net.minecraft.util.EnumFacing.DOWN
 import net.minecraft.util.EnumFacing.UP
 import net.minecraft.util.EnumParticleTypes.LAVA
+import net.minecraft.util.SoundCategory
 import net.minecraft.util.SoundEvent
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.Vec3d
 import net.minecraft.world.World
+import java.util.Random
 import kotlin.collections.Map.Entry
 import kotlin.math.log2
 
@@ -57,6 +70,38 @@ class EntityItemIgneousRock : EntityItemNoBob{
 			type = LAVA,
 			pos = InBox(0.1F)
 		)
+		
+		private val PARTICLE_FLAME_MOT = Constant(0.008F, UP) + InBox(0.012F, 0.014F, 0.012F)
+		
+		private val PARTICLE_SMELT = ParticleSpawnerCustom(
+			type = ParticleFlameCustom,
+			data = Data(maxAge = 16),
+			pos = InBox(0.85F),
+			mot = PARTICLE_FLAME_MOT
+		)
+		
+		private fun PARTICLE_BURN(target: Entity) = ParticleSpawnerCustom(
+			type = ParticleFlameCustom,
+			data = Data(maxAge = 8),
+			pos = Constant(0.2F, UP) + InBox(target, 0.4F),
+			mot = PARTICLE_FLAME_MOT
+		)
+		
+		@JvmStatic
+		val FX_BLOCK_SMELT = object : FxBlockHandler(){
+			override fun handle(pos: BlockPos, world: World, rand: Random){
+				PARTICLE_SMELT.spawn(Point(pos, 20), rand)
+				SoundEvents.ENTITY_GENERIC_BURN.playClient(pos, SoundCategory.NEUTRAL, volume = 0.3F, pitch = rand.nextFloat(1F, 2F))
+			}
+		}
+		
+		@JvmStatic
+		val FX_ENTITY_BURN = object : FxEntityHandler(){
+			override fun handle(entity: Entity, rand: Random){
+				PARTICLE_BURN(entity).spawn(Point(entity, 0.5F, 24), rand)
+				SoundEvents.ENTITY_GENERIC_BURN.playClient(entity.posVec, SoundCategory.NEUTRAL, volume = 0.3F, pitch = rand.nextFloat(1F, 2F))
+			}
+		}
 		
 		private lateinit var smeltingTransformations: Map<IBlockState, IBlockState>
 		
@@ -194,7 +239,7 @@ class EntityItemIgneousRock : EntityItemNoBob{
 			val extraDuration = (distanceMp * 40F) + rand.nextInt(20)
 			
 			entity.setFireTicks(MIN_ENTITY_BURN_DURATION_TICKS + extraDuration.floorToInt()) // about 2-5 seconds
-			// TODO FX
+			PacketClientFX(FX_ENTITY_BURN, FxEntityData(entity)).sendToAllAround(this, 32.0)
 		}
 	}
 	
@@ -222,7 +267,7 @@ class EntityItemIgneousRock : EntityItemNoBob{
 		
 		if (targetState != null){
 			pos.setState(world, targetState)
-			// TODO FX
+			PacketClientFX(FX_BLOCK_SMELT, FxBlockData(pos)).sendToAllAround(this, 32.0)
 		}
 	}
 }

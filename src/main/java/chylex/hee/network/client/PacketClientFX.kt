@@ -2,6 +2,7 @@ package chylex.hee.network.client
 import chylex.hee.game.block.BlockDragonEggOverride
 import chylex.hee.game.block.entity.TileEntityTablePedestal
 import chylex.hee.game.entity.item.EntityFallingObsidian
+import chylex.hee.game.entity.item.EntityItemIgneousRock
 import chylex.hee.game.fx.IFxData
 import chylex.hee.game.fx.IFxHandler
 import chylex.hee.game.item.ItemCompost
@@ -28,7 +29,9 @@ class PacketClientFX<T : IFxData>() : BaseClientPacket(){
 			ItemScorchingTool.FX_BLOCK_BREAK,
 			ItemScorchingTool.FX_ENTITY_HIT,
 			ItemTableLink.FX_USE,
-			EntityFallingObsidian.FX_FALL
+			EntityFallingObsidian.FX_FALL,
+			EntityItemIgneousRock.FX_BLOCK_SMELT,
+			EntityItemIgneousRock.FX_ENTITY_BURN
 		)
 	}
 	
