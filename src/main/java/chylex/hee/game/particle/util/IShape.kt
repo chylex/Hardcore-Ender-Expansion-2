@@ -26,6 +26,9 @@ interface IShape{
 		constructor(startPoint: Vec3d, endPoint: Vec3d, distanceBetweenPoints: Double) : this(startPoint, endPoint, (startPoint.distanceTo(endPoint) / distanceBetweenPoints).ceilToInt())
 		constructor(startPos: BlockPos, endPos: BlockPos, distanceBetweenPoints: Double) : this(startPos.center, endPos.center, distanceBetweenPoints)
 		
-		override val points: Collection<Vec3d> = (0 until points).map { startPoint.offsetTowards(endPoint, it.toDouble() / (points - 1)) }
+		override val points: Collection<Vec3d> = if (points == 1)
+			listOf(startPoint)
+		else
+			(0 until points).map { startPoint.offsetTowards(endPoint, it.toDouble() / (points - 1)) }
 	}
 }
