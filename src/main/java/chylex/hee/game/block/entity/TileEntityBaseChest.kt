@@ -31,6 +31,9 @@ abstract class TileEntityBaseChest : TileEntityBase(), ITickable, IWorldNameable
 	val facing: EnumFacing
 		get() = world?.let { pos.getState(it).getValue(FACING) } ?: UP
 	
+	val isLidClosed: Boolean
+		get() = viewerCount == 0
+	
 	val lidAngle = LerpedFloat(0F)
 	
 	protected abstract val defaultName: String

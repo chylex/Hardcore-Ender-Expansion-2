@@ -1,5 +1,6 @@
 package chylex.hee.game.block
 import chylex.hee.game.block.entity.TileEntityBaseChest
+import chylex.hee.game.entity.living.ai.AIOcelotSitOverride.IOcelotCanSitOn
 import chylex.hee.init.ModGuiHandler.GuiType
 import chylex.hee.system.util.getState
 import chylex.hee.system.util.getTile
@@ -28,7 +29,7 @@ import net.minecraft.util.math.BlockPos
 import net.minecraft.world.IBlockAccess
 import net.minecraft.world.World
 
-abstract class BlockAbstractChest<T : TileEntityBaseChest>(builder: BlockSimple.Builder) : BlockSimple(builder), ITileEntityProvider{
+abstract class BlockAbstractChest<T : TileEntityBaseChest>(builder: BlockSimple.Builder) : BlockSimple(builder), ITileEntityProvider, IOcelotCanSitOn{
 	private companion object{
 		private val AABB = AxisAlignedBB(0.0625, 0.0, 0.0625, 0.9375, 0.875, 0.9375)
 	}
@@ -70,7 +71,7 @@ abstract class BlockAbstractChest<T : TileEntityBaseChest>(builder: BlockSimple.
 		}
 		
 		if (world.selectExistingEntities.inBox<EntityOcelot>(AxisAlignedBB(posAbove)).any { it.isSitting }){
-			return true // TODO should maybe figure out how to make Ocelots automatically sit on custom chests (EntityAIOcelotSit)
+			return true
 		}
 		
 		pos.getTile<TileEntityBaseChest>(world)?.let {
@@ -78,6 +79,12 @@ abstract class BlockAbstractChest<T : TileEntityBaseChest>(builder: BlockSimple.
 		}
 		
 		return true
+	}
+	
+	// Ocelot behavior
+	
+	override fun canOcelotSitOn(world: World, pos: BlockPos): Boolean{
+		return pos.getTile<TileEntityBaseChest>(world)?.isLidClosed == true
 	}
 	
 	// State handling
