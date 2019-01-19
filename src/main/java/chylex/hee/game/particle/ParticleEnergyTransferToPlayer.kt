@@ -7,9 +7,7 @@ import chylex.hee.game.particle.spawner.factory.IParticleData
 import chylex.hee.game.particle.spawner.factory.IParticleMaker
 import chylex.hee.system.util.floorToInt
 import chylex.hee.system.util.lookPosVec
-import net.minecraft.client.Minecraft
 import net.minecraft.client.particle.Particle
-import net.minecraft.client.settings.GameSettings
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.util.EnumHand.MAIN_HAND
 import net.minecraft.util.EnumHandSide.RIGHT
@@ -45,9 +43,6 @@ object ParticleEnergyTransferToPlayer : IParticleMaker{
 	
 	@SideOnly(Side.CLIENT)
 	class Instance(world: World, posX: Double, posY: Double, posZ: Double, unsafeData: IntArray) : ParticleBaseEnergyTransfer(world, posX, posY, posZ){
-		private val settings: GameSettings
-			get() = Minecraft.getMinecraft().gameSettings
-		
 		override val targetPos: Vec3d
 			get() = newTargetPos
 		

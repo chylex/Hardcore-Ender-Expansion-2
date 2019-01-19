@@ -12,7 +12,6 @@ import chylex.hee.system.util.Pos
 import chylex.hee.system.util.floorToInt
 import chylex.hee.system.util.getBlock
 import chylex.hee.system.util.square
-import net.minecraft.client.Minecraft
 import net.minecraft.client.particle.Particle
 import net.minecraft.world.World
 import net.minecraftforge.fml.relauncher.Side
@@ -72,7 +71,7 @@ object ParticleEnergyCluster : IParticleMaker{
 	private class Instance(world: World, posX: Double, posY: Double, posZ: Double, motX: Double, motY: Double, motZ: Double, unsafeData: IntArray) : ParticleBaseEnergy(world, posX, posY, posZ, motX, motY, motZ){
 		private val clusterPos = Pos(posX, posY, posZ)
 		
-		private val alphaMultiplier = when(ParticleSetting.get(Minecraft.getMinecraft().gameSettings)){
+		private val alphaMultiplier = when(ParticleSetting.get(settings)){
 			ALL       -> 0.32F
 			DECREASED -> 0.46F
 			MINIMAL   -> 0.58F
@@ -84,15 +83,10 @@ object ParticleEnergyCluster : IParticleMaker{
 				particleMaxAge = 0
 			}
 			else{
-				val color = unsafeData[0]
-				val scale = unsafeData[1]
-				
-				particleRed = ((color shr 16) and 255) / 255F
-				particleGreen = ((color shr 8) and 255) / 255F
-				particleBlue = (color and 255) / 255F
+				loadColor(unsafeData[0])
 				particleAlpha = 0F
 				
-				particleScale = scale * 0.01F
+				particleScale = unsafeData[1] * 0.01F
 				
 				particleMaxAge = TOTAL_LIFESPAN
 				

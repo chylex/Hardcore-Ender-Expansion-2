@@ -22,11 +22,7 @@ object ParticleFlameCustom : IParticleMaker{
 	private val DEFAULT_DATA = Data()
 	
 	@SideOnly(Side.CLIENT)
-	private class Instance(
-		world: World, posX: Double, posY: Double, posZ: Double, motX: Double, motY: Double, motZ: Double, unsafeData: IntArray
-	) : ParticleFlame(
-		world, posX, posY, posZ, motX, motY, motZ
-	){
+	private class Instance(world: World, posX: Double, posY: Double, posZ: Double, motX: Double, motY: Double, motZ: Double, unsafeData: IntArray) : ParticleFlame(world, posX, posY, posZ, motX, motY, motZ){
 		init{
 			particleMaxAge = DEFAULT_DATA.validate(unsafeData)[0]
 		}

@@ -38,7 +38,6 @@ abstract class ParticleBaseEnergy(world: World, posX: Double, posY: Double, posZ
 			override fun getMaxV(): Float = 1F
 		}
 		
-		private val mc = Minecraft.getMinecraft()
 		private var lastInterpolationFixTime = 0L
 		
 		private val COLOR_GRAY = adjustColorComponents(RGB(60u))

@@ -12,25 +12,14 @@ abstract class ParticleBaseEnergyTransfer(world: World, posX: Double, posY: Doub
 		particleMaxAge = 200
 	}
 	
-	protected fun loadColor(color: Int){
-		particleRed = ((color shr 16) and 255) / 255F
-		particleGreen = ((color shr 8) and 255) / 255F
-		particleBlue = (color and 255) / 255F
-	}
-	
 	protected fun setupMotion(speed: Double){
-		val motion = targetPos.subtract(posX, posY, posZ).normalize().scale(speed)
-		motionX = motion.x
-		motionY = motion.y
-		motionZ = motion.z
+		motionVec = targetPos.subtract(posX, posY, posZ).normalize().scale(speed)
 	}
 	
 	override fun onUpdate(){
-		val prevMotX = motionX
-		val prevMotY = motionY
-		val prevMotZ = motionZ
+		val prevMot = motionVec
 		
-		if (targetPos.squareDistanceTo(posX, posY, posZ) <= Vec3d(motionX, motionY, motionZ).lengthSquared()){
+		if (targetPos.squareDistanceTo(posX, posY, posZ) <= prevMot.lengthSquared()){
 			setExpired()
 		}
 		
@@ -47,9 +36,7 @@ abstract class ParticleBaseEnergyTransfer(world: World, posX: Double, posY: Doub
 			setExpired()
 		}
 		else{
-			motionX = prevMotX
-			motionY = prevMotY
-			motionZ = prevMotZ
+			motionVec = prevMot
 		}
 	}
 }

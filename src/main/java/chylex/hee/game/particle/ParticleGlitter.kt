@@ -34,14 +34,11 @@ object ParticleGlitter : IParticleMaker{
 	private class Instance(world: World, posX: Double, posY: Double, posZ: Double, motX: Double, motY: Double, motZ: Double, unsafeData: IntArray) : ParticleBaseFloating(world, posX, posY, posZ, motX, motY, motZ){
 		init{
 			val data = DEFAULT_DATA.validate(unsafeData)
-			val color = data[0]
 			
 			particleTextureIndexX = rand.nextInt(1, 4)
 			particleTextureIndexY = 0
 			
-			particleRed = ((color shr 16) and 255) / 255F
-			particleGreen = ((color shr 8) and 255) / 255F
-			particleBlue = (color and 255) / 255F
+			loadColor(data[0])
 			particleAlpha = rand.nextFloat(0.1F, 1F)
 			
 			particleScale = rand.nextFloat(0.35F, 0.5F)
