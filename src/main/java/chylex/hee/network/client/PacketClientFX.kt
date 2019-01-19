@@ -5,6 +5,7 @@ import chylex.hee.game.entity.item.EntityFallingObsidian
 import chylex.hee.game.entity.item.EntityItemIgneousRock
 import chylex.hee.game.fx.IFxData
 import chylex.hee.game.fx.IFxHandler
+import chylex.hee.game.item.ItemAbstractEnergyUser
 import chylex.hee.game.item.ItemCompost
 import chylex.hee.game.item.ItemScorchingTool
 import chylex.hee.game.item.ItemTableLink
@@ -25,6 +26,7 @@ class PacketClientFX<T : IFxData>() : BaseClientPacket(){
 			Teleporter.FX_TELEPORT,
 			BlockDragonEggOverride.FX_BREAK,
 			TileEntityTablePedestal.FX_ITEM_UPDATE,
+			ItemAbstractEnergyUser.FX_CHARGE,
 			ItemCompost.FX_USE,
 			ItemScorchingTool.FX_BLOCK_BREAK,
 			ItemScorchingTool.FX_ENTITY_HIT,

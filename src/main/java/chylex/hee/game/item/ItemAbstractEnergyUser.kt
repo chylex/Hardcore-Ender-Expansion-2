@@ -1,7 +1,15 @@
 package chylex.hee.game.item
 import chylex.hee.game.block.entity.TileEntityEnergyCluster
+import chylex.hee.game.fx.IFxData
+import chylex.hee.game.fx.IFxHandler
 import chylex.hee.game.mechanics.energy.IEnergyQuantity
 import chylex.hee.game.mechanics.energy.IEnergyQuantity.Units
+import chylex.hee.game.particle.ParticleEnergyTransferToPlayer
+import chylex.hee.game.particle.ParticleEnergyTransferToPlayer.Data
+import chylex.hee.game.particle.spawner.ParticleSpawnerCustom
+import chylex.hee.game.particle.util.IOffset.InBox
+import chylex.hee.game.particle.util.IShape.Point
+import chylex.hee.network.client.PacketClientFX
 import chylex.hee.system.util.ceilToInt
 import chylex.hee.system.util.distanceTo
 import chylex.hee.system.util.floorToInt
@@ -9,7 +17,11 @@ import chylex.hee.system.util.getPos
 import chylex.hee.system.util.getTile
 import chylex.hee.system.util.heeTag
 import chylex.hee.system.util.heeTagOrNull
+import chylex.hee.system.util.readPos
 import chylex.hee.system.util.setPos
+import chylex.hee.system.util.use
+import chylex.hee.system.util.writePos
+import io.netty.buffer.ByteBuf
 import net.minecraft.client.util.ITooltipFlag
 import net.minecraft.entity.Entity
 import net.minecraft.entity.player.EntityPlayer
@@ -29,20 +41,12 @@ import net.minecraft.world.World
 import net.minecraftforge.fml.relauncher.Side
 import net.minecraftforge.fml.relauncher.SideOnly
 import org.apache.commons.lang3.math.Fraction
+import java.util.Random
 import kotlin.math.max
 import kotlin.math.pow
 
 abstract class ItemAbstractEnergyUser : Item(){
-	init{
-		maxStackSize = 1
-	}
-	
-	protected abstract fun getEnergyCapacity(stack: ItemStack): Units
-	protected abstract fun getEnergyPerUse(stack: ItemStack): Fraction
-	
-	// Energy storage
-	
-	private companion object{
+	companion object{
 		private const val ENERGY_LEVEL_TAG = "EnergyLevel"
 		
 		private const val CLUSTER_POS_TAG = "ClusterPos"
@@ -52,7 +56,40 @@ abstract class ItemAbstractEnergyUser : Item(){
 			nbt.removeTag(CLUSTER_POS_TAG)
 			nbt.removeTag(CLUSTER_TICK_OFFSET_TAG)
 		}
+		
+		class FxChargeData(private val cluster: TileEntityEnergyCluster, private val player: EntityPlayer) : IFxData{
+			override fun write(buffer: ByteBuf) = buffer.use {
+				writePos(cluster.pos)
+				writeInt(player.entityId)
+			}
+		}
+		
+		@JvmStatic
+		val FX_CHARGE = object : IFxHandler<FxChargeData>{
+			override fun handle(buffer: ByteBuf, world: World, rand: Random) = buffer.use {
+				val cluster = readPos().getTile<TileEntityEnergyCluster>(world) ?: return
+				val player = world.getEntityByID(readInt()) as? EntityPlayer ?: return
+				
+				ParticleSpawnerCustom(
+					type = ParticleEnergyTransferToPlayer,
+					data = Data(cluster, player, 0.2),
+					pos = InBox(0.01F + (0.08F * (cluster.energyLevel.floating.value / 40F).coerceAtMost(1F))),
+					maxRange = 32.0
+				).spawn(Point(cluster.pos, 1), rand)
+				
+				// TODO sound
+			}
+		}
 	}
+	
+	init{
+		maxStackSize = 1
+	}
+	
+	protected abstract fun getEnergyCapacity(stack: ItemStack): Units
+	protected abstract fun getEnergyPerUse(stack: ItemStack): Fraction
+	
+	// Energy storage
 	
 	private fun calculateInternalEnergyCapacity(stack: ItemStack): Int{
 		return getEnergyCapacity(stack).value * getEnergyPerUse(stack).denominator
@@ -137,7 +174,7 @@ abstract class ItemAbstractEnergyUser : Item(){
 					tile.drainEnergy(Units(1))
 				){
 					chargeEnergyUnit(stack)
-					// TODO particles
+					PacketClientFX(FX_CHARGE, FxChargeData(tile, entity)).sendToAllAround(tile, 32.0)
 				}
 				else{
 					removeClusterTags(this)
