@@ -1,11 +1,5 @@
 package chylex.hee.game.particle
 import chylex.hee.game.block.entity.TileEntityEnergyCluster
-import chylex.hee.game.mechanics.energy.IClusterHealth.HealthOverride.POWERED
-import chylex.hee.game.mechanics.energy.IClusterHealth.HealthOverride.REVITALIZING
-import chylex.hee.game.mechanics.energy.IClusterHealth.HealthStatus.DAMAGED
-import chylex.hee.game.mechanics.energy.IClusterHealth.HealthStatus.TIRED
-import chylex.hee.game.mechanics.energy.IClusterHealth.HealthStatus.UNSTABLE
-import chylex.hee.game.mechanics.energy.IClusterHealth.HealthStatus.WEAKENED
 import chylex.hee.game.particle.base.ParticleBaseEnergy
 import chylex.hee.game.particle.spawner.factory.IParticleData
 import chylex.hee.game.particle.spawner.factory.IParticleMaker
@@ -13,8 +7,6 @@ import chylex.hee.game.particle.util.ParticleSetting
 import chylex.hee.game.particle.util.ParticleSetting.ALL
 import chylex.hee.game.particle.util.ParticleSetting.DECREASED
 import chylex.hee.game.particle.util.ParticleSetting.MINIMAL
-import chylex.hee.game.render.util.IColor
-import chylex.hee.game.render.util.RGB
 import chylex.hee.init.ModBlocks
 import chylex.hee.system.util.Pos
 import chylex.hee.system.util.floorToInt
@@ -25,6 +17,7 @@ import net.minecraft.client.particle.Particle
 import net.minecraft.world.World
 import net.minecraftforge.fml.relauncher.Side
 import net.minecraftforge.fml.relauncher.SideOnly
+import org.apache.commons.lang3.ArrayUtils.EMPTY_INT_ARRAY
 import java.util.Random
 
 object ParticleEnergyCluster : IParticleMaker{
@@ -35,51 +28,13 @@ object ParticleEnergyCluster : IParticleMaker{
 	
 	// Particle data
 	
-	class Data(cluster: TileEntityEnergyCluster) : IParticleData{
-		private companion object{
-			private val COLOR_GRAY = adjustColorComponents(RGB(60u))
-			
-			private fun adjustColorComponents(color: IColor): Int{
-				val rgb = color.toRGB()
-				return(rgb.red.coerceIn(64, 224) shl 16) or (rgb.green.coerceIn(64, 224) shl 8) or rgb.blue.coerceIn(64, 224)
-			}
-		}
-		
-		private val level = cluster.energyLevel.floating.value
-		private val capacity = cluster.energyBaseCapacity.floating.value
-		private val health = cluster.currentHealth
-		
-		private val colorPrimary = adjustColorComponents(cluster.color.primary(100F, 42F))
-		private val colorSecondary = adjustColorComponents(cluster.color.secondary(90F, 42F))
-		
+	class Data(private val cluster: TileEntityEnergyCluster) : IParticleData{
 		override fun generate(rand: Random): IntArray{
-			val useSecondaryHue = when(health){
-				REVITALIZING, UNSTABLE -> true
-				POWERED                -> rand.nextBoolean()
-				else                   -> rand.nextInt(4) == 0
-			}
-			
-			val turnGray = useSecondaryHue && when(health){
-				WEAKENED          -> rand.nextInt(100) < 25
-				TIRED             -> rand.nextInt(100) < 75
-				DAMAGED, UNSTABLE -> true
-				else              -> false
-			}
-			
-			val finalColor = when{
-				turnGray        -> COLOR_GRAY
-				useSecondaryHue -> colorSecondary
-				else            -> colorPrimary
-			}
-			
-			val finalScale = when(useSecondaryHue){
-				true  -> (0.6F + (capacity * 0.07F) + (level * 0.008F)) * (if (health == POWERED) 1.6F else 1F)
-				false ->  0.5F + (capacity * 0.03F) + (level * 0.06F)
-			}
+			val data = cluster.particleDataGenerator?.next(rand) ?: return EMPTY_INT_ARRAY
 			
 			return intArrayOf(
-				finalColor,
-				(finalScale * 100F).floorToInt()
+				data.color,
+				(data.scale * 100F).floorToInt()
 			)
 		}
 	}

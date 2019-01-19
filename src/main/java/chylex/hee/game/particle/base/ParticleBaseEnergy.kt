@@ -1,5 +1,14 @@
 package chylex.hee.game.particle.base
+import chylex.hee.game.block.entity.TileEntityEnergyCluster
+import chylex.hee.game.mechanics.energy.IClusterHealth.HealthOverride.POWERED
+import chylex.hee.game.mechanics.energy.IClusterHealth.HealthOverride.REVITALIZING
+import chylex.hee.game.mechanics.energy.IClusterHealth.HealthStatus.DAMAGED
+import chylex.hee.game.mechanics.energy.IClusterHealth.HealthStatus.TIRED
+import chylex.hee.game.mechanics.energy.IClusterHealth.HealthStatus.UNSTABLE
+import chylex.hee.game.mechanics.energy.IClusterHealth.HealthStatus.WEAKENED
 import chylex.hee.game.render.util.GL
+import chylex.hee.game.render.util.IColor
+import chylex.hee.game.render.util.RGB
 import chylex.hee.system.Resource
 import net.minecraft.client.Minecraft
 import net.minecraft.client.particle.Particle
@@ -14,6 +23,7 @@ import net.minecraft.world.World
 import net.minecraftforge.fml.relauncher.Side
 import net.minecraftforge.fml.relauncher.SideOnly
 import org.lwjgl.opengl.GL11.GL_QUADS
+import java.util.Random
 
 @SideOnly(Side.CLIENT)
 abstract class ParticleBaseEnergy(world: World, posX: Double, posY: Double, posZ: Double, motX: Double, motY: Double, motZ: Double) : ParticleBaseFloating(world, posX, posY, posZ, motX, motY, motZ){
@@ -30,6 +40,52 @@ abstract class ParticleBaseEnergy(world: World, posX: Double, posY: Double, posZ
 		
 		private val mc = Minecraft.getMinecraft()
 		private var lastInterpolationFixTime = 0L
+		
+		private val COLOR_GRAY = adjustColorComponents(RGB(60u))
+		
+		private fun adjustColorComponents(color: IColor): Int{
+			val rgb = color.toRGB()
+			return(rgb.red.coerceIn(64, 224) shl 16) or (rgb.green.coerceIn(64, 224) shl 8) or rgb.blue.coerceIn(64, 224)
+		}
+	}
+	
+	data class ClusterParticleData(val color: Int, val scale: Float)
+	
+	class ClusterParticleDataGenerator(cluster: TileEntityEnergyCluster){
+		private val level = cluster.energyLevel.floating.value
+		private val capacity = cluster.energyBaseCapacity.floating.value
+		private val health = cluster.currentHealth
+		
+		private val colorPrimary = adjustColorComponents(cluster.color.primary(100F, 42F))
+		private val colorSecondary = adjustColorComponents(cluster.color.secondary(90F, 42F))
+		
+		fun next(rand: Random): ClusterParticleData{
+			val useSecondaryHue = when(health){
+				REVITALIZING, UNSTABLE -> true
+				POWERED                -> rand.nextBoolean()
+				else                   -> rand.nextInt(4) == 0
+			}
+			
+			val turnGray = useSecondaryHue && when(health){
+				WEAKENED          -> rand.nextInt(100) < 25
+				TIRED             -> rand.nextInt(100) < 75
+				DAMAGED, UNSTABLE -> true
+				else              -> false
+			}
+			
+			val finalColor = when{
+				turnGray        -> COLOR_GRAY
+				useSecondaryHue -> colorSecondary
+				else            -> colorPrimary
+			}
+			
+			val finalScale = when(useSecondaryHue){
+				true  -> (0.6F + (capacity * 0.07F) + (level * 0.008F)) * (if (health == POWERED) 1.6F else 1F)
+				false ->  0.5F + (capacity * 0.03F) + (level * 0.06F)
+			}
+			
+			return ClusterParticleData(color = finalColor, scale = finalScale)
+		}
 	}
 	
 	init{

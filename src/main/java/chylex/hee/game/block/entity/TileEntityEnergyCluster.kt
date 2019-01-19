@@ -18,6 +18,7 @@ import chylex.hee.game.mechanics.energy.IEnergyQuantity.Internal
 import chylex.hee.game.mechanics.energy.IEnergyQuantity.Units
 import chylex.hee.game.mechanics.energy.ProximityHandler
 import chylex.hee.game.particle.ParticleEnergyCluster
+import chylex.hee.game.particle.base.ParticleBaseEnergy.ClusterParticleDataGenerator
 import chylex.hee.game.particle.spawner.IParticleSpawner
 import chylex.hee.game.particle.spawner.ParticleSpawnerCustom
 import chylex.hee.game.particle.util.IOffset.InBox
@@ -85,7 +86,7 @@ class TileEntityEnergyCluster : TileEntityBase(), ITickable{
 	val wasUsedRecently: Boolean
 		get() = world.totalWorldTime - lastUseTick < 20L
 	
-	// Variables
+	// Fields
 	
 	private var ticksToRegen = 20
 	private var lastUseTick = 0L
@@ -95,6 +96,9 @@ class TileEntityEnergyCluster : TileEntityBase(), ITickable{
 	
 	private var particle: Pair<IParticleSpawner, IShape>? = null
 	private val particleSkipTest = ParticleEnergyCluster.newCountingSkipTest()
+	
+	var particleDataGenerator: ClusterParticleDataGenerator? = null
+		private set
 	
 	var breakWithoutExplosion = false
 	
@@ -260,6 +264,8 @@ class TileEntityEnergyCluster : TileEntityBase(), ITickable{
 			}
 		}
 		else if (context == NETWORK){
+			particleDataGenerator = ClusterParticleDataGenerator(this@TileEntityEnergyCluster)
+			
 			val particleSpawner = ParticleSpawnerCustom(
 				type = ParticleEnergyCluster,
 				data = ParticleEnergyCluster.Data(this@TileEntityEnergyCluster),
