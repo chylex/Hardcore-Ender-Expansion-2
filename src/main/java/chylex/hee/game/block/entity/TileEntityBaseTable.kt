@@ -122,7 +122,13 @@ abstract class TileEntityBaseTable<T : ITableProcess> : TileEntityBase(), ITicka
 	}
 	
 	fun tryUnlinkPedestal(pedestal: TileEntityTablePedestal, dropTableLink: Boolean): Boolean{
-		return pedestalHandler.tryUnlinkPedestal(pedestal, dropTableLink)
+		if (pedestalHandler.tryUnlinkPedestal(pedestal, dropTableLink)){
+			val removedPos = pedestal.pos
+			currentProcesses.remove { it.pedestals.contains(removedPos) }
+			return true
+		}
+		
+		return false
 	}
 	
 	fun tryMarkInputPedestalAsOutput(pedestal: TileEntityTablePedestal): Boolean{
