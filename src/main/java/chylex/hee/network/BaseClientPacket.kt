@@ -43,19 +43,19 @@ abstract class BaseClientPacket : IPacket{
 		ModNetwork.sendToAllAround(this, TargetPoint(dimension, x, y, z, range))
 	}
 	
-	inline fun sendToAllAround(world: World, vec: Vec3d, range: Double){
+	fun sendToAllAround(world: World, vec: Vec3d, range: Double){
 		this.sendToAllAround(vec.x, vec.y, vec.z, world.provider.dimension, range)
 	}
 	
-	inline fun sendToAllAround(world: World, pos: BlockPos, range: Double){
+	fun sendToAllAround(world: World, pos: BlockPos, range: Double){
 		this.sendToAllAround(pos.x + 0.5, pos.y + 0.5, pos.z + 0.5, world.provider.dimension, range)
 	}
 	
-	inline fun sendToAllAround(entity: Entity, range: Double){
+	fun sendToAllAround(entity: Entity, range: Double){
 		this.sendToAllAround(entity.posX, entity.posY, entity.posZ, entity.dimension, range)
 	}
 	
-	inline fun sendToAllAround(tile: TileEntity, range: Double){
+	fun sendToAllAround(tile: TileEntity, range: Double){
 		this.sendToAllAround(tile.world, tile.pos, range)
 	}
 }

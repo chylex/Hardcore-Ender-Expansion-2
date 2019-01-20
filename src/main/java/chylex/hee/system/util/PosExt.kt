@@ -61,7 +61,7 @@ inline fun <reified T : TileEntity> BlockPos.getTile(world: IBlockAccess): T?{
 	return world.getTileEntity(this) as? T
 }
 
-fun BlockPos.isLoaded(world: World): Boolean{
+inline fun BlockPos.isLoaded(world: World): Boolean{
 	return world.isBlockLoaded(this)
 }
 

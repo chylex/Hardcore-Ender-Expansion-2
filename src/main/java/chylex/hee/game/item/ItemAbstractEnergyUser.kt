@@ -73,8 +73,7 @@ abstract class ItemAbstractEnergyUser : Item(){
 				ParticleSpawnerCustom(
 					type = ParticleEnergyTransferToPlayer,
 					data = Data(cluster, player, 0.2),
-					pos = InBox(0.01F + (0.08F * (cluster.energyLevel.floating.value / 40F).coerceAtMost(1F))),
-					maxRange = 32.0
+					pos = InBox(0.01F + (0.08F * (cluster.energyLevel.floating.value / 40F).coerceAtMost(1F)))
 				).spawn(Point(cluster.pos, 1), rand)
 				
 				// TODO sound
