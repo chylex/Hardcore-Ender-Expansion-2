@@ -14,6 +14,7 @@ interface ITableProcess : INBTSerializable<NBTTagCompound>{
 	fun initialize()
 	fun revalidate(): Boolean
 	fun tick(context: ITableContext)
+	fun dispose()
 	
 	companion object{
 		val NO_DUST = Fraction.ZERO!!

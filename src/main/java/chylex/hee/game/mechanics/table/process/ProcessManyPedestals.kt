@@ -63,7 +63,6 @@ abstract class ProcessManyPedestals(private val world: World, pos: Array<BlockPo
 		val newInputs = Array(tiles.size){ tiles[it].itemInputCopy }
 		
 		if (newInputs.any { it.isEmpty } || !isInputStillValid(lastInputStacks, newInputs)){
-			setStatusIndicator(tiles, null)
 			return false
 		}
 		
@@ -117,10 +116,13 @@ abstract class ProcessManyPedestals(private val world: World, pos: Array<BlockPo
 			}
 			
 			Cancel -> {
-				setStatusIndicator(tiles, null)
 				context.markProcessFinished()
 			}
 		}
+	}
+	
+	override fun dispose(){
+		pedestals.indices.forEach { getTile(it)?.updateProcessStatus(null) }
 	}
 	
 	// State

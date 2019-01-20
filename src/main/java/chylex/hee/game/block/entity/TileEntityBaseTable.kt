@@ -5,11 +5,11 @@ import chylex.hee.game.block.entity.TileEntityBase.Context.STORAGE
 import chylex.hee.game.mechanics.table.TableEnergyClusterHandler
 import chylex.hee.game.mechanics.table.TableLinkedPedestalHandler
 import chylex.hee.game.mechanics.table.TableParticleHandler
+import chylex.hee.game.mechanics.table.TableProcessList
 import chylex.hee.game.mechanics.table.process.ITableContext
 import chylex.hee.game.mechanics.table.process.ITableProcess
 import chylex.hee.game.mechanics.table.process.ITableProcessSerializer
 import chylex.hee.system.util.NBTList.Companion.setList
-import chylex.hee.system.util.NBTObjectList
 import chylex.hee.system.util.delegate.NotifyOnChange
 import chylex.hee.system.util.getListOfCompounds
 import chylex.hee.system.util.getState
@@ -36,7 +36,7 @@ abstract class TileEntityBaseTable<T : ITableProcess> : TileEntityBase(), ITicka
 	private var tickCounterRefresh = 0
 	private var tickCounterProcessing = 0
 	
-	private val currentProcesses = ArrayList<T>(4)
+	private val currentProcesses = TableProcessList<T>()
 	
 	@Suppress("LeakingThis")
 	private val pedestalHandler = TableLinkedPedestalHandler(this, MAX_PEDESTAL_DISTANCE)
@@ -85,30 +85,23 @@ abstract class TileEntityBaseTable<T : ITableProcess> : TileEntityBase(), ITicka
 			
 			if (unassignedPedestals.isNotEmpty()){
 				tickCounterProcessing = 0
-				
-				for(newProcess in createNewProcesses(unassignedPedestals)){
-					currentProcesses.add(newProcess)
-					newProcess.initialize()
-				}
-				
+				currentProcesses.add(createNewProcesses(unassignedPedestals))
 				markDirty()
 			}
 		}
 		
-		if (currentProcesses.removeIf { !it.revalidate() }){
+		if (currentProcesses.remove { !it.revalidate() }){
 			markDirty()
 		}
 		
 		if (++tickCounterProcessing >= processTickRate){
 			tickCounterProcessing = 0
 			
-			if (currentProcesses.isNotEmpty()){
-				val iterator = currentProcesses.iterator()
+			if (currentProcesses.isNotEmpty){
 				val isPaused = world.getRedstonePowerFromNeighbors(pos) > 0
 				
-				while(iterator.hasNext()){
-					val process = iterator.next()
-					process.tick(createProcessingContext(process, iterator, isPaused))
+				currentProcesses.remove {
+					createProcessingContext(it, isPaused).apply(it::tick).isFinished
 				}
 				
 				markDirty()
@@ -140,7 +133,9 @@ abstract class TileEntityBaseTable<T : ITableProcess> : TileEntityBase(), ITicka
 	
 	protected abstract fun createNewProcesses(unassignedPedestals: List<TileEntityTablePedestal>): List<T>
 	
-	private fun createProcessingContext(process: ITableProcess, iterator: MutableIterator<ITableProcess>, isPaused: Boolean) = object : ITableContext{
+	private fun createProcessingContext(process: ITableProcess, isPaused: Boolean) = object : ITableContext{
+		var isFinished = false
+		
 		override val isPaused = isPaused
 		
 		override fun requestUseResources(): Boolean{
@@ -156,7 +151,7 @@ abstract class TileEntityBaseTable<T : ITableProcess> : TileEntityBase(), ITicka
 		}
 		
 		override fun markProcessFinished(){
-			iterator.remove()
+			isFinished = true
 		}
 	}
 	
@@ -170,7 +165,7 @@ abstract class TileEntityBaseTable<T : ITableProcess> : TileEntityBase(), ITicka
 		if (context == STORAGE){
 			setTag("PedestalInfo", pedestalHandler.serializeNBT())
 			setTag("ClusterInfo", clusterHandler.serializeNBT())
-			setList("Processes", NBTObjectList.of(currentProcesses.map { processSerializer.writeToNBT(it) }))
+			setList("Processes", currentProcesses.serializeToList(processSerializer))
 		}
 	}
 	
@@ -178,9 +173,7 @@ abstract class TileEntityBaseTable<T : ITableProcess> : TileEntityBase(), ITicka
 		if (context == STORAGE){
 			pedestalHandler.deserializeNBT(getCompoundTag("PedestalInfo"))
 			clusterHandler.deserializeNBT(getCompoundTag("ClusterInfo"))
-			
-			currentProcesses.clear()
-			getListOfCompounds("Processes").forEach { currentProcesses.add(processSerializer.readFromNBT(world, it)) }
+			currentProcesses.deserializeFromList(world, getListOfCompounds("Processes"), processSerializer)
 		}
 	}
 }
