@@ -32,6 +32,7 @@ class TableEnergyClusterHandler(private val table: TileEntityBaseTable<*>, maxDi
 		}
 		
 		currentCluster = cluster.pos
+		table.particleHandler.onClusterDrained(cluster.pos)
 		return true
 	}
 	

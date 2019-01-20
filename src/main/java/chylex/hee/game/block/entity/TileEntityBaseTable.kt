@@ -4,6 +4,7 @@ import chylex.hee.game.block.BlockAbstractTable.Companion.TIER
 import chylex.hee.game.block.entity.TileEntityBase.Context.STORAGE
 import chylex.hee.game.mechanics.table.TableEnergyClusterHandler
 import chylex.hee.game.mechanics.table.TableLinkedPedestalHandler
+import chylex.hee.game.mechanics.table.TableParticleHandler
 import chylex.hee.game.mechanics.table.process.ITableContext
 import chylex.hee.game.mechanics.table.process.ITableProcess
 import chylex.hee.game.mechanics.table.process.ITableProcessSerializer
@@ -42,6 +43,9 @@ abstract class TileEntityBaseTable<T : ITableProcess> : TileEntityBase(), ITicka
 	
 	@Suppress("LeakingThis")
 	private val clusterHandler = TableEnergyClusterHandler(this, MAX_CLUSTER_DISTANCE)
+	
+	@Suppress("LeakingThis")
+	val particleHandler = TableParticleHandler(this)
 	
 	// Utilities
 	
@@ -110,6 +114,8 @@ abstract class TileEntityBaseTable<T : ITableProcess> : TileEntityBase(), ITicka
 				markDirty()
 			}
 		}
+		
+		particleHandler.tick(processTickRate)
 	}
 	
 	fun onTableDestroyed(dropTableLink: Boolean){
@@ -143,6 +149,10 @@ abstract class TileEntityBaseTable<T : ITableProcess> : TileEntityBase(), ITicka
 		
 		override fun getOutputPedestal(candidate: TileEntityTablePedestal): TileEntityTablePedestal{
 			return pedestalHandler.dedicatedOutputPedestalTile ?: candidate
+		}
+		
+		override fun triggerTickParticle(){
+			particleHandler.onPedestalsTicked(process.pedestals)
 		}
 		
 		override fun markProcessFinished(){

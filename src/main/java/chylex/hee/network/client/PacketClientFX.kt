@@ -9,6 +9,7 @@ import chylex.hee.game.item.ItemAbstractEnergyUser
 import chylex.hee.game.item.ItemCompost
 import chylex.hee.game.item.ItemScorchingTool
 import chylex.hee.game.item.ItemTableLink
+import chylex.hee.game.mechanics.table.TableParticleHandler
 import chylex.hee.game.world.util.Teleporter
 import chylex.hee.network.BaseClientPacket
 import chylex.hee.system.Debug
@@ -24,6 +25,8 @@ class PacketClientFX<T : IFxData>() : BaseClientPacket(){
 		
 		private val HANDLERS = arrayOf(
 			Teleporter.FX_TELEPORT,
+			TableParticleHandler.FX_PROCESS_PEDESTALS,
+			TableParticleHandler.FX_DRAIN_CLUSTER,
 			BlockDragonEggOverride.FX_BREAK,
 			TileEntityTablePedestal.FX_ITEM_UPDATE,
 			ItemAbstractEnergyUser.FX_CHARGE,

@@ -62,6 +62,8 @@ class BlockTablePedestal(builder: BlockSimple.Builder) : BlockSimpleShaped(build
 			)
 		)
 		
+		const val PARTICLE_TARGET_Y = BOTTOM_SLAB_TOP_Y + (MIDDLE_PILLAR_TOP_Y - BOTTOM_SLAB_TOP_Y) * 0.5
+		
 		val COMBINED_BOX = max(BOTTOM_SLAB_HALF_WIDTH, TOP_SLAB_HALF_WIDTH).let {
 			AxisAlignedBB(0.5, 0.0, 0.5, 0.5, TOP_SLAB_TOP_Y, 0.5).grow(it, 0.0, it)!!
 		}
