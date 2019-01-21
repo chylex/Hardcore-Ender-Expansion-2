@@ -29,8 +29,10 @@ class TableProcessList<T : ITableProcess> : Iterable<T>{
 		var removedAny = false
 		
 		for(index in currentProcesses.indices.reversed()){
-			if (predicate(currentProcesses[index])){
-				currentProcesses.removeAt(index)
+			val process = currentProcesses[index]
+			
+			if (predicate(process)){
+				remove(process)
 				removedAny = true
 			}
 		}
