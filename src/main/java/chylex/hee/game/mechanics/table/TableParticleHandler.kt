@@ -25,7 +25,7 @@ import net.minecraft.util.math.BlockPos
 import net.minecraft.world.World
 import java.util.Random
 
-class TableParticleHandler(private val table: TileEntityBaseTable<*>){
+class TableParticleHandler(private val table: TileEntityBaseTable){
 	companion object{
 		private fun getParticleRate(processTickRate: Int): Int{
 			val defaultRate = processTickRate * 2
@@ -41,7 +41,7 @@ class TableParticleHandler(private val table: TileEntityBaseTable<*>){
 		private val PARTICLE_CLUSTER_POS = InSphere(0.05F)
 		private val PARTICLE_CLUSTER_MOT = InBox(0.004F)
 		
-		class FxProcessPedestalsData(private val table: TileEntityBaseTable<*>, private val targetPositions: List<BlockPos>, private val travelTime: Int) : IFxData{
+		class FxProcessPedestalsData(private val table: TileEntityBaseTable, private val targetPositions: List<BlockPos>, private val travelTime: Int) : IFxData{
 			override fun write(buffer: ByteBuf) = buffer.use {
 				writePos(table.pos)
 				writeByte(travelTime)
@@ -56,7 +56,7 @@ class TableParticleHandler(private val table: TileEntityBaseTable<*>){
 		@JvmStatic
 		val FX_PROCESS_PEDESTALS = object : IFxHandler<FxProcessPedestalsData>{
 			override fun handle(buffer: ByteBuf, world: World, rand: Random) = buffer.use {
-				val table = readPos().getTile<TileEntityBaseTable<*>>(world) ?: return
+				val table = readPos().getTile<TileEntityBaseTable>(world) ?: return
 				val travelTime = readByte().toInt()
 				
 				repeat(readByte().toInt()){
@@ -74,7 +74,7 @@ class TableParticleHandler(private val table: TileEntityBaseTable<*>){
 			}
 		}
 		
-		class FxDrainClusterData(private val table: TileEntityBaseTable<*>, private val clusterPos: BlockPos) : IFxData{
+		class FxDrainClusterData(private val table: TileEntityBaseTable, private val clusterPos: BlockPos) : IFxData{
 			override fun write(buffer: ByteBuf) = buffer.use {
 				writePos(clusterPos)
 				writePos(table.pos)
@@ -85,7 +85,7 @@ class TableParticleHandler(private val table: TileEntityBaseTable<*>){
 		val FX_DRAIN_CLUSTER = object : IFxHandler<FxDrainClusterData>{
 			override fun handle(buffer: ByteBuf, world: World, rand: Random) = buffer.use {
 				val cluster = readPos().getTile<TileEntityEnergyCluster>(world) ?: return
-				val table = readPos().getTile<TileEntityBaseTable<*>>(world) ?: return
+				val table = readPos().getTile<TileEntityBaseTable>(world) ?: return
 				
 				val clusterPos = cluster.pos.center
 				val tablePos = table.pos.center

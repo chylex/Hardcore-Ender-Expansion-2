@@ -73,14 +73,14 @@ class TileEntityTablePedestal : TileEntityBase(){
 	
 	private var linkedTable by NotifyOnChange<BlockPos?>(null, ::onLinkedStatusChanged)
 	
-	private val linkedTableTile: TileEntityBaseTable<*>?
+	private val linkedTableTile: TileEntityBaseTable?
 		get() = linkedTable?.getTile(world)
 	
 	val hasLinkedTable
 		get() = linkedTable != null
 	
 	val tableIndicatorColor: Int?
-		get() = linkedTable?.takeIf { it.isLoaded(world) }?.getTile<TileEntityBaseTable<*>>(world)?.tableIndicatorColor
+		get() = linkedTable?.takeIf { it.isLoaded(world) }?.getTile<TileEntityBaseTable>(world)?.tableIndicatorColor
 	
 	private val statusIndicator = PedestalStatusIndicator(this)
 	
@@ -148,7 +148,7 @@ class TileEntityTablePedestal : TileEntityBase(){
 	
 	// Behavior (Tables)
 	
-	fun setLinkedTable(tile: TileEntityBaseTable<*>){
+	fun setLinkedTable(tile: TileEntityBaseTable){
 		val currentlyLinkedTable = linkedTableTile
 		
 		if (tile !== currentlyLinkedTable){
@@ -165,15 +165,15 @@ class TileEntityTablePedestal : TileEntityBase(){
 		return linkedTableTile?.tryMarkInputPedestalAsOutput(this) == true
 	}
 	
-	fun onTableUnlinked(tile: TileEntityBaseTable<*>, dropTableLink: Boolean){
+	fun onTableUnlinked(tile: TileEntityBaseTable, dropTableLink: Boolean){
 		unlinkTableInternal(tile, if (dropTableLink) pos.up() else null)
 	}
 	
-	fun onTableDestroyed(tile: TileEntityBaseTable<*>, dropTableLink: Boolean){
+	fun onTableDestroyed(tile: TileEntityBaseTable, dropTableLink: Boolean){
 		unlinkTableInternal(tile, if (dropTableLink) tile.pos else null)
 	}
 	
-	private fun unlinkTableInternal(tile: TileEntityBaseTable<*>, dropTableLinkAt: BlockPos?){
+	private fun unlinkTableInternal(tile: TileEntityBaseTable, dropTableLinkAt: BlockPos?){
 		linkedTable?.takeIf { it == tile.pos }?.let {
 			dropTableLinkAt?.let(::spawnTableLinkAt)
 			linkedTable = null

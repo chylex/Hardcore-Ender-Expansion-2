@@ -8,7 +8,7 @@ import net.minecraft.tileentity.TileEntity
 import net.minecraft.util.math.BlockPos
 import net.minecraft.world.World
 
-abstract class BlockAbstractTableTile<T : TileEntityBaseTable<*>>(builder: BlockSimple.Builder) : BlockAbstractTable(builder), ITileEntityProvider{
+abstract class BlockAbstractTableTile<T : TileEntityBaseTable>(builder: BlockSimple.Builder) : BlockAbstractTable(builder), ITileEntityProvider{
 	abstract fun createNewTileEntity(): T
 	
 	final override fun createNewTileEntity(world: World, meta: Int): TileEntity{
@@ -17,13 +17,13 @@ abstract class BlockAbstractTableTile<T : TileEntityBaseTable<*>>(builder: Block
 	
 	override fun onBlockHarvested(world: World, pos: BlockPos, state: IBlockState, player: EntityPlayer){
 		if (!world.isRemote && player.isCreative){
-			pos.getTile<TileEntityBaseTable<*>>(world)?.onTableDestroyed(dropTableLink = false)
+			pos.getTile<TileEntityBaseTable>(world)?.onTableDestroyed(dropTableLink = false)
 		}
 	}
 	
 	override fun breakBlock(world: World, pos: BlockPos, state: IBlockState){
 		if (!world.isRemote){
-			pos.getTile<TileEntityBaseTable<*>>(world)?.onTableDestroyed(dropTableLink = true)
+			pos.getTile<TileEntityBaseTable>(world)?.onTableDestroyed(dropTableLink = true)
 		}
 		
 		super.breakBlock(world, pos, state)

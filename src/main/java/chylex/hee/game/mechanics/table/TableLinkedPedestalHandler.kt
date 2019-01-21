@@ -13,7 +13,7 @@ import net.minecraft.nbt.NBTTagCompound
 import net.minecraft.util.math.BlockPos
 import net.minecraftforge.common.util.INBTSerializable
 
-class TableLinkedPedestalHandler(private val table: TileEntityBaseTable<*>, maxDistance: Int) : INBTSerializable<NBTTagCompound>{
+class TableLinkedPedestalHandler(private val table: TileEntityBaseTable, maxDistance: Int) : INBTSerializable<NBTTagCompound>{
 	private val maxDistanceSq = square(maxDistance)
 	private val inputPedestals = HashSet<BlockPos>(/*initialCapacity */ 4, /*loadFactor */ 1F)
 	private var dedicatedOutputPedestal: BlockPos? = null

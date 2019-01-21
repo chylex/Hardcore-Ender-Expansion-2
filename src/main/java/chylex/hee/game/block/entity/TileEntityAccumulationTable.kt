@@ -1,9 +1,9 @@
 package chylex.hee.game.block.entity
-import chylex.hee.game.block.entity.TileEntityAccumulationTable.Process
 import chylex.hee.game.item.ItemAbstractEnergyUser
 import chylex.hee.game.mechanics.energy.IEnergyQuantity.Units
 import chylex.hee.game.mechanics.table.process.ITableContext
 import chylex.hee.game.mechanics.table.process.ITableInputTransformer.Companion.CONSUME_STACK
+import chylex.hee.game.mechanics.table.process.ITableProcess
 import chylex.hee.game.mechanics.table.process.ITableProcess.Companion.NO_DUST
 import chylex.hee.game.mechanics.table.process.ITableProcessSerializer
 import chylex.hee.game.mechanics.table.process.ProcessManyPedestals.State.Cancel
@@ -15,13 +15,13 @@ import net.minecraft.nbt.NBTTagCompound
 import net.minecraft.util.math.BlockPos
 import net.minecraft.world.World
 
-class TileEntityAccumulationTable : TileEntityBaseTable<Process>(){
+class TileEntityAccumulationTable : TileEntityBaseTable(){
 	override val tableIndicatorColor = RGB(220, 89, 55).toInt()
 	
-	override val processSerializer: ITableProcessSerializer<Process> = Serializer
+	override val processSerializer: ITableProcessSerializer = Serializer
 	override val processTickRate = 3
 	
-	override fun createNewProcesses(unassignedPedestals: List<TileEntityTablePedestal>): List<Process>{
+	override fun createNewProcesses(unassignedPedestals: List<TileEntityTablePedestal>): List<ITableProcess>{
 		val newProcesses = ArrayList<Process>(1)
 		
 		for(pedestal in unassignedPedestals){
@@ -33,17 +33,20 @@ class TileEntityAccumulationTable : TileEntityBaseTable<Process>(){
 		return newProcesses
 	}
 	
-	private object Serializer : ITableProcessSerializer<Process>{
-		override fun writeToNBT(process: Process): NBTTagCompound{
+	private object Serializer : ITableProcessSerializer{
+		override fun writeToNBT(process: ITableProcess): NBTTagCompound{
 			return process.serializeNBT()
 		}
 		
-		override fun readFromNBT(world: World, nbt: NBTTagCompound): Process{
-			return ProcessOnePedestal.construct(::Process, world, nbt)
+		override fun readFromNBT(world: World, nbt: NBTTagCompound): ITableProcess{
+			return Process(world, nbt).also { it.deserializeNBT(nbt) }
 		}
 	}
 	
-	class Process(world: World, pos: BlockPos) : ProcessOnePedestal(world, pos){
+	private class Process : ProcessOnePedestal{
+		constructor(world: World, pos: BlockPos) : super(world, pos)
+		constructor(world: World, nbt: NBTTagCompound) : super(world, nbt)
+		
 		override val energyPerTick =
 			Units(1)
 		

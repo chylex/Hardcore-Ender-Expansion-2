@@ -5,6 +5,6 @@ interface ITableContext{
 	val isPaused: Boolean
 	fun requestUseResources(): Boolean
 	fun getOutputPedestal(candidate: TileEntityTablePedestal) : TileEntityTablePedestal
-	fun triggerTickParticle()
+	fun triggerWorkParticle()
 	fun markProcessFinished()
 }

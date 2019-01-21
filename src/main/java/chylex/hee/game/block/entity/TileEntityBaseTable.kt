@@ -17,7 +17,7 @@ import net.minecraft.nbt.NBTTagCompound
 import net.minecraft.util.ITickable
 import net.minecraft.world.World
 
-abstract class TileEntityBaseTable<T : ITableProcess> : TileEntityBase(), ITickable{
+abstract class TileEntityBaseTable : TileEntityBase(), ITickable{
 	private companion object{
 		private const val MAX_CLUSTER_DISTANCE = 12
 		private const val MAX_PEDESTAL_DISTANCE = 6
@@ -30,13 +30,13 @@ abstract class TileEntityBaseTable<T : ITableProcess> : TileEntityBase(), ITicka
 	
 	abstract val tableIndicatorColor: Int
 	
-	protected abstract val processSerializer: ITableProcessSerializer<T>
+	protected abstract val processSerializer: ITableProcessSerializer
 	protected abstract val processTickRate: Int
 	
 	private var tickCounterRefresh = 0
 	private var tickCounterProcessing = 0
 	
-	private val currentProcesses = TableProcessList<T>()
+	private val currentProcesses = TableProcessList()
 	
 	@Suppress("LeakingThis")
 	private val pedestalHandler = TableLinkedPedestalHandler(this, MAX_PEDESTAL_DISTANCE)
@@ -137,7 +137,7 @@ abstract class TileEntityBaseTable<T : ITableProcess> : TileEntityBase(), ITicka
 	
 	// Processing
 	
-	protected abstract fun createNewProcesses(unassignedPedestals: List<TileEntityTablePedestal>): List<T>
+	protected abstract fun createNewProcesses(unassignedPedestals: List<TileEntityTablePedestal>): List<ITableProcess>
 	
 	private fun createProcessingContext(process: ITableProcess, isPaused: Boolean) = object : ITableContext{
 		var isFinished = false
@@ -152,7 +152,7 @@ abstract class TileEntityBaseTable<T : ITableProcess> : TileEntityBase(), ITicka
 			return pedestalHandler.dedicatedOutputPedestalTile ?: candidate
 		}
 		
-		override fun triggerTickParticle(){
+		override fun triggerWorkParticle(){
 			particleHandler.onPedestalsTicked(process.pedestals)
 		}
 		

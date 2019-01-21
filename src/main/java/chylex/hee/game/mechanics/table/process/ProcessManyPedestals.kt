@@ -22,6 +22,8 @@ import net.minecraft.util.math.BlockPos
 import net.minecraft.world.World
 
 abstract class ProcessManyPedestals(private val world: World, pos: Array<BlockPos>) : ITableProcess{
+	protected constructor(world: World, nbt: NBTTagCompound) : this(world, nbt.getLongArray("PedestalPos").map(::Pos).toTypedArray())
+	
 	final override val pedestals = pos
 	
 	protected abstract val whenFinished: ITableInputTransformer
@@ -39,6 +41,10 @@ abstract class ProcessManyPedestals(private val world: World, pos: Array<BlockPo
 	
 	private fun hasInputChanged(): Boolean{
 		return pedestals.indices.any { index -> getTile(index)?.inputModCounter != lastInputModCounters[index] }
+	}
+	
+	private fun setStatusIndicator(pedestals: Array<TileEntityTablePedestal>, newStatus: PedestalStatusIndicator.Process?){
+		pedestals.forEach { it.updateProcessStatus(newStatus) }
 	}
 	
 	// Handling
@@ -163,16 +169,6 @@ abstract class ProcessManyPedestals(private val world: World, pos: Array<BlockPo
 			"Work"   -> Work
 			"Output" -> Output(getListOfItemStacks("OutputItems"), getPos("TargetPedestal"))
 			else     -> Cancel
-		}
-	}
-	
-	companion object{
-		fun <T : ProcessManyPedestals> construct(constructor: (World, Array<BlockPos>) -> T, world: World, nbt: NBTTagCompound): T{
-			return constructor(world, nbt.getLongArray("PedestalPos").map(::Pos).toTypedArray()).also { it.deserializeNBT(nbt) }
-		}
-		
-		private fun setStatusIndicator(pedestals: Array<TileEntityTablePedestal>, newStatus: PedestalStatusIndicator.Process?){
-			pedestals.forEach { it.updateProcessStatus(newStatus) }
 		}
 	}
 }

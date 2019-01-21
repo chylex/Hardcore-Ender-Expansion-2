@@ -5,7 +5,10 @@ import net.minecraft.nbt.NBTTagCompound
 import net.minecraft.util.math.BlockPos
 import net.minecraft.world.World
 
-abstract class ProcessOnePedestal(world: World, pos: BlockPos) : ProcessManyPedestals(world, arrayOf(pos)){
+abstract class ProcessOnePedestal : ProcessManyPedestals{
+	protected constructor(world: World, pos: BlockPos) : super(world, arrayOf(pos))
+	protected constructor(world: World, nbt: NBTTagCompound) : super(world, nbt)
+	
 	protected abstract fun isInputStillValid(oldInput: ItemStack, newInput: ItemStack): Boolean
 	protected abstract fun onWorkTick(context: ITableContext, input: ItemStack): State
 	
@@ -19,10 +22,4 @@ abstract class ProcessOnePedestal(world: World, pos: BlockPos) : ProcessManyPede
 	
 	protected fun Output(stacks: Array<ItemStack>) = Output(stacks, pedestals[0])
 	protected fun Output(stack: ItemStack) = Output(stack, pedestals[0])
-	
-	companion object{
-		fun <T : ProcessOnePedestal> construct(constructor: (World, BlockPos) -> T, world: World, nbt: NBTTagCompound): T{
-			return ProcessManyPedestals.construct({ alsoWorld, positions -> constructor(alsoWorld, positions[0]) }, world, nbt)
-		}
-	}
 }

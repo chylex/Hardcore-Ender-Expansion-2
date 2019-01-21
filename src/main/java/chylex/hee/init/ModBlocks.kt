@@ -1,6 +1,5 @@
 package chylex.hee.init
 import chylex.hee.HEE
-import chylex.hee.game.block.BlockAccumulationTable
 import chylex.hee.game.block.BlockAncientCobweb
 import chylex.hee.game.block.BlockChorusFlowerOverride
 import chylex.hee.game.block.BlockChorusPlantOverride
@@ -30,6 +29,7 @@ import chylex.hee.game.block.BlockStairsCustom
 import chylex.hee.game.block.BlockStardustOre
 import chylex.hee.game.block.BlockTableBase
 import chylex.hee.game.block.BlockTablePedestal
+import chylex.hee.game.block.BlockTableTile
 import chylex.hee.game.block.BlockWallCustom
 import chylex.hee.game.block.entity.TileEntityAccumulationTable
 import chylex.hee.game.block.entity.TileEntityDarkChest
@@ -349,7 +349,7 @@ object ModBlocks{
 	
 	@JvmField val TABLE_PEDESTAL     = BlockTablePedestal(buildTablePedestal).apply { setup("table_pedestal") } // UPDATE: update recipe json to include tag to allow all gloomrock variations
 	@JvmField val TABLE_BASE         = BlockTableBase(buildTable).apply { setup("table_base") }
-	@JvmField val ACCUMULATION_TABLE = BlockAccumulationTable(buildTable).apply { setup("accumulation_table") }
+	@JvmField val ACCUMULATION_TABLE = BlockTableTile(buildTable, ::TileEntityAccumulationTable, minAllowedTier = 1).apply { setup("accumulation_table") }
 	
 	// Registry
 	

@@ -17,7 +17,7 @@ import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.RayTraceResult.Type.BLOCK
 import net.minecraftforge.common.util.INBTSerializable
 
-class TableEnergyClusterHandler(private val table: TileEntityBaseTable<*>, maxDistance: Int) : INBTSerializable<NBTTagCompound>{
+class TableEnergyClusterHandler(private val table: TileEntityBaseTable, maxDistance: Int) : INBTSerializable<NBTTagCompound>{
 	private val maxDistanceSq = square(maxDistance)
 	private val rayTracer = RayTracer(::canCollideCheck)
 	
