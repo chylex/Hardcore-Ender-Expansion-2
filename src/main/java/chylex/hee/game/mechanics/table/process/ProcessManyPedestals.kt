@@ -90,7 +90,7 @@ abstract class ProcessManyPedestals(private val world: World, pos: Array<BlockPo
 					currentState = onWorkTick(context, inputs)
 					
 					for((index, tile) in tiles.withIndex()){
-						if (tile.replaceInputSilently(inputs[index])){
+						if (tile.replaceInput(inputs[index], silent = true)){
 							lastInputStacks[index] = tile.itemInputCopy
 							lastInputModCounters[index] = tile.inputModCounter
 						}
@@ -103,8 +103,8 @@ abstract class ProcessManyPedestals(private val world: World, pos: Array<BlockPo
 					setStatusIndicator(tiles, PAUSED)
 				}
 				else if (tiles.find { it.pos == state.pedestal }?.let(context::getOutputPedestal)?.addToOutput(state.stacks) == true){
-					tiles.forEach {
-						it.replaceInputSilently(it.itemInputCopy.apply(whenFinished::transform))
+					for(tile in tiles){
+						tile.replaceInput(tile.itemInputCopy.apply(whenFinished::transform), silent = false)
 					}
 					
 					setStatusIndicator(tiles, null)

@@ -122,6 +122,8 @@ class TileEntityTablePedestal : TileEntityBase(){
 	var stacksForRendering = emptyArray<ItemStack>()
 		private set
 	
+	private var lastSmokeTime = Long.MIN_VALUE
+	
 	// Behavior (General)
 	
 	fun <T> SyncOnChange(initialValue: T) = NotifyOnChange(initialValue){
@@ -136,7 +138,12 @@ class TileEntityTablePedestal : TileEntityBase(){
 	}
 	
 	private fun spawnSmokeParticles(){
-		PacketClientFX(FX_ITEM_UPDATE, FxBlockData(pos)).sendToAllAround(this, 16.0)
+		val currentTime = world.totalWorldTime
+		
+		if (lastSmokeTime != currentTime){
+			lastSmokeTime = currentTime
+			PacketClientFX(FX_ITEM_UPDATE, FxBlockData(pos)).sendToAllAround(this, 16.0)
+		}
 	}
 	
 	// Behavior (Tables)
@@ -214,8 +221,16 @@ class TileEntityTablePedestal : TileEntityBase(){
 		return false
 	}
 	
-	fun replaceInputSilently(newInput: ItemStack): Boolean{
-		return inventoryHandler.replaceInputSilently(newInput)
+	fun replaceInput(newInput: ItemStack, silent: Boolean): Boolean{
+		if (inventoryHandler.replaceInput(newInput, silent)){
+			if (!silent){
+				spawnSmokeParticles()
+			}
+			
+			return true
+		}
+		
+		return false
 	}
 	
 	fun moveOutputToPlayerInventory(inventory: InventoryPlayer){

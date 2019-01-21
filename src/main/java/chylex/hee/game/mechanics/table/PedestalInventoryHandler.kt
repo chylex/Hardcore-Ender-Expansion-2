@@ -109,13 +109,13 @@ class PedestalInventoryHandler(private val updateCallback: (Boolean) -> Unit) : 
 		return false
 	}
 	
-	fun replaceInputSilently(newInput: ItemStack): Boolean{
+	fun replaceInput(newInput: ItemStack, silent: Boolean): Boolean{
 		if (ItemStack.areItemStacksEqual(itemInput, newInput)){
 			return false
 		}
 		
 		itemInput = newInput.copyIf { it.isNotEmpty }
-		onInventoryUpdated(updateInputModCounter = false)
+		onInventoryUpdated(updateInputModCounter = !silent)
 		return true
 	}
 	
