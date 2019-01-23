@@ -9,10 +9,12 @@ import chylex.hee.game.mechanics.table.TableProcessList
 import chylex.hee.game.mechanics.table.interfaces.ITableContext
 import chylex.hee.game.mechanics.table.interfaces.ITableProcess
 import chylex.hee.game.mechanics.table.interfaces.ITableProcessSerializer
+import chylex.hee.game.mechanics.table.process.ProcessSupportingItemHolder
 import chylex.hee.system.util.NBTList.Companion.setList
 import chylex.hee.system.util.delegate.NotifyOnChange
 import chylex.hee.system.util.getListOfCompounds
 import chylex.hee.system.util.getState
+import net.minecraft.item.Item
 import net.minecraft.nbt.NBTTagCompound
 import net.minecraft.util.ITickable
 import net.minecraft.world.World
@@ -85,7 +87,7 @@ abstract class TileEntityBaseTable : TileEntityBase(), ITickable{
 			
 			if (unassignedPedestals.isNotEmpty()){
 				tickCounterProcessing = 0
-				currentProcesses.add(createNewProcesses(unassignedPedestals))
+				currentProcesses.add(createNewProcesses(unassignedPedestals)) // TODO allow detecting missing supporting item
 				markDirty()
 			}
 		}
@@ -142,6 +144,10 @@ abstract class TileEntityBaseTable : TileEntityBase(), ITickable{
 		
 		override fun requestUseResources(): Boolean{
 			return clusterHandler.drainEnergy(process.energyPerTick)
+		}
+		
+		override fun requestUseSupportingItem(item: Item, amount: Int): Boolean{
+			return currentProcesses.firstOrNull { it is ProcessSupportingItemHolder && it.useItem(item, amount) } != null
 		}
 		
 		override fun getOutputPedestal(candidate: TileEntityTablePedestal): TileEntityTablePedestal{
