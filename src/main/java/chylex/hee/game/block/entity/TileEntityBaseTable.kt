@@ -86,9 +86,13 @@ abstract class TileEntityBaseTable : TileEntityBase(), ITickable{
 			val unassignedPedestals = pedestalHandler.inputPedestalTiles.filter(predicatePedestalHasInput).filterNot(predicatePedestalBusy).toList()
 			
 			if (unassignedPedestals.isNotEmpty()){
-				tickCounterProcessing = 0
-				currentProcesses.add(createNewProcesses(unassignedPedestals)) // TODO allow detecting missing supporting item
-				markDirty()
+				val newProcesses = createNewProcesses(unassignedPedestals)
+				
+				if (newProcesses.isNotEmpty()){
+					tickCounterProcessing = 0
+					currentProcesses.add(newProcesses)
+					markDirty()
+				}
 			}
 		}
 		
