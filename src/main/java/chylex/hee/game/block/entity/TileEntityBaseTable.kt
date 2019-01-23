@@ -6,9 +6,9 @@ import chylex.hee.game.mechanics.table.TableEnergyClusterHandler
 import chylex.hee.game.mechanics.table.TableLinkedPedestalHandler
 import chylex.hee.game.mechanics.table.TableParticleHandler
 import chylex.hee.game.mechanics.table.TableProcessList
-import chylex.hee.game.mechanics.table.process.ITableContext
-import chylex.hee.game.mechanics.table.process.ITableProcess
-import chylex.hee.game.mechanics.table.process.ITableProcessSerializer
+import chylex.hee.game.mechanics.table.interfaces.ITableContext
+import chylex.hee.game.mechanics.table.interfaces.ITableProcess
+import chylex.hee.game.mechanics.table.interfaces.ITableProcessSerializer
 import chylex.hee.system.util.NBTList.Companion.setList
 import chylex.hee.system.util.delegate.NotifyOnChange
 import chylex.hee.system.util.getListOfCompounds

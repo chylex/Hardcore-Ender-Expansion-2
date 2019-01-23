@@ -1,4 +1,4 @@
-package chylex.hee.game.mechanics.table.process
+package chylex.hee.game.mechanics.table.interfaces
 import net.minecraft.nbt.NBTTagCompound
 import net.minecraft.world.World
 

@@ -4,6 +4,9 @@ import chylex.hee.game.mechanics.table.PedestalStatusIndicator
 import chylex.hee.game.mechanics.table.PedestalStatusIndicator.Process.BLOCKED
 import chylex.hee.game.mechanics.table.PedestalStatusIndicator.Process.PAUSED
 import chylex.hee.game.mechanics.table.PedestalStatusIndicator.Process.WORKING
+import chylex.hee.game.mechanics.table.interfaces.ITableContext
+import chylex.hee.game.mechanics.table.interfaces.ITableInputTransformer
+import chylex.hee.game.mechanics.table.interfaces.ITableProcess
 import chylex.hee.game.mechanics.table.process.ProcessManyPedestals.State.Cancel
 import chylex.hee.game.mechanics.table.process.ProcessManyPedestals.State.Output
 import chylex.hee.game.mechanics.table.process.ProcessManyPedestals.State.Work

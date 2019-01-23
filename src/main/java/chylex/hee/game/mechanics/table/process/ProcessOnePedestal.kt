@@ -1,4 +1,5 @@
 package chylex.hee.game.mechanics.table.process
+import chylex.hee.game.mechanics.table.interfaces.ITableContext
 import chylex.hee.game.mechanics.table.process.ProcessManyPedestals.State.Output
 import net.minecraft.item.ItemStack
 import net.minecraft.nbt.NBTTagCompound

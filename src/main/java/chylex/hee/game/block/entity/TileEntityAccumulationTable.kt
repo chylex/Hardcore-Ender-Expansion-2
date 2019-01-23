@@ -1,11 +1,11 @@
 package chylex.hee.game.block.entity
 import chylex.hee.game.item.ItemAbstractEnergyUser
 import chylex.hee.game.mechanics.energy.IEnergyQuantity.Units
-import chylex.hee.game.mechanics.table.process.ITableContext
-import chylex.hee.game.mechanics.table.process.ITableInputTransformer.Companion.CONSUME_STACK
-import chylex.hee.game.mechanics.table.process.ITableProcess
-import chylex.hee.game.mechanics.table.process.ITableProcess.Companion.NO_DUST
-import chylex.hee.game.mechanics.table.process.ITableProcessSerializer
+import chylex.hee.game.mechanics.table.interfaces.ITableContext
+import chylex.hee.game.mechanics.table.interfaces.ITableInputTransformer.Companion.CONSUME_STACK
+import chylex.hee.game.mechanics.table.interfaces.ITableProcess
+import chylex.hee.game.mechanics.table.interfaces.ITableProcess.Companion.NO_DUST
+import chylex.hee.game.mechanics.table.interfaces.ITableProcessSerializer
 import chylex.hee.game.mechanics.table.process.ProcessManyPedestals.State.Cancel
 import chylex.hee.game.mechanics.table.process.ProcessManyPedestals.State.Work
 import chylex.hee.game.mechanics.table.process.ProcessOnePedestal

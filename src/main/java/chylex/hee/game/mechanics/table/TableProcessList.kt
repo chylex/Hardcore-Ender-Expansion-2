@@ -1,6 +1,6 @@
 package chylex.hee.game.mechanics.table
-import chylex.hee.game.mechanics.table.process.ITableProcess
-import chylex.hee.game.mechanics.table.process.ITableProcessSerializer
+import chylex.hee.game.mechanics.table.interfaces.ITableProcess
+import chylex.hee.game.mechanics.table.interfaces.ITableProcessSerializer
 import chylex.hee.system.util.NBTObjectList
 import net.minecraft.nbt.NBTTagCompound
 import net.minecraft.world.World

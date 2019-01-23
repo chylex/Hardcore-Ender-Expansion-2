@@ -1,4 +1,4 @@
-package chylex.hee.game.mechanics.table.process
+package chylex.hee.game.mechanics.table.interfaces
 import chylex.hee.game.mechanics.energy.IEnergyQuantity.Units
 import net.minecraft.nbt.NBTTagCompound
 import net.minecraft.util.math.BlockPos

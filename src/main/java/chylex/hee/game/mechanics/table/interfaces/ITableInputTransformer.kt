@@ -1,4 +1,4 @@
-package chylex.hee.game.mechanics.table.process
+package chylex.hee.game.mechanics.table.interfaces
 import chylex.hee.system.util.size
 import net.minecraft.item.ItemStack
 
