@@ -5,10 +5,10 @@ import chylex.hee.game.mechanics.table.interfaces.ITableContext
 import chylex.hee.game.mechanics.table.interfaces.ITableInputTransformer.Companion.CONSUME_STACK
 import chylex.hee.game.mechanics.table.interfaces.ITableProcess
 import chylex.hee.game.mechanics.table.interfaces.ITableProcess.Companion.NO_DUST
-import chylex.hee.game.mechanics.table.interfaces.ITableProcessSerializer
 import chylex.hee.game.mechanics.table.process.ProcessManyPedestals.State.Cancel
 import chylex.hee.game.mechanics.table.process.ProcessManyPedestals.State.Work
 import chylex.hee.game.mechanics.table.process.ProcessOnePedestal
+import chylex.hee.game.mechanics.table.process.serializer.BasicProcessSerializer
 import chylex.hee.game.render.util.RGB
 import net.minecraft.item.ItemStack
 import net.minecraft.nbt.NBTTagCompound
@@ -18,8 +18,8 @@ import net.minecraft.world.World
 class TileEntityAccumulationTable : TileEntityBaseTable(){
 	override val tableIndicatorColor = RGB(220, 89, 55).toInt()
 	
-	override val processSerializer: ITableProcessSerializer = Serializer
 	override val processTickRate = 3
+	override val processSerializer = BasicProcessSerializer(::Process)
 	
 	override fun createNewProcesses(unassignedPedestals: List<TileEntityTablePedestal>): List<ITableProcess>{
 		val newProcesses = ArrayList<Process>(1)
@@ -31,16 +31,6 @@ class TileEntityAccumulationTable : TileEntityBaseTable(){
 		}
 		
 		return newProcesses
-	}
-	
-	private object Serializer : ITableProcessSerializer{
-		override fun writeToNBT(process: ITableProcess): NBTTagCompound{
-			return process.serializeNBT()
-		}
-		
-		override fun readFromNBT(world: World, nbt: NBTTagCompound): ITableProcess{
-			return Process(world, nbt).also { it.deserializeNBT(nbt) }
-		}
 	}
 	
 	private class Process : ProcessOnePedestal{
@@ -71,11 +61,12 @@ class TileEntityAccumulationTable : TileEntityBaseTable(){
 				return Output(input)
 			}
 			
-			if (context.requestUseResources()){
-				item.chargeEnergyUnit(input)
+			if (!context.requestUseResources()){
+				return Work.Blocked
 			}
 			
-			return Work
+			item.chargeEnergyUnit(input)
+			return Work.Success
 		}
 	}
 }
