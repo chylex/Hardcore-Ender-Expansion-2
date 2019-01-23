@@ -31,7 +31,7 @@ abstract class ProcessManyPedestals(private val world: World, pos: Array<BlockPo
 	
 	protected abstract val whenFinished: ITableInputTransformer
 	
-	private var currentState: State = Work
+	private var currentState: State = Work.Success
 	
 	private var lastInputStacks = Array(pos.size){ ItemStack.EMPTY }
 	private var lastInputModCounters = Array(pos.size){ Int.MIN_VALUE }
@@ -88,15 +88,13 @@ abstract class ProcessManyPedestals(private val world: World, pos: Array<BlockPo
 		val state = currentState
 		
 		when(state){
-			Work -> {
+			is Work -> {
 				if (tiles.any { world.totalWorldTime - it.inputModTime < 20L } || context.isPaused){
 					setStatusIndicator(tiles, PAUSED)
 				}
 				else{
-					setStatusIndicator(tiles, WORKING)
-					
 					val inputs = Array(tiles.size){ tiles[it].itemInputCopy }
-					currentState = onWorkTick(context, inputs)
+					val newState = onWorkTick(context, inputs)
 					
 					for((index, tile) in tiles.withIndex()){
 						if (tile.replaceInput(inputs[index], silent = true)){
@@ -104,6 +102,15 @@ abstract class ProcessManyPedestals(private val world: World, pos: Array<BlockPo
 							lastInputModCounters[index] = tile.inputModCounter
 						}
 					}
+					
+					if (newState is Work){
+						setStatusIndicator(tiles, when(newState){
+							Work.Success -> WORKING.also { context.triggerWorkParticle() }
+							Work.Blocked -> BLOCKED
+						})
+					}
+					
+					currentState = newState
 				}
 			}
 			
@@ -137,7 +144,10 @@ abstract class ProcessManyPedestals(private val world: World, pos: Array<BlockPo
 	// State
 	
 	protected sealed class State{
-		object Work : State()
+		sealed class Work : State(){
+			object Success : Work()
+			object Blocked : Work()
+		}
 		
 		class Output(val stacks: Array<ItemStack>, val pedestal: BlockPos) : State(){
 			constructor(stack: ItemStack, pedestal: BlockPos) : this(arrayOf(stack), pedestal)
@@ -159,7 +169,7 @@ abstract class ProcessManyPedestals(private val world: World, pos: Array<BlockPo
 		val state = currentState
 		
 		setString("State", when(state){
-			Work      -> "Work"
+			is Work   -> "Work"
 			is Output -> "Output".also { setList("OutputItems", state.tag); setPos("TargetPedestal", state.pedestal) }
 			Cancel    -> ""
 		})
@@ -169,7 +179,7 @@ abstract class ProcessManyPedestals(private val world: World, pos: Array<BlockPo
 		getListOfItemStacks("LastInputs").forEachIndexed { index, stack -> lastInputStacks[index] = stack }
 		
 		currentState = when(getString("State")){
-			"Work"   -> Work
+			"Work"   -> Work.Success
 			"Output" -> Output(getListOfItemStacks("OutputItems"), getPos("TargetPedestal"))
 			else     -> Cancel
 		}
