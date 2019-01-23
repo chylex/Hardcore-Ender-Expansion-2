@@ -1,4 +1,5 @@
 package chylex.hee.game.mechanics.table
+import chylex.hee.game.block.entity.TileEntityTablePedestal
 import chylex.hee.game.mechanics.table.interfaces.ITableProcess
 import chylex.hee.game.mechanics.table.interfaces.ITableProcessSerializer
 import chylex.hee.system.util.NBTObjectList
@@ -38,6 +39,11 @@ class TableProcessList : Iterable<ITableProcess>{
 		}
 		
 		return removedAny
+	}
+	
+	fun remove(pedestal: TileEntityTablePedestal): Boolean{
+		val removedPos = pedestal.pos
+		return remove { it.pedestals.contains(removedPos) }
 	}
 	
 	override fun iterator(): Iterator<ITableProcess>{
