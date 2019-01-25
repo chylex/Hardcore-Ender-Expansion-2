@@ -23,6 +23,10 @@ class WeightedList<T>(private val items: List<Pair<Int, T>>){
 		throw IllegalStateException("failed generating a random weighted item")
 	}
 	
+	override fun toString(): String{
+		return items.toString()
+	}
+	
 	companion object{
 		fun <T> weightedListOf(vararg items: Pair<Int, T>): WeightedList<T>{
 			return WeightedList(items.toList())

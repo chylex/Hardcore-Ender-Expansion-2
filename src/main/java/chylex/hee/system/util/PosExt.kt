@@ -12,6 +12,8 @@ import net.minecraft.util.math.ChunkPos
 import net.minecraft.util.math.Vec3d
 import net.minecraft.world.IBlockAccess
 import net.minecraft.world.World
+import kotlin.math.max
+import kotlin.math.min
 import kotlin.math.pow
 import kotlin.math.sqrt
 
@@ -153,6 +155,14 @@ fun BlockPos.allInBoxMutable(otherBound: BlockPos): Iterable<MutableBlockPos>{
 
 fun BlockPos.allInCenteredBoxMutable(offsetX: Int, offsetY: Int, offsetZ: Int): Iterable<MutableBlockPos>{
 	return BlockPos.getAllInBoxMutable(this.x - offsetX, this.y - offsetY, this.z - offsetZ, this.x + offsetX, this.y + offsetY, this.z + offsetZ)
+}
+
+fun BlockPos.min(other: BlockPos): BlockPos{
+	return Pos(min(x, other.x), min(y, other.y), min(z, other.z))
+}
+
+fun BlockPos.max(other: BlockPos): BlockPos{
+	return Pos(max(x, other.x), max(y, other.y), max(z, other.z))
 }
 
 // Distance calculations
