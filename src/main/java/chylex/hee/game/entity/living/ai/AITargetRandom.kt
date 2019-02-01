@@ -1,6 +1,6 @@
 package chylex.hee.game.entity.living.ai
 import chylex.hee.game.entity.living.ai.util.AIBaseTargetFiltered
-import chylex.hee.system.util.nextItem
+import chylex.hee.system.util.nextItemOrNull
 import net.minecraft.entity.EntityCreature
 import net.minecraft.entity.EntityLivingBase
 
@@ -16,6 +16,6 @@ class AITargetRandom<T : EntityLivingBase>(
 		return if (chancePerTick > 0 && entity.rng.nextInt(chancePerTick) != 0)
 			null
 		else
-			entity.rng.nextItem(findSuitableTargets().toList())
+			entity.rng.nextItemOrNull(findSuitableTargets().toList())
 	}
 }

@@ -98,7 +98,7 @@ fun <T> Random.removeItem(collection: MutableList<T>): T?{
 /**
  * Returns a random item from the list, or `null` if the list is empty.
  */
-fun <T> Random.nextItem(collection: List<T>): T?{
+fun <T> Random.nextItemOrNull(collection: List<T>): T?{
 	val size = collection.size
 	return if (size == 0) null else collection[this.nextInt(size)]
 }
@@ -106,8 +106,30 @@ fun <T> Random.nextItem(collection: List<T>): T?{
 /**
  * Returns a random item from the array, or `null` if the array is empty.
  */
-fun <T> Random.nextItem(collection: Array<T>): T?{
+fun <T> Random.nextItemOrNull(collection: Array<T>): T?{
 	return if (collection.isEmpty()) null else collection[this.nextInt(collection.size)]
+}
+
+/**
+ * Returns a random item from the list, or throws if the list is empty.
+ */
+fun <T> Random.nextItem(collection: List<T>): T{
+	val size = collection.size
+	return if (size == 0) throw NoSuchElementException() else collection[this.nextInt(size)]
+}
+
+/**
+ * Returns a random item from the array, or throws if the array is empty.
+ */
+fun <T> Random.nextItem(collection: Array<T>): T{
+	return if (collection.isEmpty()) throw NoSuchElementException() else collection[this.nextInt(collection.size)]
+}
+
+/**
+ * Returns a random item from the enum, or throws if the enum has no values.
+ */
+inline fun <reified T : Enum<T>> Random.nextItem(): T{
+	return this.nextItem(enumValues())
 }
 
 /**

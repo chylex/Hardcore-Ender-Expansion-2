@@ -1,7 +1,7 @@
 package chylex.hee.game.entity.living.ai
 import chylex.hee.game.entity.living.ai.util.AIBaseTargetFiltered
 import chylex.hee.system.util.AI_FLAG_NONE
-import chylex.hee.system.util.nextItem
+import chylex.hee.system.util.nextItemOrNull
 import chylex.hee.system.util.posVec
 import chylex.hee.system.util.selectExistingEntities
 import net.minecraft.entity.EntityCreature
@@ -48,6 +48,6 @@ class AITargetSwarmSwitch<T : EntityLivingBase>(
 			friendsInRange.count { friend -> friend.attackTarget === it } < friendsAttackingCurrentTarget
 		}
 		
-		return entity.rng.nextItem(otherTargetsInRange.toList())
+		return entity.rng.nextItemOrNull(otherTargetsInRange.toList())
 	}
 }

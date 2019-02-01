@@ -292,7 +292,7 @@ class EntityInfusedTNT : EntityTNTPrimed{
 			
 			repeat(rand.nextRounded(dropAmount)){
 				for(droppedItem in lootTable.generateLootForPools(rand, lootContext)){ // there's ItemFishedEvent but it needs the hook entity...
-					val dropPos = rand.nextItem(foundWaterBlocks)!!
+					val dropPos = rand.nextItem(foundWaterBlocks)
 					
 					constructItemEntity(world, dropPos.x + rand.nextFloat(0.25, 0.75), dropPos.y + rand.nextFloat(0.25, 0.75), dropPos.z + rand.nextFloat(0.25, 0.75), droppedItem).apply {
 						motionX = rand.nextFloat(-0.25, 0.25)

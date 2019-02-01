@@ -40,7 +40,7 @@ object RecipeEndPowderRepair : RecipeBaseDynamic(){
 		if (allEnchantments.isNotEmpty()){
 			val seed = (item.registryName!!.hashCode() shlong 32) + allEnchantments.fold(1){ hash, (enchantment, level) -> Objects.hash(hash, enchantment.registryName, level) }
 			
-			val (enchantment, level) = Random(seed).nextItem(allEnchantments)!!
+			val (enchantment, level) = Random(seed).nextItem(allEnchantments)
 			repairedStack.addEnchantment(enchantment, level)
 		}
 		
