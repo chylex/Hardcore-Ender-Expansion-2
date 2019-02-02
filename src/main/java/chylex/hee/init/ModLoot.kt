@@ -5,6 +5,7 @@ import chylex.hee.game.loot.NoStackSplittingLootTable
 import chylex.hee.game.loot.conditions.ConditionCriticalHit
 import chylex.hee.game.loot.conditions.ConditionFortune
 import chylex.hee.game.loot.conditions.ConditionLooting
+import chylex.hee.game.loot.rng.RandomBiasedValueRange
 import chylex.hee.system.Resource
 import net.minecraft.util.ResourceLocation
 import net.minecraft.world.storage.loot.LootPool
@@ -80,6 +81,11 @@ object ModLoot{
 								table = NoStackSplittingLootTable(table)
 								pools = table.pools
 							}
+						}
+						
+						"rolls_bias" -> {
+							val (highestChanceValue, biasSoftener) = value.split('~')
+							pool.rolls = RandomBiasedValueRange(pool.rolls, highestChanceValue.toFloat(), biasSoftener.toFloat())
 						}
 						
 						else -> throw UnsupportedOperationException(key)
