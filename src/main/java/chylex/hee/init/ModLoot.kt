@@ -1,13 +1,20 @@
 package chylex.hee.init
+import chylex.hee.HEE
 import chylex.hee.game.loot.BlockLootTable
 import chylex.hee.game.loot.conditions.ConditionCriticalHit
 import chylex.hee.game.loot.conditions.ConditionFortune
 import chylex.hee.game.loot.conditions.ConditionLooting
 import chylex.hee.system.Resource
 import net.minecraft.util.ResourceLocation
+import net.minecraft.world.storage.loot.LootPool
+import net.minecraft.world.storage.loot.LootTable
 import net.minecraft.world.storage.loot.LootTableList
 import net.minecraft.world.storage.loot.conditions.LootConditionManager
+import net.minecraftforge.event.LootTableLoadEvent
+import net.minecraftforge.fml.common.Mod.EventBusSubscriber
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent
 
+@EventBusSubscriber(modid = HEE.ID)
 object ModLoot{
 	lateinit var HUMUS_EXPLODED: BlockLootTable
 	lateinit var ANCIENT_COBWEB: BlockLootTable
@@ -43,5 +50,36 @@ object ModLoot{
 	
 	private fun registerEntity(name: String): ResourceLocation{
 		return LootTableList.register(Resource.Custom("entities/$name"))
+	}
+	
+	val LootTable.pools
+		get() = LootTable::class.java.declaredFields.first { it.type === List::class.java }.also { it.isAccessible = true }.get(this) as List<LootPool>
+	
+	@JvmStatic
+	@SubscribeEvent
+	fun onLootTableLoad(e: LootTableLoadEvent){
+		if (e.name.namespace == HEE.ID){
+			var table = e.table
+			var pools = table.pools
+			
+			for(index in pools.indices){
+				val pool = pools[index]
+				val name = pool.name
+				
+				if (!name.contains('#')){
+					continue
+				}
+				
+				val split = name.splitToSequence('#').drop(1).map { it.split('=').let { (k, v) -> Pair(k, v) } }
+				
+				for((key, value) in split){
+					when(key){
+						else -> throw UnsupportedOperationException(key)
+					}
+				}
+			}
+			
+			e.table = table
+		}
 	}
 }
