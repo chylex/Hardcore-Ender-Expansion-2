@@ -1,6 +1,7 @@
 package chylex.hee.init
 import chylex.hee.HEE
 import chylex.hee.game.loot.BlockLootTable
+import chylex.hee.game.loot.NoStackSplittingLootTable
 import chylex.hee.game.loot.conditions.ConditionCriticalHit
 import chylex.hee.game.loot.conditions.ConditionFortune
 import chylex.hee.game.loot.conditions.ConditionLooting
@@ -74,6 +75,13 @@ object ModLoot{
 				
 				for((key, value) in split){
 					when(key){
+						"stack_splitting" -> {
+							if (value == "off"){
+								table = NoStackSplittingLootTable(table)
+								pools = table.pools
+							}
+						}
+						
 						else -> throw UnsupportedOperationException(key)
 					}
 				}
