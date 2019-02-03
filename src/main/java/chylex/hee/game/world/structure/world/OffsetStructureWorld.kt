@@ -18,4 +18,8 @@ class OffsetStructureWorld(private val wrapped: IStructureWorld, private val off
 	override fun addTrigger(pos: BlockPos, trigger: IStructureTrigger){
 		wrapped.addTrigger(pos.add(offset), trigger)
 	}
+	
+	override fun finalize(){
+		wrapped.finalize()
+	}
 }

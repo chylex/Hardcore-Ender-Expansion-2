@@ -58,4 +58,8 @@ class RotatedStructureWorld(private val wrapped: IStructureWorld, private val si
 	override fun addTrigger(pos: BlockPos, trigger: IStructureTrigger){
 		wrapped.addTrigger(rotatePos(pos, size, rotation), RotatedStructureTrigger(trigger, rotation))
 	}
+	
+	override fun finalize(){
+		wrapped.finalize()
+	}
 }

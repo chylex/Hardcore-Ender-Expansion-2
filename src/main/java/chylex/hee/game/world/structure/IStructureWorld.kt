@@ -20,6 +20,8 @@ interface IStructureWorld{
 	
 	fun addTrigger(pos: BlockPos, trigger: IStructureTrigger)
 	
+	fun finalize()
+	
 	// Utilities
 	
 	@JvmDefault fun getBlock(pos: BlockPos): Block{
