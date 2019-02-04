@@ -70,6 +70,7 @@ object ModItems{
 	// Items: Utilities
 	
 	@JvmField val TABLE_LINK     = ItemTableLink().apply { setup("table_link") }
+	@JvmField val KNOWLEDGE_NOTE = Item().apply { setup("knowledge_note") } // TODO
 	
 	// Items: Tools
 	
@@ -130,6 +131,7 @@ object ModItems{
 			register(VOID_SALAD)
 			
 			register(TABLE_LINK)
+			register(KNOWLEDGE_NOTE)
 			
 			register(VOID_MINER)
 			register(VOID_BUCKET)
