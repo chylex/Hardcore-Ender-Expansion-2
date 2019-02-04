@@ -11,6 +11,7 @@ import chylex.hee.game.entity.living.EntityMobSilverfish;
 import chylex.hee.game.entity.projectile.EntityProjectileEnderPearl;
 import chylex.hee.game.entity.projectile.EntityProjectileEyeOfEnder;
 import chylex.hee.game.entity.projectile.EntityProjectileSpatialDash;
+import chylex.hee.game.entity.technical.EntityTechnicalTrigger;
 import net.minecraft.entity.Entity;
 import net.minecraft.world.World;
 import java.util.HashMap;
@@ -36,6 +37,8 @@ public final class EntityConstructors{
 		add(EntityProjectileSpatialDash.class, EntityProjectileSpatialDash::new);
 		add(EntityProjectileEyeOfEnder.class, EntityProjectileEyeOfEnder::new);
 		add(EntityProjectileEnderPearl.class, EntityProjectileEnderPearl::new);
+		
+		add(EntityTechnicalTrigger.class, EntityTechnicalTrigger::new);
 	}
 	
 	@SuppressWarnings("unchecked")
