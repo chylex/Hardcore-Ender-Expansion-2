@@ -59,7 +59,6 @@ object ModItems{
 	@JvmField val VOID_ESSENCE          = Item().apply { setup("void_essence") }
 	@JvmField val OBSIDIAN_ROD          = Item().apply { setup("obsidian_rod") }
 	@JvmField val STATIC_CORE           = Item().apply { setup("static_core") }
-	@JvmField val TABLE_LINK            = ItemTableLink().apply { setup("table_link") }
 	@JvmField val DIRTY_INFERNIUM_INGOT = Item().apply { setup("dirty_infernium_ingot") }
 	@JvmField val BINDING_ESSENCE       = ItemBindingEssence().apply { setup("binding_essence") }
 	
@@ -68,6 +67,10 @@ object ModItems{
 	@JvmField val COMPOST    = ItemCompost().apply { setup("compost") }
 	@JvmField val VOID_SALAD = ItemVoidSalad().apply { setup("void_salad") }
 	
+	// Items: Utilities
+	
+	@JvmField val TABLE_LINK     = ItemTableLink().apply { setup("table_link") }
+	
 	// Items: Tools
 	
 	@JvmField val VOID_MINER        = ItemVoidMiner().apply { setup("void_miner") }
@@ -75,10 +78,7 @@ object ModItems{
 	@JvmField val SCORCHING_PICKAXE = ItemScorchingTool(PICKAXE).apply { setup("scorching_pickaxe") }
 	@JvmField val SCORCHING_SHOVEL  = ItemScorchingTool(SHOVEL).apply { setup("scorching_shovel") }
 	@JvmField val SCORCHING_AXE     = ItemScorchingTool(AXE).apply { setup("scorching_axe") }
-	
-	// Items: Buckets
-	
-	@JvmField val ENDER_GOO_BUCKET = ItemBucket(ModBlocks.ENDER_GOO).apply { setup("ender_goo_bucket"); containerItem = Items.BUCKET }
+	@JvmField val ENDER_GOO_BUCKET  = ItemBucket(ModBlocks.ENDER_GOO).apply { setup("ender_goo_bucket"); containerItem = Items.BUCKET }
 	
 	// Items: Energy
 	
@@ -123,19 +123,19 @@ object ModItems{
 			register(VOID_ESSENCE)
 			register(OBSIDIAN_ROD)
 			register(STATIC_CORE)
-			register(TABLE_LINK)
 			register(DIRTY_INFERNIUM_INGOT)
 			register(BINDING_ESSENCE)
 			
 			register(COMPOST)
 			register(VOID_SALAD)
 			
+			register(TABLE_LINK)
+			
 			register(VOID_MINER)
 			register(VOID_BUCKET)
 			register(SCORCHING_PICKAXE)
 			register(SCORCHING_SHOVEL)
 			register(SCORCHING_AXE)
-			
 			register(ENDER_GOO_BUCKET)
 			
 			register(ENERGY_ORACLE)

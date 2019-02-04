@@ -79,7 +79,6 @@ item.hee.alteration_nexus.name=Alteration Nexus
 item.hee.void_essence.name=Void Essence
 item.hee.obsidian_rod.name=Obsidian Rod
 item.hee.static_core.name=Static Core
-item.hee.table_link.name=Table Link
 item.hee.dirty_infernium_ingot.name=Dirty Infernium Ingot
 item.hee.binding_essence.name=Binding Essence
 
@@ -89,12 +88,13 @@ item.hee.void_salad.single.name=Void Salad
 item.hee.void_salad.double.name=Void Void Salad
 item.hee.void_salad.mega.name=Mega Void Salad
 
+item.hee.table_link.name=Table Link
+
 item.hee.void_miner.name=Void Miner
 item.hee.void_bucket.name=Void Bucket
 item.hee.scorching_pickaxe.name=Scorching Pickaxe
 item.hee.scorching_shovel.name=Scorching Shovel
 item.hee.scorching_axe.name=Scorching Axe
-
 item.hee.ender_goo_bucket.name=Ender Goo Bucket
 
 item.hee.energy_oracle.name=Energy Oracle

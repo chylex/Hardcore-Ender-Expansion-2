@@ -320,7 +320,7 @@ object ModBlocks{
 		lightLevel = 13
 		lightOpacity = 0
 		
-		soundType = SoundType.GLASS
+		soundType = SoundType.GLASS.clone(volume = 1.25F, pitch = 1.35F)
 		mapColor = MapColor.SNOW
 	}
 	
