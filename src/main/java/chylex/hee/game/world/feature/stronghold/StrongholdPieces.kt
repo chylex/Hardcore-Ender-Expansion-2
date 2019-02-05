@@ -4,6 +4,7 @@ import chylex.hee.game.world.structure.IBlockPicker.Weighted.Companion.Weighted
 import chylex.hee.game.world.structure.file.PaletteBuilder
 import chylex.hee.game.world.structure.file.PaletteMappings
 import chylex.hee.init.ModBlocks
+import chylex.hee.system.Resource
 import net.minecraft.init.Blocks
 
 object StrongholdPieces{
@@ -79,4 +80,8 @@ object StrongholdPieces{
 		
 		build()
 	}
+	
+	val LOOT_GENERIC = Resource.Custom("chests/stronghold_generic")
+	val LOOT_LIBRARY_MAIN = Resource.Custom("chests/stronghold_library_main")
+	val LOOT_LIBRARY_SECOND = Resource.Custom("chests/stronghold_library_second")
 }

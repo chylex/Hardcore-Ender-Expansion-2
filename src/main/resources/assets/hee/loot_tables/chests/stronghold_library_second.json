@@ -1,0 +1,26 @@
+{
+  "pools": [
+
+    {
+      "rolls": { "min": 4, "max": 6 },
+      "name": "pool#stack_splitting=off#rolls_bias=5~5",
+      "entries": [
+        { "type": "item", "name": "minecraft:paper", "weight": 50, "functions": [{ "function": "set_count", "count": { "min": 1, "max": 3 } }], "entryName": "paper" },
+        { "type": "item", "name": "minecraft:book", "weight": 45, "functions": [{ "function": "set_count", "count": { "min": 1, "max": 2 } }], "entryName": "book" },
+        { "type": "item", "name": "hee:knowledge_note", "weight": 42, "functions": [{ "function": "set_count", "count": 1 }], "entryName": "knowledge_note" },
+        { "type": "item", "name": "hee:ancient_dust", "weight": 36, "functions": [{ "function": "set_count", "count": { "min": 1, "max": 2 } }], "entryName": "ancient_dust" },
+        { "type": "item", "name": "minecraft:compass", "weight": 22, "functions": [{ "function": "set_count", "count": 1 }], "entryName": "compass" },
+        { "type": "item", "name": "minecraft:map", "weight": 20, "functions": [{ "function": "set_count", "count": 1 }], "entryName": "map" }
+      ]
+    },
+
+    {
+      "rolls": { "min": 4, "max": 6 },
+      "name": "pool",
+      "entries": [
+        { "type": "item", "name": "hee:ancient_cobweb", "weight": 100, "functions": [{ "function": "set_count", "count": 1 }], "entryName": "ancient_cobweb" }
+      ]
+    }
+
+  ]
+}
