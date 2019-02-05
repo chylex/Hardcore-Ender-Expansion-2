@@ -31,7 +31,8 @@ class TileEntityLootChest : TileEntityBaseChest(){
 	override val defaultName = "gui.hee.loot_chest.title"
 	override val soundOpening = ModSounds.BLOCK_LOOT_CHEST_OPEN
 	
-	private val sourceInventory = createInventory() // TODO add support for loot tables
+	val sourceInventory = createInventory() // TODO add support for loot tables
+	
 	private val playerInventories = mutableMapOf<UUID, IInventory>()
 	
 	override fun playChestSound(sound: SoundEvent){
