@@ -17,6 +17,7 @@ import chylex.hee.system.util.AITargetAttacker
 import chylex.hee.system.util.AITargetRandom
 import chylex.hee.system.util.AITargetSwarmSwitch
 import chylex.hee.system.util.AIWander
+import chylex.hee.system.util.heeTag
 import net.minecraft.block.BlockSilverfish
 import net.minecraft.block.BlockSilverfish.EnumType.forModelBlock
 import net.minecraft.block.BlockSilverfish.VARIANT
@@ -28,6 +29,7 @@ import net.minecraft.entity.SharedMonsterAttributes.MAX_HEALTH
 import net.minecraft.entity.monster.EntitySilverfish
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.init.Blocks
+import net.minecraft.nbt.NBTTagCompound
 import net.minecraft.util.DamageSource
 import net.minecraft.util.EntityDamageSource
 import net.minecraft.util.ResourceLocation
@@ -65,17 +67,12 @@ class EntityMobSilverfish(world: World) : EntitySilverfish(world), ICritTracker{
 				}
 			}
 		}
-		
-		private fun tryHideInBlock(state: IBlockState): IBlockState?{
-			return if (BlockSilverfish.canContainSilverfish(state))
-				Blocks.MONSTER_EGG.defaultState.withProperty(VARIANT, forModelBlock(state))
-			else
-				null
-		}
 	}
 	
 	private lateinit var aiSummonFromBlock: AISummonFromBlock
 	private lateinit var aiTargetSwarmSwitch: AITargetSwarmSwitch<EntityPlayer>
+	
+	private var hideInBlockDelayTicks = 120
 	
 	override var wasLastHitCritical = false
 	
@@ -94,7 +91,7 @@ class EntityMobSilverfish(world: World) : EntitySilverfish(world), ICritTracker{
 	}
 	
 	override fun initEntityAI(){
-		aiSummonFromBlock = AISummonFromBlock(this, searchAttempts = 800, searchDistance = 6, searchingFor = Blocks.MONSTER_EGG)
+		aiSummonFromBlock = AISummonFromBlock(this, searchAttempts = 500, searchDistance = 6, searchingFor = Blocks.MONSTER_EGG)
 		
 		tasks.addTask(1, AISwim(this))
 		tasks.addTask(2, AIAttackMelee(this, movementSpeed = 1.0, chaseAfterLosingSight = false))
@@ -107,6 +104,29 @@ class EntityMobSilverfish(world: World) : EntitySilverfish(world), ICritTracker{
 		targetTasks.addTask(1, AITargetAttacker(this, callReinforcements = true))
 		targetTasks.addTask(2, AITargetRandom<EntityPlayer>(this, chancePerTick = 5, checkSight = true, easilyReachableOnly = false))
 		targetTasks.addTask(3, aiTargetSwarmSwitch)
+	}
+	
+	override fun onLivingUpdate(){
+		super.onLivingUpdate()
+		
+		if (hideInBlockDelayTicks > 0){
+			--hideInBlockDelayTicks
+		}
+	}
+	
+	fun delayHideInBlockAI(delayTicks: Int){
+		hideInBlockDelayTicks = delayTicks
+	}
+	
+	fun disableHideInBlockAI(){
+		hideInBlockDelayTicks = Int.MAX_VALUE
+	}
+	
+	private fun tryHideInBlock(state: IBlockState): IBlockState?{
+		return if (BlockSilverfish.canContainSilverfish(state) && hideInBlockDelayTicks == 0)
+			Blocks.MONSTER_EGG.defaultState.withProperty(VARIANT, forModelBlock(state))
+		else
+			null
 	}
 	
 	override fun attackEntityFrom(source: DamageSource, amount: Float): Boolean{
@@ -137,5 +157,17 @@ class EntityMobSilverfish(world: World) : EntitySilverfish(world), ICritTracker{
 	
 	override fun getLootTable(): ResourceLocation{
 		return ModLoot.SILVERFISH
+	}
+	
+	override fun writeEntityToNBT(nbt: NBTTagCompound) = with(nbt.heeTag){
+		super.writeEntityToNBT(nbt)
+		
+		setInteger("HideDelay", hideInBlockDelayTicks)
+	}
+	
+	override fun readEntityFromNBT(nbt: NBTTagCompound) = with(nbt.heeTag){
+		super.readEntityFromNBT(nbt)
+		
+		hideInBlockDelayTicks = getInteger("HideDelay")
 	}
 }
