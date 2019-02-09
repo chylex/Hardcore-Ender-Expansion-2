@@ -1,12 +1,13 @@
 {
   "type": "minecraft:crafting_shaped",
   "pattern": [
-    " O ",
-    "X#X"
+    "XOX",
+    "X#X",
+    "XXX"
   ],
   "key": {
     "#": { "item": "minecraft:gold_ingot" },
-    "X": { "item": "minecraft:obsidian" },
+    "X": { "item": "hee:obsidian_fragment" },
     "O": { "item": "minecraft:ender_eye" }
   },
   "result": {
