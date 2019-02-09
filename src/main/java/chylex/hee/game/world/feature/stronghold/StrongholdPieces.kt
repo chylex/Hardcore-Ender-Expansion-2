@@ -35,8 +35,10 @@ import chylex.hee.game.world.feature.stronghold.piece.StrongholdRoom_Trap_TallIn
 import chylex.hee.game.world.structure.IBlockPicker.Weighted.Companion.Weighted
 import chylex.hee.game.world.structure.file.PaletteBuilder
 import chylex.hee.game.world.structure.file.PaletteMappings
+import chylex.hee.game.world.util.Size
 import chylex.hee.init.ModBlocks
 import chylex.hee.system.Resource
+import net.minecraft.block.Block
 import net.minecraft.init.Blocks
 import net.minecraft.init.Items
 import net.minecraft.item.EnumDyeColor
@@ -47,13 +49,15 @@ import net.minecraft.util.EnumFacing.SOUTH
 import net.minecraft.util.EnumFacing.WEST
 
 object StrongholdPieces{
+	val STRUCTURE_SIZE = Size(256, 32, 256)
+	
 	val PALETTE_ENTRY_STONE_BRICK = Weighted(
-		555 to FutureBlocks.STONE_BRICKS,
-		150 to FutureBlocks.MOSSY_STONE_BRICKS,
-		150 to FutureBlocks.CRACKED_STONE_BRICKS,
-		 70 to FutureBlocks.INFESTED_STONE_BRICKS,
-		 45 to FutureBlocks.INFESTED_MOSSY_STONE_BRICKS,
-		 30 to FutureBlocks.INFESTED_CRACKED_STONE_BRICKS
+		610 to FutureBlocks.STONE_BRICKS,
+		175 to FutureBlocks.MOSSY_STONE_BRICKS,
+		175 to FutureBlocks.CRACKED_STONE_BRICKS,
+		 20 to FutureBlocks.INFESTED_STONE_BRICKS,
+		 12 to FutureBlocks.INFESTED_MOSSY_STONE_BRICKS,
+		  8 to FutureBlocks.INFESTED_CRACKED_STONE_BRICKS
 	)
 	
 	val PALETTE = with(PaletteBuilder()){
@@ -118,6 +122,10 @@ object StrongholdPieces{
 		}
 		
 		build()
+	}
+	
+	fun isStoneBrick(block: Block): Boolean{
+		return block === Blocks.STONEBRICK || block === Blocks.MONSTER_EGG
 	}
 	
 	val LOOT_GENERIC = Resource.Custom("chests/stronghold_generic")

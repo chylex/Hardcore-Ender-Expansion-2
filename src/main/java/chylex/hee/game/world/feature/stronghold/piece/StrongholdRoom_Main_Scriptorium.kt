@@ -1,4 +1,5 @@
 package chylex.hee.game.world.feature.stronghold.piece
+import chylex.hee.game.world.feature.stronghold.StrongholdPieces
 import chylex.hee.game.world.feature.stronghold.connection.StrongholdRoomConnection
 import chylex.hee.game.world.structure.IStructureWorld
 import chylex.hee.game.world.structure.piece.IStructurePieceConnection
@@ -42,7 +43,7 @@ class StrongholdRoom_Main_Scriptorium(file: String) : StrongholdAbstractPieceFro
 				if (world.isAir(testPos) && (isInAir || Facing4.any { !world.isAir(testPos.offset(it)) })){
 					val below = world.getBlock(testPos.down())
 					
-					if (below === Blocks.BOOKSHELF || below === Blocks.STONEBRICK || below === Blocks.MONSTER_EGG || below === Blocks.STONE_SLAB){
+					if (below === Blocks.BOOKSHELF || below === Blocks.STONE_SLAB || StrongholdPieces.isStoneBrick(below)){
 						if (isInAir && rand.nextInt(4) == 0 && world.isAir(testPos.up())){
 							world.setBlock(testPos.up(), ModBlocks.ANCIENT_COBWEB)
 						}
