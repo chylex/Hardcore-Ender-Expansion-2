@@ -8,6 +8,7 @@ import net.minecraft.enchantment.EnchantmentHelper
 import net.minecraft.entity.EntityLivingBase
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.init.Enchantments
+import net.minecraft.init.Items
 import net.minecraft.item.ItemStack
 import net.minecraft.util.EnumHand.MAIN_HAND
 import net.minecraft.util.math.BlockPos
@@ -20,11 +21,13 @@ import net.minecraftforge.fml.common.eventhandler.EventPriority.LOWEST
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent
 
 class ItemVoidMiner : ItemAbstractVoidTool(){
+	private val toolClasses = arrayOf(PICKAXE, AXE, SHOVEL)
+	
 	init{
-		toolMaterial.harvestLevel.let {
-			setHarvestLevel(PICKAXE, it)
-			setHarvestLevel(AXE, it)
-			setHarvestLevel(SHOVEL, it)
+		val level = toolMaterial.harvestLevel
+		
+		for(toolClass in toolClasses){
+			setHarvestLevel(toolClass, level)
 		}
 	}
 	
@@ -47,12 +50,21 @@ class ItemVoidMiner : ItemAbstractVoidTool(){
 		return player.getHeldItem(MAIN_HAND).takeIf { it.item === this }
 	}
 	
+	private fun isAppropriateToolFor(state: IBlockState): Boolean{
+		return ( // fuck checking just isToolEffective because vanilla hardcodes everything and Forge doesn't un-hardcode everything...
+			Items.IRON_PICKAXE.canHarvestBlock(state) ||
+			Items.IRON_SHOVEL.canHarvestBlock(state) ||
+			Items.IRON_AXE.canHarvestBlock(state) ||
+			toolClasses.any { state.block.isToolEffective(it, state) }
+		)
+	}
+	
 	@SubscribeEvent(priority = HIGHEST)
 	fun onBreakSpeed(e: BreakSpeed){
 		val heldMiner = getHeldVoidMiner(e.entityPlayer)?.takeIf { it.itemDamage < it.maxDamage } ?: return
 		val state = e.state
 		
-		if (getToolClasses(heldMiner).any { state.block.isToolEffective(it, state) }){
+		if (isAppropriateToolFor(state)){
 			val efficiencyLevel = EnchantmentHelper.getEnchantmentLevel(Enchantments.EFFICIENCY, heldMiner).coerceAtMost(5)
 			e.newSpeed *= toolMaterial.efficiency + (6 * efficiencyLevel)
 		}
