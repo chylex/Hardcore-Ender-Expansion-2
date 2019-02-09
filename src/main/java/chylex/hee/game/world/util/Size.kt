@@ -1,11 +1,16 @@
 package chylex.hee.game.world.util
 import chylex.hee.system.util.Pos
+import chylex.hee.system.util.component1
+import chylex.hee.system.util.component2
+import chylex.hee.system.util.component3
 import net.minecraft.util.Rotation
 import net.minecraft.util.Rotation.CLOCKWISE_180
 import net.minecraft.util.Rotation.CLOCKWISE_90
 import net.minecraft.util.Rotation.COUNTERCLOCKWISE_90
 import net.minecraft.util.Rotation.NONE
+import net.minecraft.util.math.AxisAlignedBB
 import net.minecraft.util.math.BlockPos
+import net.minecraft.util.math.Vec3d
 
 data class Size(val x: Int, val y: Int, val z: Int){
 	val maxX get() = x - 1
@@ -32,5 +37,10 @@ data class Size(val x: Int, val y: Int, val z: Int){
 	
 	fun toBoundingBox(offset: BlockPos): BoundingBox{
 		return BoundingBox(offset, offset.add(maxX, maxY, maxZ))
+	}
+	
+	fun toBoundingBox(offset: Vec3d): AxisAlignedBB{
+		val (x, y, z) = offset
+		return AxisAlignedBB(x - centerX, y - centerY, z - centerZ, x + centerX, y + centerY, z + centerZ)
 	}
 }
