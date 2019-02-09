@@ -7,6 +7,7 @@ import chylex.hee.system.util.setEnum
 import net.minecraft.nbt.NBTTagCompound
 import net.minecraft.world.World
 import net.minecraftforge.common.util.INBTSerializable
+import java.util.Random
 
 class EntityTechnicalTrigger(world: World) : EntityTechnicalBase(world){
 	constructor(world: World, type: Types) : this(world){
@@ -14,13 +15,13 @@ class EntityTechnicalTrigger(world: World) : EntityTechnicalBase(world){
 	}
 	
 	interface ITriggerHandler : INBTSerializable<NBTTagCompound>{
-		val tickRate: Int
 		fun update(entity: EntityTechnicalTrigger)
+		fun nextTimer(rand: Random): Int
 	}
 	
 	private object InvalidTriggerHandler : ITriggerHandler{
-		override val tickRate = Int.MAX_VALUE
 		override fun update(entity: EntityTechnicalTrigger) = entity.setDead()
+		override fun nextTimer(rand: Random) = Int.MAX_VALUE
 		override fun serializeNBT() = NBTTagCompound()
 		override fun deserializeNBT(nbt: NBTTagCompound){}
 	}
@@ -32,23 +33,30 @@ class EntityTechnicalTrigger(world: World) : EntityTechnicalBase(world){
 	private var type by NotifyOnChange(Types.INVALID){ newValue -> handler = newValue.handlerConstructor() }
 	private var handler: ITriggerHandler = InvalidTriggerHandler
 	
+	private var timer = 0
+	
 	override fun entityInit(){}
 	
 	override fun onUpdate(){
 		super.onUpdate()
 		
-		if (!world.isRemote && ticksExisted % handler.tickRate == 0){
+		if (!world.isRemote && --timer < 0){
 			handler.update(this)
+			timer = handler.nextTimer(rand)
 		}
 	}
 	
 	override fun writeEntityToNBT(nbt: NBTTagCompound) = with(nbt.heeTag){
 		setEnum("Type", type)
 		setTag("Data", handler.serializeNBT())
+		
+		setShort("Timer", timer.toShort())
 	}
 	
 	override fun readEntityFromNBT(nbt: NBTTagCompound) = with(nbt.heeTag){
 		type = getEnum<Types>("Type") ?: INVALID
 		handler.deserializeNBT(getCompoundTag("Data"))
+		
+		timer = getShort("Timer").toInt()
 	}
 }
