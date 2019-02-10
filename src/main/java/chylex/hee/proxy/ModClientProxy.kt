@@ -120,10 +120,10 @@ class ModClientProxy : ModCommonProxy(){
 			for(item in keys.asSequence().filter { it.namespace == HEE.ID }.map(::getValue)){
 				ModelLoader.setCustomModelResourceLocation(item!!, 0, ModelResourceLocation(item.registryName!!, "inventory"))
 			}
-			
-			ModelLoader.setCustomModelResourceLocation(ModItems.VOID_SALAD, ItemVoidSalad.Type.DOUBLE.ordinal, ModelResourceLocation(Resource.Custom("void_void_salad"), "inventory"))
-			ModelLoader.setCustomModelResourceLocation(ModItems.VOID_SALAD, ItemVoidSalad.Type.MEGA.ordinal, ModelResourceLocation(Resource.Custom("mega_void_salad"), "inventory"))
 		}
+		
+		ModelLoader.setCustomModelResourceLocation(ModItems.VOID_SALAD, ItemVoidSalad.Type.DOUBLE.ordinal, ModelResourceLocation(Resource.Custom("void_void_salad"), "inventory"))
+		ModelLoader.setCustomModelResourceLocation(ModItems.VOID_SALAD, ItemVoidSalad.Type.MEGA.ordinal, ModelResourceLocation(Resource.Custom("mega_void_salad"), "inventory"))
 		
 		for(block in arrayOf(
 			ModBlocks.TABLE_BASE,

@@ -44,7 +44,7 @@ abstract class ParticleBaseEnergy(world: World, posX: Double, posY: Double, posZ
 		
 		private fun adjustColorComponents(color: IColor): Int{
 			val rgb = color.toRGB()
-			return(rgb.red.coerceIn(64, 224) shl 16) or (rgb.green.coerceIn(64, 224) shl 8) or rgb.blue.coerceIn(64, 224)
+			return (rgb.red.coerceIn(64, 224) shl 16) or (rgb.green.coerceIn(64, 224) shl 8) or rgb.blue.coerceIn(64, 224)
 		}
 	}
 	
