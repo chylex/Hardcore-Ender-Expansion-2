@@ -1,4 +1,5 @@
 package chylex.hee
+import chylex.hee.game.block.util.CustomPlantType
 import chylex.hee.game.commands.HeeServerCommand
 import chylex.hee.game.entity.CustomCreatureType
 import chylex.hee.game.entity.item.EntityItemIgneousRock
@@ -44,6 +45,7 @@ object HEE{
 		CustomRarity
 		CustomToolMaterial
 		CustomCreatureType
+		CustomPlantType
 	}
 	
 	@EventHandler
