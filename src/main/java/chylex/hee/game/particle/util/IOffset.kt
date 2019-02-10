@@ -88,6 +88,20 @@ interface IOffset{
 		}
 	}
 	
+	class Gaussian(
+		private val mpX: Float,
+		private val mpY: Float,
+		private val mpZ: Float
+	) : IOffset{
+		constructor(mp: Float) : this(mp, mp, mp)
+		
+		override fun next(out: MutableOffsetPoint, rand: Random){
+			out.x = (rand.nextGaussian() * mpX).toFloat()
+			out.y = (rand.nextGaussian() * mpY).toFloat()
+			out.z = (rand.nextGaussian() * mpZ).toFloat()
+		}
+	}
+	
 	// Math
 	
 	class Sum(

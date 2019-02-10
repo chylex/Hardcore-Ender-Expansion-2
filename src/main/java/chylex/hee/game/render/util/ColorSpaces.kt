@@ -1,6 +1,7 @@
 package chylex.hee.game.render.util
 import chylex.hee.system.util.floorToInt
 import chylex.hee.system.util.toRadians
+import net.minecraft.util.math.Vec3d
 import org.lwjgl.util.Color
 import kotlin.math.cos
 import kotlin.math.pow
@@ -14,6 +15,12 @@ interface IColor{
 	fun toInt(alpha: Float? = null): Int{
 		val rgb = toRGB()
 		return (if (alpha == null) 0 else ((alpha * 255).floorToInt() shl 24)) or (rgb.red shl 16) or (rgb.green shl 8) or rgb.blue
+	}
+	
+	@JvmDefault
+	fun toVec(): Vec3d{
+		val rgb = toRGB()
+		return Vec3d(rgb.red / 255.0, rgb.green / 255.0, rgb.blue / 255.0)
 	}
 }
 
