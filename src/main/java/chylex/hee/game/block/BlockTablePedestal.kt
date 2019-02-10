@@ -1,12 +1,12 @@
 package chylex.hee.game.block
 import chylex.hee.game.block.entity.TileEntityTablePedestal
+import chylex.hee.game.block.util.Property
 import chylex.hee.init.ModItems
 import chylex.hee.system.util.copyIf
 import chylex.hee.system.util.getState
 import chylex.hee.system.util.getTile
 import net.minecraft.block.Block
 import net.minecraft.block.ITileEntityProvider
-import net.minecraft.block.properties.PropertyBool
 import net.minecraft.block.state.BlockStateContainer
 import net.minecraft.block.state.IBlockState
 import net.minecraft.client.renderer.color.IBlockColor
@@ -29,7 +29,7 @@ import kotlin.math.max
 
 class BlockTablePedestal(builder: BlockSimple.Builder) : BlockSimpleShaped(builder, COMBINED_BOX), ITileEntityProvider{
 	companion object{
-		val IS_LINKED = PropertyBool.create("linked")!!
+		val IS_LINKED = Property.bool("linked")
 		
 		const val DROPPED_ITEM_THROWER_NAME = "[Pedestal]"
 		

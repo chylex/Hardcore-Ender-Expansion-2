@@ -1,5 +1,5 @@
 package chylex.hee.game.block
-import net.minecraft.block.properties.PropertyInteger
+import chylex.hee.game.block.util.Property
 import net.minecraft.block.state.BlockStateContainer
 import net.minecraft.block.state.IBlockState
 import net.minecraft.client.resources.I18n
@@ -18,7 +18,7 @@ abstract class BlockAbstractTable(builder: BlockSimple.Builder) : BlockSimple(bu
 		const val MIN_TIER = 1
 		const val MAX_TIER = 3
 		
-		val TIER = PropertyInteger.create("tier", MIN_TIER, MAX_TIER)!!
+		val TIER = Property.int("tier", MIN_TIER..MAX_TIER)
 	}
 	
 	open val minAllowedTier = MIN_TIER

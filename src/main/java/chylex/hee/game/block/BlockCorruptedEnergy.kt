@@ -3,6 +3,7 @@ import chylex.hee.game.block.BlockCorruptedEnergy.SpawnResult.FAIL
 import chylex.hee.game.block.BlockCorruptedEnergy.SpawnResult.PASSTHROUGH
 import chylex.hee.game.block.BlockCorruptedEnergy.SpawnResult.SUCCESS
 import chylex.hee.game.block.entity.TileEntityEnergyCluster
+import chylex.hee.game.block.util.Property
 import chylex.hee.game.entity.CustomCreatureType
 import chylex.hee.game.entity.IImmuneToCorruptedEnergy
 import chylex.hee.game.mechanics.damage.CombinedDamage
@@ -29,7 +30,6 @@ import chylex.hee.system.util.nextInt
 import chylex.hee.system.util.removeItem
 import chylex.hee.system.util.setAir
 import chylex.hee.system.util.setState
-import net.minecraft.block.properties.PropertyInteger
 import net.minecraft.block.state.BlockFaceShape
 import net.minecraft.block.state.BlockFaceShape.UNDEFINED
 import net.minecraft.block.state.BlockStateContainer
@@ -55,7 +55,7 @@ class BlockCorruptedEnergy(builder: BlockSimple.Builder) : BlockSimple(builder){
 		private const val MAX_TICK_RATE = 5
 		private const val MIN_TICK_RATE = 1
 		
-		val LEVEL = PropertyInteger.create("level", MIN_LEVEL, MAX_LEVEL)!!
+		val LEVEL = Property.int("level", MIN_LEVEL..MAX_LEVEL)
 		
 		private val DAMAGE_PART_NORMAL = Damage(DIFFICULTY_SCALING, ARMOR_PROTECTION(false), ENCHANTMENT_PROTECTION)
 		private val DAMAGE_PART_MAGIC = Damage(MAGIC_TYPE, NUDITY_DANGER, RAPID_DAMAGE(2))

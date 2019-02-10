@@ -3,12 +3,12 @@ import chylex.hee.game.block.BlockSimple.Builder
 import chylex.hee.game.block.BlockSimple.Builder.Companion.setHardnessWithResistance
 import chylex.hee.game.block.BlockSimple.Builder.Companion.setupBlockProperties
 import chylex.hee.game.block.BlockSlabCustom.PropertyDefault.DEFAULT
+import chylex.hee.game.block.util.Property
 import net.minecraft.block.Block
 import net.minecraft.block.BlockSlab
 import net.minecraft.block.BlockSlab.EnumBlockHalf.BOTTOM
 import net.minecraft.block.BlockSlab.EnumBlockHalf.TOP
 import net.minecraft.block.properties.IProperty
-import net.minecraft.block.properties.PropertyEnum
 import net.minecraft.block.state.BlockStateContainer
 import net.minecraft.block.state.IBlockState
 import net.minecraft.item.Item
@@ -20,7 +20,7 @@ import java.util.Random
 
 abstract class BlockSlabCustom(builder: Builder) : BlockSlab(builder.material, builder.mapColor){
 	companion object{
-		val VARIANT: PropertyEnum<PropertyDefault> = PropertyEnum.create<PropertyDefault>("variant", PropertyDefault::class.java)
+		val VARIANT = Property.enum<PropertyDefault>("variant")
 	}
 	
 	enum class PropertyDefault : IStringSerializable{

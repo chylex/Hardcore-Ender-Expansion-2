@@ -1,4 +1,5 @@
 package chylex.hee.game.block
+import chylex.hee.game.block.util.Property
 import chylex.hee.init.ModBlocks
 import chylex.hee.system.util.getBlock
 import net.minecraft.block.properties.PropertyBool
@@ -10,8 +11,8 @@ import net.minecraft.world.IBlockAccess
 
 class BlockEndersol(builder: BlockSimple.Builder) : BlockSimple(builder){
 	private companion object{
-		private val MERGE_TOP = PropertyBool.create("merge_top")
-		private val MERGE_BOTTOM = PropertyBool.create("merge_bottom")
+		private val MERGE_TOP = Property.bool("merge_top")
+		private val MERGE_BOTTOM = Property.bool("merge_bottom")
 	}
 	
 	override fun createBlockState(): BlockStateContainer = BlockStateContainer(this, MERGE_TOP, MERGE_BOTTOM)
