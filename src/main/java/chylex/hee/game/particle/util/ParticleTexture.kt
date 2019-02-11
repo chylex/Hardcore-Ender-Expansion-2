@@ -9,12 +9,15 @@ import net.minecraftforge.fml.relauncher.Side
 
 @EventBusSubscriber(Side.CLIENT, modid = HEE.ID)
 object ParticleTexture{
+	lateinit var STAR: TextureAtlasSprite private set
 	
+	private val TEX_STAR = Resource.Custom("particle/star")
 	
 	@JvmStatic
 	@SubscribeEvent
 	fun onTextureStitchPre(e: TextureStitchEvent.Pre){
 		with(e.map){
+			registerSprite(TEX_STAR)
 		}
 	}
 	
@@ -22,6 +25,7 @@ object ParticleTexture{
 	@SubscribeEvent
 	fun onTextureStitchPost(e: TextureStitchEvent.Post){
 		with(e.map){
+			STAR = getAtlasSprite(TEX_STAR.toString())
 		}
 	}
 }

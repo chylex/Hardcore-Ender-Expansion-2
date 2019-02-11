@@ -5,6 +5,7 @@ import chylex.hee.game.item.ItemBindingEssence
 import chylex.hee.game.item.ItemChorusBerry
 import chylex.hee.game.item.ItemCompost
 import chylex.hee.game.item.ItemElytraOverride
+import chylex.hee.game.item.ItemEndPowder
 import chylex.hee.game.item.ItemEnergyOracle
 import chylex.hee.game.item.ItemEnergyReceptacle
 import chylex.hee.game.item.ItemEyeOfEnderOverride
@@ -41,7 +42,7 @@ object ModItems{
 	
 	@JvmField val ETHEREUM          = Item().apply { setup("ethereum") }
 	@JvmField val ANCIENT_DUST      = Item().apply { setup("ancient_dust") }
-	@JvmField val END_POWDER        = Item().apply { setup("end_powder") }
+	@JvmField val END_POWDER        = ItemEndPowder().apply { setup("end_powder") }
 	@JvmField val STARDUST          = Item().apply { setup("stardust") }
 	@JvmField val ENDIUM_INGOT      = Item().apply { setup("endium_ingot") }
 	@JvmField val ENDIUM_NUGGET     = Item().apply { setup("endium_nugget") }
