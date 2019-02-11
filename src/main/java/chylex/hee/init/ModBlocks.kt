@@ -5,6 +5,8 @@ import chylex.hee.game.block.BlockChorusFlowerOverride
 import chylex.hee.game.block.BlockChorusPlantOverride
 import chylex.hee.game.block.BlockCorruptedEnergy
 import chylex.hee.game.block.BlockDarkChest
+import chylex.hee.game.block.BlockEndPlant
+import chylex.hee.game.block.BlockDeathFlowerDecaying
 import chylex.hee.game.block.BlockDragonEggOverride
 import chylex.hee.game.block.BlockDryVines
 import chylex.hee.game.block.BlockEndPortalAcceptor
@@ -290,6 +292,12 @@ object ModBlocks{
 	@JvmField val STARDUST_ORE     = BlockStardustOre(buildStardustOre).apply { setup("stardust_ore") }
 	@JvmField val IGNEOUS_ROCK_ORE = BlockIgneousRockOre(buildIgneousRockOre).apply { setup("igneous_rock_ore") }
 	
+	// Blocks: Decorative (Plants)
+	
+	@JvmField val DEATH_FLOWER_DECAYING = BlockDeathFlowerDecaying().apply { setup("death_flower") }
+	@JvmField val DEATH_FLOWER_HEALED   = BlockEndPlant().apply { setup("death_flower_healed") }
+	@JvmField val DEATH_FLOWER_WITHERED = BlockEndPlant().apply { setup("death_flower_withered") }
+	
 	// Blocks: Decorative (Uncategorized)
 	
 	@JvmField val ANCIENT_COBWEB = BlockAncientCobweb().apply { setup("ancient_cobweb") }
@@ -417,6 +425,10 @@ object ModBlocks{
 			register(ENDIUM_ORE with basicItemBlock)
 			register(STARDUST_ORE with basicItemBlock)
 			register(IGNEOUS_ROCK_ORE with basicItemBlock)
+			
+			register(DEATH_FLOWER_DECAYING with metaItemBlock)
+			register(DEATH_FLOWER_HEALED with basicItemBlock)
+			register(DEATH_FLOWER_WITHERED with basicItemBlock)
 			
 			register(ANCIENT_COBWEB with ::ItemAncientCobweb)
 			register(DRY_VINES with basicItemBlock)

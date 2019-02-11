@@ -1,0 +1,24 @@
+{
+  "forge_marker": 1,
+  "defaults": {
+    "model": "cross"
+  },
+  "variants": {
+    "level": {
+      "1":  { "textures": { "cross": "hee:block/death_flower_1" } },
+      "2":  { "textures": { "cross": "hee:block/death_flower_1" } },
+      "3":  { "textures": { "cross": "hee:block/death_flower_1" } },
+      "4":  { "textures": { "cross": "hee:block/death_flower_2" } },
+      "5":  { "textures": { "cross": "hee:block/death_flower_2" } },
+      "6":  { "textures": { "cross": "hee:block/death_flower_2" } },
+      "7":  { "textures": { "cross": "hee:block/death_flower_2" } },
+      "8":  { "textures": { "cross": "hee:block/death_flower_3" } },
+      "9":  { "textures": { "cross": "hee:block/death_flower_3" } },
+      "10": { "textures": { "cross": "hee:block/death_flower_3" } },
+      "11": { "textures": { "cross": "hee:block/death_flower_3" } },
+      "12": { "textures": { "cross": "hee:block/death_flower_4" } },
+      "13": { "textures": { "cross": "hee:block/death_flower_4" } },
+      "14": { "textures": { "cross": "hee:block/death_flower_4" } }
+    }
+  }
+}

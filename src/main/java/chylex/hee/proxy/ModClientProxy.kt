@@ -1,6 +1,7 @@
 package chylex.hee.proxy
 import chylex.hee.HEE
 import chylex.hee.game.block.BlockAbstractTable
+import chylex.hee.game.block.BlockDeathFlowerDecaying
 import chylex.hee.game.block.BlockDryVines
 import chylex.hee.game.block.BlockTablePedestal
 import chylex.hee.game.block.entity.TileEntityDarkChest
@@ -134,6 +135,20 @@ class ModClientProxy : ModCommonProxy(){
 			
 			for(tier in BlockAbstractTable.MIN_TIER..BlockAbstractTable.MAX_TIER){
 				ModelLoader.setCustomModelResourceLocation(item, tier, ModelResourceLocation(registryName, "tier=$tier"))
+			}
+		}
+		
+		Item.getItemFromBlock(ModBlocks.DEATH_FLOWER_DECAYING).let {
+			for(level in BlockDeathFlowerDecaying.MIN_LEVEL..BlockDeathFlowerDecaying.MAX_LEVEL){
+				val texture = when(level){
+					in 1..3   -> 1
+					in 4..7   -> 2
+					in 8..11  -> 3
+					in 12..14 -> 4
+					else      -> throw IllegalStateException()
+				}
+				
+				ModelLoader.setCustomModelResourceLocation(it, level - BlockDeathFlowerDecaying.MIN_LEVEL, ModelResourceLocation(Resource.Custom("death_flower_$texture"), "inventory"))
 			}
 		}
 		

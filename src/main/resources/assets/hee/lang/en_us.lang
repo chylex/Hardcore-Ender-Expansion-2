@@ -48,6 +48,10 @@ tile.hee.endium_ore.name=Endium Ore
 tile.hee.stardust_ore.name=Stardust Ore
 tile.hee.igneous_rock_ore.name=Igneous Rock Ore
 
+tile.hee.death_flower.name=Death Flower
+tile.hee.death_flower_healed.name=Healed Death Flower
+tile.hee.death_flower_withered.name=Withered Death Flower
+
 tile.hee.ancient_cobweb.name=Ancient Cobweb
 tile.hee.dry_vines.name=Dry Vines
 
