@@ -12,6 +12,7 @@ import chylex.hee.game.particle.util.IOffset.InBox
 import chylex.hee.game.particle.util.IShape.Line
 import chylex.hee.network.client.PacketClientFX
 import chylex.hee.network.client.PacketClientMoveYourAss
+import chylex.hee.network.client.PacketClientTeleportInstantly
 import chylex.hee.system.util.Pos
 import chylex.hee.system.util.center
 import chylex.hee.system.util.floorToInt
@@ -33,6 +34,7 @@ import net.minecraft.util.SoundCategory
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.Vec3d
 import net.minecraft.world.World
+import net.minecraft.world.WorldServer
 import net.minecraftforge.common.MinecraftForge
 import net.minecraftforge.event.entity.living.EnderTeleportEvent
 import java.util.Random
@@ -148,6 +150,14 @@ class Teleporter(
 		val world = entity.world
 		val prevPos = entity.posVec
 		val newPos = Vec3d(event.targetX, event.targetY, event.targetZ)
+		
+		if (world is WorldServer){
+			val packet = PacketClientTeleportInstantly(entity, newPos)
+			
+			for(player in world.entityTracker.getTrackingPlayers(entity)){
+				packet.sendToPlayer(player)
+			}
+		}
 		
 		entity.setPositionAndUpdate(newPos.x, newPos.y, newPos.z)
 		
