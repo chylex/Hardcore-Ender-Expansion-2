@@ -8,7 +8,6 @@ import chylex.hee.system.util.nextFloat
 import chylex.hee.system.util.nextVector
 import chylex.hee.system.util.posVec
 import chylex.hee.system.util.removeItem
-import net.minecraft.util.SoundCategory
 import net.minecraft.util.math.Vec3d
 import java.util.Random
 import kotlin.math.min
@@ -38,7 +37,7 @@ internal object EndermiteTeleportLogic{
 			val newPos = Vec3d(randomPos.x, randomPos.y.floorToInt() + 0.01, randomPos.z)
 			
 			if (Pos(newPos).down().blocksMovement(world) && world.getCollisionBoxes(endermite, originalBox.offset(newPos.subtract(originalPos))).isEmpty()){
-				TELEPORT.toLocation(endermite, newPos, SoundCategory.HOSTILE)
+				TELEPORT.toLocation(endermite, newPos)
 				return
 			}
 		}

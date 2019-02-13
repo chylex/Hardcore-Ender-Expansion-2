@@ -116,11 +116,11 @@ class Teleporter(
 		}
 	}
 	
-	fun toBlock(entity: EntityLivingBase, position: BlockPos, soundCategory: SoundCategory): Boolean{
+	fun toBlock(entity: EntityLivingBase, position: BlockPos, soundCategory: SoundCategory = entity.soundCategory): Boolean{
 		return toLocation(entity, position.center.add(0.0, -0.49, 0.0), soundCategory)
 	}
 	
-	fun toLocation(entity: EntityLivingBase, position: Vec3d, soundCategory: SoundCategory): Boolean{
+	fun toLocation(entity: EntityLivingBase, position: Vec3d, soundCategory: SoundCategory = entity.soundCategory): Boolean{
 		val event = EnderTeleportEvent(entity, position.x, position.y, position.z, damageDealt)
 		
 		if (MinecraftForge.EVENT_BUS.post(event)){

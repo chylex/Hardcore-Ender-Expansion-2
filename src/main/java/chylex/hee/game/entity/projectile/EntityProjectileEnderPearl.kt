@@ -24,7 +24,6 @@ import net.minecraft.entity.item.EntityEnderPearl
 import net.minecraft.entity.player.EntityPlayerMP
 import net.minecraft.nbt.NBTTagCompound
 import net.minecraft.util.DamageSource
-import net.minecraft.util.SoundCategory
 import net.minecraft.util.math.RayTraceResult
 import net.minecraft.util.math.RayTraceResult.Type.MISS
 import net.minecraft.world.World
@@ -175,11 +174,11 @@ class EntityProjectileEnderPearl : EntityEnderPearl, IEntityAdditionalSpawnData{
 			
 			if (thrower is EntityPlayerMP){
 				if (thrower.connection.networkManager.isChannelOpen && thrower.world === world){
-					teleporter.toLocation(thrower, posVec, SoundCategory.PLAYERS)
+					teleporter.toLocation(thrower, posVec)
 				}
 			}
 			else if (thrower != null){
-				teleporter.toLocation(thrower, posVec, SoundCategory.NEUTRAL)
+				teleporter.toLocation(thrower, posVec)
 			}
 		}
 	}

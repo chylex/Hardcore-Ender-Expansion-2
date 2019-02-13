@@ -17,7 +17,6 @@ import net.minecraft.entity.IProjectile
 import net.minecraft.entity.MoverType.SELF
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.nbt.NBTTagCompound
-import net.minecraft.util.SoundCategory
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.RayTraceResult
 import net.minecraft.util.math.RayTraceResult.Type.BLOCK
@@ -53,7 +52,7 @@ class EntityProjectileSpatialDash : Entity, IProjectile{
 		
 		private fun handleBlockHit(entity: EntityLivingBase, hit: Vec3d, motion: Vec3d, pos: BlockPos){
 			if (canTeleportPlayerOnTop(pos, entity.world)){
-				TELEPORT.toBlock(entity, pos.up(), SoundCategory.PLAYERS)
+				TELEPORT.toBlock(entity, pos.up())
 			}
 			else if (!(entity is EntityPlayer && BlockEditor.canBreak(pos, entity))){
 				handleGenericHit(entity, hit, motion)
@@ -76,11 +75,11 @@ class EntityProjectileSpatialDash : Entity, IProjectile{
 				.firstOrNull { canTeleportPlayerOnTop(it, world) }
 			
 			if (finalBlock != null){
-				TELEPORT.toBlock(entity, finalBlock.up(), SoundCategory.PLAYERS)
+				TELEPORT.toBlock(entity, finalBlock.up())
 				return true
 			}
 			else if (fallback){
-				TELEPORT.toLocation(entity, target, SoundCategory.PLAYERS)
+				TELEPORT.toLocation(entity, target)
 				return true
 			}
 			
