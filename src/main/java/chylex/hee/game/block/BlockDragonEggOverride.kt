@@ -8,7 +8,7 @@ import chylex.hee.game.particle.ParticleTeleport
 import chylex.hee.game.particle.spawner.ParticleSpawnerCustom
 import chylex.hee.game.particle.util.IOffset.InBox
 import chylex.hee.game.particle.util.IShape.Point
-import chylex.hee.game.world.util.Teleporter
+import chylex.hee.game.world.util.Teleporter.Companion.FxTeleportData
 import chylex.hee.network.client.PacketClientFX
 import chylex.hee.system.util.blocksMovement
 import chylex.hee.system.util.center
@@ -104,7 +104,15 @@ class BlockDragonEggOverride : BlockDragonEgg(){
 					finalPos.setState(world, realState)
 					pos.setAir(world)
 					
-					Teleporter.sendTeleportFX(world, pos.center, finalPos.center, SoundCategory.BLOCKS, 0.7F)
+					FxTeleportData(
+						startPoint = pos.center,
+						endPoint = finalPos.center,
+						width = 0.2F,
+						height = 0.2F,
+						soundCategory = SoundCategory.BLOCKS,
+						soundVolume = 0.7F
+					).send(world)
+					
 					return true
 				}
 			}

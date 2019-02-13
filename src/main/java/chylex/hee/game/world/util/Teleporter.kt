@@ -51,22 +51,32 @@ class Teleporter(
 		private const val EXTENDED_MINIMUM_VOLUME = 0.1F
 		private const val RANGE_FOR_MINIMUM_VOLUME = 16.0 - (16.0 * EXTENDED_MINIMUM_VOLUME)
 		
-		private val PARTICLE_POS = InBox(0.2F)
 		private val PARTICLE_MOT = InBox(0.035F)
 		
 		class FxTeleportData(
 			private val startPoint: Vec3d,
 			private val endPoint: Vec3d,
+			private val width: Float,
+			private val height: Float,
 			private val soundCategory: SoundCategory,
 			private val soundVolume: Float,
-			private val extendedRange: Float
+			private val extraRange: Float = 0F
 		) : IFxData{
 			override fun write(buffer: ByteBuf) = buffer.use {
 				writeCompactVec(startPoint)
 				writeCompactVec(endPoint)
+				writeByte((width * 10F).floorToInt().coerceIn(0, 100))
+				writeByte((height * 10F).floorToInt().coerceIn(0, 100))
 				writeString(soundCategory.getName())
 				writeByte((soundVolume * 10F).floorToInt().coerceIn(0, 250))
-				writeByte(extendedRange.floorToInt().coerceIn(0, 255))
+				writeByte(extraRange.floorToInt().coerceIn(0, 255))
+			}
+			
+			fun send(world: World){
+				val middlePoint = startPoint.offsetTowards(endPoint, 0.5)
+				val traveledDistance = startPoint.distanceTo(endPoint)
+				
+				PacketClientFX(FX_TELEPORT, this).sendToAllAround(world, middlePoint, (traveledDistance * 0.5) + 32F + extraRange)
 			}
 		}
 		
@@ -78,6 +88,9 @@ class Teleporter(
 				
 				val startPoint = readCompactVec()
 				val endPoint = readCompactVec()
+				
+				val halfWidth = (readByte() / 10F) * 0.5F
+				val halfHeight = (readByte() / 10F) * 0.5F
 				
 				val soundCategory = SoundCategory.getByName(readString())
 				val soundVolume = readByte() / 10F
@@ -100,19 +113,12 @@ class Teleporter(
 				
 				ParticleSpawnerCustom(
 					type = ParticleTeleport,
-					pos = PARTICLE_POS,
+					pos = InBox(halfWidth, halfHeight, halfWidth),
 					mot = PARTICLE_MOT,
 					maxRange = 16.0 + soundRange,
 					hideOnMinimalSetting = false
 				).spawn(Line(startPoint, endPoint, 0.5), rand)
 			}
-		}
-		
-		fun sendTeleportFX(world: World, startPoint: Vec3d, endPoint: Vec3d, soundCategory: SoundCategory, soundVolume: Float, extraRange: Float = 0F){
-			val middlePoint = startPoint.offsetTowards(endPoint, 0.5)
-			val traveledDistance = startPoint.distanceTo(endPoint)
-			
-			PacketClientFX(FX_TELEPORT, FxTeleportData(startPoint, endPoint, soundCategory, soundVolume, extraRange)).sendToAllAround(world, middlePoint, (traveledDistance * 0.5) + 32F + extraRange)
 		}
 	}
 	
@@ -139,9 +145,14 @@ class Teleporter(
 			entity.wakeUpPlayer(true, true, false)
 		}
 		
+		val world = entity.world
 		val prevPos = entity.posVec
-		entity.setPositionAndUpdate(event.targetX, event.targetY, event.targetZ)
-		sendTeleportFX(entity.world, prevPos, entity.posVec, soundCategory, 1F, extendedEffectRange)
+		val newPos = Vec3d(event.targetX, event.targetY, event.targetZ)
+		
+		entity.setPositionAndUpdate(newPos.x, newPos.y, newPos.z)
+		
+		val halfHeight = Vec3d(0.0, entity.height * 0.5, 0.0)
+		FxTeleportData(prevPos.add(halfHeight), newPos.add(halfHeight), entity.width, entity.height, soundCategory, 1F, extendedEffectRange).send(world)
 		
 		if (resetFall){
 			entity.fallDistance = 0F
@@ -156,7 +167,7 @@ class Teleporter(
 		}
 		
 		if (causedInstability > 0u){
-			Instability.get(entity.world).triggerAction(causedInstability, Pos(position))
+			Instability.get(world).triggerAction(causedInstability, Pos(position))
 		}
 		
 		return true
