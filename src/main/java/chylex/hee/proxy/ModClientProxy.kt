@@ -72,6 +72,8 @@ class ModClientProxy : ModCommonProxy(){
 	override fun onInit(){
 		ClientCommandHandler.instance.registerCommand(HeeClientCommand)
 		
+		// renderers
+		
 		registerTileRenderer<TileEntityEndPortal>(RenderTileEndPortal)
 		registerTileRenderer<TileEntityDarkChest>(RenderTileDarkChest)
 		registerTileRenderer<TileEntityLootChest>(RenderTileLootChest)

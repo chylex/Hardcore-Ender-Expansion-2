@@ -5,10 +5,10 @@ import chylex.hee.game.block.BlockChorusFlowerOverride
 import chylex.hee.game.block.BlockChorusPlantOverride
 import chylex.hee.game.block.BlockCorruptedEnergy
 import chylex.hee.game.block.BlockDarkChest
-import chylex.hee.game.block.BlockEndPlant
 import chylex.hee.game.block.BlockDeathFlowerDecaying
 import chylex.hee.game.block.BlockDragonEggOverride
 import chylex.hee.game.block.BlockDryVines
+import chylex.hee.game.block.BlockEndPlant
 import chylex.hee.game.block.BlockEndPortalAcceptor
 import chylex.hee.game.block.BlockEndPortalCustom
 import chylex.hee.game.block.BlockEndPortalOverride

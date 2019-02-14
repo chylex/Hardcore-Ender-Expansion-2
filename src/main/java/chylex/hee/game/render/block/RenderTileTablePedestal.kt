@@ -24,6 +24,8 @@ import net.minecraft.client.renderer.vertex.DefaultVertexFormats
 import net.minecraft.item.Item
 import net.minecraft.item.ItemStack
 import net.minecraftforge.client.ForgeHooksClient
+import net.minecraftforge.fml.relauncher.Side
+import net.minecraftforge.fml.relauncher.SideOnly
 import org.lwjgl.opengl.GL11.GL_ALWAYS
 import org.lwjgl.opengl.GL11.GL_GREATER
 import org.lwjgl.opengl.GL11.GL_QUADS
@@ -32,6 +34,7 @@ import java.util.Random
 import kotlin.math.cos
 import kotlin.math.sin
 
+@SideOnly(Side.CLIENT)
 object RenderTileTablePedestal : TileEntitySpecialRenderer<TileEntityTablePedestal>(){
 	private val TEX_BLOCKS_ITEMS = TextureMap.LOCATION_BLOCKS_TEXTURE
 	private val TEX_SHADOW = Resource.Vanilla("textures/misc/shadow.png")
