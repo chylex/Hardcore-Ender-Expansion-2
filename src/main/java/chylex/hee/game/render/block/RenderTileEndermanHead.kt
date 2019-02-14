@@ -1,0 +1,54 @@
+package chylex.hee.game.render.block
+import chylex.hee.game.render.util.GL
+import chylex.hee.system.Resource
+import net.minecraft.client.Minecraft
+import net.minecraft.client.model.ModelRenderer
+import net.minecraft.client.model.ModelSkeletonHead
+import net.minecraft.client.renderer.tileentity.TileEntityItemStackRenderer
+import net.minecraft.entity.Entity
+import net.minecraft.item.ItemStack
+import net.minecraftforge.fml.relauncher.Side
+import net.minecraftforge.fml.relauncher.SideOnly
+
+@SideOnly(Side.CLIENT)
+object RenderTileEndermanHead{
+	private val TEX_ENDERMAN = Resource.Custom("textures/entity/enderman_head.png")
+	private val MODEL_HEAD = ModelSkeletonHead(0, 0, 64, 32)
+	
+	object AsItem : TileEntityItemStackRenderer(){
+		override fun renderByItem(stack: ItemStack, partialTicks: Float){
+			GL.pushMatrix()
+			GL.disableCull()
+			
+			GL.translate(0.5F, 0F, 0.5F)
+			GL.enableRescaleNormal()
+			GL.scale(-1F, -1F, 1F)
+			GL.enableAlpha()
+			
+			Minecraft.getMinecraft().textureManager.bindTexture(TEX_ENDERMAN)
+			MODEL_HEAD.render(null, 0F, 0F, 0F, 180F, 0F, 0.0625F)
+			
+			GL.enableCull()
+			GL.popMatrix()
+		}
+	}
+	
+	object AsHeadLayer{
+		operator fun invoke(entity: Entity, headModel: ModelRenderer, limbSwing: Float){
+			GL.pushMatrix()
+			
+			if (entity.isSneaking){
+				GL.translate(0F, 0.2F, 0F)
+			}
+			
+			headModel.postRender(0.0625F)
+			GL.color(1F, 1F, 1F, 1F)
+			GL.scale(1.1875F, 1.1875F, -1.1875F)
+			
+			Minecraft.getMinecraft().textureManager.bindTexture(TEX_ENDERMAN)
+			MODEL_HEAD.render(null, limbSwing, 0F, 0F, 180F, 0F, 0.0625F)
+			
+			GL.popMatrix()
+		}
+	}
+}

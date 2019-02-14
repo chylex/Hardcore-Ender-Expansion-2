@@ -19,12 +19,14 @@ import chylex.hee.game.item.ItemVoidBucket
 import chylex.hee.game.item.ItemVoidSalad
 import chylex.hee.game.render.block.RenderTileDarkChest
 import chylex.hee.game.render.block.RenderTileEndPortal
+import chylex.hee.game.render.block.RenderTileEndermanHead
 import chylex.hee.game.render.block.RenderTileLootChest
 import chylex.hee.game.render.block.RenderTileTablePedestal
 import chylex.hee.game.render.entity.RenderEntityItemNoBob
 import chylex.hee.game.render.entity.RenderEntityMobAbstractEnderman
 import chylex.hee.game.render.entity.RenderEntityNothing
 import chylex.hee.game.render.entity.RenderEntityProjectileEyeOfEnder
+import chylex.hee.game.render.entity.layer.LayerEndermanHead
 import chylex.hee.game.render.model.ModelItemAmuletOfRecovery
 import chylex.hee.init.ModBlocks
 import chylex.hee.init.ModItems
@@ -77,6 +79,11 @@ class ModClientProxy : ModCommonProxy(){
 		
 		Item.getItemFromBlock(ModBlocks.DARK_CHEST).tileEntityItemStackRenderer = RenderTileDarkChest.AsItem
 		Item.getItemFromBlock(ModBlocks.LOOT_CHEST).tileEntityItemStackRenderer = RenderTileLootChest.AsItem
+		ModItems.ENDERMAN_HEAD.tileEntityItemStackRenderer = RenderTileEndermanHead.AsItem
+		
+		for(render in Minecraft.getMinecraft().renderManager.skinMap.values){
+			render.addLayer(LayerEndermanHead(render.mainModel.bipedHead))
+		}
 		
 		// colors
 		

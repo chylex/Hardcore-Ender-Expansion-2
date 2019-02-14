@@ -6,6 +6,7 @@ import chylex.hee.game.item.ItemChorusBerry
 import chylex.hee.game.item.ItemCompost
 import chylex.hee.game.item.ItemElytraOverride
 import chylex.hee.game.item.ItemEndPowder
+import chylex.hee.game.item.ItemEndermanHead
 import chylex.hee.game.item.ItemEnergyOracle
 import chylex.hee.game.item.ItemEnergyReceptacle
 import chylex.hee.game.item.ItemEyeOfEnderOverride
@@ -72,6 +73,7 @@ object ModItems{
 	
 	@JvmField val TABLE_LINK     = ItemTableLink().apply { setup("table_link") }
 	@JvmField val KNOWLEDGE_NOTE = Item().apply { setup("knowledge_note") } // TODO
+	@JvmField val ENDERMAN_HEAD  = ItemEndermanHead().apply { setup("enderman_head") }
 	
 	// Items: Tools
 	
@@ -133,6 +135,7 @@ object ModItems{
 			
 			register(TABLE_LINK)
 			register(KNOWLEDGE_NOTE)
+			register(ENDERMAN_HEAD)
 			
 			register(VOID_MINER)
 			register(VOID_BUCKET)

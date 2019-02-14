@@ -14,6 +14,7 @@ import chylex.hee.game.block.BlockEndPortalCustom
 import chylex.hee.game.block.BlockEndPortalOverride
 import chylex.hee.game.block.BlockEndPowderOre
 import chylex.hee.game.block.BlockEnderGoo
+import chylex.hee.game.block.BlockEndermanHead
 import chylex.hee.game.block.BlockEndersol
 import chylex.hee.game.block.BlockEndium
 import chylex.hee.game.block.BlockEnergyCluster
@@ -302,6 +303,7 @@ object ModBlocks{
 	
 	@JvmField val ANCIENT_COBWEB = BlockAncientCobweb().apply { setup("ancient_cobweb") }
 	@JvmField val DRY_VINES      = BlockDryVines().apply { setup("dry_vines") }
+	@JvmField val ENDERMAN_HEAD  = BlockEndermanHead().apply { setup("enderman_head_block", inCreativeTab = false) }
 	
 	// Blocks: Portals
 	
@@ -432,6 +434,7 @@ object ModBlocks{
 			
 			register(ANCIENT_COBWEB with ::ItemAncientCobweb)
 			register(DRY_VINES with basicItemBlock)
+			register(ENDERMAN_HEAD)
 			
 			register(END_PORTAL_INNER with basicItemBlock)
 			register(END_PORTAL_FRAME with basicItemBlock)
