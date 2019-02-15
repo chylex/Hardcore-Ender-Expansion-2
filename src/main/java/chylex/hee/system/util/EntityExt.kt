@@ -18,6 +18,8 @@ import net.minecraft.entity.ai.EntityAISwimming
 import net.minecraft.entity.ai.EntityAIWander
 import net.minecraft.entity.ai.EntityAIWanderAvoidWater
 import net.minecraft.entity.ai.EntityAIWatchClosest
+import net.minecraft.entity.ai.attributes.AttributeModifier
+import net.minecraft.entity.ai.attributes.IAttributeInstance
 import net.minecraft.entity.item.EntityItem
 import net.minecraft.util.EntitySelectors
 import net.minecraft.util.math.Vec3d
@@ -75,6 +77,25 @@ fun EntityItem.cloneFrom(source: Entity){
 		
 		thrower = source.thrower
 		owner = source.owner
+	}
+}
+
+// Attributes
+
+/** Performs operation: base + x + y */
+const val OPERATION_ADD = 0
+
+/** Performs operation: base * (1 + x + y) */
+const val OPERATION_MUL_INCR_GROUPED = 1
+
+/** Performs operation: base * (1 + x) * (1 + y) */
+const val OPERATION_MUL_INCR_INDIVIDUAL = 2
+
+// Attributes (Helpers)
+
+fun IAttributeInstance.tryApplyModifier(modifier: AttributeModifier){
+	if (!this.hasModifier(modifier)){
+		this.applyModifier(modifier)
 	}
 }
 
