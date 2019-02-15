@@ -1,3 +1,10 @@
 {
-  "parent": "item/skull"
+  "parent": "item/skull",
+  "display": {
+    "head": {
+      "rotation": [ 0, 180, 0 ],
+      "translation": [ 0, 8, 0 ],
+      "scale": [ 0, 0, 0 ]
+    }
+  }
 }

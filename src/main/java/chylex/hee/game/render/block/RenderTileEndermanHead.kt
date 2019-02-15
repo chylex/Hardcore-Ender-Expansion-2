@@ -36,6 +36,7 @@ object RenderTileEndermanHead{
 	object AsHeadLayer{
 		operator fun invoke(entity: Entity, headModel: ModelRenderer, limbSwing: Float){
 			GL.pushMatrix()
+			GL.disableCull()
 			
 			if (entity.isSneaking){
 				GL.translate(0F, 0.2F, 0F)
@@ -48,6 +49,7 @@ object RenderTileEndermanHead{
 			Minecraft.getMinecraft().textureManager.bindTexture(TEX_ENDERMAN)
 			MODEL_HEAD.render(null, limbSwing, 0F, 0F, 180F, 0F, 0.0625F)
 			
+			GL.enableCull()
 			GL.popMatrix()
 		}
 	}
