@@ -7,6 +7,7 @@ import chylex.hee.network.IPacket
 import io.netty.buffer.Unpooled
 import it.unimi.dsi.fastutil.bytes.Byte2ObjectOpenHashMap
 import it.unimi.dsi.fastutil.objects.Object2ByteOpenHashMap
+import net.minecraft.entity.Entity
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.entity.player.EntityPlayerMP
 import net.minecraft.network.NetHandlerPlayServer
@@ -76,6 +77,10 @@ object ModNetwork{
 	
 	fun sendToDimension(packet: BaseClientPacket, dimension: Int){
 		network.sendToDimension(writePacket(packet), dimension)
+	}
+	
+	fun sendToTracking(packet: BaseClientPacket, entity: Entity){
+		network.sendToAllTracking(writePacket(packet), entity)
 	}
 	
 	fun sendToAllAround(packet: BaseClientPacket, point: TargetPoint){

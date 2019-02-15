@@ -39,6 +39,10 @@ abstract class BaseClientPacket : IPacket{
 		ModNetwork.sendToDimension(this, dimension)
 	}
 	
+	inline fun sendToTracking(entity: Entity){
+		ModNetwork.sendToTracking(this, entity)
+	}
+	
 	inline fun sendToAllAround(x: Double, y: Double, z: Double, dimension: Int, range: Double){
 		ModNetwork.sendToAllAround(this, TargetPoint(dimension, x, y, z, range))
 	}
