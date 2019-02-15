@@ -1,9 +1,11 @@
 package chylex.hee.game.entity.living
+import chylex.hee.game.entity.util.EntityData
 import net.minecraft.entity.Entity
 import net.minecraft.entity.EntityLivingBase
 import net.minecraft.entity.SharedMonsterAttributes.MOVEMENT_SPEED
 import net.minecraft.entity.monster.EntityEnderman
 import net.minecraft.entity.projectile.EntityArrow
+import net.minecraft.network.datasync.DataSerializers
 import net.minecraft.util.DamageSource
 import net.minecraft.util.EntityDamageSource
 import net.minecraft.util.EntityDamageSourceIndirect
@@ -12,13 +14,21 @@ import net.minecraft.util.text.ITextComponent
 import net.minecraft.world.World
 
 abstract class EntityMobAbstractEnderman(world: World) : EntityEnderman(world){
-	var isAggressive
-		get() = super.isScreaming()
-		set(value) = dataManager.set(SCREAMING, value)
+	private companion object{
+		private val DATA_SHAKING = EntityData.register<EntityMobAbstractEnderman, Boolean>(DataSerializers.BOOLEAN)
+	}
+	
+	var isAggressive: Boolean by EntityData(SCREAMING)
+	var isShaking: Boolean by EntityData(DATA_SHAKING)
+	
+	override fun entityInit(){
+		super.entityInit()
+		dataManager.register(DATA_SHAKING, false)
+	}
 	
 	override fun initEntityAI(){}
 	
-	override fun updateAITasks(){}
+	override fun updateAITasks(){} // blocks vanilla water damage & sunlight behavior
 	
 	override fun setAttackTarget(newTarget: EntityLivingBase?){
 		val prevAggressive = isAggressive

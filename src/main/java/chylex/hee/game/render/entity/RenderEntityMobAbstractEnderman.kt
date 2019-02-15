@@ -17,9 +17,19 @@ open class RenderEntityMobAbstractEnderman(manager: RenderManager) : RenderEnder
 	private val rand = Random()
 	
 	override fun doRender(entity: EntityEnderman, x: Double, y: Double, z: Double, rotationYaw: Float, partialTicks: Float){
-		super.doRender(entity, x, y, z, rotationYaw, partialTicks)
+		if (entity !is EntityMobAbstractEnderman){
+			return
+		}
 		
-		if (entity is EntityMobAbstractEnderman && entity.isAggressive){
+		if (entity.isShaking){
+			rand.setSeed(entity.world.totalWorldTime)
+			super.doRender(entity, x + (rand.nextGaussian() * 0.01), y + (rand.nextGaussian() * 0.01), z + (rand.nextGaussian() * 0.01), rotationYaw, partialTicks)
+		}
+		else{
+			super.doRender(entity, x, y, z, rotationYaw, partialTicks)
+		}
+		
+		if (entity.isAggressive){
 			rand.setSeed(entity.world.totalWorldTime * 2L / 3L)
 			
 			val prevPrevYaw = entity.prevRotationYawHead
