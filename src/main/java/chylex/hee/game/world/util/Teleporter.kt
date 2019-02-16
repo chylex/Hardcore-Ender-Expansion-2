@@ -34,7 +34,6 @@ import net.minecraft.util.SoundCategory
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.Vec3d
 import net.minecraft.world.World
-import net.minecraft.world.WorldServer
 import net.minecraftforge.common.MinecraftForge
 import net.minecraftforge.event.entity.living.EnderTeleportEvent
 import java.util.Random
@@ -151,14 +150,7 @@ class Teleporter(
 		val prevPos = entity.posVec
 		val newPos = Vec3d(event.targetX, event.targetY, event.targetZ)
 		
-		if (world is WorldServer){
-			val packet = PacketClientTeleportInstantly(entity, newPos)
-			
-			for(player in world.entityTracker.getTrackingPlayers(entity)){
-				packet.sendToPlayer(player)
-			}
-		}
-		
+		PacketClientTeleportInstantly(entity, newPos).sendToTracking(entity)
 		entity.setPositionAndUpdate(newPos.x, newPos.y, newPos.z)
 		
 		val halfHeight = Vec3d(0.0, entity.height * 0.5, 0.0)
