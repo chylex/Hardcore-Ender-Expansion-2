@@ -9,18 +9,26 @@ class WeightedList<T>(private val items: List<Pair<Int, T>>){
 		else
 			items.fold(0L){ total, item -> if (item.first > 0) total + item.first else throw IllegalArgumentException("weight must be > 0") }
 	
-	fun generateItem(rand: Random): T{
+	fun generateEntry(rand: Random): Pair<Int, T>{
 		var remaining = rand.nextLong(totalWeight)
 		
 		for(item in items){
 			remaining -= item.first
 			
 			if (remaining < 0){
-				return item.second
+				return item
 			}
 		}
 		
 		throw IllegalStateException("failed generating a random weighted item")
+	}
+	
+	fun generateItem(rand: Random): T{
+		return generateEntry(rand).second
+	}
+	
+	fun mutableCopy(): MutableWeightedList<T>{
+		return MutableWeightedList(items.toMutableList())
 	}
 	
 	override fun toString(): String{
