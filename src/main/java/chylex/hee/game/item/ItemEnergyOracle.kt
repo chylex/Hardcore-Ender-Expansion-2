@@ -31,7 +31,6 @@ import net.minecraft.entity.Entity
 import net.minecraft.entity.EntityLivingBase
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.item.ItemStack
-import net.minecraft.item.crafting.IRecipe
 import net.minecraft.nbt.NBTTagCompound
 import net.minecraft.util.EnumHand.MAIN_HAND
 import net.minecraft.util.EnumHand.OFF_HAND
@@ -78,8 +77,8 @@ class ItemEnergyOracle : ItemAbstractEnergyUser(), IInfusableItem{
 			}
 		}
 		
-		fun setupRecipeNBT(recipe: IRecipe){
-			ModItems.ENERGY_ORACLE.setEnergyChargeLevel(recipe.recipeOutput, Units(20))
+		fun setupRecipeNBT(stack: ItemStack){
+			ModItems.ENERGY_ORACLE.setEnergyChargeLevel(stack, Units(20))
 		}
 	}
 	

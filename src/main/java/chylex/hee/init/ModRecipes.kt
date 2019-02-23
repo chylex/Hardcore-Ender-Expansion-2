@@ -45,8 +45,8 @@ object ModRecipes{
 			IntegrityCheck.removedEyeOfEnderRecipe = removeVanilla("ender_eye")
 			// TODO figure out what to do with the broken advancements
 			
-			ItemEnergyOracle.setupRecipeNBT(getValue(Resource.Custom("energy_oracle"))!!)
-			ItemSpatialDashGem.setupRecipeNBT(getValue(Resource.Custom("spatial_dash_gem"))!!)
+			ItemEnergyOracle.setupRecipeNBT(getValue(Resource.Custom("energy_oracle"))!!.recipeOutput)
+			ItemSpatialDashGem.setupRecipeNBT(getValue(Resource.Custom("spatial_dash_gem"))!!.recipeOutput)
 			// UPDATE: hopfully figure out a better way to do this
 			
 			register(RecipeBindingEssence named "binding_essence")

@@ -13,7 +13,6 @@ import chylex.hee.system.util.over
 import net.minecraft.client.util.ITooltipFlag
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.item.ItemStack
-import net.minecraft.item.crafting.IRecipe
 import net.minecraft.stats.StatList
 import net.minecraft.util.ActionResult
 import net.minecraft.util.EnumActionResult.FAIL
@@ -27,8 +26,8 @@ class ItemSpatialDashGem : ItemAbstractEnergyUser(), IInfusableItem{
 	companion object{
 		private const val INSTANT_SPEED_MP = 100F // just above the maximum possible distance
 		
-		fun setupRecipeNBT(recipe: IRecipe){
-			ModItems.SPATIAL_DASH_GEM.setEnergyChargePercentage(recipe.recipeOutput, 1F)
+		fun setupRecipeNBT(stack: ItemStack){
+			ModItems.SPATIAL_DASH_GEM.setEnergyChargePercentage(stack, 1F)
 		}
 	}
 	
