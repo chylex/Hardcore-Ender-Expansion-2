@@ -9,6 +9,9 @@ class WeightedList<T>(private val items: List<Pair<Int, T>>){
 		else
 			items.fold(0L){ total, item -> if (item.first > 0) total + item.first else throw IllegalArgumentException("weight must be > 0") }
 	
+	val values: List<T>
+		get() = items.map { it.second }
+	
 	fun generateEntry(rand: Random): Pair<Int, T>{
 		var remaining = rand.nextLong(totalWeight)
 		

@@ -15,6 +15,9 @@ class MutableWeightedList<T>(private val items: MutableList<Pair<Int, T>>){
 	private var cachedWeightedList = WeightedList(items)
 	private var isDirty = false
 	
+	val values: List<T>
+		get() = items.map { it.second }
+	
 	fun addItem(entry: Pair<Int, T>){
 		items.add(entry)
 		isDirty = true

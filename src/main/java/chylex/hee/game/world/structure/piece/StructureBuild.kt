@@ -92,6 +92,16 @@ class StructureBuild<T : MutableInstance>(val size: Size, startingPiece: T){
 		}
 	}
 	
+	inline fun guardChain(attempts: Int, func: () -> Boolean): Boolean{
+		for(attempt in 1..attempts){
+			if (guardChain(func)){
+				return true
+			}
+		}
+		
+		return false
+	}
+	
 	fun freeze(): IStructureGenerator{
 		val finalPieces = pieces.map(PositionedPiece<*>::freeze).toTypedArray()
 		
