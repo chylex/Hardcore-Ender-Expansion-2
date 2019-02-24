@@ -1,4 +1,5 @@
 package chylex.hee.game.world.feature.stronghold.piece
+import chylex.hee.game.world.feature.stronghold.StrongholdPieceType.CORRIDOR
 import chylex.hee.game.world.feature.stronghold.connection.StrongholdCorridorConnection
 import chylex.hee.game.world.structure.IBlockPicker.Single
 import chylex.hee.game.world.structure.IStructureWorld
@@ -10,6 +11,7 @@ import net.minecraft.util.EnumFacing.NORTH
 import net.minecraft.util.EnumFacing.SOUTH
 
 class StrongholdCorridor_Straight(length: Int) : StrongholdAbstractPiece(){
+	override val type = CORRIDOR
 	override val size = Size(5, 5, length)
 	
 	override val connections = arrayOf<IStructurePieceConnection>(

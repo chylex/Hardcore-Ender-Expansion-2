@@ -1,10 +1,11 @@
 package chylex.hee.game.world.feature.stronghold.piece
+import chylex.hee.game.world.feature.stronghold.StrongholdPieceType.ROOM
 import chylex.hee.game.world.structure.IStructureWorld
 import chylex.hee.init.ModBlocks
 import chylex.hee.system.util.Pos
 import chylex.hee.system.util.nextInt
 
-class StrongholdRoom_Decor_StairSnake(file: String) : StrongholdAbstractPieceFromFile(file){
+class StrongholdRoom_Decor_StairSnake(file: String) : StrongholdAbstractPieceFromFile(file, ROOM){
 	override fun generate(world: IStructureWorld, instance: Instance){
 		super.generate(world, instance)
 		

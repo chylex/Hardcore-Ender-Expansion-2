@@ -1,4 +1,5 @@
 package chylex.hee.game.world.feature.stronghold.piece
+import chylex.hee.game.world.feature.stronghold.StrongholdPieceType.ROOM
 import chylex.hee.game.world.feature.stronghold.StrongholdPieces
 import chylex.hee.game.world.feature.stronghold.piece.StrongholdRoom_Chest_WoodenSupports.CornerContent.CHEST_AND_FLOWER_POT
 import chylex.hee.game.world.feature.stronghold.piece.StrongholdRoom_Chest_WoodenSupports.CornerContent.JUST_COBWEBS
@@ -24,7 +25,7 @@ import net.minecraft.util.EnumFacing
 import net.minecraft.util.math.BlockPos
 import java.util.Random
 
-class StrongholdRoom_Chest_WoodenSupports(file: String) : StrongholdAbstractPieceFromFile(file){
+class StrongholdRoom_Chest_WoodenSupports(file: String) : StrongholdAbstractPieceFromFile(file, ROOM){
 	override fun generate(world: IStructureWorld, instance: Instance){
 		super.generate(world, instance)
 		

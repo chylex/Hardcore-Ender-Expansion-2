@@ -1,5 +1,6 @@
 package chylex.hee.game.world.feature.stronghold.piece
 import chylex.hee.game.block.util.FutureBlocks
+import chylex.hee.game.world.feature.stronghold.StrongholdPieceType.ROOM
 import chylex.hee.game.world.feature.stronghold.StrongholdPieces
 import chylex.hee.game.world.feature.stronghold.connection.StrongholdRoomConnection
 import chylex.hee.game.world.feature.stronghold.piece.StrongholdRoom_Main_Library.FirstFloorChestPosition.INSIDE_BOOKSHELVES
@@ -22,7 +23,7 @@ import net.minecraft.util.EnumFacing.NORTH
 import net.minecraft.util.EnumFacing.SOUTH
 import net.minecraft.util.EnumFacing.WEST
 
-class StrongholdRoom_Main_Library(file: String) : StrongholdAbstractPieceFromFile(file){
+class StrongholdRoom_Main_Library(file: String) : StrongholdAbstractPieceFromFile(file, ROOM){
 	override val connections = arrayOf<IStructurePieceConnection>(
 		StrongholdRoomConnection(Pos(centerX, 6, 0), NORTH),
 		StrongholdRoomConnection(Pos(centerX, 6, maxZ), SOUTH),

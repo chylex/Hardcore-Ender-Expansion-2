@@ -1,5 +1,6 @@
 package chylex.hee.game.world.feature.stronghold.piece
 import chylex.hee.game.block.entity.TileEntityLootChest
+import chylex.hee.game.world.feature.stronghold.StrongholdPieceType.ROOM
 import chylex.hee.game.world.feature.stronghold.StrongholdPieces
 import chylex.hee.game.world.feature.stronghold.connection.StrongholdRoomConnection
 import chylex.hee.game.world.structure.IStructureWorld
@@ -17,6 +18,7 @@ import net.minecraft.util.math.BlockPos
 abstract class StrongholdRoom_Relic(file: String, private val relicItem: ItemStack) : StrongholdAbstractPiece(){
 	private val generator = StructureFiles.loadWithCache("stronghold/$file").Generator(StrongholdPieces.PALETTE)
 	
+	final override val type = ROOM
 	final override val size = generator.size
 	
 	override val connections = arrayOf<IStructurePieceConnection>(

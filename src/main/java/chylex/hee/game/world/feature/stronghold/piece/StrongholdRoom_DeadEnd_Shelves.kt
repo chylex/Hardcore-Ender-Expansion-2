@@ -1,5 +1,6 @@
 package chylex.hee.game.world.feature.stronghold.piece
 import chylex.hee.game.block.util.FutureBlocks
+import chylex.hee.game.world.feature.stronghold.StrongholdPieceType.OTHER
 import chylex.hee.game.world.feature.stronghold.StrongholdPieces
 import chylex.hee.game.world.feature.stronghold.connection.StrongholdDeadEndConnection
 import chylex.hee.game.world.structure.IStructureWorld
@@ -18,7 +19,7 @@ import net.minecraft.util.EnumFacing.EAST
 import net.minecraft.util.EnumFacing.SOUTH
 import net.minecraft.util.EnumFacing.WEST
 
-class StrongholdRoom_DeadEnd_Shelves(file: String) : StrongholdAbstractPieceFromFile(file){
+class StrongholdRoom_DeadEnd_Shelves(file: String) : StrongholdAbstractPieceFromFile(file, OTHER){
 	override val connections = arrayOf<IStructurePieceConnection>(
 		StrongholdDeadEndConnection(Pos(centerX, 0, maxZ), SOUTH)
 	)

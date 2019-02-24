@@ -3,6 +3,7 @@ import chylex.hee.game.entity.living.EntityMobSilverfish
 import chylex.hee.game.entity.technical.EntityTechnicalTrigger
 import chylex.hee.game.entity.technical.EntityTechnicalTrigger.ITriggerHandler
 import chylex.hee.game.entity.technical.EntityTechnicalTrigger.Types.STRONGHOLD_TRAP_CORNER_HOLES
+import chylex.hee.game.world.feature.stronghold.StrongholdPieceType.ROOM
 import chylex.hee.game.world.structure.IStructureWorld
 import chylex.hee.game.world.structure.trigger.EntityStructureTrigger
 import chylex.hee.system.util.Pos
@@ -20,7 +21,7 @@ import net.minecraft.world.EnumDifficulty.PEACEFUL
 import java.util.Random
 import kotlin.math.min
 
-class StrongholdRoom_Trap_CornerHoles(file: String) : StrongholdAbstractPieceFromFile(file){
+class StrongholdRoom_Trap_CornerHoles(file: String) : StrongholdAbstractPieceFromFile(file, ROOM){
 	class Trigger : ITriggerHandler{
 		private var spawnsLeft = -1
 		

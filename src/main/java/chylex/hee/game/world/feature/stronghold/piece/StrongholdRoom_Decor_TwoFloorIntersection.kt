@@ -1,5 +1,6 @@
 package chylex.hee.game.world.feature.stronghold.piece
 import chylex.hee.game.block.util.FutureBlocks
+import chylex.hee.game.world.feature.stronghold.StrongholdPieceType.ROOM
 import chylex.hee.game.world.feature.stronghold.connection.StrongholdRoomConnection
 import chylex.hee.game.world.structure.IBlockPicker.Single
 import chylex.hee.game.world.structure.IStructureWorld
@@ -10,7 +11,7 @@ import net.minecraft.util.EnumFacing.NORTH
 import net.minecraft.util.EnumFacing.SOUTH
 import net.minecraft.util.EnumFacing.WEST
 
-class StrongholdRoom_Decor_TwoFloorIntersection(file: String) : StrongholdAbstractPieceFromFile(file){
+class StrongholdRoom_Decor_TwoFloorIntersection(file: String) : StrongholdAbstractPieceFromFile(file, ROOM){
 	override val connections = arrayOf<IStructurePieceConnection>(
 		StrongholdRoomConnection(Pos(centerX, 0, 0), NORTH),
 		StrongholdRoomConnection(Pos(centerX, 5, 0), NORTH),

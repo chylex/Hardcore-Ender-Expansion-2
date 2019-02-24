@@ -3,6 +3,7 @@ import chylex.hee.game.entity.living.EntityMobSilverfish
 import chylex.hee.game.entity.technical.EntityTechnicalTrigger
 import chylex.hee.game.entity.technical.EntityTechnicalTrigger.ITriggerHandler
 import chylex.hee.game.entity.technical.EntityTechnicalTrigger.Types.STRONGHOLD_GLOBAL
+import chylex.hee.game.world.feature.stronghold.StrongholdPieceType.ROOM
 import chylex.hee.game.world.feature.stronghold.StrongholdPieces
 import chylex.hee.game.world.feature.stronghold.connection.StrongholdRoomConnection
 import chylex.hee.game.world.structure.IStructureWorld
@@ -28,7 +29,7 @@ import net.minecraft.world.EnumDifficulty.PEACEFUL
 import java.util.Random
 import kotlin.math.min
 
-class StrongholdRoom_Main_Portal(file: String) : StrongholdAbstractPieceFromFile(file){
+class StrongholdRoom_Main_Portal(file: String) : StrongholdAbstractPieceFromFile(file, ROOM){
 	class Spawner : ITriggerHandler{
 		override fun update(entity: EntityTechnicalTrigger){
 			val world = entity.world.takeIf { it.difficulty != PEACEFUL } ?: return

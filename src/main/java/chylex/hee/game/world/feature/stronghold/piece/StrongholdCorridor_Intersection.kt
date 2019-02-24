@@ -1,4 +1,5 @@
 package chylex.hee.game.world.feature.stronghold.piece
+import chylex.hee.game.world.feature.stronghold.StrongholdPieceType.CORRIDOR
 import chylex.hee.game.world.feature.stronghold.connection.StrongholdCorridorConnection
 import chylex.hee.game.world.structure.IBlockPicker.Single
 import chylex.hee.game.world.structure.IStructureWorld
@@ -12,7 +13,8 @@ import net.minecraft.util.EnumFacing.NORTH
 import net.minecraft.util.EnumFacing.SOUTH
 import net.minecraft.util.EnumFacing.WEST
 
-class StrongholdCorridor_Intersection(vararg connections: EnumFacing) : StrongholdAbstractPiece(){
+class StrongholdCorridor_Intersection private constructor(vararg connections: EnumFacing) : StrongholdAbstractPiece(){
+	override val type = CORRIDOR
 	override val size = Size(5, 5, 5)
 	
 	override val connections = connections.map {

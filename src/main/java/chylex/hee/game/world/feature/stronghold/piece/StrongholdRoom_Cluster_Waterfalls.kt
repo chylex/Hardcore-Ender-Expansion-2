@@ -1,5 +1,6 @@
 package chylex.hee.game.world.feature.stronghold.piece
 import chylex.hee.game.mechanics.energy.IClusterGenerator.Companion.STRONGHOLD
+import chylex.hee.game.world.feature.stronghold.StrongholdPieceType.ROOM
 import chylex.hee.game.world.feature.stronghold.connection.StrongholdRoomConnection
 import chylex.hee.game.world.structure.IStructureWorld
 import chylex.hee.game.world.structure.piece.IStructurePieceConnection
@@ -10,7 +11,7 @@ import net.minecraft.util.EnumFacing.NORTH
 import net.minecraft.util.EnumFacing.SOUTH
 import net.minecraft.util.EnumFacing.WEST
 
-class StrongholdRoom_Cluster_Waterfalls(file: String) : StrongholdAbstractPieceFromFile(file){
+class StrongholdRoom_Cluster_Waterfalls(file: String) : StrongholdAbstractPieceFromFile(file, ROOM){
 	override val connections = arrayOf<IStructurePieceConnection>(
 		StrongholdRoomConnection(Pos(centerX, 2, 0), NORTH),
 		StrongholdRoomConnection(Pos(centerX, 2, maxZ), SOUTH),

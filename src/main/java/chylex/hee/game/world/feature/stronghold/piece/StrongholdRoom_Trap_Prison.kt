@@ -4,6 +4,7 @@ import chylex.hee.game.entity.living.EntityMobSilverfish
 import chylex.hee.game.entity.technical.EntityTechnicalTrigger
 import chylex.hee.game.entity.technical.EntityTechnicalTrigger.ITriggerHandler
 import chylex.hee.game.entity.technical.EntityTechnicalTrigger.Types.STRONGHOLD_TRAP_PRISON
+import chylex.hee.game.world.feature.stronghold.StrongholdPieceType.ROOM
 import chylex.hee.game.world.feature.stronghold.StrongholdPieces
 import chylex.hee.game.world.feature.stronghold.connection.StrongholdRoomConnection
 import chylex.hee.game.world.structure.IStructureWorld
@@ -37,7 +38,7 @@ import net.minecraft.world.EnumDifficulty.PEACEFUL
 import java.util.Random
 import kotlin.math.min
 
-class StrongholdRoom_Trap_Prison(file: String) : StrongholdAbstractPieceFromFile(file){
+class StrongholdRoom_Trap_Prison(file: String) : StrongholdAbstractPieceFromFile(file, ROOM){
 	class Trigger : ITriggerHandler{
 		private var spawnsLeft = -1
 		
