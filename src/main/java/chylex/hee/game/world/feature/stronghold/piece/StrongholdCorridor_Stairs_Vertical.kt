@@ -1,7 +1,7 @@
 package chylex.hee.game.world.feature.stronghold.piece
 import chylex.hee.game.block.util.FutureBlocks
 import chylex.hee.game.world.feature.stronghold.StrongholdPieces
-import chylex.hee.game.world.feature.stronghold.connection.StrongholdCorridorConnection
+import chylex.hee.game.world.feature.stronghold.connection.StrongholdStairConnection
 import chylex.hee.game.world.structure.IBlockPicker.Single
 import chylex.hee.game.world.structure.IStructureWorld
 import chylex.hee.game.world.structure.piece.IStructurePieceConnection
@@ -38,8 +38,8 @@ class StrongholdCorridor_Stairs_Vertical(connectionAtEntrance: EnumFacing, conne
 	override val size = Size(5, calculateHeight(connectionAtEntrance, connectionAtExit, levels), 5)
 	
 	override val connections = arrayOf<IStructurePieceConnection>(
-		StrongholdCorridorConnection(Pos(size.centerX, 0, size.centerZ).offset(connectionAtEntrance, 2), connectionAtEntrance),
-		StrongholdCorridorConnection(Pos(size.centerX, size.maxY - 4, size.centerZ).offset(connectionAtExit, 2), connectionAtExit)
+		StrongholdStairConnection(Pos(size.centerX, 0, size.centerZ).offset(connectionAtEntrance, 2), connectionAtEntrance),
+		StrongholdStairConnection(Pos(size.centerX, size.maxY - 4, size.centerZ).offset(connectionAtExit, 2), connectionAtExit)
 	)
 	
 	override fun generate(world: IStructureWorld, instance: Instance){

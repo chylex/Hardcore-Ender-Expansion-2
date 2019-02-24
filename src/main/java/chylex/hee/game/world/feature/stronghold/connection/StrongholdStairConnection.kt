@@ -3,8 +3,8 @@ import chylex.hee.game.world.structure.piece.IStructurePieceConnection
 import net.minecraft.util.EnumFacing
 import net.minecraft.util.math.BlockPos
 
-class StrongholdDoorConnection(override val offset: BlockPos, override val facing: EnumFacing) : IStructurePieceConnection{
+class StrongholdStairConnection(override val offset: BlockPos, override val facing: EnumFacing) : IStructurePieceConnection{
 	override fun canConnectWith(other: IStructurePieceConnection): Boolean{
-		return other !is StrongholdDoorConnection && other !is StrongholdStairConnection
+		return other !is StrongholdDoorConnection
 	}
 }
