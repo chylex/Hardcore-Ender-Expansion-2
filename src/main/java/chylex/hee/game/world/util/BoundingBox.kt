@@ -1,4 +1,5 @@
 package chylex.hee.game.world.util
+import chylex.hee.system.util.Pos
 import chylex.hee.system.util.max
 import chylex.hee.system.util.min
 import net.minecraft.util.math.BlockPos
@@ -6,6 +7,9 @@ import net.minecraft.util.math.BlockPos
 class BoundingBox(pos1: BlockPos, pos2: BlockPos){
 	val min = pos1.min(pos2)
 	val max = pos1.max(pos2)
+	
+	val center: BlockPos
+		get() = Pos((min.x + max.x) / 2, (min.y + max.y) / 2, (min.z + max.z) / 2)
 	
 	fun intersects(bb: BoundingBox): Boolean{
 		return !(
