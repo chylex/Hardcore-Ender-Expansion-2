@@ -111,5 +111,19 @@ class StrongholdRoom_Main_Portal(file: String) : StrongholdAbstractPieceFromFile
 	override fun generate(world: IStructureWorld, instance: Instance){
 		super.generate(world, instance)
 		world.addTrigger(Pos(centerX, centerY, centerZ), EntityStructureTrigger(STRONGHOLD_GLOBAL))
+		
+		for(connection in connections){
+			val offset = connection.offset
+			
+			if (offset.y == 0 && !instance.isConnectionUsed(connection)){
+				val shifted = offset.offset(connection.facing, -1)
+				val perpendicular = connection.facing.rotateY()
+				
+				val addX = perpendicular.xOffset
+				val addZ = perpendicular.zOffset
+				
+				world.placeCube(shifted.add(-addX, 1, -addZ), shifted.add(addX, 3, addZ), StrongholdPieces.PALETTE_ENTRY_STONE_BRICK)
+			}
+		}
 	}
 }

@@ -9,7 +9,7 @@ import net.minecraft.item.ItemStack
 import net.minecraft.tileentity.TileEntitySkull
 
 class StrongholdRoom_Relic_Dungeon(file: String, relicItem: ItemStack) : StrongholdRoom_Relic(file, relicItem){
-	override val lootChestPos = Pos(centerX, 2, 2)
+	override val lootChestPos = Pos(size.centerX, 2, 2)
 	
 	override fun generate(world: IStructureWorld, instance: Instance){
 		super.generate(world, instance)
@@ -17,14 +17,14 @@ class StrongholdRoom_Relic_Dungeon(file: String, relicItem: ItemStack) : Strongh
 		val rand = world.rand
 		
 		if (rand.nextBoolean()){
-			world.addTrigger(Pos(centerX - 1, 2, 2), TileEntityStructureTrigger(FutureBlocks.SKULL_FLOOR, TileEntitySkull().apply { setType(0); skullRotation = 7 }))
+			world.addTrigger(Pos(size.centerX - 1, 2, 2), TileEntityStructureTrigger(FutureBlocks.SKULL_FLOOR, TileEntitySkull().apply { setType(0); skullRotation = 7 }))
 		}
 		else{
-			world.addTrigger(Pos(centerX + 1, 2, 2), TileEntityStructureTrigger(FutureBlocks.SKULL_FLOOR, TileEntitySkull().apply { setType(0); skullRotation = 9 }))
+			world.addTrigger(Pos(size.centerX + 1, 2, 2), TileEntityStructureTrigger(FutureBlocks.SKULL_FLOOR, TileEntitySkull().apply { setType(0); skullRotation = 9 }))
 		}
 		
 		repeat(rand.nextInt(9, 15)){
-			val redstonePos = Pos(rand.nextInt(1, maxX - 1), 1, rand.nextInt(3, 10))
+			val redstonePos = Pos(rand.nextInt(1, size.maxX - 1), 1, rand.nextInt(3, 10))
 			
 			if (world.isAir(redstonePos)){
 				world.setBlock(redstonePos, Blocks.REDSTONE_WIRE)
