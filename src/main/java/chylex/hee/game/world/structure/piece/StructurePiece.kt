@@ -2,6 +2,7 @@ package chylex.hee.game.world.structure.piece
 import chylex.hee.game.world.structure.IStructureGenerator
 import chylex.hee.game.world.structure.IStructureWorld
 import chylex.hee.game.world.structure.world.RotatedStructureWorld
+import chylex.hee.game.world.util.Size
 import net.minecraft.block.BlockColored
 import net.minecraft.init.Blocks
 import net.minecraft.item.EnumDyeColor
@@ -22,8 +23,8 @@ abstract class StructurePiece : IStructureGenerator{
 	
 	// Rotated connection
 	
-	private inner class RotatedStructurePieceConnection(private val original: IStructurePieceConnection, rotation: Rotation) : IStructurePieceConnection{
-		override val offset = RotatedStructureWorld.rotatePos(original.offset, this@StructurePiece.size, rotation)
+	private class RotatedStructurePieceConnection(private val original: IStructurePieceConnection, size: Size, rotation: Rotation) : IStructurePieceConnection{
+		override val offset = RotatedStructureWorld.rotatePos(original.offset, size, rotation)
 		override val facing = rotation.rotate(original.facing)!!
 		
 		override fun canConnectWith(other: IStructurePieceConnection): Boolean{
@@ -38,7 +39,7 @@ abstract class StructurePiece : IStructureGenerator{
 	// Frozen instance
 	
 	open inner class Instance private constructor(private val rotation: Rotation, private val availableConnections: List<RotatedStructurePieceConnection>) : IStructureGenerator{
-		constructor(rotation: Rotation) : this(rotation, this@StructurePiece.connections.map { RotatedStructurePieceConnection(it, rotation) }.toMutableList())
+		constructor(rotation: Rotation) : this(rotation, this@StructurePiece.connections.map { RotatedStructurePieceConnection(it, this@StructurePiece.size, rotation) }.toMutableList())
 		
 		final override val size = this@StructurePiece.size.rotate(rotation)
 		
