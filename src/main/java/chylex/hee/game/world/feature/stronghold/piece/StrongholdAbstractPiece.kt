@@ -1,5 +1,6 @@
 package chylex.hee.game.world.feature.stronghold.piece
 import chylex.hee.game.world.feature.stronghold.StrongholdPieceType
+import chylex.hee.game.world.feature.stronghold.StrongholdPieceType.CORRIDOR
 import chylex.hee.game.world.feature.stronghold.StrongholdPieces
 import chylex.hee.game.world.structure.IBlockPicker.Single
 import chylex.hee.game.world.structure.IStructureWorld
@@ -34,6 +35,9 @@ abstract class StrongholdAbstractPiece : StructurePiece(){
 		
 		val type
 			get() = this@StrongholdAbstractPiece.type
+		
+		val canLeadIntoDeadEnd
+			get() = type == CORRIDOR && hasAvailableConnections
 		
 		val pickWeight: Int
 			get(){

@@ -14,6 +14,12 @@ import net.minecraft.util.EnumFacing.SOUTH
 import net.minecraft.util.EnumFacing.WEST
 
 class StrongholdCorridor_Intersection private constructor(vararg connections: EnumFacing) : StrongholdAbstractPiece(){
+	companion object{
+		val CORNER   = StrongholdCorridor_Intersection(SOUTH, WEST)
+		val THREEWAY = StrongholdCorridor_Intersection(SOUTH, WEST, EAST)
+		val FOURWAY  = StrongholdCorridor_Intersection(SOUTH, WEST, EAST, NORTH)
+	}
+	
 	override val type = CORRIDOR
 	override val size = Size(5, 5, 5)
 	
