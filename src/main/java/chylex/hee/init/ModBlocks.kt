@@ -25,6 +25,7 @@ import chylex.hee.game.block.BlockIgneousRockOre
 import chylex.hee.game.block.BlockInfusedTNT
 import chylex.hee.game.block.BlockLootChest
 import chylex.hee.game.block.BlockPillarCustom
+import chylex.hee.game.block.BlockScaffolding
 import chylex.hee.game.block.BlockSimple
 import chylex.hee.game.block.BlockSimpleShaped
 import chylex.hee.game.block.BlockSlabCustom
@@ -361,6 +362,17 @@ object ModBlocks{
 	@JvmField val TABLE_BASE         = BlockTableBase(buildTable).apply { setup("table_base") }
 	@JvmField val ACCUMULATION_TABLE = BlockTableTile(buildTable, ::TileEntityAccumulationTable, minAllowedTier = 1).apply { setup("accumulation_table") }
 	
+	// Blocks: Utilities
+	
+	private val buildScaffolding = BlockSimple.Builder(Materials.SCAFFOLDING).apply {
+		makeIndestructible()
+		
+		lightOpacity = 0
+		mapColor = MapColor.AIR
+	}
+	
+	@JvmField val SCAFFOLDING = BlockScaffolding(buildScaffolding).apply { setup("scaffolding") }
+	
 	// Registry
 	
 	private val basicItemBlock = ::ItemBlock
@@ -446,6 +458,8 @@ object ModBlocks{
 			register(TABLE_PEDESTAL with basicItemBlock)
 			register(TABLE_BASE with metaItemBlock)
 			register(ACCUMULATION_TABLE with metaItemBlock)
+			
+			register(SCAFFOLDING with basicItemBlock)
 		}
 		
 		tile<TileEntityPortalInner>("end_portal_inner")

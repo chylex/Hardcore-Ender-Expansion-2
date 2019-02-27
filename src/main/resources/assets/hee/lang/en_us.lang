@@ -65,6 +65,8 @@ tile.hee.accumulation_table.name=Accumulation Table
 
 tile.tooltip.hee.table_base.tier=Tier %s
 
+tile.hee.scaffolding.name=Scaffolding
+
 item.hee.ancient_dust.name=Ancient Dust
 item.hee.ethereum.name=Ethereum
 item.hee.end_powder.name=End Powder

@@ -28,4 +28,10 @@ object Materials{
 	val ENDER_GOO = CustomMaterial().apply {
 		makeLiquid()
 	}
+	
+	val SCAFFOLDING = CustomMaterial().apply {
+		blocksLight = false
+		translucent = true
+		blockWhenPushed()
+	}
 }
