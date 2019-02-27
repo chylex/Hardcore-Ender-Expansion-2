@@ -26,4 +26,4 @@ build
 
 # game
 run/*
-!run/maximize.ps1
+!run/*.ps1

@@ -35,10 +35,14 @@ object Debug{
 				}
 			}
 			
-			if (LWJGLUtil.getPlatform() == PLATFORM_WINDOWS && !GraphicsEnvironment.isHeadless() && File("maximize.ps1").exists()){
+			if (canExecutePowershell("maximize.ps1")){
 				val pid = ManagementFactory.getRuntimeMXBean().name.split("@")[0]
 				ProcessBuilder("powershell.exe", "-ExecutionPolicy", "Unrestricted", "-File", "maximize.ps1", pid).start()
 			}
 		}
+	}
+	
+	private fun canExecutePowershell(scriptName: String): Boolean{
+		return LWJGLUtil.getPlatform() == PLATFORM_WINDOWS && !GraphicsEnvironment.isHeadless() && File(scriptName).exists()
 	}
 }
