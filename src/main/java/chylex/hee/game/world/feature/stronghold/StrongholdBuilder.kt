@@ -26,11 +26,12 @@ import chylex.hee.system.util.nextItem
 import chylex.hee.system.util.nextItemOrNull
 import chylex.hee.system.util.removeItem
 import net.minecraft.util.EnumFacing
+import net.minecraft.util.math.BlockPos
 import java.util.Random
 import kotlin.math.max
 
 object StrongholdBuilder : IStructureBuilder{
-	override fun build(rand: Random): IStructureGenerator?{
+	fun buildWithEyeOfEnderTarget(rand: Random): Pair<IStructureGenerator, BlockPos?>?{
 		val build = StructureBuild(STRUCTURE_SIZE, rand.nextItem(PIECES_START).StrongholdInst(distanceToPortal = 0, facingFromPortal = null, rotation = rand.nextItem()))
 		val process = Process(build, rand)
 		
@@ -126,7 +127,13 @@ object StrongholdBuilder : IStructureBuilder{
 		// finish
 		
 		val generator = build.freeze()
-		return generator
+		val eyeOfEnderTargets = build.generatedPieces.filter { it.instance.isEyeOfEnderTarget }.shuffled(rand)
+		
+		return generator to eyeOfEnderTargets.firstOrNull()?.pieceBox?.center?.subtract(STRUCTURE_SIZE.centerPos)
+	}
+	
+	override fun build(rand: Random): IStructureGenerator?{
+		return buildWithEyeOfEnderTarget(rand)?.first
 	}
 	
 	private class Process(private val build: StructureBuild<StrongholdInst>, private val rand: Random){

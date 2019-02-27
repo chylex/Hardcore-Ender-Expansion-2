@@ -234,7 +234,7 @@ class EntityProjectileEyeOfEnder : Entity, IEntityAdditionalSpawnData{
 	private fun moveTowardsTarget(){
 		val ySpeedMp: Float
 		
-		if (targetVecXZ.lengthSquared() < square(12.0)){
+		if (targetVecXZ.lengthSquared() < square(7.0)){
 			if (speed > 0F){
 				speed -= 0.025F
 			}

@@ -13,6 +13,7 @@ import kotlin.math.pow
 
 abstract class StrongholdAbstractPiece : StructurePiece(){
 	abstract val type: StrongholdPieceType
+	protected open val isEyeOfEnderTarget = false
 	
 	override fun generate(world: IStructureWorld, instance: Instance){
 		world.placeCubeHollow(size.minPos, size.maxPos, StrongholdPieces.PALETTE_ENTRY_STONE_BRICK)
@@ -35,6 +36,9 @@ abstract class StrongholdAbstractPiece : StructurePiece(){
 		
 		val type
 			get() = this@StrongholdAbstractPiece.type
+		
+		val isEyeOfEnderTarget
+			get() = this@StrongholdAbstractPiece.isEyeOfEnderTarget && distanceToPortal in 4..6
 		
 		val canLeadIntoDeadEnd
 			get() = type == CORRIDOR && hasAvailableConnections
