@@ -42,6 +42,12 @@ object Debug{
 		}
 	}
 	
+	fun setClipboardContents(file: File){
+		if (canExecutePowershell("filecopy.ps1")){
+			ProcessBuilder("powershell.exe", "-ExecutionPolicy", "Unrestricted", "-File", "filecopy.ps1", file.absolutePath).start()
+		}
+	}
+	
 	private fun canExecutePowershell(scriptName: String): Boolean{
 		return LWJGLUtil.getPlatform() == PLATFORM_WINDOWS && !GraphicsEnvironment.isHeadless() && File(scriptName).exists()
 	}
