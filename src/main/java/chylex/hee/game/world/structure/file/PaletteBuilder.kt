@@ -2,36 +2,24 @@ package chylex.hee.game.world.structure.file
 import chylex.hee.game.world.structure.IBlockPicker
 import chylex.hee.game.world.structure.IBlockPicker.Single
 import chylex.hee.system.util.compatibility.EraseGenerics
+import com.google.common.collect.HashBiMap
+import com.google.common.collect.ImmutableBiMap
 import net.minecraft.block.Block
 import net.minecraft.block.properties.IProperty
 import net.minecraft.block.state.IBlockState
 import org.apache.commons.lang3.StringUtils
 
-class PaletteBuilder{
-	private val palette = mutableMapOf<String, IBlockPicker>()
+sealed class PaletteBuilder{
 	
 	// Add one
 	
-	fun add(key: String, picker: IBlockPicker){
-		palette[key] = picker
+	abstract fun add(key: String, state: IBlockState)
+	
+	fun add(key: String, block: Block){
+		add(key, block.defaultState)
 	}
 	
-	fun add(key: String, state: IBlockState) = add(key, Single(state))
-	fun add(key: String, block: Block) = add(key, Single(block))
-	
-	// Add one variant
-	
-	fun <T : Comparable<T>> add(key: String, baseState: IBlockState, propertyMapping: Pair<IProperty<T>, Map<String, T>>){
-		val (property, mapping) = propertyMapping
-		
-		for((name, value) in mapping){
-			add(updateKey(key, name), baseState.withProperty(property, value))
-		}
-	}
-	
-	fun <T : Comparable<T>> add(key: String, block: Block, propertyMapping: Pair<IProperty<T>, Map<String, T>>) = add(key, block.defaultState, propertyMapping)
-	
-	// Add cross product of variants
+	// Add variants
 	
 	fun add(key: String, baseState: IBlockState, propertyMappings: List<Pair<IProperty<*>, Map<String, *>>>){
 		fun process(index: Int, currentKey: String, currentState: IBlockState){
@@ -50,7 +38,17 @@ class PaletteBuilder{
 		process(0, key, baseState)
 	}
 	
-	fun add(key: String, block: Block, propertyMappings: List<Pair<IProperty<*>, Map<String, *>>>) = add(key, block.defaultState, propertyMappings)
+	fun add(key: String, block: Block, propertyMappings: List<Pair<IProperty<*>, Map<String, *>>>){
+		add(key, block.defaultState, propertyMappings)
+	}
+	
+	fun <T : Comparable<T>> add(key: String, baseState: IBlockState, propertyMapping: Pair<IProperty<T>, Map<String, T>>){
+		add(key, baseState, listOf(propertyMapping))
+	}
+	
+	fun <T : Comparable<T>> add(key: String, block: Block, propertyMapping: Pair<IProperty<T>, Map<String, T>>){
+		add(key, block.defaultState, listOf(propertyMapping))
+	}
 	
 	// Utilities
 	
@@ -61,9 +59,51 @@ class PaletteBuilder{
 			throw IllegalArgumentException("missing replacement wildcard in palette key: $key")
 	}
 	
-	// Build
+	// Generation
 	
-	fun build(): Map<String, IBlockPicker>{
-		return palette.toMap()
+	class ForGeneration : PaletteBuilder(){
+		private val palette = mutableMapOf<String, IBlockPicker>()
+		
+		fun add(key: String, picker: IBlockPicker){
+			palette[key] = picker
+		}
+		
+		override fun add(key: String, state: IBlockState){
+			add(key, Single(state))
+		}
+		
+		fun build(): Map<String, IBlockPicker>{
+			return palette.toMap()
+		}
+	}
+	
+	// Development
+	
+	class ForDevelopment : PaletteBuilder(){
+		private val palette = HashBiMap.create<String, IBlockState>()
+		
+		override fun add(key: String, state: IBlockState){
+			palette[key] = state
+		}
+		
+		fun build(): ImmutableBiMap<String, IBlockState>{
+			return ImmutableBiMap.copyOf(palette)
+		}
+	}
+	
+	// Combined
+	
+	class Combined : PaletteBuilder(){
+		val forGeneration = ForGeneration()
+		val forDevelopment = ForDevelopment()
+		
+		override fun add(key: String, state: IBlockState){
+			forGeneration.add(key, state)
+			forDevelopment.add(key, state)
+		}
+		
+		fun build(): Palette{
+			return Palette(forGeneration.build(), forDevelopment.build())
+		}
 	}
 }
