@@ -11,6 +11,9 @@ class BoundingBox(pos1: BlockPos, pos2: BlockPos){
 	val center: BlockPos
 		get() = Pos((min.x + max.x) / 2, (min.y + max.y) / 2, (min.z + max.z) / 2)
 	
+	val size: Size
+		get() = Size(max.x - min.x + 1, max.y - min.y + 1, max.z - min.z + 1)
+	
 	fun intersects(bb: BoundingBox): Boolean{
 		return !(
 			bb.max.x < min.x || bb.max.y < min.y || bb.max.z < min.z ||
