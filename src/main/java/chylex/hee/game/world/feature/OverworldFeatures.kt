@@ -1,11 +1,13 @@
 package chylex.hee.game.world.feature
+import chylex.hee.game.world.feature.basic.DispersedClusterGenerator
 import chylex.hee.game.world.feature.stronghold.StrongholdGenerator
 import net.minecraft.util.math.ChunkPos
 import net.minecraftforge.fml.common.registry.GameRegistry
 
 object OverworldFeatures{
 	fun register(){
-		GameRegistry.registerWorldGenerator(StrongholdGenerator, Int.MAX_VALUE)
+		GameRegistry.registerWorldGenerator(DispersedClusterGenerator, Int.MAX_VALUE)
+		GameRegistry.registerWorldGenerator(StrongholdGenerator, Int.MAX_VALUE - 1)
 	}
 	
 	fun findStartChunkInGrid(chunksInGrid: Int, chunkX: Int, chunkZ: Int): ChunkPos{
