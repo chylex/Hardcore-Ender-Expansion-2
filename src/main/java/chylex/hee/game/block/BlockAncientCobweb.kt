@@ -8,7 +8,9 @@ import net.minecraft.block.state.BlockFaceShape
 import net.minecraft.block.state.BlockFaceShape.UNDEFINED
 import net.minecraft.block.state.IBlockState
 import net.minecraft.entity.Entity
+import net.minecraft.entity.EntityLivingBase
 import net.minecraft.entity.item.EntityItem
+import net.minecraft.entity.monster.EntityMob
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.item.ItemShears
 import net.minecraft.item.ItemStack
@@ -66,8 +68,17 @@ class BlockAncientCobweb : Block(Materials.ANCIENT_COBWEB, MapColor.CLOTH){
 			entity.setInWeb()
 			entity.motionY = -0.25
 		}
-		else if (!world.isRemote && !(entity is EntityPlayer && entity.capabilities.isFlying)){
-			world.scheduleUpdate(pos, this, 1) // delay required to avoid client-side particle crash
+		else if (!world.isRemote){
+			val canBreak = when(entity){
+				is EntityPlayer     -> !entity.capabilities.isFlying
+				is EntityMob        -> entity.attackTarget != null && (entity.width * entity.height) > 0.5F
+				is EntityLivingBase -> false
+				else                -> true
+			}
+			
+			if (canBreak){
+				world.scheduleUpdate(pos, this, 1) // delay required to avoid client-side particle crash
+			}
 		}
 	}
 	

@@ -33,7 +33,9 @@ class BlockDryVines : BlockVine(){
 	
 	override fun updateTick(world: World, pos: BlockPos, state: IBlockState, rand: Random){}
 	
-	override fun isLadder(state: IBlockState, world: IBlockAccess, pos: BlockPos, entity: EntityLivingBase): Boolean = false
+	override fun isLadder(state: IBlockState, world: IBlockAccess, pos: BlockPos, entity: EntityLivingBase): Boolean{
+		return !entity.onGround
+	}
 	
 	override fun canAttachTo(world: World, pos: BlockPos, facing: EnumFacing): Boolean{
 		val above = pos.up()
