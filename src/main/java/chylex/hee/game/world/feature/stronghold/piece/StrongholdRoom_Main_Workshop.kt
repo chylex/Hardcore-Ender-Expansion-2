@@ -93,8 +93,6 @@ class StrongholdRoom_Main_Workshop(file: String) : StrongholdAbstractPieceFromFi
 		}
 	}
 	
-	// TODO original had item frames, worth bothering with?
-	
 	private fun placeUtilityColumn(world: IStructureWorld, pos: BlockPos, facing: EnumFacing){
 		val rand = world.rand
 		val furnace = Blocks.FURNACE.defaultState.withProperty(BlockFurnace.FACING, facing)

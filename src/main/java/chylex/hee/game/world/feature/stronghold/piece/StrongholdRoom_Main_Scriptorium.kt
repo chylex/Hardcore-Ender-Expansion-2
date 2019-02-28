@@ -5,14 +5,17 @@ import chylex.hee.game.world.feature.stronghold.connection.StrongholdRoomConnect
 import chylex.hee.game.world.structure.IStructureWorld
 import chylex.hee.game.world.structure.piece.IStructurePieceConnection
 import chylex.hee.game.world.structure.trigger.FlowerPotStructureTrigger
+import chylex.hee.game.world.structure.trigger.LootChestStructureTrigger
 import chylex.hee.init.ModBlocks
 import chylex.hee.system.util.Facing4
 import chylex.hee.system.util.Pos
 import chylex.hee.system.util.nextInt
 import chylex.hee.system.util.offsetUntil
+import net.minecraft.block.BlockChest
 import net.minecraft.init.Blocks
 import net.minecraft.item.ItemStack
 import net.minecraft.util.EnumFacing.EAST
+import net.minecraft.util.EnumFacing.NORTH
 import net.minecraft.util.EnumFacing.SOUTH
 import net.minecraft.util.EnumFacing.UP
 import net.minecraft.util.EnumFacing.WEST
@@ -29,7 +32,18 @@ class StrongholdRoom_Main_Scriptorium(file: String) : StrongholdAbstractPieceFro
 		
 		val rand = world.rand
 		
+		// Table
+		
 		world.addTrigger(Pos(centerX, 2, 1), FlowerPotStructureTrigger(ItemStack(Blocks.DEADBUSH)))
+		
+		// Chest
+		
+		val chestPos = Pos(centerX + (if (rand.nextBoolean()) -4 else 4), 2, centerZ - 3)
+		
+		world.setState(chestPos, Blocks.CHEST.defaultState.withProperty(BlockChest.FACING, NORTH))
+		world.addTrigger(chestPos, LootChestStructureTrigger(StrongholdPieces.LOOT_GENERIC, rand.nextLong()))
+		
+		// Cobwebs
 		
 		repeat(rand.nextInt(7, 12)){
 			for(attempt in 1..50){
@@ -58,7 +72,4 @@ class StrongholdRoom_Main_Scriptorium(file: String) : StrongholdAbstractPieceFro
 			}
 		}
 	}
-	
-	// TODO add a chest somewhere?
-	// TODO maybe add more torches
 }

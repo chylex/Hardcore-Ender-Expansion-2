@@ -148,6 +148,13 @@ class StrongholdRoom_Main_Library(file: String) : StrongholdAbstractPieceFromFil
 			}
 		}
 		
+		// Stairs
+		
+		if (rand.nextBoolean()){
+			world.setAir(Pos(centerX - 8, 9, centerZ + 3))
+			world.setState(Pos(centerX - 8, 8, centerZ + 3), FutureBlocks.SPRUCE_SLAB)
+		}
+		
 		// Chest
 		
 		val chestFacingOffset = if (rand.nextBoolean()) EAST else WEST
