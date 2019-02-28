@@ -72,7 +72,7 @@ object StrongholdPieces{
 		  8 to FutureBlocks.INFESTED_CRACKED_STONE_BRICKS
 	)
 	
-	val PALETTE = with(PaletteBuilder()){
+	val PALETTE = with(PaletteBuilder.Combined()){
 		add("air", Blocks.AIR)
 		add("bookshelf", Blocks.BOOKSHELF)
 		add("obsidian", Blocks.OBSIDIAN)
@@ -82,15 +82,6 @@ object StrongholdPieces{
 		add("redstone", Blocks.REDSTONE_WIRE)
 		add("water", Blocks.WATER)
 		add("lava", Blocks.LAVA)
-		
-		add("stonebrick", PALETTE_ENTRY_STONE_BRICK)
-		add("stonebrick.plain", FutureBlocks.STONE_BRICKS)
-		add("stonebrick.chiseled", FutureBlocks.CHISELED_STONE_BRICKS)
-		
-		add("stonebrick.chiseled.random", Weighted(
-			2 to FutureBlocks.STONE_BRICKS,
-			1 to FutureBlocks.CHISELED_STONE_BRICKS
-		))
 		
 		add("wall.stonebrick", ModBlocks.STONE_BRICK_WALL)
 		
@@ -120,17 +111,36 @@ object StrongholdPieces{
 		add("furnace.*", Blocks.FURNACE, PaletteMappings.FACING_HORIZONTAL)
 		add("stone_button.*", Blocks.STONE_BUTTON, PaletteMappings.FACING_ALL)
 		
-		add("bookshelf.random", Weighted(
-			8 to Blocks.BOOKSHELF.defaultState,
-			1 to FutureBlocks.OAK_PLANKS
-		))
-		
 		add("endportal.inner", ModBlocks.END_PORTAL_INNER)
 		add("endportal.frame", ModBlocks.END_PORTAL_FRAME)
 		add("endportal.acceptor", ModBlocks.END_PORTAL_ACCEPTOR)
 		
 		for((suffix, state) in PaletteMappings.VINE_WALLS(ModBlocks.DRY_VINES)){
 			add("dry_vines.$suffix", state)
+		}
+		
+		with(forGeneration){
+			add("stonebrick", PALETTE_ENTRY_STONE_BRICK)
+			add("stonebrick.plain", FutureBlocks.STONE_BRICKS)
+			add("stonebrick.chiseled", FutureBlocks.CHISELED_STONE_BRICKS)
+			
+			add("stonebrick.chiseled.random", Weighted(
+				2 to FutureBlocks.STONE_BRICKS,
+				1 to FutureBlocks.CHISELED_STONE_BRICKS
+			))
+			
+			add("bookshelf.random", Weighted(
+				8 to Blocks.BOOKSHELF.defaultState,
+				1 to FutureBlocks.OAK_PLANKS
+			))
+		}
+		
+		with(forDevelopment){
+			add("stonebrick", FutureBlocks.STONE_BRICKS)
+			add("stonebrick.plain", Blocks.DIAMOND_BLOCK)
+			add("stonebrick.chiseled", Blocks.IRON_BLOCK)
+			add("stonebrick.chiseled.random", Blocks.EMERALD_BLOCK)
+			add("bookshelf.random", Blocks.GOLD_BLOCK)
 		}
 		
 		build()

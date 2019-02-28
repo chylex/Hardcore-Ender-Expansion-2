@@ -3,6 +3,7 @@ import chylex.hee.game.block.entity.TileEntityLootChest
 import chylex.hee.game.world.feature.stronghold.StrongholdPieceType.ROOM
 import chylex.hee.game.world.feature.stronghold.StrongholdPieces
 import chylex.hee.game.world.feature.stronghold.connection.StrongholdRoomConnection
+import chylex.hee.game.world.structure.IStructureGeneratorFromFile
 import chylex.hee.game.world.structure.IStructureWorld
 import chylex.hee.game.world.structure.file.StructureFiles
 import chylex.hee.game.world.structure.piece.IStructurePieceConnection
@@ -15,8 +16,9 @@ import net.minecraft.item.ItemStack
 import net.minecraft.util.EnumFacing.SOUTH
 import net.minecraft.util.math.BlockPos
 
-abstract class StrongholdRoom_Relic(file: String, private val relicItem: ItemStack) : StrongholdAbstractPiece(){
-	private val generator = StructureFiles.loadWithCache("stronghold/$file").Generator(StrongholdPieces.PALETTE)
+abstract class StrongholdRoom_Relic(file: String, private val relicItem: ItemStack) : StrongholdAbstractPiece(), IStructureGeneratorFromFile{
+	final override val path = "stronghold/$file"
+	private val generator = StructureFiles.loadWithCache(path).Generator(StrongholdPieces.PALETTE.mappingForGeneration)
 	
 	final override val type = ROOM
 	final override val size = generator.size

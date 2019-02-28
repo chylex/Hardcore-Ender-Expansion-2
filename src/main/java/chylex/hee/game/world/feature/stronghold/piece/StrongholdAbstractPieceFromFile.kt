@@ -2,6 +2,7 @@ package chylex.hee.game.world.feature.stronghold.piece
 import chylex.hee.game.world.feature.stronghold.StrongholdPieceType
 import chylex.hee.game.world.feature.stronghold.StrongholdPieces
 import chylex.hee.game.world.feature.stronghold.connection.StrongholdRoomConnection
+import chylex.hee.game.world.structure.IStructureGeneratorFromFile
 import chylex.hee.game.world.structure.IStructureWorld
 import chylex.hee.game.world.structure.file.StructureFiles
 import chylex.hee.game.world.structure.piece.IStructurePieceConnection
@@ -11,8 +12,9 @@ import net.minecraft.util.EnumFacing.NORTH
 import net.minecraft.util.EnumFacing.SOUTH
 import net.minecraft.util.EnumFacing.WEST
 
-abstract class StrongholdAbstractPieceFromFile(file: String, override val type: StrongholdPieceType) : StrongholdAbstractPiece(){
-	private val generator = StructureFiles.loadWithCache("stronghold/$file").Generator(StrongholdPieces.PALETTE)
+abstract class StrongholdAbstractPieceFromFile(file: String, override val type: StrongholdPieceType) : StrongholdAbstractPiece(), IStructureGeneratorFromFile{
+	final override val path = "stronghold/$file"
+	private val generator = StructureFiles.loadWithCache(path).Generator(StrongholdPieces.PALETTE.mappingForGeneration)
 	
 	final override val size = generator.size
 	
