@@ -154,7 +154,7 @@ object StrongholdGenerator : IWorldGenerator{
 			return
 		}
 		
-		val adapter = WorldToStructureWorldAdapter(world, centerPos.subtract(StrongholdPieces.STRUCTURE_SIZE.centerPos))
+		val adapter = WorldToStructureWorldAdapter(world, rand, centerPos.subtract(StrongholdPieces.STRUCTURE_SIZE.centerPos))
 		
 		for(attempt in 1..50){
 			val (build, targetPos) = StrongholdBuilder.buildWithEyeOfEnderTarget(rand) ?: continue

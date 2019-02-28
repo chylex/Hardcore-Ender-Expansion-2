@@ -11,8 +11,9 @@ import net.minecraft.init.Blocks
 import net.minecraft.util.Rotation
 import net.minecraft.util.math.BlockPos
 import net.minecraft.world.World
+import java.util.Random
 
-class WorldToStructureWorldAdapter(private val world: World, private val offset: BlockPos) : IStructureWorld{
+class WorldToStructureWorldAdapter(private val world: World, override val rand: Random, private val offset: BlockPos) : IStructureWorld{
 	private companion object{
 		private val REQUIRE_SECOND_PASS = setOf<Block>(
 			Blocks.WOODEN_BUTTON,
@@ -33,8 +34,6 @@ class WorldToStructureWorldAdapter(private val world: World, private val offset:
 	}
 	
 	private val secondPass = mutableMapOf<BlockPos, IBlockState>()
-	
-	override val rand = world.rand!!
 	
 	override fun getState(pos: BlockPos): IBlockState{
 		return secondPass[pos] ?: pos.add(offset).getState(world)

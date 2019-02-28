@@ -63,7 +63,7 @@ class StructureFile(nbt: NBTTagCompound){
 		private val SKIP_BLOCK_STATE = ModBlocks.SCAFFOLDING.defaultState
 		
 		fun spawn(world: World, offset: BlockPos, piece: IStructureGeneratorFromFile, palette: Palette){
-			return spawn(WorldToStructureWorldAdapter(world, offset), piece, palette)
+			return spawn(WorldToStructureWorldAdapter(world, world.rand, offset), piece, palette)
 		}
 		
 		fun spawn(world: IStructureWorld, generator: IStructureGeneratorFromFile, palette: Palette){
@@ -76,7 +76,7 @@ class StructureFile(nbt: NBTTagCompound){
 		}
 		
 		fun save(world: World, box: BoundingBox, palette: Palette): Pair<NBTTagCompound, Set<IBlockState>>{
-			return save(WorldToStructureWorldAdapter(world, box.min), box.size, palette)
+			return save(WorldToStructureWorldAdapter(world, world.rand, box.min), box.size, palette)
 		}
 		
 		fun save(world: IStructureWorld, size: Size, palette: Palette): Pair<NBTTagCompound, Set<IBlockState>>{
