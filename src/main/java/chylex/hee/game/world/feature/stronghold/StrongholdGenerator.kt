@@ -1,9 +1,12 @@
 package chylex.hee.game.world.feature.stronghold
 import chylex.hee.HEE
+import chylex.hee.game.world.feature.OverworldFeatures
 import chylex.hee.game.world.structure.world.WorldToStructureWorldAdapter
 import chylex.hee.system.util.NBTList.Companion.setList
 import chylex.hee.system.util.NBTObjectList
 import chylex.hee.system.util.Pos
+import chylex.hee.system.util.component1
+import chylex.hee.system.util.component2
 import chylex.hee.system.util.distanceSqTo
 import chylex.hee.system.util.floorToInt
 import chylex.hee.system.util.getListOfCompounds
@@ -71,11 +74,10 @@ object StrongholdGenerator : IWorldGenerator{
 	// Search
 	
 	private fun findSpawnAt(seed: Long, chunkX: Int, chunkZ: Int): BlockPos?{
-		val normalizedX = if (chunkX < 0) chunkX - GRID_CHUNKS - 1 else chunkX
-		val normalizedZ = if (chunkZ < 0) chunkZ - GRID_CHUNKS - 1 else chunkZ
+		val (startChunkX, startChunkZ) = OverworldFeatures.findStartChunkInGrid(GRID_CHUNKS, chunkX, chunkZ)
 		
-		val centerChunkX = GRID_CHUNKS * (normalizedX / GRID_CHUNKS) + (GRID_CHUNKS / 2)
-		val centerChunkZ = GRID_CHUNKS * (normalizedZ / GRID_CHUNKS) + (GRID_CHUNKS / 2)
+		val centerChunkX = startChunkX + (GRID_CHUNKS / 2)
+		val centerChunkZ = startChunkZ + (GRID_CHUNKS / 2)
 		
 		val rand = Random((centerChunkX * 920419813L) + (centerChunkZ * 49979687L) + seed)
 		
