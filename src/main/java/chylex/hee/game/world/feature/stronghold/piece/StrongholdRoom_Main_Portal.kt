@@ -98,6 +98,8 @@ class StrongholdRoom_Main_Portal(file: String) : StrongholdAbstractPieceFromFile
 		override fun deserializeNBT(nbt: NBTTagCompound){}
 	}
 	
+	override val extraWeightMultiplier = 4
+	
 	override val connections = arrayOf<IStructurePieceConnection>(
 		StrongholdRoomConnection(Pos(centerX, 0, 0), NORTH),
 		StrongholdRoomConnection(Pos(centerX, 6, 0), NORTH),

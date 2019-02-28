@@ -24,6 +24,8 @@ import net.minecraft.util.EnumFacing.SOUTH
 import net.minecraft.util.EnumFacing.WEST
 
 class StrongholdRoom_Main_Library(file: String) : StrongholdAbstractPieceFromFile(file, ROOM){
+	override val extraWeightMultiplier = 4
+	
 	override val connections = arrayOf<IStructurePieceConnection>(
 		StrongholdRoomConnection(Pos(centerX, 6, 0), NORTH),
 		StrongholdRoomConnection(Pos(centerX, 6, maxZ), SOUTH),

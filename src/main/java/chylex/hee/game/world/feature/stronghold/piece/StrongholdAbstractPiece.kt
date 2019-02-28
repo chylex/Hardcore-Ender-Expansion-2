@@ -13,6 +13,8 @@ import kotlin.math.pow
 
 abstract class StrongholdAbstractPiece : StructurePiece(){
 	abstract val type: StrongholdPieceType
+	
+	protected open val extraWeightMultiplier = 1
 	protected open val isEyeOfEnderTarget = false
 	
 	override fun generate(world: IStructureWorld, instance: Instance){
@@ -32,7 +34,7 @@ abstract class StrongholdAbstractPiece : StructurePiece(){
 	}
 	
 	inner class StrongholdInst(val distanceToPortal: Int, val facingFromPortal: EnumFacing?, rotation: Rotation) : MutableInstance(rotation){
-		private val weightMultiplier = type.weightMultiplier / (distanceToPortal + 1F).pow(0.2F)
+		private val weightMultiplier = (type.weightMultiplier * extraWeightMultiplier) / (distanceToPortal + 1F).pow(0.2F)
 		
 		val type
 			get() = this@StrongholdAbstractPiece.type

@@ -29,6 +29,7 @@ import net.minecraft.util.EnumFacing
 import net.minecraft.util.math.BlockPos
 import java.util.Random
 import kotlin.math.max
+import kotlin.math.min
 
 object StrongholdBuilder : IStructureBuilder{
 	fun buildWithEyeOfEnderTarget(rand: Random): Pair<IStructureGenerator, BlockPos?>?{
@@ -43,10 +44,14 @@ object StrongholdBuilder : IStructureBuilder{
 			
 			for(totalAttempt in 1..totalAttempts){
 				val nextTargetPiece = process.pickNextTargetPiece() ?: break
-				val nextGeneratedPiece = rand.nextItemOrNull(remainingRooms) ?: break
+				val nextGeneratedPiece = remainingRooms.getOrNull(rand.nextInt(0, min(1, remainingRooms.size - 1))) ?: break
 				
 				if (build.guardChain(5){ process.placeNormalRoom(nextTargetPiece, nextGeneratedPiece, pathLength = rand.nextInt(1, 8)) }){
 					remainingRooms.remove(nextGeneratedPiece)
+					
+					if (remainingRooms.isEmpty()){
+						break
+					}
 				}
 			}
 			

@@ -246,21 +246,24 @@ object StrongholdPieces{
 		StrongholdRoom_Main_Portal("main.portal.nbt")
 	)
 	
-	private val PIECES_ROOMS_MAIN = arrayOf(
-		StrongholdRoom_Main_Library("main.library.nbt"),
+	private val PIECES_ROOMS_MAIN_LIBRARY = arrayOf(
+		StrongholdRoom_Main_Library("main.library.nbt")
+	)
+	
+	private val PIECES_ROOMS_MAIN_GENERAL = arrayOf(
 		StrongholdRoom_Main_Scriptorium("main.scriptorium.nbt"),
 		StrongholdRoom_Main_Workshop("main.workshop.nbt")
 	)
 	
 	fun PIECES_ROOMS(rand: Random): MutableList<StrongholdAbstractPiece>{
-		val totalRooms = rand.nextInt(27, 28)
+		val totalRoomsExceptLibrary = rand.nextInt(26, 27)
 		
 		val decorSmall = mutableListOf(*PIECES_ROOMS_DECOR_SMALL_GENERAL, *PIECES_ROOMS_DECOR_SMALL_GENERAL)
 		val decorGlass = PIECES_ROOMS_DECOR_SMALL_GLASS.toMutableList()
 		val decorLarge = PIECES_ROOMS_DECOR_LARGE.toMutableList()
 		
 		return mutableListOf<StrongholdAbstractPiece>().apply {
-			addAll(PIECES_ROOMS_MAIN)
+			addAll(PIECES_ROOMS_MAIN_GENERAL)
 			addAll(PIECES_CHESTS_CLUSTERS(rand))
 			
 			addAll(PIECES_ROOMS_TRAPS_MAIN)
@@ -274,9 +277,12 @@ object StrongholdPieces{
 				add(rand.removeItem(decorGlass)!!)
 			}
 			
-			while(size < totalRooms){
+			while(size < totalRoomsExceptLibrary){
 				add(rand.removeItem(decorSmall)!!)
 			}
+			
+			shuffle(rand)
+			add(rand.nextInt(5, 7), rand.nextItem(PIECES_ROOMS_MAIN_LIBRARY))
 		}
 	}
 	
@@ -424,7 +430,8 @@ object StrongholdPieces{
 			StrongholdRoom_DeadEnd_Waterfalls("deadend.waterfalls.nbt"),
 			
 			*PIECES_START,
-			*PIECES_ROOMS_MAIN,
+			*PIECES_ROOMS_MAIN_GENERAL,
+			*PIECES_ROOMS_MAIN_LIBRARY,
 			
 			StrongholdRoom_Relic_Dungeon("relic.dungeon.nbt", ItemStack(Items.STICK)),
 			StrongholdRoom_Relic_Fountains("relic.fountains.nbt", ItemStack(Items.STICK)),
