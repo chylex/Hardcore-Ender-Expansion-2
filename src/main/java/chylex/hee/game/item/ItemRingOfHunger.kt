@@ -28,10 +28,11 @@ class ItemRingOfHunger : ItemAbstractTrinket(){
 	@SubscribeEvent
 	fun onPlayerTick(e: PlayerTickEvent){
 		if (e.side == Side.SERVER && e.phase == Phase.START && e.player.ticksExisted % 12 == 0){
-			val foodStats = e.player.foodStats
+			val player = e.player
+			val foodStats = player.foodStats
 			
 			if (foodStats.needFood()){
-				TrinketHandler.get(e.player).transformIfActive(this){
+				TrinketHandler.get(player).transformIfActive(this){
 					val chargePercentage = 1F - (it.itemDamage.toFloat() / it.maxDamage)
 					val restoreHungerTo = min(20, 15 + (7F * chargePercentage).ceilToInt())
 					
@@ -41,6 +42,10 @@ class ItemRingOfHunger : ItemAbstractTrinket(){
 						
 						if (foodStats.foodSaturationLevel < 1F){
 							foodStats.foodSaturationLevel = 1F
+						}
+						
+						if (it.itemDamage >= it.maxDamage){
+							TrinketHandler.playTrinketBreakFX(player, this)
 						}
 					}
 				}

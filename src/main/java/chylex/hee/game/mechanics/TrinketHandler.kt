@@ -4,6 +4,7 @@ import chylex.hee.game.item.trinket.ITrinketHandler
 import chylex.hee.game.item.trinket.ITrinketHandlerProvider
 import chylex.hee.game.item.trinket.ITrinketItem
 import chylex.hee.game.mechanics.TrinketHandler.TrinketCapability.Provider
+import chylex.hee.network.client.PacketClientTrinketBreak
 import chylex.hee.system.Resource
 import chylex.hee.system.util.forge.capabilities.CapabilityProvider
 import chylex.hee.system.util.forge.capabilities.NullFactory
@@ -12,6 +13,7 @@ import chylex.hee.system.util.readStack
 import chylex.hee.system.util.writeStack
 import net.minecraft.entity.Entity
 import net.minecraft.entity.player.EntityPlayer
+import net.minecraft.item.Item
 import net.minecraft.item.ItemStack
 import net.minecraft.nbt.NBTTagCompound
 import net.minecraftforge.common.MinecraftForge
@@ -50,6 +52,10 @@ object TrinketHandler{
 		return getTrinketSlotItem(player) === stack || get(player).isInTrinketSlot(stack)
 	}
 	
+	fun playTrinketBreakFX(player: EntityPlayer, item: Item){
+		PacketClientTrinketBreak(player, item).sendToAllAround(player, 32.0)
+	}
+	
 	// Default handler implementation
 	
 	private class InternalHandlerFor(private val player: EntityPlayer) : ITrinketHandler{
@@ -58,14 +64,22 @@ object TrinketHandler{
 		}
 		
 		override fun isItemActive(item: ITrinketItem): Boolean{
-			return getItemIfActive(item) != null
+			return getTrinketIfActive(item) != null
 		}
 		
 		override fun transformIfActive(item: ITrinketItem, transformer: (ItemStack) -> Unit){
-			getItemIfActive(item)?.apply(transformer) // no need to refresh the stack
+			val trinketItem = getTrinketIfActive(item)
+			
+			if (trinketItem != null){
+				transformer(trinketItem) // no need to refresh the stack
+				
+				if (!item.canPlaceIntoTrinketSlot(trinketItem)){
+					playTrinketBreakFX(player, trinketItem.item)
+				}
+			}
 		}
 		
-		private fun getItemIfActive(item: ITrinketItem): ItemStack?{
+		private fun getTrinketIfActive(item: ITrinketItem): ItemStack?{
 			return getTrinketSlotItem(player).takeIf { it.item === item && item.canPlaceIntoTrinketSlot(it) }
 		}
 	}

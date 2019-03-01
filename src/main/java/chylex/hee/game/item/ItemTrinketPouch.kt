@@ -144,6 +144,10 @@ class ItemTrinketPouch : ItemAbstractTrinket(), ITrinketHandlerProvider, IInfusa
 			if (trinketItem != null){
 				transformer(trinketItem)
 				tryUpdatePlayerItem(updateModCounter = true)
+				
+				if (!item.canPlaceIntoTrinketSlot(trinketItem)){
+					TrinketHandler.playTrinketBreakFX(player, trinketItem.item)
+				}
 			}
 		}
 		

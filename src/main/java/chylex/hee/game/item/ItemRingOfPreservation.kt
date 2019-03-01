@@ -4,6 +4,7 @@ import chylex.hee.game.item.repair.RepairInstance
 import chylex.hee.game.mechanics.TrinketHandler
 import chylex.hee.system.util.copyIf
 import chylex.hee.system.util.isNotEmpty
+import net.minecraft.entity.Entity
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.init.Items
 import net.minecraft.item.ItemStack
@@ -17,6 +18,8 @@ import net.minecraftforge.event.entity.player.PlayerDestroyItemEvent
 import net.minecraftforge.fml.common.eventhandler.EventPriority.HIGHEST
 import net.minecraftforge.fml.common.eventhandler.EventPriority.LOWEST
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent
+import net.minecraftforge.fml.relauncher.Side
+import net.minecraftforge.fml.relauncher.SideOnly
 import java.util.UUID
 
 class ItemRingOfPreservation : ItemAbstractTrinket(), ICustomRepairBehavior{
@@ -42,6 +45,11 @@ class ItemRingOfPreservation : ItemAbstractTrinket(), ICustomRepairBehavior{
 		return !stack.isItemDamaged
 	}
 	
+	@SideOnly(Side.CLIENT)
+	override fun spawnClientTrinketBreakFX(target: Entity){
+		// TODO sound effect
+	}
+	
 	private fun onItemDestroyed(player: EntityPlayer, stack: ItemStack, info: Pair<NonNullList<ItemStack>, Int>){
 		if (!stack.isItemStackDamageable){
 			return
@@ -52,8 +60,6 @@ class ItemRingOfPreservation : ItemAbstractTrinket(), ICustomRepairBehavior{
 			
 			val (inventory, slot) = info
 			inventory[slot] = stack.apply { itemDamage = (maxDamage * 4) / 5 }
-			
-			// TODO sound effect
 		}
 	}
 	
