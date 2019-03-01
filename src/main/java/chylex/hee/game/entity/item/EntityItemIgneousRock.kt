@@ -107,7 +107,10 @@ class EntityItemIgneousRock : EntityItemNoBob{
 		
 		fun setupSmeltingTransformations(){
 			smeltingTransformations = FurnaceRecipes.instance().smeltingList.map(::convertToBlockStatePair).filterNotNull().toMap()
-			HEE.log.info(smeltingTransformations)
+			
+			for((from, to) in smeltingTransformations){
+				HEE.log.info("[EntityItemIgneousRock] found smelting transformation: $from -> $to")
+			}
 		}
 		
 		private fun convertToBlockState(stack: ItemStack): IBlockState?{
@@ -117,7 +120,7 @@ class EntityItemIgneousRock : EntityItemNoBob{
 			return try{
 				item.block.getStateForPlacement(null, null, UP, 0F, 0F, 0F, meta, null, null) // UPDATE: rewrite once block states are flattened and sane
 			}catch(e: Exception){
-				HEE.log.warn("Faking getStateForPlacement to retrieve IBlockState from ItemStack caused a crash:", e) // UPDATE: currently crashes on BlockGlazedTerracotta
+				HEE.log.warn("[EntityItemIgneousRock] faking getStateForPlacement to retrieve IBlockState from ItemStack caused a crash: ${e.stackTrace[0]}") // UPDATE: currently crashes on BlockGlazedTerracotta
 				null
 			}
 		}
