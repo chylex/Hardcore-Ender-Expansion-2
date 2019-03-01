@@ -59,6 +59,8 @@ tile.hee.end_portal_inner.name=End Portal
 tile.hee.end_portal_frame.name=End Portal Frame
 tile.hee.end_portal_acceptor.name=End Portal Acceptor
 
+tile.hee.energy_cluster.name=Energy Cluster
+
 tile.hee.table_pedestal.name=Table Pedestal
 tile.hee.table_base.name=Table Base
 tile.hee.accumulation_table.name=Accumulation Table
