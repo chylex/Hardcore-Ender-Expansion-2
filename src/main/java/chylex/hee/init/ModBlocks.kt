@@ -58,6 +58,7 @@ import chylex.hee.game.item.util.Tool.Type.SHOVEL
 import chylex.hee.init.ModCreativeTabs.OrderedCreativeTab
 import chylex.hee.system.Resource
 import chylex.hee.system.util.clone
+import chylex.hee.system.util.useVanillaName
 import net.minecraft.block.Block
 import net.minecraft.block.SoundType
 import net.minecraft.block.material.MapColor
@@ -505,7 +506,7 @@ object ModBlocks{
 	}
 	
 	private fun Block.override(vanillaBlock: Block, newCreativeTab: CreativeTabs? = ModCreativeTabs.main){
-		this.registryName = vanillaBlock.registryName
+		this.useVanillaName(vanillaBlock)
 		this.creativeTab = newCreativeTab
 		
 		if (newCreativeTab is OrderedCreativeTab){
@@ -514,7 +515,14 @@ object ModBlocks{
 	}
 	
 	private infix fun Block.with(itemBlock: ItemBlock) = apply {
-		temporaryItemBlocks.add(itemBlock.also { it.registryName = this.registryName })
+		if (this.registryName!!.namespace == Resource.Vanilla.domain){
+			itemBlock.useVanillaName(this)
+		}
+		else{
+			itemBlock.registryName = this.registryName
+		}
+		
+		temporaryItemBlocks.add(itemBlock)
 		(itemBlock.creativeTab as? OrderedCreativeTab)?.registerOrder(itemBlock)
 	}
 	

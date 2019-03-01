@@ -115,19 +115,34 @@ class ModClientProxy : ModCommonProxy(){
 		// block state mappers
 		
 		val emptyStateMapper = IStateMapper {
-			it.blockState.validStates.associate { state -> Pair(state, ModelResourceLocation(it.registryName!!, "normal")) }
+			emptyMap()
 		}
 		
-		ModelLoader.setCustomStateMapper(ModBlocks.CORRUPTED_ENERGY, emptyStateMapper)
-		ModelLoader.setCustomStateMapper(ModBlocks.ENDER_GOO, emptyStateMapper)
-		ModelLoader.setCustomStateMapper(ModBlocks.INFUSED_TNT, emptyStateMapper)
-		ModelLoader.setCustomStateMapper(ModBlocks.DARK_CHEST, emptyStateMapper)
-		ModelLoader.setCustomStateMapper(ModBlocks.LOOT_CHEST, emptyStateMapper)
+		val singleStateMapper = IStateMapper {
+			val location = ModelResourceLocation(it.registryName!!, "normal")
+			it.blockState.validStates.associateWith { location }
+		}
+		
+		ModelLoader.setCustomStateMapper(ModBlocks.END_PORTAL_INNER, emptyStateMapper)
+		ModelLoader.setCustomStateMapper(ModBlocks.ENDERMAN_HEAD, emptyStateMapper)
+		ModelLoader.setCustomStateMapper(ModBlocks.ENERGY_CLUSTER, emptyStateMapper)
+		
+		ModelLoader.setCustomStateMapper(ModBlocks.CORRUPTED_ENERGY, singleStateMapper)
+		ModelLoader.setCustomStateMapper(ModBlocks.DARK_CHEST, singleStateMapper)
+		ModelLoader.setCustomStateMapper(ModBlocks.ENDER_GOO, singleStateMapper)
+		ModelLoader.setCustomStateMapper(ModBlocks.INFUSED_TNT, singleStateMapper)
+		ModelLoader.setCustomStateMapper(ModBlocks.LOOT_CHEST, singleStateMapper)
 		
 		// item models
 		
 		with(ForgeRegistries.ITEMS){
-			for(item in keys.asSequence().filter { it.namespace == HEE.ID }.map(::getValue)){
+			val skippedBlocks = arrayOf(
+				ModBlocks.ACCUMULATION_TABLE,
+				ModBlocks.DEATH_FLOWER_DECAYING,
+				ModBlocks.TABLE_BASE
+			).map(Item::getItemFromBlock).toSet()
+			
+			for(item in keys.asSequence().filter { it.namespace == HEE.ID }.map(::getValue).filterNot(skippedBlocks::contains)){
 				ModelLoader.setCustomModelResourceLocation(item!!, 0, ModelResourceLocation(item.registryName!!, "inventory"))
 			}
 		}

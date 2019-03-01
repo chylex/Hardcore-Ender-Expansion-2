@@ -28,6 +28,7 @@ import chylex.hee.game.item.util.Tool.Type.PICKAXE
 import chylex.hee.game.item.util.Tool.Type.SHOVEL
 import chylex.hee.init.ModCreativeTabs.OrderedCreativeTab
 import chylex.hee.system.Resource
+import chylex.hee.system.util.useVanillaName
 import net.minecraft.creativetab.CreativeTabs
 import net.minecraft.init.Items
 import net.minecraft.item.Item
@@ -182,7 +183,7 @@ object ModItems{
 	}
 	
 	private fun Item.override(vanillaItem: Item, newCreativeTab: CreativeTabs? = ModCreativeTabs.main){
-		this.registryName = vanillaItem.registryName
+		this.useVanillaName(vanillaItem)
 		this.creativeTab = newCreativeTab
 		
 		if (newCreativeTab is OrderedCreativeTab){
