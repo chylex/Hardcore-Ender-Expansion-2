@@ -22,6 +22,7 @@ import chylex.hee.system.util.setPos
 import chylex.hee.system.util.use
 import chylex.hee.system.util.writePos
 import io.netty.buffer.ByteBuf
+import net.minecraft.client.resources.I18n
 import net.minecraft.client.util.ITooltipFlag
 import net.minecraft.entity.Entity
 import net.minecraft.entity.player.EntityPlayer
@@ -36,7 +37,6 @@ import net.minecraft.util.EnumHand
 import net.minecraft.util.EnumHand.OFF_HAND
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.MathHelper
-import net.minecraft.util.text.translation.I18n
 import net.minecraft.world.World
 import net.minecraftforge.fml.relauncher.Side
 import net.minecraftforge.fml.relauncher.SideOnly
@@ -202,9 +202,9 @@ abstract class ItemAbstractEnergyUser : Item(){
 		super.addInformation(stack, world, lines, flags)
 		
 		if (flags.isAdvanced){
-			lines.add(I18n.translateToLocalFormatted("item.tooltip.hee.energy.level", getEnergyLevel(stack), calculateInternalEnergyCapacity(stack)))
+			lines.add(I18n.format("item.tooltip.hee.energy.level", getEnergyLevel(stack), calculateInternalEnergyCapacity(stack)))
 		}
 		
-		lines.add(I18n.translateToLocalFormatted("item.tooltip.hee.energy.uses", (getEnergyLevel(stack).toDouble() / getEnergyPerUse(stack).numerator).ceilToInt()))
+		lines.add(I18n.format("item.tooltip.hee.energy.uses", (getEnergyLevel(stack).toDouble() / getEnergyPerUse(stack).numerator).ceilToInt()))
 	}
 }

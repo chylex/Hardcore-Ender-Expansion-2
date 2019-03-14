@@ -3,11 +3,11 @@ import chylex.hee.HEE
 import chylex.hee.game.item.trinket.ITrinketItem
 import chylex.hee.game.item.util.CustomRarity
 import chylex.hee.game.mechanics.TrinketHandler
+import net.minecraft.client.resources.I18n
 import net.minecraft.client.util.ITooltipFlag
 import net.minecraft.item.EnumRarity
 import net.minecraft.item.Item
 import net.minecraft.item.ItemStack
-import net.minecraft.util.text.translation.I18n
 import net.minecraft.world.World
 import net.minecraftforge.fml.relauncher.Side
 import net.minecraftforge.fml.relauncher.SideOnly
@@ -18,6 +18,7 @@ open class ItemAbstractTrinket : Item(), ITrinketItem{
 			return CustomRarity.TRINKET
 		}
 		
+		@SideOnly(Side.CLIENT)
 		fun onAddInformation(stack: ItemStack, trinket: ITrinketItem, lines: MutableList<String>){
 			val player = HEE.proxy.getClientSidePlayer() ?: return
 			
@@ -28,7 +29,7 @@ open class ItemAbstractTrinket : Item(), ITrinketItem{
 			val keyInSlot = if (TrinketHandler.isInTrinketSlot(player, stack)) "in_slot" else "not_in_slot"
 			val keyIsCharged = if (trinket.canPlaceIntoTrinketSlot(stack)) "charged" else "uncharged"
 			
-			lines.add(I18n.translateToLocal("item.tooltip.hee.trinket.$keyInSlot.$keyIsCharged"))
+			lines.add(I18n.format("item.tooltip.hee.trinket.$keyInSlot.$keyIsCharged"))
 		}
 	}
 	

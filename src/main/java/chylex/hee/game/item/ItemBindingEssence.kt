@@ -4,13 +4,13 @@ import chylex.hee.game.item.infusion.InfusionList
 import chylex.hee.game.item.infusion.InfusionTag
 import chylex.hee.game.render.util.RGB
 import net.minecraft.client.renderer.color.IItemColor
+import net.minecraft.client.resources.I18n
 import net.minecraft.client.util.ITooltipFlag
 import net.minecraft.creativetab.CreativeTabs
 import net.minecraft.item.EnumRarity
 import net.minecraft.item.Item
 import net.minecraft.item.ItemStack
 import net.minecraft.util.NonNullList
-import net.minecraft.util.text.translation.I18n
 import net.minecraft.world.World
 import net.minecraftforge.fml.relauncher.Side
 import net.minecraftforge.fml.relauncher.SideOnly
@@ -56,10 +56,10 @@ class ItemBindingEssence : ItemAbstractInfusable(){
 			.sortedWith(compareBy({ -it.value }, { Item.getIdFromItem(it.key) }))
 		
 		lines.add("")
-		lines.add(I18n.translateToLocal("hee.infusions.applicable.title"))
+		lines.add(I18n.format("hee.infusions.applicable.title"))
 		
 		for((item, count) in applicableTo){
-			lines.add(I18n.translateToLocalFormatted("hee.infusions.applicable.item", item.getItemStackDisplayName(ItemStack(item)), count))
+			lines.add(I18n.format("hee.infusions.applicable.item", item.getItemStackDisplayName(ItemStack(item)), count))
 		}
 	}
 	

@@ -20,6 +20,7 @@ import chylex.hee.system.util.over
 import chylex.hee.system.util.setStack
 import chylex.hee.system.util.writeTag
 import io.netty.buffer.Unpooled
+import net.minecraft.client.resources.I18n
 import net.minecraft.client.util.ITooltipFlag
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.inventory.InventoryBasic
@@ -29,7 +30,6 @@ import net.minecraft.util.ActionResult
 import net.minecraft.util.EnumActionResult.SUCCESS
 import net.minecraft.util.EnumHand
 import net.minecraft.util.NonNullList
-import net.minecraft.util.text.translation.I18n
 import net.minecraft.world.World
 import net.minecraftforge.common.MinecraftForge
 import net.minecraftforge.event.entity.living.LivingDeathEvent
@@ -325,7 +325,7 @@ class ItemAmuletOfRecovery : ItemAbstractEnergyUser(), ITrinketItem{
 			ItemAbstractTrinket.onAddInformation(stack, this, lines)
 		}
 		
-		lines.add(I18n.translateToLocalFormatted("item.tooltip.hee.energy.level", getEnergyChargeLevel(stack).units.value, getEnergyCapacity(stack).units.value))
+		lines.add(I18n.format("item.tooltip.hee.energy.level", getEnergyChargeLevel(stack).units.value, getEnergyCapacity(stack).units.value))
 	}
 	
 	@SideOnly(Side.CLIENT)

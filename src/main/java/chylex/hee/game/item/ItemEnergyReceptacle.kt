@@ -19,6 +19,7 @@ import chylex.hee.system.util.hasKey
 import chylex.hee.system.util.heeTag
 import chylex.hee.system.util.heeTagOrNull
 import net.minecraft.client.renderer.color.IItemColor
+import net.minecraft.client.resources.I18n
 import net.minecraft.client.util.ITooltipFlag
 import net.minecraft.entity.Entity
 import net.minecraft.entity.player.EntityPlayer
@@ -30,7 +31,6 @@ import net.minecraft.util.EnumActionResult.SUCCESS
 import net.minecraft.util.EnumFacing
 import net.minecraft.util.EnumHand
 import net.minecraft.util.math.BlockPos
-import net.minecraft.util.text.translation.I18n
 import net.minecraft.world.World
 import net.minecraftforge.fml.relauncher.Side
 import net.minecraftforge.fml.relauncher.SideOnly
@@ -184,13 +184,13 @@ class ItemEnergyReceptacle : ItemAbstractInfusable(){
 			val tag = stack.heeTagOrNull
 			
 			if (!tag.hasKey(CLUSTER_SNAPSHOT_TAG)){
-				lines.add(I18n.translateToLocal("item.hee.energy_receptacle.tooltip.empty"))
+				lines.add(I18n.format("item.hee.energy_receptacle.tooltip.empty"))
 			}
 			else{
 				val snapshot = ClusterSnapshot(tag.getCompoundTag(CLUSTER_SNAPSHOT_TAG))
 				val level = calculateNewEnergyLevel(snapshot, world.totalWorldTime - tag.getLong(UPDATE_TIME_TAG), InfusionTag.getList(stack))
 				
-				lines.add(I18n.translateToLocalFormatted("item.hee.energy_receptacle.tooltip.holding", level.displayString))
+				lines.add(I18n.format("item.hee.energy_receptacle.tooltip.holding", level.displayString))
 			}
 		}
 		
