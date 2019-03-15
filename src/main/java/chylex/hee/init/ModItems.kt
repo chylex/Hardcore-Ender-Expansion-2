@@ -19,6 +19,8 @@ import chylex.hee.game.item.ItemScorchingTool
 import chylex.hee.game.item.ItemSpatialDashGem
 import chylex.hee.game.item.ItemTableLink
 import chylex.hee.game.item.ItemTalismanOfGriefing
+import chylex.hee.game.item.ItemTotemOfUndyingCustom
+import chylex.hee.game.item.ItemTotemOfUndyingOverride
 import chylex.hee.game.item.ItemTrinketPouch
 import chylex.hee.game.item.ItemVoidBucket
 import chylex.hee.game.item.ItemVoidMiner
@@ -98,6 +100,7 @@ object ModItems{
 	// Items: Trinkets
 	
 	@JvmField val TRINKET_POUCH        = ItemTrinketPouch().apply { setup("trinket_pouch") }
+	@JvmField val TOTEM_OF_UNDYING     = ItemTotemOfUndyingCustom().apply { setup("totem_of_undying", translationKey = "totem") }
 	@JvmField val AMULET_OF_RECOVERY   = ItemAmuletOfRecovery().apply { setup("amulet_of_recovery") }
 	@JvmField val RING_OF_HUNGER       = ItemRingOfHunger().apply { setup("ring_of_hunger") }
 	@JvmField val RING_OF_PRESERVATION = ItemRingOfPreservation().apply { setup("ring_of_preservation") }
@@ -152,6 +155,7 @@ object ModItems{
 			register(SPATIAL_DASH_GEM)
 			
 			register(TRINKET_POUCH)
+			register(TOTEM_OF_UNDYING)
 			register(AMULET_OF_RECOVERY)
 			register(RING_OF_HUNGER)
 			register(RING_OF_PRESERVATION)
@@ -168,6 +172,7 @@ object ModItems{
 			register(ItemChorusBerry().apply { override(Items.CHORUS_FRUIT) })
 			register(ItemElytraOverride().apply { override(Items.ELYTRA) })
 			register(ItemEyeOfEnderOverride().apply { override(Items.ENDER_EYE) })
+			register(ItemTotemOfUndyingOverride().apply { override(Items.TOTEM_OF_UNDYING, newCreativeTab = null) })
 		}
 	}
 	

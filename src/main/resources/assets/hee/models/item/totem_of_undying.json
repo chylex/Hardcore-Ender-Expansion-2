@@ -1,0 +1,12 @@
+{
+  "parent": "item/generated",
+  "textures": {
+    "layer0": "hee:item/totem_of_undying"
+  },
+  "overrides": [
+    {
+      "predicate": { "hee:is_shaking": 1 },
+      "model": "hee:item/totem_of_undying_shaking"
+    }
+  ]
+}
