@@ -15,9 +15,12 @@ public final class RendererConstructors{
 	
 	static{
 		all.put(RenderEntityItemNoBob.class, RenderEntityItemNoBob::new);
+		
 		all.put(RenderEntityMobAbstractEnderman.class, RenderEntityMobAbstractEnderman::new);
 		all.put(RenderEntityMobVillagerDying.class, RenderEntityMobVillagerDying::new);
+		
 		all.put(RenderEntityProjectileEyeOfEnder.class, RenderEntityProjectileEyeOfEnder::new);
+		
 		all.put(RenderEntityNothing.class, RenderEntityNothing::new);
 	}
 	

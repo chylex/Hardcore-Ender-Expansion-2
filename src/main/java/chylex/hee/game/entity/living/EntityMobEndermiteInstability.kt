@@ -68,7 +68,7 @@ class EntityMobEndermiteInstability(world: World) : EntityMobEndermite(world), I
 		spawnCorruptedEnergy = getBoolean("Explode")
 	}
 	
-	// Client
+	// Client side
 	
 	@SideOnly(Side.CLIENT)
 	override fun isInRangeToRenderDist(distanceSq: Double): Boolean{

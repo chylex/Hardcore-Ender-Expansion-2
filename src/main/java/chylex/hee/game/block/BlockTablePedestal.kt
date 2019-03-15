@@ -183,7 +183,7 @@ class BlockTablePedestal(builder: BlockSimple.Builder) : BlockSimpleShaped(build
 		return pos.getTile<TileEntityTablePedestal>(world)?.outputComparatorStrength ?: 0
 	}
 	
-	// Client
+	// Client side
 	
 	override fun getRenderLayer(): BlockRenderLayer = CUTOUT
 	

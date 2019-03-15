@@ -66,9 +66,12 @@ class ModClientProxy : ModCommonProxy(){
 		MinecraftForge.EVENT_BUS.register(this)
 		
 		registerEntityRenderer<EntityItemNoBob, RenderEntityItemNoBob>()
+		
 		registerEntityRenderer<EntityMobAbstractEnderman, RenderEntityMobAbstractEnderman>()
 		registerEntityRenderer<EntityMobVillagerDying, RenderEntityMobVillagerDying>()
+		
 		registerEntityRenderer<EntityProjectileEyeOfEnder, RenderEntityProjectileEyeOfEnder>()
+		
 		registerEntityRenderer<EntityTechnicalBase, RenderEntityNothing>()
 	}
 	

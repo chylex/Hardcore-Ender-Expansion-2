@@ -269,7 +269,7 @@ class TileEntityTablePedestal : TileEntityBase(){
 			super.getCapability(capability, facing)
 	}
 	
-	// Client
+	// Client side
 	
 	@SideOnly(Side.CLIENT)
 	override fun getRenderBoundingBox(): AxisAlignedBB{
