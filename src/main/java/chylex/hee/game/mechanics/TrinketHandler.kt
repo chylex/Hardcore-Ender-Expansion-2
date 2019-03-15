@@ -16,6 +16,7 @@ import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.item.Item
 import net.minecraft.item.ItemStack
 import net.minecraft.nbt.NBTTagCompound
+import net.minecraft.stats.StatList
 import net.minecraftforge.common.MinecraftForge
 import net.minecraftforge.common.capabilities.Capability
 import net.minecraftforge.common.capabilities.CapabilityInject
@@ -53,6 +54,7 @@ object TrinketHandler{
 	}
 	
 	fun playTrinketBreakFX(player: EntityPlayer, item: Item){
+		player.addStat(StatList.getObjectUseStats(item)!!)
 		PacketClientTrinketBreak(player, item).sendToAllAround(player, 32.0)
 	}
 	
