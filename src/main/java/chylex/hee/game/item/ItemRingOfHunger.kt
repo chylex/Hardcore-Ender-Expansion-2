@@ -34,7 +34,7 @@ class ItemRingOfHunger : ItemAbstractTrinket(){
 			if (foodStats.needFood()){
 				TrinketHandler.get(player).transformIfActive(this){
 					val chargePercentage = 1F - (it.itemDamage.toFloat() / it.maxDamage)
-					val restoreHungerTo = min(20, 15 + (7F * chargePercentage).ceilToInt())
+					val restoreHungerTo = min(20, (14.6F + (8.1F * chargePercentage)).ceilToInt())
 					
 					if (foodStats.foodLevel < restoreHungerTo && chargePercentage > 0F){
 						++it.itemDamage
