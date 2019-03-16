@@ -2,7 +2,7 @@ package chylex.hee.game.item
 import chylex.hee.game.item.infusion.Infusion
 import chylex.hee.game.item.infusion.InfusionList
 import chylex.hee.game.item.infusion.InfusionTag
-import chylex.hee.game.render.util.RGB
+import chylex.hee.system.util.color.RGB
 import net.minecraft.client.renderer.color.IItemColor
 import net.minecraft.client.resources.I18n
 import net.minecraft.client.util.ITooltipFlag

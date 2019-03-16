@@ -2,8 +2,8 @@ package chylex.hee.game.gui
 import chylex.hee.game.gui.base.ContainerBaseCustomInventory
 import chylex.hee.game.gui.base.GuiBaseCustomInventory
 import chylex.hee.game.item.ItemTrinketPouch
-import chylex.hee.game.render.util.RGB
 import chylex.hee.system.Resource
+import chylex.hee.system.util.color.RGB
 import chylex.hee.system.util.size
 import net.minecraft.client.gui.Gui
 import net.minecraft.entity.player.EntityPlayer

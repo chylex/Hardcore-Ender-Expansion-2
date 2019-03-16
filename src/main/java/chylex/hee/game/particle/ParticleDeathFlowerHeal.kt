@@ -2,7 +2,7 @@ package chylex.hee.game.particle
 import chylex.hee.game.particle.spawner.factory.IParticleData
 import chylex.hee.game.particle.spawner.factory.IParticleMaker
 import chylex.hee.game.particle.util.ParticleTexture
-import chylex.hee.game.render.util.RGB
+import chylex.hee.system.util.color.RGB
 import chylex.hee.system.util.component1
 import chylex.hee.system.util.component2
 import chylex.hee.system.util.component3

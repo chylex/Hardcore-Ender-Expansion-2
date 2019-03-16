@@ -1,4 +1,4 @@
-package chylex.hee.game.render.entity
+package chylex.hee.client.render.entity
 import net.minecraft.client.renderer.culling.ICamera
 import net.minecraft.client.renderer.entity.Render
 import net.minecraft.client.renderer.entity.RenderManager

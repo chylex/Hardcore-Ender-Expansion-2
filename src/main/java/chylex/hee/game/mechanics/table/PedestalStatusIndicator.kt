@@ -1,8 +1,8 @@
 package chylex.hee.game.mechanics.table
 import chylex.hee.game.block.entity.TileEntityTablePedestal
-import chylex.hee.game.render.util.HCL
-import chylex.hee.game.render.util.IColor
-import chylex.hee.game.render.util.RGB
+import chylex.hee.system.util.color.HCL
+import chylex.hee.system.util.color.IColor
+import chylex.hee.system.util.color.RGB
 import chylex.hee.system.util.delegate.NotifyOnChange
 import chylex.hee.system.util.getEnum
 import chylex.hee.system.util.setEnum

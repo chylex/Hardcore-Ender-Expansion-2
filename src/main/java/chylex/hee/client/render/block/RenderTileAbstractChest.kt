@@ -1,6 +1,6 @@
-package chylex.hee.game.render.block
+package chylex.hee.client.render.block
+import chylex.hee.client.render.util.GL
 import chylex.hee.game.block.entity.TileEntityBaseChest
-import chylex.hee.game.render.util.GL
 import net.minecraft.client.model.ModelChest
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer
 import net.minecraft.util.EnumFacing.EAST

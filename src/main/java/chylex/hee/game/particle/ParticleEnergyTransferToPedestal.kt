@@ -3,9 +3,9 @@ import chylex.hee.game.block.BlockTablePedestal
 import chylex.hee.game.particle.base.ParticleBaseEnergyTransfer
 import chylex.hee.game.particle.spawner.factory.IParticleData
 import chylex.hee.game.particle.spawner.factory.IParticleMaker
-import chylex.hee.game.render.util.RGB
 import chylex.hee.init.ModBlocks
 import chylex.hee.system.util.Pos
+import chylex.hee.system.util.color.RGB
 import chylex.hee.system.util.getBlock
 import net.minecraft.client.particle.Particle
 import net.minecraft.util.math.BlockPos

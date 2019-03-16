@@ -1,5 +1,5 @@
-package chylex.hee.game.render.block
-import chylex.hee.game.render.util.GL
+package chylex.hee.client.render.block
+import chylex.hee.client.render.util.GL
 import chylex.hee.system.Resource
 import net.minecraft.client.Minecraft
 import net.minecraft.client.model.ModelRenderer

@@ -14,9 +14,9 @@ import chylex.hee.game.entity.projectile.EntityProjectileEnderPearl
 import chylex.hee.game.entity.projectile.EntityProjectileEyeOfEnder
 import chylex.hee.game.entity.projectile.EntityProjectileSpatialDash
 import chylex.hee.game.entity.technical.EntityTechnicalTrigger
-import chylex.hee.game.render.util.RGB
 import chylex.hee.init.factory.EntityConstructors
 import chylex.hee.system.Resource
+import chylex.hee.system.util.color.RGB
 import net.minecraft.entity.Entity
 import net.minecraftforge.event.RegistryEvent
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber

@@ -1,9 +1,9 @@
 package chylex.hee.init.factory;
-import chylex.hee.game.render.entity.RenderEntityItemNoBob;
-import chylex.hee.game.render.entity.RenderEntityMobAbstractEnderman;
-import chylex.hee.game.render.entity.RenderEntityMobVillagerDying;
-import chylex.hee.game.render.entity.RenderEntityNothing;
-import chylex.hee.game.render.entity.RenderEntityProjectileEyeOfEnder;
+import chylex.hee.client.render.entity.RenderEntityItemNoBob;
+import chylex.hee.client.render.entity.RenderEntityMobAbstractEnderman;
+import chylex.hee.client.render.entity.RenderEntityMobVillagerDying;
+import chylex.hee.client.render.entity.RenderEntityNothing;
+import chylex.hee.client.render.entity.RenderEntityProjectileEyeOfEnder;
 import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.entity.Entity;
 import net.minecraftforge.fml.client.registry.IRenderFactory;

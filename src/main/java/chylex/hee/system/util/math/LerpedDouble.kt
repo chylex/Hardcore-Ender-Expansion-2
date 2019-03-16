@@ -1,4 +1,4 @@
-package chylex.hee.game.render.util
+package chylex.hee.system.util.math
 
 data class LerpedDouble(var currentValue: Double) : Comparable<LerpedDouble>{
 	private var previousValue = currentValue

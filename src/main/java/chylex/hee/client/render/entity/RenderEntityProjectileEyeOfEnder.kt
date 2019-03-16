@@ -1,6 +1,6 @@
-package chylex.hee.game.render.entity
+package chylex.hee.client.render.entity
+import chylex.hee.client.render.util.GL
 import chylex.hee.game.entity.projectile.EntityProjectileEyeOfEnder
-import chylex.hee.game.render.util.GL
 import net.minecraft.client.Minecraft
 import net.minecraft.client.renderer.GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA
 import net.minecraft.client.renderer.GlStateManager.DestFactor.ZERO

@@ -1,5 +1,5 @@
 package chylex.hee.game.block.fluid
-import chylex.hee.game.render.util.RGB
+import chylex.hee.system.util.color.RGB
 import net.minecraft.block.material.MapColor
 import net.minecraft.util.ResourceLocation
 import net.minecraftforge.fluids.Fluid

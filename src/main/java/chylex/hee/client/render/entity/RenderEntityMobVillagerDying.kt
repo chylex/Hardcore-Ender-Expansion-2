@@ -1,6 +1,6 @@
-package chylex.hee.game.render.entity
+package chylex.hee.client.render.entity
+import chylex.hee.client.render.util.GL
 import chylex.hee.game.entity.living.EntityMobVillagerDying
-import chylex.hee.game.render.util.GL
 import net.minecraft.client.model.ModelVillager
 import net.minecraft.client.renderer.entity.RenderLiving
 import net.minecraft.client.renderer.entity.RenderManager

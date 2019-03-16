@@ -3,7 +3,7 @@ import chylex.hee.game.item.repair.ICustomRepairBehavior
 import chylex.hee.game.item.repair.RepairHandler
 import chylex.hee.game.item.repair.RepairInstance
 import chylex.hee.game.item.util.CustomToolMaterial
-import chylex.hee.game.render.util.RGB
+import chylex.hee.system.util.color.RGB
 import net.minecraft.entity.EntityLivingBase
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.item.ItemStack

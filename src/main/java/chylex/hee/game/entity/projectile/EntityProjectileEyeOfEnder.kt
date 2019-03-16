@@ -6,10 +6,9 @@ import chylex.hee.game.particle.util.IOffset.Constant
 import chylex.hee.game.particle.util.IOffset.InBox
 import chylex.hee.game.particle.util.IOffset.InSphere
 import chylex.hee.game.particle.util.IShape.Point
-import chylex.hee.game.render.util.IColor
-import chylex.hee.game.render.util.LerpedFloat
-import chylex.hee.game.render.util.RGB
 import chylex.hee.system.util.Pos
+import chylex.hee.system.util.color.IColor
+import chylex.hee.system.util.color.RGB
 import chylex.hee.system.util.component1
 import chylex.hee.system.util.component2
 import chylex.hee.system.util.component3
@@ -18,6 +17,7 @@ import chylex.hee.system.util.getState
 import chylex.hee.system.util.heeTag
 import chylex.hee.system.util.lookDirVec
 import chylex.hee.system.util.lookPosVec
+import chylex.hee.system.util.math.LerpedFloat
 import chylex.hee.system.util.motionVec
 import chylex.hee.system.util.nextInt
 import chylex.hee.system.util.offsetUntil

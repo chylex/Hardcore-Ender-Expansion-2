@@ -1,7 +1,7 @@
-package chylex.hee.game.render.block
+package chylex.hee.client.render.block
+import chylex.hee.client.render.util.GL
 import chylex.hee.game.block.BlockTablePedestal
 import chylex.hee.game.block.entity.TileEntityTablePedestal
-import chylex.hee.game.render.util.GL
 import chylex.hee.system.Resource
 import chylex.hee.system.util.nextFloat
 import chylex.hee.system.util.size
@@ -16,7 +16,7 @@ import net.minecraft.client.renderer.RenderHelper
 import net.minecraft.client.renderer.RenderItem
 import net.minecraft.client.renderer.Tessellator
 import net.minecraft.client.renderer.block.model.IBakedModel
-import net.minecraft.client.renderer.block.model.ItemCameraTransforms.TransformType
+import net.minecraft.client.renderer.block.model.ItemCameraTransforms.TransformType.GROUND
 import net.minecraft.client.renderer.texture.TextureManager
 import net.minecraft.client.renderer.texture.TextureMap
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer
@@ -145,7 +145,7 @@ object RenderTileTablePedestal : TileEntitySpecialRenderer<TileEntityTablePedest
 		
 		GL.translate(0.5F, baseY + offsetY, 0.5F)
 		GL.rotate(baseRotation * rotationMp, 0F, 1F, 0F)
-		renderItemWithSpread(renderer, stack, ForgeHooksClient.handleCameraTransforms(baseModel, TransformType.GROUND, false), isModel3D)
+		renderItemWithSpread(renderer, stack, ForgeHooksClient.handleCameraTransforms(baseModel, GROUND, false), isModel3D)
 		
 		GL.popMatrix()
 	}

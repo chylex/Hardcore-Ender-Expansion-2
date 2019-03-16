@@ -1,4 +1,5 @@
 package chylex.hee.game.particle.base
+import chylex.hee.client.render.util.GL
 import chylex.hee.game.block.entity.TileEntityEnergyCluster
 import chylex.hee.game.mechanics.energy.IClusterHealth.HealthOverride.POWERED
 import chylex.hee.game.mechanics.energy.IClusterHealth.HealthOverride.REVITALIZING
@@ -6,10 +7,9 @@ import chylex.hee.game.mechanics.energy.IClusterHealth.HealthStatus.DAMAGED
 import chylex.hee.game.mechanics.energy.IClusterHealth.HealthStatus.TIRED
 import chylex.hee.game.mechanics.energy.IClusterHealth.HealthStatus.UNSTABLE
 import chylex.hee.game.mechanics.energy.IClusterHealth.HealthStatus.WEAKENED
-import chylex.hee.game.render.util.GL
-import chylex.hee.game.render.util.IColor
-import chylex.hee.game.render.util.RGB
 import chylex.hee.system.Resource
+import chylex.hee.system.util.color.IColor
+import chylex.hee.system.util.color.RGB
 import net.minecraft.client.Minecraft
 import net.minecraft.client.particle.Particle
 import net.minecraft.client.renderer.BufferBuilder

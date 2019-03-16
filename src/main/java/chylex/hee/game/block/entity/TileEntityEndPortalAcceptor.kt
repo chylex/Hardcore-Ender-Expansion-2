@@ -11,12 +11,12 @@ import chylex.hee.game.block.entity.TileEntityEndPortalAcceptor.ForegroundRender
 import chylex.hee.game.block.entity.TileEntityEndPortalAcceptor.ForegroundRenderState.VISIBLE
 import chylex.hee.game.mechanics.energy.IEnergyQuantity
 import chylex.hee.game.mechanics.energy.IEnergyQuantity.Units
-import chylex.hee.game.render.util.LerpedFloat
 import chylex.hee.system.util.FLAG_SKIP_RENDER
 import chylex.hee.system.util.FLAG_SYNC_CLIENT
 import chylex.hee.system.util.breakBlock
 import chylex.hee.system.util.getEnum
 import chylex.hee.system.util.getTile
+import chylex.hee.system.util.math.LerpedFloat
 import chylex.hee.system.util.setEnum
 import net.minecraft.nbt.NBTTagCompound
 import net.minecraft.util.ITickable

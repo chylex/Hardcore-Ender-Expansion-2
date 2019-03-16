@@ -1,5 +1,5 @@
-package chylex.hee.game.render.block
-import chylex.hee.game.render.util.GL
+package chylex.hee.client.render.block
+import chylex.hee.client.render.util.GL
 import chylex.hee.system.Resource
 import chylex.hee.system.util.square
 import net.minecraft.client.Minecraft
@@ -176,7 +176,7 @@ abstract class RenderTileAbstractPortal<T : TileEntity> : TileEntitySpecialRende
 		GL.texGen(S, GL_OBJECT_PLANE, updateBuffer(1F, 0F, 0F, 0F))
 		GL.texGen(T, GL_OBJECT_PLANE, updateBuffer(0F, 0F, 1F, 0F))
 		GL.texGen(R, GL_OBJECT_PLANE, updateBuffer(1F, 0F, 0F, 1F))
-		GL.texGen(Q, GL_EYE_PLANE,    updateBuffer(0F, 1F, 0F, 0F))
+		GL.texGen(Q, GL_EYE_PLANE, updateBuffer(0F, 1F, 0F, 0F))
 		
 		GL.popMatrix()
 		

@@ -1,4 +1,4 @@
-package chylex.hee.game.render.model
+package chylex.hee.client.model.item
 import chylex.hee.init.ModItems
 import chylex.hee.system.Resource.Custom
 import net.minecraft.client.Minecraft

@@ -1,4 +1,5 @@
 package chylex.hee.game.item
+import chylex.hee.client.render.util.ColorTransition
 import chylex.hee.game.block.entity.TileEntityEnergyCluster
 import chylex.hee.game.item.infusion.IInfusableItem
 import chylex.hee.game.item.infusion.Infusion
@@ -6,14 +7,13 @@ import chylex.hee.game.item.infusion.Infusion.CAPACITY
 import chylex.hee.game.item.infusion.Infusion.DISTANCE
 import chylex.hee.game.item.infusion.InfusionTag
 import chylex.hee.game.mechanics.energy.IEnergyQuantity.Units
-import chylex.hee.game.render.util.ColorTransition
-import chylex.hee.game.render.util.HCL
 import chylex.hee.init.ModItems
 import chylex.hee.system.Resource
 import chylex.hee.system.util.Pos
 import chylex.hee.system.util.angleBetween
 import chylex.hee.system.util.center
 import chylex.hee.system.util.closestTickingTile
+import chylex.hee.system.util.color.HCL
 import chylex.hee.system.util.distanceTo
 import chylex.hee.system.util.floorToInt
 import chylex.hee.system.util.getPos
@@ -189,7 +189,7 @@ class ItemEnergyOracle : ItemAbstractEnergyUser(), IInfusableItem{
 	object Color: IItemColor{
 		private const val NONE = -1
 		
-		private val INACTIVE =  HCL(0.0, 0F,   2.8F)
+		private val INACTIVE  = HCL(0.0, 0F,   2.8F)
 		private val SEARCHING = HCL(0.0, 0F,  68.0F)
 		private val PROXIMITY = HCL(0.0, 0F, 100.0F)
 		

@@ -1,6 +1,6 @@
-package chylex.hee.game.render.entity
+package chylex.hee.client.render.entity
+import chylex.hee.client.render.util.GL
 import chylex.hee.game.entity.living.EntityMobAbstractEnderman
-import chylex.hee.game.render.util.GL
 import chylex.hee.system.util.nextFloat
 import net.minecraft.client.renderer.entity.RenderEnderman
 import net.minecraft.client.renderer.entity.RenderManager

@@ -3,8 +3,8 @@ import chylex.hee.game.particle.base.ParticleBaseFloating
 import chylex.hee.game.particle.spawner.factory.IParticleData
 import chylex.hee.game.particle.spawner.factory.IParticleMaker
 import chylex.hee.game.particle.util.ParticleTexture
-import chylex.hee.game.render.util.IColor
-import chylex.hee.game.render.util.RGB
+import chylex.hee.system.util.color.IColor
+import chylex.hee.system.util.color.RGB
 import chylex.hee.system.util.nextFloat
 import net.minecraft.client.particle.Particle
 import net.minecraft.world.World

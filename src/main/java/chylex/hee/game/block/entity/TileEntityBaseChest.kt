@@ -1,12 +1,12 @@
 package chylex.hee.game.block.entity
 import chylex.hee.game.block.entity.TileEntityBase.Context.NETWORK
-import chylex.hee.game.render.util.LerpedFloat
 import chylex.hee.system.util.FLAG_SKIP_RENDER
 import chylex.hee.system.util.FLAG_SYNC_CLIENT
 import chylex.hee.system.util.distanceSqTo
 import chylex.hee.system.util.getState
 import chylex.hee.system.util.getStringOrNull
 import chylex.hee.system.util.getTile
+import chylex.hee.system.util.math.LerpedFloat
 import chylex.hee.system.util.nextFloat
 import chylex.hee.system.util.playServer
 import net.minecraft.block.BlockDirectional.FACING

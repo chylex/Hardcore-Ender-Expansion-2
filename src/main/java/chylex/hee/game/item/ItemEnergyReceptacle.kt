@@ -9,11 +9,11 @@ import chylex.hee.game.mechanics.energy.IEnergyQuantity
 import chylex.hee.game.mechanics.energy.IEnergyQuantity.Companion.displayString
 import chylex.hee.game.mechanics.energy.IEnergyQuantity.Floating
 import chylex.hee.game.mechanics.energy.IEnergyQuantity.Internal
-import chylex.hee.game.render.util.RGB
 import chylex.hee.game.world.util.BlockEditor
 import chylex.hee.init.ModBlocks
 import chylex.hee.system.Resource
 import chylex.hee.system.util.breakBlock
+import chylex.hee.system.util.color.RGB
 import chylex.hee.system.util.getTile
 import chylex.hee.system.util.hasKey
 import chylex.hee.system.util.heeTag

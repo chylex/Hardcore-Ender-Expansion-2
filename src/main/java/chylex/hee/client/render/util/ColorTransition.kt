@@ -1,4 +1,5 @@
-package chylex.hee.game.render.util
+package chylex.hee.client.render.util
+import chylex.hee.system.util.color.HCL
 import net.minecraft.client.Minecraft
 import net.minecraftforge.fml.relauncher.Side
 import net.minecraftforge.fml.relauncher.SideOnly

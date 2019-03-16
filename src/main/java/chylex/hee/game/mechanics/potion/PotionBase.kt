@@ -1,6 +1,6 @@
 package chylex.hee.game.mechanics.potion
-import chylex.hee.game.render.util.RGB
 import chylex.hee.system.Resource
+import chylex.hee.system.util.color.RGB
 import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.Gui
 import net.minecraft.potion.Potion

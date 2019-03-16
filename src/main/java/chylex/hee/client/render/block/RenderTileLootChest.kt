@@ -1,4 +1,4 @@
-package chylex.hee.game.render.block
+package chylex.hee.client.render.block
 import chylex.hee.game.block.entity.TileEntityLootChest
 import chylex.hee.system.Resource
 import net.minecraft.client.renderer.tileentity.TileEntityItemStackRenderer

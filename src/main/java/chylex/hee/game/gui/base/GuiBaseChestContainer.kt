@@ -1,7 +1,7 @@
 package chylex.hee.game.gui.base
-import chylex.hee.game.render.util.GL
-import chylex.hee.game.render.util.RGB
+import chylex.hee.client.render.util.GL
 import chylex.hee.system.Resource
+import chylex.hee.system.util.color.RGB
 import chylex.hee.system.util.size
 import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.inventory.GuiContainer

@@ -2,11 +2,11 @@ package chylex.hee.game.item.infusion
 import chylex.hee.game.item.infusion.Infusion.Colors.Companion.Gray
 import chylex.hee.game.item.infusion.Infusion.Colors.Companion.Hcl
 import chylex.hee.game.item.infusion.Infusion.Colors.Companion.Hue
-import chylex.hee.game.render.util.HCL
-import chylex.hee.game.render.util.IColor
-import chylex.hee.game.render.util.RGB
 import chylex.hee.init.ModBlocks
 import chylex.hee.init.ModItems
+import chylex.hee.system.util.color.HCL
+import chylex.hee.system.util.color.IColor
+import chylex.hee.system.util.color.RGB
 import chylex.hee.system.util.nbtOrNull
 import chylex.hee.system.util.size
 import net.minecraft.block.Block

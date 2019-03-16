@@ -1,6 +1,6 @@
 package chylex.hee.game.block.fluid
-import chylex.hee.game.render.util.RGB
 import chylex.hee.system.Resource
+import chylex.hee.system.util.color.RGB
 import net.minecraft.block.material.MapColor
 
 object FluidEnderGoo : FluidBase(

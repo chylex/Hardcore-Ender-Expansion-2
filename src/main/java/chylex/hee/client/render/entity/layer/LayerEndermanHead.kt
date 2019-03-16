@@ -1,5 +1,5 @@
-package chylex.hee.game.render.entity.layer
-import chylex.hee.game.render.block.RenderTileEndermanHead
+package chylex.hee.client.render.entity.layer
+import chylex.hee.client.render.block.RenderTileEndermanHead
 import chylex.hee.init.ModItems
 import net.minecraft.client.model.ModelRenderer
 import net.minecraft.client.renderer.entity.layers.LayerRenderer

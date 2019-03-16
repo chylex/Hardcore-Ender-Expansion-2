@@ -1,4 +1,4 @@
-package chylex.hee.game.render.block
+package chylex.hee.client.render.block
 import chylex.hee.game.block.BlockAbstractPortal
 import chylex.hee.game.block.entity.TileEntityEndPortalAcceptor
 import chylex.hee.system.util.closestTickingTile

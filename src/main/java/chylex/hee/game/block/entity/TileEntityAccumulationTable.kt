@@ -9,7 +9,7 @@ import chylex.hee.game.mechanics.table.process.ProcessManyPedestals.State.Cancel
 import chylex.hee.game.mechanics.table.process.ProcessManyPedestals.State.Work
 import chylex.hee.game.mechanics.table.process.ProcessOnePedestal
 import chylex.hee.game.mechanics.table.process.serializer.BasicProcessSerializer
-import chylex.hee.game.render.util.RGB
+import chylex.hee.system.util.color.RGB
 import net.minecraft.item.ItemStack
 import net.minecraft.nbt.NBTTagCompound
 import net.minecraft.util.math.BlockPos

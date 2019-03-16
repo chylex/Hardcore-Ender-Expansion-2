@@ -1,4 +1,4 @@
-package chylex.hee.game.render.util
+package chylex.hee.system.util.color
 import chylex.hee.system.util.floorToInt
 import chylex.hee.system.util.toRadians
 import net.minecraft.util.math.Vec3d
