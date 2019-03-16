@@ -4,7 +4,7 @@
     "textures": {
       "bottom": "hee:block/gloomrock_smooth",
       "top": "hee:block/gloomrock_smooth",
-      "side": "hee:block/gloomrock_smooth"
+      "side": "hee:block/gloomrock_smooth_slab_side"
     }
   },
   "variants": {
