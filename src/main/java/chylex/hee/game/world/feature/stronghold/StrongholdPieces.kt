@@ -36,6 +36,7 @@ import chylex.hee.game.world.feature.stronghold.piece.StrongholdRoom_Trap_Corner
 import chylex.hee.game.world.feature.stronghold.piece.StrongholdRoom_Trap_Prison
 import chylex.hee.game.world.feature.stronghold.piece.StrongholdRoom_Trap_TallIntersection
 import chylex.hee.game.world.structure.IBlockPicker.Weighted.Companion.Weighted
+import chylex.hee.game.world.structure.IStructureDescription
 import chylex.hee.game.world.structure.file.PaletteBuilder
 import chylex.hee.game.world.structure.file.PaletteMappings
 import chylex.hee.game.world.util.Size
@@ -58,8 +59,11 @@ import net.minecraft.util.EnumFacing.SOUTH
 import net.minecraft.util.EnumFacing.WEST
 import java.util.Random
 
-object StrongholdPieces{
-	val STRUCTURE_SIZE = Size(224, 32, 224)
+object StrongholdPieces : IStructureDescription{
+	override val STRUCTURE_SIZE = Size(224, 32, 224)
+	
+	override val STRUCTURE_BUILDER = StrongholdBuilder
+	override val STRUCTURE_LOCATOR = StrongholdGenerator::findNearest
 	
 	// Palette
 	
@@ -72,7 +76,7 @@ object StrongholdPieces{
 		  8 to FutureBlocks.INFESTED_CRACKED_STONE_BRICKS
 	)
 	
-	val PALETTE = with(PaletteBuilder.Combined()){
+	override val PALETTE = with(PaletteBuilder.Combined()){
 		add("air", Blocks.AIR)
 		add("bookshelf", Blocks.BOOKSHELF)
 		add("obsidian", Blocks.OBSIDIAN)
@@ -411,7 +415,7 @@ object StrongholdPieces{
 	
 	// Pieces (All)
 	
-	val ALL_PIECES
+	override val ALL_PIECES
 		get() = arrayOf(
 			StrongholdCorridor_Straight(2),
 			StrongholdCorridor_Straight(3),
