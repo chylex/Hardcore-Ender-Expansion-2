@@ -1,4 +1,4 @@
-package chylex.hee.game.gui.slot
+package chylex.hee.game.container.slot
 import net.minecraft.inventory.IInventory
 import net.minecraft.inventory.Slot
 import net.minecraft.item.ItemStack

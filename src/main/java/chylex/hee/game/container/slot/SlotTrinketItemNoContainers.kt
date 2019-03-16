@@ -1,4 +1,4 @@
-package chylex.hee.game.gui.slot
+package chylex.hee.game.container.slot
 import chylex.hee.game.item.trinket.ITrinketHandlerProvider
 import net.minecraft.item.ItemStack
 import net.minecraftforge.items.IItemHandler

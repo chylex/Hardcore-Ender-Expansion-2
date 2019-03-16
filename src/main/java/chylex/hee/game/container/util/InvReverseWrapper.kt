@@ -1,4 +1,4 @@
-package chylex.hee.game.gui.util
+package chylex.hee.game.container.util
 import net.minecraft.inventory.IInventory
 import net.minecraft.item.ItemStack
 import net.minecraftforge.items.IItemHandlerModifiable

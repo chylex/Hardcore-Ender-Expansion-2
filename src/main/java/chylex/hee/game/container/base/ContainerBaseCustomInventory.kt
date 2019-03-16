@@ -1,4 +1,4 @@
-package chylex.hee.game.gui.base
+package chylex.hee.game.container.base
 import chylex.hee.system.util.size
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.inventory.Container

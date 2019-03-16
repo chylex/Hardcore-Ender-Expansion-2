@@ -1,5 +1,6 @@
-package chylex.hee.game.gui
-import chylex.hee.game.gui.base.GuiBaseChestContainer
+package chylex.hee.client.gui
+import chylex.hee.client.gui.base.GuiBaseChestContainer
+import chylex.hee.game.container.ContainerAmuletOfRecovery
 import chylex.hee.network.server.PacketServerContainerEvent
 import net.minecraft.client.gui.GuiButton
 import net.minecraft.client.resources.I18n

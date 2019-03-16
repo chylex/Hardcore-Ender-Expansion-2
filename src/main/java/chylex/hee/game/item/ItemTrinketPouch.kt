@@ -1,6 +1,6 @@
 package chylex.hee.game.item
-import chylex.hee.game.gui.ContainerTrinketPouch
-import chylex.hee.game.gui.slot.SlotTrinketItemInventory
+import chylex.hee.game.container.ContainerTrinketPouch
+import chylex.hee.game.container.slot.SlotTrinketItemInventory
 import chylex.hee.game.item.infusion.IInfusableItem
 import chylex.hee.game.item.infusion.Infusion
 import chylex.hee.game.item.infusion.Infusion.EXPANSION

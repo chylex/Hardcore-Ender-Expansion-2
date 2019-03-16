@@ -1,7 +1,7 @@
-package chylex.hee.game.gui
-import chylex.hee.game.gui.base.ContainerBaseCustomInventory
-import chylex.hee.game.gui.slot.SlotTrinketItemNoContainers
-import chylex.hee.game.gui.util.DetectSlotChangeListener
+package chylex.hee.game.container
+import chylex.hee.game.container.base.ContainerBaseCustomInventory
+import chylex.hee.game.container.slot.SlotTrinketItemNoContainers
+import chylex.hee.game.container.util.DetectSlotChangeListener
 import chylex.hee.game.item.ItemTrinketPouch
 import chylex.hee.system.util.size
 import net.minecraft.entity.player.EntityPlayer

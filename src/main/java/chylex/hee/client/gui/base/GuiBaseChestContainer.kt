@@ -1,4 +1,4 @@
-package chylex.hee.game.gui.base
+package chylex.hee.client.gui.base
 import chylex.hee.client.render.util.GL
 import chylex.hee.system.Resource
 import chylex.hee.system.util.color.RGB

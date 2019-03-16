@@ -1,4 +1,4 @@
-package chylex.hee.game.gui.slot
+package chylex.hee.game.container.slot
 import chylex.hee.game.item.trinket.ITrinketItem
 import chylex.hee.system.Resource
 import net.minecraft.client.renderer.texture.TextureAtlasSprite

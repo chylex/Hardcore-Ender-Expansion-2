@@ -1,6 +1,6 @@
 package chylex.hee.game.mechanics.table
 import chylex.hee.game.block.BlockTablePedestal
-import chylex.hee.game.gui.util.InvReverseWrapper
+import chylex.hee.game.container.util.InvReverseWrapper
 import chylex.hee.system.util.copyIf
 import chylex.hee.system.util.createSnapshot
 import chylex.hee.system.util.getStack

@@ -1,5 +1,5 @@
 package chylex.hee.network.server
-import chylex.hee.game.gui.slot.SlotTrinketItemInventory
+import chylex.hee.game.container.slot.SlotTrinketItemInventory
 import chylex.hee.network.BaseServerPacket
 import chylex.hee.system.util.use
 import io.netty.buffer.ByteBuf

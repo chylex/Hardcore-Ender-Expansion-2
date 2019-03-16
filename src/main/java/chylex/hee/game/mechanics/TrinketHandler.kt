@@ -1,5 +1,5 @@
 package chylex.hee.game.mechanics
-import chylex.hee.game.gui.slot.SlotTrinketItemInventory
+import chylex.hee.game.container.slot.SlotTrinketItemInventory
 import chylex.hee.game.item.trinket.ITrinketHandler
 import chylex.hee.game.item.trinket.ITrinketHandlerProvider
 import chylex.hee.game.item.trinket.ITrinketItem

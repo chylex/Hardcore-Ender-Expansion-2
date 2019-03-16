@@ -1,6 +1,6 @@
-package chylex.hee.game.gui.slot
+package chylex.hee.game.container.slot
 import chylex.hee.HEE
-import chylex.hee.game.gui.slot.SlotTrinketItemInventory.Client.isRenderingGUI
+import chylex.hee.game.container.slot.SlotTrinketItemInventory.Client.isRenderingGUI
 import chylex.hee.network.server.PacketServerShiftClickTrinket
 import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.Gui

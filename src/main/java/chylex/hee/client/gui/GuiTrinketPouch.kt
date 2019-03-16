@@ -1,7 +1,8 @@
-package chylex.hee.game.gui
-import chylex.hee.game.gui.base.ContainerBaseCustomInventory
-import chylex.hee.game.gui.base.GuiBaseCustomInventory
-import chylex.hee.game.item.ItemTrinketPouch
+package chylex.hee.client.gui
+import chylex.hee.client.gui.base.GuiBaseCustomInventory
+import chylex.hee.game.container.ContainerTrinketPouch
+import chylex.hee.game.container.base.ContainerBaseCustomInventory
+import chylex.hee.game.item.ItemTrinketPouch.Inventory
 import chylex.hee.system.Resource
 import chylex.hee.system.util.color.RGB
 import chylex.hee.system.util.size
@@ -11,7 +12,7 @@ import net.minecraftforge.fml.relauncher.Side
 import net.minecraftforge.fml.relauncher.SideOnly
 
 @SideOnly(Side.CLIENT)
-class GuiTrinketPouch(player: EntityPlayer, inventorySlot: Int) : GuiBaseCustomInventory<ItemTrinketPouch.Inventory>(ContainerTrinketPouch(player, inventorySlot)){
+class GuiTrinketPouch(player: EntityPlayer, inventorySlot: Int) : GuiBaseCustomInventory<Inventory>(ContainerTrinketPouch(player, inventorySlot)){
 	override val texBackground = Resource.Custom("textures/gui/trinket_pouch.png")
 	override val titleContainer = "gui.hee.trinket_pouch.title"
 	

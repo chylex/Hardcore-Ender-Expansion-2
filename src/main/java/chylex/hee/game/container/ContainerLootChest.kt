@@ -1,6 +1,6 @@
-package chylex.hee.game.gui
+package chylex.hee.game.container
 import chylex.hee.game.block.entity.TileEntityLootChest
-import chylex.hee.game.gui.slot.SlotReadOnly
+import chylex.hee.game.container.slot.SlotReadOnly
 import chylex.hee.system.util.size
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.inventory.ContainerChest

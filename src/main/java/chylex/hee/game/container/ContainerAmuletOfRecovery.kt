@@ -1,6 +1,6 @@
-package chylex.hee.game.gui
-import chylex.hee.game.gui.slot.SlotReadOnly
-import chylex.hee.game.gui.util.DetectSlotChangeListener
+package chylex.hee.game.container
+import chylex.hee.game.container.slot.SlotReadOnly
+import chylex.hee.game.container.util.DetectSlotChangeListener
 import chylex.hee.game.item.ItemAmuletOfRecovery
 import chylex.hee.network.server.PacketServerContainerEvent.IContainerWithEvents
 import chylex.hee.system.util.size
