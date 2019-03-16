@@ -21,7 +21,7 @@ class ItemChorusBerry : ItemFood(0, 0F, false){
 		private const val MIN_TELEPORT_DISTANCE = 8
 		private const val MIN_TELEPORT_DISTANCE_SQ = MIN_TELEPORT_DISTANCE * MIN_TELEPORT_DISTANCE
 		
-		private val TELEPORT = Teleporter(resetFall = true, causedInstability = 10u)
+		private val TELEPORT = Teleporter(causedInstability = 10u)
 		
 		private val DAMAGE_TELEPORT_FAIL = Damage(PEACEFUL_EXCLUSION, MAGIC_TYPE)
 		

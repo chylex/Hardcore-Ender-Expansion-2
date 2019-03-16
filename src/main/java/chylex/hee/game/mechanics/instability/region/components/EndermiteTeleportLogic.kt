@@ -13,7 +13,7 @@ import java.util.Random
 import kotlin.math.min
 
 internal object EndermiteTeleportLogic{
-	private val TELEPORT = Teleporter(resetFall = true, resetPathfinding = false, damageDealt = 1F, extendedEffectRange = 48F)
+	private val TELEPORT = Teleporter(resetPathfinding = false, damageDealt = 1F, extendedEffectRange = 48F)
 	
 	fun call(endermites: List<EntityMobEndermiteInstability>, amount: Int, rand: Random): Int{
 		val remaining = endermites.toMutableList()

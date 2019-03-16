@@ -170,15 +170,15 @@ class EntityProjectileEnderPearl : EntityEnderPearl, IEntityAdditionalSpawnData{
 			setDead()
 			
 			val damage = if (infusions.has(HARMLESS)) 0F else 1F + world.difficulty.id
-			val teleporter = Teleporter(resetFall = true, damageDealt = damage, causedInstability = 20u)
+			val teleport = Teleporter(damageDealt = damage, causedInstability = 20u)
 			
 			if (thrower is EntityPlayerMP){
 				if (thrower.connection.networkManager.isChannelOpen && thrower.world === world){
-					teleporter.toLocation(thrower, posVec)
+					teleport.toLocation(thrower, posVec)
 				}
 			}
 			else if (thrower != null){
-				teleporter.toLocation(thrower, posVec)
+				teleport.toLocation(thrower, posVec)
 			}
 		}
 	}

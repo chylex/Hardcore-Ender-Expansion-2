@@ -39,7 +39,7 @@ import net.minecraftforge.event.entity.living.EnderTeleportEvent
 import java.util.Random
 
 class Teleporter(
-	private val resetFall: Boolean,
+	private val resetFall: Boolean = true,
 	private val resetPathfinding: Boolean = true,
 	private val damageDealt: Float = 0F,
 	private val damageTitle: String = TITLE_FALL,
