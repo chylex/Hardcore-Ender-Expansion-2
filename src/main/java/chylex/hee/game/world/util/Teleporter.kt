@@ -14,8 +14,11 @@ import chylex.hee.network.client.PacketClientFX
 import chylex.hee.network.client.PacketClientMoveYourAss
 import chylex.hee.network.client.PacketClientTeleportInstantly
 import chylex.hee.system.util.Pos
+import chylex.hee.system.util.blocksMovement
 import chylex.hee.system.util.center
 import chylex.hee.system.util.floorToInt
+import chylex.hee.system.util.nextFloat
+import chylex.hee.system.util.nextVector
 import chylex.hee.system.util.offsetTowards
 import chylex.hee.system.util.playClient
 import chylex.hee.system.util.posVec
@@ -123,9 +126,7 @@ class Teleporter(
 		}
 	}
 	
-	fun toBlock(entity: EntityLivingBase, position: BlockPos, soundCategory: SoundCategory = entity.soundCategory): Boolean{
-		return toLocation(entity, position.center.add(0.0, -0.49, 0.0), soundCategory)
-	}
+	// Target
 	
 	fun toLocation(entity: EntityLivingBase, position: Vec3d, soundCategory: SoundCategory = entity.soundCategory): Boolean{
 		val event = EnderTeleportEvent(entity, position.x, position.y, position.z, damageDealt)
@@ -173,5 +174,30 @@ class Teleporter(
 		}
 		
 		return true
+	}
+	
+	fun nearLocation(entity: EntityLivingBase, rand: Random, position: Vec3d, distance: ClosedFloatingPointRange<Double>, attempts: Int, soundCategory: SoundCategory = entity.soundCategory): Boolean{
+		val world = entity.world
+		val originalPos = entity.posVec
+		val originalBox = entity.entityBoundingBox
+		
+		repeat(attempts){
+			val randomPos = position.add(rand.nextVector(rand.nextFloat(distance.start, distance.endInclusive)))
+			val newPos = Vec3d(randomPos.x, randomPos.y.floorToInt() + 0.01, randomPos.z)
+			
+			if (Pos(newPos).down().blocksMovement(world) && world.getCollisionBoxes(entity, originalBox.offset(newPos.subtract(originalPos))).isEmpty()){
+				return toLocation(entity, newPos, soundCategory)
+			}
+		}
+		
+		return false
+	}
+	
+	fun nearLocation(entity: EntityLivingBase, position: Vec3d, distance: ClosedFloatingPointRange<Double>, attempts: Int, soundCategory: SoundCategory = entity.soundCategory): Boolean{
+		return nearLocation(entity, entity.rng, position, distance, attempts, soundCategory)
+	}
+	
+	fun toBlock(entity: EntityLivingBase, position: BlockPos, soundCategory: SoundCategory = entity.soundCategory): Boolean{
+		return toLocation(entity, position.center.add(0.0, -0.49, 0.0), soundCategory)
 	}
 }
