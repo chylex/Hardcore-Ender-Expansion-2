@@ -71,4 +71,18 @@ interface IStructureWorld{
 		placeCube(mut1.setPos(x1, y1 + 1, z1 + 1), mut2.setPos(x1, y2 - 1, z2 - 1), picker)
 		placeCube(mut1.setPos(x2, y1 + 1, z1 + 1), mut2.setPos(x2, y2 - 1, z2 - 1), picker)
 	}
+	
+	@JvmDefault fun placeWalls(pos1: BlockPos, pos2: BlockPos, picker: IBlockPicker){
+		val (x1, y1, z1) = pos1.min(pos2)
+		val (x2, y2, z2) = pos1.max(pos2)
+		
+		val mut1 = MutableBlockPos()
+		val mut2 = MutableBlockPos()
+		
+		placeCube(mut1.setPos(x1, y1, z1), mut2.setPos(x2, y2, z1), picker)
+		placeCube(mut1.setPos(x1, y1, z2), mut2.setPos(x2, y2, z2), picker)
+		
+		placeCube(mut1.setPos(x1, y1, z1 + 1), mut2.setPos(x1, y2, z2 - 1), picker)
+		placeCube(mut1.setPos(x2, y1, z1 + 1), mut2.setPos(x2, y2, z2 - 1), picker)
+	}
 }

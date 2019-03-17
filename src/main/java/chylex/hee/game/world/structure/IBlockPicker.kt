@@ -4,6 +4,7 @@ import chylex.hee.system.collection.WeightedList
 import net.minecraft.block.Block
 import net.minecraft.block.properties.IProperty
 import net.minecraft.block.state.IBlockState
+import net.minecraft.init.Blocks
 import java.util.Random
 
 interface IBlockPicker{
@@ -15,8 +16,9 @@ interface IBlockPicker{
 		constructor(block: Block) : this(block.defaultState)
 		
 		override fun pick(rand: Random) = state
-		
 		override fun toString() = state.toString()
+		
+		object Air : Single(Blocks.AIR)
 	}
 	
 	class Weighted private constructor(private val weightedList: WeightedList<IBlockState>) : IBlockPicker{
@@ -35,7 +37,6 @@ interface IBlockPicker{
 		}
 		
 		override fun pick(rand: Random) = weightedList.generateItem(rand)
-		
 		override fun toString() = weightedList.toString()
 	}
 	
