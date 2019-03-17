@@ -2,11 +2,10 @@ package chylex.hee.game.world.feature.stronghold.piece
 import chylex.hee.game.world.feature.stronghold.StrongholdPieceType
 import chylex.hee.game.world.feature.stronghold.StrongholdPieceType.CORRIDOR
 import chylex.hee.game.world.feature.stronghold.StrongholdPieces
-import chylex.hee.game.world.structure.IBlockPicker.Single
+import chylex.hee.game.world.structure.IBlockPicker.Single.Air
 import chylex.hee.game.world.structure.IStructureWorld
 import chylex.hee.game.world.structure.piece.StructurePiece
 import chylex.hee.system.util.ceilToInt
-import net.minecraft.init.Blocks
 import net.minecraft.util.EnumFacing
 import net.minecraft.util.Rotation
 import kotlin.math.pow
@@ -28,7 +27,7 @@ abstract class StrongholdAbstractPiece : StructurePiece(){
 				val addX = perpendicular.xOffset
 				val addZ = perpendicular.zOffset
 				
-				world.placeCube(offset.add(-addX, 1, -addZ), offset.add(addX, 3, addZ), Single(Blocks.AIR))
+				world.placeCube(offset.add(-addX, 1, -addZ), offset.add(addX, 3, addZ), Air)
 			}
 		}
 	}

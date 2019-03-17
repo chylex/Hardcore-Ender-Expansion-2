@@ -4,6 +4,7 @@ import chylex.hee.game.world.feature.stronghold.StrongholdPieceType.CORRIDOR
 import chylex.hee.game.world.feature.stronghold.StrongholdPieces
 import chylex.hee.game.world.feature.stronghold.connection.StrongholdStairConnection
 import chylex.hee.game.world.structure.IBlockPicker.Single
+import chylex.hee.game.world.structure.IBlockPicker.Single.Air
 import chylex.hee.game.world.structure.IStructureWorld
 import chylex.hee.game.world.structure.piece.IStructurePieceConnection
 import chylex.hee.game.world.util.Size
@@ -46,7 +47,7 @@ class StrongholdCorridor_Stairs_Vertical(connectionAtEntrance: EnumFacing, conne
 	
 	override fun generate(world: IStructureWorld, instance: Instance){
 		super.generate(world, instance)
-		world.placeCube(Pos(1, 1, 1), Pos(size.maxX - 1, size.maxY - 1, size.maxZ - 1), Single(Blocks.AIR))
+		world.placeCube(Pos(1, 1, 1), Pos(size.maxX - 1, size.maxY - 1, size.maxZ - 1), Air)
 		
 		val rand = world.rand
 		val useStairs = rand.nextBoolean()
