@@ -9,7 +9,9 @@ import chylex.hee.game.world.structure.world.OffsetStructureWorld
 import chylex.hee.game.world.util.Size
 import net.minecraft.util.math.BlockPos
 
-class StructureBuild<T : MutableInstance>(val size: Size, startingPiece: T){
+class StructureBuild<T : MutableInstance>(val size: Size, startingPiece: PositionedPiece<T>){
+	constructor(size: Size, startingPiece: T) : this(size, PositionedPiece<T>(startingPiece, size.centerPos.subtract(startingPiece.size.centerPos)))
+	
 	enum class AddMode{
 		APPEND, MERGE
 	}
@@ -23,7 +25,7 @@ class StructureBuild<T : MutableInstance>(val size: Size, startingPiece: T){
 	}
 	
 	private val structureBox = size.toBoundingBox(BlockPos.ORIGIN)
-	private val pieces = mutableListOf(PositionedPiece(startingPiece, size.centerPos.subtract(startingPiece.size.centerPos)))
+	private val pieces = mutableListOf(startingPiece)
 	private var chain = -1
 	
 	val generatedPieces: List<PositionedPiece<T>> = pieces
