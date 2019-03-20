@@ -27,6 +27,9 @@ abstract class StructurePiece : IStructureGenerator{
 		override val offset = RotatedStructureWorld.rotatePos(original.offset, size, rotation)
 		override val facing = rotation.rotate(original.facing)!!
 		
+		override val isEvenWidth
+			get() = original.isEvenWidth
+		
 		override fun canConnectWith(other: IStructurePieceConnection): Boolean{
 			return original.canConnectWith((other as? RotatedStructurePieceConnection)?.original ?: other)
 		}

@@ -6,5 +6,9 @@ interface IStructurePieceConnection{
 	val offset: BlockPos
 	val facing: EnumFacing
 	
+	@JvmDefault
+	val isEvenWidth
+		get() = false
+	
 	fun canConnectWith(other: IStructurePieceConnection): Boolean
 }

@@ -33,6 +33,7 @@ class StructureBuild<T : MutableInstance>(val size: Size, startingPiece: T){
 			.add(targetPieceConnection.offset)
 			.offset(targetPieceConnection.facing, if (mode == MERGE) 0 else 1)
 			.subtract(newPieceConnection.offset)
+			.offset(targetPieceConnection.facing.rotateY(), if (targetPieceConnection.isEvenWidth) 1 else 0)
 		
 		val addedPiece = PositionedPiece(newPiece, alignedPos)
 		val addedBox = addedPiece.pieceBox
