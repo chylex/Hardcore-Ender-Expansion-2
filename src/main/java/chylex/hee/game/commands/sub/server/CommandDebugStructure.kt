@@ -5,14 +5,15 @@ import chylex.hee.game.world.structure.IBlockPicker.Single
 import chylex.hee.game.world.structure.IStructureDescription
 import chylex.hee.game.world.structure.IStructureGeneratorFromFile
 import chylex.hee.game.world.structure.file.StructureFile
+import chylex.hee.game.world.structure.file.StructureFiles
 import chylex.hee.game.world.structure.world.RotatedStructureWorld
 import chylex.hee.game.world.structure.world.WorldToStructureWorldAdapter
+import chylex.hee.game.world.util.Size
 import chylex.hee.system.util.Rotation4
 import net.minecraft.command.ICommandSender
 import net.minecraft.init.Blocks
 import net.minecraft.server.MinecraftServer
 import net.minecraft.util.text.TextComponentString
-import kotlin.math.max
 
 internal object CommandDebugStructure : ISubCommand{
 	private val structureDescriptions = mapOf<String, IStructureDescription>(
@@ -25,16 +26,28 @@ internal object CommandDebugStructure : ISubCommand{
 	
 	override fun executeCommand(server: MinecraftServer?, sender: ICommandSender, args: Array<out String>){
 		val arg = args.getOrNull(0) ?: return
+		
+		if (arg == "resetcache"){
+			StructureFiles.resetCache()
+			sender.sendMessage(TextComponentString("reset"))
+			return
+		}
 		val structure = args.getOrNull(1)?.let { structureDescriptions[it] } ?: return
 		
 		when(arg){
 			"pieces" -> {
 				var x = 0
 				
+				val rotations = when(args.getOrNull(2)){
+					"norots" -> listOf(Rotation.NONE)
+					null -> Rotation4
+					else -> return
+				}
+				
 				for(piece in structure.ALL_PIECES){
 					val size = piece.size
 					
-					for((index, rotation) in Rotation4.withIndex()){
+					for((index, rotation) in rotations.withIndex()){
 						val world = WorldToStructureWorldAdapter(sender.entityWorld, sender.entityWorld.rand, sender.position.add(x, index * (size.y + 2), -size.centerZ))
 						val rotatedWorld = RotatedStructureWorld(world, size, rotation)
 						
@@ -42,7 +55,7 @@ internal object CommandDebugStructure : ISubCommand{
 						rotatedWorld.apply(piece::generate).finalize()
 					}
 					
-					x += max(size.x, size.z) + 2
+					x += rotations.map(size::rotate).map(Size::x).max()!! + 2
 				}
 			}
 			

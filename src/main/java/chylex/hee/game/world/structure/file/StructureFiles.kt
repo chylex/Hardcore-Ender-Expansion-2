@@ -15,4 +15,8 @@ object StructureFiles{
 		
 		return StructureFile(nbt)
 	}
+	
+	fun resetCache(){
+		cache.clear()
+	}
 }
