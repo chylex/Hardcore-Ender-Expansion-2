@@ -14,6 +14,7 @@ import net.minecraft.init.Blocks
 import net.minecraft.init.Items
 import net.minecraft.item.Item
 import net.minecraft.item.ItemStack
+import java.util.Locale
 
 enum class Infusion(
 	val translationKey: String,
@@ -60,7 +61,11 @@ enum class Infusion(
 	
 	// Infusion logic
 	
-	private companion object{
+	companion object{
+		fun byName(name: String): Infusion{
+			return valueOf(name.toUpperCase(Locale.ROOT))
+		}
+		
 		private val TRANSFORMATIONS = arrayOf(
 			Item.getItemFromBlock(Blocks.TNT) to Item.getItemFromBlock(ModBlocks.INFUSED_TNT),
 			Items.ENDER_PEARL to ModItems.INFUSED_ENDER_PEARL

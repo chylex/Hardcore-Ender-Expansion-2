@@ -6,6 +6,7 @@ import chylex.hee.game.loot.StackSortingLootTable
 import chylex.hee.game.loot.conditions.ConditionCriticalHit
 import chylex.hee.game.loot.conditions.ConditionFortune
 import chylex.hee.game.loot.conditions.ConditionLooting
+import chylex.hee.game.loot.functions.FunctionInfuse
 import chylex.hee.game.loot.rng.RandomBiasedValueRange
 import chylex.hee.system.Resource
 import net.minecraft.util.ResourceLocation
@@ -13,6 +14,7 @@ import net.minecraft.world.storage.loot.LootPool
 import net.minecraft.world.storage.loot.LootTable
 import net.minecraft.world.storage.loot.LootTableList
 import net.minecraft.world.storage.loot.conditions.LootConditionManager
+import net.minecraft.world.storage.loot.functions.LootFunctionManager
 import net.minecraftforge.event.LootTableLoadEvent
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent
@@ -34,6 +36,8 @@ object ModLoot{
 		LootConditionManager.registerCondition(ConditionFortune.Serializer)
 		LootConditionManager.registerCondition(ConditionLooting.Serializer)
 		LootConditionManager.registerCondition(ConditionCriticalHit.Serializer)
+		
+		LootFunctionManager.registerFunction(FunctionInfuse.Serializer)
 		
 		HUMUS_EXPLODED = registerBlock("humus_exploded")
 		ANCIENT_COBWEB = registerBlock("ancient_cobweb")
