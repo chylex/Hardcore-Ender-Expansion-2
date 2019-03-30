@@ -30,12 +30,16 @@ abstract class StructurePiece : IStructureGenerator{
 		override val isEvenWidth
 			get() = original.isEvenWidth
 		
-		override fun canConnectWith(other: IStructurePieceConnection): Boolean{
-			return original.canConnectWith((other as? RotatedStructurePieceConnection)?.original ?: other)
+		override fun canBeAttachedTo(target: IStructurePieceConnection): Boolean{
+			return original.canBeAttachedTo((target as? RotatedStructurePieceConnection)?.original ?: target)
 		}
 		
 		fun matches(other: IStructurePieceConnection): Boolean{
 			return this === other || original === other
+		}
+		
+		override fun toString(): String{
+			return original.toString()
 		}
 	}
 	
@@ -49,13 +53,13 @@ abstract class StructurePiece : IStructureGenerator{
 		val hasAvailableConnections
 			get() = availableConnections.isNotEmpty()
 		
-		fun findValidConnections(): List<IStructurePieceConnection>{
+		fun findAvailableConnections(): List<IStructurePieceConnection>{
 			return availableConnections
 		}
 		
-		fun findValidConnections(with: IStructurePieceConnection): List<IStructurePieceConnection>{
-			val targetFacing = with.facing.opposite
-			return availableConnections.filter { it.facing == targetFacing && it.canConnectWith(with) }
+		fun findAvailableConnections(targetConnection: IStructurePieceConnection): List<IStructurePieceConnection>{
+			val targetFacing = targetConnection.facing.opposite
+			return availableConnections.filter { it.facing == targetFacing && it.canBeAttachedTo(targetConnection) }
 		}
 		
 		fun isConnectionUsed(connection: IStructurePieceConnection): Boolean{
@@ -74,7 +78,7 @@ abstract class StructurePiece : IStructureGenerator{
 	// Mutable instance
 	
 	open inner class MutableInstance(rotation: Rotation) : Instance(rotation){
-		private val availableConnections = findValidConnections() as MutableList<RotatedStructurePieceConnection> // ugly implementation detail
+		private val availableConnections = findAvailableConnections() as MutableList<RotatedStructurePieceConnection> // ugly implementation detail
 		private val usedConnections = mutableMapOf<RotatedStructurePieceConnection, MutableInstance>()
 		
 		fun useConnection(connection: IStructurePieceConnection, neighbor: MutableInstance){

@@ -46,7 +46,7 @@ abstract class StrongholdAbstractPiece : StructurePiece(){
 		
 		val pickWeight: Int
 			get(){
-				val connections = findValidConnections().size
+				val connections = findAvailableConnections().size
 				
 				return if (connections == 0)
 					0

@@ -4,7 +4,7 @@ import net.minecraft.util.EnumFacing
 import net.minecraft.util.math.BlockPos
 
 class StrongholdCorridorConnection(override val offset: BlockPos, override val facing: EnumFacing) : IStructurePieceConnection{
-	override fun canConnectWith(other: IStructurePieceConnection): Boolean{
+	override fun canBeAttachedTo(target: IStructurePieceConnection): Boolean{
 		return true
 	}
 }

@@ -4,7 +4,7 @@ import net.minecraft.util.EnumFacing
 import net.minecraft.util.math.BlockPos
 
 class StrongholdRoomConnection(override val offset: BlockPos, override val facing: EnumFacing) : IStructurePieceConnection{
-	override fun canConnectWith(other: IStructurePieceConnection): Boolean{
-		return other is StrongholdCorridorConnection || other is StrongholdDoorConnection
+	override fun canBeAttachedTo(target: IStructurePieceConnection): Boolean{
+		return target is StrongholdCorridorConnection || target is StrongholdDoorConnection
 	}
 }

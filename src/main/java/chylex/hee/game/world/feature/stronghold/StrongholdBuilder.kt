@@ -207,14 +207,14 @@ object StrongholdBuilder : IStructureBuilder{
 		
 		private fun addPiece(targetPiece: PositionedPiece<StrongholdInst>, generatedPiece: StrongholdAbstractPiece, mode: AddMode = APPEND): PositionedPiece<StrongholdInst>?{
 			val targetInstance = targetPiece.instance
-			val targetConnection = rand.nextItemOrNull(targetInstance.findValidConnections()) ?: return null
+			val targetConnection = rand.nextItemOrNull(targetInstance.findAvailableConnections()) ?: return null
 			
 			val facingFromPortal = targetInstance.facingFromPortal ?: targetConnection.facing
 			val distanceToPortal = targetInstance.distanceToPortal + (if (generatedPiece.type.shouldIncreaseDistanceToPortal(targetInstance.type)) 1 else 0)
 			
 			for(rotation in Rotation4.randomPermutation(rand)){
 				val inst = generatedPiece.StrongholdInst(distanceToPortal, facingFromPortal, rotation)
-				val connections = inst.findValidConnections(targetConnection)
+				val connections = inst.findAvailableConnections(targetConnection)
 				
 				if (connections.isNotEmpty()){
 					return build.addPiece(inst, rand.nextItem(connections), targetPiece, targetConnection, mode)
