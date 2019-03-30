@@ -2,6 +2,7 @@ package chylex.hee.init
 import chylex.hee.HEE
 import chylex.hee.game.loot.BlockLootTable
 import chylex.hee.game.loot.NoStackSplittingLootTable
+import chylex.hee.game.loot.StackSortingLootTable
 import chylex.hee.game.loot.conditions.ConditionCriticalHit
 import chylex.hee.game.loot.conditions.ConditionFortune
 import chylex.hee.game.loot.conditions.ConditionLooting
@@ -75,6 +76,15 @@ object ModLoot{
 							pool.rolls = RandomBiasedValueRange(pool.rolls, highestChanceValue.toFloat(), biasSoftener.toFloat())
 						}
 						
+						"sort_order" -> {
+							if (table is StackSortingLootTable){
+								table.setSortOrder(pool.name, value.toInt())
+							}
+							else{
+								throw UnsupportedOperationException(key)
+							}
+						}
+						
 						else -> throw UnsupportedOperationException(key)
 					}
 				}
@@ -101,6 +111,12 @@ object ModLoot{
 				"stack_splitting" -> {
 					if (value == "off"){
 						newTable = NoStackSplittingLootTable(table)
+					}
+				}
+				
+				"stack_sorting" -> {
+					if (value == "on"){
+						newTable = StackSortingLootTable(table)
 					}
 				}
 				
