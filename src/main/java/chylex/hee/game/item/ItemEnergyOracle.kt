@@ -186,7 +186,7 @@ class ItemEnergyOracle : ItemAbstractEnergyUser(), IInfusableItem{
 	}
 	
 	@SideOnly(Side.CLIENT)
-	object Color: IItemColor{
+	object Color : IItemColor{
 		private const val NONE = -1
 		
 		private val INACTIVE  = HCL(0.0, 0F,   2.8F)

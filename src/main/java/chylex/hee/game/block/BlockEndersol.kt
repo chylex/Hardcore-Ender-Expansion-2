@@ -2,7 +2,6 @@ package chylex.hee.game.block
 import chylex.hee.game.block.util.Property
 import chylex.hee.init.ModBlocks
 import chylex.hee.system.util.getBlock
-import net.minecraft.block.properties.PropertyBool
 import net.minecraft.block.state.BlockStateContainer
 import net.minecraft.block.state.IBlockState
 import net.minecraft.init.Blocks

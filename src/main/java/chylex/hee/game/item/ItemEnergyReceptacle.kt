@@ -198,7 +198,7 @@ class ItemEnergyReceptacle : ItemAbstractInfusable(){
 	}
 	
 	@SideOnly(Side.CLIENT)
-	object Color: IItemColor{
+	object Color : IItemColor{
 		private const val NONE = -1
 		private val WHITE = RGB(255, 255, 255).toInt()
 		

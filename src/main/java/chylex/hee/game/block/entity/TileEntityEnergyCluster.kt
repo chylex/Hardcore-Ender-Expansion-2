@@ -163,7 +163,7 @@ class TileEntityEnergyCluster : TileEntityBase(), ITickable{
 			}
 		}
 		
-		return pos.allInCenteredBox(1, 1, 1).shuffled().firstOrNull { it.isAir(world) }
+		return pos.allInCenteredBox(1, 1, 1).shuffled(rand).firstOrNull { it.isAir(world) }
 	}
 	
 	// Snapshot

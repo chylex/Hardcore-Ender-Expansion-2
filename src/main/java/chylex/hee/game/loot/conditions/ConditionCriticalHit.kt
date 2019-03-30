@@ -15,7 +15,7 @@ class ConditionCriticalHit(private val expectedValue: Boolean) : LootCondition{
 		return wasCrit == expectedValue
 	}
 	
-	object Serializer: LootCondition.Serializer<ConditionCriticalHit>(Resource.Custom("killed_by_critical_hit"), ConditionCriticalHit::class.java){
+	object Serializer : LootCondition.Serializer<ConditionCriticalHit>(Resource.Custom("killed_by_critical_hit"), ConditionCriticalHit::class.java){
 		override fun serialize(json: JsonObject, value: ConditionCriticalHit, context: JsonSerializationContext){
 			json.addProperty("value", value.expectedValue)
 		}
