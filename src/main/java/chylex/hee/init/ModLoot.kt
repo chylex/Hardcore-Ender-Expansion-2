@@ -7,6 +7,7 @@ import chylex.hee.game.loot.conditions.ConditionCriticalHit
 import chylex.hee.game.loot.conditions.ConditionFortune
 import chylex.hee.game.loot.conditions.ConditionLooting
 import chylex.hee.game.loot.functions.FunctionInfuse
+import chylex.hee.game.loot.functions.FunctionPickColoredGloomrock
 import chylex.hee.game.loot.rng.RandomBiasedValueRange
 import chylex.hee.system.Resource
 import net.minecraft.util.ResourceLocation
@@ -38,6 +39,7 @@ object ModLoot{
 		LootConditionManager.registerCondition(ConditionCriticalHit.Serializer)
 		
 		LootFunctionManager.registerFunction(FunctionInfuse.Serializer)
+		LootFunctionManager.registerFunction(FunctionPickColoredGloomrock.Serializer)
 		
 		HUMUS_EXPLODED = registerBlock("humus_exploded")
 		ANCIENT_COBWEB = registerBlock("ancient_cobweb")
