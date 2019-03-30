@@ -55,34 +55,21 @@ object ModLoot{
 	}
 	
 	val LootTable.pools
-		get() = LootTable::class.java.declaredFields.first { it.type === List::class.java }.also { it.isAccessible = true }.get(this) as List<LootPool>
+		get() = LootTable::class.java.declaredFields.first { it.type === List::class.java }.also { it.isAccessible = true }.get(this) as ArrayList<LootPool>
 	
 	@JvmStatic
 	@SubscribeEvent
 	fun onLootTableLoad(e: LootTableLoadEvent){
 		if (e.name.namespace == HEE.ID){
-			var table = e.table
-			var pools = table.pools
+			val table = reconfigureLootTable(e.table)
 			
-			for(index in pools.indices){
-				val pool = pools[index]
-				val name = pool.name
-				
-				if (!name.contains('#')){
+			for(pool in table.pools){
+				if (!pool.name.contains('#')){
 					continue
 				}
 				
-				val split = name.splitToSequence('#').drop(1).map { it.split('=').let { (k, v) -> Pair(k, v) } }
-				
-				for((key, value) in split){
+				for((key, value) in parseParameters(pool)){
 					when(key){
-						"stack_splitting" -> {
-							if (value == "off"){
-								table = NoStackSplittingLootTable(table)
-								pools = table.pools
-							}
-						}
-						
 						"rolls_bias" -> {
 							val (highestChanceValue, biasSoftener) = value.split('~')
 							pool.rolls = RandomBiasedValueRange(pool.rolls, highestChanceValue.toFloat(), biasSoftener.toFloat())
@@ -95,5 +82,36 @@ object ModLoot{
 			
 			e.table = table
 		}
+	}
+	
+	private fun reconfigureLootTable(table: LootTable): LootTable{
+		val pools = table.pools
+		val configurationPool = pools.find { it.name.startsWith("table#") }
+		
+		if (configurationPool == null){
+			return table
+		}
+		
+		pools.remove(configurationPool)
+		
+		var newTable = table
+		
+		for((key, value) in parseParameters(configurationPool)){
+			when(key){
+				"stack_splitting" -> {
+					if (value == "off"){
+						newTable = NoStackSplittingLootTable(table)
+					}
+				}
+				
+				else -> throw UnsupportedOperationException(key)
+			}
+		}
+		
+		return newTable
+	}
+	
+	private fun parseParameters(pool: LootPool): Sequence<Pair<String, String>>{
+		return pool.name.splitToSequence('#').drop(1).map { it.split('=').let { (k, v) -> Pair(k, v) } }
 	}
 }
