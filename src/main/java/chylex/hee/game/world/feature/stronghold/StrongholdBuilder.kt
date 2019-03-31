@@ -14,13 +14,14 @@ import chylex.hee.game.world.feature.stronghold.piece.StrongholdAbstractPiece.St
 import chylex.hee.game.world.feature.stronghold.piece.StrongholdRoom_Relic
 import chylex.hee.game.world.structure.IStructureGenerator
 import chylex.hee.game.world.structure.piece.IStructureBuilder
+import chylex.hee.game.world.structure.piece.IStructureBuilder.ProcessBase
 import chylex.hee.game.world.structure.piece.StructureBuild
 import chylex.hee.game.world.structure.piece.StructureBuild.AddMode
 import chylex.hee.game.world.structure.piece.StructureBuild.AddMode.APPEND
 import chylex.hee.game.world.structure.piece.StructureBuild.AddMode.MERGE
 import chylex.hee.game.world.structure.piece.StructureBuild.PositionedPiece
+import chylex.hee.system.collection.MutableWeightedList
 import chylex.hee.system.collection.WeightedList
-import chylex.hee.system.util.Rotation4
 import chylex.hee.system.util.nextInt
 import chylex.hee.system.util.nextItem
 import chylex.hee.system.util.nextItemOrNull
@@ -141,7 +142,8 @@ object StrongholdBuilder : IStructureBuilder{
 		return buildWithEyeOfEnderTarget(rand)?.first
 	}
 	
-	private class Process(private val build: StructureBuild<StrongholdInst>, private val rand: Random){
+	@Suppress("ReplaceSingleLineLet")
+	private class Process(build: StructureBuild<StrongholdInst>, rand: Random) : ProcessBase<StrongholdInst>(build, rand){
 		
 		// Piece picking
 		
@@ -158,49 +160,29 @@ object StrongholdBuilder : IStructureBuilder{
 		
 		fun placeNormalRoom(targetPiece: PositionedPiece<StrongholdInst>, generatedPiece: StrongholdAbstractPiece, pathLength: Int): Boolean{
 			val distanceToPortal = targetPiece.instance.distanceToPortal
-			val corridorPieces = PIECES_CORRIDORS(rand, distanceToPortal)
 			
 			val firstPieceIsDoor = distanceToPortal > 0 && rand.nextInt(5) <= 2
 			val lastPieceIsDoor = (!firstPieceIsDoor || pathLength > 3) && rand.nextInt(5) <= 2
 			
-			var lastPiece = targetPiece
-			
-			if (firstPieceIsDoor){
-				lastPiece = addDoorPiece(targetPiece, MERGE) ?: return false
-			}
-			
-			repeat(pathLength){
-				lastPiece = corridorPieces.removeItem(rand)?.let { addPiece(lastPiece, it) } ?: return false
-			}
-			
-			if (lastPieceIsDoor){
-				lastPiece = addDoorPiece(lastPiece) ?: return false
-			}
-			
-			return addPiece(lastPiece, generatedPiece, if (lastPieceIsDoor) MERGE else APPEND) != null
+			return targetPiece
+				 .let { if (firstPieceIsDoor) addDoorPiece(it, MERGE) else it }
+				?.let { addCorridorPieces(it, PIECES_CORRIDORS(rand, distanceToPortal), pathLength) }
+				?.let { if (lastPieceIsDoor) addDoorPiece(it) else it }
+				?.let { addPiece(it, generatedPiece, if (lastPieceIsDoor) MERGE else APPEND) } != null
 		}
 		
 		fun placeRelicRoom(targetPiece: PositionedPiece<StrongholdInst>, generatedPiece: StrongholdRoom_Relic, pathLength: Int): Boolean{
-			val corridorPieces = PIECES_CORRIDOR_RELIC.mutableCopy()
-			var lastPiece = addDoorPiece(targetPiece, MERGE) ?: return false
-			
-			repeat(pathLength){
-				lastPiece = corridorPieces.removeItem(rand)?.let { addPiece(lastPiece, it) } ?: return false
-			}
-			
-			lastPiece = addDoorPiece(lastPiece) ?: return false
-			return addPiece(lastPiece, generatedPiece, MERGE) != null
+			return targetPiece
+				 .let { addDoorPiece(it, MERGE) }
+				?.let { addCorridorPieces(it, PIECES_CORRIDOR_RELIC.mutableCopy(), pathLength) }
+				?.let { addDoorPiece(it) }
+				?.let { addPiece(it, generatedPiece, MERGE) } != null
 		}
 		
 		fun placeDeadEnd(targetPiece: PositionedPiece<StrongholdInst>, generatedPiece: StrongholdAbstractPiece, pathLength: Int): Boolean{
-			val corridorPieces = PIECES_CORRIDOR_DEAD_END.mutableCopy()
-			var lastPiece = targetPiece
-			
-			repeat(pathLength){
-				lastPiece = corridorPieces.removeItem(rand)?.let { addPiece(lastPiece, it) } ?: return false
-			}
-			
-			return addPiece(lastPiece, generatedPiece) != null
+			return targetPiece
+				 .let { addCorridorPieces(it, PIECES_CORRIDOR_DEAD_END.mutableCopy(), pathLength) }
+				?.let { addPiece(it, generatedPiece) } != null
 		}
 		
 		// Helpers
@@ -212,20 +194,21 @@ object StrongholdBuilder : IStructureBuilder{
 			val facingFromPortal = targetInstance.facingFromPortal ?: targetConnection.facing
 			val distanceToPortal = targetInstance.distanceToPortal + (if (generatedPiece.type.shouldIncreaseDistanceToPortal(targetInstance.type)) 1 else 0)
 			
-			for(rotation in Rotation4.randomPermutation(rand)){
-				val inst = generatedPiece.StrongholdInst(distanceToPortal, facingFromPortal, rotation)
-				val connections = inst.findAvailableConnections(targetConnection)
-				
-				if (connections.isNotEmpty()){
-					return build.addPiece(inst, rand.nextItem(connections), targetPiece, targetConnection, mode)
-				}
-			}
-			
-			return null
+			return baseAddPiece(mode, targetPiece, targetConnection){ rotation -> generatedPiece.StrongholdInst(distanceToPortal, facingFromPortal, rotation) }
 		}
 		
 		private fun addDoorPiece(targetPiece: PositionedPiece<StrongholdInst>, mode: AddMode = APPEND): PositionedPiece<StrongholdInst>?{
 			return addPiece(targetPiece, PIECES_DOORS.generateItem(rand), mode)
+		}
+		
+		private fun addCorridorPieces(targetPiece: PositionedPiece<StrongholdInst>, corridorPieces: MutableWeightedList<StrongholdAbstractPiece>, corridorLength: Int): PositionedPiece<StrongholdInst>?{
+			var lastPiece = targetPiece
+			
+			repeat(corridorLength){
+				lastPiece = corridorPieces.removeItem(rand)?.let { addPiece(lastPiece, it) } ?: return null
+			}
+			
+			return lastPiece
 		}
 	}
 }
