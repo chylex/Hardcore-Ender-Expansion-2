@@ -24,7 +24,7 @@ import chylex.hee.system.util.Rotation4
 import chylex.hee.system.util.nextInt
 import chylex.hee.system.util.nextItem
 import chylex.hee.system.util.nextItemOrNull
-import chylex.hee.system.util.removeItem
+import chylex.hee.system.util.removeItemOrNull
 import net.minecraft.util.EnumFacing
 import net.minecraft.util.math.BlockPos
 import java.util.Random
@@ -71,7 +71,7 @@ object StrongholdBuilder : IStructureBuilder{
 			var lastRelicFacingFromPortal: EnumFacing? = null
 			
 			while(remainingRelicRooms.isNotEmpty()){
-				val targetPiece = rand.removeItem(remainingRelicTargets) ?: break
+				val targetPiece = rand.removeItemOrNull(remainingRelicTargets) ?: break
 				val targetInstance = targetPiece.instance
 				
 				if (targetInstance.facingFromPortal != lastRelicFacingFromPortal){

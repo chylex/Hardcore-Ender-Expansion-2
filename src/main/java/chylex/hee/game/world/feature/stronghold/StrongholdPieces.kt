@@ -220,7 +220,7 @@ object StrongholdPieces : IStructureDescription{
 			*PIECES_ROOMS_CHESTS_SMALL_GENERAL,
 			*PIECES_ROOMS_CHESTS_SMALL_GENERAL,
 			*PIECES_ROOMS_CHESTS_LARGE,
-			rand.removeItem(chestsPools)!!,
+			rand.removeItem(chestsPools),
 			
 			*PIECES_ROOMS_CLUSTERS_SMALL,
 			*PIECES_ROOMS_CLUSTERS_LARGE,
@@ -274,15 +274,15 @@ object StrongholdPieces : IStructureDescription{
 			add(rand.nextItem(PIECES_ROOMS_TRAPS_PICK))
 			
 			repeat(rand.nextInt(1, 2)){
-				add(rand.removeItem(decorLarge)!!)
+				add(rand.removeItem(decorLarge))
 			}
 			
 			repeat(rand.nextInt(1, 3)){
-				add(rand.removeItem(decorGlass)!!)
+				add(rand.removeItem(decorGlass))
 			}
 			
 			while(size < totalRoomsExceptLibrary){
-				add(rand.removeItem(decorSmall)!!)
+				add(rand.removeItem(decorSmall))
 			}
 			
 			shuffle(rand)
@@ -382,7 +382,7 @@ object StrongholdPieces : IStructureDescription{
 			ItemStack(ModItems.ENERGY_ORACLE).apply(ItemEnergyOracle.Companion::setupRecipeNBT),
 			ItemStack(ModItems.AMULET_OF_RECOVERY)
 		)){
-			pickedRooms.add(rand.removeItem(availableRooms)!!(relicStack))
+			pickedRooms.add(rand.removeItem(availableRooms)(relicStack))
 		}
 		
 		return pickedRooms

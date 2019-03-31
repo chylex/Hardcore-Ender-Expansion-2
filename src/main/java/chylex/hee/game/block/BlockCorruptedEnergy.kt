@@ -147,7 +147,7 @@ class BlockCorruptedEnergy(builder: BlockSimple.Builder) : BlockSimple(builder){
 		val remainingFacings = Facing6.toMutableList()
 		
 		repeat(rand.nextInt(3, 5).coerceAtMost(level)){
-			val facing = rand.removeItem(remainingFacings)!!
+			val facing = rand.removeItem(remainingFacings)
 			val adjacentPos = pos.offset(facing)
 			
 			val spreadDecrease = if (rand.nextInt(3) == 0) 0 else 1

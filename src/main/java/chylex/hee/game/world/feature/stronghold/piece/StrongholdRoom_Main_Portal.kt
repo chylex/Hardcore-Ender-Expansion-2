@@ -56,7 +56,7 @@ class StrongholdRoom_Main_Portal(file: String) : StrongholdAbstractPieceFromFile
 			var nextAttempts = 8
 			
 			do{
-				val target = rand.removeItem(targets)!!
+				val target = rand.removeItem(targets)
 				var spawnsLeft = rand.nextInt(2, 4)
 				
 				for(attempt in 1..nextAttempts){

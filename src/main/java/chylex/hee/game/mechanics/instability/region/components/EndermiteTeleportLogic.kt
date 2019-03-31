@@ -14,7 +14,7 @@ internal object EndermiteTeleportLogic{
 		var totalTeleported = 0
 		
 		repeat(min(endermites.size, amount)){
-			performTeleportation(rand.removeItem(remaining)!!, rand)
+			performTeleportation(rand.removeItem(remaining), rand)
 			++totalTeleported
 		}
 		

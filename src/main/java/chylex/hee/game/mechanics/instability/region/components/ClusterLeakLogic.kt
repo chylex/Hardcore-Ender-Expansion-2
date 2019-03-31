@@ -31,8 +31,8 @@ internal object ClusterLeakLogic{
 			val remainingGroups = LEAK_GROUPS.toMutableList().apply { shuffle(rand) }
 			
 			while(remainingClusters.isNotEmpty() && remainingGroups.isNotEmpty()){
-				val cluster = rand.removeItem(remainingClusters)!!
-				val group = rand.removeItem(remainingGroups)!!
+				val cluster = rand.removeItem(remainingClusters)
+				val group = rand.removeItem(remainingGroups)
 				
 				assignedClusters.add(cluster to group)
 			}

@@ -1,7 +1,7 @@
 package chylex.hee.game.loot.functions
 import chylex.hee.game.item.infusion.Infusion
 import chylex.hee.system.Resource
-import chylex.hee.system.util.removeItem
+import chylex.hee.system.util.removeItemOrNull
 import com.google.gson.JsonArray
 import com.google.gson.JsonDeserializationContext
 import com.google.gson.JsonObject
@@ -20,7 +20,7 @@ class FunctionInfuse(conditions: Array<LootCondition>, private val picks: Array<
 		var finalStack = stack
 		
 		for(count in 1..(amount.generateInt(rand))){
-			finalStack = rand.removeItem(availableInfusions)?.tryInfuse(finalStack) ?: break
+			finalStack = rand.removeItemOrNull(availableInfusions)?.tryInfuse(finalStack) ?: break
 		}
 		
 		return finalStack

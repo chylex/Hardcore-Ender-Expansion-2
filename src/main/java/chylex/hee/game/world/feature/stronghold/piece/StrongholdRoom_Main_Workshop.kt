@@ -57,14 +57,14 @@ class StrongholdRoom_Main_Workshop(file: String) : StrongholdAbstractPieceFromFi
 		).toMutableList()
 		
 		repeat(1 + rand.nextInt(2) * rand.nextInt(3)){
-			val (shelfPos, shelfFacing) = rand.removeItem(shelfPositions)!!
+			val (shelfPos, shelfFacing) = rand.removeItem(shelfPositions)
 			val skullRot = shelfFacing.horizontalIndex * 4 // not quite correct but it works
 			
 			world.addTrigger(shelfPos, TileEntityStructureTrigger(FutureBlocks.SKULL_FLOOR, TileEntitySkull().apply { setType(2); skullRotation = skullRot }))
 		}
 		
 		repeat(rand.nextInt(1, 6)){
-			val shelfPos = rand.removeItem(shelfPositions)!!.first
+			val shelfPos = rand.removeItem(shelfPositions).first
 			world.setBlock(shelfPos, ModBlocks.ANCIENT_COBWEB)
 		}
 		
