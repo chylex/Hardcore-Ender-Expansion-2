@@ -4,6 +4,8 @@ import chylex.hee.game.world.feature.energyshrine.piece.EnergyShrineCorridor_Sta
 import chylex.hee.game.world.feature.energyshrine.piece.EnergyShrineCorridor_Staircase_90
 import chylex.hee.game.world.feature.energyshrine.piece.EnergyShrineCorridor_Straight
 import chylex.hee.game.world.feature.energyshrine.piece.EnergyShrineCorridor_StraightLit
+import chylex.hee.game.world.feature.energyshrine.piece.EnergyShrineRoom_Main_Final
+import chylex.hee.game.world.feature.energyshrine.piece.EnergyShrineRoom_Main_Start
 import chylex.hee.game.world.structure.IStructureDescription
 import chylex.hee.game.world.structure.file.PaletteBuilder
 import chylex.hee.game.world.structure.file.PaletteMappings
@@ -67,6 +69,15 @@ object EnergyShrinePieces : IStructureDescription{
 		EnergyShrineCorridor_Staircase_180("corridor.staircase180.nbt")
 	)
 	
+	// Pieces (Rooms)
+	
+	val PIECES_START = arrayOf(
+		EnergyShrineRoom_Main_Start("main.start.nbt")
+	)
+	
+	val PIECES_END = arrayOf(
+		EnergyShrineRoom_Main_Final("main.end.nbt")
+	)
 	
 	// Pieces (All)
 	
@@ -77,5 +88,8 @@ object EnergyShrinePieces : IStructureDescription{
 			
 			*PIECES_CORRIDOR_CORNER.values.toTypedArray(),
 			*PIECES_CORRIDOR_STAIRS,
+			
+			*PIECES_START,
+			*PIECES_END,
 		)
 }
