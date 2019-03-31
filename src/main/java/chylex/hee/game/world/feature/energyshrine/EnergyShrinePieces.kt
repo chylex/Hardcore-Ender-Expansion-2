@@ -1,4 +1,9 @@
 package chylex.hee.game.world.feature.energyshrine
+import chylex.hee.game.world.feature.energyshrine.piece.EnergyShrineCorridor_Corner
+import chylex.hee.game.world.feature.energyshrine.piece.EnergyShrineCorridor_Staircase_180
+import chylex.hee.game.world.feature.energyshrine.piece.EnergyShrineCorridor_Staircase_90
+import chylex.hee.game.world.feature.energyshrine.piece.EnergyShrineCorridor_Straight
+import chylex.hee.game.world.feature.energyshrine.piece.EnergyShrineCorridor_StraightLit
 import chylex.hee.game.world.structure.IStructureDescription
 import chylex.hee.game.world.structure.file.PaletteBuilder
 import chylex.hee.game.world.structure.file.PaletteMappings
@@ -50,10 +55,27 @@ object EnergyShrinePieces : IStructureDescription{
 		else
 			LOOT_BUILDING_MATERIALS
 	
+	// Pieces (Corridors)
+	
+	private val PIECES_CORRIDOR_CORNER = weightedListOf(
+		2 to EnergyShrineCorridor_Corner(lit = false),
+		1 to EnergyShrineCorridor_Corner(lit = true)
+	)
+	
+	private val PIECES_CORRIDOR_STAIRS = arrayOf(
+		EnergyShrineCorridor_Staircase_90("corridor.staircase90.nbt"),
+		EnergyShrineCorridor_Staircase_180("corridor.staircase180.nbt")
+	)
+	
 	
 	// Pieces (All)
 	
 	override val ALL_PIECES
 		get() = arrayOf(
+			EnergyShrineCorridor_Straight(5),
+			EnergyShrineCorridor_StraightLit(5),
+			
+			*PIECES_CORRIDOR_CORNER.values.toTypedArray(),
+			*PIECES_CORRIDOR_STAIRS,
 		)
 }
