@@ -13,9 +13,8 @@ import chylex.hee.game.world.structure.trigger.LootChestStructureTrigger
 import chylex.hee.system.util.Facing4
 import chylex.hee.system.util.Pos
 import chylex.hee.system.util.nextItem
-import net.minecraft.block.BlockChest
+import chylex.hee.system.util.withFacing
 import net.minecraft.block.BlockFlower.EnumFlowerType
-import net.minecraft.block.BlockStairs
 import net.minecraft.init.Blocks
 import net.minecraft.item.ItemStack
 import net.minecraft.util.EnumFacing.EAST
@@ -82,7 +81,7 @@ class StrongholdRoom_Main_Library(file: String) : StrongholdAbstractPieceFromFil
 		if (chestPosition == WORK_TABLE){
 			val chestPos = Pos(centerX + 6, 2, centerZ - 8)
 			
-			world.setState(chestPos, Blocks.CHEST.defaultState.withProperty(BlockChest.FACING, SOUTH))
+			world.setState(chestPos, Blocks.CHEST.withFacing(SOUTH))
 			world.addTrigger(chestPos, LootChestStructureTrigger(StrongholdPieces.LOOT_LIBRARY_SECOND, rand.nextLong()))
 		}
 		
@@ -98,7 +97,7 @@ class StrongholdRoom_Main_Library(file: String) : StrongholdAbstractPieceFromFil
 		if (chestPosition == INSIDE_BOOKSHELVES){
 			val chestPos = Pos(centerX - 8, 4, centerZ - 6)
 			
-			world.setState(chestPos, Blocks.CHEST.defaultState.withProperty(BlockChest.FACING, NORTH))
+			world.setState(chestPos, Blocks.CHEST.withFacing(NORTH))
 			world.addTrigger(chestPos, LootChestStructureTrigger(StrongholdPieces.LOOT_LIBRARY_SECOND, rand.nextLong()))
 		}
 	}
@@ -145,7 +144,7 @@ class StrongholdRoom_Main_Library(file: String) : StrongholdAbstractPieceFromFil
 					
 					world.placeCube(pos1, pos3, Single(Blocks.BOOKSHELF))
 					world.placeCube(pos2.up(), pos3.up(), Single(Blocks.BOOKSHELF))
-					world.setState(pos1.up(), Blocks.SPRUCE_STAIRS.defaultState.withProperty(BlockStairs.FACING, facing))
+					world.setState(pos1.up(), Blocks.SPRUCE_STAIRS.withFacing(facing))
 				}
 			}
 		}
@@ -165,12 +164,12 @@ class StrongholdRoom_Main_Library(file: String) : StrongholdAbstractPieceFromFil
 		val chestPos = Pos(centerX, 8, centerZ).offset(chestFacingOffset, 8)
 		val chestBackPos = chestPos.offset(chestFacing.opposite)
 		
-		world.setState(chestPos, Blocks.CHEST.defaultState.withProperty(BlockChest.FACING, chestFacing))
+		world.setState(chestPos, Blocks.CHEST.withFacing(chestFacing))
 		world.addTrigger(chestPos, LootChestStructureTrigger(StrongholdPieces.LOOT_LIBRARY_MAIN, rand.nextLong()))
 		
 		world.setAir(chestPos.up())
 		world.placeCube(chestBackPos.down(), chestBackPos.up(), Single(Blocks.BOOKSHELF))
-		world.setState(chestBackPos.up(2), Blocks.SPRUCE_STAIRS.defaultState.withProperty(BlockStairs.FACING, chestFacing))
+		world.setState(chestBackPos.up(2), Blocks.SPRUCE_STAIRS.withFacing(chestFacing))
 	}
 	
 	private fun placeThirdFloorDecorations(world: IStructureWorld){
@@ -193,7 +192,7 @@ class StrongholdRoom_Main_Library(file: String) : StrongholdAbstractPieceFromFil
 				val pos2 = Pos(centerX + (7 * xMp), 12, centerZ + (2 * zMp))
 				
 				world.placeCube(pos1, pos2.up(), Single(Blocks.BOOKSHELF))
-				world.setState(pos1.up(2), Blocks.STONE_BRICK_STAIRS.defaultState.withProperty(BlockStairs.FACING, EAST))
+				world.setState(pos1.up(2), Blocks.STONE_BRICK_STAIRS.withFacing(EAST))
 				world.setState(pos2.up(2), FutureBlocks.STONE_BRICKS)
 			}
 		}

@@ -2,6 +2,7 @@ package chylex.hee.game.world.structure.trigger
 import chylex.hee.game.world.structure.IStructureTrigger
 import chylex.hee.system.util.getTile
 import chylex.hee.system.util.setState
+import chylex.hee.system.util.withFacing
 import net.minecraft.block.BlockBed
 import net.minecraft.block.BlockBed.EnumPartType.FOOT
 import net.minecraft.block.BlockBed.EnumPartType.HEAD
@@ -16,7 +17,7 @@ import net.minecraft.world.World
 class BedStructureTrigger(private val facing: EnumFacing, private val color: EnumDyeColor) : IStructureTrigger{
 	override fun realize(world: World, pos: BlockPos, rotation: Rotation){
 		val rotatedFacing = rotation.rotate(facing)
-		val baseState = Blocks.BED.defaultState.withProperty(BlockBed.FACING, rotatedFacing).withProperty(BlockBed.OCCUPIED, false)
+		val baseState = Blocks.BED.withFacing(rotatedFacing).withProperty(BlockBed.OCCUPIED, false)
 		
 		val footPos = pos
 		val headPos = footPos.offset(rotatedFacing)

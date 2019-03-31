@@ -5,6 +5,7 @@ import chylex.hee.init.ModGuiHandler.GuiType
 import chylex.hee.system.util.getState
 import chylex.hee.system.util.getTile
 import chylex.hee.system.util.selectExistingEntities
+import chylex.hee.system.util.withFacing
 import net.minecraft.block.BlockDirectional.FACING
 import net.minecraft.block.ITileEntityProvider
 import net.minecraft.block.state.BlockFaceShape
@@ -35,7 +36,7 @@ abstract class BlockAbstractChest<T : TileEntityBaseChest>(builder: BlockSimple.
 	}
 	
 	init{
-		defaultState = blockState.baseState.withProperty(FACING, NORTH)
+		defaultState = blockState.baseState.withFacing(NORTH)
 	}
 	
 	override fun createBlockState(): BlockStateContainer = BlockStateContainer(this, FACING)
@@ -50,7 +51,7 @@ abstract class BlockAbstractChest<T : TileEntityBaseChest>(builder: BlockSimple.
 	}
 	
 	override fun getStateForPlacement(world: World, pos: BlockPos, facing: EnumFacing, hitX: Float, hitY: Float, hitZ: Float, meta: Int, placer: EntityLivingBase, hand: EnumHand): IBlockState{
-		return defaultState.withProperty(FACING, placer.horizontalFacing.opposite)
+		return this.withFacing(placer.horizontalFacing.opposite)
 	}
 	
 	final override fun onBlockPlacedBy(world: World, pos: BlockPos, state: IBlockState, placer: EntityLivingBase, stack: ItemStack){
@@ -90,15 +91,15 @@ abstract class BlockAbstractChest<T : TileEntityBaseChest>(builder: BlockSimple.
 	// State handling
 	
 	override fun withRotation(state: IBlockState, rot: Rotation): IBlockState{
-		return state.withProperty(FACING, rot.rotate(state.getValue(FACING)))
+		return state.withFacing(rot.rotate(state.getValue(FACING)))
 	}
 	
 	override fun withMirror(state: IBlockState, mirror: Mirror): IBlockState{
-		return state.withProperty(FACING, mirror.mirror(state.getValue(FACING)))
+		return state.withFacing(mirror.mirror(state.getValue(FACING)))
 	}
 	
 	override fun getMetaFromState(state: IBlockState): Int = state.getValue(FACING).index
-	override fun getStateFromMeta(meta: Int): IBlockState = defaultState.withProperty(FACING, EnumFacing.byIndex(meta))
+	override fun getStateFromMeta(meta: Int): IBlockState = this.withFacing(EnumFacing.byIndex(meta))
 	
 	// Shape and rendering
 	

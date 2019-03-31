@@ -4,10 +4,10 @@ import chylex.hee.system.util.getMaterial
 import chylex.hee.system.util.getTile
 import chylex.hee.system.util.isReplaceable
 import chylex.hee.system.util.setState
+import chylex.hee.system.util.withFacing
 import com.mojang.authlib.GameProfile
 import net.minecraft.advancements.CriteriaTriggers
 import net.minecraft.block.BlockDispenser
-import net.minecraft.block.BlockSkull.FACING
 import net.minecraft.dispenser.IBlockSource
 import net.minecraft.entity.Entity
 import net.minecraft.entity.player.EntityPlayer
@@ -78,7 +78,7 @@ class ItemEndermanHead : Item(){ // UPDATE redo this
 			return SUCCESS
 		}
 		
-		pos.setState(world, ModBlocks.ENDERMAN_HEAD.defaultState.withProperty(FACING, facing), 11)
+		pos.setState(world, ModBlocks.ENDERMAN_HEAD.withFacing(facing), 11)
 		
 		pos.getTile<TileEntitySkull>(world)?.let {
 			it.playerProfile = GameProfile(null, "MHF_Enderman") // UPDATE and this

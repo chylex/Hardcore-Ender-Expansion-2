@@ -1,6 +1,6 @@
 package chylex.hee.game.block.util
+import chylex.hee.system.util.withFacing
 import net.minecraft.block.Block
-import net.minecraft.block.BlockDirectional
 import net.minecraft.block.BlockNewLog
 import net.minecraft.block.BlockOldLog
 import net.minecraft.block.BlockPlanks
@@ -35,7 +35,7 @@ object FutureBlocks{
 	val INFESTED_MOSSY_STONE_BRICKS    = Blocks.MONSTER_EGG.withProperty(BlockSilverfish.VARIANT, BlockSilverfish.EnumType.MOSSY_STONEBRICK)
 	val INFESTED_CRACKED_STONE_BRICKS  = Blocks.MONSTER_EGG.withProperty(BlockSilverfish.VARIANT, BlockSilverfish.EnumType.CRACKED_STONEBRICK)
 	
-	val SKULL_FLOOR = Blocks.SKULL.withProperty(BlockDirectional.FACING, EnumFacing.UP)
+	val SKULL_FLOOR = Blocks.SKULL.withFacing(EnumFacing.UP)
 	
 	private fun <T : Comparable<T>> Block.withProperty(property: IProperty<T>, value: T): IBlockState{
 		return this.defaultState.withProperty(property, value)

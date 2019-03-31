@@ -10,7 +10,7 @@ import chylex.hee.game.world.structure.trigger.LootChestStructureTrigger
 import chylex.hee.game.world.structure.trigger.TileEntityStructureTrigger
 import chylex.hee.system.util.Pos
 import chylex.hee.system.util.nextItem
-import net.minecraft.block.BlockChest
+import chylex.hee.system.util.withFacing
 import net.minecraft.block.BlockFlower.EnumFlowerType
 import net.minecraft.init.Blocks
 import net.minecraft.item.ItemStack
@@ -35,7 +35,7 @@ class StrongholdRoom_DeadEnd_Shelves(file: String) : StrongholdAbstractPieceFrom
 		val chestOffset = rand.nextItem(intArrayOf(2, 4, 5), 0)
 		val chestPos = Pos(centerX + (chestSide.opposite.xOffset * 2), 2, chestOffset)
 		
-		world.setState(chestPos, Blocks.CHEST.defaultState.withProperty(BlockChest.FACING, chestSide))
+		world.setState(chestPos, Blocks.CHEST.withFacing(chestSide))
 		world.addTrigger(chestPos, LootChestStructureTrigger(StrongholdPieces.LOOT_GENERIC, rand.nextLong()))
 		
 		// skull

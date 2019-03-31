@@ -11,8 +11,8 @@ import chylex.hee.system.util.Pos
 import chylex.hee.system.util.nextInt
 import chylex.hee.system.util.nextItem
 import chylex.hee.system.util.removeItem
+import chylex.hee.system.util.withFacing
 import net.minecraft.block.BlockFlower.EnumFlowerType
-import net.minecraft.block.BlockFurnace
 import net.minecraft.init.Blocks
 import net.minecraft.item.ItemStack
 import net.minecraft.tileentity.TileEntitySkull
@@ -95,7 +95,7 @@ class StrongholdRoom_Main_Workshop(file: String) : StrongholdAbstractPieceFromFi
 	
 	private fun placeUtilityColumn(world: IStructureWorld, pos: BlockPos, facing: EnumFacing){
 		val rand = world.rand
-		val furnace = Blocks.FURNACE.defaultState.withProperty(BlockFurnace.FACING, facing)
+		val furnace = Blocks.FURNACE.withFacing(facing)
 		
 		val (bottom, top) = when(rand.nextInt(11)){
 			in 0..3 -> Single(Blocks.BOOKSHELF) to Single(Blocks.BOOKSHELF)

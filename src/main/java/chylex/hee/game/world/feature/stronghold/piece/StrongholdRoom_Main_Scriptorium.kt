@@ -11,7 +11,7 @@ import chylex.hee.system.util.Facing4
 import chylex.hee.system.util.Pos
 import chylex.hee.system.util.nextInt
 import chylex.hee.system.util.offsetUntil
-import net.minecraft.block.BlockChest
+import chylex.hee.system.util.withFacing
 import net.minecraft.init.Blocks
 import net.minecraft.item.ItemStack
 import net.minecraft.util.EnumFacing.EAST
@@ -40,7 +40,7 @@ class StrongholdRoom_Main_Scriptorium(file: String) : StrongholdAbstractPieceFro
 		
 		val chestPos = Pos(centerX + (if (rand.nextBoolean()) -4 else 4), 2, centerZ - 3)
 		
-		world.setState(chestPos, Blocks.CHEST.defaultState.withProperty(BlockChest.FACING, NORTH))
+		world.setState(chestPos, Blocks.CHEST.withFacing(NORTH))
 		world.addTrigger(chestPos, LootChestStructureTrigger(StrongholdPieces.LOOT_GENERIC, rand.nextLong()))
 		
 		// Cobwebs

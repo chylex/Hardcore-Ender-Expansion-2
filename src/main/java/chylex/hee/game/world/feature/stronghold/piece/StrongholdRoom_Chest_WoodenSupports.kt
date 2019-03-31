@@ -16,7 +16,7 @@ import chylex.hee.system.util.Pos
 import chylex.hee.system.util.nextInt
 import chylex.hee.system.util.nextItem
 import chylex.hee.system.util.removeItem
-import net.minecraft.block.BlockChest
+import chylex.hee.system.util.withFacing
 import net.minecraft.block.BlockFlower.EnumFlowerType
 import net.minecraft.block.BlockTallGrass.EnumType
 import net.minecraft.init.Blocks
@@ -119,7 +119,7 @@ class StrongholdRoom_Chest_WoodenSupports(file: String) : StrongholdAbstractPiec
 	}
 	
 	private fun placeChest(world: IStructureWorld, pos: BlockPos, facing: EnumFacing){
-		world.setState(pos, Blocks.CHEST.defaultState.withProperty(BlockChest.FACING, facing))
+		world.setState(pos, Blocks.CHEST.withFacing(facing))
 		world.addTrigger(pos, LootChestStructureTrigger(StrongholdPieces.LOOT_GENERIC, world.rand.nextLong()))
 	}
 	

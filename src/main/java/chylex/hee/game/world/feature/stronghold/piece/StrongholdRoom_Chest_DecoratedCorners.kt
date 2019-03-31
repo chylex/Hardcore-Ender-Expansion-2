@@ -9,7 +9,7 @@ import chylex.hee.system.util.Facing4
 import chylex.hee.system.util.Pos
 import chylex.hee.system.util.nextInt
 import chylex.hee.system.util.nextItem
-import net.minecraft.block.BlockChest
+import chylex.hee.system.util.withFacing
 import net.minecraft.block.BlockFlower.EnumFlowerType
 import net.minecraft.init.Blocks
 import net.minecraft.item.ItemStack
@@ -35,7 +35,7 @@ class StrongholdRoom_Chest_DecoratedCorners(file: String) : StrongholdAbstractPi
 			val chestPos = Pos(centerX, 2, centerZ).offset(facing.rotateYCCW(), 3).offset(facing, 3).offset(chestFacingOffset)
 			
 			if (world.isAir(chestPos)){
-				world.setState(chestPos, Blocks.CHEST.defaultState.withProperty(BlockChest.FACING, chestFacingOffset.opposite))
+				world.setState(chestPos, Blocks.CHEST.withFacing(chestFacingOffset.opposite))
 				world.addTrigger(chestPos, LootChestStructureTrigger(StrongholdPieces.LOOT_GENERIC, rand.nextLong()))
 			}
 		}

@@ -3,6 +3,7 @@ import chylex.hee.system.util.Facing6
 import chylex.hee.system.util.getBlock
 import chylex.hee.system.util.getState
 import chylex.hee.system.util.setAir
+import chylex.hee.system.util.withFacing
 import net.minecraft.block.Block
 import net.minecraft.block.BlockDirectional.FACING
 import net.minecraft.block.state.BlockFaceShape
@@ -51,9 +52,9 @@ class BlockGloomtorch(builder: BlockSimple.Builder) : BlockSimple(builder){
 			return (facing == UP && block.canPlaceTorchOnTop(state, world, supportingPos)) || (state.getBlockFaceShape(world, supportingPos, facing) == SOLID && !isExceptBlockForAttachWithPiston(block))
 		}
 	}
-	
+	 
 	init{
-		defaultState = blockState.baseState.withProperty(FACING, UP)
+		defaultState = blockState.baseState.withFacing(UP)
 	}
 	
 	override fun createBlockState(): BlockStateContainer = BlockStateContainer(this, FACING)
@@ -66,9 +67,9 @@ class BlockGloomtorch(builder: BlockSimple.Builder) : BlockSimple(builder){
 	
 	override fun getStateForPlacement(world: World, pos: BlockPos, facing: EnumFacing, hitX: Float, hitY: Float, hitZ: Float, meta: Int, placer: EntityLivingBase, hand: EnumHand): IBlockState{
 		return if (canPlaceGloomtorchAt(world, pos, facing))
-			defaultState.withProperty(FACING, facing)
+			this.withFacing(facing)
 		else
-			Facing6.firstOrNull { canPlaceGloomtorchAt(world, pos, it) }?.let { defaultState.withProperty(FACING, it) } ?: defaultState
+			Facing6.firstOrNull { canPlaceGloomtorchAt(world, pos, it) }?.let(this::withFacing) ?: defaultState
 	}
 	
 	override fun neighborChanged(state: IBlockState, world: World, pos: BlockPos, neighborBlock: Block, neighborPos: BlockPos){
@@ -81,15 +82,15 @@ class BlockGloomtorch(builder: BlockSimple.Builder) : BlockSimple(builder){
 	// State handling
 	
 	override fun withRotation(state: IBlockState, rot: Rotation): IBlockState{
-		return state.withProperty(FACING, rot.rotate(state.getValue(FACING)))
+		return state.withFacing(rot.rotate(state.getValue(FACING)))
 	}
 	
 	override fun withMirror(state: IBlockState, mirror: Mirror): IBlockState{
-		return state.withProperty(FACING, mirror.mirror(state.getValue(FACING)))
+		return state.withFacing(mirror.mirror(state.getValue(FACING)))
 	}
 	
 	override fun getMetaFromState(state: IBlockState): Int = state.getValue(FACING).index
-	override fun getStateFromMeta(meta: Int): IBlockState = defaultState.withProperty(FACING, EnumFacing.byIndex(meta))
+	override fun getStateFromMeta(meta: Int): IBlockState = this.withFacing(EnumFacing.byIndex(meta))
 	
 	// Shape and rendering
 	

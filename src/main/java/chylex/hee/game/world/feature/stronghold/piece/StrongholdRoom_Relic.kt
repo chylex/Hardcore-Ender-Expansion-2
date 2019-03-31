@@ -11,7 +11,7 @@ import chylex.hee.game.world.structure.trigger.TileEntityStructureTrigger
 import chylex.hee.init.ModBlocks
 import chylex.hee.system.util.Pos
 import chylex.hee.system.util.setStack
-import net.minecraft.block.BlockDirectional.FACING
+import chylex.hee.system.util.withFacing
 import net.minecraft.item.ItemStack
 import net.minecraft.util.EnumFacing.SOUTH
 import net.minecraft.util.math.BlockPos
@@ -55,7 +55,7 @@ abstract class StrongholdRoom_Relic(file: String, private val relicItem: ItemSta
 		
 		generator.generate(world)
 		
-		val chestState = ModBlocks.LOOT_CHEST.defaultState.withProperty(FACING, SOUTH)
+		val chestState = ModBlocks.LOOT_CHEST.withFacing(SOUTH)
 		val chestTile = TileEntityLootChest().apply { sourceInventory.setStack(13, relicItem.copy()) }
 		
 		world.addTrigger(lootChestPos, TileEntityStructureTrigger(chestState, chestTile))
