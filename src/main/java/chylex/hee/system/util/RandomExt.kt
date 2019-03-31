@@ -88,9 +88,17 @@ fun Random.nextBiasedFloat(biasSoftener: Float): Float{
 }
 
 /**
- * Returns a random item from the list while also removing it from the list, or returns `null` is the list is empty.
+ * Returns a random item from the list while also removing it from the list, or throws if the list is empty.
  */
-fun <T> Random.removeItem(collection: MutableList<T>): T?{
+fun <T> Random.removeItem(collection: MutableList<T>): T{
+	val size = collection.size
+	return if (size == 0) throw NoSuchElementException() else collection.removeAt(this.nextInt(size))
+}
+
+/**
+ * Returns a random item from the list while also removing it from the list, or returns `null` if the list is empty.
+ */
+fun <T> Random.removeItemOrNull(collection: MutableList<T>): T?{
 	val size = collection.size
 	return if (size == 0) null else collection.removeAt(this.nextInt(size))
 }
