@@ -1,4 +1,6 @@
 package chylex.hee.game.world.feature.energyshrine
+import chylex.hee.game.world.feature.energyshrine.EnergyShrineBanners.BannerColors
+import chylex.hee.game.world.feature.energyshrine.piece.EnergyShrineAbstractPiece
 import chylex.hee.game.world.feature.energyshrine.piece.EnergyShrineCorridor_Corner
 import chylex.hee.game.world.feature.energyshrine.piece.EnergyShrineCorridor_Staircase_180
 import chylex.hee.game.world.feature.energyshrine.piece.EnergyShrineCorridor_Staircase_90
@@ -6,12 +8,23 @@ import chylex.hee.game.world.feature.energyshrine.piece.EnergyShrineCorridor_Str
 import chylex.hee.game.world.feature.energyshrine.piece.EnergyShrineCorridor_StraightLit
 import chylex.hee.game.world.feature.energyshrine.piece.EnergyShrineRoom_Main_Final
 import chylex.hee.game.world.feature.energyshrine.piece.EnergyShrineRoom_Main_Start
+import chylex.hee.game.world.feature.energyshrine.piece.EnergyShrineRoom_Primary_DisplayCase
+import chylex.hee.game.world.feature.energyshrine.piece.EnergyShrineRoom_Primary_Secretariat
+import chylex.hee.game.world.feature.energyshrine.piece.EnergyShrineRoom_Primary_SplitT
+import chylex.hee.game.world.feature.energyshrine.piece.EnergyShrineRoom_Primary_TwoFloorFork
+import chylex.hee.game.world.feature.energyshrine.piece.EnergyShrineRoom_Primary_TwoFloorOverhang
+import chylex.hee.game.world.feature.energyshrine.piece.EnergyShrineRoom_Primary_TwoFloorSecret
+import chylex.hee.game.world.feature.energyshrine.piece.EnergyShrineRoom_Primary_TwoFloorT
+import chylex.hee.game.world.feature.energyshrine.piece.EnergyShrineRoom_Secondary_Dormitory
+import chylex.hee.game.world.feature.energyshrine.piece.EnergyShrineRoom_Secondary_Portal
+import chylex.hee.game.world.feature.energyshrine.piece.EnergyShrineRoom_Secondary_Storage
 import chylex.hee.game.world.structure.IStructureDescription
 import chylex.hee.game.world.structure.file.PaletteBuilder
 import chylex.hee.game.world.structure.file.PaletteMappings
 import chylex.hee.game.world.util.Size
 import chylex.hee.init.ModBlocks
 import chylex.hee.system.Resource
+import net.minecraft.block.Block
 import net.minecraft.init.Blocks
 import java.util.Random
 
@@ -79,6 +92,25 @@ object EnergyShrinePieces : IStructureDescription{
 		EnergyShrineRoom_Main_Final("main.end.nbt")
 	)
 	
+	private val PIECES_ROOMS_PRIMARY = arrayOf<(Block, BannerColors) -> EnergyShrineAbstractPiece>(
+		{ block, bannerColors -> EnergyShrineRoom_Primary_DisplayCase("primary.display_case.nbt", block, bannerColors) },
+		{ block, bannerColors -> EnergyShrineRoom_Primary_Secretariat("primary.secretariat.nbt", block, bannerColors) },
+		{ block, bannerColors -> EnergyShrineRoom_Primary_SplitT("primary.split_t.nbt", block, bannerColors) },
+		{ block, bannerColors -> EnergyShrineRoom_Primary_TwoFloorFork("primary.two_floor_fork.nbt", block, bannerColors) },
+		{ block, bannerColors -> EnergyShrineRoom_Primary_TwoFloorSecret("primary.two_floor_secret.nbt", block, bannerColors) }
+	)
+	
+	private val PIECES_ROOMS_PRIMARY_LARGE_INTERSECTIONS = arrayOf<(Block, BannerColors) -> EnergyShrineAbstractPiece>(
+		{ block, bannerColors -> EnergyShrineRoom_Primary_TwoFloorOverhang("primary.two_floor_overhang.nbt", block, bannerColors) },
+		{ block, bannerColors -> EnergyShrineRoom_Primary_TwoFloorT("primary.two_floor_t.nbt", block, bannerColors) }
+	)
+	
+	private val PIECES_ROOMS_SECONDARY = arrayOf<(Block, BannerColors) -> EnergyShrineAbstractPiece>(
+		{ block, bannerColors -> EnergyShrineRoom_Secondary_Dormitory("secondary.dormitory.nbt", block, bannerColors) },
+		{ block, bannerColors -> EnergyShrineRoom_Secondary_Portal("secondary.portal.nbt", block, bannerColors) },
+		{ block, bannerColors -> EnergyShrineRoom_Secondary_Storage("secondary.storage.nbt", block, bannerColors) }
+	)
+	
 	// Pieces (All)
 	
 	override val ALL_PIECES
@@ -91,5 +123,9 @@ object EnergyShrinePieces : IStructureDescription{
 			
 			*PIECES_START,
 			*PIECES_END,
+			
+			*PIECES_ROOMS_PRIMARY_LARGE_INTERSECTIONS.map { it(ModBlocks.GLOOMROCK_SMOOTH_WHITE, BannerColors.DEFAULT) }.toTypedArray(),
+			*PIECES_ROOMS_PRIMARY.map { it(ModBlocks.GLOOMROCK_SMOOTH_WHITE, BannerColors.DEFAULT) }.toTypedArray(),
+			*PIECES_ROOMS_SECONDARY.map { it(ModBlocks.GLOOMROCK_SMOOTH_WHITE, BannerColors.DEFAULT) }.toTypedArray()
 		)
 }
