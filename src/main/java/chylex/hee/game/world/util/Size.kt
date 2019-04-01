@@ -62,7 +62,7 @@ data class Size(val x: Int, val y: Int, val z: Int){
 		return BoundingBox(offset, offset.add(maxX, maxY, maxZ))
 	}
 	
-	fun toBoundingBox(offset: Vec3d): AxisAlignedBB{
+	fun toCenteredBoundingBox(offset: Vec3d): AxisAlignedBB{
 		val (x, y, z) = offset
 		return AxisAlignedBB(x - centerX, y - centerY, z - centerZ, x + centerX, y + centerY, z + centerZ)
 	}

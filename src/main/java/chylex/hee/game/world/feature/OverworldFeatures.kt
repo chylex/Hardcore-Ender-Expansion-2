@@ -2,6 +2,7 @@ package chylex.hee.game.world.feature
 import chylex.hee.game.world.feature.basic.DispersedClusterGenerator
 import chylex.hee.game.world.feature.stronghold.StrongholdGenerator
 import net.minecraft.util.math.ChunkPos
+import net.minecraft.world.World
 import net.minecraftforge.fml.common.registry.GameRegistry
 
 object OverworldFeatures{
@@ -18,5 +19,13 @@ object OverworldFeatures{
 			chunksInGrid * (normalizedX / chunksInGrid),
 			chunksInGrid * (normalizedZ / chunksInGrid)
 		)
+	}
+	
+	fun preloadChunks(world: World, chunkX: Int, chunkZ: Int, radiusX: Int, radiusZ: Int){
+		for(offsetX in -radiusX..radiusX){
+			for(offsetZ in -radiusZ..radiusZ){
+				world.getChunk(chunkX + offsetX, chunkZ + offsetZ) // UPDATE shitty hack to force nearby structures to gen first
+			}
+		}
 	}
 }

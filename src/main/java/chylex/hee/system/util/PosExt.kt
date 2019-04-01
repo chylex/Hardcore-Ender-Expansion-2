@@ -15,7 +15,6 @@ import net.minecraft.world.IBlockAccess
 import net.minecraft.world.World
 import kotlin.math.max
 import kotlin.math.min
-import kotlin.math.pow
 import kotlin.math.sqrt
 
 inline fun Pos(x: Int, y: Int, z: Int) = BlockPos(x, y, z)
@@ -172,7 +171,7 @@ fun BlockPos.max(other: BlockPos): BlockPos{
 // Distance calculations
 
 fun BlockPos.distanceSqTo(x: Int, y: Int, z: Int): Double{
-	return (x - this.x).toDouble().pow(2) + (y - this.y).toDouble().pow(2) + (z - this.z).toDouble().pow(2)
+	return (square(x - this.x) + square(y - this.y) + square(z - this.z)).toDouble()
 }
 
 fun BlockPos.distanceSqTo(pos: BlockPos): Double{
@@ -180,11 +179,11 @@ fun BlockPos.distanceSqTo(pos: BlockPos): Double{
 }
 
 fun BlockPos.distanceSqTo(vec: Vec3d): Double{
-	return (vec.x - (this.x + 0.5)).pow(2) + (vec.y - (this.y + 0.5)).pow(2) + (vec.z - (this.z + 0.5)).pow(2)
+	return square(vec.x - (this.x + 0.5)) + square(vec.y - (this.y + 0.5)) + square(vec.z - (this.z + 0.5))
 }
 
 fun BlockPos.distanceSqTo(entity: Entity): Double{
-	return (entity.posX - (this.x + 0.5)).pow(2) + (entity.posY - (this.y + 0.5)).pow(2) + (entity.posZ - (this.z + 0.5)).pow(2)
+	return square(entity.posX - (this.x + 0.5)) + square(entity.posY - (this.y + 0.5)) + square(entity.posZ - (this.z + 0.5))
 }
 
 inline fun BlockPos.distanceTo(x: Int, y: Int, z: Int): Double = sqrt(distanceSqTo(x, y, z))
