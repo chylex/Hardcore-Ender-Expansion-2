@@ -24,6 +24,10 @@ import chylex.hee.game.world.structure.file.PaletteMappings
 import chylex.hee.game.world.util.Size
 import chylex.hee.init.ModBlocks
 import chylex.hee.system.Resource
+import chylex.hee.system.collection.WeightedList.Companion.weightedListOf
+import chylex.hee.system.util.nextInt
+import chylex.hee.system.util.nextItem
+import chylex.hee.system.util.removeItem
 import net.minecraft.block.Block
 import net.minecraft.init.Blocks
 import java.util.Random
@@ -31,7 +35,7 @@ import java.util.Random
 object EnergyShrinePieces : IStructureDescription{
 	override val STRUCTURE_SIZE = Size(128, 40, 128)
 	
-	override val STRUCTURE_BUILDER get() = TODO("not implemented")
+	override val STRUCTURE_BUILDER = EnergyShrineBuilder
 	override val STRUCTURE_LOCATOR get() = TODO("not implemented")
 	
 	// Palette
@@ -82,6 +86,38 @@ object EnergyShrinePieces : IStructureDescription{
 		EnergyShrineCorridor_Staircase_180("corridor.staircase180.nbt")
 	)
 	
+	private fun PIECES_CORRIDORS_GENERIC(rand: Random, targetAmount: Int): MutableList<Array<out EnergyShrineAbstractPiece>>{
+		fun newStraightCorridor() = when{
+			rand.nextBoolean() -> arrayOf(EnergyShrineCorridor_StraightLit(1 + 2 * rand.nextInt(0, 3)))
+			rand.nextInt(4) != 0 -> arrayOf(EnergyShrineCorridor_Straight(rand.nextInt(1, 7)))
+			else -> emptyArray()
+		}
+		
+		fun newCornerCorridor(): Array<EnergyShrineAbstractPiece>{
+			fun pickShortCorridor() = when{
+				rand.nextInt(3) == 0 -> EnergyShrineCorridor_StraightLit(1 + 2 * rand.nextInt(0, 2))
+				rand.nextInt(5) != 0 -> EnergyShrineCorridor_Straight(rand.nextInt(1, 5))
+				else -> null
+			}
+			
+			return listOfNotNull(
+				pickShortCorridor(),
+				PIECES_CORRIDOR_CORNER.generateItem(rand),
+				pickShortCorridor()
+			).toTypedArray()
+		}
+		
+		return mutableListOf<Array<out EnergyShrineAbstractPiece>>().apply {
+			repeat(rand.nextInt(3, 4)){
+				add(newCornerCorridor())
+			}
+			
+			while(size < targetAmount){
+				add(newStraightCorridor())
+			}
+		}
+	}
+	
 	// Pieces (Rooms)
 	
 	val PIECES_START = arrayOf(
@@ -109,6 +145,86 @@ object EnergyShrinePieces : IStructureDescription{
 		{ block, bannerColors -> EnergyShrineRoom_Secondary_Dormitory("secondary.dormitory.nbt", block, bannerColors) },
 		{ block, bannerColors -> EnergyShrineRoom_Secondary_Portal("secondary.portal.nbt", block, bannerColors) },
 		{ block, bannerColors -> EnergyShrineRoom_Secondary_Storage("secondary.storage.nbt", block, bannerColors) }
+	)
+	
+	// Pieces (Configuration)
+	
+	fun generateRoomConfiguration(rand: Random, targetMainPathRoomAmount: Int): RoomConfiguration{
+		val bannerColors = BannerColors.random(rand)
+		
+		val cornerColors = mutableListOf(
+			ModBlocks.GLOOMROCK_SMOOTH_RED,
+			ModBlocks.GLOOMROCK_SMOOTH_ORANGE,
+			ModBlocks.GLOOMROCK_SMOOTH_YELLOW,
+			ModBlocks.GLOOMROCK_SMOOTH_GREEN,
+			ModBlocks.GLOOMROCK_SMOOTH_CYAN,
+			ModBlocks.GLOOMROCK_SMOOTH_BLUE,
+			ModBlocks.GLOOMROCK_SMOOTH_PURPLE,
+			ModBlocks.GLOOMROCK_SMOOTH_MAGENTA
+		).apply {
+			shuffle(rand)
+		}
+		
+		val targetOffPathRoomAmount = cornerColors.size - targetMainPathRoomAmount
+		
+		val mainPathRooms = mutableListOf<EnergyShrineAbstractPiece>()
+		val offPathRooms = mutableListOf<EnergyShrineAbstractPiece>()
+		
+		// add guaranteed rooms
+		
+		mainPathRooms.add(rand.nextItem(PIECES_ROOMS_PRIMARY_LARGE_INTERSECTIONS)(cornerColors.removeAt(0), bannerColors))
+		
+		for(secondaryRoom in PIECES_ROOMS_SECONDARY){
+			offPathRooms.add(secondaryRoom(cornerColors.removeAt(0), bannerColors))
+		}
+		
+		// add random rooms to fill up the quota
+		
+		val remainingPrimaryRooms = PIECES_ROOMS_PRIMARY.toMutableList()
+		
+		while(mainPathRooms.size < targetMainPathRoomAmount){
+			mainPathRooms.add(rand.removeItem(remainingPrimaryRooms)(cornerColors.removeAt(0), bannerColors))
+		}
+		
+		while(offPathRooms.size < targetOffPathRoomAmount){
+			offPathRooms.add(rand.removeItem(remainingPrimaryRooms)(cornerColors.removeAt(0), bannerColors))
+		}
+		
+		// finalize
+		
+		return RoomConfiguration(mainPathRooms, offPathRooms)
+	}
+	
+	fun generateCorridorConfiguration(rand: Random, roomConfiguration: RoomConfiguration): CorridorConfiguration{
+		val mainRoomCount = roomConfiguration.mainPath.size
+		val offRoomCount = roomConfiguration.offPath.size
+		
+		val mainPathCorridors = mutableListOf<Array<out EnergyShrineAbstractPiece>>()
+		val offPathCorridors = mutableListOf<Array<out EnergyShrineAbstractPiece>>()
+		
+		val remainingGenericCorridors = PIECES_CORRIDORS_GENERIC(rand, mainRoomCount + offRoomCount /* + 1 for stairs */)
+		
+		mainPathCorridors.add(arrayOf(rand.nextItem(PIECES_CORRIDOR_STAIRS)))
+		
+		while(mainPathCorridors.size < mainRoomCount + 1){
+			mainPathCorridors.add(rand.removeItem(remainingGenericCorridors))
+		}
+		
+		while(offPathCorridors.size < offRoomCount){
+			offPathCorridors.add(rand.removeItem(remainingGenericCorridors))
+		}
+		
+		return CorridorConfiguration(mainPathCorridors, offPathCorridors)
+	}
+	
+	class RoomConfiguration(
+		val mainPath: MutableList<EnergyShrineAbstractPiece>,
+		val offPath: MutableList<EnergyShrineAbstractPiece>
+	)
+	
+	class CorridorConfiguration(
+		val mainPath: MutableList<Array<out EnergyShrineAbstractPiece>>,
+		val offPath: MutableList<Array<out EnergyShrineAbstractPiece>>
 	)
 	
 	// Pieces (All)
