@@ -1,5 +1,4 @@
 package chylex.hee.game.world.structure.piece
-import chylex.hee.game.world.structure.IStructureGenerator
 import chylex.hee.game.world.structure.IStructureWorld
 import chylex.hee.game.world.structure.piece.StructureBuild.AddMode.APPEND
 import chylex.hee.game.world.structure.piece.StructureBuild.AddMode.MERGE
@@ -105,11 +104,14 @@ class StructureBuild<T : MutableInstance>(val size: Size, startingPiece: Positio
 		return false
 	}
 	
-	fun freeze(): IStructureGenerator{
+	fun freeze(): IStructureBuild{
 		val finalPieces = pieces.map(PositionedPiece<*>::freeze).toTypedArray()
 		
-		return object : IStructureGenerator{
+		return object : IStructureBuild{
 			override val size = this@StructureBuild.size
+			
+			override val boundingBoxes
+				get() = finalPieces.asSequence().map { it.pieceBox }
 			
 			override fun generate(world: IStructureWorld){
 				for(piece in finalPieces){
