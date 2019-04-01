@@ -1,6 +1,7 @@
 package chylex.hee.game.item
 import chylex.hee.game.entity.projectile.EntityProjectileEyeOfEnder
 import chylex.hee.game.world.feature.stronghold.StrongholdGenerator
+import chylex.hee.game.world.util.PosXZ
 import chylex.hee.system.util.nextFloat
 import chylex.hee.system.util.playServer
 import chylex.hee.system.util.posVec
@@ -36,7 +37,7 @@ class ItemEyeOfEnderOverride : ItemEnderEye(){
 		}
 		
 		if (!world.isRemote){
-			val strongholdPos = StrongholdGenerator.findNearest(world, player.posX, player.posZ)
+			val strongholdPos = StrongholdGenerator.findNearest(world, PosXZ(player.position))
 			
 			EntityProjectileEyeOfEnder(player, strongholdPos).apply {
 				world.spawnEntity(this)

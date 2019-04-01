@@ -33,7 +33,7 @@ class StrongholdRoom_Main_Portal(file: String) : StrongholdAbstractPieceFromFile
 	class Spawner : ITriggerHandler{
 		override fun update(entity: EntityTechnicalTrigger){
 			val world = entity.world.takeIf { it.difficulty != PEACEFUL } ?: return
-			val box = StrongholdPieces.STRUCTURE_SIZE.toBoundingBox(entity.posVec)
+			val box = StrongholdPieces.STRUCTURE_SIZE.toCenteredBoundingBox(entity.posVec)
 			
 			val selector = world.selectVulnerableEntities
 			val playersInRange = selector.inBox<EntityPlayer>(box).toList()

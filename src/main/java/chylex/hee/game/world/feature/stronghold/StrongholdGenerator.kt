@@ -1,14 +1,15 @@
 package chylex.hee.game.world.feature.stronghold
 import chylex.hee.HEE
 import chylex.hee.game.world.feature.OverworldFeatures
+import chylex.hee.game.world.feature.OverworldFeatures.preloadChunks
+import chylex.hee.game.world.structure.piece.IStructureBuild
 import chylex.hee.game.world.structure.world.WorldToStructureWorldAdapter
+import chylex.hee.game.world.util.PosXZ
 import chylex.hee.system.util.NBTList.Companion.setList
 import chylex.hee.system.util.NBTObjectList
 import chylex.hee.system.util.Pos
 import chylex.hee.system.util.component1
 import chylex.hee.system.util.component2
-import chylex.hee.system.util.distanceSqTo
-import chylex.hee.system.util.floorToInt
 import chylex.hee.system.util.getListOfCompounds
 import chylex.hee.system.util.getPos
 import chylex.hee.system.util.nextInt
@@ -30,6 +31,9 @@ import kotlin.math.abs
 object StrongholdGenerator : IWorldGenerator{
 	private const val GRID_CHUNKS = 68
 	private const val DIST_CHUNKS = 18
+	
+	private val STRUCTURE_SIZE
+		get() = StrongholdPieces.STRUCTURE_SIZE
 	
 	class DimensionStrongholdData(name: String) : WorldSavedData(name){ // must be public for reflection
 		companion object{
@@ -87,7 +91,7 @@ object StrongholdGenerator : IWorldGenerator{
 		
 		return Pos(
 			(centerChunkX + rand.nextInt(-DIST_CHUNKS, DIST_CHUNKS)) * 16 + 8,
-			(StrongholdPieces.STRUCTURE_SIZE.centerY + rand.nextInt(4, 14)),
+			(STRUCTURE_SIZE.centerY + rand.nextInt(4, 14)),
 			(centerChunkZ + rand.nextInt(-DIST_CHUNKS, DIST_CHUNKS)) * 16 + 8
 		)
 	}
@@ -96,54 +100,49 @@ object StrongholdGenerator : IWorldGenerator{
 		return (world.chunkProvider as? ChunkProviderServer)?.loadChunk(chunk.x, chunk.z).let { it != null && it.isTerrainPopulated }
 	}
 	
-	fun findNearest(world: World, x: Double, z: Double): BlockPos?{
-		val blockX = x.floorToInt()
-		val blockZ = z.floorToInt()
-		
-		val chunkX = blockX shr 4
-		val chunkZ = blockZ shr 4
+	fun findNearest(world: World, xz: PosXZ): BlockPos?{
+		val chunkX = xz.chunkX
+		val chunkZ = xz.chunkZ
 		
 		val seed = world.seed
 		
 		val strongholds = DimensionStrongholdData.get(world)
 		val found = mutableListOf<BlockPos>()
 		
-		for(offX in -2..2){
-			for(offZ in -2..2){
-				val testChunkX = chunkX + (GRID_CHUNKS * offX)
-				val testChunkZ = chunkZ + (GRID_CHUNKS * offZ)
-				val foundPos = findSpawnAt(seed, testChunkX, testChunkZ)
-				
-				if (foundPos == null){
-					continue
-				}
-				
-				val foundChunk = ChunkPos(foundPos)
-				val realPos = strongholds.getLocation(foundChunk)
-				
-				if (realPos != null){
-					found.add(realPos)
-				}
-				else if (!isChunkPopulated(world, foundChunk)){
-					found.add(foundPos)
-				}
+		for(offX in -2..2) for(offZ in -2..2){
+			val testChunkX = chunkX + (GRID_CHUNKS * offX)
+			val testChunkZ = chunkZ + (GRID_CHUNKS * offZ)
+			val foundPos = findSpawnAt(seed, testChunkX, testChunkZ)
+			
+			if (foundPos == null){
+				continue
+			}
+			
+			val foundChunk = ChunkPos(foundPos)
+			val realPos = strongholds.getLocation(foundChunk)
+			
+			if (realPos != null){
+				found.add(realPos)
+			}
+			else if (!isChunkPopulated(world, foundChunk)){
+				found.add(foundPos)
 			}
 		}
 		
-		return found.minBy { it.distanceSqTo(blockX, it.y, blockZ) }
+		return found.minBy { PosXZ(it).distanceSqTo(xz) }
+	}
+	
+	// Helpers
+	
+	private fun buildStructure(rand: Random): Pair<IStructureBuild?, BlockPos?>{
+		for(attempt in 1..50){
+			return StrongholdBuilder.buildWithEyeOfEnderTarget(rand) ?: continue
+		}
+		
+		return Pair(null, null)
 	}
 	
 	// Generation
-	
-	private fun preloadChunks(world: World, chunkX: Int, chunkZ: Int){
-		val chunkRadius = StrongholdPieces.STRUCTURE_SIZE.centerX / 16
-		
-		for(offsetX in -chunkRadius..chunkRadius){
-			for(offsetZ in -chunkRadius..chunkRadius){
-				world.getChunk(chunkX + offsetX, chunkZ + offsetZ) // UPDATE shitty hack to force nearby structures to gen first
-			}
-		}
-	}
 	
 	override fun generate(rand: Random, chunkX: Int, chunkZ: Int, world: World, generator: IChunkGenerator, provider: IChunkProvider){
 		if (world.provider.dimensionType != OVERWORLD){
@@ -156,18 +155,18 @@ object StrongholdGenerator : IWorldGenerator{
 			return
 		}
 		
-		val adapter = WorldToStructureWorldAdapter(world, rand, centerPos.subtract(StrongholdPieces.STRUCTURE_SIZE.centerPos))
+		val (build, targetPos) = buildStructure(rand)
 		
-		for(attempt in 1..50){
-			val (build, targetPos) = StrongholdBuilder.buildWithEyeOfEnderTarget(rand) ?: continue
-			
-			preloadChunks(world, chunkX, chunkZ)
-			adapter.apply(build::generate).finalize()
-			
-			DimensionStrongholdData.get(world).addLocation(ChunkPos(chunkX, chunkZ), targetPos?.add(centerPos) ?: centerPos)
+		if (build == null){
+			HEE.log.error("[StrongholdGenerator] failed all attempts at generating (chunkX = $chunkX, chunkZ = $chunkZ, seed = ${world.seed})")
 			return
 		}
 		
-		HEE.log.error("[StrongholdGenerator] failed all attempts at generating (chunkX = $chunkX, chunkZ = $chunkZ, seed = ${world.seed})")
+		val offset = centerPos.subtract(STRUCTURE_SIZE.centerPos)
+		val chunk = ChunkPos(chunkX, chunkZ)
+		
+		preloadChunks(world, chunkX, chunkZ, STRUCTURE_SIZE.centerX / 16, STRUCTURE_SIZE.centerZ / 16)
+		WorldToStructureWorldAdapter(world, rand, offset).apply(build::generate).finalize()
+		DimensionStrongholdData.get(world).addLocation(chunk, targetPos?.add(centerPos) ?: centerPos)
 	}
 }

@@ -12,7 +12,7 @@ import chylex.hee.game.world.feature.stronghold.StrongholdPieces.STRUCTURE_SIZE
 import chylex.hee.game.world.feature.stronghold.piece.StrongholdAbstractPiece
 import chylex.hee.game.world.feature.stronghold.piece.StrongholdAbstractPiece.StrongholdInst
 import chylex.hee.game.world.feature.stronghold.piece.StrongholdRoom_Relic
-import chylex.hee.game.world.structure.IStructureGenerator
+import chylex.hee.game.world.structure.piece.IStructureBuild
 import chylex.hee.game.world.structure.piece.IStructureBuilder
 import chylex.hee.game.world.structure.piece.IStructureBuilder.ProcessBase
 import chylex.hee.game.world.structure.piece.StructureBuild
@@ -33,7 +33,7 @@ import kotlin.math.max
 import kotlin.math.min
 
 object StrongholdBuilder : IStructureBuilder{
-	fun buildWithEyeOfEnderTarget(rand: Random): Pair<IStructureGenerator, BlockPos?>?{
+	fun buildWithEyeOfEnderTarget(rand: Random): Pair<IStructureBuild, BlockPos?>?{
 		val build = StructureBuild(STRUCTURE_SIZE, rand.nextItem(PIECES_START).StrongholdInst(distanceToPortal = 0, facingFromPortal = null, rotation = rand.nextItem()))
 		val process = Process(build, rand)
 		
@@ -138,7 +138,7 @@ object StrongholdBuilder : IStructureBuilder{
 		return generator to eyeOfEnderTargets.firstOrNull()?.pieceBox?.center?.subtract(STRUCTURE_SIZE.centerPos)
 	}
 	
-	override fun build(rand: Random): IStructureGenerator?{
+	override fun build(rand: Random): IStructureBuild?{
 		return buildWithEyeOfEnderTarget(rand)?.first
 	}
 	
