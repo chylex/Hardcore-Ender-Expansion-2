@@ -1,4 +1,5 @@
 package chylex.hee.system.util
+import chylex.hee.game.world.util.PosXZ
 import net.minecraft.block.Block
 import net.minecraft.block.material.Material
 import net.minecraft.block.state.BlockFaceShape
@@ -22,6 +23,9 @@ inline fun Pos(x: Double, y: Double, z: Double) = BlockPos(x, y, z)
 inline fun Pos(vector: Vec3d) = BlockPos(vector)
 inline fun Pos(entity: Entity) = BlockPos(entity)
 inline fun Pos(packed: Long) = BlockPos.fromLong(packed)
+
+inline val BlockPos.xz
+	get() = PosXZ(this)
 
 operator fun BlockPos.component1() = x
 operator fun BlockPos.component2() = y
