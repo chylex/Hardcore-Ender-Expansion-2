@@ -1,4 +1,7 @@
 package chylex.hee.game.world.util
+import chylex.hee.game.world.util.Size.Alignment.CENTER
+import chylex.hee.game.world.util.Size.Alignment.MAX
+import chylex.hee.game.world.util.Size.Alignment.MIN
 import chylex.hee.system.util.Pos
 import chylex.hee.system.util.component1
 import chylex.hee.system.util.component2
@@ -13,6 +16,10 @@ import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.Vec3d
 
 data class Size(val x: Int, val y: Int, val z: Int){
+	enum class Alignment{
+		MIN, CENTER, MAX
+	}
+	
 	val maxX get() = x - 1
 	val maxY get() = y - 1
 	val maxZ get() = z - 1
@@ -29,6 +36,22 @@ data class Size(val x: Int, val y: Int, val z: Int){
 	
 	val centerPos: BlockPos
 		get() = Pos(centerX, centerY, centerZ)
+	
+	fun getPos(xAlignment: Alignment, yAlignment: Alignment, zAlignment: Alignment): BlockPos{
+		return Pos(
+			getPos(xAlignment).x,
+			getPos(yAlignment).y,
+			getPos(zAlignment).z
+		)
+	}
+	
+	fun getPos(alignment: Alignment): BlockPos{
+		return when(alignment){
+			MIN    -> minPos
+			CENTER -> centerPos
+			MAX    -> maxPos
+		}
+	}
 	
 	fun rotate(rotation: Rotation) = when(rotation){
 		NONE, CLOCKWISE_180 -> this
