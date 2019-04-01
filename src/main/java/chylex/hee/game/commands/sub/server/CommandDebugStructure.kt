@@ -8,6 +8,7 @@ import chylex.hee.game.world.structure.file.StructureFile
 import chylex.hee.game.world.structure.file.StructureFiles
 import chylex.hee.game.world.structure.world.RotatedStructureWorld
 import chylex.hee.game.world.structure.world.WorldToStructureWorldAdapter
+import chylex.hee.game.world.util.PosXZ
 import chylex.hee.game.world.util.Size
 import chylex.hee.system.util.Rotation4
 import net.minecraft.command.ICommandSender
@@ -88,7 +89,7 @@ internal object CommandDebugStructure : ISubCommand{
 			}
 			
 			"locate" -> {
-				val closest = structure.STRUCTURE_LOCATOR(sender.entityWorld, sender.positionVector.x, sender.positionVector.z)
+				val closest = structure.STRUCTURE_LOCATOR(sender.entityWorld, PosXZ(sender.position))
 				sender.sendMessage(TextComponentString("Found at: $closest"))
 			}
 		}
