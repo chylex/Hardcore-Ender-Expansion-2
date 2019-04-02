@@ -78,6 +78,7 @@ object HEE{
 	fun onPostInit(e: FMLPostInitializationEvent){
 		CustomToolMaterial.setupRepairItems()
 		EntityItemIgneousRock.setupSmeltingTransformations()
+		OverworldFeatures.setupVanillaOverrides()
 	}
 	
 	@EventHandler
