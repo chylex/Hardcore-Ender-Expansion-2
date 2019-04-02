@@ -36,7 +36,7 @@ object EnergyShrinePieces : IStructureDescription{
 	override val STRUCTURE_SIZE = Size(128, 40, 128)
 	
 	override val STRUCTURE_BUILDER = EnergyShrineBuilder
-	override val STRUCTURE_LOCATOR get() = TODO("not implemented")
+	override val STRUCTURE_LOCATOR = EnergyShrineGenerator::findNearest
 	
 	// Palette
 	

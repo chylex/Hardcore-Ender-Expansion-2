@@ -1,5 +1,6 @@
 package chylex.hee.game.world.feature
 import chylex.hee.game.world.feature.basic.DispersedClusterGenerator
+import chylex.hee.game.world.feature.energyshrine.EnergyShrineGenerator
 import chylex.hee.game.world.feature.stronghold.StrongholdGenerator
 import net.minecraft.util.math.ChunkPos
 import net.minecraft.world.World
@@ -10,7 +11,8 @@ import net.minecraftforge.fml.common.registry.GameRegistry
 object OverworldFeatures{
 	fun register(){
 		GameRegistry.registerWorldGenerator(DispersedClusterGenerator, Int.MAX_VALUE)
-		GameRegistry.registerWorldGenerator(StrongholdGenerator, Int.MAX_VALUE - 1)
+		GameRegistry.registerWorldGenerator(EnergyShrineGenerator, Int.MAX_VALUE - 1)
+		GameRegistry.registerWorldGenerator(StrongholdGenerator, Int.MAX_VALUE - 2)
 	}
 	
 	fun setupVanillaOverrides(){
