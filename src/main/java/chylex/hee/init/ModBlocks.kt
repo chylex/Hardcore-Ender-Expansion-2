@@ -19,6 +19,7 @@ import chylex.hee.game.block.BlockEndersol
 import chylex.hee.game.block.BlockEndium
 import chylex.hee.game.block.BlockEnergyCluster
 import chylex.hee.game.block.BlockFallingObsidian
+import chylex.hee.game.block.BlockGloomrock
 import chylex.hee.game.block.BlockGloomtorch
 import chylex.hee.game.block.BlockHumus
 import chylex.hee.game.block.BlockIgneousRockOre
@@ -165,24 +166,24 @@ object ModBlocks{
 		mapColor = MapColor.BLACK
 	}
 	
-	@JvmField val GLOOMROCK                    = BlockSimple(buildGloomrock).apply { setup("gloomrock") }
-	@JvmField val GLOOMROCK_BRICKS             = BlockSimple(buildGloomrockBricks).apply { setup("gloomrock_bricks") }
+	@JvmField val GLOOMROCK                    = BlockGloomrock(buildGloomrock).apply { setup("gloomrock") }
+	@JvmField val GLOOMROCK_BRICKS             = BlockGloomrock(buildGloomrockBricks).apply { setup("gloomrock_bricks") }
 	@JvmField val GLOOMROCK_BRICK_STAIRS       = BlockStairsCustom(GLOOMROCK_BRICKS).apply { setup("gloomrock_brick_stairs") }
 	@JvmField val GLOOMROCK_BRICK_SLAB         = BlockSlabCustom.Half(buildGloomrockBricks).apply { setup("gloomrock_brick_slab") }
 	@JvmField val GLOOMROCK_BRICK_DOUBLE_SLAB  = BlockSlabCustom.Full(buildGloomrockBricks, GLOOMROCK_BRICK_SLAB).apply { setup("gloomrock_brick_slab_double", "hee.gloomrock_brick_slab") }
-	@JvmField val GLOOMROCK_SMOOTH             = BlockSimple(buildGloomrockSmooth).apply { setup("gloomrock_smooth") }
+	@JvmField val GLOOMROCK_SMOOTH             = BlockGloomrock(buildGloomrockSmooth).apply { setup("gloomrock_smooth") }
 	@JvmField val GLOOMROCK_SMOOTH_STAIRS      = BlockStairsCustom(GLOOMROCK_SMOOTH).apply { setup("gloomrock_smooth_stairs") }
 	@JvmField val GLOOMROCK_SMOOTH_SLAB        = BlockSlabCustom.Half(buildGloomrockSmooth).apply { setup("gloomrock_smooth_slab") }
 	@JvmField val GLOOMROCK_SMOOTH_DOUBLE_SLAB = BlockSlabCustom.Full(buildGloomrockSmooth, GLOOMROCK_SMOOTH_SLAB).apply { setup("gloomrock_smooth_slab_double", "hee.gloomrock_smooth_slab") }
-	@JvmField val GLOOMROCK_SMOOTH_RED         = BlockSimple(buildGloomrockSmooth).apply { setup("gloomrock_smooth_red") }
-	@JvmField val GLOOMROCK_SMOOTH_ORANGE      = BlockSimple(buildGloomrockSmooth).apply { setup("gloomrock_smooth_orange") }
-	@JvmField val GLOOMROCK_SMOOTH_YELLOW      = BlockSimple(buildGloomrockSmooth).apply { setup("gloomrock_smooth_yellow") }
-	@JvmField val GLOOMROCK_SMOOTH_GREEN       = BlockSimple(buildGloomrockSmooth).apply { setup("gloomrock_smooth_green") }
-	@JvmField val GLOOMROCK_SMOOTH_CYAN        = BlockSimple(buildGloomrockSmooth).apply { setup("gloomrock_smooth_cyan") }
-	@JvmField val GLOOMROCK_SMOOTH_BLUE        = BlockSimple(buildGloomrockSmooth).apply { setup("gloomrock_smooth_blue") }
-	@JvmField val GLOOMROCK_SMOOTH_PURPLE      = BlockSimple(buildGloomrockSmooth).apply { setup("gloomrock_smooth_purple") }
-	@JvmField val GLOOMROCK_SMOOTH_MAGENTA     = BlockSimple(buildGloomrockSmooth).apply { setup("gloomrock_smooth_magenta") }
-	@JvmField val GLOOMROCK_SMOOTH_WHITE       = BlockSimple(buildGloomrockSmooth).apply { setup("gloomrock_smooth_white") }
+	@JvmField val GLOOMROCK_SMOOTH_RED         = BlockGloomrock(buildGloomrockSmooth).apply { setup("gloomrock_smooth_red") }
+	@JvmField val GLOOMROCK_SMOOTH_ORANGE      = BlockGloomrock(buildGloomrockSmooth).apply { setup("gloomrock_smooth_orange") }
+	@JvmField val GLOOMROCK_SMOOTH_YELLOW      = BlockGloomrock(buildGloomrockSmooth).apply { setup("gloomrock_smooth_yellow") }
+	@JvmField val GLOOMROCK_SMOOTH_GREEN       = BlockGloomrock(buildGloomrockSmooth).apply { setup("gloomrock_smooth_green") }
+	@JvmField val GLOOMROCK_SMOOTH_CYAN        = BlockGloomrock(buildGloomrockSmooth).apply { setup("gloomrock_smooth_cyan") }
+	@JvmField val GLOOMROCK_SMOOTH_BLUE        = BlockGloomrock(buildGloomrockSmooth).apply { setup("gloomrock_smooth_blue") }
+	@JvmField val GLOOMROCK_SMOOTH_PURPLE      = BlockGloomrock(buildGloomrockSmooth).apply { setup("gloomrock_smooth_purple") }
+	@JvmField val GLOOMROCK_SMOOTH_MAGENTA     = BlockGloomrock(buildGloomrockSmooth).apply { setup("gloomrock_smooth_magenta") }
+	@JvmField val GLOOMROCK_SMOOTH_WHITE       = BlockGloomrock(buildGloomrockSmooth).apply { setup("gloomrock_smooth_white") }
 	@JvmField val GLOOMTORCH                   = BlockGloomtorch(buildGloomtorch).apply { setup("gloomtorch") }
 	
 	// Blocks: Building (Obsidian)
