@@ -18,16 +18,23 @@ class EntityTechnicalTrigger(world: World) : EntityTechnicalBase(world){
 		this.type = type
 	}
 	
+	// Handler interface
+	
 	interface ITriggerHandler : INBTSerializable<NBTTagCompound>{
+		fun check(world: World): Boolean
 		fun update(entity: EntityTechnicalTrigger)
 		fun nextTimer(rand: Random): Int
+		
+		@JvmDefault override fun serializeNBT() = NBTTagCompound()
+		@JvmDefault override fun deserializeNBT(nbt: NBTTagCompound){}
 	}
 	
+	// Known handlers
+	
 	private object InvalidTriggerHandler : ITriggerHandler{
+		override fun check(world: World) = true
 		override fun update(entity: EntityTechnicalTrigger) = entity.setDead()
 		override fun nextTimer(rand: Random) = Int.MAX_VALUE
-		override fun serializeNBT() = NBTTagCompound()
-		override fun deserializeNBT(nbt: NBTTagCompound){}
 	}
 	
 	enum class Types(val handlerConstructor: () -> ITriggerHandler){
@@ -37,6 +44,8 @@ class EntityTechnicalTrigger(world: World) : EntityTechnicalBase(world){
 		STRONGHOLD_TRAP_PRISON(StrongholdRoom_Trap_Prison::Trigger),
 		STRONGHOLD_TRAP_TALL_INTERSECTION({ StrongholdRoom_Trap_TallIntersection.Trigger })
 	}
+	
+	// Entity
 	
 	private var type by NotifyOnChange(Types.INVALID){ newValue -> handler = newValue.handlerConstructor() }
 	private var handler: ITriggerHandler = InvalidTriggerHandler
@@ -48,7 +57,7 @@ class EntityTechnicalTrigger(world: World) : EntityTechnicalBase(world){
 	override fun onUpdate(){
 		super.onUpdate()
 		
-		if (!world.isRemote && --timer < 0){
+		if (handler.check(world) && --timer < 0){
 			handler.update(this)
 			timer = handler.nextTimer(rand)
 		}
