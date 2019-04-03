@@ -50,6 +50,9 @@ class EntityTechnicalTrigger(world: World) : EntityTechnicalBase(world), IEntity
 	
 	// Entity
 	
+	val triggerType
+		get() = type
+	
 	private var type by NotifyOnChange(INVALID){ newValue -> handler = newValue.handlerConstructor() }
 	private var handler: ITriggerHandler = InvalidTriggerHandler
 	
