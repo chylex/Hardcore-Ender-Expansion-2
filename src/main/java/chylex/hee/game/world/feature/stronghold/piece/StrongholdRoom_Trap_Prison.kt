@@ -35,6 +35,7 @@ import net.minecraft.util.EnumFacing.UP
 import net.minecraft.util.EnumFacing.WEST
 import net.minecraft.util.math.AxisAlignedBB
 import net.minecraft.world.EnumDifficulty.PEACEFUL
+import net.minecraft.world.World
 import java.util.Random
 import kotlin.math.min
 
@@ -42,10 +43,14 @@ class StrongholdRoom_Trap_Prison(file: String) : StrongholdAbstractPieceFromFile
 	class Trigger : ITriggerHandler{
 		private var spawnsLeft = -1
 		
+		override fun check(world: World): Boolean{
+			return !world.isRemote && world.difficulty != PEACEFUL
+		}
+		
 		override fun update(entity: EntityTechnicalTrigger){
-			val world = entity.world.takeIf { it.difficulty != PEACEFUL } ?: return
-			
+			val world = entity.world
 			val facing = entity.horizontalFacing
+			
 			val pos1 = Pos(entity)
 			val pos2 = pos1.offset(facing, 7).offset(facing.rotateYCCW(), 4).offset(UP, 2)
 			

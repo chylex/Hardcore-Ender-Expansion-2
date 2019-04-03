@@ -26,16 +26,21 @@ import net.minecraft.util.EnumFacing.NORTH
 import net.minecraft.util.EnumFacing.SOUTH
 import net.minecraft.util.EnumFacing.WEST
 import net.minecraft.world.EnumDifficulty.PEACEFUL
+import net.minecraft.world.World
 import java.util.Random
 import kotlin.math.min
 
 class StrongholdRoom_Main_Portal(file: String) : StrongholdAbstractPieceFromFile(file, ROOM){
 	class Spawner : ITriggerHandler{
+		override fun check(world: World): Boolean{
+			return !world.isRemote && world.difficulty != PEACEFUL
+		}
+		
 		override fun update(entity: EntityTechnicalTrigger){
-			val world = entity.world.takeIf { it.difficulty != PEACEFUL } ?: return
-			val box = StrongholdPieces.STRUCTURE_SIZE.toCenteredBoundingBox(entity.posVec)
-			
+			val world = entity.world
 			val selector = world.selectVulnerableEntities
+			
+			val box = StrongholdPieces.STRUCTURE_SIZE.toCenteredBoundingBox(entity.posVec)
 			val playersInRange = selector.inBox<EntityPlayer>(box).toList()
 			
 			if (playersInRange.isEmpty() ||
@@ -93,9 +98,6 @@ class StrongholdRoom_Main_Portal(file: String) : StrongholdAbstractPieceFromFile
 		override fun nextTimer(rand: Random): Int{
 			return rand.nextInt(20, 60)
 		}
-		
-		override fun serializeNBT() = NBTTagCompound()
-		override fun deserializeNBT(nbt: NBTTagCompound){}
 	}
 	
 	override val extraWeightMultiplier = 4

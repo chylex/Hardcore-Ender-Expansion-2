@@ -19,12 +19,18 @@ import chylex.hee.system.util.selectVulnerableEntities
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.nbt.NBTTagCompound
 import net.minecraft.world.EnumDifficulty.PEACEFUL
+import net.minecraft.world.World
 import java.util.Random
 
 class StrongholdRoom_Trap_TallIntersection(file: String) : StrongholdAbstractPieceFromFile(file, ROOM){
 	object Trigger : ITriggerHandler{
+		override fun check(world: World): Boolean{
+			return !world.isRemote && world.difficulty != PEACEFUL
+		}
+		
 		override fun update(entity: EntityTechnicalTrigger){
-			val world = entity.world.takeIf { it.difficulty != PEACEFUL } ?: return
+			val world = entity.world
+			
 			val area = entity.entityBoundingBox.grow(2.5, 0.0, 2.5).expand(0.0, 2.0, 0.0)
 			val targets = world.selectVulnerableEntities.inBox<EntityPlayer>(area).toList()
 			
@@ -66,9 +72,6 @@ class StrongholdRoom_Trap_TallIntersection(file: String) : StrongholdAbstractPie
 		override fun nextTimer(rand: Random): Int{
 			return 10
 		}
-		
-		override fun serializeNBT() = NBTTagCompound()
-		override fun deserializeNBT(nbt: NBTTagCompound){}
 	}
 	
 	override fun generate(world: IStructureWorld, instance: Instance){

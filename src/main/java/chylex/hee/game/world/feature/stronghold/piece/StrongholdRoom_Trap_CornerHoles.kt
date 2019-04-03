@@ -18,6 +18,7 @@ import chylex.hee.system.util.selectVulnerableEntities
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.nbt.NBTTagCompound
 import net.minecraft.world.EnumDifficulty.PEACEFUL
+import net.minecraft.world.World
 import java.util.Random
 import kotlin.math.min
 
@@ -25,8 +26,13 @@ class StrongholdRoom_Trap_CornerHoles(file: String) : StrongholdAbstractPieceFro
 	class Trigger : ITriggerHandler{
 		private var spawnsLeft = -1
 		
+		override fun check(world: World): Boolean{
+			return !world.isRemote && world.difficulty != PEACEFUL
+		}
+		
 		override fun update(entity: EntityTechnicalTrigger){
-			val world = entity.world.takeIf { it.difficulty != PEACEFUL } ?: return
+			val world = entity.world
+			val rand = world.rand
 			
 			if (spawnsLeft == -1){
 				val area = entity.entityBoundingBox.grow(3.5, 0.0, 3.5).expand(0.0, 2.0, 0.0)
@@ -35,11 +41,9 @@ class StrongholdRoom_Trap_CornerHoles(file: String) : StrongholdAbstractPieceFro
 					return
 				}
 				else{
-					spawnsLeft = world.rand.nextInt(5, 7) + ((world.difficulty.id - 1) * 2)
+					spawnsLeft = rand.nextInt(5, 7) + ((world.difficulty.id - 1) * 2)
 				}
 			}
-			
-			val rand = world.rand
 			
 			val targetArea = entity.entityBoundingBox.grow(6.0, 0.0, 6.0).expand(0.0, 4.0, 0.0)
 			val targets = world.selectVulnerableEntities.inBox<EntityPlayer>(targetArea).toList()
