@@ -8,12 +8,15 @@ import chylex.hee.system.util.delegate.NotifyOnChange
 import chylex.hee.system.util.getEnum
 import chylex.hee.system.util.heeTag
 import chylex.hee.system.util.setEnum
+import chylex.hee.system.util.use
+import io.netty.buffer.ByteBuf
 import net.minecraft.nbt.NBTTagCompound
 import net.minecraft.world.World
 import net.minecraftforge.common.util.INBTSerializable
+import net.minecraftforge.fml.common.registry.IEntityAdditionalSpawnData
 import java.util.Random
 
-class EntityTechnicalTrigger(world: World) : EntityTechnicalBase(world){
+class EntityTechnicalTrigger(world: World) : EntityTechnicalBase(world), IEntityAdditionalSpawnData{
 	constructor(world: World, type: Types) : this(world){
 		this.type = type
 	}
@@ -47,12 +50,20 @@ class EntityTechnicalTrigger(world: World) : EntityTechnicalBase(world){
 	
 	// Entity
 	
-	private var type by NotifyOnChange(Types.INVALID){ newValue -> handler = newValue.handlerConstructor() }
+	private var type by NotifyOnChange(INVALID){ newValue -> handler = newValue.handlerConstructor() }
 	private var handler: ITriggerHandler = InvalidTriggerHandler
 	
 	private var timer = 0
 	
 	override fun entityInit(){}
+	
+	override fun writeSpawnData(buffer: ByteBuf) = buffer.use {
+		writeInt(type.ordinal)
+	}
+	
+	override fun readSpawnData(buffer: ByteBuf) = buffer.use {
+		type = Types.values().getOrNull(readInt()) ?: INVALID
+	}
 	
 	override fun onUpdate(){
 		super.onUpdate()

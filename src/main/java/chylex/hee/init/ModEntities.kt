@@ -52,7 +52,7 @@ object ModEntities{
 			register<EntityProjectileEyeOfEnder>("eye_of_ender").tracker(64, 60, false) to this
 			register<EntityProjectileSpatialDash>("projectile_spatial_dash").tracker(64, 10, true) to this
 			
-			register<EntityTechnicalTrigger>("technical_trigger").tracker(0, 60, false) to this
+			register<EntityTechnicalTrigger>("technical_trigger").tracker(256, Int.MAX_VALUE, false) to this
 		}
 		
 		// vanilla modifications
