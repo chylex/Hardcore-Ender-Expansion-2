@@ -19,7 +19,6 @@ import chylex.hee.system.util.posVec
 import chylex.hee.system.util.removeItem
 import chylex.hee.system.util.selectVulnerableEntities
 import net.minecraft.entity.player.EntityPlayer
-import net.minecraft.nbt.NBTTagCompound
 import net.minecraft.util.EnumFacing.DOWN
 import net.minecraft.util.EnumFacing.EAST
 import net.minecraft.util.EnumFacing.NORTH
@@ -115,7 +114,7 @@ class StrongholdRoom_Main_Portal(file: String) : StrongholdAbstractPieceFromFile
 	
 	override fun generate(world: IStructureWorld, instance: Instance){
 		super.generate(world, instance)
-		world.addTrigger(Pos(centerX, centerY, centerZ), EntityStructureTrigger(STRONGHOLD_GLOBAL))
+		world.addTrigger(size.centerPos, EntityStructureTrigger(STRONGHOLD_GLOBAL))
 		
 		for(connection in connections){
 			val offset = connection.offset

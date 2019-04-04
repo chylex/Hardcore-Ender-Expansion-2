@@ -17,7 +17,6 @@ import chylex.hee.system.util.nextInt
 import chylex.hee.system.util.nextItem
 import chylex.hee.system.util.selectVulnerableEntities
 import net.minecraft.entity.player.EntityPlayer
-import net.minecraft.nbt.NBTTagCompound
 import net.minecraft.world.EnumDifficulty.PEACEFUL
 import net.minecraft.world.World
 import java.util.Random

@@ -1,13 +1,11 @@
 package chylex.hee.game.world.feature.stronghold.piece
 import chylex.hee.game.world.feature.stronghold.StrongholdPieceType.CORRIDOR
 import chylex.hee.game.world.feature.stronghold.connection.StrongholdCorridorConnection
-import chylex.hee.game.world.structure.IBlockPicker.Single
 import chylex.hee.game.world.structure.IBlockPicker.Single.Air
 import chylex.hee.game.world.structure.IStructureWorld
 import chylex.hee.game.world.structure.piece.IStructurePieceConnection
 import chylex.hee.game.world.util.Size
 import chylex.hee.system.util.Pos
-import net.minecraft.init.Blocks
 import net.minecraft.util.EnumFacing
 import net.minecraft.util.EnumFacing.EAST
 import net.minecraft.util.EnumFacing.NORTH
