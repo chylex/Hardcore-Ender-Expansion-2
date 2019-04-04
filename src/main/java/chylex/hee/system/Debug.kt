@@ -1,5 +1,6 @@
 package chylex.hee.system
 import chylex.hee.HEE
+import net.minecraft.client.renderer.BannerTextures
 import net.minecraftforge.fml.common.FMLCommonHandler
 import net.minecraftforge.fml.relauncher.Side.CLIENT
 import net.minecraftforge.fml.relauncher.Side.SERVER
@@ -20,6 +21,12 @@ object Debug{
 			when(FMLCommonHandler.instance().side!!){
 				CLIENT -> {
 					Display.setTitle("${Display.getTitle()} - Hardcore Ender Expansion ${HEE.version}")
+					
+					try{
+						enableInfiniteBannerTextures()
+					}catch(t: Throwable){
+						t.printStackTrace()
+					}
 				}
 				
 				SERVER -> {
@@ -50,5 +57,20 @@ object Debug{
 	
 	private fun canExecutePowershell(scriptName: String): Boolean{
 		return LWJGLUtil.getPlatform() == PLATFORM_WINDOWS && !GraphicsEnvironment.isHeadless() && File(scriptName).exists()
+	}
+	
+	// Special features
+	
+	private fun enableInfiniteBannerTextures(){
+		with(BannerTextures.BANNER_DESIGNS.javaClass.getDeclaredField("cacheMap")){
+			isAccessible = true
+			
+			@Suppress("UNCHECKED_CAST")
+			val original = get(BannerTextures.BANNER_DESIGNS) as MutableMap<Any, Any>
+			
+			set(BannerTextures.BANNER_DESIGNS, object : MutableMap<Any, Any> by original{
+				override val size = 0
+			})
+		}
 	}
 }
