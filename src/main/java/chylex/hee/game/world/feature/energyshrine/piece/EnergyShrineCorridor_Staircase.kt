@@ -3,14 +3,15 @@ import chylex.hee.game.world.feature.energyshrine.EnergyShrinePieces
 import chylex.hee.game.world.structure.IStructureGeneratorFromFile
 import chylex.hee.game.world.structure.IStructureWorld
 import chylex.hee.game.world.structure.file.StructureFiles
+import chylex.hee.game.world.util.PosXZ
 import chylex.hee.init.ModBlocks
 import chylex.hee.system.util.Facing6
-import chylex.hee.system.util.Pos
 import chylex.hee.system.util.ceilToInt
+import chylex.hee.system.util.nextFloat
 import chylex.hee.system.util.nextInt
 import chylex.hee.system.util.nextItemOrNull
+import chylex.hee.system.util.toRadians
 import chylex.hee.system.util.withFacing
-import net.minecraft.util.math.BlockPos
 import java.util.Random
 
 abstract class EnergyShrineCorridor_Staircase(file: String) : EnergyShrineAbstractPiece(), IStructureGeneratorFromFile{
@@ -32,14 +33,15 @@ abstract class EnergyShrineCorridor_Staircase(file: String) : EnergyShrineAbstra
 			val progress = index.toFloat() / count
 			
 			for(attempt in 1..attempts){
-				val (torchX, torchZ) = nextRandomXZ(rand, progress)
+				val angle = ((progress * 85F) + rand.nextFloat(0F, 5F)).toRadians()
+				val torchXZ = nextRandomXZ(rand, angle)
 				
-				if (world.getBlock(Pos(torchX, maxY, torchZ)) !== ModBlocks.GLOOMROCK_SMOOTH){
+				if (world.getBlock(torchXZ.withY(maxY)) !== ModBlocks.GLOOMROCK_SMOOTH){
 					continue
 				}
 				
 				val yOffset = ((attempt.toFloat() / attempts) * (maxY - 6)).ceilToInt()
-				val torchPos = BlockPos(torchX, yOffset + rand.nextInt(2, 5), torchZ)
+				val torchPos = torchXZ.withY(yOffset + rand.nextInt(2, 5))
 				
 				if ((0..3).all { world.isAir(torchPos.down(it)) }){
 					val attachmentCandidates = Facing6.filter { world.getState(torchPos.offset(it)).isFullBlock }
@@ -54,5 +56,5 @@ abstract class EnergyShrineCorridor_Staircase(file: String) : EnergyShrineAbstra
 		}
 	}
 	
-	protected abstract fun nextRandomXZ(rand: Random, progress: Float): Pair<Int, Int>
+	protected abstract fun nextRandomXZ(rand: Random, angle: Double): PosXZ
 }

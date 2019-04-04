@@ -2,7 +2,8 @@ package chylex.hee.game.world.feature.energyshrine
 import chylex.hee.game.world.feature.energyshrine.EnergyShrineBanners.BannerColors
 import chylex.hee.game.world.feature.energyshrine.piece.EnergyShrineAbstractPiece
 import chylex.hee.game.world.feature.energyshrine.piece.EnergyShrineCorridor_Corner
-import chylex.hee.game.world.feature.energyshrine.piece.EnergyShrineCorridor_Staircase_180
+import chylex.hee.game.world.feature.energyshrine.piece.EnergyShrineCorridor_Staircase_180_Bottom
+import chylex.hee.game.world.feature.energyshrine.piece.EnergyShrineCorridor_Staircase_180_Top
 import chylex.hee.game.world.feature.energyshrine.piece.EnergyShrineCorridor_Staircase_90
 import chylex.hee.game.world.feature.energyshrine.piece.EnergyShrineCorridor_Straight
 import chylex.hee.game.world.feature.energyshrine.piece.EnergyShrineCorridor_StraightLit
@@ -82,8 +83,9 @@ object EnergyShrinePieces : IStructureDescription{
 	)
 	
 	private val PIECES_CORRIDOR_STAIRS = arrayOf(
-		EnergyShrineCorridor_Staircase_90("corridor.staircase90.nbt"),
-		EnergyShrineCorridor_Staircase_180("corridor.staircase180.nbt")
+		arrayOf(EnergyShrineCorridor_Staircase_90("corridor.staircase90.nbt")),
+		arrayOf(EnergyShrineCorridor_Staircase_180_Top("corridor.staircase180top.nbt"),
+			    EnergyShrineCorridor_Staircase_180_Bottom("corridor.staircase180bottom.nbt"))
 	)
 	
 	private fun PIECES_CORRIDORS_GENERIC(rand: Random, targetAmount: Int): MutableList<Array<out EnergyShrineAbstractPiece>>{
@@ -204,7 +206,7 @@ object EnergyShrinePieces : IStructureDescription{
 		
 		val remainingGenericCorridors = PIECES_CORRIDORS_GENERIC(rand, mainRoomCount + offRoomCount /* + 1 for stairs */)
 		
-		mainPathCorridors.add(arrayOf(rand.nextItem(PIECES_CORRIDOR_STAIRS)))
+		mainPathCorridors.add(rand.nextItem(PIECES_CORRIDOR_STAIRS))
 		
 		while(mainPathCorridors.size < mainRoomCount + 1){
 			mainPathCorridors.add(rand.removeItem(remainingGenericCorridors))
@@ -235,7 +237,7 @@ object EnergyShrinePieces : IStructureDescription{
 			EnergyShrineCorridor_StraightLit(5),
 			
 			*PIECES_CORRIDOR_CORNER.values.toTypedArray(),
-			*PIECES_CORRIDOR_STAIRS,
+			*PIECES_CORRIDOR_STAIRS.flatten().toTypedArray(),
 			
 			*PIECES_START,
 			*PIECES_END,
