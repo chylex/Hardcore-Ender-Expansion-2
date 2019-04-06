@@ -10,6 +10,7 @@ import chylex.hee.game.particle.util.IOffset.Gaussian
 import chylex.hee.game.particle.util.IOffset.InBox
 import chylex.hee.game.particle.util.IShape.Point
 import chylex.hee.game.world.util.Teleporter
+import chylex.hee.game.world.util.Teleporter.FxRange.Extended
 import chylex.hee.init.ModBlocks
 import chylex.hee.network.client.PacketClientFX
 import chylex.hee.system.util.allInCenteredBox
@@ -62,7 +63,7 @@ class BlockDeathFlowerDecaying : BlockEndPlant(){
 		
 		private const val WITHER_PLAYER_RADIUS = 1024.0
 		
-		private val TELEPORT = Teleporter(causedInstability = 15u, extendedEffectRange = 8F)
+		private val TELEPORT = Teleporter(causedInstability = 15u, effectRange = Extended(8F))
 		
 		private val PARTICLE_POS = Constant(0.5F, DOWN) + InBox(-0.5F, 0.5F, 0F, BUSH_AABB.maxY.toFloat(), -0.5F, 0.5F)
 		private val PARTICLE_MOT = Gaussian(0.02F)
