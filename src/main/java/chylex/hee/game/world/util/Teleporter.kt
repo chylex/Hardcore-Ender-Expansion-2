@@ -10,6 +10,9 @@ import chylex.hee.game.particle.ParticleTeleport
 import chylex.hee.game.particle.spawner.ParticleSpawnerCustom
 import chylex.hee.game.particle.util.IOffset.InBox
 import chylex.hee.game.particle.util.IShape.Line
+import chylex.hee.game.world.util.Teleporter.FxRange.Extended
+import chylex.hee.game.world.util.Teleporter.FxRange.Normal
+import chylex.hee.game.world.util.Teleporter.FxRange.Silent
 import chylex.hee.network.client.PacketClientFX
 import chylex.hee.network.client.PacketClientMoveYourAss
 import chylex.hee.network.client.PacketClientTeleportInstantly
@@ -47,7 +50,7 @@ class Teleporter(
 	private val damageDealt: Float = 0F,
 	private val damageTitle: String = TITLE_FALL,
 	private val causedInstability: UShort = 0u,
-	private val extendedEffectRange: Float = 0F
+	private val effectRange: FxRange = Normal
 ){
 	companion object{
 		private val DAMAGE = Damage(MAGIC_TYPE)
@@ -126,6 +129,12 @@ class Teleporter(
 		}
 	}
 	
+	sealed class FxRange{
+		object Silent : FxRange()
+		object Normal : FxRange()
+		class Extended(val extraRange: Float): FxRange()
+	}
+	
 	// Target
 	
 	fun toLocation(entity: EntityLivingBase, position: Vec3d, soundCategory: SoundCategory = entity.soundCategory): Boolean{
@@ -154,8 +163,15 @@ class Teleporter(
 		PacketClientTeleportInstantly(entity, newPos).sendToTracking(entity)
 		entity.setPositionAndUpdate(newPos.x, newPos.y, newPos.z)
 		
-		val halfHeight = Vec3d(0.0, entity.height * 0.5, 0.0)
-		FxTeleportData(prevPos.add(halfHeight), newPos.add(halfHeight), entity.width, entity.height, soundCategory, 1F, extendedEffectRange).send(world)
+		if (effectRange != Silent){
+			val extraRange = when(effectRange){
+				is Extended -> effectRange.extraRange
+				else -> 0F
+			}
+			
+			val halfHeight = Vec3d(0.0, entity.height * 0.5, 0.0)
+			FxTeleportData(prevPos.add(halfHeight), newPos.add(halfHeight), entity.width, entity.height, soundCategory, 1F, extraRange).send(world)
+		}
 		
 		if (resetFall){
 			entity.fallDistance = 0F
