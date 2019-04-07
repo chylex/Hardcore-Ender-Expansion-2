@@ -96,7 +96,7 @@ class EntityMobSilverfish(world: World) : EntitySilverfish(world), ICritTracker{
 		tasks.addTask(1, AISwim(this))
 		tasks.addTask(2, AIAttackMelee(this, movementSpeed = 1.0, chaseAfterLosingSight = false))
 		tasks.addTask(3, AIWander(this, movementSpeed = 1.0, chancePerTick = 10))
-		tasks.addTask(4, AIHideInBlock(this, chancePerTick = 5, tryHideInBlock = ::tryHideInBlock))
+		tasks.addTask(4, AIHideInBlock(this, chancePerTick = 15, tryHideInBlock = ::tryHideInBlock))
 		tasks.addTask(5, aiSummonFromBlock)
 		
 		aiTargetSwarmSwitch = AITargetSwarmSwitch(this, rangeMultiplier = 0.5F, checkSight = true, easilyReachableOnly = false)

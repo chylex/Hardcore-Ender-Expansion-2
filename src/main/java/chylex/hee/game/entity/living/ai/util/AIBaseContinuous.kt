@@ -2,23 +2,22 @@ package chylex.hee.game.entity.living.ai.util
 import chylex.hee.system.util.AIBase
 import chylex.hee.system.util.AI_FLAG_NONE
 
-abstract class AIBaseContinuous(mutexBits: Int = AI_FLAG_NONE) : AIBase(){
+abstract class AIBaseContinuous : AIBase(){
 	init{
-		this.mutexBits = mutexBits
+		this.mutexBits = AI_FLAG_NONE
 	}
 	
 	protected abstract fun tick()
 	
 	final override fun shouldExecute(): Boolean{
-		tick()
-		return false
+		return true
 	}
 	
 	final override fun shouldContinueExecuting(): Boolean{
-		return false
+		return true
 	}
 	
 	final override fun startExecuting(){}
-	final override fun updateTask(){}
+	final override fun updateTask() = tick()
 	final override fun resetTask(){}
 }
