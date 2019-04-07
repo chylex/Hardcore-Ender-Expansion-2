@@ -158,5 +158,5 @@ fun Random.nextVector(scale: Double): Vec3d{
  * Returns a random point inside a circle, represented by the XZ components of a vector, with its Y component equal to [y].
  */
 fun Random.nextVector2(xz: Double, y: Double): Vec3d{
-	return Vec3d(this.nextDouble() * 2.0 - 1.0, 0.0, this.nextDouble() * 2.0 - 1.0).normalize().scale(xz).add(0.0, y, 0.0)
+	return Vec3.fromXZ(this.nextDouble() * 2.0 - 1.0, this.nextDouble() * 2.0 - 1.0).normalize().scale(xz).addY(y)
 }

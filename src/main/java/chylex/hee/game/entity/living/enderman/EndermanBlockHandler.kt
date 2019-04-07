@@ -6,6 +6,8 @@ import chylex.hee.game.entity.living.enderman.EndermanBlockHandler.TargetBlockTy
 import chylex.hee.game.entity.living.enderman.EndermanBlockHandler.TargetBlockType.TRANSPARENT
 import chylex.hee.game.world.util.RayTracer
 import chylex.hee.system.util.Pos
+import chylex.hee.system.util.Vec3
+import chylex.hee.system.util.addY
 import chylex.hee.system.util.center
 import chylex.hee.system.util.component1
 import chylex.hee.system.util.component2
@@ -154,7 +156,7 @@ class EndermanBlockHandler(private val enderman: EntityMobAbstractEnderman) : IB
 		val endermanPos = Pos(endermanVec)
 		
 		for(attempt in 1..20){
-			val dir = Vec3d.fromPitchYaw(0F, enderman.rotationYaw + rand.nextFloat(-60F, 60F)).normalize()
+			val dir = Vec3.fromYaw(enderman.rotationYaw + rand.nextFloat(-60F, 60F))
 			val pos = Pos(endermanVec.add(dir.scale(rand.nextFloat(0.5, 2.0))))
 			
 			if (pos != endermanPos && pos.isAir(world) && pos.down().getState(world).isFullBlock && block.canPlaceBlockAt(world, pos)){
@@ -180,9 +182,7 @@ class EndermanBlockHandler(private val enderman: EntityMobAbstractEnderman) : IB
 		val item = Item.getItemFromBlock(block)
 		val meta = if (item.hasSubtypes) block.getMetaFromState(state) else 0
 		
-		val (x, y, z) = enderman.posVec
-			.add(0.0, 0.55, 0.0)
-			.add(Vec3d.fromPitchYaw(0F, enderman.rotationYaw).normalize().scale(0.8))
+		val (x, y, z) = enderman.posVec.addY(0.55).add(Vec3.fromYaw(enderman.rotationYaw).scale(0.8))
 		
 		EntityItem(world, x, y, z, ItemStack(item, 1, meta)).apply {
 			motionVec = Vec3d.ZERO

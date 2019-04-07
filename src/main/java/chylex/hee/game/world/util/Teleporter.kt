@@ -17,6 +17,7 @@ import chylex.hee.network.client.PacketClientFX
 import chylex.hee.network.client.PacketClientMoveYourAss
 import chylex.hee.network.client.PacketClientTeleportInstantly
 import chylex.hee.system.util.Pos
+import chylex.hee.system.util.addY
 import chylex.hee.system.util.blocksMovement
 import chylex.hee.system.util.center
 import chylex.hee.system.util.floorToInt
@@ -27,6 +28,7 @@ import chylex.hee.system.util.playClient
 import chylex.hee.system.util.posVec
 import chylex.hee.system.util.readCompactVec
 import chylex.hee.system.util.readString
+import chylex.hee.system.util.subtractY
 import chylex.hee.system.util.use
 import chylex.hee.system.util.writeCompactVec
 import chylex.hee.system.util.writeString
@@ -169,8 +171,8 @@ class Teleporter(
 				else -> 0F
 			}
 			
-			val halfHeight = Vec3d(0.0, entity.height * 0.5, 0.0)
-			FxTeleportData(prevPos.add(halfHeight), newPos.add(halfHeight), entity.width, entity.height, soundCategory, 1F, extraRange).send(world)
+			val halfHeight = entity.height * 0.5
+			FxTeleportData(prevPos.addY(halfHeight), newPos.addY(halfHeight), entity.width, entity.height, soundCategory, 1F, extraRange).send(world)
 		}
 		
 		if (resetFall){
@@ -214,6 +216,6 @@ class Teleporter(
 	}
 	
 	fun toBlock(entity: EntityLivingBase, position: BlockPos, soundCategory: SoundCategory = entity.soundCategory): Boolean{
-		return toLocation(entity, position.center.add(0.0, -0.49, 0.0), soundCategory)
+		return toLocation(entity, position.center.subtractY(0.49), soundCategory)
 	}
 }

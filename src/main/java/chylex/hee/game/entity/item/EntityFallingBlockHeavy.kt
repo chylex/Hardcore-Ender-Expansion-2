@@ -11,6 +11,7 @@ import chylex.hee.system.util.getTile
 import chylex.hee.system.util.posVec
 import chylex.hee.system.util.setAir
 import chylex.hee.system.util.setState
+import chylex.hee.system.util.subtractY
 import chylex.hee.system.util.use
 import io.netty.buffer.ByteBuf
 import net.minecraft.block.Block
@@ -92,7 +93,7 @@ open class EntityFallingBlockHeavy : EntityFallingBlock, IEntityAdditionalSpawnD
 			val pos = Pos(this)
 			
 			if (onGround){
-				val posSlightlyBelow = Pos(posVec.add(0.0, -0.01, 0.0))
+				val posSlightlyBelow = Pos(posVec.subtractY(0.01))
 				
 				if (canFallThrough(world, posSlightlyBelow) && posY != prevPosY){ // if posY hasn't changed, it's stuck on a solid replaceable block
 					onGround = false

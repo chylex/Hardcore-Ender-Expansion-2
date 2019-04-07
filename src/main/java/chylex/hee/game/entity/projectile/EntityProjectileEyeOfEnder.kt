@@ -7,6 +7,8 @@ import chylex.hee.game.particle.util.IOffset.InBox
 import chylex.hee.game.particle.util.IOffset.InSphere
 import chylex.hee.game.particle.util.IShape.Point
 import chylex.hee.system.util.Pos
+import chylex.hee.system.util.Vec3
+import chylex.hee.system.util.addY
 import chylex.hee.system.util.color.IColor
 import chylex.hee.system.util.color.RGB
 import chylex.hee.system.util.component1
@@ -26,6 +28,7 @@ import chylex.hee.system.util.posVec
 import chylex.hee.system.util.readPos
 import chylex.hee.system.util.setPos
 import chylex.hee.system.util.square
+import chylex.hee.system.util.subtractY
 import chylex.hee.system.util.use
 import chylex.hee.system.util.writePos
 import io.netty.buffer.ByteBuf
@@ -119,20 +122,20 @@ class EntityProjectileEyeOfEnder : Entity, IEntityAdditionalSpawnData{
 	}
 	
 	constructor(thrower: EntityLivingBase, targetPos: BlockPos?) : this(thrower.world){
-		this.posVec = thrower.lookPosVec.add(0.0, -(height * 0.5), 0.0).add(thrower.lookDirVec.scale(1.5))
+		this.posVec = thrower.lookPosVec.subtractY(height * 0.5).add(thrower.lookDirVec.scale(1.5))
 		this.targetPos = targetPos
 	}
 	
 	val renderBob = LerpedFloat(nextRenderBobOffset)
 	
 	private val posVecWithOffset
-		get() = posVec.add(0.0, 0.1 + renderBob.currentValue, 0.0)
+		get() = posVec.addY(0.1 + renderBob.currentValue)
 	
 	private val nextRenderBobOffset
 		get() = 0.35F + (sin(timer * 0.15F) * 0.25F) // 0.35 offset for bounding box
 	
 	private val targetVecXZ
-		get() = targetPos?.let { Vec3d(it.x + 0.5 - posX, 0.0, it.z + 0.5 - posZ) } ?: Vec3d.ZERO
+		get() = targetPos?.let { Vec3.fromXZ(it.x + 0.5 - posX, it.z + 0.5 - posZ) } ?: Vec3d.ZERO
 	
 	private var targetPos: BlockPos? = null
 	private var timer = 0
@@ -201,7 +204,7 @@ class EntityProjectileEyeOfEnder : Entity, IEntityAdditionalSpawnData{
 	}
 	
 	private fun updateTargetAltitude(){
-		val perpendicular = Vec3d(-(motionZ * 3.0), 0.0, motionX * 3.0)
+		val perpendicular = Vec3.fromXZ(-(motionZ * 3.0), motionX * 3.0)
 		val step = motionVec.scale(4.0)
 		
 		val parallelStarts = arrayOf(

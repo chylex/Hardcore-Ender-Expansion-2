@@ -5,8 +5,10 @@ import chylex.hee.game.item.ItemAbstractEnergyUser
 import chylex.hee.game.particle.base.ParticleBaseEnergyTransfer
 import chylex.hee.game.particle.spawner.factory.IParticleData
 import chylex.hee.game.particle.spawner.factory.IParticleMaker
+import chylex.hee.system.util.Vec3
 import chylex.hee.system.util.floorToInt
 import chylex.hee.system.util.lookPosVec
+import chylex.hee.system.util.subtractY
 import net.minecraft.client.particle.Particle
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.util.EnumHand.MAIN_HAND
@@ -86,9 +88,9 @@ object ParticleEnergyTransferToPlayer : IParticleMaker{
 				
 				newTargetPos = player
 					.lookPosVec
-					.subtract(0.0, 0.1 + (pitch.coerceIn(-90F, 45F) * 0.0034), 0.0)
-					.add(Vec3d.fromPitchYaw(0F, yaw + (yawOffsetMp * fov * 0.6F)).scale(0.25))
-					.add(Vec3d.fromPitchYaw(0F, yaw + 165F - (fov - 90F) / 2F).scale(abs(pitch.coerceIn(0F, 90F) / 90.0).pow(1.5) * (0.3 - abs(fov - 90.0) / 600F)))
+					.subtractY(0.1 + (pitch.coerceIn(-90F, 45F) * 0.0034))
+					.add(Vec3.fromYaw(yaw + (yawOffsetMp * fov * 0.6F)).scale(0.25))
+					.add(Vec3.fromYaw(yaw + 165F - (fov - 90F) / 2F).scale(abs(pitch.coerceIn(0F, 90F) / 90.0).pow(1.5) * (0.3 - abs(fov - 90.0) / 600F)))
 				
 				// TODO kinda weird and inaccurate, maybe use the camera transformations somehow?
 				
@@ -98,7 +100,7 @@ object ParticleEnergyTransferToPlayer : IParticleMaker{
 				
 				newTargetPos = player
 					.lookPosVec
-					.subtract(0.0, handOffset, 0.0)
+					.subtractY(handOffset)
 					.add(Vec3d.fromPitchYaw(0F, player.renderYawOffset + yawOffsetMp * 39F).scale(0.52))
 			}
 			

@@ -2,6 +2,7 @@ package chylex.hee.game.entity.living.ai
 import chylex.hee.game.entity.living.ai.util.AIBaseContinuous
 import chylex.hee.system.util.Facing6
 import chylex.hee.system.util.Pos
+import chylex.hee.system.util.addY
 import chylex.hee.system.util.getState
 import chylex.hee.system.util.nextItem
 import chylex.hee.system.util.posVec
@@ -21,7 +22,7 @@ class AIHideInBlock(
 			entity.rng.nextInt(chancePerTick) == 0
 		){
 			val world = entity.world
-			val targetPos = Pos(entity.posVec.add(0.0, 0.5, 0.0)).offset(entity.rng.nextItem(Facing6))
+			val targetPos = Pos(entity.posVec.addY(0.5)).offset(entity.rng.nextItem(Facing6))
 			
 			tryHideInBlock(targetPos.getState(world))?.let{
 				targetPos.setState(world, it)

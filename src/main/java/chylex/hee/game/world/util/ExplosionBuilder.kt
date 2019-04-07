@@ -4,6 +4,7 @@ import chylex.hee.system.util.component2
 import chylex.hee.system.util.component3
 import chylex.hee.system.util.getState
 import chylex.hee.system.util.isAir
+import chylex.hee.system.util.lookPosVec
 import chylex.hee.system.util.nextFloat
 import chylex.hee.system.util.playServer
 import chylex.hee.system.util.setBlock
@@ -174,7 +175,7 @@ class ExplosionBuilder{
 				
 				if (knockbackEntities){
 					val knockbackPower = (entity as? EntityLivingBase)?.let { EnchantmentProtection.getBlastDamageReduction(it, blastPower) } ?: blastPower
-					val knockbackVec = Vec3d(entity.posX, entity.posY + entity.eyeHeight, entity.posZ).subtract(centerVec).normalize().scale(knockbackPower)
+					val knockbackVec = entity.lookPosVec.subtract(centerVec).normalize().scale(knockbackPower)
 					
 					entity.motionX += knockbackVec.x
 					entity.motionY += knockbackVec.y
