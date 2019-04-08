@@ -21,6 +21,8 @@ abstract class EntityMobAbstractEnderman(world: World) : EntityEnderman(world){
 	var isAggressive: Boolean by EntityData(SCREAMING)
 	var isShaking: Boolean by EntityData(DATA_SHAKING)
 	
+	abstract val teleportCooldown: Int
+	
 	override fun entityInit(){
 		super.entityInit()
 		dataManager.register(DATA_SHAKING, false)

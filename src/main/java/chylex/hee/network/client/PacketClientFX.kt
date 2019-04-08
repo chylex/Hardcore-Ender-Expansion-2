@@ -4,6 +4,7 @@ import chylex.hee.game.block.BlockDragonEggOverride
 import chylex.hee.game.block.entity.TileEntityTablePedestal
 import chylex.hee.game.entity.item.EntityFallingObsidian
 import chylex.hee.game.entity.item.EntityItemIgneousRock
+import chylex.hee.game.entity.living.enderman.EndermanTeleportHandler
 import chylex.hee.game.fx.IFxData
 import chylex.hee.game.fx.IFxHandler
 import chylex.hee.game.item.ItemAbstractEnergyUser
@@ -38,7 +39,9 @@ class PacketClientFX<T : IFxData>() : BaseClientPacket(){
 			ItemTableLink.FX_USE,
 			EntityFallingObsidian.FX_FALL,
 			EntityItemIgneousRock.FX_BLOCK_SMELT,
-			EntityItemIgneousRock.FX_ENTITY_BURN
+			EntityItemIgneousRock.FX_ENTITY_BURN,
+			EndermanTeleportHandler.FX_TELEPORT_FAIL,
+			EndermanTeleportHandler.FX_TELEPORT_OUT_OF_WORLD
 		)
 	}
 	
