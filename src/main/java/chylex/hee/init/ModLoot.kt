@@ -30,6 +30,8 @@ object ModLoot{
 	lateinit var CHORUS_PLANT: BlockLootTable
 	
 	lateinit var SILVERFISH: ResourceLocation
+	lateinit var ENDERMAN: ResourceLocation
+	lateinit var ENDERMAN_FIRST_KILL: ResourceLocation
 	lateinit var ENDERMITE_NATURAL: ResourceLocation
 	lateinit var ENDERMITE_INSTABILITY: ResourceLocation
 	
@@ -49,6 +51,8 @@ object ModLoot{
 		CHORUS_PLANT = registerBlock("chorus_plant")
 		
 		SILVERFISH = registerEntity("silverfish")
+		ENDERMAN = registerEntity("enderman")
+		ENDERMAN_FIRST_KILL = registerEntity("enderman_first_kill")
 		ENDERMITE_NATURAL = registerEntity("endermite_natural")
 		ENDERMITE_INSTABILITY = registerEntity("endermite_instability")
 	}

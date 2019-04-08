@@ -6,6 +6,7 @@ import chylex.hee.game.entity.item.EntityInfusedTNT
 import chylex.hee.game.entity.item.EntityItemFreshlyCooked
 import chylex.hee.game.entity.item.EntityItemIgneousRock
 import chylex.hee.game.entity.item.EntityItemNoBob
+import chylex.hee.game.entity.living.EntityMobEnderman
 import chylex.hee.game.entity.living.EntityMobEndermite
 import chylex.hee.game.entity.living.EntityMobEndermiteInstability
 import chylex.hee.game.entity.living.EntityMobSilverfish
@@ -57,6 +58,7 @@ object ModEntities{
 		
 		// vanilla modifications
 		
+		override<EntityMobEnderman>("enderman")
 		override<EntityMobEndermite>("endermite")
 		override<EntityMobSilverfish>("silverfish")
 	}
