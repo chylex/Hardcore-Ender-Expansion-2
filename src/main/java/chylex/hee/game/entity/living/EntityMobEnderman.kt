@@ -23,6 +23,7 @@ import chylex.hee.system.util.AISwim
 import chylex.hee.system.util.AITargetEyeContact
 import chylex.hee.system.util.AIWanderNoWater
 import chylex.hee.system.util.AIWatchIdle
+import chylex.hee.system.util.Pos
 import chylex.hee.system.util.heeTag
 import chylex.hee.system.util.nextFloat
 import chylex.hee.system.util.nextInt
@@ -30,23 +31,34 @@ import chylex.hee.system.util.square
 import net.minecraft.block.state.IBlockState
 import net.minecraft.entity.Entity
 import net.minecraft.entity.EntityLivingBase
+import net.minecraft.entity.EnumCreatureType.MONSTER
 import net.minecraft.entity.SharedMonsterAttributes.ATTACK_DAMAGE
 import net.minecraft.entity.SharedMonsterAttributes.FOLLOW_RANGE
 import net.minecraft.entity.SharedMonsterAttributes.MAX_HEALTH
+import net.minecraft.entity.monster.EntityEnderman
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.entity.projectile.EntityArrow
 import net.minecraft.entity.projectile.EntityLlamaSpit
 import net.minecraft.entity.projectile.EntityPotion
 import net.minecraft.entity.projectile.EntityThrowable
+import net.minecraft.init.Blocks
 import net.minecraft.nbt.NBTTagCompound
 import net.minecraft.network.datasync.DataParameter
 import net.minecraft.util.DamageSource
 import net.minecraft.util.EntityDamageSourceIndirect
 import net.minecraft.util.ResourceLocation
+import net.minecraft.util.math.BlockPos
+import net.minecraft.world.EnumSkyBlock.BLOCK
 import net.minecraft.world.World
+import net.minecraft.world.biome.Biome
+import net.minecraft.world.biome.Biome.SpawnListEntry
+import net.minecraft.world.biome.BiomeEnd
+import net.minecraft.world.biome.BiomeHell
+import net.minecraft.world.biome.BiomeHellDecorator
 import net.minecraftforge.event.entity.ProjectileImpactEvent
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent
+import kotlin.math.min
 import kotlin.math.pow
 
 @EventBusSubscriber(modid = HEE.ID)
@@ -71,6 +83,8 @@ class EntityMobEnderman(world: World) : EntityMobAbstractEnderman(world){
 		private val TELEPORT_RANGE_AVOID_BATTLE = (12.0)..(24.0)
 		private val TELEPORT_RANGE_RANDOM_IDLE = (8.0)..(64.0)
 		private val TELEPORT_RANGE_RANDOM_BUSY = (4.0)..(12.0)
+		
+		// Projectile event
 		
 		@JvmStatic
 		@SubscribeEvent
@@ -109,7 +123,42 @@ class EntityMobEnderman(world: World) : EntityMobAbstractEnderman(world){
 				else -> return
 			}
 		}
+		
+		// Biome spawns
+		
+		private fun isBiomeBlacklisted(biome: Biome): Boolean{
+			return biome is BiomeEnd || biome is BiomeHell || biome.decorator is BiomeHellDecorator || biome.topBlock.block === Blocks.NETHERRACK
+		}
+		
+		private fun isEndermanEntry(entry: SpawnListEntry): Boolean{
+			return EntityEnderman::class.java.isAssignableFrom(entry.entityClass)
+		}
+		
+		fun setupBiomeSpawns(){
+			for(biome in Biome.REGISTRY){
+				val monsters = biome.getSpawnableList(MONSTER)
+				
+				if (isBiomeBlacklisted(biome)){
+					monsters.removeIf(::isEndermanEntry)
+				}
+				else{
+					val totalWeight = monsters.sumBy { it.itemWeight }                              // default 515
+					val endermanWeight = monsters.filter(::isEndermanEntry).sumBy { it.itemWeight } // default 10
+					
+					if (endermanWeight > 0){
+						val newSingleWeight = (2 * endermanWeight) + (totalWeight / 20) // should be about 45 for most biomes
+						val newGroupWeight = (2 * endermanWeight) / 3                   // should be about 4 for most biomes
+						
+						monsters.removeIf(::isEndermanEntry)
+						monsters.add(SpawnListEntry(EntityMobEnderman::class.java, newSingleWeight, 1, 1))
+						monsters.add(SpawnListEntry(EntityMobEnderman::class.java, newGroupWeight, 2, 3))
+					}
+				}
+			}
+		}
 	}
+	
+	// Instance
 	
 	private lateinit var teleportHandler: EndermanTeleportHandler
 	private lateinit var waterHandler: EndermanWaterHandler
@@ -409,6 +458,35 @@ class EntityMobEnderman(world: World) : EntityMobAbstractEnderman(world){
 		}
 		
 		super.onDeath(cause)
+	}
+	
+	// Spawning
+	
+	override fun getBlockPathWeight(pos: BlockPos): Float{
+		return 1F
+	}
+	
+	override fun isValidLightLevel(): Boolean{
+		val pos = Pos(this)
+		
+		if (world.isRainingAt(pos)){
+			return false
+		}
+		
+		if (world.getLightFor(BLOCK, pos) >= rand.nextInt(4, 8)){
+			return false
+		}
+		
+		return !world.provider.isSurfaceWorld || checkSkylightLevel()
+	}
+	
+	private fun checkSkylightLevel(): Boolean{
+		val skylight = world.skylightSubtracted // goes from 0 (day) to 11 (night)
+		val endermen = world.loadedEntityList.count { it is EntityMobEnderman }
+		
+		val extra = min(5, world.playerEntities.count { !it.isSpectator } - 1) // TODO use chunk set for better precision
+		
+		return (skylight >= 11 && endermen <= 40 + (extra * 5)) || (skylight >= rand.nextInt(3, 9) && endermen < (skylight * 2) + (extra * 2))
 	}
 	
 	// Properties

@@ -3,6 +3,7 @@ import chylex.hee.game.block.util.CustomPlantType
 import chylex.hee.game.commands.HeeServerCommand
 import chylex.hee.game.entity.CustomCreatureType
 import chylex.hee.game.entity.item.EntityItemIgneousRock
+import chylex.hee.game.entity.living.EntityMobEnderman
 import chylex.hee.game.entity.living.enderman.EndermanBlockHandler
 import chylex.hee.game.item.util.CustomRarity
 import chylex.hee.game.item.util.CustomToolMaterial
@@ -79,6 +80,7 @@ object HEE{
 	fun onPostInit(e: FMLPostInitializationEvent){
 		CustomToolMaterial.setupRepairItems()
 		EntityItemIgneousRock.setupSmeltingTransformations()
+		EntityMobEnderman.setupBiomeSpawns()
 		EndermanBlockHandler.setupCarriableBlocks()
 		OverworldFeatures.setupVanillaOverrides()
 	}
