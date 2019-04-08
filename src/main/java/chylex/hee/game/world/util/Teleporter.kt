@@ -15,6 +15,7 @@ import chylex.hee.game.world.util.Teleporter.FxRange.Normal
 import chylex.hee.game.world.util.Teleporter.FxRange.Silent
 import chylex.hee.network.client.PacketClientFX
 import chylex.hee.network.client.PacketClientMoveYourAss
+import chylex.hee.network.client.PacketClientRotateInstantly
 import chylex.hee.network.client.PacketClientTeleportInstantly
 import chylex.hee.system.util.Pos
 import chylex.hee.system.util.addY
@@ -183,8 +184,24 @@ class Teleporter(
 			DAMAGE.dealTo(damageDealt, entity, damageTitle)
 		}
 		
-		if (resetPathfinding && entity is EntityCreature){
-			entity.navigator.clearPath()
+		if (entity is EntityCreature){
+			if (resetPathfinding){
+				entity.navigator.clearPath()
+			}
+			
+			if (entity.lookHelper.isLooking){
+				with(entity.lookHelper){
+					setLookPosition(lookPosX, lookPosY, lookPosZ, 360F, 360F)
+					onUpdateLook()
+				}
+				
+				val newYaw = entity.rotationYawHead
+				
+				entity.rotationYaw = newYaw
+				entity.setRenderYawOffset(newYaw)
+				
+				PacketClientRotateInstantly(entity, newYaw, entity.rotationPitch).sendToTracking(entity)
+			}
 		}
 		
 		if (causedInstability > 0u){

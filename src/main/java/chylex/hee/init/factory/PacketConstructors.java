@@ -2,6 +2,7 @@ package chylex.hee.init.factory;
 import chylex.hee.network.IPacket;
 import chylex.hee.network.client.PacketClientFX;
 import chylex.hee.network.client.PacketClientMoveYourAss;
+import chylex.hee.network.client.PacketClientRotateInstantly;
 import chylex.hee.network.client.PacketClientTeleportInstantly;
 import chylex.hee.network.client.PacketClientTrinketBreak;
 import chylex.hee.network.server.PacketServerContainerEvent;
@@ -18,6 +19,7 @@ public final class PacketConstructors{
 		return Arrays.asList(
 			packet(PacketClientFX.class, PacketClientFX::new),
 			packet(PacketClientMoveYourAss.class, PacketClientMoveYourAss::new),
+			packet(PacketClientRotateInstantly.class, PacketClientRotateInstantly::new),
 			packet(PacketClientTeleportInstantly.class, PacketClientTeleportInstantly::new),
 			packet(PacketClientTrinketBreak.class, PacketClientTrinketBreak::new),
 			
