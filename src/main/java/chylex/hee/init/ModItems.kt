@@ -12,6 +12,7 @@ import chylex.hee.game.item.ItemEnergyReceptacle
 import chylex.hee.game.item.ItemEyeOfEnderOverride
 import chylex.hee.game.item.ItemIgneousRock
 import chylex.hee.game.item.ItemInfusedEnderPearl
+import chylex.hee.game.item.ItemPortalToken
 import chylex.hee.game.item.ItemRingOfHunger
 import chylex.hee.game.item.ItemRingOfPreservation
 import chylex.hee.game.item.ItemScaleOfFreefall
@@ -96,6 +97,7 @@ object ModItems{
 	
 	@JvmField val INFUSED_ENDER_PEARL = ItemInfusedEnderPearl().apply { setup("infused_ender_pearl", translationKey = "enderPearl", inCreativeTab = false) }
 	@JvmField val SPATIAL_DASH_GEM    = ItemSpatialDashGem().apply { setup("spatial_dash_gem") }
+	@JvmField val PORTAL_TOKEN        = ItemPortalToken().apply { setup("portal_token", inCreativeTab = false) }
 	
 	// Items: Trinkets
 	
@@ -153,6 +155,7 @@ object ModItems{
 			
 			register(INFUSED_ENDER_PEARL)
 			register(SPATIAL_DASH_GEM)
+			register(PORTAL_TOKEN)
 			
 			register(TRINKET_POUCH)
 			register(TOTEM_OF_UNDYING)

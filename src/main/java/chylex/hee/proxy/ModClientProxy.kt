@@ -28,6 +28,7 @@ import chylex.hee.game.entity.technical.EntityTechnicalBase
 import chylex.hee.game.item.ItemBindingEssence
 import chylex.hee.game.item.ItemEnergyOracle
 import chylex.hee.game.item.ItemEnergyReceptacle
+import chylex.hee.game.item.ItemPortalToken
 import chylex.hee.game.item.ItemVoidBucket
 import chylex.hee.game.item.ItemVoidSalad
 import chylex.hee.init.ModBlocks
@@ -111,6 +112,7 @@ class ModClientProxy : ModCommonProxy(){
 			registerItemColorHandler(ItemBindingEssence.Color, ModItems.BINDING_ESSENCE)
 			registerItemColorHandler(ItemEnergyOracle.Color, ModItems.ENERGY_ORACLE)
 			registerItemColorHandler(ItemEnergyReceptacle.Color, ModItems.ENERGY_RECEPTACLE)
+			registerItemColorHandler(ItemPortalToken.Color, ModItems.PORTAL_TOKEN)
 			registerItemColorHandler(ItemVoidBucket.Color, ModItems.VOID_BUCKET)
 		}
 	}

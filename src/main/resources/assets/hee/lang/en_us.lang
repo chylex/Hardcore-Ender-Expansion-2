@@ -113,6 +113,10 @@ item.hee.energy_receptacle.tooltip.empty=§9Empty
 item.hee.energy_receptacle.tooltip.holding=§9Holding §3%s§9 Energy
 
 item.hee.spatial_dash_gem.name=Spatial Dash Gem
+item.hee.portal_token.name=Portal Token
+item.hee.portal_token.tooltip.rare=Rare
+item.hee.portal_token.tooltip.solitary=Solitary
+item.hee.portal_token_concrete.name=Portal Token (%s)
 
 item.hee.trinket_pouch.name=Trinket Pouch
 item.hee.trinket_pouch.tooltip=Right-click to open
