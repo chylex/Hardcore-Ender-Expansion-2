@@ -1,9 +1,9 @@
 package chylex.hee.game.world.territory
-import net.minecraft.util.text.TextComponentTranslation
 import kotlin.math.abs
 
 enum class TerritoryType(
-	val key: String,
+	val title: String,
+	val desc: ITerritoryDescription,
 	val chunks: Int,
 	val height: IntRange
 ){
@@ -12,8 +12,10 @@ enum class TerritoryType(
 	TEST2(key = "test2", chunks = 1, height = 0 until 128),
 	TEST3(key = "test3", chunks = 5, height = 0 until 128),
 	TEST4(key = "test4", chunks = 6, height = 0 until 128);
+	;
 	
 	companion object{
+		const val FALLBACK_TRANSLATION_KEY = "hee.territory.fallback.name"
 		const val CHUNK_MARGIN = 64 // must be a multiple of 2
 		
 		val ALL = values()
@@ -37,8 +39,8 @@ enum class TerritoryType(
 		}
 	}
 	
-	val textComponent
-		get() = TextComponentTranslation("hee.territory.$key.name")
+	val translationKey
+		get() = "hee.territory.$title.name"
 	
 	val canGenerate
 		get() = ordinal > 0
