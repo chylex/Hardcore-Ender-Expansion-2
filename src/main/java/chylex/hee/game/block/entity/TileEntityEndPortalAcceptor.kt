@@ -1,29 +1,22 @@
 package chylex.hee.game.block.entity
 import chylex.hee.game.block.BlockEnergyCluster
-import chylex.hee.game.block.entity.TileEntityBase.Context.NETWORK
 import chylex.hee.game.block.entity.TileEntityBase.Context.STORAGE
+import chylex.hee.game.block.entity.TileEntityBasePortalController.ForegroundRenderState.Animating
+import chylex.hee.game.block.entity.TileEntityBasePortalController.ForegroundRenderState.Invisible
+import chylex.hee.game.block.entity.TileEntityBasePortalController.ForegroundRenderState.Visible
 import chylex.hee.game.block.entity.TileEntityEndPortalAcceptor.ChargeState.CHARGING
 import chylex.hee.game.block.entity.TileEntityEndPortalAcceptor.ChargeState.FINISHED
 import chylex.hee.game.block.entity.TileEntityEndPortalAcceptor.ChargeState.IDLE
 import chylex.hee.game.block.entity.TileEntityEndPortalAcceptor.ChargeState.WAITING
-import chylex.hee.game.block.entity.TileEntityEndPortalAcceptor.ForegroundRenderState.ANIMATING
-import chylex.hee.game.block.entity.TileEntityEndPortalAcceptor.ForegroundRenderState.INVISIBLE
-import chylex.hee.game.block.entity.TileEntityEndPortalAcceptor.ForegroundRenderState.VISIBLE
 import chylex.hee.game.mechanics.energy.IEnergyQuantity
 import chylex.hee.game.mechanics.energy.IEnergyQuantity.Units
 import chylex.hee.system.util.FLAG_SKIP_RENDER
 import chylex.hee.system.util.FLAG_SYNC_CLIENT
 import chylex.hee.system.util.breakBlock
-import chylex.hee.system.util.getEnum
 import chylex.hee.system.util.getTile
-import chylex.hee.system.util.math.LerpedFloat
-import chylex.hee.system.util.setEnum
 import net.minecraft.nbt.NBTTagCompound
-import net.minecraft.util.ITickable
-import kotlin.math.max
-import kotlin.math.min
 
-class TileEntityEndPortalAcceptor : TileEntityBase(), ITickable{
+class TileEntityEndPortalAcceptor : TileEntityBasePortalController(){
 	private companion object{
 		private const val NO_REFRESH = Int.MAX_VALUE
 		
@@ -38,23 +31,18 @@ class TileEntityEndPortalAcceptor : TileEntityBase(), ITickable{
 	
 	// Client animation
 	
-	private enum class ForegroundRenderState{
-		INVISIBLE,
-		ANIMATING,
-		VISIBLE
-	}
-	
-	private var foregroundRenderState = INVISIBLE
-	val foregroundRenderProgress = LerpedFloat(0F)
-	
-	private fun updateAnimation(){
-		if (foregroundRenderState == INVISIBLE){
-			foregroundRenderProgress.update(max(0F, foregroundRenderProgress - ANIMATION_PROGRESS_PER_UPDATE * 8F))
+	override val serverRenderState
+		get() = when(chargeState){
+			IDLE, WAITING -> Invisible
+			CHARGING      -> Animating(chargedEnergy.units.value.toFloat() / ENERGY_REQUIRED.units.value)
+			FINISHED      -> Visible
 		}
-		else if (foregroundRenderState == ANIMATING){
-			foregroundRenderProgress.update(min(1F, foregroundRenderProgress + ANIMATION_PROGRESS_PER_UPDATE))
-		}
-	}
+	
+	override val clientAnimationFadeInSpeed
+		get() = ANIMATION_PROGRESS_PER_UPDATE
+	
+	override val clientAnimationFadeOutSpeed
+		get() = ANIMATION_PROGRESS_PER_UPDATE * 8F
 	
 	// Charge handling
 	
@@ -149,32 +137,24 @@ class TileEntityEndPortalAcceptor : TileEntityBase(), ITickable{
 	}
 	
 	override fun update(){
-		if (world.isRemote){
-			updateAnimation()
-		}
-		else if (ticksToRefresh != NO_REFRESH && --ticksToRefresh <= 0){
+		super.update()
+		
+		if (!world.isRemote && ticksToRefresh != NO_REFRESH && --ticksToRefresh <= 0){
 			refreshClusterState()
 		}
 	}
 	
 	override fun writeNBT(nbt: NBTTagCompound, context: Context) = with(nbt){
+		super.writeNBT(nbt, context)
+		
 		if (context == STORAGE){
 			setInteger("EnergyCharge", chargedEnergy.units.value)
-		}
-		else if (context == NETWORK){
-			setEnum("RenderState", when(chargeState){
-				IDLE, WAITING -> INVISIBLE
-				CHARGING      -> ANIMATING
-				FINISHED      -> VISIBLE
-			})
-			
-			if (chargeState == CHARGING){
-				setFloat("RenderProgress", chargedEnergy.units.value.toFloat() / ENERGY_REQUIRED.units.value)
-			}
 		}
 	}
 	
 	override fun readNBT(nbt: NBTTagCompound, context: Context) = with(nbt){
+		super.readNBT(nbt, context)
+		
 		if (context == STORAGE){
 			chargedEnergy = Units(getInteger("EnergyCharge"))
 			
@@ -184,15 +164,6 @@ class TileEntityEndPortalAcceptor : TileEntityBase(), ITickable{
 			else if (chargedEnergy > Units(0)){
 				chargeState = CHARGING
 			}
-		}
-		else if (context == NETWORK){
-			foregroundRenderState = getEnum<ForegroundRenderState>("RenderState") ?: INVISIBLE
-			
-			foregroundRenderProgress.updateImmediately(when(foregroundRenderState){
-				INVISIBLE -> 0F
-				ANIMATING -> getFloat("RenderProgress")
-				VISIBLE   -> 1F
-			})
 		}
 	}
 }

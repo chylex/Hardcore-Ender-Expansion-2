@@ -1,6 +1,9 @@
 package chylex.hee.client.render.block
 import chylex.hee.client.render.util.GL
+import chylex.hee.game.block.BlockAbstractPortal
+import chylex.hee.game.block.entity.TileEntityBasePortalController
 import chylex.hee.system.Resource
+import chylex.hee.system.util.closestTickingTile
 import chylex.hee.system.util.square
 import net.minecraft.client.Minecraft
 import net.minecraft.client.renderer.ActiveRenderInfo
@@ -29,6 +32,7 @@ import org.lwjgl.opengl.GL11.GL_OBJECT_PLANE
 import org.lwjgl.opengl.GL11.GL_QUADS
 import org.lwjgl.opengl.GL11.GL_TEXTURE
 import java.nio.FloatBuffer
+import kotlin.math.pow
 
 @SideOnly(Side.CLIENT)
 abstract class RenderTileAbstractPortal<T : TileEntity> : TileEntitySpecialRenderer<T>(){
@@ -61,6 +65,16 @@ abstract class RenderTileAbstractPortal<T : TileEntity> : TileEntitySpecialRende
 	private var cameraTarget = Vec3d.ZERO
 	private var globalTranslation = 0F
 	
+	private var isAnimating = false
+	private var animationProgress = 0F
+	
+	private fun calculateEasing(layer: Int): Float{
+		return if (isAnimating)
+			(1.1F - square(animationProgress * 4.5F - 4.816F) + 22.1F * (1F - ((layer - 1F) / 14F).pow(1.2F))).coerceIn(0F, 1F).pow(1.5F)
+		else
+			animationProgress
+	}
+	
 	// Properties
 	
 	protected val color = FloatArray(3)
@@ -70,6 +84,11 @@ abstract class RenderTileAbstractPortal<T : TileEntity> : TileEntitySpecialRende
 	// Rendering
 	
 	override fun render(tile: T, x: Double, y: Double, z: Double, partialTicks: Float, destroyStage: Int, alpha: Float){
+		val acceptor = tile.pos.closestTickingTile<TileEntityBasePortalController>(tile.world, BlockAbstractPortal.MAX_DISTANCE_FROM_FRAME)
+		
+		animationProgress = acceptor?.clientAnimationProgress?.get(partialTicks) ?: 0F
+		isAnimating = animationProgress > 0F && animationProgress < 1F
+		
 		cameraTarget = ActiveRenderInfo.getCameraPosition()
 		globalTranslation = (Minecraft.getSystemTime() % 700000L) / 700000F
 		
@@ -95,7 +114,7 @@ abstract class RenderTileAbstractPortal<T : TileEntity> : TileEntitySpecialRende
 		GL.blendFunc(SRC_ALPHA, ONE_MINUS_SRC_ALPHA)
 		
 		generateNextColor(0)
-		transformColor { 0.1F }
+		transformColor { 0.1F } // discards provided value
 		
 		renderLayer(
 			x, y, z,
@@ -117,7 +136,7 @@ abstract class RenderTileAbstractPortal<T : TileEntity> : TileEntitySpecialRende
 			val colorMultiplier = 1F / (layerIndexRev + 1F)
 			
 			generateNextColor(layer)
-			transformColor { it * colorMultiplier }
+			transformColor { it * colorMultiplier * calculateEasing(layer) }
 			
 			if (layerIndexRev <= layerCount){
 				renderLayer(
