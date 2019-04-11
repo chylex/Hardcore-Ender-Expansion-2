@@ -1,5 +1,16 @@
 package chylex.hee.game.block
 import chylex.hee.game.block.entity.TileEntityPortalInner
+import chylex.hee.system.util.Facing4
+import chylex.hee.system.util.allInBoxMutable
+import chylex.hee.system.util.distanceTo
+import chylex.hee.system.util.floorToInt
+import chylex.hee.system.util.getBlock
+import chylex.hee.system.util.isAir
+import chylex.hee.system.util.max
+import chylex.hee.system.util.min
+import chylex.hee.system.util.offsetUntil
+import chylex.hee.system.util.setBlock
+import net.minecraft.block.Block
 import net.minecraft.block.ITileEntityProvider
 import net.minecraft.block.state.BlockFaceShape
 import net.minecraft.block.state.BlockFaceShape.UNDEFINED
@@ -17,9 +28,32 @@ import net.minecraft.world.World
 abstract class BlockAbstractPortal(builder: BlockSimple.Builder) : BlockSimple(builder), ITileEntityProvider{
 	companion object{
 		const val MAX_DISTANCE_FROM_FRAME = 6.0
+		private const val MAX_SIZE = 5
 		
 		private val SELECTION_AABB = AxisAlignedBB(0.0, 0.0, 0.0, 1.0, 0.75,  1.0)
 		private val COLLISION_AABB = AxisAlignedBB(0.0, 0.0, 0.0, 1.0, 0.025, 1.0)
+		
+		fun spawnInnerBlocks(world: World, controllerPos: BlockPos, frameBlock: Block, innerBlock: Block){
+			val mirrorRange = 1..(MAX_SIZE + 1)
+			val halfRange = 1..(1 + (MAX_SIZE / 2))
+			
+			for(facing in Facing4){
+				val mirrorPos = controllerPos.offsetUntil(facing, mirrorRange){ it.getBlock(world) === frameBlock } ?: continue
+				val centerPos = controllerPos.offset(facing, controllerPos.distanceTo(mirrorPos).floorToInt() / 2)
+				
+				val perpendicular1 = centerPos.offsetUntil(facing.rotateY(), halfRange){ it.getBlock(world) === frameBlock } ?: continue
+				val perpendicular2 = centerPos.offsetUntil(facing.rotateYCCW(), halfRange){ it.getBlock(world) === frameBlock } ?: continue
+				
+				val minPos = controllerPos.min(mirrorPos).min(perpendicular1).min(perpendicular2).add(1, 0, 1)
+				val maxPos = controllerPos.max(mirrorPos).max(perpendicular1).max(perpendicular2).add(-1, 0, -1)
+				
+				if (minPos.allInBoxMutable(maxPos).all { it.isAir(world) }){
+					minPos.allInBoxMutable(maxPos).forEach { it.setBlock(world, innerBlock) }
+				}
+				
+				break
+			}
+		}
 	}
 	
 	protected abstract fun onEntityInside(world: World, pos: BlockPos, entity: Entity)
