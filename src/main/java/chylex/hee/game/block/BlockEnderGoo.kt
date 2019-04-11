@@ -12,12 +12,12 @@ import chylex.hee.game.particle.util.IOffset.InBox
 import chylex.hee.game.particle.util.IShape.Point
 import chylex.hee.init.ModItems
 import chylex.hee.system.Resource
+import chylex.hee.system.capability.CapabilityProvider
 import chylex.hee.system.util.Pos
-import chylex.hee.system.util.forge.capabilities.CapabilityProvider
-import chylex.hee.system.util.forge.capabilities.NullFactory
-import chylex.hee.system.util.forge.capabilities.NullStorage
 import chylex.hee.system.util.getBlock
+import chylex.hee.system.util.getCapOrNull
 import chylex.hee.system.util.posVec
+import chylex.hee.system.util.register
 import net.minecraft.block.state.IBlockState
 import net.minecraft.entity.Entity
 import net.minecraft.entity.EntityLivingBase
@@ -72,7 +72,7 @@ open class BlockEnderGoo : BlockAbstractGoo(FluidEnderGoo, Materials.ENDER_GOO){
 		private val CAP_KEY = Resource.Custom("goo")
 		
 		init{
-			CapabilityManager.INSTANCE.register(CollisionTicker::class.java, NullStorage.get(), NullFactory.get())
+			CapabilityManager.INSTANCE.register<CollisionTicker>()
 			MinecraftForge.EVENT_BUS.register(this)
 		}
 		
@@ -86,7 +86,7 @@ open class BlockEnderGoo : BlockAbstractGoo(FluidEnderGoo, Materials.ENDER_GOO){
 		}
 		
 		private class CollisionTicker private constructor(lastWorldTime: Long) : CollisionTickerBase(lastWorldTime, MAX_COLLISION_TICK_COUNTER){
-			class Provider(worldTime: Long) : CapabilityProvider<CollisionTicker, NBTTagInt>(CAP_COLLISION_TICKER!!, CollisionTicker(worldTime))
+			class Provider(worldTime: Long) : CapabilityProvider<CollisionTicker, NBTTagInt>(CAP_COLLISION_TICKER, CollisionTicker(worldTime))
 		}
 		
 		// Status effects
@@ -164,7 +164,7 @@ open class BlockEnderGoo : BlockAbstractGoo(FluidEnderGoo, Materials.ENDER_GOO){
 		
 		if (entity is EntityLivingBase){
 			if (!world.isRemote && !CustomCreatureType.isEnder(entity)){
-				entity.getCapability(CAP_COLLISION_TICKER!!, null)?.let {
+				entity.getCapOrNull(CAP_COLLISION_TICKER)?.let {
 					val totalTicks = it.tick(world.totalWorldTime, entity.rng)
 					
 					if (totalTicks != IGNORE_COLLISION_TICK){

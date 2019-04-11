@@ -6,12 +6,13 @@ import chylex.hee.game.item.trinket.ITrinketItem
 import chylex.hee.game.mechanics.TrinketHandler.TrinketCapability.Provider
 import chylex.hee.network.client.PacketClientTrinketBreak
 import chylex.hee.system.Resource
-import chylex.hee.system.util.forge.capabilities.CapabilityProvider
-import chylex.hee.system.util.forge.capabilities.NullFactory
-import chylex.hee.system.util.forge.capabilities.NullStorage
+import chylex.hee.system.capability.CapabilityProvider
+import chylex.hee.system.capability.PlayerCapabilityHandler
+import chylex.hee.system.capability.PlayerCapabilityHandler.IPlayerCapability
+import chylex.hee.system.util.getCapOrNull
 import chylex.hee.system.util.readStack
+import chylex.hee.system.util.register
 import chylex.hee.system.util.writeStack
-import net.minecraft.entity.Entity
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.item.Item
 import net.minecraft.item.ItemStack
@@ -21,7 +22,6 @@ import net.minecraftforge.common.MinecraftForge
 import net.minecraftforge.common.capabilities.Capability
 import net.minecraftforge.common.capabilities.CapabilityInject
 import net.minecraftforge.common.capabilities.CapabilityManager
-import net.minecraftforge.event.AttachCapabilitiesEvent
 import net.minecraftforge.event.entity.EntityJoinWorldEvent
 import net.minecraftforge.event.entity.player.PlayerDropsEvent
 import net.minecraftforge.event.entity.player.PlayerEvent
@@ -31,7 +31,8 @@ import net.minecraftforge.items.ItemStackHandler
 
 object TrinketHandler{
 	fun register(){
-		CapabilityManager.INSTANCE.register(TrinketCapability::class.java, NullStorage.get(), NullFactory.get())
+		CapabilityManager.INSTANCE.register<TrinketCapability>()
+		PlayerCapabilityHandler.register(Handler)
 		MinecraftForge.EVENT_BUS.register(this)
 	}
 	
@@ -46,7 +47,7 @@ object TrinketHandler{
 	}
 	
 	fun getTrinketSlotItem(player: EntityPlayer): ItemStack{
-		return player.getCapability(CAP_TRINKET_SLOT!!, null)?.item ?: ItemStack.EMPTY
+		return player.getCapOrNull(CAP_TRINKET_SLOT)?.item ?: ItemStack.EMPTY
 	}
 	
 	fun isInTrinketSlot(player: EntityPlayer, stack: ItemStack): Boolean{
@@ -88,21 +89,17 @@ object TrinketHandler{
 	
 	// Capability handling
 	
-	private val CAP_KEY = Resource.Custom("trinket")
+	private object Handler : IPlayerCapability{
+		override val key = Resource.Custom("trinket")
+		override fun provide(player: EntityPlayer) = Provider()
+	}
 	
 	@JvmStatic
 	@CapabilityInject(TrinketCapability::class)
 	private var CAP_TRINKET_SLOT: Capability<TrinketCapability>? = null
 	
 	private fun setTrinketSlotItem(player: EntityPlayer, stack: ItemStack){
-		player.getCapability(CAP_TRINKET_SLOT!!, null)?.item = stack
-	}
-	
-	@SubscribeEvent
-	fun onAttachCapabilities(e: AttachCapabilitiesEvent<Entity>){
-		if (e.`object` is EntityPlayer){
-			e.addCapability(CAP_KEY, Provider())
-		}
+		player.getCapOrNull(CAP_TRINKET_SLOT)?.item = stack
 	}
 	
 	@SubscribeEvent
@@ -110,7 +107,7 @@ object TrinketHandler{
 		val entity = e.entity
 		
 		if (entity is EntityPlayer){
-			val handler = entity.getCapability(CAP_TRINKET_SLOT!!, null) ?: return
+			val handler = entity.getCapOrNull(CAP_TRINKET_SLOT) ?: return
 			
 			with(entity.inventoryContainer){
 				inventorySlots.add(SlotTrinketItemInventory(handler, inventorySlots.size))
@@ -122,7 +119,7 @@ object TrinketHandler{
 	@SubscribeEvent(priority = HIGHEST)
 	fun onPlayerDrops(e: PlayerDropsEvent){
 		val player = e.entityPlayer
-		val handler = player.getCapability(CAP_TRINKET_SLOT!!, null)
+		val handler = player.getCapOrNull(CAP_TRINKET_SLOT)
 		
 		if (handler == null || handler.item.isEmpty){
 			return
@@ -158,6 +155,6 @@ object TrinketHandler{
 			item = readStack()
 		}
 		
-		class Provider : CapabilityProvider<TrinketCapability, NBTTagCompound>(CAP_TRINKET_SLOT!!, TrinketCapability())
+		class Provider : CapabilityProvider<TrinketCapability, NBTTagCompound>(CAP_TRINKET_SLOT, TrinketCapability())
 	}
 }

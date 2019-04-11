@@ -1,4 +1,4 @@
-package chylex.hee.system.util.forge.capabilities
+package chylex.hee.system.capability
 import net.minecraft.nbt.NBTBase
 import net.minecraft.util.EnumFacing
 import net.minecraftforge.common.capabilities.Capability
@@ -6,9 +6,11 @@ import net.minecraftforge.common.capabilities.ICapabilitySerializable
 import net.minecraftforge.common.util.INBTSerializable
 
 abstract class CapabilityProvider<T : INBTSerializable<U>, U : NBTBase>(
-	private val instance: Capability<T>,
+	instance: Capability<T>?,
 	private val impl: T
 ) : ICapabilitySerializable<U>{
+	private val instance = instance!!
+	
 	override fun hasCapability(capability: Capability<*>, facing: EnumFacing?): Boolean{
 		return capability === instance
 	}

@@ -8,9 +8,9 @@ import chylex.hee.game.mechanics.instability.dimension.components.EndermiteSpawn
 import chylex.hee.game.mechanics.instability.region.RegionInstability
 import chylex.hee.game.mechanics.instability.region.entry.types.Entry5x5
 import chylex.hee.system.Resource
-import chylex.hee.system.util.forge.capabilities.CapabilityProvider
-import chylex.hee.system.util.forge.capabilities.NullFactory
-import chylex.hee.system.util.forge.capabilities.NullStorage
+import chylex.hee.system.capability.CapabilityProvider
+import chylex.hee.system.util.getCapOrNull
+import chylex.hee.system.util.register
 import net.minecraft.nbt.NBTTagCompound
 import net.minecraft.world.World
 import net.minecraft.world.WorldProviderEnd
@@ -26,12 +26,12 @@ import net.minecraftforge.fml.common.gameevent.TickEvent.WorldTickEvent
 
 object Instability{
 	fun register(){
-		CapabilityManager.INSTANCE.register(InstabilityCapability::class.java, NullStorage.get(), NullFactory.get())
+		CapabilityManager.INSTANCE.register<InstabilityCapability>()
 		MinecraftForge.EVENT_BUS.register(this)
 	}
 	
 	fun get(world: World): IDimensionInstability{
-		return world.getCapability(CAP_INSTABILITY!!, null)?.dimension ?: DimensionInstabilityNull
+		return world.getCapOrNull(CAP_INSTABILITY)?.dimension ?: DimensionInstabilityNull
 	}
 	
 	// World events
@@ -39,7 +39,7 @@ object Instability{
 	@SubscribeEvent
 	fun onWorldTick(e: WorldTickEvent){
 		if (e.phase == Phase.START){
-			e.world.getCapability(CAP_INSTABILITY!!, null)?.region?.update()
+			e.world.getCapOrNull(CAP_INSTABILITY)?.region?.update()
 		}
 	}
 	
