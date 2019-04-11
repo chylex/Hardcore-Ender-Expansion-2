@@ -10,7 +10,7 @@ import chylex.hee.game.block.BlockDragonEggOverride
 import chylex.hee.game.block.BlockDryVines
 import chylex.hee.game.block.BlockEndPlant
 import chylex.hee.game.block.BlockEndPortalAcceptor
-import chylex.hee.game.block.BlockEndPortalCustom
+import chylex.hee.game.block.BlockEndPortalInner
 import chylex.hee.game.block.BlockEndPortalOverride
 import chylex.hee.game.block.BlockEndPowderOre
 import chylex.hee.game.block.BlockEnderGoo
@@ -323,7 +323,7 @@ object ModBlocks{
 	
 	private val portalFrameAABB = AxisAlignedBB(0.0, 0.0, 0.0, 1.0, 0.8125, 1.0)
 	
-	@JvmField val END_PORTAL_INNER    = BlockEndPortalCustom(buildPortalInner).apply { setup("end_portal_inner", inCreativeTab = false) }
+	@JvmField val END_PORTAL_INNER    = BlockEndPortalInner(buildPortalInner).apply { setup("end_portal_inner", inCreativeTab = false) }
 	@JvmField val END_PORTAL_FRAME    = BlockSimpleShaped(buildPortalFrame, portalFrameAABB).apply { setup("end_portal_frame") }
 	@JvmField val END_PORTAL_ACCEPTOR = BlockEndPortalAcceptor(buildPortalFrame, portalFrameAABB).apply { setup("end_portal_acceptor") }
 	

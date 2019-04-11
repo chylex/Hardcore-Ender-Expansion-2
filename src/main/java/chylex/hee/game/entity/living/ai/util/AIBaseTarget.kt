@@ -4,7 +4,12 @@ import net.minecraft.entity.EntityCreature
 import net.minecraft.entity.EntityLivingBase
 import net.minecraft.entity.ai.EntityAITarget
 
-abstract class AIBaseTarget<T : EntityLivingBase>(entity: EntityCreature, checkSight: Boolean, easilyReachableOnly: Boolean, mutexBits: Int = AI_FLAG_MOVEMENT) : EntityAITarget(entity, checkSight, easilyReachableOnly){
+abstract class AIBaseTarget<T : EntityLivingBase>(
+	entity: EntityCreature,
+	checkSight: Boolean,
+	easilyReachableOnly: Boolean,
+	mutexBits: Int = AI_FLAG_MOVEMENT
+) : EntityAITarget(entity, checkSight, easilyReachableOnly){
 	init{
 		this.mutexBits = mutexBits
 	}

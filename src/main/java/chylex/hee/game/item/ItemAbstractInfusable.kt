@@ -16,6 +16,7 @@ abstract class ItemAbstractInfusable : Item(), IInfusableItem{
 			return infusion.targetItems.contains(item)
 		}
 		
+		@SideOnly(Side.CLIENT)
 		fun onAddInformation(stack: ItemStack, lines: MutableList<String>){
 			if (lines.size > 1){ // first line is item name
 				lines.add("")

@@ -6,7 +6,7 @@ import net.minecraft.entity.Entity
 import net.minecraft.util.math.BlockPos
 import net.minecraft.world.World
 
-class BlockEndPortalCustom(builder: BlockSimple.Builder) : BlockAbstractPortal(builder){
+class BlockEndPortalInner(builder: BlockSimple.Builder) : BlockAbstractPortal(builder){
 	override fun onEntityInside(world: World, pos: BlockPos, entity: Entity){
 		val acceptor = pos.closestTickingTile<TileEntityEndPortalAcceptor>(world, MAX_DISTANCE_FROM_FRAME)
 		

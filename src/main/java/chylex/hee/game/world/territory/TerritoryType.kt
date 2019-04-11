@@ -8,10 +8,6 @@ enum class TerritoryType(
 	val height: IntRange
 ){
 	// TODO
-	TEST1(key = "test1", chunks = 24, height = 0 until 128),
-	TEST2(key = "test2", chunks = 1, height = 0 until 128),
-	TEST3(key = "test3", chunks = 5, height = 0 until 128),
-	TEST4(key = "test4", chunks = 6, height = 0 until 128);
 	;
 	
 	companion object{
