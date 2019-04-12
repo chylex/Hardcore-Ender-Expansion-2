@@ -48,6 +48,7 @@ import net.minecraftforge.event.entity.living.EnderTeleportEvent
 import java.util.Random
 
 class Teleporter(
+	private val postEvent: Boolean = true,
 	private val resetFall: Boolean = true,
 	private val resetPathfinding: Boolean = true,
 	private val damageDealt: Float = 0F,
@@ -143,7 +144,7 @@ class Teleporter(
 	fun toLocation(entity: EntityLivingBase, position: Vec3d, soundCategory: SoundCategory = entity.soundCategory): Boolean{
 		val event = EnderTeleportEvent(entity, position.x, position.y, position.z, damageDealt)
 		
-		if (MinecraftForge.EVENT_BUS.post(event)){
+		if (postEvent && MinecraftForge.EVENT_BUS.post(event)){
 			return false
 		}
 		
