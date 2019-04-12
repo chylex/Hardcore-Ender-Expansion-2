@@ -1,13 +1,8 @@
 package chylex.hee.game.container.slot
-import net.minecraft.inventory.IInventory
 import net.minecraft.inventory.Slot
 import net.minecraft.item.ItemStack
 
-class SlotReadOnly(inventory: IInventory, index: Int, x: Int, y: Int) : Slot(inventory, index, x, y){
-	constructor(wrapped: Slot) : this(wrapped.inventory, wrapped.slotIndex, wrapped.xPos, wrapped.yPos){
-		slotNumber = wrapped.slotNumber
-	}
-	
+class SlotReadOnly(wrapped: Slot) : SlotWrapper(wrapped){
 	override fun isItemValid(stack: ItemStack): Boolean = false
 	override fun getSlotStackLimit(): Int = 0
 }
