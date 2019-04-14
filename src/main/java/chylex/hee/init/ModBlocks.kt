@@ -464,7 +464,7 @@ object ModBlocks{
 			register(SCAFFOLDING with basicItemBlock)
 		}
 		
-		tile<TileEntityPortalInner>("end_portal_inner")
+		tile<TileEntityPortalInner.End>("end_portal_inner")
 		tile<TileEntityEndPortalAcceptor>("end_portal_acceptor")
 		tile<TileEntityEnergyCluster>("energy_cluster")
 		tile<TileEntityInfusedTNT>("infused_tnt")

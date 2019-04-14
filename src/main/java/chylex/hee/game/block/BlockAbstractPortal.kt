@@ -1,5 +1,4 @@
 package chylex.hee.game.block
-import chylex.hee.game.block.entity.TileEntityPortalInner
 import chylex.hee.system.util.Facing4
 import chylex.hee.system.util.allInBoxMutable
 import chylex.hee.system.util.distanceTo
@@ -16,7 +15,6 @@ import net.minecraft.block.state.BlockFaceShape
 import net.minecraft.block.state.BlockFaceShape.UNDEFINED
 import net.minecraft.block.state.IBlockState
 import net.minecraft.entity.Entity
-import net.minecraft.tileentity.TileEntity
 import net.minecraft.util.EnumBlockRenderType
 import net.minecraft.util.EnumBlockRenderType.INVISIBLE
 import net.minecraft.util.EnumFacing
@@ -57,10 +55,6 @@ abstract class BlockAbstractPortal(builder: BlockSimple.Builder) : BlockSimple(b
 	}
 	
 	protected abstract fun onEntityInside(world: World, pos: BlockPos, entity: Entity)
-	
-	final override fun createNewTileEntity(world: World, meta: Int): TileEntity{
-		return TileEntityPortalInner()
-	}
 	
 	final override fun onEntityCollision(world: World, pos: BlockPos, state: IBlockState, entity: Entity){
 		if (!world.isRemote && !entity.isRiding && !entity.isBeingRidden && entity.isNonBoss && entity.posY <= pos.y + 0.05){

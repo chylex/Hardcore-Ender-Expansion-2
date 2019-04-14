@@ -1,9 +1,8 @@
 package chylex.hee.client.render.block
 import chylex.hee.client.render.util.GL
-import chylex.hee.game.block.BlockAbstractPortal
 import chylex.hee.game.block.entity.TileEntityBasePortalController
+import chylex.hee.game.block.entity.TileEntityPortalInner
 import chylex.hee.system.Resource
-import chylex.hee.system.util.closestTickingTile
 import chylex.hee.system.util.square
 import net.minecraft.client.Minecraft
 import net.minecraft.client.renderer.ActiveRenderInfo
@@ -19,9 +18,10 @@ import net.minecraft.client.renderer.GlStateManager.TexGen.T
 import net.minecraft.client.renderer.Tessellator
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats
-import net.minecraft.tileentity.TileEntity
 import net.minecraft.util.ResourceLocation
+import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.Vec3d
+import net.minecraft.world.World
 import net.minecraftforge.fml.relauncher.Side
 import net.minecraftforge.fml.relauncher.SideOnly
 import org.lwjgl.opengl.GL11.GL_EYE_LINEAR
@@ -32,10 +32,11 @@ import org.lwjgl.opengl.GL11.GL_OBJECT_PLANE
 import org.lwjgl.opengl.GL11.GL_QUADS
 import org.lwjgl.opengl.GL11.GL_TEXTURE
 import java.nio.FloatBuffer
+import java.util.Random
 import kotlin.math.pow
 
 @SideOnly(Side.CLIENT)
-abstract class RenderTileAbstractPortal<T : TileEntity> : TileEntitySpecialRenderer<T>(){
+abstract class RenderTileAbstractPortal<T : TileEntityPortalInner, C : TileEntityBasePortalController> : TileEntitySpecialRenderer<T>(){
 	private companion object{
 		@JvmStatic private val TEX_BACKGROUND = Resource.Vanilla("textures/environment/end_sky.png")
 		@JvmStatic private val TEX_PARTICLE_LAYER = Resource.Vanilla("textures/entity/end_portal.png")
@@ -77,16 +78,22 @@ abstract class RenderTileAbstractPortal<T : TileEntity> : TileEntitySpecialRende
 	
 	// Properties
 	
+	protected val rand = Random()
 	protected val color = FloatArray(3)
 	
-	protected abstract fun generateNextColor(layer: Int)
+	protected abstract fun findController(world: World, pos: BlockPos): C?
+	
+	protected abstract fun generateSeed(controller: C): Long
+	protected abstract fun generateNextColor(controller: C, layer: Int)
 	
 	// Rendering
 	
 	override fun render(tile: T, x: Double, y: Double, z: Double, partialTicks: Float, destroyStage: Int, alpha: Float){
-		val acceptor = tile.pos.closestTickingTile<TileEntityBasePortalController>(tile.world, BlockAbstractPortal.MAX_DISTANCE_FROM_FRAME)
+		val controller = findController(tile.world, tile.pos)
 		
-		animationProgress = acceptor?.clientAnimationProgress?.get(partialTicks) ?: 0F
+		rand.setSeed(controller?.let { generateSeed(it) } ?: 0L)
+		
+		animationProgress = controller?.clientAnimationProgress?.get(partialTicks) ?: 0F
 		isAnimating = animationProgress > 0F && animationProgress < 1F
 		
 		cameraTarget = ActiveRenderInfo.getCameraPosition()
@@ -113,7 +120,7 @@ abstract class RenderTileAbstractPortal<T : TileEntity> : TileEntitySpecialRende
 		
 		GL.blendFunc(SRC_ALPHA, ONE_MINUS_SRC_ALPHA)
 		
-		generateNextColor(0)
+		controller?.let { generateNextColor(it, 0) }
 		transformColor { 0.1F } // discards provided value
 		
 		renderLayer(
@@ -135,7 +142,7 @@ abstract class RenderTileAbstractPortal<T : TileEntity> : TileEntitySpecialRende
 			val layerIndexRev = 16 - layer
 			val colorMultiplier = 1F / (layerIndexRev + 1F)
 			
-			generateNextColor(layer)
+			controller?.let { generateNextColor(it, layer) }
 			transformColor { it * colorMultiplier * calculateEasing(layer) }
 			
 			if (layerIndexRev <= layerCount){

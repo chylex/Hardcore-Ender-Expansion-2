@@ -18,6 +18,7 @@ import chylex.hee.game.block.BlockDryVines
 import chylex.hee.game.block.BlockTablePedestal
 import chylex.hee.game.block.entity.TileEntityDarkChest
 import chylex.hee.game.block.entity.TileEntityLootChest
+import chylex.hee.game.block.entity.TileEntityPortalInner
 import chylex.hee.game.block.entity.TileEntityTablePedestal
 import chylex.hee.game.commands.HeeClientCommand
 import chylex.hee.game.entity.item.EntityItemNoBob
@@ -46,7 +47,6 @@ import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.item.Item
 import net.minecraft.item.ItemBlock
 import net.minecraft.tileentity.TileEntity
-import net.minecraft.tileentity.TileEntityEndPortal
 import net.minecraftforge.client.ClientCommandHandler
 import net.minecraftforge.client.event.ModelRegistryEvent
 import net.minecraftforge.client.model.ModelLoader
@@ -81,7 +81,7 @@ class ModClientProxy : ModCommonProxy(){
 		
 		// renderers
 		
-		registerTileRenderer<TileEntityEndPortal>(RenderTileEndPortal)
+		registerTileRenderer<TileEntityPortalInner.End>(RenderTileEndPortal)
 		registerTileRenderer<TileEntityDarkChest>(RenderTileDarkChest)
 		registerTileRenderer<TileEntityLootChest>(RenderTileLootChest)
 		registerTileRenderer<TileEntityTablePedestal>(RenderTileTablePedestal)
