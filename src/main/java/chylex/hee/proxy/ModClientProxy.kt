@@ -134,6 +134,7 @@ class ModClientProxy : ModCommonProxy(){
 		ModelLoader.setCustomStateMapper(ModBlocks.END_PORTAL_INNER, emptyStateMapper)
 		ModelLoader.setCustomStateMapper(ModBlocks.ENDERMAN_HEAD, emptyStateMapper)
 		ModelLoader.setCustomStateMapper(ModBlocks.ENERGY_CLUSTER, emptyStateMapper)
+		ModelLoader.setCustomStateMapper(ModBlocks.VOID_PORTAL_INNER, emptyStateMapper)
 		
 		ModelLoader.setCustomStateMapper(ModBlocks.CORRUPTED_ENERGY, singleStateMapper)
 		ModelLoader.setCustomStateMapper(ModBlocks.DARK_CHEST, singleStateMapper)

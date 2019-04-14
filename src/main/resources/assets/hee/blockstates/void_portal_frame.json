@@ -1,0 +1,16 @@
+{
+  "forge_marker": 1,
+  "defaults": {
+    "model": "hee:portal_frame",
+    "textures": {
+      "particle": "hee:block/void_portal_frame_side",
+      "bottom": "minecraft:blocks/end_stone",
+      "top": "hee:block/void_portal_frame_top_plain",
+      "side": "hee:block/void_portal_frame_side"
+    }
+  },
+  "variants": {
+    "normal": [{}],
+    "inventory": [{}]
+  }
+}

@@ -58,6 +58,9 @@ tile.hee.dry_vines.name=Dry Vines
 tile.hee.end_portal_inner.name=End Portal
 tile.hee.end_portal_frame.name=End Portal Frame
 tile.hee.end_portal_acceptor.name=End Portal Acceptor
+tile.hee.void_portal_inner.name=Void Portal
+tile.hee.void_portal_frame.name=Void Portal Frame
+tile.hee.void_portal_storage.name=Void Portal Storage
 
 tile.hee.energy_cluster.name=Energy Cluster
 

@@ -13,4 +13,5 @@ sealed class TileEntityPortalInner : TileEntityEndPortal(){
 	override fun getRenderBoundingBox(): AxisAlignedBB = AxisAlignedBB(pos, pos.add(1, 1, 1))
 	
 	class End : TileEntityPortalInner()
+	class Void : TileEntityPortalInner()
 }

@@ -35,6 +35,8 @@ import chylex.hee.game.block.BlockStardustOre
 import chylex.hee.game.block.BlockTableBase
 import chylex.hee.game.block.BlockTablePedestal
 import chylex.hee.game.block.BlockTableTile
+import chylex.hee.game.block.BlockVoidPortalInner
+import chylex.hee.game.block.BlockVoidPortalStorage
 import chylex.hee.game.block.BlockWallCustom
 import chylex.hee.game.block.entity.TileEntityAccumulationTable
 import chylex.hee.game.block.entity.TileEntityDarkChest
@@ -44,6 +46,7 @@ import chylex.hee.game.block.entity.TileEntityInfusedTNT
 import chylex.hee.game.block.entity.TileEntityLootChest
 import chylex.hee.game.block.entity.TileEntityPortalInner
 import chylex.hee.game.block.entity.TileEntityTablePedestal
+import chylex.hee.game.block.entity.TileEntityVoidPortalStorage
 import chylex.hee.game.block.fluid.FluidEnderGoo
 import chylex.hee.game.block.material.Materials
 import chylex.hee.game.item.ItemAncientCobweb
@@ -327,6 +330,10 @@ object ModBlocks{
 	@JvmField val END_PORTAL_FRAME    = BlockSimpleShaped(buildPortalFrame, portalFrameAABB).apply { setup("end_portal_frame") }
 	@JvmField val END_PORTAL_ACCEPTOR = BlockEndPortalAcceptor(buildPortalFrame, portalFrameAABB).apply { setup("end_portal_acceptor") }
 	
+	@JvmField val VOID_PORTAL_INNER   = BlockVoidPortalInner(buildPortalInner).apply { setup("void_portal_inner", inCreativeTab = false) }
+	@JvmField val VOID_PORTAL_FRAME   = BlockSimpleShaped(buildPortalFrame, portalFrameAABB).apply { setup("void_portal_frame") }
+	@JvmField val VOID_PORTAL_STORAGE = BlockVoidPortalStorage(buildPortalFrame, portalFrameAABB).apply { setup("void_portal_storage") }
+	
 	// Blocks: Energy
 	
 	private val buildEnergyCluster = BlockSimple.Builder(Materials.ENERGY_CLUSTER).apply {
@@ -453,6 +460,9 @@ object ModBlocks{
 			register(END_PORTAL_INNER with basicItemBlock)
 			register(END_PORTAL_FRAME with basicItemBlock)
 			register(END_PORTAL_ACCEPTOR with basicItemBlock)
+			register(VOID_PORTAL_INNER with basicItemBlock)
+			register(VOID_PORTAL_FRAME with basicItemBlock)
+			register(VOID_PORTAL_STORAGE with basicItemBlock)
 			
 			register(ENERGY_CLUSTER with basicItemBlock)
 			register(CORRUPTED_ENERGY)
@@ -465,7 +475,9 @@ object ModBlocks{
 		}
 		
 		tile<TileEntityPortalInner.End>("end_portal_inner")
+		tile<TileEntityPortalInner.Void>("void_portal_inner")
 		tile<TileEntityEndPortalAcceptor>("end_portal_acceptor")
+		tile<TileEntityVoidPortalStorage>("void_portal_storage")
 		tile<TileEntityEnergyCluster>("energy_cluster")
 		tile<TileEntityInfusedTNT>("infused_tnt")
 		tile<TileEntityDarkChest>("dark_chest")
