@@ -3,6 +3,7 @@ import chylex.hee.game.item.ItemPortalToken.TokenType.NORMAL
 import chylex.hee.game.world.territory.TerritoryInstance
 import chylex.hee.game.world.territory.TerritoryType
 import chylex.hee.game.world.territory.properties.TerritoryColors
+import chylex.hee.game.world.territory.storage.TerritoryGlobalStorage
 import chylex.hee.init.ModItems
 import chylex.hee.system.Resource
 import chylex.hee.system.util.color.RGB
@@ -54,13 +55,6 @@ class ItemPortalToken : Item(){
 		}
 	}
 	
-	fun assignTerritoryInstance(stack: ItemStack, instance: TerritoryInstance){
-		with(stack.heeTag){
-			setEnum(TERRITORY_TYPE_TAG, instance.territory)
-			setInteger(TERRITORY_INDEX_TAG, instance.index)
-		}
-	}
-	
 	// Token data
 	
 	fun getTokenType(stack: ItemStack): TokenType{
@@ -71,9 +65,12 @@ class ItemPortalToken : Item(){
 		return stack.heeTagOrNull?.getEnum<TerritoryType>(TERRITORY_TYPE_TAG)
 	}
 	
-	fun getTerritoryInstance(stack: ItemStack): TerritoryInstance?{
+	fun getOrCreateTerritoryInstance(stack: ItemStack): TerritoryInstance?{
 		val territory = getTerritoryType(stack) ?: return null
-		val index = stack.heeTag.getIntegerOrNull(TERRITORY_INDEX_TAG) ?: return null
+		
+		val index = with(stack.heeTag){
+			getIntegerOrNull(TERRITORY_INDEX_TAG) ?: TerritoryGlobalStorage.get().assignNewIndex(territory).also { setInteger(TERRITORY_INDEX_TAG, it) }
+		}
 		
 		return TerritoryInstance(territory, index)
 	}

@@ -33,6 +33,10 @@ enum class TerritoryType(
 			
 			return null
 		}
+		
+		fun fromTitle(title: String): TerritoryType?{
+			return ALL.find { it.title == title }
+		}
 	}
 	
 	val translationKey

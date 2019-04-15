@@ -12,6 +12,7 @@ import chylex.hee.game.mechanics.causatum.EnderCausatum
 import chylex.hee.game.mechanics.instability.Instability
 import chylex.hee.game.world.feature.OverworldFeatures
 import chylex.hee.game.world.provider.WorldProviderEndCustom
+import chylex.hee.game.world.territory.storage.TokenPlayerStorage
 import chylex.hee.init.ModConfig
 import chylex.hee.init.ModCreativeTabs
 import chylex.hee.init.ModGuiHandler
@@ -64,6 +65,7 @@ object HEE{
 		TrinketHandler.register()
 		EnderCausatum.register()
 		Instability.register()
+		TokenPlayerStorage.register()
 		WorldProviderEndCustom.register()
 		proxy.onPreInit()
 	}
