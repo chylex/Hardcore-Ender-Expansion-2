@@ -1,7 +1,10 @@
 package chylex.hee.game.block
-import chylex.hee.HEE
 import chylex.hee.game.block.entity.TileEntityEndPortalAcceptor
 import chylex.hee.game.block.entity.TileEntityPortalInner
+import chylex.hee.game.mechanics.portal.EntityPortalContact
+import chylex.hee.game.mechanics.portal.OverworldTeleporter
+import chylex.hee.init.ModBlocks
+import chylex.hee.system.util.Pos
 import chylex.hee.system.util.closestTickingTile
 import net.minecraft.entity.Entity
 import net.minecraft.tileentity.TileEntity
@@ -14,11 +17,23 @@ class BlockEndPortalInner(builder: BlockSimple.Builder) : BlockAbstractPortal(bu
 	}
 	
 	override fun onEntityInside(world: World, pos: BlockPos, entity: Entity){
-		val acceptor = pos.closestTickingTile<TileEntityEndPortalAcceptor>(world, MAX_DISTANCE_FROM_FRAME)
+		if (!EntityPortalContact.shouldTeleport(entity)){
+			return
+		}
 		
-		if (acceptor != null && acceptor.isCharged){
-			HEE.log.info("teleporting") // TODO
-			entity.changeDimension(1)
+		if (world.provider.dimension == 1){
+			entity.changeDimension(0, OverworldTeleporter.LastPortal)
+		}
+		else{
+			val acceptor = pos.closestTickingTile<TileEntityEndPortalAcceptor>(world, MAX_DISTANCE_FROM_FRAME)
+			
+			if (acceptor != null && acceptor.isCharged){
+				findInnerArea(world, acceptor.pos, ModBlocks.END_PORTAL_FRAME)?.let {
+					(min, max) -> OverworldTeleporter.LastPortal.updateForEntity(entity, Pos((min.x + max.x) / 2, pos.y, (min.z + max.z) / 2))
+				}
+				
+				entity.changeDimension(1)
+			}
 		}
 	}
 }
