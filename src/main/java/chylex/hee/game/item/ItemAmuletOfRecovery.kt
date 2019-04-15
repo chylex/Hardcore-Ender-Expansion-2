@@ -257,7 +257,7 @@ class ItemAmuletOfRecovery : ItemAbstractEnergyUser(), ITrinketItem{
 			movePlayerInventoryToTrinket(player, trinketItem)
 			setEnergyChargeLevel(trinketItem, Units(0))
 			
-			player.entityData.heeTag.setStack(PLAYER_RESPAWN_ITEM_TAG, trinketItem)
+			player.heeTag.setStack(PLAYER_RESPAWN_ITEM_TAG, trinketItem)
 		}
 	}
 	
@@ -270,7 +270,7 @@ class ItemAmuletOfRecovery : ItemAbstractEnergyUser(), ITrinketItem{
 			return
 		}
 		
-		with(player.entityData.heeTagOrNull?.getStack(PLAYER_RESPAWN_ITEM_TAG)?.heeTag ?: return){
+		with(player.heeTagOrNull?.getStack(PLAYER_RESPAWN_ITEM_TAG)?.heeTag ?: return){
 			val list = getListOfItemStacks(CONTENTS_TAG)
 			
 			for(slot in BACKFILL_SLOT_ORDER){
@@ -294,7 +294,7 @@ class ItemAmuletOfRecovery : ItemAbstractEnergyUser(), ITrinketItem{
 		val oldPlayer = e.original
 		val newPlayer = e.entityPlayer
 		
-		with(oldPlayer.entityData.heeTagOrNull ?: return){
+		with(oldPlayer.heeTagOrNull ?: return){
 			val trinketItem = getStack(PLAYER_RESPAWN_ITEM_TAG)
 			
 			if (trinketItem.isNotEmpty){

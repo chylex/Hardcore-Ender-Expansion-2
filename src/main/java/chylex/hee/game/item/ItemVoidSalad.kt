@@ -33,7 +33,7 @@ class ItemVoidSalad : ItemFood(0, 0F, false){
 		@JvmStatic
 		@SubscribeEvent
 		fun onPlayerClone(e: PlayerEvent.Clone){
-			if (e.isWasDeath && e.original.entityData.heeTagOrNull?.getBoolean(PLAYER_RESPAWN_HUNGRY_TAG) == true){
+			if (e.isWasDeath && e.original.heeTagOrNull?.getBoolean(PLAYER_RESPAWN_HUNGRY_TAG) == true){
 				setHungerAndResetSaturation(e.entityPlayer, 1)
 			}
 		}
@@ -90,7 +90,7 @@ class ItemVoidSalad : ItemFood(0, 0F, false){
 			}
 			
 			Type.MEGA -> {
-				player.entityData.heeTag.setBoolean(PLAYER_RESPAWN_HUNGRY_TAG, true)
+				player.heeTag.setBoolean(PLAYER_RESPAWN_HUNGRY_TAG, true)
 				DAMAGE_LETHAL.dealTo(Float.MAX_VALUE, player, TITLE_STARVE)
 			}
 		}

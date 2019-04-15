@@ -62,11 +62,13 @@ object HEE{
 		ModNetwork.initialize()
 		ModGuiHandler.initialize()
 		ModCreativeTabs.initialize()
+		
 		TrinketHandler.register()
 		EnderCausatum.register()
 		Instability.register()
 		TokenPlayerStorage.register()
 		WorldProviderEndCustom.register()
+		
 		proxy.onPreInit()
 	}
 	
