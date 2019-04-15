@@ -21,6 +21,7 @@ import net.minecraft.entity.ai.EntityAIWatchClosest
 import net.minecraft.entity.ai.attributes.AttributeModifier
 import net.minecraft.entity.ai.attributes.IAttributeInstance
 import net.minecraft.entity.item.EntityItem
+import net.minecraft.entity.player.EntityPlayer.PERSISTED_NBT_TAG
 import net.minecraft.util.EntitySelectors
 import net.minecraft.util.math.Vec3d
 import net.minecraft.world.World
@@ -79,6 +80,20 @@ fun EntityItem.cloneFrom(source: Entity){
 		owner = source.owner
 	}
 }
+
+// NBT
+
+val Entity.heeTag
+	get() = this.entityData.heeTag
+
+val Entity.heeTagOrNull
+	get() = this.entityData.heeTagOrNull
+
+val Entity.heeTagPersistent
+	get() = this.entityData.getOrCreateCompound(PERSISTED_NBT_TAG).heeTag
+
+val Entity.heeTagPersistentOrNull
+	get() = this.entityData.getCompoundOrNull(PERSISTED_NBT_TAG)?.heeTagOrNull
 
 // Attributes
 

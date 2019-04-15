@@ -24,67 +24,22 @@ import java.util.Locale
 import kotlin.contracts.ExperimentalContracts
 import kotlin.contracts.contract
 
+fun NBTTagCompound.getOrCreateCompound(key: String): NBTTagCompound{
+	return if (this.hasKey(key))
+		this.getCompoundTag(key)
+	else
+		NBTTagCompound().also { setTag(key, it) }
+}
+
+// HEE tag
+
 private const val HEE_TAG_NAME = HEE.ID
 
-val NBTTagCompound.heeTag: NBTTagCompound
-	get(){
-		return if (this.hasKey(HEE_TAG_NAME))
-			this.getCompoundTag(HEE_TAG_NAME)
-		else
-			NBTTagCompound().also { setTag(HEE_TAG_NAME, it) }
-	}
+val NBTTagCompound.heeTag
+	get() = this.getOrCreateCompound(HEE_TAG_NAME)
 
-val NBTTagCompound.heeTagOrNull: NBTTagCompound?
-	get(){
-		return if (this.hasKey(HEE_TAG_NAME))
-			this.getCompoundTag(HEE_TAG_NAME)
-		else
-			null
-	}
-
-// ItemStack NBT
-
-/**
- * Returns the ItemStack's NBT tag. If the ItemStack has no tag, it will be created.
- */
-inline val ItemStack.nbt: NBTTagCompound
-	get() = this.tagCompound ?: NBTTagCompound().also { this.tagCompound = it }
-
-/**
- * Returns the ItemStack's NBT tag. If the ItemStack has no tag, null is returned instead.
- */
-inline val ItemStack.nbtOrNull: NBTTagCompound?
-	get() = this.tagCompound
-
-/**
- * Returns the ItemStack's HEE tag from its main NBT tag. If the ItemStack has neither the main NBT tag nor the HEE tag, they will be created.
- */
-val ItemStack.heeTag: NBTTagCompound
-	get() = this.nbt.heeTag
-
-/**
- * Returns the ItemStack's HEE tag from its main NBT tag. If the ItemStack has neither the main NBT tag nor the HEE tag, null is returned instead.
- */
-val ItemStack.heeTagOrNull: NBTTagCompound?
-	get() = this.nbtOrNull?.heeTagOrNull
-
-/**
- * Recursively deletes all empty compound tags in the ItemStack.
- */
-fun ItemStack.cleanupNBT(){
-	fun cleanupTag(tag: NBTTagCompound){
-		tag.keySet.removeIf {
-			val nested = tag.getTag(it) as? NBTTagCompound
-			nested != null && nested.apply(::cleanupTag).isEmpty
-		}
-	}
-	
-	val nbt = this.nbtOrNull
-	
-	if (nbt != null && nbt.apply(::cleanupTag).isEmpty){
-		this.tagCompound = null
-	}
-}
+val NBTTagCompound.heeTagOrNull
+	get() = this.getCompoundOrNull(HEE_TAG_NAME)
 
 // ItemStacks
 
