@@ -5,6 +5,7 @@ import chylex.hee.system.util.distanceTo
 import chylex.hee.system.util.floorToInt
 import chylex.hee.system.util.getBlock
 import chylex.hee.system.util.isAir
+import chylex.hee.system.util.math.LerpedFloat
 import chylex.hee.system.util.max
 import chylex.hee.system.util.min
 import chylex.hee.system.util.offsetUntil
@@ -31,7 +32,7 @@ abstract class BlockAbstractPortal(builder: BlockSimple.Builder) : BlockSimple(b
 		private val SELECTION_AABB = AxisAlignedBB(0.0, 0.0, 0.0, 1.0, 0.75,  1.0)
 		private val COLLISION_AABB = AxisAlignedBB(0.0, 0.0, 0.0, 1.0, 0.025, 1.0)
 		
-		fun spawnInnerBlocks(world: World, controllerPos: BlockPos, frameBlock: Block, innerBlock: Block){
+		fun findInnerArea(world: World, controllerPos: BlockPos, frameBlock: Block): Pair<BlockPos, BlockPos>?{
 			val mirrorRange = 1..(MAX_SIZE + 1)
 			val halfRange = 1..(1 + (MAX_SIZE / 2))
 			
@@ -45,13 +46,23 @@ abstract class BlockAbstractPortal(builder: BlockSimple.Builder) : BlockSimple(b
 				val minPos = controllerPos.min(mirrorPos).min(perpendicular1).min(perpendicular2).add(1, 0, 1)
 				val maxPos = controllerPos.max(mirrorPos).max(perpendicular1).max(perpendicular2).add(-1, 0, -1)
 				
-				if (minPos.allInBoxMutable(maxPos).all { it.isAir(world) }){
-					minPos.allInBoxMutable(maxPos).forEach { it.setBlock(world, innerBlock) }
-				}
-				
-				break
+				return minPos to maxPos
+			}
+			
+			return null
+		}
+		
+		fun spawnInnerBlocks(world: World, controllerPos: BlockPos, frameBlock: Block, innerBlock: Block){
+			val (minPos, maxPos) = findInnerArea(world, controllerPos, frameBlock) ?: return
+			
+			if (minPos.allInBoxMutable(maxPos).all { it.isAir(world) }){
+				minPos.allInBoxMutable(maxPos).forEach { it.setBlock(world, innerBlock) }
 			}
 		}
+	}
+	
+	interface IPortalController{
+		val clientAnimationProgress: LerpedFloat
 	}
 	
 	protected abstract fun onEntityInside(world: World, pos: BlockPos, entity: Entity)

@@ -1,4 +1,5 @@
 package chylex.hee.game.block.entity
+import chylex.hee.game.block.BlockAbstractPortal.IPortalController
 import chylex.hee.game.block.entity.TileEntityBase.Context.NETWORK
 import chylex.hee.game.block.entity.TileEntityBasePortalController.ForegroundRenderState.Animating
 import chylex.hee.game.block.entity.TileEntityBasePortalController.ForegroundRenderState.Invisible
@@ -9,7 +10,7 @@ import net.minecraft.util.ITickable
 import kotlin.math.max
 import kotlin.math.min
 
-abstract class TileEntityBasePortalController : TileEntityBase(), ITickable{
+abstract class TileEntityBasePortalController : TileEntityBase(), IPortalController, ITickable{
 	private companion object{
 		private const val RENDER_STATE_TAG = "RenderState"
 		private const val RENDER_PROGRESS_TAG = "RenderProgress"
@@ -26,7 +27,7 @@ abstract class TileEntityBasePortalController : TileEntityBase(), ITickable{
 	protected abstract val clientAnimationFadeOutSpeed: Float
 	
 	private var clientRenderState: ForegroundRenderState = Invisible
-	val clientAnimationProgress = LerpedFloat(0F)
+	override val clientAnimationProgress = LerpedFloat(0F)
 	
 	private fun updateAnimation(){
 		when(clientRenderState){

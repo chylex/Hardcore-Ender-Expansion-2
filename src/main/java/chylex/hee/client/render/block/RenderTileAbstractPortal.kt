@@ -1,6 +1,6 @@
 package chylex.hee.client.render.block
 import chylex.hee.client.render.util.GL
-import chylex.hee.game.block.entity.TileEntityBasePortalController
+import chylex.hee.game.block.BlockAbstractPortal.IPortalController
 import chylex.hee.game.block.entity.TileEntityPortalInner
 import chylex.hee.system.Resource
 import chylex.hee.system.util.square
@@ -36,7 +36,7 @@ import java.util.Random
 import kotlin.math.pow
 
 @SideOnly(Side.CLIENT)
-abstract class RenderTileAbstractPortal<T : TileEntityPortalInner, C : TileEntityBasePortalController> : TileEntitySpecialRenderer<T>(){
+abstract class RenderTileAbstractPortal<T : TileEntityPortalInner, C : IPortalController> : TileEntitySpecialRenderer<T>(){
 	private companion object{
 		@JvmStatic private val TEX_BACKGROUND = Resource.Vanilla("textures/environment/end_sky.png")
 		@JvmStatic private val TEX_PARTICLE_LAYER = Resource.Vanilla("textures/entity/end_portal.png")
