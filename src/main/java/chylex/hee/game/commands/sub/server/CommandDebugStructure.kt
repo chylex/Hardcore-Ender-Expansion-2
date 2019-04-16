@@ -3,7 +3,6 @@ import chylex.hee.game.commands.sub.ISubCommand
 import chylex.hee.game.world.feature.energyshrine.EnergyShrinePieces
 import chylex.hee.game.world.feature.stronghold.StrongholdPieces
 import chylex.hee.game.world.structure.IBlockPicker.Single
-import chylex.hee.game.world.structure.IStructureDescription
 import chylex.hee.game.world.structure.IStructureGeneratorFromFile
 import chylex.hee.game.world.structure.file.StructureFile
 import chylex.hee.game.world.structure.file.StructureFiles
@@ -18,7 +17,7 @@ import net.minecraft.server.MinecraftServer
 import net.minecraft.util.text.TextComponentString
 
 internal object CommandDebugStructure : ISubCommand{
-	private val structureDescriptions = mapOf<String, IStructureDescription>(
+	val structureDescriptions = mapOf(
 		"stronghold" to StrongholdPieces,
 		"energyshrine" to EnergyShrinePieces
 	)
