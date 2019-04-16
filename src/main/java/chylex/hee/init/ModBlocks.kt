@@ -460,7 +460,7 @@ object ModBlocks{
 			register(END_PORTAL_INNER with basicItemBlock)
 			register(END_PORTAL_FRAME with basicItemBlock)
 			register(END_PORTAL_ACCEPTOR with basicItemBlock)
-			register(VOID_PORTAL_INNER with basicItemBlock)
+			register(VOID_PORTAL_INNER with metaItemBlock)
 			register(VOID_PORTAL_FRAME with basicItemBlock)
 			register(VOID_PORTAL_STORAGE with basicItemBlock)
 			

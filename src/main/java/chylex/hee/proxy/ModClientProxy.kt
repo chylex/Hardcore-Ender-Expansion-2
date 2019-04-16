@@ -6,6 +6,7 @@ import chylex.hee.client.render.block.RenderTileEndPortal
 import chylex.hee.client.render.block.RenderTileEndermanHead
 import chylex.hee.client.render.block.RenderTileLootChest
 import chylex.hee.client.render.block.RenderTileTablePedestal
+import chylex.hee.client.render.block.RenderTileVoidPortal
 import chylex.hee.client.render.entity.RenderEntityItemNoBob
 import chylex.hee.client.render.entity.RenderEntityMobAbstractEnderman
 import chylex.hee.client.render.entity.RenderEntityMobVillagerDying
@@ -16,6 +17,7 @@ import chylex.hee.game.block.BlockAbstractTable
 import chylex.hee.game.block.BlockDeathFlowerDecaying
 import chylex.hee.game.block.BlockDryVines
 import chylex.hee.game.block.BlockTablePedestal
+import chylex.hee.game.block.BlockVoidPortalInner
 import chylex.hee.game.block.entity.TileEntityDarkChest
 import chylex.hee.game.block.entity.TileEntityLootChest
 import chylex.hee.game.block.entity.TileEntityPortalInner
@@ -82,6 +84,7 @@ class ModClientProxy : ModCommonProxy(){
 		// renderers
 		
 		registerTileRenderer<TileEntityPortalInner.End>(RenderTileEndPortal)
+		registerTileRenderer<TileEntityPortalInner.Void>(RenderTileVoidPortal)
 		registerTileRenderer<TileEntityDarkChest>(RenderTileDarkChest)
 		registerTileRenderer<TileEntityLootChest>(RenderTileLootChest)
 		registerTileRenderer<TileEntityTablePedestal>(RenderTileTablePedestal)
@@ -182,6 +185,14 @@ class ModClientProxy : ModCommonProxy(){
 				}
 				
 				ModelLoader.setCustomModelResourceLocation(it, level - BlockDeathFlowerDecaying.MIN_LEVEL, ModelResourceLocation(Resource.Custom("death_flower_$texture"), "inventory"))
+			}
+		}
+		
+		Item.getItemFromBlock(ModBlocks.VOID_PORTAL_INNER).let {
+			val registryName = it.registryName!!
+			
+			for(type in BlockVoidPortalInner.TYPE.allowedValues){
+				ModelLoader.setCustomModelResourceLocation(it, type.ordinal, ModelResourceLocation(registryName, "inventory"))
 			}
 		}
 		

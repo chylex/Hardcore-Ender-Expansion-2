@@ -1,4 +1,5 @@
 package chylex.hee.game.item
+import chylex.hee.client.gui.GuiPortalTokenStorage
 import chylex.hee.game.item.ItemPortalToken.TokenType.NORMAL
 import chylex.hee.game.world.territory.TerritoryInstance
 import chylex.hee.game.world.territory.TerritoryType
@@ -12,6 +13,7 @@ import chylex.hee.system.util.getIntegerOrNull
 import chylex.hee.system.util.heeTag
 import chylex.hee.system.util.heeTagOrNull
 import chylex.hee.system.util.setEnum
+import net.minecraft.client.Minecraft
 import net.minecraft.client.renderer.color.IItemColor
 import net.minecraft.client.resources.I18n
 import net.minecraft.client.util.ITooltipFlag
@@ -83,8 +85,19 @@ class ItemPortalToken : Item(){
 	
 	@SideOnly(Side.CLIENT)
 	override fun addInformation(stack: ItemStack, world: World?, lines: MutableList<String>, flags: ITooltipFlag){
+		if (Minecraft.getMinecraft().currentScreen is GuiPortalTokenStorage){
+			lines.add(I18n.format("item.hee.portal_token.tooltip.activate"))
+		}
+		
 		getTokenType(stack).translationKey?.let {
 			lines.add(I18n.format(it))
+		}
+		
+		if (flags.isAdvanced){
+			stack.heeTagOrNull?.getIntegerOrNull(TERRITORY_INDEX_TAG)?.let {
+				lines.add("")
+				lines.add(I18n.format("item.hee.portal_token.tooltip.advanced", it))
+			}
 		}
 		
 		super.addInformation(stack, world, lines, flags)

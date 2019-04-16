@@ -119,6 +119,8 @@ item.hee.spatial_dash_gem.name=Spatial Dash Gem
 item.hee.portal_token.name=Portal Token
 item.hee.portal_token.tooltip.rare=Rare
 item.hee.portal_token.tooltip.solitary=Solitary
+item.hee.portal_token.tooltip.activate=§6Right-click to activate
+item.hee.portal_token.tooltip.advanced=Index: %s
 item.hee.portal_token_concrete.name=Portal Token (%s)
 
 item.hee.trinket_pouch.name=Trinket Pouch
@@ -189,6 +191,8 @@ gui.hee.loot_chest.title=Loot Chest
 gui.hee.loot_chest.title.creative=Loot Chest (Editing)
 
 gui.hee.trinket_pouch.title=Trinket Pouch
+
+gui.hee.portal_token_storage.title=Portal Tokens
 
 hee.territory.fallback.name=Unknown
 hee.territory.the_hub.name=The Hub

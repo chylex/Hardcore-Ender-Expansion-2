@@ -1,6 +1,8 @@
 package chylex.hee.game.block
 import chylex.hee.game.block.entity.TileEntityVoidPortalStorage
 import chylex.hee.init.ModBlocks
+import chylex.hee.init.ModGuiHandler.GuiType
+import chylex.hee.system.util.getTile
 import net.minecraft.block.ITileEntityProvider
 import net.minecraft.block.state.IBlockState
 import net.minecraft.entity.player.EntityPlayer
@@ -21,6 +23,14 @@ class BlockVoidPortalStorage(builder: BlockSimple.Builder, aabb: AxisAlignedBB) 
 	}
 	
 	override fun onBlockActivated(world: World, pos: BlockPos, state: IBlockState, player: EntityPlayer, hand: EnumHand, facing: EnumFacing, hitX: Float, hitY: Float, hitZ: Float): Boolean{
+		if (world.isRemote){
+			return true
+		}
+		
+		pos.getTile<TileEntityVoidPortalStorage>(world)?.let {
+			GuiType.PORTAL_TOKEN_STORAGE.open(player, pos.x, pos.y, pos.z)
+		}
+		
 		return true
 	}
 }

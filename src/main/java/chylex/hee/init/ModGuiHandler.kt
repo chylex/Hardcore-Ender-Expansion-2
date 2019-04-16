@@ -2,10 +2,13 @@ package chylex.hee.init
 import chylex.hee.HEE
 import chylex.hee.client.gui.GuiAmuletOfRecovery
 import chylex.hee.client.gui.GuiLootChest
+import chylex.hee.client.gui.GuiPortalTokenStorage
 import chylex.hee.client.gui.GuiTrinketPouch
 import chylex.hee.game.block.entity.TileEntityLootChest
+import chylex.hee.game.block.entity.TileEntityVoidPortalStorage
 import chylex.hee.game.container.ContainerAmuletOfRecovery
 import chylex.hee.game.container.ContainerLootChest
+import chylex.hee.game.container.ContainerPortalTokenStorage
 import chylex.hee.game.container.ContainerTrinketPouch
 import chylex.hee.system.util.Pos
 import chylex.hee.system.util.getTile
@@ -35,6 +38,11 @@ object ModGuiHandler : IGuiHandler{
 		TRINKET_POUCH(
 			createInterface = { player, slot, _, _ -> GuiTrinketPouch(player, slot) },
 			createContainer = { player, slot, _, _ -> ContainerTrinketPouch(player, slot) }
+		),
+		
+		PORTAL_TOKEN_STORAGE(
+			createInterface = forTileEntity<TileEntityVoidPortalStorage> { player, tile -> GuiPortalTokenStorage(player, tile) },
+			createContainer = forTileEntity<TileEntityVoidPortalStorage> { player, tile -> ContainerPortalTokenStorage(player, tile) }
 		),
 		
 		LOOT_CHEST(
