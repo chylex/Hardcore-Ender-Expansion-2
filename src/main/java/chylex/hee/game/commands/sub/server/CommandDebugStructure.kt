@@ -1,5 +1,6 @@
 package chylex.hee.game.commands.sub.server
 import chylex.hee.game.commands.sub.ISubCommand
+import chylex.hee.game.world.feature.energyshrine.EnergyShrinePieces
 import chylex.hee.game.world.feature.stronghold.StrongholdPieces
 import chylex.hee.game.world.structure.IBlockPicker.Single
 import chylex.hee.game.world.structure.IStructureDescription
@@ -18,7 +19,8 @@ import net.minecraft.util.text.TextComponentString
 
 internal object CommandDebugStructure : ISubCommand{
 	private val structureDescriptions = mapOf<String, IStructureDescription>(
-		"stronghold" to StrongholdPieces
+		"stronghold" to StrongholdPieces,
+		"energyshrine" to EnergyShrinePieces
 	)
 	
 	override val name = "structure"
