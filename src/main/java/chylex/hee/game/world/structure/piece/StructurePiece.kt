@@ -21,6 +21,8 @@ abstract class StructurePiece : IStructureGenerator{
 	
 	protected abstract fun generate(world: IStructureWorld, instance: Instance)
 	
+	// TODO support rotation + mirror
+	
 	// Rotated connection
 	
 	private class RotatedStructurePieceConnection(private val original: IStructurePieceConnection, size: Size, rotation: Rotation) : IStructurePieceConnection{

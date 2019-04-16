@@ -41,7 +41,7 @@ abstract class BlockAbstractChest<T : TileEntityBaseChest>(builder: BlockSimple.
 	
 	override fun createBlockState(): BlockStateContainer = BlockStateContainer(this, FACING)
 	
-	// Placement and interation
+	// Placement and interaction
 	
 	abstract fun createNewTileEntity(): T
 	abstract val guiType: GuiType
