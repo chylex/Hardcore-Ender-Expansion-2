@@ -1,6 +1,7 @@
 package chylex.hee.game.world.territory
 import chylex.hee.game.world.territory.TerritoryType.Companion.CHUNK_MARGIN
 import chylex.hee.game.world.territory.TerritoryType.Companion.CHUNK_X_OFFSET
+import chylex.hee.game.world.territory.TerritoryType.THE_HUB
 import chylex.hee.system.util.component1
 import chylex.hee.system.util.component2
 import chylex.hee.system.util.floorToInt
@@ -29,6 +30,8 @@ data class TerritoryInstance(val territory: TerritoryType, val index: Int){
 	companion object{
 		private const val HASH_ORDINAL_BITS = 8
 		private const val HASH_ORDINAL_MASK = (1 shl HASH_ORDINAL_BITS) - 1
+		
+		val THE_HUB_INSTANCE = TerritoryInstance(THE_HUB, 0)
 		
 		fun fromHash(hash: Int): TerritoryInstance?{
 			val territory = hash and HASH_ORDINAL_MASK

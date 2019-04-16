@@ -1,4 +1,5 @@
 package chylex.hee.game.world.territory
+import chylex.hee.game.world.territory.descriptions.Territory_TheHub
 import kotlin.math.abs
 
 enum class TerritoryType(
@@ -7,8 +8,12 @@ enum class TerritoryType(
 	val chunks: Int,
 	val height: IntRange
 ){
-	// TODO
-	;
+	THE_HUB(
+		title  = "the_hub",
+		desc   = Territory_TheHub,
+		chunks = 24,
+		height = 0 until 128
+	);
 	
 	companion object{
 		const val FALLBACK_TRANSLATION_KEY = "hee.territory.fallback.name"
