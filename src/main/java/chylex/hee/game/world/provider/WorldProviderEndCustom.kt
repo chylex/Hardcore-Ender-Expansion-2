@@ -2,6 +2,7 @@ package chylex.hee.game.world.provider
 import chylex.hee.HEE
 import chylex.hee.client.render.territory.EmptyRenderer
 import chylex.hee.client.render.util.GL
+import chylex.hee.game.world.generation.ChunkGeneratorEndCustom
 import chylex.hee.game.world.provider.behavior.DragonFightManagerNull
 import chylex.hee.game.world.provider.behavior.WorldBorderNull
 import chylex.hee.game.world.territory.TerritoryInstance
@@ -49,7 +50,7 @@ class WorldProviderEndCustom : WorldProviderEnd(){
 	}
 	
 	override fun createChunkGenerator(): IChunkGenerator{
-		return ChunkGeneratorEndDebug(world)
+		return ChunkGeneratorEndCustom(world)
 	}
 	
 	// Behavior properties

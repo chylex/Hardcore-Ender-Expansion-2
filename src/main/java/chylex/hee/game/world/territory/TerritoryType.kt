@@ -1,16 +1,20 @@
 package chylex.hee.game.world.territory
 import chylex.hee.game.world.territory.descriptions.Territory_TheHub
+import chylex.hee.game.world.territory.generators.Generator_TheHub
+import chylex.hee.game.world.util.Size
 import kotlin.math.abs
 
 enum class TerritoryType(
 	val title: String,
 	val desc: ITerritoryDescription,
+	val gen: ITerritoryGenerator,
 	val chunks: Int,
 	val height: IntRange
 ){
 	THE_HUB(
 		title  = "the_hub",
 		desc   = Territory_TheHub,
+		gen    = Generator_TheHub,
 		chunks = 24,
 		height = 0 until 128
 	);
@@ -43,6 +47,9 @@ enum class TerritoryType(
 			return ALL.find { it.title == title }
 		}
 	}
+	
+	val size
+		get() = Size(16 * chunks, 1 + height.endInclusive - height.start, 16 * chunks)
 	
 	val translationKey
 		get() = "hee.territory.$title.name"
