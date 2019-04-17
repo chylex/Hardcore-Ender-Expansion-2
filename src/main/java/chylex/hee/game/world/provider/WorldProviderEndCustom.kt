@@ -3,6 +3,7 @@ import chylex.hee.HEE
 import chylex.hee.client.render.territory.EmptyRenderer
 import chylex.hee.client.render.util.GL
 import chylex.hee.game.world.provider.behavior.DragonFightManagerNull
+import chylex.hee.game.world.provider.behavior.WorldBorderNull
 import chylex.hee.game.world.territory.TerritoryInstance
 import chylex.hee.proxy.ModCommonProxy
 import net.minecraft.client.renderer.GlStateManager.FogMode.EXP2
@@ -50,6 +51,10 @@ class WorldProviderEndCustom : WorldProviderEnd(){
 	override fun createChunkGenerator(): IChunkGenerator{
 		return ChunkGeneratorEndDebug(world)
 	}
+	
+	// Behavior properties
+	
+	override fun createWorldBorder() = WorldBorderNull()
 	
 	// TODO shitton of things to play around with
 	// TODO also test if default values work on server
