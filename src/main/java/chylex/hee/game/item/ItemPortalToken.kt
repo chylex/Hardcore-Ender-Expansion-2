@@ -1,10 +1,12 @@
 package chylex.hee.game.item
 import chylex.hee.client.gui.GuiPortalTokenStorage
+import chylex.hee.game.entity.item.EntityTokenHolder
 import chylex.hee.game.item.ItemPortalToken.TokenType.NORMAL
 import chylex.hee.game.world.territory.TerritoryInstance
 import chylex.hee.game.world.territory.TerritoryType
 import chylex.hee.game.world.territory.properties.TerritoryColors
 import chylex.hee.game.world.territory.storage.TerritoryGlobalStorage
+import chylex.hee.game.world.util.BlockEditor
 import chylex.hee.init.ModItems
 import chylex.hee.system.Resource
 import chylex.hee.system.util.color.RGB
@@ -17,8 +19,17 @@ import net.minecraft.client.Minecraft
 import net.minecraft.client.renderer.color.IItemColor
 import net.minecraft.client.resources.I18n
 import net.minecraft.client.util.ITooltipFlag
+import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.item.Item
 import net.minecraft.item.ItemStack
+import net.minecraft.util.EnumActionResult
+import net.minecraft.util.EnumActionResult.FAIL
+import net.minecraft.util.EnumActionResult.PASS
+import net.minecraft.util.EnumActionResult.SUCCESS
+import net.minecraft.util.EnumFacing
+import net.minecraft.util.EnumFacing.UP
+import net.minecraft.util.EnumHand
+import net.minecraft.util.math.BlockPos
 import net.minecraft.world.World
 import net.minecraftforge.fml.relauncher.Side
 import net.minecraftforge.fml.relauncher.SideOnly
@@ -75,6 +86,30 @@ class ItemPortalToken : Item(){
 		}
 		
 		return TerritoryInstance(territory, index)
+	}
+	
+	// Creative mode
+	
+	override fun onItemUse(player: EntityPlayer, world: World, pos: BlockPos, hand: EnumHand, facing: EnumFacing, hitX: Float, hitY: Float, hitZ: Float): EnumActionResult{
+		if (!player.isCreative || player.isSneaking){
+			return PASS
+		}
+		
+		if (world.isRemote){
+			return SUCCESS
+		}
+		
+		val targetPos = pos.up()
+		
+		val heldItem = player.getHeldItem(hand)
+		val territoryType = getTerritoryType(heldItem)
+		
+		if (territoryType == null || facing != UP || !BlockEditor.canEdit(targetPos, player, heldItem)){
+			return FAIL
+		}
+		
+		world.spawnEntity(EntityTokenHolder(world, targetPos, getTokenType(heldItem), territoryType))
+		return SUCCESS
 	}
 	
 	// Client

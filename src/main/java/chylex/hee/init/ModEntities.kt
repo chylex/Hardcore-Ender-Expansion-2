@@ -6,6 +6,7 @@ import chylex.hee.game.entity.item.EntityInfusedTNT
 import chylex.hee.game.entity.item.EntityItemFreshlyCooked
 import chylex.hee.game.entity.item.EntityItemIgneousRock
 import chylex.hee.game.entity.item.EntityItemNoBob
+import chylex.hee.game.entity.item.EntityTokenHolder
 import chylex.hee.game.entity.living.EntityMobEnderman
 import chylex.hee.game.entity.living.EntityMobEndermite
 import chylex.hee.game.entity.living.EntityMobEndermiteInstability
@@ -45,6 +46,7 @@ object ModEntities{
 			register<EntityFallingBlockHeavy>("falling_block_heavy").tracker(160, 20, true) to this
 			register<EntityFallingObsidian>("falling_obsidian").tracker(160, 20, true) to this
 			register<EntityInfusedTNT>("infused_tnt").tracker(160, 10, true) to this
+			register<EntityTokenHolder>("token_holder").tracker(128, 60, false) to this
 			
 			register<EntityMobEndermiteInstability>("endermite_instability").tracker(96, 3, true).egg(RGB(21u).toInt(), RGB(94, 122, 108).toInt()) to this
 			register<EntityMobVillagerDying>("villager_dying").tracker(80, 3, false) to this

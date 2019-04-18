@@ -5,6 +5,7 @@ import chylex.hee.game.entity.item.EntityInfusedTNT;
 import chylex.hee.game.entity.item.EntityItemFreshlyCooked;
 import chylex.hee.game.entity.item.EntityItemIgneousRock;
 import chylex.hee.game.entity.item.EntityItemNoBob;
+import chylex.hee.game.entity.item.EntityTokenHolder;
 import chylex.hee.game.entity.living.EntityMobEnderman;
 import chylex.hee.game.entity.living.EntityMobEndermite;
 import chylex.hee.game.entity.living.EntityMobEndermiteInstability;
@@ -31,6 +32,7 @@ public final class EntityConstructors{
 		add(EntityFallingBlockHeavy.class, EntityFallingBlockHeavy::new);
 		add(EntityFallingObsidian.class, EntityFallingObsidian::new);
 		add(EntityInfusedTNT.class, EntityInfusedTNT::new);
+		add(EntityTokenHolder.class, EntityTokenHolder::new);
 		
 		add(EntityMobEnderman.class, EntityMobEnderman::new);
 		add(EntityMobEndermite.class, EntityMobEndermite::new);

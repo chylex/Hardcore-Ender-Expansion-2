@@ -4,6 +4,7 @@ import chylex.hee.client.render.entity.RenderEntityMobAbstractEnderman;
 import chylex.hee.client.render.entity.RenderEntityMobVillagerDying;
 import chylex.hee.client.render.entity.RenderEntityNothing;
 import chylex.hee.client.render.entity.RenderEntityProjectileEyeOfEnder;
+import chylex.hee.client.render.entity.RenderEntityTokenHolder;
 import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.entity.Entity;
 import net.minecraftforge.fml.client.registry.IRenderFactory;
@@ -15,6 +16,7 @@ public final class RendererConstructors{
 	
 	static{
 		all.put(RenderEntityItemNoBob.class, RenderEntityItemNoBob::new);
+		all.put(RenderEntityTokenHolder.class, RenderEntityTokenHolder::new);
 		
 		all.put(RenderEntityMobAbstractEnderman.class, RenderEntityMobAbstractEnderman::new);
 		all.put(RenderEntityMobVillagerDying.class, RenderEntityMobVillagerDying::new);
