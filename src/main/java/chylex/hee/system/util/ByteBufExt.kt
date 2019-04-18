@@ -36,6 +36,18 @@ inline fun ByteBuf.readVec(): Vec3d{
 	return Vec3d(readDouble(), readDouble(), readDouble())
 }
 
+// Vec3d (Float)
+
+inline fun ByteBuf.writeFloatVec(vec: Vec3d){
+	this.writeFloat(vec.x.toFloat())
+	this.writeFloat(vec.y.toFloat())
+	this.writeFloat(vec.z.toFloat())
+}
+
+inline fun ByteBuf.readFloatVec(): Vec3d{
+	return Vec3d(readFloat().toDouble(), readFloat().toDouble(), readFloat().toDouble())
+}
+
 // Vec3d (Compact)
 
 inline fun ByteBuf.writeCompactVec(vec: Vec3d){
