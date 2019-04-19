@@ -1,5 +1,7 @@
 package chylex.hee.game.world.generation
 import chylex.hee.game.world.generation.ISegment.Companion.index
+import chylex.hee.game.world.structure.IStructureTrigger
+import chylex.hee.game.world.structure.IStructureWorld
 import chylex.hee.game.world.util.Size
 import chylex.hee.system.util.Pos
 import chylex.hee.system.util.ceilToInt
@@ -8,8 +10,9 @@ import chylex.hee.system.util.component2
 import chylex.hee.system.util.component3
 import net.minecraft.block.state.IBlockState
 import net.minecraft.util.math.BlockPos
+import java.util.Random
 
-class SegmentedWorld(val worldSize: Size, private val segmentSize: Size, defaultSegmentFactory: (Size) -> ISegment){
+class SegmentedWorld(override val rand: Random, val worldSize: Size, private val segmentSize: Size, defaultSegmentFactory: (Size) -> ISegment) : IStructureWorld{
 	private val segmentCounts = Size(
 		(worldSize.x.toFloat() / segmentSize.x).ceilToInt(),
 		(worldSize.y.toFloat() / segmentSize.y).ceilToInt(),
@@ -17,6 +20,7 @@ class SegmentedWorld(val worldSize: Size, private val segmentSize: Size, default
 	)
 	
 	private val segments = Array(segmentCounts.x * segmentCounts.y * segmentCounts.z){ defaultSegmentFactory(segmentSize) }
+	private val triggers = mutableListOf<Pair<BlockPos, IStructureTrigger>>()
 	
 	init{
 		if (worldSize.x % 16 != 0 || worldSize.z % 16 != 0){
@@ -38,13 +42,25 @@ class SegmentedWorld(val worldSize: Size, private val segmentSize: Size, default
 		return Pair(segmentIndex, segmentOffset)
 	}
 	
-	fun getState(pos: BlockPos): IBlockState{
+	override fun getState(pos: BlockPos): IBlockState{
 		val (segmentIndex, segmentOffset) = mapPos(pos)
 		return segments[segmentIndex].getState(segmentOffset)
 	}
 	
-	fun setState(pos: BlockPos, state: IBlockState){
+	override fun setState(pos: BlockPos, state: IBlockState){
 		val (segmentIndex, segmentOffset) = mapPos(pos)
 		segments[segmentIndex] = segments[segmentIndex].withState(segmentOffset, state)
+	}
+	
+	fun getTriggers(): List<Pair<BlockPos, IStructureTrigger>>{
+		return triggers
+	}
+	
+	override fun addTrigger(pos: BlockPos, trigger: IStructureTrigger){
+		triggers.add(pos to trigger)
+	}
+	
+	override fun finalize(){
+		// unused
 	}
 }

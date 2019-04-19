@@ -6,6 +6,7 @@ import chylex.hee.system.util.component1
 import chylex.hee.system.util.component2
 import net.minecraft.entity.EnumCreatureType
 import net.minecraft.init.Biomes
+import net.minecraft.util.Rotation
 import net.minecraft.util.math.BlockPos
 import net.minecraft.world.World
 import net.minecraft.world.biome.Biome
@@ -17,49 +18,73 @@ import net.minecraft.world.gen.IChunkGenerator
 class ChunkGeneratorEndCustom(private val world: World) : IChunkGenerator{
 	private val definitelyTemporaryTerritoryWorldCache = mutableMapOf<TerritoryInstance, SegmentedWorld>() // TODO DEFINITELY TEMPORARY
 	
-	override fun generateChunk(x: Int, z: Int): Chunk{
-		return Chunk(world, primeChunk(x, z), x, z).apply {
+	// Instances
+	
+	private fun getInstance(chunkX: Int, chunkZ: Int): TerritoryInstance?{
+		return TerritoryInstance.fromPos((chunkX * 16) + 8, (chunkZ * 16) + 8)?.takeIf { it.generatesChunk(chunkX, chunkZ) }
+	}
+	
+	private fun getInternalOffset(chunkX: Int, chunkZ: Int, instance: TerritoryInstance): BlockPos{
+		val (startChunkX, startChunkZ) = instance.topLeftChunk
+		val internalOffsetX = (chunkX - startChunkX) * 16
+		val internalOffsetZ = (chunkZ - startChunkZ) * 16
+		
+		return Pos(internalOffsetX, 0, internalOffsetZ)
+	}
+	
+	private fun constructWorld(instance: TerritoryInstance): SegmentedWorld{
+		val territory = instance.territory
+		val generator = territory.gen
+		val rand = instance.createRandom(world)
+		
+		return SegmentedWorld(rand, territory.size, generator.segmentSize){
+			generator.defaultSegment()
+		}.also {
+			generator.provide(rand, it)
+		}
+	}
+	
+	// Generation & population
+	
+	override fun generateChunk(chunkX: Int, chunkZ: Int): Chunk{
+		return Chunk(world, primeChunk(chunkX, chunkZ), chunkX, chunkZ).apply {
 			biomeArray.fill(Biome.getIdForBiome(Biomes.SKY).toByte())
 			generateSkylightMap()
 		}
 	}
 	
 	private fun primeChunk(chunkX: Int, chunkZ: Int) = ChunkPrimer().apply {
-		val instance = TerritoryInstance.fromPos((chunkX * 16) + 8, (chunkZ * 16) + 8)
-		
-		if (instance == null || !instance.generatesChunk(chunkX, chunkZ)){
-			return@apply
-		}
-		
-		val (startChunkX, startChunkZ) = instance.topLeftChunk
-		
-		val internalOffsetX = (chunkX - startChunkX) * 16
-		val internalOffsetZ = (chunkZ - startChunkZ) * 16
-		val blockOffsetY = instance.territory.height.first
-		
+		val instance = getInstance(chunkX, chunkZ) ?: return@apply
 		val world = definitelyTemporaryTerritoryWorldCache.computeIfAbsent(instance, ::constructWorld)
 		
-		for(blockY in 0..world.worldSize.maxY) for(blockX in 0..15) for(blockZ in 0..15){
-			setBlockState(blockX, blockOffsetY + blockY, blockZ, world.getState(Pos(internalOffsetX + blockX, blockY, internalOffsetZ + blockZ)))
-		}
-	}
-	
-	private fun constructWorld(instance: TerritoryInstance): SegmentedWorld {
-		val territory = instance.territory
-		val generator = territory.gen
+		val blockOffsetY = instance.territory.height.first
+		val internalOffset = getInternalOffset(chunkX, chunkZ, instance)
 		
-		return SegmentedWorld(territory.size, generator.segmentSize) {
-			generator.defaultSegment()
-		}.also {
-			generator.provide(instance.createRandom(world), it)
+		for(blockY in 0..world.worldSize.maxY) for(blockX in 0..15) for(blockZ in 0..15){
+			setBlockState(blockX, blockOffsetY + blockY, blockZ, world.getState(internalOffset.add(blockX, blockY, blockZ)))
 		}
 	}
 	
-	override fun populate(x: Int, z: Int){} // TODO disable forge worldgen
+	override fun populate(chunkX: Int, chunkZ: Int){ // TODO disable forge worldgen
+		val instance = getInstance(chunkX, chunkZ) ?: return
+		
+		val startOffset = Pos(chunkX * 16, instance.territory.height.first, chunkZ * 16)
+		val internalOffset = getInternalOffset(chunkX, chunkZ, instance)
+		
+		for((pos, trigger) in definitelyTemporaryTerritoryWorldCache.computeIfAbsent(instance, ::constructWorld).getTriggers()){
+			val blockOffset = pos.subtract(internalOffset)
+			
+			if (blockOffset.x in 0..15 && blockOffset.z in 0..15){
+				trigger.realize(world, startOffset.add(blockOffset), Rotation.NONE)
+			}
+		}
+	}
 	
 	override fun getPossibleCreatures(creatureType: EnumCreatureType, pos: BlockPos): List<SpawnListEntry>{
 		return emptyList() // TODO could be a good idea to use this instead of a custom spawner
 	}
+	
+	// Neutralization
 	
 	override fun generateStructures(chunk: Chunk, x: Int, z: Int): Boolean{
 		return false
