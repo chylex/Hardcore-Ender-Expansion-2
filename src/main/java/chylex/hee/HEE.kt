@@ -10,8 +10,8 @@ import chylex.hee.game.item.util.CustomToolMaterial
 import chylex.hee.game.mechanics.TrinketHandler
 import chylex.hee.game.mechanics.causatum.EnderCausatum
 import chylex.hee.game.mechanics.instability.Instability
+import chylex.hee.game.world.WorldProviderEndCustom
 import chylex.hee.game.world.feature.OverworldFeatures
-import chylex.hee.game.world.provider.WorldProviderEndCustom
 import chylex.hee.game.world.territory.storage.TokenPlayerStorage
 import chylex.hee.init.ModConfig
 import chylex.hee.init.ModCreativeTabs

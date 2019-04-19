@@ -1,4 +1,4 @@
-package chylex.hee.game.world.provider.behavior
+package chylex.hee.game.world.provider
 import net.minecraft.world.border.WorldBorder
 
 class WorldBorderNull : WorldBorder(){

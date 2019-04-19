@@ -1,4 +1,5 @@
-package chylex.hee.game.world.generation
+package chylex.hee.game.world
+import chylex.hee.game.world.generation.SegmentedWorld
 import chylex.hee.game.world.territory.TerritoryInstance
 import chylex.hee.system.util.Pos
 import chylex.hee.system.util.component1
@@ -43,11 +44,11 @@ class ChunkGeneratorEndCustom(private val world: World) : IChunkGenerator{
 		}
 	}
 	
-	private fun constructWorld(instance: TerritoryInstance): SegmentedWorld{
+	private fun constructWorld(instance: TerritoryInstance): SegmentedWorld {
 		val territory = instance.territory
 		val generator = territory.gen
 		
-		return SegmentedWorld(territory.size, generator.segmentSize){
+		return SegmentedWorld(territory.size, generator.segmentSize) {
 			generator.defaultSegment()
 		}.also {
 			generator.provide(instance.createRandom(world), it)

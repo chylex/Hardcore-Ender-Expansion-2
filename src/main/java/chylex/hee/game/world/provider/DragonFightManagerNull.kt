@@ -1,4 +1,4 @@
-package chylex.hee.game.world.provider.behavior
+package chylex.hee.game.world.provider
 import net.minecraft.entity.boss.EntityDragon
 import net.minecraft.entity.item.EntityEnderCrystal
 import net.minecraft.entity.player.EntityPlayerMP

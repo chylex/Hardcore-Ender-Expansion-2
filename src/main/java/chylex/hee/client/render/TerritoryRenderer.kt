@@ -1,7 +1,7 @@
 package chylex.hee.client.render
 import chylex.hee.HEE
 import chylex.hee.client.render.util.GL
-import chylex.hee.game.world.provider.WorldProviderEndCustom
+import chylex.hee.game.world.WorldProviderEndCustom
 import chylex.hee.game.world.territory.TerritoryType
 import chylex.hee.system.util.color.IColor
 import chylex.hee.system.util.color.RGB

@@ -1,7 +1,7 @@
 package chylex.hee.system
 import chylex.hee.HEE
 import chylex.hee.game.block.BlockEndPortalOverride
-import chylex.hee.game.world.provider.WorldProviderEndCustom
+import chylex.hee.game.world.WorldProviderEndCustom
 import net.minecraft.init.Blocks
 import net.minecraft.world.DimensionType
 

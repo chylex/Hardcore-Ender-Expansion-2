@@ -1,8 +1,8 @@
 package chylex.hee.game.world.territory.properties
 import chylex.hee.HEE
-import chylex.hee.game.world.provider.WorldProviderEndCustom.Companion.DEFAULT_CELESTIAL_ANGLE
-import chylex.hee.game.world.provider.WorldProviderEndCustom.Companion.DEFAULT_SKY_LIGHT
-import chylex.hee.game.world.provider.WorldProviderEndCustom.Companion.DEFAULT_SUN_BRIGHTNESS
+import chylex.hee.game.world.WorldProviderEndCustom.Companion.DEFAULT_CELESTIAL_ANGLE
+import chylex.hee.game.world.WorldProviderEndCustom.Companion.DEFAULT_SKY_LIGHT
+import chylex.hee.game.world.WorldProviderEndCustom.Companion.DEFAULT_SUN_BRIGHTNESS
 import net.minecraft.client.Minecraft
 import net.minecraft.util.math.Vec3d
 import net.minecraftforge.client.IRenderHandler

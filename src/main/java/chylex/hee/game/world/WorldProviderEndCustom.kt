@@ -1,10 +1,9 @@
-package chylex.hee.game.world.provider
+package chylex.hee.game.world
 import chylex.hee.HEE
 import chylex.hee.client.render.territory.EmptyRenderer
 import chylex.hee.client.render.util.GL
-import chylex.hee.game.world.generation.ChunkGeneratorEndCustom
-import chylex.hee.game.world.provider.behavior.DragonFightManagerNull
-import chylex.hee.game.world.provider.behavior.WorldBorderNull
+import chylex.hee.game.world.provider.DragonFightManagerNull
+import chylex.hee.game.world.provider.WorldBorderNull
 import chylex.hee.game.world.territory.TerritoryInstance
 import chylex.hee.proxy.ModCommonProxy
 import net.minecraft.client.renderer.GlStateManager.FogMode.EXP2
@@ -53,7 +52,7 @@ class WorldProviderEndCustom : WorldProviderEnd(){
 		return ChunkGeneratorEndCustom(world)
 	}
 	
-	override fun getSaveFolder(): String?{
+	override fun getSaveFolder(): String{
 		return "DIM-HEE"
 	}
 	
