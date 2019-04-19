@@ -97,7 +97,19 @@ object ModRendering{
 	
 	// Blocks & items
 	
-	fun registerBlockStateMappers(){
+	fun registerBlockItemColors(){
+		setColor(ModBlocks.DRY_VINES, BlockDryVines.Color)
+		setColor(ModBlocks.DRY_VINES, IItemColor { _, tintIndex -> BlockDryVines.Color.colorMultiplier(ModBlocks.DRY_VINES.defaultState, null, null, tintIndex) })
+		setColor(ModBlocks.TABLE_PEDESTAL, BlockTablePedestal.Color)
+		
+		setColor(ModItems.BINDING_ESSENCE, ItemBindingEssence.Color)
+		setColor(ModItems.ENERGY_ORACLE, ItemEnergyOracle.Color)
+		setColor(ModItems.ENERGY_RECEPTACLE, ItemEnergyReceptacle.Color)
+		setColor(ModItems.PORTAL_TOKEN, ItemPortalToken.Color)
+		setColor(ModItems.VOID_BUCKET, ItemVoidBucket.Color)
+	}
+	
+	private fun registerBlockStateMappers(){
 		val emptyStateMapper = IStateMapper {
 			emptyMap()
 		}
@@ -119,22 +131,15 @@ object ModRendering{
 		setMapper(ModBlocks.LOOT_CHEST, singleStateMapper)
 	}
 	
-	fun registerBlockItemColors(){
-		setColor(ModBlocks.DRY_VINES, BlockDryVines.Color)
-		setColor(ModBlocks.DRY_VINES, IItemColor { _, tintIndex -> BlockDryVines.Color.colorMultiplier(ModBlocks.DRY_VINES.defaultState, null, null, tintIndex) })
-		setColor(ModBlocks.TABLE_PEDESTAL, BlockTablePedestal.Color)
-		
-		setColor(ModItems.BINDING_ESSENCE, ItemBindingEssence.Color)
-		setColor(ModItems.ENERGY_ORACLE, ItemEnergyOracle.Color)
-		setColor(ModItems.ENERGY_RECEPTACLE, ItemEnergyReceptacle.Color)
-		setColor(ModItems.PORTAL_TOKEN, ItemPortalToken.Color)
-		setColor(ModItems.VOID_BUCKET, ItemVoidBucket.Color)
+	private fun registerSpecialModels(){
+		ModelItemAmuletOfRecovery.register()
 	}
 	
 	@JvmStatic
 	@SubscribeEvent
 	fun onModels(e: ModelRegistryEvent){
-		ModelItemAmuletOfRecovery.register()
+		registerBlockStateMappers()
+		registerSpecialModels()
 		
 		val tables = arrayOf(
 			ModBlocks.TABLE_BASE,

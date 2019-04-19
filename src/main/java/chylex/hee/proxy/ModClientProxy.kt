@@ -21,7 +21,6 @@ class ModClientProxy : ModCommonProxy(){
 		
 		ModRendering.registerLayers()
 		ModRendering.registerTileEntities()
-		ModRendering.registerBlockStateMappers()
 		ModRendering.registerBlockItemColors()
 	}
 	
