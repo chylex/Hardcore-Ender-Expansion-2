@@ -14,7 +14,7 @@ import net.minecraft.world.chunk.ChunkPrimer
 import net.minecraft.world.gen.IChunkGenerator
 
 class ChunkGeneratorEndCustom(private val world: World) : IChunkGenerator{
-	private val definitelyTemporaryTerritoryWorldCache = mutableMapOf<TerritoryInstance, SegmentedWorld>()
+	private val definitelyTemporaryTerritoryWorldCache = mutableMapOf<TerritoryInstance, SegmentedWorld>() // TODO DEFINITELY TEMPORARY
 	
 	override fun generateChunk(x: Int, z: Int): Chunk{
 		return Chunk(world, primeChunk(x, z), x, z).apply {
@@ -54,7 +54,7 @@ class ChunkGeneratorEndCustom(private val world: World) : IChunkGenerator{
 		}
 	}
 	
-	override fun populate(x: Int, z: Int){}
+	override fun populate(x: Int, z: Int){} // TODO disable forge worldgen
 	
 	override fun getPossibleCreatures(creatureType: EnumCreatureType, pos: BlockPos): List<SpawnListEntry>{
 		return emptyList() // TODO could be a good idea to use this instead of a custom spawner

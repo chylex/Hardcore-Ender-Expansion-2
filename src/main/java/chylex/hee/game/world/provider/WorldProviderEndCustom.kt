@@ -53,6 +53,10 @@ class WorldProviderEndCustom : WorldProviderEnd(){
 		return ChunkGeneratorEndCustom(world)
 	}
 	
+	override fun getSaveFolder(): String?{
+		return "DIM-HEE"
+	}
+	
 	// Behavior properties
 	
 	override fun createWorldBorder() = WorldBorderNull()
