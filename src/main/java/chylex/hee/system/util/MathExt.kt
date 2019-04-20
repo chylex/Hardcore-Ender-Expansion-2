@@ -35,3 +35,11 @@ fun remapRange(value: Float, from: ClosedFloatingPointRange<Float>, to: ClosedFl
 	val remappedBetween0And1 = (value - from.start) / (from.endInclusive - from.start)
 	return to.start + remappedBetween0And1 * (to.endInclusive - to.start)
 }
+
+/**
+ * Maps a range of values in [from] range to values in [to] range using linear interpolation.
+ */
+fun remapRange(value: Double, from: ClosedFloatingPointRange<Double>, to: ClosedFloatingPointRange<Double>): Double{
+	val remappedBetween0And1 = (value - from.start) / (from.endInclusive - from.start)
+	return to.start + remappedBetween0And1 * (to.endInclusive - to.start)
+}

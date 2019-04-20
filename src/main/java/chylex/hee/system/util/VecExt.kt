@@ -22,6 +22,14 @@ operator fun Vec3d.component1() = x
 operator fun Vec3d.component2() = y
 operator fun Vec3d.component3() = z
 
+inline fun Vec3d.scale(factor: Float): Vec3d{
+	return this.scale(factor.toDouble())
+}
+
+inline fun Vec3d.scale(factor: Int): Vec3d{
+	return this.scale(factor.toDouble())
+}
+
 fun Vec3d.addY(y: Double): Vec3d{
 	return Vec3d(this.x, this.y + y, this.z)
 }
