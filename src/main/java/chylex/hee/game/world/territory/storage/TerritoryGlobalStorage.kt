@@ -1,5 +1,6 @@
 package chylex.hee.game.world.territory.storage
 import chylex.hee.game.world.territory.TerritoryInstance
+import chylex.hee.game.world.territory.TerritoryInstance.Companion.THE_HUB_INSTANCE
 import chylex.hee.game.world.territory.TerritoryType
 import chylex.hee.system.util.NBTList.Companion.setList
 import chylex.hee.system.util.NBTObjectList
@@ -16,14 +17,15 @@ class TerritoryGlobalStorage(name: String) : WorldSavedData(name){
 	
 	// Instance
 	
-	private val territoryData = EnumMap(TerritoryType.values().filter { it.canGenerate }.associate { it to mutableListOf<TerritoryEntry>() })
+	private val spawnEntry = TerritoryEntry(this, THE_HUB_INSTANCE)
+	private val territoryData = EnumMap(TerritoryType.values().filterNot { it.isSpawn }.associate { it to mutableListOf<TerritoryEntry>() })
 	
 	private fun makeEntry(territory: TerritoryType, index: Int): TerritoryEntry{
 		return TerritoryEntry(this, TerritoryInstance(territory, index))
 	}
 	
 	fun assignNewIndex(territory: TerritoryType): Int{
-		if (!territory.canGenerate){
+		if (territory.isSpawn){
 			return 0
 		}
 		
@@ -39,22 +41,25 @@ class TerritoryGlobalStorage(name: String) : WorldSavedData(name){
 	fun forInstance(instance: TerritoryInstance): TerritoryEntry?{
 		val (territory, index) = instance
 		
-		if (!territory.canGenerate){
-			return null
-		}
-		
-		return territoryData[territory]!!.getOrNull(index)
+		return if (territory.isSpawn)
+			spawnEntry
+		else
+			territoryData[territory]!!.getOrNull(index)
 	}
 	
 	// Serialization
 	
 	override fun writeToNBT(nbt: NBTTagCompound) = nbt.apply {
+		setTag("[Spawn]", spawnEntry.serializeNBT())
+		
 		for((key, list) in territoryData){
 			 setList(key.title, NBTObjectList.of(list.map(TerritoryEntry::serializeNBT)))
 		}
 	}
 	
 	override fun readFromNBT(nbt: NBTTagCompound) = with(nbt){
+		spawnEntry.deserializeNBT(getCompoundTag("[Spawn]"))
+		
 		for(key in keySet){
 			val territory = TerritoryType.fromTitle(key) ?: continue
 			val list = territoryData[territory]!!

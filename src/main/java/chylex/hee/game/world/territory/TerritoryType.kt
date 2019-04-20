@@ -54,6 +54,6 @@ enum class TerritoryType(
 	val translationKey
 		get() = "hee.territory.$title.name"
 	
-	val canGenerate
-		get() = ordinal > 0
+	val isSpawn
+		get() = ordinal == 0
 }

@@ -51,8 +51,8 @@ data class TerritoryInstance(val territory: TerritoryType, val index: Int){
 		fun fromPos(x: Int, z: Int): TerritoryInstance?{
 			val territory = TerritoryType.fromX(x) ?: return null
 			
-			if (!territory.canGenerate){
-				return TerritoryInstance(territory, 0)
+			if (territory.isSpawn){
+				return THE_HUB_INSTANCE
 			}
 			
 			val isPositiveZ = z >= -(CHUNK_MARGIN * 8)
