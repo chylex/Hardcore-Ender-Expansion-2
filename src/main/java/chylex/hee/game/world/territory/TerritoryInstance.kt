@@ -1,7 +1,10 @@
 package chylex.hee.game.world.territory
+import chylex.hee.game.mechanics.portal.SpawnInfo
+import chylex.hee.game.world.ChunkGeneratorEndCustom
 import chylex.hee.game.world.territory.TerritoryType.Companion.CHUNK_MARGIN
 import chylex.hee.game.world.territory.TerritoryType.Companion.CHUNK_X_OFFSET
 import chylex.hee.game.world.territory.TerritoryType.THE_HUB
+import chylex.hee.game.world.territory.storage.TerritoryGlobalStorage
 import chylex.hee.system.util.component1
 import chylex.hee.system.util.component2
 import chylex.hee.system.util.floorToInt
@@ -9,6 +12,7 @@ import net.minecraft.entity.Entity
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.ChunkPos
 import net.minecraft.world.World
+import net.minecraft.world.gen.ChunkProviderServer
 import java.util.Random
 import kotlin.math.abs
 
@@ -108,5 +112,31 @@ data class TerritoryInstance(val territory: TerritoryType, val index: Int){
 	
 	fun createRandom(world: World) = Random(world.seed).apply {
 		setSeed(nextLong() xor (66L * index) + (ordinal * nextInt()))
+	}
+	
+	fun prepareSpawnPoint(world: World, preloadChunks: Boolean): SpawnInfo{
+		val spawnPoint = getSpawnPoint(world)
+		val spawnChunk = ChunkPos(spawnPoint)
+		
+		if (preloadChunks){
+			for(chunkX in -7..7) for(chunkZ in -7..7){
+				world.getChunk(spawnChunk.x + chunkX, spawnChunk.z + chunkZ)
+			}
+		}
+		
+		// TODO ensure clearance
+		return SpawnInfo(spawnPoint, TerritoryGlobalStorage.get().forInstance(this)?.spawnYaw)
+	}
+	
+	private fun getSpawnPoint(world: World): BlockPos{
+		val storage = TerritoryGlobalStorage.get()
+		var spawnPos = storage.forInstance(this)?.lastSpawnPoint
+		
+		if (spawnPos == null){
+			((world.chunkProvider as? ChunkProviderServer)?.chunkGenerator as? ChunkGeneratorEndCustom)?.initializeSpawnPoint(this)
+			spawnPos = storage.forInstance(this)?.lastSpawnPoint
+		}
+		
+		return spawnPos ?: bottomCenterPos.let(world::getTopSolidOrLiquidBlock).up()
 	}
 }

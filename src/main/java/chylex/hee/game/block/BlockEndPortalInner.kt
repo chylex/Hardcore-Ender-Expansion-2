@@ -1,8 +1,8 @@
 package chylex.hee.game.block
 import chylex.hee.game.block.entity.TileEntityEndPortalAcceptor
 import chylex.hee.game.block.entity.TileEntityPortalInner
-import chylex.hee.game.mechanics.portal.EntityPortalContact
 import chylex.hee.game.mechanics.portal.DimensionTeleporter
+import chylex.hee.game.mechanics.portal.EntityPortalContact
 import chylex.hee.init.ModBlocks
 import chylex.hee.system.util.Pos
 import chylex.hee.system.util.closestTickingTile
@@ -32,7 +32,7 @@ class BlockEndPortalInner(builder: BlockSimple.Builder) : BlockAbstractPortal(bu
 					(min, max) -> DimensionTeleporter.LastPortal.updateForEntity(entity, Pos((min.x + max.x) / 2, pos.y, (min.z + max.z) / 2))
 				}
 				
-				entity.changeDimension(1)
+				entity.changeDimension(1, DimensionTeleporter.EndSpawnPortal)
 			}
 		}
 	}

@@ -2,9 +2,11 @@ package chylex.hee.game.world
 import chylex.hee.HEE
 import chylex.hee.client.render.territory.EmptyRenderer
 import chylex.hee.client.render.util.GL
+import chylex.hee.game.mechanics.portal.SpawnInfo
 import chylex.hee.game.world.provider.DragonFightManagerNull
 import chylex.hee.game.world.provider.WorldBorderNull
 import chylex.hee.game.world.territory.TerritoryInstance
+import chylex.hee.game.world.territory.TerritoryInstance.Companion.THE_HUB_INSTANCE
 import chylex.hee.proxy.ModCommonProxy
 import net.minecraft.client.renderer.GlStateManager.FogMode.EXP2
 import net.minecraft.entity.Entity
@@ -54,6 +56,24 @@ class WorldProviderEndCustom : WorldProviderEnd(){
 	
 	override fun getSaveFolder(): String{
 		return "DIM-HEE"
+	}
+	
+	// Spawn point
+	
+	fun getSpawnInfo(): SpawnInfo{
+		return THE_HUB_INSTANCE.prepareSpawnPoint(world, preloadChunks = true)
+	}
+	
+	override fun getSpawnPoint(): BlockPos{
+		return THE_HUB_INSTANCE.prepareSpawnPoint(world, preloadChunks = false).pos
+	}
+	
+	override fun getRandomizedSpawnPoint(): BlockPos{
+		return spawnPoint
+	}
+	
+	override fun getSpawnCoordinate(): BlockPos?{
+		return null
 	}
 	
 	// Behavior properties

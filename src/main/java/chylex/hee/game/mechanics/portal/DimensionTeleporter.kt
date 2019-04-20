@@ -1,4 +1,5 @@
 package chylex.hee.game.mechanics.portal
+import chylex.hee.game.world.WorldProviderEndCustom
 import chylex.hee.system.util.center
 import chylex.hee.system.util.getPosOrNull
 import chylex.hee.system.util.heeTagPersistent
@@ -22,6 +23,17 @@ sealed class DimensionTeleporter{
 		private fun placeAt(entity: Entity, target: Vec3d, yaw: Float){
 			entity.setLocationAndAngles(target.x, target.y, target.z, yaw, 0F)
 			entity.motionVec = Vec3d.ZERO
+		}
+	}
+	
+	object EndSpawnPortal : ITeleporter{
+		fun getSpawnInfo(world: World): SpawnInfo?{
+			return (world.provider as? WorldProviderEndCustom)?.getSpawnInfo()
+		}
+		
+		override fun placeEntity(world: World, entity: Entity, yaw: Float){
+			val (spawnPoint, spawnYaw) = getSpawnInfo(world) ?: return
+			placeAt(entity, spawnPoint.center.subtractY(0.45), spawnYaw ?: yaw)
 		}
 	}
 	

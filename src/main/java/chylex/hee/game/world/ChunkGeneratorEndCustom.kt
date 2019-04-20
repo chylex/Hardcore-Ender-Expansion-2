@@ -1,6 +1,7 @@
 package chylex.hee.game.world
-import chylex.hee.game.world.generation.SegmentedWorld
+import chylex.hee.game.world.generation.TerritoryGenerationCache
 import chylex.hee.game.world.territory.TerritoryInstance
+import chylex.hee.game.world.territory.storage.TerritoryGlobalStorage
 import chylex.hee.system.util.Pos
 import chylex.hee.system.util.component1
 import chylex.hee.system.util.component2
@@ -16,7 +17,7 @@ import net.minecraft.world.chunk.ChunkPrimer
 import net.minecraft.world.gen.IChunkGenerator
 
 class ChunkGeneratorEndCustom(private val world: World) : IChunkGenerator{
-	private val definitelyTemporaryTerritoryWorldCache = mutableMapOf<TerritoryInstance, SegmentedWorld>() // TODO DEFINITELY TEMPORARY
+	private val territoryCache = TerritoryGenerationCache(world)
 	
 	// Instances
 	
@@ -32,16 +33,8 @@ class ChunkGeneratorEndCustom(private val world: World) : IChunkGenerator{
 		return Pos(internalOffsetX, 0, internalOffsetZ)
 	}
 	
-	private fun constructWorld(instance: TerritoryInstance): SegmentedWorld{
-		val territory = instance.territory
-		val generator = territory.gen
-		val rand = instance.createRandom(world)
-		
-		return SegmentedWorld(rand, territory.size, generator.segmentSize){
-			generator.defaultSegment()
-		}.also {
-			generator.provide(rand, it)
-		}
+	fun initializeSpawnPoint(instance: TerritoryInstance){
+		TerritoryGlobalStorage.get().forInstance(instance)?.initializeSpawnPoint(territoryCache.get(instance).second)
 	}
 	
 	// Generation & population
@@ -55,23 +48,24 @@ class ChunkGeneratorEndCustom(private val world: World) : IChunkGenerator{
 	
 	private fun primeChunk(chunkX: Int, chunkZ: Int) = ChunkPrimer().apply {
 		val instance = getInstance(chunkX, chunkZ) ?: return@apply
-		val world = definitelyTemporaryTerritoryWorldCache.computeIfAbsent(instance, ::constructWorld)
+		val constructed = territoryCache.get(instance).first
 		
 		val blockOffsetY = instance.territory.height.first
 		val internalOffset = getInternalOffset(chunkX, chunkZ, instance)
 		
-		for(blockY in 0..world.worldSize.maxY) for(blockX in 0..15) for(blockZ in 0..15){
-			setBlockState(blockX, blockOffsetY + blockY, blockZ, world.getState(internalOffset.add(blockX, blockY, blockZ)))
+		for(blockY in 0..constructed.worldSize.maxY) for(blockX in 0..15) for(blockZ in 0..15){
+			setBlockState(blockX, blockOffsetY + blockY, blockZ, constructed.getState(internalOffset.add(blockX, blockY, blockZ)))
 		}
 	}
 	
 	override fun populate(chunkX: Int, chunkZ: Int){ // TODO disable forge worldgen
 		val instance = getInstance(chunkX, chunkZ) ?: return
+		val constructed = territoryCache.get(instance).first
 		
 		val startOffset = Pos(chunkX * 16, instance.territory.height.first, chunkZ * 16)
 		val internalOffset = getInternalOffset(chunkX, chunkZ, instance)
 		
-		for((pos, trigger) in definitelyTemporaryTerritoryWorldCache.computeIfAbsent(instance, ::constructWorld).getTriggers()){
+		for((pos, trigger) in constructed.getTriggers()){
 			val blockOffset = pos.subtract(internalOffset)
 			
 			if (blockOffset.x in 0..15 && blockOffset.z in 0..15){

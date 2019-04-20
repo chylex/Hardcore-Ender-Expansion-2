@@ -4,9 +4,10 @@ import chylex.hee.game.block.BlockVoidPortalInner.Type.RETURN_ACTIVE
 import chylex.hee.game.block.entity.TileEntityPortalInner
 import chylex.hee.game.block.entity.TileEntityVoidPortalStorage
 import chylex.hee.game.block.util.Property
+import chylex.hee.game.mechanics.portal.DimensionTeleporter
 import chylex.hee.game.mechanics.portal.EntityPortalContact
+import chylex.hee.game.mechanics.portal.SpawnInfo
 import chylex.hee.game.world.territory.TerritoryInstance
-import chylex.hee.game.world.territory.storage.TerritoryGlobalStorage
 import chylex.hee.game.world.util.Teleporter
 import chylex.hee.game.world.util.Teleporter.FxRange.Silent
 import chylex.hee.system.util.center
@@ -30,10 +31,13 @@ class BlockVoidPortalInner(builder: BlockSimple.Builder) : BlockAbstractPortal(b
 		
 		private val TELEPORTER = Teleporter(postEvent = false, effectRange = Silent)
 		
-		private fun teleportEntity(entity: Entity, target: BlockPos){
-			val targetVec = target.center.subtractY(0.45)
+		private fun teleportEntity(entity: Entity, info: SpawnInfo){
+			val targetVec = info.pos.center.subtractY(0.45)
 			
 			if (entity is EntityLivingBase){
+				info.yaw?.let { entity.rotationYaw = it }
+				entity.rotationPitch = 0F
+				
 				TELEPORTER.toLocation(entity, targetVec)
 			}
 			else{
@@ -81,14 +85,15 @@ class BlockVoidPortalInner(builder: BlockSimple.Builder) : BlockAbstractPortal(b
 		
 		when(pos.getState(world).getValue(TYPE)){
 			HUB -> {
-				pos.closestTickingTile<TileEntityVoidPortalStorage>(world, MAX_DISTANCE_FROM_FRAME)
-					?.currentInstance
-					?.let(TerritoryGlobalStorage.get()::forInstance)
-					?.let { teleportEntity(entity, it.lastSpawnPos) }
+				val instance = pos.closestTickingTile<TileEntityVoidPortalStorage>(world, MAX_DISTANCE_FROM_FRAME)?.currentInstance
+				
+				if (instance != null){
+					teleportEntity(entity, instance.prepareSpawnPoint(world, preloadChunks = true))
+				}
 			}
 			
 			RETURN_ACTIVE -> {
-				teleportEntity(entity, world.spawnPoint)
+				DimensionTeleporter.EndSpawnPortal.getSpawnInfo(world)?.let { teleportEntity(entity, it) }
 			}
 			
 			else -> {}
