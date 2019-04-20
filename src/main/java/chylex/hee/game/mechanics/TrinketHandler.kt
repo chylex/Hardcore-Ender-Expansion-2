@@ -110,8 +110,10 @@ object TrinketHandler{
 			val handler = entity.getCapOrNull(CAP_TRINKET_SLOT) ?: return
 			
 			with(entity.inventoryContainer){
-				inventorySlots.add(SlotTrinketItemInventory(handler, inventorySlots.size))
-				inventoryItemStacks.add(handler.item)
+				if (inventorySlots.none { it is SlotTrinketItemInventory }){
+					inventorySlots.add(SlotTrinketItemInventory(handler, inventorySlots.size))
+					inventoryItemStacks.add(handler.item)
+				}
 			}
 		}
 	}
