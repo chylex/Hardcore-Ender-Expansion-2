@@ -7,6 +7,7 @@ import chylex.hee.game.block.BlockVoidPortalInner.Type.RETURN_ACTIVE
 import chylex.hee.game.block.entity.TileEntityPortalInner
 import chylex.hee.game.block.entity.TileEntityVoidPortalStorage
 import chylex.hee.game.world.territory.TerritoryInstance.Companion.THE_HUB_INSTANCE
+import chylex.hee.init.ModBlocks
 import chylex.hee.system.util.closestTickingTile
 import chylex.hee.system.util.getState
 import chylex.hee.system.util.math.LerpedFloat
@@ -22,7 +23,7 @@ object RenderTileVoidPortal : RenderTileAbstractPortal<TileEntityPortalInner.Voi
 		override val clientAnimationProgress = LerpedFloat(1F)
 	}
 	
-	override fun findController(world: World, pos: BlockPos) = when(pos.getState(world).getValue(TYPE)){
+	override fun findController(world: World, pos: BlockPos) = when(pos.getState(world).takeIf { it.block === ModBlocks.VOID_PORTAL_INNER }?.getValue(TYPE)){
 		HUB -> pos.closestTickingTile<TileEntityVoidPortalStorage>(world, BlockAbstractPortal.MAX_DISTANCE_FROM_FRAME)
 		RETURN_ACTIVE -> ActiveReturnController
 		else -> null
