@@ -13,7 +13,7 @@ import net.minecraft.util.math.Vec3d
 import net.minecraft.world.World
 import net.minecraftforge.common.util.ITeleporter
 
-sealed class OverworldTeleporter{
+sealed class DimensionTeleporter{
 	private companion object{
 		private fun spawnPoint(world: World): Vec3d{
 			return world.spawnPoint.let(world::getTopSolidOrLiquidBlock).center.subtractY(0.49)
