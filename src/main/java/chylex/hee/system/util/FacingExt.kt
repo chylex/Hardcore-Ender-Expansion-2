@@ -6,6 +6,7 @@ import net.minecraft.block.BlockHorizontal
 import net.minecraft.block.state.IBlockState
 import net.minecraft.util.EnumFacing
 import net.minecraft.util.Rotation
+import net.minecraft.util.math.Vec3d
 import java.util.Random
 
 // Facing
@@ -13,9 +14,13 @@ import java.util.Random
 object Facing4 : List<EnumFacing> by EnumFacing.HORIZONTALS.toList(){
 	private val allPermutations = Collections2.permutations(this).toTypedArray()
 	fun randomPermutation(rand: Random) = rand.nextItem(allPermutations)
+	
+	fun fromDirection(source: Vec3d, target: Vec3d) = EnumFacing.getFacingFromVector((target.x - source.x).toFloat(), 0F, (target.z - source.z).toFloat())
 }
 
-object Facing6 : List<EnumFacing> by EnumFacing.VALUES.toList()
+object Facing6 : List<EnumFacing> by EnumFacing.VALUES.toList(){
+	fun fromDirection(source: Vec3d, target: Vec3d) = EnumFacing.getFacingFromVector((target.x - source.x).toFloat(), (target.y - source.y).toFloat(), (target.z - source.z).toFloat())
+}
 
 // Rotation
 

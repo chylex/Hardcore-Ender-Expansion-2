@@ -31,12 +31,20 @@ inline fun Vec3d.scale(factor: Int): Vec3d{
 	return this.scale(factor.toDouble())
 }
 
+fun Vec3d.withY(y: Double): Vec3d{
+	return Vec3d(this.x, y, this.z)
+}
+
 fun Vec3d.addY(y: Double): Vec3d{
 	return Vec3d(this.x, this.y + y, this.z)
 }
 
 fun Vec3d.subtractY(y: Double): Vec3d{
 	return Vec3d(this.x, this.y - y, this.z)
+}
+
+fun Vec3d.scaleY(factor: Double): Vec3d{
+	return Vec3d(this.x, this.y * factor, this.z)
 }
 
 fun Vec3d.toYaw(): Float{
