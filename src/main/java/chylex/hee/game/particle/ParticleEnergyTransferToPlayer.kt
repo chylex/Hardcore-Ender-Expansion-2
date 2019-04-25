@@ -101,7 +101,7 @@ object ParticleEnergyTransferToPlayer : IParticleMaker{
 				newTargetPos = player
 					.lookPosVec
 					.subtractY(handOffset)
-					.add(Vec3d.fromPitchYaw(0F, player.renderYawOffset + yawOffsetMp * 39F).scale(0.52))
+					.add(Vec3.fromYaw(player.renderYawOffset + yawOffsetMp * 39F).scale(0.52))
 			}
 			
 			setupMotion(speed + (particleAge * 0.005))

@@ -26,6 +26,7 @@ import chylex.hee.system.util.offsetUntil
 import chylex.hee.system.util.playClient
 import chylex.hee.system.util.posVec
 import chylex.hee.system.util.readPos
+import chylex.hee.system.util.scale
 import chylex.hee.system.util.setPos
 import chylex.hee.system.util.square
 import chylex.hee.system.util.subtractY
@@ -205,7 +206,7 @@ class EntityProjectileEyeOfEnder : Entity, IEntityAdditionalSpawnData{
 	
 	private fun updateTargetAltitude(){
 		val perpendicular = Vec3.fromXZ(-(motionZ * 3.0), motionX * 3.0)
-		val step = motionVec.scale(4.0)
+		val step = motionVec.scale(4)
 		
 		val parallelStarts = arrayOf(
 			posVec,
@@ -216,7 +217,7 @@ class EntityProjectileEyeOfEnder : Entity, IEntityAdditionalSpawnData{
 		val checkedBlocks = HashSet<BlockPos>(36, 1F)
 		
 		parallelStarts.flatMapTo(checkedBlocks){
-			start -> (0..11).map { world.getHeight(Pos(start.add(step.scale(it.toDouble())))) }
+			start -> (0..11).map { world.getHeight(Pos(start.add(step.scale(it)))) }
 		}
 		
 		if (checkedBlocks.isEmpty()){
@@ -270,7 +271,7 @@ class EntityProjectileEyeOfEnder : Entity, IEntityAdditionalSpawnData{
 			}
 		}
 		
-		val (newX, _, newZ) = posVec.add(motionVec.scale(speed.toDouble()))
+		val (newX, _, newZ) = posVec.add(motionVec.scale(speed))
 		val newY = posY + (targetY - posY) * 0.03 * ySpeedMp
 		setPosition(newX, newY, newZ)
 	}

@@ -14,10 +14,14 @@ class RandomBiasedValueRange(min: Float, max: Float, private val highestChanceVa
 	}
 	
 	/*
+
+import java.util.Random
+import chylex.hee.system.util.nextBiasedFloat
+import kotlin.math.roundToInt
 	
 val rand = Random()
 
-(1..10000).map {
+(1..100000).map {
 	val min = 3F
 	val max = 10F
 	val highestChanceValue = 6.5F

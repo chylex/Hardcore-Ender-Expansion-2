@@ -9,6 +9,7 @@ import chylex.hee.system.util.distanceSqTo
 import chylex.hee.system.util.heeTag
 import chylex.hee.system.util.motionVec
 import chylex.hee.system.util.posVec
+import chylex.hee.system.util.scale
 import chylex.hee.system.util.selectEntities
 import chylex.hee.system.util.toRadians
 import net.minecraft.entity.Entity
@@ -123,7 +124,7 @@ class EntityProjectileSpatialDash : Entity, IProjectile{
 	override fun entityInit(){}
 	
 	override fun shoot(dirX: Double, dirY: Double, dirZ: Double, velocity: Float, inaccuracy: Float){
-		this.motionVec = Vec3d(dirX, dirY, dirZ).normalize().scale(velocity.toDouble())
+		this.motionVec = Vec3d(dirX, dirY, dirZ).normalize().scale(velocity)
 	}
 	
 	override fun onUpdate(){
@@ -169,7 +170,7 @@ class EntityProjectileSpatialDash : Entity, IProjectile{
 		val nextMot = if (currentMot.length() <= range)
 			currentMot
 		else
-			currentMot.normalize().scale(range.toDouble())
+			currentMot.normalize().scale(range)
 		
 		val nextPos = currentPos.add(nextMot)
 		val blockResult = world.rayTraceBlocks(currentPos, nextPos)
