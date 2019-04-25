@@ -9,7 +9,7 @@ import java.util.Random
 object Generator_TheHub : ITerritoryGenerator{
 	override val segmentSize = Size(32, 32, 32)
 	
-	override fun provide(rand: Random, world: SegmentedWorld): TerritoryGenerationInfo{
+	override fun provide(world: SegmentedWorld): TerritoryGenerationInfo{
 		return TerritoryGenerationInfo(BlockPos.ORIGIN)
 	}
 }

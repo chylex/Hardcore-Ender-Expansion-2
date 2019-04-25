@@ -7,6 +7,7 @@ import chylex.hee.system.util.component1
 import chylex.hee.system.util.component2
 import net.minecraft.entity.EnumCreatureType
 import net.minecraft.init.Biomes
+import net.minecraft.init.Blocks
 import net.minecraft.util.Rotation
 import net.minecraft.util.math.BlockPos
 import net.minecraft.world.World
@@ -49,11 +50,23 @@ class ChunkGeneratorEndCustom(private val world: World) : IChunkGenerator{
 	private fun primeChunk(chunkX: Int, chunkZ: Int) = ChunkPrimer().apply {
 		val instance = getInstance(chunkX, chunkZ) ?: return@apply
 		val constructed = territoryCache.get(instance).first
+		val height = constructed.worldSize.y
 		
+		val defaultState = instance.territory.gen.defaultBlock.defaultState
 		val blockOffsetY = instance.territory.height.first
 		val internalOffset = getInternalOffset(chunkX, chunkZ, instance)
 		
-		for(blockY in 0..constructed.worldSize.maxY) for(blockX in 0..15) for(blockZ in 0..15){
+		for(blockX in 0..15) for(blockZ in 0..15){
+			for(blockY in 0 until blockOffsetY){
+				setBlockState(blockX, blockY, blockZ, defaultState)
+			}
+			
+			for(blockY in height until 256){
+				setBlockState(blockX, blockY, blockZ, defaultState)
+			}
+		}
+		
+		for(blockY in 0 until height) for(blockX in 0..15) for(blockZ in 0..15){
 			setBlockState(blockX, blockOffsetY + blockY, blockZ, constructed.getState(internalOffset.add(blockX, blockY, blockZ)))
 		}
 	}

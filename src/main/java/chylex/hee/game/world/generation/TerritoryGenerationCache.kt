@@ -1,4 +1,5 @@
 package chylex.hee.game.world.generation
+import chylex.hee.game.world.generation.segments.SegmentSingleState
 import chylex.hee.game.world.territory.TerritoryInstance
 import net.minecraft.world.World
 
@@ -10,8 +11,11 @@ class TerritoryGenerationCache(private val world: World){
 		val generator = territory.gen
 		val rand = instance.createRandom(world)
 		
-		val world = SegmentedWorld(rand, territory.size, generator.segmentSize){ generator.defaultSegment() }
-		val info = generator.provide(rand, world)
+		val segmentSize = generator.segmentSize
+		val defaultBlock = generator.defaultBlock
+		
+		val world = SegmentedWorld(rand, territory.size, segmentSize){ SegmentSingleState(segmentSize, defaultBlock) }
+		val info = generator.provide(world)
 		
 		return world to info
 	}
