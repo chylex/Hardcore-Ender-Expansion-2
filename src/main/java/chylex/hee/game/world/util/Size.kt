@@ -14,8 +14,11 @@ import net.minecraft.util.Rotation.NONE
 import net.minecraft.util.math.AxisAlignedBB
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.Vec3d
+import net.minecraft.util.math.Vec3i
 
 data class Size(val x: Int, val y: Int, val z: Int){
+	constructor(xyz: Int) : this(xyz, xyz, xyz)
+	
 	enum class Alignment{
 		MIN, CENTER, MAX
 	}
@@ -56,6 +59,10 @@ data class Size(val x: Int, val y: Int, val z: Int){
 	fun rotate(rotation: Rotation) = when(rotation){
 		NONE, CLOCKWISE_180 -> this
 		CLOCKWISE_90, COUNTERCLOCKWISE_90 -> Size(z, y, x)
+	}
+	
+	fun expand(by: Vec3i): Size{
+		return Size(x + by.x, y + by.y, z + by.z)
 	}
 	
 	fun toBoundingBox(offset: BlockPos): BoundingBox{
