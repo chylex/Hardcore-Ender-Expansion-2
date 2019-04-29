@@ -14,7 +14,7 @@ class BlockEndPowderOre(builder: BlockSimple.Builder) : BlockSimple(builder){
 	}
 	
 	override fun getExpDrop(state: IBlockState, world: IBlockAccess, pos: BlockPos, fortune: Int): Int{
-		return ((world as? World)?.rand ?: RANDOM).nextInt(1, 3)
+		return ((world as? World)?.rand ?: RANDOM).nextInt(1, 2)
 	}
 	
 	override fun canSilkHarvest(): Boolean = true
