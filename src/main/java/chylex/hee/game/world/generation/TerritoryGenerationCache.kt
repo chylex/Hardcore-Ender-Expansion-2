@@ -11,10 +11,15 @@ class TerritoryGenerationCache(private val world: World){
 		val generator = territory.gen
 		val rand = instance.createRandom(world)
 		
+		val worldSize = territory.size
 		val segmentSize = generator.segmentSize
 		val defaultBlock = generator.defaultBlock
 		
-		val world = SegmentedWorld(rand, territory.size, segmentSize){ SegmentSingleState(segmentSize, defaultBlock) }
+		if (worldSize.x % 16 != 0 || worldSize.z % 16 != 0){
+			throw IllegalArgumentException("territory world size must be chunk-aligned")
+		}
+		
+		val world = SegmentedWorld(rand, worldSize, segmentSize){ SegmentSingleState(segmentSize, defaultBlock) }
 		val info = generator.provide(world)
 		
 		return world to info

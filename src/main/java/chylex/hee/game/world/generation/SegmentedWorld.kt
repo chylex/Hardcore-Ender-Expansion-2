@@ -25,12 +25,6 @@ class SegmentedWorld(override val rand: Random, val worldSize: Size, private val
 	private val segments = Array(segmentCounts.x * segmentCounts.y * segmentCounts.z){ defaultSegmentFactory(segmentSize) }
 	private val triggers = mutableListOf<Pair<BlockPos, IStructureTrigger>>()
 	
-	init{
-		if (worldSize.x % 16 != 0 || worldSize.z % 16 != 0){
-			throw IllegalArgumentException("segmented world size must be chunk-aligned")
-		}
-	}
-	
 	private fun mapPos(pos: BlockPos): Pair<Int, BlockPos>?{
 		if (!isInside(pos)){
 			HEE.log.warn("[SegmentedWorld] attempted to access position outside bounds: $pos is outside $worldSize")
