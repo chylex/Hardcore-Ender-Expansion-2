@@ -17,6 +17,14 @@ enum class TerritoryType(
 		gen    = Generator_TheHub,
 		chunks = 24,
 		height = 0 until 128
+	),
+	
+	FORGOTTEN_TOMBS(
+		title  = "forgotten_tombs",
+		desc   = Territory_TheHub, // TODO
+		gen    = Generator_TheHub, // TODO
+		chunks = 28,
+		height = 0 until 256
 	);
 	
 	companion object{
