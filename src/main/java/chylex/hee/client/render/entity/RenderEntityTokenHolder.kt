@@ -13,6 +13,7 @@ import net.minecraft.client.renderer.entity.RenderManager
 import net.minecraft.util.ResourceLocation
 import net.minecraftforge.fml.relauncher.Side
 import net.minecraftforge.fml.relauncher.SideOnly
+import kotlin.math.pow
 
 @SideOnly(Side.CLIENT)
 class RenderEntityTokenHolder(manager: RenderManager) : Render<EntityTokenHolder>(manager){
@@ -25,17 +26,21 @@ class RenderEntityTokenHolder(manager: RenderManager) : Render<EntityTokenHolder
 	private val model = ModelEntityTokenHolder()
 	
 	override fun doRender(entity: EntityTokenHolder, x: Double, y: Double, z: Double, rotationYaw: Float, partialTicks: Float){
+		val charge = entity.renderCharge.get(partialTicks)
+		val scale = 0.25F + (0.25F * charge.pow(1.5F))
+		val alpha = 0.35F + (0.475F * charge.pow(5.5F))
+		
 		GL.pushMatrix()
 		GL.translate(x, y + (entity.height * 0.5F), z)
 		
 		GL.pushMatrix()
-		GL.scale(0.5F, 0.5F, 0.5F)
+		GL.scale(scale, scale, scale)
 		GL.rotate(entity.renderRotation.get(partialTicks), 0F, 1F, 0F)
 		GL.rotate(55F, 1F, 0F, 1F)
 		
 		GL.enableBlend()
 		GL.blendFunc(SRC_ALPHA, ONE_MINUS_SRC_ALPHA)
-		GL.color(1F, 1F, 1F, 0.825F)
+		GL.color(1F, 1F, 1F, alpha)
 		
 		bindEntityTexture(entity)
 		model.render()
