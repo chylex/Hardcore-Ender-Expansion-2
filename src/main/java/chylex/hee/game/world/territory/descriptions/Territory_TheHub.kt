@@ -1,12 +1,17 @@
 package chylex.hee.game.world.territory.descriptions
 import chylex.hee.client.render.territory.EmptyRenderer
+import chylex.hee.game.entity.item.EntityTokenHolder
 import chylex.hee.game.world.territory.ITerritoryDescription
+import chylex.hee.game.world.territory.TerritoryInstance
+import chylex.hee.game.world.territory.TerritoryType.FORGOTTEN_TOMBS
 import chylex.hee.game.world.territory.properties.TerritoryColors
 import chylex.hee.game.world.territory.properties.TerritoryEnvironment
+import chylex.hee.game.world.territory.properties.TerritoryTokenHolders
 import chylex.hee.system.util.color.HCL
 import chylex.hee.system.util.nextFloat
 import net.minecraft.util.math.Vec3d
 import java.util.Random
+import kotlin.math.min
 
 object Territory_TheHub : ITerritoryDescription{
 	override val colors = object : TerritoryColors(){
@@ -35,5 +40,29 @@ object Territory_TheHub : ITerritoryDescription{
 		
 		override val fogColor = Vec3d(0.0, 0.0, 0.0)
 		override val fogDensity = 0F
+	}
+	
+	override val tokenHolders = object : TerritoryTokenHolders(){
+		override fun onTick(holder: EntityTokenHolder, instance: TerritoryInstance){
+			if (holder.territoryType == FORGOTTEN_TOMBS){
+				val currentCharge = holder.currentCharge
+				
+				if (currentCharge < 1F){
+					holder.currentCharge = min(1F, currentCharge + (1F / 600F))
+				}
+			}
+			else{
+				super.onTick(holder, instance)
+			}
+		}
+		
+		override fun afterUse(holder: EntityTokenHolder, instance: TerritoryInstance){
+			if (holder.territoryType == FORGOTTEN_TOMBS){
+				holder.currentCharge = 0F
+			}
+			else{
+				super.afterUse(holder, instance)
+			}
+		}
 	}
 }

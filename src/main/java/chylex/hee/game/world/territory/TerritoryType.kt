@@ -16,7 +16,7 @@ enum class TerritoryType(
 		desc   = Territory_TheHub,
 		gen    = Generator_TheHub,
 		chunks = 24,
-		height = 0 until 128
+		height = 64 until 192
 	),
 	
 	FORGOTTEN_TOMBS(
