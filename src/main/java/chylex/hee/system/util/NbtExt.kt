@@ -125,7 +125,7 @@ inline fun <reified T : Enum<T>> NBTTagCompound.getEnum(key: String): T?{
 	return if (value.isEmpty())
 		null
 	else
-		java.lang.Enum.valueOf(T::class.java, value.toUpperCase(Locale.ROOT))
+		try{ java.lang.Enum.valueOf(T::class.java, value.toUpperCase(Locale.ROOT)) }catch(e: IllegalArgumentException){ null }
 }
 
 // Presence checks
