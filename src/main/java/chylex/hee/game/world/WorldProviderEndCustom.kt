@@ -115,12 +115,12 @@ class WorldProviderEndCustom : WorldProviderEnd(){
 	
 	@SideOnly(Side.CLIENT)
 	override fun getSkyRenderer(): IRenderHandler?{
-		return clientEnvironment?.skyRenderer ?: EmptyRenderer
+		return clientEnvironment?.renderer ?: EmptyRenderer
 	}
 	
 	@SideOnly(Side.CLIENT)
 	override fun getSkyColor(camera: Entity, partialTicks: Float): Vec3d{
-		return clientEnvironment?.skyColor ?: Vec3d.ZERO
+		return clientEnvironment?.fogColor ?: Vec3d.ZERO // return fog color because vanilla blends fog into sky color based on chunk render distance
 	}
 	
 	// Visual properties (Fog)
