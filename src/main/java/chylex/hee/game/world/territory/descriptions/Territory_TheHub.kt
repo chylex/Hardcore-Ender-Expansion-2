@@ -1,5 +1,6 @@
 package chylex.hee.game.world.territory.descriptions
-import chylex.hee.client.render.territory.EmptyRenderer
+import chylex.hee.client.render.territory.EnvironmentRenderer
+import chylex.hee.client.render.territory.components.SkyCubeStatic
 import chylex.hee.game.entity.item.EntityTokenHolder
 import chylex.hee.game.world.territory.ITerritoryDescription
 import chylex.hee.game.world.territory.TerritoryInstance
@@ -7,6 +8,7 @@ import chylex.hee.game.world.territory.TerritoryType.FORGOTTEN_TOMBS
 import chylex.hee.game.world.territory.properties.TerritoryColors
 import chylex.hee.game.world.territory.properties.TerritoryEnvironment
 import chylex.hee.game.world.territory.properties.TerritoryTokenHolders
+import chylex.hee.system.Resource
 import chylex.hee.system.util.color.HCL
 import chylex.hee.system.util.nextFloat
 import net.minecraft.util.math.Vec3d
@@ -35,11 +37,16 @@ object Territory_TheHub : ITerritoryDescription{
 	}
 	
 	override val environment = object : TerritoryEnvironment(){
-		override val skyColor = Vec3d(1.0, 1.0, 1.0)
-		override val skyRenderer = EmptyRenderer
+		override val fogColor = Vec3d(0.04, 0.04, 0.04)
+		override val fogDensity = 0.0115F
 		
-		override val fogColor = Vec3d(0.0, 0.0, 0.0)
-		override val fogDensity = 0F
+		override val renderer = EnvironmentRenderer(
+			SkyCubeStatic(
+				texture = Resource.Vanilla("textures/environment/end_sky.png"),
+				color = Vec3d(0.2, 0.2, 0.2),
+				alpha = 1F
+			)
+		)
 	}
 	
 	override val tokenHolders = object : TerritoryTokenHolders(){
