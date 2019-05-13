@@ -1,6 +1,6 @@
 package chylex.hee.client.render.util
+import chylex.hee.client.util.MC
 import chylex.hee.system.util.color.HCL
-import net.minecraft.client.Minecraft
 import net.minecraftforge.fml.relauncher.Side
 import net.minecraftforge.fml.relauncher.SideOnly
 
@@ -27,7 +27,7 @@ class ColorTransition(private val defaultColor: HCL, private val transitionDurat
 		currentTo = null
 		currentProgress = 0F
 		
-		lastUpdateTime = Minecraft.getSystemTime()
+		lastUpdateTime = MC.systemTime
 	}
 	
 	fun resetQueue(){
@@ -44,7 +44,7 @@ class ColorTransition(private val defaultColor: HCL, private val transitionDurat
 	}
 	
 	fun updateGetColor(): HCL{
-		val currentTime = Minecraft.getSystemTime()
+		val currentTime = MC.systemTime
 		val elapsedTime = currentTime - lastUpdateTime
 		
 		lastUpdateTime = currentTime

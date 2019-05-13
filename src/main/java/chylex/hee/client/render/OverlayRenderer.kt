@@ -1,6 +1,7 @@
 package chylex.hee.client.render
 import chylex.hee.HEE
 import chylex.hee.client.render.util.GL
+import chylex.hee.client.util.MC
 import chylex.hee.game.block.entity.TileEntityEnergyCluster
 import chylex.hee.game.block.material.Materials
 import chylex.hee.game.mechanics.energy.IEnergyQuantity
@@ -11,9 +12,7 @@ import chylex.hee.system.Resource
 import chylex.hee.system.util.color.RGB
 import chylex.hee.system.util.getBlock
 import chylex.hee.system.util.getTile
-import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.Gui
-import net.minecraft.client.gui.ScaledResolution
 import net.minecraft.client.renderer.ActiveRenderInfo
 import net.minecraft.client.renderer.GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA
 import net.minecraft.client.renderer.GlStateManager.DestFactor.ZERO
@@ -37,8 +36,6 @@ object OverlayRenderer{
 	private const val LINE_SPACING = 7
 	
 	@JvmStatic private val TEX_ENDER_GOO_OVERLAY = Resource.Custom("textures/overlay/ender_goo.png")
-	
-	private val mc = Minecraft.getMinecraft()
 	
 	private var clusterLookedAt: TileEntityEnergyCluster? = null
 	
@@ -64,18 +61,18 @@ object OverlayRenderer{
 			return
 		}
 		
-		val player = mc.player
-		val insideOf = ActiveRenderInfo.getBlockStateAtEntityViewpoint(mc.world, player, e.partialTicks)
+		val player = MC.player ?: return
+		val insideOf = ActiveRenderInfo.getBlockStateAtEntityViewpoint(player.world, player, e.partialTicks)
 		
-		if (insideOf.material === Materials.ENDER_GOO && mc.gameSettings.thirdPersonView == 0 && !player.isSpectator){
-			val scaledResolution = ScaledResolution(mc)
+		if (insideOf.material === Materials.ENDER_GOO && MC.settings.thirdPersonView == 0 && !player.isSpectator){
+			val scaledResolution = MC.resolution
 			val brightness = player.brightness
 			
 			GL.color(brightness, brightness, brightness, 1F)
 			GL.tryBlendFuncSeparate(SRC_ALPHA, ONE_MINUS_SRC_ALPHA, ONE, ZERO)
 			
-			mc.textureManager.bindTexture(TEX_ENDER_GOO_OVERLAY)
-			mc.ingameGUI.drawTexturedModalRect(0, 0, 0, 0, scaledResolution.scaledWidth, scaledResolution.scaledHeight)
+			MC.textureManager.bindTexture(TEX_ENDER_GOO_OVERLAY)
+			MC.instance.ingameGUI.drawTexturedModalRect(0, 0, 0, 0, scaledResolution.scaledWidth, scaledResolution.scaledHeight)
 			
 			GL.color(1F, 1F, 1F, 1F)
 		}
@@ -87,11 +84,11 @@ object OverlayRenderer{
 	@SubscribeEvent
 	fun onRenderText(e: RenderGameOverlayEvent.Text){
 		fun drawTextOffScreenCenter(x: Int, y: Int, text: String, color: Int){
-			val scaledResolution = ScaledResolution(mc)
+			val scaledResolution = MC.resolution
 			val centerX = x + (scaledResolution.scaledWidth / 2)
 			val centerY = y + (scaledResolution.scaledHeight / 2)
 			
-			with(mc.fontRenderer){
+			with(MC.fontRenderer){
 				val textWidth = getStringWidth(text)
 				val textHeight = FONT_HEIGHT
 				
@@ -118,7 +115,7 @@ object OverlayRenderer{
 			
 			val level = getQuantityString(it.energyLevel)
 			val capacity = getQuantityString(it.energyRegenCapacity)
-			drawTextOffScreenCenter(0, -40 + LINE_SPACING + mc.fontRenderer.FONT_HEIGHT, I18n.format("hee.energy.overlay.level", level, capacity), RGB(220u).toInt())
+			drawTextOffScreenCenter(0, -40 + LINE_SPACING + MC.fontRenderer.FONT_HEIGHT, I18n.format("hee.energy.overlay.level", level, capacity), RGB(220u).toInt())
 		}
 	}
 	

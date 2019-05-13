@@ -1,7 +1,7 @@
 package chylex.hee.proxy
+import chylex.hee.client.util.MC
 import chylex.hee.game.commands.HeeClientCommand
 import chylex.hee.init.ModRendering
-import net.minecraft.client.Minecraft
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraftforge.client.ClientCommandHandler
 import net.minecraftforge.fml.relauncher.Side
@@ -10,7 +10,7 @@ import net.minecraftforge.fml.relauncher.SideOnly
 @Suppress("unused", "RemoveExplicitTypeArguments")
 @SideOnly(Side.CLIENT)
 class ModClientProxy : ModCommonProxy(){
-	override fun getClientSidePlayer(): EntityPlayer? = Minecraft.getMinecraft().player
+	override fun getClientSidePlayer(): EntityPlayer? = MC.player
 	
 	override fun onPreInit(){
 		ModRendering.registerEntities()
@@ -29,7 +29,7 @@ class ModClientProxy : ModCommonProxy(){
 	private var prevParticleSetting = Int.MAX_VALUE
 	
 	override fun pauseParticles(){
-		val settings = Minecraft.getMinecraft().gameSettings
+		val settings = MC.settings
 		
 		if (settings.particleSetting != Int.MAX_VALUE){
 			prevParticleSetting = settings.particleSetting
@@ -40,7 +40,7 @@ class ModClientProxy : ModCommonProxy(){
 	
 	override fun resumeParticles(){
 		if (prevParticleSetting != Int.MAX_VALUE){
-			Minecraft.getMinecraft().gameSettings.particleSetting = prevParticleSetting
+			MC.settings.particleSetting = prevParticleSetting
 		}
 	}
 }

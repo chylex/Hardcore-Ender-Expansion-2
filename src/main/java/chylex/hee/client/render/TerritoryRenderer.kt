@@ -1,12 +1,12 @@
 package chylex.hee.client.render
 import chylex.hee.HEE
 import chylex.hee.client.render.util.GL
+import chylex.hee.client.util.MC
 import chylex.hee.game.world.WorldProviderEndCustom
 import chylex.hee.game.world.territory.TerritoryType
 import chylex.hee.system.util.color.IColor
 import chylex.hee.system.util.color.RGB
 import chylex.hee.system.util.floorToInt
-import net.minecraft.client.Minecraft
 import net.minecraft.client.renderer.GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA
 import net.minecraft.client.renderer.GlStateManager.DestFactor.ZERO
 import net.minecraft.client.renderer.GlStateManager.SourceFactor.ONE
@@ -24,8 +24,6 @@ import kotlin.math.pow
 
 @EventBusSubscriber(Side.CLIENT, modid = HEE.ID)
 object TerritoryRenderer{
-	private val mc = Minecraft.getMinecraft()
-	
 	private var prevChunkX = Int.MAX_VALUE
 	private var prevTerritory: TerritoryType? = null
 	
@@ -33,7 +31,7 @@ object TerritoryRenderer{
 	@SubscribeEvent
 	fun onClientTick(e: ClientTickEvent){
 		if (e.phase == Phase.START){
-			val player = mc.player
+			val player = MC.player
 			
 			if (player != null && player.world.provider is WorldProviderEndCustom){
 				if (textTime > 0){
@@ -97,7 +95,7 @@ object TerritoryRenderer{
 			return
 		}
 		
-		val fontRenderer = mc.fontRenderer
+		val fontRenderer = MC.fontRenderer
 		val resolution = e.resolution
 		val width = resolution.scaledWidth
 		val height = resolution.scaledHeight
@@ -128,7 +126,7 @@ object TerritoryRenderer{
 		GL.popMatrix()
 	}
 	
-	private fun drawTitle(x: Float, y: Float, color: Int) = with(mc.fontRenderer){
+	private fun drawTitle(x: Float, y: Float, color: Int) = with(MC.fontRenderer){
 		resetStyles()
 		
 		alpha = ((color shr 24) and 255) / 255.0F

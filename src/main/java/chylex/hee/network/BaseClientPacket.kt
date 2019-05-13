@@ -1,6 +1,6 @@
 package chylex.hee.network
+import chylex.hee.client.util.MC
 import chylex.hee.init.ModNetwork
-import net.minecraft.client.Minecraft
 import net.minecraft.client.entity.EntityPlayerSP
 import net.minecraft.entity.Entity
 import net.minecraft.entity.player.EntityPlayer
@@ -17,7 +17,7 @@ import net.minecraftforge.fml.relauncher.SideOnly
 abstract class BaseClientPacket : IPacket{
 	final override fun handle(side: Side, player: EntityPlayer){
 		when(side){
-			CLIENT -> Minecraft.getMinecraft().addScheduledTask { handle(player as EntityPlayerSP) }
+			CLIENT -> MC.instance.addScheduledTask { handle(player as EntityPlayerSP) }
 			SERVER -> throw UnsupportedOperationException("tried handling a client packet on server side: ${this::class.java.simpleName}")
 		}
 	}

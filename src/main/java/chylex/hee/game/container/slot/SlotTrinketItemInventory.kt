@@ -1,8 +1,8 @@
 package chylex.hee.game.container.slot
 import chylex.hee.HEE
+import chylex.hee.client.util.MC
 import chylex.hee.game.container.slot.SlotTrinketItemInventory.Client.isRenderingGUI
 import chylex.hee.network.server.PacketServerShiftClickTrinket
-import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.Gui
 import net.minecraft.client.gui.GuiScreen
 import net.minecraft.client.gui.inventory.GuiInventory
@@ -38,9 +38,7 @@ class SlotTrinketItemInventory(trinketHandler: IItemHandler, slotNumber: Int) : 
 	
 	@SideOnly(Side.CLIENT)
 	override fun isEnabled(): Boolean{
-		val mc = Minecraft.getMinecraft()
-		
-		if (mc.currentScreen !is GuiInventory){
+		if (MC.currentScreen !is GuiInventory){
 			return false // TODO figure out creative inventory
 		}
 		
@@ -49,7 +47,7 @@ class SlotTrinketItemInventory(trinketHandler: IItemHandler, slotNumber: Int) : 
 			
 			RenderHelper.disableStandardItemLighting()
 			
-			mc.textureManager.bindTexture(TEX_SLOT)
+			MC.textureManager.bindTexture(TEX_SLOT)
 			Gui.drawScaledCustomSizeModalRect(xPos - 1, yPos  - 1, 0F, 0F, 18, 18, 18, 18, TEX_SLOT_W, TEX_SLOT_H)
 			
 			RenderHelper.enableGUIStandardItemLighting()

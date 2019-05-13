@@ -1,5 +1,5 @@
 package chylex.hee.game.particle
-import chylex.hee.HEE
+import chylex.hee.client.util.MC
 import chylex.hee.game.block.entity.TileEntityEnergyCluster
 import chylex.hee.game.item.ItemAbstractEnergyUser
 import chylex.hee.game.particle.base.ParticleBaseEnergyTransfer
@@ -81,10 +81,10 @@ object ParticleEnergyTransferToPlayer : IParticleMaker{
 			
 			val yawOffsetMp = (if (player.primaryHand == RIGHT) 1 else -1) * (if (player.getHeldItem(MAIN_HAND).item is ItemAbstractEnergyUser) 1 else -1)
 			
-			if (player === HEE.proxy.getClientSidePlayer() && settings.thirdPersonView == 0){
+			if (player === MC.player && MC.settings.thirdPersonView == 0){
 				val pitch = MathHelper.wrapDegrees(player.rotationPitch)
 				val yaw = MathHelper.wrapDegrees(player.rotationYaw)
-				val fov = settings.fovSetting
+				val fov = MC.settings.fovSetting
 				
 				newTargetPos = player
 					.lookPosVec

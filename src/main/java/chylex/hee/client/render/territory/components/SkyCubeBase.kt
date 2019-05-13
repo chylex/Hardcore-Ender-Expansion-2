@@ -1,5 +1,6 @@
 package chylex.hee.client.render.territory.components
 import chylex.hee.client.render.util.GL
+import chylex.hee.client.util.MC
 import net.minecraft.client.Minecraft
 import net.minecraft.client.multiplayer.WorldClient
 import net.minecraft.client.renderer.GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA
@@ -47,7 +48,7 @@ abstract class SkyCubeBase : IRenderHandler(){
 		RenderHelper.disableStandardItemLighting()
 		
 		GL.color(red, green, blue, alpha)
-		mc.renderEngine.bindTexture(texture)
+		MC.textureManager.bindTexture(texture)
 		
 		for(side in 0..5){
 			GL.pushMatrix()

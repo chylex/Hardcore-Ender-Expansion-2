@@ -1,8 +1,8 @@
 package chylex.hee.client.gui.base
 import chylex.hee.client.render.util.GL
+import chylex.hee.client.util.MC
 import chylex.hee.game.container.base.ContainerBaseCustomInventory
 import chylex.hee.system.util.color.RGB
-import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.inventory.GuiContainer
 import net.minecraft.client.resources.I18n
 import net.minecraft.inventory.IInventory
@@ -19,7 +19,7 @@ abstract class GuiBaseCustomInventory<T : IInventory>(container: ContainerBaseCu
 	protected abstract val texBackground: ResourceLocation
 	protected abstract val titleContainer: String
 	
-	private val titleInventory = Minecraft.getMinecraft().player.inventory.displayName.unformattedText // 'mc' not initialized yet
+	private val titleInventory = MC.player?.inventory?.displayName?.unformattedText ?: "" // 'mc' not initialized yet
 	
 	override fun drawScreen(mouseX: Int, mouseY: Int, partialTicks: Float){
 		drawDefaultBackground()

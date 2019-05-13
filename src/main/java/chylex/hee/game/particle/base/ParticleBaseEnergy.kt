@@ -1,5 +1,6 @@
 package chylex.hee.game.particle.base
 import chylex.hee.client.render.util.GL
+import chylex.hee.client.util.MC
 import chylex.hee.game.block.entity.TileEntityEnergyCluster
 import chylex.hee.game.mechanics.energy.IClusterHealth.HealthOverride.POWERED
 import chylex.hee.game.mechanics.energy.IClusterHealth.HealthOverride.REVITALIZING
@@ -10,7 +11,6 @@ import chylex.hee.game.mechanics.energy.IClusterHealth.HealthStatus.WEAKENED
 import chylex.hee.system.Resource
 import chylex.hee.system.util.color.IColor
 import chylex.hee.system.util.color.RGB
-import net.minecraft.client.Minecraft
 import net.minecraft.client.particle.Particle
 import net.minecraft.client.renderer.BufferBuilder
 import net.minecraft.client.renderer.GlStateManager.DestFactor.ONE
@@ -92,7 +92,7 @@ abstract class ParticleBaseEnergy(world: World, posX: Double, posY: Double, posZ
 	}
 	
 	override fun renderParticle(buffer: BufferBuilder, entity: Entity, partialTicks: Float, rotationX: Float, rotationZ: Float, rotationYZ: Float, rotationXY: Float, rotationXZ: Float){
-		val currentTime = Minecraft.getSystemTime()
+		val currentTime = MC.systemTime
 		
 		if (currentTime != lastInterpolationFixTime){
 			lastInterpolationFixTime = currentTime
@@ -113,14 +113,14 @@ abstract class ParticleBaseEnergy(world: World, posX: Double, posY: Double, posZ
 		
 		GL.color(1F, 1F, 1F, 1F)
 		
-		mc.entityRenderer.setupFogColor(true)
-		mc.renderEngine.bindTexture(TEX_PARTICLE)
+		MC.entityRenderer.setupFogColor(true)
+		MC.textureManager.bindTexture(TEX_PARTICLE)
 		
 		buffer.begin(GL_QUADS, DefaultVertexFormats.PARTICLE_POSITION_TEX_COLOR_LMAP)
 		super.renderParticle(buffer, entity, partialTicks, rotationX, rotationZ, rotationYZ, rotationXY, rotationXZ)
 		Tessellator.getInstance().draw()
 		
-		mc.entityRenderer.setupFogColor(false)
+		MC.entityRenderer.setupFogColor(false)
 		
 		GL.depthMask(true)
 		GL.enableLighting()

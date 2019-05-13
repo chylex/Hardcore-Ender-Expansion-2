@@ -14,6 +14,7 @@ import chylex.hee.client.render.entity.RenderEntityNothing
 import chylex.hee.client.render.entity.RenderEntityProjectileEyeOfEnder
 import chylex.hee.client.render.entity.RenderEntityTokenHolder
 import chylex.hee.client.render.entity.layer.LayerEndermanHead
+import chylex.hee.client.util.MC
 import chylex.hee.game.block.BlockAbstractTable
 import chylex.hee.game.block.BlockDryVines
 import chylex.hee.game.block.BlockTablePedestal
@@ -37,7 +38,6 @@ import chylex.hee.game.item.ItemVoidSalad
 import chylex.hee.init.factory.RendererConstructors
 import chylex.hee.system.Resource
 import net.minecraft.block.Block
-import net.minecraft.client.Minecraft
 import net.minecraft.client.renderer.block.model.ModelResourceLocation
 import net.minecraft.client.renderer.block.statemap.IStateMapper
 import net.minecraft.client.renderer.color.IBlockColor
@@ -76,7 +76,7 @@ object ModRendering{
 	}
 	
 	fun registerLayers(){
-		for(render in Minecraft.getMinecraft().renderManager.skinMap.values){
+		for(render in MC.renderManager.skinMap.values){
 			render.addLayer(LayerEndermanHead(render.mainModel.bipedHead))
 		}
 	}
@@ -197,15 +197,15 @@ object ModRendering{
 	}
 	
 	private fun setColor(block: Block, color: IBlockColor){
-		Minecraft.getMinecraft().blockColors.registerBlockColorHandler(color, block)
+		MC.instance.blockColors.registerBlockColorHandler(color, block)
 	}
 	
 	private fun setColor(block: Block, color: IItemColor){
-		Minecraft.getMinecraft().itemColors.registerItemColorHandler(color, block)
+		MC.instance.itemColors.registerItemColorHandler(color, block)
 	}
 	
 	private fun setColor(item: Item, color: IItemColor){
-		Minecraft.getMinecraft().itemColors.registerItemColorHandler(color, item)
+		MC.instance.itemColors.registerItemColorHandler(color, item)
 	}
 	
 	private fun setModel(item: Item, metadata: Int = 0, location: ResourceLocation = item.registryName!!, variant: String = "inventory"){

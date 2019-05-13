@@ -1,10 +1,10 @@
 package chylex.hee.client.render.block
 import chylex.hee.client.render.util.GL
+import chylex.hee.client.util.MC
 import chylex.hee.game.block.BlockAbstractPortal.IPortalController
 import chylex.hee.game.block.entity.TileEntityPortalInner
 import chylex.hee.system.Resource
 import chylex.hee.system.util.square
-import net.minecraft.client.Minecraft
 import net.minecraft.client.renderer.ActiveRenderInfo
 import net.minecraft.client.renderer.GLAllocation
 import net.minecraft.client.renderer.GlStateManager.DestFactor
@@ -97,9 +97,7 @@ abstract class RenderTileAbstractPortal<T : TileEntityPortalInner, C : IPortalCo
 		isAnimating = animationProgress > 0F && animationProgress < 1F
 		
 		cameraTarget = ActiveRenderInfo.getCameraPosition()
-		globalTranslation = (Minecraft.getSystemTime() % 700000L) / 700000F
-		
-		val entityRenderer = Minecraft.getMinecraft().entityRenderer
+		globalTranslation = (MC.systemTime % 700000L) / 700000F
 		
 		val offsetY = -y - 0.75
 		val topY = offsetY + cameraTarget.y
@@ -114,7 +112,7 @@ abstract class RenderTileAbstractPortal<T : TileEntityPortalInner, C : IPortalCo
 		GL.enableTexGenCoord(R)
 		GL.enableTexGenCoord(Q)
 		
-		entityRenderer.setupFogColor(true)
+		MC.entityRenderer.setupFogColor(true)
 		
 		// background
 		
@@ -159,7 +157,7 @@ abstract class RenderTileAbstractPortal<T : TileEntityPortalInner, C : IPortalCo
 		
 		// cleanup
 		
-		entityRenderer.setupFogColor(false)
+		MC.entityRenderer.setupFogColor(false)
 		
 		GL.disableTexGenCoord(S)
 		GL.disableTexGenCoord(T)

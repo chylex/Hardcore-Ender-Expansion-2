@@ -1,9 +1,9 @@
 package chylex.hee.client.gui.base
 import chylex.hee.client.render.util.GL
+import chylex.hee.client.util.MC
 import chylex.hee.system.Resource
 import chylex.hee.system.util.color.RGB
 import chylex.hee.system.util.size
-import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.inventory.GuiContainer
 import net.minecraft.inventory.ContainerChest
 import net.minecraftforge.fml.relauncher.Side
@@ -19,7 +19,7 @@ abstract class GuiBaseChestContainer(container: ContainerChest) : GuiContainer(c
 	private val containerRows = container.lowerChestInventory.size / 9
 	
 	private val titleContainer = container.lowerChestInventory.displayName.unformattedText
-	private val titleInventory = Minecraft.getMinecraft().player.inventory.displayName.unformattedText // 'mc' not initialized yet
+	private val titleInventory = MC.player?.inventory?.displayName?.unformattedText ?: "" // 'mc' not initialized yet
 	
 	init{
 		ySize = 114 + (containerRows * 18)

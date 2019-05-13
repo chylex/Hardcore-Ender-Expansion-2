@@ -1,7 +1,7 @@
 package chylex.hee.client.model.item
+import chylex.hee.client.util.MC
 import chylex.hee.init.ModItems
 import chylex.hee.system.Resource.Custom
-import net.minecraft.client.Minecraft
 import net.minecraft.client.renderer.block.model.IBakedModel
 import net.minecraft.client.renderer.block.model.ItemCameraTransforms.TransformType
 import net.minecraft.client.renderer.block.model.ItemCameraTransforms.TransformType.FIRST_PERSON_LEFT_HAND
@@ -43,7 +43,7 @@ class ModelItemAmuletOfRecovery private constructor(sourceModel: IBakedModel) : 
 		FIRST_PERSON_RIGHT_HAND,
 		THIRD_PERSON_LEFT_HAND,
 		THIRD_PERSON_RIGHT_HAND ->
-			Minecraft.getMinecraft().renderItem.itemModelMesher.modelManager.getModel(RESOURCE_HELD).handlePerspective(transformType)
+			MC.itemRenderer.itemModelMesher.modelManager.getModel(RESOURCE_HELD).handlePerspective(transformType)
 		
 		else ->
 			super.handlePerspective(transformType)

@@ -1,5 +1,6 @@
 package chylex.hee.client.render.territory.components
 import chylex.hee.client.render.util.GL
+import chylex.hee.client.util.MC
 import net.minecraft.client.Minecraft
 import net.minecraft.client.multiplayer.WorldClient
 import net.minecraft.client.renderer.GlStateManager.DestFactor
@@ -55,7 +56,7 @@ abstract class SunBase : IRenderHandler(){
 		setRotation(world, partialTicks)
 		
 		GL.color(red, green, blue, alpha)
-		mc.renderEngine.bindTexture(texture)
+		MC.textureManager.bindTexture(texture)
 		
 		buffer.begin(GL_QUADS, DefaultVertexFormats.POSITION_TEX)
 		buffer.pos(-width, dist, -width).tex(0.0, 0.0).endVertex()

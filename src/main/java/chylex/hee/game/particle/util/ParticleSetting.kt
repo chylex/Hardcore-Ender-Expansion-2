@@ -1,5 +1,5 @@
 package chylex.hee.game.particle.util
-import net.minecraft.client.settings.GameSettings
+import chylex.hee.client.util.MC
 import net.minecraftforge.fml.relauncher.Side
 import net.minecraftforge.fml.relauncher.SideOnly
 
@@ -9,11 +9,12 @@ enum class ParticleSetting{
 	MINIMAL;
 	
 	companion object{
-		@SideOnly(Side.CLIENT)
-		fun get(settings: GameSettings): ParticleSetting = when(settings.particleSetting){
-			1 -> DECREASED
-			2 -> MINIMAL
-			else -> ALL
-		}
+		val current
+			@SideOnly(Side.CLIENT)
+			get() = when(MC.settings.particleSetting){
+				1 -> DECREASED
+				2 -> MINIMAL
+				else -> ALL
+			}
 	}
 }

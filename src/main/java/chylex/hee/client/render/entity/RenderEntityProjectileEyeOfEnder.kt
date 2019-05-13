@@ -1,7 +1,7 @@
 package chylex.hee.client.render.entity
 import chylex.hee.client.render.util.GL
+import chylex.hee.client.util.MC
 import chylex.hee.game.entity.projectile.EntityProjectileEyeOfEnder
-import net.minecraft.client.Minecraft
 import net.minecraft.client.renderer.GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA
 import net.minecraft.client.renderer.GlStateManager.DestFactor.ZERO
 import net.minecraft.client.renderer.GlStateManager.SourceFactor.ONE
@@ -27,9 +27,8 @@ class RenderEntityProjectileEyeOfEnder(manager: RenderManager) : Render<EntityPr
 	}
 	
 	override fun doRender(entity: EntityProjectileEyeOfEnder, x: Double, y: Double, z: Double, rotationYaw: Float, partialTicks: Float){
-		val mc = Minecraft.getMinecraft()
-		val textureManager = mc.renderEngine
-		val itemRenderer = mc.renderItem
+		val textureManager = MC.textureManager
+		val itemRenderer = MC.itemRenderer
 		
 		val texObj = textureManager.getTexture(getEntityTexture(entity)).also { it.setBlurMipmap(false, false) }
 		textureManager.bindTexture(TEX_BLOCKS_ITEMS)

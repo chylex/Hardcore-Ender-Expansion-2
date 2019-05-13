@@ -1,11 +1,11 @@
 package chylex.hee.game.particle.spawner
+import chylex.hee.client.util.MC
 import chylex.hee.game.particle.spawner.factory.IParticleData
 import chylex.hee.game.particle.spawner.factory.IParticleData.Empty
 import chylex.hee.game.particle.util.IOffset
 import chylex.hee.game.particle.util.IOffset.MutableOffsetPoint
 import chylex.hee.game.particle.util.IOffset.None
 import chylex.hee.game.particle.util.IShape
-import net.minecraft.client.Minecraft
 import net.minecraft.util.EnumParticleTypes
 import java.util.Random
 
@@ -24,7 +24,7 @@ class ParticleSpawnerVanilla(
 	private val tmpOffsetMot = MutableOffsetPoint()
 	
 	override fun spawn(shape: IShape, rand: Random){
-		val renderer = Minecraft.getMinecraft().renderGlobal
+		val renderer = MC.instance.renderGlobal
 		
 		for(point in shape.points){
 			pos.next(tmpOffsetPos, rand)

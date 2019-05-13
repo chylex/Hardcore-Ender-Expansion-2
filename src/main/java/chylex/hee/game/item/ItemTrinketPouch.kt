@@ -1,4 +1,5 @@
 package chylex.hee.game.item
+import chylex.hee.client.util.MC
 import chylex.hee.game.container.ContainerTrinketPouch
 import chylex.hee.game.container.slot.SlotTrinketItemInventory
 import chylex.hee.game.item.infusion.IInfusableItem
@@ -23,7 +24,6 @@ import chylex.hee.system.util.heeTagOrNull
 import chylex.hee.system.util.isNotEmpty
 import chylex.hee.system.util.nonEmptySlots
 import chylex.hee.system.util.setStack
-import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.GuiScreen
 import net.minecraft.client.gui.inventory.GuiInventory
 import net.minecraft.client.resources.I18n
@@ -195,7 +195,7 @@ class ItemTrinketPouch : ItemAbstractTrinket(), ITrinketHandlerProvider, IInfusa
 	override fun addInformation(stack: ItemStack, world: World?, lines: MutableList<String>, flags: ITooltipFlag){
 		super.addInformation(stack, world, lines, flags)
 		
-		if (Minecraft.getMinecraft().currentScreen is GuiInventory){
+		if (MC.currentScreen is GuiInventory){
 			lines.add(I18n.format("item.hee.trinket_pouch.tooltip"))
 		}
 		

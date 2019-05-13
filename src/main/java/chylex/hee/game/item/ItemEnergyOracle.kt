@@ -1,5 +1,6 @@
 package chylex.hee.game.item
 import chylex.hee.client.render.util.ColorTransition
+import chylex.hee.client.util.MC
 import chylex.hee.game.block.entity.TileEntityEnergyCluster
 import chylex.hee.game.item.infusion.IInfusableItem
 import chylex.hee.game.item.infusion.Infusion
@@ -24,7 +25,6 @@ import chylex.hee.system.util.heeTagOrNull
 import chylex.hee.system.util.over
 import chylex.hee.system.util.setPos
 import chylex.hee.system.util.toDegrees
-import net.minecraft.client.Minecraft
 import net.minecraft.client.renderer.color.IItemColor
 import net.minecraft.client.util.ITooltipFlag
 import net.minecraft.entity.Entity
@@ -261,11 +261,9 @@ class ItemEnergyOracle : ItemAbstractEnergyUser(), IInfusableItem{
 			}
 			
 			val tag = stack.heeTagOrNull ?: return INACTIVE_INT
+			val player = MC.player
 			
-			val mc = Minecraft.getMinecraft()
-			val player = mc.player
-			
-			if (player == null || !mc.renderManager.isRenderShadow){ // do not render on player model in inventory // UPDATE: make sure RenderManager.renderShadow is still only affected by GuiInventory
+			if (player == null || !MC.renderManager.isRenderShadow){ // do not render on player model in inventory // UPDATE: make sure RenderManager.renderShadow is still only affected by GuiInventory
 				return INACTIVE_INT
 			}
 			

@@ -1,5 +1,6 @@
 package chylex.hee.client.render.territory.components
 import chylex.hee.client.render.util.GL
+import chylex.hee.client.util.MC
 import chylex.hee.system.util.square
 import net.minecraft.client.Minecraft
 import net.minecraft.client.multiplayer.WorldClient
@@ -100,7 +101,7 @@ abstract class SkyDomeBase : IRenderHandler(){
 		GL.shadeModel(GL_SMOOTH)
 		
 		GL.enableTexture2D()
-		mc.renderEngine.bindTexture(texture)
+		MC.textureManager.bindTexture(texture)
 		
 		buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX_COLOR)
 		

@@ -1,5 +1,6 @@
 package chylex.hee.client.render.block
 import chylex.hee.client.render.util.GL
+import chylex.hee.client.util.MC
 import chylex.hee.game.block.BlockTablePedestal
 import chylex.hee.game.block.entity.TileEntityTablePedestal
 import chylex.hee.system.Resource
@@ -7,7 +8,6 @@ import chylex.hee.system.util.nextFloat
 import chylex.hee.system.util.size
 import chylex.hee.system.util.square
 import chylex.hee.system.util.toRadians
-import net.minecraft.client.Minecraft
 import net.minecraft.client.renderer.GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA
 import net.minecraft.client.renderer.GlStateManager.DestFactor.ZERO
 import net.minecraft.client.renderer.GlStateManager.SourceFactor.ONE
@@ -63,9 +63,8 @@ object RenderTileTablePedestal : TileEntitySpecialRenderer<TileEntityTablePedest
 	}
 	
 	override fun render(tile: TileEntityTablePedestal, x: Double, y: Double, z: Double, partialTicks: Float, destroyStage: Int, alpha: Float){
-		val mc = Minecraft.getMinecraft()
-		val textureManager = mc.renderEngine
-		val itemRenderer = mc.renderItem
+		val textureManager = MC.textureManager
+		val itemRenderer = MC.itemRenderer
 		
 		val texObj = textureManager.getTexture(TEX_BLOCKS_ITEMS).also { it.setBlurMipmap(false, false) }
 		textureManager.bindTexture(TEX_BLOCKS_ITEMS)
@@ -82,7 +81,7 @@ object RenderTileTablePedestal : TileEntitySpecialRenderer<TileEntityTablePedest
 		val pos = tile.pos
 		val stacks = tile.stacksForRendering
 		
-		val itemRotation = (Minecraft.getSystemTime() % 360000L) / 20F
+		val itemRotation = (MC.systemTime % 360000L) / 20F
 		val baseSeed = pos.toLong()
 		
 		val offsetAngleIndices = if (stacks.size <= 1)
@@ -90,7 +89,7 @@ object RenderTileTablePedestal : TileEntitySpecialRenderer<TileEntityTablePedest
 		else
 			ITEM_ANGLES.toMutableList()
 		
-		val shadowAlpha = if (mc.gameSettings.entityShadows)
+		val shadowAlpha = if (MC.settings.entityShadows)
 			(0.25 * world.getLightBrightness(pos) * (1.0 - (square(x) + square(y) + square(z)) / 256.0)).toFloat().coerceAtMost(1F)
 		else
 			0F

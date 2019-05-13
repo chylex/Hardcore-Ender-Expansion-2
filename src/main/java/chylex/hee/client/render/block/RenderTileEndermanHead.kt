@@ -1,7 +1,7 @@
 package chylex.hee.client.render.block
 import chylex.hee.client.render.util.GL
+import chylex.hee.client.util.MC
 import chylex.hee.system.Resource
-import net.minecraft.client.Minecraft
 import net.minecraft.client.model.ModelRenderer
 import net.minecraft.client.model.ModelSkeletonHead
 import net.minecraft.client.renderer.tileentity.TileEntityItemStackRenderer
@@ -25,7 +25,7 @@ object RenderTileEndermanHead{
 			GL.scale(-1F, -1F, 1F)
 			GL.enableAlpha()
 			
-			Minecraft.getMinecraft().textureManager.bindTexture(TEX_ENDERMAN)
+			MC.textureManager.bindTexture(TEX_ENDERMAN)
 			MODEL_HEAD.render(null, 0F, 0F, 0F, 180F, 0F, 0.0625F)
 			
 			GL.enableCull()
@@ -46,7 +46,7 @@ object RenderTileEndermanHead{
 			GL.color(1F, 1F, 1F, 1F)
 			GL.scale(1.1875F, 1.1875F, -1.1875F)
 			
-			Minecraft.getMinecraft().textureManager.bindTexture(TEX_ENDERMAN)
+			MC.textureManager.bindTexture(TEX_ENDERMAN)
 			MODEL_HEAD.render(null, limbSwing, 0F, 0F, 180F, 0F, 0.0625F)
 			
 			GL.enableCull()

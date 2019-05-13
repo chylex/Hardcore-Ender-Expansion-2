@@ -1,9 +1,9 @@
 package chylex.hee.network.client
+import chylex.hee.client.util.MC
 import chylex.hee.game.item.trinket.ITrinketItem
 import chylex.hee.network.BaseClientPacket
 import chylex.hee.system.util.use
 import io.netty.buffer.ByteBuf
-import net.minecraft.client.Minecraft
 import net.minecraft.client.entity.EntityPlayerSP
 import net.minecraft.entity.Entity
 import net.minecraft.item.Item
@@ -34,7 +34,7 @@ class PacketClientTrinketBreak() : BaseClientPacket(){
 	override fun handle(player: EntityPlayerSP){
 		entityId?.let(player.world::getEntityByID)?.let {
 			if (it === player){
-				Minecraft.getMinecraft().entityRenderer.displayItemActivation(ItemStack(item))
+				MC.entityRenderer.displayItemActivation(ItemStack(item))
 			}
 			
 			(item as? ITrinketItem)?.spawnClientTrinketBreakFX(it)

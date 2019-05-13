@@ -1,4 +1,5 @@
 package chylex.hee.game.item
+import chylex.hee.client.util.MC
 import chylex.hee.game.entity.living.EntityMobVillagerDying
 import chylex.hee.game.mechanics.TrinketHandler
 import chylex.hee.init.ModItems
@@ -9,7 +10,6 @@ import chylex.hee.system.util.heeTagOrNull
 import chylex.hee.system.util.playClient
 import chylex.hee.system.util.posVec
 import chylex.hee.system.util.selectExistingEntities
-import net.minecraft.client.Minecraft
 import net.minecraft.entity.Entity
 import net.minecraft.entity.EntityLivingBase
 import net.minecraft.entity.passive.EntityVillager
@@ -54,7 +54,7 @@ class ItemTotemOfUndyingCustom : ItemAbstractTrinket(){
 	
 	@SideOnly(Side.CLIENT)
 	override fun spawnClientTrinketBreakFX(target: Entity){
-		Minecraft.getMinecraft().effectRenderer.emitParticleAtEntity(target, EnumParticleTypes.TOTEM, 30)
+		MC.particleManager.emitParticleAtEntity(target, EnumParticleTypes.TOTEM, 30)
 		SoundEvents.ITEM_TOTEM_USE.playClient(target.posVec, target.soundCategory)
 	}
 	
