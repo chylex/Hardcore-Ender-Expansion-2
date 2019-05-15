@@ -40,6 +40,9 @@ object Territory_TheHub : ITerritoryDescription{
 		override val fogColor = Vec3d(0.04, 0.04, 0.04)
 		override val fogDensity = 0.0115F
 		
+		override val voidRadiusMpXZ = 1.1F
+		override val voidRadiusMpY = 2F
+		
 		override val renderer = EnvironmentRenderer(
 			SkyCubeStatic(
 				texture = Resource.Vanilla("textures/environment/end_sky.png"),
