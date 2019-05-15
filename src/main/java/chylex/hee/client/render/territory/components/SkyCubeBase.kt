@@ -1,4 +1,5 @@
 package chylex.hee.client.render.territory.components
+import chylex.hee.client.render.territory.EnvironmentRenderer
 import chylex.hee.client.render.util.GL
 import chylex.hee.client.util.MC
 import net.minecraft.client.Minecraft
@@ -48,7 +49,7 @@ abstract class SkyCubeBase : IRenderHandler(){
 		GL.disableFog()
 		RenderHelper.disableStandardItemLighting()
 		
-		GL.color(red, green, blue, alpha)
+		GL.color(red, green, blue, alpha * EnvironmentRenderer.currentSkyAlpha)
 		MC.textureManager.bindTexture(texture)
 		
 		for(side in 0..5){

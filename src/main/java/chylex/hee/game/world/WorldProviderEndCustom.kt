@@ -1,6 +1,7 @@
 package chylex.hee.game.world
 import chylex.hee.HEE
 import chylex.hee.client.render.territory.EmptyRenderer
+import chylex.hee.client.render.territory.EnvironmentRenderer
 import chylex.hee.client.render.util.GL
 import chylex.hee.game.mechanics.portal.SpawnInfo
 import chylex.hee.game.world.provider.DragonFightManagerNull
@@ -138,7 +139,7 @@ class WorldProviderEndCustom : WorldProviderEnd(){
 	@SideOnly(Side.CLIENT)
 	override fun doesXZShowFog(x: Int, z: Int): Boolean{
 		GL.setFog(EXP2)
-		GL.setFogDensity(clientEnvironment?.fogDensity ?: 0F) // TODO adjust fog density by render distance
+		GL.setFogDensity(clientEnvironment?.fogDensity?.times(EnvironmentRenderer.currentFogDensityMp) ?: 0F) // TODO adjust fog density by render distance
 		return true
 	}
 	

@@ -1,4 +1,5 @@
 package chylex.hee.client.render.territory.components
+import chylex.hee.client.render.territory.EnvironmentRenderer
 import chylex.hee.client.render.util.GL
 import chylex.hee.client.util.MC
 import chylex.hee.system.util.square
@@ -13,9 +14,9 @@ import net.minecraft.util.math.Vec3d
 import net.minecraftforge.client.IRenderHandler
 import net.minecraftforge.fml.relauncher.Side
 import net.minecraftforge.fml.relauncher.SideOnly
-import org.lwjgl.opengl.GL11.GL_QUADS
 import org.lwjgl.opengl.GL11.GL_FLAT
 import org.lwjgl.opengl.GL11.GL_GREATER
+import org.lwjgl.opengl.GL11.GL_QUADS
 import org.lwjgl.opengl.GL11.GL_SMOOTH
 import kotlin.math.pow
 import kotlin.math.sqrt
@@ -84,7 +85,7 @@ abstract class SkyDomeBase : IRenderHandler(){
 	@SideOnly(Side.CLIENT)
 	override fun render(partialTicks: Float, world: WorldClient, mc: Minecraft){
 		val col = color
-		val alp = alpha
+		val alp = alpha * EnvironmentRenderer.currentSkyAlpha
 		
 		val red = col.x.toFloat()
 		val green = col.y.toFloat()

@@ -2,16 +2,26 @@ package chylex.hee.client.render
 import chylex.hee.HEE
 import chylex.hee.client.render.util.GL
 import chylex.hee.client.util.MC
+import chylex.hee.game.particle.ParticleVoid
+import chylex.hee.game.particle.spawner.ParticleSpawnerCustom
+import chylex.hee.game.particle.util.IOffset.InBox
+import chylex.hee.game.particle.util.IShape.Point
 import chylex.hee.game.world.WorldProviderEndCustom
 import chylex.hee.game.world.territory.TerritoryType
+import chylex.hee.game.world.territory.TerritoryVoid
 import chylex.hee.system.util.color.IColor
 import chylex.hee.system.util.color.RGB
 import chylex.hee.system.util.floorToInt
+import chylex.hee.system.util.lookDirVec
+import chylex.hee.system.util.math.LerpedFloat
+import chylex.hee.system.util.posVec
+import chylex.hee.system.util.scale
 import net.minecraft.client.renderer.GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA
 import net.minecraft.client.renderer.GlStateManager.DestFactor.ZERO
 import net.minecraft.client.renderer.GlStateManager.SourceFactor.ONE
 import net.minecraft.client.renderer.GlStateManager.SourceFactor.SRC_ALPHA
 import net.minecraft.client.resources.I18n
+import net.minecraft.entity.player.EntityPlayer
 import net.minecraftforge.client.event.RenderGameOverlayEvent
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber
 import net.minecraftforge.fml.common.eventhandler.EventPriority.HIGHEST
@@ -20,6 +30,7 @@ import net.minecraftforge.fml.common.gameevent.TickEvent.ClientTickEvent
 import net.minecraftforge.fml.common.gameevent.TickEvent.Phase
 import net.minecraftforge.fml.relauncher.Side
 import org.lwjgl.opengl.GL11.GL_GREATER
+import kotlin.math.min
 import kotlin.math.pow
 
 @EventBusSubscriber(Side.CLIENT, modid = HEE.ID)
@@ -34,6 +45,7 @@ object TerritoryRenderer{
 			val player = MC.player
 			
 			if (player != null && player.world.provider is WorldProviderEndCustom){
+				Void.tick(player)
 				Title.tick()
 				
 				val newChunkX = player.chunkCoordX
@@ -47,6 +59,7 @@ object TerritoryRenderer{
 						prevTerritory = newTerritory
 						
 						if (newTerritory != null){
+							Void.reset()
 							Title.display(newTerritory)
 						}
 					}
@@ -56,8 +69,47 @@ object TerritoryRenderer{
 				prevTerritory = null
 				prevChunkX = Int.MAX_VALUE
 				
+				Void.reset()
 				Title.reset()
 			}
+		}
+	}
+	
+	// Void handling
+	
+	val VOID_FACTOR_VALUE
+		get() = Void.voidFactor.get(MC.partialTicks)
+	
+	private object Void{
+		private val VOID_PARTICLE = ParticleSpawnerCustom(
+			type = ParticleVoid,
+			pos = InBox(8F)
+		)
+		
+		val voidFactor = LerpedFloat(TerritoryVoid.OUTSIDE_VOID_FACTOR)
+		
+		fun tick(player: EntityPlayer){
+			val factor = TerritoryVoid.getVoidFactor(player).also(voidFactor::update)
+			
+			if (factor == TerritoryVoid.OUTSIDE_VOID_FACTOR || MC.instance.isGamePaused){
+				return
+			}
+			
+			if (player.world.totalWorldTime % 15L == 0L) HEE.log.info(factor)
+			
+			if (factor > -1F){
+				val rand = player.rng
+				
+				val mp = min(1F, (factor * 0.275F) + 0.275F)
+				val extra = (mp.pow(1.5F) * 12F).floorToInt()
+				
+				VOID_PARTICLE.spawn(Point(player, heightMp = 0.5F, amount = 2 + extra), rand)
+				VOID_PARTICLE.spawn(Point(player.posVec.add(player.lookDirVec.scale(5)), amount = extra / 2), rand)
+			}
+		}
+		
+		fun reset(){
+			voidFactor.updateImmediately(TerritoryVoid.OUTSIDE_VOID_FACTOR)
 		}
 	}
 	
