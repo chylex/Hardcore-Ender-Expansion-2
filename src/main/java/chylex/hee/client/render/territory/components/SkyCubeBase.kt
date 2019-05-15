@@ -16,6 +16,7 @@ import net.minecraftforge.client.IRenderHandler
 import net.minecraftforge.fml.relauncher.Side
 import net.minecraftforge.fml.relauncher.SideOnly
 import org.lwjgl.opengl.GL11.GL_GREATER
+import org.lwjgl.opengl.GL11.GL_QUADS
 
 abstract class SkyCubeBase : IRenderHandler(){
 	protected companion object{
@@ -61,7 +62,7 @@ abstract class SkyCubeBase : IRenderHandler(){
 				5 -> GL.rotate(-90F, 0F, 0F, 1F)
 			}
 			
-			buffer.begin(7, DefaultVertexFormats.POSITION_TEX)
+			buffer.begin(GL_QUADS, DefaultVertexFormats.POSITION_TEX)
 			buffer.pos(-dist, -dist, -dist).tex( 0.0,  0.0).endVertex()
 			buffer.pos(-dist, -dist,  dist).tex( 0.0, 16.0).endVertex()
 			buffer.pos( dist, -dist,  dist).tex(16.0, 16.0).endVertex()

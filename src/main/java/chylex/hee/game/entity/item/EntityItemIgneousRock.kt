@@ -98,7 +98,7 @@ class EntityItemIgneousRock : EntityItemNoBob{
 		@JvmStatic
 		val FX_ENTITY_BURN = object : FxEntityHandler(){
 			override fun handle(entity: Entity, rand: Random){
-				PARTICLE_BURN(entity).spawn(Point(entity, 0.5F, 24), rand)
+				PARTICLE_BURN(entity).spawn(Point(entity, heightMp = 0.5F, amount = 24), rand)
 				SoundEvents.ENTITY_GENERIC_BURN.playClient(entity.posVec, SoundCategory.NEUTRAL, volume = 0.3F, pitch = rand.nextFloat(1F, 2F))
 			}
 		}

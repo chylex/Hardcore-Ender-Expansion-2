@@ -13,7 +13,7 @@ import net.minecraft.util.math.Vec3d
 import net.minecraftforge.client.IRenderHandler
 import net.minecraftforge.fml.relauncher.Side
 import net.minecraftforge.fml.relauncher.SideOnly
-import org.lwjgl.opengl.GL11
+import org.lwjgl.opengl.GL11.GL_QUADS
 import org.lwjgl.opengl.GL11.GL_FLAT
 import org.lwjgl.opengl.GL11.GL_GREATER
 import org.lwjgl.opengl.GL11.GL_SMOOTH
@@ -103,7 +103,7 @@ abstract class SkyDomeBase : IRenderHandler(){
 		GL.enableTexture2D()
 		MC.textureManager.bindTexture(texture)
 		
-		buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX_COLOR)
+		buffer.begin(GL_QUADS, DefaultVertexFormats.POSITION_TEX_COLOR)
 		
 		for((x, y, z, u, v, c) in Skybox.VERTICES.value){
 			buffer

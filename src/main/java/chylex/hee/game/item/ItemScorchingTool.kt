@@ -59,7 +59,7 @@ class ItemScorchingTool(private val toolClass: String) : ItemTool(CustomToolMate
 		@JvmStatic
 		val FX_ENTITY_HIT = object : FxEntityHandler(){
 			override fun handle(entity: Entity, rand: Random){
-				PARTICLE_HITTING(entity).spawn(Point(entity, 0.5F, 20), rand)
+				PARTICLE_HITTING(entity).spawn(Point(entity, heightMp = 0.5F, amount = 20), rand)
 			}
 		}
 	}
