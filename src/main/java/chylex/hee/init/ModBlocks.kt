@@ -503,6 +503,13 @@ object ModBlocks{
 	fun onRegisterItemBlocks(e: RegistryEvent.Register<Item>){
 		temporaryItemBlocks.forEach(e.registry::register)
 		temporaryItemBlocks.clear()
+		
+		// fire
+		
+		Blocks.FIRE.setFireInfo(INFUSED_TNT, 15, 100)
+		
+		Blocks.FIRE.setFireInfo(ANCIENT_COBWEB, 100, 300)
+		Blocks.FIRE.setFireInfo(DRY_VINES, 100, 300)
 	}
 	
 	// Utilities
