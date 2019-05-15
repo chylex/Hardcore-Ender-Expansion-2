@@ -7,6 +7,7 @@ import chylex.hee.game.world.provider.DragonFightManagerNull
 import chylex.hee.game.world.provider.WorldBorderNull
 import chylex.hee.game.world.territory.TerritoryInstance
 import chylex.hee.game.world.territory.TerritoryInstance.Companion.THE_HUB_INSTANCE
+import chylex.hee.game.world.territory.TerritoryVoid
 import chylex.hee.proxy.ModCommonProxy
 import net.minecraft.client.renderer.GlStateManager.FogMode.EXP2
 import net.minecraft.entity.Entity
@@ -78,6 +79,10 @@ class WorldProviderEndCustom : WorldProviderEnd(){
 	
 	// Behavior properties
 	
+	override fun onWorldUpdateEntities(){ // stops triggering a few seconds after all players leave the dimension (if still loaded)
+		TerritoryVoid.onWorldTick(world)
+	}
+	
 	override fun createWorldBorder() = WorldBorderNull()
 	
 	// TODO shitton of things to play around with
@@ -143,8 +148,6 @@ class WorldProviderEndCustom : WorldProviderEnd(){
 	}
 	
 	// Neutralization
-	
-	override fun onWorldUpdateEntities(){}
 	
 	override fun setSpawnPoint(pos: BlockPos){}
 	
