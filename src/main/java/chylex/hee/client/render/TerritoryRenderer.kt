@@ -34,10 +34,7 @@ object TerritoryRenderer{
 			val player = MC.player
 			
 			if (player != null && player.world.provider is WorldProviderEndCustom){
-				if (textTime > 0){
-					--textTime
-					--textFade
-				}
+				Title.tick()
 				
 				val newChunkX = player.chunkCoordX
 				
@@ -50,99 +47,118 @@ object TerritoryRenderer{
 						prevTerritory = newTerritory
 						
 						if (newTerritory != null){
-							val title = I18n.format(newTerritory.translationKey)
-							
-							textTime = 60 + (2 * title.length)
-							textFade = FADE_TICKS
-							textTitle = title
-							
-							with(newTerritory.desc.colors){
-								if (tokenTop.toVec().lengthSquared() > tokenBottom.toVec().lengthSquared()){
-									textMainColor = tokenTop
-									textShadowColor = tokenBottom
-								}
-								else{
-									textMainColor = tokenBottom
-									textShadowColor = tokenTop
-								}
-							}
+							Title.display(newTerritory)
 						}
 					}
 				}
 			}
-			else{
-				prevChunkX = Int.MAX_VALUE
+			else if (prevTerritory != null){
 				prevTerritory = null
-				textTime = 0
+				prevChunkX = Int.MAX_VALUE
+				
+				Title.reset()
 			}
 		}
 	}
 	
 	// Text rendering
 	
-	private const val FADE_TICKS = 22
-	
-	private var textTime = 0
-	private var textFade = 0
-	private var textTitle = ""
-	private var textMainColor: IColor = RGB(0u)
-	private var textShadowColor: IColor = RGB(0u)
-	
-	@JvmStatic
-	@SubscribeEvent(priority = HIGHEST)
-	fun onRenderGameOverlayText(e: RenderGameOverlayEvent.Text){
-		if (textTime == 0){
-			return
+	@EventBusSubscriber(Side.CLIENT, modid = HEE.ID)
+	private object Title{
+		private const val FADE_TICKS = 22
+		
+		private var textTime = 0
+		private var textFade = 0
+		private var textTitle = ""
+		private var textMainColor: IColor = RGB(0u)
+		private var textShadowColor: IColor = RGB(0u)
+		
+		fun display(newTerritory: TerritoryType){
+			val title = I18n.format(newTerritory.translationKey)
+			
+			textTime = 60 + (2 * title.length)
+			textFade = FADE_TICKS
+			textTitle = title
+			
+			with(newTerritory.desc.colors){
+				if (tokenTop.toVec().lengthSquared() > tokenBottom.toVec().lengthSquared()){
+					textMainColor = tokenTop
+					textShadowColor = tokenBottom
+				}
+				else{
+					textMainColor = tokenBottom
+					textShadowColor = tokenTop
+				}
+			}
 		}
 		
-		val fontRenderer = MC.fontRenderer
-		val resolution = e.resolution
-		val width = resolution.scaledWidth
-		val height = resolution.scaledHeight
-		
-		val opacity = when{
-			textFade > 0          -> ((FADE_TICKS - (textFade - e.partialTicks)) / FADE_TICKS.toFloat()).coerceIn(0F, 1F)
-			textTime < FADE_TICKS -> ((textTime - e.partialTicks) / FADE_TICKS.toFloat()).coerceIn(0F, 1F)
-			else                  -> 1F
+		fun tick(){
+			if (textTime > 0){
+				--textTime
+				--textFade
+			}
 		}
 		
-		GL.pushMatrix()
-		GL.translate(width * 0.5F, height * 0.5F, 0F)
-		GL.enableBlend()
-		GL.tryBlendFuncSeparate(SRC_ALPHA, ONE_MINUS_SRC_ALPHA, ONE, ZERO)
-		GL.alphaFunc(GL_GREATER, 0F)
-		GL.pushMatrix()
-		GL.scale(3F, 3F, 3F)
+		fun reset(){
+			textTime = 0
+		}
 		
-		val x = -fontRenderer.getStringWidth(textTitle) * 0.5F
-		val y = -fontRenderer.FONT_HEIGHT - 2F
+		@JvmStatic
+		@SubscribeEvent(priority = HIGHEST)
+		fun onRenderGameOverlayText(e: RenderGameOverlayEvent.Text){
+			if (textTime == 0){
+				return
+			}
+			
+			val fontRenderer = MC.fontRenderer
+			val resolution = e.resolution
+			val width = resolution.scaledWidth
+			val height = resolution.scaledHeight
+			
+			val opacity = when{
+				textFade > 0          -> ((FADE_TICKS - (textFade - e.partialTicks)) / FADE_TICKS.toFloat()).coerceIn(0F, 1F)
+				textTime < FADE_TICKS -> ((textTime - e.partialTicks) / FADE_TICKS.toFloat()).coerceIn(0F, 1F)
+				else                  -> 1F
+			}
+			
+			GL.pushMatrix()
+			GL.translate(width * 0.5F, height * 0.5F, 0F)
+			GL.enableBlend()
+			GL.tryBlendFuncSeparate(SRC_ALPHA, ONE_MINUS_SRC_ALPHA, ONE, ZERO)
+			GL.alphaFunc(GL_GREATER, 0F)
+			GL.pushMatrix()
+			GL.scale(3F, 3F, 3F)
+			
+			val x = -fontRenderer.getStringWidth(textTitle) * 0.5F
+			val y = -fontRenderer.FONT_HEIGHT - 2F
+			
+			drawTitle(x + 0.5F, y + 0.5F, textShadowColor.toInt(opacity.pow(1.25F)))
+			drawTitle(x, y, textMainColor.toInt(opacity))
+			
+			GL.popMatrix()
+			GL.alphaFunc(GL_GREATER, 0.1F)
+			GL.disableBlend()
+			GL.popMatrix()
+		}
 		
-		drawTitle(x + 0.5F, y + 0.5F, textShadowColor.toInt(opacity.pow(1.25F)))
-		drawTitle(x, y, textMainColor.toInt(opacity))
-		
-		GL.popMatrix()
-		GL.alphaFunc(GL_GREATER, 0.1F)
-		GL.disableBlend()
-		GL.popMatrix()
-	}
-	
-	private fun drawTitle(x: Float, y: Float, color: Int) = with(MC.fontRenderer){
-		resetStyles()
-		
-		alpha = ((color shr 24) and 255) / 255.0F
-		red   = ((color shr 16) and 255) / 255.0F
-		green = ((color shr  8) and 255) / 255.0F
-		blue  = (color and 255) / 255.0F
-		
-		posX = x
-		posY = y
-		
-		val text = if (bidiFlag)
-			bidiReorder(textTitle)
-		else
-			textTitle
-		
-		GL.color(red, green, blue, alpha)
-		renderStringAtPos(text, false)
+		private fun drawTitle(x: Float, y: Float, color: Int) = with(MC.fontRenderer){
+			resetStyles()
+			
+			alpha = ((color shr 24) and 255) / 255.0F
+			red   = ((color shr 16) and 255) / 255.0F
+			green = ((color shr  8) and 255) / 255.0F
+			blue  = (color and 255) / 255.0F
+			
+			posX = x
+			posY = y
+			
+			val text = if (bidiFlag)
+				bidiReorder(textTitle)
+			else
+				textTitle
+			
+			GL.color(red, green, blue, alpha)
+			renderStringAtPos(text, false)
+		}
 	}
 }
