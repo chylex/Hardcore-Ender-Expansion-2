@@ -5,12 +5,14 @@ import chylex.hee.game.world.territory.TerritoryType.Companion.CHUNK_MARGIN
 import chylex.hee.game.world.territory.TerritoryType.Companion.CHUNK_X_OFFSET
 import chylex.hee.game.world.territory.TerritoryType.THE_HUB
 import chylex.hee.game.world.territory.storage.TerritoryGlobalStorage
+import chylex.hee.system.util.center
 import chylex.hee.system.util.component1
 import chylex.hee.system.util.component2
 import chylex.hee.system.util.floorToInt
 import net.minecraft.entity.Entity
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.ChunkPos
+import net.minecraft.util.math.Vec3d
 import net.minecraft.world.World
 import net.minecraft.world.gen.ChunkProviderServer
 import java.util.Random
@@ -82,28 +84,30 @@ data class TerritoryInstance(val territory: TerritoryType, val index: Int){
 	val hash
 		get() = (ordinal and HASH_ORDINAL_MASK) or (index shl HASH_ORDINAL_BITS)
 	
-	val topLeftChunk: ChunkPos
-		get(){
-			val chunkOffX = if ((index / 2) % 2 == 0)
-				(0 until ordinal).sumBy { CHUNK_MARGIN + TerritoryType.ALL[it].chunks } // positive x
-			else
-				-(1..ordinal).sumBy { CHUNK_MARGIN + TerritoryType.ALL[it].chunks } // negative x
-			
-			val distZ = if (index % 2 == 0)
-				index / 4
-			else
-				-(index / 4) - 1 // moves odd indexes to negative z
-			
-			val chunkOffZ = distZ * (CHUNK_MARGIN + chunks)
-			
-			return ChunkPos(chunkOffX + CHUNK_X_OFFSET, chunkOffZ)
-		}
+	val topLeftChunk by lazy(LazyThreadSafetyMode.PUBLICATION){
+		val chunkOffX = if ((index / 2) % 2 == 0)
+			(0 until ordinal).sumBy { CHUNK_MARGIN + TerritoryType.ALL[it].chunks } // positive x
+		else
+			-(1..ordinal).sumBy { CHUNK_MARGIN + TerritoryType.ALL[it].chunks } // negative x
+		
+		val distZ = if (index % 2 == 0)
+			index / 4
+		else
+			-(index / 4) - 1 // moves odd indexes to negative z
+		
+		val chunkOffZ = distZ * (CHUNK_MARGIN + chunks)
+		
+		ChunkPos(chunkOffX + CHUNK_X_OFFSET, chunkOffZ)
+	}
 	
 	val bottomRightChunk: ChunkPos
 		get() = topLeftChunk.let { ChunkPos(it.x + chunks - 1, it.z + chunks - 1) }
 	
 	val bottomCenterPos: BlockPos
 		get() = topLeftChunk.getBlock(chunks * 8, territory.height.start, chunks * 8)
+	
+	val centerPoint: Vec3d
+		get() = topLeftChunk.getBlock(chunks * 8, territory.height.let { (it.start + it.endInclusive) / 2 }, chunks * 8).center
 	
 	fun generatesChunk(chunkX: Int, chunkZ: Int): Boolean{
 		val (startX, startZ) = topLeftChunk
