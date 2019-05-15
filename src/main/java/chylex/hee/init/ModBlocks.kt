@@ -50,6 +50,7 @@ import chylex.hee.game.block.entity.TileEntityVoidPortalStorage
 import chylex.hee.game.block.fluid.FluidEnderGoo
 import chylex.hee.game.block.material.Materials
 import chylex.hee.game.item.ItemAncientCobweb
+import chylex.hee.game.item.ItemBlockSlabFuel
 import chylex.hee.game.item.ItemBlockWithMetadata
 import chylex.hee.game.item.ItemDragonEgg
 import chylex.hee.game.item.ItemInfusedTNT
@@ -389,6 +390,10 @@ object ModBlocks{
 	
 	private fun slabItemBlock(half: BlockSlabCustom.Half, full: BlockSlabCustom.Full): ItemBlock{
 		return ItemSlab(half, half, full).apply { hasSubtypes = false }
+	}
+	
+	private fun woodenSlabItemBlock(half: BlockSlabCustom.Half, full: BlockSlabCustom.Full): ItemBlock{
+		return ItemBlockSlabFuel(half, full, burnTicks = 150).apply { hasSubtypes = false }
 	}
 	
 	@JvmStatic
