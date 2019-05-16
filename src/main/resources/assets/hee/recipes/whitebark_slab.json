@@ -1,0 +1,14 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "group": "wooden_slab",
+  "pattern": [
+    "###"
+  ],
+  "key": {
+    "#": { "item": "hee:whitebark_planks" }
+  },
+  "result": {
+    "item": "hee:whitebark_slab",
+    "count": 6
+  }
+}

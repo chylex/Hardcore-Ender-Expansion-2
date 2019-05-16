@@ -1,0 +1,29 @@
+{
+  "forge_marker": 1,
+  "defaults": {
+    "model": "cube_column",
+    "textures": {
+      "end": "hee:block/whitebark_log_top",
+      "side": "hee:block/whitebark_log_side"
+    }
+  },
+  "variants": {
+    "axis": {
+      "y": {},
+      "z": {
+        "x": 90
+      },
+      "x": {
+        "x": 90,
+        "y": 90
+      },
+      "none": {
+        "model": "cube_all",
+        "textures": {
+          "all": "hee:block/whitebark_log_side"
+        }
+      }
+    },
+    "inventory": [{}]
+  }
+}

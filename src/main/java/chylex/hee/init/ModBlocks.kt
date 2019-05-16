@@ -38,6 +38,7 @@ import chylex.hee.game.block.BlockTableTile
 import chylex.hee.game.block.BlockVoidPortalInner
 import chylex.hee.game.block.BlockVoidPortalStorage
 import chylex.hee.game.block.BlockWallCustom
+import chylex.hee.game.block.BlockWhitebarkLog
 import chylex.hee.game.block.entity.TileEntityAccumulationTable
 import chylex.hee.game.block.entity.TileEntityDarkChest
 import chylex.hee.game.block.entity.TileEntityEndPortalAcceptor
@@ -58,6 +59,7 @@ import chylex.hee.game.item.util.Tool.Level.DIAMOND
 import chylex.hee.game.item.util.Tool.Level.IRON
 import chylex.hee.game.item.util.Tool.Level.STONE
 import chylex.hee.game.item.util.Tool.Level.WOOD
+import chylex.hee.game.item.util.Tool.Type.AXE
 import chylex.hee.game.item.util.Tool.Type.PICKAXE
 import chylex.hee.game.item.util.Tool.Type.SHOVEL
 import chylex.hee.init.ModCreativeTabs.OrderedCreativeTab
@@ -80,6 +82,7 @@ import net.minecraftforge.fluids.FluidRegistry
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent
 import net.minecraftforge.fml.common.registry.GameRegistry
+import net.minecraftforge.oredict.OreDictionary
 
 @EventBusSubscriber(modid = HEE.ID)
 object ModBlocks{
@@ -247,6 +250,27 @@ object ModBlocks{
 	@JvmField val DARK_LOAM             = BlockSimple(buildDarkLoam).apply { setup("dark_loam") }
 	@JvmField val DARK_LOAM_SLAB        = BlockSlabCustom.Half(buildDarkLoam).apply { setup("dark_loam_slab") }
 	@JvmField val DARK_LOAM_DOUBLE_SLAB = BlockSlabCustom.Full(buildDarkLoam, DARK_LOAM_SLAB).apply { setup("dark_loam_slab_double", "hee.dark_loam_slab") }
+	
+	// Blocks: Building (Wood)
+	
+	private val buildWhitebark = BlockSimple.Builder(Material.WOOD).apply {
+		harvestTool = Pair(WOOD, AXE)
+		harvestHardness = 2.0F
+		
+		soundType = SoundType.WOOD
+		mapColor = MapColor.SNOW
+	}
+	
+	private val buildWhitebarkPlanks = buildWhitebark.clone {
+		explosionResistance = 5.0F
+	}
+	
+	@JvmField val WHITEBARK_LOG          = BlockWhitebarkLog().apply { setup("whitebark_log") }
+	@JvmField val WHITEBARK              = BlockSimple(buildWhitebark).apply { setup("whitebark") }
+	@JvmField val WHITEBARK_PLANKS       = BlockSimple(buildWhitebarkPlanks).apply { setup("whitebark_planks") }
+	@JvmField val WHITEBARK_STAIRS       = BlockStairsCustom(WHITEBARK_PLANKS).apply { setup("whitebark_stairs") }
+	@JvmField val WHITEBARK_SLAB         = BlockSlabCustom.Half(buildWhitebarkPlanks).apply { setup("whitebark_slab") }
+	@JvmField val WHITEBARK_DOUBLE_SLAB  = BlockSlabCustom.Full(buildWhitebarkPlanks, WHITEBARK_SLAB).apply { setup("whitebark_slab_double", "hee.whitebark_slab") }
 	
 	// Blocks: Interactive (Uncategorized)
 	
@@ -444,6 +468,12 @@ object ModBlocks{
 			register(DARK_LOAM_SLAB with slabItemBlock(DARK_LOAM_SLAB, DARK_LOAM_DOUBLE_SLAB))
 			register(DARK_LOAM_DOUBLE_SLAB)
 			
+			register(WHITEBARK_LOG with basicItemBlock)
+			register(WHITEBARK with basicItemBlock)
+			register(WHITEBARK_PLANKS with basicItemBlock)
+			register(WHITEBARK_STAIRS with basicItemBlock)
+			register(WHITEBARK_SLAB with woodenSlabItemBlock(WHITEBARK_SLAB, WHITEBARK_DOUBLE_SLAB))
+			
 			register(ENDER_GOO)
 			register(INFUSED_TNT with ::ItemInfusedTNT)
 			register(DARK_CHEST with basicItemBlock)
@@ -509,7 +539,21 @@ object ModBlocks{
 		temporaryItemBlocks.forEach(e.registry::register)
 		temporaryItemBlocks.clear()
 		
+		// ore dictionary
+		
+		OreDictionary.registerOre("logWood", WHITEBARK_LOG)
+		OreDictionary.registerOre("logWood", WHITEBARK) // UPDATE check new name for bark blocks
+		OreDictionary.registerOre("plankWood", WHITEBARK_PLANKS)
+		OreDictionary.registerOre("stairWood", WHITEBARK_STAIRS)
+		OreDictionary.registerOre("slabWood", WHITEBARK_SLAB)
+		
 		// fire
+		
+		Blocks.FIRE.setFireInfo(WHITEBARK_LOG, 5, 5)
+		Blocks.FIRE.setFireInfo(WHITEBARK, 5, 5)
+		Blocks.FIRE.setFireInfo(WHITEBARK_PLANKS, 5, 20)
+		Blocks.FIRE.setFireInfo(WHITEBARK_STAIRS, 5, 20)
+		Blocks.FIRE.setFireInfo(WHITEBARK_SLAB, 5, 20)
 		
 		Blocks.FIRE.setFireInfo(INFUSED_TNT, 15, 100)
 		

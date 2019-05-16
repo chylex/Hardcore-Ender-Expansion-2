@@ -43,6 +43,12 @@ tile.hee.dark_chest.name=Dark Chest
 tile.hee.loot_chest.name=Loot Chest
 tile.hee.loot_chest.tooltip=§5§o(Editable in creative mode)
 
+tile.hee.whitebark_log.name=Whitebark Log
+tile.hee.whitebark.name=Whitebark
+tile.hee.whitebark_planks.name=Whitebark Planks
+tile.hee.whitebark_stairs.name=Whitebark Stairs
+tile.hee.whitebark_slab.name=Whitebark Slab
+
 tile.hee.end_powder_ore.name=End Powder Ore
 tile.hee.endium_ore.name=Endium Ore
 tile.hee.stardust_ore.name=Stardust Ore

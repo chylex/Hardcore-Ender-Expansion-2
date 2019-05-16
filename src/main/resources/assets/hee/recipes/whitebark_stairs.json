@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "group": "wooden_stairs",
+  "pattern": [
+    "#  ",
+    "## ",
+    "###"
+  ],
+  "key": {
+    "#": { "item": "hee:whitebark_planks" }
+  },
+  "result": {
+    "item": "hee:whitebark_stairs",
+    "count": 4
+  }
+}
