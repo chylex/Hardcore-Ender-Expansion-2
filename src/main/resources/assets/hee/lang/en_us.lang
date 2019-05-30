@@ -23,6 +23,12 @@ tile.hee.gloomrock_smooth_magenta.name=Magenta Gloomrock
 tile.hee.gloomrock_smooth_white.name=White Gloomrock
 tile.hee.gloomtorch.name=Gloomtorch
 
+tile.hee.dusty_stone.name=Dusty Stone
+tile.hee.dusty_stone_cracked.name=Cracked Dusty Stone
+tile.hee.dusty_stone_damaged.name=Damaged Dusty Stone
+tile.hee.dusty_stone_bricks.name=Dusty Stone Bricks
+tile.hee.dusty_stone_cracked_bricks.name=Cracked Dusty Stone Bricks
+
 tile.hee.obsidian_stairs.name=Obsidian Stairs
 tile.hee.obsidian_falling.name=Falling Obsidian
 tile.hee.obsidian_smooth.name=Smooth Obsidian

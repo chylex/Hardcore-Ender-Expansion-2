@@ -8,6 +8,8 @@ import chylex.hee.game.block.BlockDarkChest
 import chylex.hee.game.block.BlockDeathFlowerDecaying
 import chylex.hee.game.block.BlockDragonEggOverride
 import chylex.hee.game.block.BlockDryVines
+import chylex.hee.game.block.BlockDustyStoneBricks
+import chylex.hee.game.block.BlockDustyStonePlain
 import chylex.hee.game.block.BlockEndPlant
 import chylex.hee.game.block.BlockEndPortalAcceptor
 import chylex.hee.game.block.BlockEndPortalInner
@@ -192,6 +194,38 @@ object ModBlocks{
 	@JvmField val GLOOMROCK_SMOOTH_MAGENTA     = BlockGloomrock(buildGloomrockSmooth).apply { setup("gloomrock_smooth_magenta") }
 	@JvmField val GLOOMROCK_SMOOTH_WHITE       = BlockGloomrock(buildGloomrockSmooth).apply { setup("gloomrock_smooth_white") }
 	@JvmField val GLOOMTORCH                   = BlockGloomtorch(buildGloomtorch).apply { setup("gloomtorch") }
+	
+	// Blocks: Building (Dusty Stone)
+	
+	private val buildDustyStone = BlockSimple.Builder(Materials.SOLID_NO_TOOL).apply {
+		harvestTool = Pair(WOOD, PICKAXE) // + shovel
+		harvestHardness = 1.1F
+		explosionResistance = 0.5F
+		
+		soundType = SoundType.STONE
+		mapColor = MapColor.SAND
+	}
+	
+	private val buildDustyStoneCracked = buildDustyStone.clone {
+		harvestHardness = 1.0F
+		explosionResistance = 0.2F
+	}
+	
+	private val buildDustyStoneDamaged = buildDustyStone.clone {
+		harvestHardness = 0.9F
+		explosionResistance = 0.1F
+	}
+	
+	private val buildDustyStoneBricks = buildDustyStone.clone {
+		harvestHardness = 1.9F
+		explosionResistance = 3.0F
+	}
+	
+	@JvmField val DUSTY_STONE                = BlockDustyStonePlain(buildDustyStone).apply { setup("dusty_stone") }
+	@JvmField val DUSTY_STONE_CRACKED        = BlockDustyStonePlain(buildDustyStoneCracked).apply { setup("dusty_stone_cracked") }
+	@JvmField val DUSTY_STONE_DAMAGED        = BlockDustyStonePlain(buildDustyStoneDamaged).apply { setup("dusty_stone_damaged") }
+	@JvmField val DUSTY_STONE_BRICKS         = BlockDustyStoneBricks(buildDustyStoneBricks).apply { setup("dusty_stone_bricks") } // UPDATE: update recipe json to include tag to allow all dusty stone variations
+	@JvmField val DUSTY_STONE_CRACKED_BRICKS = BlockDustyStoneBricks(buildDustyStoneBricks).apply { setup("dusty_stone_cracked_bricks") }
 	
 	// Blocks: Building (Obsidian)
 	
@@ -450,6 +484,12 @@ object ModBlocks{
 			register(GLOOMROCK_SMOOTH_MAGENTA with basicItemBlock)
 			register(GLOOMROCK_SMOOTH_WHITE with basicItemBlock)
 			register(GLOOMTORCH with basicItemBlock)
+			
+			register(DUSTY_STONE with basicItemBlock)
+			register(DUSTY_STONE_CRACKED with basicItemBlock)
+			register(DUSTY_STONE_DAMAGED with basicItemBlock)
+			register(DUSTY_STONE_BRICKS with basicItemBlock)
+			register(DUSTY_STONE_CRACKED_BRICKS with basicItemBlock)
 			
 			register(OBSIDIAN_STAIRS with basicItemBlock)
 			register(OBSIDIAN_FALLING with basicItemBlock)

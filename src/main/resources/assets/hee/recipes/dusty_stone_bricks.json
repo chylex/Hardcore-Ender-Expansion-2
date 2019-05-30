@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "###",
+    "#X#",
+    "###"
+  ],
+  "key": {
+    "#": { "item": "hee:dusty_stone" },
+    "X": { "item": "hee:ender_goo_bucket" }
+  },
+  "result": {
+    "item": "hee:dusty_stone_bricks",
+    "count": 4
+  }
+}
