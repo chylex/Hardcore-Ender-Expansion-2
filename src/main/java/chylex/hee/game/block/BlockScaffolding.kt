@@ -55,7 +55,7 @@ class BlockScaffolding(builder: BlockSimple.Builder) : BlockSimple(builder){
 			Debug.setClipboardContents(structureFile)
 			
 			if (missingMappings.isNotEmpty()){
-				player.sendMessage(TextComponentString("Missing mappings for states:"));
+				player.sendMessage(TextComponentString("Missing mappings for states:"))
 				
 				for(missingMapping in missingMappings){
 					player.sendMessage(TextComponentString(" - ${TextFormatting.GRAY}$missingMapping"))

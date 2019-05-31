@@ -37,9 +37,7 @@ class ItemVoidBucket : ItemAbstractVoidTool(){
 		
 		private fun getFluidColor(block: Block): Int{
 			if (block is IFluidBlock){
-				val fluid = block.fluid
-				
-				return when(fluid){
+				return when(val fluid = block.fluid){
 					is FluidBase -> fluid.rgbColor.toInt()
 					else -> fluid.color
 				}

@@ -78,9 +78,7 @@ class ItemVoidSalad : ItemFood(0, 0F, false){
 	}
 	
 	override fun onFoodEaten(stack: ItemStack, world: World, player: EntityPlayer){
-		val type = Type.values().getOrNull(stack.metadata) ?: return
-		
-		when(type){
+		when(Type.values().getOrNull(stack.metadata) ?: return){
 			Type.SINGLE ->
 				DAMAGE_SAFE.dealTo(2F, player, TITLE_STARVE)
 			

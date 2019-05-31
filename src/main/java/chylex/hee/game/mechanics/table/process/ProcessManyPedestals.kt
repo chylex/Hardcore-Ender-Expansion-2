@@ -85,9 +85,8 @@ abstract class ProcessManyPedestals(private val world: World, pos: Array<BlockPo
 	
 	final override fun tick(context: ITableContext){
 		val tiles = Array(pedestals.size){ getTile(it)!! }
-		val state = currentState
 		
-		when(state){
+		when(val state = currentState){
 			is Work -> {
 				if (tiles.any { world.totalWorldTime - it.inputModTime < 20L } || context.isPaused){
 					setStatusIndicator(tiles, PAUSED)

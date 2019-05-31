@@ -269,14 +269,10 @@ class NBTPrimitiveList(tagList: NBTTagList = NBTTagList()) : NBTList<NBTPrimitiv
 	
 	override fun convert(element: NBTPrimitive) = element
 	
-	override fun get(index: Int): NBTPrimitive{
-		val tag = tagList.get(index)
-		
-		return when(tag){
-			is NBTPrimitive -> tag
-			is NBTTagEnd    -> throw IndexOutOfBoundsException()
-			else            -> throw IllegalArgumentException("unhandled NBT type: ${tag::class.java.simpleName}")
-		}
+	override fun get(index: Int) = when(val tag = tagList.get(index)){
+		is NBTPrimitive -> tag
+		is NBTTagEnd    -> throw IndexOutOfBoundsException()
+		else            -> throw IllegalArgumentException("unhandled NBT type: ${tag::class.java.simpleName}")
 	}
 }
 

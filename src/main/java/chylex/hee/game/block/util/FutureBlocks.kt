@@ -1,7 +1,6 @@
 package chylex.hee.game.block.util
 import chylex.hee.system.util.with
 import chylex.hee.system.util.withFacing
-import net.minecraft.block.Block
 import net.minecraft.block.BlockNewLog
 import net.minecraft.block.BlockOldLog
 import net.minecraft.block.BlockPlanks
@@ -9,8 +8,6 @@ import net.minecraft.block.BlockSilverfish
 import net.minecraft.block.BlockStoneBrick
 import net.minecraft.block.BlockStoneSlab
 import net.minecraft.block.BlockWoodSlab
-import net.minecraft.block.properties.IProperty
-import net.minecraft.block.state.IBlockState
 import net.minecraft.init.Blocks
 import net.minecraft.util.EnumFacing
 

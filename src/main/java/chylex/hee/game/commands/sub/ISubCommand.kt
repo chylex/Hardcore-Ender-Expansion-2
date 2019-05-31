@@ -16,7 +16,7 @@ internal interface ISubCommand{
 	
 	companion object{
 		fun subCommandMapOf(vararg commands: ISubCommand): Map<String, ISubCommand>{
-			return commands.associateBy(ISubCommand::name, { it })
+			return commands.associateBy(ISubCommand::name){ it }
 		}
 	}
 }

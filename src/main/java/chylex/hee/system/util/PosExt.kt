@@ -21,7 +21,7 @@ inline fun Pos(x: Int, y: Int, z: Int) = BlockPos(x, y, z)
 inline fun Pos(x: Double, y: Double, z: Double) = BlockPos(x, y, z)
 inline fun Pos(vector: Vec3d) = BlockPos(vector)
 inline fun Pos(entity: Entity) = BlockPos(entity)
-inline fun Pos(packed: Long) = BlockPos.fromLong(packed)
+inline fun Pos(packed: Long): BlockPos = BlockPos.fromLong(packed)
 
 inline val BlockPos.xz
 	get() = PosXZ(this)

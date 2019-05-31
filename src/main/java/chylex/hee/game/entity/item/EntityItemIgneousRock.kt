@@ -156,11 +156,11 @@ class EntityItemIgneousRock : EntityItemNoBob{
 				if (rand.nextInt(6) == 0 || age < INITIAL_FIRE_UNTIL_TICKS){
 					val checkRange = (BURN_DISTANCE * 2).ceilToInt()
 					
-					val randomTopBlock = getRandomBlock().let {
-						if (it.isAir(world))
-							it.offsetUntil(DOWN, 1..checkRange){ !it.isAir(world) || it.distanceSqTo(this) > BURN_DISTANCE_SQ }?.up()
+					val randomTopBlock = getRandomBlock().let { randomPos ->
+						if (randomPos.isAir(world))
+							randomPos.offsetUntil(DOWN, 1..checkRange){ !it.isAir(world) || it.distanceSqTo(this) > BURN_DISTANCE_SQ }?.up()
 						else
-							it.offsetUntil(UP, 0..checkRange){ it.isAir(world) || it.distanceSqTo(this) > BURN_DISTANCE_SQ }
+							randomPos.offsetUntil(UP, 0..checkRange){ it.isAir(world) || it.distanceSqTo(this) > BURN_DISTANCE_SQ }
 					}
 					
 					if (randomTopBlock != null && randomTopBlock.isAir(world) && randomTopBlock.down().getFaceShape(world, UP) == SOLID){

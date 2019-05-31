@@ -12,20 +12,20 @@ import java.util.Random
 // Facing
 
 object Facing4 : List<EnumFacing> by EnumFacing.HORIZONTALS.toList(){
-	private val allPermutations = Collections2.permutations(this).toTypedArray()
+	private val allPermutations: Array<List<EnumFacing>> = Collections2.permutations(this).toTypedArray()
 	fun randomPermutation(rand: Random) = rand.nextItem(allPermutations)
 	
-	fun fromDirection(source: Vec3d, target: Vec3d) = EnumFacing.getFacingFromVector((target.x - source.x).toFloat(), 0F, (target.z - source.z).toFloat())
+	fun fromDirection(source: Vec3d, target: Vec3d): EnumFacing = EnumFacing.getFacingFromVector((target.x - source.x).toFloat(), 0F, (target.z - source.z).toFloat())
 }
 
 object Facing6 : List<EnumFacing> by EnumFacing.VALUES.toList(){
-	fun fromDirection(source: Vec3d, target: Vec3d) = EnumFacing.getFacingFromVector((target.x - source.x).toFloat(), (target.y - source.y).toFloat(), (target.z - source.z).toFloat())
+	fun fromDirection(source: Vec3d, target: Vec3d): EnumFacing = EnumFacing.getFacingFromVector((target.x - source.x).toFloat(), (target.y - source.y).toFloat(), (target.z - source.z).toFloat())
 }
 
 // Rotation
 
 object Rotation4 : List<Rotation> by Rotation.values().toList(){
-	private val allPermutations = Collections2.permutations(this).toTypedArray()
+	private val allPermutations: Array<List<Rotation>> = Collections2.permutations(this).toTypedArray()
 	fun randomPermutation(rand: Random) = rand.nextItem(allPermutations)
 }
 
