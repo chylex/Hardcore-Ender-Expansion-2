@@ -32,6 +32,7 @@ import chylex.hee.system.util.playClient
 import chylex.hee.system.util.posVec
 import chylex.hee.system.util.setPos
 import chylex.hee.system.util.updateState
+import chylex.hee.system.util.with
 import net.minecraft.block.state.IBlockState
 import net.minecraft.entity.item.EntityItem
 import net.minecraft.entity.player.InventoryPlayer
@@ -192,7 +193,7 @@ class TileEntityTablePedestal : TileEntityBase(){
 	
 	private fun onLinkedStatusChanged(){
 		if (world != null){
-			pos.updateState(world, ModBlocks.TABLE_PEDESTAL, FLAG_SYNC_CLIENT){ it.withProperty(IS_LINKED, linkedTable != null) }
+			pos.updateState(world, ModBlocks.TABLE_PEDESTAL, FLAG_SYNC_CLIENT){ it.with(IS_LINKED, linkedTable != null) }
 			statusIndicator.process = null
 		}
 	}

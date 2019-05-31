@@ -2,6 +2,7 @@ package chylex.hee.game.block
 import chylex.hee.game.block.entity.TileEntityBaseChest
 import chylex.hee.game.entity.living.ai.AIOcelotSitOverride.IOcelotCanSitOn
 import chylex.hee.init.ModGuiHandler.GuiType
+import chylex.hee.system.util.get
 import chylex.hee.system.util.getState
 import chylex.hee.system.util.getTile
 import chylex.hee.system.util.selectExistingEntities
@@ -91,15 +92,15 @@ abstract class BlockAbstractChest<T : TileEntityBaseChest>(builder: BlockSimple.
 	// State handling
 	
 	override fun withRotation(state: IBlockState, rot: Rotation): IBlockState{
-		return state.withFacing(rot.rotate(state.getValue(FACING)))
+		return state.withFacing(rot.rotate(state[FACING]))
 	}
 	
 	override fun withMirror(state: IBlockState, mirror: Mirror): IBlockState{
-		return state.withFacing(mirror.mirror(state.getValue(FACING)))
+		return state.withFacing(mirror.mirror(state[FACING]))
 	}
 	
-	override fun getMetaFromState(state: IBlockState): Int = state.getValue(FACING).index
-	override fun getStateFromMeta(meta: Int): IBlockState = this.withFacing(EnumFacing.byIndex(meta))
+	override fun getMetaFromState(state: IBlockState) = state[FACING].index
+	override fun getStateFromMeta(meta: Int) = this.withFacing(EnumFacing.byIndex(meta))
 	
 	// Shape and rendering
 	

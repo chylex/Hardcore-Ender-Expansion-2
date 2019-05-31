@@ -3,6 +3,7 @@ import chylex.hee.game.block.entity.TileEntityBase.Context.NETWORK
 import chylex.hee.system.util.FLAG_SKIP_RENDER
 import chylex.hee.system.util.FLAG_SYNC_CLIENT
 import chylex.hee.system.util.distanceSqTo
+import chylex.hee.system.util.get
 import chylex.hee.system.util.getState
 import chylex.hee.system.util.getStringOrNull
 import chylex.hee.system.util.getTile
@@ -29,7 +30,7 @@ import net.minecraft.world.World
 
 abstract class TileEntityBaseChest : TileEntityBase(), ITickable, IWorldNameable{
 	val facing: EnumFacing
-		get() = world?.let { pos.getState(it).getValue(FACING) } ?: UP
+		get() = world?.let { pos.getState(it)[FACING] } ?: UP
 	
 	val isLidClosed: Boolean
 		get() = viewerCount == 0

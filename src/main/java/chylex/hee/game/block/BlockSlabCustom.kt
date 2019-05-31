@@ -4,6 +4,8 @@ import chylex.hee.game.block.BlockSimple.Builder.Companion.setHardnessWithResist
 import chylex.hee.game.block.BlockSimple.Builder.Companion.setupBlockProperties
 import chylex.hee.game.block.BlockSlabCustom.PropertyDefault.DEFAULT
 import chylex.hee.game.block.util.Property
+import chylex.hee.system.util.get
+import chylex.hee.system.util.with
 import net.minecraft.block.Block
 import net.minecraft.block.BlockSlab
 import net.minecraft.block.BlockSlab.EnumBlockHalf.BOTTOM
@@ -42,16 +44,16 @@ abstract class BlockSlabCustom(builder: Builder) : BlockSlab(builder.material, b
 	
 	class Half(builder: Builder): BlockSlabCustom(builder){
 		init{
-			defaultState = blockState.baseState.withProperty(VARIANT, DEFAULT).withProperty(HALF, BOTTOM)
+			defaultState = blockState.baseState.with(VARIANT, DEFAULT).with(HALF, BOTTOM)
 		}
 		
 		override fun getItemDropped(state: IBlockState, rand: Random, fortune: Int): Item = Item.getItemFromBlock(this)
 		
 		override fun getItem(world: World, pos: BlockPos, state: IBlockState): ItemStack = ItemStack(this)
+		override fun getMetaFromState(state: IBlockState) = if (state[HALF] == BOTTOM) 0 else 8
+		override fun getStateFromMeta(meta: Int) = this.with(HALF, if (meta == 0) BOTTOM else TOP)
 		
-		override fun getMetaFromState(state: IBlockState): Int = if (state.getValue(HALF) == BOTTOM) 0 else 8
 		
-		override fun getStateFromMeta(meta: Int): IBlockState = defaultState.withProperty(HALF, if (meta == 0) BOTTOM else TOP)
 		
 		override fun createBlockState(): BlockStateContainer = BlockStateContainer(this, HALF, VARIANT)
 		
@@ -60,10 +62,11 @@ abstract class BlockSlabCustom(builder: Builder) : BlockSlab(builder.material, b
 	
 	class Full(builder: Builder, private val slabBlock: Block): BlockSlabCustom(builder){
 		init{
-			defaultState = blockState.baseState.withProperty(VARIANT, DEFAULT)
+			defaultState = blockState.baseState.with(VARIANT, DEFAULT)
 		}
 		
 		override fun getItemDropped(state: IBlockState, rand: Random, fortune: Int): Item = Item.getItemFromBlock(slabBlock)
+		override fun getItem(world: World, pos: BlockPos, state: IBlockState) = ItemStack(slabBlock)
 		
 		override fun getItem(world: World, pos: BlockPos, state: IBlockState): ItemStack = ItemStack(slabBlock)
 		

@@ -17,6 +17,7 @@ import chylex.hee.system.util.allInCenteredBox
 import chylex.hee.system.util.blocksMovement
 import chylex.hee.system.util.center
 import chylex.hee.system.util.distanceTo
+import chylex.hee.system.util.get
 import chylex.hee.system.util.getBlock
 import chylex.hee.system.util.getState
 import chylex.hee.system.util.nextFloat
@@ -31,6 +32,7 @@ import chylex.hee.system.util.selectExistingEntities
 import chylex.hee.system.util.setBlock
 import chylex.hee.system.util.setState
 import chylex.hee.system.util.use
+import chylex.hee.system.util.with
 import chylex.hee.system.util.writePos
 import io.netty.buffer.ByteBuf
 import net.minecraft.block.state.BlockStateContainer
@@ -152,13 +154,13 @@ class BlockDeathFlowerDecaying : BlockEndPlant(){
 	
 	fun healDeathFlower(world: World, pos: BlockPos){
 		val state = pos.getState(world)
-		val newDecayLevel = state.getValue(LEVEL) - world.rand.nextInt(1, 2)
+		val newDecayLevel = state[LEVEL] - world.rand.nextInt(1, 2)
 		
 		if (newDecayLevel < MIN_LEVEL){
 			pos.setBlock(world, ModBlocks.DEATH_FLOWER_HEALED)
 		}
 		else{
-			pos.setState(world, state.withProperty(LEVEL, newDecayLevel))
+			pos.setState(world, state.with(LEVEL, newDecayLevel))
 		}
 		
 		PacketClientFX(FX_HEAL, FxHealData(pos, newDecayLevel)).sendToAllAround(world, pos, 64.0)
@@ -190,10 +192,10 @@ class BlockDeathFlowerDecaying : BlockEndPlant(){
 			return
 		}
 		
-		val currentDecayLevel = state.getValue(LEVEL)
+		val currentDecayLevel = state[LEVEL]
 		
 		if (currentDecayLevel < MAX_LEVEL && rand.nextInt(45) == 0){
-			pos.setState(world, state.withProperty(LEVEL, currentDecayLevel + 1))
+			pos.setState(world, state.with(LEVEL, currentDecayLevel + 1))
 		}
 		else if (currentDecayLevel == MAX_LEVEL && rand.nextInt(8) == 0 && (world.worldTime % 24000L) in 15600..20400){
 			for(testPos in pos.allInCenteredBox(WITHER_FLOWER_RADIUS, WITHER_FLOWER_RADIUS, WITHER_FLOWER_RADIUS)){
@@ -254,10 +256,8 @@ class BlockDeathFlowerDecaying : BlockEndPlant(){
 	
 	// General
 	
-	override fun getMetaFromState(state: IBlockState): Int = state.getValue(LEVEL) - MIN_LEVEL
-	override fun getStateFromMeta(meta: Int): IBlockState = defaultState.withProperty(LEVEL, meta + MIN_LEVEL)
+	override fun getMetaFromState(state: IBlockState) = state[LEVEL] - MIN_LEVEL
+	override fun getStateFromMeta(meta: Int) = this.with(LEVEL, meta + MIN_LEVEL)
 	
-	override fun damageDropped(state: IBlockState): Int{
-		return state.getValue(LEVEL) - MIN_LEVEL
-	}
+	override fun damageDropped(state: IBlockState) = state[LEVEL] - MIN_LEVEL
 }

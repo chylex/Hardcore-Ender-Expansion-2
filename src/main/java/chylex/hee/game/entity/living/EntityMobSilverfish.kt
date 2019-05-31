@@ -18,6 +18,7 @@ import chylex.hee.system.util.AITargetRandom
 import chylex.hee.system.util.AITargetSwarmSwitch
 import chylex.hee.system.util.AIWander
 import chylex.hee.system.util.heeTag
+import chylex.hee.system.util.with
 import net.minecraft.block.BlockSilverfish
 import net.minecraft.block.BlockSilverfish.EnumType.forModelBlock
 import net.minecraft.block.BlockSilverfish.VARIANT
@@ -124,7 +125,7 @@ class EntityMobSilverfish(world: World) : EntitySilverfish(world), ICritTracker{
 	
 	private fun tryHideInBlock(state: IBlockState): IBlockState?{
 		return if (BlockSilverfish.canContainSilverfish(state) && hideInBlockDelayTicks == 0)
-			Blocks.MONSTER_EGG.defaultState.withProperty(VARIANT, forModelBlock(state))
+			Blocks.MONSTER_EGG.with(VARIANT, forModelBlock(state))
 		else
 			null
 	}

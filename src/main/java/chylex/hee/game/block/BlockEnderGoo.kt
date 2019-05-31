@@ -14,6 +14,7 @@ import chylex.hee.init.ModItems
 import chylex.hee.system.Resource
 import chylex.hee.system.capability.CapabilityProvider
 import chylex.hee.system.util.Pos
+import chylex.hee.system.util.get
 import chylex.hee.system.util.getBlock
 import chylex.hee.system.util.getCapOrNull
 import chylex.hee.system.util.posVec
@@ -185,7 +186,7 @@ open class BlockEnderGoo : BlockAbstractGoo(FluidEnderGoo, Materials.ENDER_GOO){
 	@SideOnly(Side.CLIENT)
 	override fun randomDisplayTick(state: IBlockState, world: World, pos: BlockPos, rand: Random){
 		if (rand.nextBoolean()){
-			val particle = if (state.getValue(LEVEL) == 0)
+			val particle = if (state[LEVEL] == 0)
 				PARTICLE_STATIONARY
 			else
 				PARTICLE_FLOWING

@@ -24,6 +24,7 @@ import chylex.hee.init.ModBlocks
 import chylex.hee.system.util.FLAG_NONE
 import chylex.hee.system.util.FLAG_SYNC_CLIENT
 import chylex.hee.system.util.Facing6
+import chylex.hee.system.util.get
 import chylex.hee.system.util.getState
 import chylex.hee.system.util.getTile
 import chylex.hee.system.util.nextInt
@@ -31,6 +32,7 @@ import chylex.hee.system.util.removeItem
 import chylex.hee.system.util.setAir
 import chylex.hee.system.util.setState
 import net.minecraft.block.state.BlockFaceShape
+import chylex.hee.system.util.with
 import net.minecraft.block.state.BlockFaceShape.UNDEFINED
 import net.minecraft.block.state.BlockStateContainer
 import net.minecraft.block.state.IBlockState
@@ -102,7 +104,7 @@ class BlockCorruptedEnergy(builder: BlockSimple.Builder) : BlockSimple(builder){
 		var updateFlags = FLAG_SYNC_CLIENT
 		
 		if (currentBlock === this){
-			if (level - currentState.getValue(LEVEL) < 3 || world.rand.nextBoolean()){
+			if (level - currentState[LEVEL] < 3 || world.rand.nextBoolean()){
 				return FAIL
 			}
 			
@@ -122,7 +124,7 @@ class BlockCorruptedEnergy(builder: BlockSimple.Builder) : BlockSimple(builder){
 				PASSTHROUGH
 		}
 		
-		pos.setState(world, defaultState.withProperty(LEVEL, level), updateFlags)
+		pos.setState(world, this.with(LEVEL, level), updateFlags)
 		return SUCCESS
 	}
 	
@@ -133,7 +135,7 @@ class BlockCorruptedEnergy(builder: BlockSimple.Builder) : BlockSimple(builder){
 	}
 	
 	override fun onBlockAdded(world: World, pos: BlockPos, state: IBlockState){
-		world.scheduleUpdate(pos, this, tickRateForLevel(state.getValue(LEVEL)))
+		world.scheduleUpdate(pos, this, tickRateForLevel(state[LEVEL]))
 	}
 	
 	override fun randomTick(world: World, pos: BlockPos, state: IBlockState, rand: Random){
@@ -143,7 +145,7 @@ class BlockCorruptedEnergy(builder: BlockSimple.Builder) : BlockSimple(builder){
 	}
 	
 	override fun updateTick(world: World, pos: BlockPos, state: IBlockState, rand: Random){
-		val level = state.getValue(LEVEL)
+		val level = state[LEVEL]
 		val remainingFacings = Facing6.toMutableList()
 		
 		repeat(rand.nextInt(3, 5).coerceAtMost(level)){
@@ -165,7 +167,7 @@ class BlockCorruptedEnergy(builder: BlockSimple.Builder) : BlockSimple(builder){
 				return
 			}
 			
-			pos.setState(world, state.withProperty(LEVEL, decreaseToLevel), FLAG_NONE) // does not call onBlockAdded for the same Block instance
+			pos.setState(world, state.with(LEVEL, decreaseToLevel), FLAG_NONE) // does not call onBlockAdded for the same Block instance
 		}
 		
 		world.scheduleUpdate(pos, this, tickRateForLevel(level))
@@ -185,7 +187,7 @@ class BlockCorruptedEnergy(builder: BlockSimple.Builder) : BlockSimple(builder){
 		if (!world.isRemote && entity is EntityLivingBase && !isEntityTolerant(entity)){
 			CombinedDamage(
 				DAMAGE_PART_NORMAL to 0.75F,
-				DAMAGE_PART_MAGIC to (0.75F + state.getValue(LEVEL) / 10F)
+				DAMAGE_PART_MAGIC to (0.75F + state[LEVEL] / 10F)
 			).dealTo(entity, TITLE_MAGIC)
 		}
 	}
@@ -203,8 +205,8 @@ class BlockCorruptedEnergy(builder: BlockSimple.Builder) : BlockSimple(builder){
 	
 	// General
 	
-	override fun getMetaFromState(state: IBlockState): Int = state.getValue(LEVEL)
-	override fun getStateFromMeta(meta: Int): IBlockState = defaultState.withProperty(LEVEL, meta)
+	override fun getMetaFromState(state: IBlockState) = state[LEVEL]
+	override fun getStateFromMeta(meta: Int) = this.with(LEVEL, meta)
 	
 	override fun getCollisionBoundingBox(state: IBlockState, world: IBlockAccess, pos: BlockPos): AxisAlignedBB? = NULL_AABB
 	override fun getBlockFaceShape(world: IBlockAccess, state: IBlockState, pos: BlockPos, face: EnumFacing): BlockFaceShape = UNDEFINED

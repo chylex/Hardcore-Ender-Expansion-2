@@ -12,9 +12,11 @@ import chylex.hee.game.world.util.Teleporter
 import chylex.hee.game.world.util.Teleporter.FxRange.Silent
 import chylex.hee.system.util.center
 import chylex.hee.system.util.closestTickingTile
+import chylex.hee.system.util.get
 import chylex.hee.system.util.getState
 import chylex.hee.system.util.motionVec
 import chylex.hee.system.util.subtractY
+import chylex.hee.system.util.with
 import net.minecraft.block.state.BlockStateContainer
 import net.minecraft.block.state.IBlockState
 import net.minecraft.entity.Entity
@@ -64,13 +66,13 @@ class BlockVoidPortalInner(builder: BlockSimple.Builder) : BlockAbstractPortal(b
 	// Instance
 	
 	init{
-		defaultState = blockState.baseState.withProperty(TYPE, HUB)
+		defaultState = blockState.baseState.with(TYPE, HUB)
 	}
 	
 	override fun createBlockState(): BlockStateContainer = BlockStateContainer(this, TYPE)
 	
-	override fun getMetaFromState(state: IBlockState): Int = state.getValue(TYPE).ordinal
-	override fun getStateFromMeta(meta: Int): IBlockState = defaultState.withProperty(TYPE, Type.values()[meta])
+	override fun getMetaFromState(state: IBlockState) = state[TYPE].ordinal
+	override fun getStateFromMeta(meta: Int) = this.with(TYPE, Type.values()[meta])
 	
 	override fun createNewTileEntity(world: World, meta: Int): TileEntity{
 		return TileEntityPortalInner.Void()
@@ -83,7 +85,7 @@ class BlockVoidPortalInner(builder: BlockSimple.Builder) : BlockAbstractPortal(b
 			return
 		}
 		
-		when(pos.getState(world).getValue(TYPE)){
+		when(pos.getState(world)[TYPE]){
 			HUB -> {
 				val instance = pos.closestTickingTile<TileEntityVoidPortalStorage>(world, MAX_DISTANCE_FROM_FRAME)?.currentInstance
 				

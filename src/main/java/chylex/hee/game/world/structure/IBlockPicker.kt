@@ -1,6 +1,7 @@
 package chylex.hee.game.world.structure
 import chylex.hee.HEE
 import chylex.hee.system.collection.WeightedList
+import chylex.hee.system.util.with
 import net.minecraft.block.Block
 import net.minecraft.block.properties.IProperty
 import net.minecraft.block.state.IBlockState
@@ -24,7 +25,7 @@ interface IBlockPicker{
 	class Weighted private constructor(private val weightedList: WeightedList<IBlockState>) : IBlockPicker{
 		companion object{
 			fun <T : Comparable<T>> Weighted(baseState: IBlockState, property: IProperty<T>, values: List<Pair<Int, T>>) : Weighted{
-				return Weighted(WeightedList(values.map { (weight, value) -> Pair(weight, baseState.withProperty(property, value)) }))
+				return Weighted(WeightedList(values.map { (weight, value) -> Pair(weight, baseState.with(property, value)) }))
 			}
 			
 			fun <T : Comparable<T>> Weighted(block: Block, property: IProperty<T>, values: List<Pair<Int, T>>) : Weighted{

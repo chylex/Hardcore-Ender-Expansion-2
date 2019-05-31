@@ -2,8 +2,10 @@ package chylex.hee.game.block
 import chylex.hee.init.ModBlocks
 import chylex.hee.init.ModLoot
 import chylex.hee.system.util.Facing4
+import chylex.hee.system.util.get
 import chylex.hee.system.util.getBlock
 import chylex.hee.system.util.isAir
+import chylex.hee.system.util.with
 import net.minecraft.block.BlockChorusPlant
 import net.minecraft.block.state.IBlockState
 import net.minecraft.init.Blocks
@@ -50,7 +52,7 @@ class BlockChorusPlantOverride : BlockChorusPlant(){
 	
 	override fun getActualState(state: IBlockState, world: IBlockAccess, pos: BlockPos): IBlockState{
 		return super.getActualState(state, world, pos).let {
-			if (it.getValue(DOWN)) it else it.withProperty(DOWN, pos.down().getBlock(world) === ModBlocks.HUMUS)
+			if (it[DOWN]) it else it.with(DOWN, pos.down().getBlock(world) === ModBlocks.HUMUS)
 		}
 	}
 }

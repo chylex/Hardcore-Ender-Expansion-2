@@ -1,5 +1,6 @@
 package chylex.hee.game.block
 import chylex.hee.init.ModItems
+import chylex.hee.system.util.get
 import net.minecraft.block.BlockSkull
 import net.minecraft.block.state.IBlockState
 import net.minecraft.item.Item
@@ -16,7 +17,7 @@ class BlockEndermanHead : BlockSkull(){
 	}
 	
 	override fun getDrops(drops: NonNullList<ItemStack>, world: IBlockAccess, pos: BlockPos, state: IBlockState, fortune: Int){
-		if (!state.getValue(NODROP)){
+		if (!state[NODROP]){
 			drops.add(ItemStack(ModItems.ENDERMAN_HEAD))
 		}
 	}

@@ -3,8 +3,10 @@ import chylex.hee.game.block.entity.TileEntityTablePedestal
 import chylex.hee.game.block.util.Property
 import chylex.hee.init.ModItems
 import chylex.hee.system.util.copyIf
+import chylex.hee.system.util.get
 import chylex.hee.system.util.getState
 import chylex.hee.system.util.getTile
+import chylex.hee.system.util.with
 import net.minecraft.block.Block
 import net.minecraft.block.ITileEntityProvider
 import net.minecraft.block.state.BlockStateContainer
@@ -80,13 +82,13 @@ class BlockTablePedestal(builder: BlockSimple.Builder) : BlockSimpleShaped(build
 	// Instance
 	
 	init{
-		defaultState = blockState.baseState.withProperty(IS_LINKED, false)
+		defaultState = blockState.baseState.with(IS_LINKED, false)
 	}
 	
 	override fun createBlockState(): BlockStateContainer = BlockStateContainer(this, IS_LINKED)
 	
-	override fun getMetaFromState(state: IBlockState): Int = if (state.getValue(IS_LINKED)) 1 else 0
-	override fun getStateFromMeta(meta: Int): IBlockState = defaultState.withProperty(IS_LINKED, meta == 1)
+	override fun getMetaFromState(state: IBlockState) = if (state[IS_LINKED]) 1 else 0
+	override fun getStateFromMeta(meta: Int) = this.with(IS_LINKED, meta == 1)
 	
 	override fun createNewTileEntity(world: World, meta: Int): TileEntity{
 		return TileEntityTablePedestal()

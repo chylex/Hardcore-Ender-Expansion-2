@@ -12,6 +12,7 @@ import chylex.hee.game.mechanics.table.interfaces.ITableProcessSerializer
 import chylex.hee.game.mechanics.table.process.ProcessSupportingItemHolder
 import chylex.hee.system.util.NBTList.Companion.setList
 import chylex.hee.system.util.delegate.NotifyOnChange
+import chylex.hee.system.util.get
 import chylex.hee.system.util.getListOfCompounds
 import chylex.hee.system.util.getState
 import net.minecraft.item.Item
@@ -67,7 +68,7 @@ abstract class TileEntityBaseTable : TileEntityBase(), ITickable{
 		val state = pos.getState(world)
 		val block = state.block as? BlockAbstractTable ?: return // TODO
 		
-		maxInputPedestals = when(state.getValue(TIER) - block.minAllowedTier){
+		maxInputPedestals = when(state[TIER] - block.minAllowedTier){
 			2 -> 7
 			1 -> 5
 			0 -> 3

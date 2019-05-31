@@ -6,6 +6,7 @@ import chylex.hee.system.util.FLAG_RENDER_IMMEDIATE
 import chylex.hee.system.util.FLAG_SYNC_CLIENT
 import chylex.hee.system.util.Pos
 import chylex.hee.system.util.allInBoxMutable
+import chylex.hee.system.util.get
 import chylex.hee.system.util.getState
 import chylex.hee.system.util.setBlock
 import net.minecraft.block.material.MapColor
@@ -120,7 +121,7 @@ abstract class BlockAbstractGoo(private val fluid: FluidBase, material: Material
 		
 		val state = pos.getState(world)
 		
-		if (state.block !== this || state.getValue(LEVEL) != 0){
+		if (state.block !== this || state[LEVEL] != 0){
 			return
 		}
 		
@@ -155,7 +156,7 @@ abstract class BlockAbstractGoo(private val fluid: FluidBase, material: Material
 				var lowestLevel = Int.MAX_VALUE
 				
 				for(testPos in posMin.allInBoxMutable(posMax)){
-					val level = testPos.getState(world).takeIf { it.block === this }?.getValue(LEVEL) ?: continue
+					val level = testPos.getState(world).takeIf { it.block === this }?.get(LEVEL) ?: continue
 					
 					if (level < lowestLevel){
 						lowestLevel = level

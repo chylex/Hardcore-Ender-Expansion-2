@@ -2,6 +2,7 @@ package chylex.hee.game.block
 import chylex.hee.game.block.util.Property
 import chylex.hee.init.ModBlocks
 import chylex.hee.system.util.getBlock
+import chylex.hee.system.util.with
 import net.minecraft.block.state.BlockStateContainer
 import net.minecraft.block.state.IBlockState
 import net.minecraft.init.Blocks
@@ -19,7 +20,7 @@ class BlockEndersol(builder: BlockSimple.Builder) : BlockSimple(builder){
 	override fun getMetaFromState(state: IBlockState): Int = 0
 	
 	override fun getActualState(state: IBlockState, world: IBlockAccess, pos: BlockPos): IBlockState{
-		return state.withProperty(MERGE_TOP, pos.up().getBlock(world) === ModBlocks.HUMUS)
-		            .withProperty(MERGE_BOTTOM, pos.down().getBlock(world) === Blocks.END_STONE)
+		return state.with(MERGE_TOP, pos.up().getBlock(world) === ModBlocks.HUMUS)
+		            .with(MERGE_BOTTOM, pos.down().getBlock(world) === Blocks.END_STONE)
 	}
 }

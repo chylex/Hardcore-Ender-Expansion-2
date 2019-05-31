@@ -1,5 +1,6 @@
 package chylex.hee.game.block
 import chylex.hee.system.util.Facing6
+import chylex.hee.system.util.get
 import chylex.hee.system.util.getBlock
 import chylex.hee.system.util.getState
 import chylex.hee.system.util.setAir
@@ -73,7 +74,7 @@ class BlockGloomtorch(builder: BlockSimple.Builder) : BlockSimple(builder){
 	}
 	
 	override fun neighborChanged(state: IBlockState, world: World, pos: BlockPos, neighborBlock: Block, neighborPos: BlockPos){
-		if (!canPlaceGloomtorchAt(world, pos, state.getValue(FACING)) && pos.getBlock(world) === this){
+		if (!canPlaceGloomtorchAt(world, pos, state[FACING]) && pos.getBlock(world) === this){
 			dropBlockAsItem(world, pos, state, 0)
 			pos.setAir(world)
 		}
@@ -82,20 +83,20 @@ class BlockGloomtorch(builder: BlockSimple.Builder) : BlockSimple(builder){
 	// State handling
 	
 	override fun withRotation(state: IBlockState, rot: Rotation): IBlockState{
-		return state.withFacing(rot.rotate(state.getValue(FACING)))
+		return state.withFacing(rot.rotate(state[FACING]))
 	}
 	
 	override fun withMirror(state: IBlockState, mirror: Mirror): IBlockState{
-		return state.withFacing(mirror.mirror(state.getValue(FACING)))
+		return state.withFacing(mirror.mirror(state[FACING]))
 	}
 	
-	override fun getMetaFromState(state: IBlockState): Int = state.getValue(FACING).index
-	override fun getStateFromMeta(meta: Int): IBlockState = this.withFacing(EnumFacing.byIndex(meta))
+	override fun getMetaFromState(state: IBlockState) = state[FACING].index
+	override fun getStateFromMeta(meta: Int) = this.withFacing(EnumFacing.byIndex(meta))
 	
 	// Shape and rendering
 	
 	override fun getBoundingBox(state: IBlockState, source: IBlockAccess, pos: BlockPos): AxisAlignedBB{
-		return BOUNDING_BOX[state.getValue(FACING)] ?: BOUNDING_BOX[UP]!!
+		return BOUNDING_BOX[state[FACING]] ?: BOUNDING_BOX[UP]!!
 	}
 	
 	override fun getBlockFaceShape(world: IBlockAccess, state: IBlockState, pos: BlockPos, face: EnumFacing): BlockFaceShape = UNDEFINED

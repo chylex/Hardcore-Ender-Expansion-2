@@ -8,6 +8,7 @@ import chylex.hee.game.world.structure.IStructureWorld
 import chylex.hee.game.world.structure.piece.IStructurePieceConnection
 import chylex.hee.game.world.util.Size
 import chylex.hee.system.util.Pos
+import chylex.hee.system.util.with
 import chylex.hee.system.util.withFacing
 import net.minecraft.block.BlockSlab
 import net.minecraft.init.Blocks
@@ -60,12 +61,12 @@ class StrongholdCorridor_Stairs_Vertical(connectionAtEntrance: EnumFacing, conne
 			val firstBlock = if (useStairs)
 				Blocks.STONE_BRICK_STAIRS.withFacing(facing)
 			else
-				FutureBlocks.STONE_BRICK_SLAB.withProperty(BlockSlab.HALF, BlockSlab.EnumBlockHalf.BOTTOM)
+				FutureBlocks.STONE_BRICK_SLAB.with(BlockSlab.HALF, BlockSlab.EnumBlockHalf.BOTTOM)
 			
 			pos.move(facing)
 			world.setState(pos, firstBlock)
 			pos.move(facing)
-			world.setState(pos, FutureBlocks.STONE_BRICK_SLAB.withProperty(BlockSlab.HALF, BlockSlab.EnumBlockHalf.TOP))
+			world.setState(pos, FutureBlocks.STONE_BRICK_SLAB.with(BlockSlab.HALF, BlockSlab.EnumBlockHalf.TOP))
 			
 			facing = facing.rotateY()
 		}

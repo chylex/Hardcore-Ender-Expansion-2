@@ -1,4 +1,5 @@
 package chylex.hee.game.world.structure.file
+import chylex.hee.system.util.with
 import net.minecraft.block.BlockDirectional
 import net.minecraft.block.BlockDoor
 import net.minecraft.block.BlockHorizontal
@@ -73,11 +74,11 @@ object PaletteMappings{
 	fun VINE_WALLS(block: BlockVine) = arrayOf("u", "n", "s", "e", "w", "ns", "ne", "nw", "se", "sw", "ew", "nse", "nsw", "new", "sew", "nsew").associate {
 		Pair(it, it.fold(block.defaultState){
 			state, chr -> when(chr){
-				'u' -> state.withProperty(BlockVine.UP, true)
-				'n' -> state.withProperty(BlockVine.NORTH, true)
-				's' -> state.withProperty(BlockVine.SOUTH, true)
-				'e' -> state.withProperty(BlockVine.EAST, true)
-				'w' -> state.withProperty(BlockVine.WEST, true)
+				'u' -> state.with(BlockVine.UP, true)
+				'n' -> state.with(BlockVine.NORTH, true)
+				's' -> state.with(BlockVine.SOUTH, true)
+				'e' -> state.with(BlockVine.EAST, true)
+				'w' -> state.with(BlockVine.WEST, true)
 				else -> throw IllegalStateException()
 			}
 		})

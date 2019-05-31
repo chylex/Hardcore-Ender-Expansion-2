@@ -3,6 +3,7 @@ import chylex.hee.game.world.structure.IStructureGenerator
 import chylex.hee.game.world.structure.IStructureWorld
 import chylex.hee.game.world.structure.world.RotatedStructureWorld
 import chylex.hee.game.world.util.Size
+import chylex.hee.system.util.with
 import net.minecraft.block.BlockColored
 import net.minecraft.init.Blocks
 import net.minecraft.item.EnumDyeColor
@@ -15,7 +16,7 @@ abstract class StructurePiece : IStructureGenerator{
 		generate(world, MutableInstance(Rotation.NONE).apply { connections.forEach { useConnection(it, MutableInstance(Rotation.NONE)) } })
 		
 		for(connection in connections){
-			world.setState(connection.offset, Blocks.WOOL.defaultState.withProperty(BlockColored.COLOR, EnumDyeColor.values()[connection.facing.index - 2]))
+			world.setState(connection.offset, Blocks.WOOL.with(BlockColored.COLOR, EnumDyeColor.values()[connection.facing.index - 2]))
 		}
 	}
 	

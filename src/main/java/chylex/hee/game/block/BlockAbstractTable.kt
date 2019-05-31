@@ -1,5 +1,7 @@
 package chylex.hee.game.block
 import chylex.hee.game.block.util.Property
+import chylex.hee.system.util.get
+import chylex.hee.system.util.with
 import net.minecraft.block.state.BlockStateContainer
 import net.minecraft.block.state.IBlockState
 import net.minecraft.client.resources.I18n
@@ -24,17 +26,15 @@ abstract class BlockAbstractTable(builder: BlockSimple.Builder) : BlockSimple(bu
 	open val minAllowedTier = MIN_TIER
 	
 	init{
-		defaultState = blockState.baseState.withProperty(TIER, MIN_TIER)
+		defaultState = blockState.baseState.with(TIER, MIN_TIER)
 	}
 	
-	final override fun createBlockState(): BlockStateContainer = BlockStateContainer(this, TIER)
+	final override fun createBlockState() = BlockStateContainer(this, TIER)
 	
-	final override fun getMetaFromState(state: IBlockState): Int = state.getValue(TIER)
-	final override fun getStateFromMeta(meta: Int): IBlockState = defaultState.withProperty(TIER, meta.coerceIn(MIN_TIER, MAX_TIER))
+	final override fun getMetaFromState(state: IBlockState) = state[TIER]
+	final override fun getStateFromMeta(meta: Int) = this.with(TIER, meta.coerceIn(MIN_TIER, MAX_TIER))
 	
-	override fun damageDropped(state: IBlockState): Int{
-		return state.getValue(TIER)
-	}
+	override fun damageDropped(state: IBlockState) = state[TIER]
 	
 	override fun getSubBlocks(tab: CreativeTabs, items: NonNullList<ItemStack>){
 		for(tier in minAllowedTier..MAX_TIER){

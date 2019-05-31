@@ -4,6 +4,7 @@ import chylex.hee.game.fx.FxBlockHandler
 import chylex.hee.game.world.util.BlockEditor
 import chylex.hee.init.ModItems
 import chylex.hee.network.client.PacketClientFX
+import chylex.hee.system.util.get
 import chylex.hee.system.util.size
 import net.minecraft.block.BlockDispenser
 import net.minecraft.block.BlockDispenser.FACING
@@ -62,7 +63,7 @@ class ItemCompost : Item(){
 		BlockDispenser.DISPENSE_BEHAVIOR_REGISTRY.putObject(this, object : BehaviorDispenseOptional(){
 			override fun dispenseStack(source: IBlockSource, stack: ItemStack): ItemStack{
 				val world = source.world
-				val pos = source.blockPos.offset(source.blockState.getValue(FACING))
+				val pos = source.blockPos.offset(source.blockState[FACING])
 				
 				successful = false
 				

@@ -3,10 +3,12 @@ import chylex.hee.game.block.entity.TileEntityInfusedTNT
 import chylex.hee.game.entity.item.EntityInfusedTNT
 import chylex.hee.game.item.infusion.Infusion.TRAP
 import chylex.hee.game.item.infusion.InfusionTag
+import chylex.hee.system.util.get
 import chylex.hee.system.util.getTile
 import chylex.hee.system.util.playServer
 import chylex.hee.system.util.posVec
 import chylex.hee.system.util.setAir
+import chylex.hee.system.util.with
 import net.minecraft.block.BlockTNT
 import net.minecraft.block.ITileEntityProvider
 import net.minecraft.block.SoundType
@@ -60,7 +62,7 @@ class BlockInfusedTNT : BlockTNT(), ITileEntityProvider{
 	
 	override fun removedByPlayer(state: IBlockState, world: World, pos: BlockPos, player: EntityPlayer, willHarvest: Boolean): Boolean{
 		if (pos.getTile<TileEntityInfusedTNT>(world)?.infusions?.has(TRAP) == true && !player.isCreative){
-			explode(world, pos, state.withProperty(EXPLODE, true), player)
+			explode(world, pos, state.with(EXPLODE, true), player)
 			pos.setAir(world)
 			return false
 		}
@@ -98,7 +100,7 @@ class BlockInfusedTNT : BlockTNT(), ITileEntityProvider{
 		
 		val infusions = pos.getTile<TileEntityInfusedTNT>(world)?.infusions
 		
-		if (infusions != null && state.getValue(EXPLODE)){
+		if (infusions != null && state[EXPLODE]){
 			if (infusions.has(TRAP) && world.isBlockPowered(pos)){
 				dropBlockAsItem(world, pos, state, 0)
 			}
