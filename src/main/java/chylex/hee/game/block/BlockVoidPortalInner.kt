@@ -69,7 +69,7 @@ class BlockVoidPortalInner(builder: BlockSimple.Builder) : BlockAbstractPortal(b
 		defaultState = blockState.baseState.with(TYPE, HUB)
 	}
 	
-	override fun createBlockState(): BlockStateContainer = BlockStateContainer(this, TYPE)
+	override fun createBlockState() = BlockStateContainer(this, TYPE)
 	
 	override fun getMetaFromState(state: IBlockState) = state[TYPE].ordinal
 	override fun getStateFromMeta(meta: Int) = this.with(TYPE, Type.values()[meta])

@@ -11,7 +11,6 @@ import net.minecraft.block.state.IBlockState
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.init.Blocks
 import net.minecraft.nbt.CompressedStreamTools
-import net.minecraft.util.BlockRenderLayer
 import net.minecraft.util.BlockRenderLayer.CUTOUT
 import net.minecraft.util.EnumFacing
 import net.minecraft.util.EnumFacing.DOWN
@@ -98,9 +97,9 @@ class BlockScaffolding(builder: BlockSimple.Builder) : BlockSimple(builder){
 	
 	// Visuals and physics
 	
-	override fun isBlockNormalCube(state: IBlockState): Boolean = false
-	override fun isNormalCube(state: IBlockState): Boolean = false
-	override fun isOpaqueCube(state: IBlockState): Boolean = false
+	override fun isBlockNormalCube(state: IBlockState) = false
+	override fun isNormalCube(state: IBlockState) = false
+	override fun isOpaqueCube(state: IBlockState) = false
 	
 	override fun canCollideCheck(state: IBlockState, hitIfLiquid: Boolean): Boolean{
 		val player = HEE.proxy.getClientSidePlayer()
@@ -116,7 +115,7 @@ class BlockScaffolding(builder: BlockSimple.Builder) : BlockSimple(builder){
 			NULL_AABB
 	}
 	
-	override fun canPlaceTorchOnTop(state: IBlockState, world: IBlockAccess, pos: BlockPos): Boolean = true
-	override fun causesSuffocation(state: IBlockState): Boolean = false
-	override fun getRenderLayer(): BlockRenderLayer = CUTOUT
+	override fun canPlaceTorchOnTop(state: IBlockState, world: IBlockAccess, pos: BlockPos) = true
+	override fun causesSuffocation(state: IBlockState) = false
+	override fun getRenderLayer() = CUTOUT
 }

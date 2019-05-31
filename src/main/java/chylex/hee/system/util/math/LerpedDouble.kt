@@ -23,10 +23,10 @@ data class LerpedDouble(var currentValue: Double) : Comparable<LerpedDouble>{
 	
 	// Arithmetic operators
 	
-	operator fun plus(value: Double): Double  = currentValue + value
-	operator fun minus(value: Double): Double = currentValue - value
-	operator fun times(value: Double): Double = currentValue * value
-	operator fun div(value: Double): Double   = currentValue / value
+	operator fun plus(value: Double)  = currentValue + value
+	operator fun minus(value: Double) = currentValue - value
+	operator fun times(value: Double) = currentValue * value
+	operator fun div(value: Double)   = currentValue / value
 	
 	operator fun plusAssign(value: Double)  = update(currentValue + value)
 	operator fun minusAssign(value: Double) = update(currentValue - value)

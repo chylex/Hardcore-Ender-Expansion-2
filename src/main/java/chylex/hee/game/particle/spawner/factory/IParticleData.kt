@@ -10,7 +10,7 @@ interface IParticleData{
 	}
 	
 	open class Static(private val data: IntArray) : IParticleData{
-		override fun generate(rand: Random): IntArray = data
+		override fun generate(rand: Random) = data
 		
 		/**
 		 * Performs validation of [inputData], using itself as the fallback value.

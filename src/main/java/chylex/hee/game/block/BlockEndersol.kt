@@ -15,9 +15,9 @@ class BlockEndersol(builder: BlockSimple.Builder) : BlockSimple(builder){
 		private val MERGE_BOTTOM = Property.bool("merge_bottom")
 	}
 	
-	override fun createBlockState(): BlockStateContainer = BlockStateContainer(this, MERGE_TOP, MERGE_BOTTOM)
+	override fun createBlockState() = BlockStateContainer(this, MERGE_TOP, MERGE_BOTTOM)
 	
-	override fun getMetaFromState(state: IBlockState): Int = 0
+	override fun getMetaFromState(state: IBlockState) = 0
 	
 	override fun getActualState(state: IBlockState, world: IBlockAccess, pos: BlockPos): IBlockState{
 		return state.with(MERGE_TOP, pos.up().getBlock(world) === ModBlocks.HUMUS)

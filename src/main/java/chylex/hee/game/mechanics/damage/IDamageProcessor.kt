@@ -17,7 +17,7 @@ import kotlin.math.nextUp
 
 interface IDamageProcessor{
 	@JvmDefault fun setup(properties: DamageProperties.Writer){}
-	@JvmDefault fun modifyDamage(amount: Float, target: Entity, properties: DamageProperties.Reader): Float = amount
+	@JvmDefault fun modifyDamage(amount: Float, target: Entity, properties: DamageProperties.Reader) = amount
 	@JvmDefault fun afterDamage(target: Entity, properties: DamageProperties.Reader){}
 	
 	companion object{ // TODO make static fields in kotlin 1.3

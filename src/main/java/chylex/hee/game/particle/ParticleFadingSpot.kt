@@ -61,7 +61,7 @@ object ParticleFadingSpot : IParticleMaker{
 			particleScale -= scalePerTick
 		}
 		
-		override fun getFXLayer(): Int = 1
+		override fun getFXLayer() = 1
 		override fun setParticleTextureIndex(index: Int){}
 	}
 }

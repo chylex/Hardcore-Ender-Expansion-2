@@ -23,10 +23,10 @@ data class LerpedFloat(var currentValue: Float) : Comparable<LerpedFloat>{
 	
 	// Arithmetic operators
 	
-	operator fun plus(value: Float): Float  = currentValue + value
-	operator fun minus(value: Float): Float = currentValue - value
-	operator fun times(value: Float): Float = currentValue * value
-	operator fun div(value: Float): Float   = currentValue / value
+	operator fun plus(value: Float)  = currentValue + value
+	operator fun minus(value: Float) = currentValue - value
+	operator fun times(value: Float) = currentValue * value
+	operator fun div(value: Float)   = currentValue / value
 	
 	operator fun plusAssign(value: Float)  = update(currentValue + value)
 	operator fun minusAssign(value: Float) = update(currentValue - value)

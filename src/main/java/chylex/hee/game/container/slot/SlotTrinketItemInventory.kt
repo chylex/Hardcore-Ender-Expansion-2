@@ -34,7 +34,7 @@ class SlotTrinketItemInventory(trinketHandler: IItemHandler, slotNumber: Int) : 
 		this.slotNumber = slotNumber
 	}
 	
-	override fun isHere(inv: IInventory, slot: Int): Boolean = true
+	override fun isHere(inv: IInventory, slot: Int) = true
 	
 	@SideOnly(Side.CLIENT)
 	override fun isEnabled(): Boolean{

@@ -26,5 +26,5 @@ internal object HeeServerCommand : HeeBaseCommand(){
 	
 	override val defaultSubCommand = CommandServerHelp
 	
-	override fun getRequiredPermissionLevel(): Int = 2
+	override fun getRequiredPermissionLevel() = 2
 }

@@ -7,5 +7,5 @@ import net.minecraftforge.fml.relauncher.SideOnly
 
 @SideOnly(Side.CLIENT)
 class RenderEntityItemNoBob(manager: RenderManager) : RenderEntityItem(manager, MC.itemRenderer){
-	override fun shouldBob(): Boolean = false
+	override fun shouldBob() = false
 }

@@ -1,5 +1,4 @@
 package chylex.hee.game.particle.base
-import net.minecraft.client.particle.Particle
 import net.minecraft.world.World
 import net.minecraftforge.fml.relauncher.Side
 import net.minecraftforge.fml.relauncher.SideOnly
@@ -21,7 +20,7 @@ abstract class ParticleBaseFloating(world: World, posX: Double, posY: Double, po
 		resetPositionToBB()
 	}
 	
-	override fun multiplyVelocity(multiplier: Float): Particle = apply {
+	override fun multiplyVelocity(multiplier: Float) = apply {
 		motionX *= multiplier
 		motionY *= multiplier
 		motionZ *= multiplier

@@ -14,7 +14,6 @@ import chylex.hee.system.util.nextFloat
 import chylex.hee.system.util.setAir
 import chylex.hee.system.util.square
 import net.minecraft.block.ITileEntityProvider
-import net.minecraft.block.state.BlockFaceShape
 import net.minecraft.block.state.BlockFaceShape.UNDEFINED
 import net.minecraft.block.state.IBlockState
 import net.minecraft.client.particle.ParticleManager
@@ -24,7 +23,6 @@ import net.minecraft.entity.IProjectile
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.item.ItemStack
 import net.minecraft.tileentity.TileEntity
-import net.minecraft.util.EnumBlockRenderType
 import net.minecraft.util.EnumBlockRenderType.INVISIBLE
 import net.minecraft.util.EnumFacing
 import net.minecraft.util.math.AxisAlignedBB
@@ -110,18 +108,18 @@ class BlockEnergyCluster(builder: BlockSimple.Builder) : BlockSimple(builder), I
 		}
 	}
 	
-	override fun quantityDropped(rand: Random): Int = 0
+	override fun quantityDropped(rand: Random) = 0
 	
-	@SideOnly(Side.CLIENT) override fun addHitEffects(state: IBlockState, world: World, target: RayTraceResult, manager: ParticleManager): Boolean = true
-	@SideOnly(Side.CLIENT) override fun addDestroyEffects(world: World, pos: BlockPos, manager: ParticleManager): Boolean = true
-	@SideOnly(Side.CLIENT) override fun addRunningEffects(state: IBlockState, world: World, pos: BlockPos, entity: Entity): Boolean = true
-	@SideOnly(Side.CLIENT) override fun addLandingEffects(state: IBlockState, world: WorldServer, pos: BlockPos, stateAgain: IBlockState, entity: EntityLivingBase, particleAmount: Int): Boolean = true
+	@SideOnly(Side.CLIENT) override fun addHitEffects(state: IBlockState, world: World, target: RayTraceResult, manager: ParticleManager) = true
+	@SideOnly(Side.CLIENT) override fun addDestroyEffects(world: World, pos: BlockPos, manager: ParticleManager) = true
+	@SideOnly(Side.CLIENT) override fun addRunningEffects(state: IBlockState, world: World, pos: BlockPos, entity: Entity) = true
+	@SideOnly(Side.CLIENT) override fun addLandingEffects(state: IBlockState, world: WorldServer, pos: BlockPos, stateAgain: IBlockState, entity: EntityLivingBase, particleAmount: Int) = true
 	
-	override fun getBoundingBox(state: IBlockState, source: IBlockAccess, pos: BlockPos): AxisAlignedBB = SELECTION_AABB
-	override fun getCollisionBoundingBox(state: IBlockState, world: IBlockAccess, pos: BlockPos): AxisAlignedBB? = NULL_AABB
-	override fun getBlockFaceShape(world: IBlockAccess, state: IBlockState, pos: BlockPos, face: EnumFacing): BlockFaceShape = UNDEFINED
+	override fun getBoundingBox(state: IBlockState, source: IBlockAccess, pos: BlockPos) = SELECTION_AABB
+	override fun getCollisionBoundingBox(state: IBlockState, world: IBlockAccess, pos: BlockPos) = NULL_AABB
+	override fun getBlockFaceShape(world: IBlockAccess, state: IBlockState, pos: BlockPos, face: EnumFacing) = UNDEFINED
 	
-	override fun isFullCube(state: IBlockState): Boolean = false
-	override fun isOpaqueCube(state: IBlockState): Boolean = false
-	override fun getRenderType(state: IBlockState): EnumBlockRenderType = INVISIBLE
+	override fun isFullCube(state: IBlockState) = false
+	override fun isOpaqueCube(state: IBlockState) = false
+	override fun getRenderType(state: IBlockState) = INVISIBLE
 }

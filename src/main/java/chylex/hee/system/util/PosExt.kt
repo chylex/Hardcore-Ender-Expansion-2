@@ -186,10 +186,10 @@ fun BlockPos.distanceSqTo(entity: Entity): Double{
 	return square(entity.posX - (this.x + 0.5)) + square(entity.posY - (this.y + 0.5)) + square(entity.posZ - (this.z + 0.5))
 }
 
-inline fun BlockPos.distanceTo(x: Int, y: Int, z: Int): Double = sqrt(distanceSqTo(x, y, z))
-inline fun BlockPos.distanceTo(pos: BlockPos): Double = sqrt(distanceSqTo(pos))
-inline fun BlockPos.distanceTo(vec: Vec3d): Double = sqrt(distanceSqTo(vec))
-inline fun BlockPos.distanceTo(entity: Entity): Double = sqrt(distanceSqTo(entity))
+inline fun BlockPos.distanceTo(x: Int, y: Int, z: Int) = sqrt(distanceSqTo(x, y, z))
+inline fun BlockPos.distanceTo(pos: BlockPos) = sqrt(distanceSqTo(pos))
+inline fun BlockPos.distanceTo(vec: Vec3d) = sqrt(distanceSqTo(vec))
+inline fun BlockPos.distanceTo(entity: Entity) = sqrt(distanceSqTo(entity))
 
 // Distance utilities
 
@@ -217,4 +217,4 @@ fun BlockPos.isAnyPlayerWithinRange(world: World, range: Double): Boolean{
 	return world.isAnyPlayerWithinRangeAt(x + 0.5, y + 0.5, z + 0.5, range)
 }
 
-inline fun BlockPos.isAnyPlayerWithinRange(world: World, range: Int): Boolean = isAnyPlayerWithinRange(world, range.toDouble())
+inline fun BlockPos.isAnyPlayerWithinRange(world: World, range: Int) = isAnyPlayerWithinRange(world, range.toDouble())

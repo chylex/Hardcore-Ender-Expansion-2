@@ -32,10 +32,10 @@ abstract class ParticleBaseEnergy(world: World, posX: Double, posY: Double, posZ
 		
 		@SideOnly(Side.CLIENT)
 		private object TextureDescription : TextureAtlasSprite(TEX_PARTICLE.toString()){
-			override fun getMinU(): Float = 0F
-			override fun getMinV(): Float = 0F
-			override fun getMaxU(): Float = 1F
-			override fun getMaxV(): Float = 1F
+			override fun getMinU() = 0F
+			override fun getMinV() = 0F
+			override fun getMaxU() = 1F
+			override fun getMaxV() = 1F
 		}
 		
 		private var lastInterpolationFixTime = 0L
@@ -128,6 +128,6 @@ abstract class ParticleBaseEnergy(world: World, posX: Double, posY: Double, posZ
 		GL.disableBlend()
 	}
 	
-	final override fun getFXLayer(): Int = 3
-	final override fun shouldDisableDepth(): Boolean = true // doesn't do anything for getFXLayer == 3, but keep just in case
+	final override fun getFXLayer() = 3
+	final override fun shouldDisableDepth() = true // doesn't do anything for getFXLayer == 3, but keep just in case
 }

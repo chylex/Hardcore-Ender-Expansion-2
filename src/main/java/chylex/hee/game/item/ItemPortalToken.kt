@@ -147,7 +147,7 @@ class ItemPortalToken : Item(){
 			return ModItems.PORTAL_TOKEN.getTerritoryType(stack)?.desc?.colors
 		}
 		
-		override fun colorMultiplier(stack: ItemStack, tintIndex: Int): Int = when(tintIndex){
+		override fun colorMultiplier(stack: ItemStack, tintIndex: Int) = when(tintIndex){
 			1 -> getColors(stack)?.tokenBottom?.toInt() ?: WHITE
 			2 -> getColors(stack)?.tokenTop?.toInt() ?: WHITE
 			else -> NONE

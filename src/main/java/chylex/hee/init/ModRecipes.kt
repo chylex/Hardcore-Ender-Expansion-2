@@ -38,7 +38,7 @@ object ModRecipes{
 	@SubscribeEvent
 	fun onRegister(e: RegistryEvent.Register<IRecipe>){
 		with(e.registry as? IForgeRegistryModifiable<IRecipe> ?: return){
-			fun removeVanilla(name: String): Boolean = remove(Resource.Vanilla(name)) != null
+			fun removeVanilla(name: String) = remove(Resource.Vanilla(name)) != null
 			
 			IntegrityCheck.removedEnderChestRecipe = removeVanilla("ender_chest")
 			IntegrityCheck.removedPurpurRecipe = removeVanilla("purpur_block")

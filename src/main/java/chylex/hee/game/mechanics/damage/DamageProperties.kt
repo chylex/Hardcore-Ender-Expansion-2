@@ -79,16 +79,16 @@ class DamageProperties{
 		val isNonLethal
 			get() = nonLethal
 		
-		override fun isDamageAbsolute(): Boolean = true // ignore potions and enchantments by default
-		override fun isDifficultyScaled(): Boolean = false // ignore difficulty by default
+		override fun isDamageAbsolute() = true // ignore potions and enchantments by default
+		override fun isDifficultyScaled() = false // ignore difficulty by default
 		
-		override fun isProjectile(): Boolean = hasType(DamageType.PROJECTILE)
-		override fun isFireDamage(): Boolean = hasType(DamageType.FIRE)
-		override fun isExplosion(): Boolean = hasType(DamageType.BLAST)
-		override fun isMagicDamage(): Boolean = hasType(DamageType.MAGIC)
+		override fun isProjectile() = hasType(DamageType.PROJECTILE)
+		override fun isFireDamage() = hasType(DamageType.FIRE)
+		override fun isExplosion() = hasType(DamageType.BLAST)
+		override fun isMagicDamage() = hasType(DamageType.MAGIC)
 		
-		override fun isUnblockable(): Boolean = ignoreArmorAndConsequentlyShield
-		override fun canHarmInCreative(): Boolean = dealCreative
+		override fun isUnblockable() = ignoreArmorAndConsequentlyShield
+		override fun canHarmInCreative() = dealCreative
 		
 		override fun getImmediateSource(): Entity? = directSource
 		override fun getTrueSource(): Entity? = remoteSource

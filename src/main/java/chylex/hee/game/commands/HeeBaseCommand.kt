@@ -11,9 +11,9 @@ internal abstract class HeeBaseCommand : CommandBase(){
 	protected abstract val allSubCommands: Map<String, ISubCommand>
 	protected abstract val defaultSubCommand: ISubCommand
 	
-	final override fun getName(): String = "hee"
+	final override fun getName() = "hee"
 	
-	final override fun getUsage(sender: ICommandSender): String = "commands.hee.usage"
+	final override fun getUsage(sender: ICommandSender) = "commands.hee.usage"
 	
 	abstract override fun getRequiredPermissionLevel(): Int
 	

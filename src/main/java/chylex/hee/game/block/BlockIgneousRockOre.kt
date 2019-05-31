@@ -92,11 +92,9 @@ class BlockIgneousRockOre(builder: BlockSimple.Builder) : BlockSimple(builder){
 		}
 	}
 	
-	override fun getHarvestLevel(state: IBlockState): Int = 0 // use super.getHarvestLevel for the real value
-	
-	override fun canHarvestBlock(world: IBlockAccess, pos: BlockPos, player: EntityPlayer): Boolean = true
-	
-	override fun canSilkHarvest(): Boolean = true
+	override fun getHarvestLevel(state: IBlockState) = 0 // use super.getHarvestLevel for the real value
+	override fun canHarvestBlock(world: IBlockAccess, pos: BlockPos, player: EntityPlayer) = true
+	override fun canSilkHarvest() = true
 	
 	// Client side
 	

@@ -31,7 +31,6 @@ import org.lwjgl.opengl.GL11.GL_OBJECT_LINEAR
 import org.lwjgl.opengl.GL11.GL_OBJECT_PLANE
 import org.lwjgl.opengl.GL11.GL_QUADS
 import org.lwjgl.opengl.GL11.GL_TEXTURE
-import java.nio.FloatBuffer
 import java.util.Random
 import kotlin.math.pow
 
@@ -43,7 +42,7 @@ abstract class RenderTileAbstractPortal<T : TileEntityPortalInner, C : IPortalCo
 		
 		@JvmStatic private val BUFFER = GLAllocation.createDirectFloatBuffer(16)
 		
-		private fun updateBuffer(value1: Float, value2: Float, value3: Float, value4: Float): FloatBuffer = BUFFER.apply {
+		private fun updateBuffer(value1: Float, value2: Float, value3: Float, value4: Float) = BUFFER.apply {
 			clear()
 			put(value1)
 			put(value2)
@@ -52,7 +51,7 @@ abstract class RenderTileAbstractPortal<T : TileEntityPortalInner, C : IPortalCo
 			flip()
 		}
 		
-		private fun getLayerCount(distSq: Double): Int = when{
+		private fun getLayerCount(distSq: Double) = when{
 			distSq > square(60) ->  5
 			distSq > square(48) ->  7
 			distSq > square(38) ->  9

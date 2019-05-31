@@ -209,7 +209,7 @@ abstract class NBTList<T : Any>(protected val tagList: NBTTagList) : Iterable<T>
 	
 	abstract fun get(index: Int) : T
 	
-	override fun iterator(): MutableIterator<T> = object : MutableIterator<T>{
+	override fun iterator() = object : MutableIterator<T>{
 		private var cursor = 0
 		private var canRemove = false
 		
@@ -236,11 +236,9 @@ abstract class NBTList<T : Any>(protected val tagList: NBTTagList) : Iterable<T>
 		}
 	}
 	
-	override fun equals(other: Any?): Boolean = tagList == other
-	
-	override fun hashCode(): Int = tagList.hashCode()
-	
-	override fun toString(): String = tagList.toString()
+	override fun equals(other: Any?) = tagList == other
+	override fun hashCode() = tagList.hashCode()
+	override fun toString() = tagList.toString()
 }
 
 class NBTPrimitiveList(tagList: NBTTagList = NBTTagList()) : NBTList<NBTPrimitive>(tagList){

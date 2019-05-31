@@ -38,13 +38,13 @@ class CustomMaterial : Material(MapColor.AIR){
 	
 	// Overrides
 	
-	override fun isSolid(): Boolean = solid
-	override fun isLiquid(): Boolean = liquid
-	override fun isOpaque(): Boolean = blocksMovement && !translucent
-	override fun isReplaceable(): Boolean = replaceable
-	override fun getCanBurn(): Boolean = flammable
+	override fun isSolid() = solid
+	override fun isLiquid() = liquid
+	override fun isOpaque() = blocksMovement && !translucent
+	override fun isReplaceable() = replaceable
+	override fun getCanBurn() = flammable
 	
-	override fun isToolNotRequired(): Boolean = !requiresTool
-	override fun blocksLight(): Boolean = blocksLight
-	override fun blocksMovement(): Boolean = blocksMovement
+	override fun isToolNotRequired() = !requiresTool
+	override fun blocksLight() = blocksLight
+	override fun blocksMovement() = blocksMovement
 }

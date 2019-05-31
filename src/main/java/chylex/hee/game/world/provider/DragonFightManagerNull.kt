@@ -11,13 +11,13 @@ import net.minecraft.world.end.DragonSpawnManager
 class DragonFightManagerNull(world: WorldServer) : DragonFightManager(world, NBTTagCompound()){
 	override fun tick(){}
 	
-	override fun hasPreviouslyKilledDragon(): Boolean = false
+	override fun hasPreviouslyKilledDragon() = false
 	override fun dragonUpdate(dragon: EntityDragon){}
 	override fun processDragonDeath(dragon: EntityDragon){}
 	override fun setRespawnState(state: DragonSpawnManager){}
 	override fun respawnDragon(){}
 	
-	override fun getNumAliveCrystals(): Int = 0
+	override fun getNumAliveCrystals() = 0
 	override fun onCrystalDestroyed(crystal: EntityEnderCrystal, source: DamageSource){}
 	override fun resetSpikeCrystals(){}
 	

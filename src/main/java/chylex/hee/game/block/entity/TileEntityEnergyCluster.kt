@@ -168,7 +168,7 @@ class TileEntityEnergyCluster : TileEntityBase(), ITickable{
 	
 	// Snapshot
 	
-	fun getClusterSnapshot(): ClusterSnapshot = ClusterSnapshot(
+	fun getClusterSnapshot() = ClusterSnapshot(
 		energyLevel    = this.energyLevel,
 		energyCapacity = this.energyBaseCapacity,
 		healthStatus   = this.internalHealthStatus,
@@ -284,6 +284,6 @@ class TileEntityEnergyCluster : TileEntityBase(), ITickable{
 	
 	// Rendering
 	
-	override fun hasFastRenderer(): Boolean = true
-	override fun canRenderBreaking(): Boolean = false
+	override fun hasFastRenderer() = true
+	override fun canRenderBreaking() = false
 }

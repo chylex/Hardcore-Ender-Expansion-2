@@ -61,9 +61,9 @@ interface IEnergyQuantity: Comparable<IEnergyQuantity>{
 		
 		override val internal: Internal = this
 		
-		override fun equals(other: Any?): Boolean = equals(this, other)
-		override fun hashCode(): Int = hashCode(this)
-		override fun toString(): String = toString(this)
+		override fun equals(other: Any?) = equals(this, other)
+		override fun hashCode() = hashCode(this)
+		override fun toString() = toString(this)
 	}
 	
 	/**
@@ -75,9 +75,9 @@ interface IEnergyQuantity: Comparable<IEnergyQuantity>{
 		
 		override val internal: Internal = Internal((value * 1_000_000).floorToInt())
 		
-		override fun equals(other: Any?): Boolean = equals(this, other)
-		override fun hashCode(): Int = hashCode(this)
-		override fun toString(): String = toString(this)
+		override fun equals(other: Any?) = equals(this, other)
+		override fun hashCode() = hashCode(this)
+		override fun toString() = toString(this)
 	}
 	
 	/**
@@ -89,8 +89,8 @@ interface IEnergyQuantity: Comparable<IEnergyQuantity>{
 		
 		override val internal: Internal = Internal(value * 50_000)
 		
-		override fun equals(other: Any?): Boolean = equals(this, other)
-		override fun hashCode(): Int = hashCode(this)
-		override fun toString(): String = toString(this)
+		override fun equals(other: Any?) = equals(this, other)
+		override fun hashCode() = hashCode(this)
+		override fun toString() = toString(this)
 	}
 }

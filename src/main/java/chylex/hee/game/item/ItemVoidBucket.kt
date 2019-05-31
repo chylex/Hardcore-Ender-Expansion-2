@@ -139,7 +139,7 @@ class ItemVoidBucket : ItemAbstractVoidTool(){
 	object Color : IItemColor{
 		private const val NONE = -1
 		
-		override fun colorMultiplier(stack: ItemStack, tintIndex: Int): Int = when(tintIndex){
+		override fun colorMultiplier(stack: ItemStack, tintIndex: Int) = when(tintIndex){
 			1 -> stack.heeTagOrNull?.getInteger(COLOR_TAG) ?: NONE // TODO using cooldown to determine the textures looks funny w/ multiple buckets in inventory
 			else -> NONE
 		}

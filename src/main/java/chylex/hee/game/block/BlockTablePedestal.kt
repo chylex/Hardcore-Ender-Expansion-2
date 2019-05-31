@@ -16,7 +16,6 @@ import net.minecraft.entity.Entity
 import net.minecraft.entity.item.EntityItem
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.tileentity.TileEntity
-import net.minecraft.util.BlockRenderLayer
 import net.minecraft.util.BlockRenderLayer.CUTOUT
 import net.minecraft.util.EnumFacing
 import net.minecraft.util.EnumHand
@@ -85,7 +84,7 @@ class BlockTablePedestal(builder: BlockSimple.Builder) : BlockSimpleShaped(build
 		defaultState = blockState.baseState.with(IS_LINKED, false)
 	}
 	
-	override fun createBlockState(): BlockStateContainer = BlockStateContainer(this, IS_LINKED)
+	override fun createBlockState() = BlockStateContainer(this, IS_LINKED)
 	
 	override fun getMetaFromState(state: IBlockState) = if (state[IS_LINKED]) 1 else 0
 	override fun getStateFromMeta(meta: Int) = this.with(IS_LINKED, meta == 1)
@@ -187,7 +186,7 @@ class BlockTablePedestal(builder: BlockSimple.Builder) : BlockSimpleShaped(build
 	
 	// Client side
 	
-	override fun getRenderLayer(): BlockRenderLayer = CUTOUT
+	override fun getRenderLayer() = CUTOUT
 	
 	@SideOnly(Side.CLIENT)
 	object Color : IBlockColor{

@@ -9,7 +9,6 @@ import chylex.hee.system.util.selectExistingEntities
 import chylex.hee.system.util.withFacing
 import net.minecraft.block.BlockDirectional.FACING
 import net.minecraft.block.ITileEntityProvider
-import net.minecraft.block.state.BlockFaceShape
 import net.minecraft.block.state.BlockFaceShape.UNDEFINED
 import net.minecraft.block.state.BlockStateContainer
 import net.minecraft.block.state.IBlockState
@@ -18,7 +17,6 @@ import net.minecraft.entity.passive.EntityOcelot
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.item.ItemStack
 import net.minecraft.tileentity.TileEntity
-import net.minecraft.util.EnumBlockRenderType
 import net.minecraft.util.EnumBlockRenderType.ENTITYBLOCK_ANIMATED
 import net.minecraft.util.EnumFacing
 import net.minecraft.util.EnumFacing.DOWN
@@ -40,7 +38,7 @@ abstract class BlockAbstractChest<T : TileEntityBaseChest>(builder: BlockSimple.
 		defaultState = blockState.baseState.withFacing(NORTH)
 	}
 	
-	override fun createBlockState(): BlockStateContainer = BlockStateContainer(this, FACING)
+	override fun createBlockState() = BlockStateContainer(this, FACING)
 	
 	// Placement and interaction
 	
@@ -104,11 +102,11 @@ abstract class BlockAbstractChest<T : TileEntityBaseChest>(builder: BlockSimple.
 	
 	// Shape and rendering
 	
-	final override fun getBoundingBox(state: IBlockState, source: IBlockAccess, pos: BlockPos): AxisAlignedBB = AABB
-	final override fun getBlockFaceShape(world: IBlockAccess, state: IBlockState, pos: BlockPos, face: EnumFacing): BlockFaceShape = UNDEFINED
+	final override fun getBoundingBox(state: IBlockState, source: IBlockAccess, pos: BlockPos) = AABB
+	final override fun getBlockFaceShape(world: IBlockAccess, state: IBlockState, pos: BlockPos, face: EnumFacing) = UNDEFINED
 	
-	final override fun isFullCube(state: IBlockState): Boolean = false
-	final override fun isOpaqueCube(state: IBlockState): Boolean = false
-	final override fun getRenderType(state: IBlockState): EnumBlockRenderType = ENTITYBLOCK_ANIMATED
-	final override fun hasCustomBreakingProgress(state: IBlockState): Boolean = true
+	final override fun isFullCube(state: IBlockState) = false
+	final override fun isOpaqueCube(state: IBlockState) = false
+	final override fun getRenderType(state: IBlockState) = ENTITYBLOCK_ANIMATED
+	final override fun hasCustomBreakingProgress(state: IBlockState) = true
 }

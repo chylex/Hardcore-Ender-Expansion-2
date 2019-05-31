@@ -12,11 +12,9 @@ import chylex.hee.system.util.offsetUntil
 import chylex.hee.system.util.setBlock
 import net.minecraft.block.Block
 import net.minecraft.block.ITileEntityProvider
-import net.minecraft.block.state.BlockFaceShape
 import net.minecraft.block.state.BlockFaceShape.UNDEFINED
 import net.minecraft.block.state.IBlockState
 import net.minecraft.entity.Entity
-import net.minecraft.util.EnumBlockRenderType
 import net.minecraft.util.EnumBlockRenderType.INVISIBLE
 import net.minecraft.util.EnumFacing
 import net.minecraft.util.math.AxisAlignedBB
@@ -73,11 +71,11 @@ abstract class BlockAbstractPortal(builder: BlockSimple.Builder) : BlockSimple(b
 		}
 	}
 	
-	final override fun getCollisionBoundingBox(state: IBlockState, world: IBlockAccess, pos: BlockPos): AxisAlignedBB = COLLISION_AABB
+	final override fun getCollisionBoundingBox(state: IBlockState, world: IBlockAccess, pos: BlockPos) = COLLISION_AABB
 	final override fun getSelectedBoundingBox(state: IBlockState, world: World, pos: BlockPos): AxisAlignedBB = SELECTION_AABB.offset(pos)
-	final override fun getBlockFaceShape(world: IBlockAccess, state: IBlockState, pos: BlockPos, face: EnumFacing): BlockFaceShape = UNDEFINED
+	final override fun getBlockFaceShape(world: IBlockAccess, state: IBlockState, pos: BlockPos, face: EnumFacing) = UNDEFINED
 	
-	final override fun isFullCube(state: IBlockState): Boolean = false
-	final override fun isOpaqueCube(state: IBlockState): Boolean = false
-	final override fun getRenderType(state: IBlockState): EnumBlockRenderType = INVISIBLE
+	final override fun isFullCube(state: IBlockState) = false
+	final override fun isOpaqueCube(state: IBlockState) = false
+	final override fun getRenderType(state: IBlockState) = INVISIBLE
 }

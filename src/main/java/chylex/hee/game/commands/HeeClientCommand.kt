@@ -23,9 +23,9 @@ internal object HeeClientCommand : HeeBaseCommand(), IClientCommand{
 	
 	override val defaultSubCommand = CommandClientHelp
 	
-	override fun getRequiredPermissionLevel(): Int = 0
+	override fun getRequiredPermissionLevel() = 0
 	
-	override fun allowUsageWithoutPrefix(sender: ICommandSender, message: String): Boolean = false
+	override fun allowUsageWithoutPrefix(sender: ICommandSender, message: String) = false
 	
 	@JvmStatic
 	@SubscribeEvent
@@ -33,7 +33,7 @@ internal object HeeClientCommand : HeeBaseCommand(), IClientCommand{
 		if (e.command === HeeClientCommand){
 			val args = e.parameters
 			
-			if (!args.isEmpty() && !allSubCommands.containsKey(args[0])){
+			if (args.isNotEmpty() && !allSubCommands.containsKey(args[0])){
 				e.isCanceled = true // send the command to server
 			}
 		}

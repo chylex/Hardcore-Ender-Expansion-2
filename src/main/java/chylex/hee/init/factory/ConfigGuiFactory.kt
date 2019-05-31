@@ -7,11 +7,11 @@ import net.minecraftforge.fml.client.config.GuiConfig
 
 @Suppress("unused")
 class ConfigGuiFactory : IModGuiFactory{
-	override fun hasConfigGui(): Boolean = true
+	override fun hasConfigGui() = true
 	
-	override fun createConfigGui(parentScreen: GuiScreen): GuiScreen = GuiConfig(parentScreen, HEE.config.configElements, HEE.ID, false, false, GuiConfig.getAbridgedConfigPath(HEE.config.filePath))
+	override fun createConfigGui(parentScreen: GuiScreen) = GuiConfig(parentScreen, HEE.config.configElements, HEE.ID, false, false, GuiConfig.getAbridgedConfigPath(HEE.config.filePath))
 	
-	override fun runtimeGuiCategories(): MutableSet<IModGuiFactory.RuntimeOptionCategoryElement> = mutableSetOf()
+	override fun runtimeGuiCategories() = mutableSetOf<IModGuiFactory.RuntimeOptionCategoryElement>()
 	
 	override fun initialize(mc: Minecraft){}
 }

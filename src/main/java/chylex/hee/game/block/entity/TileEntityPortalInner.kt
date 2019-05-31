@@ -7,10 +7,10 @@ import net.minecraftforge.fml.relauncher.SideOnly
 
 sealed class TileEntityPortalInner : TileEntityEndPortal(){
 	@SideOnly(Side.CLIENT)
-	override fun getMaxRenderDistanceSquared(): Double = square(180.0)
+	override fun getMaxRenderDistanceSquared() = square(180.0)
 	
 	@SideOnly(Side.CLIENT)
-	override fun getRenderBoundingBox(): AxisAlignedBB = AxisAlignedBB(pos, pos.add(1, 1, 1))
+	override fun getRenderBoundingBox() = AxisAlignedBB(pos, pos.add(1, 1, 1))
 	
 	class End : TileEntityPortalInner()
 	class Void : TileEntityPortalInner()

@@ -49,7 +49,7 @@ object ParticleDeathFlowerHeal : IParticleMaker{
 			particleBlue = b.toFloat()
 		}
 		
-		override fun getFXLayer(): Int = 1
+		override fun getFXLayer() = 1
 		override fun setParticleTextureIndex(index: Int){}
 	}
 }

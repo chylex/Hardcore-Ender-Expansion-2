@@ -5,8 +5,8 @@ import net.minecraft.util.math.BlockPos
 import net.minecraft.world.IBlockAccess
 
 open class BlockSimpleShaped(builder: BlockSimple.Builder, private val aabb: AxisAlignedBB) : BlockSimple(builder){
-	override fun getBoundingBox(state: IBlockState, source: IBlockAccess, pos: BlockPos): AxisAlignedBB = aabb
+	override fun getBoundingBox(state: IBlockState, source: IBlockAccess, pos: BlockPos) = aabb
 	
-	override fun isFullCube(state: IBlockState): Boolean = false
-	override fun isOpaqueCube(state: IBlockState): Boolean = false
+	override fun isFullCube(state: IBlockState) = false
+	override fun isOpaqueCube(state: IBlockState) = false
 }

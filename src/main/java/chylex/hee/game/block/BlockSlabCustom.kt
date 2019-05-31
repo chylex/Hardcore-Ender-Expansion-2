@@ -10,7 +10,6 @@ import net.minecraft.block.Block
 import net.minecraft.block.BlockSlab
 import net.minecraft.block.BlockSlab.EnumBlockHalf.BOTTOM
 import net.minecraft.block.BlockSlab.EnumBlockHalf.TOP
-import net.minecraft.block.properties.IProperty
 import net.minecraft.block.state.BlockStateContainer
 import net.minecraft.block.state.IBlockState
 import net.minecraft.item.Item
@@ -48,14 +47,12 @@ abstract class BlockSlabCustom(builder: Builder) : BlockSlab(builder.material, b
 		}
 		
 		override fun getItemDropped(state: IBlockState, rand: Random, fortune: Int): Item = Item.getItemFromBlock(this)
+		override fun getItem(world: World, pos: BlockPos, state: IBlockState) = ItemStack(this)
 		
-		override fun getItem(world: World, pos: BlockPos, state: IBlockState): ItemStack = ItemStack(this)
 		override fun getMetaFromState(state: IBlockState) = if (state[HALF] == BOTTOM) 0 else 8
 		override fun getStateFromMeta(meta: Int) = this.with(HALF, if (meta == 0) BOTTOM else TOP)
 		
-		
-		
-		override fun createBlockState(): BlockStateContainer = BlockStateContainer(this, HALF, VARIANT)
+		override fun createBlockState() = BlockStateContainer(this, HALF, VARIANT)
 		
 		override fun isDouble() = false
 	}
@@ -68,20 +65,17 @@ abstract class BlockSlabCustom(builder: Builder) : BlockSlab(builder.material, b
 		override fun getItemDropped(state: IBlockState, rand: Random, fortune: Int): Item = Item.getItemFromBlock(slabBlock)
 		override fun getItem(world: World, pos: BlockPos, state: IBlockState) = ItemStack(slabBlock)
 		
-		override fun getItem(world: World, pos: BlockPos, state: IBlockState): ItemStack = ItemStack(slabBlock)
-		
-		override fun getMetaFromState(state: IBlockState): Int = 0
-		
+		override fun getMetaFromState(state: IBlockState) = 0
 		override fun getStateFromMeta(meta: Int): IBlockState = defaultState
 		
-		override fun createBlockState(): BlockStateContainer = BlockStateContainer(this, VARIANT)
+		override fun createBlockState() = BlockStateContainer(this, VARIANT)
 		
 		override fun isDouble() = true
 	}
 	
 	override fun getTranslationKey(meta: Int): String = super.getTranslationKey()
 	
-	override fun getVariantProperty(): IProperty<*> = VARIANT
+	override fun getVariantProperty() = VARIANT
 	
-	override fun getTypeForItem(stack: ItemStack): Comparable<*> = DEFAULT
+	override fun getTypeForItem(stack: ItemStack) = DEFAULT
 }

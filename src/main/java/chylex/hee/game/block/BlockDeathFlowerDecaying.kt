@@ -148,7 +148,7 @@ class BlockDeathFlowerDecaying : BlockEndPlant(){
 		}
 	}
 	
-	override fun createBlockState(): BlockStateContainer = BlockStateContainer(this, LEVEL)
+	override fun createBlockState() = BlockStateContainer(this, LEVEL)
 	
 	// Healing
 	

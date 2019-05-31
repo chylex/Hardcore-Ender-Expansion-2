@@ -225,7 +225,7 @@ class EntityItemIgneousRock : EntityItemNoBob{
 		return super.isEntityInvulnerable(source) || source.isFireDamage
 	}
 	
-	override fun isBurning(): Boolean = true
+	override fun isBurning() = true
 	
 	// In-world behavior
 	

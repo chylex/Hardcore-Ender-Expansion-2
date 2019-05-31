@@ -110,11 +110,11 @@ abstract class ItemAbstractEnergyUser : Item(){
 	
 	// Energy handling
 	
-	fun hasAnyEnergy    (stack: ItemStack): Boolean = getEnergyLevel(stack) > 0
-	fun hasMaximumEnergy(stack: ItemStack): Boolean = getEnergyLevel(stack) >= calculateInternalEnergyCapacity(stack)
+	fun hasAnyEnergy    (stack: ItemStack) = getEnergyLevel(stack) > 0
+	fun hasMaximumEnergy(stack: ItemStack) = getEnergyLevel(stack) >= calculateInternalEnergyCapacity(stack)
 	
-	open fun chargeEnergyUnit(stack: ItemStack): Boolean = offsetEnergyLevel(stack, getEnergyPerUse(stack).denominator)
-	open fun useEnergyUnit   (stack: ItemStack): Boolean = offsetEnergyLevel(stack, -getEnergyPerUse(stack).numerator) // TODO add FX when all Energy is used, maybe don't use any in creative mode
+	open fun chargeEnergyUnit(stack: ItemStack) = offsetEnergyLevel(stack, getEnergyPerUse(stack).denominator)
+	open fun useEnergyUnit   (stack: ItemStack) = offsetEnergyLevel(stack, -getEnergyPerUse(stack).numerator) // TODO add FX when all Energy is used, maybe don't use any in creative mode
 	
 	fun getEnergyChargeLevel(stack: ItemStack): IEnergyQuantity{
 		return Units(getEnergyLevel(stack) / getEnergyPerUse(stack).denominator)
@@ -184,9 +184,9 @@ abstract class ItemAbstractEnergyUser : Item(){
 	
 	// Client visuals
 	
-	override fun showDurabilityBar(stack: ItemStack): Boolean = true
+	override fun showDurabilityBar(stack: ItemStack) = true
 	
-	override fun getDurabilityForDisplay(stack: ItemStack): Double = 1.0 - (getEnergyLevel(stack).toDouble() / calculateInternalEnergyCapacity(stack))
+	override fun getDurabilityForDisplay(stack: ItemStack) = 1.0 - (getEnergyLevel(stack).toDouble() / calculateInternalEnergyCapacity(stack))
 	
 	override fun getRGBDurabilityForDisplay(stack: ItemStack): Int{
 		val level = 1F - getDurabilityForDisplay(stack).pow(2.0).toFloat()

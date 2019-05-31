@@ -16,7 +16,7 @@ class KotlinAdapter : ILanguageAdapter{
 		return objectClass.kotlin.objectInstance ?: objectClass.newInstance()
 	}
 	
-	override fun supportsStatics(): Boolean = false
+	override fun supportsStatics() = false
 	
 	override fun setInternalProxies(mod: ModContainer?, side: Side?, loader: ClassLoader?){}
 }

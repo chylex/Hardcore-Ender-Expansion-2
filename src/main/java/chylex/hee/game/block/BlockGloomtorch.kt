@@ -7,13 +7,11 @@ import chylex.hee.system.util.setAir
 import chylex.hee.system.util.withFacing
 import net.minecraft.block.Block
 import net.minecraft.block.BlockDirectional.FACING
-import net.minecraft.block.state.BlockFaceShape
 import net.minecraft.block.state.BlockFaceShape.SOLID
 import net.minecraft.block.state.BlockFaceShape.UNDEFINED
 import net.minecraft.block.state.BlockStateContainer
 import net.minecraft.block.state.IBlockState
 import net.minecraft.entity.EntityLivingBase
-import net.minecraft.util.BlockRenderLayer
 import net.minecraft.util.BlockRenderLayer.CUTOUT
 import net.minecraft.util.EnumFacing
 import net.minecraft.util.EnumFacing.DOWN
@@ -53,12 +51,12 @@ class BlockGloomtorch(builder: BlockSimple.Builder) : BlockSimple(builder){
 			return (facing == UP && block.canPlaceTorchOnTop(state, world, supportingPos)) || (state.getBlockFaceShape(world, supportingPos, facing) == SOLID && !isExceptBlockForAttachWithPiston(block))
 		}
 	}
-	 
+	
 	init{
 		defaultState = blockState.baseState.withFacing(UP)
 	}
 	
-	override fun createBlockState(): BlockStateContainer = BlockStateContainer(this, FACING)
+	override fun createBlockState() = BlockStateContainer(this, FACING)
 	
 	// Placement rules
 	
@@ -99,9 +97,9 @@ class BlockGloomtorch(builder: BlockSimple.Builder) : BlockSimple(builder){
 		return BOUNDING_BOX[state[FACING]] ?: BOUNDING_BOX[UP]!!
 	}
 	
-	override fun getBlockFaceShape(world: IBlockAccess, state: IBlockState, pos: BlockPos, face: EnumFacing): BlockFaceShape = UNDEFINED
+	override fun getBlockFaceShape(world: IBlockAccess, state: IBlockState, pos: BlockPos, face: EnumFacing) = UNDEFINED
 	
-	override fun isFullCube(state: IBlockState): Boolean = false
-	override fun isOpaqueCube(state: IBlockState): Boolean = false
-	override fun getRenderLayer(): BlockRenderLayer = CUTOUT
+	override fun isFullCube(state: IBlockState) = false
+	override fun isOpaqueCube(state: IBlockState) = false
+	override fun getRenderLayer() = CUTOUT
 }

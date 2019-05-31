@@ -50,7 +50,7 @@ object ParticleGrowingSpot : IParticleMaker{
 			particleScale += rand.nextFloat(0.01F, 0.02F)
 		}
 		
-		override fun getFXLayer(): Int = 1
+		override fun getFXLayer() = 1
 		override fun setParticleTextureIndex(index: Int){}
 	}
 }

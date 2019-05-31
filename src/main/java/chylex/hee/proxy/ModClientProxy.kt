@@ -2,7 +2,6 @@ package chylex.hee.proxy
 import chylex.hee.client.util.MC
 import chylex.hee.game.commands.HeeClientCommand
 import chylex.hee.init.ModRendering
-import net.minecraft.entity.player.EntityPlayer
 import net.minecraftforge.client.ClientCommandHandler
 import net.minecraftforge.fml.relauncher.Side
 import net.minecraftforge.fml.relauncher.SideOnly
@@ -10,7 +9,7 @@ import net.minecraftforge.fml.relauncher.SideOnly
 @Suppress("unused", "RemoveExplicitTypeArguments")
 @SideOnly(Side.CLIENT)
 class ModClientProxy : ModCommonProxy(){
-	override fun getClientSidePlayer(): EntityPlayer? = MC.player
+	override fun getClientSidePlayer() = MC.player
 	
 	override fun onPreInit(){
 		ModRendering.registerEntities()

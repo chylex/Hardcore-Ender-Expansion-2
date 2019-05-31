@@ -202,7 +202,7 @@ class ItemEnergyReceptacle : ItemAbstractInfusable(){
 		private const val NONE = -1
 		private val WHITE = RGB(255, 255, 255).toInt()
 		
-		override fun colorMultiplier(stack: ItemStack, tintIndex: Int): Int = when(tintIndex){
+		override fun colorMultiplier(stack: ItemStack, tintIndex: Int) = when(tintIndex){
 			1 -> stack.heeTagOrNull?.getInteger(RENDER_COLOR_TAG) ?: WHITE
 			else -> NONE
 		}

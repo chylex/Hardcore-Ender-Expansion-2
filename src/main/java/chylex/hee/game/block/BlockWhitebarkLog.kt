@@ -18,12 +18,10 @@ class BlockWhitebarkLog : BlockLog(){
 		defaultState = blockState.baseState.with(LOG_AXIS, Y) // UPDATE figure out what happens to the bark variant
 	}
 	
-	override fun createBlockState(): BlockStateContainer = BlockStateContainer(this, LOG_AXIS)
+	override fun createBlockState() = BlockStateContainer(this, LOG_AXIS)
 	
 	override fun getMetaFromState(state: IBlockState) = state[LOG_AXIS].ordinal
 	override fun getStateFromMeta(meta: Int) = this.with(LOG_AXIS, EnumAxis.values()[meta])
 	
-	override fun getMapColor(state: IBlockState, world: IBlockAccess, pos: BlockPos): MapColor{
-		return MapColor.SNOW
-	}
+	override fun getMapColor(state: IBlockState, world: IBlockAccess, pos: BlockPos): MapColor = MapColor.SNOW
 }

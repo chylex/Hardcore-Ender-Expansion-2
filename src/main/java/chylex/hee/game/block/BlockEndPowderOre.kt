@@ -17,5 +17,5 @@ class BlockEndPowderOre(builder: BlockSimple.Builder) : BlockSimple(builder){
 		return ((world as? World)?.rand ?: RANDOM).nextInt(1, 2)
 	}
 	
-	override fun canSilkHarvest(): Boolean = true
+	override fun canSilkHarvest() = true
 }

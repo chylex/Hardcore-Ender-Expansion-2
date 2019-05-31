@@ -31,17 +31,14 @@ import chylex.hee.system.util.nextInt
 import chylex.hee.system.util.removeItem
 import chylex.hee.system.util.setAir
 import chylex.hee.system.util.setState
-import net.minecraft.block.state.BlockFaceShape
 import chylex.hee.system.util.with
 import net.minecraft.block.state.BlockFaceShape.UNDEFINED
 import net.minecraft.block.state.BlockStateContainer
 import net.minecraft.block.state.IBlockState
 import net.minecraft.entity.Entity
 import net.minecraft.entity.EntityLivingBase
-import net.minecraft.util.EnumBlockRenderType
 import net.minecraft.util.EnumBlockRenderType.INVISIBLE
 import net.minecraft.util.EnumFacing
-import net.minecraft.util.math.AxisAlignedBB
 import net.minecraft.util.math.BlockPos
 import net.minecraft.world.IBlockAccess
 import net.minecraft.world.World
@@ -83,7 +80,7 @@ class BlockCorruptedEnergy(builder: BlockSimple.Builder) : BlockSimple(builder){
 		needsRandomTick = true // just to be safe
 	}
 	
-	override fun createBlockState(): BlockStateContainer = BlockStateContainer(this, LEVEL)
+	override fun createBlockState() = BlockStateContainer(this, LEVEL)
 	
 	// Utility methods
 	
@@ -208,13 +205,13 @@ class BlockCorruptedEnergy(builder: BlockSimple.Builder) : BlockSimple(builder){
 	override fun getMetaFromState(state: IBlockState) = state[LEVEL]
 	override fun getStateFromMeta(meta: Int) = this.with(LEVEL, meta)
 	
-	override fun getCollisionBoundingBox(state: IBlockState, world: IBlockAccess, pos: BlockPos): AxisAlignedBB? = NULL_AABB
-	override fun getBlockFaceShape(world: IBlockAccess, state: IBlockState, pos: BlockPos, face: EnumFacing): BlockFaceShape = UNDEFINED
+	override fun getCollisionBoundingBox(state: IBlockState, world: IBlockAccess, pos: BlockPos) = NULL_AABB
+	override fun getBlockFaceShape(world: IBlockAccess, state: IBlockState, pos: BlockPos, face: EnumFacing) = UNDEFINED
 	
-	override fun isFullCube(state: IBlockState): Boolean = false
-	override fun isOpaqueCube(state: IBlockState): Boolean = false
-	override fun getRenderType(state: IBlockState): EnumBlockRenderType = INVISIBLE
+	override fun isFullCube(state: IBlockState) = false
+	override fun isOpaqueCube(state: IBlockState) = false
+	override fun getRenderType(state: IBlockState) = INVISIBLE
 	
 	// Debugging
-	// override fun getRenderLayer(): BlockRenderLayer = CUTOUT
+	// override fun getRenderLayer() = CUTOUT
 }
