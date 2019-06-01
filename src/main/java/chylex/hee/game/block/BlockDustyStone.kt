@@ -1,5 +1,6 @@
 package chylex.hee.game.block
 import chylex.hee.client.util.MC.player
+import chylex.hee.game.block.util.IBlockHarvestToolCheck
 import chylex.hee.game.item.util.Tool.Type.PICKAXE
 import chylex.hee.game.item.util.Tool.Type.SHOVEL
 import chylex.hee.system.util.getState
@@ -12,9 +13,13 @@ import net.minecraft.world.World
 import net.minecraftforge.fml.relauncher.Side
 import net.minecraftforge.fml.relauncher.SideOnly
 
-abstract class BlockDustyStone(builder: BlockSimple.Builder) : BlockSimple(builder){
+abstract class BlockDustyStone(builder: BlockSimple.Builder) : BlockSimple(builder), IBlockHarvestToolCheck{
 	override fun isToolEffective(type: String, state: IBlockState): Boolean{
 		return type == PICKAXE || type == SHOVEL
+	}
+	
+	override fun canHarvestUsing(toolClass: String, toolLevel: Int): Boolean{
+		return isToolEffective(toolClass, defaultState) && toolLevel >= 0
 	}
 	
 	protected fun isPickaxeOrShovel(stack: ItemStack): Boolean{
