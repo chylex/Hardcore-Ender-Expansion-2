@@ -94,7 +94,7 @@ class BlockGloomtorch(builder: BlockSimple.Builder) : BlockSimple(builder){
 	// Shape and rendering
 	
 	override fun getBoundingBox(state: IBlockState, source: IBlockAccess, pos: BlockPos): AxisAlignedBB{
-		return BOUNDING_BOX[state[FACING]] ?: BOUNDING_BOX[UP]!!
+		return BOUNDING_BOX[state[FACING]] ?: BOUNDING_BOX.getValue(UP)
 	}
 	
 	override fun getBlockFaceShape(world: IBlockAccess, state: IBlockState, pos: BlockPos, face: EnumFacing) = UNDEFINED

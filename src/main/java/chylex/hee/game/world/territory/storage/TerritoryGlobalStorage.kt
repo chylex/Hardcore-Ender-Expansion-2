@@ -29,7 +29,7 @@ class TerritoryGlobalStorage(name: String) : WorldSavedData(name){
 			return 0
 		}
 		
-		val list = territoryData[territory]!!
+		val list = territoryData.getValue(territory)
 		val newIndex = list.size
 		
 		list.add(makeEntry(territory, newIndex))
@@ -44,7 +44,7 @@ class TerritoryGlobalStorage(name: String) : WorldSavedData(name){
 		return if (territory.isSpawn)
 			spawnEntry
 		else
-			territoryData[territory]!!.getOrNull(index)
+			territoryData.getValue(territory).getOrNull(index)
 	}
 	
 	// Serialization
@@ -62,7 +62,7 @@ class TerritoryGlobalStorage(name: String) : WorldSavedData(name){
 		
 		for(key in keySet){
 			val territory = TerritoryType.fromTitle(key) ?: continue
-			val list = territoryData[territory]!!
+			val list = territoryData.getValue(territory)
 			
 			list.clear()
 			list.addAll(getListOfCompounds(key).mapIndexed { index, nbt -> makeEntry(territory, index).also { it.deserializeNBT(nbt) } })
