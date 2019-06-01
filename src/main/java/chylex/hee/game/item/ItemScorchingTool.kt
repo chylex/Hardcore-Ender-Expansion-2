@@ -1,4 +1,5 @@
 package chylex.hee.game.item
+import chylex.hee.game.block.util.IBlockHarvestToolCheck
 import chylex.hee.game.fx.FxBlockData
 import chylex.hee.game.fx.FxBlockHandler
 import chylex.hee.game.fx.FxEntityData
@@ -82,8 +83,12 @@ class ItemScorchingTool(private val toolClass: String) : ItemTool(CustomToolMate
 		}
 		
 		val block = state.block
-		val harvestTool = block.getHarvestTool(state)
 		
+		if (block is IBlockHarvestToolCheck){
+			return block.canHarvestUsing(toolClass, toolMaterial.harvestLevel)
+		}
+		
+		val harvestTool = block.getHarvestTool(state)
 		return harvestTool == null || (toolClass == harvestTool && toolMaterial.harvestLevel >= block.getHarvestLevel(state))
 	}
 	
