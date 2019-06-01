@@ -1,0 +1,12 @@
+{
+  "parent": "block/cube",
+  "textures": {
+    "particle": "hee:block/infused_glass",
+    "down": "hee:block/infused_glass_straight_lr",
+    "up": "hee:block/infused_glass_clear",
+    "north": "hee:block/infused_glass_threeway_ulr",
+    "south": "hee:block/infused_glass_threeway_ulr",
+    "west": "hee:block/infused_glass_clear",
+    "east": "hee:block/infused_glass_clear"
+  }
+}
