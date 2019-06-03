@@ -1,6 +1,8 @@
 package chylex.hee.client.render.territory.components
 import chylex.hee.client.render.territory.EnvironmentRenderer
 import chylex.hee.client.render.util.GL
+import chylex.hee.client.render.util.TESSELLATOR
+import chylex.hee.client.render.util.draw
 import chylex.hee.client.util.MC
 import net.minecraft.client.Minecraft
 import net.minecraft.client.multiplayer.WorldClient
@@ -9,7 +11,6 @@ import net.minecraft.client.renderer.GlStateManager.DestFactor.ZERO
 import net.minecraft.client.renderer.GlStateManager.SourceFactor.ONE
 import net.minecraft.client.renderer.GlStateManager.SourceFactor.SRC_ALPHA
 import net.minecraft.client.renderer.RenderHelper
-import net.minecraft.client.renderer.Tessellator
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats
 import net.minecraft.util.ResourceLocation
 import net.minecraft.util.math.Vec3d
@@ -39,9 +40,6 @@ abstract class SkyCubeBase : IRenderHandler(){
 		val green = col.y.toFloat()
 		val blue = col.z.toFloat()
 		
-		val tessellator = Tessellator.getInstance()
-		val buffer = tessellator.buffer
-		
 		GL.enableBlend()
 		GL.tryBlendFuncSeparate(SRC_ALPHA, ONE_MINUS_SRC_ALPHA, ONE, ZERO)
 		GL.enableAlpha()
@@ -63,12 +61,12 @@ abstract class SkyCubeBase : IRenderHandler(){
 				5 -> GL.rotate(-90F, 0F, 0F, 1F)
 			}
 			
-			buffer.begin(GL_QUADS, DefaultVertexFormats.POSITION_TEX)
-			buffer.pos(-dist, -dist, -dist).tex( 0.0,  0.0).endVertex()
-			buffer.pos(-dist, -dist,  dist).tex( 0.0, 16.0).endVertex()
-			buffer.pos( dist, -dist,  dist).tex(16.0, 16.0).endVertex()
-			buffer.pos( dist, -dist, -dist).tex(16.0,  0.0).endVertex()
-			tessellator.draw()
+			TESSELLATOR.draw(GL_QUADS, DefaultVertexFormats.POSITION_TEX){
+				pos(-dist, -dist, -dist).tex( 0.0,  0.0).endVertex()
+				pos(-dist, -dist,  dist).tex( 0.0, 16.0).endVertex()
+				pos( dist, -dist,  dist).tex(16.0, 16.0).endVertex()
+				pos( dist, -dist, -dist).tex(16.0,  0.0).endVertex()
+			}
 			
 			GL.popMatrix()
 		}

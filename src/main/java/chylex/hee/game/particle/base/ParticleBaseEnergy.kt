@@ -1,5 +1,6 @@
 package chylex.hee.game.particle.base
 import chylex.hee.client.render.util.GL
+import chylex.hee.client.render.util.TESSELLATOR
 import chylex.hee.client.util.MC
 import chylex.hee.game.block.entity.TileEntityEnergyCluster
 import chylex.hee.game.mechanics.energy.IClusterHealth.HealthOverride.POWERED
@@ -15,7 +16,6 @@ import net.minecraft.client.particle.Particle
 import net.minecraft.client.renderer.BufferBuilder
 import net.minecraft.client.renderer.GlStateManager.DestFactor.ONE
 import net.minecraft.client.renderer.GlStateManager.SourceFactor.SRC_ALPHA
-import net.minecraft.client.renderer.Tessellator
 import net.minecraft.client.renderer.texture.TextureAtlasSprite
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats
 import net.minecraft.entity.Entity
@@ -118,7 +118,7 @@ abstract class ParticleBaseEnergy(world: World, posX: Double, posY: Double, posZ
 		
 		buffer.begin(GL_QUADS, DefaultVertexFormats.PARTICLE_POSITION_TEX_COLOR_LMAP)
 		super.renderParticle(buffer, entity, partialTicks, rotationX, rotationZ, rotationYZ, rotationXY, rotationXZ)
-		Tessellator.getInstance().draw()
+		TESSELLATOR.draw()
 		
 		MC.entityRenderer.setupFogColor(false)
 		

@@ -1,13 +1,14 @@
 package chylex.hee.client.render.territory.components
 import chylex.hee.client.render.territory.EnvironmentRenderer
 import chylex.hee.client.render.util.GL
+import chylex.hee.client.render.util.TESSELLATOR
+import chylex.hee.client.render.util.draw
 import chylex.hee.client.util.MC
 import chylex.hee.system.util.square
 import net.minecraft.client.Minecraft
 import net.minecraft.client.multiplayer.WorldClient
 import net.minecraft.client.renderer.GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA
 import net.minecraft.client.renderer.GlStateManager.SourceFactor.SRC_ALPHA
-import net.minecraft.client.renderer.Tessellator
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats
 import net.minecraft.util.ResourceLocation
 import net.minecraft.util.math.Vec3d
@@ -91,9 +92,6 @@ abstract class SkyDomeBase : IRenderHandler(){
 		val green = col.y.toFloat()
 		val blue = col.z.toFloat()
 		
-		val tessellator = Tessellator.getInstance()
-		val buffer = tessellator.buffer
-		
 		GL.enableBlend()
 		GL.blendFunc(SRC_ALPHA, ONE_MINUS_SRC_ALPHA)
 		GL.enableAlpha()
@@ -104,17 +102,14 @@ abstract class SkyDomeBase : IRenderHandler(){
 		GL.enableTexture2D()
 		MC.textureManager.bindTexture(texture)
 		
-		buffer.begin(GL_QUADS, DefaultVertexFormats.POSITION_TEX_COLOR)
-		
-		for((x, y, z, u, v, c) in Skybox.VERTICES.value){
-			buffer
-				.pos(x.toDouble(), y.toDouble(), z.toDouble())
-				.tex(u.toDouble(), v.toDouble())
-				.color(red * c, green * c, blue * c, alp)
-				.endVertex()
+		TESSELLATOR.draw(GL_QUADS, DefaultVertexFormats.POSITION_TEX_COLOR){
+			for((x, y, z, u, v, c) in Skybox.VERTICES.value){
+				pos(x.toDouble(), y.toDouble(), z.toDouble())
+				tex(u.toDouble(), v.toDouble())
+				color(red * c, green * c, blue * c, alp)
+				endVertex()
+			}
 		}
-		
-		tessellator.draw()
 		
 		GL.shadeModel(GL_FLAT)
 		GL.disableFog()

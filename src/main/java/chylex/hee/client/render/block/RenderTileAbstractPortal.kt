@@ -1,5 +1,7 @@
 package chylex.hee.client.render.block
 import chylex.hee.client.render.util.GL
+import chylex.hee.client.render.util.TESSELLATOR
+import chylex.hee.client.render.util.draw
 import chylex.hee.client.util.MC
 import chylex.hee.game.block.BlockAbstractPortal.IPortalController
 import chylex.hee.game.block.entity.TileEntityPortalInner
@@ -15,7 +17,6 @@ import net.minecraft.client.renderer.GlStateManager.TexGen.Q
 import net.minecraft.client.renderer.GlStateManager.TexGen.R
 import net.minecraft.client.renderer.GlStateManager.TexGen.S
 import net.minecraft.client.renderer.GlStateManager.TexGen.T
-import net.minecraft.client.renderer.Tessellator
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats
 import net.minecraft.util.ResourceLocation
@@ -217,15 +218,12 @@ abstract class RenderTileAbstractPortal<T : TileEntityPortalInner, C : IPortalCo
 		
 		// rendering
 		
-		val tessellator = Tessellator.getInstance()
-		val buffer = tessellator.buffer
-		
-		buffer.begin(GL_QUADS, DefaultVertexFormats.POSITION_COLOR)
-		buffer.pos(renderX + 0.0, renderY + 0.75, renderZ + 0.0).color(color[0], color[1], color[2], 1F).endVertex()
-		buffer.pos(renderX + 0.0, renderY + 0.75, renderZ + 1.0).color(color[0], color[1], color[2], 1F).endVertex()
-		buffer.pos(renderX + 1.0, renderY + 0.75, renderZ + 1.0).color(color[0], color[1], color[2], 1F).endVertex()
-		buffer.pos(renderX + 1.0, renderY + 0.75, renderZ + 0.0).color(color[0], color[1], color[2], 1F).endVertex()
-		tessellator.draw()
+		TESSELLATOR.draw(GL_QUADS, DefaultVertexFormats.POSITION_COLOR){
+			pos(renderX + 0.0, renderY + 0.75, renderZ + 0.0).color(color[0], color[1], color[2], 1F).endVertex()
+			pos(renderX + 0.0, renderY + 0.75, renderZ + 1.0).color(color[0], color[1], color[2], 1F).endVertex()
+			pos(renderX + 1.0, renderY + 0.75, renderZ + 1.0).color(color[0], color[1], color[2], 1F).endVertex()
+			pos(renderX + 1.0, renderY + 0.75, renderZ + 0.0).color(color[0], color[1], color[2], 1F).endVertex()
+		}
 		
 		GL.popMatrix()
 		GL.matrixMode(GL_MODELVIEW)

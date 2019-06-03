@@ -1,5 +1,7 @@
 package chylex.hee.client.render.block
 import chylex.hee.client.render.util.GL
+import chylex.hee.client.render.util.TESSELLATOR
+import chylex.hee.client.render.util.draw
 import chylex.hee.client.util.MC
 import chylex.hee.game.block.BlockTablePedestal
 import chylex.hee.game.block.entity.TileEntityTablePedestal
@@ -14,7 +16,6 @@ import net.minecraft.client.renderer.GlStateManager.SourceFactor.ONE
 import net.minecraft.client.renderer.GlStateManager.SourceFactor.SRC_ALPHA
 import net.minecraft.client.renderer.RenderHelper
 import net.minecraft.client.renderer.RenderItem
-import net.minecraft.client.renderer.Tessellator
 import net.minecraft.client.renderer.block.model.IBakedModel
 import net.minecraft.client.renderer.block.model.ItemCameraTransforms.TransformType.GROUND
 import net.minecraft.client.renderer.texture.TextureManager
@@ -186,14 +187,11 @@ object RenderTileTablePedestal : TileEntitySpecialRenderer<TileEntityTablePedest
 	}
 	
 	private fun renderShadow(alpha: Float){
-		val tessellator = Tessellator.getInstance()
-		val buffer = tessellator.buffer
-		
-		buffer.begin(GL_QUADS, DefaultVertexFormats.POSITION_TEX_COLOR)
-		buffer.pos(SHADOW_XZ_MIN, SHADOW_Y, SHADOW_XZ_MIN).tex(0.0, 0.0).color(1F, 1F, 1F, alpha).endVertex()
-		buffer.pos(SHADOW_XZ_MIN, SHADOW_Y, SHADOW_XZ_MAX).tex(0.0, 1.0).color(1F, 1F, 1F, alpha).endVertex()
-		buffer.pos(SHADOW_XZ_MAX, SHADOW_Y, SHADOW_XZ_MAX).tex(1.0, 1.0).color(1F, 1F, 1F, alpha).endVertex()
-		buffer.pos(SHADOW_XZ_MAX, SHADOW_Y, SHADOW_XZ_MIN).tex(1.0, 0.0).color(1F, 1F, 1F, alpha).endVertex()
-		tessellator.draw()
+		TESSELLATOR.draw(GL_QUADS, DefaultVertexFormats.POSITION_TEX_COLOR){
+			pos(SHADOW_XZ_MIN, SHADOW_Y, SHADOW_XZ_MIN).tex(0.0, 0.0).color(1F, 1F, 1F, alpha).endVertex()
+			pos(SHADOW_XZ_MIN, SHADOW_Y, SHADOW_XZ_MAX).tex(0.0, 1.0).color(1F, 1F, 1F, alpha).endVertex()
+			pos(SHADOW_XZ_MAX, SHADOW_Y, SHADOW_XZ_MAX).tex(1.0, 1.0).color(1F, 1F, 1F, alpha).endVertex()
+			pos(SHADOW_XZ_MAX, SHADOW_Y, SHADOW_XZ_MIN).tex(1.0, 0.0).color(1F, 1F, 1F, alpha).endVertex()
+		}
 	}
 }

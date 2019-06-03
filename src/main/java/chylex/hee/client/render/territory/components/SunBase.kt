@@ -1,11 +1,12 @@
 package chylex.hee.client.render.territory.components
 import chylex.hee.client.render.util.GL
+import chylex.hee.client.render.util.TESSELLATOR
+import chylex.hee.client.render.util.draw
 import chylex.hee.client.util.MC
 import net.minecraft.client.Minecraft
 import net.minecraft.client.multiplayer.WorldClient
 import net.minecraft.client.renderer.GlStateManager.DestFactor
 import net.minecraft.client.renderer.GlStateManager.SourceFactor
-import net.minecraft.client.renderer.Tessellator
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats
 import net.minecraft.util.ResourceLocation
 import net.minecraft.util.math.Vec3d
@@ -43,9 +44,6 @@ abstract class SunBase : IRenderHandler(){
 		val green = col.y.toFloat()
 		val blue = col.z.toFloat()
 		
-		val tessellator = Tessellator.getInstance()
-		val buffer = tessellator.buffer
-		
 		GL.enableBlend()
 		GL.tryBlendFuncSeparate(SourceFactor.SRC_ALPHA, DestFactor.ONE, SourceFactor.ONE, DestFactor.ZERO)
 		GL.enableAlpha()
@@ -58,12 +56,12 @@ abstract class SunBase : IRenderHandler(){
 		GL.color(red, green, blue, alpha)
 		MC.textureManager.bindTexture(texture)
 		
-		buffer.begin(GL_QUADS, DefaultVertexFormats.POSITION_TEX)
-		buffer.pos(-width, dist, -width).tex(0.0, 0.0).endVertex()
-		buffer.pos( width, dist, -width).tex(1.0, 0.0).endVertex()
-		buffer.pos( width, dist,  width).tex(1.0, 1.0).endVertex()
-		buffer.pos(-width, dist,  width).tex(0.0, 1.0).endVertex()
-		tessellator.draw()
+		TESSELLATOR.draw(GL_QUADS, DefaultVertexFormats.POSITION_TEX){
+			pos(-width, dist, -width).tex(0.0, 0.0).endVertex()
+			pos( width, dist, -width).tex(1.0, 0.0).endVertex()
+			pos( width, dist,  width).tex(1.0, 1.0).endVertex()
+			pos(-width, dist,  width).tex(0.0, 1.0).endVertex()
+		}
 		
 		GL.popMatrix()
 		GL.enableFog()
