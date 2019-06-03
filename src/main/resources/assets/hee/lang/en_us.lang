@@ -46,6 +46,8 @@ tile.hee.end_stone_enchanted.name=Enchanted End Stone
 tile.hee.dark_loam.name=Dark Loam
 tile.hee.dark_loam_slab.name=Dark Loam Slab
 
+tile.hee.jar_o_dust.name=Jar o' Dust
+tile.hee.jar_o_dust.tooltip.entry=%sx %s
 tile.hee.dark_chest.name=Dark Chest
 tile.hee.loot_chest.name=Loot Chest
 tile.hee.loot_chest.tooltip=§5§o(Editable in creative mode)

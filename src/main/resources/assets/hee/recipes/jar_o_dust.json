@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "S",
+    "#",
+    "R"
+  ],
+  "key": {
+    "S": { "item": "hee:whitebark_slab" },
+    "#": { "item": "hee:infused_glass" },
+    "R": { "item": "minecraft:redstone" }
+  },
+  "result": {
+    "item": "hee:jar_o_dust"
+  }
+}

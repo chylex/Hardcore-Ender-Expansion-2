@@ -1,0 +1,17 @@
+{
+  "forge_marker": 1,
+  "defaults": {
+    "model": "hee:jar_o_dust",
+    "textures": {
+      "particle": "hee:block/jar_o_dust_base",
+      "side": "hee:block/jar_o_dust_side",
+      "base": "hee:block/jar_o_dust_base",
+      "top": "hee:block/jar_o_dust_top",
+      "lid": "hee:block/whitebark_planks"
+    }
+  },
+  "variants": {
+    "normal": [{}],
+    "inventory": { "model": "hee:jar_o_dust_inventory" }
+  }
+}

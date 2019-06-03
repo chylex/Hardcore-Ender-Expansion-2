@@ -4,6 +4,7 @@ import chylex.hee.client.model.item.ModelItemAmuletOfRecovery
 import chylex.hee.client.render.block.RenderTileDarkChest
 import chylex.hee.client.render.block.RenderTileEndPortal
 import chylex.hee.client.render.block.RenderTileEndermanHead
+import chylex.hee.client.render.block.RenderTileJarODust
 import chylex.hee.client.render.block.RenderTileLootChest
 import chylex.hee.client.render.block.RenderTileTablePedestal
 import chylex.hee.client.render.block.RenderTileVoidPortal
@@ -20,6 +21,7 @@ import chylex.hee.game.block.BlockDryVines
 import chylex.hee.game.block.BlockTablePedestal
 import chylex.hee.game.block.BlockVoidPortalInner
 import chylex.hee.game.block.entity.TileEntityDarkChest
+import chylex.hee.game.block.entity.TileEntityJarODust
 import chylex.hee.game.block.entity.TileEntityLootChest
 import chylex.hee.game.block.entity.TileEntityPortalInner
 import chylex.hee.game.block.entity.TileEntityTablePedestal
@@ -87,10 +89,13 @@ object ModRendering{
 		registerTile<TileEntityPortalInner.Void>(RenderTileVoidPortal)
 		registerTile<TileEntityDarkChest>(RenderTileDarkChest)
 		registerTile<TileEntityLootChest>(RenderTileLootChest)
+		registerTile<TileEntityJarODust>(RenderTileJarODust)
 		registerTile<TileEntityTablePedestal>(RenderTileTablePedestal)
 		
 		registerTileStack(ModBlocks.DARK_CHEST, RenderTileDarkChest.AsItem)
 		registerTileStack(ModBlocks.LOOT_CHEST, RenderTileLootChest.AsItem)
+		
+		registerTileStack(ModBlocks.JAR_O_DUST, RenderTileJarODust.AsItem)
 		
 		registerTileStack(ModItems.ENDERMAN_HEAD, RenderTileEndermanHead.AsItem)
 	}

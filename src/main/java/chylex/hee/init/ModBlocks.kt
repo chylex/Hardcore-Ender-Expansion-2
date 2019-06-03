@@ -27,6 +27,7 @@ import chylex.hee.game.block.BlockHumus
 import chylex.hee.game.block.BlockIgneousRockOre
 import chylex.hee.game.block.BlockInfusedGlass
 import chylex.hee.game.block.BlockInfusedTNT
+import chylex.hee.game.block.BlockJarODust
 import chylex.hee.game.block.BlockLootChest
 import chylex.hee.game.block.BlockPillarCustom
 import chylex.hee.game.block.BlockScaffolding
@@ -47,6 +48,7 @@ import chylex.hee.game.block.entity.TileEntityDarkChest
 import chylex.hee.game.block.entity.TileEntityEndPortalAcceptor
 import chylex.hee.game.block.entity.TileEntityEnergyCluster
 import chylex.hee.game.block.entity.TileEntityInfusedTNT
+import chylex.hee.game.block.entity.TileEntityJarODust
 import chylex.hee.game.block.entity.TileEntityLootChest
 import chylex.hee.game.block.entity.TileEntityPortalInner
 import chylex.hee.game.block.entity.TileEntityTablePedestal
@@ -319,6 +321,14 @@ object ModBlocks{
 	
 	// Blocks: Interactive (Uncategorized)
 	
+	private val buildJarODust = BlockSimple.Builder(Materials.SOLID_NO_TOOL).apply {
+		harvestHardness = 0.4F
+		explosionResistance = 0F
+		
+		soundType = SoundType.METAL
+		mapColor = MapColor.ORANGE_STAINED_HARDENED_CLAY
+	}
+	
 	private val buildLootChest = BlockSimple.Builder(Materials.SOLID_NO_TOOL).apply {
 		makeIndestructible()
 		
@@ -330,6 +340,7 @@ object ModBlocks{
 	
 	@JvmField val ENDER_GOO   = BlockEnderGoo().apply { setup("ender_goo") }
 	@JvmField val INFUSED_TNT = BlockInfusedTNT().apply { setup("infused_tnt", translationKey = "tnt", inCreativeTab = false) }
+	@JvmField val JAR_O_DUST  = BlockJarODust(buildJarODust).apply { setup("jar_o_dust") }
 	@JvmField val DARK_CHEST  = BlockDarkChest(buildGloomrock).apply { setup("dark_chest") } // UPDATE: update recipe json to include tag to allow either slab variation
 	@JvmField val LOOT_CHEST  = BlockLootChest(buildLootChest).apply { setup("loot_chest") }
 	
@@ -528,6 +539,7 @@ object ModBlocks{
 			
 			register(ENDER_GOO)
 			register(INFUSED_TNT with ::ItemInfusedTNT)
+			register(JAR_O_DUST with basicItemBlock)
 			register(DARK_CHEST with basicItemBlock)
 			register(LOOT_CHEST with basicItemBlock)
 			
@@ -569,6 +581,7 @@ object ModBlocks{
 		tile<TileEntityInfusedTNT>("infused_tnt")
 		tile<TileEntityDarkChest>("dark_chest")
 		tile<TileEntityLootChest>("loot_chest")
+		tile<TileEntityJarODust>("jar_o_dust")
 		tile<TileEntityTablePedestal>("table_pedestal")
 		tile<TileEntityAccumulationTable>("accumulation_table")
 		
@@ -590,6 +603,8 @@ object ModBlocks{
 	fun onRegisterItemBlocks(e: RegistryEvent.Register<Item>){
 		temporaryItemBlocks.forEach(e.registry::register)
 		temporaryItemBlocks.clear()
+		
+		Item.getItemFromBlock(JAR_O_DUST).setMaxStackSize(1)
 		
 		// ore dictionary
 		
