@@ -23,9 +23,10 @@ class TerritoryEntry(private val owner: TerritoryGlobalStorage, private val inst
 	fun initializeSpawnPoint(info: TerritoryGenerationInfo){
 		if (lastSpawnPoint == null){
 			val startChunk = instance.topLeftChunk
+			val bottomY = instance.territory.height.start
 			
-			lastSpawnPoint = info.spawnPoint.let { startChunk.getBlock(it.x, it.y, it.z) }
-			interestPoint = info.interestPoint?.let { startChunk.getBlock(it.x, it.y, it.z) }
+			lastSpawnPoint = info.spawnPoint.let { startChunk.getBlock(it.x, bottomY + it.y, it.z) }
+			interestPoint = info.interestPoint?.let { startChunk.getBlock(it.x, bottomY + it.y, it.z) }
 		}
 	}
 	
