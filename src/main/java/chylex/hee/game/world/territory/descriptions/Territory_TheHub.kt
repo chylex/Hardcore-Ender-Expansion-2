@@ -17,8 +17,8 @@ import kotlin.math.min
 
 object Territory_TheHub : ITerritoryDescription{
 	override val colors = object : TerritoryColors(){
-		override val tokenTop    = HCL(270.0,  10F, 58F)
-		override val tokenBottom = HCL( 40.0, 100F, 94F)
+		override val tokenTop    = HCL( 40.0, 100F, 94F)
+		override val tokenBottom = HCL(270.0,  10F, 58F)
 		
 		override val portalSeed = 31100L
 		

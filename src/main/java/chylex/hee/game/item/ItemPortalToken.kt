@@ -174,8 +174,8 @@ class ItemPortalToken : Item(){
 		}
 		
 		override fun colorMultiplier(stack: ItemStack, tintIndex: Int) = when(tintIndex){
-			1 -> getColors(stack)?.tokenBottom?.toInt() ?: WHITE
-			2 -> getColors(stack)?.tokenTop?.toInt() ?: WHITE
+			1 -> getColors(stack)?.tokenTop?.toInt() ?: WHITE
+			2 -> getColors(stack)?.tokenBottom?.toInt() ?: WHITE
 			else -> NONE
 		}
 	}
