@@ -33,7 +33,7 @@ class BlockVoidPortalInner(builder: BlockSimple.Builder) : BlockAbstractPortal(b
 		
 		private val TELEPORTER = Teleporter(postEvent = false, effectRange = Silent)
 		
-		private fun teleportEntity(entity: Entity, info: SpawnInfo){
+		fun teleportEntity(entity: Entity, info: SpawnInfo){
 			val targetVec = info.pos.center.subtractY(0.45)
 			
 			if (entity is EntityLivingBase){

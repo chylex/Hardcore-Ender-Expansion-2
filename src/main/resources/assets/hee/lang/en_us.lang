@@ -135,6 +135,8 @@ item.hee.portal_token.name=Portal Token
 item.hee.portal_token.tooltip.rare=Rare
 item.hee.portal_token.tooltip.solitary=Solitary
 item.hee.portal_token.tooltip.activate=§6Right-click to activate
+item.hee.portal_token.tooltip.creative.generate=§6Right-click to generate (creative)
+item.hee.portal_token.tooltip.creative.teleport=§6Right-click to teleport (creative)
 item.hee.portal_token.tooltip.advanced=Index: %s
 item.hee.portal_token_concrete.name=Portal Token (%s)
 
