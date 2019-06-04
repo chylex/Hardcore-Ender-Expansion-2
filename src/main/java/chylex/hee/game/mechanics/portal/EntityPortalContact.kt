@@ -1,29 +1,23 @@
 package chylex.hee.game.mechanics.portal
 import net.minecraft.entity.Entity
-import java.util.UUID
 
 object EntityPortalContact{
-	private val waitingForContact = HashSet<UUID>()
+	private const val DELAY = 10
 	
 	fun shouldTeleport(entity: Entity): Boolean{
 		if (entity.world.isRemote){
 			return false
 		}
 		
-		val id = entity.uniqueID
-		
-		if (waitingForContact.remove(id)){
-			entity.timeUntilPortal = 10
-			return false
-		}
-		else if (entity.timeUntilPortal == 0){
-			entity.timeUntilPortal = 10
-			waitingForContact.add(id)
+		if (entity.timeUntilPortal == 0 && entity.ticksExisted > 1){
+			entity.timeUntilPortal = DELAY
 			return true
 		}
-		else{
-			entity.timeUntilPortal = 10
-			return false
+		
+		if (entity.timeUntilPortal < DELAY){
+			entity.timeUntilPortal = DELAY
 		}
+		
+		return false
 	}
 }
