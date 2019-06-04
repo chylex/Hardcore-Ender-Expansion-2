@@ -5,13 +5,15 @@ import chylex.hee.game.commands.sub.server.CommandDebugTestWorld
 import chylex.hee.game.commands.sub.server.CommandServerCausatum
 import chylex.hee.game.commands.sub.server.CommandServerHelp
 import chylex.hee.game.commands.sub.server.CommandServerInfusions
+import chylex.hee.game.commands.sub.server.CommandServerPortalToken
 import chylex.hee.system.Debug
 
 internal object HeeServerCommand : HeeBaseCommand(){
 	val availableAdminCommands = arrayOf(
 		CommandServerHelp,
 		CommandServerInfusions,
-		CommandServerCausatum
+		CommandServerCausatum,
+		CommandServerPortalToken
 	)
 	
 	val availableDebugCommands = if (Debug.enabled) arrayOf(
