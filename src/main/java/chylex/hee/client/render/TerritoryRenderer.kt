@@ -63,9 +63,12 @@ object TerritoryRenderer{
 						if (newTerritory != null){
 							Void.reset()
 							Title.display(newTerritory)
+							newTerritory.desc.environment.setupClient()
 						}
 					}
 				}
+				
+				prevTerritory?.let { it.desc.environment.tickClient() }
 			}
 			else if (prevTerritory != null){
 				prevTerritory = null

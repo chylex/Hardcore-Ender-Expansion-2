@@ -72,7 +72,7 @@ object TerritoryVoid{
 		val xzRadius = territory.chunks * 8F * environment.voidRadiusMpXZ
 		val yRadius = territory.height.let { it.endInclusive - it.start } * 0.5F * environment.voidRadiusMpY
 		
-		val center = instance.centerPoint
+		val center = instance.centerPoint.add(environment.voidCenterOffset)
 		val edge = intersectEllipsoidEdge(center, point, xzRadius, yRadius)
 		
 		if (edge == null){
