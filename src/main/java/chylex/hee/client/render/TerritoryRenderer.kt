@@ -9,6 +9,7 @@ import chylex.hee.game.particle.util.IShape.Point
 import chylex.hee.game.world.WorldProviderEndCustom
 import chylex.hee.game.world.territory.TerritoryType
 import chylex.hee.game.world.territory.TerritoryVoid
+import chylex.hee.system.Debug
 import chylex.hee.system.util.color.IColor
 import chylex.hee.system.util.color.RGB
 import chylex.hee.system.util.floorToInt
@@ -23,6 +24,7 @@ import net.minecraft.client.renderer.GlStateManager.SourceFactor.SRC_ALPHA
 import net.minecraft.client.resources.I18n
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraftforge.client.event.RenderGameOverlayEvent
+import net.minecraftforge.common.MinecraftForge
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber
 import net.minecraftforge.fml.common.eventhandler.EventPriority.HIGHEST
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent
@@ -88,14 +90,18 @@ object TerritoryRenderer{
 		
 		val voidFactor = LerpedFloat(TerritoryVoid.OUTSIDE_VOID_FACTOR)
 		
+		init{
+			if (Debug.enabled){
+				MinecraftForge.EVENT_BUS.register(this)
+			}
+		}
+		
 		fun tick(player: EntityPlayer){
 			val factor = TerritoryVoid.getVoidFactor(player).also(voidFactor::update)
 			
 			if (factor == TerritoryVoid.OUTSIDE_VOID_FACTOR || MC.instance.isGamePaused){
 				return
 			}
-			
-			if (player.world.totalWorldTime % 15L == 0L) HEE.log.info(factor)
 			
 			if (factor > -1F){
 				val rand = player.rng
@@ -110,6 +116,16 @@ object TerritoryRenderer{
 		
 		fun reset(){
 			voidFactor.updateImmediately(TerritoryVoid.OUTSIDE_VOID_FACTOR)
+		}
+		
+		@SubscribeEvent
+		fun onRenderGameOverlayText(e: RenderGameOverlayEvent.Text){
+			if (MC.settings.showDebugInfo && MC.player?.dimension == 1){
+				with(e.left){
+					add("")
+					add("End Void Factor: ${"%.3f".format(voidFactor.currentValue)}")
+				}
+			}
 		}
 	}
 	
