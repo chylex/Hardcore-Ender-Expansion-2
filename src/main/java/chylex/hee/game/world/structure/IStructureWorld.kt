@@ -82,7 +82,9 @@ interface IStructureWorld{
 		placeCube(mut1.setPos(x1, y1, z1), mut2.setPos(x2, y2, z1), picker)
 		placeCube(mut1.setPos(x1, y1, z2), mut2.setPos(x2, y2, z2), picker)
 		
-		placeCube(mut1.setPos(x1, y1, z1 + 1), mut2.setPos(x1, y2, z2 - 1), picker)
-		placeCube(mut1.setPos(x2, y1, z1 + 1), mut2.setPos(x2, y2, z2 - 1), picker)
+		if (z1 != z2){
+			placeCube(mut1.setPos(x1, y1, z1 + 1), mut2.setPos(x1, y2, z2 - 1), picker)
+			placeCube(mut1.setPos(x2, y1, z1 + 1), mut2.setPos(x2, y2, z2 - 1), picker)
+		}
 	}
 }

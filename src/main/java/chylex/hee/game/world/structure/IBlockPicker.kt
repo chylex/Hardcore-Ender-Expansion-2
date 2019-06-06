@@ -32,8 +32,14 @@ interface IBlockPicker{
 				return Weighted(block.defaultState, property, values)
 			}
 			
+			@JvmName("Weighted_IBlockState")
 			fun Weighted(vararg items: Pair<Int, IBlockState>): Weighted{
 				return Weighted(WeightedList(items.toList()))
+			}
+			
+			@JvmName("Weighted_Block")
+			fun Weighted(vararg items: Pair<Int, Block>): Weighted{
+				return Weighted(WeightedList(items.toList().map { it.first to it.second.defaultState }))
 			}
 		}
 		
