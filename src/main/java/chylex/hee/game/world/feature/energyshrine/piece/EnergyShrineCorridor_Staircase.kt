@@ -1,8 +1,8 @@
 package chylex.hee.game.world.feature.energyshrine.piece
 import chylex.hee.game.world.feature.energyshrine.EnergyShrinePieces
-import chylex.hee.game.world.structure.IStructureGeneratorFromFile
+import chylex.hee.game.world.structure.IStructurePieceFromFile
+import chylex.hee.game.world.structure.IStructurePieceFromFile.Delegate
 import chylex.hee.game.world.structure.IStructureWorld
-import chylex.hee.game.world.structure.file.StructureFiles
 import chylex.hee.game.world.util.PosXZ
 import chylex.hee.init.ModBlocks
 import chylex.hee.system.util.Facing6
@@ -14,19 +14,13 @@ import chylex.hee.system.util.toRadians
 import chylex.hee.system.util.withFacing
 import java.util.Random
 
-abstract class EnergyShrineCorridor_Staircase(file: String) : EnergyShrineAbstractPiece(), IStructureGeneratorFromFile{
-	final override val path = "energyshrine/$file"
-	private val generator = StructureFiles.loadWithCache(path).Generator(EnergyShrinePieces.PALETTE.mappingForGeneration)
-	
-	final override val size = generator.size
-	
+abstract class EnergyShrineCorridor_Staircase(file: String) : EnergyShrineAbstractPiece(), IStructurePieceFromFile by Delegate("energyshrine/$file", EnergyShrinePieces.PALETTE){
 	override fun generate(world: IStructureWorld, instance: Instance){
 		generator.generate(world)
 		
 		val rand = world.rand
-		val maxY = size.maxY
 		
-		val count = (size.maxX * 0.6F).ceilToInt()
+		val count = (maxX * 0.6F).ceilToInt()
 		val attempts = 25
 		
 		for(index in 0..count){

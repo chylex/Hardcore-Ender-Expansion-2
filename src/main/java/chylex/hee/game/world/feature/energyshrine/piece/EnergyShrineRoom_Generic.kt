@@ -6,9 +6,9 @@ import chylex.hee.game.world.feature.energyshrine.connection.EnergyShrineRoomCon
 import chylex.hee.game.world.structure.IBlockPicker
 import chylex.hee.game.world.structure.IBlockPicker.Single
 import chylex.hee.game.world.structure.IBlockPicker.Single.Air
-import chylex.hee.game.world.structure.IStructureGeneratorFromFile
+import chylex.hee.game.world.structure.IStructurePieceFromFile
+import chylex.hee.game.world.structure.IStructurePieceFromFile.Delegate
 import chylex.hee.game.world.structure.IStructureWorld
-import chylex.hee.game.world.structure.file.StructureFiles
 import chylex.hee.game.world.structure.piece.IStructurePieceConnection
 import chylex.hee.game.world.structure.trigger.LootChestStructureTrigger
 import chylex.hee.game.world.structure.trigger.TileEntityStructureTrigger
@@ -24,19 +24,7 @@ import net.minecraft.util.EnumFacing.SOUTH
 import net.minecraft.util.EnumFacing.WEST
 import net.minecraft.util.math.BlockPos
 
-abstract class EnergyShrineRoom_Generic(file: String, protected val cornerBlock: Block, private val bannerColors: BannerColors) : EnergyShrineAbstractPiece(), IStructureGeneratorFromFile{
-	final override val path = "energyshrine/$file"
-	private val generator = StructureFiles.loadWithCache(path).Generator(EnergyShrinePieces.PALETTE.mappingForGeneration)
-	
-	final override val size = generator.size
-	
-	protected val maxX = size.maxX
-	protected val maxY = size.maxY
-	protected val maxZ = size.maxZ
-	
-	protected val centerX = size.centerX
-	protected val centerZ = size.centerZ
-	
+abstract class EnergyShrineRoom_Generic(file: String, protected val cornerBlock: Block, private val bannerColors: BannerColors) : EnergyShrineAbstractPiece(), IStructurePieceFromFile by Delegate("energyshrine/$file", EnergyShrinePieces.PALETTE){
 	override val connections = arrayOf<IStructurePieceConnection>(
 		EnergyShrineRoomConnection(Pos(centerX - 1, 0, 0), NORTH),
 		EnergyShrineRoomConnection(Pos(centerX, 0, maxZ), SOUTH),

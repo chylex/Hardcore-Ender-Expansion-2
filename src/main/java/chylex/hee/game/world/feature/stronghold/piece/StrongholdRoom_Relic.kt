@@ -3,9 +3,9 @@ import chylex.hee.game.block.entity.TileEntityLootChest
 import chylex.hee.game.world.feature.stronghold.StrongholdPieceType.ROOM
 import chylex.hee.game.world.feature.stronghold.StrongholdPieces
 import chylex.hee.game.world.feature.stronghold.connection.StrongholdRoomConnection
-import chylex.hee.game.world.structure.IStructureGeneratorFromFile
+import chylex.hee.game.world.structure.IStructurePieceFromFile
+import chylex.hee.game.world.structure.IStructurePieceFromFile.Delegate
 import chylex.hee.game.world.structure.IStructureWorld
-import chylex.hee.game.world.structure.file.StructureFiles
 import chylex.hee.game.world.structure.piece.IStructurePieceConnection
 import chylex.hee.game.world.structure.trigger.TileEntityStructureTrigger
 import chylex.hee.init.ModBlocks
@@ -16,23 +16,16 @@ import net.minecraft.item.ItemStack
 import net.minecraft.util.EnumFacing.SOUTH
 import net.minecraft.util.math.BlockPos
 
-abstract class StrongholdRoom_Relic(file: String, private val relicItem: ItemStack) : StrongholdAbstractPiece(), IStructureGeneratorFromFile{
-	final override val path = "stronghold/$file"
-	private val generator = StructureFiles.loadWithCache(path).Generator(StrongholdPieces.PALETTE.mappingForGeneration)
-	
+abstract class StrongholdRoom_Relic(file: String, private val relicItem: ItemStack) : StrongholdAbstractPiece(), IStructurePieceFromFile by Delegate("stronghold/$file", StrongholdPieces.PALETTE){
 	final override val type = ROOM
-	final override val size = generator.size
 	
 	override val connections = arrayOf<IStructurePieceConnection>(
-		StrongholdRoomConnection(Pos(size.centerX, 0, size.maxZ), SOUTH)
+		StrongholdRoomConnection(Pos(centerX, 0, maxZ), SOUTH)
 	)
 	
 	protected abstract val lootChestPos: BlockPos
 	
 	override fun generate(world: IStructureWorld, instance: Instance){
-		val maxX = size.maxX
-		val maxY = size.maxY
-		val maxZ = size.maxZ
 		
 		// floor and ceiling
 		
@@ -47,8 +40,8 @@ abstract class StrongholdRoom_Relic(file: String, private val relicItem: ItemSta
 		
 		// entrance wall with door cutout
 		
-		world.placeCube(Pos(1, 1, maxZ), Pos(size.centerX - 3, 4, maxZ), StrongholdPieces.PALETTE_ENTRY_STONE_BRICK)
-		world.placeCube(Pos(size.centerX + 3, 1, maxZ), Pos(maxX, 4, maxZ), StrongholdPieces.PALETTE_ENTRY_STONE_BRICK)
+		world.placeCube(Pos(1, 1, maxZ), Pos(centerX - 3, 4, maxZ), StrongholdPieces.PALETTE_ENTRY_STONE_BRICK)
+		world.placeCube(Pos(centerX + 3, 1, maxZ), Pos(maxX, 4, maxZ), StrongholdPieces.PALETTE_ENTRY_STONE_BRICK)
 		world.placeCube(Pos(1, 5, maxZ), Pos(maxX, maxY - 1, maxZ), StrongholdPieces.PALETTE_ENTRY_STONE_BRICK)
 		
 		// contents

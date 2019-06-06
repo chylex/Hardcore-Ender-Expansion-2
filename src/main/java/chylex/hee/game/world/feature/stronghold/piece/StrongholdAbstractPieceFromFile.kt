@@ -2,9 +2,9 @@ package chylex.hee.game.world.feature.stronghold.piece
 import chylex.hee.game.world.feature.stronghold.StrongholdPieceType
 import chylex.hee.game.world.feature.stronghold.StrongholdPieces
 import chylex.hee.game.world.feature.stronghold.connection.StrongholdRoomConnection
-import chylex.hee.game.world.structure.IStructureGeneratorFromFile
+import chylex.hee.game.world.structure.IStructurePieceFromFile
+import chylex.hee.game.world.structure.IStructurePieceFromFile.Delegate
 import chylex.hee.game.world.structure.IStructureWorld
-import chylex.hee.game.world.structure.file.StructureFiles
 import chylex.hee.game.world.structure.piece.IStructurePieceConnection
 import chylex.hee.system.util.Pos
 import net.minecraft.util.EnumFacing.EAST
@@ -12,20 +12,7 @@ import net.minecraft.util.EnumFacing.NORTH
 import net.minecraft.util.EnumFacing.SOUTH
 import net.minecraft.util.EnumFacing.WEST
 
-abstract class StrongholdAbstractPieceFromFile(file: String, override val type: StrongholdPieceType) : StrongholdAbstractPiece(), IStructureGeneratorFromFile{
-	final override val path = "stronghold/$file"
-	private val generator = StructureFiles.loadWithCache(path).Generator(StrongholdPieces.PALETTE.mappingForGeneration)
-	
-	final override val size = generator.size
-	
-	protected val maxX = size.maxX
-	protected val maxY = size.maxY
-	protected val maxZ = size.maxZ
-	
-	protected val centerX = size.centerX
-	protected val centerY = size.centerY
-	protected val centerZ = size.centerZ
-	
+abstract class StrongholdAbstractPieceFromFile(file: String, override val type: StrongholdPieceType) : StrongholdAbstractPiece(), IStructurePieceFromFile by Delegate("stronghold/$file", StrongholdPieces.PALETTE){
 	override val connections = arrayOf<IStructurePieceConnection>(
 		StrongholdRoomConnection(Pos(centerX, 0, 0), NORTH),
 		StrongholdRoomConnection(Pos(centerX, 0, maxZ), SOUTH),

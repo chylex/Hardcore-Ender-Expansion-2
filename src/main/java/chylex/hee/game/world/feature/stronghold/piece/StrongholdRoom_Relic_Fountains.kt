@@ -7,8 +7,8 @@ import net.minecraft.util.EnumFacing.SOUTH
 
 class StrongholdRoom_Relic_Fountains(file: String, relicItem: ItemStack) : StrongholdRoom_Relic(file, relicItem){
 	override val connections = arrayOf<IStructurePieceConnection>(
-		StrongholdRoomConnection(Pos(size.centerX, 1, size.maxZ), SOUTH)
+		StrongholdRoomConnection(Pos(centerX, 1, maxZ), SOUTH)
 	)
 	
-	override val lootChestPos = Pos(size.centerX, 3, 1)
+	override val lootChestPos = Pos(centerX, 3, 1)
 }

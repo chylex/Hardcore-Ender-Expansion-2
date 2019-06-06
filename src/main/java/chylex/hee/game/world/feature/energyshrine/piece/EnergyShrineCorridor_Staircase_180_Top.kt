@@ -13,19 +13,19 @@ import kotlin.math.sin
 
 class EnergyShrineCorridor_Staircase_180_Top(file: String) : EnergyShrineCorridor_Staircase(file){
 	override val connections = arrayOf(
-		EnergyShrineStairTopConnection(Pos(2, size.maxY - 4, size.maxZ), SOUTH),
-		EnergyShrineStairMiddleConnection(Pos(size.maxX, size.maxY, 0), EAST)
+		EnergyShrineStairTopConnection(Pos(2, maxY - 4, maxZ), SOUTH),
+		EnergyShrineStairMiddleConnection(Pos(maxX, maxY, 0), EAST)
 	)
 	
 	override fun nextRandomXZ(rand: Random, angle: Double): PosXZ{
 		val distance = rand.nextFloat(0F, 3F)
 		
-		val distanceX = size.maxX - distance
-		val distanceZ = size.maxZ - 0.5 - distance
+		val distanceX = maxX - distance
+		val distanceZ = maxZ - 0.5 - distance
 		
 		return PosXZ(
-			(size.maxX - cos(angle) * distanceX).roundToInt(),
-			(size.maxZ - sin(angle) * distanceZ).roundToInt()
+			(maxX - cos(angle) * distanceX).roundToInt(),
+			(maxZ - sin(angle) * distanceZ).roundToInt()
 		)
 	}
 }
