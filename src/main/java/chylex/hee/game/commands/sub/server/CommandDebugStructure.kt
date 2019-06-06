@@ -14,6 +14,7 @@ import chylex.hee.system.util.Rotation4
 import net.minecraft.command.ICommandSender
 import net.minecraft.init.Blocks
 import net.minecraft.server.MinecraftServer
+import net.minecraft.util.Rotation
 import net.minecraft.util.text.TextComponentString
 
 internal object CommandDebugStructure : ISubCommand{
@@ -34,6 +35,7 @@ internal object CommandDebugStructure : ISubCommand{
 			sender.sendMessage(TextComponentString("reset"))
 			return
 		}
+		
 		val structure = args.getOrNull(1)?.let { structureDescriptions[it] } ?: return
 		
 		when(arg){
@@ -64,10 +66,21 @@ internal object CommandDebugStructure : ISubCommand{
 			"piecesdev" -> {
 				var x = 0
 				
+				val rotation = when(args.getOrElse(2){ "0" }){
+					"0" -> Rotation.NONE
+					"90" -> Rotation.CLOCKWISE_90
+					"180" -> Rotation.CLOCKWISE_180
+					"270" -> Rotation.COUNTERCLOCKWISE_90
+					else -> return
+				}
+				
 				for(piece in structure.ALL_PIECES){
 					if (piece is IStructureGeneratorFromFile){
-						StructureFile.spawn(sender.entityWorld, sender.position.add(x, 0, -piece.size.centerZ), piece, structure.PALETTE)
-						x += piece.size.x + 2
+						val world = WorldToStructureWorldAdapter(sender.entityWorld, sender.entityWorld.rand, sender.position.add(x, 0, -piece.size.centerZ))
+						val rotatedWorld = RotatedStructureWorld(world, piece.size, rotation)
+						
+						StructureFile.spawn(rotatedWorld, piece, structure.PALETTE)
+						x += piece.size.rotate(rotation).x + 2
 					}
 				}
 			}
