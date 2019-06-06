@@ -3,7 +3,7 @@ import chylex.hee.game.world.structure.IBlockPicker
 import chylex.hee.game.world.structure.IBlockPicker.Fallback
 import chylex.hee.game.world.structure.IBlockPicker.Single
 import chylex.hee.game.world.structure.IStructureGenerator
-import chylex.hee.game.world.structure.IStructureGeneratorFromFile
+import chylex.hee.game.world.structure.IStructurePieceFromFile
 import chylex.hee.game.world.structure.IStructureWorld
 import chylex.hee.game.world.structure.world.WorldToStructureWorldAdapter
 import chylex.hee.game.world.util.BoundingBox
@@ -62,11 +62,11 @@ class StructureFile(nbt: NBTTagCompound){
 	companion object{
 		private val SKIP_BLOCK_STATE = ModBlocks.SCAFFOLDING.defaultState
 		
-		fun spawn(world: World, offset: BlockPos, piece: IStructureGeneratorFromFile, palette: Palette){
+		fun spawn(world: World, offset: BlockPos, piece: IStructurePieceFromFile, palette: Palette){
 			return spawn(WorldToStructureWorldAdapter(world, world.rand, offset), piece, palette)
 		}
 		
-		fun spawn(world: IStructureWorld, generator: IStructureGeneratorFromFile, palette: Palette){
+		fun spawn(world: IStructureWorld, generator: IStructurePieceFromFile, palette: Palette){
 			val path = generator.path
 			val size = generator.size
 			

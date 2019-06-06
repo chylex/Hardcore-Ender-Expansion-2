@@ -1,5 +1,6 @@
 package chylex.hee.game.world.structure.piece
 import chylex.hee.game.world.structure.IStructureGenerator
+import chylex.hee.game.world.structure.IStructurePiece
 import chylex.hee.game.world.structure.IStructureWorld
 import chylex.hee.game.world.structure.world.RotatedStructureWorld
 import chylex.hee.game.world.util.Size
@@ -9,7 +10,7 @@ import net.minecraft.init.Blocks
 import net.minecraft.item.EnumDyeColor
 import net.minecraft.util.Rotation
 
-abstract class StructurePiece : IStructureGenerator{
+abstract class StructurePiece : IStructurePiece, IStructureGenerator{
 	protected abstract val connections: Array<IStructurePieceConnection>
 	
 	final override fun generate(world: IStructureWorld){

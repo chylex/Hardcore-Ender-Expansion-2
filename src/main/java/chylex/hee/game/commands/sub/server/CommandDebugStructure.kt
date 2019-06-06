@@ -3,7 +3,7 @@ import chylex.hee.game.commands.sub.ISubCommand
 import chylex.hee.game.world.feature.energyshrine.EnergyShrinePieces
 import chylex.hee.game.world.feature.stronghold.StrongholdPieces
 import chylex.hee.game.world.structure.IBlockPicker.Single
-import chylex.hee.game.world.structure.IStructureGeneratorFromFile
+import chylex.hee.game.world.structure.IStructurePieceFromFile
 import chylex.hee.game.world.structure.file.StructureFile
 import chylex.hee.game.world.structure.file.StructureFiles
 import chylex.hee.game.world.structure.world.RotatedStructureWorld
@@ -75,7 +75,7 @@ internal object CommandDebugStructure : ISubCommand{
 				}
 				
 				for(piece in structure.ALL_PIECES){
-					if (piece is IStructureGeneratorFromFile){
+					if (piece is IStructurePieceFromFile){
 						val world = WorldToStructureWorldAdapter(sender.entityWorld, sender.entityWorld.rand, sender.position.add(x, 0, -piece.size.centerZ))
 						val rotatedWorld = RotatedStructureWorld(world, piece.size, rotation)
 						
