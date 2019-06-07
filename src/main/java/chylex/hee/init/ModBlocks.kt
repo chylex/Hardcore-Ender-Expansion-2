@@ -234,11 +234,14 @@ object ModBlocks{
 		explosionResistance = 3.0F
 	}
 	
-	@JvmField val DUSTY_STONE                = BlockDustyStonePlain(buildDustyStone).apply { setup("dusty_stone") }
-	@JvmField val DUSTY_STONE_CRACKED        = BlockDustyStonePlain(buildDustyStoneCracked).apply { setup("dusty_stone_cracked") }
-	@JvmField val DUSTY_STONE_DAMAGED        = BlockDustyStonePlain(buildDustyStoneDamaged).apply { setup("dusty_stone_damaged") }
-	@JvmField val DUSTY_STONE_BRICKS         = BlockDustyStoneBricks(buildDustyStoneBricks).apply { setup("dusty_stone_bricks") } // UPDATE: update recipe json to include tag to allow all dusty stone variations
-	@JvmField val DUSTY_STONE_CRACKED_BRICKS = BlockDustyStoneBricks(buildDustyStoneBricks).apply { setup("dusty_stone_cracked_bricks") }
+	@JvmField val DUSTY_STONE                   = BlockDustyStonePlain(buildDustyStone).apply { setup("dusty_stone") }
+	@JvmField val DUSTY_STONE_CRACKED           = BlockDustyStonePlain(buildDustyStoneCracked).apply { setup("dusty_stone_cracked") }
+	@JvmField val DUSTY_STONE_DAMAGED           = BlockDustyStonePlain(buildDustyStoneDamaged).apply { setup("dusty_stone_damaged") }
+	@JvmField val DUSTY_STONE_BRICKS            = BlockDustyStoneBricks(buildDustyStoneBricks).apply { setup("dusty_stone_bricks") } // UPDATE: update recipe json to include tag to allow all dusty stone variations
+	@JvmField val DUSTY_STONE_CRACKED_BRICKS    = BlockDustyStoneBricks(buildDustyStoneBricks).apply { setup("dusty_stone_cracked_bricks") }
+	@JvmField val DUSTY_STONE_BRICK_STAIRS      = BlockStairsCustom(DUSTY_STONE_BRICKS).apply { setup("dusty_stone_brick_stairs") }
+	@JvmField val DUSTY_STONE_BRICK_SLAB        = BlockSlabCustom.Half(buildDustyStoneBricks).apply { setup("dusty_stone_brick_slab") }
+	@JvmField val DUSTY_STONE_BRICK_DOUBLE_SLAB = BlockSlabCustom.Full(buildDustyStoneBricks, DUSTY_STONE_BRICK_SLAB).apply { setup("dusty_stone_brick_slab_double", "hee.dusty_stone_brick_slab") }
 	
 	// Blocks: Building (Obsidian)
 	
@@ -513,6 +516,8 @@ object ModBlocks{
 			register(DUSTY_STONE_DAMAGED with basicItemBlock)
 			register(DUSTY_STONE_BRICKS with basicItemBlock)
 			register(DUSTY_STONE_CRACKED_BRICKS with basicItemBlock)
+			register(DUSTY_STONE_BRICK_STAIRS with basicItemBlock)
+			register(DUSTY_STONE_BRICK_SLAB with slabItemBlock(DUSTY_STONE_BRICK_SLAB, DUSTY_STONE_BRICK_DOUBLE_SLAB))
 			
 			register(OBSIDIAN_STAIRS with basicItemBlock)
 			register(OBSIDIAN_FALLING with basicItemBlock)

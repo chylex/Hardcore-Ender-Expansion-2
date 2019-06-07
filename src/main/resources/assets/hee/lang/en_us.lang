@@ -29,6 +29,8 @@ tile.hee.dusty_stone_cracked.name=Cracked Dusty Stone
 tile.hee.dusty_stone_damaged.name=Damaged Dusty Stone
 tile.hee.dusty_stone_bricks.name=Dusty Stone Bricks
 tile.hee.dusty_stone_cracked_bricks.name=Cracked Dusty Stone Bricks
+tile.hee.dusty_stone_brick_stairs.name=Dusty Stone Brick Stairs
+tile.hee.dusty_stone_brick_slab.name=Dusty Stone Brick Slab
 
 tile.hee.obsidian_stairs.name=Obsidian Stairs
 tile.hee.obsidian_falling.name=Falling Obsidian

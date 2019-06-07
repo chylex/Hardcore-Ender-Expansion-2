@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "###"
+  ],
+  "key": {
+    "#": { "item": "hee:dusty_stone_bricks" }
+  },
+  "result": {
+    "item": "hee:dusty_stone_brick_slab",
+    "count": 6
+  }
+}
