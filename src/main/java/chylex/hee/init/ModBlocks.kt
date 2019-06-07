@@ -518,6 +518,7 @@ object ModBlocks{
 			register(DUSTY_STONE_CRACKED_BRICKS with basicItemBlock)
 			register(DUSTY_STONE_BRICK_STAIRS with basicItemBlock)
 			register(DUSTY_STONE_BRICK_SLAB with slabItemBlock(DUSTY_STONE_BRICK_SLAB, DUSTY_STONE_BRICK_DOUBLE_SLAB))
+			register(DUSTY_STONE_BRICK_DOUBLE_SLAB)
 			
 			register(OBSIDIAN_STAIRS with basicItemBlock)
 			register(OBSIDIAN_FALLING with basicItemBlock)
@@ -541,6 +542,7 @@ object ModBlocks{
 			register(WHITEBARK_PLANKS with basicItemBlock)
 			register(WHITEBARK_STAIRS with basicItemBlock)
 			register(WHITEBARK_SLAB with woodenSlabItemBlock(WHITEBARK_SLAB, WHITEBARK_DOUBLE_SLAB))
+			register(WHITEBARK_DOUBLE_SLAB)
 			
 			register(ENDER_GOO)
 			register(INFUSED_TNT with ::ItemInfusedTNT)
