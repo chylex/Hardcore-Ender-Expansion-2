@@ -1,6 +1,7 @@
 package chylex.hee.game.world.feature.stronghold.piece
-import chylex.hee.game.world.feature.stronghold.StrongholdPieceType.CORRIDOR
-import chylex.hee.game.world.feature.stronghold.connection.StrongholdCorridorConnection
+import chylex.hee.game.world.feature.stronghold.StrongholdPieceType
+import chylex.hee.game.world.feature.stronghold.connection.StrongholdConnection
+import chylex.hee.game.world.feature.stronghold.connection.StrongholdConnectionType.CORRIDOR
 import chylex.hee.game.world.structure.IBlockPicker.Single.Air
 import chylex.hee.game.world.structure.IStructureWorld
 import chylex.hee.game.world.structure.piece.IStructurePieceConnection
@@ -10,12 +11,12 @@ import net.minecraft.util.EnumFacing.NORTH
 import net.minecraft.util.EnumFacing.SOUTH
 
 class StrongholdCorridor_Straight(length: Int) : StrongholdAbstractPiece(){
-	override val type = CORRIDOR
+	override val type = StrongholdPieceType.CORRIDOR
 	override val size = Size(5, 5, length)
 	
 	override val connections = arrayOf<IStructurePieceConnection>(
-		StrongholdCorridorConnection(Pos(size.centerX, 0, 0), NORTH),
-		StrongholdCorridorConnection(Pos(size.centerX, 0, size.maxZ), SOUTH)
+		StrongholdConnection(CORRIDOR, Pos(size.centerX, 0, 0), NORTH),
+		StrongholdConnection(CORRIDOR, Pos(size.centerX, 0, size.maxZ), SOUTH)
 	)
 	
 	override fun generate(world: IStructureWorld, instance: Instance){

@@ -1,7 +1,8 @@
 package chylex.hee.game.world.feature.energyshrine.piece
 import chylex.hee.game.world.feature.energyshrine.EnergyShrineBanners.BannerColors
 import chylex.hee.game.world.feature.energyshrine.EnergyShrinePieces
-import chylex.hee.game.world.feature.energyshrine.connection.EnergyShrineTerminalConnection
+import chylex.hee.game.world.feature.energyshrine.connection.EnergyShrineConnection
+import chylex.hee.game.world.feature.energyshrine.connection.EnergyShrineConnectionType.TERMINAL
 import chylex.hee.game.world.structure.IStructureWorld
 import chylex.hee.game.world.structure.piece.IStructurePieceConnection
 import chylex.hee.game.world.structure.trigger.LootChestStructureTrigger
@@ -19,8 +20,8 @@ import net.minecraft.util.math.BlockPos
 
 class EnergyShrineRoom_Secondary_Storage(file: String, cornerBlock: Block, bannerColors: BannerColors) : EnergyShrineRoom_Generic(file, cornerBlock, bannerColors){
 	override val connections = arrayOf<IStructurePieceConnection>(
-		EnergyShrineTerminalConnection(Pos(centerX, 0, maxZ), SOUTH),
-		EnergyShrineTerminalConnection(Pos(centerX - 1, 0, 0), NORTH)
+		EnergyShrineConnection(TERMINAL, Pos(centerX, 0, maxZ), SOUTH),
+		EnergyShrineConnection(TERMINAL, Pos(centerX - 1, 0, 0), NORTH)
 	)
 	
 	override fun generate(world: IStructureWorld, instance: Instance){

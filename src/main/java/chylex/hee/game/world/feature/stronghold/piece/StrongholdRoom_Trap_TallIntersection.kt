@@ -3,7 +3,7 @@ import chylex.hee.game.entity.living.EntityMobSilverfish
 import chylex.hee.game.entity.technical.EntityTechnicalTrigger
 import chylex.hee.game.entity.technical.EntityTechnicalTrigger.ITriggerHandler
 import chylex.hee.game.entity.technical.EntityTechnicalTrigger.Types.STRONGHOLD_TRAP_TALL_INTERSECTION
-import chylex.hee.game.world.feature.stronghold.StrongholdPieceType.ROOM
+import chylex.hee.game.world.feature.stronghold.StrongholdPieceType
 import chylex.hee.game.world.feature.stronghold.StrongholdPieces
 import chylex.hee.game.world.structure.IStructureWorld
 import chylex.hee.game.world.structure.trigger.EntityStructureTrigger
@@ -21,7 +21,7 @@ import net.minecraft.world.EnumDifficulty.PEACEFUL
 import net.minecraft.world.World
 import java.util.Random
 
-class StrongholdRoom_Trap_TallIntersection(file: String) : StrongholdAbstractPieceFromFile(file, ROOM){
+class StrongholdRoom_Trap_TallIntersection(file: String) : StrongholdAbstractPieceFromFile(file, StrongholdPieceType.ROOM){
 	object Trigger : ITriggerHandler{
 		override fun check(world: World): Boolean{
 			return !world.isRemote && world.difficulty != PEACEFUL

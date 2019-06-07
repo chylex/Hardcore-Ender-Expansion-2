@@ -1,8 +1,9 @@
 package chylex.hee.game.world.feature.stronghold.piece
 import chylex.hee.game.block.util.FutureBlocks
-import chylex.hee.game.world.feature.stronghold.StrongholdPieceType.ROOM
+import chylex.hee.game.world.feature.stronghold.StrongholdPieceType
 import chylex.hee.game.world.feature.stronghold.StrongholdPieces
-import chylex.hee.game.world.feature.stronghold.connection.StrongholdRoomConnection
+import chylex.hee.game.world.feature.stronghold.connection.StrongholdConnection
+import chylex.hee.game.world.feature.stronghold.connection.StrongholdConnectionType.ROOM
 import chylex.hee.game.world.feature.stronghold.piece.StrongholdRoom_Main_Library.FirstFloorChestPosition.INSIDE_BOOKSHELVES
 import chylex.hee.game.world.feature.stronghold.piece.StrongholdRoom_Main_Library.FirstFloorChestPosition.WORK_TABLE
 import chylex.hee.game.world.structure.IBlockPicker.Single
@@ -22,16 +23,16 @@ import net.minecraft.util.EnumFacing.NORTH
 import net.minecraft.util.EnumFacing.SOUTH
 import net.minecraft.util.EnumFacing.WEST
 
-class StrongholdRoom_Main_Library(file: String) : StrongholdAbstractPieceFromFile(file, ROOM){
+class StrongholdRoom_Main_Library(file: String) : StrongholdAbstractPieceFromFile(file, StrongholdPieceType.ROOM){
 	override val extraWeightMultiplier = 4
 	
 	override val connections = arrayOf<IStructurePieceConnection>(
-		StrongholdRoomConnection(Pos(centerX, 6, 0), NORTH),
-		StrongholdRoomConnection(Pos(centerX, 6, maxZ), SOUTH),
-		StrongholdRoomConnection(Pos(maxX, 0, centerZ), EAST),
-		StrongholdRoomConnection(Pos(maxX, 11, centerZ), EAST),
-		StrongholdRoomConnection(Pos(0, 0, centerZ), WEST),
-		StrongholdRoomConnection(Pos(0, 11, centerZ), WEST)
+		StrongholdConnection(ROOM, Pos(centerX, 6, 0), NORTH),
+		StrongholdConnection(ROOM, Pos(centerX, 6, maxZ), SOUTH),
+		StrongholdConnection(ROOM, Pos(maxX, 0, centerZ), EAST),
+		StrongholdConnection(ROOM, Pos(maxX, 11, centerZ), EAST),
+		StrongholdConnection(ROOM, Pos(0, 0, centerZ), WEST),
+		StrongholdConnection(ROOM, Pos(0, 11, centerZ), WEST)
 	)
 	
 	override fun generate(world: IStructureWorld, instance: Instance){

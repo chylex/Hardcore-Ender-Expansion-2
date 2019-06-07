@@ -1,5 +1,5 @@
 package chylex.hee.game.world.feature.stronghold.piece
-import chylex.hee.game.world.feature.stronghold.StrongholdPieceType.ROOM
+import chylex.hee.game.world.feature.stronghold.StrongholdPieceType
 import chylex.hee.game.world.feature.stronghold.StrongholdPieces
 import chylex.hee.game.world.structure.IStructureWorld
 import chylex.hee.game.world.structure.trigger.FlowerPotStructureTrigger
@@ -14,7 +14,7 @@ import net.minecraft.block.BlockFlower.EnumFlowerType
 import net.minecraft.init.Blocks
 import net.minecraft.item.ItemStack
 
-class StrongholdRoom_Chest_DecoratedCorners(file: String) : StrongholdAbstractPieceFromFile(file, ROOM){
+class StrongholdRoom_Chest_DecoratedCorners(file: String) : StrongholdAbstractPieceFromFile(file, StrongholdPieceType.ROOM){
 	override fun generate(world: IStructureWorld, instance: Instance){
 		super.generate(world, instance)
 		

@@ -1,6 +1,7 @@
 package chylex.hee.game.world.feature.stronghold.piece
 import chylex.hee.game.block.util.FutureBlocks
-import chylex.hee.game.world.feature.stronghold.connection.StrongholdRoomConnection
+import chylex.hee.game.world.feature.stronghold.connection.StrongholdConnection
+import chylex.hee.game.world.feature.stronghold.connection.StrongholdConnectionType.ROOM
 import chylex.hee.game.world.structure.IBlockPicker.Single
 import chylex.hee.game.world.structure.IStructureWorld
 import chylex.hee.game.world.structure.piece.IStructurePieceConnection
@@ -12,14 +13,14 @@ import net.minecraft.util.EnumFacing.WEST
 
 class StrongholdRoom_Decor_TwoFloorIntersection(file: String) : StrongholdRoom_Decor_Generic(file){
 	override val connections = arrayOf<IStructurePieceConnection>(
-		StrongholdRoomConnection(Pos(centerX, 0, 0), NORTH),
-		StrongholdRoomConnection(Pos(centerX, 5, 0), NORTH),
-		StrongholdRoomConnection(Pos(centerX, 0, maxZ), SOUTH),
-		StrongholdRoomConnection(Pos(centerX, 5, maxZ), SOUTH),
-		StrongholdRoomConnection(Pos(maxX, 0, centerZ), EAST),
-		StrongholdRoomConnection(Pos(maxX, 5, centerZ), EAST),
-		StrongholdRoomConnection(Pos(0, 0, centerZ), WEST),
-		StrongholdRoomConnection(Pos(0, 5, centerZ), WEST)
+		StrongholdConnection(ROOM, Pos(centerX, 0, 0), NORTH),
+		StrongholdConnection(ROOM, Pos(centerX, 5, 0), NORTH),
+		StrongholdConnection(ROOM, Pos(centerX, 0, maxZ), SOUTH),
+		StrongholdConnection(ROOM, Pos(centerX, 5, maxZ), SOUTH),
+		StrongholdConnection(ROOM, Pos(maxX, 0, centerZ), EAST),
+		StrongholdConnection(ROOM, Pos(maxX, 5, centerZ), EAST),
+		StrongholdConnection(ROOM, Pos(0, 0, centerZ), WEST),
+		StrongholdConnection(ROOM, Pos(0, 5, centerZ), WEST)
 	)
 	
 	override fun generate(world: IStructureWorld, instance: Instance){

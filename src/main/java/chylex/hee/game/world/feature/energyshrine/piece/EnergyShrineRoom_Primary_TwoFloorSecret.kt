@@ -1,7 +1,8 @@
 package chylex.hee.game.world.feature.energyshrine.piece
 import chylex.hee.game.world.feature.energyshrine.EnergyShrineBanners.BannerColors
 import chylex.hee.game.world.feature.energyshrine.EnergyShrinePieces
-import chylex.hee.game.world.feature.energyshrine.connection.EnergyShrineRoomConnection
+import chylex.hee.game.world.feature.energyshrine.connection.EnergyShrineConnection
+import chylex.hee.game.world.feature.energyshrine.connection.EnergyShrineConnectionType.ROOM
 import chylex.hee.game.world.structure.IStructureWorld
 import chylex.hee.game.world.structure.piece.IStructurePieceConnection
 import chylex.hee.game.world.structure.trigger.LootChestStructureTrigger
@@ -16,9 +17,9 @@ import net.minecraft.util.EnumFacing.WEST
 
 class EnergyShrineRoom_Primary_TwoFloorSecret(file: String, cornerBlock: Block, bannerColors: BannerColors) : EnergyShrineRoom_Generic(file, cornerBlock, bannerColors){
 	override val connections = arrayOf<IStructurePieceConnection>(
-		EnergyShrineRoomConnection(Pos(centerX, 0, maxZ), SOUTH),
-		EnergyShrineRoomConnection(Pos(maxX, 0, 1), EAST),
-		EnergyShrineRoomConnection(Pos(maxX, maxY - 5, maxZ - 2), EAST)
+		EnergyShrineConnection(ROOM, Pos(centerX, 0, maxZ), SOUTH),
+		EnergyShrineConnection(ROOM, Pos(maxX, 0, 1), EAST),
+		EnergyShrineConnection(ROOM, Pos(maxX, maxY - 5, maxZ - 2), EAST)
 	)
 	
 	override fun generate(world: IStructureWorld, instance: Instance){

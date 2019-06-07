@@ -2,7 +2,8 @@ package chylex.hee.game.world.feature.energyshrine.piece
 import chylex.hee.game.world.feature.energyshrine.EnergyShrineBanners
 import chylex.hee.game.world.feature.energyshrine.EnergyShrineBanners.BannerColors
 import chylex.hee.game.world.feature.energyshrine.EnergyShrinePieces
-import chylex.hee.game.world.feature.energyshrine.connection.EnergyShrineRoomConnection
+import chylex.hee.game.world.feature.energyshrine.connection.EnergyShrineConnection
+import chylex.hee.game.world.feature.energyshrine.connection.EnergyShrineConnectionType.ROOM
 import chylex.hee.game.world.structure.IBlockPicker
 import chylex.hee.game.world.structure.IBlockPicker.Single
 import chylex.hee.game.world.structure.IBlockPicker.Single.Air
@@ -26,10 +27,10 @@ import net.minecraft.util.math.BlockPos
 
 abstract class EnergyShrineRoom_Generic(file: String, protected val cornerBlock: Block, private val bannerColors: BannerColors) : EnergyShrineAbstractPiece(), IStructurePieceFromFile by Delegate("energyshrine/$file", EnergyShrinePieces.PALETTE){
 	override val connections = arrayOf<IStructurePieceConnection>(
-		EnergyShrineRoomConnection(Pos(centerX - 1, 0, 0), NORTH),
-		EnergyShrineRoomConnection(Pos(centerX, 0, maxZ), SOUTH),
-		EnergyShrineRoomConnection(Pos(maxX, 0, centerZ - 1), EAST),
-		EnergyShrineRoomConnection(Pos(0, 0, centerZ), WEST)
+		EnergyShrineConnection(ROOM, Pos(centerX - 1, 0, 0), NORTH),
+		EnergyShrineConnection(ROOM, Pos(centerX, 0, maxZ), SOUTH),
+		EnergyShrineConnection(ROOM, Pos(maxX, 0, centerZ - 1), EAST),
+		EnergyShrineConnection(ROOM, Pos(0, 0, centerZ), WEST)
 	)
 	
 	override fun generate(world: IStructureWorld, instance: Instance){

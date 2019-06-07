@@ -1,6 +1,6 @@
 package chylex.hee.game.world.feature.stronghold.piece
 import chylex.hee.game.block.util.FutureBlocks
-import chylex.hee.game.world.feature.stronghold.StrongholdPieceType.ROOM
+import chylex.hee.game.world.feature.stronghold.StrongholdPieceType
 import chylex.hee.game.world.structure.IBlockPicker.Single
 import chylex.hee.game.world.structure.IStructureWorld
 import chylex.hee.game.world.structure.trigger.FlowerPotStructureTrigger
@@ -23,7 +23,7 @@ import net.minecraft.util.EnumFacing.SOUTH
 import net.minecraft.util.EnumFacing.WEST
 import net.minecraft.util.math.BlockPos
 
-class StrongholdRoom_Main_Workshop(file: String) : StrongholdAbstractPieceFromFile(file, ROOM){
+class StrongholdRoom_Main_Workshop(file: String) : StrongholdAbstractPieceFromFile(file, StrongholdPieceType.ROOM){
 	override fun generate(world: IStructureWorld, instance: Instance){
 		super.generate(world, instance)
 		

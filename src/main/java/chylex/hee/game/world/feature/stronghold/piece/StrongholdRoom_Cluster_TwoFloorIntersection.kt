@@ -1,7 +1,8 @@
 package chylex.hee.game.world.feature.stronghold.piece
 import chylex.hee.game.mechanics.energy.IClusterGenerator.Companion.STRONGHOLD
-import chylex.hee.game.world.feature.stronghold.StrongholdPieceType.ROOM
-import chylex.hee.game.world.feature.stronghold.connection.StrongholdRoomConnection
+import chylex.hee.game.world.feature.stronghold.StrongholdPieceType
+import chylex.hee.game.world.feature.stronghold.connection.StrongholdConnection
+import chylex.hee.game.world.feature.stronghold.connection.StrongholdConnectionType.ROOM
 import chylex.hee.game.world.structure.IStructureWorld
 import chylex.hee.game.world.structure.piece.IStructurePieceConnection
 import chylex.hee.game.world.structure.trigger.EnergyClusterStructureTrigger
@@ -11,16 +12,16 @@ import net.minecraft.util.EnumFacing.NORTH
 import net.minecraft.util.EnumFacing.SOUTH
 import net.minecraft.util.EnumFacing.WEST
 
-class StrongholdRoom_Cluster_TwoFloorIntersection(file: String) : StrongholdAbstractPieceFromFile(file, ROOM){
+class StrongholdRoom_Cluster_TwoFloorIntersection(file: String) : StrongholdAbstractPieceFromFile(file, StrongholdPieceType.ROOM){
 	override val connections = arrayOf<IStructurePieceConnection>(
-		StrongholdRoomConnection(Pos(centerX, 0, 0), NORTH),
-		StrongholdRoomConnection(Pos(centerX, 4, 0), NORTH),
-		StrongholdRoomConnection(Pos(centerX, 0, maxZ), SOUTH),
-		StrongholdRoomConnection(Pos(centerX, 4, maxZ), SOUTH),
-		StrongholdRoomConnection(Pos(maxX, 0, centerZ), EAST),
-		StrongholdRoomConnection(Pos(maxX, 4, centerZ), EAST),
-		StrongholdRoomConnection(Pos(0, 0, centerZ), WEST),
-		StrongholdRoomConnection(Pos(0, 4, centerZ), WEST)
+		StrongholdConnection(ROOM, Pos(centerX, 0, 0), NORTH),
+		StrongholdConnection(ROOM, Pos(centerX, 4, 0), NORTH),
+		StrongholdConnection(ROOM, Pos(centerX, 0, maxZ), SOUTH),
+		StrongholdConnection(ROOM, Pos(centerX, 4, maxZ), SOUTH),
+		StrongholdConnection(ROOM, Pos(maxX, 0, centerZ), EAST),
+		StrongholdConnection(ROOM, Pos(maxX, 4, centerZ), EAST),
+		StrongholdConnection(ROOM, Pos(0, 0, centerZ), WEST),
+		StrongholdConnection(ROOM, Pos(0, 4, centerZ), WEST)
 	)
 	
 	override fun generate(world: IStructureWorld, instance: Instance){

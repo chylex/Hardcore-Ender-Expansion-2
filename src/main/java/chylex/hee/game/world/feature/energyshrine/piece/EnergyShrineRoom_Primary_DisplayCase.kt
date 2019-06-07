@@ -1,6 +1,7 @@
 package chylex.hee.game.world.feature.energyshrine.piece
 import chylex.hee.game.world.feature.energyshrine.EnergyShrineBanners.BannerColors
-import chylex.hee.game.world.feature.energyshrine.connection.EnergyShrineRoomConnection
+import chylex.hee.game.world.feature.energyshrine.connection.EnergyShrineConnection
+import chylex.hee.game.world.feature.energyshrine.connection.EnergyShrineConnectionType.ROOM
 import chylex.hee.game.world.structure.IBlockPicker.Single
 import chylex.hee.game.world.structure.IBlockPicker.Single.Air
 import chylex.hee.game.world.structure.IBlockPicker.Weighted.Companion.Weighted
@@ -19,8 +20,8 @@ import net.minecraft.util.EnumFacing.WEST
 
 class EnergyShrineRoom_Primary_DisplayCase(file: String, cornerBlock: Block, bannerColors: BannerColors) : EnergyShrineRoom_Generic(file, cornerBlock, bannerColors){
 	override val connections = arrayOf<IStructurePieceConnection>(
-		EnergyShrineRoomConnection(Pos(3, 0, maxZ), SOUTH),
-		EnergyShrineRoomConnection(Pos(2, 0, 0), NORTH)
+		EnergyShrineConnection(ROOM, Pos(3, 0, maxZ), SOUTH),
+		EnergyShrineConnection(ROOM, Pos(2, 0, 0), NORTH)
 	)
 	
 	override fun generate(world: IStructureWorld, instance: Instance){

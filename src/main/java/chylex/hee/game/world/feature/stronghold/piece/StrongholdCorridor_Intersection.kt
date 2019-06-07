@@ -1,6 +1,7 @@
 package chylex.hee.game.world.feature.stronghold.piece
-import chylex.hee.game.world.feature.stronghold.StrongholdPieceType.CORRIDOR
-import chylex.hee.game.world.feature.stronghold.connection.StrongholdCorridorConnection
+import chylex.hee.game.world.feature.stronghold.StrongholdPieceType
+import chylex.hee.game.world.feature.stronghold.connection.StrongholdConnection
+import chylex.hee.game.world.feature.stronghold.connection.StrongholdConnectionType.CORRIDOR
 import chylex.hee.game.world.structure.IBlockPicker.Single.Air
 import chylex.hee.game.world.structure.IStructureWorld
 import chylex.hee.game.world.structure.piece.IStructurePieceConnection
@@ -19,15 +20,15 @@ class StrongholdCorridor_Intersection private constructor(vararg connections: En
 		val FOURWAY  = StrongholdCorridor_Intersection(SOUTH, WEST, EAST, NORTH)
 	}
 	
-	override val type = CORRIDOR
+	override val type = StrongholdPieceType.CORRIDOR
 	override val size = Size(5, 5, 5)
 	
 	override val connections = connections.map {
 		when(it){
-			NORTH -> StrongholdCorridorConnection(Pos(size.centerX, 0, 0), NORTH)
-			SOUTH -> StrongholdCorridorConnection(Pos(size.centerX, 0, size.maxZ), SOUTH)
-			EAST -> StrongholdCorridorConnection(Pos(size.maxX, 0, size.centerZ), EAST)
-			WEST -> StrongholdCorridorConnection(Pos(0, 0, size.centerZ), WEST)
+			NORTH -> StrongholdConnection(CORRIDOR, Pos(size.centerX, 0, 0), NORTH)
+			SOUTH -> StrongholdConnection(CORRIDOR, Pos(size.centerX, 0, size.maxZ), SOUTH)
+			EAST -> StrongholdConnection(CORRIDOR, Pos(size.maxX, 0, size.centerZ), EAST)
+			WEST -> StrongholdConnection(CORRIDOR, Pos(0, 0, size.centerZ), WEST)
 			else -> throw IllegalArgumentException()
 		}
 	}.toTypedArray<IStructurePieceConnection>()

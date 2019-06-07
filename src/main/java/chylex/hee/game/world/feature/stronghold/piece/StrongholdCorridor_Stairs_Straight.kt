@@ -1,14 +1,15 @@
 package chylex.hee.game.world.feature.stronghold.piece
-import chylex.hee.game.world.feature.stronghold.StrongholdPieceType.CORRIDOR
-import chylex.hee.game.world.feature.stronghold.connection.StrongholdStairConnection
+import chylex.hee.game.world.feature.stronghold.StrongholdPieceType
+import chylex.hee.game.world.feature.stronghold.connection.StrongholdConnection
+import chylex.hee.game.world.feature.stronghold.connection.StrongholdConnectionType.STAIR
 import chylex.hee.game.world.structure.piece.IStructurePieceConnection
 import chylex.hee.system.util.Pos
 import net.minecraft.util.EnumFacing.NORTH
 import net.minecraft.util.EnumFacing.SOUTH
 
-class StrongholdCorridor_Stairs_Straight(file: String) : StrongholdAbstractPieceFromFile(file, CORRIDOR){
+class StrongholdCorridor_Stairs_Straight(file: String) : StrongholdAbstractPieceFromFile(file, StrongholdPieceType.CORRIDOR){
 	override val connections = arrayOf<IStructurePieceConnection>(
-		StrongholdStairConnection(Pos(centerX, maxY - 4, 0), NORTH),
-		StrongholdStairConnection(Pos(centerX, 0, maxZ), SOUTH)
+		StrongholdConnection(STAIR, Pos(centerX, maxY - 4, 0), NORTH),
+		StrongholdConnection(STAIR, Pos(centerX, 0, maxZ), SOUTH)
 	)
 }

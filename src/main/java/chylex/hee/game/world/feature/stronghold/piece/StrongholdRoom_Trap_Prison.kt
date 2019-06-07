@@ -4,9 +4,10 @@ import chylex.hee.game.entity.living.EntityMobSilverfish
 import chylex.hee.game.entity.technical.EntityTechnicalTrigger
 import chylex.hee.game.entity.technical.EntityTechnicalTrigger.ITriggerHandler
 import chylex.hee.game.entity.technical.EntityTechnicalTrigger.Types.STRONGHOLD_TRAP_PRISON
-import chylex.hee.game.world.feature.stronghold.StrongholdPieceType.ROOM
+import chylex.hee.game.world.feature.stronghold.StrongholdPieceType
 import chylex.hee.game.world.feature.stronghold.StrongholdPieces
-import chylex.hee.game.world.feature.stronghold.connection.StrongholdRoomConnection
+import chylex.hee.game.world.feature.stronghold.connection.StrongholdConnection
+import chylex.hee.game.world.feature.stronghold.connection.StrongholdConnectionType.ROOM
 import chylex.hee.game.world.structure.IStructureWorld
 import chylex.hee.game.world.structure.piece.IStructurePieceConnection
 import chylex.hee.game.world.structure.trigger.EntityStructureTrigger
@@ -39,7 +40,7 @@ import net.minecraft.world.World
 import java.util.Random
 import kotlin.math.min
 
-class StrongholdRoom_Trap_Prison(file: String) : StrongholdAbstractPieceFromFile(file, ROOM){
+class StrongholdRoom_Trap_Prison(file: String) : StrongholdAbstractPieceFromFile(file, StrongholdPieceType.ROOM){
 	class Trigger : ITriggerHandler{
 		private var spawnsLeft = -1
 		
@@ -112,8 +113,8 @@ class StrongholdRoom_Trap_Prison(file: String) : StrongholdAbstractPieceFromFile
 	}
 	
 	override val connections = arrayOf<IStructurePieceConnection>(
-		StrongholdRoomConnection(Pos(maxX, 0, maxZ - 2), EAST),
-		StrongholdRoomConnection(Pos(0, 0, maxZ - 2), WEST)
+		StrongholdConnection(ROOM, Pos(maxX, 0, maxZ - 2), EAST),
+		StrongholdConnection(ROOM, Pos(0, 0, maxZ - 2), WEST)
 	)
 	
 	override fun generate(world: IStructureWorld, instance: Instance){

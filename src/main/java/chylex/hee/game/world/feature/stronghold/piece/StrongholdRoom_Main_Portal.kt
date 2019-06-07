@@ -3,9 +3,10 @@ import chylex.hee.game.entity.living.EntityMobSilverfish
 import chylex.hee.game.entity.technical.EntityTechnicalTrigger
 import chylex.hee.game.entity.technical.EntityTechnicalTrigger.ITriggerHandler
 import chylex.hee.game.entity.technical.EntityTechnicalTrigger.Types.STRONGHOLD_GLOBAL
-import chylex.hee.game.world.feature.stronghold.StrongholdPieceType.ROOM
+import chylex.hee.game.world.feature.stronghold.StrongholdPieceType
 import chylex.hee.game.world.feature.stronghold.StrongholdPieces
-import chylex.hee.game.world.feature.stronghold.connection.StrongholdRoomConnection
+import chylex.hee.game.world.feature.stronghold.connection.StrongholdConnection
+import chylex.hee.game.world.feature.stronghold.connection.StrongholdConnectionType.ROOM
 import chylex.hee.game.world.structure.IStructureWorld
 import chylex.hee.game.world.structure.piece.IStructurePieceConnection
 import chylex.hee.game.world.structure.trigger.EntityStructureTrigger
@@ -29,7 +30,7 @@ import net.minecraft.world.World
 import java.util.Random
 import kotlin.math.min
 
-class StrongholdRoom_Main_Portal(file: String) : StrongholdAbstractPieceFromFile(file, ROOM){
+class StrongholdRoom_Main_Portal(file: String) : StrongholdAbstractPieceFromFile(file, StrongholdPieceType.ROOM){
 	class Spawner : ITriggerHandler{
 		override fun check(world: World): Boolean{
 			return !world.isRemote && world.difficulty != PEACEFUL
@@ -102,14 +103,14 @@ class StrongholdRoom_Main_Portal(file: String) : StrongholdAbstractPieceFromFile
 	override val extraWeightMultiplier = 4
 	
 	override val connections = arrayOf<IStructurePieceConnection>(
-		StrongholdRoomConnection(Pos(centerX, 0, 0), NORTH),
-		StrongholdRoomConnection(Pos(centerX, 6, 0), NORTH),
-		StrongholdRoomConnection(Pos(centerX, 0, maxZ), SOUTH),
-		StrongholdRoomConnection(Pos(centerX, 6, maxZ), SOUTH),
-		StrongholdRoomConnection(Pos(maxX, 0, centerZ), EAST),
-		StrongholdRoomConnection(Pos(maxX, 6, centerZ), EAST),
-		StrongholdRoomConnection(Pos(0, 0, centerZ), WEST),
-		StrongholdRoomConnection(Pos(0, 6, centerZ), WEST)
+		StrongholdConnection(ROOM, Pos(centerX, 0, 0), NORTH),
+		StrongholdConnection(ROOM, Pos(centerX, 6, 0), NORTH),
+		StrongholdConnection(ROOM, Pos(centerX, 0, maxZ), SOUTH),
+		StrongholdConnection(ROOM, Pos(centerX, 6, maxZ), SOUTH),
+		StrongholdConnection(ROOM, Pos(maxX, 0, centerZ), EAST),
+		StrongholdConnection(ROOM, Pos(maxX, 6, centerZ), EAST),
+		StrongholdConnection(ROOM, Pos(0, 0, centerZ), WEST),
+		StrongholdConnection(ROOM, Pos(0, 6, centerZ), WEST)
 	)
 	
 	override fun generate(world: IStructureWorld, instance: Instance){

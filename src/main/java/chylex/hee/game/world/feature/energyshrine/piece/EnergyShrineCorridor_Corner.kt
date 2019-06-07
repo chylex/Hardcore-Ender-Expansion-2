@@ -1,5 +1,6 @@
 package chylex.hee.game.world.feature.energyshrine.piece
-import chylex.hee.game.world.feature.energyshrine.connection.EnergyShrineCorridorConnection
+import chylex.hee.game.world.feature.energyshrine.connection.EnergyShrineConnection
+import chylex.hee.game.world.feature.energyshrine.connection.EnergyShrineConnectionType.CORRIDOR
 import chylex.hee.game.world.structure.IBlockPicker.Single.Air
 import chylex.hee.game.world.structure.IStructureWorld
 import chylex.hee.game.world.structure.piece.IStructurePieceConnection
@@ -15,8 +16,8 @@ class EnergyShrineCorridor_Corner(private val lit: Boolean) : EnergyShrineAbstra
 	override val size = Size(4, 6, 4)
 	
 	override val connections = arrayOf<IStructurePieceConnection>(
-		EnergyShrineCorridorConnection(Pos(size.centerX, 0, size.maxZ), SOUTH),
-		EnergyShrineCorridorConnection(Pos(0, 0, size.centerZ), WEST)
+		EnergyShrineConnection(CORRIDOR, Pos(size.centerX, 0, size.maxZ), SOUTH),
+		EnergyShrineConnection(CORRIDOR, Pos(0, 0, size.centerZ), WEST)
 	)
 	
 	override fun generate(world: IStructureWorld, instance: Instance){

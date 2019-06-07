@@ -1,6 +1,7 @@
 package chylex.hee.game.world.feature.energyshrine.piece
 import chylex.hee.game.world.feature.energyshrine.EnergyShrineBanners.BannerColors
-import chylex.hee.game.world.feature.energyshrine.connection.EnergyShrineRoomConnection
+import chylex.hee.game.world.feature.energyshrine.connection.EnergyShrineConnection
+import chylex.hee.game.world.feature.energyshrine.connection.EnergyShrineConnectionType.ROOM
 import chylex.hee.game.world.structure.IStructureWorld
 import chylex.hee.game.world.structure.piece.IStructurePieceConnection
 import chylex.hee.game.world.structure.trigger.BedStructureTrigger
@@ -15,7 +16,7 @@ import java.util.Random
 
 class EnergyShrineRoom_Secondary_Dormitory(file: String, cornerBlock: Block, bannerColors: BannerColors) : EnergyShrineRoom_Generic(file, cornerBlock, bannerColors){
 	override val connections = arrayOf<IStructurePieceConnection>(
-		EnergyShrineRoomConnection(Pos(3, 0, maxZ), SOUTH)
+		EnergyShrineConnection(ROOM, Pos(3, 0, maxZ), SOUTH)
 	)
 	
 	override fun generate(world: IStructureWorld, instance: Instance){

@@ -1,8 +1,9 @@
 package chylex.hee.game.world.feature.stronghold.piece
 import chylex.hee.game.block.util.FutureBlocks
-import chylex.hee.game.world.feature.stronghold.StrongholdPieceType.OTHER
+import chylex.hee.game.world.feature.stronghold.StrongholdPieceType
 import chylex.hee.game.world.feature.stronghold.StrongholdPieces
-import chylex.hee.game.world.feature.stronghold.connection.StrongholdDeadEndConnection
+import chylex.hee.game.world.feature.stronghold.connection.StrongholdConnection
+import chylex.hee.game.world.feature.stronghold.connection.StrongholdConnectionType.DEAD_END
 import chylex.hee.game.world.structure.IStructureWorld
 import chylex.hee.game.world.structure.piece.IStructurePieceConnection
 import chylex.hee.game.world.structure.trigger.FlowerPotStructureTrigger
@@ -19,9 +20,9 @@ import net.minecraft.util.EnumFacing.EAST
 import net.minecraft.util.EnumFacing.SOUTH
 import net.minecraft.util.EnumFacing.WEST
 
-class StrongholdRoom_DeadEnd_Shelves(file: String) : StrongholdAbstractPieceFromFile(file, OTHER){
+class StrongholdRoom_DeadEnd_Shelves(file: String) : StrongholdAbstractPieceFromFile(file, StrongholdPieceType.OTHER){
 	override val connections = arrayOf<IStructurePieceConnection>(
-		StrongholdDeadEndConnection(Pos(centerX, 0, maxZ), SOUTH)
+		StrongholdConnection(DEAD_END, Pos(centerX, 0, maxZ), SOUTH)
 	)
 	
 	override fun generate(world: IStructureWorld, instance: Instance){

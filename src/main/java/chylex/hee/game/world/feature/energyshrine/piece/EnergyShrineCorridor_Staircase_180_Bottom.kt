@@ -1,6 +1,8 @@
 package chylex.hee.game.world.feature.energyshrine.piece
-import chylex.hee.game.world.feature.energyshrine.connection.EnergyShrineStairBottomConnection
-import chylex.hee.game.world.feature.energyshrine.connection.EnergyShrineStairMiddleConnection
+import chylex.hee.game.world.feature.energyshrine.connection.EnergyShrineConnection
+import chylex.hee.game.world.feature.energyshrine.connection.EnergyShrineConnectionType.STAIR_BOTTOM
+import chylex.hee.game.world.feature.energyshrine.connection.EnergyShrineConnectionType.STAIR_MIDDLE
+import chylex.hee.game.world.structure.piece.IStructurePieceConnection
 import chylex.hee.game.world.util.PosXZ
 import chylex.hee.system.util.Pos
 import chylex.hee.system.util.nextFloat
@@ -12,9 +14,9 @@ import kotlin.math.roundToInt
 import kotlin.math.sin
 
 class EnergyShrineCorridor_Staircase_180_Bottom(file: String) : EnergyShrineCorridor_Staircase(file){
-	override val connections = arrayOf(
-		EnergyShrineStairMiddleConnection(Pos(0, maxY, 0), WEST),
-		EnergyShrineStairBottomConnection(Pos(maxX - 1, 0, maxZ), SOUTH)
+	override val connections = arrayOf<IStructurePieceConnection>(
+		EnergyShrineConnection(STAIR_MIDDLE, Pos(0, maxY, 0), WEST),
+		EnergyShrineConnection(STAIR_BOTTOM, Pos(maxX - 1, 0, maxZ), SOUTH)
 	)
 	
 	override fun nextRandomXZ(rand: Random, angle: Double): PosXZ{
