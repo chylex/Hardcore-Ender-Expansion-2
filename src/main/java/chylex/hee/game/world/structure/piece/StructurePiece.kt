@@ -28,15 +28,12 @@ abstract class StructurePiece : IStructurePiece, IStructureGenerator{
 	// Rotated connection
 	
 	private class RotatedStructurePieceConnection(private val original: IStructurePieceConnection, size: Size, rotation: Rotation) : IStructurePieceConnection{
+		override val type = original.type
 		override val offset = RotatedStructureWorld.rotatePos(original.offset, size, rotation)
 		override val facing = rotation.rotate(original.facing)!!
 		
 		override val isEvenWidth
 			get() = original.isEvenWidth
-		
-		override fun canBeAttachedTo(target: IStructurePieceConnection): Boolean{
-			return original.canBeAttachedTo((target as? RotatedStructurePieceConnection)?.original ?: target)
-		}
 		
 		fun matches(other: IStructurePieceConnection): Boolean{
 			return this === other || original === other
@@ -63,7 +60,7 @@ abstract class StructurePiece : IStructurePiece, IStructureGenerator{
 		
 		fun findAvailableConnections(targetConnection: IStructurePieceConnection): List<IStructurePieceConnection>{
 			val targetFacing = targetConnection.facing.opposite
-			return availableConnections.filter { it.facing == targetFacing && it.canBeAttachedTo(targetConnection) }
+			return availableConnections.filter { it.facing == targetFacing && it.type.canBeAttachedTo(targetConnection.type) }
 		}
 		
 		fun isConnectionUsed(connection: IStructurePieceConnection): Boolean{
