@@ -2,6 +2,7 @@ package chylex.hee.init
 import chylex.hee.HEE
 import chylex.hee.game.item.ItemEnergyOracle
 import chylex.hee.game.item.ItemSpatialDashGem
+import chylex.hee.game.recipe.NullRecipe
 import chylex.hee.game.recipe.RecipeBindingEssence
 import chylex.hee.game.recipe.RecipeEndPowderRepair
 import chylex.hee.game.recipe.RecipeJarODustExtract
@@ -9,6 +10,7 @@ import chylex.hee.game.recipe.RecipeScaleOfFreefallRepair
 import chylex.hee.game.recipe.RecipeVoidSalad
 import chylex.hee.system.IntegrityCheck
 import chylex.hee.system.Resource
+import chylex.hee.system.util.useVanillaName
 import net.minecraft.init.Blocks
 import net.minecraft.init.Items
 import net.minecraft.item.ItemStack
@@ -40,7 +42,12 @@ object ModRecipes{
 	@SubscribeEvent
 	fun onRegister(e: RegistryEvent.Register<IRecipe>){
 		with(e.registry as? IForgeRegistryModifiable<IRecipe> ?: return){
-			fun removeVanilla(name: String) = remove(Resource.Vanilla(name)) != null
+			fun removeVanilla(name: String): Boolean{
+				val removed = remove(Resource.Vanilla(name)) ?: return false
+				
+				register(NullRecipe().apply { useVanillaName(removed) })
+				return true
+			}
 			
 			IntegrityCheck.removedEnderChestRecipe = removeVanilla("ender_chest")
 			IntegrityCheck.removedPurpurRecipe = removeVanilla("purpur_block")
