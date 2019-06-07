@@ -23,6 +23,14 @@ abstract class StructurePiece : IStructurePiece, IStructureGenerator{
 	
 	protected abstract fun generate(world: IStructureWorld, instance: Instance)
 	
+	protected fun placeConnections(world: IStructureWorld, instance: Instance){
+		for(connection in connections){
+			if (instance.isConnectionUsed(connection)){
+				connection.type.placeConnection(world, connection)
+			}
+		}
+	}
+	
 	// TODO support rotation + mirror
 	
 	// Rotated connection
