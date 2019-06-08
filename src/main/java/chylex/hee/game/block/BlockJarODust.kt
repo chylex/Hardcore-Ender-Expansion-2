@@ -6,11 +6,13 @@ import chylex.hee.game.mechanics.dust.DustLayers.Side.TOP
 import chylex.hee.game.mechanics.dust.DustType
 import chylex.hee.system.util.NBTList.Companion.setList
 import chylex.hee.system.util.getListOfCompounds
+import chylex.hee.system.util.getState
 import chylex.hee.system.util.getTile
 import chylex.hee.system.util.heeTag
 import chylex.hee.system.util.heeTagOrNull
 import chylex.hee.system.util.setAir
 import chylex.hee.system.util.size
+import net.minecraft.block.Block
 import net.minecraft.block.ITileEntityProvider
 import net.minecraft.block.material.EnumPushReaction.DESTROY
 import net.minecraft.block.state.IBlockState
@@ -23,6 +25,7 @@ import net.minecraft.item.ItemStack
 import net.minecraft.tileentity.TileEntity
 import net.minecraft.util.BlockRenderLayer.TRANSLUCENT
 import net.minecraft.util.EnumFacing
+import net.minecraft.util.EnumFacing.UP
 import net.minecraft.util.EnumHand
 import net.minecraft.util.NonNullList
 import net.minecraft.util.math.AxisAlignedBB
@@ -57,7 +60,18 @@ class BlockJarODust(builder: BlockSimple.Builder) : BlockSimpleShaped(builder, A
 		}
 	}
 	
-	// Placement & drops
+	// Placement
+	
+	override fun canPlaceBlockAt(world: World, pos: BlockPos): Boolean{
+		return super.canPlaceBlockAt(world, pos) && pos.down().let { it.getState(world).isSideSolid(world, it, UP) }
+	}
+	
+	override fun neighborChanged(state: IBlockState, world: World, pos: BlockPos, neighborBlock: Block, neighborPos: BlockPos){
+		if (!pos.down().let { it.getState(world).isSideSolid(world, it, UP) }){
+			dropBlockAsItem(world, pos, state, 0)
+			pos.setAir(world)
+		}
+	}
 	
 	override fun onBlockPlacedBy(world: World, pos: BlockPos, state: IBlockState, placer: EntityLivingBase, stack: ItemStack){
 		val list = stack.heeTagOrNull?.getListOfCompounds("Layers")
@@ -66,6 +80,8 @@ class BlockJarODust(builder: BlockSimple.Builder) : BlockSimpleShaped(builder, A
 			pos.getTile<TileEntityJarODust>(world)?.layers?.deserializeNBT(list)
 		}
 	}
+	
+	// Drops
 	
 	private fun getDrop(world: IBlockAccess, pos: BlockPos): ItemStack?{
 		return pos.getTile<TileEntityJarODust>(world)?.let { tile -> ItemStack(this).also { setLayersInStack(it, tile.layers) } }
