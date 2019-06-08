@@ -23,6 +23,7 @@ import chylex.hee.game.block.BlockEnergyCluster
 import chylex.hee.game.block.BlockFallingObsidian
 import chylex.hee.game.block.BlockGloomrock
 import chylex.hee.game.block.BlockGloomtorch
+import chylex.hee.game.block.BlockGraveDirt
 import chylex.hee.game.block.BlockHumus
 import chylex.hee.game.block.BlockIgneousRockOre
 import chylex.hee.game.block.BlockInfusedGlass
@@ -107,6 +108,14 @@ object ModBlocks{
 		mapColor = MapColor.PURPLE
 	}
 	
+	private val buildGraveDirt = BlockSimple.Builder(Materials.SOLID_NO_TOOL).apply {
+		harvestTool = Pair(WOOD, SHOVEL)
+		harvestHardness = 1.25F
+		
+		soundType = SoundType.GROUND
+		mapColor = MapColor.DIRT
+	}
+	
 	private val buildInfusedGlass = BlockSimple.Builder(Material.GLASS).apply {
 		harvestTool = Pair(WOOD, PICKAXE)
 		harvestHardness = 0.5F
@@ -152,6 +161,7 @@ object ModBlocks{
 	
 	@JvmField val ETHEREAL_LANTERN = BlockSimple(buildEtherealLantern).apply { setup("ethereal_lantern") }
 	@JvmField val STONE_BRICK_WALL = BlockWallCustom(Blocks.STONEBRICK).apply { setup("stone_brick_wall") }
+	@JvmField val GRAVE_DIRT       = BlockGraveDirt(buildGraveDirt).apply { setup("grave_dirt") }
 	@JvmField val INFUSED_GLASS    = BlockInfusedGlass(buildInfusedGlass).apply { setup("infused_glass") }
 	@JvmField val VANTABLOCK       = BlockSimple(buildVantablock).apply { setup("vantablock") }
 	@JvmField val ENDIUM_BLOCK     = BlockEndium(buildEndiumBlock).apply { setup("endium_block") }
@@ -485,6 +495,7 @@ object ModBlocks{
 		with(e.registry){
 			register(ETHEREAL_LANTERN with basicItemBlock)
 			register(STONE_BRICK_WALL with basicItemBlock)
+			register(GRAVE_DIRT with metaItemBlock)
 			register(INFUSED_GLASS with basicItemBlock)
 			register(VANTABLOCK with basicItemBlock)
 			register(ENDIUM_BLOCK with basicItemBlock)

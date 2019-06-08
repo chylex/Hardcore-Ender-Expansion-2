@@ -23,10 +23,11 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent
 
 @EventBusSubscriber(modid = HEE.ID)
 object ModLoot{
+	lateinit var GRAVE_DIRT_LOOT: BlockLootTable
+	lateinit var HUMUS_EXPLODED: BlockLootTable
 	lateinit var DUSTY_STONE: BlockLootTable
 	lateinit var DUSTY_STONE_CRACKED: BlockLootTable
 	lateinit var DUSTY_STONE_DAMAGED: BlockLootTable
-	lateinit var HUMUS_EXPLODED: BlockLootTable
 	lateinit var ANCIENT_COBWEB: BlockLootTable
 	lateinit var END_POWDER_ORE: BlockLootTable
 	lateinit var STARDUST_ORE: BlockLootTable
@@ -47,10 +48,11 @@ object ModLoot{
 		LootFunctionManager.registerFunction(FunctionInfuse.Serializer)
 		LootFunctionManager.registerFunction(FunctionPickColoredGloomrock.Serializer)
 		
+		GRAVE_DIRT_LOOT = registerBlock("grave_dirt_loot")
+		HUMUS_EXPLODED = registerBlock("humus_exploded")
 		DUSTY_STONE = registerBlock("dusty_stone")
 		DUSTY_STONE_CRACKED = registerBlock("dusty_stone_cracked")
 		DUSTY_STONE_DAMAGED = registerBlock("dusty_stone_damaged")
-		HUMUS_EXPLODED = registerBlock("humus_exploded")
 		ANCIENT_COBWEB = registerBlock("ancient_cobweb")
 		END_POWDER_ORE = registerBlock("end_powder_ore")
 		STARDUST_ORE = registerBlock("stardust_ore")

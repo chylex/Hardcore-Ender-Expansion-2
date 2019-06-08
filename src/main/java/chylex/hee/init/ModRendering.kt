@@ -18,6 +18,7 @@ import chylex.hee.client.render.entity.layer.LayerEndermanHead
 import chylex.hee.client.util.MC
 import chylex.hee.game.block.BlockAbstractTable
 import chylex.hee.game.block.BlockDryVines
+import chylex.hee.game.block.BlockGraveDirt
 import chylex.hee.game.block.BlockTablePedestal
 import chylex.hee.game.block.BlockVoidPortalInner
 import chylex.hee.game.block.entity.TileEntityDarkChest
@@ -162,6 +163,10 @@ object ModRendering{
 		setModel(ModBlocks.DEATH_FLOWER_DECAYING, 7..10, Resource.Custom("death_flower_3"))
 		setModel(ModBlocks.DEATH_FLOWER_DECAYING, 11..13, Resource.Custom("death_flower_4"))
 		
+		setModel(ModBlocks.GRAVE_DIRT, BlockGraveDirt.Type.PLAIN.ordinal, variant = "full=false,type=plain")
+		setModel(ModBlocks.GRAVE_DIRT, BlockGraveDirt.Type.SPIDERLING.ordinal, variant = "full=false,type=spiderling")
+		setModel(ModBlocks.GRAVE_DIRT, BlockGraveDirt.Type.LOOT.ordinal, variant = "full=false,type=loot")
+		
 		setModel(ModBlocks.VOID_PORTAL_INNER, BlockVoidPortalInner.Type.values().indices)
 		
 		setModel(ModItems.VOID_SALAD, ItemVoidSalad.Type.DOUBLE.ordinal, Resource.Custom("void_void_salad"))
@@ -170,6 +175,7 @@ object ModRendering{
 		with(ForgeRegistries.ITEMS){
 			val skippedBlocks = arrayOf(
 				ModBlocks.DEATH_FLOWER_DECAYING,
+				ModBlocks.GRAVE_DIRT,
 				*tables
 			).map(Item::getItemFromBlock).toSet()
 			

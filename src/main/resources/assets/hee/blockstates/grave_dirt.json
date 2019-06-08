@@ -1,0 +1,32 @@
+{
+  "forge_marker": 1,
+  "defaults": {
+    "model": "hee:grave_dirt_top",
+    "textures": {
+      "particle": "hee:block/grave_dirt",
+      "all": "hee:block/grave_dirt",
+      "top": "hee:block/grave_dirt"
+    }
+  },
+  "variants": {
+    "full=false,type=plain": [{}],
+    "full=false,type=spiderling": [{}],
+    "full=false,type=loot": [
+      { "textures": { "top": "hee:block/grave_dirt_loot_1" } },
+      { "textures": { "top": "hee:block/grave_dirt_loot_1" } },
+      { "textures": { "top": "hee:block/grave_dirt_loot_2" } },
+      { "textures": { "top": "hee:block/grave_dirt_loot_2" } },
+      { "textures": { "top": "hee:block/grave_dirt_loot_3" } },
+      { "textures": { "top": "hee:block/grave_dirt_loot_3" } },
+      { "textures": { "top": "hee:block/grave_dirt_loot_4" } },
+      { "textures": { "top": "hee:block/grave_dirt_loot_5" } },
+      { "textures": { "top": "hee:block/grave_dirt_loot_6" } },
+      { "textures": { "top": "hee:block/grave_dirt" } },
+      { "textures": { "top": "hee:block/grave_dirt" } },
+      { "textures": { "top": "hee:block/grave_dirt" } }
+    ],
+    "full=true,type=plain": [{ "model": "cube_all" }],
+    "full=true,type=spiderling": [{ "model": "cube_all" }],
+    "full=true,type=loot": [{ "model": "cube_all" }]
+  }
+}
