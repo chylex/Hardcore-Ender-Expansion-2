@@ -9,6 +9,7 @@ import chylex.hee.game.loot.conditions.ConditionLooting
 import chylex.hee.game.loot.functions.FunctionInfuse
 import chylex.hee.game.loot.functions.FunctionPickColoredGloomrock
 import chylex.hee.game.loot.rng.RandomBiasedValueRange
+import chylex.hee.game.loot.rng.RandomRoundingValueRange
 import chylex.hee.system.Resource
 import net.minecraft.util.ResourceLocation
 import net.minecraft.world.storage.loot.LootPool
@@ -91,6 +92,7 @@ object ModLoot{
 							val parameters = value.split(';').iterator()
 							
 							pool.rolls = when(val type = parameters.next()){
+								"rounding" -> RandomRoundingValueRange(pool.rolls)
 								"biased" -> RandomBiasedValueRange(pool.rolls, parameters.next().toFloat(), parameters.next().toFloat())
 								else -> throw UnsupportedOperationException(type)
 							}
