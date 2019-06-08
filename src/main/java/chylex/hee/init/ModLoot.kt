@@ -87,9 +87,13 @@ object ModLoot{
 				
 				for((key, value) in parseParameters(pool)){
 					when(key){
-						"rolls_bias" -> {
-							val (highestChanceValue, biasSoftener) = value.split('~')
-							pool.rolls = RandomBiasedValueRange(pool.rolls, highestChanceValue.toFloat(), biasSoftener.toFloat())
+						"rolls_type" -> {
+							val parameters = value.split(';').iterator()
+							
+							pool.rolls = when(val type = parameters.next()){
+								"biased" -> RandomBiasedValueRange(pool.rolls, parameters.next().toFloat(), parameters.next().toFloat())
+								else -> throw UnsupportedOperationException(type)
+							}
 						}
 						
 						"sort_order" -> {

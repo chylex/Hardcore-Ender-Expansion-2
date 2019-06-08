@@ -18,7 +18,7 @@ class RandomBiasedValueRange(min: Float, max: Float, private val highestChanceVa
 import java.util.Random
 import chylex.hee.system.util.nextBiasedFloat
 import kotlin.math.roundToInt
-	
+
 val rand = Random()
 
 (1..100000).map {
@@ -31,11 +31,11 @@ val rand = Random()
 	
 	 */
 	
-	override fun generateFloat(rand: Random): Float{
-		return highestChanceValue + (rand.nextBiasedFloat(biasSoftener) * (max - highestChanceValue)) - (rand.nextBiasedFloat(biasSoftener) * (highestChanceValue - min))
-	}
-	
 	override fun generateInt(rand: Random): Int{
 		return (highestChanceValue + (rand.nextBiasedFloat(biasSoftener) * (0.5F + max - highestChanceValue)) - (rand.nextBiasedFloat(biasSoftener) * (0.5F + highestChanceValue - min))).roundToInt()
+	}
+	
+	override fun generateFloat(rand: Random): Float{
+		return highestChanceValue + (rand.nextBiasedFloat(biasSoftener) * (max - highestChanceValue)) - (rand.nextBiasedFloat(biasSoftener) * (highestChanceValue - min))
 	}
 }
