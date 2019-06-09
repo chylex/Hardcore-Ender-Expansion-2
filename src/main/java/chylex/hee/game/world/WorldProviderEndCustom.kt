@@ -31,6 +31,8 @@ class WorldProviderEndCustom : WorldProviderEnd(){
 		fun register(){
 			DimensionType.THE_END.clazz = WorldProviderEndCustom::class.java
 		}
+		
+		var debugMode = false
 	}
 	
 	private var clientProxy: ModCommonProxy? = null
@@ -81,7 +83,9 @@ class WorldProviderEndCustom : WorldProviderEnd(){
 	// Behavior properties
 	
 	override fun onWorldUpdateEntities(){ // stops triggering a few seconds after all players leave the dimension (if still loaded)
-		TerritoryVoid.onWorldTick(world)
+		if (!debugMode){
+			TerritoryVoid.onWorldTick(world)
+		}
 	}
 	
 	override fun createWorldBorder() = WorldBorderNull()
@@ -138,6 +142,10 @@ class WorldProviderEndCustom : WorldProviderEnd(){
 	
 	@SideOnly(Side.CLIENT)
 	override fun doesXZShowFog(x: Int, z: Int): Boolean{
+		if (debugMode){
+			return false
+		}
+		
 		GL.setFog(EXP2)
 		GL.setFogDensity(clientEnvironment?.fogDensity?.times(EnvironmentRenderer.currentFogDensityMp) ?: 0F) // TODO adjust fog density by render distance
 		return true
