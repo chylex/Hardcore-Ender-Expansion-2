@@ -20,6 +20,7 @@ import chylex.hee.game.world.structure.piece.StructureBuild.AddMode
 import chylex.hee.game.world.structure.piece.StructureBuild.AddMode.APPEND
 import chylex.hee.game.world.structure.piece.StructureBuild.AddMode.MERGE
 import chylex.hee.game.world.structure.piece.StructureBuild.PositionedPiece
+import chylex.hee.game.world.util.Transform
 import chylex.hee.system.collection.MutableWeightedList
 import chylex.hee.system.collection.WeightedList
 import chylex.hee.system.util.nextInt
@@ -34,7 +35,7 @@ import kotlin.math.min
 
 object StrongholdBuilder : IStructureBuilder{
 	fun buildWithEyeOfEnderTarget(rand: Random): Pair<IStructureBuild, BlockPos?>?{
-		val build = StructureBuild(STRUCTURE_SIZE, rand.nextItem(PIECES_START).StrongholdInst(distanceToPortal = 0, facingFromPortal = null, rotation = rand.nextItem()))
+		val build = StructureBuild(STRUCTURE_SIZE, rand.nextItem(PIECES_START).StrongholdInst(distanceToPortal = 0, facingFromPortal = null, transform = Transform.random(rand)))
 		val process = Process(build, rand)
 		
 		// normal rooms

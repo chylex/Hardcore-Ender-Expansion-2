@@ -1,5 +1,6 @@
 package chylex.hee.game.world.structure.trigger
 import chylex.hee.game.world.structure.IStructureTrigger
+import chylex.hee.game.world.util.Transform
 import chylex.hee.system.util.getTile
 import chylex.hee.system.util.setState
 import chylex.hee.system.util.with
@@ -11,17 +12,16 @@ import net.minecraft.init.Blocks
 import net.minecraft.item.EnumDyeColor
 import net.minecraft.tileentity.TileEntityBed
 import net.minecraft.util.EnumFacing
-import net.minecraft.util.Rotation
 import net.minecraft.util.math.BlockPos
 import net.minecraft.world.World
 
 class BedStructureTrigger(private val facing: EnumFacing, private val color: EnumDyeColor) : IStructureTrigger{
-	override fun realize(world: World, pos: BlockPos, rotation: Rotation){
-		val rotatedFacing = rotation.rotate(facing)
-		val baseState = Blocks.BED.withFacing(rotatedFacing).with(BlockBed.OCCUPIED, false)
+	override fun realize(world: World, pos: BlockPos, transform: Transform){
+		val transformedFacing = transform(facing)
+		val baseState = Blocks.BED.withFacing(transformedFacing).with(BlockBed.OCCUPIED, false)
 		
 		val footPos = pos
-		val headPos = footPos.offset(rotatedFacing)
+		val headPos = footPos.offset(transformedFacing)
 		
 		footPos.setState(world, baseState.with(BlockBed.PART, FOOT))
 		headPos.setState(world, baseState.with(BlockBed.PART, HEAD))

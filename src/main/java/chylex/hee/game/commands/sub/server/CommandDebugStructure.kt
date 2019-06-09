@@ -6,11 +6,10 @@ import chylex.hee.game.world.structure.IBlockPicker.Single
 import chylex.hee.game.world.structure.IStructurePieceFromFile
 import chylex.hee.game.world.structure.file.StructureFile
 import chylex.hee.game.world.structure.file.StructureFiles
-import chylex.hee.game.world.structure.world.RotatedStructureWorld
+import chylex.hee.game.world.structure.world.TransformedStructureWorld
 import chylex.hee.game.world.structure.world.WorldToStructureWorldAdapter
 import chylex.hee.game.world.util.PosXZ
-import chylex.hee.game.world.util.Size
-import chylex.hee.system.util.Rotation4
+import chylex.hee.game.world.util.Transform
 import net.minecraft.command.ICommandSender
 import net.minecraft.init.Blocks
 import net.minecraft.server.MinecraftServer
@@ -42,45 +41,48 @@ internal object CommandDebugStructure : ISubCommand{
 			"pieces" -> {
 				var x = 0
 				
-				val rotations = when(args.getOrNull(2)){
-					"norots" -> listOf(Rotation.NONE)
-					null -> Rotation4
+				val transforms = when(args.getOrNull(2)){
+					"notfs" -> listOf(Transform.NONE)
+					null -> Transform.ALL
 					else -> return
 				}
 				
 				for(piece in structure.ALL_PIECES){
 					val size = piece.size
 					
-					for((index, rotation) in rotations.withIndex()){
+					for((index, transform) in transforms.withIndex()){
 						val world = WorldToStructureWorldAdapter(sender.entityWorld, sender.entityWorld.rand, sender.position.add(x, index * (size.y + 2), -size.centerZ))
-						val rotatedWorld = RotatedStructureWorld(world, size, rotation)
+						val transformedWorld = TransformedStructureWorld(world, size, transform)
 						
-						rotatedWorld.placeCube(size.minPos, size.maxPos, Single(Blocks.BEDROCK))
-						rotatedWorld.apply(piece::generate).finalize()
+						transformedWorld.placeCube(size.minPos, size.maxPos, Single(Blocks.BEDROCK))
+						transformedWorld.apply(piece::generate).finalize()
 					}
 					
-					x += rotations.map(size::rotate).map(Size::x).max()!! + 2
+					x += transforms.map { it(size).x }.max()!! + 2
 				}
 			}
 			
 			"piecesdev" -> {
 				var x = 0
 				
-				val rotation = when(args.getOrElse(2){ "0" }){
-					"0" -> Rotation.NONE
-					"90" -> Rotation.CLOCKWISE_90
-					"180" -> Rotation.CLOCKWISE_180
-					"270" -> Rotation.COUNTERCLOCKWISE_90
+				val transformArg = args.getOrElse(2){ "0" }
+				val mirror = transformArg[0] == 'M'
+				
+				val transform = when(transformArg.trimStart('M')){
+					"0" -> Transform(Rotation.NONE, mirror)
+					"90" -> Transform(Rotation.CLOCKWISE_90, mirror)
+					"180" -> Transform(Rotation.CLOCKWISE_180, mirror)
+					"270" -> Transform(Rotation.COUNTERCLOCKWISE_90, mirror)
 					else -> return
 				}
 				
 				for(piece in structure.ALL_PIECES){
 					if (piece is IStructurePieceFromFile){
 						val world = WorldToStructureWorldAdapter(sender.entityWorld, sender.entityWorld.rand, sender.position.add(x, 0, -piece.size.centerZ))
-						val rotatedWorld = RotatedStructureWorld(world, piece.size, rotation)
+						val transformedWorld = TransformedStructureWorld(world, piece.size, transform)
 						
-						StructureFile.spawn(rotatedWorld, piece, structure.PALETTE)
-						x += piece.size.rotate(rotation).x + 2
+						StructureFile.spawn(transformedWorld, piece, structure.PALETTE)
+						x += transform(piece.size).x + 2
 					}
 				}
 			}

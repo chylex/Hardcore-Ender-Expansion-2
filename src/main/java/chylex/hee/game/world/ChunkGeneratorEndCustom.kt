@@ -2,12 +2,12 @@ package chylex.hee.game.world
 import chylex.hee.game.world.generation.TerritoryGenerationCache
 import chylex.hee.game.world.territory.TerritoryInstance
 import chylex.hee.game.world.territory.storage.TerritoryGlobalStorage
+import chylex.hee.game.world.util.Transform
 import chylex.hee.system.util.Pos
 import chylex.hee.system.util.component1
 import chylex.hee.system.util.component2
 import net.minecraft.entity.EnumCreatureType
 import net.minecraft.init.Biomes
-import net.minecraft.util.Rotation
 import net.minecraft.util.math.BlockPos
 import net.minecraft.world.World
 import net.minecraft.world.biome.Biome
@@ -81,7 +81,7 @@ class ChunkGeneratorEndCustom(private val world: World) : IChunkGenerator{
 			val blockOffset = pos.subtract(internalOffset)
 			
 			if (blockOffset.x in 0..15 && blockOffset.z in 0..15){
-				trigger.realize(world, startOffset.add(blockOffset), Rotation.NONE)
+				trigger.realize(world, startOffset.add(blockOffset), Transform.NONE)
 			}
 		}
 	}

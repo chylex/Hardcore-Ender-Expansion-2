@@ -1,5 +1,7 @@
 package chylex.hee.game.world.structure.piece
 import chylex.hee.game.world.structure.IStructureWorld
+import chylex.hee.game.world.structure.piece.IStructurePieceConnection.AlignmentType.EVEN
+import chylex.hee.game.world.structure.piece.IStructurePieceConnection.AlignmentType.EVEN_MIRRORED
 import chylex.hee.game.world.structure.piece.StructureBuild.AddMode.APPEND
 import chylex.hee.game.world.structure.piece.StructureBuild.AddMode.MERGE
 import chylex.hee.game.world.structure.piece.StructurePiece.Instance
@@ -30,11 +32,7 @@ class StructureBuild<T : MutableInstance>(val size: Size, startingPiece: Positio
 	val generatedPieces: List<PositionedPiece<T>> = pieces
 	
 	fun addPiece(newPiece: T, newPieceConnection: IStructurePieceConnection, targetPiece: PositionedPiece<T>, targetPieceConnection: IStructurePieceConnection, mode: AddMode = APPEND): PositionedPiece<T>?{
-		val alignedPos = targetPiece.offset
-			.add(targetPieceConnection.offset)
-			.offset(targetPieceConnection.facing, if (mode == MERGE) 0 else 1)
-			.subtract(newPieceConnection.offset)
-			.offset(targetPieceConnection.facing.rotateY(), if (targetPieceConnection.isEvenWidth) 1 else 0)
+		val alignedPos = targetPiece.offset.add(alignConnections(newPieceConnection, targetPieceConnection, mode))
 		
 		val addedPiece = PositionedPiece(newPiece, alignedPos)
 		val addedBox = addedPiece.pieceBox
@@ -55,6 +53,26 @@ class StructureBuild<T : MutableInstance>(val size: Size, startingPiece: Positio
 		}
 		
 		return null
+	}
+	
+	private fun alignConnections(newPieceConnection: IStructurePieceConnection, targetPieceConnection: IStructurePieceConnection, mode: AddMode): BlockPos{
+		val newWidth = newPieceConnection.alignment
+		val targetWidth = targetPieceConnection.alignment
+		
+		val targetFacing = targetPieceConnection.facing
+		val unalignedPos = targetPieceConnection.offset.offset(targetFacing, if (mode == MERGE) 0 else 1).subtract(newPieceConnection.offset)
+		
+		return when{
+			targetWidth == EVEN && newWidth == EVEN ->
+				unalignedPos.offset(targetFacing.rotateY(), 1)
+			
+			targetWidth == EVEN_MIRRORED && newWidth == EVEN_MIRRORED ->
+				unalignedPos.offset(targetFacing.rotateYCCW(), 1)
+			
+			else ->
+				unalignedPos
+		}
+		
 	}
 	
 	fun beginChain(){

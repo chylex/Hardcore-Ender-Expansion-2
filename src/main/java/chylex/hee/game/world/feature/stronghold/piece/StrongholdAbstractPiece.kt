@@ -4,9 +4,9 @@ import chylex.hee.game.world.feature.stronghold.StrongholdPieceType.CORRIDOR
 import chylex.hee.game.world.feature.stronghold.StrongholdPieces
 import chylex.hee.game.world.structure.IStructureWorld
 import chylex.hee.game.world.structure.piece.StructurePiece
+import chylex.hee.game.world.util.Transform
 import chylex.hee.system.util.ceilToInt
 import net.minecraft.util.EnumFacing
-import net.minecraft.util.Rotation
 import kotlin.math.pow
 
 abstract class StrongholdAbstractPiece : StructurePiece(){
@@ -20,7 +20,7 @@ abstract class StrongholdAbstractPiece : StructurePiece(){
 		placeConnections(world, instance)
 	}
 	
-	inner class StrongholdInst(val distanceToPortal: Int, val facingFromPortal: EnumFacing?, rotation: Rotation) : MutableInstance(rotation){
+	inner class StrongholdInst(val distanceToPortal: Int, val facingFromPortal: EnumFacing?, transform: Transform) : MutableInstance(transform){
 		private val weightMultiplier = (type.weightMultiplier * extraWeightMultiplier) / (distanceToPortal + 1F).pow(0.2F)
 		
 		val type

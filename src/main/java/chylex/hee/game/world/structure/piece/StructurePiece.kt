@@ -2,19 +2,19 @@ package chylex.hee.game.world.structure.piece
 import chylex.hee.game.world.structure.IStructureGenerator
 import chylex.hee.game.world.structure.IStructurePiece
 import chylex.hee.game.world.structure.IStructureWorld
-import chylex.hee.game.world.structure.world.RotatedStructureWorld
+import chylex.hee.game.world.structure.world.TransformedStructureWorld
 import chylex.hee.game.world.util.Size
+import chylex.hee.game.world.util.Transform
 import chylex.hee.system.util.with
 import net.minecraft.block.BlockColored
 import net.minecraft.init.Blocks
 import net.minecraft.item.EnumDyeColor
-import net.minecraft.util.Rotation
 
 abstract class StructurePiece : IStructurePiece, IStructureGenerator{
 	protected abstract val connections: Array<IStructurePieceConnection>
 	
 	final override fun generate(world: IStructureWorld){
-		generate(world, MutableInstance(Rotation.NONE).apply { connections.forEach { useConnection(it, MutableInstance(Rotation.NONE)) } })
+		generate(world, MutableInstance(Transform.NONE).apply { connections.forEach { useConnection(it, MutableInstance(Transform.NONE)) } })
 		
 		for(connection in connections){
 			world.setState(connection.offset, Blocks.WOOL.with(BlockColored.COLOR, EnumDyeColor.values()[connection.facing.index - 2]))
@@ -31,17 +31,14 @@ abstract class StructurePiece : IStructurePiece, IStructureGenerator{
 		}
 	}
 	
-	// TODO support rotation + mirror
+	// Transformed connection
 	
-	// Rotated connection
-	
-	private class RotatedStructurePieceConnection(private val original: IStructurePieceConnection, size: Size, rotation: Rotation) : IStructurePieceConnection{
+	private class TransformedStructurePieceConnection(private val original: IStructurePieceConnection, size: Size, transform: Transform) : IStructurePieceConnection{
 		override val type = original.type
-		override val offset = RotatedStructureWorld.rotatePos(original.offset, size, rotation)
-		override val facing = rotation.rotate(original.facing)!!
 		
-		override val isEvenWidth
-			get() = original.isEvenWidth
+		override val offset = transform(original.offset, size)
+		override val facing = transform(original.facing)
+		override val alignment = if (transform.mirror) original.alignment.mirrored else original.alignment
 		
 		fun matches(other: IStructurePieceConnection): Boolean{
 			return this === other || original === other
@@ -54,10 +51,10 @@ abstract class StructurePiece : IStructurePiece, IStructureGenerator{
 	
 	// Frozen instance
 	
-	open inner class Instance private constructor(private val rotation: Rotation, private val availableConnections: List<RotatedStructurePieceConnection>) : IStructureGenerator{
-		constructor(rotation: Rotation) : this(rotation, this@StructurePiece.connections.map { RotatedStructurePieceConnection(it, this@StructurePiece.size, rotation) }.toMutableList())
+	open inner class Instance private constructor(private val transform: Transform, private val availableConnections: List<TransformedStructurePieceConnection>) : IStructureGenerator{
+		constructor(transform: Transform) : this(transform, this@StructurePiece.connections.map { TransformedStructurePieceConnection(it, this@StructurePiece.size, transform) }.toMutableList())
 		
-		final override val size = this@StructurePiece.size.rotate(rotation)
+		final override val size = transform(this@StructurePiece.size)
 		
 		val hasAvailableConnections
 			get() = availableConnections.isNotEmpty()
@@ -76,19 +73,19 @@ abstract class StructurePiece : IStructurePiece, IStructureGenerator{
 		}
 		
 		fun freeze(): Instance{
-			return Instance(rotation, availableConnections.toList())
+			return Instance(transform, availableConnections.toList())
 		}
 		
 		final override fun generate(world: IStructureWorld){
-			this@StructurePiece.generate(RotatedStructureWorld(world, this@StructurePiece.size, rotation), this)
+			this@StructurePiece.generate(TransformedStructureWorld(world, this@StructurePiece.size, transform), this)
 		}
 	}
 	
 	// Mutable instance
 	
-	open inner class MutableInstance(rotation: Rotation) : Instance(rotation){
-		private val availableConnections = findAvailableConnections() as MutableList<RotatedStructurePieceConnection> // ugly implementation detail
-		private val usedConnections = mutableMapOf<RotatedStructurePieceConnection, MutableInstance>()
+	open inner class MutableInstance(transform: Transform) : Instance(transform){
+		private val availableConnections = findAvailableConnections() as MutableList<TransformedStructurePieceConnection> // ugly implementation detail
+		private val usedConnections = mutableMapOf<TransformedStructurePieceConnection, MutableInstance>()
 		
 		fun useConnection(connection: IStructurePieceConnection, neighbor: MutableInstance){
 			val index = availableConnections.indexOfFirst { it.matches(connection) }

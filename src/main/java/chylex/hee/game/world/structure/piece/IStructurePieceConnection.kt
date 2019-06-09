@@ -6,8 +6,16 @@ interface IStructurePieceConnection{
 	val type: IStructurePieceConnectionType
 	val offset: BlockPos
 	val facing: EnumFacing
+	val alignment: AlignmentType
 	
-	@JvmDefault
-	val isEvenWidth
-		get() = false
+	enum class AlignmentType{
+		ODD, EVEN, EVEN_MIRRORED;
+		
+		val mirrored
+			get() = when(this){
+				ODD -> ODD
+				EVEN -> EVEN_MIRRORED
+				EVEN_MIRRORED -> EVEN
+			}
+	}
 }

@@ -12,6 +12,7 @@ import chylex.hee.game.world.structure.piece.StructureBuild.PositionedPiece
 import chylex.hee.game.world.structure.piece.StructurePiece.MutableInstance
 import chylex.hee.game.world.util.Size.Alignment.CENTER
 import chylex.hee.game.world.util.Size.Alignment.MAX
+import chylex.hee.game.world.util.Transform
 import chylex.hee.system.util.nextInt
 import chylex.hee.system.util.nextItem
 import chylex.hee.system.util.removeItemOrNull
@@ -22,7 +23,7 @@ object EnergyShrineBuilder : IStructureBuilder{
 		val remainingRooms = EnergyShrinePieces.generateRoomConfiguration(rand, targetMainPathRoomAmount = rand.nextInt(3, 4))
 		val remainingCorridors = EnergyShrinePieces.generateCorridorConfiguration(rand, remainingRooms)
 		
-		val startingPiece = rand.nextItem(PIECES_START).MutableInstance(rotation = rand.nextItem())
+		val startingPiece = rand.nextItem(PIECES_START).MutableInstance(Transform.random(rand))
 		val startingPiecePos = STRUCTURE_SIZE.getPos(CENTER, MAX, CENTER).subtract(startingPiece.size.getPos(CENTER, MAX, CENTER)).down()
 		
 		val build = StructureBuild(STRUCTURE_SIZE, PositionedPiece(startingPiece, startingPiecePos))
