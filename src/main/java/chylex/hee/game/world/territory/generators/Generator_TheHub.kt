@@ -301,7 +301,7 @@ object Generator_TheHub : ITerritoryGenerator{
 						rotation = rotation.scaleY(-0.6)
 					}
 					
-					if (rand.nextInt(5) == 0){
+					if (rand.nextInt(5) == 0 && world.isInside(pos)){
 						randomPositions.add(pos)
 					}
 				}

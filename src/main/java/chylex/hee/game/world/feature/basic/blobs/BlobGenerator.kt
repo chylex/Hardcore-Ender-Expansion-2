@@ -59,7 +59,7 @@ class BlobGenerator(private val patterns: WeightedList<BlobPattern>){
 		val size = blobWorld.worldSize
 		
 		for(pos in size.minPos.allInBoxMutable(size.maxPos)){
-			if (blobWorld.getBlock(pos) === Blocks.END_STONE && Facing6.count { blobWorld.getState(pos.offset(it)) === SCAFFOLDING } >= adjacentAirCount){
+			if (blobWorld.getBlock(pos) === Blocks.END_STONE && Facing6.count { facing -> pos.offset(facing).let { !blobWorld.isInside(it) || blobWorld.getState(it) === SCAFFOLDING } } >= adjacentAirCount){
 				blobWorld.setState(pos, SCAFFOLDING)
 			}
 		}

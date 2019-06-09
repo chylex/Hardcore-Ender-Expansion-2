@@ -20,9 +20,13 @@ class OreGenerator(
 		
 		val min = bounds.min
 		val max = bounds.max
-		val size = bounds.size
+		val (sizeX, _, sizeZ) = bounds.size
 		
-		for(chunkX in 0 until size.x step chunkSize) for(chunkZ in 0 until size.z step chunkSize){
+		if (sizeX % chunkSize != 0 || sizeZ % chunkSize != 0){
+			throw IllegalArgumentException("bounding box dimensions (X = $sizeX, Z = $sizeZ) must be multiples of chunk size ($chunkSize)")
+		}
+		
+		for(chunkX in 0 until sizeX step chunkSize) for(chunkZ in 0 until sizeZ step chunkSize){
 			var clustersLeft = clustersPerChunk(rand)
 			
 			for(attempt in 1..attemptsPerChunk){
