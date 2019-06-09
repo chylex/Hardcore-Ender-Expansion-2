@@ -46,7 +46,7 @@ object TerritoryRenderer{
 		if (e.phase == Phase.START){
 			val player = MC.player
 			
-			if (player != null && player.world.provider is WorldProviderEndCustom){
+			if (player != null && player.world.provider is WorldProviderEndCustom && player.ticksExisted > 0){
 				Void.tick(player)
 				Title.tick()
 				
