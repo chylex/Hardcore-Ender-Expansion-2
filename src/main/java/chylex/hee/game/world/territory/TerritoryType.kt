@@ -1,5 +1,7 @@
 package chylex.hee.game.world.territory
+import chylex.hee.game.world.territory.descriptions.Territory_ForgottenTombs
 import chylex.hee.game.world.territory.descriptions.Territory_TheHub
+import chylex.hee.game.world.territory.generators.Generator_ForgottenTombs
 import chylex.hee.game.world.territory.generators.Generator_TheHub
 import chylex.hee.game.world.util.Size
 import kotlin.math.abs
@@ -21,10 +23,10 @@ enum class TerritoryType(
 	
 	FORGOTTEN_TOMBS(
 		title  = "forgotten_tombs",
-		desc   = Territory_TheHub, // TODO
-		gen    = Generator_TheHub, // TODO
+		desc   = Territory_ForgottenTombs,
+		gen    = Generator_ForgottenTombs,
 		chunks = 28,
-		height = 0 until 256
+		height = 64 until 256
 	);
 	
 	companion object{
