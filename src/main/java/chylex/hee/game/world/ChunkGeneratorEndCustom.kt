@@ -22,7 +22,7 @@ class ChunkGeneratorEndCustom(private val world: World) : IChunkGenerator{
 	// Instances
 	
 	private fun getInstance(chunkX: Int, chunkZ: Int): TerritoryInstance?{
-		return TerritoryInstance.fromPos((chunkX * 16) + 8, (chunkZ * 16) + 8)?.takeIf { it.generatesChunk(chunkX, chunkZ) }
+		return TerritoryInstance.fromPos((chunkX * 16) + 8, (chunkZ * 16) + 8)
 	}
 	
 	private fun getInternalOffset(chunkX: Int, chunkZ: Int, instance: TerritoryInstance): BlockPos{
@@ -48,30 +48,40 @@ class ChunkGeneratorEndCustom(private val world: World) : IChunkGenerator{
 	
 	private fun primeChunk(chunkX: Int, chunkZ: Int) = ChunkPrimer().apply {
 		val instance = getInstance(chunkX, chunkZ) ?: return@apply
-		val constructed = territoryCache.get(instance).first
-		val height = constructed.worldSize.y
+		val territory = instance.territory
 		
-		val defaultState = instance.territory.gen.defaultBlock.defaultState
-		val blockOffsetY = instance.territory.height.first
-		val internalOffset = getInternalOffset(chunkX, chunkZ, instance)
+		val defaultState = territory.gen.defaultBlock.defaultState
 		
-		for(blockX in 0..15) for(blockZ in 0..15){
-			for(blockY in 0 until blockOffsetY){
-				setBlockState(blockX, blockY, blockZ, defaultState)
+		if (instance.generatesChunk(chunkX, chunkZ)){
+			val constructed = territoryCache.get(instance).first
+			val height = constructed.worldSize.y
+			
+			val bottomOffset = territory.height.first
+			val internalOffset = getInternalOffset(chunkX, chunkZ, instance)
+			
+			for(blockX in 0..15) for(blockZ in 0..15){
+				for(blockY in 0 until bottomOffset){
+					setBlockState(blockX, blockY, blockZ, defaultState)
+				}
+				
+				for(blockY in height until 256){
+					setBlockState(blockX, blockY, blockZ, defaultState)
+				}
 			}
 			
-			for(blockY in height until 256){
-				setBlockState(blockX, blockY, blockZ, defaultState)
+			for(blockY in 0 until height) for(blockX in 0..15) for(blockZ in 0..15){
+				setBlockState(blockX, bottomOffset + blockY, blockZ, constructed.getState(internalOffset.add(blockX, blockY, blockZ)))
 			}
 		}
-		
-		for(blockY in 0 until height) for(blockX in 0..15) for(blockZ in 0..15){
-			setBlockState(blockX, blockOffsetY + blockY, blockZ, constructed.getState(internalOffset.add(blockX, blockY, blockZ)))
+		else{
+			for(blockY in 0 until 256) for(blockX in 0..15) for(blockZ in 0..15){
+				setBlockState(blockX, blockY, blockZ, defaultState)
+			}
 		}
 	}
 	
 	override fun populate(chunkX: Int, chunkZ: Int){ // TODO disable forge worldgen
-		val instance = getInstance(chunkX, chunkZ) ?: return
+		val instance = getInstance(chunkX, chunkZ)?.takeIf { it.generatesChunk(chunkX, chunkZ) } ?: return
 		val constructed = territoryCache.get(instance).first
 		
 		val startOffset = Pos(chunkX * 16, instance.territory.height.first, chunkZ * 16)
