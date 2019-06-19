@@ -20,6 +20,7 @@ import chylex.hee.game.block.BlockEndermanHead
 import chylex.hee.game.block.BlockEndersol
 import chylex.hee.game.block.BlockEndium
 import chylex.hee.game.block.BlockEnergyCluster
+import chylex.hee.game.block.BlockEternalFire
 import chylex.hee.game.block.BlockFallingObsidian
 import chylex.hee.game.block.BlockGloomrock
 import chylex.hee.game.block.BlockGloomtorch
@@ -467,6 +468,14 @@ object ModBlocks{
 	
 	// Blocks: Utilities
 	
+	private val buildEternalFire = BlockSimple.Builder(Material.FIRE).apply {
+		harvestHardness = 0F
+		miningStats = false
+		
+		lightLevel = 15
+		soundType = SoundType.CLOTH
+	}
+	
 	private val buildScaffolding = BlockSimple.Builder(Materials.SCAFFOLDING).apply {
 		makeIndestructible()
 		
@@ -474,7 +483,8 @@ object ModBlocks{
 		mapColor = MapColor.AIR
 	}
 	
-	@JvmField val SCAFFOLDING = BlockScaffolding(buildScaffolding).apply { setup("scaffolding") }
+	@JvmField val ETERNAL_FIRE = BlockEternalFire(buildEternalFire).apply { setup("eternal_fire", inCreativeTab = false) }
+	@JvmField val SCAFFOLDING  = BlockScaffolding(buildScaffolding).apply { setup("scaffolding") }
 	
 	// Registry
 	
@@ -588,6 +598,7 @@ object ModBlocks{
 			register(TABLE_BASE with metaItemBlock)
 			register(ACCUMULATION_TABLE with metaItemBlock)
 			
+			register(ETERNAL_FIRE)
 			register(SCAFFOLDING with basicItemBlock)
 		}
 		

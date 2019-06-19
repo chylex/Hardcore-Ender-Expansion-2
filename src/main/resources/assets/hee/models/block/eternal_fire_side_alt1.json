@@ -1,0 +1,7 @@
+{
+    "parent": "block/fire_side_alt",
+    "textures": {
+        "particle": "hee:block/eternal_fire_1",
+        "fire": "hee:block/eternal_fire_1"
+    }
+}
