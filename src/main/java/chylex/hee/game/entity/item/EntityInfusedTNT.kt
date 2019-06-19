@@ -1,5 +1,6 @@
 package chylex.hee.game.entity.item
 import chylex.hee.game.block.BlockSimple.Builder.Companion.INDESTRUCTIBLE_HARDNESS
+import chylex.hee.game.item.ItemFlintAndInfernium
 import chylex.hee.game.item.infusion.Infusion.FIRE
 import chylex.hee.game.item.infusion.Infusion.HARMLESS
 import chylex.hee.game.item.infusion.Infusion.MINING
@@ -70,15 +71,17 @@ class EntityInfusedTNT : EntityTNTPrimed{
 	constructor(world: World) : super(world)
 	
 	@Suppress("NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS") // UPDATE
-	constructor(world: World, pos: BlockPos, infusions: InfusionList, igniter: EntityLivingBase?) : super(world, pos.x + 0.5, pos.y.toDouble(), pos.z + 0.5, igniter){
+	constructor(world: World, pos: BlockPos, infusions: InfusionList, igniter: EntityLivingBase?, infernium: Boolean) : super(world, pos.x + 0.5, pos.y.toDouble(), pos.z + 0.5, igniter){
 		loadInfusions(infusions)
+		this.hasInferniumPower = infernium
 	}
 	
-	constructor(world: World, pos: BlockPos, infusions: InfusionList, explosion: Explosion) : this(world, pos, infusions, explosion.explosivePlacedBy){
+	constructor(world: World, pos: BlockPos, infusions: InfusionList, explosion: Explosion) : this(world, pos, infusions, explosion.explosivePlacedBy, infernium = false){
 		fuse = rand.nextInt(fuse / 4) + (fuse / 8)
 	}
 	
 	private var infusions = InfusionList.EMPTY
+	private var hasInferniumPower = false
 	private var hasPhasedIntoWall = false
 	
 	private fun loadInfusions(infusions: InfusionList){
@@ -228,7 +231,7 @@ class EntityInfusedTNT : EntityTNTPrimed{
 			return
 		}
 		
-		val strength = if (infusions.has(POWER)) 6F else 4F
+		val strength = (if (infusions.has(POWER)) 6F else 4F) * (if (hasInferniumPower) ItemFlintAndInfernium.EXPLOSION_MULTIPLIER else 1F)
 		
 		val isFiery = infusions.has(FIRE)
 		val isHarmless = infusions.has(HARMLESS)
@@ -312,6 +315,7 @@ class EntityInfusedTNT : EntityTNTPrimed{
 		super.writeEntityToNBT(nbt)
 		
 		InfusionTag.setList(this, infusions)
+		setBoolean("HasInfernium", hasInferniumPower)
 		setBoolean("HasPhased", hasPhasedIntoWall)
 	}
 	
@@ -319,6 +323,7 @@ class EntityInfusedTNT : EntityTNTPrimed{
 		super.readEntityFromNBT(nbt)
 		
 		loadInfusions(InfusionTag.getList(this))
+		hasInferniumPower = getBoolean("HasInfernium")
 		hasPhasedIntoWall = getBoolean("HasPhased")
 	}
 }

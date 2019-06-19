@@ -127,6 +127,7 @@ item.hee.void_bucket.name=Void Bucket
 item.hee.scorching_pickaxe.name=Scorching Pickaxe
 item.hee.scorching_shovel.name=Scorching Shovel
 item.hee.scorching_axe.name=Scorching Axe
+item.hee.flint_and_infernium.name=Flint and Infernium
 item.hee.ender_goo_bucket.name=Ender Goo Bucket
 
 item.hee.energy_oracle.name=Energy Oracle

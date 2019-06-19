@@ -1,5 +1,6 @@
 package chylex.hee.game.block
 import chylex.hee.game.block.entity.TileEntityInfusedTNT
+import chylex.hee.game.block.util.Property
 import chylex.hee.game.entity.item.EntityInfusedTNT
 import chylex.hee.game.item.infusion.Infusion.TRAP
 import chylex.hee.game.item.infusion.InfusionTag
@@ -12,6 +13,7 @@ import chylex.hee.system.util.with
 import net.minecraft.block.BlockTNT
 import net.minecraft.block.ITileEntityProvider
 import net.minecraft.block.SoundType
+import net.minecraft.block.state.BlockStateContainer
 import net.minecraft.block.state.IBlockState
 import net.minecraft.entity.EntityLivingBase
 import net.minecraft.entity.player.EntityPlayer
@@ -27,9 +29,19 @@ import net.minecraft.world.World
 import java.util.Random
 
 class BlockInfusedTNT : BlockTNT(), ITileEntityProvider{
+	companion object{
+		val INFERNIUM = Property.bool("infernium")
+	}
+	
 	init{
 		soundType = SoundType.PLANT
 		creativeTab = null
+		
+		defaultState = defaultState.with(INFERNIUM, false)
+	}
+	
+	override fun createBlockState(): BlockStateContainer{
+		return BlockStateContainer(this, EXPLODE, INFERNIUM)
 	}
 	
 	override fun createNewTileEntity(world: World, meta: Int): TileEntity{
@@ -105,7 +117,7 @@ class BlockInfusedTNT : BlockTNT(), ITileEntityProvider{
 				dropBlockAsItem(world, pos, state, 0)
 			}
 			else{
-				EntityInfusedTNT(world, pos, infusions, igniter).apply {
+				EntityInfusedTNT(world, pos, infusions, igniter, state[INFERNIUM]).apply {
 					SoundEvents.ENTITY_TNT_PRIMED.playServer(world, posVec, SoundCategory.BLOCKS)
 					world.spawnEntity(this)
 				}

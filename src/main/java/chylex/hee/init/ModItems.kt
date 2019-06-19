@@ -10,6 +10,7 @@ import chylex.hee.game.item.ItemEndermanHead
 import chylex.hee.game.item.ItemEnergyOracle
 import chylex.hee.game.item.ItemEnergyReceptacle
 import chylex.hee.game.item.ItemEyeOfEnderOverride
+import chylex.hee.game.item.ItemFlintAndInfernium
 import chylex.hee.game.item.ItemIgneousRock
 import chylex.hee.game.item.ItemInfusedEnderPearl
 import chylex.hee.game.item.ItemPortalToken
@@ -81,12 +82,13 @@ object ModItems{
 	
 	// Items: Tools
 	
-	@JvmField val VOID_MINER        = ItemVoidMiner().apply { setup("void_miner") }
-	@JvmField val VOID_BUCKET       = ItemVoidBucket().apply { setup("void_bucket") }
-	@JvmField val SCORCHING_PICKAXE = ItemScorchingTool(PICKAXE).apply { setup("scorching_pickaxe") }
-	@JvmField val SCORCHING_SHOVEL  = ItemScorchingTool(SHOVEL).apply { setup("scorching_shovel") }
-	@JvmField val SCORCHING_AXE     = ItemScorchingTool(AXE).apply { setup("scorching_axe") }
-	@JvmField val ENDER_GOO_BUCKET  = ItemBucket(ModBlocks.ENDER_GOO).apply { setup("ender_goo_bucket"); containerItem = Items.BUCKET }
+	@JvmField val VOID_MINER          = ItemVoidMiner().apply { setup("void_miner") }
+	@JvmField val VOID_BUCKET         = ItemVoidBucket().apply { setup("void_bucket") }
+	@JvmField val SCORCHING_PICKAXE   = ItemScorchingTool(PICKAXE).apply { setup("scorching_pickaxe") }
+	@JvmField val SCORCHING_SHOVEL    = ItemScorchingTool(SHOVEL).apply { setup("scorching_shovel") }
+	@JvmField val SCORCHING_AXE       = ItemScorchingTool(AXE).apply { setup("scorching_axe") }
+	@JvmField val FLINT_AND_INFERNIUM = ItemFlintAndInfernium().apply { setup("flint_and_infernium") }
+	@JvmField val ENDER_GOO_BUCKET    = ItemBucket(ModBlocks.ENDER_GOO).apply { setup("ender_goo_bucket"); containerItem = Items.BUCKET }
 	
 	// Items: Energy
 	
@@ -148,6 +150,7 @@ object ModItems{
 			register(SCORCHING_PICKAXE)
 			register(SCORCHING_SHOVEL)
 			register(SCORCHING_AXE)
+			register(FLINT_AND_INFERNIUM)
 			register(ENDER_GOO_BUCKET)
 			
 			register(ENERGY_ORACLE)
