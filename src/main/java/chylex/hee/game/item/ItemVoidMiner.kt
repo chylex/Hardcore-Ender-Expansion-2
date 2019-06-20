@@ -13,6 +13,7 @@ import net.minecraft.item.ItemStack
 import net.minecraft.util.EnumHand.MAIN_HAND
 import net.minecraft.util.math.BlockPos
 import net.minecraft.world.World
+import net.minecraftforge.common.MinecraftForge
 import net.minecraftforge.event.entity.player.PlayerEvent.BreakSpeed
 import net.minecraftforge.event.world.BlockEvent.BreakEvent
 import net.minecraftforge.event.world.BlockEvent.HarvestDropsEvent
@@ -29,6 +30,8 @@ class ItemVoidMiner : ItemAbstractVoidTool(){
 		for(toolClass in toolClasses){
 			setHarvestLevel(toolClass, level)
 		}
+		
+		MinecraftForge.EVENT_BUS.register(this)
 	}
 	
 	override fun getDestroySpeed(stack: ItemStack, state: IBlockState): Float{

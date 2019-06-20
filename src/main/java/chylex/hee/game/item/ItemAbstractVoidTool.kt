@@ -9,16 +9,12 @@ import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.item.ItemStack
 import net.minecraft.item.ItemTool
 import net.minecraft.stats.StatList
-import net.minecraftforge.common.MinecraftForge
 import kotlin.math.min
 
 abstract class ItemAbstractVoidTool : ItemTool(CustomToolMaterial.VOID, emptySet()), ICustomRepairBehavior{
 	init{
 		@Suppress("LeakingThis")
 		setNoRepair()
-		
-		@Suppress("LeakingThis")
-		MinecraftForge.EVENT_BUS.register(this)
 	}
 	
 	override fun hitEntity(stack: ItemStack, target: EntityLivingBase, attacker: EntityLivingBase): Boolean{

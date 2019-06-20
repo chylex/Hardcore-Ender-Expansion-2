@@ -34,7 +34,6 @@ import net.minecraft.util.SoundCategory
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.Vec3d
 import net.minecraft.world.World
-import net.minecraftforge.common.MinecraftForge
 import java.util.Random
 
 class BlockDragonEggOverride : BlockDragonEgg(){
@@ -65,8 +64,6 @@ class BlockDragonEggOverride : BlockDragonEgg(){
 		lightValue = 2
 		soundType = source.soundType
 		translationKey = source.translationKey.removePrefix("tile.") // UPDATE: there must be a better way?
-		
-		MinecraftForge.EVENT_BUS.register(this)
 	}
 	
 	override fun updateTick(world: World, pos: BlockPos, state: IBlockState, rand: Random){
