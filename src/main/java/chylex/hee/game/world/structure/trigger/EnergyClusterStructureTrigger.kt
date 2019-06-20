@@ -12,6 +12,6 @@ import net.minecraft.world.World
 class EnergyClusterStructureTrigger(private val snapshot: ClusterSnapshot) : IStructureTrigger{
 	override fun realize(world: World, pos: BlockPos, transform: Transform){
 		pos.setBlock(world, ModBlocks.ENERGY_CLUSTER)
-		pos.getTile<TileEntityEnergyCluster>(world)?.loadClusterSnapshot(snapshot)
+		pos.getTile<TileEntityEnergyCluster>(world)?.loadClusterSnapshot(snapshot, inactive = true)
 	}
 }

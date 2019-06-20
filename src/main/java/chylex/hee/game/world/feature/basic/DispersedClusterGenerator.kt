@@ -63,7 +63,7 @@ object DispersedClusterGenerator : IWorldGenerator{
 			for(searchAttempt in 1..4){
 				if (!spawnPos.add(rand.nextInt(-3, 3), rand.nextInt(-3, 3), rand.nextInt(-3, 3)).isAir(world)){
 					spawnPos.setBlock(world, ModBlocks.ENERGY_CLUSTER)
-					spawnPos.getTile<TileEntityEnergyCluster>(world)?.loadClusterSnapshot(IClusterGenerator.OVERWORLD.generate(rand))
+					spawnPos.getTile<TileEntityEnergyCluster>(world)?.loadClusterSnapshot(IClusterGenerator.OVERWORLD.generate(rand), inactive = true)
 					return
 				}
 			}

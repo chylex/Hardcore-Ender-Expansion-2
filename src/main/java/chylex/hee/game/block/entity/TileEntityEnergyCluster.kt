@@ -176,7 +176,7 @@ class TileEntityEnergyCluster : TileEntityBase(), ITickable{
 		color          = this.color
 	)
 	
-	fun loadClusterSnapshot(snapshot: ClusterSnapshot){
+	fun loadClusterSnapshot(snapshot: ClusterSnapshot, inactive: Boolean){
 		energyLevel = snapshot.energyLevel
 		energyBaseCapacity = snapshot.energyCapacity
 		internalHealthStatus = snapshot.healthStatus
@@ -184,11 +184,8 @@ class TileEntityEnergyCluster : TileEntityBase(), ITickable{
 		color = snapshot.color
 		
 		ticksToRegen = 40
+		isInactive = inactive
 		proximityHandler.reset()
-	}
-	
-	fun setInactive(){
-		isInactive = true
 	}
 	
 	// Behavior
@@ -253,11 +250,11 @@ class TileEntityEnergyCluster : TileEntityBase(), ITickable{
 	
 	override fun readNBT(nbt: NBTTagCompound, context: Context) = with(nbt){
 		ticksToRegen = getShort(REGEN_TICKS_TAG).toInt()
-		loadClusterSnapshot(ClusterSnapshot(nbt.getCompoundTag(SNAPSHOT_TAG)))
+		loadClusterSnapshot(ClusterSnapshot(nbt.getCompoundTag(SNAPSHOT_TAG)), isInactive)
 		
 		if (context == STORAGE){
 			if (getBoolean(INACTIVE_TAG)){
-				setInactive()
+				isInactive = true
 			}
 			else{
 				proximityHandler.deserializeNBT(getCompoundTag(PROXIMITY_TAG))

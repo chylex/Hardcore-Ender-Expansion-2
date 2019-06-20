@@ -100,7 +100,7 @@ class ItemEnergyReceptacle : ItemAbstractInfusable(){
 				
 				if (finalPos != null){
 					finalPos.getTile<TileEntityEnergyCluster>(world)?.let {
-						it.loadClusterSnapshot(ClusterSnapshot(getCompoundTag(CLUSTER_SNAPSHOT_TAG)))
+						it.loadClusterSnapshot(ClusterSnapshot(getCompoundTag(CLUSTER_SNAPSHOT_TAG)), inactive = false)
 						
 						if (shouldLoseHealth(it, this, InfusionTag.getList(stack))){
 							it.deteriorateHealth()
