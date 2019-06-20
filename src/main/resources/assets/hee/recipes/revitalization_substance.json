@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    { "item": "hee:auricion" },
+    { "item": "hee:end_powder" },
+    { "item": "hee:void_essence" },
+    { "item": "hee:endium_nugget" }
+  ],
+  "result": {
+    "item": "hee:revitalization_substance",
+    "count": 3
+  }
+}

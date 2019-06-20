@@ -62,12 +62,13 @@ object ModItems{
 	
 	// Items: Manufactured resources
 	
-	@JvmField val ALTERATION_NEXUS      = Item().apply { setup("alteration_nexus") }
-	@JvmField val VOID_ESSENCE          = Item().apply { setup("void_essence") }
-	@JvmField val OBSIDIAN_ROD          = Item().apply { setup("obsidian_rod") }
-	@JvmField val STATIC_CORE           = Item().apply { setup("static_core") }
-	@JvmField val DIRTY_INFERNIUM_INGOT = Item().apply { setup("dirty_infernium_ingot") }
-	@JvmField val BINDING_ESSENCE       = ItemBindingEssence().apply { setup("binding_essence") }
+	@JvmField val ALTERATION_NEXUS         = Item().apply { setup("alteration_nexus") }
+	@JvmField val VOID_ESSENCE             = Item().apply { setup("void_essence") }
+	@JvmField val OBSIDIAN_ROD             = Item().apply { setup("obsidian_rod") }
+	@JvmField val STATIC_CORE              = Item().apply { setup("static_core") }
+	@JvmField val DIRTY_INFERNIUM_INGOT    = Item().apply { setup("dirty_infernium_ingot") }
+	@JvmField val REVITALIZATION_SUBSTANCE = Item().apply { setup("revitalization_substance") } // TODO
+	@JvmField val BINDING_ESSENCE          = ItemBindingEssence().apply { setup("binding_essence") }
 	
 	// Items: Nature & food
 	
@@ -136,6 +137,7 @@ object ModItems{
 			register(OBSIDIAN_ROD)
 			register(STATIC_CORE)
 			register(DIRTY_INFERNIUM_INGOT)
+			register(REVITALIZATION_SUBSTANCE)
 			register(BINDING_ESSENCE)
 			
 			register(COMPOST)
