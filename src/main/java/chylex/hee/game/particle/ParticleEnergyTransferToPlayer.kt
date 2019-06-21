@@ -1,19 +1,15 @@
 package chylex.hee.game.particle
-import chylex.hee.client.util.MC
+import chylex.hee.client.model.ModelHelper
 import chylex.hee.game.block.entity.TileEntityEnergyCluster
 import chylex.hee.game.item.ItemAbstractEnergyUser
 import chylex.hee.game.particle.base.ParticleBaseEnergyTransfer
 import chylex.hee.game.particle.spawner.factory.IParticleData
 import chylex.hee.game.particle.spawner.factory.IParticleMaker
-import chylex.hee.system.util.Vec3
 import chylex.hee.system.util.floorToInt
-import chylex.hee.system.util.lookPosVec
-import chylex.hee.system.util.subtractY
 import net.minecraft.client.particle.Particle
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.util.EnumHand.MAIN_HAND
-import net.minecraft.util.EnumHandSide.RIGHT
-import net.minecraft.util.math.MathHelper
+import net.minecraft.util.EnumHand.OFF_HAND
 import net.minecraft.util.math.Vec3d
 import net.minecraft.world.World
 import net.minecraftforge.fml.relauncher.Side
@@ -21,8 +17,6 @@ import net.minecraftforge.fml.relauncher.SideOnly
 import org.apache.commons.lang3.ArrayUtils
 import java.lang.ref.WeakReference
 import java.util.Random
-import kotlin.math.abs
-import kotlin.math.pow
 
 object ParticleEnergyTransferToPlayer : IParticleMaker{
 	@SideOnly(Side.CLIENT)
@@ -79,30 +73,7 @@ object ParticleEnergyTransferToPlayer : IParticleMaker{
 				return
 			}
 			
-			val yawOffsetMp = (if (player.primaryHand == RIGHT) 1 else -1) * (if (player.getHeldItem(MAIN_HAND).item is ItemAbstractEnergyUser) 1 else -1)
-			
-			if (player === MC.player && MC.settings.thirdPersonView == 0){
-				val pitch = MathHelper.wrapDegrees(player.rotationPitch)
-				val yaw = MathHelper.wrapDegrees(player.rotationYaw)
-				val fov = MC.settings.fovSetting
-				
-				newTargetPos = player
-					.lookPosVec
-					.subtractY(0.1 + (pitch.coerceIn(-90F, 45F) * 0.0034))
-					.add(Vec3.fromYaw(yaw + (yawOffsetMp * fov * 0.6F)).scale(0.25))
-					.add(Vec3.fromYaw(yaw + 165F - (fov - 90F) / 2F).scale(abs(pitch.coerceIn(0F, 90F) / 90.0).pow(1.5) * (0.3 - abs(fov - 90.0) / 600F)))
-				
-				// TODO kinda weird and inaccurate, maybe use the camera transformations somehow?
-				
-			}
-			else{
-				val handOffset = if (player.isSneaking) 1.15 else 0.75
-				
-				newTargetPos = player
-					.lookPosVec
-					.subtractY(handOffset)
-					.add(Vec3.fromYaw(player.renderYawOffset + yawOffsetMp * 39F).scale(0.52))
-			}
+			newTargetPos = ModelHelper.getHandPosition(player, if (player.getHeldItem(MAIN_HAND).item is ItemAbstractEnergyUser) MAIN_HAND else OFF_HAND)
 			
 			setupMotion(speed + (particleAge * 0.005))
 			super.onUpdate()
