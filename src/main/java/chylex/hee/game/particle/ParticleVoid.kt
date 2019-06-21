@@ -6,6 +6,7 @@ import chylex.hee.game.world.territory.TerritoryInstance
 import chylex.hee.game.world.territory.TerritoryVoid
 import chylex.hee.system.util.addY
 import chylex.hee.system.util.ceilToInt
+import chylex.hee.system.util.directionTowards
 import chylex.hee.system.util.floorToInt
 import chylex.hee.system.util.nextFloat
 import chylex.hee.system.util.nextVector
@@ -59,7 +60,7 @@ object ParticleVoid : IParticleMaker{
 					setExpired()
 				}
 				else{
-					motionVec = motionVec.offsetTowards(center.add(rand.nextVector(64.0)).subtract(posVec).normalize(), voidFactor * 0.15)
+					motionVec = motionVec.offsetTowards(posVec.directionTowards(center.add(rand.nextVector(64.0))), voidFactor * 0.15)
 				}
 			}
 		}

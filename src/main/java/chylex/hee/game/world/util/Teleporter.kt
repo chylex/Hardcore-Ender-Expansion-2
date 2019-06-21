@@ -21,6 +21,7 @@ import chylex.hee.system.util.Pos
 import chylex.hee.system.util.addY
 import chylex.hee.system.util.blocksMovement
 import chylex.hee.system.util.center
+import chylex.hee.system.util.directionTowards
 import chylex.hee.system.util.floorToInt
 import chylex.hee.system.util.nextFloat
 import chylex.hee.system.util.nextVector
@@ -118,7 +119,7 @@ class Teleporter(
 					SoundEvents.ENTITY_ENDERMEN_TELEPORT.playClient(soundPosition, soundCategory, volume = soundVolume)
 				}
 				else if (soundDistance < soundRange){
-					val closerPosition = playerPos.add(soundPosition.subtract(playerPos).normalize().scale(RANGE_FOR_MINIMUM_VOLUME))
+					val closerPosition = playerPos.add(playerPos.directionTowards(soundPosition).scale(RANGE_FOR_MINIMUM_VOLUME))
 					SoundEvents.ENTITY_ENDERMEN_TELEPORT.playClient(closerPosition, soundCategory, volume = soundVolume)
 				}
 				

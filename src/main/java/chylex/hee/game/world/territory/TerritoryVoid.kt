@@ -10,6 +10,7 @@ import chylex.hee.game.particle.spawner.ParticleSpawnerCustom
 import chylex.hee.game.particle.util.IShape.Point
 import chylex.hee.system.util.ceilToInt
 import chylex.hee.system.util.color.RGB
+import chylex.hee.system.util.directionTowards
 import chylex.hee.system.util.floorToInt
 import chylex.hee.system.util.heeTag
 import chylex.hee.system.util.nextFloat
@@ -40,7 +41,7 @@ object TerritoryVoid{
 		val xzRadSq = square(xzRadius)
 		val yRadSq = square(yRadius)
 		
-		val dir = point.subtract(center).normalize()
+		val dir = center.directionTowards(point)
 		
 		val a = (square(dir.x) / xzRadSq) + (square(dir.y) / yRadSq) + (square(dir.z) / xzRadSq)
 		val d = 4 * a // (-4) * a * (-1)

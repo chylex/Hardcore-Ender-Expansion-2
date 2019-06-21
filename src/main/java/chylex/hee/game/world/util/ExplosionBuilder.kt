@@ -2,6 +2,7 @@ package chylex.hee.game.world.util
 import chylex.hee.system.util.component1
 import chylex.hee.system.util.component2
 import chylex.hee.system.util.component3
+import chylex.hee.system.util.directionTowards
 import chylex.hee.system.util.getState
 import chylex.hee.system.util.isAir
 import chylex.hee.system.util.lookPosVec
@@ -175,7 +176,7 @@ class ExplosionBuilder{
 				
 				if (knockbackEntities){
 					val knockbackPower = (entity as? EntityLivingBase)?.let { EnchantmentProtection.getBlastDamageReduction(it, blastPower) } ?: blastPower
-					val knockbackVec = entity.lookPosVec.subtract(centerVec).normalize().scale(knockbackPower)
+					val knockbackVec = centerVec.directionTowards(entity.lookPosVec).scale(knockbackPower)
 					
 					entity.motionX += knockbackVec.x
 					entity.motionY += knockbackVec.y

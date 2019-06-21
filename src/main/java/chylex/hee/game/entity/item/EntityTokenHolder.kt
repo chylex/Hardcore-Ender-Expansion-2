@@ -6,6 +6,7 @@ import chylex.hee.game.world.territory.TerritoryType
 import chylex.hee.init.ModItems
 import chylex.hee.network.client.PacketClientLaunchInstantly
 import chylex.hee.system.util.addY
+import chylex.hee.system.util.directionTowards
 import chylex.hee.system.util.getEnum
 import chylex.hee.system.util.heeTag
 import chylex.hee.system.util.lookPosVec
@@ -99,7 +100,7 @@ class EntityTokenHolder(world: World) : Entity(world), IEntityAdditionalSpawnDat
 			val droppedToken = territoryType?.let { entityDropItem(ModItems.PORTAL_TOKEN.forTerritory(tokenType, it), (height * 0.5F) - 0.25F) }
 			
 			if (droppedToken != null){
-				val launchVec = player.lookPosVec.subtract(posVec).normalize().scale(0.5).addY(0.1)
+				val launchVec = posVec.directionTowards(player.lookPosVec).scale(0.5).addY(0.1)
 				
 				droppedToken.setNoPickupDelay()
 				droppedToken.motionVec = launchVec

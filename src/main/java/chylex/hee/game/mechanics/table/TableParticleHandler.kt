@@ -13,6 +13,7 @@ import chylex.hee.game.particle.util.IShape.Point
 import chylex.hee.init.ModBlocks
 import chylex.hee.network.client.PacketClientFX
 import chylex.hee.system.util.center
+import chylex.hee.system.util.directionTowards
 import chylex.hee.system.util.floorToInt
 import chylex.hee.system.util.getBlock
 import chylex.hee.system.util.getTile
@@ -90,7 +91,7 @@ class TableParticleHandler(private val table: TileEntityBaseTable){
 				val clusterPos = cluster.pos.center
 				val tablePos = table.pos.center
 				
-				val dirVec = tablePos.subtract(clusterPos).normalize()
+				val dirVec = clusterPos.directionTowards(tablePos)
 				val startPoint = clusterPos.add(dirVec.scale(rand.nextFloat(0.05, 0.37)))
 				val endPoint = tablePos.subtract(dirVec.scale(0.27))
 				
