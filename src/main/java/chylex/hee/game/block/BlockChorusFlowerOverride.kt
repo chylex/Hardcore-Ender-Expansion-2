@@ -5,6 +5,7 @@ import chylex.hee.system.util.Facing4
 import chylex.hee.system.util.getBlock
 import chylex.hee.system.util.isAir
 import chylex.hee.system.util.setBlock
+import chylex.hee.system.util.translationKeyOriginal
 import net.minecraft.block.BlockChorusFlower
 import net.minecraft.init.Blocks
 import net.minecraft.util.math.BlockPos
@@ -20,7 +21,7 @@ class BlockChorusFlowerOverride : BlockChorusFlower(){
 		
 		setHardness(source.getBlockHardness(null, null, null)) // UPDATE
 		soundType = source.soundType
-		translationKey = source.translationKey.removePrefix("tile.") // UPDATE: there must be a better way?
+		translationKey = source.translationKeyOriginal
 		
 		MinecraftForge.EVENT_BUS.register(this)
 	}

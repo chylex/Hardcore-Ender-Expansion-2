@@ -5,6 +5,13 @@ import net.minecraft.block.properties.PropertyBool
 import net.minecraft.block.properties.PropertyInteger
 import net.minecraft.block.state.IBlockState
 
+// General
+
+val Block.translationKeyOriginal
+	get() = this.translationKey.removePrefix("tile.") // UPDATE: there must be a better way?
+
+// Properties
+
 inline fun <T : Comparable<T>, V : T> IBlockState.with(property: IProperty<T>, value: V): IBlockState{
 	return this.withProperty(property, value)
 }

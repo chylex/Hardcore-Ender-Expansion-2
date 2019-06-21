@@ -14,7 +14,7 @@ import java.util.Random
 interface IClusterGenerator{
 	fun generate(rand: Random): ClusterSnapshot
 	
-	companion object{ // TODO make generators static fields in kotlin 1.3
+	companion object{
 		private class SimpleGenerator(level: Pair<Int, Int>, capacity: Pair<Int, Int>, private val health: (Random) -> HealthStatus) : IClusterGenerator{
 			constructor(level: Pair<Int, Int>, capacity: Pair<Int, Int>, health: WeightedList<HealthStatus>) : this(level, capacity, health::generateItem)
 			
@@ -40,6 +40,7 @@ interface IClusterGenerator{
 		
 		// Overworld
 		
+		@JvmField
 		val OVERWORLD: IClusterGenerator = SimpleGenerator(
 			level    = 0 to  7,
 			capacity = 8 to 13,
@@ -50,6 +51,7 @@ interface IClusterGenerator{
 			)
 		)
 		
+		@JvmField
 		val STRONGHOLD: IClusterGenerator = SimpleGenerator(
 			level    =  4 to 23,
 			capacity = 18 to 35,
@@ -61,6 +63,7 @@ interface IClusterGenerator{
 			)
 		)
 		
+		@JvmField
 		val ENERGY_SHRINE: IClusterGenerator = SimpleGenerator(
 			level    =  60 to 150,
 			capacity = 100 to 175,

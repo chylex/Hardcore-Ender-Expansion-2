@@ -20,6 +20,7 @@ import chylex.hee.system.util.offsetUntil
 import chylex.hee.system.util.playClient
 import chylex.hee.system.util.setAir
 import chylex.hee.system.util.setState
+import chylex.hee.system.util.translationKeyOriginal
 import net.minecraft.block.BlockDragonEgg
 import net.minecraft.block.BlockFalling
 import net.minecraft.block.state.IBlockState
@@ -63,7 +64,7 @@ class BlockDragonEggOverride : BlockDragonEgg(){
 		setHardnessWithResistance(INDESTRUCTIBLE_HARDNESS, 15F)
 		lightValue = 2
 		soundType = source.soundType
-		translationKey = source.translationKey.removePrefix("tile.") // UPDATE: there must be a better way?
+		translationKey = source.translationKeyOriginal
 	}
 	
 	override fun updateTick(world: World, pos: BlockPos, state: IBlockState, rand: Random){

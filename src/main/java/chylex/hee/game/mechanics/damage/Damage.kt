@@ -1,5 +1,4 @@
 package chylex.hee.game.mechanics.damage
-import chylex.hee.game.mechanics.damage.IDamageProcessor.Companion.CANCEL_DAMAGE
 import net.minecraft.entity.Entity
 import net.minecraft.entity.EntityLivingBase
 import net.minecraft.entity.SharedMonsterAttributes.ATTACK_DAMAGE
@@ -37,6 +36,8 @@ class Damage(private vararg val processors: IDamageProcessor){
 		dealToInternal(amount, target, directSource, remoteSource, title)
 	
 	companion object{
+		const val CANCEL_DAMAGE = 0F
+		
 		const val TITLE_GENERIC = "generic"
 		const val TITLE_PLAYER  = "player"
 		const val TITLE_MOB     = "mob"

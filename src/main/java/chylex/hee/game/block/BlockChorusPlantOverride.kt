@@ -5,6 +5,7 @@ import chylex.hee.system.util.Facing4
 import chylex.hee.system.util.get
 import chylex.hee.system.util.getBlock
 import chylex.hee.system.util.isAir
+import chylex.hee.system.util.translationKeyOriginal
 import chylex.hee.system.util.with
 import net.minecraft.block.BlockChorusPlant
 import net.minecraft.block.state.IBlockState
@@ -21,7 +22,7 @@ class BlockChorusPlantOverride : BlockChorusPlant(){
 		
 		setHardness(source.getBlockHardness(null, null, null)) // UPDATE
 		soundType = source.soundType
-		translationKey = source.translationKey.removePrefix("tile.") // UPDATE: there must be a better way?
+		translationKey = source.translationKeyOriginal
 	}
 	
 	override fun getDrops(drops: NonNullList<ItemStack>, world: IBlockAccess, pos: BlockPos, state: IBlockState, fortune: Int){

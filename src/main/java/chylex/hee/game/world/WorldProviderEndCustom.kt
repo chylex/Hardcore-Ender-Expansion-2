@@ -90,8 +90,7 @@ class WorldProviderEndCustom : WorldProviderEnd(){
 	
 	override fun createWorldBorder() = WorldBorderNull()
 	
-	// TODO shitton of things to play around with
-	// TODO also test if default values work on server
+	// TODO shitton of things to play around with, also test if default values work on server
 	
 	// Visual properties (Light)
 	

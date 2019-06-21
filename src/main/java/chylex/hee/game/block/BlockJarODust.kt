@@ -171,5 +171,5 @@ class BlockJarODust(builder: BlockSimple.Builder) : BlockSimpleShaped(builder, A
 		}
 	}
 	
-	override fun getRenderLayer() = TRANSLUCENT // TODO depth order issues & missing layers when rendered as an item
+	override fun getRenderLayer() = TRANSLUCENT
 }
