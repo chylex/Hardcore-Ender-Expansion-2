@@ -62,3 +62,7 @@ fun Vec3d.offsetTowards(other: Vec3d, progress: Double): Vec3d{
 		z + (other.z - z) * progress
 	)
 }
+
+fun Vec3d.directionTowards(target: Vec3d): Vec3d{
+	return target.subtract(this).normalize()
+}
