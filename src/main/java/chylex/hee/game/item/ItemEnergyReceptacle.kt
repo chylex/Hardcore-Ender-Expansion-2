@@ -9,11 +9,15 @@ import chylex.hee.game.mechanics.energy.IEnergyQuantity
 import chylex.hee.game.mechanics.energy.IEnergyQuantity.Companion.displayString
 import chylex.hee.game.mechanics.energy.IEnergyQuantity.Floating
 import chylex.hee.game.mechanics.energy.IEnergyQuantity.Internal
+import chylex.hee.game.world.WorldProviderEndCustom
+import chylex.hee.game.world.territory.TerritoryInstance
 import chylex.hee.game.world.util.BlockEditor
 import chylex.hee.init.ModBlocks
 import chylex.hee.system.Resource
+import chylex.hee.system.util.Pos
 import chylex.hee.system.util.breakBlock
 import chylex.hee.system.util.color.RGB
+import chylex.hee.system.util.getIntegerOrNull
 import chylex.hee.system.util.getTile
 import chylex.hee.system.util.hasKey
 import chylex.hee.system.util.heeTag
@@ -44,6 +48,7 @@ class ItemEnergyReceptacle : ItemAbstractInfusable(){
 		
 		private const val INITIAL_LEVEL_TAG = "OrigLevel"
 		private const val INITIAL_DIMENSION_TAG = "OrigDim"
+		private const val INITIAL_TERRITORY_TAG = "OrigTerritory"
 		
 		private const val ENERGY_LOSS_TICK_RATE = 10L
 		private const val ITEM_COOLDOWN = 16
@@ -58,12 +63,26 @@ class ItemEnergyReceptacle : ItemAbstractInfusable(){
 			return snapshot.energyLevel - (decreasePerCycle * elapsedCycles.toFloat())
 		}
 		
+		private fun hasMovedTooFar(nbt: NBTTagCompound, currentWorld: World, currentPos: BlockPos): Boolean{
+			val provider = currentWorld.provider
+			
+			if (provider.dimension != nbt.getInteger(INITIAL_DIMENSION_TAG)){
+				return true
+			}
+			
+			if (provider is WorldProviderEndCustom && TerritoryInstance.fromPos(currentPos) != nbt.getIntegerOrNull(INITIAL_TERRITORY_TAG)?.let(TerritoryInstance.Companion::fromHash)){
+				return true
+			}
+			
+			return false
+		}
+		
 		private fun shouldLoseHealth(cluster: TileEntityEnergyCluster, nbt: NBTTagCompound, infusions: InfusionList): Boolean{
 			if (infusions.has(SAFETY)){
 				return false
 			}
 			
-			if (cluster.world.provider.dimension != nbt.getInteger(INITIAL_DIMENSION_TAG)){
+			if (hasMovedTooFar(nbt, cluster.world, cluster.pos)){
 				return true
 			}
 			
@@ -124,14 +143,20 @@ class ItemEnergyReceptacle : ItemAbstractInfusable(){
 				
 				val cluster = pos.getTile<TileEntityEnergyCluster>(world)
 				
-				if (cluster != null){
+				if (cluster != null && cluster.tryDisturb()){
+					val provider = world.provider
+					
 					setTag(CLUSTER_SNAPSHOT_TAG, cluster.getClusterSnapshot().tag)
 					
 					setLong(UPDATE_TIME_TAG, world.totalWorldTime)
 					setInteger(RENDER_COLOR_TAG, cluster.color.primary(75F, 80F).toInt())
 					
 					setInteger(INITIAL_LEVEL_TAG, cluster.energyLevel.internal.value)
-					setInteger(INITIAL_DIMENSION_TAG, world.provider.dimension) // TODO handle moving across territories too
+					setInteger(INITIAL_DIMENSION_TAG, provider.dimension)
+					
+					if (provider is WorldProviderEndCustom){
+						TerritoryInstance.fromPos(pos)?.let { setInteger(INITIAL_TERRITORY_TAG, it.hash) }
+					}
 					
 					cluster.breakWithoutExplosion = true
 					pos.breakBlock(world, false)
@@ -168,8 +193,9 @@ class ItemEnergyReceptacle : ItemAbstractInfusable(){
 			setTag(CLUSTER_SNAPSHOT_TAG, snapshot.clone(energyLevel = newLevel).tag)
 			setLong(UPDATE_TIME_TAG, currentTime)
 			
-			if (world.provider.dimension != getInteger(INITIAL_DIMENSION_TAG)){
-				setInteger(INITIAL_DIMENSION_TAG, Int.MIN_VALUE) // forces health deterioration
+			if (hasMovedTooFar(this, world, Pos(entity))){ // force health deterioration
+				setInteger(INITIAL_DIMENSION_TAG, Int.MIN_VALUE)
+				removeTag(INITIAL_TERRITORY_TAG)
 			}
 		}
 	}
