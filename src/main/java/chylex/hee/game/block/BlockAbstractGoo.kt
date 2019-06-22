@@ -7,7 +7,10 @@ import chylex.hee.system.util.FLAG_SYNC_CLIENT
 import chylex.hee.system.util.Pos
 import chylex.hee.system.util.allInBoxMutable
 import chylex.hee.system.util.get
+import chylex.hee.system.util.getLongOrNull
+import chylex.hee.system.util.getOrCreateCompound
 import chylex.hee.system.util.getState
+import chylex.hee.system.util.heeTag
 import chylex.hee.system.util.setBlock
 import net.minecraft.block.material.MapColor
 import net.minecraft.block.material.Material
@@ -18,7 +21,6 @@ import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.init.Blocks
 import net.minecraft.item.Item
 import net.minecraft.item.ItemStack
-import net.minecraft.nbt.NBTTagInt
 import net.minecraft.potion.Potion
 import net.minecraft.potion.PotionEffect
 import net.minecraft.stats.StatList
@@ -28,20 +30,20 @@ import net.minecraft.util.math.Vec3d
 import net.minecraft.world.IBlockAccess
 import net.minecraft.world.World
 import net.minecraftforge.common.MinecraftForge
-import net.minecraftforge.common.util.INBTSerializable
 import net.minecraftforge.event.entity.player.FillBucketEvent
 import net.minecraftforge.fluids.BlockFluidClassic
 import net.minecraftforge.fml.common.eventhandler.Event.Result.ALLOW
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent
 import net.minecraftforge.fml.relauncher.Side
 import net.minecraftforge.fml.relauncher.SideOnly
-import java.util.Random
 import java.util.UUID
 
 abstract class BlockAbstractGoo(private val fluid: FluidBase, material: Material) : BlockFluidClassic(fluid, material){
 	protected companion object{
 		const val PERSISTENT_EFFECT_DURATION_TICKS = 8
-		const val IGNORE_COLLISION_TICK = -1
+		
+		private const val LAST_TIME_TAG = "Time"
+		private const val TOTAL_TICKS_TAG = "Ticks"
 		
 		@JvmStatic
 		protected fun addGooEffect(entity: EntityLivingBase, type: Potion, durationTicks: Int, level: Int = 0){
@@ -51,37 +53,6 @@ abstract class BlockAbstractGoo(private val fluid: FluidBase, material: Material
 				entity.addPotionEffect(PotionEffect(type, durationTicks, level, true, true))
 			}
 		}
-		
-		protected abstract class CollisionTickerBase(private var lastWorldTime: Long, private var maxTotalTicks: Int) : INBTSerializable<NBTTagInt>{
-			private var totalTicks = 0
-			
-			fun tick(currentWorldTime: Long, rand: Random): Int{
-				val ticksSinceLastUpdate = currentWorldTime - lastWorldTime
-				
-				if (ticksSinceLastUpdate == 0L){
-					return IGNORE_COLLISION_TICK
-				}
-				else if (ticksSinceLastUpdate > 1L){
-					totalTicks = (totalTicks - (ticksSinceLastUpdate / 2).toInt()).coerceAtLeast(0)
-				}
-				
-				lastWorldTime = currentWorldTime
-				
-				if (totalTicks < maxTotalTicks && rand.nextInt(10) != 0){
-					++totalTicks
-				}
-				
-				return totalTicks
-			}
-			
-			override fun serializeNBT(): NBTTagInt{
-				return NBTTagInt(totalTicks)
-			}
-			
-			override fun deserializeNBT(nbt: NBTTagInt){
-				totalTicks = nbt.int
-			}
-		}
 	}
 	
 	// Initialization
@@ -89,10 +60,10 @@ abstract class BlockAbstractGoo(private val fluid: FluidBase, material: Material
 	private var lastCollidingEntity = ThreadLocal<Pair<Long, UUID>?>()
 	
 	protected abstract val filledBucket: Item
+	protected abstract val tickTrackingKey: String
 	
 	init{
 		enableStats = false
-		tickRate = 18
 		
 		@Suppress("LeakingThis")
 		setQuantaPerBlock(5)
@@ -133,44 +104,73 @@ abstract class BlockAbstractGoo(private val fluid: FluidBase, material: Material
 		e.result = ALLOW
 	}
 	
-	override fun onEntityCollision(world: World, pos: BlockPos, state: IBlockState, entity: Entity){
-		if (!(entity is EntityPlayer && entity.capabilities.isFlying)){
+	final override fun onEntityCollision(world: World, pos: BlockPos, state: IBlockState, entity: Entity){
+		/*
+		 * this prevents calling onInsideGoo/modifyMotion multiple times if the entity is touching 2 or more goo blocks
+		 *
+		 * because onEntityCollision is always called in succession for all blocks colliding with an entity,
+		 * it is enough to compare if either the world time or the entity has changed since last call (on the same thread)
+		 */
+		
+		val currentWorldTime = world.totalWorldTime
+		
+		if (lastCollidingEntity.get()?.takeUnless { it.first != currentWorldTime || it.second != entity.uniqueID } == null){
+			lastCollidingEntity.set(Pair(currentWorldTime, entity.uniqueID))
 			
-			/*
-			 * this prevents calling modifyEntityMotion multiple times if the entity is touching 2 or more goo blocks
-			 *
-			 * because onEntityCollision is always called in succession for all blocks colliding with an entity,
-			 * it is enough to compare if either the world time or the entity has changed since last call (on the same thread)
-			 */
+			// handling from Entity.doBlockCollisions
+			val bb = entity.entityBoundingBox
+			val posMin = Pos(bb.minX - 0.001, bb.minY - 0.001, bb.minZ - 0.001)
+			val posMax = Pos(bb.maxX + 0.001, bb.maxY + 0.001, bb.maxZ + 0.001)
 			
-			val currentWorldTime = world.totalWorldTime
+			var lowestLevel = Int.MAX_VALUE
 			
-			if (lastCollidingEntity.get()?.takeUnless { it.first != currentWorldTime || it.second != entity.uniqueID } == null){
-				lastCollidingEntity.set(Pair(currentWorldTime, entity.uniqueID))
+			for(testPos in posMin.allInBoxMutable(posMax)){
+				val level = testPos.getState(world).takeIf { it.block === this }?.get(LEVEL) ?: continue
 				
-				// handling from Entity.doBlockCollisions
-				val bb = entity.entityBoundingBox
-				val posMin = Pos(bb.minX - 0.001, bb.minY - 0.001, bb.minZ - 0.001)
-				val posMax = Pos(bb.maxX + 0.001, bb.maxY + 0.001, bb.maxZ + 0.001)
-				
-				var lowestLevel = Int.MAX_VALUE
-				
-				for(testPos in posMin.allInBoxMutable(posMax)){
-					val level = testPos.getState(world).takeIf { it.block === this }?.get(LEVEL) ?: continue
-					
-					if (level < lowestLevel){
-						lowestLevel = level
-					}
+				if (level < lowestLevel){
+					lowestLevel = level
+				}
+			}
+			
+			if (lowestLevel != Int.MAX_VALUE){
+				if (!world.isRemote){
+					onInsideGoo(entity)
 				}
 				
-				if (lowestLevel != Int.MAX_VALUE){
-					modifyEntityMotion(entity, lowestLevel)
+				if (!(entity is EntityPlayer && entity.capabilities.isFlying)){
+					modifyMotion(entity, lowestLevel)
 				}
 			}
 		}
 	}
 	
-	abstract fun modifyEntityMotion(entity: Entity, level: Int)
+	protected fun trackTick(entity: Entity, maxTicks: Int): Int{
+		val world = entity.world
+		val currentWorldTime = world.totalWorldTime
+		
+		with(entity.heeTag.getOrCreateCompound(tickTrackingKey)){
+			val lastWorldTime = getLongOrNull(LAST_TIME_TAG) ?: (currentWorldTime - 1)
+			var totalTicks = getInteger(TOTAL_TICKS_TAG)
+			
+			val ticksSinceLastUpdate = currentWorldTime - lastWorldTime
+			
+			if (ticksSinceLastUpdate > 1L){
+				totalTicks = (totalTicks - (ticksSinceLastUpdate / 2).toInt()).coerceAtLeast(0)
+			}
+			
+			if (totalTicks < maxTicks && world.rand.nextInt(10) != 0){
+				++totalTicks
+			}
+			
+			setLong(LAST_TIME_TAG, currentWorldTime)
+			setInteger(TOTAL_TICKS_TAG, totalTicks)
+			
+			return totalTicks
+		}
+	}
+	
+	abstract fun onInsideGoo(entity: Entity)
+	abstract fun modifyMotion(entity: Entity, level: Int)
 	
 	// Colors
 	
