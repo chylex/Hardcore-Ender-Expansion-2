@@ -20,4 +20,14 @@ abstract class ParticleBase(world: World, posX: Double, posY: Double, posZ: Doub
 		particleGreen = ((color shr 8) and 255) / 255F
 		particleBlue = (color and 255) / 255F
 	}
+	
+	protected fun interpolateAge(baseValue: Float, fadeInDuration: Int = 0, fadeOutDuration: Int = 0): Float{
+		val fadeOutAfter = particleMaxAge - fadeOutDuration
+		
+		return baseValue * when{
+			particleAge < fadeInDuration -> particleAge.toFloat() / fadeInDuration
+			particleAge > fadeOutAfter   -> 1F - ((particleAge - fadeOutAfter).toFloat() / fadeOutDuration)
+			else                         -> 1F
+		}
+	}
 }

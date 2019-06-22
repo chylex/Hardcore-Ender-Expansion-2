@@ -63,9 +63,8 @@ object ParticleEnergyCluster : IParticleMaker{
 	// Particle instance
 	
 	private const val TOTAL_LIFESPAN = 25
-	
-	private const val FADE_IN_UNTIL = 6
-	private const val FADE_OUT_AFTER = TOTAL_LIFESPAN - 10
+	private const val FADE_IN_DURATION = 6
+	private const val FADE_OUT_DURATION = 10
 	
 	@SideOnly(Side.CLIENT)
 	private class Instance(world: World, posX: Double, posY: Double, posZ: Double, motX: Double, motY: Double, motZ: Double, unsafeData: IntArray) : ParticleBaseEnergy(world, posX, posY, posZ, motX, motY, motZ){
@@ -96,20 +95,15 @@ object ParticleEnergyCluster : IParticleMaker{
 		
 		override fun onUpdate(){
 			if (clusterPos.getBlock(world) !== ModBlocks.ENERGY_CLUSTER){
-				if (particleAge < FADE_OUT_AFTER){
-					particleAge = FADE_OUT_AFTER
+				if (particleAge < TOTAL_LIFESPAN - FADE_OUT_DURATION){
+					particleAge = TOTAL_LIFESPAN - FADE_OUT_DURATION
 				}
 				
 				particleAge += 2
 			}
 			
 			super.onUpdate()
-			
-			particleAlpha = alphaMultiplier * when{
-				particleAge < FADE_IN_UNTIL  -> particleAge.toFloat() / FADE_IN_UNTIL
-				particleAge > FADE_OUT_AFTER -> 1F - ((particleAge - FADE_OUT_AFTER).toFloat() / (TOTAL_LIFESPAN - FADE_OUT_AFTER))
-				else                         -> 1F
-			}
+			particleAlpha = interpolateAge(alphaMultiplier, FADE_IN_DURATION, FADE_OUT_DURATION)
 		}
 	}
 }
