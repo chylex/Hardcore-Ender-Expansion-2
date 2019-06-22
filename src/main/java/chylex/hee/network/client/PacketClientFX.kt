@@ -9,6 +9,7 @@ import chylex.hee.game.fx.IFxData
 import chylex.hee.game.fx.IFxHandler
 import chylex.hee.game.item.ItemAbstractEnergyUser
 import chylex.hee.game.item.ItemCompost
+import chylex.hee.game.item.ItemRevitalizationSubstance
 import chylex.hee.game.item.ItemScorchingTool
 import chylex.hee.game.item.ItemTableLink
 import chylex.hee.game.mechanics.table.TableParticleHandler
@@ -34,6 +35,7 @@ class PacketClientFX<T : IFxData>() : BaseClientPacket(){
 			TileEntityTablePedestal.FX_ITEM_UPDATE,
 			ItemAbstractEnergyUser.FX_CHARGE,
 			ItemCompost.FX_USE,
+			ItemRevitalizationSubstance.FX_FAIL,
 			ItemScorchingTool.FX_BLOCK_BREAK,
 			ItemScorchingTool.FX_ENTITY_HIT,
 			ItemTableLink.FX_USE,

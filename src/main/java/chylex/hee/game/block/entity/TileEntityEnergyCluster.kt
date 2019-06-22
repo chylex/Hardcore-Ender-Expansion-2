@@ -6,6 +6,7 @@ import chylex.hee.game.mechanics.energy.ClusterColor
 import chylex.hee.game.mechanics.energy.ClusterSnapshot
 import chylex.hee.game.mechanics.energy.IClusterHealth
 import chylex.hee.game.mechanics.energy.IClusterHealth.HealthOverride
+import chylex.hee.game.mechanics.energy.IClusterHealth.HealthOverride.REVITALIZING
 import chylex.hee.game.mechanics.energy.IClusterHealth.HealthStatus
 import chylex.hee.game.mechanics.energy.IClusterHealth.HealthStatus.DAMAGED
 import chylex.hee.game.mechanics.energy.IClusterHealth.HealthStatus.HEALTHY
@@ -17,7 +18,9 @@ import chylex.hee.game.mechanics.energy.IEnergyQuantity.Floating
 import chylex.hee.game.mechanics.energy.IEnergyQuantity.Internal
 import chylex.hee.game.mechanics.energy.IEnergyQuantity.Units
 import chylex.hee.game.mechanics.energy.ProximityHandler
+import chylex.hee.game.mechanics.energy.RevitalizationHandler
 import chylex.hee.game.particle.ParticleEnergyCluster
+import chylex.hee.game.particle.ParticleEnergyClusterRevitalization
 import chylex.hee.game.particle.base.ParticleBaseEnergy.ClusterParticleDataGenerator
 import chylex.hee.game.particle.spawner.IParticleSpawner
 import chylex.hee.game.particle.spawner.ParticleSpawnerCustom
@@ -47,6 +50,13 @@ class TileEntityEnergyCluster : TileEntityBase(), ITickable{
 		private const val SNAPSHOT_TAG = "Snapshot"
 		private const val INACTIVE_TAG = "Inactive"
 		private const val PROXIMITY_TAG = "Proximity"
+		private const val REVITALIZATION_TAG = "Revitalization"
+		private const val ORBITING_ORBS_TAG = "OrbitingOrbs"
+		
+		private val PARTICLE_ORBITING = ParticleSpawnerCustom(
+			type = ParticleEnergyClusterRevitalization,
+			skipTest = { _, _, _ -> false }
+		)
 	}
 	
 	enum class LeakType(val regenDelayTicks: Int, val corruptedEnergyDistance: Int, val causesInstability: Boolean){
@@ -66,8 +76,10 @@ class TileEntityEnergyCluster : TileEntityBase(), ITickable{
 	private var internalHealthStatus: HealthStatus by Notifying(HEALTHY, DEFAULT_NOTIFY_FLAGS)
 	private var internalHealthOverride: HealthOverride? by Notifying(null, DEFAULT_NOTIFY_FLAGS)
 	
-	var color: ClusterColor by Notifying(ClusterColor(0, 0), DEFAULT_NOTIFY_FLAGS)
+	var color by Notifying(ClusterColor(0, 0), DEFAULT_NOTIFY_FLAGS)
 		private set
+	
+	var clientOrbitingOrbs: Byte by Notifying(0, DEFAULT_NOTIFY_FLAGS)
 	
 	// Properties (Calculated)
 	
@@ -80,10 +92,10 @@ class TileEntityEnergyCluster : TileEntityBase(), ITickable{
 	val baseLeakSize: IEnergyQuantity
 		get() = Floating(world.rand.nextFloat(0.4F, 0.8F) * ((1F + energyBaseCapacity.floating.value).pow(0.09F) + energyLevel.floating.value.pow(0.05F) - 2.1F))
 	
-	val affectedByProximity: Boolean
+	val affectedByProximity
 		get() = proximityHandler.affectedByProximity
 	
-	val wasUsedRecently: Boolean
+	val wasUsedRecently
 		get() = world.totalWorldTime - lastUseTick < 20L
 	
 	// Fields
@@ -93,6 +105,7 @@ class TileEntityEnergyCluster : TileEntityBase(), ITickable{
 	private var isInactive = false
 	
 	private val proximityHandler = ProximityHandler(this)
+	private val revitalizationHandler = RevitalizationHandler(this)
 	
 	private var particle: Pair<IParticleSpawner, IShape>? = null
 	private val particleSkipTest = ParticleEnergyCluster.newCountingSkipTest()
@@ -100,16 +113,18 @@ class TileEntityEnergyCluster : TileEntityBase(), ITickable{
 	var particleDataGenerator: ClusterParticleDataGenerator? = null
 		private set
 	
+	private var particleOrbitingTimer = 0
+	
 	var breakWithoutExplosion = false
 	
 	// Interactions
 	
+	fun tryDisturb(): Boolean{
+		return !breakIfDemonic() && revitalizationHandler.disturb()
+	}
+	
 	fun drainEnergy(quantity: IEnergyQuantity): Boolean{
-		if (energyLevel < quantity){
-			return false
-		}
-		else if (energyLevel == MAX_POSSIBLE_VALUE){
-			pos.breakBlock(world, false)
+		if (breakIfDemonic() || energyLevel < quantity){
 			return false
 		}
 		
@@ -118,7 +133,8 @@ class TileEntityEnergyCluster : TileEntityBase(), ITickable{
 		
 		lastUseTick = world.totalWorldTime
 		isInactive = false
-		return true
+		
+		return tryDisturb()
 	}
 	
 	fun leakEnergy(quantity: IEnergyQuantity, type: LeakType){
@@ -146,6 +162,38 @@ class TileEntityEnergyCluster : TileEntityBase(), ITickable{
 	
 	fun deteriorateHealth(): Boolean{
 		return currentHealth.deterioratesTo?.let { internalHealthStatus = it; true } ?: false
+	}
+	
+	fun addRevitalizationSubstance(): Boolean{
+		if (breakIfDemonic() || internalHealthStatus.revitalizesTo == null || internalHealthOverride != null || energyLevel < energyBaseCapacity * 0.55F){
+			return false
+		}
+		
+		if (revitalizationHandler.addSubstance()){
+			internalHealthOverride = REVITALIZING
+		}
+		
+		return true
+	}
+	
+	fun revitalizeHealth(){
+		if (currentHealth != REVITALIZING){
+			return
+		}
+		
+		internalHealthOverride = null
+		internalHealthStatus.revitalizesTo?.let { internalHealthStatus = it }
+	}
+	
+	// Helpers
+	
+	private fun breakIfDemonic(): Boolean{
+		if (energyLevel == MAX_POSSIBLE_VALUE){
+			pos.breakBlock(world, false)
+			return true
+		}
+		
+		return false
 	}
 	
 	private fun findLeakPos(maxDistance: Int): BlockPos?{
@@ -196,6 +244,11 @@ class TileEntityEnergyCluster : TileEntityBase(), ITickable{
 				particle?.let { it.first.spawn(it.second, world.rand) }
 			}
 			
+			if (clientOrbitingOrbs > 0 && ++particleOrbitingTimer > (ParticleEnergyClusterRevitalization.TOTAL_LIFESPAN / clientOrbitingOrbs)){
+				particleOrbitingTimer = 0
+				PARTICLE_ORBITING.spawn(Point(pos, 1), world.rand)
+			}
+			
 			return
 		}
 		
@@ -216,7 +269,12 @@ class TileEntityEnergyCluster : TileEntityBase(), ITickable{
 		}
 		
 		if (energyLevel < energyRegenCapacity && --ticksToRegen < 0){
-			energyLevel = minOf(energyRegenCapacity, energyLevel + Floating(((1 + energyBaseCapacity.floating.value).pow(0.004F) - 0.997F) * 0.5F) * currentHealth.regenAmountMp)
+			val amountMp = currentHealth.regenAmountMp
+			
+			if (amountMp > 0F){
+				energyLevel = minOf(energyRegenCapacity, energyLevel + Floating(((1 + energyBaseCapacity.floating.value).pow(0.004F) - 0.997F) * 0.5F) * amountMp)
+			}
+			
 			ticksToRegen = (20F / currentHealth.regenSpeedMp).ceilToInt()
 		}
 		
@@ -230,6 +288,8 @@ class TileEntityEnergyCluster : TileEntityBase(), ITickable{
 		else{
 			proximityHandler.reset()
 		}
+		
+		revitalizationHandler.tick()
 	}
 	
 	// Serialization
@@ -244,6 +304,12 @@ class TileEntityEnergyCluster : TileEntityBase(), ITickable{
 			}
 			else{
 				setTag(PROXIMITY_TAG, proximityHandler.serializeNBT())
+				setTag(REVITALIZATION_TAG, revitalizationHandler.serializeNBT())
+			}
+		}
+		else if (context == NETWORK){
+			if (clientOrbitingOrbs > 0){
+				setByte(ORBITING_ORBS_TAG, clientOrbitingOrbs)
 			}
 		}
 	}
@@ -258,9 +324,18 @@ class TileEntityEnergyCluster : TileEntityBase(), ITickable{
 			}
 			else{
 				proximityHandler.deserializeNBT(getCompoundTag(PROXIMITY_TAG))
+				revitalizationHandler.deserializeNBT(getCompoundTag(REVITALIZATION_TAG))
 			}
 		}
 		else if (context == NETWORK){
+			val prevOrbitingOrbs = clientOrbitingOrbs
+			clientOrbitingOrbs = getByte(ORBITING_ORBS_TAG)
+			
+			if (clientOrbitingOrbs > prevOrbitingOrbs){
+				particleOrbitingTimer = 0
+				PARTICLE_ORBITING.spawn(Point(pos, 1), world.rand)
+			}
+			
 			particleDataGenerator = ClusterParticleDataGenerator(this@TileEntityEnergyCluster)
 			
 			val particleSpawner = ParticleSpawnerCustom(

@@ -34,6 +34,9 @@ interface IClusterHealth{
 		override val deterioratesTo: HealthStatus?
 			get() = if (canDeteriorate) values().getOrNull(ordinal + 1) else null
 		
+		val revitalizesTo: HealthStatus?
+			get() = values().getOrNull(ordinal - 1)
+		
 		override fun getLeakChance(cluster: TileEntityEnergyCluster) = leakChance
 	}
 	
@@ -51,7 +54,7 @@ interface IClusterHealth{
 					0F
 		},
 		
-		REVITALIZING("hee.energy.health.revitalizing", HCL(320.0, 75F, 66F).toInt(), regenAmountMp = 0.0F, regenSpeedMp = 0.0F, regenCapacityMp = 0.0F){
+		REVITALIZING("hee.energy.health.revitalizing", HCL(320.0, 75F, 66F).toInt(), regenAmountMp = 0.0F, regenSpeedMp = 1.0F, regenCapacityMp = 0.0F){
 			override fun getLeakChance(cluster: TileEntityEnergyCluster) = 0F
 		};
 		

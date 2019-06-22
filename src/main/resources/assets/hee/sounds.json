@@ -5,6 +5,12 @@
   "block.loot_chest.open": {
     "sounds": [ "hee:block/loot_chest_open" ]
   },
+  "item.revitalization_substance.use": {
+    "sounds": [ "hee:item/revitalization_substance_use" ]
+  },
+  "item.revitalization_substance.use.fail": {
+    "sounds": [ "hee:item/revitalization_substance_use_fail" ]
+  },
   "item.table_link.use": {
     "sounds": [ "hee:item/table_link_use" ]
   },

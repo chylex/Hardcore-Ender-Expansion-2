@@ -14,6 +14,7 @@ import chylex.hee.game.item.ItemFlintAndInfernium
 import chylex.hee.game.item.ItemIgneousRock
 import chylex.hee.game.item.ItemInfusedEnderPearl
 import chylex.hee.game.item.ItemPortalToken
+import chylex.hee.game.item.ItemRevitalizationSubstance
 import chylex.hee.game.item.ItemRingOfHunger
 import chylex.hee.game.item.ItemRingOfPreservation
 import chylex.hee.game.item.ItemScaleOfFreefall
@@ -67,7 +68,7 @@ object ModItems{
 	@JvmField val OBSIDIAN_ROD             = Item().apply { setup("obsidian_rod") }
 	@JvmField val STATIC_CORE              = Item().apply { setup("static_core") }
 	@JvmField val DIRTY_INFERNIUM_INGOT    = Item().apply { setup("dirty_infernium_ingot") }
-	@JvmField val REVITALIZATION_SUBSTANCE = Item().apply { setup("revitalization_substance") } // TODO
+	@JvmField val REVITALIZATION_SUBSTANCE = ItemRevitalizationSubstance().apply { setup("revitalization_substance") }
 	@JvmField val BINDING_ESSENCE          = ItemBindingEssence().apply { setup("binding_essence") }
 	
 	// Items: Nature & food
