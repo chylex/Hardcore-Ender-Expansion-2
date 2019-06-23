@@ -16,13 +16,10 @@ import net.minecraft.block.material.MapColor
 import net.minecraft.block.material.Material
 import net.minecraft.block.state.IBlockState
 import net.minecraft.entity.Entity
-import net.minecraft.entity.EntityLivingBase
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.init.Blocks
 import net.minecraft.item.Item
 import net.minecraft.item.ItemStack
-import net.minecraft.potion.Potion
-import net.minecraft.potion.PotionEffect
 import net.minecraft.stats.StatList
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.RayTraceResult.Type.BLOCK
@@ -39,20 +36,9 @@ import net.minecraftforge.fml.relauncher.SideOnly
 import java.util.UUID
 
 abstract class BlockAbstractGoo(private val fluid: FluidBase, material: Material) : BlockFluidClassic(fluid, material){
-	protected companion object{
-		const val PERSISTENT_EFFECT_DURATION_TICKS = 8
-		
+	private companion object{
 		private const val LAST_TIME_TAG = "Time"
 		private const val TOTAL_TICKS_TAG = "Ticks"
-		
-		@JvmStatic
-		protected fun addGooEffect(entity: EntityLivingBase, type: Potion, durationTicks: Int, level: Int = 0){
-			val existingEffect = entity.getActivePotionEffect(type)
-			
-			if (existingEffect == null || (level >= existingEffect.amplifier && durationTicks > existingEffect.duration + 30)){
-				entity.addPotionEffect(PotionEffect(type, durationTicks, level, true, true))
-			}
-		}
 	}
 	
 	// Initialization

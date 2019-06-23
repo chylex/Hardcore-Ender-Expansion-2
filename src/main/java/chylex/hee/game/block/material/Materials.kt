@@ -29,6 +29,10 @@ object Materials{
 		makeLiquid()
 	}
 	
+	val PURIFIED_ENDER_GOO = CustomMaterial().apply {
+		makeLiquid()
+	}
+	
 	val SCAFFOLDING = CustomMaterial().apply {
 		blocksLight = false
 		translucent = true

@@ -16,6 +16,7 @@ import chylex.hee.game.block.BlockEndPortalInner
 import chylex.hee.game.block.BlockEndPortalOverride
 import chylex.hee.game.block.BlockEndPowderOre
 import chylex.hee.game.block.BlockEnderGoo
+import chylex.hee.game.block.BlockEnderGooPurified
 import chylex.hee.game.block.BlockEndermanHead
 import chylex.hee.game.block.BlockEndersol
 import chylex.hee.game.block.BlockEndium
@@ -56,6 +57,7 @@ import chylex.hee.game.block.entity.TileEntityPortalInner
 import chylex.hee.game.block.entity.TileEntityTablePedestal
 import chylex.hee.game.block.entity.TileEntityVoidPortalStorage
 import chylex.hee.game.block.fluid.FluidEnderGoo
+import chylex.hee.game.block.fluid.FluidEnderGooPurified
 import chylex.hee.game.block.material.Materials
 import chylex.hee.game.item.ItemAncientCobweb
 import chylex.hee.game.item.ItemBlockSlabFuel
@@ -95,6 +97,7 @@ import net.minecraftforge.oredict.OreDictionary
 object ModBlocks{
 	init{
 		FluidRegistry.registerFluid(FluidEnderGoo)
+		FluidRegistry.registerFluid(FluidEnderGooPurified)
 	}
 	
 	// Blocks: Building (Uncategorized)
@@ -352,11 +355,12 @@ object ModBlocks{
 		mapColor = MapColor.BLACK
 	}
 	
-	@JvmField val ENDER_GOO   = BlockEnderGoo().apply { setup("ender_goo") }
-	@JvmField val INFUSED_TNT = BlockInfusedTNT().apply { setup("infused_tnt", translationKey = "tnt", inCreativeTab = false) }
-	@JvmField val JAR_O_DUST  = BlockJarODust(buildJarODust).apply { setup("jar_o_dust") }
-	@JvmField val DARK_CHEST  = BlockDarkChest(buildGloomrock).apply { setup("dark_chest") } // UPDATE: update recipe json to include tag to allow either slab variation
-	@JvmField val LOOT_CHEST  = BlockLootChest(buildLootChest).apply { setup("loot_chest") }
+	@JvmField val ENDER_GOO          = BlockEnderGoo().apply { setup("ender_goo") }
+	@JvmField val PURIFIED_ENDER_GOO = BlockEnderGooPurified().apply { setup("purified_ender_goo") }
+	@JvmField val INFUSED_TNT        = BlockInfusedTNT().apply { setup("infused_tnt", translationKey = "tnt", inCreativeTab = false) }
+	@JvmField val JAR_O_DUST         = BlockJarODust(buildJarODust).apply { setup("jar_o_dust") }
+	@JvmField val DARK_CHEST         = BlockDarkChest(buildGloomrock).apply { setup("dark_chest") } // UPDATE: update recipe json to include tag to allow either slab variation
+	@JvmField val LOOT_CHEST         = BlockLootChest(buildLootChest).apply { setup("loot_chest") }
 	
 	// Blocks: Ores
 	
@@ -566,6 +570,7 @@ object ModBlocks{
 			register(WHITEBARK_DOUBLE_SLAB)
 			
 			register(ENDER_GOO)
+			register(PURIFIED_ENDER_GOO)
 			register(INFUSED_TNT with ::ItemInfusedTNT)
 			register(JAR_O_DUST with basicItemBlock)
 			register(DARK_CHEST with basicItemBlock)

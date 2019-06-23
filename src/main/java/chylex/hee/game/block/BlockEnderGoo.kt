@@ -20,6 +20,8 @@ import net.minecraft.entity.item.EntityItem
 import net.minecraft.init.MobEffects.MINING_FATIGUE
 import net.minecraft.init.MobEffects.POISON
 import net.minecraft.init.MobEffects.WEAKNESS
+import net.minecraft.potion.Potion
+import net.minecraft.potion.PotionEffect
 import net.minecraft.util.EnumFacing.DOWN
 import net.minecraft.util.EnumFacing.UP
 import net.minecraft.util.math.BlockPos
@@ -50,8 +52,17 @@ open class BlockEnderGoo : BlockAbstractGoo(FluidEnderGoo, Materials.ENDER_GOO){
 		)
 		
 		private const val MAX_COLLISION_TICK_COUNTER = 20 * 140
+		private const val PERSISTENT_EFFECT_DURATION_TICKS = 8
 		
 		// Status effects
+		
+		private fun addGooEffect(entity: EntityLivingBase, type: Potion, durationTicks: Int, level: Int = 0){
+			val existingEffect = entity.getActivePotionEffect(type)
+			
+			if (existingEffect == null || (level >= existingEffect.amplifier && durationTicks > existingEffect.duration + 30)){
+				entity.addPotionEffect(PotionEffect(type, durationTicks, level, true, true))
+			}
+		}
 		
 		private fun updateGooEffects(entity: EntityLivingBase, totalTicks: Int){
 			addGooEffect(entity, LIFELESS, PERSISTENT_EFFECT_DURATION_TICKS)

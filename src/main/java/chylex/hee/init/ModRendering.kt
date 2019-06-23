@@ -133,6 +133,7 @@ object ModRendering{
 		setMapper(ModBlocks.CORRUPTED_ENERGY, singleStateMapper)
 		setMapper(ModBlocks.DARK_CHEST, singleStateMapper)
 		setMapper(ModBlocks.ENDER_GOO, singleStateMapper)
+		setMapper(ModBlocks.PURIFIED_ENDER_GOO, singleStateMapper)
 		setMapper(ModBlocks.INFUSED_TNT, singleStateMapper)
 		setMapper(ModBlocks.LOOT_CHEST, singleStateMapper)
 	}

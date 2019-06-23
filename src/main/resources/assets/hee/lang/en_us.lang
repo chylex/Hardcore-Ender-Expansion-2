@@ -130,6 +130,7 @@ item.hee.scorching_shovel.name=Scorching Shovel
 item.hee.scorching_axe.name=Scorching Axe
 item.hee.flint_and_infernium.name=Flint and Infernium
 item.hee.ender_goo_bucket.name=Ender Goo Bucket
+item.hee.purified_ender_goo_bucket.name=Purified Ender Goo Bucket
 
 item.hee.energy_oracle.name=Energy Oracle
 item.hee.energy_receptacle.name=Energy Receptacle
@@ -165,6 +166,7 @@ item.tooltip.hee.trinket.not_in_slot.charged=§cMust be placed in Trinket slot
 item.tooltip.hee.trinket.not_in_slot.uncharged=§cMust be charged and placed in Trinket slot
 
 fluid.ender_goo=Ender Goo
+fluid.purified_ender_goo=Purified Ender Goo
 
 hee.infusions.list.title=§aInfusions
 hee.infusions.list.item=§2- %s

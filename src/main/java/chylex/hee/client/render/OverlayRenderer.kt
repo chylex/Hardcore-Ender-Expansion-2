@@ -36,6 +36,7 @@ object OverlayRenderer{
 	private const val LINE_SPACING = 7
 	
 	@JvmStatic private val TEX_ENDER_GOO_OVERLAY = Resource.Custom("textures/overlay/ender_goo.png")
+	@JvmStatic private val TEX_PURIFIED_ENDER_GOO_OVERLAY = Resource.Custom("textures/overlay/purified_ender_goo.png")
 	
 	private var clusterLookedAt: TileEntityEnergyCluster? = null
 	
@@ -45,11 +46,11 @@ object OverlayRenderer{
 	@SubscribeEvent
 	fun onFogDensity(e: FogDensity){
 		val entity = e.entity
-		val insideOf = ActiveRenderInfo.getBlockStateAtEntityViewpoint(entity.world, entity, e.renderPartialTicks.toFloat())
+		val inside = ActiveRenderInfo.getBlockStateAtEntityViewpoint(entity.world, entity, e.renderPartialTicks.toFloat()).material
 		
-		if (insideOf.material === Materials.ENDER_GOO){
+		if (inside === Materials.ENDER_GOO || inside === Materials.PURIFIED_ENDER_GOO){
 			GL.setFog(EXP)
-			e.density = 0.66F
+			e.density = if (inside === Materials.ENDER_GOO) 0.66F else 0.06F
 			e.isCanceled = true // otherwise the event is ignored
 		}
 	}
@@ -62,16 +63,22 @@ object OverlayRenderer{
 		}
 		
 		val player = MC.player ?: return
-		val insideOf = ActiveRenderInfo.getBlockStateAtEntityViewpoint(player.world, player, e.partialTicks)
+		val inside = ActiveRenderInfo.getBlockStateAtEntityViewpoint(player.world, player, e.partialTicks).material
 		
-		if (insideOf.material === Materials.ENDER_GOO && MC.settings.thirdPersonView == 0 && !player.isSpectator){
+		if ((inside === Materials.ENDER_GOO || inside === Materials.PURIFIED_ENDER_GOO) && MC.settings.thirdPersonView == 0 && !player.isSpectator){
 			val scaledResolution = MC.resolution
 			val brightness = player.brightness
 			
 			GL.color(brightness, brightness, brightness, 1F)
 			GL.tryBlendFuncSeparate(SRC_ALPHA, ONE_MINUS_SRC_ALPHA, ONE, ZERO)
 			
-			MC.textureManager.bindTexture(TEX_ENDER_GOO_OVERLAY)
+			if (inside === Materials.ENDER_GOO){
+				MC.textureManager.bindTexture(TEX_ENDER_GOO_OVERLAY)
+			}
+			else{
+				MC.textureManager.bindTexture(TEX_PURIFIED_ENDER_GOO_OVERLAY)
+			}
+			
 			MC.instance.ingameGUI.drawTexturedModalRect(0, 0, 0, 0, scaledResolution.scaledWidth, scaledResolution.scaledHeight)
 			
 			GL.color(1F, 1F, 1F, 1F)

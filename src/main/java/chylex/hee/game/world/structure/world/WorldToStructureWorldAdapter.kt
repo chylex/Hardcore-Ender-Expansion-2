@@ -29,7 +29,8 @@ class WorldToStructureWorldAdapter(private val world: World, override val rand: 
 		private val REQUIRE_IMMEDIATE_UPDATE = setOf<Block>(
 			Blocks.LAVA,
 			Blocks.WATER,
-			ModBlocks.ENDER_GOO
+			ModBlocks.ENDER_GOO,
+			ModBlocks.PURIFIED_ENDER_GOO
 		)
 	}
 	

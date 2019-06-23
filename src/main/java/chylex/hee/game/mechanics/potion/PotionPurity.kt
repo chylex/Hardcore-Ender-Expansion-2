@@ -8,7 +8,7 @@ import net.minecraft.potion.PotionEffect
 import kotlin.math.max
 
 object PotionPurity : PotionBase(color = RGB(34, 204, 252), isNegative = false){
-	private const val MIN_DURATION = 60 // allow animations to finish, must be > 10
+	const val MIN_DURATION = 60 // allow animations to finish, must be > 10
 	
 	val PURITY = this
 	
