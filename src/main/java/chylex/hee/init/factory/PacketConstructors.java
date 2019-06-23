@@ -3,6 +3,7 @@ import chylex.hee.network.IPacket;
 import chylex.hee.network.client.PacketClientFX;
 import chylex.hee.network.client.PacketClientLaunchInstantly;
 import chylex.hee.network.client.PacketClientMoveYourAss;
+import chylex.hee.network.client.PacketClientPotionDuration;
 import chylex.hee.network.client.PacketClientRotateInstantly;
 import chylex.hee.network.client.PacketClientTeleportInstantly;
 import chylex.hee.network.client.PacketClientTrinketBreak;
@@ -21,6 +22,7 @@ public final class PacketConstructors{
 			packet(PacketClientFX.class, PacketClientFX::new),
 			packet(PacketClientLaunchInstantly.class, PacketClientLaunchInstantly::new),
 			packet(PacketClientMoveYourAss.class, PacketClientMoveYourAss::new),
+			packet(PacketClientPotionDuration.class, PacketClientPotionDuration::new),
 			packet(PacketClientRotateInstantly.class, PacketClientRotateInstantly::new),
 			packet(PacketClientTeleportInstantly.class, PacketClientTeleportInstantly::new),
 			packet(PacketClientTrinketBreak.class, PacketClientTrinketBreak::new),
