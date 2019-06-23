@@ -6,6 +6,7 @@ import chylex.hee.game.entity.item.EntityInfusedTNT
 import chylex.hee.game.entity.item.EntityItemFreshlyCooked
 import chylex.hee.game.entity.item.EntityItemIgneousRock
 import chylex.hee.game.entity.item.EntityItemNoBob
+import chylex.hee.game.entity.item.EntityItemRevitalizationSubstance
 import chylex.hee.game.entity.item.EntityTokenHolder
 import chylex.hee.game.entity.living.EntityMobEnderman
 import chylex.hee.game.entity.living.EntityMobEndermite
@@ -42,6 +43,7 @@ object ModEntities{
 			register<EntityItemNoBob>("item_no_bob").tracker(64, 3, true) to this
 			register<EntityItemIgneousRock>("item_igneous_rock").tracker(64, 3, true) to this
 			register<EntityItemFreshlyCooked>("item_freshly_cooked").tracker(64, 3, true) to this
+			register<EntityItemRevitalizationSubstance>("item_revitalization_substance").tracker(64, 3, true) to this
 			
 			register<EntityFallingBlockHeavy>("falling_block_heavy").tracker(160, 20, true) to this
 			register<EntityFallingObsidian>("falling_obsidian").tracker(160, 20, true) to this

@@ -1,6 +1,7 @@
 package chylex.hee.game.item
 import chylex.hee.client.model.ModelHelper
 import chylex.hee.game.block.entity.TileEntityEnergyCluster
+import chylex.hee.game.entity.item.EntityItemRevitalizationSubstance
 import chylex.hee.game.fx.IFxData
 import chylex.hee.game.fx.IFxHandler
 import chylex.hee.game.mechanics.energy.IClusterHealth.HealthOverride.REVITALIZING
@@ -21,8 +22,10 @@ import chylex.hee.system.util.readPos
 import chylex.hee.system.util.use
 import chylex.hee.system.util.writePos
 import io.netty.buffer.ByteBuf
+import net.minecraft.entity.Entity
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.item.Item
+import net.minecraft.item.ItemStack
 import net.minecraft.util.EnumActionResult
 import net.minecraft.util.EnumActionResult.FAIL
 import net.minecraft.util.EnumActionResult.SUCCESS
@@ -67,6 +70,10 @@ class ItemRevitalizationSubstance : Item(){
 		}
 	}
 	
+	init{
+		maxStackSize = 16
+	}
+	
 	override fun onItemUse(player: EntityPlayer, world: World, pos: BlockPos, hand: EnumHand, facing: EnumFacing, hitX: Float, hitY: Float, hitZ: Float): EnumActionResult{
 		if (world.isRemote){
 			return FAIL // disable animation
@@ -85,5 +92,13 @@ class ItemRevitalizationSubstance : Item(){
 		}
 		
 		return SUCCESS
+	}
+	
+	override fun hasCustomEntity(stack: ItemStack): Boolean{
+		return true
+	}
+	
+	override fun createEntity(world: World, replacee: Entity, stack: ItemStack): Entity{
+		return EntityItemRevitalizationSubstance(world, stack, replacee)
 	}
 }
