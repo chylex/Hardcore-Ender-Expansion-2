@@ -3,6 +3,7 @@ import chylex.hee.game.block.BlockVoidPortalInner.Type.HUB
 import chylex.hee.game.block.BlockVoidPortalInner.Type.RETURN_ACTIVE
 import chylex.hee.game.block.entity.TileEntityPortalInner
 import chylex.hee.game.block.entity.TileEntityVoidPortalStorage
+import chylex.hee.game.block.info.BlockBuilder
 import chylex.hee.game.block.util.Property
 import chylex.hee.game.mechanics.portal.DimensionTeleporter
 import chylex.hee.game.mechanics.portal.EntityPortalContact
@@ -27,7 +28,7 @@ import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.Vec3d
 import net.minecraft.world.World
 
-class BlockVoidPortalInner(builder: BlockSimple.Builder) : BlockAbstractPortal(builder){
+class BlockVoidPortalInner(builder: BlockBuilder) : BlockAbstractPortal(builder){
 	companion object{
 		val TYPE = Property.enum<Type>("type")
 		

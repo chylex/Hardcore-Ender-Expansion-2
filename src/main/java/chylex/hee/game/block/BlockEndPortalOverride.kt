@@ -1,6 +1,6 @@
 package chylex.hee.game.block
-import chylex.hee.game.block.BlockSimple.Builder.Companion.INDESTRUCTIBLE_HARDNESS
-import chylex.hee.game.block.BlockSimple.Builder.Companion.INDESTRUCTIBLE_RESISTANCE
+import chylex.hee.game.block.info.BlockBuilder.Companion.INDESTRUCTIBLE_HARDNESS
+import chylex.hee.game.block.info.BlockBuilder.Companion.INDESTRUCTIBLE_RESISTANCE
 import chylex.hee.system.util.setAir
 import net.minecraft.block.BlockEndPortal
 import net.minecraft.block.material.Material

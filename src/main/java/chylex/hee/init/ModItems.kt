@@ -85,12 +85,15 @@ object ModItems{
 	
 	// Items: Tools
 	
-	@JvmField val VOID_MINER                = ItemVoidMiner().apply { setup("void_miner") }
-	@JvmField val VOID_BUCKET               = ItemVoidBucket().apply { setup("void_bucket") }
-	@JvmField val SCORCHING_PICKAXE         = ItemScorchingTool(PICKAXE).apply { setup("scorching_pickaxe") }
-	@JvmField val SCORCHING_SHOVEL          = ItemScorchingTool(SHOVEL).apply { setup("scorching_shovel") }
-	@JvmField val SCORCHING_AXE             = ItemScorchingTool(AXE).apply { setup("scorching_axe") }
-	@JvmField val FLINT_AND_INFERNIUM       = ItemFlintAndInfernium().apply { setup("flint_and_infernium") }
+	@JvmField val VOID_MINER          = ItemVoidMiner().apply { setup("void_miner") }
+	@JvmField val VOID_BUCKET         = ItemVoidBucket().apply { setup("void_bucket") }
+	@JvmField val SCORCHING_PICKAXE   = ItemScorchingTool(PICKAXE).apply { setup("scorching_pickaxe") }
+	@JvmField val SCORCHING_SHOVEL    = ItemScorchingTool(SHOVEL).apply { setup("scorching_shovel") }
+	@JvmField val SCORCHING_AXE       = ItemScorchingTool(AXE).apply { setup("scorching_axe") }
+	@JvmField val FLINT_AND_INFERNIUM = ItemFlintAndInfernium().apply { setup("flint_and_infernium") }
+	
+	// Items: Fluids
+	
 	@JvmField val ENDER_GOO_BUCKET          = ItemBucket(ModBlocks.ENDER_GOO).apply { setup("ender_goo_bucket"); containerItem = Items.BUCKET }
 	@JvmField val PURIFIED_ENDER_GOO_BUCKET = ItemPurifiedEnderGooBucket().apply { setup("purified_ender_goo_bucket"); containerItem = Items.BUCKET }
 	
@@ -156,6 +159,7 @@ object ModItems{
 			register(SCORCHING_SHOVEL)
 			register(SCORCHING_AXE)
 			register(FLINT_AND_INFERNIUM)
+			
 			register(ENDER_GOO_BUCKET)
 			register(PURIFIED_ENDER_GOO_BUCKET)
 			

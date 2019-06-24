@@ -58,27 +58,51 @@ import chylex.hee.game.block.entity.TileEntityTablePedestal
 import chylex.hee.game.block.entity.TileEntityVoidPortalStorage
 import chylex.hee.game.block.fluid.FluidEnderGoo
 import chylex.hee.game.block.fluid.FluidEnderGooPurified
-import chylex.hee.game.block.material.Materials
+import chylex.hee.game.block.info.BlockBuilders.buildCorruptedEnergy
+import chylex.hee.game.block.info.BlockBuilders.buildDarkLoam
+import chylex.hee.game.block.info.BlockBuilders.buildDustyStone
+import chylex.hee.game.block.info.BlockBuilders.buildDustyStoneBricks
+import chylex.hee.game.block.info.BlockBuilders.buildDustyStoneCracked
+import chylex.hee.game.block.info.BlockBuilders.buildDustyStoneDamaged
+import chylex.hee.game.block.info.BlockBuilders.buildEndPowderOre
+import chylex.hee.game.block.info.BlockBuilders.buildEndStone
+import chylex.hee.game.block.info.BlockBuilders.buildEnderSol
+import chylex.hee.game.block.info.BlockBuilders.buildEndiumBlock
+import chylex.hee.game.block.info.BlockBuilders.buildEndiumOre
+import chylex.hee.game.block.info.BlockBuilders.buildEnergyCluster
+import chylex.hee.game.block.info.BlockBuilders.buildEternalFire
+import chylex.hee.game.block.info.BlockBuilders.buildEtherealLantern
+import chylex.hee.game.block.info.BlockBuilders.buildGloomrock
+import chylex.hee.game.block.info.BlockBuilders.buildGloomrockBricks
+import chylex.hee.game.block.info.BlockBuilders.buildGloomrockSmooth
+import chylex.hee.game.block.info.BlockBuilders.buildGloomtorch
+import chylex.hee.game.block.info.BlockBuilders.buildGraveDirt
+import chylex.hee.game.block.info.BlockBuilders.buildHumus
+import chylex.hee.game.block.info.BlockBuilders.buildIgneousRockOre
+import chylex.hee.game.block.info.BlockBuilders.buildInfusedGlass
+import chylex.hee.game.block.info.BlockBuilders.buildJarODust
+import chylex.hee.game.block.info.BlockBuilders.buildLootChest
+import chylex.hee.game.block.info.BlockBuilders.buildObsidian
+import chylex.hee.game.block.info.BlockBuilders.buildObsidianVariation
+import chylex.hee.game.block.info.BlockBuilders.buildObsidianVariationLit
+import chylex.hee.game.block.info.BlockBuilders.buildPortalFrame
+import chylex.hee.game.block.info.BlockBuilders.buildPortalInner
+import chylex.hee.game.block.info.BlockBuilders.buildScaffolding
+import chylex.hee.game.block.info.BlockBuilders.buildStardustOre
+import chylex.hee.game.block.info.BlockBuilders.buildTable
+import chylex.hee.game.block.info.BlockBuilders.buildTablePedestal
+import chylex.hee.game.block.info.BlockBuilders.buildVantablock
+import chylex.hee.game.block.info.BlockBuilders.buildWhitebark
+import chylex.hee.game.block.info.BlockBuilders.buildWhitebarkPlanks
 import chylex.hee.game.item.ItemAncientCobweb
 import chylex.hee.game.item.ItemBlockSlabFuel
 import chylex.hee.game.item.ItemBlockWithMetadata
 import chylex.hee.game.item.ItemDragonEgg
 import chylex.hee.game.item.ItemInfusedTNT
-import chylex.hee.game.item.util.Tool.Level.DIAMOND
-import chylex.hee.game.item.util.Tool.Level.IRON
-import chylex.hee.game.item.util.Tool.Level.STONE
-import chylex.hee.game.item.util.Tool.Level.WOOD
-import chylex.hee.game.item.util.Tool.Type.AXE
-import chylex.hee.game.item.util.Tool.Type.PICKAXE
-import chylex.hee.game.item.util.Tool.Type.SHOVEL
 import chylex.hee.init.ModCreativeTabs.OrderedCreativeTab
 import chylex.hee.system.Resource
-import chylex.hee.system.util.clone
 import chylex.hee.system.util.useVanillaName
 import net.minecraft.block.Block
-import net.minecraft.block.SoundType
-import net.minecraft.block.material.MapColor
-import net.minecraft.block.material.Material
 import net.minecraft.creativetab.CreativeTabs
 import net.minecraft.init.Blocks
 import net.minecraft.item.Item
@@ -102,67 +126,6 @@ object ModBlocks{
 	
 	// Blocks: Building (Uncategorized)
 	
-	private val buildEtherealLantern = BlockSimple.Builder(Materials.SOLID_NO_TOOL).apply {
-		harvestTool = Pair(WOOD, PICKAXE)
-		harvestHardness = 0.9F
-		
-		lightLevel = 15
-		
-		soundType = SoundType.GLASS
-		mapColor = MapColor.PURPLE
-	}
-	
-	private val buildGraveDirt = BlockSimple.Builder(Materials.SOLID_NO_TOOL).apply {
-		harvestTool = Pair(WOOD, SHOVEL)
-		harvestHardness = 1.25F
-		
-		soundType = SoundType.GROUND
-		mapColor = MapColor.DIRT
-	}
-	
-	private val buildInfusedGlass = BlockSimple.Builder(Material.GLASS).apply {
-		harvestTool = Pair(WOOD, PICKAXE)
-		harvestHardness = 0.5F
-		explosionResistance = 0.6F
-		
-		soundType = SoundType.GLASS
-		mapColor = MapColor.ORANGE_STAINED_HARDENED_CLAY
-	}
-	
-	private val buildVantablock = BlockSimple.Builder(Materials.SOLID_WITH_TOOL).apply {
-		harvestTool = Pair(IRON, PICKAXE)
-		harvestHardness = 10.0F
-		explosionResistance = 1.0F
-		
-		soundType = SoundType.CLOTH
-		mapColor = MapColor.BLACK
-	}
-	
-	private val buildEndiumBlock = BlockSimple.Builder(Materials.SOLID_WITH_TOOL).apply {
-		harvestTool = Pair(IRON, PICKAXE)
-		harvestHardness = 6.2F
-		explosionResistance = 20.0F
-		
-		soundType = SoundType.METAL
-		mapColor = MapColor.BLUE
-	}
-	
-	private val buildEnderSol = BlockSimple.Builder(Materials.SOLID_WITH_TOOL).apply {
-		harvestTool = Pair(WOOD, SHOVEL)
-		harvestHardness = 1.9F
-		
-		soundType = SoundType.GROUND.clone(pitch = 0.85F)
-		mapColor = MapColor.WOOD
-	}
-	
-	private val buildHumus = BlockSimple.Builder(Materials.SOLID_NO_TOOL).apply {
-		harvestTool = Pair(WOOD, SHOVEL)
-		harvestHardness = 0.3F
-		
-		soundType = SoundType.GROUND
-		mapColor = MapColor.BLACK
-	}
-	
 	@JvmField val ETHEREAL_LANTERN = BlockSimple(buildEtherealLantern).apply { setup("ethereal_lantern") }
 	@JvmField val STONE_BRICK_WALL = BlockWallCustom(Blocks.STONEBRICK).apply { setup("stone_brick_wall") }
 	@JvmField val GRAVE_DIRT       = BlockGraveDirt(buildGraveDirt).apply { setup("grave_dirt") }
@@ -173,34 +136,6 @@ object ModBlocks{
 	@JvmField val HUMUS            = BlockHumus(buildHumus).apply { setup("humus") }
 	
 	// Blocks: Building (Gloomrock)
-	
-	private val buildGloomrock = BlockSimple.Builder(Materials.SOLID_WITH_TOOL).apply {
-		harvestTool = Pair(WOOD, PICKAXE)
-		harvestHardness = 1.6F
-		explosionResistance = 7.0F
-		
-		soundType = SoundType.STONE
-		mapColor = MapColor.BLACK
-	}
-	
-	private val buildGloomrockBricks = buildGloomrock.clone {
-		harvestHardness = 2.8F
-		explosionResistance = 10.0F
-	}
-	
-	private val buildGloomrockSmooth = buildGloomrock.clone {
-		harvestHardness = 2.0F
-		explosionResistance = 8.0F
-	}
-	
-	private val buildGloomtorch = BlockSimple.Builder(Materials.SOLID_NO_TOOL).apply {
-		explosionResistance = 0.5F
-		
-		lightLevel = 13
-		
-		soundType = SoundType.STONE
-		mapColor = MapColor.BLACK
-	}
 	
 	@JvmField val GLOOMROCK                    = BlockGloomrock(buildGloomrock).apply { setup("gloomrock") }
 	@JvmField val GLOOMROCK_BRICKS             = BlockGloomrock(buildGloomrockBricks).apply { setup("gloomrock_bricks") }
@@ -224,30 +159,6 @@ object ModBlocks{
 	
 	// Blocks: Building (Dusty Stone)
 	
-	private val buildDustyStone = BlockSimple.Builder(Materials.SOLID_NO_TOOL).apply {
-		harvestTool = Pair(WOOD, PICKAXE) // + shovel
-		harvestHardness = 1.1F
-		explosionResistance = 0.5F
-		
-		soundType = SoundType.STONE
-		mapColor = MapColor.SAND
-	}
-	
-	private val buildDustyStoneCracked = buildDustyStone.clone {
-		harvestHardness = 1.0F
-		explosionResistance = 0.2F
-	}
-	
-	private val buildDustyStoneDamaged = buildDustyStone.clone {
-		harvestHardness = 0.9F
-		explosionResistance = 0.1F
-	}
-	
-	private val buildDustyStoneBricks = buildDustyStone.clone {
-		harvestHardness = 1.9F
-		explosionResistance = 3.0F
-	}
-	
 	@JvmField val DUSTY_STONE                   = BlockDustyStonePlain(buildDustyStone).apply { setup("dusty_stone") }
 	@JvmField val DUSTY_STONE_CRACKED           = BlockDustyStonePlain(buildDustyStoneCracked).apply { setup("dusty_stone_cracked") }
 	@JvmField val DUSTY_STONE_DAMAGED           = BlockDustyStonePlain(buildDustyStoneDamaged).apply { setup("dusty_stone_damaged") }
@@ -258,24 +169,6 @@ object ModBlocks{
 	@JvmField val DUSTY_STONE_BRICK_DOUBLE_SLAB = BlockSlabCustom.Full(buildDustyStoneBricks, DUSTY_STONE_BRICK_SLAB).apply { setup("dusty_stone_brick_slab_double", "hee.dusty_stone_brick_slab") }
 	
 	// Blocks: Building (Obsidian)
-	
-	private val buildObsidian = BlockSimple.Builder(Materials.SOLID_WITH_TOOL).apply {
-		harvestTool = Pair(DIAMOND, PICKAXE)
-		harvestHardness = 50F
-		explosionResistance = 2000F
-		
-		soundType = SoundType.STONE
-		mapColor = MapColor.BLACK
-	}
-	
-	private val buildObsidianVariation = buildObsidian.clone {
-		harvestHardness = 20F
-		explosionResistance = 500F
-	}
-	
-	private val buildObsidianVariationLit = buildObsidianVariation.clone {
-		lightLevel = 15
-	}
 	
 	@JvmField val OBSIDIAN_STAIRS       = BlockStairsCustom(Blocks.OBSIDIAN).apply { setup("obsidian_stairs") }
 	@JvmField val OBSIDIAN_FALLING      = BlockFallingObsidian(buildObsidian).apply { setup("obsidian_falling") }
@@ -288,28 +181,11 @@ object ModBlocks{
 	
 	// Blocks: Building (End Stone)
 	
-	private val buildEndStone = BlockSimple.Builder(Materials.SOLID_WITH_TOOL).apply {
-		harvestTool = Pair(WOOD, PICKAXE)
-		harvestHardness = 3.0F
-		explosionResistance = 15.0F
-		
-		soundType = SoundType.STONE
-		mapColor = MapColor.SAND
-	}
-	
 	@JvmField val END_STONE_INFESTED  = BlockSimple(buildEndStone).apply { setup("end_stone_infested") }
 	@JvmField val END_STONE_BURNED    = BlockSimple(buildEndStone).apply { setup("end_stone_burned") }
 	@JvmField val END_STONE_ENCHANTED = BlockSimple(buildEndStone).apply { setup("end_stone_enchanted") }
 	
 	// Blocks: Building (Dark Loam)
-	
-	private val buildDarkLoam = BlockSimple.Builder(Materials.SOLID_NO_TOOL).apply {
-		harvestTool = Pair(WOOD, SHOVEL)
-		harvestHardness = 0.6F
-		
-		soundType = SoundType.GROUND
-		mapColor = MapColor.BLACK
-	}
 	
 	@JvmField val DARK_LOAM             = BlockSimple(buildDarkLoam).apply { setup("dark_loam") }
 	@JvmField val DARK_LOAM_SLAB        = BlockSlabCustom.Half(buildDarkLoam).apply { setup("dark_loam_slab") }
@@ -317,81 +193,26 @@ object ModBlocks{
 	
 	// Blocks: Building (Wood)
 	
-	private val buildWhitebark = BlockSimple.Builder(Material.WOOD).apply {
-		harvestTool = Pair(WOOD, AXE)
-		harvestHardness = 2.0F
-		
-		soundType = SoundType.WOOD
-		mapColor = MapColor.SNOW
-	}
+	@JvmField val WHITEBARK_LOG         = BlockWhitebarkLog().apply { setup("whitebark_log") }
+	@JvmField val WHITEBARK             = BlockSimple(buildWhitebark).apply { setup("whitebark") }
+	@JvmField val WHITEBARK_PLANKS      = BlockSimple(buildWhitebarkPlanks).apply { setup("whitebark_planks") }
+	@JvmField val WHITEBARK_STAIRS      = BlockStairsCustom(WHITEBARK_PLANKS).apply { setup("whitebark_stairs") }
+	@JvmField val WHITEBARK_SLAB        = BlockSlabCustom.Half(buildWhitebarkPlanks).apply { setup("whitebark_slab") }
+	@JvmField val WHITEBARK_DOUBLE_SLAB = BlockSlabCustom.Full(buildWhitebarkPlanks, WHITEBARK_SLAB).apply { setup("whitebark_slab_double", "hee.whitebark_slab") }
 	
-	private val buildWhitebarkPlanks = buildWhitebark.clone {
-		explosionResistance = 5.0F
-	}
-	
-	@JvmField val WHITEBARK_LOG          = BlockWhitebarkLog().apply { setup("whitebark_log") }
-	@JvmField val WHITEBARK              = BlockSimple(buildWhitebark).apply { setup("whitebark") }
-	@JvmField val WHITEBARK_PLANKS       = BlockSimple(buildWhitebarkPlanks).apply { setup("whitebark_planks") }
-	@JvmField val WHITEBARK_STAIRS       = BlockStairsCustom(WHITEBARK_PLANKS).apply { setup("whitebark_stairs") }
-	@JvmField val WHITEBARK_SLAB         = BlockSlabCustom.Half(buildWhitebarkPlanks).apply { setup("whitebark_slab") }
-	@JvmField val WHITEBARK_DOUBLE_SLAB  = BlockSlabCustom.Full(buildWhitebarkPlanks, WHITEBARK_SLAB).apply { setup("whitebark_slab_double", "hee.whitebark_slab") }
-	
-	// Blocks: Interactive (Uncategorized)
-	
-	private val buildJarODust = BlockSimple.Builder(Materials.SOLID_NO_TOOL).apply {
-		harvestHardness = 0.4F
-		explosionResistance = 0F
-		
-		soundType = SoundType.METAL
-		mapColor = MapColor.ORANGE_STAINED_HARDENED_CLAY
-	}
-	
-	private val buildLootChest = BlockSimple.Builder(Materials.SOLID_NO_TOOL).apply {
-		makeIndestructible()
-		
-		lightLevel = 13
-		
-		soundType = SoundType.METAL
-		mapColor = MapColor.BLACK
-	}
+	// Blocks: Fluids
 	
 	@JvmField val ENDER_GOO          = BlockEnderGoo().apply { setup("ender_goo") }
 	@JvmField val PURIFIED_ENDER_GOO = BlockEnderGooPurified().apply { setup("purified_ender_goo") }
-	@JvmField val INFUSED_TNT        = BlockInfusedTNT().apply { setup("infused_tnt", translationKey = "tnt", inCreativeTab = false) }
-	@JvmField val JAR_O_DUST         = BlockJarODust(buildJarODust).apply { setup("jar_o_dust") }
-	@JvmField val DARK_CHEST         = BlockDarkChest(buildGloomrock).apply { setup("dark_chest") } // UPDATE: update recipe json to include tag to allow either slab variation
-	@JvmField val LOOT_CHEST         = BlockLootChest(buildLootChest).apply { setup("loot_chest") }
+	
+	// Blocks: Interactive (Uncategorized)
+	
+	@JvmField val INFUSED_TNT = BlockInfusedTNT().apply { setup("infused_tnt", translationKey = "tnt", inCreativeTab = false) }
+	@JvmField val JAR_O_DUST  = BlockJarODust(buildJarODust).apply { setup("jar_o_dust") }
+	@JvmField val DARK_CHEST  = BlockDarkChest(buildGloomrock).apply { setup("dark_chest") } // UPDATE: update recipe json to include tag to allow either slab variation
+	@JvmField val LOOT_CHEST  = BlockLootChest(buildLootChest).apply { setup("loot_chest") }
 	
 	// Blocks: Ores
-	
-	private val buildEndOre = BlockSimple.Builder(Materials.SOLID_WITH_TOOL).apply {
-		soundType = SoundType.STONE
-		mapColor = MapColor.SAND
-	}
-	
-	private val buildEndPowderOre = buildEndOre.clone {
-		harvestTool = Pair(STONE, PICKAXE)
-		harvestHardness = 2.0F
-		explosionResistance = 9.0F
-	}
-	
-	private val buildEndiumOre = buildEndOre.clone {
-		harvestTool = Pair(IRON, PICKAXE)
-		harvestHardness = 5.0F
-		explosionResistance = 16.5F
-	}
-	
-	private val buildStardustOre = buildEndOre.clone {
-		harvestTool = Pair(STONE, PICKAXE)
-		harvestHardness = 2.8F
-		explosionResistance = 14.0F
-	}
-	
-	private val buildIgneousRockOre = buildEndOre.clone {
-		harvestTool = Pair(DIAMOND, PICKAXE)
-		harvestHardness = 1.6F
-		explosionResistance = 6.0F
-	}
 	
 	@JvmField val END_POWDER_ORE   = BlockEndPowderOre(buildEndPowderOre).apply { setup("end_powder_ore") }
 	@JvmField val ENDIUM_ORE       = BlockEndium(buildEndiumOre).apply { setup("endium_ore") }
@@ -412,17 +233,6 @@ object ModBlocks{
 	
 	// Blocks: Portals
 	
-	private val buildPortalInner = BlockSimple.Builder(Material.PORTAL).apply {
-		makeIndestructible()
-		lightLevel = 15
-		mapColor = MapColor.BLACK
-	}
-	
-	private val buildPortalFrame = BlockSimple.Builder(Material.PORTAL).apply {
-		makeIndestructible()
-		mapColor = MapColor.SAND
-	}
-	
 	private val portalFrameAABB = AxisAlignedBB(0.0, 0.0, 0.0, 1.0, 0.8125, 1.0)
 	
 	@JvmField val END_PORTAL_INNER    = BlockEndPortalInner(buildPortalInner).apply { setup("end_portal_inner", inCreativeTab = false) }
@@ -435,57 +245,16 @@ object ModBlocks{
 	
 	// Blocks: Energy
 	
-	private val buildEnergyCluster = BlockSimple.Builder(Materials.ENERGY_CLUSTER).apply {
-		lightLevel = 13
-		lightOpacity = 0
-		
-		soundType = SoundType.GLASS.clone(volume = 1.25F, pitch = 1.35F)
-		mapColor = MapColor.SNOW
-	}
-	
-	private val buildCorruptedEnergy = BlockSimple.Builder(Materials.CORRUPTED_ENERGY).apply {
-		mapColor = MapColor.PURPLE
-	}
-	
 	@JvmField val ENERGY_CLUSTER   = BlockEnergyCluster(buildEnergyCluster).apply { setup("energy_cluster") }
 	@JvmField val CORRUPTED_ENERGY = BlockCorruptedEnergy(buildCorruptedEnergy).apply { setup("corrupted_energy") }
 	
 	// Blocks: Tables
-	
-	private val buildTablePedestal = buildGloomrock.clone {
-		harvestHardness     = buildGloomrock.harvestHardness * 0.75F
-		explosionResistance = buildGloomrock.explosionResistance * 0.5F
-	}
-	
-	private val buildTable = BlockSimple.Builder(Materials.SOLID_WITH_TOOL).apply {
-		harvestTool = Pair(STONE, PICKAXE)
-		harvestHardness = 20.0F
-		explosionResistance = 25.0F
-		
-		soundType = SoundType.METAL
-		mapColor = MapColor.GRAY
-	}
 	
 	@JvmField val TABLE_PEDESTAL     = BlockTablePedestal(buildTablePedestal).apply { setup("table_pedestal") } // UPDATE: update recipe json to include tag to allow all gloomrock variations
 	@JvmField val TABLE_BASE         = BlockTableBase(buildTable).apply { setup("table_base") }
 	@JvmField val ACCUMULATION_TABLE = BlockTableTile(buildTable, ::TileEntityAccumulationTable, minAllowedTier = 1).apply { setup("accumulation_table") }
 	
 	// Blocks: Utilities
-	
-	private val buildEternalFire = BlockSimple.Builder(Material.FIRE).apply {
-		harvestHardness = 0F
-		miningStats = false
-		
-		lightLevel = 15
-		soundType = SoundType.CLOTH
-	}
-	
-	private val buildScaffolding = BlockSimple.Builder(Materials.SCAFFOLDING).apply {
-		makeIndestructible()
-		
-		lightOpacity = 0
-		mapColor = MapColor.AIR
-	}
 	
 	@JvmField val ETERNAL_FIRE = BlockEternalFire(buildEternalFire).apply { setup("eternal_fire", inCreativeTab = false) }
 	@JvmField val SCAFFOLDING  = BlockScaffolding(buildScaffolding).apply { setup("scaffolding") }
@@ -571,6 +340,7 @@ object ModBlocks{
 			
 			register(ENDER_GOO)
 			register(PURIFIED_ENDER_GOO)
+			
 			register(INFUSED_TNT with ::ItemInfusedTNT)
 			register(JAR_O_DUST with basicItemBlock)
 			register(DARK_CHEST with basicItemBlock)

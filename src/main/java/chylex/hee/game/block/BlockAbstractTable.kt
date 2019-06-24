@@ -1,4 +1,5 @@
 package chylex.hee.game.block
+import chylex.hee.game.block.info.BlockBuilder
 import chylex.hee.game.block.util.Property
 import chylex.hee.system.util.get
 import chylex.hee.system.util.with
@@ -14,7 +15,7 @@ import net.minecraft.world.World
 import net.minecraftforge.fml.relauncher.Side
 import net.minecraftforge.fml.relauncher.SideOnly
 
-abstract class BlockAbstractTable(builder: BlockSimple.Builder) : BlockSimple(builder){
+abstract class BlockAbstractTable(builder: BlockBuilder) : BlockSimple(builder){
 	companion object{
 		const val MIN_TIER = 1
 		const val MAX_TIER = 3

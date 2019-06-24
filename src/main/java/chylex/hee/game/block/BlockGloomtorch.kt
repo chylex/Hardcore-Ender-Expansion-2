@@ -1,4 +1,5 @@
 package chylex.hee.game.block
+import chylex.hee.game.block.info.BlockBuilder
 import chylex.hee.system.util.Facing6
 import chylex.hee.system.util.get
 import chylex.hee.system.util.getBlock
@@ -28,7 +29,7 @@ import net.minecraft.util.math.BlockPos
 import net.minecraft.world.IBlockAccess
 import net.minecraft.world.World
 
-class BlockGloomtorch(builder: BlockSimple.Builder) : BlockSimple(builder){
+class BlockGloomtorch(builder: BlockBuilder) : BlockSimple(builder){
 	private companion object{
 		private const val BB_SIDE_MIN = 0.421875
 		private const val BB_SIDE_MAX = 0.578125

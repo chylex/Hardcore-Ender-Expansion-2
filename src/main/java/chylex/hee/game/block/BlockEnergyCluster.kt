@@ -1,5 +1,6 @@
 package chylex.hee.game.block
 import chylex.hee.game.block.entity.TileEntityEnergyCluster
+import chylex.hee.game.block.info.BlockBuilder
 import chylex.hee.game.mechanics.energy.IClusterGenerator
 import chylex.hee.game.mechanics.energy.IEnergyQuantity
 import chylex.hee.game.mechanics.instability.Instability
@@ -36,7 +37,7 @@ import net.minecraftforge.fml.relauncher.SideOnly
 import java.util.Random
 import kotlin.math.pow
 
-class BlockEnergyCluster(builder: BlockSimple.Builder) : BlockSimple(builder), ITileEntityProvider{
+class BlockEnergyCluster(builder: BlockBuilder) : BlockSimple(builder), ITileEntityProvider{
 	companion object{
 		private val SELECTION_AABB = AxisAlignedBB(0.2, 0.2, 0.2, 0.8, 0.8, 0.8)
 		

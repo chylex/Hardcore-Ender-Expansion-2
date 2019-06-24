@@ -1,4 +1,5 @@
 package chylex.hee.game.block
+import chylex.hee.game.block.info.BlockBuilder
 import chylex.hee.game.block.util.Property
 import chylex.hee.system.util.Facing6
 import chylex.hee.system.util.getBlock
@@ -19,7 +20,7 @@ import net.minecraftforge.fml.relauncher.Side
 import net.minecraftforge.fml.relauncher.SideOnly
 import java.util.Random
 
-class BlockInfusedGlass(builder: BlockSimple.Builder) : BlockSimple(builder){
+class BlockInfusedGlass(builder: BlockBuilder) : BlockSimple(builder){
 	companion object{
 		val CONNECT_DOWN = Property.bool("connect_d")
 		val CONNECT_UP = Property.bool("connect_u")

@@ -1,4 +1,5 @@
 package chylex.hee.game.block
+import chylex.hee.game.block.info.BlockBuilder
 import chylex.hee.game.entity.item.EntityFallingBlockHeavy
 import chylex.hee.game.entity.item.EntityFallingObsidian
 import chylex.hee.system.util.offsetUntil
@@ -15,7 +16,7 @@ import net.minecraft.util.math.BlockPos
 import net.minecraft.world.World
 import java.util.Random
 
-class BlockFallingObsidian(builder: BlockSimple.Builder) : BlockSimple(builder){
+class BlockFallingObsidian(builder: BlockBuilder) : BlockSimple(builder){
 	override fun tickRate(world: World): Int{
 		return 2
 	}

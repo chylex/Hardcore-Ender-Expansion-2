@@ -1,4 +1,4 @@
-package chylex.hee.game.block.material
+package chylex.hee.game.block.info
 
 object Materials{
 	val SOLID_NO_TOOL = CustomMaterial().apply {

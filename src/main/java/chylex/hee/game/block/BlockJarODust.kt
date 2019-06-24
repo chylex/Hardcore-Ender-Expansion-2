@@ -1,5 +1,6 @@
 package chylex.hee.game.block
 import chylex.hee.game.block.entity.TileEntityJarODust
+import chylex.hee.game.block.info.BlockBuilder
 import chylex.hee.game.mechanics.dust.DustLayers
 import chylex.hee.game.mechanics.dust.DustLayers.Side.BOTTOM
 import chylex.hee.game.mechanics.dust.DustLayers.Side.TOP
@@ -36,7 +37,7 @@ import net.minecraft.world.World
 import net.minecraftforge.fml.relauncher.Side
 import net.minecraftforge.fml.relauncher.SideOnly
 
-class BlockJarODust(builder: BlockSimple.Builder) : BlockSimpleShaped(builder, AABB), ITileEntityProvider{
+class BlockJarODust(builder: BlockBuilder) : BlockSimpleShaped(builder, AABB), ITileEntityProvider{
 	companion object{
 		val AABB = AxisAlignedBB(0.1875, 0.0, 0.1875, 0.8125, 0.84375, 0.8125)
 	}

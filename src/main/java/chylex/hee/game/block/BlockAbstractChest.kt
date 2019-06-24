@@ -1,5 +1,6 @@
 package chylex.hee.game.block
 import chylex.hee.game.block.entity.TileEntityBaseChest
+import chylex.hee.game.block.info.BlockBuilder
 import chylex.hee.game.entity.living.ai.AIOcelotSitOverride.IOcelotCanSitOn
 import chylex.hee.init.ModGuiHandler.GuiType
 import chylex.hee.system.util.get
@@ -29,7 +30,7 @@ import net.minecraft.util.math.BlockPos
 import net.minecraft.world.IBlockAccess
 import net.minecraft.world.World
 
-abstract class BlockAbstractChest<T : TileEntityBaseChest>(builder: BlockSimple.Builder) : BlockSimple(builder), ITileEntityProvider, IOcelotCanSitOn{
+abstract class BlockAbstractChest<T : TileEntityBaseChest>(builder: BlockBuilder) : BlockSimple(builder), ITileEntityProvider, IOcelotCanSitOn{
 	private companion object{
 		private val AABB = AxisAlignedBB(0.0625, 0.0, 0.0625, 0.9375, 0.875, 0.9375)
 	}

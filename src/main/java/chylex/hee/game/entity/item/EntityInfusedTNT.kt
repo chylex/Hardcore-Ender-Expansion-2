@@ -1,5 +1,5 @@
 package chylex.hee.game.entity.item
-import chylex.hee.game.block.BlockSimple.Builder.Companion.INDESTRUCTIBLE_HARDNESS
+import chylex.hee.game.block.info.BlockBuilder.Companion.INDESTRUCTIBLE_HARDNESS
 import chylex.hee.game.item.ItemFlintAndInfernium
 import chylex.hee.game.item.infusion.Infusion.FIRE
 import chylex.hee.game.item.infusion.Infusion.HARMLESS

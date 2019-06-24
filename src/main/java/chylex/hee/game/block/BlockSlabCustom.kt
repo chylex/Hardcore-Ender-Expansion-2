@@ -1,8 +1,8 @@
 package chylex.hee.game.block
-import chylex.hee.game.block.BlockSimple.Builder
-import chylex.hee.game.block.BlockSimple.Builder.Companion.setHardnessWithResistance
-import chylex.hee.game.block.BlockSimple.Builder.Companion.setupBlockProperties
 import chylex.hee.game.block.BlockSlabCustom.PropertyDefault.DEFAULT
+import chylex.hee.game.block.info.BlockBuilder
+import chylex.hee.game.block.info.BlockBuilder.Companion.setHardnessWithResistance
+import chylex.hee.game.block.info.BlockBuilder.Companion.setupBlockProperties
 import chylex.hee.game.block.util.Property
 import chylex.hee.system.util.get
 import chylex.hee.system.util.with
@@ -19,7 +19,7 @@ import net.minecraft.util.math.BlockPos
 import net.minecraft.world.World
 import java.util.Random
 
-abstract class BlockSlabCustom(builder: Builder) : BlockSlab(builder.material, builder.mapColor){
+abstract class BlockSlabCustom(builder: BlockBuilder) : BlockSlab(builder.material, builder.color){
 	companion object{
 		val VARIANT = Property.enum<PropertyDefault>("variant")
 	}
@@ -41,7 +41,7 @@ abstract class BlockSlabCustom(builder: Builder) : BlockSlab(builder.material, b
 		}
 	}
 	
-	class Half(builder: Builder): BlockSlabCustom(builder){
+	class Half(builder: BlockBuilder): BlockSlabCustom(builder){
 		init{
 			defaultState = blockState.baseState.with(VARIANT, DEFAULT).with(HALF, BOTTOM)
 		}
@@ -57,7 +57,7 @@ abstract class BlockSlabCustom(builder: Builder) : BlockSlab(builder.material, b
 		override fun isDouble() = false
 	}
 	
-	class Full(builder: Builder, private val slabBlock: Block): BlockSlabCustom(builder){
+	class Full(builder: BlockBuilder, private val slabBlock: Block): BlockSlabCustom(builder){
 		init{
 			defaultState = blockState.baseState.with(VARIANT, DEFAULT)
 		}

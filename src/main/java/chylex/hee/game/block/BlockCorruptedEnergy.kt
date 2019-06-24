@@ -3,6 +3,7 @@ import chylex.hee.game.block.BlockCorruptedEnergy.SpawnResult.FAIL
 import chylex.hee.game.block.BlockCorruptedEnergy.SpawnResult.PASSTHROUGH
 import chylex.hee.game.block.BlockCorruptedEnergy.SpawnResult.SUCCESS
 import chylex.hee.game.block.entity.TileEntityEnergyCluster
+import chylex.hee.game.block.info.BlockBuilder
 import chylex.hee.game.block.util.Property
 import chylex.hee.game.entity.CustomCreatureType
 import chylex.hee.game.entity.IImmuneToCorruptedEnergy
@@ -46,7 +47,7 @@ import net.minecraftforge.fml.relauncher.Side
 import net.minecraftforge.fml.relauncher.SideOnly
 import java.util.Random
 
-class BlockCorruptedEnergy(builder: BlockSimple.Builder) : BlockSimple(builder){
+class BlockCorruptedEnergy(builder: BlockBuilder) : BlockSimple(builder){
 	companion object{
 		private const val MIN_LEVEL = 0
 		private const val MAX_LEVEL = 15 // UPDATE: extend to 20

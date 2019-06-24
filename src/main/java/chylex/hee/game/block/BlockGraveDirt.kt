@@ -2,6 +2,7 @@ package chylex.hee.game.block
 import chylex.hee.game.block.BlockGraveDirt.Type.LOOT
 import chylex.hee.game.block.BlockGraveDirt.Type.PLAIN
 import chylex.hee.game.block.BlockGraveDirt.Type.SPIDERLING
+import chylex.hee.game.block.info.BlockBuilder
 import chylex.hee.game.block.util.Property
 import chylex.hee.init.ModLoot
 import chylex.hee.system.util.center
@@ -34,7 +35,7 @@ import net.minecraft.world.IBlockAccess
 import net.minecraft.world.World
 import java.util.Random
 
-class BlockGraveDirt(builder: BlockSimple.Builder) : BlockSimpleShaped(builder, AxisAlignedBB(0.0, 0.0, 0.0, 1.0, 0.9375, 1.0)){
+class BlockGraveDirt(builder: BlockBuilder) : BlockSimpleShaped(builder, AxisAlignedBB(0.0, 0.0, 0.0, 1.0, 0.9375, 1.0)){
 	companion object{
 		val TYPE = Property.enum<Type>("type")
 		val FULL = Property.bool("full")

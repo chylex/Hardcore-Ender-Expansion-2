@@ -49,17 +49,17 @@ tile.hee.end_stone_enchanted.name=Enchanted End Stone
 tile.hee.dark_loam.name=Dark Loam
 tile.hee.dark_loam_slab.name=Dark Loam Slab
 
-tile.hee.jar_o_dust.name=Jar o' Dust
-tile.hee.jar_o_dust.tooltip.entry=%sx %s
-tile.hee.dark_chest.name=Dark Chest
-tile.hee.loot_chest.name=Loot Chest
-tile.hee.loot_chest.tooltip=§5§o(Editable in creative mode)
-
 tile.hee.whitebark_log.name=Whitebark Log
 tile.hee.whitebark.name=Whitebark
 tile.hee.whitebark_planks.name=Whitebark Planks
 tile.hee.whitebark_stairs.name=Whitebark Stairs
 tile.hee.whitebark_slab.name=Whitebark Slab
+
+tile.hee.jar_o_dust.name=Jar o' Dust
+tile.hee.jar_o_dust.tooltip.entry=%sx %s
+tile.hee.dark_chest.name=Dark Chest
+tile.hee.loot_chest.name=Loot Chest
+tile.hee.loot_chest.tooltip=§5§o(Editable in creative mode)
 
 tile.hee.end_powder_ore.name=End Powder Ore
 tile.hee.endium_ore.name=Endium Ore
@@ -129,6 +129,7 @@ item.hee.scorching_pickaxe.name=Scorching Pickaxe
 item.hee.scorching_shovel.name=Scorching Shovel
 item.hee.scorching_axe.name=Scorching Axe
 item.hee.flint_and_infernium.name=Flint and Infernium
+
 item.hee.ender_goo_bucket.name=Ender Goo Bucket
 item.hee.purified_ender_goo_bucket.name=Purified Ender Goo Bucket
 

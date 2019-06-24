@@ -1,4 +1,5 @@
 package chylex.hee.game.block
+import chylex.hee.game.block.info.BlockBuilder
 import chylex.hee.system.util.Facing4
 import chylex.hee.system.util.allInBoxMutable
 import chylex.hee.system.util.distanceTo
@@ -22,7 +23,7 @@ import net.minecraft.util.math.BlockPos
 import net.minecraft.world.IBlockAccess
 import net.minecraft.world.World
 
-abstract class BlockAbstractPortal(builder: BlockSimple.Builder) : BlockSimple(builder), ITileEntityProvider{
+abstract class BlockAbstractPortal(builder: BlockBuilder) : BlockSimple(builder), ITileEntityProvider{
 	companion object{
 		const val MAX_DISTANCE_FROM_FRAME = 6.0
 		private const val MAX_SIZE = 5

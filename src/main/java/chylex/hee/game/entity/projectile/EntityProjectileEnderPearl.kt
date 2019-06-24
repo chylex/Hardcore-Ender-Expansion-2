@@ -1,6 +1,6 @@
 package chylex.hee.game.entity.projectile
 import chylex.hee.HEE
-import chylex.hee.game.block.BlockSimple.Builder.Companion.INDESTRUCTIBLE_HARDNESS
+import chylex.hee.game.block.info.BlockBuilder.Companion.INDESTRUCTIBLE_HARDNESS
 import chylex.hee.game.item.infusion.Infusion.HARMLESS
 import chylex.hee.game.item.infusion.Infusion.PHASING
 import chylex.hee.game.item.infusion.Infusion.RIDING

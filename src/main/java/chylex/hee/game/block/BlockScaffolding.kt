@@ -1,5 +1,6 @@
 package chylex.hee.game.block
 import chylex.hee.HEE
+import chylex.hee.game.block.info.BlockBuilder
 import chylex.hee.game.commands.sub.client.CommandClientScaffolding
 import chylex.hee.game.world.structure.file.StructureFile
 import chylex.hee.game.world.util.BoundingBox
@@ -28,7 +29,7 @@ import net.minecraft.world.IBlockAccess
 import net.minecraft.world.World
 import java.nio.file.Files
 
-class BlockScaffolding(builder: BlockSimple.Builder) : BlockSimple(builder){
+class BlockScaffolding(builder: BlockBuilder) : BlockSimple(builder){
 	override fun onBlockActivated(world: World, pos: BlockPos, state: IBlockState, player: EntityPlayer, hand: EnumHand, facing: EnumFacing, hitX: Float, hitY: Float, hitZ: Float): Boolean{
 		if (world.isRemote && player.isSneaking && !player.capabilities.isFlying && Debug.enabled){
 			val palette = CommandClientScaffolding.currentPalette

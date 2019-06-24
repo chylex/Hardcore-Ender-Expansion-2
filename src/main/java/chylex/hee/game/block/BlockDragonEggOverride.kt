@@ -1,6 +1,6 @@
 package chylex.hee.game.block
-import chylex.hee.game.block.BlockSimple.Builder.Companion.INDESTRUCTIBLE_HARDNESS
-import chylex.hee.game.block.BlockSimple.Builder.Companion.setHardnessWithResistance
+import chylex.hee.game.block.info.BlockBuilder.Companion.INDESTRUCTIBLE_HARDNESS
+import chylex.hee.game.block.info.BlockBuilder.Companion.setHardnessWithResistance
 import chylex.hee.game.entity.item.EntityFallingBlockHeavy
 import chylex.hee.game.fx.FxBlockData
 import chylex.hee.game.fx.FxBlockHandler

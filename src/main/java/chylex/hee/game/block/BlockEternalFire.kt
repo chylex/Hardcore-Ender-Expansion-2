@@ -1,5 +1,6 @@
 package chylex.hee.game.block
-import chylex.hee.game.block.BlockSimple.Builder.Companion.setupBlockProperties
+import chylex.hee.game.block.info.BlockBuilder
+import chylex.hee.game.block.info.BlockBuilder.Companion.setupBlockProperties
 import chylex.hee.game.mechanics.damage.Damage
 import chylex.hee.game.mechanics.damage.IDamageProcessor.Companion.ALL_PROTECTIONS
 import chylex.hee.game.mechanics.damage.IDamageProcessor.Companion.FIRE_TYPE
@@ -39,7 +40,7 @@ import net.minecraftforge.fml.relauncher.SideOnly
 import java.util.Random
 import kotlin.math.max
 
-class BlockEternalFire(builder: BlockSimple.Builder) : BlockFire(){
+class BlockEternalFire(builder: BlockBuilder) : BlockFire(){
 	private companion object{
 		private val PARTICLE_SMOKE = ParticleSpawnerVanilla(SMOKE_LARGE)
 		private val DAMAGE_CONTACT = Damage(PEACEFUL_EXCLUSION, *ALL_PROTECTIONS, FIRE_TYPE(12 * 20), RAPID_DAMAGE(5))

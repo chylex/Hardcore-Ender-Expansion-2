@@ -1,6 +1,6 @@
 package chylex.hee.game.block
 import chylex.hee.game.block.fluid.FluidEnderGooPurified
-import chylex.hee.game.block.material.Materials
+import chylex.hee.game.block.info.Materials
 import chylex.hee.game.fx.FxBlockData
 import chylex.hee.game.fx.FxBlockHandler
 import chylex.hee.game.mechanics.potion.PotionBase.Companion.INFINITE_DURATION_THRESHOLD

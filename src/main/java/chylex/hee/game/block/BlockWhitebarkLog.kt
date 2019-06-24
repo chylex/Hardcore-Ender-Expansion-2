@@ -1,5 +1,5 @@
 package chylex.hee.game.block
-import chylex.hee.game.block.BlockSimple.Builder.Companion.setHarvestTool
+import chylex.hee.game.block.info.BlockBuilder.Companion.setHarvestTool
 import chylex.hee.game.item.util.Tool.Level.WOOD
 import chylex.hee.game.item.util.Tool.Type.AXE
 import chylex.hee.system.util.get

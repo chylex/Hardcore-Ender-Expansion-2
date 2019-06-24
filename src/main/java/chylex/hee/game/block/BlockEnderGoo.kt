@@ -1,6 +1,6 @@
 package chylex.hee.game.block
 import chylex.hee.game.block.fluid.FluidEnderGoo
-import chylex.hee.game.block.material.Materials
+import chylex.hee.game.block.info.Materials
 import chylex.hee.game.entity.CustomCreatureType
 import chylex.hee.game.mechanics.potion.PotionLifeless.LIFELESS
 import chylex.hee.game.particle.ParticleEnderGoo

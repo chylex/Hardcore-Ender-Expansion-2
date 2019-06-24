@@ -1,6 +1,7 @@
 package chylex.hee.game.block
-import chylex.hee.game.block.BlockSimple.Builder.Companion.setupBlockProperties
 import chylex.hee.game.block.entity.TileEntityDarkChest
+import chylex.hee.game.block.info.BlockBuilder
+import chylex.hee.game.block.info.BlockBuilder.Companion.setupBlockProperties
 import chylex.hee.game.entity.living.ai.AIOcelotSitOverride.IOcelotCanSitOn
 import chylex.hee.system.util.getTile
 import net.minecraft.block.BlockChest
@@ -9,7 +10,7 @@ import net.minecraft.util.math.BlockPos
 import net.minecraft.world.World
 import net.minecraftforge.common.util.EnumHelper
 
-class BlockDarkChest(builder: BlockSimple.Builder) : BlockChest(TYPE), IOcelotCanSitOn{
+class BlockDarkChest(builder: BlockBuilder) : BlockChest(TYPE), IOcelotCanSitOn{
 	companion object{
 		val TYPE = EnumHelper.addEnum(BlockChest.Type::class.java, "HEE_DARK", emptyArray())!!
 	}

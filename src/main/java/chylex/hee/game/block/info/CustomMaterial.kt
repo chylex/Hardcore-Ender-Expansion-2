@@ -1,4 +1,4 @@
-package chylex.hee.game.block.material
+package chylex.hee.game.block.info
 import net.minecraft.block.material.MapColor
 import net.minecraft.block.material.Material
 

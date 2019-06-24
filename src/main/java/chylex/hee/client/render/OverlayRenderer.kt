@@ -3,7 +3,7 @@ import chylex.hee.HEE
 import chylex.hee.client.render.util.GL
 import chylex.hee.client.util.MC
 import chylex.hee.game.block.entity.TileEntityEnergyCluster
-import chylex.hee.game.block.material.Materials
+import chylex.hee.game.block.info.Materials
 import chylex.hee.game.mechanics.energy.IEnergyQuantity
 import chylex.hee.game.mechanics.energy.IEnergyQuantity.Companion.MAX_POSSIBLE_VALUE
 import chylex.hee.game.mechanics.energy.IEnergyQuantity.Companion.displayString

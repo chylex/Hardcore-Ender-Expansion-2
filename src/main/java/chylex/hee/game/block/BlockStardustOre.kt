@@ -1,4 +1,5 @@
 package chylex.hee.game.block
+import chylex.hee.game.block.info.BlockBuilder
 import chylex.hee.init.ModLoot
 import chylex.hee.system.util.ceilToInt
 import chylex.hee.system.util.nextBiasedFloat
@@ -10,7 +11,7 @@ import net.minecraft.util.math.BlockPos
 import net.minecraft.world.IBlockAccess
 import net.minecraft.world.World
 
-class BlockStardustOre(builder: BlockSimple.Builder) : BlockSimple(builder){
+class BlockStardustOre(builder: BlockBuilder) : BlockSimple(builder){
 	override fun getDrops(drops: NonNullList<ItemStack>, world: IBlockAccess, pos: BlockPos, state: IBlockState, fortune: Int){
 		ModLoot.STARDUST_ORE.generateDrops(drops, world, fortune)
 	}

@@ -1,5 +1,6 @@
 package chylex.hee.game.block
 import chylex.hee.game.block.entity.TileEntityBaseTable
+import chylex.hee.game.block.info.BlockBuilder
 import chylex.hee.system.util.getTile
 import net.minecraft.block.ITileEntityProvider
 import net.minecraft.block.state.IBlockState
@@ -8,7 +9,7 @@ import net.minecraft.tileentity.TileEntity
 import net.minecraft.util.math.BlockPos
 import net.minecraft.world.World
 
-abstract class BlockAbstractTableTile<T : TileEntityBaseTable>(builder: BlockSimple.Builder) : BlockAbstractTable(builder), ITileEntityProvider{
+abstract class BlockAbstractTableTile<T : TileEntityBaseTable>(builder: BlockBuilder) : BlockAbstractTable(builder), ITileEntityProvider{
 	abstract fun createNewTileEntity(): T
 	
 	final override fun createNewTileEntity(world: World, meta: Int): TileEntity{

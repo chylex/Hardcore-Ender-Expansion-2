@@ -1,4 +1,5 @@
 package chylex.hee.game.block
+import chylex.hee.game.block.info.BlockBuilder
 import chylex.hee.init.ModBlocks
 import chylex.hee.init.ModLoot
 import net.minecraft.block.state.IBlockState
@@ -10,7 +11,7 @@ import net.minecraft.util.math.BlockPos
 import net.minecraft.world.IBlockAccess
 import net.minecraft.world.World
 
-class BlockDustyStonePlain(builder: BlockSimple.Builder) : BlockDustyStone(builder){
+class BlockDustyStonePlain(builder: BlockBuilder) : BlockDustyStone(builder){
 	override fun getDrops(drops: NonNullList<ItemStack>, world: IBlockAccess, pos: BlockPos, state: IBlockState, fortune: Int){
 		val table = when(state.block){
 			ModBlocks.DUSTY_STONE         -> ModLoot.DUSTY_STONE

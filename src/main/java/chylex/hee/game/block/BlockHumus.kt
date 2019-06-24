@@ -1,4 +1,5 @@
 package chylex.hee.game.block
+import chylex.hee.game.block.info.BlockBuilder
 import chylex.hee.init.ModLoot
 import chylex.hee.system.util.getBlock
 import chylex.hee.system.util.getState
@@ -27,7 +28,7 @@ import net.minecraftforge.event.world.BlockEvent.HarvestDropsEvent
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent
 import java.util.Random
 
-class BlockHumus(builder: BlockSimple.Builder) : BlockSimple(builder){
+class BlockHumus(builder: BlockBuilder) : BlockSimple(builder){
 	init{
 		tickRandomly = true
 		

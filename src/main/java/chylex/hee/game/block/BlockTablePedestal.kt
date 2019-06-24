@@ -1,5 +1,6 @@
 package chylex.hee.game.block
 import chylex.hee.game.block.entity.TileEntityTablePedestal
+import chylex.hee.game.block.info.BlockBuilder
 import chylex.hee.game.block.util.Property
 import chylex.hee.init.ModItems
 import chylex.hee.system.util.copyIf
@@ -28,7 +29,7 @@ import net.minecraftforge.fml.relauncher.SideOnly
 import kotlin.math.abs
 import kotlin.math.max
 
-class BlockTablePedestal(builder: BlockSimple.Builder) : BlockSimpleShaped(builder, COMBINED_BOX), ITileEntityProvider{
+class BlockTablePedestal(builder: BlockBuilder) : BlockSimpleShaped(builder, COMBINED_BOX), ITileEntityProvider{
 	companion object{
 		val IS_LINKED = Property.bool("linked")
 		

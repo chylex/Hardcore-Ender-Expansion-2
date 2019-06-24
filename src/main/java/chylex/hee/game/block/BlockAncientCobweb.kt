@@ -1,5 +1,5 @@
 package chylex.hee.game.block
-import chylex.hee.game.block.material.Materials
+import chylex.hee.game.block.info.Materials
 import chylex.hee.init.ModLoot
 import chylex.hee.system.util.breakBlock
 import net.minecraft.block.Block
