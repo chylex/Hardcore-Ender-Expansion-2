@@ -1,4 +1,4 @@
-package chylex.hee.game.mechanics
+package chylex.hee.game.mechanics.scorching
 import chylex.hee.init.ModBlocks
 import chylex.hee.system.util.copyIf
 import chylex.hee.system.util.isNotEmpty

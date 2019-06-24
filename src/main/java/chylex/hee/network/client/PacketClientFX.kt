@@ -12,8 +12,8 @@ import chylex.hee.game.fx.IFxHandler
 import chylex.hee.game.item.ItemAbstractEnergyUser
 import chylex.hee.game.item.ItemCompost
 import chylex.hee.game.item.ItemRevitalizationSubstance
-import chylex.hee.game.item.ItemScorchingTool
 import chylex.hee.game.item.ItemTableLink
+import chylex.hee.game.mechanics.scorching.ScorchingHelper
 import chylex.hee.game.mechanics.table.TableParticleHandler
 import chylex.hee.game.world.util.Teleporter
 import chylex.hee.network.BaseClientPacket
@@ -30,6 +30,8 @@ class PacketClientFX<T : IFxData>() : BaseClientPacket(){
 		
 		private val HANDLERS = arrayOf(
 			Teleporter.FX_TELEPORT,
+			ScorchingHelper.FX_BLOCK_BREAK,
+			ScorchingHelper.FX_ENTITY_HIT,
 			TableParticleHandler.FX_PROCESS_PEDESTALS,
 			TableParticleHandler.FX_DRAIN_CLUSTER,
 			BlockDeathFlowerDecaying.FX_HEAL,
@@ -39,8 +41,6 @@ class PacketClientFX<T : IFxData>() : BaseClientPacket(){
 			ItemAbstractEnergyUser.FX_CHARGE,
 			ItemCompost.FX_USE,
 			ItemRevitalizationSubstance.FX_FAIL,
-			ItemScorchingTool.FX_BLOCK_BREAK,
-			ItemScorchingTool.FX_ENTITY_HIT,
 			ItemTableLink.FX_USE,
 			EntityFallingObsidian.FX_FALL,
 			EntityItemIgneousRock.FX_BLOCK_SMELT,
