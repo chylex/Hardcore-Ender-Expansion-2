@@ -138,7 +138,7 @@ inline fun AISwim(entity: EntityCreature) =
 inline fun AIWander(entity: EntityCreature, movementSpeed: Double, chancePerTick: Int) =
 	EntityAIWander(entity, movementSpeed, chancePerTick)
 
-inline fun AIWanderNoWater(entity: EntityCreature, movementSpeed: Double, chancePerTick: Int) =
+fun AIWanderNoWater(entity: EntityCreature, movementSpeed: Double, chancePerTick: Int) =
 	object : EntityAIWanderAvoidWater(entity, movementSpeed, 0F){
 		init{
 			executionChance = chancePerTick
@@ -164,7 +164,7 @@ inline fun AITargetAttacker(entity: EntityCreature, callReinforcements: Boolean)
 	EntityAIHurtByTarget(entity, callReinforcements)
 
 inline fun <reified T : EntityLivingBase> AITargetNearby(entity: EntityCreature, chancePerTick: Int, checkSight: Boolean, easilyReachableOnly: Boolean, targetPredicate: Predicate<T>? = null) =
-	EntityAINearestAttackableTarget<T>(entity, T::class.java, chancePerTick, checkSight, easilyReachableOnly, targetPredicate)
+	EntityAINearestAttackableTarget(entity, T::class.java, chancePerTick, checkSight, easilyReachableOnly, targetPredicate)
 
 inline fun <reified T : EntityLivingBase> AITargetEyeContact(entity: EntityCreature, fieldOfView: Float, headRadius: Float, minStareTicks: Int, easilyReachableOnly: Boolean, noinline targetPredicate: ((T) -> Boolean)? = null) =
 	AITargetEyeContact(entity, easilyReachableOnly, T::class.java, targetPredicate, fieldOfView, headRadius, minStareTicks)

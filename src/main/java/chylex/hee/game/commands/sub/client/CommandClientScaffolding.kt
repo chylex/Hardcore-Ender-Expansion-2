@@ -18,7 +18,7 @@ internal object CommandClientScaffolding : ISubCommand{
 		get() = data.get("Structure", null)?.let(CommandDebugStructure.structureDescriptions::get)?.PALETTE
 	
 	val currentFile
-		get() = data.get("File", "").ifBlank { "structure.nbt" }
+		get() = data.get("File", "")!!.ifBlank { "structure.nbt" }
 	
 	override fun executeCommand(server: MinecraftServer?, sender: ICommandSender, args: Array<out String>){
 		val structure = args.getOrNull(0) ?: return

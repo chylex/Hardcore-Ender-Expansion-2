@@ -59,7 +59,7 @@ enum class TerritoryType(
 	}
 	
 	val size
-		get() = Size(16 * chunks, 1 + height.endInclusive - height.start, 16 * chunks)
+		get() = Size(16 * chunks, 1 + height.last - height.first, 16 * chunks)
 	
 	val translationKey
 		get() = "hee.territory.$title.name"

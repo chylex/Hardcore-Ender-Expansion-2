@@ -68,7 +68,7 @@ object TerritoryRenderer{
 					}
 				}
 				
-				prevTerritory?.let { it.desc.environment.tickClient() }
+				prevTerritory?.desc?.environment?.tickClient()
 			}
 			else if (prevTerritory != null){
 				prevTerritory = null

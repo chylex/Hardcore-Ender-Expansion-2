@@ -26,7 +26,7 @@ object ParticleFadingSpot : IParticleMaker{
 		private val scale: ClosedFloatingPointRange<Float> = 0F..0F
 	) : IParticleData{
 		override fun generate(rand: Random): IntArray{
-			return intArrayOf(color.toInt(), rand.nextInt(lifespan.start, lifespan.endInclusive), (rand.nextFloat(scale.start, scale.endInclusive) * 100F).floorToInt())
+			return intArrayOf(color.toInt(), rand.nextInt(lifespan.first, lifespan.last), (rand.nextFloat(scale.start, scale.endInclusive) * 100F).floorToInt())
 		}
 	}
 	

@@ -21,7 +21,7 @@ class BedStructureTrigger(private val facing: EnumFacing, private val color: Enu
 		val baseState = Blocks.BED.withFacing(transformedFacing).with(BlockBed.OCCUPIED, false)
 		
 		val footPos = pos
-		val headPos = footPos.offset(transformedFacing)
+		val headPos = pos.offset(transformedFacing)
 		
 		footPos.setState(world, baseState.with(BlockBed.PART, FOOT))
 		headPos.setState(world, baseState.with(BlockBed.PART, HEAD))

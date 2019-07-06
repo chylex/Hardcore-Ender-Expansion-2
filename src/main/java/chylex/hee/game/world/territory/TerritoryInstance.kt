@@ -104,10 +104,10 @@ data class TerritoryInstance(val territory: TerritoryType, val index: Int){
 		get() = topLeftChunk.let { ChunkPos(it.x + chunks - 1, it.z + chunks - 1) }
 	
 	val bottomCenterPos: BlockPos
-		get() = topLeftChunk.getBlock(chunks * 8, territory.height.start, chunks * 8)
+		get() = topLeftChunk.getBlock(chunks * 8, territory.height.first, chunks * 8)
 	
 	val centerPoint: Vec3d
-		get() = topLeftChunk.getBlock(chunks * 8, territory.height.let { (it.start + it.endInclusive) / 2 }, chunks * 8).center
+		get() = topLeftChunk.getBlock(chunks * 8, territory.height.let { (it.first + it.last) / 2 }, chunks * 8).center
 	
 	fun generatesChunk(chunkX: Int, chunkZ: Int): Boolean{
 		val (startX, startZ) = topLeftChunk

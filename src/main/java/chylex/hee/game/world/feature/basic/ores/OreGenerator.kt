@@ -45,8 +45,8 @@ class OreGenerator(
 	
 	fun generate(world: SegmentedWorld, heights: IntRange){
 		val bounds = BoundingBox(
-			Pos(0, heights.start, 0),
-			Pos(world.worldSize.maxX, heights.endInclusive, world.worldSize.maxZ)
+			Pos(0, heights.first, 0),
+			Pos(world.worldSize.maxX, heights.last, world.worldSize.maxZ)
 		)
 		
 		generate(world, bounds)

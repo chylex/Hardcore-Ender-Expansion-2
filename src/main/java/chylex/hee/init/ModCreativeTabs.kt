@@ -19,6 +19,7 @@ object ModCreativeTabs{
 		private val itemOrder = Reference2ShortOpenHashMap<Item>().apply { defaultReturnValue(Short.MAX_VALUE) }
 		
 		fun registerOrder(item: Item){
+			@Suppress("ReplacePutWithAssignment")
 			itemOrder.put(item, (itemOrder.size + 1).toShort()) // kotlin indexer boxes the values
 		}
 		

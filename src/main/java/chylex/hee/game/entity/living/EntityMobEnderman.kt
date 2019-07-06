@@ -64,7 +64,7 @@ import kotlin.math.pow
 @EventBusSubscriber(modid = HEE.ID)
 class EntityMobEnderman(world: World) : EntityMobAbstractEnderman(world){
 	companion object{
-		private val DAMAGE_GENERAL = Damage(PEACEFUL_EXCLUSION, DIFFICULTY_SCALING, *ALL_PROTECTIONS_WITH_SHIELD, NUDITY_DANGER)
+		private val DAMAGE_GENERAL = Damage(DIFFICULTY_SCALING, PEACEFUL_EXCLUSION, *ALL_PROTECTIONS_WITH_SHIELD, NUDITY_DANGER)
 		
 		private val TELEPORT_AFTER_DAMAGE = setOf(
 			DamageSource.ANVIL,

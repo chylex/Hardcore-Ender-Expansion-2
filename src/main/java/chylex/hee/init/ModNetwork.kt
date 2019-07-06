@@ -24,6 +24,7 @@ import net.minecraftforge.fml.relauncher.Side.SERVER
 import java.util.function.Supplier
 
 object ModNetwork{
+	@Suppress("ReplacePutWithAssignment")
 	fun initialize(){
 		if (::network.isInitialized){
 			throw UnsupportedOperationException("cannot initialize ModNetwork multiple times")

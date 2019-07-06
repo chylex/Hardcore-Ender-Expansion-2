@@ -34,7 +34,7 @@ class FunctionInfuse(conditions: Array<LootCondition>, private val picks: Array<
 		
 		override fun deserialize(json: JsonObject, context: JsonDeserializationContext, conditions: Array<LootCondition>): FunctionInfuse{
 			val picks = JsonUtils.getJsonArray(json, "picks").map { Infusion.byName(it.asString) }.toTypedArray()
-			val amount = JsonUtils.deserializeClass<RandomValueRange>(json, "amount", context, RandomValueRange::class.java)
+			val amount = JsonUtils.deserializeClass(json, "amount", context, RandomValueRange::class.java)
 			
 			return FunctionInfuse(conditions, picks, amount)
 		}

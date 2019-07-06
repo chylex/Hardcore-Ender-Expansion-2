@@ -18,7 +18,7 @@ class TerritoryGlobalStorage(name: String) : WorldSavedData(name){
 	// Instance
 	
 	private val spawnEntry = TerritoryEntry(this, THE_HUB_INSTANCE)
-	private val territoryData = EnumMap(TerritoryType.values().filterNot { it.isSpawn }.associate { it to mutableListOf<TerritoryEntry>() })
+	private val territoryData = EnumMap(TerritoryType.values().filterNot { it.isSpawn }.associateWith { mutableListOf<TerritoryEntry>() })
 	
 	private fun makeEntry(territory: TerritoryType, index: Int): TerritoryEntry{
 		return TerritoryEntry(this, TerritoryInstance(territory, index))

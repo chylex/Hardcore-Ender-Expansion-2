@@ -15,7 +15,7 @@ import kotlin.math.pow
 
 object ScorchingFortune{
 	private class Spec(private val dropRange: ClosedFloatingPointRange<Float>, private val highestChance: Float){
-		constructor(dropRange: IntRange, highestChance: Float) : this((dropRange.start.toFloat())..(dropRange.endInclusive.toFloat()), highestChance)
+		constructor(dropRange: IntRange, highestChance: Float) : this((dropRange.first.toFloat())..(dropRange.last.toFloat()), highestChance)
 		
 		fun nextDropAmount(rand: Random): Int{
 			val curveScale = (dropRange.endInclusive - dropRange.start) * 0.5F
@@ -64,8 +64,8 @@ object ScorchingFortune{
 			return null
 		}
 		
-		val minimum = defaultRange.start
-		val maximum = defaultRange.endInclusive
+		val minimum = defaultRange.first
+		val maximum = defaultRange.last
 		
 		val middleAmount = (minimum + maximum) / 2F
 		val extraShift = 1.75F.pow(1F / (1F + (maximum - minimum) / 2F))

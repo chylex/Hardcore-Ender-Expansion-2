@@ -26,7 +26,7 @@ class AIForceWanderTiming(
 	}
 	
 	private fun getCurrentWanderChance(): Int{
-		if (ticksSinceLastWalk < forcedTimingRange.start){
+		if (ticksSinceLastWalk < forcedTimingRange.first){
 			return Int.MAX_VALUE
 		}
 		

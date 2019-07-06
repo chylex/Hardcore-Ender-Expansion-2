@@ -44,6 +44,7 @@ class AITargetEyeContact<T : EntityLivingBase>(
 			val stareStart = stareStarts.getLong(target)
 			
 			if (stareStart == Long.MIN_VALUE){
+				@Suppress("ReplacePutWithAssignment")
 				stareStarts.put(target, currentTime) // kotlin indexer boxes the values
 			}
 			else if (currentTime - stareStart >= minStareTicks){

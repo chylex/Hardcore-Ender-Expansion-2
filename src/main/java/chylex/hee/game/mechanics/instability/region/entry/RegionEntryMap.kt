@@ -17,6 +17,7 @@ class RegionEntryMap<T : IRegionEntry>(private val constructor: IRegionEntryCons
 		get() = entries.keys.map(constructor::fromCompacted)
 	
 	private fun addOrUpdateEntry(entry: IRegionEntry){
+		@Suppress("ReplacePutWithAssignment")
 		entries.put(entry.key, entry.compacted) // kotlin indexer boxes the values
 	}
 	

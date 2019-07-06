@@ -22,7 +22,7 @@ object ParticleGlitter : IParticleMaker{
 		protected abstract fun nextColor(rand: Random): IColor
 		
 		final override fun generate(rand: Random): IntArray{
-			return intArrayOf(nextColor(rand).toInt(), maxAgeMultiplier.start, maxAgeMultiplier.endInclusive)
+			return intArrayOf(nextColor(rand).toInt(), maxAgeMultiplier.first, maxAgeMultiplier.last)
 		}
 	}
 	

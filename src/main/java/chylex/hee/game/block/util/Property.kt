@@ -10,7 +10,7 @@ object Property{
 	}
 	
 	inline fun int(name: String, range: IntRange): PropertyInteger{
-		return PropertyInteger.create(name, range.start, range.endInclusive)
+		return PropertyInteger.create(name, range.first, range.last)
 	}
 	
 	inline fun <reified T> enum(name: String): PropertyEnum<T> where T : Enum<T>, T : IStringSerializable{

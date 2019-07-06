@@ -71,7 +71,7 @@ object TerritoryVoid{
 		val environment = territory.desc.environment
 		
 		val xzRadius = territory.chunks * 8F * environment.voidRadiusMpXZ
-		val yRadius = territory.height.let { it.endInclusive - it.start } * 0.5F * environment.voidRadiusMpY
+		val yRadius = territory.height.let { it.last - it.first } * 0.5F * environment.voidRadiusMpY
 		
 		val center = instance.centerPoint.add(environment.voidCenterOffset)
 		val edge = intersectEllipsoidEdge(center, point, xzRadius, yRadius)
@@ -171,7 +171,7 @@ object TerritoryVoid{
 		val center = instance.centerPoint
 		
 		val xzRadius = instance.territory.chunks * 8F * environment.voidRadiusMpXZ
-		val yRadius = instance.territory.height.let { it.endInclusive - it.start } * 0.5F * environment.voidRadiusMpY
+		val yRadius = instance.territory.height.let { it.last - it.first } * 0.5F * environment.voidRadiusMpY
 		
 		val spawner = ParticleSpawnerCustom(
 			type = ParticleFadingSpot,
