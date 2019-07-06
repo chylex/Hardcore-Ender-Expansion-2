@@ -15,8 +15,6 @@ import net.minecraft.entity.ai.EntityAIHurtByTarget
 import net.minecraft.entity.ai.EntityAILookIdle
 import net.minecraft.entity.ai.EntityAINearestAttackableTarget
 import net.minecraft.entity.ai.EntityAISwimming
-import net.minecraft.entity.ai.EntityAIWander
-import net.minecraft.entity.ai.EntityAIWanderAvoidWater
 import net.minecraft.entity.ai.EntityAIWatchClosest
 import net.minecraft.entity.ai.attributes.AttributeModifier
 import net.minecraft.entity.ai.attributes.IAttributeInstance
@@ -135,16 +133,6 @@ const val AI_FLAG_SWIMMING = 0b100
 inline fun AISwim(entity: EntityCreature) =
 	EntityAISwimming(entity)
 
-inline fun AIWander(entity: EntityCreature, movementSpeed: Double, chancePerTick: Int) =
-	EntityAIWander(entity, movementSpeed, chancePerTick)
-
-fun AIWanderNoWater(entity: EntityCreature, movementSpeed: Double, chancePerTick: Int) =
-	object : EntityAIWanderAvoidWater(entity, movementSpeed, 0F){
-		init{
-			executionChance = chancePerTick
-		}
-	}
-
 // AI (Looking)
 
 inline fun AIWatchIdle(entity: EntityCreature) =
@@ -163,8 +151,8 @@ inline fun AIAttackMelee(entity: EntityCreature, movementSpeed: Double, chaseAft
 inline fun AITargetAttacker(entity: EntityCreature, callReinforcements: Boolean) =
 	EntityAIHurtByTarget(entity, callReinforcements)
 
-inline fun <reified T : EntityLivingBase> AITargetNearby(entity: EntityCreature, chancePerTick: Int, checkSight: Boolean, easilyReachableOnly: Boolean, targetPredicate: Predicate<T>? = null) =
-	EntityAINearestAttackableTarget(entity, T::class.java, chancePerTick, checkSight, easilyReachableOnly, targetPredicate)
+inline fun <reified T : EntityLivingBase> AITargetNearby(entity: EntityCreature, chancePerTick: Int, checkSight: Boolean, easilyReachableOnly: Boolean, noinline targetPredicate: ((T) -> Boolean)? = null) =
+	EntityAINearestAttackableTarget(entity, T::class.java, chancePerTick, checkSight, easilyReachableOnly, targetPredicate?.let { p -> Predicate<T> { it != null && p(it) } })
 
 inline fun <reified T : EntityLivingBase> AITargetEyeContact(entity: EntityCreature, fieldOfView: Float, headRadius: Float, minStareTicks: Int, easilyReachableOnly: Boolean, noinline targetPredicate: ((T) -> Boolean)? = null) =
 	AITargetEyeContact(entity, easilyReachableOnly, T::class.java, targetPredicate, fieldOfView, headRadius, minStareTicks)

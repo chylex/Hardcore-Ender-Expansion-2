@@ -1,6 +1,7 @@
 package chylex.hee.game.entity.living
 import chylex.hee.HEE
 import chylex.hee.game.entity.living.ai.AIForceWanderTiming
+import chylex.hee.game.entity.living.ai.AIWanderLand
 import chylex.hee.game.mechanics.damage.Damage
 import chylex.hee.game.mechanics.damage.IDamageProcessor.Companion.ALL_PROTECTIONS
 import chylex.hee.game.mechanics.damage.IDamageProcessor.Companion.DIFFICULTY_SCALING
@@ -10,7 +11,6 @@ import chylex.hee.system.util.AIAttackMelee
 import chylex.hee.system.util.AISwim
 import chylex.hee.system.util.AITargetAttacker
 import chylex.hee.system.util.AITargetNearby
-import chylex.hee.system.util.AIWanderNoWater
 import chylex.hee.system.util.heeTag
 import chylex.hee.system.util.square
 import net.minecraft.entity.Entity
@@ -44,7 +44,7 @@ open class EntityMobEndermite(world: World) : EntityEndermite(world){
 	}
 	
 	override fun initEntityAI(){
-		val aiWander = AIWanderNoWater(this, movementSpeed = 1.0, chancePerTick = 50)
+		val aiWander = AIWanderLand(this, movementSpeed = 1.0, chancePerTick = 50)
 		
 		tasks.addTask(1, AISwim(this))
 		tasks.addTask(2, AIAttackMelee(this, movementSpeed = 1.0, chaseAfterLosingSight = false))

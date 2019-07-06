@@ -2,6 +2,7 @@ package chylex.hee.game.entity.living
 import chylex.hee.HEE
 import chylex.hee.game.entity.living.ai.AIPickUpBlock
 import chylex.hee.game.entity.living.ai.AITargetEyeContact
+import chylex.hee.game.entity.living.ai.AIWanderLand
 import chylex.hee.game.entity.living.ai.AIWatchTargetInShock
 import chylex.hee.game.entity.living.ai.util.AIToggle
 import chylex.hee.game.entity.living.ai.util.AIToggle.Companion.addTask
@@ -21,7 +22,6 @@ import chylex.hee.init.ModLoot
 import chylex.hee.system.util.AIAttackMelee
 import chylex.hee.system.util.AISwim
 import chylex.hee.system.util.AITargetEyeContact
-import chylex.hee.system.util.AIWanderNoWater
 import chylex.hee.system.util.AIWatchIdle
 import chylex.hee.system.util.Pos
 import chylex.hee.system.util.heeTag
@@ -211,7 +211,7 @@ class EntityMobEnderman(world: World) : EntityMobAbstractEnderman(world){
 		tasks.addTask(1, AISwim(this))
 		tasks.addTask(2, aiWatchTargetInShock)
 		tasks.addTask(3, AIAttackMelee(this, movementSpeed = 1.0, chaseAfterLosingSight = false), aiAttackTarget)
-		tasks.addTask(4, AIWanderNoWater(this, movementSpeed = 0.9, chancePerTick = 70))
+		tasks.addTask(4, AIWanderLand(this, movementSpeed = 0.9, chancePerTick = 70))
 		tasks.addTask(5, AIWatchIdle(this))
 		tasks.addTask(6, AIPickUpBlock(this, ticksPerAttempt = 20 * 30, handler = blockHandler), aiPickUpBlocks)
 		

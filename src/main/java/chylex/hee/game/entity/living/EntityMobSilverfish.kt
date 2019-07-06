@@ -3,6 +3,7 @@ import chylex.hee.HEE
 import chylex.hee.game.entity.living.ai.AIHideInBlock
 import chylex.hee.game.entity.living.ai.AISummonFromBlock
 import chylex.hee.game.entity.living.ai.AITargetSwarmSwitch
+import chylex.hee.game.entity.living.ai.AIWander
 import chylex.hee.game.entity.util.ICritTracker
 import chylex.hee.game.mechanics.damage.Damage
 import chylex.hee.game.mechanics.damage.IDamageProcessor.Companion.ALL_PROTECTIONS
@@ -16,7 +17,6 @@ import chylex.hee.system.util.AISwim
 import chylex.hee.system.util.AITargetAttacker
 import chylex.hee.system.util.AITargetRandom
 import chylex.hee.system.util.AITargetSwarmSwitch
-import chylex.hee.system.util.AIWander
 import chylex.hee.system.util.heeTag
 import chylex.hee.system.util.with
 import net.minecraft.block.BlockSilverfish
