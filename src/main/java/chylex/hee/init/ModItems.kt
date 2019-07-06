@@ -19,6 +19,7 @@ import chylex.hee.game.item.ItemRevitalizationSubstance
 import chylex.hee.game.item.ItemRingOfHunger
 import chylex.hee.game.item.ItemRingOfPreservation
 import chylex.hee.game.item.ItemScaleOfFreefall
+import chylex.hee.game.item.ItemScorchingSword
 import chylex.hee.game.item.ItemScorchingTool
 import chylex.hee.game.item.ItemSpatialDashGem
 import chylex.hee.game.item.ItemTableLink
@@ -90,6 +91,7 @@ object ModItems{
 	@JvmField val SCORCHING_PICKAXE   = ItemScorchingTool(PICKAXE).apply { setup("scorching_pickaxe") }
 	@JvmField val SCORCHING_SHOVEL    = ItemScorchingTool(SHOVEL).apply { setup("scorching_shovel") }
 	@JvmField val SCORCHING_AXE       = ItemScorchingTool(AXE).apply { setup("scorching_axe") }
+	@JvmField val SCORCHING_SWORD     = ItemScorchingSword().apply { setup("scorching_sword") }
 	@JvmField val FLINT_AND_INFERNIUM = ItemFlintAndInfernium().apply { setup("flint_and_infernium") }
 	
 	// Items: Fluids
@@ -158,6 +160,7 @@ object ModItems{
 			register(SCORCHING_PICKAXE)
 			register(SCORCHING_SHOVEL)
 			register(SCORCHING_AXE)
+			register(SCORCHING_SWORD)
 			register(FLINT_AND_INFERNIUM)
 			
 			register(ENDER_GOO_BUCKET)

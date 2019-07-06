@@ -24,7 +24,6 @@ import net.minecraftforge.event.entity.player.CriticalHitEvent
 import net.minecraftforge.event.entity.player.PlayerEvent.BreakSpeed
 import net.minecraftforge.event.world.BlockEvent.HarvestDropsEvent
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber
-import net.minecraftforge.fml.common.eventhandler.Event.Result.DENY
 import net.minecraftforge.fml.common.eventhandler.EventPriority.LOW
 import net.minecraftforge.fml.common.eventhandler.EventPriority.LOWEST
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent
@@ -93,9 +92,7 @@ object ScorchingHelper{
 	@JvmStatic
 	@SubscribeEvent(priority = LOW)
 	fun onCriticalHit(e: CriticalHitEvent){
-		if (getHeldScorchingTool(e.entityPlayer) != null){
-			e.result = DENY
-		}
+		getHeldScorchingTool(e.entityPlayer)?.onHit(e)
 	}
 	
 	// Overrides
