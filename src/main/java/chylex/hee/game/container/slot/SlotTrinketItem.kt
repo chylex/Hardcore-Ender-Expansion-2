@@ -1,5 +1,5 @@
 package chylex.hee.game.container.slot
-import chylex.hee.game.item.trinket.ITrinketItem
+import chylex.hee.game.mechanics.trinket.ITrinketItem
 import chylex.hee.system.Resource
 import net.minecraft.client.renderer.texture.TextureAtlasSprite
 import net.minecraft.item.ItemStack

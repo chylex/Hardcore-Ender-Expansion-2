@@ -1,6 +1,6 @@
 package chylex.hee.game.item
-import chylex.hee.game.mechanics.TrinketHandler
 import chylex.hee.game.mechanics.potion.PotionBase
+import chylex.hee.game.mechanics.trinket.TrinketHandler
 import chylex.hee.system.util.ceilToInt
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.item.ItemFood

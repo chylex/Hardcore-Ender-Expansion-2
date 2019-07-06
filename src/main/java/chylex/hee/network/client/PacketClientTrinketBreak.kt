@@ -1,6 +1,6 @@
 package chylex.hee.network.client
 import chylex.hee.client.util.MC
-import chylex.hee.game.item.trinket.ITrinketItem
+import chylex.hee.game.mechanics.trinket.ITrinketItem
 import chylex.hee.network.BaseClientPacket
 import chylex.hee.system.util.use
 import io.netty.buffer.ByteBuf

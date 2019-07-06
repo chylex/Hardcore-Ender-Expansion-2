@@ -1,9 +1,9 @@
 package chylex.hee.game.item
-import chylex.hee.game.mechanics.TrinketHandler
 import chylex.hee.game.mechanics.damage.DamageProperties
 import chylex.hee.game.mechanics.damage.DamageType
 import chylex.hee.game.mechanics.damage.IDamageProcessor.Companion.ENCHANTMENT_PROTECTION
 import chylex.hee.game.mechanics.damage.IDamageProcessor.Companion.POTION_PROTECTION
+import chylex.hee.game.mechanics.trinket.TrinketHandler
 import chylex.hee.game.world.util.ExplosionBuilder
 import chylex.hee.system.util.ceilToInt
 import chylex.hee.system.util.posVec

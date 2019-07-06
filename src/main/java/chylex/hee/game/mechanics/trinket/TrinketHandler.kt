@@ -1,9 +1,6 @@
-package chylex.hee.game.mechanics
+package chylex.hee.game.mechanics.trinket
 import chylex.hee.game.container.slot.SlotTrinketItemInventory
-import chylex.hee.game.item.trinket.ITrinketHandler
-import chylex.hee.game.item.trinket.ITrinketHandlerProvider
-import chylex.hee.game.item.trinket.ITrinketItem
-import chylex.hee.game.mechanics.TrinketHandler.TrinketCapability.Provider
+import chylex.hee.game.mechanics.trinket.TrinketHandler.TrinketCapability.Provider
 import chylex.hee.network.client.PacketClientTrinketBreak
 import chylex.hee.system.Resource
 import chylex.hee.system.capability.CapabilityProvider

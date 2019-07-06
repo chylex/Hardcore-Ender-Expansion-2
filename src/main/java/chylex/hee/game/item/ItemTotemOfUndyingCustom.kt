@@ -1,7 +1,7 @@
 package chylex.hee.game.item
 import chylex.hee.client.util.MC
 import chylex.hee.game.entity.living.EntityMobVillagerDying
-import chylex.hee.game.mechanics.TrinketHandler
+import chylex.hee.game.mechanics.trinket.TrinketHandler
 import chylex.hee.init.ModItems
 import chylex.hee.system.Resource
 import chylex.hee.system.util.hasKey

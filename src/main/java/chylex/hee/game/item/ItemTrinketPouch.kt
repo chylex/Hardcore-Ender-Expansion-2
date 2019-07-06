@@ -6,10 +6,10 @@ import chylex.hee.game.item.infusion.IInfusableItem
 import chylex.hee.game.item.infusion.Infusion
 import chylex.hee.game.item.infusion.Infusion.EXPANSION
 import chylex.hee.game.item.infusion.InfusionTag
-import chylex.hee.game.item.trinket.ITrinketHandler
-import chylex.hee.game.item.trinket.ITrinketHandlerProvider
-import chylex.hee.game.item.trinket.ITrinketItem
-import chylex.hee.game.mechanics.TrinketHandler
+import chylex.hee.game.mechanics.trinket.ITrinketHandler
+import chylex.hee.game.mechanics.trinket.ITrinketHandlerProvider
+import chylex.hee.game.mechanics.trinket.ITrinketItem
+import chylex.hee.game.mechanics.trinket.TrinketHandler
 import chylex.hee.init.ModGuiHandler.GuiType
 import chylex.hee.init.ModGuiHandler.GuiType.TRINKET_POUCH
 import chylex.hee.network.server.PacketServerOpenGui

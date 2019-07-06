@@ -1,4 +1,4 @@
-package chylex.hee.game.item.trinket
+package chylex.hee.game.mechanics.trinket
 import net.minecraft.entity.player.EntityPlayer
 
 /**

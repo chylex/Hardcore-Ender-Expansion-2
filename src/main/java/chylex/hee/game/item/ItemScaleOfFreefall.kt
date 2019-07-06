@@ -1,5 +1,5 @@
 package chylex.hee.game.item
-import chylex.hee.game.mechanics.TrinketHandler
+import chylex.hee.game.mechanics.trinket.TrinketHandler
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.item.ItemStack
 import net.minecraft.util.DamageSource

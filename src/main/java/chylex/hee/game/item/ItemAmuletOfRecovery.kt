@@ -1,7 +1,7 @@
 package chylex.hee.game.item
-import chylex.hee.game.item.trinket.ITrinketItem
-import chylex.hee.game.mechanics.TrinketHandler
 import chylex.hee.game.mechanics.energy.IEnergyQuantity.Units
+import chylex.hee.game.mechanics.trinket.ITrinketItem
+import chylex.hee.game.mechanics.trinket.TrinketHandler
 import chylex.hee.init.ModGuiHandler.GuiType
 import chylex.hee.system.util.NBTItemStackList
 import chylex.hee.system.util.NBTList.Companion.setList

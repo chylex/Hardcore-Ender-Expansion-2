@@ -1,8 +1,8 @@
 package chylex.hee.game.item
 import chylex.hee.HEE
-import chylex.hee.game.item.trinket.ITrinketItem
 import chylex.hee.game.item.util.CustomRarity
-import chylex.hee.game.mechanics.TrinketHandler
+import chylex.hee.game.mechanics.trinket.ITrinketItem
+import chylex.hee.game.mechanics.trinket.TrinketHandler
 import net.minecraft.client.resources.I18n
 import net.minecraft.client.util.ITooltipFlag
 import net.minecraft.item.EnumRarity

@@ -1,5 +1,5 @@
 package chylex.hee.game.container.slot
-import chylex.hee.game.item.trinket.ITrinketHandlerProvider
+import chylex.hee.game.mechanics.trinket.ITrinketHandlerProvider
 import net.minecraft.item.ItemStack
 import net.minecraftforge.items.IItemHandler
 

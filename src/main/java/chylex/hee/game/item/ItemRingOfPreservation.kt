@@ -1,7 +1,7 @@
 package chylex.hee.game.item
 import chylex.hee.game.item.repair.ICustomRepairBehavior
 import chylex.hee.game.item.repair.RepairInstance
-import chylex.hee.game.mechanics.TrinketHandler
+import chylex.hee.game.mechanics.trinket.TrinketHandler
 import chylex.hee.system.util.copyIf
 import chylex.hee.system.util.isNotEmpty
 import net.minecraft.entity.Entity
