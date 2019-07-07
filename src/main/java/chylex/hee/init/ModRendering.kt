@@ -10,6 +10,7 @@ import chylex.hee.client.render.block.RenderTileTablePedestal
 import chylex.hee.client.render.block.RenderTileVoidPortal
 import chylex.hee.client.render.entity.RenderEntityItemNoBob
 import chylex.hee.client.render.entity.RenderEntityMobAbstractEnderman
+import chylex.hee.client.render.entity.RenderEntityMobUndread
 import chylex.hee.client.render.entity.RenderEntityMobVillagerDying
 import chylex.hee.client.render.entity.RenderEntityNothing
 import chylex.hee.client.render.entity.RenderEntityProjectileEyeOfEnder
@@ -29,6 +30,7 @@ import chylex.hee.game.block.entity.TileEntityTablePedestal
 import chylex.hee.game.entity.item.EntityItemNoBob
 import chylex.hee.game.entity.item.EntityTokenHolder
 import chylex.hee.game.entity.living.EntityMobAbstractEnderman
+import chylex.hee.game.entity.living.EntityMobUndread
 import chylex.hee.game.entity.living.EntityMobVillagerDying
 import chylex.hee.game.entity.projectile.EntityProjectileEyeOfEnder
 import chylex.hee.game.entity.technical.EntityTechnicalBase
@@ -71,6 +73,7 @@ object ModRendering{
 		registerEntity<EntityTokenHolder, RenderEntityTokenHolder>()
 		
 		registerEntity<EntityMobAbstractEnderman, RenderEntityMobAbstractEnderman>()
+		registerEntity<EntityMobUndread, RenderEntityMobUndread>()
 		registerEntity<EntityMobVillagerDying, RenderEntityMobVillagerDying>()
 		
 		registerEntity<EntityProjectileEyeOfEnder, RenderEntityProjectileEyeOfEnder>()

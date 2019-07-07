@@ -206,6 +206,7 @@ hee.energy.health.unstable=UNSTABLE
 hee.energy.health.revitalizing=REVITALIZING
 
 entity.hee.endermite_instability.name=Endermite (Instability)
+entity.hee.undread.name=Undread
 entity.hee.ender_pearl.name=Ender Pearl
 
 effect.hee.lifeless=Lifeless

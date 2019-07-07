@@ -12,11 +12,13 @@ import chylex.hee.game.entity.living.EntityMobEnderman
 import chylex.hee.game.entity.living.EntityMobEndermite
 import chylex.hee.game.entity.living.EntityMobEndermiteInstability
 import chylex.hee.game.entity.living.EntityMobSilverfish
+import chylex.hee.game.entity.living.EntityMobUndread
 import chylex.hee.game.entity.living.EntityMobVillagerDying
 import chylex.hee.game.entity.projectile.EntityProjectileEnderPearl
 import chylex.hee.game.entity.projectile.EntityProjectileEyeOfEnder
 import chylex.hee.game.entity.projectile.EntityProjectileSpatialDash
 import chylex.hee.game.entity.technical.EntityTechnicalTrigger
+import chylex.hee.game.world.territory.TerritoryType
 import chylex.hee.init.factory.EntityConstructors
 import chylex.hee.system.Resource
 import chylex.hee.system.util.color.RGB
@@ -51,6 +53,7 @@ object ModEntities{
 			register<EntityTokenHolder>("token_holder").tracker(128, 60, false) to this
 			
 			register<EntityMobEndermiteInstability>("endermite_instability").tracker(96, 3, true).egg(RGB(21u).toInt(), RGB(94, 122, 108).toInt()) to this
+			register<EntityMobUndread>("undread").tracker(80, 3, true).egg(TerritoryType.FORGOTTEN_TOMBS.desc.colors.tokenTop.toInt(), TerritoryType.FORGOTTEN_TOMBS.desc.colors.tokenBottom.toInt()) to this
 			register<EntityMobVillagerDying>("villager_dying").tracker(80, 3, false) to this
 			
 			register<EntityProjectileEnderPearl>("ender_pearl").tracker(64, 10, true) to this

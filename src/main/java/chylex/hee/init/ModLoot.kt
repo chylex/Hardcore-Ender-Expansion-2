@@ -8,6 +8,7 @@ import chylex.hee.game.loot.conditions.ConditionFortune
 import chylex.hee.game.loot.conditions.ConditionLooting
 import chylex.hee.game.loot.functions.FunctionInfuse
 import chylex.hee.game.loot.functions.FunctionPickColoredGloomrock
+import chylex.hee.game.loot.functions.FunctionPickUndreadGem
 import chylex.hee.game.loot.rng.RandomBiasedValueRange
 import chylex.hee.game.loot.rng.RandomRoundingValueRange
 import chylex.hee.system.Resource
@@ -39,6 +40,7 @@ object ModLoot{
 	lateinit var ENDERMAN_FIRST_KILL: ResourceLocation
 	lateinit var ENDERMITE_NATURAL: ResourceLocation
 	lateinit var ENDERMITE_INSTABILITY: ResourceLocation
+	lateinit var UNDREAD: ResourceLocation
 	
 	fun initialize(){
 		LootConditionManager.registerCondition(ConditionFortune.Serializer)
@@ -47,6 +49,7 @@ object ModLoot{
 		
 		LootFunctionManager.registerFunction(FunctionInfuse.Serializer)
 		LootFunctionManager.registerFunction(FunctionPickColoredGloomrock.Serializer)
+		LootFunctionManager.registerFunction(FunctionPickUndreadGem.Serializer)
 		
 		GRAVE_DIRT_LOOT = registerBlock("grave_dirt_loot")
 		HUMUS_EXPLODED = registerBlock("humus_exploded")
@@ -64,6 +67,7 @@ object ModLoot{
 		ENDERMAN_FIRST_KILL = registerEntity("enderman_first_kill")
 		ENDERMITE_NATURAL = registerEntity("endermite_natural")
 		ENDERMITE_INSTABILITY = registerEntity("endermite_instability")
+		UNDREAD = registerEntity("undread")
 	}
 	
 	private fun registerBlock(name: String): BlockLootTable{

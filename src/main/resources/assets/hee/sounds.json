@@ -16,5 +16,11 @@
   },
   "item.table_link.use.fail": {
     "sounds": [ "hee:item/table_link_use_fail" ]
+  },
+  "mob.undread.hurt": {
+    "sounds": [ "hee:mob/undread_hurt" ]
+  },
+  "mob.undread.death": {
+    "sounds": [ "hee:mob/undread_death" ]
   }
 }
