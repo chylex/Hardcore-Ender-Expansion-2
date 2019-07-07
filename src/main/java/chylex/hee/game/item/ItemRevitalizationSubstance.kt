@@ -65,7 +65,7 @@ class ItemRevitalizationSubstance : Item(){
 				val startPoint = handPos.add(handPos.directionTowards(blockPos).scale(0.2))
 				
 				PARTICLE_FAIL.spawn(Line(startPoint, blockPos, rand.nextFloat(0.4, 0.5)), rand)
-				ModSounds.REVITALIZATION_SUBSTANCE_USE_FAIL.playClient(blockPos, SoundCategory.BLOCKS, volume = 0.9F)
+				ModSounds.ITEM_REVITALIZATION_SUBSTANCE_USE_FAIL.playClient(blockPos, SoundCategory.BLOCKS, volume = 0.9F)
 			}
 		}
 	}
@@ -84,7 +84,7 @@ class ItemRevitalizationSubstance : Item(){
 		if (cluster.currentHealth != REVITALIZING){
 			if (cluster.addRevitalizationSubstance()){
 				player.getHeldItem(hand).shrink(1)
-				ModSounds.REVITALIZATION_SUBSTANCE_USE.playServer(world, pos, SoundCategory.BLOCKS, volume = 0.5F)
+				ModSounds.ITEM_REVITALIZATION_SUBSTANCE_USE.playServer(world, pos, SoundCategory.BLOCKS, volume = 0.5F)
 			}
 			else{
 				PacketClientFX(FX_FAIL, FxUseData(pos, player, hand)).sendToAllAround(player, 24.0)
