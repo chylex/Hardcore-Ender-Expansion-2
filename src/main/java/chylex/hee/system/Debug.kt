@@ -51,7 +51,7 @@ object Debug{
 	
 	fun setClipboardContents(file: File){
 		if (canExecutePowershell("filecopy.ps1")){
-			ProcessBuilder("powershell.exe", "-ExecutionPolicy", "Unrestricted", "-File", "filecopy.ps1", file.absolutePath).start()
+			ProcessBuilder("powershell.exe", "-ExecutionPolicy", "Unrestricted", "-Sta", "-File", "filecopy.ps1", file.absolutePath).start()
 		}
 	}
 	
