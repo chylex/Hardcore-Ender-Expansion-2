@@ -5,6 +5,7 @@ import chylex.hee.game.world.structure.IBlockPicker.Single.Air
 import chylex.hee.game.world.structure.IStructureWorld
 import chylex.hee.game.world.structure.piece.IStructurePieceConnection
 import chylex.hee.game.world.util.Size
+import chylex.hee.init.ModBlocks
 import chylex.hee.system.util.Pos
 import net.minecraft.util.EnumFacing.NORTH
 import net.minecraft.util.EnumFacing.SOUTH
@@ -16,6 +17,9 @@ class EnergyShrineCorridor_Straight(length: Int) : EnergyShrineAbstractPiece(){
 		EnergyShrineConnection(CORRIDOR, Pos(size.centerX, 0, size.maxZ), SOUTH),
 		EnergyShrineConnection(CORRIDOR, Pos(size.centerX - 1, 0, 0), NORTH)
 	)
+	
+	override val ceilingBlock
+		get() = ModBlocks.GLOOMROCK_BRICKS
 	
 	override fun generate(world: IStructureWorld, instance: Instance){
 		super.generate(world, instance)

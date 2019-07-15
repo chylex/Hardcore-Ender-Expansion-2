@@ -20,6 +20,9 @@ class EnergyShrineCorridor_Corner(private val lit: Boolean) : EnergyShrineAbstra
 		EnergyShrineConnection(CORRIDOR, Pos(0, 0, size.centerZ), WEST)
 	)
 	
+	override val ceilingBlock
+		get() = ModBlocks.GLOOMROCK_BRICKS
+	
 	override fun generate(world: IStructureWorld, instance: Instance){
 		super.generate(world, instance)
 		world.placeCube(Pos(1, 1, 1), Pos(size.maxX - 1, size.maxY - 2, size.maxZ - 1), Air)

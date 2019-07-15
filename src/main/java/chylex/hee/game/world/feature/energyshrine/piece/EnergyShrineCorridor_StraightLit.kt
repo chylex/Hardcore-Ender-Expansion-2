@@ -22,6 +22,9 @@ class EnergyShrineCorridor_StraightLit(length: Int) : EnergyShrineAbstractPiece(
 		EnergyShrineConnection(CORRIDOR, Pos(size.centerX - 1, 0, 0), NORTH)
 	)
 	
+	override val ceilingBlock
+		get() = ModBlocks.GLOOMROCK_BRICKS
+	
 	override fun generate(world: IStructureWorld, instance: Instance){
 		super.generate(world, instance)
 		world.placeCube(Pos(2, 1, 1), Pos(size.maxX - 2, size.maxY - 2, size.maxZ - 1), Air)
