@@ -3,6 +3,8 @@ import chylex.hee.game.world.feature.energyshrine.EnergyShrinePieces.PIECES_END
 import chylex.hee.game.world.feature.energyshrine.EnergyShrinePieces.PIECES_START
 import chylex.hee.game.world.feature.energyshrine.EnergyShrinePieces.STRUCTURE_SIZE
 import chylex.hee.game.world.feature.energyshrine.piece.EnergyShrineAbstractPiece
+import chylex.hee.game.world.feature.energyshrine.piece.EnergyShrineCorridor_Staircase_180_Bottom
+import chylex.hee.game.world.feature.energyshrine.piece.EnergyShrineCorridor_Staircase_180_Top
 import chylex.hee.game.world.structure.piece.IStructureBuild
 import chylex.hee.game.world.structure.piece.IStructureBuilder
 import chylex.hee.game.world.structure.piece.IStructureBuilder.ProcessBase
@@ -70,8 +72,14 @@ object EnergyShrineBuilder : IStructureBuilder{
 			val corridorChain = rand.nextItem(corridorList)
 			var lastPiece = targetPiece
 			
+			lateinit var stairTransform: Transform
+			
 			for(corridorPiece in corridorChain){
-				lastPiece = addPiece(lastPiece, corridorPiece) ?: return false
+				lastPiece = when(corridorPiece){
+					is EnergyShrineCorridor_Staircase_180_Top -> baseAddPiece(APPEND, lastPiece){ stairTransform = it; corridorPiece.MutableInstance(it) }
+					is EnergyShrineCorridor_Staircase_180_Bottom -> baseAddPiece(APPEND, lastPiece){ corridorPiece.MutableInstance(stairTransform) }
+					else -> addPiece(lastPiece, corridorPiece)
+				} ?: return false
 			}
 			
 			if (addPiece(lastPiece, generatedPiece) == null){

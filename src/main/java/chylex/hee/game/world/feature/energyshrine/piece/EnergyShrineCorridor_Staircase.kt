@@ -12,6 +12,7 @@ import chylex.hee.system.util.nextInt
 import chylex.hee.system.util.nextItemOrNull
 import chylex.hee.system.util.toRadians
 import chylex.hee.system.util.withFacing
+import net.minecraft.util.math.BlockPos
 import java.util.Random
 
 abstract class EnergyShrineCorridor_Staircase(file: String) : EnergyShrineAbstractPiece(), IStructurePieceFromFile by Delegate("energyshrine/$file", EnergyShrinePieces.PALETTE){
@@ -38,7 +39,7 @@ abstract class EnergyShrineCorridor_Staircase(file: String) : EnergyShrineAbstra
 				val torchPos = torchXZ.withY(yOffset + rand.nextInt(2, 5))
 				
 				if ((0..3).all { world.isAir(torchPos.down(it)) }){
-					val attachmentCandidates = Facing6.filter { world.getState(torchPos.offset(it)).isFullBlock }
+					val attachmentCandidates = Facing6.filter { canAttachTorchTo(world, torchPos.offset(it)) }
 					val attachTo = rand.nextItemOrNull(attachmentCandidates)
 					
 					if (attachTo != null){
@@ -48,6 +49,10 @@ abstract class EnergyShrineCorridor_Staircase(file: String) : EnergyShrineAbstra
 				}
 			}
 		}
+	}
+	
+	private fun canAttachTorchTo(world: IStructureWorld, pos: BlockPos): Boolean{
+		return pos.x in 0..maxX && pos.y in 0..maxY && pos.z in 0..maxZ && world.getState(pos).isFullBlock
 	}
 	
 	protected abstract fun nextRandomXZ(rand: Random, angle: Double): PosXZ
