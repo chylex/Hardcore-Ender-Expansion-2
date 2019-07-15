@@ -94,6 +94,10 @@ class WorldProviderEndCustom : WorldProviderEnd(){
 	
 	// Visual properties (Light)
 	
+	override fun getLightmapColors(partialTicks: Float, sunBrightness: Float, skyLight: Float, blockLight: Float, colors: FloatArray){
+		clientEnvironment?.lightmap?.update(colors, sunBrightness, skyLight, blockLight, partialTicks)
+	}
+	
 	override fun getLightBrightnessTable(): FloatArray{
 		return clientEnvironment?.lightBrightnessTable ?: super.getLightBrightnessTable()
 	}
@@ -112,7 +116,7 @@ class WorldProviderEndCustom : WorldProviderEnd(){
 	}
 	
 	override fun hasSkyLight(): Boolean{
-		return (clientEnvironment?.skyLight ?: DEFAULT_SKY_LIGHT) > 0
+		return true
 	}
 	
 	// Visual Properties (Sky)
