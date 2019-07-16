@@ -21,12 +21,14 @@ object ParticleFadingSpot : IParticleMaker{
 	}
 	
 	class Data(
-		private val color: IColor = RGB(0u),
+		private val color: (Random) -> IColor,
 		private val lifespan: IntRange = 0..0,
 		private val scale: ClosedFloatingPointRange<Float> = 0F..0F
 	) : IParticleData{
+		constructor(color: IColor, lifespan: IntRange = 0..0, scale: ClosedFloatingPointRange<Float> = 0F..0F) : this({ color }, lifespan, scale)
+		
 		override fun generate(rand: Random): IntArray{
-			return intArrayOf(color.toInt(), rand.nextInt(lifespan.first, lifespan.last), (rand.nextFloat(scale.start, scale.endInclusive) * 100F).floorToInt())
+			return intArrayOf(color(rand).toInt(), rand.nextInt(lifespan.first, lifespan.last), (rand.nextFloat(scale.start, scale.endInclusive) * 100F).floorToInt())
 		}
 	}
 	
