@@ -40,10 +40,12 @@ import net.minecraftforge.fml.relauncher.SideOnly
 import net.minecraft.util.text.translation.I18n as I18nServer
 
 class ItemPortalToken : Item(){
-	private companion object{
+	companion object{
 		private const val TYPE_TAG = "Type"
 		private const val TERRITORY_TYPE_TAG = "Territory"
 		private const val TERRITORY_INDEX_TAG = "Index"
+		
+		const val MAX_STACK_SIZE = 16
 	}
 	
 	enum class TokenType(val propertyValue: Float, private val translationKeySuffix: String? = null){
@@ -56,7 +58,7 @@ class ItemPortalToken : Item(){
 	}
 	
 	init{
-		maxStackSize = 1
+		maxStackSize = MAX_STACK_SIZE
 		
 		addPropertyOverride(Resource.Custom("token_type")){
 			stack, _, _ -> getTokenType(stack).propertyValue

@@ -148,6 +148,7 @@ item.hee.portal_token.tooltip.creative.generate=§6Hold and right-click to gener
 item.hee.portal_token.tooltip.creative.teleport=§6Hold and right-click to teleport (creative)
 item.hee.portal_token.tooltip.advanced=Index: %s
 item.hee.portal_token_concrete.name=Portal Token (%s)
+item.hee.blank_token.name=Blank Token
 
 item.hee.trinket_pouch.name=Trinket Pouch
 item.hee.trinket_pouch.tooltip=Right-click to open

@@ -109,6 +109,7 @@ object ModItems{
 	@JvmField val INFUSED_ENDER_PEARL = ItemInfusedEnderPearl().apply { setup("infused_ender_pearl", translationKey = "enderPearl", inCreativeTab = false) }
 	@JvmField val SPATIAL_DASH_GEM    = ItemSpatialDashGem().apply { setup("spatial_dash_gem") }
 	@JvmField val PORTAL_TOKEN        = ItemPortalToken().apply { setup("portal_token", inCreativeTab = false) }
+	@JvmField val BLANK_TOKEN         = Item().apply { setup("blank_token"); setMaxStackSize(ItemPortalToken.MAX_STACK_SIZE) }
 	
 	// Items: Trinkets
 	
@@ -172,6 +173,7 @@ object ModItems{
 			register(INFUSED_ENDER_PEARL)
 			register(SPATIAL_DASH_GEM)
 			register(PORTAL_TOKEN)
+			register(BLANK_TOKEN)
 			
 			register(TRINKET_POUCH)
 			register(TOTEM_OF_UNDYING)
