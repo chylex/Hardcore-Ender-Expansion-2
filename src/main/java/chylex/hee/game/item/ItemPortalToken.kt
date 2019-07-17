@@ -82,6 +82,10 @@ class ItemPortalToken : Item(){
 		return stack.heeTagOrNull?.getEnum<TerritoryType>(TERRITORY_TYPE_TAG)
 	}
 	
+	fun hasTerritoryInstance(stack: ItemStack): Boolean{
+		return stack.heeTagOrNull.hasKey(TERRITORY_INDEX_TAG)
+	}
+	
 	fun getOrCreateTerritoryInstance(stack: ItemStack): TerritoryInstance?{
 		val territory = getTerritoryType(stack) ?: return null
 		
@@ -143,11 +147,11 @@ class ItemPortalToken : Item(){
 	
 	@SideOnly(Side.CLIENT)
 	override fun addInformation(stack: ItemStack, world: World?, lines: MutableList<String>, flags: ITooltipFlag){
-		if (MC.currentScreen is GuiPortalTokenStorage){
+		if ((MC.currentScreen as? GuiPortalTokenStorage)?.canActivateToken(stack) == true){
 			lines.add(I18n.format("item.hee.portal_token.tooltip.activate"))
 		}
-		else if (MC.player?.isCreative == true){
-			lines.add(I18n.format("item.hee.portal_token.tooltip.creative.${if (stack.heeTagOrNull.hasKey(TERRITORY_INDEX_TAG)) "teleport" else "generate"}"))
+		else if (MC.player?.let { it.isCreative && it.dimension == 1 } == true){
+			lines.add(I18n.format("item.hee.portal_token.tooltip.creative.${if (hasTerritoryInstance(stack)) "teleport" else "generate"}"))
 		}
 		
 		getTokenType(stack).translationKey?.let {
