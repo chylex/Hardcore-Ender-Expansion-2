@@ -1,26 +1,41 @@
 {
-  "block.obsidian.land": {
-    "sounds": [ "hee:block/obsidian_land" ]
-  },
   "block.loot_chest.open": {
-    "sounds": [ "hee:block/loot_chest_open" ]
+    "sounds": [ "hee:block/loot_chest_open" ],
+    "subtitle": "subtitles.block.chest.open"
   },
-  "item.revitalization_substance.use": {
-    "sounds": [ "hee:item/revitalization_substance_use" ]
+  "block.obsidian.land": {
+    "sounds": [ "hee:block/obsidian_land" ],
+    "subtitle": "subtitles.hee.block.obsidian.land"
+  },
+  "item.revitalization_substance.use.success": {
+    "sounds": [ "hee:item/revitalization_substance_use" ],
+    "subtitle": "subtitles.item.revitalization_substance.use.success"
   },
   "item.revitalization_substance.use.fail": {
-    "sounds": [ "hee:item/revitalization_substance_use_fail" ]
+    "sounds": [ "hee:item/revitalization_substance_use_fail" ],
+    "subtitle": "subtitles.item.revitalization_substance.use.fail"
   },
-  "item.table_link.use": {
+  "item.table_link.use.success": {
+    "sounds": [ "hee:item/table_link_use" ],
+    "subtitle": "subtitles.item.table_link.use.success"
+  },
+  "item.table_link.use.special": {
     "sounds": [ "hee:item/table_link_use" ]
   },
   "item.table_link.use.fail": {
-    "sounds": [ "hee:item/table_link_use_fail" ]
+    "sounds": [ "hee:item/table_link_use_fail" ],
+    "subtitle": "subtitles.item.table_link.use.fail"
+  },
+  "entity.revitalization_substance.heal": {
+    "sounds": [ "minecraft:random/fizz" ],
+    "subtitle": "subtitles.hee.entity.revitalization_substance.heal"
   },
   "mob.undread.hurt": {
-    "sounds": [ "hee:mob/undread_hurt" ]
+    "sounds": [ "hee:mob/undread_hurt" ],
+    "subtitle": "subtitles.hee.mob.undread.hurt"
   },
   "mob.undread.death": {
-    "sounds": [ "hee:mob/undread_death" ]
+    "sounds": [ "hee:mob/undread_death" ],
+    "subtitle": "subtitles.hee.mob.undread.death"
   }
 }

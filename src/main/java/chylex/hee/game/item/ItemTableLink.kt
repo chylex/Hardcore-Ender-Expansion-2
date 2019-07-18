@@ -68,9 +68,9 @@ class ItemTableLink : Item(){
 				val pos = readPos()
 				
 				when(SoundType.values().getOrNull(readByte().toInt())){
-					LINK_SUCCESS -> ModSounds.ITEM_TABLE_LINK_USE.playClient(pos, SoundCategory.PLAYERS, pitch = rand.nextFloat(0.49F, 0.51F))
-					LINK_RESTART -> ModSounds.ITEM_TABLE_LINK_USE.playClient(pos, SoundCategory.PLAYERS, pitch = rand.nextFloat(0.69F, 0.71F))
-					LINK_OUTPUT -> ModSounds.ITEM_TABLE_LINK_USE.playClient(pos, SoundCategory.PLAYERS, volume = 0.9F, pitch = 0.63F)
+					LINK_SUCCESS -> ModSounds.ITEM_TABLE_LINK_USE_SUCCESS.playClient(pos, SoundCategory.PLAYERS, pitch = rand.nextFloat(0.49F, 0.51F))
+					LINK_RESTART -> ModSounds.ITEM_TABLE_LINK_USE_SPECIAL.playClient(pos, SoundCategory.PLAYERS, pitch = rand.nextFloat(0.69F, 0.71F))
+					LINK_OUTPUT -> ModSounds.ITEM_TABLE_LINK_USE_SPECIAL.playClient(pos, SoundCategory.PLAYERS, volume = 0.9F, pitch = 0.63F)
 					else -> ModSounds.ITEM_TABLE_LINK_USE_FAIL.playClient(pos, SoundCategory.PLAYERS, volume = 0.9F, pitch = rand.nextFloat(0.72F, 0.73F))
 				}
 			}

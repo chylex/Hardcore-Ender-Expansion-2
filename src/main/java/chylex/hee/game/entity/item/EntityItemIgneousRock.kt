@@ -39,7 +39,6 @@ import net.minecraft.entity.Entity
 import net.minecraft.entity.MoverType
 import net.minecraft.init.Blocks
 import net.minecraft.init.SoundEvents
-import net.minecraft.init.SoundEvents.ENTITY_GENERIC_BURN
 import net.minecraft.item.ItemBlock
 import net.minecraft.item.ItemStack
 import net.minecraft.item.crafting.FurnaceRecipes
@@ -213,7 +212,7 @@ class EntityItemIgneousRock : EntityItemNoBob{
 	}
 	
 	override fun playSound(sound: SoundEvent, volume: Float, pitch: Float){
-		if (sound === ENTITY_GENERIC_BURN && volume == 0.4F && pitch >= 2.0F){ // UPDATE: find a better way, all item handling has changed anyway
+		if (sound === SoundEvents.ENTITY_GENERIC_BURN && volume == 0.4F && pitch >= 2.0F){ // UPDATE: find a better way, all item handling has changed anyway
 			motionVec = prevMotionVec // this disables vanilla lava handling, but also breaks hasNoGravity
 		}
 		else{

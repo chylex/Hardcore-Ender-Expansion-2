@@ -84,7 +84,7 @@ class ItemRevitalizationSubstance : Item(){
 		if (cluster.currentHealth != REVITALIZING){
 			if (cluster.addRevitalizationSubstance()){
 				player.getHeldItem(hand).shrink(1)
-				ModSounds.ITEM_REVITALIZATION_SUBSTANCE_USE.playServer(world, pos, SoundCategory.BLOCKS, volume = 0.5F)
+				ModSounds.ITEM_REVITALIZATION_SUBSTANCE_USE_SUCCESS.playServer(world, pos, SoundCategory.BLOCKS, volume = 0.5F)
 			}
 			else{
 				PacketClientFX(FX_FAIL, FxUseData(pos, player, hand)).sendToAllAround(player, 24.0)

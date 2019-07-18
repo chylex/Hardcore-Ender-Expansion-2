@@ -4,6 +4,7 @@ import chylex.hee.game.block.BlockEnderGooPurified
 import chylex.hee.game.fx.IFxData
 import chylex.hee.game.fx.IFxHandler
 import chylex.hee.init.ModBlocks
+import chylex.hee.init.ModSounds
 import chylex.hee.network.client.PacketClientFX
 import chylex.hee.system.util.Pos
 import chylex.hee.system.util.allInCenteredBoxMutable
@@ -28,7 +29,6 @@ import io.netty.buffer.ByteBuf
 import net.minecraft.block.state.IBlockState
 import net.minecraft.entity.Entity
 import net.minecraft.entity.item.EntityItem
-import net.minecraft.init.SoundEvents
 import net.minecraft.item.ItemStack
 import net.minecraft.util.DamageSource
 import net.minecraft.util.SoundCategory
@@ -68,8 +68,8 @@ class EntityItemRevitalizationSubstance : EntityItem{
 				val soundOffset = min(playerVec.distanceTo(centerVec), (radius * 0.5) - 0.5)
 				val soundPos = centerVec.add(centerVec.directionTowards(playerVec).scale(soundOffset))
 				
-				SoundEvents.BLOCK_LAVA_EXTINGUISH.playClient(soundPos, SoundCategory.BLOCKS, volume = 1F + (radius / MAX_RADIUS), pitch = 0.8F)
-				SoundEvents.BLOCK_LAVA_EXTINGUISH.playClient(soundPos, SoundCategory.BLOCKS, volume = 2F * (radius / MAX_RADIUS), pitch = 1.2F)
+				ModSounds.ENTITY_REVITALIZATION_SUBSTANCE_HEAL.playClient(soundPos, SoundCategory.BLOCKS, volume = 1F + (radius / MAX_RADIUS), pitch = 0.8F)
+				ModSounds.ENTITY_REVITALIZATION_SUBSTANCE_HEAL.playClient(soundPos, SoundCategory.BLOCKS, volume = 2F * (radius / MAX_RADIUS), pitch = 1.2F)
 			}
 		}
 		
