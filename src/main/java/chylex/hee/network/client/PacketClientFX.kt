@@ -7,6 +7,7 @@ import chylex.hee.game.entity.item.EntityFallingObsidian
 import chylex.hee.game.entity.item.EntityItemIgneousRock
 import chylex.hee.game.entity.item.EntityItemRevitalizationSubstance
 import chylex.hee.game.entity.living.enderman.EndermanTeleportHandler
+import chylex.hee.game.entity.projectile.EntityProjectileSpatialDash
 import chylex.hee.game.fx.IFxData
 import chylex.hee.game.fx.IFxHandler
 import chylex.hee.game.item.ItemAbstractEnergyUser
@@ -46,6 +47,7 @@ class PacketClientFX<T : IFxData>() : BaseClientPacket(){
 			EntityItemIgneousRock.FX_BLOCK_SMELT,
 			EntityItemIgneousRock.FX_ENTITY_BURN,
 			EntityItemRevitalizationSubstance.FX_REVITALIZE_GOO,
+			EntityProjectileSpatialDash.FX_EXPIRE,
 			EndermanTeleportHandler.FX_TELEPORT_FAIL,
 			EndermanTeleportHandler.FX_TELEPORT_OUT_OF_WORLD
 		)

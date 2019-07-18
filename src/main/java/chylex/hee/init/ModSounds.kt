@@ -13,6 +13,7 @@ object ModSounds{
 	@JvmField val ITEM_TABLE_LINK_USE_FAIL                  = SoundEvent(Resource.Custom("item.table_link.use.fail"))
 	
 	@JvmField val ENTITY_REVITALIZATION_SUBSTANCE_HEAL = SoundEvent(Resource.Custom("entity.revitalization_substance.heal"))
+	@JvmField val ENTITY_SPATIAL_DASH_EXPIRE           = SoundEvent(Resource.Custom("entity.spatial_dash.expire"))
 	
 	@JvmField val MOB_UNDREAD_HURT  = SoundEvent(Resource.Custom("mob.undread.hurt"))
 	@JvmField val MOB_UNDREAD_DEATH = SoundEvent(Resource.Custom("mob.undread.death"))

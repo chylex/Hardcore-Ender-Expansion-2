@@ -33,6 +33,7 @@ import chylex.hee.game.entity.living.EntityMobAbstractEnderman
 import chylex.hee.game.entity.living.EntityMobUndread
 import chylex.hee.game.entity.living.EntityMobVillagerDying
 import chylex.hee.game.entity.projectile.EntityProjectileEyeOfEnder
+import chylex.hee.game.entity.projectile.EntityProjectileSpatialDash
 import chylex.hee.game.entity.technical.EntityTechnicalBase
 import chylex.hee.game.item.ItemBindingEssence
 import chylex.hee.game.item.ItemEnergyOracle
@@ -77,6 +78,7 @@ object ModRendering{
 		registerEntity<EntityMobVillagerDying, RenderEntityMobVillagerDying>()
 		
 		registerEntity<EntityProjectileEyeOfEnder, RenderEntityProjectileEyeOfEnder>()
+		registerEntity<EntityProjectileSpatialDash, RenderEntityNothing>()
 		
 		registerEntity<EntityTechnicalBase, RenderEntityNothing>()
 	}
