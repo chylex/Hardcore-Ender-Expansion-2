@@ -4,11 +4,13 @@ import chylex.hee.game.particle.spawner.factory.IParticleMaker
 import chylex.hee.system.util.color.IColor
 import chylex.hee.system.util.color.RGB
 import chylex.hee.system.util.floorToInt
+import chylex.hee.system.util.nextFloat
 import net.minecraft.client.particle.Particle
 import net.minecraft.client.particle.ParticleSmokeNormal
 import net.minecraft.world.World
 import net.minecraftforge.fml.relauncher.Side
 import net.minecraftforge.fml.relauncher.SideOnly
+import java.util.Random
 
 object ParticleSmokeCustom : IParticleMaker{
 	@SideOnly(Side.CLIENT)
@@ -17,23 +19,28 @@ object ParticleSmokeCustom : IParticleMaker{
 	}
 	
 	class Data(
-		scale: Float = 1F,
-		color: IColor = RGB(255u)
-	) : IParticleData.Static(intArrayOf(
-		(scale * 100F).floorToInt(),
-		color.toInt()
-	))
+		private val color: (Random) -> IColor = { rand -> RGB((rand.nextFloat(0F, 0.3F) * 255F).floorToInt().toUByte()) },
+		private val scale: Float = 1F
+	) : IParticleData{
+		constructor(color: IColor, scale: Float = 1F) : this({ color }, scale)
+		
+		override fun generate(rand: Random): IntArray{
+			return intArrayOf(color(rand).toInt(), (scale * 100F).floorToInt())
+		}
+	}
 	
-	private val DEFAULT_DATA = Data()
+	private val DEFAULT_DATA = IParticleData.Static(intArrayOf(
+		RGB(0u).toInt(), 0
+	))
 	
 	@SideOnly(Side.CLIENT)
 	private class Instance(
 		world: World, posX: Double, posY: Double, posZ: Double, motX: Double, motY: Double, motZ: Double, unsafeData: IntArray
 	) : ParticleSmokeNormal(
-		world, posX, posY, posZ, motX, motY, motZ, DEFAULT_DATA.validate(unsafeData)[0] * 0.01F
+		world, posX, posY, posZ, motX, motY, motZ, DEFAULT_DATA.validate(unsafeData)[1] * 0.01F
 	){
 		init{
-			val color = DEFAULT_DATA.validate(unsafeData)[1]
+			val color = DEFAULT_DATA.validate(unsafeData)[0]
 			
 			particleRed = ((color shr 16) and 255) / 255F
 			particleGreen = ((color shr 8) and 255) / 255F
