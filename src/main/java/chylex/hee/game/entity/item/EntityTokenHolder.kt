@@ -29,10 +29,13 @@ import net.minecraftforge.fml.relauncher.Side
 import net.minecraftforge.fml.relauncher.SideOnly
 
 class EntityTokenHolder(world: World) : Entity(world), IEntityAdditionalSpawnData{
-	constructor(world: World, pos: BlockPos, tokenType: TokenType, territoryType: TerritoryType) : this(world){
-		setLocationAndAngles(pos.x + 0.5, pos.y + 0.5, pos.z + 0.5, 0F, 0F)
+	constructor(world: World, tokenType: TokenType, territoryType: TerritoryType) : this(world){
 		this.tokenType = tokenType
 		this.territoryType = territoryType
+	}
+	
+	constructor(world: World, pos: BlockPos, tokenType: TokenType, territoryType: TerritoryType) : this(world, tokenType, territoryType){
+		setLocationAndAngles(pos.x + 0.5, pos.y + 0.5, pos.z + 0.5, 0F, 0F)
 	}
 	
 	private companion object{

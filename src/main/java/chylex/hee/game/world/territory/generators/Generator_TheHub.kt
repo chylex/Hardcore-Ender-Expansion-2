@@ -244,7 +244,7 @@ object Generator_TheHub : ITerritoryGenerator{
 				val tokenPos = findTokenSpawnPos(world, caveCenter)
 				
 				if (tokenPos != null && spawnedTokens.all { it.distanceSqTo(tokenPos) > square(32) }){
-					world.addTrigger(tokenPos, EntityStructureTrigger({ realWorld -> EntityTokenHolder(realWorld, tokenPos, NORMAL, FORGOTTEN_TOMBS) }, yOffset = 1.0))
+					world.addTrigger(tokenPos, EntityStructureTrigger({ realWorld -> EntityTokenHolder(realWorld, NORMAL, FORGOTTEN_TOMBS) }, yOffset = 1.0))
 					spawnedTokens.add(tokenPos)
 				}
 			}
