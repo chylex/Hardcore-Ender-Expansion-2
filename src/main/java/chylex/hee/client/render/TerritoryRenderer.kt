@@ -160,6 +160,8 @@ object TerritoryRenderer{
 					textMainColor = tokenBottom
 					textShadowColor = tokenTop
 				}
+				
+				textShadowColor = textShadowColor.toRGB().let { RGB(it.red / 2, it.green / 2, it.blue / 2) }
 			}
 		}
 		
