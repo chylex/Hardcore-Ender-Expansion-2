@@ -8,7 +8,6 @@ import chylex.hee.system.util.getBlock
 import chylex.hee.system.util.heeTag
 import chylex.hee.system.util.heeTagOrNull
 import chylex.hee.system.util.setAir
-import com.google.common.collect.Iterators
 import net.minecraft.block.Block
 import net.minecraft.block.BlockLiquid
 import net.minecraft.block.material.Material
@@ -30,6 +29,7 @@ import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.RayTraceResult.Type.BLOCK
 import net.minecraft.world.World
 import net.minecraftforge.fluids.IFluidBlock
+import java.util.Collections
 
 class ItemVoidBucket : ItemAbstractVoidTool(){
 	private companion object{
@@ -61,7 +61,7 @@ class ItemVoidBucket : ItemAbstractVoidTool(){
 		}
 		
 		private val RAY_TRACE_FLUID = RayTracer(
-			canCollideCheck = { state, _ -> val block = state.block; block.canCollideCheck(state, true) || isFluid(block) }
+			canCollideCheck = { _, _, state -> val block = state.block; block.canCollideCheck(state, true) || isFluid(block) }
 		)
 	}
 	
@@ -106,9 +106,9 @@ class ItemVoidBucket : ItemAbstractVoidTool(){
 		
 		if (!world.isRemote){
 			val blocksToRemove = if (player.isSneaking)
-				Iterators.singletonIterator(clickedPos).asSequence()
+				Collections.singleton(clickedPos)
 			else
-				clickedPos.allInCenteredBox(1, 1, 1).asSequence()
+				clickedPos.allInCenteredBox(1, 1, 1)
 			
 			var totalRemoved = 0
 			

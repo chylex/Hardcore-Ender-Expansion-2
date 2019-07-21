@@ -24,7 +24,7 @@ class BlockBuilder(val material: Material, var color: MapColor, var sound: Sound
 		miningStats = false
 	}
 	
-	fun clone(modify: BlockBuilder.() -> Unit): BlockBuilder{
+	inline fun clone(modify: BlockBuilder.() -> Unit): BlockBuilder{
 		return BlockBuilder(material, color, sound).apply {
 			harvestTool = this@BlockBuilder.harvestTool
 			harvestHardness = this@BlockBuilder.harvestHardness

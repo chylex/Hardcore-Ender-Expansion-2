@@ -119,8 +119,8 @@ object EnergyShrineGenerator : IWorldGenerator{
 	}
 	
 	private fun findStructureTop(world: World, rand: Random, build: IStructureBuild, topPos: BlockPos, structureOffset: BlockPos, structureHeight: Int): BlockPos?{
-		val posSample = build.boundingBoxes.flatMap { sampleBoundingBox(it, rand).asSequence() }.toList()
-		val posSampleXZ = posSample.asSequence().map(::PosXZ).toSet()
+		val posSample = build.boundingBoxes.toList().flatMap { sampleBoundingBox(it, rand).asIterable() }
+		val posSampleXZ = posSample.map(::PosXZ).toSet()
 		
 		val topPosBelowGround = topPos.offsetUntil(DOWN, 0 until (topPos.y - structureHeight - MIN_STRUCTURE_Y)){
 			val origin = it.add(structureOffset)

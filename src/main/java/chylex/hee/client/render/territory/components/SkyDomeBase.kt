@@ -27,31 +27,31 @@ abstract class SkyDomeBase : IRenderHandler(){
 	private object Skybox{
 		data class Vertex(val x: Float, val y: Float, val z: Float, val u: Float, val v: Float, val c: Float)
 		
+		private const val SIZE = 8
+		private const val COUNT = 15
+		
+		private fun yOffset(xp: Float, zp: Float): Float{
+			return 32F - (1.15F * (square(xp) + square(zp)).pow(0.75F))
+		}
+		
+		private fun yColor(xp: Float, zp: Float): Float{
+			val distance = sqrt(square(xp) + square(zp)) / (COUNT - 2F)
+			val stretched = 1F - ((distance - 0.4F) / 0.6F)
+			
+			return stretched.coerceIn(0F, 1F)
+		}
+		
 		val VERTICES = lazy {
 			val list = mutableListOf<Vertex>()
 			
-			val size = 8
-			val count = 15
-			
-			fun yOffset(xp: Float, zp: Float): Float{
-				return 32F - (1.15F * (square(xp) + square(zp)).pow(0.75F))
-			}
-			
-			fun yColor(xp: Float, zp: Float): Float{
-				val distance = sqrt(square(xp) + square(zp)) / (count - 2F)
-				val stretched = 1F - ((distance - 0.4F) / 0.6F)
-				
-				return stretched.coerceIn(0F, 1F)
-			}
-			
-			for(xi in -count..count){
-				for(zi in -count..count){
-					if (square(xi) + square(zi) < square(count)){
-						val x1 = ((xi * size) - size / 2).toFloat()
-						val x2 = ((xi * size) + size / 2).toFloat()
+			for(xi in -COUNT..COUNT){
+				for(zi in -COUNT..COUNT){
+					if (square(xi) + square(zi) < square(COUNT)){
+						val x1 = ((xi * SIZE) - SIZE / 2).toFloat()
+						val x2 = ((xi * SIZE) + SIZE / 2).toFloat()
 						
-						val z1 = ((zi * size) - size / 2).toFloat()
-						val z2 = ((zi * size) + size / 2).toFloat()
+						val z1 = ((zi * SIZE) - SIZE / 2).toFloat()
+						val z2 = ((zi * SIZE) + SIZE / 2).toFloat()
 						
 						val y11 = yOffset(xi - 0.5F, zi - 0.5F)
 						val y12 = yOffset(xi - 0.5F, zi + 0.5F)

@@ -23,12 +23,12 @@ import net.minecraft.util.math.Vec3d
 import net.minecraft.world.World
 
 class RayTracer(
-	private val canCollideCheck: (IBlockState, BlockPos) -> Boolean
+	private val canCollideCheck: (World, BlockPos, IBlockState) -> Boolean
 ){
 	fun traceAtPos(world: World, pos: BlockPos, vecFrom: Vec3d, vecTo: Vec3d): RayTraceResult?{
 		val state = pos.getState(world)
 		
-		return if (canCollideCheck(state, pos))
+		return if (canCollideCheck(world, pos, state))
 			state.collisionRayTrace(world, pos, vecFrom, vecTo)
 		else
 			null

@@ -226,7 +226,6 @@ class EntityProjectileEyeOfEnder : Entity, IEntityAdditionalSpawnData{
 		}
 		
 		val averageY = checkedBlocks
-			.asSequence()
 			.map { pos -> 1 + (pos.offsetUntil(DOWN, 0..(pos.y)){ shouldFloatAbove(it.getState(world)) } ?: pos).y }
 			.sortedDescending()
 			.take(1 + (checkedBlocks.size / 4))

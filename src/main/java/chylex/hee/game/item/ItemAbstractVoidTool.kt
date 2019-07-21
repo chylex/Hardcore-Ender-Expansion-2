@@ -27,17 +27,21 @@ abstract class ItemAbstractVoidTool : ItemTool(CustomToolMaterial.VOID, emptySet
 		super.setDamage(stack, min(damage, stack.maxDamage))
 	}
 	
-	protected fun guardItemBreaking(stack: ItemStack, entity: EntityLivingBase, block: () -> Unit){
+	protected inline fun guardItemBreaking(stack: ItemStack, entity: EntityLivingBase, block: () -> Unit){
 		val wasNotBroken = stack.itemDamage < stack.maxDamage
 		block()
 		val isNowBroken = stack.itemDamage >= stack.maxDamage
 		
 		if (wasNotBroken && isNowBroken){
-			entity.renderBrokenItemStack(stack)
-			
-			if (entity is EntityPlayer){
-				entity.addStat(StatList.getObjectBreakStats(this)!!)
-			}
+			onItemBroken(stack, entity)
+		}
+	}
+	
+	protected fun onItemBroken(stack: ItemStack, entity: EntityLivingBase){
+		entity.renderBrokenItemStack(stack)
+		
+		if (entity is EntityPlayer){
+			entity.addStat(StatList.getObjectBreakStats(this)!!)
 		}
 	}
 	

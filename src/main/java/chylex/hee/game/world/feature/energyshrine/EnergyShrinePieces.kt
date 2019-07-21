@@ -88,35 +88,33 @@ object EnergyShrinePieces : IStructureDescription{
 			    EnergyShrineCorridor_Staircase_180_Bottom("corridor.staircase180bottom.nbt"))
 	)
 	
-	private fun PIECES_CORRIDORS_GENERIC(rand: Random, targetAmount: Int): MutableList<Array<out EnergyShrineAbstractPiece>>{
-		fun newStraightCorridor() = when{
-			rand.nextBoolean() -> arrayOf(EnergyShrineCorridor_StraightLit(1 + 2 * rand.nextInt(0, 3)))
-			rand.nextInt(4) != 0 -> arrayOf(EnergyShrineCorridor_Straight(rand.nextInt(1, 7)))
-			else -> emptyArray()
+	private fun PIECES_CORRIDOR_PART_STRAIGHT(rand: Random) = when{
+		rand.nextBoolean() -> arrayOf(EnergyShrineCorridor_StraightLit(1 + 2 * rand.nextInt(0, 3)))
+		rand.nextInt(4) != 0 -> arrayOf(EnergyShrineCorridor_Straight(rand.nextInt(1, 7)))
+		else -> emptyArray()
+	}
+	
+	private fun PIECES_CORRIDOR_PART_CORNER(rand: Random): Array<EnergyShrineAbstractPiece>{
+		fun pickShortCorridor() = when{
+			rand.nextInt(3) == 0 -> EnergyShrineCorridor_StraightLit(1 + 2 * rand.nextInt(0, 2))
+			rand.nextInt(5) != 0 -> EnergyShrineCorridor_Straight(rand.nextInt(1, 5))
+			else -> null
 		}
 		
-		fun newCornerCorridor(): Array<EnergyShrineAbstractPiece>{
-			fun pickShortCorridor() = when{
-				rand.nextInt(3) == 0 -> EnergyShrineCorridor_StraightLit(1 + 2 * rand.nextInt(0, 2))
-				rand.nextInt(5) != 0 -> EnergyShrineCorridor_Straight(rand.nextInt(1, 5))
-				else -> null
-			}
-			
-			return listOfNotNull(
-				pickShortCorridor(),
-				PIECES_CORRIDOR_CORNER.generateItem(rand),
-				pickShortCorridor()
-			).toTypedArray()
+		return listOfNotNull(
+			pickShortCorridor(),
+			PIECES_CORRIDOR_CORNER.generateItem(rand),
+			pickShortCorridor()
+		).toTypedArray()
+	}
+	
+	private fun PIECES_CORRIDORS_GENERIC(rand: Random, targetAmount: Int) = mutableListOf<Array<out EnergyShrineAbstractPiece>>().apply {
+		repeat(rand.nextInt(3, 4)){
+			add(PIECES_CORRIDOR_PART_CORNER(rand))
 		}
 		
-		return mutableListOf<Array<out EnergyShrineAbstractPiece>>().apply {
-			repeat(rand.nextInt(3, 4)){
-				add(newCornerCorridor())
-			}
-			
-			while(size < targetAmount){
-				add(newStraightCorridor())
-			}
+		while(size < targetAmount){
+			add(PIECES_CORRIDOR_PART_STRAIGHT(rand))
 		}
 	}
 	

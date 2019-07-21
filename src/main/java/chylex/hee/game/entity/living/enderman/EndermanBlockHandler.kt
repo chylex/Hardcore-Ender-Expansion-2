@@ -39,7 +39,10 @@ import net.minecraft.world.biome.Biome
 class EndermanBlockHandler(private val enderman: EntityMobAbstractEnderman) : IBlockPickUpHandler{
 	companion object{
 		private val SEARCH_AREA = AxisAlignedBB(-15.0, -2.0, -15.0, 15.0, 1.0, 15.0)
-		private val RAY_TRACE_CHECK = RayTracer(canCollideCheck = { state, _ -> state.block.canCollideCheck(state, true) })
+		
+		private val RAY_TRACE_CHECK = RayTracer(
+			canCollideCheck = { _, _, state -> state.block.canCollideCheck(state, true) }
+		)
 		
 		private val BIOME_CARRIABLE_BLOCKS = mutableMapOf<Biome, IBlockState>()
 		

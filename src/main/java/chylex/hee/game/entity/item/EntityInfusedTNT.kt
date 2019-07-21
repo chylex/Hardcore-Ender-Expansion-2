@@ -209,7 +209,7 @@ class EntityInfusedTNT : EntityTNTPrimed{
 		return collisionBoxes
 	}
 	
-	private fun moveWithCollisionCheck(collisionBoxes: List<AxisAlignedBB>, initialMotion: Double, calculateFunc: AxisAlignedBB.(AxisAlignedBB, Double) -> Double, offsetFunc: AxisAlignedBB.(Double) -> AxisAlignedBB): Double{
+	private inline fun moveWithCollisionCheck(collisionBoxes: List<AxisAlignedBB>, initialMotion: Double, calculateFunc: AxisAlignedBB.(AxisAlignedBB, Double) -> Double, offsetFunc: AxisAlignedBB.(Double) -> AxisAlignedBB): Double{
 		if (initialMotion == 0.0){
 			return initialMotion
 		}

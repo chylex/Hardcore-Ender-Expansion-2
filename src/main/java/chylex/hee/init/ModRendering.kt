@@ -185,7 +185,7 @@ object ModRendering{
 				*tables
 			).map(Item::getItemFromBlock).toSet()
 			
-			for(item in keys.asSequence().filter { it.namespace == HEE.ID }.map(::getValue).requireNoNulls().filterNot(skippedBlocks::contains)){
+			for(item in keys.filter { it.namespace == HEE.ID }.map(::getValue).requireNoNulls().filterNot(skippedBlocks::contains)){
 				setModel(item)
 			}
 		}

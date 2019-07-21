@@ -39,6 +39,10 @@ class EntityProjectileEnderPearl : EntityEnderPearl, IEntityAdditionalSpawnData{
 	companion object{
 		private val DAMAGE_HIT_ENTITY = Damage(PEACEFUL_EXCLUSION, *ALL_PROTECTIONS_WITH_SHIELD)
 		
+		private val RAY_TRACE_INDESTRUCTIBLE = RayTracer(
+			canCollideCheck = { world, pos, state -> state.getBlockHardness(world, pos) == INDESTRUCTIBLE_HARDNESS }
+		)
+		
 		@JvmStatic
 		@SubscribeEvent
 		fun onEntityJoinWorld(e: EntityJoinWorldEvent){
@@ -77,12 +81,6 @@ class EntityProjectileEnderPearl : EntityEnderPearl, IEntityAdditionalSpawnData{
 	private var infusions = InfusionList.EMPTY
 	private var hasPhasedIntoWall = false
 	private var hasPhasingFinished = false
-	
-	private val rayTraceIndestructible by lazy(LazyThreadSafetyMode.NONE){
-		RayTracer(
-			canCollideCheck = { state, pos -> state.getBlockHardness(world, pos) == INDESTRUCTIBLE_HARDNESS }
-		)
-	}
 	
 	// Initialization
 	
@@ -141,7 +139,7 @@ class EntityProjectileEnderPearl : EntityEnderPearl, IEntityAdditionalSpawnData{
 		if (!world.isRemote && infusions.has(PHASING) && hasPhasedIntoWall){
 			val airCheckBox = entityBoundingBox.grow(0.15, 0.15, 0.15)
 			
-			if (!world.checkBlockCollision(airCheckBox) || rayTraceIndestructible.traceBlocksBetweenVectors(world, prevPos, prevPos.add(prevMot)) != null){
+			if (!world.checkBlockCollision(airCheckBox) || RAY_TRACE_INDESTRUCTIBLE.traceBlocksBetweenVectors(world, prevPos, prevPos.add(prevMot)) != null){
 				hasPhasingFinished = true
 				posVec = prevPos
 				onImpact(RayTraceResult(MISS, prevPos, null, Pos(this)))

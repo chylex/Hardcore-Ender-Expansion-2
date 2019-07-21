@@ -15,6 +15,7 @@ import net.minecraft.block.state.IBlockState
 import net.minecraft.nbt.NBTTagCompound
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.RayTraceResult.Type.BLOCK
+import net.minecraft.world.World
 import net.minecraftforge.common.util.INBTSerializable
 
 class TableEnergyClusterHandler(private val table: TileEntityBaseTable, maxDistance: Int) : INBTSerializable<NBTTagCompound>{
@@ -38,7 +39,7 @@ class TableEnergyClusterHandler(private val table: TileEntityBaseTable, maxDista
 	
 	// Behavior
 	
-	private fun canCollideCheck(state: IBlockState, pos: BlockPos): Boolean{
+	private fun canCollideCheck(@Suppress("UNUSED_PARAMETER") world: World, pos: BlockPos, state: IBlockState): Boolean{
 		val block = state.block
 		
 		return if (block is BlockAbstractTableTile<*>)
