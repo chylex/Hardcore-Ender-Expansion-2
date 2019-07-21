@@ -112,9 +112,11 @@ class ItemVoidBucket : ItemAbstractVoidTool(){
 			
 			var totalRemoved = 0
 			
-			for(pos in blocksToRemove.filterIndexed { index, pos -> index == 0 || isModifiableFluid(world, pos, player, heldItem) }){
-				pos.setAir(world)
-				++totalRemoved
+			for(pos in blocksToRemove){
+				if (isModifiableFluid(world, pos, player, heldItem)){
+					pos.setAir(world)
+					++totalRemoved
+				}
 			}
 			
 			guardItemBreaking(heldItem, player){
