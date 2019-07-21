@@ -1,6 +1,7 @@
 package chylex.hee.game.commands.sub.server
 import chylex.hee.game.commands.sub.ISubCommand
 import chylex.hee.game.world.feature.energyshrine.EnergyShrinePieces
+import chylex.hee.game.world.feature.obsidiantower.ObsidianTowerPieces
 import chylex.hee.game.world.feature.stronghold.StrongholdPieces
 import chylex.hee.game.world.feature.tombdungeon.TombDungeonPieces
 import chylex.hee.game.world.structure.IBlockPicker.Single
@@ -21,7 +22,8 @@ internal object CommandDebugStructure : ISubCommand{
 	val structureDescriptions = mapOf(
 		"stronghold" to StrongholdPieces,
 		"energyshrine" to EnergyShrinePieces,
-		"tombdungeon" to TombDungeonPieces
+		"tombdungeon" to TombDungeonPieces,
+		"obsidiantower" to ObsidianTowerPieces
 	)
 	
 	override val name = "structure"
