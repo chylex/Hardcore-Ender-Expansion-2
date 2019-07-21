@@ -10,7 +10,11 @@ import chylex.hee.game.world.structure.world.OffsetStructureWorld
 import chylex.hee.game.world.util.Size
 import net.minecraft.util.math.BlockPos
 
-class StructureBuild<T : MutableInstance>(val size: Size, startingPiece: PositionedPiece<T>){
+class StructureBuild<T : MutableInstance>(val size: Size){
+	constructor(size: Size, startingPiece: PositionedPiece<T>) : this(size){
+		pieces.add(startingPiece)
+	}
+	
 	constructor(size: Size, startingPiece: T) : this(size, PositionedPiece<T>(startingPiece, size.centerPos.subtract(startingPiece.size.centerPos)))
 	
 	enum class AddMode{
@@ -26,10 +30,29 @@ class StructureBuild<T : MutableInstance>(val size: Size, startingPiece: Positio
 	}
 	
 	private val structureBox = size.toBoundingBox(BlockPos.ORIGIN)
-	private val pieces = mutableListOf(startingPiece)
+	private val pieces = mutableListOf<PositionedPiece<T>>()
 	private var chain = -1
 	
 	val generatedPieces: List<PositionedPiece<T>> = pieces
+	
+	private fun commitPiece(newPiece: PositionedPiece<T>){
+		pieces.add(newPiece)
+		
+		if (chain != -1){
+			++chain
+		}
+	}
+	
+	fun addPiece(newPiece: T, newPiecePos: BlockPos, mode: AddMode = APPEND): PositionedPiece<T>?{
+		val addedPiece = PositionedPiece(newPiece, newPiecePos)
+		val addedBox = addedPiece.pieceBox
+		
+		if (addedBox.isInside(structureBox) && (mode == MERGE || pieces.none { addedBox.intersects(it.pieceBox) })){
+			return addedPiece.apply(::commitPiece)
+		}
+		
+		return null
+	}
 	
 	fun addPiece(newPiece: T, newPieceConnection: IStructurePieceConnection, targetPiece: PositionedPiece<T>, targetPieceConnection: IStructurePieceConnection, mode: AddMode = APPEND): PositionedPiece<T>?{
 		val alignedPos = targetPiece.offset.add(alignConnections(newPieceConnection, targetPieceConnection, mode))
@@ -43,13 +66,7 @@ class StructureBuild<T : MutableInstance>(val size: Size, startingPiece: Positio
 			newPiece.useConnection(newPieceConnection, targetInstance)
 			targetInstance.useConnection(targetPieceConnection, newPiece)
 			
-			pieces.add(addedPiece)
-			
-			if (chain != -1){
-				++chain
-			}
-			
-			return addedPiece
+			return addedPiece.apply(::commitPiece)
 		}
 		
 		return null
