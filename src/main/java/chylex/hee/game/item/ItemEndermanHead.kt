@@ -47,6 +47,14 @@ class ItemEndermanHead : Item(){ // UPDATE redo this
 		})
 	}
 	
+	fun setupTileEntity(tile: TileEntitySkull){
+		tile.playerProfile = GameProfile(null, "MHF_Enderman") // UPDATE and this
+	}
+	
+	fun createTileEntity(): TileEntitySkull{
+		return TileEntitySkull().apply(::setupTileEntity)
+	}
+	
 	override fun onItemUse(player: EntityPlayer, world: World, pos: BlockPos, hand: EnumHand, facing: EnumFacing, hitX: Float, hitY: Float, hitZ: Float): EnumActionResult{
 		var pos = pos
 		var facing = facing
@@ -81,7 +89,7 @@ class ItemEndermanHead : Item(){ // UPDATE redo this
 		pos.setState(world, ModBlocks.ENDERMAN_HEAD.withFacing(facing), 11)
 		
 		pos.getTile<TileEntitySkull>(world)?.let {
-			it.playerProfile = GameProfile(null, "MHF_Enderman") // UPDATE and this
+			setupTileEntity(it)
 			
 			if (facing == UP){
 				it.skullRotation = MathHelper.floor((player.rotationYaw * 16F / 360F) + 0.5) and 15
