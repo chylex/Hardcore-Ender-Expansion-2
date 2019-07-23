@@ -9,11 +9,9 @@ import chylex.hee.game.particle.spawner.ParticleSpawnerCustom
 import chylex.hee.game.particle.util.IOffset.Gaussian
 import chylex.hee.game.particle.util.IOffset.InBox
 import chylex.hee.game.particle.util.IShape.Point
-import chylex.hee.game.world.feature.energyshrine.EnergyShrineBanners.BannerColors
 import chylex.hee.game.world.feature.energyshrine.EnergyShrinePieces
 import chylex.hee.game.world.structure.IStructureWorld
 import chylex.hee.game.world.structure.trigger.EntityStructureTrigger
-import chylex.hee.init.ModBlocks
 import chylex.hee.system.util.Pos
 import chylex.hee.system.util.color.IColor
 import chylex.hee.system.util.color.RGB
@@ -27,7 +25,7 @@ import net.minecraft.util.EnumFacing.UP
 import net.minecraft.world.World
 import java.util.Random
 
-class EnergyShrineRoom_Main_Start(file: String) : EnergyShrineRoom_Generic(file, ModBlocks.GLOOMROCK_SMOOTH_WHITE, BannerColors.DEFAULT){
+class EnergyShrineRoom_Main_Start(file: String) : EnergyShrineRoom_Generic(file){
 	private companion object{
 		private const val PARTICLE_DISTANCE = 18
 		private val PARTICLE_GLOOMROCK_CHECK_RANGE = 1..15

@@ -1,11 +1,12 @@
 package chylex.hee.game.world.feature.energyshrine.piece
+import chylex.hee.game.world.feature.energyshrine.EnergyShrineRoomData
 import chylex.hee.game.world.structure.IBlockPicker.Single
 import chylex.hee.game.world.structure.IStructureWorld
 import chylex.hee.game.world.structure.piece.StructurePiece
 import chylex.hee.init.ModBlocks
 import chylex.hee.system.util.Pos
 
-abstract class EnergyShrineAbstractPiece : StructurePiece(){
+abstract class EnergyShrineAbstractPiece : StructurePiece<EnergyShrineRoomData>(){
 	protected open val ceilingBlock
 		get() = ModBlocks.GLOOMROCK_SMOOTH
 	

@@ -97,5 +97,5 @@ object TombDungeonPieces : IStructureDescription{
 	// Pieces
 	
 	override val ALL_PIECES
-		get() = arrayOf<StructurePiece>()
+		get() = arrayOf<StructurePiece<*>>()
 }

@@ -1,5 +1,4 @@
 package chylex.hee.game.world.feature.energyshrine.piece
-import chylex.hee.game.world.feature.energyshrine.EnergyShrineBanners.BannerColors
 import chylex.hee.game.world.feature.energyshrine.EnergyShrinePieces
 import chylex.hee.game.world.feature.energyshrine.connection.EnergyShrineConnection
 import chylex.hee.game.world.feature.energyshrine.connection.EnergyShrineConnectionType.TERMINAL
@@ -12,13 +11,12 @@ import chylex.hee.system.util.allInBoxMutable
 import chylex.hee.system.util.nextInt
 import chylex.hee.system.util.nextItem
 import chylex.hee.system.util.withFacing
-import net.minecraft.block.Block
 import net.minecraft.init.Blocks
 import net.minecraft.util.EnumFacing.NORTH
 import net.minecraft.util.EnumFacing.SOUTH
 import net.minecraft.util.math.BlockPos
 
-class EnergyShrineRoom_Secondary_Storage(file: String, cornerBlock: Block, bannerColors: BannerColors) : EnergyShrineRoom_Generic(file, cornerBlock, bannerColors){
+class EnergyShrineRoom_Secondary_Storage(file: String) : EnergyShrineRoom_Generic(file){
 	override val connections = arrayOf<IStructurePieceConnection>(
 		EnergyShrineConnection(TERMINAL, Pos(centerX, 0, maxZ), SOUTH),
 		EnergyShrineConnection(TERMINAL, Pos(centerX - 1, 0, 0), NORTH)

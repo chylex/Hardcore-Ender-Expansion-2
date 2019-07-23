@@ -17,7 +17,7 @@ class ObsidianTowerBuilder(private val floors: Int, private val topPiece: Obsidi
 		val transform2 = transform1.copy(rotation = transform1.rotation.add(Rotation.CLOCKWISE_180))
 		
 		val size = ObsidianTowerPieces.calculateStructureSize(floors)
-		val build = StructureBuild<StructurePiece.MutableInstance>(size)
+		val build = StructureBuild<StructurePiece<Unit>.MutableInstance>(size)
 		
 		val bottomPos = size.getPos(CENTER, MIN, CENTER)
 		var y = 0

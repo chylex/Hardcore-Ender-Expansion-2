@@ -11,7 +11,7 @@ import chylex.hee.game.world.structure.piece.IStructureBuilder.ProcessBase
 import chylex.hee.game.world.structure.piece.StructureBuild
 import chylex.hee.game.world.structure.piece.StructureBuild.AddMode.APPEND
 import chylex.hee.game.world.structure.piece.StructureBuild.PositionedPiece
-import chylex.hee.game.world.structure.piece.StructurePiece.MutableInstance
+import chylex.hee.game.world.structure.piece.StructurePiece
 import chylex.hee.game.world.util.Size.Alignment.CENTER
 import chylex.hee.game.world.util.Size.Alignment.MAX
 import chylex.hee.game.world.util.Transform
@@ -25,7 +25,7 @@ object EnergyShrineBuilder : IStructureBuilder{
 		val remainingRooms = EnergyShrinePieces.generateRoomConfiguration(rand, targetMainPathRoomAmount = rand.nextInt(3, 4))
 		val remainingCorridors = EnergyShrinePieces.generateCorridorConfiguration(rand, remainingRooms)
 		
-		val startingPiece = rand.nextItem(PIECES_START).MutableInstance(Transform.random(rand))
+		val startingPiece = rand.nextItem(PIECES_START).MutableInstance(EnergyShrineRoomData.DEFAULT, Transform.random(rand))
 		val startingPiecePos = STRUCTURE_SIZE.getPos(CENTER, MAX, CENTER).subtract(startingPiece.size.getPos(CENTER, MAX, CENTER)).down()
 		
 		val build = StructureBuild(STRUCTURE_SIZE, PositionedPiece(startingPiece, startingPiecePos))
@@ -44,7 +44,7 @@ object EnergyShrineBuilder : IStructureBuilder{
 		// final room
 		
 		run {
-			val finalRoomPiece = rand.nextItem(PIECES_END)
+			val finalRoomPiece = rand.nextItem(PIECES_END) to EnergyShrineRoomData.DEFAULT
 			
 			if (!build.guardChain(30){ process.placeRoom(remainingCorridors.mainPath, build.generatedPieces.last(), finalRoomPiece) }){
 				return null
@@ -64,11 +64,11 @@ object EnergyShrineBuilder : IStructureBuilder{
 		return build.freeze()
 	}
 	
-	private class Process(build: StructureBuild<MutableInstance>, rand: Random) : ProcessBase<MutableInstance>(build, rand){
+	private class Process(build: StructureBuild<StructurePiece<EnergyShrineRoomData>.MutableInstance>, rand: Random) : ProcessBase<StructurePiece<EnergyShrineRoomData>.MutableInstance>(build, rand){
 		
 		// Piece placement
 		
-		fun placeRoom(corridorList: MutableList<Array<out EnergyShrineAbstractPiece>>, targetPiece: PositionedPiece<MutableInstance>, generatedPiece: EnergyShrineAbstractPiece): Boolean{
+		fun placeRoom(corridorList: MutableList<Array<out EnergyShrineAbstractPiece>>, targetPiece: PositionedPiece<StructurePiece<EnergyShrineRoomData>.MutableInstance>, generatedPiece: Pair<EnergyShrineAbstractPiece, EnergyShrineRoomData>): Boolean{
 			val corridorChain = rand.nextItem(corridorList)
 			var lastPiece = targetPiece
 			
@@ -78,22 +78,16 @@ object EnergyShrineBuilder : IStructureBuilder{
 				lastPiece = when(corridorPiece){
 					is EnergyShrineCorridor_Staircase_180_Top -> baseAddPiece(APPEND, lastPiece){ stairTransform = it; corridorPiece.MutableInstance(it) }
 					is EnergyShrineCorridor_Staircase_180_Bottom -> baseAddPiece(APPEND, lastPiece){ corridorPiece.MutableInstance(stairTransform) }
-					else -> addPiece(lastPiece, corridorPiece)
+					else -> baseAddPiece(APPEND, lastPiece, corridorPiece::MutableInstance)
 				} ?: return false
 			}
 			
-			if (addPiece(lastPiece, generatedPiece) == null){
+			if (baseAddPiece(APPEND, lastPiece){ generatedPiece.first.MutableInstance(generatedPiece.second, it) } == null){
 				return false
 			}
 			
 			corridorList.remove(corridorChain)
 			return true
-		}
-		
-		// Helpers
-		
-		private fun addPiece(targetPiece: PositionedPiece<MutableInstance>, generatedPiece: EnergyShrineAbstractPiece): PositionedPiece<MutableInstance>?{
-			return baseAddPiece(APPEND, targetPiece, generatedPiece::MutableInstance)
 		}
 	}
 }

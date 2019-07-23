@@ -1,5 +1,4 @@
 package chylex.hee.game.world.feature.energyshrine.piece
-import chylex.hee.game.world.feature.energyshrine.EnergyShrineBanners.BannerColors
 import chylex.hee.game.world.feature.energyshrine.connection.EnergyShrineConnection
 import chylex.hee.game.world.feature.energyshrine.connection.EnergyShrineConnectionType.ROOM
 import chylex.hee.game.world.structure.IStructureWorld
@@ -8,13 +7,12 @@ import chylex.hee.game.world.structure.trigger.BedStructureTrigger
 import chylex.hee.system.util.Pos
 import chylex.hee.system.util.nextInt
 import chylex.hee.system.util.nextItem
-import net.minecraft.block.Block
 import net.minecraft.item.EnumDyeColor
 import net.minecraft.util.EnumFacing.SOUTH
 import net.minecraft.util.EnumFacing.WEST
 import java.util.Random
 
-class EnergyShrineRoom_Secondary_Dormitory(file: String, cornerBlock: Block, bannerColors: BannerColors) : EnergyShrineRoom_Generic(file, cornerBlock, bannerColors){
+class EnergyShrineRoom_Secondary_Dormitory(file: String) : EnergyShrineRoom_Generic(file){
 	override val connections = arrayOf<IStructurePieceConnection>(
 		EnergyShrineConnection(ROOM, Pos(3, 0, maxZ), SOUTH)
 	)
@@ -32,8 +30,8 @@ class EnergyShrineRoom_Secondary_Dormitory(file: String, cornerBlock: Block, ban
 			world.addTrigger(Pos(6 + index, 3, 5), BedStructureTrigger(SOUTH, color))
 		}
 		
-		placeWallBanner(world, Pos(4, 2, 1), WEST)
-		placeWallBanner(world, Pos(4, 2, 4), WEST)
+		placeWallBanner(world, instance, Pos(4, 2, 1), WEST)
+		placeWallBanner(world, instance, Pos(4, 2, 4), WEST)
 	}
 	
 	private fun generateBedColors(rand: Random): Array<EnumDyeColor>{

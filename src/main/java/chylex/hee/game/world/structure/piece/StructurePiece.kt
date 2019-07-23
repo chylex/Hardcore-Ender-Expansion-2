@@ -10,11 +10,11 @@ import net.minecraft.block.BlockColored
 import net.minecraft.init.Blocks
 import net.minecraft.item.EnumDyeColor
 
-abstract class StructurePiece : IStructurePiece, IStructureGenerator{
+abstract class StructurePiece<T> : IStructurePiece, IStructureGenerator{
 	protected abstract val connections: Array<IStructurePieceConnection>
 	
 	final override fun generate(world: IStructureWorld){
-		generate(world, MutableInstance(Transform.NONE).apply { connections.forEach { useConnection(it, MutableInstance(Transform.NONE)) } })
+		generate(world, MutableInstance(null, Transform.NONE).apply { connections.forEach { useConnection(it, MutableInstance(null, Transform.NONE)) } })
 		
 		for(connection in connections){
 			world.setState(connection.offset, Blocks.WOOL.with(BlockColored.COLOR, EnumDyeColor.values()[connection.facing.index - 2]))
@@ -51,8 +51,8 @@ abstract class StructurePiece : IStructurePiece, IStructureGenerator{
 	
 	// Frozen instance
 	
-	open inner class Instance private constructor(private val transform: Transform, private val availableConnections: List<TransformedStructurePieceConnection>) : IStructureGenerator{
-		constructor(transform: Transform) : this(transform, this@StructurePiece.connections.map { TransformedStructurePieceConnection(it, this@StructurePiece.size, transform) }.toMutableList())
+	open inner class Instance private constructor(val context: T?, private val transform: Transform, private val availableConnections: List<TransformedStructurePieceConnection>) : IStructureGenerator{
+		protected constructor(context: T?, transform: Transform) : this(context, transform, this@StructurePiece.connections.map { TransformedStructurePieceConnection(it, this@StructurePiece.size, transform) }.toMutableList())
 		
 		final override val size = transform(this@StructurePiece.size)
 		
@@ -73,7 +73,7 @@ abstract class StructurePiece : IStructurePiece, IStructureGenerator{
 		}
 		
 		fun freeze(): Instance{
-			return Instance(transform, availableConnections.toList())
+			return Instance(context, transform, availableConnections.toList())
 		}
 		
 		final override fun generate(world: IStructureWorld){
@@ -83,11 +83,13 @@ abstract class StructurePiece : IStructurePiece, IStructureGenerator{
 	
 	// Mutable instance
 	
-	open inner class MutableInstance(transform: Transform) : Instance(transform){
-		private val availableConnections = findAvailableConnections() as MutableList<TransformedStructurePieceConnection> // ugly implementation detail
-		private val usedConnections = mutableMapOf<TransformedStructurePieceConnection, MutableInstance>()
+	open inner class MutableInstance(context: T?, transform: Transform) : Instance(context, transform){
+		constructor(transform: Transform) : this(null, transform)
 		
-		fun useConnection(connection: IStructurePieceConnection, neighbor: MutableInstance){
+		private val availableConnections = findAvailableConnections() as MutableList<TransformedStructurePieceConnection> // ugly implementation detail
+		private val usedConnections = mutableMapOf<TransformedStructurePieceConnection, StructurePiece<*>.MutableInstance>()
+		
+		fun useConnection(connection: IStructurePieceConnection, neighbor: StructurePiece<*>.MutableInstance){
 			val index = availableConnections.indexOfFirst { it.matches(connection) }
 			
 			if (index != -1){
@@ -95,7 +97,7 @@ abstract class StructurePiece : IStructurePiece, IStructureGenerator{
 			}
 		}
 		
-		fun restoreConnection(neighbor: MutableInstance): Boolean{
+		fun restoreConnection(neighbor: StructurePiece<*>.MutableInstance): Boolean{
 			val used = usedConnections.filterValues { it === neighbor }.keys
 			
 			if (used.isEmpty()){
@@ -110,7 +112,7 @@ abstract class StructurePiece : IStructurePiece, IStructureGenerator{
 			return true
 		}
 		
-		fun restoreAllConnections(): List<MutableInstance>{
+		fun restoreAllConnections(): List<StructurePiece<*>.MutableInstance>{
 			return usedConnections.values.toList().also {
 				availableConnections.addAll(usedConnections.keys)
 				usedConnections.clear()

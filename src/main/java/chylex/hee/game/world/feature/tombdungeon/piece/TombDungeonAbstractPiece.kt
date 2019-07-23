@@ -6,7 +6,7 @@ import chylex.hee.game.world.structure.piece.StructurePiece
 import chylex.hee.init.ModBlocks
 import chylex.hee.system.util.Pos
 
-abstract class TombDungeonAbstractPiece : StructurePiece(){
+abstract class TombDungeonAbstractPiece : StructurePiece<Unit>(){
 	protected abstract val isFancy: Boolean
 	
 	override fun generate(world: IStructureWorld, instance: Instance){

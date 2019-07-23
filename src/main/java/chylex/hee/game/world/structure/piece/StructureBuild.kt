@@ -4,13 +4,11 @@ import chylex.hee.game.world.structure.piece.IStructurePieceConnection.Alignment
 import chylex.hee.game.world.structure.piece.IStructurePieceConnection.AlignmentType.EVEN_MIRRORED
 import chylex.hee.game.world.structure.piece.StructureBuild.AddMode.APPEND
 import chylex.hee.game.world.structure.piece.StructureBuild.AddMode.MERGE
-import chylex.hee.game.world.structure.piece.StructurePiece.Instance
-import chylex.hee.game.world.structure.piece.StructurePiece.MutableInstance
 import chylex.hee.game.world.structure.world.OffsetStructureWorld
 import chylex.hee.game.world.util.Size
 import net.minecraft.util.math.BlockPos
 
-class StructureBuild<T : MutableInstance>(val size: Size){
+class StructureBuild<T : StructurePiece<*>.MutableInstance>(val size: Size){
 	constructor(size: Size, startingPiece: PositionedPiece<T>) : this(size){
 		pieces.add(startingPiece)
 	}
@@ -21,10 +19,10 @@ class StructureBuild<T : MutableInstance>(val size: Size){
 		APPEND, MERGE
 	}
 	
-	class PositionedPiece<T : Instance>(val instance: T, val offset: BlockPos){
+	class PositionedPiece<T : StructurePiece<*>.Instance>(val instance: T, val offset: BlockPos){
 		val pieceBox = instance.size.toBoundingBox(offset)
 		
-		fun freeze(): PositionedPiece<Instance>{
+		fun freeze(): PositionedPiece<StructurePiece<*>.Instance>{
 			return PositionedPiece(instance.freeze(), offset)
 		}
 	}

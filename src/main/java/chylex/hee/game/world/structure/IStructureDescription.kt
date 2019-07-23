@@ -14,7 +14,7 @@ interface IStructureDescription{
 	val STRUCTURE_LOCATOR: (World, PosXZ) -> BlockPos?
 	
 	val PALETTE: Palette
-	val ALL_PIECES: Array<out StructurePiece>
+	val ALL_PIECES: Array<out StructurePiece<*>>
 	
 	companion object{
 		val NULL_LOCATOR: (World, PosXZ) -> BlockPos? = { _, _ -> null}

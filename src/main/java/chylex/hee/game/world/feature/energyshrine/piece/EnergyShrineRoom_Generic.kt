@@ -1,7 +1,7 @@
 package chylex.hee.game.world.feature.energyshrine.piece
 import chylex.hee.game.world.feature.energyshrine.EnergyShrineBanners
-import chylex.hee.game.world.feature.energyshrine.EnergyShrineBanners.BannerColors
 import chylex.hee.game.world.feature.energyshrine.EnergyShrinePieces
+import chylex.hee.game.world.feature.energyshrine.EnergyShrineRoomData
 import chylex.hee.game.world.feature.energyshrine.connection.EnergyShrineConnection
 import chylex.hee.game.world.feature.energyshrine.connection.EnergyShrineConnectionType.ROOM
 import chylex.hee.game.world.structure.IBlockPicker
@@ -16,7 +16,6 @@ import chylex.hee.game.world.structure.trigger.TileEntityStructureTrigger
 import chylex.hee.init.ModBlocks
 import chylex.hee.system.util.Pos
 import chylex.hee.system.util.withFacing
-import net.minecraft.block.Block
 import net.minecraft.init.Blocks
 import net.minecraft.util.EnumFacing
 import net.minecraft.util.EnumFacing.EAST
@@ -25,7 +24,7 @@ import net.minecraft.util.EnumFacing.SOUTH
 import net.minecraft.util.EnumFacing.WEST
 import net.minecraft.util.math.BlockPos
 
-abstract class EnergyShrineRoom_Generic(file: String, protected val cornerBlock: Block, private val bannerColors: BannerColors) : EnergyShrineAbstractPiece(), IStructurePieceFromFile by Delegate("energyshrine/$file", EnergyShrinePieces.PALETTE){
+abstract class EnergyShrineRoom_Generic(file: String) : EnergyShrineAbstractPiece(), IStructurePieceFromFile by Delegate("energyshrine/$file", EnergyShrinePieces.PALETTE){
 	override val connections = arrayOf<IStructurePieceConnection>(
 		EnergyShrineConnection(ROOM, Pos(centerX - 1, 0, 0), NORTH),
 		EnergyShrineConnection(ROOM, Pos(centerX, 0, maxZ), SOUTH),
@@ -38,6 +37,7 @@ abstract class EnergyShrineRoom_Generic(file: String, protected val cornerBlock:
 		
 		world.placeCube(Pos(1, 0, 1), Pos(maxX - 1, 0, maxZ - 1), Single(ModBlocks.GLOOMROCK_SMOOTH))
 		
+		val cornerBlock = getContext(instance).cornerBlock
 		world.setBlock(Pos(1, 0, 1), cornerBlock)
 		world.setBlock(Pos(maxX - 1, 0, 1), cornerBlock)
 		world.setBlock(Pos(1, 0, maxZ - 1), cornerBlock)
@@ -46,9 +46,13 @@ abstract class EnergyShrineRoom_Generic(file: String, protected val cornerBlock:
 		generator.generate(world)
 	}
 	
-	protected fun placeWallBanner(world: IStructureWorld, pos: BlockPos, facing: EnumFacing){
+	protected fun getContext(instance: Instance): EnergyShrineRoomData{
+		return instance.context ?: EnergyShrineRoomData.DEFAULT
+	}
+	
+	protected fun placeWallBanner(world: IStructureWorld, instance: Instance, pos: BlockPos, facing: EnumFacing){
 		val state = Blocks.WALL_BANNER.withFacing(facing)
-		val data = EnergyShrineBanners.generate(world.rand, bannerColors)
+		val data = EnergyShrineBanners.generate(world.rand, getContext(instance).bannerColors)
 		
 		world.addTrigger(pos, TileEntityStructureTrigger(state, data))
 	}

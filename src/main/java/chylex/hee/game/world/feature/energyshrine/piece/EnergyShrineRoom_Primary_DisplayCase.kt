@@ -1,5 +1,4 @@
 package chylex.hee.game.world.feature.energyshrine.piece
-import chylex.hee.game.world.feature.energyshrine.EnergyShrineBanners.BannerColors
 import chylex.hee.game.world.feature.energyshrine.connection.EnergyShrineConnection
 import chylex.hee.game.world.feature.energyshrine.connection.EnergyShrineConnectionType.ROOM
 import chylex.hee.game.world.structure.IBlockPicker.Single
@@ -11,14 +10,13 @@ import chylex.hee.init.ModBlocks
 import chylex.hee.system.collection.MutableWeightedList.Companion.mutableWeightedListOf
 import chylex.hee.system.util.Pos
 import chylex.hee.system.util.withFacing
-import net.minecraft.block.Block
 import net.minecraft.init.Blocks
 import net.minecraft.util.EnumFacing.NORTH
 import net.minecraft.util.EnumFacing.SOUTH
 import net.minecraft.util.EnumFacing.UP
 import net.minecraft.util.EnumFacing.WEST
 
-class EnergyShrineRoom_Primary_DisplayCase(file: String, cornerBlock: Block, bannerColors: BannerColors) : EnergyShrineRoom_Generic(file, cornerBlock, bannerColors){
+class EnergyShrineRoom_Primary_DisplayCase(file: String) : EnergyShrineRoom_Generic(file){
 	override val connections = arrayOf<IStructurePieceConnection>(
 		EnergyShrineConnection(ROOM, Pos(3, 0, maxZ), SOUTH),
 		EnergyShrineConnection(ROOM, Pos(2, 0, 0), NORTH)
@@ -52,7 +50,7 @@ class EnergyShrineRoom_Primary_DisplayCase(file: String, cornerBlock: Block, ban
 			placeDecoration(world, Pos(5, 2, z), decorations.removeItem(rand))
 		}
 		
-		placeWallBanner(world, Pos(4, 3, 3), WEST)
-		placeWallBanner(world, Pos(4, 3, maxZ - 3), WEST)
+		placeWallBanner(world, instance, Pos(4, 3, 3), WEST)
+		placeWallBanner(world, instance, Pos(4, 3, maxZ - 3), WEST)
 	}
 }

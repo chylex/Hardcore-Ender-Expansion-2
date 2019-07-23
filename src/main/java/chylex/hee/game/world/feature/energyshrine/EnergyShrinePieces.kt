@@ -29,7 +29,6 @@ import chylex.hee.system.collection.WeightedList.Companion.weightedListOf
 import chylex.hee.system.util.nextInt
 import chylex.hee.system.util.nextItem
 import chylex.hee.system.util.removeItem
-import net.minecraft.block.Block
 import net.minecraft.init.Blocks
 import java.util.Random
 
@@ -128,23 +127,23 @@ object EnergyShrinePieces : IStructureDescription{
 		EnergyShrineRoom_Main_Final("main.end.nbt")
 	)
 	
-	private val PIECES_ROOMS_PRIMARY = arrayOf<(Block, BannerColors) -> EnergyShrineAbstractPiece>(
-		{ block, bannerColors -> EnergyShrineRoom_Primary_DisplayCase("primary.display_case.nbt", block, bannerColors) },
-		{ block, bannerColors -> EnergyShrineRoom_Primary_Secretariat("primary.secretariat.nbt", block, bannerColors) },
-		{ block, bannerColors -> EnergyShrineRoom_Primary_SplitT("primary.split_t.nbt", block, bannerColors) },
-		{ block, bannerColors -> EnergyShrineRoom_Primary_TwoFloorFork("primary.two_floor_fork.nbt", block, bannerColors) },
-		{ block, bannerColors -> EnergyShrineRoom_Primary_TwoFloorSecret("primary.two_floor_secret.nbt", block, bannerColors) }
+	private val PIECES_ROOMS_PRIMARY = arrayOf(
+		EnergyShrineRoom_Primary_DisplayCase("primary.display_case.nbt"),
+		EnergyShrineRoom_Primary_Secretariat("primary.secretariat.nbt"),
+		EnergyShrineRoom_Primary_SplitT("primary.split_t.nbt"),
+		EnergyShrineRoom_Primary_TwoFloorFork("primary.two_floor_fork.nbt"),
+		EnergyShrineRoom_Primary_TwoFloorSecret("primary.two_floor_secret.nbt")
 	)
 	
-	private val PIECES_ROOMS_PRIMARY_LARGE_INTERSECTIONS = arrayOf<(Block, BannerColors) -> EnergyShrineAbstractPiece>(
-		{ block, bannerColors -> EnergyShrineRoom_Primary_TwoFloorOverhang("primary.two_floor_overhang.nbt", block, bannerColors) },
-		{ block, bannerColors -> EnergyShrineRoom_Primary_TwoFloorT("primary.two_floor_t.nbt", block, bannerColors) }
+	private val PIECES_ROOMS_PRIMARY_LARGE_INTERSECTIONS = arrayOf(
+		EnergyShrineRoom_Primary_TwoFloorOverhang("primary.two_floor_overhang.nbt"),
+		EnergyShrineRoom_Primary_TwoFloorT("primary.two_floor_t.nbt")
 	)
 	
-	private val PIECES_ROOMS_SECONDARY = arrayOf<(Block, BannerColors) -> EnergyShrineAbstractPiece>(
-		{ block, bannerColors -> EnergyShrineRoom_Secondary_Dormitory("secondary.dormitory.nbt", block, bannerColors) },
-		{ block, bannerColors -> EnergyShrineRoom_Secondary_Portal("secondary.portal.nbt", block, bannerColors) },
-		{ block, bannerColors -> EnergyShrineRoom_Secondary_Storage("secondary.storage.nbt", block, bannerColors) }
+	private val PIECES_ROOMS_SECONDARY = arrayOf(
+		EnergyShrineRoom_Secondary_Dormitory("secondary.dormitory.nbt"),
+		EnergyShrineRoom_Secondary_Portal("secondary.portal.nbt"),
+		EnergyShrineRoom_Secondary_Storage("secondary.storage.nbt")
 	)
 	
 	// Pieces (Configuration)
@@ -167,15 +166,15 @@ object EnergyShrinePieces : IStructureDescription{
 		
 		val targetOffPathRoomAmount = cornerColors.size - targetMainPathRoomAmount
 		
-		val mainPathRooms = mutableListOf<EnergyShrineAbstractPiece>()
-		val offPathRooms = mutableListOf<EnergyShrineAbstractPiece>()
+		val mainPathRooms = mutableListOf<Pair<EnergyShrineAbstractPiece, EnergyShrineRoomData>>()
+		val offPathRooms = mutableListOf<Pair<EnergyShrineAbstractPiece, EnergyShrineRoomData>>()
 		
 		// add guaranteed rooms
 		
-		mainPathRooms.add(rand.nextItem(PIECES_ROOMS_PRIMARY_LARGE_INTERSECTIONS)(cornerColors.removeAt(0), bannerColors))
+		mainPathRooms.add(rand.nextItem(PIECES_ROOMS_PRIMARY_LARGE_INTERSECTIONS) to EnergyShrineRoomData(cornerColors.removeAt(0), bannerColors))
 		
 		for(secondaryRoom in PIECES_ROOMS_SECONDARY){
-			offPathRooms.add(secondaryRoom(cornerColors.removeAt(0), bannerColors))
+			offPathRooms.add(secondaryRoom to EnergyShrineRoomData(cornerColors.removeAt(0), bannerColors))
 		}
 		
 		// add random rooms to fill up the quota
@@ -183,11 +182,11 @@ object EnergyShrinePieces : IStructureDescription{
 		val remainingPrimaryRooms = PIECES_ROOMS_PRIMARY.toMutableList()
 		
 		while(mainPathRooms.size < targetMainPathRoomAmount){
-			mainPathRooms.add(rand.removeItem(remainingPrimaryRooms)(cornerColors.removeAt(0), bannerColors))
+			mainPathRooms.add(rand.removeItem(remainingPrimaryRooms) to EnergyShrineRoomData(cornerColors.removeAt(0), bannerColors))
 		}
 		
 		while(offPathRooms.size < targetOffPathRoomAmount){
-			offPathRooms.add(rand.removeItem(remainingPrimaryRooms)(cornerColors.removeAt(0), bannerColors))
+			offPathRooms.add(rand.removeItem(remainingPrimaryRooms) to EnergyShrineRoomData(cornerColors.removeAt(0), bannerColors))
 		}
 		
 		// finalize
@@ -218,8 +217,8 @@ object EnergyShrinePieces : IStructureDescription{
 	}
 	
 	class RoomConfiguration(
-		val mainPath: MutableList<EnergyShrineAbstractPiece>,
-		val offPath: MutableList<EnergyShrineAbstractPiece>
+		val mainPath: MutableList<Pair<EnergyShrineAbstractPiece, EnergyShrineRoomData>>,
+		val offPath: MutableList<Pair<EnergyShrineAbstractPiece, EnergyShrineRoomData>>
 	)
 	
 	class CorridorConfiguration(
@@ -240,8 +239,8 @@ object EnergyShrinePieces : IStructureDescription{
 			*PIECES_START,
 			*PIECES_END,
 			
-			*PIECES_ROOMS_PRIMARY_LARGE_INTERSECTIONS.map { it(ModBlocks.GLOOMROCK_SMOOTH_WHITE, BannerColors.DEFAULT) }.toTypedArray(),
-			*PIECES_ROOMS_PRIMARY.map { it(ModBlocks.GLOOMROCK_SMOOTH_WHITE, BannerColors.DEFAULT) }.toTypedArray(),
-			*PIECES_ROOMS_SECONDARY.map { it(ModBlocks.GLOOMROCK_SMOOTH_WHITE, BannerColors.DEFAULT) }.toTypedArray()
+			*PIECES_ROOMS_PRIMARY_LARGE_INTERSECTIONS,
+			*PIECES_ROOMS_PRIMARY,
+			*PIECES_ROOMS_SECONDARY
 		)
 }
