@@ -14,7 +14,7 @@ class BlobPattern private constructor(
 	)
 
 	constructor(generators: WeightedList<IBlobGenerator>, populators: WeightedList<IBlobPopulator>, populatorAmount: IntRange) : this(
-		generators, populators to { rand -> rand.nextInt(populatorAmount.first, populatorAmount.last) }
+		generators, populators to { rand -> rand.nextInt(populatorAmount) }
 	)
 	
 	fun pickGenerator(rand: Random): IBlobGenerator{

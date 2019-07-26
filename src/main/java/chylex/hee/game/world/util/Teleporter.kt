@@ -219,7 +219,7 @@ class Teleporter(
 		val originalBox = entity.entityBoundingBox
 		
 		repeat(attempts){
-			val randomPos = position.add(rand.nextVector(rand.nextFloat(distance.start, distance.endInclusive)))
+			val randomPos = position.add(rand.nextVector(rand.nextFloat(distance)))
 			val newPos = Vec3d(randomPos.x, randomPos.y.floorToInt() + 0.01, randomPos.z)
 			
 			if (Pos(newPos).down().blocksMovement(world) && world.getCollisionBoxes(entity, originalBox.offset(newPos.subtract(originalPos))).isEmpty()){

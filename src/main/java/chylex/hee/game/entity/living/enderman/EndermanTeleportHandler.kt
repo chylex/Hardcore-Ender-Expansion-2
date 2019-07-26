@@ -228,8 +228,8 @@ class EndermanTeleportHandler(private val enderman: EntityMobAbstractEnderman) :
 		val targetVec = target.posVec
 		
 		for(attempt in 1..50){
-			val dir = Vec3.fromYaw(target.rotationYaw + rand.nextFloat(angleRange.start, angleRange.endInclusive))
-			val distance = rand.nextFloat(distanceRange.start, distanceRange.endInclusive)
+			val dir = Vec3.fromYaw(target.rotationYaw + rand.nextFloat(angleRange))
+			val distance = rand.nextFloat(distanceRange)
 			
 			val offsetVec = targetVec.add(dir.scale(distance))
 			val targetPos = Pos(offsetVec).add(0, rand.nextInt(-4, 8), 0).offsetUntil(DOWN, 0..4){ it.blocksMovement(world) }?.up()
@@ -250,7 +250,7 @@ class EndermanTeleportHandler(private val enderman: EntityMobAbstractEnderman) :
 		val endermanPos = Pos(enderman)
 		
 		for(attempt in 1..25){
-			val (x, y, z) = rand.nextVector2(xz = rand.nextFloat(distanceRange.start, distanceRange.endInclusive), y = rand.nextFloat(-24.0, 48.0))
+			val (x, y, z) = rand.nextVector2(xz = rand.nextFloat(distanceRange), y = rand.nextFloat(-24.0, 48.0))
 			val targetPos = endermanPos.add(x, y, z).offsetUntil(DOWN, 0..24){ it.blocksMovement(world) }?.up()
 			
 			if (targetPos != null && teleportTo(targetPos)){

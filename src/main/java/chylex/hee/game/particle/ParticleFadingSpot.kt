@@ -28,7 +28,7 @@ object ParticleFadingSpot : IParticleMaker{
 		constructor(color: IColor, lifespan: IntRange = 0..0, scale: ClosedFloatingPointRange<Float> = 0F..0F) : this({ color }, lifespan, scale)
 		
 		override fun generate(rand: Random): IntArray{
-			return intArrayOf(color(rand).toInt(), rand.nextInt(lifespan.first, lifespan.last), (rand.nextFloat(scale.start, scale.endInclusive) * 100F).floorToInt())
+			return intArrayOf(color(rand).toInt(), rand.nextInt(lifespan), (rand.nextFloat(scale) * 100F).floorToInt())
 		}
 	}
 	

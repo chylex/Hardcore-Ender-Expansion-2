@@ -29,6 +29,13 @@ fun Random.nextInt(min: Int, max: Int): Int{
 }
 
 /**
+ * Returns a random integer within the specified range.
+ */
+fun Random.nextInt(range: IntRange): Int{
+	return this.nextInt(range.first, range.last)
+}
+
+/**
  * Returns a random long integer between `min` and `max` (both inclusive).
  * @throws IllegalArgumentException if `min` is greater than `max`
  */
@@ -53,6 +60,13 @@ fun Random.nextFloat(min: Float, max: Float): Float{
 }
 
 /**
+ * Returns a random floating point number within the specified range.
+ */
+fun Random.nextFloat(range: ClosedFloatingPointRange<Float>): Float{
+	return this.nextFloat(range.start, range.endInclusive)
+}
+
+/**
  * Returns a random floating point number between `min` and `max`, but returns a [Double] for convenience.
  * @throws IllegalArgumentException if `min` is greater than `max`
  */
@@ -62,6 +76,13 @@ fun Random.nextFloat(min: Double, max: Double): Double{
 	}
 	
 	return min + (this.nextFloat() * (max - min))
+}
+
+/**
+ * Returns a random floating point number within the specified range, but returns a [Double] for convenience.
+ */
+fun Random.nextFloat(range: ClosedFloatingPointRange<Double>): Double{
+	return this.nextFloat(range.start, range.endInclusive)
 }
 
 /**
