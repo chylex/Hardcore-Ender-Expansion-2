@@ -15,7 +15,7 @@ class OreGenerator(
 	private val attemptsPerChunk: Int,
 	private val clustersPerChunk: (Random) -> Int
 ){
-	fun generate(world: SegmentedWorld, bounds: BoundingBox = world.worldSize.toBoundingBox(BlockPos.ORIGIN)){
+	fun generate(world: SegmentedWorld, bounds: BoundingBox = world.worldSize.toBoundingBox(BlockPos.ORIGIN)): Int{
 		val rand = world.rand
 		
 		val min = bounds.min
@@ -25,6 +25,8 @@ class OreGenerator(
 		if (sizeX % chunkSize != 0 || sizeZ % chunkSize != 0){
 			throw IllegalArgumentException("bounding box dimensions (X = $sizeX, Z = $sizeZ) must be multiples of chunk size ($chunkSize)")
 		}
+		
+		var clustersGenerated = 0
 		
 		for(chunkX in 0 until sizeX step chunkSize) for(chunkZ in 0 until sizeZ step chunkSize){
 			var clustersLeft = clustersPerChunk(rand)
@@ -36,19 +38,25 @@ class OreGenerator(
 					min.z + chunkZ + rand.nextInt(chunkSize)
 				)
 				
-				if (technique.place(world, pos, placer) && --clustersLeft <= 0){
-					break
+				if (technique.place(world, pos, placer)){
+					++clustersGenerated
+					
+					if (--clustersLeft <= 0){
+						break
+					}
 				}
 			}
 		}
+		
+		return clustersGenerated
 	}
 	
-	fun generate(world: SegmentedWorld, heights: IntRange){
+	fun generate(world: SegmentedWorld, heights: IntRange): Int{
 		val bounds = BoundingBox(
 			Pos(0, heights.first, 0),
 			Pos(world.worldSize.maxX, heights.last, world.worldSize.maxZ)
 		)
 		
-		generate(world, bounds)
+		return generate(world, bounds)
 	}
 }
