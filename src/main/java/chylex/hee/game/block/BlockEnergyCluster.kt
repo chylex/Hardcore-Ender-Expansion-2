@@ -6,14 +6,12 @@ import chylex.hee.game.mechanics.energy.IEnergyQuantity
 import chylex.hee.game.mechanics.instability.Instability
 import chylex.hee.init.ModBlocks
 import chylex.hee.init.ModItems
-import chylex.hee.system.util.allInCenteredBoxMutable
+import chylex.hee.system.util.allInCenteredSphereMutable
 import chylex.hee.system.util.ceilToInt
-import chylex.hee.system.util.distanceSqTo
 import chylex.hee.system.util.floorToInt
 import chylex.hee.system.util.getTile
 import chylex.hee.system.util.nextFloat
 import chylex.hee.system.util.setAir
-import chylex.hee.system.util.square
 import net.minecraft.block.ITileEntityProvider
 import net.minecraft.block.state.BlockFaceShape.UNDEFINED
 import net.minecraft.block.state.IBlockState
@@ -55,16 +53,11 @@ class BlockEnergyCluster(builder: BlockBuilder) : BlockSimple(builder), ITileEnt
 		fun createFullLeak(world: World, pos: BlockPos, amount: IEnergyQuantity){
 			val units = amount.units.value.toFloat()
 			
-			val corruptedEnergyRadius = 1.5F + (units.pow(0.77F) / 70F)
+			val corruptedEnergyRadius = 1.5 + (units.pow(0.77F) / 70F)
 			val corruptedEnergyLevel = (2F + (units.pow(0.74F) / 9F)).ceilToInt()
 			
-			val energyRadiusInteger = corruptedEnergyRadius.ceilToInt()
-			val energyRadiusSq = square(corruptedEnergyRadius)
-			
-			pos.allInCenteredBoxMutable(energyRadiusInteger, energyRadiusInteger, energyRadiusInteger).forEach {
-				if (it.distanceSqTo(pos) <= energyRadiusSq){
-					ModBlocks.CORRUPTED_ENERGY.spawnCorruptedEnergy(world, it, corruptedEnergyLevel)
-				}
+			for(testPos in pos.allInCenteredSphereMutable(corruptedEnergyRadius)){
+				ModBlocks.CORRUPTED_ENERGY.spawnCorruptedEnergy(world, testPos, corruptedEnergyLevel)
 			}
 		}
 	}

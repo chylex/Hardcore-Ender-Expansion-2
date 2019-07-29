@@ -11,12 +11,11 @@ import chylex.hee.game.item.infusion.InfusionTag
 import chylex.hee.game.particle.spawner.ParticleSpawnerVanilla
 import chylex.hee.game.particle.util.IShape.Point
 import chylex.hee.game.world.util.ExplosionBuilder
-import chylex.hee.system.util.allInCenteredBoxMutable
+import chylex.hee.system.util.allInCenteredSphereMutable
 import chylex.hee.system.util.ceilToInt
 import chylex.hee.system.util.component1
 import chylex.hee.system.util.component2
 import chylex.hee.system.util.component3
-import chylex.hee.system.util.distanceSqTo
 import chylex.hee.system.util.floorToInt
 import chylex.hee.system.util.getMaterial
 import chylex.hee.system.util.getState
@@ -47,8 +46,6 @@ import net.minecraft.world.storage.loot.LootTableList
 class EntityInfusedTNT : EntityTNTPrimed{
 	private companion object{
 		private const val WATER_CHECK_RADIUS = 4
-		private const val WATER_CHECK_RADIUS_SQ = WATER_CHECK_RADIUS * WATER_CHECK_RADIUS
-		
 		private const val PHASING_INSTANT_FUSE_TICKS = 3
 		
 		private val PARTICLE_TICK = ParticleSpawnerVanilla(SMOKE_NORMAL)
@@ -269,13 +266,11 @@ class EntityInfusedTNT : EntityTNTPrimed{
 		var totalCountedBlocks = 0
 		val foundWaterBlocks = mutableListOf<BlockPos>()
 		
-		for(pos in position.allInCenteredBoxMutable(WATER_CHECK_RADIUS, WATER_CHECK_RADIUS, WATER_CHECK_RADIUS)){
-			if (pos.distanceSqTo(this) <= WATER_CHECK_RADIUS_SQ){
-				++totalCountedBlocks
-				
-				if (pos.getMaterial(world) === Material.WATER){
-					foundWaterBlocks.add(pos.toImmutable())
-				}
+		for(pos in position.allInCenteredSphereMutable(WATER_CHECK_RADIUS)){
+			++totalCountedBlocks
+			
+			if (pos.getMaterial(world) === Material.WATER){
+				foundWaterBlocks.add(pos.toImmutable())
 			}
 		}
 		

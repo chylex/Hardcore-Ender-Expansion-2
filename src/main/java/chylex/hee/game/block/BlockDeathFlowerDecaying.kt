@@ -13,10 +13,9 @@ import chylex.hee.game.world.util.Teleporter
 import chylex.hee.game.world.util.Teleporter.FxRange.Extended
 import chylex.hee.init.ModBlocks
 import chylex.hee.network.client.PacketClientFX
-import chylex.hee.system.util.allInCenteredBox
+import chylex.hee.system.util.allInCenteredSphereMutable
 import chylex.hee.system.util.blocksMovement
 import chylex.hee.system.util.center
-import chylex.hee.system.util.distanceTo
 import chylex.hee.system.util.get
 import chylex.hee.system.util.getBlock
 import chylex.hee.system.util.getState
@@ -61,8 +60,6 @@ class BlockDeathFlowerDecaying : BlockEndPlant(){
 		val LEVEL = Property.int("level", MIN_LEVEL..MAX_LEVEL)
 		
 		private const val WITHER_FLOWER_RADIUS = 4
-		private const val WITHER_FLOWER_RADIUS_SQ = WITHER_FLOWER_RADIUS * WITHER_FLOWER_RADIUS
-		
 		private const val WITHER_PLAYER_RADIUS = 1024.0
 		
 		private val TELEPORT = Teleporter(causedInstability = 15u, effectRange = Extended(8F))
@@ -198,8 +195,8 @@ class BlockDeathFlowerDecaying : BlockEndPlant(){
 			pos.setState(world, state.with(LEVEL, currentDecayLevel + 1))
 		}
 		else if (currentDecayLevel == MAX_LEVEL && rand.nextInt(8) == 0 && (world.worldTime % 24000L) in 15600..20400){
-			for(testPos in pos.allInCenteredBox(WITHER_FLOWER_RADIUS, WITHER_FLOWER_RADIUS, WITHER_FLOWER_RADIUS)){
-				if (testPos.distanceTo(pos) <= WITHER_FLOWER_RADIUS_SQ && testPos.getBlock(world) === this){
+			for(testPos in pos.allInCenteredSphereMutable(WITHER_FLOWER_RADIUS, avoidNipples = true)){
+				if (testPos.getBlock(world) === this){
 					testPos.setBlock(world, ModBlocks.DEATH_FLOWER_WITHERED)
 				}
 			}

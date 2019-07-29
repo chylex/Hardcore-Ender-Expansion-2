@@ -7,12 +7,10 @@ import chylex.hee.init.ModBlocks
 import chylex.hee.init.ModSounds
 import chylex.hee.network.client.PacketClientFX
 import chylex.hee.system.util.Pos
-import chylex.hee.system.util.allInCenteredBoxMutable
-import chylex.hee.system.util.ceilToInt
+import chylex.hee.system.util.allInCenteredSphereMutable
 import chylex.hee.system.util.center
 import chylex.hee.system.util.cloneFrom
 import chylex.hee.system.util.directionTowards
-import chylex.hee.system.util.distanceSqTo
 import chylex.hee.system.util.get
 import chylex.hee.system.util.getBlock
 import chylex.hee.system.util.getState
@@ -21,7 +19,6 @@ import chylex.hee.system.util.posVec
 import chylex.hee.system.util.readPos
 import chylex.hee.system.util.setState
 import chylex.hee.system.util.size
-import chylex.hee.system.util.square
 import chylex.hee.system.util.use
 import chylex.hee.system.util.with
 import chylex.hee.system.util.writePos
@@ -74,16 +71,11 @@ class EntityItemRevitalizationSubstance : EntityItem{
 		}
 		
 		private inline fun forEachGoo(world: World, center: BlockPos, radius: Float, callback: (BlockPos, IBlockState) -> Unit){
-			val radiusSq = square(radius)
-			val offset = radiusSq.ceilToInt()
-			
-			for(pos in center.allInCenteredBoxMutable(offset, offset, offset)){
-				if (pos.distanceSqTo(center) <= radiusSq){
-					val state = pos.getState(world)
-					
-					if (state.block === ModBlocks.ENDER_GOO){
-						callback(pos, state)
-					}
+			for(pos in center.allInCenteredSphereMutable(radius.toDouble())){
+				val state = pos.getState(world)
+				
+				if (state.block === ModBlocks.ENDER_GOO){
+					callback(pos, state)
 				}
 			}
 		}

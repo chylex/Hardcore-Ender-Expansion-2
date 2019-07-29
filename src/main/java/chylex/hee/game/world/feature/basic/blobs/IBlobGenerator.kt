@@ -2,10 +2,8 @@ package chylex.hee.game.world.feature.basic.blobs
 import chylex.hee.game.world.generation.SegmentedWorld
 import chylex.hee.game.world.util.Size
 import chylex.hee.system.util.Facing6
-import chylex.hee.system.util.allInCenteredBoxMutable
+import chylex.hee.system.util.allInCenteredSphereMutable
 import chylex.hee.system.util.ceilToInt
-import chylex.hee.system.util.distanceSqTo
-import chylex.hee.system.util.square
 import net.minecraft.block.Block
 import net.minecraft.init.Blocks
 import net.minecraft.util.math.BlockPos
@@ -23,12 +21,8 @@ interface IBlobGenerator{
 				return false
 			}
 			
-			val radiusSq = square(radius + 0.5)
-			
-			for(pos in center.allInCenteredBoxMutable(offset, offset, offset)){
-				if (pos.distanceSqTo(center) <= radiusSq){
-					world.setBlock(pos, block)
-				}
+			for(pos in center.allInCenteredSphereMutable(offset, avoidNipples = true)){
+				world.setBlock(pos, block)
 			}
 			
 			return true
