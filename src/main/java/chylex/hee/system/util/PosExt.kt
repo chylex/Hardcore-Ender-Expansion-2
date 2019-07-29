@@ -1,5 +1,6 @@
 package chylex.hee.system.util
 import chylex.hee.game.world.util.PosXZ
+import com.google.common.collect.Iterables
 import net.minecraft.block.Block
 import net.minecraft.block.material.Material
 import net.minecraft.block.state.BlockFaceShape
@@ -142,23 +143,62 @@ inline fun BlockPos.offsetUntil(facing: EnumFacing, offsetRange: IntRange, testP
 	return null
 }
 
-// Areas
+// Areas (Box)
 
 fun BlockPos.allInBox(otherBound: BlockPos): Iterable<BlockPos>{
 	return BlockPos.getAllInBox(this, otherBound)
-}
-
-fun BlockPos.allInCenteredBox(offsetX: Int, offsetY: Int, offsetZ: Int): Iterable<BlockPos>{
-	return BlockPos.getAllInBox(this.x - offsetX, this.y - offsetY, this.z - offsetZ, this.x + offsetX, this.y + offsetY, this.z + offsetZ)
 }
 
 fun BlockPos.allInBoxMutable(otherBound: BlockPos): Iterable<MutableBlockPos>{
 	return BlockPos.getAllInBoxMutable(this, otherBound)
 }
 
+fun BlockPos.allInCenteredBox(offsetX: Int, offsetY: Int, offsetZ: Int): Iterable<BlockPos>{
+	return BlockPos.getAllInBox(this.x - offsetX, this.y - offsetY, this.z - offsetZ, this.x + offsetX, this.y + offsetY, this.z + offsetZ)
+}
+
 fun BlockPos.allInCenteredBoxMutable(offsetX: Int, offsetY: Int, offsetZ: Int): Iterable<MutableBlockPos>{
 	return BlockPos.getAllInBoxMutable(this.x - offsetX, this.y - offsetY, this.z - offsetZ, this.x + offsetX, this.y + offsetY, this.z + offsetZ)
 }
+
+fun BlockPos.allInCenteredBox(offsetX: Double, offsetY: Double, offsetZ: Double): Iterable<BlockPos>{
+	return this.allInCenteredBox(offsetX.ceilToInt(), offsetY.ceilToInt(), offsetZ.ceilToInt())
+}
+
+fun BlockPos.allInCenteredBoxMutable(offsetX: Double, offsetY: Double, offsetZ: Double): Iterable<MutableBlockPos>{
+	return this.allInCenteredBoxMutable(offsetX.ceilToInt(), offsetY.ceilToInt(), offsetZ.ceilToInt())
+}
+
+// Areas (Sphere)
+
+private fun <T : BlockPos> BlockPos.allInCenteredSphereInternal(radius: Double, radiusSq: Double, iterable: Iterable<T>): Iterable<T>{
+	return Iterables.filter(iterable){ it!!.distanceSqTo(this) <= radiusSq }
+}
+
+private fun getSphereRadiusSq(radius: Int, avoidNipples: Boolean): Double{
+	return if (avoidNipples)
+		square(radius + 0.5)
+	else
+		square(radius.toDouble())
+}
+
+fun BlockPos.allInCenteredSphere(radius: Double): Iterable<BlockPos>{
+	return this.allInCenteredSphereInternal(radius, square(radius), this.allInCenteredBox(radius, radius, radius))
+}
+
+fun BlockPos.allInCenteredSphereMutable(radius: Double): Iterable<MutableBlockPos>{
+	return this.allInCenteredSphereInternal(radius, square(radius), this.allInCenteredBoxMutable(radius, radius, radius))
+}
+
+fun BlockPos.allInCenteredSphere(radius: Int, avoidNipples: Boolean = false): Iterable<BlockPos>{
+	return this.allInCenteredSphereInternal(radius.toDouble(), getSphereRadiusSq(radius, avoidNipples), this.allInCenteredBox(radius, radius, radius))
+}
+
+fun BlockPos.allInCenteredSphereMutable(radius: Int, avoidNipples: Boolean = false): Iterable<MutableBlockPos>{
+	return this.allInCenteredSphereInternal(radius.toDouble(), getSphereRadiusSq(radius, avoidNipples), this.allInCenteredBoxMutable(radius, radius, radius))
+}
+
+// Logic functions
 
 fun BlockPos.min(other: BlockPos): BlockPos{
 	return Pos(min(x, other.x), min(y, other.y), min(z, other.z))
