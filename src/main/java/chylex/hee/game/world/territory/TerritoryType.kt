@@ -1,7 +1,9 @@
 package chylex.hee.game.world.territory
 import chylex.hee.game.world.territory.descriptions.Territory_ForgottenTombs
+import chylex.hee.game.world.territory.descriptions.Territory_ObsidianTowers
 import chylex.hee.game.world.territory.descriptions.Territory_TheHub
 import chylex.hee.game.world.territory.generators.Generator_ForgottenTombs
+import chylex.hee.game.world.territory.generators.Generator_ObsidianTowers
 import chylex.hee.game.world.territory.generators.Generator_TheHub
 import chylex.hee.game.world.util.Size
 import kotlin.math.abs
@@ -27,6 +29,14 @@ enum class TerritoryType(
 		gen    = Generator_ForgottenTombs,
 		chunks = 28,
 		height = 64 until 256
+	),
+	
+	OBSIDIAN_TOWERS(
+		title  = "obsidian_towers",
+		desc   = Territory_ObsidianTowers,
+		gen    = Generator_ObsidianTowers,
+		chunks = 14,
+		height = 100 until 180
 	);
 	
 	companion object{

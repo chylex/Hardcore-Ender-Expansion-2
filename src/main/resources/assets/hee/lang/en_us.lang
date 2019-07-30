@@ -226,6 +226,7 @@ gui.hee.portal_token_storage.title=Portal Tokens
 hee.territory.fallback.name=Unknown
 hee.territory.the_hub.name=The Hub
 hee.territory.forgotten_tombs.name=Forgotten Tombs
+hee.territory.obsidian_towers.name=Obsidian Towers
 
 commands.hee.usage=/hee [page=1]
 commands.hee.info=shows command list
