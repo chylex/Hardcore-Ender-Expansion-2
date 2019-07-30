@@ -176,7 +176,7 @@ abstract class RenderTileAbstractPortal<T : TileEntityPortalInner, C : IPortalCo
 		color[2] = func(color[2])
 	}
 	
-	private inline fun renderLayer(renderX: Double, renderY: Double, renderZ: Double, texture: ResourceLocation, layerPosition: Double, layerRotation: Float, layerScale: Float, cameraOffsetMp: Double){
+	private fun renderLayer(renderX: Double, renderY: Double, renderZ: Double, texture: ResourceLocation, layerPosition: Double, layerRotation: Float, layerScale: Float, cameraOffsetMp: Double){
 		val globalX = rendererDispatcher.entityX
 		val globalY = rendererDispatcher.entityY
 		val globalZ = rendererDispatcher.entityZ

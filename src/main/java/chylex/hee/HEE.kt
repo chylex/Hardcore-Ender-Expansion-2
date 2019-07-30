@@ -18,6 +18,7 @@ import chylex.hee.init.ModCreativeTabs
 import chylex.hee.init.ModGuiHandler
 import chylex.hee.init.ModLoot
 import chylex.hee.init.ModNetwork
+import chylex.hee.init.ModPotions
 import chylex.hee.init.ModRecipes
 import chylex.hee.proxy.ModCommonProxy
 import chylex.hee.system.Debug
@@ -73,7 +74,7 @@ object HEE{
 	}
 	
 	@EventHandler
-	fun onInit(e: FMLInitializationEvent){
+	fun onInit(@Suppress("UNUSED_PARAMETER") e: FMLInitializationEvent){
 		ModLoot.initialize()
 		ModRecipes.initialize()
 		OverworldFeatures.register()
@@ -81,16 +82,17 @@ object HEE{
 	}
 	
 	@EventHandler
-	fun onPostInit(e: FMLPostInitializationEvent){
+	fun onPostInit(@Suppress("UNUSED_PARAMETER") e: FMLPostInitializationEvent){
 		CustomToolMaterial.setupRepairItems()
 		EntityItemIgneousRock.setupSmeltingTransformations()
 		EntityMobEnderman.setupBiomeSpawns()
 		EndermanBlockHandler.setupCarriableBlocks()
+		ModPotions.setupVanillaOverrides()
 		OverworldFeatures.setupVanillaOverrides()
 	}
 	
 	@EventHandler
-	fun onLoadComplete(e: FMLLoadCompleteEvent){
+	fun onLoadComplete(@Suppress("UNUSED_PARAMETER") e: FMLLoadCompleteEvent){
 		IntegrityCheck.verify()
 	}
 	

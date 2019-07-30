@@ -1,3 +1,5 @@
+@file:Suppress("NOTHING_TO_INLINE")
+
 package chylex.hee.system.util
 import net.minecraft.util.math.Vec3d
 import kotlin.math.acos

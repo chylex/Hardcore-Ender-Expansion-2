@@ -4,6 +4,7 @@ import chylex.hee.game.block.util.Property
 import chylex.hee.game.entity.item.EntityInfusedTNT
 import chylex.hee.game.item.infusion.Infusion.TRAP
 import chylex.hee.game.item.infusion.InfusionTag
+import chylex.hee.system.util.creativeTabIn
 import chylex.hee.system.util.get
 import chylex.hee.system.util.getTile
 import chylex.hee.system.util.playServer
@@ -35,7 +36,7 @@ class BlockInfusedTNT : BlockTNT(), ITileEntityProvider{
 	
 	init{
 		soundType = SoundType.PLANT
-		creativeTab = null
+		creativeTabIn = null
 		
 		defaultState = defaultState.with(INFERNIUM, false)
 	}

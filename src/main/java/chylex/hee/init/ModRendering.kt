@@ -149,7 +149,7 @@ object ModRendering{
 	
 	@JvmStatic
 	@SubscribeEvent
-	fun onModels(e: ModelRegistryEvent){
+	fun onModels(@Suppress("UNUSED_PARAMETER") e: ModelRegistryEvent){
 		registerBlockStateMappers()
 		registerSpecialModels()
 		

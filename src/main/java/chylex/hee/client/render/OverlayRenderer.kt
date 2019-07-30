@@ -89,7 +89,7 @@ object OverlayRenderer{
 	
 	@JvmStatic
 	@SubscribeEvent
-	fun onRenderText(e: RenderGameOverlayEvent.Text){
+	fun onRenderText(@Suppress("UNUSED_PARAMETER") e: RenderGameOverlayEvent.Text){
 		fun drawTextOffScreenCenter(x: Int, y: Int, text: String, color: Int){
 			val scaledResolution = MC.resolution
 			val centerX = x + (scaledResolution.scaledWidth / 2)

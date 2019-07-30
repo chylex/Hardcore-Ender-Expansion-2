@@ -51,7 +51,7 @@ class BlockDragonEggOverride : BlockDragonEgg(){
 			override fun handle(pos: BlockPos, world: World, rand: Random){
 				PARTICLE_BREAK.spawn(Point(pos, 30), rand)
 				
-				Blocks.DRAGON_EGG.soundType.let {
+				Blocks.DRAGON_EGG.blockSoundType.let {
 					it.breakSound.playClient(pos, SoundCategory.BLOCKS, volume = (it.getVolume() + 1F) / 2F, pitch = it.getPitch() * 0.8F)
 				}
 			}
@@ -63,7 +63,7 @@ class BlockDragonEggOverride : BlockDragonEgg(){
 		
 		setHardnessWithResistance(INDESTRUCTIBLE_HARDNESS, 15F)
 		lightValue = 2
-		soundType = source.soundType
+		soundType = source.blockSoundType
 		translationKey = source.translationKeyOriginal
 	}
 	

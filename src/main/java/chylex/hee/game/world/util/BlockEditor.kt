@@ -10,6 +10,7 @@ import net.minecraft.item.ItemBlock
 import net.minecraft.item.ItemStack
 import net.minecraft.util.EnumFacing
 import net.minecraft.util.EnumFacing.UP
+import net.minecraft.util.EnumHand
 import net.minecraft.util.SoundCategory
 import net.minecraft.util.math.BlockPos
 import net.minecraft.world.World
@@ -58,10 +59,10 @@ object BlockEditor{
 		return placeInternal(state, player, stack, getTargetPos(player.world, clickedPos, clickedFacing), clickedFacing, hitX, hitY, hitZ)
 	}
 	
-	fun place(block: Block, player: EntityPlayer, stack: ItemStack, clickedPos: BlockPos, clickedFacing: EnumFacing, hitX: Float, hitY: Float, hitZ: Float): BlockPos?{
+	fun place(block: Block, player: EntityPlayer, hand: EnumHand, stack: ItemStack, clickedPos: BlockPos, clickedFacing: EnumFacing, hitX: Float, hitY: Float, hitZ: Float): BlockPos?{
 		val world = player.world
 		val targetPos = getTargetPos(world, clickedPos, clickedFacing)
-		val placedState = block.getStateForPlacement(world, targetPos, clickedFacing, hitX, hitY, hitZ, stack.metadata, player)
+		val placedState = block.getStateForPlacement(world, targetPos, clickedFacing, hitX, hitY, hitZ, stack.metadata, player, hand)
 		
 		return placeInternal(placedState, player, stack, targetPos, clickedFacing, hitX, hitY, hitZ)
 	}

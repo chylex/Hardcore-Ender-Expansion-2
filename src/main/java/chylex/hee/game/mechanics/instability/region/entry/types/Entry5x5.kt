@@ -49,7 +49,7 @@ inline class Entry5x5(override val compacted: Long) : IRegionEntry{
 			return fromRegion(regionX, regionZ)
 		}
 		
-		private inline fun getRegionCoord(coord: Int): Int{
+		private fun getRegionCoord(coord: Int): Int{
 			return if (coord < 0)
 				((coord + 1) / REGION_BLOCKS) - 1
 			else

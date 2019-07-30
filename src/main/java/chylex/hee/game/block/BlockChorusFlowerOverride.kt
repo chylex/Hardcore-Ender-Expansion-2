@@ -20,7 +20,7 @@ class BlockChorusFlowerOverride : BlockChorusFlower(){
 		val source = Blocks.CHORUS_FLOWER
 		
 		setHardness(source.getBlockHardness(null, null, null)) // UPDATE
-		soundType = source.soundType
+		soundType = source.blockSoundType
 		translationKey = source.translationKeyOriginal
 		
 		MinecraftForge.EVENT_BUS.register(this)

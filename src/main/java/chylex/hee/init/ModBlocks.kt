@@ -101,6 +101,7 @@ import chylex.hee.game.item.ItemDragonEgg
 import chylex.hee.game.item.ItemInfusedTNT
 import chylex.hee.init.ModCreativeTabs.OrderedCreativeTab
 import chylex.hee.system.Resource
+import chylex.hee.system.util.creativeTabIn
 import chylex.hee.system.util.useVanillaName
 import net.minecraft.block.Block
 import net.minecraft.creativetab.CreativeTabs
@@ -392,7 +393,7 @@ object ModBlocks{
 		// vanilla modifications
 		
 		Blocks.END_BRICKS.setHardness(1.0F).setResistance(4.0F)
-		Blocks.END_PORTAL_FRAME.creativeTab = null
+		Blocks.END_PORTAL_FRAME.creativeTabIn = null
 		
 		with(e.registry){
 			register(BlockEndPortalOverride().apply { override(Blocks.END_PORTAL, newCreativeTab = null) })
@@ -441,13 +442,13 @@ object ModBlocks{
 		this.translationKey = translationKey
 		
 		if (inCreativeTab){
-			this.creativeTab = ModCreativeTabs.main
+			this.creativeTabIn = ModCreativeTabs.main
 		}
 	}
 	
 	private fun Block.override(vanillaBlock: Block, newCreativeTab: CreativeTabs? = ModCreativeTabs.main){
 		this.useVanillaName(vanillaBlock)
-		this.creativeTab = newCreativeTab
+		this.creativeTabIn = newCreativeTab
 		
 		if (newCreativeTab is OrderedCreativeTab){
 			newCreativeTab.registerOrder(Item.getItemFromBlock(vanillaBlock))

@@ -28,6 +28,7 @@ public final class RendererConstructors{
 		all.put(RenderEntityNothing.class, RenderEntityNothing::new);
 	}
 	
+	@SuppressWarnings("unchecked")
 	public static <T extends Entity, R extends Render<? super T>> IRenderFactory get(Class<R> cls){
 		return (IRenderFactory<T>)all.get(cls);
 	}

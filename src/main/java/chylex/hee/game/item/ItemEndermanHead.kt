@@ -64,7 +64,7 @@ class ItemEndermanHead : Item(){ // UPDATE redo this
 		}
 		
 		if (pos.isReplaceable(world)){
-			facing = EnumFacing.UP
+			facing = UP
 			pos = pos.down()
 		}
 		

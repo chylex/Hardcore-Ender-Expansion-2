@@ -112,6 +112,7 @@ class EntityItemIgneousRock : EntityItemNoBob{
 			}
 		}
 		
+		@Suppress("NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS")
 		private fun convertToBlockState(stack: ItemStack): IBlockState?{
 			val item = stack.item as? ItemBlock ?: return null
 			val meta = if (stack.itemDamage == 32767) 0 else stack.itemDamage // UPDATE: rewrite this too

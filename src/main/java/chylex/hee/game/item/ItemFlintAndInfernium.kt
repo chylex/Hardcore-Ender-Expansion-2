@@ -81,7 +81,7 @@ class ItemFlintAndInfernium : Item(){
 				pos.setAir(world)
 			}
 			else{
-				BlockEditor.place(ModBlocks.ETERNAL_FIRE, player, heldItem, pos, facing, hitX, hitY, hitZ)
+				BlockEditor.place(ModBlocks.ETERNAL_FIRE, player, hand, heldItem, pos, facing, hitX, hitY, hitZ)
 			}
 			
 			SoundEvents.ITEM_FLINTANDSTEEL_USE.playServer(world, pos, SoundCategory.BLOCKS, volume = 1.1F, pitch = world.rand.nextFloat(0.4F, 0.5F))

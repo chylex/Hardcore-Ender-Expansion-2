@@ -5,6 +5,17 @@ import net.minecraft.block.material.MapColor
 import net.minecraft.block.material.Material
 
 class BlockBuilder(val material: Material, var color: MapColor, var sound: SoundType){
+	constructor(original: BlockBuilder) : this(original.material, original.color, original.sound){
+		harvestTool = original.harvestTool
+		harvestHardness = original.harvestHardness
+		explosionResistance = original.explosionResistance
+		miningStats = original.miningStats
+		
+		lightLevel = original.lightLevel
+		lightOpacity = original.lightOpacity
+		slipperiness = original.slipperiness
+	}
+	
 	var harvestTool: Pair<Int, String?> = Pair(-1, null)
 	var harvestHardness: Float = 0F
 	var explosionResistance: Float = 0F
@@ -25,16 +36,7 @@ class BlockBuilder(val material: Material, var color: MapColor, var sound: Sound
 	}
 	
 	inline fun clone(modify: BlockBuilder.() -> Unit): BlockBuilder{
-		return BlockBuilder(material, color, sound).apply {
-			harvestTool = this@BlockBuilder.harvestTool
-			harvestHardness = this@BlockBuilder.harvestHardness
-			explosionResistance = this@BlockBuilder.explosionResistance
-			miningStats = this@BlockBuilder.miningStats
-			
-			lightLevel = this@BlockBuilder.lightLevel
-			lightOpacity = this@BlockBuilder.lightOpacity
-			slipperiness = this@BlockBuilder.slipperiness
-		}.apply(modify)
+		return BlockBuilder(this).apply(modify)
 	}
 	
 	companion object{
@@ -73,14 +75,16 @@ class BlockBuilder(val material: Material, var color: MapColor, var sound: Sound
 				this.blockMapColor = builder.color
 			}
 			
+			this.blockSoundType = builder.sound
+			
 			setHarvestTool(builder.harvestTool)
 			setHardnessWithResistance(builder.harvestHardness, builder.explosionResistance)
 			this.enableStats = builder.miningStats
 			
 			this.lightValue = builder.lightLevel
 			builder.lightOpacity?.let { this.lightOpacity = it }
+			@Suppress("DEPRECATION")
 			this.slipperiness = builder.slipperiness
-			this.blockSoundType = builder.sound
 		}
 	}
 }

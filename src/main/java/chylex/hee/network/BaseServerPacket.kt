@@ -19,6 +19,7 @@ abstract class BaseServerPacket : IPacket{
 	
 	// External utility functions
 	
+	@Suppress("NOTHING_TO_INLINE")
 	inline fun sendToServer(){
 		ModNetwork.sendToServer(this)
 	}

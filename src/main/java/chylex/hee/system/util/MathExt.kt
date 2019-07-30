@@ -1,3 +1,5 @@
+@file:Suppress("NOTHING_TO_INLINE")
+
 package chylex.hee.system.util
 import org.apache.commons.lang3.math.Fraction
 import kotlin.math.ceil

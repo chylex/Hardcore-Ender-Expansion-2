@@ -79,6 +79,7 @@ object ModLoot{
 	}
 	
 	val LootTable.pools
+		@Suppress("UNCHECKED_CAST")
 		get() = LootTable::class.java.declaredFields.first { it.type === List::class.java }.also { it.isAccessible = true }.get(this) as ArrayList<LootPool>
 	
 	@JvmStatic

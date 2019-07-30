@@ -15,6 +15,12 @@ object RenderTileEndermanHead{
 	private val TEX_ENDERMAN = Resource.Custom("textures/entity/enderman_head.png")
 	private val MODEL_HEAD = ModelSkeletonHead(0, 0, 64, 32)
 	
+	@Suppress("NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS")
+	private fun renderHead(){
+		MC.textureManager.bindTexture(TEX_ENDERMAN)
+		MODEL_HEAD.render(null, 0F, 0F, 0F, 180F, 0F, 0.0625F)
+	}
+	
 	object AsItem : TileEntityItemStackRenderer(){
 		override fun renderByItem(stack: ItemStack, partialTicks: Float){
 			GL.pushMatrix()
@@ -25,8 +31,7 @@ object RenderTileEndermanHead{
 			GL.scale(-1F, -1F, 1F)
 			GL.enableAlpha()
 			
-			MC.textureManager.bindTexture(TEX_ENDERMAN)
-			MODEL_HEAD.render(null, 0F, 0F, 0F, 180F, 0F, 0.0625F)
+			renderHead()
 			
 			GL.enableCull()
 			GL.popMatrix()
@@ -34,7 +39,7 @@ object RenderTileEndermanHead{
 	}
 	
 	object AsHeadLayer{
-		operator fun invoke(entity: Entity, headModel: ModelRenderer, limbSwing: Float){
+		operator fun invoke(entity: Entity, headModel: ModelRenderer){
 			GL.pushMatrix()
 			GL.disableCull()
 			
@@ -46,8 +51,7 @@ object RenderTileEndermanHead{
 			GL.color(1F, 1F, 1F, 1F)
 			GL.scale(1.1875F, 1.1875F, -1.1875F)
 			
-			MC.textureManager.bindTexture(TEX_ENDERMAN)
-			MODEL_HEAD.render(null, limbSwing, 0F, 0F, 180F, 0F, 0.0625F)
+			renderHead()
 			
 			GL.enableCull()
 			GL.popMatrix()

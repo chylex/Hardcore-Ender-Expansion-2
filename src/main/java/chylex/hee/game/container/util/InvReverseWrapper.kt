@@ -10,7 +10,7 @@ import net.minecraftforge.items.wrapper.InvWrapper
 class InvReverseWrapper(private val wrapped: IItemHandlerModifiable) : IItemHandlerModifiable{
 	constructor(inventory: IInventory) : this(InvWrapper(inventory))
 	
-	private inline fun reverse(slot: Int) = slots - slot - 1
+	private fun reverse(slot: Int) = slots - slot - 1
 	
 	override fun getSlots() = wrapped.slots
 	override fun getStackInSlot(slot: Int) = wrapped.getStackInSlot(reverse(slot))

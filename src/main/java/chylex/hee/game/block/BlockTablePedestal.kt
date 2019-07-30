@@ -66,8 +66,8 @@ class BlockTablePedestal(builder: BlockBuilder) : BlockSimpleShaped(builder, COM
 		
 		const val PARTICLE_TARGET_Y = BOTTOM_SLAB_TOP_Y + (MIDDLE_PILLAR_TOP_Y - BOTTOM_SLAB_TOP_Y) * 0.5
 		
-		val COMBINED_BOX = max(BOTTOM_SLAB_HALF_WIDTH, TOP_SLAB_HALF_WIDTH).let {
-			AxisAlignedBB(0.5, 0.0, 0.5, 0.5, TOP_SLAB_TOP_Y, 0.5).grow(it, 0.0, it)!!
+		val COMBINED_BOX: AxisAlignedBB = max(BOTTOM_SLAB_HALF_WIDTH, TOP_SLAB_HALF_WIDTH).let {
+			AxisAlignedBB(0.5, 0.0, 0.5, 0.5, TOP_SLAB_TOP_Y, 0.5).grow(it, 0.0, it)
 		}
 		
 		private fun isInsidePickupArea(pos: BlockPos, entity: EntityItem): Boolean{
@@ -172,7 +172,10 @@ class BlockTablePedestal(builder: BlockBuilder) : BlockSimpleShaped(builder, COM
 	}
 	
 	override fun addCollisionBoxToList(state: IBlockState, world: World, pos: BlockPos, entityBox: AxisAlignedBB, collidingBoxes: MutableList<AxisAlignedBB>, entity: Entity?, isActualState: Boolean){
-		COLLISION_BOXES.forEach { addCollisionBoxToList(pos, entityBox, collidingBoxes, it) }
+		COLLISION_BOXES.forEach {
+			@Suppress("DEPRECATION")
+			addCollisionBoxToList(pos, entityBox, collidingBoxes, it)
+		}
 	}
 	
 	// Redstone

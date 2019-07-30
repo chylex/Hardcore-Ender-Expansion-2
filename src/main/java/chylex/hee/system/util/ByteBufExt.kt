@@ -1,3 +1,5 @@
+@file:Suppress("NOTHING_TO_INLINE")
+
 package chylex.hee.system.util
 import io.netty.buffer.ByteBuf
 import io.netty.buffer.ByteBufInputStream
@@ -26,37 +28,37 @@ inline fun ByteBuf.readPos(): BlockPos{
 
 // Vec3d (Full)
 
-inline fun ByteBuf.writeVec(vec: Vec3d){
+fun ByteBuf.writeVec(vec: Vec3d){
 	this.writeDouble(vec.x)
 	this.writeDouble(vec.y)
 	this.writeDouble(vec.z)
 }
 
-inline fun ByteBuf.readVec(): Vec3d{
+fun ByteBuf.readVec(): Vec3d{
 	return Vec3d(readDouble(), readDouble(), readDouble())
 }
 
 // Vec3d (Float)
 
-inline fun ByteBuf.writeFloatVec(vec: Vec3d){
+fun ByteBuf.writeFloatVec(vec: Vec3d){
 	this.writeFloat(vec.x.toFloat())
 	this.writeFloat(vec.y.toFloat())
 	this.writeFloat(vec.z.toFloat())
 }
 
-inline fun ByteBuf.readFloatVec(): Vec3d{
+fun ByteBuf.readFloatVec(): Vec3d{
 	return Vec3d(readFloat().toDouble(), readFloat().toDouble(), readFloat().toDouble())
 }
 
 // Vec3d (Compact)
 
-inline fun ByteBuf.writeCompactVec(vec: Vec3d){
+fun ByteBuf.writeCompactVec(vec: Vec3d){
 	this.writeInt((vec.x * 8.0).floorToInt())
 	this.writeInt((vec.y * 8.0).floorToInt())
 	this.writeInt((vec.z * 8.0).floorToInt())
 }
 
-inline fun ByteBuf.readCompactVec(): Vec3d{
+fun ByteBuf.readCompactVec(): Vec3d{
 	return Vec3d(readInt() * 0.125, readInt() * 0.125, readInt() * 0.125)
 }
 

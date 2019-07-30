@@ -31,7 +31,6 @@ interface IColor{
  * @param[green] value between 0-255
  * @param[blue] value between 0-255
  */
-@UseExperimental(ExperimentalUnsignedTypes::class)
 data class RGB(val red: Int, val green: Int, val blue: Int) : IColor{
 	constructor(rgb: UByte) : this(rgb.toInt(), rgb.toInt(), rgb.toInt())
 	

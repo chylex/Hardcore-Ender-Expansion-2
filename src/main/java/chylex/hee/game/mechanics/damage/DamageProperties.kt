@@ -22,7 +22,7 @@ class DamageProperties{
 	private var nonLethal = false
 	private var dealCreative = false
 	
-	private inline fun hasType(type: DamageType): Boolean{
+	private fun hasType(type: DamageType): Boolean{
 		return typeBits and (1 shl type.ordinal) != 0
 	}
 	

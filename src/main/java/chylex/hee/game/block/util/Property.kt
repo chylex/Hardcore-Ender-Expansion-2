@@ -4,6 +4,7 @@ import net.minecraft.block.properties.PropertyEnum
 import net.minecraft.block.properties.PropertyInteger
 import net.minecraft.util.IStringSerializable
 
+@Suppress("NOTHING_TO_INLINE")
 object Property{
 	inline fun bool(name: String): PropertyBool{
 		return PropertyBool.create(name)

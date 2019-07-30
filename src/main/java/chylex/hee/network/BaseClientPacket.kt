@@ -27,23 +27,27 @@ abstract class BaseClientPacket : IPacket{
 	
 	// External utility functions
 	
+	@Suppress("NOTHING_TO_INLINE")
 	inline fun sendToAll(){
 		ModNetwork.sendToAll(this)
 	}
 	
+	@Suppress("NOTHING_TO_INLINE")
 	inline fun sendToPlayer(player: EntityPlayer){
 		ModNetwork.sendToPlayer(this, player)
 	}
 	
+	@Suppress("NOTHING_TO_INLINE")
 	inline fun sendToDimension(dimension: Int){
 		ModNetwork.sendToDimension(this, dimension)
 	}
 	
+	@Suppress("NOTHING_TO_INLINE")
 	inline fun sendToTracking(entity: Entity){
 		ModNetwork.sendToTracking(this, entity)
 	}
 	
-	inline fun sendToAllAround(x: Double, y: Double, z: Double, dimension: Int, range: Double){
+	fun sendToAllAround(x: Double, y: Double, z: Double, dimension: Int, range: Double){
 		ModNetwork.sendToAllAround(this, TargetPoint(dimension, x, y, z, range))
 	}
 	

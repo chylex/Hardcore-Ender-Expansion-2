@@ -23,6 +23,7 @@ interface ISegment{
 	/**
 	 * Utilities.
 	 */
+	@Suppress("NOTHING_TO_INLINE")
 	companion object{
 		inline fun index(x: Int, y: Int, z: Int, size: Size): Int{
 			return x + (size.x * (y + (z * size.y)))

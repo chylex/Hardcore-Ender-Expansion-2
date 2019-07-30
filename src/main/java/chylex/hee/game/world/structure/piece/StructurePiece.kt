@@ -86,6 +86,7 @@ abstract class StructurePiece<T> : IStructurePiece, IStructureGenerator{
 	open inner class MutableInstance(context: T?, transform: Transform) : Instance(context, transform){
 		constructor(transform: Transform) : this(null, transform)
 		
+		@Suppress("UNCHECKED_CAST")
 		private val availableConnections = findAvailableConnections() as MutableList<TransformedStructurePieceConnection> // ugly implementation detail
 		private val usedConnections = mutableMapOf<TransformedStructurePieceConnection, StructurePiece<*>.MutableInstance>()
 		

@@ -1,3 +1,5 @@
+@file:Suppress("NOTHING_TO_INLINE")
+
 package chylex.hee.system.util
 import chylex.hee.HEE
 import net.minecraft.inventory.IInventory
@@ -21,7 +23,6 @@ import net.minecraft.util.math.BlockPos
 import net.minecraftforge.common.util.Constants.NBT
 import org.apache.commons.lang3.ArrayUtils.EMPTY_LONG_ARRAY
 import java.util.Locale
-import kotlin.contracts.ExperimentalContracts
 import kotlin.contracts.contract
 
 fun NBTTagCompound.getOrCreateCompound(key: String): NBTTagCompound{
@@ -106,7 +107,7 @@ inline fun NBTTagCompound.setPos(key: String, pos: BlockPos){
 	this.setLong(key, pos.toLong())
 }
 
-inline fun NBTTagCompound.getPos(key: String): BlockPos{
+fun NBTTagCompound.getPos(key: String): BlockPos{
 	return if (this.hasKey(key, NBT.TAG_LONG))
 		Pos(this.getLong(key))
 	else
@@ -130,13 +131,11 @@ inline fun <reified T : Enum<T>> NBTTagCompound.getEnum(key: String): T?{
 
 // Presence checks
 
-@UseExperimental(ExperimentalContracts::class)
 inline fun NBTTagCompound?.hasKey(key: String): Boolean{
 	contract { returns(true) implies (this@hasKey != null) }
 	return this != null && this.hasKey(key)
 }
 
-@UseExperimental(ExperimentalContracts::class)
 inline fun NBTTagCompound?.hasKey(key: String, type: Int): Boolean{
 	contract { returns(true) implies (this@hasKey != null) }
 	return this != null && this.hasKey(key, type)

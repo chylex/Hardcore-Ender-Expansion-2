@@ -12,7 +12,7 @@ import net.minecraftforge.fml.relauncher.SideOnly
 class LayerEndermanHead(private val headModel: ModelRenderer) : LayerRenderer<EntityPlayer>{
 	override fun doRenderLayer(entity: EntityPlayer, limbSwing: Float, limbSwingAmount: Float, partialTicks: Float, entityTickTime: Float, rotationYaw: Float, rotationPitch: Float, scale: Float){
 		if (entity.getItemStackFromSlot(HEAD).item === ModItems.ENDERMAN_HEAD){
-			RenderTileEndermanHead.AsHeadLayer(entity, headModel, limbSwing)
+			RenderTileEndermanHead.AsHeadLayer(entity, headModel)
 		}
 	}
 	

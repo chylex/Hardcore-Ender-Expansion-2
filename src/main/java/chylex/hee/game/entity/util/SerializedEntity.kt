@@ -25,12 +25,10 @@ class SerializedEntity private constructor(private var uuid: UUID?, private var 
 	}
 	
 	fun get(world: World): Entity?{
-		if (uuid == null){
-			return null
-		}
+		val id = uuid ?: return null
 		
 		if (entity == null && world is WorldServer){
-			entity = world.getEntityFromUuid(uuid)
+			entity = world.getEntityFromUuid(id)
 		}
 		
 		return entity

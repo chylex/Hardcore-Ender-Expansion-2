@@ -52,6 +52,7 @@ class RegionInstability<T : IRegionEntry>(private val world: World, private val 
 			addInstabilityPoints(region, baseCount * 10)
 			
 			for(adjacent in region.adjacent){
+				@Suppress("UNCHECKED_CAST")
 				addInstabilityPoints(adjacent as T, baseCount * 3)
 			}
 		}
@@ -82,6 +83,7 @@ class RegionInstability<T : IRegionEntry>(private val world: World, private val 
 					multiplyInstabilityPoints(region, 0F)
 					
 					for(adjacent in region.adjacent){
+						@Suppress("UNCHECKED_CAST")
 						multiplyInstabilityPoints(adjacent as T, 0.25F)
 					}
 				}

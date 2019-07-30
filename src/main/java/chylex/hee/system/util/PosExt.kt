@@ -1,3 +1,5 @@
+@file:Suppress("NOTHING_TO_INLINE")
+
 package chylex.hee.system.util
 import chylex.hee.game.world.util.PosXZ
 import com.google.common.collect.Iterables
@@ -34,7 +36,7 @@ operator fun BlockPos.component3() = z
 operator fun ChunkPos.component1() = x
 operator fun ChunkPos.component2() = z
 
-inline val BlockPos.center
+val BlockPos.center
 	get() = Vec3d(x + 0.5, y + 0.5, z + 0.5)
 
 // Constants
@@ -171,7 +173,7 @@ fun BlockPos.allInCenteredBoxMutable(offsetX: Double, offsetY: Double, offsetZ: 
 
 // Areas (Sphere)
 
-private fun <T : BlockPos> BlockPos.allInCenteredSphereInternal(radius: Double, radiusSq: Double, iterable: Iterable<T>): Iterable<T>{
+private fun <T : BlockPos> BlockPos.allInCenteredSphereInternal(radiusSq: Double, iterable: Iterable<T>): Iterable<T>{
 	return Iterables.filter(iterable){ it!!.distanceSqTo(this) <= radiusSq }
 }
 
@@ -183,19 +185,19 @@ private fun getSphereRadiusSq(radius: Int, avoidNipples: Boolean): Double{
 }
 
 fun BlockPos.allInCenteredSphere(radius: Double): Iterable<BlockPos>{
-	return this.allInCenteredSphereInternal(radius, square(radius), this.allInCenteredBox(radius, radius, radius))
+	return this.allInCenteredSphereInternal(square(radius), this.allInCenteredBox(radius, radius, radius))
 }
 
 fun BlockPos.allInCenteredSphereMutable(radius: Double): Iterable<MutableBlockPos>{
-	return this.allInCenteredSphereInternal(radius, square(radius), this.allInCenteredBoxMutable(radius, radius, radius))
+	return this.allInCenteredSphereInternal(square(radius), this.allInCenteredBoxMutable(radius, radius, radius))
 }
 
 fun BlockPos.allInCenteredSphere(radius: Int, avoidNipples: Boolean = false): Iterable<BlockPos>{
-	return this.allInCenteredSphereInternal(radius.toDouble(), getSphereRadiusSq(radius, avoidNipples), this.allInCenteredBox(radius, radius, radius))
+	return this.allInCenteredSphereInternal(getSphereRadiusSq(radius, avoidNipples), this.allInCenteredBox(radius, radius, radius))
 }
 
 fun BlockPos.allInCenteredSphereMutable(radius: Int, avoidNipples: Boolean = false): Iterable<MutableBlockPos>{
-	return this.allInCenteredSphereInternal(radius.toDouble(), getSphereRadiusSq(radius, avoidNipples), this.allInCenteredBoxMutable(radius, radius, radius))
+	return this.allInCenteredSphereInternal(getSphereRadiusSq(radius, avoidNipples), this.allInCenteredBoxMutable(radius, radius, radius))
 }
 
 // Logic functions

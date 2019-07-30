@@ -48,6 +48,7 @@ enum class Infusion(
 	private class Name(val name: String)
 	
 	private class Colors(val primary: IColor, val secondary: IColor){
+		@Suppress("NOTHING_TO_INLINE")
 		companion object{
 			inline fun Hcl(hue: Int, c: Float = 100F, l: Float = 75F) = HCL(hue.toDouble(), c, l)
 			inline fun Hue(hue: Int) = Hcl(hue)

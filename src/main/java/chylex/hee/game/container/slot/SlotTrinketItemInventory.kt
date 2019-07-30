@@ -119,13 +119,13 @@ class SlotTrinketItemInventory(trinketHandler: IItemHandler, slotNumber: Int) : 
 		
 		@JvmStatic
 		@SubscribeEvent(priority = LOWEST)
-		fun onDrawGuiScreenPre(e: DrawScreenEvent.Pre){
+		fun onDrawGuiScreenPre(@Suppress("UNUSED_PARAMETER") e: DrawScreenEvent.Pre){
 			isRenderingGUI = true
 		}
 		
 		@JvmStatic
 		@SubscribeEvent
-		fun onDrawGuiScreenPre(e: DrawScreenEvent.Post){
+		fun onDrawGuiScreenPre(@Suppress("UNUSED_PARAMETER") e: DrawScreenEvent.Post){
 			isRenderingGUI = false
 		}
 	}
