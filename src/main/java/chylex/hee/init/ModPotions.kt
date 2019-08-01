@@ -8,6 +8,7 @@ import chylex.hee.game.mechanics.potion.brewing.recipes.BrewUnalteredPotions
 import chylex.hee.game.mechanics.potion.brewing.recipes.BrewWaterToAwkward
 import chylex.hee.game.mechanics.potion.brewing.recipes.BrewWaterToMundane
 import chylex.hee.game.mechanics.potion.brewing.recipes.BrewWaterToThick
+import chylex.hee.game.mechanics.potion.brewing.recipes.ReinsertPotionItems
 import chylex.hee.system.Resource
 import com.google.common.collect.ImmutableList
 import net.minecraft.potion.Potion
@@ -48,6 +49,7 @@ object ModPotions{
 				BrewWaterToAwkward,
 				BrewWaterToMundane,
 				BrewWaterToThick,
+				ReinsertPotionItems,
 				BrewUnalteredPotions
 			))
 		}

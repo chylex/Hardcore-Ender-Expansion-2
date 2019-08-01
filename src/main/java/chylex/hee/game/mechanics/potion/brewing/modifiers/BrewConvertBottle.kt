@@ -9,7 +9,7 @@ import net.minecraft.item.ItemStack
 
 sealed class BrewConvertBottle(override val ingredient: Item, private val newContainer: Item) : IBrewingModifier{
 	override fun check(input: ItemStack): Boolean{
-		return input.item === Items.POTIONITEM && PotionBrewing.unpack(input) != null
+		return input.item === Items.POTIONITEM && PotionBrewing.isAltered(input)
 	}
 	
 	override fun apply(input: ItemStack): ItemStack{

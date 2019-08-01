@@ -8,6 +8,7 @@ import chylex.hee.system.util.nbtOrNull
 import net.minecraft.init.MobEffects
 import net.minecraft.init.PotionTypes
 import net.minecraft.item.Item
+import net.minecraft.item.ItemPotion
 import net.minecraft.item.ItemStack
 import net.minecraft.potion.Potion
 import net.minecraft.potion.PotionType
@@ -44,16 +45,20 @@ object PotionItems{
 	val VANILLA_TYPES
 		get() = TYPE_MAPPING.values
 	
-	fun checkBottle(stack: ItemStack, type: PotionType): Boolean{
-		return PotionUtils.getPotionFromItem(stack) === type && !stack.nbtOrNull.hasKey(CUSTOM_EFFECTS_TAG)
-	}
-	
 	fun getBottle(item: Item, type: PotionType): ItemStack{
 		return PotionUtils.addPotionToItemStack(ItemStack(item), type)
 	}
 	
 	fun getBottle(item: Item, potion: Potion): ItemStack{
 		return getBottle(item, TYPE_MAPPING.getOrDefault(potion, PotionTypes.WATER))
+	}
+	
+	fun checkBottle(stack: ItemStack, type: PotionType): Boolean{
+		return isPotion(stack) && PotionUtils.getPotionFromItem(stack) === type && !stack.nbtOrNull.hasKey(CUSTOM_EFFECTS_TAG)
+	}
+	
+	fun isPotion(stack: ItemStack): Boolean{
+		return stack.item is ItemPotion
 	}
 	
 	fun isReagent(stack: ItemStack): Boolean{

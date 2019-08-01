@@ -105,6 +105,10 @@ object PotionBrewing{
 		return INFO[potion]?.Instance(stack, effect)
 	}
 	
+	fun isAltered(stack: ItemStack): Boolean{
+		return unpack(stack) != null || (PotionItems.isPotion(stack) && PotionUtils.getEffectsFromStack(stack).isEmpty())
+	}
+	
 	// Utilities
 	
 	private infix fun Int.min(seconds: Int): Int{
