@@ -1,6 +1,7 @@
 package chylex.hee.init
 import chylex.hee.HEE
 import chylex.hee.game.block.BlockAncientCobweb
+import chylex.hee.game.block.BlockBrewingStandOverride
 import chylex.hee.game.block.BlockChorusFlowerOverride
 import chylex.hee.game.block.BlockChorusPlantOverride
 import chylex.hee.game.block.BlockCorruptedEnergy
@@ -47,6 +48,7 @@ import chylex.hee.game.block.BlockVoidPortalStorage
 import chylex.hee.game.block.BlockWallCustom
 import chylex.hee.game.block.BlockWhitebarkLog
 import chylex.hee.game.block.entity.TileEntityAccumulationTable
+import chylex.hee.game.block.entity.TileEntityBrewingStandCustom
 import chylex.hee.game.block.entity.TileEntityDarkChest
 import chylex.hee.game.block.entity.TileEntityEndPortalAcceptor
 import chylex.hee.game.block.entity.TileEntityEnergyCluster
@@ -58,6 +60,7 @@ import chylex.hee.game.block.entity.TileEntityTablePedestal
 import chylex.hee.game.block.entity.TileEntityVoidPortalStorage
 import chylex.hee.game.block.fluid.FluidEnderGoo
 import chylex.hee.game.block.fluid.FluidEnderGooPurified
+import chylex.hee.game.block.info.BlockBuilders.buildBrewingStand
 import chylex.hee.game.block.info.BlockBuilders.buildCorruptedEnergy
 import chylex.hee.game.block.info.BlockBuilders.buildDarkLoam
 import chylex.hee.game.block.info.BlockBuilders.buildDustyStone
@@ -387,6 +390,7 @@ object ModBlocks{
 		tile<TileEntityDarkChest>("dark_chest")
 		tile<TileEntityLootChest>("loot_chest")
 		tile<TileEntityJarODust>("jar_o_dust")
+		tile<TileEntityBrewingStandCustom>("brewing_stand")
 		tile<TileEntityTablePedestal>("table_pedestal")
 		tile<TileEntityAccumulationTable>("accumulation_table")
 		
@@ -397,6 +401,7 @@ object ModBlocks{
 		
 		with(e.registry){
 			register(BlockEndPortalOverride().apply { override(Blocks.END_PORTAL, newCreativeTab = null) })
+			register(BlockBrewingStandOverride(buildBrewingStand).apply { override(Blocks.BREWING_STAND) })
 			register(BlockChorusFlowerOverride().apply { override(Blocks.CHORUS_FLOWER) })
 			register(BlockChorusPlantOverride().apply { override(Blocks.CHORUS_PLANT) })
 			register(BlockDragonEggOverride().apply { override(Blocks.DRAGON_EGG) } with ::ItemDragonEgg)

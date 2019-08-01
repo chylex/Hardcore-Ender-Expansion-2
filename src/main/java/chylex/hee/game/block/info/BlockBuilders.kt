@@ -155,6 +155,11 @@ object BlockBuilders{
 		lightLevel = 13
 	}
 	
+	val buildBrewingStand = BlockBuilder(Material.IRON, MapColor.YELLOW, SoundType.STONE).apply {
+		harvestHardness = 0.5F
+		lightLevel = 2
+	}
+	
 	// Ores
 	
 	private val buildEndOre = BlockBuilder(Materials.SOLID_WITH_TOOL, MapColor.SAND, SoundType.STONE)

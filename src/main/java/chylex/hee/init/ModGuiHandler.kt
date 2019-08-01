@@ -1,12 +1,15 @@
 package chylex.hee.init
 import chylex.hee.HEE
 import chylex.hee.client.gui.GuiAmuletOfRecovery
+import chylex.hee.client.gui.GuiBrewingStandCustom
 import chylex.hee.client.gui.GuiLootChest
 import chylex.hee.client.gui.GuiPortalTokenStorage
 import chylex.hee.client.gui.GuiTrinketPouch
+import chylex.hee.game.block.entity.TileEntityBrewingStandCustom
 import chylex.hee.game.block.entity.TileEntityLootChest
 import chylex.hee.game.block.entity.TileEntityVoidPortalStorage
 import chylex.hee.game.container.ContainerAmuletOfRecovery
+import chylex.hee.game.container.ContainerBrewingStandCustom
 import chylex.hee.game.container.ContainerLootChest
 import chylex.hee.game.container.ContainerPortalTokenStorage
 import chylex.hee.game.container.ContainerTrinketPouch
@@ -43,6 +46,11 @@ object ModGuiHandler : IGuiHandler{
 		PORTAL_TOKEN_STORAGE(
 			createInterface = forTileEntity<TileEntityVoidPortalStorage> { player, tile -> GuiPortalTokenStorage(player, tile) },
 			createContainer = forTileEntity<TileEntityVoidPortalStorage> { player, tile -> ContainerPortalTokenStorage(player, tile) }
+		),
+		
+		BREWING_STAND(
+			createInterface = forTileEntity<TileEntityBrewingStandCustom> { player, tile -> GuiBrewingStandCustom(player.inventory, tile) },
+			createContainer = forTileEntity<TileEntityBrewingStandCustom> { player, tile -> ContainerBrewingStandCustom(player.inventory, tile) }
 		),
 		
 		LOOT_CHEST(
