@@ -2,10 +2,10 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/Hardcore-Ender-Expansion-2.iml" filepath="$PROJECT_DIR$/.idea/modules/Hardcore-Ender-Expansion-2.iml" group="Hardcore-Ender-Expansion-2" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/Hardcore-Ender-Expansion-2_api.iml" filepath="$PROJECT_DIR$/.idea/modules/Hardcore-Ender-Expansion-2_api.iml" group="Hardcore-Ender-Expansion-2" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/Hardcore-Ender-Expansion-2_main.iml" filepath="$PROJECT_DIR$/.idea/modules/Hardcore-Ender-Expansion-2_main.iml" group="Hardcore-Ender-Expansion-2" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/Hardcore-Ender-Expansion-2_test.iml" filepath="$PROJECT_DIR$/.idea/modules/Hardcore-Ender-Expansion-2_test.iml" group="Hardcore-Ender-Expansion-2" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/Hardcore-Ender-Expansion-2.iml" filepath="$PROJECT_DIR$/.idea/modules/Hardcore-Ender-Expansion-2.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/Hardcore-Ender-Expansion-2.api.iml" filepath="$PROJECT_DIR$/.idea/modules/Hardcore-Ender-Expansion-2.api.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/Hardcore-Ender-Expansion-2.main.iml" filepath="$PROJECT_DIR$/.idea/modules/Hardcore-Ender-Expansion-2.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/Hardcore-Ender-Expansion-2.test.iml" filepath="$PROJECT_DIR$/.idea/modules/Hardcore-Ender-Expansion-2.test.iml" />
     </modules>
   </component>
 </project>

@@ -1,7 +1,7 @@
 <component name="ProjectRunConfigurationManager">
   <configuration default="false" name="Minecraft Client" type="Application" factoryName="Application" singleton="true">
     <option name="MAIN_CLASS_NAME" value="GradleStart" />
-    <module name="Hardcore-Ender-Expansion-2_main" />
+    <module name="Hardcore-Ender-Expansion-2.main" />
     <option name="PROGRAM_PARAMETERS" value="--username Player" />
     <option name="VM_PARAMETERS" value="-Dhee.debug -XX:HotswapDeoptClassPath='chylex.,net.,com.sun.proxy.$Proxy,sun.reflect.Generated'" />
     <option name="WORKING_DIRECTORY" value="./run" />
