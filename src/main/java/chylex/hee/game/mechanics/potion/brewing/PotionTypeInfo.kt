@@ -16,7 +16,7 @@ class PotionTypeInfo(
 	private val maxLevel: Int
 ){
 	fun getBasePotion(item: Item): ItemStack{
-		return PotionUtils.appendEffects(PotionItems.get(item, potion), listOf(PotionEffect(potion, duration?.baseTicks ?: 0, 0)))
+		return PotionUtils.appendEffects(PotionItems.getBottle(item, potion), listOf(PotionEffect(potion, duration?.baseTicks ?: 0, 0)))
 	}
 	
 	class Duration(val baseTicks: Int, val stepTicks: Int, val maxSteps: Int){
@@ -75,7 +75,7 @@ class PotionTypeInfo(
 			val newStack = stack.copy()
 			
 			newStack.heeTag.setInteger("DurationSteps", durationSteps)
-			newStack.nbt.removeTag(IBrewingRecipe.CUSTOM_EFFECTS_TAG)
+			newStack.nbt.removeTag(PotionItems.CUSTOM_EFFECTS_TAG)
 			
 			return PotionUtils.appendEffects(newStack, listOf(newEffect))
 		}

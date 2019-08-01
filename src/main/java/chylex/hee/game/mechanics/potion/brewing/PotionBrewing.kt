@@ -30,11 +30,10 @@ import net.minecraft.init.MobEffects.WATER_BREATHING
 import net.minecraft.init.MobEffects.WEAKNESS
 import net.minecraft.item.ItemFishFood.FishType.PUFFERFISH
 import net.minecraft.item.ItemStack
-import net.minecraft.potion.Potion
 import net.minecraft.potion.PotionUtils
 
 object PotionBrewing{
-	val INFO = setup(
+	val INFO = arrayOf(
 		PotionTypeInfo(INSTANT_HEALTH,  maxLevel = 2),
 		PotionTypeInfo(FIRE_RESISTANCE, Duration(baseTicks = 3 min 20, stepTicks = 3 min 10, maxSteps = 4), maxLevel = 1),
 		PotionTypeInfo(REGENERATION,    Duration(baseTicks = 0 min 30, stepTicks = 0 min 30, maxSteps = 3), maxLevel = 3),
@@ -57,7 +56,7 @@ object PotionBrewing{
 		PotionTypeInfo(INVISIBILITY,    Duration(baseTicks = 1 min 20, stepTicks =     1 min 16, maxSteps = 4), maxLevel = 1),
 		// TODO PotionTypeInfo(BANISHMENT,      Duration(baseTicks = 0 min 15, stepTicks =       10 s 0, maxSteps = 3), maxLevel = 1),
 		PotionTypeInfo(GLOWING,         Duration(baseTicks = 0 min 12, stepTicks =        8 s 0, maxSteps = 3), maxLevel = 1)
-	)
+	).associateBy { it.potion }
 	
 	// TODO register levitation type and other custom potions
 	
@@ -68,7 +67,7 @@ object PotionBrewing{
 		(BLAZE_POWDER to 0)           to STRENGTH,
 		(SUGAR to 0)                  to SPEED,
 		(GOLDEN_CARROT to 0)          to NIGHT_VISION,
-		(FISH to PUFFERFISH.metadata) to WATER_BREATHING,
+		(FISH to PUFFERFISH.metadata) to WATER_BREATHING, // UPDATE
 		(RABBIT_FOOT to 0)            to JUMP_BOOST,
 		(SPIDER_EYE to 0)             to POISON,
 		// UPDATE (TURTLE_SHELL to 0)           to TURTLE_MASTER,
@@ -107,10 +106,6 @@ object PotionBrewing{
 	}
 	
 	// Utilities
-	
-	private fun setup(vararg recipes: PotionTypeInfo): Map<Potion, PotionTypeInfo>{
-		return recipes.associateBy { it.potion }
-	}
 	
 	private infix fun Int.min(seconds: Int): Int{
 		return ((this * 60) + seconds) * 20

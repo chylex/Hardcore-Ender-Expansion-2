@@ -4,10 +4,6 @@ import chylex.hee.game.mechanics.potion.PotionLifeless
 import chylex.hee.game.mechanics.potion.PotionPurity
 import chylex.hee.game.mechanics.potion.brewing.PotionItems
 import chylex.hee.game.mechanics.potion.brewing.recipes.BrewBasicEffects
-import chylex.hee.game.mechanics.potion.brewing.recipes.BrewConvertBottle
-import chylex.hee.game.mechanics.potion.brewing.recipes.BrewIncreaseDuration
-import chylex.hee.game.mechanics.potion.brewing.recipes.BrewIncreaseLevel
-import chylex.hee.game.mechanics.potion.brewing.recipes.BrewReversal
 import chylex.hee.game.mechanics.potion.brewing.recipes.BrewUnalteredPotions
 import chylex.hee.game.mechanics.potion.brewing.recipes.BrewWaterToAwkward
 import chylex.hee.game.mechanics.potion.brewing.recipes.BrewWaterToMundane
@@ -49,14 +45,9 @@ object ModPotions{
 			addAll(0, listOf(
 				BrewBasicEffects.FromAwkward,
 				BrewBasicEffects.FromWater,
-				BrewIncreaseDuration,
-				BrewIncreaseLevel,
-				BrewReversal,
 				BrewWaterToAwkward,
 				BrewWaterToMundane,
 				BrewWaterToThick,
-				BrewConvertBottle.IntoSplash,
-				BrewConvertBottle.IntoLingering,
 				BrewUnalteredPotions
 			))
 		}
