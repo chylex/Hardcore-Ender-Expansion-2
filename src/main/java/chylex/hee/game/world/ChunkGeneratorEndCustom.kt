@@ -80,7 +80,7 @@ class ChunkGeneratorEndCustom(private val world: World) : IChunkGenerator{
 		}
 	}
 	
-	override fun populate(chunkX: Int, chunkZ: Int){ // TODO disable forge worldgen
+	override fun populate(chunkX: Int, chunkZ: Int){
 		val instance = getInstance(chunkX, chunkZ)?.takeIf { it.generatesChunk(chunkX, chunkZ) } ?: return
 		val constructed = territoryCache.get(instance).first
 		

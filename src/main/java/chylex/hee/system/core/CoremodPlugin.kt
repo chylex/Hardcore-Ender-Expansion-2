@@ -1,5 +1,6 @@
 package chylex.hee.system.core
 import chylex.hee.system.core.transformers.TransformBlockChorusFlower
+import chylex.hee.system.core.transformers.TransformChunk
 import chylex.hee.system.core.transformers.TransformEntityMob
 import net.minecraftforge.fml.relauncher.IFMLLoadingPlugin
 import net.minecraftforge.fml.relauncher.IFMLLoadingPlugin.Name
@@ -10,6 +11,7 @@ import net.minecraftforge.fml.relauncher.IFMLLoadingPlugin.TransformerExclusions
 class CoremodPlugin : IFMLLoadingPlugin{
 	override fun getASMTransformerClass() = arrayOf(
 		TransformBlockChorusFlower::class.java.name,
+		TransformChunk::class.java.name,
 		TransformEntityMob::class.java.name
 	)
 	
