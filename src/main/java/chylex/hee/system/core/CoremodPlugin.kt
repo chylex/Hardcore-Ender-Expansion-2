@@ -1,4 +1,5 @@
 package chylex.hee.system.core
+import chylex.hee.system.core.transformers.TransformBlockChorusFlower
 import net.minecraftforge.fml.relauncher.IFMLLoadingPlugin
 import net.minecraftforge.fml.relauncher.IFMLLoadingPlugin.Name
 import net.minecraftforge.fml.relauncher.IFMLLoadingPlugin.TransformerExclusions
@@ -6,7 +7,9 @@ import net.minecraftforge.fml.relauncher.IFMLLoadingPlugin.TransformerExclusions
 @Name("Hardcore Ender Expansion Coremod")
 @TransformerExclusions("chylex.hee.system.core", "kotlin.")
 class CoremodPlugin : IFMLLoadingPlugin{
-	override fun getASMTransformerClass() = emptyArray<String>()
+	override fun getASMTransformerClass() = arrayOf(
+		TransformBlockChorusFlower::class.java.name
+	)
 	
 	override fun getAccessTransformerClass() = null
 	override fun getSetupClass(): String? = null

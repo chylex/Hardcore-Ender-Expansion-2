@@ -2,7 +2,6 @@ package chylex.hee.init
 import chylex.hee.HEE
 import chylex.hee.game.block.BlockAncientCobweb
 import chylex.hee.game.block.BlockBrewingStandOverride
-import chylex.hee.game.block.BlockChorusFlowerOverride
 import chylex.hee.game.block.BlockChorusPlantOverride
 import chylex.hee.game.block.BlockCorruptedEnergy
 import chylex.hee.game.block.BlockDarkChest
@@ -405,7 +404,6 @@ object ModBlocks{
 		with(e.registry){
 			register(BlockEndPortalOverride().apply { override(Blocks.END_PORTAL, newCreativeTab = null) })
 			register(BlockBrewingStandOverride(buildBrewingStand).apply { override(Blocks.BREWING_STAND) })
-			register(BlockChorusFlowerOverride().apply { override(Blocks.CHORUS_FLOWER) })
 			register(BlockChorusPlantOverride().apply { override(Blocks.CHORUS_PLANT) })
 			register(BlockDragonEggOverride().apply { override(Blocks.DRAGON_EGG) } with ::ItemDragonEgg)
 		}
