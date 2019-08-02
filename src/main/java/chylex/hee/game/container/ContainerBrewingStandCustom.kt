@@ -6,12 +6,11 @@ import chylex.hee.game.container.slot.SlotBrewingReagent
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.entity.player.InventoryPlayer
 import net.minecraft.inventory.ContainerBrewingStand
-import net.minecraft.inventory.IInventory
 import net.minecraft.item.ItemStack
 
-class ContainerBrewingStandCustom(inventory: InventoryPlayer, private val brewingStand: IInventory) : ContainerBrewingStand(inventory, brewingStand), IContainerSlotTransferLogic{
+class ContainerBrewingStandCustom(inventory: InventoryPlayer, private val brewingStand: TileEntityBrewingStandCustom) : ContainerBrewingStand(inventory, brewingStand), IContainerSlotTransferLogic{
 	init{
-		TileEntityBrewingStandCustom.SLOT_REAGENT.let { inventorySlots[it] = SlotBrewingReagent(inventorySlots[it]) }
+		TileEntityBrewingStandCustom.SLOT_REAGENT.let { inventorySlots[it] = SlotBrewingReagent(inventorySlots[it], brewingStand.isEnhanced) }
 		TileEntityBrewingStandCustom.SLOT_MODIFIER.let { inventorySlots[it] = SlotBrewingModifier(inventorySlots[it]) }
 	}
 	

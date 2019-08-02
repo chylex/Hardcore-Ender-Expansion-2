@@ -8,16 +8,17 @@ import chylex.hee.system.util.getStack
 import chylex.hee.system.util.isNotEmpty
 import net.minecraft.client.gui.inventory.GuiBrewingStand
 import net.minecraft.entity.player.InventoryPlayer
-import net.minecraft.inventory.IInventory
 import net.minecraftforge.fml.relauncher.Side
 import net.minecraftforge.fml.relauncher.SideOnly
 
 @SideOnly(Side.CLIENT)
-class GuiBrewingStandCustom(inventory: InventoryPlayer, private val brewingStand: IInventory) : GuiBrewingStand(inventory, brewingStand){
+class GuiBrewingStandCustom(inventory: InventoryPlayer, private val brewingStand: TileEntityBrewingStandCustom) : GuiBrewingStand(inventory, brewingStand){
 	private companion object{
 		private val TEX_BACKGROUND = Resource.Custom("textures/gui/brewing_stand.png")
-		private val BUBBLE_LENGTHS = intArrayOf(29, 24, 20, 16, 11, 6, 0)
+		private val BUBBLE_LENGTHS = intArrayOf(0, 6, 11, 16, 20, 24, 29)
 	}
+	
+	private var brewStartTime = brewingStand.world.totalWorldTime
 	
 	init{
 		inventorySlots = ContainerBrewingStandCustom(inventory, brewingStand)
@@ -32,7 +33,8 @@ class GuiBrewingStandCustom(inventory: InventoryPlayer, private val brewingStand
 		MC.textureManager.bindTexture(TEX_BACKGROUND)
 		drawTexturedModalRect(x, y, 0, 0, xSize, ySize)
 		
-		val brewTime = brewingStand.getField(0)
+		val worldTime = brewingStand.world.totalWorldTime
+		val brewTime = brewingStand.brewTime
 		
 		if (brewTime > 0){
 			val brewProgress = (28F * (1F - (brewTime / 400F))).toInt()
@@ -41,11 +43,14 @@ class GuiBrewingStandCustom(inventory: InventoryPlayer, private val brewingStand
 				drawTexturedModalRect(x + 97, y + 16, 176, 0, 9, brewProgress)
 			}
 			
-			val bubbleLength = BUBBLE_LENGTHS[brewTime / 2 % 7]
+			val bubbleLength = BUBBLE_LENGTHS[((worldTime - brewStartTime).toInt() / 2) % 7]
 			
 			if (bubbleLength > 0){
 				drawTexturedModalRect(x + 63, y + 43 - bubbleLength, 185, 29 - bubbleLength, 12, bubbleLength)
 			}
+		}
+		else{
+			brewStartTime = worldTime
 		}
 		
 		if (brewingStand.getStack(TileEntityBrewingStandCustom.SLOT_MODIFIER).isNotEmpty){

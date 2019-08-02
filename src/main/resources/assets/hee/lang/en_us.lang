@@ -60,6 +60,7 @@ tile.hee.jar_o_dust.tooltip.entry=%sx %s
 tile.hee.dark_chest.name=Dark Chest
 tile.hee.loot_chest.name=Loot Chest
 tile.hee.loot_chest.tooltip=§5§o(Editable in creative mode)
+tile.hee.enhanced_brewing_stand.name=Enhanced Brewing Stand
 
 tile.hee.end_powder_ore.name=End Powder Ore
 tile.hee.endium_ore.name=Endium Ore
@@ -215,13 +216,11 @@ effect.hee.purity=Purity
 
 gui.hee.amulet_of_recovery.title=Amulet of Recovery
 gui.hee.amulet_of_recovery.move_all=Move All
-
 gui.hee.loot_chest.title=Loot Chest
 gui.hee.loot_chest.title.creative=Loot Chest (Editing)
-
 gui.hee.trinket_pouch.title=Trinket Pouch
-
 gui.hee.portal_token_storage.title=Portal Tokens
+gui.hee.enhanced_brewing_stand.title=Enhanced Brewing Stand
 
 hee.territory.fallback.name=Unknown
 hee.territory.the_hub.name=The Hub

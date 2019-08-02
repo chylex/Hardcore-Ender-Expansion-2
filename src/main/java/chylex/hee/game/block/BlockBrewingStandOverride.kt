@@ -15,7 +15,7 @@ import net.minecraft.util.EnumHand
 import net.minecraft.util.math.BlockPos
 import net.minecraft.world.World
 
-class BlockBrewingStandOverride(builder: BlockBuilder) : BlockBrewingStand(){
+open class BlockBrewingStandOverride(builder: BlockBuilder) : BlockBrewingStand(){
 	init{
 		setupBlockProperties(builder, replaceMaterialAndColor = true)
 		translationKey = Blocks.BREWING_STAND.translationKeyOriginal

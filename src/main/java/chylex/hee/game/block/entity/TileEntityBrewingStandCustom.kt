@@ -1,6 +1,8 @@
 package chylex.hee.game.block.entity
 import chylex.hee.game.container.ContainerBrewingStandCustom
 import chylex.hee.game.mechanics.potion.brewing.PotionItems
+import chylex.hee.init.ModBlocks
+import chylex.hee.init.ModItems
 import chylex.hee.system.util.FLAG_SYNC_CLIENT
 import chylex.hee.system.util.getStack
 import chylex.hee.system.util.getState
@@ -35,6 +37,9 @@ class TileEntityBrewingStandCustom : TileEntityBrewingStand(){
 		private val POTION_SLOTS = intArrayOf(0, 1, 2)
 	}
 	
+	val isEnhanced
+		get() = getBlockType() === ModBlocks.ENHANCED_BREWING_STAND
+	
 	var brewTime
 		get() = getField(0)
 		set(value){ setField(0, value) }
@@ -54,6 +59,9 @@ class TileEntityBrewingStandCustom : TileEntityBrewingStand(){
 			else if (--brewTime == 0){
 				doBrew()
 				markDirty()
+			}
+			else if (isEnhanced && brewTime > 2){
+				--brewTime // double brewing speed
 			}
 		}
 		else if (canBrew){
@@ -85,8 +93,14 @@ class TileEntityBrewingStandCustom : TileEntityBrewingStand(){
 		}
 		
 		val reagent = getStack(SLOT_REAGENT)
+		val endPowder = reagent.item === ModItems.END_POWDER
 		
-		if (POTION_SLOTS.any { slot -> brewingItemStacks[slot].let { it.isNotEmpty && !BrewingRecipeRegistry.hasOutput(it, reagent) } }){
+		if (endPowder){
+			if (!isEnhanced){
+				return false
+			}
+		}
+		else if (POTION_SLOTS.any { slot -> brewingItemStacks[slot].let { it.isNotEmpty && !BrewingRecipeRegistry.hasOutput(it, reagent) } }){
 			return false
 		}
 		
@@ -105,6 +119,9 @@ class TileEntityBrewingStandCustom : TileEntityBrewingStand(){
 				return false
 			}
 		}
+		else if (endPowder){
+			return false
+		}
 		
 		return true
 	}
@@ -114,7 +131,12 @@ class TileEntityBrewingStandCustom : TileEntityBrewingStand(){
 			return
 		}
 		
-		BrewingRecipeRegistry.brewPotions(brewingItemStacks, getStack(SLOT_REAGENT), POTION_SLOTS)
+		val reagent = getStack(SLOT_REAGENT)
+		
+		if (reagent.item !== ModItems.END_POWDER){
+			BrewingRecipeRegistry.brewPotions(brewingItemStacks, reagent, POTION_SLOTS)
+		}
+		
 		useIngredient(SLOT_REAGENT)
 		
 		val modifier = PotionItems.findModifier(getStack(SLOT_MODIFIER))
@@ -171,6 +193,13 @@ class TileEntityBrewingStandCustom : TileEntityBrewingStand(){
 	
 	override fun createContainer(inventory: InventoryPlayer, player: EntityPlayer): Container{
 		return ContainerBrewingStandCustom(inventory, this)
+	}
+	
+	override fun getName(): String{
+		return if (isEnhanced && !hasCustomName())
+			"gui.hee.enhanced_brewing_stand.title"
+		else
+			super.getName()
 	}
 	
 	// Serialization

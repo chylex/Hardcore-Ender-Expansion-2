@@ -22,6 +22,7 @@ import chylex.hee.game.block.BlockEndermanHead
 import chylex.hee.game.block.BlockEndersol
 import chylex.hee.game.block.BlockEndium
 import chylex.hee.game.block.BlockEnergyCluster
+import chylex.hee.game.block.BlockEnhancedBrewingStand
 import chylex.hee.game.block.BlockEternalFire
 import chylex.hee.game.block.BlockFallingObsidian
 import chylex.hee.game.block.BlockGloomrock
@@ -211,10 +212,11 @@ object ModBlocks{
 	
 	// Blocks: Interactive (Uncategorized)
 	
-	@JvmField val INFUSED_TNT = BlockInfusedTNT().apply { setup("infused_tnt", translationKey = "tnt", inCreativeTab = false) }
-	@JvmField val JAR_O_DUST  = BlockJarODust(buildJarODust).apply { setup("jar_o_dust") }
-	@JvmField val DARK_CHEST  = BlockDarkChest(buildGloomrock).apply { setup("dark_chest") } // UPDATE: update recipe json to include tag to allow either slab variation
-	@JvmField val LOOT_CHEST  = BlockLootChest(buildLootChest).apply { setup("loot_chest") }
+	@JvmField val INFUSED_TNT            = BlockInfusedTNT().apply { setup("infused_tnt", translationKey = "tnt", inCreativeTab = false) }
+	@JvmField val JAR_O_DUST             = BlockJarODust(buildJarODust).apply { setup("jar_o_dust") }
+	@JvmField val DARK_CHEST             = BlockDarkChest(buildGloomrock).apply { setup("dark_chest") } // UPDATE: update recipe json to include tag to allow either slab variation
+	@JvmField val LOOT_CHEST             = BlockLootChest(buildLootChest).apply { setup("loot_chest") }
+	@JvmField val ENHANCED_BREWING_STAND = BlockEnhancedBrewingStand(buildBrewingStand).apply { setup("enhanced_brewing_stand") }
 	
 	// Blocks: Ores
 	
@@ -349,6 +351,7 @@ object ModBlocks{
 			register(JAR_O_DUST with basicItemBlock)
 			register(DARK_CHEST with basicItemBlock)
 			register(LOOT_CHEST with basicItemBlock)
+			register(ENHANCED_BREWING_STAND with basicItemBlock)
 			
 			register(END_POWDER_ORE with basicItemBlock)
 			register(ENDIUM_ORE with basicItemBlock)
