@@ -1,5 +1,6 @@
 package chylex.hee.game.entity.living
 import chylex.hee.game.entity.IImmuneToCorruptedEnergy
+import chylex.hee.game.entity.IMobBypassPeacefulDespawn
 import chylex.hee.game.mechanics.instability.Instability
 import chylex.hee.init.ModBlocks
 import chylex.hee.init.ModLoot
@@ -15,10 +16,8 @@ import net.minecraft.world.World
 import net.minecraftforge.fml.relauncher.Side
 import net.minecraftforge.fml.relauncher.SideOnly
 
-class EntityMobEndermiteInstability(world: World) : EntityMobEndermite(world), IImmuneToCorruptedEnergy{
+class EntityMobEndermiteInstability(world: World) : EntityMobEndermite(world), IImmuneToCorruptedEnergy, IMobBypassPeacefulDespawn{
 	private var spawnCorruptedEnergy = false
-	
-	// TODO allow them to remain on peaceful difficulty
 	
 	override fun onLivingUpdate(){
 		super.onLivingUpdate()
