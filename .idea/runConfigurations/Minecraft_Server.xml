@@ -2,7 +2,7 @@
   <configuration default="false" name="Minecraft Server" type="Application" factoryName="Application" singleton="true">
     <option name="MAIN_CLASS_NAME" value="GradleStartServer" />
     <module name="Hardcore-Ender-Expansion-2.main" />
-    <option name="VM_PARAMETERS" value="-Dhee.debug -XX:HotswapDeoptClassPath='chylex.,net.,com.sun.proxy.$Proxy,sun.reflect.Generated'" />
+    <option name="VM_PARAMETERS" value="-Dhee.debug -Dfml.coreMods.load=chylex.hee.system.core.CoremodPlugin -XX:HotswapDeoptClassPath='chylex.,net.,com.sun.proxy.$Proxy,sun.reflect.Generated'" />
     <option name="WORKING_DIRECTORY" value="./run" />
     <extension enabled="false" name="coverage" runner="idea" sample_coverage="true" />
     <RunnerSettings RunnerId="Run" />
