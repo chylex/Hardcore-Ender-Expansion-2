@@ -12,7 +12,6 @@ import chylex.hee.game.mechanics.energy.IClusterHealth.HealthStatus.WEAKENED
 import chylex.hee.system.Resource
 import chylex.hee.system.util.color.IColor
 import chylex.hee.system.util.color.RGB
-import net.minecraft.client.particle.Particle
 import net.minecraft.client.renderer.BufferBuilder
 import net.minecraft.client.renderer.GlStateManager.DestFactor.ONE
 import net.minecraft.client.renderer.GlStateManager.SourceFactor.SRC_ALPHA
@@ -98,10 +97,10 @@ abstract class ParticleBaseEnergy(world: World, posX: Double, posY: Double, posZ
 			lastInterpolationFixTime = currentTime
 			
 			// ParticleManager.renderLitParticles uses interpolation values from previous tick // UPDATE: did it get fixed?
-			Particle.interpPosX = entity.lastTickPosX + (entity.posX - entity.lastTickPosX) * partialTicks
-			Particle.interpPosY = entity.lastTickPosY + (entity.posY - entity.lastTickPosY) * partialTicks
-			Particle.interpPosZ = entity.lastTickPosZ + (entity.posZ - entity.lastTickPosZ) * partialTicks
-			Particle.cameraViewDir = entity.getLook(partialTicks)
+			interpPosX = entity.lastTickPosX + (entity.posX - entity.lastTickPosX) * partialTicks
+			interpPosY = entity.lastTickPosY + (entity.posY - entity.lastTickPosY) * partialTicks
+			interpPosZ = entity.lastTickPosZ + (entity.posZ - entity.lastTickPosZ) * partialTicks
+			cameraViewDir = entity.getLook(partialTicks)
 		}
 		
 		GL.enableBlend()

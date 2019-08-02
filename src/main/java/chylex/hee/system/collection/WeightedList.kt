@@ -7,7 +7,7 @@ class WeightedList<T>(private val items: List<Pair<Int, T>>){
 		if (items.isEmpty())
 			throw IllegalArgumentException("weighted list must not be empty")
 		else
-			items.fold(0L){ total, item -> if (item.first > 0) total + item.first else throw IllegalArgumentException("weight must be > 0") }
+			items.fold(0L){ total, (weight, _) -> if (weight > 0) total + weight else throw IllegalArgumentException("weight must be > 0") }
 	
 	val values: List<T>
 		get() = items.map { it.second }

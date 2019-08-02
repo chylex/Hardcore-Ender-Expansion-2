@@ -65,7 +65,7 @@ class ItemElytraOverride : ItemElytra(){
 					var newCounter = getFloat(COUNTER_TAG) + calculateCounterIncrement(entity, getCompoundTag(LAST_POS_TAG))
 					val damageAfter = 1F + (0.33F * EnchantmentHelper.getEnchantmentLevel(Enchantments.UNBREAKING, stack))
 					
-					while(newCounter >= damageAfter && ItemElytra.isUsable(stack)){
+					while(newCounter >= damageAfter && isUsable(stack)){
 						newCounter -= damageAfter
 						
 						val newDamage = stack.itemDamage + 1

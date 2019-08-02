@@ -19,16 +19,16 @@ object RenderTileDarkChest : TileEntityChestRenderer(){
 	}
 	
 	override fun render(tile: TileEntityChest, x: Double, y: Double, z: Double, partialTicks: Float, destroyStage: Int, alpha: Float){
-		val prevTexSingle = TileEntityChestRenderer.TEXTURE_NORMAL
-		val prevTexDouble = TileEntityChestRenderer.TEXTURE_NORMAL_DOUBLE
+		val prevTexSingle = TEXTURE_NORMAL
+		val prevTexDouble = TEXTURE_NORMAL_DOUBLE
 		
-		TileEntityChestRenderer.TEXTURE_NORMAL = TEX_SINGLE
-		TileEntityChestRenderer.TEXTURE_NORMAL_DOUBLE = TEX_DOUBLE
+		TEXTURE_NORMAL = TEX_SINGLE
+		TEXTURE_NORMAL_DOUBLE = TEX_DOUBLE
 		
 		super.render(tile, x, y, z, partialTicks, destroyStage, alpha)
 		
-		TileEntityChestRenderer.TEXTURE_NORMAL = prevTexSingle
-		TileEntityChestRenderer.TEXTURE_NORMAL_DOUBLE = prevTexDouble
+		TEXTURE_NORMAL = prevTexSingle
+		TEXTURE_NORMAL_DOUBLE = prevTexDouble
 	}
 	
 	object AsItem : TileEntityItemStackRenderer(){

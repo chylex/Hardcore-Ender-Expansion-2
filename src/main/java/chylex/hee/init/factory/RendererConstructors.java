@@ -32,4 +32,6 @@ public final class RendererConstructors{
 	public static <T extends Entity, R extends Render<? super T>> IRenderFactory get(Class<R> cls){
 		return (IRenderFactory<T>)all.get(cls);
 	}
+	
+	private RendererConstructors(){}
 }

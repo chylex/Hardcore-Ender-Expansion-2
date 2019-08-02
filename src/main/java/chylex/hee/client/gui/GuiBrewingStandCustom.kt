@@ -54,7 +54,7 @@ class GuiBrewingStandCustom(inventory: InventoryPlayer, private val brewingStand
 		}
 		
 		if (brewingStand.getStack(TileEntityBrewingStandCustom.SLOT_MODIFIER).isNotEmpty){
-			drawTexturedModalRect(x + 62, y + 45, 197, 0, 14, 2);
+			drawTexturedModalRect(x + 62, y + 45, 197, 0, 14, 2)
 		}
 	}
 }

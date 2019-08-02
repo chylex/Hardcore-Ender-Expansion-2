@@ -9,7 +9,6 @@ import net.minecraft.util.EnumFacing
 import net.minecraft.util.EnumFacing.DOWN
 import net.minecraft.util.EnumFacing.UP
 import net.minecraftforge.common.capabilities.Capability
-import net.minecraftforge.items.CapabilityItemHandler
 import net.minecraftforge.items.CapabilityItemHandler.ITEM_HANDLER_CAPABILITY
 
 class TileEntityJarODust : TileEntityBase(){
@@ -25,7 +24,7 @@ class TileEntityJarODust : TileEntityBase(){
 	private val inventoryDispenser = DustLayerInventory(layers, false)
 	
 	override fun hasCapability(capability: Capability<*>, facing: EnumFacing?): Boolean{
-		return (capability === CapabilityItemHandler.ITEM_HANDLER_CAPABILITY && (facing == UP || facing == DOWN)) || super.hasCapability(capability, facing)
+		return (capability === ITEM_HANDLER_CAPABILITY && (facing == UP || facing == DOWN)) || super.hasCapability(capability, facing)
 	}
 	
 	override fun <T : Any?> getCapability(capability: Capability<T>, facing: EnumFacing?): T?{

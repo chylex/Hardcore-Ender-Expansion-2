@@ -144,7 +144,7 @@ class BlockTablePedestal(builder: BlockBuilder) : BlockSimpleShaped(builder, COM
 				tile.dropAllItems()
 			}
 		}
-		else if (!BlockTablePedestal.isItemAreaBlocked(world, pos)){
+		else if (!isItemAreaBlocked(world, pos)){
 			tile.addToInput(heldItem.copyIf { player.isCreative })
 		}
 		

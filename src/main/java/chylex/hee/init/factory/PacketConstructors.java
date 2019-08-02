@@ -16,8 +16,9 @@ import java.util.Arrays;
 import java.util.function.Supplier;
 
 public final class PacketConstructors{
+	@Nonnull
 	@SuppressWarnings({"UnusedReturnValue", "unchecked"})
-	public static @Nonnull Iterable<Pair<Class<? extends IPacket>, Supplier<IPacket>>> getAll(){
+	public static Iterable<Pair<Class<? extends IPacket>, Supplier<IPacket>>> getAll(){
 		return Arrays.asList(
 			packet(PacketClientFX.class, PacketClientFX::new),
 			packet(PacketClientLaunchInstantly.class, PacketClientLaunchInstantly::new),

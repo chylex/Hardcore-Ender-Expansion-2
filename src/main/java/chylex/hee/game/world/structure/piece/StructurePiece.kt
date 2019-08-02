@@ -83,6 +83,7 @@ abstract class StructurePiece<T> : IStructurePiece, IStructureGenerator{
 	
 	// Mutable instance
 	
+	@Suppress("RemoveRedundantQualifierName")
 	open inner class MutableInstance(context: T?, transform: Transform) : Instance(context, transform){
 		constructor(transform: Transform) : this(null, transform)
 		

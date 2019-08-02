@@ -8,7 +8,6 @@ import net.minecraft.client.resources.I18n
 import net.minecraft.client.util.ITooltipFlag
 import net.minecraft.creativetab.CreativeTabs
 import net.minecraft.item.EnumRarity
-import net.minecraft.item.Item
 import net.minecraft.item.ItemStack
 import net.minecraft.util.NonNullList
 import net.minecraft.world.World
@@ -53,7 +52,7 @@ class ItemBindingEssence : ItemAbstractInfusable(){
 			.groupingBy { it }
 			.eachCount()
 			.entries
-			.sortedWith(compareBy({ -it.value }, { Item.getIdFromItem(it.key) }))
+			.sortedWith(compareBy({ -it.value }, { getIdFromItem(it.key) }))
 		
 		lines.add("")
 		lines.add(I18n.format("hee.infusions.applicable.title"))
