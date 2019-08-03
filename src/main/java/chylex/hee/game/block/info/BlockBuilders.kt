@@ -160,6 +160,12 @@ object BlockBuilders{
 		lightLevel = 2
 	}
 	
+	// Decorative (Plants)
+	
+	val buildFlowerPot = BlockBuilder(Material.CIRCUITS, MapColor.AIR, SoundType.STONE).apply {
+		harvestHardness = 0F
+	}
+	
 	// Ores
 	
 	private val buildEndOre = BlockBuilder(Materials.SOLID_WITH_TOOL, MapColor.SAND, SoundType.STONE)

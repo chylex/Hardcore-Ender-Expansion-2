@@ -24,6 +24,7 @@ import chylex.hee.game.block.BlockEnergyCluster
 import chylex.hee.game.block.BlockEnhancedBrewingStand
 import chylex.hee.game.block.BlockEternalFire
 import chylex.hee.game.block.BlockFallingObsidian
+import chylex.hee.game.block.BlockFlowerPotCustom
 import chylex.hee.game.block.BlockGloomrock
 import chylex.hee.game.block.BlockGloomtorch
 import chylex.hee.game.block.BlockGraveDirt
@@ -75,6 +76,7 @@ import chylex.hee.game.block.info.BlockBuilders.buildEndiumOre
 import chylex.hee.game.block.info.BlockBuilders.buildEnergyCluster
 import chylex.hee.game.block.info.BlockBuilders.buildEternalFire
 import chylex.hee.game.block.info.BlockBuilders.buildEtherealLantern
+import chylex.hee.game.block.info.BlockBuilders.buildFlowerPot
 import chylex.hee.game.block.info.BlockBuilders.buildGloomrock
 import chylex.hee.game.block.info.BlockBuilders.buildGloomrockBricks
 import chylex.hee.game.block.info.BlockBuilders.buildGloomrockSmooth
@@ -98,6 +100,7 @@ import chylex.hee.game.block.info.BlockBuilders.buildVantablock
 import chylex.hee.game.block.info.BlockBuilders.buildWhitebark
 import chylex.hee.game.block.info.BlockBuilders.buildWhitebarkPlanks
 import chylex.hee.game.item.ItemAncientCobweb
+import chylex.hee.game.item.ItemBlockPlant
 import chylex.hee.game.item.ItemBlockSlabFuel
 import chylex.hee.game.item.ItemBlockWithMetadata
 import chylex.hee.game.item.ItemDragonEgg
@@ -275,6 +278,10 @@ object ModBlocks{
 	
 	private fun woodenSlabItemBlock(half: BlockSlabCustom.Half, full: BlockSlabCustom.Full): ItemBlock{
 		return ItemBlockSlabFuel(half, full, burnTicks = 150).apply { hasSubtypes = false }
+	}
+	
+	private fun plantItemBlock(potted: BlockFlowerPotCustom): (Block) -> ItemBlock{
+		return { block -> ItemBlockPlant(block, potted) }
 	}
 	
 	@JvmStatic
