@@ -6,10 +6,12 @@ import com.google.common.collect.Iterables
 import net.minecraft.block.Block
 import net.minecraft.block.material.Material
 import net.minecraft.block.state.BlockFaceShape
+import net.minecraft.block.state.BlockFaceShape.SOLID
 import net.minecraft.block.state.IBlockState
 import net.minecraft.entity.Entity
 import net.minecraft.tileentity.TileEntity
 import net.minecraft.util.EnumFacing
+import net.minecraft.util.EnumFacing.UP
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.BlockPos.MutableBlockPos
 import net.minecraft.util.math.ChunkPos
@@ -111,20 +113,25 @@ inline fun BlockPos.breakBlock(world: World, drops: Boolean): Boolean{
 
 // Block properties
 
-inline fun BlockPos.blocksMovement(world: IBlockAccess): Boolean{
-	return this.getState(world).material.blocksMovement()
+fun BlockPos.blocksMovement(world: IBlockAccess): Boolean{
+	return this.getMaterial(world).blocksMovement()
 }
 
-inline fun BlockPos.isReplaceable(world: IBlockAccess): Boolean{
+fun BlockPos.isReplaceable(world: IBlockAccess): Boolean{
 	return this.getBlock(world).isReplaceable(world, this)
 }
 
-inline fun BlockPos.getHardness(world: World): Float{
+fun BlockPos.getHardness(world: World): Float{
 	return this.getState(world).getBlockHardness(world, this)
 }
 
-inline fun BlockPos.getFaceShape(world: World, side: EnumFacing): BlockFaceShape{
+fun BlockPos.getFaceShape(world: World, side: EnumFacing): BlockFaceShape{
 	return this.getState(world).getBlockFaceShape(world, this, side)
+}
+
+@Suppress("DEPRECATION")
+fun BlockPos.isTopSolid(world: World): Boolean{
+	return this.getState(world).let { it.isTopSolid || it.getBlockFaceShape(world, this, UP) == SOLID }
 }
 
 // Block predicates
