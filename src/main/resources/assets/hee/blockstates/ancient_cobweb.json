@@ -3,6 +3,7 @@
   "variants": {
     "normal": {
       "model": "cross",
+      "smooth_lighting": false,
       "textures": {
         "cross": "hee:block/ancient_cobweb"
       }

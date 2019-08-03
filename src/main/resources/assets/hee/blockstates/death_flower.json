@@ -1,7 +1,8 @@
 {
   "forge_marker": 1,
   "defaults": {
-    "model": "cross"
+    "model": "cross",
+    "smooth_lighting": false
   },
   "variants": {
     "level": {

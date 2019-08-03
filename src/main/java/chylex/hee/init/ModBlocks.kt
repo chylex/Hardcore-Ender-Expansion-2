@@ -450,6 +450,10 @@ object ModBlocks{
 		if (inCreativeTab){
 			this.creativeTabIn = ModCreativeTabs.main
 		}
+		
+		if (this.translucent || this.lightOpacity == 0){
+			this.useNeighborBrightness = true
+		}
 	}
 	
 	private fun Block.override(vanillaBlock: Block, newCreativeTab: CreativeTabs? = ModCreativeTabs.main){
