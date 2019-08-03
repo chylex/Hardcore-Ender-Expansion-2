@@ -12,9 +12,7 @@ import chylex.hee.system.util.nextInt
 import chylex.hee.system.util.nextItem
 import chylex.hee.system.util.removeItem
 import chylex.hee.system.util.withFacing
-import net.minecraft.block.BlockFlower.EnumFlowerType
 import net.minecraft.init.Blocks
-import net.minecraft.item.ItemStack
 import net.minecraft.tileentity.TileEntitySkull
 import net.minecraft.util.EnumFacing
 import net.minecraft.util.EnumFacing.EAST
@@ -71,10 +69,10 @@ class StrongholdRoom_Main_Workshop(file: String) : StrongholdAbstractPieceFromFi
 		// Tables
 		
 		val flowerTypes = arrayOf(
-			ItemStack(Blocks.RED_FLOWER, 1, EnumFlowerType.WHITE_TULIP.meta),
-			ItemStack(Blocks.RED_FLOWER, 1, EnumFlowerType.BLUE_ORCHID.meta),
-			ItemStack(Blocks.RED_FLOWER, 1, EnumFlowerType.ALLIUM.meta),
-			ItemStack(Blocks.RED_FLOWER, 1, EnumFlowerType.POPPY.meta)
+			FutureBlocks.WHITE_TULIP_STACK,
+			FutureBlocks.BLUE_ORCHID_STACK,
+			FutureBlocks.ALLIUM_STACK,
+			FutureBlocks.POPPY_STACK
 		)
 		
 		repeat(rand.nextInt(4, 7)){

@@ -12,6 +12,6 @@ import net.minecraft.world.World
 class FlowerPotStructureTrigger(private val flowerStack: ItemStack) : IStructureTrigger{
 	override fun realize(world: World, pos: BlockPos, transform: Transform){
 		pos.setBlock(world, Blocks.FLOWER_POT)
-		pos.getTile<TileEntityFlowerPot>(world)?.setItemStack(flowerStack) // UPDATE check if the stack needs to be copied
+		pos.getTile<TileEntityFlowerPot>(world)?.setItemStack(flowerStack)
 	}
 }

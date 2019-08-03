@@ -1,5 +1,6 @@
 package chylex.hee.game.block
 import chylex.hee.game.block.util.Property
+import chylex.hee.game.entity.living.EntityMobEnderman
 import chylex.hee.game.fx.IFxData
 import chylex.hee.game.fx.IFxHandler
 import chylex.hee.game.particle.ParticleDeathFlowerHeal
@@ -239,9 +240,9 @@ class BlockDeathFlowerDecaying : BlockEndPlant(){
 				}
 			}
 		}
-		else if (rand.nextInt(18) == 0){ // TODO use EntityMobEnderman once implemented?
+		else if (rand.nextInt(18) == 0){
 			val center = pos.center
-			val nearbyEndermen = world.selectExistingEntities.inRange<EntityEnderman>(center, 128.0).filter { it.attackTarget == null }.toMutableList()
+			val nearbyEndermen = world.selectExistingEntities.inRange<EntityMobEnderman>(center, 128.0).filter { it.attackTarget == null }.toMutableList()
 			
 			if (nearbyEndermen.any() && DimensionWitherData.get(world).onTeleportTriggered(world)){
 				repeat(min(rand.nextInt(2, 3), nearbyEndermen.size)){

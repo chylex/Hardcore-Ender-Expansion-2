@@ -17,7 +17,7 @@ import net.minecraft.world.World
 
 open class BlockBrewingStandOverride(builder: BlockBuilder) : BlockBrewingStand(){
 	init{
-		setupBlockProperties(builder, replaceMaterialAndColor = true)
+		setupBlockProperties(builder)
 		translationKey = Blocks.BREWING_STAND.translationKeyOriginal
 	}
 	

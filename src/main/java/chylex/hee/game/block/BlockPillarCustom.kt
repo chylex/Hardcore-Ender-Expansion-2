@@ -5,6 +5,6 @@ import net.minecraft.block.BlockRotatedPillar
 
 class BlockPillarCustom(builder: BlockBuilder) : BlockRotatedPillar(builder.material, builder.color){
 	init{
-		setupBlockProperties(builder, replaceMaterialAndColor = false)
+		setupBlockProperties(builder)
 	}
 }

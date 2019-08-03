@@ -23,6 +23,7 @@ import net.minecraft.util.math.BlockPos
 import net.minecraftforge.common.util.Constants.NBT
 import org.apache.commons.lang3.ArrayUtils.EMPTY_LONG_ARRAY
 import java.util.Locale
+import java.util.UUID
 import kotlin.contracts.contract
 
 fun NBTTagCompound.getOrCreateCompound(key: String): NBTTagCompound{
@@ -112,6 +113,20 @@ fun NBTTagCompound.getPos(key: String): BlockPos{
 		Pos(this.getLong(key))
 	else
 		BlockPos.ORIGIN
+}
+
+// UUID
+
+inline fun NBTTagCompound.hasUUID(key: String): Boolean{
+	return this.hasUniqueId(key)
+}
+
+inline fun NBTTagCompound.getUUID(key: String): UUID{
+	return this.getUniqueId(key)!! // UPDATE marked as Nullable, but can never actually return null
+}
+
+inline fun NBTTagCompound.setUUID(key: String, uuid: UUID){
+	this.setUniqueId(key, uuid)
 }
 
 // Enums

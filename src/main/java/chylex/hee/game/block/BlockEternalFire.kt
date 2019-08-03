@@ -47,7 +47,7 @@ class BlockEternalFire(builder: BlockBuilder) : BlockFire(){
 	}
 	
 	init{
-		setupBlockProperties(builder, replaceMaterialAndColor = false)
+		setupBlockProperties(builder)
 		
 		MinecraftForge.EVENT_BUS.register(this)
 	}

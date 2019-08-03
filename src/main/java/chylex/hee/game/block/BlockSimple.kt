@@ -5,6 +5,6 @@ import net.minecraft.block.Block
 
 open class BlockSimple(builder: BlockBuilder) : Block(builder.material, builder.color){
 	init{
-		setupBlockProperties(builder, replaceMaterialAndColor = false)
+		setupBlockProperties(builder)
 	}
 }

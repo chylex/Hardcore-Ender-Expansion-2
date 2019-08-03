@@ -67,14 +67,11 @@ class BlockBuilder(val material: Material, var color: MapColor, var sound: Sound
 			}
 		}
 		
-		fun Block.setupBlockProperties(builder: BlockBuilder, replaceMaterialAndColor: Boolean){ // UPDATE: temporary AT workarounds before 1.13 block builder
-			if (replaceMaterialAndColor){
-				this.material = builder.material
-				this.translucent = !this.material.blocksLight()
-				
-				this.blockMapColor = builder.color
-			}
+		fun Block.setupBlockProperties(builder: BlockBuilder){
+			this.material = builder.material
+			this.translucent = !this.material.blocksLight()
 			
+			this.blockMapColor = builder.color
 			this.blockSoundType = builder.sound
 			
 			setHarvestTool(builder.harvestTool)

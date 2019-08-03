@@ -33,7 +33,7 @@ abstract class BlockSlabCustom(builder: BlockBuilder) : BlockSlab(builder.materi
 	}
 	
 	init{
-		setupBlockProperties(builder, replaceMaterialAndColor = false)
+		setupBlockProperties(builder)
 		useNeighborBrightness = true
 		
 		if (!isDouble){

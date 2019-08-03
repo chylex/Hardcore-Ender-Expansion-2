@@ -1,4 +1,5 @@
 package chylex.hee.game.world.feature.stronghold.piece
+import chylex.hee.game.block.util.FutureBlocks
 import chylex.hee.game.world.feature.stronghold.StrongholdPieceType
 import chylex.hee.game.world.feature.stronghold.StrongholdPieces
 import chylex.hee.game.world.feature.stronghold.piece.StrongholdRoom_Chest_WoodenSupports.CornerContent.CHEST_AND_FLOWER_POT
@@ -17,8 +18,6 @@ import chylex.hee.system.util.nextInt
 import chylex.hee.system.util.nextItem
 import chylex.hee.system.util.removeItem
 import chylex.hee.system.util.withFacing
-import net.minecraft.block.BlockFlower.EnumFlowerType
-import net.minecraft.block.BlockTallGrass.EnumType
 import net.minecraft.init.Blocks
 import net.minecraft.item.ItemStack
 import net.minecraft.util.EnumFacing
@@ -129,12 +128,12 @@ class StrongholdRoom_Chest_WoodenSupports(file: String) : StrongholdAbstractPiec
 	
 	private companion object{
 		private val FLOWER_TYPES = arrayOf(
-			ItemStack(Blocks.RED_FLOWER, 1, EnumFlowerType.BLUE_ORCHID.meta),
-			ItemStack(Blocks.RED_FLOWER, 1, EnumFlowerType.HOUSTONIA.meta), // UPDATE Azure Bluet
-			ItemStack(Blocks.RED_FLOWER, 1, EnumFlowerType.ALLIUM.meta),
-			ItemStack(Blocks.RED_FLOWER, 1, EnumFlowerType.POPPY.meta),
-			ItemStack(Blocks.YELLOW_FLOWER, 1, EnumFlowerType.DANDELION.meta),
-			ItemStack(Blocks.TALLGRASS, 1, EnumType.FERN.meta),
+			FutureBlocks.BLUE_ORCHID_STACK,
+			FutureBlocks.AZURE_BLUET_STACK,
+			FutureBlocks.ALLIUM_STACK,
+			FutureBlocks.POPPY_STACK,
+			FutureBlocks.DANDELION_STACK,
+			FutureBlocks.FERN_STACK,
 			ItemStack(Blocks.CACTUS)
 		)
 		

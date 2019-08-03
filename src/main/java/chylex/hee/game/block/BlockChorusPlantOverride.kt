@@ -20,7 +20,7 @@ class BlockChorusPlantOverride : BlockChorusPlant(){
 	init{
 		val source = Blocks.CHORUS_PLANT
 		
-		setHardness(source.getBlockHardness(null, null, null)) // UPDATE
+		setHardness(source.blockHardness)
 		soundType = source.blockSoundType
 		translationKey = source.translationKeyOriginal
 	}

@@ -1,4 +1,7 @@
 package chylex.hee.game.entity.util
+import chylex.hee.system.util.getUUID
+import chylex.hee.system.util.hasUUID
+import chylex.hee.system.util.setUUID
 import net.minecraft.entity.Entity
 import net.minecraft.nbt.NBTTagCompound
 import net.minecraft.world.World
@@ -35,12 +38,12 @@ class SerializedEntity private constructor(private var uuid: UUID?, private var 
 	}
 	
 	fun writeToNBT(tag: NBTTagCompound, key: String){
-		uuid?.let { tag.setUniqueId(key, it) }
+		uuid?.let { tag.setUUID(key, it) }
 	}
 	
 	fun readFromNBT(tag: NBTTagCompound, key: String){
-		if (tag.hasUniqueId(key)){
-			set(tag.getUniqueId(key)!!) // UPDATE: marked as Nullable, but can never actually return null... verify this again
+		if (tag.hasUUID(key)){
+			set(tag.getUUID(key))
 		}
 		else{
 			reset()

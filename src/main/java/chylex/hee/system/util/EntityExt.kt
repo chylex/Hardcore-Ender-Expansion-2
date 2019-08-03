@@ -166,7 +166,7 @@ inline fun <reified T : EntityLivingBase> AITargetSwarmSwitch(entity: EntityCrea
 // Selectors
 
 private val predicateAliveAndNotSpectating = Predicates.and(EntitySelectors.IS_ALIVE, EntitySelectors.NOT_SPECTATING)
-private val predicateAliveAndTargetable = Predicates.and(EntitySelectors.IS_ALIVE, EntitySelectors.CAN_AI_TARGET) // UPDATE: Make sure CAN_AI_TARGET still only checks creative/spectator mode
+private val predicateAliveAndTargetable = Predicates.and(EntitySelectors.IS_ALIVE, EntitySelectors.CAN_AI_TARGET)
 private val predicateAlwaysTrue = Predicates.alwaysTrue<Entity>()
 
 /**

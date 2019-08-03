@@ -1,4 +1,5 @@
 package chylex.hee.game.world.feature.stronghold.piece
+import chylex.hee.game.block.util.FutureBlocks
 import chylex.hee.game.world.feature.stronghold.StrongholdPieceType
 import chylex.hee.game.world.feature.stronghold.StrongholdPieces
 import chylex.hee.game.world.structure.IStructureWorld
@@ -10,9 +11,7 @@ import chylex.hee.system.util.Pos
 import chylex.hee.system.util.nextInt
 import chylex.hee.system.util.nextItem
 import chylex.hee.system.util.withFacing
-import net.minecraft.block.BlockFlower.EnumFlowerType
 import net.minecraft.init.Blocks
-import net.minecraft.item.ItemStack
 
 class StrongholdRoom_Chest_DecoratedCorners(file: String) : StrongholdAbstractPieceFromFile(file, StrongholdPieceType.ROOM){
 	override fun generate(world: IStructureWorld, instance: Instance){
@@ -43,11 +42,11 @@ class StrongholdRoom_Chest_DecoratedCorners(file: String) : StrongholdAbstractPi
 		// Decorations
 		
 		val flowerTypes = arrayOf(
-			ItemStack(Blocks.RED_FLOWER, 1, EnumFlowerType.RED_TULIP.meta),
-			ItemStack(Blocks.RED_FLOWER, 1, EnumFlowerType.BLUE_ORCHID.meta),
-			ItemStack(Blocks.RED_FLOWER, 1, EnumFlowerType.OXEYE_DAISY.meta),
-			ItemStack(Blocks.RED_FLOWER, 1, EnumFlowerType.HOUSTONIA.meta), // UPDATE azure bluet
-			ItemStack(Blocks.YELLOW_FLOWER, 1, EnumFlowerType.DANDELION.meta)
+			FutureBlocks.RED_TULIP_STACK,
+			FutureBlocks.BLUE_ORCHID_STACK,
+			FutureBlocks.OXEYE_DAISY_STACK,
+			FutureBlocks.AZURE_BLUET_STACK,
+			FutureBlocks.DANDELION_STACK
 		)
 		
 		repeat(rand.nextInt(3, 5)){

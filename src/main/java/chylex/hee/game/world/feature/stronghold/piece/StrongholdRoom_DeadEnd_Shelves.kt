@@ -12,9 +12,7 @@ import chylex.hee.game.world.structure.trigger.TileEntityStructureTrigger
 import chylex.hee.system.util.Pos
 import chylex.hee.system.util.nextItem
 import chylex.hee.system.util.withFacing
-import net.minecraft.block.BlockFlower.EnumFlowerType
 import net.minecraft.init.Blocks
-import net.minecraft.item.ItemStack
 import net.minecraft.tileentity.TileEntitySkull
 import net.minecraft.util.EnumFacing.EAST
 import net.minecraft.util.EnumFacing.SOUTH
@@ -51,10 +49,10 @@ class StrongholdRoom_DeadEnd_Shelves(file: String) : StrongholdAbstractPieceFrom
 		// flower pots
 		
 		val flowerTypes = arrayOf(
-			ItemStack(Blocks.RED_FLOWER, 1, EnumFlowerType.ORANGE_TULIP.meta),
-			ItemStack(Blocks.RED_FLOWER, 1, EnumFlowerType.PINK_TULIP.meta),
-			ItemStack(Blocks.RED_FLOWER, 1, EnumFlowerType.POPPY.meta),
-			ItemStack(Blocks.YELLOW_FLOWER, 1, EnumFlowerType.DANDELION.meta)
+			FutureBlocks.ORANGE_TULIP_STACK,
+			FutureBlocks.PINK_TULIP_STACK,
+			FutureBlocks.POPPY_STACK,
+			FutureBlocks.DANDELION_STACK
 		)
 		
 		repeat(rand.nextInt(3)){

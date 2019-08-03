@@ -15,9 +15,7 @@ import chylex.hee.system.util.Facing4
 import chylex.hee.system.util.Pos
 import chylex.hee.system.util.nextItem
 import chylex.hee.system.util.withFacing
-import net.minecraft.block.BlockFlower.EnumFlowerType
 import net.minecraft.init.Blocks
-import net.minecraft.item.ItemStack
 import net.minecraft.util.EnumFacing.EAST
 import net.minecraft.util.EnumFacing.NORTH
 import net.minecraft.util.EnumFacing.SOUTH
@@ -87,8 +85,8 @@ class StrongholdRoom_Main_Library(file: String) : StrongholdAbstractPieceFromFil
 		}
 		
 		val flowerTypes = arrayOf(
-			ItemStack(Blocks.RED_FLOWER, 1, EnumFlowerType.WHITE_TULIP.meta),
-			ItemStack(Blocks.YELLOW_FLOWER, 1, EnumFlowerType.DANDELION.meta)
+			FutureBlocks.WHITE_TULIP_STACK,
+			FutureBlocks.DANDELION_STACK
 		)
 		
 		world.addTrigger(Pos(centerX + 8, 2, centerZ - 8), FlowerPotStructureTrigger(rand.nextItem(flowerTypes)))

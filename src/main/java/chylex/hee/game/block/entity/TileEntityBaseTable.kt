@@ -66,7 +66,7 @@ abstract class TileEntityBaseTable : TileEntityBase(), ITickable{
 	
 	override fun firstTick(){
 		val state = pos.getState(world)
-		val block = state.block as? BlockAbstractTable ?: return // TODO
+		val block = state.block as BlockAbstractTable
 		
 		maxInputPedestals = when(state[TIER] - block.minAllowedTier){
 			2 -> 7

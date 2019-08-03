@@ -16,7 +16,7 @@ class BlockDarkChest(builder: BlockBuilder) : BlockChest(TYPE), IOcelotCanSitOn{
 	}
 	
 	init{
-		setupBlockProperties(builder, replaceMaterialAndColor = true)
+		setupBlockProperties(builder)
 	}
 	
 	override fun createNewTileEntity(world: World, meta: Int): TileEntity{
