@@ -7,10 +7,10 @@ import chylex.hee.game.mechanics.dust.DustLayers.Side.TOP
 import chylex.hee.game.mechanics.dust.DustType
 import chylex.hee.system.util.NBTList.Companion.setList
 import chylex.hee.system.util.getListOfCompounds
-import chylex.hee.system.util.getState
 import chylex.hee.system.util.getTile
 import chylex.hee.system.util.heeTag
 import chylex.hee.system.util.heeTagOrNull
+import chylex.hee.system.util.isTopSolid
 import chylex.hee.system.util.setAir
 import chylex.hee.system.util.size
 import net.minecraft.block.Block
@@ -26,7 +26,6 @@ import net.minecraft.item.ItemStack
 import net.minecraft.tileentity.TileEntity
 import net.minecraft.util.BlockRenderLayer.TRANSLUCENT
 import net.minecraft.util.EnumFacing
-import net.minecraft.util.EnumFacing.UP
 import net.minecraft.util.EnumHand
 import net.minecraft.util.NonNullList
 import net.minecraft.util.math.AxisAlignedBB
@@ -64,11 +63,11 @@ class BlockJarODust(builder: BlockBuilder) : BlockSimpleShaped(builder, AABB), I
 	// Placement
 	
 	override fun canPlaceBlockAt(world: World, pos: BlockPos): Boolean{
-		return super.canPlaceBlockAt(world, pos) && pos.down().let { it.getState(world).isSideSolid(world, it, UP) }
+		return super.canPlaceBlockAt(world, pos) && pos.down().isTopSolid(world)
 	}
 	
 	override fun neighborChanged(state: IBlockState, world: World, pos: BlockPos, neighborBlock: Block, neighborPos: BlockPos){
-		if (!pos.down().let { it.getState(world).isSideSolid(world, it, UP) }){
+		if (!pos.down().isTopSolid(world)){
 			dropBlockAsItem(world, pos, state, 0)
 			pos.setAir(world)
 		}

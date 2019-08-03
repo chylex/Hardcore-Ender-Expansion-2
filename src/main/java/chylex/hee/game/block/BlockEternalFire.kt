@@ -11,6 +11,7 @@ import chylex.hee.game.particle.util.IShape.Point
 import chylex.hee.system.util.Facing6
 import chylex.hee.system.util.getBlock
 import chylex.hee.system.util.getState
+import chylex.hee.system.util.isTopSolid
 import chylex.hee.system.util.nextFloat
 import chylex.hee.system.util.nextInt
 import chylex.hee.system.util.nextItem
@@ -26,7 +27,6 @@ import net.minecraft.entity.Entity
 import net.minecraft.init.Blocks
 import net.minecraft.init.SoundEvents
 import net.minecraft.util.EnumFacing
-import net.minecraft.util.EnumFacing.UP
 import net.minecraft.util.EnumParticleTypes.SMOKE_LARGE
 import net.minecraft.util.SoundCategory
 import net.minecraft.util.math.BlockPos
@@ -140,7 +140,7 @@ class BlockEternalFire(builder: BlockBuilder) : BlockFire(){
 		}
 		
 		if (rand.nextInt(3) != 0){
-			if (pos.down().let { it.getState(world).isSideSolid(world, it, UP) }){
+			if (pos.down().isTopSolid(world)){
 				PARTICLE_SMOKE.spawn(Point(Vec3d(
 					pos.x + rand.nextFloat(0.0, 1.0),
 					pos.y + rand.nextFloat(0.5, 1.0),
