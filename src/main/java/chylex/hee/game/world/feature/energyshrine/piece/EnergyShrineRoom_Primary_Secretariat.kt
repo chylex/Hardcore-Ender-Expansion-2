@@ -5,6 +5,7 @@ import chylex.hee.game.world.structure.IBlockPicker.Single
 import chylex.hee.game.world.structure.IBlockPicker.Single.Air
 import chylex.hee.game.world.structure.IStructureWorld
 import chylex.hee.game.world.structure.piece.IStructurePieceConnection
+import chylex.hee.init.ModBlocks
 import chylex.hee.system.collection.WeightedList.Companion.weightedListOf
 import chylex.hee.system.util.Pos
 import chylex.hee.system.util.withFacing
@@ -29,7 +30,7 @@ class EnergyShrineRoom_Primary_Secretariat(file: String) : EnergyShrineRoom_Gene
 			25 to Single(Blocks.STONE_BUTTON.withFacing(UP)),
 			20 to Single(Blocks.LIGHT_WEIGHTED_PRESSURE_PLATE),
 			20 to Single(Blocks.HEAVY_WEIGHTED_PRESSURE_PLATE),
-			15 to Single(Blocks.FLOWER_POT) // TODO add death flower
+			15 to Single(ModBlocks.POTTED_DEATH_FLOWER_WITHERED)
 		)
 		
 		for(x in 2..6){

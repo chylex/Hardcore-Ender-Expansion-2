@@ -33,7 +33,7 @@ class EnergyShrineRoom_Primary_DisplayCase(file: String) : EnergyShrineRoom_Gene
 			25 to Single(ModBlocks.GLOOMTORCH),
 			 5 to Single(ModBlocks.GLOOMTORCH),
 			
-			15 to Single(Blocks.FLOWER_POT), // TODO add death flower
+			15 to Single(ModBlocks.POTTED_DEATH_FLOWER_WITHERED),
 			15 to Single(Blocks.FLOWER_POT),
 			
 			25 to Weighted(

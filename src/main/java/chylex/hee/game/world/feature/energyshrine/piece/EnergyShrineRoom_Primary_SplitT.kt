@@ -29,7 +29,7 @@ class EnergyShrineRoom_Primary_SplitT(file: String) : EnergyShrineRoom_Generic(f
 		val decorations = mutableWeightedListOf(
 			75 to Single(ModBlocks.DARK_CHEST.withFacing(WEST)),
 			
-			20 to Single(Blocks.FLOWER_POT), // TODO add death flower
+			20 to Single(ModBlocks.POTTED_DEATH_FLOWER_WITHERED),
 			15 to Single(Blocks.FLOWER_POT),
 			15 to Single(Blocks.FLOWER_POT),
 			
