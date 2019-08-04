@@ -242,12 +242,30 @@ inline fun BlockPos.distanceTo(entity: Entity) = sqrt(distanceSqTo(entity))
 
 // Distance utilities
 
-inline fun <reified T : TileEntity> BlockPos.closestTickingTile(world: World, maxDistance: Double = Double.MAX_VALUE): T?{
+inline fun <reified T : TileEntity> BlockPos.closestTickingTile(world: World, maxDistance: Double): T?{
 	var closestTile: T? = null
-	var closestDistSq = if (maxDistance == Double.MAX_VALUE) maxDistance else square(maxDistance)
+	var closestDistSq = square(maxDistance)
 	
 	for(tile in world.tickableTileEntities){
 		if (tile is T){
+			val distSq = this.distanceSq(tile.pos)
+			
+			if (distSq < closestDistSq){
+				closestTile = tile
+				closestDistSq = distSq
+			}
+		}
+	}
+	
+	return closestTile
+}
+
+inline fun <reified T : TileEntity> BlockPos.closestTickingTile(world: World, maxDistance: Double, predicate: (T) -> Boolean): T?{
+	var closestTile: T? = null
+	var closestDistSq = square(maxDistance)
+	
+	for(tile in world.tickableTileEntities){
+		if (tile is T && predicate(tile)){
 			val distSq = this.distanceSq(tile.pos)
 			
 			if (distSq < closestDistSq){
