@@ -198,6 +198,7 @@ itemGroup.hee=Hardcore Ender Expansion
 
 hee.energy.overlay.health=%s ENERGY CLUSTER
 hee.energy.overlay.level=HOLDING %s OUT OF %s ENERGY
+hee.energy.overlay.ignored=IGNORED
 
 hee.energy.health.powered=POWERED
 hee.energy.health.healthy=HEALTHY

@@ -8,6 +8,7 @@ import chylex.hee.game.mechanics.energy.IEnergyQuantity
 import chylex.hee.game.mechanics.energy.IEnergyQuantity.Companion.MAX_POSSIBLE_VALUE
 import chylex.hee.game.mechanics.energy.IEnergyQuantity.Companion.displayString
 import chylex.hee.init.ModBlocks
+import chylex.hee.init.ModItems
 import chylex.hee.system.Resource
 import chylex.hee.system.util.color.RGB
 import chylex.hee.system.util.getBlock
@@ -90,12 +91,13 @@ object OverlayRenderer{
 	@JvmStatic
 	@SubscribeEvent
 	fun onRenderText(@Suppress("UNUSED_PARAMETER") e: RenderGameOverlayEvent.Text){
-		fun drawTextOffScreenCenter(x: Int, y: Int, text: String, color: Int){
+		fun drawTextOffScreenCenter(x: Int, y: Int, line: Int, text: String, color: Int){
 			val scaledResolution = MC.resolution
-			val centerX = x + (scaledResolution.scaledWidth / 2)
-			val centerY = y + (scaledResolution.scaledHeight / 2)
 			
 			with(MC.fontRenderer){
+				val centerX = x + (scaledResolution.scaledWidth / 2)
+				val centerY = y + (scaledResolution.scaledHeight / 2) + (line * (LINE_SPACING + FONT_HEIGHT))
+				
 				val textWidth = getStringWidth(text)
 				val textHeight = FONT_HEIGHT
 				
@@ -117,12 +119,19 @@ object OverlayRenderer{
 					quantity.displayString
 			}
 			
+			val isIgnored = MC.player?.let { player -> ModItems.ENERGY_ORACLE.isClusterIgnored(player, it.pos) } == true
+			val firstLine = if (isIgnored) -1 else 0
+			
 			val health = it.currentHealth
-			drawTextOffScreenCenter(0, -40, I18n.format("hee.energy.overlay.health", health), health.textColor)
+			drawTextOffScreenCenter(0, -40, firstLine, I18n.format("hee.energy.overlay.health", health), health.textColor)
 			
 			val level = getQuantityString(it.energyLevel)
 			val capacity = getQuantityString(it.energyRegenCapacity)
-			drawTextOffScreenCenter(0, -40 + LINE_SPACING + MC.fontRenderer.FONT_HEIGHT, I18n.format("hee.energy.overlay.level", level, capacity), RGB(220u).toInt())
+			drawTextOffScreenCenter(0, -40, firstLine + 1, I18n.format("hee.energy.overlay.level", level, capacity), RGB(220u).toInt())
+			
+			if (isIgnored){
+				drawTextOffScreenCenter(0, -40, firstLine + 2, I18n.format("hee.energy.overlay.ignored"), RGB(160u).toInt())
+			}
 		}
 	}
 	
