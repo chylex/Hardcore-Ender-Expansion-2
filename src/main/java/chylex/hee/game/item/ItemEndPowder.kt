@@ -1,6 +1,6 @@
 package chylex.hee.game.item
+import chylex.hee.game.block.IBlockDeathFlowerDecaying
 import chylex.hee.game.world.util.BlockEditor
-import chylex.hee.init.ModBlocks
 import chylex.hee.system.util.getBlock
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.item.Item
@@ -21,9 +21,11 @@ class ItemEndPowder : Item(){
 			return FAIL
 		}
 		
-		if (pos.getBlock(world) === ModBlocks.DEATH_FLOWER_DECAYING){
+		val block = pos.getBlock(world)
+		
+		if (block is IBlockDeathFlowerDecaying){
 			if (!world.isRemote){
-				ModBlocks.DEATH_FLOWER_DECAYING.healDeathFlower(world, pos)
+				block.healDeathFlower(world, pos)
 			}
 			
 			heldItem.shrink(1)

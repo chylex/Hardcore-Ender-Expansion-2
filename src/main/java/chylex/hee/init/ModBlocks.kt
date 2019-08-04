@@ -25,6 +25,7 @@ import chylex.hee.game.block.BlockEnhancedBrewingStand
 import chylex.hee.game.block.BlockEternalFire
 import chylex.hee.game.block.BlockFallingObsidian
 import chylex.hee.game.block.BlockFlowerPotCustom
+import chylex.hee.game.block.BlockFlowerPotDeathFlowerDecaying
 import chylex.hee.game.block.BlockGloomrock
 import chylex.hee.game.block.BlockGloomtorch
 import chylex.hee.game.block.BlockGraveDirt
@@ -233,6 +234,10 @@ object ModBlocks{
 	@JvmField val DEATH_FLOWER_HEALED   = BlockEndPlant().apply { setup("death_flower_healed") }
 	@JvmField val DEATH_FLOWER_WITHERED = BlockEndPlant().apply { setup("death_flower_withered") }
 	
+	@JvmField val POTTED_DEATH_FLOWER_DECAYING = BlockFlowerPotDeathFlowerDecaying(buildFlowerPot, DEATH_FLOWER_DECAYING).apply { setup("potted_death_flower", translationKey = "flowerPot", inCreativeTab = false) }
+	@JvmField val POTTED_DEATH_FLOWER_HEALED   = BlockFlowerPotCustom(buildFlowerPot, DEATH_FLOWER_HEALED).apply { setup("potted_death_flower_healed", translationKey = "flowerPot", inCreativeTab = false) }
+	@JvmField val POTTED_DEATH_FLOWER_WITHERED = BlockFlowerPotCustom(buildFlowerPot, DEATH_FLOWER_WITHERED).apply { setup("potted_death_flower_withered", translationKey = "flowerPot", inCreativeTab = false) }
+	
 	// Blocks: Decorative (Uncategorized)
 	
 	@JvmField val ANCIENT_COBWEB = BlockAncientCobweb().apply { setup("ancient_cobweb") }
@@ -364,9 +369,12 @@ object ModBlocks{
 			register(STARDUST_ORE with basicItemBlock)
 			register(IGNEOUS_ROCK_ORE with basicItemBlock)
 			
-			register(DEATH_FLOWER_DECAYING with metaItemBlock)
-			register(DEATH_FLOWER_HEALED with basicItemBlock)
-			register(DEATH_FLOWER_WITHERED with basicItemBlock)
+			register(DEATH_FLOWER_DECAYING with plantItemBlock(POTTED_DEATH_FLOWER_DECAYING))
+			register(DEATH_FLOWER_HEALED with plantItemBlock(POTTED_DEATH_FLOWER_HEALED))
+			register(DEATH_FLOWER_WITHERED with plantItemBlock(POTTED_DEATH_FLOWER_WITHERED))
+			register(POTTED_DEATH_FLOWER_DECAYING)
+			register(POTTED_DEATH_FLOWER_HEALED)
+			register(POTTED_DEATH_FLOWER_WITHERED)
 			
 			register(ANCIENT_COBWEB with ::ItemAncientCobweb)
 			register(DRY_VINES with basicItemBlock)

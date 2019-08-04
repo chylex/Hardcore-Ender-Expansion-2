@@ -181,6 +181,9 @@ object ModRendering{
 		with(ForgeRegistries.ITEMS){
 			val skippedBlocks = arrayOf(
 				ModBlocks.DEATH_FLOWER_DECAYING,
+				ModBlocks.POTTED_DEATH_FLOWER_DECAYING,
+				ModBlocks.POTTED_DEATH_FLOWER_HEALED,
+				ModBlocks.POTTED_DEATH_FLOWER_WITHERED,
 				ModBlocks.GRAVE_DIRT,
 				*tables
 			).map(Item::getItemFromBlock).toSet()

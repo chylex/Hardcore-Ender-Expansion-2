@@ -1,0 +1,25 @@
+{
+  "forge_marker": 1,
+  "defaults": {
+    "model": "flower_pot_cross",
+    "smooth_lighting": false
+  },
+  "variants": {
+    "level": {
+      "1":  { "textures": { "plant": "hee:block/death_flower_1" } },
+      "2":  { "textures": { "plant": "hee:block/death_flower_1" } },
+      "3":  { "textures": { "plant": "hee:block/death_flower_1" } },
+      "4":  { "textures": { "plant": "hee:block/death_flower_2" } },
+      "5":  { "textures": { "plant": "hee:block/death_flower_2" } },
+      "6":  { "textures": { "plant": "hee:block/death_flower_2" } },
+      "7":  { "textures": { "plant": "hee:block/death_flower_2" } },
+      "8":  { "textures": { "plant": "hee:block/death_flower_3" } },
+      "9":  { "textures": { "plant": "hee:block/death_flower_3" } },
+      "10": { "textures": { "plant": "hee:block/death_flower_3" } },
+      "11": { "textures": { "plant": "hee:block/death_flower_3" } },
+      "12": { "textures": { "plant": "hee:block/death_flower_4" } },
+      "13": { "textures": { "plant": "hee:block/death_flower_4" } },
+      "14": { "textures": { "plant": "hee:block/death_flower_4" } }
+    }
+  }
+}
