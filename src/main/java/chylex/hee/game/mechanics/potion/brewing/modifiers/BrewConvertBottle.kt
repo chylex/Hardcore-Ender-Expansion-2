@@ -7,9 +7,9 @@ import net.minecraft.init.Items
 import net.minecraft.item.Item
 import net.minecraft.item.ItemStack
 
-sealed class BrewConvertBottle(override val ingredient: Item, private val newContainer: Item) : IBrewingModifier{
+sealed class BrewConvertBottle(override val ingredient: Item, private val oldContainer: Item, private val newContainer: Item) : IBrewingModifier{
 	override fun check(input: ItemStack): Boolean{
-		return input.item === Items.POTIONITEM && PotionBrewing.isAltered(input)
+		return input.item === oldContainer && PotionBrewing.isAltered(input)
 	}
 	
 	override fun apply(input: ItemStack): ItemStack{
@@ -18,6 +18,6 @@ sealed class BrewConvertBottle(override val ingredient: Item, private val newCon
 		}
 	}
 	
-	object IntoSplash : BrewConvertBottle(Items.GUNPOWDER, Items.SPLASH_POTION)
-	object IntoLingering : BrewConvertBottle(Items.DRAGON_BREATH, Items.LINGERING_POTION)
+	object IntoSplash : BrewConvertBottle(Items.GUNPOWDER, Items.POTIONITEM, Items.SPLASH_POTION)
+	object IntoLingering : BrewConvertBottle(Items.DRAGON_BREATH, Items.SPLASH_POTION, Items.LINGERING_POTION)
 }
