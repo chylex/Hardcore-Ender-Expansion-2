@@ -60,6 +60,7 @@ tile.hee.jar_o_dust.tooltip.entry=%sx %s
 tile.hee.dark_chest.name=Dark Chest
 tile.hee.loot_chest.name=Loot Chest
 tile.hee.loot_chest.tooltip=§5§o(Editable in creative mode)
+
 tile.hee.enhanced_brewing_stand.name=Enhanced Brewing Stand
 
 tile.hee.end_powder_ore.name=End Powder Ore

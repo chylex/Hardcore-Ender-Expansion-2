@@ -213,12 +213,15 @@ object ModBlocks{
 	@JvmField val ENDER_GOO          = BlockEnderGoo().apply { setup("ender_goo") }
 	@JvmField val PURIFIED_ENDER_GOO = BlockEnderGooPurified().apply { setup("purified_ender_goo") }
 	
+	// Blocks: Interactive (Storage)
+	
+	@JvmField val JAR_O_DUST = BlockJarODust(buildJarODust).apply { setup("jar_o_dust") }
+	@JvmField val DARK_CHEST = BlockDarkChest(buildGloomrock).apply { setup("dark_chest") } // UPDATE: update recipe json to include tag to allow either slab variation
+	@JvmField val LOOT_CHEST = BlockLootChest(buildLootChest).apply { setup("loot_chest") }
+	
 	// Blocks: Interactive (Uncategorized)
 	
 	@JvmField val INFUSED_TNT            = BlockInfusedTNT().apply { setup("infused_tnt", translationKey = "tnt", inCreativeTab = false) }
-	@JvmField val JAR_O_DUST             = BlockJarODust(buildJarODust).apply { setup("jar_o_dust") }
-	@JvmField val DARK_CHEST             = BlockDarkChest(buildGloomrock).apply { setup("dark_chest") } // UPDATE: update recipe json to include tag to allow either slab variation
-	@JvmField val LOOT_CHEST             = BlockLootChest(buildLootChest).apply { setup("loot_chest") }
 	@JvmField val ENHANCED_BREWING_STAND = BlockEnhancedBrewingStand(buildBrewingStand).apply { setup("enhanced_brewing_stand") }
 	
 	// Blocks: Ores
@@ -358,10 +361,11 @@ object ModBlocks{
 			register(ENDER_GOO)
 			register(PURIFIED_ENDER_GOO)
 			
-			register(INFUSED_TNT with ::ItemInfusedTNT)
 			register(JAR_O_DUST with basicItemBlock)
 			register(DARK_CHEST with basicItemBlock)
 			register(LOOT_CHEST with basicItemBlock)
+			
+			register(INFUSED_TNT with ::ItemInfusedTNT)
 			register(ENHANCED_BREWING_STAND with basicItemBlock)
 			
 			register(END_POWDER_ORE with basicItemBlock)

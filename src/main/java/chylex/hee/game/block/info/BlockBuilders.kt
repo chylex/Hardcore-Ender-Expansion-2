@@ -143,7 +143,7 @@ object BlockBuilders{
 		explosionResistance = 5.0F
 	}
 	
-	// Interactive (Uncategorized)
+	// Interactive (Storage)
 	
 	val buildJarODust = BlockBuilder(Materials.SOLID_NO_TOOL, MapColor.ORANGE_STAINED_HARDENED_CLAY, SoundType.METAL).apply {
 		harvestHardness = 0.4F
@@ -154,6 +154,8 @@ object BlockBuilders{
 		makeIndestructible()
 		lightLevel = 13
 	}
+	
+	// Interactive (Uncategorized)
 	
 	val buildBrewingStand = BlockBuilder(Material.IRON, MapColor.YELLOW, SoundType.STONE).apply {
 		harvestHardness = 0.5F
