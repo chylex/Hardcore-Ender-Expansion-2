@@ -45,7 +45,7 @@ abstract class BlockAbstractGoo(private val fluid: FluidBase, material: Material
 	
 	private var lastCollidingEntity = ThreadLocal<Pair<Long, UUID>?>()
 	
-	protected abstract val filledBucket: Item
+	abstract val filledBucket: Item
 	protected abstract val tickTrackingKey: String
 	
 	init{

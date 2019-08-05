@@ -2,6 +2,7 @@ package chylex.hee.init
 import chylex.hee.HEE
 import chylex.hee.game.item.ItemAmuletOfRecovery
 import chylex.hee.game.item.ItemBindingEssence
+import chylex.hee.game.item.ItemBucketWithCauldron
 import chylex.hee.game.item.ItemChorusBerry
 import chylex.hee.game.item.ItemCompost
 import chylex.hee.game.item.ItemElytraOverride
@@ -39,7 +40,6 @@ import chylex.hee.system.util.useVanillaName
 import net.minecraft.creativetab.CreativeTabs
 import net.minecraft.init.Items
 import net.minecraft.item.Item
-import net.minecraft.item.ItemBucket
 import net.minecraftforge.event.RegistryEvent
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent
@@ -96,7 +96,7 @@ object ModItems{
 	
 	// Items: Fluids
 	
-	@JvmField val ENDER_GOO_BUCKET          = ItemBucket(ModBlocks.ENDER_GOO).apply { setup("ender_goo_bucket"); containerItem = Items.BUCKET }
+	@JvmField val ENDER_GOO_BUCKET          = ItemBucketWithCauldron(ModBlocks.ENDER_GOO, ModBlocks.CAULDRON_ENDER_GOO).apply { setup("ender_goo_bucket"); containerItem = Items.BUCKET }
 	@JvmField val PURIFIED_ENDER_GOO_BUCKET = ItemPurifiedEnderGooBucket().apply { setup("purified_ender_goo_bucket"); containerItem = Items.BUCKET }
 	
 	// Items: Energy
