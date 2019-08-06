@@ -27,7 +27,7 @@ import java.util.Random
 @SideOnly(Side.CLIENT)
 abstract class ParticleBaseEnergy(world: World, posX: Double, posY: Double, posZ: Double, motX: Double, motY: Double, motZ: Double) : ParticleBaseFloating(world, posX, posY, posZ, motX, motY, motZ){
 	private companion object{
-		@JvmStatic private val TEX_PARTICLE = Resource.Custom("textures/particle/energy.png")
+		private val TEX_PARTICLE = Resource.Custom("textures/particle/energy.png")
 		
 		@SideOnly(Side.CLIENT)
 		private object TextureDescription : TextureAtlasSprite(TEX_PARTICLE.toString()){

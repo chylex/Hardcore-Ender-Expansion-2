@@ -46,7 +46,6 @@ class BlockDragonEggOverride : BlockDragonEgg(){
 			mot = InBox(0.025F)
 		)
 		
-		@JvmStatic
 		val FX_BREAK = object : FxBlockHandler(){
 			override fun handle(pos: BlockPos, world: World, rand: Random){
 				PARTICLE_BREAK.spawn(Point(pos, 30), rand)

@@ -64,7 +64,6 @@ abstract class ItemAbstractEnergyUser : Item(){
 			}
 		}
 		
-		@JvmStatic
 		val FX_CHARGE = object : IFxHandler<FxChargeData>{
 			override fun handle(buffer: ByteBuf, world: World, rand: Random) = buffer.use {
 				val cluster = readPos().getTile<TileEntityEnergyCluster>(world) ?: return

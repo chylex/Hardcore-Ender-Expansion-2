@@ -71,7 +71,6 @@ class EndermanTeleportHandler(private val enderman: EntityMobAbstractEnderman) :
 			hideOnMinimalSetting = false
 		)
 		
-		@JvmStatic
 		val FX_TELEPORT_FAIL = object : FxEntityHandler(){
 			override fun handle(entity: Entity, rand: Random){
 				PARTICLE_TELEPORT_FAIL(entity).spawn(Point(entity, heightMp = 0.5F, amount = 55), rand)
@@ -79,7 +78,6 @@ class EndermanTeleportHandler(private val enderman: EntityMobAbstractEnderman) :
 			}
 		}
 		
-		@JvmStatic
 		val FX_TELEPORT_OUT_OF_WORLD = object : FxEntityHandler(){
 			override fun handle(entity: Entity, rand: Random){
 				val startPoint = entity.posVec

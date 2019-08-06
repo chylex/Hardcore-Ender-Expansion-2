@@ -53,7 +53,6 @@ class ItemRevitalizationSubstance : Item(){
 			}
 		}
 		
-		@JvmStatic
 		val FX_FAIL = object : IFxHandler<FxUseData>{
 			override fun handle(buffer: ByteBuf, world: World, rand: Random) = buffer.use {
 				val blockPos = readPos().center

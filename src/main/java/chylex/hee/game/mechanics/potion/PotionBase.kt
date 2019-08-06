@@ -10,7 +10,7 @@ import net.minecraftforge.fml.relauncher.SideOnly
 
 abstract class PotionBase(color: RGB, isNegative: Boolean) : Potion(isNegative, color.toInt()){
 	companion object{
-		@JvmStatic private val TEX_ICONS = Resource.Custom("textures/gui/status.png")
+		private val TEX_ICONS = Resource.Custom("textures/gui/status.png")
 		
 		private const val ICON_SIZE = 18
 		private const val TEXTURE_SIZE = 64F

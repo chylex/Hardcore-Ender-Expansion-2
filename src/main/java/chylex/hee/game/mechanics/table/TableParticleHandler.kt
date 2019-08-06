@@ -54,7 +54,6 @@ class TableParticleHandler(private val table: TileEntityBaseTable){
 			}
 		}
 		
-		@JvmStatic
 		val FX_PROCESS_PEDESTALS = object : IFxHandler<FxProcessPedestalsData>{
 			override fun handle(buffer: ByteBuf, world: World, rand: Random) = buffer.use {
 				val table = readPos().getTile<TileEntityBaseTable>(world) ?: return
@@ -82,7 +81,6 @@ class TableParticleHandler(private val table: TileEntityBaseTable){
 			}
 		}
 		
-		@JvmStatic
 		val FX_DRAIN_CLUSTER = object : IFxHandler<FxDrainClusterData>{
 			override fun handle(buffer: ByteBuf, world: World, rand: Random) = buffer.use {
 				val cluster = readPos().getTile<TileEntityEnergyCluster>(world) ?: return

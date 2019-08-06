@@ -8,15 +8,15 @@ object CustomCreatureType{
 	private val DEMON  = EnumHelper.addCreatureAttribute("HEE_DEMON")
 	private val SHADOW = EnumHelper.addCreatureAttribute("HEE_SHADOW")
 	
-	@JvmStatic fun isEnder(entity: EntityLivingBase): Boolean{
+	fun isEnder(entity: EntityLivingBase): Boolean{
 		return entity is EntityCreature && entity.creatureAttribute == ENDER // TODO more stuff
 	}
 	
-	@JvmStatic fun isDemon(entity: EntityLivingBase): Boolean{
+	fun isDemon(entity: EntityLivingBase): Boolean{
 		return entity is EntityCreature && entity.creatureAttribute == DEMON
 	}
 	
-	@JvmStatic fun isShadow(entity: EntityLivingBase): Boolean{
+	fun isShadow(entity: EntityLivingBase): Boolean{
 		return entity is EntityCreature && entity.creatureAttribute == SHADOW
 	}
 }

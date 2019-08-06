@@ -27,7 +27,6 @@ object PlayerCapabilityHandler{
 	
 	private val entries = mutableListOf<IPlayerCapability>()
 	
-	@JvmStatic
 	fun register(capability: IPlayerCapability){
 		entries.add(capability)
 	}

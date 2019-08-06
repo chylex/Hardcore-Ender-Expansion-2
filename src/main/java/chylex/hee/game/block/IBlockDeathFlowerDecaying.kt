@@ -180,7 +180,6 @@ interface IBlockDeathFlowerDecaying{
 			}
 		}
 		
-		@JvmStatic
 		val FX_HEAL = object : IFxHandler<FxHealData>{
 			override fun handle(buffer: ByteBuf, world: World, rand: Random){
 				val pos = buffer.readPos()

@@ -86,7 +86,6 @@ class EntityItemIgneousRock : EntityItemNoBob{
 			mot = PARTICLE_FLAME_MOT
 		)
 		
-		@JvmStatic
 		val FX_BLOCK_SMELT = object : FxBlockHandler(){
 			override fun handle(pos: BlockPos, world: World, rand: Random){
 				PARTICLE_SMELT.spawn(Point(pos, 20), rand)
@@ -94,7 +93,6 @@ class EntityItemIgneousRock : EntityItemNoBob{
 			}
 		}
 		
-		@JvmStatic
 		val FX_ENTITY_BURN = object : FxEntityHandler(){
 			override fun handle(entity: Entity, rand: Random){
 				PARTICLE_BURN(entity).spawn(Point(entity, heightMp = 0.5F, amount = 24), rand)

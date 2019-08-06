@@ -59,7 +59,6 @@ open class BlockEnderGooPurified : BlockAbstractGoo(FluidEnderGooPurified, Mater
 			mot = Constant(0.025F, UP) + InBox(0.01F, 0.01F, 0.01F)
 		)
 		
-		@JvmStatic
 		val FX_PLACE = object : FxBlockHandler(){
 			override fun handle(pos: BlockPos, world: World, rand: Random){
 				PARTICLE_PLACE.spawn(Point(pos, rand.nextInt(5, 6)), rand)

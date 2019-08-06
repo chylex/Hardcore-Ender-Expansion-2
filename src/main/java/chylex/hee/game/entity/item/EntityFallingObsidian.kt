@@ -42,7 +42,6 @@ class EntityFallingObsidian : EntityFallingBlockHeavy{
 			}
 		}
 		
-		@JvmStatic
 		val FX_FALL = object : IFxHandler<FxFallData>{
 			override fun handle(buffer: ByteBuf, world: World, rand: Random) = buffer.use {
 				val pos = readPos()

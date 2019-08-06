@@ -53,7 +53,6 @@ import java.util.Random
 
 class TileEntityTablePedestal : TileEntityBase(){
 	companion object{
-		@JvmStatic
 		val FX_ITEM_UPDATE = object : FxBlockHandler(){
 			override fun handle(pos: BlockPos, world: World, rand: Random){
 				val player = HEE.proxy.getClientSidePlayer() ?: return

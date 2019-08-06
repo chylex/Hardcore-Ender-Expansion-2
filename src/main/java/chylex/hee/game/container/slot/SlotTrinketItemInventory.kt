@@ -62,21 +62,18 @@ class SlotTrinketItemInventory(trinketHandler: IItemHandler, slotNumber: Int) : 
 		
 		// GUI integration
 		
-		@JvmStatic
 		private val SURVIVAL_INVENTORY_SLOT_POSITIONS = arrayOf(
 			Pair(77, 44),
 			Pair(77, 26),
 			Pair(77,  8)
 		)
 		
-		@JvmStatic
 		private val CREATIVE_INVENTORY_SLOT_POSITIONS = arrayOf(
 			Pair(127, 20),
 			Pair(146, 20),
 			Pair(165, 20)
 		)
 		
-		@JvmStatic
 		private fun Slot.moveSlotToEmptyPos(allSlots: List<Slot>, positions: Array<Pair<Int, Int>>){
 			xPos = -2000
 			yPos = -2000
@@ -114,7 +111,6 @@ class SlotTrinketItemInventory(trinketHandler: IItemHandler, slotNumber: Int) : 
 		
 		// Texture rendering
 		
-		@JvmField
 		var isRenderingGUI = false
 		
 		@JvmStatic

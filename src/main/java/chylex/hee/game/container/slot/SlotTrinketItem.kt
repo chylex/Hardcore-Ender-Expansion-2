@@ -17,7 +17,6 @@ open class SlotTrinketItem(trinketHandler: IItemHandler, slotIndex: Int, x: Int,
 		const val TEX_SLOT_W = 64F
 		const val TEX_SLOT_H = 32F
 		
-		@JvmStatic
 		@SideOnly(Side.CLIENT)
 		private val TEX_DEFINITION = object : TextureAtlasSprite(TEX_SLOT.toString()){
 			override fun getMinU() = 19F / TEX_SLOT_W

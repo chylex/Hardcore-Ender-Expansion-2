@@ -62,7 +62,6 @@ class ItemTableLink : Item(){
 			}
 		}
 		
-		@JvmStatic
 		val FX_USE = object : IFxHandler<FxUseData>{
 			override fun handle(buffer: ByteBuf, world: World, rand: Random) = buffer.use {
 				val pos = readPos()

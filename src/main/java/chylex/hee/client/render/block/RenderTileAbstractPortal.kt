@@ -38,10 +38,10 @@ import kotlin.math.pow
 @SideOnly(Side.CLIENT)
 abstract class RenderTileAbstractPortal<T : TileEntityPortalInner, C : IPortalController> : TileEntitySpecialRenderer<T>(){
 	private companion object{
-		@JvmStatic private val TEX_BACKGROUND = Resource.Vanilla("textures/environment/end_sky.png")
-		@JvmStatic private val TEX_PARTICLE_LAYER = Resource.Vanilla("textures/entity/end_portal.png")
+		private val TEX_BACKGROUND = Resource.Vanilla("textures/environment/end_sky.png")
+		private val TEX_PARTICLE_LAYER = Resource.Vanilla("textures/entity/end_portal.png")
 		
-		@JvmStatic private val BUFFER = GLAllocation.createDirectFloatBuffer(16)
+		private val BUFFER = GLAllocation.createDirectFloatBuffer(16)
 		
 		private fun updateBuffer(value1: Float, value2: Float, value3: Float, value4: Float) = BUFFER.apply {
 			clear()

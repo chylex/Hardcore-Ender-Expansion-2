@@ -81,7 +81,6 @@ class EntityProjectileSpatialDash : Entity, IProjectile{
 			}
 		}
 		
-		@JvmStatic
 		val FX_EXPIRE = object : IFxHandler<FxExpireData>{
 			override fun handle(buffer: ByteBuf, world: World, rand: Random) = buffer.use {
 				val point = readCompactVec()

@@ -43,14 +43,12 @@ object ScorchingHelper{
 		pos = Constant(0.2F, UP) + InBox(target, 0.4F)
 	)
 	
-	@JvmStatic
 	val FX_BLOCK_BREAK = object : FxBlockHandler(){
 		override fun handle(pos: BlockPos, world: World, rand: Random){
 			PARTICLE_MINING.spawn(Point(pos, 15), rand)
 		}
 	}
 	
-	@JvmStatic
 	val FX_ENTITY_HIT = object : FxEntityHandler(){
 		override fun handle(entity: Entity, rand: Random){
 			PARTICLE_HITTING(entity).spawn(Point(entity, heightMp = 0.5F, amount = 20), rand)

@@ -46,7 +46,6 @@ class EntityItemRevitalizationSubstance : EntityItem{
 			}
 		}
 		
-		@JvmStatic
 		val FX_REVITALIZE_GOO = object : IFxHandler<FxRevitalizeGooData>{
 			override fun handle(buffer: ByteBuf, world: World, rand: Random) = buffer.use {
 				val center = readPos()

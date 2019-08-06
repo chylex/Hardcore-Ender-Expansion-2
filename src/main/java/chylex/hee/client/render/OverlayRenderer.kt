@@ -36,8 +36,8 @@ object OverlayRenderer{
 	private const val BORDER_SIZE  = 4
 	private const val LINE_SPACING = 7
 	
-	@JvmStatic private val TEX_ENDER_GOO_OVERLAY = Resource.Custom("textures/overlay/ender_goo.png")
-	@JvmStatic private val TEX_PURIFIED_ENDER_GOO_OVERLAY = Resource.Custom("textures/overlay/purified_ender_goo.png")
+	private val TEX_ENDER_GOO_OVERLAY = Resource.Custom("textures/overlay/ender_goo.png")
+	private val TEX_PURIFIED_ENDER_GOO_OVERLAY = Resource.Custom("textures/overlay/purified_ender_goo.png")
 	
 	private var clusterLookedAt: TileEntityEnergyCluster? = null
 	

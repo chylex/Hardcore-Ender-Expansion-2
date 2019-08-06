@@ -92,7 +92,6 @@ class Teleporter(
 			}
 		}
 		
-		@JvmStatic
 		val FX_TELEPORT = object : IFxHandler<FxTeleportData>{
 			override fun handle(buffer: ByteBuf, world: World, rand: Random) = buffer.use {
 				val player = HEE.proxy.getClientSidePlayer() ?: return

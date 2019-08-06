@@ -28,7 +28,6 @@ class ItemCompost : Item(){
 	companion object{
 		private const val BONE_MEAL_EQUIVALENT = 2
 		
-		@JvmStatic
 		val FX_USE = object : FxBlockHandler(){
 			override fun handle(pos: BlockPos, world: World, rand: Random){
 				ItemDye.spawnBonemealParticles(world, pos, 25)
