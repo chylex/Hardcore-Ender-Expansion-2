@@ -4,6 +4,7 @@ import chylex.hee.game.block.BlockEnderGooPurified
 import chylex.hee.game.block.IBlockDeathFlowerDecaying
 import chylex.hee.game.block.entity.TileEntityTablePedestal
 import chylex.hee.game.entity.item.EntityFallingObsidian
+import chylex.hee.game.entity.item.EntityItemCauldronTrigger
 import chylex.hee.game.entity.item.EntityItemIgneousRock
 import chylex.hee.game.entity.item.EntityItemRevitalizationSubstance
 import chylex.hee.game.entity.living.enderman.EndermanTeleportHandler
@@ -44,6 +45,7 @@ class PacketClientFX<T : IFxData>() : BaseClientPacket(){
 			ItemRevitalizationSubstance.FX_FAIL,
 			ItemTableLink.FX_USE,
 			EntityFallingObsidian.FX_FALL,
+			EntityItemCauldronTrigger.FX_RECIPE_FINISH,
 			EntityItemIgneousRock.FX_BLOCK_SMELT,
 			EntityItemIgneousRock.FX_ENTITY_BURN,
 			EntityItemRevitalizationSubstance.FX_REVITALIZE_GOO,

@@ -2,6 +2,7 @@ package chylex.hee.init.factory;
 import chylex.hee.game.entity.item.EntityFallingBlockHeavy;
 import chylex.hee.game.entity.item.EntityFallingObsidian;
 import chylex.hee.game.entity.item.EntityInfusedTNT;
+import chylex.hee.game.entity.item.EntityItemCauldronTrigger;
 import chylex.hee.game.entity.item.EntityItemFreshlyCooked;
 import chylex.hee.game.entity.item.EntityItemIgneousRock;
 import chylex.hee.game.entity.item.EntityItemNoBob;
@@ -27,9 +28,10 @@ public final class EntityConstructors{
 	private static final Map<Class<? extends Entity>, Function<World, ? extends Entity>> all = new HashMap<>();
 	
 	static{
-		add(EntityItemNoBob.class, EntityItemNoBob::new);
-		add(EntityItemIgneousRock.class, EntityItemIgneousRock::new);
+		add(EntityItemCauldronTrigger.class, EntityItemCauldronTrigger::new);
 		add(EntityItemFreshlyCooked.class, EntityItemFreshlyCooked::new);
+		add(EntityItemIgneousRock.class, EntityItemIgneousRock::new);
+		add(EntityItemNoBob.class, EntityItemNoBob::new);
 		add(EntityItemRevitalizationSubstance.class, EntityItemRevitalizationSubstance::new);
 		
 		add(EntityFallingBlockHeavy.class, EntityFallingBlockHeavy::new);

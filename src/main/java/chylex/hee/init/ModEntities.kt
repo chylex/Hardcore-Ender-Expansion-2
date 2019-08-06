@@ -3,6 +3,7 @@ import chylex.hee.HEE
 import chylex.hee.game.entity.item.EntityFallingBlockHeavy
 import chylex.hee.game.entity.item.EntityFallingObsidian
 import chylex.hee.game.entity.item.EntityInfusedTNT
+import chylex.hee.game.entity.item.EntityItemCauldronTrigger
 import chylex.hee.game.entity.item.EntityItemFreshlyCooked
 import chylex.hee.game.entity.item.EntityItemIgneousRock
 import chylex.hee.game.entity.item.EntityItemNoBob
@@ -42,9 +43,10 @@ object ModEntities{
 		networkID = 0
 		
 		with(e.registry){
-			register<EntityItemNoBob>("item_no_bob").tracker(64, 3, true) to this
-			register<EntityItemIgneousRock>("item_igneous_rock").tracker(64, 3, true) to this
+			register<EntityItemCauldronTrigger>("item_cauldron_trigger").tracker(64, 3, true) to this
 			register<EntityItemFreshlyCooked>("item_freshly_cooked").tracker(64, 3, true) to this
+			register<EntityItemIgneousRock>("item_igneous_rock").tracker(64, 3, true) to this
+			register<EntityItemNoBob>("item_no_bob").tracker(64, 3, true) to this
 			register<EntityItemRevitalizationSubstance>("item_revitalization_substance").tracker(64, 3, true) to this
 			
 			register<EntityFallingBlockHeavy>("falling_block_heavy").tracker(160, 20, true) to this

@@ -1,5 +1,8 @@
 package chylex.hee.game.block
+import chylex.hee.HEE
+import chylex.hee.system.util.Pos
 import chylex.hee.system.util.get
+import chylex.hee.system.util.getBlock
 import chylex.hee.system.util.isNotEmpty
 import chylex.hee.system.util.playUniversal
 import net.minecraft.block.BlockCauldron
@@ -17,8 +20,27 @@ import net.minecraft.util.EnumHand
 import net.minecraft.util.SoundCategory
 import net.minecraft.util.math.BlockPos
 import net.minecraft.world.World
+import net.minecraftforge.event.entity.player.EntityItemPickupEvent
+import net.minecraftforge.fml.common.Mod.EventBusSubscriber
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent
 
+@EventBusSubscriber(modid = HEE.ID)
 abstract class BlockAbstractCauldron : BlockCauldron(){
+	companion object{
+		const val MAX_LEVEL = 3
+		
+		@JvmStatic
+		@SubscribeEvent
+		fun onEntityItemPickup(e: EntityItemPickupEvent){
+			val item = e.item
+			val pos = Pos(item)
+			
+			if (pos.getBlock(item.world) is BlockCauldron && Pos(e.entityPlayer) != pos){
+				e.isCanceled = true
+			}
+		}
+	}
+	
 	init{
 		@Suppress("LeakingThis")
 		setHardness(2F)
@@ -51,7 +73,7 @@ abstract class BlockAbstractCauldron : BlockCauldron(){
 		}
 		
 		if (item === Items.BUCKET){
-			if (state[LEVEL] == 3){
+			if (state[LEVEL] == MAX_LEVEL){
 				if (!world.isRemote){
 					player.addStat(StatList.CAULDRON_USED)
 					useAndUpdateHeldItem(player, hand, createFilledBucket())

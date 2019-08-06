@@ -1,4 +1,5 @@
 package chylex.hee.game.item
+import chylex.hee.game.block.BlockAbstractCauldron
 import chylex.hee.system.util.get
 import chylex.hee.system.util.getState
 import chylex.hee.system.util.playUniversal
@@ -30,7 +31,7 @@ open class ItemBucketWithCauldron(containedBlock: Block, private val cauldronBlo
 				}
 				
 				player.addStat(StatList.CAULDRON_FILLED)
-				pos.setState(world, cauldronBlock.with(BlockCauldron.LEVEL, 3))
+				pos.setState(world, cauldronBlock.with(BlockCauldron.LEVEL, BlockAbstractCauldron.MAX_LEVEL))
 			}
 			
 			SoundEvents.ITEM_BUCKET_EMPTY.playUniversal(player, pos, SoundCategory.BLOCKS)
