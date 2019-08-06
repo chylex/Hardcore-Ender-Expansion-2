@@ -2,6 +2,7 @@ package chylex.hee.init
 import chylex.hee.HEE
 import chylex.hee.game.block.BlockAncientCobweb
 import chylex.hee.game.block.BlockBrewingStandOverride
+import chylex.hee.game.block.BlockCauldronWithDragonsBreath
 import chylex.hee.game.block.BlockCauldronWithGoo
 import chylex.hee.game.block.BlockChorusPlantOverride
 import chylex.hee.game.block.BlockCorruptedEnergy
@@ -216,6 +217,7 @@ object ModBlocks{
 	
 	@JvmField val CAULDRON_ENDER_GOO          = BlockCauldronWithGoo(ENDER_GOO).apply { setup("cauldron_ender_goo", inCreativeTab = false) }
 	@JvmField val CAULDRON_PURIFIED_ENDER_GOO = BlockCauldronWithGoo(PURIFIED_ENDER_GOO).apply { setup("cauldron_purified_ender_goo", inCreativeTab = false) }
+	@JvmField val CAULDRON_DRAGONS_BREATH     = BlockCauldronWithDragonsBreath().apply { setup("cauldron_dragons_breath", inCreativeTab = false) }
 	
 	// Blocks: Interactive (Storage)
 	
@@ -366,6 +368,7 @@ object ModBlocks{
 			register(PURIFIED_ENDER_GOO)
 			register(CAULDRON_ENDER_GOO)
 			register(CAULDRON_PURIFIED_ENDER_GOO)
+			register(CAULDRON_DRAGONS_BREATH)
 			
 			register(JAR_O_DUST with basicItemBlock)
 			register(DARK_CHEST with basicItemBlock)

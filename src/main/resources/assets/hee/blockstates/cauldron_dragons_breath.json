@@ -1,0 +1,15 @@
+{
+  "forge_marker": 1,
+  "defaults": {
+    "smooth_lighting": false,
+    "textures": {
+      "water": "hee:block/dragons_breath_still"
+    }
+  },
+  "variants": {
+    "level=0": { "model": "cauldron_empty" },
+    "level=1": { "model": "cauldron_level1" },
+    "level=2": { "model": "cauldron_level2" },
+    "level=3": { "model": "cauldron_level3" }
+  }
+}

@@ -16,7 +16,9 @@ import chylex.hee.system.util.get
 import chylex.hee.system.util.getState
 import chylex.hee.system.util.playClient
 import chylex.hee.system.util.selectEntities
+import chylex.hee.system.util.setState
 import chylex.hee.system.util.size
+import chylex.hee.system.util.with
 import net.minecraft.block.BlockCauldron.LEVEL
 import net.minecraft.entity.Entity
 import net.minecraft.entity.item.EntityItem
@@ -34,6 +36,12 @@ import kotlin.math.min
 
 class EntityItemCauldronTrigger : EntityItem{
 	companion object{
+		private val RECIPE_DRAGONS_BREATH = arrayOf(
+			ModItems.END_POWDER to 1,
+			ModItems.ANCIENT_DUST to 1,
+			ModItems.DRAGON_SCALE to 1
+		)
+		
 		private val PARTICLE_RECIPE_FINISH = ParticleSpawnerCustom(
 			type = ParticleBubbleCustom,
 			pos = Constant(0.35F, UP) + InBox(0.3F),
@@ -64,7 +72,11 @@ class EntityItemCauldronTrigger : EntityItem{
 			val state = pos.getState(world)
 			val block = state.block
 			
-			// TODO
+			if (block === Blocks.CAULDRON){
+				if (state[LEVEL] > 0 && tryUseIngredients(RECIPE_DRAGONS_BREATH)){
+					pos.setState(world, ModBlocks.CAULDRON_DRAGONS_BREATH.with(LEVEL, state[LEVEL]))
+				}
+			}
 		}
 	}
 	
