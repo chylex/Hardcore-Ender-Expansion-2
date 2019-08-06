@@ -12,7 +12,6 @@ import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.init.Blocks
 import net.minecraft.init.Items
 import net.minecraft.init.SoundEvents
-import net.minecraft.item.Item
 import net.minecraft.item.ItemStack
 import net.minecraft.stats.StatList
 import net.minecraft.util.EnumFacing
@@ -46,13 +45,14 @@ abstract class BlockAbstractCauldron : BlockCauldron(){
 		setHardness(2F)
 	}
 	
-	protected abstract fun createFilledBucket(): ItemStack
+	protected abstract fun createFilledBucket(): ItemStack?
+	protected abstract fun createFilledBottle(): ItemStack?
 	
 	override fun setWaterLevel(world: World, pos: BlockPos, state: IBlockState, level: Int){
 		super.setWaterLevel(world, pos, if (level == 0) Blocks.CAULDRON.defaultState else state, level)
 	}
 	
-	protected fun useAndUpdateHeldItem(player: EntityPlayer, hand: EnumHand, newHeldItem: ItemStack){
+	private fun useAndUpdateHeldItem(player: EntityPlayer, hand: EnumHand, newHeldItem: ItemStack){
 		val oldHeldItem = player.getHeldItem(hand)
 		
 		oldHeldItem.shrink(1)
@@ -73,10 +73,12 @@ abstract class BlockAbstractCauldron : BlockCauldron(){
 		}
 		
 		if (item === Items.BUCKET){
-			if (state[LEVEL] == MAX_LEVEL){
+			val filledBucket = createFilledBucket()
+			
+			if (filledBucket != null && state[LEVEL] == MAX_LEVEL){
 				if (!world.isRemote){
 					player.addStat(StatList.CAULDRON_USED)
-					useAndUpdateHeldItem(player, hand, createFilledBucket())
+					useAndUpdateHeldItem(player, hand, filledBucket)
 					setWaterLevel(world, pos, state, 0)
 				}
 				
@@ -85,11 +87,22 @@ abstract class BlockAbstractCauldron : BlockCauldron(){
 			
 			return true
 		}
+		else if (item === Items.GLASS_BOTTLE){
+			val filledBottle = createFilledBottle()
+			
+			if (filledBottle != null && state[LEVEL] > 0){
+				if (!world.isRemote){
+					player.addStat(StatList.CAULDRON_USED)
+					useAndUpdateHeldItem(player, hand, filledBottle)
+					setWaterLevel(world, pos, state, state[LEVEL] - 1)
+				}
+				
+				SoundEvents.ITEM_BOTTLE_FILL.playUniversal(player, pos, SoundCategory.BLOCKS)
+			}
+			
+			return true
+		}
 		
-		return onRightClickedWithItem(world, pos, state, player, hand, item)
-	}
-	
-	open fun onRightClickedWithItem(world: World, pos: BlockPos, state: IBlockState, player: EntityPlayer, hand: EnumHand, item: Item): Boolean{
 		return false
 	}
 	
