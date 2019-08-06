@@ -88,7 +88,7 @@ object ModEntities{
 		registry.register(this.build())
 	}
 	
-	private fun override(vanillaName: String, mobClass: Class<out Entity>){
+	private fun override(vanillaName: String, mobClass: Class<out Entity>){ // TODO apparently this would break any mod that manually constructs & spawns the old entity class
 		ForgeRegistries.ENTITIES.getValue(Resource.Vanilla(vanillaName))!!.apply { // TODO is there a better way?
 			val entryFields = this::class.java.declaredFields
 			

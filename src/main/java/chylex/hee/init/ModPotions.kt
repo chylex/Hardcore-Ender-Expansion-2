@@ -63,6 +63,8 @@ object ModPotions{
 			if (location.namespace == Resource.Vanilla.domain && (vanillaTypes.contains(location.path) || type.baseName?.let(vanillaTypes::contains) == true)){
 				type.effects = emptyEffects // removes duplicate effects when using custom effects in NBT
 			}
+			
+			// TODO fix creative tab & tipped arrows, might be better to just ASM something
 		}
 	}
 	
