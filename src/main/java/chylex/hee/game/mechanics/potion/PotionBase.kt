@@ -1,10 +1,12 @@
 package chylex.hee.game.mechanics.potion
+import chylex.hee.game.mechanics.potion.brewing.PotionBrewing
 import chylex.hee.system.Resource
 import chylex.hee.system.util.color.RGB
 import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.Gui
 import net.minecraft.potion.Potion
 import net.minecraft.potion.PotionEffect
+import net.minecraft.potion.PotionType
 import net.minecraftforge.fml.relauncher.Side
 import net.minecraftforge.fml.relauncher.SideOnly
 
@@ -17,6 +19,10 @@ abstract class PotionBase(color: RGB, isNegative: Boolean) : Potion(isNegative, 
 		
 		const val INFINITE_DURATION = 32767
 		const val INFINITE_DURATION_THRESHOLD = 32147 // values >= this threshold should be considered infinite
+		
+		@JvmStatic
+		protected val PotionBase.makeType
+			get() = PotionType(PotionBrewing.INFO.getValue(this).baseEffect)
 	}
 	
 	abstract val iconX: Int
