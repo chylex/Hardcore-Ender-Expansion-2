@@ -1,5 +1,7 @@
 package chylex.hee.system.util
+import net.minecraft.util.ResourceLocation
 import net.minecraftforge.fml.common.Loader
+import net.minecraftforge.registries.IForgeRegistry
 import net.minecraftforge.registries.IForgeRegistryEntry
 
 fun <T> IForgeRegistryEntry<T>.useVanillaName(from: IForgeRegistryEntry<*>){
@@ -11,4 +13,11 @@ fun <T> IForgeRegistryEntry<T>.useVanillaName(from: IForgeRegistryEntry<*>){
 		registryName = from.registryName
 		setActiveModContainer(me)
 	}
+}
+
+fun <T : IForgeRegistryEntry<T>> IForgeRegistry<T>.getIfExists(key: ResourceLocation): T?{
+	return if (containsKey(key))
+		getValue(key)
+	else
+		null
 }
