@@ -20,7 +20,9 @@ sealed class BrewBasicEffects(private val base: PotionType, private val registry
 	
 	override fun brew(input: ItemStack, ingredient: ItemStack): ItemStack{
 		val entry = registry.entries.first { matchesReagent(ingredient, it.key) }
-		return PotionBrewing.INFO[entry.value]?.getBasePotion(input.item) ?: ItemStack.EMPTY
+		val info = PotionBrewing.INFO[entry.value] ?: return ItemStack.EMPTY
+		
+		return PotionItems.getBottle(input.item, info.potion, withBaseEffect = true)
 	}
 	
 	private fun matchesReagent(ingredient: ItemStack, key: Pair<Item, Int>): Boolean{

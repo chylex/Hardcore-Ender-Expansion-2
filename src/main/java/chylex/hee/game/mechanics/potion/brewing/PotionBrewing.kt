@@ -2,6 +2,7 @@ package chylex.hee.game.mechanics.potion.brewing
 import chylex.hee.game.mechanics.potion.PotionPurity.PURITY
 import chylex.hee.game.mechanics.potion.brewing.PotionTypeInfo.Duration
 import chylex.hee.init.ModItems.DRAGON_SCALE
+import chylex.hee.system.util.floorToInt
 import net.minecraft.init.Items.BLAZE_POWDER
 import net.minecraft.init.Items.FERMENTED_SPIDER_EYE
 import net.minecraft.init.Items.FISH
@@ -35,27 +36,27 @@ import net.minecraft.potion.PotionUtils
 object PotionBrewing{
 	val INFO = arrayOf(
 		PotionTypeInfo(INSTANT_HEALTH,  maxLevel = 2),
-		PotionTypeInfo(FIRE_RESISTANCE, Duration(baseTicks = 3 min 20, stepTicks = 3 min 10, maxSteps = 4), maxLevel = 1),
-		PotionTypeInfo(REGENERATION,    Duration(baseTicks = 0 min 30, stepTicks = 0 min 30, maxSteps = 3), maxLevel = 3),
-		PotionTypeInfo(STRENGTH,        Duration(baseTicks = 2 min 30, stepTicks = 2 min 15, maxSteps = 4), maxLevel = 3),
-		PotionTypeInfo(SPEED,           Duration(baseTicks = 2 min 30, stepTicks = 2 min 15, maxSteps = 4), maxLevel = 3),
-		PotionTypeInfo(NIGHT_VISION,    Duration(baseTicks = 3 min 20, stepTicks = 3 min 10, maxSteps = 4), maxLevel = 1),
-		PotionTypeInfo(WATER_BREATHING, Duration(baseTicks = 3 min 20, stepTicks = 3 min 10, maxSteps = 4), maxLevel = 1),
-		PotionTypeInfo(JUMP_BOOST,      Duration(baseTicks = 2 min 30, stepTicks = 2 min 15, maxSteps = 4), maxLevel = 3),
-		PotionTypeInfo(POISON,          Duration(baseTicks = 0 min 30, stepTicks = 0 min 30, maxSteps = 3), maxLevel = 2),
-		// UPDATE PotionTypeInfo(TURTLE_MASTER,   Duration(baseTicks = 0 min 20, stepTicks =   13 s 7, maxSteps = 3), maxLevel = 2),
-		// UPDATE PotionTypeInfo(SLOW_FALLING,    Duration(baseTicks = 1 min 15, stepTicks = 1 min 15, maxSteps = 3), maxLevel = 1),
-		PotionTypeInfo(LEVITATION,      Duration(baseTicks = 0 min 30, stepTicks = 0 min 30, maxSteps = 3), maxLevel = 2),
-		PotionTypeInfo(PURITY,          Duration(baseTicks = 2 min 30, stepTicks = 2 min 15, maxSteps = 4), maxLevel = 3),
-		// TODO PotionTypeInfo(CORRUPTION,      Duration(baseTicks = 0 min 20, stepTicks =   13 s 7, maxSteps = 3), maxLevel = 1),
-		PotionTypeInfo(BLINDNESS,       Duration(baseTicks = 0 min 20, stepTicks =   13 s 7, maxSteps = 3), maxLevel = 1),
-		PotionTypeInfo(WEAKNESS,        Duration(baseTicks = 1 min 15, stepTicks = 1 min 15, maxSteps = 3), maxLevel = 3),
+		PotionTypeInfo(FIRE_RESISTANCE, Duration(baseTicks = 3 min 20, stepTicks = 3 min 10,    maxSteps = 4), maxLevel = 1),
+		PotionTypeInfo(REGENERATION,    Duration(baseTicks = 0 min 30, stepTicks = 0 min 30,    maxSteps = 3), maxLevel = 3),
+		PotionTypeInfo(STRENGTH,        Duration(baseTicks = 2 min 30, stepTicks = 2 min 15,    maxSteps = 4), maxLevel = 3),
+		PotionTypeInfo(SPEED,           Duration(baseTicks = 2 min 30, stepTicks = 2 min 15,    maxSteps = 4), maxLevel = 3),
+		PotionTypeInfo(NIGHT_VISION,    Duration(baseTicks = 3 min 20, stepTicks = 3 min 10,    maxSteps = 4), maxLevel = 1),
+		PotionTypeInfo(WATER_BREATHING, Duration(baseTicks = 3 min 20, stepTicks = 3 min 10,    maxSteps = 4), maxLevel = 1),
+		PotionTypeInfo(JUMP_BOOST,      Duration(baseTicks = 2 min 30, stepTicks = 2 min 15,    maxSteps = 4), maxLevel = 3),
+		PotionTypeInfo(POISON,          Duration(baseTicks = 0 min 30, stepTicks = 0 min 30,    maxSteps = 3), maxLevel = 2),
+//		PotionTypeInfo(TURTLE_MASTER,   Duration(baseTicks = 0 min 20, stepTicks = 0 min 13.34, maxSteps = 3), maxLevel = 2), // UPDATE
+//		PotionTypeInfo(SLOW_FALLING,    Duration(baseTicks = 1 min 15, stepTicks = 1 min 15,    maxSteps = 3), maxLevel = 1), // UPDATE
+		PotionTypeInfo(LEVITATION,      Duration(baseTicks = 0 min 30, stepTicks = 0 min 30,    maxSteps = 3), maxLevel = 2),
+		PotionTypeInfo(PURITY,          Duration(baseTicks = 2 min 30, stepTicks = 2 min 15,    maxSteps = 4), maxLevel = 3),
+//		PotionTypeInfo(CORRUPTION,      Duration(baseTicks = 0 min 20, stepTicks = 0 min 13.34, maxSteps = 3), maxLevel = 1), // TODO
+		PotionTypeInfo(BLINDNESS,       Duration(baseTicks = 0 min 20, stepTicks = 0 min 13.34, maxSteps = 3), maxLevel = 1),
+		PotionTypeInfo(WEAKNESS,        Duration(baseTicks = 1 min 15, stepTicks = 1 min 15,    maxSteps = 3), maxLevel = 3),
 		
 		PotionTypeInfo(INSTANT_DAMAGE,  maxLevel = 2),
-		PotionTypeInfo(SPEED,           Duration(baseTicks = 1 min 15, stepTicks = 1 min 7 s 10, maxSteps = 4), maxLevel = 3),
-		PotionTypeInfo(INVISIBILITY,    Duration(baseTicks = 1 min 20, stepTicks =     1 min 16, maxSteps = 4), maxLevel = 1),
-		// TODO PotionTypeInfo(BANISHMENT,      Duration(baseTicks = 0 min 15, stepTicks =       10 s 0, maxSteps = 3), maxLevel = 1),
-		PotionTypeInfo(GLOWING,         Duration(baseTicks = 0 min 12, stepTicks =        8 s 0, maxSteps = 3), maxLevel = 1)
+		PotionTypeInfo(SLOWNESS,        Duration(baseTicks = 1 min 15, stepTicks = 1 min 7.5, maxSteps = 4), maxLevel = 3),
+		PotionTypeInfo(INVISIBILITY,    Duration(baseTicks = 1 min 20, stepTicks = 1 min 16,  maxSteps = 4), maxLevel = 1),
+//		PotionTypeInfo(BANISHMENT,      Duration(baseTicks = 0 min 15, stepTicks = 0 min 10,  maxSteps = 3), maxLevel = 1), // TODO
+		PotionTypeInfo(GLOWING,         Duration(baseTicks = 0 min 12, stepTicks = 0 min 8,   maxSteps = 3), maxLevel = 1)
 	).associateBy { it.potion }
 	
 	// TODO register levitation type and other custom potions
@@ -115,7 +116,7 @@ object PotionBrewing{
 		return ((this * 60) + seconds) * 20
 	}
 	
-	private infix fun Int.s(ticks: Int): Int{
-		return (this * 20) + ticks
+	private infix fun Int.min(seconds: Double): Int{
+		return (((this * 60) + seconds) * 20).floorToInt()
 	}
 }

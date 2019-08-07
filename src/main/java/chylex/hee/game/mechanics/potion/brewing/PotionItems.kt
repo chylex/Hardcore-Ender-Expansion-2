@@ -42,15 +42,30 @@ object PotionItems{
 		MobEffects.WEAKNESS        to PotionTypes.WEAKNESS
 	)
 	
-	val VANILLA_TYPES
+	private val TYPE_NO_EFFECT_OVERRIDES = mutableMapOf<PotionType, PotionType>()
+	
+	val ALTERED_TYPES
 		get() = TYPE_MAPPING.values
+	
+	fun registerNoEffectOverride(original: PotionType, override: PotionType){
+		TYPE_NO_EFFECT_OVERRIDES[original] = override
+	}
+	
+	fun findNoEffectOverride(type: PotionType): PotionType{
+		return TYPE_NO_EFFECT_OVERRIDES[type] ?: type
+	}
 	
 	fun getBottle(item: Item, type: PotionType): ItemStack{
 		return PotionUtils.addPotionToItemStack(ItemStack(item), type)
 	}
 	
-	fun getBottle(item: Item, potion: Potion): ItemStack{
-		return getBottle(item, TYPE_MAPPING.getOrDefault(potion, PotionTypes.WATER))
+	fun getBottle(item: Item, potion: Potion, withBaseEffect: Boolean): ItemStack{
+		val type = TYPE_MAPPING.getOrDefault(potion, PotionTypes.WATER)
+		
+		return if (withBaseEffect)
+			getBottle(item, type)
+		else
+			getBottle(item, findNoEffectOverride(type))
 	}
 	
 	fun checkBottle(stack: ItemStack, type: PotionType): Boolean{
