@@ -7,10 +7,11 @@ import net.minecraft.init.MobEffects.WITHER
 import net.minecraft.potion.PotionEffect
 import kotlin.math.max
 
-object PotionPurity : PotionBase(color = RGB(34, 204, 252), isNegative = false){
+object PotionPurity : PotionBase(color = RGB(73, 217, 255), isNegative = false){
 	const val MIN_DURATION = 60 // allow animations to finish, must be > 10
 	
 	val PURITY = this
+	val TYPE = this.makeType
 	
 	override val iconX = 18
 	override val iconY = 0

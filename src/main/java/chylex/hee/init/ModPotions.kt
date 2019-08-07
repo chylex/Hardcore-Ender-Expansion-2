@@ -37,6 +37,8 @@ object ModPotions{
 	@SubscribeEvent
 	fun onRegisterTypes(e: RegistryEvent.Register<PotionType>){
 		with(e.registry){
+			register(PotionPurity.TYPE named "purity")
+			
 			val alteredTypes = PotionItems.ALTERED_TYPES.map { it.registryName!!.path }.toSet()
 			
 			for(type in this){

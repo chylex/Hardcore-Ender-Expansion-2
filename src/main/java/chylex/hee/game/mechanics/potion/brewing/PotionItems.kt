@@ -1,4 +1,5 @@
 package chylex.hee.game.mechanics.potion.brewing
+import chylex.hee.game.mechanics.potion.PotionPurity
 import chylex.hee.game.mechanics.potion.brewing.modifiers.BrewConvertBottle
 import chylex.hee.game.mechanics.potion.brewing.modifiers.BrewIncreaseDuration
 import chylex.hee.game.mechanics.potion.brewing.modifiers.BrewIncreaseLevel
@@ -39,7 +40,8 @@ object PotionItems{
 		MobEffects.POISON          to PotionTypes.POISON,
 		MobEffects.REGENERATION    to PotionTypes.REGENERATION,
 		MobEffects.STRENGTH        to PotionTypes.STRENGTH,
-		MobEffects.WEAKNESS        to PotionTypes.WEAKNESS
+		MobEffects.WEAKNESS        to PotionTypes.WEAKNESS,
+		PotionPurity               to PotionPurity.TYPE
 	)
 	
 	private val TYPE_NO_EFFECT_OVERRIDES = mutableMapOf<PotionType, PotionType>()

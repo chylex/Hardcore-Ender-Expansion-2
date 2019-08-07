@@ -110,6 +110,7 @@ item.hee.dragon_scale.name=Dragon Scale
 item.hee.alteration_nexus.name=Alteration Nexus
 item.hee.void_essence.name=Void Essence
 item.hee.obsidian_rod.name=Obsidian Rod
+item.hee.purity_extract.name=Purity Extract
 item.hee.static_core.name=Static Core
 item.hee.dirty_infernium_ingot.name=Dirty Infernium Ingot
 item.hee.revitalization_substance.name=Revitalization Substance
@@ -215,6 +216,11 @@ entity.hee.ender_pearl.name=Ender Pearl
 
 effect.hee.lifeless=Lifeless
 effect.hee.purity=Purity
+
+potion.effect.purity=Potion of Purity
+splash_potion.effect.purity=Splash Potion of Purity
+lingering_potion.effect.purity=Lingering Potion of Purity
+tipped_arrow.effect.purity=Arrow of Purity
 
 gui.hee.amulet_of_recovery.title=Amulet of Recovery
 gui.hee.amulet_of_recovery.move_all=Move All

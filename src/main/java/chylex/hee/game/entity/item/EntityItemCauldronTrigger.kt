@@ -14,8 +14,10 @@ import chylex.hee.system.util.Pos
 import chylex.hee.system.util.cloneFrom
 import chylex.hee.system.util.get
 import chylex.hee.system.util.getState
+import chylex.hee.system.util.motionVec
 import chylex.hee.system.util.playClient
 import chylex.hee.system.util.selectEntities
+import chylex.hee.system.util.setBlock
 import chylex.hee.system.util.setState
 import chylex.hee.system.util.size
 import chylex.hee.system.util.with
@@ -30,6 +32,7 @@ import net.minecraft.util.EnumFacing.UP
 import net.minecraft.util.SoundCategory
 import net.minecraft.util.math.AxisAlignedBB
 import net.minecraft.util.math.BlockPos
+import net.minecraft.util.math.Vec3d
 import net.minecraft.world.World
 import java.util.Random
 import kotlin.math.min
@@ -40,6 +43,11 @@ class EntityItemCauldronTrigger : EntityItem{
 			ModItems.END_POWDER to 1,
 			ModItems.ANCIENT_DUST to 1,
 			ModItems.DRAGON_SCALE to 1
+		)
+		
+		private val RECIPE_PURITY_EXTRACT = arrayOf(
+			ModItems.END_POWDER to 3,
+			ModItems.VOID_ESSENCE to 1
 		)
 		
 		private val PARTICLE_RECIPE_FINISH = ParticleSpawnerCustom(
@@ -75,6 +83,17 @@ class EntityItemCauldronTrigger : EntityItem{
 			if (block === Blocks.CAULDRON){
 				if (state[LEVEL] > 0 && tryUseIngredients(RECIPE_DRAGONS_BREATH)){
 					pos.setState(world, ModBlocks.CAULDRON_DRAGONS_BREATH.with(LEVEL, state[LEVEL]))
+				}
+			}
+			else if (block === ModBlocks.CAULDRON_PURIFIED_ENDER_GOO){
+				if (state[LEVEL] == BlockAbstractCauldron.MAX_LEVEL && tryUseIngredients(RECIPE_PURITY_EXTRACT)){
+					pos.setBlock(world, Blocks.CAULDRON)
+					
+					EntityItem(world, pos.x + 0.5, pos.y + 0.4, pos.z + 0.5, ItemStack(ModItems.PURITY_EXTRACT)).apply {
+						motionVec = Vec3d.ZERO
+						setDefaultPickupDelay()
+						world.spawnEntity(this)
+					}
 				}
 			}
 		}

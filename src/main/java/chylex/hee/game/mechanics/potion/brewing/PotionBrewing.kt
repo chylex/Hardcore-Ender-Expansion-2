@@ -2,6 +2,7 @@ package chylex.hee.game.mechanics.potion.brewing
 import chylex.hee.game.mechanics.potion.PotionPurity.PURITY
 import chylex.hee.game.mechanics.potion.brewing.PotionTypeInfo.Duration
 import chylex.hee.init.ModItems.DRAGON_SCALE
+import chylex.hee.init.ModItems.PURITY_EXTRACT
 import chylex.hee.system.util.floorToInt
 import net.minecraft.init.Items.BLAZE_POWDER
 import net.minecraft.init.Items.FERMENTED_SPIDER_EYE
@@ -73,8 +74,8 @@ object PotionBrewing{
 		(SPIDER_EYE to 0)             to POISON,
 		// UPDATE (TURTLE_SHELL to 0)           to TURTLE_MASTER,
 		// UPDATE (PHANTOM_MEMBRANE to 0)       to SLOW_FALLING,
-		(DRAGON_SCALE to 0)           to LEVITATION
-		// TODO (PURITY_EXTRACT to 0)         to PURITY,
+		(DRAGON_SCALE to 0)           to LEVITATION,
+		(PURITY_EXTRACT to 0)         to PURITY
 		// TODO (INSTABILITY_ORB to 0)        to CORRUPTION,
 		// TODO (MURKY_CRYSTAL to 0)          to BLINDNESS
 	)

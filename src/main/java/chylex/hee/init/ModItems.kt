@@ -68,6 +68,7 @@ object ModItems{
 	@JvmField val ALTERATION_NEXUS         = Item().apply { setup("alteration_nexus") }
 	@JvmField val VOID_ESSENCE             = Item().apply { setup("void_essence") }
 	@JvmField val OBSIDIAN_ROD             = Item().apply { setup("obsidian_rod") }
+	@JvmField val PURITY_EXTRACT           = Item().apply { setup("purity_extract") }
 	@JvmField val STATIC_CORE              = Item().apply { setup("static_core") }
 	@JvmField val DIRTY_INFERNIUM_INGOT    = Item().apply { setup("dirty_infernium_ingot") }
 	@JvmField val REVITALIZATION_SUBSTANCE = ItemRevitalizationSubstance().apply { setup("revitalization_substance") }
@@ -144,6 +145,7 @@ object ModItems{
 			register(ALTERATION_NEXUS)
 			register(VOID_ESSENCE)
 			register(OBSIDIAN_ROD)
+			register(PURITY_EXTRACT)
 			register(STATIC_CORE)
 			register(DIRTY_INFERNIUM_INGOT)
 			register(REVITALIZATION_SUBSTANCE)
