@@ -29,7 +29,7 @@ import net.minecraft.world.World
 abstract class BlockAbstractPortal(builder: BlockBuilder) : BlockSimple(builder), ITileEntityProvider{
 	companion object{
 		const val MAX_DISTANCE_FROM_FRAME = 6.0
-		private const val MAX_SIZE = 5
+		const val MAX_SIZE = 5
 		
 		private val SELECTION_AABB = AxisAlignedBB(0.0, 0.0, 0.0, 1.0, 0.75,  1.0)
 		private val COLLISION_AABB = AxisAlignedBB(0.0, 0.0, 0.0, 1.0, 0.025, 1.0)

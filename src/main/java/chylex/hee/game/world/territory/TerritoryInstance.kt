@@ -10,6 +10,7 @@ import chylex.hee.system.util.component1
 import chylex.hee.system.util.component2
 import chylex.hee.system.util.floorToInt
 import net.minecraft.entity.Entity
+import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.ChunkPos
 import net.minecraft.world.World
@@ -120,8 +121,16 @@ data class TerritoryInstance(val territory: TerritoryType, val index: Int){
 		return TerritoryGlobalStorage.get().forInstance(this)?.loadSpawn(world) ?: bottomCenterPos.let(world::getTopSolidOrLiquidBlock).up()
 	}
 	
-	fun prepareSpawnPoint(world: World, clearanceRadius: Int): SpawnInfo{
-		val spawnPoint = getSpawnPoint(world)
+	fun getSpawnPoint(world: World, player: EntityPlayer): BlockPos{
+		return TerritoryGlobalStorage.get().forInstance(this)?.loadSpawnForPlayer(world, player) ?: bottomCenterPos.let(world::getTopSolidOrLiquidBlock).up()
+	}
+	
+	fun updateSpawnPoint(player: EntityPlayer, pos: BlockPos){
+		TerritoryGlobalStorage.get().forInstance(this)?.updateSpawnForPlayer(player, pos)
+	}
+	
+	fun prepareSpawnPoint(world: World, entity: Entity?, clearanceRadius: Int): SpawnInfo{
+		val spawnPoint = if (entity is EntityPlayer) getSpawnPoint(world, entity) else getSpawnPoint(world)
 		val spawnChunk = ChunkPos(spawnPoint)
 		
 		for(chunkX in -7..7) for(chunkZ in -7..7){

@@ -28,12 +28,8 @@ sealed class DimensionTeleporter{
 	}
 	
 	object EndSpawnPortal : ITeleporter{
-		fun getSpawnInfo(world: World): SpawnInfo?{
-			return (world.provider as? WorldProviderEndCustom)?.getSpawnInfo()
-		}
-		
 		override fun placeEntity(world: World, entity: Entity, yaw: Float){
-			val (spawnPoint, spawnYaw) = getSpawnInfo(world) ?: return
+			val (spawnPoint, spawnYaw) = (world.provider as? WorldProviderEndCustom)?.getSpawnInfo() ?: return
 			placeAt(entity, spawnPoint.center.subtractY(0.45), spawnYaw ?: yaw)
 		}
 	}
