@@ -1,7 +1,7 @@
 package chylex.hee.game.world
 import chylex.hee.game.world.generation.TerritoryGenerationCache
+import chylex.hee.game.world.generation.TerritoryGenerationInfo
 import chylex.hee.game.world.territory.TerritoryInstance
-import chylex.hee.game.world.territory.storage.TerritoryGlobalStorage
 import chylex.hee.game.world.util.Transform
 import chylex.hee.system.util.Pos
 import chylex.hee.system.util.component1
@@ -33,8 +33,8 @@ class ChunkGeneratorEndCustom(private val world: World) : IChunkGenerator{
 		return Pos(internalOffsetX, 0, internalOffsetZ)
 	}
 	
-	fun initializeSpawnPoint(instance: TerritoryInstance){
-		TerritoryGlobalStorage.get().forInstance(instance)?.initializeSpawnPoint(territoryCache.get(instance).second)
+	fun getGenerationInfo(instance: TerritoryInstance): TerritoryGenerationInfo{
+		return territoryCache.get(instance).second
 	}
 	
 	// Generation & population

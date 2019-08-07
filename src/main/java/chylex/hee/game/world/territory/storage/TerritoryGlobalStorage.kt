@@ -53,7 +53,7 @@ class TerritoryGlobalStorage(name: String) : WorldSavedData(name){
 		setTag("[Spawn]", spawnEntry.serializeNBT())
 		
 		for((key, list) in territoryData){
-			 setList(key.title, NBTObjectList.of(list.map(TerritoryEntry::serializeNBT)))
+			setList(key.title, NBTObjectList.of(list.map(TerritoryEntry::serializeNBT)))
 		}
 	}
 	

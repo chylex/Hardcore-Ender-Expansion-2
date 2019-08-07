@@ -65,11 +65,11 @@ class WorldProviderEndCustom : WorldProviderEnd(){
 	// Spawn point
 	
 	fun getSpawnInfo(): SpawnInfo{
-		return THE_HUB_INSTANCE.prepareSpawnPoint(world, preloadChunks = true)
+		return THE_HUB_INSTANCE.prepareSpawnPoint(world, clearanceRadius = 1)
 	}
 	
 	override fun getSpawnPoint(): BlockPos{
-		return THE_HUB_INSTANCE.prepareSpawnPoint(world, preloadChunks = false).pos
+		return THE_HUB_INSTANCE.getSpawnPoint(world)
 	}
 	
 	override fun getRandomizedSpawnPoint(): BlockPos{

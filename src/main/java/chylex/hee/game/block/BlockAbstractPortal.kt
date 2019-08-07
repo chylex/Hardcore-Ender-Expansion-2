@@ -1,15 +1,18 @@
 package chylex.hee.game.block
 import chylex.hee.game.block.info.BlockBuilder
 import chylex.hee.system.util.Facing4
+import chylex.hee.system.util.allInBox
 import chylex.hee.system.util.allInBoxMutable
 import chylex.hee.system.util.distanceTo
 import chylex.hee.system.util.floorToInt
 import chylex.hee.system.util.getBlock
 import chylex.hee.system.util.isAir
+import chylex.hee.system.util.isTopSolid
 import chylex.hee.system.util.math.LerpedFloat
 import chylex.hee.system.util.max
 import chylex.hee.system.util.min
 import chylex.hee.system.util.offsetUntil
+import chylex.hee.system.util.setAir
 import chylex.hee.system.util.setBlock
 import net.minecraft.block.Block
 import net.minecraft.block.ITileEntityProvider
@@ -56,6 +59,20 @@ abstract class BlockAbstractPortal(builder: BlockBuilder) : BlockSimple(builder)
 			
 			if (minPos.allInBoxMutable(maxPos).all { it.isAir(world) }){
 				minPos.allInBoxMutable(maxPos).forEach { it.setBlock(world, innerBlock) }
+			}
+		}
+		
+		fun ensureClearance(world: World, spawnPos: BlockPos, radius: Int){
+			for(pos in spawnPos.add(-radius, 1, -radius).allInBox(spawnPos.add(radius, 2, radius))){
+				pos.setAir(world)
+			}
+		}
+		
+		fun ensurePlatform(world: World, spawnPos: BlockPos, block: Block, radius: Int){
+			for(pos in spawnPos.add(-radius, -1, -radius).allInBox(spawnPos.add(radius, -1, radius))){
+				if (!pos.isTopSolid(world)){
+					pos.setBlock(world, block)
+				}
 			}
 		}
 	}

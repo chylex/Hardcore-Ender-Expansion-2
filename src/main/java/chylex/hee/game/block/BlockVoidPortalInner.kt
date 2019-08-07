@@ -91,7 +91,7 @@ class BlockVoidPortalInner(builder: BlockBuilder) : BlockAbstractPortal(builder)
 				val instance = pos.closestTickingTile<TileEntityVoidPortalStorage>(world, MAX_DISTANCE_FROM_FRAME)?.currentInstance
 				
 				if (instance != null){
-					teleportEntity(entity, instance.prepareSpawnPoint(world, preloadChunks = true))
+					teleportEntity(entity, instance.prepareSpawnPoint(world, clearanceRadius = 1))
 				}
 			}
 			

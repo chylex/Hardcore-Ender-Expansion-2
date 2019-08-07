@@ -1,4 +1,5 @@
 package chylex.hee.game.mechanics.portal
+import chylex.hee.game.block.BlockAbstractPortal
 import chylex.hee.game.world.WorldProviderEndCustom
 import chylex.hee.system.util.center
 import chylex.hee.system.util.getPosOrNull
@@ -47,13 +48,15 @@ sealed class DimensionTeleporter{
 		}
 		
 		override fun placeEntity(world: World, entity: Entity, yaw: Float){
-			val target = entity
-				.takeIf { it.dimension == 0 }
-				?.heeTagPersistentOrNull
-				?.getPosOrNull(LAST_PORTAL_POS_TAG)
-				?.let { it.center.subtractY(0.45) }
+			val target = entity.takeIf { it.dimension == 0 }?.heeTagPersistentOrNull?.getPosOrNull(LAST_PORTAL_POS_TAG)
 			
-			placeAt(entity, target ?: spawnPoint(world), yaw)
+			if (target != null){
+				BlockAbstractPortal.ensureClearance(world, target, radius = 1)
+				placeAt(entity, target.center.subtractY(0.45), yaw)
+			}
+			else{
+				placeAt(entity, spawnPoint(world), yaw)
+			}
 		}
 	}
 	

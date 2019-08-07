@@ -12,5 +12,9 @@ interface ITerritoryGenerator{
 	val defaultBlock: Block
 		get() = Blocks.AIR
 	
+	@JvmDefault
+	val groundBlock: Block
+		get() = Blocks.END_STONE
+	
 	fun provide(world: SegmentedWorld): TerritoryGenerationInfo
 }
