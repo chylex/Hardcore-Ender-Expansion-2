@@ -2,6 +2,7 @@ package chylex.hee.client.render
 import chylex.hee.HEE
 import chylex.hee.client.render.util.GL
 import chylex.hee.client.util.MC
+import chylex.hee.game.block.BlockAbstractPortal
 import chylex.hee.game.block.entity.TileEntityEnergyCluster
 import chylex.hee.game.block.info.Materials
 import chylex.hee.game.mechanics.energy.IEnergyQuantity
@@ -135,15 +136,21 @@ object OverlayRenderer{
 		}
 	}
 	
+	// Block outlines
+	
 	@JvmStatic
 	@SubscribeEvent
 	fun onRenderBlockOutline(e: DrawBlockHighlightEvent){
 		if (e.target.typeOfHit == BLOCK){ // why the fuck is this still called for air and entities
 			val world = e.player.world
 			val pos = e.target.blockPos
+			val block = pos.getBlock(world)
 			
-			if (pos.getBlock(world) === ModBlocks.ENERGY_CLUSTER){
+			if (block === ModBlocks.ENERGY_CLUSTER){
 				clusterLookedAt = pos.getTile(world)
+				e.isCanceled = true
+			}
+			else if (block is BlockAbstractPortal){
 				e.isCanceled = true
 			}
 		}
