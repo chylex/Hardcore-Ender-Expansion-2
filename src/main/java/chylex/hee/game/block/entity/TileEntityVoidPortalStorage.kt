@@ -5,12 +5,14 @@ import chylex.hee.game.block.entity.TileEntityBase.Context.NETWORK
 import chylex.hee.game.block.entity.TileEntityBasePortalController.ForegroundRenderState.Animating
 import chylex.hee.game.block.entity.TileEntityBasePortalController.ForegroundRenderState.Invisible
 import chylex.hee.game.block.entity.TileEntityBasePortalController.ForegroundRenderState.Visible
+import chylex.hee.game.mechanics.portal.SpawnInfo
 import chylex.hee.game.world.territory.TerritoryInstance
 import chylex.hee.init.ModItems
 import chylex.hee.system.util.FLAG_SKIP_RENDER
 import chylex.hee.system.util.FLAG_SYNC_CLIENT
 import chylex.hee.system.util.getIntegerOrNull
 import chylex.hee.system.util.square
+import net.minecraft.entity.Entity
 import net.minecraft.item.ItemStack
 import net.minecraft.nbt.NBTTagCompound
 import kotlin.math.min
@@ -52,12 +54,18 @@ class TileEntityVoidPortalStorage : TileEntityBasePortalController(), IVoidPorta
 	override var currentInstance: TerritoryInstance? by Notifying(null, FLAG_SYNC_CLIENT or FLAG_SKIP_RENDER)
 		private set
 	
+	private var firstSpawnInfo: SpawnInfo? = null
+	
 	private var remainingTime = 0
 	private var clientTime = 0
 	
 	fun activateToken(stack: ItemStack){
 		currentInstance = ModItems.PORTAL_TOKEN.getOrCreateTerritoryInstance(stack)
 		remainingTime = ACTIVATION_DURATION_TICKS
+	}
+	
+	fun prepareSpawnPoint(entity: Entity): SpawnInfo?{
+		return firstSpawnInfo ?: currentInstance?.prepareSpawnPoint(world, entity, clearanceRadius = 1).also { firstSpawnInfo = it }
 	}
 	
 	// Overrides
@@ -68,6 +76,7 @@ class TileEntityVoidPortalStorage : TileEntityBasePortalController(), IVoidPorta
 		if (!world.isRemote){
 			if (remainingTime > 0 && --remainingTime == 0){
 				currentInstance = null
+				firstSpawnInfo = null
 			}
 		}
 		else{

@@ -10,6 +10,8 @@ import chylex.hee.system.util.component1
 import chylex.hee.system.util.component2
 import chylex.hee.system.util.floorToInt
 import net.minecraft.entity.Entity
+import net.minecraft.entity.IEntityOwnable
+import net.minecraft.entity.item.EntityItem
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.ChunkPos
@@ -130,7 +132,7 @@ data class TerritoryInstance(val territory: TerritoryType, val index: Int){
 	}
 	
 	fun prepareSpawnPoint(world: World, entity: Entity?, clearanceRadius: Int): SpawnInfo{
-		val spawnPoint = if (entity is EntityPlayer) getSpawnPoint(world, entity) else getSpawnPoint(world)
+		val spawnPoint = entity?.let(::determineOwningPlayer)?.let { getSpawnPoint(world, it) } ?: getSpawnPoint(world)
 		val spawnChunk = ChunkPos(spawnPoint)
 		
 		for(chunkX in -7..7) for(chunkZ in -7..7){
@@ -141,5 +143,13 @@ data class TerritoryInstance(val territory: TerritoryType, val index: Int){
 		BlockAbstractPortal.ensurePlatform(world, spawnPoint, territory.gen.groundBlock, clearanceRadius)
 		
 		return SpawnInfo(spawnPoint, TerritoryGlobalStorage.get().forInstance(this)?.spawnYaw)
+	}
+	
+	@Suppress("UNNECESSARY_SAFE_CALL")
+	private fun determineOwningPlayer(entity: Entity) = when(entity){
+		is EntityPlayer -> entity
+		is EntityItem -> entity.thrower?.let { entity.world.minecraftServer?.playerList?.getPlayerByUsername(it) }
+		is IEntityOwnable -> entity.owner as? EntityPlayer
+		else -> null
 	}
 }

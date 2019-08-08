@@ -108,17 +108,17 @@ class BlockVoidPortalInner(builder: BlockBuilder) : BlockAbstractPortal(builder)
 		
 		when(pos.getState(world)[TYPE]){
 			HUB -> {
-				val instance = pos.closestTickingTile<TileEntityVoidPortalStorage>(world, MAX_DISTANCE_FROM_FRAME)?.currentInstance
+				val info = pos.closestTickingTile<TileEntityVoidPortalStorage>(world, MAX_DISTANCE_FROM_FRAME)?.prepareSpawnPoint(entity)
 				
-				if (instance != null){
+				if (info != null){
 					updateSpawnPortal(entity, pos)
-					teleportEntity(entity, instance.prepareSpawnPoint(world, entity, clearanceRadius = 1))
+					teleportEntity(entity, info)
 				}
 			}
 			
 			RETURN_ACTIVE -> {
 				updateSpawnPortal(entity, pos)
-				teleportEntity(entity, TerritoryInstance.THE_HUB_INSTANCE.prepareSpawnPoint(world, entity, clearanceRadius = 2))
+				teleportEntity(entity, TerritoryInstance.THE_HUB_INSTANCE.prepareSpawnPoint(world, entity as? EntityPlayer, clearanceRadius = 2))
 			}
 			
 			else -> {}
