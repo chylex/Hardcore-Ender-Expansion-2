@@ -1,4 +1,5 @@
 package chylex.hee.game.block.entity
+import chylex.hee.game.block.BlockAbstractPortal
 import chylex.hee.game.block.BlockVoidPortalInner.IVoidPortalController
 import chylex.hee.game.block.entity.TileEntityBase.Context.NETWORK
 import chylex.hee.game.block.entity.TileEntityBasePortalController.ForegroundRenderState.Animating
@@ -9,17 +10,23 @@ import chylex.hee.init.ModItems
 import chylex.hee.system.util.FLAG_SKIP_RENDER
 import chylex.hee.system.util.FLAG_SYNC_CLIENT
 import chylex.hee.system.util.getIntegerOrNull
+import chylex.hee.system.util.square
 import net.minecraft.item.ItemStack
 import net.minecraft.nbt.NBTTagCompound
+import kotlin.math.min
+import kotlin.math.nextUp
 
 class TileEntityVoidPortalStorage : TileEntityBasePortalController(), IVoidPortalController{
 	private companion object{
 		private const val ACTIVATION_DURATION_TICKS = 20 * 10
 		
-		private const val FADE_IN_PROGRESS_PER_UPDATE = 0.05F
+		private const val FADE_IN_PROGRESS_PER_UPDATE = 0.04F
 		private const val FADE_OUT_PROGRESS_PER_UPDATE = 0.02F
-		
 		private const val FADE_IN_DURATION_TICKS = 1F / FADE_IN_PROGRESS_PER_UPDATE
+		
+		private const val SLOWING_DURATION_TICKS = 75
+		private const val SLOWING_EXTRA_DELAY_TICKS = 4
+		private val SLOWING_PROGRESS_PER_UPDATE = ((1000F / 20F) / BlockAbstractPortal.TRANSLATION_SPEED).nextUp()
 	}
 	
 	// Client animation
@@ -37,7 +44,7 @@ class TileEntityVoidPortalStorage : TileEntityBasePortalController(), IVoidPorta
 	override val clientAnimationFadeInSpeed
 		get() = FADE_IN_PROGRESS_PER_UPDATE
 	
-	override val clientAnimationFadeOutSpeed // TODO add slow down animation
+	override val clientAnimationFadeOutSpeed
 		get() = FADE_OUT_PROGRESS_PER_UPDATE
 	
 	// Token handling
@@ -46,6 +53,7 @@ class TileEntityVoidPortalStorage : TileEntityBasePortalController(), IVoidPorta
 		private set
 	
 	private var remainingTime = 0
+	private var clientTime = 0
 	
 	fun activateToken(stack: ItemStack){
 		currentInstance = ModItems.PORTAL_TOKEN.getOrCreateTerritoryInstance(stack)
@@ -57,8 +65,26 @@ class TileEntityVoidPortalStorage : TileEntityBasePortalController(), IVoidPorta
 	override fun update(){
 		super.update()
 		
-		if (!world.isRemote && remainingTime > 0 && --remainingTime == 0){
-			currentInstance = null
+		if (!world.isRemote){
+			if (remainingTime > 0 && --remainingTime == 0){
+				currentInstance = null
+			}
+		}
+		else{
+			if (clientAnimationProgress.currentValue > 0F){ // just a small effect so don't care about syncing with server
+				val slowingStartTime = ACTIVATION_DURATION_TICKS - SLOWING_DURATION_TICKS - SLOWING_EXTRA_DELAY_TICKS
+				
+				if (++clientTime > slowingStartTime){
+					val progress = min(1F, (clientTime - slowingStartTime).toFloat() / SLOWING_DURATION_TICKS)
+					val offset = SLOWING_PROGRESS_PER_UPDATE * square(progress)
+					
+					clientPortalOffset.update(clientPortalOffset.currentValue + offset)
+				}
+			}
+			else{
+				clientTime = 0
+				clientPortalOffset.updateImmediately(0F)
+			}
 		}
 	}
 	

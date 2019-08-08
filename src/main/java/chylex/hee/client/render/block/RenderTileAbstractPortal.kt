@@ -3,6 +3,7 @@ import chylex.hee.client.render.util.GL
 import chylex.hee.client.render.util.TESSELLATOR
 import chylex.hee.client.render.util.draw
 import chylex.hee.client.util.MC
+import chylex.hee.game.block.BlockAbstractPortal
 import chylex.hee.game.block.BlockAbstractPortal.IPortalController
 import chylex.hee.game.block.entity.TileEntityPortalInner
 import chylex.hee.system.Resource
@@ -97,7 +98,7 @@ abstract class RenderTileAbstractPortal<T : TileEntityPortalInner, C : IPortalCo
 		isAnimating = animationProgress > 0F && animationProgress < 1F
 		
 		cameraTarget = ActiveRenderInfo.getCameraPosition()
-		globalTranslation = (MC.systemTime % 700000L) / 700000F
+		globalTranslation = ((MC.systemTime % BlockAbstractPortal.TRANSLATION_SPEED_LONG) / BlockAbstractPortal.TRANSLATION_SPEED) - (controller?.clientPortalOffset?.get(partialTicks) ?: 0F)
 		
 		val offsetY = -y - 0.75
 		val topY = offsetY + cameraTarget.y

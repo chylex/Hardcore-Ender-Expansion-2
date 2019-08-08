@@ -28,6 +28,7 @@ abstract class TileEntityBasePortalController : TileEntityBase(), IPortalControl
 	
 	private var clientRenderState: ForegroundRenderState = Invisible
 	override val clientAnimationProgress = LerpedFloat(0F)
+	override val clientPortalOffset = LerpedFloat(0F)
 	
 	private fun updateAnimation(){
 		when(clientRenderState){

@@ -14,6 +14,7 @@ import net.minecraftforge.fml.relauncher.SideOnly
 object RenderTileEndPortal : RenderTileAbstractPortal<TileEntityPortalInner.End, IPortalController>(){
 	private object AlwaysOnController : IPortalController{
 		override val clientAnimationProgress = LerpedFloat(1F)
+		override val clientPortalOffset = LerpedFloat(0F)
 	}
 	
 	override fun findController(world: World, pos: BlockPos): IPortalController?{

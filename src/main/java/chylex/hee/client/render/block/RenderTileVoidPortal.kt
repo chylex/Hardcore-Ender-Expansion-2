@@ -22,6 +22,7 @@ object RenderTileVoidPortal : RenderTileAbstractPortal<TileEntityPortalInner.Voi
 	private object ActiveReturnController : IVoidPortalController{
 		override val currentInstance = THE_HUB_INSTANCE
 		override val clientAnimationProgress = LerpedFloat(1F)
+		override val clientPortalOffset = LerpedFloat(0F)
 	}
 	
 	override fun findController(world: World, pos: BlockPos) = when(pos.getState(world).takeIf { it.block === ModBlocks.VOID_PORTAL_INNER }?.get(TYPE)){

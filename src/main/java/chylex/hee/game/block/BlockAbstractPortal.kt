@@ -31,6 +31,9 @@ abstract class BlockAbstractPortal(builder: BlockBuilder) : BlockSimple(builder)
 		const val MAX_DISTANCE_FROM_FRAME = 6.0
 		const val MAX_SIZE = 5
 		
+		const val TRANSLATION_SPEED_LONG = 600000L
+		const val TRANSLATION_SPEED = TRANSLATION_SPEED_LONG.toFloat()
+		
 		private val SELECTION_AABB = AxisAlignedBB(0.0, 0.0, 0.0, 1.0, 0.75,  1.0)
 		private val COLLISION_AABB = AxisAlignedBB(0.0, 0.0, 0.0, 1.0, 0.025, 1.0)
 		
@@ -79,6 +82,7 @@ abstract class BlockAbstractPortal(builder: BlockBuilder) : BlockSimple(builder)
 	
 	interface IPortalController{
 		val clientAnimationProgress: LerpedFloat
+		val clientPortalOffset: LerpedFloat
 	}
 	
 	protected abstract fun onEntityInside(world: World, pos: BlockPos, entity: Entity)
