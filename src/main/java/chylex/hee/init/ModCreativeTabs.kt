@@ -29,7 +29,13 @@ object ModCreativeTabs{
 		@SideOnly(Side.CLIENT)
 		override fun displayAllRelevantItems(items: NonNullList<ItemStack>){
 			super.displayAllRelevantItems(items)
-			items.sortWith(compareBy({ it.item === ModItems.BINDING_ESSENCE }, { it.item is ItemBlock }, { itemOrder.getShort(it.item) }))
+			
+			items.sortWith(compareBy(
+				{ it.item === ModItems.BINDING_ESSENCE },
+				{ it.item === ModItems.PORTAL_TOKEN },
+				{ it.item is ItemBlock },
+				{ itemOrder.getShort(it.item) }
+			))
 		}
 	}
 }

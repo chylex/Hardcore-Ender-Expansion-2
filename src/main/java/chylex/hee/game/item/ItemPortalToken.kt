@@ -22,6 +22,7 @@ import chylex.hee.system.util.setEnum
 import net.minecraft.client.renderer.color.IItemColor
 import net.minecraft.client.resources.I18n
 import net.minecraft.client.util.ITooltipFlag
+import net.minecraft.creativetab.CreativeTabs
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.item.Item
 import net.minecraft.item.ItemStack
@@ -33,6 +34,7 @@ import net.minecraft.util.EnumActionResult.SUCCESS
 import net.minecraft.util.EnumFacing
 import net.minecraft.util.EnumFacing.UP
 import net.minecraft.util.EnumHand
+import net.minecraft.util.NonNullList
 import net.minecraft.util.math.BlockPos
 import net.minecraft.world.World
 import net.minecraftforge.fml.relauncher.Side
@@ -145,6 +147,16 @@ class ItemPortalToken : Item(){
 	
 	override fun getItemStackDisplayName(stack: ItemStack): String{
 		return I18nServer.translateToLocalFormatted("item.hee.portal_token_concrete.name", I18nServer.translateToLocal(getTerritoryType(stack)?.translationKey ?: TerritoryType.FALLBACK_TRANSLATION_KEY))
+	}
+	
+	override fun getSubItems(tab: CreativeTabs, items: NonNullList<ItemStack>){
+		if (isInCreativeTab(tab)){
+			for(territory in TerritoryType.ALL){
+				if (!territory.isSpawn){
+					items.add(forTerritory(NORMAL, territory))
+				}
+			}
+		}
 	}
 	
 	@SideOnly(Side.CLIENT)
