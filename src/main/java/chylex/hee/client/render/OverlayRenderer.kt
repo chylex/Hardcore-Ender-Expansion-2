@@ -11,7 +11,9 @@ import chylex.hee.game.mechanics.energy.IEnergyQuantity.Companion.displayString
 import chylex.hee.init.ModBlocks
 import chylex.hee.init.ModItems
 import chylex.hee.system.Resource
-import chylex.hee.system.util.color.RGB
+import chylex.hee.system.util.color.IntColor
+import chylex.hee.system.util.color.IntColor.Companion.RGB
+import chylex.hee.system.util.color.IntColor.Companion.RGBA
 import chylex.hee.system.util.getBlock
 import chylex.hee.system.util.getTile
 import net.minecraft.client.gui.Gui
@@ -92,7 +94,7 @@ object OverlayRenderer{
 	@JvmStatic
 	@SubscribeEvent
 	fun onRenderText(@Suppress("UNUSED_PARAMETER") e: RenderGameOverlayEvent.Text){
-		fun drawTextOffScreenCenter(x: Int, y: Int, line: Int, text: String, color: Int){
+		fun drawTextOffScreenCenter(x: Int, y: Int, line: Int, text: String, color: IntColor){
 			val scaledResolution = MC.resolution
 			
 			with(MC.fontRenderer){
@@ -105,8 +107,8 @@ object OverlayRenderer{
 				val offsetX = -(textWidth / 2)
 				val offsetY = -(textHeight / 2)
 				
-				Gui.drawRect(centerX + offsetX - BORDER_SIZE, centerY + offsetY - BORDER_SIZE, centerX - offsetX + BORDER_SIZE - 1, centerY - offsetY + BORDER_SIZE - 1, RGB(0, 0, 0).toInt(0.6F))
-				drawStringWithShadow(text, (centerX + offsetX).toFloat(), (centerY + offsetY).toFloat(), color)
+				Gui.drawRect(centerX + offsetX - BORDER_SIZE, centerY + offsetY - BORDER_SIZE, centerX - offsetX + BORDER_SIZE - 1, centerY - offsetY + BORDER_SIZE - 1, RGBA(0u, 0.6F).i)
+				drawStringWithShadow(text, (centerX + offsetX).toFloat(), (centerY + offsetY).toFloat(), color.i)
 			}
 		}
 		
@@ -128,10 +130,10 @@ object OverlayRenderer{
 			
 			val level = getQuantityString(it.energyLevel)
 			val capacity = getQuantityString(it.energyRegenCapacity)
-			drawTextOffScreenCenter(0, -40, firstLine + 1, I18n.format("hee.energy.overlay.level", level, capacity), RGB(220u).toInt())
+			drawTextOffScreenCenter(0, -40, firstLine + 1, I18n.format("hee.energy.overlay.level", level, capacity), RGB(220u))
 			
 			if (isIgnored){
-				drawTextOffScreenCenter(0, -40, firstLine + 2, I18n.format("hee.energy.overlay.ignored"), RGB(160u).toInt())
+				drawTextOffScreenCenter(0, -40, firstLine + 2, I18n.format("hee.energy.overlay.ignored"), RGB(160u))
 			}
 		}
 	}

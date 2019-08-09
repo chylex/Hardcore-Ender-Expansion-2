@@ -1,5 +1,5 @@
 package chylex.hee.game.mechanics.energy
-import chylex.hee.system.util.color.HCL
+import chylex.hee.system.util.color.IntColor.Companion.HCL
 import java.util.Random
 
 class ClusterColor(val primaryHue: Short, val secondaryHue: Short){

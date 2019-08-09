@@ -10,8 +10,8 @@ import chylex.hee.game.world.WorldProviderEndCustom
 import chylex.hee.game.world.territory.TerritoryType
 import chylex.hee.game.world.territory.TerritoryVoid
 import chylex.hee.system.Debug
-import chylex.hee.system.util.color.IColor
-import chylex.hee.system.util.color.RGB
+import chylex.hee.system.util.color.IntColor
+import chylex.hee.system.util.color.IntColor.Companion.RGB
 import chylex.hee.system.util.floorToInt
 import chylex.hee.system.util.lookDirVec
 import chylex.hee.system.util.math.LerpedFloat
@@ -141,8 +141,8 @@ object TerritoryRenderer{
 		private var textTime = 0
 		private var textFade = 0
 		private var textTitle = ""
-		private var textMainColor: IColor = RGB(0u)
-		private var textShadowColor: IColor = RGB(0u)
+		private var textMainColor = RGB(0u)
+		private var textShadowColor = RGB(0u)
 		
 		fun display(newTerritory: TerritoryType){
 			val title = I18n.format(newTerritory.translationKey)
@@ -152,7 +152,7 @@ object TerritoryRenderer{
 			textTitle = title
 			
 			with(newTerritory.desc.colors){
-				if (tokenTop.toVec().lengthSquared() > tokenBottom.toVec().lengthSquared()){
+				if (tokenTop.asVec.lengthSquared() > tokenBottom.asVec.lengthSquared()){
 					textMainColor = tokenTop
 					textShadowColor = tokenBottom
 				}
@@ -161,7 +161,7 @@ object TerritoryRenderer{
 					textShadowColor = tokenTop
 				}
 				
-				textShadowColor = textShadowColor.toRGB().let { RGB(it.red / 2, it.green / 2, it.blue / 2) }
+				textShadowColor = textShadowColor.let { RGB(it.red / 2, it.green / 2, it.blue / 2) }
 			}
 		}
 		
@@ -205,8 +205,8 @@ object TerritoryRenderer{
 			val x = -fontRenderer.getStringWidth(textTitle) * 0.5F
 			val y = -fontRenderer.FONT_HEIGHT - 2F
 			
-			drawTitle(x + 0.5F, y + 0.5F, textShadowColor.toInt(opacity.pow(1.25F)))
-			drawTitle(x, y, textMainColor.toInt(opacity))
+			drawTitle(x + 0.5F, y + 0.5F, textShadowColor.withAlpha(opacity.pow(1.25F)))
+			drawTitle(x, y, textMainColor.withAlpha(opacity))
 			
 			GL.popMatrix()
 			GL.alphaFunc(GL_GREATER, 0.1F)
@@ -214,13 +214,13 @@ object TerritoryRenderer{
 			GL.popMatrix()
 		}
 		
-		private fun drawTitle(x: Float, y: Float, color: Int) = with(MC.fontRenderer){
+		private fun drawTitle(x: Float, y: Float, color: IntColor) = with(MC.fontRenderer){
 			resetStyles()
 			
-			alpha = ((color shr 24) and 255) / 255.0F
-			red   = ((color shr 16) and 255) / 255.0F
-			green = ((color shr  8) and 255) / 255.0F
-			blue  = (color and 255) / 255.0F
+			red   = color.red / 255F
+			green = color.green / 255F
+			blue  = color.blue / 255F
+			alpha = color.alpha / 255F
 			
 			posX = x
 			posY = y

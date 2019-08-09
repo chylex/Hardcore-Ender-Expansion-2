@@ -13,7 +13,7 @@ import chylex.hee.game.particle.util.IShape.Point
 import chylex.hee.init.ModItems
 import chylex.hee.network.client.PacketClientFX
 import chylex.hee.network.client.PacketClientPotionDuration
-import chylex.hee.system.util.color.RGB
+import chylex.hee.system.util.color.IntColor.Companion.RGB
 import chylex.hee.system.util.floorToInt
 import chylex.hee.system.util.get
 import chylex.hee.system.util.nextInt

@@ -5,7 +5,7 @@ import chylex.hee.game.particle.spawner.factory.IParticleData
 import chylex.hee.game.particle.spawner.factory.IParticleMaker
 import chylex.hee.init.ModBlocks
 import chylex.hee.system.util.Pos
-import chylex.hee.system.util.color.RGB
+import chylex.hee.system.util.color.IntColor.Companion.RGB
 import chylex.hee.system.util.getBlock
 import net.minecraft.client.particle.Particle
 import net.minecraft.util.math.BlockPos
@@ -42,7 +42,7 @@ object ParticleEnergyTransferToPedestal : IParticleMaker{
 				targetPos = Vec3d.ZERO
 			}
 			else{
-				loadColor(RGB(40u).toInt())
+				loadColor(RGB(40u))
 				particleAlpha = 0.9F
 				
 				particleScale = 0.75F

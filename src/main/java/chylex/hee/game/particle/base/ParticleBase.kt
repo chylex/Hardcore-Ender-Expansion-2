@@ -1,4 +1,5 @@
 package chylex.hee.game.particle.base
+import chylex.hee.system.util.color.IntColor
 import net.minecraft.client.particle.Particle
 import net.minecraft.util.math.Vec3d
 import net.minecraft.world.World
@@ -16,9 +17,13 @@ abstract class ParticleBase(world: World, posX: Double, posY: Double, posZ: Doub
 		}
 	
 	protected fun loadColor(color: Int){
-		particleRed = ((color shr 16) and 255) / 255F
-		particleGreen = ((color shr 8) and 255) / 255F
-		particleBlue = (color and 255) / 255F
+		loadColor(IntColor(color))
+	}
+	
+	protected fun loadColor(color: IntColor){
+		particleRed = color.red / 255F
+		particleGreen = color.green / 255F
+		particleBlue = color.blue / 255F
 	}
 	
 	protected fun interpolateAge(baseValue: Float, fadeInDuration: Int = 0, fadeOutDuration: Int = 0): Float{

@@ -1,5 +1,5 @@
 package chylex.hee.game.mechanics.potion
-import chylex.hee.system.util.color.RGB
+import chylex.hee.system.util.color.IntColor.Companion.RGB
 import chylex.hee.system.util.floorToInt
 import net.minecraft.entity.EntityLivingBase
 import net.minecraft.init.MobEffects.POISON

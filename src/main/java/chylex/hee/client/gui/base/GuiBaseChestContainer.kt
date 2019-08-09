@@ -2,7 +2,7 @@ package chylex.hee.client.gui.base
 import chylex.hee.client.render.util.GL
 import chylex.hee.client.util.MC
 import chylex.hee.system.Resource
-import chylex.hee.system.util.color.RGB
+import chylex.hee.system.util.color.IntColor.Companion.RGB
 import chylex.hee.system.util.size
 import net.minecraft.client.gui.inventory.GuiContainer
 import net.minecraft.inventory.ContainerChest
@@ -13,7 +13,7 @@ import net.minecraftforge.fml.relauncher.SideOnly
 abstract class GuiBaseChestContainer(container: ContainerChest) : GuiContainer(container){
 	private companion object{
 		private val TEX_BACKGROUND = Resource.Vanilla("textures/gui/container/generic_54.png")
-		private val COLOR_TEXT = RGB(64u).toInt()
+		private val COLOR_TEXT = RGB(64u).i
 	}
 	
 	private val containerRows = container.lowerChestInventory.size / 9

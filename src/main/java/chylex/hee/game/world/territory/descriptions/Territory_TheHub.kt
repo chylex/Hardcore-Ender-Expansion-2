@@ -9,16 +9,15 @@ import chylex.hee.game.world.territory.properties.TerritoryColors
 import chylex.hee.game.world.territory.properties.TerritoryEnvironment
 import chylex.hee.game.world.territory.properties.TerritoryTokenHolders
 import chylex.hee.system.Resource
-import chylex.hee.system.util.color.HCL
+import chylex.hee.system.util.color.IntColor.Companion.RGB
 import chylex.hee.system.util.nextFloat
-import net.minecraft.util.math.Vec3d
 import java.util.Random
 import kotlin.math.min
 
 object Territory_TheHub : ITerritoryDescription{
 	override val colors = object : TerritoryColors(){
-		override val tokenTop    = HCL( 40.0, 100F, 94F)
-		override val tokenBottom = HCL(270.0,  10F, 58F)
+		override val tokenTop    = RGB(255, 216, 131)
+		override val tokenBottom = RGB(139, 138, 151)
 		
 		override val portalSeed = 31100L
 		
@@ -37,7 +36,7 @@ object Territory_TheHub : ITerritoryDescription{
 	}
 	
 	override val environment = object : TerritoryEnvironment(){
-		override val fogColor = Vec3d(0.04, 0.04, 0.04)
+		override val fogColor = RGB(10u).asVec
 		override val fogDensity = 0.0115F
 		
 		override val voidRadiusMpXZ = 1.1F
@@ -46,8 +45,7 @@ object Territory_TheHub : ITerritoryDescription{
 		override val renderer = EnvironmentRenderer(
 			SkyCubeStatic(
 				texture = Resource.Vanilla("textures/environment/end_sky.png"),
-				color = Vec3d(0.2, 0.2, 0.2),
-				alpha = 1F
+				color = RGB(51u).asVec
 			)
 		)
 	}

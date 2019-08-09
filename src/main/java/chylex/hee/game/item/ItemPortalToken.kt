@@ -12,7 +12,7 @@ import chylex.hee.game.world.territory.storage.TerritoryGlobalStorage
 import chylex.hee.game.world.util.BlockEditor
 import chylex.hee.init.ModItems
 import chylex.hee.system.Resource
-import chylex.hee.system.util.color.RGB
+import chylex.hee.system.util.color.IntColor.Companion.RGB
 import chylex.hee.system.util.getEnum
 import chylex.hee.system.util.getIntegerOrNull
 import chylex.hee.system.util.hasKey
@@ -185,15 +185,15 @@ class ItemPortalToken : Item(){
 	@SideOnly(Side.CLIENT)
 	object Color : IItemColor{
 		private const val NONE = -1
-		private val WHITE = RGB(255, 255, 255).toInt()
+		private val WHITE = RGB(255u).i
 		
 		private fun getColors(stack: ItemStack): TerritoryColors?{
 			return ModItems.PORTAL_TOKEN.getTerritoryType(stack)?.desc?.colors
 		}
 		
 		override fun colorMultiplier(stack: ItemStack, tintIndex: Int) = when(tintIndex){
-			1 -> getColors(stack)?.tokenTop?.toInt() ?: WHITE
-			2 -> getColors(stack)?.tokenBottom?.toInt() ?: WHITE
+			1 -> getColors(stack)?.tokenTop?.i ?: WHITE
+			2 -> getColors(stack)?.tokenBottom?.i ?: WHITE
 			else -> NONE
 		}
 	}

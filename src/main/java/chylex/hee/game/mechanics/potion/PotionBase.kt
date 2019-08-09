@@ -1,7 +1,7 @@
 package chylex.hee.game.mechanics.potion
 import chylex.hee.game.mechanics.potion.brewing.PotionBrewing
 import chylex.hee.system.Resource
-import chylex.hee.system.util.color.RGB
+import chylex.hee.system.util.color.IntColor
 import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.Gui
 import net.minecraft.potion.Potion
@@ -10,7 +10,7 @@ import net.minecraft.potion.PotionType
 import net.minecraftforge.fml.relauncher.Side
 import net.minecraftforge.fml.relauncher.SideOnly
 
-abstract class PotionBase(color: RGB, isNegative: Boolean) : Potion(isNegative, color.toInt()){
+abstract class PotionBase(color: IntColor, isNegative: Boolean) : Potion(isNegative, color.i){
 	companion object{
 		private val TEX_ICONS = Resource.Custom("textures/gui/status.png")
 		

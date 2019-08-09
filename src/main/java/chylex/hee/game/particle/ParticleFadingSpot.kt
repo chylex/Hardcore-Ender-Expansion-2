@@ -3,8 +3,9 @@ import chylex.hee.game.particle.base.ParticleBaseFloating
 import chylex.hee.game.particle.spawner.factory.IParticleData
 import chylex.hee.game.particle.spawner.factory.IParticleMaker
 import chylex.hee.game.particle.util.ParticleTexture
-import chylex.hee.system.util.color.IColor
-import chylex.hee.system.util.color.RGB
+import chylex.hee.system.util.color.IRandomColor
+import chylex.hee.system.util.color.IntColor
+import chylex.hee.system.util.color.IntColor.Companion.RGB
 import chylex.hee.system.util.floorToInt
 import chylex.hee.system.util.nextFloat
 import chylex.hee.system.util.nextInt
@@ -21,19 +22,19 @@ object ParticleFadingSpot : IParticleMaker{
 	}
 	
 	class Data(
-		private val color: (Random) -> IColor,
+		private val color: IRandomColor,
 		private val lifespan: IntRange = 0..0,
 		private val scale: ClosedFloatingPointRange<Float> = 0F..0F
 	) : IParticleData{
-		constructor(color: IColor, lifespan: IntRange = 0..0, scale: ClosedFloatingPointRange<Float> = 0F..0F) : this({ color }, lifespan, scale)
+		constructor(color: IntColor, lifespan: IntRange = 0..0, scale: ClosedFloatingPointRange<Float> = 0F..0F) : this(IRandomColor.Static(color), lifespan, scale)
 		
 		override fun generate(rand: Random): IntArray{
-			return intArrayOf(color(rand).toInt(), rand.nextInt(lifespan), (rand.nextFloat(scale) * 100F).floorToInt())
+			return intArrayOf(color.next(rand).i, rand.nextInt(lifespan), (rand.nextFloat(scale) * 100F).floorToInt())
 		}
 	}
 	
 	private val DEFAULT_DATA = IParticleData.Static(intArrayOf(
-		RGB(0u).toInt(), 0, 0
+		RGB(0u).i, 0, 0
 	))
 	
 	@SideOnly(Side.CLIENT)

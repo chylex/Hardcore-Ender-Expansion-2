@@ -289,7 +289,7 @@ class ItemEnergyOracle : ItemAbstractEnergyUser(), IInfusableItem{
 		private val SEARCHING = HCL(0.0, 0F,  68.0F)
 		private val PROXIMITY = HCL(0.0, 0F, 100.0F)
 		
-		private val INACTIVE_INT = INACTIVE.toInt()
+		private val INACTIVE_INT = INACTIVE.i
 		
 		private val transitionQueue = ColorTransition(INACTIVE, 200F)
 		private var transitionIdentifier = 0L
@@ -375,7 +375,7 @@ class ItemEnergyOracle : ItemAbstractEnergyUser(), IInfusableItem{
 			}
 			
 			setNextColor(determineNextColor(stack, tag, player))
-			return transitionQueue.updateGetColor().toInt()
+			return transitionQueue.updateGetColor().i
 		}
 	}
 }

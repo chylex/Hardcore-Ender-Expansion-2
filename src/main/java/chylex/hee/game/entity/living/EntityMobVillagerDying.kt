@@ -7,7 +7,7 @@ import chylex.hee.game.particle.util.IOffset.InBox
 import chylex.hee.game.particle.util.IOffset.MutableOffsetPoint
 import chylex.hee.game.particle.util.IShape.Point
 import chylex.hee.system.util.Facing4
-import chylex.hee.system.util.color.RGB
+import chylex.hee.system.util.color.IntColor.Companion.RGB
 import chylex.hee.system.util.nextFloat
 import chylex.hee.system.util.nextItem
 import chylex.hee.system.util.playClient

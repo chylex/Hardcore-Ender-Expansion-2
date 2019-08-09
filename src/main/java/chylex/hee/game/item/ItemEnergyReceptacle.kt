@@ -16,7 +16,7 @@ import chylex.hee.init.ModBlocks
 import chylex.hee.system.Resource
 import chylex.hee.system.util.Pos
 import chylex.hee.system.util.breakBlock
-import chylex.hee.system.util.color.RGB
+import chylex.hee.system.util.color.IntColor.Companion.RGB
 import chylex.hee.system.util.getIntegerOrNull
 import chylex.hee.system.util.getTile
 import chylex.hee.system.util.hasKey
@@ -149,7 +149,7 @@ class ItemEnergyReceptacle : ItemAbstractInfusable(){
 					setTag(CLUSTER_SNAPSHOT_TAG, cluster.getClusterSnapshot().tag)
 					
 					setLong(UPDATE_TIME_TAG, world.totalWorldTime)
-					setInteger(RENDER_COLOR_TAG, cluster.color.primary(75F, 80F).toInt())
+					setInteger(RENDER_COLOR_TAG, cluster.color.primary(75F, 80F).i)
 					
 					setInteger(INITIAL_LEVEL_TAG, cluster.energyLevel.internal.value)
 					setInteger(INITIAL_DIMENSION_TAG, provider.dimension)
@@ -226,7 +226,7 @@ class ItemEnergyReceptacle : ItemAbstractInfusable(){
 	@SideOnly(Side.CLIENT)
 	object Color : IItemColor{
 		private const val NONE = -1
-		private val WHITE = RGB(255, 255, 255).toInt()
+		private val WHITE = RGB(255u).i
 		
 		override fun colorMultiplier(stack: ItemStack, tintIndex: Int) = when(tintIndex){
 			1 -> stack.heeTagOrNull?.getInteger(RENDER_COLOR_TAG) ?: WHITE

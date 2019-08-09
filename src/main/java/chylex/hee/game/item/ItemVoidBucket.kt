@@ -3,7 +3,7 @@ import chylex.hee.game.block.fluid.FluidBase
 import chylex.hee.game.world.util.BlockEditor
 import chylex.hee.game.world.util.RayTracer
 import chylex.hee.system.util.allInCenteredBox
-import chylex.hee.system.util.color.RGB
+import chylex.hee.system.util.color.IntColor.Companion.RGB
 import chylex.hee.system.util.getBlock
 import chylex.hee.system.util.heeTag
 import chylex.hee.system.util.heeTagOrNull
@@ -38,7 +38,7 @@ class ItemVoidBucket : ItemAbstractVoidTool(){
 		private fun getFluidColor(block: Block): Int{
 			if (block is IFluidBlock){
 				return when(val fluid = block.fluid){
-					is FluidBase -> fluid.rgbColor.toInt()
+					is FluidBase -> fluid.rgbColor.i
 					else -> fluid.color
 				}
 			}
@@ -46,7 +46,7 @@ class ItemVoidBucket : ItemAbstractVoidTool(){
 			val material = block.material
 			
 			return when{
-				material === Material.LAVA -> RGB(205, 90, 17).toInt()
+				material === Material.LAVA -> RGB(205, 90, 17).i
 				material is MaterialLiquid -> material.materialMapColor.colorValue
 				else -> 0
 			}

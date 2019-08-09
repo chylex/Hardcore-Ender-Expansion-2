@@ -4,7 +4,7 @@ import chylex.hee.game.container.ContainerTrinketPouch
 import chylex.hee.game.container.base.ContainerBaseCustomInventory
 import chylex.hee.game.item.ItemTrinketPouch.Inventory
 import chylex.hee.system.Resource
-import chylex.hee.system.util.color.RGB
+import chylex.hee.system.util.color.IntColor.Companion.RGBA
 import chylex.hee.system.util.size
 import net.minecraft.client.gui.Gui
 import net.minecraft.entity.player.EntityPlayer
@@ -17,7 +17,7 @@ class GuiTrinketPouch(player: EntityPlayer, inventorySlot: Int) : GuiBaseCustomI
 	override val titleContainer = "gui.hee.trinket_pouch.title"
 	
 	private val hiddenSlots: Int
-	private val hiddenSlotColor = RGB(0u).toInt(0.25F)
+	private val hiddenSlotColor = RGBA(0u, 0.25F).i
 	
 	init{
 		ySize = ContainerTrinketPouch.HEIGHT

@@ -202,7 +202,7 @@ class BlockTablePedestal(builder: BlockBuilder) : BlockSimpleShaped(builder, COM
 			}
 			
 			return when(tintIndex){
-				1 -> pos.getTile<TileEntityTablePedestal>(world)?.tableIndicatorColor ?: NONE
+				1 -> pos.getTile<TileEntityTablePedestal>(world)?.tableIndicatorColor?.i ?: NONE
 				2 -> pos.getTile<TileEntityTablePedestal>(world)?.statusIndicatorColorClient ?: NONE
 				else -> NONE
 			}

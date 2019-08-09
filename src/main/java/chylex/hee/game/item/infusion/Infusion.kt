@@ -4,9 +4,9 @@ import chylex.hee.game.item.infusion.Infusion.Colors.Companion.Hcl
 import chylex.hee.game.item.infusion.Infusion.Colors.Companion.Hue
 import chylex.hee.init.ModBlocks
 import chylex.hee.init.ModItems
-import chylex.hee.system.util.color.HCL
-import chylex.hee.system.util.color.IColor
-import chylex.hee.system.util.color.RGB
+import chylex.hee.system.util.color.IntColor
+import chylex.hee.system.util.color.IntColor.Companion.HCL
+import chylex.hee.system.util.color.IntColor.Companion.RGB
 import chylex.hee.system.util.nbtOrNull
 import chylex.hee.system.util.size
 import net.minecraft.block.Block
@@ -18,8 +18,8 @@ import java.util.Locale
 
 enum class Infusion(
 	val translationKey: String,
-	val primaryColor: Int,
-	val secondaryColor: Int,
+	val primaryColor: IntColor,
+	val secondaryColor: IntColor,
 	val targetItems: Array<out Item>
 ){
 	POWER   (Name("power"),    Colors(primary = Hcl( 15, l = 60F), secondary = Gray(144u)),        Matching(ModBlocks.INFUSED_TNT)),
@@ -43,12 +43,12 @@ enum class Infusion(
 	
 	// Construction helpers
 	
-	constructor(name: Name, colors: Colors, matching: Matching) : this("hee.infusion.${name.name}", colors.primary.toInt(), colors.secondary.toInt(), matching.items)
+	constructor(name: Name, colors: Colors, matching: Matching) : this("hee.infusion.${name.name}", colors.primary, colors.secondary, matching.items)
 	
 	private class Name(val name: String)
 	
-	private class Colors(val primary: IColor, val secondary: IColor){
-		@Suppress("NOTHING_TO_INLINE")
+	private class Colors(val primary: IntColor, val secondary: IntColor){
+		@Suppress("NOTHING_TO_INLINE", "FunctionName")
 		companion object{
 			inline fun Hcl(hue: Int, c: Float = 100F, l: Float = 75F) = HCL(hue.toDouble(), c, l)
 			inline fun Hue(hue: Int) = Hcl(hue)

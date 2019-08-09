@@ -2,7 +2,7 @@ package chylex.hee.game.world.territory.descriptions
 import chylex.hee.game.world.territory.ITerritoryDescription
 import chylex.hee.game.world.territory.properties.TerritoryColors
 import chylex.hee.game.world.territory.properties.TerritoryEnvironment
-import chylex.hee.system.util.color.RGB
+import chylex.hee.system.util.color.IntColor.Companion.RGB
 import chylex.hee.system.util.nextFloat
 import net.minecraft.util.math.Vec3d
 import java.util.Random

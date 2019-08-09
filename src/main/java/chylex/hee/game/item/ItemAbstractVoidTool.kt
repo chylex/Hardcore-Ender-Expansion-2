@@ -3,7 +3,7 @@ import chylex.hee.game.item.repair.ICustomRepairBehavior
 import chylex.hee.game.item.repair.RepairHandler
 import chylex.hee.game.item.repair.RepairInstance
 import chylex.hee.game.item.util.CustomToolMaterial
-import chylex.hee.system.util.color.RGB
+import chylex.hee.system.util.color.IntColor.Companion.RGB
 import net.minecraft.entity.EntityLivingBase
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.item.ItemStack
@@ -54,7 +54,7 @@ abstract class ItemAbstractVoidTool : ItemTool(CustomToolMaterial.VOID, emptySet
 	
 	override fun getRGBDurabilityForDisplay(stack: ItemStack): Int{
 		return if (stack.itemDamage >= stack.maxDamage)
-			RGB(160u).toInt()
+			RGB(160u).i
 		else
 			super.getRGBDurabilityForDisplay(stack)
 	}

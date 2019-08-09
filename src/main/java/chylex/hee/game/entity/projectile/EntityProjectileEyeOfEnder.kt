@@ -9,8 +9,9 @@ import chylex.hee.game.particle.util.IShape.Point
 import chylex.hee.system.util.Pos
 import chylex.hee.system.util.Vec3
 import chylex.hee.system.util.addY
-import chylex.hee.system.util.color.IColor
-import chylex.hee.system.util.color.RGB
+import chylex.hee.system.util.color.IRandomColor
+import chylex.hee.system.util.color.IntColor
+import chylex.hee.system.util.color.IntColor.Companion.RGB
 import chylex.hee.system.util.component1
 import chylex.hee.system.util.component2
 import chylex.hee.system.util.component3
@@ -80,21 +81,21 @@ class EntityProjectileEyeOfEnder : Entity, IEntityAdditionalSpawnData{
 		
 		private val PARTICLE_GLITTER_TICK = ParticleSpawnerCustom(
 			type = ParticleGlitter,
-			data = GlitterDataTick,
+			data = ParticleGlitter.Data(color = GlitterColorTick, maxAgeMultiplier = 3..5),
 			pos = InBox(0.15F),
 			mot = Constant(0.025F, DOWN) + InBox(0.02F)
 		)
 		
 		private val PARTICLE_GLITTER_DESTROY = ParticleSpawnerCustom(
 			type = ParticleGlitter,
-			data = GlitterDataDestroy,
+			data = ParticleGlitter.Data(color = GlitterColorDestroy, maxAgeMultiplier = 1..2),
 			pos = InSphere(0.35F),
 			mot = InBox(0.04F),
 			maxRange = 64.0
 		)
 		
-		private object GlitterDataTick : ParticleGlitter.Data(maxAgeMultiplier = 3..5){
-			override fun nextColor(rand: Random): IColor{
+		private object GlitterColorTick : IRandomColor{
+			override fun next(rand: Random): IntColor{
 				return if (rand.nextInt(3) == 0)
 					RGB(rand.nextInt(76, 128), rand.nextInt(64, 76), rand.nextInt(128, 192))
 				else
@@ -102,8 +103,8 @@ class EntityProjectileEyeOfEnder : Entity, IEntityAdditionalSpawnData{
 			}
 		}
 		
-		private object GlitterDataDestroy : ParticleGlitter.Data(maxAgeMultiplier = 1..2){
-			override fun nextColor(rand: Random): IColor{
+		private object GlitterColorDestroy : IRandomColor{
+			override fun next(rand: Random): IntColor{
 				return if (rand.nextInt(3) == 0)
 					RGB(rand.nextInt(102, 153), rand.nextInt(64, 76), rand.nextInt(153, 216))
 				else

@@ -13,8 +13,8 @@ import chylex.hee.game.world.feature.energyshrine.EnergyShrinePieces
 import chylex.hee.game.world.structure.IStructureWorld
 import chylex.hee.game.world.structure.trigger.EntityStructureTrigger
 import chylex.hee.system.util.Pos
-import chylex.hee.system.util.color.IColor
-import chylex.hee.system.util.color.RGB
+import chylex.hee.system.util.color.IRandomColor.Companion.IRandomColor
+import chylex.hee.system.util.color.IntColor.Companion.RGB
 import chylex.hee.system.util.getBlock
 import chylex.hee.system.util.getState
 import chylex.hee.system.util.nextInt
@@ -32,19 +32,13 @@ class EnergyShrineRoom_Main_Start(file: String) : EnergyShrineRoom_Generic(file)
 		
 		private val PARTICLE_GLITTER = ParticleSpawnerCustom(
 			type = ParticleGlitter,
-			data = GlitterDataTick,
+			data = ParticleGlitter.Data(color = IRandomColor { RGB(nextInt(112, 212), 128, nextInt(160, 240)) }, maxAgeMultiplier = 3..7),
 			pos = InBox(0.5F),
 			mot = Gaussian(0.0025F),
 			maxRange = PARTICLE_DISTANCE + 2.0
 		)
 		
 		private val RAND = Random()
-		
-		private object GlitterDataTick : ParticleGlitter.Data(maxAgeMultiplier = 3..7){
-			override fun nextColor(rand: Random): IColor{
-				return RGB(rand.nextInt(112, 212), 128, rand.nextInt(160, 240))
-			}
-		}
 	}
 	
 	object Particles : ITriggerHandler{

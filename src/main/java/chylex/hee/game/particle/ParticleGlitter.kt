@@ -2,8 +2,8 @@ package chylex.hee.game.particle
 import chylex.hee.game.particle.base.ParticleBaseFloating
 import chylex.hee.game.particle.spawner.factory.IParticleData
 import chylex.hee.game.particle.spawner.factory.IParticleMaker
-import chylex.hee.system.util.color.IColor
-import chylex.hee.system.util.color.RGB
+import chylex.hee.system.util.color.IRandomColor
+import chylex.hee.system.util.color.IntColor.Companion.RGB
 import chylex.hee.system.util.nextFloat
 import chylex.hee.system.util.nextInt
 import net.minecraft.client.particle.Particle
@@ -18,16 +18,17 @@ object ParticleGlitter : IParticleMaker{
 		return Instance(world, posX, posY, posZ, motX, motY, motZ, data)
 	}
 	
-	abstract class Data(val maxAgeMultiplier: IntRange) : IParticleData{
-		protected abstract fun nextColor(rand: Random): IColor
-		
-		final override fun generate(rand: Random): IntArray{
-			return intArrayOf(nextColor(rand).toInt(), maxAgeMultiplier.first, maxAgeMultiplier.last)
+	class Data(
+		private val color: IRandomColor,
+		private val maxAgeMultiplier: IntRange
+	) : IParticleData{
+		override fun generate(rand: Random): IntArray{
+			return intArrayOf(color.next(rand).i, maxAgeMultiplier.first, maxAgeMultiplier.last)
 		}
 	}
 	
 	private val DEFAULT_DATA = IParticleData.Static(intArrayOf(
-		RGB(0u).toInt(), 0, 0
+		RGB(0u).i, 0, 0
 	))
 	
 	@SideOnly(Side.CLIENT)

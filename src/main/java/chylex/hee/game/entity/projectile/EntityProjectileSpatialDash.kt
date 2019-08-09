@@ -18,7 +18,8 @@ import chylex.hee.network.client.PacketClientFX
 import chylex.hee.system.util.Pos
 import chylex.hee.system.util.blocksMovement
 import chylex.hee.system.util.ceilToInt
-import chylex.hee.system.util.color.RGB
+import chylex.hee.system.util.color.IRandomColor.Companion.IRandomColor
+import chylex.hee.system.util.color.IntColor.Companion.RGB
 import chylex.hee.system.util.distanceSqTo
 import chylex.hee.system.util.heeTag
 import chylex.hee.system.util.motionVec
@@ -61,7 +62,7 @@ class EntityProjectileSpatialDash : Entity, IProjectile{
 		
 		private val PARTICLE_TICK = ParticleSpawnerCustom(
 			type = ParticleFadingSpot,
-			data = ParticleFadingSpot.Data(color = { rand -> RGB(rand.nextInt(30, 70), rand.nextInt(70, 130), rand.nextInt(100, 200)) }, lifespan = 20..25, scale = (0.1F)..(0.12F)),
+			data = ParticleFadingSpot.Data(color = IRandomColor { RGB(nextInt(30, 70), nextInt(70, 130), nextInt(100, 200)) }, lifespan = 20..25, scale = (0.1F)..(0.12F)),
 			pos = InBox(0.2F),
 			mot = Gaussian(0.008F),
 			maxRange = 64.0

@@ -10,8 +10,8 @@ import chylex.hee.game.mechanics.energy.IClusterHealth.HealthStatus.TIRED
 import chylex.hee.game.mechanics.energy.IClusterHealth.HealthStatus.UNSTABLE
 import chylex.hee.game.mechanics.energy.IClusterHealth.HealthStatus.WEAKENED
 import chylex.hee.system.Resource
-import chylex.hee.system.util.color.IColor
-import chylex.hee.system.util.color.RGB
+import chylex.hee.system.util.color.IntColor
+import chylex.hee.system.util.color.IntColor.Companion.RGB
 import net.minecraft.client.renderer.BufferBuilder
 import net.minecraft.client.renderer.GlStateManager.DestFactor.ONE
 import net.minecraft.client.renderer.GlStateManager.SourceFactor.SRC_ALPHA
@@ -41,9 +41,8 @@ abstract class ParticleBaseEnergy(world: World, posX: Double, posY: Double, posZ
 		
 		private val COLOR_GRAY = adjustColorComponents(RGB(60u))
 		
-		private fun adjustColorComponents(color: IColor): Int{
-			val rgb = color.toRGB()
-			return (rgb.red.coerceIn(64, 224) shl 16) or (rgb.green.coerceIn(64, 224) shl 8) or rgb.blue.coerceIn(64, 224)
+		private fun adjustColorComponents(color: IntColor): IntColor{
+			return RGB(color.red.coerceIn(64, 224), color.green.coerceIn(64, 224), color.blue.coerceIn(64, 224))
 		}
 	}
 	
@@ -82,7 +81,7 @@ abstract class ParticleBaseEnergy(world: World, posX: Double, posY: Double, posZ
 				false ->  0.5F + (capacity * 0.03F) + (level * 0.06F)
 			}
 			
-			return ClusterParticleData(color = finalColor, scale = finalScale)
+			return ClusterParticleData(color = finalColor.i, scale = finalScale)
 		}
 	}
 	

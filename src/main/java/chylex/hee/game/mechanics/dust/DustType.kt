@@ -1,7 +1,7 @@
 package chylex.hee.game.mechanics.dust
 import chylex.hee.init.ModItems
-import chylex.hee.system.util.color.IColor
-import chylex.hee.system.util.color.RGB
+import chylex.hee.system.util.color.IntColor
+import chylex.hee.system.util.color.IntColor.Companion.RGB
 import net.minecraft.init.Items
 import net.minecraft.item.Item
 import net.minecraft.item.ItemStack
@@ -15,7 +15,7 @@ enum class DustType(val key: String, val item: Item, val color: IntArray){
 	REDSTONE("redstone", Items.REDSTONE, RGB(114, 0, 0)),
 	SUGAR("sugar", Items.SUGAR, RGB(248, 248, 255));
 	
-	constructor(key: String, item: Item, color: IColor) : this(key, item, color.toRGB().let { intArrayOf(it.red, it.green, it.blue) })
+	constructor(key: String, item: Item, color: IntColor) : this(key, item, color.let { intArrayOf(it.red, it.green, it.blue) })
 	
 	@Suppress("DEPRECATION")
 	val maxStackSize

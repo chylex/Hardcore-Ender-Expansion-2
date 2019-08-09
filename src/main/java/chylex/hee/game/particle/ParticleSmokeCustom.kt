@@ -1,8 +1,9 @@
 package chylex.hee.game.particle
 import chylex.hee.game.particle.spawner.factory.IParticleData
 import chylex.hee.game.particle.spawner.factory.IParticleMaker
-import chylex.hee.system.util.color.IColor
-import chylex.hee.system.util.color.RGB
+import chylex.hee.system.util.color.IRandomColor
+import chylex.hee.system.util.color.IntColor
+import chylex.hee.system.util.color.IntColor.Companion.RGB
 import chylex.hee.system.util.floorToInt
 import chylex.hee.system.util.nextFloat
 import net.minecraft.client.particle.Particle
@@ -19,18 +20,24 @@ object ParticleSmokeCustom : IParticleMaker{
 	}
 	
 	class Data(
-		private val color: (Random) -> IColor = { rand -> RGB((rand.nextFloat(0F, 0.3F) * 255F).floorToInt().toUByte()) },
+		private val color: IRandomColor = DefaultColor,
 		private val scale: Float = 1F
 	) : IParticleData{
-		constructor(color: IColor, scale: Float = 1F) : this({ color }, scale)
+		constructor(color: IntColor, scale: Float = 1F) : this(IRandomColor.Static(color), scale)
 		
 		override fun generate(rand: Random): IntArray{
-			return intArrayOf(color(rand).toInt(), (scale * 100F).floorToInt())
+			return intArrayOf(color.next(rand).i, (scale * 100F).floorToInt())
+		}
+	}
+	
+	private object DefaultColor : IRandomColor{
+		override fun next(rand: Random): IntColor{
+			return RGB((rand.nextFloat(0F, 0.3F) * 255F).floorToInt().toUByte())
 		}
 	}
 	
 	private val DEFAULT_DATA = IParticleData.Static(intArrayOf(
-		RGB(0u).toInt(), 0
+		RGB(0u).i, 0
 	))
 	
 	@SideOnly(Side.CLIENT)
@@ -40,11 +47,11 @@ object ParticleSmokeCustom : IParticleMaker{
 		world, posX, posY, posZ, motX, motY, motZ, DEFAULT_DATA.validate(unsafeData)[1] * 0.01F
 	){
 		init{
-			val color = DEFAULT_DATA.validate(unsafeData)[0]
+			val color = IntColor(DEFAULT_DATA.validate(unsafeData)[0])
 			
-			particleRed = ((color shr 16) and 255) / 255F
-			particleGreen = ((color shr 8) and 255) / 255F
-			particleBlue = (color and 255) / 255F
+			particleRed = color.red / 255F
+			particleGreen = color.green / 255F
+			particleBlue = color.blue / 255F
 		}
 	}
 }

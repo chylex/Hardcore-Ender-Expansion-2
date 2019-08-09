@@ -11,6 +11,7 @@ import chylex.hee.game.mechanics.table.interfaces.ITableProcess
 import chylex.hee.game.mechanics.table.interfaces.ITableProcessSerializer
 import chylex.hee.game.mechanics.table.process.ProcessSupportingItemHolder
 import chylex.hee.system.util.NBTList.Companion.setList
+import chylex.hee.system.util.color.IntColor
 import chylex.hee.system.util.delegate.NotifyOnChange
 import chylex.hee.system.util.get
 import chylex.hee.system.util.getListOfCompounds
@@ -31,7 +32,7 @@ abstract class TileEntityBaseTable : TileEntityBase(), ITickable{
 	var maxInputPedestals = 0
 		private set
 	
-	abstract val tableIndicatorColor: Int
+	abstract val tableIndicatorColor: IntColor
 	
 	protected abstract val processSerializer: ITableProcessSerializer
 	protected abstract val processTickRate: Int

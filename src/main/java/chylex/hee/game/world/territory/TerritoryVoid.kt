@@ -9,7 +9,7 @@ import chylex.hee.game.particle.ParticleFadingSpot
 import chylex.hee.game.particle.spawner.ParticleSpawnerCustom
 import chylex.hee.game.particle.util.IShape.Point
 import chylex.hee.system.util.ceilToInt
-import chylex.hee.system.util.color.RGB
+import chylex.hee.system.util.color.IntColor.Companion.RGB
 import chylex.hee.system.util.directionTowards
 import chylex.hee.system.util.floorToInt
 import chylex.hee.system.util.heeTag

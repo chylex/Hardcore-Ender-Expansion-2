@@ -21,6 +21,7 @@ import chylex.hee.init.ModBlocks
 import chylex.hee.init.ModItems
 import chylex.hee.network.client.PacketClientFX
 import chylex.hee.system.util.FLAG_SYNC_CLIENT
+import chylex.hee.system.util.color.IntColor
 import chylex.hee.system.util.delegate.NotifyOnChange
 import chylex.hee.system.util.getIntegerOrNull
 import chylex.hee.system.util.getPosOrNull
@@ -79,7 +80,7 @@ class TileEntityTablePedestal : TileEntityBase(){
 	val hasLinkedTable
 		get() = linkedTable != null
 	
-	val tableIndicatorColor: Int?
+	val tableIndicatorColor: IntColor?
 		get() = linkedTable?.takeIf { it.isLoaded(world) }?.getTile<TileEntityBaseTable>(world)?.tableIndicatorColor
 	
 	private val statusIndicator = PedestalStatusIndicator(this)
@@ -294,7 +295,7 @@ class TileEntityTablePedestal : TileEntityBase(){
 		}
 		else if (context == NETWORK){
 			linkedTable?.let {
-				setInteger("StatusColor", statusIndicator.currentColor.toInt())
+				setInteger("StatusColor", statusIndicator.currentColor.i)
 			}
 		}
 	}

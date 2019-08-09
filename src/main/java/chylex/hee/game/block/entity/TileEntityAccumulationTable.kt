@@ -9,14 +9,14 @@ import chylex.hee.game.mechanics.table.process.ProcessManyPedestals.State.Cancel
 import chylex.hee.game.mechanics.table.process.ProcessManyPedestals.State.Work
 import chylex.hee.game.mechanics.table.process.ProcessOnePedestal
 import chylex.hee.game.mechanics.table.process.serializer.BasicProcessSerializer
-import chylex.hee.system.util.color.RGB
+import chylex.hee.system.util.color.IntColor.Companion.RGB
 import net.minecraft.item.ItemStack
 import net.minecraft.nbt.NBTTagCompound
 import net.minecraft.util.math.BlockPos
 import net.minecraft.world.World
 
 class TileEntityAccumulationTable : TileEntityBaseTable(){
-	override val tableIndicatorColor = RGB(220, 89, 55).toInt()
+	override val tableIndicatorColor = RGB(220, 89, 55)
 	
 	override val processTickRate = 3
 	override val processSerializer = BasicProcessSerializer(::Process)

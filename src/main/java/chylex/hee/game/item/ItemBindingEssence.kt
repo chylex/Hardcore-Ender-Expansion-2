@@ -2,7 +2,7 @@ package chylex.hee.game.item
 import chylex.hee.game.item.infusion.Infusion
 import chylex.hee.game.item.infusion.InfusionList
 import chylex.hee.game.item.infusion.InfusionTag
-import chylex.hee.system.util.color.RGB
+import chylex.hee.system.util.color.IntColor.Companion.RGB
 import net.minecraft.client.renderer.color.IItemColor
 import net.minecraft.client.resources.I18n
 import net.minecraft.client.util.ITooltipFlag
@@ -70,7 +70,7 @@ class ItemBindingEssence : ItemAbstractInfusable(){
 	@SideOnly(Side.CLIENT)
 	object Color: IItemColor{
 		private const val NONE = -1
-		private val EMPTY = RGB(255u).toInt()
+		private val EMPTY = RGB(255u).i
 		
 		override fun colorMultiplier(stack: ItemStack, tintIndex: Int): Int{
 			val list = InfusionTag.getList(stack).toList()
@@ -80,10 +80,10 @@ class ItemBindingEssence : ItemAbstractInfusable(){
 			}
 			
 			return when(tintIndex){
-				0 -> list[0].primaryColor
-				1 -> list.getOrNull(1)?.primaryColor ?: list[0].secondaryColor
-				2 -> list.getOrNull(2)?.primaryColor ?: list.getOrNull(1)?.secondaryColor ?: list[0].primaryColor
-				3 -> list.getOrNull(3)?.primaryColor ?: list.getOrNull(2)?.primaryColor ?: (if (list.size == 2) list[0].secondaryColor else list[0].primaryColor)
+				0 -> list[0].primaryColor.i
+				1 -> (list.getOrNull(1)?.primaryColor ?: list[0].secondaryColor).i
+				2 -> (list.getOrNull(2)?.primaryColor ?: list.getOrNull(1)?.secondaryColor ?: list[0].primaryColor).i
+				3 -> (list.getOrNull(3)?.primaryColor ?: list.getOrNull(2)?.primaryColor ?: (if (list.size == 2) list[0].secondaryColor else list[0].primaryColor)).i
 				else -> NONE
 			}
 		}

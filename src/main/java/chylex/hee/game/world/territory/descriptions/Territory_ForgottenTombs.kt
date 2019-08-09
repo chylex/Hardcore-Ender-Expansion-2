@@ -7,7 +7,7 @@ import chylex.hee.game.world.territory.properties.TerritoryColors
 import chylex.hee.game.world.territory.properties.TerritoryEnvironment
 import chylex.hee.system.util.Pos
 import chylex.hee.system.util.allInCenteredBoxMutable
-import chylex.hee.system.util.color.RGB
+import chylex.hee.system.util.color.IntColor.Companion.RGB
 import chylex.hee.system.util.lookPosVec
 import chylex.hee.system.util.math.LerpedFloat
 import chylex.hee.system.util.nextFloat
