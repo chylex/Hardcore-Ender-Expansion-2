@@ -4,7 +4,6 @@ import chylex.hee.game.world.generation.SegmentedWorld
 import chylex.hee.game.world.util.Size
 import chylex.hee.system.util.Pos
 import chylex.hee.system.util.center
-import chylex.hee.system.util.math.RandomRange
 import chylex.hee.system.util.nextVector
 import net.minecraft.util.math.BlockPos
 import java.util.Random
@@ -12,20 +11,20 @@ import java.util.Random
 open class BlobGeneratorAttaching(
 	private val amount: (Random) -> Int,
 	private val radius: (Int, Random) -> Double,
-	private val distance: RandomRange,
+	private val distance: (Random) -> Double,
 	private val strategy: AttachingStrategy,
 	maxSize: Int
 ) : IBlobGenerator{
 	constructor(
 		amount: (Random) -> Int,
-		radiusFirst: RandomRange,
-		radiusOther: RandomRange,
-		distance: RandomRange,
+		radiusFirst: (Random) -> Double,
+		radiusOther: (Random) -> Double,
+		distance: (Random) -> Double,
 		strategy: AttachingStrategy,
 		maxSize: Int
 	) : this(
 		amount,
-		{ index, rand -> (if (index == 0) radiusFirst else radiusOther).nextDouble(rand) },
+		{ index, rand -> (if (index == 0) radiusFirst else radiusOther)(rand) },
 		distance,
 		strategy,
 		maxSize
@@ -71,7 +70,7 @@ open class BlobGeneratorAttaching(
 				val (attachPos, attachRad) = generated[strategy.nextIndex(generated, rand)]
 				
 				val nextRad = radius(1 + it, rand)
-				val nextDistance = (attachRad + nextRad) * distance.nextDouble(rand)
+				val nextDistance = (attachRad + nextRad) * distance(rand)
 				
 				if (IBlobGenerator.placeBlob(world, Pos(attachPos.center.add(rand.nextVector(nextDistance))), nextRad)){
 					break

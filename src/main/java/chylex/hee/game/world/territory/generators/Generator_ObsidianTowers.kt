@@ -39,6 +39,7 @@ import chylex.hee.system.util.center
 import chylex.hee.system.util.directionTowards
 import chylex.hee.system.util.distanceSqTo
 import chylex.hee.system.util.distanceTo
+import chylex.hee.system.util.math.RandomInt.Companion.Constant
 import chylex.hee.system.util.nextFloat
 import chylex.hee.system.util.nextInt
 import chylex.hee.system.util.nextItem
@@ -499,7 +500,7 @@ object Generator_ObsidianTowers : ITerritoryGenerator{
 		)
 		
 		fun construct(technique: IOreTechnique, chunkSize: Int, attemptsPerChunk: Int, clustersPerChunk: Int): OreGenerator{
-			return OreGenerator(technique, PLACER, chunkSize, attemptsPerChunk, clustersPerChunk = { clustersPerChunk })
+			return OreGenerator(technique, PLACER, chunkSize, attemptsPerChunk, Constant(clustersPerChunk))
 		}
 		
 		fun generate(world: SegmentedWorld){

@@ -27,8 +27,8 @@ import chylex.hee.system.util.allInCenteredBoxMutable
 import chylex.hee.system.util.component1
 import chylex.hee.system.util.component2
 import chylex.hee.system.util.component3
-import chylex.hee.system.util.floorToInt
-import chylex.hee.system.util.nextBiasedFloat
+import chylex.hee.system.util.math.RandomInt.Companion.Biased
+import chylex.hee.system.util.math.RandomInt.Companion.Constant
 import chylex.hee.system.util.nextFloat
 import chylex.hee.system.util.nextInt
 import chylex.hee.system.util.nextItem
@@ -207,7 +207,7 @@ object Generator_ForgottenTombs : ITerritoryGenerator{
 			
 			private val PASS = OreGenerator(
 				OreTechniqueAdjacent(
-					oresPerCluster = { rand -> 3 + (5 * rand.nextBiasedFloat(4F)).floorToInt() },
+					oresPerCluster = Biased(3, 7, biasSoftener = 4F),
 					allowDiagonals = true
 				).withAdjacentAirCheck(
 					checkDistance = 1,
@@ -221,7 +221,7 @@ object Generator_ForgottenTombs : ITerritoryGenerator{
 				
 				chunkSize = CHUNK_SIZE,
 				attemptsPerChunk = 400,
-				clustersPerChunk = { 3 }
+				clustersPerChunk = Constant(3)
 			)
 			
 			fun generate(world: SegmentedWorld, size: Size, center: BlockPos){

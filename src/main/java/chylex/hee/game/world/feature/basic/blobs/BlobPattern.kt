@@ -1,6 +1,5 @@
 package chylex.hee.game.world.feature.basic.blobs
 import chylex.hee.system.collection.WeightedList
-import chylex.hee.system.util.nextInt
 import java.util.Random
 
 class BlobPattern private constructor(
@@ -11,10 +10,6 @@ class BlobPattern private constructor(
 	
 	constructor(generators: WeightedList<IBlobGenerator>, populators: WeightedList<IBlobPopulator>, populatorAmount: (Random) -> Int) : this(
 		generators, populators to populatorAmount
-	)
-
-	constructor(generators: WeightedList<IBlobGenerator>, populators: WeightedList<IBlobPopulator>, populatorAmount: IntRange) : this(
-		generators, populators to { rand -> rand.nextInt(populatorAmount) }
 	)
 	
 	fun pickGenerator(rand: Random): IBlobGenerator{

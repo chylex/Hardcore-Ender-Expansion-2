@@ -38,8 +38,9 @@ import chylex.hee.system.util.ceilToInt
 import chylex.hee.system.util.center
 import chylex.hee.system.util.distanceSqTo
 import chylex.hee.system.util.floorToInt
-import chylex.hee.system.util.math.RandomRange.Linear
-import chylex.hee.system.util.nextBiasedFloat
+import chylex.hee.system.util.math.RandomDouble.Companion.Linear
+import chylex.hee.system.util.math.RandomInt.Companion.Biased
+import chylex.hee.system.util.math.RandomInt.Companion.Linear
 import chylex.hee.system.util.nextFloat
 import chylex.hee.system.util.nextInt
 import chylex.hee.system.util.nextItem
@@ -548,7 +549,7 @@ object Generator_TheHub : ITerritoryGenerator{
 	private object EndPowderOre{
 		private val FIRST_PASS = OreGenerator(
 			OreTechniqueAdjacent(
-				oresPerCluster = { rand -> 2 + (3 * rand.nextBiasedFloat(10F)).floorToInt() },
+				oresPerCluster = Biased(2, 4, biasSoftener = 10F),
 				allowDiagonals = true
 			).withAdjacentAirCheck(
 				checkDistance = 2,
@@ -562,12 +563,12 @@ object Generator_TheHub : ITerritoryGenerator{
 			
 			chunkSize = 32,
 			attemptsPerChunk = 128,
-			clustersPerChunk = { rand -> rand.nextInt(1, 3) }
+			clustersPerChunk = Linear(1, 3)
 		)
 		
 		private val SECOND_PASS = OreGenerator(
 			OreTechniqueAdjacent(
-				oresPerCluster = { rand -> 3 + (5 * rand.nextBiasedFloat(10F)).floorToInt() },
+				oresPerCluster = Biased(3, 7, biasSoftener = 10F),
 				allowDiagonals = true
 			).withAdjacentAirCheck(
 				checkDistance = 1,
