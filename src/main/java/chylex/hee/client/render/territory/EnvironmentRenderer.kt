@@ -11,12 +11,13 @@ import net.minecraftforge.fml.relauncher.SideOnly
 import kotlin.math.pow
 
 class EnvironmentRenderer(private vararg val renderers: IRenderHandler) : IRenderHandler(){
-	@SideOnly(Side.CLIENT)
 	companion object{
 		val currentSkyAlpha
+			@SideOnly(Side.CLIENT)
 			get() = remapRange(TerritoryRenderer.VOID_FACTOR_VALUE, (-1F)..(0.5F), (1F)..(0F)).coerceIn(0F, 1F)
 		
 		val currentFogDensityMp
+			@SideOnly(Side.CLIENT)
 			get() = 1F + (9F * remapRange(TerritoryRenderer.VOID_FACTOR_VALUE, (-0.5F)..(1F), (0F)..(1F)).coerceIn(0F, 1F).pow(1.5F))
 	}
 	
