@@ -26,7 +26,9 @@ class BlobGenerator(private val patterns: WeightedList<BlobPattern>){
 		val extraSize = populators.fold(BlockPos.ORIGIN){ acc, populator -> acc.max(populator.expandSizeBy) }
 		val allocatedSize = generator.size.expand(extraSize)
 		
-		if (!allocatedSize.toBoundingBox(pos).isInside(world.worldSize.toBoundingBox(BlockPos.ORIGIN))){
+		val origin = pos.subtract(allocatedSize.centerPos)
+		
+		if (!allocatedSize.toBoundingBox(origin).isInside(world.worldSize.toBoundingBox(BlockPos.ORIGIN))){
 			return false
 		}
 		
@@ -44,12 +46,12 @@ class BlobGenerator(private val patterns: WeightedList<BlobPattern>){
 			val state = blobWorld.getState(offset)
 			
 			if (state !== SCAFFOLDING){
-				world.setState(pos.add(offset), state)
+				world.setState(origin.add(offset), state)
 			}
 		}
 		
 		for((offset, trigger) in blobWorld.getTriggers()){
-			world.addTrigger(pos.add(offset), trigger)
+			world.addTrigger(origin.add(offset), trigger)
 		}
 		
 		return true

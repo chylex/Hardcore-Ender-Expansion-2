@@ -533,9 +533,9 @@ object Generator_TheHub : ITerritoryGenerator{
 			repeat(rand.nextInt(100, 120)){
 				for(attempt in 1..10){
 					val blobPos = Pos(
-						rand.nextInt(4, size.maxX - 4),
-						rand.nextInt(4, size.maxY - 4),
-						rand.nextInt(4, size.maxZ - 4)
+						rand.nextInt(5, size.maxX - 5),
+						rand.nextInt(5, size.maxY - 5),
+						rand.nextInt(5, size.maxZ - 5)
 					)
 					
 					if (blobPos.distanceSqTo(center) > square(MainIsland.RADIUS + 28.0) && BLOB.generate(world, rand, blobPos)){
