@@ -234,6 +234,14 @@ hee.territory.fallback.name=Unknown
 hee.territory.the_hub.name=The Hub
 hee.territory.forgotten_tombs.name=Forgotten Tombs
 hee.territory.obsidian_towers.name=Obsidian Towers
+hee.territory.arcane_conjunctions.name=Arcane Conjunctions
+hee.territory.lost_garden.name=Lost Garden
+hee.territory.ender_city.name=Ender City
+hee.territory.hostile_pass.name=Hostile Pass
+hee.territory.warded_mines.name=Warded Mines
+hee.territory.eternal_mists.name=Eternal Mists
+hee.territory.cursed_library.name=Cursed Library
+hee.territory.dragon_lair.name=Dragon Lair
 
 commands.hee.usage=/hee [page=1]
 commands.hee.info=shows command list

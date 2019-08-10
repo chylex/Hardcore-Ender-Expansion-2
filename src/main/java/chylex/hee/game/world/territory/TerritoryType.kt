@@ -1,11 +1,17 @@
 package chylex.hee.game.world.territory
+import chylex.hee.game.world.generation.SegmentedWorld
+import chylex.hee.game.world.generation.TerritoryGenerationInfo
 import chylex.hee.game.world.territory.descriptions.Territory_ForgottenTombs
 import chylex.hee.game.world.territory.descriptions.Territory_ObsidianTowers
 import chylex.hee.game.world.territory.descriptions.Territory_TheHub
 import chylex.hee.game.world.territory.generators.Generator_ForgottenTombs
 import chylex.hee.game.world.territory.generators.Generator_ObsidianTowers
 import chylex.hee.game.world.territory.generators.Generator_TheHub
+import chylex.hee.game.world.territory.properties.TerritoryColors
+import chylex.hee.game.world.territory.properties.TerritoryEnvironment
 import chylex.hee.game.world.util.Size
+import chylex.hee.system.util.color.IntColor.Companion.RGB
+import java.util.Random
 import kotlin.math.abs
 
 enum class TerritoryType(
@@ -37,6 +43,70 @@ enum class TerritoryType(
 		gen    = Generator_ObsidianTowers,
 		chunks = 14,
 		height = 100 until 180
+	),
+	
+	ARCANE_CONJUNCTIONS(
+		title  = "arcane_conjunctions",
+		desc   = TerritoryDummy,
+		gen    = GeneratorDummy,
+		chunks = 30,
+		height = 64 until 256
+	),
+	
+	LOST_GARDEN(
+		title  = "lost_garden",
+		desc   = TerritoryDummy,
+		gen    = GeneratorDummy,
+		chunks = 45,
+		height = 128 until 256
+	),
+	
+	ENDER_CITY(
+		title  = "ender_city",
+		desc   = TerritoryDummy,
+		gen    = GeneratorDummy,
+		chunks = 52,
+		height = 128 until 256
+	),
+	
+	HOSTILE_PASS(
+		title  = "hostile_pass",
+		desc   = TerritoryDummy,
+		gen    = GeneratorDummy,
+		chunks = 38,
+		height = 128 until 256
+	),
+	
+	WARDED_MINES(
+		title  = "warded_mines",
+		desc   = TerritoryDummy,
+		gen    = GeneratorDummy,
+		chunks = 27,
+		height = 0 until 256
+	),
+	
+	ETERNAL_MISTS(
+		title  = "eternal_mists",
+		desc   = TerritoryDummy,
+		gen    = GeneratorDummy,
+		chunks = 92,
+		height = 128 until 256
+	),
+	
+	CURSED_LIBRARY(
+		title  = "cursed_library",
+		desc   = TerritoryDummy,
+		gen    = GeneratorDummy,
+		chunks = 11,
+		height = 64 until 256
+	),
+	
+	DRAGON_LAIR(
+		title  = "dragon_lair",
+		desc   = TerritoryDummy,
+		gen    = GeneratorDummy,
+		chunks = 34,
+		height = 128 until 256
 	);
 	
 	companion object{
@@ -65,6 +135,37 @@ enum class TerritoryType(
 		
 		fun fromTitle(title: String): TerritoryType?{
 			return ALL.find { it.title == title }
+		}
+		
+		// TODO remove once no longer necessary
+		
+		private object TerritoryDummy : ITerritoryDescription{
+			override val colors = object : TerritoryColors(){
+				override val tokenTop    = RGB(255u)
+				override val tokenBottom = RGB(255u)
+				
+				override val portalSeed = 0L
+				
+				override fun nextPortalColor(rand: Random, color: FloatArray){
+					color.fill(1F)
+				}
+			}
+			
+			override val environment = object : TerritoryEnvironment(){
+				override val fogColor = RGB(0u).asVec
+				override val fogDensity = 0F
+				
+				override val voidRadiusMpXZ = 1F
+				override val voidRadiusMpY = 1F
+			}
+		}
+		
+		private object GeneratorDummy : ITerritoryGenerator{
+			override val segmentSize = Size(1)
+			
+			override fun provide(world: SegmentedWorld): TerritoryGenerationInfo{
+				return TerritoryGenerationInfo(world.worldSize.centerPos)
+			}
 		}
 	}
 	
