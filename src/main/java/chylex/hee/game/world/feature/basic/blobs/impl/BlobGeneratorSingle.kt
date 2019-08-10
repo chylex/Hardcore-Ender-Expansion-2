@@ -1,4 +1,5 @@
 package chylex.hee.game.world.feature.basic.blobs.impl
+import chylex.hee.game.world.feature.basic.blobs.BlobGenerator
 import chylex.hee.game.world.feature.basic.blobs.IBlobGenerator
 import chylex.hee.game.world.generation.SegmentedWorld
 import chylex.hee.game.world.util.Size
@@ -12,6 +13,6 @@ class BlobGeneratorSingle(
 	override val size = Size(1 + (radius.max.ceilToInt() * 2))
 	
 	override fun generate(world: SegmentedWorld, rand: Random){
-		IBlobGenerator.placeBlob(world, world.worldSize.centerPos, radius(rand))
+		BlobGenerator.place(world, world.worldSize.centerPos, radius(rand))
 	}
 }

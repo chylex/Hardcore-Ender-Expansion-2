@@ -1,4 +1,5 @@
 package chylex.hee.game.world.feature.basic.blobs.impl
+import chylex.hee.game.world.feature.basic.blobs.BlobGenerator
 import chylex.hee.game.world.feature.basic.blobs.IBlobGenerator
 import chylex.hee.game.world.generation.SegmentedWorld
 import chylex.hee.game.world.util.Size
@@ -61,7 +62,7 @@ open class BlobGeneratorAttaching(
 			world.worldSize.centerPos to radius(0, rand)
 		)
 		
-		if (!IBlobGenerator.placeBlob(world, generated[0].first, generated[0].second)){
+		if (!BlobGenerator.place(world, generated[0].first, generated[0].second)){
 			return
 		}
 		
@@ -72,7 +73,7 @@ open class BlobGeneratorAttaching(
 				val nextRad = radius(1 + it, rand)
 				val nextDistance = (attachRad + nextRad) * distance(rand)
 				
-				if (IBlobGenerator.placeBlob(world, Pos(attachPos.center.add(rand.nextVector(nextDistance))), nextRad)){
+				if (BlobGenerator.place(world, Pos(attachPos.center.add(rand.nextVector(nextDistance))), nextRad)){
 					break
 				}
 			}

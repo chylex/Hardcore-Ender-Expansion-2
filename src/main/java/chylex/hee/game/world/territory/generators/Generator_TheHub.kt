@@ -7,6 +7,7 @@ import chylex.hee.game.world.feature.basic.NoiseGenerator.NoiseValue
 import chylex.hee.game.world.feature.basic.PortalGenerator
 import chylex.hee.game.world.feature.basic.blobs.BlobGenerator
 import chylex.hee.game.world.feature.basic.blobs.BlobPattern
+import chylex.hee.game.world.feature.basic.blobs.BlobSmoothing
 import chylex.hee.game.world.feature.basic.blobs.impl.BlobGeneratorAttaching
 import chylex.hee.game.world.feature.basic.blobs.impl.BlobGeneratorAttaching.AttachingStrategy.FIRST_BLOB
 import chylex.hee.game.world.feature.basic.blobs.impl.BlobGeneratorSingle
@@ -511,8 +512,8 @@ object Generator_TheHub : ITerritoryGenerator{
 	}
 	
 	private object EndstoneBlobs{
-		private val BLOB = BlobGenerator(BlobPattern(
-			generators = weightedListOf(
+		private val BLOB = BlobPattern(
+			weightedListOf(
 				75 to BlobGeneratorAttaching(
 					amount = { rand -> rand.nextInt(2, rand.nextInt(3, 4)) },
 					radiusFirst = Linear(2.6, 4.4),
@@ -525,7 +526,7 @@ object Generator_TheHub : ITerritoryGenerator{
 					radius = Linear(2.3, 4.6)
 				)
 			)
-		))
+		)
 		
 		fun generate(world: SegmentedWorld, rand: Random, size: Size){
 			val center = size.centerPos
@@ -538,7 +539,7 @@ object Generator_TheHub : ITerritoryGenerator{
 						rand.nextInt(5, size.maxZ - 5)
 					)
 					
-					if (blobPos.distanceSqTo(center) > square(MainIsland.RADIUS + 28.0) && BLOB.generate(world, rand, blobPos)){
+					if (blobPos.distanceSqTo(center) > square(MainIsland.RADIUS + 28.0) && BlobGenerator.generate(world, rand, blobPos, BlobSmoothing.FULL, BLOB)){
 						break
 					}
 				}
