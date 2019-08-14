@@ -1,5 +1,6 @@
 package chylex.hee.game.entity.living
 import chylex.hee.game.entity.util.EntityData
+import chylex.hee.system.util.tryRemoveModifier
 import net.minecraft.entity.Entity
 import net.minecraft.entity.EntityLivingBase
 import net.minecraft.entity.SharedMonsterAttributes.MOVEMENT_SPEED
@@ -38,7 +39,7 @@ abstract class EntityMobAbstractEnderman(world: World) : EntityEnderman(world){
 		isAggressive = prevAggressive
 		
 		if (newTarget != null){
-			getEntityAttribute(MOVEMENT_SPEED).removeModifier(ATTACKING_SPEED_BOOST)
+			getEntityAttribute(MOVEMENT_SPEED).tryRemoveModifier(ATTACKING_SPEED_BOOST)
 		}
 	}
 	

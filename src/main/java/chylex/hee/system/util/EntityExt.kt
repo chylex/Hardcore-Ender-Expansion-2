@@ -112,6 +112,12 @@ fun IAttributeInstance.tryApplyModifier(modifier: AttributeModifier){
 	}
 }
 
+fun IAttributeInstance.tryRemoveModifier(modifier: AttributeModifier){
+	if (this.hasModifier(modifier)){
+		this.removeModifier(modifier)
+	}
+}
+
 // AI
 
 typealias AIBase = EntityAIBase

@@ -3,6 +3,7 @@ import chylex.hee.game.entity.living.EntityMobAbstractEnderman
 import chylex.hee.system.util.OPERATION_MUL_INCR_INDIVIDUAL
 import chylex.hee.system.util.nextInt
 import chylex.hee.system.util.tryApplyModifier
+import chylex.hee.system.util.tryRemoveModifier
 import net.minecraft.entity.SharedMonsterAttributes.ATTACK_DAMAGE
 import net.minecraft.entity.ai.attributes.AttributeModifier
 import net.minecraft.nbt.NBTTagCompound
@@ -52,7 +53,7 @@ class EndermanWaterHandler(private val enderman: EntityMobAbstractEnderman): ITi
 		}
 		else{
 			enderman.isShaking = false
-			enderman.getEntityAttribute(ATTACK_DAMAGE).removeModifier(DEBUFF_WEAKNESS)
+			enderman.getEntityAttribute(ATTACK_DAMAGE).tryRemoveModifier(DEBUFF_WEAKNESS)
 		}
 	}
 	
