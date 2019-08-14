@@ -4,37 +4,54 @@ import net.minecraft.entity.ai.EntityAIBase
 import net.minecraft.entity.ai.EntityAITasks
 
 class AIToggle{
-	companion object{
-		fun EntityAITasks.addTask(priority: Int, task: EntityAIBase, controller: AIToggle){
-			controller.setupTaskEntry(this, Pair(priority, task))
+	private class Entry(private val taskList: EntityAITasks, private val priority: Int, private val instance: EntityAIBase){
+		fun update(newValue: Boolean){
+			if (newValue){
+				taskList.addTask(priority, instance)
+			}
+			else{
+				taskList.removeTask(instance)
+			}
+		}
+		
+		fun conflicts(other: Entry): Boolean{
+			return taskList === other.taskList && (priority == other.priority || instance === other.instance)
+		}
+		
+		override fun toString(): String{
+			return "$priority, ${instance::class.java.simpleName}"
 		}
 	}
 	
+	companion object{
+		fun EntityAITasks.addTask(priority: Int, task: EntityAIBase, controller: AIToggle){
+			controller.addEntry(Entry(this, priority, task))
+		}
+	}
+	
+	// Instance
+	
 	var enabled by NotifyOnChange(false, ::onChange)
 	
-	private lateinit var taskList: EntityAITasks
-	private lateinit var taskEntry: Pair<Int, EntityAIBase>
+	private val entries = ArrayList<Entry>(1)
 	
-	private fun setupTaskEntry(taskList: EntityAITasks, taskEntry: Pair<Int, EntityAIBase>){
-		this.taskList = taskList
-		this.taskEntry = taskEntry
+	private fun addEntry(newEntry: Entry){
+		val conflict = entries.find(newEntry::conflicts)
+		
+		if (conflict != null){
+			throw UnsupportedOperationException("task ($newEntry) is conflicting with ($conflict) in AI toggle group")
+		}
+		
+		entries.add(newEntry)
 		
 		if (enabled){
-			onChange(true)
+			newEntry.update(true)
 		}
 	}
 	
 	private fun onChange(newValue: Boolean){
-		if (!::taskList.isInitialized){
-			return
-		}
-		
-		if (newValue){
-			val (priority, task) = taskEntry
-			taskList.addTask(priority, task)
-		}
-		else{
-			taskList.removeTask(taskEntry.second)
+		for(entry in entries){
+			entry.update(newValue)
 		}
 	}
 }
