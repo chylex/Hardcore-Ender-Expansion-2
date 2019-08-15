@@ -4,7 +4,7 @@ import net.minecraft.entity.ai.EntityAIWander
 import net.minecraft.entity.ai.RandomPositionGenerator
 import net.minecraft.util.math.Vec3d
 
-class AIWanderLand(
+open class AIWanderLand(
 	entity: EntityCreature,
 	movementSpeed: Double,
 	chancePerTick: Int,

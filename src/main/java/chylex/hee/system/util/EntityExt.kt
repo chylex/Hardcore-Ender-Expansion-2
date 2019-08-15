@@ -2,6 +2,7 @@ package chylex.hee.system.util
 import chylex.hee.game.entity.living.ai.AITargetEyeContact
 import chylex.hee.game.entity.living.ai.AITargetRandom
 import chylex.hee.game.entity.living.ai.AITargetSwarmSwitch
+import chylex.hee.game.entity.living.ai.AIWanderLandStopNear
 import chylex.hee.game.entity.util.EntitySelector
 import com.google.common.base.Predicate
 import com.google.common.base.Predicates
@@ -138,6 +139,9 @@ const val AI_FLAG_SWIMMING = 0b100
 
 inline fun AISwim(entity: EntityCreature) =
 	EntityAISwimming(entity)
+
+inline fun <reified T : EntityLivingBase> AIWanderLandStopNear(entity: EntityCreature, movementSpeed: Double, chancePerTick: Int, maxDistanceXZ: Int = 10, maxDistanceY: Int = 7, detectDistance: Double) =
+	AIWanderLandStopNear(entity, movementSpeed, chancePerTick, maxDistanceXZ, maxDistanceY, T::class.java, detectDistance)
 
 // AI (Looking)
 
