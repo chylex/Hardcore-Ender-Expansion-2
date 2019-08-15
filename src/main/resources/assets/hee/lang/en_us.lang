@@ -211,6 +211,7 @@ hee.energy.health.unstable=UNSTABLE
 hee.energy.health.revitalizing=REVITALIZING
 
 entity.hee.endermite_instability.name=Endermite (Instability)
+entity.hee.spiderling.name=Spiderling
 entity.hee.undread.name=Undread
 entity.hee.ender_pearl.name=Ender Pearl
 

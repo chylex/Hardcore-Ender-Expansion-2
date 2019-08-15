@@ -13,6 +13,7 @@ import chylex.hee.game.entity.living.EntityMobEnderman
 import chylex.hee.game.entity.living.EntityMobEndermite
 import chylex.hee.game.entity.living.EntityMobEndermiteInstability
 import chylex.hee.game.entity.living.EntityMobSilverfish
+import chylex.hee.game.entity.living.EntityMobSpiderling
 import chylex.hee.game.entity.living.EntityMobUndread
 import chylex.hee.game.entity.living.EntityMobVillagerDying
 import chylex.hee.game.entity.projectile.EntityProjectileEnderPearl
@@ -55,6 +56,7 @@ object ModEntities{
 			register<EntityTokenHolder>("token_holder").tracker(128, 60, false) to this
 			
 			register<EntityMobEndermiteInstability>("endermite_instability").tracker(96, 3, true).egg(RGB(21u).i, RGB(94, 122, 108).i) to this
+			register<EntityMobSpiderling>("spiderling").tracker(80, 2, true).egg(RGB(32, 30, 16).i, RGB(182, 25, 0).i) to this
 			register<EntityMobUndread>("undread").tracker(80, 3, true).egg(TerritoryType.FORGOTTEN_TOMBS.desc.colors.tokenTop.i, TerritoryType.FORGOTTEN_TOMBS.desc.colors.tokenBottom.i) to this
 			register<EntityMobVillagerDying>("villager_dying").tracker(80, 3, false) to this
 			
