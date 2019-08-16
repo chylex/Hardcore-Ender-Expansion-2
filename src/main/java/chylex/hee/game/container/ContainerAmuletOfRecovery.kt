@@ -1,5 +1,5 @@
 package chylex.hee.game.container
-import chylex.hee.game.container.slot.SlotReadOnly
+import chylex.hee.game.container.slot.SlotTakeOnly
 import chylex.hee.game.container.util.DetectSlotChangeListener
 import chylex.hee.game.item.ItemAmuletOfRecovery
 import chylex.hee.network.server.PacketServerContainerEvent.IContainerWithEvents
@@ -16,7 +16,7 @@ class ContainerAmuletOfRecovery(private val player: EntityPlayer, itemHeldIn: En
 	
 	init{
 		for(slot in 0 until amuletInventory.size){
-			inventorySlots[slot] = SlotReadOnly(inventorySlots[slot]).apply {
+			inventorySlots[slot] = SlotTakeOnly(inventorySlots[slot]).apply {
 				val row = slot / 9
 				
 				if (row == 0){ // move hotbar row to bottom

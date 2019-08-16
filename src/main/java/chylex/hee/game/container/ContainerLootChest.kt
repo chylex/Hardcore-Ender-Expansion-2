@@ -1,6 +1,6 @@
 package chylex.hee.game.container
 import chylex.hee.game.block.entity.TileEntityLootChest
-import chylex.hee.game.container.slot.SlotReadOnly
+import chylex.hee.game.container.slot.SlotTakeOnly
 import chylex.hee.system.util.size
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.inventory.ContainerChest
@@ -9,7 +9,7 @@ class ContainerLootChest(player: EntityPlayer, tile: TileEntityLootChest) : Cont
 	init{
 		if (!player.isCreative){
 			for(slot in 0 until lowerChestInventory.size){
-				inventorySlots[slot] = SlotReadOnly(inventorySlots[slot])
+				inventorySlots[slot] = SlotTakeOnly(inventorySlots[slot])
 			}
 		}
 	}
