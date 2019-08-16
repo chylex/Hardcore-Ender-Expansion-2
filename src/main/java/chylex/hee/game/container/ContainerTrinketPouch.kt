@@ -5,10 +5,9 @@ import chylex.hee.game.container.util.DetectSlotChangeListener
 import chylex.hee.game.item.ItemTrinketPouch
 import chylex.hee.system.util.size
 import net.minecraft.entity.player.EntityPlayer
-import net.minecraft.item.ItemStack
 import net.minecraftforge.items.wrapper.InvWrapper
 
-class ContainerTrinketPouch(private val player: EntityPlayer, inventorySlot: Int) : ContainerBaseCustomInventory<ItemTrinketPouch.Inventory>(player, ItemTrinketPouch.Inventory(player, inventorySlot), HEIGHT){
+class ContainerTrinketPouch(player: EntityPlayer, inventorySlot: Int) : ContainerBaseCustomInventory<ItemTrinketPouch.Inventory>(player, ItemTrinketPouch.Inventory(player, inventorySlot), HEIGHT){
 	companion object{
 		const val HEIGHT = 132
 		const val MAX_SLOTS = 5
@@ -26,16 +25,6 @@ class ContainerTrinketPouch(private val player: EntityPlayer, inventorySlot: Int
 	}
 	
 	override fun detectAndSendChanges(){
-		val modifiedSlot = slotChangeListener.restart(listeners){
-			super.detectAndSendChanges()
-		}
-		
-		if (modifiedSlot != null && !player.world.isRemote && !containerInventory.tryUpdatePlayerItem()){
-			if (modifiedSlot < containerInventory.size){
-				player.inventory.itemStack = ItemStack.EMPTY // prevent item duplication
-			}
-			
-			player.closeScreen()
-		}
+		slotChangeListener.restart(listeners){ super.detectAndSendChanges() }?.let(containerInventory::validatePlayerItemOnModification)
 	}
 }

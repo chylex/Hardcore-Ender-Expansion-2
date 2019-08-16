@@ -1,4 +1,5 @@
 package chylex.hee.game.item
+import chylex.hee.game.container.base.IInventoryFromPlayerItem
 import chylex.hee.game.mechanics.energy.IEnergyQuantity.Units
 import chylex.hee.game.mechanics.trinket.ITrinketItem
 import chylex.hee.game.mechanics.trinket.TrinketHandler
@@ -140,7 +141,7 @@ class ItemAmuletOfRecovery : ItemAbstractEnergyUser(), ITrinketItem{
 		}
 	}
 	
-	class Inventory(private val player: EntityPlayer, private val itemHeldIn: EnumHand) : InventoryBasic("gui.hee.amulet_of_recovery.title", false, SLOT_COUNT){
+	class Inventory(override val player: EntityPlayer, private val itemHeldIn: EnumHand) : InventoryBasic("gui.hee.amulet_of_recovery.title", false, SLOT_COUNT), IInventoryFromPlayerItem{
 		init{
 			val heldItem = player.getHeldItem(itemHeldIn)
 			
@@ -165,7 +166,7 @@ class ItemAmuletOfRecovery : ItemAbstractEnergyUser(), ITrinketItem{
 			return true
 		}
 		
-		fun tryUpdateHeldItem(): Boolean{
+		override fun tryUpdatePlayerItem(): Boolean{
 			val heldItem = player.getHeldItem(itemHeldIn)
 			
 			if (!isStackValid(heldItem)){

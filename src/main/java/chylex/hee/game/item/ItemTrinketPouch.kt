@@ -1,6 +1,7 @@
 package chylex.hee.game.item
 import chylex.hee.client.util.MC
 import chylex.hee.game.container.ContainerTrinketPouch
+import chylex.hee.game.container.base.IInventoryFromPlayerItem
 import chylex.hee.game.container.slot.SlotTrinketItemInventory
 import chylex.hee.game.item.infusion.IInfusableItem
 import chylex.hee.game.item.infusion.Infusion
@@ -66,7 +67,10 @@ class ItemTrinketPouch : ItemAbstractTrinket(), ITrinketHandlerProvider, IInfusa
 		}
 	}
 	
-	class Inventory(private val player: EntityPlayer, private val inventorySlot: Int) : InventoryBasic("gui.hee.trinket_pouch.title", false, getSlotCount(getInventoryStack(player, inventorySlot))), ITrinketHandler{
+	class Inventory(
+		override val player: EntityPlayer,
+		private val inventorySlot: Int
+	) : InventoryBasic("gui.hee.trinket_pouch.title", false, getSlotCount(getInventoryStack(player, inventorySlot))), IInventoryFromPlayerItem, ITrinketHandler{
 		private var noLongerValid = false
 		private var modCounter = 0
 		
@@ -98,7 +102,11 @@ class ItemTrinketPouch : ItemAbstractTrinket(), ITrinketHandlerProvider, IInfusa
 			return pouchItem
 		}
 		
-		fun tryUpdatePlayerItem(updateModCounter: Boolean = false): Boolean{
+		override fun tryUpdatePlayerItem(): Boolean{
+			return tryUpdatePlayerItem(updateModCounter = false)
+		}
+		
+		private fun tryUpdatePlayerItem(updateModCounter: Boolean): Boolean{
 			val pouchItem = getPouchIfValid() ?: return false
 			
 			var isEmpty = true

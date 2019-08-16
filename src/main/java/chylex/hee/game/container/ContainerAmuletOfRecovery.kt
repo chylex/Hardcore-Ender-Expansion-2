@@ -6,7 +6,6 @@ import chylex.hee.network.server.PacketServerContainerEvent.IContainerWithEvents
 import chylex.hee.system.util.size
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.inventory.ContainerChest
-import net.minecraft.item.ItemStack
 import net.minecraft.util.EnumHand
 
 class ContainerAmuletOfRecovery(private val player: EntityPlayer, itemHeldIn: EnumHand) : ContainerChest(player.inventory, ItemAmuletOfRecovery.Inventory(player, itemHeldIn), player), IContainerWithEvents{
@@ -38,17 +37,7 @@ class ContainerAmuletOfRecovery(private val player: EntityPlayer, itemHeldIn: En
 	}
 	
 	override fun detectAndSendChanges(){
-		val modifiedSlot = slotChangeListener.restart(listeners){
-			super.detectAndSendChanges()
-		}
-		
-		if (modifiedSlot != null && !player.world.isRemote && !amuletInventory.tryUpdateHeldItem()){
-			if (modifiedSlot < amuletInventory.size){
-				player.inventory.itemStack = ItemStack.EMPTY // prevent item duplication
-			}
-			
-			player.closeScreen()
-		}
+		slotChangeListener.restart(listeners){ super.detectAndSendChanges() }?.let(amuletInventory::validatePlayerItemOnModification)
 	}
 	
 	override fun handleContainerEvent(eventId: Byte){
