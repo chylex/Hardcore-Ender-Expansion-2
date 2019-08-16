@@ -12,9 +12,12 @@ import chylex.hee.game.container.ContainerAmuletOfRecovery
 import chylex.hee.game.container.ContainerBrewingStandCustom
 import chylex.hee.game.container.ContainerLootChest
 import chylex.hee.game.container.ContainerPortalTokenStorage
+import chylex.hee.game.container.ContainerShulkerBoxInInventory
 import chylex.hee.game.container.ContainerTrinketPouch
+import chylex.hee.game.item.ItemShulkerBoxOverride
 import chylex.hee.system.util.Pos
 import chylex.hee.system.util.getTile
+import net.minecraft.client.gui.inventory.GuiShulkerBox
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.tileentity.TileEntity
 import net.minecraft.util.EnumHand
@@ -36,6 +39,11 @@ object ModGuiHandler : IGuiHandler{
 		AMULET_OF_RECOVERY(
 			createInterface = { player, hand, _, _ -> GuiAmuletOfRecovery(player, EnumHand.values()[hand]) },
 			createContainer = { player, hand, _, _ -> ContainerAmuletOfRecovery(player, EnumHand.values()[hand]) }
+		),
+		
+		SHULKER_BOX(
+			createInterface = { player, slot, _, _ -> GuiShulkerBox(player.inventory, ItemShulkerBoxOverride.Inventory(player, slot)) },
+			createContainer = { player, slot, _, _ -> ContainerShulkerBoxInInventory(player, ItemShulkerBoxOverride.Inventory(player, slot)) }
 		),
 		
 		TRINKET_POUCH(

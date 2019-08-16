@@ -162,6 +162,7 @@ item.hee.talisman_of_griefing.name=Talisman of Griefing
 item.hee.scale_of_freefall.name=Scale of Freefall
 
 item.hee.chorus_berry.name=Chorus Berry
+item.hee.shulker_box.tooltip=Right-click to open
 
 item.tooltip.hee.energy.level=§9Energy: §3%s§9 / §3%s
 item.tooltip.hee.energy.uses=§9Uses Left: §3%s
