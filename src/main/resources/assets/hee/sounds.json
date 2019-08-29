@@ -1,4 +1,8 @@
 {
+  "block.igneous_plate.cool": {
+    "sounds": [ "minecraft:random/fizz" ],
+    "subtitle": "subtitles.hee.block.igneous_plate.cool"
+  },
   "block.loot_chest.open": {
     "sounds": [ "hee:block/loot_chest_open" ],
     "subtitle": "subtitles.block.chest.open"

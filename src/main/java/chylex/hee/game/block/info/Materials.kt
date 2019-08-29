@@ -33,6 +33,10 @@ object Materials{
 		makeLiquid()
 	}
 	
+	val IGNEOUS_ROCK_PLATE = CustomMaterial().apply {
+		destroyWhenPushed()
+	}
+	
 	val SCAFFOLDING = CustomMaterial().apply {
 		blocksLight = false
 		translucent = true

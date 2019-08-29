@@ -162,6 +162,8 @@ object BlockBuilders{
 		lightLevel = 2
 	}
 	
+	val buildIgneousPlate = BlockBuilder(Materials.IGNEOUS_ROCK_PLATE, MapColor.AIR, SoundType.STONE)
+	
 	// Decorative (Plants)
 	
 	val buildFlowerPot = BlockBuilder(Material.CIRCUITS, MapColor.AIR, SoundType.STONE).apply {

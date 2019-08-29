@@ -32,6 +32,7 @@ import chylex.hee.game.block.BlockGloomrock
 import chylex.hee.game.block.BlockGloomtorch
 import chylex.hee.game.block.BlockGraveDirt
 import chylex.hee.game.block.BlockHumus
+import chylex.hee.game.block.BlockIgneousPlate
 import chylex.hee.game.block.BlockIgneousRockOre
 import chylex.hee.game.block.BlockInfusedGlass
 import chylex.hee.game.block.BlockInfusedTNT
@@ -56,6 +57,7 @@ import chylex.hee.game.block.entity.TileEntityBrewingStandCustom
 import chylex.hee.game.block.entity.TileEntityDarkChest
 import chylex.hee.game.block.entity.TileEntityEndPortalAcceptor
 import chylex.hee.game.block.entity.TileEntityEnergyCluster
+import chylex.hee.game.block.entity.TileEntityIgneousPlate
 import chylex.hee.game.block.entity.TileEntityInfusedTNT
 import chylex.hee.game.block.entity.TileEntityJarODust
 import chylex.hee.game.block.entity.TileEntityLootChest
@@ -86,6 +88,7 @@ import chylex.hee.game.block.info.BlockBuilders.buildGloomrockSmooth
 import chylex.hee.game.block.info.BlockBuilders.buildGloomtorch
 import chylex.hee.game.block.info.BlockBuilders.buildGraveDirt
 import chylex.hee.game.block.info.BlockBuilders.buildHumus
+import chylex.hee.game.block.info.BlockBuilders.buildIgneousPlate
 import chylex.hee.game.block.info.BlockBuilders.buildIgneousRockOre
 import chylex.hee.game.block.info.BlockBuilders.buildInfusedGlass
 import chylex.hee.game.block.info.BlockBuilders.buildJarODust
@@ -228,6 +231,7 @@ object ModBlocks{
 	// Blocks: Interactive (Uncategorized)
 	
 	@JvmField val INFUSED_TNT            = BlockInfusedTNT().apply { setup("infused_tnt", translationKey = "tnt", inCreativeTab = false) }
+	@JvmField val IGNEOUS_PLATE          = BlockIgneousPlate(buildIgneousPlate).apply { setup("igneous_plate") }
 	@JvmField val ENHANCED_BREWING_STAND = BlockEnhancedBrewingStand(buildBrewingStand).apply { setup("enhanced_brewing_stand") }
 	
 	// Blocks: Ores
@@ -375,6 +379,7 @@ object ModBlocks{
 			register(LOOT_CHEST with basicItemBlock)
 			
 			register(INFUSED_TNT with ::ItemInfusedTNT)
+			register(IGNEOUS_PLATE with basicItemBlock)
 			register(ENHANCED_BREWING_STAND with basicItemBlock)
 			
 			register(END_POWDER_ORE with basicItemBlock)
@@ -420,6 +425,7 @@ object ModBlocks{
 		tile<TileEntityDarkChest>("dark_chest")
 		tile<TileEntityLootChest>("loot_chest")
 		tile<TileEntityJarODust>("jar_o_dust")
+		tile<TileEntityIgneousPlate>("igneous_plate")
 		tile<TileEntityBrewingStandCustom>("brewing_stand")
 		tile<TileEntityTablePedestal>("table_pedestal")
 		tile<TileEntityAccumulationTable>("accumulation_table")

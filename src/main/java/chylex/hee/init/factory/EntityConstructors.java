@@ -18,6 +18,7 @@ import chylex.hee.game.entity.living.EntityMobVillagerDying;
 import chylex.hee.game.entity.projectile.EntityProjectileEnderPearl;
 import chylex.hee.game.entity.projectile.EntityProjectileEyeOfEnder;
 import chylex.hee.game.entity.projectile.EntityProjectileSpatialDash;
+import chylex.hee.game.entity.technical.EntityTechnicalIgneousPlateLogic;
 import chylex.hee.game.entity.technical.EntityTechnicalTrigger;
 import net.minecraft.entity.Entity;
 import net.minecraft.world.World;
@@ -52,6 +53,7 @@ public final class EntityConstructors{
 		add(EntityProjectileEyeOfEnder.class, EntityProjectileEyeOfEnder::new);
 		add(EntityProjectileEnderPearl.class, EntityProjectileEnderPearl::new);
 		
+		add(EntityTechnicalIgneousPlateLogic.class, EntityTechnicalIgneousPlateLogic::new);
 		add(EntityTechnicalTrigger.class, EntityTechnicalTrigger::new);
 	}
 	

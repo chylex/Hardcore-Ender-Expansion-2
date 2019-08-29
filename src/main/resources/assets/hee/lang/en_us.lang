@@ -60,6 +60,7 @@ tile.hee.jar_o_dust.tooltip.entry=%sx %s
 tile.hee.dark_chest.name=Dark Chest
 tile.hee.loot_chest.name=Loot Chest
 tile.hee.loot_chest.tooltip=§5§o(Editable in creative mode)
+tile.hee.igneous_plate.name=Igneous Plate
 
 tile.hee.enhanced_brewing_stand.name=Enhanced Brewing Stand
 
@@ -269,6 +270,7 @@ commands.hee.infusions.info=adds or resets infusions on held item
 commands.hee.testworld.usage=/hee testworld
 commands.hee.testworld.info=converts overworld into a test world
 
+subtitles.hee.block.igneous_plate.cool=Igneous Plate cools
 subtitles.hee.block.obsidian.land=Obsidian landed
 subtitles.item.revitalization_substance.use.success=Revitalization Substance accepted
 subtitles.item.revitalization_substance.use.fail=Revitalization Substance rejected

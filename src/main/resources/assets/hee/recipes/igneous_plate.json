@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    " P ",
+    "X#X",
+    "###"
+  ],
+  "key": {
+    "#": { "item": "hee:igneous_rock" },
+    "X": { "item": "hee:endium_ingot" },
+    "P": { "item": "minecraft:heavy_weighted_pressure_plate" }
+  },
+  "result": {
+    "item": "hee:igneous_plate",
+    "count": 1
+  }
+}

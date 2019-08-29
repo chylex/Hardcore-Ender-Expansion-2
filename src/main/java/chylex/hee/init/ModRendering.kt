@@ -4,6 +4,7 @@ import chylex.hee.client.model.item.ModelItemAmuletOfRecovery
 import chylex.hee.client.render.block.RenderTileDarkChest
 import chylex.hee.client.render.block.RenderTileEndPortal
 import chylex.hee.client.render.block.RenderTileEndermanHead
+import chylex.hee.client.render.block.RenderTileIgneousPlate
 import chylex.hee.client.render.block.RenderTileJarODust
 import chylex.hee.client.render.block.RenderTileLootChest
 import chylex.hee.client.render.block.RenderTileTablePedestal
@@ -24,6 +25,7 @@ import chylex.hee.game.block.BlockGraveDirt
 import chylex.hee.game.block.BlockTablePedestal
 import chylex.hee.game.block.BlockVoidPortalInner
 import chylex.hee.game.block.entity.TileEntityDarkChest
+import chylex.hee.game.block.entity.TileEntityIgneousPlate
 import chylex.hee.game.block.entity.TileEntityJarODust
 import chylex.hee.game.block.entity.TileEntityLootChest
 import chylex.hee.game.block.entity.TileEntityPortalInner
@@ -99,6 +101,7 @@ object ModRendering{
 		registerTile<TileEntityDarkChest>(RenderTileDarkChest)
 		registerTile<TileEntityLootChest>(RenderTileLootChest)
 		registerTile<TileEntityJarODust>(RenderTileJarODust)
+		registerTile<TileEntityIgneousPlate>(RenderTileIgneousPlate)
 		registerTile<TileEntityTablePedestal>(RenderTileTablePedestal)
 		
 		registerTileStack(ModBlocks.DARK_CHEST, RenderTileDarkChest.AsItem)
@@ -142,8 +145,9 @@ object ModRendering{
 		setMapper(ModBlocks.DARK_CHEST, singleStateMapper)
 		setMapper(ModBlocks.ENDER_GOO, singleStateMapper)
 		setMapper(ModBlocks.PURIFIED_ENDER_GOO, singleStateMapper)
-		setMapper(ModBlocks.INFUSED_TNT, singleStateMapper)
 		setMapper(ModBlocks.LOOT_CHEST, singleStateMapper)
+		setMapper(ModBlocks.INFUSED_TNT, singleStateMapper)
+		setMapper(ModBlocks.IGNEOUS_PLATE, singleStateMapper)
 	}
 	
 	private fun registerSpecialModels(){

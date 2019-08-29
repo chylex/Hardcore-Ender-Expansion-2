@@ -3,8 +3,9 @@ import chylex.hee.system.Resource
 import net.minecraft.util.SoundEvent
 
 object ModSounds{
-	@JvmField val BLOCK_LOOT_CHEST_OPEN = SoundEvent(Resource.Custom("block.loot_chest.open"))
-	@JvmField val BLOCK_OBSIDIAN_LAND   = SoundEvent(Resource.Custom("block.obsidian.land"))
+	@JvmField val BLOCK_IGNEOUS_PLATE_COOL = SoundEvent(Resource.Custom("block.igneous_plate.cool"))
+	@JvmField val BLOCK_LOOT_CHEST_OPEN    = SoundEvent(Resource.Custom("block.loot_chest.open"))
+	@JvmField val BLOCK_OBSIDIAN_LAND      = SoundEvent(Resource.Custom("block.obsidian.land"))
 	
 	@JvmField val ITEM_REVITALIZATION_SUBSTANCE_USE_SUCCESS = SoundEvent(Resource.Custom("item.revitalization_substance.use.success"))
 	@JvmField val ITEM_REVITALIZATION_SUBSTANCE_USE_FAIL    = SoundEvent(Resource.Custom("item.revitalization_substance.use.fail"))
