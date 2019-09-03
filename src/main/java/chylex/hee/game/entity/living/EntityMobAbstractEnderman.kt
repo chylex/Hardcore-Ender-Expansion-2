@@ -1,8 +1,10 @@
 package chylex.hee.game.entity.living
+import chylex.hee.game.entity.CustomCreatureType
 import chylex.hee.game.entity.util.EntityData
 import chylex.hee.system.util.tryRemoveModifier
 import net.minecraft.entity.Entity
 import net.minecraft.entity.EntityLivingBase
+import net.minecraft.entity.EnumCreatureAttribute
 import net.minecraft.entity.SharedMonsterAttributes.MOVEMENT_SPEED
 import net.minecraft.entity.monster.EntityEnderman
 import net.minecraft.entity.projectile.EntityArrow
@@ -71,6 +73,10 @@ abstract class EntityMobAbstractEnderman(world: World) : EntityEnderman(world){
 	
 	override fun getLootTable(): ResourceLocation?{
 		return null
+	}
+	
+	override fun getCreatureAttribute(): EnumCreatureAttribute{
+		return CustomCreatureType.ENDER
 	}
 	
 	private class FakeIndirectDamageSource(private val source: EntityDamageSourceIndirect) : EntityDamageSource(source.damageType, source.immediateSource){

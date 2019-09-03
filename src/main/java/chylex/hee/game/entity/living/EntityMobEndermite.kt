@@ -1,5 +1,6 @@
 package chylex.hee.game.entity.living
 import chylex.hee.HEE
+import chylex.hee.game.entity.CustomCreatureType
 import chylex.hee.game.entity.living.ai.AIForceWanderTiming
 import chylex.hee.game.entity.living.ai.AIWanderLand
 import chylex.hee.game.mechanics.damage.Damage
@@ -14,6 +15,7 @@ import chylex.hee.system.util.AITargetNearby
 import chylex.hee.system.util.heeTag
 import chylex.hee.system.util.square
 import net.minecraft.entity.Entity
+import net.minecraft.entity.EnumCreatureAttribute
 import net.minecraft.entity.SharedMonsterAttributes.ATTACK_DAMAGE
 import net.minecraft.entity.SharedMonsterAttributes.MAX_HEALTH
 import net.minecraft.entity.monster.EntityEndermite
@@ -74,6 +76,10 @@ open class EntityMobEndermite(world: World) : EntityEndermite(world){
 	
 	override fun getLootTable(): ResourceLocation{
 		return ModLoot.ENDERMITE_NATURAL
+	}
+	
+	override fun getCreatureAttribute(): EnumCreatureAttribute{
+		return CustomCreatureType.ENDER
 	}
 	
 	override fun getCanSpawnHere(): Boolean{

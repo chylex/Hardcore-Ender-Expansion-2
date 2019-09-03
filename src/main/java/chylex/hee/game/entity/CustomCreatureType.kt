@@ -4,9 +4,9 @@ import net.minecraft.entity.EntityLivingBase
 import net.minecraftforge.common.util.EnumHelper
 
 object CustomCreatureType{
-	private val ENDER  = EnumHelper.addCreatureAttribute("HEE_ENDER")
-	private val DEMON  = EnumHelper.addCreatureAttribute("HEE_DEMON")
-	private val SHADOW = EnumHelper.addCreatureAttribute("HEE_SHADOW")
+	val ENDER  = EnumHelper.addCreatureAttribute("HEE_ENDER")!!
+	val DEMON  = EnumHelper.addCreatureAttribute("HEE_DEMON")!!
+	val SHADOW = EnumHelper.addCreatureAttribute("HEE_SHADOW")!!
 	
 	fun isEnder(entity: EntityLivingBase): Boolean{
 		return entity is EntityCreature && entity.creatureAttribute == ENDER // TODO more stuff
