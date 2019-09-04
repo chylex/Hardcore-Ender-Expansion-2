@@ -407,7 +407,7 @@ class EntityMobSpiderling(world: World) : EntityMob(world), ILightStartleHandler
 		val player = source.trueSource as? EntityPlayer
 		
 		if (!isBeingSwept && player != null && player.getHeldItem(MAIN_HAND).item.let { it is ItemSword || it is ItemAxe }){
-			val yaw = player.rotationYaw.toRadians()
+			val yaw = player.rotationYaw.toDouble().toRadians()
 			val xRatio = sin(yaw)
 			val zRatio = -cos(yaw)
 			

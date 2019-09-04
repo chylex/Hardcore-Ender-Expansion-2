@@ -104,7 +104,7 @@ class ItemScorchingSword : ItemSword(SCORCHING_SWORD), IScorchingItem, ICustomRe
 		}
 		
 		val rand = attacker.rng
-		val yaw = attacker.rotationYaw
+		val yaw = attacker.rotationYaw.toDouble()
 		
 		val sweepDamage = e.amount / 3F
 		var totalHits = 0

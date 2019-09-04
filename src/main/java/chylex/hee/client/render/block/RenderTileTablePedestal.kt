@@ -120,7 +120,7 @@ object RenderTileTablePedestal : TileEntitySpecialRenderer<TileEntityTablePedest
 			val locIndex = RAND.nextInt(offsetAngleIndices.size)
 			val locAngle = (offsetAngleIndices.removeAt(locIndex) + RAND.nextFloat(-3F, 3F)).toRadians()
 			
-			GL.translate(cos(locAngle) * locDistance, 0.0, sin(locAngle) * locDistance)
+			GL.translate(cos(locAngle) * locDistance, 0F, sin(locAngle) * locDistance)
 			
 			offsetY = RAND.nextFloat(0F, 0.05F)
 			rotationMp = RAND.nextFloat(0.4F, 1.2F)

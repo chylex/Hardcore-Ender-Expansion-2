@@ -28,7 +28,7 @@ abstract class EnergyShrineCorridor_Staircase(file: String) : EnergyShrineAbstra
 			val progress = index.toFloat() / count
 			
 			for(attempt in 1..attempts){
-				val angle = ((progress * 85F) + rand.nextFloat(0F, 5F)).toRadians()
+				val angle = ((progress * 85.0) + rand.nextFloat(0.0, 5.0)).toRadians()
 				val torchXZ = nextRandomXZ(rand, angle)
 				
 				if (world.getBlock(torchXZ.withY(maxY)) !== ModBlocks.GLOOMROCK_SMOOTH){

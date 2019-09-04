@@ -15,8 +15,8 @@ inline fun square(value: Int) = value * value
 inline fun square(value: Float) = value * value
 inline fun square(value: Double) = value * value
 
-inline fun Float.toDegrees() = Math.toDegrees(this.toDouble())
-inline fun Float.toRadians() = Math.toRadians(this.toDouble())
+inline fun Float.toDegrees() = Math.toDegrees(this.toDouble()).toFloat()
+inline fun Float.toRadians() = Math.toRadians(this.toDouble()).toFloat()
 
 inline fun Double.toDegrees() = Math.toDegrees(this)
 inline fun Double.toRadians() = Math.toRadians(this)

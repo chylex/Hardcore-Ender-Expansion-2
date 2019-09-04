@@ -101,7 +101,7 @@ object Generator_ObsidianTowers : ITerritoryGenerator{
 		
 		for(mp in 0..2){
 			val island = spawnIsland.getRelativeIsland(
-				angle    = (angleOffset + (120F * mp) + rand.nextFloat(-15F, 15F)).toRadians().toFloat(),
+				angle    = (angleOffset + (120F * mp) + rand.nextFloat(-15F, 15F)).toRadians(),
 				distance = if (mp == 2) rand.nextFloat(86.0, 94.0) else rand.nextFloat(42.0, 56.0),
 				radius   = if (mp == 2) 14.5 else rand.nextFloat(11.0, 12.0)
 			)

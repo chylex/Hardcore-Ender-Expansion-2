@@ -20,6 +20,9 @@ import chylex.hee.system.util.blocksMovement
 import chylex.hee.system.util.ceilToInt
 import chylex.hee.system.util.color.IRandomColor.Companion.IRandomColor
 import chylex.hee.system.util.color.IntColor.Companion.RGB
+import chylex.hee.system.util.component1
+import chylex.hee.system.util.component2
+import chylex.hee.system.util.component3
 import chylex.hee.system.util.distanceSqTo
 import chylex.hee.system.util.heeTag
 import chylex.hee.system.util.motionVec
@@ -30,7 +33,6 @@ import chylex.hee.system.util.readCompactVec
 import chylex.hee.system.util.scale
 import chylex.hee.system.util.selectEntities
 import chylex.hee.system.util.square
-import chylex.hee.system.util.toRadians
 import chylex.hee.system.util.use
 import chylex.hee.system.util.writeCompactVec
 import io.netty.buffer.ByteBuf
@@ -49,8 +51,6 @@ import net.minecraft.util.math.Vec3d
 import net.minecraft.world.World
 import net.minecraftforge.event.ForgeEventFactory
 import java.util.Random
-import kotlin.math.cos
-import kotlin.math.sin
 
 class EntityProjectileSpatialDash : Entity, IProjectile{
 	companion object{
@@ -154,13 +154,10 @@ class EntityProjectileSpatialDash : Entity, IProjectile{
 		this.owner = SerializedEntity(owner)
 		this.setPosition(owner.posX, owner.posY + owner.eyeHeight - 0.1, owner.posZ)
 		
-		val dirX = -sin(owner.rotationYaw.toRadians()) * cos(owner.rotationPitch.toRadians())
-		val dirY = -sin(owner.rotationPitch.toRadians())
-		val dirZ = cos(owner.rotationYaw.toRadians()) * cos(owner.rotationPitch.toRadians())
-		
 		val realSpeed = PROJECTILE_SPEED_BASE * speedMp
 		val realDistance = PROJECTILE_DISTANCE_BASE * distanceMp
 		
+		val (dirX, dirY, dirZ) = Vec3d.fromPitchYaw(owner.rotationPitch, owner.rotationYaw)
 		shoot(dirX, dirY, dirZ, realSpeed, 0F)
 		
 		this.lifespan = (realDistance / realSpeed).ceilToInt().toShort()

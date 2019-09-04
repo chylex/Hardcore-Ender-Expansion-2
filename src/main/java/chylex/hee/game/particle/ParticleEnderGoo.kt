@@ -21,7 +21,7 @@ object ParticleEnderGoo : IParticleMaker{
 	
 	@SideOnly(Side.CLIENT)
 	private class Instance(world: World, posX: Double, posY: Double, posZ: Double, motX: Double, motY: Double, motZ: Double) : ParticleBaseFloating(world, posX, posY, posZ, motX, motY, motZ){
-		private var angleOffset = (rand.nextInt(5, 10) * (if (rand.nextBoolean()) 1F else -1F)).toRadians().toFloat()
+		private var angleOffset = (rand.nextInt(5, 10) * (if (rand.nextBoolean()) 1F else -1F)).toRadians()
 		
 		init{
 			particleTextureIndexX = rand.nextInt(8)
