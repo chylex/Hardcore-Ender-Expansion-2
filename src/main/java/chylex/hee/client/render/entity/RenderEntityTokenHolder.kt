@@ -23,8 +23,6 @@ class RenderEntityTokenHolder(manager: RenderManager) : Render<EntityTokenHolder
 		SOLITARY to Resource.Custom("textures/entity/token_holder_solitary.png")
 	)
 	
-	private val model = ModelEntityTokenHolder()
-	
 	override fun doRender(entity: EntityTokenHolder, x: Double, y: Double, z: Double, rotationYaw: Float, partialTicks: Float){
 		val charge = entity.renderCharge.get(partialTicks)
 		val scale = 0.25F + (0.25F * charge.pow(1.5F))
@@ -43,7 +41,7 @@ class RenderEntityTokenHolder(manager: RenderManager) : Render<EntityTokenHolder
 		GL.color(1F, 1F, 1F, alpha)
 		
 		bindEntityTexture(entity)
-		model.render()
+		ModelEntityTokenHolder.render()
 		
 		GL.popMatrix()
 		GL.disableBlend()

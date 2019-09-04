@@ -1,7 +1,7 @@
 package chylex.hee.client.model.item
 import chylex.hee.client.util.MC
 import chylex.hee.init.ModItems
-import chylex.hee.system.Resource.Custom
+import chylex.hee.system.Resource
 import net.minecraft.client.renderer.block.model.IBakedModel
 import net.minecraft.client.renderer.block.model.ItemCameraTransforms.TransformType
 import net.minecraft.client.renderer.block.model.ItemCameraTransforms.TransformType.FIRST_PERSON_LEFT_HAND
@@ -22,8 +22,8 @@ import javax.vecmath.Matrix4f
 @SideOnly(Side.CLIENT)
 class ModelItemAmuletOfRecovery private constructor(sourceModel: IBakedModel) : BakedModelWrapper<IBakedModel>(sourceModel){
 	companion object{
-		private val RESOURCE_NORMAL = ModelResourceLocation(Custom("amulet_of_recovery"), "inventory")
-		private val RESOURCE_HELD   = ModelResourceLocation(Custom("amulet_of_recovery_held"), "held")
+		private val RESOURCE_NORMAL = ModelResourceLocation(Resource.Custom("amulet_of_recovery"), "inventory")
+		private val RESOURCE_HELD   = ModelResourceLocation(Resource.Custom("amulet_of_recovery_held"), "held")
 		
 		fun register(){
 			ModelBakery.registerItemVariants(ModItems.AMULET_OF_RECOVERY, RESOURCE_NORMAL, RESOURCE_HELD)
