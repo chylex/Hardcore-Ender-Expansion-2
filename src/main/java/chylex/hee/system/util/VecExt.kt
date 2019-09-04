@@ -4,6 +4,7 @@ package chylex.hee.system.util
 import net.minecraft.util.math.Vec3d
 import kotlin.math.acos
 import kotlin.math.atan2
+import kotlin.math.sqrt
 
 object Vec3{
 	/**
@@ -51,6 +52,10 @@ fun Vec3d.scaleY(factor: Double): Vec3d{
 
 fun Vec3d.toYaw(): Float{
 	return 360F - atan2(this.x, this.z).toDegrees().toFloat()
+}
+
+fun Vec3d.toPitch(): Float{
+	return -atan2(this.y, sqrt(square(this.x) + square(this.z))).toDegrees().toFloat()
 }
 
 fun Vec3d.angleBetween(other: Vec3d): Double{
