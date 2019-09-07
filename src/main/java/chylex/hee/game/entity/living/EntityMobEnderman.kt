@@ -341,6 +341,10 @@ class EntityMobEnderman(world: World) : EntityMobAbstractEnderman(world){
 	// Battle (Targeting)
 	
 	override fun setAttackTarget(newTarget: EntityLivingBase?){
+		if (attackTarget === newTarget){
+			return
+		}
+		
 		if (newTarget == null){
 			super.setAttackTarget(null)
 			trackedCausatumStage = null

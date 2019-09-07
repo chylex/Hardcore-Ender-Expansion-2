@@ -355,7 +355,7 @@ class EntityMobSpiderling(world: World) : EntityMob(world), ILightStartleHandler
 	}
 	
 	override fun setAttackTarget(newTarget: EntityLivingBase?){
-		if (world.difficulty != PEACEFUL){
+		if (world.difficulty != PEACEFUL && newTarget !== attackTarget){
 			super.setAttackTarget(newTarget)
 			
 			if (newTarget == null && lightStartleResetTime == 0L){

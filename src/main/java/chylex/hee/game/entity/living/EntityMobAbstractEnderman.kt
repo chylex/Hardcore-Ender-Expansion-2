@@ -36,6 +36,10 @@ abstract class EntityMobAbstractEnderman(world: World) : EntityEnderman(world){
 	override fun updateAITasks(){} // blocks vanilla water damage & sunlight behavior
 	
 	override fun setAttackTarget(newTarget: EntityLivingBase?){
+		if (attackTarget === newTarget){
+			return
+		}
+		
 		val prevAggressive = isAggressive
 		super.setAttackTarget(newTarget)
 		isAggressive = prevAggressive
