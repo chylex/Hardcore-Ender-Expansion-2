@@ -19,7 +19,7 @@ abstract class AIBaseTargetFiltered<T : EntityLivingBase>(
 		else
 			{ candidate -> isSuitableTarget(candidate, false) && targetPredicate(candidate) }
 	
-	protected fun findSuitableTargets(rangeMp: Float = 1F): Sequence<T>{
+	protected fun findSuitableTargets(rangeMp: Float = 1F): List<T>{
 		return entity.world.selectVulnerableEntities.inRange(targetClass, entity.posVec, targetDistance * rangeMp).filter(finalTargetPredicate)
 	}
 }

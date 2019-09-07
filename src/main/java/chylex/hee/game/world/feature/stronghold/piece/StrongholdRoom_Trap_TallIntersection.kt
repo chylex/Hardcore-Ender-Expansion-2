@@ -31,7 +31,7 @@ class StrongholdRoom_Trap_TallIntersection(file: String) : StrongholdAbstractPie
 			val world = entity.world
 			
 			val area = entity.entityBoundingBox.grow(2.5, 0.0, 2.5).expand(0.0, 2.0, 0.0)
-			val targets = world.selectVulnerableEntities.inBox<EntityPlayer>(area).toList()
+			val targets = world.selectVulnerableEntities.inBox<EntityPlayer>(area)
 			
 			if (targets.isEmpty()){
 				return

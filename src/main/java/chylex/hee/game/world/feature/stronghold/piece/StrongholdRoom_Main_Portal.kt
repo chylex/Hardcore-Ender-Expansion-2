@@ -41,17 +41,17 @@ class StrongholdRoom_Main_Portal(file: String) : StrongholdAbstractPieceFromFile
 			val selector = world.selectVulnerableEntities
 			
 			val box = StrongholdPieces.STRUCTURE_SIZE.toCenteredBoundingBox(entity.posVec)
-			val playersInRange = selector.inBox<EntityPlayer>(box).toList()
+			val playersInRange = selector.inBox<EntityPlayer>(box)
 			
 			if (playersInRange.isEmpty() ||
 				world.loadedEntityList.count { it is EntityMobSilverfish } >= 60 ||
-				selector.inBox<EntityMobSilverfish>(box).count() >= min(30, 15 + (5 * playersInRange.size))
+				selector.inBox<EntityMobSilverfish>(box).size >= min(30, 15 + (5 * playersInRange.size))
 			){
 				return
 			}
 			
 			val maxNearby = 3 + (2 * playersInRange.size)
-			val targets = playersInRange.filter { selector.inRange<EntityMobSilverfish>(it.posVec, 32.0).count() < maxNearby }.toMutableList()
+			val targets = playersInRange.filter { selector.inRange<EntityMobSilverfish>(it.posVec, 32.0).size < maxNearby }.toMutableList()
 			
 			if (targets.isEmpty()){
 				return

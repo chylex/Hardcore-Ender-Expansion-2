@@ -37,7 +37,7 @@ class StrongholdRoom_Trap_CornerHoles(file: String) : StrongholdAbstractPieceFro
 			if (spawnsLeft == -1){
 				val area = entity.entityBoundingBox.grow(3.5, 0.0, 3.5).expand(0.0, 2.0, 0.0)
 				
-				if (world.selectVulnerableEntities.inBox<EntityPlayer>(area).none()){
+				if (world.selectVulnerableEntities.inBox<EntityPlayer>(area).isEmpty()){
 					return
 				}
 				else{
@@ -46,7 +46,7 @@ class StrongholdRoom_Trap_CornerHoles(file: String) : StrongholdAbstractPieceFro
 			}
 			
 			val targetArea = entity.entityBoundingBox.grow(6.0, 0.0, 6.0).expand(0.0, 4.0, 0.0)
-			val targets = world.selectVulnerableEntities.inBox<EntityPlayer>(targetArea).toList()
+			val targets = world.selectVulnerableEntities.inBox<EntityPlayer>(targetArea)
 			
 			repeat(min(spawnsLeft, rand.nextInt(1, 3))){
 				val (x, y, z) = entity.posVec.add(

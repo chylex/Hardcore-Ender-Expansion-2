@@ -91,7 +91,7 @@ class ItemTotemOfUndyingCustom : ItemAbstractTrinket(){
 			return
 		}
 		
-		val isNearVillager = world.selectExistingEntities.inRange<EntityVillager>(entity.posVec, entity.getEntityAttribute(REACH_DISTANCE).attributeValue).any()
+		val isNearVillager = world.selectExistingEntities.inRange<EntityVillager>(entity.posVec, entity.getEntityAttribute(REACH_DISTANCE).attributeValue).isNotEmpty()
 		val wasNearVillager = stack.heeTagOrNull.hasKey(SHAKING_TAG)
 		
 		if (isNearVillager && !wasNearVillager){

@@ -16,6 +16,6 @@ class AITargetRandom<T : EntityLivingBase>(
 		return if (chancePerTick > 0 && entity.rng.nextInt(chancePerTick) != 0)
 			null
 		else
-			entity.rng.nextItemOrNull(findSuitableTargets().toList())
+			entity.rng.nextItemOrNull(findSuitableTargets())
 	}
 }

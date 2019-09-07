@@ -21,7 +21,7 @@ class AIWanderLandStopNear<T : EntityLivingBase>(
 		if (--nextCheckDelay < 0){
 			nextCheckDelay = 3
 			
-			if (entity.world.selectVulnerableEntities.inRange(detectClass, entity.posVec, detectDistance).any()){
+			if (entity.world.selectVulnerableEntities.inRange(detectClass, entity.posVec, detectDistance).isNotEmpty()){
 				entity.navigator.clearPath()
 			}
 		}

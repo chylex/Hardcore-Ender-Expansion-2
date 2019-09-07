@@ -29,7 +29,7 @@ class AITargetEyeContact<T : EntityLivingBase>(
 	private val stareStarts = Object2LongArrayMap<T>(4).apply { defaultReturnValue(Long.MIN_VALUE) }
 	
 	override fun findTarget(): T?{
-		val foundTargets = findSuitableTargets().filter(::isLookingIntoEyes).toList()
+		val foundTargets = findSuitableTargets().filter(::isLookingIntoEyes)
 		
 		if (foundTargets.isEmpty()){
 			stareStarts.clear()

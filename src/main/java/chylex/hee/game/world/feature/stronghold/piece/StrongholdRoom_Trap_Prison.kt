@@ -58,10 +58,10 @@ class StrongholdRoom_Trap_Prison(file: String) : StrongholdAbstractPieceFromFile
 			val (x1, y1, z1) = pos1.center
 			val (x2, y2, z2) = pos2.center
 			
-			val targets = world.selectVulnerableEntities.inBox<EntityPlayer>(AxisAlignedBB(x1, y1, z1, x2, y2, z2)).toList()
+			val targets = world.selectVulnerableEntities.inBox<EntityPlayer>(AxisAlignedBB(x1, y1, z1, x2, y2, z2))
 			
 			if (spawnsLeft == -1){
-				if (targets.none()){
+				if (targets.isEmpty()){
 					return
 				}
 				else{

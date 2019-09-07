@@ -103,7 +103,7 @@ class EntityItemCauldronTrigger : EntityItem{
 		val pos = Pos(this)
 		val itemEntities = world.selectEntities.inBox<EntityItem>(AxisAlignedBB(pos))
 		
-		if (itemEntities.count() < list.size){
+		if (itemEntities.size < list.size){
 			return false
 		}
 		
@@ -128,7 +128,7 @@ class EntityItemCauldronTrigger : EntityItem{
 		return true
 	}
 	
-	private fun validateIngredients(itemEntities: Sequence<EntityItem>, remainingIngredients: Map<Item, Int>): Boolean{
+	private fun validateIngredients(itemEntities: List<EntityItem>, remainingIngredients: Map<Item, Int>): Boolean{
 		val testIngredients = HashMap(remainingIngredients)
 		
 		for(itemEntity in itemEntities){

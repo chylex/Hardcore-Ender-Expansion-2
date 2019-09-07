@@ -48,6 +48,6 @@ class AITargetSwarmSwitch<T : EntityLivingBase>(
 			friendsInRange.count { friend -> friend.attackTarget === it } < friendsAttackingCurrentTarget
 		}
 		
-		return entity.rng.nextItemOrNull(otherTargetsInRange.toList())
+		return entity.rng.nextItemOrNull(otherTargetsInRange)
 	}
 }

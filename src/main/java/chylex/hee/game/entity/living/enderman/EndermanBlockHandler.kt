@@ -81,7 +81,7 @@ class EndermanBlockHandler(private val enderman: EntityMobAbstractEnderman) : IB
 		get() = enderman.heldBlockState == null
 	
 	private fun isPlayerInProximity(): Boolean{
-		return world.selectVulnerableEntities.inRange<EntityPlayer>(enderman.posVec, 14.0).any()
+		return world.selectVulnerableEntities.inRange<EntityPlayer>(enderman.posVec, 14.0).isNotEmpty()
 	}
 	
 	override fun onBeginSearch(): BlockPos?{

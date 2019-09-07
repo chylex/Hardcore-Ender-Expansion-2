@@ -151,7 +151,7 @@ interface IBlockDeathFlowerDecaying{
 			val center = pos.center
 			val nearbyEndermen = world.selectExistingEntities.inRange<EntityMobEnderman>(center, 128.0).filter { it.attackTarget == null }.toMutableList()
 			
-			if (nearbyEndermen.any() && DimensionWitherData.get(world).onTeleportTriggered(world)){
+			if (nearbyEndermen.isNotEmpty() && DimensionWitherData.get(world).onTeleportTriggered(world)){
 				repeat(min(rand.nextInt(2, 3), nearbyEndermen.size)){
 					TELEPORT.nearLocation(rand.removeItem(nearbyEndermen), rand, center, distance = (1.5)..(5.0), attempts = 64)
 				}
