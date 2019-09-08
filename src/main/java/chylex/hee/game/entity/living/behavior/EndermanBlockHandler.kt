@@ -1,9 +1,9 @@
-package chylex.hee.game.entity.living.enderman
+package chylex.hee.game.entity.living.behavior
 import chylex.hee.game.entity.living.EntityMobAbstractEnderman
 import chylex.hee.game.entity.living.ai.AIPickUpBlock.IBlockPickUpHandler
-import chylex.hee.game.entity.living.enderman.EndermanBlockHandler.TargetBlockType.FULL
-import chylex.hee.game.entity.living.enderman.EndermanBlockHandler.TargetBlockType.NONE
-import chylex.hee.game.entity.living.enderman.EndermanBlockHandler.TargetBlockType.TRANSPARENT
+import chylex.hee.game.entity.living.behavior.EndermanBlockHandler.TargetBlockType.FULL
+import chylex.hee.game.entity.living.behavior.EndermanBlockHandler.TargetBlockType.NONE
+import chylex.hee.game.entity.living.behavior.EndermanBlockHandler.TargetBlockType.TRANSPARENT
 import chylex.hee.game.world.util.RayTracer
 import chylex.hee.system.util.Pos
 import chylex.hee.system.util.Vec3

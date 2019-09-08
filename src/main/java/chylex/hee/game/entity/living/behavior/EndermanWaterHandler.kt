@@ -1,4 +1,4 @@
-package chylex.hee.game.entity.living.enderman
+package chylex.hee.game.entity.living.behavior
 import chylex.hee.game.entity.living.EntityMobAbstractEnderman
 import chylex.hee.system.util.OPERATION_MUL_INCR_INDIVIDUAL
 import chylex.hee.system.util.nextInt

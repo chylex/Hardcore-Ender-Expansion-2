@@ -6,9 +6,9 @@ import chylex.hee.game.entity.living.ai.AIWanderLand
 import chylex.hee.game.entity.living.ai.AIWatchTargetInShock
 import chylex.hee.game.entity.living.ai.util.AIToggle
 import chylex.hee.game.entity.living.ai.util.AIToggle.Companion.addTask
-import chylex.hee.game.entity.living.enderman.EndermanBlockHandler
-import chylex.hee.game.entity.living.enderman.EndermanTeleportHandler
-import chylex.hee.game.entity.living.enderman.EndermanWaterHandler
+import chylex.hee.game.entity.living.behavior.EndermanBlockHandler
+import chylex.hee.game.entity.living.behavior.EndermanTeleportHandler
+import chylex.hee.game.entity.living.behavior.EndermanWaterHandler
 import chylex.hee.game.entity.projectile.EntityProjectileSpatialDash
 import chylex.hee.game.mechanics.causatum.CausatumStage
 import chylex.hee.game.mechanics.causatum.CausatumStage.S0_INITIAL

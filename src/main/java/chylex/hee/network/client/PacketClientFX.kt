@@ -7,7 +7,7 @@ import chylex.hee.game.entity.item.EntityFallingObsidian
 import chylex.hee.game.entity.item.EntityItemCauldronTrigger
 import chylex.hee.game.entity.item.EntityItemIgneousRock
 import chylex.hee.game.entity.item.EntityItemRevitalizationSubstance
-import chylex.hee.game.entity.living.enderman.EndermanTeleportHandler
+import chylex.hee.game.entity.living.behavior.EndermanTeleportHandler
 import chylex.hee.game.entity.projectile.EntityProjectileSpatialDash
 import chylex.hee.game.entity.technical.EntityTechnicalIgneousPlateLogic
 import chylex.hee.game.fx.IFxData
