@@ -1,4 +1,5 @@
 package chylex.hee.game.entity.living.helpers
+import chylex.hee.system.util.directionTowards
 import chylex.hee.system.util.lookPosVec
 import chylex.hee.system.util.square
 import net.minecraft.entity.EntityLiving
@@ -18,7 +19,7 @@ class EntityMoveFlyingForward(entity: EntityLiving) : EntityMoveHelper(entity){
 		if (action == MOVE_TO){
 			action = WAIT
 			
-			val diff = Vec3d(posX, posY, posZ).subtract(entity.lookPosVec).normalize()
+			val diff = entity.lookPosVec.directionTowards(Vec3d(posX, posY, posZ))
 			val xz = sqrt(square(diff.x) + square(diff.z))
 			
 			val dot = Vec3d.fromPitchYaw(entity.rotationPitch, entity.rotationYaw).dotProduct(diff).coerceAtLeast(0.0)

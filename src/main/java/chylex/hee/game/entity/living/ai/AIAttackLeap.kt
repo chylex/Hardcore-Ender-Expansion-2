@@ -2,6 +2,7 @@ package chylex.hee.game.entity.living.ai
 import chylex.hee.system.util.AI_FLAG_MOVEMENT
 import chylex.hee.system.util.AI_FLAG_SWIMMING
 import chylex.hee.system.util.Vec3
+import chylex.hee.system.util.directionTowards
 import chylex.hee.system.util.nextFloat
 import chylex.hee.system.util.square
 import net.minecraft.entity.EntityCreature
@@ -58,7 +59,7 @@ class AIAttackLeap(
 	
 	override fun startExecuting(){
 		val target = leapTarget ?: return
-		val diff = Vec3.fromXZ(target.posX, target.posZ).subtract(Vec3.fromXZ(entity.posX, entity.posZ)).normalize()
+		val diff = Vec3.fromXZ(entity.posX, entity.posZ).directionTowards(Vec3.fromXZ(target.posX, target.posZ))
 		
 		val rand = entity.rng
 		val strengthXZ = rand.nextFloat(leapStrengthXZ)

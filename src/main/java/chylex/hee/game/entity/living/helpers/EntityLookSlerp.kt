@@ -1,4 +1,5 @@
 package chylex.hee.game.entity.living.helpers
+import chylex.hee.system.util.directionTowards
 import chylex.hee.system.util.lookPosVec
 import chylex.hee.system.util.math.Quaternion
 import chylex.hee.system.util.toPitch
@@ -30,15 +31,15 @@ class EntityLookSlerp(private val entity: EntityLiving, private val adjustmentSp
 		if (isLooking){
 			isLooking = false
 			
-			val diff = target.subtract(entity.lookPosVec)
+			val dir = entity.lookPosVec.directionTowards(target)
 			
-			if (Vec3d.fromPitchYaw(entity.rotationPitch, entity.rotationYaw).dotProduct(diff.normalize()) >= maxInstantAngleCos){
-				entity.rotationYaw = diff.toYaw()
-				entity.rotationPitch = diff.toPitch()
+			if (Vec3d.fromPitchYaw(entity.rotationPitch, entity.rotationYaw).dotProduct(dir) >= maxInstantAngleCos){
+				entity.rotationYaw = dir.toYaw()
+				entity.rotationPitch = dir.toPitch()
 			}
 			else{
 				val current = Quaternion.fromYawPitch(entity.rotationYaw, entity.rotationPitch)
-				val target = Quaternion.fromYawPitch(diff.toYaw(), diff.toPitch())
+				val target = Quaternion.fromYawPitch(dir.toYaw(), dir.toPitch())
 				
 				val next = current.slerp(target, adjustmentSpeed)
 				entity.rotationYaw = next.rotationYaw
