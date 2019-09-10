@@ -9,6 +9,7 @@ import chylex.hee.game.entity.item.EntityItemIgneousRock
 import chylex.hee.game.entity.item.EntityItemNoBob
 import chylex.hee.game.entity.item.EntityItemRevitalizationSubstance
 import chylex.hee.game.entity.item.EntityTokenHolder
+import chylex.hee.game.entity.living.EntityBossEnderEye
 import chylex.hee.game.entity.living.EntityMobEnderman
 import chylex.hee.game.entity.living.EntityMobEndermite
 import chylex.hee.game.entity.living.EntityMobEndermiteInstability
@@ -55,6 +56,8 @@ object ModEntities{
 			register<EntityFallingObsidian>("falling_obsidian").tracker(160, 20, true) to this
 			register<EntityInfusedTNT>("infused_tnt").tracker(160, 10, true) to this
 			register<EntityTokenHolder>("token_holder").tracker(128, 60, false) to this
+			
+			register<EntityBossEnderEye>("ender_eye").tracker(160, 1, true).egg(RGB(22u).i, RGB(219, 58, 115).i) to this
 			
 			register<EntityMobEndermiteInstability>("endermite_instability").tracker(96, 3, true).egg(RGB(21u).i, RGB(94, 122, 108).i) to this
 			register<EntityMobSpiderling>("spiderling").tracker(80, 2, true).egg(RGB(32, 30, 16).i, RGB(182, 25, 0).i) to this

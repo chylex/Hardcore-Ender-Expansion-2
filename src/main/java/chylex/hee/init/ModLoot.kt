@@ -43,6 +43,8 @@ object ModLoot{
 	lateinit var UNDREAD: ResourceLocation
 	lateinit var SPIDERLING: ResourceLocation
 	
+	lateinit var ENDER_EYE: ResourceLocation
+	
 	fun initialize(){
 		LootConditionManager.registerCondition(ConditionFortune.Serializer)
 		LootConditionManager.registerCondition(ConditionLooting.Serializer)
@@ -70,6 +72,8 @@ object ModLoot{
 		ENDERMITE_INSTABILITY = registerEntity("endermite_instability")
 		UNDREAD = registerEntity("undread")
 		SPIDERLING = registerEntity("spiderling")
+		
+		ENDER_EYE = registerEntity("ender_eye")
 	}
 	
 	private fun registerBlock(name: String): BlockLootTable{

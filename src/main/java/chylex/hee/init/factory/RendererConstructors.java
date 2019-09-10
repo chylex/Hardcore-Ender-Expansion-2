@@ -1,4 +1,5 @@
 package chylex.hee.init.factory;
+import chylex.hee.client.render.entity.RenderEntityBossEnderEye;
 import chylex.hee.client.render.entity.RenderEntityItemNoBob;
 import chylex.hee.client.render.entity.RenderEntityMobAbstractEnderman;
 import chylex.hee.client.render.entity.RenderEntityMobSpiderling;
@@ -19,6 +20,8 @@ public final class RendererConstructors{
 	static{
 		all.put(RenderEntityItemNoBob.class, RenderEntityItemNoBob::new);
 		all.put(RenderEntityTokenHolder.class, RenderEntityTokenHolder::new);
+		
+		all.put(RenderEntityBossEnderEye.class, RenderEntityBossEnderEye::new);
 		
 		all.put(RenderEntityMobAbstractEnderman.class, RenderEntityMobAbstractEnderman::new);
 		all.put(RenderEntityMobSpiderling.class, RenderEntityMobSpiderling::new);
