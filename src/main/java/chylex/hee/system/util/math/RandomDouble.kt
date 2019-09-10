@@ -5,9 +5,7 @@ import kotlin.math.pow
 
 abstract class RandomDouble private constructor(val min: Double, val max: Double) : (Random) -> Double{
 	init{
-		if (min > max){
-			throw IllegalArgumentException("min must be smaller than or equal to max")
-		}
+		require(min <= max){ "min must be smaller than or equal to max" }
 	}
 	
 	abstract override fun invoke(rand: Random): Double

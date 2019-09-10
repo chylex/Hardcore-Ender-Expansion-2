@@ -36,8 +36,6 @@ class TransformBlockChorusFlower : ICoremodTransformer{
 			}
 		}
 		
-		if (replaced != replacementCount){
-			throw IllegalStateException("expected to do $replacementCount instruction replacement(s), did $replaced instead")
-		}
+		check(replaced == replacementCount){ "expected to do $replacementCount instruction replacement(s), did $replaced instead" }
 	}
 }

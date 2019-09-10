@@ -44,9 +44,6 @@ object IntegrityCheck{
 	
 	private fun failIntegrityCheck(message: String, crash: Boolean){
 		HEE.log.error("[IntegrityCheck] $message")
-		
-		if (crash){
-			throw IllegalStateException("Integrity check failed: $message")
-		}
+		check(!crash){ "Integrity check failed: $message" }
 	}
 }

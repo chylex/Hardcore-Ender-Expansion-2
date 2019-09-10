@@ -101,9 +101,7 @@ object ModNetwork{
 	private fun writePacket(packet: IPacket): FMLProxyPacket{
 		val id = mapPacketClassToId.getByte(packet::class.java)
 		
-		if (id == MISSING_ID){
-			throw IllegalArgumentException("packet is not registered: ${packet::class.java.simpleName}")
-		}
+		require(id != MISSING_ID){ "packet is not registered: ${packet::class.java.simpleName}" }
 		
 		val buffer = Unpooled.buffer()
 		buffer.writeByte(id.toInt())

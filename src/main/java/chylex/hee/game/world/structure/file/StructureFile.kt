@@ -80,9 +80,7 @@ class StructureFile(nbt: NBTTagCompound){
 		}
 		
 		fun save(world: IStructureWorld, size: Size, palette: Palette): Pair<NBTTagCompound, Set<IBlockState>>{
-			if (size.x > 256 || size.y > 256 || size.z > 256){
-				throw IllegalArgumentException("structure files can only contain structures up to 256x256x256 blocks")
-			}
+			require(size.x <= 256 && size.y <= 256 && size.z <= 256){ "structure files can only contain structures up to 256x256x256 blocks" }
 			
 			val missingMappings = mutableSetOf<IBlockState>()
 			
@@ -116,9 +114,7 @@ class StructureFile(nbt: NBTTagCompound){
 			val generatedBlocks = IntArrayList(blockMapping.size)
 			val generatedPalette = blockMapping.values.distinct().sorted()
 			
-			if (generatedPalette.size > 256){
-				throw IllegalArgumentException("structure files can only contain up to 256 different palette mappings")
-			}
+			require(generatedPalette.size <= 256){ "structure files can only contain up to 256 different palette mappings" }
 			
 			for((key, mapping) in blockMapping){
 				generatedBlocks.add(key or generatedPalette.indexOf(mapping))

@@ -55,8 +55,8 @@ fun Entity.setFireTicks(ticks: Int){
 	val prevFire = this.fire
 	this.setFire(ticks / 20) // in case something overrides it
 	
-	val finalTicks = when{
-		this is EntityLivingBase -> EnchantmentProtection.getFireTimeForEntity(this, ticks)
+	val finalTicks = when(this){
+		is EntityLivingBase -> EnchantmentProtection.getFireTimeForEntity(this, ticks)
 		else -> ticks
 	}
 	

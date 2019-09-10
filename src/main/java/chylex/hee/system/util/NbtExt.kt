@@ -241,9 +241,7 @@ abstract class NBTList<T : Any>(protected val tagList: NBTTagList) : Iterable<T>
 		}
 		
 		override fun remove(){
-			if (!canRemove){
-				throw IllegalStateException()
-			}
+			check(canRemove)
 			
 			canRemove = false
 			tagList.removeTag(--cursor)

@@ -2,7 +2,6 @@ package chylex.hee.game.block.util
 import chylex.hee.system.util.with
 import chylex.hee.system.util.withFacing
 import net.minecraft.block.BlockFlower
-import net.minecraft.block.BlockFlower.EnumFlowerType
 import net.minecraft.block.BlockNewLog
 import net.minecraft.block.BlockOldLog
 import net.minecraft.block.BlockPlanks

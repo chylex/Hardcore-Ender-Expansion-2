@@ -39,9 +39,7 @@ object TokenPlayerStorage{
 	
 	private class TokenStorageCapability private constructor() : ItemStackHandler(5 * 9){
 		override fun setSize(size: Int){
-			if (size != slots){
-				throw IllegalArgumentException("cannot resize TokenStorageCapability")
-			}
+			require(size == slots){ "cannot resize TokenStorageCapability" }
 		}
 		
 		override fun isItemValid(slot: Int, stack: ItemStack): Boolean{

@@ -89,7 +89,7 @@ class TerritoryEntry(private val owner: TerritoryGlobalStorage, private val inst
 		val lastPortalArray = getLongArrayOrNull("LastPortals")
 		
 		if (lastPortalArray != null){
-			for(index in 0 until lastPortalArray.size step 3){
+			for(index in lastPortalArray.indices step 3){
 				lastPortals[UUID(lastPortalArray[index + 0], lastPortalArray[index + 1])] = Pos(lastPortalArray[2])
 			}
 		}

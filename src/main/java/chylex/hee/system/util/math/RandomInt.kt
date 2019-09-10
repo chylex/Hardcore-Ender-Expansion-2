@@ -6,9 +6,7 @@ import java.util.Random
 
 abstract class RandomInt private constructor(val min: Int, val max: Int) : (Random) -> Int{
 	init{
-		if (min > max){
-			throw IllegalArgumentException("min must be smaller than or equal to max")
-		}
+		require(min <= max){ "min must be smaller than or equal to max" }
 	}
 	
 	abstract override fun invoke(rand: Random): Int

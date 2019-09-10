@@ -85,9 +85,7 @@ object ModPotions{
 		val recipes = BrewingRecipeRegistry::class.java.getDeclaredField("recipes").also { it.isAccessible = true }.get(null) as ArrayList<IBrewingRecipe>
 		
 		with(recipes){
-			if (isEmpty() || removeAt(0) !is VanillaBrewingRecipe){
-				throw IllegalStateException("could not find vanilla brewing recipes in the registry")
-			}
+			check(isNotEmpty() && removeAt(0) is VanillaBrewingRecipe){ "could not find vanilla brewing recipes in the registry" }
 			
 			addAll(0, listOf(
 				BrewBasicEffects.FromAwkward,

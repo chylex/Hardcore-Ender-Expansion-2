@@ -7,6 +7,7 @@ import chylex.hee.game.world.util.Size
 import net.minecraft.util.math.BlockPos
 import net.minecraft.world.World
 
+@Suppress("PropertyName")
 interface IStructureDescription{
 	val STRUCTURE_SIZE: Size
 	

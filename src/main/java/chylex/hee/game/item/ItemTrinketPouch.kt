@@ -11,7 +11,6 @@ import chylex.hee.game.mechanics.trinket.ITrinketHandler
 import chylex.hee.game.mechanics.trinket.ITrinketHandlerProvider
 import chylex.hee.game.mechanics.trinket.ITrinketItem
 import chylex.hee.game.mechanics.trinket.TrinketHandler
-import chylex.hee.init.ModGuiHandler.GuiType
 import chylex.hee.init.ModGuiHandler.GuiType.TRINKET_POUCH
 import chylex.hee.network.server.PacketServerOpenGui
 import chylex.hee.system.util.InventorySlot
@@ -189,7 +188,7 @@ class ItemTrinketPouch : ItemAbstractTrinket(), ITrinketHandlerProvider, IInfusa
 			return ActionResult(PASS, stack)
 		}
 		
-		GuiType.TRINKET_POUCH.open(player, slot.slot)
+		TRINKET_POUCH.open(player, slot.slot)
 		return ActionResult(SUCCESS, stack)
 	}
 	

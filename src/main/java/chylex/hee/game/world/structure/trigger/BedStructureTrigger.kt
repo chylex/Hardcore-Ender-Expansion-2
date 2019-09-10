@@ -20,6 +20,7 @@ class BedStructureTrigger(private val facing: EnumFacing, private val color: Enu
 		val transformedFacing = transform(facing)
 		val baseState = Blocks.BED.withFacing(transformedFacing).with(BlockBed.OCCUPIED, false)
 		
+		@Suppress("UnnecessaryVariable")
 		val footPos = pos
 		val headPos = pos.offset(transformedFacing)
 		

@@ -22,9 +22,7 @@ class OreGenerator(
 		val max = bounds.max
 		val (sizeX, _, sizeZ) = bounds.size
 		
-		if (sizeX % chunkSize != 0 || sizeZ % chunkSize != 0){
-			throw IllegalArgumentException("bounding box dimensions (X = $sizeX, Z = $sizeZ) must be multiples of chunk size ($chunkSize)")
-		}
+		require(sizeX % chunkSize == 0 && sizeZ % chunkSize == 0){ "bounding box dimensions (X = $sizeX, Z = $sizeZ) must be multiples of chunk size ($chunkSize)" }
 		
 		var clustersGenerated = 0
 		

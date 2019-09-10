@@ -91,10 +91,7 @@ class StructureBuild<T : StructurePiece<*>.MutableInstance>(val size: Size){
 	}
 	
 	fun beginChain(){
-		if (chain != -1){
-			throw IllegalStateException("cannot begin a structure build chain when the last one has not finished")
-		}
-		
+		check(chain == -1){ "cannot begin a structure build chain when the last one has not finished" }
 		chain = 0
 	}
 	
@@ -107,9 +104,7 @@ class StructureBuild<T : StructurePiece<*>.MutableInstance>(val size: Size){
 			val removed = pieces.removeAt(pieces.lastIndex).instance
 			
 			for(neighbor in removed.restoreAllConnections()){
-				if (!neighbor.restoreConnection(removed)){
-					throw IllegalStateException("failed reverting chain, found an asymmetric connection")
-				}
+				check(neighbor.restoreConnection(removed)){ "failed reverting chain, found an asymmetric connection" }
 			}
 		}
 	}

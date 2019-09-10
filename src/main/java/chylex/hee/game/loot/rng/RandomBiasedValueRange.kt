@@ -8,9 +8,7 @@ class RandomBiasedValueRange(min: Float, max: Float, private val highestChanceVa
 	constructor(original: RandomValueRange, highestChanceValue: Float, biasSoftener: Float) : this(original.min, original.max, highestChanceValue, biasSoftener)
 	
 	init{
-		if (highestChanceValue !in min..max){
-			throw IllegalArgumentException("highestChanceValue must be between min and max")
-		}
+		require(highestChanceValue in min..max){ "highestChanceValue must be between min and max" }
 	}
 	
 	/*

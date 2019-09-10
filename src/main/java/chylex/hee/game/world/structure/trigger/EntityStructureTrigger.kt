@@ -29,9 +29,7 @@ class EntityStructureTrigger private constructor(private val entityConstructor: 
 		entityConstructor,
 		{ pos, transform -> transform(nudgeFacing).let { Vec3d(pos.x + 0.5 + (nudgeAmount * it.xOffset), pos.y + yOffset, pos.z + 0.5 + (nudgeAmount * it.zOffset)) } }
 	){
-		if (nudgeFacing.yOffset != 0){
-			throw IllegalArgumentException("entity trigger can only be nudged on x/z axis")
-		}
+		require(nudgeFacing.yOffset == 0){ "entity trigger can only be nudged on x/z axis" }
 	}
 	
 	constructor(

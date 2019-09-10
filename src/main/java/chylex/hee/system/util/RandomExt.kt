@@ -9,10 +9,7 @@ import kotlin.math.pow
  * @throws IllegalArgumentException if `min` is greater than `max`
  */
 fun Random.nextLong(bound: Long): Long{
-	if (bound <= 0){
-		throw IllegalArgumentException("bound must be positive")
-	}
-	
+	require(bound > 0){ "bound must be positive" }
 	return abs(this.nextLong()) % bound
 }
 
@@ -21,10 +18,7 @@ fun Random.nextLong(bound: Long): Long{
  * @throws IllegalArgumentException if `min` is greater than `max`
  */
 fun Random.nextInt(min: Int, max: Int): Int{
-	if (min > max){
-		throw IllegalArgumentException("min must be smaller than or equal to max")
-	}
-	
+	require(min <= max){ "min must be smaller than or equal to max" }
 	return min + this.nextInt(max - min + 1)
 }
 
@@ -40,10 +34,7 @@ fun Random.nextInt(range: IntRange): Int{
  * @throws IllegalArgumentException if `min` is greater than `max`
  */
 fun Random.nextLong(min: Long, max: Long): Long{
-	if (min > max){
-		throw IllegalArgumentException("min must be smaller than or equal to max")
-	}
-	
+	require(min <= max){ "min must be smaller than or equal to max" }
 	return min + this.nextLong(max - min + 1)
 }
 
@@ -52,10 +43,7 @@ fun Random.nextLong(min: Long, max: Long): Long{
  * @throws IllegalArgumentException if `min` is greater than `max`
  */
 fun Random.nextFloat(min: Float, max: Float): Float{
-	if (min > max){
-		throw IllegalArgumentException("min must be smaller than or equal to max")
-	}
-	
+	require(min <= max){ "min must be smaller than or equal to max" }
 	return min + (this.nextFloat() * (max - min))
 }
 
@@ -71,10 +59,7 @@ fun Random.nextFloat(range: ClosedFloatingPointRange<Float>): Float{
  * @throws IllegalArgumentException if `min` is greater than `max`
  */
 fun Random.nextFloat(min: Double, max: Double): Double{
-	if (min > max){
-		throw IllegalArgumentException("min must be smaller than or equal to max")
-	}
-	
+	require(min <= max){ "min must be smaller than or equal to max" }
 	return min + (this.nextFloat() * (max - min))
 }
 
@@ -100,9 +85,7 @@ fun Random.nextRounded(value: Float): Int{
  * @throws IllegalArgumentException if `biasSoftener` is lower than 1
  */
 fun Random.nextBiasedFloat(biasSoftener: Float): Float{
-	if (biasSoftener < 1F){
-		throw IllegalArgumentException("biasSoftener must be at least 1")
-	}
+	require(biasSoftener >= 1F){ "biasSoftener must be at least 1" }
 	
 	val unbiased = this.nextFloat()
 	return unbiased - (unbiased * this.nextFloat().pow(biasSoftener))

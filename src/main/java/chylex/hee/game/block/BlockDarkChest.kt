@@ -12,7 +12,7 @@ import net.minecraftforge.common.util.EnumHelper
 
 class BlockDarkChest(builder: BlockBuilder) : BlockChest(TYPE), IOcelotCanSitOn{
 	companion object{
-		val TYPE = EnumHelper.addEnum(BlockChest.Type::class.java, "HEE_DARK", emptyArray())!!
+		val TYPE = EnumHelper.addEnum(Type::class.java, "HEE_DARK", emptyArray())!!
 	}
 	
 	init{

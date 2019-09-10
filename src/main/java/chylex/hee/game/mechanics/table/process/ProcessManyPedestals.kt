@@ -75,7 +75,7 @@ abstract class ProcessManyPedestals(private val world: World, pos: Array<BlockPo
 			return false
 		}
 		
-		for(index in 0 until tiles.size){
+		for(index in tiles.indices){
 			lastInputStacks[index] = newInputs[index]
 			lastInputModCounters[index] = tiles[index].inputModCounter
 		}
