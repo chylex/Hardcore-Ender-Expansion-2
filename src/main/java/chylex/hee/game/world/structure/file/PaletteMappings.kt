@@ -8,6 +8,7 @@ import net.minecraft.block.BlockRotatedPillar
 import net.minecraft.block.BlockSlab
 import net.minecraft.block.BlockStairs
 import net.minecraft.block.BlockTorch
+import net.minecraft.block.BlockTrapDoor
 import net.minecraft.block.BlockVine
 import net.minecraft.util.EnumFacing.Axis.X
 import net.minecraft.util.EnumFacing.Axis.Y
@@ -61,6 +62,16 @@ object PaletteMappings{
 		"top" to BlockDoor.EnumDoorHalf.UPPER
 	)
 	
+	val TRAPDOOR_HALF = BlockTrapDoor.HALF to mapOf(
+		"bottom" to BlockTrapDoor.DoorHalf.BOTTOM,
+		"top" to BlockTrapDoor.DoorHalf.TOP
+	)
+	
+	val TRAPDOOR_OPEN = BlockTrapDoor.OPEN to mapOf(
+		"" to false,
+		"open" to true
+	)
+	
 	val SLAB_HALF = BlockSlab.HALF to mapOf(
 		"bottom" to BlockSlab.EnumBlockHalf.BOTTOM,
 		"top" to BlockSlab.EnumBlockHalf.TOP
@@ -70,6 +81,9 @@ object PaletteMappings{
 		"" to BlockStairs.EnumHalf.BOTTOM,
 		"flip" to BlockStairs.EnumHalf.TOP
 	)
+	
+	val TRAPDOOR_MAPPING_LIST = listOf(TRAPDOOR_HALF, TRAPDOOR_OPEN, FACING_HORIZONTAL)
+	val STAIR_MAPPING_LIST = listOf(STAIR_FLIP, FACING_HORIZONTAL)
 	
 	fun VINE_WALLS(block: BlockVine) = arrayOf("u", "n", "s", "e", "w", "ns", "ne", "nw", "se", "sw", "ew", "nse", "nsw", "new", "sew", "nsew").associate {
 		Pair(it, it.fold(block.defaultState){
