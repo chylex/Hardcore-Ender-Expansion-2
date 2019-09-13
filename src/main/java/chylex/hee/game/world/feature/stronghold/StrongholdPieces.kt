@@ -94,9 +94,9 @@ object StrongholdPieces : IStructureDescription{
 		add("slab.spruce.*", FutureBlocks.SPRUCE_SLAB, PaletteMappings.SLAB_HALF)
 		add("slab.stone.double", FutureBlocks.DOUBLE_STONE_SLAB)
 		
-		add("stairs.stonebrick.*.*", Blocks.STONE_BRICK_STAIRS, listOf(PaletteMappings.STAIR_FLIP, PaletteMappings.FACING_HORIZONTAL))
-		add("stairs.spruce.*.*", Blocks.SPRUCE_STAIRS, listOf(PaletteMappings.STAIR_FLIP, PaletteMappings.FACING_HORIZONTAL))
-		add("stairs.darkoak.*.*", Blocks.DARK_OAK_STAIRS, listOf(PaletteMappings.STAIR_FLIP, PaletteMappings.FACING_HORIZONTAL))
+		add("stairs.stonebrick.*.*", Blocks.STONE_BRICK_STAIRS, PaletteMappings.STAIR_MAPPING_LIST)
+		add("stairs.spruce.*.*", Blocks.SPRUCE_STAIRS, PaletteMappings.STAIR_MAPPING_LIST)
+		add("stairs.darkoak.*.*", Blocks.DARK_OAK_STAIRS, PaletteMappings.STAIR_MAPPING_LIST)
 		
 		add("log.spruce.*", FutureBlocks.SPRUCE_LOG, PaletteMappings.FACING_AXIS_LOGS)
 		add("log.darkoak.*", FutureBlocks.DARK_OAK_LOG, PaletteMappings.FACING_AXIS_LOGS)

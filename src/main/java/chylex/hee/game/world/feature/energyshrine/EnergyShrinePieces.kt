@@ -55,8 +55,8 @@ object EnergyShrinePieces : IStructureDescription{
 			add("slab.gloomrock.smooth.*", ModBlocks.GLOOMROCK_SMOOTH_SLAB, PaletteMappings.SLAB_HALF)
 			add("slab.gloomrock.smooth.double", ModBlocks.GLOOMROCK_SMOOTH_DOUBLE_SLAB)
 			
-			add("stairs.gloomrock.bricks.*.*", ModBlocks.GLOOMROCK_BRICK_STAIRS, listOf(PaletteMappings.STAIR_FLIP, PaletteMappings.FACING_HORIZONTAL))
-			add("stairs.gloomrock.smooth.*.*", ModBlocks.GLOOMROCK_SMOOTH_STAIRS, listOf(PaletteMappings.STAIR_FLIP, PaletteMappings.FACING_HORIZONTAL))
+			add("stairs.gloomrock.bricks.*.*", ModBlocks.GLOOMROCK_BRICK_STAIRS, PaletteMappings.STAIR_MAPPING_LIST)
+			add("stairs.gloomrock.smooth.*.*", ModBlocks.GLOOMROCK_SMOOTH_STAIRS, PaletteMappings.STAIR_MAPPING_LIST)
 			
 			add("gloomtorch.*", ModBlocks.GLOOMTORCH, PaletteMappings.FACING_ALL)
 			
