@@ -8,6 +8,7 @@ import chylex.hee.game.loot.conditions.ConditionFortune
 import chylex.hee.game.loot.conditions.ConditionLooting
 import chylex.hee.game.loot.functions.FunctionInfuse
 import chylex.hee.game.loot.functions.FunctionPickColoredGloomrock
+import chylex.hee.game.loot.functions.FunctionPickMusicDisk
 import chylex.hee.game.loot.functions.FunctionPickUndreadGem
 import chylex.hee.game.loot.rng.RandomBiasedValueRange
 import chylex.hee.game.loot.rng.RandomRoundingValueRange
@@ -52,6 +53,7 @@ object ModLoot{
 		
 		LootFunctionManager.registerFunction(FunctionInfuse.Serializer)
 		LootFunctionManager.registerFunction(FunctionPickColoredGloomrock.Serializer)
+		LootFunctionManager.registerFunction(FunctionPickMusicDisk.Serializer)
 		LootFunctionManager.registerFunction(FunctionPickUndreadGem.Serializer)
 		
 		GRAVE_DIRT_LOOT = registerBlock("grave_dirt_loot")
