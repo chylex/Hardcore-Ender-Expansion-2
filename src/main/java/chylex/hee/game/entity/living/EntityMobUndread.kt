@@ -6,6 +6,7 @@ import chylex.hee.game.mechanics.damage.IDamageProcessor.Companion.DIFFICULTY_SC
 import chylex.hee.game.mechanics.damage.IDamageProcessor.Companion.PEACEFUL_EXCLUSION
 import chylex.hee.init.ModLoot
 import chylex.hee.init.ModSounds
+import chylex.hee.system.migration.MagicValues.DEATH_TIME_MAX
 import chylex.hee.system.util.AIAttackMelee
 import chylex.hee.system.util.AISwim
 import chylex.hee.system.util.AITargetAttacker
@@ -88,8 +89,8 @@ class EntityMobUndread(world: World) : EntityMob(world){
 		noClip = true
 		motionY = max(0.05, motionY)
 		
-		if (deathTime >= 11){
-			deathTime = 19 // UPDATE ensure death still triggers on 20th tick
+		if (deathTime >= (DEATH_TIME_MAX / 2) + 1){
+			deathTime = DEATH_TIME_MAX - 1
 		}
 		
 		super.onDeathUpdate()

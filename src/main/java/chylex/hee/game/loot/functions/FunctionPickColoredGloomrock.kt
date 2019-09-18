@@ -12,7 +12,7 @@ import net.minecraft.world.storage.loot.conditions.LootCondition
 import net.minecraft.world.storage.loot.functions.LootFunction
 import java.util.Random
 
-class FunctionPickColoredGloomrock(conditions: Array<LootCondition>) : LootFunction(conditions){ // UPDATE replace with a tag
+class FunctionPickColoredGloomrock(conditions: Array<LootCondition>) : LootFunction(conditions){
 	private companion object{
 		private val BLOCKS = arrayOf(
 			ModBlocks.GLOOMROCK_SMOOTH_RED,

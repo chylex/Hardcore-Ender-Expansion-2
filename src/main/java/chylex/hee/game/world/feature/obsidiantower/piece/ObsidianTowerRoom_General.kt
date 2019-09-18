@@ -9,6 +9,7 @@ import chylex.hee.game.world.structure.trigger.FlowerPotStructureTrigger
 import chylex.hee.game.world.structure.trigger.LootChestStructureTrigger
 import chylex.hee.game.world.structure.trigger.TileEntityStructureTrigger
 import chylex.hee.init.ModItems
+import chylex.hee.system.migration.MagicValues
 import chylex.hee.system.util.allInBoxMutable
 import chylex.hee.system.util.nextItem
 import chylex.hee.system.util.removeItemOrNull
@@ -112,7 +113,7 @@ abstract class ObsidianTowerRoom_General(file: String, val guaranteesSpawnersOnL
 		val table = overworld.lootTableManager.getLootTableFromLocation(ObsidianTowerPieces.LOOT_FUEL)
 		
 		val fuel = table.generateLootForPools(world.rand, LootContext.Builder(overworld).build()).firstOrNull() ?: ItemStack.EMPTY
-		world.addTrigger(pos, TileEntityStructureTrigger(Blocks.FURNACE.withFacing(facing), TileEntityFurnace().apply { setStack(1, fuel) })) // UPDATE slot index
+		world.addTrigger(pos, TileEntityStructureTrigger(Blocks.FURNACE.withFacing(facing), TileEntityFurnace().apply { setStack(MagicValues.FURNACE_FUEL_SLOT, fuel) }))
 	}
 	
 	protected fun placeFlowerPot(world: IStructureWorld, pos: BlockPos){

@@ -1,4 +1,5 @@
 package chylex.hee.game.mechanics.potion
+import chylex.hee.system.migration.MagicValues
 import chylex.hee.system.util.color.IntColor.Companion.RGB
 import chylex.hee.system.util.floorToInt
 import net.minecraft.entity.EntityLivingBase
@@ -25,9 +26,9 @@ object PotionPurity : PotionBase(color = RGB(73, 217, 255), isNegative = false){
 		
 		for((type, effect) in entity.activePotionMap){
 			if (type.isBadEffect && effect.duration in MIN_DURATION..INFINITE_DURATION_THRESHOLD){ // TODO handle eternal torment
-				when(type){ // UPDATE make sure all potion types with special needs are handled, and the frequencies have not changed
-					POISON -> purifySpecial(effect, 25, purityLevel)
-					WITHER -> purifySpecial(effect, 40, purityLevel)
+				when(type){
+					POISON -> purifySpecial(effect, MagicValues.POTION_POISON_TRIGGER_RATE, purityLevel)
+					WITHER -> purifySpecial(effect, MagicValues.POTION_WITHER_TRIGGER_RATE, purityLevel)
 					else   -> purifyGeneral(effect, purityLevel, entity.getActivePotionEffect(this)!!.duration)
 				}
 			}
