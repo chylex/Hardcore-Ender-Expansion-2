@@ -1,5 +1,6 @@
 package chylex.hee.game.world.feature.obsidiantower.piece
 import chylex.hee.game.entity.item.EntityTokenHolder
+import chylex.hee.game.entity.living.EntityBossEnderEye
 import chylex.hee.game.item.ItemPortalToken.TokenType
 import chylex.hee.game.world.structure.IStructureWorld
 import chylex.hee.game.world.structure.trigger.EntityStructureTrigger
@@ -30,7 +31,7 @@ abstract class ObsidianTowerLevel_Top(file: String) : ObsidianTowerLevel_General
 		override fun generate(world: IStructureWorld, instance: Instance){
 			super.generate(world, instance)
 			world.setBlock(Pos(centerX, 1, centerZ - 3), ModBlocks.OBSIDIAN_CHISELED_LIT)
-			// TODO spawn mob
+			world.addTrigger(Pos(centerX, 2, centerZ - 3), EntityStructureTrigger(::EntityBossEnderEye, yOffset = 0.0))
 		}
 	}
 }

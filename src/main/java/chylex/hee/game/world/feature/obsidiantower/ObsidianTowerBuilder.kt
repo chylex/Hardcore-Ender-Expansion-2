@@ -1,8 +1,9 @@
 package chylex.hee.game.world.feature.obsidiantower
-import chylex.hee.game.world.feature.obsidiantower.piece.ObsidianTowerLevel_Top
+import chylex.hee.game.world.feature.obsidiantower.ObsidianTowerSpawnerLevel.LEVEL_1
 import chylex.hee.game.world.structure.piece.IStructureBuild
 import chylex.hee.game.world.structure.piece.IStructureBuilder
 import chylex.hee.game.world.structure.piece.StructureBuild
+import chylex.hee.game.world.structure.piece.StructureBuild.AddMode.MERGE
 import chylex.hee.game.world.structure.piece.StructurePiece
 import chylex.hee.game.world.util.Size.Alignment.CENTER
 import chylex.hee.game.world.util.Size.Alignment.MIN
@@ -11,25 +12,44 @@ import chylex.hee.system.util.nextItem
 import net.minecraft.util.Rotation
 import java.util.Random
 
-class ObsidianTowerBuilder(private val floors: Int, private val topPiece: ObsidianTowerLevel_Top) : IStructureBuilder{
+class ObsidianTowerBuilder(private val arrangement: ObsidianTowerRoomArrangement) : IStructureBuilder{
 	override fun build(rand: Random): IStructureBuild?{
 		val transform1 = Transform(rotation = rand.nextItem(), mirror = false)
 		val transform2 = transform1.copy(rotation = transform1.rotation.add(Rotation.CLOCKWISE_180))
 		
+		val floors = arrangement.floors
+		
 		val size = ObsidianTowerPieces.calculateStructureSize(floors)
-		val build = StructureBuild<StructurePiece<Unit>.MutableInstance>(size)
+		val build = StructureBuild<StructurePiece<*>.MutableInstance>(size)
 		
 		val bottomPos = size.getPos(CENTER, MIN, CENTER)
 		var y = 0
 		
+		val roomListMapping = arrangement.levels.map { it.first }.associateWith { it.toMutableList() }
+		
 		for(floor in 0..floors){
 			val piece = when(floor){
-				floors -> topPiece
+				floors -> arrangement.topPiece
 				0 -> ObsidianTowerPieces.PIECE_LEVEL_BOTTOM
 				else -> ObsidianTowerPieces.PIECE_LEVEL_MIDDLE
 			}
 			
-			build.addPiece(piece.MutableInstance(if (floor % 2 == 0) transform1 else transform2), bottomPos.up(y).subtract(piece.size.getPos(CENTER, MIN, CENTER)))
+			val transform = if (floor % 2 == 0) transform1 else transform2
+			val floorPos = bottomPos.up(y)
+			
+			build.addPiece(piece.MutableInstance(transform), floorPos.subtract(piece.size.getPos(CENTER, MIN, CENTER)))
+			
+			if (floor < floors){
+				val (originalRoomList, spawnerLevel) = arrangement.levels[floor]
+				val roomList = roomListMapping.getValue(originalRoomList)
+				
+				val data = ObsidianTowerRoomData(spawnerLevel, rand)
+				val room = rand.nextItem(if (spawnerLevel == LEVEL_1) roomList.filter { it.guaranteesSpawnersOnLevel1 }.ifEmpty { roomList } else roomList)
+				
+				roomList.remove(room)
+				build.addPiece(room.MutableInstance(data, transform), floorPos.subtract(room.size.getPos(CENTER, MIN, CENTER)), MERGE)
+			}
+			
 			y += piece.size.y
 		}
 		

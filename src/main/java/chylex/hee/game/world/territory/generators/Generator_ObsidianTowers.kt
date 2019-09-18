@@ -68,9 +68,9 @@ object Generator_ObsidianTowers : ITerritoryGenerator{
 		val rand = world.rand
 		val size = world.worldSize
 		
-		val remainingFloatyCrapTokens = mutableListOf( // TODO
-			TerritoryType.OBSIDIAN_TOWERS to TOKEN_ARCANE_CONJUNCTIONS,
-			TerritoryType.OBSIDIAN_TOWERS to TOKEN_LOST_GARDEN
+		val remainingFloatyCrapTokens = mutableListOf(
+			TerritoryType.ARCANE_CONJUNCTIONS to TOKEN_ARCANE_CONJUNCTIONS,
+			TerritoryType.LOST_GARDEN to TOKEN_LOST_GARDEN
 		)
 		
 		val remainingTowerTokens = mutableListOf(
@@ -301,11 +301,11 @@ object Generator_ObsidianTowers : ITerritoryGenerator{
 	
 	private object Tower{
 		fun generateBoss(world: SegmentedWorld, rand: Random, island: Island){
-			generate(world, rand, island, ObsidianTowerBuilder(5, ObsidianTowerPieces.PIECE_LEVEL_TOP_BOSS))
+			generate(world, rand, island, ObsidianTowerBuilder(ObsidianTowerPieces.ARRANGEMENTS_BOSS.generateItem(rand)))
 		}
 		
 		fun generateRegular(world: SegmentedWorld, rand: Random, island: Island, tokenInfo: Pair<TerritoryType, TokenType>){
-			generate(world, rand, island, ObsidianTowerBuilder(3, ObsidianTowerPieces.PIECE_LEVEL_TOP_TOKEN(tokenInfo.second, tokenInfo.first)))
+			generate(world, rand, island, ObsidianTowerBuilder(ObsidianTowerPieces.ARRANGEMENTS_REGULAR(tokenInfo.second, tokenInfo.first).generateItem(rand)))
 		}
 		
 		private fun generate(world: SegmentedWorld, rand: Random, island: Island, builder: ObsidianTowerBuilder){
@@ -404,13 +404,13 @@ object Generator_ObsidianTowers : ITerritoryGenerator{
 		
 		TOKEN_ARCANE_CONJUNCTIONS{
 			override fun afterPillars(world: SegmentedWorld, rand: Random, island: Island){
-				generateToken(world, rand, island, TerritoryType.OBSIDIAN_TOWERS) // TODO
+				generateToken(world, rand, island, TerritoryType.ARCANE_CONJUNCTIONS)
 			}
 		},
 		
 		TOKEN_LOST_GARDEN{
 			override fun afterPillars(world: SegmentedWorld, rand: Random, island: Island){
-				generateToken(world, rand, island, TerritoryType.OBSIDIAN_TOWERS) // TODO
+				generateToken(world, rand, island, TerritoryType.LOST_GARDEN)
 			}
 		};
 		

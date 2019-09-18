@@ -6,7 +6,7 @@ import chylex.hee.game.world.structure.IStructureWorld
 import chylex.hee.game.world.structure.piece.IStructurePieceConnection
 import chylex.hee.game.world.structure.piece.StructurePiece
 
-abstract class ObsidianTowerAbstractPieceFromFile(file: String) : StructurePiece<Unit>(), IStructurePieceFromFile by Delegate("obsidiantower/$file", ObsidianTowerPieces.PALETTE){
+abstract class ObsidianTowerAbstractPieceFromFile<T>(file: String) : StructurePiece<T>(), IStructurePieceFromFile by Delegate("obsidiantower/$file", ObsidianTowerPieces.PALETTE){
 	override val connections = emptyArray<IStructurePieceConnection>()
 	
 	override fun generate(world: IStructureWorld, instance: Instance){

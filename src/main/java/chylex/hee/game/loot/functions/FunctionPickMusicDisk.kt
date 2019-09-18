@@ -5,6 +5,7 @@ import chylex.hee.system.util.size
 import com.google.gson.JsonDeserializationContext
 import com.google.gson.JsonObject
 import com.google.gson.JsonSerializationContext
+import net.minecraft.init.Items
 import net.minecraft.item.Item
 import net.minecraft.item.ItemStack
 import net.minecraft.util.JsonUtils
@@ -15,7 +16,19 @@ import java.util.Random
 
 class FunctionPickMusicDisk(conditions: Array<LootCondition>, private val picks: Array<Item>) : LootFunction(conditions){
 	private companion object{
-		private val DISKS = mapOf<String, Array<Item>>(
+		private val DISKS = mapOf(
+			"obsidiantower" to arrayOf(
+				Items.RECORD_13,
+				Items.RECORD_CAT,
+				Items.RECORD_BLOCKS,
+				Items.RECORD_CHIRP,
+				Items.RECORD_FAR,
+				Items.RECORD_MALL,
+				Items.RECORD_MELLOHI,
+				Items.RECORD_STAL,
+				Items.RECORD_STRAD
+				// TODO replace with custom music disks
+			)
 		)
 	}
 	
