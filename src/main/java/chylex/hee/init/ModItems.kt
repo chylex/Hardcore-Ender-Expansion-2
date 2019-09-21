@@ -1,6 +1,7 @@
 package chylex.hee.init
 import chylex.hee.HEE
 import chylex.hee.game.block.dispenser.DispenseEndermanHead
+import chylex.hee.game.block.dispenser.DispenseWaterExtinguishIgneousPlate
 import chylex.hee.game.item.ItemAmuletOfRecovery
 import chylex.hee.game.item.ItemBindingEssence
 import chylex.hee.game.item.ItemBucketWithCauldron
@@ -212,6 +213,7 @@ object ModItems{
 		
 		with(BlockDispenser.DISPENSE_BEHAVIOR_REGISTRY){
 			putObject(ENDERMAN_HEAD, DispenseEndermanHead)
+			putObject(Items.WATER_BUCKET, DispenseWaterExtinguishIgneousPlate(getObject(Items.WATER_BUCKET)))
 		}
 	}
 	

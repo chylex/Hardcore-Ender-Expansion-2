@@ -65,8 +65,6 @@ class BlockIgneousPlate(builder: BlockBuilder) : BlockSimple(builder), ITileEnti
 				furnacePos.getTile<TileEntityFurnace>(world) != null
 			)
 		}
-		
-		// TODO implement dispenser behavior w/ water bucket
 	}
 	
 	init{
@@ -119,13 +117,7 @@ class BlockIgneousPlate(builder: BlockBuilder) : BlockSimple(builder), ITileEnti
 		val heldItem = player.getHeldItem(hand)
 		
 		if (heldItem.item === Items.WATER_BUCKET){
-			if (world.isRemote){
-				return true
-			}
-			
-			val furnacePos = pos.offset(state[FACING_NOT_DOWN].opposite)
-			
-			if (furnacePos.getTile<TileEntityFurnace>(world)?.let(EntityTechnicalIgneousPlateLogic.Companion::triggerCooling) == true && !player.capabilities.isCreativeMode){
+			if (!world.isRemote && tryCoolPlate(world, pos, state) && !player.capabilities.isCreativeMode){
 				player.setHeldItem(hand, ItemStack(Items.BUCKET))
 			}
 			
@@ -133,6 +125,10 @@ class BlockIgneousPlate(builder: BlockBuilder) : BlockSimple(builder), ITileEnti
 		}
 		
 		return false
+	}
+	
+	fun tryCoolPlate(world: World, pos: BlockPos, state: IBlockState): Boolean{
+		return pos.offset(state[FACING_NOT_DOWN].opposite).getTile<TileEntityFurnace>(world)?.let(EntityTechnicalIgneousPlateLogic.Companion::triggerCooling) == true
 	}
 	
 	// State handling
