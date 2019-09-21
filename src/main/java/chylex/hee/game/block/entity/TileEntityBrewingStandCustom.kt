@@ -31,10 +31,11 @@ import java.util.Arrays
 
 class TileEntityBrewingStandCustom : TileEntityBrewingStand(){
 	companion object{
+		val SLOTS_POTIONS = 0..2
 		const val SLOT_REAGENT = 3
 		const val SLOT_MODIFIER = 4
 		
-		private val POTION_SLOTS = intArrayOf(0, 1, 2)
+		private val POTION_SLOTS = SLOTS_POTIONS.toList().toIntArray()
 	}
 	
 	val isEnhanced

@@ -22,7 +22,6 @@ class GuiBrewingStandCustom(inventory: InventoryPlayer, private val brewingStand
 	
 	init{
 		inventorySlots = ContainerBrewingStandCustom(inventory, brewingStand)
-		// TODO could look better if the background sprites on slots disappeared after inserting items in them
 	}
 	
 	override fun drawGuiContainerBackgroundLayer(partialTicks: Float, mouseX: Int, mouseY: Int){
@@ -55,6 +54,14 @@ class GuiBrewingStandCustom(inventory: InventoryPlayer, private val brewingStand
 		
 		if (brewingStand.getStack(TileEntityBrewingStandCustom.SLOT_MODIFIER).isNotEmpty){
 			drawTexturedModalRect(x + 62, y + 45, 197, 0, 14, 2)
+		}
+		
+		for(slotIndex in TileEntityBrewingStandCustom.SLOTS_POTIONS){
+			val slot = inventorySlots.getSlot(slotIndex)
+			
+			if (!slot.hasStack){
+				drawTexturedModalRect(x + slot.xPos, y + slot.yPos, 211, 0, 16, 16)
+			}
 		}
 	}
 }
