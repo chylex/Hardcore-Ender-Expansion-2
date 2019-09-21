@@ -467,7 +467,7 @@ object ModBlocks{
 		Blocks.FIRE.setFireInfo(WHITEBARK_STAIRS, 5, 20)
 		Blocks.FIRE.setFireInfo(WHITEBARK_SLAB, 5, 20)
 		
-		Blocks.FIRE.setFireInfo(INFUSED_TNT, 15, 100)
+		// UPDATE hardcoded shit in BlockFire Blocks.FIRE.setFireInfo(INFUSED_TNT, 15, 100)
 		
 		Blocks.FIRE.setFireInfo(ANCIENT_COBWEB, 100, 300)
 		Blocks.FIRE.setFireInfo(DRY_VINES, 100, 300)

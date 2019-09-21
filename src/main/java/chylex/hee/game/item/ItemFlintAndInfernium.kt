@@ -62,6 +62,15 @@ class ItemFlintAndInfernium : Item(){
 		MinecraftForge.EVENT_BUS.register(this)
 	}
 	
+	fun igniteTNT(world: World, pos: BlockPos, player: EntityPlayer?, ignoreTrap: Boolean){
+		if (pos.getBlock(world) === Blocks.TNT){
+			pos.setBlock(world, ModBlocks.INFUSED_TNT, FLAG_NONE)
+		}
+		
+		ModBlocks.INFUSED_TNT.igniteTNT(world, pos, pos.getState(world).with(BlockTNT.EXPLODE, true).with(BlockInfusedTNT.INFERNIUM, true), player, ignoreTrap)
+		pos.setAir(world)
+	}
+	
 	override fun onItemUse(player: EntityPlayer, world: World, pos: BlockPos, hand: EnumHand, facing: EnumFacing, hitX: Float, hitY: Float, hitZ: Float): EnumActionResult{
 		val heldItem = player.getHeldItem(hand)
 		
@@ -73,12 +82,7 @@ class ItemFlintAndInfernium : Item(){
 			val block = pos.getBlock(world)
 			
 			if (block === Blocks.TNT || block === ModBlocks.INFUSED_TNT){
-				if (block === Blocks.TNT){
-					pos.setBlock(world, ModBlocks.INFUSED_TNT, FLAG_NONE)
-				}
-				
-				ModBlocks.INFUSED_TNT.explode(world, pos, pos.getState(world).with(BlockTNT.EXPLODE, true).with(BlockInfusedTNT.INFERNIUM, true), player)
-				pos.setAir(world)
+				igniteTNT(world, pos, player, ignoreTrap = false)
 			}
 			else{
 				BlockEditor.place(ModBlocks.ETERNAL_FIRE, player, hand, heldItem, pos, facing, hitX, hitY, hitZ)

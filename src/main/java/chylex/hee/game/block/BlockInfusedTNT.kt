@@ -111,10 +111,14 @@ class BlockInfusedTNT : BlockTNT(), ITileEntityProvider{
 			return
 		}
 		
+		igniteTNT(world, pos, state, igniter, ignoreTrap = false)
+	}
+	
+	fun igniteTNT(world: World, pos: BlockPos, state: IBlockState, igniter: EntityLivingBase?, ignoreTrap: Boolean){
 		val infusions = pos.getTile<TileEntityInfusedTNT>(world)?.infusions
 		
 		if (infusions != null && state[EXPLODE]){
-			if (infusions.has(TRAP) && world.isBlockPowered(pos)){
+			if (infusions.has(TRAP) && world.isBlockPowered(pos) && !ignoreTrap){
 				dropBlockAsItem(world, pos, state, 0)
 			}
 			else{
