@@ -1,5 +1,6 @@
 package chylex.hee.init
 import chylex.hee.HEE
+import chylex.hee.game.block.dispenser.DispenseEndermanHead
 import chylex.hee.game.item.ItemAmuletOfRecovery
 import chylex.hee.game.item.ItemBindingEssence
 import chylex.hee.game.item.ItemBucketWithCauldron
@@ -38,6 +39,7 @@ import chylex.hee.game.item.util.Tool.Type.SHOVEL
 import chylex.hee.init.ModCreativeTabs.OrderedCreativeTab
 import chylex.hee.system.Resource
 import chylex.hee.system.util.useVanillaName
+import net.minecraft.block.BlockDispenser
 import net.minecraft.block.BlockShulkerBox
 import net.minecraft.creativetab.CreativeTabs
 import net.minecraft.init.Items
@@ -204,6 +206,12 @@ object ModItems{
 				val box = BlockShulkerBox.getBlockByColor(color)
 				register(ItemShulkerBoxOverride(box).apply { override(Item.getItemFromBlock(box)) })
 			}
+		}
+		
+		// dispenser behavior
+		
+		with(BlockDispenser.DISPENSE_BEHAVIOR_REGISTRY){
+			putObject(ENDERMAN_HEAD, DispenseEndermanHead)
 		}
 	}
 	

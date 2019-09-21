@@ -7,17 +7,13 @@ import chylex.hee.system.util.setState
 import chylex.hee.system.util.withFacing
 import com.mojang.authlib.GameProfile
 import net.minecraft.advancements.CriteriaTriggers
-import net.minecraft.block.BlockDispenser
-import net.minecraft.dispenser.IBlockSource
 import net.minecraft.entity.Entity
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.entity.player.EntityPlayerMP
 import net.minecraft.init.Blocks
-import net.minecraft.init.Bootstrap.BehaviorDispenseOptional
 import net.minecraft.inventory.EntityEquipmentSlot
 import net.minecraft.inventory.EntityEquipmentSlot.HEAD
 import net.minecraft.item.Item
-import net.minecraft.item.ItemArmor
 import net.minecraft.item.ItemStack
 import net.minecraft.tileentity.TileEntitySkull
 import net.minecraft.util.EnumActionResult
@@ -30,25 +26,9 @@ import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.MathHelper
 import net.minecraft.world.World
 
-class ItemEndermanHead : Item(){ // UPDATE redo this
-	init{
-		BlockDispenser.DISPENSE_BEHAVIOR_REGISTRY.putObject(this, object : BehaviorDispenseOptional(){
-			override fun dispenseStack(source: IBlockSource, stack: ItemStack): ItemStack{
-				successful = true
-				
-				// TODO implement placement behavior if anyone even cares
-				
-				if (ItemArmor.dispenseArmor(source, stack).isEmpty){
-					successful = false
-				}
-				
-				return stack
-			}
-		})
-	}
-	
+class ItemEndermanHead : Item(){ // UPDATE redo all this
 	fun setupTileEntity(tile: TileEntitySkull){
-		tile.playerProfile = GameProfile(null, "MHF_Enderman") // UPDATE and this
+		tile.playerProfile = GameProfile(null, "MHF_Enderman")
 	}
 	
 	fun createTileEntity(): TileEntitySkull{
