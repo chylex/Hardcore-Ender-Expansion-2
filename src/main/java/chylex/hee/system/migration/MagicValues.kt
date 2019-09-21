@@ -38,4 +38,20 @@ object MagicValues{
 	 * Found in [TileEntityFurnace.SLOTS_SIDES][net.minecraft.tileentity.TileEntityFurnace.SLOTS_SIDES].
 	 */
 	const val FURNACE_FUEL_SLOT = 1
+	
+	/**
+	 * Found in [ItemSkull.SKULL_TYPES][net.minecraft.item.ItemSkull.SKULL_TYPES].
+	 */
+	const val SKULL_TYPE_SKELETON = 0
+	
+	/**
+	 * Found in [ItemSkull.SKULL_TYPES][net.minecraft.item.ItemSkull.SKULL_TYPES].
+	 */
+	const val SKULL_TYPE_ZOMBIE = 2
+	
+	/**
+	 * Found in [ItemSkull.SKULL_TYPES][net.minecraft.item.ItemSkull.SKULL_TYPES].
+	 */
+	const val SKULL_TYPE_PLAYER = 3
+	
 }

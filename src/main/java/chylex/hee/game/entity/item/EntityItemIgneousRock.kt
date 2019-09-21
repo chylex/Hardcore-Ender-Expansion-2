@@ -11,14 +11,23 @@ import chylex.hee.game.particle.spawner.ParticleSpawnerVanilla
 import chylex.hee.game.particle.util.IOffset.Constant
 import chylex.hee.game.particle.util.IOffset.InBox
 import chylex.hee.game.particle.util.IShape.Point
+import chylex.hee.init.ModBlocks
+import chylex.hee.init.ModItems
 import chylex.hee.network.client.PacketClientFX
+import chylex.hee.system.migration.MagicValues
+import chylex.hee.system.util.FLAG_SYNC_CLIENT
+import chylex.hee.system.util.Facing4
 import chylex.hee.system.util.Pos
+import chylex.hee.system.util.breakBlock
 import chylex.hee.system.util.ceilToInt
 import chylex.hee.system.util.distanceSqTo
 import chylex.hee.system.util.floorToInt
+import chylex.hee.system.util.get
+import chylex.hee.system.util.getBlock
 import chylex.hee.system.util.getFaceShape
 import chylex.hee.system.util.getMaterial
 import chylex.hee.system.util.getState
+import chylex.hee.system.util.getTile
 import chylex.hee.system.util.isAir
 import chylex.hee.system.util.motionVec
 import chylex.hee.system.util.nextBiasedFloat
@@ -32,6 +41,12 @@ import chylex.hee.system.util.setBlock
 import chylex.hee.system.util.setFireTicks
 import chylex.hee.system.util.setState
 import chylex.hee.system.util.size
+import chylex.hee.system.util.with
+import net.minecraft.block.BlockDirt
+import net.minecraft.block.BlockSilverfish
+import net.minecraft.block.BlockSponge
+import net.minecraft.block.BlockStoneBrick
+import net.minecraft.block.BlockWall
 import net.minecraft.block.material.Material
 import net.minecraft.block.state.BlockFaceShape.SOLID
 import net.minecraft.block.state.IBlockState
@@ -42,6 +57,7 @@ import net.minecraft.init.SoundEvents
 import net.minecraft.item.ItemBlock
 import net.minecraft.item.ItemStack
 import net.minecraft.item.crafting.FurnaceRecipes
+import net.minecraft.tileentity.TileEntitySkull
 import net.minecraft.util.DamageSource
 import net.minecraft.util.EnumFacing.DOWN
 import net.minecraft.util.EnumFacing.UP
@@ -150,7 +166,12 @@ class EntityItemIgneousRock : EntityItemNoBob{
 				updateBurnNearbyEntities()
 			}
 			
-			repeat(item.size){ // TODO maybe figure out some system to decrease the stack count after changing lots of blocks, to make big stacks lossy
+			var hasChangedAnyBlock = false
+			
+			val stack = item
+			val count = stack.size
+			
+			repeat(count){
 				if (rand.nextInt(6) == 0 || age < INITIAL_FIRE_UNTIL_TICKS){
 					val checkRange = (BURN_DISTANCE * 2).ceilToInt()
 					
@@ -163,11 +184,19 @@ class EntityItemIgneousRock : EntityItemNoBob{
 					
 					if (randomTopBlock != null && randomTopBlock.isAir(world) && randomTopBlock.down().getFaceShape(world, UP) == SOLID){
 						randomTopBlock.setBlock(world, Blocks.FIRE)
+						hasChangedAnyBlock = true
 					}
 				}
 				else if (rand.nextBoolean()){
-					getRandomBlock().takeUnless { it.isAir(world) }?.let(::updateBurnBlock)
+					getRandomBlock().takeUnless { it.isAir(world) }?.let {
+						updateBurnBlock(it)
+						hasChangedAnyBlock = true
+					}
 				}
+			}
+			
+			if (hasChangedAnyBlock && count > 1 && rand.nextInt(100) < (count * 4) / 10){
+				item = stack.apply { shrink(1) }
 			}
 		}
 		
@@ -255,13 +284,107 @@ class EntityItemIgneousRock : EntityItemNoBob{
 		// secondary transformations
 		
 		if (targetState == null){
-			// TODO 1.13
+			targetState = when(sourceState.block){
+				Blocks.MOSSY_COBBLESTONE -> Blocks.COBBLESTONE
+				Blocks.PACKED_ICE -> Blocks.ICE
+				Blocks.GRASS -> Blocks.DIRT
+				Blocks.FARMLAND -> Blocks.DIRT
+				Blocks.DIRT -> Blocks.DIRT.takeIf { sourceState[BlockDirt.VARIANT] == BlockDirt.DirtType.PODZOL }
+				Blocks.STONEBRICK -> Blocks.STONEBRICK.takeIf { sourceState[BlockStoneBrick.VARIANT] == BlockStoneBrick.EnumType.MOSSY }
+				Blocks.COBBLESTONE_WALL -> Blocks.COBBLESTONE_WALL.takeIf { sourceState[BlockWall.VARIANT] == BlockWall.EnumType.MOSSY }
+				Blocks.SPONGE -> Blocks.SPONGE.takeIf { sourceState[BlockSponge.WET] }
+				
+				Blocks.FLOWING_WATER,
+				Blocks.TRIPWIRE,
+				Blocks.BROWN_MUSHROOM,
+				Blocks.RED_MUSHROOM -> Blocks.AIR
+				
+				Blocks.CARPET,
+				Blocks.VINE,
+				Blocks.WEB,
+				ModBlocks.DRY_VINES,
+				ModBlocks.ANCIENT_COBWEB -> Blocks.FIRE
+				
+				Blocks.RED_FLOWER,
+				Blocks.YELLOW_FLOWER -> Blocks.DEADBUSH
+				
+				Blocks.DOUBLE_PLANT -> {
+					if (pos.up().getBlock(world) !== Blocks.DOUBLE_PLANT){
+						return
+					}
+					
+					Blocks.DEADBUSH
+				}
+				
+				Blocks.LEAVES,
+				Blocks.LEAVES2 -> {
+					val posAbove = pos.up()
+					
+					if (posAbove.isAir(world)){
+						posAbove.setBlock(world, Blocks.FIRE)
+						return
+					}
+					
+					Blocks.FIRE
+				}
+				
+				Blocks.SNOW_LAYER -> {
+					if (rand.nextInt(4) == 0)
+						Blocks.FLOWING_WATER
+					else
+						Blocks.AIR
+				}
+				
+				Blocks.ICE,
+				Blocks.FROSTED_ICE,
+				Blocks.SNOW -> {
+					if (Facing4.any { pos.offset(it).getBlock(world) === Blocks.WATER } || Facing4.all { pos.offset(it).getState(world).isFullBlock })
+						Blocks.WATER
+					else
+						Blocks.FLOWING_WATER
+				}
+				
+				Blocks.SKULL -> {
+					pos.getTile<TileEntitySkull>(world)?.takeIf { it.skullType == MagicValues.SKULL_TYPE_ZOMBIE || (it.skullType == MagicValues.SKULL_TYPE_PLAYER && it.playerProfile == null) }?.let {
+						it.setType(MagicValues.SKULL_TYPE_SKELETON)
+						it.markDirty()
+						world.notifyBlockUpdate(pos, sourceState, sourceState, FLAG_SYNC_CLIENT)
+					}
+					
+					return
+				}
+				
+				Blocks.TNT,
+				ModBlocks.INFUSED_TNT -> {
+					ModItems.FLINT_AND_INFERNIUM.igniteTNT(world, pos, null, ignoreTrap = true)
+					return
+				}
+				
+				else -> null
+			}?.defaultState
+		}
+		
+		if (targetState == null && sourceState.block === Blocks.MONSTER_EGG && sourceState[BlockSilverfish.VARIANT] == BlockSilverfish.EnumType.MOSSY_STONEBRICK){
+			targetState = Blocks.MONSTER_EGG.with(BlockSilverfish.VARIANT, BlockSilverfish.EnumType.STONEBRICK)
 		}
 		
 		// ternary transformations
 		
-		if (targetState == null && rand.nextInt(5) == 0){
-			// TODO 1.13
+		if (targetState == null && rand.nextInt(100) < 18){
+			targetState = when(sourceState.block){
+				Blocks.WATER -> Blocks.COBBLESTONE
+				Blocks.DEADBUSH -> Blocks.AIR
+				
+				Blocks.GLASS,
+				Blocks.GLASS_PANE,
+				Blocks.STAINED_GLASS,
+				Blocks.STAINED_GLASS_PANE -> {
+					pos.breakBlock(world, false)
+					return
+				}
+				
+				else -> null
+			}?.defaultState
 		}
 		
 		// final handling
