@@ -31,6 +31,9 @@ inline class IntColor(val i: Int){
 	val asVec
 		get() = Vec3d(red / 255.0, green / 255.0, blue / 255.0)
 	
+	val asHSB
+		get() = FloatArray(3).also { java.awt.Color.RGBtoHSB(red, green, blue, it) }
+	
 	// construction
 	
 	@Suppress("FunctionName")
@@ -57,5 +60,9 @@ inline class IntColor(val i: Int){
 		
 		fun HCL(hue: Double, chroma: Float, luminance: Float) =
 			chylex.hee.system.util.color.HCL(hue, chroma, luminance).toRGB()
+		
+		
+		fun HSB(hsb: FloatArray) =
+			IntColor(java.awt.Color.HSBtoRGB(hsb[0], hsb[1], hsb[2]))
 	}
 }
