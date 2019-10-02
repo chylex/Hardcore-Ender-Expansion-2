@@ -3,12 +3,12 @@ import chylex.hee.game.particle.spawner.ParticleSpawnerVanilla
 import chylex.hee.game.particle.util.IOffset.Constant
 import chylex.hee.game.particle.util.IOffset.InBox
 import chylex.hee.game.particle.util.IShape.Point
+import chylex.hee.system.migration.Facing.UP
 import chylex.hee.system.util.square
 import chylex.hee.system.util.use
 import io.netty.buffer.ByteBuf
 import net.minecraft.entity.item.EntityItem
 import net.minecraft.item.ItemStack
-import net.minecraft.util.EnumFacing.UP
 import net.minecraft.util.EnumParticleTypes.SMOKE_NORMAL
 import net.minecraft.world.World
 import net.minecraftforge.fml.common.registry.IEntityAdditionalSpawnData

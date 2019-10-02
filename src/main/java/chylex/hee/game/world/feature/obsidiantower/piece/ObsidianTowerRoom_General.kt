@@ -9,6 +9,9 @@ import chylex.hee.game.world.structure.trigger.FlowerPotStructureTrigger
 import chylex.hee.game.world.structure.trigger.LootChestStructureTrigger
 import chylex.hee.game.world.structure.trigger.TileEntityStructureTrigger
 import chylex.hee.init.ModItems
+import chylex.hee.system.migration.Facing.EAST
+import chylex.hee.system.migration.Facing.SOUTH
+import chylex.hee.system.migration.Facing.WEST
 import chylex.hee.system.migration.MagicValues
 import chylex.hee.system.util.allInBoxMutable
 import chylex.hee.system.util.nextItem
@@ -21,9 +24,6 @@ import net.minecraft.init.Blocks
 import net.minecraft.item.ItemStack
 import net.minecraft.tileentity.TileEntityFurnace
 import net.minecraft.util.EnumFacing
-import net.minecraft.util.EnumFacing.EAST
-import net.minecraft.util.EnumFacing.SOUTH
-import net.minecraft.util.EnumFacing.WEST
 import net.minecraft.util.math.BlockPos
 import net.minecraft.world.storage.loot.LootContext
 import net.minecraftforge.common.DimensionManager

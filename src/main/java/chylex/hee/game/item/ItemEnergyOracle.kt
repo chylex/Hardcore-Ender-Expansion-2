@@ -11,6 +11,9 @@ import chylex.hee.game.item.infusion.InfusionTag
 import chylex.hee.game.mechanics.energy.IEnergyQuantity.Units
 import chylex.hee.init.ModItems
 import chylex.hee.system.Resource
+import chylex.hee.system.migration.ActionResult.SUCCESS
+import chylex.hee.system.migration.Hand.MAIN_HAND
+import chylex.hee.system.migration.Hand.OFF_HAND
 import chylex.hee.system.util.Pos
 import chylex.hee.system.util.angleBetween
 import chylex.hee.system.util.center
@@ -43,11 +46,8 @@ import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.item.ItemStack
 import net.minecraft.nbt.NBTTagCompound
 import net.minecraft.util.EnumActionResult
-import net.minecraft.util.EnumActionResult.SUCCESS
 import net.minecraft.util.EnumFacing
 import net.minecraft.util.EnumHand
-import net.minecraft.util.EnumHand.MAIN_HAND
-import net.minecraft.util.EnumHand.OFF_HAND
 import net.minecraft.util.math.BlockPos
 import net.minecraft.world.World
 import net.minecraftforge.fml.relauncher.Side

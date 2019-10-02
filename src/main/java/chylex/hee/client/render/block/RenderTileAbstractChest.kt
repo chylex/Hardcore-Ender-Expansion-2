@@ -1,11 +1,11 @@
 package chylex.hee.client.render.block
 import chylex.hee.client.render.util.GL
 import chylex.hee.game.block.entity.TileEntityBaseChest
+import chylex.hee.system.migration.Facing.EAST
+import chylex.hee.system.migration.Facing.NORTH
+import chylex.hee.system.migration.Facing.WEST
 import net.minecraft.client.model.ModelChest
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer
-import net.minecraft.util.EnumFacing.EAST
-import net.minecraft.util.EnumFacing.NORTH
-import net.minecraft.util.EnumFacing.WEST
 import net.minecraft.util.ResourceLocation
 import net.minecraftforge.fml.relauncher.Side
 import net.minecraftforge.fml.relauncher.SideOnly

@@ -1,11 +1,11 @@
 package chylex.hee.game.entity.living.ai
+import chylex.hee.system.migration.Difficulty.PEACEFUL
 import chylex.hee.system.util.AIBase
 import chylex.hee.system.util.breakBlock
 import chylex.hee.system.util.getBlock
 import chylex.hee.system.util.nextInt
 import net.minecraft.block.Block
 import net.minecraft.entity.EntityCreature
-import net.minecraft.world.EnumDifficulty.PEACEFUL
 
 class AISummonFromBlock(
 	private val entity: EntityCreature,

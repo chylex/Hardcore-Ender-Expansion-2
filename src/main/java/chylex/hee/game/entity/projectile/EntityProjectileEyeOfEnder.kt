@@ -6,6 +6,8 @@ import chylex.hee.game.particle.util.IOffset.Constant
 import chylex.hee.game.particle.util.IOffset.InBox
 import chylex.hee.game.particle.util.IOffset.InSphere
 import chylex.hee.game.particle.util.IShape.Point
+import chylex.hee.system.migration.Facing.DOWN
+import chylex.hee.system.migration.Facing.UP
 import chylex.hee.system.util.Pos
 import chylex.hee.system.util.Vec3
 import chylex.hee.system.util.addY
@@ -43,8 +45,6 @@ import net.minecraft.init.Items
 import net.minecraft.init.SoundEvents
 import net.minecraft.item.ItemStack
 import net.minecraft.nbt.NBTTagCompound
-import net.minecraft.util.EnumFacing.DOWN
-import net.minecraft.util.EnumFacing.UP
 import net.minecraft.util.EnumParticleTypes.SMOKE_NORMAL
 import net.minecraft.util.SoundCategory
 import net.minecraft.util.math.BlockPos

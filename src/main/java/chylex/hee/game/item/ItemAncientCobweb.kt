@@ -1,5 +1,6 @@
 package chylex.hee.game.item
 import chylex.hee.game.block.BlockAncientCobweb
+import chylex.hee.system.migration.Hand.OFF_HAND
 import chylex.hee.system.util.nextInt
 import chylex.hee.system.util.size
 import net.minecraft.entity.Entity
@@ -8,7 +9,6 @@ import net.minecraft.entity.item.EntityItem
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.item.ItemBlock
 import net.minecraft.item.ItemStack
-import net.minecraft.util.EnumHand.OFF_HAND
 import net.minecraft.util.NonNullList
 import net.minecraft.util.math.BlockPos
 import net.minecraft.world.World

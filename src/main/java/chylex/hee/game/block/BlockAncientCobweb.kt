@@ -1,6 +1,7 @@
 package chylex.hee.game.block
 import chylex.hee.game.block.info.Materials
 import chylex.hee.init.ModLoot
+import chylex.hee.system.migration.Hand.MAIN_HAND
 import chylex.hee.system.util.breakBlock
 import net.minecraft.block.Block
 import net.minecraft.block.material.MapColor
@@ -16,7 +17,6 @@ import net.minecraft.item.ItemStack
 import net.minecraft.item.ItemSword
 import net.minecraft.util.BlockRenderLayer.CUTOUT
 import net.minecraft.util.EnumFacing
-import net.minecraft.util.EnumHand.MAIN_HAND
 import net.minecraft.util.NonNullList
 import net.minecraft.util.math.BlockPos
 import net.minecraft.world.IBlockAccess

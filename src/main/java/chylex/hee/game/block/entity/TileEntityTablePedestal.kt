@@ -20,6 +20,7 @@ import chylex.hee.game.particle.util.IShape.Point
 import chylex.hee.init.ModBlocks
 import chylex.hee.init.ModItems
 import chylex.hee.network.client.PacketClientFX
+import chylex.hee.system.migration.Facing.DOWN
 import chylex.hee.system.util.FLAG_SYNC_CLIENT
 import chylex.hee.system.util.color.IntColor
 import chylex.hee.system.util.delegate.NotifyOnChange
@@ -41,7 +42,6 @@ import net.minecraft.init.SoundEvents
 import net.minecraft.item.ItemStack
 import net.minecraft.nbt.NBTTagCompound
 import net.minecraft.util.EnumFacing
-import net.minecraft.util.EnumFacing.DOWN
 import net.minecraft.util.SoundCategory
 import net.minecraft.util.math.AxisAlignedBB
 import net.minecraft.util.math.BlockPos

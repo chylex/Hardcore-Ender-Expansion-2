@@ -4,6 +4,7 @@ import chylex.hee.game.entity.IMobBypassPeacefulDespawn
 import chylex.hee.game.mechanics.instability.Instability
 import chylex.hee.init.ModBlocks
 import chylex.hee.init.ModLoot
+import chylex.hee.system.migration.Difficulty.PEACEFUL
 import chylex.hee.system.util.Pos
 import chylex.hee.system.util.heeTag
 import chylex.hee.system.util.square
@@ -11,7 +12,6 @@ import net.minecraft.entity.EntityLivingBase
 import net.minecraft.nbt.NBTTagCompound
 import net.minecraft.util.DamageSource
 import net.minecraft.util.ResourceLocation
-import net.minecraft.world.EnumDifficulty.PEACEFUL
 import net.minecraft.world.World
 import net.minecraftforge.fml.relauncher.Side
 import net.minecraftforge.fml.relauncher.SideOnly

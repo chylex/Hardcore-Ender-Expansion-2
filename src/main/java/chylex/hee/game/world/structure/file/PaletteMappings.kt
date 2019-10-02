@@ -1,4 +1,13 @@
 package chylex.hee.game.world.structure.file
+import chylex.hee.system.migration.Facing.AXIS_X
+import chylex.hee.system.migration.Facing.AXIS_Y
+import chylex.hee.system.migration.Facing.AXIS_Z
+import chylex.hee.system.migration.Facing.DOWN
+import chylex.hee.system.migration.Facing.EAST
+import chylex.hee.system.migration.Facing.NORTH
+import chylex.hee.system.migration.Facing.SOUTH
+import chylex.hee.system.migration.Facing.UP
+import chylex.hee.system.migration.Facing.WEST
 import chylex.hee.system.util.with
 import net.minecraft.block.BlockDirectional
 import net.minecraft.block.BlockDoor
@@ -10,15 +19,6 @@ import net.minecraft.block.BlockStairs
 import net.minecraft.block.BlockTorch
 import net.minecraft.block.BlockTrapDoor
 import net.minecraft.block.BlockVine
-import net.minecraft.util.EnumFacing.Axis.X
-import net.minecraft.util.EnumFacing.Axis.Y
-import net.minecraft.util.EnumFacing.Axis.Z
-import net.minecraft.util.EnumFacing.DOWN
-import net.minecraft.util.EnumFacing.EAST
-import net.minecraft.util.EnumFacing.NORTH
-import net.minecraft.util.EnumFacing.SOUTH
-import net.minecraft.util.EnumFacing.UP
-import net.minecraft.util.EnumFacing.WEST
 
 object PaletteMappings{
 	val FACING_ALL = BlockDirectional.FACING to mapOf(
@@ -38,9 +38,9 @@ object PaletteMappings{
 	)
 	
 	val FACING_AXIS = BlockRotatedPillar.AXIS to mapOf(
-		"ew" to X,
-		"ud" to Y,
-		"ns" to Z
+		"ew" to AXIS_X,
+		"ud" to AXIS_Y,
+		"ns" to AXIS_Z
 	)
 	
 	val FACING_AXIS_LOGS = BlockLog.LOG_AXIS to mapOf(

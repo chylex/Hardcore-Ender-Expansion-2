@@ -1,6 +1,7 @@
 package chylex.hee.game.block
 import chylex.hee.game.block.info.BlockBuilder
 import chylex.hee.init.ModLoot
+import chylex.hee.system.migration.Facing.UP
 import chylex.hee.system.util.getBlock
 import chylex.hee.system.util.getState
 import chylex.hee.system.util.setAir
@@ -14,7 +15,6 @@ import net.minecraft.init.Blocks
 import net.minecraft.init.Items
 import net.minecraft.item.ItemStack
 import net.minecraft.util.EnumFacing
-import net.minecraft.util.EnumFacing.UP
 import net.minecraft.util.NonNullList
 import net.minecraft.util.math.BlockPos
 import net.minecraft.world.Explosion

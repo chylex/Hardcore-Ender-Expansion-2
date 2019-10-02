@@ -13,6 +13,8 @@ import chylex.hee.game.mechanics.trinket.ITrinketItem
 import chylex.hee.game.mechanics.trinket.TrinketHandler
 import chylex.hee.init.ModGuiHandler.GuiType.TRINKET_POUCH
 import chylex.hee.network.server.PacketServerOpenGui
+import chylex.hee.system.migration.ActionResult.PASS
+import chylex.hee.system.migration.ActionResult.SUCCESS
 import chylex.hee.system.util.InventorySlot
 import chylex.hee.system.util.NBTItemStackList
 import chylex.hee.system.util.NBTList.Companion.setList
@@ -32,8 +34,6 @@ import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.inventory.InventoryBasic
 import net.minecraft.item.ItemStack
 import net.minecraft.util.ActionResult
-import net.minecraft.util.EnumActionResult.PASS
-import net.minecraft.util.EnumActionResult.SUCCESS
 import net.minecraft.util.EnumHand
 import net.minecraft.world.World
 import net.minecraftforge.client.event.GuiScreenEvent

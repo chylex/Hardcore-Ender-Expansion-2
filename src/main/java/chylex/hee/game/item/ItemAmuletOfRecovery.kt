@@ -4,6 +4,7 @@ import chylex.hee.game.mechanics.energy.IEnergyQuantity.Units
 import chylex.hee.game.mechanics.trinket.ITrinketItem
 import chylex.hee.game.mechanics.trinket.TrinketHandler
 import chylex.hee.init.ModGuiHandler.GuiType
+import chylex.hee.system.migration.ActionResult.SUCCESS
 import chylex.hee.system.util.NBTItemStackList
 import chylex.hee.system.util.NBTList.Companion.setList
 import chylex.hee.system.util.allSlots
@@ -28,7 +29,6 @@ import net.minecraft.inventory.InventoryBasic
 import net.minecraft.item.EnumRarity
 import net.minecraft.item.ItemStack
 import net.minecraft.util.ActionResult
-import net.minecraft.util.EnumActionResult.SUCCESS
 import net.minecraft.util.EnumHand
 import net.minecraft.util.NonNullList
 import net.minecraft.world.World

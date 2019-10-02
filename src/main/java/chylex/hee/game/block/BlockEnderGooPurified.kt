@@ -13,6 +13,8 @@ import chylex.hee.game.particle.util.IShape.Point
 import chylex.hee.init.ModItems
 import chylex.hee.network.client.PacketClientFX
 import chylex.hee.network.client.PacketClientPotionDuration
+import chylex.hee.system.migration.Facing.DOWN
+import chylex.hee.system.migration.Facing.UP
 import chylex.hee.system.util.color.IntColor.Companion.RGB
 import chylex.hee.system.util.floorToInt
 import chylex.hee.system.util.get
@@ -24,8 +26,6 @@ import net.minecraft.block.state.IBlockState
 import net.minecraft.entity.Entity
 import net.minecraft.entity.EntityLivingBase
 import net.minecraft.entity.player.EntityPlayer
-import net.minecraft.util.EnumFacing.DOWN
-import net.minecraft.util.EnumFacing.UP
 import net.minecraft.util.math.BlockPos
 import net.minecraft.world.World
 import net.minecraftforge.fml.relauncher.Side

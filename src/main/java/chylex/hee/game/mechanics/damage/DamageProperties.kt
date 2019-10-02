@@ -1,10 +1,10 @@
 package chylex.hee.game.mechanics.damage
 import chylex.hee.HEE
+import chylex.hee.system.migration.Hand.MAIN_HAND
 import net.minecraft.entity.Entity
 import net.minecraft.entity.EntityLivingBase
 import net.minecraft.item.ItemStack
 import net.minecraft.util.DamageSource
-import net.minecraft.util.EnumHand.MAIN_HAND
 import net.minecraft.util.math.Vec3d
 import net.minecraft.util.text.ITextComponent
 import net.minecraft.util.text.TextComponentTranslation

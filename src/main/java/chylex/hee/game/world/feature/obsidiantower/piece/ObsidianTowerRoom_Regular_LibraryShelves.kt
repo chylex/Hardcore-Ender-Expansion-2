@@ -3,6 +3,10 @@ import chylex.hee.game.world.feature.obsidiantower.ObsidianTowerSpawnerLevel.LEV
 import chylex.hee.game.world.structure.IStructureWorld
 import chylex.hee.game.world.util.PosXZ
 import chylex.hee.init.ModBlocks
+import chylex.hee.system.migration.Facing.EAST
+import chylex.hee.system.migration.Facing.NORTH
+import chylex.hee.system.migration.Facing.SOUTH
+import chylex.hee.system.migration.Facing.WEST
 import chylex.hee.system.util.Pos
 import chylex.hee.system.util.nextInt
 import chylex.hee.system.util.nextItem
@@ -10,10 +14,6 @@ import chylex.hee.system.util.with
 import net.minecraft.block.BlockSlab
 import net.minecraft.block.BlockSlab.EnumBlockHalf.TOP
 import net.minecraft.init.Blocks
-import net.minecraft.util.EnumFacing.EAST
-import net.minecraft.util.EnumFacing.NORTH
-import net.minecraft.util.EnumFacing.SOUTH
-import net.minecraft.util.EnumFacing.WEST
 
 class ObsidianTowerRoom_Regular_LibraryShelves(file: String) : ObsidianTowerRoom_General(file, guaranteesSpawnersOnLevel1 = true){
 	private companion object{

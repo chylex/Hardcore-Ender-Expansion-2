@@ -1,5 +1,8 @@
 package chylex.hee.game.item
 import chylex.hee.init.ModBlocks
+import chylex.hee.system.migration.ActionResult.FAIL
+import chylex.hee.system.migration.ActionResult.SUCCESS
+import chylex.hee.system.migration.Facing.UP
 import chylex.hee.system.util.getMaterial
 import chylex.hee.system.util.getTile
 import chylex.hee.system.util.isReplaceable
@@ -17,10 +20,7 @@ import net.minecraft.item.Item
 import net.minecraft.item.ItemStack
 import net.minecraft.tileentity.TileEntitySkull
 import net.minecraft.util.EnumActionResult
-import net.minecraft.util.EnumActionResult.FAIL
-import net.minecraft.util.EnumActionResult.SUCCESS
 import net.minecraft.util.EnumFacing
-import net.minecraft.util.EnumFacing.UP
 import net.minecraft.util.EnumHand
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.MathHelper

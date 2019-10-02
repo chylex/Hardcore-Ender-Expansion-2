@@ -6,6 +6,7 @@ import chylex.hee.game.entity.technical.EntityTechnicalTrigger.Types.STRONGHOLD_
 import chylex.hee.game.world.feature.stronghold.StrongholdPieceType
 import chylex.hee.game.world.structure.IStructureWorld
 import chylex.hee.game.world.structure.trigger.EntityStructureTrigger
+import chylex.hee.system.migration.Difficulty.PEACEFUL
 import chylex.hee.system.util.Pos
 import chylex.hee.system.util.component1
 import chylex.hee.system.util.component2
@@ -17,7 +18,6 @@ import chylex.hee.system.util.posVec
 import chylex.hee.system.util.selectVulnerableEntities
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.nbt.NBTTagCompound
-import net.minecraft.world.EnumDifficulty.PEACEFUL
 import net.minecraft.world.World
 import java.util.Random
 import kotlin.math.min

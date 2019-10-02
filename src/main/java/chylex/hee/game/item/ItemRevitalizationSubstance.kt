@@ -12,6 +12,8 @@ import chylex.hee.game.particle.util.IOffset.InBox
 import chylex.hee.game.particle.util.IShape.Line
 import chylex.hee.init.ModSounds
 import chylex.hee.network.client.PacketClientFX
+import chylex.hee.system.migration.ActionResult.FAIL
+import chylex.hee.system.migration.ActionResult.SUCCESS
 import chylex.hee.system.util.center
 import chylex.hee.system.util.directionTowards
 import chylex.hee.system.util.getTile
@@ -27,8 +29,6 @@ import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.item.Item
 import net.minecraft.item.ItemStack
 import net.minecraft.util.EnumActionResult
-import net.minecraft.util.EnumActionResult.FAIL
-import net.minecraft.util.EnumActionResult.SUCCESS
 import net.minecraft.util.EnumFacing
 import net.minecraft.util.EnumHand
 import net.minecraft.util.SoundCategory

@@ -2,13 +2,13 @@ package chylex.hee.game.world.feature.obsidiantower.piece
 import chylex.hee.game.world.feature.obsidiantower.ObsidianTowerSpawnerLevel.LEVEL_1
 import chylex.hee.game.world.structure.IStructureWorld
 import chylex.hee.game.world.util.PosXZ
+import chylex.hee.system.migration.Facing.EAST
+import chylex.hee.system.migration.Facing.WEST
 import chylex.hee.system.util.Pos
 import chylex.hee.system.util.nextInt
 import chylex.hee.system.util.nextItem
 import chylex.hee.system.util.removeItem
 import net.minecraft.init.Blocks
-import net.minecraft.util.EnumFacing.EAST
-import net.minecraft.util.EnumFacing.WEST
 
 class ObsidianTowerRoom_Regular_GloomrockTables(file: String) : ObsidianTowerRoom_General(file, guaranteesSpawnersOnLevel1 = true){
 	override fun generateContents(world: IStructureWorld, instance: Instance){

@@ -9,6 +9,8 @@ import chylex.hee.game.world.util.BoundingBox
 import chylex.hee.game.world.util.PosXZ
 import chylex.hee.game.world.util.Size.Alignment.CENTER
 import chylex.hee.game.world.util.Size.Alignment.MAX
+import chylex.hee.system.migration.Facing.DOWN
+import chylex.hee.system.migration.Facing.UP
 import chylex.hee.system.util.blocksMovement
 import chylex.hee.system.util.component1
 import chylex.hee.system.util.component2
@@ -16,8 +18,6 @@ import chylex.hee.system.util.nextInt
 import chylex.hee.system.util.offsetUntil
 import chylex.hee.system.util.square
 import chylex.hee.system.util.xz
-import net.minecraft.util.EnumFacing.DOWN
-import net.minecraft.util.EnumFacing.UP
 import net.minecraft.util.math.BlockPos
 import net.minecraft.world.DimensionType.OVERWORLD
 import net.minecraft.world.World

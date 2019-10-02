@@ -1,7 +1,7 @@
 package chylex.hee.game.world.feature.obsidiantower.piece
 import chylex.hee.game.world.structure.IStructureWorld
+import chylex.hee.system.migration.Facing.SOUTH
 import chylex.hee.system.util.Pos
-import net.minecraft.util.EnumFacing.SOUTH
 
 class ObsidianTowerRoom_Rare_SpawnerDoor(file: String) : ObsidianTowerRoom_General(file, guaranteesSpawnersOnLevel1 = true){
 	override fun generateContents(world: IStructureWorld, instance: Instance){

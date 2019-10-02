@@ -5,6 +5,10 @@ import chylex.hee.game.block.BlockIgneousPlate
 import chylex.hee.game.block.entity.TileEntityIgneousPlate
 import chylex.hee.init.ModBlocks
 import chylex.hee.system.Resource
+import chylex.hee.system.migration.Facing.EAST
+import chylex.hee.system.migration.Facing.NORTH
+import chylex.hee.system.migration.Facing.UP
+import chylex.hee.system.migration.Facing.WEST
 import chylex.hee.system.util.color.IntColor.Companion.RGB
 import chylex.hee.system.util.component1
 import chylex.hee.system.util.component2
@@ -14,10 +18,6 @@ import chylex.hee.system.util.get
 import chylex.hee.system.util.getState
 import chylex.hee.system.util.offsetTowards
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer
-import net.minecraft.util.EnumFacing.EAST
-import net.minecraft.util.EnumFacing.NORTH
-import net.minecraft.util.EnumFacing.UP
-import net.minecraft.util.EnumFacing.WEST
 import net.minecraft.util.math.Vec3d
 import net.minecraftforge.fml.relauncher.Side
 import net.minecraftforge.fml.relauncher.SideOnly

@@ -7,13 +7,13 @@ import chylex.hee.game.particle.spawner.ParticleSpawnerVanilla
 import chylex.hee.game.particle.util.IOffset.InBox
 import chylex.hee.game.particle.util.IShape.Point
 import chylex.hee.init.ModLoot
+import chylex.hee.system.migration.Hand.MAIN_HAND
 import net.minecraft.block.state.IBlockState
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.item.Item.ToolMaterial
 import net.minecraft.item.ItemStack
 import net.minecraft.item.ItemTool
 import net.minecraft.tileentity.TileEntity
-import net.minecraft.util.EnumHand.MAIN_HAND
 import net.minecraft.util.EnumParticleTypes.LAVA
 import net.minecraft.util.NonNullList
 import net.minecraft.util.math.BlockPos

@@ -4,6 +4,8 @@ import chylex.hee.client.util.MC
 import chylex.hee.game.container.base.IInventoryFromPlayerItem
 import chylex.hee.init.ModGuiHandler.GuiType.SHULKER_BOX
 import chylex.hee.network.server.PacketServerOpenGui
+import chylex.hee.system.migration.ActionResult.PASS
+import chylex.hee.system.migration.ActionResult.SUCCESS
 import chylex.hee.system.util.allSlots
 import chylex.hee.system.util.getCompoundOrNull
 import chylex.hee.system.util.getStack
@@ -25,8 +27,6 @@ import net.minecraft.inventory.ItemStackHelper
 import net.minecraft.item.ItemShulkerBox
 import net.minecraft.item.ItemStack
 import net.minecraft.util.ActionResult
-import net.minecraft.util.EnumActionResult.PASS
-import net.minecraft.util.EnumActionResult.SUCCESS
 import net.minecraft.util.EnumHand
 import net.minecraft.util.NonNullList
 import net.minecraft.util.text.TextFormatting

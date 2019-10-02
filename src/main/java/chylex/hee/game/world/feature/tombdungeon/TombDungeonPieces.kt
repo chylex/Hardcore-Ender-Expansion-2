@@ -8,15 +8,15 @@ import chylex.hee.game.world.structure.file.PaletteMappings
 import chylex.hee.game.world.structure.piece.StructurePiece
 import chylex.hee.game.world.util.Size
 import chylex.hee.init.ModBlocks
+import chylex.hee.system.migration.Facing.EAST
+import chylex.hee.system.migration.Facing.NORTH
+import chylex.hee.system.migration.Facing.SOUTH
+import chylex.hee.system.migration.Facing.WEST
 import chylex.hee.system.util.with
 import chylex.hee.system.util.withFacing
 import net.minecraft.block.BlockSlab
 import net.minecraft.block.BlockStairs
 import net.minecraft.init.Blocks
-import net.minecraft.util.EnumFacing.EAST
-import net.minecraft.util.EnumFacing.NORTH
-import net.minecraft.util.EnumFacing.SOUTH
-import net.minecraft.util.EnumFacing.WEST
 
 object TombDungeonPieces : IStructureDescription{
 	override val STRUCTURE_SIZE = Size(300, 110, 300)

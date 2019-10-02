@@ -1,5 +1,6 @@
 package chylex.hee.game.item
 import chylex.hee.game.block.BlockFlowerPotCustom
+import chylex.hee.system.migration.ActionResult.SUCCESS
 import chylex.hee.system.util.getTile
 import chylex.hee.system.util.setState
 import net.minecraft.block.Block
@@ -8,7 +9,6 @@ import net.minecraft.item.ItemStack
 import net.minecraft.stats.StatList
 import net.minecraft.tileentity.TileEntityFlowerPot
 import net.minecraft.util.EnumActionResult
-import net.minecraft.util.EnumActionResult.SUCCESS
 import net.minecraft.util.EnumFacing
 import net.minecraft.util.EnumHand
 import net.minecraft.util.math.BlockPos

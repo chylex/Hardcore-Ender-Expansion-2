@@ -13,6 +13,8 @@ import chylex.hee.game.particle.util.IShape.Point
 import chylex.hee.game.world.util.Teleporter
 import chylex.hee.game.world.util.Teleporter.FxRange.Extended
 import chylex.hee.network.client.PacketClientFX
+import chylex.hee.system.migration.Difficulty.PEACEFUL
+import chylex.hee.system.migration.Facing.DOWN
 import chylex.hee.system.util.allInCenteredSphereMutable
 import chylex.hee.system.util.blocksMovement
 import chylex.hee.system.util.center
@@ -41,10 +43,8 @@ import net.minecraft.init.MobEffects.WITHER
 import net.minecraft.init.SoundEvents
 import net.minecraft.nbt.NBTTagCompound
 import net.minecraft.potion.PotionEffect
-import net.minecraft.util.EnumFacing.DOWN
 import net.minecraft.util.SoundCategory
 import net.minecraft.util.math.BlockPos
-import net.minecraft.world.EnumDifficulty.PEACEFUL
 import net.minecraft.world.World
 import net.minecraft.world.storage.WorldSavedData
 import java.util.Random

@@ -4,6 +4,9 @@ import chylex.hee.game.fx.FxBlockHandler
 import chylex.hee.game.world.util.BlockEditor
 import chylex.hee.init.ModItems
 import chylex.hee.network.client.PacketClientFX
+import chylex.hee.system.migration.ActionResult.FAIL
+import chylex.hee.system.migration.ActionResult.PASS
+import chylex.hee.system.migration.ActionResult.SUCCESS
 import chylex.hee.system.util.get
 import chylex.hee.system.util.size
 import net.minecraft.block.BlockDispenser
@@ -15,9 +18,6 @@ import net.minecraft.item.Item
 import net.minecraft.item.ItemDye
 import net.minecraft.item.ItemStack
 import net.minecraft.util.EnumActionResult
-import net.minecraft.util.EnumActionResult.FAIL
-import net.minecraft.util.EnumActionResult.PASS
-import net.minecraft.util.EnumActionResult.SUCCESS
 import net.minecraft.util.EnumFacing
 import net.minecraft.util.EnumHand
 import net.minecraft.util.math.BlockPos

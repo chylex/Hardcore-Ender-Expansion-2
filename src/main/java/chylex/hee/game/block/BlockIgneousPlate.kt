@@ -3,6 +3,12 @@ import chylex.hee.game.block.entity.TileEntityIgneousPlate
 import chylex.hee.game.block.info.BlockBuilder
 import chylex.hee.game.block.util.Property
 import chylex.hee.game.entity.technical.EntityTechnicalIgneousPlateLogic
+import chylex.hee.system.migration.Facing.DOWN
+import chylex.hee.system.migration.Facing.EAST
+import chylex.hee.system.migration.Facing.NORTH
+import chylex.hee.system.migration.Facing.SOUTH
+import chylex.hee.system.migration.Facing.UP
+import chylex.hee.system.migration.Facing.WEST
 import chylex.hee.system.util.Facing6
 import chylex.hee.system.util.get
 import chylex.hee.system.util.getBlock
@@ -25,12 +31,6 @@ import net.minecraft.tileentity.TileEntity
 import net.minecraft.tileentity.TileEntityFurnace
 import net.minecraft.util.EnumBlockRenderType.ENTITYBLOCK_ANIMATED
 import net.minecraft.util.EnumFacing
-import net.minecraft.util.EnumFacing.DOWN
-import net.minecraft.util.EnumFacing.EAST
-import net.minecraft.util.EnumFacing.NORTH
-import net.minecraft.util.EnumFacing.SOUTH
-import net.minecraft.util.EnumFacing.UP
-import net.minecraft.util.EnumFacing.WEST
 import net.minecraft.util.EnumHand
 import net.minecraft.util.Mirror
 import net.minecraft.util.Rotation

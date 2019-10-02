@@ -13,6 +13,7 @@ import chylex.hee.game.particle.util.IOffset.InBox
 import chylex.hee.game.particle.util.IShape.Point
 import chylex.hee.init.ModSounds
 import chylex.hee.network.client.PacketClientFX
+import chylex.hee.system.migration.Facing.UP
 import chylex.hee.system.util.Pos
 import chylex.hee.system.util.allInCenteredBox
 import chylex.hee.system.util.center
@@ -43,7 +44,6 @@ import net.minecraft.item.ItemStack
 import net.minecraft.nbt.NBTTagCompound
 import net.minecraft.network.datasync.DataSerializers
 import net.minecraft.tileentity.TileEntityFurnace
-import net.minecraft.util.EnumFacing.UP
 import net.minecraft.util.EnumParticleTypes.CLOUD
 import net.minecraft.util.EnumParticleTypes.SMOKE_LARGE
 import net.minecraft.util.EnumParticleTypes.SMOKE_NORMAL

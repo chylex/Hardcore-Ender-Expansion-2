@@ -2,6 +2,7 @@
 
 package chylex.hee.system.util
 import chylex.hee.game.world.util.PosXZ
+import chylex.hee.system.migration.Facing.UP
 import com.google.common.collect.Iterables
 import net.minecraft.block.Block
 import net.minecraft.block.material.Material
@@ -11,7 +12,6 @@ import net.minecraft.block.state.IBlockState
 import net.minecraft.entity.Entity
 import net.minecraft.tileentity.TileEntity
 import net.minecraft.util.EnumFacing
-import net.minecraft.util.EnumFacing.UP
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.BlockPos.MutableBlockPos
 import net.minecraft.util.math.ChunkPos

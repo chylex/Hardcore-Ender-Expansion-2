@@ -2,6 +2,7 @@ package chylex.hee.game.item
 import chylex.hee.game.item.util.Tool.Type.AXE
 import chylex.hee.game.item.util.Tool.Type.PICKAXE
 import chylex.hee.game.item.util.Tool.Type.SHOVEL
+import chylex.hee.system.migration.Hand.MAIN_HAND
 import net.minecraft.block.state.IBlockState
 import net.minecraft.enchantment.Enchantment
 import net.minecraft.enchantment.EnchantmentHelper
@@ -10,7 +11,6 @@ import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.init.Enchantments
 import net.minecraft.init.Items
 import net.minecraft.item.ItemStack
-import net.minecraft.util.EnumHand.MAIN_HAND
 import net.minecraft.util.math.BlockPos
 import net.minecraft.world.World
 import net.minecraftforge.common.MinecraftForge

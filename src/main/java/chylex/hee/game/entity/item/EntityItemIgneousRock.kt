@@ -14,6 +14,8 @@ import chylex.hee.game.particle.util.IShape.Point
 import chylex.hee.init.ModBlocks
 import chylex.hee.init.ModItems
 import chylex.hee.network.client.PacketClientFX
+import chylex.hee.system.migration.Facing.DOWN
+import chylex.hee.system.migration.Facing.UP
 import chylex.hee.system.migration.MagicValues
 import chylex.hee.system.util.FLAG_SYNC_CLIENT
 import chylex.hee.system.util.Facing4
@@ -59,8 +61,6 @@ import net.minecraft.item.ItemStack
 import net.minecraft.item.crafting.FurnaceRecipes
 import net.minecraft.tileentity.TileEntitySkull
 import net.minecraft.util.DamageSource
-import net.minecraft.util.EnumFacing.DOWN
-import net.minecraft.util.EnumFacing.UP
 import net.minecraft.util.EnumParticleTypes.LAVA
 import net.minecraft.util.SoundCategory
 import net.minecraft.util.SoundEvent

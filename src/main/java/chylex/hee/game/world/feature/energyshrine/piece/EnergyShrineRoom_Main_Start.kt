@@ -12,6 +12,8 @@ import chylex.hee.game.particle.util.IShape.Point
 import chylex.hee.game.world.feature.energyshrine.EnergyShrinePieces
 import chylex.hee.game.world.structure.IStructureWorld
 import chylex.hee.game.world.structure.trigger.EntityStructureTrigger
+import chylex.hee.system.migration.Facing.DOWN
+import chylex.hee.system.migration.Facing.UP
 import chylex.hee.system.util.Pos
 import chylex.hee.system.util.color.IRandomColor.Companion.IRandomColor
 import chylex.hee.system.util.color.IntColor.Companion.RGB
@@ -20,8 +22,6 @@ import chylex.hee.system.util.getState
 import chylex.hee.system.util.nextInt
 import chylex.hee.system.util.offsetUntil
 import chylex.hee.system.util.posVec
-import net.minecraft.util.EnumFacing.DOWN
-import net.minecraft.util.EnumFacing.UP
 import net.minecraft.world.World
 import java.util.Random
 

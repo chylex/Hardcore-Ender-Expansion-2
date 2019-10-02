@@ -9,6 +9,8 @@ import chylex.hee.game.particle.util.IOffset.Constant
 import chylex.hee.game.particle.util.IOffset.InBox
 import chylex.hee.game.particle.util.IShape.Point
 import chylex.hee.init.ModItems
+import chylex.hee.system.migration.Facing.DOWN
+import chylex.hee.system.migration.Facing.UP
 import chylex.hee.system.util.Pos
 import chylex.hee.system.util.get
 import chylex.hee.system.util.getBlock
@@ -22,8 +24,6 @@ import net.minecraft.init.MobEffects.POISON
 import net.minecraft.init.MobEffects.WEAKNESS
 import net.minecraft.potion.Potion
 import net.minecraft.potion.PotionEffect
-import net.minecraft.util.EnumFacing.DOWN
-import net.minecraft.util.EnumFacing.UP
 import net.minecraft.util.math.BlockPos
 import net.minecraft.world.World
 import net.minecraftforge.fml.relauncher.Side

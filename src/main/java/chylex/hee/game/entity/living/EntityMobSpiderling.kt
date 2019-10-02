@@ -15,6 +15,10 @@ import chylex.hee.game.mechanics.damage.IDamageProcessor.Companion.DIFFICULTY_SC
 import chylex.hee.game.mechanics.damage.IDamageProcessor.Companion.PEACEFUL_EXCLUSION
 import chylex.hee.game.world.util.RayTracer
 import chylex.hee.init.ModLoot
+import chylex.hee.system.migration.Difficulty.HARD
+import chylex.hee.system.migration.Difficulty.NORMAL
+import chylex.hee.system.migration.Difficulty.PEACEFUL
+import chylex.hee.system.migration.Hand.MAIN_HAND
 import chylex.hee.system.util.AIAttackMelee
 import chylex.hee.system.util.AISwim
 import chylex.hee.system.util.AITargetAttacker
@@ -60,15 +64,11 @@ import net.minecraft.network.datasync.DataSerializers
 import net.minecraft.pathfinding.PathNavigate
 import net.minecraft.potion.PotionEffect
 import net.minecraft.util.DamageSource
-import net.minecraft.util.EnumHand.MAIN_HAND
 import net.minecraft.util.ResourceLocation
 import net.minecraft.util.SoundEvent
 import net.minecraft.util.math.AxisAlignedBB
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.Vec3d
-import net.minecraft.world.EnumDifficulty.HARD
-import net.minecraft.world.EnumDifficulty.NORMAL
-import net.minecraft.world.EnumDifficulty.PEACEFUL
 import net.minecraft.world.EnumSkyBlock.BLOCK
 import net.minecraft.world.EnumSkyBlock.SKY
 import net.minecraft.world.World

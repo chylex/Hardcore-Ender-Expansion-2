@@ -3,6 +3,8 @@ import chylex.hee.game.block.entity.TileEntityBaseChest
 import chylex.hee.game.block.info.BlockBuilder
 import chylex.hee.game.entity.living.ai.AIOcelotSitOverride.IOcelotCanSitOn
 import chylex.hee.init.ModGuiHandler.GuiType
+import chylex.hee.system.migration.Facing.DOWN
+import chylex.hee.system.migration.Facing.NORTH
 import chylex.hee.system.util.get
 import chylex.hee.system.util.getState
 import chylex.hee.system.util.getTile
@@ -20,8 +22,6 @@ import net.minecraft.item.ItemStack
 import net.minecraft.tileentity.TileEntity
 import net.minecraft.util.EnumBlockRenderType.ENTITYBLOCK_ANIMATED
 import net.minecraft.util.EnumFacing
-import net.minecraft.util.EnumFacing.DOWN
-import net.minecraft.util.EnumFacing.NORTH
 import net.minecraft.util.EnumHand
 import net.minecraft.util.Mirror
 import net.minecraft.util.Rotation

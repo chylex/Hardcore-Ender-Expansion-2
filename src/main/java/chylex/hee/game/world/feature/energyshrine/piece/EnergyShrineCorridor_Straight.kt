@@ -6,9 +6,9 @@ import chylex.hee.game.world.structure.IStructureWorld
 import chylex.hee.game.world.structure.piece.IStructurePieceConnection
 import chylex.hee.game.world.util.Size
 import chylex.hee.init.ModBlocks
+import chylex.hee.system.migration.Facing.NORTH
+import chylex.hee.system.migration.Facing.SOUTH
 import chylex.hee.system.util.Pos
-import net.minecraft.util.EnumFacing.NORTH
-import net.minecraft.util.EnumFacing.SOUTH
 
 class EnergyShrineCorridor_Straight(length: Int) : EnergyShrineAbstractPiece(){
 	override val size = Size(4, 6, length)

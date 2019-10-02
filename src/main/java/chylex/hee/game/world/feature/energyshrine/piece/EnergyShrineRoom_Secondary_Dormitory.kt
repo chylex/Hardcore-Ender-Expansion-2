@@ -4,12 +4,12 @@ import chylex.hee.game.world.feature.energyshrine.connection.EnergyShrineConnect
 import chylex.hee.game.world.structure.IStructureWorld
 import chylex.hee.game.world.structure.piece.IStructurePieceConnection
 import chylex.hee.game.world.structure.trigger.BedStructureTrigger
+import chylex.hee.system.migration.Facing.SOUTH
+import chylex.hee.system.migration.Facing.WEST
 import chylex.hee.system.util.Pos
 import chylex.hee.system.util.nextInt
 import chylex.hee.system.util.nextItem
 import net.minecraft.item.EnumDyeColor
-import net.minecraft.util.EnumFacing.SOUTH
-import net.minecraft.util.EnumFacing.WEST
 import java.util.Random
 
 class EnergyShrineRoom_Secondary_Dormitory(file: String) : EnergyShrineRoom_Generic(file){

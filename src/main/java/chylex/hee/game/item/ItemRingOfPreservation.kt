@@ -2,14 +2,14 @@ package chylex.hee.game.item
 import chylex.hee.game.item.repair.ICustomRepairBehavior
 import chylex.hee.game.item.repair.RepairInstance
 import chylex.hee.game.mechanics.trinket.TrinketHandler
+import chylex.hee.system.migration.Hand.MAIN_HAND
+import chylex.hee.system.migration.Hand.OFF_HAND
 import chylex.hee.system.util.copyIf
 import chylex.hee.system.util.isNotEmpty
 import net.minecraft.entity.Entity
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.init.Items
 import net.minecraft.item.ItemStack
-import net.minecraft.util.EnumHand.MAIN_HAND
-import net.minecraft.util.EnumHand.OFF_HAND
 import net.minecraft.util.NonNullList
 import net.minecraftforge.common.MinecraftForge
 import net.minecraftforge.event.entity.living.LivingDamageEvent

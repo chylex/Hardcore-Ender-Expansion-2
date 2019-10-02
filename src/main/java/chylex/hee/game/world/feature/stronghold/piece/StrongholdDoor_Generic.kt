@@ -3,9 +3,9 @@ import chylex.hee.game.world.feature.stronghold.StrongholdPieceType
 import chylex.hee.game.world.feature.stronghold.connection.StrongholdConnection
 import chylex.hee.game.world.feature.stronghold.connection.StrongholdConnectionType.DOOR
 import chylex.hee.game.world.structure.piece.IStructurePieceConnection
+import chylex.hee.system.migration.Facing.EAST
+import chylex.hee.system.migration.Facing.WEST
 import chylex.hee.system.util.Pos
-import net.minecraft.util.EnumFacing.EAST
-import net.minecraft.util.EnumFacing.WEST
 
 class StrongholdDoor_Generic(file: String) : StrongholdAbstractPieceFromFile(file, StrongholdPieceType.OTHER){
 	override val connections = arrayOf<IStructurePieceConnection>(

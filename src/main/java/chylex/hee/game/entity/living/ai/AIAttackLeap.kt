@@ -1,4 +1,5 @@
 package chylex.hee.game.entity.living.ai
+import chylex.hee.system.migration.Hand.MAIN_HAND
 import chylex.hee.system.util.AI_FLAG_MOVEMENT
 import chylex.hee.system.util.AI_FLAG_SWIMMING
 import chylex.hee.system.util.Vec3
@@ -8,7 +9,6 @@ import chylex.hee.system.util.square
 import net.minecraft.entity.EntityCreature
 import net.minecraft.entity.EntityLivingBase
 import net.minecraft.entity.ai.EntityAIBase
-import net.minecraft.util.EnumHand.MAIN_HAND
 
 class AIAttackLeap(
 	private val entity: EntityCreature,

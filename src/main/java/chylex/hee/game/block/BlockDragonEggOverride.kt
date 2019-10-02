@@ -10,6 +10,7 @@ import chylex.hee.game.particle.util.IOffset.InBox
 import chylex.hee.game.particle.util.IShape.Point
 import chylex.hee.game.world.util.Teleporter.Companion.FxTeleportData
 import chylex.hee.network.client.PacketClientFX
+import chylex.hee.system.migration.Facing.DOWN
 import chylex.hee.system.util.blocksMovement
 import chylex.hee.system.util.center
 import chylex.hee.system.util.getState
@@ -29,7 +30,6 @@ import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.init.Blocks
 import net.minecraft.item.ItemStack
 import net.minecraft.util.EnumFacing
-import net.minecraft.util.EnumFacing.DOWN
 import net.minecraft.util.EnumHand
 import net.minecraft.util.SoundCategory
 import net.minecraft.util.math.BlockPos

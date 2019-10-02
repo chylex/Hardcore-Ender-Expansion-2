@@ -15,6 +15,8 @@ import chylex.hee.game.world.util.Teleporter.Companion.FxTeleportData
 import chylex.hee.game.world.util.Teleporter.FxRange.Extended
 import chylex.hee.game.world.util.Teleporter.FxRange.Silent
 import chylex.hee.network.client.PacketClientFX
+import chylex.hee.system.migration.Facing.DOWN
+import chylex.hee.system.migration.Facing.UP
 import chylex.hee.system.util.Pos
 import chylex.hee.system.util.Vec3
 import chylex.hee.system.util.addY
@@ -36,8 +38,6 @@ import net.minecraft.init.MobEffects.INVISIBILITY
 import net.minecraft.init.SoundEvents
 import net.minecraft.nbt.NBTTagCompound
 import net.minecraft.potion.PotionEffect
-import net.minecraft.util.EnumFacing.DOWN
-import net.minecraft.util.EnumFacing.UP
 import net.minecraft.util.ITickable
 import net.minecraft.util.SoundCategory
 import net.minecraft.util.math.AxisAlignedBB

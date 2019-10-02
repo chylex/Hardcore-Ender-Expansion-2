@@ -3,6 +3,9 @@ import chylex.hee.client.render.util.NO_TINT
 import chylex.hee.game.block.fluid.FluidBase
 import chylex.hee.game.world.util.BlockEditor
 import chylex.hee.game.world.util.RayTracer
+import chylex.hee.system.migration.ActionResult.FAIL
+import chylex.hee.system.migration.ActionResult.PASS
+import chylex.hee.system.migration.ActionResult.SUCCESS
 import chylex.hee.system.util.allInCenteredBox
 import chylex.hee.system.util.color.IntColor.Companion.RGB
 import chylex.hee.system.util.getBlock
@@ -22,9 +25,6 @@ import net.minecraft.init.Enchantments
 import net.minecraft.item.ItemStack
 import net.minecraft.stats.StatList
 import net.minecraft.util.ActionResult
-import net.minecraft.util.EnumActionResult.FAIL
-import net.minecraft.util.EnumActionResult.PASS
-import net.minecraft.util.EnumActionResult.SUCCESS
 import net.minecraft.util.EnumHand
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.RayTraceResult.Type.BLOCK

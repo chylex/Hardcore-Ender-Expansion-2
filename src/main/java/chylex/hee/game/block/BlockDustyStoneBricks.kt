@@ -1,7 +1,7 @@
 package chylex.hee.game.block
 import chylex.hee.game.block.info.BlockBuilder
+import chylex.hee.system.migration.Hand.MAIN_HAND
 import net.minecraft.entity.player.EntityPlayer
-import net.minecraft.util.EnumHand.MAIN_HAND
 import net.minecraft.util.math.BlockPos
 import net.minecraft.world.IBlockAccess
 

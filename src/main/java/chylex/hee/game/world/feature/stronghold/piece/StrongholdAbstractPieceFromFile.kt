@@ -7,11 +7,11 @@ import chylex.hee.game.world.structure.IStructurePieceFromFile
 import chylex.hee.game.world.structure.IStructurePieceFromFile.Delegate
 import chylex.hee.game.world.structure.IStructureWorld
 import chylex.hee.game.world.structure.piece.IStructurePieceConnection
+import chylex.hee.system.migration.Facing.EAST
+import chylex.hee.system.migration.Facing.NORTH
+import chylex.hee.system.migration.Facing.SOUTH
+import chylex.hee.system.migration.Facing.WEST
 import chylex.hee.system.util.Pos
-import net.minecraft.util.EnumFacing.EAST
-import net.minecraft.util.EnumFacing.NORTH
-import net.minecraft.util.EnumFacing.SOUTH
-import net.minecraft.util.EnumFacing.WEST
 
 abstract class StrongholdAbstractPieceFromFile(file: String, override val type: StrongholdPieceType) : StrongholdAbstractPiece(), IStructurePieceFromFile by Delegate("stronghold/$file", StrongholdPieces.PALETTE){
 	override val connections = arrayOf<IStructurePieceConnection>(

@@ -10,11 +10,11 @@ import chylex.hee.game.world.structure.IStructureWorld
 import chylex.hee.game.world.structure.piece.IStructurePieceConnection
 import chylex.hee.game.world.structure.trigger.TileEntityStructureTrigger
 import chylex.hee.init.ModBlocks
+import chylex.hee.system.migration.Facing.SOUTH
 import chylex.hee.system.util.Pos
 import chylex.hee.system.util.setStack
 import chylex.hee.system.util.withFacing
 import net.minecraft.item.ItemStack
-import net.minecraft.util.EnumFacing.SOUTH
 import net.minecraft.util.math.BlockPos
 
 abstract class StrongholdRoom_Relic(file: String, private val relicItem: ItemStack) : StrongholdAbstractPiece(), IStructurePieceFromFile by Delegate("stronghold/$file", StrongholdPieces.PALETTE){

@@ -1,5 +1,6 @@
 package chylex.hee.game.block.entity
 import chylex.hee.game.block.entity.TileEntityBase.Context.NETWORK
+import chylex.hee.system.migration.Facing.UP
 import chylex.hee.system.util.FLAG_SKIP_RENDER
 import chylex.hee.system.util.FLAG_SYNC_CLIENT
 import chylex.hee.system.util.distanceSqTo
@@ -17,7 +18,6 @@ import net.minecraft.init.SoundEvents
 import net.minecraft.inventory.IInventory
 import net.minecraft.nbt.NBTTagCompound
 import net.minecraft.util.EnumFacing
-import net.minecraft.util.EnumFacing.UP
 import net.minecraft.util.ITickable
 import net.minecraft.util.SoundCategory
 import net.minecraft.util.SoundEvent

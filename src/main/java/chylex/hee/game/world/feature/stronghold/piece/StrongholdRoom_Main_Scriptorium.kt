@@ -8,6 +8,11 @@ import chylex.hee.game.world.structure.piece.IStructurePieceConnection
 import chylex.hee.game.world.structure.trigger.FlowerPotStructureTrigger
 import chylex.hee.game.world.structure.trigger.LootChestStructureTrigger
 import chylex.hee.init.ModBlocks
+import chylex.hee.system.migration.Facing.EAST
+import chylex.hee.system.migration.Facing.NORTH
+import chylex.hee.system.migration.Facing.SOUTH
+import chylex.hee.system.migration.Facing.UP
+import chylex.hee.system.migration.Facing.WEST
 import chylex.hee.system.util.Facing4
 import chylex.hee.system.util.Pos
 import chylex.hee.system.util.nextInt
@@ -15,11 +20,6 @@ import chylex.hee.system.util.offsetUntil
 import chylex.hee.system.util.withFacing
 import net.minecraft.init.Blocks
 import net.minecraft.item.ItemStack
-import net.minecraft.util.EnumFacing.EAST
-import net.minecraft.util.EnumFacing.NORTH
-import net.minecraft.util.EnumFacing.SOUTH
-import net.minecraft.util.EnumFacing.UP
-import net.minecraft.util.EnumFacing.WEST
 
 class StrongholdRoom_Main_Scriptorium(file: String) : StrongholdAbstractPieceFromFile(file, StrongholdPieceType.ROOM){
 	override val connections = arrayOf<IStructurePieceConnection>(

@@ -3,6 +3,8 @@ import chylex.hee.HEE
 import chylex.hee.game.block.BlockInfusedTNT
 import chylex.hee.game.world.util.BlockEditor
 import chylex.hee.init.ModBlocks
+import chylex.hee.system.migration.ActionResult.FAIL
+import chylex.hee.system.migration.ActionResult.SUCCESS
 import chylex.hee.system.util.FLAG_NONE
 import chylex.hee.system.util.getBlock
 import chylex.hee.system.util.getState
@@ -23,8 +25,6 @@ import net.minecraft.init.SoundEvents
 import net.minecraft.item.Item
 import net.minecraft.item.ItemStack
 import net.minecraft.util.EnumActionResult
-import net.minecraft.util.EnumActionResult.FAIL
-import net.minecraft.util.EnumActionResult.SUCCESS
 import net.minecraft.util.EnumFacing
 import net.minecraft.util.EnumHand
 import net.minecraft.util.SoundCategory

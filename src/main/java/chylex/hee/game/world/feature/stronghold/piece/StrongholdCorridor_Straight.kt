@@ -6,9 +6,9 @@ import chylex.hee.game.world.structure.IBlockPicker.Single.Air
 import chylex.hee.game.world.structure.IStructureWorld
 import chylex.hee.game.world.structure.piece.IStructurePieceConnection
 import chylex.hee.game.world.util.Size
+import chylex.hee.system.migration.Facing.NORTH
+import chylex.hee.system.migration.Facing.SOUTH
 import chylex.hee.system.util.Pos
-import net.minecraft.util.EnumFacing.NORTH
-import net.minecraft.util.EnumFacing.SOUTH
 
 class StrongholdCorridor_Straight(length: Int) : StrongholdAbstractPiece(){
 	override val type = StrongholdPieceType.CORRIDOR

@@ -1,8 +1,8 @@
 package chylex.hee.game.world.feature.obsidiantower.piece
 import chylex.hee.game.world.structure.IStructureWorld
+import chylex.hee.system.migration.Facing.EAST
+import chylex.hee.system.migration.Facing.WEST
 import chylex.hee.system.util.Pos
-import net.minecraft.util.EnumFacing.EAST
-import net.minecraft.util.EnumFacing.WEST
 
 class ObsidianTowerRoom_Regular_LibraryCorners(file: String) : ObsidianTowerRoom_General(file, guaranteesSpawnersOnLevel1 = true){
 	override fun generateContents(world: IStructureWorld, instance: Instance){

@@ -5,6 +5,12 @@ import chylex.hee.game.commands.sub.client.CommandClientScaffolding
 import chylex.hee.game.world.structure.file.StructureFile
 import chylex.hee.game.world.util.BoundingBox
 import chylex.hee.system.Debug
+import chylex.hee.system.migration.Facing.DOWN
+import chylex.hee.system.migration.Facing.EAST
+import chylex.hee.system.migration.Facing.NORTH
+import chylex.hee.system.migration.Facing.SOUTH
+import chylex.hee.system.migration.Facing.UP
+import chylex.hee.system.migration.Facing.WEST
 import chylex.hee.system.util.Pos
 import chylex.hee.system.util.getBlock
 import chylex.hee.system.util.offsetUntil
@@ -14,12 +20,6 @@ import net.minecraft.init.Blocks
 import net.minecraft.nbt.CompressedStreamTools
 import net.minecraft.util.BlockRenderLayer.CUTOUT
 import net.minecraft.util.EnumFacing
-import net.minecraft.util.EnumFacing.DOWN
-import net.minecraft.util.EnumFacing.EAST
-import net.minecraft.util.EnumFacing.NORTH
-import net.minecraft.util.EnumFacing.SOUTH
-import net.minecraft.util.EnumFacing.UP
-import net.minecraft.util.EnumFacing.WEST
 import net.minecraft.util.EnumHand
 import net.minecraft.util.math.AxisAlignedBB
 import net.minecraft.util.math.BlockPos

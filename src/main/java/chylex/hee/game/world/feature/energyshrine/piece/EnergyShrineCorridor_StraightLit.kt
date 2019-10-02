@@ -7,12 +7,12 @@ import chylex.hee.game.world.structure.IStructureWorld
 import chylex.hee.game.world.structure.piece.IStructurePieceConnection
 import chylex.hee.game.world.util.Size
 import chylex.hee.init.ModBlocks
+import chylex.hee.system.migration.Facing.EAST
+import chylex.hee.system.migration.Facing.NORTH
+import chylex.hee.system.migration.Facing.SOUTH
+import chylex.hee.system.migration.Facing.WEST
 import chylex.hee.system.util.Pos
 import chylex.hee.system.util.withFacing
-import net.minecraft.util.EnumFacing.EAST
-import net.minecraft.util.EnumFacing.NORTH
-import net.minecraft.util.EnumFacing.SOUTH
-import net.minecraft.util.EnumFacing.WEST
 
 class EnergyShrineCorridor_StraightLit(length: Int) : EnergyShrineAbstractPiece(){
 	override val size = Size(6, 6, length)

@@ -3,11 +3,11 @@ import chylex.hee.game.commands.sub.ISubCommand
 import chylex.hee.game.item.infusion.Infusion
 import chylex.hee.game.item.infusion.InfusionList
 import chylex.hee.game.item.infusion.InfusionTag
+import chylex.hee.system.migration.Hand.MAIN_HAND
 import chylex.hee.system.util.isNotEmpty
 import net.minecraft.command.ICommandSender
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.server.MinecraftServer
-import net.minecraft.util.EnumHand.MAIN_HAND
 
 object CommandServerInfusions : ISubCommand{
 	override val name = "infusions"

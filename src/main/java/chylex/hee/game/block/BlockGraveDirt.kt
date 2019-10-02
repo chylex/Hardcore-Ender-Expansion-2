@@ -7,6 +7,7 @@ import chylex.hee.game.block.info.BlockBuilder
 import chylex.hee.game.block.util.Property
 import chylex.hee.game.entity.living.EntityMobSpiderling
 import chylex.hee.init.ModLoot
+import chylex.hee.system.migration.Difficulty.PEACEFUL
 import chylex.hee.system.util.center
 import chylex.hee.system.util.floorToInt
 import chylex.hee.system.util.get
@@ -35,7 +36,6 @@ import net.minecraft.util.IStringSerializable
 import net.minecraft.util.NonNullList
 import net.minecraft.util.math.AxisAlignedBB
 import net.minecraft.util.math.BlockPos
-import net.minecraft.world.EnumDifficulty.PEACEFUL
 import net.minecraft.world.Explosion
 import net.minecraft.world.IBlockAccess
 import net.minecraft.world.World

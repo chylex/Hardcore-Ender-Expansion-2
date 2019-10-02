@@ -3,6 +3,7 @@ import chylex.hee.game.mechanics.damage.Damage
 import chylex.hee.game.mechanics.damage.IDamageProcessor.Companion.MAGIC_TYPE
 import chylex.hee.game.mechanics.damage.IDamageProcessor.Companion.PEACEFUL_EXCLUSION
 import chylex.hee.game.world.util.Teleporter
+import chylex.hee.system.migration.Facing.DOWN
 import chylex.hee.system.util.blocksMovement
 import chylex.hee.system.util.distanceSqTo
 import chylex.hee.system.util.nextInt
@@ -12,7 +13,6 @@ import net.minecraft.init.MobEffects.WEAKNESS
 import net.minecraft.item.ItemFood
 import net.minecraft.item.ItemStack
 import net.minecraft.potion.PotionEffect
-import net.minecraft.util.EnumFacing.DOWN
 import net.minecraft.world.World
 import java.util.Random
 

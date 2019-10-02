@@ -4,13 +4,13 @@ import chylex.hee.game.world.feature.energyshrine.connection.EnergyShrineConnect
 import chylex.hee.game.world.structure.IBlockPicker.Single
 import chylex.hee.game.world.structure.IStructureWorld
 import chylex.hee.game.world.structure.piece.IStructurePieceConnection
+import chylex.hee.system.migration.Facing.NORTH
+import chylex.hee.system.migration.Facing.SOUTH
 import chylex.hee.system.util.Pos
 import chylex.hee.system.util.nextItem
 import chylex.hee.system.util.with
 import net.minecraft.block.BlockCarpet
 import net.minecraft.init.Blocks
-import net.minecraft.util.EnumFacing.NORTH
-import net.minecraft.util.EnumFacing.SOUTH
 
 class EnergyShrineRoom_Secondary_Portal(file: String) : EnergyShrineRoom_Generic(file){
 	override val connections = arrayOf<IStructurePieceConnection>(

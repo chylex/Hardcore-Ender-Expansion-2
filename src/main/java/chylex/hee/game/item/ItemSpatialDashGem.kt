@@ -8,6 +8,8 @@ import chylex.hee.game.item.infusion.Infusion.SPEED
 import chylex.hee.game.item.infusion.InfusionTag
 import chylex.hee.game.mechanics.energy.IEnergyQuantity.Units
 import chylex.hee.init.ModItems
+import chylex.hee.system.migration.ActionResult.FAIL
+import chylex.hee.system.migration.ActionResult.SUCCESS
 import chylex.hee.system.util.floorToInt
 import chylex.hee.system.util.over
 import net.minecraft.client.util.ITooltipFlag
@@ -15,8 +17,6 @@ import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.item.ItemStack
 import net.minecraft.stats.StatList
 import net.minecraft.util.ActionResult
-import net.minecraft.util.EnumActionResult.FAIL
-import net.minecraft.util.EnumActionResult.SUCCESS
 import net.minecraft.util.EnumHand
 import net.minecraft.world.World
 import net.minecraftforge.fml.relauncher.Side

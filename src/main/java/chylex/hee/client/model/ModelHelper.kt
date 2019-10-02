@@ -1,11 +1,11 @@
 package chylex.hee.client.model
 import chylex.hee.client.util.MC
+import chylex.hee.system.migration.Hand.MAIN_HAND
 import chylex.hee.system.util.Vec3
 import chylex.hee.system.util.lookPosVec
 import chylex.hee.system.util.subtractY
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.util.EnumHand
-import net.minecraft.util.EnumHand.MAIN_HAND
 import net.minecraft.util.EnumHandSide.RIGHT
 import net.minecraft.util.math.MathHelper
 import net.minecraft.util.math.Vec3d

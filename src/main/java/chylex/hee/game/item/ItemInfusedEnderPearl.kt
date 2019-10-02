@@ -3,6 +3,7 @@ import chylex.hee.game.entity.projectile.EntityProjectileEnderPearl
 import chylex.hee.game.item.infusion.IInfusableItem
 import chylex.hee.game.item.infusion.Infusion
 import chylex.hee.game.item.infusion.InfusionTag
+import chylex.hee.system.migration.ActionResult.SUCCESS
 import chylex.hee.system.util.nextFloat
 import chylex.hee.system.util.playServer
 import chylex.hee.system.util.posVec
@@ -13,7 +14,6 @@ import net.minecraft.item.ItemEnderPearl
 import net.minecraft.item.ItemStack
 import net.minecraft.stats.StatList
 import net.minecraft.util.ActionResult
-import net.minecraft.util.EnumActionResult.SUCCESS
 import net.minecraft.util.EnumHand
 import net.minecraft.util.SoundCategory
 import net.minecraft.world.World

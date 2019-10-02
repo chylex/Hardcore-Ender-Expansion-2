@@ -1,6 +1,7 @@
 package chylex.hee.game.world.feature.energyshrine
 import chylex.hee.game.world.util.PosXZ
 import chylex.hee.init.ModBlocks
+import chylex.hee.system.migration.Facing.DOWN
 import chylex.hee.system.util.Facing4
 import chylex.hee.system.util.blocksMovement
 import chylex.hee.system.util.getState
@@ -13,7 +14,6 @@ import chylex.hee.system.util.setState
 import chylex.hee.system.util.withFacing
 import net.minecraft.block.Block
 import net.minecraft.block.state.IBlockState
-import net.minecraft.util.EnumFacing.DOWN
 import net.minecraft.util.math.BlockPos
 import net.minecraft.world.World
 import java.util.Random

@@ -10,6 +10,7 @@ import chylex.hee.game.particle.util.IShape.Point
 import chylex.hee.init.ModBlocks
 import chylex.hee.init.ModItems
 import chylex.hee.network.client.PacketClientFX
+import chylex.hee.system.migration.Facing.UP
 import chylex.hee.system.util.Pos
 import chylex.hee.system.util.cloneFrom
 import chylex.hee.system.util.get
@@ -28,7 +29,6 @@ import net.minecraft.init.Blocks
 import net.minecraft.init.SoundEvents
 import net.minecraft.item.Item
 import net.minecraft.item.ItemStack
-import net.minecraft.util.EnumFacing.UP
 import net.minecraft.util.SoundCategory
 import net.minecraft.util.math.AxisAlignedBB
 import net.minecraft.util.math.BlockPos

@@ -1,5 +1,6 @@
 package chylex.hee.game.mechanics.instability.dimension.components
 import chylex.hee.game.entity.living.EntityMobEndermiteInstability
+import chylex.hee.system.migration.Facing.UP
 import chylex.hee.system.util.Pos
 import chylex.hee.system.util.blocksMovement
 import chylex.hee.system.util.center
@@ -10,7 +11,6 @@ import chylex.hee.system.util.offsetUntil
 import net.minecraft.block.state.BlockFaceShape.SOLID
 import net.minecraft.init.MobEffects.RESISTANCE
 import net.minecraft.potion.PotionEffect
-import net.minecraft.util.EnumFacing.UP
 import net.minecraft.util.math.BlockPos
 import net.minecraft.world.World
 import java.util.Random

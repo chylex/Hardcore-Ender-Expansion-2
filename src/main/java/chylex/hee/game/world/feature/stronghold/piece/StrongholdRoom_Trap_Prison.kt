@@ -13,6 +13,10 @@ import chylex.hee.game.world.structure.piece.IStructurePieceConnection
 import chylex.hee.game.world.structure.trigger.EntityStructureTrigger
 import chylex.hee.game.world.structure.trigger.LootChestStructureTrigger
 import chylex.hee.game.world.structure.trigger.TileEntityStructureTrigger
+import chylex.hee.system.migration.Difficulty.PEACEFUL
+import chylex.hee.system.migration.Facing.EAST
+import chylex.hee.system.migration.Facing.UP
+import chylex.hee.system.migration.Facing.WEST
 import chylex.hee.system.util.Pos
 import chylex.hee.system.util.breakBlock
 import chylex.hee.system.util.center
@@ -31,11 +35,7 @@ import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.init.Blocks
 import net.minecraft.nbt.NBTTagCompound
 import net.minecraft.tileentity.TileEntitySkull
-import net.minecraft.util.EnumFacing.EAST
-import net.minecraft.util.EnumFacing.UP
-import net.minecraft.util.EnumFacing.WEST
 import net.minecraft.util.math.AxisAlignedBB
-import net.minecraft.world.EnumDifficulty.PEACEFUL
 import net.minecraft.world.World
 import java.util.Random
 import kotlin.math.min

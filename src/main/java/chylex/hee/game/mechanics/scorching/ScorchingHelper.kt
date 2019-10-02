@@ -11,13 +11,13 @@ import chylex.hee.game.particle.util.IOffset.Constant
 import chylex.hee.game.particle.util.IOffset.InBox
 import chylex.hee.game.particle.util.IShape.Point
 import chylex.hee.init.ModItems
+import chylex.hee.system.migration.Facing.UP
+import chylex.hee.system.migration.Hand.MAIN_HAND
 import chylex.hee.system.util.isNotEmpty
 import net.minecraft.entity.Entity
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.item.Item.ToolMaterial
 import net.minecraft.item.ItemStack
-import net.minecraft.util.EnumFacing.UP
-import net.minecraft.util.EnumHand.MAIN_HAND
 import net.minecraft.util.math.BlockPos
 import net.minecraft.world.World
 import net.minecraftforge.event.entity.player.CriticalHitEvent

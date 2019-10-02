@@ -6,8 +6,8 @@ import chylex.hee.game.world.feature.stronghold.connection.StrongholdConnectionT
 import chylex.hee.game.world.structure.IStructureWorld
 import chylex.hee.game.world.structure.piece.IStructurePieceConnection
 import chylex.hee.game.world.structure.trigger.LootChestStructureTrigger
+import chylex.hee.system.migration.Facing.SOUTH
 import chylex.hee.system.util.Pos
-import net.minecraft.util.EnumFacing.SOUTH
 
 class StrongholdRoom_DeadEnd_Waterfalls(file: String) : StrongholdAbstractPieceFromFile(file, StrongholdPieceType.OTHER){
 	override val connections = arrayOf<IStructurePieceConnection>(

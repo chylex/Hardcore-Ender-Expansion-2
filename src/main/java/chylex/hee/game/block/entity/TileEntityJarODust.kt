@@ -1,13 +1,13 @@
 package chylex.hee.game.block.entity
 import chylex.hee.game.mechanics.dust.DustLayerInventory
 import chylex.hee.game.mechanics.dust.DustLayers
+import chylex.hee.system.migration.Facing.DOWN
+import chylex.hee.system.migration.Facing.UP
 import chylex.hee.system.util.FLAG_SYNC_CLIENT
 import chylex.hee.system.util.NBTList.Companion.setList
 import chylex.hee.system.util.getListOfCompounds
 import net.minecraft.nbt.NBTTagCompound
 import net.minecraft.util.EnumFacing
-import net.minecraft.util.EnumFacing.DOWN
-import net.minecraft.util.EnumFacing.UP
 import net.minecraftforge.common.capabilities.Capability
 import net.minecraftforge.items.CapabilityItemHandler.ITEM_HANDLER_CAPABILITY
 

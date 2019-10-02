@@ -1,5 +1,6 @@
 package chylex.hee.game.item
 import chylex.hee.game.block.BlockAbstractCauldron
+import chylex.hee.system.migration.ActionResult.SUCCESS
 import chylex.hee.system.util.get
 import chylex.hee.system.util.getState
 import chylex.hee.system.util.playUniversal
@@ -15,7 +16,6 @@ import net.minecraft.item.ItemBucket
 import net.minecraft.item.ItemStack
 import net.minecraft.stats.StatList
 import net.minecraft.util.EnumActionResult
-import net.minecraft.util.EnumActionResult.SUCCESS
 import net.minecraft.util.EnumFacing
 import net.minecraft.util.EnumHand
 import net.minecraft.util.SoundCategory

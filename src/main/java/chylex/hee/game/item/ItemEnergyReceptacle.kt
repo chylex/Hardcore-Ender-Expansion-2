@@ -15,6 +15,8 @@ import chylex.hee.game.world.territory.TerritoryInstance
 import chylex.hee.game.world.util.BlockEditor
 import chylex.hee.init.ModBlocks
 import chylex.hee.system.Resource
+import chylex.hee.system.migration.ActionResult.FAIL
+import chylex.hee.system.migration.ActionResult.SUCCESS
 import chylex.hee.system.util.Pos
 import chylex.hee.system.util.breakBlock
 import chylex.hee.system.util.color.IntColor.Companion.RGB
@@ -31,8 +33,6 @@ import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.item.ItemStack
 import net.minecraft.nbt.NBTTagCompound
 import net.minecraft.util.EnumActionResult
-import net.minecraft.util.EnumActionResult.FAIL
-import net.minecraft.util.EnumActionResult.SUCCESS
 import net.minecraft.util.EnumFacing
 import net.minecraft.util.EnumHand
 import net.minecraft.util.math.BlockPos

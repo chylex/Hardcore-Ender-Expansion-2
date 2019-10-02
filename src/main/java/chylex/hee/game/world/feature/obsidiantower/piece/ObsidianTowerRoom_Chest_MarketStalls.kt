@@ -1,9 +1,9 @@
 package chylex.hee.game.world.feature.obsidiantower.piece
 import chylex.hee.game.world.structure.IStructureWorld
 import chylex.hee.game.world.util.PosXZ
+import chylex.hee.system.migration.Facing.EAST
+import chylex.hee.system.migration.Facing.WEST
 import chylex.hee.system.util.removeItem
-import net.minecraft.util.EnumFacing.EAST
-import net.minecraft.util.EnumFacing.WEST
 
 class ObsidianTowerRoom_Chest_MarketStalls(file: String) : ObsidianTowerRoom_General(file){
 	override fun generateContents(world: IStructureWorld, instance: Instance){

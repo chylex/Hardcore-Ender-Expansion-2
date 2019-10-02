@@ -2,6 +2,8 @@ package chylex.hee.game.item
 import chylex.hee.game.entity.projectile.EntityProjectileEyeOfEnder
 import chylex.hee.game.world.feature.stronghold.StrongholdGenerator
 import chylex.hee.game.world.util.PosXZ
+import chylex.hee.system.migration.ActionResult.PASS
+import chylex.hee.system.migration.ActionResult.SUCCESS
 import chylex.hee.system.util.nextFloat
 import chylex.hee.system.util.playServer
 import chylex.hee.system.util.posVec
@@ -12,8 +14,6 @@ import net.minecraft.item.ItemStack
 import net.minecraft.stats.StatList
 import net.minecraft.util.ActionResult
 import net.minecraft.util.EnumActionResult
-import net.minecraft.util.EnumActionResult.PASS
-import net.minecraft.util.EnumActionResult.SUCCESS
 import net.minecraft.util.EnumFacing
 import net.minecraft.util.EnumHand
 import net.minecraft.util.SoundCategory

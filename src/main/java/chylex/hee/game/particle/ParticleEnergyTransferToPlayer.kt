@@ -5,11 +5,11 @@ import chylex.hee.game.item.ItemAbstractEnergyUser
 import chylex.hee.game.particle.base.ParticleBaseEnergyTransfer
 import chylex.hee.game.particle.spawner.factory.IParticleData
 import chylex.hee.game.particle.spawner.factory.IParticleMaker
+import chylex.hee.system.migration.Hand.MAIN_HAND
+import chylex.hee.system.migration.Hand.OFF_HAND
 import chylex.hee.system.util.floorToInt
 import net.minecraft.client.particle.Particle
 import net.minecraft.entity.player.EntityPlayer
-import net.minecraft.util.EnumHand.MAIN_HAND
-import net.minecraft.util.EnumHand.OFF_HAND
 import net.minecraft.util.math.Vec3d
 import net.minecraft.world.World
 import net.minecraftforge.fml.relauncher.Side

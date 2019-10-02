@@ -31,6 +31,8 @@ import chylex.hee.game.world.util.Size.Alignment.CENTER
 import chylex.hee.game.world.util.Size.Alignment.MIN
 import chylex.hee.init.ModBlocks
 import chylex.hee.system.collection.MutableWeightedList.Companion.mutableWeightedListOf
+import chylex.hee.system.migration.Facing.DOWN
+import chylex.hee.system.migration.Facing.UP
 import chylex.hee.system.util.Facing4
 import chylex.hee.system.util.Pos
 import chylex.hee.system.util.allInCenteredBox
@@ -51,8 +53,6 @@ import chylex.hee.system.util.square
 import chylex.hee.system.util.toRadians
 import net.minecraft.block.Block
 import net.minecraft.init.Blocks
-import net.minecraft.util.EnumFacing.DOWN
-import net.minecraft.util.EnumFacing.UP
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.Vec3d
 import java.util.Random

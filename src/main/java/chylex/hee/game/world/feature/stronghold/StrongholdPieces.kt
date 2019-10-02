@@ -45,6 +45,10 @@ import chylex.hee.init.ModItems
 import chylex.hee.system.Resource
 import chylex.hee.system.collection.MutableWeightedList
 import chylex.hee.system.collection.WeightedList.Companion.weightedListOf
+import chylex.hee.system.migration.Facing.EAST
+import chylex.hee.system.migration.Facing.NORTH
+import chylex.hee.system.migration.Facing.SOUTH
+import chylex.hee.system.migration.Facing.WEST
 import chylex.hee.system.util.nextInt
 import chylex.hee.system.util.nextItem
 import chylex.hee.system.util.removeItem
@@ -53,10 +57,6 @@ import net.minecraft.init.Blocks
 import net.minecraft.init.Items
 import net.minecraft.item.EnumDyeColor
 import net.minecraft.item.ItemStack
-import net.minecraft.util.EnumFacing.EAST
-import net.minecraft.util.EnumFacing.NORTH
-import net.minecraft.util.EnumFacing.SOUTH
-import net.minecraft.util.EnumFacing.WEST
 import java.util.Random
 
 object StrongholdPieces : IStructureDescription{
