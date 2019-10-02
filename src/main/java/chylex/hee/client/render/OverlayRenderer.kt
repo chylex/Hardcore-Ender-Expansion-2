@@ -1,6 +1,11 @@
 package chylex.hee.client.render
 import chylex.hee.HEE
 import chylex.hee.client.render.util.GL
+import chylex.hee.client.render.util.GL.DF_ONE_MINUS_SRC_ALPHA
+import chylex.hee.client.render.util.GL.DF_ZERO
+import chylex.hee.client.render.util.GL.FOG_EXP
+import chylex.hee.client.render.util.GL.SF_ONE
+import chylex.hee.client.render.util.GL.SF_SRC_ALPHA
 import chylex.hee.client.util.MC
 import chylex.hee.game.block.BlockAbstractPortal
 import chylex.hee.game.block.entity.TileEntityEnergyCluster
@@ -18,11 +23,6 @@ import chylex.hee.system.util.getBlock
 import chylex.hee.system.util.getTile
 import net.minecraft.client.gui.Gui
 import net.minecraft.client.renderer.ActiveRenderInfo
-import net.minecraft.client.renderer.GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA
-import net.minecraft.client.renderer.GlStateManager.DestFactor.ZERO
-import net.minecraft.client.renderer.GlStateManager.FogMode.EXP
-import net.minecraft.client.renderer.GlStateManager.SourceFactor.ONE
-import net.minecraft.client.renderer.GlStateManager.SourceFactor.SRC_ALPHA
 import net.minecraft.client.resources.I18n
 import net.minecraft.util.math.RayTraceResult.Type.BLOCK
 import net.minecraft.util.text.TextFormatting
@@ -53,7 +53,7 @@ object OverlayRenderer{
 		val inside = ActiveRenderInfo.getBlockStateAtEntityViewpoint(entity.world, entity, e.renderPartialTicks.toFloat()).material
 		
 		if (inside === Materials.ENDER_GOO || inside === Materials.PURIFIED_ENDER_GOO){
-			GL.setFog(EXP)
+			GL.setFogMode(FOG_EXP)
 			e.density = if (inside === Materials.ENDER_GOO) 0.66F else 0.06F
 			e.isCanceled = true // otherwise the event is ignored
 		}
@@ -74,7 +74,7 @@ object OverlayRenderer{
 			val brightness = player.brightness
 			
 			GL.color(brightness, brightness, brightness, 1F)
-			GL.tryBlendFuncSeparate(SRC_ALPHA, ONE_MINUS_SRC_ALPHA, ONE, ZERO)
+			GL.blendFunc(SF_SRC_ALPHA, DF_ONE_MINUS_SRC_ALPHA, SF_ONE, DF_ZERO)
 			
 			if (inside === Materials.ENDER_GOO){
 				MC.textureManager.bindTexture(TEX_ENDER_GOO_OVERLAY)

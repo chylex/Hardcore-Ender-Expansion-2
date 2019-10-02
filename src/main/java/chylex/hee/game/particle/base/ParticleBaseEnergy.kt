@@ -1,5 +1,7 @@
 package chylex.hee.game.particle.base
 import chylex.hee.client.render.util.GL
+import chylex.hee.client.render.util.GL.DF_ONE
+import chylex.hee.client.render.util.GL.SF_SRC_ALPHA
 import chylex.hee.client.render.util.TESSELLATOR
 import chylex.hee.client.util.MC
 import chylex.hee.game.block.entity.TileEntityEnergyCluster
@@ -13,8 +15,6 @@ import chylex.hee.system.Resource
 import chylex.hee.system.util.color.IntColor
 import chylex.hee.system.util.color.IntColor.Companion.RGB
 import net.minecraft.client.renderer.BufferBuilder
-import net.minecraft.client.renderer.GlStateManager.DestFactor.ONE
-import net.minecraft.client.renderer.GlStateManager.SourceFactor.SRC_ALPHA
 import net.minecraft.client.renderer.texture.TextureAtlasSprite
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats
 import net.minecraft.entity.Entity
@@ -103,7 +103,7 @@ abstract class ParticleBaseEnergy(world: World, posX: Double, posY: Double, posZ
 		}
 		
 		GL.enableBlend()
-		GL.blendFunc(SRC_ALPHA, ONE)
+		GL.blendFunc(SF_SRC_ALPHA, DF_ONE)
 		
 		GL.disableAlpha()
 		GL.disableLighting()

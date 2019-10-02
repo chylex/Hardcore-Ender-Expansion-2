@@ -1,13 +1,13 @@
 package chylex.hee.client.render.entity
 import chylex.hee.client.model.entity.ModelEntityTokenHolder
 import chylex.hee.client.render.util.GL
+import chylex.hee.client.render.util.GL.DF_ONE_MINUS_SRC_ALPHA
+import chylex.hee.client.render.util.GL.SF_SRC_ALPHA
 import chylex.hee.game.entity.item.EntityTokenHolder
 import chylex.hee.game.item.ItemPortalToken.TokenType.NORMAL
 import chylex.hee.game.item.ItemPortalToken.TokenType.RARE
 import chylex.hee.game.item.ItemPortalToken.TokenType.SOLITARY
 import chylex.hee.system.Resource
-import net.minecraft.client.renderer.GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA
-import net.minecraft.client.renderer.GlStateManager.SourceFactor.SRC_ALPHA
 import net.minecraft.client.renderer.entity.Render
 import net.minecraft.client.renderer.entity.RenderManager
 import net.minecraft.util.ResourceLocation
@@ -37,7 +37,7 @@ class RenderEntityTokenHolder(manager: RenderManager) : Render<EntityTokenHolder
 		GL.rotate(55F, 1F, 0F, 1F)
 		
 		GL.enableBlend()
-		GL.blendFunc(SRC_ALPHA, ONE_MINUS_SRC_ALPHA)
+		GL.blendFunc(SF_SRC_ALPHA, DF_ONE_MINUS_SRC_ALPHA)
 		GL.color(1F, 1F, 1F, alpha)
 		
 		bindEntityTexture(entity)

@@ -1,6 +1,10 @@
 package chylex.hee.client.render
 import chylex.hee.HEE
 import chylex.hee.client.render.util.GL
+import chylex.hee.client.render.util.GL.DF_ONE_MINUS_SRC_ALPHA
+import chylex.hee.client.render.util.GL.DF_ZERO
+import chylex.hee.client.render.util.GL.SF_ONE
+import chylex.hee.client.render.util.GL.SF_SRC_ALPHA
 import chylex.hee.client.util.MC
 import chylex.hee.game.particle.ParticleVoid
 import chylex.hee.game.particle.spawner.ParticleSpawnerCustom
@@ -17,10 +21,6 @@ import chylex.hee.system.util.lookDirVec
 import chylex.hee.system.util.math.LerpedFloat
 import chylex.hee.system.util.posVec
 import chylex.hee.system.util.scale
-import net.minecraft.client.renderer.GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA
-import net.minecraft.client.renderer.GlStateManager.DestFactor.ZERO
-import net.minecraft.client.renderer.GlStateManager.SourceFactor.ONE
-import net.minecraft.client.renderer.GlStateManager.SourceFactor.SRC_ALPHA
 import net.minecraft.client.resources.I18n
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraftforge.client.event.RenderGameOverlayEvent
@@ -197,7 +197,7 @@ object TerritoryRenderer{
 			GL.pushMatrix()
 			GL.translate(width * 0.5F, height * 0.5F, 0F)
 			GL.enableBlend()
-			GL.tryBlendFuncSeparate(SRC_ALPHA, ONE_MINUS_SRC_ALPHA, ONE, ZERO)
+			GL.blendFunc(SF_SRC_ALPHA, DF_ONE_MINUS_SRC_ALPHA, SF_ONE, DF_ZERO)
 			GL.alphaFunc(GL_GREATER, 0F)
 			GL.pushMatrix()
 			GL.scale(3F, 3F, 3F)

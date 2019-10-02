@@ -1,14 +1,14 @@
 package chylex.hee.client.render.territory.components
 import chylex.hee.client.render.territory.EnvironmentRenderer
 import chylex.hee.client.render.util.GL
+import chylex.hee.client.render.util.GL.DF_ONE_MINUS_SRC_ALPHA
+import chylex.hee.client.render.util.GL.SF_SRC_ALPHA
 import chylex.hee.client.render.util.TESSELLATOR
 import chylex.hee.client.render.util.draw
 import chylex.hee.client.util.MC
 import chylex.hee.system.util.square
 import net.minecraft.client.Minecraft
 import net.minecraft.client.multiplayer.WorldClient
-import net.minecraft.client.renderer.GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA
-import net.minecraft.client.renderer.GlStateManager.SourceFactor.SRC_ALPHA
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats
 import net.minecraft.util.ResourceLocation
 import net.minecraft.util.math.Vec3d
@@ -93,7 +93,7 @@ abstract class SkyDomeBase : IRenderHandler(){
 		val blue = col.z.toFloat()
 		
 		GL.enableBlend()
-		GL.blendFunc(SRC_ALPHA, ONE_MINUS_SRC_ALPHA)
+		GL.blendFunc(SF_SRC_ALPHA, DF_ONE_MINUS_SRC_ALPHA)
 		GL.enableAlpha()
 		GL.alphaFunc(GL_GREATER, 0F)
 		GL.enableFog()

@@ -3,6 +3,7 @@ import chylex.hee.HEE
 import chylex.hee.client.render.territory.EmptyRenderer
 import chylex.hee.client.render.territory.EnvironmentRenderer
 import chylex.hee.client.render.util.GL
+import chylex.hee.client.render.util.GL.FOG_EXP2
 import chylex.hee.game.mechanics.portal.SpawnInfo
 import chylex.hee.game.world.provider.DragonFightManagerNull
 import chylex.hee.game.world.provider.WorldBorderNull
@@ -10,7 +11,6 @@ import chylex.hee.game.world.territory.TerritoryInstance
 import chylex.hee.game.world.territory.TerritoryInstance.Companion.THE_HUB_INSTANCE
 import chylex.hee.game.world.territory.TerritoryVoid
 import chylex.hee.proxy.ModCommonProxy
-import net.minecraft.client.renderer.GlStateManager.FogMode.EXP2
 import net.minecraft.entity.Entity
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.Vec3d
@@ -149,7 +149,7 @@ class WorldProviderEndCustom : WorldProviderEnd(){
 			return false
 		}
 		
-		GL.setFog(EXP2)
+		GL.setFogMode(FOG_EXP2)
 		GL.setFogDensity(clientEnvironment?.fogDensity?.times(EnvironmentRenderer.currentFogDensityMp) ?: 0F) // TODO adjust fog density by render distance
 		return true
 	}

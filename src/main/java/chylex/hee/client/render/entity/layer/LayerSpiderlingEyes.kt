@@ -1,12 +1,12 @@
 package chylex.hee.client.render.entity.layer
 import chylex.hee.client.render.entity.RenderEntityMobSpiderling
 import chylex.hee.client.render.util.GL
+import chylex.hee.client.render.util.GL.DF_ONE
+import chylex.hee.client.render.util.GL.SF_ONE
 import chylex.hee.client.util.MC
 import chylex.hee.game.entity.living.EntityMobSpiderling
 import chylex.hee.system.Resource
 import net.minecraft.client.model.ModelRenderer
-import net.minecraft.client.renderer.GlStateManager.DestFactor
-import net.minecraft.client.renderer.GlStateManager.SourceFactor
 import net.minecraft.client.renderer.OpenGlHelper
 import net.minecraft.client.renderer.entity.layers.LayerRenderer
 import net.minecraftforge.fml.relauncher.Side
@@ -26,7 +26,7 @@ class LayerSpiderlingEyes(private val spiderlingRenderer: RenderEntityMobSpiderl
 		GL.color(1F, 1F, 1F, 1F)
 		GL.disableAlpha()
 		GL.enableBlend()
-		GL.blendFunc(SourceFactor.ONE, DestFactor.ONE)
+		GL.blendFunc(SF_ONE, DF_ONE)
 		GL.depthMask(!entity.isInvisible)
 		
 		OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 61680F, 0F)

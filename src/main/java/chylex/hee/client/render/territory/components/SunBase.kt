@@ -1,12 +1,14 @@
 package chylex.hee.client.render.territory.components
 import chylex.hee.client.render.util.GL
+import chylex.hee.client.render.util.GL.DF_ONE
+import chylex.hee.client.render.util.GL.DF_ZERO
+import chylex.hee.client.render.util.GL.SF_ONE
+import chylex.hee.client.render.util.GL.SF_SRC_ALPHA
 import chylex.hee.client.render.util.TESSELLATOR
 import chylex.hee.client.render.util.draw
 import chylex.hee.client.util.MC
 import net.minecraft.client.Minecraft
 import net.minecraft.client.multiplayer.WorldClient
-import net.minecraft.client.renderer.GlStateManager.DestFactor
-import net.minecraft.client.renderer.GlStateManager.SourceFactor
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats
 import net.minecraft.util.ResourceLocation
 import net.minecraft.util.math.Vec3d
@@ -45,7 +47,7 @@ abstract class SunBase : IRenderHandler(){
 		val blue = col.z.toFloat()
 		
 		GL.enableBlend()
-		GL.tryBlendFuncSeparate(SourceFactor.SRC_ALPHA, DestFactor.ONE, SourceFactor.ONE, DestFactor.ZERO)
+		GL.blendFunc(SF_SRC_ALPHA, DF_ONE, SF_ONE, DF_ZERO)
 		GL.enableAlpha()
 		GL.alphaFunc(GL_GREATER, 0F)
 		GL.disableFog()

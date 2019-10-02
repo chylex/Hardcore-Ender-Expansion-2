@@ -1,11 +1,11 @@
 package chylex.hee.client.render.entity
 import chylex.hee.client.render.util.GL
+import chylex.hee.client.render.util.GL.DF_ONE_MINUS_SRC_ALPHA
+import chylex.hee.client.render.util.GL.DF_ZERO
+import chylex.hee.client.render.util.GL.SF_ONE
+import chylex.hee.client.render.util.GL.SF_SRC_ALPHA
 import chylex.hee.client.util.MC
 import chylex.hee.game.entity.projectile.EntityProjectileEyeOfEnder
-import net.minecraft.client.renderer.GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA
-import net.minecraft.client.renderer.GlStateManager.DestFactor.ZERO
-import net.minecraft.client.renderer.GlStateManager.SourceFactor.ONE
-import net.minecraft.client.renderer.GlStateManager.SourceFactor.SRC_ALPHA
 import net.minecraft.client.renderer.RenderHelper
 import net.minecraft.client.renderer.block.model.ItemCameraTransforms.TransformType
 import net.minecraft.client.renderer.entity.Render
@@ -41,7 +41,7 @@ class RenderEntityProjectileEyeOfEnder(manager: RenderManager) : Render<EntityPr
 		GL.alphaFunc(GL_GREATER, 0.1F)
 		GL.enableRescaleNormal()
 		GL.enableBlend()
-		GL.tryBlendFuncSeparate(SRC_ALPHA, ONE_MINUS_SRC_ALPHA, ONE, ZERO)
+		GL.blendFunc(SF_SRC_ALPHA, DF_ONE_MINUS_SRC_ALPHA, SF_ONE, DF_ZERO)
 		
 		GL.color(1F, 1F, 1F, 1F)
 		

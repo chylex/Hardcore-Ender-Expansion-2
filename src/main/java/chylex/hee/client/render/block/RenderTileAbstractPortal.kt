@@ -1,5 +1,13 @@
 package chylex.hee.client.render.block
 import chylex.hee.client.render.util.GL
+import chylex.hee.client.render.util.GL.DF_ONE
+import chylex.hee.client.render.util.GL.DF_ONE_MINUS_SRC_ALPHA
+import chylex.hee.client.render.util.GL.SF_ONE
+import chylex.hee.client.render.util.GL.SF_SRC_ALPHA
+import chylex.hee.client.render.util.GL.TEX_Q
+import chylex.hee.client.render.util.GL.TEX_R
+import chylex.hee.client.render.util.GL.TEX_S
+import chylex.hee.client.render.util.GL.TEX_T
 import chylex.hee.client.render.util.TESSELLATOR
 import chylex.hee.client.render.util.draw
 import chylex.hee.client.util.MC
@@ -10,14 +18,6 @@ import chylex.hee.system.Resource
 import chylex.hee.system.util.square
 import net.minecraft.client.renderer.ActiveRenderInfo
 import net.minecraft.client.renderer.GLAllocation
-import net.minecraft.client.renderer.GlStateManager.DestFactor
-import net.minecraft.client.renderer.GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA
-import net.minecraft.client.renderer.GlStateManager.SourceFactor
-import net.minecraft.client.renderer.GlStateManager.SourceFactor.SRC_ALPHA
-import net.minecraft.client.renderer.GlStateManager.TexGen.Q
-import net.minecraft.client.renderer.GlStateManager.TexGen.R
-import net.minecraft.client.renderer.GlStateManager.TexGen.S
-import net.minecraft.client.renderer.GlStateManager.TexGen.T
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats
 import net.minecraft.util.ResourceLocation
@@ -108,16 +108,16 @@ abstract class RenderTileAbstractPortal<T : TileEntityPortalInner, C : IPortalCo
 		GL.disableLighting()
 		GL.enableBlend()
 		
-		GL.enableTexGenCoord(S)
-		GL.enableTexGenCoord(T)
-		GL.enableTexGenCoord(R)
-		GL.enableTexGenCoord(Q)
+		GL.enableTexGenCoord(TEX_S)
+		GL.enableTexGenCoord(TEX_T)
+		GL.enableTexGenCoord(TEX_R)
+		GL.enableTexGenCoord(TEX_Q)
 		
 		MC.entityRenderer.setupFogColor(true)
 		
 		// background
 		
-		GL.blendFunc(SRC_ALPHA, ONE_MINUS_SRC_ALPHA)
+		GL.blendFunc(SF_SRC_ALPHA, DF_ONE_MINUS_SRC_ALPHA)
 		
 		controller?.let { generateNextColor(it, 0) }
 		transformColor { 0.1F } // discards provided value
@@ -133,7 +133,7 @@ abstract class RenderTileAbstractPortal<T : TileEntityPortalInner, C : IPortalCo
 		
 		// inner layers
 		
-		GL.blendFunc(SourceFactor.ONE, DestFactor.ONE)
+		GL.blendFunc(SF_ONE, DF_ONE)
 		
 		val layerCount = getLayerCount((x * x) + (y * y) + (z * z))
 		
@@ -160,10 +160,10 @@ abstract class RenderTileAbstractPortal<T : TileEntityPortalInner, C : IPortalCo
 		
 		MC.entityRenderer.setupFogColor(false)
 		
-		GL.disableTexGenCoord(S)
-		GL.disableTexGenCoord(T)
-		GL.disableTexGenCoord(R)
-		GL.disableTexGenCoord(Q)
+		GL.disableTexGenCoord(TEX_S)
+		GL.disableTexGenCoord(TEX_T)
+		GL.disableTexGenCoord(TEX_R)
+		GL.disableTexGenCoord(TEX_Q)
 		
 		GL.disableBlend()
 		GL.enableLighting()
@@ -193,15 +193,15 @@ abstract class RenderTileAbstractPortal<T : TileEntityPortalInner, C : IPortalCo
 		GL.pushMatrix()
 		GL.translate(globalX, layerPosition, globalZ)
 		
-		GL.texGen(S, GL_OBJECT_LINEAR)
-		GL.texGen(T, GL_OBJECT_LINEAR)
-		GL.texGen(R, GL_OBJECT_LINEAR)
-		GL.texGen(Q, GL_EYE_LINEAR)
+		GL.texGenMode(TEX_S, GL_OBJECT_LINEAR)
+		GL.texGenMode(TEX_T, GL_OBJECT_LINEAR)
+		GL.texGenMode(TEX_R, GL_OBJECT_LINEAR)
+		GL.texGenMode(TEX_Q, GL_EYE_LINEAR)
 		
-		GL.texGen(S, GL_OBJECT_PLANE, updateBuffer(1F, 0F, 0F, 0F))
-		GL.texGen(T, GL_OBJECT_PLANE, updateBuffer(0F, 0F, 1F, 0F))
-		GL.texGen(R, GL_OBJECT_PLANE, updateBuffer(1F, 0F, 0F, 1F))
-		GL.texGen(Q, GL_EYE_PLANE, updateBuffer(0F, 1F, 0F, 0F))
+		GL.texGenParam(TEX_S, GL_OBJECT_PLANE, updateBuffer(1F, 0F, 0F, 0F))
+		GL.texGenParam(TEX_T, GL_OBJECT_PLANE, updateBuffer(0F, 0F, 1F, 0F))
+		GL.texGenParam(TEX_R, GL_OBJECT_PLANE, updateBuffer(1F, 0F, 0F, 1F))
+		GL.texGenParam(TEX_Q, GL_EYE_PLANE, updateBuffer(0F, 1F, 0F, 0F))
 		
 		GL.popMatrix()
 		

@@ -1,5 +1,7 @@
 package chylex.hee.client.render.entity
 import chylex.hee.client.render.util.GL
+import chylex.hee.client.render.util.GL.DF_ONE_MINUS_SRC_ALPHA
+import chylex.hee.client.render.util.GL.SF_SRC_ALPHA
 import chylex.hee.game.entity.living.EntityMobAbstractEnderman
 import chylex.hee.system.util.nextFloat
 import net.minecraft.client.renderer.entity.RenderEnderman
@@ -8,8 +10,6 @@ import net.minecraft.entity.monster.EntityEnderman
 import net.minecraftforge.fml.relauncher.Side
 import net.minecraftforge.fml.relauncher.SideOnly
 import org.lwjgl.opengl.GL11.GL_GREATER
-import org.lwjgl.opengl.GL11.GL_ONE_MINUS_SRC_ALPHA
-import org.lwjgl.opengl.GL11.GL_SRC_ALPHA
 import java.util.Random
 
 @SideOnly(Side.CLIENT)
@@ -40,7 +40,7 @@ open class RenderEntityMobAbstractEnderman(manager: RenderManager) : RenderEnder
 			
 			repeat(2){
 				GL.enableBlend()
-				GL.blendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA)
+				GL.blendFunc(SF_SRC_ALPHA, DF_ONE_MINUS_SRC_ALPHA)
 				GL.alphaFunc(GL_GREATER, 0.004F)
 				GL.depthMask(false)
 				GL.color(1F, 1F, 1F, rand.nextFloat(0.05F, 0.3F))
