@@ -1,4 +1,5 @@
 package chylex.hee.game.block
+import chylex.hee.client.render.util.NO_TINT
 import chylex.hee.game.block.entity.TileEntityTablePedestal
 import chylex.hee.game.block.info.BlockBuilder
 import chylex.hee.game.block.util.Property
@@ -194,17 +195,15 @@ class BlockTablePedestal(builder: BlockBuilder) : BlockSimpleShaped(builder, COM
 	
 	@SideOnly(Side.CLIENT)
 	object Color : IBlockColor{
-		private const val NONE = -1
-		
 		override fun colorMultiplier(state: IBlockState, world: IBlockAccess?, pos: BlockPos?, tintIndex: Int): Int{
 			if (world == null || pos == null){
-				return NONE
+				return NO_TINT
 			}
 			
 			return when(tintIndex){
-				1 -> pos.getTile<TileEntityTablePedestal>(world)?.tableIndicatorColor?.i ?: NONE
-				2 -> pos.getTile<TileEntityTablePedestal>(world)?.statusIndicatorColorClient ?: NONE
-				else -> NONE
+				1 -> pos.getTile<TileEntityTablePedestal>(world)?.tableIndicatorColor?.i ?: NO_TINT
+				2 -> pos.getTile<TileEntityTablePedestal>(world)?.statusIndicatorColorClient ?: NO_TINT
+				else -> NO_TINT
 			}
 		}
 	}

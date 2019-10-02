@@ -1,4 +1,5 @@
 package chylex.hee.game.item
+import chylex.hee.client.render.util.NO_TINT
 import chylex.hee.game.block.fluid.FluidBase
 import chylex.hee.game.world.util.BlockEditor
 import chylex.hee.game.world.util.RayTracer
@@ -137,11 +138,9 @@ class ItemVoidBucket : ItemAbstractVoidTool(){
 	// Client side
 	
 	object Color : IItemColor{
-		private const val NONE = -1
-		
 		override fun colorMultiplier(stack: ItemStack, tintIndex: Int) = when(tintIndex){
-			1 -> stack.heeTagOrNull?.getInteger(COLOR_TAG) ?: NONE // TODO using cooldown to determine the textures looks funny w/ multiple buckets in inventory
-			else -> NONE
+			1 -> stack.heeTagOrNull?.getInteger(COLOR_TAG) ?: NO_TINT // TODO using cooldown to determine the textures looks funny w/ multiple buckets in inventory
+			else -> NO_TINT
 		}
 	}
 }

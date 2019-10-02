@@ -1,5 +1,6 @@
 package chylex.hee.game.item
 import chylex.hee.client.gui.GuiPortalTokenStorage
+import chylex.hee.client.render.util.NO_TINT
 import chylex.hee.client.util.MC
 import chylex.hee.game.block.BlockVoidPortalInner
 import chylex.hee.game.entity.item.EntityTokenHolder
@@ -184,7 +185,6 @@ class ItemPortalToken : Item(){
 	
 	@SideOnly(Side.CLIENT)
 	object Color : IItemColor{
-		private const val NONE = -1
 		private val WHITE = RGB(255u).i
 		
 		private fun getColors(stack: ItemStack): TerritoryColors?{
@@ -194,7 +194,7 @@ class ItemPortalToken : Item(){
 		override fun colorMultiplier(stack: ItemStack, tintIndex: Int) = when(tintIndex){
 			1 -> getColors(stack)?.tokenTop?.i ?: WHITE
 			2 -> getColors(stack)?.tokenBottom?.i ?: WHITE
-			else -> NONE
+			else -> NO_TINT
 		}
 	}
 }

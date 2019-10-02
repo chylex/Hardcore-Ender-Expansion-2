@@ -19,6 +19,7 @@ import chylex.hee.client.render.entity.RenderEntityNothing
 import chylex.hee.client.render.entity.RenderEntityProjectileEyeOfEnder
 import chylex.hee.client.render.entity.RenderEntityTokenHolder
 import chylex.hee.client.render.entity.layer.LayerEndermanHead
+import chylex.hee.client.render.util.asItem
 import chylex.hee.client.util.MC
 import chylex.hee.game.block.BlockAbstractTable
 import chylex.hee.game.block.BlockDryVines
@@ -120,7 +121,7 @@ object ModRendering{
 	
 	fun registerBlockItemColors(){
 		setColor(ModBlocks.DRY_VINES, BlockDryVines.Color)
-		setColor(ModBlocks.DRY_VINES, IItemColor { _, tintIndex -> BlockDryVines.Color.colorMultiplier(ModBlocks.DRY_VINES.defaultState, null, null, tintIndex) })
+		setColor(ModBlocks.DRY_VINES, BlockDryVines.Color.asItem(ModBlocks.DRY_VINES))
 		setColor(ModBlocks.TABLE_PEDESTAL, BlockTablePedestal.Color)
 		
 		setColor(ModItems.BINDING_ESSENCE, ItemBindingEssence.Color)

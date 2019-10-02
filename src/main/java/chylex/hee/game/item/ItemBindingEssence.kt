@@ -1,4 +1,5 @@
 package chylex.hee.game.item
+import chylex.hee.client.render.util.NO_TINT
 import chylex.hee.game.item.infusion.Infusion
 import chylex.hee.game.item.infusion.InfusionList
 import chylex.hee.game.item.infusion.InfusionTag
@@ -68,8 +69,7 @@ class ItemBindingEssence : ItemAbstractInfusable(){
 	}
 	
 	@SideOnly(Side.CLIENT)
-	object Color: IItemColor{
-		private const val NONE = -1
+	object Color : IItemColor{
 		private val EMPTY = RGB(255u).i
 		
 		override fun colorMultiplier(stack: ItemStack, tintIndex: Int): Int{
@@ -84,7 +84,7 @@ class ItemBindingEssence : ItemAbstractInfusable(){
 				1 -> (list.getOrNull(1)?.primaryColor ?: list[0].secondaryColor).i
 				2 -> (list.getOrNull(2)?.primaryColor ?: list.getOrNull(1)?.secondaryColor ?: list[0].primaryColor).i
 				3 -> (list.getOrNull(3)?.primaryColor ?: list.getOrNull(2)?.primaryColor ?: (if (list.size == 2) list[0].secondaryColor else list[0].primaryColor)).i
-				else -> NONE
+				else -> NO_TINT
 			}
 		}
 	}

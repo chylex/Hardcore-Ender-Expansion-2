@@ -1,5 +1,6 @@
 package chylex.hee.game.item
 import chylex.hee.client.render.util.ColorTransition
+import chylex.hee.client.render.util.NO_TINT
 import chylex.hee.client.util.MC
 import chylex.hee.game.block.entity.TileEntityEnergyCluster
 import chylex.hee.game.item.infusion.IInfusableItem
@@ -283,8 +284,6 @@ class ItemEnergyOracle : ItemAbstractEnergyUser(), IInfusableItem{
 	
 	@SideOnly(Side.CLIENT)
 	object Color : IItemColor{
-		private const val NONE = -1
-		
 		private val INACTIVE  = HCL(0.0, 0F,   2.8F)
 		private val SEARCHING = HCL(0.0, 0F,  68.0F)
 		private val PROXIMITY = HCL(0.0, 0F, 100.0F)
@@ -353,7 +352,7 @@ class ItemEnergyOracle : ItemAbstractEnergyUser(), IInfusableItem{
 		
 		override fun colorMultiplier(stack: ItemStack, tintIndex: Int): Int{
 			if (tintIndex != 1){
-				return NONE
+				return NO_TINT
 			}
 			
 			val tag = stack.heeTagOrNull ?: return INACTIVE_INT

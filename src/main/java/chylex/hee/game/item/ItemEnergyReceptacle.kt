@@ -1,4 +1,5 @@
 package chylex.hee.game.item
+import chylex.hee.client.render.util.NO_TINT
 import chylex.hee.game.block.entity.TileEntityEnergyCluster
 import chylex.hee.game.item.infusion.Infusion.SAFETY
 import chylex.hee.game.item.infusion.Infusion.STABILITY
@@ -225,12 +226,11 @@ class ItemEnergyReceptacle : ItemAbstractInfusable(){
 	
 	@SideOnly(Side.CLIENT)
 	object Color : IItemColor{
-		private const val NONE = -1
 		private val WHITE = RGB(255u).i
 		
 		override fun colorMultiplier(stack: ItemStack, tintIndex: Int) = when(tintIndex){
 			1 -> stack.heeTagOrNull?.getInteger(RENDER_COLOR_TAG) ?: WHITE
-			else -> NONE
+			else -> NO_TINT
 		}
 	}
 }
