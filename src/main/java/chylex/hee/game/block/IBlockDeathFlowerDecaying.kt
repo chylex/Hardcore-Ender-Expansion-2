@@ -15,6 +15,7 @@ import chylex.hee.game.world.util.Teleporter.FxRange.Extended
 import chylex.hee.network.client.PacketClientFX
 import chylex.hee.system.migration.Difficulty.PEACEFUL
 import chylex.hee.system.migration.Facing.DOWN
+import chylex.hee.system.migration.vanilla.Sounds
 import chylex.hee.system.util.TagCompound
 import chylex.hee.system.util.allInCenteredSphereMutable
 import chylex.hee.system.util.blocksMovement
@@ -41,7 +42,6 @@ import net.minecraft.block.Block
 import net.minecraft.block.state.IBlockState
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.init.MobEffects.WITHER
-import net.minecraft.init.SoundEvents
 import net.minecraft.potion.PotionEffect
 import net.minecraft.util.SoundCategory
 import net.minecraft.util.math.BlockPos
@@ -136,7 +136,7 @@ interface IBlockDeathFlowerDecaying{
 					}
 				}
 				
-				SoundEvents.ENTITY_ENDERMEN_TELEPORT.playServer(world, center, SoundCategory.HOSTILE, volume = 1.25F)
+				Sounds.ENTITY_ENDERMEN_TELEPORT.playServer(world, center, SoundCategory.HOSTILE, volume = 1.25F)
 				
 				for(player in world.selectExistingEntities.inRange<EntityPlayer>(center, WITHER_PLAYER_RADIUS)){
 					val distanceMp = center.distanceTo(player.posVec) / WITHER_PLAYER_RADIUS

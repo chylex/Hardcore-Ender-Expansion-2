@@ -14,6 +14,8 @@ import chylex.hee.game.particle.util.IShape.Point
 import chylex.hee.init.ModSounds
 import chylex.hee.network.client.PacketClientFX
 import chylex.hee.system.migration.Facing.UP
+import chylex.hee.system.migration.vanilla.Blocks
+import chylex.hee.system.migration.vanilla.Sounds
 import chylex.hee.system.util.Pos
 import chylex.hee.system.util.TagCompound
 import chylex.hee.system.util.allInCenteredBox
@@ -39,8 +41,6 @@ import chylex.hee.system.util.use
 import chylex.hee.system.util.writePos
 import io.netty.buffer.ByteBuf
 import net.minecraft.entity.Entity
-import net.minecraft.init.Blocks
-import net.minecraft.init.SoundEvents
 import net.minecraft.item.ItemStack
 import net.minecraft.network.datasync.DataSerializers
 import net.minecraft.tileentity.TileEntityFurnace
@@ -166,7 +166,7 @@ class EntityTechnicalIgneousPlateLogic(world: World) : Entity(world){
 			override fun handle(pos: BlockPos, world: World, rand: Random){
 				PARTICLE_OVERHEAT.spawn(Point(pos, 50), rand)
 				PARTICLE_OVERHEAT_CLOUD.spawn(Point(pos, 15), rand)
-				SoundEvents.ENTITY_GENERIC_EXPLODE.playClient(pos, SoundCategory.BLOCKS, volume = 2F, pitch = 1F)
+				Sounds.ENTITY_GENERIC_EXPLODE.playClient(pos, SoundCategory.BLOCKS, volume = 2F, pitch = 1F)
 			}
 		}
 	}

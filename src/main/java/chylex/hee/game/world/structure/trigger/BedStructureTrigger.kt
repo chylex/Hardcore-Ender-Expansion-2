@@ -1,6 +1,7 @@
 package chylex.hee.game.world.structure.trigger
 import chylex.hee.game.world.structure.IStructureTrigger
 import chylex.hee.game.world.util.Transform
+import chylex.hee.system.migration.vanilla.Blocks
 import chylex.hee.system.util.getTile
 import chylex.hee.system.util.setState
 import chylex.hee.system.util.with
@@ -8,7 +9,6 @@ import chylex.hee.system.util.withFacing
 import net.minecraft.block.BlockBed
 import net.minecraft.block.BlockBed.EnumPartType.FOOT
 import net.minecraft.block.BlockBed.EnumPartType.HEAD
-import net.minecraft.init.Blocks
 import net.minecraft.item.EnumDyeColor
 import net.minecraft.tileentity.TileEntityBed
 import net.minecraft.util.EnumFacing

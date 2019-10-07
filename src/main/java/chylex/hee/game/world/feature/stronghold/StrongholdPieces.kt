@@ -49,12 +49,12 @@ import chylex.hee.system.migration.Facing.EAST
 import chylex.hee.system.migration.Facing.NORTH
 import chylex.hee.system.migration.Facing.SOUTH
 import chylex.hee.system.migration.Facing.WEST
+import chylex.hee.system.migration.vanilla.Blocks
+import chylex.hee.system.migration.vanilla.Items
 import chylex.hee.system.util.nextInt
 import chylex.hee.system.util.nextItem
 import chylex.hee.system.util.removeItem
 import net.minecraft.block.Block
-import net.minecraft.init.Blocks
-import net.minecraft.init.Items
 import net.minecraft.item.EnumDyeColor
 import net.minecraft.item.ItemStack
 import java.util.Random

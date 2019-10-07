@@ -5,6 +5,7 @@ import chylex.hee.game.entity.living.behavior.EndermanBlockHandler.TargetBlockTy
 import chylex.hee.game.entity.living.behavior.EndermanBlockHandler.TargetBlockType.NONE
 import chylex.hee.game.entity.living.behavior.EndermanBlockHandler.TargetBlockType.TRANSPARENT
 import chylex.hee.game.world.util.RayTracer
+import chylex.hee.system.migration.vanilla.Blocks
 import chylex.hee.system.util.Pos
 import chylex.hee.system.util.Vec3
 import chylex.hee.system.util.addY
@@ -26,7 +27,6 @@ import net.minecraft.block.state.IBlockState
 import net.minecraft.entity.item.EntityItem
 import net.minecraft.entity.monster.EntityEnderman
 import net.minecraft.entity.player.EntityPlayer
-import net.minecraft.init.Blocks
 import net.minecraft.item.Item
 import net.minecraft.item.ItemStack
 import net.minecraft.util.SoundCategory

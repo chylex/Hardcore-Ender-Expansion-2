@@ -3,12 +3,12 @@ import chylex.hee.game.world.structure.IStructureTrigger
 import chylex.hee.game.world.structure.IStructureWorld
 import chylex.hee.game.world.util.Transform
 import chylex.hee.init.ModBlocks
+import chylex.hee.system.migration.vanilla.Blocks
 import chylex.hee.system.util.FLAG_SYNC_CLIENT
 import chylex.hee.system.util.getState
 import chylex.hee.system.util.setState
 import net.minecraft.block.Block
 import net.minecraft.block.state.IBlockState
-import net.minecraft.init.Blocks
 import net.minecraft.util.math.BlockPos
 import net.minecraft.world.World
 import java.util.Random

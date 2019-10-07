@@ -17,6 +17,7 @@ import chylex.hee.network.client.PacketClientFX
 import chylex.hee.network.client.PacketClientMoveYourAss
 import chylex.hee.network.client.PacketClientRotateInstantly
 import chylex.hee.network.client.PacketClientTeleportInstantly
+import chylex.hee.system.migration.vanilla.Sounds
 import chylex.hee.system.util.Pos
 import chylex.hee.system.util.addY
 import chylex.hee.system.util.blocksMovement
@@ -39,7 +40,6 @@ import net.minecraft.entity.EntityCreature
 import net.minecraft.entity.EntityLivingBase
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.entity.player.EntityPlayerMP
-import net.minecraft.init.SoundEvents
 import net.minecraft.util.SoundCategory
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.Vec3d
@@ -115,11 +115,11 @@ class Teleporter(
 				val soundDistance = playerPos.distanceTo(soundPosition)
 				
 				if (soundDistance < RANGE_FOR_MINIMUM_VOLUME){
-					SoundEvents.ENTITY_ENDERMEN_TELEPORT.playClient(soundPosition, soundCategory, volume = soundVolume)
+					Sounds.ENTITY_ENDERMEN_TELEPORT.playClient(soundPosition, soundCategory, volume = soundVolume)
 				}
 				else if (soundDistance < soundRange){
 					val closerPosition = playerPos.add(playerPos.directionTowards(soundPosition).scale(RANGE_FOR_MINIMUM_VOLUME))
-					SoundEvents.ENTITY_ENDERMEN_TELEPORT.playClient(closerPosition, soundCategory, volume = soundVolume)
+					Sounds.ENTITY_ENDERMEN_TELEPORT.playClient(closerPosition, soundCategory, volume = soundVolume)
 				}
 				
 				ParticleSpawnerCustom(

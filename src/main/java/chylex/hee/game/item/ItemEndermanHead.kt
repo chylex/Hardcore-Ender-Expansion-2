@@ -3,6 +3,7 @@ import chylex.hee.init.ModBlocks
 import chylex.hee.system.migration.ActionResult.FAIL
 import chylex.hee.system.migration.ActionResult.SUCCESS
 import chylex.hee.system.migration.Facing.UP
+import chylex.hee.system.migration.vanilla.Blocks
 import chylex.hee.system.util.getMaterial
 import chylex.hee.system.util.getTile
 import chylex.hee.system.util.isReplaceable
@@ -13,7 +14,6 @@ import net.minecraft.advancements.CriteriaTriggers
 import net.minecraft.entity.Entity
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.entity.player.EntityPlayerMP
-import net.minecraft.init.Blocks
 import net.minecraft.inventory.EntityEquipmentSlot
 import net.minecraft.inventory.EntityEquipmentSlot.HEAD
 import net.minecraft.item.Item

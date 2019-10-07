@@ -24,6 +24,7 @@ import chylex.hee.system.migration.forge.Side
 import chylex.hee.system.migration.forge.Sided
 import chylex.hee.system.migration.forge.SubscribeAllEvents
 import chylex.hee.system.migration.forge.SubscribeEvent
+import chylex.hee.system.migration.vanilla.Sounds
 import chylex.hee.system.util.AIAttackMelee
 import chylex.hee.system.util.AISwim
 import chylex.hee.system.util.AITargetAttacker
@@ -64,7 +65,6 @@ import net.minecraft.entity.ai.attributes.AttributeModifier
 import net.minecraft.entity.monster.EntityMob
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.init.MobEffects.POISON
-import net.minecraft.init.SoundEvents
 import net.minecraft.item.ItemAxe
 import net.minecraft.item.ItemSword
 import net.minecraft.network.datasync.DataSerializers
@@ -465,19 +465,19 @@ class EntityMobSpiderling(world: World) : EntityMob(world), ILightStartleHandler
 	}
 	
 	override fun playStepSound(pos: BlockPos, block: Block){
-		playSound(SoundEvents.ENTITY_SPIDER_STEP, 0.15F, soundPitch)
+		playSound(Sounds.ENTITY_SPIDER_STEP, 0.15F, soundPitch)
 	}
 	
 	public override fun getAmbientSound(): SoundEvent{
-		return SoundEvents.ENTITY_SPIDER_AMBIENT
+		return Sounds.ENTITY_SPIDER_AMBIENT
 	}
 	
 	public override fun getHurtSound(source: DamageSource): SoundEvent{
-		return SoundEvents.ENTITY_SPIDER_HURT
+		return Sounds.ENTITY_SPIDER_HURT
 	}
 	
 	public override fun getDeathSound(): SoundEvent{
-		return SoundEvents.ENTITY_SPIDER_DEATH
+		return Sounds.ENTITY_SPIDER_DEATH
 	}
 	
 	public override fun getSoundPitch(): Float{

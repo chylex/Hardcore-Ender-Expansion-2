@@ -4,14 +4,14 @@ import chylex.hee.game.item.infusion.Infusion.Colors.Companion.Hcl
 import chylex.hee.game.item.infusion.Infusion.Colors.Companion.Hue
 import chylex.hee.init.ModBlocks
 import chylex.hee.init.ModItems
+import chylex.hee.system.migration.vanilla.Blocks
+import chylex.hee.system.migration.vanilla.Items
 import chylex.hee.system.util.color.IntColor
 import chylex.hee.system.util.color.IntColor.Companion.HCL
 import chylex.hee.system.util.color.IntColor.Companion.RGB
 import chylex.hee.system.util.nbtOrNull
 import chylex.hee.system.util.size
 import net.minecraft.block.Block
-import net.minecraft.init.Blocks
-import net.minecraft.init.Items
 import net.minecraft.item.Item
 import net.minecraft.item.ItemStack
 import java.util.Locale

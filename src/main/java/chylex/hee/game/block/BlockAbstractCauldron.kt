@@ -2,6 +2,9 @@ package chylex.hee.game.block
 import chylex.hee.HEE
 import chylex.hee.system.migration.forge.SubscribeAllEvents
 import chylex.hee.system.migration.forge.SubscribeEvent
+import chylex.hee.system.migration.vanilla.Blocks
+import chylex.hee.system.migration.vanilla.Items
+import chylex.hee.system.migration.vanilla.Sounds
 import chylex.hee.system.util.Pos
 import chylex.hee.system.util.get
 import chylex.hee.system.util.getBlock
@@ -11,9 +14,6 @@ import net.minecraft.block.BlockCauldron
 import net.minecraft.block.state.IBlockState
 import net.minecraft.entity.Entity
 import net.minecraft.entity.player.EntityPlayer
-import net.minecraft.init.Blocks
-import net.minecraft.init.Items
-import net.minecraft.init.SoundEvents
 import net.minecraft.item.ItemStack
 import net.minecraft.stats.StatList
 import net.minecraft.util.EnumFacing
@@ -82,7 +82,7 @@ abstract class BlockAbstractCauldron : BlockCauldron(){
 					setWaterLevel(world, pos, state, 0)
 				}
 				
-				SoundEvents.ITEM_BUCKET_FILL.playUniversal(player, pos, SoundCategory.BLOCKS)
+				Sounds.ITEM_BUCKET_FILL.playUniversal(player, pos, SoundCategory.BLOCKS)
 			}
 			
 			return true
@@ -97,7 +97,7 @@ abstract class BlockAbstractCauldron : BlockCauldron(){
 					setWaterLevel(world, pos, state, state[LEVEL] - 1)
 				}
 				
-				SoundEvents.ITEM_BOTTLE_FILL.playUniversal(player, pos, SoundCategory.BLOCKS)
+				Sounds.ITEM_BOTTLE_FILL.playUniversal(player, pos, SoundCategory.BLOCKS)
 			}
 			
 			return true

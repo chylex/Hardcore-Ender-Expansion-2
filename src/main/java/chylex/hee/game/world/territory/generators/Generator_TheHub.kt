@@ -32,6 +32,7 @@ import chylex.hee.init.ModBlocks
 import chylex.hee.system.collection.WeightedList.Companion.weightedListOf
 import chylex.hee.system.migration.Facing.DOWN
 import chylex.hee.system.migration.Facing.UP
+import chylex.hee.system.migration.vanilla.Blocks
 import chylex.hee.system.util.Facing4
 import chylex.hee.system.util.Pos
 import chylex.hee.system.util.TagCompound
@@ -58,7 +59,6 @@ import chylex.hee.system.util.scale
 import chylex.hee.system.util.scaleY
 import chylex.hee.system.util.square
 import chylex.hee.system.util.withY
-import net.minecraft.init.Blocks
 import net.minecraft.util.EnumFacing
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.Vec3d

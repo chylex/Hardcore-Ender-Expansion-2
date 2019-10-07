@@ -1,11 +1,11 @@
 package chylex.hee.game.world.structure
 import chylex.hee.HEE
 import chylex.hee.system.collection.WeightedList
+import chylex.hee.system.migration.vanilla.Blocks
 import chylex.hee.system.util.with
 import net.minecraft.block.Block
 import net.minecraft.block.properties.IProperty
 import net.minecraft.block.state.IBlockState
-import net.minecraft.init.Blocks
 import java.util.Random
 
 interface IBlockPicker{

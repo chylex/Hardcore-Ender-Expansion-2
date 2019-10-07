@@ -1,5 +1,7 @@
 package chylex.hee.game.block
 import chylex.hee.game.block.info.BlockBuilder
+import chylex.hee.system.migration.vanilla.Blocks
+import chylex.hee.system.migration.vanilla.Items
 import chylex.hee.system.util.isTopSolid
 import chylex.hee.system.util.setAir
 import chylex.hee.system.util.setBlock
@@ -7,8 +9,6 @@ import net.minecraft.block.Block
 import net.minecraft.block.state.BlockFaceShape.UNDEFINED
 import net.minecraft.block.state.IBlockState
 import net.minecraft.entity.player.EntityPlayer
-import net.minecraft.init.Blocks
-import net.minecraft.init.Items
 import net.minecraft.item.Item
 import net.minecraft.item.ItemStack
 import net.minecraft.util.BlockRenderLayer.CUTOUT

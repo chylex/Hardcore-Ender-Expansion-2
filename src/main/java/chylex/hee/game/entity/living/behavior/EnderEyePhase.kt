@@ -1,6 +1,7 @@
 package chylex.hee.game.entity.living.behavior
 import chylex.hee.game.entity.living.EntityBossEnderEye
 import chylex.hee.game.entity.living.behavior.EnderEyeAttack.Melee
+import chylex.hee.system.migration.vanilla.Sounds
 import chylex.hee.system.util.TagCompound
 import chylex.hee.system.util.directionTowards
 import chylex.hee.system.util.floorToInt
@@ -11,7 +12,6 @@ import chylex.hee.system.util.posVec
 import chylex.hee.system.util.selectExistingEntities
 import chylex.hee.system.util.toPitch
 import chylex.hee.system.util.toYaw
-import net.minecraft.init.SoundEvents
 import net.minecraft.util.SoundCategory
 import net.minecraftforge.common.util.INBTSerializable
 import kotlin.math.min
@@ -37,7 +37,7 @@ sealed class EnderEyePhase : INBTSerializable<TagCompound>{
 					}
 				}
 				
-				SoundEvents.ENTITY_GENERIC_EXPLODE.playServer(entity.world, entity.posVec, SoundCategory.HOSTILE, volume = 0.5F) // TODO knockback fx
+				Sounds.ENTITY_GENERIC_EXPLODE.playServer(entity.world, entity.posVec, SoundCategory.HOSTILE, volume = 0.5F) // TODO knockback fx
 			}
 			else if (timer < 0){
 				return Floating(100) // TODO
@@ -83,7 +83,7 @@ sealed class EnderEyePhase : INBTSerializable<TagCompound>{
 			
 			if (newDemonLevel != prevDemonLevel){
 				entity.updateDemonLevel(newDemonLevel)
-				SoundEvents.BLOCK_ANVIL_PLACE.playServer(entity.world, entity.posVec, SoundCategory.HOSTILE, volume = 0.3F, pitch = 0.5F + (newDemonLevel * 0.15F))
+				Sounds.BLOCK_ANVIL_PLACE.playServer(entity.world, entity.posVec, SoundCategory.HOSTILE, volume = 0.3F, pitch = 0.5F + (newDemonLevel * 0.15F))
 				// TODO custom sound
 			}
 			

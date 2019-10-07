@@ -12,8 +12,8 @@ import chylex.hee.game.world.structure.world.TransformedStructureWorld
 import chylex.hee.game.world.structure.world.WorldToStructureWorldAdapter
 import chylex.hee.game.world.util.PosXZ
 import chylex.hee.game.world.util.Transform
+import chylex.hee.system.migration.vanilla.Blocks
 import net.minecraft.command.ICommandSender
-import net.minecraft.init.Blocks
 import net.minecraft.server.MinecraftServer
 import net.minecraft.util.Rotation
 import net.minecraft.util.text.TextComponentString

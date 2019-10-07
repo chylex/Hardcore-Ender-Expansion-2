@@ -1,12 +1,12 @@
 package chylex.hee.game.mechanics.scorching
 import chylex.hee.init.ModBlocks
+import chylex.hee.system.migration.vanilla.Blocks
 import chylex.hee.system.util.copyIf
 import chylex.hee.system.util.isNotEmpty
 import chylex.hee.system.util.nextRounded
 import chylex.hee.system.util.size
 import net.minecraft.block.Block
 import net.minecraft.block.state.IBlockState
-import net.minecraft.init.Blocks
 import net.minecraft.item.ItemBlock
 import net.minecraft.item.ItemStack
 import net.minecraft.item.crafting.FurnaceRecipes

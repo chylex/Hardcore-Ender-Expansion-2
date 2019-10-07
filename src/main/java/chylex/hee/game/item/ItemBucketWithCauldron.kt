@@ -1,6 +1,9 @@
 package chylex.hee.game.item
 import chylex.hee.game.block.BlockAbstractCauldron
 import chylex.hee.system.migration.ActionResult.SUCCESS
+import chylex.hee.system.migration.vanilla.Blocks
+import chylex.hee.system.migration.vanilla.Items
+import chylex.hee.system.migration.vanilla.Sounds
 import chylex.hee.system.util.get
 import chylex.hee.system.util.getState
 import chylex.hee.system.util.playUniversal
@@ -9,9 +12,6 @@ import chylex.hee.system.util.with
 import net.minecraft.block.Block
 import net.minecraft.block.BlockCauldron
 import net.minecraft.entity.player.EntityPlayer
-import net.minecraft.init.Blocks
-import net.minecraft.init.Items
-import net.minecraft.init.SoundEvents
 import net.minecraft.item.ItemBucket
 import net.minecraft.item.ItemStack
 import net.minecraft.stats.StatList
@@ -34,7 +34,7 @@ open class ItemBucketWithCauldron(containedBlock: Block, private val cauldronBlo
 				pos.setState(world, cauldronBlock.with(BlockCauldron.LEVEL, BlockAbstractCauldron.MAX_LEVEL))
 			}
 			
-			SoundEvents.ITEM_BUCKET_EMPTY.playUniversal(player, pos, SoundCategory.BLOCKS)
+			Sounds.ITEM_BUCKET_EMPTY.playUniversal(player, pos, SoundCategory.BLOCKS)
 			return SUCCESS
 		}
 		

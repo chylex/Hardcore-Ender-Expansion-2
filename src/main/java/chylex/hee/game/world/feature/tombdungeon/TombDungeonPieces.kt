@@ -12,11 +12,11 @@ import chylex.hee.system.migration.Facing.EAST
 import chylex.hee.system.migration.Facing.NORTH
 import chylex.hee.system.migration.Facing.SOUTH
 import chylex.hee.system.migration.Facing.WEST
+import chylex.hee.system.migration.vanilla.Blocks
 import chylex.hee.system.util.with
 import chylex.hee.system.util.withFacing
 import net.minecraft.block.BlockSlab
 import net.minecraft.block.BlockStairs
-import net.minecraft.init.Blocks
 
 object TombDungeonPieces : IStructureDescription{
 	override val STRUCTURE_SIZE = Size(300, 110, 300)

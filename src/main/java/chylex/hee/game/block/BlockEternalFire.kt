@@ -11,6 +11,8 @@ import chylex.hee.game.particle.util.IShape.Point
 import chylex.hee.system.migration.forge.Side
 import chylex.hee.system.migration.forge.Sided
 import chylex.hee.system.migration.forge.SubscribeEvent
+import chylex.hee.system.migration.vanilla.Blocks
+import chylex.hee.system.migration.vanilla.Sounds
 import chylex.hee.system.util.Facing6
 import chylex.hee.system.util.getBlock
 import chylex.hee.system.util.getState
@@ -27,8 +29,6 @@ import net.minecraft.block.BlockFire
 import net.minecraft.block.BlockTNT
 import net.minecraft.block.state.IBlockState
 import net.minecraft.entity.Entity
-import net.minecraft.init.Blocks
-import net.minecraft.init.SoundEvents
 import net.minecraft.util.EnumFacing
 import net.minecraft.util.EnumParticleTypes.SMOKE_LARGE
 import net.minecraft.util.SoundCategory
@@ -127,7 +127,7 @@ class BlockEternalFire(builder: BlockBuilder) : BlockFire(){
 		val offsetPos = e.face?.let(e.pos::offset)
 		
 		if (offsetPos?.getBlock(world) === this){
-			SoundEvents.BLOCK_FIRE_EXTINGUISH.playUniversal(e.entityPlayer, offsetPos, SoundCategory.BLOCKS, volume = 0.5F, pitch = world.rand.nextFloat(1.8F, 3.4F))
+			Sounds.BLOCK_FIRE_EXTINGUISH.playUniversal(e.entityPlayer, offsetPos, SoundCategory.BLOCKS, volume = 0.5F, pitch = world.rand.nextFloat(1.8F, 3.4F))
 			offsetPos.setAir(world)
 			e.isCanceled = true
 		}
@@ -136,7 +136,7 @@ class BlockEternalFire(builder: BlockBuilder) : BlockFire(){
 	@Sided(Side.CLIENT)
 	override fun randomDisplayTick(state: IBlockState, world: World, pos: BlockPos, rand: Random){
 		if (rand.nextInt(30) == 0){
-			SoundEvents.BLOCK_FIRE_AMBIENT.playClient(pos, SoundCategory.BLOCKS, volume = rand.nextFloat(0.5F, 0.6F), pitch = rand.nextFloat(0.3F, 1F))
+			Sounds.BLOCK_FIRE_AMBIENT.playClient(pos, SoundCategory.BLOCKS, volume = rand.nextFloat(0.5F, 0.6F), pitch = rand.nextFloat(0.3F, 1F))
 		}
 		
 		if (rand.nextInt(3) != 0){

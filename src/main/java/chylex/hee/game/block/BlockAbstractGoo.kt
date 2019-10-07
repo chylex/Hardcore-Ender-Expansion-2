@@ -5,6 +5,7 @@ import chylex.hee.system.migration.forge.EventResult
 import chylex.hee.system.migration.forge.Side
 import chylex.hee.system.migration.forge.Sided
 import chylex.hee.system.migration.forge.SubscribeEvent
+import chylex.hee.system.migration.vanilla.Blocks
 import chylex.hee.system.util.FLAG_NOTIFY_NEIGHBORS
 import chylex.hee.system.util.FLAG_RENDER_IMMEDIATE
 import chylex.hee.system.util.FLAG_SYNC_CLIENT
@@ -22,7 +23,6 @@ import net.minecraft.block.material.Material
 import net.minecraft.block.state.IBlockState
 import net.minecraft.entity.Entity
 import net.minecraft.entity.player.EntityPlayer
-import net.minecraft.init.Blocks
 import net.minecraft.item.Item
 import net.minecraft.item.ItemStack
 import net.minecraft.stats.StatList

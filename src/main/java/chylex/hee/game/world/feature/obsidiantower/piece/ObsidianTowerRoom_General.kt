@@ -13,6 +13,7 @@ import chylex.hee.system.migration.Facing.EAST
 import chylex.hee.system.migration.Facing.SOUTH
 import chylex.hee.system.migration.Facing.WEST
 import chylex.hee.system.migration.MagicValues
+import chylex.hee.system.migration.vanilla.Blocks
 import chylex.hee.system.util.allInBoxMutable
 import chylex.hee.system.util.nextItem
 import chylex.hee.system.util.removeItemOrNull
@@ -20,7 +21,6 @@ import chylex.hee.system.util.setStack
 import chylex.hee.system.util.withFacing
 import net.minecraft.block.BlockPlanks
 import net.minecraft.block.BlockTallGrass
-import net.minecraft.init.Blocks
 import net.minecraft.item.ItemStack
 import net.minecraft.tileentity.TileEntityFurnace
 import net.minecraft.util.EnumFacing

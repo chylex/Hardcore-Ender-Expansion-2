@@ -13,7 +13,7 @@ import chylex.hee.system.util.heeTagOrNull
 import chylex.hee.system.util.nbt
 import chylex.hee.system.util.nbtOrNull
 import net.minecraft.init.Bootstrap
-import net.minecraft.init.Items
+import chylex.hee.system.migration.vanilla.Items
 import net.minecraft.item.ItemStack
 import net.minecraft.nbt.NBTBase
 import net.minecraft.nbt.NBTTagByte

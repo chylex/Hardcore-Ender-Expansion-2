@@ -5,13 +5,13 @@ import chylex.hee.game.world.structure.IStructureTrigger
 import chylex.hee.game.world.structure.IStructureWorld
 import chylex.hee.game.world.util.Size
 import chylex.hee.system.Debug
+import chylex.hee.system.migration.vanilla.Blocks
 import chylex.hee.system.util.Pos
 import chylex.hee.system.util.ceilToInt
 import chylex.hee.system.util.component1
 import chylex.hee.system.util.component2
 import chylex.hee.system.util.component3
 import net.minecraft.block.state.IBlockState
-import net.minecraft.init.Blocks
 import net.minecraft.util.math.BlockPos
 import java.util.Random
 

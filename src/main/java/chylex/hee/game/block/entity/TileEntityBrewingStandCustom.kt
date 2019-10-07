@@ -3,6 +3,7 @@ import chylex.hee.game.container.ContainerBrewingStandCustom
 import chylex.hee.game.mechanics.potion.brewing.PotionItems
 import chylex.hee.init.ModBlocks
 import chylex.hee.init.ModItems
+import chylex.hee.system.migration.vanilla.Sounds
 import chylex.hee.system.util.FLAG_SYNC_CLIENT
 import chylex.hee.system.util.getStack
 import chylex.hee.system.util.getState
@@ -15,7 +16,6 @@ import net.minecraft.block.BlockBrewingStand
 import net.minecraft.block.state.IBlockState
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.entity.player.InventoryPlayer
-import net.minecraft.init.SoundEvents
 import net.minecraft.inventory.Container
 import net.minecraft.inventory.InventoryHelper
 import net.minecraft.item.Item
@@ -155,7 +155,7 @@ class TileEntityBrewingStandCustom : TileEntityBrewingStand(){
 		}
 		
 		if (!world.isRemote){
-			SoundEvents.BLOCK_BREWING_STAND_BREW.playServer(world, pos, SoundCategory.BLOCKS)
+			Sounds.BLOCK_BREWING_STAND_BREW.playServer(world, pos, SoundCategory.BLOCKS)
 		}
 		
 		ForgeEventFactory.onPotionBrewed(brewingItemStacks)

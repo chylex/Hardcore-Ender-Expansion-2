@@ -1,4 +1,5 @@
 package chylex.hee.game.block.util
+import chylex.hee.system.migration.vanilla.Blocks
 import chylex.hee.system.util.with
 import chylex.hee.system.util.withFacing
 import net.minecraft.block.BlockFlower
@@ -10,7 +11,6 @@ import net.minecraft.block.BlockStoneBrick
 import net.minecraft.block.BlockStoneSlab
 import net.minecraft.block.BlockTallGrass
 import net.minecraft.block.BlockWoodSlab
-import net.minecraft.init.Blocks
 import net.minecraft.item.ItemStack
 import net.minecraft.util.EnumFacing
 

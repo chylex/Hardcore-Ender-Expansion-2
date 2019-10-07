@@ -10,6 +10,8 @@ import chylex.hee.system.migration.Facing.DOWN
 import chylex.hee.system.migration.Facing.UP
 import chylex.hee.system.migration.forge.Side
 import chylex.hee.system.migration.forge.Sided
+import chylex.hee.system.migration.vanilla.Items
+import chylex.hee.system.migration.vanilla.Sounds
 import chylex.hee.system.util.Pos
 import chylex.hee.system.util.TagCompound
 import chylex.hee.system.util.Vec3
@@ -44,8 +46,6 @@ import net.minecraft.block.state.IBlockState
 import net.minecraft.entity.Entity
 import net.minecraft.entity.EntityLivingBase
 import net.minecraft.entity.item.EntityItem
-import net.minecraft.init.Items
-import net.minecraft.init.SoundEvents
 import net.minecraft.item.ItemStack
 import net.minecraft.util.EnumParticleTypes.SMOKE_NORMAL
 import net.minecraft.util.SoundCategory
@@ -293,7 +293,7 @@ class EntityProjectileEyeOfEnder : Entity, IEntityAdditionalSpawnData{
 			
 			PARTICLE_SMOKE.spawn(Point(pos, 18), rand)
 			PARTICLE_GLITTER_DESTROY.spawn(Point(pos, 50), rand)
-			SoundEvents.ENTITY_ENDEREYE_DEATH.playClient(pos, SoundCategory.NEUTRAL)
+			Sounds.ENTITY_ENDEREYE_DEATH.playClient(pos, SoundCategory.NEUTRAL)
 		}
 	}
 	

@@ -18,9 +18,9 @@ import chylex.hee.system.migration.Facing.EAST
 import chylex.hee.system.migration.Facing.NORTH
 import chylex.hee.system.migration.Facing.SOUTH
 import chylex.hee.system.migration.Facing.WEST
+import chylex.hee.system.migration.vanilla.Blocks
 import chylex.hee.system.util.Pos
 import chylex.hee.system.util.withFacing
-import net.minecraft.init.Blocks
 import net.minecraft.util.EnumFacing
 import net.minecraft.util.math.BlockPos
 

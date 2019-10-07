@@ -1,6 +1,7 @@
 package chylex.hee.game.block.entity
 import chylex.hee.game.block.entity.TileEntityBase.Context.NETWORK
 import chylex.hee.system.migration.Facing.UP
+import chylex.hee.system.migration.vanilla.Sounds
 import chylex.hee.system.util.FLAG_SKIP_RENDER
 import chylex.hee.system.util.FLAG_SYNC_CLIENT
 import chylex.hee.system.util.TagCompound
@@ -15,7 +16,6 @@ import chylex.hee.system.util.playServer
 import net.minecraft.block.BlockDirectional.FACING
 import net.minecraft.block.state.IBlockState
 import net.minecraft.entity.player.EntityPlayer
-import net.minecraft.init.SoundEvents
 import net.minecraft.inventory.IInventory
 import net.minecraft.util.EnumFacing
 import net.minecraft.util.ITickable
@@ -38,8 +38,8 @@ abstract class TileEntityBaseChest : TileEntityBase(), ITickable, IWorldNameable
 	val lidAngle = LerpedFloat(0F)
 	
 	protected abstract val defaultName: String
-	protected open val soundOpening: SoundEvent = SoundEvents.BLOCK_CHEST_OPEN
-	protected open val soundClosing: SoundEvent = SoundEvents.BLOCK_CHEST_CLOSE
+	protected open val soundOpening: SoundEvent = Sounds.BLOCK_CHEST_OPEN
+	protected open val soundClosing: SoundEvent = Sounds.BLOCK_CHEST_CLOSE
 	
 	private var viewerCount by Notifying(0, FLAG_SYNC_CLIENT or FLAG_SKIP_RENDER)
 	private var customName: String? = null

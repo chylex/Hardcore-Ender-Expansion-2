@@ -23,6 +23,7 @@ import chylex.hee.system.migration.Facing.DOWN
 import chylex.hee.system.migration.Facing.NORTH
 import chylex.hee.system.migration.Facing.SOUTH
 import chylex.hee.system.migration.Facing.UP
+import chylex.hee.system.migration.vanilla.Blocks
 import chylex.hee.system.util.Facing4
 import chylex.hee.system.util.Facing6
 import chylex.hee.system.util.Pos
@@ -42,7 +43,6 @@ import chylex.hee.system.util.square
 import chylex.hee.system.util.withFacing
 import chylex.hee.system.util.xz
 import net.minecraft.block.Block
-import net.minecraft.init.Blocks
 import net.minecraft.util.math.BlockPos
 import java.util.Random
 import kotlin.math.PI

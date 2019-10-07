@@ -5,9 +5,9 @@ import chylex.hee.game.world.structure.IStructureWorld
 import chylex.hee.game.world.structure.trigger.EntityStructureTrigger
 import chylex.hee.game.world.territory.TerritoryType
 import chylex.hee.game.world.util.PosXZ
+import chylex.hee.system.migration.vanilla.Blocks
 import chylex.hee.system.util.Pos
 import chylex.hee.system.util.removeItem
-import net.minecraft.init.Blocks
 import net.minecraft.util.math.BlockPos
 import java.util.Random
 

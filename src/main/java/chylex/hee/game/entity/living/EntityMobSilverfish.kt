@@ -15,6 +15,7 @@ import chylex.hee.init.ModLoot
 import chylex.hee.system.migration.forge.EventPriority
 import chylex.hee.system.migration.forge.SubscribeAllEvents
 import chylex.hee.system.migration.forge.SubscribeEvent
+import chylex.hee.system.migration.vanilla.Blocks
 import chylex.hee.system.util.AIAttackMelee
 import chylex.hee.system.util.AISwim
 import chylex.hee.system.util.AITargetAttacker
@@ -34,7 +35,6 @@ import net.minecraft.entity.SharedMonsterAttributes.FOLLOW_RANGE
 import net.minecraft.entity.SharedMonsterAttributes.MAX_HEALTH
 import net.minecraft.entity.monster.EntitySilverfish
 import net.minecraft.entity.player.EntityPlayer
-import net.minecraft.init.Blocks
 import net.minecraft.util.DamageSource
 import net.minecraft.util.EntityDamageSource
 import net.minecraft.util.ResourceLocation

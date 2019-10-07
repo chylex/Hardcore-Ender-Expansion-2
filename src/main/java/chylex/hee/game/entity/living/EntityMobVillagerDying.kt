@@ -6,6 +6,7 @@ import chylex.hee.game.particle.util.IOffset
 import chylex.hee.game.particle.util.IOffset.InBox
 import chylex.hee.game.particle.util.IOffset.MutableOffsetPoint
 import chylex.hee.game.particle.util.IShape.Point
+import chylex.hee.system.migration.vanilla.Sounds
 import chylex.hee.system.util.Facing4
 import chylex.hee.system.util.color.IntColor.Companion.RGB
 import chylex.hee.system.util.nextFloat
@@ -17,7 +18,6 @@ import io.netty.buffer.ByteBuf
 import net.minecraft.entity.EntityAgeable
 import net.minecraft.entity.passive.EntityVillager
 import net.minecraft.entity.player.EntityPlayer
-import net.minecraft.init.SoundEvents
 import net.minecraft.util.EnumHand
 import net.minecraft.util.SoundCategory
 import net.minecraft.world.World
@@ -119,7 +119,7 @@ class EntityMobVillagerDying(world: World) : EntityAgeable(world), IEntityAdditi
 				pos = InBox(this, 0.25F)
 			).spawn(Point(this, heightMp = 0.5F, amount = 100), rand)
 			
-			SoundEvents.ENTITY_VILLAGER_DEATH.playClient(posVec, SoundCategory.HOSTILE, volume = 1.5F, pitch = 1.5F) // TODO new sound fx
+			Sounds.ENTITY_VILLAGER_DEATH.playClient(posVec, SoundCategory.HOSTILE, volume = 1.5F, pitch = 1.5F) // TODO new sound fx
 		}
 		
 		super.setDead()

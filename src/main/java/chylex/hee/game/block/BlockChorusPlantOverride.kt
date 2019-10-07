@@ -1,6 +1,7 @@
 package chylex.hee.game.block
 import chylex.hee.init.ModBlocks
 import chylex.hee.init.ModLoot
+import chylex.hee.system.migration.vanilla.Blocks
 import chylex.hee.system.util.Facing4
 import chylex.hee.system.util.get
 import chylex.hee.system.util.getBlock
@@ -9,7 +10,6 @@ import chylex.hee.system.util.translationKeyOriginal
 import chylex.hee.system.util.with
 import net.minecraft.block.BlockChorusPlant
 import net.minecraft.block.state.IBlockState
-import net.minecraft.init.Blocks
 import net.minecraft.item.ItemStack
 import net.minecraft.util.NonNullList
 import net.minecraft.util.math.BlockPos

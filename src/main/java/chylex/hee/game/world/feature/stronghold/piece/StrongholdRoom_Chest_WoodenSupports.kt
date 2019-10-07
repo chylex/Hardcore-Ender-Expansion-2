@@ -12,13 +12,13 @@ import chylex.hee.game.world.structure.IStructureWorld
 import chylex.hee.game.world.structure.trigger.FlowerPotStructureTrigger
 import chylex.hee.game.world.structure.trigger.LootChestStructureTrigger
 import chylex.hee.init.ModBlocks
+import chylex.hee.system.migration.vanilla.Blocks
 import chylex.hee.system.util.Facing4
 import chylex.hee.system.util.Pos
 import chylex.hee.system.util.nextInt
 import chylex.hee.system.util.nextItem
 import chylex.hee.system.util.removeItem
 import chylex.hee.system.util.withFacing
-import net.minecraft.init.Blocks
 import net.minecraft.item.ItemStack
 import net.minecraft.util.EnumFacing
 import net.minecraft.util.math.BlockPos

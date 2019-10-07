@@ -8,6 +8,7 @@ import chylex.hee.system.migration.forge.EventPriority
 import chylex.hee.system.migration.forge.Side
 import chylex.hee.system.migration.forge.Sided
 import chylex.hee.system.migration.forge.SubscribeEvent
+import chylex.hee.system.migration.vanilla.Sounds
 import chylex.hee.system.util.getAttribute
 import chylex.hee.system.util.hasKey
 import chylex.hee.system.util.heeTag
@@ -24,7 +25,6 @@ import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.entity.player.EntityPlayer.REACH_DISTANCE
 import net.minecraft.init.MobEffects.ABSORPTION
 import net.minecraft.init.MobEffects.REGENERATION
-import net.minecraft.init.SoundEvents
 import net.minecraft.item.ItemStack
 import net.minecraft.potion.PotionEffect
 import net.minecraft.util.DamageSource
@@ -58,7 +58,7 @@ class ItemTotemOfUndyingCustom : ItemAbstractTrinket(){
 	@Sided(Side.CLIENT)
 	override fun spawnClientTrinketBreakFX(target: Entity){
 		MC.particleManager.emitParticleAtEntity(target, EnumParticleTypes.TOTEM, 30)
-		SoundEvents.ITEM_TOTEM_USE.playClient(target.posVec, target.soundCategory)
+		Sounds.ITEM_TOTEM_USE.playClient(target.posVec, target.soundCategory)
 	}
 	
 	// Death logic

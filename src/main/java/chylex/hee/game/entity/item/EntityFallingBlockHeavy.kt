@@ -2,6 +2,7 @@ package chylex.hee.game.entity.item
 import chylex.hee.game.entity.item.EntityFallingBlockHeavy.PlacementResult.FAIL
 import chylex.hee.game.entity.item.EntityFallingBlockHeavy.PlacementResult.RELOCATION
 import chylex.hee.game.entity.item.EntityFallingBlockHeavy.PlacementResult.SUCCESS
+import chylex.hee.system.migration.vanilla.Blocks
 import chylex.hee.system.util.Pos
 import chylex.hee.system.util.TagCompound
 import chylex.hee.system.util.breakBlock
@@ -22,7 +23,6 @@ import net.minecraft.block.material.Material
 import net.minecraft.block.state.IBlockState
 import net.minecraft.entity.MoverType.SELF
 import net.minecraft.entity.item.EntityFallingBlock
-import net.minecraft.init.Blocks
 import net.minecraft.item.ItemStack
 import net.minecraft.tileentity.TileEntity
 import net.minecraft.util.math.BlockPos

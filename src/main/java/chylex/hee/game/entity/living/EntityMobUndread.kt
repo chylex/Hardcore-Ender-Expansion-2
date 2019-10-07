@@ -7,6 +7,7 @@ import chylex.hee.game.mechanics.damage.IDamageProcessor.Companion.PEACEFUL_EXCL
 import chylex.hee.init.ModLoot
 import chylex.hee.init.ModSounds
 import chylex.hee.system.migration.MagicValues.DEATH_TIME_MAX
+import chylex.hee.system.migration.vanilla.Sounds
 import chylex.hee.system.util.AIAttackMelee
 import chylex.hee.system.util.AISwim
 import chylex.hee.system.util.AITargetAttacker
@@ -24,7 +25,6 @@ import net.minecraft.entity.SharedMonsterAttributes.MAX_HEALTH
 import net.minecraft.entity.SharedMonsterAttributes.MOVEMENT_SPEED
 import net.minecraft.entity.monster.EntityMob
 import net.minecraft.entity.player.EntityPlayer
-import net.minecraft.init.SoundEvents
 import net.minecraft.util.DamageSource
 import net.minecraft.util.EnumHand
 import net.minecraft.util.ResourceLocation
@@ -98,7 +98,7 @@ class EntityMobUndread(world: World) : EntityMob(world){
 	}
 	
 	override fun playStepSound(pos: BlockPos, block: Block){
-		playSound(SoundEvents.ENTITY_ZOMBIE_STEP, rand.nextFloat(0.4F, 0.5F), rand.nextFloat(0.9F, 1F))
+		playSound(Sounds.ENTITY_ZOMBIE_STEP, rand.nextFloat(0.4F, 0.5F), rand.nextFloat(0.9F, 1F))
 	}
 	
 	override fun getHurtSound(source: DamageSource): SoundEvent{

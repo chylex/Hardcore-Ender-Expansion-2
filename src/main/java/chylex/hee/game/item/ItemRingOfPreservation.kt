@@ -8,12 +8,12 @@ import chylex.hee.system.migration.forge.EventPriority
 import chylex.hee.system.migration.forge.Side
 import chylex.hee.system.migration.forge.Sided
 import chylex.hee.system.migration.forge.SubscribeEvent
+import chylex.hee.system.migration.vanilla.Items
 import chylex.hee.system.util.copyIf
 import chylex.hee.system.util.isNotEmpty
 import chylex.hee.system.util.totalTime
 import net.minecraft.entity.Entity
 import net.minecraft.entity.player.EntityPlayer
-import net.minecraft.init.Items
 import net.minecraft.item.ItemStack
 import net.minecraft.util.NonNullList
 import net.minecraftforge.common.MinecraftForge

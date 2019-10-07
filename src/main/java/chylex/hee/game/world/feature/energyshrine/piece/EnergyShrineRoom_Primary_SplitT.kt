@@ -10,9 +10,9 @@ import chylex.hee.system.collection.MutableWeightedList.Companion.mutableWeighte
 import chylex.hee.system.migration.Facing.NORTH
 import chylex.hee.system.migration.Facing.SOUTH
 import chylex.hee.system.migration.Facing.WEST
+import chylex.hee.system.migration.vanilla.Blocks
 import chylex.hee.system.util.Pos
 import chylex.hee.system.util.withFacing
-import net.minecraft.init.Blocks
 
 class EnergyShrineRoom_Primary_SplitT(file: String) : EnergyShrineRoom_Generic(file){
 	override val connections = arrayOf<IStructurePieceConnection>(

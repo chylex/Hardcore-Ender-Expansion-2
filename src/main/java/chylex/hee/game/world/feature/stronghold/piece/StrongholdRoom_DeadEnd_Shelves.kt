@@ -12,10 +12,10 @@ import chylex.hee.game.world.structure.trigger.TileEntityStructureTrigger
 import chylex.hee.system.migration.Facing.EAST
 import chylex.hee.system.migration.Facing.SOUTH
 import chylex.hee.system.migration.Facing.WEST
+import chylex.hee.system.migration.vanilla.Blocks
 import chylex.hee.system.util.Pos
 import chylex.hee.system.util.nextItem
 import chylex.hee.system.util.withFacing
-import net.minecraft.init.Blocks
 import net.minecraft.tileentity.TileEntitySkull
 
 class StrongholdRoom_DeadEnd_Shelves(file: String) : StrongholdAbstractPieceFromFile(file, StrongholdPieceType.OTHER){

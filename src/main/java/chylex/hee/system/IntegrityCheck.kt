@@ -3,7 +3,7 @@ import chylex.hee.HEE
 import chylex.hee.game.block.BlockBrewingStandOverride
 import chylex.hee.game.block.BlockEndPortalOverride
 import chylex.hee.game.world.WorldProviderEndCustom
-import net.minecraft.init.Blocks
+import chylex.hee.system.migration.vanilla.Blocks
 import net.minecraft.world.DimensionType
 
 object IntegrityCheck{

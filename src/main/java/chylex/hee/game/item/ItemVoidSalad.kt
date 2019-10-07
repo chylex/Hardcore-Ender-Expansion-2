@@ -6,15 +6,15 @@ import chylex.hee.game.mechanics.damage.IDamageProcessor.Companion.MAGIC_TYPE
 import chylex.hee.game.mechanics.damage.IDamageProcessor.Companion.NON_LETHAL
 import chylex.hee.system.migration.forge.SubscribeAllEvents
 import chylex.hee.system.migration.forge.SubscribeEvent
+import chylex.hee.system.migration.vanilla.Items
+import chylex.hee.system.migration.vanilla.Sounds
 import chylex.hee.system.util.heeTag
 import chylex.hee.system.util.heeTagOrNull
 import chylex.hee.system.util.nextFloat
 import net.minecraft.creativetab.CreativeTabs
 import net.minecraft.entity.EntityLivingBase
 import net.minecraft.entity.player.EntityPlayer
-import net.minecraft.init.Items
 import net.minecraft.init.MobEffects.NAUSEA
-import net.minecraft.init.SoundEvents
 import net.minecraft.item.ItemFood
 import net.minecraft.item.ItemStack
 import net.minecraft.potion.PotionEffect
@@ -68,7 +68,7 @@ class ItemVoidSalad : ItemFood(0, 0F, false){
 	override fun onUsingTick(stack: ItemStack, player: EntityLivingBase, count: Int){
 		if (count in 26..56 && count % 4 == 0){
 			val rand = player.rng
-			player.playSound(SoundEvents.ENTITY_GENERIC_EAT, 0.5F + (0.5F * rand.nextInt(2)), rand.nextFloat(0.8F, 1.2F))
+			player.playSound(Sounds.ENTITY_GENERIC_EAT, 0.5F + (0.5F * rand.nextInt(2)), rand.nextFloat(0.8F, 1.2F))
 		}
 	}
 	

@@ -8,6 +8,8 @@ import chylex.hee.system.migration.ActionResult.SUCCESS
 import chylex.hee.system.migration.forge.EventPriority
 import chylex.hee.system.migration.forge.SubscribeAllEvents
 import chylex.hee.system.migration.forge.SubscribeEvent
+import chylex.hee.system.migration.vanilla.Blocks
+import chylex.hee.system.migration.vanilla.Sounds
 import chylex.hee.system.util.FLAG_NONE
 import chylex.hee.system.util.getBlock
 import chylex.hee.system.util.getState
@@ -23,8 +25,6 @@ import net.minecraft.block.BlockTNT
 import net.minecraft.entity.EntityLivingBase
 import net.minecraft.entity.monster.EntityCreeper
 import net.minecraft.entity.player.EntityPlayer
-import net.minecraft.init.Blocks
-import net.minecraft.init.SoundEvents
 import net.minecraft.item.Item
 import net.minecraft.item.ItemStack
 import net.minecraft.util.EnumActionResult
@@ -88,7 +88,7 @@ class ItemFlintAndInfernium : Item(){
 				BlockEditor.place(ModBlocks.ETERNAL_FIRE, player, hand, heldItem, pos, facing, hitX, hitY, hitZ)
 			}
 			
-			SoundEvents.ITEM_FLINTANDSTEEL_USE.playServer(world, pos, SoundCategory.BLOCKS, volume = 1.1F, pitch = world.rand.nextFloat(0.4F, 0.5F))
+			Sounds.ITEM_FLINTANDSTEEL_USE.playServer(world, pos, SoundCategory.BLOCKS, volume = 1.1F, pitch = world.rand.nextFloat(0.4F, 0.5F))
 			heldItem.damageItem(1, player)
 		}
 		
@@ -97,7 +97,7 @@ class ItemFlintAndInfernium : Item(){
 	
 	override fun itemInteractionForEntity(stack: ItemStack, player: EntityPlayer, target: EntityLivingBase, hand: EnumHand): Boolean{
 		if (target is EntityCreeper){
-			SoundEvents.ITEM_FLINTANDSTEEL_USE.playServer(target.world, target.posVec, target.soundCategory, volume = 1.1F, pitch = target.rng.nextFloat(0.4F, 0.5F))
+			Sounds.ITEM_FLINTANDSTEEL_USE.playServer(target.world, target.posVec, target.soundCategory, volume = 1.1F, pitch = target.rng.nextFloat(0.4F, 0.5F))
 			player.swingArm(hand)
 			player.getHeldItem(hand).damageItem(1, player)
 			

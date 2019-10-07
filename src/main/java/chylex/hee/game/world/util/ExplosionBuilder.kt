@@ -1,4 +1,6 @@
 package chylex.hee.game.world.util
+import chylex.hee.system.migration.vanilla.Blocks
+import chylex.hee.system.migration.vanilla.Sounds
 import chylex.hee.system.util.component1
 import chylex.hee.system.util.component2
 import chylex.hee.system.util.component3
@@ -16,8 +18,6 @@ import net.minecraft.entity.Entity
 import net.minecraft.entity.EntityLivingBase
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.entity.player.EntityPlayerMP
-import net.minecraft.init.Blocks
-import net.minecraft.init.SoundEvents
 import net.minecraft.network.play.server.SPacketExplosion
 import net.minecraft.util.DamageSource
 import net.minecraft.util.SoundCategory
@@ -232,7 +232,7 @@ class ExplosionBuilder{
 		}
 		
 		override fun doExplosionB(spawnParticles: Boolean){
-			SoundEvents.ENTITY_GENERIC_EXPLODE.playServer(world, centerX, centerY, centerZ, SoundCategory.BLOCKS, volume = 4F, pitch = rand.nextFloat(0.56F, 0.84F))
+			Sounds.ENTITY_GENERIC_EXPLODE.playServer(world, centerX, centerY, centerZ, SoundCategory.BLOCKS, volume = 4F, pitch = rand.nextFloat(0.56F, 0.84F))
 			destroyAffectedBlocks()
 		}
 	}

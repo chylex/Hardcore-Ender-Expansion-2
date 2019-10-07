@@ -1,7 +1,7 @@
 package chylex.hee.game.mechanics.potion.brewing.modifiers
 import chylex.hee.game.mechanics.potion.brewing.IBrewingModifier
 import chylex.hee.game.mechanics.potion.brewing.PotionBrewing
-import net.minecraft.init.Items
+import chylex.hee.system.migration.vanilla.Items
 import net.minecraft.item.ItemStack
 
 object BrewReversal : IBrewingModifier{

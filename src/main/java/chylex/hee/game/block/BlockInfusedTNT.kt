@@ -4,6 +4,7 @@ import chylex.hee.game.block.util.Property
 import chylex.hee.game.entity.item.EntityInfusedTNT
 import chylex.hee.game.item.infusion.Infusion.TRAP
 import chylex.hee.game.item.infusion.InfusionTag
+import chylex.hee.system.migration.vanilla.Sounds
 import chylex.hee.system.util.creativeTabIn
 import chylex.hee.system.util.get
 import chylex.hee.system.util.getTile
@@ -18,7 +19,6 @@ import net.minecraft.block.state.BlockStateContainer
 import net.minecraft.block.state.IBlockState
 import net.minecraft.entity.EntityLivingBase
 import net.minecraft.entity.player.EntityPlayer
-import net.minecraft.init.SoundEvents
 import net.minecraft.item.ItemStack
 import net.minecraft.tileentity.TileEntity
 import net.minecraft.util.NonNullList
@@ -123,7 +123,7 @@ class BlockInfusedTNT : BlockTNT(), ITileEntityProvider{
 			}
 			else{
 				EntityInfusedTNT(world, pos, infusions, igniter, state[INFERNIUM]).apply {
-					SoundEvents.ENTITY_TNT_PRIMED.playServer(world, posVec, SoundCategory.BLOCKS)
+					Sounds.ENTITY_TNT_PRIMED.playServer(world, posVec, SoundCategory.BLOCKS)
 					world.spawnEntity(this)
 				}
 			}

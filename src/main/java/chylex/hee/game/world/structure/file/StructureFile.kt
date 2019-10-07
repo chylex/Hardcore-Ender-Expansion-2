@@ -9,6 +9,7 @@ import chylex.hee.game.world.structure.world.WorldToStructureWorldAdapter
 import chylex.hee.game.world.util.BoundingBox
 import chylex.hee.game.world.util.Size
 import chylex.hee.init.ModBlocks
+import chylex.hee.system.migration.vanilla.Blocks
 import chylex.hee.system.util.NBTList.Companion.setList
 import chylex.hee.system.util.NBTObjectList
 import chylex.hee.system.util.Pos
@@ -17,7 +18,6 @@ import chylex.hee.system.util.getListOfStrings
 import it.unimi.dsi.fastutil.ints.Int2ObjectArrayMap
 import it.unimi.dsi.fastutil.ints.IntArrayList
 import net.minecraft.block.state.IBlockState
-import net.minecraft.init.Blocks
 import net.minecraft.util.math.BlockPos
 import net.minecraft.world.World
 

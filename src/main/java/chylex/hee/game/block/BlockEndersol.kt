@@ -2,11 +2,11 @@ package chylex.hee.game.block
 import chylex.hee.game.block.info.BlockBuilder
 import chylex.hee.game.block.util.Property
 import chylex.hee.init.ModBlocks
+import chylex.hee.system.migration.vanilla.Blocks
 import chylex.hee.system.util.getBlock
 import chylex.hee.system.util.with
 import net.minecraft.block.state.BlockStateContainer
 import net.minecraft.block.state.IBlockState
-import net.minecraft.init.Blocks
 import net.minecraft.util.math.BlockPos
 import net.minecraft.world.IBlockAccess
 

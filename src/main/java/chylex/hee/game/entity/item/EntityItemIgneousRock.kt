@@ -17,6 +17,8 @@ import chylex.hee.network.client.PacketClientFX
 import chylex.hee.system.migration.Facing.DOWN
 import chylex.hee.system.migration.Facing.UP
 import chylex.hee.system.migration.MagicValues
+import chylex.hee.system.migration.vanilla.Blocks
+import chylex.hee.system.migration.vanilla.Sounds
 import chylex.hee.system.util.FLAG_SYNC_CLIENT
 import chylex.hee.system.util.Facing4
 import chylex.hee.system.util.Pos
@@ -54,8 +56,6 @@ import net.minecraft.block.state.BlockFaceShape.SOLID
 import net.minecraft.block.state.IBlockState
 import net.minecraft.entity.Entity
 import net.minecraft.entity.MoverType
-import net.minecraft.init.Blocks
-import net.minecraft.init.SoundEvents
 import net.minecraft.item.ItemBlock
 import net.minecraft.item.ItemStack
 import net.minecraft.item.crafting.FurnaceRecipes
@@ -105,14 +105,14 @@ class EntityItemIgneousRock : EntityItemNoBob{
 		val FX_BLOCK_SMELT = object : FxBlockHandler(){
 			override fun handle(pos: BlockPos, world: World, rand: Random){
 				PARTICLE_SMELT.spawn(Point(pos, 20), rand)
-				SoundEvents.ENTITY_GENERIC_BURN.playClient(pos, SoundCategory.NEUTRAL, volume = 0.3F, pitch = rand.nextFloat(1F, 2F))
+				Sounds.ENTITY_GENERIC_BURN.playClient(pos, SoundCategory.NEUTRAL, volume = 0.3F, pitch = rand.nextFloat(1F, 2F))
 			}
 		}
 		
 		val FX_ENTITY_BURN = object : FxEntityHandler(){
 			override fun handle(entity: Entity, rand: Random){
 				PARTICLE_BURN(entity).spawn(Point(entity, heightMp = 0.5F, amount = 24), rand)
-				SoundEvents.ENTITY_GENERIC_BURN.playClient(entity.posVec, SoundCategory.NEUTRAL, volume = 0.3F, pitch = rand.nextFloat(1F, 2F))
+				Sounds.ENTITY_GENERIC_BURN.playClient(entity.posVec, SoundCategory.NEUTRAL, volume = 0.3F, pitch = rand.nextFloat(1F, 2F))
 			}
 		}
 		
@@ -240,7 +240,7 @@ class EntityItemIgneousRock : EntityItemNoBob{
 	}
 	
 	override fun playSound(sound: SoundEvent, volume: Float, pitch: Float){
-		if (sound === SoundEvents.ENTITY_GENERIC_BURN && volume == 0.4F && pitch >= 2.0F){ // UPDATE: find a better way, all item handling has changed anyway
+		if (sound === Sounds.ENTITY_GENERIC_BURN && volume == 0.4F && pitch >= 2.0F){ // UPDATE: find a better way, all item handling has changed anyway
 			motionVec = prevMotionVec // this disables vanilla lava handling, but also breaks hasNoGravity
 		}
 		else{

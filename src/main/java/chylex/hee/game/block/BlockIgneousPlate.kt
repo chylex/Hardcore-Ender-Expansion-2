@@ -9,6 +9,7 @@ import chylex.hee.system.migration.Facing.NORTH
 import chylex.hee.system.migration.Facing.SOUTH
 import chylex.hee.system.migration.Facing.UP
 import chylex.hee.system.migration.Facing.WEST
+import chylex.hee.system.migration.vanilla.Items
 import chylex.hee.system.util.Facing6
 import chylex.hee.system.util.get
 import chylex.hee.system.util.getBlock
@@ -25,7 +26,6 @@ import net.minecraft.block.state.BlockStateContainer
 import net.minecraft.block.state.IBlockState
 import net.minecraft.entity.EntityLivingBase
 import net.minecraft.entity.player.EntityPlayer
-import net.minecraft.init.Items
 import net.minecraft.item.ItemStack
 import net.minecraft.tileentity.TileEntity
 import net.minecraft.tileentity.TileEntityFurnace

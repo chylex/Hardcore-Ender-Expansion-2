@@ -3,6 +3,8 @@ import chylex.hee.game.block.info.BlockBuilder
 import chylex.hee.init.ModLoot
 import chylex.hee.system.migration.Facing.UP
 import chylex.hee.system.migration.forge.SubscribeEvent
+import chylex.hee.system.migration.vanilla.Blocks
+import chylex.hee.system.migration.vanilla.Items
 import chylex.hee.system.util.getBlock
 import chylex.hee.system.util.getState
 import chylex.hee.system.util.setAir
@@ -12,8 +14,6 @@ import net.minecraft.block.BlockReed
 import net.minecraft.block.BlockSapling
 import net.minecraft.block.state.IBlockState
 import net.minecraft.entity.Entity
-import net.minecraft.init.Blocks
-import net.minecraft.init.Items
 import net.minecraft.item.ItemStack
 import net.minecraft.util.EnumFacing
 import net.minecraft.util.NonNullList

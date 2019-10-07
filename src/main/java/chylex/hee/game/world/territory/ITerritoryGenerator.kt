@@ -2,8 +2,8 @@ package chylex.hee.game.world.territory
 import chylex.hee.game.world.generation.SegmentedWorld
 import chylex.hee.game.world.generation.TerritoryGenerationInfo
 import chylex.hee.game.world.util.Size
+import chylex.hee.system.migration.vanilla.Blocks
 import net.minecraft.block.Block
-import net.minecraft.init.Blocks
 
 interface ITerritoryGenerator{
 	val segmentSize: Size

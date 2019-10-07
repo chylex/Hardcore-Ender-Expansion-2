@@ -10,6 +10,7 @@ import chylex.hee.init.ModLoot
 import chylex.hee.system.migration.Difficulty.PEACEFUL
 import chylex.hee.system.migration.forge.Side
 import chylex.hee.system.migration.forge.Sided
+import chylex.hee.system.migration.vanilla.Blocks
 import chylex.hee.system.util.center
 import chylex.hee.system.util.floorToInt
 import chylex.hee.system.util.get
@@ -30,7 +31,6 @@ import net.minecraft.block.BlockFire
 import net.minecraft.block.state.BlockStateContainer
 import net.minecraft.block.state.IBlockState
 import net.minecraft.entity.player.EntityPlayer
-import net.minecraft.init.Blocks
 import net.minecraft.item.Item
 import net.minecraft.item.ItemStack
 import net.minecraft.tileentity.TileEntity

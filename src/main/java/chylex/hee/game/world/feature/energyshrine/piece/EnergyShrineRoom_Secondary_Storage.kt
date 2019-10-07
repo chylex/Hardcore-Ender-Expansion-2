@@ -8,12 +8,12 @@ import chylex.hee.game.world.structure.trigger.LootChestStructureTrigger
 import chylex.hee.init.ModBlocks
 import chylex.hee.system.migration.Facing.NORTH
 import chylex.hee.system.migration.Facing.SOUTH
+import chylex.hee.system.migration.vanilla.Blocks
 import chylex.hee.system.util.Pos
 import chylex.hee.system.util.allInBoxMutable
 import chylex.hee.system.util.nextInt
 import chylex.hee.system.util.nextItem
 import chylex.hee.system.util.withFacing
-import net.minecraft.init.Blocks
 import net.minecraft.util.math.BlockPos
 
 class EnergyShrineRoom_Secondary_Storage(file: String) : EnergyShrineRoom_Generic(file){

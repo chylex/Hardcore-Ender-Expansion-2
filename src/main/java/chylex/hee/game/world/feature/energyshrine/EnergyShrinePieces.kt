@@ -26,10 +26,10 @@ import chylex.hee.game.world.util.Size
 import chylex.hee.init.ModBlocks
 import chylex.hee.system.Resource
 import chylex.hee.system.collection.WeightedList.Companion.weightedListOf
+import chylex.hee.system.migration.vanilla.Blocks
 import chylex.hee.system.util.nextInt
 import chylex.hee.system.util.nextItem
 import chylex.hee.system.util.removeItem
-import net.minecraft.init.Blocks
 import java.util.Random
 
 object EnergyShrinePieces : IStructureDescription{

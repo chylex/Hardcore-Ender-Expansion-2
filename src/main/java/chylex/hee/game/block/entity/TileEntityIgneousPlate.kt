@@ -13,6 +13,7 @@ import chylex.hee.init.ModBlocks
 import chylex.hee.system.migration.Facing.AXIS_Y
 import chylex.hee.system.migration.Facing.DOWN
 import chylex.hee.system.migration.Facing.UP
+import chylex.hee.system.migration.vanilla.Blocks
 import chylex.hee.system.util.TagCompound
 import chylex.hee.system.util.floorToInt
 import chylex.hee.system.util.get
@@ -22,7 +23,6 @@ import chylex.hee.system.util.math.LerpedDouble
 import chylex.hee.system.util.motionVec
 import chylex.hee.system.util.nextFloat
 import chylex.hee.system.util.setAir
-import net.minecraft.init.Blocks
 import net.minecraft.item.ItemStack
 import net.minecraft.tileentity.TileEntityFurnace
 import net.minecraft.util.EnumFacing

@@ -1,11 +1,11 @@
 package chylex.hee.game.loot.functions
 import chylex.hee.system.Resource
+import chylex.hee.system.migration.vanilla.Items
 import chylex.hee.system.util.nextItem
 import chylex.hee.system.util.size
 import com.google.gson.JsonDeserializationContext
 import com.google.gson.JsonObject
 import com.google.gson.JsonSerializationContext
-import net.minecraft.init.Items
 import net.minecraft.item.Item
 import net.minecraft.item.ItemStack
 import net.minecraft.util.JsonUtils

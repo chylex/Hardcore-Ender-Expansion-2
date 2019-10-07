@@ -1,9 +1,9 @@
 package chylex.hee.game.mechanics.potion.brewing.modifiers
 import chylex.hee.game.mechanics.potion.brewing.IBrewingModifier
 import chylex.hee.game.mechanics.potion.brewing.PotionBrewing
+import chylex.hee.system.migration.vanilla.Items
 import chylex.hee.system.util.nbtOrNull
 import chylex.hee.system.util.size
-import net.minecraft.init.Items
 import net.minecraft.item.Item
 import net.minecraft.item.ItemStack
 

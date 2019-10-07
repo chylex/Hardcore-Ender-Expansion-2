@@ -17,6 +17,7 @@ import chylex.hee.game.world.util.Teleporter.FxRange.Silent
 import chylex.hee.network.client.PacketClientFX
 import chylex.hee.system.migration.Facing.DOWN
 import chylex.hee.system.migration.Facing.UP
+import chylex.hee.system.migration.vanilla.Sounds
 import chylex.hee.system.util.Pos
 import chylex.hee.system.util.TagCompound
 import chylex.hee.system.util.Vec3
@@ -36,7 +37,6 @@ import chylex.hee.system.util.playClient
 import chylex.hee.system.util.posVec
 import net.minecraft.entity.Entity
 import net.minecraft.init.MobEffects.INVISIBILITY
-import net.minecraft.init.SoundEvents
 import net.minecraft.potion.PotionEffect
 import net.minecraft.util.ITickable
 import net.minecraft.util.SoundCategory
@@ -74,7 +74,7 @@ class EndermanTeleportHandler(private val enderman: EntityMobAbstractEnderman) :
 		val FX_TELEPORT_FAIL = object : FxEntityHandler(){
 			override fun handle(entity: Entity, rand: Random){
 				PARTICLE_TELEPORT_FAIL(entity).spawn(Point(entity, heightMp = 0.5F, amount = 55), rand)
-				SoundEvents.ENTITY_ENDERMEN_TELEPORT.playClient(entity.posVec, SoundCategory.HOSTILE, volume = 0.75F) // TODO custom sound
+				Sounds.ENTITY_ENDERMEN_TELEPORT.playClient(entity.posVec, SoundCategory.HOSTILE, volume = 0.75F) // TODO custom sound
 			}
 		}
 		
@@ -84,7 +84,7 @@ class EndermanTeleportHandler(private val enderman: EntityMobAbstractEnderman) :
 				val endPoint = startPoint.addY(256.0)
 				
 				PARTICLE_TELEPORT_OUT_OF_WORLD.spawn(Line(startPoint, endPoint, 0.5), rand)
-				SoundEvents.ENTITY_ENDERMEN_TELEPORT.playClient(startPoint, SoundCategory.HOSTILE, volume = 2F) // TODO custom sound
+				Sounds.ENTITY_ENDERMEN_TELEPORT.playClient(startPoint, SoundCategory.HOSTILE, volume = 2F) // TODO custom sound
 			}
 		}
 		

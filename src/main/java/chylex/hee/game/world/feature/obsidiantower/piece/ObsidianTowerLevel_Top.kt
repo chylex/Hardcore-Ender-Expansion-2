@@ -6,8 +6,8 @@ import chylex.hee.game.world.structure.IStructureWorld
 import chylex.hee.game.world.structure.trigger.EntityStructureTrigger
 import chylex.hee.game.world.territory.TerritoryType
 import chylex.hee.init.ModBlocks
+import chylex.hee.system.migration.vanilla.Blocks
 import chylex.hee.system.util.Pos
-import net.minecraft.init.Blocks
 
 abstract class ObsidianTowerLevel_Top(file: String) : ObsidianTowerLevel_General(file){
 	override fun generate(world: IStructureWorld, instance: Instance){

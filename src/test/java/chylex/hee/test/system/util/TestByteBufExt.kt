@@ -28,7 +28,7 @@ import chylex.hee.system.util.writeVarInt
 import chylex.hee.system.util.writeVec
 import io.netty.buffer.Unpooled
 import net.minecraft.init.Bootstrap
-import net.minecraft.init.Items
+import chylex.hee.system.migration.vanilla.Items
 import net.minecraft.item.ItemStack
 import chylex.hee.system.util.TagCompound
 import net.minecraft.util.math.BlockPos

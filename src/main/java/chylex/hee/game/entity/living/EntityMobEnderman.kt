@@ -21,6 +21,7 @@ import chylex.hee.game.mechanics.damage.IDamageProcessor.Companion.PEACEFUL_EXCL
 import chylex.hee.init.ModLoot
 import chylex.hee.system.migration.forge.SubscribeAllEvents
 import chylex.hee.system.migration.forge.SubscribeEvent
+import chylex.hee.system.migration.vanilla.Blocks
 import chylex.hee.system.util.AIAttackMelee
 import chylex.hee.system.util.AISwim
 import chylex.hee.system.util.AITargetEyeContact
@@ -45,7 +46,6 @@ import net.minecraft.entity.projectile.EntityArrow
 import net.minecraft.entity.projectile.EntityLlamaSpit
 import net.minecraft.entity.projectile.EntityPotion
 import net.minecraft.entity.projectile.EntityThrowable
-import net.minecraft.init.Blocks
 import net.minecraft.network.datasync.DataParameter
 import net.minecraft.util.DamageSource
 import net.minecraft.util.EntityDamageSourceIndirect

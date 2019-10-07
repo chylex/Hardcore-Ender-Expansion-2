@@ -5,9 +5,9 @@ import chylex.hee.game.world.structure.IStructureWorld
 import chylex.hee.game.world.structure.world.TransformedStructureWorld
 import chylex.hee.game.world.util.Size
 import chylex.hee.game.world.util.Transform
+import chylex.hee.system.migration.vanilla.Blocks
 import chylex.hee.system.util.with
 import net.minecraft.block.BlockColored
-import net.minecraft.init.Blocks
 import net.minecraft.item.EnumDyeColor
 
 abstract class StructurePiece<T> : IStructurePiece, IStructureGenerator{

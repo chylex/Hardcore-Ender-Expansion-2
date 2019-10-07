@@ -41,11 +41,11 @@ import chylex.hee.init.ModCreativeTabs.OrderedCreativeTab
 import chylex.hee.system.Resource
 import chylex.hee.system.migration.forge.SubscribeAllEvents
 import chylex.hee.system.migration.forge.SubscribeEvent
+import chylex.hee.system.migration.vanilla.Items
 import chylex.hee.system.util.useVanillaName
 import net.minecraft.block.BlockDispenser
 import net.minecraft.block.BlockShulkerBox
 import net.minecraft.creativetab.CreativeTabs
-import net.minecraft.init.Items
 import net.minecraft.item.EnumDyeColor
 import net.minecraft.item.Item
 import net.minecraftforge.event.RegistryEvent

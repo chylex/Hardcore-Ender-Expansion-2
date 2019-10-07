@@ -11,6 +11,8 @@ import chylex.hee.init.ModBlocks
 import chylex.hee.init.ModItems
 import chylex.hee.network.client.PacketClientFX
 import chylex.hee.system.migration.Facing.UP
+import chylex.hee.system.migration.vanilla.Blocks
+import chylex.hee.system.migration.vanilla.Sounds
 import chylex.hee.system.util.Pos
 import chylex.hee.system.util.cloneFrom
 import chylex.hee.system.util.get
@@ -26,8 +28,6 @@ import chylex.hee.system.util.with
 import net.minecraft.block.BlockCauldron.LEVEL
 import net.minecraft.entity.Entity
 import net.minecraft.entity.item.EntityItem
-import net.minecraft.init.Blocks
-import net.minecraft.init.SoundEvents
 import net.minecraft.item.Item
 import net.minecraft.item.ItemStack
 import net.minecraft.util.SoundCategory
@@ -60,8 +60,8 @@ class EntityItemCauldronTrigger : EntityItem{
 		val FX_RECIPE_FINISH = object : FxBlockHandler(){
 			override fun handle(pos: BlockPos, world: World, rand: Random){
 				PARTICLE_RECIPE_FINISH.spawn(Point(pos, 22), rand)
-				SoundEvents.BLOCK_BREWING_STAND_BREW.playClient(pos, SoundCategory.BLOCKS, volume = 0.5F, pitch = 1.2F)
-				SoundEvents.BLOCK_BREWING_STAND_BREW.playClient(pos, SoundCategory.BLOCKS, volume = 0.8F, pitch = 0.8F)
+				Sounds.BLOCK_BREWING_STAND_BREW.playClient(pos, SoundCategory.BLOCKS, volume = 0.5F, pitch = 1.2F)
+				Sounds.BLOCK_BREWING_STAND_BREW.playClient(pos, SoundCategory.BLOCKS, volume = 0.8F, pitch = 0.8F)
 			}
 		}
 	}

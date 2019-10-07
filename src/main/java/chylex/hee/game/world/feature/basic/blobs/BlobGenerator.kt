@@ -4,13 +4,13 @@ import chylex.hee.game.world.feature.basic.blobs.BlobSmoothing.MILD
 import chylex.hee.game.world.generation.SegmentedWorld
 import chylex.hee.game.world.generation.segments.SegmentFull
 import chylex.hee.init.ModBlocks
+import chylex.hee.system.migration.vanilla.Blocks
 import chylex.hee.system.util.Facing6
 import chylex.hee.system.util.allInBoxMutable
 import chylex.hee.system.util.allInCenteredSphereMutable
 import chylex.hee.system.util.ceilToInt
 import chylex.hee.system.util.max
 import net.minecraft.block.Block
-import net.minecraft.init.Blocks
 import net.minecraft.util.math.BlockPos
 import java.util.Random
 

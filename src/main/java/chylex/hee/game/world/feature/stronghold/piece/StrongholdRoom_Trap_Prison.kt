@@ -17,6 +17,7 @@ import chylex.hee.system.migration.Difficulty.PEACEFUL
 import chylex.hee.system.migration.Facing.EAST
 import chylex.hee.system.migration.Facing.UP
 import chylex.hee.system.migration.Facing.WEST
+import chylex.hee.system.migration.vanilla.Blocks
 import chylex.hee.system.util.Pos
 import chylex.hee.system.util.TagCompound
 import chylex.hee.system.util.breakBlock
@@ -33,7 +34,6 @@ import chylex.hee.system.util.nextItemOrNull
 import chylex.hee.system.util.nextRounded
 import chylex.hee.system.util.selectVulnerableEntities
 import net.minecraft.entity.player.EntityPlayer
-import net.minecraft.init.Blocks
 import net.minecraft.tileentity.TileEntitySkull
 import net.minecraft.util.math.AxisAlignedBB
 import net.minecraft.world.World

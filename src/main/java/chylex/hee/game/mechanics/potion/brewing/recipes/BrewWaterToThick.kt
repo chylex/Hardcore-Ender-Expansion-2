@@ -1,7 +1,7 @@
 package chylex.hee.game.mechanics.potion.brewing.recipes
 import chylex.hee.game.mechanics.potion.brewing.IBrewingRecipe
 import chylex.hee.game.mechanics.potion.brewing.PotionItems
-import net.minecraft.init.Items
+import chylex.hee.system.migration.vanilla.Items
 import net.minecraft.init.PotionTypes.THICK
 import net.minecraft.init.PotionTypes.WATER
 import net.minecraft.item.ItemStack

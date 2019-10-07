@@ -13,12 +13,12 @@ import chylex.hee.system.migration.Facing.NORTH
 import chylex.hee.system.migration.Facing.SOUTH
 import chylex.hee.system.migration.Facing.UP
 import chylex.hee.system.migration.Facing.WEST
+import chylex.hee.system.migration.vanilla.Blocks
 import chylex.hee.system.util.Facing4
 import chylex.hee.system.util.Pos
 import chylex.hee.system.util.nextInt
 import chylex.hee.system.util.offsetUntil
 import chylex.hee.system.util.withFacing
-import net.minecraft.init.Blocks
 import net.minecraft.item.ItemStack
 
 class StrongholdRoom_Main_Scriptorium(file: String) : StrongholdAbstractPieceFromFile(file, StrongholdPieceType.ROOM){

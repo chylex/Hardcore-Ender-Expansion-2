@@ -13,9 +13,9 @@ import chylex.hee.system.IntegrityCheck
 import chylex.hee.system.Resource
 import chylex.hee.system.migration.forge.SubscribeAllEvents
 import chylex.hee.system.migration.forge.SubscribeEvent
+import chylex.hee.system.migration.vanilla.Blocks
+import chylex.hee.system.migration.vanilla.Items
 import chylex.hee.system.util.useVanillaName
-import net.minecraft.init.Blocks
-import net.minecraft.init.Items
 import net.minecraft.item.ItemStack
 import net.minecraft.item.crafting.FurnaceRecipes
 import net.minecraft.item.crafting.IRecipe

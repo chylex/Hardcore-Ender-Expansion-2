@@ -1,9 +1,9 @@
 package chylex.hee.game.recipe
 import chylex.hee.game.item.ItemVoidSalad.Type
 import chylex.hee.init.ModItems
+import chylex.hee.system.migration.vanilla.Items
 import chylex.hee.system.util.nonEmptySlots
 import com.google.common.collect.Iterators
-import net.minecraft.init.Items
 import net.minecraft.inventory.InventoryCrafting
 import net.minecraft.item.ItemFood
 import net.minecraft.item.ItemStack

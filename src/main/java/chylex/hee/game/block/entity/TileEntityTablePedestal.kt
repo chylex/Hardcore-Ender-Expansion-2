@@ -23,6 +23,7 @@ import chylex.hee.network.client.PacketClientFX
 import chylex.hee.system.migration.Facing.DOWN
 import chylex.hee.system.migration.forge.Side
 import chylex.hee.system.migration.forge.Sided
+import chylex.hee.system.migration.vanilla.Sounds
 import chylex.hee.system.util.FLAG_SYNC_CLIENT
 import chylex.hee.system.util.TagCompound
 import chylex.hee.system.util.color.IntColor
@@ -42,7 +43,6 @@ import chylex.hee.system.util.with
 import net.minecraft.block.state.IBlockState
 import net.minecraft.entity.item.EntityItem
 import net.minecraft.entity.player.InventoryPlayer
-import net.minecraft.init.SoundEvents
 import net.minecraft.item.ItemStack
 import net.minecraft.util.EnumFacing
 import net.minecraft.util.SoundCategory
@@ -60,7 +60,7 @@ class TileEntityTablePedestal : TileEntityBase(){
 				val player = HEE.proxy.getClientSidePlayer() ?: return
 				
 				PARTICLE_ITEM_UPDATE.spawn(Point(pos.up(), 12), rand)
-				SoundEvents.ENTITY_ITEM_PICKUP.playClient(player.posVec, SoundCategory.PLAYERS, volume = 0.22F, pitch = rand.nextFloat(0.6F, 3.4F))
+				Sounds.ENTITY_ITEM_PICKUP.playClient(player.posVec, SoundCategory.PLAYERS, volume = 0.22F, pitch = rand.nextFloat(0.6F, 3.4F))
 			}
 		}
 		

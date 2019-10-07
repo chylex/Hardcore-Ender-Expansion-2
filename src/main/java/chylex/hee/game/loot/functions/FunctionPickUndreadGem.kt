@@ -2,12 +2,12 @@ package chylex.hee.game.loot.functions
 import chylex.hee.system.Resource
 import chylex.hee.system.collection.WeightedList
 import chylex.hee.system.collection.WeightedList.Companion.weightedListOf
+import chylex.hee.system.migration.vanilla.Items
 import chylex.hee.system.util.size
 import com.google.common.collect.ImmutableBiMap
 import com.google.gson.JsonDeserializationContext
 import com.google.gson.JsonObject
 import com.google.gson.JsonSerializationContext
-import net.minecraft.init.Items
 import net.minecraft.item.Item
 import net.minecraft.item.ItemStack
 import net.minecraft.world.storage.loot.LootContext

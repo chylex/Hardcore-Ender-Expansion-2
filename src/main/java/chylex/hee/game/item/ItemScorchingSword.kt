@@ -13,6 +13,7 @@ import chylex.hee.system.migration.Hand.MAIN_HAND
 import chylex.hee.system.migration.forge.EventPriority
 import chylex.hee.system.migration.forge.EventResult
 import chylex.hee.system.migration.forge.SubscribeEvent
+import chylex.hee.system.migration.vanilla.Sounds
 import chylex.hee.system.util.floorToInt
 import chylex.hee.system.util.getAttribute
 import chylex.hee.system.util.nextFloat
@@ -30,7 +31,6 @@ import net.minecraft.entity.passive.EntityAnimal
 import net.minecraft.entity.passive.EntitySquid
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.init.MobEffects
-import net.minecraft.init.SoundEvents
 import net.minecraft.item.ItemStack
 import net.minecraft.item.ItemSword
 import net.minecraft.util.DamageSource
@@ -128,7 +128,7 @@ class ItemScorchingSword : ItemSword(SCORCHING_SWORD), IScorchingItem, ICustomRe
 		stopDamageRecursion.set(false)
 		
 		if (attacker is EntityPlayer){
-			SoundEvents.ENTITY_PLAYER_ATTACK_SWEEP.playUniversal(attacker, attacker.posVec, attacker.soundCategory)
+			Sounds.ENTITY_PLAYER_ATTACK_SWEEP.playUniversal(attacker, attacker.posVec, attacker.soundCategory)
 			attacker.spawnSweepParticles()
 		}
 		
