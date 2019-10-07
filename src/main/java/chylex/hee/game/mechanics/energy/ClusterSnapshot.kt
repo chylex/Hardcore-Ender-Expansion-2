@@ -3,9 +3,9 @@ import chylex.hee.game.mechanics.energy.IClusterHealth.HealthOverride
 import chylex.hee.game.mechanics.energy.IClusterHealth.HealthStatus
 import chylex.hee.game.mechanics.energy.IClusterHealth.HealthStatus.HEALTHY
 import chylex.hee.game.mechanics.energy.IEnergyQuantity.Internal
+import chylex.hee.system.util.TagCompound
 import chylex.hee.system.util.getEnum
 import chylex.hee.system.util.setEnum
-import net.minecraft.nbt.NBTTagCompound
 
 class ClusterSnapshot(
 	val energyLevel: IEnergyQuantity,
@@ -24,7 +24,7 @@ class ClusterSnapshot(
 	}
 	
 	val tag
-		get() = NBTTagCompound().apply {
+		get() = TagCompound().apply {
 			setInteger(ENERGY_LEVEL_TAG, energyLevel.internal.value)
 			setInteger(ENERGY_CAPACITY_TAG, energyCapacity.internal.value)
 			setEnum(HEALTH_STATUS_TAG, healthStatus)
@@ -33,7 +33,7 @@ class ClusterSnapshot(
 			setShort(COLOR_SECONDARY_TAG, color.secondaryHue)
 		}
 	
-	constructor(tag: NBTTagCompound) : this(
+	constructor(tag: TagCompound) : this(
 		energyLevel    = Internal(tag.getInteger(ENERGY_LEVEL_TAG)),
 		energyCapacity = Internal(tag.getInteger(ENERGY_CAPACITY_TAG)),
 		healthStatus   = tag.getEnum<HealthStatus>(HEALTH_STATUS_TAG) ?: HEALTHY,

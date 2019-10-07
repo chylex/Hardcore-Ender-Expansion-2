@@ -1,9 +1,9 @@
 package chylex.hee.game.mechanics.instability.dimension
 import chylex.hee.game.mechanics.instability.dimension.components.EndermiteSpawnLogic
+import chylex.hee.system.util.TagCompound
 import chylex.hee.system.util.ceilToInt
 import chylex.hee.system.util.floorToInt
 import chylex.hee.system.util.remapRange
-import net.minecraft.nbt.NBTTagCompound
 import net.minecraft.util.math.BlockPos
 import net.minecraft.world.World
 import kotlin.math.max
@@ -69,13 +69,13 @@ open class DimensionInstabilityGlobal(private val world: World, private val ende
 	
 	// Serialization
 	
-	override fun serializeNBT() = NBTTagCompound().apply {
+	override fun serializeNBT() = TagCompound().apply {
 		setInteger("Level", level)
 		setLong("LastAction", lastActionTime)
 		setLong("LastEndermiteSpawn", lastEndermiteSpawnTime)
 	}
 	
-	override fun deserializeNBT(nbt: NBTTagCompound) = with(nbt){
+	override fun deserializeNBT(nbt: TagCompound) = with(nbt){
 		level = getInteger("Level")
 		lastActionTime = getLong("LastAction")
 		lastEndermiteSpawnTime = getLong("LastEndermiteSpawn")

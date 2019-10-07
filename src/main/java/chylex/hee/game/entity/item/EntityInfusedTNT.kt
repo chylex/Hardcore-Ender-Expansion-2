@@ -11,6 +11,7 @@ import chylex.hee.game.item.infusion.InfusionTag
 import chylex.hee.game.particle.spawner.ParticleSpawnerVanilla
 import chylex.hee.game.particle.util.IShape.Point
 import chylex.hee.game.world.util.ExplosionBuilder
+import chylex.hee.system.util.TagCompound
 import chylex.hee.system.util.allInCenteredSphereMutable
 import chylex.hee.system.util.ceilToInt
 import chylex.hee.system.util.component1
@@ -33,7 +34,6 @@ import net.minecraft.entity.item.EntityItem
 import net.minecraft.entity.item.EntityTNTPrimed
 import net.minecraft.item.ItemStack
 import net.minecraft.item.crafting.FurnaceRecipes
-import net.minecraft.nbt.NBTTagCompound
 import net.minecraft.util.EnumParticleTypes.SMOKE_NORMAL
 import net.minecraft.util.math.AxisAlignedBB
 import net.minecraft.util.math.BlockPos
@@ -306,7 +306,7 @@ class EntityInfusedTNT : EntityTNTPrimed{
 	
 	// Serialization
 	
-	override fun writeEntityToNBT(nbt: NBTTagCompound) = with(nbt.heeTag){
+	override fun writeEntityToNBT(nbt: TagCompound) = with(nbt.heeTag){
 		super.writeEntityToNBT(nbt)
 		
 		InfusionTag.setList(this, infusions)
@@ -314,7 +314,7 @@ class EntityInfusedTNT : EntityTNTPrimed{
 		setBoolean("HasPhased", hasPhasedIntoWall)
 	}
 	
-	override fun readEntityFromNBT(nbt: NBTTagCompound) = with(nbt.heeTag){
+	override fun readEntityFromNBT(nbt: TagCompound) = with(nbt.heeTag){
 		super.readEntityFromNBT(nbt)
 		
 		loadInfusions(InfusionTag.getList(this))

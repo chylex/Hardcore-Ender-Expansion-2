@@ -26,6 +26,7 @@ import chylex.hee.system.util.AISwim
 import chylex.hee.system.util.AITargetEyeContact
 import chylex.hee.system.util.AIWatchIdle
 import chylex.hee.system.util.Pos
+import chylex.hee.system.util.TagCompound
 import chylex.hee.system.util.heeTag
 import chylex.hee.system.util.nextFloat
 import chylex.hee.system.util.nextInt
@@ -44,7 +45,6 @@ import net.minecraft.entity.projectile.EntityLlamaSpit
 import net.minecraft.entity.projectile.EntityPotion
 import net.minecraft.entity.projectile.EntityThrowable
 import net.minecraft.init.Blocks
-import net.minecraft.nbt.NBTTagCompound
 import net.minecraft.network.datasync.DataParameter
 import net.minecraft.util.DamageSource
 import net.minecraft.util.EntityDamageSourceIndirect
@@ -508,7 +508,7 @@ class EntityMobEnderman(world: World) : EntityMobAbstractEnderman(world){
 	
 	// Serialization
 	
-	override fun writeEntityToNBT(nbt: NBTTagCompound) = with(nbt.heeTag){
+	override fun writeEntityToNBT(nbt: TagCompound) = with(nbt.heeTag){
 		super.writeEntityToNBT(nbt)
 		
 		setTag("Teleport", teleportHandler.serializeNBT())
@@ -519,7 +519,7 @@ class EntityMobEnderman(world: World) : EntityMobAbstractEnderman(world){
 		setBoolean("HeldBlockDespawns", heldBlockDespawns)
 	}
 	
-	override fun readEntityFromNBT(nbt: NBTTagCompound) = with(nbt.heeTag){
+	override fun readEntityFromNBT(nbt: TagCompound) = with(nbt.heeTag){
 		super.readEntityFromNBT(nbt)
 		
 		teleportHandler.deserializeNBT(getCompoundTag("Teleport"))

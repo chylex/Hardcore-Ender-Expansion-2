@@ -30,7 +30,7 @@ import io.netty.buffer.Unpooled
 import net.minecraft.init.Bootstrap
 import net.minecraft.init.Items
 import net.minecraft.item.ItemStack
-import net.minecraft.nbt.NBTTagCompound
+import chylex.hee.system.util.TagCompound
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.Vec3d
 import org.junit.jupiter.api.Assertions.assertArrayEquals
@@ -106,11 +106,11 @@ class TestByteBufExt{
 	}
 	
 	@Nested inner class Complex{
-		@Test fun `writing and reading 'NBTTagCompound' works`() = with(Unpooled.buffer()){
+		@Test fun `writing and reading 'TagCompound' works`() = with(Unpooled.buffer()){
 			arrayOf(
-				NBTTagCompound(),
-				NBTTagCompound().apply { setLong("test", 123L) },
-				NBTTagCompound().apply { NBTTagCompound().apply { setString("key", "hello world") } }
+				TagCompound(),
+				TagCompound().apply { setLong("test", 123L) },
+				TagCompound().apply { TagCompound().apply { setString("key", "hello world") } }
 			).forEach {
 				writeTag(it)
 				assertEquals(it, readTag())

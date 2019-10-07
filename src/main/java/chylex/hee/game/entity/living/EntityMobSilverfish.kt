@@ -20,6 +20,7 @@ import chylex.hee.system.util.AISwim
 import chylex.hee.system.util.AITargetAttacker
 import chylex.hee.system.util.AITargetRandom
 import chylex.hee.system.util.AITargetSwarmSwitch
+import chylex.hee.system.util.TagCompound
 import chylex.hee.system.util.heeTag
 import chylex.hee.system.util.with
 import net.minecraft.block.BlockSilverfish
@@ -33,7 +34,6 @@ import net.minecraft.entity.SharedMonsterAttributes.MAX_HEALTH
 import net.minecraft.entity.monster.EntitySilverfish
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.init.Blocks
-import net.minecraft.nbt.NBTTagCompound
 import net.minecraft.util.DamageSource
 import net.minecraft.util.EntityDamageSource
 import net.minecraft.util.ResourceLocation
@@ -160,13 +160,13 @@ class EntityMobSilverfish(world: World) : EntitySilverfish(world), ICritTracker{
 		return ModLoot.SILVERFISH
 	}
 	
-	override fun writeEntityToNBT(nbt: NBTTagCompound) = with(nbt.heeTag){
+	override fun writeEntityToNBT(nbt: TagCompound) = with(nbt.heeTag){
 		super.writeEntityToNBT(nbt)
 		
 		setInteger("HideDelay", hideInBlockDelayTicks)
 	}
 	
-	override fun readEntityFromNBT(nbt: NBTTagCompound) = with(nbt.heeTag){
+	override fun readEntityFromNBT(nbt: TagCompound) = with(nbt.heeTag){
 		super.readEntityFromNBT(nbt)
 		
 		hideInBlockDelayTicks = getInteger("HideDelay")

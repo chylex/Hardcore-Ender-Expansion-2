@@ -1,5 +1,5 @@
 package chylex.hee.system.capability
-import net.minecraft.nbt.NBTBase
+import chylex.hee.system.util.NBTBase
 import net.minecraft.util.EnumFacing
 import net.minecraftforge.common.capabilities.Capability
 import net.minecraftforge.common.capabilities.ICapabilitySerializable

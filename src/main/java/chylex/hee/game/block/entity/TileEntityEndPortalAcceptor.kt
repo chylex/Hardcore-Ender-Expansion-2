@@ -12,9 +12,9 @@ import chylex.hee.game.mechanics.energy.IEnergyQuantity
 import chylex.hee.game.mechanics.energy.IEnergyQuantity.Units
 import chylex.hee.system.util.FLAG_SKIP_RENDER
 import chylex.hee.system.util.FLAG_SYNC_CLIENT
+import chylex.hee.system.util.TagCompound
 import chylex.hee.system.util.breakBlock
 import chylex.hee.system.util.getTile
-import net.minecraft.nbt.NBTTagCompound
 
 class TileEntityEndPortalAcceptor : TileEntityBasePortalController(){
 	private companion object{
@@ -144,7 +144,7 @@ class TileEntityEndPortalAcceptor : TileEntityBasePortalController(){
 		}
 	}
 	
-	override fun writeNBT(nbt: NBTTagCompound, context: Context) = with(nbt){
+	override fun writeNBT(nbt: TagCompound, context: Context) = with(nbt){
 		super.writeNBT(nbt, context)
 		
 		if (context == STORAGE){
@@ -152,7 +152,7 @@ class TileEntityEndPortalAcceptor : TileEntityBasePortalController(){
 		}
 	}
 	
-	override fun readNBT(nbt: NBTTagCompound, context: Context) = with(nbt){
+	override fun readNBT(nbt: TagCompound, context: Context) = with(nbt){
 		super.readNBT(nbt, context)
 		
 		if (context == STORAGE){

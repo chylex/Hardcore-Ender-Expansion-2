@@ -5,6 +5,7 @@ import chylex.hee.game.block.entity.TileEntityEnergyCluster
 import chylex.hee.game.mechanics.energy.IEnergyQuantity
 import chylex.hee.game.world.util.RayTracer
 import chylex.hee.init.ModBlocks
+import chylex.hee.system.util.TagCompound
 import chylex.hee.system.util.center
 import chylex.hee.system.util.distanceSqTo
 import chylex.hee.system.util.getPosOrNull
@@ -12,13 +13,12 @@ import chylex.hee.system.util.getTile
 import chylex.hee.system.util.setPos
 import chylex.hee.system.util.square
 import net.minecraft.block.state.IBlockState
-import net.minecraft.nbt.NBTTagCompound
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.RayTraceResult.Type.BLOCK
 import net.minecraft.world.World
 import net.minecraftforge.common.util.INBTSerializable
 
-class TableEnergyClusterHandler(private val table: TileEntityBaseTable, maxDistance: Int) : INBTSerializable<NBTTagCompound>{
+class TableEnergyClusterHandler(private val table: TileEntityBaseTable, maxDistance: Int) : INBTSerializable<TagCompound>{
 	private val maxDistanceSq = square(maxDistance)
 	private val rayTracer = RayTracer(::canCollideCheck)
 	
@@ -91,13 +91,13 @@ class TableEnergyClusterHandler(private val table: TileEntityBaseTable, maxDista
 	
 	// Serialization
 	
-	override fun serializeNBT() = NBTTagCompound().apply {
+	override fun serializeNBT() = TagCompound().apply {
 		currentCluster?.let {
 			setPos("Pos", it)
 		}
 	}
 	
-	override fun deserializeNBT(nbt: NBTTagCompound) = with(nbt){
+	override fun deserializeNBT(nbt: TagCompound) = with(nbt){
 		currentCluster = getPosOrNull("Pos")
 	}
 }

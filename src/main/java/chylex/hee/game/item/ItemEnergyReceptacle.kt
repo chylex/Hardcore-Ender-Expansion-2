@@ -20,6 +20,7 @@ import chylex.hee.system.migration.ActionResult.SUCCESS
 import chylex.hee.system.migration.forge.Side
 import chylex.hee.system.migration.forge.Sided
 import chylex.hee.system.util.Pos
+import chylex.hee.system.util.TagCompound
 import chylex.hee.system.util.breakBlock
 import chylex.hee.system.util.color.IntColor.Companion.RGB
 import chylex.hee.system.util.getIntegerOrNull
@@ -33,7 +34,6 @@ import net.minecraft.client.util.ITooltipFlag
 import net.minecraft.entity.Entity
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.item.ItemStack
-import net.minecraft.nbt.NBTTagCompound
 import net.minecraft.util.EnumActionResult
 import net.minecraft.util.EnumFacing
 import net.minecraft.util.EnumHand
@@ -64,7 +64,7 @@ class ItemEnergyReceptacle : ItemAbstractInfusable(){
 			return snapshot.energyLevel - (decreasePerCycle * elapsedCycles.toFloat())
 		}
 		
-		private fun hasMovedTooFar(nbt: NBTTagCompound, currentWorld: World, currentPos: BlockPos): Boolean{
+		private fun hasMovedTooFar(nbt: TagCompound, currentWorld: World, currentPos: BlockPos): Boolean{
 			val provider = currentWorld.provider
 			
 			if (provider.dimension != nbt.getInteger(INITIAL_DIMENSION_TAG)){
@@ -78,7 +78,7 @@ class ItemEnergyReceptacle : ItemAbstractInfusable(){
 			return false
 		}
 		
-		private fun shouldLoseHealth(cluster: TileEntityEnergyCluster, nbt: NBTTagCompound, infusions: InfusionList): Boolean{
+		private fun shouldLoseHealth(cluster: TileEntityEnergyCluster, nbt: TagCompound, infusions: InfusionList): Boolean{
 			if (infusions.has(SAFETY)){
 				return false
 			}

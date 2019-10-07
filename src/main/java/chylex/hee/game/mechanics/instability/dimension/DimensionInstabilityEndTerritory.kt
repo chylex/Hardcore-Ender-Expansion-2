@@ -1,8 +1,8 @@
 package chylex.hee.game.mechanics.instability.dimension
 import chylex.hee.game.mechanics.instability.dimension.components.EndermiteSpawnLogicEndTerritory
 import chylex.hee.game.world.territory.TerritoryInstance
+import chylex.hee.system.util.TagCompound
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap
-import net.minecraft.nbt.NBTTagCompound
 import net.minecraft.util.math.BlockPos
 import net.minecraft.world.World
 
@@ -32,13 +32,13 @@ class DimensionInstabilityEndTerritory(private val world: World) : IDimensionIns
 		getEntry(pos).triggerRelief(amount, pos)
 	}
 	
-	override fun serializeNBT() = NBTTagCompound().apply {
+	override fun serializeNBT() = TagCompound().apply {
 		for(entry in territories.int2ObjectEntrySet()){
 			setTag(entry.intKey.toString(), entry.value.serializeNBT())
 		}
 	}
 	
-	override fun deserializeNBT(nbt: NBTTagCompound){
+	override fun deserializeNBT(nbt: TagCompound){
 		for(key in nbt.keySet){
 			val keyInt = key.toIntOrNull() ?: continue
 			putEntry(keyInt).deserializeNBT(nbt.getCompoundTag(key))

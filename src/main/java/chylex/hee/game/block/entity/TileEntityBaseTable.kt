@@ -11,13 +11,13 @@ import chylex.hee.game.mechanics.table.interfaces.ITableProcess
 import chylex.hee.game.mechanics.table.interfaces.ITableProcessSerializer
 import chylex.hee.game.mechanics.table.process.ProcessSupportingItemHolder
 import chylex.hee.system.util.NBTList.Companion.setList
+import chylex.hee.system.util.TagCompound
 import chylex.hee.system.util.color.IntColor
 import chylex.hee.system.util.delegate.NotifyOnChange
 import chylex.hee.system.util.get
 import chylex.hee.system.util.getListOfCompounds
 import chylex.hee.system.util.getState
 import net.minecraft.item.Item
-import net.minecraft.nbt.NBTTagCompound
 import net.minecraft.util.ITickable
 import net.minecraft.world.World
 
@@ -175,7 +175,7 @@ abstract class TileEntityBaseTable : TileEntityBase(), ITickable{
 		this.world = world // ensures world is available in readNBT
 	}
 	
-	override fun writeNBT(nbt: NBTTagCompound, context: Context) = with(nbt){
+	override fun writeNBT(nbt: TagCompound, context: Context) = with(nbt){
 		if (context == STORAGE){
 			setTag("PedestalInfo", pedestalHandler.serializeNBT())
 			setTag("ClusterInfo", clusterHandler.serializeNBT())
@@ -183,7 +183,7 @@ abstract class TileEntityBaseTable : TileEntityBase(), ITickable{
 		}
 	}
 	
-	override fun readNBT(nbt: NBTTagCompound, context: Context) = with(nbt){
+	override fun readNBT(nbt: TagCompound, context: Context) = with(nbt){
 		if (context == STORAGE){
 			pedestalHandler.deserializeNBT(getCompoundTag("PedestalInfo"))
 			clusterHandler.deserializeNBT(getCompoundTag("ClusterInfo"))

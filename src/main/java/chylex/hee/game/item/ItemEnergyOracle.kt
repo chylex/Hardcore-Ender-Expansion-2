@@ -17,6 +17,7 @@ import chylex.hee.system.migration.Hand.OFF_HAND
 import chylex.hee.system.migration.forge.Side
 import chylex.hee.system.migration.forge.Sided
 import chylex.hee.system.util.Pos
+import chylex.hee.system.util.TagCompound
 import chylex.hee.system.util.angleBetween
 import chylex.hee.system.util.center
 import chylex.hee.system.util.closestTickingTile
@@ -46,7 +47,6 @@ import net.minecraft.entity.Entity
 import net.minecraft.entity.EntityLivingBase
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.item.ItemStack
-import net.minecraft.nbt.NBTTagCompound
 import net.minecraft.util.EnumActionResult
 import net.minecraft.util.EnumFacing
 import net.minecraft.util.EnumHand
@@ -68,12 +68,12 @@ class ItemEnergyOracle : ItemAbstractEnergyUser(), IInfusableItem{
 		
 		private const val CLUSTER_HUE_PROXIMITY_OVERRIDE = Short.MAX_VALUE
 		
-		private fun removeTrackedClusterTags(nbt: NBTTagCompound){
+		private fun removeTrackedClusterTags(nbt: TagCompound){
 			nbt.removeTag(TRACKED_CLUSTER_POS_TAG)
 			nbt.removeTag(TRACKED_CLUSTER_HUE_TAG)
 		}
 		
-		private fun updateIgnoredClusterTag(nbt: NBTTagCompound, newIgnoreList: LongCollection){
+		private fun updateIgnoredClusterTag(nbt: TagCompound, newIgnoreList: LongCollection){
 			if (newIgnoreList.isEmpty()){
 				nbt.removeTag(IGNORED_CLUSTERS_TAG)
 			}
@@ -319,7 +319,7 @@ class ItemEnergyOracle : ItemAbstractEnergyUser(), IInfusableItem{
 			}
 		}
 		
-		private fun determineNextColor(stack: ItemStack, tag: NBTTagCompound, player: EntityPlayer): HCL{
+		private fun determineNextColor(stack: ItemStack, tag: TagCompound, player: EntityPlayer): HCL{
 			if (!ModItems.ENERGY_ORACLE.hasAnyEnergy(stack)){
 				return INACTIVE
 			}

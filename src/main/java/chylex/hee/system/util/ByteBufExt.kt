@@ -7,7 +7,6 @@ import io.netty.buffer.ByteBufOutputStream
 import net.minecraft.item.ItemStack
 import net.minecraft.nbt.CompressedStreamTools
 import net.minecraft.nbt.NBTSizeTracker
-import net.minecraft.nbt.NBTTagCompound
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.Vec3d
 import net.minecraftforge.fml.common.network.ByteBufUtils
@@ -84,11 +83,11 @@ inline fun ByteBuf.readString(): String{
 
 // NBT
 
-inline fun ByteBuf.writeTag(tag: NBTTagCompound){
+inline fun ByteBuf.writeTag(tag: TagCompound){
 	CompressedStreamTools.write(tag, ByteBufOutputStream(this))
 }
 
-inline fun ByteBuf.readTag(): NBTTagCompound{
+inline fun ByteBuf.readTag(): TagCompound{
 	return CompressedStreamTools.read(ByteBufInputStream(this), NBTSizeTracker(2097152L))
 }
 

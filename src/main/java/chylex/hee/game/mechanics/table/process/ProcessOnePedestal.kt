@@ -1,14 +1,14 @@
 package chylex.hee.game.mechanics.table.process
 import chylex.hee.game.mechanics.table.interfaces.ITableContext
 import chylex.hee.game.mechanics.table.process.ProcessManyPedestals.State.Output
+import chylex.hee.system.util.TagCompound
 import net.minecraft.item.ItemStack
-import net.minecraft.nbt.NBTTagCompound
 import net.minecraft.util.math.BlockPos
 import net.minecraft.world.World
 
 abstract class ProcessOnePedestal : ProcessManyPedestals{
 	protected constructor(world: World, pos: BlockPos) : super(world, arrayOf(pos))
-	protected constructor(world: World, nbt: NBTTagCompound) : super(world, nbt)
+	protected constructor(world: World, nbt: TagCompound) : super(world, nbt)
 	
 	protected abstract fun isInputStillValid(oldInput: ItemStack, newInput: ItemStack): Boolean
 	protected abstract fun onWorkTick(context: ITableContext, input: ItemStack): State

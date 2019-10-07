@@ -1,28 +1,28 @@
 package chylex.hee.game.item.infusion
 import chylex.hee.system.util.NBTList.Companion.setList
+import chylex.hee.system.util.TagCompound
 import chylex.hee.system.util.getListOfEnums
 import chylex.hee.system.util.heeTag
 import chylex.hee.system.util.heeTagOrNull
 import net.minecraft.item.ItemStack
-import net.minecraft.nbt.NBTTagCompound
 
 object InfusionTag{
 	private const val TAG_NAME = "Infusions"
 	
 	// General
 	
-	fun hasAny(root: NBTTagCompound): Boolean{
+	fun hasAny(root: TagCompound): Boolean{
 		return root.hasKey(TAG_NAME)
 	}
 	
-	fun getList(root: NBTTagCompound): InfusionList{
+	fun getList(root: TagCompound): InfusionList{
 		return if (root.hasKey(TAG_NAME))
 			InfusionList(root.getListOfEnums(TAG_NAME))
 		else
 			InfusionList.EMPTY
 	}
 	
-	fun setList(root: NBTTagCompound, infusions: InfusionList){
+	fun setList(root: TagCompound, infusions: InfusionList){
 		if (infusions.isEmpty){
 			root.removeTag(TAG_NAME)
 		}

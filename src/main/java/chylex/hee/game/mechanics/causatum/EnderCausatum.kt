@@ -4,10 +4,10 @@ import chylex.hee.system.Resource
 import chylex.hee.system.capability.CapabilityProvider
 import chylex.hee.system.capability.PlayerCapabilityHandler
 import chylex.hee.system.capability.PlayerCapabilityHandler.IPlayerPersistentCapability
+import chylex.hee.system.util.TagCompound
 import chylex.hee.system.util.getCap
 import chylex.hee.system.util.register
 import net.minecraft.entity.player.EntityPlayer
-import net.minecraft.nbt.NBTTagCompound
 import net.minecraftforge.common.capabilities.Capability
 import net.minecraftforge.common.capabilities.CapabilityInject
 import net.minecraftforge.common.capabilities.CapabilityManager
@@ -46,17 +46,17 @@ object EnderCausatum{
 	@CapabilityInject(CausatumCapability::class)
 	private var CAP_CAUSATUM: Capability<CausatumCapability>? = null
 	
-	private class CausatumCapability private constructor() : INBTSerializable<NBTTagCompound>{
+	private class CausatumCapability private constructor() : INBTSerializable<TagCompound>{
 		var stage = CausatumStage.S0_INITIAL
 		
-		override fun serializeNBT() = NBTTagCompound().apply {
+		override fun serializeNBT() = TagCompound().apply {
 			setString("Stage", stage.key)
 		}
 		
-		override fun deserializeNBT(nbt: NBTTagCompound) = with(nbt){
+		override fun deserializeNBT(nbt: TagCompound) = with(nbt){
 			stage = CausatumStage.fromKey(getString("Stage")) ?: stage
 		}
 		
-		class Provider : CapabilityProvider<CausatumCapability, NBTTagCompound>(CAP_CAUSATUM, CausatumCapability())
+		class Provider : CapabilityProvider<CausatumCapability, TagCompound>(CAP_CAUSATUM, CausatumCapability())
 	}
 }

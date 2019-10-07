@@ -3,6 +3,7 @@ import chylex.hee.game.entity.item.EntityFallingBlockHeavy.PlacementResult.FAIL
 import chylex.hee.game.entity.item.EntityFallingBlockHeavy.PlacementResult.RELOCATION
 import chylex.hee.game.entity.item.EntityFallingBlockHeavy.PlacementResult.SUCCESS
 import chylex.hee.system.util.Pos
+import chylex.hee.system.util.TagCompound
 import chylex.hee.system.util.breakBlock
 import chylex.hee.system.util.getBlock
 import chylex.hee.system.util.getHardness
@@ -23,7 +24,6 @@ import net.minecraft.entity.MoverType.SELF
 import net.minecraft.entity.item.EntityFallingBlock
 import net.minecraft.init.Blocks
 import net.minecraft.item.ItemStack
-import net.minecraft.nbt.NBTTagCompound
 import net.minecraft.tileentity.TileEntity
 import net.minecraft.util.math.BlockPos
 import net.minecraft.world.World
@@ -146,7 +146,7 @@ open class EntityFallingBlockHeavy : EntityFallingBlock, IEntityAdditionalSpawnD
 				
 				if (tileEntityData != null && block.hasTileEntity(state)){
 					pos.getTile<TileEntity>(world)?.let {
-						val nbt = it.writeToNBT(NBTTagCompound())
+						val nbt = it.writeToNBT(TagCompound())
 						
 						for(key in tileEntityData.keySet){
 							if (key !in ignoredTileKeys){

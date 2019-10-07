@@ -1,6 +1,7 @@
 package chylex.hee.game.entity.living.behavior
 import chylex.hee.game.entity.living.EntityBossEnderEye
 import chylex.hee.game.entity.living.behavior.EnderEyeAttack.Melee
+import chylex.hee.system.util.TagCompound
 import chylex.hee.system.util.directionTowards
 import chylex.hee.system.util.floorToInt
 import chylex.hee.system.util.lookPosVec
@@ -11,16 +12,15 @@ import chylex.hee.system.util.selectExistingEntities
 import chylex.hee.system.util.toPitch
 import chylex.hee.system.util.toYaw
 import net.minecraft.init.SoundEvents
-import net.minecraft.nbt.NBTTagCompound
 import net.minecraft.util.SoundCategory
 import net.minecraftforge.common.util.INBTSerializable
 import kotlin.math.min
 
-sealed class EnderEyePhase : INBTSerializable<NBTTagCompound>{
+sealed class EnderEyePhase : INBTSerializable<TagCompound>{
 	open fun tick(entity: EntityBossEnderEye) = this
 	
-	override fun serializeNBT() = NBTTagCompound()
-	override fun deserializeNBT(nbt: NBTTagCompound){}
+	override fun serializeNBT() = TagCompound()
+	override fun deserializeNBT(nbt: TagCompound){}
 	
 	object Hibernated : EnderEyePhase()
 	
@@ -46,11 +46,11 @@ sealed class EnderEyePhase : INBTSerializable<NBTTagCompound>{
 			return this
 		}
 		
-		override fun serializeNBT() = NBTTagCompound().apply {
+		override fun serializeNBT() = TagCompound().apply {
 			setByte("Timer", timer)
 		}
 		
-		override fun deserializeNBT(nbt: NBTTagCompound) = with(nbt){
+		override fun deserializeNBT(nbt: TagCompound) = with(nbt){
 			timer = getByte("Timer")
 		}
 	}
@@ -95,12 +95,12 @@ sealed class EnderEyePhase : INBTSerializable<NBTTagCompound>{
 			return this
 		}
 		
-		override fun serializeNBT() = NBTTagCompound().apply {
+		override fun serializeNBT() = TagCompound().apply {
 			setFloat("Current", animatedSpawnerPercentage)
 			setFloat("Target", targetSpawnerPercentage)
 		}
 		
-		override fun deserializeNBT(nbt: NBTTagCompound) = with(nbt){
+		override fun deserializeNBT(nbt: TagCompound) = with(nbt){
 			animatedSpawnerPercentage = getFloat("Current")
 			targetSpawnerPercentage = getFloat("Target")
 		}

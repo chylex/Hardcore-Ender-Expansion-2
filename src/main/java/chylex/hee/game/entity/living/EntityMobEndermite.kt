@@ -12,6 +12,7 @@ import chylex.hee.system.util.AIAttackMelee
 import chylex.hee.system.util.AISwim
 import chylex.hee.system.util.AITargetAttacker
 import chylex.hee.system.util.AITargetNearby
+import chylex.hee.system.util.TagCompound
 import chylex.hee.system.util.heeTag
 import chylex.hee.system.util.square
 import net.minecraft.entity.Entity
@@ -20,7 +21,6 @@ import net.minecraft.entity.SharedMonsterAttributes.ATTACK_DAMAGE
 import net.minecraft.entity.SharedMonsterAttributes.MAX_HEALTH
 import net.minecraft.entity.monster.EntityEndermite
 import net.minecraft.entity.player.EntityPlayer
-import net.minecraft.nbt.NBTTagCompound
 import net.minecraft.util.ResourceLocation
 import net.minecraft.world.World
 
@@ -116,14 +116,14 @@ open class EntityMobEndermite(world: World) : EntityEndermite(world){
 		return realLifetime > 1800
 	}
 	
-	override fun writeEntityToNBT(nbt: NBTTagCompound) = with(nbt.heeTag){
+	override fun writeEntityToNBT(nbt: TagCompound) = with(nbt.heeTag){
 		super.writeEntityToNBT(nbt)
 		
 		setInteger("Age", realLifetime)
 		setShort("Idle", idleDespawnTimer)
 	}
 	
-	override fun readEntityFromNBT(nbt: NBTTagCompound) = with(nbt.heeTag){
+	override fun readEntityFromNBT(nbt: TagCompound) = with(nbt.heeTag){
 		super.readEntityFromNBT(nbt)
 		
 		realLifetime = getInteger("Age")

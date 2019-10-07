@@ -7,17 +7,17 @@ import chylex.hee.game.mechanics.instability.region.entry.IRegionEntry
 import chylex.hee.game.mechanics.instability.region.entry.IRegionEntryConstructor
 import chylex.hee.game.mechanics.instability.region.entry.RegionEntryMap
 import chylex.hee.system.util.Pos
+import chylex.hee.system.util.TagCompound
+import chylex.hee.system.util.TagLongArray
 import chylex.hee.system.util.floorToInt
 import chylex.hee.system.util.nextInt
-import net.minecraft.nbt.NBTTagCompound
-import net.minecraft.nbt.NBTTagLongArray
 import net.minecraft.util.ITickable
 import net.minecraft.world.World
 import net.minecraftforge.common.util.INBTSerializable
 import java.util.Random
 import kotlin.math.min
 
-class RegionInstability<T : IRegionEntry>(private val world: World, private val entryConstructor: IRegionEntryConstructor<T>) : ITickable, INBTSerializable<NBTTagCompound>{
+class RegionInstability<T : IRegionEntry>(private val world: World, private val entryConstructor: IRegionEntryConstructor<T>) : ITickable, INBTSerializable<TagCompound>{
 	private companion object{
 		private const val POINTS_TO_TRIGGER = 500
 		private const val TELEPORTS_TO_CHAOS = 16
@@ -135,7 +135,7 @@ class RegionInstability<T : IRegionEntry>(private val world: World, private val 
 	
 	// Serialization
 	
-	override fun serializeNBT() = NBTTagCompound().apply {
+	override fun serializeNBT() = TagCompound().apply {
 		setTag("Entries", entries.serializeNBT())
 		setTag("Triggered", triggered.serializeNBT())
 		
@@ -143,9 +143,9 @@ class RegionInstability<T : IRegionEntry>(private val world: World, private val 
 		setInteger("TicksToTeleport", ticksToTeleport)
 	}
 	
-	override fun deserializeNBT(nbt: NBTTagCompound) = with(nbt){
-		entries.deserializeNBT(getTag("Entries") as? NBTTagLongArray)
-		triggered.deserializeNBT(getTag("Triggered") as? NBTTagLongArray)
+	override fun deserializeNBT(nbt: TagCompound) = with(nbt){
+		entries.deserializeNBT(getTag("Entries") as? TagLongArray)
+		triggered.deserializeNBT(getTag("Triggered") as? TagLongArray)
 		
 		ticksToRecount = getInteger("TicksToRecount")
 		ticksToTeleport = getInteger("TicksToTeleport")

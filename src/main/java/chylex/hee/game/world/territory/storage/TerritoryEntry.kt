@@ -2,6 +2,7 @@ package chylex.hee.game.world.territory.storage
 import chylex.hee.game.world.ChunkGeneratorEndCustom
 import chylex.hee.game.world.territory.TerritoryInstance
 import chylex.hee.system.util.Pos
+import chylex.hee.system.util.TagCompound
 import chylex.hee.system.util.center
 import chylex.hee.system.util.delegate.NotifyOnChange
 import chylex.hee.system.util.getLongArrayOrNull
@@ -10,14 +11,13 @@ import chylex.hee.system.util.setLongArray
 import chylex.hee.system.util.setPos
 import chylex.hee.system.util.toYaw
 import net.minecraft.entity.player.EntityPlayer
-import net.minecraft.nbt.NBTTagCompound
 import net.minecraft.util.math.BlockPos
 import net.minecraft.world.World
 import net.minecraft.world.gen.ChunkProviderServer
 import net.minecraftforge.common.util.INBTSerializable
 import java.util.UUID
 
-class TerritoryEntry(private val owner: TerritoryGlobalStorage, private val instance: TerritoryInstance) : INBTSerializable<NBTTagCompound>{
+class TerritoryEntry(private val owner: TerritoryGlobalStorage, private val instance: TerritoryInstance) : INBTSerializable<TagCompound>{
 	private var spawnPoint: BlockPos? by NotifyOnChange(null, owner::markDirty)
 	private var interestPoint: BlockPos? by NotifyOnChange(null, owner::markDirty)
 	
@@ -55,7 +55,7 @@ class TerritoryEntry(private val owner: TerritoryGlobalStorage, private val inst
 		}
 	}
 	
-	override fun serializeNBT() = NBTTagCompound().apply {
+	override fun serializeNBT() = TagCompound().apply {
 		spawnPoint?.let {
 			setPos("Spawn", it)
 		}
@@ -80,7 +80,7 @@ class TerritoryEntry(private val owner: TerritoryGlobalStorage, private val inst
 		}
 	}
 	
-	override fun deserializeNBT(nbt: NBTTagCompound) = with(nbt){
+	override fun deserializeNBT(nbt: TagCompound) = with(nbt){
 		spawnPoint = getPosOrNull("Spawn")
 		interestPoint = getPosOrNull("Interest")
 		

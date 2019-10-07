@@ -9,9 +9,9 @@ import chylex.hee.game.mechanics.table.process.ProcessManyPedestals.State.Cancel
 import chylex.hee.game.mechanics.table.process.ProcessManyPedestals.State.Work
 import chylex.hee.game.mechanics.table.process.ProcessOnePedestal
 import chylex.hee.game.mechanics.table.process.serializer.BasicProcessSerializer
+import chylex.hee.system.util.TagCompound
 import chylex.hee.system.util.color.IntColor.Companion.RGB
 import net.minecraft.item.ItemStack
-import net.minecraft.nbt.NBTTagCompound
 import net.minecraft.util.math.BlockPos
 import net.minecraft.world.World
 
@@ -35,7 +35,7 @@ class TileEntityAccumulationTable : TileEntityBaseTable(){
 	
 	private class Process : ProcessOnePedestal{
 		constructor(world: World, pos: BlockPos) : super(world, pos)
-		constructor(world: World, nbt: NBTTagCompound) : super(world, nbt)
+		constructor(world: World, nbt: TagCompound) : super(world, nbt)
 		
 		override val energyPerTick =
 			Units(1)

@@ -1,6 +1,7 @@
 package chylex.hee.game.mechanics.table
 import chylex.hee.game.block.BlockTablePedestal
 import chylex.hee.game.container.util.InvReverseWrapper
+import chylex.hee.system.util.TagCompound
 import chylex.hee.system.util.copyIf
 import chylex.hee.system.util.createSnapshot
 import chylex.hee.system.util.getStack
@@ -19,7 +20,6 @@ import net.minecraft.inventory.Container
 import net.minecraft.inventory.InventoryBasic
 import net.minecraft.inventory.InventoryHelper
 import net.minecraft.item.ItemStack
-import net.minecraft.nbt.NBTTagCompound
 import net.minecraft.util.math.AxisAlignedBB
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.Vec3d
@@ -28,7 +28,7 @@ import net.minecraftforge.common.util.INBTSerializable
 import net.minecraftforge.items.ItemHandlerHelper
 import kotlin.math.min
 
-class PedestalInventoryHandler(private val updateCallback: (Boolean) -> Unit) : INBTSerializable<NBTTagCompound>{
+class PedestalInventoryHandler(private val updateCallback: (Boolean) -> Unit) : INBTSerializable<TagCompound>{
 	var itemInput: ItemStack = ItemStack.EMPTY
 		private set
 	
@@ -186,12 +186,12 @@ class PedestalInventoryHandler(private val updateCallback: (Boolean) -> Unit) : 
 	
 	// Serialization
 	
-	override fun serializeNBT() = NBTTagCompound().apply {
+	override fun serializeNBT() = TagCompound().apply {
 		setStack("Input", itemInput)
 		saveInventory("Output", itemOutput)
 	}
 	
-	override fun deserializeNBT(nbt: NBTTagCompound) = with(nbt){
+	override fun deserializeNBT(nbt: TagCompound) = with(nbt){
 		itemInput = getStack("Input")
 		loadInventory("Output", itemOutput)
 	}

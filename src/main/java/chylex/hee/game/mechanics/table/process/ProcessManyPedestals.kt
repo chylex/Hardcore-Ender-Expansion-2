@@ -13,6 +13,7 @@ import chylex.hee.game.mechanics.table.process.ProcessManyPedestals.State.Work
 import chylex.hee.system.util.NBTItemStackList
 import chylex.hee.system.util.NBTList.Companion.setList
 import chylex.hee.system.util.Pos
+import chylex.hee.system.util.TagCompound
 import chylex.hee.system.util.getListOfItemStacks
 import chylex.hee.system.util.getLongArray
 import chylex.hee.system.util.getPos
@@ -20,12 +21,11 @@ import chylex.hee.system.util.getTile
 import chylex.hee.system.util.setLongArray
 import chylex.hee.system.util.setPos
 import net.minecraft.item.ItemStack
-import net.minecraft.nbt.NBTTagCompound
 import net.minecraft.util.math.BlockPos
 import net.minecraft.world.World
 
 abstract class ProcessManyPedestals(private val world: World, pos: Array<BlockPos>) : ITableProcess{
-	protected constructor(world: World, nbt: NBTTagCompound) : this(world, nbt.getLongArray("PedestalPos").map(::Pos).toTypedArray())
+	protected constructor(world: World, nbt: TagCompound) : this(world, nbt.getLongArray("PedestalPos").map(::Pos).toTypedArray())
 	
 	final override val pedestals = pos
 	
@@ -161,7 +161,7 @@ abstract class ProcessManyPedestals(private val world: World, pos: Array<BlockPo
 	
 	// Serialization
 	
-	override fun serializeNBT() = NBTTagCompound().apply {
+	override fun serializeNBT() = TagCompound().apply {
 		setLongArray("PedestalPos", pedestals.map(BlockPos::toLong).toLongArray())
 		setList("LastInputs", NBTItemStackList.of(lastInputStacks.asIterable()))
 		
@@ -174,7 +174,7 @@ abstract class ProcessManyPedestals(private val world: World, pos: Array<BlockPo
 		})
 	}
 	
-	override fun deserializeNBT(nbt: NBTTagCompound) = with(nbt){
+	override fun deserializeNBT(nbt: TagCompound) = with(nbt){
 		getListOfItemStacks("LastInputs").forEachIndexed { index, stack -> lastInputStacks[index] = stack }
 		
 		currentState = when(getString("State")){

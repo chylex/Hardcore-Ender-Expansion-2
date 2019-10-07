@@ -7,6 +7,7 @@ import chylex.hee.init.ModItems
 import chylex.hee.network.client.PacketClientLaunchInstantly
 import chylex.hee.system.migration.forge.Side
 import chylex.hee.system.migration.forge.Sided
+import chylex.hee.system.util.TagCompound
 import chylex.hee.system.util.addY
 import chylex.hee.system.util.directionTowards
 import chylex.hee.system.util.getEnum
@@ -21,7 +22,6 @@ import chylex.hee.system.util.use
 import io.netty.buffer.ByteBuf
 import net.minecraft.entity.Entity
 import net.minecraft.entity.player.EntityPlayer
-import net.minecraft.nbt.NBTTagCompound
 import net.minecraft.network.datasync.DataSerializers
 import net.minecraft.util.DamageSource
 import net.minecraft.util.math.BlockPos
@@ -117,13 +117,13 @@ class EntityTokenHolder(world: World) : Entity(world), IEntityAdditionalSpawnDat
 		return false
 	}
 	
-	override fun writeEntityToNBT(nbt: NBTTagCompound) = with(nbt.heeTag){
+	override fun writeEntityToNBT(nbt: TagCompound) = with(nbt.heeTag){
 		setEnum("Type", tokenType)
 		setEnum("Territory", territoryType)
 		setFloat("Charge", currentCharge)
 	}
 	
-	override fun readEntityFromNBT(nbt: NBTTagCompound) = with(nbt.heeTag){
+	override fun readEntityFromNBT(nbt: TagCompound) = with(nbt.heeTag){
 		tokenType = getEnum<TokenType>("Type") ?: TokenType.NORMAL
 		territoryType = getEnum<TerritoryType>("Territory")
 		currentCharge = getFloat("Charge")

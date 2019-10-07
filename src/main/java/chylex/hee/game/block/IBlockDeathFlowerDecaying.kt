@@ -15,6 +15,7 @@ import chylex.hee.game.world.util.Teleporter.FxRange.Extended
 import chylex.hee.network.client.PacketClientFX
 import chylex.hee.system.migration.Difficulty.PEACEFUL
 import chylex.hee.system.migration.Facing.DOWN
+import chylex.hee.system.util.TagCompound
 import chylex.hee.system.util.allInCenteredSphereMutable
 import chylex.hee.system.util.blocksMovement
 import chylex.hee.system.util.center
@@ -41,7 +42,6 @@ import net.minecraft.block.state.IBlockState
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.init.MobEffects.WITHER
 import net.minecraft.init.SoundEvents
-import net.minecraft.nbt.NBTTagCompound
 import net.minecraft.potion.PotionEffect
 import net.minecraft.util.SoundCategory
 import net.minecraft.util.math.BlockPos
@@ -239,12 +239,12 @@ interface IBlockDeathFlowerDecaying{
 			return true
 		}
 		
-		override fun writeToNBT(nbt: NBTTagCompound) = nbt.apply {
+		override fun writeToNBT(nbt: TagCompound) = nbt.apply {
 			setLong("LastTeleportTime", lastTeleportTime)
 			setLong("LastWitherDay", lastWitherDay)
 		}
 		
-		override fun readFromNBT(nbt: NBTTagCompound) = with(nbt){
+		override fun readFromNBT(nbt: TagCompound) = with(nbt){
 			lastTeleportTime = getLong("LastTeleportTime")
 			lastWitherDay = getLong("LastWitherDay")
 		}

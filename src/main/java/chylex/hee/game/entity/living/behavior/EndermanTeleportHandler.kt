@@ -18,6 +18,7 @@ import chylex.hee.network.client.PacketClientFX
 import chylex.hee.system.migration.Facing.DOWN
 import chylex.hee.system.migration.Facing.UP
 import chylex.hee.system.util.Pos
+import chylex.hee.system.util.TagCompound
 import chylex.hee.system.util.Vec3
 import chylex.hee.system.util.addY
 import chylex.hee.system.util.blocksMovement
@@ -36,7 +37,6 @@ import chylex.hee.system.util.posVec
 import net.minecraft.entity.Entity
 import net.minecraft.init.MobEffects.INVISIBILITY
 import net.minecraft.init.SoundEvents
-import net.minecraft.nbt.NBTTagCompound
 import net.minecraft.potion.PotionEffect
 import net.minecraft.util.ITickable
 import net.minecraft.util.SoundCategory
@@ -48,7 +48,7 @@ import java.util.Random
 import java.util.UUID
 import kotlin.math.min
 
-class EndermanTeleportHandler(private val enderman: EntityMobAbstractEnderman) : ITickable, INBTSerializable<NBTTagCompound>{
+class EndermanTeleportHandler(private val enderman: EntityMobAbstractEnderman) : ITickable, INBTSerializable<TagCompound>{
 	companion object{
 		private const val DEFAULT_RESTORE_Y = -256.0
 		
@@ -326,12 +326,12 @@ class EndermanTeleportHandler(private val enderman: EntityMobAbstractEnderman) :
 	
 	// Serialization
 	
-	override fun serializeNBT() = NBTTagCompound().apply {
+	override fun serializeNBT() = TagCompound().apply {
 		setShort("Cooldown", tpCooldown.toShort())
 		setShort("DelayTicks", tpDelayTicks.toShort())
 	}
 	
-	override fun deserializeNBT(nbt: NBTTagCompound) = with(nbt){
+	override fun deserializeNBT(nbt: TagCompound) = with(nbt){
 		tpCooldown = getShort("Cooldown").toInt()
 		tpDelayTicks = min(1, getShort("DelayTicks").toInt())
 	}

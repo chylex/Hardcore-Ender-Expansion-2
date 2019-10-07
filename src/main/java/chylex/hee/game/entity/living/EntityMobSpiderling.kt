@@ -33,6 +33,7 @@ import chylex.hee.system.util.AIWatchClosest
 import chylex.hee.system.util.AIWatchIdle
 import chylex.hee.system.util.OPERATION_MUL_INCR_INDIVIDUAL
 import chylex.hee.system.util.Pos
+import chylex.hee.system.util.TagCompound
 import chylex.hee.system.util.addY
 import chylex.hee.system.util.directionTowards
 import chylex.hee.system.util.floorToInt
@@ -64,7 +65,6 @@ import net.minecraft.init.MobEffects.POISON
 import net.minecraft.init.SoundEvents
 import net.minecraft.item.ItemAxe
 import net.minecraft.item.ItemSword
-import net.minecraft.nbt.NBTTagCompound
 import net.minecraft.network.datasync.DataSerializers
 import net.minecraft.pathfinding.PathNavigate
 import net.minecraft.potion.PotionEffect
@@ -498,7 +498,7 @@ class EntityMobSpiderling(world: World) : EntityMob(world), ILightStartleHandler
 	
 	// Serialization
 	
-	override fun writeEntityToNBT(nbt: NBTTagCompound) = with(nbt.heeTag){
+	override fun writeEntityToNBT(nbt: TagCompound) = with(nbt.heeTag){
 		setInteger("SleepState", when{
 			isSleeping -> 2
 			canSleepAgain -> 1
@@ -508,7 +508,7 @@ class EntityMobSpiderling(world: World) : EntityMob(world), ILightStartleHandler
 		setLong("LightStartleResetTime", lightStartleResetTime)
 	}
 	
-	override fun readEntityFromNBT(nbt: NBTTagCompound) = with(nbt.heeTag){
+	override fun readEntityFromNBT(nbt: TagCompound) = with(nbt.heeTag){
 		val sleepState = getInteger("SleepState")
 		
 		if (sleepState != 2){

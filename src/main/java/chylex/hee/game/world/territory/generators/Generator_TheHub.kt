@@ -34,6 +34,7 @@ import chylex.hee.system.migration.Facing.DOWN
 import chylex.hee.system.migration.Facing.UP
 import chylex.hee.system.util.Facing4
 import chylex.hee.system.util.Pos
+import chylex.hee.system.util.TagCompound
 import chylex.hee.system.util.Vec3
 import chylex.hee.system.util.addY
 import chylex.hee.system.util.allInCenteredBoxMutable
@@ -58,7 +59,6 @@ import chylex.hee.system.util.scaleY
 import chylex.hee.system.util.square
 import chylex.hee.system.util.withY
 import net.minecraft.init.Blocks
-import net.minecraft.nbt.NBTTagCompound
 import net.minecraft.util.EnumFacing
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.Vec3d
@@ -369,7 +369,7 @@ object Generator_TheHub : ITerritoryGenerator{
 			PortalGenerator.VoidPortalHub.place(world, portalCenter, radius = 2, outline = BlockReplacer(fill = Blocks.END_STONE, replace = Blocks.AIR), base = Blocks.END_STONE)
 			Pillars.generate(world, rand, portalCenter)
 			
-			world.addTrigger(portalCenter.offset(pathFacing, 3), TileEntityStructureTrigger(ModBlocks.VOID_PORTAL_STORAGE, NBTTagCompound()))
+			world.addTrigger(portalCenter.offset(pathFacing, 3), TileEntityStructureTrigger(ModBlocks.VOID_PORTAL_STORAGE, TagCompound()))
 		}
 		
 		private object Cutout{

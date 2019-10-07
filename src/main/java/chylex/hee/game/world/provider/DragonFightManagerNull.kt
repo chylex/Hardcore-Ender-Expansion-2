@@ -1,14 +1,14 @@
 package chylex.hee.game.world.provider
+import chylex.hee.system.util.TagCompound
 import net.minecraft.entity.boss.EntityDragon
 import net.minecraft.entity.item.EntityEnderCrystal
 import net.minecraft.entity.player.EntityPlayerMP
-import net.minecraft.nbt.NBTTagCompound
 import net.minecraft.util.DamageSource
 import net.minecraft.world.WorldServer
 import net.minecraft.world.end.DragonFightManager
 import net.minecraft.world.end.DragonSpawnManager
 
-class DragonFightManagerNull(world: WorldServer) : DragonFightManager(world, NBTTagCompound()){
+class DragonFightManagerNull(world: WorldServer) : DragonFightManager(world, TagCompound()){
 	override fun tick(){}
 	
 	override fun hasPreviouslyKilledDragon() = false

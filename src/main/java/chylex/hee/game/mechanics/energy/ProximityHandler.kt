@@ -3,11 +3,11 @@ import chylex.hee.game.block.entity.TileEntityEnergyCluster
 import chylex.hee.game.block.entity.TileEntityEnergyCluster.LeakType
 import chylex.hee.game.mechanics.energy.IEnergyQuantity.Units
 import chylex.hee.game.mechanics.instability.Instability
+import chylex.hee.system.util.TagCompound
 import chylex.hee.system.util.ceilToInt
 import chylex.hee.system.util.component1
 import chylex.hee.system.util.component2
 import chylex.hee.system.util.nextInt
-import net.minecraft.nbt.NBTTagCompound
 import net.minecraft.util.math.ChunkPos
 import net.minecraftforge.common.util.INBTSerializable
 import java.util.Random
@@ -15,7 +15,7 @@ import kotlin.math.abs
 import kotlin.math.min
 import kotlin.math.pow
 
-class ProximityHandler(private val cluster: TileEntityEnergyCluster) : INBTSerializable<NBTTagCompound>{
+class ProximityHandler(private val cluster: TileEntityEnergyCluster) : INBTSerializable<TagCompound>{
 	private companion object{
 		private const val AFFECTED_TAG = "Affected"
 		private const val LEAK_TICKS_TAG = "TicksToLeak"
@@ -95,12 +95,12 @@ class ProximityHandler(private val cluster: TileEntityEnergyCluster) : INBTSeria
 		}
 	}
 	
-	override fun serializeNBT() = NBTTagCompound().apply {
+	override fun serializeNBT() = TagCompound().apply {
 		setBoolean(AFFECTED_TAG, affectedByProximity)
 		setInteger(LEAK_TICKS_TAG, ticksToLeak)
 	}
 	
-	override fun deserializeNBT(nbt: NBTTagCompound) = with(nbt){
+	override fun deserializeNBT(nbt: TagCompound) = with(nbt){
 		affectedByProximity = getBoolean(AFFECTED_TAG)
 		ticksToLeak = getInteger(LEAK_TICKS_TAG)
 	}

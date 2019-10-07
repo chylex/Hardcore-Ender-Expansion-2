@@ -16,6 +16,7 @@ import chylex.hee.system.migration.forge.EventPriority
 import chylex.hee.system.migration.forge.SubscribeAllEvents
 import chylex.hee.system.migration.forge.SubscribeEvent
 import chylex.hee.system.util.Pos
+import chylex.hee.system.util.TagCompound
 import chylex.hee.system.util.heeTag
 import chylex.hee.system.util.motionVec
 import chylex.hee.system.util.posVec
@@ -25,7 +26,6 @@ import net.minecraft.entity.Entity
 import net.minecraft.entity.EntityLivingBase
 import net.minecraft.entity.item.EntityEnderPearl
 import net.minecraft.entity.player.EntityPlayerMP
-import net.minecraft.nbt.NBTTagCompound
 import net.minecraft.util.DamageSource
 import net.minecraft.util.math.RayTraceResult
 import net.minecraft.util.math.RayTraceResult.Type.MISS
@@ -191,14 +191,14 @@ class EntityProjectileEnderPearl : EntityEnderPearl, IEntityAdditionalSpawnData{
 	
 	// Serialization
 	
-	override fun writeEntityToNBT(nbt: NBTTagCompound) = with(nbt.heeTag){
+	override fun writeEntityToNBT(nbt: TagCompound) = with(nbt.heeTag){
 		super.writeEntityToNBT(nbt)
 		
 		InfusionTag.setList(this, infusions)
 		setBoolean("HasPhased", hasPhasedIntoWall)
 	}
 	
-	override fun readEntityFromNBT(nbt: NBTTagCompound) = with(nbt.heeTag){
+	override fun readEntityFromNBT(nbt: TagCompound) = with(nbt.heeTag){
 		super.readEntityFromNBT(nbt)
 		
 		loadInfusions(InfusionTag.getList(this))

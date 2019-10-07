@@ -10,9 +10,9 @@ import chylex.hee.game.mechanics.instability.region.entry.types.Entry5x5
 import chylex.hee.system.Resource
 import chylex.hee.system.capability.CapabilityProvider
 import chylex.hee.system.migration.forge.SubscribeEvent
+import chylex.hee.system.util.TagCompound
 import chylex.hee.system.util.getCapOrNull
 import chylex.hee.system.util.register
-import net.minecraft.nbt.NBTTagCompound
 import net.minecraft.world.World
 import net.minecraft.world.WorldProviderEnd
 import net.minecraftforge.common.MinecraftForge
@@ -64,17 +64,17 @@ object Instability{
 		}
 	}
 	
-	private class InstabilityCapability private constructor(val dimension: IDimensionInstability, val region: RegionInstability<*>) : INBTSerializable<NBTTagCompound>{
-		override fun serializeNBT() = NBTTagCompound().apply {
+	private class InstabilityCapability private constructor(val dimension: IDimensionInstability, val region: RegionInstability<*>) : INBTSerializable<TagCompound>{
+		override fun serializeNBT() = TagCompound().apply {
 			setTag("Dimension", dimension.serializeNBT())
 			setTag("Region", region.serializeNBT())
 		}
 		
-		override fun deserializeNBT(nbt: NBTTagCompound) = with(nbt){
+		override fun deserializeNBT(nbt: TagCompound) = with(nbt){
 			dimension.deserializeNBT(getCompoundTag("Dimension"))
 			region.deserializeNBT(getCompoundTag("Region"))
 		}
 		
-		class Provider(dimension: IDimensionInstability, region: RegionInstability<*>) : CapabilityProvider<InstabilityCapability, NBTTagCompound>(CAP_INSTABILITY!!, InstabilityCapability(dimension, region))
+		class Provider(dimension: IDimensionInstability, region: RegionInstability<*>) : CapabilityProvider<InstabilityCapability, TagCompound>(CAP_INSTABILITY!!, InstabilityCapability(dimension, region))
 	}
 }

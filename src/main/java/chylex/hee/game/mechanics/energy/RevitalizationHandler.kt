@@ -3,6 +3,7 @@ import chylex.hee.game.block.entity.TileEntityEnergyCluster
 import chylex.hee.game.mechanics.energy.IEnergyQuantity.Internal
 import chylex.hee.game.mechanics.energy.IEnergyQuantity.Units
 import chylex.hee.init.ModItems
+import chylex.hee.system.util.TagCompound
 import chylex.hee.system.util.breakBlock
 import chylex.hee.system.util.component1
 import chylex.hee.system.util.component2
@@ -12,12 +13,11 @@ import chylex.hee.system.util.floorToInt
 import chylex.hee.system.util.nextFloat
 import net.minecraft.entity.item.EntityItem
 import net.minecraft.item.ItemStack
-import net.minecraft.nbt.NBTTagCompound
 import net.minecraftforge.common.util.INBTSerializable
 import kotlin.math.pow
 import kotlin.math.sqrt
 
-class RevitalizationHandler(private val cluster: TileEntityEnergyCluster) : INBTSerializable<NBTTagCompound>{
+class RevitalizationHandler(private val cluster: TileEntityEnergyCluster) : INBTSerializable<TagCompound>{
 	private companion object{
 		private const val SUBSTANCE_TAG = "Substance"
 		private const val LAST_DRAIN_TIME_TAG = "LastDrainTime"
@@ -120,7 +120,7 @@ class RevitalizationHandler(private val cluster: TileEntityEnergyCluster) : INBT
 		return false
 	}
 	
-	override fun serializeNBT() = NBTTagCompound().apply {
+	override fun serializeNBT() = TagCompound().apply {
 		if (isRevitalizing){
 			setLong(LAST_DRAIN_TIME_TAG, lastDrainTime)
 			setInteger(DRAIN_AMOUNT_TAG, drainAmount.value)
@@ -132,7 +132,7 @@ class RevitalizationHandler(private val cluster: TileEntityEnergyCluster) : INBT
 		}
 	}
 	
-	override fun deserializeNBT(nbt: NBTTagCompound) = with(nbt){
+	override fun deserializeNBT(nbt: TagCompound) = with(nbt){
 		substance = getByte(SUBSTANCE_TAG)
 		lastDrainTime = getLong(LAST_DRAIN_TIME_TAG)
 		drainAmount = Internal(getInteger(DRAIN_AMOUNT_TAG))

@@ -1,10 +1,10 @@
 package chylex.hee.game.block.entity
 import chylex.hee.game.block.entity.TileEntityBase.Context.NETWORK
 import chylex.hee.game.block.entity.TileEntityBase.Context.STORAGE
+import chylex.hee.system.util.TagCompound
 import chylex.hee.system.util.delegate.NotifyOnChange
 import chylex.hee.system.util.getState
 import chylex.hee.system.util.heeTag
-import net.minecraft.nbt.NBTTagCompound
 import net.minecraft.network.NetworkManager
 import net.minecraft.network.play.server.SPacketUpdateTileEntity
 import net.minecraft.tileentity.TileEntity
@@ -51,27 +51,27 @@ abstract class TileEntityBase : TileEntity(){
 		STORAGE, NETWORK
 	}
 	
-	protected abstract fun writeNBT(nbt: NBTTagCompound, context: Context)
-	protected abstract fun readNBT(nbt: NBTTagCompound, context: Context)
+	protected abstract fun writeNBT(nbt: TagCompound, context: Context)
+	protected abstract fun readNBT(nbt: TagCompound, context: Context)
 	
 	// NBT: Storage
 	
-	final override fun writeToNBT(nbt: NBTTagCompound): NBTTagCompound{
+	final override fun writeToNBT(nbt: TagCompound): TagCompound{
 		return super.writeToNBT(nbt).also { writeNBT(it.heeTag, STORAGE) }
 	}
 	
-	final override fun readFromNBT(nbt: NBTTagCompound){
+	final override fun readFromNBT(nbt: TagCompound){
 		super.readFromNBT(nbt)
 		readNBT(nbt.heeTag, STORAGE)
 	}
 	
 	// NBT: Network load (Note: do not use super.getUpdateTag/handleUpdateTag to prevent a duplicate client-side call)
 	
-	final override fun getUpdateTag(): NBTTagCompound{
-		return super.writeToNBT(NBTTagCompound()).also { writeNBT(it.heeTag, NETWORK) }
+	final override fun getUpdateTag(): TagCompound{
+		return super.writeToNBT(TagCompound()).also { writeNBT(it.heeTag, NETWORK) }
 	}
 	
-	final override fun handleUpdateTag(nbt: NBTTagCompound){
+	final override fun handleUpdateTag(nbt: TagCompound){
 		super.readFromNBT(nbt)
 		readNBT(nbt.heeTag, NETWORK)
 	}
@@ -79,7 +79,7 @@ abstract class TileEntityBase : TileEntity(){
 	// NBT: Network update
 	
 	override fun getUpdatePacket(): SPacketUpdateTileEntity{
-		return SPacketUpdateTileEntity(pos, 0, NBTTagCompound().also { writeNBT(it, NETWORK) })
+		return SPacketUpdateTileEntity(pos, 0, TagCompound().also { writeNBT(it, NETWORK) })
 	}
 	
 	override fun onDataPacket(net: NetworkManager, packet: SPacketUpdateTileEntity){

@@ -8,11 +8,11 @@ import chylex.hee.game.world.generation.SegmentedWorld
 import chylex.hee.game.world.structure.IBlockPicker.Single
 import chylex.hee.game.world.structure.trigger.TileEntityStructureTrigger
 import chylex.hee.init.ModBlocks
+import chylex.hee.system.util.TagCompound
 import chylex.hee.system.util.allInCenteredBox
 import chylex.hee.system.util.with
 import net.minecraft.block.Block
 import net.minecraft.block.state.IBlockState
-import net.minecraft.nbt.NBTTagCompound
 import net.minecraft.util.math.BlockPos
 
 sealed class PortalGenerator(private val frameState: Block, private val innerState: IBlockState){
@@ -23,7 +23,7 @@ sealed class PortalGenerator(private val frameState: Block, private val innerSta
 	
 	fun place(world: SegmentedWorld, center: BlockPos, radius: Int = 1, outline: IBlockPlacer? = null, base: Block? = null){
 		for(pos in center.allInCenteredBox(radius, 0, radius)){
-			world.addTrigger(pos, TileEntityStructureTrigger(innerState, NBTTagCompound()))
+			world.addTrigger(pos, TileEntityStructureTrigger(innerState, TagCompound()))
 		}
 		
 		val frame = radius + 1

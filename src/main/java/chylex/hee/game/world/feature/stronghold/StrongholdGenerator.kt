@@ -8,6 +8,7 @@ import chylex.hee.game.world.util.PosXZ
 import chylex.hee.system.util.NBTList.Companion.setList
 import chylex.hee.system.util.NBTObjectList
 import chylex.hee.system.util.Pos
+import chylex.hee.system.util.TagCompound
 import chylex.hee.system.util.component1
 import chylex.hee.system.util.component2
 import chylex.hee.system.util.getListOfCompounds
@@ -15,7 +16,6 @@ import chylex.hee.system.util.getPos
 import chylex.hee.system.util.nextInt
 import chylex.hee.system.util.perDimensionData
 import chylex.hee.system.util.setPos
-import net.minecraft.nbt.NBTTagCompound
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.ChunkPos
 import net.minecraft.world.DimensionType.OVERWORLD
@@ -51,11 +51,11 @@ object StrongholdGenerator : IWorldGenerator{
 			return locations[chunk]
 		}
 		
-		override fun writeToNBT(nbt: NBTTagCompound) = nbt.apply {
-			val list = NBTObjectList<NBTTagCompound>()
+		override fun writeToNBT(nbt: TagCompound) = nbt.apply {
+			val list = NBTObjectList<TagCompound>()
 			
 			for((chunk, pos) in locations){
-				list.append(NBTTagCompound().also {
+				list.append(TagCompound().also {
 					it.setInteger("ChunkX", chunk.x)
 					it.setInteger("ChunkZ", chunk.z)
 					it.setPos("Pos", pos)
@@ -65,7 +65,7 @@ object StrongholdGenerator : IWorldGenerator{
 			setList("Locations", list)
 		}
 		
-		override fun readFromNBT(nbt: NBTTagCompound) = with(nbt){
+		override fun readFromNBT(nbt: TagCompound) = with(nbt){
 			locations.clear()
 			
 			for(tag in getListOfCompounds("Locations")){

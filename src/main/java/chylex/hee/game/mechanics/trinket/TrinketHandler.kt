@@ -8,6 +8,7 @@ import chylex.hee.system.capability.PlayerCapabilityHandler
 import chylex.hee.system.capability.PlayerCapabilityHandler.IPlayerCapability
 import chylex.hee.system.migration.forge.EventPriority
 import chylex.hee.system.migration.forge.SubscribeEvent
+import chylex.hee.system.util.TagCompound
 import chylex.hee.system.util.getCapOrNull
 import chylex.hee.system.util.readStack
 import chylex.hee.system.util.register
@@ -15,7 +16,6 @@ import chylex.hee.system.util.writeStack
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.item.Item
 import net.minecraft.item.ItemStack
-import net.minecraft.nbt.NBTTagCompound
 import net.minecraft.stats.StatList
 import net.minecraftforge.common.MinecraftForge
 import net.minecraftforge.common.capabilities.Capability
@@ -146,14 +146,14 @@ object TrinketHandler{
 			get()      = getStackInSlot(0)
 			set(value) = setStackInSlot(0, value)
 		
-		override fun serializeNBT() = NBTTagCompound().apply {
+		override fun serializeNBT() = TagCompound().apply {
 			writeStack(item)
 		}
 		
-		override fun deserializeNBT(nbt: NBTTagCompound) = with(nbt){
+		override fun deserializeNBT(nbt: TagCompound) = with(nbt){
 			item = readStack()
 		}
 		
-		class Provider : CapabilityProvider<TrinketCapability, NBTTagCompound>(CAP_TRINKET_SLOT, TrinketCapability())
+		class Provider : CapabilityProvider<TrinketCapability, TagCompound>(CAP_TRINKET_SLOT, TrinketCapability())
 	}
 }

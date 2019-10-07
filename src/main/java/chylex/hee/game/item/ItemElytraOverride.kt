@@ -1,4 +1,5 @@
 package chylex.hee.game.item
+import chylex.hee.system.util.TagCompound
 import chylex.hee.system.util.cleanupNBT
 import chylex.hee.system.util.hasKey
 import chylex.hee.system.util.heeTag
@@ -11,7 +12,6 @@ import net.minecraft.init.Enchantments
 import net.minecraft.inventory.EntityEquipmentSlot.CHEST
 import net.minecraft.item.ItemElytra
 import net.minecraft.item.ItemStack
-import net.minecraft.nbt.NBTTagCompound
 import net.minecraft.world.World
 import kotlin.math.min
 import kotlin.math.sqrt
@@ -24,13 +24,13 @@ class ItemElytraOverride : ItemElytra(){
 		private const val Y_TAG = "Y"
 		private const val Z_TAG = "Z"
 		
-		private fun createPositionTag(entity: Entity) = NBTTagCompound().also {
+		private fun createPositionTag(entity: Entity) = TagCompound().also {
 			it.setDouble(X_TAG, entity.posX)
 			it.setDouble(Y_TAG, entity.posY)
 			it.setDouble(Z_TAG, entity.posZ)
 		}
 		
-		private fun calculateCounterIncrement(entity: Entity, lastPosTag: NBTTagCompound): Float{
+		private fun calculateCounterIncrement(entity: Entity, lastPosTag: TagCompound): Float{
 			val distance = entity.getDistance(lastPosTag.getDouble(X_TAG), lastPosTag.getDouble(Y_TAG), lastPosTag.getDouble(Z_TAG))
 			return sqrt(min(distance.toFloat(), 60F)) / 7.25F
 		}

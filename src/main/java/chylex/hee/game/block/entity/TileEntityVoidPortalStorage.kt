@@ -10,11 +10,11 @@ import chylex.hee.game.world.territory.TerritoryInstance
 import chylex.hee.init.ModItems
 import chylex.hee.system.util.FLAG_SKIP_RENDER
 import chylex.hee.system.util.FLAG_SYNC_CLIENT
+import chylex.hee.system.util.TagCompound
 import chylex.hee.system.util.getIntegerOrNull
 import chylex.hee.system.util.square
 import net.minecraft.entity.Entity
 import net.minecraft.item.ItemStack
-import net.minecraft.nbt.NBTTagCompound
 import kotlin.math.min
 import kotlin.math.nextUp
 
@@ -97,7 +97,7 @@ class TileEntityVoidPortalStorage : TileEntityBasePortalController(), IVoidPorta
 		}
 	}
 	
-	override fun writeNBT(nbt: NBTTagCompound, context: Context) = with(nbt){
+	override fun writeNBT(nbt: TagCompound, context: Context) = with(nbt){
 		super.writeNBT(nbt, context)
 		
 		if (context == NETWORK){
@@ -105,7 +105,7 @@ class TileEntityVoidPortalStorage : TileEntityBasePortalController(), IVoidPorta
 		}
 	}
 	
-	override fun readNBT(nbt: NBTTagCompound, context: Context) = with(nbt){
+	override fun readNBT(nbt: TagCompound, context: Context) = with(nbt){
 		super.readNBT(nbt, context)
 		
 		if (context == NETWORK){

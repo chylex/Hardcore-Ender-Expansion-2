@@ -21,6 +21,7 @@ import chylex.hee.game.mechanics.damage.IDamageProcessor.Companion.PEACEFUL_EXCL
 import chylex.hee.game.mechanics.damage.IDamageProcessor.Companion.RAPID_DAMAGE
 import chylex.hee.init.ModLoot
 import chylex.hee.network.client.PacketClientLaunchInstantly
+import chylex.hee.system.util.TagCompound
 import chylex.hee.system.util.Vec3
 import chylex.hee.system.util.directionTowards
 import chylex.hee.system.util.floorToInt
@@ -47,7 +48,6 @@ import net.minecraft.entity.SharedMonsterAttributes.MAX_HEALTH
 import net.minecraft.entity.monster.IMob
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.entity.player.EntityPlayerMP
-import net.minecraft.nbt.NBTTagCompound
 import net.minecraft.network.datasync.DataSerializers
 import net.minecraft.util.DamageSource
 import net.minecraft.util.ResourceLocation
@@ -368,7 +368,7 @@ class EntityBossEnderEye(world: World) : EntityFlying(world), IMob{
 	
 	// Serialization
 	
-	override fun writeEntityToNBT(nbt: NBTTagCompound) = with(nbt.heeTag){
+	override fun writeEntityToNBT(nbt: TagCompound) = with(nbt.heeTag){
 		super.writeEntityToNBT(nbt)
 		
 		setBoolean("Sleeping", isSleeping)
@@ -385,7 +385,7 @@ class EntityBossEnderEye(world: World) : EntityFlying(world), IMob{
 		setTag("PhaseData", bossPhase.serializeNBT())
 	}
 	
-	override fun readEntityFromNBT(nbt: NBTTagCompound) = with(nbt.heeTag){
+	override fun readEntityFromNBT(nbt: TagCompound) = with(nbt.heeTag){
 		super.readEntityFromNBT(nbt)
 		
 		isSleeping = getBoolean("Sleeping")

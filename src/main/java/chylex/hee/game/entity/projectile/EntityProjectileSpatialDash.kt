@@ -16,6 +16,7 @@ import chylex.hee.game.world.util.Teleporter
 import chylex.hee.init.ModSounds
 import chylex.hee.network.client.PacketClientFX
 import chylex.hee.system.util.Pos
+import chylex.hee.system.util.TagCompound
 import chylex.hee.system.util.blocksMovement
 import chylex.hee.system.util.ceilToInt
 import chylex.hee.system.util.color.IRandomColor.Companion.IRandomColor
@@ -41,7 +42,6 @@ import net.minecraft.entity.EntityLivingBase
 import net.minecraft.entity.IProjectile
 import net.minecraft.entity.MoverType.SELF
 import net.minecraft.entity.player.EntityPlayer
-import net.minecraft.nbt.NBTTagCompound
 import net.minecraft.util.SoundCategory
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.RayTraceResult
@@ -261,13 +261,13 @@ class EntityProjectileSpatialDash : Entity, IProjectile{
 		setDead()
 	}
 	
-	override fun writeEntityToNBT(nbt: NBTTagCompound) = with(nbt.heeTag){
+	override fun writeEntityToNBT(nbt: TagCompound) = with(nbt.heeTag){
 		owner.writeToNBT(this, "Owner")
 		setShort("Lifespan", lifespan)
 		setFloat("Range", range)
 	}
 	
-	override fun readEntityFromNBT(nbt: NBTTagCompound) = with(nbt.heeTag){
+	override fun readEntityFromNBT(nbt: TagCompound) = with(nbt.heeTag){
 		owner.readFromNBT(this, "Owner")
 		lifespan = getShort("Lifespan")
 		range = getFloat("Range")

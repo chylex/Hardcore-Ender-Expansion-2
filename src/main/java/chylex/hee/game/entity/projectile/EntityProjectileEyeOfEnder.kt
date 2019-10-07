@@ -11,6 +11,7 @@ import chylex.hee.system.migration.Facing.UP
 import chylex.hee.system.migration.forge.Side
 import chylex.hee.system.migration.forge.Sided
 import chylex.hee.system.util.Pos
+import chylex.hee.system.util.TagCompound
 import chylex.hee.system.util.Vec3
 import chylex.hee.system.util.addY
 import chylex.hee.system.util.color.IRandomColor
@@ -46,7 +47,6 @@ import net.minecraft.entity.item.EntityItem
 import net.minecraft.init.Items
 import net.minecraft.init.SoundEvents
 import net.minecraft.item.ItemStack
-import net.minecraft.nbt.NBTTagCompound
 import net.minecraft.util.EnumParticleTypes.SMOKE_NORMAL
 import net.minecraft.util.SoundCategory
 import net.minecraft.util.math.BlockPos
@@ -306,13 +306,13 @@ class EntityProjectileEyeOfEnder : Entity, IEntityAdditionalSpawnData{
 	
 	// Serialization
 	
-	override fun writeEntityToNBT(nbt: NBTTagCompound) = with(nbt.heeTag){
+	override fun writeEntityToNBT(nbt: TagCompound) = with(nbt.heeTag){
 		targetPos?.let { setPos("Target", it) }
 		setShort("Timer", timer.toShort())
 		setFloat("Speed", speed)
 	}
 	
-	override fun readEntityFromNBT(nbt: NBTTagCompound) = with(nbt.heeTag){
+	override fun readEntityFromNBT(nbt: TagCompound) = with(nbt.heeTag){
 		targetPos = getPosOrNull("Target")
 		timer = getShort("Timer").toInt()
 		speed = getFloat("Speed")

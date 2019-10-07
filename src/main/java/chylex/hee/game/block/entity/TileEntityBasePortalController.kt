@@ -4,8 +4,8 @@ import chylex.hee.game.block.entity.TileEntityBase.Context.NETWORK
 import chylex.hee.game.block.entity.TileEntityBasePortalController.ForegroundRenderState.Animating
 import chylex.hee.game.block.entity.TileEntityBasePortalController.ForegroundRenderState.Invisible
 import chylex.hee.game.block.entity.TileEntityBasePortalController.ForegroundRenderState.Visible
+import chylex.hee.system.util.TagCompound
 import chylex.hee.system.util.math.LerpedFloat
-import net.minecraft.nbt.NBTTagCompound
 import net.minecraft.util.ITickable
 import kotlin.math.max
 import kotlin.math.min
@@ -43,7 +43,7 @@ abstract class TileEntityBasePortalController : TileEntityBase(), IPortalControl
 		}
 	}
 	
-	override fun writeNBT(nbt: NBTTagCompound, context: Context) = with(nbt){
+	override fun writeNBT(nbt: TagCompound, context: Context) = with(nbt){
 		if (context == NETWORK){
 			setString(RENDER_STATE_TAG, when(val state = serverRenderState){
 				is Animating -> "Animating".also { setFloat(RENDER_PROGRESS_TAG, state.progress) }
@@ -53,7 +53,7 @@ abstract class TileEntityBasePortalController : TileEntityBase(), IPortalControl
 		}
 	}
 	
-	override fun readNBT(nbt: NBTTagCompound, context: Context) = with(nbt){
+	override fun readNBT(nbt: TagCompound, context: Context) = with(nbt){
 		if (context == NETWORK){
 			clientRenderState = when(getString(RENDER_STATE_TAG)){
 				"Animating" -> Animating(getFloat(RENDER_PROGRESS_TAG))

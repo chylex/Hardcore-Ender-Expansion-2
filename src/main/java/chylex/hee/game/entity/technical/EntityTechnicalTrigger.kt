@@ -5,13 +5,13 @@ import chylex.hee.game.world.feature.stronghold.piece.StrongholdRoom_Main_Portal
 import chylex.hee.game.world.feature.stronghold.piece.StrongholdRoom_Trap_CornerHoles
 import chylex.hee.game.world.feature.stronghold.piece.StrongholdRoom_Trap_Prison
 import chylex.hee.game.world.feature.stronghold.piece.StrongholdRoom_Trap_TallIntersection
+import chylex.hee.system.util.TagCompound
 import chylex.hee.system.util.delegate.NotifyOnChange
 import chylex.hee.system.util.getEnum
 import chylex.hee.system.util.heeTag
 import chylex.hee.system.util.setEnum
 import chylex.hee.system.util.use
 import io.netty.buffer.ByteBuf
-import net.minecraft.nbt.NBTTagCompound
 import net.minecraft.world.World
 import net.minecraftforge.common.util.INBTSerializable
 import net.minecraftforge.fml.common.registry.IEntityAdditionalSpawnData
@@ -24,13 +24,13 @@ class EntityTechnicalTrigger(world: World) : EntityTechnicalBase(world), IEntity
 	
 	// Handler interface
 	
-	interface ITriggerHandler : INBTSerializable<NBTTagCompound>{
+	interface ITriggerHandler : INBTSerializable<TagCompound>{
 		fun check(world: World): Boolean
 		fun update(entity: EntityTechnicalTrigger)
 		fun nextTimer(rand: Random): Int
 		
-		@JvmDefault override fun serializeNBT() = NBTTagCompound()
-		@JvmDefault override fun deserializeNBT(nbt: NBTTagCompound){}
+		@JvmDefault override fun serializeNBT() = TagCompound()
+		@JvmDefault override fun deserializeNBT(nbt: TagCompound){}
 	}
 	
 	// Known handlers
@@ -79,14 +79,14 @@ class EntityTechnicalTrigger(world: World) : EntityTechnicalBase(world), IEntity
 		}
 	}
 	
-	override fun writeEntityToNBT(nbt: NBTTagCompound) = with(nbt.heeTag){
+	override fun writeEntityToNBT(nbt: TagCompound) = with(nbt.heeTag){
 		setEnum("Type", type)
 		setTag("Data", handler.serializeNBT())
 		
 		setShort("Timer", timer.toShort())
 	}
 	
-	override fun readEntityFromNBT(nbt: NBTTagCompound) = with(nbt.heeTag){
+	override fun readEntityFromNBT(nbt: TagCompound) = with(nbt.heeTag){
 		type = getEnum<Types>("Type") ?: INVALID
 		handler.deserializeNBT(getCompoundTag("Data"))
 		

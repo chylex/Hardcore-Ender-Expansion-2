@@ -5,17 +5,17 @@ import chylex.hee.game.mechanics.table.PedestalStatusIndicator.Process.SUPPORTIN
 import chylex.hee.game.mechanics.table.interfaces.ITableContext
 import chylex.hee.game.mechanics.table.interfaces.ITableProcess
 import chylex.hee.game.mechanics.table.interfaces.ITableProcess.Companion.NO_DUST
+import chylex.hee.system.util.TagCompound
 import chylex.hee.system.util.getPos
 import chylex.hee.system.util.getTile
 import chylex.hee.system.util.setPos
 import chylex.hee.system.util.size
 import net.minecraft.item.Item
-import net.minecraft.nbt.NBTTagCompound
 import net.minecraft.util.math.BlockPos
 import net.minecraft.world.World
 
 class ProcessSupportingItemHolder(private val world: World, pos: BlockPos) : ITableProcess{
-	constructor(world: World, nbt: NBTTagCompound) : this(world, nbt.getPos("PedestalPos"))
+	constructor(world: World, nbt: TagCompound) : this(world, nbt.getPos("PedestalPos"))
 	
 	override val pedestals = arrayOf(pos)
 	
@@ -54,9 +54,9 @@ class ProcessSupportingItemHolder(private val world: World, pos: BlockPos) : ITa
 	
 	// Serialization
 	
-	override fun serializeNBT() = NBTTagCompound().apply {
+	override fun serializeNBT() = TagCompound().apply {
 		setPos("PedestalPos", pedestals[0])
 	}
 	
-	override fun deserializeNBT(nbt: NBTTagCompound){}
+	override fun deserializeNBT(nbt: TagCompound){}
 }

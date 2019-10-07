@@ -5,8 +5,8 @@ import chylex.hee.system.migration.Facing.DOWN
 import chylex.hee.system.migration.Facing.UP
 import chylex.hee.system.util.FLAG_SYNC_CLIENT
 import chylex.hee.system.util.NBTList.Companion.setList
+import chylex.hee.system.util.TagCompound
 import chylex.hee.system.util.getListOfCompounds
-import net.minecraft.nbt.NBTTagCompound
 import net.minecraft.util.EnumFacing
 import net.minecraftforge.common.capabilities.Capability
 import net.minecraftforge.items.CapabilityItemHandler.ITEM_HANDLER_CAPABILITY
@@ -42,11 +42,11 @@ class TileEntityJarODust : TileEntityBase(){
 	
 	// Serialization
 	
-	override fun writeNBT(nbt: NBTTagCompound, context: Context) = with(nbt){
+	override fun writeNBT(nbt: TagCompound, context: Context) = with(nbt){
 		setList("Layers", layers.serializeNBT())
 	}
 	
-	override fun readNBT(nbt: NBTTagCompound, context: Context) = with(nbt){
+	override fun readNBT(nbt: TagCompound, context: Context) = with(nbt){
 		layers.deserializeNBT(getListOfCompounds("Layers"))
 	}
 }

@@ -3,6 +3,7 @@ import chylex.hee.game.block.entity.TileEntityBase.Context.NETWORK
 import chylex.hee.system.migration.Facing.UP
 import chylex.hee.system.util.FLAG_SKIP_RENDER
 import chylex.hee.system.util.FLAG_SYNC_CLIENT
+import chylex.hee.system.util.TagCompound
 import chylex.hee.system.util.distanceSqTo
 import chylex.hee.system.util.get
 import chylex.hee.system.util.getState
@@ -16,7 +17,6 @@ import net.minecraft.block.state.IBlockState
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.init.SoundEvents
 import net.minecraft.inventory.IInventory
-import net.minecraft.nbt.NBTTagCompound
 import net.minecraft.util.EnumFacing
 import net.minecraft.util.ITickable
 import net.minecraft.util.SoundCategory
@@ -129,7 +129,7 @@ abstract class TileEntityBaseChest : TileEntityBase(), ITickable, IWorldNameable
 		return newState.block != oldState.block
 	}
 	
-	override fun writeNBT(nbt: NBTTagCompound, context: Context) = with(nbt){
+	override fun writeNBT(nbt: TagCompound, context: Context) = with(nbt){
 		customName?.let {
 			setString("CustomName", it)
 		}
@@ -139,7 +139,7 @@ abstract class TileEntityBaseChest : TileEntityBase(), ITickable, IWorldNameable
 		}
 	}
 	
-	override fun readNBT(nbt: NBTTagCompound, context: Context) = with(nbt){
+	override fun readNBT(nbt: TagCompound, context: Context) = with(nbt){
 		customName = getStringOrNull("CustomName")
 		
 		if (context == NETWORK){

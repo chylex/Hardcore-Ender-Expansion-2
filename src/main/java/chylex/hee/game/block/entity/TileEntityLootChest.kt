@@ -2,6 +2,7 @@ package chylex.hee.game.block.entity
 import chylex.hee.HEE
 import chylex.hee.game.block.entity.TileEntityBase.Context.STORAGE
 import chylex.hee.init.ModSounds
+import chylex.hee.system.util.TagCompound
 import chylex.hee.system.util.loadInventory
 import chylex.hee.system.util.nonEmptySlots
 import chylex.hee.system.util.playServer
@@ -10,7 +11,6 @@ import chylex.hee.system.util.setStack
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.inventory.IInventory
 import net.minecraft.inventory.InventoryBasic
-import net.minecraft.nbt.NBTTagCompound
 import net.minecraft.util.SoundCategory
 import net.minecraft.util.SoundEvent
 import java.util.UUID
@@ -64,13 +64,13 @@ class TileEntityLootChest : TileEntityBaseChest(){
 	
 	// Serialization
 	
-	override fun writeNBT(nbt: NBTTagCompound, context: Context) = with(nbt){
+	override fun writeNBT(nbt: TagCompound, context: Context) = with(nbt){
 		super.writeNBT(nbt, context)
 		
 		if (context == STORAGE){
 			saveInventory("SourceInventory", sourceInventory)
 			
-			setTag("PlayerInventories", NBTTagCompound().also {
+			setTag("PlayerInventories", TagCompound().also {
 				for((uuid, inventory) in playerInventories){
 					it.saveInventory(uuid.toString(), inventory)
 				}
@@ -78,7 +78,7 @@ class TileEntityLootChest : TileEntityBaseChest(){
 		}
 	}
 	
-	override fun readNBT(nbt: NBTTagCompound, context: Context) = with(nbt){
+	override fun readNBT(nbt: TagCompound, context: Context) = with(nbt){
 		super.readNBT(nbt, context)
 		
 		if (context == STORAGE){

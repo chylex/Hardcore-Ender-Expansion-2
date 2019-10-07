@@ -1,15 +1,15 @@
 package chylex.hee.game.mechanics.table
 import chylex.hee.game.block.entity.TileEntityTablePedestal
+import chylex.hee.system.util.TagCompound
 import chylex.hee.system.util.color.IntColor
 import chylex.hee.system.util.color.IntColor.Companion.HCL
 import chylex.hee.system.util.color.IntColor.Companion.RGB
 import chylex.hee.system.util.delegate.NotifyOnChange
 import chylex.hee.system.util.getEnum
 import chylex.hee.system.util.setEnum
-import net.minecraft.nbt.NBTTagCompound
 import net.minecraftforge.common.util.INBTSerializable
 
-class PedestalStatusIndicator(private val pedestal: TileEntityTablePedestal) : INBTSerializable<NBTTagCompound>{
+class PedestalStatusIndicator(private val pedestal: TileEntityTablePedestal) : INBTSerializable<TagCompound>{
 	interface IIndicatorColor{
 		val color: IntColor
 	}
@@ -45,12 +45,12 @@ class PedestalStatusIndicator(private val pedestal: TileEntityTablePedestal) : I
 	
 	// Serialization
 	
-	override fun serializeNBT() = NBTTagCompound().apply {
+	override fun serializeNBT() = TagCompound().apply {
 		setEnum("Contents", contents)
 		setEnum("Process", process)
 	}
 	
-	override fun deserializeNBT(nbt: NBTTagCompound) = with(nbt){
+	override fun deserializeNBT(nbt: TagCompound) = with(nbt){
 		contents = getEnum<Contents>("Contents") ?: Contents.NONE
 		process = getEnum<Process>("Process")
 	}

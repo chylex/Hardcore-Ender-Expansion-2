@@ -3,9 +3,9 @@ import chylex.hee.HEE
 import chylex.hee.system.migration.forge.EventPriority
 import chylex.hee.system.migration.forge.SubscribeAllEvents
 import chylex.hee.system.migration.forge.SubscribeEvent
+import chylex.hee.system.util.TagCompound
 import net.minecraft.entity.Entity
 import net.minecraft.entity.player.EntityPlayer
-import net.minecraft.nbt.NBTTagCompound
 import net.minecraft.util.ResourceLocation
 import net.minecraftforge.common.capabilities.ICapabilityProvider
 import net.minecraftforge.common.util.INBTSerializable
@@ -19,7 +19,7 @@ object PlayerCapabilityHandler{
 		fun provide(player: EntityPlayer): ICapabilityProvider
 	}
 	
-	interface IPlayerPersistentCapability<T : INBTSerializable<NBTTagCompound>> : IPlayerCapability{
+	interface IPlayerPersistentCapability<T : INBTSerializable<TagCompound>> : IPlayerCapability{
 		fun retrieve(player: EntityPlayer): T
 	}
 	

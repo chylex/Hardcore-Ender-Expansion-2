@@ -8,6 +8,7 @@ import chylex.hee.game.world.structure.IStructureWorld
 import chylex.hee.game.world.structure.trigger.EntityStructureTrigger
 import chylex.hee.system.migration.Difficulty.PEACEFUL
 import chylex.hee.system.util.Pos
+import chylex.hee.system.util.TagCompound
 import chylex.hee.system.util.component1
 import chylex.hee.system.util.component2
 import chylex.hee.system.util.component3
@@ -17,7 +18,6 @@ import chylex.hee.system.util.nextItemOrNull
 import chylex.hee.system.util.posVec
 import chylex.hee.system.util.selectVulnerableEntities
 import net.minecraft.entity.player.EntityPlayer
-import net.minecraft.nbt.NBTTagCompound
 import net.minecraft.world.World
 import java.util.Random
 import kotlin.math.min
@@ -79,11 +79,11 @@ class StrongholdRoom_Trap_CornerHoles(file: String) : StrongholdAbstractPieceFro
 				4 + (3 * rand.nextInt(0, 2))
 		}
 		
-		override fun serializeNBT() = NBTTagCompound().apply {
+		override fun serializeNBT() = TagCompound().apply {
 			setShort("SpawnsLeft", spawnsLeft.toShort())
 		}
 		
-		override fun deserializeNBT(nbt: NBTTagCompound) = with(nbt){
+		override fun deserializeNBT(nbt: TagCompound) = with(nbt){
 			spawnsLeft = getShort("SpawnsLeft").toInt()
 		}
 	}

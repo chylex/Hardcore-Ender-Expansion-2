@@ -1,6 +1,7 @@
 package chylex.hee.game.world.feature.energyshrine
 import chylex.hee.system.util.NBTList.Companion.setList
 import chylex.hee.system.util.NBTObjectList
+import chylex.hee.system.util.TagCompound
 import chylex.hee.system.util.nextItem
 import net.minecraft.item.EnumDyeColor
 import net.minecraft.item.EnumDyeColor.BLACK
@@ -18,14 +19,13 @@ import net.minecraft.item.EnumDyeColor.RED
 import net.minecraft.item.EnumDyeColor.SILVER
 import net.minecraft.item.EnumDyeColor.WHITE
 import net.minecraft.item.EnumDyeColor.YELLOW
-import net.minecraft.nbt.NBTTagCompound
 import java.util.Random
 
 object EnergyShrineBanners{
-	fun generate(rand: Random, colors: BannerColors): NBTTagCompound{
+	fun generate(rand: Random, colors: BannerColors): TagCompound{
 		val (baseColor, fadeColor) = colors.damageValues
 		
-		val patterns = NBTObjectList<NBTTagCompound>().apply {
+		val patterns = NBTObjectList<TagCompound>().apply {
 			append(pattern("cs", BLACK.dyeDamage))
 			append(pattern("bri", baseColor))
 			
@@ -70,13 +70,13 @@ object EnergyShrineBanners{
 			append(pattern("gru", fadeColor))
 		}
 		
-		return NBTTagCompound().apply {
+		return TagCompound().apply {
 			setInteger("Base", baseColor)
 			setList("Patterns", patterns)
 		}
 	}
 	
-	private fun pattern(name: String, color: Int) = NBTTagCompound().apply {
+	private fun pattern(name: String, color: Int) = TagCompound().apply {
 		setString("Pattern", name)
 		setInteger("Color", color)
 	}

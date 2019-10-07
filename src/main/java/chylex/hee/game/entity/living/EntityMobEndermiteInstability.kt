@@ -8,10 +8,10 @@ import chylex.hee.system.migration.Difficulty.PEACEFUL
 import chylex.hee.system.migration.forge.Side
 import chylex.hee.system.migration.forge.Sided
 import chylex.hee.system.util.Pos
+import chylex.hee.system.util.TagCompound
 import chylex.hee.system.util.heeTag
 import chylex.hee.system.util.square
 import net.minecraft.entity.EntityLivingBase
-import net.minecraft.nbt.NBTTagCompound
 import net.minecraft.util.DamageSource
 import net.minecraft.util.ResourceLocation
 import net.minecraft.world.World
@@ -55,13 +55,13 @@ class EntityMobEndermiteInstability(world: World) : EntityMobEndermite(world), I
 	
 	// Serialization
 	
-	override fun writeEntityToNBT(nbt: NBTTagCompound) = with(nbt.heeTag){
+	override fun writeEntityToNBT(nbt: TagCompound) = with(nbt.heeTag){
 		super.writeEntityToNBT(nbt)
 		
 		setBoolean("Explode", spawnCorruptedEnergy)
 	}
 	
-	override fun readEntityFromNBT(nbt: NBTTagCompound) = with(nbt.heeTag){
+	override fun readEntityFromNBT(nbt: TagCompound) = with(nbt.heeTag){
 		super.readEntityFromNBT(nbt)
 		
 		spawnCorruptedEnergy = getBoolean("Explode")

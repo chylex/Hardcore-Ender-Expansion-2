@@ -29,6 +29,7 @@ import chylex.hee.game.particle.util.IShape
 import chylex.hee.game.particle.util.IShape.Point
 import chylex.hee.system.util.FLAG_SKIP_RENDER
 import chylex.hee.system.util.FLAG_SYNC_CLIENT
+import chylex.hee.system.util.TagCompound
 import chylex.hee.system.util.allInCenteredBox
 import chylex.hee.system.util.breakBlock
 import chylex.hee.system.util.ceilToInt
@@ -36,7 +37,6 @@ import chylex.hee.system.util.isAir
 import chylex.hee.system.util.isAnyPlayerWithinRange
 import chylex.hee.system.util.nextFloat
 import chylex.hee.system.util.nextInt
-import net.minecraft.nbt.NBTTagCompound
 import net.minecraft.util.ITickable
 import net.minecraft.util.math.BlockPos
 import kotlin.math.max
@@ -294,7 +294,7 @@ class TileEntityEnergyCluster : TileEntityBase(), ITickable{
 	
 	// Serialization
 	
-	override fun writeNBT(nbt: NBTTagCompound, context: Context) = with(nbt){
+	override fun writeNBT(nbt: TagCompound, context: Context) = with(nbt){
 		setShort(REGEN_TICKS_TAG, ticksToRegen.toShort())
 		setTag(SNAPSHOT_TAG, getClusterSnapshot().tag)
 		
@@ -314,7 +314,7 @@ class TileEntityEnergyCluster : TileEntityBase(), ITickable{
 		}
 	}
 	
-	override fun readNBT(nbt: NBTTagCompound, context: Context) = with(nbt){
+	override fun readNBT(nbt: TagCompound, context: Context) = with(nbt){
 		ticksToRegen = getShort(REGEN_TICKS_TAG).toInt()
 		loadClusterSnapshot(ClusterSnapshot(nbt.getCompoundTag(SNAPSHOT_TAG)), isInactive)
 		

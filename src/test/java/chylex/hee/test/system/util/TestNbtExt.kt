@@ -17,7 +17,7 @@ import net.minecraft.init.Items
 import net.minecraft.item.ItemStack
 import net.minecraft.nbt.NBTBase
 import net.minecraft.nbt.NBTTagByte
-import net.minecraft.nbt.NBTTagCompound
+import chylex.hee.system.util.TagCompound
 import net.minecraft.nbt.NBTTagDouble
 import net.minecraft.nbt.NBTTagFloat
 import net.minecraft.nbt.NBTTagInt
@@ -43,12 +43,12 @@ class TestNbtExt{
 	@Nested inner class General{
 		@Nested inner class HeeTag{
 			@Test fun `'heeTag' returns an existing tag`(){
-				val nbt = NBTTagCompound().apply { setTag("hee", NBTTagCompound().apply { setString("key", "Hello") }) }
+				val nbt = TagCompound().apply { setTag("hee", TagCompound().apply { setString("key", "Hello") }) }
 				assertEquals("Hello", nbt.heeTag.getString("key"))
 			}
 			
 			@Test fun `'heeTag' assigns a new tag if missing`(){
-				val nbt = NBTTagCompound()
+				val nbt = TagCompound()
 				assertFalse(nbt.hasKey("hee"))
 				
 				nbt.heeTag.setString("key", "Hello")
@@ -59,12 +59,12 @@ class TestNbtExt{
 		
 		@Nested inner class HeeTagOrNull{
 			@Test fun `'heeTagOrNull' returns an existing tag`(){
-				val nbt = NBTTagCompound().apply { setTag("hee", NBTTagCompound().apply { setString("key", "Hello") }) }
+				val nbt = TagCompound().apply { setTag("hee", TagCompound().apply { setString("key", "Hello") }) }
 				assertEquals("Hello", nbt.heeTagOrNull?.getString("key"))
 			}
 			
 			@Test fun `'heeTagOrNull' returns null if tag is missing`(){
-				val nbt = NBTTagCompound()
+				val nbt = TagCompound()
 				assertNull(nbt.heeTagOrNull)
 			}
 		}
@@ -104,7 +104,7 @@ class TestNbtExt{
 		
 		@Nested inner class HeeTag{
 			@Test fun `'heeTag' returns an existing tag`(){
-				val stack = ItemStack(Items.BOW).apply { nbt.setTag("hee", NBTTagCompound().apply { setString("key", "Hello") }) }
+				val stack = ItemStack(Items.BOW).apply { nbt.setTag("hee", TagCompound().apply { setString("key", "Hello") }) }
 				assertEquals("Hello", stack.heeTag.getString("key"))
 			}
 			
@@ -159,9 +159,9 @@ class TestNbtExt{
 			
 			@Test fun `'cleanupNBT' correctly processes a tag with mixed data`(){
 				val stack = ItemStack(Items.BOW).apply {
-					nbt.setTag("a", NBTTagCompound())
-					nbt.setTag("b", NBTTagCompound().also { it.setTag("bb", NBTTagCompound()) })
-					nbt.setTag("c", NBTTagCompound().also { it.setString("key", "Hello"); it.setTag("cc", NBTTagCompound()) })
+					nbt.setTag("a", TagCompound())
+					nbt.setTag("b", TagCompound().also { it.setTag("bb", TagCompound()) })
+					nbt.setTag("c", TagCompound().also { it.setString("key", "Hello"); it.setTag("cc", TagCompound()) })
 				}
 				
 				assertEquals(3, stack.nbt.size)
@@ -180,12 +180,12 @@ class TestNbtExt{
 	@Nested inner class NBTPrimitiveLists{
 		@Nested inner class Properties{
 			@Test fun `'isEmpty" returns true for empty tags`(){
-				val list = NBTTagCompound().getListOfPrimitives("key")
+				val list = TagCompound().getListOfPrimitives("key")
 				assertTrue(list.isEmpty)
 			}
 			
 			@Test fun `'isEmpty' returns false for non-empty tags`(){
-				val list = NBTTagCompound().getListOfPrimitives("key")
+				val list = TagCompound().getListOfPrimitives("key")
 				
 				list.append(1)
 				list.append(2)
@@ -193,7 +193,7 @@ class TestNbtExt{
 			}
 			
 			@Test fun `'size' returns correct amount of tags`(){
-				val list = NBTTagCompound().getListOfPrimitives("key")
+				val list = TagCompound().getListOfPrimitives("key")
 				
 				assertEquals(0, list.size)
 				list.append(5)
@@ -205,7 +205,7 @@ class TestNbtExt{
 		
 		@Nested inner class AppendGet{
 			private inline fun <reified T : Any> testAppendGet(callAppend: (NBTPrimitiveList) -> Unit, callGetCheck: (T) -> Boolean){
-				with(NBTTagCompound()){
+				with(TagCompound()){
 					val list = getListOfPrimitives("key")
 					
 					callAppend(list)
@@ -265,7 +265,7 @@ class TestNbtExt{
 		}
 		
 		@Nested inner class Get{
-			private fun makeFilledTestList() = NBTTagCompound().getListOfPrimitives("key").apply {
+			private fun makeFilledTestList() = TagCompound().getListOfPrimitives("key").apply {
 				append(1)
 				append(2)
 				append(3)
@@ -286,7 +286,7 @@ class TestNbtExt{
 		}
 		
 		@Nested inner class Iterators{
-			private fun makeFilledTestList() = NBTTagCompound().getListOfPrimitives("key").apply {
+			private fun makeFilledTestList() = TagCompound().getListOfPrimitives("key").apply {
 				append(1)
 				append(2)
 				append(3)
@@ -300,7 +300,7 @@ class TestNbtExt{
 			}
 			
 			@Test fun `'hasNext' returns false and 'next' throws if empty`(){
-				val list = NBTTagCompound().getListOfPrimitives("key")
+				val list = TagCompound().getListOfPrimitives("key")
 				val iterator = list.iterator()
 				
 				assertFalse(iterator.hasNext())
@@ -351,7 +351,7 @@ class TestNbtExt{
 		
 		@Nested inner class SequenceGetters{
 			private inline fun <T : Any> testSequenceGetter(callAppend: (NBTPrimitiveList, T) -> Unit, callGetSequence: (NBTPrimitiveList) -> Sequence<T>, testValues: Array<T>){
-				with(NBTTagCompound()){
+				with(TagCompound()){
 					val list = getListOfPrimitives("key")
 					
 					for(element in testValues){
@@ -415,19 +415,19 @@ class TestNbtExt{
 	@Nested inner class NBTObjectLists{
 		@Nested inner class Properties{
 			@Test fun `'isEmpty' returns true for empty tags`(){
-				val list2 = NBTTagCompound().getListOfStrings("key")
+				val list2 = TagCompound().getListOfStrings("key")
 				assertTrue(list2.isEmpty)
 			}
 			
 			@Test fun `'isEmpty' returns false for non-empty tags`(){
-				val list2 = NBTTagCompound().getListOfStrings("key")
+				val list2 = TagCompound().getListOfStrings("key")
 				
 				list2.append("test")
 				Assertions.assertFalse(list2.isEmpty)
 			}
 			
 			@Test fun `'size' returns correct amount of tags`(){
-				val list2 = NBTTagCompound().getListOfStrings("key")
+				val list2 = TagCompound().getListOfStrings("key")
 				
 				assertEquals(0, list2.size)
 				list2.append("first")
@@ -438,8 +438,8 @@ class TestNbtExt{
 		}
 		
 		@Nested inner class AppendGet{
-			private inline fun <T : Any> testAppendGet(listGetter: NBTTagCompound.(String) -> NBTObjectList<T>, callAppend: (NBTObjectList<T>) -> Unit, callGetCheck: (T) -> Boolean){
-				with(NBTTagCompound()){
+			private inline fun <T : Any> testAppendGet(listGetter: TagCompound.(String) -> NBTObjectList<T>, callAppend: (NBTObjectList<T>) -> Unit, callGetCheck: (T) -> Boolean){
+				with(TagCompound()){
 					val list = listGetter("key")
 					
 					callAppend(list)
@@ -450,17 +450,17 @@ class TestNbtExt{
 				}
 			}
 			
-			@Test fun `'append' using NBTTagCompound updates the tag and 'get' returns the same value`(){
+			@Test fun `'append' using TagCompound updates the tag and 'get' returns the same value`(){
 				testAppendGet(
-					NBTTagCompound::getListOfCompounds,
-					{ list -> list.append(NBTTagCompound().apply { setInteger("test", 123) }) },
+					TagCompound::getListOfCompounds,
+					{ list -> list.append(TagCompound().apply { setInteger("test", 123) }) },
 					{ value -> value.getInteger("test") == 123 }
 				)
 			}
 			
 			@Test fun `'append' using String updates the tag and 'get' returns the same value`(){
 				testAppendGet(
-					NBTTagCompound::getListOfStrings,
+					TagCompound::getListOfStrings,
 					{ list -> list.append("hello") },
 					{ value -> value == "hello" }
 				)
@@ -468,7 +468,7 @@ class TestNbtExt{
 			
 			@Test fun `'append' using ByteArray updates the tag and 'get' returns the same value`(){
 				testAppendGet(
-					NBTTagCompound::getListOfByteArrays,
+					TagCompound::getListOfByteArrays,
 					{ list -> list.append(byteArrayOf(1, 2, 3)) },
 					{ value -> value.contentEquals(byteArrayOf(1, 2, 3)) }
 				)
@@ -476,7 +476,7 @@ class TestNbtExt{
 			
 			@Test fun `'append' using IntArray updates the tag and 'get' returns the same value`(){
 				testAppendGet(
-					NBTTagCompound::getListOfIntArrays,
+					TagCompound::getListOfIntArrays,
 					{ list -> list.append(intArrayOf(1, 2, 3)) },
 					{ value -> value.contentEquals(intArrayOf(1, 2, 3)) }
 				)
@@ -484,7 +484,7 @@ class TestNbtExt{
 		}
 		
 		@Nested inner class Get{
-			private fun makeFilledTestList() = NBTTagCompound().getListOfStrings("key").apply {
+			private fun makeFilledTestList() = TagCompound().getListOfStrings("key").apply {
 				append("a")
 				append("b")
 				append("c")
@@ -505,7 +505,7 @@ class TestNbtExt{
 		}
 		
 		@Nested inner class Iterators{
-			private fun makeFilledTestList() = NBTTagCompound().getListOfStrings("key").apply {
+			private fun makeFilledTestList() = TagCompound().getListOfStrings("key").apply {
 				append("a")
 				append("b")
 				append("c")
@@ -519,7 +519,7 @@ class TestNbtExt{
 			}
 			
 			@Test fun `'hasNext' returns false and 'next' throws if empty`(){
-				val list = NBTTagCompound().getListOfPrimitives("key")
+				val list = TagCompound().getListOfPrimitives("key")
 				val iterator = list.iterator()
 				
 				assertFalse(iterator.hasNext())

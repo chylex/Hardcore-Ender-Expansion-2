@@ -24,6 +24,7 @@ import chylex.hee.system.migration.Facing.DOWN
 import chylex.hee.system.migration.forge.Side
 import chylex.hee.system.migration.forge.Sided
 import chylex.hee.system.util.FLAG_SYNC_CLIENT
+import chylex.hee.system.util.TagCompound
 import chylex.hee.system.util.color.IntColor
 import chylex.hee.system.util.delegate.NotifyOnChange
 import chylex.hee.system.util.getIntegerOrNull
@@ -42,7 +43,6 @@ import net.minecraft.entity.item.EntityItem
 import net.minecraft.entity.player.InventoryPlayer
 import net.minecraft.init.SoundEvents
 import net.minecraft.item.ItemStack
-import net.minecraft.nbt.NBTTagCompound
 import net.minecraft.util.EnumFacing
 import net.minecraft.util.SoundCategory
 import net.minecraft.util.math.AxisAlignedBB
@@ -283,7 +283,7 @@ class TileEntityTablePedestal : TileEntityBase(){
 		return newState.block != oldState.block
 	}
 	
-	override fun writeNBT(nbt: NBTTagCompound, context: Context) = with(nbt){
+	override fun writeNBT(nbt: TagCompound, context: Context) = with(nbt){
 		linkedTable?.let {
 			setPos("TablePos", it)
 		}
@@ -300,7 +300,7 @@ class TileEntityTablePedestal : TileEntityBase(){
 		}
 	}
 	
-	override fun readNBT(nbt: NBTTagCompound, context: Context) = with(nbt){
+	override fun readNBT(nbt: TagCompound, context: Context) = with(nbt){
 		linkedTable = getPosOrNull("TablePos")
 		
 		inventoryHandler.deserializeNBT(nbt.getCompoundTag("Inventory"))

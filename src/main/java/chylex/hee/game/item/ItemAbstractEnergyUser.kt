@@ -15,6 +15,7 @@ import chylex.hee.system.migration.ActionResult.SUCCESS
 import chylex.hee.system.migration.Hand.OFF_HAND
 import chylex.hee.system.migration.forge.Side
 import chylex.hee.system.migration.forge.Sided
+import chylex.hee.system.util.TagCompound
 import chylex.hee.system.util.ceilToInt
 import chylex.hee.system.util.distanceTo
 import chylex.hee.system.util.floorToInt
@@ -33,7 +34,6 @@ import net.minecraft.entity.Entity
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.item.Item
 import net.minecraft.item.ItemStack
-import net.minecraft.nbt.NBTTagCompound
 import net.minecraft.util.EnumActionResult
 import net.minecraft.util.EnumFacing
 import net.minecraft.util.EnumHand
@@ -52,7 +52,7 @@ abstract class ItemAbstractEnergyUser : Item(){
 		private const val CLUSTER_POS_TAG = "ClusterPos"
 		private const val CLUSTER_TICK_OFFSET_TAG = "ClusterTick"
 		
-		private fun removeClusterTags(nbt: NBTTagCompound){
+		private fun removeClusterTags(nbt: TagCompound){
 			nbt.removeTag(CLUSTER_POS_TAG)
 			nbt.removeTag(CLUSTER_TICK_OFFSET_TAG)
 		}

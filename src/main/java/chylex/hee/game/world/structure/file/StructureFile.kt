@@ -12,16 +12,16 @@ import chylex.hee.init.ModBlocks
 import chylex.hee.system.util.NBTList.Companion.setList
 import chylex.hee.system.util.NBTObjectList
 import chylex.hee.system.util.Pos
+import chylex.hee.system.util.TagCompound
 import chylex.hee.system.util.getListOfStrings
 import it.unimi.dsi.fastutil.ints.Int2ObjectArrayMap
 import it.unimi.dsi.fastutil.ints.IntArrayList
 import net.minecraft.block.state.IBlockState
 import net.minecraft.init.Blocks
-import net.minecraft.nbt.NBTTagCompound
 import net.minecraft.util.math.BlockPos
 import net.minecraft.world.World
 
-class StructureFile(nbt: NBTTagCompound){
+class StructureFile(nbt: TagCompound){
 	private val palette: Array<String>
 	private val blocks = IntArrayList()
 	
@@ -75,11 +75,11 @@ class StructureFile(nbt: NBTTagCompound){
 			world.finalize()
 		}
 		
-		fun save(world: World, box: BoundingBox, palette: Palette): Pair<NBTTagCompound, Set<IBlockState>>{
+		fun save(world: World, box: BoundingBox, palette: Palette): Pair<TagCompound, Set<IBlockState>>{
 			return save(WorldToStructureWorldAdapter(world, world.rand, box.min), box.size, palette)
 		}
 		
-		fun save(world: IStructureWorld, size: Size, palette: Palette): Pair<NBTTagCompound, Set<IBlockState>>{
+		fun save(world: IStructureWorld, size: Size, palette: Palette): Pair<TagCompound, Set<IBlockState>>{
 			require(size.x <= 256 && size.y <= 256 && size.z <= 256){ "structure files can only contain structures up to 256x256x256 blocks" }
 			
 			val missingMappings = mutableSetOf<IBlockState>()
@@ -120,7 +120,7 @@ class StructureFile(nbt: NBTTagCompound){
 				generatedBlocks.add(key or generatedPalette.indexOf(mapping))
 			}
 			
-			val nbt = NBTTagCompound().also {
+			val nbt = TagCompound().also {
 				it.setList("Palette", NBTObjectList.of(generatedPalette.asIterable()))
 				it.setIntArray("Blocks", generatedBlocks.toIntArray())
 				it.setIntArray("Size", intArrayOf(size.x, size.y, size.z))

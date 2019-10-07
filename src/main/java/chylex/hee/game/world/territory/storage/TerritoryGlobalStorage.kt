@@ -4,9 +4,9 @@ import chylex.hee.game.world.territory.TerritoryInstance.Companion.THE_HUB_INSTA
 import chylex.hee.game.world.territory.TerritoryType
 import chylex.hee.system.util.NBTList.Companion.setList
 import chylex.hee.system.util.NBTObjectList
+import chylex.hee.system.util.TagCompound
 import chylex.hee.system.util.getListOfCompounds
 import chylex.hee.system.util.perSavefileData
-import net.minecraft.nbt.NBTTagCompound
 import net.minecraft.world.storage.WorldSavedData
 import java.util.EnumMap
 
@@ -49,7 +49,7 @@ class TerritoryGlobalStorage(name: String) : WorldSavedData(name){
 	
 	// Serialization
 	
-	override fun writeToNBT(nbt: NBTTagCompound) = nbt.apply {
+	override fun writeToNBT(nbt: TagCompound) = nbt.apply {
 		setTag("[Spawn]", spawnEntry.serializeNBT())
 		
 		for((key, list) in territoryData){
@@ -57,7 +57,7 @@ class TerritoryGlobalStorage(name: String) : WorldSavedData(name){
 		}
 	}
 	
-	override fun readFromNBT(nbt: NBTTagCompound) = with(nbt){
+	override fun readFromNBT(nbt: TagCompound) = with(nbt){
 		spawnEntry.deserializeNBT(getCompoundTag("[Spawn]"))
 		
 		for(key in keySet){

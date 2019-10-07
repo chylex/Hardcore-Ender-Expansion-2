@@ -5,11 +5,11 @@ import chylex.hee.system.Resource
 import chylex.hee.system.capability.CapabilityProvider
 import chylex.hee.system.capability.PlayerCapabilityHandler
 import chylex.hee.system.capability.PlayerCapabilityHandler.IPlayerPersistentCapability
+import chylex.hee.system.util.TagCompound
 import chylex.hee.system.util.getCap
 import chylex.hee.system.util.register
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.item.ItemStack
-import net.minecraft.nbt.NBTTagCompound
 import net.minecraftforge.common.capabilities.Capability
 import net.minecraftforge.common.capabilities.CapabilityInject
 import net.minecraftforge.common.capabilities.CapabilityManager
@@ -50,6 +50,6 @@ object TokenPlayerStorage{
 			return 1
 		}
 		
-		class Provider : CapabilityProvider<TokenStorageCapability, NBTTagCompound>(CAP_TOKEN_STORAGE, TokenStorageCapability())
+		class Provider : CapabilityProvider<TokenStorageCapability, TagCompound>(CAP_TOKEN_STORAGE, TokenStorageCapability())
 	}
 }

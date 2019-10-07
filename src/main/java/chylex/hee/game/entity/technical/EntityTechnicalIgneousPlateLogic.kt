@@ -15,6 +15,7 @@ import chylex.hee.init.ModSounds
 import chylex.hee.network.client.PacketClientFX
 import chylex.hee.system.migration.Facing.UP
 import chylex.hee.system.util.Pos
+import chylex.hee.system.util.TagCompound
 import chylex.hee.system.util.allInCenteredBox
 import chylex.hee.system.util.center
 import chylex.hee.system.util.component1
@@ -41,7 +42,6 @@ import net.minecraft.entity.Entity
 import net.minecraft.init.Blocks
 import net.minecraft.init.SoundEvents
 import net.minecraft.item.ItemStack
-import net.minecraft.nbt.NBTTagCompound
 import net.minecraft.network.datasync.DataSerializers
 import net.minecraft.tileentity.TileEntityFurnace
 import net.minecraft.util.EnumParticleTypes.CLOUD
@@ -275,12 +275,12 @@ class EntityTechnicalIgneousPlateLogic(world: World) : Entity(world){
 	
 	// Serialization
 	
-	override fun writeEntityToNBT(nbt: NBTTagCompound) = with(nbt.heeTag){
+	override fun writeEntityToNBT(nbt: TagCompound) = with(nbt.heeTag){
 		setDouble("ExtraTicks", extraTicks)
 		setFloat("OverheatLevel", overheatLevel)
 	}
 	
-	override fun readEntityFromNBT(nbt: NBTTagCompound) = with(nbt.heeTag){
+	override fun readEntityFromNBT(nbt: TagCompound) = with(nbt.heeTag){
 		extraTicks = getDouble("ExtraTicks")
 		overheatLevel = getFloat("OverheatLevel")
 	}
