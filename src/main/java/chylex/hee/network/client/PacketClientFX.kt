@@ -21,10 +21,10 @@ import chylex.hee.game.mechanics.table.TableParticleHandler
 import chylex.hee.game.world.util.Teleporter
 import chylex.hee.network.BaseClientPacket
 import chylex.hee.system.Debug
+import chylex.hee.system.migration.forge.Side
+import chylex.hee.system.migration.forge.Sided
 import io.netty.buffer.ByteBuf
 import net.minecraft.client.entity.EntityPlayerSP
-import net.minecraftforge.fml.relauncher.Side
-import net.minecraftforge.fml.relauncher.SideOnly
 import java.util.Random
 
 class PacketClientFX<T : IFxData>() : BaseClientPacket(){
@@ -90,7 +90,7 @@ class PacketClientFX<T : IFxData>() : BaseClientPacket(){
 		}
 	}
 	
-	@SideOnly(Side.CLIENT)
+	@Sided(Side.CLIENT)
 	override fun handle(player: EntityPlayerSP){
 		buffer?.let { handler.handle(it, player.world, RAND) }
 	}

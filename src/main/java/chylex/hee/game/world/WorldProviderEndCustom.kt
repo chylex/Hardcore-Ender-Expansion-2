@@ -11,6 +11,8 @@ import chylex.hee.game.world.territory.TerritoryInstance
 import chylex.hee.game.world.territory.TerritoryInstance.Companion.THE_HUB_INSTANCE
 import chylex.hee.game.world.territory.TerritoryVoid
 import chylex.hee.proxy.ModCommonProxy
+import chylex.hee.system.migration.forge.Side
+import chylex.hee.system.migration.forge.Sided
 import net.minecraft.entity.Entity
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.Vec3d
@@ -19,8 +21,6 @@ import net.minecraft.world.WorldProviderEnd
 import net.minecraft.world.WorldServer
 import net.minecraft.world.gen.IChunkGenerator
 import net.minecraftforge.client.IRenderHandler
-import net.minecraftforge.fml.relauncher.Side
-import net.minecraftforge.fml.relauncher.SideOnly
 
 class WorldProviderEndCustom : WorldProviderEnd(){
 	companion object{
@@ -110,7 +110,7 @@ class WorldProviderEndCustom : WorldProviderEnd(){
 		return 1F - (clientEnvironment?.sunBrightness ?: DEFAULT_SUN_BRIGHTNESS)
 	}
 	
-	@SideOnly(Side.CLIENT)
+	@Sided(Side.CLIENT)
 	override fun getSunBrightness(partialTicks: Float): Float{
 		return clientEnvironment?.sunBrightness ?: DEFAULT_SUN_BRIGHTNESS
 	}
@@ -121,29 +121,29 @@ class WorldProviderEndCustom : WorldProviderEnd(){
 	
 	// Visual Properties (Sky)
 	
-	@SideOnly(Side.CLIENT)
+	@Sided(Side.CLIENT)
 	override fun isSkyColored(): Boolean{
 		return true
 	}
 	
-	@SideOnly(Side.CLIENT)
+	@Sided(Side.CLIENT)
 	override fun getSkyRenderer(): IRenderHandler?{
 		return clientEnvironment?.renderer ?: EmptyRenderer
 	}
 	
-	@SideOnly(Side.CLIENT)
+	@Sided(Side.CLIENT)
 	override fun getSkyColor(camera: Entity, partialTicks: Float): Vec3d{
 		return clientEnvironment?.fogColor ?: Vec3d.ZERO // return fog color because vanilla blends fog into sky color based on chunk render distance
 	}
 	
 	// Visual properties (Fog)
 	
-	@SideOnly(Side.CLIENT)
+	@Sided(Side.CLIENT)
 	override fun getFogColor(celestialAngle: Float, partialTicks: Float): Vec3d{
 		return clientEnvironment?.fogColor ?: Vec3d.ZERO
 	}
 	
-	@SideOnly(Side.CLIENT)
+	@Sided(Side.CLIENT)
 	override fun doesXZShowFog(x: Int, z: Int): Boolean{
 		if (debugMode){
 			return false
@@ -154,7 +154,7 @@ class WorldProviderEndCustom : WorldProviderEnd(){
 		return true
 	}
 	
-	@SideOnly(Side.CLIENT)
+	@Sided(Side.CLIENT)
 	override fun getVoidFogYFactor(): Double{
 		return 1.0
 	}
@@ -163,12 +163,12 @@ class WorldProviderEndCustom : WorldProviderEnd(){
 	
 	override fun setSpawnPoint(pos: BlockPos){}
 	
-	@SideOnly(Side.CLIENT)
+	@Sided(Side.CLIENT)
 	override fun setSkyRenderer(renderer: IRenderHandler){}
 	
-	@SideOnly(Side.CLIENT)
+	@Sided(Side.CLIENT)
 	override fun setCloudRenderer(renderer: IRenderHandler){}
 	
-	@SideOnly(Side.CLIENT)
+	@Sided(Side.CLIENT)
 	override fun setWeatherRenderer(renderer: IRenderHandler){}
 }

@@ -6,6 +6,8 @@ import chylex.hee.client.render.util.GL.SF_ONE
 import chylex.hee.client.render.util.GL.SF_SRC_ALPHA
 import chylex.hee.client.util.MC
 import chylex.hee.game.entity.projectile.EntityProjectileEyeOfEnder
+import chylex.hee.system.migration.forge.Side
+import chylex.hee.system.migration.forge.Sided
 import net.minecraft.client.renderer.RenderHelper
 import net.minecraft.client.renderer.block.model.ItemCameraTransforms.TransformType
 import net.minecraft.client.renderer.entity.Render
@@ -15,11 +17,9 @@ import net.minecraft.init.Items
 import net.minecraft.item.ItemStack
 import net.minecraft.util.ResourceLocation
 import net.minecraftforge.client.ForgeHooksClient
-import net.minecraftforge.fml.relauncher.Side
-import net.minecraftforge.fml.relauncher.SideOnly
 import org.lwjgl.opengl.GL11.GL_GREATER
 
-@SideOnly(Side.CLIENT)
+@Sided(Side.CLIENT)
 class RenderEntityProjectileEyeOfEnder(manager: RenderManager) : Render<EntityProjectileEyeOfEnder>(manager){
 	private companion object{
 		private val TEX_BLOCKS_ITEMS = TextureMap.LOCATION_BLOCKS_TEXTURE

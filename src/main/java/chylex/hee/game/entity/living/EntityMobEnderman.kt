@@ -19,6 +19,8 @@ import chylex.hee.game.mechanics.damage.IDamageProcessor.Companion.DIFFICULTY_SC
 import chylex.hee.game.mechanics.damage.IDamageProcessor.Companion.NUDITY_DANGER
 import chylex.hee.game.mechanics.damage.IDamageProcessor.Companion.PEACEFUL_EXCLUSION
 import chylex.hee.init.ModLoot
+import chylex.hee.system.migration.forge.SubscribeAllEvents
+import chylex.hee.system.migration.forge.SubscribeEvent
 import chylex.hee.system.util.AIAttackMelee
 import chylex.hee.system.util.AISwim
 import chylex.hee.system.util.AITargetEyeContact
@@ -56,12 +58,10 @@ import net.minecraft.world.biome.BiomeEnd
 import net.minecraft.world.biome.BiomeHell
 import net.minecraft.world.biome.BiomeHellDecorator
 import net.minecraftforge.event.entity.ProjectileImpactEvent
-import net.minecraftforge.fml.common.Mod.EventBusSubscriber
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent
 import kotlin.math.min
 import kotlin.math.pow
 
-@EventBusSubscriber(modid = HEE.ID)
+@SubscribeAllEvents(modid = HEE.ID)
 class EntityMobEnderman(world: World) : EntityMobAbstractEnderman(world){
 	companion object{
 		private val DAMAGE_GENERAL = Damage(DIFFICULTY_SCALING, PEACEFUL_EXCLUSION, *ALL_PROTECTIONS_WITH_SHIELD, NUDITY_DANGER)

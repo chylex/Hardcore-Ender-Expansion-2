@@ -17,6 +17,8 @@ import chylex.hee.init.ModBlocks
 import chylex.hee.system.Resource
 import chylex.hee.system.migration.ActionResult.FAIL
 import chylex.hee.system.migration.ActionResult.SUCCESS
+import chylex.hee.system.migration.forge.Side
+import chylex.hee.system.migration.forge.Sided
 import chylex.hee.system.util.Pos
 import chylex.hee.system.util.breakBlock
 import chylex.hee.system.util.color.IntColor.Companion.RGB
@@ -37,8 +39,6 @@ import net.minecraft.util.EnumFacing
 import net.minecraft.util.EnumHand
 import net.minecraft.util.math.BlockPos
 import net.minecraft.world.World
-import net.minecraftforge.fml.relauncher.Side
-import net.minecraftforge.fml.relauncher.SideOnly
 import kotlin.math.pow
 
 class ItemEnergyReceptacle : ItemAbstractInfusable(){
@@ -205,7 +205,7 @@ class ItemEnergyReceptacle : ItemAbstractInfusable(){
 		return slotChanged && super.shouldCauseReequipAnimation(oldStack, newStack, slotChanged)
 	}
 	
-	@SideOnly(Side.CLIENT)
+	@Sided(Side.CLIENT)
 	override fun addInformation(stack: ItemStack, world: World?, lines: MutableList<String>, flags: ITooltipFlag){
 		if (world != null){
 			val tag = stack.heeTagOrNull
@@ -224,7 +224,7 @@ class ItemEnergyReceptacle : ItemAbstractInfusable(){
 		super.addInformation(stack, world, lines, flags)
 	}
 	
-	@SideOnly(Side.CLIENT)
+	@Sided(Side.CLIENT)
 	object Color : IItemColor{
 		private val WHITE = RGB(255u).i
 		

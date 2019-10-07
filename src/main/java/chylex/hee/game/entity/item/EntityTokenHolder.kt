@@ -5,6 +5,8 @@ import chylex.hee.game.world.territory.TerritoryInstance
 import chylex.hee.game.world.territory.TerritoryType
 import chylex.hee.init.ModItems
 import chylex.hee.network.client.PacketClientLaunchInstantly
+import chylex.hee.system.migration.forge.Side
+import chylex.hee.system.migration.forge.Sided
 import chylex.hee.system.util.addY
 import chylex.hee.system.util.directionTowards
 import chylex.hee.system.util.getEnum
@@ -25,8 +27,6 @@ import net.minecraft.util.DamageSource
 import net.minecraft.util.math.BlockPos
 import net.minecraft.world.World
 import net.minecraftforge.fml.common.registry.IEntityAdditionalSpawnData
-import net.minecraftforge.fml.relauncher.Side
-import net.minecraftforge.fml.relauncher.SideOnly
 
 class EntityTokenHolder(world: World) : Entity(world), IEntityAdditionalSpawnData{
 	constructor(world: World, tokenType: TokenType, territoryType: TerritoryType) : this(world){
@@ -133,7 +133,7 @@ class EntityTokenHolder(world: World) : Entity(world), IEntityAdditionalSpawnDat
 	override fun canTriggerWalking() = false
 	override fun canBeCollidedWith() = true
 	
-	@SideOnly(Side.CLIENT)
+	@Sided(Side.CLIENT)
 	override fun isInRangeToRenderDist(distanceSq: Double): Boolean{
 		return distanceSq < square(128.0)
 	}

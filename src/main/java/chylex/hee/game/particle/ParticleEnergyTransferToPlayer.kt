@@ -7,19 +7,19 @@ import chylex.hee.game.particle.spawner.factory.IParticleData
 import chylex.hee.game.particle.spawner.factory.IParticleMaker
 import chylex.hee.system.migration.Hand.MAIN_HAND
 import chylex.hee.system.migration.Hand.OFF_HAND
+import chylex.hee.system.migration.forge.Side
+import chylex.hee.system.migration.forge.Sided
 import chylex.hee.system.util.floorToInt
 import net.minecraft.client.particle.Particle
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.util.math.Vec3d
 import net.minecraft.world.World
-import net.minecraftforge.fml.relauncher.Side
-import net.minecraftforge.fml.relauncher.SideOnly
 import org.apache.commons.lang3.ArrayUtils
 import java.lang.ref.WeakReference
 import java.util.Random
 
 object ParticleEnergyTransferToPlayer : IParticleMaker{
-	@SideOnly(Side.CLIENT)
+	@Sided(Side.CLIENT)
 	override fun create(world: World, posX: Double, posY: Double, posZ: Double, motX: Double, motY: Double, motZ: Double, data: IntArray): Particle{
 		return Instance(world, posX, posY, posZ, data)
 	}
@@ -37,7 +37,7 @@ object ParticleEnergyTransferToPlayer : IParticleMaker{
 		}
 	}
 	
-	@SideOnly(Side.CLIENT)
+	@Sided(Side.CLIENT)
 	class Instance(world: World, posX: Double, posY: Double, posZ: Double, unsafeData: IntArray) : ParticleBaseEnergyTransfer(world, posX, posY, posZ){
 		override val targetPos: Vec3d
 			get() = newTargetPos

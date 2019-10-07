@@ -22,6 +22,8 @@ import chylex.hee.game.particle.spawner.ParticleSpawnerCustom
 import chylex.hee.game.particle.util.IOffset.InBox
 import chylex.hee.game.particle.util.IShape.Point
 import chylex.hee.init.ModBlocks
+import chylex.hee.system.migration.forge.Side
+import chylex.hee.system.migration.forge.Sided
 import chylex.hee.system.util.FLAG_NONE
 import chylex.hee.system.util.FLAG_SYNC_CLIENT
 import chylex.hee.system.util.Facing6
@@ -43,8 +45,6 @@ import net.minecraft.util.EnumFacing
 import net.minecraft.util.math.BlockPos
 import net.minecraft.world.IBlockAccess
 import net.minecraft.world.World
-import net.minecraftforge.fml.relauncher.Side
-import net.minecraftforge.fml.relauncher.SideOnly
 import java.util.Random
 
 class BlockCorruptedEnergy(builder: BlockBuilder) : BlockSimple(builder){
@@ -192,7 +192,7 @@ class BlockCorruptedEnergy(builder: BlockBuilder) : BlockSimple(builder){
 	
 	// Client side
 	
-	@SideOnly(Side.CLIENT)
+	@Sided(Side.CLIENT)
 	override fun randomDisplayTick(state: IBlockState, world: World, pos: BlockPos, rand: Random){
 		val amount = rand.nextInt(0, 2)
 		

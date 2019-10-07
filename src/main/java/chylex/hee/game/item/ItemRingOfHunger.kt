@@ -1,6 +1,9 @@
 package chylex.hee.game.item
 import chylex.hee.game.mechanics.potion.PotionBase
 import chylex.hee.game.mechanics.trinket.TrinketHandler
+import chylex.hee.system.migration.forge.EventPriority
+import chylex.hee.system.migration.forge.Side
+import chylex.hee.system.migration.forge.SubscribeEvent
 import chylex.hee.system.util.ceilToInt
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.item.ItemFood
@@ -8,11 +11,8 @@ import net.minecraft.potion.Potion
 import net.minecraft.potion.PotionEffect
 import net.minecraftforge.common.MinecraftForge
 import net.minecraftforge.event.entity.living.LivingEntityUseItemEvent
-import net.minecraftforge.fml.common.eventhandler.EventPriority.LOWEST
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent
 import net.minecraftforge.fml.common.gameevent.TickEvent.Phase
 import net.minecraftforge.fml.common.gameevent.TickEvent.PlayerTickEvent
-import net.minecraftforge.fml.relauncher.Side
 import java.util.UUID
 import kotlin.math.min
 
@@ -53,7 +53,7 @@ class ItemRingOfHunger : ItemAbstractTrinket(){
 		}
 	}
 	
-	@SubscribeEvent(priority = LOWEST)
+	@SubscribeEvent(EventPriority.LOWEST)
 	fun onLivingUseItemTick(e: LivingEntityUseItemEvent.Tick){
 		val player = e.entity as? EntityPlayer ?: return
 		

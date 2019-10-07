@@ -1,12 +1,12 @@
 package chylex.hee.client.model.entity
 import chylex.hee.client.render.util.beginBox
 import chylex.hee.client.render.util.render
+import chylex.hee.system.migration.forge.Side
+import chylex.hee.system.migration.forge.Sided
 import net.minecraft.client.model.ModelBase
 import net.minecraft.client.model.ModelRenderer
-import net.minecraftforge.fml.relauncher.Side
-import net.minecraftforge.fml.relauncher.SideOnly
 
-@SideOnly(Side.CLIENT)
+@Sided(Side.CLIENT)
 object ModelEntityTokenHolder : ModelBase(){
 	private val box: ModelRenderer
 	

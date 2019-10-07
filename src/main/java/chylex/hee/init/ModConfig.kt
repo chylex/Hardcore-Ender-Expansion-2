@@ -1,13 +1,13 @@
 package chylex.hee.init
 import chylex.hee.HEE
+import chylex.hee.system.migration.forge.Side
+import chylex.hee.system.migration.forge.SubscribeEvent
 import net.minecraftforge.common.MinecraftForge
 import net.minecraftforge.common.config.ConfigElement
 import net.minecraftforge.common.config.Configuration
 import net.minecraftforge.fml.client.config.IConfigElement
 import net.minecraftforge.fml.client.event.ConfigChangedEvent
 import net.minecraftforge.fml.common.FMLCommonHandler
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent
-import net.minecraftforge.fml.relauncher.Side.CLIENT
 import java.io.File
 
 class ModConfig(file: File){
@@ -58,7 +58,7 @@ class ModConfig(file: File){
 	}
 	
 	private fun reload(){
-		val clientOrDummy = if (FMLCommonHandler.instance().side == CLIENT) config else Configuration()
+		val clientOrDummy = if (FMLCommonHandler.instance().side == Side.CLIENT) config else Configuration()
 		
 		client = Client(clientOrDummy, CATEGORY_CLIENT)
 		general = General(config, CATEGORY_GENERAL)

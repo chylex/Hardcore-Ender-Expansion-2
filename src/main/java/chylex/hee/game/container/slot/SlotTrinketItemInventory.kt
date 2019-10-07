@@ -3,6 +3,11 @@ import chylex.hee.HEE
 import chylex.hee.client.util.MC
 import chylex.hee.game.container.slot.SlotTrinketItemInventory.Client.isRenderingGUI
 import chylex.hee.network.server.PacketServerShiftClickTrinket
+import chylex.hee.system.migration.forge.EventPriority
+import chylex.hee.system.migration.forge.Side
+import chylex.hee.system.migration.forge.Sided
+import chylex.hee.system.migration.forge.SubscribeAllEvents
+import chylex.hee.system.migration.forge.SubscribeEvent
 import net.minecraft.client.gui.Gui
 import net.minecraft.client.gui.GuiScreen
 import net.minecraft.client.gui.inventory.GuiInventory
@@ -11,11 +16,6 @@ import net.minecraft.inventory.IInventory
 import net.minecraft.inventory.Slot
 import net.minecraftforge.client.event.GuiScreenEvent
 import net.minecraftforge.client.event.GuiScreenEvent.DrawScreenEvent
-import net.minecraftforge.fml.common.Mod.EventBusSubscriber
-import net.minecraftforge.fml.common.eventhandler.EventPriority.LOWEST
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent
-import net.minecraftforge.fml.relauncher.Side
-import net.minecraftforge.fml.relauncher.SideOnly
 import net.minecraftforge.items.IItemHandler
 import org.lwjgl.input.Mouse
 
@@ -36,7 +36,7 @@ class SlotTrinketItemInventory(trinketHandler: IItemHandler, slotNumber: Int) : 
 	
 	override fun isHere(inv: IInventory, slot: Int) = true
 	
-	@SideOnly(Side.CLIENT)
+	@Sided(Side.CLIENT)
 	override fun isEnabled(): Boolean{
 		if (MC.currentScreen !is GuiInventory){
 			return false // TODO figure out creative inventory
@@ -56,8 +56,8 @@ class SlotTrinketItemInventory(trinketHandler: IItemHandler, slotNumber: Int) : 
 		return true
 	}
 	
-	@SideOnly(Side.CLIENT)
-	@EventBusSubscriber(Side.CLIENT, modid = HEE.ID)
+	@Sided(Side.CLIENT)
+	@SubscribeAllEvents(Side.CLIENT, modid = HEE.ID)
 	private object Client{
 		
 		// GUI integration
@@ -83,7 +83,7 @@ class SlotTrinketItemInventory(trinketHandler: IItemHandler, slotNumber: Int) : 
 		}
 		
 		@JvmStatic
-		@SubscribeEvent(priority = LOWEST)
+		@SubscribeEvent(EventPriority.LOWEST)
 		fun onInitGuiPost(e: GuiScreenEvent.InitGuiEvent.Post){
 			val gui = e.gui
 			
@@ -94,7 +94,7 @@ class SlotTrinketItemInventory(trinketHandler: IItemHandler, slotNumber: Int) : 
 		}
 		
 		@JvmStatic
-		@SubscribeEvent(priority = LOWEST)
+		@SubscribeEvent(EventPriority.LOWEST)
 		fun onMouseInputPre(e: GuiScreenEvent.MouseInputEvent.Pre){
 			val gui = e.gui
 			
@@ -114,7 +114,7 @@ class SlotTrinketItemInventory(trinketHandler: IItemHandler, slotNumber: Int) : 
 		var isRenderingGUI = false
 		
 		@JvmStatic
-		@SubscribeEvent(priority = LOWEST)
+		@SubscribeEvent(EventPriority.LOWEST)
 		fun onDrawGuiScreenPre(@Suppress("UNUSED_PARAMETER") e: DrawScreenEvent.Pre){
 			isRenderingGUI = true
 		}

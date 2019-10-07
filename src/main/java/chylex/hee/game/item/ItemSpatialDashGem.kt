@@ -10,6 +10,8 @@ import chylex.hee.game.mechanics.energy.IEnergyQuantity.Units
 import chylex.hee.init.ModItems
 import chylex.hee.system.migration.ActionResult.FAIL
 import chylex.hee.system.migration.ActionResult.SUCCESS
+import chylex.hee.system.migration.forge.Side
+import chylex.hee.system.migration.forge.Sided
 import chylex.hee.system.util.floorToInt
 import chylex.hee.system.util.over
 import net.minecraft.client.util.ITooltipFlag
@@ -19,8 +21,6 @@ import net.minecraft.stats.StatList
 import net.minecraft.util.ActionResult
 import net.minecraft.util.EnumHand
 import net.minecraft.world.World
-import net.minecraftforge.fml.relauncher.Side
-import net.minecraftforge.fml.relauncher.SideOnly
 
 class ItemSpatialDashGem : ItemAbstractEnergyUser(), IInfusableItem{
 	companion object{
@@ -74,13 +74,13 @@ class ItemSpatialDashGem : ItemAbstractEnergyUser(), IInfusableItem{
 	
 	// Client side
 	
-	@SideOnly(Side.CLIENT)
+	@Sided(Side.CLIENT)
 	override fun addInformation(stack: ItemStack, world: World?, lines: MutableList<String>, flags: ITooltipFlag){
 		super.addInformation(stack, world, lines, flags)
 		ItemAbstractInfusable.onAddInformation(stack, lines)
 	}
 	
-	@SideOnly(Side.CLIENT)
+	@Sided(Side.CLIENT)
 	override fun hasEffect(stack: ItemStack): Boolean{
 		return super.hasEffect(stack) || ItemAbstractInfusable.onHasEffect(stack)
 	}

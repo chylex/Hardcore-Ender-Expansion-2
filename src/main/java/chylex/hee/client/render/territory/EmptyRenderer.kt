@@ -1,11 +1,11 @@
 package chylex.hee.client.render.territory
+import chylex.hee.system.migration.forge.Side
+import chylex.hee.system.migration.forge.Sided
 import net.minecraft.client.Minecraft
 import net.minecraft.client.multiplayer.WorldClient
 import net.minecraftforge.client.IRenderHandler
-import net.minecraftforge.fml.relauncher.Side
-import net.minecraftforge.fml.relauncher.SideOnly
 
 object EmptyRenderer : IRenderHandler(){
-	@SideOnly(Side.CLIENT)
+	@Sided(Side.CLIENT)
 	override fun render(partialTicks: Float, world: WorldClient, mc: Minecraft){}
 }

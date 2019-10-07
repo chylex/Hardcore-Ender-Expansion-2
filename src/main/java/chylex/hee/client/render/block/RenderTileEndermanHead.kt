@@ -2,15 +2,15 @@ package chylex.hee.client.render.block
 import chylex.hee.client.render.util.GL
 import chylex.hee.client.util.MC
 import chylex.hee.system.Resource
+import chylex.hee.system.migration.forge.Side
+import chylex.hee.system.migration.forge.Sided
 import net.minecraft.client.model.ModelRenderer
 import net.minecraft.client.model.ModelSkeletonHead
 import net.minecraft.client.renderer.tileentity.TileEntityItemStackRenderer
 import net.minecraft.entity.Entity
 import net.minecraft.item.ItemStack
-import net.minecraftforge.fml.relauncher.Side
-import net.minecraftforge.fml.relauncher.SideOnly
 
-@SideOnly(Side.CLIENT)
+@Sided(Side.CLIENT)
 object RenderTileEndermanHead{
 	private val TEX_ENDERMAN = Resource.Custom("textures/entity/enderman_head.png")
 	private val MODEL_HEAD = ModelSkeletonHead(0, 0, 64, 32)

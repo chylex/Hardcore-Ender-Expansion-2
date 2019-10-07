@@ -5,6 +5,8 @@ import chylex.hee.game.mechanics.dust.DustLayers
 import chylex.hee.game.mechanics.dust.DustLayers.Side.BOTTOM
 import chylex.hee.game.mechanics.dust.DustLayers.Side.TOP
 import chylex.hee.game.mechanics.dust.DustType
+import chylex.hee.system.migration.forge.Side
+import chylex.hee.system.migration.forge.Sided
 import chylex.hee.system.util.NBTList.Companion.setList
 import chylex.hee.system.util.getListOfCompounds
 import chylex.hee.system.util.getTile
@@ -33,8 +35,6 @@ import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.RayTraceResult
 import net.minecraft.world.IBlockAccess
 import net.minecraft.world.World
-import net.minecraftforge.fml.relauncher.Side
-import net.minecraftforge.fml.relauncher.SideOnly
 
 class BlockJarODust(builder: BlockBuilder) : BlockSimpleShaped(builder, AABB), ITileEntityProvider{
 	companion object{
@@ -154,7 +154,7 @@ class BlockJarODust(builder: BlockBuilder) : BlockSimpleShaped(builder, AABB), I
 	
 	// Client side
 	
-	@SideOnly(Side.CLIENT)
+	@Sided(Side.CLIENT)
 	override fun addInformation(stack: ItemStack, world: World?, lines: MutableList<String>, flags: ITooltipFlag){
 		val contents = getLayersFromStack(stack)?.contents
 		

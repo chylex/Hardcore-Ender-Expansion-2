@@ -25,18 +25,18 @@ import chylex.hee.game.entity.technical.EntityTechnicalTrigger
 import chylex.hee.game.world.territory.TerritoryType
 import chylex.hee.init.factory.EntityConstructors
 import chylex.hee.system.Resource
+import chylex.hee.system.migration.forge.SubscribeAllEvents
+import chylex.hee.system.migration.forge.SubscribeEvent
 import chylex.hee.system.util.color.IntColor.Companion.RGB
 import net.minecraft.entity.Entity
 import net.minecraftforge.event.RegistryEvent
-import net.minecraftforge.fml.common.Mod.EventBusSubscriber
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent
 import net.minecraftforge.fml.common.registry.EntityEntry
 import net.minecraftforge.fml.common.registry.EntityEntryBuilder
 import net.minecraftforge.fml.common.registry.ForgeRegistries
 import net.minecraftforge.registries.IForgeRegistry
 import java.util.function.Function
 
-@EventBusSubscriber(modid = HEE.ID)
+@SubscribeAllEvents(modid = HEE.ID)
 object ModEntities{
 	private var networkID = -1
 	

@@ -14,6 +14,10 @@ import chylex.hee.game.world.WorldProviderEndCustom
 import chylex.hee.game.world.territory.TerritoryType
 import chylex.hee.game.world.territory.TerritoryVoid
 import chylex.hee.system.Debug
+import chylex.hee.system.migration.forge.EventPriority
+import chylex.hee.system.migration.forge.Side
+import chylex.hee.system.migration.forge.SubscribeAllEvents
+import chylex.hee.system.migration.forge.SubscribeEvent
 import chylex.hee.system.util.color.IntColor
 import chylex.hee.system.util.color.IntColor.Companion.RGB
 import chylex.hee.system.util.floorToInt
@@ -25,17 +29,13 @@ import net.minecraft.client.resources.I18n
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraftforge.client.event.RenderGameOverlayEvent
 import net.minecraftforge.common.MinecraftForge
-import net.minecraftforge.fml.common.Mod.EventBusSubscriber
-import net.minecraftforge.fml.common.eventhandler.EventPriority.HIGHEST
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent
 import net.minecraftforge.fml.common.gameevent.TickEvent.ClientTickEvent
 import net.minecraftforge.fml.common.gameevent.TickEvent.Phase
-import net.minecraftforge.fml.relauncher.Side
 import org.lwjgl.opengl.GL11.GL_GREATER
 import kotlin.math.min
 import kotlin.math.pow
 
-@EventBusSubscriber(Side.CLIENT, modid = HEE.ID)
+@SubscribeAllEvents(Side.CLIENT, modid = HEE.ID)
 object TerritoryRenderer{
 	private var prevChunkX = Int.MAX_VALUE
 	private var prevTerritory: TerritoryType? = null
@@ -134,7 +134,7 @@ object TerritoryRenderer{
 	
 	// Text rendering
 	
-	@EventBusSubscriber(Side.CLIENT, modid = HEE.ID)
+	@SubscribeAllEvents(Side.CLIENT, modid = HEE.ID)
 	private object Title{
 		private const val FADE_TICKS = 22
 		
@@ -177,7 +177,7 @@ object TerritoryRenderer{
 		}
 		
 		@JvmStatic
-		@SubscribeEvent(priority = HIGHEST)
+		@SubscribeEvent(EventPriority.HIGHEST)
 		fun onRenderGameOverlayText(e: RenderGameOverlayEvent.Text){
 			if (textTime == 0){
 				return

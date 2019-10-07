@@ -1,15 +1,15 @@
 package chylex.hee.client.model.block
 import chylex.hee.client.render.util.beginBox
 import chylex.hee.client.render.util.render
+import chylex.hee.system.migration.forge.Side
+import chylex.hee.system.migration.forge.Sided
 import net.minecraft.client.model.ModelBase
 import net.minecraft.client.model.ModelRenderer
-import net.minecraftforge.fml.relauncher.Side
-import net.minecraftforge.fml.relauncher.SideOnly
 import kotlin.math.PI
 import kotlin.math.abs
 import kotlin.math.sin
 
-@SideOnly(Side.CLIENT)
+@Sided(Side.CLIENT)
 object ModelBlockIgneousPlate : ModelBase(){
 	const val ANIMATION_PERIOD = PI
 	

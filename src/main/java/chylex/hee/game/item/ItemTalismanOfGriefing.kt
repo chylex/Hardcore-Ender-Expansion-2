@@ -5,6 +5,7 @@ import chylex.hee.game.mechanics.damage.IDamageProcessor.Companion.ENCHANTMENT_P
 import chylex.hee.game.mechanics.damage.IDamageProcessor.Companion.POTION_PROTECTION
 import chylex.hee.game.mechanics.trinket.TrinketHandler
 import chylex.hee.game.world.util.ExplosionBuilder
+import chylex.hee.system.migration.forge.SubscribeEvent
 import chylex.hee.system.util.ceilToInt
 import chylex.hee.system.util.posVec
 import chylex.hee.system.util.square
@@ -24,7 +25,6 @@ import net.minecraftforge.common.ISpecialArmor.ArmorProperties
 import net.minecraftforge.common.MinecraftForge
 import net.minecraftforge.event.entity.living.LivingHurtEvent
 import net.minecraftforge.event.world.ExplosionEvent
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent
 import java.util.UUID
 import kotlin.math.max
 import kotlin.math.min

@@ -1,11 +1,11 @@
 package chylex.hee.game.item.repair
 import chylex.hee.HEE
+import chylex.hee.system.migration.forge.SubscribeAllEvents
+import chylex.hee.system.migration.forge.SubscribeEvent
 import net.minecraft.item.ItemStack
 import net.minecraftforge.event.AnvilUpdateEvent
-import net.minecraftforge.fml.common.Mod.EventBusSubscriber
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent
 
-@EventBusSubscriber(modid = HEE.ID)
+@SubscribeAllEvents(modid = HEE.ID)
 object RepairHandler{
 	const val MAX_EXPERIENCE_COST = 39
 	

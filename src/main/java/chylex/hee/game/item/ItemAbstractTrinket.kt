@@ -3,14 +3,14 @@ import chylex.hee.HEE
 import chylex.hee.game.item.util.CustomRarity
 import chylex.hee.game.mechanics.trinket.ITrinketItem
 import chylex.hee.game.mechanics.trinket.TrinketHandler
+import chylex.hee.system.migration.forge.Side
+import chylex.hee.system.migration.forge.Sided
 import net.minecraft.client.resources.I18n
 import net.minecraft.client.util.ITooltipFlag
 import net.minecraft.item.EnumRarity
 import net.minecraft.item.Item
 import net.minecraft.item.ItemStack
 import net.minecraft.world.World
-import net.minecraftforge.fml.relauncher.Side
-import net.minecraftforge.fml.relauncher.SideOnly
 
 open class ItemAbstractTrinket : Item(), ITrinketItem{
 	companion object{
@@ -18,7 +18,7 @@ open class ItemAbstractTrinket : Item(), ITrinketItem{
 			return CustomRarity.TRINKET
 		}
 		
-		@SideOnly(Side.CLIENT)
+		@Sided(Side.CLIENT)
 		fun onAddInformation(stack: ItemStack, trinket: ITrinketItem, lines: MutableList<String>){
 			val player = HEE.proxy.getClientSidePlayer() ?: return
 			
@@ -41,7 +41,7 @@ open class ItemAbstractTrinket : Item(), ITrinketItem{
 		return onGetRarity()
 	}
 	
-	@SideOnly(Side.CLIENT)
+	@Sided(Side.CLIENT)
 	override fun addInformation(stack: ItemStack, world: World?, lines: MutableList<String>, flags: ITooltipFlag){
 		super.addInformation(stack, world, lines, flags)
 		onAddInformation(stack, this, lines)

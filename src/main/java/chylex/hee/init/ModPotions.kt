@@ -11,6 +11,8 @@ import chylex.hee.game.mechanics.potion.brewing.recipes.BrewWaterToMundane
 import chylex.hee.game.mechanics.potion.brewing.recipes.BrewWaterToThick
 import chylex.hee.game.mechanics.potion.brewing.recipes.ReinsertPotionItems
 import chylex.hee.system.Resource
+import chylex.hee.system.migration.forge.SubscribeAllEvents
+import chylex.hee.system.migration.forge.SubscribeEvent
 import chylex.hee.system.util.getIfExists
 import com.google.common.collect.ImmutableList
 import net.minecraft.potion.Potion
@@ -19,10 +21,8 @@ import net.minecraftforge.common.brewing.BrewingRecipeRegistry
 import net.minecraftforge.common.brewing.IBrewingRecipe
 import net.minecraftforge.common.brewing.VanillaBrewingRecipe
 import net.minecraftforge.event.RegistryEvent
-import net.minecraftforge.fml.common.Mod.EventBusSubscriber
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent
 
-@EventBusSubscriber(modid = HEE.ID)
+@SubscribeAllEvents(modid = HEE.ID)
 object ModPotions{
 	@JvmStatic
 	@SubscribeEvent

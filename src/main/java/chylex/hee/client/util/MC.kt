@@ -1,4 +1,6 @@
 package chylex.hee.client.util
+import chylex.hee.system.migration.forge.Side
+import chylex.hee.system.migration.forge.Sided
 import net.minecraft.client.Minecraft
 import net.minecraft.client.entity.EntityPlayerSP
 import net.minecraft.client.gui.FontRenderer
@@ -11,10 +13,8 @@ import net.minecraft.client.renderer.RenderItem
 import net.minecraft.client.renderer.entity.RenderManager
 import net.minecraft.client.renderer.texture.TextureManager
 import net.minecraft.client.settings.GameSettings
-import net.minecraftforge.fml.relauncher.Side
-import net.minecraftforge.fml.relauncher.SideOnly
 
-@SideOnly(Side.CLIENT)
+@Sided(Side.CLIENT)
 object MC{
 	@JvmField
 	val instance: Minecraft = Minecraft.getMinecraft()

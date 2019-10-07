@@ -7,6 +7,8 @@ import chylex.hee.system.migration.Facing.NORTH
 import chylex.hee.system.migration.Facing.SOUTH
 import chylex.hee.system.migration.Facing.UP
 import chylex.hee.system.migration.Facing.WEST
+import chylex.hee.system.migration.forge.Side
+import chylex.hee.system.migration.forge.Sided
 import chylex.hee.system.util.Facing6
 import chylex.hee.system.util.getBlock
 import chylex.hee.system.util.with
@@ -16,8 +18,6 @@ import net.minecraft.util.BlockRenderLayer.TRANSLUCENT
 import net.minecraft.util.EnumFacing
 import net.minecraft.util.math.BlockPos
 import net.minecraft.world.IBlockAccess
-import net.minecraftforge.fml.relauncher.Side
-import net.minecraftforge.fml.relauncher.SideOnly
 import java.util.Random
 
 class BlockInfusedGlass(builder: BlockBuilder) : BlockSimple(builder){
@@ -60,7 +60,7 @@ class BlockInfusedGlass(builder: BlockBuilder) : BlockSimple(builder){
 	override fun isOpaqueCube(state: IBlockState) = false
 	override fun getRenderLayer() = TRANSLUCENT
 	
-	@SideOnly(Side.CLIENT)
+	@Sided(Side.CLIENT)
 	override fun shouldSideBeRendered(state: IBlockState, world: IBlockAccess, pos: BlockPos, side: EnumFacing): Boolean{
 		return pos.offset(side).getBlock(world) !== this
 	}

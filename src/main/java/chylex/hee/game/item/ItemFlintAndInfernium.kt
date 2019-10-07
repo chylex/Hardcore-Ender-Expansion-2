@@ -5,6 +5,9 @@ import chylex.hee.game.world.util.BlockEditor
 import chylex.hee.init.ModBlocks
 import chylex.hee.system.migration.ActionResult.FAIL
 import chylex.hee.system.migration.ActionResult.SUCCESS
+import chylex.hee.system.migration.forge.EventPriority
+import chylex.hee.system.migration.forge.SubscribeAllEvents
+import chylex.hee.system.migration.forge.SubscribeEvent
 import chylex.hee.system.util.FLAG_NONE
 import chylex.hee.system.util.getBlock
 import chylex.hee.system.util.getState
@@ -32,11 +35,8 @@ import net.minecraft.util.math.BlockPos
 import net.minecraft.world.World
 import net.minecraftforge.common.MinecraftForge
 import net.minecraftforge.event.world.ExplosionEvent
-import net.minecraftforge.fml.common.Mod.EventBusSubscriber
-import net.minecraftforge.fml.common.eventhandler.EventPriority.HIGHEST
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent
 
-@EventBusSubscriber(modid = HEE.ID)
+@SubscribeAllEvents(modid = HEE.ID)
 class ItemFlintAndInfernium : Item(){
 	companion object{
 		private const val CREEPER_INFERNIUM_TAG = "Infernium"
@@ -44,7 +44,7 @@ class ItemFlintAndInfernium : Item(){
 		const val EXPLOSION_MULTIPLIER = 1.5F
 		
 		@JvmStatic
-		@SubscribeEvent(priority = HIGHEST)
+		@SubscribeEvent(EventPriority.HIGHEST)
 		fun onExplosionStart(e: ExplosionEvent.Start){
 			val explosion = e.explosion
 			val creeper = explosion.explosivePlacedBy as? EntityCreeper

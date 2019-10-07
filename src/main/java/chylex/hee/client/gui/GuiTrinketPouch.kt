@@ -4,14 +4,14 @@ import chylex.hee.game.container.ContainerTrinketPouch
 import chylex.hee.game.container.base.ContainerBaseCustomInventory
 import chylex.hee.game.item.ItemTrinketPouch.Inventory
 import chylex.hee.system.Resource
+import chylex.hee.system.migration.forge.Side
+import chylex.hee.system.migration.forge.Sided
 import chylex.hee.system.util.color.IntColor.Companion.RGBA
 import chylex.hee.system.util.size
 import net.minecraft.client.gui.Gui
 import net.minecraft.entity.player.EntityPlayer
-import net.minecraftforge.fml.relauncher.Side
-import net.minecraftforge.fml.relauncher.SideOnly
 
-@SideOnly(Side.CLIENT)
+@Sided(Side.CLIENT)
 class GuiTrinketPouch(player: EntityPlayer, inventorySlot: Int) : GuiBaseCustomInventory<Inventory>(ContainerTrinketPouch(player, inventorySlot)){
 	override val texBackground = Resource.Custom("textures/gui/trinket_pouch.png")
 	override val titleContainer = "gui.hee.trinket_pouch.title"

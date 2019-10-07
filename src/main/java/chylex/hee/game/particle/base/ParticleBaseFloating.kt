@@ -1,12 +1,12 @@
 package chylex.hee.game.particle.base
+import chylex.hee.system.migration.forge.Side
+import chylex.hee.system.migration.forge.Sided
 import net.minecraft.world.World
-import net.minecraftforge.fml.relauncher.Side
-import net.minecraftforge.fml.relauncher.SideOnly
 
 /**
  * Particle with no gravity, no block collisions, and no motion randomness.
  */
-@SideOnly(Side.CLIENT)
+@Sided(Side.CLIENT)
 abstract class ParticleBaseFloating(world: World, posX: Double, posY: Double, posZ: Double, motX: Double, motY: Double, motZ: Double) : ParticleBase(world, posX, posY, posZ, motX, motY, motZ){
 	init{
 		motionX = motX

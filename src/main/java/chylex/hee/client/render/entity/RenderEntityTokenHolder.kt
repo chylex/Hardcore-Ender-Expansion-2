@@ -8,14 +8,14 @@ import chylex.hee.game.item.ItemPortalToken.TokenType.NORMAL
 import chylex.hee.game.item.ItemPortalToken.TokenType.RARE
 import chylex.hee.game.item.ItemPortalToken.TokenType.SOLITARY
 import chylex.hee.system.Resource
+import chylex.hee.system.migration.forge.Side
+import chylex.hee.system.migration.forge.Sided
 import net.minecraft.client.renderer.entity.Render
 import net.minecraft.client.renderer.entity.RenderManager
 import net.minecraft.util.ResourceLocation
-import net.minecraftforge.fml.relauncher.Side
-import net.minecraftforge.fml.relauncher.SideOnly
 import kotlin.math.pow
 
-@SideOnly(Side.CLIENT)
+@Sided(Side.CLIENT)
 class RenderEntityTokenHolder(manager: RenderManager) : Render<EntityTokenHolder>(manager){
 	private val textures = mapOf(
 		NORMAL   to Resource.Custom("textures/entity/token_holder.png"),

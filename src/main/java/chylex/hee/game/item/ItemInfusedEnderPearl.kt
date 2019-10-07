@@ -4,6 +4,8 @@ import chylex.hee.game.item.infusion.IInfusableItem
 import chylex.hee.game.item.infusion.Infusion
 import chylex.hee.game.item.infusion.InfusionTag
 import chylex.hee.system.migration.ActionResult.SUCCESS
+import chylex.hee.system.migration.forge.Side
+import chylex.hee.system.migration.forge.Sided
 import chylex.hee.system.util.nextFloat
 import chylex.hee.system.util.playServer
 import chylex.hee.system.util.posVec
@@ -17,8 +19,6 @@ import net.minecraft.util.ActionResult
 import net.minecraft.util.EnumHand
 import net.minecraft.util.SoundCategory
 import net.minecraft.world.World
-import net.minecraftforge.fml.relauncher.Side
-import net.minecraftforge.fml.relauncher.SideOnly
 
 class ItemInfusedEnderPearl : ItemEnderPearl(), IInfusableItem{
 	init{
@@ -48,13 +48,13 @@ class ItemInfusedEnderPearl : ItemEnderPearl(), IInfusableItem{
 		return ItemAbstractInfusable.onCanApplyInfusion(this, infusion)
 	}
 	
-	@SideOnly(Side.CLIENT)
+	@Sided(Side.CLIENT)
 	override fun addInformation(stack: ItemStack, world: World?, lines: MutableList<String>, flags: ITooltipFlag){
 		super.addInformation(stack, world, lines, flags)
 		ItemAbstractInfusable.onAddInformation(stack, lines)
 	}
 	
-	@SideOnly(Side.CLIENT)
+	@Sided(Side.CLIENT)
 	override fun hasEffect(stack: ItemStack): Boolean{
 		return super.hasEffect(stack) || ItemAbstractInfusable.onHasEffect(stack)
 	}

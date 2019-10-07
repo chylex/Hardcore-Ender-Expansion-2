@@ -16,6 +16,9 @@ import chylex.hee.game.mechanics.energy.IEnergyQuantity.Companion.displayString
 import chylex.hee.init.ModBlocks
 import chylex.hee.init.ModItems
 import chylex.hee.system.Resource
+import chylex.hee.system.migration.forge.Side
+import chylex.hee.system.migration.forge.SubscribeAllEvents
+import chylex.hee.system.migration.forge.SubscribeEvent
 import chylex.hee.system.util.color.IntColor
 import chylex.hee.system.util.color.IntColor.Companion.RGB
 import chylex.hee.system.util.color.IntColor.Companion.RGBA
@@ -30,11 +33,8 @@ import net.minecraftforge.client.event.DrawBlockHighlightEvent
 import net.minecraftforge.client.event.EntityViewRenderEvent.FogDensity
 import net.minecraftforge.client.event.RenderGameOverlayEvent
 import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType.HELMET
-import net.minecraftforge.fml.common.Mod.EventBusSubscriber
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent
-import net.minecraftforge.fml.relauncher.Side
 
-@EventBusSubscriber(Side.CLIENT, modid = HEE.ID)
+@SubscribeAllEvents(Side.CLIENT, modid = HEE.ID)
 object OverlayRenderer{
 	private const val BORDER_SIZE  = 4
 	private const val LINE_SPACING = 7

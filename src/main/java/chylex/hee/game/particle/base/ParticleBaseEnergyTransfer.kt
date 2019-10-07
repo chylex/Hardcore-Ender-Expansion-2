@@ -1,10 +1,10 @@
 package chylex.hee.game.particle.base
+import chylex.hee.system.migration.forge.Side
+import chylex.hee.system.migration.forge.Sided
 import net.minecraft.util.math.Vec3d
 import net.minecraft.world.World
-import net.minecraftforge.fml.relauncher.Side
-import net.minecraftforge.fml.relauncher.SideOnly
 
-@SideOnly(Side.CLIENT)
+@Sided(Side.CLIENT)
 abstract class ParticleBaseEnergyTransfer(world: World, posX: Double, posY: Double, posZ: Double) : ParticleBaseEnergy(world, posX, posY, posZ, 0.0, 0.0, 0.0){
 	protected abstract val targetPos: Vec3d
 	

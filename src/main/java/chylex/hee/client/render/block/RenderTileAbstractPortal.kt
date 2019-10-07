@@ -15,6 +15,8 @@ import chylex.hee.game.block.BlockAbstractPortal
 import chylex.hee.game.block.BlockAbstractPortal.IPortalController
 import chylex.hee.game.block.entity.TileEntityPortalInner
 import chylex.hee.system.Resource
+import chylex.hee.system.migration.forge.Side
+import chylex.hee.system.migration.forge.Sided
 import chylex.hee.system.util.square
 import net.minecraft.client.renderer.ActiveRenderInfo
 import net.minecraft.client.renderer.GLAllocation
@@ -24,8 +26,6 @@ import net.minecraft.util.ResourceLocation
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.Vec3d
 import net.minecraft.world.World
-import net.minecraftforge.fml.relauncher.Side
-import net.minecraftforge.fml.relauncher.SideOnly
 import org.lwjgl.opengl.GL11.GL_EYE_LINEAR
 import org.lwjgl.opengl.GL11.GL_EYE_PLANE
 import org.lwjgl.opengl.GL11.GL_MODELVIEW
@@ -36,7 +36,7 @@ import org.lwjgl.opengl.GL11.GL_TEXTURE
 import java.util.Random
 import kotlin.math.pow
 
-@SideOnly(Side.CLIENT)
+@Sided(Side.CLIENT)
 abstract class RenderTileAbstractPortal<T : TileEntityPortalInner, C : IPortalController> : TileEntitySpecialRenderer<T>(){
 	private companion object{
 		private val TEX_BACKGROUND = Resource.Vanilla("textures/environment/end_sky.png")

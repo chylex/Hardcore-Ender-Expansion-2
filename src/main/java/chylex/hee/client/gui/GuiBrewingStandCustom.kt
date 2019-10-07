@@ -4,14 +4,14 @@ import chylex.hee.client.util.MC
 import chylex.hee.game.block.entity.TileEntityBrewingStandCustom
 import chylex.hee.game.container.ContainerBrewingStandCustom
 import chylex.hee.system.Resource
+import chylex.hee.system.migration.forge.Side
+import chylex.hee.system.migration.forge.Sided
 import chylex.hee.system.util.getStack
 import chylex.hee.system.util.isNotEmpty
 import net.minecraft.client.gui.inventory.GuiBrewingStand
 import net.minecraft.entity.player.InventoryPlayer
-import net.minecraftforge.fml.relauncher.Side
-import net.minecraftforge.fml.relauncher.SideOnly
 
-@SideOnly(Side.CLIENT)
+@Sided(Side.CLIENT)
 class GuiBrewingStandCustom(inventory: InventoryPlayer, private val brewingStand: TileEntityBrewingStandCustom) : GuiBrewingStand(inventory, brewingStand){
 	private companion object{
 		private val TEX_BACKGROUND = Resource.Custom("textures/gui/brewing_stand.png")

@@ -1,8 +1,8 @@
 package chylex.hee.system.core
+import chylex.hee.system.migration.forge.Side
 import net.minecraftforge.fml.common.FMLModContainer
 import net.minecraftforge.fml.common.ILanguageAdapter
 import net.minecraftforge.fml.common.ModContainer
-import net.minecraftforge.fml.relauncher.Side
 import java.lang.reflect.Field
 import java.lang.reflect.Method
 

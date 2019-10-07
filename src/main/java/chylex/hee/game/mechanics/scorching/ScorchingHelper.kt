@@ -13,6 +13,9 @@ import chylex.hee.game.particle.util.IShape.Point
 import chylex.hee.init.ModItems
 import chylex.hee.system.migration.Facing.UP
 import chylex.hee.system.migration.Hand.MAIN_HAND
+import chylex.hee.system.migration.forge.EventPriority
+import chylex.hee.system.migration.forge.SubscribeAllEvents
+import chylex.hee.system.migration.forge.SubscribeEvent
 import chylex.hee.system.util.isNotEmpty
 import net.minecraft.entity.Entity
 import net.minecraft.entity.player.EntityPlayer
@@ -23,13 +26,9 @@ import net.minecraft.world.World
 import net.minecraftforge.event.entity.player.CriticalHitEvent
 import net.minecraftforge.event.entity.player.PlayerEvent.BreakSpeed
 import net.minecraftforge.event.world.BlockEvent.HarvestDropsEvent
-import net.minecraftforge.fml.common.Mod.EventBusSubscriber
-import net.minecraftforge.fml.common.eventhandler.EventPriority.LOW
-import net.minecraftforge.fml.common.eventhandler.EventPriority.LOWEST
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent
 import java.util.Random
 
-@EventBusSubscriber(modid = HEE.ID)
+@SubscribeAllEvents(modid = HEE.ID)
 object ScorchingHelper{
 	private val PARTICLE_MINING = ParticleSpawnerCustom(
 		type = ParticleFlameCustom,
@@ -64,7 +63,7 @@ object ScorchingHelper{
 	// Events
 	
 	@JvmStatic
-	@SubscribeEvent(priority = LOWEST)
+	@SubscribeEvent(EventPriority.LOWEST)
 	fun onBreakSpeed(e: BreakSpeed){
 		val world = e.entity.world
 		
@@ -74,7 +73,7 @@ object ScorchingHelper{
 	}
 	
 	@JvmStatic
-	@SubscribeEvent(priority = LOW)
+	@SubscribeEvent(EventPriority.LOW)
 	fun onHarvestDrops(e: HarvestDropsEvent){
 		if (e.harvester?.let(::getHeldScorchingTool)?.canMine(e.state) == true){ // TODO not checking drops.isNotEmpty to support Vines, is that a problem?
 			val fortuneStack = ScorchingFortune.createSmeltedStack(e.state, e.world.rand)
@@ -88,7 +87,7 @@ object ScorchingHelper{
 	}
 	
 	@JvmStatic
-	@SubscribeEvent(priority = LOW)
+	@SubscribeEvent(EventPriority.LOW)
 	fun onCriticalHit(e: CriticalHitEvent){
 		getHeldScorchingTool(e.entityPlayer)?.onHit(e)
 	}

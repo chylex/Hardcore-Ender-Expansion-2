@@ -12,6 +12,8 @@ import chylex.hee.game.mechanics.energy.IClusterHealth.HealthStatus.TIRED
 import chylex.hee.game.mechanics.energy.IClusterHealth.HealthStatus.UNSTABLE
 import chylex.hee.game.mechanics.energy.IClusterHealth.HealthStatus.WEAKENED
 import chylex.hee.system.Resource
+import chylex.hee.system.migration.forge.Side
+import chylex.hee.system.migration.forge.Sided
 import chylex.hee.system.util.color.IntColor
 import chylex.hee.system.util.color.IntColor.Companion.RGB
 import net.minecraft.client.renderer.BufferBuilder
@@ -19,17 +21,15 @@ import net.minecraft.client.renderer.texture.TextureAtlasSprite
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats
 import net.minecraft.entity.Entity
 import net.minecraft.world.World
-import net.minecraftforge.fml.relauncher.Side
-import net.minecraftforge.fml.relauncher.SideOnly
 import org.lwjgl.opengl.GL11.GL_QUADS
 import java.util.Random
 
-@SideOnly(Side.CLIENT)
+@Sided(Side.CLIENT)
 abstract class ParticleBaseEnergy(world: World, posX: Double, posY: Double, posZ: Double, motX: Double, motY: Double, motZ: Double) : ParticleBaseFloating(world, posX, posY, posZ, motX, motY, motZ){
 	private companion object{
 		private val TEX_PARTICLE = Resource.Custom("textures/particle/energy.png")
 		
-		@SideOnly(Side.CLIENT)
+		@Sided(Side.CLIENT)
 		private object TextureDescription : TextureAtlasSprite(TEX_PARTICLE.toString()){
 			override fun getMinU() = 0F
 			override fun getMinV() = 0F

@@ -2,6 +2,7 @@ package chylex.hee.game.block
 import chylex.hee.game.block.info.Materials
 import chylex.hee.init.ModLoot
 import chylex.hee.system.migration.Hand.MAIN_HAND
+import chylex.hee.system.migration.forge.SubscribeEvent
 import chylex.hee.system.util.breakBlock
 import net.minecraft.block.Block
 import net.minecraft.block.material.MapColor
@@ -23,7 +24,6 @@ import net.minecraft.world.IBlockAccess
 import net.minecraft.world.World
 import net.minecraftforge.common.MinecraftForge
 import net.minecraftforge.event.entity.player.PlayerEvent.BreakSpeed
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent
 import java.util.Random
 
 class BlockAncientCobweb : Block(Materials.ANCIENT_COBWEB, MapColor.CLOTH){

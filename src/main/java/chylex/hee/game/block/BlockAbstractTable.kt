@@ -1,6 +1,8 @@
 package chylex.hee.game.block
 import chylex.hee.game.block.info.BlockBuilder
 import chylex.hee.game.block.util.Property
+import chylex.hee.system.migration.forge.Side
+import chylex.hee.system.migration.forge.Sided
 import chylex.hee.system.util.get
 import chylex.hee.system.util.with
 import net.minecraft.block.state.BlockStateContainer
@@ -12,8 +14,6 @@ import net.minecraft.item.ItemStack
 import net.minecraft.util.BlockRenderLayer.CUTOUT
 import net.minecraft.util.NonNullList
 import net.minecraft.world.World
-import net.minecraftforge.fml.relauncher.Side
-import net.minecraftforge.fml.relauncher.SideOnly
 
 abstract class BlockAbstractTable(builder: BlockBuilder) : BlockSimple(builder){
 	companion object{
@@ -42,7 +42,7 @@ abstract class BlockAbstractTable(builder: BlockBuilder) : BlockSimple(builder){
 		}
 	}
 	
-	@SideOnly(Side.CLIENT)
+	@Sided(Side.CLIENT)
 	override fun addInformation(stack: ItemStack, world: World?, lines: MutableList<String>, flags: ITooltipFlag){
 		lines.add(I18n.format("tile.tooltip.hee.table_base.tier", stack.metadata))
 	}

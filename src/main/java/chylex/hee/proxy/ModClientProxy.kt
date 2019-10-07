@@ -2,12 +2,12 @@ package chylex.hee.proxy
 import chylex.hee.client.util.MC
 import chylex.hee.game.commands.HeeClientCommand
 import chylex.hee.init.ModRendering
+import chylex.hee.system.migration.forge.Side
+import chylex.hee.system.migration.forge.Sided
 import net.minecraftforge.client.ClientCommandHandler
-import net.minecraftforge.fml.relauncher.Side
-import net.minecraftforge.fml.relauncher.SideOnly
 
 @Suppress("unused", "RemoveExplicitTypeArguments")
-@SideOnly(Side.CLIENT)
+@Sided(Side.CLIENT)
 class ModClientProxy : ModCommonProxy(){
 	override fun getClientSidePlayer() = MC.player
 	

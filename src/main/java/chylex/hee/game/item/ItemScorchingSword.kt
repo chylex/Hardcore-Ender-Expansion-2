@@ -10,6 +10,9 @@ import chylex.hee.game.mechanics.scorching.ScorchingHelper
 import chylex.hee.game.mechanics.scorching.ScorchingHelper.FX_ENTITY_HIT
 import chylex.hee.network.client.PacketClientFX
 import chylex.hee.system.migration.Hand.MAIN_HAND
+import chylex.hee.system.migration.forge.EventPriority
+import chylex.hee.system.migration.forge.EventResult
+import chylex.hee.system.migration.forge.SubscribeEvent
 import chylex.hee.system.util.floorToInt
 import chylex.hee.system.util.nextFloat
 import chylex.hee.system.util.playUniversal
@@ -34,11 +37,6 @@ import net.minecraftforge.common.MinecraftForge
 import net.minecraftforge.event.entity.living.LivingDamageEvent
 import net.minecraftforge.event.entity.living.LootingLevelEvent
 import net.minecraftforge.event.entity.player.CriticalHitEvent
-import net.minecraftforge.fml.common.eventhandler.Event.Result.ALLOW
-import net.minecraftforge.fml.common.eventhandler.Event.Result.DENY
-import net.minecraftforge.fml.common.eventhandler.EventPriority.LOW
-import net.minecraftforge.fml.common.eventhandler.EventPriority.LOWEST
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent
 import kotlin.math.cos
 import kotlin.math.max
 import kotlin.math.sin
@@ -80,7 +78,7 @@ class ItemScorchingSword : ItemSword(SCORCHING_SWORD), IScorchingItem, ICustomRe
 		val target = e.target
 		
 		if (target !is EntityLivingBase){
-			e.result = DENY
+			e.result = EventResult.DENY
 			return
 		}
 		
@@ -89,10 +87,10 @@ class ItemScorchingSword : ItemSword(SCORCHING_SWORD), IScorchingItem, ICustomRe
 		target.setFireTicks(type.fire) // set fire before drops
 		
 		e.damageModifier = type.damageMultiplier
-		e.result = ALLOW // prevents sweep
+		e.result = EventResult.ALLOW // prevents sweep
 	}
 	
-	@SubscribeEvent(priority = LOWEST)
+	@SubscribeEvent(EventPriority.LOWEST)
 	fun onLivingDamage(e: LivingDamageEvent){
 		val (attacker, heldItem) = e.source.takeUnless { stopDamageRecursion.get() }?.let(::validateDamageSource) ?: return
 		val target = e.entityLiving
@@ -140,7 +138,7 @@ class ItemScorchingSword : ItemSword(SCORCHING_SWORD), IScorchingItem, ICustomRe
 		}
 	}
 	
-	@SubscribeEvent(priority = LOW)
+	@SubscribeEvent(EventPriority.LOW)
 	fun onMobDrops(e: LootingLevelEvent){
 		if (validateDamageSource(e.damageSource) != null){
 			e.lootingLevel = max(e.lootingLevel, getTargetType(e.entityLiving).looting)

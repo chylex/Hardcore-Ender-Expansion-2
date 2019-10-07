@@ -2,6 +2,8 @@ package chylex.hee.game.block
 import chylex.hee.game.block.info.BlockBuilder.Companion.setHarvestTool
 import chylex.hee.game.item.util.Tool.Level.WOOD
 import chylex.hee.game.item.util.Tool.Type.AXE
+import chylex.hee.system.migration.forge.Side
+import chylex.hee.system.migration.forge.Sided
 import chylex.hee.system.util.color.IntColor
 import chylex.hee.system.util.getBlock
 import chylex.hee.system.util.getState
@@ -18,8 +20,6 @@ import net.minecraft.world.ColorizerFoliage
 import net.minecraft.world.IBlockAccess
 import net.minecraft.world.World
 import net.minecraft.world.biome.BiomeColorHelper
-import net.minecraftforge.fml.relauncher.Side
-import net.minecraftforge.fml.relauncher.SideOnly
 import java.util.Random
 
 class BlockDryVines : BlockVine(){
@@ -50,7 +50,7 @@ class BlockDryVines : BlockVine(){
 	
 	// Client side
 	
-	@SideOnly(Side.CLIENT)
+	@Sided(Side.CLIENT)
 	object Color : IBlockColor{
 		private fun dryify(color: Int): Int{
 			val hsb = IntColor(color).asHSB

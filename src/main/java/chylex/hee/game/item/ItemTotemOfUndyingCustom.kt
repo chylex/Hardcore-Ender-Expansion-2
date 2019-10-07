@@ -4,6 +4,10 @@ import chylex.hee.game.entity.living.EntityMobVillagerDying
 import chylex.hee.game.mechanics.trinket.TrinketHandler
 import chylex.hee.init.ModItems
 import chylex.hee.system.Resource
+import chylex.hee.system.migration.forge.EventPriority
+import chylex.hee.system.migration.forge.Side
+import chylex.hee.system.migration.forge.Sided
+import chylex.hee.system.migration.forge.SubscribeEvent
 import chylex.hee.system.util.hasKey
 import chylex.hee.system.util.heeTag
 import chylex.hee.system.util.heeTagOrNull
@@ -26,10 +30,6 @@ import net.minecraft.util.EnumParticleTypes
 import net.minecraft.world.World
 import net.minecraftforge.common.MinecraftForge
 import net.minecraftforge.event.entity.living.LivingDeathEvent
-import net.minecraftforge.fml.common.eventhandler.EventPriority.HIGHEST
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent
-import net.minecraftforge.fml.relauncher.Side
-import net.minecraftforge.fml.relauncher.SideOnly
 
 class ItemTotemOfUndyingCustom : ItemAbstractTrinket(){
 	private companion object{
@@ -52,7 +52,7 @@ class ItemTotemOfUndyingCustom : ItemAbstractTrinket(){
 		return !stack.isItemDamaged
 	}
 	
-	@SideOnly(Side.CLIENT)
+	@Sided(Side.CLIENT)
 	override fun spawnClientTrinketBreakFX(target: Entity){
 		MC.particleManager.emitParticleAtEntity(target, EnumParticleTypes.TOTEM, 30)
 		SoundEvents.ITEM_TOTEM_USE.playClient(target.posVec, target.soundCategory)
@@ -60,7 +60,7 @@ class ItemTotemOfUndyingCustom : ItemAbstractTrinket(){
 	
 	// Death logic
 	
-	@SubscribeEvent(priority = HIGHEST)
+	@SubscribeEvent(EventPriority.HIGHEST)
 	fun onLivingDeath(e: LivingDeathEvent){
 		if (e.source.canHarmInCreative()){
 			return

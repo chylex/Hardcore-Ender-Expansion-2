@@ -1,12 +1,12 @@
 package chylex.hee.init
+import chylex.hee.system.migration.forge.Side
+import chylex.hee.system.migration.forge.Sided
 import it.unimi.dsi.fastutil.objects.Reference2ShortOpenHashMap
 import net.minecraft.creativetab.CreativeTabs
 import net.minecraft.item.Item
 import net.minecraft.item.ItemBlock
 import net.minecraft.item.ItemStack
 import net.minecraft.util.NonNullList
-import net.minecraftforge.fml.relauncher.Side
-import net.minecraftforge.fml.relauncher.SideOnly
 
 object ModCreativeTabs{
 	lateinit var main: OrderedCreativeTab
@@ -23,10 +23,10 @@ object ModCreativeTabs{
 			itemOrder.put(item, (itemOrder.size + 1).toShort()) // kotlin indexer boxes the values
 		}
 		
-		@SideOnly(Side.CLIENT)
+		@Sided(Side.CLIENT)
 		override fun createIcon() = ItemStack(ModItems.ETHEREUM)
 		
-		@SideOnly(Side.CLIENT)
+		@Sided(Side.CLIENT)
 		override fun displayAllRelevantItems(items: NonNullList<ItemStack>){
 			super.displayAllRelevantItems(items)
 			

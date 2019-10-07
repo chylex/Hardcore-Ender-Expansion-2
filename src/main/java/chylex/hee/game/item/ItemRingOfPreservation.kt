@@ -4,6 +4,10 @@ import chylex.hee.game.item.repair.RepairInstance
 import chylex.hee.game.mechanics.trinket.TrinketHandler
 import chylex.hee.system.migration.Hand.MAIN_HAND
 import chylex.hee.system.migration.Hand.OFF_HAND
+import chylex.hee.system.migration.forge.EventPriority
+import chylex.hee.system.migration.forge.Side
+import chylex.hee.system.migration.forge.Sided
+import chylex.hee.system.migration.forge.SubscribeEvent
 import chylex.hee.system.util.copyIf
 import chylex.hee.system.util.isNotEmpty
 import net.minecraft.entity.Entity
@@ -15,11 +19,6 @@ import net.minecraftforge.common.MinecraftForge
 import net.minecraftforge.event.entity.living.LivingDamageEvent
 import net.minecraftforge.event.entity.living.LivingHurtEvent
 import net.minecraftforge.event.entity.player.PlayerDestroyItemEvent
-import net.minecraftforge.fml.common.eventhandler.EventPriority.HIGHEST
-import net.minecraftforge.fml.common.eventhandler.EventPriority.LOWEST
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent
-import net.minecraftforge.fml.relauncher.Side
-import net.minecraftforge.fml.relauncher.SideOnly
 import java.util.UUID
 
 class ItemRingOfPreservation : ItemAbstractTrinket(), ICustomRepairBehavior{
@@ -45,7 +44,7 @@ class ItemRingOfPreservation : ItemAbstractTrinket(), ICustomRepairBehavior{
 		return !stack.isItemDamaged
 	}
 	
-	@SideOnly(Side.CLIENT)
+	@Sided(Side.CLIENT)
 	override fun spawnClientTrinketBreakFX(target: Entity){
 		// TODO sound effect
 	}
@@ -78,7 +77,7 @@ class ItemRingOfPreservation : ItemAbstractTrinket(), ICustomRepairBehavior{
 	
 	// UPDATE: check if EntityLivingBase.damageEntity still triggers the events in the same order to allow detecting armor breaking, or if PlayerDestroyItemEvent gets fixed
 	
-	@SubscribeEvent(priority = HIGHEST)
+	@SubscribeEvent(EventPriority.HIGHEST)
 	fun onPlayerDestroyItem(e: PlayerDestroyItemEvent){
 		val player = e.entityPlayer
 		val inventory = player.inventory
@@ -92,7 +91,7 @@ class ItemRingOfPreservation : ItemAbstractTrinket(), ICustomRepairBehavior{
 		onItemDestroyed(player, e.original, info)
 	}
 	
-	@SubscribeEvent(priority = LOWEST)
+	@SubscribeEvent(EventPriority.LOWEST)
 	fun onLivingHurt(e: LivingHurtEvent){
 		val player = e.entity as? EntityPlayer
 		
@@ -109,7 +108,7 @@ class ItemRingOfPreservation : ItemAbstractTrinket(), ICustomRepairBehavior{
 		lastHurtPlayerArmor = Pair(HurtPlayerInfo(player), armorCopy)
 	}
 	
-	@SubscribeEvent(priority = HIGHEST, receiveCanceled = true)
+	@SubscribeEvent(EventPriority.HIGHEST, receiveCanceled = true)
 	fun onLivingDamage(e: LivingDamageEvent){
 		val (hurtInfo, prevArmor) = lastHurtPlayerArmor ?: return
 		val player = e.entity as? EntityPlayer ?: return

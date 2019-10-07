@@ -50,6 +50,9 @@ import chylex.hee.game.item.ItemVoidBucket
 import chylex.hee.game.item.ItemVoidSalad
 import chylex.hee.init.factory.RendererConstructors
 import chylex.hee.system.Resource
+import chylex.hee.system.migration.forge.Side
+import chylex.hee.system.migration.forge.SubscribeAllEvents
+import chylex.hee.system.migration.forge.SubscribeEvent
 import net.minecraft.block.Block
 import net.minecraft.client.renderer.block.model.ModelResourceLocation
 import net.minecraft.client.renderer.block.statemap.IStateMapper
@@ -66,12 +69,9 @@ import net.minecraftforge.client.event.ModelRegistryEvent
 import net.minecraftforge.client.model.ModelLoader
 import net.minecraftforge.fml.client.registry.ClientRegistry
 import net.minecraftforge.fml.client.registry.RenderingRegistry
-import net.minecraftforge.fml.common.Mod.EventBusSubscriber
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent
 import net.minecraftforge.fml.common.registry.ForgeRegistries
-import net.minecraftforge.fml.relauncher.Side
 
-@EventBusSubscriber(Side.CLIENT, modid = HEE.ID)
+@SubscribeAllEvents(Side.CLIENT, modid = HEE.ID)
 object ModRendering{
 	
 	// Entities

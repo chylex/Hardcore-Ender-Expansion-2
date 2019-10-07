@@ -1,5 +1,8 @@
 package chylex.hee.system.capability
 import chylex.hee.HEE
+import chylex.hee.system.migration.forge.EventPriority
+import chylex.hee.system.migration.forge.SubscribeAllEvents
+import chylex.hee.system.migration.forge.SubscribeEvent
 import net.minecraft.entity.Entity
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.nbt.NBTTagCompound
@@ -8,11 +11,8 @@ import net.minecraftforge.common.capabilities.ICapabilityProvider
 import net.minecraftforge.common.util.INBTSerializable
 import net.minecraftforge.event.AttachCapabilitiesEvent
 import net.minecraftforge.event.entity.player.PlayerEvent
-import net.minecraftforge.fml.common.Mod.EventBusSubscriber
-import net.minecraftforge.fml.common.eventhandler.EventPriority.HIGHEST
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent
 
-@EventBusSubscriber(modid = HEE.ID)
+@SubscribeAllEvents(modid = HEE.ID)
 object PlayerCapabilityHandler{
 	interface IPlayerCapability{
 		val key: ResourceLocation
@@ -46,7 +46,7 @@ object PlayerCapabilityHandler{
 	}
 	
 	@JvmStatic
-	@SubscribeEvent(priority = HIGHEST)
+	@SubscribeEvent(EventPriority.HIGHEST)
 	fun onPlayerClone(e: PlayerEvent.Clone){
 		val oldPlayer = e.original
 		val newPlayer = e.entityPlayer

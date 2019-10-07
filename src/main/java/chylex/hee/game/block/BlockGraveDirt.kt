@@ -8,6 +8,8 @@ import chylex.hee.game.block.util.Property
 import chylex.hee.game.entity.living.EntityMobSpiderling
 import chylex.hee.init.ModLoot
 import chylex.hee.system.migration.Difficulty.PEACEFUL
+import chylex.hee.system.migration.forge.Side
+import chylex.hee.system.migration.forge.Sided
 import chylex.hee.system.util.center
 import chylex.hee.system.util.floorToInt
 import chylex.hee.system.util.get
@@ -41,8 +43,6 @@ import net.minecraft.world.IBlockAccess
 import net.minecraft.world.World
 import net.minecraft.world.WorldServer
 import net.minecraft.world.storage.loot.LootContext
-import net.minecraftforge.fml.relauncher.Side
-import net.minecraftforge.fml.relauncher.SideOnly
 import java.util.Random
 
 class BlockGraveDirt(builder: BlockBuilder) : BlockSimpleShaped(builder, AxisAlignedBB(0.0, 0.0, 0.0, 1.0, 0.9375, 1.0)){
@@ -138,7 +138,7 @@ class BlockGraveDirt(builder: BlockBuilder) : BlockSimpleShaped(builder, AxisAli
 		}
 	}
 	
-	@SideOnly(Side.CLIENT)
+	@Sided(Side.CLIENT)
 	override fun randomDisplayTick(state: IBlockState, world: World, pos: BlockPos, rand: Random){
 		if (state[TYPE] == SPIDERLING && world.difficulty != PEACEFUL && world.totalWorldTime - clientLastSpiderlingSound > 35L){
 			val distanceSq = MC.player?.getDistanceSqToCenter(pos) ?: 0.0

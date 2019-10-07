@@ -17,6 +17,8 @@ import chylex.hee.system.migration.ActionResult.FAIL
 import chylex.hee.system.migration.ActionResult.PASS
 import chylex.hee.system.migration.ActionResult.SUCCESS
 import chylex.hee.system.migration.Facing.UP
+import chylex.hee.system.migration.forge.Side
+import chylex.hee.system.migration.forge.Sided
 import chylex.hee.system.util.color.IntColor.Companion.RGB
 import chylex.hee.system.util.getEnum
 import chylex.hee.system.util.getIntegerOrNull
@@ -38,8 +40,6 @@ import net.minecraft.util.EnumHand
 import net.minecraft.util.NonNullList
 import net.minecraft.util.math.BlockPos
 import net.minecraft.world.World
-import net.minecraftforge.fml.relauncher.Side
-import net.minecraftforge.fml.relauncher.SideOnly
 import net.minecraft.util.text.translation.I18n as I18nServer
 
 class ItemPortalToken : Item(){
@@ -160,7 +160,7 @@ class ItemPortalToken : Item(){
 		}
 	}
 	
-	@SideOnly(Side.CLIENT)
+	@Sided(Side.CLIENT)
 	override fun addInformation(stack: ItemStack, world: World?, lines: MutableList<String>, flags: ITooltipFlag){
 		if ((MC.currentScreen as? GuiPortalTokenStorage)?.canActivateToken(stack) == true){
 			lines.add(I18n.format("item.hee.portal_token.tooltip.activate"))
@@ -183,7 +183,7 @@ class ItemPortalToken : Item(){
 		super.addInformation(stack, world, lines, flags)
 	}
 	
-	@SideOnly(Side.CLIENT)
+	@Sided(Side.CLIENT)
 	object Color : IItemColor{
 		private val WHITE = RGB(255u).i
 		

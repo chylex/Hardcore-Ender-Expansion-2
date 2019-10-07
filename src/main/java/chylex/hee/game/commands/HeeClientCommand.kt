@@ -6,16 +6,16 @@ import chylex.hee.game.commands.sub.client.CommandClientScaffolding
 import chylex.hee.game.commands.sub.client.CommandClientVersion
 import chylex.hee.game.commands.sub.client.CommandDebugToggles
 import chylex.hee.system.Debug
+import chylex.hee.system.migration.forge.Side
+import chylex.hee.system.migration.forge.Sided
+import chylex.hee.system.migration.forge.SubscribeAllEvents
+import chylex.hee.system.migration.forge.SubscribeEvent
 import net.minecraft.command.ICommandSender
 import net.minecraftforge.client.IClientCommand
 import net.minecraftforge.event.CommandEvent
-import net.minecraftforge.fml.common.Mod.EventBusSubscriber
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent
-import net.minecraftforge.fml.relauncher.Side
-import net.minecraftforge.fml.relauncher.SideOnly
 
-@SideOnly(Side.CLIENT)
-@EventBusSubscriber(Side.CLIENT, modid = HEE.ID)
+@Sided(Side.CLIENT)
+@SubscribeAllEvents(Side.CLIENT, modid = HEE.ID)
 internal object HeeClientCommand : HeeBaseCommand(), IClientCommand{
 	public override val allSubCommands = subCommandMapOf(*
 		arrayOf(

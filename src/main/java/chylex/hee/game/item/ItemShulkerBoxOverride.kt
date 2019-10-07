@@ -6,6 +6,11 @@ import chylex.hee.init.ModGuiHandler.GuiType.SHULKER_BOX
 import chylex.hee.network.server.PacketServerOpenGui
 import chylex.hee.system.migration.ActionResult.PASS
 import chylex.hee.system.migration.ActionResult.SUCCESS
+import chylex.hee.system.migration.forge.EventPriority
+import chylex.hee.system.migration.forge.Side
+import chylex.hee.system.migration.forge.Sided
+import chylex.hee.system.migration.forge.SubscribeAllEvents
+import chylex.hee.system.migration.forge.SubscribeEvent
 import chylex.hee.system.util.allSlots
 import chylex.hee.system.util.getCompoundOrNull
 import chylex.hee.system.util.getStack
@@ -32,11 +37,6 @@ import net.minecraft.util.NonNullList
 import net.minecraft.util.text.TextFormatting
 import net.minecraft.world.World
 import net.minecraftforge.client.event.GuiScreenEvent
-import net.minecraftforge.fml.common.Mod.EventBusSubscriber
-import net.minecraftforge.fml.common.eventhandler.EventPriority.LOWEST
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent
-import net.minecraftforge.fml.relauncher.Side
-import net.minecraftforge.fml.relauncher.SideOnly
 import org.lwjgl.input.Mouse
 
 class ItemShulkerBoxOverride(block: Block) : ItemShulkerBox(block){
@@ -111,11 +111,11 @@ class ItemShulkerBoxOverride(block: Block) : ItemShulkerBox(block){
 	
 	// Client side
 	
-	@SideOnly(Side.CLIENT)
-	@EventBusSubscriber(Side.CLIENT, modid = HEE.ID)
+	@Sided(Side.CLIENT)
+	@SubscribeAllEvents(Side.CLIENT, modid = HEE.ID)
 	object EventHandler{
 		@JvmStatic
-		@SubscribeEvent(priority = LOWEST)
+		@SubscribeEvent(EventPriority.LOWEST)
 		fun onMouseInputPre(e: GuiScreenEvent.MouseInputEvent.Pre){
 			val gui = e.gui
 			
@@ -134,7 +134,7 @@ class ItemShulkerBoxOverride(block: Block) : ItemShulkerBox(block){
 		return slotChanged && super.shouldCauseReequipAnimation(oldStack, newStack, slotChanged)
 	}
 	
-	@SideOnly(Side.CLIENT)
+	@Sided(Side.CLIENT)
 	override fun addInformation(stack: ItemStack, world: World?, lines: MutableList<String>, flags: ITooltipFlag){
 		if (MC.currentScreen is GuiInventory){
 			lines.add(I18n.format("item.hee.shulker_box.tooltip"))

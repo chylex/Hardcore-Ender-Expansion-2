@@ -2,15 +2,15 @@ package chylex.hee.client.gui.base
 import chylex.hee.client.render.util.GL
 import chylex.hee.client.util.MC
 import chylex.hee.game.container.base.ContainerBaseCustomInventory
+import chylex.hee.system.migration.forge.Side
+import chylex.hee.system.migration.forge.Sided
 import chylex.hee.system.util.color.IntColor.Companion.RGB
 import net.minecraft.client.gui.inventory.GuiContainer
 import net.minecraft.client.resources.I18n
 import net.minecraft.inventory.IInventory
 import net.minecraft.util.ResourceLocation
-import net.minecraftforge.fml.relauncher.Side
-import net.minecraftforge.fml.relauncher.SideOnly
 
-@SideOnly(Side.CLIENT)
+@Sided(Side.CLIENT)
 abstract class GuiBaseCustomInventory<T : IInventory>(container: ContainerBaseCustomInventory<T>) : GuiContainer(container){
 	private companion object{
 		private val COLOR_TEXT = RGB(64u).i

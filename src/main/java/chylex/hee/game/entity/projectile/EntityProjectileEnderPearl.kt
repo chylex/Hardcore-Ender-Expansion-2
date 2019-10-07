@@ -12,6 +12,9 @@ import chylex.hee.game.mechanics.damage.IDamageProcessor.Companion.ALL_PROTECTIO
 import chylex.hee.game.mechanics.damage.IDamageProcessor.Companion.PEACEFUL_EXCLUSION
 import chylex.hee.game.world.util.RayTracer
 import chylex.hee.game.world.util.Teleporter
+import chylex.hee.system.migration.forge.EventPriority
+import chylex.hee.system.migration.forge.SubscribeAllEvents
+import chylex.hee.system.migration.forge.SubscribeEvent
 import chylex.hee.system.util.Pos
 import chylex.hee.system.util.heeTag
 import chylex.hee.system.util.motionVec
@@ -29,12 +32,9 @@ import net.minecraft.util.math.RayTraceResult.Type.MISS
 import net.minecraft.world.World
 import net.minecraftforge.event.entity.EntityJoinWorldEvent
 import net.minecraftforge.event.entity.living.LivingAttackEvent
-import net.minecraftforge.fml.common.Mod.EventBusSubscriber
-import net.minecraftforge.fml.common.eventhandler.EventPriority.LOWEST
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent
 import net.minecraftforge.fml.common.registry.IEntityAdditionalSpawnData
 
-@EventBusSubscriber(modid = HEE.ID)
+@SubscribeAllEvents(modid = HEE.ID)
 class EntityProjectileEnderPearl : EntityEnderPearl, IEntityAdditionalSpawnData{
 	companion object{
 		private val DAMAGE_HIT_ENTITY = Damage(PEACEFUL_EXCLUSION, *ALL_PROTECTIONS_WITH_SHIELD)
@@ -55,7 +55,7 @@ class EntityProjectileEnderPearl : EntityEnderPearl, IEntityAdditionalSpawnData{
 		}
 		
 		@JvmStatic
-		@SubscribeEvent(priority = LOWEST)
+		@SubscribeEvent(EventPriority.LOWEST)
 		fun onLivingAttack(e: LivingAttackEvent){
 			if (e.source === DamageSource.IN_WALL && !e.entity.world.isRemote){
 				val riding = e.entityLiving.ridingEntity

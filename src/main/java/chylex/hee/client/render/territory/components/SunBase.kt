@@ -7,14 +7,14 @@ import chylex.hee.client.render.util.GL.SF_SRC_ALPHA
 import chylex.hee.client.render.util.TESSELLATOR
 import chylex.hee.client.render.util.draw
 import chylex.hee.client.util.MC
+import chylex.hee.system.migration.forge.Side
+import chylex.hee.system.migration.forge.Sided
 import net.minecraft.client.Minecraft
 import net.minecraft.client.multiplayer.WorldClient
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats
 import net.minecraft.util.ResourceLocation
 import net.minecraft.util.math.Vec3d
 import net.minecraftforge.client.IRenderHandler
-import net.minecraftforge.fml.relauncher.Side
-import net.minecraftforge.fml.relauncher.SideOnly
 import org.lwjgl.opengl.GL11.GL_GREATER
 import org.lwjgl.opengl.GL11.GL_QUADS
 
@@ -36,7 +36,7 @@ abstract class SunBase : IRenderHandler(){
 		GL.rotate(world.getCelestialAngle(partialTicks) * 360F, 1F, 0F, 0F)
 	}
 	
-	@SideOnly(Side.CLIENT)
+	@Sided(Side.CLIENT)
 	override fun render(partialTicks: Float, world: WorldClient, mc: Minecraft){
 		val width = size
 		val dist = distance

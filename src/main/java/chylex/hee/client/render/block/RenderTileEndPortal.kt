@@ -3,14 +3,14 @@ import chylex.hee.game.block.BlockAbstractPortal
 import chylex.hee.game.block.BlockAbstractPortal.IPortalController
 import chylex.hee.game.block.entity.TileEntityEndPortalAcceptor
 import chylex.hee.game.block.entity.TileEntityPortalInner
+import chylex.hee.system.migration.forge.Side
+import chylex.hee.system.migration.forge.Sided
 import chylex.hee.system.util.closestTickingTile
 import chylex.hee.system.util.math.LerpedFloat
 import net.minecraft.util.math.BlockPos
 import net.minecraft.world.World
-import net.minecraftforge.fml.relauncher.Side
-import net.minecraftforge.fml.relauncher.SideOnly
 
-@SideOnly(Side.CLIENT)
+@Sided(Side.CLIENT)
 object RenderTileEndPortal : RenderTileAbstractPortal<TileEntityPortalInner.End, IPortalController>(){
 	private object AlwaysOnController : IPortalController{
 		override val clientAnimationProgress = LerpedFloat(1F)

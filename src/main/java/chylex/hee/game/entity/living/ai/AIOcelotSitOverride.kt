@@ -1,5 +1,8 @@
 package chylex.hee.game.entity.living.ai
 import chylex.hee.HEE
+import chylex.hee.system.migration.forge.EventPriority
+import chylex.hee.system.migration.forge.SubscribeAllEvents
+import chylex.hee.system.migration.forge.SubscribeEvent
 import chylex.hee.system.util.getBlock
 import chylex.hee.system.util.isAir
 import net.minecraft.entity.ai.EntityAIOcelotSit
@@ -7,11 +10,8 @@ import net.minecraft.entity.passive.EntityOcelot
 import net.minecraft.util.math.BlockPos
 import net.minecraft.world.World
 import net.minecraftforge.event.entity.EntityJoinWorldEvent
-import net.minecraftforge.fml.common.Mod.EventBusSubscriber
-import net.minecraftforge.fml.common.eventhandler.EventPriority.LOWEST
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent
 
-@EventBusSubscriber(modid = HEE.ID)
+@SubscribeAllEvents(modid = HEE.ID)
 class AIOcelotSitOverride(ocelot: EntityOcelot, overridden: EntityAIOcelotSit) : EntityAIOcelotSit(ocelot, overridden.movementSpeed){
 	interface IOcelotCanSitOn{
 		fun canOcelotSitOn(world: World, pos: BlockPos): Boolean
@@ -19,7 +19,7 @@ class AIOcelotSitOverride(ocelot: EntityOcelot, overridden: EntityAIOcelotSit) :
 	
 	companion object{
 		@JvmStatic
-		@SubscribeEvent(priority = LOWEST, receiveCanceled = true)
+		@SubscribeEvent(EventPriority.LOWEST, receiveCanceled = true)
 		fun onEntityJoinWorld(e: EntityJoinWorldEvent){
 			val entity = e.entity
 			

@@ -1,6 +1,10 @@
 package chylex.hee.game.block
 import chylex.hee.game.block.fluid.FluidBase
 import chylex.hee.game.world.util.BlockEditor
+import chylex.hee.system.migration.forge.EventResult
+import chylex.hee.system.migration.forge.Side
+import chylex.hee.system.migration.forge.Sided
+import chylex.hee.system.migration.forge.SubscribeEvent
 import chylex.hee.system.util.FLAG_NOTIFY_NEIGHBORS
 import chylex.hee.system.util.FLAG_RENDER_IMMEDIATE
 import chylex.hee.system.util.FLAG_SYNC_CLIENT
@@ -29,10 +33,6 @@ import net.minecraft.world.World
 import net.minecraftforge.common.MinecraftForge
 import net.minecraftforge.event.entity.player.FillBucketEvent
 import net.minecraftforge.fluids.BlockFluidClassic
-import net.minecraftforge.fml.common.eventhandler.Event.Result.ALLOW
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent
-import net.minecraftforge.fml.relauncher.Side
-import net.minecraftforge.fml.relauncher.SideOnly
 import java.util.UUID
 
 abstract class BlockAbstractGoo(private val fluid: FluidBase, material: Material) : BlockFluidClassic(fluid, material){
@@ -87,7 +87,7 @@ abstract class BlockAbstractGoo(private val fluid: FluidBase, material: Material
 		
 		pos.setBlock(world, Blocks.AIR, FLAG_NOTIFY_NEIGHBORS or FLAG_SYNC_CLIENT or FLAG_RENDER_IMMEDIATE)
 		e.filledBucket = ItemStack(filledBucket)
-		e.result = ALLOW
+		e.result = EventResult.ALLOW
 	}
 	
 	final override fun onEntityCollision(world: World, pos: BlockPos, state: IBlockState, entity: Entity){
@@ -160,7 +160,7 @@ abstract class BlockAbstractGoo(private val fluid: FluidBase, material: Material
 	
 	// Colors
 	
-	@SideOnly(Side.CLIENT)
+	@Sided(Side.CLIENT)
 	override fun getFogColor(world: World, pos: BlockPos, state: IBlockState, entity: Entity, originalColor: Vec3d, partialTicks: Float): Vec3d{
 		return fluid.fogColor
 	}

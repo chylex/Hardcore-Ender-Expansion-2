@@ -11,6 +11,8 @@ import chylex.hee.game.recipe.RecipeScaleOfFreefallRepair
 import chylex.hee.game.recipe.RecipeVoidSalad
 import chylex.hee.system.IntegrityCheck
 import chylex.hee.system.Resource
+import chylex.hee.system.migration.forge.SubscribeAllEvents
+import chylex.hee.system.migration.forge.SubscribeEvent
 import chylex.hee.system.util.useVanillaName
 import net.minecraft.init.Blocks
 import net.minecraft.init.Items
@@ -18,11 +20,9 @@ import net.minecraft.item.ItemStack
 import net.minecraft.item.crafting.FurnaceRecipes
 import net.minecraft.item.crafting.IRecipe
 import net.minecraftforge.event.RegistryEvent
-import net.minecraftforge.fml.common.Mod.EventBusSubscriber
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent
 import net.minecraftforge.registries.IForgeRegistryModifiable
 
-@EventBusSubscriber(modid = HEE.ID)
+@SubscribeAllEvents(modid = HEE.ID)
 object ModRecipes{
 	fun initialize(){ // UPDATE: Move smelting recipes to JSON
 		with(FurnaceRecipes.instance()){

@@ -2,6 +2,8 @@ package chylex.hee.game.particle
 import chylex.hee.game.particle.spawner.factory.IParticleData
 import chylex.hee.game.particle.spawner.factory.IParticleMaker
 import chylex.hee.game.particle.util.ParticleTexture
+import chylex.hee.system.migration.forge.Side
+import chylex.hee.system.migration.forge.Sided
 import chylex.hee.system.util.color.IntColor.Companion.RGB
 import chylex.hee.system.util.component1
 import chylex.hee.system.util.component2
@@ -11,11 +13,9 @@ import chylex.hee.system.util.offsetTowards
 import net.minecraft.client.particle.Particle
 import net.minecraft.client.particle.ParticleSuspendedTown
 import net.minecraft.world.World
-import net.minecraftforge.fml.relauncher.Side
-import net.minecraftforge.fml.relauncher.SideOnly
 
 object ParticleDeathFlowerHeal : IParticleMaker{
-	@SideOnly(Side.CLIENT)
+	@Sided(Side.CLIENT)
 	override fun create(world: World, posX: Double, posY: Double, posZ: Double, motX: Double, motY: Double, motZ: Double, data: IntArray): Particle{
 		return Instance(world, posX, posY, posZ, motX, motY, motZ, data)
 	}
@@ -31,7 +31,7 @@ object ParticleDeathFlowerHeal : IParticleMaker{
 	private val COLOR_MIN = RGB(164, 78, 202).asVec
 	private val COLOR_MAX = RGB(232, 85, 252).asVec
 	
-	@SideOnly(Side.CLIENT)
+	@Sided(Side.CLIENT)
 	private class Instance(world: World, posX: Double, posY: Double, posZ: Double, motX: Double, motY: Double, motZ: Double, unsafeData: IntArray) : ParticleSuspendedTown(world, posX, posY, posZ, motX, motY, motZ){
 		init{
 			particleTexture = ParticleTexture.STAR

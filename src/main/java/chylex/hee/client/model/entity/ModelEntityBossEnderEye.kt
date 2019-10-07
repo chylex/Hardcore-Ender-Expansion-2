@@ -1,15 +1,15 @@
 package chylex.hee.client.model.entity
 import chylex.hee.client.render.util.beginBox
 import chylex.hee.game.entity.living.EntityBossEnderEye
+import chylex.hee.system.migration.forge.Side
+import chylex.hee.system.migration.forge.Sided
 import chylex.hee.system.util.toRadians
 import net.minecraft.client.model.ModelBase
 import net.minecraft.client.model.ModelRenderer
 import net.minecraft.entity.Entity
 import net.minecraft.entity.EntityLivingBase
-import net.minecraftforge.fml.relauncher.Side
-import net.minecraftforge.fml.relauncher.SideOnly
 
-@SideOnly(Side.CLIENT)
+@Sided(Side.CLIENT)
 object ModelEntityBossEnderEye : ModelBase(){
 	const val SCALE = 16F / 18F
 	

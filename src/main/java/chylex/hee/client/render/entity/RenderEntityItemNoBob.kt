@@ -1,11 +1,11 @@
 package chylex.hee.client.render.entity
 import chylex.hee.client.util.MC
+import chylex.hee.system.migration.forge.Side
+import chylex.hee.system.migration.forge.Sided
 import net.minecraft.client.renderer.entity.RenderEntityItem
 import net.minecraft.client.renderer.entity.RenderManager
-import net.minecraftforge.fml.relauncher.Side
-import net.minecraftforge.fml.relauncher.SideOnly
 
-@SideOnly(Side.CLIENT)
+@Sided(Side.CLIENT)
 class RenderEntityItemNoBob(manager: RenderManager) : RenderEntityItem(manager, MC.itemRenderer){
 	override fun shouldBob() = false
 }

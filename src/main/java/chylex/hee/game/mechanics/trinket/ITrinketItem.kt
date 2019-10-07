@@ -1,8 +1,8 @@
 package chylex.hee.game.mechanics.trinket
+import chylex.hee.system.migration.forge.Side
+import chylex.hee.system.migration.forge.Sided
 import net.minecraft.entity.Entity
 import net.minecraft.item.ItemStack
-import net.minecraftforge.fml.relauncher.Side
-import net.minecraftforge.fml.relauncher.SideOnly
 
 /**
  * Describes an item which can be inserted into a Trinket slot. The interface must be applied to a class extending [Item][net.minecraft.item.Item].
@@ -17,7 +17,7 @@ interface ITrinketItem{
 	/**
 	 * Spawns particle and/or sound effects on the [target] entity whose trinket broke.
 	 */
-	@SideOnly(Side.CLIENT)
+	@Sided(Side.CLIENT)
 	@JvmDefault
 	fun spawnClientTrinketBreakFX(target: Entity){}
 }

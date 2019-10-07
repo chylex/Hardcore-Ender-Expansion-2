@@ -5,6 +5,10 @@ import chylex.hee.game.mechanics.trinket.ITrinketItem
 import chylex.hee.game.mechanics.trinket.TrinketHandler
 import chylex.hee.init.ModGuiHandler.GuiType
 import chylex.hee.system.migration.ActionResult.SUCCESS
+import chylex.hee.system.migration.forge.EventPriority
+import chylex.hee.system.migration.forge.Side
+import chylex.hee.system.migration.forge.Sided
+import chylex.hee.system.migration.forge.SubscribeEvent
 import chylex.hee.system.util.NBTItemStackList
 import chylex.hee.system.util.NBTList.Companion.setList
 import chylex.hee.system.util.allSlots
@@ -36,12 +40,6 @@ import net.minecraftforge.common.MinecraftForge
 import net.minecraftforge.event.entity.living.LivingDeathEvent
 import net.minecraftforge.event.entity.player.PlayerDropsEvent
 import net.minecraftforge.event.entity.player.PlayerEvent
-import net.minecraftforge.fml.common.eventhandler.EventPriority.HIGH
-import net.minecraftforge.fml.common.eventhandler.EventPriority.LOW
-import net.minecraftforge.fml.common.eventhandler.EventPriority.LOWEST
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent
-import net.minecraftforge.fml.relauncher.Side
-import net.minecraftforge.fml.relauncher.SideOnly
 
 class ItemAmuletOfRecovery : ItemAbstractEnergyUser(), ITrinketItem{
 	private companion object{
@@ -242,7 +240,7 @@ class ItemAmuletOfRecovery : ItemAbstractEnergyUser(), ITrinketItem{
 	
 	// Death events
 	
-	@SubscribeEvent(priority = HIGH)
+	@SubscribeEvent(EventPriority.HIGH)
 	fun onLivingDeath(e: LivingDeathEvent){
 		val player = e.entityLiving as? EntityPlayer ?: return
 		val world = player.world
@@ -262,7 +260,7 @@ class ItemAmuletOfRecovery : ItemAbstractEnergyUser(), ITrinketItem{
 		}
 	}
 	
-	@SubscribeEvent(priority = LOW)
+	@SubscribeEvent(EventPriority.LOW)
 	fun onPlayerDrops(e: PlayerDropsEvent){
 		val player = e.entityPlayer
 		val drops = e.drops
@@ -286,7 +284,7 @@ class ItemAmuletOfRecovery : ItemAbstractEnergyUser(), ITrinketItem{
 		}
 	}
 	
-	@SubscribeEvent(priority = LOWEST)
+	@SubscribeEvent(EventPriority.LOWEST)
 	fun onPlayerClone(e: PlayerEvent.Clone){
 		if (!e.isWasDeath){
 			return
@@ -320,7 +318,7 @@ class ItemAmuletOfRecovery : ItemAbstractEnergyUser(), ITrinketItem{
 		return ItemAbstractTrinket.onGetRarity()
 	}
 	
-	@SideOnly(Side.CLIENT)
+	@Sided(Side.CLIENT)
 	override fun addInformation(stack: ItemStack, world: World?, lines: MutableList<String>, flags: ITooltipFlag){
 		if (!hasAnyContents(stack)){
 			ItemAbstractTrinket.onAddInformation(stack, this, lines)
@@ -329,7 +327,7 @@ class ItemAmuletOfRecovery : ItemAbstractEnergyUser(), ITrinketItem{
 		lines.add(I18n.format("item.tooltip.hee.energy.level", getEnergyChargeLevel(stack).units.value, getEnergyCapacity(stack).units.value))
 	}
 	
-	@SideOnly(Side.CLIENT)
+	@Sided(Side.CLIENT)
 	override fun hasEffect(stack: ItemStack): Boolean{
 		return hasAnyContents(stack)
 	}

@@ -1,6 +1,9 @@
 package chylex.hee.game.mechanics.damage
 import chylex.hee.HEE
 import chylex.hee.system.migration.Hand.MAIN_HAND
+import chylex.hee.system.migration.forge.EventPriority
+import chylex.hee.system.migration.forge.SubscribeAllEvents
+import chylex.hee.system.migration.forge.SubscribeEvent
 import net.minecraft.entity.Entity
 import net.minecraft.entity.EntityLivingBase
 import net.minecraft.item.ItemStack
@@ -10,11 +13,8 @@ import net.minecraft.util.text.ITextComponent
 import net.minecraft.util.text.TextComponentTranslation
 import net.minecraft.util.text.translation.I18n
 import net.minecraftforge.event.entity.living.LivingDamageEvent
-import net.minecraftforge.fml.common.Mod.EventBusSubscriber
-import net.minecraftforge.fml.common.eventhandler.EventPriority.HIGHEST
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent
 
-@EventBusSubscriber(modid = HEE.ID)
+@SubscribeAllEvents(modid = HEE.ID)
 class DamageProperties{
 	private var typeBits = 0
 	private var ignoreArmorAndConsequentlyShield = true // due to how vanilla handles unblockable damage, isUnblockable controls both armor and shield
@@ -121,7 +121,7 @@ class DamageProperties{
 	
 	private companion object{
 		@JvmStatic
-		@SubscribeEvent(priority = HIGHEST)
+		@SubscribeEvent(EventPriority.HIGHEST)
 		fun onLivingDamage(e: LivingDamageEvent){
 			val source = e.source as? CustomDamageSource ?: return
 			

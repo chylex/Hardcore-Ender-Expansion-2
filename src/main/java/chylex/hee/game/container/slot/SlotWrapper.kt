@@ -1,4 +1,6 @@
 package chylex.hee.game.container.slot
+import chylex.hee.system.migration.forge.Side
+import chylex.hee.system.migration.forge.Sided
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.inventory.IInventory
 import net.minecraft.inventory.Slot
@@ -7,8 +9,6 @@ import net.minecraft.inventory.SlotFurnaceOutput
 import net.minecraft.inventory.SlotMerchantResult
 import net.minecraft.item.ItemStack
 import net.minecraft.util.ResourceLocation
-import net.minecraftforge.fml.relauncher.Side
-import net.minecraftforge.fml.relauncher.SideOnly
 
 abstract class SlotWrapper(private val wrapped: Slot) : Slot(wrapped.inventory, wrapped.slotIndex, wrapped.xPos, wrapped.yPos){
 	init{
@@ -20,7 +20,7 @@ abstract class SlotWrapper(private val wrapped: Slot) : Slot(wrapped.inventory, 
 		}
 	}
 	
-	@SideOnly(Side.CLIENT) override fun isEnabled() = wrapped.isEnabled
+	@Sided(Side.CLIENT) override fun isEnabled() = wrapped.isEnabled
 	
 	override fun isHere(inventory: IInventory, slot: Int) = wrapped.isHere(inventory, slot)
 	override fun isSameInventory(other: Slot) = wrapped.isSameInventory(other)
@@ -45,8 +45,8 @@ abstract class SlotWrapper(private val wrapped: Slot) : Slot(wrapped.inventory, 
 	override fun onSwapCraft(amount: Int){}
 	
 	override fun setBackgroundName(name: String?) = wrapped.setBackgroundName(name)
-	@SideOnly(Side.CLIENT) override fun setBackgroundLocation(texture: ResourceLocation) = wrapped.setBackgroundLocation(texture)
-	@SideOnly(Side.CLIENT) override fun getBackgroundLocation(): ResourceLocation = wrapped.backgroundLocation
-	@SideOnly(Side.CLIENT) override fun getBackgroundSprite() = wrapped.backgroundSprite
-	@SideOnly(Side.CLIENT) override fun getSlotTexture() = wrapped.slotTexture
+	@Sided(Side.CLIENT) override fun setBackgroundLocation(texture: ResourceLocation) = wrapped.setBackgroundLocation(texture)
+	@Sided(Side.CLIENT) override fun getBackgroundLocation(): ResourceLocation = wrapped.backgroundLocation
+	@Sided(Side.CLIENT) override fun getBackgroundSprite() = wrapped.backgroundSprite
+	@Sided(Side.CLIENT) override fun getSlotTexture() = wrapped.slotTexture
 }

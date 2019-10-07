@@ -9,6 +9,8 @@ import chylex.hee.system.migration.Facing.EAST
 import chylex.hee.system.migration.Facing.NORTH
 import chylex.hee.system.migration.Facing.UP
 import chylex.hee.system.migration.Facing.WEST
+import chylex.hee.system.migration.forge.Side
+import chylex.hee.system.migration.forge.Sided
 import chylex.hee.system.util.color.IntColor.Companion.RGB
 import chylex.hee.system.util.component1
 import chylex.hee.system.util.component2
@@ -19,12 +21,10 @@ import chylex.hee.system.util.getState
 import chylex.hee.system.util.offsetTowards
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer
 import net.minecraft.util.math.Vec3d
-import net.minecraftforge.fml.relauncher.Side
-import net.minecraftforge.fml.relauncher.SideOnly
 import org.lwjgl.opengl.GL11.GL_MODELVIEW
 import org.lwjgl.opengl.GL11.GL_TEXTURE
 
-@SideOnly(Side.CLIENT)
+@Sided(Side.CLIENT)
 object RenderTileIgneousPlate : TileEntitySpecialRenderer<TileEntityIgneousPlate>(){
 	private val TEX_PLATE = Resource.Custom("textures/entity/igneous_plate.png")
 	

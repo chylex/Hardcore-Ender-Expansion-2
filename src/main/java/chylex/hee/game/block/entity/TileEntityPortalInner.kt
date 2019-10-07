@@ -1,15 +1,15 @@
 package chylex.hee.game.block.entity
+import chylex.hee.system.migration.forge.Side
+import chylex.hee.system.migration.forge.Sided
 import chylex.hee.system.util.square
 import net.minecraft.tileentity.TileEntityEndPortal
 import net.minecraft.util.math.AxisAlignedBB
-import net.minecraftforge.fml.relauncher.Side
-import net.minecraftforge.fml.relauncher.SideOnly
 
 sealed class TileEntityPortalInner : TileEntityEndPortal(){
-	@SideOnly(Side.CLIENT)
+	@Sided(Side.CLIENT)
 	override fun getMaxRenderDistanceSquared() = square(180.0)
 	
-	@SideOnly(Side.CLIENT)
+	@Sided(Side.CLIENT)
 	override fun getRenderBoundingBox() = AxisAlignedBB(pos, pos.add(1, 1, 1))
 	
 	class End : TileEntityPortalInner()

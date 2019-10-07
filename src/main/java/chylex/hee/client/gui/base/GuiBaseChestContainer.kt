@@ -2,14 +2,14 @@ package chylex.hee.client.gui.base
 import chylex.hee.client.render.util.GL
 import chylex.hee.client.util.MC
 import chylex.hee.system.Resource
+import chylex.hee.system.migration.forge.Side
+import chylex.hee.system.migration.forge.Sided
 import chylex.hee.system.util.color.IntColor.Companion.RGB
 import chylex.hee.system.util.size
 import net.minecraft.client.gui.inventory.GuiContainer
 import net.minecraft.inventory.ContainerChest
-import net.minecraftforge.fml.relauncher.Side
-import net.minecraftforge.fml.relauncher.SideOnly
 
-@SideOnly(Side.CLIENT)
+@Sided(Side.CLIENT)
 abstract class GuiBaseChestContainer(container: ContainerChest) : GuiContainer(container){
 	private companion object{
 		private val TEX_BACKGROUND = Resource.Vanilla("textures/gui/container/generic_54.png")

@@ -39,6 +39,8 @@ import chylex.hee.game.item.util.Tool.Type.PICKAXE
 import chylex.hee.game.item.util.Tool.Type.SHOVEL
 import chylex.hee.init.ModCreativeTabs.OrderedCreativeTab
 import chylex.hee.system.Resource
+import chylex.hee.system.migration.forge.SubscribeAllEvents
+import chylex.hee.system.migration.forge.SubscribeEvent
 import chylex.hee.system.util.useVanillaName
 import net.minecraft.block.BlockDispenser
 import net.minecraft.block.BlockShulkerBox
@@ -47,10 +49,8 @@ import net.minecraft.init.Items
 import net.minecraft.item.EnumDyeColor
 import net.minecraft.item.Item
 import net.minecraftforge.event.RegistryEvent
-import net.minecraftforge.fml.common.Mod.EventBusSubscriber
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent
 
-@EventBusSubscriber(modid = HEE.ID)
+@SubscribeAllEvents(modid = HEE.ID)
 object ModItems{
 	
 	// Items: Raw resources

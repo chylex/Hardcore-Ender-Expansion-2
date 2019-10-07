@@ -7,6 +7,8 @@ import chylex.hee.game.block.BlockJarODust
 import chylex.hee.game.block.entity.TileEntityJarODust
 import chylex.hee.game.mechanics.dust.DustLayers
 import chylex.hee.system.Resource
+import chylex.hee.system.migration.forge.Side
+import chylex.hee.system.migration.forge.Sided
 import chylex.hee.system.util.floorToInt
 import chylex.hee.system.util.getListOfCompounds
 import chylex.hee.system.util.heeTagOrNull
@@ -16,11 +18,9 @@ import net.minecraft.client.renderer.tileentity.TileEntityItemStackRenderer
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats
 import net.minecraft.item.ItemStack
-import net.minecraftforge.fml.relauncher.Side
-import net.minecraftforge.fml.relauncher.SideOnly
 import org.lwjgl.opengl.GL11.GL_QUADS
 
-@SideOnly(Side.CLIENT)
+@Sided(Side.CLIENT)
 object RenderTileJarODust : TileEntitySpecialRenderer<TileEntityJarODust>(){
 	private val TEX_LAYER = Resource.Custom("textures/entity/dust_layer.png")
 	private const val TEX_MP = 1.6

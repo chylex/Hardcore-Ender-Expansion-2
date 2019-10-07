@@ -4,6 +4,8 @@ import chylex.hee.game.particle.base.ParticleBaseEnergyTransfer
 import chylex.hee.game.particle.spawner.factory.IParticleData
 import chylex.hee.game.particle.spawner.factory.IParticleMaker
 import chylex.hee.init.ModBlocks
+import chylex.hee.system.migration.forge.Side
+import chylex.hee.system.migration.forge.Sided
 import chylex.hee.system.util.Pos
 import chylex.hee.system.util.color.IntColor.Companion.RGB
 import chylex.hee.system.util.getBlock
@@ -11,12 +13,10 @@ import net.minecraft.client.particle.Particle
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.Vec3d
 import net.minecraft.world.World
-import net.minecraftforge.fml.relauncher.Side
-import net.minecraftforge.fml.relauncher.SideOnly
 import java.util.Random
 
 object ParticleEnergyTransferToPedestal : IParticleMaker{
-	@SideOnly(Side.CLIENT)
+	@Sided(Side.CLIENT)
 	override fun create(world: World, posX: Double, posY: Double, posZ: Double, motX: Double, motY: Double, motZ: Double, data: IntArray): Particle{
 		return Instance(world, posX, posY, posZ, data)
 	}
@@ -30,7 +30,7 @@ object ParticleEnergyTransferToPedestal : IParticleMaker{
 		)
 	}
 	
-	@SideOnly(Side.CLIENT)
+	@Sided(Side.CLIENT)
 	class Instance(world: World, posX: Double, posY: Double, posZ: Double, unsafeData: IntArray) : ParticleBaseEnergyTransfer(world, posX, posY, posZ){
 		override val targetPos: Vec3d
 		

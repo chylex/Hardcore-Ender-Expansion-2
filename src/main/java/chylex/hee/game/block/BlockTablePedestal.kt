@@ -4,6 +4,8 @@ import chylex.hee.game.block.entity.TileEntityTablePedestal
 import chylex.hee.game.block.info.BlockBuilder
 import chylex.hee.game.block.util.Property
 import chylex.hee.init.ModItems
+import chylex.hee.system.migration.forge.Side
+import chylex.hee.system.migration.forge.Sided
 import chylex.hee.system.util.copyIf
 import chylex.hee.system.util.get
 import chylex.hee.system.util.getState
@@ -25,8 +27,6 @@ import net.minecraft.util.math.AxisAlignedBB
 import net.minecraft.util.math.BlockPos
 import net.minecraft.world.IBlockAccess
 import net.minecraft.world.World
-import net.minecraftforge.fml.relauncher.Side
-import net.minecraftforge.fml.relauncher.SideOnly
 import kotlin.math.abs
 import kotlin.math.max
 
@@ -193,7 +193,7 @@ class BlockTablePedestal(builder: BlockBuilder) : BlockSimpleShaped(builder, COM
 	
 	override fun getRenderLayer() = CUTOUT
 	
-	@SideOnly(Side.CLIENT)
+	@Sided(Side.CLIENT)
 	object Color : IBlockColor{
 		override fun colorMultiplier(state: IBlockState, world: IBlockAccess?, pos: BlockPos?, tintIndex: Int): Int{
 			if (world == null || pos == null){

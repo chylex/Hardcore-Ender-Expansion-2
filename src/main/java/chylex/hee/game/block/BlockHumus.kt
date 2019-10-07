@@ -2,6 +2,7 @@ package chylex.hee.game.block
 import chylex.hee.game.block.info.BlockBuilder
 import chylex.hee.init.ModLoot
 import chylex.hee.system.migration.Facing.UP
+import chylex.hee.system.migration.forge.SubscribeEvent
 import chylex.hee.system.util.getBlock
 import chylex.hee.system.util.getState
 import chylex.hee.system.util.setAir
@@ -25,7 +26,6 @@ import net.minecraftforge.common.EnumPlantType.Plains
 import net.minecraftforge.common.IPlantable
 import net.minecraftforge.common.MinecraftForge
 import net.minecraftforge.event.world.BlockEvent.HarvestDropsEvent
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent
 import java.util.Random
 
 class BlockHumus(builder: BlockBuilder) : BlockSimple(builder){

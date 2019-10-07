@@ -19,6 +19,11 @@ import chylex.hee.system.migration.Difficulty.HARD
 import chylex.hee.system.migration.Difficulty.NORMAL
 import chylex.hee.system.migration.Difficulty.PEACEFUL
 import chylex.hee.system.migration.Hand.MAIN_HAND
+import chylex.hee.system.migration.forge.EventResult
+import chylex.hee.system.migration.forge.Side
+import chylex.hee.system.migration.forge.Sided
+import chylex.hee.system.migration.forge.SubscribeAllEvents
+import chylex.hee.system.migration.forge.SubscribeEvent
 import chylex.hee.system.util.AIAttackMelee
 import chylex.hee.system.util.AISwim
 import chylex.hee.system.util.AITargetAttacker
@@ -74,18 +79,13 @@ import net.minecraft.world.EnumSkyBlock.SKY
 import net.minecraft.world.World
 import net.minecraftforge.common.ForgeHooks
 import net.minecraftforge.event.entity.player.CriticalHitEvent
-import net.minecraftforge.fml.common.Mod.EventBusSubscriber
-import net.minecraftforge.fml.common.eventhandler.Event.Result.ALLOW
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent
-import net.minecraftforge.fml.relauncher.Side
-import net.minecraftforge.fml.relauncher.SideOnly
 import kotlin.math.abs
 import kotlin.math.cos
 import kotlin.math.log10
 import kotlin.math.roundToInt
 import kotlin.math.sin
 
-@EventBusSubscriber(modid = HEE.ID)
+@SubscribeAllEvents(modid = HEE.ID)
 class EntityMobSpiderling(world: World) : EntityMob(world), ILightStartleHandler, IMobBypassPeacefulDespawn{
 	companion object{
 		private val DAMAGE_GENERAL = Damage(DIFFICULTY_SCALING, PEACEFUL_EXCLUSION, *ALL_PROTECTIONS)
@@ -103,7 +103,7 @@ class EntityMobSpiderling(world: World) : EntityMob(world), ILightStartleHandler
 		@SubscribeEvent
 		fun onHit(e: CriticalHitEvent){
 			if (e.target is EntityMobSpiderling){
-				e.result = ALLOW // UPDATE abusing crit to disable sweep
+				e.result = EventResult.ALLOW // UPDATE abusing crit to disable sweep
 			}
 		}
 		
@@ -482,7 +482,7 @@ class EntityMobSpiderling(world: World) : EntityMob(world), ILightStartleHandler
 		return rand.nextFloat(1.2F, 1.5F)
 	}
 	
-	@SideOnly(Side.CLIENT)
+	@Sided(Side.CLIENT)
 	override fun getBrightnessForRender(): Int{
 		val pos = Pos(this)
 		

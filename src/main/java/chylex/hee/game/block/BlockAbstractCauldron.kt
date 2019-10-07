@@ -1,5 +1,7 @@
 package chylex.hee.game.block
 import chylex.hee.HEE
+import chylex.hee.system.migration.forge.SubscribeAllEvents
+import chylex.hee.system.migration.forge.SubscribeEvent
 import chylex.hee.system.util.Pos
 import chylex.hee.system.util.get
 import chylex.hee.system.util.getBlock
@@ -20,10 +22,8 @@ import net.minecraft.util.SoundCategory
 import net.minecraft.util.math.BlockPos
 import net.minecraft.world.World
 import net.minecraftforge.event.entity.player.EntityItemPickupEvent
-import net.minecraftforge.fml.common.Mod.EventBusSubscriber
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent
 
-@EventBusSubscriber(modid = HEE.ID)
+@SubscribeAllEvents(modid = HEE.ID)
 abstract class BlockAbstractCauldron : BlockCauldron(){
 	companion object{
 		const val MAX_LEVEL = 3

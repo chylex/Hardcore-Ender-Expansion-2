@@ -4,6 +4,8 @@ import chylex.hee.game.mechanics.damage.Damage
 import chylex.hee.game.mechanics.damage.Damage.Companion.TITLE_STARVE
 import chylex.hee.game.mechanics.damage.IDamageProcessor.Companion.MAGIC_TYPE
 import chylex.hee.game.mechanics.damage.IDamageProcessor.Companion.NON_LETHAL
+import chylex.hee.system.migration.forge.SubscribeAllEvents
+import chylex.hee.system.migration.forge.SubscribeEvent
 import chylex.hee.system.util.heeTag
 import chylex.hee.system.util.heeTagOrNull
 import chylex.hee.system.util.nextFloat
@@ -19,10 +21,8 @@ import net.minecraft.potion.PotionEffect
 import net.minecraft.util.NonNullList
 import net.minecraft.world.World
 import net.minecraftforge.event.entity.player.PlayerEvent
-import net.minecraftforge.fml.common.Mod.EventBusSubscriber
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent
 
-@EventBusSubscriber(modid = HEE.ID)
+@SubscribeAllEvents(modid = HEE.ID)
 class ItemVoidSalad : ItemFood(0, 0F, false){
 	private companion object{
 		private val DAMAGE_SAFE = Damage(MAGIC_TYPE, NON_LETHAL)

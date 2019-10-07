@@ -10,6 +10,7 @@ import chylex.hee.game.mechanics.scorching.ScorchingHelper
 import chylex.hee.game.mechanics.scorching.ScorchingHelper.FX_BLOCK_BREAK
 import chylex.hee.game.mechanics.scorching.ScorchingHelper.FX_ENTITY_HIT
 import chylex.hee.network.client.PacketClientFX
+import chylex.hee.system.migration.forge.EventResult
 import net.minecraft.block.state.IBlockState
 import net.minecraft.entity.EntityLivingBase
 import net.minecraft.item.ItemStack
@@ -17,7 +18,6 @@ import net.minecraft.item.ItemTool
 import net.minecraft.util.math.BlockPos
 import net.minecraft.world.World
 import net.minecraftforge.event.entity.player.CriticalHitEvent
-import net.minecraftforge.fml.common.eventhandler.Event.Result.DENY
 
 class ItemScorchingTool(private val toolClass: String) : ItemTool(SCORCHING_TOOL, emptySet()), IScorchingItem, ICustomRepairBehavior by ScorchingHelper.Repair(SCORCHING_TOOL){
 	override val material: ToolMaterial
@@ -68,7 +68,7 @@ class ItemScorchingTool(private val toolClass: String) : ItemTool(SCORCHING_TOOL
 	// Hitting behavior
 	
 	override fun onHit(e: CriticalHitEvent){
-		e.result = DENY
+		e.result = EventResult.DENY
 	}
 	
 	override fun hitEntity(stack: ItemStack, target: EntityLivingBase, attacker: EntityLivingBase): Boolean{

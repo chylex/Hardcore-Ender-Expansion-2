@@ -1,10 +1,10 @@
 package chylex.hee.client.render.util
 import chylex.hee.client.util.MC
+import chylex.hee.system.migration.forge.Side
+import chylex.hee.system.migration.forge.Sided
 import chylex.hee.system.util.color.HCL
-import net.minecraftforge.fml.relauncher.Side
-import net.minecraftforge.fml.relauncher.SideOnly
 
-@SideOnly(Side.CLIENT)
+@Sided(Side.CLIENT)
 class ColorTransition(private val defaultColor: HCL, private val transitionDuration: Float){
 	private var currentFrom: HCL = defaultColor
 	private var currentTo: HCL? = null

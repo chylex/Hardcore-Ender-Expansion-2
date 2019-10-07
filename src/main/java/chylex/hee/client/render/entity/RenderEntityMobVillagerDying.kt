@@ -1,16 +1,16 @@
 package chylex.hee.client.render.entity
 import chylex.hee.client.render.util.GL
 import chylex.hee.game.entity.living.EntityMobVillagerDying
+import chylex.hee.system.migration.forge.Side
+import chylex.hee.system.migration.forge.Sided
 import net.minecraft.client.model.ModelVillager
 import net.minecraft.client.renderer.entity.RenderLiving
 import net.minecraft.client.renderer.entity.RenderManager
 import net.minecraft.util.ResourceLocation
-import net.minecraftforge.fml.relauncher.Side
-import net.minecraftforge.fml.relauncher.SideOnly
 import java.util.Random
 import kotlin.math.min
 
-@SideOnly(Side.CLIENT)
+@Sided(Side.CLIENT)
 class RenderEntityMobVillagerDying(manager: RenderManager) : RenderLiving<EntityMobVillagerDying>(manager, ModelVillager(0F), 0.5F){
 	private val rand = Random()
 	

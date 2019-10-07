@@ -1,16 +1,16 @@
 package chylex.hee.client.render.util
+import chylex.hee.system.migration.forge.Side
+import chylex.hee.system.migration.forge.Sided
 import net.minecraft.client.renderer.GlStateManager
 import net.minecraft.client.renderer.GlStateManager.DestFactor
 import net.minecraft.client.renderer.GlStateManager.FogMode
 import net.minecraft.client.renderer.GlStateManager.SourceFactor
 import net.minecraft.client.renderer.GlStateManager.TexGen
-import net.minecraftforge.fml.relauncher.Side
-import net.minecraftforge.fml.relauncher.SideOnly
 import java.nio.FloatBuffer
 
 typealias GLSM = GlStateManager
 
-@SideOnly(Side.CLIENT)
+@Sided(Side.CLIENT)
 object GL{
 	
 	// General

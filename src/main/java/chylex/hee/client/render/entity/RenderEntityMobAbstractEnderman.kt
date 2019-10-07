@@ -3,16 +3,16 @@ import chylex.hee.client.render.util.GL
 import chylex.hee.client.render.util.GL.DF_ONE_MINUS_SRC_ALPHA
 import chylex.hee.client.render.util.GL.SF_SRC_ALPHA
 import chylex.hee.game.entity.living.EntityMobAbstractEnderman
+import chylex.hee.system.migration.forge.Side
+import chylex.hee.system.migration.forge.Sided
 import chylex.hee.system.util.nextFloat
 import net.minecraft.client.renderer.entity.RenderEnderman
 import net.minecraft.client.renderer.entity.RenderManager
 import net.minecraft.entity.monster.EntityEnderman
-import net.minecraftforge.fml.relauncher.Side
-import net.minecraftforge.fml.relauncher.SideOnly
 import org.lwjgl.opengl.GL11.GL_GREATER
 import java.util.Random
 
-@SideOnly(Side.CLIENT)
+@Sided(Side.CLIENT)
 open class RenderEntityMobAbstractEnderman(manager: RenderManager) : RenderEnderman(manager){
 	private val rand = Random()
 	

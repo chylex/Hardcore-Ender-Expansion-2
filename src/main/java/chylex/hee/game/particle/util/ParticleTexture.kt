@@ -1,13 +1,13 @@
 package chylex.hee.game.particle.util
 import chylex.hee.HEE
 import chylex.hee.system.Resource
+import chylex.hee.system.migration.forge.Side
+import chylex.hee.system.migration.forge.SubscribeAllEvents
+import chylex.hee.system.migration.forge.SubscribeEvent
 import net.minecraft.client.renderer.texture.TextureAtlasSprite
 import net.minecraftforge.client.event.TextureStitchEvent
-import net.minecraftforge.fml.common.Mod.EventBusSubscriber
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent
-import net.minecraftforge.fml.relauncher.Side
 
-@EventBusSubscriber(Side.CLIENT, modid = HEE.ID)
+@SubscribeAllEvents(Side.CLIENT, modid = HEE.ID)
 object ParticleTexture{
 	lateinit var PIXEL: TextureAtlasSprite private set
 	lateinit var STAR: TextureAtlasSprite private set

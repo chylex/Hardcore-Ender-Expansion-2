@@ -13,6 +13,8 @@ import chylex.hee.game.loot.functions.FunctionPickUndreadGem
 import chylex.hee.game.loot.rng.RandomBiasedValueRange
 import chylex.hee.game.loot.rng.RandomRoundingValueRange
 import chylex.hee.system.Resource
+import chylex.hee.system.migration.forge.SubscribeAllEvents
+import chylex.hee.system.migration.forge.SubscribeEvent
 import net.minecraft.util.ResourceLocation
 import net.minecraft.world.storage.loot.LootPool
 import net.minecraft.world.storage.loot.LootTable
@@ -20,10 +22,8 @@ import net.minecraft.world.storage.loot.LootTableList
 import net.minecraft.world.storage.loot.conditions.LootConditionManager
 import net.minecraft.world.storage.loot.functions.LootFunctionManager
 import net.minecraftforge.event.LootTableLoadEvent
-import net.minecraftforge.fml.common.Mod.EventBusSubscriber
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent
 
-@EventBusSubscriber(modid = HEE.ID)
+@SubscribeAllEvents(modid = HEE.ID)
 object ModLoot{
 	lateinit var GRAVE_DIRT_LOOT: BlockLootTable
 	lateinit var HUMUS_EXPLODED: BlockLootTable

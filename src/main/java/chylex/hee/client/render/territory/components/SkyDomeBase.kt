@@ -6,6 +6,8 @@ import chylex.hee.client.render.util.GL.SF_SRC_ALPHA
 import chylex.hee.client.render.util.TESSELLATOR
 import chylex.hee.client.render.util.draw
 import chylex.hee.client.util.MC
+import chylex.hee.system.migration.forge.Side
+import chylex.hee.system.migration.forge.Sided
 import chylex.hee.system.util.square
 import net.minecraft.client.Minecraft
 import net.minecraft.client.multiplayer.WorldClient
@@ -13,8 +15,6 @@ import net.minecraft.client.renderer.vertex.DefaultVertexFormats
 import net.minecraft.util.ResourceLocation
 import net.minecraft.util.math.Vec3d
 import net.minecraftforge.client.IRenderHandler
-import net.minecraftforge.fml.relauncher.Side
-import net.minecraftforge.fml.relauncher.SideOnly
 import org.lwjgl.opengl.GL11.GL_FLAT
 import org.lwjgl.opengl.GL11.GL_GREATER
 import org.lwjgl.opengl.GL11.GL_QUADS
@@ -23,7 +23,7 @@ import kotlin.math.pow
 import kotlin.math.sqrt
 
 abstract class SkyDomeBase : IRenderHandler(){
-	@SideOnly(Side.CLIENT)
+	@Sided(Side.CLIENT)
 	private object Skybox{
 		data class Vertex(val x: Float, val y: Float, val z: Float, val u: Float, val v: Float, val c: Float)
 		
@@ -83,7 +83,7 @@ abstract class SkyDomeBase : IRenderHandler(){
 	protected abstract val color: Vec3d
 	protected open val alpha = DEFAULT_ALPHA
 	
-	@SideOnly(Side.CLIENT)
+	@Sided(Side.CLIENT)
 	override fun render(partialTicks: Float, world: WorldClient, mc: Minecraft){
 		val col = color
 		val alp = alpha * EnvironmentRenderer.currentSkyAlpha

@@ -5,9 +5,9 @@ import chylex.hee.client.render.territory.lightmaps.VanillaEndLightmap
 import chylex.hee.game.world.WorldProviderEndCustom.Companion.DEFAULT_CELESTIAL_ANGLE
 import chylex.hee.game.world.WorldProviderEndCustom.Companion.DEFAULT_SKY_LIGHT
 import chylex.hee.game.world.WorldProviderEndCustom.Companion.DEFAULT_SUN_BRIGHTNESS
+import chylex.hee.system.migration.forge.Side
+import chylex.hee.system.migration.forge.Sided
 import net.minecraft.util.math.Vec3d
-import net.minecraftforge.fml.relauncher.Side
-import net.minecraftforge.fml.relauncher.SideOnly
 
 abstract class TerritoryEnvironment{
 	open val lightBrightnessTable: FloatArray?
@@ -32,9 +32,9 @@ abstract class TerritoryEnvironment{
 	open val renderer: EnvironmentRenderer? = null
 	open val lightmap: ILightmap = VanillaEndLightmap
 	
-	@SideOnly(Side.CLIENT)
+	@Sided(Side.CLIENT)
 	open fun setupClient(){}
 	
-	@SideOnly(Side.CLIENT)
+	@Sided(Side.CLIENT)
 	open fun tickClient(){}
 }

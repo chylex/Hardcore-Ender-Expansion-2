@@ -1,11 +1,11 @@
 package chylex.hee.network.client
 import chylex.hee.network.BaseClientPacket
+import chylex.hee.system.migration.forge.Side
+import chylex.hee.system.migration.forge.Sided
 import chylex.hee.system.util.use
 import io.netty.buffer.ByteBuf
 import net.minecraft.client.entity.EntityPlayerSP
 import net.minecraft.potion.Potion
-import net.minecraftforge.fml.relauncher.Side
-import net.minecraftforge.fml.relauncher.SideOnly
 
 class PacketClientPotionDuration() : BaseClientPacket(){
 	constructor(potion: Potion, newDuration: Int) : this(){
@@ -26,7 +26,7 @@ class PacketClientPotionDuration() : BaseClientPacket(){
 		newDuration = readInt()
 	}
 	
-	@SideOnly(Side.CLIENT)
+	@Sided(Side.CLIENT)
 	override fun handle(player: EntityPlayerSP){
 		potion?.let(player::getActivePotionEffect)?.duration = newDuration!!
 	}

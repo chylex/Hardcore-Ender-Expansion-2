@@ -2,15 +2,15 @@ package chylex.hee.client.render.entity
 import chylex.hee.client.render.util.GL
 import chylex.hee.game.entity.living.EntityMobUndread
 import chylex.hee.system.Resource
+import chylex.hee.system.migration.forge.Side
+import chylex.hee.system.migration.forge.Sided
 import net.minecraft.client.model.ModelZombie
 import net.minecraft.client.renderer.entity.RenderBiped
 import net.minecraft.client.renderer.entity.RenderManager
 import net.minecraft.client.renderer.entity.layers.LayerBipedArmor
 import net.minecraft.util.ResourceLocation
-import net.minecraftforge.fml.relauncher.Side
-import net.minecraftforge.fml.relauncher.SideOnly
 
-@SideOnly(Side.CLIENT)
+@Sided(Side.CLIENT)
 class RenderEntityMobUndread(manager: RenderManager) : RenderBiped<EntityMobUndread>(manager, ModelZombie(), 0.5F){
 	private val texture = Resource.Custom("textures/entity/undread.png")
 	

@@ -4,17 +4,17 @@ import chylex.hee.game.block.entity.TileEntityBaseChest
 import chylex.hee.system.migration.Facing.EAST
 import chylex.hee.system.migration.Facing.NORTH
 import chylex.hee.system.migration.Facing.WEST
+import chylex.hee.system.migration.forge.Side
+import chylex.hee.system.migration.forge.Sided
 import net.minecraft.client.model.ModelChest
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer
 import net.minecraft.util.ResourceLocation
-import net.minecraftforge.fml.relauncher.Side
-import net.minecraftforge.fml.relauncher.SideOnly
 import org.lwjgl.opengl.GL11.GL_MODELVIEW
 import org.lwjgl.opengl.GL11.GL_TEXTURE
 import kotlin.math.PI
 import kotlin.math.pow
 
-@SideOnly(Side.CLIENT)
+@Sided(Side.CLIENT)
 abstract class RenderTileAbstractChest<T : TileEntityBaseChest> : TileEntitySpecialRenderer<T>(){
 	protected abstract val texture: ResourceLocation
 	

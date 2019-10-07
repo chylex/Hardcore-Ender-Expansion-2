@@ -1,6 +1,8 @@
 package chylex.hee.game.particle
 import chylex.hee.game.particle.spawner.factory.IParticleData
 import chylex.hee.game.particle.spawner.factory.IParticleMaker
+import chylex.hee.system.migration.forge.Side
+import chylex.hee.system.migration.forge.Sided
 import chylex.hee.system.util.color.IRandomColor
 import chylex.hee.system.util.color.IntColor
 import chylex.hee.system.util.color.IntColor.Companion.RGB
@@ -9,12 +11,10 @@ import chylex.hee.system.util.nextFloat
 import net.minecraft.client.particle.Particle
 import net.minecraft.client.particle.ParticleSmokeNormal
 import net.minecraft.world.World
-import net.minecraftforge.fml.relauncher.Side
-import net.minecraftforge.fml.relauncher.SideOnly
 import java.util.Random
 
 object ParticleSmokeCustom : IParticleMaker{
-	@SideOnly(Side.CLIENT)
+	@Sided(Side.CLIENT)
 	override fun create(world: World, posX: Double, posY: Double, posZ: Double, motX: Double, motY: Double, motZ: Double, data: IntArray): Particle{
 		return Instance(world, posX, posY, posZ, motX, motY, motZ, data)
 	}
@@ -40,7 +40,7 @@ object ParticleSmokeCustom : IParticleMaker{
 		RGB(0u).i, 0
 	))
 	
-	@SideOnly(Side.CLIENT)
+	@Sided(Side.CLIENT)
 	private class Instance(
 		world: World, posX: Double, posY: Double, posZ: Double, motX: Double, motY: Double, motZ: Double, unsafeData: IntArray
 	) : ParticleSmokeNormal(

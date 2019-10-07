@@ -1,13 +1,13 @@
 package chylex.hee.game.item
 import chylex.hee.game.mechanics.trinket.TrinketHandler
+import chylex.hee.system.migration.forge.EventPriority
+import chylex.hee.system.migration.forge.SubscribeEvent
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.item.ItemStack
 import net.minecraft.util.DamageSource
 import net.minecraftforge.common.MinecraftForge
 import net.minecraftforge.event.entity.living.LivingDamageEvent
 import net.minecraftforge.event.entity.living.LivingDeathEvent
-import net.minecraftforge.fml.common.eventhandler.EventPriority.HIGHEST
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent
 
 class ItemScaleOfFreefall : ItemAbstractTrinket(){
 	init{
@@ -20,7 +20,7 @@ class ItemScaleOfFreefall : ItemAbstractTrinket(){
 		return stack.itemDamage < stack.maxDamage
 	}
 	
-	@SubscribeEvent(priority = HIGHEST)
+	@SubscribeEvent(EventPriority.HIGHEST)
 	fun onLivingDamage(e: LivingDamageEvent){
 		if (e.source !== DamageSource.FALL){
 			return
@@ -33,7 +33,7 @@ class ItemScaleOfFreefall : ItemAbstractTrinket(){
 		}
 	}
 	
-	@SubscribeEvent(priority = HIGHEST)
+	@SubscribeEvent(EventPriority.HIGHEST)
 	fun onLivingDeath(e: LivingDeathEvent){
 		if (e.source !== DamageSource.FALL){
 			return

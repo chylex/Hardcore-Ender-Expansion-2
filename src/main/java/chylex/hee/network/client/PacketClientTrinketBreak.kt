@@ -2,14 +2,14 @@ package chylex.hee.network.client
 import chylex.hee.client.util.MC
 import chylex.hee.game.mechanics.trinket.ITrinketItem
 import chylex.hee.network.BaseClientPacket
+import chylex.hee.system.migration.forge.Side
+import chylex.hee.system.migration.forge.Sided
 import chylex.hee.system.util.use
 import io.netty.buffer.ByteBuf
 import net.minecraft.client.entity.EntityPlayerSP
 import net.minecraft.entity.Entity
 import net.minecraft.item.Item
 import net.minecraft.item.ItemStack
-import net.minecraftforge.fml.relauncher.Side
-import net.minecraftforge.fml.relauncher.SideOnly
 
 class PacketClientTrinketBreak() : BaseClientPacket(){
 	constructor(target: Entity, item: Item) : this(){
@@ -30,7 +30,7 @@ class PacketClientTrinketBreak() : BaseClientPacket(){
 		item = Item.getItemById(readInt())
 	}
 	
-	@SideOnly(Side.CLIENT)
+	@Sided(Side.CLIENT)
 	override fun handle(player: EntityPlayerSP){
 		entityId?.let(player.world::getEntityByID)?.let {
 			if (it === player){

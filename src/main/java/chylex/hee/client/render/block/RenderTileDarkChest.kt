@@ -1,15 +1,15 @@
 package chylex.hee.client.render.block
 import chylex.hee.game.block.entity.TileEntityDarkChest
 import chylex.hee.system.Resource
+import chylex.hee.system.migration.forge.Side
+import chylex.hee.system.migration.forge.Sided
 import net.minecraft.client.renderer.tileentity.TileEntityChestRenderer
 import net.minecraft.client.renderer.tileentity.TileEntityItemStackRenderer
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher
 import net.minecraft.item.ItemStack
 import net.minecraft.tileentity.TileEntityChest
-import net.minecraftforge.fml.relauncher.Side
-import net.minecraftforge.fml.relauncher.SideOnly
 
-@SideOnly(Side.CLIENT)
+@Sided(Side.CLIENT)
 object RenderTileDarkChest : TileEntityChestRenderer(){
 	private val TEX_SINGLE = Resource.Custom("textures/entity/dark_chest_single.png")
 	private val TEX_DOUBLE = Resource.Custom("textures/entity/dark_chest_double.png")

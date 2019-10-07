@@ -3,6 +3,8 @@ import chylex.hee.game.item.util.Tool.Type.AXE
 import chylex.hee.game.item.util.Tool.Type.PICKAXE
 import chylex.hee.game.item.util.Tool.Type.SHOVEL
 import chylex.hee.system.migration.Hand.MAIN_HAND
+import chylex.hee.system.migration.forge.EventPriority
+import chylex.hee.system.migration.forge.SubscribeEvent
 import net.minecraft.block.state.IBlockState
 import net.minecraft.enchantment.Enchantment
 import net.minecraft.enchantment.EnchantmentHelper
@@ -17,9 +19,6 @@ import net.minecraftforge.common.MinecraftForge
 import net.minecraftforge.event.entity.player.PlayerEvent.BreakSpeed
 import net.minecraftforge.event.world.BlockEvent.BreakEvent
 import net.minecraftforge.event.world.BlockEvent.HarvestDropsEvent
-import net.minecraftforge.fml.common.eventhandler.EventPriority.HIGHEST
-import net.minecraftforge.fml.common.eventhandler.EventPriority.LOWEST
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent
 
 class ItemVoidMiner : ItemAbstractVoidTool(){
 	private val toolClasses = arrayOf(PICKAXE, AXE, SHOVEL)
@@ -62,7 +61,7 @@ class ItemVoidMiner : ItemAbstractVoidTool(){
 		)
 	}
 	
-	@SubscribeEvent(priority = HIGHEST)
+	@SubscribeEvent(EventPriority.HIGHEST)
 	fun onBreakSpeed(e: BreakSpeed){
 		val heldMiner = getHeldVoidMiner(e.entityPlayer)?.takeIf { it.itemDamage < it.maxDamage } ?: return
 		val state = e.state
@@ -73,14 +72,14 @@ class ItemVoidMiner : ItemAbstractVoidTool(){
 		}
 	}
 	
-	@SubscribeEvent(priority = HIGHEST)
+	@SubscribeEvent(EventPriority.HIGHEST)
 	fun onBlockBreak(e: BreakEvent){
 		if (e.player?.let(::getHeldVoidMiner) != null){
 			e.expToDrop = 0
 		}
 	}
 	
-	@SubscribeEvent(priority = LOWEST)
+	@SubscribeEvent(EventPriority.LOWEST)
 	fun onHarvestDrops(e: HarvestDropsEvent){
 		if (e.harvester?.let(::getHeldVoidMiner) != null){
 			e.drops.clear()

@@ -1,7 +1,7 @@
 package chylex.hee.network
+import chylex.hee.system.migration.forge.Side
 import io.netty.buffer.ByteBuf
 import net.minecraft.entity.player.EntityPlayer
-import net.minecraftforge.fml.relauncher.Side
 
 interface IPacket{
 	fun write(buffer: ByteBuf)

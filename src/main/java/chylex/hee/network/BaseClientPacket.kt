@@ -1,6 +1,8 @@
 package chylex.hee.network
 import chylex.hee.client.util.MC
 import chylex.hee.init.ModNetwork
+import chylex.hee.system.migration.forge.Side
+import chylex.hee.system.migration.forge.Sided
 import net.minecraft.client.entity.EntityPlayerSP
 import net.minecraft.entity.Entity
 import net.minecraft.entity.player.EntityPlayer
@@ -9,20 +11,16 @@ import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.Vec3d
 import net.minecraft.world.World
 import net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint
-import net.minecraftforge.fml.relauncher.Side
-import net.minecraftforge.fml.relauncher.Side.CLIENT
-import net.minecraftforge.fml.relauncher.Side.SERVER
-import net.minecraftforge.fml.relauncher.SideOnly
 
 abstract class BaseClientPacket : IPacket{
 	final override fun handle(side: Side, player: EntityPlayer){
 		when(side){
-			CLIENT -> MC.instance.addScheduledTask { handle(player as EntityPlayerSP) }
-			SERVER -> throw UnsupportedOperationException("tried handling a client packet on server side: ${this::class.java.simpleName}")
+			Side.CLIENT -> MC.instance.addScheduledTask { handle(player as EntityPlayerSP) }
+			Side.SERVER -> throw UnsupportedOperationException("tried handling a client packet on server side: ${this::class.java.simpleName}")
 		}
 	}
 	
-	@SideOnly(CLIENT)
+	@Sided(Side.CLIENT)
 	abstract fun handle(player: EntityPlayerSP)
 	
 	// External utility functions

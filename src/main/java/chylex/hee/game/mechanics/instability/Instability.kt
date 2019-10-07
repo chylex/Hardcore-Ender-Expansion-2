@@ -9,6 +9,7 @@ import chylex.hee.game.mechanics.instability.region.RegionInstability
 import chylex.hee.game.mechanics.instability.region.entry.types.Entry5x5
 import chylex.hee.system.Resource
 import chylex.hee.system.capability.CapabilityProvider
+import chylex.hee.system.migration.forge.SubscribeEvent
 import chylex.hee.system.util.getCapOrNull
 import chylex.hee.system.util.register
 import net.minecraft.nbt.NBTTagCompound
@@ -20,7 +21,6 @@ import net.minecraftforge.common.capabilities.CapabilityInject
 import net.minecraftforge.common.capabilities.CapabilityManager
 import net.minecraftforge.common.util.INBTSerializable
 import net.minecraftforge.event.AttachCapabilitiesEvent
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent
 import net.minecraftforge.fml.common.gameevent.TickEvent.Phase
 import net.minecraftforge.fml.common.gameevent.TickEvent.WorldTickEvent
 

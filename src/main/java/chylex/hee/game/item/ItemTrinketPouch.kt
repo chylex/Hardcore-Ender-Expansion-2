@@ -15,6 +15,10 @@ import chylex.hee.init.ModGuiHandler.GuiType.TRINKET_POUCH
 import chylex.hee.network.server.PacketServerOpenGui
 import chylex.hee.system.migration.ActionResult.PASS
 import chylex.hee.system.migration.ActionResult.SUCCESS
+import chylex.hee.system.migration.forge.EventPriority
+import chylex.hee.system.migration.forge.Side
+import chylex.hee.system.migration.forge.Sided
+import chylex.hee.system.migration.forge.SubscribeEvent
 import chylex.hee.system.util.InventorySlot
 import chylex.hee.system.util.NBTItemStackList
 import chylex.hee.system.util.NBTList.Companion.setList
@@ -38,10 +42,6 @@ import net.minecraft.util.EnumHand
 import net.minecraft.world.World
 import net.minecraftforge.client.event.GuiScreenEvent
 import net.minecraftforge.common.MinecraftForge
-import net.minecraftforge.fml.common.eventhandler.EventPriority.LOWEST
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent
-import net.minecraftforge.fml.relauncher.Side
-import net.minecraftforge.fml.relauncher.SideOnly
 import org.lwjgl.input.Mouse
 
 class ItemTrinketPouch : ItemAbstractTrinket(), ITrinketHandlerProvider, IInfusableItem{
@@ -198,7 +198,7 @@ class ItemTrinketPouch : ItemAbstractTrinket(), ITrinketHandlerProvider, IInfusa
 		return slotChanged && super.shouldCauseReequipAnimation(oldStack, newStack, slotChanged)
 	}
 	
-	@SideOnly(Side.CLIENT)
+	@Sided(Side.CLIENT)
 	override fun addInformation(stack: ItemStack, world: World?, lines: MutableList<String>, flags: ITooltipFlag){
 		super.addInformation(stack, world, lines, flags)
 		
@@ -209,13 +209,13 @@ class ItemTrinketPouch : ItemAbstractTrinket(), ITrinketHandlerProvider, IInfusa
 		ItemAbstractInfusable.onAddInformation(stack, lines)
 	}
 	
-	@SideOnly(Side.CLIENT)
+	@Sided(Side.CLIENT)
 	override fun hasEffect(stack: ItemStack): Boolean{
 		return super.hasEffect(stack) || ItemAbstractInfusable.onHasEffect(stack)
 	}
 	
-	@SideOnly(Side.CLIENT)
-	@SubscribeEvent(priority = LOWEST)
+	@Sided(Side.CLIENT)
+	@SubscribeEvent(EventPriority.LOWEST)
 	fun onMouseInputPre(e: GuiScreenEvent.MouseInputEvent.Pre){
 		val gui = e.gui
 		

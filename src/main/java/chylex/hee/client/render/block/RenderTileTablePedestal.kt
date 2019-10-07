@@ -10,6 +10,8 @@ import chylex.hee.client.util.MC
 import chylex.hee.game.block.BlockTablePedestal
 import chylex.hee.game.block.entity.TileEntityTablePedestal
 import chylex.hee.system.Resource
+import chylex.hee.system.migration.forge.Side
+import chylex.hee.system.migration.forge.Sided
 import chylex.hee.system.util.nextFloat
 import chylex.hee.system.util.size
 import chylex.hee.system.util.square
@@ -25,8 +27,6 @@ import net.minecraft.client.renderer.vertex.DefaultVertexFormats
 import net.minecraft.item.Item
 import net.minecraft.item.ItemStack
 import net.minecraftforge.client.ForgeHooksClient
-import net.minecraftforge.fml.relauncher.Side
-import net.minecraftforge.fml.relauncher.SideOnly
 import org.lwjgl.opengl.GL11.GL_ALWAYS
 import org.lwjgl.opengl.GL11.GL_GREATER
 import org.lwjgl.opengl.GL11.GL_QUADS
@@ -35,7 +35,7 @@ import java.util.Random
 import kotlin.math.cos
 import kotlin.math.sin
 
-@SideOnly(Side.CLIENT)
+@Sided(Side.CLIENT)
 object RenderTileTablePedestal : TileEntitySpecialRenderer<TileEntityTablePedestal>(){
 	private val TEX_BLOCKS_ITEMS = TextureMap.LOCATION_BLOCKS_TEXTURE
 	private val TEX_SHADOW = Resource.Vanilla("textures/misc/shadow.png")

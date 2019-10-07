@@ -1,13 +1,13 @@
 package chylex.hee.client.render.block
 import chylex.hee.game.block.entity.TileEntityLootChest
 import chylex.hee.system.Resource
+import chylex.hee.system.migration.forge.Side
+import chylex.hee.system.migration.forge.Sided
 import net.minecraft.client.renderer.tileentity.TileEntityItemStackRenderer
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher
 import net.minecraft.item.ItemStack
-import net.minecraftforge.fml.relauncher.Side
-import net.minecraftforge.fml.relauncher.SideOnly
 
-@SideOnly(Side.CLIENT)
+@Sided(Side.CLIENT)
 object RenderTileLootChest : RenderTileAbstractChest<TileEntityLootChest>(){
 	override val texture = Resource.Custom("textures/entity/loot_chest.png")
 	

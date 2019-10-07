@@ -6,6 +6,8 @@ import chylex.hee.game.mechanics.energy.IEnergyQuantity
 import chylex.hee.game.mechanics.instability.Instability
 import chylex.hee.init.ModBlocks
 import chylex.hee.init.ModItems
+import chylex.hee.system.migration.forge.Side
+import chylex.hee.system.migration.forge.Sided
 import chylex.hee.system.util.allInCenteredSphereMutable
 import chylex.hee.system.util.ceilToInt
 import chylex.hee.system.util.floorToInt
@@ -30,8 +32,6 @@ import net.minecraft.util.math.RayTraceResult
 import net.minecraft.world.IBlockAccess
 import net.minecraft.world.World
 import net.minecraft.world.WorldServer
-import net.minecraftforge.fml.relauncher.Side
-import net.minecraftforge.fml.relauncher.SideOnly
 import java.util.Random
 import kotlin.math.pow
 
@@ -104,10 +104,10 @@ class BlockEnergyCluster(builder: BlockBuilder) : BlockSimple(builder), ITileEnt
 	
 	override fun quantityDropped(rand: Random) = 0
 	
-	@SideOnly(Side.CLIENT) override fun addHitEffects(state: IBlockState, world: World, target: RayTraceResult, manager: ParticleManager) = true
-	@SideOnly(Side.CLIENT) override fun addDestroyEffects(world: World, pos: BlockPos, manager: ParticleManager) = true
-	@SideOnly(Side.CLIENT) override fun addRunningEffects(state: IBlockState, world: World, pos: BlockPos, entity: Entity) = true
-	@SideOnly(Side.CLIENT) override fun addLandingEffects(state: IBlockState, world: WorldServer, pos: BlockPos, stateAgain: IBlockState, entity: EntityLivingBase, particleAmount: Int) = true
+	@Sided(Side.CLIENT) override fun addHitEffects(state: IBlockState, world: World, target: RayTraceResult, manager: ParticleManager) = true
+	@Sided(Side.CLIENT) override fun addDestroyEffects(world: World, pos: BlockPos, manager: ParticleManager) = true
+	@Sided(Side.CLIENT) override fun addRunningEffects(state: IBlockState, world: World, pos: BlockPos, entity: Entity) = true
+	@Sided(Side.CLIENT) override fun addLandingEffects(state: IBlockState, world: WorldServer, pos: BlockPos, stateAgain: IBlockState, entity: EntityLivingBase, particleAmount: Int) = true
 	
 	override fun getBoundingBox(state: IBlockState, source: IBlockAccess, pos: BlockPos) = SELECTION_AABB
 	override fun getCollisionBoundingBox(state: IBlockState, world: IBlockAccess, pos: BlockPos) = NULL_AABB

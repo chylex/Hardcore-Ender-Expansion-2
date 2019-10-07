@@ -4,6 +4,8 @@ import chylex.hee.init.factory.PacketConstructors
 import chylex.hee.network.BaseClientPacket
 import chylex.hee.network.BaseServerPacket
 import chylex.hee.network.IPacket
+import chylex.hee.system.migration.forge.Side
+import chylex.hee.system.migration.forge.SubscribeEvent
 import io.netty.buffer.Unpooled
 import it.unimi.dsi.fastutil.bytes.Byte2ObjectOpenHashMap
 import it.unimi.dsi.fastutil.objects.Object2ByteOpenHashMap
@@ -12,15 +14,12 @@ import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.entity.player.EntityPlayerMP
 import net.minecraft.network.NetHandlerPlayServer
 import net.minecraft.network.PacketBuffer
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent
 import net.minecraftforge.fml.common.network.FMLEventChannel
 import net.minecraftforge.fml.common.network.FMLNetworkEvent.ClientCustomPacketEvent
 import net.minecraftforge.fml.common.network.FMLNetworkEvent.ServerCustomPacketEvent
 import net.minecraftforge.fml.common.network.NetworkRegistry
 import net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint
 import net.minecraftforge.fml.common.network.internal.FMLProxyPacket
-import net.minecraftforge.fml.relauncher.Side.CLIENT
-import net.minecraftforge.fml.relauncher.Side.SERVER
 import java.util.function.Supplier
 
 object ModNetwork{
@@ -54,12 +53,12 @@ object ModNetwork{
 	
 	@SubscribeEvent
 	fun onClientPacket(e: ClientCustomPacketEvent){
-		readPacket(e.packet).handle(CLIENT, HEE.proxy.getClientSidePlayer()!!)
+		readPacket(e.packet).handle(Side.CLIENT, HEE.proxy.getClientSidePlayer()!!)
 	}
 	
 	@SubscribeEvent
 	fun onServerPacket(e: ServerCustomPacketEvent){
-		readPacket(e.packet).handle(SERVER, (e.handler as NetHandlerPlayServer).player)
+		readPacket(e.packet).handle(Side.SERVER, (e.handler as NetHandlerPlayServer).player)
 	}
 	
 	// Packet sending

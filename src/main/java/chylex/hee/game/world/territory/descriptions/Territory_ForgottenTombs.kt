@@ -5,6 +5,8 @@ import chylex.hee.client.util.MC
 import chylex.hee.game.world.territory.ITerritoryDescription
 import chylex.hee.game.world.territory.properties.TerritoryColors
 import chylex.hee.game.world.territory.properties.TerritoryEnvironment
+import chylex.hee.system.migration.forge.Side
+import chylex.hee.system.migration.forge.Sided
 import chylex.hee.system.util.Pos
 import chylex.hee.system.util.allInCenteredBoxMutable
 import chylex.hee.system.util.color.IntColor.Companion.RGB
@@ -15,8 +17,6 @@ import net.minecraft.init.MobEffects
 import net.minecraft.util.math.Vec3d
 import net.minecraft.world.EnumSkyBlock.BLOCK
 import net.minecraft.world.EnumSkyBlock.SKY
-import net.minecraftforge.fml.relauncher.Side
-import net.minecraftforge.fml.relauncher.SideOnly
 import java.util.Random
 import kotlin.math.max
 import kotlin.math.pow
@@ -68,13 +68,13 @@ object Territory_ForgottenTombs : ITerritoryDescription{
 		private val currentFogDensity = LerpedFloat(MAX_FOG_DENSITY)
 		private var nightVisionFactor = 0F
 		
-		@SideOnly(Side.CLIENT)
+		@Sided(Side.CLIENT)
 		override fun setupClient(){
 			tickClient()
 			currentFogDensity.updateImmediately(MAX_FOG_DENSITY * 0.8F)
 		}
 		
-		@SideOnly(Side.CLIENT)
+		@Sided(Side.CLIENT)
 		override fun tickClient(){
 			val player = MC.player
 			val pos = player?.lookPosVec?.let(::Pos)

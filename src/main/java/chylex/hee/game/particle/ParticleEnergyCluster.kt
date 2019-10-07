@@ -8,19 +8,19 @@ import chylex.hee.game.particle.util.ParticleSetting.ALL
 import chylex.hee.game.particle.util.ParticleSetting.DECREASED
 import chylex.hee.game.particle.util.ParticleSetting.MINIMAL
 import chylex.hee.init.ModBlocks
+import chylex.hee.system.migration.forge.Side
+import chylex.hee.system.migration.forge.Sided
 import chylex.hee.system.util.Pos
 import chylex.hee.system.util.floorToInt
 import chylex.hee.system.util.getBlock
 import chylex.hee.system.util.square
 import net.minecraft.client.particle.Particle
 import net.minecraft.world.World
-import net.minecraftforge.fml.relauncher.Side
-import net.minecraftforge.fml.relauncher.SideOnly
 import org.apache.commons.lang3.ArrayUtils.EMPTY_INT_ARRAY
 import java.util.Random
 
 object ParticleEnergyCluster : IParticleMaker{
-	@SideOnly(Side.CLIENT)
+	@Sided(Side.CLIENT)
 	override fun create(world: World, posX: Double, posY: Double, posZ: Double, motX: Double, motY: Double, motZ: Double, data: IntArray): Particle{
 		return Instance(world, posX, posY, posZ, motX, motY, motZ, data)
 	}
@@ -66,7 +66,7 @@ object ParticleEnergyCluster : IParticleMaker{
 	private const val FADE_IN_DURATION = 6
 	private const val FADE_OUT_DURATION = 10
 	
-	@SideOnly(Side.CLIENT)
+	@Sided(Side.CLIENT)
 	private class Instance(world: World, posX: Double, posY: Double, posZ: Double, motX: Double, motY: Double, motZ: Double, unsafeData: IntArray) : ParticleBaseEnergy(world, posX, posY, posZ, motX, motY, motZ){
 		private val clusterPos = Pos(posX, posY, posZ)
 		

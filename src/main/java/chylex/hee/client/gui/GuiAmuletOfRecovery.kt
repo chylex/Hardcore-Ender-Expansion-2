@@ -2,15 +2,15 @@ package chylex.hee.client.gui
 import chylex.hee.client.gui.base.GuiBaseChestContainer
 import chylex.hee.game.container.ContainerAmuletOfRecovery
 import chylex.hee.network.server.PacketServerContainerEvent
+import chylex.hee.system.migration.forge.Side
+import chylex.hee.system.migration.forge.Sided
 import net.minecraft.client.gui.GuiButton
 import net.minecraft.client.resources.I18n
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.util.EnumHand
 import net.minecraftforge.fml.client.config.GuiButtonExt
-import net.minecraftforge.fml.relauncher.Side
-import net.minecraftforge.fml.relauncher.SideOnly
 
-@SideOnly(Side.CLIENT)
+@Sided(Side.CLIENT)
 class GuiAmuletOfRecovery(player: EntityPlayer, itemHeldIn: EnumHand) : GuiBaseChestContainer(ContainerAmuletOfRecovery(player, itemHeldIn)){
 	override fun initGui(){
 		super.initGui()

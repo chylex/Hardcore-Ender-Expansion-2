@@ -4,13 +4,13 @@ import chylex.hee.client.model.entity.ModelEntityBossEnderEye.SCALE
 import chylex.hee.client.render.util.GL
 import chylex.hee.game.entity.living.EntityBossEnderEye
 import chylex.hee.system.Resource
+import chylex.hee.system.migration.forge.Side
+import chylex.hee.system.migration.forge.Sided
 import net.minecraft.client.renderer.entity.RenderLiving
 import net.minecraft.client.renderer.entity.RenderManager
 import net.minecraft.util.ResourceLocation
-import net.minecraftforge.fml.relauncher.Side
-import net.minecraftforge.fml.relauncher.SideOnly
 
-@SideOnly(Side.CLIENT)
+@Sided(Side.CLIENT)
 class RenderEntityBossEnderEye(manager: RenderManager) : RenderLiving<EntityBossEnderEye>(manager, ModelEntityBossEnderEye, SCALE){
 	private val texture = Resource.Custom("textures/entity/ender_eye.png")
 	

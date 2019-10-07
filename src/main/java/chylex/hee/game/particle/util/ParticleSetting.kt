@@ -1,7 +1,7 @@
 package chylex.hee.game.particle.util
 import chylex.hee.client.util.MC
-import net.minecraftforge.fml.relauncher.Side
-import net.minecraftforge.fml.relauncher.SideOnly
+import chylex.hee.system.migration.forge.Side
+import chylex.hee.system.migration.forge.Sided
 
 enum class ParticleSetting{
 	ALL,
@@ -10,7 +10,7 @@ enum class ParticleSetting{
 	
 	companion object{
 		val current
-			@SideOnly(Side.CLIENT)
+			@Sided(Side.CLIENT)
 			get() = when(MC.settings.particleSetting){
 				1 -> DECREASED
 				2 -> MINIMAL

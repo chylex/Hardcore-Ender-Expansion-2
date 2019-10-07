@@ -5,6 +5,8 @@ import chylex.hee.game.mechanics.instability.Instability
 import chylex.hee.init.ModBlocks
 import chylex.hee.init.ModLoot
 import chylex.hee.system.migration.Difficulty.PEACEFUL
+import chylex.hee.system.migration.forge.Side
+import chylex.hee.system.migration.forge.Sided
 import chylex.hee.system.util.Pos
 import chylex.hee.system.util.heeTag
 import chylex.hee.system.util.square
@@ -13,8 +15,6 @@ import net.minecraft.nbt.NBTTagCompound
 import net.minecraft.util.DamageSource
 import net.minecraft.util.ResourceLocation
 import net.minecraft.world.World
-import net.minecraftforge.fml.relauncher.Side
-import net.minecraftforge.fml.relauncher.SideOnly
 
 class EntityMobEndermiteInstability(world: World) : EntityMobEndermite(world), IImmuneToCorruptedEnergy, IMobBypassPeacefulDespawn{
 	private var spawnCorruptedEnergy = false
@@ -69,7 +69,7 @@ class EntityMobEndermiteInstability(world: World) : EntityMobEndermite(world), I
 	
 	// Client side
 	
-	@SideOnly(Side.CLIENT)
+	@Sided(Side.CLIENT)
 	override fun isInRangeToRenderDist(distanceSq: Double): Boolean{
 		return distanceSq < square(96.0)
 	}

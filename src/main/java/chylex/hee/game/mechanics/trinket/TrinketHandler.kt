@@ -6,6 +6,8 @@ import chylex.hee.system.Resource
 import chylex.hee.system.capability.CapabilityProvider
 import chylex.hee.system.capability.PlayerCapabilityHandler
 import chylex.hee.system.capability.PlayerCapabilityHandler.IPlayerCapability
+import chylex.hee.system.migration.forge.EventPriority
+import chylex.hee.system.migration.forge.SubscribeEvent
 import chylex.hee.system.util.getCapOrNull
 import chylex.hee.system.util.readStack
 import chylex.hee.system.util.register
@@ -22,8 +24,6 @@ import net.minecraftforge.common.capabilities.CapabilityManager
 import net.minecraftforge.event.entity.EntityJoinWorldEvent
 import net.minecraftforge.event.entity.player.PlayerDropsEvent
 import net.minecraftforge.event.entity.player.PlayerEvent
-import net.minecraftforge.fml.common.eventhandler.EventPriority.HIGHEST
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent
 import net.minecraftforge.items.ItemStackHandler
 
 object TrinketHandler{
@@ -115,7 +115,7 @@ object TrinketHandler{
 		}
 	}
 	
-	@SubscribeEvent(priority = HIGHEST)
+	@SubscribeEvent(EventPriority.HIGHEST)
 	fun onPlayerDrops(e: PlayerDropsEvent){
 		val player = e.entityPlayer
 		val handler = player.getCapOrNull(CAP_TRINKET_SLOT)
@@ -131,7 +131,7 @@ object TrinketHandler{
 		handler.item = ItemStack.EMPTY
 	}
 	
-	@SubscribeEvent(priority = HIGHEST)
+	@SubscribeEvent(EventPriority.HIGHEST)
 	fun onPlayerClone(e: PlayerEvent.Clone){
 		val oldPlayer = e.original
 		val newPlayer = e.entityPlayer

@@ -13,6 +13,8 @@ import chylex.hee.init.ModSounds
 import chylex.hee.network.client.PacketClientFX
 import chylex.hee.system.migration.ActionResult.FAIL
 import chylex.hee.system.migration.ActionResult.SUCCESS
+import chylex.hee.system.migration.forge.Side
+import chylex.hee.system.migration.forge.Sided
 import chylex.hee.system.util.cleanupNBT
 import chylex.hee.system.util.cloneFrom
 import chylex.hee.system.util.getBlock
@@ -40,8 +42,6 @@ import net.minecraft.util.EnumHand
 import net.minecraft.util.SoundCategory
 import net.minecraft.util.math.BlockPos
 import net.minecraft.world.World
-import net.minecraftforge.fml.relauncher.Side
-import net.minecraftforge.fml.relauncher.SideOnly
 import java.util.Random
 
 class ItemTableLink : Item(){
@@ -183,7 +183,7 @@ class ItemTableLink : Item(){
 		return EntityItem(world, replacee.posX, replacee.posY, replacee.posZ, cleanStack).apply { cloneFrom(replacee) }
 	}
 	
-	@SideOnly(Side.CLIENT)
+	@Sided(Side.CLIENT)
 	override fun hasEffect(stack: ItemStack): Boolean{
 		return stack.heeTagOrNull.hasKey(POS_TAG)
 	}

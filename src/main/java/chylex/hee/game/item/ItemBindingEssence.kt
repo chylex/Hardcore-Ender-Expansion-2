@@ -3,6 +3,8 @@ import chylex.hee.client.render.util.NO_TINT
 import chylex.hee.game.item.infusion.Infusion
 import chylex.hee.game.item.infusion.InfusionList
 import chylex.hee.game.item.infusion.InfusionTag
+import chylex.hee.system.migration.forge.Side
+import chylex.hee.system.migration.forge.Sided
 import chylex.hee.system.util.color.IntColor.Companion.RGB
 import net.minecraft.client.renderer.color.IItemColor
 import net.minecraft.client.resources.I18n
@@ -12,8 +14,6 @@ import net.minecraft.item.EnumRarity
 import net.minecraft.item.ItemStack
 import net.minecraft.util.NonNullList
 import net.minecraft.world.World
-import net.minecraftforge.fml.relauncher.Side
-import net.minecraftforge.fml.relauncher.SideOnly
 
 class ItemBindingEssence : ItemAbstractInfusable(){
 	init{
@@ -38,7 +38,7 @@ class ItemBindingEssence : ItemAbstractInfusable(){
 		return EnumRarity.UNCOMMON
 	}
 	
-	@SideOnly(Side.CLIENT)
+	@Sided(Side.CLIENT)
 	override fun addInformation(stack: ItemStack, world: World?, lines: MutableList<String>, flags: ITooltipFlag){
 		super.addInformation(stack, world, lines, flags)
 		
@@ -63,12 +63,12 @@ class ItemBindingEssence : ItemAbstractInfusable(){
 		}
 	}
 	
-	@SideOnly(Side.CLIENT)
+	@Sided(Side.CLIENT)
 	override fun hasEffect(stack: ItemStack): Boolean{
 		return false
 	}
 	
-	@SideOnly(Side.CLIENT)
+	@Sided(Side.CLIENT)
 	object Color : IItemColor{
 		private val EMPTY = RGB(255u).i
 		

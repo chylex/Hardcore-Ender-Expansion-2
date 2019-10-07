@@ -14,6 +14,8 @@ import chylex.hee.system.Resource
 import chylex.hee.system.migration.ActionResult.SUCCESS
 import chylex.hee.system.migration.Hand.MAIN_HAND
 import chylex.hee.system.migration.Hand.OFF_HAND
+import chylex.hee.system.migration.forge.Side
+import chylex.hee.system.migration.forge.Sided
 import chylex.hee.system.util.Pos
 import chylex.hee.system.util.angleBetween
 import chylex.hee.system.util.center
@@ -50,8 +52,6 @@ import net.minecraft.util.EnumFacing
 import net.minecraft.util.EnumHand
 import net.minecraft.util.math.BlockPos
 import net.minecraft.world.World
-import net.minecraftforge.fml.relauncher.Side
-import net.minecraftforge.fml.relauncher.SideOnly
 
 class ItemEnergyOracle : ItemAbstractEnergyUser(), IInfusableItem{
 	companion object{
@@ -271,18 +271,18 @@ class ItemEnergyOracle : ItemAbstractEnergyUser(), IInfusableItem{
 		return (oldStack.item === this) != (newStack.item === this) // disabling the animation looks a bit nicer, otherwise it happens a bit too fast
 	}
 	
-	@SideOnly(Side.CLIENT)
+	@Sided(Side.CLIENT)
 	override fun addInformation(stack: ItemStack, world: World?, lines: MutableList<String>, flags: ITooltipFlag){
 		super.addInformation(stack, world, lines, flags)
 		ItemAbstractInfusable.onAddInformation(stack, lines)
 	}
 	
-	@SideOnly(Side.CLIENT)
+	@Sided(Side.CLIENT)
 	override fun hasEffect(stack: ItemStack): Boolean{
 		return super.hasEffect(stack) // infusion glint is way too strong and obscures the core
 	}
 	
-	@SideOnly(Side.CLIENT)
+	@Sided(Side.CLIENT)
 	object Color : IItemColor{
 		private val INACTIVE  = HCL(0.0, 0F,   2.8F)
 		private val SEARCHING = HCL(0.0, 0F,  68.0F)

@@ -1,9 +1,8 @@
 package chylex.hee.system
 import chylex.hee.HEE
+import chylex.hee.system.migration.forge.Side
 import net.minecraft.client.renderer.BannerTextures
 import net.minecraftforge.fml.common.FMLCommonHandler
-import net.minecraftforge.fml.relauncher.Side.CLIENT
-import net.minecraftforge.fml.relauncher.Side.SERVER
 import org.lwjgl.LWJGLUtil
 import org.lwjgl.LWJGLUtil.PLATFORM_WINDOWS
 import org.lwjgl.opengl.Display
@@ -19,7 +18,7 @@ object Debug{
 	fun initialize(){
 		if (enabled){
 			when(FMLCommonHandler.instance().side!!){
-				CLIENT -> {
+				Side.CLIENT -> {
 					Display.setTitle("${Display.getTitle()} - Hardcore Ender Expansion ${HEE.version}")
 					
 					try{
@@ -29,7 +28,7 @@ object Debug{
 					}
 				}
 				
-				SERVER -> {
+				Side.SERVER -> {
 					try{
 						FileOutputStream("eula.txt").use {
 							val properties = Properties()

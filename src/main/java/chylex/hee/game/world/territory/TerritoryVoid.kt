@@ -8,6 +8,11 @@ import chylex.hee.game.mechanics.damage.IDamageProcessor.Companion.IGNORE_INVINC
 import chylex.hee.game.particle.ParticleFadingSpot
 import chylex.hee.game.particle.spawner.ParticleSpawnerCustom
 import chylex.hee.game.particle.util.IShape.Point
+import chylex.hee.system.migration.forge.EventPriority
+import chylex.hee.system.migration.forge.Side
+import chylex.hee.system.migration.forge.Sided
+import chylex.hee.system.migration.forge.SubscribeAllEvents
+import chylex.hee.system.migration.forge.SubscribeEvent
 import chylex.hee.system.util.ceilToInt
 import chylex.hee.system.util.color.IntColor.Companion.RGB
 import chylex.hee.system.util.directionTowards
@@ -23,16 +28,11 @@ import net.minecraft.util.DamageSource
 import net.minecraft.util.math.Vec3d
 import net.minecraft.world.World
 import net.minecraftforge.event.entity.living.LivingDamageEvent
-import net.minecraftforge.fml.common.Mod.EventBusSubscriber
-import net.minecraftforge.fml.common.eventhandler.EventPriority.HIGHEST
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent
-import net.minecraftforge.fml.relauncher.Side
-import net.minecraftforge.fml.relauncher.SideOnly
 import kotlin.math.max
 import kotlin.math.min
 import kotlin.math.sqrt
 
-@EventBusSubscriber(modid = HEE.ID)
+@SubscribeAllEvents(modid = HEE.ID)
 object TerritoryVoid{
 	const val OUTSIDE_VOID_FACTOR = -1F
 	const val INSTANT_DEATH_FACTOR = 3F
@@ -152,7 +152,7 @@ object TerritoryVoid{
 	// Event handling
 	
 	@JvmStatic
-	@SubscribeEvent(priority = HIGHEST)
+	@SubscribeEvent(EventPriority.HIGHEST)
 	fun onPlayerDamage(e: LivingDamageEvent){
 		if (e.source === DamageSource.OUT_OF_WORLD && e.entity.let { it is EntityLivingBase && it.dimension == 1 }){
 			e.isCanceled = true
@@ -161,7 +161,7 @@ object TerritoryVoid{
 	
 	// Debug
 	
-	@SideOnly(Side.CLIENT)
+	@Sided(Side.CLIENT)
 	private fun debugEllipsoidEdge(){
 		val player = MC.player ?: return
 		val instance = TerritoryInstance.fromPos(player) ?: return
