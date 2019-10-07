@@ -69,8 +69,7 @@ enum class ObsidianTowerSpawnerLevel(
 			arrayOf(
 				Potions.SPEED to 2,
 				Potions.STRENGTH to 2,
-				Potions.RESISTANCE to 1,
-				Potions.FIRE_RESISTANCE to 1
+				Potions.RESISTANCE to 1
 			),
 			arrayOf(
 				Potions.SPEED to 3,
