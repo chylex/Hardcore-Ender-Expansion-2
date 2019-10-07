@@ -10,10 +10,10 @@ import chylex.hee.game.mechanics.portal.SpawnInfo
 import chylex.hee.game.world.territory.TerritoryInstance
 import chylex.hee.game.world.util.Teleporter
 import chylex.hee.game.world.util.Teleporter.FxRange.Silent
-import chylex.hee.system.util.Facing4
 import chylex.hee.system.util.Pos
 import chylex.hee.system.util.center
 import chylex.hee.system.util.closestTickingTile
+import chylex.hee.system.util.facades.Facing4
 import chylex.hee.system.util.get
 import chylex.hee.system.util.getBlock
 import chylex.hee.system.util.getState

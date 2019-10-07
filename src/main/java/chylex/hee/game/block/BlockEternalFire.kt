@@ -13,7 +13,7 @@ import chylex.hee.system.migration.forge.Sided
 import chylex.hee.system.migration.forge.SubscribeEvent
 import chylex.hee.system.migration.vanilla.Blocks
 import chylex.hee.system.migration.vanilla.Sounds
-import chylex.hee.system.util.Facing6
+import chylex.hee.system.util.facades.Facing6
 import chylex.hee.system.util.getBlock
 import chylex.hee.system.util.getState
 import chylex.hee.system.util.isTopSolid

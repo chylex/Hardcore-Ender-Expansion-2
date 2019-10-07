@@ -6,7 +6,7 @@ import chylex.hee.system.migration.Facing.NORTH
 import chylex.hee.system.migration.Facing.SOUTH
 import chylex.hee.system.migration.Facing.UP
 import chylex.hee.system.migration.Facing.WEST
-import chylex.hee.system.util.Facing6
+import chylex.hee.system.util.facades.Facing6
 import chylex.hee.system.util.get
 import chylex.hee.system.util.getBlock
 import chylex.hee.system.util.getState

@@ -24,14 +24,14 @@ import chylex.hee.system.migration.Facing.NORTH
 import chylex.hee.system.migration.Facing.SOUTH
 import chylex.hee.system.migration.Facing.UP
 import chylex.hee.system.migration.vanilla.Blocks
-import chylex.hee.system.util.Facing4
-import chylex.hee.system.util.Facing6
 import chylex.hee.system.util.Pos
 import chylex.hee.system.util.allInBoxMutable
 import chylex.hee.system.util.allInCenteredBoxMutable
 import chylex.hee.system.util.component1
 import chylex.hee.system.util.component2
 import chylex.hee.system.util.component3
+import chylex.hee.system.util.facades.Facing4
+import chylex.hee.system.util.facades.Facing6
 import chylex.hee.system.util.math.RandomInt.Companion.Biased
 import chylex.hee.system.util.math.RandomInt.Companion.Constant
 import chylex.hee.system.util.nextFloat

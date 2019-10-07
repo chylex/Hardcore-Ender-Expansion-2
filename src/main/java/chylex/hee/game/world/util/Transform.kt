@@ -1,9 +1,9 @@
 package chylex.hee.game.world.util
 import chylex.hee.system.util.Pos
-import chylex.hee.system.util.Rotation4
 import chylex.hee.system.util.component1
 import chylex.hee.system.util.component2
 import chylex.hee.system.util.component3
+import chylex.hee.system.util.facades.Rotation4
 import chylex.hee.system.util.nextItem
 import net.minecraft.block.state.IBlockState
 import net.minecraft.entity.Entity

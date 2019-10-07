@@ -34,7 +34,6 @@ import chylex.hee.system.collection.MutableWeightedList.Companion.mutableWeighte
 import chylex.hee.system.migration.Facing.DOWN
 import chylex.hee.system.migration.Facing.UP
 import chylex.hee.system.migration.vanilla.Blocks
-import chylex.hee.system.util.Facing4
 import chylex.hee.system.util.Pos
 import chylex.hee.system.util.allInCenteredBox
 import chylex.hee.system.util.ceilToInt
@@ -42,6 +41,7 @@ import chylex.hee.system.util.center
 import chylex.hee.system.util.directionTowards
 import chylex.hee.system.util.distanceSqTo
 import chylex.hee.system.util.distanceTo
+import chylex.hee.system.util.facades.Facing4
 import chylex.hee.system.util.math.RandomInt.Companion.Constant
 import chylex.hee.system.util.nextFloat
 import chylex.hee.system.util.nextInt

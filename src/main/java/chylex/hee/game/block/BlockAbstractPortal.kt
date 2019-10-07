@@ -1,9 +1,9 @@
 package chylex.hee.game.block
 import chylex.hee.game.block.info.BlockBuilder
-import chylex.hee.system.util.Facing4
 import chylex.hee.system.util.allInBox
 import chylex.hee.system.util.allInBoxMutable
 import chylex.hee.system.util.distanceTo
+import chylex.hee.system.util.facades.Facing4
 import chylex.hee.system.util.floorToInt
 import chylex.hee.system.util.getBlock
 import chylex.hee.system.util.isAir

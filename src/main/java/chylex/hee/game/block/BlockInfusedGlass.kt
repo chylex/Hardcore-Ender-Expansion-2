@@ -9,7 +9,7 @@ import chylex.hee.system.migration.Facing.UP
 import chylex.hee.system.migration.Facing.WEST
 import chylex.hee.system.migration.forge.Side
 import chylex.hee.system.migration.forge.Sided
-import chylex.hee.system.util.Facing6
+import chylex.hee.system.util.facades.Facing6
 import chylex.hee.system.util.getBlock
 import chylex.hee.system.util.with
 import net.minecraft.block.state.BlockStateContainer

@@ -2,11 +2,14 @@
 
 package chylex.hee.system.util
 import net.minecraft.block.Block
+import net.minecraft.block.BlockDirectional
+import net.minecraft.block.BlockHorizontal
 import net.minecraft.block.properties.IProperty
 import net.minecraft.block.properties.PropertyBool
 import net.minecraft.block.properties.PropertyInteger
 import net.minecraft.block.state.IBlockState
 import net.minecraft.creativetab.CreativeTabs
+import net.minecraft.util.EnumFacing
 
 // General
 
@@ -38,4 +41,21 @@ inline operator fun IBlockState.get(property: PropertyBool): Boolean{
 
 inline operator fun IBlockState.get(property: PropertyInteger): Int{
 	return this.getValue(property)
+}
+
+// Facing
+
+fun IBlockState.withFacing(facing: EnumFacing): IBlockState{
+	if (this.properties.containsKey(BlockDirectional.FACING)){
+		return this.withProperty(BlockDirectional.FACING, facing)
+	}
+	else if (this.properties.containsKey(BlockHorizontal.FACING)){
+		return this.withProperty(BlockHorizontal.FACING, facing)
+	}
+	
+	throw UnsupportedOperationException("could not find a facing property on the block")
+}
+
+fun Block.withFacing(facing: EnumFacing): IBlockState{
+	return this.defaultState.withFacing(facing)
 }

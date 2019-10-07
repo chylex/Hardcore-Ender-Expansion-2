@@ -8,9 +8,9 @@ import chylex.hee.game.world.feature.stronghold.StrongholdPieces
 import chylex.hee.game.world.structure.IStructureWorld
 import chylex.hee.game.world.structure.trigger.EntityStructureTrigger
 import chylex.hee.system.migration.Difficulty.PEACEFUL
-import chylex.hee.system.util.Facing4
 import chylex.hee.system.util.Pos
 import chylex.hee.system.util.breakBlock
+import chylex.hee.system.util.facades.Facing4
 import chylex.hee.system.util.getBlock
 import chylex.hee.system.util.isAir
 import chylex.hee.system.util.nextFloat

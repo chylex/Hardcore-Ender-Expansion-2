@@ -2,8 +2,8 @@ package chylex.hee.game.world.feature.energyshrine
 import chylex.hee.game.world.util.PosXZ
 import chylex.hee.init.ModBlocks
 import chylex.hee.system.migration.Facing.DOWN
-import chylex.hee.system.util.Facing4
 import chylex.hee.system.util.blocksMovement
+import chylex.hee.system.util.facades.Facing4
 import chylex.hee.system.util.getState
 import chylex.hee.system.util.isAir
 import chylex.hee.system.util.nextInt

@@ -20,11 +20,11 @@ import chylex.hee.system.migration.MagicValues
 import chylex.hee.system.migration.vanilla.Blocks
 import chylex.hee.system.migration.vanilla.Sounds
 import chylex.hee.system.util.FLAG_SYNC_CLIENT
-import chylex.hee.system.util.Facing4
 import chylex.hee.system.util.Pos
 import chylex.hee.system.util.breakBlock
 import chylex.hee.system.util.ceilToInt
 import chylex.hee.system.util.distanceSqTo
+import chylex.hee.system.util.facades.Facing4
 import chylex.hee.system.util.floorToInt
 import chylex.hee.system.util.get
 import chylex.hee.system.util.getBlock

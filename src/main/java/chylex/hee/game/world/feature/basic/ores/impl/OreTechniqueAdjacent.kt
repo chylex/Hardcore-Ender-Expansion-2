@@ -2,7 +2,7 @@ package chylex.hee.game.world.feature.basic.ores.impl
 import chylex.hee.game.world.feature.basic.ores.IOreTechnique
 import chylex.hee.game.world.generation.IBlockPlacer
 import chylex.hee.game.world.generation.SegmentedWorld
-import chylex.hee.system.util.Facing6
+import chylex.hee.system.util.facades.Facing6
 import chylex.hee.system.util.nextInt
 import chylex.hee.system.util.nextItem
 import net.minecraft.util.math.BlockPos

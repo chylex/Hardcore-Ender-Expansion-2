@@ -2,7 +2,7 @@ package chylex.hee.game.block
 import chylex.hee.init.ModBlocks
 import chylex.hee.init.ModLoot
 import chylex.hee.system.migration.vanilla.Blocks
-import chylex.hee.system.util.Facing4
+import chylex.hee.system.util.facades.Facing4
 import chylex.hee.system.util.get
 import chylex.hee.system.util.getBlock
 import chylex.hee.system.util.isAir

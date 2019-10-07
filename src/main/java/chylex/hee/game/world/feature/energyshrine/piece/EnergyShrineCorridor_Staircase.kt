@@ -5,8 +5,8 @@ import chylex.hee.game.world.structure.IStructurePieceFromFile.Delegate
 import chylex.hee.game.world.structure.IStructureWorld
 import chylex.hee.game.world.util.PosXZ
 import chylex.hee.init.ModBlocks
-import chylex.hee.system.util.Facing6
 import chylex.hee.system.util.ceilToInt
+import chylex.hee.system.util.facades.Facing6
 import chylex.hee.system.util.nextFloat
 import chylex.hee.system.util.nextInt
 import chylex.hee.system.util.nextItemOrNull

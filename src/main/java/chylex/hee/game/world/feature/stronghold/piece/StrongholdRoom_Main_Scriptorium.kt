@@ -14,8 +14,8 @@ import chylex.hee.system.migration.Facing.SOUTH
 import chylex.hee.system.migration.Facing.UP
 import chylex.hee.system.migration.Facing.WEST
 import chylex.hee.system.migration.vanilla.Blocks
-import chylex.hee.system.util.Facing4
 import chylex.hee.system.util.Pos
+import chylex.hee.system.util.facades.Facing4
 import chylex.hee.system.util.nextInt
 import chylex.hee.system.util.offsetUntil
 import chylex.hee.system.util.withFacing

@@ -26,7 +26,7 @@ import chylex.hee.system.migration.forge.Side
 import chylex.hee.system.migration.forge.Sided
 import chylex.hee.system.util.FLAG_NONE
 import chylex.hee.system.util.FLAG_SYNC_CLIENT
-import chylex.hee.system.util.Facing6
+import chylex.hee.system.util.facades.Facing6
 import chylex.hee.system.util.get
 import chylex.hee.system.util.getState
 import chylex.hee.system.util.getTile

@@ -2,7 +2,7 @@ package chylex.hee.game.world.structure.piece
 import chylex.hee.game.world.structure.piece.StructureBuild.AddMode
 import chylex.hee.game.world.structure.piece.StructureBuild.PositionedPiece
 import chylex.hee.game.world.util.Transform
-import chylex.hee.system.util.Rotation4
+import chylex.hee.system.util.facades.Rotation4
 import chylex.hee.system.util.nextItem
 import chylex.hee.system.util.nextItemOrNull
 import java.util.Random

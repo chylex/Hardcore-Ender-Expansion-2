@@ -1,8 +1,8 @@
 package chylex.hee.game.entity.living.ai
 import chylex.hee.game.entity.living.ai.util.AIBaseContinuous
-import chylex.hee.system.util.Facing6
 import chylex.hee.system.util.Pos
 import chylex.hee.system.util.addY
+import chylex.hee.system.util.facades.Facing6
 import chylex.hee.system.util.getState
 import chylex.hee.system.util.nextItem
 import chylex.hee.system.util.posVec
