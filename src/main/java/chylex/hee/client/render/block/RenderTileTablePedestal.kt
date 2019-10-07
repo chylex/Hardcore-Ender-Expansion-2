@@ -9,9 +9,9 @@ import chylex.hee.client.render.util.draw
 import chylex.hee.client.util.MC
 import chylex.hee.game.block.BlockTablePedestal
 import chylex.hee.game.block.entity.TileEntityTablePedestal
-import chylex.hee.system.Resource
 import chylex.hee.system.migration.forge.Side
 import chylex.hee.system.migration.forge.Sided
+import chylex.hee.system.util.facades.Resource
 import chylex.hee.system.util.nextFloat
 import chylex.hee.system.util.size
 import chylex.hee.system.util.square

@@ -1,6 +1,6 @@
 package chylex.hee.game.loot.conditions
 import chylex.hee.game.entity.util.ICritTracker
-import chylex.hee.system.Resource
+import chylex.hee.system.util.facades.Resource
 import com.google.gson.JsonDeserializationContext
 import com.google.gson.JsonObject
 import com.google.gson.JsonSerializationContext

@@ -1,6 +1,6 @@
 package chylex.hee.game.loot.functions
-import chylex.hee.system.Resource
 import chylex.hee.system.migration.vanilla.Items
+import chylex.hee.system.util.facades.Resource
 import chylex.hee.system.util.nextItem
 import chylex.hee.system.util.size
 import com.google.gson.JsonDeserializationContext

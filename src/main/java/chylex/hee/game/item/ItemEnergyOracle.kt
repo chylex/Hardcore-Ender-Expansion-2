@@ -10,7 +10,6 @@ import chylex.hee.game.item.infusion.Infusion.DISTANCE
 import chylex.hee.game.item.infusion.InfusionTag
 import chylex.hee.game.mechanics.energy.IEnergyQuantity.Units
 import chylex.hee.init.ModItems
-import chylex.hee.system.Resource
 import chylex.hee.system.migration.ActionResult.SUCCESS
 import chylex.hee.system.migration.Hand.MAIN_HAND
 import chylex.hee.system.migration.Hand.OFF_HAND
@@ -23,6 +22,7 @@ import chylex.hee.system.util.center
 import chylex.hee.system.util.closestTickingTile
 import chylex.hee.system.util.color.HCL
 import chylex.hee.system.util.distanceTo
+import chylex.hee.system.util.facades.Resource
 import chylex.hee.system.util.floorToInt
 import chylex.hee.system.util.getIntegerOrNull
 import chylex.hee.system.util.getLongArray

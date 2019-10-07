@@ -8,8 +8,8 @@ import chylex.hee.game.world.territory.TerritoryType.FORGOTTEN_TOMBS
 import chylex.hee.game.world.territory.properties.TerritoryColors
 import chylex.hee.game.world.territory.properties.TerritoryEnvironment
 import chylex.hee.game.world.territory.properties.TerritoryTokenHolders
-import chylex.hee.system.Resource
 import chylex.hee.system.util.color.IntColor.Companion.RGB
+import chylex.hee.system.util.facades.Resource
 import chylex.hee.system.util.nextFloat
 import java.util.Random
 import kotlin.math.min

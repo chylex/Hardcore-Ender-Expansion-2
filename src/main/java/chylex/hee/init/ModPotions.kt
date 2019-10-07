@@ -10,9 +10,9 @@ import chylex.hee.game.mechanics.potion.brewing.recipes.BrewWaterToAwkward
 import chylex.hee.game.mechanics.potion.brewing.recipes.BrewWaterToMundane
 import chylex.hee.game.mechanics.potion.brewing.recipes.BrewWaterToThick
 import chylex.hee.game.mechanics.potion.brewing.recipes.ReinsertPotionItems
-import chylex.hee.system.Resource
 import chylex.hee.system.migration.forge.SubscribeAllEvents
 import chylex.hee.system.migration.forge.SubscribeEvent
+import chylex.hee.system.util.facades.Resource
 import chylex.hee.system.util.getIfExists
 import com.google.common.collect.ImmutableList
 import net.minecraft.potion.Potion
@@ -43,10 +43,9 @@ object ModPotions{
 			
 			for(type in this){
 				val location = type.registryName!!
-				val domain = location.namespace
 				val path = location.path
 				
-				if ((domain == Resource.Vanilla.domain || domain == Resource.Custom.domain) && alteredTypes.contains(path) && type.baseName == null && type.effects.isNotEmpty()){
+				if ((Resource.isVanilla(location) || Resource.isCustom(location)) && alteredTypes.contains(path) && type.baseName == null && type.effects.isNotEmpty()){
 					val info = PotionBrewing.INFO[type.effects[0].potion]
 					
 					if (info != null){

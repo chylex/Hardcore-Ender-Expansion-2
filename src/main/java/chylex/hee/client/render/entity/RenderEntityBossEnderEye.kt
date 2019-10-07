@@ -3,9 +3,9 @@ import chylex.hee.client.model.entity.ModelEntityBossEnderEye
 import chylex.hee.client.model.entity.ModelEntityBossEnderEye.SCALE
 import chylex.hee.client.render.util.GL
 import chylex.hee.game.entity.living.EntityBossEnderEye
-import chylex.hee.system.Resource
 import chylex.hee.system.migration.forge.Side
 import chylex.hee.system.migration.forge.Sided
+import chylex.hee.system.util.facades.Resource
 import net.minecraft.client.renderer.entity.RenderLiving
 import net.minecraft.client.renderer.entity.RenderManager
 import net.minecraft.util.ResourceLocation

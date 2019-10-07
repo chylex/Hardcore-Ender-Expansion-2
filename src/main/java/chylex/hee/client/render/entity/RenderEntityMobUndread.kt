@@ -1,9 +1,9 @@
 package chylex.hee.client.render.entity
 import chylex.hee.client.render.util.GL
 import chylex.hee.game.entity.living.EntityMobUndread
-import chylex.hee.system.Resource
 import chylex.hee.system.migration.forge.Side
 import chylex.hee.system.migration.forge.Sided
+import chylex.hee.system.util.facades.Resource
 import net.minecraft.client.model.ModelZombie
 import net.minecraft.client.renderer.entity.RenderBiped
 import net.minecraft.client.renderer.entity.RenderManager

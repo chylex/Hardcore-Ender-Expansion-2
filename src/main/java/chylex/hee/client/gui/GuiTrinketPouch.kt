@@ -3,10 +3,10 @@ import chylex.hee.client.gui.base.GuiBaseCustomInventory
 import chylex.hee.game.container.ContainerTrinketPouch
 import chylex.hee.game.container.base.ContainerBaseCustomInventory
 import chylex.hee.game.item.ItemTrinketPouch.Inventory
-import chylex.hee.system.Resource
 import chylex.hee.system.migration.forge.Side
 import chylex.hee.system.migration.forge.Sided
 import chylex.hee.system.util.color.IntColor.Companion.RGBA
+import chylex.hee.system.util.facades.Resource
 import chylex.hee.system.util.size
 import net.minecraft.client.gui.Gui
 import net.minecraft.entity.player.EntityPlayer

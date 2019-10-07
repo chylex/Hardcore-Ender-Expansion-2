@@ -2,9 +2,9 @@ package chylex.hee.client.render.entity
 import chylex.hee.client.render.entity.layer.LayerSpiderlingEyes
 import chylex.hee.client.render.util.GL
 import chylex.hee.game.entity.living.EntityMobSpiderling
-import chylex.hee.system.Resource
 import chylex.hee.system.migration.forge.Side
 import chylex.hee.system.migration.forge.Sided
+import chylex.hee.system.util.facades.Resource
 import net.minecraft.client.model.ModelSpider
 import net.minecraft.client.renderer.entity.RenderLiving
 import net.minecraft.client.renderer.entity.RenderManager

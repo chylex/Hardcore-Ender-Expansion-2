@@ -3,12 +3,12 @@ import chylex.hee.client.util.MC
 import chylex.hee.game.entity.living.EntityMobVillagerDying
 import chylex.hee.game.mechanics.trinket.TrinketHandler
 import chylex.hee.init.ModItems
-import chylex.hee.system.Resource
 import chylex.hee.system.migration.forge.EventPriority
 import chylex.hee.system.migration.forge.Side
 import chylex.hee.system.migration.forge.Sided
 import chylex.hee.system.migration.forge.SubscribeEvent
 import chylex.hee.system.migration.vanilla.Sounds
+import chylex.hee.system.util.facades.Resource
 import chylex.hee.system.util.getAttribute
 import chylex.hee.system.util.hasKey
 import chylex.hee.system.util.heeTag

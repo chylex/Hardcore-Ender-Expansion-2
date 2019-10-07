@@ -1,10 +1,10 @@
 package chylex.hee.client.gui.base
 import chylex.hee.client.render.util.GL
 import chylex.hee.client.util.MC
-import chylex.hee.system.Resource
 import chylex.hee.system.migration.forge.Side
 import chylex.hee.system.migration.forge.Sided
 import chylex.hee.system.util.color.IntColor.Companion.RGB
+import chylex.hee.system.util.facades.Resource
 import chylex.hee.system.util.size
 import net.minecraft.client.gui.inventory.GuiContainer
 import net.minecraft.inventory.ContainerChest

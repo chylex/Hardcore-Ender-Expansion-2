@@ -38,10 +38,10 @@ import chylex.hee.game.item.util.Tool.Type.AXE
 import chylex.hee.game.item.util.Tool.Type.PICKAXE
 import chylex.hee.game.item.util.Tool.Type.SHOVEL
 import chylex.hee.init.ModCreativeTabs.OrderedCreativeTab
-import chylex.hee.system.Resource
 import chylex.hee.system.migration.forge.SubscribeAllEvents
 import chylex.hee.system.migration.forge.SubscribeEvent
 import chylex.hee.system.migration.vanilla.Items
+import chylex.hee.system.util.facades.Resource
 import chylex.hee.system.util.useVanillaName
 import net.minecraft.block.BlockDispenser
 import net.minecraft.block.BlockShulkerBox

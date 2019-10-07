@@ -112,11 +112,11 @@ import chylex.hee.game.item.ItemBlockWithMetadata
 import chylex.hee.game.item.ItemDragonEgg
 import chylex.hee.game.item.ItemInfusedTNT
 import chylex.hee.init.ModCreativeTabs.OrderedCreativeTab
-import chylex.hee.system.Resource
 import chylex.hee.system.migration.forge.SubscribeAllEvents
 import chylex.hee.system.migration.forge.SubscribeEvent
 import chylex.hee.system.migration.vanilla.Blocks
 import chylex.hee.system.util.creativeTabIn
+import chylex.hee.system.util.facades.Resource
 import chylex.hee.system.util.useVanillaName
 import net.minecraft.block.Block
 import net.minecraft.creativetab.CreativeTabs
@@ -500,7 +500,7 @@ object ModBlocks{
 	}
 	
 	private infix fun Block.with(itemBlock: ItemBlock) = apply {
-		if (this.registryName!!.namespace == Resource.Vanilla.domain){
+		if (Resource.isVanilla(this.registryName!!)){
 			itemBlock.useVanillaName(this)
 		}
 		else{

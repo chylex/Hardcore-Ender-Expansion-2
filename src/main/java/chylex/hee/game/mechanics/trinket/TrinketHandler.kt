@@ -2,13 +2,13 @@ package chylex.hee.game.mechanics.trinket
 import chylex.hee.game.container.slot.SlotTrinketItemInventory
 import chylex.hee.game.mechanics.trinket.TrinketHandler.TrinketCapability.Provider
 import chylex.hee.network.client.PacketClientTrinketBreak
-import chylex.hee.system.Resource
 import chylex.hee.system.capability.CapabilityProvider
 import chylex.hee.system.capability.PlayerCapabilityHandler
 import chylex.hee.system.capability.PlayerCapabilityHandler.IPlayerCapability
 import chylex.hee.system.migration.forge.EventPriority
 import chylex.hee.system.migration.forge.SubscribeEvent
 import chylex.hee.system.util.TagCompound
+import chylex.hee.system.util.facades.Resource
 import chylex.hee.system.util.facades.Stats
 import chylex.hee.system.util.getCapOrNull
 import chylex.hee.system.util.readStack

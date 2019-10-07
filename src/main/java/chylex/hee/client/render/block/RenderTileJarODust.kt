@@ -6,9 +6,9 @@ import chylex.hee.client.util.MC
 import chylex.hee.game.block.BlockJarODust
 import chylex.hee.game.block.entity.TileEntityJarODust
 import chylex.hee.game.mechanics.dust.DustLayers
-import chylex.hee.system.Resource
 import chylex.hee.system.migration.forge.Side
 import chylex.hee.system.migration.forge.Sided
+import chylex.hee.system.util.facades.Resource
 import chylex.hee.system.util.floorToInt
 import chylex.hee.system.util.getListOfCompounds
 import chylex.hee.system.util.heeTagOrNull

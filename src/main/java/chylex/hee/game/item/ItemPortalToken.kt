@@ -12,7 +12,6 @@ import chylex.hee.game.world.territory.properties.TerritoryColors
 import chylex.hee.game.world.territory.storage.TerritoryGlobalStorage
 import chylex.hee.game.world.util.BlockEditor
 import chylex.hee.init.ModItems
-import chylex.hee.system.Resource
 import chylex.hee.system.migration.ActionResult.FAIL
 import chylex.hee.system.migration.ActionResult.PASS
 import chylex.hee.system.migration.ActionResult.SUCCESS
@@ -20,6 +19,7 @@ import chylex.hee.system.migration.Facing.UP
 import chylex.hee.system.migration.forge.Side
 import chylex.hee.system.migration.forge.Sided
 import chylex.hee.system.util.color.IntColor.Companion.RGB
+import chylex.hee.system.util.facades.Resource
 import chylex.hee.system.util.getEnum
 import chylex.hee.system.util.getIntegerOrNull
 import chylex.hee.system.util.hasKey

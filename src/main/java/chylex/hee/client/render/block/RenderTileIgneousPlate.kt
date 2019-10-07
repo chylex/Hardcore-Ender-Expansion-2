@@ -4,7 +4,6 @@ import chylex.hee.client.render.util.GL
 import chylex.hee.game.block.BlockIgneousPlate
 import chylex.hee.game.block.entity.TileEntityIgneousPlate
 import chylex.hee.init.ModBlocks
-import chylex.hee.system.Resource
 import chylex.hee.system.migration.Facing.EAST
 import chylex.hee.system.migration.Facing.NORTH
 import chylex.hee.system.migration.Facing.UP
@@ -15,6 +14,7 @@ import chylex.hee.system.util.color.IntColor.Companion.RGB
 import chylex.hee.system.util.component1
 import chylex.hee.system.util.component2
 import chylex.hee.system.util.component3
+import chylex.hee.system.util.facades.Resource
 import chylex.hee.system.util.floorToInt
 import chylex.hee.system.util.get
 import chylex.hee.system.util.getState

@@ -42,7 +42,6 @@ import chylex.hee.game.world.structure.file.PaletteMappings
 import chylex.hee.game.world.util.Size
 import chylex.hee.init.ModBlocks
 import chylex.hee.init.ModItems
-import chylex.hee.system.Resource
 import chylex.hee.system.collection.MutableWeightedList
 import chylex.hee.system.collection.WeightedList.Companion.weightedListOf
 import chylex.hee.system.migration.Facing.EAST
@@ -51,6 +50,7 @@ import chylex.hee.system.migration.Facing.SOUTH
 import chylex.hee.system.migration.Facing.WEST
 import chylex.hee.system.migration.vanilla.Blocks
 import chylex.hee.system.migration.vanilla.Items
+import chylex.hee.system.util.facades.Resource
 import chylex.hee.system.util.nextInt
 import chylex.hee.system.util.nextItem
 import chylex.hee.system.util.removeItem

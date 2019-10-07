@@ -3,9 +3,9 @@ import chylex.hee.client.render.util.GL
 import chylex.hee.client.util.MC
 import chylex.hee.game.block.entity.TileEntityBrewingStandCustom
 import chylex.hee.game.container.ContainerBrewingStandCustom
-import chylex.hee.system.Resource
 import chylex.hee.system.migration.forge.Side
 import chylex.hee.system.migration.forge.Sided
+import chylex.hee.system.util.facades.Resource
 import chylex.hee.system.util.getStack
 import chylex.hee.system.util.isNotEmpty
 import chylex.hee.system.util.totalTime

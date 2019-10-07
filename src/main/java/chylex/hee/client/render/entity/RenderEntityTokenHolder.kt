@@ -7,9 +7,9 @@ import chylex.hee.game.entity.item.EntityTokenHolder
 import chylex.hee.game.item.ItemPortalToken.TokenType.NORMAL
 import chylex.hee.game.item.ItemPortalToken.TokenType.RARE
 import chylex.hee.game.item.ItemPortalToken.TokenType.SOLITARY
-import chylex.hee.system.Resource
 import chylex.hee.system.migration.forge.Side
 import chylex.hee.system.migration.forge.Sided
+import chylex.hee.system.util.facades.Resource
 import net.minecraft.client.renderer.entity.Render
 import net.minecraft.client.renderer.entity.RenderManager
 import net.minecraft.util.ResourceLocation

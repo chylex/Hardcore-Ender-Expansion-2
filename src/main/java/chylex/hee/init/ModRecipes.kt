@@ -10,11 +10,11 @@ import chylex.hee.game.recipe.RecipePortalTokenDuplication
 import chylex.hee.game.recipe.RecipeScaleOfFreefallRepair
 import chylex.hee.game.recipe.RecipeVoidSalad
 import chylex.hee.system.IntegrityCheck
-import chylex.hee.system.Resource
 import chylex.hee.system.migration.forge.SubscribeAllEvents
 import chylex.hee.system.migration.forge.SubscribeEvent
 import chylex.hee.system.migration.vanilla.Blocks
 import chylex.hee.system.migration.vanilla.Items
+import chylex.hee.system.util.facades.Resource
 import chylex.hee.system.util.useVanillaName
 import net.minecraft.item.ItemStack
 import net.minecraft.item.crafting.FurnaceRecipes

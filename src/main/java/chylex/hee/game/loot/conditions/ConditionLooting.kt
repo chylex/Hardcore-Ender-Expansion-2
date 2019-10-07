@@ -1,5 +1,5 @@
 package chylex.hee.game.loot.conditions
-import chylex.hee.system.Resource
+import chylex.hee.system.util.facades.Resource
 import net.minecraft.world.storage.loot.LootContext
 import java.util.Random
 

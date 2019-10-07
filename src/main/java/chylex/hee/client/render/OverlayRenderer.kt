@@ -15,13 +15,13 @@ import chylex.hee.game.mechanics.energy.IEnergyQuantity.Companion.MAX_POSSIBLE_V
 import chylex.hee.game.mechanics.energy.IEnergyQuantity.Companion.displayString
 import chylex.hee.init.ModBlocks
 import chylex.hee.init.ModItems
-import chylex.hee.system.Resource
 import chylex.hee.system.migration.forge.Side
 import chylex.hee.system.migration.forge.SubscribeAllEvents
 import chylex.hee.system.migration.forge.SubscribeEvent
 import chylex.hee.system.util.color.IntColor
 import chylex.hee.system.util.color.IntColor.Companion.RGB
 import chylex.hee.system.util.color.IntColor.Companion.RGBA
+import chylex.hee.system.util.facades.Resource
 import chylex.hee.system.util.getBlock
 import chylex.hee.system.util.getTile
 import net.minecraft.client.gui.Gui

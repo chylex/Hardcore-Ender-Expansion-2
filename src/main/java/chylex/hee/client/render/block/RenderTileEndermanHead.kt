@@ -1,9 +1,9 @@
 package chylex.hee.client.render.block
 import chylex.hee.client.render.util.GL
 import chylex.hee.client.util.MC
-import chylex.hee.system.Resource
 import chylex.hee.system.migration.forge.Side
 import chylex.hee.system.migration.forge.Sided
+import chylex.hee.system.util.facades.Resource
 import net.minecraft.client.model.ModelRenderer
 import net.minecraft.client.model.ModelSkeletonHead
 import net.minecraft.client.renderer.tileentity.TileEntityItemStackRenderer

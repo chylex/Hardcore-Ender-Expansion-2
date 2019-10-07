@@ -1,10 +1,10 @@
 package chylex.hee.game.mechanics.causatum
 import chylex.hee.game.mechanics.causatum.EnderCausatum.CausatumCapability.Provider
-import chylex.hee.system.Resource
 import chylex.hee.system.capability.CapabilityProvider
 import chylex.hee.system.capability.PlayerCapabilityHandler
 import chylex.hee.system.capability.PlayerCapabilityHandler.IPlayerPersistentCapability
 import chylex.hee.system.util.TagCompound
+import chylex.hee.system.util.facades.Resource
 import chylex.hee.system.util.getCap
 import chylex.hee.system.util.register
 import net.minecraft.entity.player.EntityPlayer

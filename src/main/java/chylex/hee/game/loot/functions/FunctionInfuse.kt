@@ -1,6 +1,6 @@
 package chylex.hee.game.loot.functions
 import chylex.hee.game.item.infusion.Infusion
-import chylex.hee.system.Resource
+import chylex.hee.system.util.facades.Resource
 import chylex.hee.system.util.removeItemOrNull
 import com.google.gson.JsonArray
 import com.google.gson.JsonDeserializationContext

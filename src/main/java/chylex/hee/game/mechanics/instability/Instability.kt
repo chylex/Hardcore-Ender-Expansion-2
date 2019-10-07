@@ -7,10 +7,10 @@ import chylex.hee.game.mechanics.instability.dimension.IDimensionInstability
 import chylex.hee.game.mechanics.instability.dimension.components.EndermiteSpawnLogicOverworld
 import chylex.hee.game.mechanics.instability.region.RegionInstability
 import chylex.hee.game.mechanics.instability.region.entry.types.Entry5x5
-import chylex.hee.system.Resource
 import chylex.hee.system.capability.CapabilityProvider
 import chylex.hee.system.migration.forge.SubscribeEvent
 import chylex.hee.system.util.TagCompound
+import chylex.hee.system.util.facades.Resource
 import chylex.hee.system.util.getCapOrNull
 import chylex.hee.system.util.register
 import net.minecraft.world.World

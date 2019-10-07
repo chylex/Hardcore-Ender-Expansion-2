@@ -1,9 +1,9 @@
 package chylex.hee.game.particle.util
 import chylex.hee.HEE
-import chylex.hee.system.Resource
 import chylex.hee.system.migration.forge.Side
 import chylex.hee.system.migration.forge.SubscribeAllEvents
 import chylex.hee.system.migration.forge.SubscribeEvent
+import chylex.hee.system.util.facades.Resource
 import net.minecraft.client.renderer.texture.TextureAtlasSprite
 import net.minecraftforge.client.event.TextureStitchEvent
 

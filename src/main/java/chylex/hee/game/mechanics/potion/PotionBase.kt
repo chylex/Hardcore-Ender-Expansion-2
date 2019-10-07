@@ -1,9 +1,9 @@
 package chylex.hee.game.mechanics.potion
 import chylex.hee.game.mechanics.potion.brewing.PotionBrewing
-import chylex.hee.system.Resource
 import chylex.hee.system.migration.forge.Side
 import chylex.hee.system.migration.forge.Sided
 import chylex.hee.system.util.color.IntColor
+import chylex.hee.system.util.facades.Resource
 import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.Gui
 import net.minecraft.potion.Potion

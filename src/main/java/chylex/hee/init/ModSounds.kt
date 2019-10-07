@@ -1,5 +1,5 @@
 package chylex.hee.init
-import chylex.hee.system.Resource
+import chylex.hee.system.util.facades.Resource
 import net.minecraft.util.SoundEvent
 
 object ModSounds{

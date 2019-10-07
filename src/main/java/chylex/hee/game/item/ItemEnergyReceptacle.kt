@@ -14,7 +14,6 @@ import chylex.hee.game.world.WorldProviderEndCustom
 import chylex.hee.game.world.territory.TerritoryInstance
 import chylex.hee.game.world.util.BlockEditor
 import chylex.hee.init.ModBlocks
-import chylex.hee.system.Resource
 import chylex.hee.system.migration.ActionResult.FAIL
 import chylex.hee.system.migration.ActionResult.SUCCESS
 import chylex.hee.system.migration.forge.Side
@@ -23,6 +22,7 @@ import chylex.hee.system.util.Pos
 import chylex.hee.system.util.TagCompound
 import chylex.hee.system.util.breakBlock
 import chylex.hee.system.util.color.IntColor.Companion.RGB
+import chylex.hee.system.util.facades.Resource
 import chylex.hee.system.util.getIntegerOrNull
 import chylex.hee.system.util.getTile
 import chylex.hee.system.util.hasKey

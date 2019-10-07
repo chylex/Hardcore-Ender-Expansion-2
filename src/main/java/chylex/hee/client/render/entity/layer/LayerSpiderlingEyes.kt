@@ -5,9 +5,9 @@ import chylex.hee.client.render.util.GL.DF_ONE
 import chylex.hee.client.render.util.GL.SF_ONE
 import chylex.hee.client.util.MC
 import chylex.hee.game.entity.living.EntityMobSpiderling
-import chylex.hee.system.Resource
 import chylex.hee.system.migration.forge.Side
 import chylex.hee.system.migration.forge.Sided
+import chylex.hee.system.util.facades.Resource
 import net.minecraft.client.model.ModelRenderer
 import net.minecraft.client.renderer.OpenGlHelper
 import net.minecraft.client.renderer.entity.layers.LayerRenderer

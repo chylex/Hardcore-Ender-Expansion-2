@@ -49,10 +49,10 @@ import chylex.hee.game.item.ItemPortalToken
 import chylex.hee.game.item.ItemVoidBucket
 import chylex.hee.game.item.ItemVoidSalad
 import chylex.hee.init.factory.RendererConstructors
-import chylex.hee.system.Resource
 import chylex.hee.system.migration.forge.Side
 import chylex.hee.system.migration.forge.SubscribeAllEvents
 import chylex.hee.system.migration.forge.SubscribeEvent
+import chylex.hee.system.util.facades.Resource
 import net.minecraft.block.Block
 import net.minecraft.client.renderer.block.model.ModelResourceLocation
 import net.minecraft.client.renderer.block.statemap.IStateMapper
@@ -200,7 +200,7 @@ object ModRendering{
 				*tables
 			).map(Item::getItemFromBlock).toSet()
 			
-			for(item in keys.filter { it.namespace == HEE.ID }.map(::getValue).requireNoNulls().filterNot(skippedBlocks::contains)){
+			for(item in keys.filter(Resource::isCustom).map(::getValue).requireNoNulls().filterNot(skippedBlocks::contains)){
 				setModel(item)
 			}
 		}

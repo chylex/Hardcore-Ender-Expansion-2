@@ -24,10 +24,10 @@ import chylex.hee.game.entity.technical.EntityTechnicalIgneousPlateLogic
 import chylex.hee.game.entity.technical.EntityTechnicalTrigger
 import chylex.hee.game.world.territory.TerritoryType
 import chylex.hee.init.factory.EntityConstructors
-import chylex.hee.system.Resource
 import chylex.hee.system.migration.forge.SubscribeAllEvents
 import chylex.hee.system.migration.forge.SubscribeEvent
 import chylex.hee.system.util.color.IntColor.Companion.RGB
+import chylex.hee.system.util.facades.Resource
 import net.minecraft.entity.Entity
 import net.minecraftforge.event.RegistryEvent
 import net.minecraftforge.fml.common.registry.EntityEntry

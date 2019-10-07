@@ -2,9 +2,9 @@ package chylex.hee.client.render.territory
 import chylex.hee.client.render.TerritoryRenderer
 import chylex.hee.client.render.territory.components.SkyCubeStatic
 import chylex.hee.client.render.util.GL
-import chylex.hee.system.Resource
 import chylex.hee.system.migration.forge.Side
 import chylex.hee.system.migration.forge.Sided
+import chylex.hee.system.util.facades.Resource
 import chylex.hee.system.util.remapRange
 import net.minecraft.client.Minecraft
 import net.minecraft.client.multiplayer.WorldClient

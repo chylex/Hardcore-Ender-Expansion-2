@@ -12,9 +12,9 @@ import chylex.hee.game.loot.functions.FunctionPickMusicDisk
 import chylex.hee.game.loot.functions.FunctionPickUndreadGem
 import chylex.hee.game.loot.rng.RandomBiasedValueRange
 import chylex.hee.game.loot.rng.RandomRoundingValueRange
-import chylex.hee.system.Resource
 import chylex.hee.system.migration.forge.SubscribeAllEvents
 import chylex.hee.system.migration.forge.SubscribeEvent
+import chylex.hee.system.util.facades.Resource
 import net.minecraft.util.ResourceLocation
 import net.minecraft.world.storage.loot.LootPool
 import net.minecraft.world.storage.loot.LootTable
@@ -93,7 +93,7 @@ object ModLoot{
 	@JvmStatic
 	@SubscribeEvent
 	fun onLootTableLoad(e: LootTableLoadEvent){
-		if (e.name.namespace == HEE.ID){
+		if (Resource.isCustom(e.name)){
 			val table = reconfigureLootTable(e.table)
 			
 			for(pool in table.pools){
