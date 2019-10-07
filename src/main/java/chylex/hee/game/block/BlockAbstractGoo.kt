@@ -11,6 +11,7 @@ import chylex.hee.system.util.FLAG_RENDER_IMMEDIATE
 import chylex.hee.system.util.FLAG_SYNC_CLIENT
 import chylex.hee.system.util.Pos
 import chylex.hee.system.util.allInBoxMutable
+import chylex.hee.system.util.facades.Stats
 import chylex.hee.system.util.get
 import chylex.hee.system.util.getLongOrNull
 import chylex.hee.system.util.getOrCreateCompound
@@ -25,7 +26,6 @@ import net.minecraft.entity.Entity
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.item.Item
 import net.minecraft.item.ItemStack
-import net.minecraft.stats.StatList
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.RayTraceResult.Type.BLOCK
 import net.minecraft.util.math.Vec3d
@@ -83,7 +83,7 @@ abstract class BlockAbstractGoo(private val fluid: FluidBase, material: Material
 			return
 		}
 		
-		player.addStat(StatList.getObjectUseStats(e.emptyBucket.item)!!)
+		player.addStat(Stats.useItem(e.emptyBucket.item))
 		// TODO sound effect?
 		
 		pos.setBlock(world, Blocks.AIR, FLAG_NOTIFY_NEIGHBORS or FLAG_SYNC_CLIENT or FLAG_RENDER_IMMEDIATE)

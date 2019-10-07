@@ -4,11 +4,11 @@ import chylex.hee.game.item.repair.RepairHandler
 import chylex.hee.game.item.repair.RepairInstance
 import chylex.hee.game.item.util.CustomToolMaterial
 import chylex.hee.system.util.color.IntColor.Companion.RGB
+import chylex.hee.system.util.facades.Stats
 import net.minecraft.entity.EntityLivingBase
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.item.ItemStack
 import net.minecraft.item.ItemTool
-import net.minecraft.stats.StatList
 import kotlin.math.min
 
 abstract class ItemAbstractVoidTool : ItemTool(CustomToolMaterial.VOID, emptySet()), ICustomRepairBehavior{
@@ -41,7 +41,7 @@ abstract class ItemAbstractVoidTool : ItemTool(CustomToolMaterial.VOID, emptySet
 		entity.renderBrokenItemStack(stack)
 		
 		if (entity is EntityPlayer){
-			entity.addStat(StatList.getObjectBreakStats(this)!!)
+			entity.addStat(Stats.breakItem(this))
 		}
 	}
 	

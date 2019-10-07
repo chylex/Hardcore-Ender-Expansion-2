@@ -8,6 +8,7 @@ import chylex.hee.system.migration.ActionResult.PASS
 import chylex.hee.system.migration.ActionResult.SUCCESS
 import chylex.hee.system.util.allInCenteredBox
 import chylex.hee.system.util.color.IntColor.Companion.RGB
+import chylex.hee.system.util.facades.Stats
 import chylex.hee.system.util.getBlock
 import chylex.hee.system.util.heeTag
 import chylex.hee.system.util.heeTagOrNull
@@ -23,7 +24,6 @@ import net.minecraft.entity.EntityLivingBase
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.init.Enchantments
 import net.minecraft.item.ItemStack
-import net.minecraft.stats.StatList
 import net.minecraft.util.ActionResult
 import net.minecraft.util.EnumHand
 import net.minecraft.util.math.BlockPos
@@ -130,7 +130,7 @@ class ItemVoidBucket : ItemAbstractVoidTool(){
 		// TODO sound
 		
 		player.cooldownTracker.setCooldown(this, 13)
-		player.addStat(StatList.getObjectUseStats(this)!!)
+		player.addStat(Stats.useItem(this))
 		
 		return ActionResult(SUCCESS, heldItem)
 	}

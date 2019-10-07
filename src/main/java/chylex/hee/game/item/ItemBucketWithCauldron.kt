@@ -4,6 +4,7 @@ import chylex.hee.system.migration.ActionResult.SUCCESS
 import chylex.hee.system.migration.vanilla.Blocks
 import chylex.hee.system.migration.vanilla.Items
 import chylex.hee.system.migration.vanilla.Sounds
+import chylex.hee.system.util.facades.Stats
 import chylex.hee.system.util.get
 import chylex.hee.system.util.getState
 import chylex.hee.system.util.playUniversal
@@ -14,7 +15,6 @@ import net.minecraft.block.BlockCauldron
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.item.ItemBucket
 import net.minecraft.item.ItemStack
-import net.minecraft.stats.StatList
 import net.minecraft.util.EnumActionResult
 import net.minecraft.util.EnumFacing
 import net.minecraft.util.EnumHand
@@ -30,7 +30,7 @@ open class ItemBucketWithCauldron(containedBlock: Block, private val cauldronBlo
 					player.setHeldItem(hand, ItemStack(Items.BUCKET))
 				}
 				
-				player.addStat(StatList.CAULDRON_FILLED)
+				player.addStat(Stats.CAULDRON_FILLED)
 				pos.setState(world, cauldronBlock.with(BlockCauldron.LEVEL, BlockAbstractCauldron.MAX_LEVEL))
 			}
 			

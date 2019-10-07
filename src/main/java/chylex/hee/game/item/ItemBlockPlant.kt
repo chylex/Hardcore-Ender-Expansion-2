@@ -1,12 +1,12 @@
 package chylex.hee.game.item
 import chylex.hee.game.block.BlockFlowerPotCustom
 import chylex.hee.system.migration.ActionResult.SUCCESS
+import chylex.hee.system.util.facades.Stats
 import chylex.hee.system.util.getTile
 import chylex.hee.system.util.setState
 import net.minecraft.block.Block
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.item.ItemStack
-import net.minecraft.stats.StatList
 import net.minecraft.tileentity.TileEntityFlowerPot
 import net.minecraft.util.EnumActionResult
 import net.minecraft.util.EnumFacing
@@ -28,7 +28,7 @@ class ItemBlockPlant(block: Block, private val potted: BlockFlowerPotCustom) : I
 			val heldItem = player.getHeldItem(hand)
 			
 			pos.setState(world, potted.getStateFromMeta(heldItem.metadata))
-			player.addStat(StatList.FLOWER_POTTED)
+			player.addStat(Stats.FLOWER_POTTED)
 			
 			heldItem.shrink(1)
 			return SUCCESS

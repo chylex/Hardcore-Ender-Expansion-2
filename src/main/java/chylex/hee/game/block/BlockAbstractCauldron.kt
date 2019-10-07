@@ -6,6 +6,7 @@ import chylex.hee.system.migration.vanilla.Blocks
 import chylex.hee.system.migration.vanilla.Items
 import chylex.hee.system.migration.vanilla.Sounds
 import chylex.hee.system.util.Pos
+import chylex.hee.system.util.facades.Stats
 import chylex.hee.system.util.get
 import chylex.hee.system.util.getBlock
 import chylex.hee.system.util.isNotEmpty
@@ -15,7 +16,6 @@ import net.minecraft.block.state.IBlockState
 import net.minecraft.entity.Entity
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.item.ItemStack
-import net.minecraft.stats.StatList
 import net.minecraft.util.EnumFacing
 import net.minecraft.util.EnumHand
 import net.minecraft.util.SoundCategory
@@ -77,7 +77,7 @@ abstract class BlockAbstractCauldron : BlockCauldron(){
 			
 			if (filledBucket != null && state[LEVEL] == MAX_LEVEL){
 				if (!world.isRemote){
-					player.addStat(StatList.CAULDRON_USED)
+					player.addStat(Stats.CAULDRON_USED)
 					useAndUpdateHeldItem(player, hand, filledBucket)
 					setWaterLevel(world, pos, state, 0)
 				}
@@ -92,7 +92,7 @@ abstract class BlockAbstractCauldron : BlockCauldron(){
 			
 			if (filledBottle != null && state[LEVEL] > 0){
 				if (!world.isRemote){
-					player.addStat(StatList.CAULDRON_USED)
+					player.addStat(Stats.CAULDRON_USED)
 					useAndUpdateHeldItem(player, hand, filledBottle)
 					setWaterLevel(world, pos, state, state[LEVEL] - 1)
 				}

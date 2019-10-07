@@ -9,6 +9,7 @@ import chylex.hee.system.capability.PlayerCapabilityHandler.IPlayerCapability
 import chylex.hee.system.migration.forge.EventPriority
 import chylex.hee.system.migration.forge.SubscribeEvent
 import chylex.hee.system.util.TagCompound
+import chylex.hee.system.util.facades.Stats
 import chylex.hee.system.util.getCapOrNull
 import chylex.hee.system.util.readStack
 import chylex.hee.system.util.register
@@ -16,7 +17,6 @@ import chylex.hee.system.util.writeStack
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.item.Item
 import net.minecraft.item.ItemStack
-import net.minecraft.stats.StatList
 import net.minecraftforge.common.MinecraftForge
 import net.minecraftforge.common.capabilities.Capability
 import net.minecraftforge.common.capabilities.CapabilityInject
@@ -52,7 +52,7 @@ object TrinketHandler{
 	}
 	
 	fun playTrinketBreakFX(player: EntityPlayer, item: Item){
-		player.addStat(StatList.getObjectUseStats(item)!!)
+		player.addStat(Stats.useItem(item))
 		PacketClientTrinketBreak(player, item).sendToAllAround(player, 32.0)
 	}
 	

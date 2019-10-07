@@ -7,6 +7,7 @@ import chylex.hee.system.migration.ActionResult.SUCCESS
 import chylex.hee.system.migration.forge.Side
 import chylex.hee.system.migration.forge.Sided
 import chylex.hee.system.migration.vanilla.Sounds
+import chylex.hee.system.util.facades.Stats
 import chylex.hee.system.util.nextFloat
 import chylex.hee.system.util.playServer
 import chylex.hee.system.util.posVec
@@ -14,7 +15,6 @@ import net.minecraft.client.util.ITooltipFlag
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.item.ItemEnderPearl
 import net.minecraft.item.ItemStack
-import net.minecraft.stats.StatList
 import net.minecraft.util.ActionResult
 import net.minecraft.util.EnumHand
 import net.minecraft.util.SoundCategory
@@ -39,7 +39,7 @@ class ItemInfusedEnderPearl : ItemEnderPearl(), IInfusableItem{
 		Sounds.ENTITY_ENDERPEARL_THROW.playServer(world, player.posVec, SoundCategory.NEUTRAL, volume = 0.5F, pitch = 0.4F / itemRand.nextFloat(0.8F, 1.2F))
 		
 		player.cooldownTracker.setCooldown(this, 20)
-		player.addStat(StatList.getObjectUseStats(this)!!)
+		player.addStat(Stats.useItem(this))
 		
 		return ActionResult(SUCCESS, heldItem)
 	}

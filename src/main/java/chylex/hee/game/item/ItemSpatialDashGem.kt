@@ -12,12 +12,12 @@ import chylex.hee.system.migration.ActionResult.FAIL
 import chylex.hee.system.migration.ActionResult.SUCCESS
 import chylex.hee.system.migration.forge.Side
 import chylex.hee.system.migration.forge.Sided
+import chylex.hee.system.util.facades.Stats
 import chylex.hee.system.util.floorToInt
 import chylex.hee.system.util.over
 import net.minecraft.client.util.ITooltipFlag
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.item.ItemStack
-import net.minecraft.stats.StatList
 import net.minecraft.util.ActionResult
 import net.minecraft.util.EnumHand
 import net.minecraft.world.World
@@ -67,7 +67,7 @@ class ItemSpatialDashGem : ItemAbstractEnergyUser(), IInfusableItem{
 		}
 		
 		player.cooldownTracker.setCooldown(this, 24)
-		player.addStat(StatList.getObjectUseStats(this)!!)
+		player.addStat(Stats.useItem(this))
 		
 		return ActionResult(SUCCESS, heldItem)
 	}

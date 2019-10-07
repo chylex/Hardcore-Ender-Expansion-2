@@ -5,13 +5,13 @@ import chylex.hee.game.world.util.PosXZ
 import chylex.hee.system.migration.ActionResult.PASS
 import chylex.hee.system.migration.ActionResult.SUCCESS
 import chylex.hee.system.migration.vanilla.Sounds
+import chylex.hee.system.util.facades.Stats
 import chylex.hee.system.util.nextFloat
 import chylex.hee.system.util.playServer
 import chylex.hee.system.util.posVec
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.item.ItemEnderEye
 import net.minecraft.item.ItemStack
-import net.minecraft.stats.StatList
 import net.minecraft.util.ActionResult
 import net.minecraft.util.EnumActionResult
 import net.minecraft.util.EnumFacing
@@ -50,7 +50,7 @@ class ItemEyeOfEnderOverride : ItemEnderEye(){
 			Sounds.ENTITY_ENDEREYE_LAUNCH.playServer(world, player.posVec, SoundCategory.NEUTRAL, volume = 0.5F, pitch = 0.4F / itemRand.nextFloat(0.8F, 1.2F))
 		}
 		
-		player.addStat(StatList.getObjectUseStats(this)!!)
+		player.addStat(Stats.useItem(this))
 		
 		return ActionResult(SUCCESS, heldItem)
 	}
