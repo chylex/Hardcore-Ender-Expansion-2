@@ -40,7 +40,7 @@ object ParticleGrowingSpot : IParticleMaker{
 			
 			particleScale = rand.nextFloat(0.25F, 0.35F)
 			
-			particleMaxAge = data[1]
+			maxAge = data[1]
 		}
 		
 		override fun onUpdate(){

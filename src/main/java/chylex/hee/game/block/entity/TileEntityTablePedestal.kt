@@ -36,6 +36,7 @@ import chylex.hee.system.util.nextFloat
 import chylex.hee.system.util.playClient
 import chylex.hee.system.util.posVec
 import chylex.hee.system.util.setPos
+import chylex.hee.system.util.totalTime
 import chylex.hee.system.util.updateState
 import chylex.hee.system.util.with
 import net.minecraft.block.state.IBlockState
@@ -139,7 +140,7 @@ class TileEntityTablePedestal : TileEntityBase(){
 	}
 	
 	private fun spawnSmokeParticles(){
-		val currentTime = world.totalWorldTime
+		val currentTime = world.totalTime
 		
 		if (lastSmokeTime != currentTime){
 			lastSmokeTime = currentTime
@@ -255,7 +256,7 @@ class TileEntityTablePedestal : TileEntityBase(){
 		
 		if (updateInputModCounter){
 			++inputModCounter
-			inputModTime = world.totalWorldTime
+			inputModTime = world.totalTime
 		}
 	}
 	

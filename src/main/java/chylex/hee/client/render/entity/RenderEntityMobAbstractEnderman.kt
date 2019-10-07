@@ -6,6 +6,7 @@ import chylex.hee.game.entity.living.EntityMobAbstractEnderman
 import chylex.hee.system.migration.forge.Side
 import chylex.hee.system.migration.forge.Sided
 import chylex.hee.system.util.nextFloat
+import chylex.hee.system.util.totalTime
 import net.minecraft.client.renderer.entity.RenderEnderman
 import net.minecraft.client.renderer.entity.RenderManager
 import net.minecraft.entity.monster.EntityEnderman
@@ -22,7 +23,7 @@ open class RenderEntityMobAbstractEnderman(manager: RenderManager) : RenderEnder
 		}
 		
 		if (entity.isShaking){
-			rand.setSeed(entity.world.totalWorldTime)
+			rand.setSeed(entity.world.totalTime)
 			super.doRender(entity, x + (rand.nextGaussian() * 0.01), y + (rand.nextGaussian() * 0.01), z + (rand.nextGaussian() * 0.01), rotationYaw, partialTicks)
 		}
 		else{
@@ -30,7 +31,7 @@ open class RenderEntityMobAbstractEnderman(manager: RenderManager) : RenderEnder
 		}
 		
 		if (entity.isAggressive){
-			rand.setSeed(entity.world.totalWorldTime * 2L / 3L)
+			rand.setSeed(entity.world.totalTime * 2L / 3L)
 			
 			val prevPrevYaw = entity.prevRotationYawHead
 			val prevYaw = entity.rotationYawHead

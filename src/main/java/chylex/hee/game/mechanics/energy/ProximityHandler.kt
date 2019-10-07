@@ -8,6 +8,7 @@ import chylex.hee.system.util.ceilToInt
 import chylex.hee.system.util.component1
 import chylex.hee.system.util.component2
 import chylex.hee.system.util.nextInt
+import chylex.hee.system.util.totalTime
 import net.minecraft.util.math.ChunkPos
 import net.minecraftforge.common.util.INBTSerializable
 import java.util.Random
@@ -80,7 +81,7 @@ class ProximityHandler(private val cluster: TileEntityEnergyCluster) : INBTSeria
 		
 		val world = cluster.world
 		
-		if (world.totalWorldTime % INSTABILITY_INTERVAL_TICKS == 0L){
+		if (world.totalTime % INSTABILITY_INTERVAL_TICKS == 0L){
 			val pos = cluster.pos
 			
 			with(Instability.get(world)){

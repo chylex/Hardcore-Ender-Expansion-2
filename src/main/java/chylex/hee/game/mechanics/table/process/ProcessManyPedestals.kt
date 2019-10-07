@@ -20,6 +20,7 @@ import chylex.hee.system.util.getPos
 import chylex.hee.system.util.getTile
 import chylex.hee.system.util.setLongArray
 import chylex.hee.system.util.setPos
+import chylex.hee.system.util.totalTime
 import net.minecraft.item.ItemStack
 import net.minecraft.util.math.BlockPos
 import net.minecraft.world.World
@@ -88,7 +89,7 @@ abstract class ProcessManyPedestals(private val world: World, pos: Array<BlockPo
 		
 		when(val state = currentState){
 			is Work -> {
-				if (tiles.any { world.totalWorldTime - it.inputModTime < 20L } || context.isPaused){
+				if (tiles.any { world.totalTime - it.inputModTime < 20L } || context.isPaused){
 					setStatusIndicator(tiles, PAUSED)
 				}
 				else{

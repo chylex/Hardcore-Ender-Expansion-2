@@ -4,6 +4,7 @@ import chylex.hee.system.util.directionTowards
 import chylex.hee.system.util.lookPosVec
 import chylex.hee.system.util.motionVec
 import chylex.hee.system.util.square
+import chylex.hee.system.util.totalTime
 
 sealed class EnderEyeAttack{
 	abstract val canTakeKnockback: Boolean
@@ -42,7 +43,7 @@ sealed class EnderEyeAttack{
 				}
 				
 				if (distSq < square(1.4)){
-					val currentTime = world.totalWorldTime
+					val currentTime = world.totalTime
 					
 					if (currentTime - lastAttackTime >= 20L){
 						lastAttackTime = currentTime

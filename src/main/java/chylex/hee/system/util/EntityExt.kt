@@ -18,6 +18,7 @@ import net.minecraft.entity.ai.EntityAINearestAttackableTarget
 import net.minecraft.entity.ai.EntityAISwimming
 import net.minecraft.entity.ai.EntityAIWatchClosest
 import net.minecraft.entity.ai.attributes.AttributeModifier
+import net.minecraft.entity.ai.attributes.IAttribute
 import net.minecraft.entity.ai.attributes.IAttributeInstance
 import net.minecraft.entity.item.EntityItem
 import net.minecraft.entity.player.EntityPlayer.PERSISTED_NBT_TAG
@@ -104,6 +105,15 @@ const val OPERATION_MUL_INCR_GROUPED = 1
 
 /** Performs operation: base * (1 + x) * (1 + y) */
 const val OPERATION_MUL_INCR_INDIVIDUAL = 2
+
+// Attributes (Renames)
+
+fun EntityLivingBase.getAttribute(attribute: IAttribute): IAttributeInstance{
+	return this.getEntityAttribute(attribute)
+}
+
+val IAttributeInstance.value
+	get() = this.attributeValue
 
 // Attributes (Helpers)
 

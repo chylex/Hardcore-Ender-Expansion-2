@@ -7,6 +7,7 @@ import chylex.hee.system.util.getState
 import chylex.hee.system.util.nextInt
 import chylex.hee.system.util.posVec
 import chylex.hee.system.util.square
+import chylex.hee.system.util.totalTime
 import net.minecraft.block.state.IBlockState
 import net.minecraft.entity.EntityCreature
 import net.minecraft.entity.ai.EntityAIBase
@@ -24,7 +25,7 @@ class AIPickUpBlock(
 		fun onBlockReached(state: IBlockState)
 	}
 	
-	private var timeOfNextAttempt = entity.world.totalWorldTime + entity.rng.nextInt(ticksPerAttempt / 2, ticksPerAttempt)
+	private var timeOfNextAttempt = entity.world.totalTime + entity.rng.nextInt(ticksPerAttempt / 2, ticksPerAttempt)
 	
 	private var targetNavPos: Vec3d? = null
 	private var targetBlockPos: BlockPos? = null
@@ -37,7 +38,7 @@ class AIPickUpBlock(
 		
 		val world = entity.world
 		
-		if (world.totalWorldTime < timeOfNextAttempt){
+		if (world.totalTime < timeOfNextAttempt){
 			return false
 		}
 		
@@ -84,7 +85,7 @@ class AIPickUpBlock(
 	}
 	
 	override fun resetTask(){
-		timeOfNextAttempt = entity.world.totalWorldTime + ticksPerAttempt
+		timeOfNextAttempt = entity.world.totalTime + ticksPerAttempt
 		targetBlockPos = null
 		targetBlockState = null
 	}

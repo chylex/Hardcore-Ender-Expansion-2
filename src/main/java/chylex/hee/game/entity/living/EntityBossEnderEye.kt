@@ -25,6 +25,7 @@ import chylex.hee.system.util.TagCompound
 import chylex.hee.system.util.Vec3
 import chylex.hee.system.util.directionTowards
 import chylex.hee.system.util.floorToInt
+import chylex.hee.system.util.getAttribute
 import chylex.hee.system.util.heeTag
 import chylex.hee.system.util.math.LerpedFloat
 import chylex.hee.system.util.motionVec
@@ -33,6 +34,7 @@ import chylex.hee.system.util.nextItemOrNull
 import chylex.hee.system.util.posVec
 import chylex.hee.system.util.scale
 import chylex.hee.system.util.selectVulnerableEntities
+import chylex.hee.system.util.value
 import chylex.hee.system.util.withY
 import net.minecraft.block.material.EnumPushReaction
 import net.minecraft.entity.Entity
@@ -129,16 +131,16 @@ class EntityBossEnderEye(world: World) : EntityFlying(world), IMob{
 		attributeMap.registerAttribute(ATTACK_DAMAGE)
 		attributeMap.registerAttribute(FLYING_SPEED)
 		
-		getEntityAttribute(MAX_HEALTH).baseValue = 300.0
-		getEntityAttribute(ATTACK_DAMAGE).baseValue = 4.0
-		getEntityAttribute(FLYING_SPEED).baseValue = 0.0925
-		getEntityAttribute(FOLLOW_RANGE).baseValue = 16.0
+		getAttribute(MAX_HEALTH).baseValue = 300.0
+		getAttribute(ATTACK_DAMAGE).baseValue = 4.0
+		getAttribute(FLYING_SPEED).baseValue = 0.0925
+		getAttribute(FOLLOW_RANGE).baseValue = 16.0
 		
 		experienceValue = 50
 	}
 	
 	private fun updateDemonLevelAttributes(){
-		getEntityAttribute(ATTACK_DAMAGE).baseValue = 4.0 * damageMultiplier
+		getAttribute(ATTACK_DAMAGE).baseValue = 4.0 * damageMultiplier
 		experienceValue = (50 * experienceMultiplier).floorToInt()
 	}
 	
@@ -240,7 +242,7 @@ class EntityBossEnderEye(world: World) : EntityFlying(world), IMob{
 			return attacker
 		}
 		
-		val range = getEntityAttribute(FOLLOW_RANGE).attributeValue
+		val range = getAttribute(FOLLOW_RANGE).value
 		val targets = world.selectVulnerableEntities.inRange<EntityPlayer>(posVec, range).filter(::canEntityBeSeen)
 		
 		return rng.nextItemOrNull(targets).also { attackTarget = it }

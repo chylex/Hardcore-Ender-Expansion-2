@@ -23,6 +23,7 @@ import chylex.hee.system.util.get
 import chylex.hee.system.util.nextInt
 import chylex.hee.system.util.nextItemOrNull
 import chylex.hee.system.util.setState
+import chylex.hee.system.util.totalTime
 import chylex.hee.system.util.with
 import net.minecraft.block.state.IBlockState
 import net.minecraft.entity.Entity
@@ -72,7 +73,7 @@ open class BlockEnderGooPurified : BlockAbstractGoo(FluidEnderGooPurified, Mater
 		// Status effects
 		
 		private fun updateGooEffects(entity: EntityLivingBase, totalTicks: Int){
-			val currentTime = entity.world.totalWorldTime
+			val currentTime = entity.world.totalTime
 			val rand = entity.rng
 			
 			if (totalTicks > 25 && currentTime % 40L == 0L){

@@ -38,6 +38,7 @@ import chylex.hee.system.util.over
 import chylex.hee.system.util.setLongArray
 import chylex.hee.system.util.setPos
 import chylex.hee.system.util.toDegrees
+import chylex.hee.system.util.totalTime
 import it.unimi.dsi.fastutil.longs.LongAVLTreeSet
 import it.unimi.dsi.fastutil.longs.LongArrayList
 import it.unimi.dsi.fastutil.longs.LongCollection
@@ -186,7 +187,7 @@ class ItemEnergyOracle : ItemAbstractEnergyUser(), IInfusableItem{
 		}
 		
 		val tag = stack.heeTag
-		val currentTime = world.totalWorldTime
+		val currentTime = world.totalTime
 		
 		// unique identifier
 		

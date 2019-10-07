@@ -49,7 +49,7 @@ object ParticleEnergyTransferToPlayer : IParticleMaker{
 		init{
 			if (unsafeData.size < 4){
 				particleAlpha = 0F
-				particleMaxAge = 0
+				maxAge = 0
 				
 				speed = 0.0
 				player = WeakReference(null)
@@ -75,7 +75,7 @@ object ParticleEnergyTransferToPlayer : IParticleMaker{
 			
 			newTargetPos = ModelHelper.getHandPosition(player, if (player.getHeldItem(MAIN_HAND).item is ItemAbstractEnergyUser) MAIN_HAND else OFF_HAND)
 			
-			setupMotion(speed + (particleAge * 0.005))
+			setupMotion(speed + (age * 0.005))
 			super.onUpdate()
 		}
 	}

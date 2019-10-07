@@ -8,12 +8,15 @@ import chylex.hee.system.migration.forge.EventPriority
 import chylex.hee.system.migration.forge.Side
 import chylex.hee.system.migration.forge.Sided
 import chylex.hee.system.migration.forge.SubscribeEvent
+import chylex.hee.system.util.getAttribute
 import chylex.hee.system.util.hasKey
 import chylex.hee.system.util.heeTag
 import chylex.hee.system.util.heeTagOrNull
 import chylex.hee.system.util.playClient
 import chylex.hee.system.util.posVec
 import chylex.hee.system.util.selectExistingEntities
+import chylex.hee.system.util.totalTime
+import chylex.hee.system.util.value
 import net.minecraft.entity.Entity
 import net.minecraft.entity.EntityLivingBase
 import net.minecraft.entity.passive.EntityVillager
@@ -87,11 +90,11 @@ class ItemTotemOfUndyingCustom : ItemAbstractTrinket(){
 	// Villager logic
 	
 	override fun onUpdate(stack: ItemStack, world: World, entity: Entity, itemSlot: Int, isSelected: Boolean){
-		if (world.isRemote || world.totalWorldTime % 10L != 0L || canPlaceIntoTrinketSlot(stack) || entity !is EntityPlayer){
+		if (world.isRemote || world.totalTime % 10L != 0L || canPlaceIntoTrinketSlot(stack) || entity !is EntityPlayer){
 			return
 		}
 		
-		val isNearVillager = world.selectExistingEntities.inRange<EntityVillager>(entity.posVec, entity.getEntityAttribute(REACH_DISTANCE).attributeValue).isNotEmpty()
+		val isNearVillager = world.selectExistingEntities.inRange<EntityVillager>(entity.posVec, entity.getAttribute(REACH_DISTANCE).value).isNotEmpty()
 		val wasNearVillager = stack.heeTagOrNull.hasKey(SHAKING_TAG)
 		
 		if (isNearVillager && !wasNearVillager){

@@ -2,6 +2,7 @@ package chylex.hee.game.entity.living.behavior
 import chylex.hee.game.entity.living.EntityMobAbstractEnderman
 import chylex.hee.system.util.OPERATION_MUL_INCR_INDIVIDUAL
 import chylex.hee.system.util.TagCompound
+import chylex.hee.system.util.getAttribute
 import chylex.hee.system.util.nextInt
 import chylex.hee.system.util.tryApplyModifier
 import chylex.hee.system.util.tryRemoveModifier
@@ -49,11 +50,11 @@ class EndermanWaterHandler(private val enderman: EntityMobAbstractEnderman): ITi
 	private fun updateDebuff(){
 		if (debuffTicks > 0){
 			enderman.isShaking = true
-			enderman.getEntityAttribute(ATTACK_DAMAGE).tryApplyModifier(DEBUFF_WEAKNESS)
+			enderman.getAttribute(ATTACK_DAMAGE).tryApplyModifier(DEBUFF_WEAKNESS)
 		}
 		else{
 			enderman.isShaking = false
-			enderman.getEntityAttribute(ATTACK_DAMAGE).tryRemoveModifier(DEBUFF_WEAKNESS)
+			enderman.getAttribute(ATTACK_DAMAGE).tryRemoveModifier(DEBUFF_WEAKNESS)
 		}
 	}
 	

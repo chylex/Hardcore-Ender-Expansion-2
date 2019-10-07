@@ -13,6 +13,7 @@ import chylex.hee.system.util.AISwim
 import chylex.hee.system.util.AITargetAttacker
 import chylex.hee.system.util.AITargetNearby
 import chylex.hee.system.util.TagCompound
+import chylex.hee.system.util.getAttribute
 import chylex.hee.system.util.heeTag
 import chylex.hee.system.util.square
 import net.minecraft.entity.Entity
@@ -39,8 +40,8 @@ open class EntityMobEndermite(world: World) : EntityEndermite(world){
 	override fun applyEntityAttributes(){
 		super.applyEntityAttributes()
 		
-		getEntityAttribute(MAX_HEALTH).baseValue = 8.0
-		getEntityAttribute(ATTACK_DAMAGE).baseValue = 2.0
+		getAttribute(MAX_HEALTH).baseValue = 8.0
+		getAttribute(ATTACK_DAMAGE).baseValue = 2.0
 		
 		experienceValue = 3
 	}

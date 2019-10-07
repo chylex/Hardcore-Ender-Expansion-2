@@ -11,6 +11,7 @@ import chylex.hee.system.util.component3
 import chylex.hee.system.util.delegate.NotifyOnChange
 import chylex.hee.system.util.floorToInt
 import chylex.hee.system.util.nextFloat
+import chylex.hee.system.util.totalTime
 import net.minecraft.entity.item.EntityItem
 import net.minecraft.item.ItemStack
 import net.minecraftforge.common.util.INBTSerializable
@@ -44,7 +45,7 @@ class RevitalizationHandler(private val cluster: TileEntityEnergyCluster) : INBT
 			return
 		}
 		
-		val currentTime = cluster.world.totalWorldTime
+		val currentTime = cluster.world.totalTime
 		val timeDiff = currentTime - lastDrainTime
 		
 		if (timeDiff < DRAIN_RATE_TICKS){
@@ -111,7 +112,7 @@ class RevitalizationHandler(private val cluster: TileEntityEnergyCluster) : INBT
 			val durationTicks = 20F * (50F + (30F * sqrt(capacityUnits))) / (0.25F + (0.75F * cluster.currentHealth.regenAmountMp))
 			val toDrain = cluster.energyBaseCapacity * 0.5F
 			
-			lastDrainTime = cluster.world.totalWorldTime
+			lastDrainTime = cluster.world.totalTime
 			drainAmount = maxOf(Internal(1), toDrain * (DRAIN_RATE_TICKS / durationTicks)).internal
 			drainTarget = maxOf(Units(0), cluster.energyLevel - toDrain).units
 			return true

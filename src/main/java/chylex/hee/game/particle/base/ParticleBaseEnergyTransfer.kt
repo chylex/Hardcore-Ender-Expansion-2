@@ -9,7 +9,7 @@ abstract class ParticleBaseEnergyTransfer(world: World, posX: Double, posY: Doub
 	protected abstract val targetPos: Vec3d
 	
 	init{
-		particleMaxAge = 200
+		maxAge = 200
 	}
 	
 	protected fun setupMotion(speed: Double){

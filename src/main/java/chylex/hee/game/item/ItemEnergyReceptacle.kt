@@ -28,6 +28,7 @@ import chylex.hee.system.util.getTile
 import chylex.hee.system.util.hasKey
 import chylex.hee.system.util.heeTag
 import chylex.hee.system.util.heeTagOrNull
+import chylex.hee.system.util.totalTime
 import net.minecraft.client.renderer.color.IItemColor
 import net.minecraft.client.resources.I18n
 import net.minecraft.client.util.ITooltipFlag
@@ -149,7 +150,7 @@ class ItemEnergyReceptacle : ItemAbstractInfusable(){
 					
 					setTag(CLUSTER_SNAPSHOT_TAG, cluster.getClusterSnapshot().tag)
 					
-					setLong(UPDATE_TIME_TAG, world.totalWorldTime)
+					setLong(UPDATE_TIME_TAG, world.totalTime)
 					setInteger(RENDER_COLOR_TAG, cluster.color.primary(75F, 80F).i)
 					
 					setInteger(INITIAL_LEVEL_TAG, cluster.energyLevel.internal.value)
@@ -181,7 +182,7 @@ class ItemEnergyReceptacle : ItemAbstractInfusable(){
 				return
 			}
 			
-			val currentTime = world.totalWorldTime
+			val currentTime = world.totalTime
 			val ticksElapsed = currentTime - getLong(UPDATE_TIME_TAG)
 			
 			if (ticksElapsed < ENERGY_LOSS_TICK_RATE){
@@ -215,7 +216,7 @@ class ItemEnergyReceptacle : ItemAbstractInfusable(){
 			}
 			else{
 				val snapshot = ClusterSnapshot(tag.getCompoundTag(CLUSTER_SNAPSHOT_TAG))
-				val level = calculateNewEnergyLevel(snapshot, world.totalWorldTime - tag.getLong(UPDATE_TIME_TAG), InfusionTag.getList(stack))
+				val level = calculateNewEnergyLevel(snapshot, world.totalTime - tag.getLong(UPDATE_TIME_TAG), InfusionTag.getList(stack))
 				
 				lines.add(I18n.format("item.hee.energy_receptacle.tooltip.holding", level.displayString))
 			}

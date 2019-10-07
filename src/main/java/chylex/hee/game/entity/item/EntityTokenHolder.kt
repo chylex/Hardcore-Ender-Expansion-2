@@ -18,6 +18,7 @@ import chylex.hee.system.util.motionVec
 import chylex.hee.system.util.posVec
 import chylex.hee.system.util.setEnum
 import chylex.hee.system.util.square
+import chylex.hee.system.util.totalTime
 import chylex.hee.system.util.use
 import io.netty.buffer.ByteBuf
 import net.minecraft.entity.Entity
@@ -42,7 +43,7 @@ class EntityTokenHolder(world: World) : Entity(world), IEntityAdditionalSpawnDat
 		private val DATA_CHARGE = EntityData.register<EntityTokenHolder, Float>(DataSerializers.FLOAT)
 	}
 	
-	val renderRotation = LerpedFloat(world.totalWorldTime * 3F)
+	val renderRotation = LerpedFloat(world.totalTime * 3F)
 	val renderCharge = LerpedFloat(1F)
 	
 	var tokenType = TokenType.NORMAL
@@ -79,7 +80,7 @@ class EntityTokenHolder(world: World) : Entity(world), IEntityAdditionalSpawnDat
 		super.onUpdate()
 		
 		if (world.isRemote){
-			renderRotation.update(world.totalWorldTime * 3F)
+			renderRotation.update(world.totalTime * 3F)
 			renderCharge.update(currentCharge)
 		}
 		else{

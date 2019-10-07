@@ -41,7 +41,7 @@ object ParticleVoid : IParticleMaker{
 			
 			particleScale = rand.nextFloat(0.25F, 0.4F)
 			
-			particleMaxAge = (30F / rand.nextFloat(0.3F, 1F)).ceilToInt()
+			maxAge = (30F / rand.nextFloat(0.3F, 1F)).ceilToInt()
 			
 			motionVec = Vec3d(
 				rand.nextFloat(-1.0, 1.0),
@@ -70,7 +70,7 @@ object ParticleVoid : IParticleMaker{
 			
 			motionVec = motionVec.scale(0.996)
 			
-			if (particleAge >= particleMaxAge - 3){
+			if (age >= maxAge - 3){
 				particleAlpha = max(0F, particleAlpha - 0.25F)
 			}
 			else{

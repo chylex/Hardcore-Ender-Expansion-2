@@ -12,6 +12,7 @@ import chylex.hee.system.util.AISwim
 import chylex.hee.system.util.AITargetAttacker
 import chylex.hee.system.util.AITargetNearby
 import chylex.hee.system.util.AIWatchIdle
+import chylex.hee.system.util.getAttribute
 import chylex.hee.system.util.nextFloat
 import chylex.hee.system.util.square
 import net.minecraft.block.Block
@@ -45,10 +46,10 @@ class EntityMobUndread(world: World) : EntityMob(world){
 	override fun applyEntityAttributes(){
 		super.applyEntityAttributes()
 		
-		getEntityAttribute(MAX_HEALTH).baseValue = 12.0
-		getEntityAttribute(ATTACK_DAMAGE).baseValue = 4.0
-		getEntityAttribute(MOVEMENT_SPEED).baseValue = 0.18
-		getEntityAttribute(FOLLOW_RANGE).baseValue = 24.0
+		getAttribute(MAX_HEALTH).baseValue = 12.0
+		getAttribute(ATTACK_DAMAGE).baseValue = 4.0
+		getAttribute(MOVEMENT_SPEED).baseValue = 0.18
+		getAttribute(FOLLOW_RANGE).baseValue = 24.0
 		
 		experienceValue = 5
 	}

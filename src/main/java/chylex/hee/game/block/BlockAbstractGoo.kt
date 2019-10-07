@@ -16,6 +16,7 @@ import chylex.hee.system.util.getOrCreateCompound
 import chylex.hee.system.util.getState
 import chylex.hee.system.util.heeTag
 import chylex.hee.system.util.setBlock
+import chylex.hee.system.util.totalTime
 import net.minecraft.block.material.MapColor
 import net.minecraft.block.material.Material
 import net.minecraft.block.state.IBlockState
@@ -98,7 +99,7 @@ abstract class BlockAbstractGoo(private val fluid: FluidBase, material: Material
 		 * it is enough to compare if either the world time or the entity has changed since last call (on the same thread)
 		 */
 		
-		val currentWorldTime = world.totalWorldTime
+		val currentWorldTime = world.totalTime
 		
 		if (lastCollidingEntity.get()?.takeUnless { it.first != currentWorldTime || it.second != entity.uniqueID } == null){
 			lastCollidingEntity.set(Pair(currentWorldTime, entity.uniqueID))
@@ -132,7 +133,7 @@ abstract class BlockAbstractGoo(private val fluid: FluidBase, material: Material
 	
 	protected fun trackTick(entity: Entity, maxTicks: Int): Int{
 		val world = entity.world
-		val currentWorldTime = world.totalWorldTime
+		val currentWorldTime = world.totalTime
 		
 		with(entity.heeTag.getOrCreateCompound(tickTrackingKey)){
 			val lastWorldTime = getLongOrNull(LAST_TIME_TAG) ?: (currentWorldTime - 1)

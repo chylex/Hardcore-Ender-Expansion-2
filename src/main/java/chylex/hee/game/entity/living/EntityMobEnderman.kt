@@ -27,6 +27,7 @@ import chylex.hee.system.util.AITargetEyeContact
 import chylex.hee.system.util.AIWatchIdle
 import chylex.hee.system.util.Pos
 import chylex.hee.system.util.TagCompound
+import chylex.hee.system.util.getAttribute
 import chylex.hee.system.util.heeTag
 import chylex.hee.system.util.nextFloat
 import chylex.hee.system.util.nextInt
@@ -188,9 +189,9 @@ class EntityMobEnderman(world: World) : EntityMobAbstractEnderman(world){
 	override fun applyEntityAttributes(){
 		super.applyEntityAttributes()
 		
-		getEntityAttribute(MAX_HEALTH).baseValue = 40.0
-		getEntityAttribute(ATTACK_DAMAGE).baseValue = 5.0
-		getEntityAttribute(FOLLOW_RANGE).baseValue = 64.0
+		getAttribute(MAX_HEALTH).baseValue = 40.0
+		getAttribute(ATTACK_DAMAGE).baseValue = 5.0
+		getAttribute(FOLLOW_RANGE).baseValue = 64.0
 		
 		experienceValue = 10
 	}

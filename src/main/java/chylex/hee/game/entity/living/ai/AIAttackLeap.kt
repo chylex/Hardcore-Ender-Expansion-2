@@ -6,6 +6,7 @@ import chylex.hee.system.util.Vec3
 import chylex.hee.system.util.directionTowards
 import chylex.hee.system.util.nextFloat
 import chylex.hee.system.util.square
+import chylex.hee.system.util.totalTime
 import net.minecraft.entity.EntityCreature
 import net.minecraft.entity.EntityLivingBase
 import net.minecraft.entity.ai.EntityAIBase
@@ -34,7 +35,7 @@ class AIAttackLeap(
 		}
 		
 		val target = entity.attackTarget ?: return false
-		val currentTime = entity.world.totalWorldTime
+		val currentTime = entity.world.totalTime
 		
 		if (currentTime - lastLeapTime < triggerCooldown){
 			return false
@@ -69,7 +70,7 @@ class AIAttackLeap(
 		entity.motionZ += (diff.z * strengthXZ) + (entity.motionZ * 0.1)
 		entity.motionY = strengthY
 		
-		lastLeapTime = entity.world.totalWorldTime
+		lastLeapTime = entity.world.totalTime
 	}
 	
 	override fun updateTask(){

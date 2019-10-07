@@ -18,6 +18,7 @@ import chylex.hee.system.util.nextFloat
 import chylex.hee.system.util.playClient
 import chylex.hee.system.util.readPos
 import chylex.hee.system.util.selectVulnerableEntities
+import chylex.hee.system.util.totalTime
 import chylex.hee.system.util.use
 import chylex.hee.system.util.writePos
 import io.netty.buffer.ByteBuf
@@ -68,7 +69,7 @@ class EntityFallingObsidian : EntityFallingBlockHeavy{
 		if (!world.isRemote && pos != lastFallPos){
 			if (pos.y < lastFallPos.y && fallDistance >= 1F){
 				val damageAmount = 5F * (ln(2F * (1.2F + fallDistance)) - 1F).pow(1.8F)
-				val worldTime = world.totalWorldTime
+				val worldTime = world.totalTime
 				
 				for(entity in world.selectVulnerableEntities.inBox<EntityLivingBase>(entityBoundingBox)){
 					val uuid = entity.uniqueID

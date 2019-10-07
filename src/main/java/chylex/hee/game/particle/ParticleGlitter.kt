@@ -44,13 +44,13 @@ object ParticleGlitter : IParticleMaker{
 			
 			particleScale = rand.nextFloat(0.35F, 0.5F)
 			
-			particleMaxAge = (4F / rand.nextFloat(0.1F, 1F)).toInt() * rand.nextInt(data[1], data[2])
+			maxAge = (4F / rand.nextFloat(0.1F, 1F)).toInt() * rand.nextInt(data[1], data[2])
 		}
 		
 		override fun onUpdate(){
 			super.onUpdate()
 			
-			if (particleAge < (particleMaxAge * 3) / 4 && rand.nextInt(5) == 0){
+			if (age < (maxAge * 3) / 4 && rand.nextInt(5) == 0){
 				particleAlpha = rand.nextFloat(0.5F, 1F)
 			}
 			

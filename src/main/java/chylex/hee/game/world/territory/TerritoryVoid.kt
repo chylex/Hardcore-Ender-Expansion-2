@@ -22,6 +22,7 @@ import chylex.hee.system.util.nextFloat
 import chylex.hee.system.util.posVec
 import chylex.hee.system.util.remapRange
 import chylex.hee.system.util.square
+import chylex.hee.system.util.totalTime
 import net.minecraft.entity.Entity
 import net.minecraft.entity.EntityLivingBase
 import net.minecraft.util.DamageSource
@@ -110,7 +111,7 @@ object TerritoryVoid{
 	private val DAMAGE = Damage(DEAL_CREATIVE, IGNORE_INVINCIBILITY())
 	
 	fun onWorldTick(world: World){
-		if (world.totalWorldTime % 3L != 0L){
+		if (world.totalTime % 3L != 0L){
 			return
 		}
 		
@@ -134,7 +135,7 @@ object TerritoryVoid{
 			}
 			
 			with(entity.heeTag){
-				val currentTime = world.totalWorldTime
+				val currentTime = world.totalTime
 				val nextDamageTime = getLong(PLAYER_NEXT_DAMAGE_TIME_TAG)
 				
 				if (currentTime >= nextDamageTime){

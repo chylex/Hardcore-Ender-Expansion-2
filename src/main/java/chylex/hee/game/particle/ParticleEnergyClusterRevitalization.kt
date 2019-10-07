@@ -43,12 +43,12 @@ object ParticleEnergyClusterRevitalization : IParticleMaker{
 			particleBlue = 1F
 			particleAlpha = 0F
 			
-			particleMaxAge = TOTAL_LIFESPAN
+			maxAge = TOTAL_LIFESPAN
 			
 			val cluster = clusterPos.getTile<TileEntityEnergyCluster>(world)
 			
 			if (cluster == null){
-				particleAge = particleMaxAge
+				age = maxAge
 				
 				isRevitalizing = false
 				targetDistance = 0.0
@@ -65,11 +65,11 @@ object ParticleEnergyClusterRevitalization : IParticleMaker{
 		
 		override fun onUpdate(){
 			if ((clusterPos.getTile<TileEntityEnergyCluster>(world)?.clientOrbitingOrbs ?: 0) == 0.toByte()){
-				if (particleAge < TOTAL_LIFESPAN - FADE_OUT_DURATION){
-					particleAge = TOTAL_LIFESPAN - FADE_OUT_DURATION
+				if (age < TOTAL_LIFESPAN - FADE_OUT_DURATION){
+					age = TOTAL_LIFESPAN - FADE_OUT_DURATION
 				}
 				
-				particleAge += 3
+				age += 3
 			}
 			
 			super.onUpdate()
@@ -78,8 +78,8 @@ object ParticleEnergyClusterRevitalization : IParticleMaker{
 			val posVec = Vec3d(posX, posY, posZ)
 			val newPos: Vec3d
 			
-			if (isRevitalizing && particleAge > TOTAL_LIFESPAN - FADE_OUT_DURATION){
-				newPos = posVec.offsetTowards(clusterPos.center, 1.0 - (TOTAL_LIFESPAN - particleAge).toDouble() / TOTAL_LIFESPAN)
+			if (isRevitalizing && age > TOTAL_LIFESPAN - FADE_OUT_DURATION){
+				newPos = posVec.offsetTowards(clusterPos.center, 1.0 - (TOTAL_LIFESPAN - age).toDouble() / TOTAL_LIFESPAN)
 			}
 			else{
 				motionTarget = motionTarget.offsetTowards(motionOffset, 0.1).normalize()

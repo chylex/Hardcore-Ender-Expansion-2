@@ -19,6 +19,7 @@ import chylex.hee.system.util.getBlock
 import chylex.hee.system.util.getTile
 import chylex.hee.system.util.nextFloat
 import chylex.hee.system.util.readPos
+import chylex.hee.system.util.totalTime
 import chylex.hee.system.util.use
 import chylex.hee.system.util.writePos
 import io.netty.buffer.ByteBuf
@@ -109,7 +110,7 @@ class TableParticleHandler(private val table: TileEntityBaseTable){
 	
 	fun tick(processTickRate: Int){
 		val particleRate = getParticleRate(processTickRate)
-		val modTick = table.world.totalWorldTime % particleRate
+		val modTick = table.world.totalTime % particleRate
 		
 		if (modTick == 0L){
 			lastDrainedCluster?.let {

@@ -21,6 +21,7 @@ import chylex.hee.system.util.selectEntities
 import chylex.hee.system.util.setBlock
 import chylex.hee.system.util.setState
 import chylex.hee.system.util.size
+import chylex.hee.system.util.totalTime
 import chylex.hee.system.util.with
 import net.minecraft.block.BlockCauldron.LEVEL
 import net.minecraft.entity.Entity
@@ -75,7 +76,7 @@ class EntityItemCauldronTrigger : EntityItem{
 	override fun onUpdate(){
 		super.onUpdate()
 		
-		if (!world.isRemote && world.totalWorldTime % 5L == 0L){
+		if (!world.isRemote && world.totalTime % 5L == 0L){
 			val pos = Pos(this)
 			val state = pos.getState(world)
 			val block = state.block

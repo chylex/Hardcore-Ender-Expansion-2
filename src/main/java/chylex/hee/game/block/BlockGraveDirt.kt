@@ -22,6 +22,7 @@ import chylex.hee.system.util.playServer
 import chylex.hee.system.util.posVec
 import chylex.hee.system.util.setState
 import chylex.hee.system.util.toYaw
+import chylex.hee.system.util.totalTime
 import chylex.hee.system.util.with
 import net.minecraft.block.Block
 import net.minecraft.block.BlockDirt
@@ -140,11 +141,11 @@ class BlockGraveDirt(builder: BlockBuilder) : BlockSimpleShaped(builder, AxisAli
 	
 	@Sided(Side.CLIENT)
 	override fun randomDisplayTick(state: IBlockState, world: World, pos: BlockPos, rand: Random){
-		if (state[TYPE] == SPIDERLING && world.difficulty != PEACEFUL && world.totalWorldTime - clientLastSpiderlingSound > 35L){
+		if (state[TYPE] == SPIDERLING && world.difficulty != PEACEFUL && world.totalTime - clientLastSpiderlingSound > 35L){
 			val distanceSq = MC.player?.getDistanceSqToCenter(pos) ?: 0.0
 			
 			if (rand.nextInt(3 + (distanceSq.floorToInt() / 5)) == 0){
-				clientLastSpiderlingSound = world.totalWorldTime
+				clientLastSpiderlingSound = world.totalTime
 				
 				makeSpiderling(world, pos, yaw = 0F).apply {
 					ambientSound.playClient(pos, soundCategory, volume = 0.35F, pitch = rand.nextFloat(0.4F, 0.6F))

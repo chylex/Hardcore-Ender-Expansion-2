@@ -47,11 +47,11 @@ object ParticleTeleport : IParticleMaker{
 			particleGreen = particleBlue * 0.3F
 			particleRed = particleBlue * 0.9F
 			
-			particleMaxAge = rand.nextInt(data[0], data[1])
+			maxAge = rand.nextInt(data[0], data[1])
 		}
 		
 		override fun renderParticle(buffer: BufferBuilder, entity: Entity, partialTicks: Float, rotationX: Float, rotationZ: Float, rotationYZ: Float, rotationXY: Float, rotationXZ: Float){
-			particleScale = initialScale * (1F - (particleAge + partialTicks) / (particleMaxAge + 1F))
+			particleScale = initialScale * (1F - (age + partialTicks) / (maxAge + 1F))
 			super.renderParticle(buffer, entity, partialTicks, rotationX, rotationZ, rotationYZ, rotationXY, rotationXZ)
 		}
 	}

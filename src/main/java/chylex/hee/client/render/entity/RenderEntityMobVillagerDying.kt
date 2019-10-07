@@ -3,6 +3,7 @@ import chylex.hee.client.render.util.GL
 import chylex.hee.game.entity.living.EntityMobVillagerDying
 import chylex.hee.system.migration.forge.Side
 import chylex.hee.system.migration.forge.Sided
+import chylex.hee.system.util.totalTime
 import net.minecraft.client.model.ModelVillager
 import net.minecraft.client.renderer.entity.RenderLiving
 import net.minecraft.client.renderer.entity.RenderManager
@@ -15,7 +16,7 @@ class RenderEntityMobVillagerDying(manager: RenderManager) : RenderLiving<Entity
 	private val rand = Random()
 	
 	override fun doRender(entity: EntityMobVillagerDying, x: Double, y: Double, z: Double, rotationYaw: Float, partialTicks: Float){
-		rand.setSeed(entity.world.totalWorldTime)
+		rand.setSeed(entity.world.totalTime)
 		
 		val mp = min(1F, entity.deathTime / 50F) * 0.005F
 		super.doRender(entity, x + (rand.nextGaussian() * mp), y + (rand.nextGaussian() * mp), z + (rand.nextGaussian() * mp), rotationYaw, partialTicks)

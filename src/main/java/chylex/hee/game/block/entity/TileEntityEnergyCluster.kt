@@ -37,6 +37,7 @@ import chylex.hee.system.util.isAir
 import chylex.hee.system.util.isAnyPlayerWithinRange
 import chylex.hee.system.util.nextFloat
 import chylex.hee.system.util.nextInt
+import chylex.hee.system.util.totalTime
 import net.minecraft.util.ITickable
 import net.minecraft.util.math.BlockPos
 import kotlin.math.max
@@ -96,7 +97,7 @@ class TileEntityEnergyCluster : TileEntityBase(), ITickable{
 		get() = proximityHandler.affectedByProximity
 	
 	val wasUsedRecently
-		get() = world.totalWorldTime - lastUseTick < 20L
+		get() = world.totalTime - lastUseTick < 20L
 	
 	// Fields
 	
@@ -131,7 +132,7 @@ class TileEntityEnergyCluster : TileEntityBase(), ITickable{
 		energyLevel -= quantity
 		ticksToRegen = 20 + (40F / currentHealth.regenSpeedMp).ceilToInt()
 		
-		lastUseTick = world.totalWorldTime
+		lastUseTick = world.totalTime
 		isInactive = false
 		
 		return tryDisturb()
@@ -240,7 +241,7 @@ class TileEntityEnergyCluster : TileEntityBase(), ITickable{
 	
 	override fun update(){
 		if (world.isRemote){
-			if (world.totalWorldTime % 3L == 0L){
+			if (world.totalTime % 3L == 0L){
 				particle?.let { it.first.spawn(it.second, world.rand) }
 			}
 			
@@ -253,7 +254,7 @@ class TileEntityEnergyCluster : TileEntityBase(), ITickable{
 		}
 		
 		if (isInactive){
-			if (world.totalWorldTime % 80L == 0L){
+			if (world.totalTime % 80L == 0L){
 				val activationRange = when(internalHealthStatus){
 					UNSTABLE -> 48.0
 					DAMAGED  -> 32.0

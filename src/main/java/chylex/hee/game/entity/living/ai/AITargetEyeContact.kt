@@ -4,6 +4,7 @@ import chylex.hee.system.util.lookDirVec
 import chylex.hee.system.util.lookPosVec
 import chylex.hee.system.util.square
 import chylex.hee.system.util.toRadians
+import chylex.hee.system.util.totalTime
 import it.unimi.dsi.fastutil.objects.Object2LongArrayMap
 import net.minecraft.entity.EntityCreature
 import net.minecraft.entity.EntityLivingBase
@@ -38,7 +39,7 @@ class AITargetEyeContact<T : EntityLivingBase>(
 		
 		stareStarts.keys.retainAll(foundTargets)
 		
-		val currentTime = entity.world.totalWorldTime
+		val currentTime = entity.world.totalTime
 		
 		for(target in foundTargets){
 			val stareStart = stareStarts.getLong(target)

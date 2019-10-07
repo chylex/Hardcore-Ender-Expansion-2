@@ -37,6 +37,7 @@ import chylex.hee.system.util.TagCompound
 import chylex.hee.system.util.addY
 import chylex.hee.system.util.directionTowards
 import chylex.hee.system.util.floorToInt
+import chylex.hee.system.util.getAttribute
 import chylex.hee.system.util.getState
 import chylex.hee.system.util.heeTag
 import chylex.hee.system.util.isLoaded
@@ -48,6 +49,7 @@ import chylex.hee.system.util.selectExistingEntities
 import chylex.hee.system.util.selectVulnerableEntities
 import chylex.hee.system.util.square
 import chylex.hee.system.util.toRadians
+import chylex.hee.system.util.totalTime
 import chylex.hee.system.util.tryApplyModifier
 import chylex.hee.system.util.tryRemoveModifier
 import net.minecraft.block.Block
@@ -162,10 +164,10 @@ class EntityMobSpiderling(world: World) : EntityMob(world), ILightStartleHandler
 	override fun applyEntityAttributes(){
 		super.applyEntityAttributes()
 		
-		getEntityAttribute(MAX_HEALTH).baseValue = rand.nextInt(11, 13).toDouble()
-		getEntityAttribute(ATTACK_DAMAGE).baseValue = 1.5
-		getEntityAttribute(MOVEMENT_SPEED).baseValue = 0.32
-		getEntityAttribute(FOLLOW_RANGE).baseValue = 20.0
+		getAttribute(MAX_HEALTH).baseValue = rand.nextInt(11, 13).toDouble()
+		getAttribute(ATTACK_DAMAGE).baseValue = 1.5
+		getAttribute(MOVEMENT_SPEED).baseValue = 0.32
+		getAttribute(FOLLOW_RANGE).baseValue = 20.0
 		
 		experienceValue = 2
 	}
@@ -235,7 +237,7 @@ class EntityMobSpiderling(world: World) : EntityMob(world), ILightStartleHandler
 		}
 		
 		if (onGround){
-			getEntityAttribute(ATTACK_DAMAGE).tryRemoveModifier(FALL_CRIT_DAMAGE)
+			getAttribute(ATTACK_DAMAGE).tryRemoveModifier(FALL_CRIT_DAMAGE)
 		}
 		
 		if (jumpCooldown > 0){
@@ -271,7 +273,7 @@ class EntityMobSpiderling(world: World) : EntityMob(world), ILightStartleHandler
 						ForgeHooks.onLivingJump(this)
 						
 						jumpCooldown = rand.nextInt(18, 22)
-						getEntityAttribute(ATTACK_DAMAGE).tryApplyModifier(FALL_CRIT_DAMAGE)
+						getAttribute(ATTACK_DAMAGE).tryApplyModifier(FALL_CRIT_DAMAGE)
 					}
 				}
 			}
@@ -317,7 +319,7 @@ class EntityMobSpiderling(world: World) : EntityMob(world), ILightStartleHandler
 	override fun onLightStartled(): Boolean{
 		wakeUp(instant = false, preventSleep = true)
 		
-		if (world.totalWorldTime < lightStartleResetTime){
+		if (world.totalTime < lightStartleResetTime){
 			return false
 		}
 		
@@ -359,7 +361,7 @@ class EntityMobSpiderling(world: World) : EntityMob(world), ILightStartleHandler
 			super.setAttackTarget(newTarget)
 			
 			if (newTarget == null && lightStartleResetTime == 0L){
-				lightStartleResetTime = world.totalWorldTime + (30L * 20L)
+				lightStartleResetTime = world.totalTime + (30L * 20L)
 			}
 		}
 	}
@@ -376,7 +378,7 @@ class EntityMobSpiderling(world: World) : EntityMob(world), ILightStartleHandler
 	
 	override fun jump(){ // TODO could improve by making the motion less smooth when starting the jump, somehow
 		if (jumpCooldown == 0){
-			getEntityAttribute(ATTACK_DAMAGE).tryApplyModifier(FALL_CRIT_DAMAGE)
+			getAttribute(ATTACK_DAMAGE).tryApplyModifier(FALL_CRIT_DAMAGE)
 			super.jump()
 		}
 	}
@@ -426,7 +428,7 @@ class EntityMobSpiderling(world: World) : EntityMob(world), ILightStartleHandler
 	
 	override fun attackEntityAsMob(entity: Entity): Boolean{
 		if (tasks.taskEntries.any { it.using && it.action is AIAttackLeap }){
-			getEntityAttribute(ATTACK_DAMAGE).tryApplyModifier(FALL_CRIT_DAMAGE)
+			getAttribute(ATTACK_DAMAGE).tryApplyModifier(FALL_CRIT_DAMAGE)
 		}
 		
 		if (!DAMAGE_GENERAL.dealToFrom(entity, this)){

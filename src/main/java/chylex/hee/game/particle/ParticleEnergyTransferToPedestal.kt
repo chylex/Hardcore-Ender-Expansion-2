@@ -37,7 +37,7 @@ object ParticleEnergyTransferToPedestal : IParticleMaker{
 		init{
 			if (unsafeData.size < 4){
 				particleAlpha = 0F
-				particleMaxAge = 0
+				maxAge = 0
 				
 				targetPos = Vec3d.ZERO
 			}
@@ -56,8 +56,8 @@ object ParticleEnergyTransferToPedestal : IParticleMaker{
 			super.onUpdate()
 			
 			if (Pos(targetPos).getBlock(world) !== ModBlocks.TABLE_PEDESTAL){
-				if (particleAge < particleMaxAge - 5){
-					particleMaxAge = particleAge + 5
+				if (age < maxAge - 5){
+					maxAge = age + 5
 				}
 				
 				particleAlpha -= 0.2F

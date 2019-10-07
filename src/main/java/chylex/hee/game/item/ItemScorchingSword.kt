@@ -14,6 +14,7 @@ import chylex.hee.system.migration.forge.EventPriority
 import chylex.hee.system.migration.forge.EventResult
 import chylex.hee.system.migration.forge.SubscribeEvent
 import chylex.hee.system.util.floorToInt
+import chylex.hee.system.util.getAttribute
 import chylex.hee.system.util.nextFloat
 import chylex.hee.system.util.playUniversal
 import chylex.hee.system.util.posVec
@@ -153,7 +154,7 @@ class ItemScorchingSword : ItemSword(SCORCHING_SWORD), IScorchingItem, ICustomRe
 	
 	private fun isPassive(target: EntityLivingBase): Boolean{
 		@Suppress("SENSELESS_COMPARISON")
-		if (target.getEntityAttribute(SharedMonsterAttributes.ATTACK_DAMAGE) != null){
+		if (target.getAttribute(SharedMonsterAttributes.ATTACK_DAMAGE) != null){
 			return false
 		}
 		

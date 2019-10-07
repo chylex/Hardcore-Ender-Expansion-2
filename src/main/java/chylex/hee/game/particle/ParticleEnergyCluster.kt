@@ -79,7 +79,7 @@ object ParticleEnergyCluster : IParticleMaker{
 		init{
 			if (unsafeData.size < 2){
 				particleAlpha = 0F
-				particleMaxAge = 0
+				maxAge = 0
 			}
 			else{
 				loadColor(unsafeData[0])
@@ -87,7 +87,7 @@ object ParticleEnergyCluster : IParticleMaker{
 				
 				particleScale = unsafeData[1] * 0.01F
 				
-				particleMaxAge = TOTAL_LIFESPAN
+				maxAge = TOTAL_LIFESPAN
 				
 				multiplyVelocity(square(particleScale * 0.5F).coerceAtMost(1F))
 			}
@@ -95,11 +95,11 @@ object ParticleEnergyCluster : IParticleMaker{
 		
 		override fun onUpdate(){
 			if (clusterPos.getBlock(world) !== ModBlocks.ENERGY_CLUSTER){
-				if (particleAge < TOTAL_LIFESPAN - FADE_OUT_DURATION){
-					particleAge = TOTAL_LIFESPAN - FADE_OUT_DURATION
+				if (age < TOTAL_LIFESPAN - FADE_OUT_DURATION){
+					age = TOTAL_LIFESPAN - FADE_OUT_DURATION
 				}
 				
-				particleAge += 2
+				age += 2
 			}
 			
 			super.onUpdate()

@@ -33,7 +33,7 @@ object ParticleEnergyTableDrain : IParticleMaker{
 		init{
 			if (unsafeData.size < 2){
 				particleAlpha = 0F
-				particleMaxAge = 0
+				maxAge = 0
 			}
 			else{
 				loadColor(unsafeData[0])
@@ -41,7 +41,7 @@ object ParticleEnergyTableDrain : IParticleMaker{
 				
 				particleScale = unsafeData[1] * 0.01F
 				
-				particleMaxAge = 6
+				maxAge = 6
 			}
 		}
 		

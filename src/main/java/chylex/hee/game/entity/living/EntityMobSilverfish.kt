@@ -21,6 +21,7 @@ import chylex.hee.system.util.AITargetAttacker
 import chylex.hee.system.util.AITargetRandom
 import chylex.hee.system.util.AITargetSwarmSwitch
 import chylex.hee.system.util.TagCompound
+import chylex.hee.system.util.getAttribute
 import chylex.hee.system.util.heeTag
 import chylex.hee.system.util.with
 import net.minecraft.block.BlockSilverfish
@@ -84,9 +85,9 @@ class EntityMobSilverfish(world: World) : EntitySilverfish(world), ICritTracker{
 	override fun applyEntityAttributes(){
 		super.applyEntityAttributes()
 		
-		getEntityAttribute(MAX_HEALTH).baseValue = 8.0
-		getEntityAttribute(ATTACK_DAMAGE).baseValue = 2.0
-		getEntityAttribute(FOLLOW_RANGE).baseValue = 12.0
+		getAttribute(MAX_HEALTH).baseValue = 8.0
+		getAttribute(ATTACK_DAMAGE).baseValue = 2.0
+		getAttribute(FOLLOW_RANGE).baseValue = 12.0
 		
 		experienceValue = 3
 	}

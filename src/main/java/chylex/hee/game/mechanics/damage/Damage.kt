@@ -1,4 +1,6 @@
 package chylex.hee.game.mechanics.damage
+import chylex.hee.system.util.getAttribute
+import chylex.hee.system.util.value
 import net.minecraft.entity.Entity
 import net.minecraft.entity.EntityLivingBase
 import net.minecraft.entity.SharedMonsterAttributes.ATTACK_DAMAGE
@@ -27,7 +29,7 @@ class Damage(private vararg val processors: IDamageProcessor){
 		dealToInternal(amount, target, null, null, title)
 	
 	fun dealToFrom(target: Entity, source: EntityLivingBase, title: String = determineTitleDirect(source)) =
-		dealToInternal(source.getEntityAttribute(ATTACK_DAMAGE).attributeValue.toFloat(), target, source, source, title)
+		dealToInternal(source.getAttribute(ATTACK_DAMAGE).value.toFloat(), target, source, source, title)
 	
 	fun dealToFrom(amount: Float, target: Entity, source: Entity, title: String = determineTitleDirect(source)) =
 		dealToInternal(amount, target, source, source, title)

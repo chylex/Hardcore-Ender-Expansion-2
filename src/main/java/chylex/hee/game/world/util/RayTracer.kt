@@ -10,9 +10,11 @@ import chylex.hee.system.util.component1
 import chylex.hee.system.util.component2
 import chylex.hee.system.util.component3
 import chylex.hee.system.util.floorToInt
+import chylex.hee.system.util.getAttribute
 import chylex.hee.system.util.getState
 import chylex.hee.system.util.lookDirVec
 import chylex.hee.system.util.lookPosVec
+import chylex.hee.system.util.value
 import net.minecraft.block.state.IBlockState
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.entity.player.EntityPlayer.REACH_DISTANCE
@@ -139,7 +141,7 @@ class RayTracer(
 	
 	fun traceBlocksInPlayerReach(player: EntityPlayer): RayTraceResult?{
 		val vecFrom = player.lookPosVec
-		val vecTo = vecFrom.add(player.lookDirVec.scale(player.getEntityAttribute(REACH_DISTANCE).attributeValue))
+		val vecTo = vecFrom.add(player.lookDirVec.scale(player.getAttribute(REACH_DISTANCE).value))
 		
 		return traceBlocksBetweenVectors(player.world, vecFrom, vecTo)
 	}

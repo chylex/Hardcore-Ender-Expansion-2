@@ -4,6 +4,7 @@ import chylex.hee.system.util.cleanupNBT
 import chylex.hee.system.util.hasKey
 import chylex.hee.system.util.heeTag
 import chylex.hee.system.util.heeTagOrNull
+import chylex.hee.system.util.totalTime
 import net.minecraft.advancements.CriteriaTriggers
 import net.minecraft.enchantment.EnchantmentHelper
 import net.minecraft.entity.Entity
@@ -61,7 +62,7 @@ class ItemElytraOverride : ItemElytra(){
 					setFloat(COUNTER_TAG, 0F)
 					setTag(LAST_POS_TAG, createPositionTag(entity))
 				}
-				else if (world.totalWorldTime % 20L == 0L){
+				else if (world.totalTime % 20L == 0L){
 					var newCounter = getFloat(COUNTER_TAG) + calculateCounterIncrement(entity, getCompoundTag(LAST_POS_TAG))
 					val damageAfter = 1F + (0.33F * EnchantmentHelper.getEnchantmentLevel(Enchantments.UNBREAKING, stack))
 					

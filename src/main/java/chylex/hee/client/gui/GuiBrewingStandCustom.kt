@@ -8,6 +8,7 @@ import chylex.hee.system.migration.forge.Side
 import chylex.hee.system.migration.forge.Sided
 import chylex.hee.system.util.getStack
 import chylex.hee.system.util.isNotEmpty
+import chylex.hee.system.util.totalTime
 import net.minecraft.client.gui.inventory.GuiBrewingStand
 import net.minecraft.entity.player.InventoryPlayer
 
@@ -18,7 +19,7 @@ class GuiBrewingStandCustom(inventory: InventoryPlayer, private val brewingStand
 		private val BUBBLE_LENGTHS = intArrayOf(0, 6, 11, 16, 20, 24, 29)
 	}
 	
-	private var brewStartTime = brewingStand.world.totalWorldTime
+	private var brewStartTime = brewingStand.world.totalTime
 	
 	init{
 		inventorySlots = ContainerBrewingStandCustom(inventory, brewingStand)
@@ -32,7 +33,7 @@ class GuiBrewingStandCustom(inventory: InventoryPlayer, private val brewingStand
 		MC.textureManager.bindTexture(TEX_BACKGROUND)
 		drawTexturedModalRect(x, y, 0, 0, xSize, ySize)
 		
-		val worldTime = brewingStand.world.totalWorldTime
+		val worldTime = brewingStand.world.totalTime
 		val brewTime = brewingStand.brewTime
 		
 		if (brewTime > 0){

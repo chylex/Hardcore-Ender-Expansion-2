@@ -4,6 +4,7 @@ import chylex.hee.system.util.TagCompound
 import chylex.hee.system.util.ceilToInt
 import chylex.hee.system.util.floorToInt
 import chylex.hee.system.util.remapRange
+import chylex.hee.system.util.totalTime
 import net.minecraft.util.math.BlockPos
 import net.minecraft.world.World
 import kotlin.math.max
@@ -39,7 +40,7 @@ open class DimensionInstabilityGlobal(private val world: World, private val ende
 	}
 	
 	override fun triggerAction(amount: UShort, pos: BlockPos){
-		val currentTime = world.totalWorldTime
+		val currentTime = world.totalTime
 		val ticksSinceLastAction = currentTime - lastActionTime
 		val ticksSinceEndermiteSpawn = currentTime - lastEndermiteSpawnTime
 		

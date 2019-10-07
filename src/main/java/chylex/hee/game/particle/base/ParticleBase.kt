@@ -16,6 +16,14 @@ abstract class ParticleBase(world: World, posX: Double, posY: Double, posZ: Doub
 			motionZ = value.z
 		}
 	
+	protected var age
+		get() = particleAge
+		set(value){ particleAge = value }
+	
+	protected var maxAge
+		get() = particleMaxAge
+		@JvmName("setMaxAge2") set(value){ particleMaxAge = value }
+	
 	protected fun loadColor(color: Int){
 		loadColor(IntColor(color))
 	}
@@ -27,12 +35,12 @@ abstract class ParticleBase(world: World, posX: Double, posY: Double, posZ: Doub
 	}
 	
 	protected fun interpolateAge(baseValue: Float, fadeInDuration: Int = 0, fadeOutDuration: Int = 0): Float{
-		val fadeOutAfter = particleMaxAge - fadeOutDuration
+		val fadeOutAfter = maxAge - fadeOutDuration
 		
 		return baseValue * when{
-			particleAge < fadeInDuration -> particleAge.toFloat() / fadeInDuration
-			particleAge > fadeOutAfter   -> 1F - ((particleAge - fadeOutAfter).toFloat() / fadeOutDuration)
-			else                         -> 1F
+			age < fadeInDuration -> age.toFloat() / fadeInDuration
+			age > fadeOutAfter   -> 1F - ((age - fadeOutAfter).toFloat() / fadeOutDuration)
+			else                 -> 1F
 		}
 	}
 }

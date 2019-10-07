@@ -10,6 +10,7 @@ import chylex.hee.system.migration.forge.Sided
 import chylex.hee.system.migration.forge.SubscribeEvent
 import chylex.hee.system.util.copyIf
 import chylex.hee.system.util.isNotEmpty
+import chylex.hee.system.util.totalTime
 import net.minecraft.entity.Entity
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.init.Items
@@ -23,10 +24,10 @@ import java.util.UUID
 
 class ItemRingOfPreservation : ItemAbstractTrinket(), ICustomRepairBehavior{
 	private class HurtPlayerInfo private constructor(val playerId: UUID, val worldTime: Long){
-		constructor(player: EntityPlayer) : this(player.uniqueID, player.world.totalWorldTime)
+		constructor(player: EntityPlayer) : this(player.uniqueID, player.world.totalTime)
 		
 		fun matches(player: EntityPlayer): Boolean{
-			return player.uniqueID == playerId && player.world.totalWorldTime == worldTime
+			return player.uniqueID == playerId && player.world.totalTime == worldTime
 		}
 	}
 	

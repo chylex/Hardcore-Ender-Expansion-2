@@ -41,7 +41,7 @@ object ParticleEnderGoo : IParticleMaker{
 			
 			particleGravity = 0.15F
 			
-			particleMaxAge = rand.nextInt(34, 42)
+			maxAge = rand.nextInt(34, 42)
 		}
 		
 		override fun onUpdate(){
@@ -51,7 +51,7 @@ object ParticleEnderGoo : IParticleMaker{
 			particleAngle += angleOffset
 			angleOffset *= 0.94F
 			
-			if (particleAge > particleMaxAge - 15){
+			if (age > maxAge - 15){
 				particleScale *= 0.9F
 			}
 			

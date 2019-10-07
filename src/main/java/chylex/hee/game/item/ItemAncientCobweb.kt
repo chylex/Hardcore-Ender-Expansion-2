@@ -3,6 +3,7 @@ import chylex.hee.game.block.BlockAncientCobweb
 import chylex.hee.system.migration.Hand.OFF_HAND
 import chylex.hee.system.util.nextInt
 import chylex.hee.system.util.size
+import chylex.hee.system.util.totalTime
 import net.minecraft.entity.Entity
 import net.minecraft.entity.EntityLivingBase
 import net.minecraft.entity.item.EntityItem
@@ -16,7 +17,7 @@ import kotlin.math.min
 
 class ItemAncientCobweb(private val sourceBlock: BlockAncientCobweb) : ItemBlock(sourceBlock){
 	override fun onUpdate(stack: ItemStack, world: World, entity: Entity, itemSlot: Int, isSelected: Boolean){
-		if (world.isRemote || world.totalWorldTime % 4L != 0L){
+		if (world.isRemote || world.totalTime % 4L != 0L){
 			return
 		}
 		

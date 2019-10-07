@@ -19,13 +19,16 @@ import chylex.hee.system.util.TagCompound
 import chylex.hee.system.util.ceilToInt
 import chylex.hee.system.util.distanceTo
 import chylex.hee.system.util.floorToInt
+import chylex.hee.system.util.getAttribute
 import chylex.hee.system.util.getPos
 import chylex.hee.system.util.getTile
 import chylex.hee.system.util.heeTag
 import chylex.hee.system.util.heeTagOrNull
 import chylex.hee.system.util.readPos
 import chylex.hee.system.util.setPos
+import chylex.hee.system.util.totalTime
 import chylex.hee.system.util.use
+import chylex.hee.system.util.value
 import chylex.hee.system.util.writePos
 import io.netty.buffer.ByteBuf
 import net.minecraft.client.resources.I18n
@@ -146,9 +149,9 @@ abstract class ItemAbstractEnergyUser : Item(){
 			if (hasKey(CLUSTER_POS_TAG)){
 				removeClusterTags(this)
 			}
-			else if (pos.distanceTo(player) <= player.getEntityAttribute(EntityPlayer.REACH_DISTANCE).attributeValue){
+			else if (pos.distanceTo(player) <= player.getAttribute(EntityPlayer.REACH_DISTANCE).value){
 				setPos(CLUSTER_POS_TAG, pos)
-				setByte(CLUSTER_TICK_OFFSET_TAG, (4L - (world.totalWorldTime % 4L)).toByte())
+				setByte(CLUSTER_TICK_OFFSET_TAG, (4L - (world.totalTime % 4L)).toByte())
 			}
 		}
 		
@@ -161,13 +164,13 @@ abstract class ItemAbstractEnergyUser : Item(){
 		}
 		
 		with(stack.heeTagOrNull ?: return){
-			if (hasKey(CLUSTER_POS_TAG) && (world.totalWorldTime + getByte(CLUSTER_TICK_OFFSET_TAG)) % 4L == 0L){
+			if (hasKey(CLUSTER_POS_TAG) && (world.totalTime + getByte(CLUSTER_TICK_OFFSET_TAG)) % 4L == 0L){
 				val pos = getPos(CLUSTER_POS_TAG)
 				val tile = pos.getTile<TileEntityEnergyCluster>(world)
 				
 				if ((isSelected || entity.getHeldItem(OFF_HAND) === stack) &&
 					getShort(ENERGY_LEVEL_TAG) < calculateInternalEnergyCapacity(stack) &&
-					pos.distanceTo(entity) <= entity.getEntityAttribute(EntityPlayer.REACH_DISTANCE).attributeValue &&
+					pos.distanceTo(entity) <= entity.getAttribute(EntityPlayer.REACH_DISTANCE).value &&
 					tile != null &&
 					tile.drainEnergy(Units(1))
 				){

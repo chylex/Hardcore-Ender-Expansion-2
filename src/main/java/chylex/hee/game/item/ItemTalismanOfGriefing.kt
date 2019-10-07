@@ -9,6 +9,7 @@ import chylex.hee.system.migration.forge.SubscribeEvent
 import chylex.hee.system.util.ceilToInt
 import chylex.hee.system.util.posVec
 import chylex.hee.system.util.square
+import chylex.hee.system.util.totalTime
 import net.minecraft.entity.Entity
 import net.minecraft.entity.EntityLivingBase
 import net.minecraft.entity.player.EntityPlayer
@@ -78,7 +79,7 @@ class ItemTalismanOfGriefing : ItemAbstractTrinket(){
 	}
 	
 	private fun markEntitiesForTalismanRepair(explosion: Explosion, entities: List<Entity>){
-		val currentTime = explosion.world.totalWorldTime
+		val currentTime = explosion.world.totalTime
 		val recentlyExploded = lastRepairMarkEntities.get()
 		
 		if (lastRepairMarkTime.get() != currentTime){
@@ -156,7 +157,7 @@ class ItemTalismanOfGriefing : ItemAbstractTrinket(){
 		val entity = e.entityLiving
 		val world = entity.world
 		
-		if (lastRepairMarkTime.get() != world.totalWorldTime || !lastRepairMarkEntities.get().remove(entity.uniqueID)){
+		if (lastRepairMarkTime.get() != world.totalTime || !lastRepairMarkEntities.get().remove(entity.uniqueID)){
 			return
 		}
 		

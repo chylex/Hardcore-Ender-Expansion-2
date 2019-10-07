@@ -28,6 +28,7 @@ import chylex.hee.system.util.nextFloat
 import chylex.hee.system.util.playClient
 import chylex.hee.system.util.readPos
 import chylex.hee.system.util.setPos
+import chylex.hee.system.util.totalTime
 import chylex.hee.system.util.use
 import chylex.hee.system.util.writePos
 import io.netty.buffer.ByteBuf
@@ -153,7 +154,7 @@ class ItemTableLink : Item(){
 			
 			if (heldItem.isNotEmpty){
 				setPos(POS_TAG, newStoredPos)
-				setLong(TIME_TAG, world.totalWorldTime)
+				setLong(TIME_TAG, world.totalTime)
 			}
 			
 			PacketClientFX(FX_USE, FxUseData(pos, soundType)).sendToAllAround(world, pos, 16.0)
@@ -163,13 +164,13 @@ class ItemTableLink : Item(){
 	}
 	
 	override fun onUpdate(stack: ItemStack, world: World, entity: Entity, itemSlot: Int, isSelected: Boolean){
-		if (world.isRemote || world.totalWorldTime % 10L != 0L){
+		if (world.isRemote || world.totalTime % 10L != 0L){
 			return
 		}
 		
 		val tag = stack.heeTagOrNull
 		
-		if (tag.hasKey(TIME_TAG) && world.totalWorldTime - tag.getLong(TIME_TAG) >= RESET_TIME_TICKS){
+		if (tag.hasKey(TIME_TAG) && world.totalTime - tag.getLong(TIME_TAG) >= RESET_TIME_TICKS){
 			removeLinkingTags(stack)
 		}
 	}

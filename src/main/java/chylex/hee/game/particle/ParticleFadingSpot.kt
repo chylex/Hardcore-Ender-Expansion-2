@@ -51,10 +51,10 @@ object ParticleFadingSpot : IParticleMaker{
 			
 			particleScale = data[1] * 0.01F
 			
-			particleMaxAge = data[2]
+			maxAge = data[2]
 			
-			alphaPerTick = 1F / particleMaxAge
-			scalePerTick = particleScale / (particleMaxAge + rand.nextInt(1, 9))
+			alphaPerTick = 1F / maxAge
+			scalePerTick = particleScale / (maxAge + rand.nextInt(1, 9))
 		}
 		
 		override fun onUpdate(){
