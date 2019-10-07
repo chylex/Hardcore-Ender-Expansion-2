@@ -15,6 +15,13 @@ inline class IntColor(val i: Int){
 	inline val blue
 		get() = i and 255
 	
+	// destructuring
+	
+	operator fun component1(): Int = red
+	operator fun component2(): Int = green
+	operator fun component3(): Int = blue
+	operator fun component4(): Int = alpha
+	
 	// modification
 	
 	val withNoAlpha
@@ -32,7 +39,7 @@ inline class IntColor(val i: Int){
 		get() = Vec3d(red / 255.0, green / 255.0, blue / 255.0)
 	
 	val asHSB
-		get() = FloatArray(3).also { java.awt.Color.RGBtoHSB(red, green, blue, it) }
+		get() = HSB.fromRGB(this)
 	
 	// construction
 	
@@ -62,7 +69,7 @@ inline class IntColor(val i: Int){
 			chylex.hee.system.util.color.HCL(hue, chroma, luminance).toRGB()
 		
 		
-		fun HSB(hsb: FloatArray) =
-			IntColor(java.awt.Color.HSBtoRGB(hsb[0], hsb[1], hsb[2]))
+		fun HSB(hue: Float, saturation: Float, brightness: Float) =
+			chylex.hee.system.util.color.HSB(hue, saturation, brightness).toRGB()
 	}
 }

@@ -3,7 +3,6 @@ import chylex.hee.game.block.info.BlockBuilder.Companion.setHarvestTool
 import chylex.hee.game.item.util.Tool.Level.WOOD
 import chylex.hee.game.item.util.Tool.Type.AXE
 import chylex.hee.system.util.color.IntColor
-import chylex.hee.system.util.color.IntColor.Companion.HSB
 import chylex.hee.system.util.getBlock
 import chylex.hee.system.util.getState
 import chylex.hee.system.util.isAir
@@ -56,10 +55,10 @@ class BlockDryVines : BlockVine(){
 		private fun dryify(color: Int): Int{
 			val hsb = IntColor(color).asHSB
 			
-			hsb[1] *= 0.6F
-			hsb[2] *= 0.8F
-			
-			return HSB(hsb).i
+			return hsb.copy(
+				saturation = hsb.saturation * 0.6F,
+				brightness = hsb.brightness * 0.8F
+			).i
 		}
 		
 		override fun colorMultiplier(state: IBlockState, world: IBlockAccess?, pos: BlockPos?, tintIndex: Int): Int{
