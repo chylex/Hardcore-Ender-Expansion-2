@@ -2,30 +2,28 @@ package chylex.hee.game.block
 import chylex.hee.game.block.fluid.FluidEnderGoo
 import chylex.hee.game.block.info.Materials
 import chylex.hee.game.entity.CustomCreatureType
-import chylex.hee.game.mechanics.potion.PotionLifeless.LIFELESS
 import chylex.hee.game.particle.ParticleEnderGoo
 import chylex.hee.game.particle.spawner.ParticleSpawnerCustom
 import chylex.hee.game.particle.util.IOffset.Constant
 import chylex.hee.game.particle.util.IOffset.InBox
 import chylex.hee.game.particle.util.IShape.Point
 import chylex.hee.init.ModItems
+import chylex.hee.init.ModPotions
 import chylex.hee.system.migration.Facing.DOWN
 import chylex.hee.system.migration.Facing.UP
 import chylex.hee.system.migration.forge.Side
 import chylex.hee.system.migration.forge.Sided
+import chylex.hee.system.migration.vanilla.Potions
 import chylex.hee.system.util.Pos
 import chylex.hee.system.util.get
 import chylex.hee.system.util.getBlock
+import chylex.hee.system.util.makeEffect
 import chylex.hee.system.util.posVec
 import net.minecraft.block.state.IBlockState
 import net.minecraft.entity.Entity
 import net.minecraft.entity.EntityLivingBase
 import net.minecraft.entity.item.EntityItem
-import net.minecraft.init.MobEffects.MINING_FATIGUE
-import net.minecraft.init.MobEffects.POISON
-import net.minecraft.init.MobEffects.WEAKNESS
 import net.minecraft.potion.Potion
-import net.minecraft.potion.PotionEffect
 import net.minecraft.util.math.BlockPos
 import net.minecraft.world.World
 import java.util.Random
@@ -60,12 +58,12 @@ open class BlockEnderGoo : BlockAbstractGoo(FluidEnderGoo, Materials.ENDER_GOO){
 			val existingEffect = entity.getActivePotionEffect(type)
 			
 			if (existingEffect == null || (level >= existingEffect.amplifier && durationTicks > existingEffect.duration + 30)){
-				entity.addPotionEffect(PotionEffect(type, durationTicks, level, true, true))
+				entity.addPotionEffect(type.makeEffect(durationTicks, level, isAmbient = true, showParticles = true))
 			}
 		}
 		
 		private fun updateGooEffects(entity: EntityLivingBase, totalTicks: Int){
-			addGooEffect(entity, LIFELESS, PERSISTENT_EFFECT_DURATION_TICKS)
+			addGooEffect(entity, ModPotions.LIFELESS, PERSISTENT_EFFECT_DURATION_TICKS)
 			
 			if (totalTicks >= 20 * 5){
 				var miningFatigueLevel = 0
@@ -90,15 +88,15 @@ open class BlockEnderGoo : BlockAbstractGoo(FluidEnderGoo, Materials.ENDER_GOO){
 							}
 						}
 						
-						if (entity.rng.nextInt(100) < poisonChancePercent && !entity.isPotionActive(POISON)){
-							addGooEffect(entity, POISON, 80 + (totalTicks - 20 * 20) / 10)
+						if (entity.rng.nextInt(100) < poisonChancePercent && !entity.isPotionActive(Potions.POISON)){
+							addGooEffect(entity, Potions.POISON, 80 + (totalTicks - 20 * 20) / 10)
 						}
 					}
 					
-					addGooEffect(entity, WEAKNESS, weaknessDuration.coerceAtMost((20 * 60 * 3) + 19), weaknessLevel)
+					addGooEffect(entity, Potions.WEAKNESS, weaknessDuration.coerceAtMost((20 * 60 * 3) + 19), weaknessLevel)
 				}
 				
-				addGooEffect(entity, MINING_FATIGUE, PERSISTENT_EFFECT_DURATION_TICKS, miningFatigueLevel)
+				addGooEffect(entity, Potions.MINING_FATIGUE, PERSISTENT_EFFECT_DURATION_TICKS, miningFatigueLevel)
 			}
 		}
 	}

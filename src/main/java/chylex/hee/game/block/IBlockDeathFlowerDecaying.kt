@@ -15,6 +15,7 @@ import chylex.hee.game.world.util.Teleporter.FxRange.Extended
 import chylex.hee.network.client.PacketClientFX
 import chylex.hee.system.migration.Difficulty.PEACEFUL
 import chylex.hee.system.migration.Facing.DOWN
+import chylex.hee.system.migration.vanilla.Potions
 import chylex.hee.system.migration.vanilla.Sounds
 import chylex.hee.system.util.TagCompound
 import chylex.hee.system.util.allInCenteredSphereMutable
@@ -23,6 +24,7 @@ import chylex.hee.system.util.center
 import chylex.hee.system.util.get
 import chylex.hee.system.util.getBlock
 import chylex.hee.system.util.getState
+import chylex.hee.system.util.makeEffect
 import chylex.hee.system.util.nextFloat
 import chylex.hee.system.util.nextInt
 import chylex.hee.system.util.offsetUntil
@@ -41,8 +43,6 @@ import io.netty.buffer.ByteBuf
 import net.minecraft.block.Block
 import net.minecraft.block.state.IBlockState
 import net.minecraft.entity.player.EntityPlayer
-import net.minecraft.init.MobEffects.WITHER
-import net.minecraft.potion.PotionEffect
 import net.minecraft.util.SoundCategory
 import net.minecraft.util.math.BlockPos
 import net.minecraft.world.World
@@ -142,7 +142,7 @@ interface IBlockDeathFlowerDecaying{
 					val distanceMp = center.distanceTo(player.posVec) / WITHER_PLAYER_RADIUS
 					val witherSeconds = 30 - (25 * distanceMp).roundToInt()
 					
-					player.addPotionEffect(PotionEffect(WITHER, 20 * witherSeconds, 0))
+					player.addPotionEffect(Potions.WITHER.makeEffect(20 * witherSeconds))
 					// TODO broadcast
 				}
 			}

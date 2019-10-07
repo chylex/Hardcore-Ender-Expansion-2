@@ -1,11 +1,8 @@
 package chylex.hee.game.world.feature.obsidiantower
 import chylex.hee.game.mechanics.potion.PotionBase.Companion.INFINITE_DURATION
+import chylex.hee.system.migration.vanilla.Potions
+import chylex.hee.system.util.makeEffect
 import chylex.hee.system.util.nextItem
-import net.minecraft.init.MobEffects.FIRE_RESISTANCE
-import net.minecraft.init.MobEffects.REGENERATION
-import net.minecraft.init.MobEffects.RESISTANCE
-import net.minecraft.init.MobEffects.SPEED
-import net.minecraft.init.MobEffects.STRENGTH
 import net.minecraft.potion.Potion
 import net.minecraft.potion.PotionEffect
 import java.util.Random
@@ -35,7 +32,11 @@ enum class ObsidianTowerSpawnerLevel(
 		mobLimitPerSpawner = 3..6,
 		mobLimitInSpawnArea = 3,
 		effects = arrayOf(
-			arrayOf(SPEED to 1, STRENGTH to 1, FIRE_RESISTANCE to 1)
+			arrayOf(
+				Potions.SPEED to 1,
+				Potions.STRENGTH to 1,
+				Potions.FIRE_RESISTANCE to 1
+			)
 		)
 	),
 	
@@ -44,8 +45,16 @@ enum class ObsidianTowerSpawnerLevel(
 		mobLimitPerSpawner = 7..11,
 		mobLimitInSpawnArea = 4,
 		effects = arrayOf(
-			arrayOf(SPEED to 1, STRENGTH to 1, RESISTANCE to 1, FIRE_RESISTANCE to 1),
-			arrayOf(SPEED to 2, STRENGTH to 2)
+			arrayOf(
+				Potions.SPEED to 1,
+				Potions.STRENGTH to 1,
+				Potions.RESISTANCE to 1,
+				Potions.FIRE_RESISTANCE to 1
+			),
+			arrayOf(
+				Potions.SPEED to 2,
+				Potions.STRENGTH to 2
+			)
 		)
 	),
 	
@@ -54,9 +63,20 @@ enum class ObsidianTowerSpawnerLevel(
 		mobLimitPerSpawner = 12..17,
 		mobLimitInSpawnArea = 5,
 		effects = arrayOf(
-			arrayOf(FIRE_RESISTANCE to 1),
-			arrayOf(SPEED to 2, STRENGTH to 2, RESISTANCE to 1, FIRE_RESISTANCE to 1),
-			arrayOf(SPEED to 3, RESISTANCE to 2, REGENERATION to 1)
+			arrayOf(
+				Potions.FIRE_RESISTANCE to 1
+			),
+			arrayOf(
+				Potions.SPEED to 2,
+				Potions.STRENGTH to 2,
+				Potions.RESISTANCE to 1,
+				Potions.FIRE_RESISTANCE to 1
+			),
+			arrayOf(
+				Potions.SPEED to 3,
+				Potions.RESISTANCE to 2,
+				Potions.REGENERATION to 1
+			)
 		)
 	);
 	
@@ -69,7 +89,7 @@ enum class ObsidianTowerSpawnerLevel(
 		
 		for(list in effects){
 			val (potion, level) = rand.nextItem(list)
-			picks[potion] = PotionEffect(potion, INFINITE_DURATION, level - 1)
+			picks[potion] = potion.makeEffect(INFINITE_DURATION, level - 1)
 		}
 		
 		return picks.values

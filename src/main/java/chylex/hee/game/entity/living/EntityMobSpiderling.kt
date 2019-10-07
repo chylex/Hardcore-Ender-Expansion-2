@@ -24,6 +24,7 @@ import chylex.hee.system.migration.forge.Side
 import chylex.hee.system.migration.forge.Sided
 import chylex.hee.system.migration.forge.SubscribeAllEvents
 import chylex.hee.system.migration.forge.SubscribeEvent
+import chylex.hee.system.migration.vanilla.Potions
 import chylex.hee.system.migration.vanilla.Sounds
 import chylex.hee.system.util.AIAttackMelee
 import chylex.hee.system.util.AISwim
@@ -64,7 +65,6 @@ import net.minecraft.entity.SharedMonsterAttributes.MOVEMENT_SPEED
 import net.minecraft.entity.ai.attributes.AttributeModifier
 import net.minecraft.entity.monster.EntityMob
 import net.minecraft.entity.player.EntityPlayer
-import net.minecraft.init.MobEffects.POISON
 import net.minecraft.item.ItemAxe
 import net.minecraft.item.ItemSword
 import net.minecraft.network.datasync.DataSerializers
@@ -311,7 +311,7 @@ class EntityMobSpiderling(world: World) : EntityMob(world), ILightStartleHandler
 	}
 	
 	override fun isPotionApplicable(effect: PotionEffect): Boolean{
-		return effect.potion != POISON && super.isPotionApplicable(effect)
+		return effect.potion != Potions.POISON && super.isPotionApplicable(effect)
 	}
 	
 	// Behavior (Light)

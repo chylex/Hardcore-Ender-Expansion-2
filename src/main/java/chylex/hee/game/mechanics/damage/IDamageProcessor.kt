@@ -1,11 +1,11 @@
 package chylex.hee.game.mechanics.damage
 import chylex.hee.game.mechanics.damage.Damage.Companion.CANCEL_DAMAGE
+import chylex.hee.system.migration.vanilla.Potions
 import chylex.hee.system.util.setFireTicks
 import net.minecraft.enchantment.EnchantmentHelper
 import net.minecraft.entity.Entity
 import net.minecraft.entity.EntityLivingBase
 import net.minecraft.entity.player.EntityPlayer
-import net.minecraft.init.MobEffects.RESISTANCE
 import net.minecraft.item.ItemArmor
 import net.minecraft.potion.PotionEffect
 import net.minecraft.util.CombatRules
@@ -160,7 +160,7 @@ interface IDamageProcessor{
 				return if (target !is EntityLivingBase)
 					amount
 				else
-					amount * (1F - (0.15F * (target.getActivePotionEffect(RESISTANCE)?.amplifier?.plus(1)?.coerceAtMost(5) ?: 0)))
+					amount * (1F - (0.15F * (target.getActivePotionEffect(Potions.RESISTANCE)?.amplifier?.plus(1)?.coerceAtMost(5) ?: 0)))
 			}
 		}
 		

@@ -5,6 +5,7 @@ import chylex.hee.system.migration.forge.EventPriority
 import chylex.hee.system.migration.forge.Side
 import chylex.hee.system.migration.forge.SubscribeEvent
 import chylex.hee.system.util.ceilToInt
+import chylex.hee.system.util.makeEffect
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.item.ItemFood
 import net.minecraft.potion.Potion
@@ -58,7 +59,7 @@ class ItemRingOfHunger : ItemAbstractTrinket(){
 		val player = e.entity as? EntityPlayer ?: return
 		
 		if (!player.world.isRemote && e.item.item is ItemFood && e.duration <= 1){
-			foodUseTracker[player.uniqueID] = player.activePotionMap.mapValues { (type, effect) -> PotionEffect(type, effect.duration, effect.amplifier) }
+			foodUseTracker[player.uniqueID] = player.activePotionMap.mapValues { (type, effect) -> type.makeEffect(effect.duration, effect.amplifier) }
 		}
 	}
 	

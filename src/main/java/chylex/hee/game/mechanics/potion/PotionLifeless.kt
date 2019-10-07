@@ -8,8 +8,6 @@ import net.minecraftforge.event.entity.living.LivingHealEvent
 
 @SubscribeAllEvents(modid = HEE.ID)
 object PotionLifeless : PotionBase(color = FluidEnderGoo.rgbColor, isNegative = true){
-	val LIFELESS = this
-	
 	override val iconX = 0
 	override val iconY = 0
 	

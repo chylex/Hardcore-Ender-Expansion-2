@@ -7,12 +7,14 @@ import chylex.hee.system.migration.forge.EventPriority
 import chylex.hee.system.migration.forge.Side
 import chylex.hee.system.migration.forge.Sided
 import chylex.hee.system.migration.forge.SubscribeEvent
+import chylex.hee.system.migration.vanilla.Potions
 import chylex.hee.system.migration.vanilla.Sounds
 import chylex.hee.system.util.facades.Resource
 import chylex.hee.system.util.getAttribute
 import chylex.hee.system.util.hasKey
 import chylex.hee.system.util.heeTag
 import chylex.hee.system.util.heeTagOrNull
+import chylex.hee.system.util.makeEffect
 import chylex.hee.system.util.playClient
 import chylex.hee.system.util.posVec
 import chylex.hee.system.util.selectExistingEntities
@@ -23,10 +25,7 @@ import net.minecraft.entity.EntityLivingBase
 import net.minecraft.entity.passive.EntityVillager
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.entity.player.EntityPlayer.REACH_DISTANCE
-import net.minecraft.init.MobEffects.ABSORPTION
-import net.minecraft.init.MobEffects.REGENERATION
 import net.minecraft.item.ItemStack
-import net.minecraft.potion.PotionEffect
 import net.minecraft.util.DamageSource
 import net.minecraft.util.EnumHand
 import net.minecraft.util.EnumParticleTypes
@@ -81,8 +80,8 @@ class ItemTotemOfUndyingCustom : ItemAbstractTrinket(){
 			
 			player.health = 1F
 			player.clearActivePotions()
-			player.addPotionEffect(PotionEffect(REGENERATION, 900, 1))
-			player.addPotionEffect(PotionEffect(ABSORPTION, 100, 1))
+			player.addPotionEffect(Potions.REGENERATION.makeEffect(900, 1))
+			player.addPotionEffect(Potions.ABSORPTION.makeEffect(100, 1))
 			e.isCanceled = true
 		}
 	}

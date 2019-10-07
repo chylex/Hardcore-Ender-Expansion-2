@@ -4,10 +4,10 @@ import chylex.hee.game.mechanics.potion.brewing.modifiers.BrewConvertBottle
 import chylex.hee.game.mechanics.potion.brewing.modifiers.BrewIncreaseDuration
 import chylex.hee.game.mechanics.potion.brewing.modifiers.BrewIncreaseLevel
 import chylex.hee.game.mechanics.potion.brewing.modifiers.BrewReversal
+import chylex.hee.system.migration.vanilla.PotionTypes
+import chylex.hee.system.migration.vanilla.Potions
 import chylex.hee.system.util.hasKey
 import chylex.hee.system.util.nbtOrNull
-import net.minecraft.init.MobEffects
-import net.minecraft.init.PotionTypes
 import net.minecraft.item.Item
 import net.minecraft.item.ItemPotion
 import net.minecraft.item.ItemStack
@@ -28,20 +28,20 @@ object PotionItems{
 	).associateBy { it.ingredient }
 	
 	private val TYPE_MAPPING = mapOf(
-		MobEffects.NIGHT_VISION    to PotionTypes.NIGHT_VISION,
-		MobEffects.INVISIBILITY    to PotionTypes.INVISIBILITY,
-		MobEffects.JUMP_BOOST      to PotionTypes.LEAPING,
-		MobEffects.FIRE_RESISTANCE to PotionTypes.FIRE_RESISTANCE,
-		MobEffects.SPEED           to PotionTypes.SWIFTNESS,
-		MobEffects.SLOWNESS        to PotionTypes.SLOWNESS,
-		MobEffects.WATER_BREATHING to PotionTypes.WATER_BREATHING,
-		MobEffects.INSTANT_HEALTH  to PotionTypes.HEALING,
-		MobEffects.INSTANT_DAMAGE  to PotionTypes.HARMING,
-		MobEffects.POISON          to PotionTypes.POISON,
-		MobEffects.REGENERATION    to PotionTypes.REGENERATION,
-		MobEffects.STRENGTH        to PotionTypes.STRENGTH,
-		MobEffects.WEAKNESS        to PotionTypes.WEAKNESS,
-		PotionPurity               to PotionPurity.TYPE
+		Potions.NIGHT_VISION    to PotionTypes.NIGHT_VISION,
+		Potions.INVISIBILITY    to PotionTypes.INVISIBILITY,
+		Potions.JUMP_BOOST      to PotionTypes.LEAPING,
+		Potions.FIRE_RESISTANCE to PotionTypes.FIRE_RESISTANCE,
+		Potions.SPEED           to PotionTypes.SWIFTNESS,
+		Potions.SLOWNESS        to PotionTypes.SLOWNESS,
+		Potions.WATER_BREATHING to PotionTypes.WATER_BREATHING,
+		Potions.INSTANT_HEALTH  to PotionTypes.HEALING,
+		Potions.INSTANT_DAMAGE  to PotionTypes.HARMING,
+		Potions.POISON          to PotionTypes.POISON,
+		Potions.REGENERATION    to PotionTypes.REGENERATION,
+		Potions.STRENGTH        to PotionTypes.STRENGTH,
+		Potions.WEAKNESS        to PotionTypes.WEAKNESS,
+		PotionPurity            to PotionPurity.TYPE
 	)
 	
 	private val TYPE_NO_EFFECT_OVERRIDES = mutableMapOf<PotionType, PotionType>()

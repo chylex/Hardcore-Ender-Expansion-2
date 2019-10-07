@@ -24,12 +24,15 @@ import net.minecraftforge.event.RegistryEvent
 
 @SubscribeAllEvents(modid = HEE.ID)
 object ModPotions{
+	val LIFELESS get() = PotionLifeless
+	val PURITY   get() = PotionPurity
+	
 	@JvmStatic
 	@SubscribeEvent
 	fun onRegisterPotions(e: RegistryEvent.Register<Potion>){
 		with(e.registry){
-			register(PotionLifeless named "lifeless")
-			register(PotionPurity named "purity")
+			register(LIFELESS named "lifeless")
+			register(PURITY named "purity")
 		}
 	}
 	

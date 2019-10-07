@@ -1,5 +1,6 @@
 package chylex.hee.game.mechanics.potion.brewing
 import chylex.hee.system.util.floorToInt
+import chylex.hee.system.util.makeEffect
 import chylex.hee.system.util.nbt
 import net.minecraft.item.ItemStack
 import net.minecraft.potion.Potion
@@ -13,13 +14,13 @@ class PotionTypeInfo(
 	private val maxLevel: Int
 ){
 	val baseEffect
-		get() = PotionEffect(potion, duration?.baseTicks ?: 0, 0)
+		get() = potion.makeEffect(duration?.baseTicks ?: 0, 0)
 	
 	val vanillaOverrideStrongEffect
-		get() = PotionEffect(potion, duration?.getDuration(0, 1) ?: 0, 1)
+		get() = potion.makeEffect(duration?.getDuration(0, 1) ?: 0, 1)
 	
 	val vanillaOverrideLongEffect
-		get() = PotionEffect(potion, duration?.getDuration(1, 0) ?: 0, 0)
+		get() = potion.makeEffect(duration?.getDuration(1, 0) ?: 0, 0)
 	
 	class Duration(val baseTicks: Int, val stepTicks: Int, val maxSteps: Int){
 		private fun getBaseDuration(steps: Int): Int{
@@ -85,14 +86,14 @@ class PotionTypeInfo(
 				}
 				
 				val newItem = PotionItems.getBottle(stack.item, potion, withBaseEffect = false)
-				val newEffect = PotionEffect(reversed, 0, 0, effect.isAmbient, effect.doesShowParticles())
+				val newEffect = reversed.makeEffect(0, 0, effect.isAmbient, effect.doesShowParticles())
 				
 				return info.Instance(newItem, newEffect).createNewEffect(durationSteps, newEffect.amplifier)
 			}
 		
 		private fun createNewEffect(durationSteps: Int, amplifier: Int): ItemStack{
 			val newDuration = duration?.getDuration(durationSteps, amplifier) ?: 0
-			val newEffect = PotionEffect(potion, newDuration, amplifier, effect.isAmbient, effect.doesShowParticles())
+			val newEffect = potion.makeEffect(newDuration, amplifier, effect.isAmbient, effect.doesShowParticles())
 			
 			return with(stack.copy()){
 				nbt.removeTag(PotionItems.CUSTOM_EFFECTS_TAG)

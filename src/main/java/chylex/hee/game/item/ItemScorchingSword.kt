@@ -13,6 +13,7 @@ import chylex.hee.system.migration.Hand.MAIN_HAND
 import chylex.hee.system.migration.forge.EventPriority
 import chylex.hee.system.migration.forge.EventResult
 import chylex.hee.system.migration.forge.SubscribeEvent
+import chylex.hee.system.migration.vanilla.Potions
 import chylex.hee.system.migration.vanilla.Sounds
 import chylex.hee.system.util.floorToInt
 import chylex.hee.system.util.getAttribute
@@ -30,7 +31,6 @@ import net.minecraft.entity.passive.EntityAmbientCreature
 import net.minecraft.entity.passive.EntityAnimal
 import net.minecraft.entity.passive.EntitySquid
 import net.minecraft.entity.player.EntityPlayer
-import net.minecraft.init.MobEffects
 import net.minecraft.item.ItemStack
 import net.minecraft.item.ItemSword
 import net.minecraft.util.DamageSource
@@ -149,7 +149,7 @@ class ItemScorchingSword : ItemSword(SCORCHING_SWORD), IScorchingItem, ICustomRe
 	// Hitting statistics
 	
 	private fun isImmune(target: EntityLivingBase): Boolean{
-		return target.isImmuneToFire || target.isPotionActive(MobEffects.FIRE_RESISTANCE)
+		return target.isImmuneToFire || target.isPotionActive(Potions.FIRE_RESISTANCE)
 	}
 	
 	private fun isPassive(target: EntityLivingBase): Boolean{

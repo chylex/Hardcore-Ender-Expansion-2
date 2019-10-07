@@ -17,6 +17,7 @@ import chylex.hee.game.world.util.Teleporter.FxRange.Silent
 import chylex.hee.network.client.PacketClientFX
 import chylex.hee.system.migration.Facing.DOWN
 import chylex.hee.system.migration.Facing.UP
+import chylex.hee.system.migration.vanilla.Potions
 import chylex.hee.system.migration.vanilla.Sounds
 import chylex.hee.system.util.Pos
 import chylex.hee.system.util.TagCompound
@@ -29,6 +30,7 @@ import chylex.hee.system.util.component2
 import chylex.hee.system.util.component3
 import chylex.hee.system.util.floorToInt
 import chylex.hee.system.util.isLoaded
+import chylex.hee.system.util.makeEffect
 import chylex.hee.system.util.nextFloat
 import chylex.hee.system.util.nextInt
 import chylex.hee.system.util.nextVector2
@@ -36,8 +38,6 @@ import chylex.hee.system.util.offsetUntil
 import chylex.hee.system.util.playClient
 import chylex.hee.system.util.posVec
 import net.minecraft.entity.Entity
-import net.minecraft.init.MobEffects.INVISIBILITY
-import net.minecraft.potion.PotionEffect
 import net.minecraft.util.ITickable
 import net.minecraft.util.SoundCategory
 import net.minecraft.util.math.AxisAlignedBB
@@ -273,7 +273,7 @@ class EndermanTeleportHandler(private val enderman: EntityMobAbstractEnderman) :
 		tpDelayRestoreY = enderman.posY
 		
 		enderman.setNoAI(true)
-		enderman.addPotionEffect(PotionEffect(INVISIBILITY, delayTicks, enderman.getActivePotionEffect(INVISIBILITY)?.amplifier ?: 0, true, false))
+		enderman.addPotionEffect(Potions.INVISIBILITY.makeEffect(delayTicks, enderman.getActivePotionEffect(Potions.INVISIBILITY)?.amplifier ?: 0, isAmbient = true, showParticles = false))
 		enderman.setPositionAndUpdate(enderman.posX, 4095.0, enderman.posZ)
 		
 		return true

@@ -4,15 +4,15 @@ import chylex.hee.game.mechanics.damage.IDamageProcessor.Companion.MAGIC_TYPE
 import chylex.hee.game.mechanics.damage.IDamageProcessor.Companion.PEACEFUL_EXCLUSION
 import chylex.hee.game.world.util.Teleporter
 import chylex.hee.system.migration.Facing.DOWN
+import chylex.hee.system.migration.vanilla.Potions
 import chylex.hee.system.util.blocksMovement
 import chylex.hee.system.util.distanceSqTo
+import chylex.hee.system.util.makeEffect
 import chylex.hee.system.util.nextInt
 import chylex.hee.system.util.offsetUntil
 import net.minecraft.entity.player.EntityPlayer
-import net.minecraft.init.MobEffects.WEAKNESS
 import net.minecraft.item.ItemFood
 import net.minecraft.item.ItemStack
-import net.minecraft.potion.PotionEffect
 import net.minecraft.world.World
 import java.util.Random
 
@@ -74,14 +74,14 @@ class ItemChorusBerry : ItemFood(0, 0F, false){
 				foodStats.addStats(hungerRestored, 3.5F)
 				
 				if (rand.nextInt(4) == 0){
-					player.addPotionEffect(PotionEffect(WEAKNESS, 20 * 60, 1))
+					player.addPotionEffect(Potions.WEAKNESS.makeEffect(20 * 60, 1))
 				}
 			}
 			else{
 				foodStats.addStats(hungerRestored, 16.5F)
 				
 				if (rand.nextInt(4) != 0){
-					player.addPotionEffect(PotionEffect(WEAKNESS, 20 * (90 + hungerOvercharge * 30), 1))
+					player.addPotionEffect(Potions.WEAKNESS.makeEffect(20 * (90 + hungerOvercharge * 30), 1))
 				}
 				
 				if (!teleportPlayer(player, hungerOvercharge, rand)){

@@ -7,13 +7,13 @@ import chylex.hee.game.world.territory.properties.TerritoryColors
 import chylex.hee.game.world.territory.properties.TerritoryEnvironment
 import chylex.hee.system.migration.forge.Side
 import chylex.hee.system.migration.forge.Sided
+import chylex.hee.system.migration.vanilla.Potions
 import chylex.hee.system.util.Pos
 import chylex.hee.system.util.allInCenteredBoxMutable
 import chylex.hee.system.util.color.IntColor.Companion.RGB
 import chylex.hee.system.util.lookPosVec
 import chylex.hee.system.util.math.LerpedFloat
 import chylex.hee.system.util.nextFloat
-import net.minecraft.init.MobEffects
 import net.minecraft.util.math.Vec3d
 import net.minecraft.world.EnumSkyBlock.BLOCK
 import net.minecraft.world.EnumSkyBlock.SKY
@@ -103,7 +103,7 @@ object Territory_ForgottenTombs : ITerritoryDescription{
 			val speed = if (next > prev) 0.025F else 0.055F
 			
 			currentFogDensity.update(prev + (next - prev) * speed)
-			nightVisionFactor = if (player?.isPotionActive(MobEffects.NIGHT_VISION) == true) 1F else 0F
+			nightVisionFactor = if (player?.isPotionActive(Potions.NIGHT_VISION) == true) 1F else 0F
 		}
 	}
 }

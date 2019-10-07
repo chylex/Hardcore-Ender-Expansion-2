@@ -2,8 +2,7 @@ package chylex.hee.game.mechanics.potion.brewing.recipes
 import chylex.hee.game.mechanics.potion.brewing.IBrewingRecipe
 import chylex.hee.game.mechanics.potion.brewing.PotionBrewing
 import chylex.hee.game.mechanics.potion.brewing.PotionItems
-import net.minecraft.init.PotionTypes.AWKWARD
-import net.minecraft.init.PotionTypes.WATER
+import chylex.hee.system.migration.vanilla.PotionTypes
 import net.minecraft.item.Item
 import net.minecraft.item.ItemStack
 import net.minecraft.potion.Potion
@@ -29,6 +28,6 @@ sealed class BrewBasicEffects(private val base: PotionType, private val registry
 		return ingredient.item === key.first && ingredient.metadata == key.second
 	}
 	
-	object FromWater : BrewBasicEffects(WATER, PotionBrewing.WATER)
-	object FromAwkward : BrewBasicEffects(AWKWARD, PotionBrewing.AWKWARD)
+	object FromWater : BrewBasicEffects(PotionTypes.WATER, PotionBrewing.WATER)
+	object FromAwkward : BrewBasicEffects(PotionTypes.AWKWARD, PotionBrewing.AWKWARD)
 }

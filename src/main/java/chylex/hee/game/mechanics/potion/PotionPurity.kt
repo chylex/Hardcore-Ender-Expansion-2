@@ -1,17 +1,15 @@
 package chylex.hee.game.mechanics.potion
 import chylex.hee.system.migration.MagicValues
+import chylex.hee.system.migration.vanilla.Potions
 import chylex.hee.system.util.color.IntColor.Companion.RGB
 import chylex.hee.system.util.floorToInt
 import net.minecraft.entity.EntityLivingBase
-import net.minecraft.init.MobEffects.POISON
-import net.minecraft.init.MobEffects.WITHER
 import net.minecraft.potion.PotionEffect
 import kotlin.math.max
 
 object PotionPurity : PotionBase(color = RGB(73, 217, 255), isNegative = false){
 	const val MIN_DURATION = 60 // allow animations to finish, must be > 10
 	
-	val PURITY = this
 	val TYPE = this.makeType
 	
 	override val iconX = 18
@@ -27,9 +25,9 @@ object PotionPurity : PotionBase(color = RGB(73, 217, 255), isNegative = false){
 		for((type, effect) in entity.activePotionMap){
 			if (type.isBadEffect && effect.duration in MIN_DURATION..INFINITE_DURATION_THRESHOLD){ // TODO handle eternal torment
 				when(type){
-					POISON -> purifySpecial(effect, MagicValues.POTION_POISON_TRIGGER_RATE, purityLevel)
-					WITHER -> purifySpecial(effect, MagicValues.POTION_WITHER_TRIGGER_RATE, purityLevel)
-					else   -> purifyGeneral(effect, purityLevel, entity.getActivePotionEffect(this)!!.duration)
+					Potions.POISON -> purifySpecial(effect, MagicValues.POTION_POISON_TRIGGER_RATE, purityLevel)
+					Potions.WITHER -> purifySpecial(effect, MagicValues.POTION_WITHER_TRIGGER_RATE, purityLevel)
+					else           -> purifyGeneral(effect, purityLevel, entity.getActivePotionEffect(this)!!.duration)
 				}
 			}
 		}

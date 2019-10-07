@@ -7,17 +7,17 @@ import chylex.hee.game.mechanics.damage.IDamageProcessor.Companion.NON_LETHAL
 import chylex.hee.system.migration.forge.SubscribeAllEvents
 import chylex.hee.system.migration.forge.SubscribeEvent
 import chylex.hee.system.migration.vanilla.Items
+import chylex.hee.system.migration.vanilla.Potions
 import chylex.hee.system.migration.vanilla.Sounds
 import chylex.hee.system.util.heeTag
 import chylex.hee.system.util.heeTagOrNull
+import chylex.hee.system.util.makeEffect
 import chylex.hee.system.util.nextFloat
 import net.minecraft.creativetab.CreativeTabs
 import net.minecraft.entity.EntityLivingBase
 import net.minecraft.entity.player.EntityPlayer
-import net.minecraft.init.MobEffects.NAUSEA
 import net.minecraft.item.ItemFood
 import net.minecraft.item.ItemStack
-import net.minecraft.potion.PotionEffect
 import net.minecraft.util.NonNullList
 import net.minecraft.world.World
 import net.minecraftforge.event.entity.player.PlayerEvent
@@ -84,7 +84,7 @@ class ItemVoidSalad : ItemFood(0, 0F, false){
 			
 			Type.DOUBLE -> {
 				DAMAGE_SAFE.dealTo(10F, player, TITLE_STARVE)
-				player.addPotionEffect(PotionEffect(NAUSEA, 20 * 15, 0))
+				player.addPotionEffect(Potions.NAUSEA.makeEffect(20 * 15))
 			}
 			
 			Type.MEGA -> {
