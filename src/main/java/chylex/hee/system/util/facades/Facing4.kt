@@ -9,5 +9,6 @@ object Facing4 : List<EnumFacing> by EnumFacing.HORIZONTALS.toList(){
 	private val allPermutations: Array<List<EnumFacing>> = Collections2.permutations(this).toTypedArray()
 	fun randomPermutation(rand: Random) = rand.nextItem(allPermutations)
 	
-	fun fromDirection(source: Vec3d, target: Vec3d): EnumFacing = EnumFacing.getFacingFromVector((target.x - source.x).toFloat(), 0F, (target.z - source.z).toFloat())
+	fun fromDirection(direction: Vec3d): EnumFacing = EnumFacing.getFacingFromVector(direction.x.toFloat(), 0F, direction.z.toFloat())
+	fun fromDirection(source: Vec3d, target: Vec3d) = fromDirection(target.subtract(source))
 }
