@@ -6,9 +6,11 @@ import chylex.hee.game.world.util.Transform
 import chylex.hee.system.util.Pos
 import chylex.hee.system.util.component1
 import chylex.hee.system.util.component2
+import chylex.hee.system.util.getBlock
 import net.minecraft.entity.EnumCreatureType
 import net.minecraft.init.Biomes
 import net.minecraft.util.math.BlockPos
+import net.minecraft.world.EnumSkyBlock.BLOCK
 import net.minecraft.world.World
 import net.minecraft.world.biome.Biome
 import net.minecraft.world.biome.Biome.SpawnListEntry
@@ -92,6 +94,14 @@ class ChunkGeneratorEndCustom(private val world: World) : IChunkGenerator{
 			
 			if (blockOffset.x in 0..15 && blockOffset.z in 0..15){
 				trigger.realize(world, startOffset.add(blockOffset), Transform.NONE)
+			}
+		}
+		
+		for(x in 0..15) for(y in 0..instance.territory.height.last) for(z in 0..15){
+			val pos = startOffset.add(x, y, z)
+			
+			if (pos.getBlock(world).lightValue > 0){
+				world.checkLightFor(BLOCK, pos) // TODO figure out something better?
 			}
 		}
 	}
