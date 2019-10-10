@@ -1,12 +1,11 @@
 package chylex.hee.system
 import chylex.hee.HEE
+import chylex.hee.proxy.Environment
 import chylex.hee.system.migration.forge.Side
 import net.minecraft.client.renderer.BannerTextures
-import net.minecraftforge.fml.common.FMLCommonHandler
 import org.lwjgl.LWJGLUtil
 import org.lwjgl.LWJGLUtil.PLATFORM_WINDOWS
 import org.lwjgl.opengl.Display
-import java.awt.GraphicsEnvironment
 import java.io.File
 import java.io.FileOutputStream
 import java.lang.management.ManagementFactory
@@ -17,7 +16,7 @@ object Debug{
 	
 	fun initialize(){
 		if (enabled){
-			when(FMLCommonHandler.instance().side!!){
+			when(Environment.side){
 				Side.CLIENT -> {
 					Display.setTitle("${Display.getTitle()} - Hardcore Ender Expansion ${HEE.version}")
 					
@@ -55,7 +54,7 @@ object Debug{
 	}
 	
 	private fun canExecutePowershell(scriptName: String): Boolean{
-		return LWJGLUtil.getPlatform() == PLATFORM_WINDOWS && !GraphicsEnvironment.isHeadless() && File(scriptName).exists()
+		return LWJGLUtil.getPlatform() == PLATFORM_WINDOWS && Environment.side == Side.CLIENT && File(scriptName).exists()
 	}
 	
 	// Special features

@@ -20,13 +20,12 @@ import chylex.hee.init.ModLoot
 import chylex.hee.init.ModNetwork
 import chylex.hee.init.ModPotions
 import chylex.hee.init.ModRecipes
-import chylex.hee.proxy.ModCommonProxy
+import chylex.hee.proxy.Environment
 import chylex.hee.system.Debug
 import chylex.hee.system.IntegrityCheck
 import chylex.hee.system.migration.forge.Side
 import net.minecraftforge.fml.common.Mod
 import net.minecraftforge.fml.common.Mod.EventHandler
-import net.minecraftforge.fml.common.SidedProxy
 import net.minecraftforge.fml.common.event.FMLInitializationEvent
 import net.minecraftforge.fml.common.event.FMLLoadCompleteEvent
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent
@@ -43,8 +42,7 @@ object HEE{
 	lateinit var version: String
 	lateinit var config: ModConfig
 	
-	@SidedProxy(clientSide = "chylex.hee.proxy.ModClientProxy", serverSide = "chylex.hee.proxy.ModCommonProxy")
-	lateinit var proxy: ModCommonProxy
+	val proxy = Environment.constructProxy()
 	
 	init{
 		CustomRarity

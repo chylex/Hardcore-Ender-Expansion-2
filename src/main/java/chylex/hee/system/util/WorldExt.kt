@@ -1,7 +1,7 @@
 package chylex.hee.system.util
+import chylex.hee.proxy.Environment
 import net.minecraft.world.World
 import net.minecraft.world.storage.WorldSavedData
-import net.minecraftforge.fml.common.FMLCommonHandler
 
 // Renaming
 
@@ -23,5 +23,5 @@ inline fun <reified T : WorldSavedData> World.perSavefileData(name: String, cons
 }
 
 inline fun <reified T : WorldSavedData> perSavefileData(name: String, constructor: (String) -> T): T{
-	return FMLCommonHandler.instance().minecraftServerInstance.entityWorld.perSavefileData(name, constructor)
+	return Environment.getServer().entityWorld.perSavefileData(name, constructor)
 }
