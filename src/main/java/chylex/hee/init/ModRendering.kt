@@ -7,6 +7,7 @@ import chylex.hee.client.render.block.RenderTileEndermanHead
 import chylex.hee.client.render.block.RenderTileIgneousPlate
 import chylex.hee.client.render.block.RenderTileJarODust
 import chylex.hee.client.render.block.RenderTileLootChest
+import chylex.hee.client.render.block.RenderTileSpawner
 import chylex.hee.client.render.block.RenderTileTablePedestal
 import chylex.hee.client.render.block.RenderTileVoidPortal
 import chylex.hee.client.render.entity.RenderEntityBossEnderEye
@@ -27,6 +28,7 @@ import chylex.hee.game.block.BlockGraveDirt
 import chylex.hee.game.block.BlockPuzzleLogic
 import chylex.hee.game.block.BlockTablePedestal
 import chylex.hee.game.block.BlockVoidPortalInner
+import chylex.hee.game.block.entity.TileEntityBaseSpawner
 import chylex.hee.game.block.entity.TileEntityDarkChest
 import chylex.hee.game.block.entity.TileEntityIgneousPlate
 import chylex.hee.game.block.entity.TileEntityJarODust
@@ -104,6 +106,7 @@ object ModRendering{
 	fun registerTileEntities(){
 		registerTile<TileEntityPortalInner.End>(RenderTileEndPortal)
 		registerTile<TileEntityPortalInner.Void>(RenderTileVoidPortal)
+		registerTile<TileEntityBaseSpawner>(RenderTileSpawner)
 		registerTile<TileEntityDarkChest>(RenderTileDarkChest)
 		registerTile<TileEntityLootChest>(RenderTileLootChest)
 		registerTile<TileEntityJarODust>(RenderTileJarODust)

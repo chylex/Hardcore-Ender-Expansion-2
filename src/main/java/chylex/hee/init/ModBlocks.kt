@@ -273,6 +273,8 @@ object ModBlocks{
 	@JvmField val DRY_VINES      = BlockDryVines().apply { setup("dry_vines") }
 	@JvmField val ENDERMAN_HEAD  = BlockEndermanHead().apply { setup("enderman_head_block", inCreativeTab = false) }
 	
+	// Blocks: Spawners
+	
 	// Blocks: Portals
 	
 	private val portalFrameAABB = AxisAlignedBB(0.0, 0.0, 0.0, 1.0, 0.8125, 1.0)
