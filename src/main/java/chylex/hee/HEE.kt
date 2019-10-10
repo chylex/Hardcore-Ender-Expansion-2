@@ -13,7 +13,6 @@ import chylex.hee.game.mechanics.trinket.TrinketHandler
 import chylex.hee.game.world.WorldProviderEndCustom
 import chylex.hee.game.world.feature.OverworldFeatures
 import chylex.hee.game.world.territory.storage.TokenPlayerStorage
-import chylex.hee.init.ModConfig
 import chylex.hee.init.ModCreativeTabs
 import chylex.hee.init.ModGuiHandler
 import chylex.hee.init.ModLoot
@@ -34,13 +33,12 @@ import net.minecraftforge.fml.common.event.FMLServerStartingEvent
 import net.minecraftforge.fml.common.network.NetworkCheckHandler
 import org.apache.logging.log4j.Logger
 
-@Mod(modid = HEE.ID, useMetadata = true, modLanguageAdapter = "chylex.hee.system.core.KotlinAdapter", guiFactory = "chylex.hee.init.factory.ConfigGuiFactory")
+@Mod(modid = HEE.ID, useMetadata = true, modLanguageAdapter = "chylex.hee.system.core.KotlinAdapter")
 object HEE{
 	const val ID = "hee"
 	
 	lateinit var log: Logger
 	lateinit var version: String
-	lateinit var config: ModConfig
 	
 	val proxy = Environment.constructProxy()
 	
@@ -55,7 +53,6 @@ object HEE{
 	fun onPreInit(e: FMLPreInitializationEvent){
 		log = e.modLog
 		version = e.modMetadata.version
-		config = ModConfig(e.suggestedConfigurationFile)
 		
 		Debug.initialize()
 		ModNetwork.initialize()
