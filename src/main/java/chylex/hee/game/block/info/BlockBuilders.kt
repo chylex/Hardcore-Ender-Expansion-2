@@ -155,6 +155,16 @@ object BlockBuilders{
 		lightLevel = 13
 	}
 	
+	// Interactive (Puzzle)
+	
+	val buildPuzzleLogic = BlockBuilder(Materials.SOLID_NO_TOOL, MapColor.ORANGE_STAINED_HARDENED_CLAY, SoundType.STONE).apply {
+		makeIndestructible()
+	}
+	
+	val buildPuzzleWall = buildPuzzleLogic.clone {
+		lightLevel = 14
+	}
+	
 	// Interactive (Uncategorized)
 	
 	val buildBrewingStand = BlockBuilder(Material.IRON, MapColor.YELLOW, SoundType.STONE).apply {

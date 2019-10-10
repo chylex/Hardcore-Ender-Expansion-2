@@ -39,6 +39,7 @@ import chylex.hee.game.block.BlockInfusedTNT
 import chylex.hee.game.block.BlockJarODust
 import chylex.hee.game.block.BlockLootChest
 import chylex.hee.game.block.BlockPillarCustom
+import chylex.hee.game.block.BlockPuzzleLogic
 import chylex.hee.game.block.BlockScaffolding
 import chylex.hee.game.block.BlockSimple
 import chylex.hee.game.block.BlockSimpleShaped
@@ -98,6 +99,8 @@ import chylex.hee.game.block.info.BlockBuilders.buildObsidianVariation
 import chylex.hee.game.block.info.BlockBuilders.buildObsidianVariationLit
 import chylex.hee.game.block.info.BlockBuilders.buildPortalFrame
 import chylex.hee.game.block.info.BlockBuilders.buildPortalInner
+import chylex.hee.game.block.info.BlockBuilders.buildPuzzleLogic
+import chylex.hee.game.block.info.BlockBuilders.buildPuzzleWall
 import chylex.hee.game.block.info.BlockBuilders.buildScaffolding
 import chylex.hee.game.block.info.BlockBuilders.buildStardustOre
 import chylex.hee.game.block.info.BlockBuilders.buildTable
@@ -112,6 +115,8 @@ import chylex.hee.game.item.ItemBlockWithMetadata
 import chylex.hee.game.item.ItemDragonEgg
 import chylex.hee.game.item.ItemInfusedTNT
 import chylex.hee.init.ModCreativeTabs.OrderedCreativeTab
+import chylex.hee.system.migration.Facing.NORTH
+import chylex.hee.system.migration.Facing.SOUTH
 import chylex.hee.system.migration.forge.SubscribeAllEvents
 import chylex.hee.system.migration.forge.SubscribeEvent
 import chylex.hee.system.migration.vanilla.Blocks
@@ -227,6 +232,17 @@ object ModBlocks{
 	@JvmField val JAR_O_DUST = BlockJarODust(buildJarODust).apply { setup("jar_o_dust") }
 	@JvmField val DARK_CHEST = BlockDarkChest(buildGloomrock).apply { setup("dark_chest") } // UPDATE: update recipe json to include tag to allow either slab variation
 	@JvmField val LOOT_CHEST = BlockLootChest(buildLootChest).apply { setup("loot_chest") }
+	
+	// Blocks: Interactive (Puzzle)
+	
+	@JvmField val PUZZLE_WALL       = BlockSimple(buildPuzzleWall).apply { setup("puzzle_block_wall") }
+	@JvmField val PUZZLE_PLAIN      = BlockPuzzleLogic.Plain(buildPuzzleLogic).apply { setup("puzzle_block_plain") }
+	@JvmField val PUZZLE_BURST_3    = BlockPuzzleLogic.Burst(buildPuzzleLogic, radius = 1).apply { setup("puzzle_block_burst_3") }
+	@JvmField val PUZZLE_BURST_5    = BlockPuzzleLogic.Burst(buildPuzzleLogic, radius = 2).apply { setup("puzzle_block_burst_5") }
+	@JvmField val PUZZLE_REDIRECT_1 = BlockPuzzleLogic.Redirect(buildPuzzleLogic, arrayOf(NORTH)).apply { setup("puzzle_block_redirect_1") }
+	@JvmField val PUZZLE_REDIRECT_2 = BlockPuzzleLogic.Redirect(buildPuzzleLogic, arrayOf(NORTH, SOUTH)).apply { setup("puzzle_block_redirect_2") }
+	@JvmField val PUZZLE_REDIRECT_4 = BlockPuzzleLogic.RedirectAll(buildPuzzleLogic).apply { setup("puzzle_block_redirect_4") }
+	@JvmField val PUZZLE_TELEPORT   = BlockPuzzleLogic.Teleport(buildPuzzleLogic).apply { setup("puzzle_block_teleport") }
 	
 	// Blocks: Interactive (Uncategorized)
 	
@@ -377,6 +393,15 @@ object ModBlocks{
 			register(JAR_O_DUST with basicItemBlock)
 			register(DARK_CHEST with basicItemBlock)
 			register(LOOT_CHEST with basicItemBlock)
+			
+			register(PUZZLE_WALL with basicItemBlock)
+			register(PUZZLE_PLAIN with basicItemBlock)
+			register(PUZZLE_BURST_3 with basicItemBlock)
+			register(PUZZLE_BURST_5 with basicItemBlock)
+			register(PUZZLE_REDIRECT_1 with basicItemBlock)
+			register(PUZZLE_REDIRECT_2 with basicItemBlock)
+			register(PUZZLE_REDIRECT_4 with basicItemBlock)
+			register(PUZZLE_TELEPORT with basicItemBlock)
 			
 			register(INFUSED_TNT with ::ItemInfusedTNT)
 			register(IGNEOUS_PLATE with basicItemBlock)

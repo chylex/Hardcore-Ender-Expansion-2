@@ -24,6 +24,7 @@ import chylex.hee.client.util.MC
 import chylex.hee.game.block.BlockAbstractTable
 import chylex.hee.game.block.BlockDryVines
 import chylex.hee.game.block.BlockGraveDirt
+import chylex.hee.game.block.BlockPuzzleLogic
 import chylex.hee.game.block.BlockTablePedestal
 import chylex.hee.game.block.BlockVoidPortalInner
 import chylex.hee.game.block.entity.TileEntityDarkChest
@@ -123,6 +124,18 @@ object ModRendering{
 		setColor(ModBlocks.DRY_VINES, BlockDryVines.Color)
 		setColor(ModBlocks.DRY_VINES, BlockDryVines.Color.asItem(ModBlocks.DRY_VINES))
 		setColor(ModBlocks.TABLE_PEDESTAL, BlockTablePedestal.Color)
+		
+		for(block in arrayOf(
+			ModBlocks.PUZZLE_BURST_3,
+			ModBlocks.PUZZLE_BURST_5,
+			ModBlocks.PUZZLE_REDIRECT_1,
+			ModBlocks.PUZZLE_REDIRECT_2,
+			ModBlocks.PUZZLE_REDIRECT_4,
+			ModBlocks.PUZZLE_TELEPORT
+		)){
+			setColor(block, BlockPuzzleLogic.Color)
+			setColor(block, BlockPuzzleLogic.Color.asItem(block))
+		}
 		
 		setColor(ModItems.BINDING_ESSENCE, ItemBindingEssence.Color)
 		setColor(ModItems.ENERGY_ORACLE, ItemEnergyOracle.Color)

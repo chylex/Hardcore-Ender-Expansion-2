@@ -60,8 +60,17 @@ tile.hee.jar_o_dust.tooltip.entry=%sx %s
 tile.hee.dark_chest.name=Dark Chest
 tile.hee.loot_chest.name=Loot Chest
 tile.hee.loot_chest.tooltip=§5§o(Editable in creative mode)
-tile.hee.igneous_plate.name=Igneous Plate
 
+tile.hee.puzzle_block_wall.name=Puzzle Block (Wall)
+tile.hee.puzzle_block_plain.name=Puzzle Block (Plain)
+tile.hee.puzzle_block_burst_3.name=Puzzle Block (Burst 3x3)
+tile.hee.puzzle_block_burst_5.name=Puzzle Block (Burst 5x5)
+tile.hee.puzzle_block_redirect_1.name=Puzzle Block (Redirect 1)
+tile.hee.puzzle_block_redirect_2.name=Puzzle Block (Redirect 2)
+tile.hee.puzzle_block_redirect_4.name=Puzzle Block (Redirect 4)
+tile.hee.puzzle_block_teleport.name=Puzzle Block (Teleport)
+
+tile.hee.igneous_plate.name=Igneous Plate
 tile.hee.enhanced_brewing_stand.name=Enhanced Brewing Stand
 
 tile.hee.end_powder_ore.name=End Powder Ore

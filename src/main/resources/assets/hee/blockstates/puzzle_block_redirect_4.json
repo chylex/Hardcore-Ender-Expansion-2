@@ -1,0 +1,18 @@
+{
+  "forge_marker": 1,
+  "defaults": {
+    "model": "hee:puzzle_block_overlay",
+    "textures": {
+      "base": "hee:block/puzzle_base_active",
+      "top": "hee:block/puzzle_overlay_redirect_4"
+    }
+  },
+  "variants": {
+    "state": {
+      "active":   { "textures": { "base": "hee:block/puzzle_base_active" } },
+      "inactive": { "textures": { "base": "hee:block/puzzle_base_inactive" } },
+      "disabled": { "textures": { "base": "hee:block/puzzle_base_disabled" } }
+    },
+    "inventory": [{}]
+  }
+}

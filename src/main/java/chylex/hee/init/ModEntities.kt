@@ -21,6 +21,7 @@ import chylex.hee.game.entity.projectile.EntityProjectileEnderPearl
 import chylex.hee.game.entity.projectile.EntityProjectileEyeOfEnder
 import chylex.hee.game.entity.projectile.EntityProjectileSpatialDash
 import chylex.hee.game.entity.technical.EntityTechnicalIgneousPlateLogic
+import chylex.hee.game.entity.technical.EntityTechnicalPuzzle
 import chylex.hee.game.entity.technical.EntityTechnicalTrigger
 import chylex.hee.game.world.territory.TerritoryType
 import chylex.hee.init.factory.EntityConstructors
@@ -69,6 +70,7 @@ object ModEntities{
 			register<EntityProjectileSpatialDash>("projectile_spatial_dash").tracker(64, 10, true) to this
 			
 			register<EntityTechnicalIgneousPlateLogic>("igneous_plate_logic").tracker(32, 10, false) to this
+			register<EntityTechnicalPuzzle>("technical_puzzle").tracker(1, Int.MAX_VALUE, false) to this
 			register<EntityTechnicalTrigger>("technical_trigger").tracker(256, Int.MAX_VALUE, false) to this
 		}
 		

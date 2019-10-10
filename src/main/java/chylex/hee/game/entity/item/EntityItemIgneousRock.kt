@@ -1,5 +1,7 @@
 package chylex.hee.game.entity.item
 import chylex.hee.HEE
+import chylex.hee.game.block.BlockPuzzleLogic
+import chylex.hee.game.entity.technical.EntityTechnicalPuzzle
 import chylex.hee.game.fx.FxBlockData
 import chylex.hee.game.fx.FxBlockHandler
 import chylex.hee.game.fx.FxEntityData
@@ -21,6 +23,7 @@ import chylex.hee.system.migration.vanilla.Blocks
 import chylex.hee.system.migration.vanilla.Sounds
 import chylex.hee.system.util.FLAG_SYNC_CLIENT
 import chylex.hee.system.util.Pos
+import chylex.hee.system.util.TagCompound
 import chylex.hee.system.util.breakBlock
 import chylex.hee.system.util.ceilToInt
 import chylex.hee.system.util.distanceSqTo
@@ -28,11 +31,14 @@ import chylex.hee.system.util.facades.Facing4
 import chylex.hee.system.util.floorToInt
 import chylex.hee.system.util.get
 import chylex.hee.system.util.getBlock
+import chylex.hee.system.util.getEnum
 import chylex.hee.system.util.getFaceShape
 import chylex.hee.system.util.getMaterial
 import chylex.hee.system.util.getState
 import chylex.hee.system.util.getTile
+import chylex.hee.system.util.heeTag
 import chylex.hee.system.util.isAir
+import chylex.hee.system.util.isNotEmpty
 import chylex.hee.system.util.motionVec
 import chylex.hee.system.util.nextBiasedFloat
 import chylex.hee.system.util.nextFloat
@@ -42,9 +48,11 @@ import chylex.hee.system.util.playClient
 import chylex.hee.system.util.posVec
 import chylex.hee.system.util.selectVulnerableEntities
 import chylex.hee.system.util.setBlock
+import chylex.hee.system.util.setEnum
 import chylex.hee.system.util.setFireTicks
 import chylex.hee.system.util.setState
 import chylex.hee.system.util.size
+import chylex.hee.system.util.totalTime
 import chylex.hee.system.util.with
 import net.minecraft.block.BlockDirt
 import net.minecraft.block.BlockSilverfish
@@ -61,6 +69,7 @@ import net.minecraft.item.ItemStack
 import net.minecraft.item.crafting.FurnaceRecipes
 import net.minecraft.tileentity.TileEntitySkull
 import net.minecraft.util.DamageSource
+import net.minecraft.util.EnumFacing
 import net.minecraft.util.EnumParticleTypes.LAVA
 import net.minecraft.util.SoundCategory
 import net.minecraft.util.SoundEvent
@@ -149,8 +158,10 @@ class EntityItemIgneousRock : EntityItemNoBob{
 	
 	constructor(world: World, stack: ItemStack, replacee: Entity) : super(world, stack, replacee){
 		lifespan = 1200 + (world.rand.nextBiasedFloat(3F) * 1200F).floorToInt()
+		throwFacing = Facing4.fromDirection(motionVec)
 	}
 	
+	private var throwFacing = DOWN
 	private var prevMotionVec = Vec3d.ZERO
 	
 	init{
@@ -160,6 +171,30 @@ class EntityItemIgneousRock : EntityItemNoBob{
 	override fun onUpdate(){
 		prevMotionVec = motionVec
 		super.onUpdate()
+		
+		val currentPos = Pos(this)
+		
+		if (!world.isRemote && age > 4 && (world.totalTime - 1L) % BlockPuzzleLogic.UPDATE_RATE == 0L){
+			val posBelow = currentPos.down()
+			
+			if (posBelow.getBlock(world) is BlockPuzzleLogic){
+				val entity = EntityTechnicalPuzzle(world)
+				
+				if (entity.startChain(posBelow, throwFacing)){
+					world.spawnEntity(entity)
+					
+					val reducedStack = item.apply { shrink(1) }.takeIf { it.isNotEmpty }
+					
+					if (reducedStack == null){
+						setDead()
+						return
+					}
+					else{
+						item = reducedStack
+					}
+				}
+			}
+		}
 		
 		if (!world.isRemote && age >= ACTIVITY_DELAY_TICKS){
 			if (ticksExisted % 5 == 0){
@@ -199,8 +234,6 @@ class EntityItemIgneousRock : EntityItemNoBob{
 				item = stack.apply { shrink(1) }
 			}
 		}
-		
-		val currentPos = Pos(this)
 		
 		if (currentPos != Pos(prevPosX, prevPosY, prevPosZ) || ticksExisted % 25 == 0){
 			if (currentPos.getMaterial(world) === Material.WATER){
@@ -393,5 +426,15 @@ class EntityItemIgneousRock : EntityItemNoBob{
 			pos.setState(world, targetState)
 			PacketClientFX(FX_BLOCK_SMELT, FxBlockData(pos)).sendToAllAround(this, 32.0)
 		}
+	}
+	
+	// Serialization
+	
+	override fun writeEntityToNBT(nbt: TagCompound) = with(nbt.heeTag){
+		setEnum("Facing", throwFacing)
+	}
+	
+	override fun readEntityFromNBT(nbt: TagCompound) = with(nbt.heeTag){
+		throwFacing = getEnum<EnumFacing>("Facing") ?: throwFacing
 	}
 }
