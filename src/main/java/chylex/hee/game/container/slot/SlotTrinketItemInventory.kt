@@ -47,8 +47,8 @@ class SlotTrinketItemInventory(trinketHandler: IItemHandler, slotNumber: Int) : 
 			
 			RenderHelper.disableStandardItemLighting()
 			
-			MC.textureManager.bindTexture(TEX_SLOT)
-			Gui.drawScaledCustomSizeModalRect(xPos - 1, yPos  - 1, 0F, 0F, 18, 18, 18, 18, TEX_SLOT_W, TEX_SLOT_H)
+			MC.textureManager.bindTexture(SlotTrinketItem.Client.TEX_SLOT)
+			Gui.drawScaledCustomSizeModalRect(xPos - 1, yPos  - 1, 0F, 0F, 18, 18, 18, 18, SlotTrinketItem.Client.TEX_SLOT_W, SlotTrinketItem.Client.TEX_SLOT_H)
 			
 			RenderHelper.enableGUIStandardItemLighting()
 		}
