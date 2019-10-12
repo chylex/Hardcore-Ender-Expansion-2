@@ -94,6 +94,7 @@ class TileEntityIgneousPlate : TileEntityBase(), ITickable{
 	
 	fun reduceSpeed(amount: Float){
 		progress = max(0.0, progress - amount)
+		markDirty()
 	}
 	
 	fun blastOff(){
@@ -124,10 +125,14 @@ class TileEntityIgneousPlate : TileEntityBase(), ITickable{
 			furnace.isBurning
 		
 		if (isBurning){
-			progress = min(1.0, progress + PROGRESS_HEAT_UP_PER_TICK)
+			if (progress < 1.0){
+				progress = min(1.0, progress + PROGRESS_HEAT_UP_PER_TICK)
+				markDirty()
+			}
 		}
 		else if (potential > 0.0){
 			progress = max(0.0, progress - PROGRESS_COOL_DOWN_PER_TICK)
+			markDirty()
 		}
 		
 		if (world.isRemote){
