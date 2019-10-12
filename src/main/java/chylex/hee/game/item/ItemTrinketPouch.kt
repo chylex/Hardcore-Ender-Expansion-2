@@ -19,10 +19,11 @@ import chylex.hee.system.migration.forge.EventPriority
 import chylex.hee.system.migration.forge.Side
 import chylex.hee.system.migration.forge.Sided
 import chylex.hee.system.migration.forge.SubscribeEvent
-import chylex.hee.system.util.InventorySlot
 import chylex.hee.system.util.NBTItemStackList
 import chylex.hee.system.util.NBTList.Companion.setList
 import chylex.hee.system.util.allSlots
+import chylex.hee.system.util.any
+import chylex.hee.system.util.find
 import chylex.hee.system.util.getListOfItemStacks
 import chylex.hee.system.util.getStack
 import chylex.hee.system.util.heeTag
@@ -138,7 +139,7 @@ class ItemTrinketPouch : ItemAbstractTrinket(), ITrinketHandlerProvider, IInfusa
 		// Trinket handler implementation
 		
 		override fun isInTrinketSlot(stack: ItemStack): Boolean{
-			return getPouchIfValid() != null && nonEmptySlots.asSequence().any { it.stack === stack }
+			return getPouchIfValid() != null && nonEmptySlots.any { it.stack === stack }
 		}
 		
 		override fun isItemActive(item: ITrinketItem): Boolean{
@@ -162,7 +163,7 @@ class ItemTrinketPouch : ItemAbstractTrinket(), ITrinketHandlerProvider, IInfusa
 			return if (getPouchIfValid() == null)
 				null
 			else
-				return nonEmptySlots.asSequence().map(InventorySlot::stack).find { it.item === item && item.canPlaceIntoTrinketSlot(it) }
+				return nonEmptySlots.find { (_, stack) -> stack.item === item && item.canPlaceIntoTrinketSlot(stack) }?.stack
 		}
 	}
 	
@@ -182,7 +183,7 @@ class ItemTrinketPouch : ItemAbstractTrinket(), ITrinketHandlerProvider, IInfusa
 	
 	override fun onItemRightClick(world: World, player: EntityPlayer, hand: EnumHand): ActionResult<ItemStack>{
 		val stack = player.getHeldItem(hand)
-		val slot = player.inventory.nonEmptySlots.asSequence().find { it.stack === stack }
+		val slot = player.inventory.nonEmptySlots.find { it.stack === stack }
 		
 		if (slot == null){
 			return ActionResult(PASS, stack)

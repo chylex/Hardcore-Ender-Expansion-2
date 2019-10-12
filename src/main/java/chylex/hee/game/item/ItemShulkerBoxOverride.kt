@@ -12,6 +12,7 @@ import chylex.hee.system.migration.forge.Sided
 import chylex.hee.system.migration.forge.SubscribeAllEvents
 import chylex.hee.system.migration.forge.SubscribeEvent
 import chylex.hee.system.util.allSlots
+import chylex.hee.system.util.find
 import chylex.hee.system.util.getCompoundOrNull
 import chylex.hee.system.util.getStack
 import chylex.hee.system.util.isNotEmpty
@@ -99,7 +100,7 @@ class ItemShulkerBoxOverride(block: Block) : ItemShulkerBox(block){
 	
 	override fun onItemRightClick(world: World, player: EntityPlayer, hand: EnumHand): ActionResult<ItemStack>{
 		val stack = player.getHeldItem(hand)
-		val slot = player.inventory.nonEmptySlots.asSequence().find { it.stack === stack }
+		val slot = player.inventory.nonEmptySlots.find { it.stack === stack }
 		
 		if (slot == null){
 			return ActionResult(PASS, stack)

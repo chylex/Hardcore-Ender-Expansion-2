@@ -43,7 +43,7 @@ import net.minecraft.world.WorldServer
 import net.minecraft.world.storage.loot.LootContext
 import java.util.Random
 
-sealed class BlockGraveDirt(builder: BlockBuilder) : BlockSimpleShaped(builder, AxisAlignedBB(0.0, 0.0, 0.0, 1.0, 0.9375, 1.0)){
+open class BlockGraveDirt(builder: BlockBuilder) : BlockSimpleShaped(builder, AxisAlignedBB(0.0, 0.0, 0.0, 1.0, 0.9375, 1.0)){
 	companion object{
 		val FULL = Property.bool("full")
 		
@@ -106,8 +106,6 @@ sealed class BlockGraveDirt(builder: BlockBuilder) : BlockSimpleShaped(builder, 
 	}
 	
 	// Variations
-	
-	class Plain(builder: BlockBuilder) : BlockGraveDirt(builder)
 	
 	class Loot(builder: BlockBuilder) : BlockGraveDirt(builder){
 		override fun getDrops(drops: NonNullList<ItemStack>, world: IBlockAccess, pos: BlockPos, state: IBlockState, fortune: Int){

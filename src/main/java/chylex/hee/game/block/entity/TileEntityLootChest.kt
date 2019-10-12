@@ -62,7 +62,7 @@ class TileEntityLootChest : TileEntityBaseChest(){
 		return if (player.isCreative)
 			sourceInventory
 		else
-			playerInventories.computeIfAbsent(player.uniqueID){ createInventoryClone(sourceInventory) }
+			playerInventories.getOrPut(player.uniqueID){ createInventoryClone(sourceInventory) }
 	}
 	
 	// Serialization

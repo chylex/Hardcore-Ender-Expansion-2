@@ -258,22 +258,22 @@ abstract class NBTList<T : Any>(protected val tagList: TagList) : Iterable<T>{
 
 class NBTPrimitiveList(tagList: TagList = TagList()) : NBTList<NBTPrimitive>(tagList){
 	val allBytes
-		get() = iterator().asSequence().map(NBTPrimitive::getByte)
+		get() = this.map(NBTPrimitive::getByte)
 	
 	val allShorts
-		get() = iterator().asSequence().map(NBTPrimitive::getShort)
+		get() = this.map(NBTPrimitive::getShort)
 	
 	val allInts
-		get() = iterator().asSequence().map(NBTPrimitive::getInt)
+		get() = this.map(NBTPrimitive::getInt)
 	
 	val allLongs
-		get() = iterator().asSequence().map(NBTPrimitive::getLong)
+		get() = this.map(NBTPrimitive::getLong)
 	
 	val allFloats
-		get() = iterator().asSequence().map(NBTPrimitive::getFloat)
+		get() = this.map(NBTPrimitive::getFloat)
 	
 	val allDoubles
-		get() = iterator().asSequence().map(NBTPrimitive::getDouble)
+		get() = this.map(NBTPrimitive::getDouble)
 	
 	fun append(value: Byte)   = tagList.appendTag(TagByte(value))
 	fun append(value: Short)  = tagList.appendTag(TagShort(value))

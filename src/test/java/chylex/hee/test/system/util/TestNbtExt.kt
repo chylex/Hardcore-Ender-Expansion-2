@@ -1,7 +1,9 @@
 package chylex.hee.test.system.util
+import chylex.hee.system.migration.vanilla.Items
 import chylex.hee.system.util.NBTList.Companion.setList
 import chylex.hee.system.util.NBTObjectList
 import chylex.hee.system.util.NBTPrimitiveList
+import chylex.hee.system.util.TagCompound
 import chylex.hee.system.util.cleanupNBT
 import chylex.hee.system.util.getListOfByteArrays
 import chylex.hee.system.util.getListOfCompounds
@@ -13,11 +15,9 @@ import chylex.hee.system.util.heeTagOrNull
 import chylex.hee.system.util.nbt
 import chylex.hee.system.util.nbtOrNull
 import net.minecraft.init.Bootstrap
-import chylex.hee.system.migration.vanilla.Items
 import net.minecraft.item.ItemStack
 import net.minecraft.nbt.NBTBase
 import net.minecraft.nbt.NBTTagByte
-import chylex.hee.system.util.TagCompound
 import net.minecraft.nbt.NBTTagDouble
 import net.minecraft.nbt.NBTTagFloat
 import net.minecraft.nbt.NBTTagInt
@@ -350,7 +350,7 @@ class TestNbtExt{
 		}
 		
 		@Nested inner class SequenceGetters{
-			private inline fun <T : Any> testSequenceGetter(callAppend: (NBTPrimitiveList, T) -> Unit, callGetSequence: (NBTPrimitiveList) -> Sequence<T>, testValues: Array<T>){
+			private inline fun <T : Any> testSequenceGetter(callAppend: (NBTPrimitiveList, T) -> Unit, callGetSequence: (NBTPrimitiveList) -> Iterable<T>, testValues: Array<T>){
 				with(TagCompound()){
 					val list = getListOfPrimitives("key")
 					
@@ -358,7 +358,7 @@ class TestNbtExt{
 						callAppend(list, element)
 					}
 					
-					assertIterableEquals(testValues.asIterable(), callGetSequence(list).asIterable())
+					assertIterableEquals(testValues.asIterable(), callGetSequence(list))
 				}
 			}
 			

@@ -24,7 +24,7 @@ class TableLinkedPedestalHandler(private val table: TileEntityBaseTable, maxDist
 	private var dedicatedOutputPedestal: BlockPos? = null
 	
 	val inputPedestalTiles
-		get() = inputPedestals.asSequence().mapNotNull { it.getTile<TileEntityTablePedestal>(table.world) }
+		get() = inputPedestals.mapNotNull { it.getTile<TileEntityTablePedestal>(table.world) }
 	
 	val dedicatedOutputPedestalTile
 		get() = dedicatedOutputPedestal?.getTile<TileEntityTablePedestal>(table.world)

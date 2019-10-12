@@ -213,7 +213,7 @@ class ExplosionBuilder{
 				val fireChance = builder.blockFireChance
 				
 				if (fireChance > 0){
-					val candidates = if (builder.destroyBlocks) affectedBlockPositions.asSequence() else affectedBlockPositions.asSequence().map(BlockPos::up)
+					val candidates = if (builder.destroyBlocks) affectedBlockPositions else affectedBlockPositions.map(BlockPos::up)
 					
 					for(pos in candidates){
 						if (pos.isAir(world) && pos.down().getState(world).isFullBlock && rand.nextInt(fireChance) == 0){

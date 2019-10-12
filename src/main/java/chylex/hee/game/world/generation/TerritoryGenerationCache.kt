@@ -24,6 +24,6 @@ class TerritoryGenerationCache(private val world: World){
 	}
 	
 	fun get(instance: TerritoryInstance): Pair<SegmentedWorld, TerritoryGenerationInfo>{
-		return definitelyTemporaryTerritoryWorldCache.computeIfAbsent(instance, ::constructInstance)
+		return definitelyTemporaryTerritoryWorldCache.getOrPut(instance){ constructInstance(instance) }
 	}
 }

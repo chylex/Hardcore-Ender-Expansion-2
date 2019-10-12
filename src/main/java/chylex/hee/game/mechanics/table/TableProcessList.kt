@@ -21,12 +21,25 @@ class TableProcessList : Iterable<ITableProcess>{
 		processes.forEach(::add)
 	}
 	
+	fun revalidate(): Boolean{
+		return removeIf { !it.revalidate() }
+	}
+	
 	fun remove(process: ITableProcess){
 		currentProcesses.remove(process)
 		process.dispose()
 	}
 	
 	fun remove(predicate: (ITableProcess) -> Boolean): Boolean{
+		return removeIf(predicate)
+	}
+	
+	fun remove(pedestal: TileEntityTablePedestal): Boolean{
+		val removedPos = pedestal.pos
+		return removeIf { it.pedestals.contains(removedPos) }
+	}
+	
+	private inline fun removeIf(predicate: (ITableProcess) -> Boolean): Boolean{
 		var removedAny = false
 		
 		for(index in currentProcesses.indices.reversed()){
@@ -39,11 +52,6 @@ class TableProcessList : Iterable<ITableProcess>{
 		}
 		
 		return removedAny
-	}
-	
-	fun remove(pedestal: TileEntityTablePedestal): Boolean{
-		val removedPos = pedestal.pos
-		return remove { it.pedestals.contains(removedPos) }
 	}
 	
 	override fun iterator(): Iterator<ITableProcess>{

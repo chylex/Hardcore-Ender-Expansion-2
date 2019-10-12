@@ -213,7 +213,7 @@ object ModBlocks{
 	
 	// Blocks: Building (Grave Dirt)
 	
-	@JvmField val GRAVE_DIRT_PLAIN      = BlockGraveDirt.Plain(buildGraveDirt).apply { setup("grave_dirt") }
+	@JvmField val GRAVE_DIRT_PLAIN      = BlockGraveDirt(buildGraveDirt).apply { setup("grave_dirt") }
 	@JvmField val GRAVE_DIRT_LOOT       = BlockGraveDirt.Loot(buildGraveDirt).apply { setup("grave_dirt_loot") }
 	@JvmField val GRAVE_DIRT_SPIDERLING = BlockGraveDirt.Spiderling(buildGraveDirt).apply { setup("grave_dirt_spiderling") }
 	

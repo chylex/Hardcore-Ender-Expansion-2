@@ -61,11 +61,10 @@ abstract class TileEntityBaseTable : TileEntityBase(), ITickable{
 		-> if (isLoaded) markDirty()
 	}
 	
-	private val predicatePedestalBusy: (TileEntityTablePedestal) -> Boolean =
-		{ val pos = it.pos; currentProcesses.any { process -> process.pedestals.contains(pos) } }
-	
-	private val predicatePedestalHasInput: (TileEntityTablePedestal) -> Boolean =
-		{ it.hasInputItem }
+	private fun isPedestalBusy(pedestal: TileEntityTablePedestal): Boolean{
+		val pos = pedestal.pos
+		return currentProcesses.any { process -> process.pedestals.contains(pos) }
+	}
 	
 	// Behavior
 	
@@ -89,7 +88,7 @@ abstract class TileEntityBaseTable : TileEntityBase(), ITickable{
 		if (++tickCounterRefresh >= PROCESS_REFRESH_RATE){
 			tickCounterRefresh = 0
 			
-			val unassignedPedestals = pedestalHandler.inputPedestalTiles.filter(predicatePedestalHasInput).filterNot(predicatePedestalBusy).toList()
+			val unassignedPedestals = pedestalHandler.inputPedestalTiles.filter { it.hasInputItem && !isPedestalBusy(it) }
 			
 			if (unassignedPedestals.isNotEmpty()){
 				val newProcesses = createNewProcesses(unassignedPedestals)
@@ -102,7 +101,7 @@ abstract class TileEntityBaseTable : TileEntityBase(), ITickable{
 			}
 		}
 		
-		if (currentProcesses.remove { !it.revalidate() }){
+		if (currentProcesses.revalidate()){
 			markDirty()
 		}
 		

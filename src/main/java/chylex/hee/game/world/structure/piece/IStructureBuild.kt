@@ -3,5 +3,5 @@ import chylex.hee.game.world.structure.IStructureGenerator
 import chylex.hee.game.world.util.BoundingBox
 
 interface IStructureBuild : IStructureGenerator{
-	val boundingBoxes: Sequence<BoundingBox>
+	val boundingBoxes: Iterable<BoundingBox>
 }

@@ -139,7 +139,7 @@ class StructureBuild<T : StructurePiece<*>.MutableInstance>(val size: Size){
 			override val size = this@StructureBuild.size
 			
 			override val boundingBoxes
-				get() = finalPieces.asSequence().map { it.pieceBox }
+				get() = finalPieces.map { it.pieceBox }
 			
 			override fun generate(world: IStructureWorld){
 				for(piece in finalPieces){
