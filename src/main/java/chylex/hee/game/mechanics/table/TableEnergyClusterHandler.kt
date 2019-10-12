@@ -19,6 +19,10 @@ import net.minecraft.world.World
 import net.minecraftforge.common.util.INBTSerializable
 
 class TableEnergyClusterHandler(private val table: TileEntityBaseTable, maxDistance: Int) : INBTSerializable<TagCompound>{
+	private companion object{
+		private const val POS_TAG = "Pos"
+	}
+	
 	private val maxDistanceSq = square(maxDistance)
 	private val rayTracer = RayTracer(::canCollideCheck)
 	
@@ -93,11 +97,11 @@ class TableEnergyClusterHandler(private val table: TileEntityBaseTable, maxDista
 	
 	override fun serializeNBT() = TagCompound().apply {
 		currentCluster?.let {
-			setPos("Pos", it)
+			setPos(POS_TAG, it)
 		}
 	}
 	
 	override fun deserializeNBT(nbt: TagCompound) = with(nbt){
-		currentCluster = getPosOrNull("Pos")
+		currentCluster = getPosOrNull(POS_TAG)
 	}
 }

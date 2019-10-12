@@ -69,13 +69,15 @@ fun TagCompound.getStack(key: String): ItemStack{
 
 // Inventories
 
+private const val SLOT_TAG = "Slot"
+
 fun TagCompound.saveInventory(key: String, inventory: IInventory){
 	val list = TagList()
 	
 	for((slot, stack) in inventory.nonEmptySlots){
 		list.appendTag(TagCompound().also {
 			stack.writeToNBT(it)
-			it.setInteger("Slot", slot)
+			it.setInteger(SLOT_TAG, slot)
 		})
 	}
 	
@@ -86,7 +88,7 @@ fun TagCompound.loadInventory(key: String, inventory: IInventory){
 	inventory.clear()
 	
 	for(tag in this.getListOfCompounds(key)){
-		inventory.setStack(tag.getInteger("Slot"), ItemStack(tag))
+		inventory.setStack(tag.getInteger(SLOT_TAG), ItemStack(tag))
 	}
 }
 

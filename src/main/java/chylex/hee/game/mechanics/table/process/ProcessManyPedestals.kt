@@ -26,7 +26,13 @@ import net.minecraft.util.math.BlockPos
 import net.minecraft.world.World
 
 abstract class ProcessManyPedestals(private val world: World, pos: Array<BlockPos>) : ITableProcess{
-	protected constructor(world: World, nbt: TagCompound) : this(world, nbt.getLongArray("PedestalPos").map(::Pos).toTypedArray())
+	protected constructor(world: World, nbt: TagCompound) : this(world, nbt.getLongArray(PEDESTAL_POS_TAG).map(::Pos).toTypedArray())
+	
+	private companion object{
+		private const val PEDESTAL_POS_TAG = "PedestalPos"
+		private const val LAST_INPUTS_TAG = "LastInputs"
+		private const val STATE_TAG = "State"
+	}
 	
 	final override val pedestals = pos
 	
@@ -163,12 +169,12 @@ abstract class ProcessManyPedestals(private val world: World, pos: Array<BlockPo
 	// Serialization
 	
 	override fun serializeNBT() = TagCompound().apply {
-		setLongArray("PedestalPos", pedestals.map(BlockPos::toLong).toLongArray())
-		setList("LastInputs", NBTItemStackList.of(lastInputStacks.asIterable()))
+		setLongArray(PEDESTAL_POS_TAG, pedestals.map(BlockPos::toLong).toLongArray())
+		setList(LAST_INPUTS_TAG, NBTItemStackList.of(lastInputStacks.asIterable()))
 		
 		val state = currentState
 		
-		setString("State", when(state){
+		setString(STATE_TAG, when(state){
 			is Work   -> "Work"
 			is Output -> "Output".also { setList("OutputItems", state.tag); setPos("TargetPedestal", state.pedestal) }
 			Cancel    -> ""
@@ -176,9 +182,9 @@ abstract class ProcessManyPedestals(private val world: World, pos: Array<BlockPo
 	}
 	
 	override fun deserializeNBT(nbt: TagCompound) = with(nbt){
-		getListOfItemStacks("LastInputs").forEachIndexed { index, stack -> lastInputStacks[index] = stack }
+		getListOfItemStacks(LAST_INPUTS_TAG).forEachIndexed { index, stack -> lastInputStacks[index] = stack }
 		
-		currentState = when(getString("State")){
+		currentState = when(getString(STATE_TAG)){
 			"Work"   -> Work.Success
 			"Output" -> Output(getListOfItemStacks("OutputItems"), getPos("TargetPedestal"))
 			else     -> Cancel

@@ -29,6 +29,8 @@ class TileEntityVoidPortalStorage : TileEntityBasePortalController(), IVoidPorta
 		private const val SLOWING_DURATION_TICKS = 75
 		private const val SLOWING_EXTRA_DELAY_TICKS = 4
 		private val SLOWING_PROGRESS_PER_UPDATE = ((1000F / 20F) / BlockAbstractPortal.TRANSLATION_SPEED).nextUp()
+		
+		private const val INSTANCE_TAG = "Instance"
 	}
 	
 	// Client animation
@@ -101,7 +103,7 @@ class TileEntityVoidPortalStorage : TileEntityBasePortalController(), IVoidPorta
 		super.writeNBT(nbt, context)
 		
 		if (context == NETWORK){
-			currentInstance?.let { setInteger("Instance", it.hash) }
+			currentInstance?.let { setInteger(INSTANCE_TAG, it.hash) }
 		}
 	}
 	
@@ -109,7 +111,7 @@ class TileEntityVoidPortalStorage : TileEntityBasePortalController(), IVoidPorta
 		super.readNBT(nbt, context)
 		
 		if (context == NETWORK){
-			currentInstance = getIntegerOrNull("Instance")?.let(TerritoryInstance.Companion::fromHash) ?: currentInstance // keep previous instance for animation
+			currentInstance = getIntegerOrNull(INSTANCE_TAG)?.let(TerritoryInstance.Companion::fromHash) ?: currentInstance // keep previous instance for animation
 		}
 	}
 }

@@ -15,6 +15,9 @@ import net.minecraftforge.common.util.INBTSerializable
 class EndermanWaterHandler(private val enderman: EntityMobAbstractEnderman): ITickable, INBTSerializable<TagCompound>{
 	private companion object{
 		private val DEBUFF_WEAKNESS = AttributeModifier("Water weakness", -0.5, OPERATION_MUL_INCR_INDIVIDUAL)
+		
+		private const val WET_COUNTER_TAG = "WetCounter"
+		private const val DEBUFF_TICKS_TAG = "DebuffTicks"
 	}
 	
 	private var wetCounter = 0
@@ -59,13 +62,13 @@ class EndermanWaterHandler(private val enderman: EntityMobAbstractEnderman): ITi
 	}
 	
 	override fun serializeNBT() = TagCompound().apply {
-		setShort("WetCounter", wetCounter.toShort())
-		setShort("DebuffTicks", debuffTicks.toShort())
+		setShort(WET_COUNTER_TAG, wetCounter.toShort())
+		setShort(DEBUFF_TICKS_TAG, debuffTicks.toShort())
 	}
 	
 	override fun deserializeNBT(nbt: TagCompound) = with(nbt){
-		wetCounter = getShort("WetCounter").toInt()
-		debuffTicks = getShort("DebuffTicks").toInt()
+		wetCounter = getShort(WET_COUNTER_TAG).toInt()
+		debuffTicks = getShort(DEBUFF_TICKS_TAG).toInt()
 		updateDebuff()
 	}
 }

@@ -29,6 +29,11 @@ import net.minecraft.world.IWorldNameable
 import net.minecraft.world.World
 
 abstract class TileEntityBaseChest : TileEntityBase(), ITickable, IWorldNameable{
+	private companion object{
+		private const val CUSTOM_NAME_TAG = "CustomName"
+		private const val VIEWER_COUNT_TAG = "ViewerCount"
+	}
+	
 	val facing: EnumFacing
 		get() = world?.let { pos.getState(it)[FACING] } ?: UP
 	
@@ -131,19 +136,19 @@ abstract class TileEntityBaseChest : TileEntityBase(), ITickable, IWorldNameable
 	
 	override fun writeNBT(nbt: TagCompound, context: Context) = with(nbt){
 		customName?.let {
-			setString("CustomName", it)
+			setString(CUSTOM_NAME_TAG, it)
 		}
 		
 		if (context == NETWORK){
-			setShort("ViewerCount", viewerCount.toShort())
+			setShort(VIEWER_COUNT_TAG, viewerCount.toShort())
 		}
 	}
 	
 	override fun readNBT(nbt: TagCompound, context: Context) = with(nbt){
-		customName = getStringOrNull("CustomName")
+		customName = getStringOrNull(CUSTOM_NAME_TAG)
 		
 		if (context == NETWORK){
-			viewerCount = getShort("ViewerCount").toInt()
+			viewerCount = getShort(VIEWER_COUNT_TAG).toInt()
 		}
 	}
 }

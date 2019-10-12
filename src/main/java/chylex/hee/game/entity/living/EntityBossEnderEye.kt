@@ -77,6 +77,11 @@ class EntityBossEnderEye(world: World) : EntityFlying(world), IMob{
 		
 		private const val KNOCKBACK_MP = 0.15
 		
+		private const val SLEEPING_TAG = "Sleeping"
+		private const val DEMON_LEVEL_TAG = "DemonLevel"
+		private const val PHASE_TAG = "Phase"
+		private const val PHASE_DATA_TAG = "PhaseData"
+		
 		const val ARMS_LIMP: Byte = 0
 		const val ARMS_HUG: Byte = 1
 		const val ARMS_ATTACK: Byte = 2
@@ -373,10 +378,10 @@ class EntityBossEnderEye(world: World) : EntityFlying(world), IMob{
 	override fun writeEntityToNBT(nbt: TagCompound) = with(nbt.heeTag){
 		super.writeEntityToNBT(nbt)
 		
-		setBoolean("Sleeping", isSleeping)
-		setByte("DemonLevel", demonLevel)
+		setBoolean(SLEEPING_TAG, isSleeping)
+		setByte(DEMON_LEVEL_TAG, demonLevel)
 		
-		setString("Phase", when(bossPhase){
+		setString(PHASE_TAG, when(bossPhase){
 			Hibernated -> "Hibernated"
 			is OpenEye -> "OpenEye"
 			is Floating -> "Floating"
@@ -384,16 +389,16 @@ class EntityBossEnderEye(world: World) : EntityFlying(world), IMob{
 			is Ready -> "Ready"
 		})
 		
-		setTag("PhaseData", bossPhase.serializeNBT())
+		setTag(PHASE_DATA_TAG, bossPhase.serializeNBT())
 	}
 	
 	override fun readEntityFromNBT(nbt: TagCompound) = with(nbt.heeTag){
 		super.readEntityFromNBT(nbt)
 		
-		isSleeping = getBoolean("Sleeping")
-		demonLevel = getByte("DemonLevel")
+		isSleeping = getBoolean(SLEEPING_TAG)
+		demonLevel = getByte(DEMON_LEVEL_TAG)
 		
-		bossPhase = when(getString("Phase")){
+		bossPhase = when(getString(PHASE_TAG)){
 			"Hibernated" -> Hibernated
 			"OpenEye" -> OpenEye()
 			"Floating" -> Floating(0)
@@ -401,6 +406,6 @@ class EntityBossEnderEye(world: World) : EntityFlying(world), IMob{
 			else -> Ready()
 		}
 		
-		bossPhase.deserializeNBT(getCompoundTag("PhaseData"))
+		bossPhase.deserializeNBT(getCompoundTag(PHASE_DATA_TAG))
 	}
 }

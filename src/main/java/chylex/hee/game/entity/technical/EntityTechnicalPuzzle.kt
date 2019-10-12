@@ -29,6 +29,11 @@ import net.minecraft.util.math.Vec3d
 import net.minecraft.world.World
 
 class EntityTechnicalPuzzle(world: World) : EntityTechnicalBase(world){
+	private companion object{
+		private const val START_POS_TAG = "StartPos"
+		private const val FACING_TAG = "Facing"
+	}
+	
 	private var startPos = BlockPos.ORIGIN
 	private var facing = DOWN
 	
@@ -144,12 +149,12 @@ class EntityTechnicalPuzzle(world: World) : EntityTechnicalBase(world){
 	}
 	
 	override fun writeEntityToNBT(nbt: TagCompound) = with(nbt.heeTag){
-		setPos("StartPos", startPos)
-		setEnum("Facing", facing)
+		setPos(START_POS_TAG, startPos)
+		setEnum(FACING_TAG, facing)
 	}
 	
 	override fun readEntityFromNBT(nbt: TagCompound) = with(nbt.heeTag){
-		startPos = getPos("StartPos")
-		facing = getEnum<EnumFacing>("Facing") ?: facing
+		startPos = getPos(START_POS_TAG)
+		facing = getEnum<EnumFacing>(FACING_TAG) ?: facing
 	}
 }

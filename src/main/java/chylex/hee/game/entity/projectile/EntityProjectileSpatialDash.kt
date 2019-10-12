@@ -57,6 +57,10 @@ class EntityProjectileSpatialDash : Entity, IProjectile{
 		private const val PROJECTILE_SPEED_BASE = 1.5F
 		private const val PROJECTILE_DISTANCE_BASE = 32 // max distance is 98 blocks
 		
+		private const val OWNER_TAG = "Owner"
+		private const val LIFESPAN_TAG = "Lifespan"
+		private const val RANGE_TAG = "Range"
+		
 		private val TELEPORT_OFFSETS: Array<BlockPos>
 		private val TELEPORT = Teleporter(causedInstability = 15u)
 		
@@ -262,14 +266,14 @@ class EntityProjectileSpatialDash : Entity, IProjectile{
 	}
 	
 	override fun writeEntityToNBT(nbt: TagCompound) = with(nbt.heeTag){
-		owner.writeToNBT(this, "Owner")
-		setShort("Lifespan", lifespan)
-		setFloat("Range", range)
+		owner.writeToNBT(this, OWNER_TAG)
+		setShort(LIFESPAN_TAG, lifespan)
+		setFloat(RANGE_TAG, range)
 	}
 	
 	override fun readEntityFromNBT(nbt: TagCompound) = with(nbt.heeTag){
-		owner.readFromNBT(this, "Owner")
-		lifespan = getShort("Lifespan")
-		range = getFloat("Range")
+		owner.readFromNBT(this, OWNER_TAG)
+		lifespan = getShort(LIFESPAN_TAG)
+		range = getFloat(RANGE_TAG)
 	}
 }

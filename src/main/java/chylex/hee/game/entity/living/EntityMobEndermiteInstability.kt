@@ -17,6 +17,10 @@ import net.minecraft.util.ResourceLocation
 import net.minecraft.world.World
 
 class EntityMobEndermiteInstability(world: World) : EntityMobEndermite(world), IImmuneToCorruptedEnergy, IMobBypassPeacefulDespawn{
+	private companion object{
+		private const val EXPLODE_TAG = "Explode"
+	}
+	
 	private var spawnCorruptedEnergy = false
 	
 	override fun onLivingUpdate(){
@@ -58,13 +62,13 @@ class EntityMobEndermiteInstability(world: World) : EntityMobEndermite(world), I
 	override fun writeEntityToNBT(nbt: TagCompound) = with(nbt.heeTag){
 		super.writeEntityToNBT(nbt)
 		
-		setBoolean("Explode", spawnCorruptedEnergy)
+		setBoolean(EXPLODE_TAG, spawnCorruptedEnergy)
 	}
 	
 	override fun readEntityFromNBT(nbt: TagCompound) = with(nbt.heeTag){
 		super.readEntityFromNBT(nbt)
 		
-		spawnCorruptedEnergy = getBoolean("Explode")
+		spawnCorruptedEnergy = getBoolean(EXPLODE_TAG)
 	}
 	
 	// Client side

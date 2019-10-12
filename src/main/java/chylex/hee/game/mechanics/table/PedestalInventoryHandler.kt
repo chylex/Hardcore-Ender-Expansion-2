@@ -29,6 +29,11 @@ import net.minecraftforge.items.ItemHandlerHelper
 import kotlin.math.min
 
 class PedestalInventoryHandler(private val updateCallback: (Boolean) -> Unit) : INBTSerializable<TagCompound>{
+	private companion object{
+		private const val INPUT_TAG = "Input"
+		private const val OUTPUT_TAG = "Output"
+	}
+	
 	var itemInput: ItemStack = ItemStack.EMPTY
 		private set
 	
@@ -187,12 +192,12 @@ class PedestalInventoryHandler(private val updateCallback: (Boolean) -> Unit) : 
 	// Serialization
 	
 	override fun serializeNBT() = TagCompound().apply {
-		setStack("Input", itemInput)
-		saveInventory("Output", itemOutput)
+		setStack(INPUT_TAG, itemInput)
+		saveInventory(OUTPUT_TAG, itemOutput)
 	}
 	
 	override fun deserializeNBT(nbt: TagCompound) = with(nbt){
-		itemInput = getStack("Input")
-		loadInventory("Output", itemOutput)
+		itemInput = getStack(INPUT_TAG)
+		loadInventory(OUTPUT_TAG, itemOutput)
 	}
 }

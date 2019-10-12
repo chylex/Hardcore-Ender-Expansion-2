@@ -55,6 +55,11 @@ import java.util.Random
 
 class TileEntityTablePedestal : TileEntityBase(){
 	companion object{
+		private const val TABLE_POS_TAG = "TablePos"
+		private const val INVENTORY_TAG = "Inventory"
+		private const val STATUS_TAG = "Status"
+		private const val STATUS_COLOR_TAG = "StatusColor"
+		
 		val FX_ITEM_UPDATE = object : FxBlockHandler(){
 			override fun handle(pos: BlockPos, world: World, rand: Random){
 				val player = HEE.proxy.getClientSidePlayer() ?: return
@@ -286,32 +291,32 @@ class TileEntityTablePedestal : TileEntityBase(){
 	
 	override fun writeNBT(nbt: TagCompound, context: Context) = with(nbt){
 		linkedTable?.let {
-			setPos("TablePos", it)
+			setPos(TABLE_POS_TAG, it)
 		}
 		
-		setTag("Inventory", inventoryHandler.serializeNBT())
+		setTag(INVENTORY_TAG, inventoryHandler.serializeNBT())
 		
 		if (context == STORAGE){
-			setTag("Status", statusIndicator.serializeNBT())
+			setTag(STATUS_TAG, statusIndicator.serializeNBT())
 		}
 		else if (context == NETWORK){
 			linkedTable?.let {
-				setInteger("StatusColor", statusIndicator.currentColor.i)
+				setInteger(STATUS_COLOR_TAG, statusIndicator.currentColor.i)
 			}
 		}
 	}
 	
 	override fun readNBT(nbt: TagCompound, context: Context) = with(nbt){
-		linkedTable = getPosOrNull("TablePos")
+		linkedTable = getPosOrNull(TABLE_POS_TAG)
 		
-		inventoryHandler.deserializeNBT(nbt.getCompoundTag("Inventory"))
+		inventoryHandler.deserializeNBT(nbt.getCompoundTag(INVENTORY_TAG))
 		
 		if (context == STORAGE){
-			statusIndicator.deserializeNBT(nbt.getCompoundTag("Status"))
+			statusIndicator.deserializeNBT(nbt.getCompoundTag(STATUS_TAG))
 		}
 		else if (context == NETWORK){
 			stacksForRendering = inventoryHandler.nonEmptyStacks.toTypedArray()
-			statusIndicatorColorClient = getIntegerOrNull("StatusColor")
+			statusIndicatorColorClient = getIntegerOrNull(STATUS_COLOR_TAG)
 		}
 	}
 }

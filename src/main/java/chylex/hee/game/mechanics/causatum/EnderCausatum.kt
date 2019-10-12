@@ -42,6 +42,8 @@ object EnderCausatum{
 		override fun retrieve(player: EntityPlayer) = player.getCap(CAP_CAUSATUM)
 	}
 	
+	private const val STAGE_TAG = "Stage"
+	
 	@JvmStatic
 	@CapabilityInject(CausatumCapability::class)
 	private var CAP_CAUSATUM: Capability<CausatumCapability>? = null
@@ -50,11 +52,11 @@ object EnderCausatum{
 		var stage = CausatumStage.S0_INITIAL
 		
 		override fun serializeNBT() = TagCompound().apply {
-			setString("Stage", stage.key)
+			setString(STAGE_TAG, stage.key)
 		}
 		
 		override fun deserializeNBT(nbt: TagCompound) = with(nbt){
-			stage = CausatumStage.fromKey(getString("Stage")) ?: stage
+			stage = CausatumStage.fromKey(getString(STAGE_TAG)) ?: stage
 		}
 		
 		class Provider : CapabilityProvider<CausatumCapability, TagCompound>(CAP_CAUSATUM, CausatumCapability())

@@ -19,6 +19,9 @@ class TileEntityLootChest : TileEntityBaseChest(){
 	private companion object{
 		private const val SLOT_COUNT = 9 * 3
 		
+		private const val SOURCE_INV_TAG = "SourceInventory"
+		private const val PLAYER_INV_TAG = "PlayerInventories"
+		
 		private fun createInventory() = InventoryBasic("[Loot Chest]", false, SLOT_COUNT)
 		
 		private fun createInventoryClone(source: IInventory) = createInventory().also {
@@ -68,9 +71,9 @@ class TileEntityLootChest : TileEntityBaseChest(){
 		super.writeNBT(nbt, context)
 		
 		if (context == STORAGE){
-			saveInventory("SourceInventory", sourceInventory)
+			saveInventory(SOURCE_INV_TAG, sourceInventory)
 			
-			setTag("PlayerInventories", TagCompound().also {
+			setTag(PLAYER_INV_TAG, TagCompound().also {
 				for((uuid, inventory) in playerInventories){
 					it.saveInventory(uuid.toString(), inventory)
 				}
@@ -82,9 +85,9 @@ class TileEntityLootChest : TileEntityBaseChest(){
 		super.readNBT(nbt, context)
 		
 		if (context == STORAGE){
-			loadInventory("SourceInventory", sourceInventory)
+			loadInventory(SOURCE_INV_TAG, sourceInventory)
 			
-			with(getCompoundTag("PlayerInventories")){
+			with(getCompoundTag(PLAYER_INV_TAG)){
 				for(key in keySet){
 					val uuid = try{
 						UUID.fromString(key)

@@ -10,6 +10,10 @@ import net.minecraft.util.ITickable
 import net.minecraft.util.math.BlockPos
 
 abstract class TileEntityBaseSpawner: TileEntityBase(), ITickable{
+	private companion object{
+		private const val LAST_POS_TAG = "LastPos"
+	}
+	
 	protected val isTainted // TODO
 		get() = lastPos != null && lastPos != pos
 	
@@ -47,13 +51,13 @@ abstract class TileEntityBaseSpawner: TileEntityBase(), ITickable{
 	
 	override fun writeNBT(nbt: TagCompound, context: Context) = with(nbt){
 		if (context == STORAGE){
-			lastPos?.let { setPos("LastPos", it) }
+			lastPos?.let { setPos(LAST_POS_TAG, it) }
 		}
 	}
 	
 	override fun readNBT(nbt: TagCompound, context: Context) = with(nbt){
 		if (context == STORAGE){
-			lastPos = getPosOrNull("LastPos")
+			lastPos = getPosOrNull(LAST_POS_TAG)
 		}
 	}
 }

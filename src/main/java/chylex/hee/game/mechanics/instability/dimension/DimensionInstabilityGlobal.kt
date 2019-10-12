@@ -14,6 +14,10 @@ open class DimensionInstabilityGlobal(private val world: World, private val ende
 	private companion object{
 		private const val INITIAL_ENDERMITE_SPAWN_TIME = -300L
 		
+		private const val LEVEL_TAG = "Level"
+		private const val LAST_ACTION_TAG = "LastAction"
+		private const val LAST_ENDERMITE_SPAWN_TAG = "LastEndermiteSpawn"
+		
 		private fun calculatePassiveRelief(ticksSinceLastAction: Long): UShort{
 			return (5 * (ticksSinceLastAction / (20L * 20L))).toUShort()
 		}
@@ -71,14 +75,14 @@ open class DimensionInstabilityGlobal(private val world: World, private val ende
 	// Serialization
 	
 	override fun serializeNBT() = TagCompound().apply {
-		setInteger("Level", level)
-		setLong("LastAction", lastActionTime)
-		setLong("LastEndermiteSpawn", lastEndermiteSpawnTime)
+		setInteger(LEVEL_TAG, level)
+		setLong(LAST_ACTION_TAG, lastActionTime)
+		setLong(LAST_ENDERMITE_SPAWN_TAG, lastEndermiteSpawnTime)
 	}
 	
 	override fun deserializeNBT(nbt: TagCompound) = with(nbt){
-		level = getInteger("Level")
-		lastActionTime = getLong("LastAction")
-		lastEndermiteSpawnTime = getLong("LastEndermiteSpawn")
+		level = getInteger(LEVEL_TAG)
+		lastActionTime = getLong(LAST_ACTION_TAG)
+		lastEndermiteSpawnTime = getLong(LAST_ENDERMITE_SPAWN_TAG)
 	}
 }

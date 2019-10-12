@@ -38,6 +38,11 @@ object StrongholdGenerator : IWorldGenerator{
 	class DimensionStrongholdData(name: String) : WorldSavedData(name){ // must be public for reflection
 		companion object{
 			fun get(world: World) = world.perDimensionData("HEE_STRONGHOLDS", ::DimensionStrongholdData)
+			
+			private const val CHUNK_X_TAG = "ChunkX"
+			private const val CHUNK_Z_TAG = "ChunkZ"
+			private const val POS_TAG = "Pos"
+			private const val LOCATIONS_TAG = "Locations"
 		}
 		
 		private val locations = mutableMapOf<ChunkPos, BlockPos>()
@@ -56,21 +61,21 @@ object StrongholdGenerator : IWorldGenerator{
 			
 			for((chunk, pos) in locations){
 				list.append(TagCompound().also {
-					it.setInteger("ChunkX", chunk.x)
-					it.setInteger("ChunkZ", chunk.z)
-					it.setPos("Pos", pos)
+					it.setInteger(CHUNK_X_TAG, chunk.x)
+					it.setInteger(CHUNK_Z_TAG, chunk.z)
+					it.setPos(POS_TAG, pos)
 				})
 			}
 			
-			setList("Locations", list)
+			setList(LOCATIONS_TAG, list)
 		}
 		
 		override fun readFromNBT(nbt: TagCompound) = with(nbt){
 			locations.clear()
 			
-			for(tag in getListOfCompounds("Locations")){
-				val chunk = ChunkPos(tag.getInteger("ChunkX"), tag.getInteger("ChunkZ"))
-				locations[chunk] = tag.getPos("Pos")
+			for(tag in getListOfCompounds(LOCATIONS_TAG)){
+				val chunk = ChunkPos(tag.getInteger(CHUNK_X_TAG), tag.getInteger(CHUNK_Z_TAG))
+				locations[chunk] = tag.getPos(POS_TAG)
 			}
 		}
 	}

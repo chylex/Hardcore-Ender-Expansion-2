@@ -42,6 +42,10 @@ import kotlin.math.min
 
 class StrongholdRoom_Trap_Prison(file: String) : StrongholdAbstractPieceFromFile(file, StrongholdPieceType.ROOM){
 	class Trigger : ITriggerHandler{
+		private companion object{
+			private const val SPAWNS_LEFT_TAG = "SpawnsLeft"
+		}
+		
 		private var spawnsLeft = -1
 		
 		override fun check(world: World): Boolean{
@@ -104,11 +108,11 @@ class StrongholdRoom_Trap_Prison(file: String) : StrongholdAbstractPieceFromFile
 		}
 		
 		override fun serializeNBT() = TagCompound().apply {
-			setShort("SpawnsLeft", spawnsLeft.toShort())
+			setShort(SPAWNS_LEFT_TAG, spawnsLeft.toShort())
 		}
 		
 		override fun deserializeNBT(nbt: TagCompound) = with(nbt){
-			spawnsLeft = getShort("SpawnsLeft").toInt()
+			spawnsLeft = getShort(SPAWNS_LEFT_TAG).toInt()
 		}
 	}
 	

@@ -22,6 +22,12 @@ class EntityTechnicalTrigger(world: World) : EntityTechnicalBase(world), IEntity
 		this.type = type
 	}
 	
+	private companion object{
+		private const val TYPE_TAG = "Type"
+		private const val DATA_TAG = "Data"
+		private const val TIMER_TAG = "Timer"
+	}
+	
 	// Handler interface
 	
 	interface ITriggerHandler : INBTSerializable<TagCompound>{
@@ -80,16 +86,16 @@ class EntityTechnicalTrigger(world: World) : EntityTechnicalBase(world), IEntity
 	}
 	
 	override fun writeEntityToNBT(nbt: TagCompound) = with(nbt.heeTag){
-		setEnum("Type", type)
-		setTag("Data", handler.serializeNBT())
+		setEnum(TYPE_TAG, type)
+		setTag(DATA_TAG, handler.serializeNBT())
 		
-		setShort("Timer", timer.toShort())
+		setShort(TIMER_TAG, timer.toShort())
 	}
 	
 	override fun readEntityFromNBT(nbt: TagCompound) = with(nbt.heeTag){
-		type = getEnum<Types>("Type") ?: INVALID
-		handler.deserializeNBT(getCompoundTag("Data"))
+		type = getEnum<Types>(TYPE_TAG) ?: INVALID
+		handler.deserializeNBT(getCompoundTag(DATA_TAG))
 		
-		timer = getShort("Timer").toInt()
+		timer = getShort(TIMER_TAG).toInt()
 	}
 }

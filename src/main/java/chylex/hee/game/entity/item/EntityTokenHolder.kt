@@ -41,6 +41,10 @@ class EntityTokenHolder(world: World) : Entity(world), IEntityAdditionalSpawnDat
 	
 	private companion object{
 		private val DATA_CHARGE = EntityData.register<EntityTokenHolder, Float>(DataSerializers.FLOAT)
+		
+		private const val TOKEN_TYPE_TAG = "Type"
+		private const val TERRITORY_TYPE_TAG = "Territory"
+		private const val CHARGE_TAG = "Charge"
 	}
 	
 	val renderRotation = LerpedFloat(world.totalTime * 3F)
@@ -119,15 +123,15 @@ class EntityTokenHolder(world: World) : Entity(world), IEntityAdditionalSpawnDat
 	}
 	
 	override fun writeEntityToNBT(nbt: TagCompound) = with(nbt.heeTag){
-		setEnum("Type", tokenType)
-		setEnum("Territory", territoryType)
-		setFloat("Charge", currentCharge)
+		setEnum(TOKEN_TYPE_TAG, tokenType)
+		setEnum(TERRITORY_TYPE_TAG, territoryType)
+		setFloat(CHARGE_TAG, currentCharge)
 	}
 	
 	override fun readEntityFromNBT(nbt: TagCompound) = with(nbt.heeTag){
-		tokenType = getEnum<TokenType>("Type") ?: TokenType.NORMAL
-		territoryType = getEnum<TerritoryType>("Territory")
-		currentCharge = getFloat("Charge")
+		tokenType = getEnum<TokenType>(TOKEN_TYPE_TAG) ?: TokenType.NORMAL
+		territoryType = getEnum<TerritoryType>(TERRITORY_TYPE_TAG)
+		currentCharge = getFloat(CHARGE_TAG)
 	}
 	
 	override fun doesEntityNotTriggerPressurePlate() = true

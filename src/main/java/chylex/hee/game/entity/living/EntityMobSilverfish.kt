@@ -48,6 +48,8 @@ class EntityMobSilverfish(world: World) : EntitySilverfish(world), ICritTracker{
 		private val DAMAGE_GENERAL          = Damage(DIFFICULTY_SCALING, PEACEFUL_EXCLUSION, *ALL_PROTECTIONS, RAPID_DAMAGE(5))
 		private val DAMAGE_HAUNTWOOD_FOREST = Damage(DIFFICULTY_SCALING, PEACEFUL_KNOCKBACK, *ALL_PROTECTIONS, RAPID_DAMAGE(5))
 		
+		private const val HIDE_DELAY_TAG = "HideDelay"
+		
 		@JvmStatic
 		@SubscribeEvent(EventPriority.LOWEST)
 		fun onEntityJoinWorld(e: EntityJoinWorldEvent){
@@ -164,12 +166,12 @@ class EntityMobSilverfish(world: World) : EntitySilverfish(world), ICritTracker{
 	override fun writeEntityToNBT(nbt: TagCompound) = with(nbt.heeTag){
 		super.writeEntityToNBT(nbt)
 		
-		setInteger("HideDelay", hideInBlockDelayTicks)
+		setInteger(HIDE_DELAY_TAG, hideInBlockDelayTicks)
 	}
 	
 	override fun readEntityFromNBT(nbt: TagCompound) = with(nbt.heeTag){
 		super.readEntityFromNBT(nbt)
 		
-		hideInBlockDelayTicks = getInteger("HideDelay")
+		hideInBlockDelayTicks = getInteger(HIDE_DELAY_TAG)
 	}
 }

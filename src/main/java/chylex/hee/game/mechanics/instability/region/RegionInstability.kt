@@ -21,6 +21,11 @@ class RegionInstability<T : IRegionEntry>(private val world: World, private val 
 	private companion object{
 		private const val POINTS_TO_TRIGGER = 500
 		private const val TELEPORTS_TO_CHAOS = 16
+		
+		private const val ENTRIES_TAG = "Entries"
+		private const val TRIGGERED_TAG = "Triggered"
+		private const val TICKS_TO_RECOUNT_TAG = "TicksToRecount"
+		private const val TICKS_TO_TELEPORT_TAG = "TicksToTeleport"
 	}
 	
 	private val rand = Random()
@@ -136,18 +141,18 @@ class RegionInstability<T : IRegionEntry>(private val world: World, private val 
 	// Serialization
 	
 	override fun serializeNBT() = TagCompound().apply {
-		setTag("Entries", entries.serializeNBT())
-		setTag("Triggered", triggered.serializeNBT())
+		setTag(ENTRIES_TAG, entries.serializeNBT())
+		setTag(TRIGGERED_TAG, triggered.serializeNBT())
 		
-		setInteger("TicksToRecount", ticksToRecount)
-		setInteger("TicksToTeleport", ticksToTeleport)
+		setInteger(TICKS_TO_RECOUNT_TAG, ticksToRecount)
+		setInteger(TICKS_TO_TELEPORT_TAG, ticksToTeleport)
 	}
 	
 	override fun deserializeNBT(nbt: TagCompound) = with(nbt){
-		entries.deserializeNBT(getTag("Entries") as? TagLongArray)
-		triggered.deserializeNBT(getTag("Triggered") as? TagLongArray)
+		entries.deserializeNBT(getTag(ENTRIES_TAG) as? TagLongArray)
+		triggered.deserializeNBT(getTag(TRIGGERED_TAG) as? TagLongArray)
 		
-		ticksToRecount = getInteger("TicksToRecount")
-		ticksToTeleport = getInteger("TicksToTeleport")
+		ticksToRecount = getInteger(TICKS_TO_RECOUNT_TAG)
+		ticksToTeleport = getInteger(TICKS_TO_TELEPORT_TAG)
 	}
 }

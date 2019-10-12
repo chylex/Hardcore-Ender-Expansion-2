@@ -48,6 +48,9 @@ class EntityInfusedTNT : EntityTNTPrimed{
 		private const val WATER_CHECK_RADIUS = 4
 		private const val PHASING_INSTANT_FUSE_TICKS = 3
 		
+		private const val HAS_INFERNIUM_TAG = "HasInfernium"
+		private const val HAS_PHASED_TAG = "HasPhased"
+		
 		private val PARTICLE_TICK = ParticleSpawnerVanilla(SMOKE_NORMAL)
 		
 		// EntityItem construction
@@ -310,15 +313,15 @@ class EntityInfusedTNT : EntityTNTPrimed{
 		super.writeEntityToNBT(nbt)
 		
 		InfusionTag.setList(this, infusions)
-		setBoolean("HasInfernium", hasInferniumPower)
-		setBoolean("HasPhased", hasPhasedIntoWall)
+		setBoolean(HAS_INFERNIUM_TAG, hasInferniumPower)
+		setBoolean(HAS_PHASED_TAG, hasPhasedIntoWall)
 	}
 	
 	override fun readEntityFromNBT(nbt: TagCompound) = with(nbt.heeTag){
 		super.readEntityFromNBT(nbt)
 		
 		loadInfusions(InfusionTag.getList(this))
-		hasInferniumPower = getBoolean("HasInfernium")
-		hasPhasedIntoWall = getBoolean("HasPhased")
+		hasInferniumPower = getBoolean(HAS_INFERNIUM_TAG)
+		hasPhasedIntoWall = getBoolean(HAS_PHASED_TAG)
 	}
 }

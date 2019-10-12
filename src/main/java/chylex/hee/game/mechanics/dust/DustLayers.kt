@@ -6,6 +6,11 @@ import net.minecraft.item.ItemStack
 import kotlin.math.min
 
 class DustLayers(val totalCapacity: Int){
+	private companion object{
+		private const val TYPE_TAG = "Type"
+		private const val AMOUNT_TAG = "Amount"
+	}
+	
 	enum class Side{
 		TOP{
 			override fun index(list: List<Pair<DustType, Short>>) = if (list.isEmpty()) null else list.lastIndex
@@ -93,8 +98,8 @@ class DustLayers(val totalCapacity: Int){
 	fun serializeNBT() = NBTObjectList<TagCompound>().apply {
 		for((dustType, dustAmount) in layers){
 			append(TagCompound().also {
-				it.setString("Type", dustType.key)
-				it.setShort("Amount", dustAmount)
+				it.setString(TYPE_TAG, dustType.key)
+				it.setShort(AMOUNT_TAG, dustAmount)
 			})
 		}
 	}
@@ -103,8 +108,8 @@ class DustLayers(val totalCapacity: Int){
 		layers.clear()
 		
 		for(tag in this){
-			val dustType = tag.getString("Type")
-			val dustAmount = tag.getShort("Amount")
+			val dustType = tag.getString(TYPE_TAG)
+			val dustAmount = tag.getShort(AMOUNT_TAG)
 			
 			DustType.values().firstOrNull { it.key == dustType }?.let { it to dustAmount }?.let(layers::add)
 		}

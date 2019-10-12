@@ -14,6 +14,11 @@ class PedestalStatusIndicator(private val pedestal: TileEntityTablePedestal) : I
 		val color: IntColor
 	}
 	
+	private companion object{
+		private const val CONTENTS_TAG = "Contents"
+		private const val PROCESS_TAG = "Process"
+	}
+	
 	// Categories
 	
 	enum class Contents(override val color: IntColor) : IIndicatorColor{
@@ -46,12 +51,12 @@ class PedestalStatusIndicator(private val pedestal: TileEntityTablePedestal) : I
 	// Serialization
 	
 	override fun serializeNBT() = TagCompound().apply {
-		setEnum("Contents", contents)
-		setEnum("Process", process)
+		setEnum(CONTENTS_TAG, contents)
+		setEnum(PROCESS_TAG, process)
 	}
 	
 	override fun deserializeNBT(nbt: TagCompound) = with(nbt){
-		contents = getEnum<Contents>("Contents") ?: Contents.NONE
-		process = getEnum<Process>("Process")
+		contents = getEnum<Contents>(CONTENTS_TAG) ?: Contents.NONE
+		process = getEnum<Process>(PROCESS_TAG)
 	}
 }

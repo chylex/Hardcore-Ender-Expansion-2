@@ -73,6 +73,12 @@ class TileEntitySpawnerObsidianTower() : TileEntityBaseSpawner(){
 		private const val SPAWN_AREA_BOX_HEIGHT = 4.0
 		private const val ACTIVATION_DISTANCE_SQ = 7.0 // rough estimate
 		
+		private const val TOWER_OFFSET_TAG = "TowerOffset"
+		private const val TOWER_LEVEL_TAG = "TowerLevel"
+		private const val TOWER_EFFECTS_TAG = "TowerEffects"
+		private const val REMAINING_MOB_SPAWNS_TAG = "RemainingMobSpawns"
+		private const val NEXT_SPAWN_COOLDOWN_TAG = "NextSpawnCooldown"
+		
 		val FX_BREAK = object : FxBlockHandler(){
 			override fun handle(pos: BlockPos, world: World, rand: Random){
 				PARTICLE_BREAK.spawn(Point(pos, rand.nextInt(18, 20)), rand)
@@ -226,25 +232,25 @@ class TileEntitySpawnerObsidianTower() : TileEntityBaseSpawner(){
 		super.writeNBT(nbt, context)
 		
 		if (context == STORAGE){
-			setPos("TowerOffset", offset)
-			setEnum("TowerLevel", level)
-			setInteger("RemainingMobSpawns", remainingMobSpawns)
-			setInteger("NextSpawnCooldown", nextSpawnCooldown)
+			setPos(TOWER_OFFSET_TAG, offset)
+			setEnum(TOWER_LEVEL_TAG, level)
+			setInteger(REMAINING_MOB_SPAWNS_TAG, remainingMobSpawns)
+			setInteger(NEXT_SPAWN_COOLDOWN_TAG, nextSpawnCooldown)
 		}
 		
-		setList("TowerEffects", NBTObjectList.of(effects.map { it.writeCustomPotionEffectToNBT(TagCompound()) }))
+		setList(TOWER_EFFECTS_TAG, NBTObjectList.of(effects.map { it.writeCustomPotionEffectToNBT(TagCompound()) }))
 	}
 	
 	override fun readNBT(nbt: TagCompound, context: Context) = with(nbt){
 		super.readNBT(nbt, context)
 		
 		if (context == STORAGE){
-			offset = getPos("TowerOffset")
-			level = getEnum<ObsidianTowerSpawnerLevel>("TowerLevel") ?: level
-			remainingMobSpawns = getInteger("RemainingMobSpawns")
-			nextSpawnCooldown = getInteger("NextSpawnCooldown")
+			offset = getPos(TOWER_OFFSET_TAG)
+			level = getEnum<ObsidianTowerSpawnerLevel>(TOWER_LEVEL_TAG) ?: level
+			remainingMobSpawns = getInteger(REMAINING_MOB_SPAWNS_TAG)
+			nextSpawnCooldown = getInteger(NEXT_SPAWN_COOLDOWN_TAG)
 		}
 		
-		effects = getListOfCompounds("TowerEffects").mapNotNull { PotionEffect.readCustomPotionEffectFromNBT(it) }.toTypedArray()
+		effects = getListOfCompounds(TOWER_EFFECTS_TAG).mapNotNull { PotionEffect.readCustomPotionEffectFromNBT(it) }.toTypedArray()
 	}
 }

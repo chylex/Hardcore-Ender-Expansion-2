@@ -28,9 +28,9 @@ class StructureFile(nbt: TagCompound){
 	val size: Size
 	
 	init{
-		val tagPalette = nbt.getListOfStrings("Palette")
-		val tagBlocks = nbt.getIntArray("Blocks")
-		val tagSize = nbt.getIntArray("Size")
+		val tagPalette = nbt.getListOfStrings(PALETTE_TAG)
+		val tagBlocks = nbt.getIntArray(BLOCKS_TAG)
+		val tagSize = nbt.getIntArray(SIZE_TAG)
 		
 		palette = tagPalette.toList().toTypedArray()
 		
@@ -60,6 +60,10 @@ class StructureFile(nbt: TagCompound){
 	}
 	
 	companion object{
+		private const val PALETTE_TAG = "Palette"
+		private const val BLOCKS_TAG = "Blocks"
+		private const val SIZE_TAG = "Size"
+		
 		private val SKIP_BLOCK_STATE = ModBlocks.SCAFFOLDING.defaultState
 		
 		fun spawn(world: World, offset: BlockPos, piece: IStructurePieceFromFile, palette: Palette){
@@ -121,9 +125,9 @@ class StructureFile(nbt: TagCompound){
 			}
 			
 			val nbt = TagCompound().also {
-				it.setList("Palette", NBTObjectList.of(generatedPalette.asIterable()))
-				it.setIntArray("Blocks", generatedBlocks.toIntArray())
-				it.setIntArray("Size", intArrayOf(size.x, size.y, size.z))
+				it.setList(PALETTE_TAG, NBTObjectList.of(generatedPalette.asIterable()))
+				it.setIntArray(BLOCKS_TAG, generatedBlocks.toIntArray())
+				it.setIntArray(SIZE_TAG, intArrayOf(size.x, size.y, size.z))
 			}
 			
 			return nbt to missingMappings

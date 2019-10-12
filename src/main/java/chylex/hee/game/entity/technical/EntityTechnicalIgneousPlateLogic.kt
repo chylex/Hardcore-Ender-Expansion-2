@@ -66,6 +66,9 @@ class EntityTechnicalIgneousPlateLogic(world: World) : Entity(world){
 		
 		private val DATA_OVERHEAT_LEVEL = EntityData.register<EntityTechnicalIgneousPlateLogic, Float>(DataSerializers.FLOAT)
 		
+		private const val EXTRA_TICKS_TAG = "ExtraTicks"
+		private const val OVERHEAT_LEVEL_TAG = "OverheatLevel"
+		
 		private fun getAttachedPlates(furnace: TileEntityFurnace): List<TileEntityIgneousPlate>{
 			val world = furnace.world
 			val pos = furnace.pos
@@ -276,12 +279,12 @@ class EntityTechnicalIgneousPlateLogic(world: World) : Entity(world){
 	// Serialization
 	
 	override fun writeEntityToNBT(nbt: TagCompound) = with(nbt.heeTag){
-		setDouble("ExtraTicks", extraTicks)
-		setFloat("OverheatLevel", overheatLevel)
+		setDouble(EXTRA_TICKS_TAG, extraTicks)
+		setFloat(OVERHEAT_LEVEL_TAG, overheatLevel)
 	}
 	
 	override fun readEntityFromNBT(nbt: TagCompound) = with(nbt.heeTag){
-		extraTicks = getDouble("ExtraTicks")
-		overheatLevel = getFloat("OverheatLevel")
+		extraTicks = getDouble(EXTRA_TICKS_TAG)
+		overheatLevel = getFloat(OVERHEAT_LEVEL_TAG)
 	}
 }

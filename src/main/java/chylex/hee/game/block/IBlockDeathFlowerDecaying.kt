@@ -210,6 +210,9 @@ interface IBlockDeathFlowerDecaying{
 	class DimensionWitherData(name: String) : WorldSavedData(name){ // must be public for reflection
 		companion object{
 			fun get(world: World) = world.perDimensionData("HEE_DEATH_FLOWER_WITHER", ::DimensionWitherData)
+			
+			private const val LAST_TELEPORT_TIME_TAG = "LastTeleportTime"
+			private const val LAST_WITHER_DAY_TAG = "LastWitherDay"
 		}
 		
 		private var lastTeleportTime = -24000L
@@ -240,13 +243,13 @@ interface IBlockDeathFlowerDecaying{
 		}
 		
 		override fun writeToNBT(nbt: TagCompound) = nbt.apply {
-			setLong("LastTeleportTime", lastTeleportTime)
-			setLong("LastWitherDay", lastWitherDay)
+			setLong(LAST_TELEPORT_TIME_TAG, lastTeleportTime)
+			setLong(LAST_WITHER_DAY_TAG, lastWitherDay)
 		}
 		
 		override fun readFromNBT(nbt: TagCompound) = with(nbt){
-			lastTeleportTime = getLong("LastTeleportTime")
-			lastWitherDay = getLong("LastWitherDay")
+			lastTeleportTime = getLong(LAST_TELEPORT_TIME_TAG)
+			lastWitherDay = getLong(LAST_WITHER_DAY_TAG)
 		}
 	}
 }

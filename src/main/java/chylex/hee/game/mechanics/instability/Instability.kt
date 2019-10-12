@@ -47,6 +47,9 @@ object Instability{
 	
 	private val CAP_KEY = Resource.Custom("instability")
 	
+	private const val DIMENSION_TAG = "Dimension"
+	private const val REGION_TAG = "Region"
+	
 	@JvmStatic
 	@CapabilityInject(InstabilityCapability::class)
 	private var CAP_INSTABILITY: Capability<InstabilityCapability>? = null
@@ -66,13 +69,13 @@ object Instability{
 	
 	private class InstabilityCapability private constructor(val dimension: IDimensionInstability, val region: RegionInstability<*>) : INBTSerializable<TagCompound>{
 		override fun serializeNBT() = TagCompound().apply {
-			setTag("Dimension", dimension.serializeNBT())
-			setTag("Region", region.serializeNBT())
+			setTag(DIMENSION_TAG, dimension.serializeNBT())
+			setTag(REGION_TAG, region.serializeNBT())
 		}
 		
 		override fun deserializeNBT(nbt: TagCompound) = with(nbt){
-			dimension.deserializeNBT(getCompoundTag("Dimension"))
-			region.deserializeNBT(getCompoundTag("Region"))
+			dimension.deserializeNBT(getCompoundTag(DIMENSION_TAG))
+			region.deserializeNBT(getCompoundTag(REGION_TAG))
 		}
 		
 		class Provider(dimension: IDimensionInstability, region: RegionInstability<*>) : CapabilityProvider<InstabilityCapability, TagCompound>(CAP_INSTABILITY!!, InstabilityCapability(dimension, region))

@@ -90,6 +90,8 @@ class EntityItemIgneousRock : EntityItemNoBob{
 		
 		private const val MIN_ENTITY_BURN_DURATION_TICKS = 40
 		
+		private const val FACING_TAG = "Facing"
+		
 		private val PARTICLE_TICK = ParticleSpawnerVanilla(
 			type = LAVA,
 			pos = InBox(0.1F)
@@ -431,10 +433,10 @@ class EntityItemIgneousRock : EntityItemNoBob{
 	// Serialization
 	
 	override fun writeEntityToNBT(nbt: TagCompound) = with(nbt.heeTag){
-		setEnum("Facing", throwFacing)
+		setEnum(FACING_TAG, throwFacing)
 	}
 	
 	override fun readEntityFromNBT(nbt: TagCompound) = with(nbt.heeTag){
-		throwFacing = getEnum<EnumFacing>("Facing") ?: throwFacing
+		throwFacing = getEnum<EnumFacing>(FACING_TAG) ?: throwFacing
 	}
 }

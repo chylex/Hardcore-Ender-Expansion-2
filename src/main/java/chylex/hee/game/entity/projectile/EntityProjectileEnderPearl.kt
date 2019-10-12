@@ -43,6 +43,8 @@ class EntityProjectileEnderPearl : EntityEnderPearl, IEntityAdditionalSpawnData{
 			canCollideCheck = { world, pos, state -> state.getBlockHardness(world, pos) == INDESTRUCTIBLE_HARDNESS }
 		)
 		
+		private const val HAS_PHASED_TAG = "HasPhased"
+		
 		@JvmStatic
 		@SubscribeEvent
 		fun onEntityJoinWorld(e: EntityJoinWorldEvent){
@@ -195,13 +197,13 @@ class EntityProjectileEnderPearl : EntityEnderPearl, IEntityAdditionalSpawnData{
 		super.writeEntityToNBT(nbt)
 		
 		InfusionTag.setList(this, infusions)
-		setBoolean("HasPhased", hasPhasedIntoWall)
+		setBoolean(HAS_PHASED_TAG, hasPhasedIntoWall)
 	}
 	
 	override fun readEntityFromNBT(nbt: TagCompound) = with(nbt.heeTag){
 		super.readEntityFromNBT(nbt)
 		
 		loadInfusions(InfusionTag.getList(this))
-		hasPhasedIntoWall = getBoolean("HasPhased")
+		hasPhasedIntoWall = getBoolean(HAS_PHASED_TAG)
 	}
 }

@@ -67,6 +67,12 @@ class EntityMobEnderman(world: World) : EntityMobAbstractEnderman(world){
 	companion object{
 		private val DAMAGE_GENERAL = Damage(DIFFICULTY_SCALING, PEACEFUL_EXCLUSION, *ALL_PROTECTIONS_WITH_SHIELD, NUDITY_DANGER)
 		
+		private const val TELEPORT_HANDLER_TAG = "Teleport"
+		private const val WATER_HANDLER_TAG = "Water"
+		private const val CAN_PICK_UP_BLOCKS_TAG = "CanPickUpBlocks"
+		private const val HELD_BLOCK_TIMER_TAG = "HeldBlockTimer"
+		private const val HELD_BLOCK_DESPAWNS_TAG = "HeldBlockDespawns"
+		
 		private val TELEPORT_AFTER_DAMAGE = setOf(
 			DamageSource.ANVIL,
 			DamageSource.CACTUS,
@@ -512,22 +518,22 @@ class EntityMobEnderman(world: World) : EntityMobAbstractEnderman(world){
 	override fun writeEntityToNBT(nbt: TagCompound) = with(nbt.heeTag){
 		super.writeEntityToNBT(nbt)
 		
-		setTag("Teleport", teleportHandler.serializeNBT())
-		setTag("Water", waterHandler.serializeNBT())
+		setTag(TELEPORT_HANDLER_TAG, teleportHandler.serializeNBT())
+		setTag(WATER_HANDLER_TAG, waterHandler.serializeNBT())
 		
-		setBoolean("CanPickUpBlocks", aiPickUpBlocks.enabled)
-		setShort("HeldBlockTimer", heldBlockTimer)
-		setBoolean("HeldBlockDespawns", heldBlockDespawns)
+		setBoolean(CAN_PICK_UP_BLOCKS_TAG, aiPickUpBlocks.enabled)
+		setShort(HELD_BLOCK_TIMER_TAG, heldBlockTimer)
+		setBoolean(HELD_BLOCK_DESPAWNS_TAG, heldBlockDespawns)
 	}
 	
 	override fun readEntityFromNBT(nbt: TagCompound) = with(nbt.heeTag){
 		super.readEntityFromNBT(nbt)
 		
-		teleportHandler.deserializeNBT(getCompoundTag("Teleport"))
-		waterHandler.deserializeNBT(getCompoundTag("Water"))
+		teleportHandler.deserializeNBT(getCompoundTag(TELEPORT_HANDLER_TAG))
+		waterHandler.deserializeNBT(getCompoundTag(WATER_HANDLER_TAG))
 		
-		aiPickUpBlocks.enabled = getBoolean("CanPickUpBlocks")
-		heldBlockTimer = getShort("HeldBlockTimer")
-		heldBlockDespawns = getBoolean("HeldBlockDespawns")
+		aiPickUpBlocks.enabled = getBoolean(CAN_PICK_UP_BLOCKS_TAG)
+		heldBlockTimer = getShort(HELD_BLOCK_TIMER_TAG)
+		heldBlockDespawns = getBoolean(HELD_BLOCK_DESPAWNS_TAG)
 	}
 }

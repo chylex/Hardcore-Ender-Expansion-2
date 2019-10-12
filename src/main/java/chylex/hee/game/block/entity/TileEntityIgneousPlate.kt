@@ -41,6 +41,8 @@ class TileEntityIgneousPlate : TileEntityBase(), ITickable{
 		private const val PROGRESS_HEAT_UP_PER_TICK = 1.0 / TICKS_TO_HEAT_UP
 		private const val PROGRESS_COOL_DOWN_PER_TICK = 1.0 / TICKS_TO_COOL_DOWN
 		
+		private const val PROGRESS_TAG = "Progress"
+		
 		private fun createPositionOffset(facing: EnumFacing, offset: Float) = if (facing.axis == AXIS_Y)
 			InBox(offset, 0F, offset)
 		else
@@ -174,10 +176,10 @@ class TileEntityIgneousPlate : TileEntityBase(), ITickable{
 	}
 	
 	override fun writeNBT(nbt: TagCompound, context: Context) = with(nbt){
-		setDouble("Progress", progress)
+		setDouble(PROGRESS_TAG, progress)
 	}
 	
 	override fun readNBT(nbt: TagCompound, context: Context) = with(nbt){
-		progress = getDouble("Progress")
+		progress = getDouble(PROGRESS_TAG)
 	}
 }

@@ -71,6 +71,10 @@ class EntityProjectileEyeOfEnder : Entity, IEntityAdditionalSpawnData{
 		private const val TICK_REACHED_TARGET_SKIP = 500
 		private const val TICK_DROP_REACHED_TARGET = 580
 		
+		private const val TARGET_TAG = "Target"
+		private const val TIMER_TAG = "Timer"
+		private const val SPEED_TAG = "Speed"
+		
 		private val PARTICLE_SMOKE = ParticleSpawnerVanilla(
 			type = SMOKE_NORMAL,
 			pos = Constant(0.1F, UP) + InBox(0.15F),
@@ -307,14 +311,14 @@ class EntityProjectileEyeOfEnder : Entity, IEntityAdditionalSpawnData{
 	// Serialization
 	
 	override fun writeEntityToNBT(nbt: TagCompound) = with(nbt.heeTag){
-		targetPos?.let { setPos("Target", it) }
-		setShort("Timer", timer.toShort())
-		setFloat("Speed", speed)
+		targetPos?.let { setPos(TARGET_TAG, it) }
+		setShort(TIMER_TAG, timer.toShort())
+		setFloat(SPEED_TAG, speed)
 	}
 	
 	override fun readEntityFromNBT(nbt: TagCompound) = with(nbt.heeTag){
-		targetPos = getPosOrNull("Target")
-		timer = getShort("Timer").toInt()
-		speed = getFloat("Speed")
+		targetPos = getPosOrNull(TARGET_TAG)
+		timer = getShort(TIMER_TAG).toInt()
+		speed = getFloat(SPEED_TAG)
 	}
 }

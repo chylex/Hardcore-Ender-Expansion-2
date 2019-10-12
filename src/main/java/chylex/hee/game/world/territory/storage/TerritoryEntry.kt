@@ -18,6 +18,12 @@ import net.minecraftforge.common.util.INBTSerializable
 import java.util.UUID
 
 class TerritoryEntry(private val owner: TerritoryGlobalStorage, private val instance: TerritoryInstance) : INBTSerializable<TagCompound>{
+	private companion object{
+		private const val SPAWN_POINT_TAG = "Spawn"
+		private const val INTEREST_POINT_TAG = "Interest"
+		private const val LAST_PORTALS_TAG = "LastPortals"
+	}
+	
 	private var spawnPoint: BlockPos? by NotifyOnChange(null, owner::markDirty)
 	private var interestPoint: BlockPos? by NotifyOnChange(null, owner::markDirty)
 	
@@ -57,11 +63,11 @@ class TerritoryEntry(private val owner: TerritoryGlobalStorage, private val inst
 	
 	override fun serializeNBT() = TagCompound().apply {
 		spawnPoint?.let {
-			setPos("Spawn", it)
+			setPos(SPAWN_POINT_TAG, it)
 		}
 		
 		interestPoint?.let {
-			setPos("Interest", it)
+			setPos(INTEREST_POINT_TAG, it)
 		}
 		
 		if (lastPortals.isNotEmpty()){
@@ -76,17 +82,17 @@ class TerritoryEntry(private val owner: TerritoryGlobalStorage, private val inst
 				lastPortalArray[offset + 2] = pos.toLong()
 			}
 			
-			setLongArray("LastPortals", lastPortalArray)
+			setLongArray(LAST_PORTALS_TAG, lastPortalArray)
 		}
 	}
 	
 	override fun deserializeNBT(nbt: TagCompound) = with(nbt){
-		spawnPoint = getPosOrNull("Spawn")
-		interestPoint = getPosOrNull("Interest")
+		spawnPoint = getPosOrNull(SPAWN_POINT_TAG)
+		interestPoint = getPosOrNull(INTEREST_POINT_TAG)
 		
 		lastPortals.clear()
 		
-		val lastPortalArray = getLongArrayOrNull("LastPortals")
+		val lastPortalArray = getLongArrayOrNull(LAST_PORTALS_TAG)
 		
 		if (lastPortalArray != null){
 			for(index in lastPortalArray.indices step 3){

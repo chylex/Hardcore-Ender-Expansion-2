@@ -101,6 +101,9 @@ class EntityMobSpiderling(world: World) : EntityMob(world), ILightStartleHandler
 		
 		private const val BASE_JUMP_MOTION = 0.38F
 		
+		private const val SLEEP_STATE_TAG = "SleepState"
+		private const val LIGHT_STARTLE_RESET_TIME_TAG = "LightStartleResetTime"
+		
 		@JvmStatic
 		@SubscribeEvent
 		fun onHit(e: CriticalHitEvent){
@@ -501,22 +504,22 @@ class EntityMobSpiderling(world: World) : EntityMob(world), ILightStartleHandler
 	// Serialization
 	
 	override fun writeEntityToNBT(nbt: TagCompound) = with(nbt.heeTag){
-		setInteger("SleepState", when{
+		setInteger(SLEEP_STATE_TAG, when{
 			isSleeping -> 2
 			canSleepAgain -> 1
 			else -> 0
 		})
 		
-		setLong("LightStartleResetTime", lightStartleResetTime)
+		setLong(LIGHT_STARTLE_RESET_TIME_TAG, lightStartleResetTime)
 	}
 	
 	override fun readEntityFromNBT(nbt: TagCompound) = with(nbt.heeTag){
-		val sleepState = getInteger("SleepState")
+		val sleepState = getInteger(SLEEP_STATE_TAG)
 		
 		if (sleepState != 2){
 			wakeUp(instant = true, preventSleep = sleepState != 1)
 		}
 		
-		lightStartleResetTime = getLong("LightStartleResetTime")
+		lightStartleResetTime = getLong(LIGHT_STARTLE_RESET_TIME_TAG)
 	}
 }

@@ -25,6 +25,10 @@ sealed class EnderEyePhase : INBTSerializable<TagCompound>{
 	object Hibernated : EnderEyePhase()
 	
 	class OpenEye : EnderEyePhase(){
+		private companion object{
+			private const val TIMER_TAG = "Timer"
+		}
+		
 		private var timer: Byte = 35
 		
 		override fun tick(entity: EntityBossEnderEye): EnderEyePhase{
@@ -47,15 +51,20 @@ sealed class EnderEyePhase : INBTSerializable<TagCompound>{
 		}
 		
 		override fun serializeNBT() = TagCompound().apply {
-			setByte("Timer", timer)
+			setByte(TIMER_TAG, timer)
 		}
 		
 		override fun deserializeNBT(nbt: TagCompound) = with(nbt){
-			timer = getByte("Timer")
+			timer = getByte(TIMER_TAG)
 		}
 	}
 	
 	class Floating(remainingSpawnerPercentage: Int) : EnderEyePhase(){
+		private companion object{
+			private const val CURRENT_TAG = "Current"
+			private const val TARGET_TAG = "Target"
+		}
+		
 		private var animatedSpawnerPercentage = -15F
 		private var targetSpawnerPercentage = remainingSpawnerPercentage.toFloat()
 		
@@ -96,13 +105,13 @@ sealed class EnderEyePhase : INBTSerializable<TagCompound>{
 		}
 		
 		override fun serializeNBT() = TagCompound().apply {
-			setFloat("Current", animatedSpawnerPercentage)
-			setFloat("Target", targetSpawnerPercentage)
+			setFloat(CURRENT_TAG, animatedSpawnerPercentage)
+			setFloat(TARGET_TAG, targetSpawnerPercentage)
 		}
 		
 		override fun deserializeNBT(nbt: TagCompound) = with(nbt){
-			animatedSpawnerPercentage = getFloat("Current")
-			targetSpawnerPercentage = getFloat("Target")
+			animatedSpawnerPercentage = getFloat(CURRENT_TAG)
+			targetSpawnerPercentage = getFloat(TARGET_TAG)
 		}
 	}
 	

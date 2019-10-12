@@ -27,6 +27,10 @@ abstract class TileEntityBaseTable : TileEntityBase(), ITickable{
 		private const val MAX_PEDESTAL_DISTANCE = 6
 		
 		private const val PROCESS_REFRESH_RATE = 10
+		
+		private const val PEDESTAL_INFO_TAG = "PedestalInfo"
+		private const val CLUSTER_INFO_TAG = "ClusterInfo"
+		private const val PROCESSES_TAG = "Processes"
 	}
 	
 	var maxInputPedestals = 0
@@ -177,17 +181,17 @@ abstract class TileEntityBaseTable : TileEntityBase(), ITickable{
 	
 	override fun writeNBT(nbt: TagCompound, context: Context) = with(nbt){
 		if (context == STORAGE){
-			setTag("PedestalInfo", pedestalHandler.serializeNBT())
-			setTag("ClusterInfo", clusterHandler.serializeNBT())
-			setList("Processes", currentProcesses.serializeToList(processSerializer))
+			setTag(PEDESTAL_INFO_TAG, pedestalHandler.serializeNBT())
+			setTag(CLUSTER_INFO_TAG, clusterHandler.serializeNBT())
+			setList(PROCESSES_TAG, currentProcesses.serializeToList(processSerializer))
 		}
 	}
 	
 	override fun readNBT(nbt: TagCompound, context: Context) = with(nbt){
 		if (context == STORAGE){
-			pedestalHandler.deserializeNBT(getCompoundTag("PedestalInfo"))
-			clusterHandler.deserializeNBT(getCompoundTag("ClusterInfo"))
-			currentProcesses.deserializeFromList(world, getListOfCompounds("Processes"), processSerializer)
+			pedestalHandler.deserializeNBT(getCompoundTag(PEDESTAL_INFO_TAG))
+			clusterHandler.deserializeNBT(getCompoundTag(CLUSTER_INFO_TAG))
+			currentProcesses.deserializeFromList(world, getListOfCompounds(PROCESSES_TAG), processSerializer)
 		}
 	}
 }

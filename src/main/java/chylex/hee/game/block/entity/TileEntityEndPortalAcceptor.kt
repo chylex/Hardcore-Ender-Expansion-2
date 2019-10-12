@@ -23,6 +23,8 @@ class TileEntityEndPortalAcceptor : TileEntityBasePortalController(){
 		private const val WAITING_REFRESH_RATE = 20
 		private const val CHARGING_REFRESH_RATE = 2
 		
+		private const val ENERGY_CHARGE_TAG = "EnergyCharge"
+		
 		private val ENERGY_REQUIRED = Units(100)
 		private val ENERGY_PER_UPDATE = Units(1)
 		
@@ -148,7 +150,7 @@ class TileEntityEndPortalAcceptor : TileEntityBasePortalController(){
 		super.writeNBT(nbt, context)
 		
 		if (context == STORAGE){
-			setInteger("EnergyCharge", chargedEnergy.units.value)
+			setInteger(ENERGY_CHARGE_TAG, chargedEnergy.units.value)
 		}
 	}
 	
@@ -156,7 +158,7 @@ class TileEntityEndPortalAcceptor : TileEntityBasePortalController(){
 		super.readNBT(nbt, context)
 		
 		if (context == STORAGE){
-			chargedEnergy = Units(getInteger("EnergyCharge"))
+			chargedEnergy = Units(getInteger(ENERGY_CHARGE_TAG))
 			
 			if (chargedEnergy >= ENERGY_REQUIRED){
 				chargeState = FINISHED

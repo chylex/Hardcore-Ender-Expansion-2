@@ -14,6 +14,11 @@ import net.minecraft.util.math.BlockPos
 import net.minecraftforge.common.util.INBTSerializable
 
 class TableLinkedPedestalHandler(private val table: TileEntityBaseTable, maxDistance: Int) : INBTSerializable<TagCompound>{
+	private companion object{
+		private const val POS_TAG = "Pos"
+		private const val OUTPUT_TAG = "Output"
+	}
+	
 	private val maxDistanceSq = square(maxDistance)
 	private val inputPedestals = HashSet<BlockPos>(/*initialCapacity */ 4, /*loadFactor */ 1F)
 	private var dedicatedOutputPedestal: BlockPos? = null
@@ -107,17 +112,17 @@ class TableLinkedPedestalHandler(private val table: TileEntityBaseTable, maxDist
 	// Serialization
 	
 	override fun serializeNBT() = TagCompound().apply {
-		setLongArray("Pos", inputPedestals.map(BlockPos::toLong).toLongArray())
+		setLongArray(POS_TAG, inputPedestals.map(BlockPos::toLong).toLongArray())
 		
 		dedicatedOutputPedestal?.let {
-			setPos("Output", it)
+			setPos(OUTPUT_TAG, it)
 		}
 	}
 	
 	override fun deserializeNBT(nbt: TagCompound) = with(nbt){
 		inputPedestals.clear()
-		getLongArray("Pos").forEach { inputPedestals.add(Pos(it)) }
+		getLongArray(POS_TAG).forEach { inputPedestals.add(Pos(it)) }
 		
-		dedicatedOutputPedestal = getPosOrNull("Output")
+		dedicatedOutputPedestal = getPosOrNull(OUTPUT_TAG)
 	}
 }

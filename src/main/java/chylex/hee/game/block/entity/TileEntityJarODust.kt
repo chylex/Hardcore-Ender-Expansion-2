@@ -1,4 +1,5 @@
 package chylex.hee.game.block.entity
+import chylex.hee.game.block.BlockJarODust
 import chylex.hee.game.mechanics.dust.DustLayerInventory
 import chylex.hee.game.mechanics.dust.DustLayers
 import chylex.hee.system.migration.Facing.DOWN
@@ -43,10 +44,10 @@ class TileEntityJarODust : TileEntityBase(){
 	// Serialization
 	
 	override fun writeNBT(nbt: TagCompound, context: Context) = with(nbt){
-		setList("Layers", layers.serializeNBT())
+		setList(BlockJarODust.LAYERS_TAG, layers.serializeNBT())
 	}
 	
 	override fun readNBT(nbt: TagCompound, context: Context) = with(nbt){
-		layers.deserializeNBT(getListOfCompounds("Layers"))
+		layers.deserializeNBT(getListOfCompounds(BlockJarODust.LAYERS_TAG))
 	}
 }

@@ -15,7 +15,11 @@ import net.minecraft.util.math.BlockPos
 import net.minecraft.world.World
 
 class ProcessSupportingItemHolder(private val world: World, pos: BlockPos) : ITableProcess{
-	constructor(world: World, nbt: TagCompound) : this(world, nbt.getPos("PedestalPos"))
+	constructor(world: World, nbt: TagCompound) : this(world, nbt.getPos(PEDESTAL_POS_TAG))
+	
+	private companion object{
+		private const val PEDESTAL_POS_TAG = "PedestalPos"
+	}
 	
 	override val pedestals = arrayOf(pos)
 	
@@ -55,7 +59,7 @@ class ProcessSupportingItemHolder(private val world: World, pos: BlockPos) : ITa
 	// Serialization
 	
 	override fun serializeNBT() = TagCompound().apply {
-		setPos("PedestalPos", pedestals[0])
+		setPos(PEDESTAL_POS_TAG, pedestals[0])
 	}
 	
 	override fun deserializeNBT(nbt: TagCompound){}

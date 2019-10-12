@@ -28,6 +28,9 @@ import net.minecraft.world.World
 open class EntityMobEndermite(world: World) : EntityEndermite(world){
 	private companion object{
 		private val DAMAGE_GENERAL = Damage(DIFFICULTY_SCALING, PEACEFUL_EXCLUSION, *ALL_PROTECTIONS)
+		
+		private const val AGE_TAG = "Age"
+		private const val IDLE_TAG = "Idle"
 	}
 	
 	private var realLifetime = 0
@@ -120,14 +123,14 @@ open class EntityMobEndermite(world: World) : EntityEndermite(world){
 	override fun writeEntityToNBT(nbt: TagCompound) = with(nbt.heeTag){
 		super.writeEntityToNBT(nbt)
 		
-		setInteger("Age", realLifetime)
-		setShort("Idle", idleDespawnTimer)
+		setInteger(AGE_TAG, realLifetime)
+		setShort(IDLE_TAG, idleDespawnTimer)
 	}
 	
 	override fun readEntityFromNBT(nbt: TagCompound) = with(nbt.heeTag){
 		super.readEntityFromNBT(nbt)
 		
-		realLifetime = getInteger("Age")
-		idleDespawnTimer = getShort("Idle")
+		realLifetime = getInteger(AGE_TAG)
+		idleDespawnTimer = getShort(IDLE_TAG)
 	}
 }

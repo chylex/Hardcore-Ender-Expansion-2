@@ -52,6 +52,9 @@ class EndermanTeleportHandler(private val enderman: EntityMobAbstractEnderman) :
 	companion object{
 		private const val DEFAULT_RESTORE_Y = -256.0
 		
+		private const val COOLDOWN_TAG = "Cooldown"
+		private const val DELAY_TICKS_TAG = "DelayTicks"
+		
 		private val TELEPORTER_GENERAL = Teleporter(resetFall = true, causedInstability = 15u, effectRange = Extended(16F))
 		private val TELEPORTER_SILENT = Teleporter(resetFall = true, causedInstability = 15u, effectRange = Silent)
 		private val TELEPORTER_DODGE = Teleporter(resetFall = false, resetPathfinding = false)
@@ -327,12 +330,12 @@ class EndermanTeleportHandler(private val enderman: EntityMobAbstractEnderman) :
 	// Serialization
 	
 	override fun serializeNBT() = TagCompound().apply {
-		setShort("Cooldown", tpCooldown.toShort())
-		setShort("DelayTicks", tpDelayTicks.toShort())
+		setShort(COOLDOWN_TAG, tpCooldown.toShort())
+		setShort(DELAY_TICKS_TAG, tpDelayTicks.toShort())
 	}
 	
 	override fun deserializeNBT(nbt: TagCompound) = with(nbt){
-		tpCooldown = getShort("Cooldown").toInt()
-		tpDelayTicks = min(1, getShort("DelayTicks").toInt())
+		tpCooldown = getShort(COOLDOWN_TAG).toInt()
+		tpDelayTicks = min(1, getShort(DELAY_TICKS_TAG).toInt())
 	}
 }

@@ -119,7 +119,7 @@ object RenderTileJarODust : TileEntitySpecialRenderer<TileEntityJarODust>(){
 			
 			dispatcher.blockModelRenderer.renderModelBrightness(model, state, 1F, true)
 			
-			stack.heeTagOrNull?.getListOfCompounds("Layers")?.let {
+			stack.heeTagOrNull?.getListOfCompounds(BlockJarODust.LAYERS_TAG)?.let {
 				layers.deserializeNBT(it)
 				renderLayers(layers, 0.0, 0.0, 0.0)
 			}
