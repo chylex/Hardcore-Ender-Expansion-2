@@ -1,5 +1,5 @@
 package chylex.hee.game.item
-import chylex.hee.HEE
+import chylex.hee.client.util.MC
 import chylex.hee.game.item.util.CustomRarity
 import chylex.hee.game.mechanics.trinket.ITrinketItem
 import chylex.hee.game.mechanics.trinket.TrinketHandler
@@ -20,7 +20,7 @@ open class ItemAbstractTrinket : Item(), ITrinketItem{
 		
 		@Sided(Side.CLIENT)
 		fun onAddInformation(stack: ItemStack, trinket: ITrinketItem, lines: MutableList<String>){
-			val player = HEE.proxy.getClientSidePlayer() ?: return
+			val player = MC.player ?: return
 			
 			if (lines.size > 1){ // first line is item name
 				lines.add("")
