@@ -2,6 +2,7 @@ package chylex.hee.game.item
 import chylex.hee.init.ModBlocks
 import chylex.hee.system.migration.ActionResult.FAIL
 import chylex.hee.system.migration.ActionResult.SUCCESS
+import chylex.hee.system.migration.Facing.DOWN
 import chylex.hee.system.migration.Facing.UP
 import chylex.hee.system.migration.vanilla.Blocks
 import chylex.hee.system.util.getMaterial
@@ -39,7 +40,7 @@ class ItemEndermanHead : Item(){ // UPDATE redo all this
 		var pos = pos
 		var facing = facing
 		
-		if (facing == EnumFacing.DOWN){
+		if (facing == DOWN){
 			return FAIL
 		}
 		

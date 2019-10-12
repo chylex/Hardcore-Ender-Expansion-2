@@ -24,7 +24,6 @@ import chylex.hee.client.render.util.asItem
 import chylex.hee.client.util.MC
 import chylex.hee.game.block.BlockAbstractTable
 import chylex.hee.game.block.BlockDryVines
-import chylex.hee.game.block.BlockGraveDirt
 import chylex.hee.game.block.BlockPuzzleLogic
 import chylex.hee.game.block.BlockTablePedestal
 import chylex.hee.game.block.BlockVoidPortalInner

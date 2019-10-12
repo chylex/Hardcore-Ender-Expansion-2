@@ -2,6 +2,7 @@ package chylex.hee.game.world.structure.trigger
 import chylex.hee.game.entity.technical.EntityTechnicalTrigger
 import chylex.hee.game.world.structure.IStructureTrigger
 import chylex.hee.game.world.util.Transform
+import chylex.hee.system.migration.Facing.SOUTH
 import chylex.hee.system.util.component1
 import chylex.hee.system.util.component2
 import chylex.hee.system.util.component3
@@ -34,7 +35,7 @@ class EntityStructureTrigger private constructor(private val entityConstructor: 
 	
 	constructor(
 		triggerType: EntityTechnicalTrigger.Types,
-		facing: EnumFacing = EnumFacing.SOUTH
+		facing: EnumFacing = SOUTH
 	) : this(
 		{ world -> EntityTechnicalTrigger(world, triggerType).apply { rotationYaw = facing.horizontalAngle } },
 		yOffset = 0.0

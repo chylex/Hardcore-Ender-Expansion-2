@@ -2,6 +2,7 @@ package chylex.hee.game.block
 import chylex.hee.game.block.info.BlockBuilder.Companion.setHarvestTool
 import chylex.hee.game.item.util.Tool.Level.WOOD
 import chylex.hee.game.item.util.Tool.Type.AXE
+import chylex.hee.system.migration.Facing
 import chylex.hee.system.migration.forge.Side
 import chylex.hee.system.migration.forge.Sided
 import chylex.hee.system.util.color.IntColor
@@ -40,7 +41,7 @@ class BlockDryVines : BlockVine(){
 	
 	override fun canAttachTo(world: World, pos: BlockPos, facing: EnumFacing): Boolean{
 		val above = pos.up()
-		return isAcceptableNeighbor(world, pos.offset(facing.opposite), facing) && (above.isAir(world) || above.getBlock(world) === this || isAcceptableNeighbor(world, above, EnumFacing.UP))
+		return isAcceptableNeighbor(world, pos.offset(facing.opposite), facing) && (above.isAir(world) || above.getBlock(world) === this || isAcceptableNeighbor(world, above, Facing.UP))
 	}
 	
 	private fun isAcceptableNeighbor(world: World, pos: BlockPos, facing: EnumFacing): Boolean{

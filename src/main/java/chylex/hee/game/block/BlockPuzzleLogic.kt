@@ -5,6 +5,7 @@ import chylex.hee.game.block.BlockPuzzleLogic.State.DISABLED
 import chylex.hee.game.block.BlockPuzzleLogic.State.INACTIVE
 import chylex.hee.game.block.info.BlockBuilder
 import chylex.hee.game.block.util.Property
+import chylex.hee.system.migration.Facing.NORTH
 import chylex.hee.system.migration.forge.Side
 import chylex.hee.system.migration.forge.Sided
 import chylex.hee.system.util.allInCenteredBox
@@ -22,7 +23,6 @@ import net.minecraft.client.renderer.color.IBlockColor
 import net.minecraft.entity.EntityLivingBase
 import net.minecraft.util.BlockRenderLayer.CUTOUT
 import net.minecraft.util.EnumFacing
-import net.minecraft.util.EnumFacing.NORTH
 import net.minecraft.util.EnumHand
 import net.minecraft.util.IStringSerializable
 import net.minecraft.util.math.BlockPos

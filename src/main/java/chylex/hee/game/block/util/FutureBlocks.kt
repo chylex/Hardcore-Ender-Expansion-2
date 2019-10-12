@@ -1,4 +1,5 @@
 package chylex.hee.game.block.util
+import chylex.hee.system.migration.Facing
 import chylex.hee.system.migration.vanilla.Blocks
 import chylex.hee.system.util.with
 import chylex.hee.system.util.withFacing
@@ -12,7 +13,6 @@ import net.minecraft.block.BlockStoneSlab
 import net.minecraft.block.BlockTallGrass
 import net.minecraft.block.BlockWoodSlab
 import net.minecraft.item.ItemStack
-import net.minecraft.util.EnumFacing
 
 object FutureBlocks{
 	val STONE_SLAB        = Blocks.STONE_SLAB.with(BlockStoneSlab.VARIANT, BlockStoneSlab.EnumType.STONE)
@@ -36,7 +36,7 @@ object FutureBlocks{
 	val INFESTED_MOSSY_STONE_BRICKS    = Blocks.MONSTER_EGG.with(BlockSilverfish.VARIANT, BlockSilverfish.EnumType.MOSSY_STONEBRICK)
 	val INFESTED_CRACKED_STONE_BRICKS  = Blocks.MONSTER_EGG.with(BlockSilverfish.VARIANT, BlockSilverfish.EnumType.CRACKED_STONEBRICK)
 	
-	val SKULL_FLOOR = Blocks.SKULL.withFacing(EnumFacing.UP)
+	val SKULL_FLOOR = Blocks.SKULL.withFacing(Facing.UP)
 	
 	val POPPY_STACK        get() = ItemStack(Blocks.RED_FLOWER, 1, BlockFlower.EnumFlowerType.POPPY.meta)
 	val BLUE_ORCHID_STACK  get() = ItemStack(Blocks.RED_FLOWER, 1, BlockFlower.EnumFlowerType.BLUE_ORCHID.meta)
