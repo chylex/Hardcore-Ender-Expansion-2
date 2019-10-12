@@ -149,7 +149,6 @@ object ModBlocks{
 	
 	@JvmField val ETHEREAL_LANTERN = BlockSimple(buildEtherealLantern).apply { setup("ethereal_lantern") }
 	@JvmField val STONE_BRICK_WALL = BlockWallCustom(Blocks.STONEBRICK).apply { setup("stone_brick_wall") }
-	@JvmField val GRAVE_DIRT       = BlockGraveDirt(buildGraveDirt).apply { setup("grave_dirt") }
 	@JvmField val INFUSED_GLASS    = BlockInfusedGlass(buildInfusedGlass).apply { setup("infused_glass") }
 	@JvmField val VANTABLOCK       = BlockSimple(buildVantablock).apply { setup("vantablock") }
 	@JvmField val ENDIUM_BLOCK     = BlockEndium(buildEndiumBlock).apply { setup("endium_block") }
@@ -211,6 +210,12 @@ object ModBlocks{
 	@JvmField val DARK_LOAM             = BlockSimple(buildDarkLoam).apply { setup("dark_loam") }
 	@JvmField val DARK_LOAM_SLAB        = BlockSlabCustom.Half(buildDarkLoam).apply { setup("dark_loam_slab") }
 	@JvmField val DARK_LOAM_DOUBLE_SLAB = BlockSlabCustom.Full(buildDarkLoam, DARK_LOAM_SLAB).apply { setup("dark_loam_slab_double", "hee.dark_loam_slab") }
+	
+	// Blocks: Building (Grave Dirt)
+	
+	@JvmField val GRAVE_DIRT_PLAIN      = BlockGraveDirt.Plain(buildGraveDirt).apply { setup("grave_dirt") }
+	@JvmField val GRAVE_DIRT_LOOT       = BlockGraveDirt.Loot(buildGraveDirt).apply { setup("grave_dirt_loot") }
+	@JvmField val GRAVE_DIRT_SPIDERLING = BlockGraveDirt.Spiderling(buildGraveDirt).apply { setup("grave_dirt_spiderling") }
 	
 	// Blocks: Building (Wood)
 	
@@ -331,7 +336,6 @@ object ModBlocks{
 		with(e.registry){
 			register(ETHEREAL_LANTERN with basicItemBlock)
 			register(STONE_BRICK_WALL with basicItemBlock)
-			register(GRAVE_DIRT with metaItemBlock)
 			register(INFUSED_GLASS with basicItemBlock)
 			register(VANTABLOCK with basicItemBlock)
 			register(ENDIUM_BLOCK with basicItemBlock)
@@ -383,6 +387,10 @@ object ModBlocks{
 			register(DARK_LOAM with basicItemBlock)
 			register(DARK_LOAM_SLAB with slabItemBlock(DARK_LOAM_SLAB, DARK_LOAM_DOUBLE_SLAB))
 			register(DARK_LOAM_DOUBLE_SLAB)
+			
+			register(GRAVE_DIRT_PLAIN with basicItemBlock)
+			register(GRAVE_DIRT_LOOT with basicItemBlock)
+			register(GRAVE_DIRT_SPIDERLING with basicItemBlock)
 			
 			register(WHITEBARK_LOG with basicItemBlock)
 			register(WHITEBARK with basicItemBlock)

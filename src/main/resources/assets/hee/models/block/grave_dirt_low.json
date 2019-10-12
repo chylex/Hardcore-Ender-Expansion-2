@@ -1,5 +1,10 @@
 {
   "parent": "minecraft:block/block",
+  "textures": {
+    "particle": "hee:block/grave_dirt",
+    "all": "hee:block/grave_dirt",
+    "top": "hee:block/grave_dirt"
+  },
   "elements": [
     {
       "from": [  0,  0,  0 ],

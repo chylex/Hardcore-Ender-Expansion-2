@@ -197,10 +197,6 @@ object ModRendering{
 		setModel(ModBlocks.DEATH_FLOWER_DECAYING, 7..10, Resource.Custom("death_flower_3"))
 		setModel(ModBlocks.DEATH_FLOWER_DECAYING, 11..13, Resource.Custom("death_flower_4"))
 		
-		setModel(ModBlocks.GRAVE_DIRT, BlockGraveDirt.Type.PLAIN.ordinal, variant = "full=false,type=plain")
-		setModel(ModBlocks.GRAVE_DIRT, BlockGraveDirt.Type.SPIDERLING.ordinal, variant = "full=false,type=spiderling")
-		setModel(ModBlocks.GRAVE_DIRT, BlockGraveDirt.Type.LOOT.ordinal, variant = "full=false,type=loot")
-		
 		setModel(ModBlocks.VOID_PORTAL_INNER, BlockVoidPortalInner.Type.values().indices)
 		
 		setModel(ModItems.VOID_SALAD, ItemVoidSalad.Type.DOUBLE.ordinal, Resource.Custom("void_void_salad"))
@@ -212,7 +208,6 @@ object ModRendering{
 				ModBlocks.POTTED_DEATH_FLOWER_DECAYING,
 				ModBlocks.POTTED_DEATH_FLOWER_HEALED,
 				ModBlocks.POTTED_DEATH_FLOWER_WITHERED,
-				ModBlocks.GRAVE_DIRT,
 				*tables
 			).map(Item::getItemFromBlock).toSet()
 			

@@ -1,5 +1,4 @@
 package chylex.hee.game.world.feature.tombdungeon
-import chylex.hee.game.block.BlockGraveDirt
 import chylex.hee.game.world.structure.IBlockPicker.Weighted.Companion.Weighted
 import chylex.hee.game.world.structure.IStructureDescription
 import chylex.hee.game.world.structure.IStructureDescription.Companion.NULL_LOCATOR
@@ -47,17 +46,17 @@ object TombDungeonPieces : IStructureDescription{
 		  7 to ModBlocks.DUSTY_STONE_BRICK_STAIRS.with(BlockStairs.HALF, BlockStairs.EnumHalf.TOP).withFacing(WEST)
 	)
 	
-	private val PALETTE_ENTRY_PLAIN_GRAVE = Weighted(ModBlocks.GRAVE_DIRT, BlockGraveDirt.TYPE, listOf(
-		74 to BlockGraveDirt.Type.PLAIN,
-		18 to BlockGraveDirt.Type.SPIDERLING,
-		 8 to BlockGraveDirt.Type.LOOT
-	))
+	private val PALETTE_ENTRY_PLAIN_GRAVE = Weighted(
+		74 to ModBlocks.GRAVE_DIRT_PLAIN,
+		18 to ModBlocks.GRAVE_DIRT_SPIDERLING,
+		 8 to ModBlocks.GRAVE_DIRT_LOOT
+	)
 	
-	private val PALETTE_ENTRY_FANCY_GRAVE = Weighted(ModBlocks.GRAVE_DIRT, BlockGraveDirt.TYPE, listOf(
-		69 to BlockGraveDirt.Type.PLAIN,
-		27 to BlockGraveDirt.Type.LOOT,
-		 4 to BlockGraveDirt.Type.SPIDERLING
-	))
+	private val PALETTE_ENTRY_FANCY_GRAVE = Weighted(
+		69 to ModBlocks.GRAVE_DIRT_PLAIN,
+		27 to ModBlocks.GRAVE_DIRT_LOOT,
+		 4 to ModBlocks.GRAVE_DIRT_SPIDERLING
+	)
 	
 	private fun generateCommonPalette() = PaletteBuilder.Combined().apply {
 		add("air", Blocks.AIR)
@@ -70,7 +69,7 @@ object TombDungeonPieces : IStructureDescription{
 		with(forDevelopment){
 			add("dustystone.wall", Blocks.LAPIS_BLOCK)
 			add("dustystone.ceiling", Blocks.COAL_BLOCK)
-			add("gravedirt", ModBlocks.GRAVE_DIRT)
+			add("gravedirt", ModBlocks.GRAVE_DIRT_PLAIN)
 		}
 	}
 	

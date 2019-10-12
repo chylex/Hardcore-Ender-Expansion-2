@@ -1,0 +1,24 @@
+{
+  "forge_marker": 1,
+  "defaults": {
+    "model": "hee:grave_dirt_low"
+  },
+  "variants": {
+    "full=false": [
+      { "textures": { "top": "hee:block/grave_dirt_loot_1" } },
+      { "textures": { "top": "hee:block/grave_dirt_loot_1" } },
+      { "textures": { "top": "hee:block/grave_dirt_loot_2" } },
+      { "textures": { "top": "hee:block/grave_dirt_loot_2" } },
+      { "textures": { "top": "hee:block/grave_dirt_loot_3" } },
+      { "textures": { "top": "hee:block/grave_dirt_loot_3" } },
+      { "textures": { "top": "hee:block/grave_dirt_loot_4" } },
+      { "textures": { "top": "hee:block/grave_dirt_loot_5" } },
+      { "textures": { "top": "hee:block/grave_dirt_loot_6" } },
+      { "textures": { "top": "hee:block/grave_dirt" } },
+      { "textures": { "top": "hee:block/grave_dirt" } },
+      { "textures": { "top": "hee:block/grave_dirt" } }
+    ],
+    "full=true": [{ "model": "hee:grave_dirt_full" }],
+    "inventory": [{ "textures": { "top": "hee:block/grave_dirt_loot_4" } }]
+  }
+}

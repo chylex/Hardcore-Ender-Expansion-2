@@ -1,6 +1,5 @@
 tile.hee.ethereal_lantern.name=Ethereal Lantern
 tile.hee.stone_brick_wall.name=Stone Brick Wall
-tile.hee.grave_dirt.name=Grave Dirt
 tile.hee.infused_glass.name=Infused Glass
 tile.hee.vantablock.name=Vantablock
 tile.hee.endium_block.name=Endium Block
@@ -48,6 +47,10 @@ tile.hee.end_stone_enchanted.name=Enchanted End Stone
 
 tile.hee.dark_loam.name=Dark Loam
 tile.hee.dark_loam_slab.name=Dark Loam Slab
+
+tile.hee.grave_dirt.name=Grave Dirt
+tile.hee.grave_dirt_loot.name=Grave Dirt (Loot)
+tile.hee.grave_dirt_spiderling.name=Grave Dirt (Spiderling)
 
 tile.hee.whitebark_log.name=Whitebark Log
 tile.hee.whitebark.name=Whitebark
