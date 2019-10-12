@@ -1,6 +1,7 @@
 package chylex.hee.game.mechanics.damage
 import chylex.hee.game.mechanics.damage.Damage.Companion.CANCEL_DAMAGE
 import chylex.hee.system.migration.vanilla.Potions
+import chylex.hee.system.util.clone
 import chylex.hee.system.util.setFireTicks
 import net.minecraft.enchantment.EnchantmentHelper
 import net.minecraft.entity.Entity
@@ -168,7 +169,7 @@ interface IDamageProcessor{
 		fun STATUS(effect: PotionEffect) = object : IDamageProcessor{
 			override fun afterDamage(target: Entity, properties: DamageProperties.Reader){
 				if (target is EntityLivingBase){
-					target.addPotionEffect(effect)
+					target.addPotionEffect(effect.clone())
 				}
 			}
 		}

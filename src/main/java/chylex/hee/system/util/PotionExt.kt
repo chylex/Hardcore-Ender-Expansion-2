@@ -13,3 +13,7 @@ fun Potion.makeEffect(duration: Int, amplifier: Int): PotionEffect{
 fun Potion.makeEffect(duration: Int, amplifier: Int = 0, isAmbient: Boolean = false, showParticles: Boolean = true): PotionEffect{
 	return PotionEffect(this, duration, amplifier, isAmbient, showParticles)
 }
+
+fun PotionEffect.clone(): PotionEffect{
+	return PotionEffect(this)
+}
