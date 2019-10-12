@@ -208,6 +208,14 @@ object BlockBuilders{
 		explosionResistance = 6.0F
 	}
 	
+	// Spawners
+	
+	val buildSpawnerObsidianTowers = BlockBuilder(Material.ROCK, MapColor.STONE, SoundType.METAL).apply {
+		harvestTool = Pair(STONE, PICKAXE)
+		harvestHardness = 8.0F
+		miningStats = false
+	}
+	
 	// Portals
 	
 	val buildPortalInner = BlockBuilder(Material.PORTAL, MapColor.BLACK, SoundType.STONE).apply {

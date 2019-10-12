@@ -2,6 +2,7 @@ package chylex.hee.network.client
 import chylex.hee.game.block.BlockDragonEggOverride
 import chylex.hee.game.block.BlockEnderGooPurified
 import chylex.hee.game.block.IBlockDeathFlowerDecaying
+import chylex.hee.game.block.entity.TileEntitySpawnerObsidianTower
 import chylex.hee.game.block.entity.TileEntityTablePedestal
 import chylex.hee.game.entity.item.EntityFallingObsidian
 import chylex.hee.game.entity.item.EntityItemCauldronTrigger
@@ -40,6 +41,7 @@ class PacketClientFX<T : IFxData>() : BaseClientPacket(){
 			IBlockDeathFlowerDecaying.FX_HEAL,
 			BlockDragonEggOverride.FX_BREAK,
 			BlockEnderGooPurified.FX_PLACE,
+			TileEntitySpawnerObsidianTower.FX_BREAK,
 			TileEntityTablePedestal.FX_ITEM_UPDATE,
 			ItemAbstractEnergyUser.FX_CHARGE,
 			ItemCompost.FX_USE,

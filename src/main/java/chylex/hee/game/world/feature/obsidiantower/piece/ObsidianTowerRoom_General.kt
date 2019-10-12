@@ -1,4 +1,5 @@
 package chylex.hee.game.world.feature.obsidiantower.piece
+import chylex.hee.game.block.entity.TileEntitySpawnerObsidianTower
 import chylex.hee.game.block.util.FutureBlocks
 import chylex.hee.game.world.feature.obsidiantower.ObsidianTowerPieces
 import chylex.hee.game.world.feature.obsidiantower.ObsidianTowerRoomData
@@ -7,7 +8,9 @@ import chylex.hee.game.world.feature.obsidiantower.ObsidianTowerSpawnerLevel.LEV
 import chylex.hee.game.world.structure.IStructureWorld
 import chylex.hee.game.world.structure.trigger.FlowerPotStructureTrigger
 import chylex.hee.game.world.structure.trigger.LootChestStructureTrigger
+import chylex.hee.game.world.structure.trigger.ObsidianTowerSpawnerStructureTrigger
 import chylex.hee.game.world.structure.trigger.TileEntityStructureTrigger
+import chylex.hee.init.ModBlocks
 import chylex.hee.init.ModItems
 import chylex.hee.system.migration.Facing.EAST
 import chylex.hee.system.migration.Facing.SOUTH
@@ -38,10 +41,6 @@ abstract class ObsidianTowerRoom_General(file: String, val guaranteesSpawnersOnL
 			Blocks.TALLGRASS to BlockTallGrass.EnumType.FERN.meta,
 			Blocks.SAPLING to BlockPlanks.EnumType.DARK_OAK.metadata
 		)
-		
-		private fun addSpawnerTrigger(world: IStructureWorld, pos: BlockPos, data: ObsidianTowerRoomData){
-			// TODO world.addTrigger(pos, TileEntityStructureTrigger(ModBlocks.SPAWNER_OBSIDIAN_TOWERS, TileEntitySpawnerObsidianTower(pos, data)))
-		}
 	}
 	
 	protected abstract fun generateContents(world: IStructureWorld, instance: Instance)
@@ -57,17 +56,17 @@ abstract class ObsidianTowerRoom_General(file: String, val guaranteesSpawnersOnL
 			val spawners = mutableListOf<BlockPos>()
 			
 			for(pos in size.minPos.allInBoxMutable(size.maxPos)){
-				/* TODO if (world.getBlock(pos) === ModBlocks.SPAWNER_OBSIDIAN_TOWERS){
+				if (world.getBlock(pos) === ModBlocks.SPAWNER_OBSIDIAN_TOWERS){
 					spawners.add(pos.toImmutable())
-				}*/
+				}
 			}
 			
 			rand.removeItemOrNull(spawners)?.let {
-				addSpawnerTrigger(world, it, ObsidianTowerRoomData(INTRODUCTION, rand))
+				placeSpawnerTrigger(world, it, ObsidianTowerRoomData(INTRODUCTION, rand))
 			}
 			
 			for(spawner in spawners){
-				addSpawnerTrigger(world, spawner, data)
+				placeSpawnerTrigger(world, spawner, data)
 			}
 		}
 	}
@@ -79,11 +78,15 @@ abstract class ObsidianTowerRoom_General(file: String, val guaranteesSpawnersOnL
 			world.setBlock(pos, Blocks.BEDROCK)
 		}
 		else if (data.spawnerLevel == LEVEL_1){
-			// TODO world.setBlock(pos, ModBlocks.SPAWNER_OBSIDIAN_TOWERS) // delay adding trigger until generate()
+			world.setBlock(pos, ModBlocks.SPAWNER_OBSIDIAN_TOWERS) // delay adding trigger until generate()
 		}
 		else{
-			addSpawnerTrigger(world, pos, data)
+			placeSpawnerTrigger(world, pos, data)
 		}
+	}
+	
+	private fun placeSpawnerTrigger(world: IStructureWorld, pos: BlockPos, data: ObsidianTowerRoomData){
+		world.addTrigger(pos, ObsidianTowerSpawnerStructureTrigger(TileEntitySpawnerObsidianTower(data, world.rand), pos, size))
 	}
 	
 	protected fun placeEndermanHead(world: IStructureWorld, pos: BlockPos, rotation: Int){

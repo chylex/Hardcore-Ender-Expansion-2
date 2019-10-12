@@ -44,6 +44,7 @@ import chylex.hee.game.block.BlockScaffolding
 import chylex.hee.game.block.BlockSimple
 import chylex.hee.game.block.BlockSimpleShaped
 import chylex.hee.game.block.BlockSlabCustom
+import chylex.hee.game.block.BlockSpawnerObsidianTowers
 import chylex.hee.game.block.BlockStairsCustom
 import chylex.hee.game.block.BlockStardustOre
 import chylex.hee.game.block.BlockTableBase
@@ -63,6 +64,7 @@ import chylex.hee.game.block.entity.TileEntityInfusedTNT
 import chylex.hee.game.block.entity.TileEntityJarODust
 import chylex.hee.game.block.entity.TileEntityLootChest
 import chylex.hee.game.block.entity.TileEntityPortalInner
+import chylex.hee.game.block.entity.TileEntitySpawnerObsidianTower
 import chylex.hee.game.block.entity.TileEntityTablePedestal
 import chylex.hee.game.block.entity.TileEntityVoidPortalStorage
 import chylex.hee.game.block.fluid.FluidEnderGoo
@@ -102,6 +104,7 @@ import chylex.hee.game.block.info.BlockBuilders.buildPortalInner
 import chylex.hee.game.block.info.BlockBuilders.buildPuzzleLogic
 import chylex.hee.game.block.info.BlockBuilders.buildPuzzleWall
 import chylex.hee.game.block.info.BlockBuilders.buildScaffolding
+import chylex.hee.game.block.info.BlockBuilders.buildSpawnerObsidianTowers
 import chylex.hee.game.block.info.BlockBuilders.buildStardustOre
 import chylex.hee.game.block.info.BlockBuilders.buildTable
 import chylex.hee.game.block.info.BlockBuilders.buildTablePedestal
@@ -275,6 +278,8 @@ object ModBlocks{
 	
 	// Blocks: Spawners
 	
+	@JvmField val SPAWNER_OBSIDIAN_TOWERS = BlockSpawnerObsidianTowers(buildSpawnerObsidianTowers).apply { setup("spawner_obsidian_towers", inCreativeTab = false) }
+	
 	// Blocks: Portals
 	
 	private val portalFrameAABB = AxisAlignedBB(0.0, 0.0, 0.0, 1.0, 0.8125, 1.0)
@@ -425,6 +430,8 @@ object ModBlocks{
 			register(DRY_VINES with basicItemBlock)
 			register(ENDERMAN_HEAD)
 			
+			register(SPAWNER_OBSIDIAN_TOWERS)
+			
 			register(END_PORTAL_INNER with basicItemBlock)
 			register(END_PORTAL_FRAME with basicItemBlock)
 			register(END_PORTAL_ACCEPTOR with basicItemBlock)
@@ -447,6 +454,7 @@ object ModBlocks{
 		tile<TileEntityPortalInner.Void>("void_portal_inner")
 		tile<TileEntityEndPortalAcceptor>("end_portal_acceptor")
 		tile<TileEntityVoidPortalStorage>("void_portal_storage")
+		tile<TileEntitySpawnerObsidianTower>("spawner_obsidian_tower")
 		tile<TileEntityEnergyCluster>("energy_cluster")
 		tile<TileEntityInfusedTNT>("infused_tnt")
 		tile<TileEntityDarkChest>("dark_chest")
