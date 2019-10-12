@@ -14,6 +14,21 @@
       <name>javax.xml</name>
       <name>jdk.internal</name>
       <name>net.java.games.input.Component.Identifier.Key</name>
+      <name>net.minecraft.init.Blocks</name>
+      <name>net.minecraft.init.Items</name>
+      <name>net.minecraft.init.MobEffects</name>
+      <name>net.minecraft.init.PotionTypes</name>
+      <name>net.minecraft.init.SoundEvents</name>
+      <name>net.minecraft.util.EnumActionResult</name>
+      <name>net.minecraft.util.EnumFacing</name>
+      <name>net.minecraft.util.EnumHand</name>
+      <name>net.minecraft.world.EnumDifficulty</name>
+      <name>net.minecraftforge.fml.common.Mod.EventBusSubscriber</name>
+      <name>net.minecraftforge.fml.common.eventhandler.Event</name>
+      <name>net.minecraftforge.fml.common.eventhandler.EventPriority</name>
+      <name>net.minecraftforge.fml.common.eventhandler.SubscribeEvent</name>
+      <name>net.minecraftforge.fml.relauncher.Side</name>
+      <name>net.minecraftforge.fml.relauncher.SideOnly</name>
       <name>org.ietf</name>
       <name>org.omg</name>
       <name>org.w3c</name>
