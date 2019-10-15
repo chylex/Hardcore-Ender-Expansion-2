@@ -1,9 +1,11 @@
 package chylex.hee.game.world.territory
 import chylex.hee.game.world.generation.SegmentedWorld
 import chylex.hee.game.world.generation.TerritoryGenerationInfo
+import chylex.hee.game.world.territory.descriptions.Territory_ArcaneConjunctions
 import chylex.hee.game.world.territory.descriptions.Territory_ForgottenTombs
 import chylex.hee.game.world.territory.descriptions.Territory_ObsidianTowers
 import chylex.hee.game.world.territory.descriptions.Territory_TheHub
+import chylex.hee.game.world.territory.generators.Generator_ArcaneConjunctions
 import chylex.hee.game.world.territory.generators.Generator_ForgottenTombs
 import chylex.hee.game.world.territory.generators.Generator_ObsidianTowers
 import chylex.hee.game.world.territory.generators.Generator_TheHub
@@ -47,8 +49,8 @@ enum class TerritoryType(
 	
 	ARCANE_CONJUNCTIONS(
 		title  = "arcane_conjunctions",
-		desc   = TerritoryDummy,
-		gen    = GeneratorDummy,
+		desc   = Territory_ArcaneConjunctions,
+		gen    = Generator_ArcaneConjunctions,
 		chunks = 30,
 		height = 64 until 256
 	),
