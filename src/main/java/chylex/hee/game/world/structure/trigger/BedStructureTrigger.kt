@@ -1,9 +1,9 @@
 package chylex.hee.game.world.structure.trigger
 import chylex.hee.game.world.structure.IStructureTrigger
+import chylex.hee.game.world.structure.IStructureWorld
 import chylex.hee.game.world.util.Transform
 import chylex.hee.system.migration.vanilla.Blocks
 import chylex.hee.system.util.getTile
-import chylex.hee.system.util.setState
 import chylex.hee.system.util.with
 import chylex.hee.system.util.withFacing
 import net.minecraft.block.BlockBed
@@ -16,7 +16,7 @@ import net.minecraft.util.math.BlockPos
 import net.minecraft.world.World
 
 class BedStructureTrigger(private val facing: EnumFacing, private val color: EnumDyeColor) : IStructureTrigger{
-	override fun realize(world: World, pos: BlockPos, transform: Transform){
+	override fun setup(world: IStructureWorld, pos: BlockPos, transform: Transform){
 		val transformedFacing = transform(facing)
 		val baseState = Blocks.BED.withFacing(transformedFacing).with(BlockBed.OCCUPIED, false)
 		
@@ -24,8 +24,14 @@ class BedStructureTrigger(private val facing: EnumFacing, private val color: Enu
 		val footPos = pos
 		val headPos = pos.offset(transformedFacing)
 		
-		footPos.setState(world, baseState.with(BlockBed.PART, FOOT))
-		headPos.setState(world, baseState.with(BlockBed.PART, HEAD))
+		world.setState(footPos, baseState.with(BlockBed.PART, FOOT))
+		world.setState(headPos, baseState.with(BlockBed.PART, HEAD))
+	}
+	
+	override fun realize(world: World, pos: BlockPos, transform: Transform){
+		@Suppress("UnnecessaryVariable")
+		val footPos = pos
+		val headPos = pos.offset(transform(facing))
 		
 		footPos.getTile<TileEntityBed>(world)?.color = color
 		headPos.getTile<TileEntityBed>(world)?.color = color

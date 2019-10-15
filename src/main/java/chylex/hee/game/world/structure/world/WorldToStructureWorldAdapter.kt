@@ -58,6 +58,7 @@ class WorldToStructureWorldAdapter(private val world: World, override val rand: 
 	}
 	
 	override fun addTrigger(pos: BlockPos, trigger: IStructureTrigger){
+		trigger.setup(this, pos, Transform.NONE)
 		trigger.realize(world, pos.add(offset), Transform.NONE)
 	}
 	

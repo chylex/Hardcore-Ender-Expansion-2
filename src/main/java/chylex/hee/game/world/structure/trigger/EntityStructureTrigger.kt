@@ -1,6 +1,7 @@
 package chylex.hee.game.world.structure.trigger
 import chylex.hee.game.entity.technical.EntityTechnicalTrigger
 import chylex.hee.game.world.structure.IStructureTrigger
+import chylex.hee.game.world.structure.IStructureWorld
 import chylex.hee.game.world.util.Transform
 import chylex.hee.system.migration.Facing.SOUTH
 import chylex.hee.system.util.component1
@@ -40,6 +41,8 @@ class EntityStructureTrigger private constructor(private val entityConstructor: 
 		{ world -> EntityTechnicalTrigger(world, triggerType).apply { rotationYaw = facing.horizontalAngle } },
 		yOffset = 0.0
 	)
+	
+	override fun setup(world: IStructureWorld, pos: BlockPos, transform: Transform){}
 	
 	override fun realize(world: World, pos: BlockPos, transform: Transform){
 		val (x, y, z) = entityLocator(pos, transform)

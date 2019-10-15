@@ -4,6 +4,7 @@ import chylex.hee.game.world.generation.ISegment.Companion.index
 import chylex.hee.game.world.structure.IStructureTrigger
 import chylex.hee.game.world.structure.IStructureWorld
 import chylex.hee.game.world.util.Size
+import chylex.hee.game.world.util.Transform
 import chylex.hee.system.Debug
 import chylex.hee.system.migration.vanilla.Blocks
 import chylex.hee.system.util.Pos
@@ -65,6 +66,7 @@ class SegmentedWorld(override val rand: Random, val worldSize: Size, private val
 	
 	override fun addTrigger(pos: BlockPos, trigger: IStructureTrigger){
 		if (isInside(pos)){
+			trigger.setup(this, pos, Transform.NONE)
 			triggers.add(pos to trigger)
 		}
 	}

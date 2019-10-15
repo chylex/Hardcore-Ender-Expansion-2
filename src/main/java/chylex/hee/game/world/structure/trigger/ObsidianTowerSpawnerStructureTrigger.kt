@@ -1,6 +1,7 @@
 package chylex.hee.game.world.structure.trigger
 import chylex.hee.game.block.entity.TileEntitySpawnerObsidianTower
 import chylex.hee.game.world.structure.IStructureTrigger
+import chylex.hee.game.world.structure.IStructureWorld
 import chylex.hee.game.world.util.Size
 import chylex.hee.game.world.util.Size.Alignment.CENTER
 import chylex.hee.game.world.util.Size.Alignment.MIN
@@ -10,13 +11,20 @@ import chylex.hee.system.util.getTile
 import net.minecraft.util.math.BlockPos
 import net.minecraft.world.World
 
-class ObsidianTowerSpawnerStructureTrigger(private val spawner: TileEntitySpawnerObsidianTower, private val roomOffset: BlockPos, private val roomSize: Size) : IStructureTrigger{
+class ObsidianTowerSpawnerStructureTrigger(spawner: TileEntitySpawnerObsidianTower, private val roomOffset: BlockPos, private val roomSize: Size) : IStructureTrigger{
+	private val spawner = TileEntityStructureTrigger(ModBlocks.SPAWNER_OBSIDIAN_TOWERS, spawner)
+	
+	override fun setup(world: IStructureWorld, pos: BlockPos, transform: Transform){
+		spawner.setup(world, pos, transform)
+	}
+	
 	override fun realize(world: World, pos: BlockPos, transform: Transform){
-		TileEntityStructureTrigger(ModBlocks.SPAWNER_OBSIDIAN_TOWERS, spawner).realize(world, pos, transform)
-		
+		spawner.realize(world, pos, transform)
+		pos.getTile<TileEntitySpawnerObsidianTower>(world)?.offset = calculateTransformedOffset(transform)
+	}
+	
+	private fun calculateTransformedOffset(transform: Transform): BlockPos{
 		val floorCenter = transform(roomSize.getPos(CENTER, MIN, CENTER).up(), roomSize)
-		val transformedOffset = transform(roomOffset, roomSize).subtract(floorCenter)
-		
-		pos.getTile<TileEntitySpawnerObsidianTower>(world)?.offset = transformedOffset
+		return transform(roomOffset, roomSize).subtract(floorCenter)
 	}
 }
