@@ -11,12 +11,13 @@ import chylex.hee.system.util.ceilToInt
 import chylex.hee.system.util.facades.Facing6
 import chylex.hee.system.util.max
 import net.minecraft.block.Block
+import net.minecraft.block.state.IBlockState
 import net.minecraft.util.math.BlockPos
 import java.util.Random
 
 object BlobGenerator{
-	private val SCAFFOLDING = ModBlocks.SCAFFOLDING.defaultState
-	private val BASE = Blocks.END_STONE
+	val BASE: Block = Blocks.END_STONE
+	val SCAFFOLDING: IBlockState = ModBlocks.SCAFFOLDING.defaultState
 	
 	fun place(world: SegmentedWorld, center: BlockPos, radius: Double, block: Block = BASE): Boolean{
 		val offset = radius.ceilToInt()

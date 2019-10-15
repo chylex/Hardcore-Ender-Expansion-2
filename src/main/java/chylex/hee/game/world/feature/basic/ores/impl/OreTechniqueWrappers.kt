@@ -1,4 +1,5 @@
 package chylex.hee.game.world.feature.basic.ores.impl
+import chylex.hee.game.world.feature.basic.blobs.BlobGenerator
 import chylex.hee.game.world.feature.basic.ores.IOreTechnique
 import chylex.hee.game.world.generation.IBlockPlacer
 import chylex.hee.game.world.generation.SegmentedWorld
@@ -17,6 +18,6 @@ fun IOreTechnique.withAdjacentAirCheck(checkDistance: Int = 1, chanceIfNoAir: Fl
 	}
 	
 	private fun isAirOrOutside(world: SegmentedWorld, pos: BlockPos): Boolean{
-		return !world.isInside(pos) || world.isAir(pos)
+		return !world.isInside(pos) || world.isAir(pos) || world.getState(pos) === BlobGenerator.SCAFFOLDING
 	}
 }
