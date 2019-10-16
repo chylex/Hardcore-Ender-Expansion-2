@@ -1,6 +1,7 @@
 package chylex.hee.game.world.structure.world
 import chylex.hee.game.world.structure.IStructureTrigger
 import chylex.hee.game.world.structure.IStructureWorld
+import chylex.hee.game.world.structure.trigger.BlockUpdateStructureTrigger
 import chylex.hee.game.world.util.Transform
 import chylex.hee.init.ModBlocks
 import chylex.hee.system.migration.vanilla.Blocks
@@ -52,8 +53,7 @@ class WorldToStructureWorldAdapter(private val world: World, override val rand: 
 		worldPos.setState(world, state, FLAG_SYNC_CLIENT)
 		
 		if (REQUIRE_IMMEDIATE_UPDATE.contains(block)){
-			world.immediateBlockTick(worldPos, state, world.rand)
-			world.neighborChanged(worldPos, block, worldPos) // needed for liquids
+			BlockUpdateStructureTrigger(state).realize(world, worldPos, Transform.NONE)
 		}
 	}
 	
