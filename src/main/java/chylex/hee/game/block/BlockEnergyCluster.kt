@@ -1,7 +1,6 @@
 package chylex.hee.game.block
 import chylex.hee.game.block.entity.TileEntityEnergyCluster
 import chylex.hee.game.block.info.BlockBuilder
-import chylex.hee.game.mechanics.energy.IClusterGenerator
 import chylex.hee.game.mechanics.energy.IEnergyQuantity
 import chylex.hee.game.mechanics.instability.Instability
 import chylex.hee.init.ModBlocks

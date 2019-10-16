@@ -18,11 +18,6 @@ class MutableWeightedList<T>(private val items: MutableList<Pair<Int, T>>){
 	val values: List<T>
 		get() = items.map { it.second }
 	
-	fun addItem(entry: Pair<Int, T>){
-		items.add(entry)
-		isDirty = true
-	}
-	
 	fun addItem(weight: Int, item: T){
 		items.add(Pair(weight, item))
 		isDirty = true

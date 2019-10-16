@@ -27,7 +27,7 @@ class OreGenerator(
 		var clustersGenerated = 0
 		
 		for(chunkX in 0 until sizeX step chunkSize) for(chunkZ in 0 until sizeZ step chunkSize){
-			var clustersLeft = clustersPerChunk(rand)
+			var clustersLeft = clustersPerChunk(rand).takeIf { it > 0 } ?: continue
 			
 			for(attempt in 1..attemptsPerChunk){
 				val pos = Pos(

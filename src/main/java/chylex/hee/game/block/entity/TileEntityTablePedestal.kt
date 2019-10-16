@@ -30,6 +30,7 @@ import chylex.hee.system.util.color.IntColor
 import chylex.hee.system.util.delegate.NotifyOnChange
 import chylex.hee.system.util.getIntegerOrNull
 import chylex.hee.system.util.getPosOrNull
+import chylex.hee.system.util.getState
 import chylex.hee.system.util.getTile
 import chylex.hee.system.util.isLoaded
 import chylex.hee.system.util.isNotEmpty
@@ -37,8 +38,8 @@ import chylex.hee.system.util.nextFloat
 import chylex.hee.system.util.playClient
 import chylex.hee.system.util.posVec
 import chylex.hee.system.util.setPos
+import chylex.hee.system.util.setState
 import chylex.hee.system.util.totalTime
-import chylex.hee.system.util.updateState
 import chylex.hee.system.util.with
 import net.minecraft.block.state.IBlockState
 import net.minecraft.entity.item.EntityItem
@@ -199,7 +200,12 @@ class TileEntityTablePedestal : TileEntityBase(){
 	
 	private fun onLinkedStatusChanged(){
 		if (world != null){
-			pos.updateState(world, ModBlocks.TABLE_PEDESTAL, FLAG_SYNC_CLIENT){ it.with(IS_LINKED, linkedTable != null) }
+			val state = pos.getState(world)
+			
+			if (state.block === ModBlocks.TABLE_PEDESTAL){
+				pos.setState(world, state.with(IS_LINKED, linkedTable != null))
+			}
+			
 			statusIndicator.process = null
 		}
 	}

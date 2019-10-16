@@ -15,9 +15,7 @@ interface IClusterGenerator{
 	fun generate(rand: Random): ClusterSnapshot
 	
 	companion object{
-		private class SimpleGenerator(level: Pair<Int, Int>, capacity: Pair<Int, Int>, private val health: (Random) -> HealthStatus) : IClusterGenerator{
-			constructor(level: Pair<Int, Int>, capacity: Pair<Int, Int>, health: WeightedList<HealthStatus>) : this(level, capacity, health::generateItem)
-			
+		private class SimpleGenerator(level: Pair<Int, Int>, capacity: Pair<Int, Int>, private val health: WeightedList<HealthStatus>) : IClusterGenerator{
 			private val levelMin = Units(level.first).floating.value
 			private val levelMax = Units(level.second).floating.value
 			
@@ -31,7 +29,7 @@ interface IClusterGenerator{
 				return ClusterSnapshot(
 					energyLevel    = minOf(generatedLevel, generatedCapacity),
 					energyCapacity = generatedCapacity,
-					healthStatus   = health(rand),
+					healthStatus   = health.generateItem(rand),
 					healthOverride = null,
 					color          = ClusterColor.generate(rand)
 				)

@@ -101,9 +101,6 @@ data class TerritoryInstance(val territory: TerritoryType, val index: Int){
 		ChunkPos(chunkOffX + CHUNK_X_OFFSET, chunkOffZ)
 	}
 	
-	private val bottomRightChunk: ChunkPos
-		get() = topLeftChunk.let { ChunkPos(it.x + chunks - 1, it.z + chunks - 1) }
-	
 	private val bottomCenterPos: BlockPos
 		get() = topLeftChunk.getBlock(chunks * 8, territory.height.first, chunks * 8)
 	

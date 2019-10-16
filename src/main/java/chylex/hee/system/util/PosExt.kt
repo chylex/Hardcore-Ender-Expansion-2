@@ -98,16 +98,6 @@ inline fun BlockPos.setState(world: World, state: IBlockState, flags: Int): Bool
 	return world.setBlockState(this, state, flags)
 }
 
-inline fun BlockPos.updateState(world: World, expectedBlock: Block, stateMapper: (IBlockState) -> IBlockState): Boolean{
-	val currentState = this.getState(world)
-	return currentState.block === expectedBlock && this.setState(world, stateMapper(currentState))
-}
-
-inline fun BlockPos.updateState(world: World, expectedBlock: Block, flags: Int, stateMapper: (IBlockState) -> IBlockState): Boolean{
-	val currentState = this.getState(world)
-	return currentState.block === expectedBlock && this.setState(world, stateMapper(currentState), flags)
-}
-
 inline fun BlockPos.breakBlock(world: World, drops: Boolean): Boolean{
 	return world.destroyBlock(this, drops)
 }

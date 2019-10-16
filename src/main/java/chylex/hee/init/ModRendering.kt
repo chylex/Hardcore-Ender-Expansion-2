@@ -258,12 +258,6 @@ object ModRendering{
 		setModel(Item.getItemFromBlock(block), metadata, location, variant)
 	}
 	
-	private fun setModel(item: Item, metadatas: IntRange, location: ResourceLocation = item.registryName!!, variant: String = "inventory"){
-		for(metadata in metadatas){
-			setModel(item, metadata, location, variant)
-		}
-	}
-	
 	private fun setModel(block: Block, metadatas: IntRange, location: ResourceLocation = block.registryName!!, variant: String = "inventory"){
 		for(metadata in metadatas){
 			setModel(block, metadata, location, variant)
