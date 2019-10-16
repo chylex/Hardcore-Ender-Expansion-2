@@ -3,6 +3,7 @@ import chylex.hee.game.mechanics.energy.IClusterHealth.HealthStatus
 import chylex.hee.game.mechanics.energy.IClusterHealth.HealthStatus.DAMAGED
 import chylex.hee.game.mechanics.energy.IClusterHealth.HealthStatus.HEALTHY
 import chylex.hee.game.mechanics.energy.IClusterHealth.HealthStatus.TIRED
+import chylex.hee.game.mechanics.energy.IClusterHealth.HealthStatus.UNSTABLE
 import chylex.hee.game.mechanics.energy.IClusterHealth.HealthStatus.WEAKENED
 import chylex.hee.game.mechanics.energy.IEnergyQuantity.Floating
 import chylex.hee.game.mechanics.energy.IEnergyQuantity.Units
@@ -69,5 +70,23 @@ interface IClusterGenerator{
 				100 to HEALTHY
 			)
 		)
+		
+		@JvmStatic
+		fun ARCANE_CONJUNCTIONS(rand: Random, amount: Int): Array<IClusterGenerator>{
+			val level = 2 to 80
+			
+			val tiers = listOf(
+				( 50 to 115) to weightedListOf(40 to HEALTHY, 45 to WEAKENED,              15 to UNSTABLE),
+				(115 to 180) to weightedListOf(20 to HEALTHY, 55 to WEAKENED, 10 to TIRED, 15 to UNSTABLE),
+				(180 to 245) to weightedListOf(10 to HEALTHY, 50 to WEAKENED, 25 to TIRED, 15 to UNSTABLE),
+				(245 to 310) to weightedListOf( 5 to HEALTHY, 40 to WEAKENED, 40 to TIRED, 15 to UNSTABLE),
+				(310 to 375) to weightedListOf(               35 to WEAKENED, 50 to TIRED, 15 to UNSTABLE)
+			).shuffled(rand)
+			
+			return Array(amount){
+				val (capacity, health) = tiers[it % tiers.size]
+				SimpleGenerator(level, capacity, health)
+			}
+		}
 	}
 }

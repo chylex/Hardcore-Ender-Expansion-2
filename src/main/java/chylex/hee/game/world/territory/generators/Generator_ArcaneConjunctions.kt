@@ -1,4 +1,6 @@
 package chylex.hee.game.world.territory.generators
+import chylex.hee.game.mechanics.energy.IClusterGenerator
+import chylex.hee.game.mechanics.energy.IClusterGenerator.Companion.ARCANE_CONJUNCTIONS
 import chylex.hee.game.world.feature.basic.PortalGenerator
 import chylex.hee.game.world.feature.basic.blobs.BlobGenerator
 import chylex.hee.game.world.feature.basic.blobs.BlobPattern
@@ -17,10 +19,13 @@ import chylex.hee.game.world.generation.IBlockPlacer.BlockPlacer
 import chylex.hee.game.world.generation.IBlockPlacer.BlockReplacer
 import chylex.hee.game.world.generation.SegmentedWorld
 import chylex.hee.game.world.generation.TerritoryGenerationInfo
+import chylex.hee.game.world.structure.trigger.BlockUpdateStructureTrigger
+import chylex.hee.game.world.structure.trigger.EnergyClusterStructureTrigger
 import chylex.hee.game.world.territory.ITerritoryGenerator
 import chylex.hee.game.world.util.Size
 import chylex.hee.init.ModBlocks
 import chylex.hee.system.migration.Facing.DOWN
+import chylex.hee.system.migration.Facing.UP
 import chylex.hee.system.migration.vanilla.Blocks
 import chylex.hee.system.util.Pos
 import chylex.hee.system.util.allInCenteredBoxMutable
@@ -32,7 +37,9 @@ import chylex.hee.system.util.component2
 import chylex.hee.system.util.component3
 import chylex.hee.system.util.distanceSqTo
 import chylex.hee.system.util.distanceTo
+import chylex.hee.system.util.facades.Facing4
 import chylex.hee.system.util.facades.Facing6
+import chylex.hee.system.util.floodFill
 import chylex.hee.system.util.math.RandomDouble.Companion.Constant
 import chylex.hee.system.util.math.RandomInt.Companion.Constant
 import chylex.hee.system.util.math.RandomInt.Companion.Linear
@@ -42,10 +49,12 @@ import chylex.hee.system.util.nextItem
 import chylex.hee.system.util.nextVector
 import chylex.hee.system.util.offsetTowards
 import chylex.hee.system.util.offsetUntil
+import chylex.hee.system.util.removeItem
 import chylex.hee.system.util.square
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.Vec3d
 import java.util.Random
+import kotlin.collections.set
 import kotlin.math.PI
 import kotlin.math.abs
 import kotlin.math.max
@@ -71,21 +80,31 @@ object Generator_ArcaneConjunctions : ITerritoryGenerator{
 			}
 		}
 		
-		val unassigned = layout.blobs.toMutableSet()
+		val unassigned = layout.blobs.toMutableList()
 		var spawnBlob: Blob? = null
 		
 		for(blob in unassigned.filter { it.connections > 0 && it.center.distanceSqTo(centerPos) <= square(275) }.shuffled(rand).take(3)){
 			unassigned.remove(blob)
-			layout.assign(blob, BlobContents.RETURN_PORTAL)
+			layout.assign(blob, BlobContents.ReturnPortal)
 			spawnBlob = blob
 		}
 		
-		// TODO contents
+		for(generator in ARCANE_CONJUNCTIONS(rand, min(unassigned.size - 10, rand.nextInt(17, 20)))){
+			layout.assign(rand.removeItem(unassigned), BlobContents.EnergyCluster(generator))
+		}
+		
+		repeat(min(unassigned.size - 3, rand.nextInt(3, 4))){
+			layout.assign(rand.removeItem(unassigned), BlobContents.EnderGoo)
+		}
+		
+		repeat(min(unassigned.size - 3, rand.nextInt(4, 9))){
+			layout.assign(rand.removeItem(unassigned), BlobContents.SmallBlob)
+		}
 		
 		layout.generate(world, rand)
 		
 		if (spawnBlob == null){
-			spawnBlob = Blob(centerPos, 5.5).apply { generateHollow(world, rand, BlobContents.RETURN_PORTAL) }
+			spawnBlob = Blob(centerPos, 5.5).apply { generateHollow(world, rand, BlobContents.ReturnPortal) }
 		}
 		
 		Ores.generate(world)
@@ -123,7 +142,7 @@ object Generator_ArcaneConjunctions : ITerritoryGenerator{
 			}
 			
 			for(blob in blobs){
-				blob.generateHollow(world, rand, contents.getOrDefault(blob, BlobContents.NOTHING))
+				blob.generateHollow(world, rand, contents.getOrDefault(blob, BlobContents.Nothing))
 			}
 			
 			for(path in paths){
@@ -132,6 +151,10 @@ object Generator_ArcaneConjunctions : ITerritoryGenerator{
 						world.setAir(it)
 					}
 				}
+			}
+			
+			for(blob in blobs){
+				contents[blob]?.after(world, rand, blob)
 			}
 		}
 		
@@ -177,7 +200,7 @@ object Generator_ArcaneConjunctions : ITerritoryGenerator{
 		}
 		
 		private fun generateRandomFilledBlobs(world: SegmentedWorld, rand: Random){
-			repeat(rand.nextInt(12, 15)){
+			repeat(rand.nextInt(10, 13)){
 				for(attempt in 1..5){
 					if (generateFilledBlob(world, rand)){
 						break
@@ -302,8 +325,7 @@ object Generator_ArcaneConjunctions : ITerritoryGenerator{
 			BlobGenerator.generate(world, rand, center, BlobSmoothing.MILD, BlobPattern(
 				BlobGeneratorSingle(Constant(radius)),
 				PopulatorBuilder().apply {
-					guarantee(FILL_POPULATOR)
-					guarantee(*contents.populators)
+					guarantee(FILL_POPULATOR, contents)
 				}
 			))
 		}
@@ -434,10 +456,13 @@ object Generator_ArcaneConjunctions : ITerritoryGenerator{
 		}
 	}
 	
-	private enum class BlobContents(val populators: Array<IBlobPopulator>){
-		NOTHING(emptyArray()),
+	private sealed class BlobContents : IBlobPopulator{
+		override fun generate(world: SegmentedWorld, rand: Random){}
+		open fun after(world: SegmentedWorld, rand: Random, blob: Blob){}
 		
-		RETURN_PORTAL(arrayOf(object : IBlobPopulator{
+		object Nothing : BlobContents()
+		
+		object ReturnPortal : BlobContents(){
 			override fun generate(world: SegmentedWorld, rand: Random){
 				val size = world.worldSize
 				val center = size.centerPos
@@ -445,7 +470,53 @@ object Generator_ArcaneConjunctions : ITerritoryGenerator{
 				val pos = center.offsetUntil(DOWN, 1..((size.y + 1) / 2)){ !world.isAir(it) }?.up() ?: center
 				PortalGenerator.VoidPortalReturnActive.place(world, pos, outline = BlockPlacer(Blocks.END_STONE))
 			}
-		}));
+		}
+		
+		class EnergyCluster(private val generator: IClusterGenerator) : BlobContents(){
+			override fun generate(world: SegmentedWorld, rand: Random){
+				val size = world.worldSize
+				val center = size.centerPos
+				
+				val pos = if (rand.nextInt(3) != 0)
+					center
+				else
+					Pos(center.center.add(rand.nextVector(rand.nextFloat(0.0, (min(size.x, size.z) - 1) * 0.3))))
+				
+				world.addTrigger(pos, EnergyClusterStructureTrigger(generator.generate(rand)))
+			}
+		}
+		
+		object EnderGoo : BlobContents(){
+			override fun generate(world: SegmentedWorld, rand: Random){
+				val size = world.worldSize
+				val center = size.centerPos
+				val radius = min(size.x, size.z) / 2
+				
+				val bottomCenter = center.offsetUntil(DOWN, 1..radius){ world.getBlock(it) === Blocks.END_STONE } ?: return
+				
+				val topBlocks = center.offsetUntil(UP, 1..radius){
+					world.getBlock(it) === Blocks.END_STONE
+				}?.floodFill(Facing4){
+					world.getBlock(it) === Blocks.END_STONE && Facing4.all { side -> world.getBlock(it.offset(side)) === Blocks.END_STONE } && world.isAir(it.down())
+				}
+				
+				if (topBlocks.isNullOrEmpty()){
+					return
+				}
+				
+				world.addTrigger(rand.nextItem(topBlocks), BlockUpdateStructureTrigger(ModBlocks.ENDER_GOO))
+				
+				for(level in 1..2) for(pos in bottomCenter.up(level).floodFill(Facing4){ world.isAir(it) && !world.isAir(it.down()) }){
+					world.addTrigger(pos, BlockUpdateStructureTrigger(ModBlocks.ENDER_GOO))
+				}
+			}
+		}
+		
+		object SmallBlob : BlobContents(){
+			override fun after(world: SegmentedWorld, rand: Random, blob: Blob){
+				Blob(blob.center, (blob.radius * rand.nextFloat(0.325, 0.525)).coerceIn(Blob.FILLED_RADIUS)).generateFilled(world, rand)
+			}
+		}
 	}
 	
 	private object Ores{
