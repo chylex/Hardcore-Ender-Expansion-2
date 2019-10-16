@@ -18,6 +18,7 @@ import net.minecraft.util.math.ChunkPos
 import net.minecraft.util.math.Vec3d
 import net.minecraft.world.IBlockAccess
 import net.minecraft.world.World
+import java.util.Stack
 import kotlin.math.max
 import kotlin.math.min
 import kotlin.math.sqrt
@@ -205,6 +206,34 @@ fun BlockPos.allInCenteredSphere(radius: Int, avoidNipples: Boolean = false): It
 
 fun BlockPos.allInCenteredSphereMutable(radius: Int, avoidNipples: Boolean = false): Iterable<MutableBlockPos>{
 	return this.allInCenteredSphereInternal(getSphereRadiusSq(radius, avoidNipples), this.allInCenteredBoxMutable(radius, radius, radius))
+}
+
+// Areas (Flood-Fill)
+
+inline fun BlockPos.floodFill(facings: Iterable<EnumFacing>, condition: (BlockPos) -> Boolean): List<BlockPos>{
+	val found = mutableListOf<BlockPos>()
+	
+	val stack = Stack<BlockPos>().apply { push(this@floodFill) }
+	val visited = mutableSetOf(this)
+	
+	while(stack.isNotEmpty()){
+		val current = stack.pop()
+		
+		if (condition(current)){
+			found.add(current)
+			
+			for(facing in facings){
+				val offset = current.offset(facing)
+				
+				if (!visited.contains(offset)){
+					stack.push(offset)
+					visited.add(offset)
+				}
+			}
+		}
+	}
+	
+	return found
 }
 
 // Logic functions
