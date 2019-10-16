@@ -30,6 +30,7 @@ import chylex.hee.system.util.getEnum
 import chylex.hee.system.util.getListOfCompounds
 import chylex.hee.system.util.getPos
 import chylex.hee.system.util.getState
+import chylex.hee.system.util.isAnyPlayerWithinRange
 import chylex.hee.system.util.nextFloat
 import chylex.hee.system.util.nextInt
 import chylex.hee.system.util.nextItemOrNull
@@ -71,7 +72,7 @@ class TileEntitySpawnerObsidianTower() : TileEntityBaseSpawner(){
 		private const val SPAWN_AREA_RADIUS_XZ = 5.0
 		private const val SPAWN_AREA_BOX_RANGE_XZ = 4.0
 		private const val SPAWN_AREA_BOX_HEIGHT = 4.0
-		private const val ACTIVATION_DISTANCE_SQ = 7.0 // rough estimate
+		private const val ACTIVATION_DISTANCE = 7.0 // rough estimate
 		
 		private const val TOWER_OFFSET_TAG = "TowerOffset"
 		private const val TOWER_LEVEL_TAG = "TowerLevel"
@@ -146,7 +147,7 @@ class TileEntitySpawnerObsidianTower() : TileEntityBaseSpawner(){
 		
 		val floorCenter = floorCenter
 		
-		if (world.playerEntities.none { it.getDistanceSqToCenter(floorCenter) <= square(ACTIVATION_DISTANCE_SQ) }){
+		if (!floorCenter.isAnyPlayerWithinRange(world, ACTIVATION_DISTANCE)){
 			return
 		}
 		
