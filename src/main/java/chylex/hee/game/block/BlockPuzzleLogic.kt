@@ -11,7 +11,9 @@ import chylex.hee.system.migration.forge.Sided
 import chylex.hee.system.util.allInCenteredBox
 import chylex.hee.system.util.color.IntColor.Companion.RGB
 import chylex.hee.system.util.facades.Facing4
+import chylex.hee.system.util.floodFill
 import chylex.hee.system.util.get
+import chylex.hee.system.util.getBlock
 import chylex.hee.system.util.getState
 import chylex.hee.system.util.setState
 import chylex.hee.system.util.with
@@ -28,7 +30,6 @@ import net.minecraft.util.IStringSerializable
 import net.minecraft.util.math.BlockPos
 import net.minecraft.world.IBlockAccess
 import net.minecraft.world.World
-import java.util.Stack
 
 sealed class BlockPuzzleLogic(builder: BlockBuilder) : BlockSimple(builder){
 	companion object{
@@ -37,31 +38,8 @@ sealed class BlockPuzzleLogic(builder: BlockBuilder) : BlockSimple(builder){
 		const val UPDATE_RATE = 7
 		const val MAX_SIZE = 20
 		
-		fun findAllBlocks(world: World, pos: BlockPos): List<Pair<BlockPos, IBlockState>>{
-			val found = mutableListOf<Pair<BlockPos, IBlockState>>()
-			
-			val stack = Stack<BlockPos>().apply { push(pos) }
-			val visited = mutableSetOf(pos)
-			
-			while(stack.isNotEmpty()){
-				val current = stack.pop()
-				val state = current.getState(world)
-				
-				if (state.block is BlockPuzzleLogic && state[STATE] != DISABLED){
-					found.add(current to state)
-					
-					for(facing in Facing4){
-						val offset = current.offset(facing)
-						
-						if (!visited.contains(offset)){
-							stack.push(offset)
-							visited.add(offset)
-						}
-					}
-				}
-			}
-			
-			return found
+		fun findAllBlocks(world: World, pos: BlockPos): List<BlockPos>{
+			return pos.floodFill(Facing4){ it.getState(world).let { state -> state.block is BlockPuzzleLogic && state[STATE] != DISABLED } }
 		}
 		
 		private fun makePair(pos: BlockPos, facing: EnumFacing): Pair<BlockPos, EnumFacing>{
@@ -172,7 +150,7 @@ sealed class BlockPuzzleLogic(builder: BlockBuilder) : BlockSimple(builder){
 	
 	class Teleport(builder: BlockBuilder) : BlockPuzzleLogic(builder){
 		override fun getNextChains(world: World, pos: BlockPos, facing: EnumFacing): List<Pair<BlockPos, EnumFacing>>{
-			return findAllBlocks(world, pos).filter { it.first != pos && it.second.block is Teleport }.map { makePair(it.first, facing) }
+			return findAllBlocks(world, pos).filter { it != pos && it.getBlock(world) is Teleport }.map { makePair(it, facing) }
 		}
 	}
 	

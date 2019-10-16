@@ -19,7 +19,6 @@ import chylex.hee.system.util.setPos
 import chylex.hee.system.util.setState
 import chylex.hee.system.util.totalTime
 import chylex.hee.system.util.with
-import net.minecraft.block.state.IBlockState
 import net.minecraft.entity.item.EntityItem
 import net.minecraft.item.ItemStack
 import net.minecraft.util.EnumFacing
@@ -99,13 +98,13 @@ class EntityTechnicalPuzzle(world: World) : EntityTechnicalBase(world){
 		}
 	}
 	
-	private fun isBlockingSolution(allBlocks: List<Pair<BlockPos, IBlockState>>, other: EntityTechnicalPuzzle): Boolean{
+	private fun isBlockingSolution(allBlocks: List<BlockPos>, other: EntityTechnicalPuzzle): Boolean{
 		if (other.isDead){
 			return false
 		}
 		
 		val entityPos = Pos(other)
-		return allBlocks.any { (pos, _) -> pos == entityPos }
+		return allBlocks.any { it == entityPos }
 	}
 	
 	fun startChain(pos: BlockPos, facing: EnumFacing): Boolean{
@@ -128,15 +127,15 @@ class EntityTechnicalPuzzle(world: World) : EntityTechnicalBase(world){
 		val allBlocks = BlockPuzzleLogic.findAllBlocks(world, startPos)
 		val entityArea = BlockPuzzleLogic.MAX_SIZE.toDouble().let { AxisAlignedBB(startPos).grow(it, 0.0, it) }
 		
-		if (world.selectEntities.inBox<EntityTechnicalPuzzle>(entityArea).any { isBlockingSolution(allBlocks, it) }){
+		if (allBlocks.isEmpty() || world.selectEntities.inBox<EntityTechnicalPuzzle>(entityArea).any { isBlockingSolution(allBlocks, it) }){
 			return
 		}
 		
-		if (allBlocks.isNotEmpty() && allBlocks.all { it.second[BlockPuzzleLogic.STATE] == BlockPuzzleLogic.State.ACTIVE }){
-			allBlocks.forEach { it.first.setState(world, it.second.with(BlockPuzzleLogic.STATE, BlockPuzzleLogic.State.DISABLED)) }
+		if (allBlocks.all { it.getState(world)[BlockPuzzleLogic.STATE] == BlockPuzzleLogic.State.ACTIVE }){
+			allBlocks.forEach { it.setState(world, it.getState(world).with(BlockPuzzleLogic.STATE, BlockPuzzleLogic.State.DISABLED)) }
 			
-			val min = allBlocks.fold(allBlocks[0].first){ acc, (pos, _) -> acc.min(pos) }
-			val max = allBlocks.fold(allBlocks[0].first){ acc, (pos, _) -> acc.max(pos) }
+			val min = allBlocks.reduce(BlockPos::min)
+			val max = allBlocks.reduce(BlockPos::max)
 			
 			// TODO will need to be adjusted for different shapes
 			// TODO fx
