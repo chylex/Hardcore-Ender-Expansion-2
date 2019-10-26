@@ -1,14 +1,14 @@
 package chylex.hee.game.particle
-import chylex.hee.game.particle.spawner.factory.IParticleMaker
+import chylex.hee.game.particle.spawner.IParticleMaker
 import chylex.hee.system.migration.forge.Side
 import chylex.hee.system.migration.forge.Sided
 import net.minecraft.client.particle.Particle
 import net.minecraft.client.particle.ParticleBubble
 import net.minecraft.world.World
 
-object ParticleBubbleCustom : IParticleMaker{
+object ParticleBubbleCustom : IParticleMaker.Simple(){
 	@Sided(Side.CLIENT)
-	override fun create(world: World, posX: Double, posY: Double, posZ: Double, motX: Double, motY: Double, motZ: Double, data: IntArray): Particle{
+	override fun create(world: World, posX: Double, posY: Double, posZ: Double, motX: Double, motY: Double, motZ: Double): Particle{
 		return Instance(world, posX, posY, posZ, motX, motY, motZ)
 	}
 	

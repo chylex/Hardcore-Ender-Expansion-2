@@ -5,7 +5,6 @@ import chylex.hee.game.fx.IFxHandler
 import chylex.hee.game.mechanics.energy.IEnergyQuantity
 import chylex.hee.game.mechanics.energy.IEnergyQuantity.Units
 import chylex.hee.game.particle.ParticleEnergyTransferToPlayer
-import chylex.hee.game.particle.ParticleEnergyTransferToPlayer.Data
 import chylex.hee.game.particle.spawner.ParticleSpawnerCustom
 import chylex.hee.game.particle.util.IOffset.InBox
 import chylex.hee.game.particle.util.IShape.Point
@@ -74,7 +73,7 @@ abstract class ItemAbstractEnergyUser : Item(){
 				
 				ParticleSpawnerCustom(
 					type = ParticleEnergyTransferToPlayer,
-					data = Data(cluster, player, 0.2),
+					data = ParticleEnergyTransferToPlayer.Data(cluster, player, 0.2),
 					pos = InBox(0.01F + (0.08F * (cluster.energyLevel.floating.value / 40F).coerceAtMost(1F)))
 				).spawn(Point(cluster.pos, 1), rand)
 				

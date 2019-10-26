@@ -338,11 +338,13 @@ class TileEntityEnergyCluster : TileEntityBase(), ITickable{
 				PARTICLE_ORBITING.spawn(Point(pos, 1), world.rand)
 			}
 			
-			particleDataGenerator = ClusterParticleDataGenerator(this@TileEntityEnergyCluster)
+			val particleDataGen = ClusterParticleDataGenerator(this@TileEntityEnergyCluster).also {
+				particleDataGenerator = it
+			}
 			
 			val particleSpawner = ParticleSpawnerCustom(
 				type = ParticleEnergyCluster,
-				data = ParticleEnergyCluster.Data(this@TileEntityEnergyCluster),
+				data = particleDataGen,
 				pos = InBox(0.003F),
 				mot = InBox(0.0015F),
 				skipTest = particleSkipTest

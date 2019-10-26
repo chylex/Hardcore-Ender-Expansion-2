@@ -37,7 +37,7 @@ import kotlin.math.pow
 
 open class BlockEnderGooPurified : BlockAbstractGoo(FluidEnderGooPurified, Materials.PURIFIED_ENDER_GOO){
 	companion object{
-		private val PARTICLE_DATA = ParticleSmokeCustom.Data(color = RGB(210, 148, 237))
+		private val PARTICLE_DATA = ParticleSmokeCustom.Data(color = RGB(210, 148, 237), scale = 1F)
 		
 		private val PARTICLE_STATIONARY = ParticleSpawnerCustom(
 			type = ParticleSmokeCustom,

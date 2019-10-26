@@ -5,7 +5,6 @@ import chylex.hee.game.fx.FxEntityHandler
 import chylex.hee.game.item.repair.ICustomRepairBehavior
 import chylex.hee.game.item.repair.RepairInstance
 import chylex.hee.game.particle.ParticleFlameCustom
-import chylex.hee.game.particle.ParticleFlameCustom.Data
 import chylex.hee.game.particle.spawner.ParticleSpawnerCustom
 import chylex.hee.game.particle.util.IOffset.Constant
 import chylex.hee.game.particle.util.IOffset.InBox
@@ -32,13 +31,13 @@ import java.util.Random
 object ScorchingHelper{
 	private val PARTICLE_MINING = ParticleSpawnerCustom(
 		type = ParticleFlameCustom,
-		data = Data(maxAge = 6),
+		data = ParticleFlameCustom.Data(maxAge = 6),
 		pos = InBox(0.7F)
 	)
 	
 	private fun PARTICLE_HITTING(target: Entity) = ParticleSpawnerCustom(
 		type = ParticleFlameCustom,
-		data = Data(maxAge = 4),
+		data = ParticleFlameCustom.Data(maxAge = 4),
 		pos = Constant(0.2F, UP) + InBox(target, 0.4F)
 	)
 	

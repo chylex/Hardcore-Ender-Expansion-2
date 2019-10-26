@@ -1,8 +1,9 @@
 package chylex.hee.game.particle
 import chylex.hee.game.block.BlockTablePedestal
+import chylex.hee.game.particle.ParticleEnergyTransferToPedestal.Data
 import chylex.hee.game.particle.base.ParticleBaseEnergyTransfer
-import chylex.hee.game.particle.spawner.factory.IParticleData
-import chylex.hee.game.particle.spawner.factory.IParticleMaker
+import chylex.hee.game.particle.data.IParticleData
+import chylex.hee.game.particle.spawner.IParticleMaker
 import chylex.hee.init.ModBlocks
 import chylex.hee.system.migration.forge.Side
 import chylex.hee.system.migration.forge.Sided
@@ -13,33 +14,26 @@ import net.minecraft.client.particle.Particle
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.Vec3d
 import net.minecraft.world.World
-import java.util.Random
 
-object ParticleEnergyTransferToPedestal : IParticleMaker{
+object ParticleEnergyTransferToPedestal : IParticleMaker<Data>{
 	@Sided(Side.CLIENT)
-	override fun create(world: World, posX: Double, posY: Double, posZ: Double, motX: Double, motY: Double, motZ: Double, data: IntArray): Particle{
+	override fun create(world: World, posX: Double, posY: Double, posZ: Double, motX: Double, motY: Double, motZ: Double, data: Data?): Particle{
 		return Instance(world, posX, posY, posZ, data)
 	}
 	
-	class Data(private val targetPos: BlockPos, private val travelTime: Int) : IParticleData{
-		override fun generate(rand: Random) = intArrayOf(
-			targetPos.x,
-			targetPos.y,
-			targetPos.z,
-			travelTime
-		)
-	}
+	class Data(
+		val targetPos: BlockPos,
+		val travelTime: Int
+	) : IParticleData.Self<Data>()
 	
 	@Sided(Side.CLIENT)
-	class Instance(world: World, posX: Double, posY: Double, posZ: Double, unsafeData: IntArray) : ParticleBaseEnergyTransfer(world, posX, posY, posZ){
+	class Instance(world: World, posX: Double, posY: Double, posZ: Double, data: Data?) : ParticleBaseEnergyTransfer(world, posX, posY, posZ){
 		override val targetPos: Vec3d
 		
 		init{
-			if (unsafeData.size < 4){
-				particleAlpha = 0F
-				maxAge = 0
-				
+			if (data == null){
 				targetPos = Vec3d.ZERO
+				setExpired()
 			}
 			else{
 				loadColor(RGB(40u))
@@ -47,8 +41,8 @@ object ParticleEnergyTransferToPedestal : IParticleMaker{
 				
 				particleScale = 0.75F
 				
-				targetPos = Vec3d(unsafeData[0] + 0.5, unsafeData[1] + BlockTablePedestal.PARTICLE_TARGET_Y, unsafeData[2] + 0.5)
-				setupMotion(Vec3d(posX, posY, posZ).distanceTo(targetPos) / unsafeData[3])
+				targetPos = data.targetPos.let { Vec3d(it.x + 0.5, it.y + BlockTablePedestal.PARTICLE_TARGET_Y, it.z + 0.5) }
+				setupMotion(Vec3d(posX, posY, posZ).distanceTo(targetPos) / data.travelTime)
 			}
 		}
 		

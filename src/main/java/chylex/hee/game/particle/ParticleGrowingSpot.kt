@@ -1,46 +1,43 @@
 package chylex.hee.game.particle
 import chylex.hee.game.particle.base.ParticleBaseFloating
-import chylex.hee.game.particle.spawner.factory.IParticleData
-import chylex.hee.game.particle.spawner.factory.IParticleMaker
+import chylex.hee.game.particle.data.ParticleDataColorLifespanScale
+import chylex.hee.game.particle.spawner.IParticleMaker
 import chylex.hee.game.particle.util.ParticleTexture
 import chylex.hee.system.migration.forge.Side
 import chylex.hee.system.migration.forge.Sided
+import chylex.hee.system.util.color.IRandomColor
 import chylex.hee.system.util.color.IntColor
-import chylex.hee.system.util.color.IntColor.Companion.RGB
 import chylex.hee.system.util.nextFloat
 import net.minecraft.client.particle.Particle
 import net.minecraft.world.World
 import kotlin.math.min
 
-object ParticleGrowingSpot : IParticleMaker{
+object ParticleGrowingSpot : IParticleMaker<ParticleDataColorLifespanScale>{
 	@Sided(Side.CLIENT)
-	override fun create(world: World, posX: Double, posY: Double, posZ: Double, motX: Double, motY: Double, motZ: Double, data: IntArray): Particle{
+	override fun create(world: World, posX: Double, posY: Double, posZ: Double, motX: Double, motY: Double, motZ: Double, data: ParticleDataColorLifespanScale?): Particle{
 		return Instance(world, posX, posY, posZ, motX, motY, motZ, data)
 	}
 	
-	class Data(
-		color: IntColor = RGB(0u),
-		lifespan: Int = 0
-	) : IParticleData.Static(intArrayOf(
-		color.i,
-		lifespan
-	))
-	
-	private val DEFAULT_DATA = Data()
+	fun Data(
+		color: IntColor,
+		lifespan: Int
+	) = ParticleDataColorLifespanScale.Generator(IRandomColor.Static(color), lifespan..lifespan, 1F..1F)
 	
 	@Sided(Side.CLIENT)
-	private class Instance(world: World, posX: Double, posY: Double, posZ: Double, motX: Double, motY: Double, motZ: Double, unsafeData: IntArray) : ParticleBaseFloating(world, posX, posY, posZ, motX, motY, motZ){
+	private class Instance(world: World, posX: Double, posY: Double, posZ: Double, motX: Double, motY: Double, motZ: Double, data: ParticleDataColorLifespanScale?) : ParticleBaseFloating(world, posX, posY, posZ, motX, motY, motZ){
 		init{
-			val data = DEFAULT_DATA.validate(unsafeData)
-			
 			particleTexture = ParticleTexture.PIXEL
 			
-			loadColor(data[0])
-			particleAlpha = 0.25F
-			
-			particleScale = rand.nextFloat(0.25F, 0.35F)
-			
-			maxAge = data[1]
+			if (data == null){
+				setExpired()
+			}
+			else{
+				loadColor(data.color)
+				particleAlpha = 0.25F
+				particleScale = rand.nextFloat(0.25F, 0.35F) * data.scale
+				
+				maxAge = data.lifespan
+			}
 		}
 		
 		override fun onUpdate(){

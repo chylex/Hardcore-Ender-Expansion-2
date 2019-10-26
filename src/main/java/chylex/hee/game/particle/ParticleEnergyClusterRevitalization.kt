@@ -3,7 +3,7 @@ import chylex.hee.game.block.entity.TileEntityEnergyCluster
 import chylex.hee.game.mechanics.energy.IClusterHealth.HealthOverride.REVITALIZING
 import chylex.hee.game.mechanics.energy.IEnergyQuantity
 import chylex.hee.game.particle.base.ParticleBaseEnergy
-import chylex.hee.game.particle.spawner.factory.IParticleMaker
+import chylex.hee.game.particle.spawner.IParticleMaker
 import chylex.hee.system.migration.forge.Side
 import chylex.hee.system.migration.forge.Sided
 import chylex.hee.system.util.Pos
@@ -16,9 +16,9 @@ import net.minecraft.client.particle.Particle
 import net.minecraft.util.math.Vec3d
 import net.minecraft.world.World
 
-object ParticleEnergyClusterRevitalization : IParticleMaker{
+object ParticleEnergyClusterRevitalization : IParticleMaker.Simple(){
 	@Sided(Side.CLIENT)
-	override fun create(world: World, posX: Double, posY: Double, posZ: Double, motX: Double, motY: Double, motZ: Double, data: IntArray): Particle{
+	override fun create(world: World, posX: Double, posY: Double, posZ: Double, motX: Double, motY: Double, motZ: Double): Particle{
 		return Instance(world, posX, posY, posZ, motX, motY, motZ)
 	}
 	

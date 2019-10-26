@@ -176,7 +176,7 @@ object TerritoryVoid{
 		
 		val spawner = ParticleSpawnerCustom(
 			type = ParticleFadingSpot,
-			data = ParticleFadingSpot.Data(color = RGB(128u), lifespan = 40..40, scale = (0.2F)..(0.2F)),
+			data = ParticleFadingSpot.Data(color = RGB(128u), lifespan = 40, scale = 0.2F),
 			maxRange = 128.0
 		)
 		

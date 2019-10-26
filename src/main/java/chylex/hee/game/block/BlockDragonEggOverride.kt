@@ -41,7 +41,7 @@ class BlockDragonEggOverride : BlockDragonEgg(){
 	companion object{
 		private val PARTICLE_BREAK = ParticleSpawnerCustom(
 			type = ParticleTeleport,
-			data = ParticleTeleport.Data(minLifespan = 7, maxLifespan = 14, minScale = 2.7F, maxScale = 3.4F),
+			data = ParticleTeleport.Data(lifespan = 7..14, scale = (2.7F)..(3.4F)),
 			pos = InBox(0.66F),
 			mot = InBox(0.025F)
 		)

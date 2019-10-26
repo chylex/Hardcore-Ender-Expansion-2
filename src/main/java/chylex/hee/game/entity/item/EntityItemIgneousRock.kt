@@ -7,7 +7,6 @@ import chylex.hee.game.fx.FxBlockHandler
 import chylex.hee.game.fx.FxEntityData
 import chylex.hee.game.fx.FxEntityHandler
 import chylex.hee.game.particle.ParticleFlameCustom
-import chylex.hee.game.particle.ParticleFlameCustom.Data
 import chylex.hee.game.particle.spawner.ParticleSpawnerCustom
 import chylex.hee.game.particle.spawner.ParticleSpawnerVanilla
 import chylex.hee.game.particle.util.IOffset.Constant
@@ -101,14 +100,14 @@ class EntityItemIgneousRock : EntityItemNoBob{
 		
 		private val PARTICLE_SMELT = ParticleSpawnerCustom(
 			type = ParticleFlameCustom,
-			data = Data(maxAge = 16),
+			data = ParticleFlameCustom.Data(maxAge = 16),
 			pos = InBox(0.85F),
 			mot = PARTICLE_FLAME_MOT
 		)
 		
 		private fun PARTICLE_BURN(target: Entity) = ParticleSpawnerCustom(
 			type = ParticleFlameCustom,
-			data = Data(maxAge = 8),
+			data = ParticleFlameCustom.Data(maxAge = 8),
 			pos = Constant(0.2F, UP) + InBox(target, 0.4F),
 			mot = PARTICLE_FLAME_MOT
 		)

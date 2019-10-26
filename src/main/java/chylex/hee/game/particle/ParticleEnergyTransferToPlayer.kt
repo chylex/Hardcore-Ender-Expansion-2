@@ -2,71 +2,71 @@ package chylex.hee.game.particle
 import chylex.hee.client.model.ModelHelper
 import chylex.hee.game.block.entity.TileEntityEnergyCluster
 import chylex.hee.game.item.ItemAbstractEnergyUser
+import chylex.hee.game.particle.ParticleEnergyTransferToPlayer.TransferData
 import chylex.hee.game.particle.base.ParticleBaseEnergyTransfer
-import chylex.hee.game.particle.spawner.factory.IParticleData
-import chylex.hee.game.particle.spawner.factory.IParticleMaker
+import chylex.hee.game.particle.data.IParticleData
+import chylex.hee.game.particle.data.ParticleDataColorScale
+import chylex.hee.game.particle.spawner.IParticleMaker
 import chylex.hee.system.migration.Hand.MAIN_HAND
 import chylex.hee.system.migration.Hand.OFF_HAND
 import chylex.hee.system.migration.forge.Side
 import chylex.hee.system.migration.forge.Sided
-import chylex.hee.system.util.floorToInt
 import net.minecraft.client.particle.Particle
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.util.math.Vec3d
 import net.minecraft.world.World
-import org.apache.commons.lang3.ArrayUtils
 import java.lang.ref.WeakReference
 import java.util.Random
 
-object ParticleEnergyTransferToPlayer : IParticleMaker{
+object ParticleEnergyTransferToPlayer : IParticleMaker<TransferData?>{
 	@Sided(Side.CLIENT)
-	override fun create(world: World, posX: Double, posY: Double, posZ: Double, motX: Double, motY: Double, motZ: Double, data: IntArray): Particle{
+	override fun create(world: World, posX: Double, posY: Double, posZ: Double, motX: Double, motY: Double, motZ: Double, data: TransferData?): Particle{
 		return Instance(world, posX, posY, posZ, data)
 	}
 	
-	class Data(private val cluster: TileEntityEnergyCluster, private val player: EntityPlayer, private val speed: Double) : IParticleData{
-		override fun generate(rand: Random): IntArray{
-			val data = cluster.particleDataGenerator?.next(rand) ?: return ArrayUtils.EMPTY_INT_ARRAY
-			
-			return intArrayOf(
-				data.color,
-				((0.3F + (data.scale * 0.1F)) * 100F).floorToInt(),
-				(speed * 100F).floorToInt(),
-				player.entityId
-			)
+	class Data(
+		cluster: TileEntityEnergyCluster,
+		player: EntityPlayer,
+		val speed: Double
+	) : IParticleData<TransferData?>{
+		private val clusterDataGenerator = cluster.particleDataGenerator
+		private val player = WeakReference(player)
+		
+		override fun generate(rand: Random): TransferData?{
+			return clusterDataGenerator?.let { TransferData(it.generate(rand), player, speed) }
 		}
 	}
 	
+	class TransferData(val cluster: ParticleDataColorScale, val player: WeakReference<EntityPlayer>, val speed: Double)
+	
 	@Sided(Side.CLIENT)
-	class Instance(world: World, posX: Double, posY: Double, posZ: Double, unsafeData: IntArray) : ParticleBaseEnergyTransfer(world, posX, posY, posZ){
+	class Instance(world: World, posX: Double, posY: Double, posZ: Double, data: TransferData?) : ParticleBaseEnergyTransfer(world, posX, posY, posZ){
 		override val targetPos: Vec3d
 			get() = newTargetPos
 		
 		private val speed: Double
-		private val player: WeakReference<EntityPlayer?>
+		private val player: WeakReference<EntityPlayer>?
 		private var newTargetPos = Vec3d.ZERO
 		
 		init{
-			if (unsafeData.size < 4){
-				particleAlpha = 0F
-				maxAge = 0
-				
+			if (data == null){
 				speed = 0.0
-				player = WeakReference(null)
+				player = null
+				setExpired()
 			}
 			else{
-				loadColor(unsafeData[0])
+				loadColor(data.cluster.color)
 				particleAlpha = 0.75F
 				
-				particleScale = unsafeData[1] * 0.01F
+				particleScale = 0.3F + (data.cluster.scale * 0.1F)
 				
-				speed = unsafeData[2] * 0.01
-				player = WeakReference(world.getEntityByID(unsafeData[3]) as? EntityPlayer)
+				speed = data.speed
+				player = data.player
 			}
 		}
 		
 		override fun onUpdate(){
-			val player = player.get()
+			val player = player?.get()
 			
 			if (player == null){
 				setExpired()

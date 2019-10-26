@@ -5,6 +5,7 @@ import chylex.hee.game.fx.IFxData
 import chylex.hee.game.fx.IFxHandler
 import chylex.hee.game.particle.ParticleEnergyTableDrain
 import chylex.hee.game.particle.ParticleEnergyTransferToPedestal
+import chylex.hee.game.particle.base.ParticleBaseEnergy.ClusterParticleDataGenerator
 import chylex.hee.game.particle.spawner.ParticleSpawnerCustom
 import chylex.hee.game.particle.util.IOffset.InBox
 import chylex.hee.game.particle.util.IOffset.InSphere
@@ -96,7 +97,7 @@ class TableParticleHandler(private val table: TileEntityBaseTable){
 				
 				ParticleSpawnerCustom(
 					type = ParticleEnergyTableDrain,
-					data = ParticleEnergyTableDrain.Data(cluster),
+					data = ClusterParticleDataGenerator(cluster),
 					pos = PARTICLE_CLUSTER_POS,
 					mot = PARTICLE_CLUSTER_MOT,
 					maxRange = 64.0

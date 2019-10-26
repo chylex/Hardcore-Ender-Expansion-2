@@ -1,8 +1,7 @@
 package chylex.hee.game.particle
-import chylex.hee.game.block.entity.TileEntityEnergyCluster
 import chylex.hee.game.particle.base.ParticleBaseEnergy
-import chylex.hee.game.particle.spawner.factory.IParticleData
-import chylex.hee.game.particle.spawner.factory.IParticleMaker
+import chylex.hee.game.particle.data.ParticleDataColorScale
+import chylex.hee.game.particle.spawner.IParticleMaker
 import chylex.hee.game.particle.util.ParticleSetting
 import chylex.hee.game.particle.util.ParticleSetting.ALL
 import chylex.hee.game.particle.util.ParticleSetting.DECREASED
@@ -11,31 +10,16 @@ import chylex.hee.init.ModBlocks
 import chylex.hee.system.migration.forge.Side
 import chylex.hee.system.migration.forge.Sided
 import chylex.hee.system.util.Pos
-import chylex.hee.system.util.floorToInt
 import chylex.hee.system.util.getBlock
 import chylex.hee.system.util.square
 import net.minecraft.client.particle.Particle
 import net.minecraft.world.World
-import org.apache.commons.lang3.ArrayUtils.EMPTY_INT_ARRAY
 import java.util.Random
 
-object ParticleEnergyCluster : IParticleMaker{
+object ParticleEnergyCluster : IParticleMaker<ParticleDataColorScale>{
 	@Sided(Side.CLIENT)
-	override fun create(world: World, posX: Double, posY: Double, posZ: Double, motX: Double, motY: Double, motZ: Double, data: IntArray): Particle{
+	override fun create(world: World, posX: Double, posY: Double, posZ: Double, motX: Double, motY: Double, motZ: Double, data: ParticleDataColorScale?): Particle{
 		return Instance(world, posX, posY, posZ, motX, motY, motZ, data)
-	}
-	
-	// Particle data
-	
-	class Data(private val cluster: TileEntityEnergyCluster) : IParticleData{
-		override fun generate(rand: Random): IntArray{
-			val data = cluster.particleDataGenerator?.next(rand) ?: return EMPTY_INT_ARRAY
-			
-			return intArrayOf(
-				data.color,
-				(data.scale * 100F).floorToInt()
-			)
-		}
 	}
 	
 	// Skip test
@@ -67,7 +51,7 @@ object ParticleEnergyCluster : IParticleMaker{
 	private const val FADE_OUT_DURATION = 10
 	
 	@Sided(Side.CLIENT)
-	private class Instance(world: World, posX: Double, posY: Double, posZ: Double, motX: Double, motY: Double, motZ: Double, unsafeData: IntArray) : ParticleBaseEnergy(world, posX, posY, posZ, motX, motY, motZ){
+	private class Instance(world: World, posX: Double, posY: Double, posZ: Double, motX: Double, motY: Double, motZ: Double, data: ParticleDataColorScale?) : ParticleBaseEnergy(world, posX, posY, posZ, motX, motY, motZ){
 		private val clusterPos = Pos(posX, posY, posZ)
 		
 		private val alphaMultiplier = when(ParticleSetting.current){
@@ -77,15 +61,13 @@ object ParticleEnergyCluster : IParticleMaker{
 		}
 		
 		init{
-			if (unsafeData.size < 2){
-				particleAlpha = 0F
-				maxAge = 0
+			if (data == null){
+				setExpired()
 			}
 			else{
-				loadColor(unsafeData[0])
+				loadColor(data.color)
 				particleAlpha = 0F
-				
-				particleScale = unsafeData[1] * 0.01F
+				particleScale = data.scale
 				
 				maxAge = TOTAL_LIFESPAN
 				

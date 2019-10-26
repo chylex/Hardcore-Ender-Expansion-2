@@ -4,7 +4,6 @@ import chylex.hee.game.entity.living.EntityMobEnderman
 import chylex.hee.game.fx.IFxData
 import chylex.hee.game.fx.IFxHandler
 import chylex.hee.game.particle.ParticleDeathFlowerHeal
-import chylex.hee.game.particle.ParticleDeathFlowerHeal.Data
 import chylex.hee.game.particle.spawner.ParticleSpawnerCustom
 import chylex.hee.game.particle.util.IOffset.Constant
 import chylex.hee.game.particle.util.IOffset.Gaussian
@@ -199,7 +198,7 @@ interface IBlockDeathFlowerDecaying{
 				
 				ParticleSpawnerCustom(
 					type = ParticleDeathFlowerHeal,
-					data = Data(healLevel),
+					data = ParticleDeathFlowerHeal.Data(healLevel),
 					pos = PARTICLE_POS,
 					mot = PARTICLE_MOT
 				).spawn(Point(pos, particleAmount), rand)

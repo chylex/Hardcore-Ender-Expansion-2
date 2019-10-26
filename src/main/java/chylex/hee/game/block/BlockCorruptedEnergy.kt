@@ -62,7 +62,7 @@ class BlockCorruptedEnergy(builder: BlockBuilder) : BlockSimple(builder){
 		
 		private val PARTICLE_CORRUPTION = ParticleSpawnerCustom(
 			type = ParticleCorruptedEnergy,
-			data = Data(minLifespan = 8, maxLifespan = 12, minScale = 2.5F, maxScale = 5.0F),
+			data = Data(lifespan = 8..12, scale = (2.5F)..(5.0F)),
 			pos = InBox(0.75F),
 			mot = InBox(0.05F),
 			hideOnMinimalSetting = false

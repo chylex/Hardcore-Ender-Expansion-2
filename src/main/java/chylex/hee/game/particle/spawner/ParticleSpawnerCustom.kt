@@ -1,8 +1,6 @@
 package chylex.hee.game.particle.spawner
 import chylex.hee.client.util.MC
-import chylex.hee.game.particle.spawner.factory.IParticleData
-import chylex.hee.game.particle.spawner.factory.IParticleData.Empty
-import chylex.hee.game.particle.spawner.factory.IParticleMaker
+import chylex.hee.game.particle.data.IParticleData
 import chylex.hee.game.particle.util.IOffset
 import chylex.hee.game.particle.util.IOffset.MutableOffsetPoint
 import chylex.hee.game.particle.util.IOffset.None
@@ -15,16 +13,16 @@ import chylex.hee.system.util.posVec
 import chylex.hee.system.util.square
 import java.util.Random
 
-class ParticleSpawnerCustom(
-	private val type: IParticleMaker,
-	private val data: IParticleData = Empty,
+class ParticleSpawnerCustom<D : IParticleData<T>, T>(
+	private val type: IParticleMaker<T>,
+	private val data: D? = null,
 	private val pos: IOffset = None,
 	private val mot: IOffset = None,
 	private val skipTest: (Double, ParticleSetting, Random) -> Boolean
 ) : IParticleSpawner{
 	constructor(
-		type: IParticleMaker,
-		data: IParticleData = Empty,
+		type: IParticleMaker<T>,
+		data: D? = null,
 		pos: IOffset = None,
 		mot: IOffset = None,
 		maxRange: Double = 32.0,
@@ -57,7 +55,7 @@ class ParticleSpawnerCustom(
 				tmpOffsetMot.x.toDouble(),
 				tmpOffsetMot.y.toDouble(),
 				tmpOffsetMot.z.toDouble(),
-				data.generate(rand)
+				data?.generate(rand)
 			).let(particleManager::addEffect)
 		}
 	}

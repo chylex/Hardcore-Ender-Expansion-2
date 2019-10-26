@@ -1,7 +1,5 @@
 package chylex.hee.game.particle.spawner
 import chylex.hee.client.util.MC
-import chylex.hee.game.particle.spawner.factory.IParticleData
-import chylex.hee.game.particle.spawner.factory.IParticleData.Empty
 import chylex.hee.game.particle.util.IOffset
 import chylex.hee.game.particle.util.IOffset.MutableOffsetPoint
 import chylex.hee.game.particle.util.IOffset.None
@@ -11,7 +9,6 @@ import java.util.Random
 
 class ParticleSpawnerVanilla(
 	type: EnumParticleTypes,
-	private val data: IParticleData = Empty,
 	private val pos: IOffset = None,
 	private val mot: IOffset = None,
 	private val ignoreRangeLimit: Boolean = false,
@@ -39,8 +36,7 @@ class ParticleSpawnerVanilla(
 				point.z + tmpOffsetPos.z,
 				tmpOffsetMot.x.toDouble(),
 				tmpOffsetMot.y.toDouble(),
-				tmpOffsetMot.z.toDouble(),
-				*data.generate(rand)
+				tmpOffsetMot.z.toDouble()
 			)
 		}
 	}

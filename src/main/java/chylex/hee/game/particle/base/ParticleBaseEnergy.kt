@@ -11,6 +11,8 @@ import chylex.hee.game.mechanics.energy.IClusterHealth.HealthStatus.DAMAGED
 import chylex.hee.game.mechanics.energy.IClusterHealth.HealthStatus.TIRED
 import chylex.hee.game.mechanics.energy.IClusterHealth.HealthStatus.UNSTABLE
 import chylex.hee.game.mechanics.energy.IClusterHealth.HealthStatus.WEAKENED
+import chylex.hee.game.particle.data.IParticleData
+import chylex.hee.game.particle.data.ParticleDataColorScale
 import chylex.hee.system.migration.forge.Side
 import chylex.hee.system.migration.forge.Sided
 import chylex.hee.system.util.color.IntColor
@@ -46,9 +48,7 @@ abstract class ParticleBaseEnergy(world: World, posX: Double, posY: Double, posZ
 		}
 	}
 	
-	data class ClusterParticleData(val color: Int, val scale: Float)
-	
-	class ClusterParticleDataGenerator(cluster: TileEntityEnergyCluster){
+	class ClusterParticleDataGenerator(cluster: TileEntityEnergyCluster) : IParticleData<ParticleDataColorScale>{
 		private val level = cluster.energyLevel.floating.value
 		private val capacity = cluster.energyBaseCapacity.floating.value
 		private val health = cluster.currentHealth
@@ -56,7 +56,7 @@ abstract class ParticleBaseEnergy(world: World, posX: Double, posY: Double, posZ
 		private val colorPrimary = adjustColorComponents(cluster.color.primary(100F, 42F))
 		private val colorSecondary = adjustColorComponents(cluster.color.secondary(90F, 42F))
 		
-		fun next(rand: Random): ClusterParticleData{
+		override fun generate(rand: Random): ParticleDataColorScale{
 			val useSecondaryHue = when(health){
 				REVITALIZING, UNSTABLE -> true
 				POWERED                -> rand.nextBoolean()
@@ -81,7 +81,7 @@ abstract class ParticleBaseEnergy(world: World, posX: Double, posY: Double, posZ
 				false ->  0.5F + (capacity * 0.03F) + (level * 0.06F)
 			}
 			
-			return ClusterParticleData(color = finalColor.i, scale = finalScale)
+			return ParticleDataColorScale(color = finalColor, scale = finalScale)
 		}
 	}
 	
