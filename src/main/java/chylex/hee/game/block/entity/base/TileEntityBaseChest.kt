@@ -1,5 +1,5 @@
-package chylex.hee.game.block.entity
-import chylex.hee.game.block.entity.TileEntityBase.Context.NETWORK
+package chylex.hee.game.block.entity.base
+import chylex.hee.game.block.entity.base.TileEntityBase.Context.NETWORK
 import chylex.hee.system.migration.Facing.UP
 import chylex.hee.system.migration.vanilla.Sounds
 import chylex.hee.system.util.FLAG_SKIP_RENDER

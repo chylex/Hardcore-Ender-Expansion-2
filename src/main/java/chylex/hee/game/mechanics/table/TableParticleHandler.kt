@@ -1,6 +1,6 @@
 package chylex.hee.game.mechanics.table
-import chylex.hee.game.block.entity.TileEntityBaseTable
 import chylex.hee.game.block.entity.TileEntityEnergyCluster
+import chylex.hee.game.block.entity.base.TileEntityBaseTable
 import chylex.hee.game.fx.IFxData
 import chylex.hee.game.fx.IFxHandler
 import chylex.hee.game.particle.ParticleEnergyTableDrain

@@ -1,5 +1,6 @@
 package chylex.hee.game.block.entity
 import chylex.hee.game.block.BlockJarODust
+import chylex.hee.game.block.entity.base.TileEntityBase
 import chylex.hee.game.mechanics.dust.DustLayerInventory
 import chylex.hee.game.mechanics.dust.DustLayers
 import chylex.hee.system.migration.Facing.DOWN

@@ -1,7 +1,8 @@
 package chylex.hee.game.block.entity
 import chylex.hee.game.block.BlockEnergyCluster
-import chylex.hee.game.block.entity.TileEntityBase.Context.NETWORK
-import chylex.hee.game.block.entity.TileEntityBase.Context.STORAGE
+import chylex.hee.game.block.entity.base.TileEntityBase
+import chylex.hee.game.block.entity.base.TileEntityBase.Context.NETWORK
+import chylex.hee.game.block.entity.base.TileEntityBase.Context.STORAGE
 import chylex.hee.game.mechanics.energy.ClusterColor
 import chylex.hee.game.mechanics.energy.ClusterSnapshot
 import chylex.hee.game.mechanics.energy.IClusterHealth

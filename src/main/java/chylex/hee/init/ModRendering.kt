@@ -27,13 +27,13 @@ import chylex.hee.game.block.BlockDryVines
 import chylex.hee.game.block.BlockPuzzleLogic
 import chylex.hee.game.block.BlockTablePedestal
 import chylex.hee.game.block.BlockVoidPortalInner
-import chylex.hee.game.block.entity.TileEntityBaseSpawner
 import chylex.hee.game.block.entity.TileEntityDarkChest
 import chylex.hee.game.block.entity.TileEntityIgneousPlate
 import chylex.hee.game.block.entity.TileEntityJarODust
 import chylex.hee.game.block.entity.TileEntityLootChest
 import chylex.hee.game.block.entity.TileEntityPortalInner
 import chylex.hee.game.block.entity.TileEntityTablePedestal
+import chylex.hee.game.block.entity.base.TileEntityBaseSpawner
 import chylex.hee.game.entity.item.EntityItemNoBob
 import chylex.hee.game.entity.item.EntityTokenHolder
 import chylex.hee.game.entity.living.EntityBossEnderEye
@@ -103,20 +103,18 @@ object ModRendering{
 	
 	@Suppress("unused", "RemoveExplicitTypeArguments")
 	fun registerTileEntities(){
-		registerTile<TileEntityPortalInner.End>(RenderTileEndPortal)
-		registerTile<TileEntityPortalInner.Void>(RenderTileVoidPortal)
 		registerTile<TileEntityBaseSpawner>(RenderTileSpawner)
 		registerTile<TileEntityDarkChest>(RenderTileDarkChest)
-		registerTile<TileEntityLootChest>(RenderTileLootChest)
-		registerTile<TileEntityJarODust>(RenderTileJarODust)
 		registerTile<TileEntityIgneousPlate>(RenderTileIgneousPlate)
+		registerTile<TileEntityJarODust>(RenderTileJarODust)
+		registerTile<TileEntityLootChest>(RenderTileLootChest)
+		registerTile<TileEntityPortalInner.End>(RenderTileEndPortal)
+		registerTile<TileEntityPortalInner.Void>(RenderTileVoidPortal)
 		registerTile<TileEntityTablePedestal>(RenderTileTablePedestal)
 		
 		registerTileStack(ModBlocks.DARK_CHEST, RenderTileDarkChest.AsItem)
 		registerTileStack(ModBlocks.LOOT_CHEST, RenderTileLootChest.AsItem)
-		
 		registerTileStack(ModBlocks.JAR_O_DUST, RenderTileJarODust.AsItem)
-		
 		registerTileStack(ModItems.ENDERMAN_HEAD, RenderTileEndermanHead.AsItem)
 	}
 	

@@ -1,5 +1,5 @@
 package chylex.hee.game.block
-import chylex.hee.game.block.entity.TileEntityBaseTable
+import chylex.hee.game.block.entity.base.TileEntityBaseTable
 import chylex.hee.game.block.info.BlockBuilder
 import chylex.hee.system.util.getTile
 import net.minecraft.block.ITileEntityProvider

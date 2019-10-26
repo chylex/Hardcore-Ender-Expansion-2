@@ -1,6 +1,6 @@
-package chylex.hee.game.block.entity
-import chylex.hee.game.block.entity.TileEntityBase.Context.NETWORK
-import chylex.hee.game.block.entity.TileEntityBase.Context.STORAGE
+package chylex.hee.game.block.entity.base
+import chylex.hee.game.block.entity.base.TileEntityBase.Context.NETWORK
+import chylex.hee.game.block.entity.base.TileEntityBase.Context.STORAGE
 import chylex.hee.system.util.TagCompound
 import chylex.hee.system.util.delegate.NotifyOnChange
 import chylex.hee.system.util.getState

@@ -1,4 +1,5 @@
 package chylex.hee.game.block.entity
+import chylex.hee.game.block.entity.base.TileEntityBaseTable
 import chylex.hee.game.item.ItemAbstractEnergyUser
 import chylex.hee.game.mechanics.energy.IEnergyQuantity.Units
 import chylex.hee.game.mechanics.table.interfaces.ITableContext

@@ -2,8 +2,10 @@ package chylex.hee.game.block.entity
 import chylex.hee.HEE
 import chylex.hee.game.block.BlockTablePedestal
 import chylex.hee.game.block.BlockTablePedestal.Companion.IS_LINKED
-import chylex.hee.game.block.entity.TileEntityBase.Context.NETWORK
-import chylex.hee.game.block.entity.TileEntityBase.Context.STORAGE
+import chylex.hee.game.block.entity.base.TileEntityBase
+import chylex.hee.game.block.entity.base.TileEntityBase.Context.NETWORK
+import chylex.hee.game.block.entity.base.TileEntityBase.Context.STORAGE
+import chylex.hee.game.block.entity.base.TileEntityBaseTable
 import chylex.hee.game.fx.FxBlockData
 import chylex.hee.game.fx.FxBlockHandler
 import chylex.hee.game.mechanics.table.PedestalInventoryHandler

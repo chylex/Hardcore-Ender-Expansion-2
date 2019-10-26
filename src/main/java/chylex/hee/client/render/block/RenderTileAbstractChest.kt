@@ -1,6 +1,6 @@
 package chylex.hee.client.render.block
 import chylex.hee.client.render.util.GL
-import chylex.hee.game.block.entity.TileEntityBaseChest
+import chylex.hee.game.block.entity.base.TileEntityBaseChest
 import chylex.hee.system.migration.Facing.EAST
 import chylex.hee.system.migration.Facing.NORTH
 import chylex.hee.system.migration.Facing.WEST

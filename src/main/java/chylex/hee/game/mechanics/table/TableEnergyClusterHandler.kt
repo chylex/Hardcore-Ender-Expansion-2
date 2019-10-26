@@ -1,7 +1,7 @@
 package chylex.hee.game.mechanics.table
 import chylex.hee.game.block.BlockAbstractTableTile
-import chylex.hee.game.block.entity.TileEntityBaseTable
 import chylex.hee.game.block.entity.TileEntityEnergyCluster
+import chylex.hee.game.block.entity.base.TileEntityBaseTable
 import chylex.hee.game.mechanics.energy.IEnergyQuantity
 import chylex.hee.game.world.util.RayTracer
 import chylex.hee.init.ModBlocks

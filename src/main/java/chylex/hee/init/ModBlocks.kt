@@ -458,20 +458,20 @@ object ModBlocks{
 			register(SCAFFOLDING with basicItemBlock)
 		}
 		
+		tile<TileEntityAccumulationTable>("accumulation_table")
+		tile<TileEntityBrewingStandCustom>("brewing_stand")
+		tile<TileEntityDarkChest>("dark_chest")
+		tile<TileEntityEndPortalAcceptor>("end_portal_acceptor")
+		tile<TileEntityEnergyCluster>("energy_cluster")
+		tile<TileEntityIgneousPlate>("igneous_plate")
+		tile<TileEntityInfusedTNT>("infused_tnt")
+		tile<TileEntityJarODust>("jar_o_dust")
+		tile<TileEntityLootChest>("loot_chest")
 		tile<TileEntityPortalInner.End>("end_portal_inner")
 		tile<TileEntityPortalInner.Void>("void_portal_inner")
-		tile<TileEntityEndPortalAcceptor>("end_portal_acceptor")
-		tile<TileEntityVoidPortalStorage>("void_portal_storage")
 		tile<TileEntitySpawnerObsidianTower>("spawner_obsidian_tower")
-		tile<TileEntityEnergyCluster>("energy_cluster")
-		tile<TileEntityInfusedTNT>("infused_tnt")
-		tile<TileEntityDarkChest>("dark_chest")
-		tile<TileEntityLootChest>("loot_chest")
-		tile<TileEntityJarODust>("jar_o_dust")
-		tile<TileEntityIgneousPlate>("igneous_plate")
-		tile<TileEntityBrewingStandCustom>("brewing_stand")
 		tile<TileEntityTablePedestal>("table_pedestal")
-		tile<TileEntityAccumulationTable>("accumulation_table")
+		tile<TileEntityVoidPortalStorage>("void_portal_storage")
 		
 		// vanilla modifications
 		

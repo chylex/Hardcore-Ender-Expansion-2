@@ -1,6 +1,7 @@
 package chylex.hee.game.block.entity
 import chylex.hee.client.model.block.ModelBlockIgneousPlate.ANIMATION_PERIOD
 import chylex.hee.game.block.BlockIgneousPlate
+import chylex.hee.game.block.entity.base.TileEntityBase
 import chylex.hee.game.entity.item.EntityItemFreshlyCooked
 import chylex.hee.game.entity.technical.EntityTechnicalIgneousPlateLogic
 import chylex.hee.game.particle.ParticleFlameCustom

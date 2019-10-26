@@ -1,7 +1,7 @@
 package chylex.hee.client.render.block
 import chylex.hee.client.render.util.GL
 import chylex.hee.client.util.MC
-import chylex.hee.game.block.entity.TileEntityBaseSpawner
+import chylex.hee.game.block.entity.base.TileEntityBaseSpawner
 import chylex.hee.system.migration.forge.Side
 import chylex.hee.system.migration.forge.Sided
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer

@@ -1,5 +1,5 @@
-package chylex.hee.game.block.entity
-import chylex.hee.game.block.entity.TileEntityBase.Context.STORAGE
+package chylex.hee.game.block.entity.base
+import chylex.hee.game.block.entity.base.TileEntityBase.Context.STORAGE
 import chylex.hee.system.util.TagCompound
 import chylex.hee.system.util.getPosOrNull
 import chylex.hee.system.util.math.LerpedFloat

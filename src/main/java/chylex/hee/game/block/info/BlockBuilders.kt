@@ -167,17 +167,11 @@ object BlockBuilders{
 	
 	// Interactive (Uncategorized)
 	
+	val buildIgneousPlate = BlockBuilder(Materials.IGNEOUS_ROCK_PLATE, MapColor.AIR, SoundType.STONE)
+	
 	val buildBrewingStand = BlockBuilder(Material.IRON, MapColor.YELLOW, SoundType.STONE).apply {
 		harvestHardness = 0.5F
 		lightLevel = 2
-	}
-	
-	val buildIgneousPlate = BlockBuilder(Materials.IGNEOUS_ROCK_PLATE, MapColor.AIR, SoundType.STONE)
-	
-	// Decorative (Plants)
-	
-	val buildFlowerPot = BlockBuilder(Material.CIRCUITS, MapColor.AIR, SoundType.STONE).apply {
-		harvestHardness = 0F
 	}
 	
 	// Ores
@@ -206,6 +200,12 @@ object BlockBuilders{
 		harvestTool = Pair(DIAMOND, PICKAXE)
 		harvestHardness = 1.6F
 		explosionResistance = 6.0F
+	}
+	
+	// Decorative (Plants)
+	
+	val buildFlowerPot = BlockBuilder(Material.CIRCUITS, MapColor.AIR, SoundType.STONE).apply {
+		harvestHardness = 0F
 	}
 	
 	// Spawners

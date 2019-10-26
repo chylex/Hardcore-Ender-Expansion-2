@@ -1,5 +1,6 @@
 package chylex.hee.game.block.entity
-import chylex.hee.game.block.entity.TileEntityBase.Context.STORAGE
+import chylex.hee.game.block.entity.base.TileEntityBase.Context.STORAGE
+import chylex.hee.game.block.entity.base.TileEntityBaseSpawner
 import chylex.hee.game.entity.living.EntityMobEnderman
 import chylex.hee.game.fx.FxBlockData
 import chylex.hee.game.fx.FxBlockHandler

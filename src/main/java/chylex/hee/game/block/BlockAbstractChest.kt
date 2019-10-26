@@ -1,5 +1,5 @@
 package chylex.hee.game.block
-import chylex.hee.game.block.entity.TileEntityBaseChest
+import chylex.hee.game.block.entity.base.TileEntityBaseChest
 import chylex.hee.game.block.info.BlockBuilder
 import chylex.hee.game.entity.living.ai.AIOcelotSitOverride.IOcelotCanSitOn
 import chylex.hee.init.ModGuiHandler.GuiType

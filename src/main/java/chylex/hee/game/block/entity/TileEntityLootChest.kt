@@ -1,6 +1,7 @@
 package chylex.hee.game.block.entity
 import chylex.hee.HEE
-import chylex.hee.game.block.entity.TileEntityBase.Context.STORAGE
+import chylex.hee.game.block.entity.base.TileEntityBase.Context.STORAGE
+import chylex.hee.game.block.entity.base.TileEntityBaseChest
 import chylex.hee.init.ModSounds
 import chylex.hee.system.util.TagCompound
 import chylex.hee.system.util.loadInventory

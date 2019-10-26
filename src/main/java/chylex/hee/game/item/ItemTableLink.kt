@@ -1,7 +1,7 @@
 package chylex.hee.game.item
 import chylex.hee.game.block.BlockAbstractTableTile
-import chylex.hee.game.block.entity.TileEntityBaseTable
 import chylex.hee.game.block.entity.TileEntityTablePedestal
+import chylex.hee.game.block.entity.base.TileEntityBaseTable
 import chylex.hee.game.fx.IFxData
 import chylex.hee.game.fx.IFxHandler
 import chylex.hee.game.item.ItemTableLink.Companion.SoundType.LINK_FAIL

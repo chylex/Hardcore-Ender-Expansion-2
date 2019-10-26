@@ -1,7 +1,8 @@
-package chylex.hee.game.block.entity
+package chylex.hee.game.block.entity.base
 import chylex.hee.game.block.BlockAbstractTable
 import chylex.hee.game.block.BlockAbstractTable.Companion.TIER
-import chylex.hee.game.block.entity.TileEntityBase.Context.STORAGE
+import chylex.hee.game.block.entity.TileEntityTablePedestal
+import chylex.hee.game.block.entity.base.TileEntityBase.Context.STORAGE
 import chylex.hee.game.mechanics.table.TableEnergyClusterHandler
 import chylex.hee.game.mechanics.table.TableLinkedPedestalHandler
 import chylex.hee.game.mechanics.table.TableParticleHandler
@@ -159,7 +160,7 @@ abstract class TileEntityBaseTable : TileEntityBase(), ITickable{
 			return currentProcesses.firstOrNull { it is ProcessSupportingItemHolder && it.useItem(item, amount) } != null
 		}
 		
-		override fun getOutputPedestal(candidate: TileEntityTablePedestal): TileEntityTablePedestal{
+		override fun getOutputPedestal(candidate: TileEntityTablePedestal): TileEntityTablePedestal {
 			return pedestalHandler.dedicatedOutputPedestalTile ?: candidate
 		}
 		

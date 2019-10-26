@@ -1,10 +1,11 @@
 package chylex.hee.game.block.entity
 import chylex.hee.game.block.BlockAbstractPortal
 import chylex.hee.game.block.BlockVoidPortalInner.IVoidPortalController
-import chylex.hee.game.block.entity.TileEntityBase.Context.NETWORK
-import chylex.hee.game.block.entity.TileEntityBasePortalController.ForegroundRenderState.Animating
-import chylex.hee.game.block.entity.TileEntityBasePortalController.ForegroundRenderState.Invisible
-import chylex.hee.game.block.entity.TileEntityBasePortalController.ForegroundRenderState.Visible
+import chylex.hee.game.block.entity.base.TileEntityBase.Context.NETWORK
+import chylex.hee.game.block.entity.base.TileEntityBasePortalController
+import chylex.hee.game.block.entity.base.TileEntityBasePortalController.ForegroundRenderState.Animating
+import chylex.hee.game.block.entity.base.TileEntityBasePortalController.ForegroundRenderState.Invisible
+import chylex.hee.game.block.entity.base.TileEntityBasePortalController.ForegroundRenderState.Visible
 import chylex.hee.game.mechanics.portal.SpawnInfo
 import chylex.hee.game.world.territory.TerritoryInstance
 import chylex.hee.init.ModItems

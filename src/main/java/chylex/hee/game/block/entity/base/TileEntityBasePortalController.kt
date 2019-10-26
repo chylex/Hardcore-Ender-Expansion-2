@@ -1,9 +1,9 @@
-package chylex.hee.game.block.entity
+package chylex.hee.game.block.entity.base
 import chylex.hee.game.block.BlockAbstractPortal.IPortalController
-import chylex.hee.game.block.entity.TileEntityBase.Context.NETWORK
-import chylex.hee.game.block.entity.TileEntityBasePortalController.ForegroundRenderState.Animating
-import chylex.hee.game.block.entity.TileEntityBasePortalController.ForegroundRenderState.Invisible
-import chylex.hee.game.block.entity.TileEntityBasePortalController.ForegroundRenderState.Visible
+import chylex.hee.game.block.entity.base.TileEntityBase.Context.NETWORK
+import chylex.hee.game.block.entity.base.TileEntityBasePortalController.ForegroundRenderState.Animating
+import chylex.hee.game.block.entity.base.TileEntityBasePortalController.ForegroundRenderState.Invisible
+import chylex.hee.game.block.entity.base.TileEntityBasePortalController.ForegroundRenderState.Visible
 import chylex.hee.system.util.TagCompound
 import chylex.hee.system.util.math.LerpedFloat
 import net.minecraft.util.ITickable

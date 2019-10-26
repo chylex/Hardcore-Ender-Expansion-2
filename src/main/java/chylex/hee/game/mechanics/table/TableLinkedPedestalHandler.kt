@@ -1,6 +1,6 @@
 package chylex.hee.game.mechanics.table
-import chylex.hee.game.block.entity.TileEntityBaseTable
 import chylex.hee.game.block.entity.TileEntityTablePedestal
+import chylex.hee.game.block.entity.base.TileEntityBaseTable
 import chylex.hee.system.util.Pos
 import chylex.hee.system.util.TagCompound
 import chylex.hee.system.util.distanceSqTo

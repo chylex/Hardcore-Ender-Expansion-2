@@ -128,7 +128,7 @@ fun BlockPos.isTopSolid(world: World): Boolean{
 // Block predicates
 
 /**
- * Offsets the block position in [offsetRange] distances a the direction of [facing] until [testPredicate] returns true.
+ * Offsets the block position in the direction of [facing] by distances defined by [offsetRange] until [testPredicate] returns true.
  * Returns the first [BlockPos] for which [testPredicate] returned true, or null if [testPredicate] didn't return true for any blocks within the [offsetRange].
  */
 inline fun BlockPos.offsetUntil(facing: EnumFacing, offsetRange: IntRange, testPredicate: (BlockPos) -> Boolean): BlockPos?{
