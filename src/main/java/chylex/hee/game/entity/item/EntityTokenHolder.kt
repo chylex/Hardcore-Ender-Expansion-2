@@ -1,9 +1,16 @@
 package chylex.hee.game.entity.item
 import chylex.hee.game.entity.util.EntityData
+import chylex.hee.game.fx.FxEntityData
+import chylex.hee.game.fx.FxEntityHandler
 import chylex.hee.game.item.ItemPortalToken.TokenType
+import chylex.hee.game.particle.ParticleSmokeCustom
+import chylex.hee.game.particle.spawner.ParticleSpawnerCustom
+import chylex.hee.game.particle.util.IOffset.InSphere
+import chylex.hee.game.particle.util.IShape.Point
 import chylex.hee.game.world.territory.TerritoryInstance
 import chylex.hee.game.world.territory.TerritoryType
 import chylex.hee.init.ModItems
+import chylex.hee.network.client.PacketClientFX
 import chylex.hee.network.client.PacketClientLaunchInstantly
 import chylex.hee.system.migration.forge.Side
 import chylex.hee.system.migration.forge.Sided
@@ -26,8 +33,10 @@ import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.network.datasync.DataSerializers
 import net.minecraft.util.DamageSource
 import net.minecraft.util.math.BlockPos
+import net.minecraft.util.math.Vec3d
 import net.minecraft.world.World
 import net.minecraftforge.fml.common.registry.IEntityAdditionalSpawnData
+import java.util.Random
 
 class EntityTokenHolder(world: World) : Entity(world), IEntityAdditionalSpawnData{
 	constructor(world: World, tokenType: TokenType, territoryType: TerritoryType) : this(world){
@@ -39,15 +48,31 @@ class EntityTokenHolder(world: World) : Entity(world), IEntityAdditionalSpawnDat
 		setLocationAndAngles(pos.x + 0.5, pos.y + 0.5, pos.z + 0.5, 0F, 0F)
 	}
 	
-	private companion object{
+	companion object{
 		private val DATA_CHARGE = EntityData.register<EntityTokenHolder, Float>(DataSerializers.FLOAT)
 		
 		private const val TOKEN_TYPE_TAG = "Type"
 		private const val TERRITORY_TYPE_TAG = "Territory"
 		private const val CHARGE_TAG = "Charge"
+		
+		private val PARTICLE_BREAK = ParticleSpawnerCustom(
+			type = ParticleSmokeCustom,
+			data = ParticleSmokeCustom.Data(lifespan = 7..8, scale = 1.7F),
+			pos = InSphere(0.65F)
+		)
+		
+		val FX_BREAK = object : FxEntityHandler(){
+			override fun handle(entity: Entity, rand: Random){
+				PARTICLE_BREAK.spawn(Point(entity, 0.5F, 75), rand)
+				// TODO sound
+			}
+		}
 	}
 	
-	val renderRotation = LerpedFloat(world.totalTime * 3F)
+	private val nextRotation
+		get() = ((world.totalTime * 3L) % 360L).toFloat()
+	
+	val renderRotation = LerpedFloat(nextRotation)
 	val renderCharge = LerpedFloat(1F)
 	
 	var tokenType = TokenType.NORMAL
@@ -84,7 +109,14 @@ class EntityTokenHolder(world: World) : Entity(world), IEntityAdditionalSpawnDat
 		super.onUpdate()
 		
 		if (world.isRemote){
-			renderRotation.update(world.totalTime * 3F)
+			val prevRotation = renderRotation.currentValue
+			val nextRotation = nextRotation
+			
+			if (nextRotation < prevRotation){
+				renderRotation.updateImmediately(prevRotation - 360F)
+			}
+			
+			renderRotation.update(nextRotation)
 			renderCharge.update(currentCharge)
 		}
 		else{
@@ -92,30 +124,30 @@ class EntityTokenHolder(world: World) : Entity(world), IEntityAdditionalSpawnDat
 		}
 	}
 	
+	fun forceDropToken(motion: Vec3d){
+		val droppedToken = territoryType?.let { entityDropItem(ModItems.PORTAL_TOKEN.forTerritory(tokenType, it), (height * 0.5F) - 0.25F) }
+		
+		if (droppedToken != null){
+			droppedToken.setNoPickupDelay()
+			droppedToken.motionVec = motion
+			PacketClientLaunchInstantly(droppedToken, motion).sendToTracking(this)
+		}
+		
+		PacketClientFX(FX_BREAK, FxEntityData(this)).sendToAllAround(this, 24.0)
+	}
+	
 	override fun attackEntityFrom(source: DamageSource, amount: Float): Boolean{
-		if (world.isRemote || currentCharge < 1F){
+		if (world.isRemote){
 			return false
 		}
 		
-		val player = source.immediateSource as? EntityPlayer
+		val player = source.immediateSource as? EntityPlayer ?: return false
 		
-		if (player != null){
-			if (player.capabilities.isCreativeMode && player.isSneaking){
-				setDead()
-				return false
-			}
-			
-			val droppedToken = territoryType?.let { entityDropItem(ModItems.PORTAL_TOKEN.forTerritory(tokenType, it), (height * 0.5F) - 0.25F) }
-			
-			if (droppedToken != null){
-				val launchVec = posVec.directionTowards(player.lookPosVec).scale(0.5).addY(0.1)
-				
-				droppedToken.setNoPickupDelay()
-				droppedToken.motionVec = launchVec
-				PacketClientLaunchInstantly(droppedToken, launchVec).sendToTracking(this)
-			}
-			
-			// TODO fx
+		if (player.capabilities.isCreativeMode && player.isSneaking){
+			setDead()
+		}
+		else if (currentCharge >= 1F){
+			forceDropToken(posVec.directionTowards(player.lookPosVec).scale(0.5).addY(0.1))
 			TerritoryInstance.fromPos(this)?.let { it.territory.desc.tokenHolders.afterUse(this, it) }
 		}
 		

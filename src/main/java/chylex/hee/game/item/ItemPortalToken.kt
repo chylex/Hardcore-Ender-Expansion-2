@@ -25,6 +25,7 @@ import chylex.hee.system.util.getIntegerOrNull
 import chylex.hee.system.util.hasKey
 import chylex.hee.system.util.heeTag
 import chylex.hee.system.util.heeTagOrNull
+import chylex.hee.system.util.selectExistingEntities
 import chylex.hee.system.util.setEnum
 import net.minecraft.client.renderer.color.IItemColor
 import net.minecraft.client.resources.I18n
@@ -38,6 +39,7 @@ import net.minecraft.util.EnumActionResult
 import net.minecraft.util.EnumFacing
 import net.minecraft.util.EnumHand
 import net.minecraft.util.NonNullList
+import net.minecraft.util.math.AxisAlignedBB
 import net.minecraft.util.math.BlockPos
 import net.minecraft.world.World
 import net.minecraft.util.text.translation.I18n as I18nServer
@@ -136,7 +138,7 @@ class ItemPortalToken : Item(){
 		val heldItem = player.getHeldItem(hand)
 		val territoryType = getTerritoryType(heldItem)
 		
-		if (territoryType == null || facing != UP || !BlockEditor.canEdit(targetPos, player, heldItem)){
+		if (territoryType == null || facing != UP || !BlockEditor.canEdit(targetPos, player, heldItem) || world.selectExistingEntities.inBox<EntityTokenHolder>(AxisAlignedBB(targetPos)).any()){
 			return FAIL
 		}
 		
