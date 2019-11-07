@@ -1,0 +1,68 @@
+package chylex.hee.game.particle
+import chylex.hee.game.particle.base.ParticleBase
+import chylex.hee.game.particle.data.ParticleDataColorLifespanScale
+import chylex.hee.game.particle.spawner.IParticleMaker
+import chylex.hee.game.particle.util.ParticleTexture
+import chylex.hee.system.migration.forge.Side
+import chylex.hee.system.migration.forge.Sided
+import chylex.hee.system.util.color.IRandomColor.Companion.IRandomColor
+import chylex.hee.system.util.color.IntColor.Companion.RGB
+import chylex.hee.system.util.nextFloat
+import chylex.hee.system.util.nextInt
+import chylex.hee.system.util.nextItem
+import net.minecraft.client.particle.Particle
+import net.minecraft.util.math.Vec3d
+import net.minecraft.world.World
+import java.util.Random
+import kotlin.math.PI
+import kotlin.math.cos
+import kotlin.math.sign
+import kotlin.math.sin
+
+object ParticleExperienceOrbFloating : IParticleMaker<ParticleDataColorLifespanScale>{
+	private val rand = Random()
+	
+	@Sided(Side.CLIENT)
+	override fun create(world: World, posX: Double, posY: Double, posZ: Double, motX: Double, motY: Double, motZ: Double, data: ParticleDataColorLifespanScale?): Particle{
+		return Instance(world, posX, posY, posZ, motY, data ?: DEFAULT_DATA.generate(rand))
+	}
+	
+	fun Data(
+		lifespan: Int
+	) = ParticleDataColorLifespanScale.Generator(DEFAULT_COLOR, lifespan..lifespan, 1F..1F)
+	
+	val DEFAULT_COLOR = IRandomColor { RGB(nextInt(0, 255), 255, nextInt(0, 51)) }
+	
+	private val DEFAULT_DATA = Data(lifespan = 100)
+	
+	@Sided(Side.CLIENT)
+	class Instance(world: World, posX: Double, posY: Double, posZ: Double, motY: Double, data: ParticleDataColorLifespanScale) : ParticleBase(world, posX, posY, posZ, 0.0, 0.0, 0.0){
+		private val motionOffset: Double
+		
+		init{
+			particleTexture = rand.nextItem(ParticleTexture.EXPERIENCE)
+			
+			loadColor(data.color)
+			particleScale = data.scale
+			
+			maxAge = data.lifespan
+			
+			motionVec = Vec3d(0.0, motY, 0.0)
+			motionOffset = rand.nextFloat(-PI, PI)
+		}
+		
+		override fun onUpdate(){
+			super.onUpdate()
+			
+			motionX = sin(motionOffset + sign(motionOffset) * (age / 8.0)) * 0.02
+			motionZ = cos(motionOffset + sign(motionOffset) * (age / 8.0)) * 0.02
+			
+			if (age > maxAge - 10){
+				particleAlpha -= 0.1F
+			}
+		}
+		
+		override fun getFXLayer() = 1
+		override fun setParticleTextureIndex(index: Int){}
+	}
+}
