@@ -73,6 +73,9 @@ tile.hee.puzzle_block_redirect_2.name=Puzzle Block (Redirect 2)
 tile.hee.puzzle_block_redirect_4.name=Puzzle Block (Redirect 4)
 tile.hee.puzzle_block_teleport.name=Puzzle Block (Teleport)
 
+tile.hee.experience_gate.name=Experience Gate
+tile.hee.experience_gate_controller.name=Experience Gate (Controller)
+
 tile.hee.igneous_plate.name=Igneous Plate
 tile.hee.enhanced_brewing_stand.name=Enhanced Brewing Stand
 

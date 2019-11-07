@@ -25,6 +25,8 @@ import chylex.hee.game.block.BlockEndium
 import chylex.hee.game.block.BlockEnergyCluster
 import chylex.hee.game.block.BlockEnhancedBrewingStand
 import chylex.hee.game.block.BlockEternalFire
+import chylex.hee.game.block.BlockExperienceGateController
+import chylex.hee.game.block.BlockExperienceGateOutline
 import chylex.hee.game.block.BlockFallingObsidian
 import chylex.hee.game.block.BlockFlowerPotCustom
 import chylex.hee.game.block.BlockFlowerPotDeathFlowerDecaying
@@ -59,6 +61,7 @@ import chylex.hee.game.block.entity.TileEntityBrewingStandCustom
 import chylex.hee.game.block.entity.TileEntityDarkChest
 import chylex.hee.game.block.entity.TileEntityEndPortalAcceptor
 import chylex.hee.game.block.entity.TileEntityEnergyCluster
+import chylex.hee.game.block.entity.TileEntityExperienceGate
 import chylex.hee.game.block.entity.TileEntityIgneousPlate
 import chylex.hee.game.block.entity.TileEntityInfusedTNT
 import chylex.hee.game.block.entity.TileEntityJarODust
@@ -84,6 +87,7 @@ import chylex.hee.game.block.info.BlockBuilders.buildEndiumOre
 import chylex.hee.game.block.info.BlockBuilders.buildEnergyCluster
 import chylex.hee.game.block.info.BlockBuilders.buildEternalFire
 import chylex.hee.game.block.info.BlockBuilders.buildEtherealLantern
+import chylex.hee.game.block.info.BlockBuilders.buildExperienceGate
 import chylex.hee.game.block.info.BlockBuilders.buildFlowerPot
 import chylex.hee.game.block.info.BlockBuilders.buildGloomrock
 import chylex.hee.game.block.info.BlockBuilders.buildGloomrockBricks
@@ -251,6 +255,11 @@ object ModBlocks{
 	@JvmField val PUZZLE_REDIRECT_2 = BlockPuzzleLogic.Redirect(buildPuzzleLogic, arrayOf(NORTH, SOUTH)).apply { setup("puzzle_block_redirect_2") }
 	@JvmField val PUZZLE_REDIRECT_4 = BlockPuzzleLogic.RedirectAll(buildPuzzleLogic).apply { setup("puzzle_block_redirect_4") }
 	@JvmField val PUZZLE_TELEPORT   = BlockPuzzleLogic.Teleport(buildPuzzleLogic).apply { setup("puzzle_block_teleport") }
+	
+	// Blocks: Interactive (Gates)
+	
+	@JvmField val EXPERIENCE_GATE            = BlockExperienceGateOutline(buildExperienceGate).apply { setup("experience_gate") }
+	@JvmField val EXPERIENCE_GATE_CONTROLLER = BlockExperienceGateController(buildExperienceGate).apply { setup("experience_gate_controller") }
 	
 	// Blocks: Interactive (Uncategorized)
 	
@@ -421,6 +430,8 @@ object ModBlocks{
 			register(INFUSED_TNT with ::ItemInfusedTNT)
 			register(IGNEOUS_PLATE with basicItemBlock)
 			register(ENHANCED_BREWING_STAND with basicItemBlock)
+			register(EXPERIENCE_GATE with basicItemBlock)
+			register(EXPERIENCE_GATE_CONTROLLER)
 			
 			register(END_POWDER_ORE with basicItemBlock)
 			register(ENDIUM_ORE with basicItemBlock)
@@ -463,6 +474,7 @@ object ModBlocks{
 		tile<TileEntityDarkChest>("dark_chest")
 		tile<TileEntityEndPortalAcceptor>("end_portal_acceptor")
 		tile<TileEntityEnergyCluster>("energy_cluster")
+		tile<TileEntityExperienceGate>("experience_gate")
 		tile<TileEntityIgneousPlate>("igneous_plate")
 		tile<TileEntityInfusedTNT>("infused_tnt")
 		tile<TileEntityJarODust>("jar_o_dust")

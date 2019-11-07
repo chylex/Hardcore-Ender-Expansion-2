@@ -14,6 +14,13 @@ object MagicValues{
 	const val DEATH_TIME_MAX = 20
 	
 	/**
+	 * How much an entity's collision box is reduced before checking for block collisions.
+	 *
+	 * Found in [Entity.doBlockCollisions][net.minecraft.entity.Entity.doBlockCollisions].
+	 */
+	const val BLOCK_COLLISION_SHRINK = 0.001
+	
+	/**
 	 * Default damage applied to [ItemSword][net.minecraft.item.ItemSword]s, which is added to [ToolMaterial.attackDamage][net.minecraft.item.Item.ToolMaterial.attackDamage].
 	 *
 	 * Found in [ItemSword][net.minecraft.item.ItemSword] constructor (+ 3F) and [SharedMonsterAttributes.ATTACK_DAMAGE][net.minecraft.entity.SharedMonsterAttributes.ATTACK_DAMAGE] (+ 1F).

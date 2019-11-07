@@ -1,0 +1,25 @@
+{
+  "forge_marker": 1,
+  "defaults": {
+    "model": "cube_bottom_top",
+    "textures": {
+      "top": "hee:block/experience_gate_bottom",
+      "side": "hee:block/experience_gate_side",
+      "bottom": "hee:block/experience_gate_bottom"
+    }
+  },
+  "variants": {
+    "is_straight=false,neighbor_north=false,neighbor_west=false": [{ "textures": { "top": "hee:block/experience_gate_top_rd1" } }],
+    "is_straight=false,neighbor_north=false,neighbor_west=true":  [{ "textures": { "top": "hee:block/experience_gate_top_rd2" }, "y": 90 }],
+    "is_straight=false,neighbor_north=true,neighbor_west=false":  [{ "textures": { "top": "hee:block/experience_gate_top_rd2" }, "y": 270 }],
+    "is_straight=false,neighbor_north=true,neighbor_west=true":   [{ "textures": { "top": "hee:block/experience_gate_top_rd1" }, "y": 180 }],
+
+    "is_straight=true,neighbor_north=false,neighbor_west=true": [{ "textures": { "top": "hee:block/experience_gate_top_ud" }, "y": 90 }],
+    "is_straight=true,neighbor_north=true,neighbor_west=false": [{ "textures": { "top": "hee:block/experience_gate_top_ud" } }],
+
+    "is_straight=true,neighbor_north=false,neighbor_west=false": [{}],
+    "is_straight=true,neighbor_north=true,neighbor_west=true": [{}],
+
+    "inventory": [{}]
+  }
+}

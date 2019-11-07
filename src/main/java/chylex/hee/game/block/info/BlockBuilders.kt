@@ -165,6 +165,13 @@ object BlockBuilders{
 		lightLevel = 14
 	}
 	
+	// Interactive (Gates)
+	
+	val buildExperienceGate = BlockBuilder(Materials.SOLID_NO_TOOL, MapColor.GREEN, SoundType.METAL).apply {
+		makeIndestructible()
+		lightLevel = 5
+	}
+	
 	// Interactive (Uncategorized)
 	
 	val buildIgneousPlate = BlockBuilder(Materials.IGNEOUS_ROCK_PLATE, MapColor.AIR, SoundType.STONE)

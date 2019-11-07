@@ -4,6 +4,7 @@ import chylex.hee.client.model.item.ModelItemAmuletOfRecovery
 import chylex.hee.client.render.block.RenderTileDarkChest
 import chylex.hee.client.render.block.RenderTileEndPortal
 import chylex.hee.client.render.block.RenderTileEndermanHead
+import chylex.hee.client.render.block.RenderTileExperienceGate
 import chylex.hee.client.render.block.RenderTileIgneousPlate
 import chylex.hee.client.render.block.RenderTileJarODust
 import chylex.hee.client.render.block.RenderTileLootChest
@@ -28,6 +29,7 @@ import chylex.hee.game.block.BlockPuzzleLogic
 import chylex.hee.game.block.BlockTablePedestal
 import chylex.hee.game.block.BlockVoidPortalInner
 import chylex.hee.game.block.entity.TileEntityDarkChest
+import chylex.hee.game.block.entity.TileEntityExperienceGate
 import chylex.hee.game.block.entity.TileEntityIgneousPlate
 import chylex.hee.game.block.entity.TileEntityJarODust
 import chylex.hee.game.block.entity.TileEntityLootChest
@@ -105,6 +107,7 @@ object ModRendering{
 	fun registerTileEntities(){
 		registerTile<TileEntityBaseSpawner>(RenderTileSpawner)
 		registerTile<TileEntityDarkChest>(RenderTileDarkChest)
+		registerTile<TileEntityExperienceGate>(RenderTileExperienceGate)
 		registerTile<TileEntityIgneousPlate>(RenderTileIgneousPlate)
 		registerTile<TileEntityJarODust>(RenderTileJarODust)
 		registerTile<TileEntityLootChest>(RenderTileLootChest)
