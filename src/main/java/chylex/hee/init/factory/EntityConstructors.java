@@ -15,6 +15,7 @@ import chylex.hee.game.entity.living.EntityMobEndermiteInstability;
 import chylex.hee.game.entity.living.EntityMobSilverfish;
 import chylex.hee.game.entity.living.EntityMobSpiderling;
 import chylex.hee.game.entity.living.EntityMobUndread;
+import chylex.hee.game.entity.living.EntityMobVampireBat;
 import chylex.hee.game.entity.living.EntityMobVillagerDying;
 import chylex.hee.game.entity.projectile.EntityProjectileEnderPearl;
 import chylex.hee.game.entity.projectile.EntityProjectileEyeOfEnder;
@@ -51,6 +52,7 @@ public final class EntityConstructors{
 		add(EntityMobSilverfish.class, EntityMobSilverfish::new);
 		add(EntityMobSpiderling.class, EntityMobSpiderling::new);
 		add(EntityMobUndread.class, EntityMobUndread::new);
+		add(EntityMobVampireBat.class, EntityMobVampireBat::new);
 		add(EntityMobVillagerDying.class, EntityMobVillagerDying::new);
 		
 		add(EntityProjectileSpatialDash.class, EntityProjectileSpatialDash::new);

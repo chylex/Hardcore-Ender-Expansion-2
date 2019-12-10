@@ -4,6 +4,7 @@ import chylex.hee.client.render.entity.RenderEntityItemNoBob;
 import chylex.hee.client.render.entity.RenderEntityMobAbstractEnderman;
 import chylex.hee.client.render.entity.RenderEntityMobSpiderling;
 import chylex.hee.client.render.entity.RenderEntityMobUndread;
+import chylex.hee.client.render.entity.RenderEntityMobVampireBat;
 import chylex.hee.client.render.entity.RenderEntityMobVillagerDying;
 import chylex.hee.client.render.entity.RenderEntityNothing;
 import chylex.hee.client.render.entity.RenderEntityProjectileEyeOfEnder;
@@ -26,6 +27,7 @@ public final class RendererConstructors{
 		all.put(RenderEntityMobAbstractEnderman.class, RenderEntityMobAbstractEnderman::new);
 		all.put(RenderEntityMobSpiderling.class, RenderEntityMobSpiderling::new);
 		all.put(RenderEntityMobUndread.class, RenderEntityMobUndread::new);
+		all.put(RenderEntityMobVampireBat.class, RenderEntityMobVampireBat::new);
 		all.put(RenderEntityMobVillagerDying.class, RenderEntityMobVillagerDying::new);
 		
 		all.put(RenderEntityProjectileEyeOfEnder.class, RenderEntityProjectileEyeOfEnder::new);

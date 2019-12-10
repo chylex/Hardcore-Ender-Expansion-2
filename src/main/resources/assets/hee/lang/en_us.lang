@@ -231,6 +231,7 @@ entity.hee.ender_eye.name=Ender Eye
 entity.hee.endermite_instability.name=Endermite (Instability)
 entity.hee.spiderling.name=Spiderling
 entity.hee.undread.name=Undread
+entity.hee.vampire_bat.name=Vampire Bat
 entity.hee.ender_pearl.name=Ender Pearl
 
 effect.hee.lifeless=Lifeless
