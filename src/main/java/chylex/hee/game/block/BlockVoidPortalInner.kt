@@ -5,6 +5,7 @@ import chylex.hee.game.block.entity.TileEntityPortalInner
 import chylex.hee.game.block.entity.TileEntityVoidPortalStorage
 import chylex.hee.game.block.info.BlockBuilder
 import chylex.hee.game.block.util.Property
+import chylex.hee.game.mechanics.portal.DimensionTeleporter
 import chylex.hee.game.mechanics.portal.EntityPortalContact
 import chylex.hee.game.mechanics.portal.SpawnInfo
 import chylex.hee.game.world.territory.TerritoryInstance
@@ -14,6 +15,7 @@ import chylex.hee.system.util.Pos
 import chylex.hee.system.util.center
 import chylex.hee.system.util.closestTickingTile
 import chylex.hee.system.util.facades.Facing4
+import chylex.hee.system.util.floodFill
 import chylex.hee.system.util.get
 import chylex.hee.system.util.getBlock
 import chylex.hee.system.util.getState
@@ -21,8 +23,10 @@ import chylex.hee.system.util.max
 import chylex.hee.system.util.min
 import chylex.hee.system.util.motionVec
 import chylex.hee.system.util.offsetUntil
+import chylex.hee.system.util.setAir
 import chylex.hee.system.util.subtractY
 import chylex.hee.system.util.with
+import net.minecraft.block.Block
 import net.minecraft.block.state.BlockStateContainer
 import net.minecraft.block.state.IBlockState
 import net.minecraft.entity.Entity
@@ -85,20 +89,37 @@ class BlockVoidPortalInner(builder: BlockBuilder) : BlockAbstractPortal(builder)
 		return TileEntityPortalInner.Void()
 	}
 	
+	// Breaking
+	
+	override fun neighborChanged(state: IBlockState, world: World, pos: BlockPos, neighborBlock: Block, neighborPos: BlockPos){
+		if (neighborBlock is BlockVoidPortalCrafted && neighborPos.getBlock(world) !is BlockVoidPortalCrafted){
+			for(portalPos in pos.floodFill(Facing4){ it.getBlock(world) === this }){
+				portalPos.setAir(world)
+			}
+		}
+	}
+	
 	// Interaction
+	
+	private fun findSpawnPortalCenter(entity: Entity, pos: BlockPos): BlockPos?{
+		val world = entity.world
+		val offsets = Facing4.map { facing -> pos.offsetUntil(facing, 1..MAX_SIZE){ it.getBlock(world) !== this } ?: return null }
+		
+		val minPos = offsets.reduce(BlockPos::min)
+		val maxPos = offsets.reduce(BlockPos::max)
+		
+		return Pos((minPos.x + maxPos.x) / 2, pos.y, (minPos.z + maxPos.z) / 2)
+	}
 	
 	private fun updateSpawnPortal(entity: Entity, pos: BlockPos){
 		if (entity !is EntityPlayer){
 			return
 		}
 		
-		val world = entity.world
-		val offsets = Facing4.map { facing -> pos.offsetUntil(facing, 1..MAX_SIZE){ it.getBlock(world) !== this } ?: return }
+		val centerPos = findSpawnPortalCenter(entity, pos) ?: return
+		val instance = TerritoryInstance.fromPos(entity) ?: return
 		
-		val minPos = offsets.reduce(BlockPos::min)
-		val maxPos = offsets.reduce(BlockPos::max)
-		
-		TerritoryInstance.fromPos(entity)?.updateSpawnPoint(entity, Pos((minPos.x + maxPos.x) / 2, pos.y, (minPos.z + maxPos.z) / 2))
+		instance.updateSpawnPoint(entity, centerPos)
 	}
 	
 	override fun onEntityInside(world: World, pos: BlockPos, entity: Entity){
@@ -111,14 +132,23 @@ class BlockVoidPortalInner(builder: BlockBuilder) : BlockAbstractPortal(builder)
 				val info = pos.closestTickingTile<TileEntityVoidPortalStorage>(world, MAX_DISTANCE_FROM_FRAME)?.prepareSpawnPoint(entity)
 				
 				if (info != null){
-					updateSpawnPortal(entity, pos)
-					teleportEntity(entity, info)
+					if (entity.dimension == 1){
+						DimensionTeleporter.LastHubPortal.updateForEntity(entity, null)
+						updateSpawnPortal(entity, pos)
+						teleportEntity(entity, info)
+					}
+					else{
+						DimensionTeleporter.LastHubPortal.updateForEntity(entity, pos)
+						entity.changeDimension(1, DimensionTeleporter.EndTerritoryPortal(info))
+					}
 				}
 			}
 			
 			RETURN_ACTIVE -> {
-				updateSpawnPortal(entity, pos)
-				teleportEntity(entity, TerritoryInstance.THE_HUB_INSTANCE.prepareSpawnPoint(world, entity as? EntityPlayer, clearanceRadius = 2))
+				if (!DimensionTeleporter.LastHubPortal.tryOverrideTeleport(entity)){
+					updateSpawnPortal(entity, pos)
+					teleportEntity(entity, TerritoryInstance.THE_HUB_INSTANCE.prepareSpawnPoint(entity as? EntityPlayer, clearanceRadius = 2))
+				}
 			}
 			
 			else -> {}

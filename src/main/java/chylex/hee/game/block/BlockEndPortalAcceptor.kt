@@ -17,7 +17,7 @@ class BlockEndPortalAcceptor(builder: BlockBuilder, aabb: AxisAlignedBB) : Block
 	}
 	
 	override fun onBlockAdded(world: World, pos: BlockPos, state: IBlockState){
-		BlockAbstractPortal.spawnInnerBlocks(world, pos, ModBlocks.END_PORTAL_FRAME, ModBlocks.END_PORTAL_INNER)
+		BlockAbstractPortal.spawnInnerBlocks(world, pos, ModBlocks.END_PORTAL_FRAME, ModBlocks.END_PORTAL_INNER, minSize = 1)
 	}
 	
 	override fun neighborChanged(state: IBlockState, world: World, pos: BlockPos, neighborBlock: Block, neighborPos: BlockPos){

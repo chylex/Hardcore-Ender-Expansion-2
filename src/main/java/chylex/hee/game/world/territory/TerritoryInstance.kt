@@ -5,6 +5,7 @@ import chylex.hee.game.world.territory.TerritoryType.Companion.CHUNK_MARGIN
 import chylex.hee.game.world.territory.TerritoryType.Companion.CHUNK_X_OFFSET
 import chylex.hee.game.world.territory.TerritoryType.THE_HUB
 import chylex.hee.game.world.territory.storage.TerritoryGlobalStorage
+import chylex.hee.proxy.Environment
 import chylex.hee.system.util.center
 import chylex.hee.system.util.component1
 import chylex.hee.system.util.component2
@@ -74,6 +75,9 @@ data class TerritoryInstance(val territory: TerritoryType, val index: Int){
 			
 			return TerritoryInstance(territory, indexStart + indexOffsetX + indexOffsetZ)
 		}
+		
+		val endWorld: World
+			get() = Environment.getServer().getWorld(1)
 	}
 	
 	private val ordinal
@@ -112,24 +116,26 @@ data class TerritoryInstance(val territory: TerritoryType, val index: Int){
 		return chunkX >= startX && chunkZ >= startZ && chunkX < startX + chunks && chunkZ < startZ + chunks
 	}
 	
-	fun createRandom(world: World) = Random(world.seed).apply {
+	fun createRandom(worldSeed: Long) = Random(worldSeed).apply {
 		setSeed(nextLong() xor (66L * index) + (ordinal * nextInt()))
 	}
 	
-	fun getSpawnPoint(world: World): BlockPos{
-		return TerritoryGlobalStorage.get().forInstance(this)?.loadSpawn(world) ?: bottomCenterPos.let(world::getTopSolidOrLiquidBlock).up()
+	fun getSpawnPoint(): BlockPos{
+		return TerritoryGlobalStorage.get().forInstance(this)?.loadSpawn() ?: bottomCenterPos.let(endWorld::getTopSolidOrLiquidBlock).up()
 	}
 	
-	fun getSpawnPoint(world: World, player: EntityPlayer): BlockPos{
-		return TerritoryGlobalStorage.get().forInstance(this)?.loadSpawnForPlayer(world, player) ?: bottomCenterPos.let(world::getTopSolidOrLiquidBlock).up()
+	fun getSpawnPoint(player: EntityPlayer): BlockPos{
+		return TerritoryGlobalStorage.get().forInstance(this)?.loadSpawnForPlayer(player) ?: bottomCenterPos.let(endWorld::getTopSolidOrLiquidBlock).up()
 	}
 	
 	fun updateSpawnPoint(player: EntityPlayer, pos: BlockPos){
 		TerritoryGlobalStorage.get().forInstance(this)?.updateSpawnForPlayer(player, pos)
 	}
 	
-	fun prepareSpawnPoint(world: World, entity: Entity?, clearanceRadius: Int): SpawnInfo{
-		val spawnPoint = entity?.let(::determineOwningPlayer)?.let { getSpawnPoint(world, it) } ?: getSpawnPoint(world)
+	fun prepareSpawnPoint(entity: Entity?, clearanceRadius: Int): SpawnInfo{
+		val world = endWorld
+		
+		val spawnPoint = entity?.let(::determineOwningPlayer)?.let { getSpawnPoint(it) } ?: getSpawnPoint()
 		val spawnChunk = ChunkPos(spawnPoint)
 		
 		for(chunkX in -7..7) for(chunkZ in -7..7){

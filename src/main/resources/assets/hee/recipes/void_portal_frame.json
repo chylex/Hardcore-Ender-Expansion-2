@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "XAX",
+    "###"
+  ],
+  "key": {
+    "#": { "item": "minecraft:end_stone" },
+    "X": { "item": "hee:endium_ingot" },
+    "A": { "item": "hee:auricion" }
+  },
+  "result": {
+    "item": "hee:void_portal_frame_crafted",
+    "count": 3
+  }
+}

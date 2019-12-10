@@ -12,7 +12,6 @@ import chylex.hee.system.util.setPos
 import chylex.hee.system.util.toYaw
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.util.math.BlockPos
-import net.minecraft.world.World
 import net.minecraft.world.gen.ChunkProviderServer
 import net.minecraftforge.common.util.INBTSerializable
 import java.util.UUID
@@ -32,9 +31,9 @@ class TerritoryEntry(private val owner: TerritoryGlobalStorage, private val inst
 	
 	private val lastPortals = mutableMapOf<UUID, BlockPos>()
 	
-	fun loadSpawn(world: World): BlockPos{
+	fun loadSpawn(): BlockPos{
 		if (spawnPoint == null){
-			val info = ((world.chunkProvider as ChunkProviderServer).chunkGenerator as ChunkGeneratorEndCustom).getGenerationInfo(instance)
+			val info = ((TerritoryInstance.endWorld.chunkProvider as ChunkProviderServer).chunkGenerator as ChunkGeneratorEndCustom).getGenerationInfo(instance)
 			
 			val startChunk = instance.topLeftChunk
 			val bottomY = instance.territory.height.first
@@ -46,8 +45,8 @@ class TerritoryEntry(private val owner: TerritoryGlobalStorage, private val inst
 		return spawnPoint!!
 	}
 	
-	fun loadSpawnForPlayer(world: World, player: EntityPlayer): BlockPos{
-		return lastPortals[player.uniqueID] ?: loadSpawn(world)
+	fun loadSpawnForPlayer(player: EntityPlayer): BlockPos{
+		return lastPortals[player.uniqueID] ?: loadSpawn()
 	}
 	
 	fun updateSpawnForPlayer(player: EntityPlayer, pos: BlockPos){

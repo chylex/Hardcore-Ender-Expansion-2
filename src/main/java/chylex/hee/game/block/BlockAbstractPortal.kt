@@ -57,10 +57,13 @@ abstract class BlockAbstractPortal(builder: BlockBuilder) : BlockSimple(builder)
 			return null
 		}
 		
-		fun spawnInnerBlocks(world: World, controllerPos: BlockPos, frameBlock: Block, innerBlock: Block){
+		fun spawnInnerBlocks(world: World, controllerPos: BlockPos, frameBlock: Block, innerBlock: Block, minSize: Int){
 			val (minPos, maxPos) = findInnerArea(world, controllerPos, frameBlock) ?: return
 			
-			if (minPos.allInBoxMutable(maxPos).all { it.isAir(world) }){
+			if (maxPos.x - minPos.x + 1 >= minSize &&
+				maxPos.z - minPos.z + 1 >= minSize &&
+				minPos.allInBoxMutable(maxPos).all { it.isAir(world) }
+			){
 				minPos.allInBoxMutable(maxPos).forEach { it.setBlock(world, innerBlock) }
 			}
 		}

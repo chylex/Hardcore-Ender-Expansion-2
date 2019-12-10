@@ -9,7 +9,7 @@ class TerritoryGenerationCache(private val world: World){
 	private fun constructInstance(instance: TerritoryInstance): Pair<SegmentedWorld, TerritoryGenerationInfo>{
 		val territory = instance.territory
 		val generator = territory.gen
-		val rand = instance.createRandom(world)
+		val rand = instance.createRandom(world.seed)
 		
 		val worldSize = territory.size
 		val segmentSize = generator.segmentSize

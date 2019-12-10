@@ -3,6 +3,7 @@ import chylex.hee.game.block.BlockAbstractPortal
 import chylex.hee.game.world.WorldProviderEndCustom
 import chylex.hee.system.util.center
 import chylex.hee.system.util.getPosOrNull
+import chylex.hee.system.util.hasKey
 import chylex.hee.system.util.heeTagPersistent
 import chylex.hee.system.util.heeTagPersistentOrNull
 import chylex.hee.system.util.motionVec
@@ -25,17 +26,41 @@ sealed class DimensionTeleporter{
 			entity.setLocationAndAngles(target.x, target.y, target.z, yaw, 0F)
 			entity.motionVec = Vec3d.ZERO
 		}
-	}
-	
-	object EndSpawnPortal : ITeleporter{
-		override fun placeEntity(world: World, entity: Entity, yaw: Float){
-			val (spawnPoint, spawnYaw) = (world.provider as? WorldProviderEndCustom)?.getSpawnInfo() ?: return
-			placeAt(entity, spawnPoint.center.subtractY(0.45), spawnYaw ?: yaw)
+		
+		private fun placeAt(entity: Entity, yaw: Float, spawnInfo: SpawnInfo){
+			placeAt(entity, spawnInfo.pos.center.subtractY(0.45), spawnInfo.yaw ?: yaw)
+		}
+		
+		private fun placeIntoPortal(entity: Entity, world: World, target: BlockPos?, yaw: Float){
+			if (target != null){
+				BlockAbstractPortal.ensureClearance(world, target, radius = 1)
+				placeAt(entity, target.center.subtractY(0.45), yaw)
+			}
+			else{
+				placeAt(entity, spawnPoint(world), yaw)
+			}
 		}
 	}
 	
-	object LastPortal : ITeleporter{
-		private const val LAST_PORTAL_POS_TAG = "LastPortal"
+	// To End
+	
+	object EndSpawnPortal : ITeleporter{
+		override fun placeEntity(world: World, entity: Entity, yaw: Float){
+			val spawnInfo = (world.provider as? WorldProviderEndCustom)?.getSpawnInfo() ?: return
+			placeAt(entity, yaw, spawnInfo)
+		}
+	}
+	
+	class EndTerritoryPortal(private val spawnInfo: SpawnInfo) : ITeleporter{
+		override fun placeEntity(world: World, entity: Entity, yaw: Float){
+			placeAt(entity, yaw, spawnInfo)
+		}
+	}
+	
+	// From End
+	
+	object LastEndPortal : ITeleporter{
+		private const val LAST_PORTAL_POS_TAG = "LastEndPortal"
 		
 		fun updateForEntity(entity: Entity, pos: BlockPos){
 			if (entity.dimension == 0){
@@ -44,15 +69,40 @@ sealed class DimensionTeleporter{
 		}
 		
 		override fun placeEntity(world: World, entity: Entity, yaw: Float){
-			val target = entity.takeIf { it.dimension == 0 }?.heeTagPersistentOrNull?.getPosOrNull(LAST_PORTAL_POS_TAG)
+			placeIntoPortal(entity, world, entity.takeIf { it.dimension == 0 }?.heeTagPersistentOrNull?.getPosOrNull(LAST_PORTAL_POS_TAG), yaw)
+		}
+	}
+	
+	object LastHubPortal : ITeleporter{
+		private const val LAST_PORTAL_POS_TAG = "LastVoidPortal"
+		private const val LAST_PORTAL_DIM_TAG = "LastVoidPortalDim"
+		
+		fun tryOverrideTeleport(entity: Entity): Boolean{
+			val tag = entity.heeTagPersistentOrNull
 			
-			if (target != null){
-				BlockAbstractPortal.ensureClearance(world, target, radius = 1)
-				placeAt(entity, target.center.subtractY(0.45), yaw)
+			if (tag.hasKey(LAST_PORTAL_POS_TAG) && tag.hasKey(LAST_PORTAL_DIM_TAG)){
+				entity.changeDimension(tag.getInteger(LAST_PORTAL_DIM_TAG), this)
+				return true
 			}
-			else{
-				placeAt(entity, spawnPoint(world), yaw)
+			
+			return false
+		}
+		
+		fun updateForEntity(entity: Entity, pos: BlockPos?){
+			with(entity.heeTagPersistent){
+				if (entity.dimension == 1 || pos == null){
+					removeTag(LAST_PORTAL_POS_TAG)
+					removeTag(LAST_PORTAL_DIM_TAG)
+				}
+				else{
+					setPos(LAST_PORTAL_POS_TAG, pos)
+					setInteger(LAST_PORTAL_DIM_TAG, entity.dimension)
+				}
 			}
+		}
+		
+		override fun placeEntity(world: World, entity: Entity, yaw: Float){
+			placeIntoPortal(entity, world, entity.heeTagPersistentOrNull?.getPosOrNull(LAST_PORTAL_POS_TAG), yaw)
 		}
 	}
 	

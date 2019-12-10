@@ -13,6 +13,7 @@ import chylex.hee.system.util.FLAG_SKIP_RENDER
 import chylex.hee.system.util.FLAG_SYNC_CLIENT
 import chylex.hee.system.util.TagCompound
 import chylex.hee.system.util.getIntegerOrNull
+import chylex.hee.system.util.isAnyPlayerWithinRange
 import chylex.hee.system.util.square
 import net.minecraft.entity.Entity
 import net.minecraft.item.ItemStack
@@ -68,7 +69,7 @@ class TileEntityVoidPortalStorage : TileEntityBasePortalController(), IVoidPorta
 	}
 	
 	fun prepareSpawnPoint(entity: Entity): SpawnInfo?{
-		return firstSpawnInfo ?: currentInstance?.prepareSpawnPoint(world, entity, clearanceRadius = 1).also { firstSpawnInfo = it }
+		return firstSpawnInfo ?: currentInstance?.prepareSpawnPoint(entity, clearanceRadius = 1).also { firstSpawnInfo = it }
 	}
 	
 	// Overrides
@@ -77,9 +78,10 @@ class TileEntityVoidPortalStorage : TileEntityBasePortalController(), IVoidPorta
 		super.update()
 		
 		if (!world.isRemote){
-			if (remainingTime > 0 && --remainingTime == 0){
+			if ((remainingTime > 0 && --remainingTime == 0) || !pos.isAnyPlayerWithinRange(world, 160)){
 				currentInstance = null
 				firstSpawnInfo = null
+				remainingTime = 0
 			}
 		}
 		else{

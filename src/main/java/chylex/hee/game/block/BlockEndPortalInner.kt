@@ -23,14 +23,14 @@ class BlockEndPortalInner(builder: BlockBuilder) : BlockAbstractPortal(builder){
 		}
 		
 		if (world.provider.dimension == 1){
-			entity.changeDimension(0, DimensionTeleporter.LastPortal)
+			entity.changeDimension(0, DimensionTeleporter.LastEndPortal)
 		}
 		else{
 			val acceptor = pos.closestTickingTile<TileEntityEndPortalAcceptor>(world, MAX_DISTANCE_FROM_FRAME)
 			
 			if (acceptor != null && acceptor.isCharged){
 				findInnerArea(world, acceptor.pos, ModBlocks.END_PORTAL_FRAME)?.let {
-					(min, max) -> DimensionTeleporter.LastPortal.updateForEntity(entity, Pos((min.x + max.x) / 2, pos.y, (min.z + max.z) / 2))
+					(min, max) -> DimensionTeleporter.LastEndPortal.updateForEntity(entity, Pos((min.x + max.x) / 2, pos.y, (min.z + max.z) / 2))
 				}
 				
 				entity.changeDimension(1, DimensionTeleporter.EndSpawnPortal)

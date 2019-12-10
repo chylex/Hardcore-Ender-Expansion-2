@@ -120,7 +120,7 @@ class ItemPortalToken : Item(){
 			return ActionResult(FAIL, heldItem)
 		}
 		
-		BlockVoidPortalInner.teleportEntity(player, instance.prepareSpawnPoint(world, player, clearanceRadius = 1))
+		BlockVoidPortalInner.teleportEntity(player, instance.prepareSpawnPoint(player, clearanceRadius = 1))
 		return ActionResult(SUCCESS, heldItem)
 	}
 	

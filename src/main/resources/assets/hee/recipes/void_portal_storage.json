@@ -1,0 +1,14 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "X",
+    "#"
+  ],
+  "key": {
+    "#": { "item": "hee:void_portal_frame_crafted" },
+    "X": { "item": "hee:linking_gem", "type": "hee:ingredient_full_energy" }
+  },
+  "result": {
+    "item": "hee:void_portal_storage_crafted"
+  }
+}

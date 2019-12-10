@@ -52,8 +52,10 @@ import chylex.hee.game.block.BlockStardustOre
 import chylex.hee.game.block.BlockTableBase
 import chylex.hee.game.block.BlockTablePedestal
 import chylex.hee.game.block.BlockTableTile
+import chylex.hee.game.block.BlockVoidPortalCrafted
 import chylex.hee.game.block.BlockVoidPortalInner
 import chylex.hee.game.block.BlockVoidPortalStorage
+import chylex.hee.game.block.BlockVoidPortalStorageCrafted
 import chylex.hee.game.block.BlockWallCustom
 import chylex.hee.game.block.BlockWhitebarkLog
 import chylex.hee.game.block.entity.TileEntityAccumulationTable
@@ -104,6 +106,7 @@ import chylex.hee.game.block.info.BlockBuilders.buildObsidian
 import chylex.hee.game.block.info.BlockBuilders.buildObsidianVariation
 import chylex.hee.game.block.info.BlockBuilders.buildObsidianVariationLit
 import chylex.hee.game.block.info.BlockBuilders.buildPortalFrame
+import chylex.hee.game.block.info.BlockBuilders.buildPortalFrameCrafted
 import chylex.hee.game.block.info.BlockBuilders.buildPortalInner
 import chylex.hee.game.block.info.BlockBuilders.buildPuzzleLogic
 import chylex.hee.game.block.info.BlockBuilders.buildPuzzleWall
@@ -306,6 +309,9 @@ object ModBlocks{
 	@JvmField val VOID_PORTAL_FRAME   = BlockSimpleShaped(buildPortalFrame, portalFrameAABB).apply { setup("void_portal_frame") }
 	@JvmField val VOID_PORTAL_STORAGE = BlockVoidPortalStorage(buildPortalFrame, portalFrameAABB).apply { setup("void_portal_storage") }
 	
+	@JvmField val VOID_PORTAL_FRAME_CRAFTED   = BlockVoidPortalCrafted(buildPortalFrameCrafted, portalFrameAABB).apply { setup("void_portal_frame_crafted", translationKey = "hee.void_portal_frame", inCreativeTab = false) }
+	@JvmField val VOID_PORTAL_STORAGE_CRAFTED = BlockVoidPortalStorageCrafted(buildPortalFrameCrafted, portalFrameAABB).apply { setup("void_portal_storage_crafted", translationKey = "hee.void_portal_storage", inCreativeTab = false) }
+	
 	// Blocks: Energy
 	
 	@JvmField val ENERGY_CLUSTER   = BlockEnergyCluster(buildEnergyCluster).apply { setup("energy_cluster") }
@@ -457,6 +463,8 @@ object ModBlocks{
 			register(VOID_PORTAL_INNER with metaItemBlock)
 			register(VOID_PORTAL_FRAME with basicItemBlock)
 			register(VOID_PORTAL_STORAGE with basicItemBlock)
+			register(VOID_PORTAL_FRAME_CRAFTED with basicItemBlock)
+			register(VOID_PORTAL_STORAGE_CRAFTED with basicItemBlock)
 			
 			register(ENERGY_CLUSTER with basicItemBlock)
 			register(CORRUPTED_ENERGY)

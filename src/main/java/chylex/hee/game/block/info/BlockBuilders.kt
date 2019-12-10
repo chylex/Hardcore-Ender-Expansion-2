@@ -234,6 +234,11 @@ object BlockBuilders{
 		makeIndestructible()
 	}
 	
+	val buildPortalFrameCrafted = BlockBuilder(Materials.SOLID_WITH_TOOL, MapColor.SAND, SoundType.STONE).apply {
+		harvestTool = Pair(DIAMOND, PICKAXE)
+		harvestHardness = 1.7F
+	}
+	
 	// Energy
 	
 	val buildEnergyCluster = BlockBuilder(Materials.ENERGY_CLUSTER, MapColor.SNOW, SoundType.GLASS.clone(volume = 1.25F, pitch = 1.35F)).apply {
