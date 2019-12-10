@@ -115,6 +115,7 @@ object ModItems{
 	
 	@JvmField val INFUSED_ENDER_PEARL = ItemInfusedEnderPearl().apply { setup("infused_ender_pearl", translationKey = "enderPearl", inCreativeTab = false) }
 	@JvmField val SPATIAL_DASH_GEM    = ItemSpatialDashGem().apply { setup("spatial_dash_gem") }
+	@JvmField val LINKING_GEM         = ItemSpatialDashGem().apply { setup("linking_gem") } // TODO
 	@JvmField val PORTAL_TOKEN        = ItemPortalToken().apply { setup("portal_token") }
 	@JvmField val BLANK_TOKEN         = Item().apply { setup("blank_token"); setMaxStackSize(ItemPortalToken.MAX_STACK_SIZE) }
 	
@@ -180,6 +181,7 @@ object ModItems{
 			
 			register(INFUSED_ENDER_PEARL)
 			register(SPATIAL_DASH_GEM)
+			register(LINKING_GEM)
 			register(PORTAL_TOKEN)
 			register(BLANK_TOKEN)
 			
