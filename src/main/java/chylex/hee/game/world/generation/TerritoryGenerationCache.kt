@@ -1,4 +1,5 @@
 package chylex.hee.game.world.generation
+import chylex.hee.HEE
 import chylex.hee.game.world.generation.segments.SegmentSingleState
 import chylex.hee.game.world.territory.TerritoryInstance
 import net.minecraft.world.World
@@ -17,8 +18,13 @@ class TerritoryGenerationCache(private val world: World){
 		
 		require(worldSize.x % 16 == 0 && worldSize.z % 16 == 0){ "territory world size must be chunk-aligned" }
 		
+		val timeStart = System.currentTimeMillis()
+		
 		val world = SegmentedWorld(rand, worldSize, segmentSize){ SegmentSingleState(segmentSize, defaultBlock) }
 		val info = generator.provide(world)
+		
+		val timeEnd = System.currentTimeMillis()
+		HEE.log.info("[TerritoryGenerationCache] generated ${territory.name} in ${timeEnd - timeStart} ms")
 		
 		return world to info
 	}
