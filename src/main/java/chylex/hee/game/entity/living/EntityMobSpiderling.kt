@@ -363,7 +363,7 @@ class EntityMobSpiderling(world: World) : EntityMob(world), ILightStartleHandler
 		if (world.difficulty != PEACEFUL && newTarget !== attackTarget){
 			super.setAttackTarget(newTarget)
 			
-			if (newTarget == null && lightStartleResetTime == 0L){
+			if (attackTarget == null && lightStartleResetTime == 0L){
 				lightStartleResetTime = world.totalTime + (30L * 20L)
 			}
 		}

@@ -46,7 +46,7 @@ abstract class EntityMobAbstractEnderman(world: World) : EntityEnderman(world){
 		isAggressive = prevAggressive
 		
 		if (newTarget != null){
-			getAttribute(MOVEMENT_SPEED).tryRemoveModifier(ATTACKING_SPEED_BOOST)
+			getAttribute(MOVEMENT_SPEED).tryRemoveModifier(ATTACKING_SPEED_BOOST) // vanilla adds speed boost attribute in this case
 		}
 	}
 	
