@@ -143,6 +143,14 @@ object BlockBuilders{
 		explosionResistance = 5.0F
 	}
 	
+	// Building (Miner's Burial)
+	
+	val buildMinersBurial = BlockBuilder(Materials.SOLID_WITH_TOOL, MapColor.RED, SoundType.STONE).apply {
+		harvestTool = Pair(WOOD, PICKAXE)
+		harvestHardness = 0.6F
+		explosionResistance = 200F
+	}
+	
 	// Interactive (Storage)
 	
 	val buildJarODust = BlockBuilder(Materials.SOLID_NO_TOOL, MapColor.ORANGE_STAINED_HARDENED_CLAY, SoundType.METAL).apply {

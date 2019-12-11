@@ -233,6 +233,13 @@ object ModBlocks{
 	@JvmField val WHITEBARK_SLAB        = BlockSlabCustom.Half(buildWhitebarkPlanks).apply { setup("whitebark_slab") }
 	@JvmField val WHITEBARK_DOUBLE_SLAB = BlockSlabCustom.Full(buildWhitebarkPlanks, WHITEBARK_SLAB).apply { setup("whitebark_slab_double", "hee.whitebark_slab") }
 	
+	// Blocks: Building (Miner's Burial)
+	
+	@JvmField val MINERS_BURIAL_BLOCK_PLAIN    = BlockSimple(buildMinersBurial).apply { setup("miners_burial_block_plain") }
+	@JvmField val MINERS_BURIAL_BLOCK_CHISELED = BlockSimple(buildMinersBurial).apply { setup("miners_burial_block_chiseled") }
+	@JvmField val MINERS_BURIAL_BLOCK_PILLAR   = BlockPillarCustom(buildMinersBurial).apply { setup("miners_burial_block_pillar") }
+	@JvmField val MINERS_BURIAL_BLOCK_JAIL     = BlockSimple(buildMinersBurial).apply { setup("miners_burial_block_jail") }
+	
 	// Blocks: Fluids
 	
 	@JvmField val ENDER_GOO          = BlockEnderGoo().apply { setup("ender_goo") }
@@ -413,6 +420,11 @@ object ModBlocks{
 			register(WHITEBARK_STAIRS with basicItemBlock)
 			register(WHITEBARK_SLAB with woodenSlabItemBlock(WHITEBARK_SLAB, WHITEBARK_DOUBLE_SLAB))
 			register(WHITEBARK_DOUBLE_SLAB)
+			
+			register(MINERS_BURIAL_BLOCK_PLAIN with basicItemBlock)
+			register(MINERS_BURIAL_BLOCK_CHISELED with basicItemBlock)
+			register(MINERS_BURIAL_BLOCK_PILLAR with basicItemBlock)
+			register(MINERS_BURIAL_BLOCK_JAIL with basicItemBlock)
 			
 			register(ENDER_GOO)
 			register(PURIFIED_ENDER_GOO)

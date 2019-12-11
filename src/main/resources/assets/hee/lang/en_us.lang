@@ -58,6 +58,11 @@ tile.hee.whitebark_planks.name=Whitebark Planks
 tile.hee.whitebark_stairs.name=Whitebark Stairs
 tile.hee.whitebark_slab.name=Whitebark Slab
 
+tile.hee.miners_burial_block_plain.name=Miner's Burial Block
+tile.hee.miners_burial_block_chiseled.name=Miner's Burial Block (Chiseled)
+tile.hee.miners_burial_block_pillar.name=Miner's Burial Block (Pillar)
+tile.hee.miners_burial_block_jail.name=Miner's Burial Block (Jail)
+
 tile.hee.jar_o_dust.name=Jar o' Dust
 tile.hee.jar_o_dust.tooltip.entry=%sx %s
 tile.hee.dark_chest.name=Dark Chest
