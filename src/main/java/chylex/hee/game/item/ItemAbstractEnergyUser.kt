@@ -8,6 +8,10 @@ import chylex.hee.game.particle.ParticleEnergyTransferToPlayer
 import chylex.hee.game.particle.spawner.ParticleSpawnerCustom
 import chylex.hee.game.particle.util.IOffset.InBox
 import chylex.hee.game.particle.util.IShape.Point
+import chylex.hee.game.particle.util.ParticleSetting
+import chylex.hee.game.particle.util.ParticleSetting.ALL
+import chylex.hee.game.particle.util.ParticleSetting.DECREASED
+import chylex.hee.game.particle.util.ParticleSetting.MINIMAL
 import chylex.hee.network.client.PacketClientFX
 import chylex.hee.system.migration.ActionResult.FAIL
 import chylex.hee.system.migration.ActionResult.SUCCESS
@@ -67,6 +71,16 @@ abstract class ItemAbstractEnergyUser : Item(){
 		}
 		
 		val FX_CHARGE = object : IFxHandler<FxChargeData>{
+			private var particleSkipCounter = 0
+			
+			private fun particleSkipTest(distanceSq: Double, particleSetting: ParticleSetting, rand: Random): Boolean{
+				return when(particleSetting){
+					ALL       -> false
+					DECREASED -> ++particleSkipCounter % 2 != 0
+					MINIMAL   -> ++particleSkipCounter % 3 != 0
+				}
+			}
+			
 			override fun handle(buffer: ByteBuf, world: World, rand: Random) = buffer.use {
 				val cluster = readPos().getTile<TileEntityEnergyCluster>(world) ?: return
 				val player = world.getEntityByID(readInt()) as? EntityPlayer ?: return
@@ -74,7 +88,8 @@ abstract class ItemAbstractEnergyUser : Item(){
 				ParticleSpawnerCustom(
 					type = ParticleEnergyTransferToPlayer,
 					data = ParticleEnergyTransferToPlayer.Data(cluster, player, 0.2),
-					pos = InBox(0.01F + (0.08F * (cluster.energyLevel.floating.value / 40F).coerceAtMost(1F)))
+					pos = InBox(0.01F + (0.08F * (cluster.energyLevel.floating.value / 40F).coerceAtMost(1F))),
+					skipTest = ::particleSkipTest
 				).spawn(Point(cluster.pos, 1), rand)
 				
 				// TODO sound
@@ -163,7 +178,7 @@ abstract class ItemAbstractEnergyUser : Item(){
 		}
 		
 		with(stack.heeTagOrNull ?: return){
-			if (hasKey(CLUSTER_POS_TAG) && (world.totalTime + getByte(CLUSTER_TICK_OFFSET_TAG)) % 4L == 0L){
+			if (hasKey(CLUSTER_POS_TAG) && (world.totalTime + getByte(CLUSTER_TICK_OFFSET_TAG)) % 3L == 0L){
 				val pos = getPos(CLUSTER_POS_TAG)
 				val tile = pos.getTile<TileEntityEnergyCluster>(world)
 				
