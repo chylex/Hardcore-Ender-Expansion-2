@@ -2,7 +2,10 @@ package chylex.hee.system
 import chylex.hee.HEE
 import chylex.hee.proxy.Environment
 import chylex.hee.system.migration.forge.Side
+import chylex.hee.system.migration.forge.SubscribeEvent
 import net.minecraft.client.renderer.BannerTextures
+import net.minecraftforge.client.event.GuiOpenEvent
+import net.minecraftforge.common.MinecraftForge
 import org.lwjgl.LWJGLUtil
 import org.lwjgl.LWJGLUtil.PLATFORM_WINDOWS
 import org.lwjgl.opengl.Display
@@ -41,8 +44,15 @@ object Debug{
 			}
 			
 			if (canExecutePowershell("maximize.ps1")){
-				val pid = ManagementFactory.getRuntimeMXBean().name.split("@")[0]
-				ProcessBuilder("powershell.exe", "-ExecutionPolicy", "Unrestricted", "-File", "maximize.ps1", pid).start()
+				MinecraftForge.EVENT_BUS.register(object : Any(){
+					@SubscribeEvent
+					fun test(e: GuiOpenEvent){
+						val pid = ManagementFactory.getRuntimeMXBean().name.split("@")[0]
+						ProcessBuilder("powershell.exe", "-ExecutionPolicy", "Unrestricted", "-File", "maximize.ps1", pid).start()
+						
+						MinecraftForge.EVENT_BUS.unregister(this)
+					}
+				})
 			}
 		}
 	}
