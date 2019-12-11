@@ -1,4 +1,5 @@
 package chylex.hee.game.entity.projectile
+import chylex.hee.HEE
 import chylex.hee.client.sound.MovingSoundSpatialDash
 import chylex.hee.client.util.MC
 import chylex.hee.game.entity.util.SerializedEntity
@@ -24,6 +25,7 @@ import chylex.hee.system.util.color.IntColor.Companion.RGB
 import chylex.hee.system.util.component1
 import chylex.hee.system.util.component2
 import chylex.hee.system.util.component3
+import chylex.hee.system.util.directionTowards
 import chylex.hee.system.util.distanceSqTo
 import chylex.hee.system.util.heeTag
 import chylex.hee.system.util.motionVec
@@ -80,18 +82,37 @@ class EntityProjectileSpatialDash : Entity, IProjectile{
 			maxRange = 128.0
 		)
 		
-		class FxExpireData(private val point: Vec3d) : IFxData{
+		class FxExpireData(private val point: Vec3d, private val ownerEntity: Entity?) : IFxData{
 			override fun write(buffer: ByteBuf) = buffer.use {
 				writeCompactVec(point)
+				writeInt(ownerEntity?.entityId ?: -1)
 			}
 		}
 		
 		val FX_EXPIRE = object : IFxHandler<FxExpireData>{
 			override fun handle(buffer: ByteBuf, world: World, rand: Random) = buffer.use {
+				val player = HEE.proxy.getClientSidePlayer() ?: return
+				val playerPos = player.posVec
+				
 				val point = readCompactVec()
+				val forceAudible = readInt() == player.entityId
+				
+				val soundPoint = if (forceAudible){
+					val distance = playerPos.distanceTo(point)
+					
+					if (distance < 10.0){
+						point
+					}
+					else{
+						playerPos.add(playerPos.directionTowards(point).scale(10.0 + (distance - 10.0) * 0.04)) // makes the sound audible even at max distance of ~100 blocks
+					}
+				}
+				else{
+					point
+				}
 				
 				PARTICLE_EXPIRE.spawn(Point(point, 10), rand)
-				ModSounds.ENTITY_SPATIAL_DASH_EXPIRE.playClient(point, SoundCategory.PLAYERS)
+				ModSounds.ENTITY_SPATIAL_DASH_EXPIRE.playClient(soundPoint, SoundCategory.PLAYERS)
 			}
 		}
 		
@@ -172,6 +193,16 @@ class EntityProjectileSpatialDash : Entity, IProjectile{
 	private var lifespan: Short
 	private var range: Float
 	
+	private val cappedMotionVec: Vec3d
+		get(){
+			val currentMot = motionVec
+			
+			return if (currentMot.length() <= range)
+				currentMot
+			else
+				currentMot.normalize().scale(range)
+		}
+	
 	init{
 		noClip = true
 		setSize(0.2F, 0.2F)
@@ -227,14 +258,8 @@ class EntityProjectileSpatialDash : Entity, IProjectile{
 	
 	private fun determineHitObject(): RayTraceResult?{
 		val currentPos = posVec
-		val currentMot = motionVec
+		val nextPos = currentPos.add(cappedMotionVec)
 		
-		val nextMot = if (currentMot.length() <= range)
-			currentMot
-		else
-			currentMot.normalize().scale(range)
-		
-		val nextPos = currentPos.add(nextMot)
 		val blockResult = world.rayTraceBlocks(currentPos, nextPos)
 		
 		val ownerEntity = owner.get(world)
@@ -253,11 +278,12 @@ class EntityProjectileSpatialDash : Entity, IProjectile{
 	
 	private fun setExpired(){
 		val ownerEntity = owner.get(world)
+		val expirePos = posVec.add(cappedMotionVec)
 		
-		PacketClientFX(FX_EXPIRE, FxExpireData(posVec)).let {
+		PacketClientFX(FX_EXPIRE, FxExpireData(expirePos, ownerEntity)).let {
 			it.sendToAllAround(this, 32.0)
 			
-			if (ownerEntity is EntityPlayer && ownerEntity.getDistanceSq(this) > square(32)){
+			if (ownerEntity is EntityPlayer && expirePos.squareDistanceTo(ownerEntity.posVec) > square(32)){
 				it.sendToPlayer(ownerEntity)
 			}
 		}
