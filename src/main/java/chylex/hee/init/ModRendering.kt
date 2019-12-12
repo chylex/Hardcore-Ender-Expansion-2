@@ -8,6 +8,7 @@ import chylex.hee.client.render.block.RenderTileExperienceGate
 import chylex.hee.client.render.block.RenderTileIgneousPlate
 import chylex.hee.client.render.block.RenderTileJarODust
 import chylex.hee.client.render.block.RenderTileLootChest
+import chylex.hee.client.render.block.RenderTileMinersBurialAltar
 import chylex.hee.client.render.block.RenderTileSpawner
 import chylex.hee.client.render.block.RenderTileTablePedestal
 import chylex.hee.client.render.block.RenderTileVoidPortal
@@ -34,6 +35,7 @@ import chylex.hee.game.block.entity.TileEntityExperienceGate
 import chylex.hee.game.block.entity.TileEntityIgneousPlate
 import chylex.hee.game.block.entity.TileEntityJarODust
 import chylex.hee.game.block.entity.TileEntityLootChest
+import chylex.hee.game.block.entity.TileEntityMinersBurialAltar
 import chylex.hee.game.block.entity.TileEntityPortalInner
 import chylex.hee.game.block.entity.TileEntityTablePedestal
 import chylex.hee.game.block.entity.base.TileEntityBaseSpawner
@@ -114,6 +116,7 @@ object ModRendering{
 		registerTile<TileEntityIgneousPlate>(RenderTileIgneousPlate)
 		registerTile<TileEntityJarODust>(RenderTileJarODust)
 		registerTile<TileEntityLootChest>(RenderTileLootChest)
+		registerTile<TileEntityMinersBurialAltar>(RenderTileMinersBurialAltar)
 		registerTile<TileEntityPortalInner.End>(RenderTileEndPortal)
 		registerTile<TileEntityPortalInner.Void>(RenderTileVoidPortal)
 		registerTile<TileEntityTablePedestal>(RenderTileTablePedestal)

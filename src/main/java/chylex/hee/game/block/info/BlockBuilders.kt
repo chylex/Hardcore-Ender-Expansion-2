@@ -151,6 +151,10 @@ object BlockBuilders{
 		explosionResistance = 200F
 	}
 	
+	val buildMinersBurialAltar = buildMinersBurial.clone {
+		makeIndestructible()
+	}
+	
 	// Interactive (Storage)
 	
 	val buildJarODust = BlockBuilder(Materials.SOLID_NO_TOOL, MapColor.ORANGE_STAINED_HARDENED_CLAY, SoundType.METAL).apply {

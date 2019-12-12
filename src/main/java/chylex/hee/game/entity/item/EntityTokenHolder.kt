@@ -136,6 +136,10 @@ class EntityTokenHolder(world: World) : Entity(world), IEntityAdditionalSpawnDat
 		PacketClientFX(FX_BREAK, FxEntityData(this)).sendToAllAround(this, 24.0)
 	}
 	
+	fun forceDropTokenTowards(player: EntityPlayer){
+		forceDropToken(posVec.directionTowards(player.lookPosVec).scale(0.5).addY(0.1))
+	}
+	
 	override fun attackEntityFrom(source: DamageSource, amount: Float): Boolean{
 		if (world.isRemote){
 			return false
@@ -147,7 +151,7 @@ class EntityTokenHolder(world: World) : Entity(world), IEntityAdditionalSpawnDat
 			setDead()
 		}
 		else if (currentCharge >= 1F){
-			forceDropToken(posVec.directionTowards(player.lookPosVec).scale(0.5).addY(0.1))
+			forceDropTokenTowards(player)
 			TerritoryInstance.fromPos(this)?.let { it.territory.desc.tokenHolders.afterUse(this, it) }
 		}
 		

@@ -40,6 +40,7 @@ import chylex.hee.game.block.BlockInfusedGlass
 import chylex.hee.game.block.BlockInfusedTNT
 import chylex.hee.game.block.BlockJarODust
 import chylex.hee.game.block.BlockLootChest
+import chylex.hee.game.block.BlockMinersBurialAltar
 import chylex.hee.game.block.BlockPillarCustom
 import chylex.hee.game.block.BlockPuzzleLogic
 import chylex.hee.game.block.BlockScaffolding
@@ -68,6 +69,7 @@ import chylex.hee.game.block.entity.TileEntityIgneousPlate
 import chylex.hee.game.block.entity.TileEntityInfusedTNT
 import chylex.hee.game.block.entity.TileEntityJarODust
 import chylex.hee.game.block.entity.TileEntityLootChest
+import chylex.hee.game.block.entity.TileEntityMinersBurialAltar
 import chylex.hee.game.block.entity.TileEntityPortalInner
 import chylex.hee.game.block.entity.TileEntitySpawnerObsidianTower
 import chylex.hee.game.block.entity.TileEntityTablePedestal
@@ -102,6 +104,8 @@ import chylex.hee.game.block.info.BlockBuilders.buildIgneousRockOre
 import chylex.hee.game.block.info.BlockBuilders.buildInfusedGlass
 import chylex.hee.game.block.info.BlockBuilders.buildJarODust
 import chylex.hee.game.block.info.BlockBuilders.buildLootChest
+import chylex.hee.game.block.info.BlockBuilders.buildMinersBurial
+import chylex.hee.game.block.info.BlockBuilders.buildMinersBurialAltar
 import chylex.hee.game.block.info.BlockBuilders.buildObsidian
 import chylex.hee.game.block.info.BlockBuilders.buildObsidianVariation
 import chylex.hee.game.block.info.BlockBuilders.buildObsidianVariationLit
@@ -239,6 +243,7 @@ object ModBlocks{
 	@JvmField val MINERS_BURIAL_BLOCK_CHISELED = BlockSimple(buildMinersBurial).apply { setup("miners_burial_block_chiseled") }
 	@JvmField val MINERS_BURIAL_BLOCK_PILLAR   = BlockPillarCustom(buildMinersBurial).apply { setup("miners_burial_block_pillar") }
 	@JvmField val MINERS_BURIAL_BLOCK_JAIL     = BlockSimple(buildMinersBurial).apply { setup("miners_burial_block_jail") }
+	@JvmField val MINERS_BURIAL_ALTAR          = BlockMinersBurialAltar(buildMinersBurialAltar).apply { setup("miners_burial_altar") }
 	
 	// Blocks: Fluids
 	
@@ -425,6 +430,7 @@ object ModBlocks{
 			register(MINERS_BURIAL_BLOCK_CHISELED with basicItemBlock)
 			register(MINERS_BURIAL_BLOCK_PILLAR with basicItemBlock)
 			register(MINERS_BURIAL_BLOCK_JAIL with basicItemBlock)
+			register(MINERS_BURIAL_ALTAR with basicItemBlock)
 			
 			register(ENDER_GOO)
 			register(PURIFIED_ENDER_GOO)
@@ -499,6 +505,7 @@ object ModBlocks{
 		tile<TileEntityInfusedTNT>("infused_tnt")
 		tile<TileEntityJarODust>("jar_o_dust")
 		tile<TileEntityLootChest>("loot_chest")
+		tile<TileEntityMinersBurialAltar>("miners_burial_altar")
 		tile<TileEntityPortalInner.End>("end_portal_inner")
 		tile<TileEntityPortalInner.Void>("void_portal_inner")
 		tile<TileEntitySpawnerObsidianTower>("spawner_obsidian_tower")

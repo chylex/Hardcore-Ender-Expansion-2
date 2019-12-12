@@ -7,6 +7,12 @@
     "sounds": [ "hee:block/loot_chest_open" ],
     "subtitle": "subtitles.block.chest.open"
   },
+  "block.miners_burial_altar.spawn": {
+    "sounds": [ "hee:block/miners_burial_altar_spawn" ]
+  },
+  "block.miners_burial_altar.done": {
+    "sounds": [ "hee:block/obsidian_land" ]
+  },
   "block.obsidian.land": {
     "sounds": [ "hee:block/obsidian_land" ],
     "subtitle": "subtitles.hee.block.obsidian.land"

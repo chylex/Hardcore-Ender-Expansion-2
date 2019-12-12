@@ -62,6 +62,7 @@ tile.hee.miners_burial_block_plain.name=Miner's Burial Block
 tile.hee.miners_burial_block_chiseled.name=Miner's Burial Block (Chiseled)
 tile.hee.miners_burial_block_pillar.name=Miner's Burial Block (Pillar)
 tile.hee.miners_burial_block_jail.name=Miner's Burial Block (Jail)
+tile.hee.miners_burial_altar.name=Miner's Burial Altar
 
 tile.hee.jar_o_dust.name=Jar o' Dust
 tile.hee.jar_o_dust.tooltip.entry=%sx %s

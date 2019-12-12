@@ -18,6 +18,7 @@ import chylex.hee.game.item.ItemIgneousRock
 import chylex.hee.game.item.ItemInfusedEnderPearl
 import chylex.hee.game.item.ItemPortalToken
 import chylex.hee.game.item.ItemPurifiedEnderGooBucket
+import chylex.hee.game.item.ItemPuzzleMedallion
 import chylex.hee.game.item.ItemRevitalizationSubstance
 import chylex.hee.game.item.ItemRingOfHunger
 import chylex.hee.game.item.ItemRingOfPreservation
@@ -63,7 +64,7 @@ object ModItems{
 	@JvmField val ENDIUM_NUGGET     = Item().apply { setup("endium_nugget") }
 	@JvmField val OBSIDIAN_FRAGMENT = Item().apply { setup("obsidian_fragment") }
 	@JvmField val IGNEOUS_ROCK      = ItemIgneousRock().apply { setup("igneous_rock") }
-	@JvmField val PUZZLE_MEDALLION  = Item().apply { setup("puzzle_medallion") }
+	@JvmField val PUZZLE_MEDALLION  = ItemPuzzleMedallion().apply { setup("puzzle_medallion") }
 	@JvmField val INFERNIUM         = Item().apply { setup("infernium") }
 	@JvmField val INFERNIUM_INGOT   = Item().apply { setup("infernium_ingot") }
 	@JvmField val AURICION          = Item().apply { setup("auricion") }
