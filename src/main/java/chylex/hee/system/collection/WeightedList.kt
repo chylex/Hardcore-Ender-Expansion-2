@@ -2,7 +2,7 @@ package chylex.hee.system.collection
 import chylex.hee.system.util.nextLong
 import java.util.Random
 
-class WeightedList<T>(private val items: List<Pair<Int, T>>){
+class WeightedList<T>(val items: List<Pair<Int, T>>){
 	private val totalWeight =
 		if (items.isEmpty())
 			throw IllegalArgumentException("weighted list must not be empty")
