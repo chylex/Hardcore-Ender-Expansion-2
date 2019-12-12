@@ -1,9 +1,6 @@
 package chylex.hee.client.render.block
 import chylex.hee.client.render.util.GL
-import chylex.hee.client.render.util.GL.DF_ONE_MINUS_SRC_ALPHA
-import chylex.hee.client.render.util.GL.DF_ZERO
-import chylex.hee.client.render.util.GL.SF_ONE
-import chylex.hee.client.render.util.GL.SF_SRC_ALPHA
+import chylex.hee.client.render.util.ItemRenderHelper
 import chylex.hee.client.render.util.TESSELLATOR
 import chylex.hee.client.render.util.draw
 import chylex.hee.client.util.MC
@@ -16,12 +13,10 @@ import chylex.hee.system.util.nextFloat
 import chylex.hee.system.util.size
 import chylex.hee.system.util.square
 import chylex.hee.system.util.toRadians
-import net.minecraft.client.renderer.RenderHelper
 import net.minecraft.client.renderer.RenderItem
 import net.minecraft.client.renderer.block.model.IBakedModel
 import net.minecraft.client.renderer.block.model.ItemCameraTransforms.TransformType.GROUND
 import net.minecraft.client.renderer.texture.TextureManager
-import net.minecraft.client.renderer.texture.TextureMap
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats
 import net.minecraft.item.Item
@@ -37,7 +32,6 @@ import kotlin.math.sin
 
 @Sided(Side.CLIENT)
 object RenderTileTablePedestal : TileEntitySpecialRenderer<TileEntityTablePedestal>(){
-	private val TEX_BLOCKS_ITEMS = TextureMap.LOCATION_BLOCKS_TEXTURE
 	private val TEX_SHADOW = Resource.Vanilla("textures/misc/shadow.png")
 	private val RAND = Random()
 	
@@ -67,17 +61,9 @@ object RenderTileTablePedestal : TileEntitySpecialRenderer<TileEntityTablePedest
 		val textureManager = MC.textureManager
 		val itemRenderer = MC.itemRenderer
 		
-		val texObj = textureManager.getTexture(TEX_BLOCKS_ITEMS).also { it.setBlurMipmap(false, false) }
-		textureManager.bindTexture(TEX_BLOCKS_ITEMS)
-		
+		ItemRenderHelper.beginItemModel()
 		GL.pushMatrix()
 		GL.translate(x, y, z)
-		
-		RenderHelper.enableStandardItemLighting()
-		GL.alphaFunc(GL_GREATER, 0.1F)
-		GL.enableRescaleNormal()
-		GL.enableBlend()
-		GL.blendFunc(SF_SRC_ALPHA, DF_ONE_MINUS_SRC_ALPHA, SF_ONE, DF_ZERO)
 		
 		val pos = tile.pos
 		val stacks = tile.stacksForRendering
@@ -99,11 +85,8 @@ object RenderTileTablePedestal : TileEntitySpecialRenderer<TileEntityTablePedest
 			renderItemStack(textureManager, itemRenderer, stack, index, itemRotation, baseSeed, offsetAngleIndices, shadowAlpha)
 		}
 		
-		GL.disableBlend()
-		GL.disableRescaleNormal()
-		
 		GL.popMatrix()
-		texObj.restoreLastBlurMipmap()
+		ItemRenderHelper.endItemModel()
 	}
 	
 	private fun renderItemStack(textureManager: TextureManager, renderer: RenderItem, stack: ItemStack, index: Int, baseRotation: Float, baseSeed: Long, offsetAngleIndices: MutableList<Float>, shadowAlpha: Float){
@@ -135,10 +118,10 @@ object RenderTileTablePedestal : TileEntitySpecialRenderer<TileEntityTablePedest
 			
 			GL.depthMask(true)
 			GL.alphaFunc(GL_GREATER, 0.1F)
-			textureManager.bindTexture(TEX_BLOCKS_ITEMS)
+			textureManager.bindTexture(ItemRenderHelper.TEX_BLOCKS_ITEMS)
 		}
 		
-		val baseModel = renderer.getItemModelWithOverrides(stack, world, null)
+		val baseModel = ItemRenderHelper.getItemModel(stack)
 		val isModel3D = baseModel.isGui3d
 		
 		val baseY = if (isModel3D) 0.8325F else 1F
