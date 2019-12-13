@@ -21,6 +21,7 @@ import chylex.hee.game.entity.living.EntityMobVillagerDying;
 import chylex.hee.game.entity.projectile.EntityProjectileEnderPearl;
 import chylex.hee.game.entity.projectile.EntityProjectileEyeOfEnder;
 import chylex.hee.game.entity.projectile.EntityProjectileSpatialDash;
+import chylex.hee.game.entity.technical.EntityTechnicalCausatumEvent;
 import chylex.hee.game.entity.technical.EntityTechnicalIgneousPlateLogic;
 import chylex.hee.game.entity.technical.EntityTechnicalPuzzle;
 import chylex.hee.game.entity.technical.EntityTechnicalTrigger;
@@ -61,6 +62,7 @@ public final class EntityConstructors{
 		add(EntityProjectileEyeOfEnder.class, EntityProjectileEyeOfEnder::new);
 		add(EntityProjectileEnderPearl.class, EntityProjectileEnderPearl::new);
 		
+		add(EntityTechnicalCausatumEvent.class, EntityTechnicalCausatumEvent::new);
 		add(EntityTechnicalIgneousPlateLogic.class, EntityTechnicalIgneousPlateLogic::new);
 		add(EntityTechnicalPuzzle.class, EntityTechnicalPuzzle::new);
 		add(EntityTechnicalTrigger.class, EntityTechnicalTrigger::new);
