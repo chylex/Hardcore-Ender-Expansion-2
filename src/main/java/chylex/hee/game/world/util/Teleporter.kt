@@ -190,7 +190,7 @@ class Teleporter(
 				entity.navigator.clearPath()
 			}
 			
-			if (entity.lookHelper.isLooking){
+			if (entity.lookHelper.isLooking){ // must be called inside updateAITasks to apply
 				with(entity.lookHelper){
 					setLookPosition(lookPosX, lookPosY, lookPosZ, 360F, 360F)
 					onUpdateLook()

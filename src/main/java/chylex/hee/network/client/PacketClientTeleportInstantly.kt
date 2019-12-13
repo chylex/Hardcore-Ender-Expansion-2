@@ -31,6 +31,9 @@ class PacketClientTeleportInstantly() : BaseClientPacket(){
 	
 	@Sided(Side.CLIENT)
 	override fun handle(player: EntityPlayerSP){
-		entityId?.let(player.world::getEntityByID)?.setPositionAndUpdate(position.x, position.y, position.z)
+		entityId?.let(player.world::getEntityByID)?.let {
+			it.setPositionAndUpdate(position.x, position.y, position.z)
+			it.setPositionAndRotationDirect(it.posX, it.posY, it.posZ, it.rotationYaw, it.rotationPitch, 0, true)
+		}
 	}
 }
