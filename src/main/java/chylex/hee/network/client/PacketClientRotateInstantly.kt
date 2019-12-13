@@ -6,6 +6,7 @@ import chylex.hee.system.util.use
 import io.netty.buffer.ByteBuf
 import net.minecraft.client.entity.EntityPlayerSP
 import net.minecraft.entity.Entity
+import net.minecraft.entity.EntityLivingBase
 
 class PacketClientRotateInstantly() : BaseClientPacket(){
 	constructor(entity: Entity, yaw: Float, pitch: Float) : this(){
@@ -36,6 +37,10 @@ class PacketClientRotateInstantly() : BaseClientPacket(){
 			it.setPositionAndRotation(it.posX, it.posY, it.posZ, yaw!!, pitch!!)
 			it.setRenderYawOffset(yaw!!)
 			it.rotationYawHead = yaw!!
+			
+			if (it is EntityLivingBase){
+				it.prevRenderYawOffset = it.renderYawOffset
+			}
 		}
 	}
 }
