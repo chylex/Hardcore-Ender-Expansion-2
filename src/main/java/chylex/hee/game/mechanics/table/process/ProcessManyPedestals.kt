@@ -95,7 +95,7 @@ abstract class ProcessManyPedestals(private val world: World, pos: Array<BlockPo
 		
 		when(val state = currentState){
 			is Work -> {
-				if (tiles.any { world.totalTime - it.inputModTime < 20L } || context.isPaused){
+				if (context.isPaused || tiles.any { world.totalTime - it.inputModTime < 20L } || !context.ensureDustAvailable(dustPerTick)){
 					setStatusIndicator(tiles, PAUSED)
 				}
 				else{

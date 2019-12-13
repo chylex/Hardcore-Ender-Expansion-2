@@ -10,6 +10,7 @@ import chylex.hee.client.render.block.RenderTileJarODust
 import chylex.hee.client.render.block.RenderTileLootChest
 import chylex.hee.client.render.block.RenderTileMinersBurialAltar
 import chylex.hee.client.render.block.RenderTileSpawner
+import chylex.hee.client.render.block.RenderTileTable
 import chylex.hee.client.render.block.RenderTileTablePedestal
 import chylex.hee.client.render.block.RenderTileVoidPortal
 import chylex.hee.client.render.entity.RenderEntityBossEnderEye
@@ -39,6 +40,7 @@ import chylex.hee.game.block.entity.TileEntityMinersBurialAltar
 import chylex.hee.game.block.entity.TileEntityPortalInner
 import chylex.hee.game.block.entity.TileEntityTablePedestal
 import chylex.hee.game.block.entity.base.TileEntityBaseSpawner
+import chylex.hee.game.block.entity.base.TileEntityBaseTable
 import chylex.hee.game.entity.item.EntityItemNoBob
 import chylex.hee.game.entity.item.EntityTokenHolder
 import chylex.hee.game.entity.living.EntityBossEnderEye
@@ -111,6 +113,7 @@ object ModRendering{
 	@Suppress("unused", "RemoveExplicitTypeArguments")
 	fun registerTileEntities(){
 		registerTile<TileEntityBaseSpawner>(RenderTileSpawner)
+		registerTile<TileEntityBaseTable>(RenderTileTable)
 		registerTile<TileEntityDarkChest>(RenderTileDarkChest)
 		registerTile<TileEntityExperienceGate>(RenderTileExperienceGate)
 		registerTile<TileEntityIgneousPlate>(RenderTileIgneousPlate)

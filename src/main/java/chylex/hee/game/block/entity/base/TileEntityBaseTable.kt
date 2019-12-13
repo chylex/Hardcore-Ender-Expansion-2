@@ -1,8 +1,11 @@
 package chylex.hee.game.block.entity.base
 import chylex.hee.game.block.BlockAbstractTable
 import chylex.hee.game.block.BlockAbstractTable.Companion.TIER
+import chylex.hee.game.block.entity.TileEntityJarODust
 import chylex.hee.game.block.entity.TileEntityTablePedestal
 import chylex.hee.game.block.entity.base.TileEntityBase.Context.STORAGE
+import chylex.hee.game.mechanics.dust.DustLayers
+import chylex.hee.game.mechanics.dust.DustType
 import chylex.hee.game.mechanics.table.TableEnergyClusterHandler
 import chylex.hee.game.mechanics.table.TableLinkedPedestalHandler
 import chylex.hee.game.mechanics.table.TableParticleHandler
@@ -18,9 +21,11 @@ import chylex.hee.system.util.delegate.NotifyOnChange
 import chylex.hee.system.util.get
 import chylex.hee.system.util.getListOfCompounds
 import chylex.hee.system.util.getState
+import chylex.hee.system.util.getTile
 import net.minecraft.item.Item
 import net.minecraft.util.ITickable
 import net.minecraft.world.World
+import org.apache.commons.lang3.math.Fraction
 
 abstract class TileEntityBaseTable : TileEntityBase(), ITickable{
 	private companion object{
@@ -32,12 +37,15 @@ abstract class TileEntityBaseTable : TileEntityBase(), ITickable{
 		private const val PEDESTAL_INFO_TAG = "PedestalInfo"
 		private const val CLUSTER_INFO_TAG = "ClusterInfo"
 		private const val PROCESSES_TAG = "Processes"
+		private const val DUST_FRACTION_N_TAG = "DustAmountN"
+		private const val DUST_FRACTION_D_TAG = "DustAmountD"
 	}
 	
 	var maxInputPedestals = 0
 		private set
 	
 	abstract val tableIndicatorColor: IntColor
+	open val tableDustType: DustType? = null
 	
 	protected abstract val processSerializer: ITableProcessSerializer
 	protected abstract val processTickRate: Int
@@ -46,6 +54,7 @@ abstract class TileEntityBaseTable : TileEntityBase(), ITickable{
 	private var tickCounterProcessing = 0
 	
 	private val currentProcesses = TableProcessList()
+	private var storedDust = Fraction.ZERO
 	
 	@Suppress("LeakingThis")
 	private val pedestalHandler = TableLinkedPedestalHandler(this, MAX_PEDESTAL_DISTANCE)
@@ -152,8 +161,36 @@ abstract class TileEntityBaseTable : TileEntityBase(), ITickable{
 		
 		override val isPaused = isPaused
 		
+		override fun ensureDustAvailable(amount: Fraction): Boolean{
+			if (amount == ITableProcess.NO_DUST || storedDust >= amount){
+				return true
+			}
+			
+			val dustType = tableDustType
+			val jar = pos.up().getTile<TileEntityJarODust>(world)
+			
+			if (dustType == null || jar == null){
+				return false
+			}
+			
+			while(storedDust < amount){
+				if (jar.layers.removeDust(DustLayers.Side.BOTTOM, dustType, 1).isEmpty){
+					return false
+				}
+				
+				storedDust = storedDust.add(Fraction.ONE)
+			}
+			
+			return true
+		}
+		
 		override fun requestUseResources(): Boolean{
-			return clusterHandler.drainEnergy(process.energyPerTick)
+			if (clusterHandler.drainEnergy(process.energyPerTick)){
+				storedDust = storedDust.subtract(process.dustPerTick)
+				return true
+			}
+			
+			return false
 		}
 		
 		override fun requestUseSupportingItem(item: Item, amount: Int): Boolean{
@@ -184,6 +221,9 @@ abstract class TileEntityBaseTable : TileEntityBase(), ITickable{
 			setTag(PEDESTAL_INFO_TAG, pedestalHandler.serializeNBT())
 			setTag(CLUSTER_INFO_TAG, clusterHandler.serializeNBT())
 			setList(PROCESSES_TAG, currentProcesses.serializeToList(processSerializer))
+			
+			setInteger(DUST_FRACTION_N_TAG, storedDust.numerator)
+			setInteger(DUST_FRACTION_D_TAG, storedDust.denominator)
 		}
 	}
 	
@@ -192,6 +232,8 @@ abstract class TileEntityBaseTable : TileEntityBase(), ITickable{
 			pedestalHandler.deserializeNBT(getCompoundTag(PEDESTAL_INFO_TAG))
 			clusterHandler.deserializeNBT(getCompoundTag(CLUSTER_INFO_TAG))
 			currentProcesses.deserializeFromList(world, getListOfCompounds(PROCESSES_TAG), processSerializer)
+			
+			storedDust = Fraction.getFraction(getInteger(DUST_FRACTION_N_TAG), getInteger(DUST_FRACTION_D_TAG))
 		}
 	}
 }

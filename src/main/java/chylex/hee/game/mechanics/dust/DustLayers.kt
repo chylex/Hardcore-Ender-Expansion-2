@@ -62,6 +62,10 @@ class DustLayers(val totalCapacity: Int){
 		return added
 	}
 	
+	fun getDustType(side: Side): DustType?{
+		return side.index(layers)?.let(layers::get)?.first
+	}
+	
 	fun getDust(side: Side, amount: Int = Int.MAX_VALUE): ItemStack{
 		val (dustType, dustAmount) = side.index(layers)?.let(layers::get) ?: return ItemStack.EMPTY
 		
