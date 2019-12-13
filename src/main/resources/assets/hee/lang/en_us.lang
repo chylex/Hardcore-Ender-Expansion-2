@@ -235,6 +235,7 @@ hee.energy.health.unstable=UNSTABLE
 hee.energy.health.revitalizing=REVITALIZING
 
 entity.hee.ender_eye.name=Ender Eye
+entity.hee.angry_enderman.name=Angry Enderman
 entity.hee.endermite_instability.name=Endermite (Instability)
 entity.hee.spiderling.name=Spiderling
 entity.hee.undread.name=Undread

@@ -12,7 +12,7 @@ import net.minecraft.util.DamageSource
 import net.minecraft.util.ITickable
 import net.minecraftforge.common.util.INBTSerializable
 
-class EndermanWaterHandler(private val enderman: EntityMobAbstractEnderman): ITickable, INBTSerializable<TagCompound>{
+class EndermanWaterHandler(private val enderman: EntityMobAbstractEnderman, private val takeDamageAfterWetTicks: Int): ITickable, INBTSerializable<TagCompound>{
 	private companion object{
 		private val DEBUFF_WEAKNESS = AttributeModifier("Water weakness", -0.5, OPERATION_MUL_INCR_INDIVIDUAL)
 		
@@ -33,7 +33,7 @@ class EndermanWaterHandler(private val enderman: EntityMobAbstractEnderman): ITi
 				debuffTicks = enderman.rng.nextInt(20 * 6, 20 * 8)
 				updateDebuff()
 			}
-			else if (wetCounter > 80){
+			else if (wetCounter > takeDamageAfterWetTicks){
 				enderman.attackTarget = null
 				enderman.attackEntityFrom(DamageSource.DROWN, 3F) // causes teleportation attempt
 			}

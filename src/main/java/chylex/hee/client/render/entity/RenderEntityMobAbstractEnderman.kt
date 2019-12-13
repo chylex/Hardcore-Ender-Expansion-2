@@ -30,7 +30,9 @@ open class RenderEntityMobAbstractEnderman(manager: RenderManager) : RenderEnder
 			super.doRender(entity, x, y, z, rotationYaw, partialTicks)
 		}
 		
-		if (entity.isAggressive){
+		val cloneCount = getCloneCount(entity)
+		
+		if (cloneCount > 0){
 			rand.setSeed(entity.world.totalTime * 2L / 3L)
 			
 			val prevPrevYaw = entity.prevRotationYawHead
@@ -39,20 +41,22 @@ open class RenderEntityMobAbstractEnderman(manager: RenderManager) : RenderEnder
 			val prevPrevPitch = entity.prevRotationPitch
 			val prevPitch = entity.rotationPitch
 			
-			repeat(2){
+			repeat(cloneCount){
 				GL.enableBlend()
 				GL.blendFunc(SF_SRC_ALPHA, DF_ONE_MINUS_SRC_ALPHA)
 				GL.alphaFunc(GL_GREATER, 0.004F)
 				GL.depthMask(false)
 				GL.color(1F, 1F, 1F, rand.nextFloat(0.05F, 0.3F))
 				
-				entity.rotationYawHead += rand.nextFloat(-45F, 45F)
-				entity.prevRotationYawHead = entity.rotationYawHead
+				if (rand.nextInt(3) == 0){
+					entity.rotationYawHead += rand.nextFloat(-45F, 45F)
+					entity.prevRotationYawHead = entity.rotationYawHead
+					
+					entity.rotationPitch += rand.nextFloat(-30F, 30F)
+					entity.prevRotationPitch = entity.rotationPitch
+				}
 				
-				entity.rotationPitch += rand.nextFloat(-30F, 30F)
-				entity.prevRotationPitch = entity.rotationPitch
-				
-				super.doRender(entity, x + rand.nextGaussian() * 0.05, y + rand.nextGaussian() * 0.025, z + rand.nextGaussian() * 0.05, rotationYaw, partialTicks)
+				super.doRender(entity, x + rand.nextGaussian() * 0.04, y + rand.nextGaussian() * 0.025, z + rand.nextGaussian() * 0.04, rotationYaw, partialTicks)
 			}
 			
 			entity.prevRotationYawHead = prevPrevYaw
@@ -65,5 +69,9 @@ open class RenderEntityMobAbstractEnderman(manager: RenderManager) : RenderEnder
 			GL.alphaFunc(GL_GREATER, 0.1F)
 			GL.disableBlend()
 		}
+	}
+	
+	protected open fun getCloneCount(entity: EntityMobAbstractEnderman): Int{
+		return if (entity.hurtTime == 0 && entity.isAggressive) 2 else 0
 	}
 }

@@ -16,6 +16,7 @@ import chylex.hee.client.render.block.RenderTileVoidPortal
 import chylex.hee.client.render.entity.RenderEntityBossEnderEye
 import chylex.hee.client.render.entity.RenderEntityItemNoBob
 import chylex.hee.client.render.entity.RenderEntityMobAbstractEnderman
+import chylex.hee.client.render.entity.RenderEntityMobAngryEnderman
 import chylex.hee.client.render.entity.RenderEntityMobSpiderling
 import chylex.hee.client.render.entity.RenderEntityMobUndread
 import chylex.hee.client.render.entity.RenderEntityMobVampireBat
@@ -45,6 +46,7 @@ import chylex.hee.game.entity.item.EntityItemNoBob
 import chylex.hee.game.entity.item.EntityTokenHolder
 import chylex.hee.game.entity.living.EntityBossEnderEye
 import chylex.hee.game.entity.living.EntityMobAbstractEnderman
+import chylex.hee.game.entity.living.EntityMobAngryEnderman
 import chylex.hee.game.entity.living.EntityMobSpiderling
 import chylex.hee.game.entity.living.EntityMobUndread
 import chylex.hee.game.entity.living.EntityMobVampireBat
@@ -93,6 +95,7 @@ object ModRendering{
 		registerEntity<EntityBossEnderEye, RenderEntityBossEnderEye>()
 		
 		registerEntity<EntityMobAbstractEnderman, RenderEntityMobAbstractEnderman>()
+		registerEntity<EntityMobAngryEnderman, RenderEntityMobAngryEnderman>()
 		registerEntity<EntityMobSpiderling, RenderEntityMobSpiderling>()
 		registerEntity<EntityMobUndread, RenderEntityMobUndread>()
 		registerEntity<EntityMobVampireBat, RenderEntityMobVampireBat>()

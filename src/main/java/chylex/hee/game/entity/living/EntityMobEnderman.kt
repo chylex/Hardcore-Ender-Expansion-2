@@ -13,11 +13,6 @@ import chylex.hee.game.entity.projectile.EntityProjectileSpatialDash
 import chylex.hee.game.mechanics.causatum.CausatumStage
 import chylex.hee.game.mechanics.causatum.CausatumStage.S0_INITIAL
 import chylex.hee.game.mechanics.causatum.EnderCausatum
-import chylex.hee.game.mechanics.damage.Damage
-import chylex.hee.game.mechanics.damage.IDamageProcessor.Companion.ALL_PROTECTIONS_WITH_SHIELD
-import chylex.hee.game.mechanics.damage.IDamageProcessor.Companion.DIFFICULTY_SCALING
-import chylex.hee.game.mechanics.damage.IDamageProcessor.Companion.NUDITY_DANGER
-import chylex.hee.game.mechanics.damage.IDamageProcessor.Companion.PEACEFUL_EXCLUSION
 import chylex.hee.init.ModLoot
 import chylex.hee.system.migration.forge.SubscribeAllEvents
 import chylex.hee.system.migration.forge.SubscribeEvent
@@ -34,7 +29,6 @@ import chylex.hee.system.util.nextFloat
 import chylex.hee.system.util.nextInt
 import chylex.hee.system.util.square
 import net.minecraft.block.state.IBlockState
-import net.minecraft.entity.Entity
 import net.minecraft.entity.EntityLivingBase
 import net.minecraft.entity.EnumCreatureType.MONSTER
 import net.minecraft.entity.SharedMonsterAttributes.ATTACK_DAMAGE
@@ -65,8 +59,6 @@ import kotlin.math.pow
 @SubscribeAllEvents(modid = HEE.ID)
 class EntityMobEnderman(world: World) : EntityMobAbstractEnderman(world){
 	companion object{
-		private val DAMAGE_GENERAL = Damage(DIFFICULTY_SCALING, PEACEFUL_EXCLUSION, *ALL_PROTECTIONS_WITH_SHIELD, NUDITY_DANGER)
-		
 		private const val TELEPORT_HANDLER_TAG = "Teleport"
 		private const val WATER_HANDLER_TAG = "Water"
 		private const val CAN_PICK_UP_BLOCKS_TAG = "CanPickUpBlocks"
@@ -204,7 +196,7 @@ class EntityMobEnderman(world: World) : EntityMobAbstractEnderman(world){
 	
 	override fun initEntityAI(){
 		teleportHandler = EndermanTeleportHandler(this)
-		waterHandler = EndermanWaterHandler(this)
+		waterHandler = EndermanWaterHandler(this, takeDamageAfterWetTicks = 80)
 		blockHandler = EndermanBlockHandler(this)
 		
 		aiWatchTargetInShock = AIWatchTargetInShock(this, maxDistance = 72.0)
@@ -452,10 +444,6 @@ class EntityMobEnderman(world: World) : EntityMobAbstractEnderman(world){
 		return true
 	}
 	
-	override fun attackEntityAsMob(entity: Entity): Boolean{
-		return DAMAGE_GENERAL.dealToFrom(entity, this)
-	}
-	
 	override fun onDeath(cause: DamageSource){
 		if (dead){
 			return
@@ -507,10 +495,6 @@ class EntityMobEnderman(world: World) : EntityMobAbstractEnderman(world){
 			ModLoot.ENDERMAN_FIRST_KILL
 		else
 			ModLoot.ENDERMAN
-	}
-	
-	override fun getEyeHeight(): Float{
-		return 2.62F
 	}
 	
 	// Serialization

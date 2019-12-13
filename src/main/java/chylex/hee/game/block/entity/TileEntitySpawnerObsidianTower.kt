@@ -1,6 +1,7 @@
 package chylex.hee.game.block.entity
 import chylex.hee.game.block.entity.base.TileEntityBase.Context.STORAGE
 import chylex.hee.game.block.entity.base.TileEntityBaseSpawner
+import chylex.hee.game.entity.living.EntityMobAngryEnderman
 import chylex.hee.game.entity.living.EntityMobEnderman
 import chylex.hee.game.fx.FxBlockData
 import chylex.hee.game.fx.FxBlockHandler
@@ -209,7 +210,7 @@ class TileEntitySpawnerObsidianTower() : TileEntityBaseSpawner(){
 	
 	private fun triggerSpawn(rand: Random){
 		val (x, y, z) = floorCenter
-		val enderman = EntityMobEnderman(world) // TODO angry enderman
+		val enderman = EntityMobAngryEnderman(world)
 		
 		for(attempt in 1..50){
 			enderman.setPosition(x + 0.5 + rand.nextFloat(-SPAWN_AREA_BOX_RANGE_XZ, SPAWN_AREA_BOX_RANGE_XZ), y + 0.01, z + 0.5 + rand.nextFloat(-SPAWN_AREA_BOX_RANGE_XZ, SPAWN_AREA_BOX_RANGE_XZ))

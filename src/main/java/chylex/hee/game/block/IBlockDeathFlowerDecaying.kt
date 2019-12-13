@@ -1,5 +1,6 @@
 package chylex.hee.game.block
 import chylex.hee.game.block.util.Property
+import chylex.hee.game.entity.living.EntityMobAngryEnderman
 import chylex.hee.game.entity.living.EntityMobEnderman
 import chylex.hee.game.fx.IFxData
 import chylex.hee.game.fx.IFxHandler
@@ -112,7 +113,7 @@ interface IBlockDeathFlowerDecaying{
 				val center = pos.center
 				
 				repeat(rand.nextInt(4, 5)){
-					val enderman = EntityMobEnderman(world) // TODO use angry endermen once implemented
+					val enderman = EntityMobAngryEnderman(world)
 					val yaw = rand.nextFloat(0F, 360F)
 					
 					for(attempt in 1..64){

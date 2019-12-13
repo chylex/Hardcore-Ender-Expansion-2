@@ -1,6 +1,11 @@
 package chylex.hee.game.entity.living
 import chylex.hee.game.entity.CustomCreatureType
 import chylex.hee.game.entity.util.EntityData
+import chylex.hee.game.mechanics.damage.Damage
+import chylex.hee.game.mechanics.damage.IDamageProcessor.Companion.ALL_PROTECTIONS_WITH_SHIELD
+import chylex.hee.game.mechanics.damage.IDamageProcessor.Companion.DIFFICULTY_SCALING
+import chylex.hee.game.mechanics.damage.IDamageProcessor.Companion.NUDITY_DANGER
+import chylex.hee.game.mechanics.damage.IDamageProcessor.Companion.PEACEFUL_EXCLUSION
 import chylex.hee.system.util.getAttribute
 import chylex.hee.system.util.tryRemoveModifier
 import net.minecraft.entity.Entity
@@ -14,12 +19,14 @@ import net.minecraft.util.DamageSource
 import net.minecraft.util.EntityDamageSource
 import net.minecraft.util.EntityDamageSourceIndirect
 import net.minecraft.util.ResourceLocation
+import net.minecraft.util.math.AxisAlignedBB
 import net.minecraft.util.text.ITextComponent
 import net.minecraft.world.World
 
 abstract class EntityMobAbstractEnderman(world: World) : EntityEnderman(world){
 	private companion object{
 		private val DATA_SHAKING = EntityData.register<EntityMobAbstractEnderman, Boolean>(DataSerializers.BOOLEAN)
+		private val DAMAGE_GENERAL = Damage(DIFFICULTY_SCALING, PEACEFUL_EXCLUSION, *ALL_PROTECTIONS_WITH_SHIELD, NUDITY_DANGER)
 	}
 	
 	var isAggressive: Boolean by EntityData(SCREAMING)
@@ -64,6 +71,14 @@ abstract class EntityMobAbstractEnderman(world: World) : EntityEnderman(world){
 		return super.attackEntityFrom(source, amount)
 	}
 	
+	override fun attackEntityAsMob(entity: Entity): Boolean{
+		return DAMAGE_GENERAL.dealToFrom(entity, this)
+	}
+	
+	open fun canTeleportTo(aabb: AxisAlignedBB): Boolean{
+		return world.getCollisionBoxes(null, aabb).isEmpty() && !world.containsAnyLiquid(aabb)
+	}
+	
 	override fun teleportRandomly(): Boolean{
 		return false
 	}
@@ -82,6 +97,10 @@ abstract class EntityMobAbstractEnderman(world: World) : EntityEnderman(world){
 	
 	override fun getCreatureAttribute(): EnumCreatureAttribute{
 		return CustomCreatureType.ENDER
+	}
+	
+	override fun getEyeHeight(): Float{
+		return 2.62F
 	}
 	
 	private class FakeIndirectDamageSource(private val source: EntityDamageSourceIndirect) : EntityDamageSource(source.damageType, source.immediateSource){

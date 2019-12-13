@@ -10,6 +10,7 @@ import chylex.hee.game.entity.item.EntityItemNoBob
 import chylex.hee.game.entity.item.EntityItemRevitalizationSubstance
 import chylex.hee.game.entity.item.EntityTokenHolder
 import chylex.hee.game.entity.living.EntityBossEnderEye
+import chylex.hee.game.entity.living.EntityMobAngryEnderman
 import chylex.hee.game.entity.living.EntityMobEnderman
 import chylex.hee.game.entity.living.EntityMobEndermite
 import chylex.hee.game.entity.living.EntityMobEndermiteInstability
@@ -61,6 +62,7 @@ object ModEntities{
 			
 			register<EntityBossEnderEye>("ender_eye").tracker(160, 1, true).egg(RGB(22u).i, RGB(219, 58, 115).i) to this
 			
+			register<EntityMobAngryEnderman>("angry_enderman").tracker(80, 3, true).egg(RGB(21u).i, RGB(111, 75, 36).i) to this
 			register<EntityMobEndermiteInstability>("endermite_instability").tracker(96, 3, true).egg(RGB(21u).i, RGB(94, 122, 108).i) to this
 			register<EntityMobSpiderling>("spiderling").tracker(80, 2, true).egg(RGB(32, 30, 16).i, RGB(182, 25, 0).i) to this
 			register<EntityMobUndread>("undread").tracker(80, 3, true).egg(TerritoryType.FORGOTTEN_TOMBS.desc.colors.tokenTop.i, TerritoryType.FORGOTTEN_TOMBS.desc.colors.tokenBottom.i) to this
