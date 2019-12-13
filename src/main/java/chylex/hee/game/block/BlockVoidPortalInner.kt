@@ -5,6 +5,7 @@ import chylex.hee.game.block.entity.TileEntityPortalInner
 import chylex.hee.game.block.entity.TileEntityVoidPortalStorage
 import chylex.hee.game.block.info.BlockBuilder
 import chylex.hee.game.block.util.Property
+import chylex.hee.game.mechanics.causatum.EnderCausatum
 import chylex.hee.game.mechanics.portal.DimensionTeleporter
 import chylex.hee.game.mechanics.portal.EntityPortalContact
 import chylex.hee.game.mechanics.portal.SpawnInfo
@@ -48,6 +49,10 @@ class BlockVoidPortalInner(builder: BlockBuilder) : BlockAbstractPortal(builder)
 			val targetVec = info.pos.center.subtractY(0.45)
 			
 			if (entity is EntityLivingBase){
+				if (entity is EntityPlayer){
+					TerritoryInstance.fromPos(info.pos)?.let { EnderCausatum.triggerStage(entity, it.territory.stage) }
+				}
+				
 				info.yaw?.let { entity.rotationYaw = it }
 				entity.rotationPitch = 0F
 				

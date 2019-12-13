@@ -1,4 +1,7 @@
 package chylex.hee.game.world.territory
+import chylex.hee.game.mechanics.causatum.CausatumStage
+import chylex.hee.game.mechanics.causatum.CausatumStage.S2_ENTERED_END
+import chylex.hee.game.mechanics.causatum.CausatumStage.S3_FINISHED_CURSED_LIBRARY
 import chylex.hee.game.world.generation.SegmentedWorld
 import chylex.hee.game.world.generation.TerritoryGenerationInfo
 import chylex.hee.game.world.territory.descriptions.Territory_ArcaneConjunctions
@@ -21,7 +24,8 @@ enum class TerritoryType(
 	val desc: ITerritoryDescription,
 	val gen: ITerritoryGenerator,
 	val chunks: Int,
-	val height: IntRange
+	val height: IntRange,
+	val stage: CausatumStage = S2_ENTERED_END
 ){
 	THE_HUB(
 		title  = "the_hub",
@@ -108,7 +112,8 @@ enum class TerritoryType(
 		desc   = TerritoryDummy,
 		gen    = GeneratorDummy,
 		chunks = 34,
-		height = 128 until 256
+		height = 128 until 256,
+		stage  = S3_FINISHED_CURSED_LIBRARY
 	);
 	
 	companion object{
