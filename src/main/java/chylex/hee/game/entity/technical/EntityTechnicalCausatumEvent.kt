@@ -1,4 +1,5 @@
 package chylex.hee.game.entity.technical
+import chylex.hee.game.mechanics.causatum.events.CausatumEventEndermanKill
 import chylex.hee.system.util.TagCompound
 import chylex.hee.system.util.getStringOrNull
 import chylex.hee.system.util.heeTag
@@ -15,7 +16,8 @@ class EntityTechnicalCausatumEvent(world: World) : EntityTechnicalBase(world){
 		private const val TYPE_TAG = "Type"
 		private const val DATA_TAG = "Data"
 		
-		private val TYPE_MAPPING = HashBiMap.create(mapOf<Class<ICausatumEventHandler>, Pair<String, () -> ICausatumEventHandler>>(
+		private val TYPE_MAPPING = HashBiMap.create(mapOf(
+			map("EndermanKill", ::CausatumEventEndermanKill)
 		))
 		
 		private inline fun <reified T : ICausatumEventHandler> map(name: String, noinline constructor: () -> T) = T::class.java to (name to constructor)

@@ -44,6 +44,10 @@
     "sounds": [ "minecraft:random/fizz" ],
     "subtitle": "subtitles.hee.entity.spatial_dash.expire"
   },
+  "mob.enderman.first_kill": {
+    "sounds": [ "mob/endermen/stare" ],
+    "subtitle": "subtitles.hee.mob.enderman.first_kill"
+  },
   "mob.undread.hurt": {
     "sounds": [ "hee:mob/undread_hurt" ],
     "subtitle": "subtitles.hee.mob.undread.hurt"

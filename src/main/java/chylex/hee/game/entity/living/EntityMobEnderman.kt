@@ -10,10 +10,13 @@ import chylex.hee.game.entity.living.behavior.EndermanBlockHandler
 import chylex.hee.game.entity.living.behavior.EndermanTeleportHandler
 import chylex.hee.game.entity.living.behavior.EndermanWaterHandler
 import chylex.hee.game.entity.projectile.EntityProjectileSpatialDash
+import chylex.hee.game.entity.technical.EntityTechnicalCausatumEvent
 import chylex.hee.game.mechanics.causatum.CausatumStage
 import chylex.hee.game.mechanics.causatum.CausatumStage.S0_INITIAL
 import chylex.hee.game.mechanics.causatum.EnderCausatum
+import chylex.hee.game.mechanics.causatum.events.CausatumEventEndermanKill
 import chylex.hee.init.ModLoot
+import chylex.hee.init.ModSounds
 import chylex.hee.system.migration.forge.SubscribeAllEvents
 import chylex.hee.system.migration.forge.SubscribeEvent
 import chylex.hee.system.migration.vanilla.Blocks
@@ -27,6 +30,9 @@ import chylex.hee.system.util.getAttribute
 import chylex.hee.system.util.heeTag
 import chylex.hee.system.util.nextFloat
 import chylex.hee.system.util.nextInt
+import chylex.hee.system.util.playServer
+import chylex.hee.system.util.posVec
+import chylex.hee.system.util.selectEntities
 import chylex.hee.system.util.square
 import net.minecraft.block.state.IBlockState
 import net.minecraft.entity.EntityLivingBase
@@ -44,6 +50,7 @@ import net.minecraft.network.datasync.DataParameter
 import net.minecraft.util.DamageSource
 import net.minecraft.util.EntityDamageSourceIndirect
 import net.minecraft.util.ResourceLocation
+import net.minecraft.util.SoundCategory
 import net.minecraft.util.math.BlockPos
 import net.minecraft.world.EnumSkyBlock.BLOCK
 import net.minecraft.world.World
@@ -53,6 +60,7 @@ import net.minecraft.world.biome.BiomeEnd
 import net.minecraft.world.biome.BiomeHell
 import net.minecraft.world.biome.BiomeHellDecorator
 import net.minecraftforge.event.entity.ProjectileImpactEvent
+import kotlin.math.abs
 import kotlin.math.min
 import kotlin.math.pow
 
@@ -451,9 +459,28 @@ class EntityMobEnderman(world: World) : EntityMobAbstractEnderman(world){
 		
 		val attacker = cause.trueSource as? EntityPlayer ?: attackingPlayer
 		
-		if (attacker != null && EnderCausatum.triggerStage(attacker, CausatumStage.S1_KILLED_ENDERMAN)){
-			// TODO trigger stage for everyone nearby & spawn event
-			wasFirstKill = true
+		if (attacker != null){
+			if (EnderCausatum.triggerStage(attacker, CausatumStage.S1_KILLED_ENDERMAN)){
+				// TODO achievement after the event finishes & compendium
+				
+				for(player in world.selectEntities.inRange<EntityPlayer>(posVec, 32.0)){
+					if (player !== attacker && abs(player.posY - posY) < 8.0){
+						EnderCausatum.triggerStage(player, CausatumStage.S1_KILLED_ENDERMAN)
+					}
+				}
+				
+				ModSounds.MOB_ENDERMAN_FIRST_KILL.playServer(world, posVec, SoundCategory.HOSTILE)
+				
+				EntityTechnicalCausatumEvent(world, CausatumEventEndermanKill(this, attacker)).apply {
+					setPosition(this@EntityMobEnderman.posX, this@EntityMobEnderman.posY, this@EntityMobEnderman.posZ)
+					world.spawnEntity(this)
+				}
+				
+				wasFirstKill = true
+			}
+			else{
+				// TODO achievement
+			}
 		}
 		
 		super.onDeath(cause)
