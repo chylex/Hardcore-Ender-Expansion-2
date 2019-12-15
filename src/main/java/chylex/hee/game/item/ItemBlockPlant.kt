@@ -14,7 +14,7 @@ import net.minecraft.util.EnumHand
 import net.minecraft.util.math.BlockPos
 import net.minecraft.world.World
 
-class ItemBlockPlant(block: Block, private val potted: BlockFlowerPotCustom) : ItemBlockWithMetadata(block){
+class ItemBlockPlant(block: Block, private val potted: BlockFlowerPotCustom, private val burnTicks: Int) : ItemBlockWithMetadata(block){
 	private fun checkEmptyFlowerPot(world: World, pos: BlockPos): Boolean{
 		return pos.getTile<TileEntityFlowerPot>(world)?.flowerItemStack?.isEmpty == true
 	}
@@ -35,5 +35,9 @@ class ItemBlockPlant(block: Block, private val potted: BlockFlowerPotCustom) : I
 		}
 		
 		return super.onItemUse(player, world, pos, hand, facing, hitX, hitY, hitZ)
+	}
+	
+	override fun getItemBurnTime(stack: ItemStack): Int{
+		return burnTicks
 	}
 }

@@ -58,7 +58,9 @@ import chylex.hee.game.block.BlockVoidPortalInner
 import chylex.hee.game.block.BlockVoidPortalStorage
 import chylex.hee.game.block.BlockVoidPortalStorageCrafted
 import chylex.hee.game.block.BlockWallCustom
+import chylex.hee.game.block.BlockWhitebarkLeaves
 import chylex.hee.game.block.BlockWhitebarkLog
+import chylex.hee.game.block.BlockWhitebarkSapling
 import chylex.hee.game.block.entity.TileEntityAccumulationTable
 import chylex.hee.game.block.entity.TileEntityBrewingStandCustom
 import chylex.hee.game.block.entity.TileEntityDarkChest
@@ -289,6 +291,9 @@ object ModBlocks{
 	@JvmField val STARDUST_ORE     = BlockStardustOre(buildStardustOre).apply { setup("stardust_ore") }
 	@JvmField val IGNEOUS_ROCK_ORE = BlockIgneousRockOre(buildIgneousRockOre).apply { setup("igneous_rock_ore") }
 	
+	// Blocks: Decorative (Trees)
+	
+	
 	// Blocks: Decorative (Plants)
 	
 	@JvmField val DEATH_FLOWER_DECAYING = BlockDeathFlowerDecaying().apply { setup("death_flower") }
@@ -354,7 +359,11 @@ object ModBlocks{
 	}
 	
 	private fun plantItemBlock(potted: BlockFlowerPotCustom): (Block) -> ItemBlock{
-		return { block -> ItemBlockPlant(block, potted) }
+		return { block -> ItemBlockPlant(block, potted, burnTicks = 0) }
+	}
+	
+	private fun saplingItemBlock(potted: BlockFlowerPotCustom): (Block) -> ItemBlock{
+		return { block -> ItemBlockPlant(block, potted, burnTicks = 100) }
 	}
 	
 	@JvmStatic
