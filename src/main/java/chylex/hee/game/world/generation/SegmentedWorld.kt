@@ -16,7 +16,7 @@ import net.minecraft.block.state.IBlockState
 import net.minecraft.util.math.BlockPos
 import java.util.Random
 
-class SegmentedWorld(override val rand: Random, val worldSize: Size, private val segmentSize: Size, defaultSegmentFactory: (Size) -> ISegment) : IStructureWorld{
+open class SegmentedWorld(override val rand: Random, val worldSize: Size, private val segmentSize: Size, defaultSegmentFactory: (Size) -> ISegment) : IStructureWorld{
 	private val segmentCounts = Size(
 		(worldSize.x.toFloat() / segmentSize.x).ceilToInt(),
 		(worldSize.y.toFloat() / segmentSize.y).ceilToInt(),
