@@ -1,0 +1,19 @@
+{
+  "forge_marker": 1,
+  "variants": {
+    "normal": {
+      "model": "cross",
+      "smooth_lighting": false,
+      "textures": {
+        "cross": "hee:block/autumn_sapling_orange"
+      }
+    },
+    "inventory": {
+      "model": "builtin/generated",
+      "transform": "forge:default-item",
+      "textures": {
+        "layer0": "hee:block/autumn_sapling_orange"
+      }
+    }
+  }
+}

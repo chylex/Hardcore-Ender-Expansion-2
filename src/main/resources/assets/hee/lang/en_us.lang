@@ -90,6 +90,13 @@ tile.hee.endium_ore.name=Endium Ore
 tile.hee.stardust_ore.name=Stardust Ore
 tile.hee.igneous_rock_ore.name=Igneous Rock Ore
 
+tile.hee.autumn_leaves_brown.name=Autumn Leaves (Brown)
+tile.hee.autumn_leaves_orange.name=Autumn Leaves (Orange)
+tile.hee.autumn_leaves_yellowgreen.name=Autumn Leaves (Yellow-Green)
+tile.hee.autumn_sapling_brown.name=Autumn Sapling (Brown)
+tile.hee.autumn_sapling_orange.name=Autumn Sapling (Orange)
+tile.hee.autumn_sapling_yellowgreen.name=Autumn Sapling (Yellow-Green)
+
 tile.hee.death_flower.name=Death Flower
 tile.hee.death_flower_healed.name=Healed Death Flower
 tile.hee.death_flower_withered.name=Withered Death Flower

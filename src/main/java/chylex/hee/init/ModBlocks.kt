@@ -130,6 +130,7 @@ import chylex.hee.game.item.ItemBlockSlabFuel
 import chylex.hee.game.item.ItemBlockWithMetadata
 import chylex.hee.game.item.ItemDragonEgg
 import chylex.hee.game.item.ItemInfusedTNT
+import chylex.hee.game.world.feature.basic.trees.types.AutumnTreeGenerator
 import chylex.hee.init.ModCreativeTabs.OrderedCreativeTab
 import chylex.hee.system.migration.Facing.NORTH
 import chylex.hee.system.migration.Facing.SOUTH
@@ -293,6 +294,17 @@ object ModBlocks{
 	
 	// Blocks: Decorative (Trees)
 	
+	@JvmField val WHITEBARK_SAPLING_AUTUMN_BROWN       = BlockWhitebarkSapling(AutumnTreeGenerator.Brown).apply { setup("autumn_sapling_brown") }
+	@JvmField val WHITEBARK_SAPLING_AUTUMN_ORANGE      = BlockWhitebarkSapling(AutumnTreeGenerator.Orange).apply { setup("autumn_sapling_orange") }
+	@JvmField val WHITEBARK_SAPLING_AUTUMN_YELLOWGREEN = BlockWhitebarkSapling(AutumnTreeGenerator.YellowGreen).apply { setup("autumn_sapling_yellowgreen") }
+	
+	@JvmField val WHITEBARK_LEAVES_AUTUMN_BROWN       = BlockWhitebarkLeaves(WHITEBARK_SAPLING_AUTUMN_BROWN).apply { setup("autumn_leaves_brown") }
+	@JvmField val WHITEBARK_LEAVES_AUTUMN_ORANGE      = BlockWhitebarkLeaves(WHITEBARK_SAPLING_AUTUMN_ORANGE).apply { setup("autumn_leaves_orange") }
+	@JvmField val WHITEBARK_LEAVES_AUTUMN_YELLOWGREEN = BlockWhitebarkLeaves(WHITEBARK_SAPLING_AUTUMN_YELLOWGREEN).apply { setup("autumn_leaves_yellowgreen") }
+	
+	@JvmField val POTTED_WHITEBARK_SAPLING_AUTUMN_BROWN       = BlockFlowerPotCustom(buildFlowerPot, WHITEBARK_SAPLING_AUTUMN_BROWN).apply { setup("potted_autumn_sapling_brown", translationKey = "flowerPot", inCreativeTab = false) }
+	@JvmField val POTTED_WHITEBARK_SAPLING_AUTUMN_ORANGE      = BlockFlowerPotCustom(buildFlowerPot, WHITEBARK_SAPLING_AUTUMN_ORANGE).apply { setup("potted_autumn_sapling_orange", translationKey = "flowerPot", inCreativeTab = false) }
+	@JvmField val POTTED_WHITEBARK_SAPLING_AUTUMN_YELLOWGREEN = BlockFlowerPotCustom(buildFlowerPot, WHITEBARK_SAPLING_AUTUMN_YELLOWGREEN).apply { setup("potted_autumn_sapling_yellowgreen", translationKey = "flowerPot", inCreativeTab = false) }
 	
 	// Blocks: Decorative (Plants)
 	
@@ -471,6 +483,16 @@ object ModBlocks{
 			register(STARDUST_ORE with basicItemBlock)
 			register(IGNEOUS_ROCK_ORE with basicItemBlock)
 			
+			register(WHITEBARK_LEAVES_AUTUMN_BROWN with basicItemBlock)
+			register(WHITEBARK_LEAVES_AUTUMN_ORANGE with basicItemBlock)
+			register(WHITEBARK_LEAVES_AUTUMN_YELLOWGREEN with basicItemBlock)
+			register(WHITEBARK_SAPLING_AUTUMN_BROWN with saplingItemBlock(POTTED_WHITEBARK_SAPLING_AUTUMN_BROWN))
+			register(WHITEBARK_SAPLING_AUTUMN_ORANGE with saplingItemBlock(POTTED_WHITEBARK_SAPLING_AUTUMN_ORANGE))
+			register(WHITEBARK_SAPLING_AUTUMN_YELLOWGREEN with saplingItemBlock(POTTED_WHITEBARK_SAPLING_AUTUMN_YELLOWGREEN))
+			register(POTTED_WHITEBARK_SAPLING_AUTUMN_BROWN)
+			register(POTTED_WHITEBARK_SAPLING_AUTUMN_ORANGE)
+			register(POTTED_WHITEBARK_SAPLING_AUTUMN_YELLOWGREEN)
+			
 			register(DEATH_FLOWER_DECAYING with plantItemBlock(POTTED_DEATH_FLOWER_DECAYING))
 			register(DEATH_FLOWER_HEALED with plantItemBlock(POTTED_DEATH_FLOWER_HEALED))
 			register(DEATH_FLOWER_WITHERED with plantItemBlock(POTTED_DEATH_FLOWER_WITHERED))
@@ -557,6 +579,10 @@ object ModBlocks{
 		Blocks.FIRE.setFireInfo(WHITEBARK_PLANKS, 5, 20)
 		Blocks.FIRE.setFireInfo(WHITEBARK_STAIRS, 5, 20)
 		Blocks.FIRE.setFireInfo(WHITEBARK_SLAB, 5, 20)
+		
+		Blocks.FIRE.setFireInfo(WHITEBARK_LEAVES_AUTUMN_BROWN, 30, 60)
+		Blocks.FIRE.setFireInfo(WHITEBARK_LEAVES_AUTUMN_ORANGE, 30, 60)
+		Blocks.FIRE.setFireInfo(WHITEBARK_LEAVES_AUTUMN_YELLOWGREEN, 30, 60)
 		
 		// UPDATE hardcoded shit in BlockFire Blocks.FIRE.setFireInfo(INFUSED_TNT, 15, 100)
 		

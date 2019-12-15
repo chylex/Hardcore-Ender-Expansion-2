@@ -1,0 +1,12 @@
+{
+  "forge_marker": 1,
+  "variants": {
+    "normal": {
+      "model": "flower_pot_cross",
+      "smooth_lighting": false,
+      "textures": {
+        "plant": "hee:block/autumn_sapling_orange"
+      }
+    }
+  }
+}

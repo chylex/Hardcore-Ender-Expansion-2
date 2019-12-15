@@ -181,6 +181,12 @@ object ModRendering{
 		setMapper(ModBlocks.LOOT_CHEST, singleStateMapper)
 		setMapper(ModBlocks.INFUSED_TNT, singleStateMapper)
 		setMapper(ModBlocks.IGNEOUS_PLATE, singleStateMapper)
+		setMapper(ModBlocks.WHITEBARK_LEAVES_AUTUMN_BROWN, singleStateMapper)
+		setMapper(ModBlocks.WHITEBARK_LEAVES_AUTUMN_ORANGE, singleStateMapper)
+		setMapper(ModBlocks.WHITEBARK_LEAVES_AUTUMN_YELLOWGREEN, singleStateMapper)
+		setMapper(ModBlocks.WHITEBARK_SAPLING_AUTUMN_BROWN, singleStateMapper)
+		setMapper(ModBlocks.WHITEBARK_SAPLING_AUTUMN_ORANGE, singleStateMapper)
+		setMapper(ModBlocks.WHITEBARK_SAPLING_AUTUMN_YELLOWGREEN, singleStateMapper)
 	}
 	
 	private fun registerSpecialModels(){
