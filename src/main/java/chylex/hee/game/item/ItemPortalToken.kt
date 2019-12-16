@@ -1,4 +1,5 @@
 package chylex.hee.game.item
+import chylex.hee.HEE
 import chylex.hee.client.gui.GuiPortalTokenStorage
 import chylex.hee.client.render.util.NO_TINT
 import chylex.hee.client.util.MC
@@ -109,7 +110,7 @@ class ItemPortalToken : Item(){
 		val heldItem = player.getHeldItem(hand)
 		val territory = getTerritoryType(heldItem)
 		
-		if (world.isRemote || !player.isCreative || player.dimension != 1 || territory == null){
+		if (world.isRemote || !player.isCreative || player.dimension != HEE.DIM || territory == null){
 			return super.onItemRightClick(world, player, hand)
 		}
 		
@@ -167,7 +168,7 @@ class ItemPortalToken : Item(){
 		if ((MC.currentScreen as? GuiPortalTokenStorage)?.canActivateToken(stack) == true){
 			lines.add(I18n.format("item.hee.portal_token.tooltip.activate"))
 		}
-		else if (MC.player?.let { it.isCreative && it.dimension == 1 } == true){
+		else if (MC.player?.let { it.isCreative && it.dimension == HEE.DIM } == true){
 			lines.add(I18n.format("item.hee.portal_token.tooltip.creative.${if (hasTerritoryInstance(stack)) "teleport" else "generate"}"))
 		}
 		

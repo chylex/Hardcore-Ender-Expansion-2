@@ -1,4 +1,5 @@
 package chylex.hee.client.render.block
+import chylex.hee.HEE
 import chylex.hee.game.block.BlockAbstractPortal
 import chylex.hee.game.block.BlockAbstractPortal.IPortalController
 import chylex.hee.game.block.entity.TileEntityEndPortalAcceptor
@@ -18,7 +19,7 @@ object RenderTileEndPortal : RenderTileAbstractPortal<TileEntityPortalInner.End,
 	}
 	
 	override fun findController(world: World, pos: BlockPos): IPortalController?{
-		if (world.provider.dimension == 1){
+		if (world.provider.dimension == HEE.DIM){
 			return AlwaysOnController
 		}
 		

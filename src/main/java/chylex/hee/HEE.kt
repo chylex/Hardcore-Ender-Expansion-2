@@ -36,6 +36,7 @@ import org.apache.logging.log4j.Logger
 @Mod(modid = HEE.ID, useMetadata = true, modLanguageAdapter = "chylex.hee.system.core.KotlinAdapter")
 object HEE{
 	const val ID = "hee"
+	const val DIM = 1
 	
 	lateinit var log: Logger
 	lateinit var version: String

@@ -1,4 +1,5 @@
 package chylex.hee.game.entity.living
+import chylex.hee.HEE
 import chylex.hee.game.entity.living.EntityMobVampireBat.BehaviorType.HOSTILE
 import chylex.hee.game.entity.living.EntityMobVampireBat.BehaviorType.NEUTRAL
 import chylex.hee.game.entity.living.EntityMobVampireBat.BehaviorType.PASSIVE
@@ -352,7 +353,7 @@ class EntityMobVampireBat(world: World) : EntityBat(world), IMob, IKnockbackMult
 	override fun onInitialSpawn(difficulty: DifficultyInstance, data: IEntityLivingData?): IEntityLivingData?{
 		// TODO use onInitialSpawn for territory generation, call enablePersistence to stop despawning
 		
-		if (world.provider.dimension == 1){
+		if (world.provider.dimension == HEE.DIM){
 			when(TerritoryType.fromX(posX.floorToInt())){
 				else -> {}
 			}

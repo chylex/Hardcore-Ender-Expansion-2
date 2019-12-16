@@ -1,4 +1,5 @@
 package chylex.hee.game.block
+import chylex.hee.HEE
 import chylex.hee.game.block.entity.TileEntityEndPortalAcceptor
 import chylex.hee.game.block.entity.TileEntityPortalInner
 import chylex.hee.game.block.info.BlockBuilder
@@ -25,7 +26,7 @@ class BlockEndPortalInner(builder: BlockBuilder) : BlockAbstractPortal(builder){
 			return
 		}
 		
-		if (world.provider.dimension == 1){
+		if (world.provider.dimension == HEE.DIM){
 			entity.changeDimension(0, DimensionTeleporter.LastEndPortal)
 		}
 		else{

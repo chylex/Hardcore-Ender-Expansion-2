@@ -1,4 +1,5 @@
 package chylex.hee.game.mechanics.portal
+import chylex.hee.HEE
 import chylex.hee.game.block.BlockAbstractPortal
 import chylex.hee.game.world.WorldProviderEndCustom
 import chylex.hee.system.util.center
@@ -90,7 +91,7 @@ sealed class DimensionTeleporter{
 		
 		fun updateForEntity(entity: Entity, pos: BlockPos?){
 			with(entity.heeTagPersistent){
-				if (entity.dimension == 1 || pos == null){
+				if (entity.dimension == HEE.DIM || pos == null){
 					removeTag(LAST_PORTAL_POS_TAG)
 					removeTag(LAST_PORTAL_DIM_TAG)
 				}

@@ -88,7 +88,7 @@ object TerritoryVoid{
 	}
 	
 	fun getVoidFactor(world: World, point: Vec3d): Float{
-		if (world.provider.dimension != 1){
+		if (world.provider.dimension != HEE.DIM){
 			return OUTSIDE_VOID_FACTOR
 		}
 		
@@ -96,7 +96,7 @@ object TerritoryVoid{
 	}
 	
 	fun getVoidFactor(entity: Entity): Float{
-		if (entity.dimension != 1){
+		if (entity.dimension != HEE.DIM){
 			return OUTSIDE_VOID_FACTOR
 		}
 		
@@ -155,7 +155,7 @@ object TerritoryVoid{
 	@JvmStatic
 	@SubscribeEvent(EventPriority.HIGHEST)
 	fun onPlayerDamage(e: LivingDamageEvent){
-		if (e.source === DamageSource.OUT_OF_WORLD && e.entity.let { it is EntityLivingBase && it.dimension == 1 }){
+		if (e.source === DamageSource.OUT_OF_WORLD && e.entity.let { it is EntityLivingBase && it.dimension == HEE.DIM }){
 			e.isCanceled = true
 		}
 	}

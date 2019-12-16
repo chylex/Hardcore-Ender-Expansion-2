@@ -123,7 +123,7 @@ object TerritoryRenderer{
 		
 		@SubscribeEvent
 		fun onRenderGameOverlayText(e: RenderGameOverlayEvent.Text){
-			if (MC.settings.showDebugInfo && MC.player?.dimension == 1){
+			if (MC.settings.showDebugInfo && MC.player?.dimension == HEE.DIM){
 				with(e.left){
 					add("")
 					add("End Void Factor: ${"%.3f".format(voidFactor.currentValue)}")

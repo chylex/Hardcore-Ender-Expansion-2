@@ -1,4 +1,5 @@
 package chylex.hee.game.world.territory
+import chylex.hee.HEE
 import chylex.hee.game.block.BlockAbstractPortal
 import chylex.hee.game.mechanics.portal.SpawnInfo
 import chylex.hee.game.world.territory.TerritoryType.Companion.CHUNK_MARGIN
@@ -77,7 +78,7 @@ data class TerritoryInstance(val territory: TerritoryType, val index: Int){
 		}
 		
 		val endWorld: World
-			get() = Environment.getServer().getWorld(1)
+			get() = Environment.getServer().getWorld(HEE.DIM)
 	}
 	
 	private val ordinal

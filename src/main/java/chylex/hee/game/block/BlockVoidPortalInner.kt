@@ -1,4 +1,5 @@
 package chylex.hee.game.block
+import chylex.hee.HEE
 import chylex.hee.game.block.BlockVoidPortalInner.Type.HUB
 import chylex.hee.game.block.BlockVoidPortalInner.Type.RETURN_ACTIVE
 import chylex.hee.game.block.entity.TileEntityPortalInner
@@ -137,7 +138,7 @@ class BlockVoidPortalInner(builder: BlockBuilder) : BlockAbstractPortal(builder)
 				val info = pos.closestTickingTile<TileEntityVoidPortalStorage>(world, MAX_DISTANCE_FROM_FRAME)?.prepareSpawnPoint(entity)
 				
 				if (info != null){
-					if (entity.dimension == 1){
+					if (entity.dimension == HEE.DIM){
 						DimensionTeleporter.LastHubPortal.updateForEntity(entity, null)
 						updateSpawnPortal(entity, pos)
 						teleportEntity(entity, info)
