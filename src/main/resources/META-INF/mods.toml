@@ -1,0 +1,26 @@
+modLoader = "kotlinfml"
+loaderVersion = "[1,)"
+
+authors = "https://hee.chylex.com/authors"
+issueTrackerURL = "https://github.com/chylex/Hardcore-Ender-Expansion-2/issues"
+
+[[mods]]
+modId = "hee"
+version = "2.0.0-dev"
+displayName = "Hardcore Ender Expansion"
+displayURL = "https://hee.chylex.com"
+description = ""
+
+[[dependencies.hee]]
+    modId = "minecraft"
+    mandatory = true
+    versionRange = "[1.14.4]"
+    ordering = "NONE"
+    side = "BOTH"
+
+[[dependencies.hee]]
+    modId = "forge"
+    mandatory = true
+    versionRange = "[28.1.111,)"
+    ordering = "NONE"
+    side = "BOTH"

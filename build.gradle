@@ -1,23 +1,48 @@
 buildscript{
-    ext.kotlin_version = "1.3.40"
+    ext.kotlin_version = "1.3.61"
     
     repositories{
         jcenter()
         mavenCentral()
         
         maven{
-            url = "http://files.minecraftforge.net/maven"
+            url = "https://files.minecraftforge.net/maven"
         }
     }
     
     dependencies{
-        classpath "net.minecraftforge.gradle:ForgeGradle:2.3-SNAPSHOT"
-        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:${kotlin_version}"
+        classpath(group: "net.minecraftforge.gradle", name: "ForgeGradle", version: "3.+", changing: true){
+            exclude group: "trove", module: "trove"
+        }
+
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:" + kotlin_version
     }
 }
 
-apply plugin: "net.minecraftforge.gradle.forge"
+repositories{
+    maven{
+        url = "https://minecraft.curseforge.com/api/maven"
+    }
+}
+
+apply plugin: "net.minecraftforge.gradle"
+apply plugin: "eclipse"
 apply plugin: "kotlin"
+
+def mcversion = "1.14.4"
+def forgeversion = "28.1.111"
+def kottleversion = "1.4.0"
+
+def prefixName = "displayName = "
+def prefixVersion = "version = "
+
+def metaLines = file("src/main/resources/META-INF/mods.toml").readLines()
+def metaName = metaLines.find { line -> line.startsWith(prefixName) }.substring(prefixName.length())[1..-2]
+def metaVersion = metaLines.find { line -> line.startsWith(prefixVersion) }.substring(prefixVersion.length())[1..-2]
+
+group = "chylex.hee"
+version = metaVersion
+archivesBaseName = metaName.replaceAll("\\s", "")
 
 sourceCompatibility = targetCompatibility = "1.8"
 
@@ -43,36 +68,64 @@ tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile){
 }
 
 minecraft{
-    version = "1.12.2-14.23.5.2768"
-    runDir = "run"
-    mappings = "stable_39"
-    makeObfSourceJar = false
+    mappings channel: "snapshot", version: "20200101-1.14.3"
+
+    accessTransformer = file("src/main/resources/META-INF/accesstransformer.cfg")
+
+    runs{
+        client{
+            properties "hee.debug": ""
+            workingDirectory file("run")
+
+            mods{
+                hee{
+                    source sourceSets.main
+                }
+            }
+        }
+
+        server{
+            properties "hee.debug": ""
+            workingDirectory file("run")
+
+            mods{
+                hee{
+                    source sourceSets.main
+                }
+            }
+        }
+    }
 }
 
 dependencies{
-    compile "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
-    compile "org.jetbrains.kotlin:kotlin-reflect"
+    minecraft "net.minecraftforge:forge:" + mcversion + "-" + forgeversion
+    implementation "kottle:Kottle:" + kottleversion
 
-    testCompile "org.junit.jupiter:junit-jupiter-api:5.3.0-RC1"
+    testImplementation "org.junit.jupiter:junit-jupiter-api:5.3.0-RC1"
 }
 
 test{
     systemProperty "junit.jupiter.testinstance.lifecycle.default", "per_class"
 }
 
-def modinfo = null
-
-processResources{
-    File file = new File(++sourceSets.main.resources.srcDirs.iterator(), "mcmod.info")
-    modinfo = new groovy.json.JsonSlurper().parseText(file.getText())[0]
-
-    rename("hee_at.cfg", "META-INF/hee_at.cfg")
-}
-
 jar{
-    archiveName = "HardcoreEnderExpansion  MC-${project.minecraft.version}  v${modinfo.version}.jar"
+    archiveName = archivesBaseName + "-" + mcversion + "-v" + version + ".jar"
+
+    from("./"){
+        include "LICENSE"
+    }
 
     manifest{
-        attributes "FMLAT": "hee_at.cfg"
+        attributes([
+                "Specification-Title"  : "bettersprinting",
+                "Specification-Version": "1",
+                "Specification-Vendor" : "chylex",
+
+                "Implementation-Title"  : metaName,
+                "Implementation-Version": metaVersion,
+                "Implementation-Vendor" : "chylex",
+
+                "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ")
+        ])
     }
 }
