@@ -35,7 +35,6 @@ object ModRecipes{
 		}*/
 	}
 	
-	@JvmStatic
 	@SubscribeEvent
 	fun onRegister(e: RegistryEvent.Register<IRecipeSerializer<*>>){
 		CraftingHelper.register(Resource.Custom("ingredient_full_energy"), IngredientFullEnergy)

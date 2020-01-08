@@ -68,10 +68,10 @@ import kotlin.math.abs
 import kotlin.math.min
 import kotlin.math.pow
 
-@SubscribeAllEvents(modid = HEE.ID)
 class EntityMobEnderman(type: EntityType<EntityMobEnderman>, world: World) : EntityMobAbstractEnderman(type, world){
 	constructor(world: World) : this(ModEntities.ENDERMAN, world)
 	
+	@SubscribeAllEvents(modid = HEE.ID)
 	companion object{
 		private const val TELEPORT_HANDLER_TAG = "Teleport"
 		private const val WATER_HANDLER_TAG = "Water"
@@ -99,7 +99,6 @@ class EntityMobEnderman(type: EntityType<EntityMobEnderman>, world: World) : Ent
 		
 		// Projectile event
 		
-		@JvmStatic
 		@SubscribeEvent
 		fun onProjectileImpact(e: ProjectileImpactEvent){
 			val enderman = (e.rayTraceResult as? EntityRayTraceResult)?.entity

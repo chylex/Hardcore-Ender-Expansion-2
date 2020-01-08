@@ -10,7 +10,6 @@ interface IKnockbackMultiplier{
 	
 	@SubscribeAllEvents(modid = HEE.ID)
 	object EventHandler{
-		@JvmStatic
 		@SubscribeEvent(EventPriority.HIGHEST)
 		fun onCriticalHit(e: LivingKnockBackEvent){
 			val mp = (e.originalAttacker as? IKnockbackMultiplier)?.lastHitKnockbackMultiplier ?: return

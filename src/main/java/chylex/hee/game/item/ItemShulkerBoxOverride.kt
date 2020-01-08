@@ -111,7 +111,6 @@ class ItemShulkerBoxOverride(block: Block, properties: Properties) : ItemBlock(b
 	@Sided(Side.CLIENT)
 	@SubscribeAllEvents(Side.CLIENT, modid = HEE.ID)
 	object EventHandler{
-		@JvmStatic
 		@SubscribeEvent(EventPriority.LOWEST)
 		fun onMouseInputPre(e: GuiScreenEvent.MouseClickedEvent.Pre){
 			val gui = e.gui

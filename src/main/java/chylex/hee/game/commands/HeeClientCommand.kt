@@ -21,7 +21,6 @@ internal object HeeClientCommand : HeeBaseCommand(), IClientCommand{
 	
 	override fun allowUsageWithoutPrefix(sender: ICommandSender, message: String) = false
 	
-	@JvmStatic
 	@SubscribeEvent
 	fun onClientCommand(e: CommandEvent){
 		if (e.command === HeeClientCommand){

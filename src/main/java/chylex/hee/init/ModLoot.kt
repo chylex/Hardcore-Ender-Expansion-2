@@ -40,7 +40,6 @@ object ModLoot{
 		@Suppress("UNCHECKED_CAST")
 		get() = POOLS_FIELD.get(this) as ArrayList<LootPool>
 	
-	@JvmStatic
 	@SubscribeEvent
 	fun onLootTableLoad(e: LootTableLoadEvent){
 		if (Resource.isCustom(e.name)){

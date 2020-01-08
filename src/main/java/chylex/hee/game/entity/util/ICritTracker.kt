@@ -11,7 +11,6 @@ interface ICritTracker{
 	
 	@SubscribeAllEvents(modid = HEE.ID)
 	object EventHandler{
-		@JvmStatic
 		@SubscribeEvent(EventPriority.LOWEST, receiveCanceled = true)
 		fun onCriticalHit(e: CriticalHitEvent){
 			(e.target as? ICritTracker)?.wasLastHitCritical = e.result == EventResult.ALLOW || (e.result == EventResult.DEFAULT && e.isVanillaCritical)

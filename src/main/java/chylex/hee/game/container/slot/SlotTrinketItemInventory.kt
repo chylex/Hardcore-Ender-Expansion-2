@@ -78,7 +78,6 @@ class SlotTrinketItemInventory(trinketHandler: IItemHandler, slotNumber: Int) : 
 			yPos = y
 		}
 		
-		@JvmStatic
 		@SubscribeEvent(EventPriority.LOWEST)
 		fun onInitGuiPost(e: GuiScreenEvent.InitGuiEvent.Post){
 			val gui = e.gui
@@ -89,7 +88,6 @@ class SlotTrinketItemInventory(trinketHandler: IItemHandler, slotNumber: Int) : 
 			}
 		}
 		
-		@JvmStatic
 		@SubscribeEvent(EventPriority.LOWEST)
 		fun onMouseInputPre(e: GuiScreenEvent.MouseClickedEvent.Pre){
 			val gui = e.gui
@@ -109,13 +107,11 @@ class SlotTrinketItemInventory(trinketHandler: IItemHandler, slotNumber: Int) : 
 		
 		var isRenderingGUI = false
 		
-		@JvmStatic
 		@SubscribeEvent(EventPriority.LOWEST)
 		fun onDrawGuiScreenPre(@Suppress("UNUSED_PARAMETER") e: DrawScreenEvent.Pre){
 			isRenderingGUI = true
 		}
 		
-		@JvmStatic
 		@SubscribeEvent
 		fun onDrawGuiScreenPre(@Suppress("UNUSED_PARAMETER") e: DrawScreenEvent.Post){
 			isRenderingGUI = false

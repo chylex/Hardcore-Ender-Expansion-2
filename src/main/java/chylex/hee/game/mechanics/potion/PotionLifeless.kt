@@ -12,7 +12,6 @@ object PotionLifeless : PotionBase(color = FluidEnderGoo.rgbColor, kind = HARMFU
 	override val iconX = 0
 	override val iconY = 0
 	
-	@JvmStatic
 	@SubscribeEvent(EventPriority.LOWEST)
 	fun onLivingHeal(e: LivingHealEvent){
 		if (e.entityLiving.isPotionActive(this)){

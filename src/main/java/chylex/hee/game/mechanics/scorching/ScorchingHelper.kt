@@ -61,7 +61,6 @@ object ScorchingHelper{
 	
 	// Events
 	
-	@JvmStatic
 	@SubscribeEvent(EventPriority.LOWEST)
 	fun onBreakSpeed(e: BreakSpeed){
 		val world = e.entity.world
@@ -71,7 +70,6 @@ object ScorchingHelper{
 		}
 	}
 	
-	@JvmStatic
 	@SubscribeEvent(EventPriority.LOW)
 	fun onHarvestDrops(e: HarvestDropsEvent){
 		if (e.harvester?.let(::getHeldScorchingTool)?.canMine(e.state) == true){ // TODO not checking drops.isNotEmpty to support Vines, is that a problem?
@@ -85,7 +83,6 @@ object ScorchingHelper{
 		}
 	}
 	
-	@JvmStatic
 	@SubscribeEvent(EventPriority.LOW)
 	fun onCriticalHit(e: CriticalHitEvent){
 		getHeldScorchingTool(e.player)?.onHit(e)

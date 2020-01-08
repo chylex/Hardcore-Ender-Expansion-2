@@ -12,14 +12,13 @@ import net.minecraft.util.math.BlockPos
 import net.minecraft.world.IWorldReader
 import net.minecraftforge.event.entity.EntityJoinWorldEvent
 
-@SubscribeAllEvents(modid = HEE.ID)
 class AIOcelotSitOverride(ocelot: CatEntity, overridden: CatSitOnBlockGoal) : CatSitOnBlockGoal(ocelot, overridden.movementSpeed){
 	interface IOcelotCanSitOn{
 		fun canOcelotSitOn(world: IWorldReader, pos: BlockPos): Boolean
 	}
 	
+	@SubscribeAllEvents(modid = HEE.ID)
 	companion object{
-		@JvmStatic
 		@SubscribeEvent(EventPriority.LOWEST, receiveCanceled = true)
 		fun onEntityJoinWorld(e: EntityJoinWorldEvent){
 			val entity = e.entity

@@ -33,7 +33,6 @@ object PlayerCapabilityHandler{
 	
 	// Event handling
 	
-	@JvmStatic
 	@SubscribeEvent
 	fun onAttachCapabilities(e: AttachCapabilitiesEvent<Entity>){
 		val entity = e.`object`
@@ -45,7 +44,6 @@ object PlayerCapabilityHandler{
 		}
 	}
 	
-	@JvmStatic
 	@SubscribeEvent(EventPriority.HIGHEST)
 	fun onPlayerClone(e: PlayerEvent.Clone){
 		val oldPlayer = e.original

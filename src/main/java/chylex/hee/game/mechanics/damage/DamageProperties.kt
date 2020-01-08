@@ -13,7 +13,6 @@ import net.minecraft.util.math.Vec3d
 import net.minecraft.util.text.ITextComponent
 import net.minecraftforge.event.entity.living.LivingDamageEvent
 
-@SubscribeAllEvents(modid = HEE.ID)
 class DamageProperties{
 	private var typeBits = 0
 	private var ignoreArmorAndConsequentlyShield = true // due to how vanilla handles unblockable damage, isUnblockable controls both armor and shield
@@ -118,8 +117,8 @@ class DamageProperties{
 	
 	// Non-lethal damage handling
 	
+	@SubscribeAllEvents(modid = HEE.ID)
 	private companion object{
-		@JvmStatic
 		@SubscribeEvent(EventPriority.HIGHEST)
 		fun onLivingDamage(e: LivingDamageEvent){
 			val source = e.source as? CustomDamageSource ?: return

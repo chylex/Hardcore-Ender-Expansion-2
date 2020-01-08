@@ -29,7 +29,6 @@ object ModPotions{
 	val LIFELESS get() = PotionLifeless
 	val PURITY   get() = PotionPurity
 	
-	@JvmStatic
 	@SubscribeEvent
 	fun onRegisterPotions(e: RegistryEvent.Register<Potion>){
 		with(e.registry){
@@ -38,7 +37,6 @@ object ModPotions{
 		}
 	}
 	
-	@JvmStatic
 	@SubscribeEvent
 	fun onRegisterTypes(e: RegistryEvent.Register<PotionType>){
 		with(e.registry){

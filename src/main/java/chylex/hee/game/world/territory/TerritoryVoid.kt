@@ -151,7 +151,6 @@ object TerritoryVoid{
 	
 	// Event handling
 	
-	@JvmStatic
 	@SubscribeEvent(EventPriority.HIGHEST)
 	fun onPlayerDamage(e: LivingDamageEvent){
 		if (e.source === DamageSource.OUT_OF_WORLD && e.entity.let { it is EntityLivingBase && it.dimension === HEE.dim }){

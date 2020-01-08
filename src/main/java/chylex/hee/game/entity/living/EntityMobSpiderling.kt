@@ -95,10 +95,10 @@ import kotlin.math.log10
 import kotlin.math.roundToInt
 import kotlin.math.sin
 
-@SubscribeAllEvents(modid = HEE.ID)
 class EntityMobSpiderling(type: EntityType<EntityMobSpiderling>, world: World) : EntityMob(type, world), ILightStartleHandler, IMobBypassPeacefulDespawn{
 	constructor(world: World) : this(ModEntities.SPIDERLING, world)
 	
+	@SubscribeAllEvents(modid = HEE.ID)
 	companion object{
 		private val DAMAGE_GENERAL = Damage(DIFFICULTY_SCALING, PEACEFUL_EXCLUSION, *ALL_PROTECTIONS)
 		private val FALL_CRIT_DAMAGE = AttributeModifier("Fall crit damage", 0.5, OPERATION_MUL_INCR_INDIVIDUAL)
@@ -112,7 +112,6 @@ class EntityMobSpiderling(type: EntityType<EntityMobSpiderling>, world: World) :
 		private const val SLEEP_STATE_TAG = "SleepState"
 		private const val LIGHT_STARTLE_RESET_TIME_TAG = "LightStartleResetTime"
 		
-		@JvmStatic
 		@SubscribeEvent
 		fun onHit(e: CriticalHitEvent){
 			if (e.target is EntityMobSpiderling){

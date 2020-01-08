@@ -41,7 +41,6 @@ object RenderTileExperienceGate : TileEntityRendererFast<TileEntityExperienceGat
 	private val FRAME_COUNT = 1 + FRAMES.sumBy { it.size }
 	private val FRAME_OFFSETS = FRAMES.indices.map { index -> 1 + FRAMES.take(index).sumBy { it.size } }.toIntArray()
 	
-	@JvmStatic
 	@SubscribeEvent
 	fun onTextureStitchPre(e: TextureStitchEvent.Pre){
 		if (e.map.basePath != "textures/block"){
@@ -53,7 +52,6 @@ object RenderTileExperienceGate : TileEntityRendererFast<TileEntityExperienceGat
 		}
 	}
 	
-	@JvmStatic
 	@SubscribeEvent
 	fun onTextureStitchPost(e: TextureStitchEvent.Post){
 		if (e.map.basePath != "textures/block"){

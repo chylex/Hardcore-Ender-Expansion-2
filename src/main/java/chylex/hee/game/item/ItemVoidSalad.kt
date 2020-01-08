@@ -21,8 +21,8 @@ import net.minecraft.item.ItemStack
 import net.minecraft.world.World
 import net.minecraftforge.event.entity.player.PlayerEvent
 
-@SubscribeAllEvents(modid = HEE.ID)
 class ItemVoidSalad(properties: Properties) : Item(properties){
+	@SubscribeAllEvents(modid = HEE.ID)
 	companion object{
 		private val DAMAGE_SAFE = Damage(MAGIC_TYPE, NON_LETHAL)
 		private val DAMAGE_LETHAL = Damage(MAGIC_TYPE)
@@ -31,7 +31,6 @@ class ItemVoidSalad(properties: Properties) : Item(properties){
 		
 		val FOOD: Food = Food.Builder().hunger(0).saturation(0F).setAlwaysEdible().build()
 		
-		@JvmStatic
 		@SubscribeEvent
 		fun onPlayerClone(e: PlayerEvent.Clone){
 			if (e.isWasDeath && e.original.heeTagOrNull?.getBoolean(PLAYER_RESPAWN_HUNGRY_TAG) == true){

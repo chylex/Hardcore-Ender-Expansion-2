@@ -357,7 +357,6 @@ object ModBlocks{
 		return { block -> ItemBlockFuel(block, itemBlockDefaultProps, burnTicks) }
 	}
 	
-	@JvmStatic
 	@SubscribeEvent
 	fun onRegisterFluids(e: RegistryEvent.Register<Fluid>){
 		with(e.registry){
@@ -368,7 +367,6 @@ object ModBlocks{
 		}
 	}
 	
-	@JvmStatic
 	@SubscribeEvent
 	fun onRegisterBlocks(e: RegistryEvent.Register<Block>){
 		with(e.registry){
@@ -521,7 +519,6 @@ object ModBlocks{
 		}
 	}
 	
-	@JvmStatic
 	@SubscribeEvent
 	fun onRegisterItemBlocks(e: RegistryEvent.Register<Item>){
 		temporaryItemBlocks.forEach(e.registry::register)

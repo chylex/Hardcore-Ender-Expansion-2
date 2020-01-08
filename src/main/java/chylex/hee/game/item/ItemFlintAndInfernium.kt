@@ -35,14 +35,13 @@ import net.minecraft.world.World
 import net.minecraftforge.common.MinecraftForge
 import net.minecraftforge.event.world.ExplosionEvent
 
-@SubscribeAllEvents(modid = HEE.ID)
 class ItemFlintAndInfernium(properties: Properties) : Item(properties){
+	@SubscribeAllEvents(modid = HEE.ID)
 	companion object{
 		private const val CREEPER_INFERNIUM_TAG = "Infernium"
 		
 		const val EXPLOSION_MULTIPLIER = 1.5F
 		
-		@JvmStatic
 		@SubscribeEvent(EventPriority.HIGHEST)
 		fun onExplosionStart(e: ExplosionEvent.Start){
 			val explosion = e.explosion

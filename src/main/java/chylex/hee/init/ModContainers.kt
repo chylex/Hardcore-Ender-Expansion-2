@@ -24,7 +24,6 @@ object ModContainers{
 	val SHULKER_BOX_IN_INVENTORY = build<ContainerShulkerBoxInInventory>() named "shulker_box_in_inventory"
 	val TRINKET_POUCH            = build<ContainerTrinketPouch>() named "trinket_pouch"
 	
-	@JvmStatic
 	@SubscribeEvent
 	fun onRegister(e: RegistryEvent.Register<ContainerType<*>>){
 		with(e.registry){

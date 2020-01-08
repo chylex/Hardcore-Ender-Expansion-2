@@ -52,7 +52,6 @@ object HEE{
 		WorldProviderEndCustom.register()
 	}
 	
-	@JvmStatic
 	@SubscribeEvent
 	fun onCommonSetup(@Suppress("UNUSED_PARAMETER") e: FMLCommonSetupEvent){
 		Debug.initialize()
@@ -68,7 +67,6 @@ object HEE{
 		OverworldFeatures.register()
 	}
 	
-	@JvmStatic
 	@SubscribeEvent
 	fun onLoadComplete(@Suppress("UNUSED_PARAMETER") e: FMLLoadCompleteEvent){
 		EntityMobEnderman.setupBiomeSpawns()
@@ -78,7 +76,6 @@ object HEE{
 		IntegrityCheck.verify()
 	}
 	
-	@JvmStatic
 	@SubscribeEvent
 	fun onServerStarting(@Suppress("UNUSED_PARAMETER") e: FMLServerStartingEvent){
 		// UPDATE e.registerServerCommand(HeeServerCommand)

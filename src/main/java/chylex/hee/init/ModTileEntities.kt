@@ -44,7 +44,6 @@ object ModTileEntities{
 	val TABLE_PEDESTAL         = build<TileEntityTablePedestal>(ModBlocks.TABLE_PEDESTAL) named "table_pedestal"
 	val VOID_PORTAL_STORAGE    = build<TileEntityVoidPortalStorage>(ModBlocks.VOID_PORTAL_STORAGE, ModBlocks.VOID_PORTAL_STORAGE_CRAFTED) named "void_portal_storage"
 	
-	@JvmStatic
 	@SubscribeEvent
 	fun onRegister(e: RegistryEvent.Register<TileEntityType<*>>){
 		with(e.registry){

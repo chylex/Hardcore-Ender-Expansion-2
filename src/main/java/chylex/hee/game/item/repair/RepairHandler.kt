@@ -9,7 +9,6 @@ import net.minecraftforge.event.AnvilUpdateEvent
 object RepairHandler{
 	const val MAX_EXPERIENCE_COST = 39
 	
-	@JvmStatic
 	@SubscribeEvent
 	fun onAnvilUpdate(e: AnvilUpdateEvent){
 		val target = e.left

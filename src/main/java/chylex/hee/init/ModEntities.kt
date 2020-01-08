@@ -79,7 +79,6 @@ object ModEntities{
 	val TECHNICAL_PUZZLE    = build<EntityTechnicalPuzzle>(MISC).size(0F, 0F).immuneToFire().tracker(1, Int.MAX_VALUE, false).name("technical_puzzle")
 	val TECHNICAL_TRIGGER   = build<EntityTechnicalTrigger>(MISC).size(0F, 0F).immuneToFire().tracker(256, Int.MAX_VALUE, false).name("technical_trigger")
 	
-	@JvmStatic
 	@SubscribeEvent
 	fun onRegister(e: RegistryEvent.Register<EntityType<*>>){
 		with(e.registry){

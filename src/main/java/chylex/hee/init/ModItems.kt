@@ -152,7 +152,6 @@ object ModItems{
 	
 	// Registry
 	
-	@JvmStatic
 	@SubscribeEvent
 	fun onRegister(e: RegistryEvent.Register<Item>){
 		with(e.registry){

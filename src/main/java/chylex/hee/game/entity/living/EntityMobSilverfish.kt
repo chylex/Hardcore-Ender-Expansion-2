@@ -43,17 +43,16 @@ import net.minecraftforge.event.entity.EntityJoinWorldEvent
 import net.minecraftforge.fml.network.NetworkHooks
 import kotlin.math.floor
 
-@SubscribeAllEvents(modid = HEE.ID)
 class EntityMobSilverfish(type: EntityType<EntityMobSilverfish>, world: World) : EntitySilverfish(type, world), ICritTracker{
 	constructor(world: World) : this(ModEntities.SILVERFISH, world)
 	
+	@SubscribeAllEvents(modid = HEE.ID)
 	companion object{
 		private val DAMAGE_GENERAL          = Damage(DIFFICULTY_SCALING, PEACEFUL_EXCLUSION, *ALL_PROTECTIONS, RAPID_DAMAGE(5))
 		private val DAMAGE_HAUNTWOOD_FOREST = Damage(DIFFICULTY_SCALING, PEACEFUL_KNOCKBACK, *ALL_PROTECTIONS, RAPID_DAMAGE(5))
 		
 		private const val HIDE_DELAY_TAG = "HideDelay"
 		
-		@JvmStatic
 		@SubscribeEvent(EventPriority.LOWEST)
 		fun onEntityJoinWorld(e: EntityJoinWorldEvent){
 			val entity = e.entity

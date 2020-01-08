@@ -50,7 +50,6 @@ import net.minecraftforge.event.entity.living.LivingAttackEvent
 import net.minecraftforge.fml.common.registry.IEntityAdditionalSpawnData
 import net.minecraftforge.fml.network.NetworkHooks
 
-@SubscribeAllEvents(modid = HEE.ID)
 class EntityProjectileEnderPearl(type: EntityType<EntityProjectileEnderPearl>, world: World) : EntityEnderPearl(type, world), IEntityAdditionalSpawnData{
 	constructor(thrower: EntityLivingBase, infusions: InfusionList) : this(ModEntities.ENDER_PEARL, thrower.world){
 		// UPDATE constructor doesn't initialize "perlThrower", owner, ownerId and maybe more
@@ -58,6 +57,7 @@ class EntityProjectileEnderPearl(type: EntityType<EntityProjectileEnderPearl>, w
 		shoot(thrower, thrower.rotationPitch, thrower.rotationYaw, 0F, 1.5F, 1F)
 	}
 	
+	@SubscribeAllEvents(modid = HEE.ID)
 	companion object{
 		private val DAMAGE_HIT_ENTITY = Damage(PEACEFUL_EXCLUSION, *ALL_PROTECTIONS_WITH_SHIELD)
 		
@@ -72,7 +72,6 @@ class EntityProjectileEnderPearl(type: EntityType<EntityProjectileEnderPearl>, w
 		
 		private const val HAS_PHASED_TAG = "HasPhased"
 		
-		@JvmStatic
 		@SubscribeEvent
 		fun onEntityJoinWorld(e: EntityJoinWorldEvent){
 			val original = e.entity
@@ -83,7 +82,6 @@ class EntityProjectileEnderPearl(type: EntityType<EntityProjectileEnderPearl>, w
 			}
 		}
 		
-		@JvmStatic
 		@SubscribeEvent(EventPriority.LOWEST)
 		fun onLivingAttack(e: LivingAttackEvent){
 			if (e.source === DamageSource.IN_WALL && !e.entity.world.isRemote){

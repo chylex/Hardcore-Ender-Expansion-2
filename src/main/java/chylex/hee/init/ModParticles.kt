@@ -35,7 +35,6 @@ import net.minecraftforge.fml.common.Mod.EventBusSubscriber.Bus.MOD
 
 @SubscribeAllEvents(modid = HEE.ID, bus = MOD)
 object ModParticles{
-	@JvmStatic
 	@SubscribeEvent
 	fun onRegister(e: RegistryEvent.Register<ParticleType<*>>){
 		with(e.registry){
@@ -76,7 +75,6 @@ object ModParticles{
 			})
 		}
 		
-		@JvmStatic
 		@SubscribeEvent
 		fun onRegisterFactories(e: ParticleFactoryRegisterEvent){
 			for(factory in factories){

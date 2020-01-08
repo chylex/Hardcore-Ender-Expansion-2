@@ -44,7 +44,6 @@ object OverlayRenderer{
 	
 	// Ender Goo
 	
-	@JvmStatic
 	@SubscribeEvent
 	fun onFogDensity(e: FogDensity){
 		val inside = e.info.blockAtCamera.material
@@ -56,7 +55,6 @@ object OverlayRenderer{
 		}
 	}
 	
-	@JvmStatic
 	@SubscribeEvent
 	fun onRenderHelmetOverlayPre(e: RenderGameOverlayEvent.Pre){
 		if (e.type != HELMET){
@@ -88,7 +86,6 @@ object OverlayRenderer{
 	
 	// Energy Cluster
 	
-	@JvmStatic
 	@SubscribeEvent
 	fun onRenderText(@Suppress("UNUSED_PARAMETER") e: RenderGameOverlayEvent.Text){
 		fun drawTextOffScreenCenter(x: Int, y: Int, line: Int, text: String, color: IntColor){
@@ -137,7 +134,6 @@ object OverlayRenderer{
 	
 	// Block outlines
 	
-	@JvmStatic
 	@SubscribeEvent
 	fun onRenderBlockOutline(e: DrawBlockHighlightEvent.HighlightBlock){
 		val world = MC.world ?: return

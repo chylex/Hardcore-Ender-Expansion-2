@@ -95,7 +95,6 @@ object ModRendering{
 	val RENDER_ITEM_JAR_O_DUST = RenderTileJarODust.AsItem
 	// UPDATE val RENDER_ITEM_ENDERMAN_HEAD, RenderTileEndermanHead.AsItem
 	
-	@JvmStatic
 	@SubscribeEvent
 	@Suppress("unused", "UNUSED_PARAMETER", "RemoveExplicitTypeArguments")
 	fun onRegisterRenderers(e: FMLClientSetupEvent){
@@ -149,7 +148,6 @@ object ModRendering{
 		}
 	}
 	
-	@JvmStatic
 	@SubscribeEvent
 	fun onRegisterBlockItemColors(e: ColorHandlerEvent.Item){
 		with(e.blockColors){ with(e.itemColors){
@@ -207,7 +205,6 @@ object ModRendering{
 		setMapper(ModBlocks.WHITEBARK_SAPLING_AUTUMN_YELLOWGREEN, singleStateMapper)
 	}*/
 	
-	@JvmStatic
 	@SubscribeEvent
 	fun onRegisterModels(@Suppress("UNUSED_PARAMETER") e: ModelRegistryEvent){
 		

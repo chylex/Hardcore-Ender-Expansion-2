@@ -40,7 +40,6 @@ object TerritoryRenderer{
 	private var prevChunkX = Int.MAX_VALUE
 	private var prevTerritory: TerritoryType? = null
 	
-	@JvmStatic
 	@SubscribeEvent
 	fun onClientTick(e: ClientTickEvent){
 		if (e.phase == Phase.START){
@@ -176,7 +175,6 @@ object TerritoryRenderer{
 			textTime = 0
 		}
 		
-		@JvmStatic
 		@SubscribeEvent(EventPriority.HIGHEST)
 		fun onRenderGameOverlayText(e: RenderGameOverlayEvent.Text){
 			if (textTime == 0){

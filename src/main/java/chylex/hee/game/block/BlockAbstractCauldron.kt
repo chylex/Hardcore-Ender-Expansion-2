@@ -23,12 +23,11 @@ import net.minecraft.util.math.BlockRayTraceResult
 import net.minecraft.world.World
 import net.minecraftforge.event.entity.player.EntityItemPickupEvent
 
-@SubscribeAllEvents(modid = HEE.ID)
 abstract class BlockAbstractCauldron(builder: BlockBuilder) : BlockCauldron(builder.p){
+	@SubscribeAllEvents(modid = HEE.ID)
 	companion object{
 		const val MAX_LEVEL = 3
 		
-		@JvmStatic
 		@SubscribeEvent
 		fun onEntityItemPickup(e: EntityItemPickupEvent){
 			val item = e.item
