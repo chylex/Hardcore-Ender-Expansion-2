@@ -1,24 +1,27 @@
 package chylex.hee.game.world.util
 import chylex.hee.system.migration.vanilla.Blocks
+import chylex.hee.system.migration.vanilla.EntityLivingBase
+import chylex.hee.system.migration.vanilla.EntityPlayer
+import chylex.hee.system.migration.vanilla.EntityPlayerMP
 import chylex.hee.system.migration.vanilla.Sounds
 import chylex.hee.system.util.component1
 import chylex.hee.system.util.component2
 import chylex.hee.system.util.component3
 import chylex.hee.system.util.directionTowards
+import chylex.hee.system.util.getFluidState
 import chylex.hee.system.util.getState
 import chylex.hee.system.util.isAir
+import chylex.hee.system.util.isFullBlock
 import chylex.hee.system.util.lookPosVec
 import chylex.hee.system.util.nextFloat
 import chylex.hee.system.util.playServer
 import chylex.hee.system.util.setBlock
 import chylex.hee.system.util.square
-import net.minecraft.block.material.Material
-import net.minecraft.enchantment.EnchantmentProtection
+import net.minecraft.block.Block
+import net.minecraft.enchantment.ProtectionEnchantment
 import net.minecraft.entity.Entity
-import net.minecraft.entity.EntityLivingBase
-import net.minecraft.entity.player.EntityPlayer
-import net.minecraft.entity.player.EntityPlayerMP
-import net.minecraft.network.play.server.SPacketExplosion
+import net.minecraft.item.ItemStack
+import net.minecraft.network.play.server.SExplosionPacket
 import net.minecraft.util.DamageSource
 import net.minecraft.util.SoundCategory
 import net.minecraft.util.math.AxisAlignedBB
@@ -26,9 +29,13 @@ import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.Vec3d
 import net.minecraft.world.Explosion
 import net.minecraft.world.World
+import net.minecraft.world.server.ServerWorld
+import net.minecraft.world.storage.loot.LootContext
+import net.minecraft.world.storage.loot.LootParameters
 import net.minecraftforge.event.ForgeEventFactory
 import java.util.Random
 import kotlin.math.floor
+import kotlin.math.max
 
 class ExplosionBuilder{
 	var destroyBlocks = true
@@ -58,10 +65,10 @@ class ExplosionBuilder{
 		val destroyedBlocks = if (destroyBlocks) explosion.affectedBlockPositions else emptyList()
 		val playerKnockback = explosion.playerKnockbackMap
 		
-		for(player in world.playerEntities){
+		for(player in world.players){
 			if (player.getDistanceSq(x, y, z) < square(64)){
 				@Suppress("NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS") // UPDATE
-				(player as EntityPlayerMP).connection.sendPacket(SPacketExplosion(x, y, z, strength, destroyedBlocks, playerKnockback[player]))
+				(player as EntityPlayerMP).connection.sendPacket(SExplosionPacket(x, y, z, strength, destroyedBlocks, playerKnockback[player]))
 			}
 		}
 	}
@@ -79,7 +86,7 @@ class ExplosionBuilder{
 		private val centerZ: Double,
 		strength: Float,
 		private val builder: ExplosionBuilder
-	) : Explosion(world, @Suppress("NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS") source, centerX, centerY, centerZ, strength, false, false){ // UPDATE
+	) : Explosion(world, source, centerX, centerY, centerZ, strength, false, Mode.NONE /* don't care */){
 		private val rand = Random()
 		
 		private fun determineAffectedBlocks(){
@@ -103,10 +110,16 @@ class ExplosionBuilder{
 							while(remainingPower > 0F){
 								val pos = BlockPos(testX, testY, testZ)
 								val state = pos.getState(world)
+								val fluid = pos.getFluidState(world)
 								
-								if (state.material !== Material.AIR){
-									val explosionResistance = source?.getExplosionResistance(this, world, pos, state) ?: state.block.getExplosionResistance(world, pos, null, this)
-									remainingPower -= (explosionResistance + 0.3F) * 0.3F
+								if (!state.isAir(world, pos) || !fluid.isEmpty){
+									val blockResistance = max(
+										state.getExplosionResistance(world, pos, source, this),
+										fluid.getExplosionResistance(world, pos, source, this)
+									)
+									
+									val finalResistance = source?.getExplosionResistance(this, world, pos, state, fluid, blockResistance) ?: blockResistance
+									remainingPower -= (finalResistance + 0.3F) * 0.3F
 								}
 								
 								if (remainingPower > 0F && (source == null || source.canExplosionDestroyBlock(this, this.world, pos, state, remainingPower))){
@@ -156,18 +169,19 @@ class ExplosionBuilder{
 				}
 				
 				if (entity is EntityPlayer){
-					if (entity.isSpectator || (entity.isCreative && entity.capabilities.isFlying)){
+					if (entity.isSpectator || (entity.isCreative && entity.abilities.isFlying)){
 						continue
 					}
 				}
 				
-				val distanceScaled = entity.getDistance(centerX, centerY, centerZ) / doubleSize
+				val lookPosVec = entity.lookPosVec
+				val distanceScaled = lookPosVec.distanceTo(centerVec) / doubleSize
 				
 				if (distanceScaled > 1){
 					continue
 				}
 				
-				val blastPower = (1 - distanceScaled) * world.getBlockDensity(centerVec, entity.entityBoundingBox)
+				val blastPower = (1 - distanceScaled) * getBlockDensity(centerVec, entity)
 				
 				if (damageEntities){
 					val finalDamage = 1F + ((square(blastPower) + blastPower) * size * 7).toInt()
@@ -175,12 +189,10 @@ class ExplosionBuilder{
 				}
 				
 				if (knockbackEntities){
-					val knockbackPower = (entity as? EntityLivingBase)?.let { EnchantmentProtection.getBlastDamageReduction(it, blastPower) } ?: blastPower
-					val knockbackVec = centerVec.directionTowards(entity.lookPosVec).scale(knockbackPower)
+					val knockbackPower = (entity as? EntityLivingBase)?.let { ProtectionEnchantment.getBlastDamageReduction(it, blastPower) } ?: blastPower
+					val knockbackVec = centerVec.directionTowards(lookPosVec).scale(knockbackPower)
 					
-					entity.motionX += knockbackVec.x
-					entity.motionY += knockbackVec.y
-					entity.motionZ += knockbackVec.z
+					entity.motion = entity.motion.mul(knockbackVec)
 					
 					if (entity is EntityPlayer){
 						playerKnockbackMap[entity] = knockbackVec // vanilla uses blastPower instead of knockbackPower here, bug?
@@ -191,20 +203,31 @@ class ExplosionBuilder{
 		
 		private fun destroyAffectedBlocks(){
 			if (builder.destroyBlocks){
+				// UPDATE incorporate them into the context
 				val blockDropRate = builder.blockDropRate ?: 1F / size
 				val blockDropFortune = builder.blockDropFortune
 				
 				for(pos in affectedBlockPositions){
 					val state = pos.getState(world)
 					
-					if (state.material !== Material.AIR){
-						val block = state.block
-						
-						if (block.canDropFromExplosion(this)){
-							block.dropBlockAsItemWithChance(world, pos, state, blockDropRate, blockDropFortune)
+					if (!state.isAir(world, pos)){
+						if (world is ServerWorld && state.canDropFromExplosion(world, pos, this)){
+							val tile = if (state.hasTileEntity())
+								world.getTileEntity(pos)
+							else
+								null
+							
+							val context = LootContext.Builder(world)
+								.withRandom(world.rand)
+								.withParameter(LootParameters.POSITION, pos)
+								.withParameter(LootParameters.TOOL, ItemStack.EMPTY)
+								.withParameter(LootParameters.EXPLOSION_RADIUS, size)
+								.withNullableParameter(LootParameters.BLOCK_ENTITY, tile)
+							
+							Block.spawnDrops(state, context)
 						}
 						
-						block.onBlockExploded(this.world, pos, this)
+						state.onBlockExploded(world, pos, this)
 					}
 				}
 			}
@@ -216,7 +239,7 @@ class ExplosionBuilder{
 					val candidates = if (builder.destroyBlocks) affectedBlockPositions else affectedBlockPositions.map(BlockPos::up)
 					
 					for(pos in candidates){
-						if (pos.isAir(world) && pos.down().getState(world).isFullBlock && rand.nextInt(fireChance) == 0){
+						if (pos.isAir(world) && pos.down().isFullBlock(world) && rand.nextInt(fireChance) == 0){
 							pos.setBlock(world, Blocks.FIRE)
 						}
 					}

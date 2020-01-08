@@ -6,37 +6,35 @@ import chylex.hee.game.item.infusion.InfusionTag
 import chylex.hee.system.migration.ActionResult.SUCCESS
 import chylex.hee.system.migration.forge.Side
 import chylex.hee.system.migration.forge.Sided
+import chylex.hee.system.migration.vanilla.EntityPlayer
+import chylex.hee.system.migration.vanilla.ItemEnderPearl
 import chylex.hee.system.migration.vanilla.Sounds
 import chylex.hee.system.util.facades.Stats
 import chylex.hee.system.util.nextFloat
 import chylex.hee.system.util.playServer
 import chylex.hee.system.util.posVec
 import net.minecraft.client.util.ITooltipFlag
-import net.minecraft.entity.player.EntityPlayer
-import net.minecraft.item.ItemEnderPearl
 import net.minecraft.item.ItemStack
+import net.minecraft.item.Items
 import net.minecraft.util.ActionResult
-import net.minecraft.util.EnumHand
+import net.minecraft.util.Hand
 import net.minecraft.util.SoundCategory
+import net.minecraft.util.text.ITextComponent
 import net.minecraft.world.World
 
-class ItemInfusedEnderPearl : ItemEnderPearl(), IInfusableItem{
-	init{
-		creativeTab = null
-	}
-	
-	override fun onItemRightClick(world: World, player: EntityPlayer, hand: EnumHand): ActionResult<ItemStack>{
+class ItemInfusedEnderPearl(properties: Properties) : ItemEnderPearl(properties), IInfusableItem{
+	override fun onItemRightClick(world: World, player: EntityPlayer, hand: Hand): ActionResult<ItemStack>{
 		val heldItem = player.getHeldItem(hand)
 		
-		if (!player.capabilities.isCreativeMode){
+		if (!player.abilities.isCreativeMode){
 			heldItem.shrink(1)
 		}
 		
 		if (!world.isRemote){
-			world.spawnEntity(EntityProjectileEnderPearl(player, InfusionTag.getList(heldItem)))
+			world.addEntity(EntityProjectileEnderPearl(player, InfusionTag.getList(heldItem)))
 		}
 		
-		Sounds.ENTITY_ENDERPEARL_THROW.playServer(world, player.posVec, SoundCategory.NEUTRAL, volume = 0.5F, pitch = 0.4F / itemRand.nextFloat(0.8F, 1.2F))
+		Sounds.ENTITY_ENDER_PEARL_THROW.playServer(world, player.posVec, SoundCategory.NEUTRAL, volume = 0.5F, pitch = 0.4F / random.nextFloat(0.8F, 1.2F))
 		
 		player.cooldownTracker.setCooldown(this, 20)
 		player.addStat(Stats.useItem(this))
@@ -48,8 +46,12 @@ class ItemInfusedEnderPearl : ItemEnderPearl(), IInfusableItem{
 		return ItemAbstractInfusable.onCanApplyInfusion(this, infusion)
 	}
 	
+	override fun getTranslationKey(): String{
+		return Items.ENDER_PEARL.translationKey
+	}
+	
 	@Sided(Side.CLIENT)
-	override fun addInformation(stack: ItemStack, world: World?, lines: MutableList<String>, flags: ITooltipFlag){
+	override fun addInformation(stack: ItemStack, world: World?, lines: MutableList<ITextComponent>, flags: ITooltipFlag){
 		super.addInformation(stack, world, lines, flags)
 		ItemAbstractInfusable.onAddInformation(stack, lines)
 	}

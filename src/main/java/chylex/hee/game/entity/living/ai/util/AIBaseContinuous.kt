@@ -1,14 +1,7 @@
 package chylex.hee.game.entity.living.ai.util
-import chylex.hee.system.util.AIBase
-import chylex.hee.system.util.AI_FLAG_NONE
+import net.minecraft.entity.ai.goal.Goal
 
-abstract class AIBaseContinuous : AIBase(){
-	init{
-		this.mutexBits = AI_FLAG_NONE
-	}
-	
-	protected abstract fun tick()
-	
+abstract class AIBaseContinuous : Goal(){
 	final override fun shouldExecute(): Boolean{
 		return true
 	}
@@ -18,6 +11,5 @@ abstract class AIBaseContinuous : AIBase(){
 	}
 	
 	final override fun startExecuting(){}
-	final override fun updateTask() = tick()
 	final override fun resetTask(){}
 }

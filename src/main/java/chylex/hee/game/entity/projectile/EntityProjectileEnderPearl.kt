@@ -10,38 +10,65 @@ import chylex.hee.game.item.infusion.InfusionTag
 import chylex.hee.game.mechanics.damage.Damage
 import chylex.hee.game.mechanics.damage.IDamageProcessor.Companion.ALL_PROTECTIONS_WITH_SHIELD
 import chylex.hee.game.mechanics.damage.IDamageProcessor.Companion.PEACEFUL_EXCLUSION
-import chylex.hee.game.world.util.RayTracer
 import chylex.hee.game.world.util.Teleporter
+import chylex.hee.init.ModEntities
+import chylex.hee.system.migration.Facing.DOWN
+import chylex.hee.system.migration.Facing.UP
 import chylex.hee.system.migration.forge.EventPriority
 import chylex.hee.system.migration.forge.SubscribeAllEvents
 import chylex.hee.system.migration.forge.SubscribeEvent
+import chylex.hee.system.migration.vanilla.EntityEnderPearl
+import chylex.hee.system.migration.vanilla.EntityLivingBase
+import chylex.hee.system.migration.vanilla.EntityPlayerMP
 import chylex.hee.system.util.Pos
 import chylex.hee.system.util.TagCompound
 import chylex.hee.system.util.heeTag
 import chylex.hee.system.util.motionVec
 import chylex.hee.system.util.posVec
+import chylex.hee.system.util.subtractY
 import chylex.hee.system.util.use
-import io.netty.buffer.ByteBuf
+import net.minecraft.block.BlockState
 import net.minecraft.entity.Entity
-import net.minecraft.entity.EntityLivingBase
-import net.minecraft.entity.item.EntityEnderPearl
-import net.minecraft.entity.player.EntityPlayerMP
+import net.minecraft.entity.EntityType
+import net.minecraft.network.IPacket
+import net.minecraft.network.PacketBuffer
 import net.minecraft.util.DamageSource
+import net.minecraft.util.math.BlockPos
+import net.minecraft.util.math.BlockRayTraceResult
+import net.minecraft.util.math.EntityRayTraceResult
+import net.minecraft.util.math.RayTraceContext
+import net.minecraft.util.math.RayTraceContext.FluidMode
 import net.minecraft.util.math.RayTraceResult
-import net.minecraft.util.math.RayTraceResult.Type.MISS
+import net.minecraft.util.math.RayTraceResult.Type
+import net.minecraft.util.math.Vec3d
+import net.minecraft.util.math.shapes.VoxelShape
+import net.minecraft.util.math.shapes.VoxelShapes
+import net.minecraft.world.IBlockReader
 import net.minecraft.world.World
 import net.minecraftforge.event.entity.EntityJoinWorldEvent
 import net.minecraftforge.event.entity.living.LivingAttackEvent
 import net.minecraftforge.fml.common.registry.IEntityAdditionalSpawnData
+import net.minecraftforge.fml.network.NetworkHooks
 
 @SubscribeAllEvents(modid = HEE.ID)
-class EntityProjectileEnderPearl : EntityEnderPearl, IEntityAdditionalSpawnData{
+class EntityProjectileEnderPearl(type: EntityType<EntityProjectileEnderPearl>, world: World) : EntityEnderPearl(type, world), IEntityAdditionalSpawnData{
+	constructor(thrower: EntityLivingBase, infusions: InfusionList) : this(ModEntities.ENDER_PEARL, thrower.world){
+		// UPDATE constructor doesn't initialize "perlThrower", owner, ownerId and maybe more
+		loadInfusions(infusions)
+		shoot(thrower, thrower.rotationPitch, thrower.rotationYaw, 0F, 1.5F, 1F)
+	}
+	
 	companion object{
 		private val DAMAGE_HIT_ENTITY = Damage(PEACEFUL_EXCLUSION, *ALL_PROTECTIONS_WITH_SHIELD)
 		
-		private val RAY_TRACE_INDESTRUCTIBLE = RayTracer(
-			canCollideCheck = { world, pos, state -> state.getBlockHardness(world, pos) == INDESTRUCTIBLE_HARDNESS }
-		)
+		class RayTraceIndestructible(startVec: Vec3d, endVec: Vec3d, entity: Entity) : RayTraceContext(startVec, endVec, BlockMode.COLLIDER, FluidMode.NONE, entity){
+			override fun getBlockShape(state: BlockState, world: IBlockReader, pos: BlockPos): VoxelShape{
+				return if (state.getBlockHardness(world, pos) == INDESTRUCTIBLE_HARDNESS)
+					VoxelShapes.fullCube() // UPDATE test
+				else
+					VoxelShapes.empty()
+			}
+		}
 		
 		private const val HAS_PHASED_TAG = "HasPhased"
 		
@@ -52,7 +79,7 @@ class EntityProjectileEnderPearl : EntityEnderPearl, IEntityAdditionalSpawnData{
 			
 			if (original is EntityEnderPearl && original !is EntityProjectileEnderPearl){
 				e.isCanceled = true
-				e.world.spawnEntity(EntityProjectileEnderPearl(original.thrower!!, InfusionList.EMPTY))
+				e.world.addEntity(EntityProjectileEnderPearl(original.thrower!!, InfusionList.EMPTY))
 			}
 		}
 		
@@ -67,17 +94,6 @@ class EntityProjectileEnderPearl : EntityEnderPearl, IEntityAdditionalSpawnData{
 				}
 			}
 		}
-	}
-	
-	@Suppress("unused")
-	constructor(world: World) : super(world){
-		setSize(0.35F, 0.35F)
-	}
-	
-	constructor(thrower: EntityLivingBase, infusions: InfusionList) : super(thrower.world, thrower){
-		setSize(0.35F, 0.35F)
-		loadInfusions(infusions)
-		shoot(thrower, thrower.rotationPitch, thrower.rotationYaw, 0F, 1.5F, 1F)
 	}
 	
 	private var infusions = InfusionList.EMPTY
@@ -95,12 +111,16 @@ class EntityProjectileEnderPearl : EntityEnderPearl, IEntityAdditionalSpawnData{
 		}
 	}
 	
-	override fun writeSpawnData(buffer: ByteBuf) = buffer.use {
+	override fun createSpawnPacket(): IPacket<*>{
+		return NetworkHooks.getEntitySpawningPacket(this)
+	}
+	
+	override fun writeSpawnData(buffer: PacketBuffer) = buffer.use {
 		writeBoolean(infusions.has(HARMLESS))
 		writeBoolean(infusions.has(SLOW))
 	}
 	
-	override fun readSpawnData(buffer: ByteBuf) = buffer.use {
+	override fun readSpawnData(buffer: PacketBuffer) = buffer.use {
 		var list = InfusionList.EMPTY
 		
 		if (readBoolean()){
@@ -124,27 +144,25 @@ class EntityProjectileEnderPearl : EntityEnderPearl, IEntityAdditionalSpawnData{
 	
 	// Behavior
 	
-	override fun onUpdate(){
+	override fun tick(){
 		val prevPos = posVec
 		val prevMot = motionVec
-		super.onUpdate()
+		super.tick()
 		
 		if (infusions.has(SLOW)){
-			motionVec = prevMot.scale(0.999)
-			motionY -= gravityVelocity * 0.01F
+			motionVec = prevMot.scale(0.999).subtractY(gravityVelocity * 0.01)
 		}
 		else if (!hasNoGravity()){
-			motionVec = prevMot.scale(0.99)
-			motionY -= gravityVelocity
+			motionVec = prevMot.scale(0.99).subtractY(gravityVelocity * 0.01)
 		}
 		
 		if (!world.isRemote && infusions.has(PHASING) && hasPhasedIntoWall){
-			val airCheckBox = entityBoundingBox.grow(0.15, 0.15, 0.15)
+			val airCheckBox = boundingBox.grow(0.15, 0.15, 0.15)
 			
-			if (!world.checkBlockCollision(airCheckBox) || RAY_TRACE_INDESTRUCTIBLE.traceBlocksBetweenVectors(world, prevPos, prevPos.add(prevMot)) != null){
+			if (!world.checkBlockCollision(airCheckBox) || world.rayTraceBlocks(RayTraceIndestructible(prevPos, prevPos.add(prevMot), this)).type == Type.BLOCK){
 				hasPhasingFinished = true
 				posVec = prevPos
-				onImpact(RayTraceResult(MISS, prevPos, null, Pos(this)))
+				onImpact(BlockRayTraceResult.createMiss(prevPos, DOWN, Pos(this)))
 			}
 		}
 	}
@@ -156,7 +174,7 @@ class EntityProjectileEnderPearl : EntityEnderPearl, IEntityAdditionalSpawnData{
 		}
 		
 		val thrower: EntityLivingBase? = thrower
-		val hitEntity: Entity? = result.entityHit
+		val hitEntity: Entity? = (result as? EntityRayTraceResult)?.entity
 		
 		if (hitEntity === thrower){
 			return
@@ -167,7 +185,7 @@ class EntityProjectileEnderPearl : EntityEnderPearl, IEntityAdditionalSpawnData{
 		}
 		
 		if (!world.isRemote){
-			setDead()
+			remove()
 			
 			val damage = if (infusions.has(HARMLESS)) 0F else 1F + world.difficulty.id
 			val teleport = Teleporter(damageDealt = damage, causedInstability = 20u)
@@ -186,22 +204,22 @@ class EntityProjectileEnderPearl : EntityEnderPearl, IEntityAdditionalSpawnData{
 	override fun removePassenger(passenger: Entity){
 		super.removePassenger(passenger)
 		
-		if (passenger === thrower && !isDead){
-			onImpact(RayTraceResult(MISS, posVec, null, Pos(this)))
+		if (passenger === thrower && isAlive){
+			onImpact(BlockRayTraceResult.createMiss(posVec, UP, Pos(this)))
 		}
 	}
 	
 	// Serialization
 	
-	override fun writeEntityToNBT(nbt: TagCompound) = with(nbt.heeTag){
-		super.writeEntityToNBT(nbt)
+	override fun writeAdditional(nbt: TagCompound) = nbt.heeTag.use {
+		super.writeAdditional(nbt)
 		
 		InfusionTag.setList(this, infusions)
-		setBoolean(HAS_PHASED_TAG, hasPhasedIntoWall)
+		putBoolean(HAS_PHASED_TAG, hasPhasedIntoWall)
 	}
 	
-	override fun readEntityFromNBT(nbt: TagCompound) = with(nbt.heeTag){
-		super.readEntityFromNBT(nbt)
+	override fun readAdditional(nbt: TagCompound) = nbt.heeTag.use {
+		super.readAdditional(nbt)
 		
 		loadInfusions(InfusionTag.getList(this))
 		hasPhasedIntoWall = getBoolean(HAS_PHASED_TAG)

@@ -3,6 +3,7 @@
   <component name="JavaProjectCodeInsightSettings">
     <excluded-names>
       <name>akka</name>
+      <name>chylex.hee.client.util.MC</name>
       <name>com.ibm</name>
       <name>com.sun</name>
       <name>java.awt</name>

@@ -1,36 +1,32 @@
 package chylex.hee.game.block
-import chylex.hee.game.block.info.Materials
-import chylex.hee.init.ModLoot
+import chylex.hee.game.block.info.BlockBuilder
 import chylex.hee.system.migration.Hand.MAIN_HAND
 import chylex.hee.system.migration.forge.SubscribeEvent
+import chylex.hee.system.migration.vanilla.BlockWeb
+import chylex.hee.system.migration.vanilla.EntityItem
+import chylex.hee.system.migration.vanilla.EntityLivingBase
+import chylex.hee.system.migration.vanilla.EntityMob
+import chylex.hee.system.migration.vanilla.EntityPlayer
+import chylex.hee.system.migration.vanilla.ItemShears
+import chylex.hee.system.migration.vanilla.ItemSword
 import chylex.hee.system.util.breakBlock
-import net.minecraft.block.Block
-import net.minecraft.block.material.MapColor
-import net.minecraft.block.state.BlockFaceShape.UNDEFINED
-import net.minecraft.block.state.IBlockState
+import chylex.hee.system.util.facades.Resource
+import net.minecraft.block.BlockState
 import net.minecraft.entity.Entity
-import net.minecraft.entity.EntityLivingBase
-import net.minecraft.entity.item.EntityItem
-import net.minecraft.entity.monster.EntityMob
-import net.minecraft.entity.player.EntityPlayer
-import net.minecraft.item.ItemShears
-import net.minecraft.item.ItemStack
-import net.minecraft.item.ItemSword
-import net.minecraft.util.BlockRenderLayer.CUTOUT
-import net.minecraft.util.EnumFacing
-import net.minecraft.util.NonNullList
+import net.minecraft.util.ResourceLocation
 import net.minecraft.util.math.BlockPos
-import net.minecraft.world.IBlockAccess
+import net.minecraft.util.math.Vec3d
+import net.minecraft.util.math.shapes.ISelectionContext
+import net.minecraft.util.math.shapes.VoxelShape
+import net.minecraft.util.math.shapes.VoxelShapes
+import net.minecraft.world.IBlockReader
 import net.minecraft.world.World
 import net.minecraftforge.common.MinecraftForge
 import net.minecraftforge.event.entity.player.PlayerEvent.BreakSpeed
 import java.util.Random
 
-class BlockAncientCobweb : Block(Materials.ANCIENT_COBWEB, MapColor.CLOTH){
+class BlockAncientCobweb(builder: BlockBuilder) : BlockWeb(builder.p){
 	init{
-		setHardness(0.2F)
-		setLightOpacity(1)
-		
 		MinecraftForge.EVENT_BUS.register(this)
 	}
 	
@@ -40,7 +36,7 @@ class BlockAncientCobweb : Block(Materials.ANCIENT_COBWEB, MapColor.CLOTH){
 			return
 		}
 		
-		val item = e.entityPlayer.getHeldItem(MAIN_HAND).item
+		val item = e.player.getHeldItem(MAIN_HAND).item
 		
 		if (item is ItemSword){
 			e.newSpeed = e.originalSpeed * 15.8F
@@ -50,39 +46,36 @@ class BlockAncientCobweb : Block(Materials.ANCIENT_COBWEB, MapColor.CLOTH){
 		}
 	}
 	
-	override fun updateTick(world: World, pos: BlockPos, state: IBlockState, rand: Random){
+	override fun tick(state: BlockState, world: World, pos: BlockPos, rand: Random){
 		pos.breakBlock(world, true)
 	}
 	
-	override fun getDrops(drops: NonNullList<ItemStack>, world: IBlockAccess, pos: BlockPos, state: IBlockState, fortune: Int){
-		ModLoot.ANCIENT_COBWEB.generateDrops(drops, world, fortune)
+	override fun getLootTable(): ResourceLocation{
+		return Resource.Custom("blocks/ancient_cobweb")
 	}
 	
-	override fun canSilkHarvest() = true
+	// UPDATE override fun canSilkHarvest() = true
 	
-	override fun onEntityCollision(world: World, pos: BlockPos, state: IBlockState, entity: Entity){
+	override fun onEntityCollision(state: BlockState, world: World, pos: BlockPos, entity: Entity){
 		if (entity is EntityItem){
-			entity.setInWeb()
-			entity.motionY = -0.25
+			entity.setMotionMultiplier(state, Vec3d(0.25, 0.05, 0.25))
+			// UPDATE test entity.motionY = -0.25
 		}
 		else if (!world.isRemote){
 			val canBreak = when(entity){
-				is EntityPlayer     -> !entity.capabilities.isFlying
+				is EntityPlayer     -> !entity.abilities.isFlying
 				is EntityMob        -> entity.attackTarget != null && (entity.width * entity.height) > 0.5F
 				is EntityLivingBase -> false
 				else                -> true
 			}
 			
 			if (canBreak){
-				world.scheduleUpdate(pos, this, 1) // delay required to avoid client-side particle crash
+				world.pendingBlockTicks.scheduleTick(pos, this, 1) // delay required to avoid client-side particle crash
 			}
 		}
 	}
 	
-	override fun getCollisionBoundingBox(state: IBlockState, world: IBlockAccess, pos: BlockPos) = NULL_AABB
-	override fun getBlockFaceShape(world: IBlockAccess, state: IBlockState, pos: BlockPos, face: EnumFacing) = UNDEFINED
-	
-	override fun isFullCube(state: IBlockState) = false
-	override fun isOpaqueCube(state: IBlockState) = false
-	override fun getRenderLayer() = CUTOUT
+	override fun getCollisionShape(state: BlockState, world: IBlockReader, pos: BlockPos, context: ISelectionContext): VoxelShape {
+		return VoxelShapes.empty()
+	}
 }

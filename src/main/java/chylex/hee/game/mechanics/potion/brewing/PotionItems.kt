@@ -4,15 +4,15 @@ import chylex.hee.game.mechanics.potion.brewing.modifiers.BrewConvertBottle
 import chylex.hee.game.mechanics.potion.brewing.modifiers.BrewIncreaseDuration
 import chylex.hee.game.mechanics.potion.brewing.modifiers.BrewIncreaseLevel
 import chylex.hee.game.mechanics.potion.brewing.modifiers.BrewReversal
+import chylex.hee.system.migration.vanilla.ItemPotion
+import chylex.hee.system.migration.vanilla.Potion
+import chylex.hee.system.migration.vanilla.PotionType
 import chylex.hee.system.migration.vanilla.PotionTypes
 import chylex.hee.system.migration.vanilla.Potions
 import chylex.hee.system.util.hasKey
 import chylex.hee.system.util.nbtOrNull
 import net.minecraft.item.Item
-import net.minecraft.item.ItemPotion
 import net.minecraft.item.ItemStack
-import net.minecraft.potion.Potion
-import net.minecraft.potion.PotionType
 import net.minecraft.potion.PotionUtils
 import net.minecraftforge.common.brewing.BrewingRecipeRegistry
 

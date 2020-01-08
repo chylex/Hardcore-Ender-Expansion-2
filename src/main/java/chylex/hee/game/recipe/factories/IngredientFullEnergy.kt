@@ -1,33 +1,43 @@
 package chylex.hee.game.recipe.factories
 import chylex.hee.game.item.ItemAbstractEnergyUser
 import chylex.hee.game.item.infusion.InfusionTag
+import chylex.hee.game.recipe.factories.IngredientFullEnergy.Instance
 import chylex.hee.system.util.getIfExists
 import com.google.gson.JsonObject
 import com.google.gson.JsonSyntaxException
+import net.minecraft.item.Item
 import net.minecraft.item.ItemStack
 import net.minecraft.item.crafting.Ingredient
-import net.minecraft.util.JsonUtils
+import net.minecraft.network.PacketBuffer
+import net.minecraft.util.JSONUtils
 import net.minecraft.util.ResourceLocation
-import net.minecraftforge.common.crafting.IIngredientFactory
-import net.minecraftforge.common.crafting.JsonContext
-import net.minecraftforge.fml.common.registry.ForgeRegistries
+import net.minecraftforge.common.crafting.IIngredientSerializer
+import net.minecraftforge.registries.ForgeRegistries
+import java.util.stream.Stream
 
-@Suppress("unused")
-class IngredientFullEnergy : IIngredientFactory{
-	override fun parse(context: JsonContext, json: JsonObject): Ingredient{
-		val itemName = JsonUtils.getString(json, "item")
+object IngredientFullEnergy : IIngredientSerializer<Instance>{
+	override fun write(buffer: PacketBuffer, ingredient: Instance){
+		buffer.writeRegistryId(ingredient.item)
+	}
+	
+	override fun parse(buffer: PacketBuffer): Instance{
+		return construct(buffer.readRegistryIdSafe(Item::class.java))
+	}
+	
+	override fun parse(json: JsonObject): Instance{
+		val itemName = JSONUtils.getString(json, "item")
 		val item = ForgeRegistries.ITEMS.getIfExists(ResourceLocation(itemName))
 		
 		if (item == null){
 			throw JsonSyntaxException("Unknown item '$itemName'")
 		}
 		
-		if (item.hasSubtypes){
-			throw JsonSyntaxException("Item '$itemName' must not have subtypes")
-		}
-		
+		return construct(item)
+	}
+	
+	private fun construct(item: Item): Instance{
 		if (item !is ItemAbstractEnergyUser){
-			throw JsonSyntaxException("Item '$itemName' does not use Energy")
+			throw JsonSyntaxException("Item '${item.registryName}' does not use Energy")
 		}
 		
 		val stack = ItemStack(item).also {
@@ -37,8 +47,8 @@ class IngredientFullEnergy : IIngredientFactory{
 		return Instance(stack, item)
 	}
 	
-	private class Instance(stack: ItemStack, private val item: ItemAbstractEnergyUser) : Ingredient(stack){
-		override fun apply(ingredient: ItemStack?): Boolean{
+	class Instance(stack: ItemStack, val item: ItemAbstractEnergyUser) : Ingredient(Stream.of(SingleItemList(stack))){
+		override fun test(ingredient: ItemStack?): Boolean{
 			return ingredient != null && ingredient.item === item && item.hasMaximumEnergy(ingredient) && !InfusionTag.hasAny(ingredient)
 		}
 	}

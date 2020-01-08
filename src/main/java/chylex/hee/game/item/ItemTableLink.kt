@@ -15,6 +15,7 @@ import chylex.hee.system.migration.ActionResult.FAIL
 import chylex.hee.system.migration.ActionResult.SUCCESS
 import chylex.hee.system.migration.forge.Side
 import chylex.hee.system.migration.forge.Sided
+import chylex.hee.system.migration.vanilla.EntityItem
 import chylex.hee.system.util.cleanupNBT
 import chylex.hee.system.util.cloneFrom
 import chylex.hee.system.util.getBlock
@@ -26,26 +27,23 @@ import chylex.hee.system.util.heeTagOrNull
 import chylex.hee.system.util.isNotEmpty
 import chylex.hee.system.util.nextFloat
 import chylex.hee.system.util.playClient
+import chylex.hee.system.util.putPos
 import chylex.hee.system.util.readPos
-import chylex.hee.system.util.setPos
 import chylex.hee.system.util.totalTime
 import chylex.hee.system.util.use
 import chylex.hee.system.util.writePos
-import io.netty.buffer.ByteBuf
 import net.minecraft.entity.Entity
-import net.minecraft.entity.item.EntityItem
-import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.item.Item
 import net.minecraft.item.ItemStack
-import net.minecraft.util.EnumActionResult
-import net.minecraft.util.EnumFacing
-import net.minecraft.util.EnumHand
+import net.minecraft.item.ItemUseContext
+import net.minecraft.network.PacketBuffer
+import net.minecraft.util.ActionResultType
 import net.minecraft.util.SoundCategory
 import net.minecraft.util.math.BlockPos
 import net.minecraft.world.World
 import java.util.Random
 
-class ItemTableLink : Item(){
+class ItemTableLink(properties: Properties) : Item(properties){
 	companion object{
 		private const val POS_TAG = "StoredPos"
 		private const val TIME_TAG = "StoredTime"
@@ -57,14 +55,14 @@ class ItemTableLink : Item(){
 		}
 		
 		class FxUseData(private val pos: BlockPos, private val type: SoundType) : IFxData{
-			override fun write(buffer: ByteBuf) = buffer.use {
+			override fun write(buffer: PacketBuffer) = buffer.use {
 				writePos(pos)
 				writeByte(type.ordinal)
 			}
 		}
 		
 		val FX_USE = object : IFxHandler<FxUseData>{
-			override fun handle(buffer: ByteBuf, world: World, rand: Random) = buffer.use {
+			override fun handle(buffer: PacketBuffer, world: World, rand: Random) = buffer.use {
 				val pos = readPos()
 				
 				when(SoundType.values().getOrNull(readByte().toInt())){
@@ -99,15 +97,19 @@ class ItemTableLink : Item(){
 		
 		private fun removeLinkingTags(stack: ItemStack){
 			stack.heeTagOrNull?.apply {
-				removeTag(POS_TAG)
-				removeTag(TIME_TAG)
+				remove(POS_TAG)
+				remove(TIME_TAG)
 			}
 			
 			stack.cleanupNBT()
 		}
 	}
 	
-	override fun onItemUse(player: EntityPlayer, world: World, pos: BlockPos, hand: EnumHand, facing: EnumFacing, hitX: Float, hitY: Float, hitZ: Float): EnumActionResult{
+	override fun onItemUse(context: ItemUseContext): ActionResultType{
+		val player = context.player ?: return FAIL
+		val world = context.world
+		val pos = context.pos
+		
 		if (!player.isSneaking || !isValidTarget(world, pos)){
 			val pedestal = pos.getTile<TileEntityTablePedestal>(world)
 			
@@ -128,7 +130,7 @@ class ItemTableLink : Item(){
 			return SUCCESS
 		}
 		
-		val heldItem = player.getHeldItem(hand)
+		val heldItem = player.getHeldItem(context.hand)
 		var newStoredPos = pos
 		var soundType = LINK_RESTART
 		
@@ -153,8 +155,8 @@ class ItemTableLink : Item(){
 			}
 			
 			if (heldItem.isNotEmpty){
-				setPos(POS_TAG, newStoredPos)
-				setLong(TIME_TAG, world.totalTime)
+				putPos(POS_TAG, newStoredPos)
+				putLong(TIME_TAG, world.totalTime)
 			}
 			
 			PacketClientFX(FX_USE, FxUseData(pos, soundType)).sendToAllAround(world, pos, 16.0)
@@ -163,7 +165,7 @@ class ItemTableLink : Item(){
 		return SUCCESS
 	}
 	
-	override fun onUpdate(stack: ItemStack, world: World, entity: Entity, itemSlot: Int, isSelected: Boolean){
+	override fun inventoryTick(stack: ItemStack, world: World, entity: Entity, itemSlot: Int, isSelected: Boolean){
 		if (world.isRemote || world.totalTime % 10L != 0L){
 			return
 		}

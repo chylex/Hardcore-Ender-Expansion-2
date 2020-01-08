@@ -2,6 +2,7 @@ package chylex.hee.game.world.feature.basic
 import chylex.hee.game.block.entity.TileEntityEnergyCluster
 import chylex.hee.game.mechanics.energy.IClusterGenerator
 import chylex.hee.game.world.feature.OverworldFeatures
+import chylex.hee.game.world.feature.OverworldFeatures.IOverworldFeature
 import chylex.hee.init.ModBlocks
 import chylex.hee.system.util.Pos
 import chylex.hee.system.util.component1
@@ -11,14 +12,10 @@ import chylex.hee.system.util.isAir
 import chylex.hee.system.util.nextInt
 import chylex.hee.system.util.setBlock
 import net.minecraft.util.math.ChunkPos
-import net.minecraft.world.DimensionType.OVERWORLD
-import net.minecraft.world.World
-import net.minecraft.world.chunk.IChunkProvider
-import net.minecraft.world.gen.IChunkGenerator
-import net.minecraftforge.fml.common.IWorldGenerator
+import net.minecraft.world.server.ServerWorld
 import java.util.Random
 
-object DispersedClusterGenerator : IWorldGenerator{
+object DispersedClusterGenerator : IOverworldFeature{
 	private const val GRID_CHUNKS = 12
 	
 	private fun findSpawnAt(seed: Long, chunkX: Int, chunkZ: Int): ChunkPos?{
@@ -35,11 +32,7 @@ object DispersedClusterGenerator : IWorldGenerator{
 		)
 	}
 	
-	override fun generate(rand: Random, chunkX: Int, chunkZ: Int, world: World, generator: IChunkGenerator, provider: IChunkProvider){
-		if (world.provider.dimensionType != OVERWORLD){
-			return
-		}
-		
+	override fun generate(world: ServerWorld, chunkX: Int, chunkZ: Int, rand: Random){
 		val (targetChunkX, targetChunkZ) = findSpawnAt(world.seed, chunkX, chunkZ) ?: return
 		
 		if (chunkX != targetChunkX || chunkZ != targetChunkZ){

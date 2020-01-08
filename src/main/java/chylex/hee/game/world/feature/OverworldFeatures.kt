@@ -1,23 +1,22 @@
 package chylex.hee.game.world.feature
-import chylex.hee.game.world.feature.basic.DispersedClusterGenerator
-import chylex.hee.game.world.feature.energyshrine.EnergyShrineGenerator
-import chylex.hee.game.world.feature.stronghold.StrongholdGenerator
 import net.minecraft.util.math.ChunkPos
 import net.minecraft.world.World
-import net.minecraft.world.biome.Biome
-import net.minecraftforge.common.BiomeManager
-import net.minecraftforge.fml.common.registry.GameRegistry
+import net.minecraft.world.gen.feature.Feature
+import net.minecraft.world.server.ServerWorld
+import net.minecraftforge.registries.ForgeRegistries
+import java.util.Random
 
 object OverworldFeatures{
 	fun register(){
-		GameRegistry.registerWorldGenerator(DispersedClusterGenerator, Int.MAX_VALUE)
-		GameRegistry.registerWorldGenerator(EnergyShrineGenerator, Int.MAX_VALUE - 1)
-		GameRegistry.registerWorldGenerator(StrongholdGenerator, Int.MAX_VALUE - 2)
+		// UPDATE GameRegistry.registerWorldGenerator(DispersedClusterGenerator, Int.MAX_VALUE)
+		// UPDATE GameRegistry.registerWorldGenerator(EnergyShrineGenerator, Int.MAX_VALUE - 1)
+		// UPDATE GameRegistry.registerWorldGenerator(StrongholdGenerator, Int.MAX_VALUE - 2)
 	}
 	
 	fun setupVanillaOverrides(){
-		BiomeManager.strongHoldBiomes.clear()
-		BiomeManager.strongHoldBiomesBlackList.addAll(Biome.REGISTRY)
+		for(biome in ForgeRegistries.BIOMES){
+			biome.structures.remove(Feature.STRONGHOLD)
+		}
 	}
 	
 	fun findStartChunkInGrid(chunksInGrid: Int, chunkX: Int, chunkZ: Int): ChunkPos{
@@ -36,5 +35,10 @@ object OverworldFeatures{
 				world.getChunk(chunkX + offsetX, chunkZ + offsetZ) // UPDATE shitty hack to force nearby structures to gen first
 			}
 		}
+	}
+	
+	// UPDATE
+	interface IOverworldFeature{
+		fun generate(world: ServerWorld, chunkX: Int, chunkZ: Int, rand: Random)
 	}
 }

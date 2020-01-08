@@ -13,10 +13,16 @@ import chylex.hee.system.migration.Hand.MAIN_HAND
 import chylex.hee.system.migration.forge.EventPriority
 import chylex.hee.system.migration.forge.EventResult
 import chylex.hee.system.migration.forge.SubscribeEvent
+import chylex.hee.system.migration.vanilla.EntityAmbientCreature
+import chylex.hee.system.migration.vanilla.EntityAnimal
+import chylex.hee.system.migration.vanilla.EntityLivingBase
+import chylex.hee.system.migration.vanilla.EntityPlayer
+import chylex.hee.system.migration.vanilla.EntitySquid
+import chylex.hee.system.migration.vanilla.ItemSword
 import chylex.hee.system.migration.vanilla.Potions
 import chylex.hee.system.migration.vanilla.Sounds
+import chylex.hee.system.util.doDamage
 import chylex.hee.system.util.floorToInt
-import chylex.hee.system.util.getAttribute
 import chylex.hee.system.util.nextFloat
 import chylex.hee.system.util.playUniversal
 import chylex.hee.system.util.posVec
@@ -24,15 +30,9 @@ import chylex.hee.system.util.selectVulnerableEntities
 import chylex.hee.system.util.setFireTicks
 import chylex.hee.system.util.square
 import chylex.hee.system.util.toRadians
-import net.minecraft.block.state.IBlockState
-import net.minecraft.entity.EntityLivingBase
+import net.minecraft.block.BlockState
 import net.minecraft.entity.SharedMonsterAttributes
-import net.minecraft.entity.passive.EntityAmbientCreature
-import net.minecraft.entity.passive.EntityAnimal
-import net.minecraft.entity.passive.EntitySquid
-import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.item.ItemStack
-import net.minecraft.item.ItemSword
 import net.minecraft.util.DamageSource
 import net.minecraftforge.common.MinecraftForge
 import net.minecraftforge.event.entity.living.LivingDamageEvent
@@ -42,8 +42,10 @@ import kotlin.math.cos
 import kotlin.math.max
 import kotlin.math.sin
 
-class ItemScorchingSword : ItemSword(SCORCHING_SWORD), IScorchingItem, ICustomRepairBehavior by ScorchingHelper.Repair(SCORCHING_SWORD){
-	override val material: ToolMaterial
+class ItemScorchingSword(
+	properties: Properties
+) : ItemSword(SCORCHING_SWORD, 0, -2.4F, properties), IScorchingItem, ICustomRepairBehavior by ScorchingHelper.Repair(SCORCHING_SWORD){
+	override val material
 		get() = SCORCHING_SWORD
 	
 	private val stopDamageRecursion = ThreadLocal.withInitial { false }
@@ -61,7 +63,7 @@ class ItemScorchingSword : ItemSword(SCORCHING_SWORD), IScorchingItem, ICustomRe
 	
 	// Mining behavior
 	
-	override fun canMine(state: IBlockState): Boolean{
+	override fun canMine(state: BlockState): Boolean{
 		return false
 	}
 	
@@ -71,7 +73,7 @@ class ItemScorchingSword : ItemSword(SCORCHING_SWORD), IScorchingItem, ICustomRe
 		target.setFire(getTargetType(target).fire)
 		PacketClientFX(FX_ENTITY_HIT, FxEntityData(target)).sendToAllAround(target, 32.0)
 		
-		stack.damageItem(1, attacker)
+		stack.doDamage(1, attacker, MAIN_HAND)
 		return true
 	}
 	
@@ -110,7 +112,7 @@ class ItemScorchingSword : ItemSword(SCORCHING_SWORD), IScorchingItem, ICustomRe
 		
 		stopDamageRecursion.set(true)
 		
-		for(entity in target.world.selectVulnerableEntities.inBox<EntityLivingBase>(target.entityBoundingBox.grow(1.0, 0.25, 1.0))){
+		for(entity in target.world.selectVulnerableEntities.inBox<EntityLivingBase>(target.boundingBox.grow(1.0, 0.25, 1.0))){
 			if (entity !== attacker && entity !== target && !attacker.isOnSameTeam(entity) && getTargetType(entity).fire > 0 && attacker.getDistanceSq(entity) <= square(3)){
 				val source = if (attacker is EntityPlayer)
 					DamageSource.causePlayerDamage(attacker)
@@ -135,7 +137,7 @@ class ItemScorchingSword : ItemSword(SCORCHING_SWORD), IScorchingItem, ICustomRe
 		val totalDamage = totalHits / 3
 		
 		if (totalDamage > 0){
-			heldItem.damageItem(totalDamage, attacker)
+			heldItem.doDamage(totalDamage, attacker, MAIN_HAND)
 		}
 	}
 	

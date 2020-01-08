@@ -10,11 +10,14 @@ import chylex.hee.game.item.infusion.Infusion.DISTANCE
 import chylex.hee.game.item.infusion.InfusionTag
 import chylex.hee.game.mechanics.energy.IEnergyQuantity.Units
 import chylex.hee.init.ModItems
+import chylex.hee.system.migration.ActionResult.FAIL
 import chylex.hee.system.migration.ActionResult.SUCCESS
 import chylex.hee.system.migration.Hand.MAIN_HAND
 import chylex.hee.system.migration.Hand.OFF_HAND
 import chylex.hee.system.migration.forge.Side
 import chylex.hee.system.migration.forge.Sided
+import chylex.hee.system.migration.vanilla.EntityLivingBase
+import chylex.hee.system.migration.vanilla.EntityPlayer
 import chylex.hee.system.util.Pos
 import chylex.hee.system.util.TagCompound
 import chylex.hee.system.util.angleBetween
@@ -25,7 +28,6 @@ import chylex.hee.system.util.distanceTo
 import chylex.hee.system.util.facades.Resource
 import chylex.hee.system.util.floorToInt
 import chylex.hee.system.util.getIntegerOrNull
-import chylex.hee.system.util.getLongArray
 import chylex.hee.system.util.getLongArrayOrNull
 import chylex.hee.system.util.getPos
 import chylex.hee.system.util.getPosOrNull
@@ -35,8 +37,7 @@ import chylex.hee.system.util.heeTag
 import chylex.hee.system.util.heeTagOrNull
 import chylex.hee.system.util.isLoaded
 import chylex.hee.system.util.over
-import chylex.hee.system.util.setLongArray
-import chylex.hee.system.util.setPos
+import chylex.hee.system.util.putPos
 import chylex.hee.system.util.toDegrees
 import chylex.hee.system.util.totalTime
 import it.unimi.dsi.fastutil.longs.LongAVLTreeSet
@@ -45,16 +46,14 @@ import it.unimi.dsi.fastutil.longs.LongCollection
 import net.minecraft.client.renderer.color.IItemColor
 import net.minecraft.client.util.ITooltipFlag
 import net.minecraft.entity.Entity
-import net.minecraft.entity.EntityLivingBase
-import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.item.ItemStack
-import net.minecraft.util.EnumActionResult
-import net.minecraft.util.EnumFacing
-import net.minecraft.util.EnumHand
+import net.minecraft.item.ItemUseContext
+import net.minecraft.util.ActionResultType
 import net.minecraft.util.math.BlockPos
+import net.minecraft.util.text.ITextComponent
 import net.minecraft.world.World
 
-class ItemEnergyOracle : ItemAbstractEnergyUser(), IInfusableItem{
+class ItemEnergyOracle(properties: Properties) : ItemAbstractEnergyUser(properties), IInfusableItem{
 	companion object{
 		private const val ORACLE_IDENTIFIER_TAG = "ID"
 		private const val ORACLE_LAST_SLOT_TAG = "Slot"
@@ -70,16 +69,16 @@ class ItemEnergyOracle : ItemAbstractEnergyUser(), IInfusableItem{
 		private const val CLUSTER_HUE_PROXIMITY_OVERRIDE = Short.MAX_VALUE
 		
 		private fun removeTrackedClusterTags(nbt: TagCompound){
-			nbt.removeTag(TRACKED_CLUSTER_POS_TAG)
-			nbt.removeTag(TRACKED_CLUSTER_HUE_TAG)
+			nbt.remove(TRACKED_CLUSTER_POS_TAG)
+			nbt.remove(TRACKED_CLUSTER_HUE_TAG)
 		}
 		
 		private fun updateIgnoredClusterTag(nbt: TagCompound, newIgnoreList: LongCollection){
 			if (newIgnoreList.isEmpty()){
-				nbt.removeTag(IGNORED_CLUSTERS_TAG)
+				nbt.remove(IGNORED_CLUSTERS_TAG)
 			}
 			else{
-				nbt.setLongArray(IGNORED_CLUSTERS_TAG, newIgnoreList.toLongArray()) // the collection must be sorted
+				nbt.putLongArray(IGNORED_CLUSTERS_TAG, newIgnoreList.toLongArray()) // the collection must be sorted
 			}
 		}
 		
@@ -154,13 +153,17 @@ class ItemEnergyOracle : ItemAbstractEnergyUser(), IInfusableItem{
 		return ItemAbstractInfusable.onCanApplyInfusion(this, infusion)
 	}
 	
-	override fun onItemUse(player: EntityPlayer, world: World, pos: BlockPos, hand: EnumHand, facing: EnumFacing, hitX: Float, hitY: Float, hitZ: Float): EnumActionResult{
+	override fun onItemUse(context: ItemUseContext): ActionResultType{
+		val player = context.player ?: return FAIL
+		val world = context.world
+		val pos = context.pos
+		
 		if (player.isSneaking && pos.getTile<TileEntityEnergyCluster>(world) != null){
 			if (world.isRemote){
 				return SUCCESS
 			}
 			
-			val heldItem = player.getHeldItem(hand)
+			val heldItem = player.getHeldItem(context.hand)
 			val entry = pos.toLong()
 			
 			with(heldItem.heeTag){
@@ -176,11 +179,11 @@ class ItemEnergyOracle : ItemAbstractEnergyUser(), IInfusableItem{
 			return SUCCESS
 		}
 		
-		return super.onItemUse(player, world, pos, hand, facing, hitX, hitY, hitZ)
+		return super.onItemUse(context)
 	}
 	
-	override fun onUpdate(stack: ItemStack, world: World, entity: Entity, itemSlot: Int, isSelected: Boolean){
-		super.onUpdate(stack, world, entity, itemSlot, isSelected)
+	override fun inventoryTick(stack: ItemStack, world: World, entity: Entity, itemSlot: Int, isSelected: Boolean){
+		super.inventoryTick(stack, world, entity, itemSlot, isSelected)
 		
 		if (world.isRemote){
 			return
@@ -192,8 +195,8 @@ class ItemEnergyOracle : ItemAbstractEnergyUser(), IInfusableItem{
 		// unique identifier
 		
 		if (tag.getIntegerOrNull(ORACLE_LAST_SLOT_TAG) != itemSlot){
-			tag.setLong(ORACLE_IDENTIFIER_TAG, world.rand.nextLong())
-			tag.setInteger(ORACLE_LAST_SLOT_TAG, itemSlot)
+			tag.putLong(ORACLE_IDENTIFIER_TAG, world.rand.nextLong())
+			tag.putInt(ORACLE_LAST_SLOT_TAG, itemSlot)
 		}
 		
 		if (currentTime % 200L == 0L){
@@ -235,13 +238,13 @@ class ItemEnergyOracle : ItemAbstractEnergyUser(), IInfusableItem{
 			}
 			else{
 				with(tag){
-					setPos(TRACKED_CLUSTER_POS_TAG, closestCluster.pos)
+					putPos(TRACKED_CLUSTER_POS_TAG, closestCluster.pos)
 					
 					if (closestCluster.affectedByProximity && holderPos.distanceTo(closestCluster.pos) < detectionRange * CLUSTER_PROXIMITY_RANGE_MP){
-						setShort(TRACKED_CLUSTER_HUE_TAG, CLUSTER_HUE_PROXIMITY_OVERRIDE)
+						putShort(TRACKED_CLUSTER_HUE_TAG, CLUSTER_HUE_PROXIMITY_OVERRIDE)
 					}
 					else{
-						setShort(TRACKED_CLUSTER_HUE_TAG, closestCluster.color.primaryHue)
+						putShort(TRACKED_CLUSTER_HUE_TAG, closestCluster.color.primaryHue)
 					}
 				}
 			}
@@ -254,7 +257,7 @@ class ItemEnergyOracle : ItemAbstractEnergyUser(), IInfusableItem{
 			
 			with(tag){
 				if (getPosOrNull(LAST_UPDATE_POS_TAG) != holderPos){
-					setPos(LAST_UPDATE_POS_TAG, holderPos)
+					putPos(LAST_UPDATE_POS_TAG, holderPos)
 					
 					if (getShort(TRACKED_CLUSTER_HUE_TAG) != CLUSTER_HUE_PROXIMITY_OVERRIDE && !useEnergyUnit(stack)){
 						removeTrackedClusterTags(this)
@@ -273,7 +276,7 @@ class ItemEnergyOracle : ItemAbstractEnergyUser(), IInfusableItem{
 	}
 	
 	@Sided(Side.CLIENT)
-	override fun addInformation(stack: ItemStack, world: World?, lines: MutableList<String>, flags: ITooltipFlag){
+	override fun addInformation(stack: ItemStack, world: World?, lines: MutableList<ITextComponent>, flags: ITooltipFlag){
 		super.addInformation(stack, world, lines, flags)
 		ItemAbstractInfusable.onAddInformation(stack, lines)
 	}
@@ -336,7 +339,7 @@ class ItemEnergyOracle : ItemAbstractEnergyUser(), IInfusableItem{
 			}
 			
 			val vecLook = player.lookVec
-			val vecTarget = tag.getPos(TRACKED_CLUSTER_POS_TAG).center.subtract(player.posX, player.posY + player.getEyeHeight(), player.posZ)
+			val vecTarget = tag.getPos(TRACKED_CLUSTER_POS_TAG).center.subtract(player.posX, player.posY + player.eyeHeight, player.posZ)
 			
 			val angleDifference = vecLook.angleBetween(vecTarget).toDegrees()
 			
@@ -351,7 +354,7 @@ class ItemEnergyOracle : ItemAbstractEnergyUser(), IInfusableItem{
 			return HCL(clusterHue.toDouble(), level, (25 + level * 3) / 4)
 		}
 		
-		override fun colorMultiplier(stack: ItemStack, tintIndex: Int): Int{
+		override fun getColor(stack: ItemStack, tintIndex: Int): Int{
 			if (tintIndex != 1){
 				return NO_TINT
 			}

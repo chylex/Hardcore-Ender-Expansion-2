@@ -7,7 +7,10 @@ import chylex.hee.game.mechanics.dust.DustLayers.Side.TOP
 import chylex.hee.game.mechanics.dust.DustType
 import chylex.hee.system.migration.forge.Side
 import chylex.hee.system.migration.forge.Sided
-import chylex.hee.system.util.NBTList.Companion.setList
+import chylex.hee.system.migration.vanilla.EntityLivingBase
+import chylex.hee.system.migration.vanilla.EntityPlayer
+import chylex.hee.system.migration.vanilla.TextComponentTranslation
+import chylex.hee.system.util.NBTList.Companion.putList
 import chylex.hee.system.util.getListOfCompounds
 import chylex.hee.system.util.getTile
 import chylex.hee.system.util.heeTag
@@ -15,67 +18,68 @@ import chylex.hee.system.util.heeTagOrNull
 import chylex.hee.system.util.isTopSolid
 import chylex.hee.system.util.setAir
 import chylex.hee.system.util.size
-import net.minecraft.block.Block
-import net.minecraft.block.ITileEntityProvider
-import net.minecraft.block.material.EnumPushReaction.DESTROY
-import net.minecraft.block.state.IBlockState
-import net.minecraft.client.resources.I18n
+import net.minecraft.block.BlockState
 import net.minecraft.client.util.ITooltipFlag
-import net.minecraft.entity.EntityLivingBase
-import net.minecraft.entity.player.EntityPlayer
-import net.minecraft.item.Item
+import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.item.ItemStack
 import net.minecraft.tileentity.TileEntity
 import net.minecraft.util.BlockRenderLayer.TRANSLUCENT
-import net.minecraft.util.EnumFacing
-import net.minecraft.util.EnumHand
-import net.minecraft.util.NonNullList
+import net.minecraft.util.Hand
 import net.minecraft.util.math.AxisAlignedBB
 import net.minecraft.util.math.BlockPos
+import net.minecraft.util.math.BlockRayTraceResult
 import net.minecraft.util.math.RayTraceResult
-import net.minecraft.world.IBlockAccess
+import net.minecraft.util.text.ITextComponent
+import net.minecraft.world.IBlockReader
+import net.minecraft.world.IWorldReader
 import net.minecraft.world.World
+import net.minecraft.world.storage.loot.LootContext
+import net.minecraft.world.storage.loot.LootParameters
 
-class BlockJarODust(builder: BlockBuilder) : BlockSimpleShaped(builder, AABB), ITileEntityProvider{
+class BlockJarODust(builder: BlockBuilder) : BlockSimpleShaped(builder, AABB){
 	companion object{
 		val AABB = AxisAlignedBB(0.1875, 0.0, 0.1875, 0.8125, 0.84375, 0.8125)
 		
 		const val LAYERS_TAG = "Layers"
 	}
 	
-	override fun createNewTileEntity(world: World, meta: Int): TileEntity{
+	override fun hasTileEntity(state: BlockState): Boolean{
+		return true
+	}
+	
+	override fun createTileEntity(state: BlockState, world: IBlockReader): TileEntity{
 		return TileEntityJarODust()
 	}
 	
 	// ItemStack serialization
 	
 	fun getLayersFromStack(stack: ItemStack): DustLayers?{
-		return if (stack.item === Item.getItemFromBlock(this))
+		return if (stack.item === this.asItem())
 			stack.heeTagOrNull?.getListOfCompounds(LAYERS_TAG)?.let { list -> DustLayers(TileEntityJarODust.DUST_CAPACITY).apply { deserializeNBT(list) } }
 		else
 			null
 	}
 	
 	fun setLayersInStack(stack: ItemStack, layers: DustLayers){
-		if (stack.item === Item.getItemFromBlock(this)){
-			stack.heeTag.setList(LAYERS_TAG, layers.serializeNBT())
+		if (stack.item === this.asItem()){
+			stack.heeTag.putList(LAYERS_TAG, layers.serializeNBT())
 		}
 	}
 	
 	// Placement
 	
-	override fun canPlaceBlockAt(world: World, pos: BlockPos): Boolean{
-		return super.canPlaceBlockAt(world, pos) && pos.down().isTopSolid(world)
+	override fun isValidPosition(state: BlockState, world: IWorldReader, pos: BlockPos): Boolean{
+		return super.isValidPosition(state, world, pos) && pos.down().isTopSolid(world)
 	}
-	
-	override fun neighborChanged(state: IBlockState, world: World, pos: BlockPos, neighborBlock: Block, neighborPos: BlockPos){
+	/* UPDATE
+	override fun neighborChanged(state: BlockState, world: World, pos: BlockPos, neighborBlock: Block, neighborPos: BlockPos){
 		if (!pos.down().isTopSolid(world)){
 			dropBlockAsItem(world, pos, state, 0)
 			pos.setAir(world)
 		}
-	}
+	}*/
 	
-	override fun onBlockPlacedBy(world: World, pos: BlockPos, state: IBlockState, placer: EntityLivingBase, stack: ItemStack){
+	override fun onBlockPlacedBy(world: World, pos: BlockPos, state: BlockState, placer: EntityLivingBase?, stack: ItemStack){
 		val list = stack.heeTagOrNull?.getListOfCompounds(LAYERS_TAG)
 		
 		if (list != null){
@@ -85,34 +89,39 @@ class BlockJarODust(builder: BlockBuilder) : BlockSimpleShaped(builder, AABB), I
 	
 	// Drops
 	
-	private fun getDrop(world: IBlockAccess, pos: BlockPos): ItemStack?{
+	private fun getDrop(world: IBlockReader, pos: BlockPos): ItemStack?{
 		return pos.getTile<TileEntityJarODust>(world)?.let { tile -> ItemStack(this).also { setLayersInStack(it, tile.layers) } }
 	}
 	
-	override fun getDrops(drops: NonNullList<ItemStack>, world: IBlockAccess, pos: BlockPos, state: IBlockState, fortune: Int){
-		getDrop(world, pos)?.let(drops::add)
+	override fun getDrops(state: BlockState, context: LootContext.Builder): MutableList<ItemStack>{
+		val drop = context.get(LootParameters.POSITION)?.let { getDrop(context.world, it) }
+		
+		return if (drop != null)
+			mutableListOf(drop)
+		else
+			mutableListOf()
 	}
 	
-	override fun getPickBlock(state: IBlockState, target: RayTraceResult, world: World, pos: BlockPos, player: EntityPlayer): ItemStack{
+	override fun getPickBlock(state: BlockState, target: RayTraceResult, world: IBlockReader, pos: BlockPos, player: PlayerEntity): ItemStack{
 		return getDrop(world, pos) ?: ItemStack(this)
 	}
-	
-	override fun removedByPlayer(state: IBlockState, world: World, pos: BlockPos, player: EntityPlayer, willHarvest: Boolean): Boolean{
+	/* UPDATE
+	override fun removedByPlayer(state: BlockState, world: World, pos: BlockPos, player: EntityPlayer, willHarvest: Boolean): Boolean{
 		if (willHarvest){
 			return true // skip super call before drops
 		}
 		
 		return super.removedByPlayer(state, world, pos, player, willHarvest)
-	}
+	}*/
 	
-	override fun harvestBlock(world: World, player: EntityPlayer, pos: BlockPos, state: IBlockState, tile: TileEntity?, stack: ItemStack){
+	override fun harvestBlock(world: World, player: EntityPlayer, pos: BlockPos, state: BlockState, tile: TileEntity?, stack: ItemStack){
 		super.harvestBlock(world, player, pos, state, tile, stack)
 		pos.setAir(world)
 	}
 	
 	// Interaction
 	
-	override fun onBlockActivated(world: World, pos: BlockPos, state: IBlockState, player: EntityPlayer, hand: EnumHand, facing: EnumFacing, hitX: Float, hitY: Float, hitZ: Float): Boolean{
+	override fun onBlockActivated(state: BlockState, world: World, pos: BlockPos, player: EntityPlayer, hand: Hand, hit: BlockRayTraceResult): Boolean{
 		val heldItem = player.getHeldItem(hand)
 		
 		return if (heldItem.isEmpty)
@@ -121,7 +130,7 @@ class BlockJarODust(builder: BlockBuilder) : BlockSimpleShaped(builder, AABB), I
 			tryInsertDust(world, pos, player, heldItem)
 	}
 	
-	private fun tryExtractDust(world: World, pos: BlockPos, player: EntityPlayer, hand: EnumHand): Boolean{
+	private fun tryExtractDust(world: World, pos: BlockPos, player: EntityPlayer, hand: Hand): Boolean{
 		if (world.isRemote){
 			return true
 		}
@@ -152,12 +161,10 @@ class BlockJarODust(builder: BlockBuilder) : BlockSimpleShaped(builder, AABB), I
 		return true
 	}
 	
-	override fun getPushReaction(state: IBlockState) = DESTROY
-	
 	// Client side
 	
 	@Sided(Side.CLIENT)
-	override fun addInformation(stack: ItemStack, world: World?, lines: MutableList<String>, flags: ITooltipFlag){
+	override fun addInformation(stack: ItemStack, world: IBlockReader?, lines: MutableList<ITextComponent>, flags: ITooltipFlag){
 		val contents = getLayersFromStack(stack)?.contents
 		
 		if (contents != null){
@@ -168,7 +175,7 @@ class BlockJarODust(builder: BlockBuilder) : BlockSimpleShaped(builder, AABB), I
 				.sortedWith(compareBy({ -it.value }, { it.key.key }))
 			
 			for((dustType, dustAmount) in entries){
-				lines.add(I18n.format("tile.hee.jar_o_dust.tooltip.entry", dustAmount, I18n.format("${dustType.item.translationKey}.name")))
+				lines.add(TextComponentTranslation("tile.hee.jar_o_dust.tooltip.entry", dustAmount, TextComponentTranslation(dustType.item.translationKey)))
 			}
 		}
 	}

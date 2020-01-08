@@ -6,8 +6,8 @@ import chylex.hee.system.util.component3
 import chylex.hee.system.util.max
 import chylex.hee.system.util.min
 import net.minecraft.block.Block
+import net.minecraft.block.BlockState
 import net.minecraft.block.material.Material
-import net.minecraft.block.state.IBlockState
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.BlockPos.MutableBlockPos
 import java.util.Random
@@ -15,8 +15,8 @@ import java.util.Random
 interface IStructureWorld{
 	val rand: Random
 	
-	fun getState(pos: BlockPos): IBlockState
-	fun setState(pos: BlockPos, state: IBlockState)
+	fun getState(pos: BlockPos): BlockState
+	fun setState(pos: BlockPos, state: BlockState)
 	
 	fun addTrigger(pos: BlockPos, trigger: IStructureTrigger)
 	

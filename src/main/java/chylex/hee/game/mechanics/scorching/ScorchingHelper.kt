@@ -15,10 +15,10 @@ import chylex.hee.system.migration.Hand.MAIN_HAND
 import chylex.hee.system.migration.forge.EventPriority
 import chylex.hee.system.migration.forge.SubscribeAllEvents
 import chylex.hee.system.migration.forge.SubscribeEvent
+import chylex.hee.system.migration.vanilla.EntityPlayer
 import chylex.hee.system.util.isNotEmpty
 import net.minecraft.entity.Entity
-import net.minecraft.entity.player.EntityPlayer
-import net.minecraft.item.Item.ToolMaterial
+import net.minecraft.item.IItemTier
 import net.minecraft.item.ItemStack
 import net.minecraft.util.math.BlockPos
 import net.minecraft.world.World
@@ -66,7 +66,7 @@ object ScorchingHelper{
 	fun onBreakSpeed(e: BreakSpeed){
 		val world = e.entity.world
 		
-		if (world.isRemote && getHeldScorchingTool(e.entityPlayer)?.canMine(e.state) == true){
+		if (world.isRemote && getHeldScorchingTool(e.player)?.canMine(e.state) == true){
 			PARTICLE_MINING.spawn(Point(e.pos, 5), world.rand)
 		}
 	}
@@ -75,7 +75,7 @@ object ScorchingHelper{
 	@SubscribeEvent(EventPriority.LOW)
 	fun onHarvestDrops(e: HarvestDropsEvent){
 		if (e.harvester?.let(::getHeldScorchingTool)?.canMine(e.state) == true){ // TODO not checking drops.isNotEmpty to support Vines, is that a problem?
-			val fortuneStack = ScorchingFortune.createSmeltedStack(e.state, e.world.rand)
+			val fortuneStack = ScorchingFortune.createSmeltedStack(e.world.world, e.state.block, e.harvester.rng)
 			
 			if (fortuneStack.isNotEmpty){
 				e.drops.clear()
@@ -88,18 +88,18 @@ object ScorchingHelper{
 	@JvmStatic
 	@SubscribeEvent(EventPriority.LOW)
 	fun onCriticalHit(e: CriticalHitEvent){
-		getHeldScorchingTool(e.entityPlayer)?.onHit(e)
+		getHeldScorchingTool(e.player)?.onHit(e)
 	}
 	
 	// Overrides
 	
 	fun onGetIsRepairable(tool: IScorchingItem, toRepair: ItemStack, repairWith: ItemStack): Boolean{
-		return toRepair.isItemDamaged && repairWith.item.let { it === ModItems.INFERNIUM || it === tool.material.repairItemStack.item }
+		return repairWith.item === ModItems.INFERNIUM || tool.material.repairMaterial.test(repairWith)
 	}
 	
-	class Repair(val material: ToolMaterial) : ICustomRepairBehavior{
+	class Repair(val material: IItemTier) : ICustomRepairBehavior{
 		override fun onRepairUpdate(instance: RepairInstance) = with(instance){
-			if (ingredient.item === material.repairItemStack.item){
+			if (material.repairMaterial.test(ingredient)){
 				repairFully()
 			}
 			else{

@@ -3,42 +3,43 @@ import chylex.hee.game.particle.spawner.ParticleSpawnerVanilla
 import chylex.hee.game.particle.util.IOffset.Constant
 import chylex.hee.game.particle.util.IOffset.InBox
 import chylex.hee.game.particle.util.IShape.Point
+import chylex.hee.init.ModEntities
 import chylex.hee.system.migration.Facing.UP
 import chylex.hee.system.util.square
 import chylex.hee.system.util.use
-import io.netty.buffer.ByteBuf
-import net.minecraft.entity.item.EntityItem
+import net.minecraft.entity.EntityType
 import net.minecraft.item.ItemStack
-import net.minecraft.util.EnumParticleTypes.SMOKE_NORMAL
+import net.minecraft.network.PacketBuffer
+import net.minecraft.particles.ParticleTypes.SMOKE
+import net.minecraft.util.math.Vec3d
 import net.minecraft.world.World
 import net.minecraftforge.fml.common.registry.IEntityAdditionalSpawnData
 
-class EntityItemFreshlyCooked : EntityItem, IEntityAdditionalSpawnData{
+class EntityItemFreshlyCooked : EntityItemBase, IEntityAdditionalSpawnData{
+	@Suppress("unused")
+	constructor(type: EntityType<EntityItemFreshlyCooked>, world: World) : super(type, world)
+	constructor(world: World, pos: Vec3d, stack: ItemStack) : super(ModEntities.ITEM_FRESHLY_COOKED, world, pos, stack)
+	
 	private companion object{
 		private const val STOP_SMOKING_AFTER_TICKS = 20 * 90
 		
 		private val PARTICLE_TICK = ParticleSpawnerVanilla(
-			type = SMOKE_NORMAL,
+			type = SMOKE,
 			pos = Constant(0.375F, UP) + InBox(0.12F, 0F, 0.12F),
 			mot = Constant(0.03F, UP) + InBox(0.02F)
 		)
 	}
 	
-	@Suppress("unused")
-	constructor(world: World) : super(world)
-	
-	constructor(world: World, x: Double, y: Double, z: Double, stack: ItemStack) : super(world, x, y, z, stack)
-	
-	override fun writeSpawnData(buffer: ByteBuf) = buffer.use {
+	override fun writeSpawnData(buffer: PacketBuffer) = buffer.use {
 		writeShort(age)
 	}
 	
-	override fun readSpawnData(buffer: ByteBuf) = buffer.use {
+	override fun readSpawnData(buffer: PacketBuffer) = buffer.use {
 		age = readShort().toInt()
 	}
 	
-	override fun onUpdate(){
-		super.onUpdate()
+	override fun tick(){
+		super.tick()
 		
 		if (world.isRemote && age < STOP_SMOKING_AFTER_TICKS){
 			val period = 2 + ((4 * age) / STOP_SMOKING_AFTER_TICKS)

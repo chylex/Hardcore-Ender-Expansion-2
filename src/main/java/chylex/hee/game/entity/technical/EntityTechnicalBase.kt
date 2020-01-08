@@ -1,18 +1,23 @@
 package chylex.hee.game.entity.technical
 import net.minecraft.entity.Entity
+import net.minecraft.entity.EntityType
+import net.minecraft.network.IPacket
 import net.minecraft.world.World
+import net.minecraftforge.fml.network.NetworkHooks
 
-abstract class EntityTechnicalBase(world: World) : Entity(world){
+@Suppress("LeakingThis")
+abstract class EntityTechnicalBase(type: EntityType<out EntityTechnicalBase>, world: World) : Entity(type, world){
 	init{
 		noClip = true
-		isImmuneToFire = true
-		
-		setSize(0F, 0F)
-		setEntityInvulnerable(true)
+		isInvulnerable = true
 		setNoGravity(true)
 	}
 	
-	override fun onUpdate(){
+	override fun createSpawnPacket(): IPacket<*>{
+		return NetworkHooks.getEntitySpawningPacket(this)
+	}
+	
+	override fun tick(){
 		world.profiler.startSection("entityBaseTick")
 		
 		prevPosX = posX

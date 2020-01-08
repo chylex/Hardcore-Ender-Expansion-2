@@ -1,8 +1,6 @@
 package chylex.hee.game.commands.sub.server
-import chylex.hee.game.commands.sub.ISubCommand
-import net.minecraft.command.ICommandSender
-import net.minecraft.server.MinecraftServer
 
+/*
 internal object CommandDebugTestWorld : ISubCommand{
 	override val name = "testworld"
 	override val usage = "commands.hee.testworld.usage"
@@ -18,4 +16,4 @@ internal object CommandDebugTestWorld : ISubCommand{
 			executeCommand(sender, "/weather clear")
 		}
 	}
-}
+}*/

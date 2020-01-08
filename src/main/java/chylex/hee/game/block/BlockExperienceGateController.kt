@@ -2,18 +2,21 @@ package chylex.hee.game.block
 import chylex.hee.game.block.entity.TileEntityExperienceGate
 import chylex.hee.game.block.info.BlockBuilder
 import chylex.hee.system.util.getTile
-import net.minecraft.block.ITileEntityProvider
+import net.minecraft.block.BlockState
 import net.minecraft.tileentity.TileEntity
 import net.minecraft.util.math.BlockPos
-import net.minecraft.world.IBlockAccess
-import net.minecraft.world.World
+import net.minecraft.world.IBlockReader
 
-class BlockExperienceGateController(builder: BlockBuilder) : BlockExperienceGate(builder), ITileEntityProvider{
-	override fun createNewTileEntity(world: World, meta: Int): TileEntity{
+class BlockExperienceGateController(builder: BlockBuilder) : BlockExperienceGate(builder){
+	override fun hasTileEntity(state: BlockState): Boolean{
+		return true
+	}
+	
+	override fun createTileEntity(state: BlockState, world: IBlockReader): TileEntity{
 		return TileEntityExperienceGate()
 	}
 	
-	override fun findController(world: IBlockAccess, pos: BlockPos): TileEntityExperienceGate?{
+	override fun findController(world: IBlockReader, pos: BlockPos): TileEntityExperienceGate?{
 		return pos.getTile(world)
 	}
 }

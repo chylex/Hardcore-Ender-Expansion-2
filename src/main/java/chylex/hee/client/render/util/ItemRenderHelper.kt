@@ -7,16 +7,16 @@ import chylex.hee.client.util.MC
 import chylex.hee.system.migration.forge.Side
 import chylex.hee.system.migration.forge.Sided
 import net.minecraft.client.renderer.RenderHelper
-import net.minecraft.client.renderer.block.model.IBakedModel
+import net.minecraft.client.renderer.model.IBakedModel
+import net.minecraft.client.renderer.texture.AtlasTexture
 import net.minecraft.client.renderer.texture.ITextureObject
-import net.minecraft.client.renderer.texture.TextureMap
 import net.minecraft.item.ItemStack
 import net.minecraft.util.ResourceLocation
 import org.lwjgl.opengl.GL11.GL_GREATER
 
 @Sided(Side.CLIENT)
 object ItemRenderHelper{
-	val TEX_BLOCKS_ITEMS: ResourceLocation = TextureMap.LOCATION_BLOCKS_TEXTURE
+	val TEX_BLOCKS_ITEMS: ResourceLocation = AtlasTexture.LOCATION_BLOCKS_TEXTURE
 	private lateinit var texBlocksItemsObj: ITextureObject
 	
 	fun beginItemModel(){

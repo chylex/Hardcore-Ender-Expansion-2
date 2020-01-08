@@ -27,7 +27,7 @@ class StructureBuild<T : StructurePiece<*>.MutableInstance>(val size: Size){
 		}
 	}
 	
-	private val structureBox = size.toBoundingBox(BlockPos.ORIGIN)
+	private val structureBox = size.toBoundingBox(BlockPos.ZERO)
 	private val pieces = mutableListOf<PositionedPiece<T>>()
 	private var chain = -1
 	

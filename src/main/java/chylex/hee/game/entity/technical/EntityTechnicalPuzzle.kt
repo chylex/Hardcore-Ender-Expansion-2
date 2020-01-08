@@ -1,10 +1,11 @@
 package chylex.hee.game.entity.technical
 import chylex.hee.game.block.BlockPuzzleLogic
+import chylex.hee.init.ModEntities
 import chylex.hee.init.ModItems
 import chylex.hee.system.migration.Facing.DOWN
+import chylex.hee.system.migration.vanilla.EntityItem
 import chylex.hee.system.util.Pos
 import chylex.hee.system.util.TagCompound
-import chylex.hee.system.util.get
 import chylex.hee.system.util.getBlock
 import chylex.hee.system.util.getEnum
 import chylex.hee.system.util.getPos
@@ -13,40 +14,42 @@ import chylex.hee.system.util.heeTag
 import chylex.hee.system.util.max
 import chylex.hee.system.util.min
 import chylex.hee.system.util.motionVec
+import chylex.hee.system.util.putEnum
+import chylex.hee.system.util.putPos
 import chylex.hee.system.util.selectEntities
-import chylex.hee.system.util.setEnum
-import chylex.hee.system.util.setPos
 import chylex.hee.system.util.setState
 import chylex.hee.system.util.totalTime
-import chylex.hee.system.util.with
-import net.minecraft.entity.item.EntityItem
+import chylex.hee.system.util.use
+import net.minecraft.entity.EntityType
 import net.minecraft.item.ItemStack
-import net.minecraft.util.EnumFacing
+import net.minecraft.util.Direction
 import net.minecraft.util.math.AxisAlignedBB
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.Vec3d
 import net.minecraft.world.World
 
-class EntityTechnicalPuzzle(world: World) : EntityTechnicalBase(world){
+class EntityTechnicalPuzzle(type: EntityType<EntityTechnicalPuzzle>, world: World) : EntityTechnicalBase(type, world){
+	constructor(world: World) : this(ModEntities.TECHNICAL_PUZZLE, world)
+	
 	private companion object{
 		private const val START_POS_TAG = "StartPos"
 		private const val FACING_TAG = "Facing"
 	}
 	
-	private var startPos = BlockPos.ORIGIN
+	private var startPos = BlockPos.ZERO
 	private var facing = DOWN
 	
-	override fun entityInit(){}
+	override fun registerData(){}
 	
-	override fun onUpdate(){
-		super.onUpdate()
+	override fun tick(){
+		super.tick()
 		
 		if (world.isRemote){
 			return
 		}
 		
 		if (ticksExisted == 1 && hasConflict()){
-			setDead()
+			remove()
 			return
 		}
 		
@@ -58,7 +61,7 @@ class EntityTechnicalPuzzle(world: World) : EntityTechnicalBase(world){
 	}
 	
 	private fun hasConflict(): Boolean{
-		return world.selectEntities.inBox<EntityTechnicalPuzzle>(AxisAlignedBB(Pos(this))).any { it !== this && it.facing == facing && !it.isDead }
+		return world.selectEntities.inBox<EntityTechnicalPuzzle>(AxisAlignedBB(Pos(this))).any { it !== this && it.facing == facing && it.isAlive }
 	}
 	
 	private fun setPosition(pos: BlockPos){
@@ -81,13 +84,13 @@ class EntityTechnicalPuzzle(world: World) : EntityTechnicalBase(world){
 				facing = nextChains[0].second
 				
 				if (hasConflict()){
-					setDead()
+					remove()
 				}
 				
 				for(index in 1 until nextChains.size){
 					EntityTechnicalPuzzle(world).apply {
 						if (startChain(nextChains[index].first, nextChains[index].second)){
-							world.spawnEntity(this)
+							world.addEntity(this)
 						}
 					}
 				}
@@ -99,7 +102,7 @@ class EntityTechnicalPuzzle(world: World) : EntityTechnicalBase(world){
 	}
 	
 	private fun isBlockingSolution(allBlocks: List<BlockPos>, other: EntityTechnicalPuzzle): Boolean{
-		if (other.isDead){
+		if (!other.isAlive){
 			return false
 		}
 		
@@ -107,7 +110,7 @@ class EntityTechnicalPuzzle(world: World) : EntityTechnicalBase(world){
 		return allBlocks.any { it == entityPos }
 	}
 	
-	fun startChain(pos: BlockPos, facing: EnumFacing): Boolean{
+	fun startChain(pos: BlockPos, facing: Direction): Boolean{
 		val state = pos.getState(world)
 		val block = state.block
 		
@@ -122,7 +125,7 @@ class EntityTechnicalPuzzle(world: World) : EntityTechnicalBase(world){
 	}
 	
 	private fun endChain(){
-		setDead()
+		remove()
 		
 		val allBlocks = BlockPuzzleLogic.findAllBlocks(world, startPos)
 		val entityArea = BlockPuzzleLogic.MAX_SIZE.toDouble().let { AxisAlignedBB(startPos).grow(it, 0.0, it) }
@@ -142,18 +145,18 @@ class EntityTechnicalPuzzle(world: World) : EntityTechnicalBase(world){
 			
 			EntityItem(world, (min.x + max.x + 1) / 2.0, posY + 1.5, (min.z + max.z + 1) / 2.0, ItemStack(ModItems.PUZZLE_MEDALLION)).apply {
 				motionVec = Vec3d.ZERO
-				world.spawnEntity(this)
+				world.addEntity(this)
 			}
 		}
 	}
 	
-	override fun writeEntityToNBT(nbt: TagCompound) = with(nbt.heeTag){
-		setPos(START_POS_TAG, startPos)
-		setEnum(FACING_TAG, facing)
+	override fun writeAdditional(nbt: TagCompound) = nbt.heeTag.use {
+		putPos(START_POS_TAG, startPos)
+		putEnum(FACING_TAG, facing)
 	}
 	
-	override fun readEntityFromNBT(nbt: TagCompound) = with(nbt.heeTag){
+	override fun readAdditional(nbt: TagCompound) = nbt.heeTag.use {
 		startPos = getPos(START_POS_TAG)
-		facing = getEnum<EnumFacing>(FACING_TAG) ?: facing
+		facing = getEnum<Direction>(FACING_TAG) ?: facing
 	}
 }

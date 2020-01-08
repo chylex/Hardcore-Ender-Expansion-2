@@ -1,12 +1,6 @@
 package chylex.hee.game.commands.sub.client
-import chylex.hee.HEE
-import chylex.hee.game.commands.sub.ISubCommand
-import net.minecraft.command.ICommandSender
-import net.minecraft.server.MinecraftServer
-import net.minecraft.util.text.TextComponentString
-import net.minecraft.util.text.TextComponentTranslation
-import net.minecraft.util.text.TextFormatting.DARK_GREEN
 
+/*
 internal object CommandClientVersion : ISubCommand{
 	override val name = "version"
 	override val usage = "commands.hee.version.usage"
@@ -25,4 +19,4 @@ internal object CommandClientVersion : ISubCommand{
 		sender.sendMessage(emptyLine)
 		// TODO update information
 	}
-}
+}*/

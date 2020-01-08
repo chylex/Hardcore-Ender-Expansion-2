@@ -11,7 +11,7 @@ class RepairInstance(val target: ItemStack, val ingredient: ItemStack){
 	var ingredientCost = 0
 	
 	fun repairFully(){
-		repaired = target.copy().also { it.itemDamage = 0 }
+		repaired = target.copy().also { it.damage = 0 }
 		experienceCost = target.repairCost + 1
 		ingredientCost = 1
 	}
@@ -24,11 +24,11 @@ class RepairInstance(val target: ItemStack, val ingredient: ItemStack){
 		ingredientCost = 0
 		
 		for(step in 0 until ingredient.size){
-			repaired.itemDamage -= damagePerIngredient
+			repaired.damage -= damagePerIngredient
 			experienceCost++
 			ingredientCost++
 			
-			if (repaired.itemDamage == 0){
+			if (repaired.damage == 0){
 				break
 			}
 		}

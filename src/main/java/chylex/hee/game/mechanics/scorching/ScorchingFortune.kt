@@ -1,15 +1,23 @@
 package chylex.hee.game.mechanics.scorching
 import chylex.hee.init.ModBlocks
+import chylex.hee.proxy.Environment
 import chylex.hee.system.migration.vanilla.Blocks
+import chylex.hee.system.migration.vanilla.ItemBlock
+import chylex.hee.system.migration.vanilla.Items
 import chylex.hee.system.util.copyIf
 import chylex.hee.system.util.isNotEmpty
 import chylex.hee.system.util.nextRounded
 import chylex.hee.system.util.size
 import net.minecraft.block.Block
-import net.minecraft.block.state.IBlockState
-import net.minecraft.item.ItemBlock
+import net.minecraft.inventory.Inventory
 import net.minecraft.item.ItemStack
-import net.minecraft.item.crafting.FurnaceRecipes
+import net.minecraft.item.crafting.IRecipeType
+import net.minecraft.util.math.BlockPos
+import net.minecraft.world.World
+import net.minecraft.world.server.ServerWorld
+import net.minecraft.world.storage.loot.LootContext
+import net.minecraft.world.storage.loot.LootParameterSets
+import net.minecraft.world.storage.loot.LootParameters
 import java.util.Random
 import kotlin.math.pow
 
@@ -35,8 +43,7 @@ object ScorchingFortune{
 		Blocks.EMERALD_ORE to Spec((1.0F)..(4.5F), 2.5F),
 		Blocks.LAPIS_ORE to Spec(5..28, 12F),
 		Blocks.REDSTONE_ORE to Spec(3..20, 10F),
-		Blocks.LIT_REDSTONE_ORE to Spec(3..20, 10F),
-		Blocks.QUARTZ_ORE to Spec((1.7F)..(3.1F), 3F),
+		Blocks.NETHER_QUARTZ_ORE to Spec((1.7F)..(3.1F), 3F),
 		ModBlocks.END_POWDER_ORE to Spec(2..5, 2.5F),
 		ModBlocks.ENDIUM_ORE to Spec(1..2, 1.2F),
 		ModBlocks.IGNEOUS_ROCK_ORE to Spec(1..2, 1.8F)
@@ -48,19 +55,19 @@ object ScorchingFortune{
 		ModBlocks.STARDUST_ORE
 	)
 	
-	private val FORTUNE_CACHED = mutableMapOf<IBlockState, Spec?>()
+	private val FORTUNE_CACHED = mutableMapOf<Block, Spec?>()
 	
 	// Calculations
 	
-	private fun createGeneralFortuneSpec(state: IBlockState): Spec?{
-		if (FORTUNE_CACHED.containsKey(state)){
-			return FORTUNE_CACHED[state]
+	private fun createGeneralFortuneSpec(world: ServerWorld, block: Block): Spec?{
+		if (FORTUNE_CACHED.containsKey(block)){
+			return FORTUNE_CACHED[block]
 		}
 		
-		val defaultRange = estimateDropRange(state)
+		val defaultRange = estimateDropRange(world, block)
 		
 		if (defaultRange.isEmpty()){
-			FORTUNE_CACHED[state] = null
+			FORTUNE_CACHED[block] = null
 			return null
 		}
 		
@@ -73,18 +80,31 @@ object ScorchingFortune{
 		val highestChance = middleAmount + extraShift - 1F
 		val newRange = minimum..(maximum + 2)
 		
-		return Spec(newRange, highestChance).also { FORTUNE_CACHED[state] = it }
+		return Spec(newRange, highestChance).also { FORTUNE_CACHED[block] = it }
 	}
 	
-	private fun estimateDropRange(state: IBlockState): IntRange{
-		val block = state.block
+	private fun estimateDropRange(world: ServerWorld, block: Block): IntRange{ // UPDATE test
 		val rand = Random(96L)
+		
+		val lootTable = Environment.getServer().lootTableManager.getLootTableFromLocation(block.lootTable)
+		val lootContext = LootContext.Builder(world)
+			.withRandom(rand)
+			.withParameter(LootParameters.BLOCK_STATE, block.defaultState)
+			.withParameter(LootParameters.POSITION, BlockPos.ZERO)
+			.withParameter(LootParameters.TOOL, ItemStack(Items.DIAMOND_PICKAXE))
+			.build(LootParameterSets.BLOCK)
 		
 		var minimum = Int.MAX_VALUE
 		var maximum = Int.MIN_VALUE
 		
 		repeat(200){
-			val amount = block.quantityDropped(state, 0, rand)
+			val items = lootTable.generate(lootContext)
+			
+			if (items.size != 1){
+				return IntRange.EMPTY
+			}
+			
+			val amount = items.first().size
 			
 			if (amount == 0){
 				return IntRange.EMPTY
@@ -102,29 +122,28 @@ object ScorchingFortune{
 		return minimum..maximum
 	}
 	
-	private fun getStackFromState(state: IBlockState): ItemStack{
-		return state.block.let { ItemStack(it, 1, it.getMetaFromState(state)) }
-	}
-	
-	private fun getSmeltingResult(state: IBlockState): ItemStack{
-		return if (state.block === Blocks.LIT_REDSTONE_ORE) // TODO ...
-			getSmeltingResult(Blocks.REDSTONE_ORE.defaultState)
-		else
-			FurnaceRecipes.instance().getSmeltingResult(getStackFromState(state)).copyIf { it.isNotEmpty }
+	private fun getSmeltingResult(world: World, block: Block): ItemStack{
+		val inventory = Inventory(ItemStack(block))
+		val recipe = world.recipeManager.getRecipe(IRecipeType.SMELTING, inventory, world).orElse(null)
+		
+		return recipe?.recipeOutput?.copyIf { it.isNotEmpty } ?: ItemStack.EMPTY
 	}
 	
 	// Public
 	
-	fun canSmelt(state: IBlockState): Boolean{
-		return getSmeltingResult(state).isNotEmpty
+	fun canSmelt(world: World, block: Block): Boolean{
+		return getSmeltingResult(world, block).isNotEmpty
 	}
 	
-	fun createSmeltedStack(state: IBlockState, rand: Random): ItemStack{
-		val block = state.block
-		val smelted = getSmeltingResult(state)
+	fun createSmeltedStack(world: World, block: Block, rand: Random): ItemStack{
+		if (world !is ServerWorld){
+			return ItemStack.EMPTY
+		}
+		
+		val smelted = getSmeltingResult(world, block)
 		
 		if (smelted.isNotEmpty && !FORTUNE_BLACKLISTED.contains(block)){
-			val fortuneSpec = FORTUNE_HARDCODED[block] ?: if (smelted.item is ItemBlock) null else createGeneralFortuneSpec(state)
+			val fortuneSpec = FORTUNE_HARDCODED[block] ?: if (smelted.item is ItemBlock) null else createGeneralFortuneSpec(world, block)
 			
 			if (fortuneSpec != null){
 				smelted.size = fortuneSpec.nextDropAmount(rand)

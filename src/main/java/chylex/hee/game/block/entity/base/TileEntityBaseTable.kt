@@ -14,20 +14,20 @@ import chylex.hee.game.mechanics.table.interfaces.ITableContext
 import chylex.hee.game.mechanics.table.interfaces.ITableProcess
 import chylex.hee.game.mechanics.table.interfaces.ITableProcessSerializer
 import chylex.hee.game.mechanics.table.process.ProcessSupportingItemHolder
-import chylex.hee.system.util.NBTList.Companion.setList
+import chylex.hee.system.util.NBTList.Companion.putList
 import chylex.hee.system.util.TagCompound
 import chylex.hee.system.util.color.IntColor
 import chylex.hee.system.util.delegate.NotifyOnChange
-import chylex.hee.system.util.get
 import chylex.hee.system.util.getListOfCompounds
 import chylex.hee.system.util.getState
 import chylex.hee.system.util.getTile
+import chylex.hee.system.util.use
 import net.minecraft.item.Item
-import net.minecraft.util.ITickable
-import net.minecraft.world.World
+import net.minecraft.tileentity.ITickableTileEntity
+import net.minecraft.tileentity.TileEntityType
 import org.apache.commons.lang3.math.Fraction
 
-abstract class TileEntityBaseTable : TileEntityBase(), ITickable{
+abstract class TileEntityBaseTable(type: TileEntityType<out TileEntityBaseTable>) : TileEntityBase(type), ITickableTileEntity{
 	private companion object{
 		private const val MAX_CLUSTER_DISTANCE = 12
 		private const val MAX_PEDESTAL_DISTANCE = 6
@@ -79,7 +79,7 @@ abstract class TileEntityBaseTable : TileEntityBase(), ITickable{
 	// Behavior
 	
 	override fun firstTick(){
-		val state = pos.getState(world)
+		val state = pos.getState(wrld)
 		val block = state.block as BlockAbstractTable
 		
 		maxInputPedestals = when(state[TIER] - block.minAllowedTier){
@@ -90,8 +90,8 @@ abstract class TileEntityBaseTable : TileEntityBase(), ITickable{
 		}
 	}
 	
-	final override fun update(){
-		if (world.isRemote || !world.isAreaLoaded(pos, MAX_CLUSTER_DISTANCE)){
+	final override fun tick(){
+		if (wrld.isRemote || !wrld.isAreaLoaded(pos, MAX_CLUSTER_DISTANCE)){
 			return
 		}
 		
@@ -119,7 +119,7 @@ abstract class TileEntityBaseTable : TileEntityBase(), ITickable{
 			tickCounterProcessing = 0
 			
 			if (currentProcesses.isNotEmpty){
-				val isPaused = world.getRedstonePowerFromNeighbors(pos) > 0
+				val isPaused = wrld.getRedstonePowerFromNeighbors(pos) > 0
 				
 				currentProcesses.remove {
 					createProcessingContext(it, isPaused).apply(it::tick).isFinished
@@ -167,7 +167,7 @@ abstract class TileEntityBaseTable : TileEntityBase(), ITickable{
 			}
 			
 			val dustType = tableDustType
-			val jar = pos.up().getTile<TileEntityJarODust>(world)
+			val jar = pos.up().getTile<TileEntityJarODust>(wrld)
 			
 			if (dustType == null || jar == null){
 				return false
@@ -212,28 +212,24 @@ abstract class TileEntityBaseTable : TileEntityBase(), ITickable{
 	
 	// Serialization
 	
-	override fun setWorldCreate(world: World){
-		this.world = world // ensures world is available in readNBT
-	}
-	
-	override fun writeNBT(nbt: TagCompound, context: Context) = with(nbt){
+	override fun writeNBT(nbt: TagCompound, context: Context) = nbt.use {
 		if (context == STORAGE){
-			setTag(PEDESTAL_INFO_TAG, pedestalHandler.serializeNBT())
-			setTag(CLUSTER_INFO_TAG, clusterHandler.serializeNBT())
-			setList(PROCESSES_TAG, currentProcesses.serializeToList(processSerializer))
+			put(PEDESTAL_INFO_TAG, pedestalHandler.serializeNBT())
+			put(CLUSTER_INFO_TAG, clusterHandler.serializeNBT())
+			putList(PROCESSES_TAG, currentProcesses.serializeToList(processSerializer))
 			
-			setInteger(DUST_FRACTION_N_TAG, storedDust.numerator)
-			setInteger(DUST_FRACTION_D_TAG, storedDust.denominator)
+			putInt(DUST_FRACTION_N_TAG, storedDust.numerator)
+			putInt(DUST_FRACTION_D_TAG, storedDust.denominator)
 		}
 	}
 	
-	override fun readNBT(nbt: TagCompound, context: Context) = with(nbt){
+	override fun readNBT(nbt: TagCompound, context: Context) = nbt.use {
 		if (context == STORAGE){
-			pedestalHandler.deserializeNBT(getCompoundTag(PEDESTAL_INFO_TAG))
-			clusterHandler.deserializeNBT(getCompoundTag(CLUSTER_INFO_TAG))
-			currentProcesses.deserializeFromList(world, getListOfCompounds(PROCESSES_TAG), processSerializer)
+			pedestalHandler.deserializeNBT(getCompound(PEDESTAL_INFO_TAG))
+			clusterHandler.deserializeNBT(getCompound(CLUSTER_INFO_TAG))
+			currentProcesses.deserializeFromList(wrld, getListOfCompounds(PROCESSES_TAG), processSerializer)
 			
-			storedDust = Fraction.getFraction(getInteger(DUST_FRACTION_N_TAG), getInteger(DUST_FRACTION_D_TAG))
+			storedDust = Fraction.getFraction(getInt(DUST_FRACTION_N_TAG), getInt(DUST_FRACTION_D_TAG))
 		}
 	}
 }

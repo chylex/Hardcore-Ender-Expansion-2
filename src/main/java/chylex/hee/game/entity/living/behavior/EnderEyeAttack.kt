@@ -24,7 +24,7 @@ sealed class EnderEyeAttack{
 			}
 			else{
 				armPosition = EntityBossEnderEye.ARMS_HUG
-				lookHelper.setLookPositionWithEntity(target, 0F, 0F)
+				lookController.setLookPositionWithEntity(target, 0F, 0F)
 				setRotateTarget(target)
 				
 				val currentVec = lookPosVec

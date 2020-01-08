@@ -18,6 +18,7 @@ import chylex.hee.system.migration.ActionResult.FAIL
 import chylex.hee.system.migration.ActionResult.SUCCESS
 import chylex.hee.system.migration.forge.Side
 import chylex.hee.system.migration.forge.Sided
+import chylex.hee.system.migration.vanilla.TextComponentTranslation
 import chylex.hee.system.util.Pos
 import chylex.hee.system.util.TagCompound
 import chylex.hee.system.util.breakBlock
@@ -29,20 +30,19 @@ import chylex.hee.system.util.hasKey
 import chylex.hee.system.util.heeTag
 import chylex.hee.system.util.heeTagOrNull
 import chylex.hee.system.util.totalTime
+import chylex.hee.system.util.use
 import net.minecraft.client.renderer.color.IItemColor
-import net.minecraft.client.resources.I18n
 import net.minecraft.client.util.ITooltipFlag
 import net.minecraft.entity.Entity
-import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.item.ItemStack
-import net.minecraft.util.EnumActionResult
-import net.minecraft.util.EnumFacing
-import net.minecraft.util.EnumHand
+import net.minecraft.item.ItemUseContext
+import net.minecraft.util.ActionResultType
 import net.minecraft.util.math.BlockPos
+import net.minecraft.util.text.ITextComponent
 import net.minecraft.world.World
 import kotlin.math.pow
 
-class ItemEnergyReceptacle : ItemAbstractInfusable(){
+class ItemEnergyReceptacle(properties: Properties) : ItemAbstractInfusable(properties){
 	private companion object{
 		private const val CLUSTER_SNAPSHOT_TAG = "Cluster"
 		private const val UPDATE_TIME_TAG = "UpdateTime"
@@ -66,13 +66,13 @@ class ItemEnergyReceptacle : ItemAbstractInfusable(){
 		}
 		
 		private fun hasMovedTooFar(nbt: TagCompound, currentWorld: World, currentPos: BlockPos): Boolean{
-			val provider = currentWorld.provider
+			val dimension = currentWorld.dimension
 			
-			if (provider.dimension != nbt.getInteger(INITIAL_DIMENSION_TAG)){
+			if (dimension.type.id != nbt.getInt(INITIAL_DIMENSION_TAG)){
 				return true
 			}
 			
-			if (provider is WorldProviderEndCustom && TerritoryInstance.fromPos(currentPos) != nbt.getIntegerOrNull(INITIAL_TERRITORY_TAG)?.let(TerritoryInstance.Companion::fromHash)){
+			if (dimension is WorldProviderEndCustom && TerritoryInstance.fromPos(currentPos) != nbt.getIntegerOrNull(INITIAL_TERRITORY_TAG)?.let(TerritoryInstance.Companion::fromHash)){
 				return true
 			}
 			
@@ -84,11 +84,11 @@ class ItemEnergyReceptacle : ItemAbstractInfusable(){
 				return false
 			}
 			
-			if (hasMovedTooFar(nbt, cluster.world, cluster.pos)){
+			if (hasMovedTooFar(nbt, cluster.world!!, cluster.pos)){
 				return true
 			}
 			
-			val totalEnergyLost = Internal(nbt.getInteger(INITIAL_LEVEL_TAG)) - cluster.energyLevel
+			val totalEnergyLost = Internal(nbt.getInt(INITIAL_LEVEL_TAG)) - cluster.energyLevel
 			
 			if (totalEnergyLost > maxOf(Floating(1F), cluster.energyBaseCapacity * 0.2F)){
 				return true
@@ -99,8 +99,6 @@ class ItemEnergyReceptacle : ItemAbstractInfusable(){
 	}
 	
 	init{
-		maxStackSize = 1
-		
 		addPropertyOverride(Resource.Custom("has_cluster")){
 			stack, _, _ -> if (stack.heeTagOrNull.hasKey(CLUSTER_SNAPSHOT_TAG)) 1F else 0F
 		}
@@ -108,12 +106,16 @@ class ItemEnergyReceptacle : ItemAbstractInfusable(){
 		// TODO tweak animation
 	}
 	
-	override fun onItemUse(player: EntityPlayer, world: World, pos: BlockPos, hand: EnumHand, facing: EnumFacing, hitX: Float, hitY: Float, hitZ: Float): EnumActionResult{
-		val stack = player.getHeldItem(hand)
+	override fun onItemUse(context: ItemUseContext): ActionResultType{
+		val player = context.player ?: return FAIL
+		val world = context.world
+		val pos = context.pos
 		
-		with(stack.heeTag){
+		val stack = player.getHeldItem(context.hand)
+		
+		stack.heeTag.use {
 			if (hasKey(CLUSTER_SNAPSHOT_TAG)){
-				val finalPos = BlockEditor.place(ModBlocks.ENERGY_CLUSTER, player, hand, stack, pos, facing, hitX, hitY, hitZ)
+				val finalPos = BlockEditor.place(ModBlocks.ENERGY_CLUSTER, player, stack, context)
 				
 				if (world.isRemote){
 					return SUCCESS
@@ -121,18 +123,18 @@ class ItemEnergyReceptacle : ItemAbstractInfusable(){
 				
 				if (finalPos != null){
 					finalPos.getTile<TileEntityEnergyCluster>(world)?.let {
-						it.loadClusterSnapshot(ClusterSnapshot(getCompoundTag(CLUSTER_SNAPSHOT_TAG)), inactive = false)
+						it.loadClusterSnapshot(ClusterSnapshot(getCompound(CLUSTER_SNAPSHOT_TAG)), inactive = false)
 						
 						if (shouldLoseHealth(it, this, InfusionTag.getList(stack))){
 							it.deteriorateHealth()
 						}
 					}
 					
-					removeTag(CLUSTER_SNAPSHOT_TAG)
-					removeTag(UPDATE_TIME_TAG)
-					removeTag(RENDER_COLOR_TAG)
-					removeTag(INITIAL_LEVEL_TAG)
-					removeTag(INITIAL_DIMENSION_TAG)
+					remove(CLUSTER_SNAPSHOT_TAG)
+					remove(UPDATE_TIME_TAG)
+					remove(RENDER_COLOR_TAG)
+					remove(INITIAL_LEVEL_TAG)
+					remove(INITIAL_DIMENSION_TAG)
 					
 					player.cooldownTracker.setCooldown(this@ItemEnergyReceptacle, ITEM_COOLDOWN)
 					return SUCCESS
@@ -146,18 +148,18 @@ class ItemEnergyReceptacle : ItemAbstractInfusable(){
 				val cluster = pos.getTile<TileEntityEnergyCluster>(world)
 				
 				if (cluster != null && cluster.tryDisturb()){
-					val provider = world.provider
+					val dimension = world.dimension
 					
-					setTag(CLUSTER_SNAPSHOT_TAG, cluster.getClusterSnapshot().tag)
+					put(CLUSTER_SNAPSHOT_TAG, cluster.getClusterSnapshot().tag)
 					
-					setLong(UPDATE_TIME_TAG, world.totalTime)
-					setInteger(RENDER_COLOR_TAG, cluster.color.primary(75F, 80F).i)
+					putLong(UPDATE_TIME_TAG, world.totalTime)
+					putInt(RENDER_COLOR_TAG, cluster.color.primary(75F, 80F).i)
 					
-					setInteger(INITIAL_LEVEL_TAG, cluster.energyLevel.internal.value)
-					setInteger(INITIAL_DIMENSION_TAG, provider.dimension)
+					putInt(INITIAL_LEVEL_TAG, cluster.energyLevel.internal.value)
+					putInt(INITIAL_DIMENSION_TAG, dimension.type.id)
 					
-					if (provider is WorldProviderEndCustom){
-						TerritoryInstance.fromPos(pos)?.let { setInteger(INITIAL_TERRITORY_TAG, it.hash) }
+					if (dimension is WorldProviderEndCustom){
+						TerritoryInstance.fromPos(pos)?.let { putInt(INITIAL_TERRITORY_TAG, it.hash) }
 					}
 					
 					cluster.breakWithoutExplosion = true
@@ -172,7 +174,7 @@ class ItemEnergyReceptacle : ItemAbstractInfusable(){
 		return FAIL
 	}
 	
-	override fun onUpdate(stack: ItemStack, world: World, entity: Entity, itemSlot: Int, isSelected: Boolean){
+	override fun inventoryTick(stack: ItemStack, world: World, entity: Entity, itemSlot: Int, isSelected: Boolean){
 		if (world.isRemote){
 			return
 		}
@@ -189,15 +191,15 @@ class ItemEnergyReceptacle : ItemAbstractInfusable(){
 				return
 			}
 			
-			val snapshot = ClusterSnapshot(getCompoundTag(CLUSTER_SNAPSHOT_TAG))
+			val snapshot = ClusterSnapshot(getCompound(CLUSTER_SNAPSHOT_TAG))
 			val newLevel = calculateNewEnergyLevel(snapshot, ticksElapsed, InfusionTag.getList(stack))
 			
-			setTag(CLUSTER_SNAPSHOT_TAG, snapshot.clone(energyLevel = newLevel).tag)
-			setLong(UPDATE_TIME_TAG, currentTime)
+			put(CLUSTER_SNAPSHOT_TAG, snapshot.clone(energyLevel = newLevel).tag)
+			putLong(UPDATE_TIME_TAG, currentTime)
 			
 			if (hasMovedTooFar(this, world, Pos(entity))){ // force health deterioration
-				setInteger(INITIAL_DIMENSION_TAG, Int.MIN_VALUE)
-				removeTag(INITIAL_TERRITORY_TAG)
+				putInt(INITIAL_DIMENSION_TAG, Int.MIN_VALUE)
+				remove(INITIAL_TERRITORY_TAG)
 			}
 		}
 	}
@@ -207,18 +209,18 @@ class ItemEnergyReceptacle : ItemAbstractInfusable(){
 	}
 	
 	@Sided(Side.CLIENT)
-	override fun addInformation(stack: ItemStack, world: World?, lines: MutableList<String>, flags: ITooltipFlag){
+	override fun addInformation(stack: ItemStack, world: World?, lines: MutableList<ITextComponent>, flags: ITooltipFlag){
 		if (world != null){
 			val tag = stack.heeTagOrNull
 			
 			if (!tag.hasKey(CLUSTER_SNAPSHOT_TAG)){
-				lines.add(I18n.format("item.hee.energy_receptacle.tooltip.empty"))
+				lines.add(TextComponentTranslation("item.hee.energy_receptacle.tooltip.empty"))
 			}
 			else{
-				val snapshot = ClusterSnapshot(tag.getCompoundTag(CLUSTER_SNAPSHOT_TAG))
+				val snapshot = ClusterSnapshot(tag.getCompound(CLUSTER_SNAPSHOT_TAG))
 				val level = calculateNewEnergyLevel(snapshot, world.totalTime - tag.getLong(UPDATE_TIME_TAG), InfusionTag.getList(stack))
 				
-				lines.add(I18n.format("item.hee.energy_receptacle.tooltip.holding", level.displayString))
+				lines.add(TextComponentTranslation("item.hee.energy_receptacle.tooltip.holding", level.displayString))
 			}
 		}
 		
@@ -229,8 +231,8 @@ class ItemEnergyReceptacle : ItemAbstractInfusable(){
 	object Color : IItemColor{
 		private val WHITE = RGB(255u).i
 		
-		override fun colorMultiplier(stack: ItemStack, tintIndex: Int) = when(tintIndex){
-			1 -> stack.heeTagOrNull?.getInteger(RENDER_COLOR_TAG) ?: WHITE
+		override fun getColor(stack: ItemStack, tintIndex: Int) = when(tintIndex){
+			1 -> stack.heeTagOrNull?.getInt(RENDER_COLOR_TAG) ?: WHITE
 			else -> NO_TINT
 		}
 	}

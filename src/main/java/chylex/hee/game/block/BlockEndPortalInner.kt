@@ -8,16 +8,19 @@ import chylex.hee.game.mechanics.causatum.EnderCausatum
 import chylex.hee.game.mechanics.portal.DimensionTeleporter
 import chylex.hee.game.mechanics.portal.EntityPortalContact
 import chylex.hee.init.ModBlocks
+import chylex.hee.system.migration.vanilla.EntityPlayer
 import chylex.hee.system.util.Pos
 import chylex.hee.system.util.closestTickingTile
+import net.minecraft.block.BlockState
 import net.minecraft.entity.Entity
-import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.tileentity.TileEntity
 import net.minecraft.util.math.BlockPos
+import net.minecraft.world.IBlockReader
 import net.minecraft.world.World
+import net.minecraft.world.dimension.DimensionType
 
 class BlockEndPortalInner(builder: BlockBuilder) : BlockAbstractPortal(builder){
-	override fun createNewTileEntity(world: World, meta: Int): TileEntity{
+	override fun createTileEntity(state: BlockState, world: IBlockReader): TileEntity{
 		return TileEntityPortalInner.End()
 	}
 	
@@ -26,8 +29,8 @@ class BlockEndPortalInner(builder: BlockBuilder) : BlockAbstractPortal(builder){
 			return
 		}
 		
-		if (world.provider.dimension == HEE.DIM){
-			entity.changeDimension(0, DimensionTeleporter.LastEndPortal)
+		if (world.dimension.type === HEE.dim){
+			DimensionTeleporter.changeDimension(entity, DimensionType.OVERWORLD, DimensionTeleporter.LastEndPortal)
 		}
 		else{
 			val acceptor = pos.closestTickingTile<TileEntityEndPortalAcceptor>(world, MAX_DISTANCE_FROM_FRAME)
@@ -41,7 +44,7 @@ class BlockEndPortalInner(builder: BlockBuilder) : BlockAbstractPortal(builder){
 					EnderCausatum.triggerStage(entity, CausatumStage.S2_ENTERED_END)
 				}
 				
-				entity.changeDimension(1, DimensionTeleporter.EndSpawnPortal)
+				DimensionTeleporter.changeDimension(entity, DimensionType.THE_END, DimensionTeleporter.EndSpawnPortal)
 			}
 		}
 	}

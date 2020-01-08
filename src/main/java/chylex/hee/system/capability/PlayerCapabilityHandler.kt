@@ -3,9 +3,9 @@ import chylex.hee.HEE
 import chylex.hee.system.migration.forge.EventPriority
 import chylex.hee.system.migration.forge.SubscribeAllEvents
 import chylex.hee.system.migration.forge.SubscribeEvent
+import chylex.hee.system.migration.vanilla.EntityPlayer
 import chylex.hee.system.util.TagCompound
 import net.minecraft.entity.Entity
-import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.util.ResourceLocation
 import net.minecraftforge.common.capabilities.ICapabilityProvider
 import net.minecraftforge.common.util.INBTSerializable
@@ -49,7 +49,7 @@ object PlayerCapabilityHandler{
 	@SubscribeEvent(EventPriority.HIGHEST)
 	fun onPlayerClone(e: PlayerEvent.Clone){
 		val oldPlayer = e.original
-		val newPlayer = e.entityPlayer
+		val newPlayer = e.player
 		
 		for(entry in entries){
 			if (entry is IPlayerPersistentCapability<*>){

@@ -100,7 +100,7 @@ inline class Entry5x5(override val compacted: Long) : IRegionEntry{
 	
 	Pos(0, 16, 0).allInCenteredBoxMutable(200, 0, 200).forEach { pos ->
 		val e = Entry5x5.Constructor.fromPos(pos)
-		pos.setState(world, Blocks.WOOL.defaultState.withProperty(COLOR, EnumDyeColor.values()[(e.x + 4 * e.z) % 16]))
+		pos.setState(world, Blocks.WOOL.defaultState.withProperty(COLOR, DyeColor.values()[(e.x + 4 * e.z) % 16]))
 		
 		if (Entry5x5.Constructor.fromPos(Pos(0, 0, 0)).adjacent.any { it.key == e.key }){
 			pos.up().setBlock(world, Blocks.ACACIA_FENCE)

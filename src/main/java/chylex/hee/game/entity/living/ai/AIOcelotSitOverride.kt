@@ -3,18 +3,19 @@ import chylex.hee.HEE
 import chylex.hee.system.migration.forge.EventPriority
 import chylex.hee.system.migration.forge.SubscribeAllEvents
 import chylex.hee.system.migration.forge.SubscribeEvent
+import chylex.hee.system.migration.vanilla.EntityCat
 import chylex.hee.system.util.getBlock
 import chylex.hee.system.util.isAir
-import net.minecraft.entity.ai.EntityAIOcelotSit
-import net.minecraft.entity.passive.EntityOcelot
+import net.minecraft.entity.ai.goal.CatSitOnBlockGoal
+import net.minecraft.entity.passive.CatEntity
 import net.minecraft.util.math.BlockPos
-import net.minecraft.world.World
+import net.minecraft.world.IWorldReader
 import net.minecraftforge.event.entity.EntityJoinWorldEvent
 
 @SubscribeAllEvents(modid = HEE.ID)
-class AIOcelotSitOverride(ocelot: EntityOcelot, overridden: EntityAIOcelotSit) : EntityAIOcelotSit(ocelot, overridden.movementSpeed){
+class AIOcelotSitOverride(ocelot: CatEntity, overridden: CatSitOnBlockGoal) : CatSitOnBlockGoal(ocelot, overridden.movementSpeed){
 	interface IOcelotCanSitOn{
-		fun canOcelotSitOn(world: World, pos: BlockPos): Boolean
+		fun canOcelotSitOn(world: IWorldReader, pos: BlockPos): Boolean
 	}
 	
 	companion object{
@@ -23,19 +24,19 @@ class AIOcelotSitOverride(ocelot: EntityOcelot, overridden: EntityAIOcelotSit) :
 		fun onEntityJoinWorld(e: EntityJoinWorldEvent){
 			val entity = e.entity
 			
-			if (entity is EntityOcelot && !entity.world.isRemote){
-				val tasks = entity.tasks
-				val entry = tasks.taskEntries.find { entry -> entry.action.let { it is EntityAIOcelotSit && it !is AIOcelotSitOverride } }
+			if (entity is EntityCat && !entity.world.isRemote){
+				val tasks = entity.goalSelector
+				val entry = tasks.goals.find { entry -> entry.goal.let { it is CatSitOnBlockGoal && it !is AIOcelotSitOverride } }
 				
 				if (entry != null){
-					tasks.taskEntries.remove(entry)
-					tasks.addTask(entry.priority, AIOcelotSitOverride(entity, entry.action as EntityAIOcelotSit))
+					tasks.goals.remove(entry)
+					tasks.addGoal(entry.priority, AIOcelotSitOverride(entity, entry.goal as CatSitOnBlockGoal))
 				}
 			}
 		}
 	}
 	
-	override fun shouldMoveTo(world: World, pos: BlockPos): Boolean{
+	override fun shouldMoveTo(world: IWorldReader, pos: BlockPos): Boolean{
 		if (super.shouldMoveTo(world, pos)){
 			return true
 		}

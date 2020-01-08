@@ -1,45 +1,37 @@
 package chylex.hee.proxy
 import chylex.hee.client.util.MC
-import chylex.hee.game.commands.HeeClientCommand
-import chylex.hee.init.ModRendering
+import chylex.hee.game.particle.spawner.IParticleMaker
+import chylex.hee.init.ModParticles
 import chylex.hee.system.migration.forge.Side
 import chylex.hee.system.migration.forge.Sided
-import net.minecraftforge.client.ClientCommandHandler
+import net.minecraft.client.particle.IAnimatedSprite
+import net.minecraft.client.particle.ParticleManager
+import net.minecraft.particles.BasicParticleType
 
 @Suppress("unused", "RemoveExplicitTypeArguments")
 @Sided(Side.CLIENT)
 class ModClientProxy : ModCommonProxy(){
 	override fun getClientSidePlayer() = MC.player
 	
-	override fun onPreInit(){
-		ModRendering.registerEntities()
-	}
-	
-	override fun onInit(){
-		ClientCommandHandler.instance.registerCommand(HeeClientCommand)
-		
-		ModRendering.registerLayers()
-		ModRendering.registerTileEntities()
-		ModRendering.registerBlockItemColors()
-	}
-	
 	// Particles
 	
-	private var prevParticleSetting = Int.MAX_VALUE
-	
-	override fun pauseParticles(){
-		val settings = MC.settings
-		
-		if (settings.particleSetting != Int.MAX_VALUE){
-			prevParticleSetting = settings.particleSetting
-		}
-		
-		settings.particleSetting = Int.MAX_VALUE
+	override fun registerParticle(type: BasicParticleType, maker: IParticleMaker<*>, callback: (IAnimatedSprite) -> Unit){
+		ModParticles.Client.addFactory(type, maker, callback)
 	}
 	
-	override fun resumeParticles(){
-		if (prevParticleSetting != Int.MAX_VALUE){
-			MC.settings.particleSetting = prevParticleSetting
+	private var prevParticleManager: ParticleManager? = null
+	
+	override fun pauseParticles() = with(MC.instance){
+		if (particles != null){
+			prevParticleManager = particles
+			particles = null
+		}
+	}
+	
+	override fun resumeParticles() = with(MC.instance){
+		if (particles == null){
+			particles = prevParticleManager
+			prevParticleManager = null
 		}
 	}
 }

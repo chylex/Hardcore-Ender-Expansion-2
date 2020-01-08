@@ -9,8 +9,12 @@ import chylex.hee.system.migration.forge.EventPriority
 import chylex.hee.system.migration.forge.SubscribeAllEvents
 import chylex.hee.system.migration.forge.SubscribeEvent
 import chylex.hee.system.migration.vanilla.Blocks
+import chylex.hee.system.migration.vanilla.EntityCreeper
+import chylex.hee.system.migration.vanilla.EntityLivingBase
+import chylex.hee.system.migration.vanilla.EntityPlayer
 import chylex.hee.system.migration.vanilla.Sounds
 import chylex.hee.system.util.FLAG_NONE
+import chylex.hee.system.util.doDamage
 import chylex.hee.system.util.getBlock
 import chylex.hee.system.util.getState
 import chylex.hee.system.util.heeTag
@@ -20,16 +24,11 @@ import chylex.hee.system.util.playServer
 import chylex.hee.system.util.posVec
 import chylex.hee.system.util.setAir
 import chylex.hee.system.util.setBlock
-import chylex.hee.system.util.with
-import net.minecraft.block.BlockTNT
-import net.minecraft.entity.EntityLivingBase
-import net.minecraft.entity.monster.EntityCreeper
-import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.item.Item
 import net.minecraft.item.ItemStack
-import net.minecraft.util.EnumActionResult
-import net.minecraft.util.EnumFacing
-import net.minecraft.util.EnumHand
+import net.minecraft.item.ItemUseContext
+import net.minecraft.util.ActionResultType
+import net.minecraft.util.Hand
 import net.minecraft.util.SoundCategory
 import net.minecraft.util.math.BlockPos
 import net.minecraft.world.World
@@ -37,7 +36,7 @@ import net.minecraftforge.common.MinecraftForge
 import net.minecraftforge.event.world.ExplosionEvent
 
 @SubscribeAllEvents(modid = HEE.ID)
-class ItemFlintAndInfernium : Item(){
+class ItemFlintAndInfernium(properties: Properties) : Item(properties){
 	companion object{
 		private const val CREEPER_INFERNIUM_TAG = "Infernium"
 		
@@ -56,9 +55,6 @@ class ItemFlintAndInfernium : Item(){
 	}
 	
 	init{
-		maxStackSize = 1
-		maxDamage = 25
-		
 		MinecraftForge.EVENT_BUS.register(this)
 	}
 	
@@ -67,12 +63,16 @@ class ItemFlintAndInfernium : Item(){
 			pos.setBlock(world, ModBlocks.INFUSED_TNT, FLAG_NONE)
 		}
 		
-		ModBlocks.INFUSED_TNT.igniteTNT(world, pos, pos.getState(world).with(BlockTNT.EXPLODE, true).with(BlockInfusedTNT.INFERNIUM, true), player, ignoreTrap)
+		ModBlocks.INFUSED_TNT.igniteTNT(world, pos, pos.getState(world).with(BlockInfusedTNT.INFERNIUM, true), player, ignoreTrap)
 		pos.setAir(world)
 	}
 	
-	override fun onItemUse(player: EntityPlayer, world: World, pos: BlockPos, hand: EnumHand, facing: EnumFacing, hitX: Float, hitY: Float, hitZ: Float): EnumActionResult{
-		val heldItem = player.getHeldItem(hand)
+	override fun onItemUse(context: ItemUseContext): ActionResultType{
+		val player = context.player ?: return FAIL
+		val world = context.world
+		val pos = context.pos
+		
+		val heldItem = player.getHeldItem(context.hand)
 		
 		if (!BlockEditor.canEdit(pos, player, heldItem)){
 			return FAIL
@@ -85,23 +85,23 @@ class ItemFlintAndInfernium : Item(){
 				igniteTNT(world, pos, player, ignoreTrap = false)
 			}
 			else{
-				BlockEditor.place(ModBlocks.ETERNAL_FIRE, player, hand, heldItem, pos, facing, hitX, hitY, hitZ)
+				BlockEditor.place(ModBlocks.ETERNAL_FIRE, player, heldItem, context)
 			}
 			
 			Sounds.ITEM_FLINTANDSTEEL_USE.playServer(world, pos, SoundCategory.BLOCKS, volume = 1.1F, pitch = world.rand.nextFloat(0.4F, 0.5F))
-			heldItem.damageItem(1, player)
+			heldItem.doDamage(1, player, context.hand)
 		}
 		
 		return SUCCESS
 	}
 	
-	override fun itemInteractionForEntity(stack: ItemStack, player: EntityPlayer, target: EntityLivingBase, hand: EnumHand): Boolean{
+	override fun itemInteractionForEntity(stack: ItemStack, player: EntityPlayer, target: EntityLivingBase, hand: Hand): Boolean{
 		if (target is EntityCreeper){
 			Sounds.ITEM_FLINTANDSTEEL_USE.playServer(target.world, target.posVec, target.soundCategory, volume = 1.1F, pitch = target.rng.nextFloat(0.4F, 0.5F))
 			player.swingArm(hand)
-			player.getHeldItem(hand).damageItem(1, player)
+			player.getHeldItem(hand).doDamage(1, player, hand)
 			
-			target.heeTag.setBoolean(CREEPER_INFERNIUM_TAG, true)
+			target.heeTag.putBoolean(CREEPER_INFERNIUM_TAG, true)
 			target.ignite()
 			return true
 		}

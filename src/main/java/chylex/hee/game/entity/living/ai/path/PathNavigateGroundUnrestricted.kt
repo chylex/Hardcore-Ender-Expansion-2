@@ -1,14 +1,14 @@
 package chylex.hee.game.entity.living.ai.path
+import chylex.hee.system.migration.vanilla.EntityLiving
 import chylex.hee.system.util.floorToInt
 import chylex.hee.system.util.posVec
 import chylex.hee.system.util.square
 import net.minecraft.entity.Entity
-import net.minecraft.entity.EntityLiving
-import net.minecraft.pathfinding.PathNavigateGround
+import net.minecraft.pathfinding.GroundPathNavigator
 import net.minecraft.util.math.Vec3d
 import net.minecraft.world.World
 
-class PathNavigateGroundUnrestricted(entity: EntityLiving, world: World) : PathNavigateGround(entity, world){
+class PathNavigateGroundUnrestricted(entity: EntityLiving, world: World) : GroundPathNavigator(entity, world){
 	private var overrideTarget = Vec3d.ZERO
 	private var overrideSpeed = 0.0
 	
@@ -17,7 +17,7 @@ class PathNavigateGroundUnrestricted(entity: EntityLiving, world: World) : PathN
 	}
 	
 	override fun tryMoveToXYZ(x: Double, y: Double, z: Double, speed: Double): Boolean{
-		val path = getPathToXYZ(x, y, z)
+		val path = func_225466_a(x, y, z, 1) // UPDATE getPathToXYZ
 		
 		if (path != null){
 			overrideSpeed = 0.0
@@ -30,7 +30,7 @@ class PathNavigateGroundUnrestricted(entity: EntityLiving, world: World) : PathN
 	}
 	
 	override fun tryMoveToEntityLiving(entity: Entity, speed: Double): Boolean{
-		val path = getPathToEntityLiving(entity)
+		val path = getPathToEntityLiving(entity, 1)
 		
 		if (path != null){
 			overrideSpeed = 0.0
@@ -42,9 +42,9 @@ class PathNavigateGroundUnrestricted(entity: EntityLiving, world: World) : PathN
 		return true
 	}
 	
-	override fun onUpdateNavigation(){
+	override fun tick(){
 		if (!super.noPath()){
-			super.onUpdateNavigation()
+			super.tick()
 		}
 		else if (overrideSpeed > 0.0){
 			val entityPos = entity.posVec

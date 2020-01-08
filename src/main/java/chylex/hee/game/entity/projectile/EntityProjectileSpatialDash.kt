@@ -14,8 +14,11 @@ import chylex.hee.game.particle.util.IShape.Line
 import chylex.hee.game.particle.util.IShape.Point
 import chylex.hee.game.world.util.BlockEditor
 import chylex.hee.game.world.util.Teleporter
+import chylex.hee.init.ModEntities
 import chylex.hee.init.ModSounds
 import chylex.hee.network.client.PacketClientFX
+import chylex.hee.system.migration.vanilla.EntityLivingBase
+import chylex.hee.system.migration.vanilla.EntityPlayer
 import chylex.hee.system.util.Pos
 import chylex.hee.system.util.TagCompound
 import chylex.hee.system.util.blocksMovement
@@ -34,27 +37,46 @@ import chylex.hee.system.util.playClient
 import chylex.hee.system.util.posVec
 import chylex.hee.system.util.readCompactVec
 import chylex.hee.system.util.scale
-import chylex.hee.system.util.selectEntities
 import chylex.hee.system.util.square
 import chylex.hee.system.util.use
 import chylex.hee.system.util.writeCompactVec
-import io.netty.buffer.ByteBuf
 import net.minecraft.entity.Entity
-import net.minecraft.entity.EntityLivingBase
+import net.minecraft.entity.EntityType
 import net.minecraft.entity.IProjectile
 import net.minecraft.entity.MoverType.SELF
-import net.minecraft.entity.player.EntityPlayer
+import net.minecraft.entity.projectile.ProjectileHelper
+import net.minecraft.network.IPacket
+import net.minecraft.network.PacketBuffer
 import net.minecraft.util.SoundCategory
 import net.minecraft.util.math.BlockPos
+import net.minecraft.util.math.BlockRayTraceResult
+import net.minecraft.util.math.EntityRayTraceResult
+import net.minecraft.util.math.RayTraceContext
+import net.minecraft.util.math.RayTraceContext.BlockMode
+import net.minecraft.util.math.RayTraceContext.FluidMode
 import net.minecraft.util.math.RayTraceResult
-import net.minecraft.util.math.RayTraceResult.Type.BLOCK
-import net.minecraft.util.math.RayTraceResult.Type.MISS
+import net.minecraft.util.math.RayTraceResult.Type
 import net.minecraft.util.math.Vec3d
 import net.minecraft.world.World
 import net.minecraftforge.event.ForgeEventFactory
+import net.minecraftforge.fml.network.NetworkHooks
 import java.util.Random
 
-class EntityProjectileSpatialDash : Entity, IProjectile{
+class EntityProjectileSpatialDash(type: EntityType<EntityProjectileSpatialDash>, world: World) : Entity(type, world), IProjectile{
+	constructor(world: World, owner: EntityLivingBase, speedMp: Float, distanceMp: Float) : this(ModEntities.SPATIAL_DASH, world){
+		this.owner = SerializedEntity(owner)
+		this.setPosition(owner.posX, owner.posY + owner.eyeHeight - 0.1, owner.posZ)
+		
+		val realSpeed = PROJECTILE_SPEED_BASE * speedMp
+		val realDistance = PROJECTILE_DISTANCE_BASE * distanceMp
+		
+		val (dirX, dirY, dirZ) = Vec3d.fromPitchYaw(owner.rotationPitch, owner.rotationYaw)
+		shoot(dirX, dirY, dirZ, realSpeed, 0F)
+		
+		this.lifespan = (realDistance / realSpeed).ceilToInt().toShort()
+		this.range = realDistance
+	}
+	
 	companion object{
 		private const val PROJECTILE_SPEED_BASE = 1.5F
 		private const val PROJECTILE_DISTANCE_BASE = 32 // max distance is 98 blocks
@@ -83,14 +105,14 @@ class EntityProjectileSpatialDash : Entity, IProjectile{
 		)
 		
 		class FxExpireData(private val point: Vec3d, private val ownerEntity: Entity?) : IFxData{
-			override fun write(buffer: ByteBuf) = buffer.use {
+			override fun write(buffer: PacketBuffer) = buffer.use {
 				writeCompactVec(point)
 				writeInt(ownerEntity?.entityId ?: -1)
 			}
 		}
 		
 		val FX_EXPIRE = object : IFxHandler<FxExpireData>{
-			override fun handle(buffer: ByteBuf, world: World, rand: Random) = buffer.use {
+			override fun handle(buffer: PacketBuffer, world: World, rand: Random) = buffer.use {
 				val player = HEE.proxy.getClientSidePlayer() ?: return
 				val playerPos = player.posVec
 				
@@ -121,7 +143,11 @@ class EntityProjectileSpatialDash : Entity, IProjectile{
 			
 			offsets.add(Pos(0, 2, 0))
 			offsets.add(Pos(0, 1, 0))
-			offsets.addAll(BlockPos.getAllInBox(Pos(-1, -1, -1), Pos(1, 0, 1)))
+			
+			for(pos in BlockPos.getAllInBox(Pos(-1, -1, -1), Pos(1, 0, 1))){
+				offsets.add(pos)
+			}
+			
 			offsets.add(Pos(0, -2, 0))
 			
 			TELEPORT_OFFSETS = offsets.toTypedArray()
@@ -168,27 +194,6 @@ class EntityProjectileSpatialDash : Entity, IProjectile{
 		}
 	}
 	
-	@Suppress("unused")
-	constructor(world: World) : super(world){
-		this.owner = SerializedEntity()
-		this.lifespan = 0
-		this.range = 0F
-	}
-	
-	constructor(world: World, owner: EntityLivingBase, speedMp: Float, distanceMp: Float) : super(world){
-		this.owner = SerializedEntity(owner)
-		this.setPosition(owner.posX, owner.posY + owner.eyeHeight - 0.1, owner.posZ)
-		
-		val realSpeed = PROJECTILE_SPEED_BASE * speedMp
-		val realDistance = PROJECTILE_DISTANCE_BASE * distanceMp
-		
-		val (dirX, dirY, dirZ) = Vec3d.fromPitchYaw(owner.rotationPitch, owner.rotationYaw)
-		shoot(dirX, dirY, dirZ, realSpeed, 0F)
-		
-		this.lifespan = (realDistance / realSpeed).ceilToInt().toShort()
-		this.range = realDistance
-	}
-	
 	private var owner: SerializedEntity
 	private var lifespan: Short
 	private var range: Float
@@ -205,43 +210,46 @@ class EntityProjectileSpatialDash : Entity, IProjectile{
 	
 	init{
 		noClip = true
-		setSize(0.2F, 0.2F)
 	}
 	
-	override fun entityInit(){}
+	override fun registerData(){}
+	
+	override fun createSpawnPacket(): IPacket<*>{
+		return NetworkHooks.getEntitySpawningPacket(this)
+	}
 	
 	override fun shoot(dirX: Double, dirY: Double, dirZ: Double, velocity: Float, inaccuracy: Float){
 		this.motionVec = Vec3d(dirX, dirY, dirZ).normalize().scale(velocity)
 	}
 	
-	override fun onUpdate(){
+	override fun tick(){
 		if (world.isRemote){
 			if (ticksExisted == 1){
-				MC.instance.soundHandler.playSound(MovingSoundSpatialDash(this))
+				MC.instance.soundHandler.play(MovingSoundSpatialDash(this))
 			}
 			else{
 				PARTICLE_TICK.spawn(Line(Vec3d(prevPosX, prevPosY, prevPosZ), posVec, 0.75), rand)
 			}
 		}
 		
-		super.onUpdate()
+		super.tick()
 		
 		if (!world.isRemote){
 			val hitObject = determineHitObject()
 			
-			if (hitObject != null && hitObject.typeOfHit != MISS){
+			if (hitObject != null && hitObject.type != Type.MISS){
 				val ownerEntity = owner.get(world)
 				
 				if (ownerEntity is EntityLivingBase && ownerEntity.world === world){
-					if (hitObject.typeOfHit == BLOCK){
-						handleBlockHit(ownerEntity, hitObject.hitVec, motionVec, hitObject.blockPos)
+					if (hitObject is BlockRayTraceResult){
+						handleBlockHit(ownerEntity, hitObject.hitVec, motionVec, hitObject.pos)
 					}
 					else{
 						handleGenericHit(ownerEntity, hitObject.hitVec, motionVec)
 					}
 				}
 				
-				setDead()
+				remove()
 				return
 			}
 			
@@ -253,25 +261,25 @@ class EntityProjectileSpatialDash : Entity, IProjectile{
 			range -= motionVec.length().toFloat()
 		}
 		
-		move(SELF, motionX, motionY, motionZ)
+		move(SELF, motion)
 	}
 	
 	private fun determineHitObject(): RayTraceResult?{
 		val currentPos = posVec
 		val nextPos = currentPos.add(cappedMotionVec)
 		
-		val blockResult = world.rayTraceBlocks(currentPos, nextPos)
+		val blockResult = world.rayTraceBlocks(RayTraceContext(currentPos, nextPos, BlockMode.COLLIDER, FluidMode.NONE, this)).takeIf { it.type == Type.BLOCK }
 		
 		val ownerEntity = owner.get(world)
 		val tracedNextPos = blockResult?.hitVec ?: nextPos
 		
-		val entityResult = world
-			.selectEntities
-			.allInBox(entityBoundingBox.expand(motionX, motionY, motionZ).grow(1.0))
-			.filter { it.canBeCollidedWith() && it != ownerEntity } // the projectile itself cannot collide with anything, therefore not even itself
-			.mapNotNull { it.entityBoundingBox.grow(0.3).calculateIntercept(currentPos, tracedNextPos) }
-			.minBy { currentPos.squareDistanceTo(it.hitVec) }
-			?.let { RayTraceResult(it.entityHit, it.hitVec) } // EntityThrowable sets hitVec to the middle of the entity, but that wouldn't work too nicely here
+		val entityResult = ProjectileHelper.rayTraceEntities(world, this, currentPos, nextPos, boundingBox.expand(motion).grow(1.0)){
+			// the projectile itself cannot collide with anything, therefore not even itself
+			it.canBeCollidedWith() && !it.isSpectator && it !== ownerEntity
+		}?.let {
+			// ProjectileHelper sets hitVec to the bottom of the entity, but that wouldn't work too nicely here
+			it.entity.boundingBox.grow(0.3).rayTrace(currentPos, tracedNextPos).orElse(null)?.let { hit -> EntityRayTraceResult(it.entity, hit) }
+		}
 		
 		return (entityResult ?: blockResult)?.takeUnless { ForgeEventFactory.onProjectileImpact(this, it) }
 	}
@@ -288,18 +296,24 @@ class EntityProjectileSpatialDash : Entity, IProjectile{
 			}
 		}
 		
-		setDead()
+		remove()
 	}
 	
-	override fun writeEntityToNBT(nbt: TagCompound) = with(nbt.heeTag){
+	override fun writeAdditional(nbt: TagCompound) = nbt.heeTag.use {
 		owner.writeToNBT(this, OWNER_TAG)
-		setShort(LIFESPAN_TAG, lifespan)
-		setFloat(RANGE_TAG, range)
+		putShort(LIFESPAN_TAG, lifespan)
+		putFloat(RANGE_TAG, range)
 	}
 	
-	override fun readEntityFromNBT(nbt: TagCompound) = with(nbt.heeTag){
+	override fun readAdditional(nbt: TagCompound) = nbt.heeTag.use {
 		owner.readFromNBT(this, OWNER_TAG)
 		lifespan = getShort(LIFESPAN_TAG)
 		range = getFloat(RANGE_TAG)
+	}
+	
+	init {
+		this.owner = SerializedEntity()
+		this.lifespan = 0
+		this.range = 0F
 	}
 }

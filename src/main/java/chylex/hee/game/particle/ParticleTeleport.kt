@@ -10,12 +10,12 @@ import chylex.hee.system.util.color.IntColor.Companion.RGB
 import chylex.hee.system.util.floorToInt
 import chylex.hee.system.util.nextFloat
 import net.minecraft.client.particle.Particle
+import net.minecraft.client.renderer.ActiveRenderInfo
 import net.minecraft.client.renderer.BufferBuilder
-import net.minecraft.entity.Entity
 import net.minecraft.world.World
 import java.util.Random
 
-object ParticleTeleport : IParticleMaker<ParticleDataColorLifespanScale>{
+object ParticleTeleport : IParticleMaker.WithData<ParticleDataColorLifespanScale>(){
 	private val rand = Random()
 	
 	@Sided(Side.CLIENT)
@@ -45,17 +45,15 @@ object ParticleTeleport : IParticleMaker<ParticleDataColorLifespanScale>{
 		private val initialScale = data.scale
 		
 		init{
-			particleTextureIndexX = rand.nextInt(8)
-			particleTextureIndexY = 0
-			
+			selectSpriteRandomly(ParticleTeleport.sprite)
 			loadColor(data.color)
 			
 			maxAge = data.lifespan
 		}
 		
-		override fun renderParticle(buffer: BufferBuilder, entity: Entity, partialTicks: Float, rotationX: Float, rotationZ: Float, rotationYZ: Float, rotationXY: Float, rotationXZ: Float){
+		override fun renderParticle(buffer: BufferBuilder, info: ActiveRenderInfo, partialTicks: Float, rotationX: Float, rotationZ: Float, rotationYZ: Float, rotationXY: Float, rotationXZ: Float){
 			particleScale = initialScale * (1F - (age + partialTicks) / (maxAge + 1F))
-			super.renderParticle(buffer, entity, partialTicks, rotationX, rotationZ, rotationYZ, rotationXY, rotationXZ)
+			super.renderParticle(buffer, info, partialTicks, rotationX, rotationZ, rotationYZ, rotationXY, rotationXZ)
 		}
 	}
 }

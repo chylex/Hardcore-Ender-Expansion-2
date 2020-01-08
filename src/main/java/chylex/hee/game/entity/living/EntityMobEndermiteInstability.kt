@@ -3,28 +3,33 @@ import chylex.hee.game.entity.IImmuneToCorruptedEnergy
 import chylex.hee.game.entity.IMobBypassPeacefulDespawn
 import chylex.hee.game.mechanics.instability.Instability
 import chylex.hee.init.ModBlocks
-import chylex.hee.init.ModLoot
+import chylex.hee.init.ModEntities
 import chylex.hee.system.migration.Difficulty.PEACEFUL
 import chylex.hee.system.migration.forge.Side
 import chylex.hee.system.migration.forge.Sided
+import chylex.hee.system.migration.vanilla.EntityLivingBase
 import chylex.hee.system.util.Pos
 import chylex.hee.system.util.TagCompound
+import chylex.hee.system.util.facades.Resource
 import chylex.hee.system.util.heeTag
 import chylex.hee.system.util.square
-import net.minecraft.entity.EntityLivingBase
+import chylex.hee.system.util.use
+import net.minecraft.entity.EntityType
 import net.minecraft.util.DamageSource
 import net.minecraft.util.ResourceLocation
 import net.minecraft.world.World
 
-class EntityMobEndermiteInstability(world: World) : EntityMobEndermite(world), IImmuneToCorruptedEnergy, IMobBypassPeacefulDespawn{
+class EntityMobEndermiteInstability(type: EntityType<EntityMobEndermiteInstability>, world: World) : EntityMobEndermite(type, world), IImmuneToCorruptedEnergy, IMobBypassPeacefulDespawn{
+	constructor(world: World) : this(ModEntities.ENDERMITE_INSTABILITY, world)
+	
 	private companion object{
 		private const val EXPLODE_TAG = "Explode"
 	}
 	
 	private var spawnCorruptedEnergy = false
 	
-	override fun onLivingUpdate(){
-		super.onLivingUpdate()
+	override fun livingTick(){
+		super.livingTick()
 		
 		if (world.difficulty == PEACEFUL && attackTarget != null){
 			super.setAttackTarget(null)
@@ -42,31 +47,31 @@ class EntityMobEndermiteInstability(world: World) : EntityMobEndermite(world), I
 		spawnCorruptedEnergy = true
 	}
 	
-	override fun setDead(){
-		if (!world.isRemote && spawnCorruptedEnergy && !isDead){
+	override fun remove(){
+		if (!world.isRemote && spawnCorruptedEnergy && isAlive){
 			val pos = Pos(this)
 			
 			Instability.get(world).triggerRelief(20u, pos)
 			ModBlocks.CORRUPTED_ENERGY.spawnCorruptedEnergy(world, pos, 2)
 		}
 		
-		super.setDead()
+		super.remove()
 	}
 	
 	override fun getLootTable(): ResourceLocation{
-		return ModLoot.ENDERMITE_INSTABILITY
+		return Resource.Custom("entities/endermite_instability")
 	}
 	
 	// Serialization
 	
-	override fun writeEntityToNBT(nbt: TagCompound) = with(nbt.heeTag){
-		super.writeEntityToNBT(nbt)
+	override fun writeAdditional(nbt: TagCompound) = nbt.heeTag.use {
+		super.writeAdditional(nbt)
 		
-		setBoolean(EXPLODE_TAG, spawnCorruptedEnergy)
+		putBoolean(EXPLODE_TAG, spawnCorruptedEnergy)
 	}
 	
-	override fun readEntityFromNBT(nbt: TagCompound) = with(nbt.heeTag){
-		super.readEntityFromNBT(nbt)
+	override fun readAdditional(nbt: TagCompound) = nbt.heeTag.use {
+		super.readAdditional(nbt)
 		
 		spawnCorruptedEnergy = getBoolean(EXPLODE_TAG)
 	}

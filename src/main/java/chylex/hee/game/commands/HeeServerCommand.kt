@@ -1,13 +1,5 @@
 package chylex.hee.game.commands
-import chylex.hee.game.commands.sub.ISubCommand.Companion.subCommandMapOf
-import chylex.hee.game.commands.sub.server.CommandDebugStructure
-import chylex.hee.game.commands.sub.server.CommandDebugTestWorld
-import chylex.hee.game.commands.sub.server.CommandServerCausatum
-import chylex.hee.game.commands.sub.server.CommandServerHelp
-import chylex.hee.game.commands.sub.server.CommandServerInfusions
-import chylex.hee.game.commands.sub.server.CommandServerPortalToken
-import chylex.hee.system.Debug
-
+/*
 internal object HeeServerCommand : HeeBaseCommand(){
 	val availableAdminCommands = arrayOf(
 		CommandServerHelp,
@@ -29,4 +21,4 @@ internal object HeeServerCommand : HeeBaseCommand(){
 	override val defaultSubCommand = CommandServerHelp
 	
 	override fun getRequiredPermissionLevel() = 2
-}
+}*/

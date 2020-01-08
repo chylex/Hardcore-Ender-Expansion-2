@@ -1,15 +1,16 @@
 package chylex.hee.game.entity.living.ai
-import chylex.hee.system.util.AIBase
-import chylex.hee.system.util.AI_FLAG_LOOKING
-import chylex.hee.system.util.AI_FLAG_MOVEMENT
+import chylex.hee.system.migration.vanilla.EntityCreature
 import chylex.hee.system.util.square
-import net.minecraft.entity.EntityCreature
+import net.minecraft.entity.ai.goal.Goal
+import net.minecraft.entity.ai.goal.Goal.Flag.LOOK
+import net.minecraft.entity.ai.goal.Goal.Flag.MOVE
+import java.util.EnumSet
 import kotlin.math.max
 
 class AIWatchTargetInShock(
 	private val entity: EntityCreature,
 	maxDistance: Double
-) : AIBase(){
+) : Goal(){
 	val isWatching
 		get() = remainingTicks > 0
 	
@@ -17,7 +18,7 @@ class AIWatchTargetInShock(
 	private var remainingTicks = 0
 	
 	init{
-		this.mutexBits = AI_FLAG_LOOKING or AI_FLAG_MOVEMENT
+		mutexFlags = EnumSet.of(MOVE, LOOK)
 	}
 	
 	fun startWatching(ticks: Int){
@@ -38,13 +39,13 @@ class AIWatchTargetInShock(
 		}
 		
 		val target = entity.attackTarget
-		return target != null && target.isEntityAlive && entity.getDistanceSq(target) <= maxDistanceSq
+		return target != null && target.isAlive && entity.getDistanceSq(target) <= maxDistanceSq
 	}
 	
-	override fun updateTask(){
+	override fun tick(){
 		val target = entity.attackTarget ?: return
 		
-		entity.lookHelper.setLookPosition(target.posX, target.posY + target.eyeHeight, target.posZ, entity.horizontalFaceSpeed.toFloat(), entity.verticalFaceSpeed.toFloat())
+		entity.lookController.setLookPosition(target.posX, target.posY + target.eyeHeight, target.posZ, entity.horizontalFaceSpeed.toFloat(), entity.verticalFaceSpeed.toFloat())
 		--remainingTicks
 	}
 	

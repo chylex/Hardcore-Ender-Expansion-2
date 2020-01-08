@@ -5,4 +5,4 @@ import net.minecraft.client.renderer.color.IItemColor
 
 const val NO_TINT = -1
 
-fun IBlockColor.asItem(block: Block) = IItemColor { _, tintIndex -> colorMultiplier(block.defaultState, null, null, tintIndex) }
+fun IBlockColor.asItem(block: Block) = IItemColor { _, tintIndex -> this.getColor(block.defaultState, null, null, tintIndex) }

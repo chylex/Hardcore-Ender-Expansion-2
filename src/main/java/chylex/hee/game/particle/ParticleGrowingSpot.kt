@@ -2,7 +2,6 @@ package chylex.hee.game.particle
 import chylex.hee.game.particle.base.ParticleBaseFloating
 import chylex.hee.game.particle.data.ParticleDataColorLifespanScale
 import chylex.hee.game.particle.spawner.IParticleMaker
-import chylex.hee.game.particle.util.ParticleTexture
 import chylex.hee.system.migration.forge.Side
 import chylex.hee.system.migration.forge.Sided
 import chylex.hee.system.util.color.IRandomColor
@@ -12,7 +11,7 @@ import net.minecraft.client.particle.Particle
 import net.minecraft.world.World
 import kotlin.math.min
 
-object ParticleGrowingSpot : IParticleMaker<ParticleDataColorLifespanScale>{
+object ParticleGrowingSpot : IParticleMaker.WithData<ParticleDataColorLifespanScale>(){
 	@Sided(Side.CLIENT)
 	override fun create(world: World, posX: Double, posY: Double, posZ: Double, motX: Double, motY: Double, motZ: Double, data: ParticleDataColorLifespanScale?): Particle{
 		return Instance(world, posX, posY, posZ, motX, motY, motZ, data)
@@ -26,7 +25,7 @@ object ParticleGrowingSpot : IParticleMaker<ParticleDataColorLifespanScale>{
 	@Sided(Side.CLIENT)
 	private class Instance(world: World, posX: Double, posY: Double, posZ: Double, motX: Double, motY: Double, motZ: Double, data: ParticleDataColorLifespanScale?) : ParticleBaseFloating(world, posX, posY, posZ, motX, motY, motZ){
 		init{
-			particleTexture = ParticleTexture.PIXEL
+			selectSpriteRandomly(ParticleGrowingSpot.sprite)
 			
 			if (data == null){
 				setExpired()
@@ -40,14 +39,11 @@ object ParticleGrowingSpot : IParticleMaker<ParticleDataColorLifespanScale>{
 			}
 		}
 		
-		override fun onUpdate(){
-			super.onUpdate()
+		override fun tick(){
+			super.tick()
 			
 			particleAlpha = min(0.9F, particleAlpha + rand.nextFloat(0.03F, 0.09F))
 			particleScale += rand.nextFloat(0.01F, 0.02F)
 		}
-		
-		override fun getFXLayer() = 1
-		override fun setParticleTextureIndex(index: Int){}
 	}
 }

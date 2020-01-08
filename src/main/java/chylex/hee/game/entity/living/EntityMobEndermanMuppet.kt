@@ -4,20 +4,22 @@ import chylex.hee.game.entity.living.EntityMobEndermanMuppet.Type.INVALID
 import chylex.hee.game.entity.living.behavior.EndermanTeleportHandler
 import chylex.hee.game.entity.technical.EntityTechnicalCausatumEvent
 import chylex.hee.game.mechanics.causatum.events.CausatumEventEndermanKill
+import chylex.hee.init.ModEntities
 import chylex.hee.system.util.Pos
 import chylex.hee.system.util.TagCompound
-import chylex.hee.system.util.getAttribute
 import chylex.hee.system.util.getEnum
 import chylex.hee.system.util.heeTag
 import chylex.hee.system.util.posVec
+import chylex.hee.system.util.putEnum
 import chylex.hee.system.util.selectExistingEntities
-import chylex.hee.system.util.setEnum
+import chylex.hee.system.util.use
+import net.minecraft.entity.EntityType
 import net.minecraft.entity.SharedMonsterAttributes.MAX_HEALTH
 import net.minecraft.entity.SharedMonsterAttributes.MOVEMENT_SPEED
 import net.minecraft.world.World
 
-class EntityMobEndermanMuppet(world: World) : EntityMobAbstractEnderman(world){
-	constructor(world: World, type: Type) : this(world){
+class EntityMobEndermanMuppet(type: EntityType<EntityMobEndermanMuppet>, world: World) : EntityMobAbstractEnderman(type, world){
+	constructor(world: World, type: Type) : this(ModEntities.ENDERMAN_MUPPET, world){
 		this.type = type
 	}
 	
@@ -35,8 +37,8 @@ class EntityMobEndermanMuppet(world: World) : EntityMobAbstractEnderman(world){
 	override val teleportCooldown = Int.MAX_VALUE
 	private var type = INVALID
 	
-	override fun applyEntityAttributes(){
-		super.applyEntityAttributes()
+	override fun registerAttributes(){
+		super.registerAttributes()
 		
 		getAttribute(MAX_HEALTH).baseValue = 40.0
 		getAttribute(MOVEMENT_SPEED).baseValue = 0.0
@@ -44,8 +46,8 @@ class EntityMobEndermanMuppet(world: World) : EntityMobAbstractEnderman(world){
 		experienceValue = 0
 	}
 	
-	override fun onUpdate(){
-		super.onUpdate()
+	override fun tick(){
+		super.tick()
 		
 		if (ticksExisted == 1){
 			setRenderYawOffset(rotationYawHead)
@@ -55,7 +57,7 @@ class EntityMobEndermanMuppet(world: World) : EntityMobAbstractEnderman(world){
 	
 	override fun updateAITasks(){
 		if (type == INVALID){
-			setDead()
+			remove()
 		}
 		else if (type == FIRST_KILL){
 			if (world.isAreaLoaded(Pos(this), 24) && world.selectExistingEntities.inRange<EntityTechnicalCausatumEvent>(posVec, 24.0).none { it.type == CausatumEventEndermanKill::class.java }){
@@ -70,24 +72,28 @@ class EntityMobEndermanMuppet(world: World) : EntityMobAbstractEnderman(world){
 		EndermanTeleportHandler(this).teleportOutOfWorld(force = true)
 	}
 	
-	override fun canDespawn(): Boolean{
+	override fun canDespawn(distanceToClosestPlayerSq: Double): Boolean{
 		return false
 	}
 	
-	override fun despawnEntity(){
+	override fun preventDespawn(): Boolean{
+		return true
+	}
+	
+	override fun checkDespawn(){
 		return
 	}
 	
 	// Serialization
 	
-	override fun writeEntityToNBT(nbt: TagCompound) = with(nbt.heeTag){
-		super.writeEntityToNBT(nbt)
+	override fun writeAdditional(nbt: TagCompound) = nbt.heeTag.use {
+		super.writeAdditional(nbt)
 		
-		setEnum(TYPE_TAG, type)
+		putEnum(TYPE_TAG, type)
 	}
 	
-	override fun readEntityFromNBT(nbt: TagCompound) = with(nbt.heeTag){
-		super.readEntityFromNBT(nbt)
+	override fun readAdditional(nbt: TagCompound) = nbt.heeTag.use {
+		super.readAdditional(nbt)
 		
 		type = getEnum<Type>(TYPE_TAG) ?: INVALID
 	}

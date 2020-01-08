@@ -11,39 +11,42 @@ import chylex.hee.game.mechanics.damage.IDamageProcessor.Companion.DIFFICULTY_SC
 import chylex.hee.game.mechanics.damage.IDamageProcessor.Companion.PEACEFUL_EXCLUSION
 import chylex.hee.game.mechanics.damage.IDamageProcessor.Companion.PEACEFUL_KNOCKBACK
 import chylex.hee.game.mechanics.damage.IDamageProcessor.Companion.RAPID_DAMAGE
-import chylex.hee.init.ModLoot
+import chylex.hee.init.ModEntities
 import chylex.hee.system.migration.forge.EventPriority
 import chylex.hee.system.migration.forge.SubscribeAllEvents
 import chylex.hee.system.migration.forge.SubscribeEvent
-import chylex.hee.system.migration.vanilla.Blocks
+import chylex.hee.system.migration.vanilla.BlockSilverfish
+import chylex.hee.system.migration.vanilla.EntityPlayer
+import chylex.hee.system.migration.vanilla.EntitySilverfish
 import chylex.hee.system.util.AIAttackMelee
 import chylex.hee.system.util.AISwim
 import chylex.hee.system.util.AITargetAttacker
 import chylex.hee.system.util.AITargetRandom
 import chylex.hee.system.util.AITargetSwarmSwitch
 import chylex.hee.system.util.TagCompound
-import chylex.hee.system.util.getAttribute
+import chylex.hee.system.util.facades.Resource
 import chylex.hee.system.util.heeTag
-import chylex.hee.system.util.with
-import net.minecraft.block.BlockSilverfish
-import net.minecraft.block.BlockSilverfish.EnumType.forModelBlock
-import net.minecraft.block.BlockSilverfish.VARIANT
-import net.minecraft.block.state.IBlockState
+import chylex.hee.system.util.use
+import net.minecraft.block.Block
+import net.minecraft.block.BlockState
 import net.minecraft.entity.Entity
+import net.minecraft.entity.EntityType
 import net.minecraft.entity.SharedMonsterAttributes.ATTACK_DAMAGE
 import net.minecraft.entity.SharedMonsterAttributes.FOLLOW_RANGE
 import net.minecraft.entity.SharedMonsterAttributes.MAX_HEALTH
-import net.minecraft.entity.monster.EntitySilverfish
-import net.minecraft.entity.player.EntityPlayer
+import net.minecraft.network.IPacket
 import net.minecraft.util.DamageSource
 import net.minecraft.util.EntityDamageSource
 import net.minecraft.util.ResourceLocation
 import net.minecraft.world.World
 import net.minecraftforge.event.entity.EntityJoinWorldEvent
+import net.minecraftforge.fml.network.NetworkHooks
 import kotlin.math.floor
 
 @SubscribeAllEvents(modid = HEE.ID)
-class EntityMobSilverfish(world: World) : EntitySilverfish(world), ICritTracker{
+class EntityMobSilverfish(type: EntityType<EntityMobSilverfish>, world: World) : EntitySilverfish(type, world), ICritTracker{
+	constructor(world: World) : this(ModEntities.SILVERFISH, world)
+	
 	companion object{
 		private val DAMAGE_GENERAL          = Damage(DIFFICULTY_SCALING, PEACEFUL_EXCLUSION, *ALL_PROTECTIONS, RAPID_DAMAGE(5))
 		private val DAMAGE_HAUNTWOOD_FOREST = Damage(DIFFICULTY_SCALING, PEACEFUL_KNOCKBACK, *ALL_PROTECTIONS, RAPID_DAMAGE(5))
@@ -62,7 +65,7 @@ class EntityMobSilverfish(world: World) : EntitySilverfish(world), ICritTracker{
 				
 				EntityMobSilverfish(world).apply {
 					copyLocationAndAnglesFrom(entity)
-					world.spawnEntity(this)
+					world.addEntity(this)
 					
 					if (rotationYaw == 0F && rotationPitch == 0F && posY == floor(posY) && (posX - 0.5) == floor(posX) && (posZ - 0.5) == floor(posZ)){
 						// high confidence of being spawned from BlockSilverfish
@@ -80,12 +83,8 @@ class EntityMobSilverfish(world: World) : EntitySilverfish(world), ICritTracker{
 	
 	override var wasLastHitCritical = false
 	
-	init{
-		setSize(0.575F, 0.35F)
-	}
-	
-	override fun applyEntityAttributes(){
-		super.applyEntityAttributes()
+	override fun registerAttributes(){
+		super.registerAttributes()
 		
 		getAttribute(MAX_HEALTH).baseValue = 8.0
 		getAttribute(ATTACK_DAMAGE).baseValue = 2.0
@@ -94,24 +93,28 @@ class EntityMobSilverfish(world: World) : EntitySilverfish(world), ICritTracker{
 		experienceValue = 3
 	}
 	
-	override fun initEntityAI(){
-		aiSummonFromBlock = AISummonFromBlock(this, searchAttempts = 500, searchDistance = 6, searchingFor = Blocks.MONSTER_EGG)
+	override fun registerGoals(){
+		aiSummonFromBlock = AISummonFromBlock(this, searchAttempts = 500, searchDistance = 6, searchingFor = ::isSilverfishBlock)
 		
-		tasks.addTask(1, AISwim(this))
-		tasks.addTask(2, AIAttackMelee(this, movementSpeed = 1.0, chaseAfterLosingSight = false))
-		tasks.addTask(3, AIWander(this, movementSpeed = 1.0, chancePerTick = 10))
-		tasks.addTask(4, AIHideInBlock(this, chancePerTick = 15, tryHideInBlock = ::tryHideInBlock))
-		tasks.addTask(5, aiSummonFromBlock)
+		goalSelector.addGoal(1, AISwim(this))
+		goalSelector.addGoal(2, AIAttackMelee(this, movementSpeed = 1.0, chaseAfterLosingSight = false))
+		goalSelector.addGoal(3, AIWander(this, movementSpeed = 1.0, chancePerTick = 10))
+		goalSelector.addGoal(4, AIHideInBlock(this, chancePerTick = 15, tryHideInBlock = ::tryHideInBlock))
+		goalSelector.addGoal(5, aiSummonFromBlock)
 		
 		aiTargetSwarmSwitch = AITargetSwarmSwitch(this, rangeMultiplier = 0.5F, checkSight = true, easilyReachableOnly = false)
 		
-		targetTasks.addTask(1, AITargetAttacker(this, callReinforcements = true))
-		targetTasks.addTask(2, AITargetRandom<EntityPlayer>(this, chancePerTick = 5, checkSight = true, easilyReachableOnly = false))
-		targetTasks.addTask(3, aiTargetSwarmSwitch)
+		targetSelector.addGoal(1, AITargetAttacker(this, callReinforcements = true))
+		targetSelector.addGoal(2, AITargetRandom<EntityPlayer>(this, chancePerTick = 5, checkSight = true, easilyReachableOnly = false))
+		targetSelector.addGoal(3, aiTargetSwarmSwitch)
 	}
 	
-	override fun onLivingUpdate(){
-		super.onLivingUpdate()
+	override fun createSpawnPacket(): IPacket<*>{
+		return NetworkHooks.getEntitySpawningPacket(this)
+	}
+	
+	override fun livingTick(){
+		super.livingTick()
 		
 		if (hideInBlockDelayTicks > 0){
 			--hideInBlockDelayTicks
@@ -126,9 +129,13 @@ class EntityMobSilverfish(world: World) : EntitySilverfish(world), ICritTracker{
 		hideInBlockDelayTicks = Int.MAX_VALUE
 	}
 	
-	private fun tryHideInBlock(state: IBlockState): IBlockState?{
+	private fun isSilverfishBlock(block: Block): Boolean{
+		return block is BlockSilverfish
+	}
+	
+	private fun tryHideInBlock(state: BlockState): BlockState?{
 		return if (BlockSilverfish.canContainSilverfish(state) && hideInBlockDelayTicks == 0)
-			Blocks.MONSTER_EGG.with(VARIANT, forModelBlock(state))
+			BlockSilverfish.infest(state.block)
 		else
 			null
 	}
@@ -160,18 +167,18 @@ class EntityMobSilverfish(world: World) : EntitySilverfish(world), ICritTracker{
 	}
 	
 	override fun getLootTable(): ResourceLocation{
-		return ModLoot.SILVERFISH
+		return Resource.Custom("entities/silverfish")
 	}
 	
-	override fun writeEntityToNBT(nbt: TagCompound) = with(nbt.heeTag){
-		super.writeEntityToNBT(nbt)
+	override fun writeAdditional(nbt: TagCompound) = nbt.heeTag.use {
+		super.writeAdditional(nbt)
 		
-		setInteger(HIDE_DELAY_TAG, hideInBlockDelayTicks)
+		putInt(HIDE_DELAY_TAG, hideInBlockDelayTicks)
 	}
 	
-	override fun readEntityFromNBT(nbt: TagCompound) = with(nbt.heeTag){
-		super.readEntityFromNBT(nbt)
+	override fun readAdditional(nbt: TagCompound) = nbt.heeTag.use {
+		super.readAdditional(nbt)
 		
-		hideInBlockDelayTicks = getInteger(HIDE_DELAY_TAG)
+		hideInBlockDelayTicks = getInt(HIDE_DELAY_TAG)
 	}
 }

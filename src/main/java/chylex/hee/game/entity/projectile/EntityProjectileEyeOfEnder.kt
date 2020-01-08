@@ -6,10 +6,14 @@ import chylex.hee.game.particle.util.IOffset.Constant
 import chylex.hee.game.particle.util.IOffset.InBox
 import chylex.hee.game.particle.util.IOffset.InSphere
 import chylex.hee.game.particle.util.IShape.Point
+import chylex.hee.init.ModEntities
 import chylex.hee.system.migration.Facing.DOWN
 import chylex.hee.system.migration.Facing.UP
 import chylex.hee.system.migration.forge.Side
 import chylex.hee.system.migration.forge.Sided
+import chylex.hee.system.migration.vanilla.BlockFlowingFluid
+import chylex.hee.system.migration.vanilla.EntityItem
+import chylex.hee.system.migration.vanilla.EntityLivingBase
 import chylex.hee.system.migration.vanilla.Items
 import chylex.hee.system.migration.vanilla.Sounds
 import chylex.hee.system.util.Pos
@@ -29,35 +33,42 @@ import chylex.hee.system.util.lookDirVec
 import chylex.hee.system.util.lookPosVec
 import chylex.hee.system.util.math.LerpedFloat
 import chylex.hee.system.util.motionVec
+import chylex.hee.system.util.motionX
+import chylex.hee.system.util.motionZ
 import chylex.hee.system.util.nextInt
 import chylex.hee.system.util.offsetUntil
 import chylex.hee.system.util.playClient
 import chylex.hee.system.util.posVec
+import chylex.hee.system.util.putPos
 import chylex.hee.system.util.readPos
 import chylex.hee.system.util.scale
-import chylex.hee.system.util.setPos
 import chylex.hee.system.util.square
 import chylex.hee.system.util.subtractY
 import chylex.hee.system.util.use
 import chylex.hee.system.util.writePos
-import io.netty.buffer.ByteBuf
-import net.minecraft.block.BlockLiquid
-import net.minecraft.block.state.IBlockState
+import net.minecraft.block.BlockState
 import net.minecraft.entity.Entity
-import net.minecraft.entity.EntityLivingBase
-import net.minecraft.entity.item.EntityItem
+import net.minecraft.entity.EntityType
 import net.minecraft.item.ItemStack
-import net.minecraft.util.EnumParticleTypes.SMOKE_NORMAL
+import net.minecraft.network.IPacket
+import net.minecraft.network.PacketBuffer
+import net.minecraft.particles.ParticleTypes.SMOKE
 import net.minecraft.util.SoundCategory
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.Vec3d
 import net.minecraft.world.World
-import net.minecraftforge.fluids.IFluidBlock
+import net.minecraft.world.gen.Heightmap.Type.WORLD_SURFACE
 import net.minecraftforge.fml.common.registry.IEntityAdditionalSpawnData
+import net.minecraftforge.fml.network.NetworkHooks
 import java.util.Random
 import kotlin.math.sin
 
-class EntityProjectileEyeOfEnder : Entity, IEntityAdditionalSpawnData{
+class EntityProjectileEyeOfEnder(type: EntityType<EntityProjectileEyeOfEnder>, world: World) : Entity(type, world), IEntityAdditionalSpawnData{
+	constructor(thrower: EntityLivingBase, targetPos: BlockPos?) : this(ModEntities.EYE_OF_ENDER, thrower.world){
+		this.posVec = thrower.lookPosVec.subtractY(height * 0.5).add(thrower.lookDirVec.scale(1.5))
+		this.targetPos = targetPos
+	}
+	
 	private companion object{
 		private const val TICK_BEGIN_GLITTER = 30
 		private const val TICK_BEGIN_MOVEMENT = 40
@@ -76,7 +87,7 @@ class EntityProjectileEyeOfEnder : Entity, IEntityAdditionalSpawnData{
 		private const val SPEED_TAG = "Speed"
 		
 		private val PARTICLE_SMOKE = ParticleSpawnerVanilla(
-			type = SMOKE_NORMAL,
+			type = SMOKE,
 			pos = Constant(0.1F, UP) + InBox(0.15F),
 			mot = InBox(0.075F),
 			ignoreRangeLimit = true,
@@ -116,21 +127,12 @@ class EntityProjectileEyeOfEnder : Entity, IEntityAdditionalSpawnData{
 			}
 		}
 		
-		private fun shouldFloatAbove(state: IBlockState): Boolean{
-			return state.material.blocksMovement() || state.block.let { it is IFluidBlock || it is BlockLiquid }
+		private fun shouldFloatAbove(state: BlockState): Boolean{
+			return state.material.blocksMovement() || state.block is BlockFlowingFluid
 		}
 	}
 	
 	// Instance
-	
-	constructor(world: World) : super(world){
-		setSize(0.5F, 1F)
-	}
-	
-	constructor(thrower: EntityLivingBase, targetPos: BlockPos?) : this(thrower.world){
-		this.posVec = thrower.lookPosVec.subtractY(height * 0.5).add(thrower.lookDirVec.scale(1.5))
-		this.targetPos = targetPos
-	}
 	
 	val renderBob = LerpedFloat(nextRenderBobOffset)
 	
@@ -147,32 +149,36 @@ class EntityProjectileEyeOfEnder : Entity, IEntityAdditionalSpawnData{
 	private var timer = 0
 	private var speed = 0F
 	
-	private var prevPos = BlockPos.ORIGIN
+	private var prevPos = BlockPos.ZERO
 	private var targetY = 0.0
 	
 	// Initialization
 	
-	override fun entityInit(){}
+	override fun registerData(){}
 	
-	override fun writeSpawnData(buffer: ByteBuf) = buffer.use {
-		writePos(targetPos ?: BlockPos.ORIGIN)
+	override fun createSpawnPacket(): IPacket<*>{
+		return NetworkHooks.getEntitySpawningPacket(this)
+	}
+	
+	override fun writeSpawnData(buffer: PacketBuffer) = buffer.use {
+		writePos(targetPos ?: BlockPos.ZERO)
 		writeShort(timer)
 		writeFloat(speed)
 	}
 	
-	override fun readSpawnData(buffer: ByteBuf) = buffer.use {
-		targetPos = buffer.readPos().takeIf { it != BlockPos.ORIGIN }
+	override fun readSpawnData(buffer: PacketBuffer) = buffer.use {
+		targetPos = buffer.readPos().takeIf { it != BlockPos.ZERO }
 		timer = buffer.readShort().toInt()
 		speed = buffer.readFloat()
 	}
 	
 	// Behavior
 	
-	override fun onUpdate(){
+	override fun tick(){
 		lastTickPosX = posX
 		lastTickPosY = posY
 		lastTickPosZ = posZ
-		super.onUpdate()
+		super.tick()
 		
 		if (ticksExisted == 1){
 			motionVec = targetVecXZ.normalize().scale(0.27)
@@ -222,7 +228,7 @@ class EntityProjectileEyeOfEnder : Entity, IEntityAdditionalSpawnData{
 		val checkedBlocks = HashSet<BlockPos>(36, 1F)
 		
 		parallelStarts.flatMapTo(checkedBlocks){
-			start -> (0..11).map { world.getHeight(Pos(start.add(step.scale(it)))) }
+			start -> (0..11).map { world.getHeight(WORLD_SURFACE, Pos(start.add(step.scale(it)))) }
 		}
 		
 		if (checkedBlocks.isEmpty()){
@@ -271,7 +277,7 @@ class EntityProjectileEyeOfEnder : Entity, IEntityAdditionalSpawnData{
 			ySpeedMp = if (timer < TICK_FULL_Y_MOVEMENT) speed else 1F
 			
 			if (!world.isRemote && timer > TICK_DESTROY_NO_ENERGY_MIN && timer > rand.nextInt(TICK_DESTROY_NO_ENERGY_MIN, TICK_DESTROY_NO_ENERGY_MAX)){
-				setDead()
+				remove()
 			}
 		}
 		
@@ -283,21 +289,21 @@ class EntityProjectileEyeOfEnder : Entity, IEntityAdditionalSpawnData{
 	private fun dropEye(){
 		EntityItem(world, posX, posY + nextRenderBobOffset - 0.25, posZ, ItemStack(Items.ENDER_EYE)).apply {
 			setDefaultPickupDelay()
-			world.spawnEntity(this)
+			world.addEntity(this)
 		}
 		
-		setDead()
+		remove()
 	}
 	
-	override fun setDead(){
-		super.setDead()
+	override fun remove(){
+		super.remove()
 		
 		if (world.isRemote){
 			val pos = posVecWithOffset
 			
 			PARTICLE_SMOKE.spawn(Point(pos, 18), rand)
 			PARTICLE_GLITTER_DESTROY.spawn(Point(pos, 50), rand)
-			Sounds.ENTITY_ENDEREYE_DEATH.playClient(pos, SoundCategory.NEUTRAL)
+			Sounds.ENTITY_ENDER_EYE_DEATH.playClient(pos, SoundCategory.NEUTRAL)
 		}
 	}
 	
@@ -310,13 +316,13 @@ class EntityProjectileEyeOfEnder : Entity, IEntityAdditionalSpawnData{
 	
 	// Serialization
 	
-	override fun writeEntityToNBT(nbt: TagCompound) = with(nbt.heeTag){
-		targetPos?.let { setPos(TARGET_TAG, it) }
-		setShort(TIMER_TAG, timer.toShort())
-		setFloat(SPEED_TAG, speed)
+	override fun writeAdditional(nbt: TagCompound) = nbt.heeTag.use {
+		targetPos?.let { putPos(TARGET_TAG, it) }
+		putShort(TIMER_TAG, timer.toShort())
+		putFloat(SPEED_TAG, speed)
 	}
 	
-	override fun readEntityFromNBT(nbt: TagCompound) = with(nbt.heeTag){
+	override fun readAdditional(nbt: TagCompound) = nbt.heeTag.use {
 		targetPos = getPosOrNull(TARGET_TAG)
 		timer = getShort(TIMER_TAG).toInt()
 		speed = getFloat(SPEED_TAG)

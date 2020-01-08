@@ -27,7 +27,7 @@ import chylex.hee.system.util.nextInt
 import chylex.hee.system.util.nextItem
 import chylex.hee.system.util.nextItemOrNull
 import chylex.hee.system.util.removeItemOrNull
-import net.minecraft.util.EnumFacing
+import net.minecraft.util.Direction
 import net.minecraft.util.math.BlockPos
 import java.util.Random
 import kotlin.math.max
@@ -70,7 +70,7 @@ object StrongholdBuilder : IStructureBuilder{
 			val remainingRelicTargets = openPiecesByDistance.take(max(10, openPiecesByDistance.size / 3)).toMutableList()
 			val remainingRelicRooms = PIECES_RELICS(rand)
 			
-			var lastRelicFacingFromPortal: EnumFacing? = null
+			var lastRelicFacingFromPortal: Direction? = null
 			
 			while(remainingRelicRooms.isNotEmpty()){
 				val targetPiece = rand.removeItemOrNull(remainingRelicTargets) ?: break
@@ -98,7 +98,7 @@ object StrongholdBuilder : IStructureBuilder{
 			val openPiecesForDeadEnds = build.generatedPieces.filter { it.instance.canLeadIntoDeadEnd }.shuffled(rand)
 			val remainingDeadEnds = PIECES_DEAD_ENDS(rand)
 			
-			var lastDeadEndFacingFromPortal: EnumFacing? = null
+			var lastDeadEndFacingFromPortal: Direction? = null
 			var lastDeadEndFacingCounter = 0
 			
 			for(targetPiece in openPiecesForDeadEnds){

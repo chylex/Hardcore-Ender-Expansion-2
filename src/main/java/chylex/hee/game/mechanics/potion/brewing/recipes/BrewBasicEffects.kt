@@ -2,13 +2,13 @@ package chylex.hee.game.mechanics.potion.brewing.recipes
 import chylex.hee.game.mechanics.potion.brewing.IBrewingRecipe
 import chylex.hee.game.mechanics.potion.brewing.PotionBrewing
 import chylex.hee.game.mechanics.potion.brewing.PotionItems
+import chylex.hee.system.migration.vanilla.Potion
+import chylex.hee.system.migration.vanilla.PotionType
 import chylex.hee.system.migration.vanilla.PotionTypes
 import net.minecraft.item.Item
 import net.minecraft.item.ItemStack
-import net.minecraft.potion.Potion
-import net.minecraft.potion.PotionType
 
-sealed class BrewBasicEffects(private val base: PotionType, private val registry: Map<Pair<Item, Int>, Potion>) : IBrewingRecipe{
+sealed class BrewBasicEffects(private val base: PotionType, private val registry: Map<Item, Potion>) : IBrewingRecipe{
 	override fun isInput(input: ItemStack): Boolean{
 		return PotionItems.checkBottle(input, base)
 	}
@@ -24,8 +24,8 @@ sealed class BrewBasicEffects(private val base: PotionType, private val registry
 		return PotionItems.getBottle(input.item, info.potion, withBaseEffect = true)
 	}
 	
-	private fun matchesReagent(ingredient: ItemStack, key: Pair<Item, Int>): Boolean{
-		return ingredient.item === key.first && ingredient.metadata == key.second
+	private fun matchesReagent(ingredient: ItemStack, item: Item): Boolean{
+		return ingredient.item === item
 	}
 	
 	object FromWater : BrewBasicEffects(PotionTypes.WATER, PotionBrewing.WATER)

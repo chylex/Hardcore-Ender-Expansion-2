@@ -1,45 +1,44 @@
 package chylex.hee.game.world.feature.obsidiantower.piece
 import chylex.hee.game.block.entity.TileEntitySpawnerObsidianTower
-import chylex.hee.game.block.util.FutureBlocks
 import chylex.hee.game.world.feature.obsidiantower.ObsidianTowerPieces
 import chylex.hee.game.world.feature.obsidiantower.ObsidianTowerRoomData
 import chylex.hee.game.world.feature.obsidiantower.ObsidianTowerSpawnerLevel.INTRODUCTION
 import chylex.hee.game.world.feature.obsidiantower.ObsidianTowerSpawnerLevel.LEVEL_1
 import chylex.hee.game.world.structure.IStructureWorld
-import chylex.hee.game.world.structure.trigger.FlowerPotStructureTrigger
 import chylex.hee.game.world.structure.trigger.LootChestStructureTrigger
 import chylex.hee.game.world.structure.trigger.ObsidianTowerSpawnerStructureTrigger
 import chylex.hee.game.world.structure.trigger.TileEntityStructureTrigger
 import chylex.hee.init.ModBlocks
-import chylex.hee.init.ModItems
+import chylex.hee.proxy.Environment
 import chylex.hee.system.migration.Facing.EAST
 import chylex.hee.system.migration.Facing.SOUTH
 import chylex.hee.system.migration.Facing.WEST
 import chylex.hee.system.migration.MagicValues
+import chylex.hee.system.migration.vanilla.BlockSkull
 import chylex.hee.system.migration.vanilla.Blocks
+import chylex.hee.system.migration.vanilla.TileEntityFurnace
 import chylex.hee.system.util.allInBoxMutable
 import chylex.hee.system.util.nextItem
 import chylex.hee.system.util.removeItemOrNull
 import chylex.hee.system.util.setStack
+import chylex.hee.system.util.with
 import chylex.hee.system.util.withFacing
-import net.minecraft.block.BlockPlanks
-import net.minecraft.block.BlockTallGrass
 import net.minecraft.item.ItemStack
-import net.minecraft.tileentity.TileEntityFurnace
-import net.minecraft.util.EnumFacing
+import net.minecraft.util.Direction
 import net.minecraft.util.math.BlockPos
+import net.minecraft.world.dimension.DimensionType
 import net.minecraft.world.storage.loot.LootContext
-import net.minecraftforge.common.DimensionManager
+import net.minecraft.world.storage.loot.LootParameterSets
 
 abstract class ObsidianTowerRoom_General(file: String, val guaranteesSpawnersOnLevel1: Boolean = false) : ObsidianTowerAbstractPieceFromFile<ObsidianTowerRoomData>(file){
 	private companion object{
-		private val FLOWER_TYPES = arrayOf(
-			Blocks.RED_MUSHROOM to 0,
-			Blocks.BROWN_MUSHROOM to 0,
-			Blocks.CACTUS to 0,
-			Blocks.DEADBUSH to 0,
-			Blocks.TALLGRASS to BlockTallGrass.EnumType.FERN.meta,
-			Blocks.SAPLING to BlockPlanks.EnumType.DARK_OAK.metadata
+		private val FLOWER_POT_TYPES = arrayOf(
+			Blocks.POTTED_RED_MUSHROOM,
+			Blocks.POTTED_BROWN_MUSHROOM,
+			Blocks.POTTED_CACTUS,
+			Blocks.POTTED_DEAD_BUSH,
+			Blocks.POTTED_FERN,
+			Blocks.POTTED_DARK_OAK_SAPLING
 		)
 	}
 	
@@ -90,10 +89,10 @@ abstract class ObsidianTowerRoom_General(file: String, val guaranteesSpawnersOnL
 	}
 	
 	protected fun placeEndermanHead(world: IStructureWorld, pos: BlockPos, rotation: Int){
-		world.addTrigger(pos, TileEntityStructureTrigger(FutureBlocks.SKULL_FLOOR, ModItems.ENDERMAN_HEAD.createTileEntity().apply { skullRotation = rotation }))
+		world.setState(pos, ModBlocks.ENDERMAN_HEAD.with(BlockSkull.ROTATION, rotation))
 	}
 	
-	protected fun placeEndermanHead(world: IStructureWorld, pos: BlockPos, facing: EnumFacing){
+	protected fun placeEndermanHead(world: IStructureWorld, pos: BlockPos, facing: Direction){
 		placeEndermanHead(world, pos, when(facing){
 			WEST -> 12
 			SOUTH -> 8
@@ -106,20 +105,20 @@ abstract class ObsidianTowerRoom_General(file: String, val guaranteesSpawnersOnL
 		world.addTrigger(pos, LootChestStructureTrigger(if (isSpecial) ObsidianTowerPieces.LOOT_SPECIAL else ObsidianTowerPieces.LOOT_GENERAL, world.rand.nextLong()))
 	}
 	
-	protected fun placeChest(world: IStructureWorld, pos: BlockPos, facing: EnumFacing, isSpecial: Boolean = false){
+	protected fun placeChest(world: IStructureWorld, pos: BlockPos, facing: Direction, isSpecial: Boolean = false){
 		world.setState(pos, Blocks.CHEST.withFacing(facing))
 		placeLootTrigger(world, pos, isSpecial)
 	}
 	
-	protected fun placeFurnace(world: IStructureWorld, pos: BlockPos, facing: EnumFacing){
-		val overworld = DimensionManager.getWorld(0)
-		val table = overworld.lootTableManager.getLootTableFromLocation(ObsidianTowerPieces.LOOT_FUEL)
+	protected fun placeFurnace(world: IStructureWorld, pos: BlockPos, facing: Direction){
+		val overworld = Environment.getServer().getWorld(DimensionType.OVERWORLD)
+		val table = Environment.getServer().lootTableManager.getLootTableFromLocation(ObsidianTowerPieces.LOOT_FUEL)
 		
-		val fuel = table.generateLootForPools(world.rand, LootContext.Builder(overworld).build()).firstOrNull() ?: ItemStack.EMPTY
+		val fuel = table.generate(LootContext.Builder(overworld).withRandom(world.rand).build(LootParameterSets.EMPTY)).firstOrNull() ?: ItemStack.EMPTY
 		world.addTrigger(pos, TileEntityStructureTrigger(Blocks.FURNACE.withFacing(facing), TileEntityFurnace().apply { setStack(MagicValues.FURNACE_FUEL_SLOT, fuel) }))
 	}
 	
 	protected fun placeFlowerPot(world: IStructureWorld, pos: BlockPos){
-		world.addTrigger(pos, FlowerPotStructureTrigger(world.rand.nextItem(FLOWER_TYPES).let { ItemStack(it.first, 1, it.second) }))
+		world.setBlock(pos, world.rand.nextItem(FLOWER_POT_TYPES))
 	}
 }

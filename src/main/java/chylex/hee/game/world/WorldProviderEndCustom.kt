@@ -13,23 +13,38 @@ import chylex.hee.game.world.territory.TerritoryVoid
 import chylex.hee.proxy.ModCommonProxy
 import chylex.hee.system.migration.forge.Side
 import chylex.hee.system.migration.forge.Sided
-import net.minecraft.entity.Entity
+import chylex.hee.system.util.Pos
+import chylex.hee.system.util.xz
+import net.minecraft.block.Blocks
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.Vec3d
-import net.minecraft.world.DimensionType
-import net.minecraft.world.WorldProviderEnd
-import net.minecraft.world.WorldServer
-import net.minecraft.world.gen.IChunkGenerator
+import net.minecraft.world.World
+import net.minecraft.world.biome.Biomes
+import net.minecraft.world.biome.provider.SingleBiomeProvider
+import net.minecraft.world.biome.provider.SingleBiomeProviderSettings
+import net.minecraft.world.dimension.DimensionType
+import net.minecraft.world.dimension.EndDimension
+import net.minecraft.world.gen.ChunkGenerator
+import net.minecraft.world.gen.EndGenerationSettings
+import net.minecraft.world.server.ServerWorld
 import net.minecraftforge.client.IRenderHandler
+import java.util.function.BiFunction
 
-class WorldProviderEndCustom : WorldProviderEnd(){
+class WorldProviderEndCustom(world: World, type: DimensionType) : EndDimension(world, type){
 	companion object{
 		const val DEFAULT_CELESTIAL_ANGLE = 0.5F
 		const val DEFAULT_SUN_BRIGHTNESS = 1F
 		const val DEFAULT_SKY_LIGHT = 0
 		
+		const val SAVE_FOLDER = "DIM-HEE"
+		val CONSTRUCTOR = BiFunction(::WorldProviderEndCustom)
+		
 		fun register(){
-			DimensionType.THE_END.clazz = WorldProviderEndCustom::class.java
+			with(HEE.dim){
+				directory = SAVE_FOLDER
+				factory = CONSTRUCTOR
+				hasSkyLight = true
+			}
 		}
 		
 		var debugMode = false
@@ -40,12 +55,10 @@ class WorldProviderEndCustom : WorldProviderEnd(){
 	private val clientEnvironment
 		get() = clientProxy?.getClientSidePlayer()?.let(TerritoryInstance.Companion::fromPos)?.territory?.desc?.environment
 	
-	override fun init(){
-		super.init()
-		
-		when(val world = this.world){
-			is WorldServer -> {
-				dragonFightManager = DragonFightManagerNull(world)
+	init{
+		when(val w = this.world){
+			is ServerWorld -> {
+				dragonFightManager = DragonFightManagerNull(w, this)
 			}
 			
 			else -> {
@@ -54,12 +67,14 @@ class WorldProviderEndCustom : WorldProviderEnd(){
 		}
 	}
 	
-	override fun createChunkGenerator(): IChunkGenerator{
-		return ChunkGeneratorEndCustom(world)
-	}
-	
-	override fun getSaveFolder(): String{
-		return "DIM-HEE"
+	override fun createChunkGenerator(): ChunkGenerator<EndGenerationSettings>{
+		val settings = EndGenerationSettings().apply {
+			defaultBlock = Blocks.END_STONE.defaultState
+			defaultFluid = Blocks.AIR.defaultState
+			spawnPos = Pos(THE_HUB_INSTANCE.centerPoint).xz.withY(255)
+		}
+		
+		return ChunkGeneratorEndCustom(world, SingleBiomeProvider(SingleBiomeProviderSettings().setBiome(Biomes.THE_END)), settings)
 	}
 	
 	// Spawn point
@@ -72,19 +87,15 @@ class WorldProviderEndCustom : WorldProviderEnd(){
 		return THE_HUB_INSTANCE.getSpawnPoint()
 	}
 	
-	override fun getRandomizedSpawnPoint(): BlockPos{
-		return spawnPoint
-	}
-	
 	override fun getSpawnCoordinate(): BlockPos?{
 		return null
 	}
 	
 	// Behavior properties
 	
-	override fun onWorldUpdateEntities(){ // stops triggering a few seconds after all players leave the dimension (if still loaded)
+	override fun tick(){ // stops triggering a few seconds after all players leave the dimension (if still loaded)
 		if (!debugMode){
-			TerritoryVoid.onWorldTick(world)
+			TerritoryVoid.onWorldTick(world as ServerWorld)
 		}
 	}
 	
@@ -106,17 +117,9 @@ class WorldProviderEndCustom : WorldProviderEnd(){
 		return clientEnvironment?.celestialAngle ?: DEFAULT_CELESTIAL_ANGLE
 	}
 	
-	override fun getSunBrightnessFactor(partialTicks: Float): Float{
-		return 1F - (clientEnvironment?.sunBrightness ?: DEFAULT_SUN_BRIGHTNESS)
-	}
-	
 	@Sided(Side.CLIENT)
 	override fun getSunBrightness(partialTicks: Float): Float{
 		return clientEnvironment?.sunBrightness ?: DEFAULT_SUN_BRIGHTNESS
-	}
-	
-	override fun hasSkyLight(): Boolean{
-		return true
 	}
 	
 	// Visual Properties (Sky)
@@ -132,7 +135,7 @@ class WorldProviderEndCustom : WorldProviderEnd(){
 	}
 	
 	@Sided(Side.CLIENT)
-	override fun getSkyColor(camera: Entity, partialTicks: Float): Vec3d{
+	override fun getSkyColor(pos: BlockPos, partialTicks: Float): Vec3d{
 		return clientEnvironment?.fogColor ?: Vec3d.ZERO // return fog color because vanilla blends fog into sky color based on chunk render distance
 	}
 	

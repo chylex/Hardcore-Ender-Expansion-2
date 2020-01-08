@@ -11,13 +11,12 @@ import chylex.hee.system.migration.forge.Sided
 import chylex.hee.system.util.facades.Resource
 import chylex.hee.system.util.nextFloat
 import chylex.hee.system.util.size
-import chylex.hee.system.util.square
 import chylex.hee.system.util.toRadians
-import net.minecraft.client.renderer.RenderItem
-import net.minecraft.client.renderer.block.model.IBakedModel
-import net.minecraft.client.renderer.block.model.ItemCameraTransforms.TransformType.GROUND
+import net.minecraft.client.renderer.ItemRenderer
+import net.minecraft.client.renderer.model.IBakedModel
+import net.minecraft.client.renderer.model.ItemCameraTransforms.TransformType.GROUND
 import net.minecraft.client.renderer.texture.TextureManager
-import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer
+import net.minecraft.client.renderer.tileentity.TileEntityRenderer
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats
 import net.minecraft.item.Item
 import net.minecraft.item.ItemStack
@@ -31,7 +30,7 @@ import kotlin.math.cos
 import kotlin.math.sin
 
 @Sided(Side.CLIENT)
-object RenderTileTablePedestal : TileEntitySpecialRenderer<TileEntityTablePedestal>(){
+object RenderTileTablePedestal : TileEntityRenderer<TileEntityTablePedestal>(){
 	private val TEX_SHADOW = Resource.Vanilla("textures/misc/shadow.png")
 	private val RAND = Random()
 	
@@ -57,7 +56,7 @@ object RenderTileTablePedestal : TileEntitySpecialRenderer<TileEntityTablePedest
 		else           -> 1
 	}
 	
-	override fun render(tile: TileEntityTablePedestal, x: Double, y: Double, z: Double, partialTicks: Float, destroyStage: Int, alpha: Float){
+	override fun render(tile: TileEntityTablePedestal, x: Double, y: Double, z: Double, partialTicks: Float, destroyStage: Int){
 		val textureManager = MC.textureManager
 		val itemRenderer = MC.itemRenderer
 		
@@ -77,7 +76,7 @@ object RenderTileTablePedestal : TileEntitySpecialRenderer<TileEntityTablePedest
 			ITEM_ANGLES.toMutableList()
 		
 		val shadowAlpha = if (MC.settings.entityShadows)
-			(0.25 * world.getLightBrightness(pos) * (1.0 - (square(x) + square(y) + square(z)) / 256.0)).toFloat().coerceAtMost(1F)
+			(0.75 * (1.0 - (MC.renderManager.getDistanceToCamera(x, y, z) / 256.0))).toFloat().coerceAtMost(1F)
 		else
 			0F
 		
@@ -89,14 +88,14 @@ object RenderTileTablePedestal : TileEntitySpecialRenderer<TileEntityTablePedest
 		ItemRenderHelper.endItemModel()
 	}
 	
-	private fun renderItemStack(textureManager: TextureManager, renderer: RenderItem, stack: ItemStack, index: Int, baseRotation: Float, baseSeed: Long, offsetAngleIndices: MutableList<Float>, shadowAlpha: Float){
+	private fun renderItemStack(textureManager: TextureManager, renderer: ItemRenderer, stack: ItemStack, index: Int, baseRotation: Float, baseSeed: Long, offsetAngleIndices: MutableList<Float>, shadowAlpha: Float){
 		GL.pushMatrix()
 		
 		var offsetY = 0F
 		var rotationMp = 1F
 		
 		if (index > 0 && offsetAngleIndices.isNotEmpty()){
-			val seed = baseSeed + ((Item.getIdFromItem(stack.item) + stack.metadata) xor (33867 shl index))
+			val seed = baseSeed + (Item.getIdFromItem(stack.item) xor (33867 shl index))
 			RAND.setSeed(seed)
 			
 			val locDistance = RAND.nextFloat(0.26F, 0.29F)
@@ -133,11 +132,11 @@ object RenderTileTablePedestal : TileEntitySpecialRenderer<TileEntityTablePedest
 		GL.popMatrix()
 	}
 	
-	private fun renderItemWithSpread(renderer: RenderItem, stack: ItemStack, model: IBakedModel, isModel3D: Boolean){
+	private fun renderItemWithSpread(renderer: ItemRenderer, stack: ItemStack, model: IBakedModel, isModel3D: Boolean){
 		val extraModels = getItemModelCount(stack.size) - 1
 		
 		if (extraModels > 0){
-			RAND.setSeed((Item.getIdFromItem(stack.item) + stack.metadata).toLong())
+			RAND.setSeed(Item.getIdFromItem(stack.item).toLong())
 			
 			if (!isModel3D){
 				GL.translate(0F, 0F, -SPREAD_DEPTH_PER_2D_MODEL * (extraModels / 2F))

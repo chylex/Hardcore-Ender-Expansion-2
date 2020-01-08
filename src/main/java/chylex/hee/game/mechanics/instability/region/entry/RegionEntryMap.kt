@@ -48,7 +48,7 @@ class RegionEntryMap<T : IRegionEntry>(private val constructor: IRegionEntryCons
 		entries.clear()
 		
 		if (nbt != null){
-			for(compacted in nbt.data){
+			for(compacted in nbt.asLongArray){
 				addOrUpdateEntry(constructor.fromCompacted(compacted))
 			}
 		}

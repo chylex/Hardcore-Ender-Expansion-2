@@ -23,7 +23,7 @@ import chylex.hee.system.util.readPos
 import chylex.hee.system.util.totalTime
 import chylex.hee.system.util.use
 import chylex.hee.system.util.writePos
-import io.netty.buffer.ByteBuf
+import net.minecraft.network.PacketBuffer
 import net.minecraft.util.math.BlockPos
 import net.minecraft.world.World
 import java.util.Random
@@ -45,7 +45,7 @@ class TableParticleHandler(private val table: TileEntityBaseTable){
 		private val PARTICLE_CLUSTER_MOT = InBox(0.004F)
 		
 		class FxProcessPedestalsData(private val table: TileEntityBaseTable, private val targetPositions: List<BlockPos>, private val travelTime: Int) : IFxData{
-			override fun write(buffer: ByteBuf) = buffer.use {
+			override fun write(buffer: PacketBuffer) = buffer.use {
 				writePos(table.pos)
 				writeByte(travelTime)
 				writeByte(targetPositions.size)
@@ -57,7 +57,7 @@ class TableParticleHandler(private val table: TileEntityBaseTable){
 		}
 		
 		val FX_PROCESS_PEDESTALS = object : IFxHandler<FxProcessPedestalsData>{
-			override fun handle(buffer: ByteBuf, world: World, rand: Random) = buffer.use {
+			override fun handle(buffer: PacketBuffer, world: World, rand: Random) = buffer.use {
 				val table = readPos().getTile<TileEntityBaseTable>(world) ?: return
 				val travelTime = readByte().toInt()
 				
@@ -77,14 +77,14 @@ class TableParticleHandler(private val table: TileEntityBaseTable){
 		}
 		
 		class FxDrainClusterData(private val table: TileEntityBaseTable, private val clusterPos: BlockPos) : IFxData{
-			override fun write(buffer: ByteBuf) = buffer.use {
+			override fun write(buffer: PacketBuffer) = buffer.use {
 				writePos(clusterPos)
 				writePos(table.pos)
 			}
 		}
 		
 		val FX_DRAIN_CLUSTER = object : IFxHandler<FxDrainClusterData>{
-			override fun handle(buffer: ByteBuf, world: World, rand: Random) = buffer.use {
+			override fun handle(buffer: PacketBuffer, world: World, rand: Random) = buffer.use {
 				val cluster = readPos().getTile<TileEntityEnergyCluster>(world) ?: return
 				val table = readPos().getTile<TileEntityBaseTable>(world) ?: return
 				
@@ -111,7 +111,7 @@ class TableParticleHandler(private val table: TileEntityBaseTable){
 	
 	fun tick(processTickRate: Int){
 		val particleRate = getParticleRate(processTickRate)
-		val modTick = table.world.totalTime % particleRate
+		val modTick = table.wrld.totalTime % particleRate
 		
 		if (modTick == 0L){
 			lastDrainedCluster?.let {

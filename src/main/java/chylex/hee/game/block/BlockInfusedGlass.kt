@@ -7,20 +7,18 @@ import chylex.hee.system.migration.Facing.NORTH
 import chylex.hee.system.migration.Facing.SOUTH
 import chylex.hee.system.migration.Facing.UP
 import chylex.hee.system.migration.Facing.WEST
-import chylex.hee.system.migration.forge.Side
-import chylex.hee.system.migration.forge.Sided
+import chylex.hee.system.migration.vanilla.BlockAbstractGlass
 import chylex.hee.system.util.facades.Facing6
 import chylex.hee.system.util.getBlock
-import chylex.hee.system.util.with
-import net.minecraft.block.state.BlockStateContainer
-import net.minecraft.block.state.IBlockState
-import net.minecraft.util.BlockRenderLayer.TRANSLUCENT
-import net.minecraft.util.EnumFacing
+import net.minecraft.block.Block
+import net.minecraft.block.BlockState
+import net.minecraft.item.BlockItemUseContext
+import net.minecraft.state.StateContainer.Builder
+import net.minecraft.util.Direction
 import net.minecraft.util.math.BlockPos
-import net.minecraft.world.IBlockAccess
-import java.util.Random
+import net.minecraft.world.IWorld
 
-class BlockInfusedGlass(builder: BlockBuilder) : BlockSimple(builder){
+class BlockInfusedGlass(builder: BlockBuilder) : BlockAbstractGlass(builder.p){
 	companion object{
 		val CONNECT_DOWN = Property.bool("connect_d")
 		val CONNECT_UP = Property.bool("connect_u")
@@ -40,28 +38,27 @@ class BlockInfusedGlass(builder: BlockBuilder) : BlockSimple(builder){
 	}
 	
 	init{
-		defaultState = Facing6.fold(blockState.baseState){ acc, facing -> acc.with(CONNECT_MAPPINGS.getValue(facing), false) }
+		defaultState = Facing6.fold(stateContainer.baseState){ acc, facing -> acc.with(CONNECT_MAPPINGS.getValue(facing), false) }
 	}
 	
-	override fun createBlockState() = BlockStateContainer(this, CONNECT_DOWN, CONNECT_UP, CONNECT_NORTH, CONNECT_SOUTH, CONNECT_EAST, CONNECT_WEST)
-	
-	override fun getMetaFromState(state: IBlockState) = 0
-	
-	override fun getActualState(state: IBlockState, world: IBlockAccess, pos: BlockPos): IBlockState{
-		return Facing6.fold(state){ acc, facing -> acc.with(CONNECT_MAPPINGS.getValue(facing), pos.offset(facing).getBlock(world) === this) } // TODO improve corners
+	override fun fillStateContainer(container: Builder<Block, BlockState>){
+		container.add(CONNECT_DOWN, CONNECT_UP, CONNECT_NORTH, CONNECT_SOUTH, CONNECT_EAST, CONNECT_WEST)
 	}
 	
+	// UPDATE check updatePostPlacement in various places if this is also needed
+	override fun getStateForPlacement(context: BlockItemUseContext): BlockState{
+		val world = context.world
+		val pos = context.pos
+		
+		return Facing6.fold(defaultState){ acc, facing -> acc.with(CONNECT_MAPPINGS.getValue(facing), pos.offset(facing).getBlock(world) === this) } // TODO improve corners
+	}
+	
+	override fun updatePostPlacement(state: BlockState, facing: Direction, neighborState: BlockState, world: IWorld, pos: BlockPos, neighborPos: BlockPos): BlockState{
+		return state.with(CONNECT_MAPPINGS.getValue(facing), pos.offset(facing).getBlock(world) === this)
+	}
+	
+	/* UPDATE
 	override fun quantityDropped(rand: Random) = 0
 	override fun canSilkHarvest() = true
-	
-	override fun canPlaceTorchOnTop(state: IBlockState, world: IBlockAccess, pos: BlockPos) = true
-	
-	override fun isFullCube(state: IBlockState) = false
-	override fun isOpaqueCube(state: IBlockState) = false
-	override fun getRenderLayer() = TRANSLUCENT
-	
-	@Sided(Side.CLIENT)
-	override fun shouldSideBeRendered(state: IBlockState, world: IBlockAccess, pos: BlockPos, side: EnumFacing): Boolean{
-		return pos.offset(side).getBlock(world) !== this
-	}
+	*/
 }

@@ -1,9 +1,9 @@
 package chylex.hee.network.server
 import chylex.hee.HEE
 import chylex.hee.network.BaseServerPacket
+import chylex.hee.system.migration.vanilla.EntityPlayerMP
 import chylex.hee.system.util.use
-import io.netty.buffer.ByteBuf
-import net.minecraft.entity.player.EntityPlayerMP
+import net.minecraft.network.PacketBuffer
 
 class PacketServerContainerEvent() : BaseServerPacket(){
 	interface IContainerWithEvents{
@@ -18,11 +18,11 @@ class PacketServerContainerEvent() : BaseServerPacket(){
 	
 	private var eventId: Byte? = null
 	
-	override fun write(buffer: ByteBuf) = buffer.use {
+	override fun write(buffer: PacketBuffer) = buffer.use {
 		writeByte(eventId!!.toInt())
 	}
 	
-	override fun read(buffer: ByteBuf) = buffer.use {
+	override fun read(buffer: PacketBuffer) = buffer.use {
 		eventId = readByte()
 	}
 	

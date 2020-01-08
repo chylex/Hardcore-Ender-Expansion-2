@@ -1,12 +1,6 @@
 package chylex.hee.game.commands.sub.server
-import chylex.hee.game.commands.sub.ISubCommand
-import chylex.hee.game.mechanics.causatum.CausatumStage
-import chylex.hee.game.mechanics.causatum.EnderCausatum
-import net.minecraft.command.ICommandSender
-import net.minecraft.entity.player.EntityPlayer
-import net.minecraft.server.MinecraftServer
-import net.minecraft.util.text.TextComponentString
 
+/*
 object CommandServerCausatum : ISubCommand{
 	override val name = "causatum"
 	override val usage = "commands.hee.causatum.usage"
@@ -28,4 +22,4 @@ object CommandServerCausatum : ISubCommand{
 		
 		// UPDATE
 	}
-}
+}*/

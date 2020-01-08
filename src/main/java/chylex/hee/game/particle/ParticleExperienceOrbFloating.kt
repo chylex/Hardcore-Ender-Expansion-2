@@ -2,14 +2,12 @@ package chylex.hee.game.particle
 import chylex.hee.game.particle.base.ParticleBase
 import chylex.hee.game.particle.data.ParticleDataColorLifespanScale
 import chylex.hee.game.particle.spawner.IParticleMaker
-import chylex.hee.game.particle.util.ParticleTexture
 import chylex.hee.system.migration.forge.Side
 import chylex.hee.system.migration.forge.Sided
 import chylex.hee.system.util.color.IRandomColor.Companion.IRandomColor
 import chylex.hee.system.util.color.IntColor.Companion.RGB
 import chylex.hee.system.util.nextFloat
 import chylex.hee.system.util.nextInt
-import chylex.hee.system.util.nextItem
 import net.minecraft.client.particle.Particle
 import net.minecraft.util.math.Vec3d
 import net.minecraft.world.World
@@ -19,7 +17,7 @@ import kotlin.math.cos
 import kotlin.math.sign
 import kotlin.math.sin
 
-object ParticleExperienceOrbFloating : IParticleMaker<ParticleDataColorLifespanScale>{
+object ParticleExperienceOrbFloating : IParticleMaker.WithData<ParticleDataColorLifespanScale>(){
 	private val rand = Random()
 	
 	@Sided(Side.CLIENT)
@@ -40,7 +38,7 @@ object ParticleExperienceOrbFloating : IParticleMaker<ParticleDataColorLifespanS
 		private val motionOffset: Double
 		
 		init{
-			particleTexture = rand.nextItem(ParticleTexture.EXPERIENCE)
+			selectSpriteRandomly(ParticleExperienceOrbFloating.sprite)
 			
 			loadColor(data.color)
 			particleScale = data.scale
@@ -51,8 +49,8 @@ object ParticleExperienceOrbFloating : IParticleMaker<ParticleDataColorLifespanS
 			motionOffset = rand.nextFloat(-PI, PI)
 		}
 		
-		override fun onUpdate(){
-			super.onUpdate()
+		override fun tick(){
+			super.tick()
 			
 			motionX = sin(motionOffset + sign(motionOffset) * (age / 8.0)) * 0.02
 			motionZ = cos(motionOffset + sign(motionOffset) * (age / 8.0)) * 0.02
@@ -61,8 +59,5 @@ object ParticleExperienceOrbFloating : IParticleMaker<ParticleDataColorLifespanS
 				particleAlpha -= 0.1F
 			}
 		}
-		
-		override fun getFXLayer() = 1
-		override fun setParticleTextureIndex(index: Int){}
 	}
 }

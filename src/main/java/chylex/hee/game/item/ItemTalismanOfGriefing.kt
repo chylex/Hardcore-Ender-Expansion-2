@@ -6,23 +6,23 @@ import chylex.hee.game.mechanics.damage.IDamageProcessor.Companion.POTION_PROTEC
 import chylex.hee.game.mechanics.trinket.TrinketHandler
 import chylex.hee.game.world.util.ExplosionBuilder
 import chylex.hee.system.migration.forge.SubscribeEvent
+import chylex.hee.system.migration.vanilla.EntityLivingBase
+import chylex.hee.system.migration.vanilla.EntityPlayer
 import chylex.hee.system.util.ceilToInt
 import chylex.hee.system.util.posVec
 import chylex.hee.system.util.square
 import chylex.hee.system.util.totalTime
 import net.minecraft.entity.Entity
-import net.minecraft.entity.EntityLivingBase
-import net.minecraft.entity.player.EntityPlayer
+import net.minecraft.entity.SharedMonsterAttributes.ARMOR_TOUGHNESS
 import net.minecraft.item.ItemStack
-import net.minecraft.util.DamageSource
-import net.minecraft.util.EnumHand
-import net.minecraft.world.EnumDifficulty
-import net.minecraft.world.EnumDifficulty.EASY
-import net.minecraft.world.EnumDifficulty.HARD
-import net.minecraft.world.EnumDifficulty.NORMAL
-import net.minecraft.world.EnumDifficulty.PEACEFUL
+import net.minecraft.util.CombatRules
+import net.minecraft.util.Hand
+import net.minecraft.world.Difficulty
+import net.minecraft.world.Difficulty.EASY
+import net.minecraft.world.Difficulty.HARD
+import net.minecraft.world.Difficulty.NORMAL
+import net.minecraft.world.Difficulty.PEACEFUL
 import net.minecraft.world.Explosion
-import net.minecraftforge.common.ISpecialArmor.ArmorProperties
 import net.minecraftforge.common.MinecraftForge
 import net.minecraftforge.event.entity.living.LivingHurtEvent
 import net.minecraftforge.event.world.ExplosionEvent
@@ -30,7 +30,7 @@ import java.util.UUID
 import kotlin.math.max
 import kotlin.math.min
 
-class ItemTalismanOfGriefing : ItemAbstractTrinket(){
+class ItemTalismanOfGriefing(properties: Properties) : ItemAbstractTrinket(properties){
 	private companion object{
 		private val BLAST_DAMAGE_PROPERTIES = DamageProperties().apply {
 			with(Writer()){
@@ -45,19 +45,19 @@ class ItemTalismanOfGriefing : ItemAbstractTrinket(){
 			
 			val distanceScaled = player.posVec.distanceTo(pos) / (radius * 2F)
 			
-			val blastPower = (1F - distanceScaled) * player.world.getBlockDensity(pos, player.entityBoundingBox)
+			val blastPower = (1 - distanceScaled) * Explosion.getBlockDensity(pos, player)
 			val explosionDamage = 1F + ((square(blastPower) + blastPower) * radius * 7).toInt()
 			
 			var finalDamage = explosionDamage
 			
-			finalDamage = ArmorProperties.applyArmor(player, player.inventory.armorInventory, DamageSource.causeExplosionDamage(explosion), finalDamage.toDouble())
+			finalDamage = CombatRules.getDamageAfterAbsorb(finalDamage, player.totalArmorValue.toFloat(), player.getAttribute(ARMOR_TOUGHNESS).value.toFloat())
 			finalDamage = POTION_PROTECTION.modifyDamage(finalDamage, player, BLAST_DAMAGE_PROPERTIES)
 			finalDamage = ENCHANTMENT_PROTECTION.modifyDamage(finalDamage, player, BLAST_DAMAGE_PROPERTIES)
 			
 			return finalDamage
 		}
 		
-		private fun getNormalDifficultyEquivalentDamage(amount: Float, currentDifficulty: EnumDifficulty) = when(currentDifficulty){
+		private fun getNormalDifficultyEquivalentDamage(amount: Float, currentDifficulty: Difficulty) = when(currentDifficulty){
 			PEACEFUL -> 0F
 			EASY     -> max(amount, (amount - 1F) * 2F)
 			NORMAL   -> amount
@@ -69,13 +69,11 @@ class ItemTalismanOfGriefing : ItemAbstractTrinket(){
 	private val lastRepairMarkEntities = ThreadLocal.withInitial { HashSet<UUID>(4) }
 	
 	init{
-		maxDamage = 25
-		
 		MinecraftForge.EVENT_BUS.register(this)
 	}
 	
 	override fun canPlaceIntoTrinketSlot(stack: ItemStack): Boolean{
-		return stack.itemDamage < stack.maxDamage
+		return stack.damage < stack.maxDamage
 	}
 	
 	private fun markEntitiesForTalismanRepair(explosion: Explosion, entities: List<Entity>){
@@ -128,7 +126,7 @@ class ItemTalismanOfGriefing : ItemAbstractTrinket(){
 					val durabilityTaken = (finalDamage / 10F).ceilToInt().coerceAtMost(3)
 					
 					trinketHandler.transformIfActive(this){
-						it.itemDamage = min(it.maxDamage, it.itemDamage + durabilityTaken)
+						it.damage = min(it.maxDamage, it.damage + durabilityTaken)
 					}
 					
 					e.affectedBlocks.clear()
@@ -170,11 +168,11 @@ class ItemTalismanOfGriefing : ItemAbstractTrinket(){
 			return
 		}
 		
-		for(hand in EnumHand.values()){
+		for(hand in Hand.values()){
 			val heldItem = entity.getHeldItem(hand)
 			
 			if (heldItem.item === this){
-				heldItem.itemDamage = 0
+				heldItem.damage = 0
 				// TODO sound fx
 			}
 		}

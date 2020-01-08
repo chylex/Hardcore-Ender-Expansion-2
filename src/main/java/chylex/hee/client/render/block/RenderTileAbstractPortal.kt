@@ -18,9 +18,9 @@ import chylex.hee.system.migration.forge.Side
 import chylex.hee.system.migration.forge.Sided
 import chylex.hee.system.util.facades.Resource
 import chylex.hee.system.util.square
-import net.minecraft.client.renderer.ActiveRenderInfo
 import net.minecraft.client.renderer.GLAllocation
-import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer
+import net.minecraft.client.renderer.tileentity.TileEntityRenderer
+import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats
 import net.minecraft.util.ResourceLocation
 import net.minecraft.util.math.BlockPos
@@ -37,7 +37,7 @@ import java.util.Random
 import kotlin.math.pow
 
 @Sided(Side.CLIENT)
-abstract class RenderTileAbstractPortal<T : TileEntityPortalInner, C : IPortalController> : TileEntitySpecialRenderer<T>(){
+abstract class RenderTileAbstractPortal<T : TileEntityPortalInner, C : IPortalController> : TileEntityRenderer<T>(){
 	private companion object{
 		private val TEX_BACKGROUND = Resource.Vanilla("textures/environment/end_sky.png")
 		private val TEX_PARTICLE_LAYER = Resource.Vanilla("textures/entity/end_portal.png")
@@ -89,15 +89,15 @@ abstract class RenderTileAbstractPortal<T : TileEntityPortalInner, C : IPortalCo
 	
 	// Rendering
 	
-	override fun render(tile: T, x: Double, y: Double, z: Double, partialTicks: Float, destroyStage: Int, alpha: Float){
-		val controller = findController(tile.world, tile.pos)
+	override fun render(tile: T, x: Double, y: Double, z: Double, partialTicks: Float, destroyStage: Int){
+		val controller = findController(tile.world ?: return, tile.pos)
 		
 		rand.setSeed(controller?.let { generateSeed(it) } ?: 0L)
 		
 		animationProgress = controller?.clientAnimationProgress?.get(partialTicks) ?: 0F
 		isAnimating = animationProgress > 0F && animationProgress < 1F
 		
-		cameraTarget = ActiveRenderInfo.getCameraPosition()
+		cameraTarget = MC.renderManager.info.projectedView // UPDATE test
 		globalTranslation = ((MC.systemTime % BlockAbstractPortal.TRANSLATION_SPEED_LONG) / BlockAbstractPortal.TRANSLATION_SPEED) - (controller?.clientPortalOffset?.get(partialTicks) ?: 0F)
 		
 		val offsetY = -y - 0.75
@@ -113,7 +113,7 @@ abstract class RenderTileAbstractPortal<T : TileEntityPortalInner, C : IPortalCo
 		GL.enableTexGenCoord(TEX_R)
 		GL.enableTexGenCoord(TEX_Q)
 		
-		MC.entityRenderer.setupFogColor(true)
+		MC.gameRenderer.setupFogColor(true)
 		
 		// background
 		
@@ -158,7 +158,7 @@ abstract class RenderTileAbstractPortal<T : TileEntityPortalInner, C : IPortalCo
 		
 		// cleanup
 		
-		MC.entityRenderer.setupFogColor(false)
+		MC.gameRenderer.setupFogColor(false)
 		
 		GL.disableTexGenCoord(TEX_S)
 		GL.disableTexGenCoord(TEX_T)
@@ -178,9 +178,9 @@ abstract class RenderTileAbstractPortal<T : TileEntityPortalInner, C : IPortalCo
 	}
 	
 	private fun renderLayer(renderX: Double, renderY: Double, renderZ: Double, texture: ResourceLocation, layerPosition: Double, layerRotation: Float, layerScale: Float, cameraOffsetMp: Double){
-		val globalX = rendererDispatcher.entityX
-		val globalY = rendererDispatcher.entityY
-		val globalZ = rendererDispatcher.entityZ
+		val globalX = TileEntityRendererDispatcher.staticPlayerX
+		val globalY = TileEntityRendererDispatcher.staticPlayerY
+		val globalZ = TileEntityRendererDispatcher.staticPlayerZ
 		
 		// texture
 		

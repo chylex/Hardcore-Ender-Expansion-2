@@ -17,7 +17,7 @@ class CaveGenerator(
 ){
 	fun generate(world: SegmentedWorld, start: Vec3d, length: Double, pather: ICavePather): Int{
 		val rand = world.rand
-		val worldBox = world.worldSize.toBoundingBox(BlockPos.ORIGIN)
+		val worldBox = world.worldSize.toBoundingBox(BlockPos.ZERO)
 		
 		val steps = (length / stepSize).ceilToInt()
 		var point = start

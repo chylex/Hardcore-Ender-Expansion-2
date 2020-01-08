@@ -2,18 +2,17 @@ package chylex.hee.game.world.structure
 import chylex.hee.HEE
 import chylex.hee.system.collection.WeightedList
 import chylex.hee.system.migration.vanilla.Blocks
-import chylex.hee.system.util.with
 import net.minecraft.block.Block
-import net.minecraft.block.properties.IProperty
-import net.minecraft.block.state.IBlockState
+import net.minecraft.block.BlockState
+import net.minecraft.state.IProperty
 import java.util.Random
 
 interface IBlockPicker{
-	fun pick(rand: Random): IBlockState
+	fun pick(rand: Random): BlockState
 	
 	// Implementations
 	
-	open class Single(private val state: IBlockState) : IBlockPicker{
+	open class Single(private val state: BlockState) : IBlockPicker{
 		constructor(block: Block) : this(block.defaultState)
 		
 		override fun pick(rand: Random) = state
@@ -22,9 +21,9 @@ interface IBlockPicker{
 		object Air : Single(Blocks.AIR)
 	}
 	
-	class Weighted private constructor(private val weightedList: WeightedList<IBlockState>) : IBlockPicker{
+	class Weighted private constructor(private val weightedList: WeightedList<BlockState>) : IBlockPicker{
 		companion object{
-			fun <T : Comparable<T>> Weighted(baseState: IBlockState, property: IProperty<T>, values: List<Pair<Int, T>>) : Weighted{
+			fun <T : Comparable<T>> Weighted(baseState: BlockState, property: IProperty<T>, values: List<Pair<Int, T>>) : Weighted{
 				return Weighted(WeightedList(values.map { (weight, value) -> Pair(weight, baseState.with(property, value)) }))
 			}
 			
@@ -32,8 +31,8 @@ interface IBlockPicker{
 				return Weighted(block.defaultState, property, values)
 			}
 			
-			@JvmName("Weighted_IBlockState")
-			fun Weighted(vararg items: Pair<Int, IBlockState>): Weighted{
+			@JvmName("Weighted_BlockState")
+			fun Weighted(vararg items: Pair<Int, BlockState>): Weighted{
 				return Weighted(WeightedList(items.toList()))
 			}
 			
@@ -47,10 +46,10 @@ interface IBlockPicker{
 		override fun toString() = weightedList.toString()
 	}
 	
-	class Fallback(private val logMessage: String, state: IBlockState) : Single(state){
+	class Fallback(private val logMessage: String, state: BlockState) : Single(state){
 		constructor(logMessage: String, block: Block) : this(logMessage, block.defaultState)
 		
-		override fun pick(rand: Random): IBlockState{
+		override fun pick(rand: Random): BlockState{
 			HEE.log.warn(logMessage)
 			return super.pick(rand)
 		}

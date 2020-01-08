@@ -2,10 +2,10 @@ package chylex.hee.client.sound
 import chylex.hee.game.entity.projectile.EntityProjectileSpatialDash
 import chylex.hee.system.migration.vanilla.Sounds
 import chylex.hee.system.util.nextFloat
-import net.minecraft.client.audio.MovingSound
+import net.minecraft.client.audio.TickableSound
 import net.minecraft.util.SoundCategory
 
-class MovingSoundSpatialDash(private val entity: EntityProjectileSpatialDash) : MovingSound(Sounds.ITEM_ELYTRA_FLYING, SoundCategory.PLAYERS){
+class MovingSoundSpatialDash(private val entity: EntityProjectileSpatialDash) : TickableSound(Sounds.ITEM_ELYTRA_FLYING, SoundCategory.PLAYERS){
 	init{
 		volume = 0.9F
 		pitch = entity.world.rand.nextFloat(1.1F, 1.4F)
@@ -13,14 +13,14 @@ class MovingSoundSpatialDash(private val entity: EntityProjectileSpatialDash) : 
 		repeatDelay = 0
 	}
 	
-	override fun update(){
-		if (entity.isDead){
+	override fun tick(){
+		if (!entity.isAlive){
 			donePlaying = true
 			return
 		}
 		
-		xPosF = entity.posX.toFloat()
-		yPosF = entity.posY.toFloat()
-		zPosF = entity.posZ.toFloat()
+		x = entity.posX.toFloat()
+		y = entity.posY.toFloat()
+		z = entity.posZ.toFloat()
 	}
 }

@@ -1,9 +1,12 @@
 package chylex.hee.game.entity.living.ai.util
-import net.minecraft.entity.EntityCreature
-import net.minecraft.entity.ai.EntityAIWander
+import chylex.hee.system.migration.vanilla.EntityCreature
+import net.minecraft.entity.ai.goal.RandomWalkingGoal
 import net.minecraft.util.math.Vec3d
 
-abstract class AIBaseWanderConditioned(creature: EntityCreature, speed: Double) : EntityAIWander(creature, speed, 0){
+abstract class AIBaseWanderConditioned(creature: EntityCreature, speed: Double) : RandomWalkingGoal(creature, speed, 0){
+	protected inline val entity: EntityCreature
+		get() = creature
+	
 	abstract override fun shouldExecute(): Boolean
 	abstract override fun getPosition(): Vec3d?
 	

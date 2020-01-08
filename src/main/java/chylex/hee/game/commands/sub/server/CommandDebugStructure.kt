@@ -1,23 +1,6 @@
 package chylex.hee.game.commands.sub.server
-import chylex.hee.game.commands.sub.ISubCommand
-import chylex.hee.game.world.feature.energyshrine.EnergyShrinePieces
-import chylex.hee.game.world.feature.obsidiantower.ObsidianTowerPieces
-import chylex.hee.game.world.feature.stronghold.StrongholdPieces
-import chylex.hee.game.world.feature.tombdungeon.TombDungeonPieces
-import chylex.hee.game.world.structure.IBlockPicker.Single
-import chylex.hee.game.world.structure.IStructurePieceFromFile
-import chylex.hee.game.world.structure.file.StructureFile
-import chylex.hee.game.world.structure.file.StructureFiles
-import chylex.hee.game.world.structure.world.TransformedStructureWorld
-import chylex.hee.game.world.structure.world.WorldToStructureWorldAdapter
-import chylex.hee.game.world.util.PosXZ
-import chylex.hee.game.world.util.Transform
-import chylex.hee.system.migration.vanilla.Blocks
-import net.minecraft.command.ICommandSender
-import net.minecraft.server.MinecraftServer
-import net.minecraft.util.Rotation
-import net.minecraft.util.text.TextComponentString
 
+/*
 internal object CommandDebugStructure : ISubCommand{
 	val structureDescriptions = mapOf(
 		"stronghold" to StrongholdPieces,
@@ -114,4 +97,4 @@ internal object CommandDebugStructure : ISubCommand{
 			}
 		}
 	}
-}
+}*/

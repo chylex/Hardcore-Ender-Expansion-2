@@ -1,44 +1,45 @@
 package chylex.hee.client.util
 import chylex.hee.system.migration.forge.Side
 import chylex.hee.system.migration.forge.Sided
+import chylex.hee.system.migration.vanilla.EntityPlayerSP
+import chylex.hee.system.migration.vanilla.RenderManager
+import net.minecraft.client.GameSettings
+import net.minecraft.client.MainWindow
 import net.minecraft.client.Minecraft
-import net.minecraft.client.entity.EntityPlayerSP
 import net.minecraft.client.gui.FontRenderer
-import net.minecraft.client.gui.GuiScreen
-import net.minecraft.client.gui.ScaledResolution
-import net.minecraft.client.multiplayer.WorldClient
+import net.minecraft.client.gui.screen.Screen
 import net.minecraft.client.particle.ParticleManager
-import net.minecraft.client.renderer.EntityRenderer
-import net.minecraft.client.renderer.RenderItem
-import net.minecraft.client.renderer.entity.RenderManager
+import net.minecraft.client.renderer.GameRenderer
+import net.minecraft.client.renderer.ItemRenderer
 import net.minecraft.client.renderer.texture.TextureManager
-import net.minecraft.client.settings.GameSettings
+import net.minecraft.client.world.ClientWorld
+import net.minecraft.util.Util
 
 @Sided(Side.CLIENT)
 object MC{
 	@JvmField
-	val instance: Minecraft = Minecraft.getMinecraft()
+	val instance: Minecraft = Minecraft.getInstance()
 	
 	// General
 	
 	val settings: GameSettings
 		get() = instance.gameSettings
 	
-	val resolution
-		get() = ScaledResolution(instance)
+	val window: MainWindow
+		get() = instance.mainWindow
 	
 	val systemTime
-		get() = Minecraft.getSystemTime()
+		get() = Util.milliTime()
 	
 	// Game state
 	
 	val player: EntityPlayerSP?
 		get() = instance.player
 	
-	val world: WorldClient?
+	val world: ClientWorld?
 		get() = instance.world
 	
-	val currentScreen: GuiScreen?
+	val currentScreen: Screen?
 		get() = instance.currentScreen
 	
 	// Rendering
@@ -53,13 +54,13 @@ object MC{
 		get() = instance.renderManager
 	
 	val particleManager: ParticleManager
-		get() = instance.effectRenderer
+		get() = instance.particles
 	
-	val entityRenderer: EntityRenderer
-		get() = instance.entityRenderer
+	val gameRenderer: GameRenderer
+		get() = instance.gameRenderer
 	
-	val itemRenderer: RenderItem
-		get() = instance.renderItem
+	val itemRenderer: ItemRenderer
+		get() = instance.itemRenderer
 	
 	val fontRenderer: FontRenderer
 		get() = instance.fontRenderer

@@ -1,9 +1,10 @@
 package chylex.hee.game.particle
+import chylex.hee.game.particle.base.ParticleBase
 import chylex.hee.game.particle.spawner.IParticleMaker
 import chylex.hee.system.migration.forge.Side
 import chylex.hee.system.migration.forge.Sided
+import chylex.hee.system.util.nextFloat
 import net.minecraft.client.particle.Particle
-import net.minecraft.client.particle.ParticleBubble
 import net.minecraft.world.World
 
 object ParticleBubbleCustom : IParticleMaker.Simple(){
@@ -13,8 +14,23 @@ object ParticleBubbleCustom : IParticleMaker.Simple(){
 	}
 	
 	@Sided(Side.CLIENT)
-	private class Instance(world: World, posX: Double, posY: Double, posZ: Double, motX: Double, motY: Double, motZ: Double) : ParticleBubble(world, posX, posY, posZ, motX, motY, motZ){
-		override fun onUpdate(){
+	private class Instance(world: World, posX: Double, posY: Double, posZ: Double, motX: Double, motY: Double, motZ: Double) : ParticleBase(world, posX, posY, posZ, motX, motY, motZ){
+		init{
+			selectSpriteRandomly(ParticleBubbleCustom.sprite)
+			
+			setSize(0.02F, 0.02F)
+			particleScale *= rand.nextFloat(0.2F, 0.8F)
+			
+			motionVec = motionVec.scale(0.2).add(
+				rand.nextFloat(-0.02, 0.02),
+				rand.nextFloat(-0.02, 0.02),
+				rand.nextFloat(-0.02, 0.02)
+			)
+			
+			maxAge = (8.0 / rand.nextFloat(0.2, 1.0)).toInt()
+		}
+		
+		override fun tick(){
 			prevPosX = posX
 			prevPosY = posY
 			prevPosZ = posZ
@@ -26,7 +42,7 @@ object ParticleBubbleCustom : IParticleMaker.Simple(){
 			motionY *= 0.85
 			motionZ *= 0.85
 			
-			if (--particleMaxAge < 0){
+			if (--maxAge < 0){
 				setExpired()
 			}
 		}

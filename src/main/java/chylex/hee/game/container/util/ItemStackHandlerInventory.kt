@@ -1,12 +1,10 @@
 package chylex.hee.game.container.util
-import net.minecraft.entity.player.EntityPlayer
+import chylex.hee.system.migration.vanilla.EntityPlayer
 import net.minecraft.inventory.IInventory
 import net.minecraft.item.ItemStack
-import net.minecraft.util.text.TextComponentString
-import net.minecraft.util.text.TextComponentTranslation
 import net.minecraftforge.items.ItemStackHandler
 
-open class ItemStackHandlerInventory(private val handler: ItemStackHandler, private val name: String, private val hasCustomName: Boolean = false) : IInventory{
+open class ItemStackHandlerInventory(private val handler: ItemStackHandler) : IInventory{
 	private val slotIndices
 		get() = 0 until handler.slots
 	
@@ -52,26 +50,9 @@ open class ItemStackHandlerInventory(private val handler: ItemStackHandler, priv
 	
 	override fun markDirty(){}
 	
-	// Name
-	
-	override fun getName() = name
-	override fun hasCustomName() = hasCustomName
-	
-	override fun getDisplayName() =
-		if (hasCustomName)
-			TextComponentString(name)
-		else
-			TextComponentTranslation(name)
-	
 	// Interaction
 	
 	override fun isUsableByPlayer(player: EntityPlayer) = true
 	override fun openInventory(player: EntityPlayer){}
 	override fun closeInventory(player: EntityPlayer){}
-	
-	// Fields
-	
-	override fun setField(id: Int, value: Int){}
-	override fun getField(id: Int) = 0
-	override fun getFieldCount() = 0
 }

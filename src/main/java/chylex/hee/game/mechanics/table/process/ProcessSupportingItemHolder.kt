@@ -8,7 +8,7 @@ import chylex.hee.game.mechanics.table.interfaces.ITableProcess.Companion.NO_DUS
 import chylex.hee.system.util.TagCompound
 import chylex.hee.system.util.getPos
 import chylex.hee.system.util.getTile
-import chylex.hee.system.util.setPos
+import chylex.hee.system.util.putPos
 import chylex.hee.system.util.size
 import net.minecraft.item.Item
 import net.minecraft.util.math.BlockPos
@@ -59,7 +59,7 @@ class ProcessSupportingItemHolder(private val world: World, pos: BlockPos) : ITa
 	// Serialization
 	
 	override fun serializeNBT() = TagCompound().apply {
-		setPos(PEDESTAL_POS_TAG, pedestals[0])
+		putPos(PEDESTAL_POS_TAG, pedestals[0])
 	}
 	
 	override fun deserializeNBT(nbt: TagCompound){}

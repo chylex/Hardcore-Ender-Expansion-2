@@ -3,7 +3,7 @@ import chylex.hee.game.mechanics.dust.DustLayers.Side.BOTTOM
 import chylex.hee.init.ModBlocks
 import chylex.hee.system.util.nonEmptySlots
 import chylex.hee.system.util.size
-import net.minecraft.inventory.InventoryCrafting
+import net.minecraft.inventory.CraftingInventory
 import net.minecraft.item.ItemStack
 import net.minecraft.util.NonNullList
 import net.minecraft.world.World
@@ -13,19 +13,19 @@ object RecipeJarODustExtract : RecipeBaseDynamic(){
 		return (width * height) >= 1
 	}
 	
-	override fun matches(inv: InventoryCrafting, world: World): Boolean{
+	override fun matches(inv: CraftingInventory, world: World): Boolean{
 		val iterator = inv.nonEmptySlots.takeIf { it.hasNext() } ?: return false
 		val first = iterator.next()
 		
 		return !iterator.hasNext() && getLayers(first.stack)?.contents?.isNotEmpty() == true
 	}
 	
-	override fun getCraftingResult(inv: InventoryCrafting): ItemStack{
+	override fun getCraftingResult(inv: CraftingInventory): ItemStack{
 		val first = inv.nonEmptySlots.next()
 		return getLayers(first.stack)?.getDust(BOTTOM) ?: ItemStack.EMPTY
 	}
 	
-	override fun getRemainingItems(inv: InventoryCrafting): NonNullList<ItemStack>{
+	override fun getRemainingItems(inv: CraftingInventory): NonNullList<ItemStack>{
 		return NonNullList.withSize(inv.size, ItemStack.EMPTY).also {
 			val first = inv.nonEmptySlots.next()
 			val layers = getLayers(first.stack)

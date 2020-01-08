@@ -7,22 +7,24 @@ import chylex.hee.system.capability.PlayerCapabilityHandler
 import chylex.hee.system.capability.PlayerCapabilityHandler.IPlayerCapability
 import chylex.hee.system.migration.forge.EventPriority
 import chylex.hee.system.migration.forge.SubscribeEvent
+import chylex.hee.system.migration.vanilla.EntityPlayer
 import chylex.hee.system.util.TagCompound
 import chylex.hee.system.util.facades.Resource
 import chylex.hee.system.util.facades.Stats
 import chylex.hee.system.util.getCapOrNull
 import chylex.hee.system.util.readStack
 import chylex.hee.system.util.register
+import chylex.hee.system.util.use
 import chylex.hee.system.util.writeStack
-import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.item.Item
 import net.minecraft.item.ItemStack
+import net.minecraft.world.GameRules.KEEP_INVENTORY
 import net.minecraftforge.common.MinecraftForge
 import net.minecraftforge.common.capabilities.Capability
 import net.minecraftforge.common.capabilities.CapabilityInject
 import net.minecraftforge.common.capabilities.CapabilityManager
 import net.minecraftforge.event.entity.EntityJoinWorldEvent
-import net.minecraftforge.event.entity.player.PlayerDropsEvent
+import net.minecraftforge.event.entity.living.LivingDropsEvent
 import net.minecraftforge.event.entity.player.PlayerEvent
 import net.minecraftforge.items.ItemStackHandler
 
@@ -106,7 +108,7 @@ object TrinketHandler{
 		if (entity is EntityPlayer){
 			val handler = entity.getCapOrNull(CAP_TRINKET_SLOT) ?: return
 			
-			with(entity.inventoryContainer){
+			with(entity.container){
 				if (inventorySlots.none { it is SlotTrinketItemInventory }){
 					inventorySlots.add(SlotTrinketItemInventory(handler, inventorySlots.size))
 					inventoryItemStacks.add(handler.item)
@@ -116,27 +118,29 @@ object TrinketHandler{
 	}
 	
 	@SubscribeEvent(EventPriority.HIGHEST)
-	fun onPlayerDrops(e: PlayerDropsEvent){
-		val player = e.entityPlayer
+	fun onPlayerDrops(e: LivingDropsEvent){
+		val player = e.entity as? EntityPlayer
+		
+		if (player == null){
+			return
+		}
+		
 		val handler = player.getCapOrNull(CAP_TRINKET_SLOT)
 		
 		if (handler == null || handler.item.isEmpty){
 			return
 		}
 		
-		player.captureDrops = true
-		player.dropItem(handler.item, true, false)
-		player.captureDrops = false
-		
+		e.drops.add(player.dropItem(handler.item, true, false))
 		handler.item = ItemStack.EMPTY
 	}
 	
 	@SubscribeEvent(EventPriority.HIGHEST)
 	fun onPlayerClone(e: PlayerEvent.Clone){
 		val oldPlayer = e.original
-		val newPlayer = e.entityPlayer
+		val newPlayer = e.player
 		
-		if (oldPlayer.world.gameRules.getBoolean("keepInventory")){
+		if (oldPlayer.world.gameRules.getBoolean(KEEP_INVENTORY)){
 			setTrinketSlotItem(newPlayer, getTrinketSlotItem(oldPlayer))
 		}
 	}
@@ -150,7 +154,7 @@ object TrinketHandler{
 			writeStack(item)
 		}
 		
-		override fun deserializeNBT(nbt: TagCompound) = with(nbt){
+		override fun deserializeNBT(nbt: TagCompound) = nbt.use {
 			item = readStack()
 		}
 		

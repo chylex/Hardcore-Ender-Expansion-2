@@ -1,23 +1,24 @@
 package chylex.hee.game.item
+import chylex.hee.system.migration.vanilla.Enchantments
+import chylex.hee.system.migration.vanilla.EntityPlayerMP
+import chylex.hee.system.migration.vanilla.ItemElytra
 import chylex.hee.system.util.TagCompound
 import chylex.hee.system.util.cleanupNBT
 import chylex.hee.system.util.hasKey
 import chylex.hee.system.util.heeTag
 import chylex.hee.system.util.heeTagOrNull
 import chylex.hee.system.util.totalTime
+import chylex.hee.system.util.use
 import net.minecraft.advancements.CriteriaTriggers
 import net.minecraft.enchantment.EnchantmentHelper
 import net.minecraft.entity.Entity
-import net.minecraft.entity.player.EntityPlayerMP
-import net.minecraft.init.Enchantments
-import net.minecraft.inventory.EntityEquipmentSlot.CHEST
-import net.minecraft.item.ItemElytra
+import net.minecraft.inventory.EquipmentSlotType.CHEST
 import net.minecraft.item.ItemStack
 import net.minecraft.world.World
 import kotlin.math.min
 import kotlin.math.sqrt
 
-class ItemElytraOverride : ItemElytra(){
+class ItemElytraOverride(properties: Properties, private val originalTranslationKey: String) : ItemElytra(properties){
 	private companion object{
 		private const val COUNTER_TAG = "Counter"
 		private const val LAST_POS_TAG = "LastPos"
@@ -26,57 +27,55 @@ class ItemElytraOverride : ItemElytra(){
 		private const val Z_TAG = "Z"
 		
 		private fun createPositionTag(entity: Entity) = TagCompound().also {
-			it.setDouble(X_TAG, entity.posX)
-			it.setDouble(Y_TAG, entity.posY)
-			it.setDouble(Z_TAG, entity.posZ)
+			it.putDouble(X_TAG, entity.posX)
+			it.putDouble(Y_TAG, entity.posY)
+			it.putDouble(Z_TAG, entity.posZ)
 		}
 		
 		private fun calculateCounterIncrement(entity: Entity, lastPosTag: TagCompound): Float{
-			val distance = entity.getDistance(lastPosTag.getDouble(X_TAG), lastPosTag.getDouble(Y_TAG), lastPosTag.getDouble(Z_TAG))
+			val distance = sqrt(entity.getDistanceSq(lastPosTag.getDouble(X_TAG), lastPosTag.getDouble(Y_TAG), lastPosTag.getDouble(Z_TAG)))
 			return sqrt(min(distance.toFloat(), 60F)) / 7.25F
 		}
 		
 		private fun removeFlightTrackingTags(stack: ItemStack){
 			with(stack.heeTagOrNull ?: return){
 				if (hasKey(COUNTER_TAG)){
-					removeTag(COUNTER_TAG)
-					removeTag(LAST_POS_TAG)
+					remove(COUNTER_TAG)
+					remove(LAST_POS_TAG)
 					stack.cleanupNBT()
 				}
 			}
 		}
 	}
 	
-	init{
-		translationKey = "elytra"
-	}
+	override fun getTranslationKey() = originalTranslationKey
 	
-	override fun onUpdate(stack: ItemStack, world: World, entity: Entity, itemSlot: Int, isSelected: Boolean){
+	override fun inventoryTick(stack: ItemStack, world: World, entity: Entity, itemSlot: Int, isSelected: Boolean){
 		if (world.isRemote || entity !is EntityPlayerMP){
 			return
 		}
 		
-		if (entity.isElytraFlying && stack === entity.getItemStackFromSlot(CHEST) && !entity.capabilities.isCreativeMode){
-			with(stack.heeTag){
+		if (entity.isElytraFlying && stack === entity.getItemStackFromSlot(CHEST) && !entity.abilities.isCreativeMode){
+			stack.heeTag.use {
 				if (!hasKey(LAST_POS_TAG)){
-					setFloat(COUNTER_TAG, 0F)
-					setTag(LAST_POS_TAG, createPositionTag(entity))
+					putFloat(COUNTER_TAG, 0F)
+					put(LAST_POS_TAG, createPositionTag(entity))
 				}
 				else if (world.totalTime % 20L == 0L){
-					var newCounter = getFloat(COUNTER_TAG) + calculateCounterIncrement(entity, getCompoundTag(LAST_POS_TAG))
+					var newCounter = getFloat(COUNTER_TAG) + calculateCounterIncrement(entity, getCompound(LAST_POS_TAG))
 					val damageAfter = 1F + (0.33F * EnchantmentHelper.getEnchantmentLevel(Enchantments.UNBREAKING, stack))
 					
 					while(newCounter >= damageAfter && isUsable(stack)){
 						newCounter -= damageAfter
 						
-						val newDamage = stack.itemDamage + 1
+						val newDamage = stack.damage + 1
 						
 						CriteriaTriggers.ITEM_DURABILITY_CHANGED.trigger(entity, stack, newDamage)
 						super.setDamage(stack, newDamage)
 					}
 					
-					setFloat(COUNTER_TAG, newCounter)
-					setTag(LAST_POS_TAG, createPositionTag(entity))
+					putFloat(COUNTER_TAG, newCounter)
+					put(LAST_POS_TAG, createPositionTag(entity))
 				}
 			}
 		}

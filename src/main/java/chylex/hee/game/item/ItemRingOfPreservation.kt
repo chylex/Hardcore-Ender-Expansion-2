@@ -8,12 +8,12 @@ import chylex.hee.system.migration.forge.EventPriority
 import chylex.hee.system.migration.forge.Side
 import chylex.hee.system.migration.forge.Sided
 import chylex.hee.system.migration.forge.SubscribeEvent
+import chylex.hee.system.migration.vanilla.EntityPlayer
 import chylex.hee.system.migration.vanilla.Items
 import chylex.hee.system.util.copyIf
 import chylex.hee.system.util.isNotEmpty
 import chylex.hee.system.util.totalTime
 import net.minecraft.entity.Entity
-import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.item.ItemStack
 import net.minecraft.util.NonNullList
 import net.minecraftforge.common.MinecraftForge
@@ -22,7 +22,7 @@ import net.minecraftforge.event.entity.living.LivingHurtEvent
 import net.minecraftforge.event.entity.player.PlayerDestroyItemEvent
 import java.util.UUID
 
-class ItemRingOfPreservation : ItemAbstractTrinket(), ICustomRepairBehavior{
+class ItemRingOfPreservation(properties: Properties) : ItemAbstractTrinket(properties), ICustomRepairBehavior{
 	private class HurtPlayerInfo private constructor(val playerId: UUID, val worldTime: Long){
 		constructor(player: EntityPlayer) : this(player.uniqueID, player.world.totalTime)
 		
@@ -34,15 +34,13 @@ class ItemRingOfPreservation : ItemAbstractTrinket(), ICustomRepairBehavior{
 	private var lastHurtPlayerArmor: Pair<HurtPlayerInfo, Array<ItemStack>>? = null
 	
 	init{
-		maxDamage = 1
-		
 		MinecraftForge.EVENT_BUS.register(this)
 	}
 	
 	// Trinket handling
 	
 	override fun canPlaceIntoTrinketSlot(stack: ItemStack): Boolean{
-		return !stack.isItemDamaged
+		return !stack.isDamaged
 	}
 	
 	@Sided(Side.CLIENT)
@@ -51,22 +49,22 @@ class ItemRingOfPreservation : ItemAbstractTrinket(), ICustomRepairBehavior{
 	}
 	
 	private fun onItemDestroyed(player: EntityPlayer, stack: ItemStack, info: Pair<NonNullList<ItemStack>, Int>){
-		if (!stack.isItemStackDamageable){
+		if (!stack.isDamageable){
 			return
 		}
 		
 		TrinketHandler.get(player).transformIfActive(this){
-			it.itemDamage = 1
+			it.damage = 1
 			
 			val (inventory, slot) = info
-			inventory[slot] = stack.apply { itemDamage = (maxDamage * 4) / 5 }
+			inventory[slot] = stack.apply { damage = (maxDamage * 4) / 5 }
 		}
 	}
 	
 	// Repair handling
 	
 	override fun getIsRepairable(toRepair: ItemStack, repairWith: ItemStack): Boolean{
-		return toRepair.isItemDamaged && repairWith.item === Items.DIAMOND
+		return repairWith.item === Items.DIAMOND
 	}
 	
 	override fun onRepairUpdate(instance: RepairInstance) = with(instance){
@@ -80,7 +78,7 @@ class ItemRingOfPreservation : ItemAbstractTrinket(), ICustomRepairBehavior{
 	
 	@SubscribeEvent(EventPriority.HIGHEST)
 	fun onPlayerDestroyItem(e: PlayerDestroyItemEvent){
-		val player = e.entityPlayer
+		val player = e.player
 		val inventory = player.inventory
 		
 		val info = when(e.hand){

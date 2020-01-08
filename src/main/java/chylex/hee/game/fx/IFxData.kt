@@ -1,6 +1,6 @@
 package chylex.hee.game.fx
-import io.netty.buffer.ByteBuf
+import net.minecraft.network.PacketBuffer
 
 interface IFxData{
-	fun write(buffer: ByteBuf)
+	fun write(buffer: PacketBuffer)
 }

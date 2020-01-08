@@ -12,17 +12,19 @@ import chylex.hee.game.mechanics.potion.brewing.recipes.BrewWaterToThick
 import chylex.hee.game.mechanics.potion.brewing.recipes.ReinsertPotionItems
 import chylex.hee.system.migration.forge.SubscribeAllEvents
 import chylex.hee.system.migration.forge.SubscribeEvent
+import chylex.hee.system.migration.vanilla.Potion
+import chylex.hee.system.migration.vanilla.PotionType
 import chylex.hee.system.util.facades.Resource
 import chylex.hee.system.util.getIfExists
+import chylex.hee.system.util.named
 import com.google.common.collect.ImmutableList
-import net.minecraft.potion.Potion
-import net.minecraft.potion.PotionType
 import net.minecraftforge.common.brewing.BrewingRecipeRegistry
 import net.minecraftforge.common.brewing.IBrewingRecipe
 import net.minecraftforge.common.brewing.VanillaBrewingRecipe
 import net.minecraftforge.event.RegistryEvent
+import net.minecraftforge.fml.common.Mod.EventBusSubscriber.Bus.MOD
 
-@SubscribeAllEvents(modid = HEE.ID)
+@SubscribeAllEvents(modid = HEE.ID, bus = MOD)
 object ModPotions{
 	val LIFELESS get() = PotionLifeless
 	val PURITY   get() = PotionPurity
@@ -99,16 +101,5 @@ object ModPotions{
 				BrewUnalteredPotions
 			))
 		}
-	}
-	
-	// Utilities
-	
-	private infix fun Potion.named(registryName: String) = apply {
-		setPotionName("effect.hee.$registryName")
-		setRegistryName(Resource.Custom(registryName))
-	}
-	
-	private infix fun PotionType.named(registryName: String) = apply {
-		setRegistryName(Resource.Custom(registryName))
 	}
 }

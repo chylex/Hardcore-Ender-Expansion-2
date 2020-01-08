@@ -11,11 +11,13 @@ import chylex.hee.game.particle.spawner.ParticleSpawnerVanilla
 import chylex.hee.game.particle.util.IOffset.Constant
 import chylex.hee.game.particle.util.IOffset.InBox
 import chylex.hee.game.particle.util.IShape.Point
+import chylex.hee.init.ModEntities
 import chylex.hee.init.ModSounds
 import chylex.hee.network.client.PacketClientFX
 import chylex.hee.system.migration.Facing.UP
 import chylex.hee.system.migration.vanilla.Blocks
 import chylex.hee.system.migration.vanilla.Sounds
+import chylex.hee.system.migration.vanilla.TileEntityFurnace
 import chylex.hee.system.util.Pos
 import chylex.hee.system.util.TagCompound
 import chylex.hee.system.util.allInCenteredBox
@@ -39,25 +41,30 @@ import chylex.hee.system.util.selectEntities
 import chylex.hee.system.util.setBlock
 import chylex.hee.system.util.use
 import chylex.hee.system.util.writePos
-import io.netty.buffer.ByteBuf
 import net.minecraft.entity.Entity
+import net.minecraft.entity.EntityType
 import net.minecraft.item.ItemStack
+import net.minecraft.network.IPacket
+import net.minecraft.network.PacketBuffer
 import net.minecraft.network.datasync.DataSerializers
-import net.minecraft.tileentity.TileEntityFurnace
-import net.minecraft.util.EnumParticleTypes.CLOUD
-import net.minecraft.util.EnumParticleTypes.SMOKE_LARGE
-import net.minecraft.util.EnumParticleTypes.SMOKE_NORMAL
+import net.minecraft.particles.ParticleTypes.CLOUD
+import net.minecraft.particles.ParticleTypes.LARGE_SMOKE
+import net.minecraft.particles.ParticleTypes.SMOKE
 import net.minecraft.util.SoundCategory
 import net.minecraft.util.math.AxisAlignedBB
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.Vec3d
 import net.minecraft.world.World
+import net.minecraftforge.fml.network.NetworkHooks
 import java.util.Random
 import kotlin.math.max
 import kotlin.math.min
 import kotlin.math.pow
+import kotlin.streams.toList
 
-class EntityTechnicalIgneousPlateLogic(world: World) : Entity(world){
+class EntityTechnicalIgneousPlateLogic(type: EntityType<EntityTechnicalIgneousPlateLogic>, world: World) : Entity(type, world){
+	constructor(world: World) : this(ModEntities.IGNEOUS_PLATE_LOGIC, world)
+	
 	companion object{
 		private const val FIELD_COOK_TIME_CURRENT = 2
 		private const val FIELD_COOK_TIME_TARGET = 3
@@ -70,23 +77,23 @@ class EntityTechnicalIgneousPlateLogic(world: World) : Entity(world){
 		private const val OVERHEAT_LEVEL_TAG = "OverheatLevel"
 		
 		private fun getAttachedPlates(furnace: TileEntityFurnace): List<TileEntityIgneousPlate>{
-			val world = furnace.world
+			val world = furnace.world ?: return emptyList()
 			val pos = furnace.pos
 			
 			return BlockIgneousPlate.FACING_NOT_DOWN.allowedValues.mapNotNull { pos.offset(it).getTile<TileEntityIgneousPlate>(world)?.takeIf { plate -> plate.isAttachedTo(furnace) } }
 		}
 		
 		private fun findLogicEntity(furnace: TileEntityFurnace): EntityTechnicalIgneousPlateLogic?{
-			return furnace.world.selectEntities.inBox<EntityTechnicalIgneousPlateLogic>(AxisAlignedBB(furnace.pos)).firstOrNull()
+			return furnace.world?.selectEntities?.inBox<EntityTechnicalIgneousPlateLogic>(AxisAlignedBB(furnace.pos))?.firstOrNull()
 		}
 		
 		fun createForFurnace(furnace: TileEntityFurnace){
 			if (findLogicEntity(furnace) == null){
 				val (x, y, z) = furnace.pos.center
 				
-				EntityTechnicalIgneousPlateLogic(furnace.world).apply {
+				EntityTechnicalIgneousPlateLogic(furnace.world!!).apply {
 					setLocationAndAngles(x, y, z, 0F, 0F)
-					world.spawnEntity(this)
+					world.addEntity(this)
 				}
 			}
 		}
@@ -120,23 +127,23 @@ class EntityTechnicalIgneousPlateLogic(world: World) : Entity(world){
 		
 		private fun dropOverheatItem(world: World, pos: BlockPos, stack: ItemStack){
 			val rand = world.rand
-			val (targetX, targetY, targetZ) = pos.center.add(rand.nextFloat(-0.24, 0.24), 0.0, rand.nextFloat(-0.24, 0.24))
+			val target = pos.center.add(rand.nextFloat(-0.24, 0.24), 0.0, rand.nextFloat(-0.24, 0.24))
 			
 			while(stack.isNotEmpty){
-				EntityItemFreshlyCooked(world, targetX, targetY, targetZ, stack.splitStack(rand.nextInt(10, 20))).apply {
+				EntityItemFreshlyCooked(world, target, stack.split(rand.nextInt(10, 20))).apply {
 					motionVec = Vec3d.ZERO
-					world.spawnEntity(this)
+					world.addEntity(this)
 				}
 			}
 		}
 		
 		private val PARTICLE_COOLING = ParticleSpawnerVanilla(
-			type = SMOKE_NORMAL,
+			type = SMOKE,
 			pos = InBox(0.45F)
 		)
 		
 		private val PARTICLE_OVERHEAT = ParticleSpawnerVanilla(
-			type = SMOKE_LARGE,
+			type = LARGE_SMOKE,
 			pos = Constant(0.25F, UP) + InBox(1.75F, 0.5F, 1.75F)
 		)
 		
@@ -146,14 +153,14 @@ class EntityTechnicalIgneousPlateLogic(world: World) : Entity(world){
 		)
 		
 		class FxCoolingData(private val pos: BlockPos, private val amount: Float) : IFxData{
-			override fun write(buffer: ByteBuf) = buffer.use {
+			override fun write(buffer: PacketBuffer) = buffer.use {
 				writePos(pos)
 				writeFloat(amount)
 			}
 		}
 		
 		val FX_COOLING = object : IFxHandler<FxCoolingData>{
-			override fun handle(buffer: ByteBuf, world: World, rand: Random) = buffer.use {
+			override fun handle(buffer: PacketBuffer, world: World, rand: Random) = buffer.use {
 				val pos = buffer.readPos()
 				val amount = buffer.readFloat()
 				
@@ -181,28 +188,31 @@ class EntityTechnicalIgneousPlateLogic(world: World) : Entity(world){
 	
 	init{
 		noClip = true
-		setSize(0F, 0F)
 	}
 	
-	override fun entityInit(){
+	override fun createSpawnPacket(): IPacket<*>{
+		return NetworkHooks.getEntitySpawningPacket(this)
+	}
+	
+	override fun registerData(){
 		dataManager.register(DATA_OVERHEAT_LEVEL, 0F)
 	}
 	
-	override fun onUpdate(){
-		super.onUpdate()
+	override fun tick(){
+		super.tick()
 		
 		if (!world.isRemote && world.isAreaLoaded(position, 1)){
 			val furnace = Pos(this).getTile<TileEntityFurnace>(world)
 			
 			if (furnace == null){
-				setDead()
+				remove()
 				return
 			}
 			
 			val plates = getAttachedPlates(furnace)
 			
 			if (plates.isEmpty()){
-				setDead()
+				remove()
 				return
 			}
 			
@@ -232,10 +242,12 @@ class EntityTechnicalIgneousPlateLogic(world: World) : Entity(world){
 			extraTicks -= 1.0
 			
 			if (furnace.isBurning){
-				val currentCookTime = furnace.getField(FIELD_COOK_TIME_CURRENT)
-				val newCookTime = min(currentCookTime + 1, furnace.getField(FIELD_COOK_TIME_TARGET) - 1)
+				val data = furnace.furnaceData
 				
-				furnace.setField(FIELD_COOK_TIME_CURRENT, newCookTime)
+				val currentCookTime = data.get(FIELD_COOK_TIME_CURRENT)
+				val newCookTime = min(currentCookTime + 1, data.get(FIELD_COOK_TIME_TARGET) - 1)
+				
+				data.set(FIELD_COOK_TIME_CURRENT, newCookTime)
 			}
 		}
 	}
@@ -249,7 +261,7 @@ class EntityTechnicalIgneousPlateLogic(world: World) : Entity(world){
 			}
 			
 			val pos = Pos(this)
-			val freePositions = pos.allInCenteredBox(1, 0, 1).filter { it.isAir(world) }
+			val freePositions = pos.allInCenteredBox(1, 0, 1).toList().filter { it.isAir(world) }
 			
 			val ingredientSlots = furnace.getSlotsForFace(UP)
 			
@@ -272,18 +284,18 @@ class EntityTechnicalIgneousPlateLogic(world: World) : Entity(world){
 			PacketClientFX(FX_OVERHEAT, FxBlockData(pos)).sendToAllAround(this, 32.0)
 			
 			pos.setBlock(world, Blocks.FIRE)
-			setDead()
+			remove()
 		}
 	}
 	
 	// Serialization
 	
-	override fun writeEntityToNBT(nbt: TagCompound) = with(nbt.heeTag){
-		setDouble(EXTRA_TICKS_TAG, extraTicks)
-		setFloat(OVERHEAT_LEVEL_TAG, overheatLevel)
+	override fun writeAdditional(nbt: TagCompound) = nbt.heeTag.use {
+		putDouble(EXTRA_TICKS_TAG, extraTicks)
+		putFloat(OVERHEAT_LEVEL_TAG, overheatLevel)
 	}
 	
-	override fun readEntityFromNBT(nbt: TagCompound) = with(nbt.heeTag){
+	override fun readAdditional(nbt: TagCompound) = nbt.heeTag.use {
 		extraTicks = getDouble(EXTRA_TICKS_TAG)
 		overheatLevel = getFloat(OVERHEAT_LEVEL_TAG)
 	}

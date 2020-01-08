@@ -1,18 +1,19 @@
 package chylex.hee.game.entity.living.ai
 import chylex.hee.system.migration.Difficulty.PEACEFUL
-import chylex.hee.system.util.AIBase
+import chylex.hee.system.migration.vanilla.EntityCreature
 import chylex.hee.system.util.breakBlock
 import chylex.hee.system.util.getBlock
 import chylex.hee.system.util.nextInt
 import net.minecraft.block.Block
-import net.minecraft.entity.EntityCreature
+import net.minecraft.entity.ai.goal.Goal
+import net.minecraft.world.GameRules.MOB_GRIEFING
 
 class AISummonFromBlock(
 	private val entity: EntityCreature,
 	private val searchAttempts: Int,
 	private val searchDistance: Int,
-	private val searchingFor: Block
-) : AIBase(){
+	private val searchingFor: (Block) -> Boolean
+) : Goal(){
 	private var summonInTicks = Int.MAX_VALUE
 	
 	fun triggerSummonInTicks(ticks: Int){
@@ -25,7 +26,7 @@ class AISummonFromBlock(
 		return summonInTicks != Int.MAX_VALUE
 	}
 	
-	override fun updateTask(){
+	override fun tick(){
 		if (--summonInTicks > 0){
 			return
 		}
@@ -35,7 +36,7 @@ class AISummonFromBlock(
 		val world = entity.world
 		val difficulty = world.difficulty
 		
-		if (difficulty == PEACEFUL || !world.gameRules.getBoolean("mobGriefing")){
+		if (difficulty == PEACEFUL || !world.gameRules.getBoolean(MOB_GRIEFING)){
 			return
 		}
 		
@@ -51,7 +52,7 @@ class AISummonFromBlock(
 				rand.nextInt(-searchDistance, searchDistance)
 			)
 			
-			if (checkedPos.getBlock(world) === searchingFor){
+			if (searchingFor(checkedPos.getBlock(world))){
 				checkedPos.breakBlock(world, true)
 				
 				if (--remainingSpawns == 0){

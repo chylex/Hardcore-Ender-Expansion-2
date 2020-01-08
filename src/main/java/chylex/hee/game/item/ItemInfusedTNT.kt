@@ -3,19 +3,20 @@ import chylex.hee.game.item.infusion.IInfusableItem
 import chylex.hee.game.item.infusion.Infusion
 import chylex.hee.system.migration.forge.Side
 import chylex.hee.system.migration.forge.Sided
+import chylex.hee.system.migration.vanilla.ItemBlock
 import net.minecraft.block.Block
 import net.minecraft.client.util.ITooltipFlag
-import net.minecraft.item.ItemBlock
 import net.minecraft.item.ItemStack
+import net.minecraft.util.text.ITextComponent
 import net.minecraft.world.World
 
-class ItemInfusedTNT(sourceBlock: Block) : ItemBlock(sourceBlock), IInfusableItem{
+class ItemInfusedTNT(block: Block, properties: Properties) : ItemBlock(block, properties), IInfusableItem{
 	override fun canApplyInfusion(infusion: Infusion): Boolean{
 		return ItemAbstractInfusable.onCanApplyInfusion(this, infusion)
 	}
 	
 	@Sided(Side.CLIENT)
-	override fun addInformation(stack: ItemStack, world: World?, lines: MutableList<String>, flags: ITooltipFlag){
+	override fun addInformation(stack: ItemStack, world: World?, lines: MutableList<ITextComponent>, flags: ITooltipFlag){
 		super.addInformation(stack, world, lines, flags)
 		ItemAbstractInfusable.onAddInformation(stack, lines)
 	}

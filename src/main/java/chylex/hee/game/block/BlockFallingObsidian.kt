@@ -3,40 +3,39 @@ import chylex.hee.game.block.info.BlockBuilder
 import chylex.hee.game.entity.item.EntityFallingBlockHeavy
 import chylex.hee.game.entity.item.EntityFallingObsidian
 import chylex.hee.system.migration.Facing.DOWN
-import chylex.hee.system.migration.vanilla.Blocks
 import chylex.hee.system.util.offsetUntil
 import chylex.hee.system.util.setAir
 import chylex.hee.system.util.setBlock
-import net.minecraft.block.Block
-import net.minecraft.block.BlockFalling
-import net.minecraft.block.state.IBlockState
-import net.minecraft.entity.player.EntityPlayer
-import net.minecraft.item.Item
+import net.minecraft.block.BlockState
+import net.minecraft.util.Direction
 import net.minecraft.util.math.BlockPos
+import net.minecraft.world.IWorld
+import net.minecraft.world.IWorldReader
 import net.minecraft.world.World
 import java.util.Random
 
 class BlockFallingObsidian(builder: BlockBuilder) : BlockSimple(builder){
-	override fun tickRate(world: World): Int{
+	override fun tickRate(world: IWorldReader): Int{
 		return 2
 	}
 	
-	override fun onBlockAdded(world: World, pos: BlockPos, state: IBlockState){
-		world.scheduleUpdate(pos, this, tickRate(world))
+	override fun onBlockAdded(state: BlockState, world: World, pos: BlockPos, oldState: BlockState, isMoving: Boolean){
+		world.pendingBlockTicks.scheduleTick(pos, this, tickRate(world))
 	}
 	
-	override fun neighborChanged(state: IBlockState, world: World, pos: BlockPos, neighborBlock: Block, neighborPos: BlockPos){
-		world.scheduleUpdate(pos, this, tickRate(world))
+	override fun updatePostPlacement(state: BlockState, facing: Direction, neighborState: BlockState, world: IWorld, pos: BlockPos, neighborPos: BlockPos): BlockState{
+		world.pendingBlockTicks.scheduleTick(pos, this, tickRate(world))
+		return super.updatePostPlacement(state, facing, neighborState, world, pos, neighborPos)
 	}
 	
-	override fun updateTick(world: World, pos: BlockPos, state: IBlockState, rand: Random){
+	override fun tick(state: BlockState, world: World, pos: BlockPos, rand: Random){
 		if (world.isRemote){
 			return
 		}
 		
 		if (EntityFallingBlockHeavy.canFallThrough(world, pos.down()) && pos.y >= 0){
-			if (!BlockFalling.fallInstantly && world.isAreaLoaded(pos, 32)){
-				world.spawnEntity(EntityFallingObsidian(world, pos, defaultState))
+			if (world.isAreaLoaded(pos, 32)){ // UPDATE
+				world.addEntity(EntityFallingObsidian(world, pos, defaultState))
 			}
 			else{
 				pos.setAir(world)
@@ -45,11 +44,12 @@ class BlockFallingObsidian(builder: BlockBuilder) : BlockSimple(builder){
 		}
 	}
 	
-	override fun getItemDropped(state: IBlockState, rand: Random, fortune: Int): Item{
+	/* UPDATE
+	override fun getItemDropped(state: BlockState, rand: Random, fortune: Int): Item{
 		return Item.getItemFromBlock(Blocks.OBSIDIAN)
 	}
 	
-	override fun canSilkHarvest(world: World, pos: BlockPos, state: IBlockState, player: EntityPlayer): Boolean{
+	override fun canSilkHarvest(world: World, pos: BlockPos, state: BlockState, player: EntityPlayer): Boolean{
 		return false
-	}
+	}*/
 }

@@ -1,50 +1,44 @@
 package chylex.hee.game.world.structure.world
+import chylex.hee.game.block.BlockGloomtorch
 import chylex.hee.game.world.structure.IStructureTrigger
 import chylex.hee.game.world.structure.IStructureWorld
-import chylex.hee.game.world.structure.trigger.BlockUpdateStructureTrigger
+import chylex.hee.game.world.structure.trigger.FluidStructureTrigger
 import chylex.hee.game.world.util.Transform
-import chylex.hee.init.ModBlocks
-import chylex.hee.system.migration.vanilla.Blocks
+import chylex.hee.system.migration.vanilla.BlockButton
+import chylex.hee.system.migration.vanilla.BlockFlowingFluid
+import chylex.hee.system.migration.vanilla.BlockRedstoneWire
+import chylex.hee.system.migration.vanilla.BlockTorch
+import chylex.hee.system.migration.vanilla.BlockVine
 import chylex.hee.system.util.FLAG_SYNC_CLIENT
 import chylex.hee.system.util.getState
 import chylex.hee.system.util.setState
 import net.minecraft.block.Block
-import net.minecraft.block.state.IBlockState
+import net.minecraft.block.BlockState
 import net.minecraft.util.math.BlockPos
 import net.minecraft.world.World
 import java.util.Random
 
 class WorldToStructureWorldAdapter(private val world: World, override val rand: Random, private val offset: BlockPos) : IStructureWorld{
-	private companion object{
-		private val REQUIRE_SECOND_PASS = setOf<Block>(
-			Blocks.WOODEN_BUTTON,
-			Blocks.STONE_BUTTON,
-			Blocks.TORCH,
-			Blocks.REDSTONE_TORCH,
-			Blocks.UNLIT_REDSTONE_TORCH,
-			Blocks.REDSTONE_WIRE,
-			Blocks.VINE,
-			ModBlocks.DRY_VINES
-		)
+	private fun requiresSecondPass(block: Block) = when(block){
+		is BlockVine,
+		is BlockTorch,
+		is BlockGloomtorch,
+		is BlockButton,
+		is BlockRedstoneWire -> true
 		
-		private val REQUIRE_IMMEDIATE_UPDATE = setOf<Block>(
-			Blocks.LAVA,
-			Blocks.WATER,
-			ModBlocks.ENDER_GOO,
-			ModBlocks.PURIFIED_ENDER_GOO
-		)
+		else -> false
 	}
 	
-	private val secondPass = mutableMapOf<BlockPos, IBlockState>()
+	private val secondPass = mutableMapOf<BlockPos, BlockState>()
 	
-	override fun getState(pos: BlockPos): IBlockState{
+	override fun getState(pos: BlockPos): BlockState{
 		return secondPass[pos] ?: pos.add(offset).getState(world)
 	}
 	
-	override fun setState(pos: BlockPos, state: IBlockState){
+	override fun setState(pos: BlockPos, state: BlockState){
 		val block = state.block
 		
-		if (REQUIRE_SECOND_PASS.contains(block)){
+		if (requiresSecondPass(block)){
 			secondPass[pos] = state
 			return
 		}
@@ -52,8 +46,8 @@ class WorldToStructureWorldAdapter(private val world: World, override val rand: 
 		val worldPos = pos.add(offset)
 		worldPos.setState(world, state, FLAG_SYNC_CLIENT)
 		
-		if (REQUIRE_IMMEDIATE_UPDATE.contains(block)){
-			BlockUpdateStructureTrigger(state).realize(world, worldPos, Transform.NONE)
+		if (block is BlockFlowingFluid){
+			FluidStructureTrigger(block).realize(world, worldPos, Transform.NONE)
 		}
 	}
 	

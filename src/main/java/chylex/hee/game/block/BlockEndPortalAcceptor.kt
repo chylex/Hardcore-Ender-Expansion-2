@@ -2,27 +2,35 @@ package chylex.hee.game.block
 import chylex.hee.game.block.entity.TileEntityEndPortalAcceptor
 import chylex.hee.game.block.info.BlockBuilder
 import chylex.hee.init.ModBlocks
+import chylex.hee.system.migration.Facing.UP
 import chylex.hee.system.util.getTile
-import net.minecraft.block.Block
-import net.minecraft.block.ITileEntityProvider
-import net.minecraft.block.state.IBlockState
+import net.minecraft.block.BlockState
 import net.minecraft.tileentity.TileEntity
+import net.minecraft.util.Direction
 import net.minecraft.util.math.AxisAlignedBB
 import net.minecraft.util.math.BlockPos
+import net.minecraft.world.IBlockReader
+import net.minecraft.world.IWorld
 import net.minecraft.world.World
 
-class BlockEndPortalAcceptor(builder: BlockBuilder, aabb: AxisAlignedBB) : BlockSimpleShaped(builder, aabb), ITileEntityProvider{
-	override fun createNewTileEntity(world: World, meta: Int): TileEntity{
+class BlockEndPortalAcceptor(builder: BlockBuilder, aabb: AxisAlignedBB) : BlockSimpleShaped(builder, aabb){
+	override fun hasTileEntity(state: BlockState): Boolean{
+		return true
+	}
+	
+	override fun createTileEntity(state: BlockState, world: IBlockReader): TileEntity{
 		return TileEntityEndPortalAcceptor()
 	}
 	
-	override fun onBlockAdded(world: World, pos: BlockPos, state: IBlockState){
+	override fun onBlockAdded(state: BlockState, world: World, pos: BlockPos, oldState: BlockState, isMoving: Boolean){
 		BlockAbstractPortal.spawnInnerBlocks(world, pos, ModBlocks.END_PORTAL_FRAME, ModBlocks.END_PORTAL_INNER, minSize = 1)
 	}
 	
-	override fun neighborChanged(state: IBlockState, world: World, pos: BlockPos, neighborBlock: Block, neighborPos: BlockPos){
-		if (neighborPos == pos.up()){
+	override fun updatePostPlacement(state: BlockState, facing: Direction, neighborState: BlockState, world: IWorld, pos: BlockPos, neighborPos: BlockPos): BlockState{
+		if (facing == UP){
 			pos.getTile<TileEntityEndPortalAcceptor>(world)?.refreshClusterState()
 		}
+		
+		return super.updatePostPlacement(state, facing, neighborState, world, pos, neighborPos)
 	}
 }

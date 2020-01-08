@@ -6,21 +6,23 @@ import chylex.hee.game.mechanics.damage.IDamageProcessor.Companion.PEACEFUL_EXCL
 import chylex.hee.game.particle.spawner.ParticleSpawnerVanilla
 import chylex.hee.game.particle.util.IOffset.InBox
 import chylex.hee.game.particle.util.IShape.Point
-import chylex.hee.init.ModLoot
 import chylex.hee.system.migration.Hand.MAIN_HAND
 import chylex.hee.system.migration.forge.Side
 import chylex.hee.system.migration.forge.Sided
 import chylex.hee.system.migration.forge.SubscribeEvent
-import net.minecraft.block.state.IBlockState
-import net.minecraft.entity.player.EntityPlayer
-import net.minecraft.item.Item.ToolMaterial
+import chylex.hee.system.migration.vanilla.EntityPlayer
+import chylex.hee.system.migration.vanilla.ItemTool
+import chylex.hee.system.util.doDamage
+import chylex.hee.system.util.facades.Resource
+import net.minecraft.block.BlockState
+import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.item.ItemStack
-import net.minecraft.item.ItemTool
+import net.minecraft.particles.ParticleTypes.LAVA
 import net.minecraft.tileentity.TileEntity
-import net.minecraft.util.EnumParticleTypes.LAVA
-import net.minecraft.util.NonNullList
+import net.minecraft.util.ResourceLocation
 import net.minecraft.util.math.BlockPos
-import net.minecraft.world.IBlockAccess
+import net.minecraft.world.IBlockReader
+import net.minecraft.world.IWorldReader
 import net.minecraft.world.World
 import net.minecraftforge.common.MinecraftForge
 import net.minecraftforge.event.world.BlockEvent.BreakEvent
@@ -40,13 +42,7 @@ class BlockIgneousRockOre(builder: BlockBuilder) : BlockSimple(builder){
 		}
 		
 		private fun getToolHarvestLevel(stack: ItemStack): Int?{
-			return (stack.item as? ItemTool)?.let {
-				try{
-					ToolMaterial.valueOf(it.toolMaterialName).harvestLevel
-				}catch(e: IllegalArgumentException){
-					null
-				}
-			}
+			return (stack.item as? ItemTool)?.tier?.harvestLevel
 		}
 	}
 	
@@ -54,22 +50,22 @@ class BlockIgneousRockOre(builder: BlockBuilder) : BlockSimple(builder){
 		MinecraftForge.EVENT_BUS.register(this)
 	}
 	
-	override fun getDrops(drops: NonNullList<ItemStack>, world: IBlockAccess, pos: BlockPos, state: IBlockState, fortune: Int){
-		ModLoot.IGNEOUS_ROCK_ORE.generateDrops(drops, world, fortune)
+	override fun getLootTable(): ResourceLocation{
+		return Resource.Custom("blocks/igneous_rock_ore")
 	}
 	
-	override fun getExpDrop(state: IBlockState, world: IBlockAccess, pos: BlockPos, fortune: Int): Int{
+	override fun getExpDrop(state: BlockState, world: IWorldReader, pos: BlockPos, fortune: Int, silktouch: Int): Int{
 		return 9
 	}
 	
 	// Custom harvesting handling
 	
-	override fun harvestBlock(world: World, player: EntityPlayer, pos: BlockPos, state: IBlockState, tile: TileEntity?, stack: ItemStack){
+	override fun harvestBlock(world: World, player: EntityPlayer, pos: BlockPos, state: BlockState, tile: TileEntity?, stack: ItemStack){
 		val heldItem = player.getHeldItem(MAIN_HAND)
 		val tierDifference = getToolHarvestLevel(heldItem)?.let { super.getHarvestLevel(state) - it } ?: return
 		
 		if (tierDifference > 0){
-			heldItem.damageItem(tierDifference, player)
+			heldItem.doDamage(tierDifference, player, MAIN_HAND)
 			causeMiningDamage(player)
 		}
 		else{
@@ -77,10 +73,11 @@ class BlockIgneousRockOre(builder: BlockBuilder) : BlockSimple(builder){
 		}
 	}
 	
-	override fun dropBlockAsItemWithChance(world: World, pos: BlockPos, state: IBlockState, chance: Float, fortune: Int){
+	/* UPDATE
+	override fun dropBlockAsItemWithChance(world: World, pos: BlockPos, state: BlockState, chance: Float, fortune: Int){
 		super.dropBlockAsItemWithChance(world, pos, state, chance, fortune)
 		harvesters.get()?.let(::causeMiningDamage)
-	}
+	}*/
 	
 	@SubscribeEvent
 	fun onBlockBreak(e: BreakEvent){
@@ -93,14 +90,14 @@ class BlockIgneousRockOre(builder: BlockBuilder) : BlockSimple(builder){
 		}
 	}
 	
-	override fun getHarvestLevel(state: IBlockState) = 0 // use super.getHarvestLevel for the real value
-	override fun canHarvestBlock(world: IBlockAccess, pos: BlockPos, player: EntityPlayer) = true
-	override fun canSilkHarvest() = true
+	override fun getHarvestLevel(state: BlockState) = 0 // use super.getHarvestLevel for the real value
+	override fun canHarvestBlock(state: BlockState, world: IBlockReader, pos: BlockPos, player: PlayerEntity): Boolean = true
+	// UPDATE override fun canSilkHarvest() = true
 	
 	// Client side
 	
 	@Sided(Side.CLIENT)
-	override fun randomDisplayTick(state: IBlockState, world: World, pos: BlockPos, rand: Random){
+	override fun animateTick(state: BlockState, world: World, pos: BlockPos, rand: Random){
 		if (rand.nextInt(4) != 0){
 			PARTICLE_TICK.spawn(Point(pos, 1), rand)
 		}

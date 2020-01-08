@@ -1,19 +1,6 @@
 package chylex.hee.game.commands
-import chylex.hee.HEE
-import chylex.hee.game.commands.sub.ISubCommand.Companion.subCommandMapOf
-import chylex.hee.game.commands.sub.client.CommandClientHelp
-import chylex.hee.game.commands.sub.client.CommandClientScaffolding
-import chylex.hee.game.commands.sub.client.CommandClientVersion
-import chylex.hee.game.commands.sub.client.CommandDebugToggles
-import chylex.hee.system.Debug
-import chylex.hee.system.migration.forge.Side
-import chylex.hee.system.migration.forge.Sided
-import chylex.hee.system.migration.forge.SubscribeAllEvents
-import chylex.hee.system.migration.forge.SubscribeEvent
-import net.minecraft.command.ICommandSender
-import net.minecraftforge.client.IClientCommand
-import net.minecraftforge.event.CommandEvent
 
+/*
 @Sided(Side.CLIENT)
 @SubscribeAllEvents(Side.CLIENT, modid = HEE.ID)
 internal object HeeClientCommand : HeeBaseCommand(), IClientCommand{
@@ -45,4 +32,4 @@ internal object HeeClientCommand : HeeBaseCommand(), IClientCommand{
 			}
 		}
 	}
-}
+}*/

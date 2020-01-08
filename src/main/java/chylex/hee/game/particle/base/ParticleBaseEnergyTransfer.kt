@@ -16,14 +16,14 @@ abstract class ParticleBaseEnergyTransfer(world: World, posX: Double, posY: Doub
 		motionVec = targetPos.subtract(posX, posY, posZ).normalize().scale(speed)
 	}
 	
-	override fun onUpdate(){
+	override fun tick(){
 		val prevMot = motionVec
 		
 		if (targetPos.squareDistanceTo(posX, posY, posZ) <= prevMot.lengthSquared()){
 			setExpired()
 		}
 		
-		super.onUpdate()
+		super.tick()
 		
 		if (isExpired){
 			return

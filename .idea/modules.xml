@@ -3,7 +3,6 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/Hardcore-Ender-Expansion-2.iml" filepath="$PROJECT_DIR$/.idea/modules/Hardcore-Ender-Expansion-2.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/Hardcore-Ender-Expansion-2.api.iml" filepath="$PROJECT_DIR$/.idea/modules/Hardcore-Ender-Expansion-2.api.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/Hardcore-Ender-Expansion-2.main.iml" filepath="$PROJECT_DIR$/.idea/modules/Hardcore-Ender-Expansion-2.main.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/Hardcore-Ender-Expansion-2.test.iml" filepath="$PROJECT_DIR$/.idea/modules/Hardcore-Ender-Expansion-2.test.iml" />
     </modules>

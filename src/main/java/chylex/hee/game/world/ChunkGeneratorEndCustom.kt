@@ -6,19 +6,24 @@ import chylex.hee.game.world.util.Transform
 import chylex.hee.system.util.Pos
 import chylex.hee.system.util.component1
 import chylex.hee.system.util.component2
-import chylex.hee.system.util.getBlock
-import net.minecraft.entity.EnumCreatureType
-import net.minecraft.init.Biomes
+import net.minecraft.block.BlockState
+import net.minecraft.entity.EntityClassification
 import net.minecraft.util.math.BlockPos
-import net.minecraft.world.EnumSkyBlock.BLOCK
+import net.minecraft.world.IWorld
 import net.minecraft.world.World
 import net.minecraft.world.biome.Biome
 import net.minecraft.world.biome.Biome.SpawnListEntry
-import net.minecraft.world.chunk.Chunk
-import net.minecraft.world.chunk.ChunkPrimer
-import net.minecraft.world.gen.IChunkGenerator
+import net.minecraft.world.biome.provider.BiomeProvider
+import net.minecraft.world.chunk.IChunk
+import net.minecraft.world.gen.ChunkGenerator
+import net.minecraft.world.gen.EndGenerationSettings
+import net.minecraft.world.gen.Heightmap.Type
+import net.minecraft.world.gen.WorldGenRegion
+import net.minecraft.world.gen.feature.IFeatureConfig
+import net.minecraft.world.gen.feature.structure.Structure
+import net.minecraft.world.gen.feature.template.TemplateManager
 
-class ChunkGeneratorEndCustom(private val world: World) : IChunkGenerator{
+class ChunkGeneratorEndCustom(world: World, biomeProvider: BiomeProvider, settings: EndGenerationSettings) : ChunkGenerator<EndGenerationSettings>(world, biomeProvider, settings){
 	private val territoryCache = TerritoryGenerationCache(world)
 	
 	// Instances
@@ -35,21 +40,22 @@ class ChunkGeneratorEndCustom(private val world: World) : IChunkGenerator{
 		return Pos(internalOffsetX, 0, internalOffsetZ)
 	}
 	
+	private fun setState(chunk: IChunk, x: Int, y: Int, z: Int, state: BlockState){
+		chunk.setBlockState(Pos(x, y, z), state, false)
+	}
+	
 	fun getGenerationInfo(instance: TerritoryInstance): TerritoryGenerationInfo{
 		return territoryCache.get(instance).second
 	}
 	
 	// Generation & population
 	
-	override fun generateChunk(chunkX: Int, chunkZ: Int): Chunk{
-		return Chunk(world, primeChunk(chunkX, chunkZ), chunkX, chunkZ).apply {
-			biomeArray.fill(Biome.getIdForBiome(Biomes.SKY).toByte())
-			generateSkylightMap()
-		}
-	}
+	override fun makeBase(world: IWorld, chunk: IChunk){}
 	
-	private fun primeChunk(chunkX: Int, chunkZ: Int) = ChunkPrimer().apply {
-		val instance = getInstance(chunkX, chunkZ) ?: return@apply
+	override fun generateSurface(chunk: IChunk){
+		val (chunkX, chunkZ) = chunk.pos
+		
+		val instance = getInstance(chunkX, chunkZ) ?: return
 		val territory = instance.territory
 		
 		val defaultState = territory.gen.defaultBlock.defaultState
@@ -63,26 +69,30 @@ class ChunkGeneratorEndCustom(private val world: World) : IChunkGenerator{
 			
 			for(blockX in 0..15) for(blockZ in 0..15){
 				for(blockY in 0 until bottomOffset){
-					setBlockState(blockX, blockY, blockZ, defaultState)
+					setState(chunk, blockX, blockY, blockZ, defaultState)
 				}
 				
 				for(blockY in height until 256){
-					setBlockState(blockX, blockY, blockZ, defaultState)
+					setState(chunk, blockX, blockY, blockZ, defaultState)
 				}
 			}
 			
 			for(blockY in 0 until height) for(blockX in 0..15) for(blockZ in 0..15){
-				setBlockState(blockX, bottomOffset + blockY, blockZ, constructed.getState(internalOffset.add(blockX, blockY, blockZ)))
+				setState(chunk, blockX, bottomOffset + blockY, blockZ, constructed.getState(internalOffset.add(blockX, blockY, blockZ)))
 			}
 		}
 		else{
 			for(blockY in 0 until 256) for(blockX in 0..15) for(blockZ in 0..15){
-				setBlockState(blockX, blockY, blockZ, defaultState)
+				setState(chunk, blockX, blockY, blockZ, defaultState)
 			}
 		}
 	}
 	
-	override fun populate(chunkX: Int, chunkZ: Int){
+	override fun decorate(region: WorldGenRegion){
+		val chunkX = region.mainChunkX
+		val chunkZ = region.mainChunkZ
+		val world = region.world
+		
 		val instance = getInstance(chunkX, chunkZ)?.takeIf { it.generatesChunk(chunkX, chunkZ) } ?: return
 		val constructed = territoryCache.get(instance).first
 		
@@ -97,32 +107,39 @@ class ChunkGeneratorEndCustom(private val world: World) : IChunkGenerator{
 			}
 		}
 		
+		/* UPDATE needed?
 		for(x in 0..15) for(y in 0..instance.territory.height.last) for(z in 0..15){
 			val pos = startOffset.add(x, y, z)
 			
-			if (pos.getBlock(world).lightValue > 0){
+			if (pos.getState(world).lightValue > 0){
 				world.checkLightFor(BLOCK, pos) // TODO figure out something better?
 			}
-		}
+		}*/
 	}
 	
-	override fun getPossibleCreatures(creatureType: EnumCreatureType, pos: BlockPos): List<SpawnListEntry>{
+	override fun getPossibleCreatures(type: EntityClassification, pos: BlockPos): List<SpawnListEntry>{
 		return emptyList() // TODO could be a good idea to use this instead of a custom spawner
+	}
+	
+	override fun getGroundHeight(): Int{
+		return 50 // UPDATE
+	}
+	
+	override fun func_222529_a(x: Int, z: Int, heightmapType: Type): Int{
+		return 0 // UPDATE
 	}
 	
 	// Neutralization
 	
-	override fun generateStructures(chunk: Chunk, x: Int, z: Int): Boolean{
+	override fun hasStructure(biome: Biome, structure: Structure<out IFeatureConfig>): Boolean{
 		return false
 	}
 	
-	override fun recreateStructures(chunk: Chunk, x: Int, z: Int){}
-	
-	override fun isInsideStructure(world: World, structureName: String, pos: BlockPos): Boolean{
-		return false
+	override fun <C : IFeatureConfig?> getStructureConfig(biome: Biome, structure: Structure<C>): C?{
+		return IFeatureConfig.NO_FEATURE_CONFIG as C // UPDATE
 	}
 	
-	override fun getNearestStructurePos(world: World, structureName: String, position: BlockPos, findUnexplored: Boolean): BlockPos?{
-		return null
-	}
+	override fun initStructureStarts(chunk: IChunk, generator: ChunkGenerator<*>, templates: TemplateManager){}
+	
+	override fun generateStructureStarts(world: IWorld, chunk: IChunk){}
 }

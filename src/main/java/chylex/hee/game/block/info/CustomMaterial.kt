@@ -1,8 +1,9 @@
 package chylex.hee.game.block.info
-import net.minecraft.block.material.MapColor
 import net.minecraft.block.material.Material
+import net.minecraft.block.material.MaterialColor
+import net.minecraft.block.material.PushReaction
 
-class CustomMaterial : Material(MapColor.AIR){
+class CustomMaterial{
 	var solid = true
 	private var liquid = false
 	
@@ -12,14 +13,16 @@ class CustomMaterial : Material(MapColor.AIR){
 	
 	var requiresTool = false
 	var blocksMovement = true
-	var blocksLight = true
+	var blocksLight = true // UPDATE not used anywhere
+	
+	private var pushReaction = PushReaction.NORMAL
 	
 	fun destroyWhenPushed(){
-		setNoPushMobility()
+		pushReaction = PushReaction.DESTROY
 	}
 	
 	fun blockWhenPushed(){
-		setImmovableMobility()
+		pushReaction = PushReaction.BLOCK
 	}
 	
 	fun makeTransparent(){
@@ -36,15 +39,14 @@ class CustomMaterial : Material(MapColor.AIR){
 		destroyWhenPushed()
 	}
 	
-	// Overrides
+	// Building
 	
-	override fun isSolid() = solid
-	override fun isLiquid() = liquid
-	override fun isOpaque() = blocksMovement && !translucent
-	override fun isReplaceable() = replaceable
-	override fun getCanBurn() = flammable
+	fun build(): Material{
+		return Material(MaterialColor.AIR, liquid, solid, blocksMovement, blocksMovement && !translucent, !requiresTool, flammable, replaceable, pushReaction)
+	}
 	
-	override fun isToolNotRequired() = !requiresTool
-	override fun blocksLight() = blocksLight
-	override fun blocksMovement() = blocksMovement
+	inline fun build(block: CustomMaterial.() -> Unit): Material{
+		block()
+		return build()
+	}
 }

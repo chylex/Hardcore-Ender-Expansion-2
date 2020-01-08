@@ -16,11 +16,15 @@ import chylex.hee.game.particle.util.IOffset.Constant
 import chylex.hee.game.particle.util.IOffset.InBox
 import chylex.hee.game.particle.util.IShape.Point
 import chylex.hee.init.ModItems
+import chylex.hee.init.ModTileEntities
 import chylex.hee.network.client.PacketClientFX
 import chylex.hee.network.client.PacketClientUpdateExperience
 import chylex.hee.system.migration.Facing.UP
 import chylex.hee.system.migration.forge.Side
 import chylex.hee.system.migration.forge.Sided
+import chylex.hee.system.migration.vanilla.EntityItem
+import chylex.hee.system.migration.vanilla.EntityPlayer
+import chylex.hee.system.migration.vanilla.EntityXPOrb
 import chylex.hee.system.migration.vanilla.Items
 import chylex.hee.system.migration.vanilla.Sounds
 import chylex.hee.system.util.FLAG_SYNC_CLIENT
@@ -41,11 +45,10 @@ import chylex.hee.system.util.selectExistingEntities
 import chylex.hee.system.util.selectVulnerableEntities
 import chylex.hee.system.util.size
 import chylex.hee.system.util.totalTime
+import chylex.hee.system.util.use
 import net.minecraft.entity.Entity
-import net.minecraft.entity.item.EntityItem
-import net.minecraft.entity.item.EntityXPOrb
-import net.minecraft.entity.player.EntityPlayer
-import net.minecraft.util.ITickable
+import net.minecraft.tileentity.ITickableTileEntity
+import net.minecraft.tileentity.TileEntityType
 import net.minecraft.util.SoundCategory
 import net.minecraft.util.math.AxisAlignedBB
 import net.minecraft.util.math.Vec3d
@@ -54,7 +57,9 @@ import java.util.WeakHashMap
 import kotlin.math.min
 import kotlin.math.sin
 
-class TileEntityExperienceGate : TileEntityBase(), ITickable{
+class TileEntityExperienceGate(type: TileEntityType<TileEntityExperienceGate>) : TileEntityBase(type), ITickableTileEntity{
+	constructor() : this(ModTileEntities.EXPERIENCE_GATE)
+	
 	companion object{
 		private val DAMAGE_START_EXTRACTION = Damage(MAGIC_TYPE, PEACEFUL_KNOCKBACK, IGNORE_INVINCIBILITY())
 		
@@ -144,7 +149,7 @@ class TileEntityExperienceGate : TileEntityBase(), ITickable{
 		get() = pos.let { (x, y, z) -> AxisAlignedBB(x - 1.0, y + 0.5, z - 1.0, x + 2.0, y + 3.5, z + 2.0) }
 	
 	private val tokenHolderToCharge
-		get() = world.selectExistingEntities.inBox<EntityTokenHolder>(AxisAlignedBB(pos).expand(0.0, 4.0, 0.0)).firstOrNull { it.currentCharge < 1F }
+		get() = wrld.selectExistingEntities.inBox<EntityTokenHolder>(AxisAlignedBB(pos).expand(0.0, 4.0, 0.0)).firstOrNull { it.currentCharge < 1F }
 	
 	private val canStartDraining
 		get() = experience < TARGET_XP && tokenHolderToCharge != null
@@ -154,15 +159,15 @@ class TileEntityExperienceGate : TileEntityBase(), ITickable{
 	
 	private var particlePauseTimer = 0
 	
-	override fun update(){
-		if (world.isRemote){
-			val rand = world.rand
+	override fun tick(){
+		if (wrld.isRemote){
+			val rand = wrld.rand
 			
 			if (particlePauseTimer > 0){
 				--particlePauseTimer
 			}
 			else if (experience < TARGET_XP){
-				if (world.selectVulnerableEntities.inBox<EntityPlayer>(entityDetectionArea).any()){
+				if (wrld.selectVulnerableEntities.inBox<EntityPlayer>(entityDetectionArea).any()){
 					PARTICLE_TICK_SLOW.spawn(Point(pos, rand.nextInt(1, 2)), rand)
 				}
 				else{
@@ -193,8 +198,8 @@ class TileEntityExperienceGate : TileEntityBase(), ITickable{
 				}
 			}
 		}
-		else if (world.totalTime % 4L == 0L){
-			for(orb in world.selectEntities.inBox<EntityXPOrb>(entityDetectionArea)){ // makes throwing xp bottles into the gate a bit nicer
+		else if (wrld.totalTime % 4L == 0L){
+			for(orb in wrld.selectEntities.inBox<EntityXPOrb>(entityDetectionArea)){ // makes throwing xp bottles into the gate a bit nicer
 				if (orb.ticksExisted > 6){
 					onCollision(orb)
 				}
@@ -219,7 +224,7 @@ class TileEntityExperienceGate : TileEntityBase(), ITickable{
 			return
 		}
 		
-		val currentTime = world.totalTime
+		val currentTime = wrld.totalTime
 		
 		val extractionData = playerExtraction[player]?.takeIf {
 			currentTime - it.lastTriggerTime < 10L
@@ -240,7 +245,7 @@ class TileEntityExperienceGate : TileEntityBase(), ITickable{
 			experience += xpDrain
 			
 			if (currentTime % 3L == 0L){
-				Sounds.ENTITY_EXPERIENCE_ORB_PICKUP.playServer(world, player.posVec, SoundCategory.BLOCKS, volume = 0.1F, pitch = world.rand.nextFloat(0.55F, 1.25F))
+				Sounds.ENTITY_EXPERIENCE_ORB_PICKUP.playServer(wrld, player.posVec, SoundCategory.BLOCKS, volume = 0.1F, pitch = wrld.rand.nextFloat(0.55F, 1.25F))
 			}
 		}
 	}
@@ -265,7 +270,7 @@ class TileEntityExperienceGate : TileEntityBase(), ITickable{
 		}
 		
 		PacketClientFX(FX_CONSUME, FxEntityData(entity)).sendToAllAround(entity, 16.0)
-		entity.setDead()
+		entity.remove()
 	}
 	
 	fun onCollision(orb: EntityXPOrb){
@@ -280,7 +285,7 @@ class TileEntityExperienceGate : TileEntityBase(), ITickable{
 		
 		if (orb.xpValue <= 0){
 			PacketClientFX(FX_CONSUME, FxEntityData(orb)).sendToAllAround(orb, 16.0)
-			orb.setDead()
+			orb.remove()
 		}
 	}
 	
@@ -293,11 +298,11 @@ class TileEntityExperienceGate : TileEntityBase(), ITickable{
 	
 	// Serialization
 	
-	override fun writeNBT(nbt: TagCompound, context: Context) = with(nbt){
-		setFloat(EXPERIENCE_TAG, experience)
+	override fun writeNBT(nbt: TagCompound, context: Context) = nbt.use {
+		putFloat(EXPERIENCE_TAG, experience)
 	}
 	
-	override fun readNBT(nbt: TagCompound, context: Context) = with(nbt){
+	override fun readNBT(nbt: TagCompound, context: Context) = nbt.use {
 		if (context == NETWORK){
 			if (clientLoaded){
 				val previous = experience

@@ -2,12 +2,12 @@ package chylex.hee.network.client
 import chylex.hee.network.BaseClientPacket
 import chylex.hee.system.migration.forge.Side
 import chylex.hee.system.migration.forge.Sided
+import chylex.hee.system.migration.vanilla.EntityPlayerSP
 import chylex.hee.system.util.readVec
 import chylex.hee.system.util.use
 import chylex.hee.system.util.writeVec
-import io.netty.buffer.ByteBuf
-import net.minecraft.client.entity.EntityPlayerSP
 import net.minecraft.entity.Entity
+import net.minecraft.network.PacketBuffer
 import net.minecraft.util.math.Vec3d
 
 class PacketClientTeleportInstantly() : BaseClientPacket(){
@@ -19,12 +19,12 @@ class PacketClientTeleportInstantly() : BaseClientPacket(){
 	private var entityId: Int? = null
 	private lateinit var position: Vec3d
 	
-	override fun write(buffer: ByteBuf) = buffer.use {
+	override fun write(buffer: PacketBuffer) = buffer.use {
 		writeInt(entityId!!)
 		writeVec(position)
 	}
 	
-	override fun read(buffer: ByteBuf) = buffer.use {
+	override fun read(buffer: PacketBuffer) = buffer.use {
 		entityId = readInt()
 		position = readVec()
 	}

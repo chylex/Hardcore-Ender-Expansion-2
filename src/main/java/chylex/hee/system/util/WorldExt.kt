@@ -1,27 +1,23 @@
 package chylex.hee.system.util
-import chylex.hee.proxy.Environment
+import net.minecraft.util.math.BlockPos
 import net.minecraft.world.World
+import net.minecraft.world.gen.Heightmap.Type.WORLD_SURFACE
+import net.minecraft.world.server.ServerWorld
 import net.minecraft.world.storage.WorldSavedData
 
 // Renaming
 
 val World.totalTime
-	get() = this.totalWorldTime
+	get() = this.gameTime
+
+// Porting
+
+fun World.getTopSolidOrLiquidBlock(pos: BlockPos): BlockPos{
+	return world.getHeight(WORLD_SURFACE, pos) // UPDATE test
+}
 
 // World data
 
-inline fun <reified T : WorldSavedData> World.perDimensionData(name: String, constructor: (String) -> T): T{
-	return this.perWorldStorage.let {
-		it.getOrLoadData(T::class.java, name) as? T ?: constructor(name).also { data -> it.setData(name, data) }
-	}
-}
-
-inline fun <reified T : WorldSavedData> World.perSavefileData(name: String, constructor: (String) -> T): T{
-	return this.mapStorage!!.let {
-		it.getOrLoadData(T::class.java, name) as? T ?: constructor(name).also { data -> it.setData(name, data) }
-	}
-}
-
-inline fun <reified T : WorldSavedData> perSavefileData(name: String, constructor: (String) -> T): T{
-	return Environment.getServer().entityWorld.perSavefileData(name, constructor)
+fun <T : WorldSavedData> ServerWorld.perDimensionData(name: String, constructor: () -> T): T{
+	return this.savedData.getOrCreate(constructor, name)
 }

@@ -3,12 +3,12 @@ import chylex.hee.client.util.MC
 import chylex.hee.system.migration.Hand.MAIN_HAND
 import chylex.hee.system.migration.forge.Side
 import chylex.hee.system.migration.forge.Sided
+import chylex.hee.system.migration.vanilla.EntityPlayer
 import chylex.hee.system.util.Vec3
 import chylex.hee.system.util.lookPosVec
 import chylex.hee.system.util.subtractY
-import net.minecraft.entity.player.EntityPlayer
-import net.minecraft.util.EnumHand
-import net.minecraft.util.EnumHandSide.RIGHT
+import net.minecraft.util.Hand
+import net.minecraft.util.HandSide.RIGHT
 import net.minecraft.util.math.MathHelper
 import net.minecraft.util.math.Vec3d
 import kotlin.math.abs
@@ -16,13 +16,13 @@ import kotlin.math.pow
 
 object ModelHelper{
 	@Sided(Side.CLIENT)
-	fun getHandPosition(player: EntityPlayer, hand: EnumHand): Vec3d{
+	fun getHandPosition(player: EntityPlayer, hand: Hand): Vec3d{
 		val yawOffsetMp = (if (player.primaryHand == RIGHT) 1 else -1) * (if (hand == MAIN_HAND) 1 else -1)
 		
 		if (player === MC.player && MC.settings.thirdPersonView == 0){
 			val pitch = MathHelper.wrapDegrees(player.rotationPitch)
 			val yaw = MathHelper.wrapDegrees(player.rotationYaw)
-			val fov = MC.settings.fovSetting
+			val fov = MC.settings.fov.toFloat()
 			
 			return player
 				.lookPosVec

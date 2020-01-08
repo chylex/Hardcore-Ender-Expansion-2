@@ -13,6 +13,10 @@ class DustLayerInventory(private val layers: DustLayers, private val isIntake: B
 		return layers.contents.getOrNull(slot)?.let { ItemStack(it.first.item, it.second.toInt()) } ?: ItemStack.EMPTY
 	}
 	
+	override fun isItemValid(slot: Int, stack: ItemStack): Boolean{
+		return isIntake && DustType.fromStack(stack) != null
+	}
+	
 	override fun insertItem(slot: Int, stack: ItemStack, simulate: Boolean): ItemStack{
 		if (!isIntake){
 			return stack

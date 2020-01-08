@@ -1,8 +1,8 @@
 package chylex.hee.client.render.util
-import net.minecraft.client.model.ModelBox
-import net.minecraft.client.model.ModelRenderer
+import net.minecraft.client.renderer.entity.model.RendererModel
+import net.minecraft.client.renderer.model.ModelBox
 
-class ModelBoxBuilder(private val model: ModelRenderer){
+class ModelBoxBuilder(private val model: RendererModel){
 	private var x = 0F
 	private var y = 0F
 	private var z = 0F

@@ -32,6 +32,8 @@ import chylex.hee.system.util.directionTowards
 import chylex.hee.system.util.floorToInt
 import chylex.hee.system.util.isLoaded
 import chylex.hee.system.util.makeEffect
+import chylex.hee.system.util.motionX
+import chylex.hee.system.util.motionZ
 import chylex.hee.system.util.nextFloat
 import chylex.hee.system.util.nextInt
 import chylex.hee.system.util.nextVector2
@@ -39,8 +41,8 @@ import chylex.hee.system.util.offsetUntil
 import chylex.hee.system.util.playClient
 import chylex.hee.system.util.posVec
 import chylex.hee.system.util.toRadians
+import chylex.hee.system.util.use
 import net.minecraft.entity.Entity
-import net.minecraft.util.ITickable
 import net.minecraft.util.SoundCategory
 import net.minecraft.util.math.AxisAlignedBB
 import net.minecraft.util.math.BlockPos
@@ -50,7 +52,7 @@ import java.util.Random
 import java.util.UUID
 import kotlin.math.min
 
-class EndermanTeleportHandler(private val enderman: EntityMobAbstractEnderman) : ITickable, INBTSerializable<TagCompound>{
+class EndermanTeleportHandler(private val enderman: EntityMobAbstractEnderman) : INBTSerializable<TagCompound>{
 	companion object{
 		private const val DEFAULT_RESTORE_Y = -256.0
 		
@@ -79,7 +81,7 @@ class EndermanTeleportHandler(private val enderman: EntityMobAbstractEnderman) :
 		val FX_TELEPORT_FAIL = object : FxEntityHandler(){
 			override fun handle(entity: Entity, rand: Random){
 				PARTICLE_TELEPORT_FAIL(entity).spawn(Point(entity, heightMp = 0.5F, amount = 55), rand)
-				Sounds.ENTITY_ENDERMEN_TELEPORT.playClient(entity.posVec, SoundCategory.HOSTILE, volume = 0.75F) // TODO custom sound
+				Sounds.ENTITY_ENDERMAN_TELEPORT.playClient(entity.posVec, SoundCategory.HOSTILE, volume = 0.75F) // TODO custom sound
 			}
 		}
 		
@@ -89,7 +91,7 @@ class EndermanTeleportHandler(private val enderman: EntityMobAbstractEnderman) :
 				val endPoint = startPoint.addY(256.0)
 				
 				PARTICLE_TELEPORT_OUT_OF_WORLD.spawn(Line(startPoint, endPoint, 0.5), rand)
-				Sounds.ENTITY_ENDERMEN_TELEPORT.playClient(startPoint, SoundCategory.HOSTILE, volume = 2F) // TODO custom sound
+				Sounds.ENTITY_ENDERMAN_TELEPORT.playClient(startPoint, SoundCategory.HOSTILE, volume = 2F) // TODO custom sound
 			}
 		}
 		
@@ -112,7 +114,7 @@ class EndermanTeleportHandler(private val enderman: EntityMobAbstractEnderman) :
 	
 	private var lastDodged: UUID? = null
 	
-	override fun update(){
+	fun update(){
 		if (tpCooldown > 0){
 			--tpCooldown
 		}
@@ -128,7 +130,7 @@ class EndermanTeleportHandler(private val enderman: EntityMobAbstractEnderman) :
 			tpDelayedReappearing = true
 			
 			if (tpDelayedCallback?.invoke() != true){
-				enderman.setDead()
+				enderman.remove()
 			}
 			
 			tpDelayedReappearing = false
@@ -356,18 +358,18 @@ class EndermanTeleportHandler(private val enderman: EntityMobAbstractEnderman) :
 		}
 		
 		PacketClientFX(FX_TELEPORT_OUT_OF_WORLD, FxEntityData(enderman)).sendToAllAround(enderman, 64.0)
-		enderman.setDead()
+		enderman.remove()
 		return true
 	}
 	
 	// Serialization
 	
 	override fun serializeNBT() = TagCompound().apply {
-		setShort(COOLDOWN_TAG, tpCooldown.toShort())
-		setShort(DELAY_TICKS_TAG, tpDelayTicks.toShort())
+		putShort(COOLDOWN_TAG, tpCooldown.toShort())
+		putShort(DELAY_TICKS_TAG, tpDelayTicks.toShort())
 	}
 	
-	override fun deserializeNBT(nbt: TagCompound) = with(nbt){
+	override fun deserializeNBT(nbt: TagCompound) = nbt.use {
 		tpCooldown = getShort(COOLDOWN_TAG).toInt()
 		tpDelayTicks = min(1, getShort(DELAY_TICKS_TAG).toInt())
 	}

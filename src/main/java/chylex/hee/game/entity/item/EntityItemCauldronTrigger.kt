@@ -8,14 +8,14 @@ import chylex.hee.game.particle.util.IOffset.Constant
 import chylex.hee.game.particle.util.IOffset.InBox
 import chylex.hee.game.particle.util.IShape.Point
 import chylex.hee.init.ModBlocks
+import chylex.hee.init.ModEntities
 import chylex.hee.init.ModItems
 import chylex.hee.network.client.PacketClientFX
 import chylex.hee.system.migration.Facing.UP
 import chylex.hee.system.migration.vanilla.Blocks
+import chylex.hee.system.migration.vanilla.EntityItem
 import chylex.hee.system.migration.vanilla.Sounds
 import chylex.hee.system.util.Pos
-import chylex.hee.system.util.cloneFrom
-import chylex.hee.system.util.get
 import chylex.hee.system.util.getState
 import chylex.hee.system.util.motionVec
 import chylex.hee.system.util.playClient
@@ -25,9 +25,9 @@ import chylex.hee.system.util.setState
 import chylex.hee.system.util.size
 import chylex.hee.system.util.totalTime
 import chylex.hee.system.util.with
-import net.minecraft.block.BlockCauldron.LEVEL
+import net.minecraft.block.CauldronBlock.LEVEL
 import net.minecraft.entity.Entity
-import net.minecraft.entity.item.EntityItem
+import net.minecraft.entity.EntityType
 import net.minecraft.item.Item
 import net.minecraft.item.ItemStack
 import net.minecraft.util.SoundCategory
@@ -38,7 +38,11 @@ import net.minecraft.world.World
 import java.util.Random
 import kotlin.math.min
 
-class EntityItemCauldronTrigger : EntityItem{
+class EntityItemCauldronTrigger : EntityItemBase{
+	@Suppress("unused")
+	constructor(type: EntityType<EntityItemCauldronTrigger>, world: World) : super(type, world)
+	constructor(world: World, stack: ItemStack, replacee: Entity) : super(ModEntities.ITEM_CAULDRON_TRIGGER, world, stack, replacee)
+	
 	companion object{
 		private val RECIPE_DRAGONS_BREATH = arrayOf(
 			ModItems.END_POWDER to 1,
@@ -66,15 +70,8 @@ class EntityItemCauldronTrigger : EntityItem{
 		}
 	}
 	
-	@Suppress("unused")
-	constructor(world: World) : super(world)
-	
-	constructor(world: World, stack: ItemStack, replacee: Entity) : super(world, replacee.posX, replacee.posY, replacee.posZ, stack){
-		this.cloneFrom(replacee)
-	}
-	
-	override fun onUpdate(){
-		super.onUpdate()
+	override fun tick(){
+		super.tick()
 		
 		if (!world.isRemote && world.totalTime % 5L == 0L){
 			val pos = Pos(this)
@@ -93,7 +90,7 @@ class EntityItemCauldronTrigger : EntityItem{
 					EntityItem(world, pos.x + 0.5, pos.y + 0.4, pos.z + 0.5, ItemStack(ModItems.PURITY_EXTRACT)).apply {
 						motionVec = Vec3d.ZERO
 						setDefaultPickupDelay()
-						world.spawnEntity(this)
+						world.addEntity(this)
 					}
 				}
 			}

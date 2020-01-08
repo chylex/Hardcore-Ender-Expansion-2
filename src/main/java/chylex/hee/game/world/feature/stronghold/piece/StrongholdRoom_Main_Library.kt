@@ -1,5 +1,4 @@
 package chylex.hee.game.world.feature.stronghold.piece
-import chylex.hee.game.block.util.FutureBlocks
 import chylex.hee.game.world.feature.stronghold.StrongholdPieceType
 import chylex.hee.game.world.feature.stronghold.StrongholdPieces
 import chylex.hee.game.world.feature.stronghold.connection.StrongholdConnection
@@ -9,7 +8,6 @@ import chylex.hee.game.world.feature.stronghold.piece.StrongholdRoom_Main_Librar
 import chylex.hee.game.world.structure.IBlockPicker.Single
 import chylex.hee.game.world.structure.IStructureWorld
 import chylex.hee.game.world.structure.piece.IStructurePieceConnection
-import chylex.hee.game.world.structure.trigger.FlowerPotStructureTrigger
 import chylex.hee.game.world.structure.trigger.LootChestStructureTrigger
 import chylex.hee.system.migration.Facing.EAST
 import chylex.hee.system.migration.Facing.NORTH
@@ -61,7 +59,7 @@ class StrongholdRoom_Main_Library(file: String) : StrongholdAbstractPieceFromFil
 					world.setBlock(bookshelfPos, Blocks.BOOKSHELF)
 					
 					if (centerFillHoles){
-						world.setState(bookshelfPos.up(), FutureBlocks.SPRUCE_SLAB)
+						world.setBlock(bookshelfPos.up(), Blocks.SPRUCE_SLAB)
 					}
 				}
 			}
@@ -84,12 +82,12 @@ class StrongholdRoom_Main_Library(file: String) : StrongholdAbstractPieceFromFil
 			world.addTrigger(chestPos, LootChestStructureTrigger(StrongholdPieces.LOOT_LIBRARY_SECOND, rand.nextLong()))
 		}
 		
-		val flowerTypes = arrayOf(
-			FutureBlocks.WHITE_TULIP_STACK,
-			FutureBlocks.DANDELION_STACK
+		val flowerPotTypes = arrayOf(
+			Blocks.POTTED_WHITE_TULIP,
+			Blocks.POTTED_DANDELION
 		)
 		
-		world.addTrigger(Pos(centerX + 8, 2, centerZ - 8), FlowerPotStructureTrigger(rand.nextItem(flowerTypes)))
+		world.setBlock(Pos(centerX + 8, 2, centerZ - 8), rand.nextItem(flowerPotTypes))
 		
 		// Bookshelf section
 		
@@ -122,7 +120,7 @@ class StrongholdRoom_Main_Library(file: String) : StrongholdAbstractPieceFromFil
 						Pos(centerX + (xMp * 4), 7, centerZ + (3 * facing.zOffset))
 					)){
 						world.setBlock(pos, Blocks.BOOKSHELF)
-						world.setState(pos.up(), FutureBlocks.SPRUCE_SLAB)
+						world.setBlock(pos.up(), Blocks.SPRUCE_SLAB)
 					}
 					
 					for(pos in arrayOf(
@@ -131,7 +129,7 @@ class StrongholdRoom_Main_Library(file: String) : StrongholdAbstractPieceFromFil
 					)){
 						world.setBlock(pos, Blocks.BOOKSHELF)
 						world.setBlock(pos.up(), Blocks.BOOKSHELF)
-						world.setState(pos.up(2), FutureBlocks.SPRUCE_SLAB)
+						world.setBlock(pos.up(2), Blocks.SPRUCE_SLAB)
 					}
 				}
 			}
@@ -152,7 +150,7 @@ class StrongholdRoom_Main_Library(file: String) : StrongholdAbstractPieceFromFil
 		
 		if (rand.nextBoolean()){
 			world.setAir(Pos(centerX - 8, 9, centerZ + 3))
-			world.setState(Pos(centerX - 8, 8, centerZ + 3), FutureBlocks.SPRUCE_SLAB)
+			world.setBlock(Pos(centerX - 8, 8, centerZ + 3), Blocks.SPRUCE_SLAB)
 		}
 		
 		// Chest
@@ -182,7 +180,7 @@ class StrongholdRoom_Main_Library(file: String) : StrongholdAbstractPieceFromFil
 				val pos2 = Pos(centerX + (5 * xMp), 12, centerZ + (2 * zMp))
 				
 				world.placeCube(pos1, pos2, Single(Blocks.BOOKSHELF))
-				world.placeCube(pos1.up(), pos2.up(), Single(FutureBlocks.SPRUCE_SLAB))
+				world.placeCube(pos1.up(), pos2.up(), Single(Blocks.SPRUCE_SLAB))
 			}
 		}
 		else{
@@ -192,7 +190,7 @@ class StrongholdRoom_Main_Library(file: String) : StrongholdAbstractPieceFromFil
 				
 				world.placeCube(pos1, pos2.up(), Single(Blocks.BOOKSHELF))
 				world.setState(pos1.up(2), Blocks.STONE_BRICK_STAIRS.withFacing(EAST))
-				world.setState(pos2.up(2), FutureBlocks.STONE_BRICKS)
+				world.setBlock(pos2.up(2), Blocks.STONE_BRICKS)
 			}
 		}
 	}

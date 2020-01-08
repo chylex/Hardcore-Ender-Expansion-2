@@ -1,36 +1,36 @@
 package chylex.hee.system.migration
-import net.minecraft.util.EnumActionResult
-import net.minecraft.util.EnumFacing
-import net.minecraft.util.EnumHand
-import net.minecraft.world.EnumDifficulty
+import net.minecraft.util.ActionResultType
+import net.minecraft.util.Direction
+import net.minecraft.util.Hand
+import net.minecraft.world.Difficulty
 
 object Facing{
-	val DOWN  get() = EnumFacing.DOWN
-	val UP    get() = EnumFacing.UP
-	val NORTH get() = EnumFacing.NORTH
-	val SOUTH get() = EnumFacing.SOUTH
-	val WEST  get() = EnumFacing.WEST
-	val EAST  get() = EnumFacing.EAST
+	val DOWN  get() = Direction.DOWN
+	val UP    get() = Direction.UP
+	val NORTH get() = Direction.NORTH
+	val SOUTH get() = Direction.SOUTH
+	val WEST  get() = Direction.WEST
+	val EAST  get() = Direction.EAST
 	
-	val AXIS_X get() = EnumFacing.Axis.X
-	val AXIS_Y get() = EnumFacing.Axis.Y
-	val AXIS_Z get() = EnumFacing.Axis.Z
+	val AXIS_X get() = Direction.Axis.X
+	val AXIS_Y get() = Direction.Axis.Y
+	val AXIS_Z get() = Direction.Axis.Z
 }
 
 object Difficulty{
-	val PEACEFUL get() = EnumDifficulty.PEACEFUL
-	val EASY     get() = EnumDifficulty.EASY
-	val NORMAL   get() = EnumDifficulty.NORMAL
-	val HARD     get() = EnumDifficulty.HARD
+	val PEACEFUL get() = Difficulty.PEACEFUL
+	val EASY     get() = Difficulty.EASY
+	val NORMAL   get() = Difficulty.NORMAL
+	val HARD     get() = Difficulty.HARD
 }
 
 object Hand{
-	val MAIN_HAND get() = EnumHand.MAIN_HAND
-	val OFF_HAND  get() = EnumHand.OFF_HAND
+	val MAIN_HAND get() = Hand.MAIN_HAND
+	val OFF_HAND  get() = Hand.OFF_HAND
 }
 
 object ActionResult{
-	val SUCCESS get() = EnumActionResult.SUCCESS
-	val PASS    get() = EnumActionResult.PASS
-	val FAIL    get() = EnumActionResult.FAIL
+	val SUCCESS get() = ActionResultType.SUCCESS
+	val PASS    get() = ActionResultType.PASS
+	val FAIL    get() = ActionResultType.FAIL
 }

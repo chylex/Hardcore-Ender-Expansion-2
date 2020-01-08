@@ -3,75 +3,76 @@ import chylex.hee.game.block.entity.base.TileEntityBaseChest
 import chylex.hee.game.block.info.BlockBuilder
 import chylex.hee.game.entity.living.ai.AIOcelotSitOverride.IOcelotCanSitOn
 import chylex.hee.init.ModGuiHandler.GuiType
-import chylex.hee.system.migration.Facing.DOWN
 import chylex.hee.system.migration.Facing.NORTH
-import chylex.hee.system.util.get
+import chylex.hee.system.migration.vanilla.EntityCat
+import chylex.hee.system.migration.vanilla.EntityLivingBase
+import chylex.hee.system.migration.vanilla.EntityPlayer
 import chylex.hee.system.util.getState
 import chylex.hee.system.util.getTile
 import chylex.hee.system.util.selectExistingEntities
 import chylex.hee.system.util.withFacing
-import net.minecraft.block.BlockDirectional.FACING
-import net.minecraft.block.ITileEntityProvider
-import net.minecraft.block.state.BlockFaceShape.UNDEFINED
-import net.minecraft.block.state.BlockStateContainer
-import net.minecraft.block.state.IBlockState
-import net.minecraft.entity.EntityLivingBase
-import net.minecraft.entity.passive.EntityOcelot
-import net.minecraft.entity.player.EntityPlayer
+import net.minecraft.block.Block
+import net.minecraft.block.BlockRenderType.ENTITYBLOCK_ANIMATED
+import net.minecraft.block.BlockState
+import net.minecraft.block.ChestBlock.FACING
+import net.minecraft.item.BlockItemUseContext
 import net.minecraft.item.ItemStack
+import net.minecraft.state.StateContainer.Builder
 import net.minecraft.tileentity.TileEntity
-import net.minecraft.util.EnumBlockRenderType.ENTITYBLOCK_ANIMATED
-import net.minecraft.util.EnumFacing
-import net.minecraft.util.EnumHand
+import net.minecraft.util.Hand
 import net.minecraft.util.Mirror
 import net.minecraft.util.Rotation
 import net.minecraft.util.math.AxisAlignedBB
 import net.minecraft.util.math.BlockPos
-import net.minecraft.world.IBlockAccess
+import net.minecraft.util.math.BlockRayTraceResult
+import net.minecraft.world.IBlockReader
+import net.minecraft.world.IWorldReader
 import net.minecraft.world.World
 
-abstract class BlockAbstractChest<T : TileEntityBaseChest>(builder: BlockBuilder) : BlockSimple(builder), ITileEntityProvider, IOcelotCanSitOn{
-	private companion object{
-		private val AABB = AxisAlignedBB(0.0625, 0.0, 0.0625, 0.9375, 0.875, 0.9375)
-	}
-	
+abstract class BlockAbstractChest<T : TileEntityBaseChest>(builder: BlockBuilder) : BlockSimpleShaped(builder, AxisAlignedBB(0.0625, 0.0, 0.0625, 0.9375, 0.875, 0.9375)), IOcelotCanSitOn{
 	init{
-		defaultState = blockState.baseState.withFacing(NORTH)
+		defaultState = stateContainer.baseState.withFacing(NORTH)
 	}
 	
-	override fun createBlockState() = BlockStateContainer(this, FACING)
+	override fun fillStateContainer(container: Builder<Block, BlockState>){
+		container.add(FACING)
+	}
 	
 	// Placement and interaction
 	
-	abstract fun createNewTileEntity(): T
+	abstract fun createTileEntity(): T
 	abstract val guiType: GuiType
 	
-	final override fun createNewTileEntity(world: World, meta: Int): TileEntity{
-		return createNewTileEntity()
+	override fun hasTileEntity(state: BlockState): Boolean{
+		return true
 	}
 	
-	override fun getStateForPlacement(world: World, pos: BlockPos, facing: EnumFacing, hitX: Float, hitY: Float, hitZ: Float, meta: Int, placer: EntityLivingBase, hand: EnumHand): IBlockState{
-		return this.withFacing(placer.horizontalFacing.opposite)
+	final override fun createTileEntity(state: BlockState, world: IBlockReader): TileEntity{
+		return createTileEntity()
 	}
 	
-	final override fun onBlockPlacedBy(world: World, pos: BlockPos, state: IBlockState, placer: EntityLivingBase, stack: ItemStack){
+	override fun getStateForPlacement(context: BlockItemUseContext): BlockState{
+		return this.withFacing(context.placementHorizontalFacing.opposite)
+	}
+	
+	final override fun onBlockPlacedBy(world: World, pos: BlockPos, state: BlockState, placer: EntityLivingBase?, stack: ItemStack){
 		if (stack.hasDisplayName()){
 			pos.getTile<TileEntityBaseChest>(world)?.setCustomName(stack.displayName)
 		}
 	}
 	
-	final override fun onBlockActivated(world: World, pos: BlockPos, state: IBlockState, player: EntityPlayer, hand: EnumHand, facing: EnumFacing, hitX: Float, hitY: Float, hitZ: Float): Boolean{
+	final override fun onBlockActivated(state: BlockState, world: World, pos: BlockPos, player: EntityPlayer, hand: Hand, hit: BlockRayTraceResult): Boolean{
 		if (world.isRemote){
 			return true
 		}
 		
 		val posAbove = pos.up()
 		
-		if (posAbove.getState(world).doesSideBlockChestOpening(world, posAbove, DOWN)){
+		if (posAbove.getState(world).isNormalCube(world, posAbove)){
 			return true
 		}
 		
-		if (world.selectExistingEntities.inBox<EntityOcelot>(AxisAlignedBB(posAbove)).any { it.isSitting }){
+		if (world.selectExistingEntities.inBox<EntityCat>(AxisAlignedBB(posAbove)).any { it.isSitting }){
 			return true
 		}
 		
@@ -84,30 +85,22 @@ abstract class BlockAbstractChest<T : TileEntityBaseChest>(builder: BlockBuilder
 	
 	// Ocelot behavior
 	
-	override fun canOcelotSitOn(world: World, pos: BlockPos): Boolean{
+	override fun canOcelotSitOn(world: IWorldReader, pos: BlockPos): Boolean{
 		return pos.getTile<TileEntityBaseChest>(world)?.isLidClosed == true
 	}
 	
 	// State handling
 	
-	override fun withRotation(state: IBlockState, rot: Rotation): IBlockState{
+	override fun rotate(state: BlockState, rot: Rotation): BlockState{
 		return state.withFacing(rot.rotate(state[FACING]))
 	}
 	
-	override fun withMirror(state: IBlockState, mirror: Mirror): IBlockState{
+	override fun mirror(state: BlockState, mirror: Mirror): BlockState{
 		return state.withFacing(mirror.mirror(state[FACING]))
 	}
 	
-	override fun getMetaFromState(state: IBlockState) = state[FACING].index
-	override fun getStateFromMeta(meta: Int) = this.withFacing(EnumFacing.byIndex(meta))
+	// Rendering
 	
-	// Shape and rendering
-	
-	final override fun getBoundingBox(state: IBlockState, source: IBlockAccess, pos: BlockPos) = AABB
-	final override fun getBlockFaceShape(world: IBlockAccess, state: IBlockState, pos: BlockPos, face: EnumFacing) = UNDEFINED
-	
-	final override fun isFullCube(state: IBlockState) = false
-	final override fun isOpaqueCube(state: IBlockState) = false
-	final override fun getRenderType(state: IBlockState) = ENTITYBLOCK_ANIMATED
-	final override fun hasCustomBreakingProgress(state: IBlockState) = true
+	final override fun getRenderType(state: BlockState) = ENTITYBLOCK_ANIMATED
+	final override fun hasCustomBreakingProgress(state: BlockState) = true
 }

@@ -3,20 +3,24 @@ import chylex.hee.client.util.MC
 import chylex.hee.init.ModNetwork
 import chylex.hee.system.migration.forge.Side
 import chylex.hee.system.migration.forge.Sided
-import net.minecraft.client.entity.EntityPlayerSP
+import chylex.hee.system.migration.vanilla.EntityPlayer
+import chylex.hee.system.migration.vanilla.EntityPlayerSP
 import net.minecraft.entity.Entity
-import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.tileentity.TileEntity
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.Vec3d
 import net.minecraft.world.World
-import net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint
+import net.minecraft.world.dimension.DimensionType
+import net.minecraftforge.fml.LogicalSide
+import net.minecraftforge.fml.LogicalSide.CLIENT
+import net.minecraftforge.fml.LogicalSide.SERVER
+import net.minecraftforge.fml.network.PacketDistributor.TargetPoint
 
 abstract class BaseClientPacket : IPacket{
-	final override fun handle(side: Side, player: EntityPlayer){
+	final override fun handle(side: LogicalSide, player: EntityPlayer){
 		when(side){
-			Side.CLIENT -> MC.instance.addScheduledTask { handle(player as EntityPlayerSP) }
-			Side.SERVER -> throw UnsupportedOperationException("tried handling a client packet on server side: ${this::class.java.simpleName}")
+			CLIENT -> MC.instance.execute { handle(player as EntityPlayerSP) }
+			SERVER -> throw UnsupportedOperationException("tried handling a client packet on server side: ${this::class.java.simpleName}")
 		}
 	}
 	
@@ -36,7 +40,7 @@ abstract class BaseClientPacket : IPacket{
 	}
 	
 	@Suppress("NOTHING_TO_INLINE")
-	inline fun sendToDimension(dimension: Int){
+	inline fun sendToDimension(dimension: DimensionType){
 		ModNetwork.sendToDimension(this, dimension)
 	}
 	
@@ -45,16 +49,16 @@ abstract class BaseClientPacket : IPacket{
 		ModNetwork.sendToTracking(this, entity)
 	}
 	
-	fun sendToAllAround(x: Double, y: Double, z: Double, dimension: Int, range: Double){
-		ModNetwork.sendToAllAround(this, TargetPoint(dimension, x, y, z, range))
+	fun sendToAllAround(x: Double, y: Double, z: Double, dimension: DimensionType, range: Double){
+		ModNetwork.sendToAllAround(this, TargetPoint(x, y, z, range, dimension))
 	}
 	
 	fun sendToAllAround(world: World, vec: Vec3d, range: Double){
-		this.sendToAllAround(vec.x, vec.y, vec.z, world.provider.dimension, range)
+		this.sendToAllAround(vec.x, vec.y, vec.z, world.dimension.type, range)
 	}
 	
 	fun sendToAllAround(world: World, pos: BlockPos, range: Double){
-		this.sendToAllAround(pos.x + 0.5, pos.y + 0.5, pos.z + 0.5, world.provider.dimension, range)
+		this.sendToAllAround(pos.x + 0.5, pos.y + 0.5, pos.z + 0.5, world.dimension.type, range)
 	}
 	
 	fun sendToAllAround(entity: Entity, range: Double){
@@ -62,6 +66,6 @@ abstract class BaseClientPacket : IPacket{
 	}
 	
 	fun sendToAllAround(tile: TileEntity, range: Double){
-		this.sendToAllAround(tile.world, tile.pos, range)
+		this.sendToAllAround(tile.world!!, tile.pos, range)
 	}
 }

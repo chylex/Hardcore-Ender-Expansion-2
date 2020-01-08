@@ -14,14 +14,18 @@ import chylex.hee.game.world.territory.TerritoryType
 import chylex.hee.init.ModBlocks
 import chylex.hee.init.ModItems
 import chylex.hee.init.ModSounds
+import chylex.hee.init.ModTileEntities
 import chylex.hee.network.client.PacketClientFX
 import chylex.hee.system.collection.MutableWeightedList.Companion.mutableWeightedListOf
 import chylex.hee.system.collection.WeightedList.Companion.weightedListOf
 import chylex.hee.system.migration.Facing
+import chylex.hee.system.migration.vanilla.BlockRotatedPillar
+import chylex.hee.system.migration.vanilla.EntityItem
+import chylex.hee.system.migration.vanilla.EntityPlayer
 import chylex.hee.system.migration.vanilla.Items
 import chylex.hee.system.util.FLAG_SYNC_CLIENT
 import chylex.hee.system.util.NBTItemStackList
-import chylex.hee.system.util.NBTList.Companion.setList
+import chylex.hee.system.util.NBTList.Companion.putList
 import chylex.hee.system.util.Pos
 import chylex.hee.system.util.TagCompound
 import chylex.hee.system.util.addY
@@ -43,13 +47,11 @@ import chylex.hee.system.util.square
 import chylex.hee.system.util.use
 import chylex.hee.system.util.with
 import chylex.hee.system.util.writeCompactVec
-import io.netty.buffer.ByteBuf
-import net.minecraft.block.BlockRotatedPillar
-import net.minecraft.entity.item.EntityItem
-import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.item.Item
 import net.minecraft.item.ItemStack
-import net.minecraft.util.ITickable
+import net.minecraft.network.PacketBuffer
+import net.minecraft.tileentity.ITickableTileEntity
+import net.minecraft.tileentity.TileEntityType
 import net.minecraft.util.SoundCategory
 import net.minecraft.util.math.AxisAlignedBB
 import net.minecraft.util.math.Vec3d
@@ -58,7 +60,9 @@ import java.util.Random
 import kotlin.math.max
 import kotlin.math.roundToInt
 
-class TileEntityMinersBurialAltar : TileEntityBase(), ITickable{
+class TileEntityMinersBurialAltar(type: TileEntityType<TileEntityMinersBurialAltar>) : TileEntityBase(type), ITickableTileEntity{
+	constructor() : this(ModTileEntities.MINERS_BURIAL_ALTAR)
+	
 	companion object{
 		private const val HAS_MEDALLION_TAG = "HasMedallion"
 		private const val REDEEM_TYPE_TAG = "RedeemType"
@@ -108,14 +112,14 @@ class TileEntityMinersBurialAltar : TileEntityBase(), ITickable{
 		)
 		
 		class FxSpawnData(private val pos: Vec3d, private val type: Byte) : IFxData{
-			override fun write(buffer: ByteBuf) = buffer.use {
+			override fun write(buffer: PacketBuffer) = buffer.use {
 				writeCompactVec(pos)
 				writeByte(type.toInt())
 			}
 		}
 		
 		val FX_SPAWN = object : IFxHandler<FxSpawnData>{
-			override fun handle(buffer: ByteBuf, world: World, rand: Random) = buffer.use {
+			override fun handle(buffer: PacketBuffer, world: World, rand: Random) = buffer.use {
 				val pos = readCompactVec()
 				
 				when(readByte()){
@@ -152,8 +156,8 @@ class TileEntityMinersBurialAltar : TileEntityBase(), ITickable{
 	
 	// Ticking
 	
-	override fun update(){
-		val closestPlayer = world.getClosestPlayer(pos.x + 0.5, pos.y + 0.5, pos.z + 0.5, 12.0, false)
+	override fun tick(){
+		val closestPlayer = wrld.getClosestPlayer(pos.x + 0.5, pos.y + 0.5, pos.z + 0.5, 12.0, false)
 		
 		if (closestPlayer == null){
 			return
@@ -164,7 +168,7 @@ class TileEntityMinersBurialAltar : TileEntityBase(), ITickable{
 			return
 		}
 		
-		if (world.isRemote){
+		if (wrld.isRemote){
 			if (redeemTick > 0 && redeemType != REDEEM_TYPE_FINISHED){
 				++redeemTick
 				// TODO sound of huge stones rubbing against each other for the insertion animation
@@ -180,12 +184,12 @@ class TileEntityMinersBurialAltar : TileEntityBase(), ITickable{
 				for(y in 1 until PILLAR_HEIGHT){
 					val offsetPos = pos.up(y)
 					
-					if (offsetPos.getHardness(world) >= 0F){
-						offsetPos.setState(world, pillar)
+					if (offsetPos.getHardness(wrld) >= 0F){
+						offsetPos.setState(wrld, pillar)
 					}
 				}
 				
-				pos.setState(world, pillar)
+				pos.setState(wrld, pillar)
 				
 				PacketClientFX(FX_SPAWN, FxSpawnData(pos.center, redeemType)).sendToAllAround(this, 16.0)
 				return
@@ -193,14 +197,14 @@ class TileEntityMinersBurialAltar : TileEntityBase(), ITickable{
 			
 			markDirty()
 		}
-		else if (redeemTick > 0 || (redeemTick == 0 && world.tickableTileEntities.none { it is TileEntityMinersBurialAltar && it.redeemTick > 0 && isGrouped(it) })){
+		else if (redeemTick > 0 || (redeemTick == 0 && wrld.tickableTileEntities.none { it is TileEntityMinersBurialAltar && it.redeemTick > 0 && isGrouped(it) })){
 			++redeemTick
 			
 			if (redeemTick == 1){
 				notifyUpdate(FLAG_SYNC_CLIENT)
 			}
 			else if (redeemTick > MEDALLION_ANIM_TOTAL_DURATION && (tickRedeemSequence(redeemTick - 1 - MEDALLION_ANIM_TOTAL_DURATION, closestPlayer) || redeemTick == Int.MAX_VALUE)){
-				for(tile in world.tickableTileEntities){
+				for(tile in wrld.tickableTileEntities){
 					if (tile is TileEntityMinersBurialAltar && tile !== this && isGrouped(tile)){
 						tile.redeemType = ((redeemType + 1) % 3).toByte()
 						tile.markDirty()
@@ -221,16 +225,16 @@ class TileEntityMinersBurialAltar : TileEntityBase(), ITickable{
 			}
 			
 			val tokenHolderPos = pos.up(1)
-			val tokenHolder = world.selectExistingEntities.inBox<EntityTokenHolder>(AxisAlignedBB(tokenHolderPos)).firstOrNull()
+			val tokenHolder = wrld.selectExistingEntities.inBox<EntityTokenHolder>(AxisAlignedBB(tokenHolderPos)).firstOrNull()
 			
 			if (tick == 0){
 				if (tokenHolder == null){
 					val fxPos = Vec3d(tokenHolderPos.x + 0.5, tokenHolderPos.y + 0.95, tokenHolderPos.z + 0.5)
-					PacketClientFX(FX_SPAWN, FxSpawnData(fxPos, redeemType)).sendToAllAround(world, fxPos, 16.0)
+					PacketClientFX(FX_SPAWN, FxSpawnData(fxPos, redeemType)).sendToAllAround(wrld, fxPos, 16.0)
 					
-					EntityTokenHolder(world, tokenHolderPos, TokenType.NORMAL, TerritoryType.CURSED_LIBRARY).apply {
+					EntityTokenHolder(wrld, tokenHolderPos, TokenType.NORMAL, TerritoryType.CURSED_LIBRARY).apply {
 						currentCharge = 0F
-						world.spawnEntity(this)
+						wrld.addEntity(this)
 					}
 				}
 				
@@ -246,7 +250,7 @@ class TileEntityMinersBurialAltar : TileEntityBase(), ITickable{
 				}
 				else{
 					tokenHolder.forceDropTokenTowards(closestPlayer)
-					tokenHolder.setDead()
+					tokenHolder.remove()
 					
 					redeemTick = 20
 					return true
@@ -259,7 +263,7 @@ class TileEntityMinersBurialAltar : TileEntityBase(), ITickable{
 			if (tick == 0){
 				itemDrops.clear()
 				
-				val rand = world.rand
+				val rand = wrld.rand
 				val mainTables = ITEM_DROP_TABLES_MAIN.map { it.mutableCopy() }
 				
 				for(table in mainTables){
@@ -288,10 +292,10 @@ class TileEntityMinersBurialAltar : TileEntityBase(), ITickable{
 					return true
 				}
 				
-				val rand = world.rand
+				val rand = wrld.rand
 				
 				val stack = itemDrops.last()
-				val split = stack.splitStack(rand.nextInt(1, 3))
+				val split = stack.split(rand.nextInt(1, 3))
 				
 				if (stack.isEmpty){
 					itemDrops.removeAt(itemDrops.lastIndex)
@@ -301,12 +305,12 @@ class TileEntityMinersBurialAltar : TileEntityBase(), ITickable{
 				val spawnMot = spawnPos.directionTowards(closestPlayer.lookPosVec).scale(0.175).addY(0.3)
 				
 				val fxPos = spawnPos.addY(0.375)
-				PacketClientFX(FX_SPAWN, FxSpawnData(fxPos, redeemType)).sendToAllAround(world, fxPos, 16.0)
+				PacketClientFX(FX_SPAWN, FxSpawnData(fxPos, redeemType)).sendToAllAround(wrld, fxPos, 16.0)
 				
-				EntityItem(world, spawnPos.x, spawnPos.y, spawnPos.z, split).apply {
+				EntityItem(wrld, spawnPos.x, spawnPos.y, spawnPos.z, split).apply {
 					motionVec = spawnMot
 					setNoPickupDelay()
-					world.spawnEntity(this)
+					wrld.addEntity(this)
 				}
 			}
 			
@@ -326,25 +330,25 @@ class TileEntityMinersBurialAltar : TileEntityBase(), ITickable{
 	}
 	
 	private fun addItemDrop(item: Pair<Item, IntRange>){
-		itemDrops.add(ItemStack(item.first, world.rand.nextInt(item.second)))
+		itemDrops.add(ItemStack(item.first, wrld.rand.nextInt(item.second)))
 	}
 	
 	// Serialization
 	
-	override fun writeNBT(nbt: TagCompound, context: Context) = with(nbt){
-		setBoolean(HAS_MEDALLION_TAG, hasMedallion)
-		setByte(REDEEM_TYPE_TAG, redeemType)
-		setInteger(REDEEM_TICK_TAG, redeemTick)
+	override fun writeNBT(nbt: TagCompound, context: Context) = nbt.use {
+		putBoolean(HAS_MEDALLION_TAG, hasMedallion)
+		putByte(REDEEM_TYPE_TAG, redeemType)
+		putInt(REDEEM_TICK_TAG, redeemTick)
 		
 		if (context == STORAGE){
-			setList(ITEM_DROPS_TAG, NBTItemStackList.of(itemDrops))
+			putList(ITEM_DROPS_TAG, NBTItemStackList.of(itemDrops))
 		}
 	}
 	
-	override fun readNBT(nbt: TagCompound, context: Context) = with(nbt){
+	override fun readNBT(nbt: TagCompound, context: Context) = nbt.use {
 		hasMedallion = getBoolean(HAS_MEDALLION_TAG)
 		redeemType = getByte(REDEEM_TYPE_TAG)
-		redeemTick = getInteger(REDEEM_TICK_TAG)
+		redeemTick = getInt(REDEEM_TICK_TAG)
 		
 		if (context == STORAGE){
 			itemDrops.clear()

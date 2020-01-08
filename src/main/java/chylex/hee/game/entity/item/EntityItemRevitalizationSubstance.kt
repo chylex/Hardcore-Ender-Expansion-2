@@ -4,14 +4,14 @@ import chylex.hee.game.block.BlockEnderGooPurified
 import chylex.hee.game.fx.IFxData
 import chylex.hee.game.fx.IFxHandler
 import chylex.hee.init.ModBlocks
+import chylex.hee.init.ModEntities
 import chylex.hee.init.ModSounds
 import chylex.hee.network.client.PacketClientFX
+import chylex.hee.system.migration.vanilla.BlockFlowingFluid
 import chylex.hee.system.util.Pos
 import chylex.hee.system.util.allInCenteredSphereMutable
 import chylex.hee.system.util.center
-import chylex.hee.system.util.cloneFrom
 import chylex.hee.system.util.directionTowards
-import chylex.hee.system.util.get
 import chylex.hee.system.util.getBlock
 import chylex.hee.system.util.getState
 import chylex.hee.system.util.playClient
@@ -22,32 +22,35 @@ import chylex.hee.system.util.size
 import chylex.hee.system.util.use
 import chylex.hee.system.util.with
 import chylex.hee.system.util.writePos
-import io.netty.buffer.ByteBuf
-import net.minecraft.block.state.IBlockState
+import net.minecraft.block.BlockState
 import net.minecraft.entity.Entity
-import net.minecraft.entity.item.EntityItem
+import net.minecraft.entity.EntityType
 import net.minecraft.item.ItemStack
+import net.minecraft.network.PacketBuffer
 import net.minecraft.util.DamageSource
 import net.minecraft.util.SoundCategory
 import net.minecraft.util.math.BlockPos
 import net.minecraft.world.World
-import net.minecraftforge.fluids.BlockFluidBase
 import java.util.Random
 import kotlin.math.min
 
-class EntityItemRevitalizationSubstance : EntityItem{
+class EntityItemRevitalizationSubstance : EntityItemBase{
+	@Suppress("unused")
+	constructor(type: EntityType<EntityItemRevitalizationSubstance>, world: World) : super(type, world)
+	constructor(world: World, stack: ItemStack, replacee: Entity) : super(ModEntities.ITEM_REVITALIZATION_SUBSTANCE, world, stack, replacee)
+	
 	companion object{
 		private const val MAX_RADIUS = 8.5F
 		
 		class FxRevitalizeGooData(private val center: BlockPos, private val radius: Float) : IFxData{
-			override fun write(buffer: ByteBuf) = buffer.use {
+			override fun write(buffer: PacketBuffer) = buffer.use {
 				writePos(center)
 				writeFloat(radius)
 			}
 		}
 		
 		val FX_REVITALIZE_GOO = object : IFxHandler<FxRevitalizeGooData>{
-			override fun handle(buffer: ByteBuf, world: World, rand: Random) = buffer.use {
+			override fun handle(buffer: PacketBuffer, world: World, rand: Random) = buffer.use {
 				val center = readPos()
 				val radius = readFloat()
 				
@@ -69,7 +72,7 @@ class EntityItemRevitalizationSubstance : EntityItem{
 			}
 		}
 		
-		private inline fun forEachGoo(world: World, center: BlockPos, radius: Float, callback: (BlockPos, IBlockState) -> Unit){
+		private inline fun forEachGoo(world: World, center: BlockPos, radius: Float, callback: (BlockPos, BlockState) -> Unit){
 			for(pos in center.allInCenteredSphereMutable(radius.toDouble())){
 				val state = pos.getState(world)
 				
@@ -78,13 +81,6 @@ class EntityItemRevitalizationSubstance : EntityItem{
 				}
 			}
 		}
-	}
-	
-	@Suppress("unused")
-	constructor(world: World) : super(world)
-	
-	constructor(world: World, stack: ItemStack, replacee: Entity) : super(world, replacee.posX, replacee.posY, replacee.posZ, stack){
-		this.cloneFrom(replacee)
 	}
 	
 	private var isBeingDamaged = false
@@ -97,7 +93,7 @@ class EntityItemRevitalizationSubstance : EntityItem{
 		return result
 	}
 	
-	override fun setDead(){
+	override fun remove(){
 		if (!world.isRemote && (age >= lifespan || isBeingDamaged)){
 			val center = Pos(this)
 			
@@ -107,11 +103,11 @@ class EntityItemRevitalizationSubstance : EntityItem{
 				PacketClientFX(FX_REVITALIZE_GOO, FxRevitalizeGooData(center, radius)).sendToAllAround(this, 24.0)
 				
 				forEachGoo(world, center, radius){
-					pos, state -> pos.setState(world, ModBlocks.PURIFIED_ENDER_GOO.with(BlockFluidBase.LEVEL, state[BlockFluidBase.LEVEL]))
+					pos, state -> pos.setState(world, ModBlocks.PURIFIED_ENDER_GOO.with(BlockFlowingFluid.LEVEL, state[BlockFlowingFluid.LEVEL]))
 				}
 			}
 		}
 		
-		super.setDead()
+		super.remove()
 	}
 }

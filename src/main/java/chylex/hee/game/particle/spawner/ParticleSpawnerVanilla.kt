@@ -4,30 +4,30 @@ import chylex.hee.game.particle.util.IOffset
 import chylex.hee.game.particle.util.IOffset.MutableOffsetPoint
 import chylex.hee.game.particle.util.IOffset.None
 import chylex.hee.game.particle.util.IShape
-import net.minecraft.util.EnumParticleTypes
+import net.minecraft.particles.IParticleData
 import java.util.Random
 
 class ParticleSpawnerVanilla(
-	type: EnumParticleTypes,
+	type: IParticleData,
 	private val pos: IOffset = None,
 	private val mot: IOffset = None,
 	private val ignoreRangeLimit: Boolean = false,
 	hideOnMinimalSetting: Boolean = true
 ) : IParticleSpawner{
-	private val particleID = type.particleID
+	private val particleID = type
 	private val showSomeParticlesEvenOnMinimalSetting = !hideOnMinimalSetting
 	
 	private val tmpOffsetPos = MutableOffsetPoint()
 	private val tmpOffsetMot = MutableOffsetPoint()
 	
 	override fun spawn(shape: IShape, rand: Random){
-		val renderer = MC.instance.renderGlobal
+		val renderer = MC.instance.worldRenderer
 		
 		for(point in shape.points){
 			pos.next(tmpOffsetPos, rand)
 			mot.next(tmpOffsetMot, rand)
 			
-			renderer.spawnParticle(
+			renderer.addParticle(
 				particleID,
 				ignoreRangeLimit,
 				showSomeParticlesEvenOnMinimalSetting,

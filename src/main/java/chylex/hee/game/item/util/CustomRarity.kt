@@ -1,7 +1,7 @@
 package chylex.hee.game.item.util
+import net.minecraft.item.Rarity
 import net.minecraft.util.text.TextFormatting
-import net.minecraftforge.common.util.EnumHelper
 
 object CustomRarity{
-	val TRINKET = EnumHelper.addRarity("HEE_TRINKET", TextFormatting.GOLD, "Trinket")!!
+	val TRINKET: Rarity = Rarity.create("HEE_TRINKET", TextFormatting.GOLD)
 }

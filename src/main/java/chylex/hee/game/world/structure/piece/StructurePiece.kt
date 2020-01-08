@@ -1,14 +1,12 @@
 package chylex.hee.game.world.structure.piece
+import chylex.hee.game.block.util.ColoredBlocks
 import chylex.hee.game.world.structure.IStructureGenerator
 import chylex.hee.game.world.structure.IStructurePiece
 import chylex.hee.game.world.structure.IStructureWorld
 import chylex.hee.game.world.structure.world.TransformedStructureWorld
 import chylex.hee.game.world.util.Size
 import chylex.hee.game.world.util.Transform
-import chylex.hee.system.migration.vanilla.Blocks
-import chylex.hee.system.util.with
-import net.minecraft.block.BlockColored
-import net.minecraft.item.EnumDyeColor
+import net.minecraft.item.DyeColor
 
 abstract class StructurePiece<T> : IStructurePiece, IStructureGenerator{
 	protected abstract val connections: Array<IStructurePieceConnection>
@@ -17,7 +15,7 @@ abstract class StructurePiece<T> : IStructurePiece, IStructureGenerator{
 		generate(world, MutableInstance(null, Transform.NONE).apply { connections.forEach { useConnection(it, MutableInstance(null, Transform.NONE)) } })
 		
 		for(connection in connections){
-			world.setState(connection.offset, Blocks.WOOL.with(BlockColored.COLOR, EnumDyeColor.values()[connection.facing.index - 2]))
+			world.setBlock(connection.offset, ColoredBlocks.WOOL.getValue(DyeColor.values()[connection.facing.index - 2]))
 		}
 	}
 	

@@ -1,6 +1,7 @@
 package chylex.hee.game.mechanics.table
 import chylex.hee.game.block.BlockTablePedestal
 import chylex.hee.game.container.util.InvReverseWrapper
+import chylex.hee.system.migration.vanilla.EntityItem
 import chylex.hee.system.util.TagCompound
 import chylex.hee.system.util.copyIf
 import chylex.hee.system.util.createSnapshot
@@ -9,16 +10,16 @@ import chylex.hee.system.util.isNotEmpty
 import chylex.hee.system.util.loadInventory
 import chylex.hee.system.util.motionVec
 import chylex.hee.system.util.nonEmptySlots
+import chylex.hee.system.util.putStack
 import chylex.hee.system.util.restoreSnapshot
 import chylex.hee.system.util.saveInventory
 import chylex.hee.system.util.selectExistingEntities
-import chylex.hee.system.util.setStack
 import chylex.hee.system.util.size
-import net.minecraft.entity.item.EntityItem
-import net.minecraft.entity.player.InventoryPlayer
-import net.minecraft.inventory.Container
-import net.minecraft.inventory.InventoryBasic
+import chylex.hee.system.util.use
+import net.minecraft.entity.player.PlayerInventory
+import net.minecraft.inventory.Inventory
 import net.minecraft.inventory.InventoryHelper
+import net.minecraft.inventory.container.Container
 import net.minecraft.item.ItemStack
 import net.minecraft.util.math.AxisAlignedBB
 import net.minecraft.util.math.BlockPos
@@ -37,8 +38,8 @@ class PedestalInventoryHandler(private val updateCallback: (Boolean) -> Unit) : 
 	var itemInput: ItemStack = ItemStack.EMPTY
 		private set
 	
-	private val itemOutput = InventoryBasic("[Output]", false, 9).apply {
-		addInventoryChangeListener { onInventoryUpdated(updateInputModCounter = false) }
+	private val itemOutput = Inventory(9).apply {
+		addListener { onInventoryUpdated(updateInputModCounter = false) }
 	}
 	
 	val itemOutputCap = InvReverseWrapper(itemOutput)
@@ -124,7 +125,7 @@ class PedestalInventoryHandler(private val updateCallback: (Boolean) -> Unit) : 
 		return true
 	}
 	
-	fun moveOutputToPlayerInventory(inventory: InventoryPlayer): Boolean{
+	fun moveOutputToPlayerInventory(inventory: PlayerInventory): Boolean{
 		var hasTransferedAnything = false
 		
 		for((_, stack) in itemOutput.nonEmptySlots){
@@ -178,7 +179,7 @@ class PedestalInventoryHandler(private val updateCallback: (Boolean) -> Unit) : 
 			if (!previousItemEntities.contains(itemEntity)){
 				itemEntity.setNoPickupDelay()
 				itemEntity.motionVec = Vec3d.ZERO
-				itemEntity.thrower = BlockTablePedestal.DROPPED_ITEM_THROWER_NAME
+				itemEntity.throwerId = BlockTablePedestal.DROPPED_ITEM_THROWER
 			}
 		}
 	}
@@ -192,11 +193,11 @@ class PedestalInventoryHandler(private val updateCallback: (Boolean) -> Unit) : 
 	// Serialization
 	
 	override fun serializeNBT() = TagCompound().apply {
-		setStack(INPUT_TAG, itemInput)
+		putStack(INPUT_TAG, itemInput)
 		saveInventory(OUTPUT_TAG, itemOutput)
 	}
 	
-	override fun deserializeNBT(nbt: TagCompound) = with(nbt){
+	override fun deserializeNBT(nbt: TagCompound) = nbt.use {
 		itemInput = getStack(INPUT_TAG)
 		loadInventory(OUTPUT_TAG, itemOutput)
 	}

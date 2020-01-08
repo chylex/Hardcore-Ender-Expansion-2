@@ -1,19 +1,19 @@
 package chylex.hee.system.util
-import net.minecraft.potion.Potion
-import net.minecraft.potion.PotionEffect
+import chylex.hee.system.migration.vanilla.Potion
+import net.minecraft.potion.EffectInstance
 
-fun Potion.makeEffect(duration: Int): PotionEffect{
-	return PotionEffect(this, duration)
+fun Potion.makeEffect(duration: Int): EffectInstance{
+	return EffectInstance(this, duration)
 }
 
-fun Potion.makeEffect(duration: Int, amplifier: Int): PotionEffect{
-	return PotionEffect(this, duration, amplifier)
+fun Potion.makeEffect(duration: Int, amplifier: Int): EffectInstance{
+	return EffectInstance(this, duration, amplifier)
 }
 
-fun Potion.makeEffect(duration: Int, amplifier: Int = 0, isAmbient: Boolean = false, showParticles: Boolean = true): PotionEffect{
-	return PotionEffect(this, duration, amplifier, isAmbient, showParticles)
+fun Potion.makeEffect(duration: Int, amplifier: Int = 0, isAmbient: Boolean = false, showParticles: Boolean = true): EffectInstance{
+	return EffectInstance(this, duration, amplifier, isAmbient, showParticles)
 }
 
-fun PotionEffect.clone(): PotionEffect{
-	return PotionEffect(this)
+fun EffectInstance.clone(): EffectInstance{
+	return EffectInstance(this)
 }

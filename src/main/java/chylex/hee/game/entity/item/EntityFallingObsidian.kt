@@ -9,8 +9,10 @@ import chylex.hee.game.mechanics.damage.Damage.Companion.TITLE_FALLING_BLOCK
 import chylex.hee.game.mechanics.damage.IDamageProcessor.Companion.ARMOR_PROTECTION
 import chylex.hee.game.mechanics.damage.IDamageProcessor.Companion.ENCHANTMENT_PROTECTION
 import chylex.hee.game.mechanics.damage.IDamageProcessor.Companion.PEACEFUL_EXCLUSION
+import chylex.hee.init.ModEntities
 import chylex.hee.init.ModSounds
 import chylex.hee.network.client.PacketClientFX
+import chylex.hee.system.migration.vanilla.EntityLivingBase
 import chylex.hee.system.util.Pos
 import chylex.hee.system.util.allInCenteredBox
 import chylex.hee.system.util.distanceSqTo
@@ -21,9 +23,9 @@ import chylex.hee.system.util.selectVulnerableEntities
 import chylex.hee.system.util.totalTime
 import chylex.hee.system.util.use
 import chylex.hee.system.util.writePos
-import io.netty.buffer.ByteBuf
-import net.minecraft.block.state.IBlockState
-import net.minecraft.entity.EntityLivingBase
+import net.minecraft.block.BlockState
+import net.minecraft.entity.EntityType
+import net.minecraft.network.PacketBuffer
 import net.minecraft.util.SoundCategory
 import net.minecraft.util.math.BlockPos
 import net.minecraft.world.World
@@ -31,20 +33,25 @@ import java.util.Random
 import java.util.UUID
 import kotlin.math.ln
 import kotlin.math.pow
+import kotlin.streams.toList
 
 class EntityFallingObsidian : EntityFallingBlockHeavy{
+	@Suppress("unused")
+	constructor(type: EntityType<EntityFallingObsidian>, world: World) : super(type, world)
+	constructor(world: World, pos: BlockPos, state: BlockState) : super(ModEntities.FALLING_OBSIDIAN, world, pos, state)
+	
 	companion object{
 		private val DAMAGE = Damage(PEACEFUL_EXCLUSION, ARMOR_PROTECTION(false), ENCHANTMENT_PROTECTION)
 		
 		class FxFallData(private val pos: BlockPos, private val volume: Float) : IFxData{
-			override fun write(buffer: ByteBuf) = buffer.use {
+			override fun write(buffer: PacketBuffer) = buffer.use {
 				writePos(pos)
 				writeFloat(volume)
 			}
 		}
 		
 		val FX_FALL = object : IFxHandler<FxFallData>{
-			override fun handle(buffer: ByteBuf, world: World, rand: Random) = buffer.use {
+			override fun handle(buffer: PacketBuffer, world: World, rand: Random) = buffer.use {
 				val pos = readPos()
 				val volume = readFloat()
 				
@@ -58,12 +65,7 @@ class EntityFallingObsidian : EntityFallingBlockHeavy{
 	private var lastFallPos = Pos(this)
 	private var entityDamageTime = mutableMapOf<UUID, Long>()
 	
-	@Suppress("unused")
-	constructor(world: World) : super(world)
-	
-	constructor(world: World, pos: BlockPos, state: IBlockState) : super(world, pos, state)
-	
-	override fun updateFallState(y: Double, onGround: Boolean, state: IBlockState, pos: BlockPos){
+	override fun updateFallState(y: Double, onGround: Boolean, state: BlockState, pos: BlockPos){
 		super.updateFallState(y, onGround, state, pos)
 		
 		if (!world.isRemote && pos != lastFallPos){
@@ -71,7 +73,7 @@ class EntityFallingObsidian : EntityFallingBlockHeavy{
 				val damageAmount = 5F * (ln(2F * (1.2F + fallDistance)) - 1F).pow(1.8F)
 				val worldTime = world.totalTime
 				
-				for(entity in world.selectVulnerableEntities.inBox<EntityLivingBase>(entityBoundingBox)){
+				for(entity in world.selectVulnerableEntities.inBox<EntityLivingBase>(boundingBox)){
 					val uuid = entity.uniqueID
 					
 					if (entityDamageTime[uuid]?.takeUnless { worldTime - it > 40 } == null){
@@ -94,12 +96,12 @@ class EntityFallingObsidian : EntityFallingBlockHeavy{
 		}
 	}
 	
-	override fun placeAfterLanding(pos: BlockPos, collidingWith: IBlockState): PlacementResult{
+	override fun placeAfterLanding(pos: BlockPos, collidingWith: BlockState): PlacementResult{
 		if (super.placeAfterLanding(pos, collidingWith) == SUCCESS){
 			return SUCCESS
 		}
 		
-		val relocationPos = pos.allInCenteredBox(1, 0, 1).filter { canFallThrough(world, it) }.minBy { it.distanceSqTo(this) }
+		val relocationPos = pos.allInCenteredBox(1, 0, 1).toList().filter { canFallThrough(world, it) }.minBy { it.distanceSqTo(this) }
 		
 		return if (relocationPos != null){
 			if (super.placeAfterLanding(relocationPos, collidingWith) == SUCCESS){

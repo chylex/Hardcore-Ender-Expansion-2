@@ -10,14 +10,14 @@ import chylex.hee.game.world.util.BoundingBox
 import chylex.hee.game.world.util.Size
 import chylex.hee.init.ModBlocks
 import chylex.hee.system.migration.vanilla.Blocks
-import chylex.hee.system.util.NBTList.Companion.setList
+import chylex.hee.system.util.NBTList.Companion.putList
 import chylex.hee.system.util.NBTObjectList
 import chylex.hee.system.util.Pos
 import chylex.hee.system.util.TagCompound
 import chylex.hee.system.util.getListOfStrings
 import it.unimi.dsi.fastutil.ints.Int2ObjectArrayMap
 import it.unimi.dsi.fastutil.ints.IntArrayList
-import net.minecraft.block.state.IBlockState
+import net.minecraft.block.BlockState
 import net.minecraft.util.math.BlockPos
 import net.minecraft.world.World
 
@@ -79,14 +79,14 @@ class StructureFile(nbt: TagCompound){
 			world.finalize()
 		}
 		
-		fun save(world: World, box: BoundingBox, palette: Palette): Pair<TagCompound, Set<IBlockState>>{
+		fun save(world: World, box: BoundingBox, palette: Palette): Pair<TagCompound, Set<BlockState>>{
 			return save(WorldToStructureWorldAdapter(world, world.rand, box.min), box.size, palette)
 		}
 		
-		fun save(world: IStructureWorld, size: Size, palette: Palette): Pair<TagCompound, Set<IBlockState>>{
+		fun save(world: IStructureWorld, size: Size, palette: Palette): Pair<TagCompound, Set<BlockState>>{
 			require(size.x <= 256 && size.y <= 256 && size.z <= 256){ "structure files can only contain structures up to 256x256x256 blocks" }
 			
-			val missingMappings = mutableSetOf<IBlockState>()
+			val missingMappings = mutableSetOf<BlockState>()
 			
 			val paletteMapping = palette.lookupForDevelopment
 			val blockMapping = Int2ObjectArrayMap<String>()
@@ -125,9 +125,9 @@ class StructureFile(nbt: TagCompound){
 			}
 			
 			val nbt = TagCompound().also {
-				it.setList(PALETTE_TAG, NBTObjectList.of(generatedPalette.asIterable()))
-				it.setIntArray(BLOCKS_TAG, generatedBlocks.toIntArray())
-				it.setIntArray(SIZE_TAG, intArrayOf(size.x, size.y, size.z))
+				it.putList(PALETTE_TAG, NBTObjectList.of(generatedPalette.asIterable()))
+				it.putIntArray(BLOCKS_TAG, generatedBlocks.toIntArray())
+				it.putIntArray(SIZE_TAG, intArrayOf(size.x, size.y, size.z))
 			}
 			
 			return nbt to missingMappings

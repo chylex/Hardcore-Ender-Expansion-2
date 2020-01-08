@@ -9,8 +9,10 @@ import chylex.hee.system.migration.forge.EventPriority
 import chylex.hee.system.migration.forge.Side
 import chylex.hee.system.migration.forge.Sided
 import chylex.hee.system.migration.forge.SubscribeEvent
+import chylex.hee.system.migration.vanilla.EntityPlayer
+import chylex.hee.system.migration.vanilla.TextComponentTranslation
 import chylex.hee.system.util.NBTItemStackList
-import chylex.hee.system.util.NBTList.Companion.setList
+import chylex.hee.system.util.NBTList.Companion.putList
 import chylex.hee.system.util.allSlots
 import chylex.hee.system.util.enchantmentMap
 import chylex.hee.system.util.getIntegerOrNull
@@ -23,25 +25,26 @@ import chylex.hee.system.util.heeTagOrNull
 import chylex.hee.system.util.isNotEmpty
 import chylex.hee.system.util.nbtOrNull
 import chylex.hee.system.util.over
+import chylex.hee.system.util.putStack
 import chylex.hee.system.util.setStack
 import chylex.hee.system.util.writeTag
 import io.netty.buffer.Unpooled
-import net.minecraft.client.resources.I18n
 import net.minecraft.client.util.ITooltipFlag
-import net.minecraft.entity.player.EntityPlayer
-import net.minecraft.inventory.InventoryBasic
-import net.minecraft.item.EnumRarity
+import net.minecraft.inventory.Inventory
 import net.minecraft.item.ItemStack
+import net.minecraft.item.Rarity
 import net.minecraft.util.ActionResult
-import net.minecraft.util.EnumHand
+import net.minecraft.util.Hand
 import net.minecraft.util.NonNullList
+import net.minecraft.util.text.ITextComponent
+import net.minecraft.world.GameRules.KEEP_INVENTORY
 import net.minecraft.world.World
 import net.minecraftforge.common.MinecraftForge
 import net.minecraftforge.event.entity.living.LivingDeathEvent
-import net.minecraftforge.event.entity.player.PlayerDropsEvent
+import net.minecraftforge.event.entity.living.LivingDropsEvent
 import net.minecraftforge.event.entity.player.PlayerEvent
 
-class ItemAmuletOfRecovery : ItemAbstractEnergyUser(), ITrinketItem{
+class ItemAmuletOfRecovery(properties: Properties) : ItemAbstractEnergyUser(properties), ITrinketItem{
 	private companion object{
 		private const val CONTENTS_TAG = "Contents"
 		private const val RETRIEVAL_ENERGY_TAG = "RetrievalEnergy"
@@ -86,7 +89,7 @@ class ItemAmuletOfRecovery : ItemAbstractEnergyUser(), ITrinketItem{
 			}
 			
 			processPlayerInventory(player, ::moveFromInventory)
-			trinketItem.heeTag.setList(CONTENTS_TAG, NBTItemStackList.of(saved.asIterable()))
+			trinketItem.heeTag.putList(CONTENTS_TAG, NBTItemStackList.of(saved.asIterable()))
 		}
 		
 		private fun updateRetrievalCost(trinketItem: ItemStack){
@@ -108,17 +111,17 @@ class ItemAmuletOfRecovery : ItemAbstractEnergyUser(), ITrinketItem{
 						
 						if (nbtCopy != null){ // UPDATE: many changes in 1.13
 							// general
-							nbtCopy.removeTag("Unbreakable")
-							nbtCopy.removeTag("CanDestroy")
-							nbtCopy.removeTag("CanPlaceOn")
+							nbtCopy.remove("Unbreakable")
+							nbtCopy.remove("CanDestroy")
+							nbtCopy.remove("CanPlaceOn")
 							
 							// enchantments
-							nbtCopy.removeTag("ench")
-							nbtCopy.removeTag("StoredEnchantments")
-							nbtCopy.removeTag("RepairCost")
+							nbtCopy.remove("ench")
+							nbtCopy.remove("StoredEnchantments")
+							nbtCopy.remove("RepairCost")
 							
 							// attributes
-							nbtCopy.removeTag("AttributeModifiers")
+							nbtCopy.remove("AttributeModifiers")
 							
 							// calculation & cleanup
 							try{
@@ -134,12 +137,12 @@ class ItemAmuletOfRecovery : ItemAbstractEnergyUser(), ITrinketItem{
 				}
 				
 				val totalCost = 10 + (sumOfSlots / 2) + (sumOfSizes / 50) + (sumOfEnchantments / 6) + (sumOfFilteredTagSizes / 100)
-				setInteger(RETRIEVAL_ENERGY_TAG, totalCost)
+				putInt(RETRIEVAL_ENERGY_TAG, totalCost)
 			}
 		}
 	}
 	
-	class Inventory(override val player: EntityPlayer, private val itemHeldIn: EnumHand) : InventoryBasic("gui.hee.amulet_of_recovery.title", false, SLOT_COUNT), IInventoryFromPlayerItem{
+	class Inv(override val player: EntityPlayer, private val itemHeldIn: Hand) : Inventory(/* UPDATE "gui.hee.amulet_of_recovery.title", false, */SLOT_COUNT), IInventoryFromPlayerItem{
 		init{
 			val heldItem = player.getHeldItem(itemHeldIn)
 			
@@ -183,10 +186,10 @@ class ItemAmuletOfRecovery : ItemAbstractEnergyUser(), ITrinketItem{
 			}
 			
 			if (isEmpty){
-				heldItem.heeTag.removeTag(CONTENTS_TAG)
+				heldItem.heeTag.remove(CONTENTS_TAG)
 			}
 			else{
-				heldItem.heeTag.setList(CONTENTS_TAG, newList)
+				heldItem.heeTag.putList(CONTENTS_TAG, newList)
 			}
 			
 			return true
@@ -196,8 +199,6 @@ class ItemAmuletOfRecovery : ItemAbstractEnergyUser(), ITrinketItem{
 	// Initialization
 	
 	init{
-		maxStackSize = 1
-		
 		MinecraftForge.EVENT_BUS.register(this)
 	}
 	
@@ -220,14 +221,14 @@ class ItemAmuletOfRecovery : ItemAbstractEnergyUser(), ITrinketItem{
 			return false
 		}
 		
-		if (hasMaximumEnergy(stack) && hasAnyContents(stack) && stack.heeTag.getListOfCompounds(CONTENTS_TAG).all { it.size == 0 }){
-			stack.heeTag.removeTag(CONTENTS_TAG) // re-activate Trinket immediately after charging if the inventory is empty
+		if (hasMaximumEnergy(stack) && hasAnyContents(stack) && stack.heeTag.getListOfCompounds(CONTENTS_TAG).all { it.isEmpty }){
+			stack.heeTag.remove(CONTENTS_TAG) // re-activate Trinket immediately after charging if the inventory is empty
 		}
 		
 		return true
 	}
 	
-	override fun onItemRightClick(world: World, player: EntityPlayer, hand: EnumHand): ActionResult<ItemStack>{
+	override fun onItemRightClick(world: World, player: EntityPlayer, hand: Hand): ActionResult<ItemStack>{
 		val stack = player.getHeldItem(hand)
 		
 		if (!hasAnyContents(stack) || !hasMaximumEnergy(stack)){
@@ -245,7 +246,7 @@ class ItemAmuletOfRecovery : ItemAbstractEnergyUser(), ITrinketItem{
 		val player = e.entityLiving as? EntityPlayer ?: return
 		val world = player.world
 		
-		if (world.isRemote || world.gameRules.getBoolean("keepInventory")){
+		if (world.isRemote || world.gameRules.getBoolean(KEEP_INVENTORY)){
 			return
 		}
 		
@@ -256,16 +257,16 @@ class ItemAmuletOfRecovery : ItemAbstractEnergyUser(), ITrinketItem{
 			movePlayerInventoryToTrinket(player, trinketItem)
 			setEnergyChargeLevel(trinketItem, Units(0))
 			
-			player.heeTag.setStack(PLAYER_RESPAWN_ITEM_TAG, trinketItem)
+			player.heeTag.putStack(PLAYER_RESPAWN_ITEM_TAG, trinketItem)
 		}
 	}
 	
 	@SubscribeEvent(EventPriority.LOW)
-	fun onPlayerDrops(e: PlayerDropsEvent){
-		val player = e.entityPlayer
+	fun onPlayerDrops(e: LivingDropsEvent){
+		val player = e.entity
 		val drops = e.drops
 		
-		if (player.world.isRemote || drops.isEmpty()){
+		if (player.world.isRemote || player !is EntityPlayer || drops.isEmpty()){
 			return
 		}
 		
@@ -274,7 +275,8 @@ class ItemAmuletOfRecovery : ItemAbstractEnergyUser(), ITrinketItem{
 			
 			for(slot in BACKFILL_SLOT_ORDER){
 				if (list.get(slot).isEmpty){
-					list.set(slot, drops.removeAt(0).item)
+					list.set(slot, drops.first().item)
+					drops.iterator().remove()
 					
 					if (drops.isEmpty()){
 						break
@@ -291,7 +293,7 @@ class ItemAmuletOfRecovery : ItemAbstractEnergyUser(), ITrinketItem{
 		}
 		
 		val oldPlayer = e.original
-		val newPlayer = e.entityPlayer
+		val newPlayer = e.player
 		
 		with(oldPlayer.heeTagOrNull ?: return){
 			val trinketItem = getStack(PLAYER_RESPAWN_ITEM_TAG)
@@ -303,7 +305,7 @@ class ItemAmuletOfRecovery : ItemAbstractEnergyUser(), ITrinketItem{
 					newPlayer.dropItem(trinketItem, false, false)
 				}
 				
-				removeTag(PLAYER_RESPAWN_ITEM_TAG)
+				remove(PLAYER_RESPAWN_ITEM_TAG)
 			}
 		}
 	}
@@ -314,17 +316,17 @@ class ItemAmuletOfRecovery : ItemAbstractEnergyUser(), ITrinketItem{
 		return !hasMaximumEnergy(stack)
 	}
 	
-	override fun getRarity(stack: ItemStack): EnumRarity{
+	override fun getRarity(stack: ItemStack): Rarity{
 		return ItemAbstractTrinket.onGetRarity()
 	}
 	
 	@Sided(Side.CLIENT)
-	override fun addInformation(stack: ItemStack, world: World?, lines: MutableList<String>, flags: ITooltipFlag){
+	override fun addInformation(stack: ItemStack, world: World?, lines: MutableList<ITextComponent>, flags: ITooltipFlag){
 		if (!hasAnyContents(stack)){
 			ItemAbstractTrinket.onAddInformation(stack, this, lines)
 		}
 		
-		lines.add(I18n.format("item.tooltip.hee.energy.level", getEnergyChargeLevel(stack).units.value, getEnergyCapacity(stack).units.value))
+		lines.add(TextComponentTranslation("item.tooltip.hee.energy.level", getEnergyChargeLevel(stack).units.value, getEnergyCapacity(stack).units.value))
 	}
 	
 	@Sided(Side.CLIENT)

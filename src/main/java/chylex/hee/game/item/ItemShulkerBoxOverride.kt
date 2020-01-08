@@ -11,6 +11,10 @@ import chylex.hee.system.migration.forge.Side
 import chylex.hee.system.migration.forge.Sided
 import chylex.hee.system.migration.forge.SubscribeAllEvents
 import chylex.hee.system.migration.forge.SubscribeEvent
+import chylex.hee.system.migration.vanilla.EntityPlayer
+import chylex.hee.system.migration.vanilla.ItemBlock
+import chylex.hee.system.migration.vanilla.TextComponentString
+import chylex.hee.system.migration.vanilla.TextComponentTranslation
 import chylex.hee.system.util.allSlots
 import chylex.hee.system.util.find
 import chylex.hee.system.util.getCompoundOrNull
@@ -23,24 +27,22 @@ import chylex.hee.system.util.setStack
 import chylex.hee.system.util.size
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap
 import net.minecraft.block.Block
-import net.minecraft.client.gui.GuiScreen
-import net.minecraft.client.gui.inventory.GuiInventory
+import net.minecraft.client.gui.screen.Screen
+import net.minecraft.client.gui.screen.inventory.InventoryScreen
 import net.minecraft.client.resources.I18n
 import net.minecraft.client.util.ITooltipFlag
-import net.minecraft.entity.player.EntityPlayer
-import net.minecraft.inventory.InventoryBasic
+import net.minecraft.inventory.Inventory
 import net.minecraft.inventory.ItemStackHelper
-import net.minecraft.item.ItemShulkerBox
 import net.minecraft.item.ItemStack
 import net.minecraft.util.ActionResult
-import net.minecraft.util.EnumHand
+import net.minecraft.util.Hand
 import net.minecraft.util.NonNullList
+import net.minecraft.util.text.ITextComponent
 import net.minecraft.util.text.TextFormatting
 import net.minecraft.world.World
 import net.minecraftforge.client.event.GuiScreenEvent
-import org.lwjgl.input.Mouse
 
-class ItemShulkerBoxOverride(block: Block) : ItemShulkerBox(block){
+class ItemShulkerBoxOverride(block: Block, properties: Properties) : ItemBlock(block, properties){
 	private companion object{
 		private const val TILE_ENTITY_TAG = "BlockEntityTag"
 		private const val TOOLTIP_ENTRY_COUNT = 5
@@ -54,7 +56,9 @@ class ItemShulkerBoxOverride(block: Block) : ItemShulkerBox(block){
 		LARGE(27)
 	}
 	
-	class Inventory(override val player: EntityPlayer, private val inventorySlot: Int) : InventoryBasic("", false, BoxSize.LARGE.slots), IInventoryFromPlayerItem{
+	class Inv(override val player: EntityPlayer, private val inventorySlot: Int) : Inventory(BoxSize.LARGE.slots), IInventoryFromPlayerItem{
+		// UPDATE name
+		
 		private val boxStack
 			get() = player.inventory.getStack(inventorySlot)
 		
@@ -63,7 +67,7 @@ class ItemShulkerBoxOverride(block: Block) : ItemShulkerBox(block){
 			
 			if (isStackValid(boxStack)){
 				NonNullList.withSize(size, ItemStack.EMPTY).also {
-					ItemStackHelper.loadAllItems(boxStack.nbt.getCompoundTag(TILE_ENTITY_TAG), it)
+					ItemStackHelper.loadAllItems(boxStack.nbt.getCompound(TILE_ENTITY_TAG), it)
 					it.forEachIndexed(::setStack)
 				}
 			}
@@ -81,24 +85,16 @@ class ItemShulkerBoxOverride(block: Block) : ItemShulkerBox(block){
 					it[slot] = stack
 				}
 				
-				ItemStackHelper.saveAllItems(boxStack.nbt.getCompoundTag(TILE_ENTITY_TAG), it)
+				ItemStackHelper.saveAllItems(boxStack.nbt.getCompound(TILE_ENTITY_TAG), it)
 			}
 			
 			return true
-		}
-		
-		override fun getName(): String{
-			return boxStack.let { if (it.hasDisplayName()) it.displayName else "${it.translationKey}.name" }
-		}
-		
-		override fun hasCustomName(): Boolean{
-			return boxStack.hasDisplayName()
 		}
 	}
 	
 	// Use handling
 	
-	override fun onItemRightClick(world: World, player: EntityPlayer, hand: EnumHand): ActionResult<ItemStack>{
+	override fun onItemRightClick(world: World, player: EntityPlayer, hand: Hand): ActionResult<ItemStack>{
 		val stack = player.getHeldItem(hand)
 		val slot = player.inventory.nonEmptySlots.find { it.stack === stack }
 		
@@ -117,10 +113,10 @@ class ItemShulkerBoxOverride(block: Block) : ItemShulkerBox(block){
 	object EventHandler{
 		@JvmStatic
 		@SubscribeEvent(EventPriority.LOWEST)
-		fun onMouseInputPre(e: GuiScreenEvent.MouseInputEvent.Pre){
+		fun onMouseInputPre(e: GuiScreenEvent.MouseClickedEvent.Pre){
 			val gui = e.gui
 			
-			if (gui is GuiInventory && Mouse.getEventButton() == 1 && Mouse.getEventButtonState() && !GuiScreen.isShiftKeyDown()){
+			if (gui is InventoryScreen && e.button == 1 && !Screen.hasShiftDown()){
 				val hoveredSlot = gui.slotUnderMouse
 				
 				if (hoveredSlot != null && isStackValid(hoveredSlot.stack)){
@@ -136,10 +132,10 @@ class ItemShulkerBoxOverride(block: Block) : ItemShulkerBox(block){
 	}
 	
 	@Sided(Side.CLIENT)
-	override fun addInformation(stack: ItemStack, world: World?, lines: MutableList<String>, flags: ITooltipFlag){
-		if (MC.currentScreen is GuiInventory){
-			lines.add(I18n.format("item.hee.shulker_box.tooltip"))
-			lines.add("")
+	override fun addInformation(stack: ItemStack, world: World?, lines: MutableList<ITextComponent>, flags: ITooltipFlag){
+		if (MC.currentScreen is InventoryScreen){
+			lines.add(TextComponentTranslation("item.hee.shulker_box.tooltip"))
+			lines.add(TextComponentString(""))
 		}
 		
 		val contentsTag = stack.nbtOrNull?.getCompoundOrNull(TILE_ENTITY_TAG)
@@ -153,23 +149,23 @@ class ItemShulkerBoxOverride(block: Block) : ItemShulkerBox(block){
 				
 				for(invStack in inventory){
 					if (invStack.isNotEmpty){
-						counts.addTo(invStack.displayName, invStack.count)
+						counts.addTo(invStack.displayName.string /* UPDATE */, invStack.count)
 					}
 				}
 				
 				val sorted = counts.entries.sortedWith(compareBy({ -it.value }, { it.key }))
 				
 				for((name, count) in sorted.take(TOOLTIP_ENTRY_COUNT)){
-					lines.add("%s x%d".format(name, count))
+					lines.add(TextComponentString("%s x%d".format(name, count)))
 				}
 				
 				if (sorted.size > TOOLTIP_ENTRY_COUNT){
-					lines.add("${TextFormatting.ITALIC}${I18n.format("container.shulkerBox.more", sorted.size - TOOLTIP_ENTRY_COUNT)}")
+					lines.add(TextComponentString("${TextFormatting.ITALIC}${I18n.format("container.shulkerBox.more", sorted.size - TOOLTIP_ENTRY_COUNT)}"))
 				}
 			}
 		}
 		
-		if (lines.lastOrNull()?.isEmpty() == true){
+		if ((lines.lastOrNull() as? TextComponentString)?.text.isNullOrEmpty()){
 			lines.removeAt(lines.lastIndex)
 		}
 	}

@@ -1,4 +1,5 @@
 package chylex.hee.game.entity.living.ai
+import chylex.hee.system.migration.vanilla.EntityCreature
 import chylex.hee.system.util.breakBlock
 import chylex.hee.system.util.component1
 import chylex.hee.system.util.component2
@@ -8,9 +9,8 @@ import chylex.hee.system.util.nextInt
 import chylex.hee.system.util.posVec
 import chylex.hee.system.util.square
 import chylex.hee.system.util.totalTime
-import net.minecraft.block.state.IBlockState
-import net.minecraft.entity.EntityCreature
-import net.minecraft.entity.ai.EntityAIBase
+import net.minecraft.block.BlockState
+import net.minecraft.entity.ai.goal.Goal
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.Vec3d
 
@@ -18,18 +18,18 @@ class AIPickUpBlock(
 	private val entity: EntityCreature,
 	private val ticksPerAttempt: Int,
 	private val handler: IBlockPickUpHandler
-) : EntityAIBase(){
+) : Goal(){
 	interface IBlockPickUpHandler{
 		val canBeginSearch: Boolean
 		fun onBeginSearch(): BlockPos?
-		fun onBlockReached(state: IBlockState)
+		fun onBlockReached(state: BlockState)
 	}
 	
 	private var timeOfNextAttempt = entity.world.totalTime + entity.rng.nextInt(ticksPerAttempt / 2, ticksPerAttempt)
 	
 	private var targetNavPos: Vec3d? = null
 	private var targetBlockPos: BlockPos? = null
-	private var targetBlockState: IBlockState? = null
+	private var targetBlockState: BlockState? = null
 	
 	override fun shouldExecute(): Boolean{
 		if (entity.attackTarget != null || !handler.canBeginSearch){
@@ -69,7 +69,7 @@ class AIPickUpBlock(
 		return !entity.navigator.noPath() && targetNavPos != null && targetBlockPos?.getState(entity.world) === targetBlockState
 	}
 	
-	override fun updateTask(){
+	override fun tick(){
 		val target = targetNavPos ?: return
 		
 		if (entity.posVec.squareDistanceTo(target) < square(1.33)){

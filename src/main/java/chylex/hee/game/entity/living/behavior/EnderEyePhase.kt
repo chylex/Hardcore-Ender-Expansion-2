@@ -7,11 +7,13 @@ import chylex.hee.system.util.directionTowards
 import chylex.hee.system.util.floorToInt
 import chylex.hee.system.util.lookPosVec
 import chylex.hee.system.util.math.Quaternion
+import chylex.hee.system.util.motionY
 import chylex.hee.system.util.playServer
 import chylex.hee.system.util.posVec
 import chylex.hee.system.util.selectExistingEntities
 import chylex.hee.system.util.toPitch
 import chylex.hee.system.util.toYaw
+import chylex.hee.system.util.use
 import net.minecraft.util.SoundCategory
 import net.minecraftforge.common.util.INBTSerializable
 import kotlin.math.min
@@ -51,10 +53,10 @@ sealed class EnderEyePhase : INBTSerializable<TagCompound>{
 		}
 		
 		override fun serializeNBT() = TagCompound().apply {
-			setByte(TIMER_TAG, timer)
+			putByte(TIMER_TAG, timer)
 		}
 		
-		override fun deserializeNBT(nbt: TagCompound) = with(nbt){
+		override fun deserializeNBT(nbt: TagCompound) = nbt.use {
 			timer = getByte(TIMER_TAG)
 		}
 	}
@@ -105,11 +107,11 @@ sealed class EnderEyePhase : INBTSerializable<TagCompound>{
 		}
 		
 		override fun serializeNBT() = TagCompound().apply {
-			setFloat(CURRENT_TAG, animatedSpawnerPercentage)
-			setFloat(TARGET_TAG, targetSpawnerPercentage)
+			putFloat(CURRENT_TAG, animatedSpawnerPercentage)
+			putFloat(TARGET_TAG, targetSpawnerPercentage)
 		}
 		
-		override fun deserializeNBT(nbt: TagCompound) = with(nbt){
+		override fun deserializeNBT(nbt: TagCompound) = nbt.use {
 			animatedSpawnerPercentage = getFloat(CURRENT_TAG)
 			targetSpawnerPercentage = getFloat(TARGET_TAG)
 		}

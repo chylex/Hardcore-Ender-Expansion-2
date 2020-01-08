@@ -10,18 +10,15 @@ import chylex.hee.system.migration.forge.Side
 import chylex.hee.system.migration.forge.Sided
 import chylex.hee.system.util.facades.Resource
 import chylex.hee.system.util.floorToInt
-import chylex.hee.system.util.getListOfCompounds
-import chylex.hee.system.util.heeTagOrNull
-import net.minecraft.block.Block
 import net.minecraft.client.renderer.RenderHelper
-import net.minecraft.client.renderer.tileentity.TileEntityItemStackRenderer
-import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer
+import net.minecraft.client.renderer.tileentity.ItemStackTileEntityRenderer
+import net.minecraft.client.renderer.tileentity.TileEntityRenderer
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats
 import net.minecraft.item.ItemStack
 import org.lwjgl.opengl.GL11.GL_QUADS
 
 @Sided(Side.CLIENT)
-object RenderTileJarODust : TileEntitySpecialRenderer<TileEntityJarODust>(){
+object RenderTileJarODust : TileEntityRenderer<TileEntityJarODust>(){
 	private val TEX_LAYER = Resource.Custom("textures/entity/dust_layer.png")
 	private const val TEX_MP = 1.6
 	
@@ -30,8 +27,8 @@ object RenderTileJarODust : TileEntitySpecialRenderer<TileEntityJarODust>(){
 	private const val EPSILON_Y = 0.025
 	private const val EPSILON_XZ = 0.005
 	
-	override fun render(tile: TileEntityJarODust, x: Double, y: Double, z: Double, partialTicks: Float, destroyStage: Int, alpha: Float){
-		GL.color(1F, 1F, 1F, alpha)
+	override fun render(tile: TileEntityJarODust, x: Double, y: Double, z: Double, partialTicks: Float, destroyStage: Int){
+		GL.color(1F, 1F, 1F)
 		RenderHelper.disableStandardItemLighting()
 		renderLayers(tile.layers, x, y, z)
 	}
@@ -109,10 +106,11 @@ object RenderTileJarODust : TileEntitySpecialRenderer<TileEntityJarODust>(){
 	}
 	
 	// TODO not implemented at the moment
-	object AsItem : TileEntityItemStackRenderer(){
+	object AsItem : ItemStackTileEntityRenderer(){
 		private val layers = DustLayers(TileEntityJarODust.DUST_CAPACITY)
 		
-		override fun renderByItem(stack: ItemStack, partialTicks: Float){
+		override fun renderByItem(stack: ItemStack){
+			/* UPDATE
 			val dispatcher = MC.instance.blockRendererDispatcher
 			val state = Block.getBlockFromItem(stack.item).defaultState
 			val model = dispatcher.blockModelShapes.getModelForState(state)
@@ -122,7 +120,7 @@ object RenderTileJarODust : TileEntitySpecialRenderer<TileEntityJarODust>(){
 			stack.heeTagOrNull?.getListOfCompounds(BlockJarODust.LAYERS_TAG)?.let {
 				layers.deserializeNBT(it)
 				renderLayers(layers, 0.0, 0.0, 0.0)
-			}
+			}*/
 		}
 	}
 }

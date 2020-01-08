@@ -1,7 +1,7 @@
 package chylex.hee.system.util
 import chylex.hee.HEE
+import chylex.hee.system.migration.vanilla.EntityPlayer
 import net.minecraft.block.SoundType
-import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.util.SoundCategory
 import net.minecraft.util.SoundEvent
 import net.minecraft.util.math.Vec3d

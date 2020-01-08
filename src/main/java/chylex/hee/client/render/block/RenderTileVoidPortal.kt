@@ -11,7 +11,6 @@ import chylex.hee.init.ModBlocks
 import chylex.hee.system.migration.forge.Side
 import chylex.hee.system.migration.forge.Sided
 import chylex.hee.system.util.closestTickingTile
-import chylex.hee.system.util.get
 import chylex.hee.system.util.getState
 import chylex.hee.system.util.math.LerpedFloat
 import net.minecraft.util.math.BlockPos

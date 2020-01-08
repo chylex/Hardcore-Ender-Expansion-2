@@ -1,16 +1,15 @@
 package chylex.hee.game.entity.living.ai
 import chylex.hee.game.entity.living.ai.util.AIBaseTargetFiltered
 import chylex.hee.system.migration.vanilla.Blocks
+import chylex.hee.system.migration.vanilla.EntityCreature
+import chylex.hee.system.migration.vanilla.EntityLivingBase
 import chylex.hee.system.util.lookDirVec
 import chylex.hee.system.util.lookPosVec
 import chylex.hee.system.util.square
 import chylex.hee.system.util.toRadians
 import chylex.hee.system.util.totalTime
 import it.unimi.dsi.fastutil.objects.Object2LongArrayMap
-import net.minecraft.entity.EntityCreature
-import net.minecraft.entity.EntityLivingBase
-import net.minecraft.inventory.EntityEquipmentSlot.HEAD
-import net.minecraft.item.Item
+import net.minecraft.inventory.EquipmentSlotType.HEAD
 import kotlin.math.abs
 import kotlin.math.cos
 
@@ -58,7 +57,7 @@ class AITargetEyeContact<T : EntityLivingBase>(
 	}
 	
 	private fun isLookingIntoEyes(target: T): Boolean{
-		if (target.getItemStackFromSlot(HEAD).item === Item.getItemFromBlock(Blocks.PUMPKIN)){
+		if (target.getItemStackFromSlot(HEAD).item === Blocks.CARVED_PUMPKIN.asItem()){ // UPDATE test
 			return false
 		}
 		

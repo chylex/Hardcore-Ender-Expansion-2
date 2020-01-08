@@ -1,11 +1,12 @@
 package chylex.hee.game.world.feature.stronghold
 import chylex.hee.HEE
 import chylex.hee.game.world.feature.OverworldFeatures
+import chylex.hee.game.world.feature.OverworldFeatures.IOverworldFeature
 import chylex.hee.game.world.feature.OverworldFeatures.preloadChunks
 import chylex.hee.game.world.structure.piece.IStructureBuild
 import chylex.hee.game.world.structure.world.WorldToStructureWorldAdapter
 import chylex.hee.game.world.util.PosXZ
-import chylex.hee.system.util.NBTList.Companion.setList
+import chylex.hee.system.util.NBTList.Companion.putList
 import chylex.hee.system.util.NBTObjectList
 import chylex.hee.system.util.Pos
 import chylex.hee.system.util.TagCompound
@@ -15,29 +16,27 @@ import chylex.hee.system.util.getListOfCompounds
 import chylex.hee.system.util.getPos
 import chylex.hee.system.util.nextInt
 import chylex.hee.system.util.perDimensionData
-import chylex.hee.system.util.setPos
+import chylex.hee.system.util.putPos
+import chylex.hee.system.util.use
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.ChunkPos
-import net.minecraft.world.DimensionType.OVERWORLD
-import net.minecraft.world.World
-import net.minecraft.world.chunk.IChunkProvider
-import net.minecraft.world.gen.ChunkProviderServer
-import net.minecraft.world.gen.IChunkGenerator
+import net.minecraft.world.server.ServerWorld
 import net.minecraft.world.storage.WorldSavedData
-import net.minecraftforge.fml.common.IWorldGenerator
 import java.util.Random
 import kotlin.math.abs
 
-object StrongholdGenerator : IWorldGenerator{
+object StrongholdGenerator : IOverworldFeature{
 	private const val GRID_CHUNKS = 68
 	private const val DIST_CHUNKS = 18
 	
 	private val STRUCTURE_SIZE
 		get() = StrongholdPieces.STRUCTURE_SIZE
 	
-	class DimensionStrongholdData(name: String) : WorldSavedData(name){ // must be public for reflection
+	class DimensionStrongholdData private constructor() : WorldSavedData(NAME){
 		companion object{
-			fun get(world: World) = world.perDimensionData("HEE_STRONGHOLDS", ::DimensionStrongholdData)
+			fun get(world: ServerWorld) = world.perDimensionData(NAME, ::DimensionStrongholdData)
+			
+			private const val NAME = "HEE_STRONGHOLDS"
 			
 			private const val CHUNK_X_TAG = "ChunkX"
 			private const val CHUNK_Z_TAG = "ChunkZ"
@@ -56,25 +55,25 @@ object StrongholdGenerator : IWorldGenerator{
 			return locations[chunk]
 		}
 		
-		override fun writeToNBT(nbt: TagCompound) = nbt.apply {
+		override fun write(nbt: TagCompound) = nbt.apply {
 			val list = NBTObjectList<TagCompound>()
 			
 			for((chunk, pos) in locations){
 				list.append(TagCompound().also {
-					it.setInteger(CHUNK_X_TAG, chunk.x)
-					it.setInteger(CHUNK_Z_TAG, chunk.z)
-					it.setPos(POS_TAG, pos)
+					it.putInt(CHUNK_X_TAG, chunk.x)
+					it.putInt(CHUNK_Z_TAG, chunk.z)
+					it.putPos(POS_TAG, pos)
 				})
 			}
 			
-			setList(LOCATIONS_TAG, list)
+			putList(LOCATIONS_TAG, list)
 		}
 		
-		override fun readFromNBT(nbt: TagCompound) = with(nbt){
+		override fun read(nbt: TagCompound) = nbt.use {
 			locations.clear()
 			
 			for(tag in getListOfCompounds(LOCATIONS_TAG)){
-				val chunk = ChunkPos(tag.getInteger(CHUNK_X_TAG), tag.getInteger(CHUNK_Z_TAG))
+				val chunk = ChunkPos(tag.getInt(CHUNK_X_TAG), tag.getInt(CHUNK_Z_TAG))
 				locations[chunk] = tag.getPos(POS_TAG)
 			}
 		}
@@ -101,11 +100,11 @@ object StrongholdGenerator : IWorldGenerator{
 		)
 	}
 	
-	private fun isChunkPopulated(world: World, chunk: ChunkPos): Boolean{
-		return (world.chunkProvider as? ChunkProviderServer)?.loadChunk(chunk.x, chunk.z).let { it != null && it.isTerrainPopulated }
+	private fun isChunkPopulated(world: ServerWorld, chunk: ChunkPos): Boolean{
+		return true // UPDATE (world.chunkProvider as? ServerChunkProvider)?.loadChunk(chunk.x, chunk.z).let { it != null && it.isTerrainPopulated }
 	}
 	
-	fun findNearest(world: World, xz: PosXZ): BlockPos?{
+	fun findNearest(world: ServerWorld, xz: PosXZ): BlockPos?{
 		val chunkX = xz.chunkX
 		val chunkZ = xz.chunkZ
 		
@@ -149,11 +148,7 @@ object StrongholdGenerator : IWorldGenerator{
 	
 	// Generation
 	
-	override fun generate(rand: Random, chunkX: Int, chunkZ: Int, world: World, generator: IChunkGenerator, provider: IChunkProvider){
-		if (world.provider.dimensionType != OVERWORLD){
-			return
-		}
-		
+	override fun generate(world: ServerWorld, chunkX: Int, chunkZ: Int, rand: Random){
 		val centerPos = findSpawnAt(world.seed, chunkX, chunkZ) ?: return
 		
 		if (chunkX != (centerPos.x shr 4) || chunkZ != (centerPos.z shr 4)){

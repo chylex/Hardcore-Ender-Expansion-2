@@ -38,12 +38,10 @@ import chylex.hee.game.world.territory.TerritoryType
 import chylex.hee.game.world.util.Size
 import chylex.hee.init.ModBlocks
 import chylex.hee.system.collection.WeightedList.Companion.weightedListOf
-import chylex.hee.system.migration.Facing.UP
+import chylex.hee.system.migration.vanilla.BlockFlowingFluid
 import chylex.hee.system.migration.vanilla.Blocks
 import chylex.hee.system.util.facades.Resource
 import chylex.hee.system.util.with
-import net.minecraft.block.BlockTorch
-import net.minecraftforge.fluids.BlockFluidBase
 
 object ObsidianTowerPieces : IStructureDescription{
 	fun calculateStructureSize(floors: Int) = Size(
@@ -72,25 +70,23 @@ object ObsidianTowerPieces : IStructureDescription{
 		add("gloomrock.bricks", ModBlocks.GLOOMROCK_BRICKS)
 		add("gloomrock.smooth", ModBlocks.GLOOMROCK_SMOOTH)
 		
-		add("slab.gloomrock.bricks.*", ModBlocks.GLOOMROCK_BRICK_SLAB, PaletteMappings.SLAB_HALF)
-		add("slab.gloomrock.bricks.double", ModBlocks.GLOOMROCK_BRICK_DOUBLE_SLAB)
-		add("slab.gloomrock.smooth.*", ModBlocks.GLOOMROCK_SMOOTH_SLAB, PaletteMappings.SLAB_HALF)
-		add("slab.gloomrock.smooth.double", ModBlocks.GLOOMROCK_SMOOTH_DOUBLE_SLAB)
+		add("slab.gloomrock.bricks.*", ModBlocks.GLOOMROCK_BRICK_SLAB, PaletteMappings.SLAB_TYPE)
+		add("slab.gloomrock.smooth.*", ModBlocks.GLOOMROCK_SMOOTH_SLAB, PaletteMappings.SLAB_TYPE)
 		
 		add("stairs.obsidian.*.*", ModBlocks.OBSIDIAN_STAIRS, PaletteMappings.STAIR_MAPPING_LIST)
 		add("stairs.gloomrock.bricks.*.*", ModBlocks.GLOOMROCK_BRICK_STAIRS, PaletteMappings.STAIR_MAPPING_LIST)
 		add("stairs.gloomrock.smooth.*.*", ModBlocks.GLOOMROCK_SMOOTH_STAIRS, PaletteMappings.STAIR_MAPPING_LIST)
 		
 		add("ladder.*", Blocks.LADDER, PaletteMappings.FACING_HORIZONTAL)
-		add("trapdoor.*.*.*", Blocks.TRAPDOOR, PaletteMappings.TRAPDOOR_MAPPING_LIST)
+		add("trapdoor.*.*.*", Blocks.OAK_TRAPDOOR, PaletteMappings.TRAPDOOR_MAPPING_LIST) // UPDATE maybe a different wood?
 		add("fence.darkoak", Blocks.DARK_OAK_FENCE)
 		
-		add("torch.up", Blocks.TORCH.with(BlockTorch.FACING, UP))
+		add("torch.up", Blocks.TORCH)
 		add("chest.*", Blocks.CHEST, PaletteMappings.FACING_HORIZONTAL)
 		add("furnace.*", Blocks.FURNACE, PaletteMappings.FACING_HORIZONTAL)
 		add("dropper.*", Blocks.DROPPER, PaletteMappings.FACING_ALL)
 		
-		add("endergoo", ModBlocks.ENDER_GOO.with(BlockFluidBase.LEVEL, 0))
+		add("endergoo", ModBlocks.ENDER_GOO.with(BlockFlowingFluid.LEVEL, 0))
 		
 		with(forGeneration){
 			add("redstone.random", Weighted(

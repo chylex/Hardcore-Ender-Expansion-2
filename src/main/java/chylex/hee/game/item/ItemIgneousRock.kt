@@ -5,8 +5,8 @@ import net.minecraft.item.Item
 import net.minecraft.item.ItemStack
 import net.minecraft.world.World
 
-class ItemIgneousRock : Item(){
-	override fun getItemBurnTime(stack: ItemStack): Int{
+class ItemIgneousRock(properties: Properties) : Item(properties){
+	override fun getBurnTime(stack: ItemStack): Int{
 		return 1300
 	}
 	

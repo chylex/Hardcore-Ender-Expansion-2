@@ -1,12 +1,6 @@
 package chylex.hee.game.commands
-import chylex.hee.game.commands.sub.ISubCommand
-import net.minecraft.command.CommandBase
-import net.minecraft.command.ICommandSender
-import net.minecraft.server.MinecraftServer
-import net.minecraft.util.math.BlockPos
-import org.apache.commons.lang3.ArrayUtils
-import java.util.Collections
 
+/*
 internal abstract class HeeBaseCommand : CommandBase(){
 	protected abstract val allSubCommands: Map<String, ISubCommand>
 	protected abstract val defaultSubCommand: ISubCommand
@@ -36,4 +30,4 @@ internal abstract class HeeBaseCommand : CommandBase(){
 			else -> allSubCommands[args[0]]?.getTabCompletions(server, sender, ArrayUtils.remove(args, 0), targetPos) ?: Collections.emptyList()
 		}
 	}
-}
+}*/

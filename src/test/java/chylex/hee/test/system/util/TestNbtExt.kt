@@ -1,30 +1,32 @@
 package chylex.hee.test.system.util
 import chylex.hee.system.migration.vanilla.Items
-import chylex.hee.system.util.NBTList.Companion.setList
+import chylex.hee.system.migration.vanilla.TextComponentString
+import chylex.hee.system.util.NBTBase
+import chylex.hee.system.util.NBTList.Companion.putList
 import chylex.hee.system.util.NBTObjectList
 import chylex.hee.system.util.NBTPrimitiveList
+import chylex.hee.system.util.TagByte
 import chylex.hee.system.util.TagCompound
+import chylex.hee.system.util.TagDouble
+import chylex.hee.system.util.TagFloat
+import chylex.hee.system.util.TagInt
+import chylex.hee.system.util.TagList
+import chylex.hee.system.util.TagLong
+import chylex.hee.system.util.TagShort
 import chylex.hee.system.util.cleanupNBT
 import chylex.hee.system.util.getListOfByteArrays
 import chylex.hee.system.util.getListOfCompounds
 import chylex.hee.system.util.getListOfIntArrays
 import chylex.hee.system.util.getListOfPrimitives
 import chylex.hee.system.util.getListOfStrings
+import chylex.hee.system.util.hasKey
 import chylex.hee.system.util.heeTag
 import chylex.hee.system.util.heeTagOrNull
 import chylex.hee.system.util.nbt
 import chylex.hee.system.util.nbtOrNull
-import net.minecraft.init.Bootstrap
 import net.minecraft.item.ItemStack
-import net.minecraft.nbt.NBTBase
-import net.minecraft.nbt.NBTTagByte
-import net.minecraft.nbt.NBTTagDouble
-import net.minecraft.nbt.NBTTagFloat
-import net.minecraft.nbt.NBTTagInt
-import net.minecraft.nbt.NBTTagList
-import net.minecraft.nbt.NBTTagLong
-import net.minecraft.nbt.NBTTagShort
-import org.junit.jupiter.api.Assertions
+import net.minecraft.util.registry.Bootstrap
+import net.minecraftforge.common.util.Constants.NBT
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.Assertions.assertIterableEquals
@@ -43,7 +45,7 @@ class TestNbtExt{
 	@Nested inner class General{
 		@Nested inner class HeeTag{
 			@Test fun `'heeTag' returns an existing tag`(){
-				val nbt = TagCompound().apply { setTag("hee", TagCompound().apply { setString("key", "Hello") }) }
+				val nbt = TagCompound().apply { put("hee", TagCompound().apply { putString("key", "Hello") }) }
 				assertEquals("Hello", nbt.heeTag.getString("key"))
 			}
 			
@@ -51,7 +53,7 @@ class TestNbtExt{
 				val nbt = TagCompound()
 				assertFalse(nbt.hasKey("hee"))
 				
-				nbt.heeTag.setString("key", "Hello")
+				nbt.heeTag.putString("key", "Hello")
 				assertTrue(nbt.hasKey("hee"))
 				assertEquals("Hello", nbt.heeTag.getString("key"))
 			}
@@ -59,7 +61,7 @@ class TestNbtExt{
 		
 		@Nested inner class HeeTagOrNull{
 			@Test fun `'heeTagOrNull' returns an existing tag`(){
-				val nbt = TagCompound().apply { setTag("hee", TagCompound().apply { setString("key", "Hello") }) }
+				val nbt = TagCompound().apply { put("hee", TagCompound().apply { putString("key", "Hello") }) }
 				assertEquals("Hello", nbt.heeTagOrNull?.getString("key"))
 			}
 			
@@ -73,50 +75,50 @@ class TestNbtExt{
 	@Nested inner class ItemStacks{
 		@Nested inner class Nbt{
 			@Test fun `'nbt' returns an existing ItemStack tag`(){
-				val stack = ItemStack(Items.BOW).apply { setStackDisplayName("Hello") }
-				assertEquals("Hello", stack.nbt.getCompoundTag("display").getString("Name"))
+				val stack = ItemStack(Items.BOW).apply { displayName = TextComponentString("Hello") }
+				assertTrue(stack.nbt.hasKey("display", NBT.TAG_COMPOUND))
 			}
 			
 			@Test fun `'nbt' assigns a new ItemStack tag if missing`(){
 				val stack = ItemStack(Items.BOW)
-				assertNull(stack.tagCompound)
+				assertNull(stack.tag)
 				
-				assertEquals(0, stack.nbt.size)
-				assertNotNull(stack.tagCompound)
+				assertEquals(0, stack.nbt.size())
+				assertNotNull(stack.tag)
 				
-				stack.nbt.setString("key", "Hello")
-				assertEquals("Hello", stack.tagCompound?.getString("key"))
+				stack.nbt.putString("key", "Hello")
+				assertEquals("Hello", stack.tag?.getString("key"))
 			}
 		}
 		
 		@Nested inner class NbtOrNull{
 			@Test fun `'nbtOrNull' returns an existing ItemStack tag`(){
-				val stack = ItemStack(Items.BOW).apply { setStackDisplayName("Hello") }
-				assertEquals("Hello", stack.nbtOrNull?.getCompoundTag("display")?.getString("Name"))
+				val stack = ItemStack(Items.BOW).apply { displayName = TextComponentString("Hello") }
+				assertTrue(stack.nbtOrNull.hasKey("display"))
 			}
 			
 			@Test fun `'nbtOrNull' returns null if ItemStack tag is missing`(){
 				val stack = ItemStack(Items.BOW)
 				assertNull(stack.nbtOrNull)
-				assertNull(stack.tagCompound)
+				assertNull(stack.tag)
 			}
 		}
 		
 		@Nested inner class HeeTag{
 			@Test fun `'heeTag' returns an existing tag`(){
-				val stack = ItemStack(Items.BOW).apply { nbt.setTag("hee", TagCompound().apply { setString("key", "Hello") }) }
+				val stack = ItemStack(Items.BOW).apply { nbt.put("hee", TagCompound().apply { putString("key", "Hello") }) }
 				assertEquals("Hello", stack.heeTag.getString("key"))
 			}
 			
 			@Test fun `'heeTag' assigns a new tag if missing`(){
-				val stack = ItemStack(Items.BOW).apply { heeTag.setString("key", "Hello") }
-				assertEquals("Hello", stack.tagCompound?.getCompoundTag("hee")?.getString("key"))
+				val stack = ItemStack(Items.BOW).apply { heeTag.putString("key", "Hello") }
+				assertEquals("Hello", stack.tag?.getCompound("hee")?.getString("key"))
 			}
 		}
 		
 		@Nested inner class HeeTagOrNull{
 			@Test fun `'heeTagOrNull' returns an existing 'heeTag'`(){
-				val stack = ItemStack(Items.BOW).apply { heeTag.setString("key", "Hello") }
+				val stack = ItemStack(Items.BOW).apply { heeTag.putString("key", "Hello") }
 				assertEquals("Hello", stack.heeTagOrNull?.getString("key"))
 			}
 			
@@ -126,14 +128,14 @@ class TestNbtExt{
 			}
 			
 			@Test fun `'heeTagOrNull' returns null if ItemStack tag is present but has no 'heeTag'`(){
-				val stack = ItemStack(Items.BOW).apply { nbt.setBoolean("testing", true) }
+				val stack = ItemStack(Items.BOW).apply { nbt.putBoolean("testing", true) }
 				assertNull(stack.heeTagOrNull)
 			}
 		}
 		
 		@Nested inner class CleanupNBT{
 			@Test fun `'cleanupNBT' keeps a non-empty ItemStack tag`(){
-				val stack = ItemStack(Items.BOW).apply { nbt.setString("key", "Hello") }
+				val stack = ItemStack(Items.BOW).apply { nbt.putString("key", "Hello") }
 				assertEquals("Hello", stack.nbtOrNull?.getString("key"))
 				
 				stack.cleanupNBT()
@@ -159,20 +161,20 @@ class TestNbtExt{
 			
 			@Test fun `'cleanupNBT' correctly processes a tag with mixed data`(){
 				val stack = ItemStack(Items.BOW).apply {
-					nbt.setTag("a", TagCompound())
-					nbt.setTag("b", TagCompound().also { it.setTag("bb", TagCompound()) })
-					nbt.setTag("c", TagCompound().also { it.setString("key", "Hello"); it.setTag("cc", TagCompound()) })
+					nbt.put("a", TagCompound())
+					nbt.put("b", TagCompound().also { it.put("bb", TagCompound()) })
+					nbt.put("c", TagCompound().also { it.putString("key", "Hello"); it.put("cc", TagCompound()) })
 				}
 				
-				assertEquals(3, stack.nbt.size)
+				assertEquals(3, stack.nbt.size())
 				
 				stack.cleanupNBT()
-				assertEquals(1, stack.nbt.size)
+				assertEquals(1, stack.nbt.size())
 				assertFalse(stack.nbt.hasKey("a"))
 				assertFalse(stack.nbt.hasKey("b"))
 				assertTrue(stack.nbt.hasKey("c"))
-				assertFalse(stack.nbt.getCompoundTag("c").hasKey("cc"))
-				assertEquals("Hello", stack.nbt.getCompoundTag("c").getString("key"))
+				assertFalse(stack.nbt.getCompound("c").hasKey("cc"))
+				assertEquals("Hello", stack.nbt.getCompound("c").getString("key"))
 			}
 		}
 	}
@@ -189,7 +191,7 @@ class TestNbtExt{
 				
 				list.append(1)
 				list.append(2)
-				Assertions.assertFalse(list.isEmpty)
+				assertFalse(list.isEmpty)
 			}
 			
 			@Test fun `'size' returns correct amount of tags`(){
@@ -209,9 +211,9 @@ class TestNbtExt{
 					val list = getListOfPrimitives("key")
 					
 					callAppend(list)
-					setList("key", list)
+					putList("key", list)
 					
-					val primitive1 = (getTag("key") as NBTTagList).get(0)
+					val primitive1 = (get("key") as TagList).get(0)
 					assertTrue(primitive1 is T)
 					assertTrue(callGetCheck(primitive1 as T))
 					
@@ -222,42 +224,42 @@ class TestNbtExt{
 			}
 			
 			@Test fun `'append' using byte updates the tag and 'get' returns the same value`(){
-				testAppendGet<NBTTagByte>(
+				testAppendGet<TagByte>(
 					{ list -> list.append(Byte.MAX_VALUE) },
 					{ primitive -> primitive.byte == Byte.MAX_VALUE }
 				)
 			}
 			
 			@Test fun `'append' using short updates the tag and 'get' returns the same value`(){
-				testAppendGet<NBTTagShort>(
+				testAppendGet<TagShort>(
 					{ list -> list.append(Short.MAX_VALUE) },
 					{ primitive -> primitive.short == Short.MAX_VALUE }
 				)
 			}
 			
 			@Test fun `'append' using int updates the tag and 'get' returns the same value`(){
-				testAppendGet<NBTTagInt>(
+				testAppendGet<TagInt>(
 					{ list -> list.append(Int.MAX_VALUE) },
 					{ primitive -> primitive.int == Int.MAX_VALUE }
 				)
 			}
 			
 			@Test fun `'append' using long updates the tag and 'get' returns the same value`(){
-				testAppendGet<NBTTagLong>({
+				testAppendGet<TagLong>({
 					list -> list.append(Long.MAX_VALUE) },
 					{ primitive -> primitive.long == Long.MAX_VALUE }
 				)
 			}
 			
 			@Test fun `'append' using float updates the tag and 'get' returns the same value`(){
-				testAppendGet<NBTTagFloat>(
+				testAppendGet<TagFloat>(
 					{ list -> list.append(Float.MAX_VALUE) },
 					{ primitive -> primitive.float == Float.MAX_VALUE }
 				)
 			}
 			
 			@Test fun `'append' using double updates the tag and 'get' returns the same value`(){
-				testAppendGet<NBTTagDouble>(
+				testAppendGet<TagDouble>(
 					{ list -> list.append(Double.MAX_VALUE) },
 					{ primitive -> primitive.double == Double.MAX_VALUE }
 				)
@@ -273,9 +275,9 @@ class TestNbtExt{
 			
 			@Test fun `'get' returns correct value`(){
 				val list = makeFilledTestList()
-				assertEquals(NBTTagInt(1), list.get(0))
-				assertEquals(NBTTagInt(2), list.get(1))
-				assertEquals(NBTTagInt(3), list.get(2))
+				assertEquals(TagInt(1), list.get(0))
+				assertEquals(TagInt(2), list.get(1))
+				assertEquals(TagInt(3), list.get(2))
 			}
 			
 			@Test fun `'get' throws when out of bounds`(){
@@ -296,7 +298,7 @@ class TestNbtExt{
 			
 			@Test fun `iterating goes through all items`(){
 				val list = makeFilledTestList()
-				assertIterableEquals(intArrayOf(1, 2, 3, Int.MIN_VALUE, Int.MAX_VALUE).map(::NBTTagInt).asIterable(), list)
+				assertIterableEquals(intArrayOf(1, 2, 3, Int.MIN_VALUE, Int.MAX_VALUE).map(::TagInt).asIterable(), list)
 			}
 			
 			@Test fun `'hasNext' returns false and 'next' throws if empty`(){
@@ -312,7 +314,7 @@ class TestNbtExt{
 				val iterator = list.iterator()
 				
 				assertTrue(iterator.hasNext())
-				assertEquals(NBTTagInt(1), iterator.next())
+				assertEquals(TagInt(1), iterator.next())
 			}
 			
 			@Test fun `'remove' throws before calling 'next'`(){
@@ -326,26 +328,26 @@ class TestNbtExt{
 				val list = makeFilledTestList()
 				val iterator = list.iterator()
 				
-				assertEquals(NBTTagInt(1), iterator.next())
+				assertEquals(TagInt(1), iterator.next())
 				iterator.remove()
-				assertEquals(NBTTagInt(2), iterator.next())
+				assertEquals(TagInt(2), iterator.next())
 				
-				assertIterableEquals(intArrayOf(2, 3, Int.MIN_VALUE, Int.MAX_VALUE).map(::NBTTagInt).asIterable(), list)
+				assertIterableEquals(intArrayOf(2, 3, Int.MIN_VALUE, Int.MAX_VALUE).map(::TagInt).asIterable(), list)
 			}
 			
 			@Test fun `'remove' removes several elements correctly`(){
 				val list = makeFilledTestList()
 				val iterator = list.iterator()
 				
-				assertEquals(NBTTagInt(1), iterator.next())
-				assertEquals(NBTTagInt(2), iterator.next())
+				assertEquals(TagInt(1), iterator.next())
+				assertEquals(TagInt(2), iterator.next())
 				iterator.remove()
-				assertEquals(NBTTagInt(3), iterator.next())
-				assertEquals(NBTTagInt(Int.MIN_VALUE), iterator.next())
+				assertEquals(TagInt(3), iterator.next())
+				assertEquals(TagInt(Int.MIN_VALUE), iterator.next())
 				iterator.remove()
-				assertEquals(NBTTagInt(Int.MAX_VALUE), iterator.next())
+				assertEquals(TagInt(Int.MAX_VALUE), iterator.next())
 				
-				assertIterableEquals(intArrayOf(1, 3, Int.MAX_VALUE).map(::NBTTagInt).asIterable(), list)
+				assertIterableEquals(intArrayOf(1, 3, Int.MAX_VALUE).map(::TagInt).asIterable(), list)
 			}
 		}
 		
@@ -364,7 +366,7 @@ class TestNbtExt{
 			
 			@Test fun `'allBytes' retrieves all values`(){
 				testSequenceGetter(
-					NBTPrimitiveList::append,
+					{ list, item -> list.append(item) },
 					NBTPrimitiveList::allBytes,
 					arrayOf(1.toByte(), 2.toByte(), 3.toByte(), Byte.MIN_VALUE, Byte.MAX_VALUE)
 				)
@@ -372,7 +374,7 @@ class TestNbtExt{
 			
 			@Test fun `'allShorts' retrieves all values`(){
 				testSequenceGetter(
-					NBTPrimitiveList::append,
+					{ list, item -> list.append(item) },
 					NBTPrimitiveList::allShorts,
 					arrayOf(1.toShort(), 2.toShort(), 3.toShort(), Short.MIN_VALUE, Short.MAX_VALUE)
 				)
@@ -380,7 +382,7 @@ class TestNbtExt{
 			
 			@Test fun `'allInts' retrieves all values`(){
 				testSequenceGetter(
-					NBTPrimitiveList::append,
+					{ list, item -> list.append(item) },
 					NBTPrimitiveList::allInts,
 					arrayOf(1, 2, 3, Int.MIN_VALUE, Int.MAX_VALUE)
 				)
@@ -388,7 +390,7 @@ class TestNbtExt{
 			
 			@Test fun `'allLongs' retrieves all values`(){
 				testSequenceGetter(
-					NBTPrimitiveList::append,
+					{ list, item -> list.append(item) },
 					NBTPrimitiveList::allLongs,
 					arrayOf(1L, 2L, 3L, Long.MIN_VALUE, Long.MAX_VALUE)
 				)
@@ -396,7 +398,7 @@ class TestNbtExt{
 			
 			@Test fun `'allFloats' retrieves all values`(){
 				testSequenceGetter(
-					NBTPrimitiveList::append,
+					{ list, item -> list.append(item) },
 					NBTPrimitiveList::allFloats,
 					arrayOf(1F, 2F, 3F, Float.MIN_VALUE, Float.MAX_VALUE)
 				)
@@ -404,7 +406,7 @@ class TestNbtExt{
 			
 			@Test fun `'allDoubles' retrieves all values`(){
 				testSequenceGetter(
-					NBTPrimitiveList::append,
+					{ list, item -> list.append(item) },
 					NBTPrimitiveList::allDoubles,
 					arrayOf(1.0, 2.0, 3.0, Double.MIN_VALUE, Double.MAX_VALUE)
 				)
@@ -423,7 +425,7 @@ class TestNbtExt{
 				val list2 = TagCompound().getListOfStrings("key")
 				
 				list2.append("test")
-				Assertions.assertFalse(list2.isEmpty)
+				assertFalse(list2.isEmpty)
 			}
 			
 			@Test fun `'size' returns correct amount of tags`(){
@@ -443,9 +445,9 @@ class TestNbtExt{
 					val list = listGetter("key")
 					
 					callAppend(list)
-					setList("key", list)
+					putList("key", list)
 					
-					assertTrue((getTag("key") as NBTTagList).get(0) is NBTBase)
+					assertTrue((get("key") as TagList).get(0) is NBTBase)
 					assertTrue(callGetCheck(list.get(0)))
 				}
 			}
@@ -453,8 +455,8 @@ class TestNbtExt{
 			@Test fun `'append' using TagCompound updates the tag and 'get' returns the same value`(){
 				testAppendGet(
 					TagCompound::getListOfCompounds,
-					{ list -> list.append(TagCompound().apply { setInteger("test", 123) }) },
-					{ value -> value.getInteger("test") == 123 }
+					{ list -> list.append(TagCompound().apply { putInt("test", 123) }) },
+					{ value -> value.getInt("test") == 123 }
 				)
 			}
 			

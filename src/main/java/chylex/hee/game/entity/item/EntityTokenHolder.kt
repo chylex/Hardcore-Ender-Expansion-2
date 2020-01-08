@@ -9,11 +9,13 @@ import chylex.hee.game.particle.util.IOffset.InSphere
 import chylex.hee.game.particle.util.IShape.Point
 import chylex.hee.game.world.territory.TerritoryInstance
 import chylex.hee.game.world.territory.TerritoryType
+import chylex.hee.init.ModEntities
 import chylex.hee.init.ModItems
 import chylex.hee.network.client.PacketClientFX
 import chylex.hee.network.client.PacketClientLaunchInstantly
 import chylex.hee.system.migration.forge.Side
 import chylex.hee.system.migration.forge.Sided
+import chylex.hee.system.migration.vanilla.EntityPlayer
 import chylex.hee.system.util.TagCompound
 import chylex.hee.system.util.addY
 import chylex.hee.system.util.directionTowards
@@ -23,23 +25,25 @@ import chylex.hee.system.util.lookPosVec
 import chylex.hee.system.util.math.LerpedFloat
 import chylex.hee.system.util.motionVec
 import chylex.hee.system.util.posVec
-import chylex.hee.system.util.setEnum
+import chylex.hee.system.util.putEnum
 import chylex.hee.system.util.square
 import chylex.hee.system.util.totalTime
 import chylex.hee.system.util.use
-import io.netty.buffer.ByteBuf
 import net.minecraft.entity.Entity
-import net.minecraft.entity.player.EntityPlayer
+import net.minecraft.entity.EntityType
+import net.minecraft.network.IPacket
+import net.minecraft.network.PacketBuffer
 import net.minecraft.network.datasync.DataSerializers
 import net.minecraft.util.DamageSource
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.Vec3d
 import net.minecraft.world.World
 import net.minecraftforge.fml.common.registry.IEntityAdditionalSpawnData
+import net.minecraftforge.fml.network.NetworkHooks
 import java.util.Random
 
-class EntityTokenHolder(world: World) : Entity(world), IEntityAdditionalSpawnData{
-	constructor(world: World, tokenType: TokenType, territoryType: TerritoryType) : this(world){
+class EntityTokenHolder(type: EntityType<EntityTokenHolder>, world: World) : Entity(type, world), IEntityAdditionalSpawnData{
+	constructor(world: World, tokenType: TokenType, territoryType: TerritoryType) : this(ModEntities.TOKEN_HOLDER, world){
 		this.tokenType = tokenType
 		this.territoryType = territoryType
 	}
@@ -84,29 +88,32 @@ class EntityTokenHolder(world: World) : Entity(world), IEntityAdditionalSpawnDat
 	var currentCharge by EntityData(DATA_CHARGE)
 	
 	init{
-		setSize(0.55F, 0.675F)
-		setEntityInvulnerable(true)
+		isInvulnerable = true
 		setNoGravity(true)
 	}
 	
-	override fun entityInit(){
+	override fun createSpawnPacket(): IPacket<*>{
+		return NetworkHooks.getEntitySpawningPacket(this)
+	}
+	
+	override fun registerData(){
 		dataManager.register(DATA_CHARGE, 1F)
 	}
 	
-	override fun writeSpawnData(buffer: ByteBuf) = buffer.use {
+	override fun writeSpawnData(buffer: PacketBuffer) = buffer.use {
 		writeByte(tokenType.ordinal)
 		writeShort(territoryType?.ordinal ?: -1)
 		writeFloat(currentCharge)
 	}
 	
-	override fun readSpawnData(buffer: ByteBuf) = buffer.use {
+	override fun readSpawnData(buffer: PacketBuffer) = buffer.use {
 		tokenType = TokenType.values().getOrElse(readByte().toInt()){ TokenType.NORMAL }
 		territoryType = TerritoryType.values().getOrNull(readShort().toInt())
 		renderCharge.updateImmediately(readFloat())
 	}
 	
-	override fun onUpdate(){
-		super.onUpdate()
+	override fun tick(){
+		super.tick()
 		
 		if (world.isRemote){
 			val prevRotation = renderRotation.currentValue
@@ -147,8 +154,8 @@ class EntityTokenHolder(world: World) : Entity(world), IEntityAdditionalSpawnDat
 		
 		val player = source.immediateSource as? EntityPlayer ?: return false
 		
-		if (player.capabilities.isCreativeMode && player.isSneaking){
-			setDead()
+		if (player.abilities.isCreativeMode && player.isSneaking){
+			remove()
 		}
 		else if (currentCharge >= 1F){
 			forceDropTokenTowards(player)
@@ -158,13 +165,13 @@ class EntityTokenHolder(world: World) : Entity(world), IEntityAdditionalSpawnDat
 		return false
 	}
 	
-	override fun writeEntityToNBT(nbt: TagCompound) = with(nbt.heeTag){
-		setEnum(TOKEN_TYPE_TAG, tokenType)
-		setEnum(TERRITORY_TYPE_TAG, territoryType)
-		setFloat(CHARGE_TAG, currentCharge)
+	override fun writeAdditional(nbt: TagCompound) = nbt.heeTag.use {
+		putEnum(TOKEN_TYPE_TAG, tokenType)
+		putEnum(TERRITORY_TYPE_TAG, territoryType)
+		putFloat(CHARGE_TAG, currentCharge)
 	}
 	
-	override fun readEntityFromNBT(nbt: TagCompound) = with(nbt.heeTag){
+	override fun readAdditional(nbt: TagCompound) = nbt.heeTag.use {
 		tokenType = getEnum<TokenType>(TOKEN_TYPE_TAG) ?: TokenType.NORMAL
 		territoryType = getEnum<TerritoryType>(TERRITORY_TYPE_TAG)
 		currentCharge = getFloat(CHARGE_TAG)

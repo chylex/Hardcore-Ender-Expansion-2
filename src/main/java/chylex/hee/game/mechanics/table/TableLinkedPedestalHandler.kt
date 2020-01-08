@@ -4,12 +4,11 @@ import chylex.hee.game.block.entity.base.TileEntityBaseTable
 import chylex.hee.system.util.Pos
 import chylex.hee.system.util.TagCompound
 import chylex.hee.system.util.distanceSqTo
-import chylex.hee.system.util.getLongArray
 import chylex.hee.system.util.getPosOrNull
 import chylex.hee.system.util.getTile
-import chylex.hee.system.util.setLongArray
-import chylex.hee.system.util.setPos
+import chylex.hee.system.util.putPos
 import chylex.hee.system.util.square
+import chylex.hee.system.util.use
 import net.minecraft.util.math.BlockPos
 import net.minecraftforge.common.util.INBTSerializable
 
@@ -24,10 +23,10 @@ class TableLinkedPedestalHandler(private val table: TileEntityBaseTable, maxDist
 	private var dedicatedOutputPedestal: BlockPos? = null
 	
 	val inputPedestalTiles
-		get() = inputPedestals.mapNotNull { it.getTile<TileEntityTablePedestal>(table.world) }
+		get() = inputPedestals.mapNotNull { it.getTile<TileEntityTablePedestal>(table.wrld) }
 	
 	val dedicatedOutputPedestalTile
-		get() = dedicatedOutputPedestal?.getTile<TileEntityTablePedestal>(table.world)
+		get() = dedicatedOutputPedestal?.getTile<TileEntityTablePedestal>(table.wrld)
 	
 	// Behavior
 	
@@ -112,14 +111,14 @@ class TableLinkedPedestalHandler(private val table: TileEntityBaseTable, maxDist
 	// Serialization
 	
 	override fun serializeNBT() = TagCompound().apply {
-		setLongArray(POS_TAG, inputPedestals.map(BlockPos::toLong).toLongArray())
+		putLongArray(POS_TAG, inputPedestals.map(BlockPos::toLong).toLongArray())
 		
 		dedicatedOutputPedestal?.let {
-			setPos(OUTPUT_TAG, it)
+			putPos(OUTPUT_TAG, it)
 		}
 	}
 	
-	override fun deserializeNBT(nbt: TagCompound) = with(nbt){
+	override fun deserializeNBT(nbt: TagCompound) = nbt.use {
 		inputPedestals.clear()
 		getLongArray(POS_TAG).forEach { inputPedestals.add(Pos(it)) }
 		

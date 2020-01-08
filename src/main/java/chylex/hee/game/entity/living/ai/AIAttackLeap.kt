@@ -1,15 +1,20 @@
 package chylex.hee.game.entity.living.ai
 import chylex.hee.system.migration.Hand.MAIN_HAND
-import chylex.hee.system.util.AI_FLAG_MOVEMENT
-import chylex.hee.system.util.AI_FLAG_SWIMMING
+import chylex.hee.system.migration.vanilla.EntityCreature
+import chylex.hee.system.migration.vanilla.EntityLivingBase
 import chylex.hee.system.util.Vec3
+import chylex.hee.system.util.addXZ
 import chylex.hee.system.util.directionTowards
+import chylex.hee.system.util.motionX
+import chylex.hee.system.util.motionZ
 import chylex.hee.system.util.nextFloat
 import chylex.hee.system.util.square
 import chylex.hee.system.util.totalTime
-import net.minecraft.entity.EntityCreature
-import net.minecraft.entity.EntityLivingBase
-import net.minecraft.entity.ai.EntityAIBase
+import chylex.hee.system.util.withY
+import net.minecraft.entity.ai.goal.Goal
+import net.minecraft.entity.ai.goal.Goal.Flag.JUMP
+import net.minecraft.entity.ai.goal.Goal.Flag.MOVE
+import java.util.EnumSet
 
 class AIAttackLeap(
 	private val entity: EntityCreature,
@@ -18,7 +23,7 @@ class AIAttackLeap(
 	private val triggerCooldown: Int,
 	private val leapStrengthXZ: ClosedFloatingPointRange<Double>,
 	private val leapStrengthY: ClosedFloatingPointRange<Double>
-) : EntityAIBase(){
+) : Goal(){
 	private val triggerDistanceSq = square(triggerDistance.start)..square(triggerDistance.endInclusive)
 	
 	private var leapTarget: EntityLivingBase? = null
@@ -26,7 +31,7 @@ class AIAttackLeap(
 	private var hasAttacked = false
 	
 	init{
-		mutexBits = AI_FLAG_SWIMMING or AI_FLAG_MOVEMENT
+		mutexFlags = EnumSet.of(MOVE, JUMP)
 	}
 	
 	override fun shouldExecute(): Boolean{
@@ -66,21 +71,22 @@ class AIAttackLeap(
 		val strengthXZ = rand.nextFloat(leapStrengthXZ)
 		val strengthY = rand.nextFloat(leapStrengthY)
 		
-		entity.motionX += (diff.x * strengthXZ) + (entity.motionX * 0.1)
-		entity.motionZ += (diff.z * strengthXZ) + (entity.motionZ * 0.1)
-		entity.motionY = strengthY
+		entity.motion = entity.motion.withY(strengthY).addXZ(
+			(diff.x * strengthXZ) + (entity.motionX * 0.1),
+			(diff.z * strengthXZ) + (entity.motionZ * 0.1)
+		)
 		
 		lastLeapTime = entity.world.totalTime
 	}
 	
-	override fun updateTask(){
+	override fun tick(){
 		if (hasAttacked){
 			return
 		}
 		
 		val target = leapTarget ?: return
 		
-		val distSq = entity.getDistanceSq(target.posX, target.entityBoundingBox.maxY, target.posZ)
+		val distSq = entity.getDistanceSq(target.posX, target.boundingBox.maxY, target.posZ)
 		val reachSq = square(entity.width) + (target.width * 0.5F)
 		
 		if (distSq <= reachSq){

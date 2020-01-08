@@ -1,18 +1,17 @@
 package chylex.hee.game.world.territory.storage
 import chylex.hee.game.world.ChunkGeneratorEndCustom
 import chylex.hee.game.world.territory.TerritoryInstance
+import chylex.hee.system.migration.vanilla.EntityPlayer
 import chylex.hee.system.util.Pos
 import chylex.hee.system.util.TagCompound
 import chylex.hee.system.util.center
 import chylex.hee.system.util.delegate.NotifyOnChange
 import chylex.hee.system.util.getLongArrayOrNull
 import chylex.hee.system.util.getPosOrNull
-import chylex.hee.system.util.setLongArray
-import chylex.hee.system.util.setPos
+import chylex.hee.system.util.putPos
 import chylex.hee.system.util.toYaw
-import net.minecraft.entity.player.EntityPlayer
+import chylex.hee.system.util.use
 import net.minecraft.util.math.BlockPos
-import net.minecraft.world.gen.ChunkProviderServer
 import net.minecraftforge.common.util.INBTSerializable
 import java.util.UUID
 
@@ -33,7 +32,7 @@ class TerritoryEntry(private val owner: TerritoryGlobalStorage, private val inst
 	
 	fun loadSpawn(): BlockPos{
 		if (spawnPoint == null){
-			val info = ((TerritoryInstance.endWorld.chunkProvider as ChunkProviderServer).chunkGenerator as ChunkGeneratorEndCustom).getGenerationInfo(instance)
+			val info = (TerritoryInstance.endWorld.chunkProvider.chunkGenerator as ChunkGeneratorEndCustom).getGenerationInfo(instance)
 			
 			val startChunk = instance.topLeftChunk
 			val bottomY = instance.territory.height.first
@@ -62,11 +61,11 @@ class TerritoryEntry(private val owner: TerritoryGlobalStorage, private val inst
 	
 	override fun serializeNBT() = TagCompound().apply {
 		spawnPoint?.let {
-			setPos(SPAWN_POINT_TAG, it)
+			putPos(SPAWN_POINT_TAG, it)
 		}
 		
 		interestPoint?.let {
-			setPos(INTEREST_POINT_TAG, it)
+			putPos(INTEREST_POINT_TAG, it)
 		}
 		
 		if (lastPortals.isNotEmpty()){
@@ -81,11 +80,11 @@ class TerritoryEntry(private val owner: TerritoryGlobalStorage, private val inst
 				lastPortalArray[offset + 2] = pos.toLong()
 			}
 			
-			setLongArray(LAST_PORTALS_TAG, lastPortalArray)
+			putLongArray(LAST_PORTALS_TAG, lastPortalArray)
 		}
 	}
 	
-	override fun deserializeNBT(nbt: TagCompound) = with(nbt){
+	override fun deserializeNBT(nbt: TagCompound) = nbt.use {
 		spawnPoint = getPosOrNull(SPAWN_POINT_TAG)
 		interestPoint = getPosOrNull(INTEREST_POINT_TAG)
 		

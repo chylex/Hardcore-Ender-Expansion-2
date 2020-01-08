@@ -6,8 +6,8 @@ import chylex.hee.system.migration.Facing.NORTH
 import chylex.hee.system.migration.Facing.WEST
 import chylex.hee.system.migration.forge.Side
 import chylex.hee.system.migration.forge.Sided
-import net.minecraft.client.model.ModelChest
-import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer
+import net.minecraft.client.renderer.tileentity.TileEntityRenderer
+import net.minecraft.client.renderer.tileentity.model.ChestModel
 import net.minecraft.util.ResourceLocation
 import org.lwjgl.opengl.GL11.GL_MODELVIEW
 import org.lwjgl.opengl.GL11.GL_TEXTURE
@@ -15,12 +15,12 @@ import kotlin.math.PI
 import kotlin.math.pow
 
 @Sided(Side.CLIENT)
-abstract class RenderTileAbstractChest<T : TileEntityBaseChest> : TileEntitySpecialRenderer<T>(){
+abstract class RenderTileAbstractChest<T : TileEntityBaseChest> : TileEntityRenderer<T>(){
 	protected abstract val texture: ResourceLocation
 	
-	private val modelChest = ModelChest()
+	private val modelChest = ChestModel()
 	
-	override fun render(tile: T, x: Double, y: Double, z: Double, partialTicks: Float, destroyStage: Int, alpha: Float){
+	override fun render(tile: T, x: Double, y: Double, z: Double, partialTicks: Float, destroyStage: Int){
 		if (destroyStage >= 0){
 			bindTexture(DESTROY_STAGES[destroyStage])
 			GL.matrixMode(GL_TEXTURE)
@@ -35,7 +35,7 @@ abstract class RenderTileAbstractChest<T : TileEntityBaseChest> : TileEntitySpec
 		
 		GL.pushMatrix()
 		GL.enableRescaleNormal()
-		GL.color(1F, 1F, 1F, alpha)
+		GL.color(1F, 1F, 1F)
 		GL.translate(x, y + 1F, z + 1F)
 		GL.scale(1F, -1F, -1F)
 		GL.translate(0.5F, 0.5F, 0.5F)
@@ -50,7 +50,7 @@ abstract class RenderTileAbstractChest<T : TileEntityBaseChest> : TileEntitySpec
 		GL.rotate(rotation, 0F, 1F, 0F)
 		GL.translate(-0.5F, -0.5F, -0.5F)
 		
-		modelChest.chestLid.rotateAngleX = -(1F - (1F - tile.lidAngle.get(partialTicks)).pow(3)) * PI.toFloat() * 0.5F
+		modelChest.lid.rotateAngleX = -(1F - (1F - tile.lidAngle.get(partialTicks)).pow(3)) * PI.toFloat() * 0.5F
 		modelChest.renderAll()
 		
 		GL.disableRescaleNormal()

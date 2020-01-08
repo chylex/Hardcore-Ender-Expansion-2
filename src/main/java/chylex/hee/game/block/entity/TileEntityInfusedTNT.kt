@@ -3,9 +3,13 @@ import chylex.hee.game.block.entity.base.TileEntityBase
 import chylex.hee.game.block.entity.base.TileEntityBase.Context.STORAGE
 import chylex.hee.game.item.infusion.InfusionList
 import chylex.hee.game.item.infusion.InfusionTag
+import chylex.hee.init.ModTileEntities
 import chylex.hee.system.util.TagCompound
+import net.minecraft.tileentity.TileEntityType
 
-class TileEntityInfusedTNT : TileEntityBase(){
+class TileEntityInfusedTNT(type: TileEntityType<TileEntityInfusedTNT>) : TileEntityBase(type){
+	constructor() : this(ModTileEntities.INFUSED_TNT)
+	
 	var infusions = InfusionList.EMPTY
 	
 	override fun writeNBT(nbt: TagCompound, context: Context){

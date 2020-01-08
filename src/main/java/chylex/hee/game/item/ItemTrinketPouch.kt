@@ -19,8 +19,10 @@ import chylex.hee.system.migration.forge.EventPriority
 import chylex.hee.system.migration.forge.Side
 import chylex.hee.system.migration.forge.Sided
 import chylex.hee.system.migration.forge.SubscribeEvent
+import chylex.hee.system.migration.vanilla.EntityPlayer
+import chylex.hee.system.migration.vanilla.TextComponentTranslation
 import chylex.hee.system.util.NBTItemStackList
-import chylex.hee.system.util.NBTList.Companion.setList
+import chylex.hee.system.util.NBTList.Companion.putList
 import chylex.hee.system.util.allSlots
 import chylex.hee.system.util.any
 import chylex.hee.system.util.find
@@ -31,21 +33,19 @@ import chylex.hee.system.util.heeTagOrNull
 import chylex.hee.system.util.isNotEmpty
 import chylex.hee.system.util.nonEmptySlots
 import chylex.hee.system.util.setStack
-import net.minecraft.client.gui.GuiScreen
-import net.minecraft.client.gui.inventory.GuiInventory
-import net.minecraft.client.resources.I18n
+import net.minecraft.client.gui.screen.Screen
+import net.minecraft.client.gui.screen.inventory.InventoryScreen
 import net.minecraft.client.util.ITooltipFlag
-import net.minecraft.entity.player.EntityPlayer
-import net.minecraft.inventory.InventoryBasic
+import net.minecraft.inventory.Inventory
 import net.minecraft.item.ItemStack
 import net.minecraft.util.ActionResult
-import net.minecraft.util.EnumHand
+import net.minecraft.util.Hand
+import net.minecraft.util.text.ITextComponent
 import net.minecraft.world.World
 import net.minecraftforge.client.event.GuiScreenEvent
 import net.minecraftforge.common.MinecraftForge
-import org.lwjgl.input.Mouse
 
-class ItemTrinketPouch : ItemAbstractTrinket(), ITrinketHandlerProvider, IInfusableItem{
+class ItemTrinketPouch(properties: Properties) : ItemAbstractTrinket(properties), ITrinketHandlerProvider, IInfusableItem{
 	private companion object{
 		private const val CONTENTS_TAG = "Contents"
 		private const val MOD_COUNTER_TAG = "Version"
@@ -67,10 +67,10 @@ class ItemTrinketPouch : ItemAbstractTrinket(), ITrinketHandlerProvider, IInfusa
 		}
 	}
 	
-	class Inventory(
+	class Inv(
 		override val player: EntityPlayer,
 		private val inventorySlot: Int
-	) : InventoryBasic("gui.hee.trinket_pouch.title", false, getSlotCount(getInventoryStack(player, inventorySlot))), IInventoryFromPlayerItem, ITrinketHandler{
+	) : Inventory(/* UPDATE "gui.hee.trinket_pouch.title", false, */getSlotCount(getInventoryStack(player, inventorySlot))), IInventoryFromPlayerItem, ITrinketHandler{
 		private var noLongerValid = false
 		private var modCounter = 0
 		
@@ -80,7 +80,7 @@ class ItemTrinketPouch : ItemAbstractTrinket(), ITrinketHandlerProvider, IInfusa
 			if (isStackValid(pouchItem)){
 				pouchItem.heeTagOrNull?.let {
 					it.getListOfItemStacks(CONTENTS_TAG).forEachIndexed(::setStack)
-					modCounter = it.getInteger(MOD_COUNTER_TAG)
+					modCounter = it.getInt(MOD_COUNTER_TAG)
 				}
 			}
 			else{
@@ -93,7 +93,7 @@ class ItemTrinketPouch : ItemAbstractTrinket(), ITrinketHandlerProvider, IInfusa
 				return null
 			}
 			
-			val pouchItem = getInventoryStack(player, inventorySlot).takeIf { isStackValid(it) && it.heeTag.getInteger(MOD_COUNTER_TAG) == modCounter }
+			val pouchItem = getInventoryStack(player, inventorySlot).takeIf { isStackValid(it) && it.heeTag.getInt(MOD_COUNTER_TAG) == modCounter }
 			
 			if (pouchItem == null){
 				noLongerValid = true
@@ -122,14 +122,14 @@ class ItemTrinketPouch : ItemAbstractTrinket(), ITrinketHandlerProvider, IInfusa
 			
 			with(pouchItem.heeTag){
 				if (isEmpty){
-					removeTag(CONTENTS_TAG)
+					remove(CONTENTS_TAG)
 				}
 				else{
-					setList(CONTENTS_TAG, newList)
+					putList(CONTENTS_TAG, newList)
 				}
 				
 				if (updateModCounter){
-					setInteger(MOD_COUNTER_TAG, ++modCounter)
+					putInt(MOD_COUNTER_TAG, ++modCounter)
 				}
 			}
 			
@@ -174,14 +174,14 @@ class ItemTrinketPouch : ItemAbstractTrinket(), ITrinketHandlerProvider, IInfusa
 	}
 	
 	override fun createTrinketHandler(player: EntityPlayer): ITrinketHandler{
-		return (player.openContainer as? ContainerTrinketPouch)?.containerInventory ?: Inventory(player, INVENTORY_SLOT_TRINKET) // helpfully updates the opened GUI too
+		return ((player.openContainer as? ContainerTrinketPouch)?.containerInventory as? Inv) ?: Inv(player, INVENTORY_SLOT_TRINKET) // helpfully updates the opened GUI too
 	}
 	
 	override fun canApplyInfusion(infusion: Infusion): Boolean{
 		return ItemAbstractInfusable.onCanApplyInfusion(this, infusion)
 	}
 	
-	override fun onItemRightClick(world: World, player: EntityPlayer, hand: EnumHand): ActionResult<ItemStack>{
+	override fun onItemRightClick(world: World, player: EntityPlayer, hand: Hand): ActionResult<ItemStack>{
 		val stack = player.getHeldItem(hand)
 		val slot = player.inventory.nonEmptySlots.find { it.stack === stack }
 		
@@ -200,11 +200,11 @@ class ItemTrinketPouch : ItemAbstractTrinket(), ITrinketHandlerProvider, IInfusa
 	}
 	
 	@Sided(Side.CLIENT)
-	override fun addInformation(stack: ItemStack, world: World?, lines: MutableList<String>, flags: ITooltipFlag){
+	override fun addInformation(stack: ItemStack, world: World?, lines: MutableList<ITextComponent>, flags: ITooltipFlag){
 		super.addInformation(stack, world, lines, flags)
 		
-		if (MC.currentScreen is GuiInventory){
-			lines.add(I18n.format("item.hee.trinket_pouch.tooltip"))
+		if (MC.currentScreen is InventoryScreen){
+			lines.add(TextComponentTranslation("item.hee.trinket_pouch.tooltip"))
 		}
 		
 		ItemAbstractInfusable.onAddInformation(stack, lines)
@@ -217,10 +217,10 @@ class ItemTrinketPouch : ItemAbstractTrinket(), ITrinketHandlerProvider, IInfusa
 	
 	@Sided(Side.CLIENT)
 	@SubscribeEvent(EventPriority.LOWEST)
-	fun onMouseInputPre(e: GuiScreenEvent.MouseInputEvent.Pre){
+	fun onMouseInputPre(e: GuiScreenEvent.MouseClickedEvent.Pre){
 		val gui = e.gui
 		
-		if (gui is GuiInventory && Mouse.getEventButton() == 1 && Mouse.getEventButtonState() && !GuiScreen.isShiftKeyDown()){
+		if (gui is InventoryScreen && e.button == 1 && !Screen.hasShiftDown()){
 			val hoveredSlot = gui.slotUnderMouse
 			
 			if (hoveredSlot != null && hoveredSlot.stack.item === this){

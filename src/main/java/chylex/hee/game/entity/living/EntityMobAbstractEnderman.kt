@@ -6,40 +6,47 @@ import chylex.hee.game.mechanics.damage.IDamageProcessor.Companion.ALL_PROTECTIO
 import chylex.hee.game.mechanics.damage.IDamageProcessor.Companion.DIFFICULTY_SCALING
 import chylex.hee.game.mechanics.damage.IDamageProcessor.Companion.NUDITY_DANGER
 import chylex.hee.game.mechanics.damage.IDamageProcessor.Companion.PEACEFUL_EXCLUSION
-import chylex.hee.system.util.getAttribute
+import chylex.hee.system.migration.vanilla.EntityArrow
+import chylex.hee.system.migration.vanilla.EntityEnderman
+import chylex.hee.system.migration.vanilla.EntityLivingBase
 import chylex.hee.system.util.tryRemoveModifier
+import net.minecraft.entity.CreatureAttribute
 import net.minecraft.entity.Entity
-import net.minecraft.entity.EntityLivingBase
-import net.minecraft.entity.EnumCreatureAttribute
+import net.minecraft.entity.EntitySize
+import net.minecraft.entity.EntityType
+import net.minecraft.entity.Pose
 import net.minecraft.entity.SharedMonsterAttributes.MOVEMENT_SPEED
-import net.minecraft.entity.monster.EntityEnderman
-import net.minecraft.entity.projectile.EntityArrow
+import net.minecraft.network.IPacket
 import net.minecraft.network.datasync.DataSerializers
 import net.minecraft.util.DamageSource
 import net.minecraft.util.EntityDamageSource
-import net.minecraft.util.EntityDamageSourceIndirect
-import net.minecraft.util.ResourceLocation
+import net.minecraft.util.IndirectEntityDamageSource
 import net.minecraft.util.math.AxisAlignedBB
 import net.minecraft.util.text.ITextComponent
 import net.minecraft.world.World
+import net.minecraftforge.fml.network.NetworkHooks
 
-abstract class EntityMobAbstractEnderman(world: World) : EntityEnderman(world){
+abstract class EntityMobAbstractEnderman(type: EntityType<out EntityMobAbstractEnderman>, world: World) : EntityEnderman(type, world){
 	private companion object{
 		private val DATA_SHAKING = EntityData.register<EntityMobAbstractEnderman, Boolean>(DataSerializers.BOOLEAN)
 		private val DAMAGE_GENERAL = Damage(DIFFICULTY_SCALING, PEACEFUL_EXCLUSION, *ALL_PROTECTIONS_WITH_SHIELD, NUDITY_DANGER)
 	}
 	
-	var isAggressive: Boolean by EntityData(SCREAMING)
+	var isAggro: Boolean by EntityData(SCREAMING)
 	var isShaking: Boolean by EntityData(DATA_SHAKING)
 	
 	abstract val teleportCooldown: Int
 	
-	override fun entityInit(){
-		super.entityInit()
+	override fun registerData(){
+		super.registerData()
 		dataManager.register(DATA_SHAKING, false)
 	}
 	
-	override fun initEntityAI(){}
+	override fun registerGoals(){}
+	
+	override fun createSpawnPacket(): IPacket<*>{
+		return NetworkHooks.getEntitySpawningPacket(this)
+	}
 	
 	override fun updateAITasks(){} // blocks vanilla water damage & sunlight behavior
 	
@@ -48,9 +55,9 @@ abstract class EntityMobAbstractEnderman(world: World) : EntityEnderman(world){
 			return
 		}
 		
-		val prevAggressive = isAggressive
+		val prevAggressive = isAggro
 		super.setAttackTarget(newTarget)
-		isAggressive = prevAggressive
+		isAggro = prevAggressive
 		
 		if (newTarget != null){
 			getAttribute(MOVEMENT_SPEED).tryRemoveModifier(ATTACKING_SPEED_BOOST) // vanilla adds speed boost attribute in this case
@@ -58,11 +65,11 @@ abstract class EntityMobAbstractEnderman(world: World) : EntityEnderman(world){
 	}
 	
 	override fun attackEntityFrom(source: DamageSource, amount: Float): Boolean{
-		if (source is EntityDamageSourceIndirect){
+		if (source is IndirectEntityDamageSource){
 			val result = super.attackEntityFrom(FakeIndirectDamageSource(source), amount)
 			
 			if (result){
-				(source.immediateSource as? EntityArrow)?.setDead() // of course vanilla hardcodes not destroying arrows with Endermen...
+				(source.immediateSource as? EntityArrow)?.remove() // of course vanilla hardcodes not destroying arrows with Endermen...
 			}
 			
 			return result
@@ -76,14 +83,10 @@ abstract class EntityMobAbstractEnderman(world: World) : EntityEnderman(world){
 	}
 	
 	open fun canTeleportTo(aabb: AxisAlignedBB): Boolean{
-		return world.getCollisionBoxes(null, aabb).isEmpty() && !world.containsAnyLiquid(aabb)
+		return world.isCollisionBoxesEmpty(null, aabb, emptySet()) && !world.containsAnyLiquid(aabb)
 	}
 	
 	override fun teleportRandomly(): Boolean{
-		return false
-	}
-	
-	override fun teleportToEntity(entity: Entity): Boolean{
 		return false
 	}
 	
@@ -91,19 +94,15 @@ abstract class EntityMobAbstractEnderman(world: World) : EntityEnderman(world){
 		return false // disables vanilla fx
 	}
 	
-	override fun getLootTable(): ResourceLocation?{
-		return null
-	}
-	
-	override fun getCreatureAttribute(): EnumCreatureAttribute{
+	override fun getCreatureAttribute(): CreatureAttribute{
 		return CustomCreatureType.ENDER
 	}
 	
-	override fun getEyeHeight(): Float{
+	override fun getStandingEyeHeight(pose: Pose, size: EntitySize): Float{
 		return 2.62F
 	}
 	
-	private class FakeIndirectDamageSource(private val source: EntityDamageSourceIndirect) : EntityDamageSource(source.damageType, source.immediateSource){
+	private class FakeIndirectDamageSource(private val source: IndirectEntityDamageSource) : EntityDamageSource(source.damageType, source.immediateSource){
 		override fun getImmediateSource() = source.immediateSource
 		override fun getTrueSource() = source.trueSource
 		

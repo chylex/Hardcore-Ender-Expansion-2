@@ -6,13 +6,13 @@ import chylex.hee.system.util.TagCompound
 import chylex.hee.system.util.getBlock
 import chylex.hee.system.util.getTile
 import net.minecraft.block.Block
-import net.minecraft.block.state.IBlockState
+import net.minecraft.block.BlockState
 import net.minecraft.tileentity.TileEntity
 import net.minecraft.util.math.BlockPos
 import net.minecraft.world.World
 
-class TileEntityStructureTrigger(private val state: IBlockState, private val nbt: TagCompound) : IStructureTrigger{
-	constructor(state: IBlockState, tile: TileEntity) : this(state, tile.serializeNBT())
+class TileEntityStructureTrigger(private val state: BlockState, private val nbt: TagCompound) : IStructureTrigger{
+	constructor(state: BlockState, tile: TileEntity) : this(state, tile.serializeNBT())
 	constructor(block: Block, nbt: TagCompound) : this(block.defaultState, nbt)
 	constructor(block: Block, tile: TileEntity) : this(block, tile.serializeNBT())
 	
@@ -26,7 +26,7 @@ class TileEntityStructureTrigger(private val state: IBlockState, private val nbt
 		}
 		
 		pos.getTile<TileEntity>(world)?.let {
-			it.readFromNBT(nbt)
+			it.read(nbt)
 			it.pos = pos
 			transform(it)
 		}

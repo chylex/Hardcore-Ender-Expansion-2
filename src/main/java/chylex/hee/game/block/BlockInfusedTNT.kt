@@ -4,76 +4,87 @@ import chylex.hee.game.block.util.Property
 import chylex.hee.game.entity.item.EntityInfusedTNT
 import chylex.hee.game.item.infusion.Infusion.TRAP
 import chylex.hee.game.item.infusion.InfusionTag
+import chylex.hee.system.migration.vanilla.BlockTNT
+import chylex.hee.system.migration.vanilla.Blocks
+import chylex.hee.system.migration.vanilla.EntityLivingBase
+import chylex.hee.system.migration.vanilla.EntityPlayer
 import chylex.hee.system.migration.vanilla.Sounds
-import chylex.hee.system.util.creativeTabIn
-import chylex.hee.system.util.get
+import chylex.hee.system.util.breakBlock
 import chylex.hee.system.util.getTile
 import chylex.hee.system.util.playServer
 import chylex.hee.system.util.posVec
 import chylex.hee.system.util.setAir
-import chylex.hee.system.util.with
-import net.minecraft.block.BlockTNT
-import net.minecraft.block.ITileEntityProvider
-import net.minecraft.block.SoundType
-import net.minecraft.block.state.BlockStateContainer
-import net.minecraft.block.state.IBlockState
-import net.minecraft.entity.EntityLivingBase
-import net.minecraft.entity.player.EntityPlayer
+import net.minecraft.block.Block
+import net.minecraft.block.BlockState
 import net.minecraft.item.ItemStack
+import net.minecraft.state.StateContainer.Builder
 import net.minecraft.tileentity.TileEntity
-import net.minecraft.util.NonNullList
 import net.minecraft.util.SoundCategory
 import net.minecraft.util.math.BlockPos
 import net.minecraft.world.Explosion
-import net.minecraft.world.IBlockAccess
+import net.minecraft.world.IBlockReader
 import net.minecraft.world.World
+import net.minecraft.world.storage.loot.LootContext
+import net.minecraft.world.storage.loot.LootParameters
 import java.util.Random
 
-class BlockInfusedTNT : BlockTNT(), ITileEntityProvider{
+class BlockInfusedTNT : BlockTNT(Properties.from(Blocks.TNT)){
 	companion object{
 		val INFERNIUM = Property.bool("infernium")
 	}
 	
 	init{
-		soundType = SoundType.PLANT
-		creativeTabIn = null
-		
 		defaultState = defaultState.with(INFERNIUM, false)
 	}
 	
-	override fun createBlockState(): BlockStateContainer{
-		return BlockStateContainer(this, EXPLODE, INFERNIUM)
+	override fun fillStateContainer(container: Builder<Block, BlockState>){
+		super.fillStateContainer(container)
+		container.add(INFERNIUM)
 	}
 	
-	override fun createNewTileEntity(world: World, meta: Int): TileEntity{
+	override fun hasTileEntity(state: BlockState): Boolean{
+		return true
+	}
+	
+	override fun createTileEntity(state: BlockState, world: IBlockReader): TileEntity{
 		return TileEntityInfusedTNT()
+	}
+	
+	override fun getTranslationKey(): String{
+		return Blocks.TNT.translationKey
 	}
 	
 	// Placement & drops
 	
-	override fun onBlockPlacedBy(world: World, pos: BlockPos, state: IBlockState, placer: EntityLivingBase, stack: ItemStack){
+	override fun onBlockPlacedBy(world: World, pos: BlockPos, state: BlockState, placer: EntityLivingBase?, stack: ItemStack){
 		pos.getTile<TileEntityInfusedTNT>(world)?.infusions = InfusionTag.getList(stack)
 	}
 	
-	override fun getDrops(drops: NonNullList<ItemStack>, world: IBlockAccess, pos: BlockPos, state: IBlockState, fortune: Int){
-		val infusions = pos.getTile<TileEntityInfusedTNT>(world)?.infusions
+	override fun getDrops(state: BlockState, context: LootContext.Builder): MutableList<ItemStack>{
+		val world = context.world
+		val pos = context.get(LootParameters.POSITION)
+		
+		val infusions = pos?.getTile<TileEntityInfusedTNT>(world)?.infusions
 		
 		if (infusions != null){
-			drops.add(ItemStack(this).also { InfusionTag.setList(it, infusions) })
+			return mutableListOf(ItemStack(this).also { InfusionTag.setList(it, infusions) })
 		}
+		
+		return mutableListOf()
 	}
 	
 	// Delay block addition/deletion
 	
-	override fun onBlockAdded(world: World, pos: BlockPos, state: IBlockState){
-		world.scheduleUpdate(pos, this, 1)
+	override fun onBlockAdded(state: BlockState, world: World, pos: BlockPos, oldState: BlockState, isMoving: Boolean){
+		world.pendingBlockTicks.scheduleTick(pos, this, 1)
 	}
 	
-	override fun updateTick(world: World, pos: BlockPos, state: IBlockState, rand: Random){
-		super.onBlockAdded(world, pos, state)
+	override fun tick(state: BlockState, world: World, pos: BlockPos, rand: Random){
+		super.onBlockAdded(state, world, pos, Blocks.AIR.defaultState, false)
 	}
 	
-	override fun removedByPlayer(state: IBlockState, world: World, pos: BlockPos, player: EntityPlayer, willHarvest: Boolean): Boolean{
+	/* UPDATE
+	override fun removedByPlayer(state: BlockState, world: World, pos: BlockPos, player: EntityPlayer, willHarvest: Boolean): Boolean{
 		if (pos.getTile<TileEntityInfusedTNT>(world)?.infusions?.has(TRAP) == true && !player.isCreative){
 			explode(world, pos, state.with(EXPLODE, true), player)
 			pos.setAir(world)
@@ -85,9 +96,9 @@ class BlockInfusedTNT : BlockTNT(), ITileEntityProvider{
 		}
 		
 		return super.removedByPlayer(state, world, pos, player, willHarvest)
-	}
+	}*/
 	
-	override fun harvestBlock(world: World, player: EntityPlayer, pos: BlockPos, state: IBlockState, tile: TileEntity?, stack: ItemStack){
+	override fun harvestBlock(world: World, player: EntityPlayer, pos: BlockPos, state: BlockState, tile: TileEntity?, stack: ItemStack){
 		super.harvestBlock(world, player, pos, state, tile, stack)
 		pos.setAir(world)
 	}
@@ -102,29 +113,30 @@ class BlockInfusedTNT : BlockTNT(), ITileEntityProvider{
 		val infusions = pos.getTile<TileEntityInfusedTNT>(world)?.infusions
 		
 		if (infusions != null){
-			world.spawnEntity(EntityInfusedTNT(world, pos, infusions, explosion))
+			world.addEntity(EntityInfusedTNT(world, pos, infusions, explosion))
 		}
 	}
 	
-	override fun explode(world: World, pos: BlockPos, state: IBlockState, igniter: EntityLivingBase?){
+	/* UPDATE
+	override fun explode(world: World, pos: BlockPos, state: BlockState, igniter: EntityLivingBase?){
 		if (world.isRemote){
 			return
 		}
 		
 		igniteTNT(world, pos, state, igniter, ignoreTrap = false)
-	}
+	}*/
 	
-	fun igniteTNT(world: World, pos: BlockPos, state: IBlockState, igniter: EntityLivingBase?, ignoreTrap: Boolean){
+	fun igniteTNT(world: World, pos: BlockPos, state: BlockState, igniter: EntityLivingBase?, ignoreTrap: Boolean){
 		val infusions = pos.getTile<TileEntityInfusedTNT>(world)?.infusions
 		
-		if (infusions != null && state[EXPLODE]){
+		if (infusions != null){
 			if (infusions.has(TRAP) && world.isBlockPowered(pos) && !ignoreTrap){
-				dropBlockAsItem(world, pos, state, 0)
+				pos.breakBlock(world, true) // UPDATE test
 			}
 			else{
 				EntityInfusedTNT(world, pos, infusions, igniter, state[INFERNIUM]).apply {
 					Sounds.ENTITY_TNT_PRIMED.playServer(world, posVec, SoundCategory.BLOCKS)
-					world.spawnEntity(this)
+					world.addEntity(this)
 				}
 			}
 		}

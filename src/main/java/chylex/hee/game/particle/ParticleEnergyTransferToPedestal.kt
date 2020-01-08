@@ -15,7 +15,7 @@ import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.Vec3d
 import net.minecraft.world.World
 
-object ParticleEnergyTransferToPedestal : IParticleMaker<Data>{
+object ParticleEnergyTransferToPedestal : IParticleMaker.WithData<Data>(){
 	@Sided(Side.CLIENT)
 	override fun create(world: World, posX: Double, posY: Double, posZ: Double, motX: Double, motY: Double, motZ: Double, data: Data?): Particle{
 		return Instance(world, posX, posY, posZ, data)
@@ -36,6 +36,8 @@ object ParticleEnergyTransferToPedestal : IParticleMaker<Data>{
 				setExpired()
 			}
 			else{
+				selectSpriteRandomly(ParticleEnergyTransferToPedestal.sprite)
+				
 				loadColor(RGB(40u))
 				particleAlpha = 0.9F
 				
@@ -46,8 +48,8 @@ object ParticleEnergyTransferToPedestal : IParticleMaker<Data>{
 			}
 		}
 		
-		override fun onUpdate(){
-			super.onUpdate()
+		override fun tick(){
+			super.tick()
 			
 			if (Pos(targetPos).getBlock(world) !== ModBlocks.TABLE_PEDESTAL){
 				if (age < maxAge - 5){

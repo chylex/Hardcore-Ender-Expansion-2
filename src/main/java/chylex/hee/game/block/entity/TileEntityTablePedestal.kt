@@ -21,10 +21,12 @@ import chylex.hee.game.particle.util.IOffset.InBox
 import chylex.hee.game.particle.util.IShape.Point
 import chylex.hee.init.ModBlocks
 import chylex.hee.init.ModItems
+import chylex.hee.init.ModTileEntities
 import chylex.hee.network.client.PacketClientFX
 import chylex.hee.system.migration.Facing.DOWN
 import chylex.hee.system.migration.forge.Side
 import chylex.hee.system.migration.forge.Sided
+import chylex.hee.system.migration.vanilla.EntityItem
 import chylex.hee.system.migration.vanilla.Sounds
 import chylex.hee.system.util.FLAG_SYNC_CLIENT
 import chylex.hee.system.util.TagCompound
@@ -39,24 +41,26 @@ import chylex.hee.system.util.isNotEmpty
 import chylex.hee.system.util.nextFloat
 import chylex.hee.system.util.playClient
 import chylex.hee.system.util.posVec
-import chylex.hee.system.util.setPos
+import chylex.hee.system.util.putPos
 import chylex.hee.system.util.setState
 import chylex.hee.system.util.totalTime
-import chylex.hee.system.util.with
-import net.minecraft.block.state.IBlockState
-import net.minecraft.entity.item.EntityItem
-import net.minecraft.entity.player.InventoryPlayer
+import chylex.hee.system.util.use
+import net.minecraft.entity.player.PlayerInventory
 import net.minecraft.item.ItemStack
-import net.minecraft.util.EnumFacing
+import net.minecraft.tileentity.TileEntityType
+import net.minecraft.util.Direction
 import net.minecraft.util.SoundCategory
 import net.minecraft.util.math.AxisAlignedBB
 import net.minecraft.util.math.BlockPos
 import net.minecraft.world.World
 import net.minecraftforge.common.capabilities.Capability
+import net.minecraftforge.common.util.LazyOptional
 import net.minecraftforge.items.CapabilityItemHandler.ITEM_HANDLER_CAPABILITY
 import java.util.Random
 
-class TileEntityTablePedestal : TileEntityBase(){
+class TileEntityTablePedestal(type: TileEntityType<TileEntityTablePedestal>) : TileEntityBase(type){
+	constructor() : this(ModTileEntities.TABLE_PEDESTAL)
+	
 	companion object{
 		private const val TABLE_POS_TAG = "TablePos"
 		private const val INVENTORY_TAG = "Inventory"
@@ -84,18 +88,18 @@ class TileEntityTablePedestal : TileEntityBase(){
 	private var linkedTable by NotifyOnChange<BlockPos?>(null, ::onLinkedStatusChanged)
 	
 	private val linkedTableTile: TileEntityBaseTable?
-		get() = linkedTable?.getTile(world)
+		get() = linkedTable?.getTile(wrld)
 	
 	val hasLinkedTable
 		get() = linkedTable != null
 	
 	val tableIndicatorColor: IntColor?
-		get() = linkedTable?.takeIf { it.isLoaded(world) }?.getTile<TileEntityBaseTable>(world)?.tableIndicatorColor
+		get() = linkedTable?.takeIf { it.isLoaded(wrld) }?.getTile<TileEntityBaseTable>(wrld)?.tableIndicatorColor
 	
 	private val statusIndicator = PedestalStatusIndicator(this)
 	
 	var statusIndicatorColorClient by NotifyOnChange<Int?>(null){
-		-> world.markBlockRangeForRenderUpdate(pos, pos)
+		-> // UPDATE wrld.markBlockRangeForRenderUpdate(pos, pos)
 	}
 	
 	var isDedicatedOutput
@@ -103,7 +107,7 @@ class TileEntityTablePedestal : TileEntityBase(){
 		set(value){
 			if (value){
 				statusIndicator.process = DEDICATED_OUTPUT
-				inventoryHandler.dropInputItem(world, pos.up())
+				inventoryHandler.dropInputItem(wrld, pos.up())
 			}
 			else{
 				statusIndicator.process = null
@@ -148,7 +152,7 @@ class TileEntityTablePedestal : TileEntityBase(){
 	}
 	
 	private fun spawnSmokeParticles(){
-		val currentTime = world.totalTime
+		val currentTime = wrld.totalTime
 		
 		if (lastSmokeTime != currentTime){
 			lastSmokeTime = currentTime
@@ -191,21 +195,21 @@ class TileEntityTablePedestal : TileEntityBase(){
 	}
 	
 	private fun spawnTableLinkAt(pos: BlockPos){
-		val rand = world.rand
+		val rand = wrld.rand
 		
-		EntityItem(world, pos.x + rand.nextFloat(0.25, 0.75), pos.y + rand.nextFloat(0.25, 0.75), pos.z + rand.nextFloat(0.25, 0.75), ItemStack(ModItems.TABLE_LINK)).apply {
+		EntityItem(wrld, pos.x + rand.nextFloat(0.25, 0.75), pos.y + rand.nextFloat(0.25, 0.75), pos.z + rand.nextFloat(0.25, 0.75), ItemStack(ModItems.TABLE_LINK)).apply {
 			setDefaultPickupDelay()
-			thrower = BlockTablePedestal.DROPPED_ITEM_THROWER_NAME
-			world.spawnEntity(this)
+			throwerId = BlockTablePedestal.DROPPED_ITEM_THROWER
+			wrld.addEntity(this)
 		}
 	}
 	
 	private fun onLinkedStatusChanged(){
 		if (world != null){
-			val state = pos.getState(world)
+			val state = pos.getState(wrld)
 			
 			if (state.block === ModBlocks.TABLE_PEDESTAL){
-				pos.setState(world, state.with(IS_LINKED, linkedTable != null))
+				pos.setState(wrld, state.with(IS_LINKED, linkedTable != null))
 			}
 			
 			statusIndicator.process = null
@@ -248,14 +252,14 @@ class TileEntityTablePedestal : TileEntityBase(){
 		return false
 	}
 	
-	fun moveOutputToPlayerInventory(inventory: InventoryPlayer){
+	fun moveOutputToPlayerInventory(inventory: PlayerInventory){
 		if (inventoryHandler.moveOutputToPlayerInventory(inventory)){
 			spawnSmokeParticles()
 		}
 	}
 	
 	fun dropAllItems(){
-		inventoryHandler.dropAllItems(world, pos.up())
+		inventoryHandler.dropAllItems(wrld, pos.up())
 	}
 	
 	private fun onInventoryUpdated(updateInputModCounter: Boolean){
@@ -269,17 +273,13 @@ class TileEntityTablePedestal : TileEntityBase(){
 		
 		if (updateInputModCounter){
 			++inputModCounter
-			inputModTime = world.totalTime
+			inputModTime = wrld.totalTime
 		}
 	}
 	
-	override fun hasCapability(capability: Capability<*>, facing: EnumFacing?): Boolean{
-		return (capability === ITEM_HANDLER_CAPABILITY && facing == DOWN) || super.hasCapability(capability, facing)
-	}
-	
-	override fun <T : Any?> getCapability(capability: Capability<T>, facing: EnumFacing?): T?{
+	override fun <T : Any?> getCapability(capability: Capability<T>, facing: Direction?): LazyOptional<T>{
 		return if (capability === ITEM_HANDLER_CAPABILITY && facing == DOWN)
-			ITEM_HANDLER_CAPABILITY.cast(inventoryHandler.itemOutputCap)
+			LazyOptional.of { inventoryHandler.itemOutputCap }.cast()
 		else
 			super.getCapability(capability, facing)
 	}
@@ -293,34 +293,30 @@ class TileEntityTablePedestal : TileEntityBase(){
 	
 	// Serialization
 	
-	override fun shouldRefresh(world: World, pos: BlockPos, oldState: IBlockState, newState: IBlockState): Boolean{
-		return newState.block != oldState.block
-	}
-	
-	override fun writeNBT(nbt: TagCompound, context: Context) = with(nbt){
+	override fun writeNBT(nbt: TagCompound, context: Context) = nbt.use {
 		linkedTable?.let {
-			setPos(TABLE_POS_TAG, it)
+			putPos(TABLE_POS_TAG, it)
 		}
 		
-		setTag(INVENTORY_TAG, inventoryHandler.serializeNBT())
+		put(INVENTORY_TAG, inventoryHandler.serializeNBT())
 		
 		if (context == STORAGE){
-			setTag(STATUS_TAG, statusIndicator.serializeNBT())
+			put(STATUS_TAG, statusIndicator.serializeNBT())
 		}
 		else if (context == NETWORK){
 			linkedTable?.let {
-				setInteger(STATUS_COLOR_TAG, statusIndicator.currentColor.i)
+				putInt(STATUS_COLOR_TAG, statusIndicator.currentColor.i)
 			}
 		}
 	}
 	
-	override fun readNBT(nbt: TagCompound, context: Context) = with(nbt){
+	override fun readNBT(nbt: TagCompound, context: Context) = nbt.use {
 		linkedTable = getPosOrNull(TABLE_POS_TAG)
 		
-		inventoryHandler.deserializeNBT(nbt.getCompoundTag(INVENTORY_TAG))
+		inventoryHandler.deserializeNBT(nbt.getCompound(INVENTORY_TAG))
 		
 		if (context == STORAGE){
-			statusIndicator.deserializeNBT(nbt.getCompoundTag(STATUS_TAG))
+			statusIndicator.deserializeNBT(nbt.getCompound(STATUS_TAG))
 		}
 		else if (context == NETWORK){
 			stacksForRendering = inventoryHandler.nonEmptyStacks.toTypedArray()

@@ -1,22 +1,6 @@
 package chylex.hee.game.commands.sub.server
-import chylex.hee.game.commands.HeeServerCommand.availableAdminCommands
-import chylex.hee.game.commands.HeeServerCommand.availableDebugCommands
-import chylex.hee.game.commands.sub.ISubCommand
-import chylex.hee.system.util.ceilToInt
-import net.minecraft.command.CommandException
-import net.minecraft.command.ICommandSender
-import net.minecraft.command.WrongUsageException
-import net.minecraft.entity.player.EntityPlayer
-import net.minecraft.server.MinecraftServer
-import net.minecraft.util.text.ITextComponent
-import net.minecraft.util.text.TextComponentString
-import net.minecraft.util.text.TextComponentTranslation
-import net.minecraft.util.text.TextFormatting.GRAY
-import net.minecraft.util.text.TextFormatting.GREEN
-import net.minecraft.util.text.event.ClickEvent
-import net.minecraft.util.text.event.ClickEvent.Action.RUN_COMMAND
-import net.minecraft.util.text.event.ClickEvent.Action.SUGGEST_COMMAND
 
+/*
 internal object CommandServerHelp : ISubCommand{
 	override val name = "1"
 	override val usage = "commands.hee.usage"
@@ -134,4 +118,4 @@ internal object CommandServerHelp : ISubCommand{
 	private fun chainTextComponents(vararg components: ITextComponent): ITextComponent{
 		return components.reduce { component, next -> component.appendSibling(next) }
 	}
-}
+}*/

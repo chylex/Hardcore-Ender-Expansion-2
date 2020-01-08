@@ -1,7 +1,7 @@
 package chylex.hee.game.recipe
 import chylex.hee.init.ModItems
 import chylex.hee.system.util.nonEmptySlots
-import net.minecraft.inventory.InventoryCrafting
+import net.minecraft.inventory.CraftingInventory
 import net.minecraft.item.ItemStack
 import net.minecraft.world.World
 
@@ -10,15 +10,15 @@ object RecipeScaleOfFreefallRepair : RecipeBaseDynamic(){
 		return (width * height) >= 2
 	}
 	
-	override fun matches(inv: InventoryCrafting, world: World): Boolean{
+	override fun matches(inv: CraftingInventory, world: World): Boolean{
 		return determineRepairInfo(inv) != null
 	}
 	
-	override fun getCraftingResult(inv: InventoryCrafting): ItemStack{
+	override fun getCraftingResult(inv: CraftingInventory): ItemStack{
 		val (dragonScaleCount, damagedTrinket) = determineRepairInfo(inv) ?: return ItemStack.EMPTY
 		
 		return damagedTrinket.copy().also {
-			it.itemDamage -= dragonScaleCount * (it.maxDamage / 2) // itemDamage < 0 is handled in Item.setDamage
+			it.damage -= dragonScaleCount * (it.maxDamage / 2) // damage < 0 is handled in Item.setDamage
 		}
 	}
 	
@@ -26,7 +26,7 @@ object RecipeScaleOfFreefallRepair : RecipeBaseDynamic(){
 	
 	private data class RepairInfo(val dragonScaleCount: Int, val damagedTrinket: ItemStack)
 	
-	private fun determineRepairInfo(inv: InventoryCrafting): RepairInfo?{
+	private fun determineRepairInfo(inv: CraftingInventory): RepairInfo?{
 		var damagedTrinket: ItemStack? = null
 		var dragonScaleCount = 0
 		var dragonScaleLimit = 0
@@ -40,12 +40,12 @@ object RecipeScaleOfFreefallRepair : RecipeBaseDynamic(){
 			}
 			
 			if (item === ModItems.SCALE_OF_FREEFALL){
-				if (damagedTrinket != null || !stack.isItemDamaged){
+				if (damagedTrinket != null || !stack.isDamaged){
 					return null
 				}
 				
 				damagedTrinket = stack
-				dragonScaleLimit = if (stack.itemDamage <= stack.maxDamage / 2) 1 else 2
+				dragonScaleLimit = if (stack.damage <= stack.maxDamage / 2) 1 else 2
 				continue
 			}
 			

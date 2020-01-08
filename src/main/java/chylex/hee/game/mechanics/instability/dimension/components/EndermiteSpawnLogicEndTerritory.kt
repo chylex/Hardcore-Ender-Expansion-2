@@ -3,16 +3,16 @@ import chylex.hee.game.entity.living.EntityMobEndermiteInstability
 import chylex.hee.game.world.territory.TerritoryInstance
 import net.minecraft.entity.monster.IMob
 import net.minecraft.util.math.BlockPos
-import net.minecraft.world.World
+import net.minecraft.world.server.ServerWorld
 
 object EndermiteSpawnLogicEndTerritory : EndermiteSpawnLogic(){
-	override fun checkMobLimits(world: World, pos: BlockPos): Boolean{
+	override fun checkMobLimits(world: ServerWorld, pos: BlockPos): Boolean{
 		val instance = TerritoryInstance.fromPos(pos)
 		
 		var hostileMobCount = 0
 		var endermiteCount = 0
 		
-		for(entity in world.loadedEntityList){
+		for(entity in world.entities){
 			if (entity is IMob){
 				if (++hostileMobCount > 150){
 					return false
@@ -27,8 +27,8 @@ object EndermiteSpawnLogicEndTerritory : EndermiteSpawnLogic(){
 		return true
 	}
 	
-	override fun countExisting(world: World, pos: BlockPos): Int{
+	override fun countExisting(world: ServerWorld, pos: BlockPos): Int{
 		val instance = TerritoryInstance.fromPos(pos)
-		return world.loadedEntityList.count { it is EntityMobEndermiteInstability && instance == TerritoryInstance.fromPos(it) }
+		return world.entities.filter { it is EntityMobEndermiteInstability && instance == TerritoryInstance.fromPos(it) }.count().toInt()
 	}
 }

@@ -64,7 +64,7 @@ class EnergyShrineRoom_Main_Start(file: String) : EnergyShrineRoom_Generic(file)
 					RAND.nextInt(-PARTICLE_DISTANCE, PARTICLE_DISTANCE)
 				)
 				
-				if (targetPos.getState(world).isFullBlock){
+				if (targetPos.getState(world).isOpaqueCube(world, targetPos)){ // UPDATE test
 					continue
 				}
 				

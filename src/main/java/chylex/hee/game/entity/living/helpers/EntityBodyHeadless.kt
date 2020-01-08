@@ -1,8 +1,8 @@
 package chylex.hee.game.entity.living.helpers
-import net.minecraft.entity.EntityBodyHelper
-import net.minecraft.entity.EntityLivingBase
+import chylex.hee.system.migration.vanilla.EntityLiving
+import net.minecraft.entity.ai.controller.BodyController
 
-class EntityBodyHeadless(private val entity: EntityLivingBase) : EntityBodyHelper(entity){
+class EntityBodyHeadless(private val entity: EntityLiving) : BodyController(entity){
 	override fun updateRenderAngles(){
 		val yaw = entity.rotationYaw
 		

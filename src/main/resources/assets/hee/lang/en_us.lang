@@ -96,10 +96,16 @@ tile.hee.autumn_leaves_yellowgreen.name=Autumn Leaves (Yellow-Green)
 tile.hee.autumn_sapling_brown.name=Autumn Sapling (Brown)
 tile.hee.autumn_sapling_orange.name=Autumn Sapling (Orange)
 tile.hee.autumn_sapling_yellowgreen.name=Autumn Sapling (Yellow-Green)
+tile.hee.potted_autumn_sapling_brown.name=Potted Autumn Sapling (Brown)
+tile.hee.potted_autumn_sapling_orange.name=Potted Autumn Sapling (Orange)
+tile.hee.potted_autumn_sapling_yellowgreen.name=Potted Autumn Sapling (Yellow-Green)
 
 tile.hee.death_flower.name=Death Flower
 tile.hee.death_flower_healed.name=Healed Death Flower
 tile.hee.death_flower_withered.name=Withered Death Flower
+tile.hee.potted_death_flower.name=Potted Death Flower
+tile.hee.potted_death_flower_healed.name=Potted Healed Death Flower
+tile.hee.potted_death_flower_withered.name=Potted Withered Death Flower
 
 tile.hee.ancient_cobweb.name=Ancient Cobweb
 tile.hee.dry_vines.name=Dry Vines

@@ -24,8 +24,7 @@ object ParticleEnderGoo : IParticleMaker.Simple(){
 		private var angleOffset = (rand.nextInt(5, 10) * (if (rand.nextBoolean()) 1F else -1F)).toRadians()
 		
 		init{
-			particleTextureIndexX = rand.nextInt(8)
-			particleTextureIndexY = 0
+			selectSpriteRandomly(ParticleEnderGoo.sprite)
 			
 			val colorMp = if (rand.nextInt(10) == 0)
 				rand.nextFloat(0.3F, 0.6F)
@@ -44,8 +43,8 @@ object ParticleEnderGoo : IParticleMaker.Simple(){
 			maxAge = rand.nextInt(34, 42)
 		}
 		
-		override fun onUpdate(){
-			super.onUpdate()
+		override fun tick(){
+			super.tick()
 			
 			prevParticleAngle = particleAngle
 			particleAngle += angleOffset

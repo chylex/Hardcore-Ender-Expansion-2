@@ -1,10 +1,11 @@
 package chylex.hee.game.block.info
 import net.minecraft.block.Block
 import net.minecraft.block.SoundType
-import net.minecraft.block.material.MapColor
 import net.minecraft.block.material.Material
+import net.minecraft.block.material.MaterialColor
+import net.minecraftforge.common.ToolType
 
-class BlockBuilder(val material: Material, var color: MapColor, var sound: SoundType){
+class BlockBuilder(val material: Material, var color: MaterialColor, var sound: SoundType){
 	constructor(original: BlockBuilder) : this(original.material, original.color, original.sound){
 		harvestTool = original.harvestTool
 		harvestHardness = original.harvestHardness
@@ -16,17 +17,43 @@ class BlockBuilder(val material: Material, var color: MapColor, var sound: Sound
 		slipperiness = original.slipperiness
 	}
 	
-	var harvestTool: Pair<Int, String?> = Pair(-1, null)
+	var harvestTool: Pair<Int, ToolType?> = Pair(-1, null)
 	var harvestHardness: Float = 0F
 	var explosionResistance: Float = 0F
-	var miningStats: Boolean = true
+	var miningStats: Boolean = true // UPDATE
 	
 	var lightLevel: Int = 0
-	var lightOpacity: Int? = null
+	var lightOpacity: Int? = null // UPDATE
 	var slipperiness: Float = 0.6F
+	
+	var randomTicks: Boolean = false
+	// UPDATE noDrops
 	
 	val isIndestructible: Boolean
 		get() = harvestHardness == INDESTRUCTIBLE_HARDNESS
+	
+	val p: Block.Properties
+		get() = Block.Properties.create(material, color).apply {
+			val (level, tool) = harvestTool
+			
+			if (tool != null){
+				harvestTool(tool)
+				harvestLevel(level)
+			}
+			
+			hardnessAndResistance(harvestHardness, explosionResistance)
+			lightValue(lightLevel)
+			slipperiness(slipperiness)
+			sound(sound)
+			
+			if (!material.blocksMovement()){
+				doesNotBlockMovement() // UPDATE
+			}
+			
+			if (randomTicks){
+				tickRandomly()
+			}
+		}
 	
 	fun makeIndestructible(){
 		harvestTool = Pair(-1, null)
@@ -41,47 +68,6 @@ class BlockBuilder(val material: Material, var color: MapColor, var sound: Sound
 	
 	companion object{
 		const val INDESTRUCTIBLE_HARDNESS = -1F
-		const val INDESTRUCTIBLE_RESISTANCE = 6000000F
-		
-		fun Block.setHarvestTool(tool: Pair<Int, String?>){
-			val toolType = tool.second
-			
-			if (toolType != null){
-				this.setHarvestLevel(toolType, tool.first)
-			}
-		}
-		
-		fun Block.setHardnessWithResistance(harvestHardness: Float, explosionResistance: Float, multiplier: Float = 1F){
-			if (harvestHardness == INDESTRUCTIBLE_HARDNESS){
-				this.setHardness(harvestHardness)
-			}
-			else{
-				this.setHardness(harvestHardness * multiplier)
-			}
-			
-			if (explosionResistance == INDESTRUCTIBLE_RESISTANCE){ // UPDATE: check if setResistance still multiplies the provided value by 3
-				this.setResistance(explosionResistance)
-			}
-			else{
-				this.setResistance(explosionResistance * multiplier)
-			}
-		}
-		
-		fun Block.setupBlockProperties(builder: BlockBuilder){
-			this.material = builder.material
-			this.translucent = !this.material.blocksLight()
-			
-			this.blockMapColor = builder.color
-			this.blockSoundType = builder.sound
-			
-			setHarvestTool(builder.harvestTool)
-			setHardnessWithResistance(builder.harvestHardness, builder.explosionResistance)
-			this.enableStats = builder.miningStats
-			
-			this.lightValue = builder.lightLevel
-			builder.lightOpacity?.let { this.lightOpacity = it }
-			@Suppress("DEPRECATION")
-			this.slipperiness = builder.slipperiness
-		}
+		const val INDESTRUCTIBLE_RESISTANCE = 3600000F
 	}
 }

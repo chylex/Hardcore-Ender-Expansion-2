@@ -1,12 +1,12 @@
 package chylex.hee.game.entity
-import net.minecraft.entity.EntityCreature
-import net.minecraft.entity.EntityLivingBase
-import net.minecraftforge.common.util.EnumHelper
+import chylex.hee.system.migration.vanilla.EntityCreature
+import chylex.hee.system.migration.vanilla.EntityLivingBase
+import net.minecraft.entity.CreatureAttribute
 
 object CustomCreatureType{
-	val ENDER  = EnumHelper.addCreatureAttribute("HEE_ENDER")!!
-	val DEMON  = EnumHelper.addCreatureAttribute("HEE_DEMON")!!
-	val SHADOW = EnumHelper.addCreatureAttribute("HEE_SHADOW")!!
+	val ENDER  = CreatureAttribute()
+	val DEMON  = CreatureAttribute()
+	val SHADOW = CreatureAttribute()
 	
 	fun isEnder(entity: EntityLivingBase): Boolean{
 		return entity is EntityCreature && entity.creatureAttribute == ENDER // TODO more stuff

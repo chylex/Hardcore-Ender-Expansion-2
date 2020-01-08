@@ -1,15 +1,13 @@
 package chylex.hee.game.entity.item
-import chylex.hee.system.util.cloneFrom
+import chylex.hee.init.ModEntities
 import net.minecraft.entity.Entity
-import net.minecraft.entity.item.EntityItem
+import net.minecraft.entity.EntityType
 import net.minecraft.item.ItemStack
 import net.minecraft.world.World
 
-open class EntityItemNoBob : EntityItem{
+open class EntityItemNoBob : EntityItemBase{
 	@Suppress("unused")
-	constructor(world: World) : super(world)
-	
-	constructor(world: World, stack: ItemStack, replacee: Entity) : super(world, replacee.posX, replacee.posY, replacee.posZ, stack){
-		this.cloneFrom(replacee)
-	}
+	constructor(type: EntityType<out EntityItemNoBob>, world: World) : super(type, world)
+	constructor(type: EntityType<out EntityItemNoBob>, world: World, stack: ItemStack, replacee: Entity) : super(type, world, stack, replacee)
+	constructor(world: World, stack: ItemStack, replacee: Entity) : this(ModEntities.ITEM_NO_BOB, world, stack, replacee)
 }

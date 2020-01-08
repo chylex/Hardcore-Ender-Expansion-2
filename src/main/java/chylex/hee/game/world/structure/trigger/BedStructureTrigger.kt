@@ -1,39 +1,28 @@
 package chylex.hee.game.world.structure.trigger
+import chylex.hee.game.block.util.ColoredBlocks
 import chylex.hee.game.world.structure.IStructureTrigger
 import chylex.hee.game.world.structure.IStructureWorld
 import chylex.hee.game.world.util.Transform
-import chylex.hee.system.migration.vanilla.Blocks
-import chylex.hee.system.util.getTile
-import chylex.hee.system.util.with
+import chylex.hee.system.migration.vanilla.BlockBed
 import chylex.hee.system.util.withFacing
-import net.minecraft.block.BlockBed
-import net.minecraft.block.BlockBed.EnumPartType.FOOT
-import net.minecraft.block.BlockBed.EnumPartType.HEAD
-import net.minecraft.item.EnumDyeColor
-import net.minecraft.tileentity.TileEntityBed
-import net.minecraft.util.EnumFacing
+import net.minecraft.item.DyeColor
+import net.minecraft.state.properties.BedPart
+import net.minecraft.util.Direction
 import net.minecraft.util.math.BlockPos
 import net.minecraft.world.World
 
-class BedStructureTrigger(private val facing: EnumFacing, private val color: EnumDyeColor) : IStructureTrigger{
+class BedStructureTrigger(private val facing: Direction, private val color: DyeColor) : IStructureTrigger{
 	override fun setup(world: IStructureWorld, pos: BlockPos, transform: Transform){
 		val transformedFacing = transform(facing)
-		val baseState = Blocks.BED.withFacing(transformedFacing).with(BlockBed.OCCUPIED, false)
+		val baseState = ColoredBlocks.BED.getValue(color).withFacing(transformedFacing).with(BlockBed.OCCUPIED, false)
 		
 		@Suppress("UnnecessaryVariable")
 		val footPos = pos
 		val headPos = pos.offset(transformedFacing)
 		
-		world.setState(footPos, baseState.with(BlockBed.PART, FOOT))
-		world.setState(headPos, baseState.with(BlockBed.PART, HEAD))
+		world.setState(footPos, baseState.with(BlockBed.PART, BedPart.FOOT))
+		world.setState(headPos, baseState.with(BlockBed.PART, BedPart.HEAD))
 	}
 	
-	override fun realize(world: World, pos: BlockPos, transform: Transform){
-		@Suppress("UnnecessaryVariable")
-		val footPos = pos
-		val headPos = pos.offset(transform(facing))
-		
-		footPos.getTile<TileEntityBed>(world)?.color = color
-		headPos.getTile<TileEntityBed>(world)?.color = color
-	}
+	override fun realize(world: World, pos: BlockPos, transform: Transform){}
 }

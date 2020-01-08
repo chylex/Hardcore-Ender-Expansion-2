@@ -4,47 +4,51 @@ import chylex.hee.game.mechanics.damage.Damage
 import chylex.hee.game.mechanics.damage.IDamageProcessor.Companion.ALL_PROTECTIONS_WITH_SHIELD
 import chylex.hee.game.mechanics.damage.IDamageProcessor.Companion.DIFFICULTY_SCALING
 import chylex.hee.game.mechanics.damage.IDamageProcessor.Companion.PEACEFUL_EXCLUSION
-import chylex.hee.init.ModLoot
+import chylex.hee.init.ModEntities
 import chylex.hee.init.ModSounds
 import chylex.hee.system.migration.MagicValues.DEATH_TIME_MAX
+import chylex.hee.system.migration.vanilla.EntityMob
+import chylex.hee.system.migration.vanilla.EntityPlayer
 import chylex.hee.system.migration.vanilla.Sounds
 import chylex.hee.system.util.AIAttackMelee
 import chylex.hee.system.util.AISwim
 import chylex.hee.system.util.AITargetAttacker
 import chylex.hee.system.util.AITargetNearby
 import chylex.hee.system.util.AIWatchIdle
-import chylex.hee.system.util.getAttribute
+import chylex.hee.system.util.facades.Resource
+import chylex.hee.system.util.motionY
 import chylex.hee.system.util.nextFloat
 import chylex.hee.system.util.square
-import net.minecraft.block.Block
+import net.minecraft.block.BlockState
+import net.minecraft.entity.CreatureAttribute
 import net.minecraft.entity.Entity
-import net.minecraft.entity.EnumCreatureAttribute
+import net.minecraft.entity.EntitySize
+import net.minecraft.entity.EntityType
+import net.minecraft.entity.Pose
 import net.minecraft.entity.SharedMonsterAttributes.ATTACK_DAMAGE
 import net.minecraft.entity.SharedMonsterAttributes.FOLLOW_RANGE
 import net.minecraft.entity.SharedMonsterAttributes.MAX_HEALTH
 import net.minecraft.entity.SharedMonsterAttributes.MOVEMENT_SPEED
-import net.minecraft.entity.monster.EntityMob
-import net.minecraft.entity.player.EntityPlayer
+import net.minecraft.network.IPacket
 import net.minecraft.util.DamageSource
-import net.minecraft.util.EnumHand
+import net.minecraft.util.Hand
 import net.minecraft.util.ResourceLocation
 import net.minecraft.util.SoundEvent
 import net.minecraft.util.math.BlockPos
 import net.minecraft.world.World
+import net.minecraftforge.fml.network.NetworkHooks
 import kotlin.math.abs
 import kotlin.math.max
 
-class EntityMobUndread(world: World) : EntityMob(world){
+class EntityMobUndread(type: EntityType<EntityMobUndread>, world: World) : EntityMob(type, world){
+	constructor(world: World) : this(ModEntities.UNDREAD, world)
+	
 	private companion object{
 		private val DAMAGE_GENERAL = Damage(DIFFICULTY_SCALING, PEACEFUL_EXCLUSION, *ALL_PROTECTIONS_WITH_SHIELD)
 	}
 	
-	init{
-		setSize(0.625F, 1.925F)
-	}
-	
-	override fun applyEntityAttributes(){
-		super.applyEntityAttributes()
+	override fun registerAttributes(){
+		super.registerAttributes()
 		
 		getAttribute(MAX_HEALTH).baseValue = 12.0
 		getAttribute(ATTACK_DAMAGE).baseValue = 4.0
@@ -54,14 +58,18 @@ class EntityMobUndread(world: World) : EntityMob(world){
 		experienceValue = 5
 	}
 	
-	override fun initEntityAI(){
-		tasks.addTask(1, AISwim(this))
-		tasks.addTask(2, AIAttackMelee(this, movementSpeed = 1.0, chaseAfterLosingSight = true))
-		tasks.addTask(3, AIWanderLand(this, movementSpeed = 0.9, chancePerTick = 12, maxDistanceXZ = 7, maxDistanceY = 3))
-		tasks.addTask(4, AIWatchIdle(this))
+	override fun registerGoals(){
+		goalSelector.addGoal(1, AISwim(this))
+		goalSelector.addGoal(2, AIAttackMelee(this, movementSpeed = 1.0, chaseAfterLosingSight = true))
+		goalSelector.addGoal(3, AIWanderLand(this, movementSpeed = 0.9, chancePerTick = 12, maxDistanceXZ = 7, maxDistanceY = 3))
+		goalSelector.addGoal(4, AIWatchIdle(this))
 		
-		targetTasks.addTask(1, AITargetAttacker(this, callReinforcements = false))
-		targetTasks.addTask(2, AITargetNearby(this, chancePerTick = 1, checkSight = false, easilyReachableOnly = false, targetPredicate = ::isPlayerNearby ))
+		targetSelector.addGoal(1, AITargetAttacker(this, callReinforcements = false))
+		targetSelector.addGoal(2, AITargetNearby(this, chancePerTick = 1, checkSight = false, easilyReachableOnly = false, targetPredicate = ::isPlayerNearby ))
+	}
+	
+	override fun createSpawnPacket(): IPacket<*>{
+		return NetworkHooks.getEntitySpawningPacket(this)
 	}
 	
 	private fun isPlayerNearby(player: EntityPlayer): Boolean{
@@ -73,18 +81,18 @@ class EntityMobUndread(world: World) : EntityMob(world){
 	}
 	
 	override fun getLootTable(): ResourceLocation{
-		return ModLoot.UNDREAD
+		return Resource.Custom("entities/undread")
 	}
 	
-	override fun getCreatureAttribute(): EnumCreatureAttribute{
-		return EnumCreatureAttribute.UNDEAD
+	override fun getCreatureAttribute(): CreatureAttribute{
+		return CreatureAttribute.UNDEAD
 	}
 	
-	override fun getEyeHeight(): Float{
+	override fun getStandingEyeHeight(pose: Pose, size: EntitySize): Float{
 		return 1.68F
 	}
 	
-	override fun swingArm(hand: EnumHand){}
+	override fun swingArm(hand: Hand){}
 	
 	override fun onDeathUpdate(){
 		noClip = true
@@ -97,7 +105,7 @@ class EntityMobUndread(world: World) : EntityMob(world){
 		super.onDeathUpdate()
 	}
 	
-	override fun playStepSound(pos: BlockPos, block: Block){
+	override fun playStepSound(pos: BlockPos, state: BlockState){
 		playSound(Sounds.ENTITY_ZOMBIE_STEP, rand.nextFloat(0.4F, 0.5F), rand.nextFloat(0.9F, 1F))
 	}
 	

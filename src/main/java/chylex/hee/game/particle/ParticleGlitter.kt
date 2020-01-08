@@ -12,7 +12,7 @@ import net.minecraft.client.particle.Particle
 import net.minecraft.world.World
 import java.util.Random
 
-object ParticleGlitter : IParticleMaker<ParticleDataColorLifespanScale>{
+object ParticleGlitter : IParticleMaker.WithData<ParticleDataColorLifespanScale>(){
 	@Sided(Side.CLIENT)
 	override fun create(world: World, posX: Double, posY: Double, posZ: Double, motX: Double, motY: Double, motZ: Double, data: ParticleDataColorLifespanScale?): Particle{
 		return Instance(world, posX, posY, posZ, motX, motY, motZ, data)
@@ -30,8 +30,7 @@ object ParticleGlitter : IParticleMaker<ParticleDataColorLifespanScale>{
 	@Sided(Side.CLIENT)
 	private class Instance(world: World, posX: Double, posY: Double, posZ: Double, motX: Double, motY: Double, motZ: Double, data: ParticleDataColorLifespanScale?) : ParticleBaseFloating(world, posX, posY, posZ, motX, motY, motZ){
 		init{
-			particleTextureIndexX = rand.nextInt(1, 4)
-			particleTextureIndexY = 0
+			selectSpriteRandomly(ParticleGlitter.sprite)
 			
 			if (data == null){
 				setExpired()
@@ -45,8 +44,8 @@ object ParticleGlitter : IParticleMaker<ParticleDataColorLifespanScale>{
 			}
 		}
 		
-		override fun onUpdate(){
-			super.onUpdate()
+		override fun tick(){
+			super.tick()
 			
 			if (age < (maxAge * 3) / 4 && rand.nextInt(5) == 0){
 				particleAlpha = rand.nextFloat(0.5F, 1F)

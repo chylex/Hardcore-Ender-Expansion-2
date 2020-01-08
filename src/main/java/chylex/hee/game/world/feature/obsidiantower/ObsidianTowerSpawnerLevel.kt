@@ -1,10 +1,10 @@
 package chylex.hee.game.world.feature.obsidiantower
 import chylex.hee.game.mechanics.potion.PotionBase.Companion.INFINITE_DURATION
+import chylex.hee.system.migration.vanilla.Potion
 import chylex.hee.system.migration.vanilla.Potions
 import chylex.hee.system.util.makeEffect
 import chylex.hee.system.util.nextItem
-import net.minecraft.potion.Potion
-import net.minecraft.potion.PotionEffect
+import net.minecraft.potion.EffectInstance
 import java.util.Random
 
 enum class ObsidianTowerSpawnerLevel(
@@ -79,12 +79,12 @@ enum class ObsidianTowerSpawnerLevel(
 		)
 	);
 	
-	fun generateEffects(rand: Random): Collection<PotionEffect>{
+	fun generateEffects(rand: Random): Collection<EffectInstance>{
 		if (effects.isEmpty()){
 			return emptyList()
 		}
 		
-		val picks = mutableMapOf<Potion, PotionEffect>()
+		val picks = mutableMapOf<Potion, EffectInstance>()
 		
 		for(list in effects){
 			val (potion, level) = rand.nextItem(list)

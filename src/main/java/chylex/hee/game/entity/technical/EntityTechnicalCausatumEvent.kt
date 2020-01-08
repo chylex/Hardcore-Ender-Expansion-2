@@ -1,14 +1,17 @@
 package chylex.hee.game.entity.technical
 import chylex.hee.game.mechanics.causatum.events.CausatumEventEndermanKill
+import chylex.hee.init.ModEntities
 import chylex.hee.system.util.TagCompound
 import chylex.hee.system.util.getStringOrNull
 import chylex.hee.system.util.heeTag
+import chylex.hee.system.util.use
 import com.google.common.collect.HashBiMap
+import net.minecraft.entity.EntityType
 import net.minecraft.world.World
 import net.minecraftforge.common.util.INBTSerializable
 
-class EntityTechnicalCausatumEvent(world: World) : EntityTechnicalBase(world){
-	constructor(world: World, handler: ICausatumEventHandler) : this(world){
+class EntityTechnicalCausatumEvent(type: EntityType<EntityTechnicalCausatumEvent>, world: World) : EntityTechnicalBase(type, world){
+	constructor(world: World, handler: ICausatumEventHandler) : this(ModEntities.CAUSATUM_EVENT, world){
 		this.handler = handler
 	}
 	
@@ -36,34 +39,34 @@ class EntityTechnicalCausatumEvent(world: World) : EntityTechnicalBase(world){
 	
 	private lateinit var handler: ICausatumEventHandler
 	
-	override fun entityInit(){}
+	override fun registerData(){}
 	
-	override fun onUpdate(){
-		super.onUpdate()
+	override fun tick(){
+		super.tick()
 		
 		if (!world.isRemote){
 			handler.update(this)
 		}
 	}
 	
-	override fun writeEntityToNBT(nbt: TagCompound) = with(nbt.heeTag){
+	override fun writeAdditional(nbt: TagCompound) = nbt.heeTag.use {
 		val entry = TYPE_MAPPING[type]
 		
 		if (entry != null){
-			setString(TYPE_TAG, entry.first)
-			setTag(DATA_TAG, handler.serializeNBT())
+			putString(TYPE_TAG, entry.first)
+			put(DATA_TAG, handler.serializeNBT())
 		}
 	}
 	
-	override fun readEntityFromNBT(nbt: TagCompound) = with(nbt.heeTag){
+	override fun readAdditional(nbt: TagCompound) = nbt.heeTag.use {
 		val entry = getStringOrNull(TYPE_TAG)?.let { type -> TYPE_MAPPING.values.find { it.first == type } }
 		
 		if (entry != null){
 			handler = entry.second()
-			handler.deserializeNBT(getCompoundTag(DATA_TAG))
+			handler.deserializeNBT(getCompound(DATA_TAG))
 		}
 		else{
-			setDead()
+			remove()
 		}
 	}
 }

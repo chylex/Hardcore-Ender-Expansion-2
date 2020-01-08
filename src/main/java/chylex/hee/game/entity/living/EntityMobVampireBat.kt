@@ -14,7 +14,13 @@ import chylex.hee.game.particle.spawner.ParticleSpawnerCustom
 import chylex.hee.game.particle.util.IOffset.InBox
 import chylex.hee.game.particle.util.IShape.Point
 import chylex.hee.game.world.territory.TerritoryType
+import chylex.hee.init.ModEntities
+import chylex.hee.system.migration.Difficulty.HARD
 import chylex.hee.system.migration.Difficulty.PEACEFUL
+import chylex.hee.system.migration.vanilla.BlockChorusPlant
+import chylex.hee.system.migration.vanilla.EntityBat
+import chylex.hee.system.migration.vanilla.EntityLivingBase
+import chylex.hee.system.migration.vanilla.EntityPlayer
 import chylex.hee.system.migration.vanilla.Potions
 import chylex.hee.system.migration.vanilla.Sounds
 import chylex.hee.system.util.Pos
@@ -25,7 +31,6 @@ import chylex.hee.system.util.center
 import chylex.hee.system.util.color.IRandomColor.Companion.IRandomColor
 import chylex.hee.system.util.color.IntColor.Companion.RGB
 import chylex.hee.system.util.floorToInt
-import chylex.hee.system.util.getAttribute
 import chylex.hee.system.util.getBlock
 import chylex.hee.system.util.getEnum
 import chylex.hee.system.util.getState
@@ -40,34 +45,36 @@ import chylex.hee.system.util.nextItemOrNull
 import chylex.hee.system.util.nextVector
 import chylex.hee.system.util.playClient
 import chylex.hee.system.util.posVec
+import chylex.hee.system.util.putEnum
 import chylex.hee.system.util.selectVulnerableEntities
-import chylex.hee.system.util.setEnum
 import chylex.hee.system.util.square
 import chylex.hee.system.util.totalTime
-import chylex.hee.system.util.value
-import net.minecraft.block.BlockChorusPlant
-import net.minecraft.block.state.IBlockState
+import chylex.hee.system.util.use
 import net.minecraft.entity.Entity
-import net.minecraft.entity.EntityLivingBase
-import net.minecraft.entity.IEntityLivingData
+import net.minecraft.entity.EntityType
+import net.minecraft.entity.ILivingEntityData
 import net.minecraft.entity.SharedMonsterAttributes.ATTACK_DAMAGE
 import net.minecraft.entity.SharedMonsterAttributes.FLYING_SPEED
 import net.minecraft.entity.SharedMonsterAttributes.FOLLOW_RANGE
 import net.minecraft.entity.SharedMonsterAttributes.MAX_HEALTH
+import net.minecraft.entity.SpawnReason
 import net.minecraft.entity.monster.IMob
-import net.minecraft.entity.passive.EntityBat
-import net.minecraft.entity.player.EntityPlayer
+import net.minecraft.nbt.CompoundNBT
+import net.minecraft.network.IPacket
 import net.minecraft.util.SoundCategory
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.Vec3d
+import net.minecraft.world.Difficulty.NORMAL
 import net.minecraft.world.DifficultyInstance
-import net.minecraft.world.EnumDifficulty.HARD
-import net.minecraft.world.EnumDifficulty.NORMAL
-import net.minecraft.world.EnumSkyBlock.BLOCK
+import net.minecraft.world.IWorld
+import net.minecraft.world.LightType.BLOCK
 import net.minecraft.world.World
+import net.minecraftforge.fml.network.NetworkHooks
 import kotlin.math.cos
 
-class EntityMobVampireBat(world: World) : EntityBat(world), IMob, IKnockbackMultiplier{
+class EntityMobVampireBat(type: EntityType<EntityMobVampireBat>, world: World) : EntityBat(type, world), IMob, IKnockbackMultiplier{
+	constructor(world: World) : this(ModEntities.VAMPIRE_BAT, world)
+	
 	private companion object{
 		private const val MIN_ATTACK_COOLDOWN = 30
 		
@@ -140,14 +147,14 @@ class EntityMobVampireBat(world: World) : EntityBat(world), IMob, IKnockbackMult
 	override val lastHitKnockbackMultiplier = 0.4F
 	
 	init{
-		moveHelper = EntityMoveFlyingBat(this)
+		moveController = EntityMoveFlyingBat(this)
 	}
 	
-	override fun applyEntityAttributes(){
-		super.applyEntityAttributes()
+	override fun registerAttributes(){
+		super.registerAttributes()
 		
-		attributeMap.registerAttribute(ATTACK_DAMAGE)
-		attributeMap.registerAttribute(FLYING_SPEED)
+		attributes.registerAttribute(ATTACK_DAMAGE)
+		attributes.registerAttribute(FLYING_SPEED)
 		
 		getAttribute(FOLLOW_RANGE).baseValue = 14.5
 		getAttribute(FLYING_SPEED).baseValue = 0.1
@@ -169,18 +176,22 @@ class EntityMobVampireBat(world: World) : EntityBat(world), IMob, IKnockbackMult
 		health = maxHealth
 	}
 	
+	override fun createSpawnPacket(): IPacket<*>{
+		return NetworkHooks.getEntitySpawningPacket(this)
+	}
+	
 	// Behavior
 	
-	override fun onUpdate(){
-		super.onUpdate()
+	override fun tick(){
+		super.tick()
 		
 		if (isBatHanging && Pos(this).up().getBlock(world) is BlockChorusPlant){
 			posY = posY.floorToInt() + 1.25 - height // TODO some variations of chorus plants are extra thicc
 		}
 	}
 	
-	override fun onLivingUpdate(){
-		super.onLivingUpdate()
+	override fun livingTick(){
+		super.livingTick()
 		
 		if (world.isRemote){
 			if (isBatHanging){
@@ -243,7 +254,7 @@ class EntityMobVampireBat(world: World) : EntityBat(world), IMob, IKnockbackMult
 					nextSleepPos = null
 					motionVec = Vec3d.ZERO
 					
-					moveHelper.onUpdateMoveHelper()
+					moveHelper.tick()
 					moveForward = 0F
 				}
 			}
@@ -272,19 +283,20 @@ class EntityMobVampireBat(world: World) : EntityBat(world), IMob, IKnockbackMult
 	}
 	
 	private fun canSleepAt(pos: BlockPos): Boolean{
-		return pos.isAir(world) && canHangUnderBlock(pos.up().getState(world))
+		return pos.isAir(world) && canHangUnderBlock(pos.up())
 	}
 	
 	private fun canHangUnderCurrentBlock(): Boolean{
-		return canHangUnderBlock(Pos(this).up().getState(world))
+		return canHangUnderBlock(Pos(this).up())
 	}
 	
-	private fun canHangUnderBlock(state: IBlockState): Boolean{
-		return state.isNormalCube || state.block is BlockChorusPlant
+	private fun canHangUnderBlock(pos: BlockPos): Boolean{
+		val state = pos.getState(world)
+		return state.isNormalCube(world, pos) || state.block is BlockChorusPlant
 	}
 	
 	private fun isHangingDisturbed(): Boolean{
-		return world.getNearestPlayerNotCreative(this, 4.0) != null
+		return world.selectVulnerableEntities.inRange<EntityPlayer>(posVec, 4.0).any() // UPDATE optimize?
 	}
 	
 	override fun setIsBatHanging(isHanging: Boolean){
@@ -350,16 +362,16 @@ class EntityMobVampireBat(world: World) : EntityBat(world), IMob, IKnockbackMult
 	
 	// Spawning
 	
-	override fun onInitialSpawn(difficulty: DifficultyInstance, data: IEntityLivingData?): IEntityLivingData?{
+	override fun onInitialSpawn(world: IWorld, difficulty: DifficultyInstance, reason: SpawnReason, data: ILivingEntityData?, nbt: CompoundNBT?): ILivingEntityData?{
 		// TODO use onInitialSpawn for territory generation, call enablePersistence to stop despawning
 		
-		if (world.provider.dimension == HEE.DIM){
+		if (world.dimension.type === HEE.dim){
 			when(TerritoryType.fromX(posX.floorToInt())){
 				else -> {}
 			}
 		}
 		
-		return super.onInitialSpawn(difficulty, data)
+		return super.onInitialSpawn(world, difficulty, reason, data, nbt)
 	}
 	
 	// Properties
@@ -377,15 +389,15 @@ class EntityMobVampireBat(world: World) : EntityBat(world), IMob, IKnockbackMult
 	
 	// Serialization
 	
-	override fun writeEntityToNBT(nbt: TagCompound) = with(nbt.heeTag){
-		setEnum(BEHAVIOR_TYPE_TAG, behaviorType)
-		setInteger(ATTACK_COOLDOWN_TAG, attackCooldown)
+	override fun writeAdditional(nbt: TagCompound) = nbt.heeTag.use {
+		putEnum(BEHAVIOR_TYPE_TAG, behaviorType)
+		putInt(ATTACK_COOLDOWN_TAG, attackCooldown)
 	}
 	
-	override fun readEntityFromNBT(nbt: TagCompound) = with(nbt.heeTag){
+	override fun readAdditional(nbt: TagCompound) = nbt.heeTag.use {
 		behaviorType = getEnum<BehaviorType>(BEHAVIOR_TYPE_TAG) ?: behaviorType
 		updateHostilityAttributes()
 		
-		attackCooldown = getInteger(ATTACK_COOLDOWN_TAG).coerceAtLeast(MIN_ATTACK_COOLDOWN)
+		attackCooldown = getInt(ATTACK_COOLDOWN_TAG).coerceAtLeast(MIN_ATTACK_COOLDOWN)
 	}
 }

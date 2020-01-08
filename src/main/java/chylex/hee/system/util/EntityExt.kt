@@ -4,27 +4,26 @@ import chylex.hee.game.entity.living.ai.AITargetRandom
 import chylex.hee.game.entity.living.ai.AITargetSwarmSwitch
 import chylex.hee.game.entity.living.ai.AIWanderLandStopNear
 import chylex.hee.game.entity.util.EntitySelector
-import com.google.common.base.Predicate
+import chylex.hee.system.migration.vanilla.EntityCreature
+import chylex.hee.system.migration.vanilla.EntityItem
+import chylex.hee.system.migration.vanilla.EntityLivingBase
 import com.google.common.base.Predicates
-import net.minecraft.enchantment.EnchantmentProtection
+import net.minecraft.enchantment.ProtectionEnchantment
 import net.minecraft.entity.Entity
-import net.minecraft.entity.EntityCreature
-import net.minecraft.entity.EntityLivingBase
-import net.minecraft.entity.ai.EntityAIAttackMelee
-import net.minecraft.entity.ai.EntityAIBase
-import net.minecraft.entity.ai.EntityAIHurtByTarget
-import net.minecraft.entity.ai.EntityAILookIdle
-import net.minecraft.entity.ai.EntityAINearestAttackableTarget
-import net.minecraft.entity.ai.EntityAISwimming
-import net.minecraft.entity.ai.EntityAIWatchClosest
 import net.minecraft.entity.ai.attributes.AttributeModifier
-import net.minecraft.entity.ai.attributes.IAttribute
+import net.minecraft.entity.ai.attributes.AttributeModifier.Operation
 import net.minecraft.entity.ai.attributes.IAttributeInstance
-import net.minecraft.entity.item.EntityItem
-import net.minecraft.entity.player.EntityPlayer.PERSISTED_NBT_TAG
-import net.minecraft.util.EntitySelectors
+import net.minecraft.entity.ai.goal.HurtByTargetGoal
+import net.minecraft.entity.ai.goal.LookAtGoal
+import net.minecraft.entity.ai.goal.LookRandomlyGoal
+import net.minecraft.entity.ai.goal.MeleeAttackGoal
+import net.minecraft.entity.ai.goal.NearestAttackableTargetGoal
+import net.minecraft.entity.ai.goal.SwimGoal
+import net.minecraft.entity.player.PlayerEntity.PERSISTED_NBT_TAG
+import net.minecraft.util.EntityPredicates
 import net.minecraft.util.math.Vec3d
-import net.minecraft.world.World
+import net.minecraft.world.IEntityReader
+import java.util.function.Predicate
 
 // Properties
 
@@ -37,15 +36,31 @@ var Entity.posVec: Vec3d
 	}
 
 var Entity.motionVec: Vec3d
-	get() = Vec3d(this.motionX, this.motionY, this.motionZ)
+	get() = this.motion
 	set(value){
-		this.motionX = value.x
-		this.motionY = value.y
-		this.motionZ = value.z
+		this.motion = value
+	}
+
+var Entity.motionX
+	get() = this.motion.x // UPDATE
+	set(value){
+		this.motion = Vec3d(value, motion.y, motion.z)
+	}
+
+var Entity.motionY
+	get() = this.motion.y // UPDATE
+	set(value){
+		this.motion = Vec3d(motion.x, value, motion.z)
+	}
+
+var Entity.motionZ
+	get() = this.motion.z // UPDATE
+	set(value){
+		this.motion = Vec3d(motion.x, motion.y, value)
 	}
 
 val Entity.lookPosVec: Vec3d
-	get() = this.getPositionEyes(1F)
+	get() = this.getEyePosition(1F)
 
 val Entity.lookDirVec: Vec3d
 	get() = this.getLook(1F)
@@ -57,7 +72,7 @@ fun Entity.setFireTicks(ticks: Int){
 	this.setFire(ticks / 20) // in case something overrides it
 	
 	val finalTicks = when(this){
-		is EntityLivingBase -> EnchantmentProtection.getFireTimeForEntity(this, ticks)
+		is EntityLivingBase -> ProtectionEnchantment.getFireTimeForEntity(this, ticks)
 		else -> ticks
 	}
 	
@@ -67,53 +82,44 @@ fun Entity.setFireTicks(ticks: Int){
 }
 
 fun EntityItem.cloneFrom(source: Entity){
-	motionX = source.motionX
-	motionY = source.motionY
-	motionZ = source.motionZ
+	posVec = source.posVec
+	motion = source.motion
+	rotationYaw = source.rotationYaw
 	isAirBorne = source.isAirBorne
 	
 	if (source is EntityItem){
 		lifespan = source.lifespan
 		pickupDelay = source.pickupDelay
 		
-		thrower = source.thrower
-		owner = source.owner
+		throwerId = source.throwerId
+		ownerId = source.ownerId
 	}
 }
 
 // NBT
 
 val Entity.heeTag
-	get() = this.entityData.heeTag
+	get() = this.persistentData.heeTag
 
 val Entity.heeTagOrNull
-	get() = this.entityData.heeTagOrNull
+	get() = this.persistentData.heeTagOrNull
 
 val Entity.heeTagPersistent
-	get() = this.entityData.getOrCreateCompound(PERSISTED_NBT_TAG).heeTag
+	get() = this.persistentData.getOrCreateCompound(PERSISTED_NBT_TAG).heeTag
 
 val Entity.heeTagPersistentOrNull
-	get() = this.entityData.getCompoundOrNull(PERSISTED_NBT_TAG)?.heeTagOrNull
+	get() = this.persistentData.getCompoundOrNull(PERSISTED_NBT_TAG)?.heeTagOrNull
 
 // Attributes
 
 /** Performs operation: base + x + y */
-const val OPERATION_ADD = 0
+val OPERATION_ADD = Operation.ADDITION
 
 /** Performs operation: base * (1 + x + y) */
-const val OPERATION_MUL_INCR_GROUPED = 1
+val OPERATION_MUL_INCR_GROUPED = Operation.MULTIPLY_BASE
 
 /** Performs operation: base * (1 + x) * (1 + y) */
-const val OPERATION_MUL_INCR_INDIVIDUAL = 2
-
-// Attributes (Renames)
-
-fun EntityLivingBase.getAttribute(attribute: IAttribute): IAttributeInstance{
-	return this.getEntityAttribute(attribute)
-}
-
-val IAttributeInstance.value
-	get() = this.attributeValue
+val OPERATION_MUL_INCR_INDIVIDUAL = Operation.MULTIPLY_TOTAL
 
 // Attributes (Helpers)
 
@@ -129,26 +135,10 @@ fun IAttributeInstance.tryRemoveModifier(modifier: AttributeModifier){
 	}
 }
 
-// AI
-
-typealias AIBase = EntityAIBase
-
-/** Makes the AI compatible with everything. */
-const val AI_FLAG_NONE = 0
-
-/** Prevents other movement AI tasks from running (mutex 1, 3, 5, 7). */
-const val AI_FLAG_MOVEMENT = 0b001
-
-/** Prevents other looking AI tasks from running (mutex 2, 3, 6, 7). */
-const val AI_FLAG_LOOKING = 0b010
-
-/** Prevents other swimming AI tasks from running (mutex 4, 5, 6, 7). */
-const val AI_FLAG_SWIMMING = 0b100
-
 // AI (Movement)
 
 inline fun AISwim(entity: EntityCreature) =
-	EntityAISwimming(entity)
+	SwimGoal(entity)
 
 inline fun <reified T : EntityLivingBase> AIWanderLandStopNear(entity: EntityCreature, movementSpeed: Double, chancePerTick: Int, maxDistanceXZ: Int = 10, maxDistanceY: Int = 7, detectDistance: Double) =
 	AIWanderLandStopNear(entity, movementSpeed, chancePerTick, maxDistanceXZ, maxDistanceY, T::class.java, detectDistance)
@@ -156,23 +146,26 @@ inline fun <reified T : EntityLivingBase> AIWanderLandStopNear(entity: EntityCre
 // AI (Looking)
 
 inline fun AIWatchIdle(entity: EntityCreature) =
-	EntityAILookIdle(entity)
+	LookRandomlyGoal(entity)
 
 inline fun <reified T : EntityLivingBase> AIWatchClosest(entity: EntityCreature, maxDistance: Float) =
-	EntityAIWatchClosest(entity, T::class.java, maxDistance)
+	LookAtGoal(entity, T::class.java, maxDistance)
 
 // AI (Actions)
 
 inline fun AIAttackMelee(entity: EntityCreature, movementSpeed: Double, chaseAfterLosingSight: Boolean) =
-	EntityAIAttackMelee(entity, movementSpeed, chaseAfterLosingSight)
+	MeleeAttackGoal(entity, movementSpeed, chaseAfterLosingSight)
 
 // AI (Targeting)
 
-inline fun AITargetAttacker(entity: EntityCreature, callReinforcements: Boolean) =
-	EntityAIHurtByTarget(entity, callReinforcements)
+inline fun AITargetAttacker(entity: EntityCreature, callReinforcements: Boolean): HurtByTargetGoal =
+	if (callReinforcements)
+		HurtByTargetGoal(entity).setCallsForHelp(entity::class.java) // UPDATE test
+	else
+		HurtByTargetGoal(entity)
 
 inline fun <reified T : EntityLivingBase> AITargetNearby(entity: EntityCreature, chancePerTick: Int, checkSight: Boolean, easilyReachableOnly: Boolean, noinline targetPredicate: ((T) -> Boolean)? = null) =
-	EntityAINearestAttackableTarget(entity, T::class.java, chancePerTick, checkSight, easilyReachableOnly, targetPredicate?.let { p -> Predicate<T> { it != null && p(it) } })
+	NearestAttackableTargetGoal(entity, T::class.java, chancePerTick, checkSight, easilyReachableOnly, targetPredicate?.let { p -> Predicate<EntityLivingBase> { p(it as T) } })
 
 inline fun <reified T : EntityLivingBase> AITargetEyeContact(entity: EntityCreature, fieldOfView: Float, headRadius: Float, minStareTicks: Int, easilyReachableOnly: Boolean, noinline targetPredicate: ((T) -> Boolean)? = null) =
 	AITargetEyeContact(entity, easilyReachableOnly, T::class.java, targetPredicate, fieldOfView, headRadius, minStareTicks)
@@ -185,30 +178,30 @@ inline fun <reified T : EntityLivingBase> AITargetSwarmSwitch(entity: EntityCrea
 
 // Selectors
 
-private val predicateAliveAndNotSpectating = Predicates.and(EntitySelectors.IS_ALIVE, EntitySelectors.NOT_SPECTATING)
-private val predicateAliveAndTargetable = Predicates.and(EntitySelectors.IS_ALIVE, EntitySelectors.CAN_AI_TARGET)
+private val predicateAliveAndNotSpectating = EntityPredicates.IS_ALIVE.and(EntityPredicates.NOT_SPECTATING)
+private val predicateAliveAndTargetable = EntityPredicates.IS_ALIVE.and(EntityPredicates.CAN_AI_TARGET)
 private val predicateAlwaysTrue = Predicates.alwaysTrue<Entity>()
 
 /**
  * Selects all entities which are not spectators.
  */
-val World.selectEntities
-	get() = EntitySelector(this, EntitySelectors.NOT_SPECTATING)
+val IEntityReader.selectEntities
+	get() = EntitySelector(this, EntityPredicates.NOT_SPECTATING)
 
 /**
  * Selects all entities which have not been removed from the world, and are not spectators.
  */
-val World.selectExistingEntities
+val IEntityReader.selectExistingEntities
 	get() = EntitySelector(this, predicateAliveAndNotSpectating)
 
 /**
  * Selects all entities which have not been removed from the world, and are not spectators or creative mode players.
  */
-val World.selectVulnerableEntities
+val IEntityReader.selectVulnerableEntities
 	get() = EntitySelector(this, predicateAliveAndTargetable)
 
 /**
  * Selects all entities and spectators.
  */
-val World.selectEntitiesAndSpectators
+val IEntityReader.selectEntitiesAndSpectators
 	get() = EntitySelector(this, predicateAlwaysTrue)

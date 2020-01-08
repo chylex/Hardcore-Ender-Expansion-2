@@ -1,21 +1,22 @@
 package chylex.hee.proxy
 import chylex.hee.system.migration.forge.Side
 import net.minecraft.server.MinecraftServer
-import net.minecraftforge.fml.common.FMLCommonHandler
+import net.minecraftforge.fml.loading.FMLEnvironment
+import net.minecraftforge.fml.server.ServerLifecycleHooks
 
 object Environment{
-	val side: Side = FMLCommonHandler.instance().side
+	val side: Side = FMLEnvironment.dist
 	
 	fun constructProxy(): ModCommonProxy{
 		val constructor: () -> ModCommonProxy = when(side){
-			Side.CLIENT -> {{ ModClientProxy() }}
-			Side.SERVER -> {{ ModCommonProxy() }}
+			Side.CLIENT           -> {{ ModClientProxy() }}
+			Side.DEDICATED_SERVER -> {{ ModCommonProxy() }}
 		}
 		
 		return constructor()
 	}
 	
 	fun getServer(): MinecraftServer{
-		return FMLCommonHandler.instance().minecraftServerInstance
+		return ServerLifecycleHooks.getCurrentServer()
 	}
 }

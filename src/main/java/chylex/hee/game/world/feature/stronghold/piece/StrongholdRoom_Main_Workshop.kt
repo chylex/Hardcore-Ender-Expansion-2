@@ -1,24 +1,22 @@
 package chylex.hee.game.world.feature.stronghold.piece
-import chylex.hee.game.block.util.FutureBlocks
 import chylex.hee.game.world.feature.stronghold.StrongholdPieceType
 import chylex.hee.game.world.structure.IBlockPicker.Single
 import chylex.hee.game.world.structure.IStructureWorld
-import chylex.hee.game.world.structure.trigger.FlowerPotStructureTrigger
-import chylex.hee.game.world.structure.trigger.TileEntityStructureTrigger
 import chylex.hee.init.ModBlocks
 import chylex.hee.system.migration.Facing.EAST
 import chylex.hee.system.migration.Facing.NORTH
 import chylex.hee.system.migration.Facing.SOUTH
 import chylex.hee.system.migration.Facing.WEST
+import chylex.hee.system.migration.vanilla.BlockSkull
 import chylex.hee.system.migration.vanilla.Blocks
 import chylex.hee.system.util.Pos
 import chylex.hee.system.util.facades.Facing4
 import chylex.hee.system.util.nextInt
 import chylex.hee.system.util.nextItem
 import chylex.hee.system.util.removeItem
+import chylex.hee.system.util.with
 import chylex.hee.system.util.withFacing
-import net.minecraft.tileentity.TileEntitySkull
-import net.minecraft.util.EnumFacing
+import net.minecraft.util.Direction
 import net.minecraft.util.math.BlockPos
 
 class StrongholdRoom_Main_Workshop(file: String) : StrongholdAbstractPieceFromFile(file, StrongholdPieceType.ROOM){
@@ -58,7 +56,7 @@ class StrongholdRoom_Main_Workshop(file: String) : StrongholdAbstractPieceFromFi
 			val (shelfPos, shelfFacing) = rand.removeItem(shelfPositions)
 			val skullRot = shelfFacing.horizontalIndex * 4 // not quite correct but it works
 			
-			world.addTrigger(shelfPos, TileEntityStructureTrigger(FutureBlocks.SKULL_FLOOR, TileEntitySkull().apply { setType(2); skullRotation = skullRot }))
+			world.setState(shelfPos, Blocks.ZOMBIE_HEAD.with(BlockSkull.ROTATION, skullRot))
 		}
 		
 		repeat(rand.nextInt(1, 6)){
@@ -68,11 +66,11 @@ class StrongholdRoom_Main_Workshop(file: String) : StrongholdAbstractPieceFromFi
 		
 		// Tables
 		
-		val flowerTypes = arrayOf(
-			FutureBlocks.WHITE_TULIP_STACK,
-			FutureBlocks.BLUE_ORCHID_STACK,
-			FutureBlocks.ALLIUM_STACK,
-			FutureBlocks.POPPY_STACK
+		val flowerPotTypes = arrayOf(
+			Blocks.POTTED_WHITE_TULIP,
+			Blocks.POTTED_BLUE_ORCHID,
+			Blocks.POTTED_ALLIUM,
+			Blocks.POTTED_POPPY
 		)
 		
 		repeat(rand.nextInt(4, 7)){
@@ -86,12 +84,12 @@ class StrongholdRoom_Main_Workshop(file: String) : StrongholdAbstractPieceFromFi
 				world.setBlock(decorPos, ModBlocks.ANCIENT_COBWEB)
 			}
 			else{
-				world.addTrigger(decorPos, FlowerPotStructureTrigger(rand.nextItem(flowerTypes)))
+				world.setBlock(decorPos, rand.nextItem(flowerPotTypes))
 			}
 		}
 	}
 	
-	private fun placeUtilityColumn(world: IStructureWorld, pos: BlockPos, facing: EnumFacing){
+	private fun placeUtilityColumn(world: IStructureWorld, pos: BlockPos, facing: Direction){
 		val rand = world.rand
 		val furnace = Blocks.FURNACE.withFacing(facing)
 		

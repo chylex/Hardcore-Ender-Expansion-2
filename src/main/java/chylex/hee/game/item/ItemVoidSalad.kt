@@ -6,6 +6,8 @@ import chylex.hee.game.mechanics.damage.IDamageProcessor.Companion.MAGIC_TYPE
 import chylex.hee.game.mechanics.damage.IDamageProcessor.Companion.NON_LETHAL
 import chylex.hee.system.migration.forge.SubscribeAllEvents
 import chylex.hee.system.migration.forge.SubscribeEvent
+import chylex.hee.system.migration.vanilla.EntityLivingBase
+import chylex.hee.system.migration.vanilla.EntityPlayer
 import chylex.hee.system.migration.vanilla.Items
 import chylex.hee.system.migration.vanilla.Potions
 import chylex.hee.system.migration.vanilla.Sounds
@@ -13,28 +15,27 @@ import chylex.hee.system.util.heeTag
 import chylex.hee.system.util.heeTagOrNull
 import chylex.hee.system.util.makeEffect
 import chylex.hee.system.util.nextFloat
-import net.minecraft.creativetab.CreativeTabs
-import net.minecraft.entity.EntityLivingBase
-import net.minecraft.entity.player.EntityPlayer
-import net.minecraft.item.ItemFood
+import net.minecraft.item.Food
+import net.minecraft.item.Item
 import net.minecraft.item.ItemStack
-import net.minecraft.util.NonNullList
 import net.minecraft.world.World
 import net.minecraftforge.event.entity.player.PlayerEvent
 
 @SubscribeAllEvents(modid = HEE.ID)
-class ItemVoidSalad : ItemFood(0, 0F, false){
-	private companion object{
+class ItemVoidSalad(properties: Properties) : Item(properties){
+	companion object{
 		private val DAMAGE_SAFE = Damage(MAGIC_TYPE, NON_LETHAL)
 		private val DAMAGE_LETHAL = Damage(MAGIC_TYPE)
 		
 		private const val PLAYER_RESPAWN_HUNGRY_TAG = "MegaVoidSalad"
 		
+		val FOOD: Food = Food.Builder().hunger(0).saturation(0F).setAlwaysEdible().build()
+		
 		@JvmStatic
 		@SubscribeEvent
 		fun onPlayerClone(e: PlayerEvent.Clone){
 			if (e.isWasDeath && e.original.heeTagOrNull?.getBoolean(PLAYER_RESPAWN_HUNGRY_TAG) == true){
-				setHungerAndResetSaturation(e.entityPlayer, 1)
+				setHungerAndResetSaturation(e.player, 1)
 			}
 		}
 		
@@ -54,14 +55,7 @@ class ItemVoidSalad : ItemFood(0, 0F, false){
 		SINGLE, DOUBLE, MEGA
 	}
 	
-	init{
-		maxStackSize = 1
-		hasSubtypes = true
-		
-		setAlwaysEdible()
-	}
-	
-	override fun getMaxItemUseDuration(stack: ItemStack): Int{
+	override fun getUseDuration(stack: ItemStack): Int{
 		return 70
 	}
 	
@@ -74,40 +68,36 @@ class ItemVoidSalad : ItemFood(0, 0F, false){
 	
 	override fun onItemUseFinish(stack: ItemStack, world: World, entity: EntityLivingBase): ItemStack{
 		super.onItemUseFinish(stack, world, entity)
+		applyVoidEffect(stack, entity)
 		return ItemStack(Items.BOWL)
 	}
 	
-	override fun onFoodEaten(stack: ItemStack, world: World, player: EntityPlayer){
-		when(Type.values().getOrNull(stack.metadata) ?: return){
+	private fun applyVoidEffect(stack: ItemStack, entity: EntityLivingBase){
+		when(Type.values().getOrNull(stack.damage) ?: return){
 			Type.SINGLE ->
-				DAMAGE_SAFE.dealTo(2F, player, TITLE_STARVE)
+				DAMAGE_SAFE.dealTo(2F, entity, TITLE_STARVE)
 			
 			Type.DOUBLE -> {
-				DAMAGE_SAFE.dealTo(10F, player, TITLE_STARVE)
-				player.addPotionEffect(Potions.NAUSEA.makeEffect(20 * 15))
+				DAMAGE_SAFE.dealTo(10F, entity, TITLE_STARVE)
+				entity.addPotionEffect(Potions.NAUSEA.makeEffect(20 * 15))
 			}
 			
 			Type.MEGA -> {
-				player.heeTag.setBoolean(PLAYER_RESPAWN_HUNGRY_TAG, true)
-				DAMAGE_LETHAL.dealTo(Float.MAX_VALUE, player, TITLE_STARVE)
+				entity.heeTag.putBoolean(PLAYER_RESPAWN_HUNGRY_TAG, true)
+				DAMAGE_LETHAL.dealTo(Float.MAX_VALUE, entity, TITLE_STARVE)
 			}
 		}
 		
-		setHungerAndResetSaturation(player, 0)
-	}
-	
-	override fun getTranslationKey(stack: ItemStack): String{
-		return when(stack.metadata){
-			2 -> "item.hee.void_salad.mega"
-			1 -> "item.hee.void_salad.double"
-			else -> "item.hee.void_salad.single"
+		if (entity is EntityPlayer){
+			setHungerAndResetSaturation(entity, 0)
 		}
 	}
 	
-	override fun getSubItems(tab: CreativeTabs, items: NonNullList<ItemStack>){
-		if (isInCreativeTab(tab)){
-			items.add(ItemStack(this, 1, Type.SINGLE.ordinal))
-			// hide the rest
+	override fun getTranslationKey(stack: ItemStack): String{
+		return when(stack.damage){
+			2 -> "item.hee.void_salad.mega"
+			1 -> "item.hee.void_salad.double"
+			else -> "item.hee.void_salad.single"
 		}
 	}
 }

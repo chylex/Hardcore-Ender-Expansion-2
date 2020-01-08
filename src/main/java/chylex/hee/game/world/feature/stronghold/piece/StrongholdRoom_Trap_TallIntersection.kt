@@ -8,6 +8,7 @@ import chylex.hee.game.world.feature.stronghold.StrongholdPieces
 import chylex.hee.game.world.structure.IStructureWorld
 import chylex.hee.game.world.structure.trigger.EntityStructureTrigger
 import chylex.hee.system.migration.Difficulty.PEACEFUL
+import chylex.hee.system.migration.vanilla.EntityPlayer
 import chylex.hee.system.util.Pos
 import chylex.hee.system.util.breakBlock
 import chylex.hee.system.util.facades.Facing4
@@ -17,7 +18,6 @@ import chylex.hee.system.util.nextFloat
 import chylex.hee.system.util.nextInt
 import chylex.hee.system.util.nextItem
 import chylex.hee.system.util.selectVulnerableEntities
-import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.world.World
 import java.util.Random
 
@@ -30,7 +30,7 @@ class StrongholdRoom_Trap_TallIntersection(file: String) : StrongholdAbstractPie
 		override fun update(entity: EntityTechnicalTrigger){
 			val world = entity.world
 			
-			val area = entity.entityBoundingBox.grow(2.5, 0.0, 2.5).expand(0.0, 2.0, 0.0)
+			val area = entity.boundingBox.grow(2.5, 0.0, 2.5).expand(0.0, 2.0, 0.0)
 			val targets = world.selectVulnerableEntities.inBox<EntityPlayer>(area)
 			
 			if (targets.isEmpty()){
@@ -53,7 +53,7 @@ class StrongholdRoom_Trap_TallIntersection(file: String) : StrongholdAbstractPie
 					EntityMobSilverfish(world).apply {
 						setLocationAndAngles(testPos.x + 0.5, testPos.y.toDouble(), testPos.z + 0.5, rand.nextFloat(0F, 360F), 0F)
 						delayHideInBlockAI(20 * 30)
-						world.spawnEntity(this)
+						world.addEntity(this)
 						
 						spawnExplosionParticle()
 						attackTarget = rand.nextItem(targets)
@@ -65,7 +65,7 @@ class StrongholdRoom_Trap_TallIntersection(file: String) : StrongholdAbstractPie
 				}
 			}
 			
-			entity.setDead()
+			entity.remove()
 		}
 		
 		override fun nextTimer(rand: Random): Int{

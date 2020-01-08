@@ -6,10 +6,11 @@ import chylex.hee.system.util.delegate.NotifyOnChange
 import chylex.hee.system.util.getState
 import chylex.hee.system.util.heeTag
 import net.minecraft.network.NetworkManager
-import net.minecraft.network.play.server.SPacketUpdateTileEntity
+import net.minecraft.network.play.server.SUpdateTileEntityPacket
 import net.minecraft.tileentity.TileEntity
+import net.minecraft.tileentity.TileEntityType
 
-abstract class TileEntityBase : TileEntity(){
+abstract class TileEntityBase(type: TileEntityType<out TileEntityBase>) : TileEntity(type){
 	protected companion object{
 		const val FLAG_MARK_DIRTY = 128
 	}
@@ -22,6 +23,9 @@ abstract class TileEntityBase : TileEntity(){
 		-> notifyUpdate(notifyFlags)
 	}
 	
+	val wrld
+		get() = super.world!!
+	
 	protected var isLoaded = false
 		private set
 	
@@ -31,14 +35,14 @@ abstract class TileEntityBase : TileEntity(){
 	}
 	
 	protected fun notifyUpdate(flags: Int){
-		if (world == null || world.isRemote || !isLoaded){
+		if (super.world == null || wrld.isRemote || !isLoaded){
 			return
 		}
 		
 		val pos = pos
-		val state = pos.getState(world)
+		val state = pos.getState(wrld)
 		
-		world.notifyBlockUpdate(pos, state, state, flags and FLAG_MARK_DIRTY.inv())
+		wrld.notifyBlockUpdate(pos, state, state, flags and FLAG_MARK_DIRTY.inv())
 		
 		if (flags and FLAG_MARK_DIRTY != 0){
 			markDirty()
@@ -56,33 +60,33 @@ abstract class TileEntityBase : TileEntity(){
 	
 	// NBT: Storage
 	
-	final override fun writeToNBT(nbt: TagCompound): TagCompound{
-		return super.writeToNBT(nbt).also { writeNBT(it.heeTag, STORAGE) }
+	final override fun write(nbt: TagCompound): TagCompound{
+		return super.write(nbt).also { writeNBT(it.heeTag, STORAGE) }
 	}
 	
-	final override fun readFromNBT(nbt: TagCompound){
-		super.readFromNBT(nbt)
+	final override fun read(nbt: TagCompound){
+		super.read(nbt)
 		readNBT(nbt.heeTag, STORAGE)
 	}
 	
 	// NBT: Network load (Note: do not use super.getUpdateTag/handleUpdateTag to prevent a duplicate client-side call)
 	
 	final override fun getUpdateTag(): TagCompound{
-		return super.writeToNBT(TagCompound()).also { writeNBT(it.heeTag, NETWORK) }
+		return super.write(TagCompound()).also { writeNBT(it.heeTag, NETWORK) }
 	}
 	
 	final override fun handleUpdateTag(nbt: TagCompound){
-		super.readFromNBT(nbt)
+		super.read(nbt)
 		readNBT(nbt.heeTag, NETWORK)
 	}
 	
 	// NBT: Network update
 	
-	override fun getUpdatePacket(): SPacketUpdateTileEntity{
-		return SPacketUpdateTileEntity(pos, 0, TagCompound().also { writeNBT(it, NETWORK) })
+	override fun getUpdatePacket(): SUpdateTileEntityPacket{
+		return SUpdateTileEntityPacket(pos, 0, TagCompound().also { writeNBT(it, NETWORK) })
 	}
 	
-	override fun onDataPacket(net: NetworkManager, packet: SPacketUpdateTileEntity){
+	override fun onDataPacket(net: NetworkManager, packet: SUpdateTileEntityPacket){
 		readNBT(packet.nbtCompound, NETWORK)
 	}
 }

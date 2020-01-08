@@ -9,6 +9,7 @@ import chylex.hee.system.util.component1
 import chylex.hee.system.util.component2
 import chylex.hee.system.util.nextInt
 import chylex.hee.system.util.totalTime
+import chylex.hee.system.util.use
 import net.minecraft.util.math.ChunkPos
 import net.minecraftforge.common.util.INBTSerializable
 import java.util.Random
@@ -49,7 +50,7 @@ class ProximityHandler(private val cluster: TileEntityEnergyCluster) : INBTSeria
 	private fun recalculateProximityClusterCount(){
 		val (myChunkX, myChunkZ) = ChunkPos(cluster.pos)
 		
-		lastProximityClusterCount = cluster.world.loadedTileEntityList.count {
+		lastProximityClusterCount = cluster.wrld.loadedTileEntityList.count {
 			it is TileEntityEnergyCluster &&
 			it !== cluster &&
 			it.currentHealth.affectedByProximity &&
@@ -71,7 +72,7 @@ class ProximityHandler(private val cluster: TileEntityEnergyCluster) : INBTSeria
 			
 			if (affectedByProximity != newProximityStatus){
 				affectedByProximity = newProximityStatus
-				ticksToLeak = nextLeakInterval(cluster.world.rand, lastProximityClusterCount)
+				ticksToLeak = nextLeakInterval(cluster.wrld.rand, lastProximityClusterCount)
 			}
 		}
 		
@@ -79,7 +80,7 @@ class ProximityHandler(private val cluster: TileEntityEnergyCluster) : INBTSeria
 			return
 		}
 		
-		val world = cluster.world
+		val world = cluster.wrld
 		
 		if (world.totalTime % INSTABILITY_INTERVAL_TICKS == 0L){
 			val pos = cluster.pos
@@ -97,12 +98,12 @@ class ProximityHandler(private val cluster: TileEntityEnergyCluster) : INBTSeria
 	}
 	
 	override fun serializeNBT() = TagCompound().apply {
-		setBoolean(AFFECTED_TAG, affectedByProximity)
-		setInteger(LEAK_TICKS_TAG, ticksToLeak)
+		putBoolean(AFFECTED_TAG, affectedByProximity)
+		putInt(LEAK_TICKS_TAG, ticksToLeak)
 	}
 	
-	override fun deserializeNBT(nbt: TagCompound) = with(nbt){
+	override fun deserializeNBT(nbt: TagCompound) = nbt.use {
 		affectedByProximity = getBoolean(AFFECTED_TAG)
-		ticksToLeak = getInteger(LEAK_TICKS_TAG)
+		ticksToLeak = getInt(LEAK_TICKS_TAG)
 	}
 }

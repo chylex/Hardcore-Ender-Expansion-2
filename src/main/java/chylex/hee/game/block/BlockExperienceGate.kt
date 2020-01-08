@@ -7,24 +7,27 @@ import chylex.hee.system.migration.Facing.NORTH
 import chylex.hee.system.migration.Facing.SOUTH
 import chylex.hee.system.migration.Facing.WEST
 import chylex.hee.system.migration.MagicValues
+import chylex.hee.system.migration.vanilla.EntityItem
+import chylex.hee.system.migration.vanilla.EntityPlayer
+import chylex.hee.system.migration.vanilla.EntityXPOrb
 import chylex.hee.system.util.Pos
 import chylex.hee.system.util.allInCenteredBox
+import chylex.hee.system.util.asVoxelShape
 import chylex.hee.system.util.getBlock
 import chylex.hee.system.util.getTile
 import chylex.hee.system.util.offsetUntil
 import chylex.hee.system.util.setBlock
-import net.minecraft.block.state.IBlockState
+import net.minecraft.block.BlockState
 import net.minecraft.entity.Entity
-import net.minecraft.entity.item.EntityItem
-import net.minecraft.entity.item.EntityXPOrb
-import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.util.math.AxisAlignedBB
 import net.minecraft.util.math.BlockPos
-import net.minecraft.world.IBlockAccess
+import net.minecraft.util.math.shapes.ISelectionContext
+import net.minecraft.util.math.shapes.VoxelShape
+import net.minecraft.world.IBlockReader
 import net.minecraft.world.World
 
 abstract class BlockExperienceGate(builder: BlockBuilder) : BlockSimple(builder){
-	protected open fun findController(world: IBlockAccess, pos: BlockPos): TileEntityExperienceGate?{
+	protected open fun findController(world: IBlockReader, pos: BlockPos): TileEntityExperienceGate?{
 		for(offset in pos.allInCenteredBox(1, 0, 1)){
 			val tile = offset.getTile<TileEntityExperienceGate>(world)
 			
@@ -36,7 +39,7 @@ abstract class BlockExperienceGate(builder: BlockBuilder) : BlockSimple(builder)
 		return null
 	}
 	
-	override fun onBlockAdded(world: World, pos: BlockPos, state: IBlockState){
+	override fun onBlockAdded(state: BlockState, world: World, pos: BlockPos, oldState: BlockState, isMoving: Boolean){
 		if (world.isAreaLoaded(pos, 3)){
 			val nw = pos.offsetUntil(NORTH, 1..3){ it.getBlock(world) !== this }?.south()?.offsetUntil(WEST, 1..3){ it.getBlock(world) !== this }?.east() ?: return
 			val se = pos.offsetUntil(SOUTH, 1..3){ it.getBlock(world) !== this }?.north()?.offsetUntil(EAST, 1..3){ it.getBlock(world) !== this }?.west() ?: return
@@ -51,12 +54,14 @@ abstract class BlockExperienceGate(builder: BlockBuilder) : BlockSimple(builder)
 		}
 	}
 	
-	override fun getCollisionBoundingBox(state: IBlockState, world: IBlockAccess, pos: BlockPos): AxisAlignedBB?{
-		return AxisAlignedBB(0.0, 0.0, 0.0, 1.0, 1.0 - (2.0 * MagicValues.BLOCK_COLLISION_SHRINK), 1.0)
+	// UPDATE test onentitywalk
+	
+	override fun getCollisionShape(state: BlockState, world: IBlockReader, pos: BlockPos, context: ISelectionContext): VoxelShape{
+		return AxisAlignedBB(0.0, 0.0, 0.0, 1.0, 1.0 - (2.0 * MagicValues.BLOCK_COLLISION_SHRINK), 1.0).asVoxelShape // UPDATE
 	}
 	
-	override fun onEntityCollision(world: World, pos: BlockPos, state: IBlockState, entity: Entity){
-		if (!world.isRemote && entity.ticksExisted > 10 && !entity.isDead){
+	override fun onEntityCollision(state: BlockState, world: World, pos: BlockPos, entity: Entity){
+		if (!world.isRemote && entity.ticksExisted > 10 && entity.isAlive){
 			when(entity){
 				is EntityPlayer -> findController(world, pos)?.onCollision(entity)
 				is EntityItem   -> findController(world, pos)?.onCollision(entity)

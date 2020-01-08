@@ -1,11 +1,11 @@
 package chylex.hee.game.world.structure.piece
-import net.minecraft.util.EnumFacing
+import net.minecraft.util.Direction
 import net.minecraft.util.math.BlockPos
 
 interface IStructurePieceConnection{
 	val type: IStructurePieceConnectionType
 	val offset: BlockPos
-	val facing: EnumFacing
+	val facing: Direction
 	val alignment: AlignmentType
 	
 	enum class AlignmentType{

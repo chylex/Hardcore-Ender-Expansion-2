@@ -24,10 +24,10 @@ import chylex.hee.game.particle.util.IShape.Point
 import chylex.hee.init.ModBlocks
 import chylex.hee.system.migration.forge.Side
 import chylex.hee.system.migration.forge.Sided
+import chylex.hee.system.migration.vanilla.EntityLivingBase
 import chylex.hee.system.util.FLAG_NONE
 import chylex.hee.system.util.FLAG_SYNC_CLIENT
 import chylex.hee.system.util.facades.Facing6
-import chylex.hee.system.util.get
 import chylex.hee.system.util.getState
 import chylex.hee.system.util.getTile
 import chylex.hee.system.util.nextInt
@@ -35,22 +35,24 @@ import chylex.hee.system.util.removeItem
 import chylex.hee.system.util.setAir
 import chylex.hee.system.util.setState
 import chylex.hee.system.util.with
-import net.minecraft.block.state.BlockFaceShape.UNDEFINED
-import net.minecraft.block.state.BlockStateContainer
-import net.minecraft.block.state.IBlockState
+import net.minecraft.block.Block
+import net.minecraft.block.BlockRenderType.INVISIBLE
+import net.minecraft.block.BlockState
 import net.minecraft.entity.Entity
-import net.minecraft.entity.EntityLivingBase
-import net.minecraft.util.EnumBlockRenderType.INVISIBLE
-import net.minecraft.util.EnumFacing
+import net.minecraft.state.StateContainer.Builder
 import net.minecraft.util.math.BlockPos
-import net.minecraft.world.IBlockAccess
+import net.minecraft.util.math.shapes.ISelectionContext
+import net.minecraft.util.math.shapes.VoxelShape
+import net.minecraft.util.math.shapes.VoxelShapes
+import net.minecraft.world.IBlockReader
+import net.minecraft.world.IWorldReader
 import net.minecraft.world.World
 import java.util.Random
 
 class BlockCorruptedEnergy(builder: BlockBuilder) : BlockSimple(builder){
 	companion object{
 		private const val MIN_LEVEL = 0
-		private const val MAX_LEVEL = 15 // UPDATE: extend to 20
+		private const val MAX_LEVEL = 20
 		
 		private const val MAX_TICK_RATE = 5
 		private const val MIN_TICK_RATE = 1
@@ -77,11 +79,9 @@ class BlockCorruptedEnergy(builder: BlockBuilder) : BlockSimple(builder){
 		}
 	}
 	
-	init{
-		needsRandomTick = true // just to be safe
+	override fun fillStateContainer(container: Builder<Block, BlockState>){
+		container.add(LEVEL)
 	}
-	
-	override fun createBlockState() = BlockStateContainer(this, LEVEL)
 	
 	// Utility methods
 	
@@ -116,7 +116,7 @@ class BlockCorruptedEnergy(builder: BlockBuilder) : BlockSimple(builder){
 			return PASSTHROUGH
 		}
 		else if (!currentBlock.isAir(currentState, world, pos)){
-			return if (currentState.isNormalCube)
+			return if (currentState.isNormalCube(world, pos))
 				FAIL
 			else
 				PASSTHROUGH
@@ -128,21 +128,21 @@ class BlockCorruptedEnergy(builder: BlockBuilder) : BlockSimple(builder){
 	
 	// Tick handling
 	
-	override fun tickRate(world: World): Int{
+	override fun tickRate(world: IWorldReader): Int{
 		return MAX_TICK_RATE
 	}
 	
-	override fun onBlockAdded(world: World, pos: BlockPos, state: IBlockState){
-		world.scheduleUpdate(pos, this, tickRateForLevel(state[LEVEL]))
+	override fun onBlockAdded(state: BlockState, world: World, pos: BlockPos, oldState: BlockState, isMoving: Boolean){
+		world.pendingBlockTicks.scheduleTick(pos, this, tickRateForLevel(state[LEVEL]))
 	}
 	
-	override fun randomTick(world: World, pos: BlockPos, state: IBlockState, rand: Random){
-		if (!world.isUpdateScheduled(pos, this)){
+	override fun randomTick(state: BlockState, world: World, pos: BlockPos, rand: Random){
+		if (!world.pendingBlockTicks.isTickScheduled(pos, this)){
 			pos.setAir(world)
 		}
 	}
 	
-	override fun updateTick(world: World, pos: BlockPos, state: IBlockState, rand: Random){
+	override fun tick(state: BlockState, world: World, pos: BlockPos, rand: Random){
 		val level = state[LEVEL]
 		val remainingFacings = Facing6.toMutableList()
 		
@@ -168,20 +168,16 @@ class BlockCorruptedEnergy(builder: BlockBuilder) : BlockSimple(builder){
 			pos.setState(world, state.with(LEVEL, decreaseToLevel), FLAG_NONE) // does not call onBlockAdded for the same Block instance
 		}
 		
-		world.scheduleUpdate(pos, this, tickRateForLevel(level))
+		world.pendingBlockTicks.scheduleTick(pos, this, tickRateForLevel(level))
 	}
 	
 	// Interactions
 	
-	override fun isAir(state: IBlockState, world: IBlockAccess, pos: BlockPos): Boolean{
+	override fun isAir(state: BlockState, world: IBlockReader, pos: BlockPos): Boolean{
 		return true
 	}
 	
-	override fun canCollideCheck(state: IBlockState, hitIfLiquid: Boolean): Boolean{ // actually used for raytracing, not entity collisions
-		return false
-	}
-	
-	override fun onEntityCollision(world: World, pos: BlockPos, state: IBlockState, entity: Entity){
+	override fun onEntityCollision(state: BlockState, world: World, pos: BlockPos, entity: Entity){
 		if (!world.isRemote && entity is EntityLivingBase && !isEntityTolerant(entity)){
 			CombinedDamage(
 				DAMAGE_PART_NORMAL to 0.75F,
@@ -193,25 +189,21 @@ class BlockCorruptedEnergy(builder: BlockBuilder) : BlockSimple(builder){
 	// Client side
 	
 	@Sided(Side.CLIENT)
-	override fun randomDisplayTick(state: IBlockState, world: World, pos: BlockPos, rand: Random){
+	override fun animateTick(state: BlockState, world: World, pos: BlockPos, rand: Random){
 		val amount = rand.nextInt(0, 2)
 		
 		if (amount > 0){
-			PARTICLE_CORRUPTION.spawn(Point(pos, amount), rand) // TODO figure out how to show particles outside randomDisplayTick range
+			PARTICLE_CORRUPTION.spawn(Point(pos, amount), rand) // TODO figure out how to show particles outside animateTick range
 		}
 	}
 	
 	// General
 	
-	override fun getMetaFromState(state: IBlockState) = state[LEVEL]
-	override fun getStateFromMeta(meta: Int) = this.with(LEVEL, meta)
+	override fun getCollisionShape(state: BlockState, world: IBlockReader, pos: BlockPos, context: ISelectionContext): VoxelShape{
+		return VoxelShapes.empty()
+	}
 	
-	override fun getCollisionBoundingBox(state: IBlockState, world: IBlockAccess, pos: BlockPos) = NULL_AABB
-	override fun getBlockFaceShape(world: IBlockAccess, state: IBlockState, pos: BlockPos, face: EnumFacing) = UNDEFINED
-	
-	override fun isFullCube(state: IBlockState) = false
-	override fun isOpaqueCube(state: IBlockState) = false
-	override fun getRenderType(state: IBlockState) = INVISIBLE
+	override fun getRenderType(state: BlockState) = INVISIBLE
 	
 	// Debugging
 	// override fun getRenderLayer() = CUTOUT

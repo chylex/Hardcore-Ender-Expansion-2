@@ -1,19 +1,32 @@
 package chylex.hee.client.render.entity
 import chylex.hee.client.render.util.GL
+import chylex.hee.client.util.MC
 import chylex.hee.game.entity.living.EntityMobVillagerDying
 import chylex.hee.system.migration.forge.Side
 import chylex.hee.system.migration.forge.Sided
+import chylex.hee.system.migration.vanilla.RenderLiving
+import chylex.hee.system.migration.vanilla.RenderManager
+import chylex.hee.system.util.facades.Resource
 import chylex.hee.system.util.totalTime
-import net.minecraft.client.model.ModelVillager
-import net.minecraft.client.renderer.entity.RenderLiving
-import net.minecraft.client.renderer.entity.RenderManager
+import net.minecraft.client.renderer.entity.layers.HeadLayer
+import net.minecraft.client.renderer.entity.layers.VillagerHeldItemLayer
+import net.minecraft.client.renderer.entity.layers.VillagerLevelPendantLayer
+import net.minecraft.client.renderer.entity.model.VillagerModel
+import net.minecraft.resources.IReloadableResourceManager
 import net.minecraft.util.ResourceLocation
 import java.util.Random
 import kotlin.math.min
 
 @Sided(Side.CLIENT)
-class RenderEntityMobVillagerDying(manager: RenderManager) : RenderLiving<EntityMobVillagerDying>(manager, ModelVillager(0F), 0.5F){
+class RenderEntityMobVillagerDying(manager: RenderManager) : RenderLiving<EntityMobVillagerDying, VillagerModel<EntityMobVillagerDying>>(manager, VillagerModel(0F), 0.5F){
 	private val rand = Random()
+	private val texture = Resource.Vanilla("textures/entity/villager/villager.png")
+	
+	init{
+		addLayer(HeadLayer(this))
+		addLayer(VillagerLevelPendantLayer(this, MC.instance.resourceManager as IReloadableResourceManager, "villager"))
+		addLayer(VillagerHeldItemLayer(this))
+	}
 	
 	override fun doRender(entity: EntityMobVillagerDying, x: Double, y: Double, z: Double, rotationYaw: Float, partialTicks: Float){
 		rand.setSeed(entity.world.totalTime)
@@ -22,8 +35,8 @@ class RenderEntityMobVillagerDying(manager: RenderManager) : RenderLiving<Entity
 		super.doRender(entity, x + (rand.nextGaussian() * mp), y + (rand.nextGaussian() * mp), z + (rand.nextGaussian() * mp), rotationYaw, partialTicks)
 	}
 	
-	override fun getEntityTexture(entity: EntityMobVillagerDying): ResourceLocation?{
-		return entity.profession?.skin
+	override fun getEntityTexture(entity: EntityMobVillagerDying): ResourceLocation{
+		return texture
 	}
 	
 	override fun preRenderCallback(entity: EntityMobVillagerDying, partialTicks: Float){

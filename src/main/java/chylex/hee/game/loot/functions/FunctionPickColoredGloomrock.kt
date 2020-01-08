@@ -8,11 +8,10 @@ import com.google.gson.JsonObject
 import com.google.gson.JsonSerializationContext
 import net.minecraft.item.ItemStack
 import net.minecraft.world.storage.loot.LootContext
-import net.minecraft.world.storage.loot.conditions.LootCondition
-import net.minecraft.world.storage.loot.functions.LootFunction
-import java.util.Random
+import net.minecraft.world.storage.loot.LootFunction
+import net.minecraft.world.storage.loot.conditions.ILootCondition
 
-class FunctionPickColoredGloomrock(conditions: Array<LootCondition>) : LootFunction(conditions){
+class FunctionPickColoredGloomrock(conditions: Array<ILootCondition>) : LootFunction(conditions){
 	private companion object{
 		private val BLOCKS = arrayOf(
 			ModBlocks.GLOOMROCK_SMOOTH_RED,
@@ -27,14 +26,14 @@ class FunctionPickColoredGloomrock(conditions: Array<LootCondition>) : LootFunct
 		)
 	}
 	
-	override fun apply(stack: ItemStack, rand: Random, context: LootContext): ItemStack{
-		return ItemStack(rand.nextItem(BLOCKS), stack.size, stack.metadata)
+	override fun doApply(stack: ItemStack, context: LootContext): ItemStack{
+		return ItemStack(context.random.nextItem(BLOCKS), stack.size)
 	}
 	
 	object Serializer : LootFunction.Serializer<FunctionPickColoredGloomrock>(Resource.Custom("pick_colored_gloomrock"), FunctionPickColoredGloomrock::class.java){
 		override fun serialize(json: JsonObject, value: FunctionPickColoredGloomrock, context: JsonSerializationContext){}
 		
-		override fun deserialize(json: JsonObject, context: JsonDeserializationContext, conditions: Array<LootCondition>): FunctionPickColoredGloomrock{
+		override fun deserialize(json: JsonObject, context: JsonDeserializationContext, conditions: Array<ILootCondition>): FunctionPickColoredGloomrock{
 			return FunctionPickColoredGloomrock(conditions)
 		}
 	}

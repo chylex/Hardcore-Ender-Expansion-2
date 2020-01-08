@@ -1,11 +1,9 @@
 package chylex.hee.game.mechanics.damage
-import chylex.hee.system.util.getAttribute
-import chylex.hee.system.util.value
+import chylex.hee.system.migration.vanilla.EntityLivingBase
+import chylex.hee.system.migration.vanilla.EntityPlayer
+import chylex.hee.system.migration.vanilla.EntityThrowable
 import net.minecraft.entity.Entity
-import net.minecraft.entity.EntityLivingBase
 import net.minecraft.entity.SharedMonsterAttributes.ATTACK_DAMAGE
-import net.minecraft.entity.player.EntityPlayer
-import net.minecraft.entity.projectile.EntityThrowable
 
 class Damage(private vararg val processors: IDamageProcessor){
 	private val properties = DamageProperties().apply {

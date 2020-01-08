@@ -1,11 +1,13 @@
 package chylex.hee.proxy
-import net.minecraft.entity.player.EntityPlayer
+import chylex.hee.game.particle.spawner.IParticleMaker
+import chylex.hee.system.migration.vanilla.EntityPlayer
+import net.minecraft.client.particle.IAnimatedSprite
+import net.minecraft.particles.BasicParticleType
 
 open class ModCommonProxy{
 	open fun getClientSidePlayer(): EntityPlayer? = null
 	
-	open fun onPreInit(){}
-	open fun onInit(){}
+	open fun registerParticle(type: BasicParticleType, maker: IParticleMaker<*>, callback: (IAnimatedSprite) -> Unit){}
 	
 	open fun pauseParticles(){}
 	open fun resumeParticles(){}

@@ -1,9 +1,9 @@
 package chylex.hee.client.render.util
-import net.minecraft.client.model.ModelRenderer
+import net.minecraft.client.renderer.entity.model.RendererModel
 
-val ModelRenderer.beginBox
+val RendererModel.beginBox
 	get() = ModelBoxBuilder(this)
 
-fun ModelRenderer.render(){
+fun RendererModel.render(){
 	this.render(1F / 16F)
 }

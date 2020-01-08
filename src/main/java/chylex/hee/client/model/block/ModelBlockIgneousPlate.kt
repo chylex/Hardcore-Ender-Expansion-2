@@ -3,31 +3,31 @@ import chylex.hee.client.render.util.beginBox
 import chylex.hee.client.render.util.render
 import chylex.hee.system.migration.forge.Side
 import chylex.hee.system.migration.forge.Sided
-import net.minecraft.client.model.ModelBase
-import net.minecraft.client.model.ModelRenderer
+import net.minecraft.client.renderer.entity.model.RendererModel
+import net.minecraft.client.renderer.model.Model
 import kotlin.math.PI
 import kotlin.math.abs
 import kotlin.math.sin
 
 @Sided(Side.CLIENT)
-object ModelBlockIgneousPlate : ModelBase(){
+object ModelBlockIgneousPlate : Model(){
 	const val ANIMATION_PERIOD = PI
 	
-	private val outerBox: ModelRenderer
-	private val innerBox: ModelRenderer
+	private val outerBox: RendererModel
+	private val innerBox: RendererModel
 	
 	init{
 		textureWidth = 32
 		textureHeight = 16
 		
-		outerBox = ModelRenderer(this).apply {
+		outerBox = RendererModel(this).apply {
 			beginBox.offset(12F,  4F, 0F).size( 2, 8, 2).tex(0, 6).add()
 			beginBox.offset( 2F,  4F, 0F).size( 2, 8, 2).tex(8, 6).add()
 			beginBox.offset( 2F,  2F, 0F).size(12, 2, 2).tex(0, 0).add()
 			beginBox.offset( 2F, 12F, 0F).size(12, 2, 2).tex(0, 4).add()
 		}
 		
-		innerBox = ModelRenderer(this).apply {
+		innerBox = RendererModel(this).apply {
 			beginBox.offset(4F, 4F, 0.5F).size(8, 8, 1).tex(14, 7).add()
 		}
 	}

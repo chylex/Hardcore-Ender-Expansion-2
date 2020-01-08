@@ -7,14 +7,13 @@ import chylex.hee.game.entity.living.ai.AIWanderLightStartle.ILightStartleHandle
 import chylex.hee.game.entity.living.ai.AIWanderOnFirePanic
 import chylex.hee.game.entity.living.ai.path.PathNavigateGroundUnrestricted
 import chylex.hee.game.entity.living.ai.util.AIToggle
-import chylex.hee.game.entity.living.ai.util.AIToggle.Companion.addTask
+import chylex.hee.game.entity.living.ai.util.AIToggle.Companion.addGoal
 import chylex.hee.game.entity.util.EntityData
 import chylex.hee.game.mechanics.damage.Damage
 import chylex.hee.game.mechanics.damage.IDamageProcessor.Companion.ALL_PROTECTIONS
 import chylex.hee.game.mechanics.damage.IDamageProcessor.Companion.DIFFICULTY_SCALING
 import chylex.hee.game.mechanics.damage.IDamageProcessor.Companion.PEACEFUL_EXCLUSION
-import chylex.hee.game.world.util.RayTracer
-import chylex.hee.init.ModLoot
+import chylex.hee.init.ModEntities
 import chylex.hee.system.migration.Difficulty.HARD
 import chylex.hee.system.migration.Difficulty.NORMAL
 import chylex.hee.system.migration.Difficulty.PEACEFUL
@@ -24,6 +23,12 @@ import chylex.hee.system.migration.forge.Side
 import chylex.hee.system.migration.forge.Sided
 import chylex.hee.system.migration.forge.SubscribeAllEvents
 import chylex.hee.system.migration.forge.SubscribeEvent
+import chylex.hee.system.migration.vanilla.BlockWeb
+import chylex.hee.system.migration.vanilla.EntityLivingBase
+import chylex.hee.system.migration.vanilla.EntityMob
+import chylex.hee.system.migration.vanilla.EntityPlayer
+import chylex.hee.system.migration.vanilla.ItemAxe
+import chylex.hee.system.migration.vanilla.ItemSword
 import chylex.hee.system.migration.vanilla.Potions
 import chylex.hee.system.migration.vanilla.Sounds
 import chylex.hee.system.util.AIAttackMelee
@@ -38,11 +43,12 @@ import chylex.hee.system.util.Pos
 import chylex.hee.system.util.TagCompound
 import chylex.hee.system.util.addY
 import chylex.hee.system.util.directionTowards
+import chylex.hee.system.util.facades.Resource
 import chylex.hee.system.util.floorToInt
-import chylex.hee.system.util.getAttribute
 import chylex.hee.system.util.getState
 import chylex.hee.system.util.heeTag
 import chylex.hee.system.util.isLoaded
+import chylex.hee.system.util.motionY
 import chylex.hee.system.util.nextFloat
 import chylex.hee.system.util.nextInt
 import chylex.hee.system.util.posVec
@@ -54,33 +60,35 @@ import chylex.hee.system.util.toRadians
 import chylex.hee.system.util.totalTime
 import chylex.hee.system.util.tryApplyModifier
 import chylex.hee.system.util.tryRemoveModifier
-import net.minecraft.block.Block
+import chylex.hee.system.util.use
+import net.minecraft.block.BlockState
+import net.minecraft.entity.CreatureAttribute
 import net.minecraft.entity.Entity
-import net.minecraft.entity.EntityLivingBase
-import net.minecraft.entity.EnumCreatureAttribute
+import net.minecraft.entity.EntityType
 import net.minecraft.entity.SharedMonsterAttributes.ATTACK_DAMAGE
 import net.minecraft.entity.SharedMonsterAttributes.FOLLOW_RANGE
 import net.minecraft.entity.SharedMonsterAttributes.MAX_HEALTH
 import net.minecraft.entity.SharedMonsterAttributes.MOVEMENT_SPEED
 import net.minecraft.entity.ai.attributes.AttributeModifier
-import net.minecraft.entity.monster.EntityMob
-import net.minecraft.entity.player.EntityPlayer
-import net.minecraft.item.ItemAxe
-import net.minecraft.item.ItemSword
+import net.minecraft.network.IPacket
 import net.minecraft.network.datasync.DataSerializers
-import net.minecraft.pathfinding.PathNavigate
-import net.minecraft.potion.PotionEffect
+import net.minecraft.pathfinding.PathNavigator
+import net.minecraft.potion.EffectInstance
 import net.minecraft.util.DamageSource
 import net.minecraft.util.ResourceLocation
 import net.minecraft.util.SoundEvent
-import net.minecraft.util.math.AxisAlignedBB
 import net.minecraft.util.math.BlockPos
+import net.minecraft.util.math.RayTraceContext
+import net.minecraft.util.math.RayTraceContext.BlockMode
+import net.minecraft.util.math.RayTraceContext.FluidMode
+import net.minecraft.util.math.RayTraceResult.Type
 import net.minecraft.util.math.Vec3d
-import net.minecraft.world.EnumSkyBlock.BLOCK
-import net.minecraft.world.EnumSkyBlock.SKY
+import net.minecraft.world.LightType.BLOCK
+import net.minecraft.world.LightType.SKY
 import net.minecraft.world.World
 import net.minecraftforge.common.ForgeHooks
 import net.minecraftforge.event.entity.player.CriticalHitEvent
+import net.minecraftforge.fml.network.NetworkHooks
 import kotlin.math.abs
 import kotlin.math.cos
 import kotlin.math.log10
@@ -88,16 +96,16 @@ import kotlin.math.roundToInt
 import kotlin.math.sin
 
 @SubscribeAllEvents(modid = HEE.ID)
-class EntityMobSpiderling(world: World) : EntityMob(world), ILightStartleHandler, IMobBypassPeacefulDespawn{
+class EntityMobSpiderling(type: EntityType<EntityMobSpiderling>, world: World) : EntityMob(type, world), ILightStartleHandler, IMobBypassPeacefulDespawn{
+	constructor(world: World) : this(ModEntities.SPIDERLING, world)
+	
 	companion object{
 		private val DAMAGE_GENERAL = Damage(DIFFICULTY_SCALING, PEACEFUL_EXCLUSION, *ALL_PROTECTIONS)
 		private val FALL_CRIT_DAMAGE = AttributeModifier("Fall crit damage", 0.5, OPERATION_MUL_INCR_INDIVIDUAL)
 		
 		private val DATA_SLEEPING = EntityData.register<EntityMobSpiderling, Boolean>(DataSerializers.BOOLEAN)
 		
-		private val RAY_TRACE_OBSTACLE = RayTracer(
-			canCollideCheck = { _, _, state -> state.block.canCollideCheck(state, false) }
-		)
+		val LOOT_TABLE = Resource.Custom("entities/spiderling")
 		
 		private const val BASE_JUMP_MOTION = 0.38F
 		
@@ -112,18 +120,13 @@ class EntityMobSpiderling(world: World) : EntityMob(world), ILightStartleHandler
 			}
 		}
 		
-		private fun findTopBlockBox(world: World, pos: BlockPos): AxisAlignedBB?{
-			var topBox: AxisAlignedBB? = null
-			
+		private fun findTopBlockMaxY(world: World, pos: BlockPos): Double?{
 			for(y in 0..3){
 				val testPos = pos.up(y)
-				val testBox = testPos.getState(world).getCollisionBoundingBox(world, testPos)
+				val testBox = testPos.getState(world).getCollisionShape(world, testPos)
 				
-				if (testBox == Block.NULL_AABB){
-					return topBox?.offset(pos.up(y - 1))
-				}
-				else{
-					topBox = testBox
+				if (testBox.isEmpty){
+					return testPos.y + testBox.boundingBox.maxY // UPDATE test
 				}
 			}
 			
@@ -133,7 +136,7 @@ class EntityMobSpiderling(world: World) : EntityMob(world), ILightStartleHandler
 	
 	// Instance
 	
-	var isSleeping by EntityData(DATA_SLEEPING)
+	var isSleepingProp by EntityData(DATA_SLEEPING)
 		private set
 	
 	private var lightStartleResetTime = 0L
@@ -155,17 +158,16 @@ class EntityMobSpiderling(world: World) : EntityMob(world), ILightStartleHandler
 	// Initialization
 	
 	init{
-		setSize(0.675F, 0.45F)
 		stepHeight = 0F
 	}
 	
-	override fun entityInit(){
-		super.entityInit()
+	override fun registerData(){
+		super.registerData()
 		dataManager.register(DATA_SLEEPING, true)
 	}
 	
-	override fun applyEntityAttributes(){
-		super.applyEntityAttributes()
+	override fun registerAttributes(){
+		super.registerAttributes()
 		
 		getAttribute(MAX_HEALTH).baseValue = rand.nextInt(11, 13).toDouble()
 		getAttribute(ATTACK_DAMAGE).baseValue = 1.5
@@ -175,27 +177,31 @@ class EntityMobSpiderling(world: World) : EntityMob(world), ILightStartleHandler
 		experienceValue = 2
 	}
 	
-	override fun initEntityAI(){
+	override fun registerGoals(){
 		aiMovement = AIToggle()
 		aiMovement.enabled = false
 		
-		tasks.addTask(1, AISwim(this))
-		tasks.addTask(2, AIWanderOnFirePanic(this, movementSpeed = 1.2, searchWaterChance = ::panicSearchWaterChance, maxWaterDistanceXZ = 20, maxLandDistanceY = 5, searchLandChance = ::panicSearchLandChance, maxLandDistanceXZ = 5, maxWaterDistanceY = 2))
-		tasks.addTask(3, AIWanderLightStartle(this, movementSpeed = 1.2, minBlockLightIncrease = 3, minCombinedLightDecrease = 6, searchAttempts = 1000, maxDistanceXZ = 15, maxDistanceY = 2, handler = this))
-		tasks.addTask(4, AIAttackLeap(this, triggerDistance = (1.5)..(3.5), triggerChance = 0.75F, triggerCooldown = 45, leapStrengthXZ = (0.9)..(1.1), leapStrengthY = (0.4)..(0.5)), aiMovement)
-		tasks.addTask(5, AIAttackMelee(this, movementSpeed = 1.1, chaseAfterLosingSight = true), aiMovement)
-		tasks.addTask(6, AIWanderLandStopNear<EntityPlayer>(this, movementSpeed = 0.9, chancePerTick = 30, detectDistance = 7.5), aiMovement)
-		tasks.addTask(7, AIWatchClosest<EntityPlayer>(this, maxDistance = 3.5F), aiMovement)
-		tasks.addTask(8, AIWatchIdle(this), aiMovement)
+		goalSelector.addGoal(1, AISwim(this))
+		goalSelector.addGoal(2, AIWanderOnFirePanic(this, movementSpeed = 1.2, searchWaterChance = ::panicSearchWaterChance, maxWaterDistanceXZ = 20, maxLandDistanceY = 5, searchLandChance = ::panicSearchLandChance, maxLandDistanceXZ = 5, maxWaterDistanceY = 2))
+		goalSelector.addGoal(3, AIWanderLightStartle(this, movementSpeed = 1.2, minBlockLightIncrease = 3, minCombinedLightDecrease = 6, searchAttempts = 1000, maxDistanceXZ = 15, maxDistanceY = 2, handler = this))
+		goalSelector.addGoal(4, AIAttackLeap(this, triggerDistance = (1.5)..(3.5), triggerChance = 0.75F, triggerCooldown = 45, leapStrengthXZ = (0.9)..(1.1), leapStrengthY = (0.4)..(0.5)), aiMovement)
+		goalSelector.addGoal(5, AIAttackMelee(this, movementSpeed = 1.1, chaseAfterLosingSight = true), aiMovement)
+		goalSelector.addGoal(6, AIWanderLandStopNear<EntityPlayer>(this, movementSpeed = 0.9, chancePerTick = 30, detectDistance = 7.5), aiMovement)
+		goalSelector.addGoal(7, AIWatchClosest<EntityPlayer>(this, maxDistance = 3.5F), aiMovement)
+		goalSelector.addGoal(8, AIWatchIdle(this), aiMovement)
 		
-		targetTasks.addTask(1, AITargetAttacker(this, callReinforcements = false))
-		targetTasks.addTask(2, AITargetNearby(this, chancePerTick = 18, checkSight = true, easilyReachableOnly = false, targetPredicate = ::isPlayerNearbyForAttack), aiMovement)
+		targetSelector.addGoal(1, AITargetAttacker(this, callReinforcements = false))
+		targetSelector.addGoal(2, AITargetNearby(this, chancePerTick = 18, checkSight = true, easilyReachableOnly = false, targetPredicate = ::isPlayerNearbyForAttack), aiMovement)
+	}
+	
+	override fun createSpawnPacket(): IPacket<*>{
+		return NetworkHooks.getEntitySpawningPacket(this)
 	}
 	
 	// Behavior (General)
 	
-	override fun onLivingUpdate(){
-		super.onLivingUpdate()
+	override fun livingTick(){
+		super.livingTick()
 		
 		if (world.isRemote){
 			if (ticksExisted == 1){ // fix first tick body rotation delay
@@ -233,7 +239,7 @@ class EntityMobSpiderling(world: World) : EntityMob(world), ILightStartleHandler
 			}
 			else if (canSleepAgain && navigator.noPath() && rand.nextInt(6) == 0){
 				if (findPlayerInSight(maxDistance = 16.0, maxDiffY = 6) == null){
-					isSleeping = true
+					isSleepingProp = true
 					aiMovement.enabled = false
 				}
 			}
@@ -256,19 +262,18 @@ class EntityMobSpiderling(world: World) : EntityMob(world), ILightStartleHandler
 				val target = Vec3d(moveHelper.x, start.y, moveHelper.z)
 				
 				val direction = start.directionTowards(target)
-				val obstacle = RAY_TRACE_OBSTACLE.traceBlocksBetweenVectors(world, start, start.add(direction.scale(3.0)))
+				val obstacle = world.rayTraceBlocks(RayTraceContext(start, start.add(direction.scale(3.0)), BlockMode.COLLIDER, FluidMode.NONE, this))
 				
-				if (obstacle != null){
-					val topBox = findTopBlockBox(world, obstacle.blockPos)
+				if (obstacle.type == Type.BLOCK){
+					val topY = findTopBlockMaxY(world, obstacle.pos)
 					
-					if (topBox != null){
-						val diffY = (topBox.maxY - posY).coerceIn(0.5, 2.5)
+					if (topY != null){
+						val diffY = (topY - posY).coerceIn(0.5, 2.5)
 						val jumpMotion = (0.514 * log10(diffY + 0.35)) + 0.416 // goes roughly from 0.38 for half a block, to 0.65 for two and a half blocks
 						
 						if (!collidedHorizontally){
 							val strafeMotionMp = 0.2 + (jumpMotion - BASE_JUMP_MOTION)
-							motionX += direction.x * strafeMotionMp
-							motionZ += direction.z * strafeMotionMp
+							motion = motion.add(direction.x * strafeMotionMp, 0.0, direction.z * strafeMotionMp)
 						}
 						
 						motionY = jumpMotion
@@ -299,7 +304,7 @@ class EntityMobSpiderling(world: World) : EntityMob(world), ILightStartleHandler
 	
 	private fun wakeUp(instant: Boolean, preventSleep: Boolean){
 		if (isSleeping){
-			isSleeping = false
+			isSleepingProp = false
 			wakeUpDelayAI = if (instant) 1 else rand.nextInt(25, 40)
 			
 			if (preventSleep){
@@ -313,7 +318,7 @@ class EntityMobSpiderling(world: World) : EntityMob(world), ILightStartleHandler
 		super.setFire(seconds)
 	}
 	
-	override fun isPotionApplicable(effect: PotionEffect): Boolean{
+	override fun isPotionApplicable(effect: EffectInstance): Boolean{
 		return effect.potion != Potions.POISON && super.isPotionApplicable(effect)
 	}
 	
@@ -329,7 +334,7 @@ class EntityMobSpiderling(world: World) : EntityMob(world), ILightStartleHandler
 		lightStartleResetTime = 0L
 		
 		if (attackTarget == null){
-			attackTarget = world.getClosestPlayerToEntity(this@EntityMobSpiderling, 10.0)
+			attackTarget = world.getClosestPlayer(this@EntityMobSpiderling, 10.0)
 		}
 		
 		return true
@@ -371,7 +376,7 @@ class EntityMobSpiderling(world: World) : EntityMob(world), ILightStartleHandler
 	
 	// Movement
 	
-	override fun createNavigator(world: World): PathNavigate{
+	override fun createNavigator(world: World): PathNavigator{
 		return PathNavigateGroundUnrestricted(this, world)
 	}
 	
@@ -394,7 +399,11 @@ class EntityMobSpiderling(world: World) : EntityMob(world), ILightStartleHandler
 		return 256
 	}
 	
-	override fun setInWeb(){}
+	override fun setMotionMultiplier(state: BlockState, mp: Vec3d){
+		if (state.block !is BlockWeb){
+			super.setMotionMultiplier(state, mp)
+		}
+	}
 	
 	// Damage
 	
@@ -430,7 +439,7 @@ class EntityMobSpiderling(world: World) : EntityMob(world), ILightStartleHandler
 	}
 	
 	override fun attackEntityAsMob(entity: Entity): Boolean{
-		if (tasks.taskEntries.any { it.using && it.action is AIAttackLeap }){
+		if (goalSelector.runningGoals.anyMatch { it.goal is AIAttackLeap }){
 			getAttribute(ATTACK_DAMAGE).tryApplyModifier(FALL_CRIT_DAMAGE)
 		}
 		
@@ -450,24 +459,28 @@ class EntityMobSpiderling(world: World) : EntityMob(world), ILightStartleHandler
 	// Properties
 	
 	override fun getLootTable(): ResourceLocation{
-		return ModLoot.SPIDERLING
+		return LOOT_TABLE
 	}
 	
 	override fun getExperiencePoints(player: EntityPlayer): Int{
 		return rand.nextInt(0, experienceValue)
 	}
 	
-	override fun getCreatureAttribute(): EnumCreatureAttribute{
-		return EnumCreatureAttribute.ARTHROPOD
+	override fun getCreatureAttribute(): CreatureAttribute{
+		return CreatureAttribute.ARTHROPOD
 	}
 	
-	override fun playLivingSound(){
+	override fun isSleeping(): Boolean{
+		return isSleepingProp
+	}
+	
+	override fun playAmbientSound(){
 		if (!isSleeping && rand.nextInt(5) <= 1){
-			super.playLivingSound()
+			super.playAmbientSound()
 		}
 	}
 	
-	override fun playStepSound(pos: BlockPos, block: Block){
+	override fun playStepSound(pos: BlockPos, state: BlockState){
 		playSound(Sounds.ENTITY_SPIDER_STEP, 0.15F, soundPitch)
 	}
 	
@@ -495,26 +508,26 @@ class EntityMobSpiderling(world: World) : EntityMob(world), ILightStartleHandler
 			return 0
 		}
 		
-		val sky = (world.getLightFromNeighborsFor(SKY, pos) * 0.77).floorToInt()
-		val block = (world.getLightFromNeighborsFor(BLOCK, pos) * 0.77).floorToInt()
+		val sky = (world.getLightFor(SKY, pos) * 0.77).floorToInt()
+		val block = (world.getLightFor(BLOCK, pos) * 0.77).floorToInt()
 		
 		return (sky shl 20) or (block shl 4)
 	}
 	
 	// Serialization
 	
-	override fun writeEntityToNBT(nbt: TagCompound) = with(nbt.heeTag){
-		setInteger(SLEEP_STATE_TAG, when{
+	override fun writeAdditional(nbt: TagCompound) = nbt.heeTag.use {
+		putInt(SLEEP_STATE_TAG, when{
 			isSleeping -> 2
 			canSleepAgain -> 1
 			else -> 0
 		})
 		
-		setLong(LIGHT_STARTLE_RESET_TIME_TAG, lightStartleResetTime)
+		putLong(LIGHT_STARTLE_RESET_TIME_TAG, lightStartleResetTime)
 	}
 	
-	override fun readEntityFromNBT(nbt: TagCompound) = with(nbt.heeTag){
-		val sleepState = getInteger(SLEEP_STATE_TAG)
+	override fun readAdditional(nbt: TagCompound) = nbt.heeTag.use {
+		val sleepState = getInt(SLEEP_STATE_TAG)
 		
 		if (sleepState != 2){
 			wakeUp(instant = true, preventSleep = sleepState != 1)

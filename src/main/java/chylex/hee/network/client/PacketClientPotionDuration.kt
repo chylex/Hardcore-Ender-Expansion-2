@@ -2,10 +2,10 @@ package chylex.hee.network.client
 import chylex.hee.network.BaseClientPacket
 import chylex.hee.system.migration.forge.Side
 import chylex.hee.system.migration.forge.Sided
+import chylex.hee.system.migration.vanilla.EntityPlayerSP
+import chylex.hee.system.migration.vanilla.Potion
 import chylex.hee.system.util.use
-import io.netty.buffer.ByteBuf
-import net.minecraft.client.entity.EntityPlayerSP
-import net.minecraft.potion.Potion
+import net.minecraft.network.PacketBuffer
 
 class PacketClientPotionDuration() : BaseClientPacket(){
 	constructor(potion: Potion, newDuration: Int) : this(){
@@ -16,13 +16,13 @@ class PacketClientPotionDuration() : BaseClientPacket(){
 	private var potion: Potion? = null
 	private var newDuration: Int? = null
 	
-	override fun write(buffer: ByteBuf) = buffer.use {
-		writeInt(Potion.REGISTRY.getIDForObject(potion))
+	override fun write(buffer: PacketBuffer) = buffer.use {
+		writeRegistryId(potion!!)
 		writeInt(newDuration!!)
 	}
 	
-	override fun read(buffer: ByteBuf) = buffer.use {
-		potion = Potion.REGISTRY.getObjectById(readInt())
+	override fun read(buffer: PacketBuffer) = buffer.use {
+		potion = readRegistryIdSafe(Potion::class.java)
 		newDuration = readInt()
 	}
 	

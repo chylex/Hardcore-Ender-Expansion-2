@@ -4,7 +4,7 @@ import chylex.hee.game.item.infusion.InfusionTag
 import chylex.hee.init.ModItems
 import chylex.hee.system.util.nonEmptySlots
 import chylex.hee.system.util.size
-import net.minecraft.inventory.InventoryCrafting
+import net.minecraft.inventory.CraftingInventory
 import net.minecraft.item.ItemStack
 import net.minecraft.world.World
 import kotlin.math.max
@@ -14,11 +14,11 @@ object RecipeBindingEssence : RecipeBaseDynamic(){
 		return (width * height) >= 2
 	}
 	
-	override fun matches(inv: InventoryCrafting, world: World): Boolean{
+	override fun matches(inv: CraftingInventory, world: World): Boolean{
 		return determineRepairInfo(inv) != null
 	}
 	
-	override fun getCraftingResult(inv: InventoryCrafting): ItemStack{
+	override fun getCraftingResult(inv: CraftingInventory): ItemStack{
 		val (targetItem, infusionList) = determineRepairInfo(inv) ?: return ItemStack.EMPTY
 		
 		return infusionList.fold(targetItem){
@@ -32,7 +32,7 @@ object RecipeBindingEssence : RecipeBaseDynamic(){
 	
 	private data class RepairInfo(val targetItem: ItemStack, val infusionList: InfusionList)
 	
-	private fun determineRepairInfo(inv: InventoryCrafting): RepairInfo?{
+	private fun determineRepairInfo(inv: CraftingInventory): RepairInfo?{
 		var targetItem: ItemStack? = null
 		var bindingEssence: ItemStack? = null
 		

@@ -13,7 +13,7 @@ class TransformBlockChorusFlower : ICoremodTransformer{
 	override fun process(node: ClassNode){
 		val updateTick = node.findMethod(
 			"b",          "(Lamu;Let;Lawt;Ljava/util/Random;)V",
-			"updateTick", "(Lnet/minecraft/world/World;Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/block/state/IBlockState;Ljava/util/Random;)V"
+			"updateTick", "(Lnet/minecraft/world/World;Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/block/state/BlockState;Ljava/util/Random;)V"
 		)
 		
 		val canSurvive = node.findMethod(

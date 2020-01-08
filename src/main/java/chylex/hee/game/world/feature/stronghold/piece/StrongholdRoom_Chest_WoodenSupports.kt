@@ -1,5 +1,4 @@
 package chylex.hee.game.world.feature.stronghold.piece
-import chylex.hee.game.block.util.FutureBlocks
 import chylex.hee.game.world.feature.stronghold.StrongholdPieceType
 import chylex.hee.game.world.feature.stronghold.StrongholdPieces
 import chylex.hee.game.world.feature.stronghold.piece.StrongholdRoom_Chest_WoodenSupports.CornerContent.CHEST_AND_FLOWER_POT
@@ -9,7 +8,6 @@ import chylex.hee.game.world.feature.stronghold.piece.StrongholdRoom_Chest_Woode
 import chylex.hee.game.world.feature.stronghold.piece.StrongholdRoom_Chest_WoodenSupports.CornerContent.TWO_CHESTS
 import chylex.hee.game.world.feature.stronghold.piece.StrongholdRoom_Chest_WoodenSupports.CornerContent.TWO_FLOWER_POTS
 import chylex.hee.game.world.structure.IStructureWorld
-import chylex.hee.game.world.structure.trigger.FlowerPotStructureTrigger
 import chylex.hee.game.world.structure.trigger.LootChestStructureTrigger
 import chylex.hee.init.ModBlocks
 import chylex.hee.system.migration.vanilla.Blocks
@@ -19,8 +17,7 @@ import chylex.hee.system.util.nextInt
 import chylex.hee.system.util.nextItem
 import chylex.hee.system.util.removeItem
 import chylex.hee.system.util.withFacing
-import net.minecraft.item.ItemStack
-import net.minecraft.util.EnumFacing
+import net.minecraft.util.Direction
 import net.minecraft.util.math.BlockPos
 import java.util.Random
 
@@ -114,10 +111,10 @@ class StrongholdRoom_Chest_WoodenSupports(file: String) : StrongholdAbstractPiec
 	}
 	
 	private fun placeFlowerPot(world: IStructureWorld, pos: BlockPos){
-		world.addTrigger(pos, FlowerPotStructureTrigger(world.rand.nextItem(FLOWER_TYPES)))
+		world.setBlock(pos, world.rand.nextItem(FLOWER_POT_TYPES))
 	}
 	
-	private fun placeChest(world: IStructureWorld, pos: BlockPos, facing: EnumFacing){
+	private fun placeChest(world: IStructureWorld, pos: BlockPos, facing: Direction){
 		world.setState(pos, Blocks.CHEST.withFacing(facing))
 		world.addTrigger(pos, LootChestStructureTrigger(StrongholdPieces.LOOT_GENERIC, world.rand.nextLong()))
 	}
@@ -127,14 +124,14 @@ class StrongholdRoom_Chest_WoodenSupports(file: String) : StrongholdAbstractPiec
 	}
 	
 	private companion object{
-		private val FLOWER_TYPES = arrayOf(
-			FutureBlocks.BLUE_ORCHID_STACK,
-			FutureBlocks.AZURE_BLUET_STACK,
-			FutureBlocks.ALLIUM_STACK,
-			FutureBlocks.POPPY_STACK,
-			FutureBlocks.DANDELION_STACK,
-			FutureBlocks.FERN_STACK,
-			ItemStack(Blocks.CACTUS)
+		private val FLOWER_POT_TYPES = arrayOf(
+			Blocks.POTTED_BLUE_ORCHID,
+			Blocks.POTTED_AZURE_BLUET,
+			Blocks.POTTED_ALLIUM,
+			Blocks.POTTED_POPPY,
+			Blocks.POTTED_DANDELION,
+			Blocks.POTTED_FERN,
+			Blocks.POTTED_CACTUS
 		)
 		
 		private fun generateCorners(rand: Random): MutableList<CornerContent>{

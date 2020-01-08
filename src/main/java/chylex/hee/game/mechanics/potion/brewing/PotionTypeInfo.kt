@@ -1,10 +1,10 @@
 package chylex.hee.game.mechanics.potion.brewing
+import chylex.hee.system.migration.vanilla.Potion
 import chylex.hee.system.util.floorToInt
 import chylex.hee.system.util.makeEffect
 import chylex.hee.system.util.nbt
 import net.minecraft.item.ItemStack
-import net.minecraft.potion.Potion
-import net.minecraft.potion.PotionEffect
+import net.minecraft.potion.EffectInstance
 import net.minecraft.potion.PotionUtils
 import kotlin.math.abs
 
@@ -55,7 +55,7 @@ class PotionTypeInfo(
 		}
 	}
 	
-	inner class Instance(private val stack: ItemStack, private val effect: PotionEffect){
+	inner class Instance(private val stack: ItemStack, private val effect: EffectInstance){
 		private val durationSteps = duration?.getSteps(effect.duration, amplifier) ?: 0
 		
 		private val amplifier
@@ -96,7 +96,7 @@ class PotionTypeInfo(
 			val newEffect = potion.makeEffect(newDuration, amplifier, effect.isAmbient, effect.doesShowParticles())
 			
 			return with(stack.copy()){
-				nbt.removeTag(PotionItems.CUSTOM_EFFECTS_TAG)
+				nbt.remove(PotionItems.CUSTOM_EFFECTS_TAG)
 				
 				PotionUtils.addPotionToItemStack(this, PotionItems.findNoEffectOverride(PotionUtils.getPotionFromItem(this)))
 				PotionUtils.appendEffects(this, listOf(newEffect))

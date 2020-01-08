@@ -5,10 +5,10 @@ import chylex.hee.system.util.component2
 import chylex.hee.system.util.component3
 import chylex.hee.system.util.facades.Rotation4
 import chylex.hee.system.util.nextItem
-import net.minecraft.block.state.IBlockState
+import net.minecraft.block.BlockState
 import net.minecraft.entity.Entity
 import net.minecraft.tileentity.TileEntity
-import net.minecraft.util.EnumFacing
+import net.minecraft.util.Direction
 import net.minecraft.util.Mirror
 import net.minecraft.util.Rotation
 import net.minecraft.util.math.BlockPos
@@ -43,12 +43,12 @@ data class Transform(val rotation: Rotation, val mirror: Boolean){
 		return Transform(target.rotation.add(rotation), target.mirror xor mirror)
 	}
 	
-	operator fun invoke(facing: EnumFacing): EnumFacing{
+	operator fun invoke(facing: Direction): Direction{
 		return mirroring.mirror(rotation.rotate(facing))
 	}
 	
-	operator fun invoke(state: IBlockState): IBlockState{
-		return state.withRotation(rotation).withMirror(mirroring)
+	operator fun invoke(state: BlockState): BlockState{
+		return state.rotate(rotation).mirror(mirroring)
 	}
 	
 	operator fun invoke(entity: Entity){

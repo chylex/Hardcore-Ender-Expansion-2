@@ -1,24 +1,19 @@
 package chylex.hee.game.block
 import chylex.hee.game.block.entity.TileEntitySpawnerObsidianTower
 import chylex.hee.game.block.info.BlockBuilder
-import chylex.hee.game.block.info.BlockBuilder.Companion.setupBlockProperties
-import net.minecraft.block.BlockMobSpawner
-import net.minecraft.block.state.IBlockState
+import chylex.hee.system.migration.vanilla.BlockMobSpawner
+import net.minecraft.block.BlockState
 import net.minecraft.tileentity.TileEntity
 import net.minecraft.util.math.BlockPos
-import net.minecraft.world.IBlockAccess
-import net.minecraft.world.World
+import net.minecraft.world.IBlockReader
+import net.minecraft.world.IWorldReader
 
-class BlockSpawnerObsidianTowers(builder: BlockBuilder) : BlockMobSpawner(){
-	init{
-		setupBlockProperties(builder)
-	}
-	
-	override fun createNewTileEntity(world: World, meta: Int): TileEntity{
+class BlockSpawnerObsidianTowers(builder: BlockBuilder) : BlockMobSpawner(builder.p){
+	override fun createTileEntity(state: BlockState, world: IBlockReader): TileEntity{
 		return TileEntitySpawnerObsidianTower()
 	}
 	
-	override fun getExpDrop(state: IBlockState, world: IBlockAccess, pos: BlockPos, fortune: Int): Int{
+	override fun getExpDrop(state: BlockState, world: IWorldReader, pos: BlockPos, fortune: Int, silktouch: Int): Int{
 		return 0
 	}
 }

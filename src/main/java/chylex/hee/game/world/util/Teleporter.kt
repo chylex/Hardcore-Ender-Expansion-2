@@ -17,6 +17,10 @@ import chylex.hee.network.client.PacketClientFX
 import chylex.hee.network.client.PacketClientMoveYourAss
 import chylex.hee.network.client.PacketClientRotateInstantly
 import chylex.hee.network.client.PacketClientTeleportInstantly
+import chylex.hee.system.migration.vanilla.EntityCreature
+import chylex.hee.system.migration.vanilla.EntityLivingBase
+import chylex.hee.system.migration.vanilla.EntityPlayer
+import chylex.hee.system.migration.vanilla.EntityPlayerMP
 import chylex.hee.system.migration.vanilla.Sounds
 import chylex.hee.system.util.Pos
 import chylex.hee.system.util.addY
@@ -30,16 +34,10 @@ import chylex.hee.system.util.offsetTowards
 import chylex.hee.system.util.playClient
 import chylex.hee.system.util.posVec
 import chylex.hee.system.util.readCompactVec
-import chylex.hee.system.util.readString
 import chylex.hee.system.util.subtractY
 import chylex.hee.system.util.use
 import chylex.hee.system.util.writeCompactVec
-import chylex.hee.system.util.writeString
-import io.netty.buffer.ByteBuf
-import net.minecraft.entity.EntityCreature
-import net.minecraft.entity.EntityLivingBase
-import net.minecraft.entity.player.EntityPlayer
-import net.minecraft.entity.player.EntityPlayerMP
+import net.minecraft.network.PacketBuffer
 import net.minecraft.util.SoundCategory
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.Vec3d
@@ -74,12 +72,13 @@ class Teleporter(
 			private val soundVolume: Float,
 			private val extraRange: Float = 0F
 		) : IFxData{
-			override fun write(buffer: ByteBuf) = buffer.use {
+			override fun write(buffer: PacketBuffer) = buffer.use {
 				writeCompactVec(startPoint)
 				writeCompactVec(endPoint)
 				writeByte((width * 10F).floorToInt().coerceIn(0, 100))
 				writeByte((height * 10F).floorToInt().coerceIn(0, 100))
-				writeString(soundCategory.getName())
+				
+				writeEnumValue(soundCategory)
 				writeByte((soundVolume * 10F).floorToInt().coerceIn(0, 250))
 				writeByte(extraRange.floorToInt().coerceIn(0, 255))
 			}
@@ -93,7 +92,7 @@ class Teleporter(
 		}
 		
 		val FX_TELEPORT = object : IFxHandler<FxTeleportData>{
-			override fun handle(buffer: ByteBuf, world: World, rand: Random) = buffer.use {
+			override fun handle(buffer: PacketBuffer, world: World, rand: Random) = buffer.use {
 				val player = HEE.proxy.getClientSidePlayer() ?: return
 				val playerPos = player.posVec
 				
@@ -103,7 +102,7 @@ class Teleporter(
 				val halfWidth = (readByte() / 10F) * 0.5F
 				val halfHeight = (readByte() / 10F) * 0.5F
 				
-				val soundCategory = SoundCategory.getByName(readString())
+				val soundCategory = readEnumValue(SoundCategory::class.java)
 				val soundVolume = readByte() / 10F
 				val soundRange = 16F + readByte()
 				
@@ -115,11 +114,11 @@ class Teleporter(
 				val soundDistance = playerPos.distanceTo(soundPosition)
 				
 				if (soundDistance < RANGE_FOR_MINIMUM_VOLUME){
-					Sounds.ENTITY_ENDERMEN_TELEPORT.playClient(soundPosition, soundCategory, volume = soundVolume)
+					Sounds.ENTITY_ENDERMAN_TELEPORT.playClient(soundPosition, soundCategory, volume = soundVolume)
 				}
 				else if (soundDistance < soundRange){
 					val closerPosition = playerPos.add(playerPos.directionTowards(soundPosition).scale(RANGE_FOR_MINIMUM_VOLUME))
-					Sounds.ENTITY_ENDERMEN_TELEPORT.playClient(closerPosition, soundCategory, volume = soundVolume)
+					Sounds.ENTITY_ENDERMAN_TELEPORT.playClient(closerPosition, soundCategory, volume = soundVolume)
 				}
 				
 				ParticleSpawnerCustom(
@@ -148,15 +147,15 @@ class Teleporter(
 			return false
 		}
 		
-		if (entity.isRiding){
-			entity.dismountRidingEntity()
+		if (entity.isPassenger){
+			entity.stopRiding()
 			
 			if (entity is EntityPlayerMP){
 				PacketClientMoveYourAss(position).sendToPlayer(entity) // dismounting client ignores any attempts at teleporting
 			}
 		}
 		
-		if (entity.isPlayerSleeping && entity is EntityPlayer){
+		if (entity.isSleeping && entity is EntityPlayer){
 			entity.wakeUpPlayer(true, true, false)
 		}
 		
@@ -190,10 +189,10 @@ class Teleporter(
 				entity.navigator.clearPath()
 			}
 			
-			if (entity.lookHelper.isLooking){ // must be called inside updateAITasks to apply
-				with(entity.lookHelper){
+			if (entity.lookController.isLooking){ // must be called inside updateAITasks to apply
+				with(entity.lookController){
 					setLookPosition(lookPosX, lookPosY, lookPosZ, 360F, 360F)
-					onUpdateLook()
+					tick()
 				}
 				
 				val newYaw = entity.rotationYawHead
@@ -215,13 +214,13 @@ class Teleporter(
 	fun nearLocation(entity: EntityLivingBase, rand: Random, position: Vec3d, distance: ClosedFloatingPointRange<Double>, attempts: Int, soundCategory: SoundCategory = entity.soundCategory): Boolean{
 		val world = entity.world
 		val originalPos = entity.posVec
-		val originalBox = entity.entityBoundingBox
+		val originalBox = entity.boundingBox
 		
 		repeat(attempts){
 			val randomPos = position.add(rand.nextVector(rand.nextFloat(distance)))
 			val newPos = Vec3d(randomPos.x, randomPos.y.floorToInt() + 0.01, randomPos.z)
 			
-			if (Pos(newPos).down().blocksMovement(world) && world.getCollisionBoxes(entity, originalBox.offset(newPos.subtract(originalPos))).isEmpty()){
+			if (Pos(newPos).down().blocksMovement(world) && world.isCollisionBoxesEmpty(entity, originalBox.offset(newPos.subtract(originalPos)))){
 				return toLocation(entity, newPos, soundCategory)
 			}
 		}

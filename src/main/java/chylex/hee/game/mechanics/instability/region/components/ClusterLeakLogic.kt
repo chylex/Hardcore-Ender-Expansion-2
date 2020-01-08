@@ -5,10 +5,12 @@ import chylex.hee.game.mechanics.energy.IClusterHealth.HealthStatus.HEALTHY
 import chylex.hee.game.mechanics.energy.IClusterHealth.HealthStatus.TIRED
 import chylex.hee.game.mechanics.energy.IClusterHealth.HealthStatus.WEAKENED
 import chylex.hee.system.collection.WeightedList
+import chylex.hee.system.migration.vanilla.EntityLightningBolt
 import chylex.hee.system.util.ceilToInt
 import chylex.hee.system.util.nextInt
 import chylex.hee.system.util.removeItem
-import net.minecraft.entity.effect.EntityLightningBolt
+import net.minecraft.world.gen.Heightmap.Type.MOTION_BLOCKING
+import net.minecraft.world.server.ServerWorld
 import java.util.Random
 import kotlin.math.pow
 
@@ -63,12 +65,10 @@ internal object ClusterLeakLogic{
 			val toDeteriorate = WeightedList(canDeteriorate).generateItem(rand)
 			
 			if (toDeteriorate.deteriorateHealth()){
-				val world = toDeteriorate.world
+				val world = toDeteriorate.wrld as ServerWorld
+				val lightningPos = world.getHeight(MOTION_BLOCKING, toDeteriorate.pos.add(rand.nextInt(-24, 24), 0, rand.nextInt(-24, 24)))
 				
-				val lightningPos = toDeteriorate.pos.add(rand.nextInt(-24, 24), 0, rand.nextInt(-24, 24))
-				val lightningY = world.getHeight(lightningPos.x, lightningPos.z)
-				
-				world.addWeatherEffect(EntityLightningBolt(world, lightningPos.x + 0.5, lightningY.toDouble(), lightningPos.z + 0.5, true))
+				world.addLightningBolt(EntityLightningBolt(world, lightningPos.x + 0.5, lightningPos.y.toDouble(), lightningPos.z + 0.5, true))
 			}
 		}
 	}

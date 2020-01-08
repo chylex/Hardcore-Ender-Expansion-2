@@ -19,7 +19,7 @@ enum class DustType(val key: String, val item: Item, val color: IntArray){
 	
 	@Suppress("DEPRECATION")
 	val maxStackSize
-		get() = item.itemStackLimit
+		get() = item.maxStackSize
 	
 	companion object{
 		fun fromStack(stack: ItemStack): DustType?{

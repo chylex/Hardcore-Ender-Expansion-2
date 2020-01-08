@@ -2,17 +2,16 @@ package chylex.hee.game.entity.living.behavior
 import chylex.hee.game.entity.living.EntityMobAbstractEnderman
 import chylex.hee.system.util.OPERATION_MUL_INCR_INDIVIDUAL
 import chylex.hee.system.util.TagCompound
-import chylex.hee.system.util.getAttribute
 import chylex.hee.system.util.nextInt
 import chylex.hee.system.util.tryApplyModifier
 import chylex.hee.system.util.tryRemoveModifier
+import chylex.hee.system.util.use
 import net.minecraft.entity.SharedMonsterAttributes.ATTACK_DAMAGE
 import net.minecraft.entity.ai.attributes.AttributeModifier
 import net.minecraft.util.DamageSource
-import net.minecraft.util.ITickable
 import net.minecraftforge.common.util.INBTSerializable
 
-class EndermanWaterHandler(private val enderman: EntityMobAbstractEnderman, private val takeDamageAfterWetTicks: Int): ITickable, INBTSerializable<TagCompound>{
+class EndermanWaterHandler(private val enderman: EntityMobAbstractEnderman, private val takeDamageAfterWetTicks: Int): INBTSerializable<TagCompound>{
 	private companion object{
 		private val DEBUFF_WEAKNESS = AttributeModifier("Water weakness", -0.5, OPERATION_MUL_INCR_INDIVIDUAL)
 		
@@ -23,7 +22,7 @@ class EndermanWaterHandler(private val enderman: EntityMobAbstractEnderman, priv
 	private var wetCounter = 0
 	private var debuffTicks = 0
 	
-	override fun update(){
+	fun update(){
 		val isWet = enderman.isWet
 		
 		if (isWet){
@@ -62,11 +61,11 @@ class EndermanWaterHandler(private val enderman: EntityMobAbstractEnderman, priv
 	}
 	
 	override fun serializeNBT() = TagCompound().apply {
-		setShort(WET_COUNTER_TAG, wetCounter.toShort())
-		setShort(DEBUFF_TICKS_TAG, debuffTicks.toShort())
+		putShort(WET_COUNTER_TAG, wetCounter.toShort())
+		putShort(DEBUFF_TICKS_TAG, debuffTicks.toShort())
 	}
 	
-	override fun deserializeNBT(nbt: TagCompound) = with(nbt){
+	override fun deserializeNBT(nbt: TagCompound) = nbt.use {
 		wetCounter = getShort(WET_COUNTER_TAG).toInt()
 		debuffTicks = getShort(DEBUFF_TICKS_TAG).toInt()
 		updateDebuff()

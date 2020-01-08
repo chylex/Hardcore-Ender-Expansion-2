@@ -1,8 +1,8 @@
 package chylex.hee.game.entity.living.ai
+import chylex.hee.system.migration.vanilla.EntityCreature
+import chylex.hee.system.migration.vanilla.EntityLivingBase
 import chylex.hee.system.util.posVec
 import chylex.hee.system.util.selectVulnerableEntities
-import net.minecraft.entity.EntityCreature
-import net.minecraft.entity.EntityLivingBase
 
 class AIWanderLandStopNear<T : EntityLivingBase>(
 	entity: EntityCreature,
@@ -15,8 +15,8 @@ class AIWanderLandStopNear<T : EntityLivingBase>(
 ) : AIWanderLand(entity, movementSpeed, chancePerTick, maxDistanceXZ, maxDistanceY){
 	private var nextCheckDelay = 0
 	
-	override fun updateTask(){
-		super.updateTask()
+	override fun tick(){
+		super.tick()
 		
 		if (--nextCheckDelay < 0){
 			nextCheckDelay = 3

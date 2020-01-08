@@ -27,8 +27,9 @@ import chylex.hee.network.BaseClientPacket
 import chylex.hee.system.Debug
 import chylex.hee.system.migration.forge.Side
 import chylex.hee.system.migration.forge.Sided
+import chylex.hee.system.migration.vanilla.EntityPlayerSP
 import io.netty.buffer.ByteBuf
-import net.minecraft.client.entity.EntityPlayerSP
+import net.minecraft.network.PacketBuffer
 import java.util.Random
 
 class PacketClientFX<T : IFxData>() : BaseClientPacket(){
@@ -78,13 +79,13 @@ class PacketClientFX<T : IFxData>() : BaseClientPacket(){
 	
 	private var buffer: ByteBuf? = null
 	
-	override fun write(buffer: ByteBuf){
+	override fun write(buffer: PacketBuffer){
 		buffer.writeInt(HANDLERS.indexOf(handler))
 		data.write(buffer)
 	}
 	
 	@Suppress("UNCHECKED_CAST")
-	override fun read(buffer: ByteBuf){
+	override fun read(buffer: PacketBuffer){
 		val index = buffer.readInt()
 		
 		if (index == -1){
@@ -100,6 +101,6 @@ class PacketClientFX<T : IFxData>() : BaseClientPacket(){
 	
 	@Sided(Side.CLIENT)
 	override fun handle(player: EntityPlayerSP){
-		buffer?.let { handler.handle(it, player.world, RAND) }
+		buffer?.let { handler.handle(PacketBuffer(it), player.world, RAND) }
 	}
 }

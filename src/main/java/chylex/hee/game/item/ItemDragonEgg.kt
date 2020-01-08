@@ -1,12 +1,12 @@
 package chylex.hee.game.item
 import chylex.hee.game.entity.item.EntityItemNoBob
+import chylex.hee.system.migration.vanilla.ItemBlock
 import net.minecraft.block.Block
 import net.minecraft.entity.Entity
-import net.minecraft.item.ItemBlock
 import net.minecraft.item.ItemStack
 import net.minecraft.world.World
 
-class ItemDragonEgg(sourceBlock: Block) : ItemBlock(sourceBlock){
+class ItemDragonEgg(block: Block, properties: Properties) : ItemBlock(block, properties){
 	override fun hasCustomEntity(stack: ItemStack): Boolean{
 		return true
 	}

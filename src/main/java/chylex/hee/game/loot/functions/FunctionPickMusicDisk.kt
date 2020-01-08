@@ -8,39 +8,38 @@ import com.google.gson.JsonObject
 import com.google.gson.JsonSerializationContext
 import net.minecraft.item.Item
 import net.minecraft.item.ItemStack
-import net.minecraft.util.JsonUtils
+import net.minecraft.util.JSONUtils
 import net.minecraft.world.storage.loot.LootContext
-import net.minecraft.world.storage.loot.conditions.LootCondition
-import net.minecraft.world.storage.loot.functions.LootFunction
-import java.util.Random
+import net.minecraft.world.storage.loot.LootFunction
+import net.minecraft.world.storage.loot.conditions.ILootCondition
 
-class FunctionPickMusicDisk(conditions: Array<LootCondition>, private val picks: Array<Item>) : LootFunction(conditions){
+class FunctionPickMusicDisk(conditions: Array<ILootCondition>, private val picks: Array<Item>) : LootFunction(conditions){
 	private companion object{
 		private val DISKS = mapOf(
 			"obsidiantower" to arrayOf(
-				Items.RECORD_13,
-				Items.RECORD_CAT,
-				Items.RECORD_BLOCKS,
-				Items.RECORD_CHIRP,
-				Items.RECORD_FAR,
-				Items.RECORD_MALL,
-				Items.RECORD_MELLOHI,
-				Items.RECORD_STAL,
-				Items.RECORD_STRAD
+				Items.MUSIC_DISC_13,
+				Items.MUSIC_DISC_CAT,
+				Items.MUSIC_DISC_BLOCKS,
+				Items.MUSIC_DISC_CHIRP,
+				Items.MUSIC_DISC_FAR,
+				Items.MUSIC_DISC_MALL,
+				Items.MUSIC_DISC_MELLOHI,
+				Items.MUSIC_DISC_STAL,
+				Items.MUSIC_DISC_STRAD
 				// TODO replace with custom music disks
 			)
 		)
 	}
 	
-	override fun apply(stack: ItemStack, rand: Random, context: LootContext): ItemStack{
-		return ItemStack(rand.nextItem(picks), stack.size, stack.metadata)
+	override fun doApply(stack: ItemStack, context: LootContext): ItemStack{
+		return ItemStack(context.random.nextItem(picks), stack.size)
 	}
 	
 	object Serializer : LootFunction.Serializer<FunctionPickMusicDisk>(Resource.Custom("pick_music_disk"), FunctionPickMusicDisk::class.java){
 		override fun serialize(json: JsonObject, value: FunctionPickMusicDisk, context: JsonSerializationContext){}
 		
-		override fun deserialize(json: JsonObject, context: JsonDeserializationContext, conditions: Array<LootCondition>): FunctionPickMusicDisk{
-			return FunctionPickMusicDisk(conditions, DISKS.getValue(JsonUtils.getString(json, "type")))
+		override fun deserialize(json: JsonObject, context: JsonDeserializationContext, conditions: Array<ILootCondition>): FunctionPickMusicDisk{
+			return FunctionPickMusicDisk(conditions, DISKS.getValue(JSONUtils.getString(json, "type")))
 		}
 	}
 }

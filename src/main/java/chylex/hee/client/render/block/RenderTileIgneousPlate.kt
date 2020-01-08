@@ -16,16 +16,15 @@ import chylex.hee.system.util.component2
 import chylex.hee.system.util.component3
 import chylex.hee.system.util.facades.Resource
 import chylex.hee.system.util.floorToInt
-import chylex.hee.system.util.get
 import chylex.hee.system.util.getState
 import chylex.hee.system.util.offsetTowards
-import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer
+import net.minecraft.client.renderer.tileentity.TileEntityRenderer
 import net.minecraft.util.math.Vec3d
 import org.lwjgl.opengl.GL11.GL_MODELVIEW
 import org.lwjgl.opengl.GL11.GL_TEXTURE
 
 @Sided(Side.CLIENT)
-object RenderTileIgneousPlate : TileEntitySpecialRenderer<TileEntityIgneousPlate>(){
+object RenderTileIgneousPlate : TileEntityRenderer<TileEntityIgneousPlate>(){
 	private val TEX_PLATE = Resource.Custom("textures/entity/igneous_plate.png")
 	
 	private val COLOR_TRANSITIONS = arrayOf(
@@ -41,7 +40,7 @@ object RenderTileIgneousPlate : TileEntitySpecialRenderer<TileEntityIgneousPlate
 		return COLOR_TRANSITIONS[index].offsetTowards(COLOR_TRANSITIONS[index + 1], progress)
 	}
 	
-	override fun render(tile: TileEntityIgneousPlate, x: Double, y: Double, z: Double, partialTicks: Float, destroyStage: Int, alpha: Float){
+	override fun render(tile: TileEntityIgneousPlate, x: Double, y: Double, z: Double, partialTicks: Float, destroyStage: Int){
 		if (destroyStage >= 0){
 			bindTexture(DESTROY_STAGES[destroyStage])
 			GL.matrixMode(GL_TEXTURE)
@@ -53,9 +52,9 @@ object RenderTileIgneousPlate : TileEntitySpecialRenderer<TileEntityIgneousPlate
 			bindTexture(TEX_PLATE)
 		}
 		
-		val state = tile.pos.getState(tile.world)
+		val state = tile.world?.let { tile.pos.getState(it) }
 		
-		if (state.block !== ModBlocks.IGNEOUS_PLATE){
+		if (state?.block !== ModBlocks.IGNEOUS_PLATE){
 			return
 		}
 		
@@ -87,13 +86,13 @@ object RenderTileIgneousPlate : TileEntitySpecialRenderer<TileEntityIgneousPlate
 		}
 		
 		GL.enableRescaleNormal()
-		GL.color(1F, 1F, 1F, alpha)
+		GL.color(1F, 1F, 1F)
 		
 		if (destroyStage < 0){
 			ModelBlockIgneousPlate.renderOuterBox()
 			
 			val (r, g, b) = getInnerBoxColor(tile.clientCombinedHeat)
-			GL.color(r.toFloat(), g.toFloat(), b.toFloat(), alpha)
+			GL.color(r.toFloat(), g.toFloat(), b.toFloat())
 		}
 		
 		GL.disableLighting()

@@ -1,7 +1,6 @@
 package chylex.hee.game.particle
 import chylex.hee.game.particle.base.ParticleBaseFloating
 import chylex.hee.game.particle.spawner.IParticleMaker
-import chylex.hee.game.particle.util.ParticleTexture
 import chylex.hee.game.world.territory.TerritoryInstance
 import chylex.hee.game.world.territory.TerritoryVoid
 import chylex.hee.system.migration.forge.Side
@@ -29,7 +28,7 @@ object ParticleVoid : IParticleMaker.Simple(){
 	@Sided(Side.CLIENT)
 	private class Instance(world: World, posX: Double, posY: Double, posZ: Double, motX: Double, motY: Double, motZ: Double) : ParticleBaseFloating(world, posX, posY, posZ, motX, motY, motZ){
 		init{
-			particleTexture = ParticleTexture.PIXEL
+			selectSpriteRandomly(ParticleVoid.sprite)
 			
 			val color = rand.nextFloat(0.25F, 0.35F)
 			val motMp = rand.nextFloat(1F, 3F) * 0.001F
@@ -65,8 +64,8 @@ object ParticleVoid : IParticleMaker.Simple(){
 			}
 		}
 		
-		override fun onUpdate(){
-			super.onUpdate()
+		override fun tick(){
+			super.tick()
 			
 			motionVec = motionVec.scale(0.996)
 			
@@ -77,8 +76,5 @@ object ParticleVoid : IParticleMaker.Simple(){
 				particleAlpha = min(1F, particleAlpha + 0.4F)
 			}
 		}
-		
-		override fun getFXLayer() = 1
-		override fun setParticleTextureIndex(index: Int){}
 	}
 }

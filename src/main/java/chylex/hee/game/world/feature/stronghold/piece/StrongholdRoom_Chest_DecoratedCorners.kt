@@ -1,9 +1,7 @@
 package chylex.hee.game.world.feature.stronghold.piece
-import chylex.hee.game.block.util.FutureBlocks
 import chylex.hee.game.world.feature.stronghold.StrongholdPieceType
 import chylex.hee.game.world.feature.stronghold.StrongholdPieces
 import chylex.hee.game.world.structure.IStructureWorld
-import chylex.hee.game.world.structure.trigger.FlowerPotStructureTrigger
 import chylex.hee.game.world.structure.trigger.LootChestStructureTrigger
 import chylex.hee.init.ModBlocks
 import chylex.hee.system.migration.vanilla.Blocks
@@ -41,12 +39,12 @@ class StrongholdRoom_Chest_DecoratedCorners(file: String) : StrongholdAbstractPi
 		
 		// Decorations
 		
-		val flowerTypes = arrayOf(
-			FutureBlocks.RED_TULIP_STACK,
-			FutureBlocks.BLUE_ORCHID_STACK,
-			FutureBlocks.OXEYE_DAISY_STACK,
-			FutureBlocks.AZURE_BLUET_STACK,
-			FutureBlocks.DANDELION_STACK
+		val flowerPotTypes = arrayOf(
+			Blocks.POTTED_RED_TULIP,
+			Blocks.POTTED_BLUE_ORCHID,
+			Blocks.POTTED_OXEYE_DAISY,
+			Blocks.POTTED_AZURE_BLUET,
+			Blocks.POTTED_DANDELION
 		)
 		
 		repeat(rand.nextInt(3, 5)){
@@ -58,7 +56,7 @@ class StrongholdRoom_Chest_DecoratedCorners(file: String) : StrongholdAbstractPi
 					world.setBlock(decorPos, ModBlocks.ANCIENT_COBWEB)
 				}
 				else{
-					world.addTrigger(decorPos, FlowerPotStructureTrigger(rand.nextItem(flowerTypes)))
+					world.setBlock(decorPos, rand.nextItem(flowerPotTypes))
 				}
 			}
 		}

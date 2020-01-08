@@ -8,16 +8,14 @@ import chylex.hee.system.migration.forge.Side
 import chylex.hee.system.migration.forge.Sided
 import chylex.hee.system.migration.forge.SubscribeAllEvents
 import chylex.hee.system.migration.forge.SubscribeEvent
-import net.minecraft.client.gui.Gui
-import net.minecraft.client.gui.GuiScreen
-import net.minecraft.client.gui.inventory.GuiInventory
+import net.minecraft.client.gui.AbstractGui
+import net.minecraft.client.gui.screen.Screen
+import net.minecraft.client.gui.screen.inventory.InventoryScreen
 import net.minecraft.client.renderer.RenderHelper
-import net.minecraft.inventory.IInventory
-import net.minecraft.inventory.Slot
+import net.minecraft.inventory.container.Slot
 import net.minecraftforge.client.event.GuiScreenEvent
 import net.minecraftforge.client.event.GuiScreenEvent.DrawScreenEvent
 import net.minecraftforge.items.IItemHandler
-import org.lwjgl.input.Mouse
 
 class SlotTrinketItemInventory(trinketHandler: IItemHandler, slotNumber: Int) : SlotTrinketItem(trinketHandler, 0, -2000, -2000){
 	companion object{
@@ -34,11 +32,9 @@ class SlotTrinketItemInventory(trinketHandler: IItemHandler, slotNumber: Int) : 
 		this.slotNumber = slotNumber
 	}
 	
-	override fun isHere(inv: IInventory, slot: Int) = true
-	
 	@Sided(Side.CLIENT)
 	override fun isEnabled(): Boolean{
-		if (MC.currentScreen !is GuiInventory){
+		if (MC.currentScreen !is InventoryScreen){
 			return false // TODO figure out creative inventory
 		}
 		
@@ -48,7 +44,7 @@ class SlotTrinketItemInventory(trinketHandler: IItemHandler, slotNumber: Int) : 
 			RenderHelper.disableStandardItemLighting()
 			
 			MC.textureManager.bindTexture(SlotTrinketItem.Client.TEX_SLOT)
-			Gui.drawScaledCustomSizeModalRect(xPos - 1, yPos  - 1, 0F, 0F, 18, 18, 18, 18, SlotTrinketItem.Client.TEX_SLOT_W, SlotTrinketItem.Client.TEX_SLOT_H)
+			AbstractGui.blit(xPos - 1, yPos - 1, 18, 18, 0F, 0F, 18, 18, SlotTrinketItem.Client.TEX_SLOT_W, SlotTrinketItem.Client.TEX_SLOT_H)
 			
 			RenderHelper.enableGUIStandardItemLighting()
 		}
@@ -87,20 +83,20 @@ class SlotTrinketItemInventory(trinketHandler: IItemHandler, slotNumber: Int) : 
 		fun onInitGuiPost(e: GuiScreenEvent.InitGuiEvent.Post){
 			val gui = e.gui
 			
-			if (gui is GuiInventory){
-				val allSlots = gui.inventorySlots.inventorySlots
+			if (gui is InventoryScreen){
+				val allSlots = gui.container.inventorySlots // UPDATE test
 				findTrinketSlot(allSlots)?.moveSlotToEmptyPos(allSlots, SURVIVAL_INVENTORY_SLOT_POSITIONS)
 			}
 		}
 		
 		@JvmStatic
 		@SubscribeEvent(EventPriority.LOWEST)
-		fun onMouseInputPre(e: GuiScreenEvent.MouseInputEvent.Pre){
+		fun onMouseInputPre(e: GuiScreenEvent.MouseClickedEvent.Pre){
 			val gui = e.gui
 			
-			if (gui is GuiInventory && Mouse.getEventButton() in 0..1 && Mouse.getEventButtonState() && GuiScreen.isShiftKeyDown()){
+			if (gui is InventoryScreen && (e.button == 0 || e.button == 1) && Screen.hasShiftDown()){
 				val hoveredSlot = gui.slotUnderMouse ?: return
-				val trinketSlot = findTrinketSlot(gui.inventorySlots.inventorySlots) ?: return
+				val trinketSlot = findTrinketSlot(gui.container.inventorySlots) ?: return // UPDATE test
 				
 				if (canShiftClickTrinket(hoveredSlot, trinketSlot)){
 					PacketServerShiftClickTrinket(hoveredSlot.slotNumber).sendToServer()

@@ -1,15 +1,15 @@
 package chylex.hee.game.entity.living.ai
 import chylex.hee.game.entity.living.ai.util.AIBaseWanderConditioned
+import chylex.hee.system.migration.vanilla.EntityCreature
 import chylex.hee.system.util.Pos
 import chylex.hee.system.util.distanceTo
 import chylex.hee.system.util.isAir
 import chylex.hee.system.util.nextInt
-import net.minecraft.entity.EntityCreature
 import net.minecraft.pathfinding.Path
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.Vec3d
-import net.minecraft.world.EnumSkyBlock.BLOCK
-import net.minecraft.world.EnumSkyBlock.SKY
+import net.minecraft.world.LightType.BLOCK
+import net.minecraft.world.LightType.SKY
 
 class AIWanderLightStartle(
 	entity: EntityCreature,
@@ -83,7 +83,7 @@ class AIWanderLightStartle(
 			
 			val testLight = getCombinedLight(testPos)
 			
-			if (startLight - testLight >= minCombinedLightDecrease && testLight < foundLight && nav.getPathToPos(testPos)?.let { validatePath(it, testPos) } == true){
+			if (startLight - testLight >= minCombinedLightDecrease && testLight < foundLight && nav.getPathToPos(testPos, 0 /* UPDATE what is this? */)?.let { validatePath(it, testPos) } == true){
 				foundTarget = testPos
 				foundLight = testLight
 			}
@@ -102,7 +102,7 @@ class AIWanderLightStartle(
 	
 	override fun startExecuting(){}
 	
-	override fun updateTask(){
+	override fun tick(){
 		if (wanderDelay > 0 && --wanderDelay == 0){
 			super.startExecuting()
 		}

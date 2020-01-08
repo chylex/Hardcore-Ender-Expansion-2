@@ -1,30 +1,30 @@
 package chylex.hee.game.block
 import chylex.hee.HEE
+import chylex.hee.game.block.info.BlockBuilder
 import chylex.hee.system.migration.forge.SubscribeAllEvents
 import chylex.hee.system.migration.forge.SubscribeEvent
+import chylex.hee.system.migration.vanilla.BlockCauldron
 import chylex.hee.system.migration.vanilla.Blocks
+import chylex.hee.system.migration.vanilla.EntityPlayer
 import chylex.hee.system.migration.vanilla.Items
 import chylex.hee.system.migration.vanilla.Sounds
 import chylex.hee.system.util.Pos
 import chylex.hee.system.util.facades.Stats
-import chylex.hee.system.util.get
 import chylex.hee.system.util.getBlock
 import chylex.hee.system.util.isNotEmpty
 import chylex.hee.system.util.playUniversal
-import net.minecraft.block.BlockCauldron
-import net.minecraft.block.state.IBlockState
+import net.minecraft.block.BlockState
 import net.minecraft.entity.Entity
-import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.item.ItemStack
-import net.minecraft.util.EnumFacing
-import net.minecraft.util.EnumHand
+import net.minecraft.util.Hand
 import net.minecraft.util.SoundCategory
 import net.minecraft.util.math.BlockPos
+import net.minecraft.util.math.BlockRayTraceResult
 import net.minecraft.world.World
 import net.minecraftforge.event.entity.player.EntityItemPickupEvent
 
 @SubscribeAllEvents(modid = HEE.ID)
-abstract class BlockAbstractCauldron : BlockCauldron(){
+abstract class BlockAbstractCauldron(builder: BlockBuilder) : BlockCauldron(builder.p){
 	companion object{
 		const val MAX_LEVEL = 3
 		
@@ -34,25 +34,20 @@ abstract class BlockAbstractCauldron : BlockCauldron(){
 			val item = e.item
 			val pos = Pos(item)
 			
-			if (pos.getBlock(item.world) is BlockCauldron && Pos(e.entityPlayer) != pos){
+			if (pos.getBlock(item.world) is BlockCauldron && Pos(e.player) != pos){
 				e.isCanceled = true
 			}
 		}
 	}
 	
-	init{
-		@Suppress("LeakingThis")
-		setHardness(2F)
-	}
-	
 	protected abstract fun createFilledBucket(): ItemStack?
 	protected abstract fun createFilledBottle(): ItemStack?
 	
-	override fun setWaterLevel(world: World, pos: BlockPos, state: IBlockState, level: Int){
+	override fun setWaterLevel(world: World, pos: BlockPos, state: BlockState, level: Int){
 		super.setWaterLevel(world, pos, if (level == 0) Blocks.CAULDRON.defaultState else state, level)
 	}
 	
-	private fun useAndUpdateHeldItem(player: EntityPlayer, hand: EnumHand, newHeldItem: ItemStack){
+	private fun useAndUpdateHeldItem(player: EntityPlayer, hand: Hand, newHeldItem: ItemStack){
 		val oldHeldItem = player.getHeldItem(hand)
 		
 		oldHeldItem.shrink(1)
@@ -65,7 +60,7 @@ abstract class BlockAbstractCauldron : BlockCauldron(){
 		}
 	}
 	
-	final override fun onBlockActivated(world: World, pos: BlockPos, state: IBlockState, player: EntityPlayer, hand: EnumHand, facing: EnumFacing, hitX: Float, hitY: Float, hitZ: Float): Boolean{
+	final override fun onBlockActivated(state: BlockState, world: World, pos: BlockPos, player: EntityPlayer, hand: Hand, hit: BlockRayTraceResult): Boolean{
 		val item = player.getHeldItem(hand).takeIf { it.isNotEmpty }?.item
 		
 		if (item == null){
@@ -106,6 +101,6 @@ abstract class BlockAbstractCauldron : BlockCauldron(){
 		return false
 	}
 	
-	override fun onEntityCollision(world: World, pos: BlockPos, state: IBlockState, entity: Entity){}
+	override fun onEntityCollision(state: BlockState, world: World, pos: BlockPos, entity: Entity){}
 	override fun fillWithRain(world: World, pos: BlockPos){}
 }

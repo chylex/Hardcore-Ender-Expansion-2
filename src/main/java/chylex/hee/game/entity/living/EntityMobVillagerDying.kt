@@ -6,27 +6,38 @@ import chylex.hee.game.particle.util.IOffset
 import chylex.hee.game.particle.util.IOffset.InBox
 import chylex.hee.game.particle.util.IOffset.MutableOffsetPoint
 import chylex.hee.game.particle.util.IShape.Point
+import chylex.hee.init.ModEntities
+import chylex.hee.system.migration.vanilla.EntityAgeable
+import chylex.hee.system.migration.vanilla.EntityPlayer
+import chylex.hee.system.migration.vanilla.EntityVillager
 import chylex.hee.system.migration.vanilla.Sounds
+import chylex.hee.system.util.TagCompound
 import chylex.hee.system.util.color.IntColor.Companion.RGB
 import chylex.hee.system.util.facades.Facing4
 import chylex.hee.system.util.nextFloat
 import chylex.hee.system.util.nextItem
 import chylex.hee.system.util.playClient
 import chylex.hee.system.util.posVec
+import chylex.hee.system.util.readTag
 import chylex.hee.system.util.use
-import io.netty.buffer.ByteBuf
-import net.minecraft.entity.EntityAgeable
-import net.minecraft.entity.passive.EntityVillager
-import net.minecraft.entity.player.EntityPlayer
-import net.minecraft.util.EnumHand
+import chylex.hee.system.util.writeTag
+import com.mojang.datafixers.Dynamic
+import net.minecraft.entity.EntityType
+import net.minecraft.entity.merchant.villager.VillagerData
+import net.minecraft.entity.villager.IVillagerDataHolder
+import net.minecraft.nbt.NBTDynamicOps
+import net.minecraft.network.IPacket
+import net.minecraft.network.PacketBuffer
+import net.minecraft.util.Hand
 import net.minecraft.util.SoundCategory
 import net.minecraft.world.World
 import net.minecraftforge.fml.common.registry.IEntityAdditionalSpawnData
-import net.minecraftforge.fml.common.registry.VillagerRegistry
-import net.minecraftforge.fml.common.registry.VillagerRegistry.VillagerProfession
+import net.minecraftforge.fml.network.NetworkHooks
 import java.util.Random
 
-class EntityMobVillagerDying(world: World) : EntityAgeable(world), IEntityAdditionalSpawnData{
+class EntityMobVillagerDying(type: EntityType<EntityMobVillagerDying>, world: World) : EntityAgeable(type, world), IVillagerDataHolder, IEntityAdditionalSpawnData{
+	constructor(world: World) : this(ModEntities.VILLAGER_DYING, world)
+	
 	private object DecayParticlePos : IOffset{
 		private const val halfSize = 0.25F
 		
@@ -48,41 +59,46 @@ class EntityMobVillagerDying(world: World) : EntityAgeable(world), IEntityAdditi
 			}
 		}
 	}
-	
-	var profession: VillagerProfession? = null
+	var villager: VillagerData? = null
 		private set
 	
 	init{
-		setSize(0.6F, 1.95F)
-		setEntityInvulnerable(true)
+		isInvulnerable = true
 		setNoGravity(true)
 	}
 	
-	override fun applyEntityAttributes(){
-		super.applyEntityAttributes()
+	override fun registerAttributes(){
+		super.registerAttributes()
 		
 		experienceValue = 0
 	}
 	
 	fun copyVillagerDataFrom(villager: EntityVillager){
 		setGrowingAge(villager.growingAge)
-		profession = villager.professionForge
+		this.villager = villager.villagerData
 		
 		renderYawOffset = villager.renderYawOffset
 		rotationYawHead = villager.rotationYawHead
 		limbSwing = villager.limbSwing
 	}
 	
-	override fun writeSpawnData(buffer: ByteBuf) = buffer.use {
-		writeInt(VillagerRegistry.getId(profession))
-		
+	override fun getVillagerData(): VillagerData{
+		return villager!!
+	}
+	
+	override fun createSpawnPacket(): IPacket<*>{
+		return NetworkHooks.getEntitySpawningPacket(this)
+	}
+	
+	override fun writeSpawnData(buffer: PacketBuffer) = buffer.use {
+		writeTag(villagerData.serialize(NBTDynamicOps.INSTANCE) as TagCompound)
 		writeFloat(renderYawOffset)
 		writeFloat(rotationYawHead)
 		writeFloat(limbSwing)
 	}
 	
-	override fun readSpawnData(buffer: ByteBuf) = buffer.use {
-		profession = VillagerRegistry.getById(readInt()) ?: VillagerRegistry.FARMER
+	override fun readSpawnData(buffer: PacketBuffer) = buffer.use {
+		villager = VillagerData(Dynamic(NBTDynamicOps.INSTANCE, buffer.readTag()))
 		
 		renderYawOffset = readFloat()
 		rotationYawHead = readFloat()
@@ -92,7 +108,7 @@ class EntityMobVillagerDying(world: World) : EntityAgeable(world), IEntityAdditi
 		prevRotationYawHead = rotationYawHead
 	}
 	
-	override fun onUpdate(){
+	override fun tick(){
 		firstUpdate = false
 		onDeathUpdate()
 	}
@@ -107,12 +123,12 @@ class EntityMobVillagerDying(world: World) : EntityAgeable(world), IEntityAdditi
 		}
 		
 		if (++deathTime == 65){
-			setDead()
+			remove()
 		}
 	}
 	
-	override fun setDead(){
-		if (world.isRemote && !isDead){
+	override fun remove(){
+		if (world.isRemote && isAlive){
 			ParticleSpawnerCustom(
 				type = ParticleSmokeCustom,
 				data = ParticleSmokeCustom.Data(scale = 1.66F),
@@ -122,10 +138,10 @@ class EntityMobVillagerDying(world: World) : EntityAgeable(world), IEntityAdditi
 			Sounds.ENTITY_VILLAGER_DEATH.playClient(posVec, SoundCategory.HOSTILE, volume = 1.5F, pitch = 1.5F) // TODO new sound fx
 		}
 		
-		super.setDead()
+		super.remove()
 	}
 	
-	override fun processInteract(player: EntityPlayer, hand: EnumHand) = true
+	override fun processInteract(player: EntityPlayer, hand: Hand) = true
 	override fun canBeLeashedTo(player: EntityPlayer) = false
 	
 	override fun createChild(ageable: EntityAgeable): EntityAgeable? = null
@@ -134,5 +150,7 @@ class EntityMobVillagerDying(world: World) : EntityAgeable(world), IEntityAdditi
 	override fun attackable() = false
 	override fun canBeCollidedWith() = false
 	override fun canBeHitWithPotion() = false
-	override fun canDespawn() = false
+	
+	override fun canDespawn(distanceToClosestPlayerSq: Double) = false
+	override fun preventDespawn() = true
 }

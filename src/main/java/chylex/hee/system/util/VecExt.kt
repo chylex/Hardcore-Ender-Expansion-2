@@ -42,8 +42,16 @@ fun Vec3d.addY(y: Double): Vec3d{
 	return Vec3d(this.x, this.y + y, this.z)
 }
 
+fun Vec3d.addXZ(x: Double, z: Double): Vec3d{
+	return Vec3d(this.x + x, this.y, this.z + z)
+}
+
 fun Vec3d.subtractY(y: Double): Vec3d{
 	return Vec3d(this.x, this.y - y, this.z)
+}
+
+fun Vec3d.scaleXZ(factor: Double): Vec3d{
+	return Vec3d(this.x * factor, this.y, this.z * factor)
 }
 
 fun Vec3d.scaleY(factor: Double): Vec3d{

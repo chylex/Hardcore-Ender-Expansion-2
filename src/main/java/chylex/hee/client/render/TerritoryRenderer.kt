@@ -18,6 +18,7 @@ import chylex.hee.system.migration.forge.EventPriority
 import chylex.hee.system.migration.forge.Side
 import chylex.hee.system.migration.forge.SubscribeAllEvents
 import chylex.hee.system.migration.forge.SubscribeEvent
+import chylex.hee.system.migration.vanilla.EntityPlayer
 import chylex.hee.system.util.color.IntColor
 import chylex.hee.system.util.color.IntColor.Companion.RGB
 import chylex.hee.system.util.floorToInt
@@ -26,11 +27,10 @@ import chylex.hee.system.util.math.LerpedFloat
 import chylex.hee.system.util.posVec
 import chylex.hee.system.util.scale
 import net.minecraft.client.resources.I18n
-import net.minecraft.entity.player.EntityPlayer
 import net.minecraftforge.client.event.RenderGameOverlayEvent
 import net.minecraftforge.common.MinecraftForge
-import net.minecraftforge.fml.common.gameevent.TickEvent.ClientTickEvent
-import net.minecraftforge.fml.common.gameevent.TickEvent.Phase
+import net.minecraftforge.event.TickEvent.ClientTickEvent
+import net.minecraftforge.event.TickEvent.Phase
 import org.lwjgl.opengl.GL11.GL_GREATER
 import kotlin.math.min
 import kotlin.math.pow
@@ -46,7 +46,7 @@ object TerritoryRenderer{
 		if (e.phase == Phase.START){
 			val player = MC.player
 			
-			if (player != null && player.world.provider is WorldProviderEndCustom && player.ticksExisted > 0){
+			if (player != null && player.world.dimension is WorldProviderEndCustom && player.ticksExisted > 0){
 				Void.tick(player)
 				Title.tick()
 				
@@ -123,7 +123,7 @@ object TerritoryRenderer{
 		
 		@SubscribeEvent
 		fun onRenderGameOverlayText(e: RenderGameOverlayEvent.Text){
-			if (MC.settings.showDebugInfo && MC.player?.dimension == HEE.DIM){
+			if (MC.settings.showDebugInfo && MC.player?.dimension === HEE.dim){
 				with(e.left){
 					add("")
 					add("End Void Factor: ${"%.3f".format(voidFactor.currentValue)}")
@@ -184,7 +184,7 @@ object TerritoryRenderer{
 			}
 			
 			val fontRenderer = MC.fontRenderer
-			val resolution = e.resolution
+			val resolution = e.window
 			val width = resolution.scaledWidth
 			val height = resolution.scaledHeight
 			
@@ -215,23 +215,7 @@ object TerritoryRenderer{
 		}
 		
 		private fun drawTitle(x: Float, y: Float, color: IntColor) = with(MC.fontRenderer){
-			resetStyles()
-			
-			red   = color.red / 255F
-			green = color.green / 255F
-			blue  = color.blue / 255F
-			alpha = color.alpha / 255F
-			
-			posX = x
-			posY = y
-			
-			val text = if (bidiFlag)
-				bidiReorder(textTitle)
-			else
-				textTitle
-			
-			GL.color(red, green, blue, alpha)
-			renderStringAtPos(text, false)
+			drawString(textTitle, x, y, color.i)
 		}
 	}
 }

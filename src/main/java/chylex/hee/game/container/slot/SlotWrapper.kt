@@ -1,12 +1,11 @@
 package chylex.hee.game.container.slot
 import chylex.hee.system.migration.forge.Side
 import chylex.hee.system.migration.forge.Sided
-import net.minecraft.entity.player.EntityPlayer
-import net.minecraft.inventory.IInventory
-import net.minecraft.inventory.Slot
-import net.minecraft.inventory.SlotCrafting
-import net.minecraft.inventory.SlotFurnaceOutput
-import net.minecraft.inventory.SlotMerchantResult
+import chylex.hee.system.migration.vanilla.EntityPlayer
+import net.minecraft.inventory.container.CraftingResultSlot
+import net.minecraft.inventory.container.FurnaceResultSlot
+import net.minecraft.inventory.container.MerchantResultSlot
+import net.minecraft.inventory.container.Slot
 import net.minecraft.item.ItemStack
 import net.minecraft.util.ResourceLocation
 
@@ -14,7 +13,7 @@ abstract class SlotWrapper(private val wrapped: Slot) : Slot(wrapped.inventory, 
 	init{
 		slotNumber = wrapped.slotNumber
 		
-		if (wrapped is SlotCrafting || wrapped is SlotFurnaceOutput || wrapped is SlotMerchantResult){
+		if (wrapped is CraftingResultSlot || wrapped is FurnaceResultSlot || wrapped is MerchantResultSlot){
 			// these types override onCrafting and onSwapCraft and wrapping them would change behavior
 			throw UnsupportedOperationException("wrapping ${wrapped::class.java.simpleName} is not supported")
 		}
@@ -22,7 +21,6 @@ abstract class SlotWrapper(private val wrapped: Slot) : Slot(wrapped.inventory, 
 	
 	@Sided(Side.CLIENT) override fun isEnabled() = wrapped.isEnabled
 	
-	override fun isHere(inventory: IInventory, slot: Int) = wrapped.isHere(inventory, slot)
 	override fun isSameInventory(other: Slot) = wrapped.isSameInventory(other)
 	override fun getSlotIndex() = wrapped.slotIndex
 	

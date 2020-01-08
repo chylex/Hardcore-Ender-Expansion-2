@@ -3,11 +3,12 @@ import chylex.hee.game.mechanics.causatum.EnderCausatum.CausatumCapability.Provi
 import chylex.hee.system.capability.CapabilityProvider
 import chylex.hee.system.capability.PlayerCapabilityHandler
 import chylex.hee.system.capability.PlayerCapabilityHandler.IPlayerPersistentCapability
+import chylex.hee.system.migration.vanilla.EntityPlayer
 import chylex.hee.system.util.TagCompound
 import chylex.hee.system.util.facades.Resource
 import chylex.hee.system.util.getCap
 import chylex.hee.system.util.register
-import net.minecraft.entity.player.EntityPlayer
+import chylex.hee.system.util.use
 import net.minecraftforge.common.capabilities.Capability
 import net.minecraftforge.common.capabilities.CapabilityInject
 import net.minecraftforge.common.capabilities.CapabilityManager
@@ -52,10 +53,10 @@ object EnderCausatum{
 		var stage = CausatumStage.S0_INITIAL
 		
 		override fun serializeNBT() = TagCompound().apply {
-			setString(STAGE_TAG, stage.key)
+			putString(STAGE_TAG, stage.key)
 		}
 		
-		override fun deserializeNBT(nbt: TagCompound) = with(nbt){
+		override fun deserializeNBT(nbt: TagCompound) = nbt.use {
 			stage = CausatumStage.fromKey(getString(STAGE_TAG)) ?: stage
 		}
 		

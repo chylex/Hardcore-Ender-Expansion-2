@@ -1,37 +1,38 @@
 package chylex.hee.game.block
 import chylex.hee.game.block.info.BlockBuilder
-import chylex.hee.init.ModLoot
+import chylex.hee.proxy.Environment
 import chylex.hee.system.migration.Facing.UP
 import chylex.hee.system.migration.forge.SubscribeEvent
+import chylex.hee.system.migration.vanilla.BlockBush
+import chylex.hee.system.migration.vanilla.BlockReed
+import chylex.hee.system.migration.vanilla.BlockSapling
 import chylex.hee.system.migration.vanilla.Blocks
 import chylex.hee.system.migration.vanilla.Items
+import chylex.hee.system.util.breakBlock
+import chylex.hee.system.util.facades.Resource
 import chylex.hee.system.util.getBlock
 import chylex.hee.system.util.getState
 import chylex.hee.system.util.setAir
 import chylex.hee.system.util.size
-import net.minecraft.block.BlockBush
-import net.minecraft.block.BlockReed
-import net.minecraft.block.BlockSapling
-import net.minecraft.block.state.IBlockState
+import net.minecraft.block.BlockState
 import net.minecraft.entity.Entity
 import net.minecraft.item.ItemStack
-import net.minecraft.util.EnumFacing
-import net.minecraft.util.NonNullList
+import net.minecraft.util.Direction
 import net.minecraft.util.math.BlockPos
 import net.minecraft.world.Explosion
-import net.minecraft.world.IBlockAccess
+import net.minecraft.world.IBlockReader
 import net.minecraft.world.World
-import net.minecraftforge.common.EnumPlantType.Crop
-import net.minecraftforge.common.EnumPlantType.Plains
+import net.minecraft.world.server.ServerWorld
+import net.minecraft.world.storage.loot.LootContext
+import net.minecraft.world.storage.loot.LootParameterSets
 import net.minecraftforge.common.IPlantable
 import net.minecraftforge.common.MinecraftForge
+import net.minecraftforge.common.PlantType
 import net.minecraftforge.event.world.BlockEvent.HarvestDropsEvent
 import java.util.Random
 
 class BlockHumus(builder: BlockBuilder) : BlockSimple(builder){
 	init{
-		tickRandomly = true
-		
 		MinecraftForge.EVENT_BUS.register(this)
 	}
 	
@@ -47,44 +48,44 @@ class BlockHumus(builder: BlockBuilder) : BlockSimple(builder){
 		}
 	}
 	
-	override fun randomTick(world: World, pos: BlockPos, state: IBlockState, rand: Random){
-		super.randomTick(world, pos, state, rand)
+	override fun randomTick(state: BlockState, world: World, pos: BlockPos, rand: Random){
+		super.randomTick(state, world, pos, rand)
 		
 		if (rand.nextInt(5) <= 1){
 			val plantPos = pos.up()
 			val plant = plantPos.getBlock(world)
 			
 			if (plant is IPlantable && canSustainPlant(state, world, pos, UP, plant)){
-				plant.randomTick(world, plantPos, plantPos.getState(world), rand)
+				plant.randomTick(plantPos.getState(world), world, plantPos, rand)
 			}
 		}
 	}
 	
-	override fun canSustainPlant(state: IBlockState, world: IBlockAccess, pos: BlockPos, direction: EnumFacing, plant: IPlantable): Boolean{
+	override fun canSustainPlant(state: BlockState, world: IBlockReader, pos: BlockPos, direction: Direction, plant: IPlantable): Boolean{
 		val type = plant.getPlantType(world, pos)
 		
 		return (
-			type == Crop ||
-			type == Plains ||
+			type == PlantType.Crop ||
+			type == PlantType.Plains ||
 			plant is BlockSapling ||
 			plant is BlockReed ||
 			(plant is BlockBush && super.canSustainPlant(state, world, pos, direction, plant)) // UPDATE: check if BlockBush still returns before plantType switch
 		)
 	}
 	
-	override fun isFertile(world: World, pos: BlockPos): Boolean{
+	override fun isFertile(state: BlockState, world: IBlockReader, pos: BlockPos): Boolean{
 		return true
 	}
 	
 	override fun onFallenUpon(world: World, pos: BlockPos, entity: Entity, fallDistance: Float){
 		super.onFallenUpon(world, pos, entity, fallDistance)
 		
-		if (entity.canTrample(world, this, pos, fallDistance)){
+		if (entity.canTrample(pos.getState(world), pos, fallDistance)){
 			val plantPos = pos.up()
 			val plant = plantPos.getBlock(world)
 			
-			if (plant is IPlantable && plant.getPlantType(world, plantPos) == Crop){
-				plant.dropBlockAsItem(world, plantPos, plantPos.getState(world), 0)
+			if (plant is IPlantable && plant.getPlantType(world, plantPos) == PlantType.Crop){
+				plantPos.breakBlock(world, true) // UPDATE test
 				plantPos.setAir(world)
 			}
 		}
@@ -96,10 +97,10 @@ class BlockHumus(builder: BlockBuilder) : BlockSimple(builder){
 	
 	override fun onExplosionDestroy(world: World, pos: BlockPos, explosion: Explosion){
 		if (!world.isRemote){
-			val drops = NonNullList.create<ItemStack>()
-			ModLoot.HUMUS_EXPLODED.generateDrops(drops, world, 0)
+			val lootTable = Environment.getServer().lootTableManager.getLootTableFromLocation(Resource.Custom("blocks/humus_exploded"))
+			val lootContext = LootContext.Builder(world as ServerWorld).withRandom(world.rand).build(LootParameterSets.EMPTY)
 			
-			for(drop in drops){
+			for(drop in lootTable.generate(lootContext)){
 				spawnAsEntity(world, pos, drop)
 			}
 		}

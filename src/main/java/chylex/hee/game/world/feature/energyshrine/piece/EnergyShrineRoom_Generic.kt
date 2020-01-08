@@ -1,4 +1,5 @@
 package chylex.hee.game.world.feature.energyshrine.piece
+import chylex.hee.game.block.util.ColoredBlocks
 import chylex.hee.game.world.feature.energyshrine.EnergyShrineBanners
 import chylex.hee.game.world.feature.energyshrine.EnergyShrinePieces
 import chylex.hee.game.world.feature.energyshrine.EnergyShrineRoomData
@@ -18,10 +19,9 @@ import chylex.hee.system.migration.Facing.EAST
 import chylex.hee.system.migration.Facing.NORTH
 import chylex.hee.system.migration.Facing.SOUTH
 import chylex.hee.system.migration.Facing.WEST
-import chylex.hee.system.migration.vanilla.Blocks
 import chylex.hee.system.util.Pos
 import chylex.hee.system.util.withFacing
-import net.minecraft.util.EnumFacing
+import net.minecraft.util.Direction
 import net.minecraft.util.math.BlockPos
 
 abstract class EnergyShrineRoom_Generic(file: String) : EnergyShrineAbstractPiece(), IStructurePieceFromFile by Delegate("energyshrine/$file", EnergyShrinePieces.PALETTE){
@@ -50,9 +50,9 @@ abstract class EnergyShrineRoom_Generic(file: String) : EnergyShrineAbstractPiec
 		return instance.context ?: EnergyShrineRoomData.DEFAULT
 	}
 	
-	protected fun placeWallBanner(world: IStructureWorld, instance: Instance, pos: BlockPos, facing: EnumFacing){
-		val state = Blocks.WALL_BANNER.withFacing(facing)
-		val data = EnergyShrineBanners.generate(world.rand, getContext(instance).bannerColors)
+	protected fun placeWallBanner(world: IStructureWorld, instance: Instance, pos: BlockPos, facing: Direction){
+		val (color, data) = EnergyShrineBanners.generate(world.rand, getContext(instance).bannerColors)
+		val state = ColoredBlocks.WALL_BANNER.getValue(color).withFacing(facing)
 		
 		world.addTrigger(pos, TileEntityStructureTrigger(state, data))
 	}

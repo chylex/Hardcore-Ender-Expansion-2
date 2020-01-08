@@ -1,5 +1,5 @@
 package chylex.hee.game.mechanics.trinket
-import net.minecraft.entity.player.EntityPlayer
+import chylex.hee.system.migration.vanilla.EntityPlayer
 
 /**
  * Describes a Trinket item which itself can handle [ITrinketHandler] requests. The interface must be applied to a class extending [Item][net.minecraft.item.Item].

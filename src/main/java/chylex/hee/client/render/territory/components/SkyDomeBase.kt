@@ -10,8 +10,8 @@ import chylex.hee.system.migration.forge.Side
 import chylex.hee.system.migration.forge.Sided
 import chylex.hee.system.util.square
 import net.minecraft.client.Minecraft
-import net.minecraft.client.multiplayer.WorldClient
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats
+import net.minecraft.client.world.ClientWorld
 import net.minecraft.util.ResourceLocation
 import net.minecraft.util.math.Vec3d
 import net.minecraftforge.client.IRenderHandler
@@ -22,7 +22,7 @@ import org.lwjgl.opengl.GL11.GL_SMOOTH
 import kotlin.math.pow
 import kotlin.math.sqrt
 
-abstract class SkyDomeBase : IRenderHandler(){
+abstract class SkyDomeBase : IRenderHandler{
 	@Sided(Side.CLIENT)
 	private object Skybox{
 		data class Vertex(val x: Float, val y: Float, val z: Float, val u: Float, val v: Float, val c: Float)
@@ -84,7 +84,7 @@ abstract class SkyDomeBase : IRenderHandler(){
 	protected open val alpha = DEFAULT_ALPHA
 	
 	@Sided(Side.CLIENT)
-	override fun render(partialTicks: Float, world: WorldClient, mc: Minecraft){
+	override fun render(ticks: Int, partialTicks: Float, world: ClientWorld, mc: Minecraft){
 		val col = color
 		val alp = alpha * EnvironmentRenderer.currentSkyAlpha
 		
@@ -99,7 +99,7 @@ abstract class SkyDomeBase : IRenderHandler(){
 		GL.enableFog()
 		GL.shadeModel(GL_SMOOTH)
 		
-		GL.enableTexture2D()
+		GL.enableTexture()
 		MC.textureManager.bindTexture(texture)
 		
 		TESSELLATOR.draw(GL_QUADS, DefaultVertexFormats.POSITION_TEX_COLOR){

@@ -3,19 +3,25 @@ import chylex.hee.game.block.BlockAbstractTableTile
 import chylex.hee.game.block.entity.TileEntityEnergyCluster
 import chylex.hee.game.block.entity.base.TileEntityBaseTable
 import chylex.hee.game.mechanics.energy.IEnergyQuantity
-import chylex.hee.game.world.util.RayTracer
-import chylex.hee.init.ModBlocks
 import chylex.hee.system.util.TagCompound
 import chylex.hee.system.util.center
 import chylex.hee.system.util.distanceSqTo
 import chylex.hee.system.util.getPosOrNull
 import chylex.hee.system.util.getTile
-import chylex.hee.system.util.setPos
+import chylex.hee.system.util.putPos
 import chylex.hee.system.util.square
-import net.minecraft.block.state.IBlockState
+import chylex.hee.system.util.use
+import net.minecraft.block.BlockState
 import net.minecraft.util.math.BlockPos
-import net.minecraft.util.math.RayTraceResult.Type.BLOCK
-import net.minecraft.world.World
+import net.minecraft.util.math.RayTraceContext
+import net.minecraft.util.math.RayTraceResult.Type
+import net.minecraft.util.math.Vec3d
+import net.minecraft.util.math.shapes.ISelectionContext
+import net.minecraft.util.math.shapes.VoxelShape
+import net.minecraft.util.math.shapes.VoxelShapes
+import net.minecraft.world.IBlockReader
+import net.minecraft.world.server.ServerWorld
+import net.minecraftforge.common.util.FakePlayerFactory
 import net.minecraftforge.common.util.INBTSerializable
 
 class TableEnergyClusterHandler(private val table: TileEntityBaseTable, maxDistance: Int) : INBTSerializable<TagCompound>{
@@ -24,12 +30,10 @@ class TableEnergyClusterHandler(private val table: TileEntityBaseTable, maxDista
 	}
 	
 	private val maxDistanceSq = square(maxDistance)
-	private val rayTracer = RayTracer(::canCollideCheck)
-	
 	private var currentCluster: BlockPos? by table.MarkDirtyOnChange(null)
 	
 	fun drainEnergy(amount: IEnergyQuantity): Boolean{
-		val cluster = currentCluster?.getTile<TileEntityEnergyCluster>(table.world)?.takeIf(::checkLineOfSight) ?: findNewCluster()
+		val cluster = currentCluster?.getTile<TileEntityEnergyCluster>(table.wrld)?.takeIf(::checkLineOfSight) ?: findNewCluster()
 		
 		if (cluster == null || !cluster.drainEnergy(amount)){
 			currentCluster = null
@@ -43,17 +47,19 @@ class TableEnergyClusterHandler(private val table: TileEntityBaseTable, maxDista
 	
 	// Behavior
 	
-	private fun canCollideCheck(@Suppress("UNUSED_PARAMETER") world: World, pos: BlockPos, state: IBlockState): Boolean{
-		val block = state.block
-		
-		return if (block is BlockAbstractTableTile<*>)
-			pos != table.pos
-		else
-			block !== ModBlocks.ENERGY_CLUSTER && block.canCollideCheck(state, false)
+	private inner class RayTraceObstacles(startVec: Vec3d, endVec: Vec3d) : RayTraceContext(startVec, endVec, BlockMode.COLLIDER, FluidMode.NONE, FakePlayerFactory.getMinecraft(table.wrld as ServerWorld) /* UPDATE entity cannot be null */){
+		override fun getBlockShape(state: BlockState, world: IBlockReader, pos: BlockPos): VoxelShape{
+			val block = state.block
+			
+			return if (block is BlockAbstractTableTile<*> && pos == table.pos)
+				VoxelShapes.empty()
+			else
+				BlockMode.COLLIDER.get(state, world, pos, ISelectionContext.dummy())
+		}
 	}
 	
 	private fun checkLineOfSight(cluster: TileEntityEnergyCluster): Boolean{
-		return rayTracer.traceBlocksBetweenVectors(table.world, table.pos.center, cluster.pos.center)?.typeOfHit != BLOCK
+		return table.wrld.rayTraceBlocks(RayTraceObstacles(table.pos.center, cluster.pos.center)).type == Type.MISS
 	}
 	
 	private fun isValidCandidate(cluster: TileEntityEnergyCluster): Boolean{
@@ -84,7 +90,7 @@ class TableEnergyClusterHandler(private val table: TileEntityBaseTable, maxDista
 	private fun findNewCluster(): TileEntityEnergyCluster?{
 		val candidates = ArrayList<TileEntityEnergyCluster>(4)
 		
-		for(tile in table.world.tickableTileEntities){
+		for(tile in table.wrld.tickableTileEntities){
 			if (tile is TileEntityEnergyCluster && isValidCandidate(tile)){
 				candidates.add(tile)
 			}
@@ -97,11 +103,11 @@ class TableEnergyClusterHandler(private val table: TileEntityBaseTable, maxDista
 	
 	override fun serializeNBT() = TagCompound().apply {
 		currentCluster?.let {
-			setPos(POS_TAG, it)
+			putPos(POS_TAG, it)
 		}
 	}
 	
-	override fun deserializeNBT(nbt: TagCompound) = with(nbt){
+	override fun deserializeNBT(nbt: TagCompound) = nbt.use {
 		currentCluster = getPosOrNull(POS_TAG)
 	}
 }

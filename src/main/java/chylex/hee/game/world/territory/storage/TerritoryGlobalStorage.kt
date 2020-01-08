@@ -2,17 +2,20 @@ package chylex.hee.game.world.territory.storage
 import chylex.hee.game.world.territory.TerritoryInstance
 import chylex.hee.game.world.territory.TerritoryInstance.Companion.THE_HUB_INSTANCE
 import chylex.hee.game.world.territory.TerritoryType
-import chylex.hee.system.util.NBTList.Companion.setList
+import chylex.hee.system.util.NBTList.Companion.putList
 import chylex.hee.system.util.NBTObjectList
 import chylex.hee.system.util.TagCompound
 import chylex.hee.system.util.getListOfCompounds
-import chylex.hee.system.util.perSavefileData
+import chylex.hee.system.util.perDimensionData
+import chylex.hee.system.util.use
 import net.minecraft.world.storage.WorldSavedData
 import java.util.EnumMap
 
-class TerritoryGlobalStorage(name: String) : WorldSavedData(name){
+class TerritoryGlobalStorage private constructor() : WorldSavedData(NAME){
 	companion object{
-		fun get() = perSavefileData("HEE_TERRITORIES", ::TerritoryGlobalStorage)
+		fun get() = TerritoryInstance.endWorld.perDimensionData(NAME, ::TerritoryGlobalStorage)
+		
+		private const val NAME = "HEE_TERRITORIES"
 	}
 	
 	// Instance
@@ -49,18 +52,18 @@ class TerritoryGlobalStorage(name: String) : WorldSavedData(name){
 	
 	// Serialization
 	
-	override fun writeToNBT(nbt: TagCompound) = nbt.apply {
-		setTag("[Spawn]", spawnEntry.serializeNBT())
+	override fun write(nbt: TagCompound) = nbt.apply {
+		put("[Spawn]", spawnEntry.serializeNBT())
 		
 		for((key, list) in territoryData){
-			setList(key.title, NBTObjectList.of(list.map(TerritoryEntry::serializeNBT)))
+			putList(key.title, NBTObjectList.of(list.map(TerritoryEntry::serializeNBT)))
 		}
 	}
 	
-	override fun readFromNBT(nbt: TagCompound) = with(nbt){
-		spawnEntry.deserializeNBT(getCompoundTag("[Spawn]"))
+	override fun read(nbt: TagCompound) = nbt.use {
+		spawnEntry.deserializeNBT(getCompound("[Spawn]"))
 		
-		for(key in keySet){
+		for(key in keySet()){
 			val territory = TerritoryType.fromTitle(key) ?: continue
 			val list = territoryData.getValue(territory)
 			

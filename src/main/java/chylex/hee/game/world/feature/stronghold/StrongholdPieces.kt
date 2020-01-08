@@ -1,5 +1,4 @@
 package chylex.hee.game.world.feature.stronghold
-import chylex.hee.game.block.util.FutureBlocks
 import chylex.hee.game.item.ItemEnergyOracle
 import chylex.hee.game.world.feature.stronghold.piece.StrongholdAbstractPiece
 import chylex.hee.game.world.feature.stronghold.piece.StrongholdCorridor_Chest_Double
@@ -48,6 +47,7 @@ import chylex.hee.system.migration.Facing.EAST
 import chylex.hee.system.migration.Facing.NORTH
 import chylex.hee.system.migration.Facing.SOUTH
 import chylex.hee.system.migration.Facing.WEST
+import chylex.hee.system.migration.vanilla.BlockSilverfish
 import chylex.hee.system.migration.vanilla.Blocks
 import chylex.hee.system.migration.vanilla.Items
 import chylex.hee.system.util.facades.Resource
@@ -55,8 +55,9 @@ import chylex.hee.system.util.nextInt
 import chylex.hee.system.util.nextItem
 import chylex.hee.system.util.removeItem
 import net.minecraft.block.Block
-import net.minecraft.item.EnumDyeColor
+import net.minecraft.item.DyeColor
 import net.minecraft.item.ItemStack
+import net.minecraft.tags.BlockTags
 import java.util.Random
 
 object StrongholdPieces : IStructureDescription{
@@ -68,12 +69,12 @@ object StrongholdPieces : IStructureDescription{
 	// Palette
 	
 	val PALETTE_ENTRY_STONE_BRICK = Weighted(
-		610 to FutureBlocks.STONE_BRICKS,
-		175 to FutureBlocks.MOSSY_STONE_BRICKS,
-		175 to FutureBlocks.CRACKED_STONE_BRICKS,
-		 20 to FutureBlocks.INFESTED_STONE_BRICKS,
-		 12 to FutureBlocks.INFESTED_MOSSY_STONE_BRICKS,
-		  8 to FutureBlocks.INFESTED_CRACKED_STONE_BRICKS
+		610 to Blocks.STONE_BRICKS,
+		175 to Blocks.MOSSY_STONE_BRICKS,
+		175 to Blocks.CRACKED_STONE_BRICKS,
+		 20 to Blocks.INFESTED_STONE_BRICKS,
+		 12 to Blocks.INFESTED_MOSSY_STONE_BRICKS,
+		  8 to Blocks.INFESTED_CRACKED_STONE_BRICKS
 	)
 	
 	override val PALETTE = with(PaletteBuilder.Combined()){
@@ -89,28 +90,28 @@ object StrongholdPieces : IStructureDescription{
 		
 		add("wall.stonebrick", ModBlocks.STONE_BRICK_WALL)
 		
-		add("slab.stone.*", FutureBlocks.STONE_SLAB, PaletteMappings.SLAB_HALF)
-		add("slab.stonebrick.*", FutureBlocks.STONE_BRICK_SLAB, PaletteMappings.SLAB_HALF)
-		add("slab.spruce.*", FutureBlocks.SPRUCE_SLAB, PaletteMappings.SLAB_HALF)
-		add("slab.stone.double", FutureBlocks.DOUBLE_STONE_SLAB)
+		add("slab.stone.*", Blocks.STONE_SLAB, PaletteMappings.SLAB_TYPE)
+		add("slab.stonebrick.*", Blocks.STONE_BRICK_SLAB, PaletteMappings.SLAB_TYPE)
+		add("slab.spruce.*", Blocks.SPRUCE_SLAB, PaletteMappings.SLAB_TYPE)
 		
 		add("stairs.stonebrick.*.*", Blocks.STONE_BRICK_STAIRS, PaletteMappings.STAIR_MAPPING_LIST)
 		add("stairs.spruce.*.*", Blocks.SPRUCE_STAIRS, PaletteMappings.STAIR_MAPPING_LIST)
 		add("stairs.darkoak.*.*", Blocks.DARK_OAK_STAIRS, PaletteMappings.STAIR_MAPPING_LIST)
 		
-		add("log.spruce.*", FutureBlocks.SPRUCE_LOG, PaletteMappings.FACING_AXIS_LOGS)
-		add("log.darkoak.*", FutureBlocks.DARK_OAK_LOG, PaletteMappings.FACING_AXIS_LOGS)
+		add("log.spruce.*", Blocks.SPRUCE_LOG, PaletteMappings.FACING_AXIS)
+		add("log.darkoak.*", Blocks.DARK_OAK_LOG, PaletteMappings.FACING_AXIS)
 		
-		add("planks.oak", FutureBlocks.OAK_PLANKS)
-		add("planks.spruce", FutureBlocks.SPRUCE_PLANKS)
-		add("planks.darkoak", FutureBlocks.DARK_OAK_PLANKS)
+		add("planks.oak", Blocks.OAK_PLANKS)
+		add("planks.spruce", Blocks.SPRUCE_PLANKS)
+		add("planks.darkoak", Blocks.DARK_OAK_PLANKS)
 		
 		add("fence.oak", Blocks.OAK_FENCE)
 		
 		add("door.oak.*.*", Blocks.OAK_DOOR, listOf(PaletteMappings.DOOR_HALF, PaletteMappings.FACING_HORIZONTAL))
 		add("door.iron.*.*", Blocks.IRON_DOOR, listOf(PaletteMappings.DOOR_HALF, PaletteMappings.FACING_HORIZONTAL))
 		
-		add("torch.*", Blocks.TORCH, PaletteMappings.FACING_TORCH)
+		add("torch", Blocks.TORCH)
+		add("torch.*", Blocks.WALL_TORCH, PaletteMappings.FACING_WALL_TORCH)
 		add("chest.*", Blocks.CHEST, PaletteMappings.FACING_HORIZONTAL)
 		add("furnace.*", Blocks.FURNACE, PaletteMappings.FACING_HORIZONTAL)
 		add("stone_button.*", Blocks.STONE_BUTTON, PaletteMappings.FACING_ALL)
@@ -125,22 +126,22 @@ object StrongholdPieces : IStructureDescription{
 		
 		with(forGeneration){
 			add("stonebrick", PALETTE_ENTRY_STONE_BRICK)
-			add("stonebrick.plain", FutureBlocks.STONE_BRICKS)
-			add("stonebrick.chiseled", FutureBlocks.CHISELED_STONE_BRICKS)
+			add("stonebrick.plain", Blocks.STONE_BRICKS)
+			add("stonebrick.chiseled", Blocks.CHISELED_STONE_BRICKS)
 			
 			add("stonebrick.chiseled.random", Weighted(
-				2 to FutureBlocks.STONE_BRICKS,
-				1 to FutureBlocks.CHISELED_STONE_BRICKS
+				2 to Blocks.STONE_BRICKS,
+				1 to Blocks.CHISELED_STONE_BRICKS
 			))
 			
 			add("bookshelf.random", Weighted(
-				8 to Blocks.BOOKSHELF.defaultState,
-				1 to FutureBlocks.OAK_PLANKS
+				8 to Blocks.BOOKSHELF,
+				1 to Blocks.OAK_PLANKS
 			))
 		}
 		
 		with(forDevelopment){
-			add("stonebrick", FutureBlocks.STONE_BRICKS)
+			add("stonebrick", Blocks.STONE_BRICKS)
 			add("stonebrick.plain", Blocks.DIAMOND_BLOCK)
 			add("stonebrick.chiseled", Blocks.IRON_BLOCK)
 			add("stonebrick.chiseled.random", Blocks.EMERALD_BLOCK)
@@ -151,7 +152,7 @@ object StrongholdPieces : IStructureDescription{
 	}
 	
 	fun isStoneBrick(block: Block): Boolean{
-		return block === Blocks.STONEBRICK || block === Blocks.MONSTER_EGG
+		return block.isIn(BlockTags.STONE_BRICKS) || (block is BlockSilverfish && block.mimickedBlock.isIn(BlockTags.STONE_BRICKS))
 	}
 	
 	// Loot
@@ -174,11 +175,11 @@ object StrongholdPieces : IStructureDescription{
 	)
 	
 	private val PIECES_ROOMS_DECOR_SMALL_GLASS = arrayOf(
-		StrongholdRoom_Decor_GlassCorners("decor.glass_corners.nbt", EnumDyeColor.WHITE),
-		StrongholdRoom_Decor_GlassCorners("decor.glass_corners.nbt", EnumDyeColor.SILVER),
-		StrongholdRoom_Decor_GlassCorners("decor.glass_corners.nbt", EnumDyeColor.BLACK),
-		StrongholdRoom_Decor_GlassCorners("decor.glass_corners.nbt", EnumDyeColor.PURPLE),
-		StrongholdRoom_Decor_GlassCorners("decor.glass_corners.nbt", EnumDyeColor.MAGENTA)
+		StrongholdRoom_Decor_GlassCorners("decor.glass_corners.nbt", DyeColor.WHITE),
+		StrongholdRoom_Decor_GlassCorners("decor.glass_corners.nbt", DyeColor.LIGHT_GRAY),
+		StrongholdRoom_Decor_GlassCorners("decor.glass_corners.nbt", DyeColor.BLACK),
+		StrongholdRoom_Decor_GlassCorners("decor.glass_corners.nbt", DyeColor.PURPLE),
+		StrongholdRoom_Decor_GlassCorners("decor.glass_corners.nbt", DyeColor.MAGENTA)
 	)
 	
 	private val PIECES_ROOMS_DECOR_LARGE = arrayOf(

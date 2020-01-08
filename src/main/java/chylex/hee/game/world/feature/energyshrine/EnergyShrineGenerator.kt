@@ -1,6 +1,7 @@
 package chylex.hee.game.world.feature.energyshrine
 import chylex.hee.HEE
 import chylex.hee.game.world.feature.OverworldFeatures
+import chylex.hee.game.world.feature.OverworldFeatures.IOverworldFeature
 import chylex.hee.game.world.feature.OverworldFeatures.preloadChunks
 import chylex.hee.game.world.feature.stronghold.StrongholdGenerator
 import chylex.hee.game.world.structure.piece.IStructureBuild
@@ -19,14 +20,11 @@ import chylex.hee.system.util.offsetUntil
 import chylex.hee.system.util.square
 import chylex.hee.system.util.xz
 import net.minecraft.util.math.BlockPos
-import net.minecraft.world.DimensionType.OVERWORLD
 import net.minecraft.world.World
-import net.minecraft.world.chunk.IChunkProvider
-import net.minecraft.world.gen.IChunkGenerator
-import net.minecraftforge.fml.common.IWorldGenerator
+import net.minecraft.world.server.ServerWorld
 import java.util.Random
 
-object EnergyShrineGenerator : IWorldGenerator{
+object EnergyShrineGenerator : IOverworldFeature{
 	private const val GRID_CHUNKS = 27
 	private const val GRID_Z_OFFSET = 9
 	private val GRID_Z_OFFSET_CHECKS = intArrayOf(0, -1, 1)
@@ -42,7 +40,7 @@ object EnergyShrineGenerator : IWorldGenerator{
 	
 	// Search
 	
-	private fun findSpawnAtMaybe(world: World, chunkX: Int, chunkZ: Int): PosXZ?{
+	private fun findSpawnAtMaybe(world: ServerWorld, chunkX: Int, chunkZ: Int): PosXZ?{
 		val (startChunkX, startChunkZ) = OverworldFeatures.findStartChunkInGrid(GRID_CHUNKS, chunkX, chunkZ)
 		
 		val xChunkColumn = startChunkX / GRID_CHUNKS
@@ -70,7 +68,7 @@ object EnergyShrineGenerator : IWorldGenerator{
 		return centerPos
 	}
 	
-	fun findNearest(world: World, xz: PosXZ): BlockPos?{ // does not guarantee a correct find
+	fun findNearest(world: ServerWorld, xz: PosXZ): BlockPos?{ // does not guarantee a correct find
 		val chunkX = xz.chunkX
 		val chunkZ = xz.chunkZ
 		
@@ -155,7 +153,7 @@ object EnergyShrineGenerator : IWorldGenerator{
 	
 	// Generation
 	
-	private fun findSpawnMatchingChunk(world: World, chunkX: Int, chunkZ: Int): PosXZ?{
+	private fun findSpawnMatchingChunk(world: ServerWorld, chunkX: Int, chunkZ: Int): PosXZ?{
 		for(zOffset in GRID_Z_OFFSET_CHECKS){
 			val foundPos = findSpawnAtMaybe(world, chunkX, chunkZ + GRID_CHUNKS * zOffset)
 			
@@ -167,11 +165,7 @@ object EnergyShrineGenerator : IWorldGenerator{
 		return null
 	}
 	
-	override fun generate(rand: Random, chunkX: Int, chunkZ: Int, world: World, generator: IChunkGenerator, provider: IChunkProvider){
-		if (world.provider.dimensionType != OVERWORLD){
-			return
-		}
-		
+	override fun generate(world: ServerWorld, chunkX: Int, chunkZ: Int, rand: Random){
 		val centerXZ = findSpawnMatchingChunk(world, chunkX, chunkZ) ?: return
 		val build = buildStructure(rand)
 		
@@ -191,7 +185,7 @@ object EnergyShrineGenerator : IWorldGenerator{
 			return
 		}
 		
-		val structureOffset = BlockPos.ORIGIN.subtract(STRUCTURE_SIZE.getPos(CENTER, MAX, CENTER))
+		val structureOffset = BlockPos.ZERO.subtract(STRUCTURE_SIZE.getPos(CENTER, MAX, CENTER))
 		val structurePos = findStructureTop(world, rand, build, topPos.down(topOffset), structureOffset, structureHeight)
 		
 		if (structurePos == null){

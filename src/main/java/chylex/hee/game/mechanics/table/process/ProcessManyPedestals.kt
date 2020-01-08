@@ -11,16 +11,15 @@ import chylex.hee.game.mechanics.table.process.ProcessManyPedestals.State.Cancel
 import chylex.hee.game.mechanics.table.process.ProcessManyPedestals.State.Output
 import chylex.hee.game.mechanics.table.process.ProcessManyPedestals.State.Work
 import chylex.hee.system.util.NBTItemStackList
-import chylex.hee.system.util.NBTList.Companion.setList
+import chylex.hee.system.util.NBTList.Companion.putList
 import chylex.hee.system.util.Pos
 import chylex.hee.system.util.TagCompound
 import chylex.hee.system.util.getListOfItemStacks
-import chylex.hee.system.util.getLongArray
 import chylex.hee.system.util.getPos
 import chylex.hee.system.util.getTile
-import chylex.hee.system.util.setLongArray
-import chylex.hee.system.util.setPos
+import chylex.hee.system.util.putPos
 import chylex.hee.system.util.totalTime
+import chylex.hee.system.util.use
 import net.minecraft.item.ItemStack
 import net.minecraft.util.math.BlockPos
 import net.minecraft.world.World
@@ -169,19 +168,19 @@ abstract class ProcessManyPedestals(private val world: World, pos: Array<BlockPo
 	// Serialization
 	
 	override fun serializeNBT() = TagCompound().apply {
-		setLongArray(PEDESTAL_POS_TAG, pedestals.map(BlockPos::toLong).toLongArray())
-		setList(LAST_INPUTS_TAG, NBTItemStackList.of(lastInputStacks.asIterable()))
+		putLongArray(PEDESTAL_POS_TAG, pedestals.map(BlockPos::toLong).toLongArray())
+		putList(LAST_INPUTS_TAG, NBTItemStackList.of(lastInputStacks.asIterable()))
 		
 		val state = currentState
 		
-		setString(STATE_TAG, when(state){
+		putString(STATE_TAG, when(state){
 			is Work   -> "Work"
-			is Output -> "Output".also { setList("OutputItems", state.tag); setPos("TargetPedestal", state.pedestal) }
+			is Output -> "Output".also { putList("OutputItems", state.tag); putPos("TargetPedestal", state.pedestal) }
 			Cancel    -> ""
 		})
 	}
 	
-	override fun deserializeNBT(nbt: TagCompound) = with(nbt){
+	override fun deserializeNBT(nbt: TagCompound) = nbt.use {
 		getListOfItemStacks(LAST_INPUTS_TAG).forEachIndexed { index, stack -> lastInputStacks[index] = stack }
 		
 		currentState = when(getString(STATE_TAG)){

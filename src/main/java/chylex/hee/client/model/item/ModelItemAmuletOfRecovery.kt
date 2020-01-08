@@ -1,18 +1,16 @@
 package chylex.hee.client.model.item
 import chylex.hee.client.util.MC
-import chylex.hee.init.ModItems
 import chylex.hee.system.migration.forge.Side
 import chylex.hee.system.migration.forge.Sided
 import chylex.hee.system.migration.forge.SubscribeEvent
 import chylex.hee.system.util.facades.Resource
-import net.minecraft.client.renderer.block.model.IBakedModel
-import net.minecraft.client.renderer.block.model.ItemCameraTransforms.TransformType
-import net.minecraft.client.renderer.block.model.ItemCameraTransforms.TransformType.FIRST_PERSON_LEFT_HAND
-import net.minecraft.client.renderer.block.model.ItemCameraTransforms.TransformType.FIRST_PERSON_RIGHT_HAND
-import net.minecraft.client.renderer.block.model.ItemCameraTransforms.TransformType.THIRD_PERSON_LEFT_HAND
-import net.minecraft.client.renderer.block.model.ItemCameraTransforms.TransformType.THIRD_PERSON_RIGHT_HAND
-import net.minecraft.client.renderer.block.model.ModelBakery
-import net.minecraft.client.renderer.block.model.ModelResourceLocation
+import net.minecraft.client.renderer.model.IBakedModel
+import net.minecraft.client.renderer.model.ItemCameraTransforms.TransformType
+import net.minecraft.client.renderer.model.ItemCameraTransforms.TransformType.FIRST_PERSON_LEFT_HAND
+import net.minecraft.client.renderer.model.ItemCameraTransforms.TransformType.FIRST_PERSON_RIGHT_HAND
+import net.minecraft.client.renderer.model.ItemCameraTransforms.TransformType.THIRD_PERSON_LEFT_HAND
+import net.minecraft.client.renderer.model.ItemCameraTransforms.TransformType.THIRD_PERSON_RIGHT_HAND
+import net.minecraft.client.renderer.model.ModelResourceLocation
 import net.minecraftforge.client.event.ModelBakeEvent
 import net.minecraftforge.client.model.BakedModelWrapper
 import net.minecraftforge.common.MinecraftForge
@@ -26,14 +24,14 @@ class ModelItemAmuletOfRecovery private constructor(sourceModel: IBakedModel) : 
 		private val RESOURCE_HELD   = ModelResourceLocation(Resource.Custom("amulet_of_recovery_held"), "held")
 		
 		fun register(){
-			ModelBakery.registerItemVariants(ModItems.AMULET_OF_RECOVERY, RESOURCE_NORMAL, RESOURCE_HELD)
+			// UPDATE ModelBakery.registerItemVariants(ModItems.AMULET_OF_RECOVERY, RESOURCE_NORMAL, RESOURCE_HELD)
 			MinecraftForge.EVENT_BUS.register(this)
 		}
 		
 		@SubscribeEvent
 		fun onModelBake(e: ModelBakeEvent){
 			with(e.modelRegistry){
-				putObject(RESOURCE_NORMAL, ModelItemAmuletOfRecovery(getObject(RESOURCE_NORMAL)!!))
+				put(RESOURCE_NORMAL, ModelItemAmuletOfRecovery(get(RESOURCE_NORMAL)!!))
 			}
 		}
 	}

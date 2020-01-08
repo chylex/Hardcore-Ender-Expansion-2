@@ -13,10 +13,10 @@ open class SlotTrinketItem(trinketHandler: IItemHandler, slotIndex: Int, x: Int,
 	protected object Client{
 		val TEX_SLOT = Resource.Custom("textures/gui/trinket.png")
 		
-		const val TEX_SLOT_W = 64F
-		const val TEX_SLOT_H = 32F
+		const val TEX_SLOT_W = 64
+		const val TEX_SLOT_H = 32
 		
-		val TEX_DEFINITION = object : TextureAtlasSprite(TEX_SLOT.toString()){
+		val TEX_DEFINITION = object : TextureAtlasSprite(TEX_SLOT, TEX_SLOT_W, TEX_SLOT_H){
 			override fun getMinU() = 19F / TEX_SLOT_W
 			override fun getMaxU() = 35F / TEX_SLOT_W
 			override fun getMinV() =  1F / TEX_SLOT_H

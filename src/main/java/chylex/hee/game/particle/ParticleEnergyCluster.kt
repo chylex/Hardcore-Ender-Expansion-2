@@ -16,7 +16,7 @@ import net.minecraft.client.particle.Particle
 import net.minecraft.world.World
 import java.util.Random
 
-object ParticleEnergyCluster : IParticleMaker<ParticleDataColorScale>{
+object ParticleEnergyCluster : IParticleMaker.WithData<ParticleDataColorScale>(){
 	@Sided(Side.CLIENT)
 	override fun create(world: World, posX: Double, posY: Double, posZ: Double, motX: Double, motY: Double, motZ: Double, data: ParticleDataColorScale?): Particle{
 		return Instance(world, posX, posY, posZ, motX, motY, motZ, data)
@@ -65,6 +65,8 @@ object ParticleEnergyCluster : IParticleMaker<ParticleDataColorScale>{
 				setExpired()
 			}
 			else{
+				selectSpriteRandomly(ParticleEnergyCluster.sprite)
+				
 				loadColor(data.color)
 				particleAlpha = 0F
 				particleScale = data.scale
@@ -75,7 +77,7 @@ object ParticleEnergyCluster : IParticleMaker<ParticleDataColorScale>{
 			}
 		}
 		
-		override fun onUpdate(){
+		override fun tick(){
 			if (clusterPos.getBlock(world) !== ModBlocks.ENERGY_CLUSTER){
 				if (age < TOTAL_LIFESPAN - FADE_OUT_DURATION){
 					age = TOTAL_LIFESPAN - FADE_OUT_DURATION
@@ -84,7 +86,7 @@ object ParticleEnergyCluster : IParticleMaker<ParticleDataColorScale>{
 				age += 2
 			}
 			
-			super.onUpdate()
+			super.tick()
 			particleAlpha = interpolateAge(alphaMultiplier, FADE_IN_DURATION, FADE_OUT_DURATION)
 		}
 	}

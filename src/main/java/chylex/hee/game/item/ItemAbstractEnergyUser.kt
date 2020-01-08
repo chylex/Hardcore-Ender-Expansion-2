@@ -18,40 +18,38 @@ import chylex.hee.system.migration.ActionResult.SUCCESS
 import chylex.hee.system.migration.Hand.OFF_HAND
 import chylex.hee.system.migration.forge.Side
 import chylex.hee.system.migration.forge.Sided
+import chylex.hee.system.migration.vanilla.EntityPlayer
+import chylex.hee.system.migration.vanilla.TextComponentTranslation
 import chylex.hee.system.util.TagCompound
 import chylex.hee.system.util.ceilToInt
 import chylex.hee.system.util.distanceTo
 import chylex.hee.system.util.floorToInt
-import chylex.hee.system.util.getAttribute
 import chylex.hee.system.util.getPos
 import chylex.hee.system.util.getTile
+import chylex.hee.system.util.hasKey
 import chylex.hee.system.util.heeTag
 import chylex.hee.system.util.heeTagOrNull
+import chylex.hee.system.util.putPos
 import chylex.hee.system.util.readPos
-import chylex.hee.system.util.setPos
 import chylex.hee.system.util.totalTime
 import chylex.hee.system.util.use
-import chylex.hee.system.util.value
 import chylex.hee.system.util.writePos
-import io.netty.buffer.ByteBuf
-import net.minecraft.client.resources.I18n
 import net.minecraft.client.util.ITooltipFlag
 import net.minecraft.entity.Entity
-import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.item.Item
 import net.minecraft.item.ItemStack
-import net.minecraft.util.EnumActionResult
-import net.minecraft.util.EnumFacing
-import net.minecraft.util.EnumHand
-import net.minecraft.util.math.BlockPos
+import net.minecraft.item.ItemUseContext
+import net.minecraft.network.PacketBuffer
+import net.minecraft.util.ActionResultType
 import net.minecraft.util.math.MathHelper
+import net.minecraft.util.text.ITextComponent
 import net.minecraft.world.World
 import org.apache.commons.lang3.math.Fraction
 import java.util.Random
 import kotlin.math.max
 import kotlin.math.pow
 
-abstract class ItemAbstractEnergyUser : Item(){
+abstract class ItemAbstractEnergyUser(properties: Properties) : Item(properties){
 	companion object{
 		private const val ENERGY_LEVEL_TAG = "EnergyLevel"
 		
@@ -59,12 +57,12 @@ abstract class ItemAbstractEnergyUser : Item(){
 		private const val CLUSTER_TICK_OFFSET_TAG = "ClusterTick"
 		
 		private fun removeClusterTags(nbt: TagCompound){
-			nbt.removeTag(CLUSTER_POS_TAG)
-			nbt.removeTag(CLUSTER_TICK_OFFSET_TAG)
+			nbt.remove(CLUSTER_POS_TAG)
+			nbt.remove(CLUSTER_TICK_OFFSET_TAG)
 		}
 		
 		class FxChargeData(private val cluster: TileEntityEnergyCluster, private val player: EntityPlayer) : IFxData{
-			override fun write(buffer: ByteBuf) = buffer.use {
+			override fun write(buffer: PacketBuffer) = buffer.use {
 				writePos(cluster.pos)
 				writeInt(player.entityId)
 			}
@@ -81,7 +79,7 @@ abstract class ItemAbstractEnergyUser : Item(){
 				}
 			}
 			
-			override fun handle(buffer: ByteBuf, world: World, rand: Random) = buffer.use {
+			override fun handle(buffer: PacketBuffer, world: World, rand: Random) = buffer.use {
 				val cluster = readPos().getTile<TileEntityEnergyCluster>(world) ?: return
 				val player = world.getEntityByID(readInt()) as? EntityPlayer ?: return
 				
@@ -98,7 +96,7 @@ abstract class ItemAbstractEnergyUser : Item(){
 	}
 	
 	init{
-		maxStackSize = 1
+		require(maxStackSize == 1){ "energy item must have a maximum stack size of 1" }
 	}
 	
 	protected abstract fun getEnergyCapacity(stack: ItemStack): Units
@@ -119,7 +117,7 @@ abstract class ItemAbstractEnergyUser : Item(){
 			val prevLevel = getShort(ENERGY_LEVEL_TAG)
 			val newLevel = (prevLevel + byAmount).coerceIn(0, calculateInternalEnergyCapacity(stack)).toShort()
 			
-			setShort(ENERGY_LEVEL_TAG, newLevel)
+			putShort(ENERGY_LEVEL_TAG, newLevel)
 			return prevLevel != newLevel
 		}
 	}
@@ -138,21 +136,25 @@ abstract class ItemAbstractEnergyUser : Item(){
 	
 	fun setEnergyChargeLevel(stack: ItemStack, level: IEnergyQuantity){
 		val internalCapacity = calculateInternalEnergyCapacity(stack)
-		stack.heeTag.setShort(ENERGY_LEVEL_TAG, (level.units.value * getEnergyPerUse(stack).denominator).coerceIn(0, internalCapacity).toShort())
+		stack.heeTag.putShort(ENERGY_LEVEL_TAG, (level.units.value * getEnergyPerUse(stack).denominator).coerceIn(0, internalCapacity).toShort())
 	}
 	
 	fun setEnergyChargePercentage(stack: ItemStack, percentage: Float){
 		val internalCapacity = calculateInternalEnergyCapacity(stack)
-		stack.heeTag.setShort(ENERGY_LEVEL_TAG, (internalCapacity * percentage).floorToInt().coerceIn(0, internalCapacity).toShort())
+		stack.heeTag.putShort(ENERGY_LEVEL_TAG, (internalCapacity * percentage).floorToInt().coerceIn(0, internalCapacity).toShort())
 	}
 	
 	// Energy charging
 	
-	override fun onItemUse(player: EntityPlayer, world: World, pos: BlockPos, hand: EnumHand, facing: EnumFacing, hitX: Float, hitY: Float, hitZ: Float): EnumActionResult{
-		val tile = pos.getTile<TileEntityEnergyCluster>(world)
-		val stack = player.getHeldItem(hand)
+	override fun onItemUse(context: ItemUseContext): ActionResultType{
+		val player = context.player ?: return FAIL
+		val world = context.world
+		val pos = context.pos
 		
-		if (tile == null || !player.canPlayerEdit(pos, facing, stack)){
+		val tile = pos.getTile<TileEntityEnergyCluster>(world)
+		val stack = player.getHeldItem(context.hand)
+		
+		if (tile == null || !player.canPlayerEdit(pos, context.face, stack)){
 			return FAIL
 		}
 		else if (world.isRemote){
@@ -164,15 +166,15 @@ abstract class ItemAbstractEnergyUser : Item(){
 				removeClusterTags(this)
 			}
 			else if (pos.distanceTo(player) <= player.getAttribute(EntityPlayer.REACH_DISTANCE).value){
-				setPos(CLUSTER_POS_TAG, pos)
-				setByte(CLUSTER_TICK_OFFSET_TAG, (4L - (world.totalTime % 4L)).toByte())
+				putPos(CLUSTER_POS_TAG, pos)
+				putByte(CLUSTER_TICK_OFFSET_TAG, (4L - (world.totalTime % 4L)).toByte())
 			}
 		}
 		
 		return SUCCESS
 	}
 	
-	override fun onUpdate(stack: ItemStack, world: World, entity: Entity, itemSlot: Int, isSelected: Boolean){
+	override fun inventoryTick(stack: ItemStack, world: World, entity: Entity, itemSlot: Int, isSelected: Boolean){
 		if (world.isRemote || entity !is EntityPlayer){
 			return
 		}
@@ -214,13 +216,13 @@ abstract class ItemAbstractEnergyUser : Item(){
 	}
 	
 	@Sided(Side.CLIENT)
-	override fun addInformation(stack: ItemStack, world: World?, lines: MutableList<String>, flags: ITooltipFlag){
+	override fun addInformation(stack: ItemStack, world: World?, lines: MutableList<ITextComponent>, flags: ITooltipFlag){
 		super.addInformation(stack, world, lines, flags)
 		
 		if (flags.isAdvanced){
-			lines.add(I18n.format("item.tooltip.hee.energy.level", getEnergyLevel(stack), calculateInternalEnergyCapacity(stack)))
+			lines.add(TextComponentTranslation("item.tooltip.hee.energy.level", getEnergyLevel(stack), calculateInternalEnergyCapacity(stack)))
 		}
 		
-		lines.add(I18n.format("item.tooltip.hee.energy.uses", (getEnergyLevel(stack).toDouble() / getEnergyPerUse(stack).numerator).ceilToInt()))
+		lines.add(TextComponentTranslation("item.tooltip.hee.energy.uses", (getEnergyLevel(stack).toDouble() / getEnergyPerUse(stack).numerator).ceilToInt()))
 	}
 }

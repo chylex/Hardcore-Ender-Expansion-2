@@ -1,8 +1,9 @@
 package chylex.hee.test.mechanics.damage
 import chylex.hee.game.mechanics.damage.DamageProperties
 import chylex.hee.game.mechanics.damage.DamageType
+import chylex.hee.system.migration.vanilla.EntitySnowball
 import net.minecraft.entity.Entity
-import net.minecraft.entity.projectile.EntitySnowball
+import net.minecraft.entity.EntityType
 import net.minecraft.util.DamageSource
 import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.Assertions.assertNotNull
@@ -79,7 +80,7 @@ class TestDamageProperties{
 			
 			assertTrue(createDamageSource().isDamageAbsolute)
 			assertFalse(createDamageSource().isDifficultyScaled)
-			assertNull(createDamageSource(EntitySnowball(null)).damageLocation)
+			assertNull(createDamageSource(EntitySnowball(EntityType.SNOWBALL, null)).damageLocation)
 		}
 		
 		@Test fun `using 'setAllowArmor' updates state correctly`() = with(DamageProperties()){
@@ -89,7 +90,7 @@ class TestDamageProperties{
 			assertTrue(Reader().ignoreShield)
 			
 			assertFalse(createDamageSource().isUnblockable)
-			assertNull(createDamageSource(EntitySnowball(null)).damageLocation)
+			assertNull(createDamageSource(EntitySnowball(EntityType.SNOWBALL, null)).damageLocation)
 		}
 		
 		@Test fun `using 'setAllowArmorAndShield' updates state correctly`() = with(DamageProperties()){
@@ -99,7 +100,7 @@ class TestDamageProperties{
 			assertFalse(Reader().ignoreShield)
 			
 			assertFalse(createDamageSource().isUnblockable)
-			assertNotNull(createDamageSource(EntitySnowball(null)).damageLocation)
+			assertNotNull(createDamageSource(EntitySnowball(EntityType.SNOWBALL, null)).damageLocation)
 		}
 		
 		@Test fun `using 'setDealCreative' updates state correctly`() = with(DamageProperties()){

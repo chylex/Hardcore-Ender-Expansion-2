@@ -15,8 +15,8 @@ import chylex.hee.system.util.lookPosVec
 import chylex.hee.system.util.math.LerpedFloat
 import chylex.hee.system.util.nextFloat
 import net.minecraft.util.math.Vec3d
-import net.minecraft.world.EnumSkyBlock.BLOCK
-import net.minecraft.world.EnumSkyBlock.SKY
+import net.minecraft.world.LightType.BLOCK
+import net.minecraft.world.LightType.SKY
 import java.util.Random
 import kotlin.math.max
 import kotlin.math.pow

@@ -2,28 +2,23 @@ package chylex.hee.client.gui
 import chylex.hee.client.render.util.GL
 import chylex.hee.client.util.MC
 import chylex.hee.game.block.entity.TileEntityBrewingStandCustom
-import chylex.hee.game.container.ContainerBrewingStandCustom
 import chylex.hee.system.migration.forge.Side
 import chylex.hee.system.migration.forge.Sided
+import chylex.hee.system.migration.vanilla.ContainerBrewingStand
 import chylex.hee.system.util.facades.Resource
-import chylex.hee.system.util.getStack
-import chylex.hee.system.util.isNotEmpty
 import chylex.hee.system.util.totalTime
-import net.minecraft.client.gui.inventory.GuiBrewingStand
-import net.minecraft.entity.player.InventoryPlayer
+import net.minecraft.client.gui.screen.inventory.BrewingStandScreen
+import net.minecraft.entity.player.PlayerInventory
+import net.minecraft.util.text.ITextComponent
 
 @Sided(Side.CLIENT)
-class GuiBrewingStandCustom(inventory: InventoryPlayer, private val brewingStand: TileEntityBrewingStandCustom) : GuiBrewingStand(inventory, brewingStand){
+class GuiBrewingStandCustom(container: ContainerBrewingStand, inventory: PlayerInventory, title: ITextComponent) : BrewingStandScreen(container, inventory, title){
 	private companion object{
 		private val TEX_BACKGROUND = Resource.Custom("textures/gui/brewing_stand.png")
 		private val BUBBLE_LENGTHS = intArrayOf(0, 6, 11, 16, 20, 24, 29)
 	}
 	
-	private var brewStartTime = brewingStand.world.totalTime
-	
-	init{
-		inventorySlots = ContainerBrewingStandCustom(inventory, brewingStand)
-	}
+	private var brewStartTime = MC.world!!.totalTime
 	
 	override fun drawGuiContainerBackgroundLayer(partialTicks: Float, mouseX: Int, mouseY: Int){
 		val x = (width - xSize) / 2
@@ -31,37 +26,37 @@ class GuiBrewingStandCustom(inventory: InventoryPlayer, private val brewingStand
 		
 		GL.color(1F, 1F, 1F, 1F)
 		MC.textureManager.bindTexture(TEX_BACKGROUND)
-		drawTexturedModalRect(x, y, 0, 0, xSize, ySize)
+		blit(x, y, 0, 0, xSize, ySize)
 		
-		val worldTime = brewingStand.world.totalTime
-		val brewTime = brewingStand.brewTime
+		val worldTime = MC.world!!.totalTime
+		val brewTime = container.func_216981_f() // UPDATE getBrewTime
 		
 		if (brewTime > 0){
 			val brewProgress = (28F * (1F - (brewTime / 400F))).toInt()
 			
 			if (brewProgress > 0){
-				drawTexturedModalRect(x + 97, y + 16, 176, 0, 9, brewProgress)
+				blit(x + 97, y + 16, 176, 0, 9, brewProgress)
 			}
 			
 			val bubbleLength = BUBBLE_LENGTHS[((worldTime - brewStartTime).toInt() / 2) % 7]
 			
 			if (bubbleLength > 0){
-				drawTexturedModalRect(x + 63, y + 43 - bubbleLength, 185, 29 - bubbleLength, 12, bubbleLength)
+				blit(x + 63, y + 43 - bubbleLength, 185, 29 - bubbleLength, 12, bubbleLength)
 			}
 		}
 		else{
 			brewStartTime = worldTime
 		}
 		
-		if (brewingStand.getStack(TileEntityBrewingStandCustom.SLOT_MODIFIER).isNotEmpty){
-			drawTexturedModalRect(x + 62, y + 45, 197, 0, 14, 2)
+		if (container.getSlot(TileEntityBrewingStandCustom.SLOT_MODIFIER).hasStack){
+			blit(x + 62, y + 45, 197, 0, 14, 2)
 		}
 		
 		for(slotIndex in TileEntityBrewingStandCustom.SLOTS_POTIONS){
-			val slot = inventorySlots.getSlot(slotIndex)
+			val slot = container.getSlot(slotIndex)
 			
 			if (!slot.hasStack){
-				drawTexturedModalRect(x + slot.xPos, y + slot.yPos, 211, 0, 16, 16)
+				blit(x + slot.xPos, y + slot.yPos, 211, 0, 16, 16)
 			}
 		}
 	}

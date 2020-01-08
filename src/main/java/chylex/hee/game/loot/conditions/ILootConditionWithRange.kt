@@ -2,15 +2,15 @@ package chylex.hee.game.loot.conditions
 import com.google.gson.JsonDeserializationContext
 import com.google.gson.JsonObject
 import com.google.gson.JsonSerializationContext
-import net.minecraft.util.JsonUtils
+import net.minecraft.util.JSONUtils
 import net.minecraft.util.ResourceLocation
-import net.minecraft.world.storage.loot.conditions.LootCondition
+import net.minecraft.world.storage.loot.conditions.ILootCondition
 
-interface ILootConditionWithRange : LootCondition{
+interface ILootConditionWithRange : ILootCondition{
 	val minLevel: Int
 	val maxLevel: Int
 	
-	abstract class Serializer<T : ILootConditionWithRange>(key: ResourceLocation, cls: Class<T>) : LootCondition.Serializer<T>(key, cls){
+	abstract class Serializer<T : ILootConditionWithRange>(key: ResourceLocation, cls: Class<T>) : ILootCondition.AbstractSerializer<T>(key, cls){
 		private companion object{
 			private const val MIN_LEVEL = 0
 			private const val MAX_LEVEL = Int.MAX_VALUE
@@ -39,14 +39,14 @@ interface ILootConditionWithRange : LootCondition{
 			val minLevel: Int
 			val maxLevel: Int
 			
-			if (JsonUtils.isNumber(json["level"])){
-				minLevel = JsonUtils.getInt(json, "level")
+			if (JSONUtils.isNumber(json["level"])){
+				minLevel = JSONUtils.getInt(json, "level")
 				maxLevel = minLevel
 			}
 			else{
-				val range = JsonUtils.getJsonObject(json, "level")
-				minLevel = JsonUtils.getInt(range, "min", MIN_LEVEL)
-				maxLevel = JsonUtils.getInt(range, "max", MAX_LEVEL)
+				val range = JSONUtils.getJsonObject(json, "level")
+				minLevel = JSONUtils.getInt(range, "min", MIN_LEVEL)
+				maxLevel = JSONUtils.getInt(range, "max", MAX_LEVEL)
 			}
 			
 			return construct(minLevel, maxLevel)

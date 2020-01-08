@@ -1,22 +1,21 @@
 package chylex.hee.game.block
 import chylex.hee.game.block.IBlockDeathFlowerDecaying.Companion.LEVEL
-import chylex.hee.game.block.IBlockDeathFlowerDecaying.Companion.MIN_LEVEL
+import chylex.hee.game.block.info.BlockBuilder
 import chylex.hee.init.ModBlocks
-import chylex.hee.system.util.get
-import chylex.hee.system.util.with
-import net.minecraft.block.state.BlockStateContainer
-import net.minecraft.block.state.IBlockState
+import net.minecraft.block.Block
+import net.minecraft.block.BlockState
+import net.minecraft.state.StateContainer.Builder
 import net.minecraft.util.math.BlockPos
+import net.minecraft.world.IWorldReader
 import net.minecraft.world.World
 import java.util.Random
 
-class BlockDeathFlowerDecaying : BlockEndPlant(), IBlockDeathFlowerDecaying{
-	override fun createBlockState() = BlockStateContainer(this, LEVEL)
+class BlockDeathFlowerDecaying(builder: BlockBuilder) : BlockEndPlant(builder), IBlockDeathFlowerDecaying{
+	override fun fillStateContainer(container: Builder<Block, BlockState>){
+		container.add(LEVEL)
+	}
 	
-	override fun getMetaFromState(state: IBlockState) = state[LEVEL] - MIN_LEVEL
-	override fun getStateFromMeta(meta: Int) = this.with(LEVEL, meta + MIN_LEVEL)
-	
-	override fun damageDropped(state: IBlockState) = state[LEVEL] - MIN_LEVEL
+	// UPDATE override fun damageDropped(state: BlockState) = state[LEVEL] - MIN_LEVEL
 	
 	override val thisAsBlock
 		get() = this
@@ -27,17 +26,17 @@ class BlockDeathFlowerDecaying : BlockEndPlant(), IBlockDeathFlowerDecaying{
 	override val witheredFlowerBlock
 		get() = ModBlocks.DEATH_FLOWER_WITHERED
 	
-	override fun tickRate(world: World): Int{
+	override fun tickRate(world: IWorldReader): Int{
 		return implTickRate()
 	}
 	
-	override fun onBlockAdded(world: World, pos: BlockPos, state: IBlockState){
-		super.onBlockAdded(world, pos, state)
+	override fun onBlockAdded(state: BlockState, world: World, pos: BlockPos, oldState: BlockState, isMoving: Boolean){
+		super.onBlockAdded(state, world, pos, oldState, isMoving)
 		implOnBlockAdded(world, pos)
 	}
 	
-	override fun updateTick(world: World, pos: BlockPos, state: IBlockState, rand: Random){
-		super.updateTick(world, pos, state, rand)
+	override fun tick(state: BlockState, world: World, pos: BlockPos, rand: Random){
+		super.tick(state, world, pos, rand)
 		implUpdateTick(world, pos, state, rand)
 	}
 }

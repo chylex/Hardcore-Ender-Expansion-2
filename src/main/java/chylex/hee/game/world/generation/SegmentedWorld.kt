@@ -12,7 +12,7 @@ import chylex.hee.system.util.ceilToInt
 import chylex.hee.system.util.component1
 import chylex.hee.system.util.component2
 import chylex.hee.system.util.component3
-import net.minecraft.block.state.IBlockState
+import net.minecraft.block.BlockState
 import net.minecraft.util.math.BlockPos
 import java.util.Random
 
@@ -50,12 +50,12 @@ open class SegmentedWorld(override val rand: Random, val worldSize: Size, privat
 		return pos.x in 0..worldSize.maxX && pos.y in 0..worldSize.maxY && pos.z in 0..worldSize.maxZ
 	}
 	
-	override fun getState(pos: BlockPos): IBlockState{
+	override fun getState(pos: BlockPos): BlockState{
 		val (segmentIndex, segmentOffset) = mapPos(pos) ?: return Blocks.AIR.defaultState
 		return segments[segmentIndex].getState(segmentOffset)
 	}
 	
-	override fun setState(pos: BlockPos, state: IBlockState){
+	override fun setState(pos: BlockPos, state: BlockState){
 		val (segmentIndex, segmentOffset) = mapPos(pos) ?: return
 		segments[segmentIndex] = segments[segmentIndex].withState(segmentOffset, state)
 	}

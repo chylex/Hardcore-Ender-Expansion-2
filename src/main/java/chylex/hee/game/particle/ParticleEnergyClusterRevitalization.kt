@@ -63,7 +63,7 @@ object ParticleEnergyClusterRevitalization : IParticleMaker.Simple(){
 			}
 		}
 		
-		override fun onUpdate(){
+		override fun tick(){
 			if ((clusterPos.getTile<TileEntityEnergyCluster>(world)?.clientOrbitingOrbs ?: 0) == 0.toByte()){
 				if (age < TOTAL_LIFESPAN - FADE_OUT_DURATION){
 					age = TOTAL_LIFESPAN - FADE_OUT_DURATION
@@ -72,7 +72,7 @@ object ParticleEnergyClusterRevitalization : IParticleMaker.Simple(){
 				age += 3
 			}
 			
-			super.onUpdate()
+			super.tick()
 			particleAlpha = interpolateAge(BASE_ALPHA, FADE_IN_DURATION, FADE_OUT_DURATION)
 			
 			val posVec = Vec3d(posX, posY, posZ)

@@ -1,11 +1,9 @@
 package chylex.hee.network.server
 import chylex.hee.init.ModGuiHandler.GuiType
 import chylex.hee.network.BaseServerPacket
-import chylex.hee.system.util.readVarInt
+import chylex.hee.system.migration.vanilla.EntityPlayerMP
 import chylex.hee.system.util.use
-import chylex.hee.system.util.writeVarInt
-import io.netty.buffer.ByteBuf
-import net.minecraft.entity.player.EntityPlayerMP
+import net.minecraft.network.PacketBuffer
 
 class PacketServerOpenGui() : BaseServerPacket(){
 	constructor(type: GuiType, x: Int = 0, y: Int = 0, z: Int = 0) : this(){
@@ -20,14 +18,14 @@ class PacketServerOpenGui() : BaseServerPacket(){
 	private var y: Int? = null
 	private var z: Int? = null
 	
-	override fun write(buffer: ByteBuf) = buffer.use {
+	override fun write(buffer: PacketBuffer) = buffer.use {
 		writeVarInt(type!!.ordinal)
 		writeVarInt(x!!)
 		writeVarInt(y!!)
 		writeVarInt(z!!)
 	}
 	
-	override fun read(buffer: ByteBuf) = buffer.use {
+	override fun read(buffer: PacketBuffer) = buffer.use {
 		type = GuiType.values().getOrNull(readVarInt())
 		x = readVarInt()
 		y = readVarInt()

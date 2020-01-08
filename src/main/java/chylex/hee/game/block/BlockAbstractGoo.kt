@@ -1,97 +1,52 @@
 package chylex.hee.game.block
 import chylex.hee.game.block.fluid.FluidBase
-import chylex.hee.game.world.util.BlockEditor
-import chylex.hee.system.migration.forge.EventResult
 import chylex.hee.system.migration.forge.Side
 import chylex.hee.system.migration.forge.Sided
-import chylex.hee.system.migration.forge.SubscribeEvent
-import chylex.hee.system.migration.vanilla.Blocks
-import chylex.hee.system.util.FLAG_NOTIFY_NEIGHBORS
-import chylex.hee.system.util.FLAG_RENDER_IMMEDIATE
-import chylex.hee.system.util.FLAG_SYNC_CLIENT
+import chylex.hee.system.migration.vanilla.BlockFlowingFluid
+import chylex.hee.system.migration.vanilla.EntityPlayer
 import chylex.hee.system.util.Pos
 import chylex.hee.system.util.allInBoxMutable
-import chylex.hee.system.util.facades.Stats
-import chylex.hee.system.util.get
 import chylex.hee.system.util.getLongOrNull
 import chylex.hee.system.util.getOrCreateCompound
 import chylex.hee.system.util.getState
 import chylex.hee.system.util.heeTag
-import chylex.hee.system.util.setBlock
 import chylex.hee.system.util.totalTime
-import net.minecraft.block.material.MapColor
+import net.minecraft.block.BlockState
 import net.minecraft.block.material.Material
-import net.minecraft.block.state.IBlockState
+import net.minecraft.block.material.MaterialColor
 import net.minecraft.entity.Entity
-import net.minecraft.entity.player.EntityPlayer
-import net.minecraft.item.Item
-import net.minecraft.item.ItemStack
 import net.minecraft.util.math.BlockPos
-import net.minecraft.util.math.RayTraceResult.Type.BLOCK
 import net.minecraft.util.math.Vec3d
-import net.minecraft.world.IBlockAccess
+import net.minecraft.world.IBlockReader
+import net.minecraft.world.IWorldReader
 import net.minecraft.world.World
-import net.minecraftforge.common.MinecraftForge
-import net.minecraftforge.event.entity.player.FillBucketEvent
-import net.minecraftforge.fluids.BlockFluidClassic
 import java.util.UUID
+import java.util.function.Supplier
 
-abstract class BlockAbstractGoo(private val fluid: FluidBase, material: Material) : BlockFluidClassic(fluid, material){
-	private companion object{
+abstract class BlockAbstractGoo(
+	private val fluid: FluidBase,
+	material: Material
+) : BlockFlowingFluid(Supplier { fluid.still }, Properties.create(material, fluid.mapColor).hardnessAndResistance(fluid.resistance).doesNotBlockMovement().noDrops()){
+	protected companion object{
 		private const val LAST_TIME_TAG = "Time"
 		private const val TOTAL_TICKS_TAG = "Ticks"
+		
+		const val FLOW_DISTANCE = 5
 	}
 	
 	// Initialization
 	
 	private var lastCollidingEntity = ThreadLocal<Pair<Long, UUID>?>()
 	
-	abstract val filledBucket: Item
 	protected abstract val tickTrackingKey: String
 	
 	init{
-		enableStats = false
-		
-		@Suppress("LeakingThis")
-		setQuantaPerBlock(5)
-		
-		@Suppress("LeakingThis")
-		MinecraftForge.EVENT_BUS.register(this)
+		// UPDATE setQuantaPerBlock(5)
 	}
 	
 	// Behavior
 	
-	@SubscribeEvent
-	fun onFillBucket(e: FillBucketEvent){
-		val target = e.target
-		
-		if (target == null || target.typeOfHit != BLOCK){
-			return
-		}
-		
-		val world = e.world
-		val player = e.entityPlayer
-		val pos = target.blockPos
-		
-		if (!BlockEditor.canEdit(pos, e.entityPlayer, e.emptyBucket) || !world.isBlockModifiable(player, pos)){
-			return
-		}
-		
-		val state = pos.getState(world)
-		
-		if (state.block !== this || state[LEVEL] != 0){
-			return
-		}
-		
-		player.addStat(Stats.useItem(e.emptyBucket.item))
-		// TODO sound effect?
-		
-		pos.setBlock(world, Blocks.AIR, FLAG_NOTIFY_NEIGHBORS or FLAG_SYNC_CLIENT or FLAG_RENDER_IMMEDIATE)
-		e.filledBucket = ItemStack(filledBucket)
-		e.result = EventResult.ALLOW
-	}
-	
-	final override fun onEntityCollision(world: World, pos: BlockPos, state: IBlockState, entity: Entity){
+	final override fun onEntityCollision(state: BlockState, world: World, pos: BlockPos, entity: Entity){
 		/*
 		 * this prevents calling onInsideGoo/modifyMotion multiple times if the entity is touching 2 or more goo blocks
 		 *
@@ -105,7 +60,7 @@ abstract class BlockAbstractGoo(private val fluid: FluidBase, material: Material
 			lastCollidingEntity.set(Pair(currentWorldTime, entity.uniqueID))
 			
 			// handling from Entity.doBlockCollisions
-			val bb = entity.entityBoundingBox
+			val bb = entity.boundingBox
 			val posMin = Pos(bb.minX - 0.001, bb.minY - 0.001, bb.minZ - 0.001)
 			val posMax = Pos(bb.maxX + 0.001, bb.maxY + 0.001, bb.maxZ + 0.001)
 			
@@ -124,7 +79,7 @@ abstract class BlockAbstractGoo(private val fluid: FluidBase, material: Material
 					onInsideGoo(entity)
 				}
 				
-				if (!(entity is EntityPlayer && entity.capabilities.isFlying)){
+				if (!(entity is EntityPlayer && entity.abilities.isFlying)){
 					modifyMotion(entity, lowestLevel)
 				}
 			}
@@ -137,7 +92,7 @@ abstract class BlockAbstractGoo(private val fluid: FluidBase, material: Material
 		
 		with(entity.heeTag.getOrCreateCompound(tickTrackingKey)){
 			val lastWorldTime = getLongOrNull(LAST_TIME_TAG) ?: (currentWorldTime - 1)
-			var totalTicks = getInteger(TOTAL_TICKS_TAG)
+			var totalTicks = getInt(TOTAL_TICKS_TAG)
 			
 			val ticksSinceLastUpdate = currentWorldTime - lastWorldTime
 			
@@ -149,8 +104,8 @@ abstract class BlockAbstractGoo(private val fluid: FluidBase, material: Material
 				++totalTicks
 			}
 			
-			setLong(LAST_TIME_TAG, currentWorldTime)
-			setInteger(TOTAL_TICKS_TAG, totalTicks)
+			putLong(LAST_TIME_TAG, currentWorldTime)
+			putInt(TOTAL_TICKS_TAG, totalTicks)
 			
 			return totalTicks
 		}
@@ -159,14 +114,12 @@ abstract class BlockAbstractGoo(private val fluid: FluidBase, material: Material
 	abstract fun onInsideGoo(entity: Entity)
 	abstract fun modifyMotion(entity: Entity, level: Int)
 	
-	// Colors
-	
-	@Sided(Side.CLIENT)
-	override fun getFogColor(world: World, pos: BlockPos, state: IBlockState, entity: Entity, originalColor: Vec3d, partialTicks: Float): Vec3d{
-		return fluid.fogColor
+	override fun getMaterialColor(state: BlockState, world: IBlockReader, pos: BlockPos): MaterialColor{
+		return fluid.mapColor
 	}
 	
-	override fun getMapColor(state: IBlockState, world: IBlockAccess, pos: BlockPos): MapColor{
-		return fluid.mapColor
+	@Sided(Side.CLIENT)
+	override fun getFogColor(state: BlockState, world: IWorldReader, pos: BlockPos, entity: Entity, originalColor: Vec3d, partialTicks: Float): Vec3d{
+		return fluid.fogColor
 	}
 }

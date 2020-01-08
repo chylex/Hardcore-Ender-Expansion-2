@@ -2,14 +2,16 @@ package chylex.hee.init
 import chylex.hee.HEE
 import chylex.hee.game.block.dispenser.DispenseEndermanHead
 import chylex.hee.game.block.dispenser.DispenseWaterExtinguishIgneousPlate
+import chylex.hee.game.block.fluid.FluidEnderGoo
+import chylex.hee.game.block.fluid.FluidEnderGooPurified
 import chylex.hee.game.item.ItemAmuletOfRecovery
 import chylex.hee.game.item.ItemBindingEssence
+import chylex.hee.game.item.ItemBlockHead
 import chylex.hee.game.item.ItemBucketWithCauldron
 import chylex.hee.game.item.ItemChorusBerry
 import chylex.hee.game.item.ItemCompost
 import chylex.hee.game.item.ItemElytraOverride
 import chylex.hee.game.item.ItemEndPowder
-import chylex.hee.game.item.ItemEndermanHead
 import chylex.hee.game.item.ItemEnergyOracle
 import chylex.hee.game.item.ItemEnergyReceptacle
 import chylex.hee.game.item.ItemEyeOfEnderOverride
@@ -38,97 +40,115 @@ import chylex.hee.game.item.ItemVoidSalad
 import chylex.hee.game.item.util.Tool.Type.AXE
 import chylex.hee.game.item.util.Tool.Type.PICKAXE
 import chylex.hee.game.item.util.Tool.Type.SHOVEL
+import chylex.hee.game.world.territory.TerritoryType
 import chylex.hee.init.ModCreativeTabs.OrderedCreativeTab
 import chylex.hee.system.migration.forge.SubscribeAllEvents
 import chylex.hee.system.migration.forge.SubscribeEvent
+import chylex.hee.system.migration.vanilla.BlockDispenser
+import chylex.hee.system.migration.vanilla.BlockShulkerBox
+import chylex.hee.system.migration.vanilla.ItemSpawnEgg
 import chylex.hee.system.migration.vanilla.Items
+import chylex.hee.system.util.color.IntColor.Companion.RGB
 import chylex.hee.system.util.facades.Resource
 import chylex.hee.system.util.useVanillaName
-import net.minecraft.block.BlockDispenser
-import net.minecraft.block.BlockShulkerBox
-import net.minecraft.creativetab.CreativeTabs
-import net.minecraft.item.EnumDyeColor
+import net.minecraft.item.DyeColor
 import net.minecraft.item.Item
+import net.minecraft.item.ItemGroup
 import net.minecraftforge.event.RegistryEvent
+import net.minecraftforge.fml.common.Mod.EventBusSubscriber.Bus.MOD
 
-@SubscribeAllEvents(modid = HEE.ID)
+@SubscribeAllEvents(modid = HEE.ID, bus = MOD)
 object ModItems{
+	private val baseProps
+		get() = Item.Properties().group(ModCreativeTabs.main)
+	
+	private val defaultProps = baseProps
+	private val toolProps = baseProps.maxStackSize(1)
 	
 	// Items: Raw resources
 	
-	@JvmField val ETHEREUM          = Item().apply { setup("ethereum") }
-	@JvmField val ANCIENT_DUST      = Item().apply { setup("ancient_dust") }
-	@JvmField val END_POWDER        = ItemEndPowder().apply { setup("end_powder") }
-	@JvmField val STARDUST          = Item().apply { setup("stardust") }
-	@JvmField val ENDIUM_INGOT      = Item().apply { setup("endium_ingot") }
-	@JvmField val ENDIUM_NUGGET     = Item().apply { setup("endium_nugget") }
-	@JvmField val OBSIDIAN_FRAGMENT = Item().apply { setup("obsidian_fragment") }
-	@JvmField val IGNEOUS_ROCK      = ItemIgneousRock().apply { setup("igneous_rock") }
-	@JvmField val PUZZLE_MEDALLION  = ItemPuzzleMedallion().apply { setup("puzzle_medallion") }
-	@JvmField val INFERNIUM         = Item().apply { setup("infernium") }
-	@JvmField val INFERNIUM_INGOT   = Item().apply { setup("infernium_ingot") }
-	@JvmField val AURICION          = Item().apply { setup("auricion") }
-	@JvmField val DRAGON_SCALE      = Item().apply { setup("dragon_scale") }
+	@JvmField val ETHEREUM          = Item(defaultProps) named "ethereum"
+	@JvmField val ANCIENT_DUST      = Item(defaultProps) named "ancient_dust"
+	@JvmField val END_POWDER        = ItemEndPowder(defaultProps) named "end_powder"
+	@JvmField val STARDUST          = Item(defaultProps) named "stardust"
+	@JvmField val ENDIUM_INGOT      = Item(defaultProps) named "endium_ingot"
+	@JvmField val ENDIUM_NUGGET     = Item(defaultProps) named "endium_nugget"
+	@JvmField val OBSIDIAN_FRAGMENT = Item(defaultProps) named "obsidian_fragment"
+	@JvmField val IGNEOUS_ROCK      = ItemIgneousRock(defaultProps) named "igneous_rock"
+	@JvmField val PUZZLE_MEDALLION  = ItemPuzzleMedallion(defaultProps) named "puzzle_medallion"
+	@JvmField val INFERNIUM         = Item(defaultProps) named "infernium"
+	@JvmField val INFERNIUM_INGOT   = Item(defaultProps) named "infernium_ingot"
+	@JvmField val AURICION          = Item(defaultProps) named "auricion"
+	@JvmField val DRAGON_SCALE      = Item(defaultProps) named "dragon_scale"
 	
 	// Items: Manufactured resources
 	
-	@JvmField val ALTERATION_NEXUS         = Item().apply { setup("alteration_nexus") }
-	@JvmField val VOID_ESSENCE             = Item().apply { setup("void_essence") }
-	@JvmField val OBSIDIAN_ROD             = Item().apply { setup("obsidian_rod") }
-	@JvmField val PURITY_EXTRACT           = Item().apply { setup("purity_extract") }
-	@JvmField val STATIC_CORE              = Item().apply { setup("static_core") }
-	@JvmField val DIRTY_INFERNIUM_INGOT    = Item().apply { setup("dirty_infernium_ingot") }
-	@JvmField val REVITALIZATION_SUBSTANCE = ItemRevitalizationSubstance().apply { setup("revitalization_substance") }
-	@JvmField val BINDING_ESSENCE          = ItemBindingEssence().apply { setup("binding_essence") }
+	@JvmField val ALTERATION_NEXUS         = Item(defaultProps) named "alteration_nexus"
+	@JvmField val VOID_ESSENCE             = Item(defaultProps) named "void_essence"
+	@JvmField val OBSIDIAN_ROD             = Item(defaultProps) named "obsidian_rod"
+	@JvmField val PURITY_EXTRACT           = Item(defaultProps) named "purity_extract"
+	@JvmField val STATIC_CORE              = Item(defaultProps) named "static_core"
+	@JvmField val DIRTY_INFERNIUM_INGOT    = Item(defaultProps) named "dirty_infernium_ingot"
+	@JvmField val REVITALIZATION_SUBSTANCE = ItemRevitalizationSubstance(baseProps.maxStackSize(16)) named "revitalization_substance"
+	@JvmField val BINDING_ESSENCE          = ItemBindingEssence(baseProps.maxStackSize(16)) named "binding_essence"
 	
 	// Items: Nature & food
 	
-	@JvmField val COMPOST    = ItemCompost().apply { setup("compost") }
-	@JvmField val VOID_SALAD = ItemVoidSalad().apply { setup("void_salad") }
+	@JvmField val COMPOST    = ItemCompost(defaultProps) named "compost"
+	@JvmField val VOID_SALAD = ItemVoidSalad(baseProps.maxStackSize(1).maxDamage(3).food(ItemVoidSalad.FOOD)) named "void_salad" // UPDATE maxstacksize unnecessary?
 	
 	// Items: Utilities
 	
-	@JvmField val TABLE_LINK     = ItemTableLink().apply { setup("table_link") }
-	@JvmField val KNOWLEDGE_NOTE = Item().apply { setup("knowledge_note") } // TODO
-	@JvmField val ENDERMAN_HEAD  = ItemEndermanHead().apply { setup("enderman_head") }
+	@JvmField val TABLE_LINK     = ItemTableLink(defaultProps) named "table_link"
+	@JvmField val KNOWLEDGE_NOTE = Item(defaultProps) named "knowledge_note" // TODO
+	@JvmField val ENDERMAN_HEAD  = ItemBlockHead(ModBlocks.ENDERMAN_HEAD, ModBlocks.ENDERMAN_WALL_HEAD, defaultProps) named "enderman_head"
 	
 	// Items: Tools
 	
-	@JvmField val VOID_MINER          = ItemVoidMiner().apply { setup("void_miner") }
-	@JvmField val VOID_BUCKET         = ItemVoidBucket().apply { setup("void_bucket") }
-	@JvmField val SCORCHING_PICKAXE   = ItemScorchingTool(PICKAXE).apply { setup("scorching_pickaxe") }
-	@JvmField val SCORCHING_SHOVEL    = ItemScorchingTool(SHOVEL).apply { setup("scorching_shovel") }
-	@JvmField val SCORCHING_AXE       = ItemScorchingTool(AXE).apply { setup("scorching_axe") }
-	@JvmField val SCORCHING_SWORD     = ItemScorchingSword().apply { setup("scorching_sword") }
-	@JvmField val FLINT_AND_INFERNIUM = ItemFlintAndInfernium().apply { setup("flint_and_infernium") }
+	@JvmField val VOID_MINER          = ItemVoidMiner(baseProps.maxStackSize(1).setNoRepair()) named "void_miner"
+	@JvmField val VOID_BUCKET         = ItemVoidBucket(baseProps.maxStackSize(1).setNoRepair()) named "void_bucket"
+	@JvmField val SCORCHING_PICKAXE   = ItemScorchingTool(baseProps.setNoRepair(), PICKAXE, attackSpeed = -2.8F) named "scorching_pickaxe"
+	@JvmField val SCORCHING_SHOVEL    = ItemScorchingTool(baseProps.setNoRepair(), SHOVEL, attackSpeed = -3F) named "scorching_shovel"
+	@JvmField val SCORCHING_AXE       = ItemScorchingTool(baseProps.setNoRepair(), AXE, attackSpeed = -3F) named "scorching_axe"
+	@JvmField val SCORCHING_SWORD     = ItemScorchingSword(baseProps.setNoRepair()) named "scorching_sword"
+	@JvmField val FLINT_AND_INFERNIUM = ItemFlintAndInfernium(baseProps.maxDamage(25)) named "flint_and_infernium"
 	
 	// Items: Fluids
 	
-	@JvmField val ENDER_GOO_BUCKET          = ItemBucketWithCauldron(ModBlocks.ENDER_GOO, ModBlocks.CAULDRON_ENDER_GOO).apply { setup("ender_goo_bucket"); containerItem = Items.BUCKET }
-	@JvmField val PURIFIED_ENDER_GOO_BUCKET = ItemPurifiedEnderGooBucket().apply { setup("purified_ender_goo_bucket"); containerItem = Items.BUCKET }
+	@JvmField val ENDER_GOO_BUCKET          = ItemBucketWithCauldron(FluidEnderGoo.still, ModBlocks.CAULDRON_ENDER_GOO, baseProps.maxStackSize(1).containerItem(Items.BUCKET)) named "ender_goo_bucket"
+	@JvmField val PURIFIED_ENDER_GOO_BUCKET = ItemPurifiedEnderGooBucket(FluidEnderGooPurified.still, ModBlocks.CAULDRON_PURIFIED_ENDER_GOO, baseProps.maxStackSize(1).containerItem(Items.BUCKET)) named "purified_ender_goo_bucket"
 	
 	// Items: Energy
 	
-	@JvmField val ENERGY_ORACLE     = ItemEnergyOracle().apply { setup("energy_oracle") }
-	@JvmField val ENERGY_RECEPTACLE = ItemEnergyReceptacle().apply { setup("energy_receptacle") }
+	@JvmField val ENERGY_ORACLE     = ItemEnergyOracle(toolProps) named "energy_oracle"
+	@JvmField val ENERGY_RECEPTACLE = ItemEnergyReceptacle(toolProps) named "energy_receptacle"
 	
 	// Items: Gems & teleportation
 	
-	@JvmField val INFUSED_ENDER_PEARL = ItemInfusedEnderPearl().apply { setup("infused_ender_pearl", translationKey = "enderPearl", inCreativeTab = false) }
-	@JvmField val SPATIAL_DASH_GEM    = ItemSpatialDashGem().apply { setup("spatial_dash_gem") }
-	@JvmField val LINKING_GEM         = ItemSpatialDashGem().apply { setup("linking_gem") } // TODO
-	@JvmField val PORTAL_TOKEN        = ItemPortalToken().apply { setup("portal_token") }
-	@JvmField val BLANK_TOKEN         = Item().apply { setup("blank_token"); setMaxStackSize(ItemPortalToken.MAX_STACK_SIZE) }
+	@JvmField val INFUSED_ENDER_PEARL = ItemInfusedEnderPearl(Item.Properties().maxStackSize(16)) named "infused_ender_pearl"
+	@JvmField val SPATIAL_DASH_GEM    = ItemSpatialDashGem(toolProps) named "spatial_dash_gem"
+	@JvmField val LINKING_GEM         = ItemSpatialDashGem(toolProps) named "linking_gem" // TODO
+	@JvmField val PORTAL_TOKEN        = ItemPortalToken(baseProps.maxStackSize(ItemPortalToken.MAX_STACK_SIZE)) named "portal_token"
+	@JvmField val BLANK_TOKEN         = Item(baseProps.maxStackSize(ItemPortalToken.MAX_STACK_SIZE)) named "blank_token"
 	
 	// Items: Trinkets
 	
-	@JvmField val TRINKET_POUCH        = ItemTrinketPouch().apply { setup("trinket_pouch") }
-	@JvmField val TOTEM_OF_UNDYING     = ItemTotemOfUndyingCustom().apply { setup("totem_of_undying", translationKey = "totem") }
-	@JvmField val AMULET_OF_RECOVERY   = ItemAmuletOfRecovery().apply { setup("amulet_of_recovery") }
-	@JvmField val RING_OF_HUNGER       = ItemRingOfHunger().apply { setup("ring_of_hunger") }
-	@JvmField val RING_OF_PRESERVATION = ItemRingOfPreservation().apply { setup("ring_of_preservation") }
-	@JvmField val TALISMAN_OF_GRIEFING = ItemTalismanOfGriefing().apply { setup("talisman_of_griefing") }
-	@JvmField val SCALE_OF_FREEFALL    = ItemScaleOfFreefall().apply { setup("scale_of_freefall") }
+	@JvmField val TRINKET_POUCH        = ItemTrinketPouch(toolProps) named "trinket_pouch"
+	@JvmField val TOTEM_OF_UNDYING     = ItemTotemOfUndyingCustom(baseProps.maxDamage(4)) named "totem_of_undying"
+	@JvmField val AMULET_OF_RECOVERY   = ItemAmuletOfRecovery(toolProps) named "amulet_of_recovery"
+	@JvmField val RING_OF_HUNGER       = ItemRingOfHunger(baseProps.maxDamage(120)) named "ring_of_hunger"
+	@JvmField val RING_OF_PRESERVATION = ItemRingOfPreservation(baseProps.maxDamage(1)) named "ring_of_preservation"
+	@JvmField val TALISMAN_OF_GRIEFING = ItemTalismanOfGriefing(baseProps.maxDamage(25)) named "talisman_of_griefing"
+	@JvmField val SCALE_OF_FREEFALL    = ItemScaleOfFreefall(baseProps.maxDamage(8)) named "scale_of_freefall"
+	
+	// Items: Spawn Eggs
+	
+	@JvmField val SPAWN_ENDER_EYE             = ItemSpawnEgg(ModEntities.ENDER_EYE, RGB(22u).i, RGB(219, 58, 115).i, baseProps) named "ender_eye_spawn_egg"
+	@JvmField val SPAWN_ANGRY_ENDERMAN        = ItemSpawnEgg(ModEntities.ANGRY_ENDERMAN, RGB(21u).i, RGB(111, 75, 36).i, baseProps) named "angry_enderman_spawn_egg"
+	@JvmField val SPAWN_ENDERMITE_INSTABILITY = ItemSpawnEgg(ModEntities.ENDERMITE_INSTABILITY, RGB(21u).i, RGB(94, 122, 108).i, baseProps) named "endermite_instability_spawn_egg"
+	@JvmField val SPAWN_SPIDERLING            = ItemSpawnEgg(ModEntities.SPIDERLING, RGB(32, 30, 16).i, RGB(182, 25, 0).i, baseProps) named "spiderling_spawn_egg"
+	@JvmField val SPAWN_UNDREAD               = ItemSpawnEgg(ModEntities.UNDREAD, TerritoryType.FORGOTTEN_TOMBS.desc.colors.tokenTop.i, TerritoryType.FORGOTTEN_TOMBS.desc.colors.tokenBottom.i, baseProps) named "undread_spawn_egg"
+	@JvmField val SPAWN_VAMPIRE_BAT           = ItemSpawnEgg(ModEntities.VAMPIRE_BAT, RGB(76, 62, 48).i, RGB(66, 16, 15).i, baseProps) named "vampire_bat_spawn_egg"
 	
 	// Registry
 	
@@ -193,47 +213,48 @@ object ModItems{
 			register(RING_OF_PRESERVATION)
 			register(TALISMAN_OF_GRIEFING)
 			register(SCALE_OF_FREEFALL)
+			
+			register(SPAWN_ENDER_EYE)
+			register(SPAWN_ANGRY_ENDERMAN)
+			register(SPAWN_ENDERMITE_INSTABILITY)
+			register(SPAWN_SPIDERLING)
+			register(SPAWN_UNDREAD)
+			register(SPAWN_VAMPIRE_BAT)
 		}
 		
 		// vanilla modifications
 		
-		Items.CHORUS_FRUIT_POPPED.creativeTab = null
-		Items.ELYTRA.creativeTab = null
+		Items.POPPED_CHORUS_FRUIT.group = null
+		Items.ELYTRA.group = null
 		
 		with(e.registry){
-			register(ItemChorusBerry().apply { override(Items.CHORUS_FRUIT) })
-			register(ItemElytraOverride().apply { override(Items.ELYTRA) })
-			register(ItemEyeOfEnderOverride().apply { override(Items.ENDER_EYE) })
-			register(ItemTotemOfUndyingOverride().apply { override(Items.TOTEM_OF_UNDYING, newCreativeTab = null) })
+			register(ItemChorusBerry(baseProps.food(ItemChorusBerry.FOOD)).apply { override(Items.CHORUS_FRUIT) })
+			register(ItemElytraOverride(baseProps.maxDamage(432), Items.ELYTRA.translationKey).apply { override(Items.ELYTRA) })
+			register(ItemEyeOfEnderOverride(defaultProps, Items.ENDER_EYE.translationKey).apply { override(Items.ENDER_EYE) })
+			register(ItemTotemOfUndyingOverride(toolProps, Items.TOTEM_OF_UNDYING.translationKey).apply { override(Items.TOTEM_OF_UNDYING, newCreativeTab = null) })
 			
-			for(color in EnumDyeColor.values()){
+			for(color in DyeColor.values()){
 				val box = BlockShulkerBox.getBlockByColor(color)
-				register(ItemShulkerBoxOverride(box).apply { override(Item.getItemFromBlock(box)) })
+				register(ItemShulkerBoxOverride(box, baseProps).apply { override(box.asItem()) })
 			}
 		}
 		
 		// dispenser behavior
 		
-		with(BlockDispenser.DISPENSE_BEHAVIOR_REGISTRY){
-			putObject(ENDERMAN_HEAD, DispenseEndermanHead)
-			putObject(Items.WATER_BUCKET, DispenseWaterExtinguishIgneousPlate(getObject(Items.WATER_BUCKET)))
-		}
+		BlockDispenser.registerDispenseBehavior(ENDERMAN_HEAD, DispenseEndermanHead)
+		BlockDispenser.registerDispenseBehavior(Items.WATER_BUCKET, DispenseWaterExtinguishIgneousPlate(BlockDispenser.DISPENSE_BEHAVIOR_REGISTRY[Items.WATER_BUCKET]))
 	}
 	
 	// Utilities
 	
-	private fun Item.setup(registryName: String, translationKey: String = "hee.$registryName", inCreativeTab: Boolean = true){
+	private infix fun <T : Item> T.named(registryName: String): T = apply {
 		this.registryName = Resource.Custom(registryName)
-		this.translationKey = translationKey
-		
-		if (inCreativeTab){
-			this.creativeTab = ModCreativeTabs.main.also { it.registerOrder(this) }
-		}
+		(this.group as? OrderedCreativeTab)?.registerOrder(this)
 	}
 	
-	private fun Item.override(vanillaItem: Item, newCreativeTab: CreativeTabs? = ModCreativeTabs.main){
+	private fun Item.override(vanillaItem: Item, newCreativeTab: ItemGroup? = ModCreativeTabs.main){
 		this.useVanillaName(vanillaItem)
-		this.creativeTab = newCreativeTab
+		this.group = newCreativeTab
 		
 		if (newCreativeTab is OrderedCreativeTab){
 			newCreativeTab.registerOrder(this)

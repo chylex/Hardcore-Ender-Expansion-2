@@ -13,12 +13,13 @@ import chylex.hee.game.mechanics.portal.SpawnInfo
 import chylex.hee.game.world.territory.TerritoryInstance
 import chylex.hee.game.world.util.Teleporter
 import chylex.hee.game.world.util.Teleporter.FxRange.Silent
+import chylex.hee.system.migration.vanilla.EntityLivingBase
+import chylex.hee.system.migration.vanilla.EntityPlayer
 import chylex.hee.system.util.Pos
 import chylex.hee.system.util.center
 import chylex.hee.system.util.closestTickingTile
 import chylex.hee.system.util.facades.Facing4
 import chylex.hee.system.util.floodFill
-import chylex.hee.system.util.get
 import chylex.hee.system.util.getBlock
 import chylex.hee.system.util.getState
 import chylex.hee.system.util.max
@@ -29,16 +30,21 @@ import chylex.hee.system.util.setAir
 import chylex.hee.system.util.subtractY
 import chylex.hee.system.util.with
 import net.minecraft.block.Block
-import net.minecraft.block.state.BlockStateContainer
-import net.minecraft.block.state.IBlockState
+import net.minecraft.block.BlockState
 import net.minecraft.entity.Entity
-import net.minecraft.entity.EntityLivingBase
-import net.minecraft.entity.player.EntityPlayer
+import net.minecraft.item.BlockItemUseContext
+import net.minecraft.item.ItemStack
+import net.minecraft.state.StateContainer.Builder
 import net.minecraft.tileentity.TileEntity
+import net.minecraft.util.Direction
 import net.minecraft.util.IStringSerializable
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.Vec3d
+import net.minecraft.world.IBlockReader
+import net.minecraft.world.IWorld
 import net.minecraft.world.World
+import net.minecraft.world.dimension.DimensionType
+import net.minecraft.world.storage.loot.LootContext
 
 class BlockVoidPortalInner(builder: BlockBuilder) : BlockAbstractPortal(builder){
 	companion object{
@@ -83,26 +89,42 @@ class BlockVoidPortalInner(builder: BlockBuilder) : BlockAbstractPortal(builder)
 	// Instance
 	
 	init{
-		defaultState = blockState.baseState.with(TYPE, HUB)
+		defaultState = stateContainer.baseState.with(TYPE, HUB)
 	}
 	
-	override fun createBlockState() = BlockStateContainer(this, TYPE)
+	override fun fillStateContainer(container: Builder<Block, BlockState>){
+		container.add(TYPE)
+	}
 	
-	override fun getMetaFromState(state: IBlockState) = state[TYPE].ordinal
-	override fun getStateFromMeta(meta: Int) = this.with(TYPE, Type.values()[meta])
-	
-	override fun createNewTileEntity(world: World, meta: Int): TileEntity{
+	override fun createTileEntity(state: BlockState, world: IBlockReader): TileEntity{
 		return TileEntityPortalInner.Void()
+	}
+	
+	// Metadata
+	
+	override fun getDrops(state: BlockState, context: LootContext.Builder): MutableList<ItemStack>{
+		return super.getDrops(state, context) // UPDATE
+	}
+	
+	override fun getStateForPlacement(context: BlockItemUseContext): BlockState{
+		return this.with(TYPE, Type.values().getOrNull(context.item.damage) ?: HUB)
 	}
 	
 	// Breaking
 	
-	override fun neighborChanged(state: IBlockState, world: World, pos: BlockPos, neighborBlock: Block, neighborPos: BlockPos){
-		if (neighborBlock is BlockVoidPortalCrafted && neighborPos.getBlock(world) !is BlockVoidPortalCrafted){
+	override fun updatePostPlacement(state: BlockState, facing: Direction, neighborState: BlockState, world: IWorld, pos: BlockPos, neighborPos: BlockPos): BlockState{
+		// UPDATE test??? maybe use neighbor update
+		if (neighborState.block is BlockVoidPortalCrafted && neighborPos.getBlock(world) !is BlockVoidPortalCrafted){
 			for(portalPos in pos.floodFill(Facing4){ it.getBlock(world) === this }){
 				portalPos.setAir(world)
 			}
 		}
+		
+		return super.updatePostPlacement(state, facing, neighborState, world, pos, neighborPos)
+	}
+	
+	override fun neighborChanged(state: BlockState, world: World, pos: BlockPos, p_220069_4_: Block, p_220069_5_: BlockPos, isMoving: Boolean){
+		super.neighborChanged(state, world, pos, p_220069_4_, p_220069_5_, isMoving)
 	}
 	
 	// Interaction
@@ -138,14 +160,14 @@ class BlockVoidPortalInner(builder: BlockBuilder) : BlockAbstractPortal(builder)
 				val info = pos.closestTickingTile<TileEntityVoidPortalStorage>(world, MAX_DISTANCE_FROM_FRAME)?.prepareSpawnPoint(entity)
 				
 				if (info != null){
-					if (entity.dimension == HEE.DIM){
+					if (entity.dimension === HEE.dim){
 						DimensionTeleporter.LastHubPortal.updateForEntity(entity, null)
 						updateSpawnPortal(entity, pos)
 						teleportEntity(entity, info)
 					}
 					else{
 						DimensionTeleporter.LastHubPortal.updateForEntity(entity, pos)
-						entity.changeDimension(1, DimensionTeleporter.EndTerritoryPortal(info))
+						DimensionTeleporter.changeDimension(entity, DimensionType.THE_END, DimensionTeleporter.EndTerritoryPortal(info))
 					}
 				}
 			}

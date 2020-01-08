@@ -5,11 +5,11 @@ import chylex.hee.client.render.util.GL.SF_SRC_ALPHA
 import chylex.hee.game.entity.living.EntityMobAbstractEnderman
 import chylex.hee.system.migration.forge.Side
 import chylex.hee.system.migration.forge.Sided
+import chylex.hee.system.migration.vanilla.EntityEnderman
+import chylex.hee.system.migration.vanilla.RenderEnderman
+import chylex.hee.system.migration.vanilla.RenderManager
 import chylex.hee.system.util.nextFloat
 import chylex.hee.system.util.totalTime
-import net.minecraft.client.renderer.entity.RenderEnderman
-import net.minecraft.client.renderer.entity.RenderManager
-import net.minecraft.entity.monster.EntityEnderman
 import org.lwjgl.opengl.GL11.GL_GREATER
 import java.util.Random
 
@@ -72,6 +72,6 @@ open class RenderEntityMobAbstractEnderman(manager: RenderManager) : RenderEnder
 	}
 	
 	protected open fun getCloneCount(entity: EntityMobAbstractEnderman): Int{
-		return if (entity.hurtTime == 0 && entity.isAggressive) 2 else 0
+		return if (entity.hurtTime == 0 && entity.isAggro) 2 else 0
 	}
 }

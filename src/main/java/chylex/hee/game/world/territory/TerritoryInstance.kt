@@ -7,17 +7,18 @@ import chylex.hee.game.world.territory.TerritoryType.Companion.CHUNK_X_OFFSET
 import chylex.hee.game.world.territory.TerritoryType.THE_HUB
 import chylex.hee.game.world.territory.storage.TerritoryGlobalStorage
 import chylex.hee.proxy.Environment
+import chylex.hee.system.migration.vanilla.EntityItem
+import chylex.hee.system.migration.vanilla.EntityPlayer
+import chylex.hee.system.migration.vanilla.EntityTameable
 import chylex.hee.system.util.center
 import chylex.hee.system.util.component1
 import chylex.hee.system.util.component2
 import chylex.hee.system.util.floorToInt
+import chylex.hee.system.util.getTopSolidOrLiquidBlock
 import net.minecraft.entity.Entity
-import net.minecraft.entity.IEntityOwnable
-import net.minecraft.entity.item.EntityItem
-import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.ChunkPos
-import net.minecraft.world.World
+import net.minecraft.world.server.ServerWorld
 import java.util.Random
 import kotlin.math.abs
 
@@ -77,8 +78,8 @@ data class TerritoryInstance(val territory: TerritoryType, val index: Int){
 			return TerritoryInstance(territory, indexStart + indexOffsetX + indexOffsetZ)
 		}
 		
-		val endWorld: World
-			get() = Environment.getServer().getWorld(HEE.DIM)
+		val endWorld: ServerWorld
+			get() = Environment.getServer().getWorld(HEE.dim)
 	}
 	
 	private val ordinal
@@ -151,9 +152,9 @@ data class TerritoryInstance(val territory: TerritoryType, val index: Int){
 	
 	@Suppress("UNNECESSARY_SAFE_CALL")
 	private fun determineOwningPlayer(entity: Entity) = when(entity){
-		is EntityPlayer -> entity
-		is EntityItem -> entity.thrower?.let { entity.world.minecraftServer?.playerList?.getPlayerByUsername(it) }
-		is IEntityOwnable -> entity.owner as? EntityPlayer
+		is EntityPlayer   -> entity
+		is EntityItem     -> entity.throwerId?.let(Environment.getServer().playerList::getPlayerByUUID)
+		is EntityTameable -> entity.owner as? EntityPlayer
 		else -> null
 	}
 }

@@ -2,10 +2,10 @@ package chylex.hee.game.entity.util
 import chylex.hee.system.util.TagCompound
 import chylex.hee.system.util.getUUID
 import chylex.hee.system.util.hasUUID
-import chylex.hee.system.util.setUUID
+import chylex.hee.system.util.putUUID
 import net.minecraft.entity.Entity
 import net.minecraft.world.World
-import net.minecraft.world.WorldServer
+import net.minecraft.world.server.ServerWorld
 import java.util.UUID
 
 class SerializedEntity private constructor(private var uuid: UUID?, private var entity: Entity?){
@@ -30,15 +30,15 @@ class SerializedEntity private constructor(private var uuid: UUID?, private var 
 	fun get(world: World): Entity?{
 		val id = uuid ?: return null
 		
-		if (entity == null && world is WorldServer){
-			entity = world.getEntityFromUuid(id)
+		if (entity == null && world is ServerWorld){
+			entity = world.getEntityByUuid(id)
 		}
 		
 		return entity
 	}
 	
 	fun writeToNBT(tag: TagCompound, key: String){
-		uuid?.let { tag.setUUID(key, it) }
+		uuid?.let { tag.putUUID(key, it) }
 	}
 	
 	fun readFromNBT(tag: TagCompound, key: String){

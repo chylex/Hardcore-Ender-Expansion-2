@@ -4,10 +4,11 @@ import chylex.hee.game.block.fluid.FluidEnderGoo
 import chylex.hee.system.migration.forge.EventPriority
 import chylex.hee.system.migration.forge.SubscribeAllEvents
 import chylex.hee.system.migration.forge.SubscribeEvent
+import net.minecraft.potion.EffectType.HARMFUL
 import net.minecraftforge.event.entity.living.LivingHealEvent
 
 @SubscribeAllEvents(modid = HEE.ID)
-object PotionLifeless : PotionBase(color = FluidEnderGoo.rgbColor, isNegative = true){
+object PotionLifeless : PotionBase(color = FluidEnderGoo.rgbColor, kind = HARMFUL){
 	override val iconX = 0
 	override val iconY = 0
 	

@@ -3,7 +3,7 @@ import chylex.hee.game.item.ItemPortalToken.TokenType.NORMAL
 import chylex.hee.init.ModItems
 import chylex.hee.system.util.nonEmptySlots
 import chylex.hee.system.util.size
-import net.minecraft.inventory.InventoryCrafting
+import net.minecraft.inventory.CraftingInventory
 import net.minecraft.item.ItemStack
 import net.minecraft.world.World
 
@@ -12,11 +12,11 @@ object RecipePortalTokenDuplication : RecipeBaseDynamic(){
 		return (width * height) >= 2
 	}
 	
-	override fun matches(inv: InventoryCrafting, world: World): Boolean{
+	override fun matches(inv: CraftingInventory, world: World): Boolean{
 		return determineDuplicationInfo(inv) != null
 	}
 	
-	override fun getCraftingResult(inv: InventoryCrafting): ItemStack{
+	override fun getCraftingResult(inv: CraftingInventory): ItemStack{
 		val (blankTokenCount, originalToken) = determineDuplicationInfo(inv) ?: return ItemStack.EMPTY
 		
 		return originalToken.copy().also {
@@ -28,7 +28,7 @@ object RecipePortalTokenDuplication : RecipeBaseDynamic(){
 	
 	private data class DuplicationInfo(val blankTokenCount: Int, val originalToken: ItemStack)
 	
-	private fun determineDuplicationInfo(inv: InventoryCrafting): DuplicationInfo?{
+	private fun determineDuplicationInfo(inv: CraftingInventory): DuplicationInfo?{
 		var originalToken: ItemStack? = null
 		var blankTokenCount = 0
 		

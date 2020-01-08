@@ -16,6 +16,7 @@ import chylex.hee.system.migration.Facing.EAST
 import chylex.hee.system.migration.Facing.NORTH
 import chylex.hee.system.migration.Facing.SOUTH
 import chylex.hee.system.migration.Facing.WEST
+import chylex.hee.system.migration.vanilla.EntityPlayer
 import chylex.hee.system.util.Pos
 import chylex.hee.system.util.getBlock
 import chylex.hee.system.util.isAir
@@ -25,8 +26,8 @@ import chylex.hee.system.util.offsetUntil
 import chylex.hee.system.util.posVec
 import chylex.hee.system.util.removeItem
 import chylex.hee.system.util.selectVulnerableEntities
-import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.world.World
+import net.minecraft.world.server.ServerWorld
 import java.util.Random
 import kotlin.math.min
 
@@ -37,14 +38,14 @@ class StrongholdRoom_Main_Portal(file: String) : StrongholdAbstractPieceFromFile
 		}
 		
 		override fun update(entity: EntityTechnicalTrigger){
-			val world = entity.world
+			val world = entity.world as ServerWorld
 			val selector = world.selectVulnerableEntities
 			
 			val box = StrongholdPieces.STRUCTURE_SIZE.toCenteredBoundingBox(entity.posVec)
 			val playersInRange = selector.inBox<EntityPlayer>(box)
 			
 			if (playersInRange.isEmpty() ||
-				world.loadedEntityList.count { it is EntityMobSilverfish } >= 60 ||
+				world.entities.filter { it is EntityMobSilverfish }.count() >= 60 ||
 				selector.inBox<EntityMobSilverfish>(box).size >= min(30, 15 + (5 * playersInRange.size))
 			){
 				return
@@ -83,7 +84,7 @@ class StrongholdRoom_Main_Portal(file: String) : StrongholdAbstractPieceFromFile
 					
 					if (mob != null){
 						mob.disableHideInBlockAI()
-						world.spawnEntity(mob)
+						world.addEntity(mob)
 						
 						if (--spawnsLeft == 0){
 							break

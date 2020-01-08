@@ -4,12 +4,12 @@ import chylex.hee.client.util.MC
 import chylex.hee.game.block.entity.base.TileEntityBaseSpawner
 import chylex.hee.system.migration.forge.Side
 import chylex.hee.system.migration.forge.Sided
-import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer
+import net.minecraft.client.renderer.tileentity.TileEntityRenderer
 import kotlin.math.max
 
 @Sided(Side.CLIENT)
-object RenderTileSpawner : TileEntitySpecialRenderer<TileEntityBaseSpawner>(){
-	override fun render(tile: TileEntityBaseSpawner, x: Double, y: Double, z: Double, partialTicks: Float, destroyStage: Int, alpha: Float){
+object RenderTileSpawner : TileEntityRenderer<TileEntityBaseSpawner>(){
+	override fun render(tile: TileEntityBaseSpawner, x: Double, y: Double, z: Double, partialTicks: Float, destroyStage: Int){
 		val entity = tile.clientEntity
 		val scale = 0.53125F / max(entity.width, entity.height).coerceAtLeast(1F)
 		

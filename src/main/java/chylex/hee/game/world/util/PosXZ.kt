@@ -1,7 +1,8 @@
 package chylex.hee.game.world.util
 import chylex.hee.system.util.Pos
+import chylex.hee.system.util.getTopSolidOrLiquidBlock
 import chylex.hee.system.util.square
-import net.minecraft.util.EnumFacing
+import net.minecraft.util.Direction
 import net.minecraft.util.math.BlockPos
 import net.minecraft.world.World
 import kotlin.math.sqrt
@@ -19,7 +20,7 @@ data class PosXZ(val x: Int, val z: Int){
 		return PosXZ(this.x + x, this.z + z)
 	}
 	
-	fun offset(facing: EnumFacing): PosXZ{
+	fun offset(facing: Direction): PosXZ{
 		return PosXZ(this.x + facing.xOffset, this.z + facing.zOffset)
 	}
 	

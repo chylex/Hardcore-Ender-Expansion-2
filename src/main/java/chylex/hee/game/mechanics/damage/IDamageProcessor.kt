@@ -1,18 +1,18 @@
 package chylex.hee.game.mechanics.damage
 import chylex.hee.game.mechanics.damage.Damage.Companion.CANCEL_DAMAGE
+import chylex.hee.system.migration.vanilla.EntityLivingBase
+import chylex.hee.system.migration.vanilla.EntityPlayer
+import chylex.hee.system.migration.vanilla.ItemArmor
 import chylex.hee.system.migration.vanilla.Potions
 import chylex.hee.system.util.setFireTicks
 import net.minecraft.enchantment.EnchantmentHelper
 import net.minecraft.entity.Entity
-import net.minecraft.entity.EntityLivingBase
-import net.minecraft.entity.player.EntityPlayer
-import net.minecraft.item.ItemArmor
-import net.minecraft.potion.PotionEffect
+import net.minecraft.potion.EffectInstance
 import net.minecraft.util.CombatRules
-import net.minecraft.world.EnumDifficulty.EASY
-import net.minecraft.world.EnumDifficulty.HARD
-import net.minecraft.world.EnumDifficulty.NORMAL
-import net.minecraft.world.EnumDifficulty.PEACEFUL
+import net.minecraft.world.Difficulty.EASY
+import net.minecraft.world.Difficulty.HARD
+import net.minecraft.world.Difficulty.NORMAL
+import net.minecraft.world.Difficulty.PEACEFUL
 import kotlin.math.nextUp
 
 interface IDamageProcessor{
@@ -165,7 +165,7 @@ interface IDamageProcessor{
 		}
 		
 		@JvmStatic
-		fun STATUS(effect: (EntityLivingBase) -> PotionEffect?) = object : IDamageProcessor{
+		fun STATUS(effect: (EntityLivingBase) -> EffectInstance?) = object : IDamageProcessor{
 			override fun afterDamage(target: Entity, properties: DamageProperties.Reader){
 				if (target is EntityLivingBase){
 					effect(target)?.let(target::addPotionEffect)

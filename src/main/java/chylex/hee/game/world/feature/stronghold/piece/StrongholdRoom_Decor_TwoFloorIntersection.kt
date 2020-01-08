@@ -1,5 +1,4 @@
 package chylex.hee.game.world.feature.stronghold.piece
-import chylex.hee.game.block.util.FutureBlocks
 import chylex.hee.game.world.feature.stronghold.connection.StrongholdConnection
 import chylex.hee.game.world.feature.stronghold.connection.StrongholdConnectionType.ROOM
 import chylex.hee.game.world.structure.IBlockPicker.Single
@@ -9,6 +8,7 @@ import chylex.hee.system.migration.Facing.EAST
 import chylex.hee.system.migration.Facing.NORTH
 import chylex.hee.system.migration.Facing.SOUTH
 import chylex.hee.system.migration.Facing.WEST
+import chylex.hee.system.migration.vanilla.Blocks
 import chylex.hee.system.util.Pos
 
 class StrongholdRoom_Decor_TwoFloorIntersection(file: String) : StrongholdRoom_Decor_Generic(file){
@@ -38,7 +38,7 @@ class StrongholdRoom_Decor_TwoFloorIntersection(file: String) : StrongholdRoom_D
 	}
 	
 	private fun placeChiseledCross(world: IStructureWorld, y: Int){
-		world.placeCube(Pos(centerX, y, 1), Pos(centerX, y, maxZ - 1), Single(FutureBlocks.CHISELED_STONE_BRICKS))
-		world.placeCube(Pos(1, y, centerZ), Pos(maxX - 1, y, centerZ), Single(FutureBlocks.CHISELED_STONE_BRICKS))
+		world.placeCube(Pos(centerX, y, 1), Pos(centerX, y, maxZ - 1), Single(Blocks.CHISELED_STONE_BRICKS))
+		world.placeCube(Pos(1, y, centerZ), Pos(maxX - 1, y, centerZ), Single(Blocks.CHISELED_STONE_BRICKS))
 	}
 }

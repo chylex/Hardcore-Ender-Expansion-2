@@ -27,13 +27,12 @@ import chylex.hee.game.entity.technical.EntityTechnicalIgneousPlateLogic;
 import chylex.hee.game.entity.technical.EntityTechnicalPuzzle;
 import chylex.hee.game.entity.technical.EntityTechnicalTrigger;
 import net.minecraft.entity.Entity;
-import net.minecraft.world.World;
+import net.minecraft.entity.EntityType;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.function.Function;
 
 public final class EntityConstructors{
-	private static final Map<Class<? extends Entity>, Function<World, ? extends Entity>> all = new HashMap<>();
+	private static final Map<Class<? extends Entity>, EntityType.IFactory<? extends Entity>> all = new HashMap<>();
 	
 	static{
 		add(EntityItemCauldronTrigger.class, EntityItemCauldronTrigger::new);
@@ -71,14 +70,14 @@ public final class EntityConstructors{
 	}
 	
 	@SuppressWarnings("unchecked")
-	public static <T extends Entity> Function<World, T> get(Class<T> cls){
-		return (Function<World, T>)all.get(cls);
+	public static <T extends Entity> EntityType.IFactory<T> get(Class<T> cls){
+		return (EntityType.IFactory<T>)all.get(cls);
 	}
 	
 	/**
 	 * Ensures the class and constructor are compatible to catch typos.
 	 */
-	private static <T extends Entity> void add(Class<T> cls, Function<World, T> constructor){
+	private static <T extends Entity> void add(Class<T> cls, EntityType.IFactory<T> constructor){
 		all.put(cls, constructor);
 	}
 	

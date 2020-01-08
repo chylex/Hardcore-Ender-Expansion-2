@@ -1,8 +1,6 @@
 package chylex.hee.game.commands.sub
-import net.minecraft.command.ICommandSender
-import net.minecraft.server.MinecraftServer
-import net.minecraft.util.math.BlockPos
 
+/*
 internal interface ISubCommand{
 	val name: String
 	val usage: String
@@ -19,4 +17,4 @@ internal interface ISubCommand{
 			return commands.associateBy(ISubCommand::name){ it }
 		}
 	}
-}
+}*/

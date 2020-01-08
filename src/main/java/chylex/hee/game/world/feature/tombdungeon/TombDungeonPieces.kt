@@ -11,11 +11,13 @@ import chylex.hee.system.migration.Facing.EAST
 import chylex.hee.system.migration.Facing.NORTH
 import chylex.hee.system.migration.Facing.SOUTH
 import chylex.hee.system.migration.Facing.WEST
+import chylex.hee.system.migration.vanilla.BlockSlab
+import chylex.hee.system.migration.vanilla.BlockStairs
 import chylex.hee.system.migration.vanilla.Blocks
 import chylex.hee.system.util.with
 import chylex.hee.system.util.withFacing
-import net.minecraft.block.BlockSlab
-import net.minecraft.block.BlockStairs
+import net.minecraft.state.properties.Half
+import net.minecraft.state.properties.SlabType
 
 object TombDungeonPieces : IStructureDescription{
 	override val STRUCTURE_SIZE = Size(300, 110, 300)
@@ -39,11 +41,11 @@ object TombDungeonPieces : IStructureDescription{
 	val PALETTE_ENTRY_FANCY_CEILING = Weighted(
 		860 to ModBlocks.DUSTY_STONE_BRICKS.defaultState,
 		 82 to ModBlocks.DUSTY_STONE_CRACKED_BRICKS.defaultState,
-		 30 to ModBlocks.DUSTY_STONE_BRICK_SLAB.with(BlockSlab.HALF, BlockSlab.EnumBlockHalf.TOP),
-		  7 to ModBlocks.DUSTY_STONE_BRICK_STAIRS.with(BlockStairs.HALF, BlockStairs.EnumHalf.TOP).withFacing(NORTH),
-		  7 to ModBlocks.DUSTY_STONE_BRICK_STAIRS.with(BlockStairs.HALF, BlockStairs.EnumHalf.TOP).withFacing(SOUTH),
-		  7 to ModBlocks.DUSTY_STONE_BRICK_STAIRS.with(BlockStairs.HALF, BlockStairs.EnumHalf.TOP).withFacing(EAST),
-		  7 to ModBlocks.DUSTY_STONE_BRICK_STAIRS.with(BlockStairs.HALF, BlockStairs.EnumHalf.TOP).withFacing(WEST)
+		 30 to ModBlocks.DUSTY_STONE_BRICK_SLAB.with(BlockSlab.TYPE, SlabType.TOP),
+		  7 to ModBlocks.DUSTY_STONE_BRICK_STAIRS.with(BlockStairs.HALF, Half.TOP).withFacing(NORTH),
+		  7 to ModBlocks.DUSTY_STONE_BRICK_STAIRS.with(BlockStairs.HALF, Half.TOP).withFacing(SOUTH),
+		  7 to ModBlocks.DUSTY_STONE_BRICK_STAIRS.with(BlockStairs.HALF, Half.TOP).withFacing(EAST),
+		  7 to ModBlocks.DUSTY_STONE_BRICK_STAIRS.with(BlockStairs.HALF, Half.TOP).withFacing(WEST)
 	)
 	
 	private val PALETTE_ENTRY_PLAIN_GRAVE = Weighted(
@@ -63,7 +65,7 @@ object TombDungeonPieces : IStructureDescription{
 		add("dustystone", ModBlocks.DUSTY_STONE)
 		add("dustystone.bricks", ModBlocks.DUSTY_STONE_BRICKS)
 		
-		add("slab.dustystonebrick.*", ModBlocks.DUSTY_STONE_BRICK_SLAB, PaletteMappings.SLAB_HALF)
+		add("slab.dustystonebrick.*", ModBlocks.DUSTY_STONE_BRICK_SLAB, PaletteMappings.SLAB_TYPE)
 		add("stairs.dustystonebrick.*.*", ModBlocks.DUSTY_STONE_BRICK_STAIRS, PaletteMappings.STAIR_MAPPING_LIST)
 		
 		with(forDevelopment){

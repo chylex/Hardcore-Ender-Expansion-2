@@ -6,7 +6,7 @@ import java.util.Random
 interface IBlobPopulator{
 	@JvmDefault
 	val expandSizeBy: BlockPos
-		get() = BlockPos.ORIGIN
+		get() = BlockPos.ZERO
 	
 	fun generate(world: SegmentedWorld, rand: Random)
 }

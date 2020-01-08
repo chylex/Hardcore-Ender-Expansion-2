@@ -13,11 +13,11 @@ sealed class BrewConvertBottle(override val ingredient: Item, private val oldCon
 	}
 	
 	override fun apply(input: ItemStack): ItemStack{
-		return ItemStack(newContainer, input.size, input.metadata).also {
-			it.tagCompound = input.nbtOrNull?.copy()
+		return ItemStack(newContainer, input.size).also {
+			it.tag = input.nbtOrNull?.copy()
 		}
 	}
 	
-	object IntoSplash : BrewConvertBottle(Items.GUNPOWDER, Items.POTIONITEM, Items.SPLASH_POTION)
+	object IntoSplash : BrewConvertBottle(Items.GUNPOWDER, Items.POTION, Items.SPLASH_POTION)
 	object IntoLingering : BrewConvertBottle(Items.DRAGON_BREATH, Items.SPLASH_POTION, Items.LINGERING_POTION)
 }

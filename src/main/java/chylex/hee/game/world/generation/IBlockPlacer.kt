@@ -23,9 +23,7 @@ interface IBlockPlacer{
 	
 	open class BlockReplacer(private val fill: Block, private val replace: Block) : IBlockPlacer{
 		init{
-			if (fill === replace){
-				throw IllegalArgumentException("replacing a block only by itself makes no sense")
-			}
+			require(fill !== replace){ "replacing a block only by itself makes no sense" }
 		}
 		
 		override fun place(world: SegmentedWorld, pos: BlockPos): Boolean{

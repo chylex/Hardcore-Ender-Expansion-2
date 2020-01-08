@@ -1,43 +1,48 @@
 package chylex.hee.game.block.info
 
 object Materials{
-	val SOLID_NO_TOOL = CustomMaterial().apply {
+	val SOLID_NO_TOOL = CustomMaterial().build {
 		requiresTool = false
 	}
 	
-	val SOLID_WITH_TOOL = CustomMaterial().apply {
+	val SOLID_WITH_TOOL = CustomMaterial().build {
 		requiresTool = true
 	}
 	
-	val ANCIENT_COBWEB = CustomMaterial().apply {
+	val ANCIENT_COBWEB = CustomMaterial().build {
 		blocksMovement = false
 		destroyWhenPushed()
 	}
 	
-	val ENERGY_CLUSTER = CustomMaterial().apply {
+	val ENERGY_CLUSTER = CustomMaterial().build {
 		makeTransparent()
 		destroyWhenPushed()
 	}
 	
-	val CORRUPTED_ENERGY = CustomMaterial().apply {
+	val CORRUPTED_ENERGY = CustomMaterial().build {
 		replaceable = true
 		makeTransparent()
 		destroyWhenPushed()
 	}
 	
-	val ENDER_GOO = CustomMaterial().apply {
+	val ENDER_GOO = CustomMaterial().build {
 		makeLiquid()
 	}
 	
-	val PURIFIED_ENDER_GOO = CustomMaterial().apply {
+	val PURIFIED_ENDER_GOO = CustomMaterial().build {
 		makeLiquid()
 	}
 	
-	val IGNEOUS_ROCK_PLATE = CustomMaterial().apply {
+	val IGNEOUS_ROCK_PLATE = CustomMaterial().build {
 		destroyWhenPushed()
 	}
 	
-	val SCAFFOLDING = CustomMaterial().apply {
+	val JAR_O_DUST = CustomMaterial().build {
+		requiresTool = false
+		destroyWhenPushed()
+	}
+	
+	val SCAFFOLDING = CustomMaterial().build {
 		blocksLight = false
 		translucent = true
 		blockWhenPushed()

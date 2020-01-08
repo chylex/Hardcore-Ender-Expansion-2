@@ -7,13 +7,12 @@ import chylex.hee.system.migration.forge.Sided
 import chylex.hee.system.util.facades.Resource
 import chylex.hee.system.util.remapRange
 import net.minecraft.client.Minecraft
-import net.minecraft.client.multiplayer.WorldClient
-import net.minecraft.client.renderer.EntityRenderer
+import net.minecraft.client.world.ClientWorld
 import net.minecraft.util.math.Vec3d
 import net.minecraftforge.client.IRenderHandler
 import kotlin.math.pow
 
-class EnvironmentRenderer(private vararg val renderers: IRenderHandler) : IRenderHandler(){
+class EnvironmentRenderer(private vararg val renderers: IRenderHandler) : IRenderHandler{
 	companion object{
 		val currentSkyAlpha
 			@Sided(Side.CLIENT)
@@ -33,15 +32,11 @@ class EnvironmentRenderer(private vararg val renderers: IRenderHandler) : IRende
 	}
 	
 	@Sided(Side.CLIENT)
-	override fun render(partialTicks: Float, world: WorldClient, mc: Minecraft){
-		if (mc.gameSettings.anaglyph && EntityRenderer.anaglyphField != 0){
-			return
-		}
-		
+	override fun render(ticks: Int, partialTicks: Float, world: ClientWorld, mc: Minecraft){
 		GL.depthMask(false)
 		
 		for(renderer in renderers){
-			renderer.render(partialTicks, world, mc)
+			renderer.render(ticks, partialTicks, world, mc)
 		}
 		
 		GL.depthMask(true)

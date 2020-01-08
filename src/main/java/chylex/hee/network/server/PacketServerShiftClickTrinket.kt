@@ -1,10 +1,10 @@
 package chylex.hee.network.server
 import chylex.hee.game.container.slot.SlotTrinketItemInventory
 import chylex.hee.network.BaseServerPacket
+import chylex.hee.system.migration.vanilla.EntityPlayerMP
 import chylex.hee.system.util.use
-import io.netty.buffer.ByteBuf
-import net.minecraft.entity.player.EntityPlayerMP
 import net.minecraft.item.ItemStack
+import net.minecraft.network.PacketBuffer
 
 class PacketServerShiftClickTrinket() : BaseServerPacket(){
 	constructor(sourceSlot: Int) : this(){
@@ -13,18 +13,18 @@ class PacketServerShiftClickTrinket() : BaseServerPacket(){
 	
 	private var sourceSlot: Int? = null
 	
-	override fun write(buffer: ByteBuf) = buffer.use {
+	override fun write(buffer: PacketBuffer) = buffer.use {
 		writeInt(sourceSlot!!)
 	}
 	
-	override fun read(buffer: ByteBuf) = buffer.use {
+	override fun read(buffer: PacketBuffer) = buffer.use {
 		sourceSlot = readInt()
 	}
 	
 	override fun handle(player: EntityPlayerMP){
 		player.markPlayerActive()
 		
-		val allSlots = player.inventoryContainer.inventorySlots
+		val allSlots = player.container.inventorySlots
 		
 		val hoveredSlot = sourceSlot?.let(allSlots::getOrNull) ?: return
 		val trinketSlot = SlotTrinketItemInventory.findTrinketSlot(allSlots) ?: return

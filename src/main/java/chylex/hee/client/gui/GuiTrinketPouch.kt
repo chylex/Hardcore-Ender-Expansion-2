@@ -2,17 +2,16 @@ package chylex.hee.client.gui
 import chylex.hee.client.gui.base.GuiBaseCustomInventory
 import chylex.hee.game.container.ContainerTrinketPouch
 import chylex.hee.game.container.base.ContainerBaseCustomInventory
-import chylex.hee.game.item.ItemTrinketPouch.Inventory
 import chylex.hee.system.migration.forge.Side
 import chylex.hee.system.migration.forge.Sided
 import chylex.hee.system.util.color.IntColor.Companion.RGBA
 import chylex.hee.system.util.facades.Resource
 import chylex.hee.system.util.size
-import net.minecraft.client.gui.Gui
-import net.minecraft.entity.player.EntityPlayer
+import net.minecraft.entity.player.PlayerInventory
+import net.minecraft.util.text.ITextComponent
 
 @Sided(Side.CLIENT)
-class GuiTrinketPouch(player: EntityPlayer, inventorySlot: Int) : GuiBaseCustomInventory<Inventory>(ContainerTrinketPouch(player, inventorySlot)){
+class GuiTrinketPouch(container: ContainerTrinketPouch, inventory: PlayerInventory, title: ITextComponent) : GuiBaseCustomInventory<ContainerTrinketPouch>(container, inventory, title){
 	override val texBackground = Resource.Custom("textures/gui/trinket_pouch.png")
 	override val titleContainer = "gui.hee.trinket_pouch.title"
 	
@@ -21,7 +20,7 @@ class GuiTrinketPouch(player: EntityPlayer, inventorySlot: Int) : GuiBaseCustomI
 	
 	init{
 		ySize = ContainerTrinketPouch.HEIGHT
-		hiddenSlots = ContainerTrinketPouch.MAX_SLOTS - (inventorySlots as ContainerBaseCustomInventory<*>).containerInventory.size
+		hiddenSlots = ContainerTrinketPouch.MAX_SLOTS - (container as ContainerBaseCustomInventory<*>).containerInventory.size
 	}
 	
 	override fun drawGuiContainerBackgroundLayer(partialTicks: Float, mouseX: Int, mouseY: Int){
@@ -37,6 +36,6 @@ class GuiTrinketPouch(player: EntityPlayer, inventorySlot: Int) : GuiBaseCustomI
 	private fun renderSlotCover(index: Int){
 		val x = guiLeft + 44 + (index * 18)
 		val y = guiTop + 18
-		Gui.drawRect(x, y, x + 16, y + 16, hiddenSlotColor)
+		fill(x, y, x + 16, y + 16, hiddenSlotColor)
 	}
 }

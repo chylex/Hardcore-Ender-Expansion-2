@@ -7,22 +7,23 @@ import chylex.hee.game.mechanics.instability.dimension.IDimensionInstability
 import chylex.hee.game.mechanics.instability.dimension.components.EndermiteSpawnLogicOverworld
 import chylex.hee.game.mechanics.instability.region.RegionInstability
 import chylex.hee.game.mechanics.instability.region.entry.types.Entry5x5
+import chylex.hee.game.world.WorldProviderEndCustom
 import chylex.hee.system.capability.CapabilityProvider
 import chylex.hee.system.migration.forge.SubscribeEvent
 import chylex.hee.system.util.TagCompound
 import chylex.hee.system.util.facades.Resource
 import chylex.hee.system.util.getCapOrNull
 import chylex.hee.system.util.register
+import chylex.hee.system.util.use
 import net.minecraft.world.World
-import net.minecraft.world.WorldProviderEnd
 import net.minecraftforge.common.MinecraftForge
 import net.minecraftforge.common.capabilities.Capability
 import net.minecraftforge.common.capabilities.CapabilityInject
 import net.minecraftforge.common.capabilities.CapabilityManager
 import net.minecraftforge.common.util.INBTSerializable
 import net.minecraftforge.event.AttachCapabilitiesEvent
-import net.minecraftforge.fml.common.gameevent.TickEvent.Phase
-import net.minecraftforge.fml.common.gameevent.TickEvent.WorldTickEvent
+import net.minecraftforge.event.TickEvent.Phase
+import net.minecraftforge.event.TickEvent.WorldTickEvent
 
 object Instability{
 	fun register(){
@@ -58,8 +59,12 @@ object Instability{
 	fun onAttachCapabilities(e: AttachCapabilitiesEvent<World>){
 		val world = e.`object`
 		
-		when(world.provider){
-			is WorldProviderEnd ->
+		if (world.isRemote){
+			return
+		}
+		
+		when(world.dimension){
+			is WorldProviderEndCustom ->
 				e.addCapability(CAP_KEY, Provider(DimensionInstabilityEndTerritory(world), RegionInstability(world, Entry5x5.Constructor)))
 			
 			else ->
@@ -69,13 +74,13 @@ object Instability{
 	
 	private class InstabilityCapability private constructor(val dimension: IDimensionInstability, val region: RegionInstability<*>) : INBTSerializable<TagCompound>{
 		override fun serializeNBT() = TagCompound().apply {
-			setTag(DIMENSION_TAG, dimension.serializeNBT())
-			setTag(REGION_TAG, region.serializeNBT())
+			put(DIMENSION_TAG, dimension.serializeNBT())
+			put(REGION_TAG, region.serializeNBT())
 		}
 		
-		override fun deserializeNBT(nbt: TagCompound) = with(nbt){
-			dimension.deserializeNBT(getCompoundTag(DIMENSION_TAG))
-			region.deserializeNBT(getCompoundTag(REGION_TAG))
+		override fun deserializeNBT(nbt: TagCompound) = nbt.use {
+			dimension.deserializeNBT(getCompound(DIMENSION_TAG))
+			region.deserializeNBT(getCompound(REGION_TAG))
 		}
 		
 		class Provider(dimension: IDimensionInstability, region: RegionInstability<*>) : CapabilityProvider<InstabilityCapability, TagCompound>(CAP_INSTABILITY!!, InstabilityCapability(dimension, region))

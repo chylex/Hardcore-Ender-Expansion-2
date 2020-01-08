@@ -5,7 +5,7 @@ import chylex.hee.game.mechanics.energy.IClusterHealth.HealthStatus.HEALTHY
 import chylex.hee.game.mechanics.energy.IEnergyQuantity.Internal
 import chylex.hee.system.util.TagCompound
 import chylex.hee.system.util.getEnum
-import chylex.hee.system.util.setEnum
+import chylex.hee.system.util.putEnum
 
 class ClusterSnapshot(
 	val energyLevel: IEnergyQuantity,
@@ -25,17 +25,17 @@ class ClusterSnapshot(
 	
 	val tag
 		get() = TagCompound().apply {
-			setInteger(ENERGY_LEVEL_TAG, energyLevel.internal.value)
-			setInteger(ENERGY_CAPACITY_TAG, energyCapacity.internal.value)
-			setEnum(HEALTH_STATUS_TAG, healthStatus)
-			setEnum(HEALTH_OVERRIDE_TAG, healthOverride)
-			setShort(COLOR_PRIMARY_TAG, color.primaryHue)
-			setShort(COLOR_SECONDARY_TAG, color.secondaryHue)
+			putInt(ENERGY_LEVEL_TAG, energyLevel.internal.value)
+			putInt(ENERGY_CAPACITY_TAG, energyCapacity.internal.value)
+			putEnum(HEALTH_STATUS_TAG, healthStatus)
+			putEnum(HEALTH_OVERRIDE_TAG, healthOverride)
+			putShort(COLOR_PRIMARY_TAG, color.primaryHue)
+			putShort(COLOR_SECONDARY_TAG, color.secondaryHue)
 		}
 	
 	constructor(tag: TagCompound) : this(
-		energyLevel    = Internal(tag.getInteger(ENERGY_LEVEL_TAG)),
-		energyCapacity = Internal(tag.getInteger(ENERGY_CAPACITY_TAG)),
+		energyLevel    = Internal(tag.getInt(ENERGY_LEVEL_TAG)),
+		energyCapacity = Internal(tag.getInt(ENERGY_CAPACITY_TAG)),
 		healthStatus   = tag.getEnum<HealthStatus>(HEALTH_STATUS_TAG) ?: HEALTHY,
 		healthOverride = tag.getEnum<HealthOverride>(HEALTH_OVERRIDE_TAG),
 		color          = ClusterColor(tag.getShort(COLOR_PRIMARY_TAG), tag.getShort(COLOR_SECONDARY_TAG))

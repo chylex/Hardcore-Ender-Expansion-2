@@ -11,13 +11,18 @@ import chylex.hee.game.block.entity.base.TileEntityBasePortalController.Foregrou
 import chylex.hee.game.block.entity.base.TileEntityBasePortalController.ForegroundRenderState.Visible
 import chylex.hee.game.mechanics.energy.IEnergyQuantity
 import chylex.hee.game.mechanics.energy.IEnergyQuantity.Units
+import chylex.hee.init.ModTileEntities
 import chylex.hee.system.util.FLAG_SKIP_RENDER
 import chylex.hee.system.util.FLAG_SYNC_CLIENT
 import chylex.hee.system.util.TagCompound
 import chylex.hee.system.util.breakBlock
 import chylex.hee.system.util.getTile
+import chylex.hee.system.util.use
+import net.minecraft.tileentity.TileEntityType
 
-class TileEntityEndPortalAcceptor : TileEntityBasePortalController(){
+class TileEntityEndPortalAcceptor(type: TileEntityType<TileEntityEndPortalAcceptor>) : TileEntityBasePortalController(type){
+	constructor() : this(ModTileEntities.END_PORTAL_ACCEPTOR)
+	
 	private companion object{
 		private const val NO_REFRESH = Int.MAX_VALUE
 		
@@ -66,7 +71,7 @@ class TileEntityEndPortalAcceptor : TileEntityBasePortalController(){
 	private var chargedEnergy: IEnergyQuantity = Units(0)
 	
 	fun refreshClusterState(){
-		if (world.isRemote || isRefreshing){
+		if (wrld.isRemote || isRefreshing){
 			return
 		}
 		
@@ -75,7 +80,7 @@ class TileEntityEndPortalAcceptor : TileEntityBasePortalController(){
 		val newChargeState: ChargeState
 		
 		val posAbove = pos.up()
-		val cluster = posAbove.getTile<TileEntityEnergyCluster>(world)
+		val cluster = posAbove.getTile<TileEntityEnergyCluster>(wrld)
 		
 		if (cluster == null){
 			newChargeState = when(chargeState){
@@ -84,7 +89,7 @@ class TileEntityEndPortalAcceptor : TileEntityBasePortalController(){
 				WAITING  -> IDLE
 				
 				CHARGING -> {
-					BlockEnergyCluster.createSmallLeak(world, posAbove, chargedEnergy)
+					BlockEnergyCluster.createSmallLeak(wrld, posAbove, chargedEnergy)
 					chargedEnergy = Units(0)
 					IDLE
 				}
@@ -107,7 +112,7 @@ class TileEntityEndPortalAcceptor : TileEntityBasePortalController(){
 						
 						if (chargedEnergy >= ENERGY_REQUIRED){
 							cluster.breakWithoutExplosion = true
-							cluster.pos.breakBlock(world, false)
+							cluster.pos.breakBlock(wrld, false)
 							FINISHED
 						}
 						else{
@@ -117,7 +122,7 @@ class TileEntityEndPortalAcceptor : TileEntityBasePortalController(){
 					}
 					else{
 						cluster.breakWithoutExplosion = true
-						cluster.pos.breakBlock(world, false)
+						cluster.pos.breakBlock(wrld, false)
 						CHARGING
 					}
 			}
@@ -139,27 +144,27 @@ class TileEntityEndPortalAcceptor : TileEntityBasePortalController(){
 		refreshClusterState()
 	}
 	
-	override fun update(){
-		super.update()
+	override fun tick(){
+		super.tick()
 		
-		if (!world.isRemote && ticksToRefresh != NO_REFRESH && --ticksToRefresh <= 0){
+		if (!wrld.isRemote && ticksToRefresh != NO_REFRESH && --ticksToRefresh <= 0){
 			refreshClusterState()
 		}
 	}
 	
-	override fun writeNBT(nbt: TagCompound, context: Context) = with(nbt){
+	override fun writeNBT(nbt: TagCompound, context: Context) = nbt.use {
 		super.writeNBT(nbt, context)
 		
 		if (context == STORAGE){
-			setInteger(ENERGY_CHARGE_TAG, chargedEnergy.units.value)
+			putInt(ENERGY_CHARGE_TAG, chargedEnergy.units.value)
 		}
 	}
 	
-	override fun readNBT(nbt: TagCompound, context: Context) = with(nbt){
+	override fun readNBT(nbt: TagCompound, context: Context) = nbt.use {
 		super.readNBT(nbt, context)
 		
 		if (context == STORAGE){
-			chargedEnergy = Units(getInteger(ENERGY_CHARGE_TAG))
+			chargedEnergy = Units(getInt(ENERGY_CHARGE_TAG))
 			
 			if (chargedEnergy >= ENERGY_REQUIRED){
 				chargeState = FINISHED

@@ -5,14 +5,14 @@ import chylex.hee.game.world.util.Size
 import chylex.hee.init.ModBlocks
 import chylex.hee.system.util.allInBoxMutable
 import com.google.common.collect.Iterables
-import net.minecraft.block.state.IBlockState
+import net.minecraft.block.BlockState
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.BlockPos.MutableBlockPos
 import java.util.Random
 
 class ScaffoldedWorld(rand: Random, size: Size) : SegmentedWorld(rand, size, size, SEGMENTER){
 	private companion object{
-		private val SCAFFOLDING: IBlockState = ModBlocks.SCAFFOLDING.defaultState
+		private val SCAFFOLDING: BlockState = ModBlocks.SCAFFOLDING.defaultState
 		private val SEGMENTER = { size: Size -> SegmentFull(size, SCAFFOLDING) }
 	}
 	

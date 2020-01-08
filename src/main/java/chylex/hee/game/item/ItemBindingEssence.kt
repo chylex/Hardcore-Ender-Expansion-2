@@ -5,27 +5,25 @@ import chylex.hee.game.item.infusion.InfusionList
 import chylex.hee.game.item.infusion.InfusionTag
 import chylex.hee.system.migration.forge.Side
 import chylex.hee.system.migration.forge.Sided
+import chylex.hee.system.migration.vanilla.TextComponentString
+import chylex.hee.system.migration.vanilla.TextComponentTranslation
 import chylex.hee.system.util.color.IntColor.Companion.RGB
 import net.minecraft.client.renderer.color.IItemColor
-import net.minecraft.client.resources.I18n
 import net.minecraft.client.util.ITooltipFlag
-import net.minecraft.creativetab.CreativeTabs
-import net.minecraft.item.EnumRarity
+import net.minecraft.item.ItemGroup
 import net.minecraft.item.ItemStack
+import net.minecraft.item.Rarity
 import net.minecraft.util.NonNullList
+import net.minecraft.util.text.ITextComponent
 import net.minecraft.world.World
 
-class ItemBindingEssence : ItemAbstractInfusable(){
-	init{
-		maxStackSize = 16
-	}
-	
+class ItemBindingEssence(properties: Properties) : ItemAbstractInfusable(properties){
 	override fun canApplyInfusion(infusion: Infusion): Boolean{
 		return true
 	}
 	
-	override fun getSubItems(tab: CreativeTabs, items: NonNullList<ItemStack>){
-		if (isInCreativeTab(tab)){
+	override fun fillItemGroup(tab: ItemGroup, items: NonNullList<ItemStack>){
+		if (isInGroup(tab)){
 			items.add(ItemStack(this))
 			
 			for(infusion in Infusion.values()){
@@ -34,12 +32,12 @@ class ItemBindingEssence : ItemAbstractInfusable(){
 		}
 	}
 	
-	override fun getRarity(stack: ItemStack): EnumRarity{
-		return EnumRarity.UNCOMMON
+	override fun getRarity(stack: ItemStack): Rarity{
+		return Rarity.UNCOMMON
 	}
 	
 	@Sided(Side.CLIENT)
-	override fun addInformation(stack: ItemStack, world: World?, lines: MutableList<String>, flags: ITooltipFlag){
+	override fun addInformation(stack: ItemStack, world: World?, lines: MutableList<ITextComponent>, flags: ITooltipFlag){
 		super.addInformation(stack, world, lines, flags)
 		
 		val list = InfusionTag.getList(stack)
@@ -55,11 +53,11 @@ class ItemBindingEssence : ItemAbstractInfusable(){
 			.entries
 			.sortedWith(compareBy({ -it.value }, { getIdFromItem(it.key) }))
 		
-		lines.add("")
-		lines.add(I18n.format("hee.infusions.applicable.title"))
+		lines.add(TextComponentString(""))
+		lines.add(TextComponentTranslation("hee.infusions.applicable.title"))
 		
 		for((item, count) in applicableTo){
-			lines.add(I18n.format("hee.infusions.applicable.item", item.getItemStackDisplayName(ItemStack(item)), count))
+			lines.add(TextComponentTranslation("hee.infusions.applicable.item", item.getDisplayName(ItemStack(item)), count))
 		}
 	}
 	
@@ -72,7 +70,7 @@ class ItemBindingEssence : ItemAbstractInfusable(){
 	object Color : IItemColor{
 		private val EMPTY = RGB(255u).i
 		
-		override fun colorMultiplier(stack: ItemStack, tintIndex: Int): Int{
+		override fun getColor(stack: ItemStack, tintIndex: Int): Int{
 			val list = InfusionTag.getList(stack).toList()
 			
 			if (list.isEmpty()){

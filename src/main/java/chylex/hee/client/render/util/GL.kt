@@ -1,11 +1,12 @@
 package chylex.hee.client.render.util
 import chylex.hee.system.migration.forge.Side
 import chylex.hee.system.migration.forge.Sided
-import net.minecraft.client.renderer.GlStateManager
-import net.minecraft.client.renderer.GlStateManager.DestFactor
-import net.minecraft.client.renderer.GlStateManager.FogMode
-import net.minecraft.client.renderer.GlStateManager.SourceFactor
-import net.minecraft.client.renderer.GlStateManager.TexGen
+import com.mojang.blaze3d.platform.GLX
+import com.mojang.blaze3d.platform.GlStateManager
+import com.mojang.blaze3d.platform.GlStateManager.DestFactor
+import com.mojang.blaze3d.platform.GlStateManager.FogMode
+import com.mojang.blaze3d.platform.GlStateManager.SourceFactor
+import com.mojang.blaze3d.platform.GlStateManager.TexGen
 import java.nio.FloatBuffer
 
 typealias GLSM = GlStateManager
@@ -29,12 +30,12 @@ object GL{
 	fun disableBlend() = GLSM.disableBlend()
 	
 	fun blendFunc(s: SourceFactor, d: DestFactor) = GLSM.blendFunc(s, d)
-	fun blendFunc(srgb: SourceFactor, drgb: DestFactor, sa: SourceFactor, da: DestFactor) = GLSM.tryBlendFuncSeparate(srgb, drgb, sa, da)
+	fun blendFunc(srgb: SourceFactor, drgb: DestFactor, sa: SourceFactor, da: DestFactor) = GLSM.blendFuncSeparate(srgb, drgb, sa, da)
 	
 	// Alpha
 	
-	fun enableAlpha() = GLSM.enableAlpha()
-	fun disableAlpha() = GLSM.disableAlpha()
+	fun enableAlpha() = GLSM.enableAlphaTest()
+	fun disableAlpha() = GLSM.disableAlphaTest()
 	
 	fun alphaFunc(func: Int, ref: Float) = GLSM.alphaFunc(func, ref)
 	
@@ -43,8 +44,8 @@ object GL{
 	fun enableFog() = GLSM.enableFog()
 	fun disableFog() = GLSM.disableFog()
 	
-	fun setFogMode(mode: FogMode) = GLSM.setFog(mode)
-	fun setFogDensity(density: Float) = GLSM.setFogDensity(density)
+	fun setFogMode(mode: FogMode) = GLSM.fogMode(mode)
+	fun setFogDensity(density: Float) = GLSM.fogDensity(density)
 	
 	// Lighting
 	
@@ -53,27 +54,41 @@ object GL{
 	
 	fun shadeModel(model: Int) = GLSM.shadeModel(model)
 	
+	// Lightmap
+	
+	fun setLightmapCoords(x: Float, y: Float){
+		GLX.glMultiTexCoord2f(GLX.GL_TEXTURE1, x, y)
+	}
+	
+	fun setLightmapCoords(x: Int, y: Int){
+		setLightmapCoords(x.toFloat(), y.toFloat())
+	}
+	
+	fun setLightmapCoords(brightness: Int){
+		setLightmapCoords(brightness % 65536, brightness / 65536)
+	}
+	
 	// Color
 	
 	fun enableColorMaterial() = GLSM.enableColorMaterial()
 	fun disableColorMaterial() = GLSM.disableColorMaterial()
 	
-	fun color(red: Float, green: Float, blue: Float) = GLSM.color(red, green, blue)
-	fun color(red: Float, green: Float, blue: Float, alpha: Float) = GLSM.color(red, green, blue, alpha)
+	fun color(red: Float, green: Float, blue: Float) = GLSM.color3f(red, green, blue)
+	fun color(red: Float, green: Float, blue: Float, alpha: Float) = GLSM.color4f(red, green, blue, alpha)
 	
 	// Texture
 	
-	fun enableTexture2D() = GLSM.enableTexture2D()
-	fun disableTexture2D() = GLSM.disableTexture2D()
+	fun enableTexture() = GLSM.enableTexture()
+	fun disableTexture() = GLSM.disableTexture()
 	
-	fun enableOutlineMode(color: Int) = GLSM.enableOutlineMode(color)
-	fun disableOutlineMode() = GLSM.disableOutlineMode()
+	fun enableOutlineMode(color: Int) = GLSM.setupSolidRenderingTextureCombine(color)
+	fun disableOutlineMode() = GLSM.tearDownSolidRenderingTextureCombine()
 	
-	fun enableTexGenCoord(tex: TexGen) = GLSM.enableTexGenCoord(tex)
-	fun disableTexGenCoord(tex: TexGen) = GLSM.disableTexGenCoord(tex)
+	fun enableTexGenCoord(tex: TexGen) = GLSM.enableTexGen(tex)
+	fun disableTexGenCoord(tex: TexGen) = GLSM.disableTexGen(tex)
 	
-	fun texGenMode(tex: TexGen, mode: Int) = GLSM.texGen(tex, mode)
-	fun texGenParam(tex: TexGen, param: Int, buffer: FloatBuffer) = GLSM.texGen(tex, param, buffer)
+	fun texGenMode(tex: TexGen, mode: Int) = GLSM.texGenMode(tex, mode)
+	fun texGenParam(tex: TexGen, param: Int, buffer: FloatBuffer) = GLSM.texGenParam(tex, param, buffer)
 	
 	// Matrix
 	
@@ -83,14 +98,14 @@ object GL{
 	
 	fun matrixMode(mode: Int) = GLSM.matrixMode(mode)
 	
-	fun translate(x: Float, y: Float, z: Float) = GLSM.translate(x, y, z)
-	fun translate(x: Double, y: Double, z: Double) = GLSM.translate(x, y, z)
+	fun translate(x: Float, y: Float, z: Float) = GLSM.translatef(x, y, z)
+	fun translate(x: Double, y: Double, z: Double) = GLSM.translated(x, y, z)
 	
-	fun scale(x: Float, y: Float, z: Float) = GLSM.scale(x, y, z)
-	fun scale(x: Double, y: Double, z: Double) = GLSM.scale(x, y, z)
+	fun scale(x: Float, y: Float, z: Float) = GLSM.scalef(x, y, z)
+	fun scale(x: Double, y: Double, z: Double) = GLSM.scaled(x, y, z)
 	
-	fun rotate(angle: Float, x: Float, y: Float, z: Float) = GLSM.rotate(angle, x, y, z)
-	// fun rotate(angle: Double, x: Double, y: Double, z: Double) = GLSM.rotate(angle, x, y, z)
+	fun rotate(angle: Float, x: Float, y: Float, z: Float) = GLSM.rotatef(angle, x, y, z)
+	fun rotate(angle: Double, x: Double, y: Double, z: Double) = GLSM.rotated(angle, x, y, z)
 	
 	// Constants
 	

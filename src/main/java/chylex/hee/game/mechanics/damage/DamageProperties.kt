@@ -4,14 +4,13 @@ import chylex.hee.system.migration.Hand.MAIN_HAND
 import chylex.hee.system.migration.forge.EventPriority
 import chylex.hee.system.migration.forge.SubscribeAllEvents
 import chylex.hee.system.migration.forge.SubscribeEvent
+import chylex.hee.system.migration.vanilla.EntityLivingBase
+import chylex.hee.system.migration.vanilla.TextComponentTranslation
 import net.minecraft.entity.Entity
-import net.minecraft.entity.EntityLivingBase
 import net.minecraft.item.ItemStack
 import net.minecraft.util.DamageSource
 import net.minecraft.util.math.Vec3d
 import net.minecraft.util.text.ITextComponent
-import net.minecraft.util.text.TextComponentTranslation
-import net.minecraft.util.text.translation.I18n
 import net.minecraftforge.event.entity.living.LivingDamageEvent
 
 @SubscribeAllEvents(modid = HEE.ID)
@@ -110,7 +109,7 @@ class DamageProperties{
 			val translationKeyGeneric = "death.attack.$damageType"
 			val translationKeyItem = "$translationKeyGeneric.item"
 			
-			return if (!heldItem.isEmpty && heldItem.hasDisplayName() && I18n.canTranslate(translationKeyItem))
+			return if (!heldItem.isEmpty && heldItem.hasDisplayName())
 				TextComponentTranslation(translationKeyItem, victim.displayName, realSource.displayName, heldItem.textComponent)
 			else
 				TextComponentTranslation(translationKeyGeneric, victim.displayName, realSource.displayName)

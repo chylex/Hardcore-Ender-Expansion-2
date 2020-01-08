@@ -1,6 +1,5 @@
 package chylex.hee.game.block
 import chylex.hee.game.block.info.BlockBuilder
-import chylex.hee.game.block.info.BlockBuilder.Companion.setupBlockProperties
 import chylex.hee.game.mechanics.damage.Damage
 import chylex.hee.game.mechanics.damage.IDamageProcessor.Companion.ALL_PROTECTIONS
 import chylex.hee.game.mechanics.damage.IDamageProcessor.Companion.FIRE_TYPE
@@ -11,63 +10,53 @@ import chylex.hee.game.particle.util.IShape.Point
 import chylex.hee.system.migration.forge.Side
 import chylex.hee.system.migration.forge.Sided
 import chylex.hee.system.migration.forge.SubscribeEvent
-import chylex.hee.system.migration.vanilla.Blocks
+import chylex.hee.system.migration.vanilla.BlockFire
 import chylex.hee.system.migration.vanilla.Sounds
 import chylex.hee.system.util.facades.Facing6
 import chylex.hee.system.util.getBlock
-import chylex.hee.system.util.getState
 import chylex.hee.system.util.isTopSolid
 import chylex.hee.system.util.nextFloat
-import chylex.hee.system.util.nextInt
 import chylex.hee.system.util.nextItem
 import chylex.hee.system.util.playClient
 import chylex.hee.system.util.playUniversal
 import chylex.hee.system.util.setAir
-import chylex.hee.system.util.setState
-import chylex.hee.system.util.with
-import net.minecraft.block.BlockFire
-import net.minecraft.block.BlockTNT
-import net.minecraft.block.state.IBlockState
+import net.minecraft.block.BlockState
 import net.minecraft.entity.Entity
-import net.minecraft.util.EnumFacing
-import net.minecraft.util.EnumParticleTypes.SMOKE_LARGE
+import net.minecraft.particles.ParticleTypes.LARGE_SMOKE
+import net.minecraft.util.Direction
 import net.minecraft.util.SoundCategory
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.Vec3d
+import net.minecraft.world.GameRules.DO_FIRE_TICK
+import net.minecraft.world.IWorldReader
 import net.minecraft.world.World
 import net.minecraftforge.common.MinecraftForge
 import net.minecraftforge.event.entity.player.PlayerInteractEvent
 import java.util.Random
-import kotlin.math.max
 
-class BlockEternalFire(builder: BlockBuilder) : BlockFire(){
+class BlockEternalFire(builder: BlockBuilder) : BlockFire(builder.p){
 	private companion object{
-		private val PARTICLE_SMOKE = ParticleSpawnerVanilla(SMOKE_LARGE)
+		private val PARTICLE_SMOKE = ParticleSpawnerVanilla(LARGE_SMOKE)
 		private val DAMAGE_CONTACT = Damage(PEACEFUL_EXCLUSION, *ALL_PROTECTIONS, FIRE_TYPE(12 * 20), RAPID_DAMAGE(5))
 	}
 	
 	init{
-		setupBlockProperties(builder)
-		
 		MinecraftForge.EVENT_BUS.register(this)
 	}
 	
-	override fun getMetaFromState(state: IBlockState) = 0
-	override fun getStateFromMeta(meta: Int): IBlockState = defaultState
-	
-	override fun tickRate(world: World) = super.tickRate(world) * 2
+	override fun tickRate(world: IWorldReader) = super.tickRate(world) * 2
 	override fun canDie(world: World, pos: BlockPos) = false
 	
-	override fun updateTick(world: World, pos: BlockPos, state: IBlockState, rand: Random){
-		if (!world.gameRules.getBoolean("doFireTick") || !world.isAreaLoaded(pos, 2)){
+	override fun tick(state: BlockState, world: World, pos: BlockPos, rand: Random){
+		if (!world.gameRules.getBoolean(DO_FIRE_TICK) || !world.isAreaLoaded(pos, 2)){
 			return
 		}
 		
-		if (!canPlaceBlockAt(world, pos)){
-			world.setBlockToAir(pos)
+		if (!state.isValidPosition(world, pos)){
+			pos.setAir(world)
 		}
 		
-		world.scheduleUpdate(pos, this, tickRate(world) + rand.nextInt(10))
+		world.pendingBlockTicks.scheduleTick(pos, this, tickRate(world) + rand.nextInt(10))
 		
 		val baseChance = if (world.isBlockinHighHumidity(pos))
 			250
@@ -82,11 +71,12 @@ class BlockEternalFire(builder: BlockBuilder) : BlockFire(){
 		}
 	}
 	
-	private fun trySpread(world: World, pos: BlockPos, chance: Int, rand: Random, face: EnumFacing){
+	private fun trySpread(world: World, pos: BlockPos, chance: Int, rand: Random, face: Direction){
+		/* UPDATE
 		val state = pos.getState(world)
 		val block = state.block
 		
-		if (block === this || !canPlaceBlockAt(world, pos)){
+		if (block === this || !state.isValidPosition(world, pos)){
 			return
 		}
 		
@@ -108,16 +98,16 @@ class BlockEternalFire(builder: BlockBuilder) : BlockFire(){
 		
 		if (rand.nextInt(chance) < flammability){
 			if (rand.nextInt(3) == 0 && !world.isRainingAt(pos)){
-				pos.setState(world, Blocks.FIRE.defaultState.with(AGE, rand.nextInt(8, 12)))
+				pos.setState(world, Blocks.FIRE.with(AGE, rand.nextInt(8, 12)))
 			}
 			
 			if (block === Blocks.TNT){
 				Blocks.TNT.onPlayerDestroy(world, pos, state.with(BlockTNT.EXPLODE, true))
 			}
-		}
+		}*/
 	}
 	
-	override fun onEntityCollision(world: World, pos: BlockPos, state: IBlockState, entity: Entity){
+	override fun onEntityCollision(state: BlockState, world: World, pos: BlockPos, entity: Entity){
 		DAMAGE_CONTACT.dealTo(1F, entity, Damage.TITLE_IN_FIRE)
 	}
 	
@@ -127,14 +117,14 @@ class BlockEternalFire(builder: BlockBuilder) : BlockFire(){
 		val offsetPos = e.face?.let(e.pos::offset)
 		
 		if (offsetPos?.getBlock(world) === this){
-			Sounds.BLOCK_FIRE_EXTINGUISH.playUniversal(e.entityPlayer, offsetPos, SoundCategory.BLOCKS, volume = 0.5F, pitch = world.rand.nextFloat(1.8F, 3.4F))
+			Sounds.BLOCK_FIRE_EXTINGUISH.playUniversal(e.player, offsetPos, SoundCategory.BLOCKS, volume = 0.5F, pitch = world.rand.nextFloat(1.8F, 3.4F))
 			offsetPos.setAir(world)
 			e.isCanceled = true
 		}
 	}
 	
 	@Sided(Side.CLIENT)
-	override fun randomDisplayTick(state: IBlockState, world: World, pos: BlockPos, rand: Random){
+	override fun animateTick(state: BlockState, world: World, pos: BlockPos, rand: Random){
 		if (rand.nextInt(30) == 0){
 			Sounds.BLOCK_FIRE_AMBIENT.playClient(pos, SoundCategory.BLOCKS, volume = rand.nextFloat(0.5F, 0.6F), pitch = rand.nextFloat(0.3F, 1F))
 		}

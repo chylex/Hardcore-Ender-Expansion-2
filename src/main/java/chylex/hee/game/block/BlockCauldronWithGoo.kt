@@ -1,27 +1,24 @@
 package chylex.hee.game.block
+import chylex.hee.game.block.info.BlockBuilder
 import chylex.hee.game.mechanics.potion.brewing.PotionItems
 import chylex.hee.system.migration.vanilla.Items
 import chylex.hee.system.migration.vanilla.PotionTypes
-import net.minecraft.block.state.IBlockState
+import net.minecraft.block.BlockState
 import net.minecraft.entity.Entity
 import net.minecraft.item.ItemStack
 import net.minecraft.util.math.BlockPos
 import net.minecraft.world.World
 
-class BlockCauldronWithGoo(private val goo: BlockAbstractGoo) : BlockAbstractCauldron(){
-	init{
-		setHardness(2F)
-	}
-	
+class BlockCauldronWithGoo(builder: BlockBuilder, private val goo: BlockAbstractGoo) : BlockAbstractCauldron(builder){
 	override fun createFilledBucket(): ItemStack?{
-		return ItemStack(goo.filledBucket)
+		return ItemStack(goo.fluid.filledBucket)
 	}
 	
 	override fun createFilledBottle(): ItemStack?{
-		return PotionItems.getBottle(Items.POTIONITEM, PotionTypes.THICK)
+		return PotionItems.getBottle(Items.POTION, PotionTypes.THICK)
 	}
 	
-	override fun onEntityCollision(world: World, pos: BlockPos, state: IBlockState, entity: Entity){
+	override fun onEntityCollision(state: BlockState, world: World, pos: BlockPos, entity: Entity){
 		goo.onInsideGoo(entity)
 	}
 	

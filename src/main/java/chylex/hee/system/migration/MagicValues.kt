@@ -7,9 +7,9 @@ package chylex.hee.system.migration
  */
 object MagicValues{
 	/**
-	 * Value of [EntityLivingBase.deathTime][net.minecraft.entity.EntityLivingBase.deathTime] animation at which an entity becomes officially dead.
+	 * Value of [LivingEntity.deathTime][net.minecraft.entity.LivingEntity.deathTime] animation at which an entity becomes officially dead.
 	 *
-	 * Found in [EntityLivingBase.onDeathUpdate][net.minecraft.entity.EntityLivingBase.onDeathUpdate].
+	 * Found in [LivingEntity.onDeathUpdate][net.minecraft.entity.LivingEntity.onDeathUpdate].
 	 */
 	const val DEATH_TIME_MAX = 20
 	
@@ -21,44 +21,28 @@ object MagicValues{
 	const val BLOCK_COLLISION_SHRINK = 0.001
 	
 	/**
-	 * Default damage applied to [ItemSword][net.minecraft.item.ItemSword]s, which is added to [ToolMaterial.attackDamage][net.minecraft.item.Item.ToolMaterial.attackDamage].
+	 * Default player damage added to [IItemTier.getAttackDamage][net.minecraft.item.IItemTier.getAttackDamage].
 	 *
-	 * Found in [ItemSword][net.minecraft.item.ItemSword] constructor (+ 3F) and [SharedMonsterAttributes.ATTACK_DAMAGE][net.minecraft.entity.SharedMonsterAttributes.ATTACK_DAMAGE] (+ 1F).
+	 * Found in [PlayerEntity.registerAttributes][net.minecraft.entity.player.PlayerEntity.registerAttributes] (+ 1F).
 	 */
-	const val SWORD_DEFAULT_DAMAGE_INCREASE = 4F
+	const val PLAYER_HAND_DAMAGE = 1F
 	
 	/**
-	 * Frequency of triggering damage from [MobEffects.POISON][net.minecraft.init.MobEffects.POISON].
+	 * Frequency of triggering damage from [Effects.POISON][net.minecraft.potion.Effects.POISON].
 	 *
-	 * Found in [Potion.isReady][net.minecraft.potion.Potion.isReady]. Don't forget to check if more negative effect types were added that function this way.
+	 * Found in [Effect.isReady][net.minecraft.potion.Effect.isReady]. Don't forget to check if more negative effect types were added that function this way.
 	 */
 	const val POTION_POISON_TRIGGER_RATE = 25
 	
 	/**
-	 * Frequency of triggering damage from [MobEffects.WITHER][net.minecraft.init.MobEffects.WITHER].
+	 * Frequency of triggering damage from [Effects.WITHER][net.minecraft.potion.Effects.WITHER].
 	 *
-	 * Found in [Potion.isReady][net.minecraft.potion.Potion.isReady]. Don't forget to check if more negative effect types were added that function this way.
+	 * Found in [Effect.isReady][net.minecraft.potion.Effect.isReady]. Don't forget to check if more negative effect types were added that function this way.
 	 */
 	const val POTION_WITHER_TRIGGER_RATE = 40
 	
 	/**
-	 * Found in [TileEntityFurnace.SLOTS_SIDES][net.minecraft.tileentity.TileEntityFurnace.SLOTS_SIDES].
+	 * Found in [AbstractFurnaceTileEntity.SLOTS_HORIZONTAL][net.minecraft.tileentity.AbstractFurnaceTileEntity.SLOTS_HORIZONTAL].
 	 */
 	const val FURNACE_FUEL_SLOT = 1
-	
-	/**
-	 * Found in [ItemSkull.SKULL_TYPES][net.minecraft.item.ItemSkull.SKULL_TYPES].
-	 */
-	const val SKULL_TYPE_SKELETON = 0
-	
-	/**
-	 * Found in [ItemSkull.SKULL_TYPES][net.minecraft.item.ItemSkull.SKULL_TYPES].
-	 */
-	const val SKULL_TYPE_ZOMBIE = 2
-	
-	/**
-	 * Found in [ItemSkull.SKULL_TYPES][net.minecraft.item.ItemSkull.SKULL_TYPES].
-	 */
-	const val SKULL_TYPE_PLAYER = 3
-	
 }

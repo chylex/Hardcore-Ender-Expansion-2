@@ -2,22 +2,20 @@ package chylex.hee.game.item
 import chylex.hee.game.mechanics.trinket.TrinketHandler
 import chylex.hee.system.migration.forge.EventPriority
 import chylex.hee.system.migration.forge.SubscribeEvent
-import net.minecraft.entity.player.EntityPlayer
+import chylex.hee.system.migration.vanilla.EntityPlayer
 import net.minecraft.item.ItemStack
 import net.minecraft.util.DamageSource
 import net.minecraftforge.common.MinecraftForge
 import net.minecraftforge.event.entity.living.LivingDamageEvent
 import net.minecraftforge.event.entity.living.LivingDeathEvent
 
-class ItemScaleOfFreefall : ItemAbstractTrinket(){
+class ItemScaleOfFreefall(properties: Properties) : ItemAbstractTrinket(properties){
 	init{
-		maxDamage = 8
-		
 		MinecraftForge.EVENT_BUS.register(this)
 	}
 	
 	override fun canPlaceIntoTrinketSlot(stack: ItemStack): Boolean{
-		return stack.itemDamage < stack.maxDamage
+		return stack.damage < stack.maxDamage
 	}
 	
 	@SubscribeEvent(EventPriority.HIGHEST)
@@ -42,7 +40,7 @@ class ItemScaleOfFreefall : ItemAbstractTrinket(){
 		val player = e.entity as? EntityPlayer ?: return
 		
 		TrinketHandler.get(player).transformIfActive(this){
-			++it.itemDamage
+			++it.damage
 			
 			player.health = 1F
 			e.isCanceled = true

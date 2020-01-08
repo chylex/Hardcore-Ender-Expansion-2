@@ -3,17 +3,17 @@ import chylex.hee.game.particle.data.ParticleDataColorLifespanScale
 import chylex.hee.game.particle.spawner.IParticleMaker
 import chylex.hee.system.migration.forge.Side
 import chylex.hee.system.migration.forge.Sided
+import chylex.hee.system.migration.vanilla.ParticleSmokeNormal
 import chylex.hee.system.util.color.IRandomColor
 import chylex.hee.system.util.color.IntColor
 import chylex.hee.system.util.color.IntColor.Companion.RGB
 import chylex.hee.system.util.floorToInt
 import chylex.hee.system.util.nextFloat
 import net.minecraft.client.particle.Particle
-import net.minecraft.client.particle.ParticleSmokeNormal
 import net.minecraft.world.World
 import java.util.Random
 
-object ParticleSmokeCustom : IParticleMaker<ParticleDataColorLifespanScale>{
+object ParticleSmokeCustom : IParticleMaker.WithData<ParticleDataColorLifespanScale>(){
 	private val rand = Random()
 	
 	@Sided(Side.CLIENT)
@@ -50,7 +50,7 @@ object ParticleSmokeCustom : IParticleMaker<ParticleDataColorLifespanScale>{
 	private class Instance(
 		world: World, posX: Double, posY: Double, posZ: Double, motX: Double, motY: Double, motZ: Double, data: ParticleDataColorLifespanScale
 	) : ParticleSmokeNormal(
-		world, posX, posY, posZ, motX, motY, motZ, data.scale
+		world, posX, posY, posZ, motX, motY, motZ, data.scale, sprite
 	){
 		init{
 			val color = data.color
@@ -60,7 +60,7 @@ object ParticleSmokeCustom : IParticleMaker<ParticleDataColorLifespanScale>{
 			particleBlue = color.blue / 255F
 			
 			if (data.lifespan != -1){
-				particleMaxAge = data.lifespan
+				maxAge = data.lifespan
 			}
 		}
 	}

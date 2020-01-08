@@ -1,97 +1,100 @@
 package chylex.hee.game.world.feature.energyshrine
-import chylex.hee.system.util.NBTList.Companion.setList
-import chylex.hee.system.util.NBTObjectList
 import chylex.hee.system.util.TagCompound
 import chylex.hee.system.util.nextItem
-import net.minecraft.item.EnumDyeColor
-import net.minecraft.item.EnumDyeColor.BLACK
-import net.minecraft.item.EnumDyeColor.BLUE
-import net.minecraft.item.EnumDyeColor.BROWN
-import net.minecraft.item.EnumDyeColor.CYAN
-import net.minecraft.item.EnumDyeColor.GREEN
-import net.minecraft.item.EnumDyeColor.LIGHT_BLUE
-import net.minecraft.item.EnumDyeColor.LIME
-import net.minecraft.item.EnumDyeColor.MAGENTA
-import net.minecraft.item.EnumDyeColor.ORANGE
-import net.minecraft.item.EnumDyeColor.PINK
-import net.minecraft.item.EnumDyeColor.PURPLE
-import net.minecraft.item.EnumDyeColor.RED
-import net.minecraft.item.EnumDyeColor.SILVER
-import net.minecraft.item.EnumDyeColor.WHITE
-import net.minecraft.item.EnumDyeColor.YELLOW
+import net.minecraft.item.DyeColor
+import net.minecraft.item.DyeColor.BLACK
+import net.minecraft.item.DyeColor.BLUE
+import net.minecraft.item.DyeColor.BROWN
+import net.minecraft.item.DyeColor.CYAN
+import net.minecraft.item.DyeColor.GREEN
+import net.minecraft.item.DyeColor.LIGHT_BLUE
+import net.minecraft.item.DyeColor.LIGHT_GRAY
+import net.minecraft.item.DyeColor.LIME
+import net.minecraft.item.DyeColor.MAGENTA
+import net.minecraft.item.DyeColor.ORANGE
+import net.minecraft.item.DyeColor.PINK
+import net.minecraft.item.DyeColor.PURPLE
+import net.minecraft.item.DyeColor.RED
+import net.minecraft.item.DyeColor.WHITE
+import net.minecraft.item.DyeColor.YELLOW
+import net.minecraft.tileentity.BannerPattern
+import net.minecraft.tileentity.BannerPattern.BORDER
+import net.minecraft.tileentity.BannerPattern.BRICKS
+import net.minecraft.tileentity.BannerPattern.FLOWER
+import net.minecraft.tileentity.BannerPattern.GRADIENT_UP
+import net.minecraft.tileentity.BannerPattern.MOJANG
+import net.minecraft.tileentity.BannerPattern.SKULL
+import net.minecraft.tileentity.BannerPattern.SQUARE_BOTTOM_LEFT
+import net.minecraft.tileentity.BannerPattern.SQUARE_BOTTOM_RIGHT
+import net.minecraft.tileentity.BannerPattern.SQUARE_TOP_LEFT
+import net.minecraft.tileentity.BannerPattern.SQUARE_TOP_RIGHT
+import net.minecraft.tileentity.BannerPattern.STRIPE_CENTER
+import net.minecraft.tileentity.BannerPattern.STRIPE_MIDDLE
 import java.util.Random
 
 object EnergyShrineBanners{
-	fun generate(rand: Random, colors: BannerColors): TagCompound{
-		val (baseColor, fadeColor) = colors.damageValues
+	fun generate(rand: Random, colors: BannerColors): Pair<DyeColor, TagCompound>{
+		val baseColor = colors.base
+		val fadeColor = colors.fade
 		
-		val patterns = NBTObjectList<TagCompound>().apply {
-			append(pattern("cs", BLACK.dyeDamage))
-			append(pattern("bri", baseColor))
+		val patterns = BannerPattern.Builder().apply {
+			func_222477_a(STRIPE_CENTER, BLACK)
+			func_222477_a(BRICKS, baseColor)
 			
 			// primary shapes
 			
 			when(rand.nextInt(10)){
-				in 0..3 -> append(pattern("tl", baseColor))
-				in 4..7 -> append(pattern("tr", baseColor))
+				in 0..3 -> func_222477_a(SQUARE_TOP_LEFT, baseColor)
+				in 4..7 -> func_222477_a(SQUARE_TOP_RIGHT, baseColor)
 				// 8..9
 			}
 			
 			when(rand.nextInt(8)){
-				in 0..2 -> append(pattern("bl", baseColor))
-				in 3..5 -> append(pattern("br", baseColor))
+				in 0..2 -> func_222477_a(SQUARE_BOTTOM_LEFT, baseColor)
+				in 3..5 -> func_222477_a(SQUARE_BOTTOM_RIGHT, baseColor)
 				// 6..7
 			}
 			
 			if (rand.nextInt(3) != 0){
-				append(pattern("ms", baseColor))
+				func_222477_a(STRIPE_MIDDLE, baseColor)
 			}
 			
 			if (rand.nextInt(3) == 0){
-				append(pattern("bo", baseColor))
+				func_222477_a(BORDER, baseColor)
 			}
 			
 			// special shapes
 			
 			if (rand.nextInt(6) == 0){
-				append(pattern("sku", baseColor))
+				func_222477_a(SKULL, baseColor)
 			}
 			
 			if (rand.nextInt(5) == 0){
-				append(pattern("moj", baseColor))
+				func_222477_a(MOJANG, baseColor)
 			}
 			
 			if (rand.nextInt(4) == 0){
-				append(pattern("flo", baseColor))
+				func_222477_a(FLOWER, baseColor)
 			}
 			
 			// fade gradient
 			
-			append(pattern("gru", fadeColor))
+			func_222477_a(GRADIENT_UP, fadeColor)
 		}
 		
-		return TagCompound().apply {
-			setInteger("Base", baseColor)
-			setList("Patterns", patterns)
+		return baseColor to TagCompound().apply {
+			put("Patterns", patterns.func_222476_a())
 		}
-	}
-	
-	private fun pattern(name: String, color: Int) = TagCompound().apply {
-		setString("Pattern", name)
-		setInteger("Color", color)
 	}
 	
 	class BannerColors(
-		private val base: EnumDyeColor,
-		private val fade: EnumDyeColor
+		val base: DyeColor,
+		val fade: DyeColor
 	){
-		val damageValues
-			get() = Pair(base.dyeDamage, fade.dyeDamage)
-		
 		companion object{
 			val DEFAULT = BannerColors(WHITE, WHITE)
 			
-			private val BASE_COLORS = arrayOf(WHITE, ORANGE, MAGENTA, LIGHT_BLUE, YELLOW, LIME, PINK, CYAN, PURPLE, BLUE, BROWN, GREEN, RED, SILVER)
+			private val BASE_COLORS = arrayOf(WHITE, ORANGE, MAGENTA, LIGHT_BLUE, YELLOW, LIME, PINK, CYAN, PURPLE, BLUE, BROWN, GREEN, RED, LIGHT_GRAY)
 			private val FADE_COLORS = arrayOf(WHITE, ORANGE, MAGENTA, LIGHT_BLUE, YELLOW, LIME, PINK, CYAN, PURPLE, BLUE, BROWN, GREEN, RED, BLACK)
 			
 			fun random(rand: Random): BannerColors{
@@ -100,7 +103,7 @@ object EnergyShrineBanners{
 				val remainingFadeColors = FADE_COLORS.toMutableList().apply {
 					remove(base)
 					
-					if (base == WHITE || base == SILVER){
+					if (base == WHITE || base == LIGHT_GRAY){
 						remove(WHITE)
 						remove(BLACK)
 					}

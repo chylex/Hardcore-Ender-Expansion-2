@@ -1,9 +1,13 @@
 package chylex.hee.init
 import chylex.hee.HEE
+import chylex.hee.client.gui.GuiAmuletOfRecovery
+import chylex.hee.client.gui.GuiBrewingStandCustom
+import chylex.hee.client.gui.GuiLootChest
+import chylex.hee.client.gui.GuiPortalTokenStorage
+import chylex.hee.client.gui.GuiTrinketPouch
 import chylex.hee.client.model.item.ModelItemAmuletOfRecovery
 import chylex.hee.client.render.block.RenderTileDarkChest
 import chylex.hee.client.render.block.RenderTileEndPortal
-import chylex.hee.client.render.block.RenderTileEndermanHead
 import chylex.hee.client.render.block.RenderTileExperienceGate
 import chylex.hee.client.render.block.RenderTileIgneousPlate
 import chylex.hee.client.render.block.RenderTileJarODust
@@ -27,11 +31,9 @@ import chylex.hee.client.render.entity.RenderEntityTokenHolder
 import chylex.hee.client.render.entity.layer.LayerEndermanHead
 import chylex.hee.client.render.util.asItem
 import chylex.hee.client.util.MC
-import chylex.hee.game.block.BlockAbstractTable
 import chylex.hee.game.block.BlockDryVines
 import chylex.hee.game.block.BlockPuzzleLogic
 import chylex.hee.game.block.BlockTablePedestal
-import chylex.hee.game.block.BlockVoidPortalInner
 import chylex.hee.game.block.entity.TileEntityDarkChest
 import chylex.hee.game.block.entity.TileEntityExperienceGate
 import chylex.hee.game.block.entity.TileEntityIgneousPlate
@@ -42,6 +44,10 @@ import chylex.hee.game.block.entity.TileEntityPortalInner
 import chylex.hee.game.block.entity.TileEntityTablePedestal
 import chylex.hee.game.block.entity.base.TileEntityBaseSpawner
 import chylex.hee.game.block.entity.base.TileEntityBaseTable
+import chylex.hee.game.container.ContainerAmuletOfRecovery
+import chylex.hee.game.container.ContainerLootChest
+import chylex.hee.game.container.ContainerPortalTokenStorage
+import chylex.hee.game.container.ContainerTrinketPouch
 import chylex.hee.game.entity.item.EntityItemNoBob
 import chylex.hee.game.entity.item.EntityTokenHolder
 import chylex.hee.game.entity.living.EntityBossEnderEye
@@ -59,36 +65,52 @@ import chylex.hee.game.item.ItemEnergyOracle
 import chylex.hee.game.item.ItemEnergyReceptacle
 import chylex.hee.game.item.ItemPortalToken
 import chylex.hee.game.item.ItemVoidBucket
-import chylex.hee.game.item.ItemVoidSalad
 import chylex.hee.init.factory.RendererConstructors
+import chylex.hee.init.factory.ScreenConstructors
 import chylex.hee.system.migration.forge.Side
 import chylex.hee.system.migration.forge.SubscribeAllEvents
 import chylex.hee.system.migration.forge.SubscribeEvent
-import chylex.hee.system.util.facades.Resource
-import net.minecraft.block.Block
-import net.minecraft.client.renderer.block.model.ModelResourceLocation
-import net.minecraft.client.renderer.block.statemap.IStateMapper
-import net.minecraft.client.renderer.color.IBlockColor
-import net.minecraft.client.renderer.color.IItemColor
-import net.minecraft.client.renderer.entity.Render
-import net.minecraft.client.renderer.tileentity.TileEntityItemStackRenderer
-import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer
+import chylex.hee.system.migration.vanilla.ContainerBrewingStand
+import chylex.hee.system.migration.vanilla.ContainerShulkerBox
+import net.minecraft.client.gui.ScreenManager
+import net.minecraft.client.gui.screen.inventory.ContainerScreen
+import net.minecraft.client.gui.screen.inventory.ShulkerBoxScreen
+import net.minecraft.client.renderer.entity.EntityRenderer
+import net.minecraft.client.renderer.tileentity.TileEntityRenderer
 import net.minecraft.entity.Entity
-import net.minecraft.item.Item
+import net.minecraft.inventory.container.Container
+import net.minecraft.inventory.container.ContainerType
 import net.minecraft.tileentity.TileEntity
-import net.minecraft.util.ResourceLocation
+import net.minecraftforge.client.event.ColorHandlerEvent
 import net.minecraftforge.client.event.ModelRegistryEvent
-import net.minecraftforge.client.model.ModelLoader
 import net.minecraftforge.fml.client.registry.ClientRegistry
 import net.minecraftforge.fml.client.registry.RenderingRegistry
-import net.minecraftforge.fml.common.registry.ForgeRegistries
+import net.minecraftforge.fml.common.Mod.EventBusSubscriber.Bus.MOD
+import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent
 
-@SubscribeAllEvents(Side.CLIENT, modid = HEE.ID)
+@SubscribeAllEvents(Side.CLIENT, modid = HEE.ID, bus = MOD)
 object ModRendering{
+	val RENDER_ITEM_DARK_CHEST = RenderTileDarkChest.AsItem
+	val RENDER_ITEM_LOOT_CHEST = RenderTileLootChest.AsItem
+	val RENDER_ITEM_JAR_O_DUST = RenderTileJarODust.AsItem
+	// UPDATE val RENDER_ITEM_ENDERMAN_HEAD, RenderTileEndermanHead.AsItem
 	
-	// Entities
-	
-	fun registerEntities(){
+	@JvmStatic
+	@SubscribeEvent
+	@Suppress("unused", "UNUSED_PARAMETER", "RemoveExplicitTypeArguments")
+	fun onRegisterRenderers(e: FMLClientSetupEvent){
+		
+		// screens
+		
+		registerScreen<GuiAmuletOfRecovery, ContainerAmuletOfRecovery>(ModContainers.AMULET_OF_RECOVERY)
+		registerScreen<GuiBrewingStandCustom, ContainerBrewingStand>(ModContainers.BREWING_STAND)
+		registerScreen<GuiLootChest, ContainerLootChest>(ModContainers.LOOT_CHEST)
+		registerScreen<GuiPortalTokenStorage, ContainerPortalTokenStorage>(ModContainers.PORTAL_TOKEN_STORAGE)
+		registerScreen<ShulkerBoxScreen, ContainerShulkerBox>(ModContainers.SHULKER_BOX_IN_INVENTORY)
+		registerScreen<GuiTrinketPouch, ContainerTrinketPouch>(ModContainers.TRINKET_POUCH)
+		
+		// entities
+		
 		registerEntity<EntityItemNoBob, RenderEntityItemNoBob>()
 		registerEntity<EntityTokenHolder, RenderEntityTokenHolder>()
 		
@@ -105,16 +127,9 @@ object ModRendering{
 		registerEntity<EntityProjectileSpatialDash, RenderEntityNothing>()
 		
 		registerEntity<EntityTechnicalBase, RenderEntityNothing>()
-	}
-	
-	fun registerLayers(){
-		for(render in MC.renderManager.skinMap.values){
-			render.addLayer(LayerEndermanHead(render.mainModel.bipedHead))
-		}
-	}
-	
-	@Suppress("unused", "RemoveExplicitTypeArguments")
-	fun registerTileEntities(){
+		
+		// tile entities
+		
 		registerTile<TileEntityBaseSpawner>(RenderTileSpawner)
 		registerTile<TileEntityBaseTable>(RenderTileTable)
 		registerTile<TileEntityDarkChest>(RenderTileDarkChest)
@@ -127,38 +142,41 @@ object ModRendering{
 		registerTile<TileEntityPortalInner.Void>(RenderTileVoidPortal)
 		registerTile<TileEntityTablePedestal>(RenderTileTablePedestal)
 		
-		registerTileStack(ModBlocks.DARK_CHEST, RenderTileDarkChest.AsItem)
-		registerTileStack(ModBlocks.LOOT_CHEST, RenderTileLootChest.AsItem)
-		registerTileStack(ModBlocks.JAR_O_DUST, RenderTileJarODust.AsItem)
-		registerTileStack(ModItems.ENDERMAN_HEAD, RenderTileEndermanHead.AsItem)
-	}
-	
-	// Blocks & items
-	
-	fun registerBlockItemColors(){
-		setColor(ModBlocks.DRY_VINES, BlockDryVines.Color)
-		setColor(ModBlocks.DRY_VINES, BlockDryVines.Color.asItem(ModBlocks.DRY_VINES))
-		setColor(ModBlocks.TABLE_PEDESTAL, BlockTablePedestal.Color)
+		// miscellaneous
 		
-		for(block in arrayOf(
-			ModBlocks.PUZZLE_BURST_3,
-			ModBlocks.PUZZLE_BURST_5,
-			ModBlocks.PUZZLE_REDIRECT_1,
-			ModBlocks.PUZZLE_REDIRECT_2,
-			ModBlocks.PUZZLE_REDIRECT_4,
-			ModBlocks.PUZZLE_TELEPORT
-		)){
-			setColor(block, BlockPuzzleLogic.Color)
-			setColor(block, BlockPuzzleLogic.Color.asItem(block))
+		for(render in MC.renderManager.skinMap.values){
+			render.addLayer(LayerEndermanHead(render))
 		}
-		
-		setColor(ModItems.BINDING_ESSENCE, ItemBindingEssence.Color)
-		setColor(ModItems.ENERGY_ORACLE, ItemEnergyOracle.Color)
-		setColor(ModItems.ENERGY_RECEPTACLE, ItemEnergyReceptacle.Color)
-		setColor(ModItems.PORTAL_TOKEN, ItemPortalToken.Color)
-		setColor(ModItems.VOID_BUCKET, ItemVoidBucket.Color)
 	}
 	
+	@JvmStatic
+	@SubscribeEvent
+	fun onRegisterBlockItemColors(e: ColorHandlerEvent.Item){
+		with(e.blockColors){ with(e.itemColors){
+			register(BlockDryVines.Color, ModBlocks.DRY_VINES)
+			register(BlockDryVines.Color.asItem(ModBlocks.DRY_VINES), ModBlocks.DRY_VINES)
+			register(BlockTablePedestal.Color, ModBlocks.TABLE_PEDESTAL)
+			
+			register(ItemBindingEssence.Color, ModItems.BINDING_ESSENCE)
+			register(ItemEnergyOracle.Color, ModItems.ENERGY_ORACLE)
+			register(ItemEnergyReceptacle.Color, ModItems.ENERGY_RECEPTACLE)
+			register(ItemPortalToken.Color, ModItems.PORTAL_TOKEN)
+			register(ItemVoidBucket.Color, ModItems.VOID_BUCKET)
+			
+			for(block in arrayOf(
+				ModBlocks.PUZZLE_BURST_3,
+				ModBlocks.PUZZLE_BURST_5,
+				ModBlocks.PUZZLE_REDIRECT_1,
+				ModBlocks.PUZZLE_REDIRECT_2,
+				ModBlocks.PUZZLE_REDIRECT_4,
+				ModBlocks.PUZZLE_TELEPORT
+			)){
+				register(BlockPuzzleLogic.Color, block)
+				register(BlockPuzzleLogic.Color.asItem(block), block)
+			}
+		}}
+	}
+	/* TODO
 	private fun registerBlockStateMappers(){
 		val emptyStateMapper = IStateMapper {
 			emptyMap()
@@ -187,18 +205,18 @@ object ModRendering{
 		setMapper(ModBlocks.WHITEBARK_SAPLING_AUTUMN_BROWN, singleStateMapper)
 		setMapper(ModBlocks.WHITEBARK_SAPLING_AUTUMN_ORANGE, singleStateMapper)
 		setMapper(ModBlocks.WHITEBARK_SAPLING_AUTUMN_YELLOWGREEN, singleStateMapper)
-	}
-	
-	private fun registerSpecialModels(){
-		ModelItemAmuletOfRecovery.register()
-	}
+	}*/
 	
 	@JvmStatic
 	@SubscribeEvent
-	fun onModels(@Suppress("UNUSED_PARAMETER") e: ModelRegistryEvent){
-		registerBlockStateMappers()
-		registerSpecialModels()
+	fun onRegisterModels(@Suppress("UNUSED_PARAMETER") e: ModelRegistryEvent){
 		
+		// special models
+		
+		ModelItemAmuletOfRecovery.register()
+		
+		// UPDATE
+		/* TODO
 		val tables = arrayOf(
 			ModBlocks.TABLE_BASE,
 			ModBlocks.ACCUMULATION_TABLE
@@ -232,41 +250,26 @@ object ModRendering{
 			for(item in keys.filter(Resource::isCustom).map(::getValue).requireNoNulls().filterNot(skippedBlocks::contains)){
 				setModel(item)
 			}
-		}
+		}*/
 	}
 	
 	// Utilities
 	
-	private inline fun <reified T : Entity, reified R : Render<in T>> registerEntity(){
-		RenderingRegistry.registerEntityRenderingHandler(T::class.java, RendererConstructors.get(R::class.java))
+	private inline fun <reified T : ContainerScreen<U>, U : Container> registerScreen(type: ContainerType<out U>){
+		ScreenManager.registerFactory(type, ScreenConstructors.get(T::class.java))
 	}
 	
-	private inline fun <reified T : TileEntity> registerTile(renderer: TileEntitySpecialRenderer<in T>){
+	private inline fun <reified T : Entity, reified U : EntityRenderer<in T>> registerEntity(){
+		RenderingRegistry.registerEntityRenderingHandler(T::class.java, RendererConstructors.get(U::class.java))
+	}
+	
+	private inline fun <reified T : TileEntity> registerTile(renderer: TileEntityRenderer<in T>){
 		ClientRegistry.bindTileEntitySpecialRenderer(T::class.java, renderer)
 	}
 	
-	private fun registerTileStack(block: Block, renderer: TileEntityItemStackRenderer){
-		Item.getItemFromBlock(block).tileEntityItemStackRenderer = renderer
-	}
-	
-	private fun registerTileStack(item: Item, renderer: TileEntityItemStackRenderer){
-		item.tileEntityItemStackRenderer = renderer
-	}
-	
+	/* UPDATE
 	private fun setMapper(block: Block, mapper: IStateMapper){
 		ModelLoader.setCustomStateMapper(block, mapper)
-	}
-	
-	private fun setColor(block: Block, color: IBlockColor){
-		MC.instance.blockColors.registerBlockColorHandler(color, block)
-	}
-	
-	private fun setColor(block: Block, color: IItemColor){
-		MC.instance.itemColors.registerItemColorHandler(color, block)
-	}
-	
-	private fun setColor(item: Item, color: IItemColor){
-		MC.instance.itemColors.registerItemColorHandler(color, item)
 	}
 	
 	private fun setModel(item: Item, metadata: Int = 0, location: ResourceLocation = item.registryName!!, variant: String = "inventory"){
@@ -281,5 +284,5 @@ object ModRendering{
 		for(metadata in metadatas){
 			setModel(block, metadata, location, variant)
 		}
-	}
+	}*/
 }

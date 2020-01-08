@@ -1,5 +1,4 @@
 package chylex.hee.game.world.feature.stronghold.piece
-import chylex.hee.game.block.util.FutureBlocks
 import chylex.hee.game.entity.living.EntityMobSilverfish
 import chylex.hee.game.entity.technical.EntityTechnicalTrigger
 import chylex.hee.game.entity.technical.EntityTechnicalTrigger.ITriggerHandler
@@ -12,12 +11,13 @@ import chylex.hee.game.world.structure.IStructureWorld
 import chylex.hee.game.world.structure.piece.IStructurePieceConnection
 import chylex.hee.game.world.structure.trigger.EntityStructureTrigger
 import chylex.hee.game.world.structure.trigger.LootChestStructureTrigger
-import chylex.hee.game.world.structure.trigger.TileEntityStructureTrigger
 import chylex.hee.system.migration.Difficulty.PEACEFUL
 import chylex.hee.system.migration.Facing.EAST
 import chylex.hee.system.migration.Facing.UP
 import chylex.hee.system.migration.Facing.WEST
+import chylex.hee.system.migration.vanilla.BlockSkull
 import chylex.hee.system.migration.vanilla.Blocks
+import chylex.hee.system.migration.vanilla.EntityPlayer
 import chylex.hee.system.util.Pos
 import chylex.hee.system.util.TagCompound
 import chylex.hee.system.util.breakBlock
@@ -33,8 +33,8 @@ import chylex.hee.system.util.nextInt
 import chylex.hee.system.util.nextItemOrNull
 import chylex.hee.system.util.nextRounded
 import chylex.hee.system.util.selectVulnerableEntities
-import net.minecraft.entity.player.EntityPlayer
-import net.minecraft.tileentity.TileEntitySkull
+import chylex.hee.system.util.use
+import chylex.hee.system.util.with
 import net.minecraft.util.math.AxisAlignedBB
 import net.minecraft.world.World
 import java.util.Random
@@ -86,7 +86,7 @@ class StrongholdRoom_Trap_Prison(file: String) : StrongholdAbstractPieceFromFile
 						
 						EntityMobSilverfish(world).apply {
 							setLocationAndAngles(testPos.x + 0.5, testPos.y.toDouble(), testPos.z + 0.5, rand.nextFloat(0F, 360F), 0F)
-							world.spawnEntity(this)
+							world.addEntity(this)
 							
 							spawnExplosionParticle()
 							attackTarget = rand.nextItemOrNull(targets)
@@ -99,7 +99,7 @@ class StrongholdRoom_Trap_Prison(file: String) : StrongholdAbstractPieceFromFile
 			}
 			
 			if (spawnsLeft == 0){
-				entity.setDead()
+				entity.remove()
 			}
 		}
 		
@@ -108,10 +108,10 @@ class StrongholdRoom_Trap_Prison(file: String) : StrongholdAbstractPieceFromFile
 		}
 		
 		override fun serializeNBT() = TagCompound().apply {
-			setShort(SPAWNS_LEFT_TAG, spawnsLeft.toShort())
+			putShort(SPAWNS_LEFT_TAG, spawnsLeft.toShort())
 		}
 		
-		override fun deserializeNBT(nbt: TagCompound) = with(nbt){
+		override fun deserializeNBT(nbt: TagCompound) = nbt.use {
 			spawnsLeft = getShort(SPAWNS_LEFT_TAG).toInt()
 		}
 	}
@@ -133,8 +133,8 @@ class StrongholdRoom_Trap_Prison(file: String) : StrongholdAbstractPieceFromFile
 		
 		// Skull
 		
-		val skullType = if (rand.nextInt(3) == 0) 2 else 0
-		world.addTrigger(Pos(maxX - 1, 1, 1), TileEntityStructureTrigger(FutureBlocks.SKULL_FLOOR, TileEntitySkull().apply { setType(skullType); skullRotation = 10 }))
+		val skullType = if (rand.nextInt(3) == 0) Blocks.SKELETON_SKULL else Blocks.ZOMBIE_HEAD
+		world.setState(Pos(maxX - 1, 1, 1), skullType.with(BlockSkull.ROTATION, 10))
 		
 		// Redstone
 		

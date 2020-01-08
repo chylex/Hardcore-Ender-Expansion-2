@@ -6,7 +6,7 @@ import chylex.hee.game.world.structure.IStructureWorld
 import chylex.hee.game.world.structure.piece.StructurePiece
 import chylex.hee.game.world.util.Transform
 import chylex.hee.system.util.ceilToInt
-import net.minecraft.util.EnumFacing
+import net.minecraft.util.Direction
 import kotlin.math.pow
 
 abstract class StrongholdAbstractPiece : StructurePiece<Unit>(){
@@ -20,7 +20,7 @@ abstract class StrongholdAbstractPiece : StructurePiece<Unit>(){
 		placeConnections(world, instance)
 	}
 	
-	inner class StrongholdInst(val distanceToPortal: Int, val facingFromPortal: EnumFacing?, transform: Transform) : MutableInstance(null, transform){
+	inner class StrongholdInst(val distanceToPortal: Int, val facingFromPortal: Direction?, transform: Transform) : MutableInstance(null, transform){
 		private val weightMultiplier = (type.weightMultiplier * extraWeightMultiplier) / (distanceToPortal + 1F).pow(0.2F)
 		
 		val type

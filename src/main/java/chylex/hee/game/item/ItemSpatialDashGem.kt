@@ -12,17 +12,18 @@ import chylex.hee.system.migration.ActionResult.FAIL
 import chylex.hee.system.migration.ActionResult.SUCCESS
 import chylex.hee.system.migration.forge.Side
 import chylex.hee.system.migration.forge.Sided
+import chylex.hee.system.migration.vanilla.EntityPlayer
 import chylex.hee.system.util.facades.Stats
 import chylex.hee.system.util.floorToInt
 import chylex.hee.system.util.over
 import net.minecraft.client.util.ITooltipFlag
-import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.item.ItemStack
 import net.minecraft.util.ActionResult
-import net.minecraft.util.EnumHand
+import net.minecraft.util.Hand
+import net.minecraft.util.text.ITextComponent
 import net.minecraft.world.World
 
-class ItemSpatialDashGem : ItemAbstractEnergyUser(), IInfusableItem{
+class ItemSpatialDashGem(properties: Properties) : ItemAbstractEnergyUser(properties), IInfusableItem{
 	companion object{
 		private const val INSTANT_SPEED_MP = 100F // just above the maximum possible distance
 		
@@ -45,7 +46,7 @@ class ItemSpatialDashGem : ItemAbstractEnergyUser(), IInfusableItem{
 		return ItemAbstractInfusable.onCanApplyInfusion(this, infusion)
 	}
 	
-	override fun onItemRightClick(world: World, player: EntityPlayer, hand: EnumHand): ActionResult<ItemStack>{
+	override fun onItemRightClick(world: World, player: EntityPlayer, hand: Hand): ActionResult<ItemStack>{
 		val heldItem = player.getHeldItem(hand)
 		
 		if (!useEnergyUnit(heldItem)){
@@ -63,7 +64,7 @@ class ItemSpatialDashGem : ItemAbstractEnergyUser(), IInfusableItem{
 			
 			val distanceMp = infusions.calculateLevelMultiplier(DISTANCE, 1.75F)
 			
-			world.spawnEntity(EntityProjectileSpatialDash(world, player, speedMp, distanceMp))
+			world.addEntity(EntityProjectileSpatialDash(world, player, speedMp, distanceMp))
 		}
 		
 		player.cooldownTracker.setCooldown(this, 24)
@@ -75,7 +76,7 @@ class ItemSpatialDashGem : ItemAbstractEnergyUser(), IInfusableItem{
 	// Client side
 	
 	@Sided(Side.CLIENT)
-	override fun addInformation(stack: ItemStack, world: World?, lines: MutableList<String>, flags: ITooltipFlag){
+	override fun addInformation(stack: ItemStack, world: World?, lines: MutableList<ITextComponent>, flags: ITooltipFlag){
 		super.addInformation(stack, world, lines, flags)
 		ItemAbstractInfusable.onAddInformation(stack, lines)
 	}

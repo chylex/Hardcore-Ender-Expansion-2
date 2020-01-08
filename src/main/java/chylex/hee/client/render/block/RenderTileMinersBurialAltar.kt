@@ -6,17 +6,17 @@ import chylex.hee.game.block.entity.TileEntityMinersBurialAltar
 import chylex.hee.init.ModItems
 import chylex.hee.system.migration.forge.Side
 import chylex.hee.system.migration.forge.Sided
-import net.minecraft.client.renderer.block.model.ItemCameraTransforms.TransformType.GROUND
-import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer
+import net.minecraft.client.renderer.model.ItemCameraTransforms.TransformType.GROUND
+import net.minecraft.client.renderer.tileentity.TileEntityRenderer
 import net.minecraft.item.ItemStack
 import net.minecraftforge.client.ForgeHooksClient
 
 @Sided(Side.CLIENT)
-object RenderTileMinersBurialAltar : TileEntitySpecialRenderer<TileEntityMinersBurialAltar>(){
+object RenderTileMinersBurialAltar : TileEntityRenderer<TileEntityMinersBurialAltar>(){
 	private val PUZZLE_MEDALLION = ItemStack(ModItems.PUZZLE_MEDALLION)
 	private const val SCALE_XZ = 1.85F
 	
-	override fun render(tile: TileEntityMinersBurialAltar, x: Double, y: Double, z: Double, partialTicks: Float, destroyStage: Int, alpha: Float){
+	override fun render(tile: TileEntityMinersBurialAltar, x: Double, y: Double, z: Double, partialTicks: Float, destroyStage: Int){
 		if (!tile.hasMedallion){
 			return
 		}

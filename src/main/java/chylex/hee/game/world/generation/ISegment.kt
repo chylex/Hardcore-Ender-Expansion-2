@@ -1,6 +1,6 @@
 package chylex.hee.game.world.generation
 import chylex.hee.game.world.util.Size
-import net.minecraft.block.state.IBlockState
+import net.minecraft.block.BlockState
 import net.minecraft.util.math.BlockPos
 
 /**
@@ -8,17 +8,17 @@ import net.minecraft.util.math.BlockPos
  */
 interface ISegment{
 	/**
-	 * Returns the [IBlockState] at the specified position.
+	 * Returns the [BlockState] at the specified position.
 	 */
-	fun getState(pos: BlockPos): IBlockState
+	fun getState(pos: BlockPos): BlockState
 	
 	/**
-	 * Changes the [IBlockState] at the specified position.
+	 * Changes the [BlockState] at the specified position.
 	 *
 	 * If the current implementation supports such change, it should modify its internal state and return `this`.
 	 * Otherwise, it must return a different implementation with the change applied.
 	 */
-	fun withState(pos: BlockPos, state: IBlockState): ISegment
+	fun withState(pos: BlockPos, state: BlockState): ISegment
 	
 	/**
 	 * Utilities.

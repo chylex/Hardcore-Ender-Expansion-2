@@ -1,13 +1,6 @@
 package chylex.hee.game.commands.sub.server
-import chylex.hee.game.commands.sub.ISubCommand
-import chylex.hee.game.item.ItemPortalToken.TokenType
-import chylex.hee.game.world.territory.TerritoryType
-import chylex.hee.init.ModItems
-import net.minecraft.command.ICommandSender
-import net.minecraft.entity.player.EntityPlayer
-import net.minecraft.server.MinecraftServer
-import java.util.Locale
 
+/*
 object CommandServerPortalToken : ISubCommand{
 	override val name = "token"
 	override val usage = "commands.hee.token.usage"
@@ -23,4 +16,4 @@ object CommandServerPortalToken : ISubCommand{
 		
 		// UPDATE
 	}
-}
+}*/

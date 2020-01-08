@@ -1,15 +1,17 @@
 package chylex.hee.network
 import chylex.hee.init.ModNetwork
-import chylex.hee.system.migration.forge.Side
-import net.minecraft.entity.player.EntityPlayer
-import net.minecraft.entity.player.EntityPlayerMP
-import net.minecraft.world.WorldServer
+import chylex.hee.system.migration.vanilla.EntityPlayer
+import chylex.hee.system.migration.vanilla.EntityPlayerMP
+import net.minecraft.world.server.ServerWorld
+import net.minecraftforge.fml.LogicalSide
+import net.minecraftforge.fml.LogicalSide.CLIENT
+import net.minecraftforge.fml.LogicalSide.SERVER
 
 abstract class BaseServerPacket : IPacket{
-	final override fun handle(side: Side, player: EntityPlayer){
+	final override fun handle(side: LogicalSide, player: EntityPlayer){
 		when(side){
-			Side.CLIENT -> throw UnsupportedOperationException("tried handling a server packet on client side: ${this::class.java.simpleName}")
-			Side.SERVER -> (player.world as WorldServer).addScheduledTask { handle(player as EntityPlayerMP) }
+			CLIENT -> throw UnsupportedOperationException("tried handling a server packet on client side: ${this::class.java.simpleName}")
+			SERVER -> (player.world as ServerWorld).server.execute { handle(player as EntityPlayerMP) }
 		}
 	}
 	

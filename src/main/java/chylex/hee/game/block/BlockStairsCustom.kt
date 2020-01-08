@@ -1,10 +1,5 @@
 package chylex.hee.game.block
+import chylex.hee.system.migration.vanilla.BlockStairs
 import net.minecraft.block.Block
-import net.minecraft.block.BlockStairs
 
-class BlockStairsCustom(sourceBlock: Block) : BlockStairs(sourceBlock.defaultState){
-	init{
-		blockHardness *= sourceBlock.blockHardness * 0.75F
-		useNeighborBrightness = true
-	}
-}
+class BlockStairsCustom(block: Block) : BlockStairs(block.defaultState, Properties.from(block))

@@ -7,42 +7,40 @@ import chylex.hee.network.client.PacketClientFX
 import chylex.hee.system.migration.ActionResult.FAIL
 import chylex.hee.system.migration.ActionResult.PASS
 import chylex.hee.system.migration.ActionResult.SUCCESS
-import chylex.hee.system.util.get
+import chylex.hee.system.migration.vanilla.BlockDispenser
+import chylex.hee.system.migration.vanilla.EntityPlayer
+import chylex.hee.system.migration.vanilla.ItemBoneMeal
 import chylex.hee.system.util.size
-import net.minecraft.block.BlockDispenser
-import net.minecraft.block.BlockDispenser.FACING
+import net.minecraft.block.DispenserBlock.FACING
 import net.minecraft.dispenser.IBlockSource
-import net.minecraft.entity.player.EntityPlayer
-import net.minecraft.init.Bootstrap.BehaviorDispenseOptional
+import net.minecraft.dispenser.OptionalDispenseBehavior
 import net.minecraft.item.Item
-import net.minecraft.item.ItemDye
 import net.minecraft.item.ItemStack
-import net.minecraft.util.EnumActionResult
-import net.minecraft.util.EnumFacing
-import net.minecraft.util.EnumHand
+import net.minecraft.item.ItemUseContext
+import net.minecraft.util.ActionResultType
 import net.minecraft.util.math.BlockPos
 import net.minecraft.world.World
 import java.util.Random
 
-class ItemCompost : Item(){
+class ItemCompost(properties: Properties) : Item(properties){
 	companion object{
 		private const val BONE_MEAL_EQUIVALENT = 2
 		
 		val FX_USE = object : FxBlockHandler(){
 			override fun handle(pos: BlockPos, world: World, rand: Random){
-				ItemDye.spawnBonemealParticles(world, pos, 25)
+				ItemBoneMeal.spawnBonemealParticles(world, pos, 25)
 			}
 		}
 		
-		private fun applyCompost(world: World, pos: BlockPos, playerInfo: Pair<EntityPlayer, EnumHand>? = null): Boolean{
+		private fun applyCompost(world: World, pos: BlockPos, player: EntityPlayer? = null): Boolean{
 			val simulatedItem = ItemStack(ModItems.COMPOST, BONE_MEAL_EQUIVALENT)
 			
 			repeat(BONE_MEAL_EQUIVALENT){
-				if (playerInfo == null){
-					ItemDye.applyBonemeal(simulatedItem, world, pos)
+				if (player == null){
+					ItemBoneMeal.applyBonemeal(simulatedItem, world, pos)
 				}
 				else{
-					ItemDye.applyBonemeal(simulatedItem, world, pos, playerInfo.first, playerInfo.second)
+					ItemBoneMeal.applyBonemeal(simulatedItem, world, pos, player)
 				}
 			}
 			
@@ -59,7 +57,7 @@ class ItemCompost : Item(){
 	}
 	
 	init{
-		BlockDispenser.DISPENSE_BEHAVIOR_REGISTRY.putObject(this, object : BehaviorDispenseOptional(){
+		BlockDispenser.registerDispenseBehavior(this, object : OptionalDispenseBehavior(){
 			override fun dispenseStack(source: IBlockSource, stack: ItemStack): ItemStack{
 				val world = source.world
 				val pos = source.blockPos.offset(source.blockState[FACING])
@@ -76,14 +74,18 @@ class ItemCompost : Item(){
 		})
 	}
 	
-	override fun onItemUse(player: EntityPlayer, world: World, pos: BlockPos, hand: EnumHand, facing: EnumFacing, hitX: Float, hitY: Float, hitZ: Float): EnumActionResult{
-		val heldItem = player.getHeldItem(hand)
+	override fun onItemUse(context: ItemUseContext): ActionResultType{
+		val player = context.player ?: return FAIL
+		val world = context.world
+		val pos = context.pos
+		
+		val heldItem = player.getHeldItem(context.hand)
 		
 		if (!BlockEditor.canEdit(pos, player, heldItem)){
 			return FAIL
 		}
 		
-		if (applyCompost(world, pos, Pair(player, hand))){
+		if (applyCompost(world, pos, player)){
 			heldItem.shrink(1)
 			return SUCCESS
 		}

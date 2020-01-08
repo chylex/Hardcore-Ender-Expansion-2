@@ -15,13 +15,13 @@ import chylex.hee.game.world.util.Teleporter.FxRange.Extended
 import chylex.hee.network.client.PacketClientFX
 import chylex.hee.system.migration.Difficulty.PEACEFUL
 import chylex.hee.system.migration.Facing.DOWN
+import chylex.hee.system.migration.vanilla.EntityPlayer
 import chylex.hee.system.migration.vanilla.Potions
 import chylex.hee.system.migration.vanilla.Sounds
 import chylex.hee.system.util.TagCompound
 import chylex.hee.system.util.allInCenteredSphereMutable
 import chylex.hee.system.util.blocksMovement
 import chylex.hee.system.util.center
-import chylex.hee.system.util.get
 import chylex.hee.system.util.getBlock
 import chylex.hee.system.util.getState
 import chylex.hee.system.util.makeEffect
@@ -37,15 +37,14 @@ import chylex.hee.system.util.selectExistingEntities
 import chylex.hee.system.util.setBlock
 import chylex.hee.system.util.setState
 import chylex.hee.system.util.use
-import chylex.hee.system.util.with
 import chylex.hee.system.util.writePos
-import io.netty.buffer.ByteBuf
 import net.minecraft.block.Block
-import net.minecraft.block.state.IBlockState
-import net.minecraft.entity.player.EntityPlayer
+import net.minecraft.block.BlockState
+import net.minecraft.network.PacketBuffer
 import net.minecraft.util.SoundCategory
 import net.minecraft.util.math.BlockPos
 import net.minecraft.world.World
+import net.minecraft.world.server.ServerWorld
 import net.minecraft.world.storage.WorldSavedData
 import java.util.Random
 import kotlin.math.min
@@ -80,16 +79,16 @@ interface IBlockDeathFlowerDecaying{
 	@JvmDefault
 	fun implOnBlockAdded(world: World, pos: BlockPos){
 		val tickRate = implTickRate()
-		world.scheduleUpdate(pos, thisAsBlock, world.rand.nextInt(tickRate / 4, tickRate))
+		world.pendingBlockTicks.scheduleTick(pos, thisAsBlock, world.rand.nextInt(tickRate / 4, tickRate))
 	}
 	
 	@JvmDefault
-	fun implUpdateTick(world: World, pos: BlockPos, state: IBlockState, rand: Random){
-		if (pos.getBlock(world) !== thisAsBlock){
+	fun implUpdateTick(world: World, pos: BlockPos, state: BlockState, rand: Random){
+		if (pos.getBlock(world) !== thisAsBlock || world !is ServerWorld){
 			return
 		}
 		
-		world.scheduleUpdate(pos, thisAsBlock, implTickRate())
+		world.pendingBlockTicks.scheduleTick(pos, thisAsBlock, implTickRate())
 		
 		if (world.difficulty == PEACEFUL){
 			return
@@ -100,7 +99,7 @@ interface IBlockDeathFlowerDecaying{
 		if (currentDecayLevel < MAX_LEVEL && rand.nextInt(45) == 0){
 			pos.setState(world, state.with(LEVEL, currentDecayLevel + 1))
 		}
-		else if (currentDecayLevel == MAX_LEVEL && rand.nextInt(8) == 0 && (world.worldTime % 24000L) in 15600..20400){
+		else if (currentDecayLevel == MAX_LEVEL && rand.nextInt(8) == 0 && (world.dayTime % 24000L) in 15600..20400){
 			for(testPos in pos.allInCenteredSphereMutable(WITHER_FLOWER_RADIUS, avoidNipples = true)){
 				val block = testPos.getBlock(world)
 				
@@ -128,15 +127,15 @@ interface IBlockDeathFlowerDecaying{
 						if (testPos != null){
 							enderman.setLocationAndAngles(testPos.x + rand.nextFloat(-0.5, 0.5), testPos.y + 0.01, testPos.z + rand.nextFloat(-0.5, 0.5), yaw, 0F)
 							
-							if (world.getCollisionBoxes(enderman, enderman.entityBoundingBox.grow(0.2, 0.0, 0.2)).isEmpty()){
-								world.spawnEntity(enderman)
+							if (world.isCollisionBoxesEmpty(enderman, enderman.boundingBox.grow(0.2, 0.0, 0.2))){
+								world.addEntity(enderman)
 								break
 							}
 						}
 					}
 				}
 				
-				Sounds.ENTITY_ENDERMEN_TELEPORT.playServer(world, center, SoundCategory.HOSTILE, volume = 1.25F)
+				Sounds.ENTITY_ENDERMAN_TELEPORT.playServer(world, center, SoundCategory.HOSTILE, volume = 1.25F)
 				
 				for(player in world.selectExistingEntities.inRange<EntityPlayer>(center, WITHER_PLAYER_RADIUS)){
 					val distanceMp = center.distanceTo(player.posVec) / WITHER_PLAYER_RADIUS
@@ -174,14 +173,14 @@ interface IBlockDeathFlowerDecaying{
 		private val PARTICLE_MOT = Gaussian(0.02F)
 		
 		class FxHealData(private val pos: BlockPos, private val newLevel: Int) : IFxData{
-			override fun write(buffer: ByteBuf) = buffer.use {
+			override fun write(buffer: PacketBuffer) = buffer.use {
 				writePos(pos)
 				writeByte(newLevel)
 			}
 		}
 		
 		val FX_HEAL = object : IFxHandler<FxHealData>{
-			override fun handle(buffer: ByteBuf, world: World, rand: Random){
+			override fun handle(buffer: PacketBuffer, world: World, rand: Random){
 				val pos = buffer.readPos()
 				val newLevel = buffer.readByte()
 				
@@ -207,9 +206,11 @@ interface IBlockDeathFlowerDecaying{
 		}
 	}
 	
-	class DimensionWitherData(name: String) : WorldSavedData(name){ // must be public for reflection
+	class DimensionWitherData private constructor() : WorldSavedData(NAME){
 		companion object{
-			fun get(world: World) = world.perDimensionData("HEE_DEATH_FLOWER_WITHER", ::DimensionWitherData)
+			fun get(world: ServerWorld) = world.perDimensionData(NAME, ::DimensionWitherData)
+			
+			private const val NAME = "HEE_DEATH_FLOWER_WITHER"
 			
 			private const val LAST_TELEPORT_TIME_TAG = "LastTeleportTime"
 			private const val LAST_WITHER_DAY_TAG = "LastWitherDay"
@@ -219,7 +220,7 @@ interface IBlockDeathFlowerDecaying{
 		private var lastWitherDay = -1L
 		
 		fun onTeleportTriggered(world: World): Boolean{
-			val currentTime = world.worldTime
+			val currentTime = world.dayTime
 			
 			if (currentTime < lastTeleportTime + 21600L){
 				return false
@@ -231,7 +232,7 @@ interface IBlockDeathFlowerDecaying{
 		}
 		
 		fun onWitherTriggered(world: World): Boolean{
-			val currentDay = world.worldTime / 24000L
+			val currentDay = world.dayTime / 24000L
 			
 			if (currentDay == lastWitherDay){
 				return false
@@ -242,12 +243,12 @@ interface IBlockDeathFlowerDecaying{
 			return true
 		}
 		
-		override fun writeToNBT(nbt: TagCompound) = nbt.apply {
-			setLong(LAST_TELEPORT_TIME_TAG, lastTeleportTime)
-			setLong(LAST_WITHER_DAY_TAG, lastWitherDay)
+		override fun write(nbt: TagCompound) = nbt.apply {
+			putLong(LAST_TELEPORT_TIME_TAG, lastTeleportTime)
+			putLong(LAST_WITHER_DAY_TAG, lastWitherDay)
 		}
 		
-		override fun readFromNBT(nbt: TagCompound) = with(nbt){
+		override fun read(nbt: TagCompound) = nbt.use {
 			lastTeleportTime = getLong(LAST_TELEPORT_TIME_TAG)
 			lastWitherDay = getLong(LAST_WITHER_DAY_TAG)
 		}

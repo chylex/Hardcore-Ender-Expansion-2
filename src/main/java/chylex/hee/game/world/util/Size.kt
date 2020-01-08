@@ -32,7 +32,7 @@ data class Size(val x: Int, val y: Int, val z: Int){
 	val centerZ get() = z / 2
 	
 	val minPos: BlockPos
-		get() = BlockPos.ORIGIN
+		get() = BlockPos.ZERO
 	
 	val maxPos: BlockPos
 		get() = Pos(maxX, maxY, maxZ)

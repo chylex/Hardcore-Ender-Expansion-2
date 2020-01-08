@@ -12,24 +12,23 @@ import chylex.hee.system.util.allInCenteredBox
 import chylex.hee.system.util.color.IntColor.Companion.RGB
 import chylex.hee.system.util.facades.Facing4
 import chylex.hee.system.util.floodFill
-import chylex.hee.system.util.get
 import chylex.hee.system.util.getBlock
 import chylex.hee.system.util.getState
 import chylex.hee.system.util.setState
-import chylex.hee.system.util.with
 import chylex.hee.system.util.withFacing
-import net.minecraft.block.BlockHorizontal.FACING
-import net.minecraft.block.state.BlockStateContainer
-import net.minecraft.block.state.IBlockState
+import net.minecraft.block.Block
+import net.minecraft.block.BlockState
+import net.minecraft.block.HorizontalBlock.HORIZONTAL_FACING
 import net.minecraft.client.renderer.color.IBlockColor
-import net.minecraft.entity.EntityLivingBase
+import net.minecraft.item.BlockItemUseContext
+import net.minecraft.state.StateContainer.Builder
 import net.minecraft.util.BlockRenderLayer.CUTOUT
-import net.minecraft.util.EnumFacing
-import net.minecraft.util.EnumHand
+import net.minecraft.util.Direction
 import net.minecraft.util.IStringSerializable
 import net.minecraft.util.math.BlockPos
-import net.minecraft.world.IBlockAccess
+import net.minecraft.world.IEnviromentBlockReader
 import net.minecraft.world.World
+import kotlin.streams.toList
 
 sealed class BlockPuzzleLogic(builder: BlockBuilder) : BlockSimple(builder){
 	companion object{
@@ -42,7 +41,7 @@ sealed class BlockPuzzleLogic(builder: BlockBuilder) : BlockSimple(builder){
 			return pos.floodFill(Facing4){ it.getState(world).let { state -> state.block is BlockPuzzleLogic && state[STATE] != DISABLED } }
 		}
 		
-		private fun makePair(pos: BlockPos, facing: EnumFacing): Pair<BlockPos, EnumFacing>{
+		private fun makePair(pos: BlockPos, facing: Direction): Pair<BlockPos, Direction>{
 			return pos.offset(facing) to facing
 		}
 	}
@@ -65,16 +64,20 @@ sealed class BlockPuzzleLogic(builder: BlockBuilder) : BlockSimple(builder){
 	}
 	
 	init{
-		defaultState = blockState.baseState.with(STATE, ACTIVE)
+		defaultState = stateContainer.baseState.with(STATE, ACTIVE)
 	}
-	override fun createBlockState() = BlockStateContainer(this, STATE)
 	
-	override fun getMetaFromState(state: IBlockState) = state[STATE].ordinal
-	override fun getStateFromMeta(meta: Int) = this.with(STATE, State.values()[meta])
+	override fun fillStateContainer(container: Builder<Block, BlockState>){
+		container.add(STATE)
+	}
+	
+	override fun isSolid(state: BlockState): Boolean{
+		return true
+	}
 	
 	// Logic
 	
-	fun onToggled(world: World, pos: BlockPos, facing: EnumFacing): List<Pair<BlockPos, EnumFacing>>{
+	fun onToggled(world: World, pos: BlockPos, facing: Direction): List<Pair<BlockPos, Direction>>{
 		val state = pos.getState(world)
 		
 		return if (toggleState(world, pos, state))
@@ -83,7 +86,7 @@ sealed class BlockPuzzleLogic(builder: BlockBuilder) : BlockSimple(builder){
 			emptyList()
 	}
 	
-	protected fun toggleState(world: World, pos: BlockPos, state: IBlockState): Boolean{
+	protected fun toggleState(world: World, pos: BlockPos, state: BlockState): Boolean{
 		val type = state[STATE]
 		
 		if (type == DISABLED){
@@ -94,18 +97,18 @@ sealed class BlockPuzzleLogic(builder: BlockBuilder) : BlockSimple(builder){
 		return true
 	}
 	
-	protected abstract fun getNextChains(world: World, pos: BlockPos, facing: EnumFacing): List<Pair<BlockPos, EnumFacing>>
+	protected abstract fun getNextChains(world: World, pos: BlockPos, facing: Direction): List<Pair<BlockPos, Direction>>
 	
 	// Variations
 	
 	class Plain(builder: BlockBuilder) : BlockPuzzleLogic(builder){
-		override fun getNextChains(world: World, pos: BlockPos, facing: EnumFacing): List<Pair<BlockPos, EnumFacing>>{
+		override fun getNextChains(world: World, pos: BlockPos, facing: Direction): List<Pair<BlockPos, Direction>>{
 			return listOf(makePair(pos, facing))
 		}
 	}
 	
 	class Burst(builder: BlockBuilder, private val radius: Int) : BlockPuzzleLogic(builder){
-		private fun toggleAndChain(world: World, pos: BlockPos, facing: EnumFacing): List<Pair<BlockPos, EnumFacing>>{
+		private fun toggleAndChain(world: World, pos: BlockPos, facing: Direction): List<Pair<BlockPos, Direction>>{
 			val state = pos.getState(world)
 			val block = state.block
 			
@@ -115,41 +118,40 @@ sealed class BlockPuzzleLogic(builder: BlockBuilder) : BlockSimple(builder){
 				block.getNextChains(world, pos, facing)
 		}
 		
-		override fun getNextChains(world: World, pos: BlockPos, facing: EnumFacing): List<Pair<BlockPos, EnumFacing>>{
-			return pos.allInCenteredBox(radius, 0, radius).flatMap { toggleAndChain(world, it, facing)  }.distinct()
+		override fun getNextChains(world: World, pos: BlockPos, facing: Direction): List<Pair<BlockPos, Direction>>{
+			return pos.allInCenteredBox(radius, 0, radius).toList().flatMap { toggleAndChain(world, it, facing)  }.distinct()
 		}
 	}
 	
-	class Redirect(builder: BlockBuilder, private val directions: Array<EnumFacing>) : BlockPuzzleLogic(builder){
+	class Redirect(builder: BlockBuilder, private val directions: Array<Direction>) : BlockPuzzleLogic(builder){
 		init{
-			defaultState = blockState.baseState.with(STATE, ACTIVE).with(FACING, NORTH)
+			defaultState = stateContainer.baseState.with(STATE, ACTIVE).with(HORIZONTAL_FACING, NORTH)
 		}
 		
-		override fun createBlockState() = BlockStateContainer(this, STATE, FACING)
-		
-		override fun getMetaFromState(state: IBlockState) = (4 * state[STATE].ordinal) + state[FACING].horizontalIndex
-		override fun getStateFromMeta(meta: Int) = this.with(STATE, State.values()[meta / 4]).with(FACING, EnumFacing.byHorizontalIndex(meta % 4))
-		
-		override fun getStateForPlacement(world: World, pos: BlockPos, facing: EnumFacing, hitX: Float, hitY: Float, hitZ: Float, meta: Int, placer: EntityLivingBase, hand: EnumHand): IBlockState{
-			return this.withFacing(placer.horizontalFacing)
+		override fun fillStateContainer(container: Builder<Block, BlockState>){
+			container.add(STATE, HORIZONTAL_FACING)
 		}
 		
-		override fun getNextChains(world: World, pos: BlockPos, facing: EnumFacing): List<Pair<BlockPos, EnumFacing>>{
-			val rotation = pos.getState(world)[FACING].horizontalIndex + NORTH.horizontalIndex
+		override fun getStateForPlacement(context: BlockItemUseContext): BlockState{
+			return this.withFacing(context.placementHorizontalFacing)
+		}
+		
+		override fun getNextChains(world: World, pos: BlockPos, facing: Direction): List<Pair<BlockPos, Direction>>{
+			val rotation = pos.getState(world)[HORIZONTAL_FACING].horizontalIndex + NORTH.horizontalIndex
 			val exclude = facing.opposite
 			
-			return directions.map { EnumFacing.byHorizontalIndex(it.horizontalIndex + rotation) }.filter { it != exclude }.map { makePair(pos, it) }
+			return directions.map { Direction.byHorizontalIndex(it.horizontalIndex + rotation) }.filter { it != exclude }.map { makePair(pos, it) }
 		}
 	}
 	
 	class RedirectAll(builder: BlockBuilder) : BlockPuzzleLogic(builder){
-		override fun getNextChains(world: World, pos: BlockPos, facing: EnumFacing): List<Pair<BlockPos, EnumFacing>>{
+		override fun getNextChains(world: World, pos: BlockPos, facing: Direction): List<Pair<BlockPos, Direction>>{
 			return Facing4.filter { it != facing.opposite }.map { makePair(pos, it) }
 		}
 	}
 	
 	class Teleport(builder: BlockBuilder) : BlockPuzzleLogic(builder){
-		override fun getNextChains(world: World, pos: BlockPos, facing: EnumFacing): List<Pair<BlockPos, EnumFacing>>{
+		override fun getNextChains(world: World, pos: BlockPos, facing: Direction): List<Pair<BlockPos, Direction>>{
 			return findAllBlocks(world, pos).filter { it != pos && it.getBlock(world) is Teleport }.map { makePair(it, facing) }
 		}
 	}
@@ -160,7 +162,7 @@ sealed class BlockPuzzleLogic(builder: BlockBuilder) : BlockSimple(builder){
 	
 	@Sided(Side.CLIENT)
 	object Color : IBlockColor{
-		override fun colorMultiplier(state: IBlockState, world: IBlockAccess?, pos: BlockPos?, tintIndex: Int): Int{
+		override fun getColor(state: BlockState, world: IEnviromentBlockReader?, pos: BlockPos?, tintIndex: Int): Int{
 			if (tintIndex != 1){
 				return NO_TINT
 			}

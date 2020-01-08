@@ -8,17 +8,18 @@ import chylex.hee.system.migration.Facing.NORTH
 import chylex.hee.system.migration.Facing.SOUTH
 import chylex.hee.system.migration.Facing.UP
 import chylex.hee.system.migration.Facing.WEST
-import chylex.hee.system.util.with
-import net.minecraft.block.BlockDirectional
-import net.minecraft.block.BlockDoor
-import net.minecraft.block.BlockHorizontal
-import net.minecraft.block.BlockLog
-import net.minecraft.block.BlockRotatedPillar
-import net.minecraft.block.BlockSlab
-import net.minecraft.block.BlockStairs
-import net.minecraft.block.BlockTorch
-import net.minecraft.block.BlockTrapDoor
-import net.minecraft.block.BlockVine
+import chylex.hee.system.migration.vanilla.BlockDirectional
+import chylex.hee.system.migration.vanilla.BlockDoor
+import chylex.hee.system.migration.vanilla.BlockHorizontal
+import chylex.hee.system.migration.vanilla.BlockRotatedPillar
+import chylex.hee.system.migration.vanilla.BlockSlab
+import chylex.hee.system.migration.vanilla.BlockStairs
+import chylex.hee.system.migration.vanilla.BlockTorchWall
+import chylex.hee.system.migration.vanilla.BlockTrapDoor
+import chylex.hee.system.migration.vanilla.BlockVine
+import net.minecraft.state.properties.DoubleBlockHalf
+import net.minecraft.state.properties.Half
+import net.minecraft.state.properties.SlabType
 
 object PaletteMappings{
 	val FACING_ALL = BlockDirectional.FACING to mapOf(
@@ -30,7 +31,7 @@ object PaletteMappings{
 		"west" to WEST
 	)
 	
-	val FACING_HORIZONTAL = BlockHorizontal.FACING to mapOf(
+	val FACING_HORIZONTAL = BlockHorizontal.HORIZONTAL_FACING to mapOf(
 		"north" to NORTH,
 		"south" to SOUTH,
 		"east" to EAST,
@@ -43,13 +44,7 @@ object PaletteMappings{
 		"ns" to AXIS_Z
 	)
 	
-	val FACING_AXIS_LOGS = BlockLog.LOG_AXIS to mapOf(
-		"ew" to BlockLog.EnumAxis.X,
-		"ud" to BlockLog.EnumAxis.Y,
-		"ns" to BlockLog.EnumAxis.Z
-	)
-	
-	val FACING_TORCH = BlockTorch.FACING to mapOf(
+	val FACING_WALL_TORCH = BlockTorchWall.HORIZONTAL_FACING to mapOf(
 		"" to UP,
 		"north" to NORTH,
 		"south" to SOUTH,
@@ -58,13 +53,13 @@ object PaletteMappings{
 	)
 	
 	val DOOR_HALF = BlockDoor.HALF to mapOf(
-		"bottom" to BlockDoor.EnumDoorHalf.LOWER,
-		"top" to BlockDoor.EnumDoorHalf.UPPER
+		"bottom" to DoubleBlockHalf.LOWER,
+		"top" to DoubleBlockHalf.UPPER
 	)
 	
 	val TRAPDOOR_HALF = BlockTrapDoor.HALF to mapOf(
-		"bottom" to BlockTrapDoor.DoorHalf.BOTTOM,
-		"top" to BlockTrapDoor.DoorHalf.TOP
+		"bottom" to Half.BOTTOM,
+		"top" to Half.TOP
 	)
 	
 	val TRAPDOOR_OPEN = BlockTrapDoor.OPEN to mapOf(
@@ -72,14 +67,15 @@ object PaletteMappings{
 		"open" to true
 	)
 	
-	val SLAB_HALF = BlockSlab.HALF to mapOf(
-		"bottom" to BlockSlab.EnumBlockHalf.BOTTOM,
-		"top" to BlockSlab.EnumBlockHalf.TOP
+	val SLAB_TYPE = BlockSlab.TYPE to mapOf(
+		"bottom" to SlabType.BOTTOM,
+		"top" to SlabType.TOP,
+		"double" to SlabType.DOUBLE
 	)
 	
 	val STAIR_FLIP = BlockStairs.HALF to mapOf(
-		"" to BlockStairs.EnumHalf.BOTTOM,
-		"flip" to BlockStairs.EnumHalf.TOP
+		"" to Half.BOTTOM,
+		"flip" to Half.TOP
 	)
 	
 	val TRAPDOOR_MAPPING_LIST = listOf(TRAPDOOR_HALF, TRAPDOOR_OPEN, FACING_HORIZONTAL)

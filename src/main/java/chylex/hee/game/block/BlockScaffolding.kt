@@ -1,10 +1,6 @@
 package chylex.hee.game.block
 import chylex.hee.HEE
 import chylex.hee.game.block.info.BlockBuilder
-import chylex.hee.game.commands.sub.client.CommandClientScaffolding
-import chylex.hee.game.world.structure.file.StructureFile
-import chylex.hee.game.world.util.BoundingBox
-import chylex.hee.system.Debug
 import chylex.hee.system.migration.Facing.DOWN
 import chylex.hee.system.migration.Facing.EAST
 import chylex.hee.system.migration.Facing.NORTH
@@ -15,23 +11,20 @@ import chylex.hee.system.migration.vanilla.Blocks
 import chylex.hee.system.util.Pos
 import chylex.hee.system.util.getBlock
 import chylex.hee.system.util.offsetUntil
-import net.minecraft.block.state.IBlockState
-import net.minecraft.entity.player.EntityPlayer
-import net.minecraft.nbt.CompressedStreamTools
+import net.minecraft.block.BlockState
 import net.minecraft.util.BlockRenderLayer.CUTOUT
-import net.minecraft.util.EnumFacing
-import net.minecraft.util.EnumHand
-import net.minecraft.util.math.AxisAlignedBB
+import net.minecraft.util.Direction
 import net.minecraft.util.math.BlockPos
-import net.minecraft.util.text.TextComponentString
-import net.minecraft.util.text.TextFormatting
-import net.minecraft.world.IBlockAccess
+import net.minecraft.util.math.shapes.ISelectionContext
+import net.minecraft.util.math.shapes.VoxelShape
+import net.minecraft.util.math.shapes.VoxelShapes
+import net.minecraft.world.IBlockReader
 import net.minecraft.world.World
-import java.nio.file.Files
 
 class BlockScaffolding(builder: BlockBuilder) : BlockSimple(builder){
-	override fun onBlockActivated(world: World, pos: BlockPos, state: IBlockState, player: EntityPlayer, hand: EnumHand, facing: EnumFacing, hitX: Float, hitY: Float, hitZ: Float): Boolean{
-		if (world.isRemote && player.isSneaking && !player.capabilities.isFlying && Debug.enabled){
+	/* UPDATE
+	override fun onBlockActivated(state: BlockState, world: World, pos: BlockPos, player: EntityPlayer, hand: Hand, hit: BlockRayTraceResult): Boolean{
+		if (world.isRemote && player.isSneaking && !player.abilities.isFlying && Debug.enabled){
 			val palette = CommandClientScaffolding.currentPalette
 			
 			if (palette == null){
@@ -68,11 +61,11 @@ class BlockScaffolding(builder: BlockBuilder) : BlockSimple(builder){
 		}
 		
 		return false
-	}
+	}*/
 	
 	// Helpers
 	
-	private fun find(world: World, pos: BlockPos?, direction: EnumFacing): BlockPos?{
+	private fun find(world: World, pos: BlockPos?, direction: Direction): BlockPos?{
 		return pos?.offsetUntil(direction, 0..255){ it.getBlock(world) === Blocks.AIR }?.offset(direction.opposite)
 	}
 	
@@ -98,25 +91,26 @@ class BlockScaffolding(builder: BlockBuilder) : BlockSimple(builder){
 	
 	// Visuals and physics
 	
-	override fun isBlockNormalCube(state: IBlockState) = false
-	override fun isNormalCube(state: IBlockState) = false
-	override fun isOpaqueCube(state: IBlockState) = false
+	override fun isNormalCube(state: BlockState, world: IBlockReader, pos: BlockPos) = false
+	override fun causesSuffocation(state: BlockState, world: IBlockReader, pos: BlockPos) = false
 	
-	override fun canCollideCheck(state: IBlockState, hitIfLiquid: Boolean): Boolean{
-		val player = HEE.proxy.getClientSidePlayer()
-		return player == null || player.isSneaking || player.capabilities.isFlying
-	}
-	
-	override fun getCollisionBoundingBox(state: IBlockState, world: IBlockAccess, pos: BlockPos): AxisAlignedBB?{
+	override fun getCollisionShape(state: BlockState, world: IBlockReader, pos: BlockPos, context: ISelectionContext): VoxelShape{
 		val player = HEE.proxy.getClientSidePlayer()
 		
-		return if (player == null || !player.capabilities.isFlying)
-			FULL_BLOCK_AABB
+		return if (player == null || !player.abilities.isFlying)
+			VoxelShapes.fullCube()
 		else
-			NULL_AABB
+			VoxelShapes.empty()
 	}
 	
-	override fun canPlaceTorchOnTop(state: IBlockState, world: IBlockAccess, pos: BlockPos) = true
-	override fun causesSuffocation(state: IBlockState) = false
+	override fun getRaytraceShape(state: BlockState, world: IBlockReader, pos: BlockPos): VoxelShape{ // UPDATE test
+		val player = HEE.proxy.getClientSidePlayer()
+		
+		return if (player == null || player.isSneaking || player.abilities.isFlying)
+			VoxelShapes.fullCube()
+		else
+			VoxelShapes.empty()
+	}
+	
 	override fun getRenderLayer() = CUTOUT
 }

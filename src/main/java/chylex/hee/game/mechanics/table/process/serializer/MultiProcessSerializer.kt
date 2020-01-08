@@ -19,14 +19,14 @@ class MultiProcessSerializer(private vararg val mappings: Mapping) : ITableProce
 	override fun writeToNBT(process: ITableProcess) = TagCompound().apply {
 		val mapping = mappings.first { it.cls.isAssignableFrom(process.javaClass) }
 		
-		setString(TYPE_TAG, mapping.key)
-		setTag(DATA_TAG, mapping.serializer.writeToNBT(process))
+		putString(TYPE_TAG, mapping.key)
+		put(DATA_TAG, mapping.serializer.writeToNBT(process))
 	}
 	
 	override fun readFromNBT(world: World, nbt: TagCompound): ITableProcess{
 		return mappings
 			.first { it.key == nbt.getString(TYPE_TAG) }
 			.serializer
-			.readFromNBT(world, nbt.getCompoundTag(DATA_TAG))
+			.readFromNBT(world, nbt.getCompound(DATA_TAG))
 	}
 }

@@ -24,10 +24,8 @@ import chylex.hee.system.util.color.IntColor.Companion.RGBA
 import chylex.hee.system.util.facades.Resource
 import chylex.hee.system.util.getBlock
 import chylex.hee.system.util.getTile
-import net.minecraft.client.gui.Gui
-import net.minecraft.client.renderer.ActiveRenderInfo
+import net.minecraft.client.gui.AbstractGui
 import net.minecraft.client.resources.I18n
-import net.minecraft.util.math.RayTraceResult.Type.BLOCK
 import net.minecraft.util.text.TextFormatting
 import net.minecraftforge.client.event.DrawBlockHighlightEvent
 import net.minecraftforge.client.event.EntityViewRenderEvent.FogDensity
@@ -49,8 +47,7 @@ object OverlayRenderer{
 	@JvmStatic
 	@SubscribeEvent
 	fun onFogDensity(e: FogDensity){
-		val entity = e.entity
-		val inside = ActiveRenderInfo.getBlockStateAtEntityViewpoint(entity.world, entity, e.renderPartialTicks.toFloat()).material
+		val inside = e.info.blockAtCamera.material
 		
 		if (inside === Materials.ENDER_GOO || inside === Materials.PURIFIED_ENDER_GOO){
 			GL.setFogMode(FOG_EXP)
@@ -67,10 +64,10 @@ object OverlayRenderer{
 		}
 		
 		val player = MC.player ?: return
-		val inside = ActiveRenderInfo.getBlockStateAtEntityViewpoint(player.world, player, e.partialTicks).material
+		val inside = MC.gameRenderer.activeRenderInfo.blockAtCamera.material
 		
 		if ((inside === Materials.ENDER_GOO || inside === Materials.PURIFIED_ENDER_GOO) && MC.settings.thirdPersonView == 0 && !player.isSpectator){
-			val scaledResolution = MC.resolution
+			val window = MC.window
 			val brightness = player.brightness
 			
 			GL.color(brightness, brightness, brightness, 1F)
@@ -83,7 +80,7 @@ object OverlayRenderer{
 				MC.textureManager.bindTexture(TEX_PURIFIED_ENDER_GOO_OVERLAY)
 			}
 			
-			MC.instance.ingameGUI.drawTexturedModalRect(0, 0, 0, 0, scaledResolution.scaledWidth, scaledResolution.scaledHeight)
+			MC.instance.ingameGUI.blit(0, 0, 0, 0, window.scaledWidth, window.scaledHeight)
 			
 			GL.color(1F, 1F, 1F, 1F)
 		}
@@ -95,11 +92,11 @@ object OverlayRenderer{
 	@SubscribeEvent
 	fun onRenderText(@Suppress("UNUSED_PARAMETER") e: RenderGameOverlayEvent.Text){
 		fun drawTextOffScreenCenter(x: Int, y: Int, line: Int, text: String, color: IntColor){
-			val scaledResolution = MC.resolution
+			val window = MC.window
 			
 			with(MC.fontRenderer){
-				val centerX = x + (scaledResolution.scaledWidth / 2)
-				val centerY = y + (scaledResolution.scaledHeight / 2) + (line * (LINE_SPACING + FONT_HEIGHT))
+				val centerX = x + (window.scaledWidth / 2)
+				val centerY = y + (window.scaledHeight / 2) + (line * (LINE_SPACING + FONT_HEIGHT))
 				
 				val textWidth = getStringWidth(text)
 				val textHeight = FONT_HEIGHT
@@ -107,7 +104,7 @@ object OverlayRenderer{
 				val offsetX = -(textWidth / 2)
 				val offsetY = -(textHeight / 2)
 				
-				Gui.drawRect(centerX + offsetX - BORDER_SIZE, centerY + offsetY - BORDER_SIZE, centerX - offsetX + BORDER_SIZE - 1, centerY - offsetY + BORDER_SIZE - 1, RGBA(0u, 0.6F).i)
+				AbstractGui.fill(centerX + offsetX - BORDER_SIZE, centerY + offsetY - BORDER_SIZE, centerX - offsetX + BORDER_SIZE - 1, centerY - offsetY + BORDER_SIZE - 1, RGBA(0u, 0.6F).i)
 				drawStringWithShadow(text, (centerX + offsetX).toFloat(), (centerY + offsetY).toFloat(), color.i)
 			}
 		}
@@ -142,19 +139,18 @@ object OverlayRenderer{
 	
 	@JvmStatic
 	@SubscribeEvent
-	fun onRenderBlockOutline(e: DrawBlockHighlightEvent){
-		if (e.target.typeOfHit == BLOCK){ // why the fuck is this still called for air and entities
-			val world = e.player.world
-			val pos = e.target.blockPos
-			val block = pos.getBlock(world)
-			
-			if (block === ModBlocks.ENERGY_CLUSTER){
-				clusterLookedAt = pos.getTile(world)
-				e.isCanceled = true
-			}
-			else if (block is BlockAbstractPortal){
-				e.isCanceled = true
-			}
+	fun onRenderBlockOutline(e: DrawBlockHighlightEvent.HighlightBlock){
+		val world = MC.world ?: return
+		
+		val pos = e.target.pos
+		val block = pos.getBlock(world)
+		
+		if (block === ModBlocks.ENERGY_CLUSTER){
+			clusterLookedAt = pos.getTile(world)
+			e.isCanceled = true
+		}
+		else if (block is BlockAbstractPortal){
+			e.isCanceled = true
 		}
 	}
 }

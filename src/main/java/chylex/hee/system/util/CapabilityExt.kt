@@ -1,7 +1,7 @@
 package chylex.hee.system.util
 import chylex.hee.system.capability.NullFactory
 import chylex.hee.system.capability.NullStorage
-import net.minecraft.util.EnumFacing
+import net.minecraft.util.Direction
 import net.minecraftforge.common.capabilities.Capability
 import net.minecraftforge.common.capabilities.Capability.IStorage
 import net.minecraftforge.common.capabilities.CapabilityManager
@@ -12,14 +12,12 @@ inline fun <reified T> CapabilityManager.register(storage: IStorage<T> = NullSto
 	this.register(T::class.java, storage, factory)
 }
 
-fun <T> ICapabilityProvider.hasCap(capability: Capability<T>?, facing: EnumFacing? = null): Boolean{
-	return this.hasCapability(capability!!, facing)
+@Suppress("NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS")
+fun <T> ICapabilityProvider.getCap(capability: Capability<T>?, facing: Direction? = null): T{
+	return this.getCapability(capability!!, facing).orElse(null) ?: throw NullPointerException()
 }
 
-fun <T> ICapabilityProvider.getCap(capability: Capability<T>?, facing: EnumFacing? = null): T{
-	return this.getCapability(capability!!, facing)!!
-}
-
-fun <T> ICapabilityProvider.getCapOrNull(capability: Capability<T>?, facing: EnumFacing? = null): T?{
-	return this.getCapability(capability!!, facing)
+@Suppress("NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS")
+fun <T> ICapabilityProvider.getCapOrNull(capability: Capability<T>?, facing: Direction? = null): T?{
+	return this.getCapability(capability!!, facing).orElse(null)
 }

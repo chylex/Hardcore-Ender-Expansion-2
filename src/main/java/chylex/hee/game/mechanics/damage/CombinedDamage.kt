@@ -1,7 +1,7 @@
 package chylex.hee.game.mechanics.damage
 import chylex.hee.game.mechanics.damage.Damage.Companion.TITLE_GENERIC
+import chylex.hee.system.migration.vanilla.EntityLivingBase
 import net.minecraft.entity.Entity
-import net.minecraft.entity.EntityLivingBase
 
 class CombinedDamage(private vararg val definitions: Pair<Damage, Float>){
 	private fun dealToInternal(target: Entity, damageCall: (Pair<Damage, Float>) -> Boolean): Boolean{

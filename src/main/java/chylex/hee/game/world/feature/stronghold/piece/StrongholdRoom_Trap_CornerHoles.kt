@@ -7,6 +7,7 @@ import chylex.hee.game.world.feature.stronghold.StrongholdPieceType
 import chylex.hee.game.world.structure.IStructureWorld
 import chylex.hee.game.world.structure.trigger.EntityStructureTrigger
 import chylex.hee.system.migration.Difficulty.PEACEFUL
+import chylex.hee.system.migration.vanilla.EntityPlayer
 import chylex.hee.system.util.Pos
 import chylex.hee.system.util.TagCompound
 import chylex.hee.system.util.component1
@@ -17,7 +18,7 @@ import chylex.hee.system.util.nextInt
 import chylex.hee.system.util.nextItemOrNull
 import chylex.hee.system.util.posVec
 import chylex.hee.system.util.selectVulnerableEntities
-import net.minecraft.entity.player.EntityPlayer
+import chylex.hee.system.util.use
 import net.minecraft.world.World
 import java.util.Random
 import kotlin.math.min
@@ -39,7 +40,7 @@ class StrongholdRoom_Trap_CornerHoles(file: String) : StrongholdAbstractPieceFro
 			val rand = world.rand
 			
 			if (spawnsLeft == -1){
-				val area = entity.entityBoundingBox.grow(3.5, 0.0, 3.5).expand(0.0, 2.0, 0.0)
+				val area = entity.boundingBox.grow(3.5, 0.0, 3.5).expand(0.0, 2.0, 0.0)
 				
 				if (world.selectVulnerableEntities.inBox<EntityPlayer>(area).isEmpty()){
 					return
@@ -49,7 +50,7 @@ class StrongholdRoom_Trap_CornerHoles(file: String) : StrongholdAbstractPieceFro
 				}
 			}
 			
-			val targetArea = entity.entityBoundingBox.grow(6.0, 0.0, 6.0).expand(0.0, 4.0, 0.0)
+			val targetArea = entity.boundingBox.grow(6.0, 0.0, 6.0).expand(0.0, 4.0, 0.0)
 			val targets = world.selectVulnerableEntities.inBox<EntityPlayer>(targetArea)
 			
 			repeat(min(spawnsLeft, rand.nextInt(1, 3))){
@@ -62,7 +63,7 @@ class StrongholdRoom_Trap_CornerHoles(file: String) : StrongholdAbstractPieceFro
 				EntityMobSilverfish(world).apply {
 					setLocationAndAngles(x, y, z, rand.nextFloat(0F, 360F), 0F)
 					delayHideInBlockAI(20 * 30)
-					world.spawnEntity(this)
+					world.addEntity(this)
 					
 					fallDistance = 1.5F
 					attackTarget = rand.nextItemOrNull(targets)
@@ -72,7 +73,7 @@ class StrongholdRoom_Trap_CornerHoles(file: String) : StrongholdAbstractPieceFro
 			}
 			
 			if (spawnsLeft == 0){
-				entity.setDead()
+				entity.remove()
 			}
 		}
 		
@@ -84,10 +85,10 @@ class StrongholdRoom_Trap_CornerHoles(file: String) : StrongholdAbstractPieceFro
 		}
 		
 		override fun serializeNBT() = TagCompound().apply {
-			setShort(SPAWNS_LEFT_TAG, spawnsLeft.toShort())
+			putShort(SPAWNS_LEFT_TAG, spawnsLeft.toShort())
 		}
 		
-		override fun deserializeNBT(nbt: TagCompound) = with(nbt){
+		override fun deserializeNBT(nbt: TagCompound) = nbt.use {
 			spawnsLeft = getShort(SPAWNS_LEFT_TAG).toInt()
 		}
 	}

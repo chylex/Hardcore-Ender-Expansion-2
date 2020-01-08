@@ -6,35 +6,38 @@ import chylex.hee.game.block.util.Property
 import chylex.hee.init.ModItems
 import chylex.hee.system.migration.forge.Side
 import chylex.hee.system.migration.forge.Sided
+import chylex.hee.system.migration.vanilla.EntityItem
+import chylex.hee.system.migration.vanilla.EntityPlayer
+import chylex.hee.system.util.asVoxelShape
 import chylex.hee.system.util.copyIf
-import chylex.hee.system.util.get
 import chylex.hee.system.util.getState
 import chylex.hee.system.util.getTile
-import chylex.hee.system.util.with
 import net.minecraft.block.Block
-import net.minecraft.block.ITileEntityProvider
-import net.minecraft.block.state.BlockStateContainer
-import net.minecraft.block.state.IBlockState
+import net.minecraft.block.BlockState
 import net.minecraft.client.renderer.color.IBlockColor
 import net.minecraft.entity.Entity
-import net.minecraft.entity.item.EntityItem
-import net.minecraft.entity.player.EntityPlayer
+import net.minecraft.state.StateContainer.Builder
 import net.minecraft.tileentity.TileEntity
 import net.minecraft.util.BlockRenderLayer.CUTOUT
-import net.minecraft.util.EnumFacing
-import net.minecraft.util.EnumHand
+import net.minecraft.util.Hand
 import net.minecraft.util.math.AxisAlignedBB
 import net.minecraft.util.math.BlockPos
-import net.minecraft.world.IBlockAccess
+import net.minecraft.util.math.BlockRayTraceResult
+import net.minecraft.util.math.shapes.ISelectionContext
+import net.minecraft.util.math.shapes.VoxelShape
+import net.minecraft.util.math.shapes.VoxelShapes
+import net.minecraft.world.IBlockReader
+import net.minecraft.world.IEnviromentBlockReader
 import net.minecraft.world.World
+import java.util.UUID
 import kotlin.math.abs
 import kotlin.math.max
 
-class BlockTablePedestal(builder: BlockBuilder) : BlockSimpleShaped(builder, COMBINED_BOX), ITileEntityProvider{
+class BlockTablePedestal(builder: BlockBuilder) : BlockSimpleShaped(builder, COMBINED_BOX){
 	companion object{
 		val IS_LINKED = Property.bool("linked")
 		
-		const val DROPPED_ITEM_THROWER_NAME = "[Pedestal]"
+		val DROPPED_ITEM_THROWER: UUID = UUID.fromString("f6496b88-3669-4d2b-a9d6-cd2e36f188eb")
 		
 		// Collision checks
 		
@@ -71,43 +74,48 @@ class BlockTablePedestal(builder: BlockBuilder) : BlockSimpleShaped(builder, COM
 			AxisAlignedBB(0.5, 0.0, 0.5, 0.5, TOP_SLAB_TOP_Y, 0.5).grow(it, 0.0, it)
 		}
 		
+		val COLLISION_SHAPE: VoxelShape = COLLISION_BOXES.map { it.asVoxelShape }.reduce { acc, next -> VoxelShapes.or(acc, next) }
+		
 		private fun isInsidePickupArea(pos: BlockPos, entity: EntityItem): Boolean{
 			return (entity.posY - pos.y) >= PICKUP_TOP_Y && abs(pos.x + 0.5 - entity.posX) <= PICKUP_DIST_XZ && abs(pos.z + 0.5 - entity.posZ) <= PICKUP_DIST_XZ
 		}
 		
 		private fun isItemAreaBlocked(world: World, pos: BlockPos): Boolean{
-			return pos.up().let { it.getState(world).getCollisionBoundingBox(world, it) != NULL_AABB }
+			return pos.up().getState(world).getCollisionShape(world, pos).isEmpty
 		}
 	}
 	
 	// Instance
 	
 	init{
-		defaultState = blockState.baseState.with(IS_LINKED, false)
+		defaultState = stateContainer.baseState.with(IS_LINKED, false)
 	}
 	
-	override fun createBlockState() = BlockStateContainer(this, IS_LINKED)
+	override fun fillStateContainer(container: Builder<Block, BlockState>){
+		container.add(IS_LINKED)
+	}
 	
-	override fun getMetaFromState(state: IBlockState) = if (state[IS_LINKED]) 1 else 0
-	override fun getStateFromMeta(meta: Int) = this.with(IS_LINKED, meta == 1)
+	override fun hasTileEntity(state: BlockState): Boolean{
+		return true
+	}
 	
-	override fun createNewTileEntity(world: World, meta: Int): TileEntity{
+	override fun createTileEntity(state: BlockState, world: IBlockReader): TileEntity{
 		return TileEntityTablePedestal()
 	}
 	
 	// Interaction
 	
-	override fun onEntityCollision(world: World, pos: BlockPos, state: IBlockState, entity: Entity){
+	override fun onEntityCollision(state: BlockState, world: World, pos: BlockPos, entity: Entity){
 		if (world.isRemote){
 			return
 		}
 		
-		if (entity is EntityItem && entity.age >= 5 && isInsidePickupArea(pos, entity) && entity.thrower != DROPPED_ITEM_THROWER_NAME){
+		if (entity is EntityItem && entity.age >= 5 && isInsidePickupArea(pos, entity) && entity.throwerId != DROPPED_ITEM_THROWER){
 			val stack = entity.item
 			
 			if (pos.getTile<TileEntityTablePedestal>(world)?.addToInput(stack) == true){
 				if (stack.isEmpty){
-					entity.setDead()
+					entity.remove()
 				}
 				else{
 					entity.item = stack
@@ -119,13 +127,13 @@ class BlockTablePedestal(builder: BlockBuilder) : BlockSimpleShaped(builder, COM
 		}
 	}
 	
-	override fun onBlockClicked(world: World, pos: BlockPos, player: EntityPlayer){
+	override fun onBlockClicked(state: BlockState, world: World, pos: BlockPos, player: EntityPlayer){
 		if (!world.isRemote){
 			pos.getTile<TileEntityTablePedestal>(world)?.dropAllItems()
 		}
 	}
 	
-	override fun onBlockActivated(world: World, pos: BlockPos, state: IBlockState, player: EntityPlayer, hand: EnumHand, facing: EnumFacing, hitX: Float, hitY: Float, hitZ: Float): Boolean{
+	override fun onBlockActivated(state: BlockState, world: World, pos: BlockPos, player: EntityPlayer, hand: Hand, hit: BlockRayTraceResult): Boolean{
 		if (world.isRemote){
 			return true
 		}
@@ -152,40 +160,35 @@ class BlockTablePedestal(builder: BlockBuilder) : BlockSimpleShaped(builder, COM
 		return true
 	}
 	
-	override fun onBlockHarvested(world: World, pos: BlockPos, state: IBlockState, player: EntityPlayer){
+	override fun onBlockHarvested(world: World, pos: BlockPos, state: BlockState, player: EntityPlayer){
 		if (!world.isRemote && player.isCreative){
 			pos.getTile<TileEntityTablePedestal>(world)?.onPedestalDestroyed(dropTableLink = false)
 		}
 	}
 	
-	override fun breakBlock(world: World, pos: BlockPos, state: IBlockState){
-		if (!world.isRemote){
-			pos.getTile<TileEntityTablePedestal>(world)?.onPedestalDestroyed(dropTableLink = true)
-		}
-		
-		super.breakBlock(world, pos, state)
+	override fun onReplaced(state: BlockState, world: World, pos: BlockPos, newState: BlockState, isMoving: Boolean){
+		pos.getTile<TileEntityTablePedestal>(world)?.onPedestalDestroyed(dropTableLink = true)
+		super.onReplaced(state, world, pos, newState, isMoving)
 	}
 	
-	override fun neighborChanged(state: IBlockState, world: World, pos: BlockPos, neighborBlock: Block, neighborPos: BlockPos){
+	/* UPDATE
+	override fun neighborChanged(state: BlockState, world: World, pos: BlockPos, neighborBlock: Block, neighborPos: BlockPos){
 		if (!world.isRemote && neighborPos == pos.up() && isItemAreaBlocked(world, pos)){
 			pos.getTile<TileEntityTablePedestal>(world)?.dropAllItems()
 		}
-	}
+	}*/
 	
-	override fun addCollisionBoxToList(state: IBlockState, world: World, pos: BlockPos, entityBox: AxisAlignedBB, collidingBoxes: MutableList<AxisAlignedBB>, entity: Entity?, isActualState: Boolean){
-		COLLISION_BOXES.forEach {
-			@Suppress("DEPRECATION")
-			addCollisionBoxToList(pos, entityBox, collidingBoxes, it)
-		}
+	override fun getCollisionShape(state: BlockState, world: IBlockReader, pos: BlockPos, context: ISelectionContext): VoxelShape{
+		return COLLISION_SHAPE
 	}
 	
 	// Redstone
 	
-	override fun hasComparatorInputOverride(state: IBlockState): Boolean{
+	override fun hasComparatorInputOverride(state: BlockState): Boolean{
 		return true
 	}
 	
-	override fun getComparatorInputOverride(state: IBlockState, world: World, pos: BlockPos): Int{
+	override fun getComparatorInputOverride(state: BlockState, world: World, pos: BlockPos): Int{
 		return pos.getTile<TileEntityTablePedestal>(world)?.outputComparatorStrength ?: 0
 	}
 	
@@ -195,7 +198,7 @@ class BlockTablePedestal(builder: BlockBuilder) : BlockSimpleShaped(builder, COM
 	
 	@Sided(Side.CLIENT)
 	object Color : IBlockColor{
-		override fun colorMultiplier(state: IBlockState, world: IBlockAccess?, pos: BlockPos?, tintIndex: Int): Int{
+		override fun getColor(state: BlockState, world: IEnviromentBlockReader?, pos: BlockPos?, tintIndex: Int): Int{
 			if (world == null || pos == null){
 				return NO_TINT
 			}

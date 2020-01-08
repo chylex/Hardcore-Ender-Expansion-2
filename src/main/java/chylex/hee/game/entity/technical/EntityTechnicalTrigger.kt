@@ -5,20 +5,22 @@ import chylex.hee.game.world.feature.stronghold.piece.StrongholdRoom_Main_Portal
 import chylex.hee.game.world.feature.stronghold.piece.StrongholdRoom_Trap_CornerHoles
 import chylex.hee.game.world.feature.stronghold.piece.StrongholdRoom_Trap_Prison
 import chylex.hee.game.world.feature.stronghold.piece.StrongholdRoom_Trap_TallIntersection
+import chylex.hee.init.ModEntities
 import chylex.hee.system.util.TagCompound
 import chylex.hee.system.util.delegate.NotifyOnChange
 import chylex.hee.system.util.getEnum
 import chylex.hee.system.util.heeTag
-import chylex.hee.system.util.setEnum
+import chylex.hee.system.util.putEnum
 import chylex.hee.system.util.use
-import io.netty.buffer.ByteBuf
+import net.minecraft.entity.EntityType
+import net.minecraft.network.PacketBuffer
 import net.minecraft.world.World
 import net.minecraftforge.common.util.INBTSerializable
 import net.minecraftforge.fml.common.registry.IEntityAdditionalSpawnData
 import java.util.Random
 
-class EntityTechnicalTrigger(world: World) : EntityTechnicalBase(world), IEntityAdditionalSpawnData{
-	constructor(world: World, type: Types) : this(world){
+class EntityTechnicalTrigger(type: EntityType<EntityTechnicalTrigger>, world: World) : EntityTechnicalBase(type, world), IEntityAdditionalSpawnData{
+	constructor(world: World, type: Types) : this(ModEntities.TECHNICAL_TRIGGER, world){
 		this.type = type
 	}
 	
@@ -43,7 +45,7 @@ class EntityTechnicalTrigger(world: World) : EntityTechnicalBase(world), IEntity
 	
 	private object InvalidTriggerHandler : ITriggerHandler{
 		override fun check(world: World) = true
-		override fun update(entity: EntityTechnicalTrigger) = entity.setDead()
+		override fun update(entity: EntityTechnicalTrigger) = entity.remove()
 		override fun nextTimer(rand: Random) = Int.MAX_VALUE
 	}
 	
@@ -66,18 +68,18 @@ class EntityTechnicalTrigger(world: World) : EntityTechnicalBase(world), IEntity
 	
 	private var timer = 0
 	
-	override fun entityInit(){}
+	override fun registerData(){}
 	
-	override fun writeSpawnData(buffer: ByteBuf) = buffer.use {
+	override fun writeSpawnData(buffer: PacketBuffer) = buffer.use {
 		writeInt(type.ordinal)
 	}
 	
-	override fun readSpawnData(buffer: ByteBuf) = buffer.use {
+	override fun readSpawnData(buffer: PacketBuffer) = buffer.use {
 		type = Types.values().getOrNull(readInt()) ?: INVALID
 	}
 	
-	override fun onUpdate(){
-		super.onUpdate()
+	override fun tick(){
+		super.tick()
 		
 		if (handler.check(world) && --timer < 0){
 			handler.update(this)
@@ -85,16 +87,16 @@ class EntityTechnicalTrigger(world: World) : EntityTechnicalBase(world), IEntity
 		}
 	}
 	
-	override fun writeEntityToNBT(nbt: TagCompound) = with(nbt.heeTag){
-		setEnum(TYPE_TAG, type)
-		setTag(DATA_TAG, handler.serializeNBT())
+	override fun writeAdditional(nbt: TagCompound) = nbt.heeTag.use {
+		putEnum(TYPE_TAG, type)
+		put(DATA_TAG, handler.serializeNBT())
 		
-		setShort(TIMER_TAG, timer.toShort())
+		putShort(TIMER_TAG, timer.toShort())
 	}
 	
-	override fun readEntityFromNBT(nbt: TagCompound) = with(nbt.heeTag){
+	override fun readAdditional(nbt: TagCompound) = nbt.heeTag.use {
 		type = getEnum<Types>(TYPE_TAG) ?: INVALID
-		handler.deserializeNBT(getCompoundTag(DATA_TAG))
+		handler.deserializeNBT(getCompound(DATA_TAG))
 		
 		timer = getShort(TIMER_TAG).toInt()
 	}

@@ -31,15 +31,13 @@ abstract class AutumnTreeGenerator : WhitebarkTreeGenerator(){
 			world.setBlock(root.up(y), ModBlocks.WHITEBARK_LOG)
 		}
 		
-		val leaves = leafBlock.worldgenState
-		
 		val leafArrangement = when(rootHeight){
 			6 -> LEAVES_SHORT
 			7 -> if (rand.nextBoolean()) LEAVES_TALL else LEAVES_SHORT
 			else -> LEAVES_TALL
 		}
 		
-		world.setState(root.up(rootHeight), leaves)
+		world.setBlock(root.up(rootHeight), leafBlock)
 		
 		for((y, size) in leafArrangement){
 			for(pos in root.up(rootHeight - 1 - y).allInCenteredBoxMutable(size, 0, size)){
@@ -51,7 +49,7 @@ abstract class AutumnTreeGenerator : WhitebarkTreeGenerator(){
 					continue
 				}
 				
-				world.setState(pos, leaves)
+				world.setBlock(pos, leafBlock)
 			}
 		}
 		
@@ -65,8 +63,8 @@ abstract class AutumnTreeGenerator : WhitebarkTreeGenerator(){
 					rand.nextInt(-2, 2)
 				)
 				
-				if (world.isAir(pos) && world.getState(pos.up()) == leaves && Facing4.all { facing -> pos.offset(facing).let { !world.isInside(it) || world.getBlock(it) !== leaves } }){
-					world.setState(pos, leaves)
+				if (world.isAir(pos) && world.getBlock(pos.up()) === leafBlock && Facing4.all { facing -> pos.offset(facing).let { !world.isInside(it) || world.getBlock(it) !== leafBlock } }){
+					world.setBlock(pos, leafBlock)
 					break
 				}
 			}

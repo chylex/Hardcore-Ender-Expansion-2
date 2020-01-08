@@ -1,13 +1,15 @@
 package chylex.hee.game.mechanics.potion
 import chylex.hee.system.migration.MagicValues
+import chylex.hee.system.migration.vanilla.EntityLivingBase
 import chylex.hee.system.migration.vanilla.Potions
 import chylex.hee.system.util.color.IntColor.Companion.RGB
 import chylex.hee.system.util.floorToInt
-import net.minecraft.entity.EntityLivingBase
-import net.minecraft.potion.PotionEffect
+import net.minecraft.potion.EffectInstance
+import net.minecraft.potion.EffectType.BENEFICIAL
+import net.minecraft.potion.EffectType.HARMFUL
 import kotlin.math.max
 
-object PotionPurity : PotionBase(color = RGB(73, 217, 255), isNegative = false){
+object PotionPurity : PotionBase(color = RGB(73, 217, 255), kind = BENEFICIAL){
 	const val MIN_DURATION = 60 // allow animations to finish, must be > 10
 	
 	val TYPE = this.makeType
@@ -23,7 +25,7 @@ object PotionPurity : PotionBase(color = RGB(73, 217, 255), isNegative = false){
 		val purityLevel = amplifier + 1
 		
 		for((type, effect) in entity.activePotionMap){
-			if (type.isBadEffect && effect.duration in MIN_DURATION..INFINITE_DURATION_THRESHOLD){ // TODO handle eternal torment
+			if (type.effectType == HARMFUL && effect.duration in MIN_DURATION..INFINITE_DURATION_THRESHOLD){ // TODO handle eternal torment, maybe bad omen?
 				when(type){
 					Potions.POISON -> purifySpecial(effect, MagicValues.POTION_POISON_TRIGGER_RATE, purityLevel)
 					Potions.WITHER -> purifySpecial(effect, MagicValues.POTION_WITHER_TRIGGER_RATE, purityLevel)
@@ -33,7 +35,7 @@ object PotionPurity : PotionBase(color = RGB(73, 217, 255), isNegative = false){
 		}
 	}
 	
-	private fun purifyGeneral(effect: PotionEffect, purityLevel: Int, purityDuration: Int){
+	private fun purifyGeneral(effect: EffectInstance, purityLevel: Int, purityDuration: Int){
 		val frequency = when(purityLevel){
 			1    -> 10
 			2    ->  4
@@ -46,7 +48,7 @@ object PotionPurity : PotionBase(color = RGB(73, 217, 255), isNegative = false){
 		}
 	}
 	
-	private fun purifySpecial(effect: PotionEffect, baseFrequency: Int, purityLevel: Int){
+	private fun purifySpecial(effect: EffectInstance, baseFrequency: Int, purityLevel: Int){
 		val realFrequency = (baseFrequency shr effect.amplifier).coerceAtLeast(1)
 		
 		if (effect.duration % realFrequency == 0){

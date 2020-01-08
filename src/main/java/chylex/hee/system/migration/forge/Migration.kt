@@ -1,13 +1,13 @@
 package chylex.hee.system.migration.forge
+import net.minecraftforge.api.distmarker.Dist
+import net.minecraftforge.api.distmarker.OnlyIn
+import net.minecraftforge.eventbus.api.Event
+import net.minecraftforge.eventbus.api.EventPriority
+import net.minecraftforge.eventbus.api.SubscribeEvent
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber
-import net.minecraftforge.fml.common.eventhandler.Event
-import net.minecraftforge.fml.common.eventhandler.EventPriority
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent
-import net.minecraftforge.fml.relauncher.Side
-import net.minecraftforge.fml.relauncher.SideOnly
 
-typealias Sided = SideOnly
-typealias Side = Side
+typealias Sided = OnlyIn
+typealias Side = Dist
 
 typealias SubscribeAllEvents = EventBusSubscriber
 typealias SubscribeEvent = SubscribeEvent

@@ -1,16 +1,16 @@
 package chylex.hee.game.entity.living.ai.util
 import chylex.hee.system.util.delegate.NotifyOnChange
-import net.minecraft.entity.ai.EntityAIBase
-import net.minecraft.entity.ai.EntityAITasks
+import net.minecraft.entity.ai.goal.Goal
+import net.minecraft.entity.ai.goal.GoalSelector
 
 class AIToggle{
-	private class Entry(private val taskList: EntityAITasks, private val priority: Int, private val instance: EntityAIBase){
+	private class Entry(private val taskList: GoalSelector, private val priority: Int, private val instance: Goal){
 		fun update(newValue: Boolean){
 			if (newValue){
-				taskList.addTask(priority, instance)
+				taskList.addGoal(priority, instance)
 			}
 			else{
-				taskList.removeTask(instance)
+				taskList.removeGoal(instance)
 			}
 		}
 		
@@ -24,7 +24,7 @@ class AIToggle{
 	}
 	
 	companion object{
-		fun EntityAITasks.addTask(priority: Int, task: EntityAIBase, controller: AIToggle){
+		fun GoalSelector.addGoal(priority: Int, task: Goal, controller: AIToggle){
 			controller.addEntry(Entry(this, priority, task))
 		}
 	}

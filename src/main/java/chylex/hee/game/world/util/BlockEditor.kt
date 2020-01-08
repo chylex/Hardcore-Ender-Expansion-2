@@ -1,19 +1,24 @@
 package chylex.hee.game.world.util
 import chylex.hee.system.migration.Facing.UP
+import chylex.hee.system.migration.vanilla.EntityPlayer
 import chylex.hee.system.util.getHardness
+import chylex.hee.system.util.getState
 import chylex.hee.system.util.isAir
-import chylex.hee.system.util.isReplaceable
 import chylex.hee.system.util.playUniversal
+import chylex.hee.system.util.setState
+import net.minecraft.advancements.CriteriaTriggers
 import net.minecraft.block.Block
-import net.minecraft.block.state.IBlockState
-import net.minecraft.entity.player.EntityPlayer
-import net.minecraft.item.ItemBlock
+import net.minecraft.block.BlockState
+import net.minecraft.entity.player.ServerPlayerEntity
+import net.minecraft.item.BlockItemUseContext
 import net.minecraft.item.ItemStack
-import net.minecraft.util.EnumFacing
-import net.minecraft.util.EnumHand
+import net.minecraft.item.ItemUseContext
+import net.minecraft.util.Direction
 import net.minecraft.util.SoundCategory
 import net.minecraft.util.math.BlockPos
-import net.minecraft.world.World
+import net.minecraft.util.math.shapes.ISelectionContext
+import net.minecraftforge.common.util.BlockSnapshot
+import net.minecraftforge.event.ForgeEventFactory
 
 object BlockEditor{
 	
@@ -25,45 +30,44 @@ object BlockEditor{
 	
 	fun canBreak(pos: BlockPos, player: EntityPlayer): Boolean{
 		val world = player.world
-		return (pos.isAir(world) || pos.getHardness(world) >= 0F) && player.capabilities.allowEdit
+		return (pos.isAir(world) || pos.getHardness(world) >= 0F) && player.abilities.allowEdit
 	}
 	
 	// Placement
 	
-	private fun placeInternal(state: IBlockState, player: EntityPlayer, stack: ItemStack, targetPos: BlockPos, clickedFacing: EnumFacing, hitX: Float, hitY: Float, hitZ: Float): BlockPos?{
+	private fun placeInternal(state: BlockState, player: EntityPlayer, stack: ItemStack, targetPos: BlockPos, clickedFacing: Direction): BlockPos?{
 		val block = state.block
 		val world = player.world
 		
-		if (!player.canPlayerEdit(targetPos, clickedFacing, stack) || !world.mayPlace(block, targetPos, false, clickedFacing, null)){
+		if (!player.canPlayerEdit(targetPos, clickedFacing, stack) ||
+			!world.func_217350_a(state, targetPos, ISelectionContext.dummy()) || // UPDATE checks entity collisions
+			!ForgeEventFactory.onBlockPlace(player, BlockSnapshot.getBlockSnapshot(world, targetPos), UP)
+		){
 			return null
 		}
 		
-		if (!ItemBlock(block).placeBlockAt(stack, player, world, targetPos, clickedFacing, hitX, hitY, hitZ, state)){
-			return null
+		targetPos.setState(world, state)
+		
+		if (player is ServerPlayerEntity) {
+			CriteriaTriggers.PLACED_BLOCK.trigger(player, targetPos, stack)
 		}
 		
-		val sound = block.getSoundType(state, world, targetPos, player)
-		sound.placeSound.playUniversal(player, targetPos, SoundCategory.BLOCKS, volume = (sound.volume + 1F) / 2F, pitch = sound.pitch * 0.8F)
+		block.getSoundType(state, world, targetPos, player).let {
+			it.placeSound.playUniversal(player, targetPos, SoundCategory.BLOCKS, volume = (it.volume + 1F) / 2F, pitch = it.pitch * 0.8F)
+		}
 		
 		return targetPos
 	}
 	
-	private fun getTargetPos(world: World, clickedPos: BlockPos, clickedFacing: EnumFacing): BlockPos{
-		return if (clickedPos.isReplaceable(world))
-			clickedPos
-		else
-			clickedPos.offset(clickedFacing)
-	}
-	
-	fun place(state: IBlockState, player: EntityPlayer, stack: ItemStack, clickedPos: BlockPos, clickedFacing: EnumFacing, hitX: Float, hitY: Float, hitZ: Float): BlockPos?{
-		return placeInternal(state, player, stack, getTargetPos(player.world, clickedPos, clickedFacing), clickedFacing, hitX, hitY, hitZ)
-	}
-	
-	fun place(block: Block, player: EntityPlayer, hand: EnumHand, stack: ItemStack, clickedPos: BlockPos, clickedFacing: EnumFacing, hitX: Float, hitY: Float, hitZ: Float): BlockPos?{
-		val world = player.world
-		val targetPos = getTargetPos(world, clickedPos, clickedFacing)
-		val placedState = block.getStateForPlacement(world, targetPos, clickedFacing, hitX, hitY, hitZ, stack.metadata, player, hand)
+	// UPDATE test
+	fun place(block: Block, player: EntityPlayer, stack: ItemStack, context: ItemUseContext): BlockPos?{
+		val world = context.world
+		val blockContext = BlockItemUseContext(context)
 		
-		return placeInternal(placedState, player, stack, targetPos, clickedFacing, hitX, hitY, hitZ)
+		if (context.pos.getState(world).isReplaceable(blockContext)){
+			blockContext.replacingClickedOnBlock()
+		}
+		
+		return block.getStateForPlacement(blockContext)?.let { placeInternal(it, player, stack, blockContext.pos, context.face) }
 	}
 }

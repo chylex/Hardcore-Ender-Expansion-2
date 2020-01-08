@@ -11,13 +11,15 @@ import chylex.hee.system.util.TagCompound
 import chylex.hee.system.util.TagLongArray
 import chylex.hee.system.util.floorToInt
 import chylex.hee.system.util.nextInt
-import net.minecraft.util.ITickable
+import chylex.hee.system.util.use
 import net.minecraft.world.World
+import net.minecraft.world.server.ServerWorld
 import net.minecraftforge.common.util.INBTSerializable
 import java.util.Random
 import kotlin.math.min
+import kotlin.streams.toList
 
-class RegionInstability<T : IRegionEntry>(private val world: World, private val entryConstructor: IRegionEntryConstructor<T>) : ITickable, INBTSerializable<TagCompound>{
+class RegionInstability<T : IRegionEntry>(private val world: World, private val entryConstructor: IRegionEntryConstructor<T>) : INBTSerializable<TagCompound>{
 	private companion object{
 		private const val POINTS_TO_TRIGGER = 500
 		private const val TELEPORTS_TO_CHAOS = 16
@@ -28,6 +30,10 @@ class RegionInstability<T : IRegionEntry>(private val world: World, private val 
 		private const val TICKS_TO_TELEPORT_TAG = "TicksToTeleport"
 	}
 	
+	init{
+		require(world is ServerWorld){ "[RegionInstability] world must be a server world" }
+	}
+	
 	private val rand = Random()
 	
 	private val entries = RegionEntryMap(entryConstructor)
@@ -36,7 +42,7 @@ class RegionInstability<T : IRegionEntry>(private val world: World, private val 
 	private var ticksToRecount = 25 * 20
 	private var ticksToTeleport = 35 * 20
 	
-	override fun update(){
+	fun update(){
 		if (!triggered.isEmpty && --ticksToTeleport < 0){
 			ticksToTeleport = rand.nextInt(35, 75)
 			tickTriggered()
@@ -99,7 +105,7 @@ class RegionInstability<T : IRegionEntry>(private val world: World, private val 
 	// Regions
 	
 	private fun groupEndermitesByRegion(): Map<T, List<EntityMobEndermiteInstability>>{
-		return world.loadedEntityList.filterIsInstance<EntityMobEndermiteInstability>().groupBy { entryConstructor.fromPos(Pos(it)) }
+		return (world as ServerWorld).entities.toList().filterIsInstance<EntityMobEndermiteInstability>().groupBy { entryConstructor.fromPos(Pos(it)) }
 	}
 	
 	private fun groupClustersByRegion(): Map<T, List<TileEntityEnergyCluster>>{
@@ -141,18 +147,18 @@ class RegionInstability<T : IRegionEntry>(private val world: World, private val 
 	// Serialization
 	
 	override fun serializeNBT() = TagCompound().apply {
-		setTag(ENTRIES_TAG, entries.serializeNBT())
-		setTag(TRIGGERED_TAG, triggered.serializeNBT())
+		put(ENTRIES_TAG, entries.serializeNBT())
+		put(TRIGGERED_TAG, triggered.serializeNBT())
 		
-		setInteger(TICKS_TO_RECOUNT_TAG, ticksToRecount)
-		setInteger(TICKS_TO_TELEPORT_TAG, ticksToTeleport)
+		putInt(TICKS_TO_RECOUNT_TAG, ticksToRecount)
+		putInt(TICKS_TO_TELEPORT_TAG, ticksToTeleport)
 	}
 	
-	override fun deserializeNBT(nbt: TagCompound) = with(nbt){
-		entries.deserializeNBT(getTag(ENTRIES_TAG) as? TagLongArray)
-		triggered.deserializeNBT(getTag(TRIGGERED_TAG) as? TagLongArray)
+	override fun deserializeNBT(nbt: TagCompound) = nbt.use {
+		entries.deserializeNBT(get(ENTRIES_TAG) as? TagLongArray)
+		triggered.deserializeNBT(get(TRIGGERED_TAG) as? TagLongArray)
 		
-		ticksToRecount = getInteger(TICKS_TO_RECOUNT_TAG)
-		ticksToTeleport = getInteger(TICKS_TO_TELEPORT_TAG)
+		ticksToRecount = getInt(TICKS_TO_RECOUNT_TAG)
+		ticksToTeleport = getInt(TICKS_TO_TELEPORT_TAG)
 	}
 }

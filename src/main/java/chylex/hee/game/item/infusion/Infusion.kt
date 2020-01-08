@@ -57,7 +57,7 @@ enum class Infusion(
 	}
 	
 	private class Matching(vararg val items: Item){
-		constructor(block: Block, vararg items: Item) : this(*arrayOf(Item.getItemFromBlock(block)).plus(items))
+		constructor(block: Block, vararg items: Item) : this(*arrayOf(block.asItem()).plus(items))
 	}
 	
 	// Infusion logic
@@ -68,7 +68,7 @@ enum class Infusion(
 		}
 		
 		private val TRANSFORMATIONS = arrayOf(
-			Item.getItemFromBlock(Blocks.TNT) to Item.getItemFromBlock(ModBlocks.INFUSED_TNT),
+			Blocks.TNT.asItem() to ModBlocks.INFUSED_TNT.asItem(),
 			Items.ENDER_PEARL to ModItems.INFUSED_ENDER_PEARL
 		)
 	}
@@ -96,8 +96,8 @@ enum class Infusion(
 			return null
 		}
 		
-		return ItemStack(transformedItem, stack.size, stack.metadata).also {
-			it.tagCompound = stack.nbtOrNull?.copy()
+		return ItemStack(transformedItem, stack.size).also {
+			it.tag = stack.nbtOrNull?.copy()
 			InfusionTag.setList(it, list.with(this))
 		}
 	}

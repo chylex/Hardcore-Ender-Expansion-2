@@ -11,9 +11,9 @@ import chylex.hee.system.migration.Facing.NORTH
 import chylex.hee.system.migration.Facing.SOUTH
 import chylex.hee.system.migration.Facing.WEST
 import chylex.hee.system.util.Pos
-import net.minecraft.util.EnumFacing
+import net.minecraft.util.Direction
 
-class StrongholdCorridor_Intersection private constructor(vararg connections: EnumFacing) : StrongholdAbstractPiece(){
+class StrongholdCorridor_Intersection private constructor(vararg connections: Direction) : StrongholdAbstractPiece(){
 	companion object{
 		val CORNER   = StrongholdCorridor_Intersection(SOUTH, WEST)
 		val THREEWAY = StrongholdCorridor_Intersection(SOUTH, WEST, EAST)

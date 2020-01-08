@@ -117,7 +117,7 @@ object Generator_ForgottenTombs : ITerritoryGenerator{
 				val noiseXZ = NoiseGenerator.PerlinNormalized(rand, scale = 24.0, octaves = 2)
 				val noiseY = NoiseGenerator.PerlinNormalized(rand, scale = 48.0, octaves = 2)
 				
-				for((x, y, z) in BlockPos.ORIGIN.allInCenteredBoxMutable(RADIUS_XZ, RADIUS_Y, RADIUS_XZ)){
+				for((x, y, z) in BlockPos.ZERO.allInCenteredBoxMutable(RADIUS_XZ, RADIUS_Y, RADIUS_XZ)){
 					val normalizedY = remapRange(y.toFloat(), -radY..radY, 0F..1F)
 					
 					val powerY = remapRange(sqrt(normalizedY), 0F..1F, (4.8F)..(1.6F))

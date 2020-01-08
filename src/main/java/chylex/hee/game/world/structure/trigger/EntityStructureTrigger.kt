@@ -8,7 +8,7 @@ import chylex.hee.system.util.component1
 import chylex.hee.system.util.component2
 import chylex.hee.system.util.component3
 import net.minecraft.entity.Entity
-import net.minecraft.util.EnumFacing
+import net.minecraft.util.Direction
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.Vec3d
 import net.minecraft.world.World
@@ -24,7 +24,7 @@ class EntityStructureTrigger private constructor(private val entityConstructor: 
 	
 	constructor(
 		entityConstructor: (World) -> Entity,
-		nudgeFacing: EnumFacing,
+		nudgeFacing: Direction,
 		nudgeAmount: Double,
 		yOffset: Double
 	) : this(
@@ -36,7 +36,7 @@ class EntityStructureTrigger private constructor(private val entityConstructor: 
 	
 	constructor(
 		triggerType: EntityTechnicalTrigger.Types,
-		facing: EnumFacing = SOUTH
+		facing: Direction = SOUTH
 	) : this(
 		{ world -> EntityTechnicalTrigger(world, triggerType).apply { rotationYaw = facing.horizontalAngle } },
 		yOffset = 0.0
@@ -50,7 +50,7 @@ class EntityStructureTrigger private constructor(private val entityConstructor: 
 		entityConstructor(world).apply {
 			setLocationAndAngles(x, y, z, rotationYaw, rotationPitch)
 			transform(this)
-			world.spawnEntity(this)
+			world.addEntity(this)
 		}
 	}
 }

@@ -1,18 +1,25 @@
 package chylex.hee.game.container
+import chylex.hee.game.block.entity.TileEntityLootChest
 import chylex.hee.game.container.slot.SlotTakeOnly
 import chylex.hee.game.container.util.DetectSlotChangeListener
 import chylex.hee.game.item.ItemAmuletOfRecovery
+import chylex.hee.init.ModContainers
 import chylex.hee.network.server.PacketServerContainerEvent.IContainerWithEvents
+import chylex.hee.system.migration.vanilla.ContainerChest
+import chylex.hee.system.migration.vanilla.EntityPlayer
 import chylex.hee.system.util.size
-import net.minecraft.entity.player.EntityPlayer
-import net.minecraft.inventory.ContainerChest
-import net.minecraft.util.EnumHand
+import net.minecraft.entity.player.PlayerInventory
+import net.minecraft.inventory.IInventory
+import net.minecraft.inventory.Inventory
 
-class ContainerAmuletOfRecovery(private val player: EntityPlayer, itemHeldIn: EnumHand) : ContainerChest(player.inventory, ItemAmuletOfRecovery.Inventory(player, itemHeldIn), player), IContainerWithEvents{
+class ContainerAmuletOfRecovery(id: Int, private val player: EntityPlayer, amuletInventory: IInventory) : ContainerChest(ModContainers.AMULET_OF_RECOVERY, id, player.inventory, amuletInventory, 3), IContainerWithEvents{
+	constructor(id: Int, player: EntityPlayer, tile: TileEntityLootChest) : this(id, player, tile.getChestInventoryFor(player))
+	constructor(id: Int, inventory: PlayerInventory) : this(id, inventory.player, Inventory(9 * 3))
+	
 	private val slotChangeListener = DetectSlotChangeListener()
 	
-	private val amuletInventory: ItemAmuletOfRecovery.Inventory
-		get() = super.getLowerChestInventory() as ItemAmuletOfRecovery.Inventory
+	private val amuletInventory: ItemAmuletOfRecovery.Inv
+		get() = lowerChestInventory as ItemAmuletOfRecovery.Inv
 	
 	init{
 		for(slot in 0 until amuletInventory.size){

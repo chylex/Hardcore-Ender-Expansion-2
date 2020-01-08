@@ -60,6 +60,7 @@ import kotlin.math.abs
 import kotlin.math.pow
 import kotlin.math.roundToInt
 import kotlin.math.sqrt
+import kotlin.streams.toList
 
 object Generator_ObsidianTowers : ITerritoryGenerator{
 	override val segmentSize = Size(16, 40, 16)
@@ -343,8 +344,8 @@ object Generator_ObsidianTowers : ITerritoryGenerator{
 		
 		GOO_POOL{
 			private val checkOffsets = arrayOf(
-				BlockPos.ORIGIN.offset(DOWN),
-				*BlockPos.ORIGIN.allInCenteredBox(1, 0, 1).toList().toTypedArray()
+				BlockPos.ZERO.offset(DOWN),
+				*BlockPos.ZERO.allInCenteredBox(1, 0, 1).toList().toTypedArray()
 			)
 			
 			override fun beforePillars(world: SegmentedWorld, rand: Random, island: Island){
@@ -447,7 +448,7 @@ object Generator_ObsidianTowers : ITerritoryGenerator{
 			for(attempt in 1..100){
 				val pos = island.getRelativePos(rand.nextFloat(0F, 360F), rand.nextFloat(0.0, island.radius * 0.6))
 				
-				if (!world.isAir(pos) && pos.up().allInCenteredBox(1, 0, 1).all(world::isAir)){
+				if (!world.isAir(pos) && pos.up().allInCenteredBox(1, 0, 1).allMatch(world::isAir)){
 					world.addTrigger(pos.up(), EntityStructureTrigger({ realWorld -> EntityTokenHolder(realWorld, TokenType.NORMAL, territoryType) }, yOffset = 0.4))
 					break
 				}

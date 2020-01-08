@@ -13,12 +13,15 @@ import chylex.hee.game.particle.util.IOffset.InBox
 import chylex.hee.game.particle.util.IShape.Point
 import chylex.hee.game.world.feature.obsidiantower.ObsidianTowerRoomData
 import chylex.hee.game.world.feature.obsidiantower.ObsidianTowerSpawnerLevel
+import chylex.hee.init.ModTileEntities
 import chylex.hee.network.client.PacketClientFX
 import chylex.hee.system.migration.Difficulty.PEACEFUL
 import chylex.hee.system.migration.Facing.DOWN
 import chylex.hee.system.migration.forge.EventResult
+import chylex.hee.system.migration.vanilla.EntityLiving
+import chylex.hee.system.migration.vanilla.EntityPlayer
 import chylex.hee.system.migration.vanilla.Sounds
-import chylex.hee.system.util.NBTList.Companion.setList
+import chylex.hee.system.util.NBTList.Companion.putList
 import chylex.hee.system.util.NBTObjectList
 import chylex.hee.system.util.Pos
 import chylex.hee.system.util.TagCompound
@@ -37,17 +40,18 @@ import chylex.hee.system.util.nextFloat
 import chylex.hee.system.util.nextInt
 import chylex.hee.system.util.nextItemOrNull
 import chylex.hee.system.util.playClient
+import chylex.hee.system.util.putEnum
+import chylex.hee.system.util.putPos
 import chylex.hee.system.util.selectVulnerableEntities
-import chylex.hee.system.util.setEnum
-import chylex.hee.system.util.setPos
 import chylex.hee.system.util.square
 import chylex.hee.system.util.totalTime
+import chylex.hee.system.util.use
 import net.minecraft.entity.Entity
-import net.minecraft.entity.EntityLiving
-import net.minecraft.entity.player.EntityPlayer
-import net.minecraft.potion.PotionEffect
-import net.minecraft.util.EnumParticleTypes.EXPLOSION_NORMAL
-import net.minecraft.util.EnumParticleTypes.SMOKE_NORMAL
+import net.minecraft.entity.SpawnReason
+import net.minecraft.particles.ParticleTypes.EXPLOSION
+import net.minecraft.particles.ParticleTypes.SMOKE
+import net.minecraft.potion.EffectInstance
+import net.minecraft.tileentity.TileEntityType
 import net.minecraft.util.SoundCategory
 import net.minecraft.util.math.AxisAlignedBB
 import net.minecraft.util.math.BlockPos
@@ -56,15 +60,17 @@ import net.minecraftforge.event.ForgeEventFactory
 import java.util.Random
 import kotlin.math.max
 
-class TileEntitySpawnerObsidianTower() : TileEntityBaseSpawner(){
+class TileEntitySpawnerObsidianTower(type: TileEntityType<TileEntitySpawnerObsidianTower>) : TileEntityBaseSpawner(type){
+	constructor() : this(ModTileEntities.SPAWNER_OBSIDIAN_TOWER)
+	
 	companion object{
 		private val PARTICLE_SMOKE = ParticleSpawnerVanilla(
-			type = SMOKE_NORMAL,
+			type = SMOKE,
 			pos = InBox(0.5F)
 		)
 		
 		private val PARTICLE_BREAK = ParticleSpawnerVanilla(
-			type = EXPLOSION_NORMAL,
+			type = EXPLOSION,
 			pos = InBox(0.5F)
 		)
 		
@@ -90,10 +96,10 @@ class TileEntitySpawnerObsidianTower() : TileEntityBaseSpawner(){
 		}
 	}
 	
-	var offset: BlockPos = BlockPos.ORIGIN
+	var offset: BlockPos = BlockPos.ZERO
 	
 	private var level = ObsidianTowerSpawnerLevel.INTRODUCTION
-	private var effects = emptyArray<PotionEffect>()
+	private var effects = emptyArray<EffectInstance>()
 	
 	private var remainingMobSpawns = 5
 	private var nextSpawnCooldown = 0
@@ -116,14 +122,14 @@ class TileEntitySpawnerObsidianTower() : TileEntityBaseSpawner(){
 	}
 	
 	override fun createClientEntity(): Entity{
-		return EntityMobEnderman(world)
+		return EntityMobEnderman(wrld)
 	}
 	
 	// Tick handling
 	
 	override fun tickClient(){
-		val rand = world.rand
-		val time = world.totalTime
+		val rand = wrld.rand
+		val time = wrld.totalTime
 		
 		if (time % 3L == 0L && rand.nextInt(max(2, 5 - effects.size)) == 0){
 			val color = rand.nextItemOrNull(effects)?.let { IntColor(it.potion.liquidColor) }
@@ -143,13 +149,13 @@ class TileEntitySpawnerObsidianTower() : TileEntityBaseSpawner(){
 	}
 	
 	override fun tickServer(){
-		if (world.difficulty == PEACEFUL){
+		if (wrld.difficulty == PEACEFUL){
 			return
 		}
 		
 		val floorCenter = floorCenter
 		
-		if (!floorCenter.isAnyPlayerWithinRange(world, ACTIVATION_DISTANCE)){
+		if (!floorCenter.isAnyPlayerWithinRange(wrld, ACTIVATION_DISTANCE)){
 			return
 		}
 		
@@ -169,7 +175,7 @@ class TileEntitySpawnerObsidianTower() : TileEntityBaseSpawner(){
 		}
 		
 		if (--nextSpawnCooldown < 0){
-			val rand = world.rand
+			val rand = wrld.rand
 			val amount = minOf(remainingMobSpawns, maxEndermen - spawnedEndermen, rand.nextInt(1, 2))
 			
 			repeat(amount){
@@ -180,10 +186,10 @@ class TileEntitySpawnerObsidianTower() : TileEntityBaseSpawner(){
 			
 			if (remainingMobSpawns <= 0 || level == ObsidianTowerSpawnerLevel.INTRODUCTION){
 				PacketClientFX(FX_BREAK, FxBlockData(pos)).sendToAllAround(this, 12.0)
-				pos.breakBlock(world, false)
+				pos.breakBlock(wrld, false)
 			}
 			else{
-				nextSpawnCooldown = 20 * (level.baseCooldown - world.difficulty.id - rand.nextInt(0, 2))
+				nextSpawnCooldown = 20 * (level.baseCooldown - wrld.difficulty.id - rand.nextInt(0, 2))
 				markDirty()
 			}
 		}
@@ -196,21 +202,23 @@ class TileEntitySpawnerObsidianTower() : TileEntityBaseSpawner(){
 	}
 	
 	private inline fun <reified T : Entity> getEntitiesInSpawnArea(searchArea: AxisAlignedBB): List<T>{
-		return world.selectVulnerableEntities.inBox<T>(searchArea).filter(::isEntityInRange)
+		return wrld.selectVulnerableEntities.inBox<T>(searchArea).filter(::isEntityInRange)
 	}
 	
 	private fun canEntitySpawn(entity: EntityLiving): Boolean{
+		val posBelow = Pos(entity).down()
+		
 		return (
-			Pos(entity).down().getState(world).canEntitySpawn(entity) &&
+			posBelow.getState(wrld).canEntitySpawn(wrld, posBelow, entity.type) &&
 			isEntityInRange(entity) &&
-			entity.isNotColliding &&
-			ForgeEventFactory.canEntitySpawn(entity, world, entity.posX.toFloat(), entity.posY.toFloat(), entity.posZ.toFloat(), null) != EventResult.DENY
+			entity.isNotColliding(wrld) &&
+			ForgeEventFactory.canEntitySpawn(entity, wrld, entity.posX, entity.posY, entity.posZ, null, SpawnReason.SPAWNER) != EventResult.DENY
 		)
 	}
 	
 	private fun triggerSpawn(rand: Random){
 		val (x, y, z) = floorCenter
-		val enderman = EntityMobAngryEnderman(world)
+		val enderman = EntityMobAngryEnderman(wrld)
 		
 		for(attempt in 1..50){
 			enderman.setPosition(x + 0.5 + rand.nextFloat(-SPAWN_AREA_BOX_RANGE_XZ, SPAWN_AREA_BOX_RANGE_XZ), y + 0.01, z + 0.5 + rand.nextFloat(-SPAWN_AREA_BOX_RANGE_XZ, SPAWN_AREA_BOX_RANGE_XZ))
@@ -222,7 +230,7 @@ class TileEntitySpawnerObsidianTower() : TileEntityBaseSpawner(){
 					enderman.addPotionEffect(effect.clone())
 				}
 				
-				world.spawnEntity(enderman)
+				wrld.addEntity(enderman)
 				enderman.spawnExplosionParticle()
 				break
 			}
@@ -231,29 +239,29 @@ class TileEntitySpawnerObsidianTower() : TileEntityBaseSpawner(){
 	
 	// Serialization
 	
-	override fun writeNBT(nbt: TagCompound, context: Context) = with(nbt){
+	override fun writeNBT(nbt: TagCompound, context: Context) = nbt.use {
 		super.writeNBT(nbt, context)
 		
 		if (context == STORAGE){
-			setPos(TOWER_OFFSET_TAG, offset)
-			setEnum(TOWER_LEVEL_TAG, level)
-			setInteger(REMAINING_MOB_SPAWNS_TAG, remainingMobSpawns)
-			setInteger(NEXT_SPAWN_COOLDOWN_TAG, nextSpawnCooldown)
+			putPos(TOWER_OFFSET_TAG, offset)
+			putEnum(TOWER_LEVEL_TAG, level)
+			putInt(REMAINING_MOB_SPAWNS_TAG, remainingMobSpawns)
+			putInt(NEXT_SPAWN_COOLDOWN_TAG, nextSpawnCooldown)
 		}
 		
-		setList(TOWER_EFFECTS_TAG, NBTObjectList.of(effects.map { it.writeCustomPotionEffectToNBT(TagCompound()) }))
+		putList(TOWER_EFFECTS_TAG, NBTObjectList.of(effects.map { it.write(TagCompound()) }))
 	}
 	
-	override fun readNBT(nbt: TagCompound, context: Context) = with(nbt){
+	override fun readNBT(nbt: TagCompound, context: Context) = nbt.use {
 		super.readNBT(nbt, context)
 		
 		if (context == STORAGE){
 			offset = getPos(TOWER_OFFSET_TAG)
 			level = getEnum<ObsidianTowerSpawnerLevel>(TOWER_LEVEL_TAG) ?: level
-			remainingMobSpawns = getInteger(REMAINING_MOB_SPAWNS_TAG)
-			nextSpawnCooldown = getInteger(NEXT_SPAWN_COOLDOWN_TAG)
+			remainingMobSpawns = getInt(REMAINING_MOB_SPAWNS_TAG)
+			nextSpawnCooldown = getInt(NEXT_SPAWN_COOLDOWN_TAG)
 		}
 		
-		effects = getListOfCompounds(TOWER_EFFECTS_TAG).mapNotNull { PotionEffect.readCustomPotionEffectFromNBT(it) }.toTypedArray()
+		effects = getListOfCompounds(TOWER_EFFECTS_TAG).mapNotNull { EffectInstance.read(it) }.toTypedArray()
 	}
 }

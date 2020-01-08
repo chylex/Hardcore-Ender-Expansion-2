@@ -1,5 +1,4 @@
 package chylex.hee.game.entity.item
-import chylex.hee.game.block.info.BlockBuilder.Companion.INDESTRUCTIBLE_HARDNESS
 import chylex.hee.game.item.ItemFlintAndInfernium
 import chylex.hee.game.item.infusion.Infusion.FIRE
 import chylex.hee.game.item.infusion.Infusion.HARMLESS
@@ -11,37 +10,41 @@ import chylex.hee.game.item.infusion.InfusionTag
 import chylex.hee.game.particle.spawner.ParticleSpawnerVanilla
 import chylex.hee.game.particle.util.IShape.Point
 import chylex.hee.game.world.util.ExplosionBuilder
+import chylex.hee.proxy.Environment
+import chylex.hee.system.migration.vanilla.EntityItem
+import chylex.hee.system.migration.vanilla.EntityLivingBase
+import chylex.hee.system.migration.vanilla.EntityTNTPrimed
+import chylex.hee.system.migration.vanilla.Items
 import chylex.hee.system.util.TagCompound
 import chylex.hee.system.util.allInCenteredSphereMutable
-import chylex.hee.system.util.ceilToInt
-import chylex.hee.system.util.component1
-import chylex.hee.system.util.component2
-import chylex.hee.system.util.component3
-import chylex.hee.system.util.floorToInt
+import chylex.hee.system.util.center
 import chylex.hee.system.util.getMaterial
-import chylex.hee.system.util.getState
 import chylex.hee.system.util.heeTag
-import chylex.hee.system.util.motionVec
+import chylex.hee.system.util.motionY
 import chylex.hee.system.util.nextFloat
 import chylex.hee.system.util.nextItem
 import chylex.hee.system.util.nextRounded
 import chylex.hee.system.util.remapRange
+import chylex.hee.system.util.use
 import net.minecraft.block.material.Material
-import net.minecraft.entity.EntityLivingBase
+import net.minecraft.entity.EntityType
 import net.minecraft.entity.MoverType
 import net.minecraft.entity.MoverType.SELF
-import net.minecraft.entity.item.EntityItem
-import net.minecraft.entity.item.EntityTNTPrimed
+import net.minecraft.inventory.Inventory
 import net.minecraft.item.ItemStack
-import net.minecraft.item.crafting.FurnaceRecipes
-import net.minecraft.util.EnumParticleTypes.SMOKE_NORMAL
-import net.minecraft.util.math.AxisAlignedBB
+import net.minecraft.item.crafting.IRecipeType.SMELTING
+import net.minecraft.network.IPacket
+import net.minecraft.particles.ParticleTypes.SMOKE
 import net.minecraft.util.math.BlockPos
+import net.minecraft.util.math.Vec3d
 import net.minecraft.world.Explosion
 import net.minecraft.world.World
-import net.minecraft.world.WorldServer
+import net.minecraft.world.server.ServerWorld
 import net.minecraft.world.storage.loot.LootContext
-import net.minecraft.world.storage.loot.LootTableList
+import net.minecraft.world.storage.loot.LootParameterSets
+import net.minecraft.world.storage.loot.LootParameters
+import net.minecraft.world.storage.loot.LootTables
+import net.minecraftforge.fml.network.NetworkHooks
 
 class EntityInfusedTNT : EntityTNTPrimed{
 	private companion object{
@@ -51,27 +54,34 @@ class EntityInfusedTNT : EntityTNTPrimed{
 		private const val HAS_INFERNIUM_TAG = "HasInfernium"
 		private const val HAS_PHASED_TAG = "HasPhased"
 		
-		private val PARTICLE_TICK = ParticleSpawnerVanilla(SMOKE_NORMAL)
+		private val PARTICLE_TICK = ParticleSpawnerVanilla(SMOKE)
 		
 		// EntityItem construction
 		
-		private val constructRawItem: (World, Double, Double, Double, ItemStack) -> EntityItem = ::EntityItem
+		private val constructRawItem: (World, Vec3d, ItemStack) -> EntityItem = { world, pos, stack ->
+			EntityItem(world, pos.x, pos.y, pos.z, stack)
+		}
 		
-		private val constructCookedItem: (World, Double, Double, Double, ItemStack) -> EntityItem = { world, x, y, z, stack ->
-			FurnaceRecipes.instance().getSmeltingResult(stack).let {
-				if (it.isEmpty)
-					constructRawItem(world, x, y, z, stack)
+		private val constructCookedItem: (World, Vec3d, ItemStack) -> EntityItem = { world, pos, stack ->
+			world.recipeManager.getRecipe(SMELTING, Inventory(stack), world).orElse(null).let {
+				if (it == null)
+					constructRawItem(world, pos, stack)
 				else
-					EntityItemFreshlyCooked(world, x, y, z, it)
+					EntityItemFreshlyCooked(world, pos, it.recipeOutput.copy())
 			}
 		}
 	}
 	
-	@Suppress("unused")
-	constructor(world: World) : super(world)
+	private var infusions = InfusionList.EMPTY
+	private var hasInferniumPower = false
+	private var hasPhasedIntoWall = false
 	
-	@Suppress("NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS") // UPDATE
+	@Suppress("unused")
+	constructor(type: EntityType<EntityInfusedTNT>, world: World) : super(type, world)
+	
+	@Suppress("NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS")
 	constructor(world: World, pos: BlockPos, infusions: InfusionList, igniter: EntityLivingBase?, infernium: Boolean) : super(world, pos.x + 0.5, pos.y.toDouble(), pos.z + 0.5, igniter){
+		// UPDATE
 		loadInfusions(infusions)
 		this.hasInferniumPower = infernium
 	}
@@ -80,16 +90,16 @@ class EntityInfusedTNT : EntityTNTPrimed{
 		fuse = rand.nextInt(fuse / 4) + (fuse / 8)
 	}
 	
-	private var infusions = InfusionList.EMPTY
-	private var hasInferniumPower = false
-	private var hasPhasedIntoWall = false
+	override fun createSpawnPacket(): IPacket<*>{
+		return NetworkHooks.getEntitySpawningPacket(this)
+	}
 	
 	private fun loadInfusions(infusions: InfusionList){
 		this.infusions = infusions
 		this.noClip = infusions.has(PHASING)
 	}
 	
-	override fun onUpdate(){
+	override fun tick(){
 		prevPosX = posX
 		prevPosY = posY
 		prevPosZ = posZ
@@ -98,19 +108,15 @@ class EntityInfusedTNT : EntityTNTPrimed{
 			motionY -= 0.04
 		}
 		
-		move(SELF, motionX, motionY, motionZ)
-		motionX *= 0.98
-		motionY *= 0.98
-		motionZ *= 0.98
+		move(SELF, motion)
+		motion = motion.scale(0.98)
 		
 		if (onGround){
-			motionX *= 0.7
-			motionZ *= 0.7
-			motionY *= -0.5
+			motion = motion.mul(0.7, -0.5, 0.7)
 		}
 		
 		if (--fuse <= 0){
-			setDead()
+			remove()
 			blowUp()
 		}
 		else{
@@ -121,11 +127,11 @@ class EntityInfusedTNT : EntityTNTPrimed{
 	
 	// Phasing
 	
-	override fun move(type: MoverType, x: Double, y: Double, z: Double){
+	override fun move(type: MoverType, by: Vec3d){
 		if (noClip && type == SELF){
 			collideWithIndestructibleBlocks()
 			
-			if (world.collidesWithAnyBlock(entityBoundingBox)){
+			if (!world.areCollisionShapesEmpty(boundingBox)){
 				hasPhasedIntoWall = true
 			}
 			else if (hasPhasedIntoWall && fuse > PHASING_INSTANT_FUSE_TICKS){
@@ -133,14 +139,15 @@ class EntityInfusedTNT : EntityTNTPrimed{
 			}
 		}
 		else{
-			super.move(type, x, y, z)
+			super.move(type, by)
 		}
 	}
 	
 	private fun collideWithIndestructibleBlocks(){
+		/* UPDATE
 		val (prevMotX, prevMotY, prevMotZ) = motionVec
 		
-		val collisionBoxes = getCollisionBoxesForIndestructibleBlocks(entityBoundingBox.expand(motionX, motionY, motionZ))
+		val collisionBoxes = getCollisionBoxesForIndestructibleBlocks(boundingBox.expand(motionX, motionY, motionZ))
 		
 		val newMotY = moveWithCollisionCheck(collisionBoxes, motionY, AxisAlignedBB::calculateYOffset){ offset(0.0, it, 0.0) }
 		val newMotX = moveWithCollisionCheck(collisionBoxes, motionX, AxisAlignedBB::calculateXOffset){ offset(it, 0.0, 0.0) }
@@ -168,9 +175,10 @@ class EntityInfusedTNT : EntityTNTPrimed{
 		
 		if (changedMotY){
 			motionY = 0.0
-		}
+		}*/
 	}
 	
+	/* UPDATE
 	private fun getCollisionBoxesForIndestructibleBlocks(box: AxisAlignedBB): List<AxisAlignedBB>{
 		val minX = box.minX.floorToInt() - 1
 		val minY = box.minY.floorToInt() - 1
@@ -214,15 +222,15 @@ class EntityInfusedTNT : EntityTNTPrimed{
 			return initialMotion
 		}
 		
-		val boundingBox = entityBoundingBox
-		val finalOffset = collisionBoxes.fold(initialMotion){ acc, box -> box.calculateFunc(boundingBox, acc) }
+		val boundingBox2 = boundingBox // UPDATE
+		val finalOffset = collisionBoxes.fold(initialMotion){ acc, box -> box.calculateFunc(boundingBox2, acc) }
 		
 		if (finalOffset != 0.0){
-			entityBoundingBox = boundingBox.offsetFunc(finalOffset)
+			boundingBox = boundingBox2.offsetFunc(finalOffset)
 		}
 		
 		return finalOffset
-	}
+	}*/
 	
 	// Explosion handling
 	
@@ -286,21 +294,31 @@ class EntityInfusedTNT : EntityTNTPrimed{
 				else             -> remapRange(waterRatio, (0.4F)..(1.0F), (4.0F)..(5.8F))
 			}
 			
-			val lootContext = LootContext.Builder(world as WorldServer).build()
-			val lootTable = world.lootTableManager.getLootTableFromLocation(LootTableList.GAMEPLAY_FISHING)
+			val lootTable = Environment.getServer().lootTableManager.getLootTableFromLocation(LootTables.GAMEPLAY_FISHING)
+			val lootContext = LootContext.Builder(world as ServerWorld)
+				.withRandom(rand)
+				.withParameter(LootParameters.POSITION, position)
+				.withParameter(LootParameters.TOOL, ItemStack(Items.FISHING_ROD))
+				.build(LootParameterSets.FISHING)
 			
 			val constructItemEntity = if (cook) constructCookedItem else constructRawItem
 			
 			repeat(rand.nextRounded(dropAmount)){
-				for(droppedItem in lootTable.generateLootForPools(rand, lootContext)){ // there's ItemFishedEvent but it needs the hook entity...
-					val dropPos = rand.nextItem(foundWaterBlocks)
+				for(droppedItem in lootTable.generate(lootContext)){ // there's ItemFishedEvent but it needs the hook entity...
+					val dropPos = rand.nextItem(foundWaterBlocks).center.add(
+						rand.nextFloat(-0.25, 0.25),
+						rand.nextFloat(-0.25, 0.25),
+						rand.nextFloat(-0.25, 0.25)
+					)
 					
-					constructItemEntity(world, dropPos.x + rand.nextFloat(0.25, 0.75), dropPos.y + rand.nextFloat(0.25, 0.75), dropPos.z + rand.nextFloat(0.25, 0.75), droppedItem).apply {
-						motionX = rand.nextFloat(-0.25, 0.25)
-						motionZ = rand.nextFloat(-0.25, 0.25)
-						motionY = rand.nextFloat(1.0, 1.2) // UPDATE: 1.13 makes items float upwards, review this
+					constructItemEntity(world, dropPos, droppedItem).apply {
+						motion = Vec3d(
+							rand.nextFloat(-0.25, 0.25),
+							rand.nextFloat(1.0, 1.2), // UPDATE: 1.13 makes items float upwards, review this
+							rand.nextFloat(-0.25, 0.25)
+						)
 						
-						world.spawnEntity(this)
+						world.addEntity(this)
 					}
 				}
 			}
@@ -309,16 +327,16 @@ class EntityInfusedTNT : EntityTNTPrimed{
 	
 	// Serialization
 	
-	override fun writeEntityToNBT(nbt: TagCompound) = with(nbt.heeTag){
-		super.writeEntityToNBT(nbt)
+	override fun writeAdditional(nbt: TagCompound) = nbt.heeTag.use {
+		super.writeAdditional(nbt)
 		
 		InfusionTag.setList(this, infusions)
-		setBoolean(HAS_INFERNIUM_TAG, hasInferniumPower)
-		setBoolean(HAS_PHASED_TAG, hasPhasedIntoWall)
+		putBoolean(HAS_INFERNIUM_TAG, hasInferniumPower)
+		putBoolean(HAS_PHASED_TAG, hasPhasedIntoWall)
 	}
 	
-	override fun readEntityFromNBT(nbt: TagCompound) = with(nbt.heeTag){
-		super.readEntityFromNBT(nbt)
+	override fun readAdditional(nbt: TagCompound) = nbt.heeTag.use {
+		super.readAdditional(nbt)
 		
 		loadInfusions(InfusionTag.getList(this))
 		hasInferniumPower = getBoolean(HAS_INFERNIUM_TAG)

@@ -12,11 +12,12 @@ import net.minecraft.client.renderer.texture.TextureAtlasSprite
 import net.minecraft.util.math.BlockPos
 import net.minecraft.world.World
 import net.minecraftforge.client.event.TextureStitchEvent
-import net.minecraftforge.client.model.animation.FastTESR
+import net.minecraftforge.client.model.animation.TileEntityRendererFast
+import net.minecraftforge.fml.common.Mod.EventBusSubscriber.Bus.MOD
 
 @Sided(Side.CLIENT)
-@SubscribeAllEvents(Side.CLIENT, modid = HEE.ID)
-object RenderTileExperienceGate : FastTESR<TileEntityExperienceGate>(){
+@SubscribeAllEvents(Side.CLIENT, modid = HEE.ID, bus = MOD)
+object RenderTileExperienceGate : TileEntityRendererFast<TileEntityExperienceGate>(){
 	private const val SPRITE_COUNT = 40
 	
 	private val TEX = Array(SPRITE_COUNT){ Resource.Custom("block/experience_gate_top_bar_$it") }
@@ -43,14 +44,22 @@ object RenderTileExperienceGate : FastTESR<TileEntityExperienceGate>(){
 	@JvmStatic
 	@SubscribeEvent
 	fun onTextureStitchPre(e: TextureStitchEvent.Pre){
-		with(e.map){
-			TEX.forEach { registerSprite(it) }
+		if (e.map.basePath != "textures/block"){
+			return
+		}
+		
+		with(e){
+			TEX.forEach { addSprite(it) }
 		}
 	}
 	
 	@JvmStatic
 	@SubscribeEvent
 	fun onTextureStitchPost(e: TextureStitchEvent.Post){
+		if (e.map.basePath != "textures/block"){
+			return
+		}
+		
 		SPRITES.clear()
 		
 		with(e.map){
@@ -62,8 +71,8 @@ object RenderTileExperienceGate : FastTESR<TileEntityExperienceGate>(){
 		return FRAMES[index].getOrNull((frame - FRAME_OFFSETS[index]).coerceAtMost(FRAMES[index].lastIndex))?.let(SPRITES::getOrNull)
 	}
 	
-	override fun renderTileEntityFast(tile: TileEntityExperienceGate, x: Double, y: Double, z: Double, partialTicks: Float, destroyStage: Int, partial: Float, buffer: BufferBuilder){
-		val world = tile.world
+	override fun renderTileEntityFast(tile: TileEntityExperienceGate, x: Double, y: Double, z: Double, partialTicks: Float, destroyStage: Int, buffer: BufferBuilder){
+		val world = tile.world ?: return
 		val pos = tile.pos
 		
 		val progress = tile.chargeProgress

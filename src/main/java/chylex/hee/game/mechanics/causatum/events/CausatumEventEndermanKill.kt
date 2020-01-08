@@ -6,7 +6,9 @@ import chylex.hee.game.entity.technical.EntityTechnicalCausatumEvent
 import chylex.hee.game.entity.technical.EntityTechnicalCausatumEvent.ICausatumEventHandler
 import chylex.hee.game.entity.util.SerializedEntity
 import chylex.hee.game.world.util.Teleporter.Companion.FxTeleportData
-import chylex.hee.system.util.NBTList.Companion.setList
+import chylex.hee.system.migration.Facing.DOWN
+import chylex.hee.system.migration.vanilla.EntityPlayer
+import chylex.hee.system.util.NBTList.Companion.putList
 import chylex.hee.system.util.NBTObjectList
 import chylex.hee.system.util.Pos
 import chylex.hee.system.util.TagCompound
@@ -25,9 +27,7 @@ import chylex.hee.system.util.offsetUntil
 import chylex.hee.system.util.posVec
 import chylex.hee.system.util.removeItemOrNull
 import chylex.hee.system.util.square
-import net.minecraft.entity.player.EntityPlayer
-import net.minecraft.nbt.NBTTagCompound
-import net.minecraft.util.EnumFacing.DOWN
+import chylex.hee.system.util.use
 import net.minecraft.util.math.Vec3d
 import net.minecraft.world.World
 
@@ -65,7 +65,7 @@ class CausatumEventEndermanKill() : ICausatumEventHandler{
 				despawn(world, muppet)
 			}
 			
-			entity.setDead()
+			entity.remove()
 			return
 		}
 		
@@ -74,7 +74,7 @@ class CausatumEventEndermanKill() : ICausatumEventHandler{
 				val muppet = rand.removeItemOrNull(muppets)
 				
 				if (muppet == null){
-					entity.setDead()
+					entity.remove()
 					return
 				}
 				
@@ -92,9 +92,9 @@ class CausatumEventEndermanKill() : ICausatumEventHandler{
 		
 		muppets.removeAll {
 			with(it.get(world) as? EntityMobEndermanMuppet ?: return@removeAll true){
-				lookHelper.setLookPosition(lookX, lookY, lookZ, horizontalFaceSpeed.toFloat(), verticalFaceSpeed.toFloat())
+				lookController.setLookPosition(lookX, lookY, lookZ, horizontalFaceSpeed.toFloat(), verticalFaceSpeed.toFloat())
 				
-				if (lastDamageSource?.trueSource is EntityPlayer || world.getClosestPlayerToEntity(this, 2.0) != null){
+				if (lastDamageSource?.trueSource is EntityPlayer || world.getClosestPlayer(this, 2.0) != null){
 					if (timer < DESPAWN_START_TIME){
 						timer = DESPAWN_START_TIME
 					}
@@ -121,13 +121,10 @@ class CausatumEventEndermanKill() : ICausatumEventHandler{
 			if (testY != null){
 				muppet.setPosition(testVec.x, testY.y + 1.01, testVec.z)
 				
-				val aabb = muppet.entityBoundingBox
-				
 				if (muppet.getDistanceSq(deathPos.x, deathPos.y, deathPos.z) > square(4.0) &&
-					world.getClosestPlayerToEntity(muppet, 7.0) == null &&
-					world.checkNoEntityCollision(aabb) &&
-					world.getCollisionBoxes(muppet, aabb).isEmpty() &&
-					!world.containsAnyLiquid(aabb)
+					world.getClosestPlayer(muppet, 7.0) == null &&
+					world.areCollisionShapesEmpty(muppet) && // UPDATE necessary?
+					muppet.isNotColliding(world)
 				){
 					val endPoint = muppet.posVec.addY(muppet.height * 0.5)
 					val startPoint = endPoint.addY(64.0)
@@ -137,15 +134,15 @@ class CausatumEventEndermanKill() : ICausatumEventHandler{
 					val (lookX, lookY, lookZ) = getLookPos(world)
 					
 					with(muppet){
-						lookHelper.setLookPosition(lookX, lookY, lookZ, 360F, 180F)
-						lookHelper.onUpdateLook()
+						lookController.setLookPosition(lookX, lookY, lookZ, 360F, 180F)
+						lookController.tick()
 						
 						prevRotationYawHead = rotationYawHead
 						prevRotationYaw = rotationYawHead
 						rotationYaw = rotationYawHead
 					}
 					
-					world.spawnEntity(muppet)
+					world.addEntity(muppet)
 					return SerializedEntity(muppet)
 				}
 			}
@@ -163,23 +160,23 @@ class CausatumEventEndermanKill() : ICausatumEventHandler{
 	}
 	
 	override fun serializeNBT() = TagCompound().apply {
-		setDouble(ENDERMAN_X_TAG, deathPos.x)
-		setDouble(ENDERMAN_Y_TAG, deathPos.y)
-		setDouble(ENDERMAN_Z_TAG, deathPos.z)
+		putDouble(ENDERMAN_X_TAG, deathPos.x)
+		putDouble(ENDERMAN_Y_TAG, deathPos.y)
+		putDouble(ENDERMAN_Z_TAG, deathPos.z)
 		
 		killer.writeToNBT(this, KILLER_TAG)
-		setList(MUPPETS_TAG, NBTObjectList.of(muppets.map { NBTTagCompound().apply { it.writeToNBT(this, MUPPET_TAG) } }))
+		putList(MUPPETS_TAG, NBTObjectList.of(muppets.map { TagCompound().apply { it.writeToNBT(this, MUPPET_TAG) } }))
 		
-		setInteger(TIMER_TAG, timer)
+		putInt(TIMER_TAG, timer)
 	}
 	
-	override fun deserializeNBT(nbt: TagCompound) = with(nbt){
+	override fun deserializeNBT(nbt: TagCompound) = nbt.use {
 		deathPos = Vec3d(getDouble(ENDERMAN_X_TAG), getDouble(ENDERMAN_Y_TAG), getDouble(ENDERMAN_Z_TAG))
 		
 		killer.readFromNBT(this, KILLER_TAG)
 		muppets.clear()
 		muppets.addAll(getListOfCompounds(MUPPETS_TAG).map { SerializedEntity().apply { readFromNBT(it, MUPPET_TAG) } })
 		
-		timer = getInteger(TIMER_TAG)
+		timer = getInt(TIMER_TAG)
 	}
 }

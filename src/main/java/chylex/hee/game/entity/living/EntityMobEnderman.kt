@@ -5,7 +5,7 @@ import chylex.hee.game.entity.living.ai.AITargetEyeContact
 import chylex.hee.game.entity.living.ai.AIWanderLand
 import chylex.hee.game.entity.living.ai.AIWatchTargetInShock
 import chylex.hee.game.entity.living.ai.util.AIToggle
-import chylex.hee.game.entity.living.ai.util.AIToggle.Companion.addTask
+import chylex.hee.game.entity.living.ai.util.AIToggle.Companion.addGoal
 import chylex.hee.game.entity.living.behavior.EndermanBlockHandler
 import chylex.hee.game.entity.living.behavior.EndermanTeleportHandler
 import chylex.hee.game.entity.living.behavior.EndermanWaterHandler
@@ -15,18 +15,22 @@ import chylex.hee.game.mechanics.causatum.CausatumStage
 import chylex.hee.game.mechanics.causatum.CausatumStage.S0_INITIAL
 import chylex.hee.game.mechanics.causatum.EnderCausatum
 import chylex.hee.game.mechanics.causatum.events.CausatumEventEndermanKill
-import chylex.hee.init.ModLoot
+import chylex.hee.init.ModEntities
 import chylex.hee.init.ModSounds
 import chylex.hee.system.migration.forge.SubscribeAllEvents
 import chylex.hee.system.migration.forge.SubscribeEvent
-import chylex.hee.system.migration.vanilla.Blocks
+import chylex.hee.system.migration.vanilla.EntityArrow
+import chylex.hee.system.migration.vanilla.EntityLivingBase
+import chylex.hee.system.migration.vanilla.EntityLlamaSpit
+import chylex.hee.system.migration.vanilla.EntityPlayer
+import chylex.hee.system.migration.vanilla.EntityPotion
+import chylex.hee.system.migration.vanilla.EntityThrowable
 import chylex.hee.system.util.AIAttackMelee
 import chylex.hee.system.util.AISwim
 import chylex.hee.system.util.AITargetEyeContact
 import chylex.hee.system.util.AIWatchIdle
-import chylex.hee.system.util.Pos
 import chylex.hee.system.util.TagCompound
-import chylex.hee.system.util.getAttribute
+import chylex.hee.system.util.facades.Resource
 import chylex.hee.system.util.heeTag
 import chylex.hee.system.util.nextFloat
 import chylex.hee.system.util.nextInt
@@ -34,38 +38,40 @@ import chylex.hee.system.util.playServer
 import chylex.hee.system.util.posVec
 import chylex.hee.system.util.selectEntities
 import chylex.hee.system.util.square
-import net.minecraft.block.state.IBlockState
-import net.minecraft.entity.EntityLivingBase
-import net.minecraft.entity.EnumCreatureType.MONSTER
+import chylex.hee.system.util.use
+import net.minecraft.block.BlockState
+import net.minecraft.entity.EntityClassification.MONSTER
+import net.minecraft.entity.EntityType
 import net.minecraft.entity.SharedMonsterAttributes.ATTACK_DAMAGE
 import net.minecraft.entity.SharedMonsterAttributes.FOLLOW_RANGE
 import net.minecraft.entity.SharedMonsterAttributes.MAX_HEALTH
-import net.minecraft.entity.monster.EntityEnderman
-import net.minecraft.entity.player.EntityPlayer
-import net.minecraft.entity.projectile.EntityArrow
-import net.minecraft.entity.projectile.EntityLlamaSpit
-import net.minecraft.entity.projectile.EntityPotion
-import net.minecraft.entity.projectile.EntityThrowable
+import net.minecraft.entity.SpawnReason
+import net.minecraft.entity.monster.MonsterEntity
 import net.minecraft.network.datasync.DataParameter
 import net.minecraft.util.DamageSource
-import net.minecraft.util.EntityDamageSourceIndirect
+import net.minecraft.util.IndirectEntityDamageSource
 import net.minecraft.util.ResourceLocation
 import net.minecraft.util.SoundCategory
 import net.minecraft.util.math.BlockPos
-import net.minecraft.world.EnumSkyBlock.BLOCK
+import net.minecraft.util.math.EntityRayTraceResult
+import net.minecraft.world.Difficulty
+import net.minecraft.world.IWorld
+import net.minecraft.world.LightType.BLOCK
 import net.minecraft.world.World
 import net.minecraft.world.biome.Biome
+import net.minecraft.world.biome.Biome.Category
 import net.minecraft.world.biome.Biome.SpawnListEntry
-import net.minecraft.world.biome.BiomeEnd
-import net.minecraft.world.biome.BiomeHell
-import net.minecraft.world.biome.BiomeHellDecorator
 import net.minecraftforge.event.entity.ProjectileImpactEvent
+import net.minecraftforge.registries.ForgeRegistries
+import java.util.Random
 import kotlin.math.abs
 import kotlin.math.min
 import kotlin.math.pow
 
 @SubscribeAllEvents(modid = HEE.ID)
-class EntityMobEnderman(world: World) : EntityMobAbstractEnderman(world){
+class EntityMobEnderman(type: EntityType<EntityMobEnderman>, world: World) : EntityMobAbstractEnderman(type, world){
+	constructor(world: World) : this(ModEntities.ENDERMAN, world)
+	
 	companion object{
 		private const val TELEPORT_HANDLER_TAG = "Teleport"
 		private const val WATER_HANDLER_TAG = "Water"
@@ -96,7 +102,7 @@ class EntityMobEnderman(world: World) : EntityMobAbstractEnderman(world){
 		@JvmStatic
 		@SubscribeEvent
 		fun onProjectileImpact(e: ProjectileImpactEvent){
-			val enderman = e.rayTraceResult.entityHit
+			val enderman = (e.rayTraceResult as? EntityRayTraceResult)?.entity
 			
 			if (enderman !is EntityMobEnderman){
 				return
@@ -126,7 +132,7 @@ class EntityMobEnderman(world: World) : EntityMobAbstractEnderman(world){
 			
 			enderman.revengeTarget = when(projectile){
 				is EntityThrowable -> projectile.thrower
-				is EntityArrow -> projectile.shootingEntity as? EntityLivingBase
+				is EntityArrow -> projectile.shooter as? EntityLivingBase
 				else -> return
 			}
 		}
@@ -134,19 +140,19 @@ class EntityMobEnderman(world: World) : EntityMobAbstractEnderman(world){
 		// Biome spawns
 		
 		private fun isBiomeBlacklisted(biome: Biome): Boolean{
-			return biome is BiomeEnd || biome is BiomeHell || biome.decorator is BiomeHellDecorator || biome.topBlock.block === Blocks.NETHERRACK
+			return biome.category.let { it == Category.NETHER || it == Category.THEEND }
 		}
 		
 		private fun isEndermanEntry(entry: SpawnListEntry): Boolean{
-			return EntityEnderman::class.java.isAssignableFrom(entry.entityClass)
+			return entry.entityType == EntityType.ENDERMAN
 		}
 		
 		fun setupBiomeSpawns(){
-			for(biome in Biome.REGISTRY){
-				val monsters = biome.getSpawnableList(MONSTER)
+			for(biome in ForgeRegistries.BIOMES){
+				val monsters = biome.getSpawns(MONSTER)
 				
 				if (isBiomeBlacklisted(biome)){
-					monsters.removeIf(::isEndermanEntry)
+					monsters.removeAll(::isEndermanEntry)
 				}
 				else{
 					val totalWeight = monsters.sumBy { it.itemWeight }                              // default 515
@@ -156,12 +162,39 @@ class EntityMobEnderman(world: World) : EntityMobAbstractEnderman(world){
 						val newSingleWeight = (2 * endermanWeight) + (totalWeight / 20) // should be about 45 for most biomes
 						val newGroupWeight = (2 * endermanWeight) / 3                   // should be about 4 for most biomes
 						
-						monsters.removeIf(::isEndermanEntry)
-						monsters.add(SpawnListEntry(EntityMobEnderman::class.java, newSingleWeight, 1, 1))
-						monsters.add(SpawnListEntry(EntityMobEnderman::class.java, newGroupWeight, 2, 3))
+						monsters.removeAll(::isEndermanEntry)
+						monsters.add(SpawnListEntry(ModEntities.ENDERMAN, newSingleWeight, 1, 1))
+						monsters.add(SpawnListEntry(ModEntities.ENDERMAN, newGroupWeight, 2, 3))
 					}
 				}
 			}
+		}
+		
+		// Spawn conditions
+		
+		fun canSpawnAt(type: EntityType<out MonsterEntity>, world: IWorld, reason: SpawnReason, pos: BlockPos, rand: Random): Boolean{
+			return world.difficulty != Difficulty.PEACEFUL && checkSpawnLightLevel(world, pos, rand) && canSpawnOn(type, world, reason, pos, rand)
+		}
+		
+		private fun checkSpawnLightLevel(world: IWorld, pos: BlockPos, rand: Random): Boolean{
+			if (world.world.isRainingAt(pos)){
+				return false
+			}
+			
+			if (world.getLightFor(BLOCK, pos) >= rand.nextInt(4, 8)){
+				return false
+			}
+			
+			return !world.dimension.isSurfaceWorld || checkSkylightLevel(world, rand)
+		}
+		
+		private fun checkSkylightLevel(world: IWorld, rand: Random): Boolean{
+			val skylight = world.skylightSubtracted // goes from 0 (day) to 11 (night)
+			val endermen = world.selectEntities.inDimension<EntityMobEnderman>().size
+			
+			val extra = min(5, world.players.count { !it.isSpectator } - 1) // TODO use chunk set for better precision
+			
+			return (skylight >= 11 && endermen <= 40 + (extra * 5)) || (skylight >= rand.nextInt(3, 9) && endermen < (skylight * 2) + (extra * 2))
 		}
 	}
 	
@@ -192,8 +225,8 @@ class EntityMobEnderman(world: World) : EntityMobAbstractEnderman(world){
 	
 	// Initialization
 	
-	override fun applyEntityAttributes(){
-		super.applyEntityAttributes()
+	override fun registerAttributes(){
+		super.registerAttributes()
 		
 		getAttribute(MAX_HEALTH).baseValue = 40.0
 		getAttribute(ATTACK_DAMAGE).baseValue = 5.0
@@ -202,7 +235,7 @@ class EntityMobEnderman(world: World) : EntityMobAbstractEnderman(world){
 		experienceValue = 10
 	}
 	
-	override fun initEntityAI(){
+	override fun registerGoals(){
 		teleportHandler = EndermanTeleportHandler(this)
 		waterHandler = EndermanWaterHandler(this, takeDamageAfterWetTicks = 80)
 		blockHandler = EndermanBlockHandler(this)
@@ -215,28 +248,28 @@ class EntityMobEnderman(world: World) : EntityMobAbstractEnderman(world){
 		aiPickUpBlocks = AIToggle()
 		aiPickUpBlocks.enabled = rand.nextInt(5) == 0
 		
-		tasks.addTask(1, AISwim(this))
-		tasks.addTask(2, aiWatchTargetInShock)
-		tasks.addTask(3, AIAttackMelee(this, movementSpeed = 1.0, chaseAfterLosingSight = false), aiAttackTarget)
-		tasks.addTask(4, AIWanderLand(this, movementSpeed = 0.9, chancePerTick = 70))
-		tasks.addTask(5, AIWatchIdle(this))
-		tasks.addTask(6, AIPickUpBlock(this, ticksPerAttempt = 20 * 30, handler = blockHandler), aiPickUpBlocks)
+		goalSelector.addGoal(1, AISwim(this))
+		goalSelector.addGoal(2, aiWatchTargetInShock)
+		goalSelector.addGoal(3, AIAttackMelee(this, movementSpeed = 1.0, chaseAfterLosingSight = false), aiAttackTarget)
+		goalSelector.addGoal(4, AIWanderLand(this, movementSpeed = 0.9, chancePerTick = 70))
+		goalSelector.addGoal(5, AIWatchIdle(this))
+		goalSelector.addGoal(6, AIPickUpBlock(this, ticksPerAttempt = 20 * 30, handler = blockHandler), aiPickUpBlocks)
 		
-		targetTasks.addTask(1, AITargetEyeContact(this, fieldOfView = 140F, headRadius = 0.19F, minStareTicks = 9, easilyReachableOnly = false, targetPredicate = ::canTriggerEyeContact))
+		targetSelector.addGoal(1, AITargetEyeContact(this, fieldOfView = 140F, headRadius = 0.19F, minStareTicks = 9, easilyReachableOnly = false, targetPredicate = ::canTriggerEyeContact))
 	}
 	
 	// Behavior
 	
-	override fun onLivingUpdate(){
-		if (isAggressive){
+	override fun livingTick(){
+		if (isAggro){
 			with(HEE.proxy){
 				pauseParticles()
-				super.onLivingUpdate()
+				super.livingTick()
 				resumeParticles()
 			}
 		}
 		else{
-			super.onLivingUpdate()
+			super.livingTick()
 		}
 		
 		if (!world.isRemote){
@@ -290,12 +323,12 @@ class EntityMobEnderman(world: World) : EntityMobAbstractEnderman(world){
 	override fun notifyDataManagerChange(key: DataParameter<*>){
 		super.notifyDataManagerChange(key)
 		
-		if (key === SCREAMING && world.isRemote && isAggressive){
+		if (key === SCREAMING && world.isRemote && isAggro){
 			// TODO sound fx
 		}
 	}
 	
-	override fun setHeldBlockState(state: IBlockState?){
+	override fun setHeldBlockState(state: BlockState?){
 		super.setHeldBlockState(state)
 		
 		if (state == null){
@@ -320,7 +353,7 @@ class EntityMobEnderman(world: World) : EntityMobAbstractEnderman(world){
 	
 	private fun beginStare(durationTicks: Int){
 		aiWatchTargetInShock.startWatching(durationTicks)
-		aiWatchTargetInShock.updateTask() // forces look update for teleportation
+		aiWatchTargetInShock.tick() // forces look update for teleportation
 		idleTime = 0
 	}
 	
@@ -355,7 +388,7 @@ class EntityMobEnderman(world: World) : EntityMobAbstractEnderman(world){
 		if (newTarget == null){
 			super.setAttackTarget(null)
 			trackedCausatumStage = null
-			isAggressive = false
+			isAggro = false
 		}
 		else if (newTarget is EntityPlayer){
 			val currentStage = trackedCausatumStage
@@ -374,10 +407,10 @@ class EntityMobEnderman(world: World) : EntityMobAbstractEnderman(world){
 			}
 			else{
 				aiAttackTarget.enabled = true
-				isAggressive = true
+				isAggro = true
 			}
 			
-			if (targetTasks.taskEntries.any { it.using && it.action is AITargetEyeContact<*> }){
+			if (targetSelector.runningGoals.anyMatch { it.goal is AITargetEyeContact<*> }){
 				if (trackedCausatumStage == S0_INITIAL){
 					beginScaredStare()
 				}
@@ -441,7 +474,7 @@ class EntityMobEnderman(world: World) : EntityMobAbstractEnderman(world){
 				teleportHandler.teleportOutOfWorld()
 			}
 		}
-		else if (source is EntityDamageSourceIndirect){
+		else if (source is IndirectEntityDamageSource){
 			teleportHandler.teleportRandom(TELEPORT_RANGE_AVOID_BATTLE)
 			
 			if (revengeTarget == null){
@@ -473,7 +506,7 @@ class EntityMobEnderman(world: World) : EntityMobAbstractEnderman(world){
 				
 				EntityTechnicalCausatumEvent(world, CausatumEventEndermanKill(this, attacker)).apply {
 					setPosition(this@EntityMobEnderman.posX, this@EntityMobEnderman.posY, this@EntityMobEnderman.posZ)
-					world.spawnEntity(this)
+					world.addEntity(this)
 				}
 				
 				wasFirstKill = true
@@ -492,56 +525,33 @@ class EntityMobEnderman(world: World) : EntityMobAbstractEnderman(world){
 		return 1F
 	}
 	
-	override fun isValidLightLevel(): Boolean{
-		val pos = Pos(this)
-		
-		if (world.isRainingAt(pos)){
-			return false
-		}
-		
-		if (world.getLightFor(BLOCK, pos) >= rand.nextInt(4, 8)){
-			return false
-		}
-		
-		return !world.provider.isSurfaceWorld || checkSkylightLevel()
-	}
-	
-	private fun checkSkylightLevel(): Boolean{
-		val skylight = world.skylightSubtracted // goes from 0 (day) to 11 (night)
-		val endermen = world.loadedEntityList.count { it is EntityMobEnderman }
-		
-		val extra = min(5, world.playerEntities.count { !it.isSpectator } - 1) // TODO use chunk set for better precision
-		
-		return (skylight >= 11 && endermen <= 40 + (extra * 5)) || (skylight >= rand.nextInt(3, 9) && endermen < (skylight * 2) + (extra * 2))
-	}
-	
 	// Properties
 	
 	override fun getLootTable(): ResourceLocation{
 		return if (wasFirstKill)
-			ModLoot.ENDERMAN_FIRST_KILL
+			Resource.Custom("entities/enderman_first_kill")
 		else
-			ModLoot.ENDERMAN
+			Resource.Custom("entities/enderman")
 	}
 	
 	// Serialization
 	
-	override fun writeEntityToNBT(nbt: TagCompound) = with(nbt.heeTag){
-		super.writeEntityToNBT(nbt)
+	override fun writeAdditional(nbt: TagCompound) = nbt.heeTag.use {
+		super.writeAdditional(nbt)
 		
-		setTag(TELEPORT_HANDLER_TAG, teleportHandler.serializeNBT())
-		setTag(WATER_HANDLER_TAG, waterHandler.serializeNBT())
+		put(TELEPORT_HANDLER_TAG, teleportHandler.serializeNBT())
+		put(WATER_HANDLER_TAG, waterHandler.serializeNBT())
 		
-		setBoolean(CAN_PICK_UP_BLOCKS_TAG, aiPickUpBlocks.enabled)
-		setShort(HELD_BLOCK_TIMER_TAG, heldBlockTimer)
-		setBoolean(HELD_BLOCK_DESPAWNS_TAG, heldBlockDespawns)
+		putBoolean(CAN_PICK_UP_BLOCKS_TAG, aiPickUpBlocks.enabled)
+		putShort(HELD_BLOCK_TIMER_TAG, heldBlockTimer)
+		putBoolean(HELD_BLOCK_DESPAWNS_TAG, heldBlockDespawns)
 	}
 	
-	override fun readEntityFromNBT(nbt: TagCompound) = with(nbt.heeTag){
-		super.readEntityFromNBT(nbt)
+	override fun readAdditional(nbt: TagCompound) = nbt.heeTag.use {
+		super.readAdditional(nbt)
 		
-		teleportHandler.deserializeNBT(getCompoundTag(TELEPORT_HANDLER_TAG))
-		waterHandler.deserializeNBT(getCompoundTag(WATER_HANDLER_TAG))
+		teleportHandler.deserializeNBT(getCompound(TELEPORT_HANDLER_TAG))
+		waterHandler.deserializeNBT(getCompound(WATER_HANDLER_TAG))
 		
 		aiPickUpBlocks.enabled = getBoolean(CAN_PICK_UP_BLOCKS_TAG)
 		heldBlockTimer = getShort(HELD_BLOCK_TIMER_TAG)

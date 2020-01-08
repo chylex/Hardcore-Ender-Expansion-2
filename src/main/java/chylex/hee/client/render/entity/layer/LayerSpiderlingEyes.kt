@@ -8,29 +8,29 @@ import chylex.hee.game.entity.living.EntityMobSpiderling
 import chylex.hee.system.migration.forge.Side
 import chylex.hee.system.migration.forge.Sided
 import chylex.hee.system.util.facades.Resource
-import net.minecraft.client.model.ModelRenderer
-import net.minecraft.client.renderer.OpenGlHelper
 import net.minecraft.client.renderer.entity.layers.LayerRenderer
+import net.minecraft.client.renderer.entity.model.RendererModel
+import net.minecraft.client.renderer.entity.model.SpiderModel
 
 @Sided(Side.CLIENT)
-class LayerSpiderlingEyes(private val spiderlingRenderer: RenderEntityMobSpiderling, private val headRenderer: ModelRenderer) : LayerRenderer<EntityMobSpiderling>{
+class LayerSpiderlingEyes(spiderlingRenderer: RenderEntityMobSpiderling, private val headRenderer: RendererModel) : LayerRenderer<EntityMobSpiderling, SpiderModel<EntityMobSpiderling>>(spiderlingRenderer){
 	private val texture = Resource.Custom("textures/entity/spiderling_eyes.png")
 	
-	override fun doRenderLayer(entity: EntityMobSpiderling, limbSwing: Float, limbSwingAmount: Float, partialTicks: Float, ageInTicks: Float, netHeadYaw: Float, headPitch: Float, scale: Float){
+	override fun render(entity: EntityMobSpiderling, limbSwing: Float, limbSwingAmount: Float, partialTicks: Float, ageInTicks: Float, netHeadYaw: Float, headPitch: Float, scale: Float){
 		if (entity.isSleeping){
 			return
 		}
 		
-		spiderlingRenderer.bindTexture(texture)
+		bindTexture(texture)
 		
-		GL.color(1F, 1F, 1F, 1F)
 		GL.disableAlpha()
 		GL.enableBlend()
 		GL.blendFunc(SF_ONE, DF_ONE)
 		GL.depthMask(!entity.isInvisible)
 		
-		OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 61680F, 0F)
-		MC.entityRenderer.setupFogColor(true)
+		GL.color(1F, 1F, 1F, 1F)
+		GL.setLightmapCoords(61680F, 0F)
+		MC.gameRenderer.setupFogColor(true)
 		
 		if (headPitch == 0F){
 			GL.pushMatrix()
@@ -42,9 +42,10 @@ class LayerSpiderlingEyes(private val spiderlingRenderer: RenderEntityMobSpiderl
 			headRenderer.render(scale)
 		}
 		
-		spiderlingRenderer.setLightmap(entity)
-		MC.entityRenderer.setupFogColor(false)
+		MC.gameRenderer.setupFogColor(false)
+		func_215334_a(entity) // UPDATE resets lightmap
 		
+		GL.depthMask(true)
 		GL.disableBlend()
 		GL.enableAlpha()
 	}

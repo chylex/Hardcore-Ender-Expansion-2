@@ -59,7 +59,7 @@ import chylex.hee.system.util.scale
 import chylex.hee.system.util.scaleY
 import chylex.hee.system.util.square
 import chylex.hee.system.util.withY
-import net.minecraft.util.EnumFacing
+import net.minecraft.util.Direction
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.Vec3d
 import java.util.Random
@@ -360,11 +360,11 @@ object Generator_TheHub : ITerritoryGenerator{
 			return portalCenterPos
 		}
 		
-		fun generatePath(world: SegmentedWorld, portalCenter: BlockPos, spawnIslandCenter: BlockPos): EnumFacing{
+		fun generatePath(world: SegmentedWorld, portalCenter: BlockPos, spawnIslandCenter: BlockPos): Direction{
 			return Path.generate(world, spawnIslandCenter, portalCenter)
 		}
 		
-		fun generatePortal(world: SegmentedWorld, rand: Random, portalCenter: BlockPos, pathFacing: EnumFacing){
+		fun generatePortal(world: SegmentedWorld, rand: Random, portalCenter: BlockPos, pathFacing: Direction){
 			Cutout.generate(world, portalCenter)
 			PortalGenerator.VoidPortalHub.place(world, portalCenter, radius = 2, outline = BlockReplacer(fill = Blocks.END_STONE, replace = Blocks.AIR), base = Blocks.END_STONE)
 			Pillars.generate(world, rand, portalCenter)
@@ -393,7 +393,7 @@ object Generator_TheHub : ITerritoryGenerator{
 		private object Path{
 			private const val PAINT_RADIUS = 2.5
 			
-			fun generate(world: SegmentedWorld, start: BlockPos, destination: BlockPos): EnumFacing{
+			fun generate(world: SegmentedWorld, start: BlockPos, destination: BlockPos): Direction{
 				val points = generatePoints(world.rand, start, destination)
 				
 				for((p1, p2) in points.zipWithNext()){

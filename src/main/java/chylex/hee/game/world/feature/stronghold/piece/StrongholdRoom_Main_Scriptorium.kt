@@ -5,7 +5,6 @@ import chylex.hee.game.world.feature.stronghold.connection.StrongholdConnection
 import chylex.hee.game.world.feature.stronghold.connection.StrongholdConnectionType.ROOM
 import chylex.hee.game.world.structure.IStructureWorld
 import chylex.hee.game.world.structure.piece.IStructurePieceConnection
-import chylex.hee.game.world.structure.trigger.FlowerPotStructureTrigger
 import chylex.hee.game.world.structure.trigger.LootChestStructureTrigger
 import chylex.hee.init.ModBlocks
 import chylex.hee.system.migration.Facing.EAST
@@ -19,7 +18,6 @@ import chylex.hee.system.util.facades.Facing4
 import chylex.hee.system.util.nextInt
 import chylex.hee.system.util.offsetUntil
 import chylex.hee.system.util.withFacing
-import net.minecraft.item.ItemStack
 
 class StrongholdRoom_Main_Scriptorium(file: String) : StrongholdAbstractPieceFromFile(file, StrongholdPieceType.ROOM){
 	override val connections = arrayOf<IStructurePieceConnection>(
@@ -35,7 +33,7 @@ class StrongholdRoom_Main_Scriptorium(file: String) : StrongholdAbstractPieceFro
 		
 		// Table
 		
-		world.addTrigger(Pos(centerX, 2, 1), FlowerPotStructureTrigger(ItemStack(Blocks.DEADBUSH)))
+		world.setBlock(Pos(centerX, 2, 1), Blocks.POTTED_DEAD_BUSH)
 		
 		// Chest
 		
@@ -59,7 +57,7 @@ class StrongholdRoom_Main_Scriptorium(file: String) : StrongholdAbstractPieceFro
 				if (world.isAir(testPos) && (isInAir || Facing4.any { !world.isAir(testPos.offset(it)) })){
 					val below = world.getBlock(testPos.down())
 					
-					if (below === Blocks.BOOKSHELF || below === Blocks.STONE_SLAB || StrongholdPieces.isStoneBrick(below)){
+					if (below === Blocks.BOOKSHELF || below === Blocks.STONE_SLAB || StrongholdPieces.isStoneBrick(below)){ // UPDATE test if slab still works
 						if (isInAir && rand.nextInt(4) == 0 && world.isAir(testPos.up())){
 							world.setBlock(testPos.up(), ModBlocks.ANCIENT_COBWEB)
 						}

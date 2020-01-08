@@ -5,7 +5,6 @@ import chylex.hee.init.ModPotions
 import chylex.hee.system.migration.vanilla.Items
 import chylex.hee.system.migration.vanilla.Potions
 import chylex.hee.system.util.floorToInt
-import net.minecraft.item.ItemFishFood.FishType.PUFFERFISH
 import net.minecraft.item.ItemStack
 import net.minecraft.potion.PotionUtils
 
@@ -21,7 +20,7 @@ object PotionBrewing{
 		PotionTypeInfo(Potions.JUMP_BOOST,      Duration(baseTicks = 2 min 30, stepTicks = 2 min 15,    maxSteps = 4), maxLevel = 3),
 		PotionTypeInfo(Potions.POISON,          Duration(baseTicks = 0 min 30, stepTicks = 0 min 30,    maxSteps = 3), maxLevel = 2),
 //		PotionTypeInfo(Potions.TURTLE_MASTER,   Duration(baseTicks = 0 min 20, stepTicks = 0 min 13.34, maxSteps = 3), maxLevel = 2), // UPDATE
-//		PotionTypeInfo(Potions.SLOW_FALLING,    Duration(baseTicks = 1 min 15, stepTicks = 1 min 15,    maxSteps = 3), maxLevel = 1), // UPDATE
+		PotionTypeInfo(Potions.SLOW_FALLING,    Duration(baseTicks = 1 min 15, stepTicks = 1 min 15,    maxSteps = 3), maxLevel = 1),
 		PotionTypeInfo(Potions.LEVITATION,      Duration(baseTicks = 0 min 30, stepTicks = 0 min 30,    maxSteps = 3), maxLevel = 2),
 		PotionTypeInfo(ModPotions.PURITY,       Duration(baseTicks = 2 min 30, stepTicks = 2 min 15,    maxSteps = 4), maxLevel = 3),
 //		PotionTypeInfo(ModPotions.CORRUPTION,   Duration(baseTicks = 0 min 20, stepTicks = 0 min 13.34, maxSteps = 3), maxLevel = 1), // TODO
@@ -38,25 +37,25 @@ object PotionBrewing{
 	// TODO register levitation type and other custom potions
 	
 	val AWKWARD = mapOf(
-		(Items.SPECKLED_MELON to 0)         to Potions.INSTANT_HEALTH,
-		(Items.MAGMA_CREAM to 0)            to Potions.FIRE_RESISTANCE,
-		(Items.GHAST_TEAR to 0)             to Potions.REGENERATION,
-		(Items.BLAZE_POWDER to 0)           to Potions.STRENGTH,
-		(Items.SUGAR to 0)                  to Potions.SPEED,
-		(Items.GOLDEN_CARROT to 0)          to Potions.NIGHT_VISION,
-		(Items.FISH to PUFFERFISH.metadata) to Potions.WATER_BREATHING, // UPDATE
-		(Items.RABBIT_FOOT to 0)            to Potions.JUMP_BOOST,
-		(Items.SPIDER_EYE to 0)             to Potions.POISON,
-		// UPDATE (Items.TURTLE_SHELL to 0)           to Potions.TURTLE_MASTER,
-		// UPDATE (Items.PHANTOM_MEMBRANE to 0)       to Potions.SLOW_FALLING,
-		(ModItems.DRAGON_SCALE to 0)        to Potions.LEVITATION,
-		(ModItems.PURITY_EXTRACT to 0)      to ModPotions.PURITY
+		Items.GLISTERING_MELON_SLICE to Potions.INSTANT_HEALTH,
+		Items.MAGMA_CREAM            to Potions.FIRE_RESISTANCE,
+		Items.GHAST_TEAR             to Potions.REGENERATION,
+		Items.BLAZE_POWDER           to Potions.STRENGTH,
+		Items.SUGAR                  to Potions.SPEED,
+		Items.GOLDEN_CARROT          to Potions.NIGHT_VISION,
+		Items.PUFFERFISH             to Potions.WATER_BREATHING,
+		Items.RABBIT_FOOT            to Potions.JUMP_BOOST,
+		Items.SPIDER_EYE             to Potions.POISON,
+		// UPDATE Items.SCUTE                  to Potions.TURTLE_MASTER,
+		Items.PHANTOM_MEMBRANE       to Potions.SLOW_FALLING,
+		ModItems.DRAGON_SCALE        to Potions.LEVITATION,
+		ModItems.PURITY_EXTRACT      to ModPotions.PURITY
 		// TODO (ModItems.INSTABILITY_ORB to 0)     to ModPotions.CORRUPTION,
 		// TODO (ModItems.MURKY_CRYSTAL to 0)       to Potions.BLINDNESS
 	)
 	
 	val WATER = mapOf(
-		(Items.FERMENTED_SPIDER_EYE to 0) to Potions.WEAKNESS
+		Items.FERMENTED_SPIDER_EYE to Potions.WEAKNESS
 	)
 	
 	val REVERSAL = mapOf(

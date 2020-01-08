@@ -4,25 +4,25 @@ import chylex.hee.client.util.MC
 import chylex.hee.system.migration.forge.Side
 import chylex.hee.system.migration.forge.Sided
 import chylex.hee.system.util.facades.Resource
-import net.minecraft.client.model.ModelRenderer
-import net.minecraft.client.model.ModelSkeletonHead
-import net.minecraft.client.renderer.tileentity.TileEntityItemStackRenderer
+import net.minecraft.client.renderer.entity.model.GenericHeadModel
+import net.minecraft.client.renderer.entity.model.RendererModel
+import net.minecraft.client.renderer.tileentity.ItemStackTileEntityRenderer
 import net.minecraft.entity.Entity
 import net.minecraft.item.ItemStack
 
 @Sided(Side.CLIENT)
 object RenderTileEndermanHead{
 	private val TEX_ENDERMAN = Resource.Custom("textures/entity/enderman_head.png")
-	private val MODEL_HEAD = ModelSkeletonHead(0, 0, 64, 32)
+	private val MODEL_HEAD = GenericHeadModel(0, 0, 64, 32)
 	
 	@Suppress("NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS")
 	private fun renderHead(){
 		MC.textureManager.bindTexture(TEX_ENDERMAN)
-		MODEL_HEAD.render(null, 0F, 0F, 0F, 180F, 0F, 0.0625F)
+		MODEL_HEAD.func_217104_a(0F, 0F, 0F, 180F, 0F, 0.0625F)
 	}
 	
-	object AsItem : TileEntityItemStackRenderer(){
-		override fun renderByItem(stack: ItemStack, partialTicks: Float){
+	object AsItem : ItemStackTileEntityRenderer(){
+		override fun renderByItem(stack: ItemStack){
 			GL.pushMatrix()
 			GL.disableCull()
 			
@@ -39,7 +39,7 @@ object RenderTileEndermanHead{
 	}
 	
 	object AsHeadLayer{
-		operator fun invoke(entity: Entity, headModel: ModelRenderer){
+		operator fun invoke(entity: Entity, headModel: RendererModel){
 			GL.pushMatrix()
 			GL.disableCull()
 			

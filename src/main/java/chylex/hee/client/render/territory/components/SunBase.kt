@@ -10,15 +10,15 @@ import chylex.hee.client.util.MC
 import chylex.hee.system.migration.forge.Side
 import chylex.hee.system.migration.forge.Sided
 import net.minecraft.client.Minecraft
-import net.minecraft.client.multiplayer.WorldClient
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats
+import net.minecraft.client.world.ClientWorld
 import net.minecraft.util.ResourceLocation
 import net.minecraft.util.math.Vec3d
 import net.minecraftforge.client.IRenderHandler
 import org.lwjgl.opengl.GL11.GL_GREATER
 import org.lwjgl.opengl.GL11.GL_QUADS
 
-abstract class SunBase : IRenderHandler(){
+abstract class SunBase : IRenderHandler{
 	protected companion object{
 		val DEFAULT_COLOR = Vec3d(1.0, 1.0, 1.0)
 		const val DEFAULT_ALPHA = 1F
@@ -31,13 +31,13 @@ abstract class SunBase : IRenderHandler(){
 	protected abstract val size: Double
 	protected open val distance = DEFAULT_DISTANCE
 	
-	protected open fun setRotation(world: WorldClient, partialTicks: Float){
+	protected open fun setRotation(world: ClientWorld, partialTicks: Float){
 		GL.rotate(-90F, 0F, 1F, 0F)
 		GL.rotate(world.getCelestialAngle(partialTicks) * 360F, 1F, 0F, 0F)
 	}
 	
 	@Sided(Side.CLIENT)
-	override fun render(partialTicks: Float, world: WorldClient, mc: Minecraft){
+	override fun render(ticks: Int, partialTicks: Float, world: ClientWorld, mc: Minecraft){
 		val width = size
 		val dist = distance
 		val col = color

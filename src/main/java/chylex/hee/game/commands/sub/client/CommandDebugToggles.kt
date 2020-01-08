@@ -1,10 +1,6 @@
 package chylex.hee.game.commands.sub.client
-import chylex.hee.game.commands.sub.ISubCommand
-import chylex.hee.game.world.WorldProviderEndCustom
-import net.minecraft.command.ICommandSender
-import net.minecraft.server.MinecraftServer
-import net.minecraft.util.text.TextComponentString
 
+/*
 internal object CommandDebugToggles : ISubCommand{
 	override val name = "debug"
 	override val usage = "commands.hee.debug.usage"
@@ -20,4 +16,4 @@ internal object CommandDebugToggles : ISubCommand{
 		
 		// TODO update
 	}
-}
+}*/

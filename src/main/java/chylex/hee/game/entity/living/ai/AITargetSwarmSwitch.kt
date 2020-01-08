@@ -1,11 +1,11 @@
 package chylex.hee.game.entity.living.ai
 import chylex.hee.game.entity.living.ai.util.AIBaseTargetFiltered
-import chylex.hee.system.util.AI_FLAG_NONE
+import chylex.hee.system.migration.vanilla.EntityCreature
+import chylex.hee.system.migration.vanilla.EntityLivingBase
 import chylex.hee.system.util.nextItemOrNull
 import chylex.hee.system.util.posVec
 import chylex.hee.system.util.selectExistingEntities
-import net.minecraft.entity.EntityCreature
-import net.minecraft.entity.EntityLivingBase
+import java.util.EnumSet
 
 class AITargetSwarmSwitch<T : EntityLivingBase>(
 	entity: EntityCreature,
@@ -14,7 +14,7 @@ class AITargetSwarmSwitch<T : EntityLivingBase>(
 	targetClass: Class<T>,
 	targetPredicate: ((T) -> Boolean)?,
 	rangeMultiplier: Float
-) : AIBaseTargetFiltered<T>(entity, checkSight, easilyReachableOnly, targetClass, targetPredicate, mutexBits = AI_FLAG_NONE){
+) : AIBaseTargetFiltered<T>(entity, checkSight, easilyReachableOnly, targetClass, targetPredicate, mutexBits = EnumSet.noneOf(Flag::class.java)){
 	private val rangeMultiplier = if (rangeMultiplier in 0F..1F) rangeMultiplier else throw IllegalArgumentException("rangeMultiplier must be between 0 and 1 (inclusive)")
 	
 	private var triggerRetarget = false

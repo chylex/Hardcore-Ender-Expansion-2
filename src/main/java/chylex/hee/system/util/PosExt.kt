@@ -3,22 +3,26 @@
 package chylex.hee.system.util
 import chylex.hee.game.world.util.PosXZ
 import chylex.hee.system.migration.Facing.UP
+import com.google.common.base.Function
 import com.google.common.collect.Iterables
 import net.minecraft.block.Block
+import net.minecraft.block.BlockState
 import net.minecraft.block.material.Material
-import net.minecraft.block.state.BlockFaceShape
-import net.minecraft.block.state.BlockFaceShape.SOLID
-import net.minecraft.block.state.IBlockState
 import net.minecraft.entity.Entity
+import net.minecraft.fluid.IFluidState
 import net.minecraft.tileentity.TileEntity
-import net.minecraft.util.EnumFacing
+import net.minecraft.util.Direction
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.BlockPos.MutableBlockPos
 import net.minecraft.util.math.ChunkPos
 import net.minecraft.util.math.Vec3d
-import net.minecraft.world.IBlockAccess
+import net.minecraft.world.IBlockReader
+import net.minecraft.world.IWorldReader
+import net.minecraft.world.IWorldWriter
 import net.minecraft.world.World
+import net.minecraftforge.common.util.Constants.BlockFlags
 import java.util.Stack
+import java.util.stream.Stream
 import kotlin.math.max
 import kotlin.math.min
 import kotlin.math.sqrt
@@ -45,93 +49,92 @@ val BlockPos.center
 // Constants
 
 const val FLAG_NONE             = 0
-const val FLAG_NOTIFY_NEIGHBORS = 1
-const val FLAG_SYNC_CLIENT      = 2
-const val FLAG_SKIP_RENDER      = 4
-const val FLAG_RENDER_IMMEDIATE = 8
+const val FLAG_NOTIFY_NEIGHBORS = BlockFlags.NOTIFY_NEIGHBORS
+const val FLAG_SYNC_CLIENT      = BlockFlags.BLOCK_UPDATE
+const val FLAG_SKIP_RENDER      = BlockFlags.NO_RERENDER
+const val FLAG_RENDER_IMMEDIATE = BlockFlags.RERENDER_MAIN_THREAD
 
 // Block getters
 
-inline fun BlockPos.isAir(world: IBlockAccess): Boolean{
+inline fun BlockPos.isAir(world: IWorldReader): Boolean{
 	return world.isAirBlock(this)
 }
 
-inline fun BlockPos.getBlock(world: IBlockAccess): Block{
+inline fun BlockPos.getBlock(world: IBlockReader): Block{
 	return world.getBlockState(this).block
 }
 
-inline fun BlockPos.getMaterial(world: IBlockAccess): Material{
+inline fun BlockPos.getMaterial(world: IBlockReader): Material{
 	return world.getBlockState(this).material
 }
 
-inline fun BlockPos.getState(world: IBlockAccess): IBlockState{
+inline fun BlockPos.getState(world: IBlockReader): BlockState{
 	return world.getBlockState(this)
 }
 
-inline fun <reified T : TileEntity> BlockPos.getTile(world: IBlockAccess): T?{
+inline fun <reified T : TileEntity> BlockPos.getTile(world: IBlockReader): T?{
 	return world.getTileEntity(this) as? T
 }
 
-inline fun BlockPos.isLoaded(world: World): Boolean{
+inline fun BlockPos.isLoaded(world: IWorldReader): Boolean{
 	return world.isBlockLoaded(this)
+}
+
+inline fun BlockPos.getFluidState(world: IBlockReader): IFluidState{
+	return world.getFluidState(this)
 }
 
 // Block setters
 
-inline fun BlockPos.setAir(world: World): Boolean{
-	return world.setBlockToAir(this)
+inline fun BlockPos.setAir(world: IWorldWriter): Boolean{
+	return world.removeBlock(this, false)
 }
 
-inline fun BlockPos.setBlock(world: World, block: Block): Boolean{
-	return world.setBlockState(this, block.defaultState)
+inline fun BlockPos.setBlock(world: IWorldWriter, block: Block): Boolean{
+	return world.setBlockState(this, block.defaultState, BlockFlags.DEFAULT)
 }
 
-inline fun BlockPos.setBlock(world: World, block: Block, flags: Int): Boolean{
+inline fun BlockPos.setBlock(world: IWorldWriter, block: Block, flags: Int): Boolean{
 	return world.setBlockState(this, block.defaultState, flags)
 }
 
-inline fun BlockPos.setState(world: World, state: IBlockState): Boolean{
-	return world.setBlockState(this, state)
+inline fun BlockPos.setState(world: IWorldWriter, state: BlockState): Boolean{
+	return world.setBlockState(this, state, BlockFlags.DEFAULT)
 }
 
-inline fun BlockPos.setState(world: World, state: IBlockState, flags: Int): Boolean{
+inline fun BlockPos.setState(world: IWorldWriter, state: BlockState, flags: Int): Boolean{
 	return world.setBlockState(this, state, flags)
 }
 
-inline fun BlockPos.breakBlock(world: World, drops: Boolean): Boolean{
+inline fun BlockPos.breakBlock(world: IWorldWriter, drops: Boolean): Boolean{
 	return world.destroyBlock(this, drops)
 }
 
 // Block properties
 
-fun BlockPos.blocksMovement(world: IBlockAccess): Boolean{
+fun BlockPos.blocksMovement(world: IBlockReader): Boolean{
 	return this.getMaterial(world).blocksMovement()
 }
 
-fun BlockPos.isReplaceable(world: IBlockAccess): Boolean{
-	return this.getBlock(world).isReplaceable(world, this)
-}
-
-fun BlockPos.getHardness(world: World): Float{
+fun BlockPos.getHardness(world: IBlockReader): Float{
 	return this.getState(world).getBlockHardness(world, this)
 }
 
-fun BlockPos.getFaceShape(world: World, side: EnumFacing): BlockFaceShape{
-	return this.getState(world).getBlockFaceShape(world, this, side)
+fun BlockPos.isFullBlock(world: IBlockReader): Boolean{
+	return this.getState(world).isOpaqueCube(world, this) // UPDATE test
 }
 
-@Suppress("DEPRECATION")
-fun BlockPos.isTopSolid(world: World): Boolean{
-	return this.getState(world).let { it.isTopSolid || it.getBlockFaceShape(world, this, UP) == SOLID }
+fun BlockPos.isTopSolid(world: IBlockReader): Boolean{
+	return Block.doesSideFillSquare(this.getState(world).getCollisionShape(world, this), UP)
 }
 
-// Block predicates
+// Position predicates
 
 /**
  * Offsets the block position in the direction of [facing] by distances defined by [offsetRange] until [testPredicate] returns true.
  * Returns the first [BlockPos] for which [testPredicate] returned true, or null if [testPredicate] didn't return true for any blocks within the [offsetRange].
  */
-inline fun BlockPos.offsetUntil(facing: EnumFacing, offsetRange: IntRange, testPredicate: (BlockPos) -> Boolean): BlockPos?{
+inline fun BlockPos.offsetUntil(facing: Direction, offsetRange: IntRange, testPredicate: (BlockPos) -> Boolean): BlockPos?{
 	for(offset in offsetRange){
 		val testPos = this.offset(facing, offset)
 		
@@ -145,23 +148,25 @@ inline fun BlockPos.offsetUntil(facing: EnumFacing, offsetRange: IntRange, testP
 
 // Areas (Box)
 
-fun BlockPos.allInBox(otherBound: BlockPos): Iterable<BlockPos>{
+private val castMutable = Function<BlockPos, MutableBlockPos> { pos -> pos as MutableBlockPos }
+
+fun BlockPos.allInBox(otherBound: BlockPos): Stream<BlockPos>{
 	return BlockPos.getAllInBox(this, otherBound)
 }
 
 fun BlockPos.allInBoxMutable(otherBound: BlockPos): Iterable<MutableBlockPos>{
-	return BlockPos.getAllInBoxMutable(this, otherBound)
+	return Iterables.transform(BlockPos.getAllInBoxMutable(this, otherBound), castMutable)
 }
 
-fun BlockPos.allInCenteredBox(offsetX: Int, offsetY: Int, offsetZ: Int): Iterable<BlockPos>{
+fun BlockPos.allInCenteredBox(offsetX: Int, offsetY: Int, offsetZ: Int): Stream<BlockPos>{
 	return BlockPos.getAllInBox(this.x - offsetX, this.y - offsetY, this.z - offsetZ, this.x + offsetX, this.y + offsetY, this.z + offsetZ)
 }
 
 fun BlockPos.allInCenteredBoxMutable(offsetX: Int, offsetY: Int, offsetZ: Int): Iterable<MutableBlockPos>{
-	return BlockPos.getAllInBoxMutable(this.x - offsetX, this.y - offsetY, this.z - offsetZ, this.x + offsetX, this.y + offsetY, this.z + offsetZ)
+	return Iterables.transform(BlockPos.getAllInBoxMutable(this.x - offsetX, this.y - offsetY, this.z - offsetZ, this.x + offsetX, this.y + offsetY, this.z + offsetZ), castMutable)
 }
 
-fun BlockPos.allInCenteredBox(offsetX: Double, offsetY: Double, offsetZ: Double): Iterable<BlockPos>{
+fun BlockPos.allInCenteredBox(offsetX: Double, offsetY: Double, offsetZ: Double): Stream<BlockPos>{
 	return this.allInCenteredBox(offsetX.ceilToInt(), offsetY.ceilToInt(), offsetZ.ceilToInt())
 }
 
@@ -171,8 +176,12 @@ fun BlockPos.allInCenteredBoxMutable(offsetX: Double, offsetY: Double, offsetZ: 
 
 // Areas (Sphere)
 
-private fun <T : BlockPos> BlockPos.allInCenteredSphereInternal(radiusSq: Double, iterable: Iterable<T>): Iterable<T>{
-	return Iterables.filter(iterable){ it!!.distanceSqTo(this) <= radiusSq }
+private fun <T : BlockPos> BlockPos.allInCenteredSphereInternal(radiusSq: Double, iterable: Stream<T>): Stream<T>{
+	return iterable.filter { it.distanceSqTo(this) <= radiusSq }
+}
+
+private fun <T : MutableBlockPos> BlockPos.allInCenteredSphereInternalMutable(radiusSq: Double, iterable: Iterable<T>): Iterable<T>{
+	return iterable.filter { it.distanceSqTo(this) <= radiusSq }
 }
 
 private fun getSphereRadiusSq(radius: Int, avoidNipples: Boolean): Double{
@@ -182,25 +191,25 @@ private fun getSphereRadiusSq(radius: Int, avoidNipples: Boolean): Double{
 		square(radius.toDouble())
 }
 
-fun BlockPos.allInCenteredSphere(radius: Double): Iterable<BlockPos>{
+fun BlockPos.allInCenteredSphere(radius: Double): Stream<BlockPos>{
 	return this.allInCenteredSphereInternal(square(radius), this.allInCenteredBox(radius, radius, radius))
 }
 
 fun BlockPos.allInCenteredSphereMutable(radius: Double): Iterable<MutableBlockPos>{
-	return this.allInCenteredSphereInternal(square(radius), this.allInCenteredBoxMutable(radius, radius, radius))
+	return this.allInCenteredSphereInternalMutable(square(radius), this.allInCenteredBoxMutable(radius, radius, radius))
 }
 
-fun BlockPos.allInCenteredSphere(radius: Int, avoidNipples: Boolean = false): Iterable<BlockPos>{
+fun BlockPos.allInCenteredSphere(radius: Int, avoidNipples: Boolean = false): Stream<BlockPos>{
 	return this.allInCenteredSphereInternal(getSphereRadiusSq(radius, avoidNipples), this.allInCenteredBox(radius, radius, radius))
 }
 
 fun BlockPos.allInCenteredSphereMutable(radius: Int, avoidNipples: Boolean = false): Iterable<MutableBlockPos>{
-	return this.allInCenteredSphereInternal(getSphereRadiusSq(radius, avoidNipples), this.allInCenteredBoxMutable(radius, radius, radius))
+	return this.allInCenteredSphereInternalMutable(getSphereRadiusSq(radius, avoidNipples), this.allInCenteredBoxMutable(radius, radius, radius))
 }
 
 // Areas (Flood-Fill)
 
-inline fun BlockPos.floodFill(facings: Iterable<EnumFacing>, condition: (BlockPos) -> Boolean): List<BlockPos>{
+inline fun BlockPos.floodFill(facings: Iterable<Direction>, condition: (BlockPos) -> Boolean): List<BlockPos>{
 	val found = mutableListOf<BlockPos>()
 	
 	val stack = Stack<BlockPos>().apply { push(this@floodFill) }
@@ -300,7 +309,7 @@ inline fun <reified T : TileEntity> BlockPos.closestTickingTile(world: World, ma
 // Entity checks
 
 fun BlockPos.isAnyPlayerWithinRange(world: World, range: Double): Boolean{
-	return world.isAnyPlayerWithinRangeAt(x + 0.5, y + 0.5, z + 0.5, range)
+	return world.isPlayerWithin(x + 0.5, y + 0.5, z + 0.5, range)
 }
 
 inline fun BlockPos.isAnyPlayerWithinRange(world: World, range: Int) = isAnyPlayerWithinRange(world, range.toDouble())

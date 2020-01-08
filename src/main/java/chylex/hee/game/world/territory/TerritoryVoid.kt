@@ -13,6 +13,7 @@ import chylex.hee.system.migration.forge.Side
 import chylex.hee.system.migration.forge.Sided
 import chylex.hee.system.migration.forge.SubscribeAllEvents
 import chylex.hee.system.migration.forge.SubscribeEvent
+import chylex.hee.system.migration.vanilla.EntityLivingBase
 import chylex.hee.system.util.ceilToInt
 import chylex.hee.system.util.color.IntColor.Companion.RGB
 import chylex.hee.system.util.directionTowards
@@ -24,14 +25,15 @@ import chylex.hee.system.util.remapRange
 import chylex.hee.system.util.square
 import chylex.hee.system.util.totalTime
 import net.minecraft.entity.Entity
-import net.minecraft.entity.EntityLivingBase
 import net.minecraft.util.DamageSource
 import net.minecraft.util.math.Vec3d
 import net.minecraft.world.World
+import net.minecraft.world.server.ServerWorld
 import net.minecraftforge.event.entity.living.LivingDamageEvent
 import kotlin.math.max
 import kotlin.math.min
 import kotlin.math.sqrt
+import kotlin.streams.toList
 
 @SubscribeAllEvents(modid = HEE.ID)
 object TerritoryVoid{
@@ -88,7 +90,7 @@ object TerritoryVoid{
 	}
 	
 	fun getVoidFactor(world: World, point: Vec3d): Float{
-		if (world.provider.dimension != HEE.DIM){
+		if (world.dimension.type !== HEE.dim){
 			return OUTSIDE_VOID_FACTOR
 		}
 		
@@ -96,7 +98,7 @@ object TerritoryVoid{
 	}
 	
 	fun getVoidFactor(entity: Entity): Float{
-		if (entity.dimension != HEE.DIM){
+		if (entity.dimension !== HEE.dim){
 			return OUTSIDE_VOID_FACTOR
 		}
 		
@@ -110,15 +112,12 @@ object TerritoryVoid{
 	private val FACTOR_DAMAGE_REMAP_FROM = (0.5F)..(3.0F)
 	private val DAMAGE = Damage(DEAL_CREATIVE, IGNORE_INVINCIBILITY())
 	
-	fun onWorldTick(world: World){
+	fun onWorldTick(world: ServerWorld){
 		if (world.totalTime % 3L != 0L){
 			return
 		}
 		
-		val entities = world.loadedEntityList
-		
-		for(index in entities.lastIndex downTo 0){ // killing entity will remove it from the list
-			val entity = entities[index]
+		for(entity in world.entities.toList()){ // UPDATE make sure this works
 			val factor = getVoidFactorInternal(entity.posVec)
 			
 			if (factor < 0F){
@@ -143,7 +142,7 @@ object TerritoryVoid{
 					
 					if (DAMAGE.dealTo(amount, entity, TITLE_WITHER)){
 						val cooldown = min(30, remapRange(factor, FACTOR_DAMAGE_REMAP_FROM, (30F)..(6F)).floorToInt())
-						setLong(PLAYER_NEXT_DAMAGE_TIME_TAG, currentTime + cooldown)
+						putLong(PLAYER_NEXT_DAMAGE_TIME_TAG, currentTime + cooldown)
 					}
 				}
 			}
@@ -155,7 +154,7 @@ object TerritoryVoid{
 	@JvmStatic
 	@SubscribeEvent(EventPriority.HIGHEST)
 	fun onPlayerDamage(e: LivingDamageEvent){
-		if (e.source === DamageSource.OUT_OF_WORLD && e.entity.let { it is EntityLivingBase && it.dimension == HEE.DIM }){
+		if (e.source === DamageSource.OUT_OF_WORLD && e.entity.let { it is EntityLivingBase && it.dimension === HEE.dim }){
 			e.isCanceled = true
 		}
 	}

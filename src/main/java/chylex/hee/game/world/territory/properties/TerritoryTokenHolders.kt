@@ -8,6 +8,6 @@ abstract class TerritoryTokenHolders{
 	open fun onTick(holder: EntityTokenHolder, instance: TerritoryInstance){}
 	
 	open fun afterUse(holder: EntityTokenHolder, instance: TerritoryInstance){
-		holder.setDead()
+		holder.remove()
 	}
 }

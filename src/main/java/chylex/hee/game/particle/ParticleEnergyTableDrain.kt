@@ -7,7 +7,7 @@ import chylex.hee.system.migration.forge.Sided
 import net.minecraft.client.particle.Particle
 import net.minecraft.world.World
 
-object ParticleEnergyTableDrain : IParticleMaker<ParticleDataColorScale>{
+object ParticleEnergyTableDrain : IParticleMaker.WithData<ParticleDataColorScale>(){
 	@Sided(Side.CLIENT)
 	override fun create(world: World, posX: Double, posY: Double, posZ: Double, motX: Double, motY: Double, motZ: Double, data: ParticleDataColorScale?): Particle{
 		return Instance(world, posX, posY, posZ, motX, motY, motZ, data)
@@ -20,6 +20,8 @@ object ParticleEnergyTableDrain : IParticleMaker<ParticleDataColorScale>{
 				setExpired()
 			}
 			else{
+				selectSpriteRandomly(ParticleEnergyTableDrain.sprite)
+				
 				loadColor(data.color)
 				particleAlpha = 1F
 				particleScale = 0.45F + (data.scale * 0.15F)
@@ -28,8 +30,8 @@ object ParticleEnergyTableDrain : IParticleMaker<ParticleDataColorScale>{
 			}
 		}
 		
-		override fun onUpdate(){
-			super.onUpdate()
+		override fun tick(){
+			super.tick()
 			
 			particleAlpha -= 0.16F
 		}

@@ -7,13 +7,13 @@ import chylex.hee.system.migration.Facing.EAST
 import chylex.hee.system.migration.Facing.NORTH
 import chylex.hee.system.migration.Facing.SOUTH
 import chylex.hee.system.migration.Facing.WEST
+import chylex.hee.system.migration.vanilla.BlockSlab
 import chylex.hee.system.migration.vanilla.Blocks
 import chylex.hee.system.util.Pos
 import chylex.hee.system.util.nextInt
 import chylex.hee.system.util.nextItem
 import chylex.hee.system.util.with
-import net.minecraft.block.BlockSlab
-import net.minecraft.block.BlockSlab.EnumBlockHalf.TOP
+import net.minecraft.state.properties.SlabType
 
 class ObsidianTowerRoom_Regular_LibraryShelves(file: String) : ObsidianTowerRoom_General(file, guaranteesSpawnersOnLevel1 = true){
 	private companion object{
@@ -54,7 +54,7 @@ class ObsidianTowerRoom_Regular_LibraryShelves(file: String) : ObsidianTowerRoom
 				for(zOffset in (0 until 5).minus(exclusionZone)){
 					val z = centerZ - 2 + zOffset
 					
-					world.setState(Pos(x, 3, z), ModBlocks.GLOOMROCK_SMOOTH_SLAB.with(BlockSlab.HALF, TOP))
+					world.setState(Pos(x, 3, z), ModBlocks.GLOOMROCK_SMOOTH_SLAB.with(BlockSlab.TYPE, SlabType.TOP))
 					world.setBlock(Pos(x, 4, z), Blocks.BOOKSHELF)
 					world.setBlock(Pos(x, 5, z), ModBlocks.GLOOMROCK_SMOOTH_SLAB)
 				}
@@ -76,7 +76,7 @@ class ObsidianTowerRoom_Regular_LibraryShelves(file: String) : ObsidianTowerRoom
 				}
 				
 				1 -> {
-					world.setState(pos.withY(3), ModBlocks.GLOOMROCK_SMOOTH_SLAB.with(BlockSlab.HALF, TOP))
+					world.setState(pos.withY(3), ModBlocks.GLOOMROCK_SMOOTH_SLAB.with(BlockSlab.TYPE, SlabType.TOP))
 					world.setBlock(pos.withY(4), Blocks.BOOKSHELF)
 					world.setBlock(pos.withY(5), ModBlocks.GLOOMROCK_SMOOTH_SLAB)
 				}

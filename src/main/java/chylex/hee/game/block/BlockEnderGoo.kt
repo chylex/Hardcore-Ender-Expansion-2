@@ -7,24 +7,25 @@ import chylex.hee.game.particle.spawner.ParticleSpawnerCustom
 import chylex.hee.game.particle.util.IOffset.Constant
 import chylex.hee.game.particle.util.IOffset.InBox
 import chylex.hee.game.particle.util.IShape.Point
-import chylex.hee.init.ModItems
 import chylex.hee.init.ModPotions
 import chylex.hee.system.migration.Facing.DOWN
 import chylex.hee.system.migration.Facing.UP
 import chylex.hee.system.migration.forge.Side
 import chylex.hee.system.migration.forge.Sided
+import chylex.hee.system.migration.vanilla.EntityItem
+import chylex.hee.system.migration.vanilla.EntityLivingBase
+import chylex.hee.system.migration.vanilla.Potion
 import chylex.hee.system.migration.vanilla.Potions
 import chylex.hee.system.util.Pos
-import chylex.hee.system.util.get
 import chylex.hee.system.util.getBlock
 import chylex.hee.system.util.makeEffect
+import chylex.hee.system.util.motionX
+import chylex.hee.system.util.motionZ
 import chylex.hee.system.util.posVec
-import net.minecraft.block.state.IBlockState
+import net.minecraft.block.BlockState
 import net.minecraft.entity.Entity
-import net.minecraft.entity.EntityLivingBase
-import net.minecraft.entity.item.EntityItem
-import net.minecraft.potion.Potion
 import net.minecraft.util.math.BlockPos
+import net.minecraft.world.IWorldReader
 import net.minecraft.world.World
 import java.util.Random
 import kotlin.math.pow
@@ -103,17 +104,14 @@ open class BlockEnderGoo : BlockAbstractGoo(FluidEnderGoo, Materials.ENDER_GOO){
 	
 	// Initialization
 	
-	override val filledBucket
-		get() = ModItems.ENDER_GOO_BUCKET
-	
 	override val tickTrackingKey
 		get() = "EnderGoo"
 	
-	init{
-		tickRate = 18
-	}
-	
 	// Behavior
+	
+	override fun tickRate(world: IWorldReader): Int{
+		return 18
+	}
 	
 	override fun onInsideGoo(entity: Entity){
 		if (entity is EntityLivingBase && !CustomCreatureType.isEnder(entity)){
@@ -126,7 +124,7 @@ open class BlockEnderGoo : BlockAbstractGoo(FluidEnderGoo, Materials.ENDER_GOO){
 	
 	override fun modifyMotion(entity: Entity, level: Int){
 		val world = entity.world
-		val strength = ((quantaPerBlock - level) / quantaPerBlockFloat).pow(1.75F)
+		val strength = ((FLOW_DISTANCE - level) / FLOW_DISTANCE.toFloat()).pow(1.75F)
 		
 		if (world.isRemote){
 			val rand = world.rand
@@ -141,15 +139,17 @@ open class BlockEnderGoo : BlockAbstractGoo(FluidEnderGoo, Materials.ENDER_GOO){
 			}
 		}
 		
-		entity.motionX *= 0.8 - (0.75 * strength)
-		entity.motionY *= 1.0 - (0.24 * strength)
-		entity.motionZ *= 0.8 - (0.75 * strength)
+		entity.motion = entity.motion.mul(
+			0.8 - (0.75 * strength),
+			1.0 - (0.24 * strength),
+			0.8 - (0.75 * strength)
+		)
 	}
 	
 	// Client side
 	
 	@Sided(Side.CLIENT)
-	override fun randomDisplayTick(state: IBlockState, world: World, pos: BlockPos, rand: Random){
+	override fun animateTick(state: BlockState, world: World, pos: BlockPos, rand: Random){
 		if (rand.nextBoolean()){
 			val particle = if (state[LEVEL] == 0)
 				PARTICLE_STATIONARY

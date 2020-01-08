@@ -1,6 +1,5 @@
 package chylex.hee.init
 import chylex.hee.HEE
-import chylex.hee.game.loot.BlockLootTable
 import chylex.hee.game.loot.NoStackSplittingLootTable
 import chylex.hee.game.loot.StackSortingLootTable
 import chylex.hee.game.loot.conditions.ConditionCriticalHit
@@ -15,38 +14,15 @@ import chylex.hee.game.loot.rng.RandomRoundingValueRange
 import chylex.hee.system.migration.forge.SubscribeAllEvents
 import chylex.hee.system.migration.forge.SubscribeEvent
 import chylex.hee.system.util.facades.Resource
-import net.minecraft.util.ResourceLocation
 import net.minecraft.world.storage.loot.LootPool
 import net.minecraft.world.storage.loot.LootTable
-import net.minecraft.world.storage.loot.LootTableList
+import net.minecraft.world.storage.loot.RandomValueRange
 import net.minecraft.world.storage.loot.conditions.LootConditionManager
 import net.minecraft.world.storage.loot.functions.LootFunctionManager
 import net.minecraftforge.event.LootTableLoadEvent
 
 @SubscribeAllEvents(modid = HEE.ID)
 object ModLoot{
-	lateinit var GRAVE_DIRT_LOOT: BlockLootTable
-	lateinit var HUMUS_EXPLODED: BlockLootTable
-	lateinit var DUSTY_STONE: BlockLootTable
-	lateinit var DUSTY_STONE_CRACKED: BlockLootTable
-	lateinit var DUSTY_STONE_DAMAGED: BlockLootTable
-	lateinit var ANCIENT_COBWEB: BlockLootTable
-	lateinit var END_POWDER_ORE: BlockLootTable
-	lateinit var STARDUST_ORE: BlockLootTable
-	lateinit var IGNEOUS_ROCK_ORE: BlockLootTable
-	lateinit var CHORUS_PLANT: BlockLootTable
-	
-	lateinit var SILVERFISH: ResourceLocation
-	lateinit var ENDERMAN: ResourceLocation
-	lateinit var ENDERMAN_FIRST_KILL: ResourceLocation
-	lateinit var ANGRY_ENDERMAN: ResourceLocation
-	lateinit var ENDERMITE_NATURAL: ResourceLocation
-	lateinit var ENDERMITE_INSTABILITY: ResourceLocation
-	lateinit var UNDREAD: ResourceLocation
-	lateinit var SPIDERLING: ResourceLocation
-	
-	lateinit var ENDER_EYE: ResourceLocation
-	
 	fun initialize(){
 		LootConditionManager.registerCondition(ConditionFortune.Serializer)
 		LootConditionManager.registerCondition(ConditionLooting.Serializer)
@@ -56,41 +32,13 @@ object ModLoot{
 		LootFunctionManager.registerFunction(FunctionPickColoredGloomrock.Serializer)
 		LootFunctionManager.registerFunction(FunctionPickMusicDisk.Serializer)
 		LootFunctionManager.registerFunction(FunctionPickUndreadGem.Serializer)
-		
-		GRAVE_DIRT_LOOT = registerBlock("grave_dirt_loot")
-		HUMUS_EXPLODED = registerBlock("humus_exploded")
-		DUSTY_STONE = registerBlock("dusty_stone")
-		DUSTY_STONE_CRACKED = registerBlock("dusty_stone_cracked")
-		DUSTY_STONE_DAMAGED = registerBlock("dusty_stone_damaged")
-		ANCIENT_COBWEB = registerBlock("ancient_cobweb")
-		END_POWDER_ORE = registerBlock("end_powder_ore")
-		STARDUST_ORE = registerBlock("stardust_ore")
-		IGNEOUS_ROCK_ORE = registerBlock("igneous_rock_ore")
-		CHORUS_PLANT = registerBlock("chorus_plant")
-		
-		SILVERFISH = registerEntity("silverfish")
-		ENDERMAN = registerEntity("enderman")
-		ENDERMAN_FIRST_KILL = registerEntity("enderman_first_kill")
-		ANGRY_ENDERMAN = registerEntity("angry_enderman")
-		ENDERMITE_NATURAL = registerEntity("endermite_natural")
-		ENDERMITE_INSTABILITY = registerEntity("endermite_instability")
-		UNDREAD = registerEntity("undread")
-		SPIDERLING = registerEntity("spiderling")
-		
-		ENDER_EYE = registerEntity("ender_eye")
 	}
 	
-	private fun registerBlock(name: String): BlockLootTable{
-		return BlockLootTable(LootTableList.register(Resource.Custom("blocks/$name")))
-	}
+	private val POOLS_FIELD = LootTable::class.java.declaredFields.first { it.type === List::class.java }.also { it.isAccessible = true }
 	
-	private fun registerEntity(name: String): ResourceLocation{
-		return LootTableList.register(Resource.Custom("entities/$name"))
-	}
-	
-	val LootTable.pools
+	val LootTable.poolsExt
 		@Suppress("UNCHECKED_CAST")
-		get() = LootTable::class.java.declaredFields.first { it.type === List::class.java }.also { it.isAccessible = true }.get(this) as ArrayList<LootPool>
+		get() = POOLS_FIELD.get(this) as ArrayList<LootPool>
 	
 	@JvmStatic
 	@SubscribeEvent
@@ -98,7 +46,7 @@ object ModLoot{
 		if (Resource.isCustom(e.name)){
 			val table = reconfigureLootTable(e.table)
 			
-			for(pool in table.pools){
+			for(pool in table.poolsExt){
 				if (!pool.name.contains('#')){
 					continue
 				}
@@ -107,12 +55,13 @@ object ModLoot{
 					when(key){
 						"rolls_type" -> {
 							val parameters = value.split(';').iterator()
+							val rolls = pool.rolls as RandomValueRange
 							
-							pool.rolls = when(val type = parameters.next()){
-								"rounding" -> RandomRoundingValueRange(pool.rolls)
-								"biased" -> RandomBiasedValueRange(pool.rolls, parameters.next().toFloat(), parameters.next().toFloat())
+							pool.setRolls(when(val type = parameters.next()){
+								"rounding" -> RandomRoundingValueRange(rolls)
+								"biased" -> RandomBiasedValueRange(rolls, parameters.next().toFloat(), parameters.next().toFloat())
 								else -> throw UnsupportedOperationException(type)
-							}
+							})
 						}
 						
 						"sort_order" -> {
@@ -134,7 +83,7 @@ object ModLoot{
 	}
 	
 	private fun reconfigureLootTable(table: LootTable): LootTable{
-		val pools = table.pools
+		val pools = table.poolsExt
 		val configurationPool = pools.find { it.name.startsWith("table#") }
 		
 		if (configurationPool == null){

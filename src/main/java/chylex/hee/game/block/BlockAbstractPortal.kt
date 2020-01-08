@@ -2,6 +2,7 @@ package chylex.hee.game.block
 import chylex.hee.game.block.info.BlockBuilder
 import chylex.hee.system.util.allInBox
 import chylex.hee.system.util.allInBoxMutable
+import chylex.hee.system.util.asVoxelShape
 import chylex.hee.system.util.distanceTo
 import chylex.hee.system.util.facades.Facing4
 import chylex.hee.system.util.floorToInt
@@ -15,18 +16,18 @@ import chylex.hee.system.util.offsetUntil
 import chylex.hee.system.util.setAir
 import chylex.hee.system.util.setBlock
 import net.minecraft.block.Block
-import net.minecraft.block.ITileEntityProvider
-import net.minecraft.block.state.BlockFaceShape.UNDEFINED
-import net.minecraft.block.state.IBlockState
+import net.minecraft.block.BlockRenderType.INVISIBLE
+import net.minecraft.block.BlockState
 import net.minecraft.entity.Entity
-import net.minecraft.util.EnumBlockRenderType.INVISIBLE
-import net.minecraft.util.EnumFacing
+import net.minecraft.tileentity.TileEntity
 import net.minecraft.util.math.AxisAlignedBB
 import net.minecraft.util.math.BlockPos
-import net.minecraft.world.IBlockAccess
+import net.minecraft.util.math.shapes.ISelectionContext
+import net.minecraft.util.math.shapes.VoxelShape
+import net.minecraft.world.IBlockReader
 import net.minecraft.world.World
 
-abstract class BlockAbstractPortal(builder: BlockBuilder) : BlockSimple(builder), ITileEntityProvider{
+abstract class BlockAbstractPortal(builder: BlockBuilder) : BlockSimpleShaped(builder, AxisAlignedBB(0.0, 0.0, 0.0, 1.0, 0.75, 1.0)){
 	companion object{
 		const val MAX_DISTANCE_FROM_FRAME = 6.0
 		const val MAX_SIZE = 5
@@ -34,8 +35,7 @@ abstract class BlockAbstractPortal(builder: BlockBuilder) : BlockSimple(builder)
 		const val TRANSLATION_SPEED_LONG = 600000L
 		const val TRANSLATION_SPEED = TRANSLATION_SPEED_LONG.toFloat()
 		
-		private val SELECTION_AABB = AxisAlignedBB(0.0, 0.0, 0.0, 1.0, 0.75,  1.0)
-		private val COLLISION_AABB = AxisAlignedBB(0.0, 0.0, 0.0, 1.0, 0.025, 1.0)
+		private val COLLISION_AABB = AxisAlignedBB(0.0, 0.0, 0.0, 1.0, 0.025, 1.0).asVoxelShape
 		
 		fun findInnerArea(world: World, controllerPos: BlockPos, frameBlock: Block): Pair<BlockPos, BlockPos>?{
 			val mirrorRange = 1..(MAX_SIZE + 1)
@@ -88,19 +88,22 @@ abstract class BlockAbstractPortal(builder: BlockBuilder) : BlockSimple(builder)
 		val clientPortalOffset: LerpedFloat
 	}
 	
+	override fun hasTileEntity(state: BlockState): Boolean{
+		return true
+	}
+	
+	abstract override fun createTileEntity(state: BlockState, world: IBlockReader): TileEntity
 	protected abstract fun onEntityInside(world: World, pos: BlockPos, entity: Entity)
 	
-	final override fun onEntityCollision(world: World, pos: BlockPos, state: IBlockState, entity: Entity){
-		if (!world.isRemote && !entity.isRiding && !entity.isBeingRidden && entity.isNonBoss && entity.posY <= pos.y + 0.05){
+	final override fun onEntityCollision(state: BlockState, world: World, pos: BlockPos, entity: Entity){
+		if (!world.isRemote && !entity.isPassenger && !entity.isBeingRidden && entity.isNonBoss && entity.posY <= pos.y + 0.05){
 			onEntityInside(world, pos, entity)
 		}
 	}
 	
-	final override fun getCollisionBoundingBox(state: IBlockState, world: IBlockAccess, pos: BlockPos) = COLLISION_AABB
-	final override fun getSelectedBoundingBox(state: IBlockState, world: World, pos: BlockPos): AxisAlignedBB = SELECTION_AABB.offset(pos)
-	final override fun getBlockFaceShape(world: IBlockAccess, state: IBlockState, pos: BlockPos, face: EnumFacing) = UNDEFINED
+	override fun getCollisionShape(state: BlockState, world: IBlockReader, pos: BlockPos, context: ISelectionContext): VoxelShape{
+		return COLLISION_AABB
+	}
 	
-	final override fun isFullCube(state: IBlockState) = false
-	final override fun isOpaqueCube(state: IBlockState) = false
-	final override fun getRenderType(state: IBlockState) = INVISIBLE
+	final override fun getRenderType(state: BlockState) = INVISIBLE
 }

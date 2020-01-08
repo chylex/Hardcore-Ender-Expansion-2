@@ -2,9 +2,9 @@ package chylex.hee.network.client
 import chylex.hee.network.BaseClientPacket
 import chylex.hee.system.migration.forge.Side
 import chylex.hee.system.migration.forge.Sided
+import chylex.hee.system.migration.vanilla.EntityPlayerSP
 import chylex.hee.system.util.use
-import io.netty.buffer.ByteBuf
-import net.minecraft.client.entity.EntityPlayerSP
+import net.minecraft.network.PacketBuffer
 
 class PacketClientUpdateExperience() : BaseClientPacket(){
 	constructor(experience: Float) : this(){
@@ -13,11 +13,11 @@ class PacketClientUpdateExperience() : BaseClientPacket(){
 	
 	private var experience: Float? = null
 	
-	override fun write(buffer: ByteBuf) = buffer.use {
+	override fun write(buffer: PacketBuffer) = buffer.use {
 		writeFloat(experience!!)
 	}
 	
-	override fun read(buffer: ByteBuf) = buffer.use {
+	override fun read(buffer: PacketBuffer) = buffer.use {
 		experience = readFloat()
 	}
 	

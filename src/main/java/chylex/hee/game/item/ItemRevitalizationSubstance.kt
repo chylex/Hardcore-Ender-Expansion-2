@@ -14,6 +14,7 @@ import chylex.hee.init.ModSounds
 import chylex.hee.network.client.PacketClientFX
 import chylex.hee.system.migration.ActionResult.FAIL
 import chylex.hee.system.migration.ActionResult.SUCCESS
+import chylex.hee.system.migration.vanilla.EntityPlayer
 import chylex.hee.system.util.center
 import chylex.hee.system.util.directionTowards
 import chylex.hee.system.util.getTile
@@ -23,20 +24,19 @@ import chylex.hee.system.util.playServer
 import chylex.hee.system.util.readPos
 import chylex.hee.system.util.use
 import chylex.hee.system.util.writePos
-import io.netty.buffer.ByteBuf
 import net.minecraft.entity.Entity
-import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.item.Item
 import net.minecraft.item.ItemStack
-import net.minecraft.util.EnumActionResult
-import net.minecraft.util.EnumFacing
-import net.minecraft.util.EnumHand
+import net.minecraft.item.ItemUseContext
+import net.minecraft.network.PacketBuffer
+import net.minecraft.util.ActionResultType
+import net.minecraft.util.Hand
 import net.minecraft.util.SoundCategory
 import net.minecraft.util.math.BlockPos
 import net.minecraft.world.World
 import java.util.Random
 
-class ItemRevitalizationSubstance : Item(){
+class ItemRevitalizationSubstance(properties: Properties) : Item(properties){
 	companion object{
 		private val PARTICLE_FAIL = ParticleSpawnerCustom(
 			type = ParticleSmokeCustom,
@@ -45,8 +45,8 @@ class ItemRevitalizationSubstance : Item(){
 			mot = Gaussian(0.01F)
 		)
 		
-		class FxUseData(private val pos: BlockPos, private val player: EntityPlayer, private val hand: EnumHand) : IFxData{
-			override fun write(buffer: ByteBuf) = buffer.use {
+		class FxUseData(private val pos: BlockPos, private val player: EntityPlayer, private val hand: Hand) : IFxData{
+			override fun write(buffer: PacketBuffer) = buffer.use {
 				writePos(pos)
 				writeInt(player.entityId)
 				writeByte(hand.ordinal)
@@ -54,11 +54,11 @@ class ItemRevitalizationSubstance : Item(){
 		}
 		
 		val FX_FAIL = object : IFxHandler<FxUseData>{
-			override fun handle(buffer: ByteBuf, world: World, rand: Random) = buffer.use {
+			override fun handle(buffer: PacketBuffer, world: World, rand: Random) = buffer.use {
 				val blockPos = readPos().center
 				
 				val player = world.getEntityByID(readInt()) as? EntityPlayer ?: return
-				val hand = EnumHand.values().getOrNull(readByte().toInt()) ?: return
+				val hand = Hand.values().getOrNull(readByte().toInt()) ?: return
 				
 				val handPos = ModelHelper.getHandPosition(player, hand)
 				val startPoint = handPos.add(handPos.directionTowards(blockPos).scale(0.2))
@@ -69,11 +69,11 @@ class ItemRevitalizationSubstance : Item(){
 		}
 	}
 	
-	init{
-		maxStackSize = 16
-	}
-	
-	override fun onItemUse(player: EntityPlayer, world: World, pos: BlockPos, hand: EnumHand, facing: EnumFacing, hitX: Float, hitY: Float, hitZ: Float): EnumActionResult{
+	override fun onItemUse(context: ItemUseContext): ActionResultType{
+		val player = context.player ?: return FAIL
+		val world = context.world
+		val pos = context.pos
+		
 		if (world.isRemote){
 			return FAIL // disable animation
 		}
@@ -82,11 +82,11 @@ class ItemRevitalizationSubstance : Item(){
 		
 		if (cluster.currentHealth != REVITALIZING){
 			if (cluster.addRevitalizationSubstance()){
-				player.getHeldItem(hand).shrink(1)
+				player.getHeldItem(context.hand).shrink(1)
 				ModSounds.ITEM_REVITALIZATION_SUBSTANCE_USE_SUCCESS.playServer(world, pos, SoundCategory.BLOCKS, volume = 0.5F)
 			}
 			else{
-				PacketClientFX(FX_FAIL, FxUseData(pos, player, hand)).sendToAllAround(player, 24.0)
+				PacketClientFX(FX_FAIL, FxUseData(pos, player, context.hand)).sendToAllAround(player, 24.0)
 			}
 		}
 		

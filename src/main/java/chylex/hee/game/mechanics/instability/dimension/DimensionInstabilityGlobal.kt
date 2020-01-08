@@ -5,8 +5,10 @@ import chylex.hee.system.util.ceilToInt
 import chylex.hee.system.util.floorToInt
 import chylex.hee.system.util.remapRange
 import chylex.hee.system.util.totalTime
+import chylex.hee.system.util.use
 import net.minecraft.util.math.BlockPos
 import net.minecraft.world.World
+import net.minecraft.world.server.ServerWorld
 import kotlin.math.max
 import kotlin.math.pow
 
@@ -34,6 +36,10 @@ open class DimensionInstabilityGlobal(private val world: World, private val ende
 		}
 	}
 	
+	init{
+		require(world is ServerWorld){ "[DimensionInstabilityGlobal] world must be a server world" }
+	}
+	
 	private var level = 0
 	
 	private var lastActionTime = 0L
@@ -53,7 +59,7 @@ open class DimensionInstabilityGlobal(private val world: World, private val ende
 		
 		level += (amount.toInt() * calculateActionMultiplier(ticksSinceEndermiteSpawn)).ceilToInt()
 		
-		if (level >= 200 && level >= 200 + calculateExtraLevelRequired(endermiteSpawnLogic.countExisting(world, pos))){
+		if (level >= 200 && level >= 200 + calculateExtraLevelRequired(endermiteSpawnLogic.countExisting(world as ServerWorld, pos))){
 			if (endermiteSpawnLogic.trySpawnNear(world, pos)){
 				triggerReliefMultiplier(0.9F)
 				lastEndermiteSpawnTime = currentTime
@@ -75,13 +81,13 @@ open class DimensionInstabilityGlobal(private val world: World, private val ende
 	// Serialization
 	
 	override fun serializeNBT() = TagCompound().apply {
-		setInteger(LEVEL_TAG, level)
-		setLong(LAST_ACTION_TAG, lastActionTime)
-		setLong(LAST_ENDERMITE_SPAWN_TAG, lastEndermiteSpawnTime)
+		putInt(LEVEL_TAG, level)
+		putLong(LAST_ACTION_TAG, lastActionTime)
+		putLong(LAST_ENDERMITE_SPAWN_TAG, lastEndermiteSpawnTime)
 	}
 	
-	override fun deserializeNBT(nbt: TagCompound) = with(nbt){
-		level = getInteger(LEVEL_TAG)
+	override fun deserializeNBT(nbt: TagCompound) = nbt.use {
+		level = getInt(LEVEL_TAG)
 		lastActionTime = getLong(LAST_ACTION_TAG)
 		lastEndermiteSpawnTime = getLong(LAST_ENDERMITE_SPAWN_TAG)
 	}

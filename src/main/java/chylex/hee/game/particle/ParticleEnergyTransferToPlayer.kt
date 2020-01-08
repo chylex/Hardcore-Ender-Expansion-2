@@ -11,14 +11,14 @@ import chylex.hee.system.migration.Hand.MAIN_HAND
 import chylex.hee.system.migration.Hand.OFF_HAND
 import chylex.hee.system.migration.forge.Side
 import chylex.hee.system.migration.forge.Sided
+import chylex.hee.system.migration.vanilla.EntityPlayer
 import net.minecraft.client.particle.Particle
-import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.util.math.Vec3d
 import net.minecraft.world.World
 import java.lang.ref.WeakReference
 import java.util.Random
 
-object ParticleEnergyTransferToPlayer : IParticleMaker<TransferData?>{
+object ParticleEnergyTransferToPlayer : IParticleMaker.WithData<TransferData?>(){
 	@Sided(Side.CLIENT)
 	override fun create(world: World, posX: Double, posY: Double, posZ: Double, motX: Double, motY: Double, motZ: Double, data: TransferData?): Particle{
 		return Instance(world, posX, posY, posZ, data)
@@ -55,6 +55,8 @@ object ParticleEnergyTransferToPlayer : IParticleMaker<TransferData?>{
 				setExpired()
 			}
 			else{
+				selectSpriteRandomly(ParticleEnergyTransferToPlayer.sprite)
+				
 				loadColor(data.cluster.color)
 				particleAlpha = 0.75F
 				
@@ -65,7 +67,7 @@ object ParticleEnergyTransferToPlayer : IParticleMaker<TransferData?>{
 			}
 		}
 		
-		override fun onUpdate(){
+		override fun tick(){
 			val player = player?.get()
 			
 			if (player == null){
@@ -76,7 +78,7 @@ object ParticleEnergyTransferToPlayer : IParticleMaker<TransferData?>{
 			newTargetPos = ModelHelper.getHandPosition(player, if (player.getHeldItem(MAIN_HAND).item is ItemAbstractEnergyUser) MAIN_HAND else OFF_HAND)
 			
 			setupMotion(speed + (age * 0.005))
-			super.onUpdate()
+			super.tick()
 		}
 	}
 }

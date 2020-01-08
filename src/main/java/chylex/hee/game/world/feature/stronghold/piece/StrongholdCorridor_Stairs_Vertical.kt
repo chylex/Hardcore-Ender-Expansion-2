@@ -1,5 +1,4 @@
 package chylex.hee.game.world.feature.stronghold.piece
-import chylex.hee.game.block.util.FutureBlocks
 import chylex.hee.game.world.feature.stronghold.StrongholdPieceType
 import chylex.hee.game.world.feature.stronghold.StrongholdPieces
 import chylex.hee.game.world.feature.stronghold.connection.StrongholdConnection
@@ -8,15 +7,16 @@ import chylex.hee.game.world.structure.IBlockPicker.Single.Air
 import chylex.hee.game.world.structure.IStructureWorld
 import chylex.hee.game.world.structure.piece.IStructurePieceConnection
 import chylex.hee.game.world.util.Size
+import chylex.hee.system.migration.vanilla.BlockSlab
 import chylex.hee.system.migration.vanilla.Blocks
 import chylex.hee.system.util.Pos
 import chylex.hee.system.util.with
 import chylex.hee.system.util.withFacing
-import net.minecraft.block.BlockSlab
-import net.minecraft.util.EnumFacing
+import net.minecraft.state.properties.SlabType
+import net.minecraft.util.Direction
 import net.minecraft.util.math.BlockPos.MutableBlockPos
 
-class StrongholdCorridor_Stairs_Vertical(connectionAtEntrance: EnumFacing, connectionAtExit: EnumFacing, levels: Int) : StrongholdAbstractPiece(){
+class StrongholdCorridor_Stairs_Vertical(connectionAtEntrance: Direction, connectionAtExit: Direction, levels: Int) : StrongholdAbstractPiece(){
 	private companion object{
 		/*
 		 * base height for levels = 1 is 9
@@ -26,7 +26,7 @@ class StrongholdCorridor_Stairs_Vertical(connectionAtEntrance: EnumFacing, conne
 		 * if exit is opposite of entrance (return), add 3
 		 * base height for levels = 2 is 13
 		 */
-		private fun calculateHeight(connectionAtEntrance: EnumFacing, connectionAtExit: EnumFacing, levels: Int): Int{
+		private fun calculateHeight(connectionAtEntrance: Direction, connectionAtExit: Direction, levels: Int): Int{
 			val revEntrance = connectionAtEntrance.opposite
 			
 			return 9 + ((levels - 1) * 4) + when(connectionAtExit){
@@ -62,12 +62,12 @@ class StrongholdCorridor_Stairs_Vertical(connectionAtEntrance: EnumFacing, conne
 			val firstBlock = if (useStairs)
 				Blocks.STONE_BRICK_STAIRS.withFacing(facing)
 			else
-				FutureBlocks.STONE_BRICK_SLAB.with(BlockSlab.HALF, BlockSlab.EnumBlockHalf.BOTTOM)
+				Blocks.STONE_BRICK_SLAB.with(BlockSlab.TYPE, SlabType.BOTTOM)
 			
 			pos.move(facing)
 			world.setState(pos, firstBlock)
 			pos.move(facing)
-			world.setState(pos, FutureBlocks.STONE_BRICK_SLAB.with(BlockSlab.HALF, BlockSlab.EnumBlockHalf.TOP))
+			world.setState(pos, Blocks.STONE_BRICK_SLAB.with(BlockSlab.TYPE, SlabType.TOP))
 			
 			facing = facing.rotateY()
 		}

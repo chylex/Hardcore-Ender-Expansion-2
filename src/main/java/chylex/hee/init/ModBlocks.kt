@@ -1,7 +1,7 @@
 package chylex.hee.init
 import chylex.hee.HEE
 import chylex.hee.game.block.BlockAncientCobweb
-import chylex.hee.game.block.BlockBrewingStandOverride
+import chylex.hee.game.block.BlockBrewingStandCustom
 import chylex.hee.game.block.BlockCauldronWithDragonsBreath
 import chylex.hee.game.block.BlockCauldronWithGoo
 import chylex.hee.game.block.BlockChorusPlantOverride
@@ -19,11 +19,9 @@ import chylex.hee.game.block.BlockEndPortalOverride
 import chylex.hee.game.block.BlockEndPowderOre
 import chylex.hee.game.block.BlockEnderGoo
 import chylex.hee.game.block.BlockEnderGooPurified
-import chylex.hee.game.block.BlockEndermanHead
 import chylex.hee.game.block.BlockEndersol
 import chylex.hee.game.block.BlockEndium
 import chylex.hee.game.block.BlockEnergyCluster
-import chylex.hee.game.block.BlockEnhancedBrewingStand
 import chylex.hee.game.block.BlockEternalFire
 import chylex.hee.game.block.BlockExperienceGateController
 import chylex.hee.game.block.BlockExperienceGateOutline
@@ -46,6 +44,7 @@ import chylex.hee.game.block.BlockPuzzleLogic
 import chylex.hee.game.block.BlockScaffolding
 import chylex.hee.game.block.BlockSimple
 import chylex.hee.game.block.BlockSimpleShaped
+import chylex.hee.game.block.BlockSkullCustom
 import chylex.hee.game.block.BlockSlabCustom
 import chylex.hee.game.block.BlockSpawnerObsidianTowers
 import chylex.hee.game.block.BlockStairsCustom
@@ -57,37 +56,29 @@ import chylex.hee.game.block.BlockVoidPortalCrafted
 import chylex.hee.game.block.BlockVoidPortalInner
 import chylex.hee.game.block.BlockVoidPortalStorage
 import chylex.hee.game.block.BlockVoidPortalStorageCrafted
-import chylex.hee.game.block.BlockWallCustom
 import chylex.hee.game.block.BlockWhitebarkLeaves
 import chylex.hee.game.block.BlockWhitebarkLog
 import chylex.hee.game.block.BlockWhitebarkSapling
 import chylex.hee.game.block.entity.TileEntityAccumulationTable
-import chylex.hee.game.block.entity.TileEntityBrewingStandCustom
-import chylex.hee.game.block.entity.TileEntityDarkChest
-import chylex.hee.game.block.entity.TileEntityEndPortalAcceptor
-import chylex.hee.game.block.entity.TileEntityEnergyCluster
-import chylex.hee.game.block.entity.TileEntityExperienceGate
-import chylex.hee.game.block.entity.TileEntityIgneousPlate
-import chylex.hee.game.block.entity.TileEntityInfusedTNT
-import chylex.hee.game.block.entity.TileEntityJarODust
-import chylex.hee.game.block.entity.TileEntityLootChest
-import chylex.hee.game.block.entity.TileEntityMinersBurialAltar
-import chylex.hee.game.block.entity.TileEntityPortalInner
-import chylex.hee.game.block.entity.TileEntitySpawnerObsidianTower
-import chylex.hee.game.block.entity.TileEntityTablePedestal
-import chylex.hee.game.block.entity.TileEntityVoidPortalStorage
 import chylex.hee.game.block.fluid.FluidEnderGoo
 import chylex.hee.game.block.fluid.FluidEnderGooPurified
+import chylex.hee.game.block.info.BlockBuilders.buildAncientCobweb
 import chylex.hee.game.block.info.BlockBuilders.buildBrewingStand
+import chylex.hee.game.block.info.BlockBuilders.buildCauldron
+import chylex.hee.game.block.info.BlockBuilders.buildChorusPlant
 import chylex.hee.game.block.info.BlockBuilders.buildCorruptedEnergy
 import chylex.hee.game.block.info.BlockBuilders.buildDarkLoam
+import chylex.hee.game.block.info.BlockBuilders.buildDragonEgg
+import chylex.hee.game.block.info.BlockBuilders.buildDryVines
 import chylex.hee.game.block.info.BlockBuilders.buildDustyStone
 import chylex.hee.game.block.info.BlockBuilders.buildDustyStoneBricks
 import chylex.hee.game.block.info.BlockBuilders.buildDustyStoneCracked
 import chylex.hee.game.block.info.BlockBuilders.buildDustyStoneDamaged
+import chylex.hee.game.block.info.BlockBuilders.buildEndPortalOverride
 import chylex.hee.game.block.info.BlockBuilders.buildEndPowderOre
 import chylex.hee.game.block.info.BlockBuilders.buildEndStone
 import chylex.hee.game.block.info.BlockBuilders.buildEnderSol
+import chylex.hee.game.block.info.BlockBuilders.buildEndermanHead
 import chylex.hee.game.block.info.BlockBuilders.buildEndiumBlock
 import chylex.hee.game.block.info.BlockBuilders.buildEndiumOre
 import chylex.hee.game.block.info.BlockBuilders.buildEnergyCluster
@@ -111,6 +102,7 @@ import chylex.hee.game.block.info.BlockBuilders.buildMinersBurialAltar
 import chylex.hee.game.block.info.BlockBuilders.buildObsidian
 import chylex.hee.game.block.info.BlockBuilders.buildObsidianVariation
 import chylex.hee.game.block.info.BlockBuilders.buildObsidianVariationLit
+import chylex.hee.game.block.info.BlockBuilders.buildPlant
 import chylex.hee.game.block.info.BlockBuilders.buildPortalFrame
 import chylex.hee.game.block.info.BlockBuilders.buildPortalFrameCrafted
 import chylex.hee.game.block.info.BlockBuilders.buildPortalInner
@@ -123,11 +115,12 @@ import chylex.hee.game.block.info.BlockBuilders.buildTable
 import chylex.hee.game.block.info.BlockBuilders.buildTablePedestal
 import chylex.hee.game.block.info.BlockBuilders.buildVantablock
 import chylex.hee.game.block.info.BlockBuilders.buildWhitebark
+import chylex.hee.game.block.info.BlockBuilders.buildWhitebarkLeaves
 import chylex.hee.game.block.info.BlockBuilders.buildWhitebarkPlanks
+import chylex.hee.game.block.info.BlockBuilders.buildWhitebarkSapling
+import chylex.hee.game.block.util.CustomSkulls
 import chylex.hee.game.item.ItemAncientCobweb
-import chylex.hee.game.item.ItemBlockPlant
-import chylex.hee.game.item.ItemBlockSlabFuel
-import chylex.hee.game.item.ItemBlockWithMetadata
+import chylex.hee.game.item.ItemBlockFuel
 import chylex.hee.game.item.ItemDragonEgg
 import chylex.hee.game.item.ItemInfusedTNT
 import chylex.hee.game.world.feature.basic.trees.types.AutumnTreeGenerator
@@ -136,251 +129,248 @@ import chylex.hee.system.migration.Facing.NORTH
 import chylex.hee.system.migration.Facing.SOUTH
 import chylex.hee.system.migration.forge.SubscribeAllEvents
 import chylex.hee.system.migration.forge.SubscribeEvent
+import chylex.hee.system.migration.vanilla.BlockFire
+import chylex.hee.system.migration.vanilla.BlockWall
 import chylex.hee.system.migration.vanilla.Blocks
-import chylex.hee.system.util.creativeTabIn
+import chylex.hee.system.migration.vanilla.ItemBlock
 import chylex.hee.system.util.facades.Resource
+import chylex.hee.system.util.named
 import chylex.hee.system.util.useVanillaName
 import net.minecraft.block.Block
-import net.minecraft.creativetab.CreativeTabs
+import net.minecraft.fluid.Fluid
 import net.minecraft.item.Item
-import net.minecraft.item.ItemBlock
-import net.minecraft.item.ItemSlab
-import net.minecraft.tileentity.TileEntity
+import net.minecraft.item.ItemGroup
 import net.minecraft.util.math.AxisAlignedBB
 import net.minecraftforge.event.RegistryEvent
-import net.minecraftforge.fluids.FluidRegistry
-import net.minecraftforge.fml.common.registry.GameRegistry
-import net.minecraftforge.oredict.OreDictionary
+import net.minecraftforge.fml.common.Mod.EventBusSubscriber.Bus.MOD
+import java.util.concurrent.Callable
 
-@SubscribeAllEvents(modid = HEE.ID)
+@SubscribeAllEvents(modid = HEE.ID, bus = MOD)
 object ModBlocks{
-	init{
-		FluidRegistry.registerFluid(FluidEnderGoo)
-		FluidRegistry.registerFluid(FluidEnderGooPurified)
-	}
 	
 	// Blocks: Building (Uncategorized)
 	
-	@JvmField val ETHEREAL_LANTERN = BlockSimple(buildEtherealLantern).apply { setup("ethereal_lantern") }
-	@JvmField val STONE_BRICK_WALL = BlockWallCustom(Blocks.STONEBRICK).apply { setup("stone_brick_wall") }
-	@JvmField val INFUSED_GLASS    = BlockInfusedGlass(buildInfusedGlass).apply { setup("infused_glass") }
-	@JvmField val VANTABLOCK       = BlockSimple(buildVantablock).apply { setup("vantablock") }
-	@JvmField val ENDIUM_BLOCK     = BlockEndium(buildEndiumBlock).apply { setup("endium_block") }
-	@JvmField val ENDERSOL         = BlockEndersol(buildEnderSol).apply { setup("endersol") }
-	@JvmField val HUMUS            = BlockHumus(buildHumus).apply { setup("humus") }
+	@JvmField val ETHEREAL_LANTERN = BlockSimple(buildEtherealLantern) named "ethereal_lantern"
+	@JvmField val STONE_BRICK_WALL = BlockWall(Block.Properties.from(Blocks.STONE_BRICKS)) named "stone_brick_wall"
+	@JvmField val INFUSED_GLASS    = BlockInfusedGlass(buildInfusedGlass) named "infused_glass"
+	@JvmField val VANTABLOCK       = BlockSimple(buildVantablock) named "vantablock"
+	@JvmField val ENDIUM_BLOCK     = BlockEndium(buildEndiumBlock) named "endium_block"
+	@JvmField val ENDERSOL         = BlockEndersol(buildEnderSol) named "endersol"
+	@JvmField val HUMUS            = BlockHumus(buildHumus) named "humus"
 	
 	// Blocks: Building (Gloomrock)
 	
-	@JvmField val GLOOMROCK                    = BlockGloomrock(buildGloomrock).apply { setup("gloomrock") }
-	@JvmField val GLOOMROCK_BRICKS             = BlockGloomrock(buildGloomrockBricks).apply { setup("gloomrock_bricks") }
-	@JvmField val GLOOMROCK_BRICK_STAIRS       = BlockStairsCustom(GLOOMROCK_BRICKS).apply { setup("gloomrock_brick_stairs") }
-	@JvmField val GLOOMROCK_BRICK_SLAB         = BlockSlabCustom.Half(buildGloomrockBricks).apply { setup("gloomrock_brick_slab") }
-	@JvmField val GLOOMROCK_BRICK_DOUBLE_SLAB  = BlockSlabCustom.Full(buildGloomrockBricks, GLOOMROCK_BRICK_SLAB).apply { setup("gloomrock_brick_slab_double", "hee.gloomrock_brick_slab") }
-	@JvmField val GLOOMROCK_SMOOTH             = BlockGloomrock(buildGloomrockSmooth).apply { setup("gloomrock_smooth") }
-	@JvmField val GLOOMROCK_SMOOTH_STAIRS      = BlockStairsCustom(GLOOMROCK_SMOOTH).apply { setup("gloomrock_smooth_stairs") }
-	@JvmField val GLOOMROCK_SMOOTH_SLAB        = BlockSlabCustom.Half(buildGloomrockSmooth).apply { setup("gloomrock_smooth_slab") }
-	@JvmField val GLOOMROCK_SMOOTH_DOUBLE_SLAB = BlockSlabCustom.Full(buildGloomrockSmooth, GLOOMROCK_SMOOTH_SLAB).apply { setup("gloomrock_smooth_slab_double", "hee.gloomrock_smooth_slab") }
-	@JvmField val GLOOMROCK_SMOOTH_RED         = BlockGloomrock(buildGloomrockSmooth).apply { setup("gloomrock_smooth_red") }
-	@JvmField val GLOOMROCK_SMOOTH_ORANGE      = BlockGloomrock(buildGloomrockSmooth).apply { setup("gloomrock_smooth_orange") }
-	@JvmField val GLOOMROCK_SMOOTH_YELLOW      = BlockGloomrock(buildGloomrockSmooth).apply { setup("gloomrock_smooth_yellow") }
-	@JvmField val GLOOMROCK_SMOOTH_GREEN       = BlockGloomrock(buildGloomrockSmooth).apply { setup("gloomrock_smooth_green") }
-	@JvmField val GLOOMROCK_SMOOTH_CYAN        = BlockGloomrock(buildGloomrockSmooth).apply { setup("gloomrock_smooth_cyan") }
-	@JvmField val GLOOMROCK_SMOOTH_BLUE        = BlockGloomrock(buildGloomrockSmooth).apply { setup("gloomrock_smooth_blue") }
-	@JvmField val GLOOMROCK_SMOOTH_PURPLE      = BlockGloomrock(buildGloomrockSmooth).apply { setup("gloomrock_smooth_purple") }
-	@JvmField val GLOOMROCK_SMOOTH_MAGENTA     = BlockGloomrock(buildGloomrockSmooth).apply { setup("gloomrock_smooth_magenta") }
-	@JvmField val GLOOMROCK_SMOOTH_WHITE       = BlockGloomrock(buildGloomrockSmooth).apply { setup("gloomrock_smooth_white") }
-	@JvmField val GLOOMTORCH                   = BlockGloomtorch(buildGloomtorch).apply { setup("gloomtorch") }
+	@JvmField val GLOOMROCK                = BlockGloomrock(buildGloomrock) named "gloomrock"
+	@JvmField val GLOOMROCK_BRICKS         = BlockGloomrock(buildGloomrockBricks) named "gloomrock_bricks"
+	@JvmField val GLOOMROCK_BRICK_STAIRS   = BlockStairsCustom(GLOOMROCK_BRICKS) named "gloomrock_brick_stairs"
+	@JvmField val GLOOMROCK_BRICK_SLAB     = BlockSlabCustom(buildGloomrockBricks) named "gloomrock_brick_slab"
+	@JvmField val GLOOMROCK_SMOOTH         = BlockGloomrock(buildGloomrockSmooth) named "gloomrock_smooth"
+	@JvmField val GLOOMROCK_SMOOTH_STAIRS  = BlockStairsCustom(GLOOMROCK_SMOOTH) named "gloomrock_smooth_stairs"
+	@JvmField val GLOOMROCK_SMOOTH_SLAB    = BlockSlabCustom(buildGloomrockSmooth) named "gloomrock_smooth_slab"
+	@JvmField val GLOOMROCK_SMOOTH_RED     = BlockGloomrock(buildGloomrockSmooth) named "gloomrock_smooth_red"
+	@JvmField val GLOOMROCK_SMOOTH_ORANGE  = BlockGloomrock(buildGloomrockSmooth) named "gloomrock_smooth_orange"
+	@JvmField val GLOOMROCK_SMOOTH_YELLOW  = BlockGloomrock(buildGloomrockSmooth) named "gloomrock_smooth_yellow"
+	@JvmField val GLOOMROCK_SMOOTH_GREEN   = BlockGloomrock(buildGloomrockSmooth) named "gloomrock_smooth_green"
+	@JvmField val GLOOMROCK_SMOOTH_CYAN    = BlockGloomrock(buildGloomrockSmooth) named "gloomrock_smooth_cyan"
+	@JvmField val GLOOMROCK_SMOOTH_BLUE    = BlockGloomrock(buildGloomrockSmooth) named "gloomrock_smooth_blue"
+	@JvmField val GLOOMROCK_SMOOTH_PURPLE  = BlockGloomrock(buildGloomrockSmooth) named "gloomrock_smooth_purple"
+	@JvmField val GLOOMROCK_SMOOTH_MAGENTA = BlockGloomrock(buildGloomrockSmooth) named "gloomrock_smooth_magenta"
+	@JvmField val GLOOMROCK_SMOOTH_WHITE   = BlockGloomrock(buildGloomrockSmooth) named "gloomrock_smooth_white"
+	@JvmField val GLOOMTORCH               = BlockGloomtorch(buildGloomtorch) named "gloomtorch"
 	
 	// Blocks: Building (Dusty Stone)
 	
-	@JvmField val DUSTY_STONE                   = BlockDustyStonePlain(buildDustyStone).apply { setup("dusty_stone") }
-	@JvmField val DUSTY_STONE_CRACKED           = BlockDustyStonePlain(buildDustyStoneCracked).apply { setup("dusty_stone_cracked") }
-	@JvmField val DUSTY_STONE_DAMAGED           = BlockDustyStonePlain(buildDustyStoneDamaged).apply { setup("dusty_stone_damaged") }
-	@JvmField val DUSTY_STONE_BRICKS            = BlockDustyStoneBricks(buildDustyStoneBricks).apply { setup("dusty_stone_bricks") } // UPDATE: update recipe json to include tag to allow all dusty stone variations
-	@JvmField val DUSTY_STONE_CRACKED_BRICKS    = BlockDustyStoneBricks(buildDustyStoneBricks).apply { setup("dusty_stone_cracked_bricks") }
-	@JvmField val DUSTY_STONE_BRICK_STAIRS      = BlockStairsCustom(DUSTY_STONE_BRICKS).apply { setup("dusty_stone_brick_stairs") }
-	@JvmField val DUSTY_STONE_BRICK_SLAB        = BlockSlabCustom.Half(buildDustyStoneBricks).apply { setup("dusty_stone_brick_slab") }
-	@JvmField val DUSTY_STONE_BRICK_DOUBLE_SLAB = BlockSlabCustom.Full(buildDustyStoneBricks, DUSTY_STONE_BRICK_SLAB).apply { setup("dusty_stone_brick_slab_double", "hee.dusty_stone_brick_slab") }
+	@JvmField val DUSTY_STONE                = BlockDustyStonePlain(buildDustyStone) named "dusty_stone"
+	@JvmField val DUSTY_STONE_CRACKED        = BlockDustyStonePlain(buildDustyStoneCracked) named "dusty_stone_cracked"
+	@JvmField val DUSTY_STONE_DAMAGED        = BlockDustyStonePlain(buildDustyStoneDamaged) named "dusty_stone_damaged"
+	@JvmField val DUSTY_STONE_BRICKS         = BlockDustyStoneBricks(buildDustyStoneBricks) named "dusty_stone_bricks" // UPDATE: update recipe json to include tag to allow all dusty stone variations
+	@JvmField val DUSTY_STONE_CRACKED_BRICKS = BlockDustyStoneBricks(buildDustyStoneBricks) named "dusty_stone_cracked_bricks"
+	@JvmField val DUSTY_STONE_BRICK_STAIRS   = BlockStairsCustom(DUSTY_STONE_BRICKS) named "dusty_stone_brick_stairs"
+	@JvmField val DUSTY_STONE_BRICK_SLAB     = BlockSlabCustom(buildDustyStoneBricks) named "dusty_stone_brick_slab"
 	
 	// Blocks: Building (Obsidian)
 	
-	@JvmField val OBSIDIAN_STAIRS       = BlockStairsCustom(Blocks.OBSIDIAN).apply { setup("obsidian_stairs") }
-	@JvmField val OBSIDIAN_FALLING      = BlockFallingObsidian(buildObsidian).apply { setup("obsidian_falling") }
-	@JvmField val OBSIDIAN_SMOOTH       = BlockSimple(buildObsidianVariation).apply { setup("obsidian_smooth") }
-	@JvmField val OBSIDIAN_CHISELED     = BlockSimple(buildObsidianVariation).apply { setup("obsidian_chiseled") }
-	@JvmField val OBSIDIAN_PILLAR       = BlockPillarCustom(buildObsidianVariation).apply { setup("obsidian_pillar") }
-	@JvmField val OBSIDIAN_SMOOTH_LIT   = BlockSimple(buildObsidianVariationLit).apply { setup("obsidian_smooth_lit") }
-	@JvmField val OBSIDIAN_CHISELED_LIT = BlockSimple(buildObsidianVariationLit).apply { setup("obsidian_chiseled_lit") }
-	@JvmField val OBSIDIAN_PILLAR_LIT   = BlockPillarCustom(buildObsidianVariationLit).apply { setup("obsidian_pillar_lit") }
+	@JvmField val OBSIDIAN_STAIRS       = BlockStairsCustom(Blocks.OBSIDIAN) named "obsidian_stairs"
+	@JvmField val OBSIDIAN_FALLING      = BlockFallingObsidian(buildObsidian) named "obsidian_falling"
+	@JvmField val OBSIDIAN_SMOOTH       = BlockSimple(buildObsidianVariation) named "obsidian_smooth"
+	@JvmField val OBSIDIAN_CHISELED     = BlockSimple(buildObsidianVariation) named "obsidian_chiseled"
+	@JvmField val OBSIDIAN_PILLAR       = BlockPillarCustom(buildObsidianVariation) named "obsidian_pillar"
+	@JvmField val OBSIDIAN_SMOOTH_LIT   = BlockSimple(buildObsidianVariationLit) named "obsidian_smooth_lit"
+	@JvmField val OBSIDIAN_CHISELED_LIT = BlockSimple(buildObsidianVariationLit) named "obsidian_chiseled_lit"
+	@JvmField val OBSIDIAN_PILLAR_LIT   = BlockPillarCustom(buildObsidianVariationLit) named "obsidian_pillar_lit"
 	
 	// Blocks: Building (End Stone)
 	
-	@JvmField val END_STONE_INFESTED  = BlockSimple(buildEndStone).apply { setup("end_stone_infested") }
-	@JvmField val END_STONE_BURNED    = BlockSimple(buildEndStone).apply { setup("end_stone_burned") }
-	@JvmField val END_STONE_ENCHANTED = BlockSimple(buildEndStone).apply { setup("end_stone_enchanted") }
+	@JvmField val END_STONE_INFESTED  = BlockSimple(buildEndStone) named "end_stone_infested"
+	@JvmField val END_STONE_BURNED    = BlockSimple(buildEndStone) named "end_stone_burned"
+	@JvmField val END_STONE_ENCHANTED = BlockSimple(buildEndStone) named "end_stone_enchanted"
 	
 	// Blocks: Building (Dark Loam)
 	
-	@JvmField val DARK_LOAM             = BlockSimple(buildDarkLoam).apply { setup("dark_loam") }
-	@JvmField val DARK_LOAM_SLAB        = BlockSlabCustom.Half(buildDarkLoam).apply { setup("dark_loam_slab") }
-	@JvmField val DARK_LOAM_DOUBLE_SLAB = BlockSlabCustom.Full(buildDarkLoam, DARK_LOAM_SLAB).apply { setup("dark_loam_slab_double", "hee.dark_loam_slab") }
+	@JvmField val DARK_LOAM      = BlockSimple(buildDarkLoam) named "dark_loam"
+	@JvmField val DARK_LOAM_SLAB = BlockSlabCustom(buildDarkLoam) named "dark_loam_slab"
 	
 	// Blocks: Building (Grave Dirt)
 	
-	@JvmField val GRAVE_DIRT_PLAIN      = BlockGraveDirt(buildGraveDirt).apply { setup("grave_dirt") }
-	@JvmField val GRAVE_DIRT_LOOT       = BlockGraveDirt.Loot(buildGraveDirt).apply { setup("grave_dirt_loot") }
-	@JvmField val GRAVE_DIRT_SPIDERLING = BlockGraveDirt.Spiderling(buildGraveDirt).apply { setup("grave_dirt_spiderling") }
+	@JvmField val GRAVE_DIRT_PLAIN      = BlockGraveDirt(buildGraveDirt) named "grave_dirt"
+	@JvmField val GRAVE_DIRT_LOOT       = BlockGraveDirt.Loot(buildGraveDirt) named "grave_dirt_loot"
+	@JvmField val GRAVE_DIRT_SPIDERLING = BlockGraveDirt.Spiderling(buildGraveDirt) named "grave_dirt_spiderling"
 	
 	// Blocks: Building (Wood)
 	
-	@JvmField val WHITEBARK_LOG         = BlockWhitebarkLog().apply { setup("whitebark_log") }
-	@JvmField val WHITEBARK             = BlockSimple(buildWhitebark).apply { setup("whitebark") }
-	@JvmField val WHITEBARK_PLANKS      = BlockSimple(buildWhitebarkPlanks).apply { setup("whitebark_planks") }
-	@JvmField val WHITEBARK_STAIRS      = BlockStairsCustom(WHITEBARK_PLANKS).apply { setup("whitebark_stairs") }
-	@JvmField val WHITEBARK_SLAB        = BlockSlabCustom.Half(buildWhitebarkPlanks).apply { setup("whitebark_slab") }
-	@JvmField val WHITEBARK_DOUBLE_SLAB = BlockSlabCustom.Full(buildWhitebarkPlanks, WHITEBARK_SLAB).apply { setup("whitebark_slab_double", "hee.whitebark_slab") }
+	@JvmField val WHITEBARK_LOG    = BlockWhitebarkLog(buildWhitebark) named "whitebark_log"
+	@JvmField val WHITEBARK        = BlockSimple(buildWhitebark) named "whitebark"
+	@JvmField val WHITEBARK_PLANKS = BlockSimple(buildWhitebarkPlanks) named "whitebark_planks"
+	@JvmField val WHITEBARK_STAIRS = BlockStairsCustom(WHITEBARK_PLANKS) named "whitebark_stairs"
+	@JvmField val WHITEBARK_SLAB   = BlockSlabCustom(buildWhitebarkPlanks) named "whitebark_slab"
 	
 	// Blocks: Building (Miner's Burial)
 	
-	@JvmField val MINERS_BURIAL_BLOCK_PLAIN    = BlockSimple(buildMinersBurial).apply { setup("miners_burial_block_plain") }
-	@JvmField val MINERS_BURIAL_BLOCK_CHISELED = BlockSimple(buildMinersBurial).apply { setup("miners_burial_block_chiseled") }
-	@JvmField val MINERS_BURIAL_BLOCK_PILLAR   = BlockPillarCustom(buildMinersBurial).apply { setup("miners_burial_block_pillar") }
-	@JvmField val MINERS_BURIAL_BLOCK_JAIL     = BlockSimple(buildMinersBurial).apply { setup("miners_burial_block_jail") }
-	@JvmField val MINERS_BURIAL_ALTAR          = BlockMinersBurialAltar(buildMinersBurialAltar).apply { setup("miners_burial_altar") }
+	@JvmField val MINERS_BURIAL_BLOCK_PLAIN    = BlockSimple(buildMinersBurial) named "miners_burial_block_plain"
+	@JvmField val MINERS_BURIAL_BLOCK_CHISELED = BlockSimple(buildMinersBurial) named "miners_burial_block_chiseled"
+	@JvmField val MINERS_BURIAL_BLOCK_PILLAR   = BlockPillarCustom(buildMinersBurial) named "miners_burial_block_pillar"
+	@JvmField val MINERS_BURIAL_BLOCK_JAIL     = BlockSimple(buildMinersBurial) named "miners_burial_block_jail"
+	@JvmField val MINERS_BURIAL_ALTAR          = BlockMinersBurialAltar(buildMinersBurialAltar) named "miners_burial_altar"
 	
 	// Blocks: Fluids
 	
-	@JvmField val ENDER_GOO          = BlockEnderGoo().apply { setup("ender_goo") }
-	@JvmField val PURIFIED_ENDER_GOO = BlockEnderGooPurified().apply { setup("purified_ender_goo") }
+	@JvmField val ENDER_GOO          = BlockEnderGoo() named "ender_goo"
+	@JvmField val PURIFIED_ENDER_GOO = BlockEnderGooPurified() named "purified_ender_goo"
 	
-	@JvmField val CAULDRON_ENDER_GOO          = BlockCauldronWithGoo(ENDER_GOO).apply { setup("cauldron_ender_goo", inCreativeTab = false) }
-	@JvmField val CAULDRON_PURIFIED_ENDER_GOO = BlockCauldronWithGoo(PURIFIED_ENDER_GOO).apply { setup("cauldron_purified_ender_goo", inCreativeTab = false) }
-	@JvmField val CAULDRON_DRAGONS_BREATH     = BlockCauldronWithDragonsBreath().apply { setup("cauldron_dragons_breath", inCreativeTab = false) }
+	@JvmField val CAULDRON_ENDER_GOO          = BlockCauldronWithGoo(buildCauldron, ENDER_GOO) named "cauldron_ender_goo"
+	@JvmField val CAULDRON_PURIFIED_ENDER_GOO = BlockCauldronWithGoo(buildCauldron, PURIFIED_ENDER_GOO) named "cauldron_purified_ender_goo"
+	@JvmField val CAULDRON_DRAGONS_BREATH     = BlockCauldronWithDragonsBreath(buildCauldron) named "cauldron_dragons_breath"
 	
 	// Blocks: Interactive (Storage)
 	
-	@JvmField val JAR_O_DUST = BlockJarODust(buildJarODust).apply { setup("jar_o_dust") }
-	@JvmField val DARK_CHEST = BlockDarkChest(buildGloomrock).apply { setup("dark_chest") } // UPDATE: update recipe json to include tag to allow either slab variation
-	@JvmField val LOOT_CHEST = BlockLootChest(buildLootChest).apply { setup("loot_chest") }
+	@JvmField val JAR_O_DUST = BlockJarODust(buildJarODust) named "jar_o_dust"
+	@JvmField val DARK_CHEST = BlockDarkChest(buildGloomrock) named "dark_chest" // UPDATE: update recipe json to include tag to allow either slab variation
+	@JvmField val LOOT_CHEST = BlockLootChest(buildLootChest) named "loot_chest"
 	
 	// Blocks: Interactive (Puzzle)
 	
-	@JvmField val PUZZLE_WALL       = BlockSimple(buildPuzzleWall).apply { setup("puzzle_block_wall") }
-	@JvmField val PUZZLE_PLAIN      = BlockPuzzleLogic.Plain(buildPuzzleLogic).apply { setup("puzzle_block_plain") }
-	@JvmField val PUZZLE_BURST_3    = BlockPuzzleLogic.Burst(buildPuzzleLogic, radius = 1).apply { setup("puzzle_block_burst_3") }
-	@JvmField val PUZZLE_BURST_5    = BlockPuzzleLogic.Burst(buildPuzzleLogic, radius = 2).apply { setup("puzzle_block_burst_5") }
-	@JvmField val PUZZLE_REDIRECT_1 = BlockPuzzleLogic.Redirect(buildPuzzleLogic, arrayOf(NORTH)).apply { setup("puzzle_block_redirect_1") }
-	@JvmField val PUZZLE_REDIRECT_2 = BlockPuzzleLogic.Redirect(buildPuzzleLogic, arrayOf(NORTH, SOUTH)).apply { setup("puzzle_block_redirect_2") }
-	@JvmField val PUZZLE_REDIRECT_4 = BlockPuzzleLogic.RedirectAll(buildPuzzleLogic).apply { setup("puzzle_block_redirect_4") }
-	@JvmField val PUZZLE_TELEPORT   = BlockPuzzleLogic.Teleport(buildPuzzleLogic).apply { setup("puzzle_block_teleport") }
+	@JvmField val PUZZLE_WALL       = BlockSimple(buildPuzzleWall) named "puzzle_block_wall"
+	@JvmField val PUZZLE_PLAIN      = BlockPuzzleLogic.Plain(buildPuzzleLogic) named "puzzle_block_plain"
+	@JvmField val PUZZLE_BURST_3    = BlockPuzzleLogic.Burst(buildPuzzleLogic, radius = 1) named "puzzle_block_burst_3"
+	@JvmField val PUZZLE_BURST_5    = BlockPuzzleLogic.Burst(buildPuzzleLogic, radius = 2) named "puzzle_block_burst_5"
+	@JvmField val PUZZLE_REDIRECT_1 = BlockPuzzleLogic.Redirect(buildPuzzleLogic, arrayOf(NORTH)) named "puzzle_block_redirect_1"
+	@JvmField val PUZZLE_REDIRECT_2 = BlockPuzzleLogic.Redirect(buildPuzzleLogic, arrayOf(NORTH, SOUTH)) named "puzzle_block_redirect_2"
+	@JvmField val PUZZLE_REDIRECT_4 = BlockPuzzleLogic.RedirectAll(buildPuzzleLogic) named "puzzle_block_redirect_4"
+	@JvmField val PUZZLE_TELEPORT   = BlockPuzzleLogic.Teleport(buildPuzzleLogic) named "puzzle_block_teleport"
 	
 	// Blocks: Interactive (Gates)
 	
-	@JvmField val EXPERIENCE_GATE            = BlockExperienceGateOutline(buildExperienceGate).apply { setup("experience_gate") }
-	@JvmField val EXPERIENCE_GATE_CONTROLLER = BlockExperienceGateController(buildExperienceGate).apply { setup("experience_gate_controller") }
+	@JvmField val EXPERIENCE_GATE            = BlockExperienceGateOutline(buildExperienceGate) named "experience_gate"
+	@JvmField val EXPERIENCE_GATE_CONTROLLER = BlockExperienceGateController(buildExperienceGate) named "experience_gate_controller"
 	
 	// Blocks: Interactive (Uncategorized)
 	
-	@JvmField val INFUSED_TNT            = BlockInfusedTNT().apply { setup("infused_tnt", translationKey = "tnt", inCreativeTab = false) }
-	@JvmField val IGNEOUS_PLATE          = BlockIgneousPlate(buildIgneousPlate).apply { setup("igneous_plate") }
-	@JvmField val ENHANCED_BREWING_STAND = BlockEnhancedBrewingStand(buildBrewingStand).apply { setup("enhanced_brewing_stand") }
+	@JvmField val INFUSED_TNT            = BlockInfusedTNT() named "infused_tnt"
+	@JvmField val IGNEOUS_PLATE          = BlockIgneousPlate(buildIgneousPlate) named "igneous_plate"
+	@JvmField val ENHANCED_BREWING_STAND = BlockBrewingStandCustom(buildBrewingStand) named "enhanced_brewing_stand"
 	
 	// Blocks: Ores
 	
-	@JvmField val END_POWDER_ORE   = BlockEndPowderOre(buildEndPowderOre).apply { setup("end_powder_ore") }
-	@JvmField val ENDIUM_ORE       = BlockEndium(buildEndiumOre).apply { setup("endium_ore") }
-	@JvmField val STARDUST_ORE     = BlockStardustOre(buildStardustOre).apply { setup("stardust_ore") }
-	@JvmField val IGNEOUS_ROCK_ORE = BlockIgneousRockOre(buildIgneousRockOre).apply { setup("igneous_rock_ore") }
+	@JvmField val END_POWDER_ORE   = BlockEndPowderOre(buildEndPowderOre) named "end_powder_ore"
+	@JvmField val ENDIUM_ORE       = BlockEndium(buildEndiumOre) named "endium_ore"
+	@JvmField val STARDUST_ORE     = BlockStardustOre(buildStardustOre) named "stardust_ore"
+	@JvmField val IGNEOUS_ROCK_ORE = BlockIgneousRockOre(buildIgneousRockOre) named "igneous_rock_ore"
 	
 	// Blocks: Decorative (Trees)
 	
-	@JvmField val WHITEBARK_SAPLING_AUTUMN_BROWN       = BlockWhitebarkSapling(AutumnTreeGenerator.Brown).apply { setup("autumn_sapling_brown") }
-	@JvmField val WHITEBARK_SAPLING_AUTUMN_ORANGE      = BlockWhitebarkSapling(AutumnTreeGenerator.Orange).apply { setup("autumn_sapling_orange") }
-	@JvmField val WHITEBARK_SAPLING_AUTUMN_YELLOWGREEN = BlockWhitebarkSapling(AutumnTreeGenerator.YellowGreen).apply { setup("autumn_sapling_yellowgreen") }
+	@JvmField val WHITEBARK_SAPLING_AUTUMN_BROWN       = BlockWhitebarkSapling(buildWhitebarkSapling, AutumnTreeGenerator.Brown) named "autumn_sapling_brown"
+	@JvmField val WHITEBARK_SAPLING_AUTUMN_ORANGE      = BlockWhitebarkSapling(buildWhitebarkSapling, AutumnTreeGenerator.Orange) named "autumn_sapling_orange"
+	@JvmField val WHITEBARK_SAPLING_AUTUMN_YELLOWGREEN = BlockWhitebarkSapling(buildWhitebarkSapling, AutumnTreeGenerator.YellowGreen) named "autumn_sapling_yellowgreen"
 	
-	@JvmField val WHITEBARK_LEAVES_AUTUMN_BROWN       = BlockWhitebarkLeaves(WHITEBARK_SAPLING_AUTUMN_BROWN).apply { setup("autumn_leaves_brown") }
-	@JvmField val WHITEBARK_LEAVES_AUTUMN_ORANGE      = BlockWhitebarkLeaves(WHITEBARK_SAPLING_AUTUMN_ORANGE).apply { setup("autumn_leaves_orange") }
-	@JvmField val WHITEBARK_LEAVES_AUTUMN_YELLOWGREEN = BlockWhitebarkLeaves(WHITEBARK_SAPLING_AUTUMN_YELLOWGREEN).apply { setup("autumn_leaves_yellowgreen") }
+	@JvmField val WHITEBARK_LEAVES_AUTUMN_BROWN       = BlockWhitebarkLeaves(buildWhitebarkLeaves, WHITEBARK_SAPLING_AUTUMN_BROWN) named "autumn_leaves_brown"
+	@JvmField val WHITEBARK_LEAVES_AUTUMN_ORANGE      = BlockWhitebarkLeaves(buildWhitebarkLeaves, WHITEBARK_SAPLING_AUTUMN_ORANGE) named "autumn_leaves_orange"
+	@JvmField val WHITEBARK_LEAVES_AUTUMN_YELLOWGREEN = BlockWhitebarkLeaves(buildWhitebarkLeaves, WHITEBARK_SAPLING_AUTUMN_YELLOWGREEN) named "autumn_leaves_yellowgreen"
 	
-	@JvmField val POTTED_WHITEBARK_SAPLING_AUTUMN_BROWN       = BlockFlowerPotCustom(buildFlowerPot, WHITEBARK_SAPLING_AUTUMN_BROWN).apply { setup("potted_autumn_sapling_brown", translationKey = "flowerPot", inCreativeTab = false) }
-	@JvmField val POTTED_WHITEBARK_SAPLING_AUTUMN_ORANGE      = BlockFlowerPotCustom(buildFlowerPot, WHITEBARK_SAPLING_AUTUMN_ORANGE).apply { setup("potted_autumn_sapling_orange", translationKey = "flowerPot", inCreativeTab = false) }
-	@JvmField val POTTED_WHITEBARK_SAPLING_AUTUMN_YELLOWGREEN = BlockFlowerPotCustom(buildFlowerPot, WHITEBARK_SAPLING_AUTUMN_YELLOWGREEN).apply { setup("potted_autumn_sapling_yellowgreen", translationKey = "flowerPot", inCreativeTab = false) }
+	@JvmField val POTTED_WHITEBARK_SAPLING_AUTUMN_BROWN       = BlockFlowerPotCustom(buildFlowerPot, WHITEBARK_SAPLING_AUTUMN_BROWN) named "potted_autumn_sapling_brown"
+	@JvmField val POTTED_WHITEBARK_SAPLING_AUTUMN_ORANGE      = BlockFlowerPotCustom(buildFlowerPot, WHITEBARK_SAPLING_AUTUMN_ORANGE) named "potted_autumn_sapling_orange"
+	@JvmField val POTTED_WHITEBARK_SAPLING_AUTUMN_YELLOWGREEN = BlockFlowerPotCustom(buildFlowerPot, WHITEBARK_SAPLING_AUTUMN_YELLOWGREEN) named "potted_autumn_sapling_yellowgreen"
 	
 	// Blocks: Decorative (Plants)
 	
-	@JvmField val DEATH_FLOWER_DECAYING = BlockDeathFlowerDecaying().apply { setup("death_flower") }
-	@JvmField val DEATH_FLOWER_HEALED   = BlockEndPlant().apply { setup("death_flower_healed") }
-	@JvmField val DEATH_FLOWER_WITHERED = BlockEndPlant().apply { setup("death_flower_withered") }
+	@JvmField val DEATH_FLOWER_DECAYING = BlockDeathFlowerDecaying(buildPlant) named "death_flower"
+	@JvmField val DEATH_FLOWER_HEALED   = BlockEndPlant(buildPlant) named "death_flower_healed"
+	@JvmField val DEATH_FLOWER_WITHERED = BlockEndPlant(buildPlant) named "death_flower_withered"
 	
-	@JvmField val POTTED_DEATH_FLOWER_DECAYING = BlockFlowerPotDeathFlowerDecaying(buildFlowerPot, DEATH_FLOWER_DECAYING).apply { setup("potted_death_flower", translationKey = "flowerPot", inCreativeTab = false) }
-	@JvmField val POTTED_DEATH_FLOWER_HEALED   = BlockFlowerPotCustom(buildFlowerPot, DEATH_FLOWER_HEALED).apply { setup("potted_death_flower_healed", translationKey = "flowerPot", inCreativeTab = false) }
-	@JvmField val POTTED_DEATH_FLOWER_WITHERED = BlockFlowerPotCustom(buildFlowerPot, DEATH_FLOWER_WITHERED).apply { setup("potted_death_flower_withered", translationKey = "flowerPot", inCreativeTab = false) }
+	@JvmField val POTTED_DEATH_FLOWER_DECAYING = BlockFlowerPotDeathFlowerDecaying(buildFlowerPot, DEATH_FLOWER_DECAYING) named "potted_death_flower"
+	@JvmField val POTTED_DEATH_FLOWER_HEALED   = BlockFlowerPotCustom(buildFlowerPot, DEATH_FLOWER_HEALED) named "potted_death_flower_healed"
+	@JvmField val POTTED_DEATH_FLOWER_WITHERED = BlockFlowerPotCustom(buildFlowerPot, DEATH_FLOWER_WITHERED) named "potted_death_flower_withered"
 	
 	// Blocks: Decorative (Uncategorized)
 	
-	@JvmField val ANCIENT_COBWEB = BlockAncientCobweb().apply { setup("ancient_cobweb") }
-	@JvmField val DRY_VINES      = BlockDryVines().apply { setup("dry_vines") }
-	@JvmField val ENDERMAN_HEAD  = BlockEndermanHead().apply { setup("enderman_head_block", inCreativeTab = false) }
+	@JvmField val ANCIENT_COBWEB     = BlockAncientCobweb(buildAncientCobweb) named "ancient_cobweb"
+	@JvmField val DRY_VINES          = BlockDryVines(buildDryVines) named "dry_vines"
+	@JvmField val ENDERMAN_HEAD      = BlockSkullCustom(CustomSkulls.Enderman, buildEndermanHead) named "enderman_head"
+	@JvmField val ENDERMAN_WALL_HEAD = BlockSkullCustom.Wall(CustomSkulls.Enderman, buildEndermanHead) named "enderman_wall_head"
 	
 	// Blocks: Spawners
 	
-	@JvmField val SPAWNER_OBSIDIAN_TOWERS = BlockSpawnerObsidianTowers(buildSpawnerObsidianTowers).apply { setup("spawner_obsidian_towers", inCreativeTab = false) }
+	@JvmField val SPAWNER_OBSIDIAN_TOWERS = BlockSpawnerObsidianTowers(buildSpawnerObsidianTowers) named "spawner_obsidian_towers"
 	
 	// Blocks: Portals
 	
 	private val portalFrameAABB = AxisAlignedBB(0.0, 0.0, 0.0, 1.0, 0.8125, 1.0)
 	
-	@JvmField val END_PORTAL_INNER    = BlockEndPortalInner(buildPortalInner).apply { setup("end_portal_inner", inCreativeTab = false) }
-	@JvmField val END_PORTAL_FRAME    = BlockSimpleShaped(buildPortalFrame, portalFrameAABB).apply { setup("end_portal_frame") }
-	@JvmField val END_PORTAL_ACCEPTOR = BlockEndPortalAcceptor(buildPortalFrame, portalFrameAABB).apply { setup("end_portal_acceptor") }
+	@JvmField val END_PORTAL_INNER    = BlockEndPortalInner(buildPortalInner) named "end_portal_inner"
+	@JvmField val END_PORTAL_FRAME    = BlockSimpleShaped(buildPortalFrame, portalFrameAABB) named "end_portal_frame"
+	@JvmField val END_PORTAL_ACCEPTOR = BlockEndPortalAcceptor(buildPortalFrame, portalFrameAABB) named "end_portal_acceptor"
 	
-	@JvmField val VOID_PORTAL_INNER   = BlockVoidPortalInner(buildPortalInner).apply { setup("void_portal_inner", inCreativeTab = false) }
-	@JvmField val VOID_PORTAL_FRAME   = BlockSimpleShaped(buildPortalFrame, portalFrameAABB).apply { setup("void_portal_frame") }
-	@JvmField val VOID_PORTAL_STORAGE = BlockVoidPortalStorage(buildPortalFrame, portalFrameAABB).apply { setup("void_portal_storage") }
+	@JvmField val VOID_PORTAL_INNER   = BlockVoidPortalInner(buildPortalInner) named "void_portal_inner"
+	@JvmField val VOID_PORTAL_FRAME   = BlockSimpleShaped(buildPortalFrame, portalFrameAABB) named "void_portal_frame"
+	@JvmField val VOID_PORTAL_STORAGE = BlockVoidPortalStorage(buildPortalFrame, portalFrameAABB) named "void_portal_storage"
 	
-	@JvmField val VOID_PORTAL_FRAME_CRAFTED   = BlockVoidPortalCrafted(buildPortalFrameCrafted, portalFrameAABB).apply { setup("void_portal_frame_crafted", translationKey = "hee.void_portal_frame", inCreativeTab = false) }
-	@JvmField val VOID_PORTAL_STORAGE_CRAFTED = BlockVoidPortalStorageCrafted(buildPortalFrameCrafted, portalFrameAABB).apply { setup("void_portal_storage_crafted", translationKey = "hee.void_portal_storage", inCreativeTab = false) }
+	@JvmField val VOID_PORTAL_FRAME_CRAFTED   = BlockVoidPortalCrafted(buildPortalFrameCrafted, portalFrameAABB) named "void_portal_frame_crafted"
+	@JvmField val VOID_PORTAL_STORAGE_CRAFTED = BlockVoidPortalStorageCrafted(buildPortalFrameCrafted, portalFrameAABB) named "void_portal_storage_crafted"
 	
 	// Blocks: Energy
 	
-	@JvmField val ENERGY_CLUSTER   = BlockEnergyCluster(buildEnergyCluster).apply { setup("energy_cluster") }
-	@JvmField val CORRUPTED_ENERGY = BlockCorruptedEnergy(buildCorruptedEnergy).apply { setup("corrupted_energy") }
+	@JvmField val ENERGY_CLUSTER   = BlockEnergyCluster(buildEnergyCluster) named "energy_cluster"
+	@JvmField val CORRUPTED_ENERGY = BlockCorruptedEnergy(buildCorruptedEnergy) named "corrupted_energy"
 	
 	// Blocks: Tables
 	
-	@JvmField val TABLE_PEDESTAL     = BlockTablePedestal(buildTablePedestal).apply { setup("table_pedestal") } // UPDATE: update recipe json to include tag to allow all gloomrock variations
-	@JvmField val TABLE_BASE         = BlockTableBase(buildTable).apply { setup("table_base") }
-	@JvmField val ACCUMULATION_TABLE = BlockTableTile(buildTable, ::TileEntityAccumulationTable, minAllowedTier = 1).apply { setup("accumulation_table") }
+	@JvmField val TABLE_PEDESTAL     = BlockTablePedestal(buildTablePedestal) named "table_pedestal" // UPDATE: update recipe json to include tag to allow all gloomrock variations
+	@JvmField val TABLE_BASE         = BlockTableBase(buildTable) named "table_base"
+	@JvmField val ACCUMULATION_TABLE = BlockTableTile(buildTable, ::TileEntityAccumulationTable, minAllowedTier = 1) named "accumulation_table"
 	
 	// Blocks: Utilities
 	
-	@JvmField val ETERNAL_FIRE = BlockEternalFire(buildEternalFire).apply { setup("eternal_fire", inCreativeTab = false) }
-	@JvmField val SCAFFOLDING  = BlockScaffolding(buildScaffolding).apply { setup("scaffolding") }
+	@JvmField val ETERNAL_FIRE = BlockEternalFire(buildEternalFire) named "eternal_fire"
+	@JvmField val SCAFFOLDING  = BlockScaffolding(buildScaffolding) named "scaffolding"
 	
 	// Registry
 	
-	private val basicItemBlock = ::ItemBlock
-	private val metaItemBlock = ::ItemBlockWithMetadata
+	private val itemBlockBaseProps
+		get() = Item.Properties().group(ModCreativeTabs.main)
 	
-	private fun slabItemBlock(half: BlockSlabCustom.Half, full: BlockSlabCustom.Full): ItemBlock{
-		return ItemSlab(half, half, full).apply { hasSubtypes = false }
-	}
+	private val itemBlockDefaultProps = itemBlockBaseProps
+	private val itemBlockPropsHidden = Item.Properties()
 	
-	private fun woodenSlabItemBlock(half: BlockSlabCustom.Half, full: BlockSlabCustom.Full): ItemBlock{
-		return ItemBlockSlabFuel(half, full, burnTicks = 150).apply { hasSubtypes = false }
-	}
+	private val basicItemBlock = { block: Block -> ItemBlock(block, itemBlockDefaultProps) }
+	private val hiddenItemBlock = { block: Block -> ItemBlock(block, itemBlockPropsHidden) }
 	
-	private fun plantItemBlock(potted: BlockFlowerPotCustom): (Block) -> ItemBlock{
-		return { block -> ItemBlockPlant(block, potted, burnTicks = 0) }
-	}
-	
-	private fun saplingItemBlock(potted: BlockFlowerPotCustom): (Block) -> ItemBlock{
-		return { block -> ItemBlockPlant(block, potted, burnTicks = 100) }
+	private fun fuelItemBlock(burnTicks: Int): (Block) -> ItemBlock{
+		return { block -> ItemBlockFuel(block, itemBlockDefaultProps, burnTicks) }
 	}
 	
 	@JvmStatic
 	@SubscribeEvent
-	fun onRegister(e: RegistryEvent.Register<Block>){
+	fun onRegisterFluids(e: RegistryEvent.Register<Fluid>){
+		with(e.registry){
+			register(FluidEnderGoo.still)
+			register(FluidEnderGoo.flowing)
+			register(FluidEnderGooPurified.still)
+			register(FluidEnderGooPurified.flowing)
+		}
+	}
+	
+	@JvmStatic
+	@SubscribeEvent
+	fun onRegisterBlocks(e: RegistryEvent.Register<Block>){
 		with(e.registry){
 			register(ETHEREAL_LANTERN with basicItemBlock)
 			register(STONE_BRICK_WALL with basicItemBlock)
@@ -393,12 +383,10 @@ object ModBlocks{
 			register(GLOOMROCK with basicItemBlock)
 			register(GLOOMROCK_BRICKS with basicItemBlock)
 			register(GLOOMROCK_BRICK_STAIRS with basicItemBlock)
-			register(GLOOMROCK_BRICK_SLAB with slabItemBlock(GLOOMROCK_BRICK_SLAB, GLOOMROCK_BRICK_DOUBLE_SLAB))
-			register(GLOOMROCK_BRICK_DOUBLE_SLAB)
+			register(GLOOMROCK_BRICK_SLAB with basicItemBlock)
 			register(GLOOMROCK_SMOOTH with basicItemBlock)
 			register(GLOOMROCK_SMOOTH_STAIRS with basicItemBlock)
-			register(GLOOMROCK_SMOOTH_SLAB with slabItemBlock(GLOOMROCK_SMOOTH_SLAB, GLOOMROCK_SMOOTH_DOUBLE_SLAB))
-			register(GLOOMROCK_SMOOTH_DOUBLE_SLAB)
+			register(GLOOMROCK_SMOOTH_SLAB with basicItemBlock)
 			register(GLOOMROCK_SMOOTH_RED with basicItemBlock)
 			register(GLOOMROCK_SMOOTH_ORANGE with basicItemBlock)
 			register(GLOOMROCK_SMOOTH_YELLOW with basicItemBlock)
@@ -416,8 +404,7 @@ object ModBlocks{
 			register(DUSTY_STONE_BRICKS with basicItemBlock)
 			register(DUSTY_STONE_CRACKED_BRICKS with basicItemBlock)
 			register(DUSTY_STONE_BRICK_STAIRS with basicItemBlock)
-			register(DUSTY_STONE_BRICK_SLAB with slabItemBlock(DUSTY_STONE_BRICK_SLAB, DUSTY_STONE_BRICK_DOUBLE_SLAB))
-			register(DUSTY_STONE_BRICK_DOUBLE_SLAB)
+			register(DUSTY_STONE_BRICK_SLAB with basicItemBlock)
 			
 			register(OBSIDIAN_STAIRS with basicItemBlock)
 			register(OBSIDIAN_FALLING with basicItemBlock)
@@ -433,8 +420,7 @@ object ModBlocks{
 			register(END_STONE_ENCHANTED with basicItemBlock)
 			
 			register(DARK_LOAM with basicItemBlock)
-			register(DARK_LOAM_SLAB with slabItemBlock(DARK_LOAM_SLAB, DARK_LOAM_DOUBLE_SLAB))
-			register(DARK_LOAM_DOUBLE_SLAB)
+			register(DARK_LOAM_SLAB with basicItemBlock)
 			
 			register(GRAVE_DIRT_PLAIN with basicItemBlock)
 			register(GRAVE_DIRT_LOOT with basicItemBlock)
@@ -444,8 +430,7 @@ object ModBlocks{
 			register(WHITEBARK with basicItemBlock)
 			register(WHITEBARK_PLANKS with basicItemBlock)
 			register(WHITEBARK_STAIRS with basicItemBlock)
-			register(WHITEBARK_SLAB with woodenSlabItemBlock(WHITEBARK_SLAB, WHITEBARK_DOUBLE_SLAB))
-			register(WHITEBARK_DOUBLE_SLAB)
+			register(WHITEBARK_SLAB with fuelItemBlock(burnTicks = 150))
 			
 			register(MINERS_BURIAL_BLOCK_PLAIN with basicItemBlock)
 			register(MINERS_BURIAL_BLOCK_CHISELED with basicItemBlock)
@@ -459,9 +444,9 @@ object ModBlocks{
 			register(CAULDRON_PURIFIED_ENDER_GOO)
 			register(CAULDRON_DRAGONS_BREATH)
 			
-			register(JAR_O_DUST with basicItemBlock)
-			register(DARK_CHEST with basicItemBlock)
-			register(LOOT_CHEST with basicItemBlock)
+			register(JAR_O_DUST with { ItemBlock(it, itemBlockBaseProps.maxStackSize(1).setTEISR { Callable { ModRendering.RENDER_ITEM_JAR_O_DUST } }) })
+			register(DARK_CHEST with { ItemBlock(it, itemBlockBaseProps.setTEISR { Callable { ModRendering.RENDER_ITEM_DARK_CHEST } }) })
+			register(LOOT_CHEST with { ItemBlock(it, itemBlockBaseProps.setTEISR { Callable { ModRendering.RENDER_ITEM_LOOT_CHEST } }) })
 			
 			register(PUZZLE_WALL with basicItemBlock)
 			register(PUZZLE_PLAIN with basicItemBlock)
@@ -472,7 +457,7 @@ object ModBlocks{
 			register(PUZZLE_REDIRECT_4 with basicItemBlock)
 			register(PUZZLE_TELEPORT with basicItemBlock)
 			
-			register(INFUSED_TNT with ::ItemInfusedTNT)
+			register(INFUSED_TNT with ItemInfusedTNT(INFUSED_TNT, itemBlockPropsHidden))
 			register(IGNEOUS_PLATE with basicItemBlock)
 			register(ENHANCED_BREWING_STAND with basicItemBlock)
 			register(EXPERIENCE_GATE with basicItemBlock)
@@ -486,73 +471,53 @@ object ModBlocks{
 			register(WHITEBARK_LEAVES_AUTUMN_BROWN with basicItemBlock)
 			register(WHITEBARK_LEAVES_AUTUMN_ORANGE with basicItemBlock)
 			register(WHITEBARK_LEAVES_AUTUMN_YELLOWGREEN with basicItemBlock)
-			register(WHITEBARK_SAPLING_AUTUMN_BROWN with saplingItemBlock(POTTED_WHITEBARK_SAPLING_AUTUMN_BROWN))
-			register(WHITEBARK_SAPLING_AUTUMN_ORANGE with saplingItemBlock(POTTED_WHITEBARK_SAPLING_AUTUMN_ORANGE))
-			register(WHITEBARK_SAPLING_AUTUMN_YELLOWGREEN with saplingItemBlock(POTTED_WHITEBARK_SAPLING_AUTUMN_YELLOWGREEN))
+			register(WHITEBARK_SAPLING_AUTUMN_BROWN with fuelItemBlock(burnTicks = 100))
+			register(WHITEBARK_SAPLING_AUTUMN_ORANGE with fuelItemBlock(burnTicks = 100))
+			register(WHITEBARK_SAPLING_AUTUMN_YELLOWGREEN with fuelItemBlock(burnTicks = 100))
 			register(POTTED_WHITEBARK_SAPLING_AUTUMN_BROWN)
 			register(POTTED_WHITEBARK_SAPLING_AUTUMN_ORANGE)
 			register(POTTED_WHITEBARK_SAPLING_AUTUMN_YELLOWGREEN)
 			
-			register(DEATH_FLOWER_DECAYING with plantItemBlock(POTTED_DEATH_FLOWER_DECAYING))
-			register(DEATH_FLOWER_HEALED with plantItemBlock(POTTED_DEATH_FLOWER_HEALED))
-			register(DEATH_FLOWER_WITHERED with plantItemBlock(POTTED_DEATH_FLOWER_WITHERED))
+			register(DEATH_FLOWER_DECAYING with basicItemBlock)
+			register(DEATH_FLOWER_HEALED with basicItemBlock)
+			register(DEATH_FLOWER_WITHERED with basicItemBlock)
 			register(POTTED_DEATH_FLOWER_DECAYING)
 			register(POTTED_DEATH_FLOWER_HEALED)
 			register(POTTED_DEATH_FLOWER_WITHERED)
 			
-			register(ANCIENT_COBWEB with ::ItemAncientCobweb)
+			register(ANCIENT_COBWEB with { ItemAncientCobweb(it, itemBlockDefaultProps) })
 			register(DRY_VINES with basicItemBlock)
 			register(ENDERMAN_HEAD)
 			
 			register(SPAWNER_OBSIDIAN_TOWERS)
 			
-			register(END_PORTAL_INNER with basicItemBlock)
+			register(END_PORTAL_INNER with hiddenItemBlock)
 			register(END_PORTAL_FRAME with basicItemBlock)
 			register(END_PORTAL_ACCEPTOR with basicItemBlock)
-			register(VOID_PORTAL_INNER with metaItemBlock)
+			register(VOID_PORTAL_INNER with hiddenItemBlock)
 			register(VOID_PORTAL_FRAME with basicItemBlock)
 			register(VOID_PORTAL_STORAGE with basicItemBlock)
-			register(VOID_PORTAL_FRAME_CRAFTED with basicItemBlock)
-			register(VOID_PORTAL_STORAGE_CRAFTED with basicItemBlock)
+			register(VOID_PORTAL_FRAME_CRAFTED with hiddenItemBlock)
+			register(VOID_PORTAL_STORAGE_CRAFTED with hiddenItemBlock)
 			
 			register(ENERGY_CLUSTER with basicItemBlock)
 			register(CORRUPTED_ENERGY)
 			
 			register(TABLE_PEDESTAL with basicItemBlock)
-			register(TABLE_BASE with metaItemBlock)
-			register(ACCUMULATION_TABLE with metaItemBlock)
+			register(TABLE_BASE with basicItemBlock)
+			register(ACCUMULATION_TABLE with basicItemBlock)
 			
 			register(ETERNAL_FIRE)
 			register(SCAFFOLDING with basicItemBlock)
 		}
 		
-		tile<TileEntityAccumulationTable>("accumulation_table")
-		tile<TileEntityBrewingStandCustom>("brewing_stand")
-		tile<TileEntityDarkChest>("dark_chest")
-		tile<TileEntityEndPortalAcceptor>("end_portal_acceptor")
-		tile<TileEntityEnergyCluster>("energy_cluster")
-		tile<TileEntityExperienceGate>("experience_gate")
-		tile<TileEntityIgneousPlate>("igneous_plate")
-		tile<TileEntityInfusedTNT>("infused_tnt")
-		tile<TileEntityJarODust>("jar_o_dust")
-		tile<TileEntityLootChest>("loot_chest")
-		tile<TileEntityMinersBurialAltar>("miners_burial_altar")
-		tile<TileEntityPortalInner.End>("end_portal_inner")
-		tile<TileEntityPortalInner.Void>("void_portal_inner")
-		tile<TileEntitySpawnerObsidianTower>("spawner_obsidian_tower")
-		tile<TileEntityTablePedestal>("table_pedestal")
-		tile<TileEntityVoidPortalStorage>("void_portal_storage")
-		
 		// vanilla modifications
 		
-		Blocks.END_BRICKS.setHardness(1.0F).setResistance(4.0F)
-		Blocks.END_PORTAL_FRAME.creativeTabIn = null
-		
 		with(e.registry){
-			register(BlockEndPortalOverride().apply { override(Blocks.END_PORTAL, newCreativeTab = null) })
-			register(BlockBrewingStandOverride(buildBrewingStand).apply { override(Blocks.BREWING_STAND) })
-			register(BlockChorusPlantOverride().apply { override(Blocks.CHORUS_PLANT) })
-			register(BlockDragonEggOverride().apply { override(Blocks.DRAGON_EGG) } with ::ItemDragonEgg)
+			register(BlockEndPortalOverride(buildEndPortalOverride).apply { override(Blocks.END_PORTAL, newCreativeTab = null) })
+			register(BlockBrewingStandCustom.Override(buildBrewingStand, Blocks.BREWING_STAND.translationKey).apply { override(Blocks.BREWING_STAND) })
+			register(BlockChorusPlantOverride(buildChorusPlant).apply { override(Blocks.CHORUS_PLANT) })
+			register(BlockDragonEggOverride(buildDragonEgg, Blocks.DRAGON_EGG.translationKey).apply { override(Blocks.DRAGON_EGG) } with { ItemDragonEgg(it, itemBlockDefaultProps) })
 		}
 	}
 	
@@ -562,57 +527,52 @@ object ModBlocks{
 		temporaryItemBlocks.forEach(e.registry::register)
 		temporaryItemBlocks.clear()
 		
-		Item.getItemFromBlock(JAR_O_DUST).setMaxStackSize(1)
-		
 		// ore dictionary
 		
-		OreDictionary.registerOre("logWood", WHITEBARK_LOG)
-		OreDictionary.registerOre("logWood", WHITEBARK) // UPDATE check new name for bark blocks
-		OreDictionary.registerOre("plankWood", WHITEBARK_PLANKS)
-		OreDictionary.registerOre("stairWood", WHITEBARK_STAIRS)
-		OreDictionary.registerOre("slabWood", WHITEBARK_SLAB)
+		// UPDATE tags
+		//OreDictionary.registerOre("logWood", WHITEBARK_LOG)
+		//OreDictionary.registerOre("logWood", WHITEBARK) // UPDATE check new name for bark blocks
+		//OreDictionary.registerOre("plankWood", WHITEBARK_PLANKS)
+		//OreDictionary.registerOre("stairWood", WHITEBARK_STAIRS)
+		//OreDictionary.registerOre("slabWood", WHITEBARK_SLAB)
 		
 		// fire
 		
-		Blocks.FIRE.setFireInfo(WHITEBARK_LOG, 5, 5)
-		Blocks.FIRE.setFireInfo(WHITEBARK, 5, 5)
-		Blocks.FIRE.setFireInfo(WHITEBARK_PLANKS, 5, 20)
-		Blocks.FIRE.setFireInfo(WHITEBARK_STAIRS, 5, 20)
-		Blocks.FIRE.setFireInfo(WHITEBARK_SLAB, 5, 20)
+		with(Blocks.FIRE as BlockFire){
+			setFireInfo(WHITEBARK_LOG, 5, 5)
+			setFireInfo(WHITEBARK, 5, 5)
+			setFireInfo(WHITEBARK_PLANKS, 5, 20)
+			setFireInfo(WHITEBARK_STAIRS, 5, 20)
+			setFireInfo(WHITEBARK_SLAB, 5, 20)
+			
+			setFireInfo(WHITEBARK_LEAVES_AUTUMN_BROWN, 30, 60)
+			setFireInfo(WHITEBARK_LEAVES_AUTUMN_ORANGE, 30, 60)
+			setFireInfo(WHITEBARK_LEAVES_AUTUMN_YELLOWGREEN, 30, 60)
+			
+			// UPDATE hardcoded shit in BlockFire Blocks.FIRE.setFireInfo(INFUSED_TNT, 15, 100)
+			
+			setFireInfo(ANCIENT_COBWEB, 100, 300)
+			setFireInfo(DRY_VINES, 100, 300)
+		}
 		
-		Blocks.FIRE.setFireInfo(WHITEBARK_LEAVES_AUTUMN_BROWN, 30, 60)
-		Blocks.FIRE.setFireInfo(WHITEBARK_LEAVES_AUTUMN_ORANGE, 30, 60)
-		Blocks.FIRE.setFireInfo(WHITEBARK_LEAVES_AUTUMN_YELLOWGREEN, 30, 60)
+		// vanilla modifications
 		
-		// UPDATE hardcoded shit in BlockFire Blocks.FIRE.setFireInfo(INFUSED_TNT, 15, 100)
-		
-		Blocks.FIRE.setFireInfo(ANCIENT_COBWEB, 100, 300)
-		Blocks.FIRE.setFireInfo(DRY_VINES, 100, 300)
+		Blocks.END_PORTAL_FRAME.asItem().group = null
 	}
 	
 	// Utilities
 	
 	private val temporaryItemBlocks = mutableListOf<ItemBlock>()
 	
-	private fun Block.setup(registryName: String, translationKey: String = "hee.$registryName", inCreativeTab: Boolean = true){
-		this.setRegistryName(HEE.ID, registryName)
-		this.translationKey = translationKey
-		
-		if (inCreativeTab){
-			this.creativeTabIn = ModCreativeTabs.main
-		}
-		
-		if (this.translucent || this.lightOpacity == 0){
-			this.useNeighborBrightness = true
-		}
-	}
-	
-	private fun Block.override(vanillaBlock: Block, newCreativeTab: CreativeTabs? = ModCreativeTabs.main){
+	private fun Block.override(vanillaBlock: Block, newCreativeTab: ItemGroup? = ModCreativeTabs.main){
 		this.useVanillaName(vanillaBlock)
-		this.creativeTabIn = newCreativeTab
+		
+		val item = vanillaBlock.asItem().apply {
+			group = newCreativeTab
+		}
 		
 		if (newCreativeTab is OrderedCreativeTab){
-			newCreativeTab.registerOrder(Item.getItemFromBlock(vanillaBlock))
+			newCreativeTab.registerOrder(item)
 		}
 	}
 	
@@ -625,14 +585,10 @@ object ModBlocks{
 		}
 		
 		temporaryItemBlocks.add(itemBlock)
-		(itemBlock.creativeTab as? OrderedCreativeTab)?.registerOrder(itemBlock)
+		(itemBlock.group as? OrderedCreativeTab)?.registerOrder(itemBlock)
 	}
 	
 	private infix fun <T : Block> T.with(itemBlockConstructor: (T) -> ItemBlock): Block{
 		return with(itemBlockConstructor(this))
-	}
-	
-	private inline fun <reified T : TileEntity> tile(registryName: String){
-		GameRegistry.registerTileEntity(T::class.java, Resource.Custom(registryName))
 	}
 }

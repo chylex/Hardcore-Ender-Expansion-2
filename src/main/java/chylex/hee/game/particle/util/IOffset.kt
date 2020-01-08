@@ -2,7 +2,7 @@ package chylex.hee.game.particle.util
 import chylex.hee.system.util.nextFloat
 import chylex.hee.system.util.nextVector
 import net.minecraft.entity.Entity
-import net.minecraft.util.EnumFacing
+import net.minecraft.util.Direction
 import java.util.Random
 
 interface IOffset{
@@ -29,7 +29,7 @@ interface IOffset{
 		private val offsetY: Float,
 		private val offsetZ: Float
 	) : IOffset{
-		constructor(offset: Float, towards: EnumFacing) : this(
+		constructor(offset: Float, towards: Direction) : this(
 			offsetX = offset * towards.xOffset,
 			offsetY = offset * towards.yOffset,
 			offsetZ = offset * towards.zOffset

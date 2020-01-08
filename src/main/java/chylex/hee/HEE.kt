@@ -1,12 +1,8 @@
 package chylex.hee
 import chylex.hee.game.block.util.CustomPlantType
-import chylex.hee.game.commands.HeeServerCommand
-import chylex.hee.game.entity.CustomCreatureType
-import chylex.hee.game.entity.item.EntityItemIgneousRock
 import chylex.hee.game.entity.living.EntityMobEnderman
 import chylex.hee.game.entity.living.behavior.EndermanBlockHandler
 import chylex.hee.game.item.util.CustomRarity
-import chylex.hee.game.item.util.CustomToolMaterial
 import chylex.hee.game.mechanics.causatum.EnderCausatum
 import chylex.hee.game.mechanics.instability.Instability
 import chylex.hee.game.mechanics.trinket.TrinketHandler
@@ -14,7 +10,6 @@ import chylex.hee.game.world.WorldProviderEndCustom
 import chylex.hee.game.world.feature.OverworldFeatures
 import chylex.hee.game.world.territory.storage.TokenPlayerStorage
 import chylex.hee.init.ModCreativeTabs
-import chylex.hee.init.ModGuiHandler
 import chylex.hee.init.ModLoot
 import chylex.hee.init.ModNetwork
 import chylex.hee.init.ModPotions
@@ -22,83 +17,70 @@ import chylex.hee.init.ModRecipes
 import chylex.hee.proxy.Environment
 import chylex.hee.system.Debug
 import chylex.hee.system.IntegrityCheck
-import chylex.hee.system.migration.forge.Side
+import chylex.hee.system.migration.forge.SubscribeAllEvents
+import chylex.hee.system.migration.forge.SubscribeEvent
+import net.minecraft.world.dimension.DimensionType
+import net.minecraftforge.fml.ModLoadingContext
 import net.minecraftforge.fml.common.Mod
-import net.minecraftforge.fml.common.Mod.EventHandler
-import net.minecraftforge.fml.common.event.FMLInitializationEvent
-import net.minecraftforge.fml.common.event.FMLLoadCompleteEvent
-import net.minecraftforge.fml.common.event.FMLPostInitializationEvent
-import net.minecraftforge.fml.common.event.FMLPreInitializationEvent
-import net.minecraftforge.fml.common.event.FMLServerStartingEvent
-import net.minecraftforge.fml.common.network.NetworkCheckHandler
+import net.minecraftforge.fml.common.Mod.EventBusSubscriber.Bus.MOD
+import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent
+import net.minecraftforge.fml.event.lifecycle.FMLLoadCompleteEvent
+import net.minecraftforge.fml.event.server.FMLServerStartingEvent
+import org.apache.logging.log4j.LogManager
 import org.apache.logging.log4j.Logger
 
-@Mod(modid = HEE.ID, useMetadata = true, modLanguageAdapter = "chylex.hee.system.core.KotlinAdapter")
+@Mod(HEE.ID)
+@SubscribeAllEvents(modid = HEE.ID, bus = MOD)
 object HEE{
 	const val ID = "hee"
-	const val DIM = 1
 	
-	lateinit var log: Logger
-	lateinit var version: String
+	val log: Logger = LogManager.getLogger("HardcoreEnderExpansion")
+	val version: String
 	
+	val dim: DimensionType = DimensionType.THE_END
 	val proxy = Environment.constructProxy()
 	
 	init{
+		with(ModLoadingContext.get()){
+			version = activeContainer.modInfo.version.toString()
+		}
+		
 		CustomRarity
-		CustomToolMaterial
-		CustomCreatureType
 		CustomPlantType
+		
+		ModCreativeTabs.initialize()
+		WorldProviderEndCustom.register()
 	}
 	
-	@EventHandler
-	fun onPreInit(e: FMLPreInitializationEvent){
-		log = e.modLog
-		version = e.modMetadata.version
-		
+	@JvmStatic
+	@SubscribeEvent
+	fun onCommonSetup(@Suppress("UNUSED_PARAMETER") e: FMLCommonSetupEvent){
 		Debug.initialize()
+		
 		ModNetwork.initialize()
-		ModGuiHandler.initialize()
-		ModCreativeTabs.initialize()
+		ModLoot.initialize()
+		ModRecipes.initialize()
 		
 		TrinketHandler.register()
 		EnderCausatum.register()
 		Instability.register()
 		TokenPlayerStorage.register()
-		WorldProviderEndCustom.register()
-		
-		proxy.onPreInit()
-	}
-	
-	@EventHandler
-	fun onInit(@Suppress("UNUSED_PARAMETER") e: FMLInitializationEvent){
-		ModLoot.initialize()
-		ModRecipes.initialize()
 		OverworldFeatures.register()
-		proxy.onInit()
 	}
 	
-	@EventHandler
-	fun onPostInit(@Suppress("UNUSED_PARAMETER") e: FMLPostInitializationEvent){
-		CustomToolMaterial.setupRepairItems()
-		EntityItemIgneousRock.setupSmeltingTransformations()
+	@JvmStatic
+	@SubscribeEvent
+	fun onLoadComplete(@Suppress("UNUSED_PARAMETER") e: FMLLoadCompleteEvent){
 		EntityMobEnderman.setupBiomeSpawns()
 		EndermanBlockHandler.setupCarriableBlocks()
 		ModPotions.setupVanillaOverrides()
 		OverworldFeatures.setupVanillaOverrides()
-	}
-	
-	@EventHandler
-	fun onLoadComplete(@Suppress("UNUSED_PARAMETER") e: FMLLoadCompleteEvent){
 		IntegrityCheck.verify()
 	}
 	
-	@EventHandler
-	fun onServerStarting(e: FMLServerStartingEvent){
-		e.registerServerCommand(HeeServerCommand)
-	}
-	
-	@NetworkCheckHandler
-	fun onNetworkCheck(mods: Map<String, String>, @Suppress("UNUSED_PARAMETER") side: Side): Boolean{
-		return mods.isNotEmpty() && mods[ID] == version
+	@JvmStatic
+	@SubscribeEvent
+	fun onServerStarting(@Suppress("UNUSED_PARAMETER") e: FMLServerStartingEvent){
+		// UPDATE e.registerServerCommand(HeeServerCommand)
 	}
 }

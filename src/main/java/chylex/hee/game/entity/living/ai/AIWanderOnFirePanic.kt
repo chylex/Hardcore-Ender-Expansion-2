@@ -1,13 +1,13 @@
 package chylex.hee.game.entity.living.ai
 import chylex.hee.game.entity.living.ai.util.AIBaseWanderConditioned
 import chylex.hee.system.migration.Facing.UP
+import chylex.hee.system.migration.vanilla.EntityCreature
 import chylex.hee.system.util.Pos
 import chylex.hee.system.util.center
 import chylex.hee.system.util.getMaterial
 import chylex.hee.system.util.nextInt
 import chylex.hee.system.util.offsetUntil
 import net.minecraft.block.material.Material
-import net.minecraft.entity.EntityCreature
 import net.minecraft.entity.ai.RandomPositionGenerator
 import net.minecraft.util.math.Vec3d
 

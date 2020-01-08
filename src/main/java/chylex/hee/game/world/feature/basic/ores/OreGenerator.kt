@@ -15,7 +15,7 @@ class OreGenerator(
 	private val attemptsPerChunk: Int,
 	private val clustersPerChunk: (Random) -> Int
 ){
-	fun generate(world: SegmentedWorld, bounds: BoundingBox = world.worldSize.toBoundingBox(BlockPos.ORIGIN)): Int{
+	fun generate(world: SegmentedWorld, bounds: BoundingBox = world.worldSize.toBoundingBox(BlockPos.ZERO)): Int{
 		val rand = world.rand
 		
 		val min = bounds.min

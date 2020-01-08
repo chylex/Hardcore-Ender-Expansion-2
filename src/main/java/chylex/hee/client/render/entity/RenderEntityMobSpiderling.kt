@@ -4,18 +4,18 @@ import chylex.hee.client.render.util.GL
 import chylex.hee.game.entity.living.EntityMobSpiderling
 import chylex.hee.system.migration.forge.Side
 import chylex.hee.system.migration.forge.Sided
+import chylex.hee.system.migration.vanilla.RenderLiving
+import chylex.hee.system.migration.vanilla.RenderManager
 import chylex.hee.system.util.facades.Resource
-import net.minecraft.client.model.ModelSpider
-import net.minecraft.client.renderer.entity.RenderLiving
-import net.minecraft.client.renderer.entity.RenderManager
+import net.minecraft.client.renderer.entity.model.SpiderModel
 import net.minecraft.util.ResourceLocation
 
 @Sided(Side.CLIENT)
-class RenderEntityMobSpiderling(manager: RenderManager) : RenderLiving<EntityMobSpiderling>(manager, ModelSpider(), 0.5F){
+class RenderEntityMobSpiderling(manager: RenderManager) : RenderLiving<EntityMobSpiderling, SpiderModel<EntityMobSpiderling>>(manager, SpiderModel(), 0.5F){
 	private val texture = Resource.Custom("textures/entity/spiderling.png")
 	
 	init{
-		addLayer(LayerSpiderlingEyes(this, (mainModel as ModelSpider).spiderHead))
+		addLayer(LayerSpiderlingEyes(this, (entityModel as SpiderModel).field_78209_a)) // UPDATE spiderHead
 	}
 	
 	override fun preRenderCallback(entity: EntityMobSpiderling, partialTicks: Float){

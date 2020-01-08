@@ -1,26 +1,29 @@
 package chylex.hee.game.block
 import chylex.hee.game.block.info.BlockBuilder
-import chylex.hee.init.ModLoot
 import chylex.hee.system.util.ceilToInt
+import chylex.hee.system.util.facades.Resource
 import chylex.hee.system.util.nextBiasedFloat
-import net.minecraft.block.state.IBlockState
-import net.minecraft.item.ItemStack
+import net.minecraft.block.BlockState
 import net.minecraft.util.BlockRenderLayer.CUTOUT
-import net.minecraft.util.NonNullList
+import net.minecraft.util.ResourceLocation
 import net.minecraft.util.math.BlockPos
-import net.minecraft.world.IBlockAccess
+import net.minecraft.world.IWorldReader
 import net.minecraft.world.World
 
 class BlockStardustOre(builder: BlockBuilder) : BlockSimple(builder){
-	override fun getDrops(drops: NonNullList<ItemStack>, world: IBlockAccess, pos: BlockPos, state: IBlockState, fortune: Int){
-		ModLoot.STARDUST_ORE.generateDrops(drops, world, fortune)
+	override fun isSolid(state: BlockState): Boolean{
+		return true
 	}
 	
-	override fun getExpDrop(state: IBlockState, world: IBlockAccess, pos: BlockPos, fortune: Int): Int{
+	override fun getLootTable(): ResourceLocation{
+		return Resource.Custom("blocks/stardust_ore")
+	}
+	
+	override fun getExpDrop(state: BlockState, world: IWorldReader, pos: BlockPos, fortune: Int, silktouch: Int): Int{
 		return (((world as? World)?.rand ?: RANDOM).nextBiasedFloat(4F) * 6F).ceilToInt()
 	}
 	
-	override fun canSilkHarvest() = true
+	// UPDATE override fun canSilkHarvest() = true
 	
 	override fun getRenderLayer() = CUTOUT
 }

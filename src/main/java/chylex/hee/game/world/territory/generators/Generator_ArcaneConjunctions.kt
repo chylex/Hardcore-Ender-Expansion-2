@@ -19,8 +19,8 @@ import chylex.hee.game.world.generation.IBlockPlacer.BlockPlacer
 import chylex.hee.game.world.generation.IBlockPlacer.BlockReplacer
 import chylex.hee.game.world.generation.SegmentedWorld
 import chylex.hee.game.world.generation.TerritoryGenerationInfo
-import chylex.hee.game.world.structure.trigger.BlockUpdateStructureTrigger
 import chylex.hee.game.world.structure.trigger.EnergyClusterStructureTrigger
+import chylex.hee.game.world.structure.trigger.FluidStructureTrigger
 import chylex.hee.game.world.territory.ITerritoryGenerator
 import chylex.hee.game.world.util.Size
 import chylex.hee.init.ModBlocks
@@ -402,7 +402,7 @@ object Generator_ArcaneConjunctions : ITerritoryGenerator{
 		inline fun forEachOuterBlock(callback: (BlockPos) -> Unit) = forEachPoint {
 			val center = Pos(it)
 			
-			for((x, y, z) in BlockPos.ORIGIN.allInCenteredBoxMutable(baseRadiusXZ, baseRadiusY, baseRadiusXZ)){
+			for((x, y, z) in BlockPos.ZERO.allInCenteredBoxMutable(baseRadiusXZ, baseRadiusY, baseRadiusXZ)){
 				if (square(abs(x) / baseRadiusXZ) + square(abs(y) / baseRadiusY) + square(abs(z) / baseRadiusXZ) <= 1F){
 					callback(center.add(x, y, z))
 				}
@@ -412,7 +412,7 @@ object Generator_ArcaneConjunctions : ITerritoryGenerator{
 		inline fun forEachInnerBlock(rand: Random, callback: (BlockPos) -> Unit) = forEachPoint {
 			val center = Pos(it)
 			
-			for((x, y, z) in BlockPos.ORIGIN.allInCenteredBoxMutable(baseRadiusXZ, baseRadiusY, baseRadiusXZ)){
+			for((x, y, z) in BlockPos.ZERO.allInCenteredBoxMutable(baseRadiusXZ, baseRadiusY, baseRadiusXZ)){
 				val subtractRadius = outerThickness + rand.nextFloat(0.0, 0.2)
 				val radXZ = baseRadiusXZ - subtractRadius
 				val radY = baseRadiusY - subtractRadius
@@ -504,10 +504,10 @@ object Generator_ArcaneConjunctions : ITerritoryGenerator{
 					return
 				}
 				
-				world.addTrigger(rand.nextItem(topBlocks), BlockUpdateStructureTrigger(ModBlocks.ENDER_GOO))
+				world.addTrigger(rand.nextItem(topBlocks), FluidStructureTrigger(ModBlocks.ENDER_GOO))
 				
 				for(level in 1..2) for(pos in bottomCenter.up(level).floodFill(Facing4){ world.isAir(it) && !world.isAir(it.down()) }){
-					world.addTrigger(pos, BlockUpdateStructureTrigger(ModBlocks.ENDER_GOO))
+					world.addTrigger(pos, FluidStructureTrigger(ModBlocks.ENDER_GOO))
 				}
 			}
 		}

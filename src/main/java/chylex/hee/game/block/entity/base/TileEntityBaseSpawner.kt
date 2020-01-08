@@ -4,12 +4,14 @@ import chylex.hee.system.util.TagCompound
 import chylex.hee.system.util.getPosOrNull
 import chylex.hee.system.util.math.LerpedFloat
 import chylex.hee.system.util.nextFloat
-import chylex.hee.system.util.setPos
+import chylex.hee.system.util.putPos
+import chylex.hee.system.util.use
 import net.minecraft.entity.Entity
-import net.minecraft.util.ITickable
+import net.minecraft.tileentity.ITickableTileEntity
+import net.minecraft.tileentity.TileEntityType
 import net.minecraft.util.math.BlockPos
 
-abstract class TileEntityBaseSpawner: TileEntityBase(), ITickable{
+abstract class TileEntityBaseSpawner(type: TileEntityType<out TileEntityBaseSpawner>) : TileEntityBase(type), ITickableTileEntity{
 	private companion object{
 		private const val LAST_POS_TAG = "LastPos"
 	}
@@ -31,13 +33,13 @@ abstract class TileEntityBaseSpawner: TileEntityBase(), ITickable{
 			markDirty()
 		}
 		
-		if (world.isRemote){
-			clientRotation.update(world.rand.nextFloat(0F, 360F))
+		if (wrld.isRemote){
+			clientRotation.update(wrld.rand.nextFloat(0F, 360F))
 		}
 	}
 	
-	final override fun update(){
-		if (world.isRemote){
+	final override fun tick(){
+		if (wrld.isRemote){
 			clientRotation.update(clientRotation.currentValue + clientRotationSpeed)
 			tickClient()
 		}
@@ -49,13 +51,13 @@ abstract class TileEntityBaseSpawner: TileEntityBase(), ITickable{
 	protected abstract fun tickClient()
 	protected abstract fun tickServer()
 	
-	override fun writeNBT(nbt: TagCompound, context: Context) = with(nbt){
+	override fun writeNBT(nbt: TagCompound, context: Context) = nbt.use {
 		if (context == STORAGE){
-			lastPos?.let { setPos(LAST_POS_TAG, it) }
+			lastPos?.let { putPos(LAST_POS_TAG, it) }
 		}
 	}
 	
-	override fun readNBT(nbt: TagCompound, context: Context) = with(nbt){
+	override fun readNBT(nbt: TagCompound, context: Context) = nbt.use {
 		if (context == STORAGE){
 			lastPos = getPosOrNull(LAST_POS_TAG)
 		}

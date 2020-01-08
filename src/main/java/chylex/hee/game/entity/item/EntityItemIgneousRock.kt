@@ -1,5 +1,4 @@
 package chylex.hee.game.entity.item
-import chylex.hee.HEE
 import chylex.hee.game.block.BlockPuzzleLogic
 import chylex.hee.game.entity.technical.EntityTechnicalPuzzle
 import chylex.hee.game.fx.FxBlockData
@@ -13,14 +12,22 @@ import chylex.hee.game.particle.util.IOffset.Constant
 import chylex.hee.game.particle.util.IOffset.InBox
 import chylex.hee.game.particle.util.IShape.Point
 import chylex.hee.init.ModBlocks
+import chylex.hee.init.ModEntities
 import chylex.hee.init.ModItems
 import chylex.hee.network.client.PacketClientFX
 import chylex.hee.system.migration.Facing.DOWN
 import chylex.hee.system.migration.Facing.UP
-import chylex.hee.system.migration.MagicValues
+import chylex.hee.system.migration.vanilla.BlockCarpet
+import chylex.hee.system.migration.vanilla.BlockDoublePlant
+import chylex.hee.system.migration.vanilla.BlockFlower
+import chylex.hee.system.migration.vanilla.BlockLeaves
+import chylex.hee.system.migration.vanilla.BlockSkull
+import chylex.hee.system.migration.vanilla.BlockSkullWall
+import chylex.hee.system.migration.vanilla.BlockStainedGlass
+import chylex.hee.system.migration.vanilla.BlockStainedGlassPane
 import chylex.hee.system.migration.vanilla.Blocks
+import chylex.hee.system.migration.vanilla.ItemBlock
 import chylex.hee.system.migration.vanilla.Sounds
-import chylex.hee.system.util.FLAG_SYNC_CLIENT
 import chylex.hee.system.util.Pos
 import chylex.hee.system.util.TagCompound
 import chylex.hee.system.util.breakBlock
@@ -28,16 +35,15 @@ import chylex.hee.system.util.ceilToInt
 import chylex.hee.system.util.distanceSqTo
 import chylex.hee.system.util.facades.Facing4
 import chylex.hee.system.util.floorToInt
-import chylex.hee.system.util.get
 import chylex.hee.system.util.getBlock
 import chylex.hee.system.util.getEnum
-import chylex.hee.system.util.getFaceShape
 import chylex.hee.system.util.getMaterial
 import chylex.hee.system.util.getState
-import chylex.hee.system.util.getTile
 import chylex.hee.system.util.heeTag
 import chylex.hee.system.util.isAir
+import chylex.hee.system.util.isFullBlock
 import chylex.hee.system.util.isNotEmpty
+import chylex.hee.system.util.isTopSolid
 import chylex.hee.system.util.motionVec
 import chylex.hee.system.util.nextBiasedFloat
 import chylex.hee.system.util.nextFloat
@@ -45,41 +51,46 @@ import chylex.hee.system.util.nextVector
 import chylex.hee.system.util.offsetUntil
 import chylex.hee.system.util.playClient
 import chylex.hee.system.util.posVec
+import chylex.hee.system.util.putEnum
+import chylex.hee.system.util.scaleXZ
 import chylex.hee.system.util.selectVulnerableEntities
 import chylex.hee.system.util.setBlock
-import chylex.hee.system.util.setEnum
 import chylex.hee.system.util.setFireTicks
+import chylex.hee.system.util.setStack
 import chylex.hee.system.util.setState
 import chylex.hee.system.util.size
 import chylex.hee.system.util.totalTime
+import chylex.hee.system.util.use
 import chylex.hee.system.util.with
-import net.minecraft.block.BlockDirt
-import net.minecraft.block.BlockSilverfish
-import net.minecraft.block.BlockSponge
-import net.minecraft.block.BlockStoneBrick
-import net.minecraft.block.BlockWall
+import net.minecraft.block.BlockState
 import net.minecraft.block.material.Material
-import net.minecraft.block.state.BlockFaceShape.SOLID
-import net.minecraft.block.state.IBlockState
 import net.minecraft.entity.Entity
+import net.minecraft.entity.EntityType
 import net.minecraft.entity.MoverType
-import net.minecraft.item.ItemBlock
+import net.minecraft.inventory.Inventory
 import net.minecraft.item.ItemStack
-import net.minecraft.item.crafting.FurnaceRecipes
-import net.minecraft.tileentity.TileEntitySkull
+import net.minecraft.item.crafting.IRecipeType
+import net.minecraft.particles.ParticleTypes.LAVA
+import net.minecraft.tags.FluidTags
 import net.minecraft.util.DamageSource
-import net.minecraft.util.EnumFacing
-import net.minecraft.util.EnumParticleTypes.LAVA
+import net.minecraft.util.Direction
 import net.minecraft.util.SoundCategory
 import net.minecraft.util.SoundEvent
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.Vec3d
 import net.minecraft.world.World
 import java.util.Random
-import kotlin.collections.Map.Entry
 import kotlin.math.log2
 
 class EntityItemIgneousRock : EntityItemNoBob{
+	@Suppress("unused")
+	constructor(type: EntityType<EntityItemIgneousRock>, world: World) : super(type, world)
+	
+	constructor(world: World, stack: ItemStack, replacee: Entity) : super(ModEntities.ITEM_IGNEOUS_ROCK, world, stack, replacee){
+		lifespan = 1200 + (world.rand.nextBiasedFloat(3F) * 1200F).floorToInt()
+		throwFacing = Facing4.fromDirection(motionVec)
+	}
+	
 	companion object{
 		private const val BURN_DISTANCE = 3.5
 		private const val BURN_DISTANCE_SQ = BURN_DISTANCE * BURN_DISTANCE
@@ -125,53 +136,16 @@ class EntityItemIgneousRock : EntityItemNoBob{
 				Sounds.ENTITY_GENERIC_BURN.playClient(entity.posVec, SoundCategory.NEUTRAL, volume = 0.3F, pitch = rand.nextFloat(1F, 2F))
 			}
 		}
-		
-		private lateinit var smeltingTransformations: Map<IBlockState, IBlockState>
-		
-		fun setupSmeltingTransformations(){
-			smeltingTransformations = FurnaceRecipes.instance().smeltingList.map(::convertToBlockStatePair).filterNotNull().toMap()
-			
-			for((from, to) in smeltingTransformations){
-				HEE.log.info("[EntityItemIgneousRock] found smelting transformation: $from -> $to")
-			}
-		}
-		
-		@Suppress("NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS")
-		private fun convertToBlockState(stack: ItemStack): IBlockState?{
-			val item = stack.item as? ItemBlock ?: return null
-			val meta = if (stack.itemDamage == 32767) 0 else stack.itemDamage // UPDATE: rewrite this too
-			
-			return try{
-				item.block.getStateForPlacement(null, null, UP, 0F, 0F, 0F, meta, null, null) // UPDATE: rewrite once block states are flattened and sane
-			}catch(e: Exception){
-				HEE.log.warn("[EntityItemIgneousRock] faking getStateForPlacement to retrieve IBlockState from ItemStack caused a crash: ${e.stackTrace[0]}") // UPDATE: currently crashes on BlockGlazedTerracotta
-				null
-			}
-		}
-		
-		private fun convertToBlockStatePair(entry: Entry<ItemStack, ItemStack>): Pair<IBlockState, IBlockState>?{
-			return (convertToBlockState(entry.key) ?: return null) to (convertToBlockState(entry.value) ?: return null)
-		}
-	}
-	
-	@Suppress("unused")
-	constructor(world: World) : super(world)
-	
-	constructor(world: World, stack: ItemStack, replacee: Entity) : super(world, stack, replacee){
-		lifespan = 1200 + (world.rand.nextBiasedFloat(3F) * 1200F).floorToInt()
-		throwFacing = Facing4.fromDirection(motionVec)
 	}
 	
 	private var throwFacing = DOWN
 	private var prevMotionVec = Vec3d.ZERO
 	
-	init{
-		isImmuneToFire = true
-	}
+	private val smeltingInventory = Inventory(1)
 	
-	override fun onUpdate(){
+	override fun tick(){
 		prevMotionVec = motionVec
-		super.onUpdate()
+		super.tick()
 		
 		val currentPos = Pos(this)
 		
@@ -182,12 +156,12 @@ class EntityItemIgneousRock : EntityItemNoBob{
 				val entity = EntityTechnicalPuzzle(world)
 				
 				if (entity.startChain(posBelow, throwFacing)){
-					world.spawnEntity(entity)
+					world.addEntity(entity)
 					
 					val reducedStack = item.apply { shrink(1) }.takeIf { it.isNotEmpty }
 					
 					if (reducedStack == null){
-						setDead()
+						remove()
 						return
 					}
 					else{
@@ -218,7 +192,7 @@ class EntityItemIgneousRock : EntityItemNoBob{
 							randomPos.offsetUntil(UP, 0..checkRange){ it.isAir(world) || it.distanceSqTo(this) > BURN_DISTANCE_SQ }
 					}
 					
-					if (randomTopBlock != null && randomTopBlock.isAir(world) && randomTopBlock.down().getFaceShape(world, UP) == SOLID){
+					if (randomTopBlock != null && randomTopBlock.isAir(world) && randomTopBlock.down().isTopSolid(world)){
 						randomTopBlock.setBlock(world, Blocks.FIRE)
 						hasChangedAnyBlock = true
 					}
@@ -238,9 +212,7 @@ class EntityItemIgneousRock : EntityItemNoBob{
 		
 		if (currentPos != Pos(prevPosX, prevPosY, prevPosZ) || ticksExisted % 25 == 0){
 			if (currentPos.getMaterial(world) === Material.WATER){
-				motionY = 0.2
-				motionX = rand.nextFloat(-0.2, 0.2)
-				motionZ = rand.nextFloat(-0.2, 0.2)
+				setMotion(rand.nextFloat(-0.2, 0.2), 0.2, rand.nextFloat(-0.2, 0.2))
 				// spawns bubble particles via Entity.doWaterSplashEffect
 				// plays hissing sound (ENTITY_GENERIC_EXTINGUISH_FIRE) via Entity.move, as the entity is on fire
 			}
@@ -249,9 +221,8 @@ class EntityItemIgneousRock : EntityItemNoBob{
 		if (isInLava){
 			lifespan -= 3
 			
-			world.handleMaterialAcceleration(entityBoundingBox, Material.LAVA, this)
-			motionX *= 0.9
-			motionZ *= 0.9
+			handleFluidAcceleration(FluidTags.LAVA)
+			motion = motion.scaleXZ(0.9)
 		}
 		
 		if (world.isRemote){
@@ -264,12 +235,12 @@ class EntityItemIgneousRock : EntityItemNoBob{
 		}
 	}
 	
-	override fun move(type: MoverType, x: Double, y: Double, z: Double){
+	override fun move(type: MoverType, by: Vec3d){
 		if (isInLava){
-			super.move(type, x * 0.2, y * 0.01, z * 0.2)
+			super.move(type, by.mul(0.2, 0.01, 0.2))
 		}
 		else{
-			super.move(type, x, y, z)
+			super.move(type, by)
 		}
 	}
 	
@@ -282,8 +253,8 @@ class EntityItemIgneousRock : EntityItemNoBob{
 		}
 	}
 	
-	override fun isEntityInvulnerable(source: DamageSource): Boolean{
-		return super.isEntityInvulnerable(source) || source.isFireDamage
+	override fun isInvulnerableTo(source: DamageSource): Boolean{
+		return super.isInvulnerableTo(source) || source.isFireDamage
 	}
 	
 	override fun isBurning() = true
@@ -309,11 +280,16 @@ class EntityItemIgneousRock : EntityItemNoBob{
 	
 	private fun updateBurnBlock(pos: BlockPos){
 		val sourceState = pos.getState(world)
-		var targetState: IBlockState?
+		var targetState: BlockState? = null
 		
 		// primary transformations
 		
-		targetState = smeltingTransformations[sourceState]
+		smeltingInventory.setStack(0, ItemStack(sourceState.block))
+		val output = world.recipeManager.getRecipe(IRecipeType.SMELTING, smeltingInventory, world).orElse(null)?.recipeOutput
+		
+		if (output != null && output.isNotEmpty){
+			targetState = (output.item as? ItemBlock)?.block?.defaultState // UPDATE test, maybe attempt to clone state where possible
+		}
 		
 		// secondary transformations
 		
@@ -321,37 +297,46 @@ class EntityItemIgneousRock : EntityItemNoBob{
 			targetState = when(sourceState.block){
 				Blocks.MOSSY_COBBLESTONE -> Blocks.COBBLESTONE
 				Blocks.PACKED_ICE -> Blocks.ICE
-				Blocks.GRASS -> Blocks.DIRT
+				Blocks.GRASS_BLOCK -> Blocks.DIRT
 				Blocks.FARMLAND -> Blocks.DIRT
-				Blocks.DIRT -> Blocks.DIRT.takeIf { sourceState[BlockDirt.VARIANT] == BlockDirt.DirtType.PODZOL }
-				Blocks.STONEBRICK -> Blocks.STONEBRICK.takeIf { sourceState[BlockStoneBrick.VARIANT] == BlockStoneBrick.EnumType.MOSSY }
-				Blocks.COBBLESTONE_WALL -> Blocks.COBBLESTONE_WALL.takeIf { sourceState[BlockWall.VARIANT] == BlockWall.EnumType.MOSSY }
-				Blocks.SPONGE -> Blocks.SPONGE.takeIf { sourceState[BlockSponge.WET] }
+				Blocks.PODZOL -> Blocks.DIRT
 				
-				Blocks.FLOWING_WATER,
+				Blocks.MOSSY_COBBLESTONE -> Blocks.COBBLESTONE
+				Blocks.MOSSY_COBBLESTONE_SLAB -> Blocks.COBBLESTONE_SLAB
+				Blocks.MOSSY_COBBLESTONE_STAIRS -> Blocks.COBBLESTONE_STAIRS
+				Blocks.MOSSY_COBBLESTONE_WALL -> Blocks.COBBLESTONE_WALL
+				
+				Blocks.MOSSY_STONE_BRICKS -> Blocks.STONE_BRICKS
+				Blocks.MOSSY_STONE_BRICK_SLAB -> Blocks.STONE_BRICK_SLAB
+				Blocks.MOSSY_STONE_BRICK_STAIRS -> Blocks.STONE_BRICK_STAIRS
+				Blocks.MOSSY_STONE_BRICK_WALL -> Blocks.STONE_BRICK_WALL
+				
+				Blocks.INFESTED_MOSSY_STONE_BRICKS -> Blocks.INFESTED_STONE_BRICKS
+				
+				Blocks.WET_SPONGE -> Blocks.SPONGE
+				
+				// UPDATE Blocks.FLOWING_WATER,
 				Blocks.TRIPWIRE,
 				Blocks.BROWN_MUSHROOM,
 				Blocks.RED_MUSHROOM -> Blocks.AIR
 				
-				Blocks.CARPET,
 				Blocks.VINE,
-				Blocks.WEB,
+				Blocks.COBWEB,
 				ModBlocks.DRY_VINES,
-				ModBlocks.ANCIENT_COBWEB -> Blocks.FIRE
+				ModBlocks.ANCIENT_COBWEB,
+				is BlockCarpet -> Blocks.FIRE
 				
-				Blocks.RED_FLOWER,
-				Blocks.YELLOW_FLOWER -> Blocks.DEADBUSH
+				is BlockFlower -> Blocks.DEAD_BUSH
 				
-				Blocks.DOUBLE_PLANT -> {
-					if (pos.up().getBlock(world) !== Blocks.DOUBLE_PLANT){
+				is BlockDoublePlant -> {
+					if (pos.up().getBlock(world) !== sourceState.block){
 						return
 					}
 					
-					Blocks.DEADBUSH
+					Blocks.DEAD_BUSH
 				}
 				
-				Blocks.LEAVES,
-				Blocks.LEAVES2 -> {
+				is BlockLeaves -> {
 					val posAbove = pos.up()
 					
 					if (posAbove.isAir(world)){
@@ -362,9 +347,9 @@ class EntityItemIgneousRock : EntityItemNoBob{
 					Blocks.FIRE
 				}
 				
-				Blocks.SNOW_LAYER -> {
+				Blocks.SNOW -> {
 					if (rand.nextInt(4) == 0)
-						Blocks.FLOWING_WATER
+						Blocks.AIR // UPDATE flowing water
 					else
 						Blocks.AIR
 				}
@@ -372,20 +357,10 @@ class EntityItemIgneousRock : EntityItemNoBob{
 				Blocks.ICE,
 				Blocks.FROSTED_ICE,
 				Blocks.SNOW -> {
-					if (Facing4.any { pos.offset(it).getBlock(world) === Blocks.WATER } || Facing4.all { pos.offset(it).getState(world).isFullBlock })
+					if (Facing4.any { pos.offset(it).getBlock(world) === Blocks.WATER } || Facing4.all { pos.offset(it).isFullBlock(world) })
 						Blocks.WATER
 					else
-						Blocks.FLOWING_WATER
-				}
-				
-				Blocks.SKULL -> {
-					pos.getTile<TileEntitySkull>(world)?.takeIf { it.skullType == MagicValues.SKULL_TYPE_ZOMBIE || (it.skullType == MagicValues.SKULL_TYPE_PLAYER && it.playerProfile == null) }?.let {
-						it.setType(MagicValues.SKULL_TYPE_SKELETON)
-						it.markDirty()
-						world.notifyBlockUpdate(pos, sourceState, sourceState, FLAG_SYNC_CLIENT)
-					}
-					
-					return
+						Blocks.AIR // UPDATE flowing water
 				}
 				
 				Blocks.TNT,
@@ -398,8 +373,16 @@ class EntityItemIgneousRock : EntityItemNoBob{
 			}?.defaultState
 		}
 		
-		if (targetState == null && sourceState.block === Blocks.MONSTER_EGG && sourceState[BlockSilverfish.VARIANT] == BlockSilverfish.EnumType.MOSSY_STONEBRICK){
-			targetState = Blocks.MONSTER_EGG.with(BlockSilverfish.VARIANT, BlockSilverfish.EnumType.STONEBRICK)
+		if (targetState == null){
+			targetState = when(sourceState.block){
+				Blocks.ZOMBIE_HEAD,
+				Blocks.PLAYER_HEAD -> Blocks.SKELETON_SKULL.with(BlockSkull.ROTATION, sourceState[BlockSkull.ROTATION])
+				
+				Blocks.ZOMBIE_WALL_HEAD,
+				Blocks.PLAYER_WALL_HEAD -> Blocks.SKELETON_WALL_SKULL.with(BlockSkullWall.FACING, sourceState[BlockSkullWall.FACING])
+				
+				else -> null
+			}
 		}
 		
 		// ternary transformations
@@ -407,12 +390,12 @@ class EntityItemIgneousRock : EntityItemNoBob{
 		if (targetState == null && rand.nextInt(100) < 18){
 			targetState = when(sourceState.block){
 				Blocks.WATER -> Blocks.COBBLESTONE
-				Blocks.DEADBUSH -> Blocks.AIR
+				Blocks.DEAD_BUSH -> Blocks.AIR
 				
 				Blocks.GLASS,
 				Blocks.GLASS_PANE,
-				Blocks.STAINED_GLASS,
-				Blocks.STAINED_GLASS_PANE -> {
+				is BlockStainedGlass,
+				is BlockStainedGlassPane -> {
 					pos.breakBlock(world, false)
 					return
 				}
@@ -431,11 +414,11 @@ class EntityItemIgneousRock : EntityItemNoBob{
 	
 	// Serialization
 	
-	override fun writeEntityToNBT(nbt: TagCompound) = with(nbt.heeTag){
-		setEnum(FACING_TAG, throwFacing)
+	override fun writeAdditional(nbt: TagCompound) = nbt.heeTag.use {
+		putEnum(FACING_TAG, throwFacing)
 	}
 	
-	override fun readEntityFromNBT(nbt: TagCompound) = with(nbt.heeTag){
-		throwFacing = getEnum<EnumFacing>(FACING_TAG) ?: throwFacing
+	override fun readAdditional(nbt: TagCompound) = nbt.heeTag.use {
+		throwFacing = getEnum<Direction>(FACING_TAG) ?: throwFacing
 	}
 }

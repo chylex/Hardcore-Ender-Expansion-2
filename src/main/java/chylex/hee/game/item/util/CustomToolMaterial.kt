@@ -1,19 +1,31 @@
 package chylex.hee.game.item.util
 import chylex.hee.game.item.util.Tool.Level.DIAMOND
 import chylex.hee.game.item.util.Tool.Level.IRON
+import chylex.hee.game.item.util.Tool.Level.WOOD
 import chylex.hee.init.ModItems
 import chylex.hee.system.migration.MagicValues
-import net.minecraft.item.ItemStack
-import net.minecraftforge.common.util.EnumHelper
+import net.minecraft.item.IItemTier
+import net.minecraft.item.crafting.Ingredient
 
 object CustomToolMaterial{
-	val VOID = EnumHelper.addToolMaterial("HEE_VOID", IRON, 925, 15F, 0F, 1)!!
-	val SCORCHING_TOOL = EnumHelper.addToolMaterial("HEE_SCORCHING_TOOL", DIAMOND, 175, 10F, 2F, 0)!!
-	val SCORCHING_SWORD = EnumHelper.addToolMaterial("HEE_SCORCHING_SWORD", DIAMOND, 275, 10F, 9F - MagicValues.SWORD_DEFAULT_DAMAGE_INCREASE, 0)!!
+	val VOID_MINER: IItemTier      = Tier(IRON,    925, 15F, 0F, 1, Ingredient.fromItems(ModItems.VOID_ESSENCE))
+	val VOID_BUCKET: IItemTier     = Tier(WOOD,    575, 15F, 0F, 1, Ingredient.fromItems(ModItems.VOID_ESSENCE))
+	val SCORCHING_TOOL: IItemTier  = Tier(DIAMOND, 175, 10F, 2F, 0, Ingredient.fromItems(ModItems.INFERNIUM_INGOT))
+	val SCORCHING_SWORD: IItemTier = Tier(DIAMOND, 275, 10F, 9F - MagicValues.PLAYER_HAND_DAMAGE, 0, Ingredient.fromItems(ModItems.INFERNIUM_INGOT))
 	
-	fun setupRepairItems(){
-		VOID.setRepairItem(ItemStack(ModItems.VOID_ESSENCE))
-		SCORCHING_TOOL.setRepairItem(ItemStack(ModItems.INFERNIUM_INGOT))
-		SCORCHING_SWORD.setRepairItem(ItemStack(ModItems.INFERNIUM_INGOT))
+	private class Tier(
+		private val harvestLevel: Int,
+		private val maxUses: Int,
+		private val efficiency: Float,
+		private val attackDamage: Float,
+		private val enchantability: Int,
+		private val repairMaterial: Ingredient
+	) : IItemTier{
+		override fun getHarvestLevel() = harvestLevel
+		override fun getMaxUses() = maxUses
+		override fun getEfficiency() = efficiency
+		override fun getAttackDamage() = attackDamage
+		override fun getEnchantability() = enchantability
+		override fun getRepairMaterial() = repairMaterial
 	}
 }

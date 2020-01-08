@@ -6,12 +6,13 @@ import chylex.hee.system.migration.Facing.NORTH
 import chylex.hee.system.migration.Facing.SOUTH
 import chylex.hee.system.migration.Facing.WEST
 import chylex.hee.system.util.getBlock
-import chylex.hee.system.util.with
-import net.minecraft.block.state.BlockStateContainer
-import net.minecraft.block.state.IBlockState
-import net.minecraft.util.EnumFacing
+import net.minecraft.block.Block
+import net.minecraft.block.BlockState
+import net.minecraft.state.StateContainer.Builder
+import net.minecraft.util.Direction
 import net.minecraft.util.math.BlockPos
-import net.minecraft.world.IBlockAccess
+import net.minecraft.world.IBlockReader
+import net.minecraft.world.IWorld
 
 class BlockExperienceGateOutline(builder: BlockBuilder) : BlockExperienceGate(builder){
 	companion object{
@@ -21,19 +22,20 @@ class BlockExperienceGateOutline(builder: BlockBuilder) : BlockExperienceGate(bu
 	}
 	
 	init{
-		defaultState = blockState.baseState.with(NEIGHBOR_NORTH, false).with(NEIGHBOR_WEST, false).with(IS_STRAIGHT, false)
+		defaultState = stateContainer.baseState.with(NEIGHBOR_NORTH, false).with(NEIGHBOR_WEST, false).with(IS_STRAIGHT, false)
 	}
 	
-	override fun createBlockState() = BlockStateContainer(this, NEIGHBOR_NORTH, NEIGHBOR_WEST, IS_STRAIGHT)
+	override fun fillStateContainer(container: Builder<Block, BlockState>){
+		container.add(NEIGHBOR_NORTH, NEIGHBOR_WEST, IS_STRAIGHT)
+	}
 	
-	override fun getMetaFromState(state: IBlockState) = 0
-	override fun getStateFromMeta(meta: Int): IBlockState = defaultState
-	
-	private fun checkSide(world: IBlockAccess, pos: BlockPos, facing: EnumFacing): Boolean{
+	private fun checkSide(world: IBlockReader, pos: BlockPos, facing: Direction): Boolean{
 		return pos.offset(facing).getBlock(world) === this
 	}
 	
-	override fun getActualState(state: IBlockState, world: IBlockAccess, pos: BlockPos): IBlockState{
+	// UPDATE placement state
+	
+	override fun updatePostPlacement(state: BlockState, facing: Direction, neighborState: BlockState, world: IWorld, pos: BlockPos, neighborPos: BlockPos): BlockState{
 		val north = checkSide(world, pos, NORTH)
 		val west = checkSide(world, pos, WEST)
 		

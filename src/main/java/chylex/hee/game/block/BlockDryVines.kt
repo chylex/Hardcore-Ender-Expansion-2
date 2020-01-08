@@ -1,52 +1,28 @@
 package chylex.hee.game.block
-import chylex.hee.game.block.info.BlockBuilder.Companion.setHarvestTool
-import chylex.hee.game.item.util.Tool.Level.WOOD
-import chylex.hee.game.item.util.Tool.Type.AXE
-import chylex.hee.system.migration.Facing
+import chylex.hee.game.block.info.BlockBuilder
 import chylex.hee.system.migration.forge.Side
 import chylex.hee.system.migration.forge.Sided
+import chylex.hee.system.migration.vanilla.BlockVine
+import chylex.hee.system.migration.vanilla.EntityLivingBase
 import chylex.hee.system.util.color.IntColor
-import chylex.hee.system.util.getBlock
-import chylex.hee.system.util.getState
-import chylex.hee.system.util.isAir
-import net.minecraft.block.BlockVine
-import net.minecraft.block.SoundType
-import net.minecraft.block.state.BlockFaceShape.SOLID
-import net.minecraft.block.state.IBlockState
+import net.minecraft.block.BlockState
 import net.minecraft.client.renderer.color.IBlockColor
-import net.minecraft.entity.EntityLivingBase
-import net.minecraft.util.EnumFacing
 import net.minecraft.util.math.BlockPos
-import net.minecraft.world.ColorizerFoliage
-import net.minecraft.world.IBlockAccess
+import net.minecraft.world.FoliageColors
+import net.minecraft.world.IEnviromentBlockReader
+import net.minecraft.world.IWorldReader
 import net.minecraft.world.World
-import net.minecraft.world.biome.BiomeColorHelper
+import net.minecraft.world.biome.BiomeColors
 import java.util.Random
 
-class BlockDryVines : BlockVine(){
-	init{
-		setHardness(0.1F)
-		setHarvestTool(Pair(WOOD, AXE))
-		
-		soundType = SoundType.PLANT
-	}
+class BlockDryVines(builder: BlockBuilder) : BlockVine(builder.p){
 	
 	// Custom behavior
 	
-	override fun updateTick(world: World, pos: BlockPos, state: IBlockState, rand: Random){}
+	override fun tick(state: BlockState, world: World, pos: BlockPos, rand: Random){}
 	
-	override fun isLadder(state: IBlockState, world: IBlockAccess, pos: BlockPos, entity: EntityLivingBase): Boolean{
+	override fun isLadder(state: BlockState, world: IWorldReader, pos: BlockPos, entity: EntityLivingBase): Boolean{
 		return !entity.onGround
-	}
-	
-	override fun canAttachTo(world: World, pos: BlockPos, facing: EnumFacing): Boolean{
-		val above = pos.up()
-		return isAcceptableNeighbor(world, pos.offset(facing.opposite), facing) && (above.isAir(world) || above.getBlock(world) === this || isAcceptableNeighbor(world, above, Facing.UP))
-	}
-	
-	private fun isAcceptableNeighbor(world: World, pos: BlockPos, facing: EnumFacing): Boolean{
-		val state = pos.getState(world)
-		return state.getBlockFaceShape(world, pos, facing) == SOLID && !isExceptBlockForAttaching(state.block)
 	}
 	
 	// Client side
@@ -62,11 +38,11 @@ class BlockDryVines : BlockVine(){
 			).i
 		}
 		
-		override fun colorMultiplier(state: IBlockState, world: IBlockAccess?, pos: BlockPos?, tintIndex: Int): Int{
+		override fun getColor(state: BlockState, world: IEnviromentBlockReader?, pos: BlockPos?, tintIndex: Int): Int{
 			return if (world != null && pos != null)
-				dryify(BiomeColorHelper.getFoliageColorAtPos(world, pos))
+				dryify(BiomeColors.getFoliageColor(world, pos))
 			else
-				dryify(ColorizerFoliage.getFoliageColorBasic())
+				dryify(FoliageColors.getDefault())
 		}
 	}
 }

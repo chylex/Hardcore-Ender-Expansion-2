@@ -10,26 +10,25 @@ import chylex.hee.game.particle.spawner.ParticleSpawnerCustom
 import chylex.hee.game.particle.util.IOffset.Constant
 import chylex.hee.game.particle.util.IOffset.InBox
 import chylex.hee.game.particle.util.IShape.Point
-import chylex.hee.init.ModItems
 import chylex.hee.network.client.PacketClientFX
 import chylex.hee.network.client.PacketClientPotionDuration
 import chylex.hee.system.migration.Facing.DOWN
 import chylex.hee.system.migration.Facing.UP
 import chylex.hee.system.migration.forge.Side
 import chylex.hee.system.migration.forge.Sided
+import chylex.hee.system.migration.vanilla.EntityLivingBase
+import chylex.hee.system.migration.vanilla.EntityPlayer
 import chylex.hee.system.util.color.IntColor.Companion.RGB
 import chylex.hee.system.util.floorToInt
-import chylex.hee.system.util.get
 import chylex.hee.system.util.nextInt
 import chylex.hee.system.util.nextItemOrNull
-import chylex.hee.system.util.setState
+import chylex.hee.system.util.scaleXZ
 import chylex.hee.system.util.totalTime
-import chylex.hee.system.util.with
-import net.minecraft.block.state.IBlockState
+import net.minecraft.block.BlockState
 import net.minecraft.entity.Entity
-import net.minecraft.entity.EntityLivingBase
-import net.minecraft.entity.player.EntityPlayer
+import net.minecraft.potion.EffectType.HARMFUL
 import net.minecraft.util.math.BlockPos
+import net.minecraft.world.IWorldReader
 import net.minecraft.world.World
 import java.util.Random
 import kotlin.math.max
@@ -77,7 +76,7 @@ open class BlockEnderGooPurified : BlockAbstractGoo(FluidEnderGooPurified, Mater
 			val rand = entity.rng
 			
 			if (totalTicks > 25 && currentTime % 40L == 0L){
-				val effect = rand.nextItemOrNull(entity.activePotionEffects.filter { it.potion.isBadEffect && it.duration in MIN_DURATION..INFINITE_DURATION_THRESHOLD })
+				val effect = rand.nextItemOrNull(entity.activePotionEffects.filter { it.potion.effectType == HARMFUL && it.duration in MIN_DURATION..INFINITE_DURATION_THRESHOLD })
 				
 				if (effect != null){
 					effect.duration = max(MIN_DURATION, effect.duration - (effect.duration * 0.2F).floorToInt().coerceIn(MIN_DURATION_REDUCTION, MAX_DURATION_REDUCTION))
@@ -116,17 +115,14 @@ open class BlockEnderGooPurified : BlockAbstractGoo(FluidEnderGooPurified, Mater
 	
 	// Initialization
 	
-	override val filledBucket
-		get() = ModItems.PURIFIED_ENDER_GOO_BUCKET
-	
 	override val tickTrackingKey
 		get() = "PurifiedGoo"
 	
-	init{
-		tickRate = 16
-	}
-	
 	// Behavior
+	
+	override fun tickRate(world: IWorldReader): Int{
+		return 16
+	}
 	
 	override fun onInsideGoo(entity: Entity){
 		if (entity is EntityLivingBase){
@@ -135,19 +131,14 @@ open class BlockEnderGooPurified : BlockAbstractGoo(FluidEnderGooPurified, Mater
 	}
 	
 	override fun modifyMotion(entity: Entity, level: Int){
-		val strength = ((quantaPerBlock - level) / quantaPerBlockFloat).pow(1.25F)
-		
-		entity.motionX *= 0.95 - (0.45 * strength)
-		entity.motionZ *= 0.95 - (0.45 * strength)
+		val strength = ((FLOW_DISTANCE - level) / FLOW_DISTANCE.toFloat()).pow(1.25F)
+		entity.motion = entity.motion.scaleXZ(0.95 - (0.45 * strength))
 	}
 	
-	override fun flowIntoBlock(world: World, pos: BlockPos, meta: Int){
-		if (meta < 0){
-			return
-		}
+	override fun onBlockAdded(state: BlockState, world: World, pos: BlockPos, oldState: BlockState, isMoving: Boolean){
+		super.onBlockAdded(state, world, pos, oldState, isMoving)
 		
-		if (displaceIfPossible(world, pos)){
-			pos.setState(world, this.with(LEVEL, meta))
+		if (!state.fluidState.isSource){ // UPDATE test
 			PacketClientFX(FX_PLACE, FxBlockData(pos)).sendToAllAround(world, pos, 16.0) // TODO optimize somehow?
 		}
 	}
@@ -155,7 +146,7 @@ open class BlockEnderGooPurified : BlockAbstractGoo(FluidEnderGooPurified, Mater
 	// Client side
 	
 	@Sided(Side.CLIENT)
-	override fun randomDisplayTick(state: IBlockState, world: World, pos: BlockPos, rand: Random){
+	override fun animateTick(state: BlockState, world: World, pos: BlockPos, rand: Random){
 		if (rand.nextInt(4) == 0){
 			val particle = if (state[LEVEL] == 0)
 				PARTICLE_STATIONARY

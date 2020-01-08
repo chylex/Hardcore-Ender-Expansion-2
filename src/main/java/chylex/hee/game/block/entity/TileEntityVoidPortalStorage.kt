@@ -9,18 +9,23 @@ import chylex.hee.game.block.entity.base.TileEntityBasePortalController.Foregrou
 import chylex.hee.game.mechanics.portal.SpawnInfo
 import chylex.hee.game.world.territory.TerritoryInstance
 import chylex.hee.init.ModItems
+import chylex.hee.init.ModTileEntities
 import chylex.hee.system.util.FLAG_SKIP_RENDER
 import chylex.hee.system.util.FLAG_SYNC_CLIENT
 import chylex.hee.system.util.TagCompound
 import chylex.hee.system.util.getIntegerOrNull
 import chylex.hee.system.util.isAnyPlayerWithinRange
 import chylex.hee.system.util.square
+import chylex.hee.system.util.use
 import net.minecraft.entity.Entity
 import net.minecraft.item.ItemStack
+import net.minecraft.tileentity.TileEntityType
 import kotlin.math.min
 import kotlin.math.nextUp
 
-class TileEntityVoidPortalStorage : TileEntityBasePortalController(), IVoidPortalController{
+class TileEntityVoidPortalStorage(type: TileEntityType<TileEntityVoidPortalStorage>) : TileEntityBasePortalController(type), IVoidPortalController{
+	constructor() : this(ModTileEntities.VOID_PORTAL_STORAGE)
+	
 	private companion object{
 		private const val ACTIVATION_DURATION_TICKS = 20 * 10
 		
@@ -74,11 +79,11 @@ class TileEntityVoidPortalStorage : TileEntityBasePortalController(), IVoidPorta
 	
 	// Overrides
 	
-	override fun update(){
-		super.update()
+	override fun tick(){
+		super.tick()
 		
-		if (!world.isRemote){
-			if ((remainingTime > 0 && --remainingTime == 0) || !pos.isAnyPlayerWithinRange(world, 160)){
+		if (!wrld.isRemote){
+			if ((remainingTime > 0 && --remainingTime == 0) || !pos.isAnyPlayerWithinRange(wrld, 160)){
 				currentInstance = null
 				firstSpawnInfo = null
 				remainingTime = 0
@@ -102,15 +107,15 @@ class TileEntityVoidPortalStorage : TileEntityBasePortalController(), IVoidPorta
 		}
 	}
 	
-	override fun writeNBT(nbt: TagCompound, context: Context) = with(nbt){
+	override fun writeNBT(nbt: TagCompound, context: Context) = nbt.use {
 		super.writeNBT(nbt, context)
 		
 		if (context == NETWORK){
-			currentInstance?.let { setInteger(INSTANCE_TAG, it.hash) }
+			currentInstance?.let { putInt(INSTANCE_TAG, it.hash) }
 		}
 	}
 	
-	override fun readNBT(nbt: TagCompound, context: Context) = with(nbt){
+	override fun readNBT(nbt: TagCompound, context: Context) = nbt.use {
 		super.readNBT(nbt, context)
 		
 		if (context == NETWORK){

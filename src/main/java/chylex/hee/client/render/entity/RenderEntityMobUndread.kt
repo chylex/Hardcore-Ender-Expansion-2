@@ -1,26 +1,22 @@
 package chylex.hee.client.render.entity
+import chylex.hee.client.model.entity.ModelEntityUndread
 import chylex.hee.client.render.util.GL
 import chylex.hee.game.entity.living.EntityMobUndread
 import chylex.hee.system.migration.forge.Side
 import chylex.hee.system.migration.forge.Sided
+import chylex.hee.system.migration.vanilla.RenderBiped
+import chylex.hee.system.migration.vanilla.RenderManager
 import chylex.hee.system.util.facades.Resource
-import net.minecraft.client.model.ModelZombie
-import net.minecraft.client.renderer.entity.RenderBiped
-import net.minecraft.client.renderer.entity.RenderManager
-import net.minecraft.client.renderer.entity.layers.LayerBipedArmor
+import net.minecraft.client.renderer.entity.layers.BipedArmorLayer
+import net.minecraft.client.renderer.entity.model.AbstractZombieModel
 import net.minecraft.util.ResourceLocation
 
 @Sided(Side.CLIENT)
-class RenderEntityMobUndread(manager: RenderManager) : RenderBiped<EntityMobUndread>(manager, ModelZombie(), 0.5F){
+class RenderEntityMobUndread(manager: RenderManager) : RenderBiped<EntityMobUndread, AbstractZombieModel<EntityMobUndread>>(manager, ModelEntityUndread(), 0.5F){
 	private val texture = Resource.Custom("textures/entity/undread.png")
 	
 	init{
-		addLayer(object : LayerBipedArmor(this){
-			override fun initArmor(){
-				modelLeggings = ModelZombie(0.5125F, true)
-				modelArmor = ModelZombie(1F, true)
-			}
-		})
+		addLayer(BipedArmorLayer(this, ModelEntityUndread(0.5125F, true), ModelEntityUndread(1F, true))) // UPDATE is tall texture needed?
 	}
 	
 	override fun preRenderCallback(entity: EntityMobUndread, partialTicks: Float){

@@ -1,10 +1,11 @@
 package chylex.hee.game.item.util
+import net.minecraftforge.common.ToolType
 
 object Tool{
 	object Type{
-		const val PICKAXE = "pickaxe"
-		const val SHOVEL  = "shovel"
-		const val AXE     = "axe"
+		val PICKAXE: ToolType = ToolType.PICKAXE
+		val SHOVEL: ToolType  = ToolType.SHOVEL
+		val AXE: ToolType     = ToolType.AXE
 	}
 	
 	object Level{

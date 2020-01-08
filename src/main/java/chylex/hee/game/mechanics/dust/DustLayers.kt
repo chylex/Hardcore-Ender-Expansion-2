@@ -102,8 +102,8 @@ class DustLayers(val totalCapacity: Int){
 	fun serializeNBT() = NBTObjectList<TagCompound>().apply {
 		for((dustType, dustAmount) in layers){
 			append(TagCompound().also {
-				it.setString(TYPE_TAG, dustType.key)
-				it.setShort(AMOUNT_TAG, dustAmount)
+				it.putString(TYPE_TAG, dustType.key)
+				it.putShort(AMOUNT_TAG, dustAmount)
 			})
 		}
 	}

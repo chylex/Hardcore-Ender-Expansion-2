@@ -2,12 +2,14 @@ package chylex.hee.game.particle.base
 import chylex.hee.system.migration.forge.Side
 import chylex.hee.system.migration.forge.Sided
 import chylex.hee.system.util.color.IntColor
-import net.minecraft.client.particle.Particle
+import net.minecraft.client.particle.IParticleRenderType
+import net.minecraft.client.particle.IParticleRenderType.PARTICLE_SHEET_OPAQUE
+import net.minecraft.client.particle.SpriteTexturedParticle
 import net.minecraft.util.math.Vec3d
 import net.minecraft.world.World
 
 @Sided(Side.CLIENT)
-abstract class ParticleBase(world: World, posX: Double, posY: Double, posZ: Double, motX: Double, motY: Double, motZ: Double) : Particle(world, posX, posY, posZ, motX, motY, motZ){
+abstract class ParticleBase(world: World, posX: Double, posY: Double, posZ: Double, motX: Double, motY: Double, motZ: Double) : SpriteTexturedParticle(world, posX, posY, posZ, motX, motY, motZ){
 	protected var motionVec: Vec3d
 		get() = Vec3d(motionX, motionY, motionZ)
 		set(value){
@@ -16,13 +18,14 @@ abstract class ParticleBase(world: World, posX: Double, posY: Double, posZ: Doub
 			motionZ = value.z
 		}
 	
-	protected var age
-		get() = particleAge
-		set(value){ particleAge = value }
+	val redF
+		get() = particleRed
 	
-	protected var maxAge
-		get() = particleMaxAge
-		@JvmName("setMaxAge2") set(value){ particleMaxAge = value }
+	val greenF
+		get() = particleGreen
+	
+	val blueF
+		get() = particleBlue
 	
 	protected fun loadColor(color: Int){
 		loadColor(IntColor(color))
@@ -42,5 +45,9 @@ abstract class ParticleBase(world: World, posX: Double, posY: Double, posZ: Doub
 			age > fadeOutAfter   -> 1F - ((age - fadeOutAfter).toFloat() / fadeOutDuration)
 			else                 -> 1F
 		}
+	}
+	
+	override fun getRenderType(): IParticleRenderType{
+		return PARTICLE_SHEET_OPAQUE
 	}
 }

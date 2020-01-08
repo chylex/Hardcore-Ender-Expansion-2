@@ -7,20 +7,19 @@ import com.google.gson.JsonDeserializationContext
 import com.google.gson.JsonObject
 import com.google.gson.JsonSerializationContext
 import net.minecraft.item.ItemStack
-import net.minecraft.util.JsonUtils
+import net.minecraft.util.JSONUtils
 import net.minecraft.world.storage.loot.LootContext
+import net.minecraft.world.storage.loot.LootFunction
 import net.minecraft.world.storage.loot.RandomValueRange
-import net.minecraft.world.storage.loot.conditions.LootCondition
-import net.minecraft.world.storage.loot.functions.LootFunction
-import java.util.Random
+import net.minecraft.world.storage.loot.conditions.ILootCondition
 
-class FunctionInfuse(conditions: Array<LootCondition>, private val picks: Array<Infusion>, private val amount: RandomValueRange) : LootFunction(conditions){
-	override fun apply(stack: ItemStack, rand: Random, context: LootContext): ItemStack{
+class FunctionInfuse(conditions: Array<ILootCondition>, private val picks: Array<Infusion>, private val amount: RandomValueRange) : LootFunction(conditions){
+	override fun doApply(stack: ItemStack, context: LootContext): ItemStack{
 		val availableInfusions = picks.toMutableList()
 		var finalStack = stack
 		
-		for(count in 1..(amount.generateInt(rand))){
-			finalStack = rand.removeItemOrNull(availableInfusions)?.tryInfuse(finalStack) ?: break
+		for(count in 1..(amount.generateInt(context.random))){
+			finalStack = context.random.removeItemOrNull(availableInfusions)?.tryInfuse(finalStack) ?: break
 		}
 		
 		return finalStack
@@ -32,9 +31,9 @@ class FunctionInfuse(conditions: Array<LootCondition>, private val picks: Array<
 			json.add("amount", context.serialize(value.amount))
 		}
 		
-		override fun deserialize(json: JsonObject, context: JsonDeserializationContext, conditions: Array<LootCondition>): FunctionInfuse{
-			val picks = JsonUtils.getJsonArray(json, "picks").map { Infusion.byName(it.asString) }.toTypedArray()
-			val amount = JsonUtils.deserializeClass(json, "amount", context, RandomValueRange::class.java)
+		override fun deserialize(json: JsonObject, context: JsonDeserializationContext, conditions: Array<ILootCondition>): FunctionInfuse{
+			val picks = JSONUtils.getJsonArray(json, "picks").map { Infusion.byName(it.asString) }.toTypedArray()
+			val amount = JSONUtils.deserializeClass(json, "amount", context, RandomValueRange::class.java)
 			
 			return FunctionInfuse(conditions, picks, amount)
 		}

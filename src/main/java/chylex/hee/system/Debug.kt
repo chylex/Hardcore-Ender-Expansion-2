@@ -1,14 +1,15 @@
 package chylex.hee.system
 import chylex.hee.HEE
+import chylex.hee.client.util.MC
 import chylex.hee.proxy.Environment
 import chylex.hee.system.migration.forge.Side
 import chylex.hee.system.migration.forge.SubscribeEvent
 import net.minecraft.client.renderer.BannerTextures
+import net.minecraft.util.SharedConstants
 import net.minecraftforge.client.event.GuiOpenEvent
 import net.minecraftforge.common.MinecraftForge
-import org.lwjgl.LWJGLUtil
-import org.lwjgl.LWJGLUtil.PLATFORM_WINDOWS
-import org.lwjgl.opengl.Display
+import org.apache.commons.lang3.SystemUtils
+import org.lwjgl.glfw.GLFW
 import java.io.File
 import java.io.FileOutputStream
 import java.lang.management.ManagementFactory
@@ -21,7 +22,9 @@ object Debug{
 		if (enabled){
 			when(Environment.side){
 				Side.CLIENT -> {
-					Display.setTitle("${Display.getTitle()} - Hardcore Ender Expansion ${HEE.version}")
+					MC.instance.execute {
+						GLFW.glfwSetWindowTitle(MC.window.handle, "Minecraft ${SharedConstants.getVersion().name} - Hardcore Ender Expansion ${HEE.version}")
+					}
 					
 					try{
 						enableInfiniteBannerTextures()
@@ -30,7 +33,7 @@ object Debug{
 					}
 				}
 				
-				Side.SERVER -> {
+				Side.DEDICATED_SERVER -> {
 					try{
 						FileOutputStream("eula.txt").use {
 							val properties = Properties()
@@ -64,7 +67,7 @@ object Debug{
 	}
 	
 	private fun canExecutePowershell(scriptName: String): Boolean{
-		return LWJGLUtil.getPlatform() == PLATFORM_WINDOWS && Environment.side == Side.CLIENT && File(scriptName).exists()
+		return SystemUtils.IS_OS_WINDOWS && Environment.side == Side.CLIENT && File(scriptName).exists()
 	}
 	
 	// Special features

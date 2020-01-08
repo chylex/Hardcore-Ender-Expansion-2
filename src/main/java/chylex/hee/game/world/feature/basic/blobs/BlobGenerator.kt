@@ -33,12 +33,12 @@ object BlobGenerator{
 		val generator = pattern.pickGenerator(rand)
 		val populators = pattern.pickPopulators(rand)
 		
-		val extraSize = populators.fold(BlockPos.ORIGIN){ acc, populator -> acc.max(populator.expandSizeBy) }
+		val extraSize = populators.fold(BlockPos.ZERO){ acc, populator -> acc.max(populator.expandSizeBy) }
 		val allocatedSize = generator.size.expand(extraSize)
 		
 		val origin = center.subtract(allocatedSize.centerPos)
 		
-		if (!allocatedSize.toBoundingBox(origin).isInside(world.worldSize.toBoundingBox(BlockPos.ORIGIN))){
+		if (!allocatedSize.toBoundingBox(origin).isInside(world.worldSize.toBoundingBox(BlockPos.ZERO))){
 			return false
 		}
 		

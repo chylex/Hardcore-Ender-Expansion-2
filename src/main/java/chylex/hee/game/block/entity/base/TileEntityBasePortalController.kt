@@ -6,11 +6,13 @@ import chylex.hee.game.block.entity.base.TileEntityBasePortalController.Foregrou
 import chylex.hee.game.block.entity.base.TileEntityBasePortalController.ForegroundRenderState.Visible
 import chylex.hee.system.util.TagCompound
 import chylex.hee.system.util.math.LerpedFloat
-import net.minecraft.util.ITickable
+import chylex.hee.system.util.use
+import net.minecraft.tileentity.ITickableTileEntity
+import net.minecraft.tileentity.TileEntityType
 import kotlin.math.max
 import kotlin.math.min
 
-abstract class TileEntityBasePortalController : TileEntityBase(), IPortalController, ITickable{
+abstract class TileEntityBasePortalController(type: TileEntityType<out TileEntityBasePortalController>) : TileEntityBase(type), IPortalController, ITickableTileEntity{
 	private companion object{
 		private const val RENDER_STATE_TAG = "RenderState"
 		private const val RENDER_PROGRESS_TAG = "RenderProgress"
@@ -37,23 +39,23 @@ abstract class TileEntityBasePortalController : TileEntityBase(), IPortalControl
 		}
 	}
 	
-	override fun update(){
-		if (world.isRemote){
+	override fun tick(){
+		if (wrld.isRemote){
 			updateAnimation()
 		}
 	}
 	
-	override fun writeNBT(nbt: TagCompound, context: Context) = with(nbt){
+	override fun writeNBT(nbt: TagCompound, context: Context) = nbt.use {
 		if (context == NETWORK){
-			setString(RENDER_STATE_TAG, when(val state = serverRenderState){
-				is Animating -> "Animating".also { setFloat(RENDER_PROGRESS_TAG, state.progress) }
+			putString(RENDER_STATE_TAG, when(val state = serverRenderState){
+				is Animating -> "Animating".also { putFloat(RENDER_PROGRESS_TAG, state.progress) }
 				Visible      -> "Visible"
 				Invisible    -> ""
 			})
 		}
 	}
 	
-	override fun readNBT(nbt: TagCompound, context: Context) = with(nbt){
+	override fun readNBT(nbt: TagCompound, context: Context) = nbt.use {
 		if (context == NETWORK){
 			clientRenderState = when(getString(RENDER_STATE_TAG)){
 				"Animating" -> Animating(getFloat(RENDER_PROGRESS_TAG))

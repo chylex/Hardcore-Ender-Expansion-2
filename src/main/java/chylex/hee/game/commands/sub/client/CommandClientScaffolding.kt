@@ -1,11 +1,6 @@
 package chylex.hee.game.commands.sub.client
-import chylex.hee.game.commands.sub.ISubCommand
-import chylex.hee.game.commands.sub.server.CommandDebugStructure
-import net.minecraft.command.ICommandSender
-import net.minecraft.server.MinecraftServer
-import net.minecraft.util.text.TextComponentString
-import java.util.prefs.Preferences
 
+/*
 internal object CommandClientScaffolding : ISubCommand{
 	override val name = "scaffolding"
 	override val usage = "commands.hee.scaffolding.usage"
@@ -35,4 +30,4 @@ internal object CommandClientScaffolding : ISubCommand{
 		
 		sender.sendMessage(TextComponentString("Structure set."))
 	}
-}
+}*/

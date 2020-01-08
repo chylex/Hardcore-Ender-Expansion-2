@@ -5,15 +5,15 @@ import chylex.hee.system.util.compatibility.EraseGenerics
 import com.google.common.collect.HashBiMap
 import com.google.common.collect.ImmutableBiMap
 import net.minecraft.block.Block
-import net.minecraft.block.properties.IProperty
-import net.minecraft.block.state.IBlockState
+import net.minecraft.block.BlockState
+import net.minecraft.state.IProperty
 import org.apache.commons.lang3.StringUtils
 
 sealed class PaletteBuilder{
 	
 	// Add one
 	
-	abstract fun add(key: String, state: IBlockState)
+	abstract fun add(key: String, state: BlockState)
 	
 	fun add(key: String, block: Block){
 		add(key, block.defaultState)
@@ -21,8 +21,8 @@ sealed class PaletteBuilder{
 	
 	// Add variants
 	
-	fun add(key: String, baseState: IBlockState, propertyMappings: List<Pair<IProperty<*>, Map<String, *>>>){
-		fun process(index: Int, currentKey: String, currentState: IBlockState){
+	fun add(key: String, baseState: BlockState, propertyMappings: List<Pair<IProperty<*>, Map<String, *>>>){
+		fun process(index: Int, currentKey: String, currentState: BlockState){
 			if (index == propertyMappings.size){
 				add(currentKey, currentState)
 				return
@@ -42,7 +42,7 @@ sealed class PaletteBuilder{
 		add(key, block.defaultState, propertyMappings)
 	}
 	
-	fun <T : Comparable<T>> add(key: String, baseState: IBlockState, propertyMapping: Pair<IProperty<T>, Map<String, T>>){
+	fun <T : Comparable<T>> add(key: String, baseState: BlockState, propertyMapping: Pair<IProperty<T>, Map<String, T>>){
 		add(key, baseState, listOf(propertyMapping))
 	}
 	
@@ -68,7 +68,7 @@ sealed class PaletteBuilder{
 			palette[key] = picker
 		}
 		
-		override fun add(key: String, state: IBlockState){
+		override fun add(key: String, state: BlockState){
 			add(key, Single(state))
 		}
 		
@@ -80,13 +80,13 @@ sealed class PaletteBuilder{
 	// Development
 	
 	class ForDevelopment : PaletteBuilder(){
-		private val palette = HashBiMap.create<String, IBlockState>()
+		private val palette = HashBiMap.create<String, BlockState>()
 		
-		override fun add(key: String, state: IBlockState){
+		override fun add(key: String, state: BlockState){
 			palette[key] = state
 		}
 		
-		fun build(): ImmutableBiMap<String, IBlockState>{
+		fun build(): ImmutableBiMap<String, BlockState>{
 			return ImmutableBiMap.copyOf(palette)
 		}
 	}
@@ -97,7 +97,7 @@ sealed class PaletteBuilder{
 		val forGeneration = ForGeneration()
 		val forDevelopment = ForDevelopment()
 		
-		override fun add(key: String, state: IBlockState){
+		override fun add(key: String, state: BlockState){
 			forGeneration.add(key, state)
 			forDevelopment.add(key, state)
 		}

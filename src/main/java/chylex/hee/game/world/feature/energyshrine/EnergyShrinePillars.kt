@@ -13,7 +13,8 @@ import chylex.hee.system.util.setBlock
 import chylex.hee.system.util.setState
 import chylex.hee.system.util.withFacing
 import net.minecraft.block.Block
-import net.minecraft.block.state.IBlockState
+import net.minecraft.block.BlockState
+import net.minecraft.tags.BlockTags
 import net.minecraft.util.math.BlockPos
 import net.minecraft.world.World
 import java.util.Random
@@ -22,7 +23,7 @@ import kotlin.math.max
 object EnergyShrinePillars{
 	fun isReplaceable(world: World, pos: BlockPos): Boolean{
 		val state = pos.getState(world)
-		return !state.material.blocksMovement() || state.block.isLeaves(state, world, pos)
+		return !state.material.blocksMovement() || state.isIn(BlockTags.LEAVES)
 	}
 	
 	fun tryGenerate(world: World, rand: Random, surfacePos: BlockPos): Boolean{
@@ -88,7 +89,7 @@ object EnergyShrinePillars{
 		return true
 	}
 	
-	private fun pickPillarTopBlock(rand: Random, fullBlock: Block): IBlockState{
+	private fun pickPillarTopBlock(rand: Random, fullBlock: Block): BlockState{
 		if (rand.nextBoolean()){
 			val topBlock = if (fullBlock === ModBlocks.GLOOMROCK_SMOOTH)
 				ModBlocks.GLOOMROCK_SMOOTH_SLAB

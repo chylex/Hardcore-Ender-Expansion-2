@@ -34,14 +34,14 @@ class DimensionInstabilityEndTerritory(private val world: World) : IDimensionIns
 	
 	override fun serializeNBT() = TagCompound().apply {
 		for(entry in territories.int2ObjectEntrySet()){
-			setTag(entry.intKey.toString(), entry.value.serializeNBT())
+			put(entry.intKey.toString(), entry.value.serializeNBT())
 		}
 	}
 	
 	override fun deserializeNBT(nbt: TagCompound){
-		for(key in nbt.keySet){
+		for(key in nbt.keySet()){
 			val keyInt = key.toIntOrNull() ?: continue
-			putEntry(keyInt).deserializeNBT(nbt.getCompoundTag(key))
+			putEntry(keyInt).deserializeNBT(nbt.getCompound(key))
 		}
 	}
 }

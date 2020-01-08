@@ -11,30 +11,35 @@ import chylex.hee.game.particle.util.IOffset.Constant
 import chylex.hee.game.particle.util.IOffset.InBox
 import chylex.hee.game.particle.util.IShape.Point
 import chylex.hee.init.ModBlocks
+import chylex.hee.init.ModTileEntities
 import chylex.hee.system.migration.Facing.AXIS_Y
 import chylex.hee.system.migration.Facing.DOWN
 import chylex.hee.system.migration.Facing.UP
-import chylex.hee.system.migration.vanilla.Blocks
+import chylex.hee.system.migration.vanilla.BlockFurnace
+import chylex.hee.system.migration.vanilla.TileEntityFurnace
 import chylex.hee.system.util.TagCompound
+import chylex.hee.system.util.center
 import chylex.hee.system.util.floorToInt
-import chylex.hee.system.util.get
 import chylex.hee.system.util.getState
 import chylex.hee.system.util.getTile
 import chylex.hee.system.util.math.LerpedDouble
 import chylex.hee.system.util.motionVec
 import chylex.hee.system.util.nextFloat
 import chylex.hee.system.util.setAir
+import chylex.hee.system.util.use
 import net.minecraft.item.ItemStack
-import net.minecraft.tileentity.TileEntityFurnace
-import net.minecraft.util.EnumFacing
-import net.minecraft.util.ITickable
+import net.minecraft.tileentity.ITickableTileEntity
+import net.minecraft.tileentity.TileEntityType
+import net.minecraft.util.Direction
 import net.minecraft.util.math.Vec3d
 import kotlin.math.abs
 import kotlin.math.max
 import kotlin.math.min
 import kotlin.math.pow
 
-class TileEntityIgneousPlate : TileEntityBase(), ITickable{
+class TileEntityIgneousPlate(type: TileEntityType<TileEntityIgneousPlate>) : TileEntityBase(type), ITickableTileEntity{
+	constructor() : this(ModTileEntities.IGNEOUS_PLATE)
+	
 	private companion object{
 		private const val TICKS_TO_HEAT_UP = 1100
 		private const val TICKS_TO_COOL_DOWN = 2600
@@ -44,7 +49,7 @@ class TileEntityIgneousPlate : TileEntityBase(), ITickable{
 		
 		private const val PROGRESS_TAG = "Progress"
 		
-		private fun createPositionOffset(facing: EnumFacing, offset: Float) = if (facing.axis == AXIS_Y)
+		private fun createPositionOffset(facing: Direction, offset: Float) = if (facing.axis == AXIS_Y)
 			InBox(offset, 0F, offset)
 		else
 			InBox(offset * abs(facing.zOffset), offset, offset * abs(facing.xOffset))
@@ -78,7 +83,7 @@ class TileEntityIgneousPlate : TileEntityBase(), ITickable{
 		get() = overheatingPercentage > 0F
 	
 	private val overheatingPercentage
-		get() = pos.offset(facing.opposite).getTile<TileEntityFurnace>(world)?.let { EntityTechnicalIgneousPlateLogic.getOverheatingPercentage(it) } ?: 0F
+		get() = pos.offset(facing.opposite).getTile<TileEntityFurnace>(wrld)?.let { EntityTechnicalIgneousPlateLogic.getOverheatingPercentage(it) } ?: 0F
 	
 	private var facing = DOWN
 	private var progress = 0.0
@@ -99,29 +104,29 @@ class TileEntityIgneousPlate : TileEntityBase(), ITickable{
 	}
 	
 	fun blastOff(){
-		val rand = world.rand
+		val rand = wrld.rand
 		
-		EntityItemFreshlyCooked(world, pos.x + 0.5, pos.y + 0.5, pos.z + 0.5, ItemStack(ModBlocks.IGNEOUS_PLATE)).apply {
+		EntityItemFreshlyCooked(wrld, pos.center, ItemStack(ModBlocks.IGNEOUS_PLATE)).apply {
 			motionVec = Vec3d(facing.directionVec).scale(rand.nextFloat(2.5, 3.0)).add(rand.nextFloat(-0.2, 0.2), rand.nextFloat(0.1, 0.2), rand.nextFloat(-0.2, 0.2))
-			world.spawnEntity(this)
+			wrld.addEntity(this)
 		}
 		
-		pos.setAir(world)
+		pos.setAir(wrld)
 	}
 	
 	override fun firstTick(){
-		facing = pos.getState(world)[BlockIgneousPlate.FACING_NOT_DOWN]
+		facing = pos.getState(wrld)[BlockIgneousPlate.FACING_NOT_DOWN]
 	}
 	
-	override fun update(){
-		if (!world.isAreaLoaded(pos, 1)){
+	override fun tick(){
+		if (!wrld.isAreaLoaded(pos, 1)){
 			return
 		}
 		
-		val furnace = pos.offset(facing.opposite).getTile<TileEntityFurnace>(world) ?: return
+		val furnace = pos.offset(facing.opposite).getTile<TileEntityFurnace>(wrld) ?: return
 		
-		val isBurning = if (world.isRemote)
-			furnace.blockType === Blocks.LIT_FURNACE
+		val isBurning = if (wrld.isRemote)
+			furnace.blockState[BlockFurnace.LIT]
 		else
 			furnace.isBurning
 		
@@ -136,7 +141,7 @@ class TileEntityIgneousPlate : TileEntityBase(), ITickable{
 			markDirty()
 		}
 		
-		if (world.isRemote){
+		if (wrld.isRemote){
 			val potential = potential
 			val threshold = if (isBurning) 0.001 else 0.03
 			
@@ -150,12 +155,12 @@ class TileEntityIgneousPlate : TileEntityBase(), ITickable{
 					animation -= 1.0
 					// TODO sound
 					
-					PARTICLE_WORK[facing]?.spawn(Point(pos, (2 + (potential * 8)).floorToInt()), world.rand)
+					PARTICLE_WORK[facing]?.spawn(Point(pos, (2 + (potential * 8)).floorToInt()), wrld.rand)
 					
 					val overheatingLevel = EntityTechnicalIgneousPlateLogic.getOverheatingPercentage(furnace)
 					
 					if (overheatingLevel > 0.0){
-						PARTICLE_OVERHEATING[facing]?.spawn(Point(pos, 1 + (max(0F, overheatingLevel - 0.125F) * 4F).floorToInt()), world.rand)
+						PARTICLE_OVERHEATING[facing]?.spawn(Point(pos, 1 + (max(0F, overheatingLevel - 0.125F) * 4F).floorToInt()), wrld.rand)
 					}
 				}
 				
@@ -181,11 +186,11 @@ class TileEntityIgneousPlate : TileEntityBase(), ITickable{
 		}
 	}
 	
-	override fun writeNBT(nbt: TagCompound, context: Context) = with(nbt){
-		setDouble(PROGRESS_TAG, progress)
+	override fun writeNBT(nbt: TagCompound, context: Context) = nbt.use {
+		putDouble(PROGRESS_TAG, progress)
 	}
 	
-	override fun readNBT(nbt: TagCompound, context: Context) = with(nbt){
+	override fun readNBT(nbt: TagCompound, context: Context) = nbt.use {
 		progress = getDouble(PROGRESS_TAG)
 	}
 }

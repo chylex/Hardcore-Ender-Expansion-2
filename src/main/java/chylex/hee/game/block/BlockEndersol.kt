@@ -2,13 +2,15 @@ package chylex.hee.game.block
 import chylex.hee.game.block.info.BlockBuilder
 import chylex.hee.game.block.util.Property
 import chylex.hee.init.ModBlocks
+import chylex.hee.system.migration.Facing.DOWN
+import chylex.hee.system.migration.Facing.UP
 import chylex.hee.system.migration.vanilla.Blocks
-import chylex.hee.system.util.getBlock
-import chylex.hee.system.util.with
-import net.minecraft.block.state.BlockStateContainer
-import net.minecraft.block.state.IBlockState
+import net.minecraft.block.Block
+import net.minecraft.block.BlockState
+import net.minecraft.state.StateContainer.Builder
+import net.minecraft.util.Direction
 import net.minecraft.util.math.BlockPos
-import net.minecraft.world.IBlockAccess
+import net.minecraft.world.IWorld
 
 class BlockEndersol(builder: BlockBuilder) : BlockSimple(builder){
 	private companion object{
@@ -16,12 +18,17 @@ class BlockEndersol(builder: BlockBuilder) : BlockSimple(builder){
 		private val MERGE_BOTTOM = Property.bool("merge_bottom")
 	}
 	
-	override fun createBlockState() = BlockStateContainer(this, MERGE_TOP, MERGE_BOTTOM)
+	override fun fillStateContainer(container: Builder<Block, BlockState>){
+		container.add(MERGE_TOP, MERGE_BOTTOM)
+	}
 	
-	override fun getMetaFromState(state: IBlockState) = 0
+	// UPDATE placement state
 	
-	override fun getActualState(state: IBlockState, world: IBlockAccess, pos: BlockPos): IBlockState{
-		return state.with(MERGE_TOP, pos.up().getBlock(world) === ModBlocks.HUMUS)
-		            .with(MERGE_BOTTOM, pos.down().getBlock(world) === Blocks.END_STONE)
+	override fun updatePostPlacement(state: BlockState, facing: Direction, neighborState: BlockState, world: IWorld, pos: BlockPos, neighborPos: BlockPos): BlockState{
+		return when(facing){
+			UP   -> state.with(MERGE_TOP, neighborState.block === ModBlocks.HUMUS)
+			DOWN -> state.with(MERGE_BOTTOM, neighborState.block === Blocks.END_STONE)
+			else -> state
+		}
 	}
 }

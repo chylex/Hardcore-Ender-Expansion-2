@@ -6,7 +6,7 @@ import chylex.hee.system.util.nonEmptySlots
 import chylex.hee.system.util.shlong
 import chylex.hee.system.util.size
 import net.minecraft.enchantment.Enchantment
-import net.minecraft.inventory.InventoryCrafting
+import net.minecraft.inventory.CraftingInventory
 import net.minecraft.item.ItemStack
 import net.minecraft.world.World
 import java.util.Objects
@@ -19,21 +19,21 @@ object RecipeEndPowderRepair : RecipeBaseDynamic(){
 		return (width * height) > 2
 	}
 	
-	override fun matches(inv: InventoryCrafting, world: World): Boolean{
+	override fun matches(inv: CraftingInventory, world: World): Boolean{
 		return determineRepairInfo(inv) != null
 	}
 	
-	override fun getCraftingResult(inv: InventoryCrafting): ItemStack{
+	override fun getCraftingResult(inv: CraftingInventory): ItemStack{
 		val (endPowderCount, repairItem1, repairItem2) = determineRepairInfo(inv) ?: return ItemStack.EMPTY
 		
 		val item = repairItem1.item
 		val durability = repairItem1.maxDamage
 		
-		val item1Durability = durability - repairItem1.itemDamage
-		val item2Durability = durability - repairItem2.itemDamage
+		val item1Durability = durability - repairItem1.damage
+		val item2Durability = durability - repairItem2.damage
 		
 		val newDurability = item1Durability + item2Durability + (durability / 20) + (durability * endPowderCount / 10)
-		val repairedStack = ItemStack(item, 1, durability - newDurability) // itemDamage < 0 is handled in Item.setDamage
+		val repairedStack = ItemStack(item, 1).apply { damage = durability - newDurability } // damage < 0 is handled in Item.setDamage
 		
 		val allEnchantments = (repairItem1.enchantmentList + repairItem2.enchantmentList).sortedWith(ENCHANTMENT_COMPARATOR).toList()
 		
@@ -51,7 +51,7 @@ object RecipeEndPowderRepair : RecipeBaseDynamic(){
 	
 	private data class RepairInfo(val endPowderCount: Int, val repairItem1: ItemStack, val repairItem2: ItemStack)
 	
-	private fun determineRepairInfo(inv: InventoryCrafting): RepairInfo?{
+	private fun determineRepairInfo(inv: CraftingInventory): RepairInfo?{
 		var endPowderCount = 0
 		var repairItem1: ItemStack? = null
 		var repairItem2: ItemStack? = null
@@ -85,6 +85,6 @@ object RecipeEndPowderRepair : RecipeBaseDynamic(){
 	}
 	
 	private fun canRepairTogether(repairItem1: ItemStack, repairItem2: ItemStack): Boolean{
-		return repairItem1.item.let { it === repairItem2.item && it.isRepairable } && repairItem1.maxDamage == repairItem2.maxDamage
+		return repairItem1.item.let { it === repairItem2.item && it.isRepairable(repairItem1) } && repairItem1.maxDamage == repairItem2.maxDamage
 	}
 }

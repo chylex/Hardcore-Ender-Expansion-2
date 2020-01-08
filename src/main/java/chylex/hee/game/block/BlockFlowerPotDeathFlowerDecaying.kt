@@ -1,26 +1,31 @@
 package chylex.hee.game.block
 import chylex.hee.game.block.IBlockDeathFlowerDecaying.Companion.LEVEL
-import chylex.hee.game.block.IBlockDeathFlowerDecaying.Companion.MIN_LEVEL
 import chylex.hee.game.block.info.BlockBuilder
 import chylex.hee.init.ModBlocks
 import chylex.hee.init.ModItems
-import chylex.hee.system.util.get
-import chylex.hee.system.util.with
+import chylex.hee.system.migration.vanilla.EntityPlayer
 import net.minecraft.block.Block
-import net.minecraft.block.state.BlockStateContainer
-import net.minecraft.block.state.IBlockState
-import net.minecraft.entity.player.EntityPlayer
-import net.minecraft.util.EnumFacing
-import net.minecraft.util.EnumHand
+import net.minecraft.block.BlockState
+import net.minecraft.item.ItemStack
+import net.minecraft.state.StateContainer.Builder
+import net.minecraft.util.Hand
 import net.minecraft.util.math.BlockPos
+import net.minecraft.util.math.BlockRayTraceResult
+import net.minecraft.world.IBlockReader
+import net.minecraft.world.IWorldReader
 import net.minecraft.world.World
 import java.util.Random
 
-class BlockFlowerPotDeathFlowerDecaying(builder: BlockBuilder, flower: Block) : BlockFlowerPotCustom(builder, flower), IBlockDeathFlowerDecaying{
-	override fun createBlockState() = BlockStateContainer(this, LEVEL)
+class BlockFlowerPotDeathFlowerDecaying(builder: BlockBuilder, private val flower: Block) : BlockFlowerPotCustom(builder, flower), IBlockDeathFlowerDecaying{
+	override fun fillStateContainer(container: Builder<Block, BlockState>){
+		container.add(LEVEL)
+	}
 	
-	override fun getMetaFromState(state: IBlockState) = state[LEVEL] - MIN_LEVEL
-	override fun getStateFromMeta(meta: Int) = this.with(LEVEL, meta + MIN_LEVEL)
+	override fun getItem(world: IBlockReader, pos: BlockPos, state: BlockState): ItemStack{
+		return ItemStack(flower).apply { damage = state[LEVEL] }
+	}
+	
+	// UPDATE use onblockadded to setup metadata?
 	
 	override val thisAsBlock
 		get() = this
@@ -31,25 +36,25 @@ class BlockFlowerPotDeathFlowerDecaying(builder: BlockBuilder, flower: Block) : 
 	override val witheredFlowerBlock
 		get() = ModBlocks.POTTED_DEATH_FLOWER_WITHERED
 	
-	override fun tickRate(world: World): Int{
+	override fun tickRate(world: IWorldReader): Int{
 		return implTickRate()
 	}
 	
-	override fun onBlockAdded(world: World, pos: BlockPos, state: IBlockState){
-		super.onBlockAdded(world, pos, state)
+	override fun onBlockAdded(state: BlockState, world: World, pos: BlockPos, oldState: BlockState, isMoving: Boolean){
+		super.onBlockAdded(state, world, pos, oldState, isMoving)
 		implOnBlockAdded(world, pos)
 	}
 	
-	override fun updateTick(world: World, pos: BlockPos, state: IBlockState, rand: Random){
-		super.updateTick(world, pos, state, rand)
+	override fun tick(state: BlockState, world: World, pos: BlockPos, rand: Random){
+		super.tick(state, world, pos, rand)
 		implUpdateTick(world, pos, state, rand)
 	}
 	
-	override fun onBlockActivated(world: World, pos: BlockPos, state: IBlockState, player: EntityPlayer, hand: EnumHand, facing: EnumFacing, hitX: Float, hitY: Float, hitZ: Float): Boolean{
+	override fun onBlockActivated(state: BlockState, world: World, pos: BlockPos, player: EntityPlayer, hand: Hand, hit: BlockRayTraceResult): Boolean{
 		if (player.getHeldItem(hand).item === ModItems.END_POWDER){
 			return false
 		}
 		
-		return super.onBlockActivated(world, pos, state, player, hand, facing, hitX, hitY, hitZ)
+		return super.onBlockActivated(state, world, pos, player, hand, hit)
 	}
 }

@@ -1,21 +1,23 @@
 package chylex.hee.game.entity.living.ai.util
-import chylex.hee.system.util.AI_FLAG_MOVEMENT
-import net.minecraft.entity.EntityCreature
-import net.minecraft.entity.EntityLivingBase
-import net.minecraft.entity.ai.EntityAITarget
+import chylex.hee.system.migration.vanilla.EntityCreature
+import chylex.hee.system.migration.vanilla.EntityLiving
+import chylex.hee.system.migration.vanilla.EntityLivingBase
+import net.minecraft.entity.ai.goal.Goal.Flag.MOVE
+import net.minecraft.entity.ai.goal.TargetGoal
+import java.util.EnumSet
 
 abstract class AIBaseTarget<T : EntityLivingBase>(
 	entity: EntityCreature,
 	checkSight: Boolean,
 	easilyReachableOnly: Boolean,
-	mutexBits: Int = AI_FLAG_MOVEMENT
-) : EntityAITarget(entity, checkSight, easilyReachableOnly){
+	mutexBits: EnumSet<Flag> = EnumSet.of(MOVE)
+) : TargetGoal(entity, checkSight, easilyReachableOnly){
 	init{
-		this.mutexBits = mutexBits
+		mutexFlags = mutexBits
 	}
 	
-	protected inline val entity: EntityCreature
-		get() = taskOwner
+	protected inline val entity: EntityLiving
+		get() = goalOwner
 	
 	private var selectedTarget: T? = null
 	

@@ -12,10 +12,10 @@ import chylex.hee.system.util.TagCompound
 import chylex.hee.system.util.allInCenteredBox
 import chylex.hee.system.util.with
 import net.minecraft.block.Block
-import net.minecraft.block.state.IBlockState
+import net.minecraft.block.BlockState
 import net.minecraft.util.math.BlockPos
 
-sealed class PortalGenerator(private val frameState: Block, private val innerState: IBlockState){
+sealed class PortalGenerator(private val frameState: Block, private val innerState: BlockState){
 	object EndPortal : PortalGenerator(ModBlocks.END_PORTAL_FRAME, ModBlocks.END_PORTAL_INNER.defaultState)
 	object VoidPortalHub : PortalGenerator(ModBlocks.VOID_PORTAL_FRAME, ModBlocks.VOID_PORTAL_INNER.with(TYPE, HUB))
 	object VoidPortalReturnActive : PortalGenerator(ModBlocks.VOID_PORTAL_FRAME, ModBlocks.VOID_PORTAL_INNER.with(TYPE, RETURN_ACTIVE))
