@@ -14,9 +14,6 @@ object PotionPurity : PotionBase(color = RGB(73, 217, 255), kind = BENEFICIAL){
 	
 	val TYPE = this.makeType
 	
-	override val iconX = 18
-	override val iconY = 0
-	
 	override fun isReady(duration: Int, amplifier: Int): Boolean{
 		return true
 	}

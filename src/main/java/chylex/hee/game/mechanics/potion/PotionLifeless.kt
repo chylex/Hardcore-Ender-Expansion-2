@@ -9,9 +9,6 @@ import net.minecraftforge.event.entity.living.LivingHealEvent
 
 @SubscribeAllEvents(modid = HEE.ID)
 object PotionLifeless : PotionBase(color = FluidEnderGoo.rgbColor, kind = HARMFUL){
-	override val iconX = 0
-	override val iconY = 0
-	
 	@SubscribeEvent(EventPriority.LOWEST)
 	fun onLivingHeal(e: LivingHealEvent){
 		if (e.entityLiving.isPotionActive(this)){
