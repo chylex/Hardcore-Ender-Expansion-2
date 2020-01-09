@@ -19,6 +19,7 @@ import chylex.hee.init.factory.TileEntityConstructors
 import chylex.hee.system.migration.forge.SubscribeAllEvents
 import chylex.hee.system.migration.forge.SubscribeEvent
 import chylex.hee.system.util.named
+import com.google.common.collect.ImmutableSet
 import net.minecraft.block.Block
 import net.minecraft.tileentity.TileEntity
 import net.minecraft.tileentity.TileEntityType
@@ -27,7 +28,7 @@ import net.minecraftforge.fml.common.Mod.EventBusSubscriber.Bus.MOD
 
 @SubscribeAllEvents(modid = HEE.ID, bus = MOD)
 object ModTileEntities{
-	val ACCUMULATION_TABLE     = build<TileEntityAccumulationTable>(ModBlocks.ACCUMULATION_TABLE) named "accumulation_table"
+	val ACCUMULATION_TABLE     = build<TileEntityAccumulationTable>(ModBlocks.ACCUMULATION_TABLE_TIER_1, ModBlocks.ACCUMULATION_TABLE_TIER_2, ModBlocks.ACCUMULATION_TABLE_TIER_3) named "accumulation_table"
 	val BREWING_STAND          = build<TileEntityBrewingStandCustom>(ModBlocks.ENHANCED_BREWING_STAND) named "brewing_stand"
 	val DARK_CHEST             = build<TileEntityDarkChest>(ModBlocks.DARK_CHEST) named "dark_chest"
 	val END_PORTAL_ACCEPTOR    = build<TileEntityEndPortalAcceptor>(ModBlocks.END_PORTAL_ACCEPTOR) named "end_portal_acceptor"
@@ -63,6 +64,16 @@ object ModTileEntities{
 			register(SPAWNER_OBSIDIAN_TOWER)
 			register(TABLE_PEDESTAL)
 			register(VOID_PORTAL_STORAGE)
+		}
+	}
+	
+	fun setupVanillaValidBlocks(){
+		with(TileEntityType.SKULL){
+			validBlocks = ImmutableSet.builder<Block>()
+				.addAll(validBlocks)
+				.add(ModBlocks.ENDERMAN_HEAD)
+				.add(ModBlocks.ENDERMAN_WALL_HEAD)
+				.build()
 		}
 	}
 	

@@ -1,0 +1,8 @@
+{
+  "parent": "block/stairs",
+  "textures": {
+    "bottom": "hee:block/whitebark_planks",
+    "top": "hee:block/whitebark_planks",
+    "side": "hee:block/whitebark_planks"
+  }
+}

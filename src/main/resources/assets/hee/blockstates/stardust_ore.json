@@ -1,214 +1,26 @@
 {
-  "forge_marker": 1,
-  "defaults": {
-    "model": "hee:cube_overlay",
-    "textures": {
-      "base": "minecraft:blocks/end_stone",
-      "particle": "hee:block/stardust_ore_particle"
-    }
-  },
   "variants": {
-    "normal": [
-      {
-        "textures": {
-          "down": "hee:block/stardust_ore_11",
-          "up": "hee:block/stardust_ore_8",
-          "north": "hee:block/stardust_ore_1",
-          "south": "hee:block/stardust_ore_2",
-          "west": "hee:block/stardust_ore_4",
-          "east": "hee:block/stardust_ore_3"
-        }
-      },
-      {
-        "textures": {
-          "down": "hee:block/stardust_ore_6",
-          "up": "hee:block/stardust_ore_1",
-          "north": "hee:block/stardust_ore_11",
-          "south": "hee:block/stardust_ore_10",
-          "west": "hee:block/stardust_ore_5",
-          "east": "hee:block/stardust_ore_7"
-        }
-      },
-      {
-        "textures": {
-          "down": "hee:block/stardust_ore_1",
-          "up": "hee:block/stardust_ore_2",
-          "north": "hee:block/stardust_ore_7",
-          "south": "hee:block/stardust_ore_5",
-          "west": "hee:block/stardust_ore_8",
-          "east": "hee:block/stardust_ore_9"
-        }
-      },
-      {
-        "textures": {
-          "down": "hee:block/stardust_ore_4",
-          "up": "hee:block/stardust_ore_10",
-          "north": "hee:block/stardust_ore_5",
-          "south": "hee:block/stardust_ore_3",
-          "west": "hee:block/stardust_ore_9",
-          "east": "hee:block/stardust_ore_1"
-        }
-      },
-      {
-        "textures": {
-          "down": "hee:block/stardust_ore_5",
-          "up": "hee:block/stardust_ore_11",
-          "north": "hee:block/stardust_ore_6",
-          "south": "hee:block/stardust_ore_9",
-          "west": "hee:block/stardust_ore_3",
-          "east": "hee:block/stardust_ore_4"
-        }
-      },
-      {
-        "textures": {
-          "down": "hee:block/stardust_ore_2",
-          "up": "hee:block/stardust_ore_9",
-          "north": "hee:block/stardust_ore_8",
-          "south": "hee:block/stardust_ore_1",
-          "west": "hee:block/stardust_ore_7",
-          "east": "hee:block/stardust_ore_6"
-        }
-      },
-      {
-        "textures": {
-          "down": "hee:block/stardust_ore_1",
-          "up": "hee:block/stardust_ore_7",
-          "north": "hee:block/stardust_ore_3",
-          "south": "hee:block/stardust_ore_4",
-          "west": "hee:block/stardust_ore_2",
-          "east": "hee:block/stardust_ore_5"
-        }
-      },
-      {
-        "textures": {
-          "down": "hee:block/stardust_ore_3",
-          "up": "hee:block/stardust_ore_5",
-          "north": "hee:block/stardust_ore_2",
-          "south": "hee:block/stardust_ore_6",
-          "west": "hee:block/stardust_ore_11",
-          "east": "hee:block/stardust_ore_10"
-        }
-      },
-      {
-        "textures": {
-          "down": "hee:block/stardust_ore_8",
-          "up": "hee:block/stardust_ore_6",
-          "north": "hee:block/stardust_ore_4",
-          "south": "hee:block/stardust_ore_11",
-          "west": "hee:block/stardust_ore_1",
-          "east": "hee:block/stardust_ore_2"
-        }
-      },
-      {
-        "textures": {
-          "down": "hee:block/stardust_ore_10",
-          "up": "hee:block/stardust_ore_4",
-          "north": "hee:block/stardust_ore_3",
-          "south": "hee:block/stardust_ore_7",
-          "west": "hee:block/stardust_ore_6",
-          "east": "hee:block/stardust_ore_1"
-        }
-      },
-      {
-        "textures": {
-          "down": "hee:block/stardust_ore_10",
-          "up": "hee:block/stardust_ore_8",
-          "north": "hee:block/stardust_ore_5",
-          "south": "hee:block/stardust_ore_1",
-          "west": "hee:block/stardust_ore_9",
-          "east": "hee:block/stardust_ore_3"
-        }
-      },
-      {
-        "textures": {
-          "down": "hee:block/stardust_ore_9",
-          "up": "hee:block/stardust_ore_4",
-          "north": "hee:block/stardust_ore_7",
-          "south": "hee:block/stardust_ore_8",
-          "west": "hee:block/stardust_ore_3",
-          "east": "hee:block/stardust_ore_10"
-        }
-      },
-      {
-        "textures": {
-          "down": "hee:block/stardust_ore_5",
-          "up": "hee:block/stardust_ore_9",
-          "north": "hee:block/stardust_ore_2",
-          "south": "hee:block/stardust_ore_6",
-          "west": "hee:block/stardust_ore_7",
-          "east": "hee:block/stardust_ore_8"
-        }
-      },
-      {
-        "textures": {
-          "down": "hee:block/stardust_ore_3",
-          "up": "hee:block/stardust_ore_11",
-          "north": "hee:block/stardust_ore_9",
-          "south": "hee:block/stardust_ore_6",
-          "west": "hee:block/stardust_ore_10",
-          "east": "hee:block/stardust_ore_2"
-        }
-      },
-      {
-        "textures": {
-          "down": "hee:block/stardust_ore_1",
-          "up": "hee:block/stardust_ore_9",
-          "north": "hee:block/stardust_ore_11",
-          "south": "hee:block/stardust_ore_3",
-          "west": "hee:block/stardust_ore_7",
-          "east": "hee:block/stardust_ore_8"
-        }
-      },
-      {
-        "textures": {
-          "down": "hee:block/stardust_ore_6",
-          "up": "hee:block/stardust_ore_1",
-          "north": "hee:block/stardust_ore_2",
-          "south": "hee:block/stardust_ore_10",
-          "west": "hee:block/stardust_ore_9",
-          "east": "hee:block/stardust_ore_4"
-        }
-      },
-      {
-        "textures": {
-          "down": "hee:block/stardust_ore_2",
-          "up": "hee:block/stardust_ore_5",
-          "north": "hee:block/stardust_ore_9",
-          "south": "hee:block/stardust_ore_7",
-          "west": "hee:block/stardust_ore_3",
-          "east": "hee:block/stardust_ore_8"
-        }
-      },
-      {
-        "textures": {
-          "down": "hee:block/stardust_ore_11",
-          "up": "hee:block/stardust_ore_7",
-          "north": "hee:block/stardust_ore_6",
-          "south": "hee:block/stardust_ore_4",
-          "west": "hee:block/stardust_ore_2",
-          "east": "hee:block/stardust_ore_3"
-        }
-      },
-      {
-        "textures": {
-          "down": "hee:block/stardust_ore_4",
-          "up": "hee:block/stardust_ore_9",
-          "north": "hee:block/stardust_ore_1",
-          "south": "hee:block/stardust_ore_2",
-          "west": "hee:block/stardust_ore_6",
-          "east": "hee:block/stardust_ore_11"
-        }
-      },
-      {
-        "textures": {
-          "down": "hee:block/stardust_ore_7",
-          "up": "hee:block/stardust_ore_3",
-          "north": "hee:block/stardust_ore_10",
-          "south": "hee:block/stardust_ore_8",
-          "west": "hee:block/stardust_ore_2",
-          "east": "hee:block/stardust_ore_5"
-        }
-      }
+    "": [
+      { "model": "hee:block/stardust_ore_1" },
+      { "model": "hee:block/stardust_ore_2" },
+      { "model": "hee:block/stardust_ore_3" },
+      { "model": "hee:block/stardust_ore_4" },
+      { "model": "hee:block/stardust_ore_5" },
+      { "model": "hee:block/stardust_ore_6" },
+      { "model": "hee:block/stardust_ore_7" },
+      { "model": "hee:block/stardust_ore_8" },
+      { "model": "hee:block/stardust_ore_9" },
+      { "model": "hee:block/stardust_ore_10" },
+      { "model": "hee:block/stardust_ore_11" },
+      { "model": "hee:block/stardust_ore_12" },
+      { "model": "hee:block/stardust_ore_13" },
+      { "model": "hee:block/stardust_ore_14" },
+      { "model": "hee:block/stardust_ore_15" },
+      { "model": "hee:block/stardust_ore_16" },
+      { "model": "hee:block/stardust_ore_17" },
+      { "model": "hee:block/stardust_ore_18" },
+      { "model": "hee:block/stardust_ore_19" },
+      { "model": "hee:block/stardust_ore_20" }
     ]
   }
 }

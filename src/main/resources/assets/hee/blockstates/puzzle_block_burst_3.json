@@ -1,18 +1,19 @@
 {
-  "forge_marker": 1,
-  "defaults": {
-    "model": "hee:puzzle_block_overlay",
-    "textures": {
-      "base": "hee:block/puzzle_base_active",
-      "top": "hee:block/puzzle_overlay_burst_3"
-    }
-  },
-  "variants": {
-    "state": {
-      "active":   { "textures": { "base": "hee:block/puzzle_base_active" } },
-      "inactive": { "textures": { "base": "hee:block/puzzle_base_inactive" } },
-      "disabled": { "textures": { "base": "hee:block/puzzle_base_disabled" } }
+  "multipart": [
+    {
+      "when":  { "state": "active" },
+      "apply": { "model": "hee:block/puzzle_base_active" }
     },
-    "inventory": [{}]
-  }
+    {
+      "when":  { "state": "inactive" },
+      "apply": { "model": "hee:block/puzzle_base_inactive" }
+    },
+    {
+      "when":  { "state": "disabled" },
+      "apply": { "model": "hee:block/puzzle_base_disabled" }
+    },
+    {
+      "apply": { "model": "hee:block/puzzle_overlay_burst_3" }
+    }
+  ]
 }

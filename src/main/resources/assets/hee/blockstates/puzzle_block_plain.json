@@ -1,17 +1,7 @@
 {
-  "forge_marker": 1,
-  "defaults": {
-    "model": "cube_all",
-    "textures": {
-      "all": "hee:block/puzzle_base_active"
-    }
-  },
   "variants": {
-    "state": {
-      "active":   { "textures": { "all": "hee:block/puzzle_base_active" } },
-      "inactive": { "textures": { "all": "hee:block/puzzle_base_inactive" } },
-      "disabled": { "textures": { "all": "hee:block/puzzle_base_disabled" } }
-    },
-    "inventory": [{}]
+    "state=active":   { "model": "hee:block/puzzle_base_active" },
+    "state=inactive": { "model": "hee:block/puzzle_base_inactive" },
+    "state=disabled": { "model": "hee:block/puzzle_base_disabled" }
   }
 }

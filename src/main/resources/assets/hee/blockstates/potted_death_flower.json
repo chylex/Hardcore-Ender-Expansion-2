@@ -1,25 +1,18 @@
 {
-  "forge_marker": 1,
-  "defaults": {
-    "model": "flower_pot_cross",
-    "smooth_lighting": false
-  },
   "variants": {
-    "level": {
-      "1":  { "textures": { "plant": "hee:block/death_flower_1" } },
-      "2":  { "textures": { "plant": "hee:block/death_flower_1" } },
-      "3":  { "textures": { "plant": "hee:block/death_flower_1" } },
-      "4":  { "textures": { "plant": "hee:block/death_flower_2" } },
-      "5":  { "textures": { "plant": "hee:block/death_flower_2" } },
-      "6":  { "textures": { "plant": "hee:block/death_flower_2" } },
-      "7":  { "textures": { "plant": "hee:block/death_flower_2" } },
-      "8":  { "textures": { "plant": "hee:block/death_flower_3" } },
-      "9":  { "textures": { "plant": "hee:block/death_flower_3" } },
-      "10": { "textures": { "plant": "hee:block/death_flower_3" } },
-      "11": { "textures": { "plant": "hee:block/death_flower_3" } },
-      "12": { "textures": { "plant": "hee:block/death_flower_4" } },
-      "13": { "textures": { "plant": "hee:block/death_flower_4" } },
-      "14": { "textures": { "plant": "hee:block/death_flower_4" } }
-    }
+    "level=1":  { "model": "hee:block/potted_death_flower_1" },
+    "level=2":  { "model": "hee:block/potted_death_flower_1" },
+    "level=3":  { "model": "hee:block/potted_death_flower_1" },
+    "level=4":  { "model": "hee:block/potted_death_flower_2" },
+    "level=5":  { "model": "hee:block/potted_death_flower_2" },
+    "level=6":  { "model": "hee:block/potted_death_flower_2" },
+    "level=7":  { "model": "hee:block/potted_death_flower_2" },
+    "level=8":  { "model": "hee:block/potted_death_flower_3" },
+    "level=9":  { "model": "hee:block/potted_death_flower_3" },
+    "level=10": { "model": "hee:block/potted_death_flower_3" },
+    "level=11": { "model": "hee:block/potted_death_flower_3" },
+    "level=12": { "model": "hee:block/potted_death_flower_4" },
+    "level=13": { "model": "hee:block/potted_death_flower_4" },
+    "level=14": { "model": "hee:block/potted_death_flower_4" }
   }
 }

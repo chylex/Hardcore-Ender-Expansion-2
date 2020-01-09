@@ -1,0 +1,11 @@
+{
+  "parent": "hee:block/stardust_ore",
+  "textures": {
+    "down": "hee:block/stardust_ore_3",
+    "up": "hee:block/stardust_ore_11",
+    "north": "hee:block/stardust_ore_9",
+    "south": "hee:block/stardust_ore_6",
+    "west": "hee:block/stardust_ore_10",
+    "east": "hee:block/stardust_ore_2"
+  }
+}

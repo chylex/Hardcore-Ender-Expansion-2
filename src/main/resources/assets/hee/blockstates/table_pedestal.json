@@ -1,19 +1,11 @@
 {
-  "forge_marker": 1,
-  "defaults": {
-    "model": "hee:table_pedestal",
-    "textures": {
-      "particle": "hee:block/table_pedestal_particle",
-      "texture": "hee:block/table_pedestal"
-    }
-  },
-  "variants": {
-    "linked": {
-      "false": {},
-      "true": {
-        "submodel": "hee:table_pedestal_overlay"
-      }
+  "multipart": [
+    {
+      "apply": { "model": "hee:block/table_pedestal" }
     },
-    "inventory": [{}]
-  }
+    {
+      "when":  { "linked": "true" },
+      "apply": { "model": "hee:block/table_pedestal_overlay" }
+    }
+  ]
 }

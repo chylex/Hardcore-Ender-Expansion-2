@@ -1,6 +1,5 @@
 package chylex.hee.game.block.entity.base
 import chylex.hee.game.block.BlockAbstractTable
-import chylex.hee.game.block.BlockAbstractTable.Companion.TIER
 import chylex.hee.game.block.entity.TileEntityJarODust
 import chylex.hee.game.block.entity.TileEntityTablePedestal
 import chylex.hee.game.block.entity.base.TileEntityBase.Context.STORAGE
@@ -82,7 +81,7 @@ abstract class TileEntityBaseTable(type: TileEntityType<out TileEntityBaseTable>
 		val state = pos.getState(wrld)
 		val block = state.block as BlockAbstractTable
 		
-		maxInputPedestals = when(state[TIER] - block.minAllowedTier){
+		maxInputPedestals = when(block.tier - block.firstTier){
 			2 -> 7
 			1 -> 5
 			0 -> 3

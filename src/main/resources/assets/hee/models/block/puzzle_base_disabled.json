@@ -1,0 +1,6 @@
+{
+  "parent": "block/cube_all",
+  "textures": {
+    "all": "hee:block/puzzle_base_disabled"
+  }
+}

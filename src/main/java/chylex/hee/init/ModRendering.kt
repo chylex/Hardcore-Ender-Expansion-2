@@ -28,9 +28,7 @@ import chylex.hee.client.render.entity.RenderEntityMobVillagerDying
 import chylex.hee.client.render.entity.RenderEntityNothing
 import chylex.hee.client.render.entity.RenderEntityProjectileEyeOfEnder
 import chylex.hee.client.render.entity.RenderEntityTokenHolder
-import chylex.hee.client.render.entity.layer.LayerEndermanHead
 import chylex.hee.client.render.util.asItem
-import chylex.hee.client.util.MC
 import chylex.hee.game.block.BlockDryVines
 import chylex.hee.game.block.BlockPuzzleLogic
 import chylex.hee.game.block.BlockTablePedestal
@@ -44,6 +42,7 @@ import chylex.hee.game.block.entity.TileEntityPortalInner
 import chylex.hee.game.block.entity.TileEntityTablePedestal
 import chylex.hee.game.block.entity.base.TileEntityBaseSpawner
 import chylex.hee.game.block.entity.base.TileEntityBaseTable
+import chylex.hee.game.block.util.CustomSkulls
 import chylex.hee.game.container.ContainerAmuletOfRecovery
 import chylex.hee.game.container.ContainerLootChest
 import chylex.hee.game.container.ContainerPortalTokenStorage
@@ -72,10 +71,13 @@ import chylex.hee.system.migration.forge.SubscribeAllEvents
 import chylex.hee.system.migration.forge.SubscribeEvent
 import chylex.hee.system.migration.vanilla.ContainerBrewingStand
 import chylex.hee.system.migration.vanilla.ContainerShulkerBox
+import chylex.hee.system.util.facades.Resource
 import net.minecraft.client.gui.ScreenManager
 import net.minecraft.client.gui.screen.inventory.ContainerScreen
 import net.minecraft.client.gui.screen.inventory.ShulkerBoxScreen
 import net.minecraft.client.renderer.entity.EntityRenderer
+import net.minecraft.client.renderer.entity.model.GenericHeadModel
+import net.minecraft.client.renderer.tileentity.SkullTileEntityRenderer
 import net.minecraft.client.renderer.tileentity.TileEntityRenderer
 import net.minecraft.entity.Entity
 import net.minecraft.inventory.container.Container
@@ -93,7 +95,6 @@ object ModRendering{
 	val RENDER_ITEM_DARK_CHEST = RenderTileDarkChest.AsItem
 	val RENDER_ITEM_LOOT_CHEST = RenderTileLootChest.AsItem
 	val RENDER_ITEM_JAR_O_DUST = RenderTileJarODust.AsItem
-	// UPDATE val RENDER_ITEM_ENDERMAN_HEAD, RenderTileEndermanHead.AsItem
 	
 	@SubscribeEvent
 	@Suppress("unused", "UNUSED_PARAMETER", "RemoveExplicitTypeArguments")
@@ -143,9 +144,8 @@ object ModRendering{
 		
 		// miscellaneous
 		
-		for(render in MC.renderManager.skinMap.values){
-			render.addLayer(LayerEndermanHead(render))
-		}
+		SkullTileEntityRenderer.MODELS[CustomSkulls.Enderman] = GenericHeadModel(0, 0, 64, 32)
+		SkullTileEntityRenderer.SKINS[CustomSkulls.Enderman] = Resource.Custom("textures/entity/enderman_head.png")
 	}
 	
 	@SubscribeEvent
@@ -174,80 +174,10 @@ object ModRendering{
 			}
 		}}
 	}
-	/* TODO
-	private fun registerBlockStateMappers(){
-		val emptyStateMapper = IStateMapper {
-			emptyMap()
-		}
-		
-		val singleStateMapper = IStateMapper {
-			val location = ModelResourceLocation(it.registryName!!, "normal")
-			it.blockState.validStates.associateWith { location }
-		}
-		
-		setMapper(ModBlocks.END_PORTAL_INNER, emptyStateMapper)
-		setMapper(ModBlocks.ENDERMAN_HEAD, emptyStateMapper)
-		setMapper(ModBlocks.ENERGY_CLUSTER, emptyStateMapper)
-		setMapper(ModBlocks.VOID_PORTAL_INNER, emptyStateMapper)
-		
-		setMapper(ModBlocks.CORRUPTED_ENERGY, singleStateMapper)
-		setMapper(ModBlocks.DARK_CHEST, singleStateMapper)
-		setMapper(ModBlocks.ENDER_GOO, singleStateMapper)
-		setMapper(ModBlocks.PURIFIED_ENDER_GOO, singleStateMapper)
-		setMapper(ModBlocks.LOOT_CHEST, singleStateMapper)
-		setMapper(ModBlocks.INFUSED_TNT, singleStateMapper)
-		setMapper(ModBlocks.IGNEOUS_PLATE, singleStateMapper)
-		setMapper(ModBlocks.WHITEBARK_LEAVES_AUTUMN_BROWN, singleStateMapper)
-		setMapper(ModBlocks.WHITEBARK_LEAVES_AUTUMN_ORANGE, singleStateMapper)
-		setMapper(ModBlocks.WHITEBARK_LEAVES_AUTUMN_YELLOWGREEN, singleStateMapper)
-		setMapper(ModBlocks.WHITEBARK_SAPLING_AUTUMN_BROWN, singleStateMapper)
-		setMapper(ModBlocks.WHITEBARK_SAPLING_AUTUMN_ORANGE, singleStateMapper)
-		setMapper(ModBlocks.WHITEBARK_SAPLING_AUTUMN_YELLOWGREEN, singleStateMapper)
-	}*/
 	
 	@SubscribeEvent
 	fun onRegisterModels(@Suppress("UNUSED_PARAMETER") e: ModelRegistryEvent){
-		
-		// special models
-		
 		ModelItemAmuletOfRecovery.register()
-		
-		// UPDATE
-		/* TODO
-		val tables = arrayOf(
-			ModBlocks.TABLE_BASE,
-			ModBlocks.ACCUMULATION_TABLE
-		)
-		
-		for(block in tables){
-			for(tier in BlockAbstractTable.MIN_TIER..BlockAbstractTable.MAX_TIER){
-				setModel(block, tier, variant = "tier=$tier")
-			}
-		}
-		
-		setModel(ModBlocks.DEATH_FLOWER_DECAYING, 0..2, Resource.Custom("death_flower_1"))
-		setModel(ModBlocks.DEATH_FLOWER_DECAYING, 3..6, Resource.Custom("death_flower_2"))
-		setModel(ModBlocks.DEATH_FLOWER_DECAYING, 7..10, Resource.Custom("death_flower_3"))
-		setModel(ModBlocks.DEATH_FLOWER_DECAYING, 11..13, Resource.Custom("death_flower_4"))
-		
-		setModel(ModBlocks.VOID_PORTAL_INNER, BlockVoidPortalInner.Type.values().indices)
-		
-		setModel(ModItems.VOID_SALAD, ItemVoidSalad.Type.DOUBLE.ordinal, Resource.Custom("void_void_salad"))
-		setModel(ModItems.VOID_SALAD, ItemVoidSalad.Type.MEGA.ordinal, Resource.Custom("mega_void_salad"))
-		
-		with(ForgeRegistries.ITEMS){
-			val skippedBlocks = arrayOf(
-				ModBlocks.DEATH_FLOWER_DECAYING,
-				ModBlocks.POTTED_DEATH_FLOWER_DECAYING,
-				ModBlocks.POTTED_DEATH_FLOWER_HEALED,
-				ModBlocks.POTTED_DEATH_FLOWER_WITHERED,
-				*tables
-			).map(Item::getItemFromBlock).toSet()
-			
-			for(item in keys.filter(Resource::isCustom).map(::getValue).requireNoNulls().filterNot(skippedBlocks::contains)){
-				setModel(item)
-			}
-		}*/
 	}
 	
 	// Utilities
@@ -263,23 +193,4 @@ object ModRendering{
 	private inline fun <reified T : TileEntity> registerTile(renderer: TileEntityRenderer<in T>){
 		ClientRegistry.bindTileEntitySpecialRenderer(T::class.java, renderer)
 	}
-	
-	/* UPDATE
-	private fun setMapper(block: Block, mapper: IStateMapper){
-		ModelLoader.setCustomStateMapper(block, mapper)
-	}
-	
-	private fun setModel(item: Item, metadata: Int = 0, location: ResourceLocation = item.registryName!!, variant: String = "inventory"){
-		ModelLoader.setCustomModelResourceLocation(item, metadata, ModelResourceLocation(location, variant))
-	}
-	
-	private fun setModel(block: Block, metadata: Int = 0, location: ResourceLocation = block.registryName!!, variant: String = "inventory"){
-		setModel(Item.getItemFromBlock(block), metadata, location, variant)
-	}
-	
-	private fun setModel(block: Block, metadatas: IntRange, location: ResourceLocation = block.registryName!!, variant: String = "inventory"){
-		for(metadata in metadatas){
-			setModel(block, metadata, location, variant)
-		}
-	}*/
 }

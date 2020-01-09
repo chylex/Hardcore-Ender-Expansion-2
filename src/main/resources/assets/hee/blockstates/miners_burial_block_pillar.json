@@ -1,23 +1,7 @@
 {
-  "forge_marker": 1,
-  "defaults": {
-    "model": "cube_column",
-    "textures": {
-      "end": "hee:block/miners_burial_block_pillar_top",
-      "side": "hee:block/miners_burial_block_pillar"
-    }
-  },
   "variants": {
-    "axis": {
-      "y": {},
-      "z": {
-        "x": 90
-      },
-      "x": {
-        "x": 90,
-        "y": 90
-      }
-    },
-    "inventory": [{}]
+    "axis=y": { "model": "hee:block/miners_burial_block_pillar" },
+    "axis=z": { "model": "hee:block/miners_burial_block_pillar", "x": 90 },
+    "axis=x": { "model": "hee:block/miners_burial_block_pillar", "x": 90, "y": 90 }
   }
 }

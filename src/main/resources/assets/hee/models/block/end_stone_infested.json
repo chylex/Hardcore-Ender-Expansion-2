@@ -1,0 +1,9 @@
+{
+  "parent": "block/cube_bottom_top",
+  "textures": {
+    "particle": "hee:block/end_stone_infested_top",
+    "bottom": "minecraft:block/end_stone",
+    "top": "hee:block/end_stone_infested_top",
+    "side": "hee:block/end_stone_infested_side"
+  }
+}

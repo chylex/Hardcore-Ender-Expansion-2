@@ -1,0 +1,6 @@
+{
+  "parent": "hee:block/puzzle_block_inventory",
+  "textures": {
+    "top": "hee:block/puzzle_overlay_redirect_1n"
+  }
+}

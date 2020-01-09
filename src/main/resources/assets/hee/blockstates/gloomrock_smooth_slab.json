@@ -1,26 +1,7 @@
 {
-  "forge_marker": 1,
-  "defaults": {
-    "textures": {
-      "bottom": "hee:block/gloomrock_smooth",
-      "top": "hee:block/gloomrock_smooth",
-      "side": "hee:block/gloomrock_smooth_slab_side"
-    }
-  },
   "variants": {
-    "variant": {
-      "default": {}
-    },
-    "half": {
-      "bottom": {
-        "model": "half_slab"
-      },
-      "top": {
-        "model": "upper_slab"
-      }
-    },
-    "inventory": {
-      "model": "half_slab"
-    }
+    "type=bottom": { "model": "hee:block/gloomrock_smooth_slab" },
+    "type=top": { "model": "hee:block/gloomrock_smooth_slab_top" },
+    "type=double": { "model": "hee:block/gloomrock_smooth" }
   }
 }

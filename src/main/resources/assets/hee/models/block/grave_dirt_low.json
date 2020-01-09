@@ -1,5 +1,5 @@
 {
-  "parent": "minecraft:block/block",
+  "parent": "block/block",
   "textures": {
     "particle": "hee:block/grave_dirt",
     "all": "hee:block/grave_dirt",

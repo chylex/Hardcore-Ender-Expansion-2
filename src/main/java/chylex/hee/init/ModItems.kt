@@ -228,9 +228,9 @@ object ModItems{
 		
 		with(e.registry){
 			register(ItemChorusBerry(baseProps.food(ItemChorusBerry.FOOD)).apply { override(Items.CHORUS_FRUIT) })
-			register(ItemElytraOverride(baseProps.maxDamage(432), Items.ELYTRA.translationKey).apply { override(Items.ELYTRA) })
-			register(ItemEyeOfEnderOverride(defaultProps, Items.ENDER_EYE.translationKey).apply { override(Items.ENDER_EYE) })
-			register(ItemTotemOfUndyingOverride(toolProps, Items.TOTEM_OF_UNDYING.translationKey).apply { override(Items.TOTEM_OF_UNDYING, newCreativeTab = null) })
+			register(ItemElytraOverride(baseProps.maxDamage(432)).apply { override(Items.ELYTRA) })
+			register(ItemEyeOfEnderOverride(defaultProps).apply { override(Items.ENDER_EYE) })
+			register(ItemTotemOfUndyingOverride(toolProps).apply { override(Items.TOTEM_OF_UNDYING, newCreativeTab = null) })
 			
 			for(color in DyeColor.values()){
 				val box = BlockShulkerBox.getBlockByColor(color)

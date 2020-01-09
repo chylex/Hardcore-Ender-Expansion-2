@@ -1,6 +1,10 @@
 {
-  "parent": "minecraft:block/block",
+  "parent": "block/block",
   "ambientocclusion": false,
+  "textures": {
+    "particle": "hee:block/scaffolding",
+    "all": "hee:block/scaffolding"
+  },
   "elements": [
     {
       "from": [ 7, 7, 7 ],

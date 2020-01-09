@@ -1,0 +1,8 @@
+{
+  "parent": "block/slab",
+  "textures": {
+    "bottom": "hee:block/gloomrock_bricks",
+    "top": "hee:block/gloomrock_bricks",
+    "side": "hee:block/gloomrock_bricks"
+  }
+}

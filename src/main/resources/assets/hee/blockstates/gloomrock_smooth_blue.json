@@ -1,13 +1,5 @@
 {
-  "forge_marker": 1,
-  "defaults": {
-    "model": "cube_all",
-    "textures": {
-      "all": "hee:block/gloomrock_smooth_blue"
-    }
-  },
   "variants": {
-    "normal": [{}],
-    "inventory": [{}]
+    "": { "model": "hee:block/gloomrock_smooth_blue" }
   }
 }

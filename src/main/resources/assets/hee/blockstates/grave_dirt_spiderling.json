@@ -1,8 +1,6 @@
 {
-  "forge_marker": 1,
   "variants": {
-    "full=false": [{ "model": "hee:grave_dirt_low" }],
-    "full=true": [{ "model": "hee:grave_dirt_full" }],
-    "inventory": [{ "model": "hee:grave_dirt_low" }]
+    "full=false": { "model": "hee:block/grave_dirt_low" },
+    "full=true": { "model": "hee:block/grave_dirt_full" }
   }
 }

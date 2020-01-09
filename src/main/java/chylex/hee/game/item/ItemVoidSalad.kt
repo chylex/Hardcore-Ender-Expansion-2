@@ -11,10 +11,13 @@ import chylex.hee.system.migration.vanilla.EntityPlayer
 import chylex.hee.system.migration.vanilla.Items
 import chylex.hee.system.migration.vanilla.Potions
 import chylex.hee.system.migration.vanilla.Sounds
+import chylex.hee.system.util.facades.Resource
+import chylex.hee.system.util.getEnum
 import chylex.hee.system.util.heeTag
 import chylex.hee.system.util.heeTagOrNull
 import chylex.hee.system.util.makeEffect
 import chylex.hee.system.util.nextFloat
+import chylex.hee.system.util.putEnum
 import net.minecraft.item.Food
 import net.minecraft.item.Item
 import net.minecraft.item.ItemStack
@@ -28,6 +31,7 @@ class ItemVoidSalad(properties: Properties) : Item(properties){
 		private val DAMAGE_LETHAL = Damage(MAGIC_TYPE)
 		
 		private const val PLAYER_RESPAWN_HUNGRY_TAG = "MegaVoidSalad"
+		private const val TYPE_TAG = "Type"
 		
 		val FOOD: Food = Food.Builder().hunger(0).saturation(0F).setAlwaysEdible().build()
 		
@@ -51,7 +55,21 @@ class ItemVoidSalad(properties: Properties) : Item(properties){
 	}
 	
 	enum class Type{
-		SINGLE, DOUBLE, MEGA
+		SINGLE, DOUBLE, MEGA // UPDATE fix texture
+	}
+	
+	init{
+		addPropertyOverride(Resource.Custom("void_salad_type")){
+			stack, _, _ -> getSaladType(stack).ordinal.toFloat()
+		}
+	}
+	
+	fun getSaladType(stack: ItemStack): Type{
+		return stack.heeTagOrNull?.getEnum<Type>(TYPE_TAG) ?: Type.SINGLE
+	}
+	
+	fun setSaladType(stack: ItemStack, type: Type){
+		stack.heeTag.putEnum(TYPE_TAG, type)
 	}
 	
 	override fun getUseDuration(stack: ItemStack): Int{
@@ -72,7 +90,7 @@ class ItemVoidSalad(properties: Properties) : Item(properties){
 	}
 	
 	private fun applyVoidEffect(stack: ItemStack, entity: EntityLivingBase){
-		when(Type.values().getOrNull(stack.damage) ?: return){
+		when(getSaladType(stack)){
 			Type.SINGLE ->
 				DAMAGE_SAFE.dealTo(2F, entity, TITLE_STARVE)
 			
@@ -93,10 +111,10 @@ class ItemVoidSalad(properties: Properties) : Item(properties){
 	}
 	
 	override fun getTranslationKey(stack: ItemStack): String{
-		return when(stack.damage){
-			2 -> "item.hee.void_salad.mega"
-			1 -> "item.hee.void_salad.double"
-			else -> "item.hee.void_salad.single"
+		return when(getSaladType(stack)){
+			Type.SINGLE -> "item.hee.void_salad.single"
+			Type.DOUBLE -> "item.hee.void_salad.double"
+			Type.MEGA   -> "item.hee.void_salad.mega"
 		}
 	}
 }

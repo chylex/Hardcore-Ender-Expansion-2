@@ -1,0 +1,6 @@
+{
+  "parent": "block/block",
+  "textures": {
+    "particle": "hee:block/loot_chest_particle"
+  }
+}

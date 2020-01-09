@@ -33,9 +33,9 @@ object RecipeVoidSalad : RecipeBaseDynamic(){
 		val isRightVoidSalad = isSingleVoidSalad(getStackInRowAndColumn(inv, 2, bowlRow - 1))
 		
 		return when{
-			isLeftVoidSalad && isRightVoidSalad -> ItemStack(ModItems.VOID_SALAD).apply { damage = Type.MEGA.ordinal }
-			isLeftVoidSalad || isRightVoidSalad -> ItemStack(ModItems.VOID_SALAD).apply { damage = Type.DOUBLE.ordinal }
-			else                                -> ItemStack(ModItems.VOID_SALAD).apply { damage = Type.SINGLE.ordinal }
+			isLeftVoidSalad && isRightVoidSalad -> ItemStack(ModItems.VOID_SALAD).also { ModItems.VOID_SALAD.setSaladType(it, Type.MEGA) }
+			isLeftVoidSalad || isRightVoidSalad -> ItemStack(ModItems.VOID_SALAD).also { ModItems.VOID_SALAD.setSaladType(it, Type.DOUBLE) }
+			else                                -> ItemStack(ModItems.VOID_SALAD).also { ModItems.VOID_SALAD.setSaladType(it, Type.SINGLE) }
 		}
 	}
 	
@@ -44,7 +44,7 @@ object RecipeVoidSalad : RecipeBaseDynamic(){
 	}
 	
 	private fun isSingleVoidSalad(stack: ItemStack): Boolean{
-		return stack.item === ModItems.VOID_SALAD && stack.damage == Type.SINGLE.ordinal
+		return stack.item === ModItems.VOID_SALAD && ModItems.VOID_SALAD.getSaladType(stack) == Type.SINGLE
 	}
 	
 	private fun getStackInRowAndColumn(inv: CraftingInventory, row: Int, column: Int): ItemStack{

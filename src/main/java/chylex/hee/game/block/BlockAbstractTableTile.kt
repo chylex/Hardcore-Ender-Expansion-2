@@ -9,7 +9,13 @@ import net.minecraft.util.math.BlockPos
 import net.minecraft.world.IBlockReader
 import net.minecraft.world.World
 
-abstract class BlockAbstractTableTile<T : TileEntityBaseTable>(builder: BlockBuilder) : BlockAbstractTable(builder){
+abstract class BlockAbstractTableTile<T : TileEntityBaseTable>(builder: BlockBuilder, name: String, tier: Int, firstTier: Int) : BlockAbstractTable(builder, tier, firstTier){
+	private val translationKey = "block.hee.$name"
+	
+	override fun getTranslationKey(): String{
+		return translationKey
+	}
+	
 	abstract fun createTileEntity(): T
 	
 	override fun hasTileEntity(state: BlockState): Boolean{

@@ -1,11 +1,14 @@
 package chylex.hee.game.block
 import chylex.hee.game.block.IBlockDeathFlowerDecaying.Companion.LEVEL
 import chylex.hee.game.block.info.BlockBuilder
+import chylex.hee.game.item.ItemDeathFlower
 import chylex.hee.init.ModBlocks
 import chylex.hee.init.ModItems
 import chylex.hee.system.migration.vanilla.EntityPlayer
+import chylex.hee.system.util.setState
 import net.minecraft.block.Block
 import net.minecraft.block.BlockState
+import net.minecraft.entity.LivingEntity
 import net.minecraft.item.ItemStack
 import net.minecraft.state.StateContainer.Builder
 import net.minecraft.util.Hand
@@ -22,10 +25,8 @@ class BlockFlowerPotDeathFlowerDecaying(builder: BlockBuilder, private val flowe
 	}
 	
 	override fun getItem(world: IBlockReader, pos: BlockPos, state: BlockState): ItemStack{
-		return ItemStack(flower).apply { damage = state[LEVEL] }
+		return ItemStack(flower).also { ItemDeathFlower.setDeathLevel(it, state[LEVEL]) }
 	}
-	
-	// UPDATE use onblockadded to setup metadata?
 	
 	override val thisAsBlock
 		get() = this
@@ -38,6 +39,10 @@ class BlockFlowerPotDeathFlowerDecaying(builder: BlockBuilder, private val flowe
 	
 	override fun tickRate(world: IWorldReader): Int{
 		return implTickRate()
+	}
+	
+	override fun onBlockPlacedBy(world: World, pos: BlockPos, state: BlockState, placer: LivingEntity?, stack: ItemStack){
+		pos.setState(world, state.with(LEVEL, ItemDeathFlower.getDeathLevel(stack)))
 	}
 	
 	override fun onBlockAdded(state: BlockState, world: World, pos: BlockPos, oldState: BlockState, isMoving: Boolean){

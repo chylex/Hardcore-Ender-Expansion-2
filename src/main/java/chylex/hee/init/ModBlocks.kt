@@ -121,6 +121,7 @@ import chylex.hee.game.block.info.BlockBuilders.buildWhitebarkSapling
 import chylex.hee.game.block.util.CustomSkulls
 import chylex.hee.game.item.ItemAncientCobweb
 import chylex.hee.game.item.ItemBlockFuel
+import chylex.hee.game.item.ItemDeathFlower
 import chylex.hee.game.item.ItemDragonEgg
 import chylex.hee.game.item.ItemInfusedTNT
 import chylex.hee.game.world.feature.basic.trees.types.AutumnTreeGenerator
@@ -333,9 +334,13 @@ object ModBlocks{
 	
 	// Blocks: Tables
 	
-	@JvmField val TABLE_PEDESTAL     = BlockTablePedestal(buildTablePedestal) named "table_pedestal" // UPDATE: update recipe json to include tag to allow all gloomrock variations
-	@JvmField val TABLE_BASE         = BlockTableBase(buildTable) named "table_base"
-	@JvmField val ACCUMULATION_TABLE = BlockTableTile(buildTable, ::TileEntityAccumulationTable, minAllowedTier = 1) named "accumulation_table"
+	@JvmField val TABLE_PEDESTAL            = BlockTablePedestal(buildTablePedestal) named "table_pedestal" // UPDATE: update recipe json to include tag to allow all gloomrock variations
+	@JvmField val TABLE_BASE_TIER_1         = BlockTableBase(buildTable, tier = 1, firstTier = 1) named "table_base_tier_1"
+	@JvmField val TABLE_BASE_TIER_2         = BlockTableBase(buildTable, tier = 2, firstTier = 1) named "table_base_tier_2"
+	@JvmField val TABLE_BASE_TIER_3         = BlockTableBase(buildTable, tier = 3, firstTier = 1) named "table_base_tier_3"
+	@JvmField val ACCUMULATION_TABLE_TIER_1 = BlockTableTile(buildTable, "accumulation_table", TileEntityAccumulationTable::class.java, tier = 1, firstTier = 1) named "accumulation_table_tier_1"
+	@JvmField val ACCUMULATION_TABLE_TIER_2 = BlockTableTile(buildTable, "accumulation_table", TileEntityAccumulationTable::class.java, tier = 2, firstTier = 1) named "accumulation_table_tier_2"
+	@JvmField val ACCUMULATION_TABLE_TIER_3 = BlockTableTile(buildTable, "accumulation_table", TileEntityAccumulationTable::class.java, tier = 3, firstTier = 1) named "accumulation_table_tier_3"
 	
 	// Blocks: Utilities
 	
@@ -476,7 +481,7 @@ object ModBlocks{
 			register(POTTED_WHITEBARK_SAPLING_AUTUMN_ORANGE)
 			register(POTTED_WHITEBARK_SAPLING_AUTUMN_YELLOWGREEN)
 			
-			register(DEATH_FLOWER_DECAYING with basicItemBlock)
+			register(DEATH_FLOWER_DECAYING with { ItemDeathFlower(it, itemBlockDefaultProps) })
 			register(DEATH_FLOWER_HEALED with basicItemBlock)
 			register(DEATH_FLOWER_WITHERED with basicItemBlock)
 			register(POTTED_DEATH_FLOWER_DECAYING)
@@ -502,8 +507,12 @@ object ModBlocks{
 			register(CORRUPTED_ENERGY)
 			
 			register(TABLE_PEDESTAL with basicItemBlock)
-			register(TABLE_BASE with basicItemBlock)
-			register(ACCUMULATION_TABLE with basicItemBlock)
+			register(TABLE_BASE_TIER_1 with basicItemBlock)
+			register(TABLE_BASE_TIER_2 with basicItemBlock)
+			register(TABLE_BASE_TIER_3 with basicItemBlock)
+			register(ACCUMULATION_TABLE_TIER_1 with basicItemBlock)
+			register(ACCUMULATION_TABLE_TIER_2 with basicItemBlock)
+			register(ACCUMULATION_TABLE_TIER_3 with basicItemBlock)
 			
 			register(ETERNAL_FIRE)
 			register(SCAFFOLDING with basicItemBlock)

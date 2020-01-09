@@ -1,0 +1,7 @@
+{
+  "parent": "block/cross",
+  "ambientocclusion": false,
+  "textures": {
+    "cross": "minecraft:item/barrier"
+  }
+}

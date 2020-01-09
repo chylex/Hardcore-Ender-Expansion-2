@@ -1,26 +1,7 @@
 {
-  "forge_marker": 1,
-  "defaults": {
-    "textures": {
-      "bottom": "hee:block/gloomrock_bricks",
-      "top": "hee:block/gloomrock_bricks",
-      "side": "hee:block/gloomrock_bricks"
-    }
-  },
   "variants": {
-    "variant": {
-      "default": {}
-    },
-    "half": {
-      "bottom": {
-        "model": "half_slab"
-      },
-      "top": {
-        "model": "upper_slab"
-      }
-    },
-    "inventory": {
-      "model": "half_slab"
-    }
+    "type=bottom": { "model": "hee:block/gloomrock_brick_slab" },
+    "type=top": { "model": "hee:block/gloomrock_brick_slab_top" },
+    "type=double": { "model": "hee:block/gloomrock_bricks" }
   }
 }

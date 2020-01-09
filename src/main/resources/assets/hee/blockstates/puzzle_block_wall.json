@@ -1,13 +1,5 @@
 {
-  "forge_marker": 1,
-  "defaults": {
-    "model": "cube_all",
-    "textures": {
-      "all": "hee:block/puzzle_wall"
-    }
-  },
   "variants": {
-    "normal": [{}],
-    "inventory": [{}]
+    "": { "model": "hee:block/puzzle_block_wall" }
   }
 }

@@ -1,15 +1,8 @@
 {
-  "forge_marker": 1,
-  "defaults": {
-    "smooth_lighting": false,
-    "textures": {
-      "water": "hee:block/purified_ender_goo_still"
-    }
-  },
   "variants": {
-    "level=0": { "model": "cauldron_empty" },
-    "level=1": { "model": "cauldron_level1" },
-    "level=2": { "model": "cauldron_level2" },
-    "level=3": { "model": "cauldron_level3" }
+    "level=0": { "model": "block/cauldron" },
+    "level=1": { "model": "hee:block/cauldron_purified_ender_goo_level1" },
+    "level=2": { "model": "hee:block/cauldron_purified_ender_goo_level2" },
+    "level=3": { "model": "hee:block/cauldron_purified_ender_goo_level3" }
   }
 }

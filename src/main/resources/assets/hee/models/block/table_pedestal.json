@@ -1,5 +1,9 @@
 {
   "parent": "block/block",
+  "textures": {
+    "particle": "hee:block/table_pedestal_particle",
+    "texture": "hee:block/table_pedestal"
+  },
   "elements": [
     {
       "from": [  2, 0,  2 ],
