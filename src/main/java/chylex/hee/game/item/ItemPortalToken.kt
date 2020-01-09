@@ -152,7 +152,7 @@ class ItemPortalToken(properties: Properties) : Item(properties){
 	
 	override fun getDisplayName(stack: ItemStack): ITextComponent{
 		// UPDATE custom names?
-		return TextComponentTranslation("item.hee.portal_token_concrete.name", TextComponentTranslation(getTerritoryType(stack)?.translationKey ?: TerritoryType.FALLBACK_TRANSLATION_KEY))
+		return TextComponentTranslation("item.hee.portal_token_concrete", TextComponentTranslation(getTerritoryType(stack)?.translationKey ?: TerritoryType.FALLBACK_TRANSLATION_KEY))
 	}
 	
 	override fun fillItemGroup(tab: ItemGroup, items: NonNullList<ItemStack>){

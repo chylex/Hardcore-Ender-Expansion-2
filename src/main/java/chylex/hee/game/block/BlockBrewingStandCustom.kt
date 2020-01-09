@@ -29,8 +29,4 @@ open class BlockBrewingStandCustom(builder: BlockBuilder) : BlockBrewingStand(bu
 		
 		return true
 	}
-	
-	class Override(builder: BlockBuilder, private val originalTranslationKey: String) : BlockBrewingStandCustom(builder){
-		override fun getTranslationKey() = originalTranslationKey
-	}
 }

@@ -16,6 +16,6 @@ class BlockLootChest(builder: BlockBuilder) : BlockAbstractChest<TileEntityLootC
 	
 	@Sided(Side.CLIENT)
 	override fun addInformation(stack: ItemStack, world: IBlockReader?, lines: MutableList<ITextComponent>, flags: ITooltipFlag){
-		lines.add(TextComponentTranslation("tile.hee.loot_chest.tooltip"))
+		lines.add(TextComponentTranslation("block.hee.loot_chest.tooltip"))
 	}
 }

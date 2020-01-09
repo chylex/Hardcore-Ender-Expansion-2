@@ -69,6 +69,10 @@ class ItemChorusBerry(properties: Properties) : Item(properties){
 		}
 	}
 	
+	override fun getTranslationKey(): String{
+		return "item.hee.chorus_berry"
+	}
+	
 	override fun onItemUseFinish(stack: ItemStack, world: World, entity: EntityLivingBase): ItemStack{
 		val rand = world.rand
 		

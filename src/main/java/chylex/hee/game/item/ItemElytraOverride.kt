@@ -18,7 +18,7 @@ import net.minecraft.world.World
 import kotlin.math.min
 import kotlin.math.sqrt
 
-class ItemElytraOverride(properties: Properties, private val originalTranslationKey: String) : ItemElytra(properties){
+class ItemElytraOverride(properties: Properties) : ItemElytra(properties){
 	private companion object{
 		private const val COUNTER_TAG = "Counter"
 		private const val LAST_POS_TAG = "LastPos"
@@ -47,8 +47,6 @@ class ItemElytraOverride(properties: Properties, private val originalTranslation
 			}
 		}
 	}
-	
-	override fun getTranslationKey() = originalTranslationKey
 	
 	override fun inventoryTick(stack: ItemStack, world: World, entity: Entity, itemSlot: Int, isSelected: Boolean){
 		if (world.isRemote || entity !is EntityPlayerMP){

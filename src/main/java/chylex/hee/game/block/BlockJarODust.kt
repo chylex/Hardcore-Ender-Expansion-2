@@ -175,7 +175,7 @@ class BlockJarODust(builder: BlockBuilder) : BlockSimpleShaped(builder, AABB){
 				.sortedWith(compareBy({ -it.value }, { it.key.key }))
 			
 			for((dustType, dustAmount) in entries){
-				lines.add(TextComponentTranslation("tile.hee.jar_o_dust.tooltip.entry", dustAmount, TextComponentTranslation(dustType.item.translationKey)))
+				lines.add(TextComponentTranslation("block.hee.jar_o_dust.tooltip.entry", dustAmount, TextComponentTranslation(dustType.item.translationKey)))
 			}
 		}
 	}

@@ -6,9 +6,7 @@ import net.minecraft.item.Item
 import net.minecraft.item.ItemStack
 import net.minecraft.world.World
 
-class ItemTotemOfUndyingOverride(properties: Properties, private val originalTranslationKey: String) : Item(properties){
-	override fun getTranslationKey() = originalTranslationKey
-	
+class ItemTotemOfUndyingOverride(properties: Properties) : Item(properties){
 	override fun inventoryTick(stack: ItemStack, world: World, entity: Entity, itemSlot: Int, isSelected: Boolean){
 		if (!world.isRemote && entity is EntityPlayer){
 			entity.replaceItemInInventory(itemSlot, ItemStack(ModItems.TOTEM_OF_UNDYING))

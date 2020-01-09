@@ -36,7 +36,7 @@ import net.minecraft.world.World
 import net.minecraft.world.gen.Heightmap.Type.OCEAN_FLOOR
 import java.util.Random
 
-class BlockDragonEggOverride(builder: BlockBuilder, private val originalTranslationKey: String) : BlockDragonEgg(builder.p){
+class BlockDragonEggOverride(builder: BlockBuilder) : BlockDragonEgg(builder.p){
 	companion object{
 		private val PARTICLE_BREAK = ParticleSpawnerCustom(
 			type = ParticleTeleport,
@@ -55,8 +55,6 @@ class BlockDragonEggOverride(builder: BlockBuilder, private val originalTranslat
 			}
 		}
 	}
-	
-	override fun getTranslationKey() = originalTranslationKey
 	
 	override fun tick(state: BlockState, world: World, pos: BlockPos, rand: Random){
 		if (world.isRemote){

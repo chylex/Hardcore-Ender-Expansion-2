@@ -23,7 +23,7 @@ object IntegrityCheck{
 		warnIfFalse(removedChorusFruitRecipe, "could not remove vanilla Chorus Fruit smelting recipe")
 		
 		crashIfFalse(Blocks.END_PORTAL::class.java === BlockEndPortalOverride::class.java, "invalid End Portal block: ${Blocks.END_PORTAL::class.java}")
-		crashIfFalse(Blocks.BREWING_STAND::class.java === BlockBrewingStandCustom.Override::class.java, "invalid Brewing Stand block: ${Blocks.BREWING_STAND::class.java}")
+		crashIfFalse(Blocks.BREWING_STAND::class.java === BlockBrewingStandCustom::class.java, "invalid Brewing Stand block: ${Blocks.BREWING_STAND::class.java}")
 		
 		crashIfFalse(DimensionType.THE_END.directory == WorldProviderEndCustom.SAVE_FOLDER, "invalid End dimension save directory: ${DimensionType.THE_END.directory}")
 		crashIfFalse(DimensionType.THE_END.factory === WorldProviderEndCustom.CONSTRUCTOR, "invalid End dimension factory: ${DimensionType.THE_END.factory}")

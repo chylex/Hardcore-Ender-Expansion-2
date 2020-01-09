@@ -521,10 +521,9 @@ object ModBlocks{
 		// vanilla modifications
 		
 		with(e.registry){
-			register(BlockEndPortalOverride(buildEndPortalOverride).apply { override(Blocks.END_PORTAL, newCreativeTab = null) })
-			register(BlockBrewingStandCustom.Override(buildBrewingStand, Blocks.BREWING_STAND.translationKey).apply { override(Blocks.BREWING_STAND) })
-			register(BlockChorusPlantOverride(buildChorusPlant).apply { override(Blocks.CHORUS_PLANT) })
-			register(BlockDragonEggOverride(buildDragonEgg, Blocks.DRAGON_EGG.translationKey).apply { override(Blocks.DRAGON_EGG) } with { ItemDragonEgg(it, itemBlockDefaultProps) })
+			register(BlockEndPortalOverride(buildEndPortalOverride).apply { override(Blocks.END_PORTAL){ null } })
+			register(BlockBrewingStandCustom(buildBrewingStand).apply { override(Blocks.BREWING_STAND){ ItemBlock(it, Item.Properties().group(ItemGroup.BREWING)) } })
+			register(BlockDragonEggOverride(buildDragonEgg).apply { override(Blocks.DRAGON_EGG){ ItemDragonEgg(it, itemBlockDefaultProps) } })
 		}
 	}
 	
@@ -570,16 +569,9 @@ object ModBlocks{
 	
 	private val temporaryItemBlocks = mutableListOf<ItemBlock>()
 	
-	private fun Block.override(vanillaBlock: Block, newCreativeTab: ItemGroup? = ModCreativeTabs.main){
+	private inline fun Block.override(vanillaBlock: Block, itemBlockConstructor: ((Block) -> ItemBlock?)){
 		this.useVanillaName(vanillaBlock)
-		
-		val item = vanillaBlock.asItem().apply {
-			group = newCreativeTab
-		}
-		
-		if (newCreativeTab is OrderedCreativeTab){
-			newCreativeTab.registerOrder(item)
-		}
+		itemBlockConstructor(this)?.let { with(it) }
 	}
 	
 	private infix fun Block.with(itemBlock: ItemBlock) = apply {

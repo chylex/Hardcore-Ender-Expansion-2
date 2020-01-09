@@ -20,9 +20,7 @@ import net.minecraft.util.SoundCategory
 import net.minecraft.world.World
 import net.minecraft.world.server.ServerWorld
 
-class ItemEyeOfEnderOverride(properties: Properties, private val originalTranslationKey: String) : ItemEnderEye(properties){
-	override fun getTranslationKey() = originalTranslationKey
-	
+class ItemEyeOfEnderOverride(properties: Properties) : ItemEnderEye(properties){
 	override fun onItemUse(context: ItemUseContext): ActionResultType{
 		return PASS
 	}
