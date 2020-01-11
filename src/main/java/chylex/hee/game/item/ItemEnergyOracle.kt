@@ -54,7 +54,7 @@ import net.minecraft.util.text.ITextComponent
 import net.minecraft.world.World
 
 class ItemEnergyOracle(properties: Properties) : ItemAbstractEnergyUser(properties), IInfusableItem{
-	companion object{
+	private companion object{
 		private const val ORACLE_IDENTIFIER_TAG = "ID"
 		private const val ORACLE_LAST_SLOT_TAG = "Slot"
 		
@@ -101,10 +101,6 @@ class ItemEnergyOracle(properties: Properties) : ItemAbstractEnergyUser(properti
 			else{
 				0.5F // tracking
 			}
-		}
-		
-		fun setupRecipeNBT(stack: ItemStack){
-			ModItems.ENERGY_ORACLE.setEnergyChargeLevel(stack, Units(30))
 		}
 	}
 	

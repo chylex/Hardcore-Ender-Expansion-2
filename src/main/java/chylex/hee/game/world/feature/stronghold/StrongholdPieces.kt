@@ -1,5 +1,5 @@
 package chylex.hee.game.world.feature.stronghold
-import chylex.hee.game.item.ItemEnergyOracle
+import chylex.hee.game.mechanics.energy.IEnergyQuantity.Units
 import chylex.hee.game.world.feature.stronghold.piece.StrongholdAbstractPiece
 import chylex.hee.game.world.feature.stronghold.piece.StrongholdCorridor_Chest_Double
 import chylex.hee.game.world.feature.stronghold.piece.StrongholdCorridor_Chest_Single
@@ -380,7 +380,7 @@ object StrongholdPieces : IStructureDescription{
 		val pickedRooms = mutableListOf<StrongholdRoom_Relic>()
 		
 		for(relicStack in arrayOf(
-			ItemStack(ModItems.ENERGY_ORACLE).apply(ItemEnergyOracle.Companion::setupRecipeNBT),
+			ItemStack(ModItems.ENERGY_ORACLE).also { ModItems.ENERGY_ORACLE.setEnergyChargeLevel(it, Units(30)) },
 			ItemStack(ModItems.AMULET_OF_RECOVERY)
 		)){
 			pickedRooms.add(rand.removeItem(availableRooms)(relicStack))

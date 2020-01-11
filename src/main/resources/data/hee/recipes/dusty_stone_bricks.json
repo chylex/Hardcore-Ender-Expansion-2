@@ -6,7 +6,11 @@
     "###"
   ],
   "key": {
-    "#": { "item": "hee:dusty_stone" },
+    "#": [
+      { "item": "hee:dusty_stone" },
+      { "item": "hee:dusty_stone_cracked" },
+      { "item": "hee:dusty_stone_damaged" }
+    ],
     "X": { "item": "hee:ender_goo_bucket" }
   },
   "result": {

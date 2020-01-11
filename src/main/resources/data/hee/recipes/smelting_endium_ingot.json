@@ -1,0 +1,9 @@
+{
+  "type": "minecraft:smelting",
+  "ingredient": {
+    "item": "hee:endium_ore"
+  },
+  "result": "hee:endium_ingot",
+  "experience": 1.0,
+  "cookingtime": 200
+}

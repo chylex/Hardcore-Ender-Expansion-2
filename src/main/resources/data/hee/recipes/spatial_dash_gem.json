@@ -1,5 +1,5 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "hee:crafting_shaped_with_energy",
   "pattern": [
     "X#X",
     "#C#",
@@ -11,6 +11,7 @@
     "C": { "item": "hee:static_core" }
   },
   "result": {
-    "item": "hee:spatial_dash_gem"
+    "item": "hee:spatial_dash_gem",
+    "energy": -1
   }
 }

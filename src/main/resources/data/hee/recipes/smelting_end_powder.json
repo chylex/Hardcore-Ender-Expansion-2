@@ -1,0 +1,9 @@
+{
+  "type": "minecraft:smelting",
+  "ingredient": {
+    "item": "hee:end_powder_ore"
+  },
+  "result": "hee:end_powder",
+  "experience": 0.15,
+  "cookingtime": 200
+}

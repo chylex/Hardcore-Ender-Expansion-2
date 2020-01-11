@@ -59,7 +59,6 @@ object HEE{
 		
 		ModNetwork.initialize()
 		ModLoot.initialize()
-		ModRecipes.initialize()
 		
 		TrinketHandler.register()
 		EnderCausatum.register()

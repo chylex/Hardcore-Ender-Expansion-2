@@ -19,9 +19,9 @@ object RecipeVoidSalad : RecipeBaseDynamic(){
 		
 		return (
 			bowlRow != null &&
-			getStackInRowAndColumn(inv, 0, bowlRow - 1).item.isFood &&
+			isValidFood(getStackInRowAndColumn(inv, 0, bowlRow - 1)) &&
 			getStackInRowAndColumn(inv, 1, bowlRow - 1).item === ModItems.VOID_ESSENCE &&
-			getStackInRowAndColumn(inv, 2, bowlRow - 1).item.isFood &&
+			isValidFood(getStackInRowAndColumn(inv, 2, bowlRow - 1)) &&
 			Iterators.size(inv.nonEmptySlots) == 4
 		)
 	}
@@ -41,6 +41,10 @@ object RecipeVoidSalad : RecipeBaseDynamic(){
 	
 	private fun findBowlRow(inv: CraftingInventory): Int?{
 		return (0 until inv.height).find { row -> getStackInRowAndColumn(inv, 1, row).item === Items.BOWL }
+	}
+	
+	private fun isValidFood(stack: ItemStack): Boolean{
+		return stack.item.isFood && (stack.item !== ModItems.VOID_SALAD || isSingleVoidSalad(stack))
 	}
 	
 	private fun isSingleVoidSalad(stack: ItemStack): Boolean{

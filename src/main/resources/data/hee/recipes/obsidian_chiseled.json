@@ -7,9 +7,9 @@
   ],
   "key": {
     "#": { "item": "hee:obsidian_fragment" },
-    "X": { "item": "minecraft:quartz_block", "data": 0 }
+    "X": { "item": "minecraft:chiseled_quartz_block" }
   },
   "result": {
-    "item": "hee:obsidian_smooth"
+    "item": "hee:obsidian_chiseled"
   }
 }

@@ -6,7 +6,10 @@
     " # "
   ],
   "key": {
-    "#": { "item": "hee:gloomrock_smooth_slab" },
+    "#": [
+      { "item": "hee:gloomrock_smooth_slab" },
+      { "item": "hee:gloomrock_brick_slab" }
+    ],
     "X": { "item": "minecraft:chest" }
   },
   "result": {

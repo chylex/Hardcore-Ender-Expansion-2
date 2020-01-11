@@ -1,0 +1,9 @@
+{
+  "type": "minecraft:smelting",
+  "ingredient": {
+    "item": "hee:dusty_stone"
+  },
+  "result": "hee:infused_glass",
+  "experience": 0.15,
+  "cookingtime": 200
+}

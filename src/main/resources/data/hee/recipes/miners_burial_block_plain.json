@@ -6,11 +6,11 @@
     "###"
   ],
   "key": {
-    "#": { "item": "minecraft:quartz_block", "data": 2 },
+    "#": { "item": "minecraft:quartz_block" },
     "X": { "item": "hee:infernium" }
   },
   "result": {
-    "item": "hee:miners_burial_block_pillar",
+    "item": "hee:miners_burial_block_plain",
     "count": 16
   }
 }

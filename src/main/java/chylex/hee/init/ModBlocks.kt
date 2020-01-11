@@ -184,7 +184,7 @@ object ModBlocks{
 	@JvmField val DUSTY_STONE                = BlockDustyStonePlain(buildDustyStone) named "dusty_stone"
 	@JvmField val DUSTY_STONE_CRACKED        = BlockDustyStonePlain(buildDustyStoneCracked) named "dusty_stone_cracked"
 	@JvmField val DUSTY_STONE_DAMAGED        = BlockDustyStonePlain(buildDustyStoneDamaged) named "dusty_stone_damaged"
-	@JvmField val DUSTY_STONE_BRICKS         = BlockDustyStoneBricks(buildDustyStoneBricks) named "dusty_stone_bricks" // UPDATE: update recipe json to include tag to allow all dusty stone variations
+	@JvmField val DUSTY_STONE_BRICKS         = BlockDustyStoneBricks(buildDustyStoneBricks) named "dusty_stone_bricks"
 	@JvmField val DUSTY_STONE_CRACKED_BRICKS = BlockDustyStoneBricks(buildDustyStoneBricks) named "dusty_stone_cracked_bricks"
 	@JvmField val DUSTY_STONE_BRICK_STAIRS   = BlockStairsCustom(DUSTY_STONE_BRICKS) named "dusty_stone_brick_stairs"
 	@JvmField val DUSTY_STONE_BRICK_SLAB     = BlockSlabCustom(buildDustyStoneBricks) named "dusty_stone_brick_slab"
@@ -245,7 +245,7 @@ object ModBlocks{
 	// Blocks: Interactive (Storage)
 	
 	@JvmField val JAR_O_DUST = BlockJarODust(buildJarODust) named "jar_o_dust"
-	@JvmField val DARK_CHEST = BlockDarkChest(buildGloomrock) named "dark_chest" // UPDATE: update recipe json to include tag to allow either slab variation
+	@JvmField val DARK_CHEST = BlockDarkChest(buildGloomrock) named "dark_chest"
 	@JvmField val LOOT_CHEST = BlockLootChest(buildLootChest) named "loot_chest"
 	
 	// Blocks: Interactive (Puzzle)
@@ -334,7 +334,7 @@ object ModBlocks{
 	
 	// Blocks: Tables
 	
-	@JvmField val TABLE_PEDESTAL            = BlockTablePedestal(buildTablePedestal) named "table_pedestal" // UPDATE: update recipe json to include tag to allow all gloomrock variations
+	@JvmField val TABLE_PEDESTAL            = BlockTablePedestal(buildTablePedestal) named "table_pedestal"
 	@JvmField val TABLE_BASE_TIER_1         = BlockTableBase(buildTable, tier = 1, firstTier = 1) named "table_base_tier_1"
 	@JvmField val TABLE_BASE_TIER_2         = BlockTableBase(buildTable, tier = 2, firstTier = 1) named "table_base_tier_2"
 	@JvmField val TABLE_BASE_TIER_3         = BlockTableBase(buildTable, tier = 3, firstTier = 1) named "table_base_tier_3"

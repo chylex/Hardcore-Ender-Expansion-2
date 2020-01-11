@@ -1,6 +1,0 @@
-{
-  "ingredients": {
-    "ingredient_full_energy": "chylex.hee.game.recipe.factories.IngredientFullEnergy",
-    "ingredient_no_infusions": "chylex.hee.game.recipe.factories.IngredientNoInfusions"
-  }
-}

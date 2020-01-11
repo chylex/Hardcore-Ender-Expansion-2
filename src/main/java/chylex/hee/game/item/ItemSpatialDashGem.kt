@@ -7,7 +7,6 @@ import chylex.hee.game.item.infusion.Infusion.DISTANCE
 import chylex.hee.game.item.infusion.Infusion.SPEED
 import chylex.hee.game.item.infusion.InfusionTag
 import chylex.hee.game.mechanics.energy.IEnergyQuantity.Units
-import chylex.hee.init.ModItems
 import chylex.hee.system.migration.ActionResult.FAIL
 import chylex.hee.system.migration.ActionResult.SUCCESS
 import chylex.hee.system.migration.forge.Side
@@ -24,12 +23,8 @@ import net.minecraft.util.text.ITextComponent
 import net.minecraft.world.World
 
 class ItemSpatialDashGem(properties: Properties) : ItemAbstractEnergyUser(properties), IInfusableItem{
-	companion object{
+	private companion object{
 		private const val INSTANT_SPEED_MP = 100F // just above the maximum possible distance
-		
-		fun setupRecipeNBT(stack: ItemStack){
-			ModItems.SPATIAL_DASH_GEM.setEnergyChargePercentage(stack, 1F)
-		}
 	}
 	
 	// Energy properties

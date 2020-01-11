@@ -1,0 +1,9 @@
+{
+  "type": "minecraft:smelting",
+  "ingredient": {
+    "item": "hee:igneous_rock_ore"
+  },
+  "result": "hee:igneous_rock",
+  "experience": 0.2,
+  "cookingtime": 200
+}

@@ -8,10 +8,10 @@
   ],
   "key": {
     "#": { "item": "hee:gloomrock_smooth" },
-    "X": { "item": "minecraft:dye", "data": 14 }
+    "X": { "item": "minecraft:green_dye" }
   },
   "result": {
-    "item": "hee:gloomrock_smooth_orange",
+    "item": "hee:gloomrock_smooth_green",
     "count": 8
   }
 }

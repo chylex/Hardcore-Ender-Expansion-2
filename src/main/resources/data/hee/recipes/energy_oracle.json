@@ -1,5 +1,5 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "hee:crafting_shaped_with_energy",
   "pattern": [
     "XOX",
     "X#X",
@@ -11,6 +11,7 @@
     "O": { "item": "minecraft:ender_eye" }
   },
   "result": {
-    "item": "hee:energy_oracle"
+    "item": "hee:energy_oracle",
+    "energy": 30
   }
 }
