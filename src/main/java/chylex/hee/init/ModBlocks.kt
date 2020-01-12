@@ -530,15 +530,6 @@ object ModBlocks{
 		temporaryItemBlocks.forEach(e.registry::register)
 		temporaryItemBlocks.clear()
 		
-		// ore dictionary
-		
-		// UPDATE tags
-		//OreDictionary.registerOre("logWood", WHITEBARK_LOG)
-		//OreDictionary.registerOre("logWood", WHITEBARK) // UPDATE check new name for bark blocks
-		//OreDictionary.registerOre("plankWood", WHITEBARK_PLANKS)
-		//OreDictionary.registerOre("stairWood", WHITEBARK_STAIRS)
-		//OreDictionary.registerOre("slabWood", WHITEBARK_SLAB)
-		
 		// fire
 		
 		with(Blocks.FIRE as BlockFire){
