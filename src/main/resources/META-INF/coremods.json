@@ -1,2 +1,4 @@
 {
+  "HEE_MobBypassPeacefulDespawn": "coremods/mob_bypass_peaceful_despawn.js",
+  "HEE_ChorusPlantsGrowOnHumus": "coremods/chorus_plants_grow_on_humus.js"
 }

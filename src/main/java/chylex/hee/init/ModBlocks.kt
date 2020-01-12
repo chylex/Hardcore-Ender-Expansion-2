@@ -4,7 +4,6 @@ import chylex.hee.game.block.BlockAncientCobweb
 import chylex.hee.game.block.BlockBrewingStandCustom
 import chylex.hee.game.block.BlockCauldronWithDragonsBreath
 import chylex.hee.game.block.BlockCauldronWithGoo
-import chylex.hee.game.block.BlockChorusPlantOverride
 import chylex.hee.game.block.BlockCorruptedEnergy
 import chylex.hee.game.block.BlockDarkChest
 import chylex.hee.game.block.BlockDeathFlowerDecaying
@@ -65,7 +64,6 @@ import chylex.hee.game.block.fluid.FluidEnderGooPurified
 import chylex.hee.game.block.info.BlockBuilders.buildAncientCobweb
 import chylex.hee.game.block.info.BlockBuilders.buildBrewingStand
 import chylex.hee.game.block.info.BlockBuilders.buildCauldron
-import chylex.hee.game.block.info.BlockBuilders.buildChorusPlant
 import chylex.hee.game.block.info.BlockBuilders.buildCorruptedEnergy
 import chylex.hee.game.block.info.BlockBuilders.buildDarkLoam
 import chylex.hee.game.block.info.BlockBuilders.buildDragonEgg
