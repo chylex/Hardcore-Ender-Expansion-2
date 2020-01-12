@@ -4,9 +4,7 @@ import net.minecraft.world.storage.loot.RandomValueRange
 import java.util.Random
 import kotlin.math.roundToInt
 
-class RandomBiasedValueRange(min: Float, max: Float, private val highestChanceValue: Float, private val biasSoftener: Float) : RandomValueRange(min, max){
-	constructor(original: RandomValueRange, highestChanceValue: Float, biasSoftener: Float) : this(original.min, original.max, highestChanceValue, biasSoftener)
-	
+class RandomBiasedValueRange(range: ClosedFloatingPointRange<Float>, private val highestChanceValue: Float, private val biasSoftener: Float) : RandomValueRange(range.start, range.endInclusive){
 	init{
 		require(highestChanceValue in min..max){ "highestChanceValue must be between min and max" }
 	}

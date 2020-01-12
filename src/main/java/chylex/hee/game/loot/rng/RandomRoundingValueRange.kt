@@ -6,9 +6,7 @@ import java.util.Random
 import kotlin.math.ceil
 import kotlin.math.floor
 
-class RandomRoundingValueRange(min: Float, max: Float) : RandomValueRange(floor(min), ceil(max)){
-	constructor(original: RandomValueRange) : this(original.min, original.max)
-	
+class RandomRoundingValueRange(range: ClosedFloatingPointRange<Float>) : RandomValueRange(floor(range.start), ceil(range.endInclusive)){
 	private val realMin = min
 	private val realMax = max
 	

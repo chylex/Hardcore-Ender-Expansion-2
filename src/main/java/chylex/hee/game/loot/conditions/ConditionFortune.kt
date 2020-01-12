@@ -11,7 +11,7 @@ class ConditionFortune(override val minLevel: Int, override val maxLevel: Int): 
 		return (context.get(LootParameters.TOOL)?.let { EnchantmentHelper.getEnchantmentLevel(Enchantments.FORTUNE, it) } ?: 0) in minLevel..maxLevel
 	}
 	
-	override fun getRequiredParameters(): MutableSet<LootParameter<*>> {
+	override fun getRequiredParameters(): MutableSet<LootParameter<*>>{
 		return mutableSetOf(LootParameters.TOOL)
 	}
 	
