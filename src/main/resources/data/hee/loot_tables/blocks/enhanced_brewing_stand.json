@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:block",
+  "pools": [
+    {
+      "rolls": 1,
+      "name": "pool",
+      "conditions": [{ "condition": "minecraft:survives_explosion" }],
+      "entries": [
+        { "type": "item", "name": "hee:enhanced_brewing_stand", "functions": [{ "function": "copy_name", "source": "block_entity" }], "entryName": "#1" }
+      ]
+    }
+  ]
+}

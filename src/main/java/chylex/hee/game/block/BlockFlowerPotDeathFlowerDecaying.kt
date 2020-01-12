@@ -8,24 +8,23 @@ import chylex.hee.system.migration.vanilla.EntityPlayer
 import chylex.hee.system.util.setState
 import net.minecraft.block.Block
 import net.minecraft.block.BlockState
+import net.minecraft.block.Blocks
 import net.minecraft.entity.LivingEntity
 import net.minecraft.item.ItemStack
 import net.minecraft.state.StateContainer.Builder
 import net.minecraft.util.Hand
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.BlockRayTraceResult
+import net.minecraft.util.math.RayTraceResult
 import net.minecraft.world.IBlockReader
 import net.minecraft.world.IWorldReader
 import net.minecraft.world.World
+import net.minecraft.world.storage.loot.LootContext
 import java.util.Random
 
 class BlockFlowerPotDeathFlowerDecaying(builder: BlockBuilder, private val flower: Block) : BlockFlowerPotCustom(builder, flower), IBlockDeathFlowerDecaying{
 	override fun fillStateContainer(container: Builder<Block, BlockState>){
 		container.add(LEVEL)
-	}
-	
-	override fun getItem(world: IBlockReader, pos: BlockPos, state: BlockState): ItemStack{
-		return ItemStack(flower).also { ItemDeathFlower.setDeathLevel(it, state[LEVEL]) }
 	}
 	
 	override val thisAsBlock
@@ -43,6 +42,18 @@ class BlockFlowerPotDeathFlowerDecaying(builder: BlockBuilder, private val flowe
 	
 	override fun onBlockPlacedBy(world: World, pos: BlockPos, state: BlockState, placer: LivingEntity?, stack: ItemStack){
 		pos.setState(world, state.with(LEVEL, ItemDeathFlower.getDeathLevel(stack)))
+	}
+	
+	private fun getDrop(state: BlockState): ItemStack{
+		return ItemStack(flower).also { ItemDeathFlower.setDeathLevel(it, state[LEVEL]) }
+	}
+	
+	override fun getDrops(state: BlockState, context: LootContext.Builder): MutableList<ItemStack>{
+		return mutableListOf(ItemStack(Blocks.FLOWER_POT), getDrop(state))
+	}
+	
+	override fun getPickBlock(state: BlockState, target: RayTraceResult, world: IBlockReader, pos: BlockPos, player: EntityPlayer): ItemStack{
+		return getDrop(state)
 	}
 	
 	override fun onBlockAdded(state: BlockState, world: World, pos: BlockPos, oldState: BlockState, isMoving: Boolean){

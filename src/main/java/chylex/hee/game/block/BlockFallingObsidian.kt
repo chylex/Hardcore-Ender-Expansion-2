@@ -43,13 +43,4 @@ class BlockFallingObsidian(builder: BlockBuilder) : BlockSimple(builder){
 			}
 		}
 	}
-	
-	/* UPDATE
-	override fun getItemDropped(state: BlockState, rand: Random, fortune: Int): Item{
-		return Item.getItemFromBlock(Blocks.OBSIDIAN)
-	}
-	
-	override fun canSilkHarvest(world: World, pos: BlockPos, state: BlockState, player: EntityPlayer): Boolean{
-		return false
-	}*/
 }

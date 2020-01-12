@@ -1,19 +1,15 @@
 package chylex.hee.game.block
 import chylex.hee.game.block.info.BlockBuilder
-import chylex.hee.init.ModBlocks
-import chylex.hee.system.util.facades.Resource
-import net.minecraft.util.ResourceLocation
+import chylex.hee.system.migration.Hand.MAIN_HAND
+import net.minecraft.block.BlockState
+import net.minecraft.enchantment.EnchantmentHelper
+import net.minecraft.enchantment.Enchantments
+import net.minecraft.entity.player.PlayerEntity
+import net.minecraft.util.math.BlockPos
+import net.minecraft.world.IBlockReader
 
 class BlockDustyStonePlain(builder: BlockBuilder) : BlockDustyStone(builder){
-	override fun getLootTable(): ResourceLocation = when(this){
-		ModBlocks.DUSTY_STONE         -> Resource.Custom("blocks/dusty_stone")
-		ModBlocks.DUSTY_STONE_CRACKED -> Resource.Custom("blocks/dusty_stone_cracked")
-		ModBlocks.DUSTY_STONE_DAMAGED -> Resource.Custom("blocks/dusty_stone_damaged")
-		else                          -> super.getLootTable()
+	override fun canHarvestBlock(state: BlockState, world: IBlockReader, pos: BlockPos, player: PlayerEntity): Boolean{
+		return player.getHeldItem(MAIN_HAND).let { EnchantmentHelper.getEnchantmentLevel(Enchantments.SILK_TOUCH, it) == 0 || isPickaxeOrShovel(it) }
 	}
-	
-	/* UPDATE
-	override fun canSilkHarvest(world: World, pos: BlockPos, state: BlockState, player: EntityPlayer): Boolean{
-		return isPickaxeOrShovel(player.getHeldItem(MAIN_HAND))
-	}*/
 }

@@ -16,11 +16,9 @@ import chylex.hee.system.util.getTile
 import chylex.hee.system.util.heeTag
 import chylex.hee.system.util.heeTagOrNull
 import chylex.hee.system.util.isTopSolid
-import chylex.hee.system.util.setAir
 import chylex.hee.system.util.size
 import net.minecraft.block.BlockState
 import net.minecraft.client.util.ITooltipFlag
-import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.item.ItemStack
 import net.minecraft.tileentity.TileEntity
 import net.minecraft.util.BlockRenderLayer.TRANSLUCENT
@@ -89,12 +87,12 @@ class BlockJarODust(builder: BlockBuilder) : BlockSimpleShaped(builder, AABB){
 	
 	// Drops
 	
-	private fun getDrop(world: IBlockReader, pos: BlockPos): ItemStack?{
-		return pos.getTile<TileEntityJarODust>(world)?.let { tile -> ItemStack(this).also { setLayersInStack(it, tile.layers) } }
+	private fun getDrop(tile: TileEntityJarODust): ItemStack?{
+		return ItemStack(this).also { setLayersInStack(it, tile.layers) }
 	}
 	
 	override fun getDrops(state: BlockState, context: LootContext.Builder): MutableList<ItemStack>{
-		val drop = context.get(LootParameters.POSITION)?.let { getDrop(context.world, it) }
+		val drop = (context.get(LootParameters.BLOCK_ENTITY) as? TileEntityJarODust)?.let(::getDrop)
 		
 		return if (drop != null)
 			mutableListOf(drop)
@@ -102,22 +100,10 @@ class BlockJarODust(builder: BlockBuilder) : BlockSimpleShaped(builder, AABB){
 			mutableListOf()
 	}
 	
-	override fun getPickBlock(state: BlockState, target: RayTraceResult, world: IBlockReader, pos: BlockPos, player: PlayerEntity): ItemStack{
-		return getDrop(world, pos) ?: ItemStack(this)
+	override fun getPickBlock(state: BlockState, target: RayTraceResult, world: IBlockReader, pos: BlockPos, player: EntityPlayer): ItemStack{
+		return pos.getTile<TileEntityJarODust>(world)?.let(::getDrop) ?: ItemStack(this)
 	}
-	/* UPDATE
-	override fun removedByPlayer(state: BlockState, world: World, pos: BlockPos, player: EntityPlayer, willHarvest: Boolean): Boolean{
-		if (willHarvest){
-			return true // skip super call before drops
-		}
-		
-		return super.removedByPlayer(state, world, pos, player, willHarvest)
-	}*/
 	
-	override fun harvestBlock(world: World, player: EntityPlayer, pos: BlockPos, state: BlockState, tile: TileEntity?, stack: ItemStack){
-		super.harvestBlock(world, player, pos, state, tile, stack)
-		pos.setAir(world)
-	}
 	
 	// Interaction
 	

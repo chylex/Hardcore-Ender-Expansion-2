@@ -1,6 +1,5 @@
 package chylex.hee.game.block
 import chylex.hee.game.block.info.BlockBuilder
-import chylex.hee.proxy.Environment
 import chylex.hee.system.migration.Facing.UP
 import chylex.hee.system.migration.forge.SubscribeEvent
 import chylex.hee.system.migration.vanilla.BlockBush
@@ -9,7 +8,6 @@ import chylex.hee.system.migration.vanilla.BlockSapling
 import chylex.hee.system.migration.vanilla.Blocks
 import chylex.hee.system.migration.vanilla.Items
 import chylex.hee.system.util.breakBlock
-import chylex.hee.system.util.facades.Resource
 import chylex.hee.system.util.getBlock
 import chylex.hee.system.util.getState
 import chylex.hee.system.util.setAir
@@ -24,7 +22,7 @@ import net.minecraft.world.IBlockReader
 import net.minecraft.world.World
 import net.minecraft.world.server.ServerWorld
 import net.minecraft.world.storage.loot.LootContext
-import net.minecraft.world.storage.loot.LootParameterSets
+import net.minecraft.world.storage.loot.LootParameters
 import net.minecraftforge.common.IPlantable
 import net.minecraftforge.common.MinecraftForge
 import net.minecraftforge.common.PlantType
@@ -95,14 +93,17 @@ class BlockHumus(builder: BlockBuilder) : BlockSimple(builder){
 		return false
 	}
 	
-	override fun onExplosionDestroy(world: World, pos: BlockPos, explosion: Explosion){
-		if (!world.isRemote){
-			val lootTable = Environment.getServer().lootTableManager.getLootTableFromLocation(Resource.Custom("blocks/humus_exploded"))
-			val lootContext = LootContext.Builder(world as ServerWorld).withRandom(world.rand).build(LootParameterSets.EMPTY)
-			
-			for(drop in lootTable.generate(lootContext)){
-				spawnAsEntity(world, pos, drop)
-			}
+	override fun onBlockExploded(state: BlockState, world: World, pos: BlockPos, explosion: Explosion){
+		super.onBlockExploded(state, world, pos, explosion)
+		
+		if (world is ServerWorld){
+			LootContext.Builder(world)
+				.withRandom(world.rand)
+				.withParameter(LootParameters.POSITION, pos)
+				.withParameter(LootParameters.EXPLOSION_RADIUS, explosion.size)
+				.withParameter(LootParameters.TOOL, ItemStack.EMPTY)
+				.withNullableParameter(LootParameters.BLOCK_ENTITY, null)
+				.let { spawnDrops(state, it) }
 		}
 	}
 }

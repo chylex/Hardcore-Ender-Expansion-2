@@ -10,10 +10,8 @@ import chylex.hee.system.migration.vanilla.EntityPlayer
 import chylex.hee.system.migration.vanilla.ItemShears
 import chylex.hee.system.migration.vanilla.ItemSword
 import chylex.hee.system.util.breakBlock
-import chylex.hee.system.util.facades.Resource
 import net.minecraft.block.BlockState
 import net.minecraft.entity.Entity
-import net.minecraft.util.ResourceLocation
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.Vec3d
 import net.minecraft.util.math.shapes.ISelectionContext
@@ -49,12 +47,6 @@ class BlockAncientCobweb(builder: BlockBuilder) : BlockWeb(builder.p){
 	override fun tick(state: BlockState, world: World, pos: BlockPos, rand: Random){
 		pos.breakBlock(world, true)
 	}
-	
-	override fun getLootTable(): ResourceLocation{
-		return Resource.Custom("blocks/ancient_cobweb")
-	}
-	
-	// UPDATE override fun canSilkHarvest() = true
 	
 	override fun onEntityCollision(state: BlockState, world: World, pos: BlockPos, entity: Entity){
 		if (entity is EntityItem){

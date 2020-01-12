@@ -1,0 +1,26 @@
+{
+  "type": "minecraft:block",
+  "pools": [
+
+    {
+      "rolls": 1,
+      "name": "pool",
+      "conditions": [{ "condition": "hee:was_exploded", "value": false }],
+      "entries": [
+        { "type": "item", "name": "hee:humus", "entryName": "#1" }
+      ]
+    },
+
+    {
+      "rolls": 1,
+      "name": "pool",
+      "conditions": [{ "condition": "hee:was_exploded", "value": true }],
+      "entries": [
+        { "type": "item", "name": "hee:compost", "weight": 950, "functions": [{ "function": "set_count", "count": 0 }], "entryName": "#0" },
+        { "type": "item", "name": "hee:compost", "weight":  35, "functions": [{ "function": "set_count", "count": 1 }], "entryName": "#1" },
+        { "type": "item", "name": "hee:compost", "weight":  15, "functions": [{ "function": "set_count", "count": 2 }], "entryName": "#2" }
+      ]
+    }
+
+  ]
+}

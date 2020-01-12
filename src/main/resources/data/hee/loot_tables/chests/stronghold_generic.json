@@ -1,0 +1,43 @@
+{
+  "type": "minecraft:chest",
+  "pools": [
+
+    {
+      "rolls": 0,
+      "name": "table#stack_splitting=off",
+      "entries": []
+    },
+
+    {
+      "rolls": { "min": 3, "max": 10 },
+      "name": "pool#rolls_type=biased;6.5;3",
+      "entries": [
+        { "type": "item", "name": "minecraft:iron_ingot", "weight": 100, "functions": [{ "function": "set_count", "count": { "min": 1, "max": 5 } }], "entryName": "iron_ingot" },
+        { "type": "item", "name": "hee:ethereum", "weight": 95, "functions": [{ "function": "set_count", "count": { "min": 1, "max": 2 } }], "entryName": "ethereum" },
+        { "type": "item", "name": "minecraft:gold_ingot", "weight": 92, "functions": [{ "function": "set_count", "count": { "min": 1, "max": 3 } }], "entryName": "gold_ingot" },
+        { "type": "item", "name": "minecraft:rotten_flesh", "weight": 82, "functions": [{ "function": "set_count", "count": { "min": 1, "max": 4 } }], "entryName": "rotten_flesh" },
+        { "type": "item", "name": "minecraft:ender_pearl", "weight": 80, "functions": [{ "function": "set_count", "count": 1 }], "entryName": "ender_pearl" },
+        { "type": "item", "name": "minecraft:leather", "weight": 76, "functions": [{ "function": "set_count", "count": { "min": 1, "max": 6 } }], "entryName": "leather" },
+        { "type": "item", "name": "minecraft:paper", "weight": 75, "functions": [{ "function": "set_count", "count": { "min": 1, "max": 4 } }], "entryName": "paper" },
+        { "type": "item", "name": "hee:knowledge_note", "weight": 70, "functions": [{ "function": "set_count", "count": { "min": 1, "max": 4 } }], "entryName": "knowledge_note" },
+        { "type": "item", "name": "minecraft:book", "weight": 70, "functions": [{ "function": "set_count", "count": 1 }], "entryName": "book" },
+        { "type": "item", "name": "minecraft:obsidian", "weight": 58, "functions": [{ "function": "set_count", "count": { "min": 2, "max": 3 } }], "entryName": "obsidian" },
+        { "type": "item", "name": "minecraft:bowl", "weight": 40, "functions": [{ "function": "set_count", "count": { "min": 1, "max": 3 } }], "entryName": "bowl" },
+        { "type": "item", "name": "minecraft:string", "weight": 36, "functions": [{ "function": "set_count", "count": { "min": 1, "max": 3 } }], "entryName": "string" },
+        { "type": "item", "name": "minecraft:ink_sac", "weight": 30, "functions": [{ "function": "set_count", "count": 1 }], "entryName": "ink_sac" },
+        { "type": "item", "name": "minecraft:glass_bottle", "weight": 22, "functions": [{ "function": "set_count", "count": 1 }], "entryName": "glass_bottle" },
+        { "type": "item", "name": "minecraft:potion", "weight": 22, "functions": [{ "function": "set_count", "count": 1 }, { "function": "set_nbt", "tag": "{Potion:\"minecraft:water\"}" }], "entryName": "potion" },
+        { "type": "item", "name": "minecraft:diamond", "weight": 14, "functions": [{ "function": "set_count", "count": { "min": 1, "max": 2 } }], "entryName": "diamond" }
+      ]
+    },
+
+    {
+      "rolls": { "min": 0, "max": 7 },
+      "name": "pool",
+      "entries": [
+        { "type": "item", "name": "hee:ancient_cobweb", "weight": 100, "functions": [{ "function": "set_count", "count": 1 }], "entryName": "ancient_cobweb" }
+      ]
+    }
+
+  ]
+}

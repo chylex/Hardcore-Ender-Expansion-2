@@ -1,0 +1,27 @@
+{
+  "type": "minecraft:chest",
+  "pools": [
+
+    {
+      "rolls": 0,
+      "name": "table#stack_splitting=off",
+      "entries": []
+    },
+
+    {
+      "rolls": { "min": 2, "max": 7 },
+      "name": "pool",
+      "entries": [
+        { "type": "item", "name": "hee:ethereum", "weight": 100, "functions": [{ "function": "set_count", "count": { "min": 1, "max": 4 } }], "entryName": "ethereum" },
+        { "type": "item", "name": "minecraft:gold_nugget", "weight": 100, "functions": [{ "function": "set_count", "count": { "min": 1, "max": 7 } }], "entryName": "gold_nugget" },
+        { "type": "item", "name": "minecraft:iron_nugget", "weight": 90, "functions": [{ "function": "set_count", "count": { "min": 2, "max": 8 } }], "entryName": "iron_nugget" },
+        { "type": "item", "name": "minecraft:ender_pearl", "weight": 75, "functions": [{ "function": "set_count", "count": { "min": 1, "max": 3 } }], "entryName": "ender_pearl" },
+        { "type": "item", "name": "hee:gloomtorch", "weight": 75, "functions": [{ "function": "set_count", "count": { "min": 1, "max": 4 } }], "entryName": "gloomtorch" },
+        { "type": "item", "name": "minecraft:gold_ingot", "weight": 64, "functions": [{ "function": "set_count", "count": { "min": 1, "max": 2 } }], "entryName": "gold_ingot" },
+        { "type": "item", "name": "minecraft:iron_ingot", "weight": 60, "functions": [{ "function": "set_count", "count": { "min": 1, "max": 3 } }], "entryName": "iron_ingot" },
+        { "type": "item", "name": "minecraft:ender_pearl", "weight": 45, "functions": [{ "function": "set_count", "count": 1 }, { "function": "hee:infuse", "picks": [ "HARMLESS", "PHASING", "SLOW", "RIDING" ], "amount": 1 }], "entryName": "ender_pearl#infused" }
+      ]
+    }
+
+  ]
+}

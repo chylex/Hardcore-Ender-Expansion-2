@@ -1,0 +1,25 @@
+{
+  "type": "minecraft:block",
+  "pools": [
+
+    {
+      "rolls": 1,
+      "name": "pool",
+      "conditions": [{ "condition": "hee:has_silk_touch", "value": false }, { "condition": "minecraft:survives_explosion" }],
+      "entries": [
+        { "type": "item", "name": "hee:ancient_dust", "weight": 99, "functions": [{ "function": "set_count", "count": 0 }], "entryName": "#0" },
+        { "type": "item", "name": "hee:ancient_dust", "weight":  1, "functions": [{ "function": "set_count", "count": 1 }], "entryName": "#1" }
+      ]
+    },
+
+    {
+      "rolls": 1,
+      "name": "pool",
+      "conditions": [{ "condition": "hee:has_silk_touch", "value": true }],
+      "entries": [
+        { "type": "item", "name": "hee:dusty_stone_damaged", "entryName": "#1" }
+      ]
+    }
+
+  ]
+}

@@ -9,6 +9,11 @@ object Materials{
 		requiresTool = true
 	}
 	
+	val INFUSED_GLASS = CustomMaterial().build {
+		requiresTool = true
+		translucent = true
+	}
+	
 	val ANCIENT_COBWEB = CustomMaterial().build {
 		blocksMovement = false
 		destroyWhenPushed()

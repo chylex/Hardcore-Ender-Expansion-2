@@ -10,24 +10,24 @@ class BlockBuilder(val material: Material, var color: MaterialColor, var sound: 
 		harvestTool = original.harvestTool
 		harvestHardness = original.harvestHardness
 		explosionResistance = original.explosionResistance
-		miningStats = original.miningStats
 		
 		lightLevel = original.lightLevel
 		lightOpacity = original.lightOpacity
 		slipperiness = original.slipperiness
+		
+		noDrops = original.noDrops
 	}
 	
 	var harvestTool: Pair<Int, ToolType?> = Pair(-1, null)
 	var harvestHardness: Float = 0F
 	var explosionResistance: Float = 0F
-	var miningStats: Boolean = true // UPDATE
 	
 	var lightLevel: Int = 0
 	var lightOpacity: Int? = null // UPDATE
 	var slipperiness: Float = 0.6F
 	
 	var randomTicks: Boolean = false
-	// UPDATE noDrops
+	var noDrops: Boolean = false
 	
 	val isIndestructible: Boolean
 		get() = harvestHardness == INDESTRUCTIBLE_HARDNESS
@@ -53,13 +53,17 @@ class BlockBuilder(val material: Material, var color: MaterialColor, var sound: 
 			if (randomTicks){
 				tickRandomly()
 			}
+			
+			if (noDrops){
+				noDrops()
+			}
 		}
 	
 	fun makeIndestructible(){
 		harvestTool = Pair(-1, null)
 		harvestHardness = INDESTRUCTIBLE_HARDNESS
 		explosionResistance = INDESTRUCTIBLE_RESISTANCE
-		miningStats = false
+		noDrops = true
 	}
 	
 	inline fun clone(modify: BlockBuilder.() -> Unit): BlockBuilder{

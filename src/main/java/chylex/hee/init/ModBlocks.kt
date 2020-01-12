@@ -98,7 +98,7 @@ import chylex.hee.game.block.info.BlockBuilders.buildInfusedGlass
 import chylex.hee.game.block.info.BlockBuilders.buildJarODust
 import chylex.hee.game.block.info.BlockBuilders.buildLootChest
 import chylex.hee.game.block.info.BlockBuilders.buildMinersBurial
-import chylex.hee.game.block.info.BlockBuilders.buildMinersBurialAltar
+import chylex.hee.game.block.info.BlockBuilders.buildMinersBurialIndestructible
 import chylex.hee.game.block.info.BlockBuilders.buildObsidian
 import chylex.hee.game.block.info.BlockBuilders.buildObsidianVariation
 import chylex.hee.game.block.info.BlockBuilders.buildObsidianVariationLit
@@ -214,7 +214,7 @@ object ModBlocks{
 	// Blocks: Building (Grave Dirt)
 	
 	@JvmField val GRAVE_DIRT_PLAIN      = BlockGraveDirt(buildGraveDirt) named "grave_dirt"
-	@JvmField val GRAVE_DIRT_LOOT       = BlockGraveDirt.Loot(buildGraveDirt) named "grave_dirt_loot"
+	@JvmField val GRAVE_DIRT_LOOT       = BlockGraveDirt(buildGraveDirt) named "grave_dirt_loot"
 	@JvmField val GRAVE_DIRT_SPIDERLING = BlockGraveDirt.Spiderling(buildGraveDirt) named "grave_dirt_spiderling"
 	
 	// Blocks: Building (Wood)
@@ -230,8 +230,8 @@ object ModBlocks{
 	@JvmField val MINERS_BURIAL_BLOCK_PLAIN    = BlockSimple(buildMinersBurial) named "miners_burial_block_plain"
 	@JvmField val MINERS_BURIAL_BLOCK_CHISELED = BlockSimple(buildMinersBurial) named "miners_burial_block_chiseled"
 	@JvmField val MINERS_BURIAL_BLOCK_PILLAR   = BlockPillarCustom(buildMinersBurial) named "miners_burial_block_pillar"
-	@JvmField val MINERS_BURIAL_BLOCK_JAIL     = BlockSimple(buildMinersBurial) named "miners_burial_block_jail"
-	@JvmField val MINERS_BURIAL_ALTAR          = BlockMinersBurialAltar(buildMinersBurialAltar) named "miners_burial_altar"
+	@JvmField val MINERS_BURIAL_BLOCK_JAIL     = BlockSimple(buildMinersBurialIndestructible) named "miners_burial_block_jail"
+	@JvmField val MINERS_BURIAL_ALTAR          = BlockMinersBurialAltar(buildMinersBurialIndestructible) named "miners_burial_altar"
 	
 	// Blocks: Fluids
 	

@@ -50,10 +50,6 @@ class BlockIgneousRockOre(builder: BlockBuilder) : BlockSimple(builder){
 		MinecraftForge.EVENT_BUS.register(this)
 	}
 	
-	override fun getLootTable(): ResourceLocation{
-		return Resource.Custom("blocks/igneous_rock_ore")
-	}
-	
 	override fun getExpDrop(state: BlockState, world: IWorldReader, pos: BlockPos, fortune: Int, silktouch: Int): Int{
 		return 9
 	}
@@ -92,7 +88,6 @@ class BlockIgneousRockOre(builder: BlockBuilder) : BlockSimple(builder){
 	
 	override fun getHarvestLevel(state: BlockState) = 0 // use super.getHarvestLevel for the real value
 	override fun canHarvestBlock(state: BlockState, world: IBlockReader, pos: BlockPos, player: PlayerEntity): Boolean = true
-	// UPDATE override fun canSilkHarvest() = true
 	
 	// Client side
 	

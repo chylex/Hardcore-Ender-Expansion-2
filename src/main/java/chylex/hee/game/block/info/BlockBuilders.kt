@@ -29,7 +29,7 @@ object BlockBuilders{
 		explosionResistance = 1.25F
 	}
 	
-	val buildInfusedGlass = BlockBuilder(Material.GLASS, MaterialColor.ORANGE_TERRACOTTA, SoundType.GLASS).apply {
+	val buildInfusedGlass = BlockBuilder(Materials.INFUSED_GLASS, MaterialColor.ORANGE_TERRACOTTA, SoundType.GLASS).apply {
 		harvestTool = Pair(WOOD, PICKAXE)
 		harvestHardness = 0.5F
 		explosionResistance = 0.3F
@@ -159,7 +159,7 @@ object BlockBuilders{
 		explosionResistance = 120F
 	}
 	
-	val buildMinersBurialAltar = buildMinersBurial.clone {
+	val buildMinersBurialIndestructible = buildMinersBurial.clone {
 		makeIndestructible()
 	}
 	
@@ -287,7 +287,7 @@ object BlockBuilders{
 		harvestTool = Pair(STONE, PICKAXE)
 		harvestHardness = 8.0F
 		explosionResistance = 8.0F
-		miningStats = false
+		noDrops = true
 	}
 	
 	// Portals
@@ -312,10 +312,12 @@ object BlockBuilders{
 	val buildEnergyCluster = BlockBuilder(Materials.ENERGY_CLUSTER, MaterialColor.SNOW, SoundType.GLASS.clone(volume = 1.25F, pitch = 1.35F)).apply {
 		lightLevel = 13
 		lightOpacity = 0
+		noDrops = true
 	}
 	
 	val buildCorruptedEnergy = BlockBuilder(Materials.CORRUPTED_ENERGY, MaterialColor.PURPLE, SoundType.SAND).apply {
 		randomTicks = true // just to be safe
+		noDrops = true
 	}
 	
 	// Tables
@@ -336,7 +338,7 @@ object BlockBuilders{
 	val buildEternalFire = BlockBuilder(Material.FIRE, MaterialColor.AIR, SoundType.CLOTH).apply {
 		harvestHardness = 0F
 		explosionResistance = 0F
-		miningStats = false
+		noDrops = true
 		lightLevel = 15
 	}
 	

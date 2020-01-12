@@ -14,7 +14,6 @@ import chylex.hee.system.migration.vanilla.EntityPlayer
 import chylex.hee.system.util.center
 import chylex.hee.system.util.floorToInt
 import chylex.hee.system.util.getBlock
-import chylex.hee.system.util.getState
 import chylex.hee.system.util.nextFloat
 import chylex.hee.system.util.nextInt
 import chylex.hee.system.util.playClient
@@ -24,7 +23,6 @@ import chylex.hee.system.util.toYaw
 import chylex.hee.system.util.totalTime
 import net.minecraft.block.Block
 import net.minecraft.block.BlockState
-import net.minecraft.block.Blocks
 import net.minecraft.item.ItemStack
 import net.minecraft.state.StateContainer.Builder
 import net.minecraft.tileentity.TileEntity
@@ -43,6 +41,7 @@ import net.minecraft.world.World
 import net.minecraft.world.server.ServerWorld
 import net.minecraft.world.storage.loot.LootContext
 import net.minecraft.world.storage.loot.LootParameterSets
+import net.minecraft.world.storage.loot.LootParameters
 import java.util.Random
 
 open class BlockGraveDirt(builder: BlockBuilder) : BlockSimpleShaped(builder, AxisAlignedBB(0.0, 0.0, 0.0, 1.0, 0.9375, 1.0)){
@@ -82,45 +81,27 @@ open class BlockGraveDirt(builder: BlockBuilder) : BlockSimpleShaped(builder, Ax
 			super.getShape(state, source, pos, context)
 	}
 	
-	// Drops
-	
-	/* UPDATE
-	override fun getItemDropped(state: BlockState, rand: Random, fortune: Int): Item{
-		return Item.getItemFromBlock(Blocks.DIRT)
-	}
-	
-	override fun damageDropped(state: BlockState): Int{
-		return BlockDirt.DirtType.COARSE_DIRT.metadata
-	}
-	
-	override fun canSilkHarvest() = false*/
-	
 	// Explosions
 	
 	override fun canDropFromExplosion(explosion: Explosion): Boolean{
 		return false
 	}
 	
-	override fun onExplosionDestroy(world: World, pos: BlockPos, explosion: Explosion){
-		val state = pos.getState(world)
-		val rand = world.rand
+	override fun onBlockExploded(state: BlockState, world: World, pos: BlockPos, explosion: Explosion){
+		super.onBlockExploded(state, world, pos, explosion)
 		
-		super.onExplosionDestroy(world, pos, explosion)
-		
-		if (!world.isRemote && rand.nextInt(5) == 0){
-			spawnAsEntity(world, pos, ItemStack(Blocks.COARSE_DIRT)) // UPDATE use loot instead?
+		if (world is ServerWorld){
+			LootContext.Builder(world)
+				.withRandom(world.rand)
+				.withParameter(LootParameters.POSITION, pos)
+				.withParameter(LootParameters.EXPLOSION_RADIUS, explosion.size)
+				.withParameter(LootParameters.TOOL, ItemStack.EMPTY)
+				.withNullableParameter(LootParameters.BLOCK_ENTITY, null)
+				.let { spawnDrops(state, it) }
 		}
 	}
 	
 	// Variations
-	
-	class Loot(builder: BlockBuilder) : BlockGraveDirt(builder){
-		/* UPDATE
-		override fun getDrops(drops: NonNullList<ItemStack>, world: IBlockReader, pos: BlockPos, state: BlockState, fortune: Int){
-			super.getDrops(drops, world, pos, state, fortune)
-			ModLoot.GRAVE_DIRT_LOOT.generateDrops(drops, world, fortune) // TODO include modded nuggets
-		}*/
-	}
 	
 	class Spiderling(builder: BlockBuilder) : BlockGraveDirt(builder){
 		private var clientLastSpiderlingSound = 0L

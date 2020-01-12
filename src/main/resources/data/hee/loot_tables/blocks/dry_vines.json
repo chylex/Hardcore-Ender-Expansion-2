@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:block",
+  "pools": [
+    {
+      "rolls": 1,
+      "name": "pool",
+      "conditions": [{ "condition": "hee:was_sheared", "value": true }],
+      "entries": [
+        { "type": "item", "name": "hee:dry_vines", "entryName": "#1" }
+      ]
+    }
+  ]
+}

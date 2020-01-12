@@ -1,0 +1,40 @@
+{
+  "type": "minecraft:block",
+  "pools": [
+
+    {
+      "rolls": 1,
+      "name": "pool",
+      "conditions": [{ "condition": "hee:was_exploded", "value": false }],
+      "entries": [
+        { "type": "item", "name": "minecraft:coarse_dirt", "entryName": "#1" }
+      ]
+    },
+    {
+      "rolls": 1.18,
+      "name": "pool#rolls_type=rounding",
+      "conditions": [{ "condition": "hee:was_exploded", "value": false }],
+      "entries": [
+        { "type": "item", "name": "minecraft:bone", "weight": 100, "functions": [{ "function": "set_count", "count": 1 }], "entryName": "bone" },
+        { "type": "item", "name": "minecraft:string", "weight": 100, "functions": [{ "function": "set_count", "count": 1 }], "entryName": "string" },
+        { "type": "item", "name": "minecraft:stick", "weight": 95, "functions": [{ "function": "set_count", "count": 1 }], "entryName": "stick" },
+        { "type": "item", "name": "hee:ancient_dust", "weight": 90, "functions": [{ "function": "set_count", "count": 1 }], "entryName": "ancient_dust" },
+        { "type": "item", "name": "minecraft:leather", "weight": 85, "functions": [{ "function": "set_count", "count": 1 }], "entryName": "leather" },
+        { "type": "item", "name": "minecraft:iron_nugget", "weight": 70, "functions": [{ "function": "set_count", "count": 1 }], "entryName": "iron_nugget" },
+        { "type": "item", "name": "minecraft:gold_nugget", "weight": 69, "functions": [{ "function": "set_count", "count": 1 }], "entryName": "gold_nugget" },
+        { "type": "item", "name": "minecraft:rotten_flesh", "weight": 50, "functions": [{ "function": "set_count", "count": 1 }], "entryName": "rotten_flesh" }
+      ]
+    },
+
+    {
+      "rolls": 1,
+      "name": "pool",
+      "conditions": [{ "condition": "hee:was_exploded", "value": true }],
+      "entries": [
+        { "type": "item", "name": "minecraft:coarse_dirt", "weight": 4, "functions": [{ "function": "set_count", "count": 0 }], "entryName": "#0" },
+        { "type": "item", "name": "minecraft:coarse_dirt", "weight": 1, "functions": [{ "function": "set_count", "count": 1 }], "entryName": "#1" }
+      ]
+    }
+
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:block",
+  "pools": [
+    {
+      "rolls": 1,
+      "name": "pool",
+      "conditions": [{ "condition": "hee:has_silk_touch", "value": true }],
+      "entries": [
+        { "type": "item", "name": "hee:infused_glass", "entryName": "#1" }
+      ]
+    }
+  ]
+}

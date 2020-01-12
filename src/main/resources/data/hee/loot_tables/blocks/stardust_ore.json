@@ -1,0 +1,28 @@
+{
+  "type": "minecraft:block",
+  "pools": [
+
+    {
+      "rolls": 1,
+      "name": "pool",
+      "conditions": [{ "condition": "hee:has_silk_touch", "value": false }, { "condition": "minecraft:survives_explosion" }],
+      "entries": [
+        { "type": "item", "name": "hee:stardust", "weight": 12, "functions": [{ "function": "set_count", "count": 1 }], "entryName": "#1" },
+        { "type": "item", "name": "hee:stardust", "weight": 26, "functions": [{ "function": "set_count", "count": 2 }], "entryName": "#2" },
+        { "type": "item", "name": "hee:stardust", "weight": 38, "functions": [{ "function": "set_count", "count": 3 }], "entryName": "#3" },
+        { "type": "item", "name": "hee:stardust", "weight": 18, "functions": [{ "function": "set_count", "count": 4 }], "entryName": "#4" },
+        { "type": "item", "name": "hee:stardust", "weight":  6, "functions": [{ "function": "set_count", "count": 5 }], "entryName": "#5" }
+      ]
+    },
+
+    {
+      "rolls": 1,
+      "name": "pool",
+      "conditions": [{ "condition": "hee:has_silk_touch", "value": true }],
+      "entries": [
+        { "type": "item", "name": "hee:stardust_ore", "entryName": "#1" }
+      ]
+    }
+
+  ]
+}

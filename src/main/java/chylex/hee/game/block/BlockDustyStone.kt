@@ -9,20 +9,24 @@ import chylex.hee.system.migration.forge.Sided
 import chylex.hee.system.util.getState
 import net.minecraft.block.BlockState
 import net.minecraft.client.particle.ParticleManager
+import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.item.ItemStack
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.BlockRayTraceResult
 import net.minecraft.util.math.RayTraceResult
+import net.minecraft.world.IBlockReader
 import net.minecraft.world.World
 import net.minecraftforge.common.ToolType
 
 abstract class BlockDustyStone(builder: BlockBuilder) : BlockSimple(builder), IBlockHarvestToolCheck{
-	override fun isToolEffective(state: BlockState, tool: ToolType): Boolean{
-		return tool == PICKAXE || tool == SHOVEL
-	}
+	abstract override fun canHarvestBlock(state: BlockState, world: IBlockReader, pos: BlockPos, player: PlayerEntity): Boolean
 	
 	override fun canHarvestUsing(toolClass: ToolType, toolLevel: Int): Boolean{
 		return isToolEffective(defaultState, toolClass) && toolLevel >= 0
+	}
+	
+	override fun isToolEffective(state: BlockState, tool: ToolType): Boolean{
+		return tool == PICKAXE || tool == SHOVEL
 	}
 	
 	protected fun isPickaxeOrShovel(stack: ItemStack): Boolean{

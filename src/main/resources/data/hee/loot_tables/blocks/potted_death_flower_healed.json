@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:block",
+  "pools": [
+    {
+      "rolls": 1,
+      "name": "pool",
+      "conditions": [{ "condition": "minecraft:survives_explosion" }],
+      "entries": [
+        { "type": "item", "name": "minecraft:flower_pot", "entryName": "#1" }
+      ]
+    },
+    {
+      "rolls": 1,
+      "name": "pool",
+      "conditions": [{ "condition": "minecraft:survives_explosion" }],
+      "entries": [
+        { "type": "item", "name": "hee:death_flower_healed", "entryName": "#1" }
+      ]
+    }
+  ]
+}

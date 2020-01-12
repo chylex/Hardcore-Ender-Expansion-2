@@ -9,7 +9,6 @@ import net.minecraft.item.ItemStack
 import net.minecraft.util.BlockRenderLayer.CUTOUT
 import net.minecraft.util.text.ITextComponent
 import net.minecraft.world.IBlockReader
-import net.minecraft.world.storage.loot.LootContext
 
 abstract class BlockAbstractTable(builder: BlockBuilder, val tier: Int, val firstTier: Int) : BlockSimple(builder){
 	init{
@@ -19,10 +18,6 @@ abstract class BlockAbstractTable(builder: BlockBuilder, val tier: Int, val firs
 	
 	override fun isSolid(state: BlockState): Boolean{
 		return true
-	}
-	
-	override fun getDrops(state: BlockState, context: LootContext.Builder): MutableList<ItemStack>{
-		return super.getDrops(state, context) // UPDATE
 	}
 	
 	@Sided(Side.CLIENT)

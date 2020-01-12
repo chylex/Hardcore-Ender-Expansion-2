@@ -1,0 +1,25 @@
+{
+  "type": "minecraft:block",
+  "pools": [
+
+    {
+      "rolls": 1,
+      "name": "pool",
+      "conditions": [{ "condition": "hee:was_exploded", "value": false }],
+      "entries": [
+        { "type": "item", "name": "minecraft:coarse_dirt", "entryName": "#1" }
+      ]
+    },
+
+    {
+      "rolls": 1,
+      "name": "pool",
+      "conditions": [{ "condition": "hee:was_exploded", "value": true }],
+      "entries": [
+        { "type": "item", "name": "minecraft:coarse_dirt", "weight": 4, "functions": [{ "function": "set_count", "count": 0 }], "entryName": "#0" },
+        { "type": "item", "name": "minecraft:coarse_dirt", "weight": 1, "functions": [{ "function": "set_count", "count": 1 }], "entryName": "#1" }
+      ]
+    }
+
+  ]
+}

@@ -57,8 +57,4 @@ class BlockInfusedGlass(builder: BlockBuilder) : BlockAbstractGlass(builder.p){
 		return state.with(CONNECT_MAPPINGS.getValue(facing), pos.offset(facing).getBlock(world) === this)
 	}
 	
-	/* UPDATE
-	override fun quantityDropped(rand: Random) = 0
-	override fun canSilkHarvest() = true
-	*/
 }

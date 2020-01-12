@@ -21,6 +21,7 @@ import net.minecraft.state.StateContainer.Builder
 import net.minecraft.tileentity.TileEntity
 import net.minecraft.util.SoundCategory
 import net.minecraft.util.math.BlockPos
+import net.minecraft.util.math.RayTraceResult
 import net.minecraft.world.Explosion
 import net.minecraft.world.IBlockReader
 import net.minecraft.world.World
@@ -60,17 +61,21 @@ class BlockInfusedTNT : BlockTNT(Properties.from(Blocks.TNT)){
 		pos.getTile<TileEntityInfusedTNT>(world)?.infusions = InfusionTag.getList(stack)
 	}
 	
+	private fun getDrop(tile: TileEntityInfusedTNT): ItemStack?{
+		return ItemStack(this).also { InfusionTag.setList(it, tile.infusions) }
+	}
+	
 	override fun getDrops(state: BlockState, context: LootContext.Builder): MutableList<ItemStack>{
-		val world = context.world
-		val pos = context.get(LootParameters.POSITION)
+		val drop = (context.get(LootParameters.BLOCK_ENTITY) as? TileEntityInfusedTNT)?.let(::getDrop)
 		
-		val infusions = pos?.getTile<TileEntityInfusedTNT>(world)?.infusions
-		
-		if (infusions != null){
-			return mutableListOf(ItemStack(this).also { InfusionTag.setList(it, infusions) })
-		}
-		
-		return mutableListOf()
+		return if (drop != null)
+			mutableListOf(drop)
+		else
+			mutableListOf()
+	}
+	
+	override fun getPickBlock(state: BlockState, target: RayTraceResult, world: IBlockReader, pos: BlockPos, player: EntityPlayer): ItemStack{
+		return pos.getTile<TileEntityInfusedTNT>(world)?.let(::getDrop) ?: ItemStack(this)
 	}
 	
 	// Delay block addition/deletion
