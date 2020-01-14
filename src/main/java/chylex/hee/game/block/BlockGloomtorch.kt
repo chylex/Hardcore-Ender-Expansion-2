@@ -80,14 +80,6 @@ class BlockGloomtorch(builder: BlockBuilder) : BlockDirectional(builder.p){
 			super.updatePostPlacement(state, facing, neighborState, world, pos, neighborPos)
 	}
 	
-	/* UPDATE
-	override fun neighborChanged(state: BlockState, world: World, pos: BlockPos, neighborBlock: Block, neighborPos: BlockPos){
-		if (!canPlaceGloomtorchAt(world, pos, state[FACING]) && pos.getBlock(world) === this){
-			dropBlockAsItem(world, pos, state, 0)
-			pos.setAir(world)
-		}
-	}*/
-	
 	// State handling
 	
 	override fun rotate(state: BlockState, rot: Rotation): BlockState{

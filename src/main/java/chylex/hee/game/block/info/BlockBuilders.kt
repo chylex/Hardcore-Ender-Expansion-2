@@ -311,7 +311,6 @@ object BlockBuilders{
 	
 	val buildEnergyCluster = BlockBuilder(Materials.ENERGY_CLUSTER, MaterialColor.SNOW, SoundType.GLASS.clone(volume = 1.25F, pitch = 1.35F)).apply {
 		lightLevel = 13
-		lightOpacity = 0
 		noDrops = true
 	}
 	
@@ -344,7 +343,6 @@ object BlockBuilders{
 	
 	val buildScaffolding = BlockBuilder(Materials.SCAFFOLDING, MaterialColor.AIR, SoundType.STONE).apply {
 		makeIndestructible()
-		lightOpacity = 0
 	}
 	
 	// Overrides
@@ -353,11 +351,6 @@ object BlockBuilders{
 		makeIndestructible()
 		lightLevel = 15
 		randomTicks = true
-	}
-	
-	val buildChorusPlant = BlockBuilder(Material.PLANTS, MaterialColor.PURPLE, SoundType.WOOD).apply {
-		harvestHardness = 0.4F
-		explosionResistance = 0.4F
 	}
 	
 	val buildDragonEgg = BlockBuilder(Material.DRAGON_EGG, MaterialColor.BLACK, SoundType.STONE).apply {

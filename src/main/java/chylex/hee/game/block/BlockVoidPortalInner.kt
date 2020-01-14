@@ -28,12 +28,9 @@ import chylex.hee.system.util.motionVec
 import chylex.hee.system.util.offsetUntil
 import chylex.hee.system.util.setAir
 import chylex.hee.system.util.subtractY
-import chylex.hee.system.util.with
 import net.minecraft.block.Block
 import net.minecraft.block.BlockState
 import net.minecraft.entity.Entity
-import net.minecraft.item.BlockItemUseContext
-import net.minecraft.item.ItemStack
 import net.minecraft.state.StateContainer.Builder
 import net.minecraft.tileentity.TileEntity
 import net.minecraft.util.Direction
@@ -44,7 +41,6 @@ import net.minecraft.world.IBlockReader
 import net.minecraft.world.IWorld
 import net.minecraft.world.World
 import net.minecraft.world.dimension.DimensionType
-import net.minecraft.world.storage.loot.LootContext
 
 class BlockVoidPortalInner(builder: BlockBuilder) : BlockAbstractPortal(builder){
 	companion object{
@@ -98,16 +94,6 @@ class BlockVoidPortalInner(builder: BlockBuilder) : BlockAbstractPortal(builder)
 	
 	override fun createTileEntity(state: BlockState, world: IBlockReader): TileEntity{
 		return TileEntityPortalInner.Void()
-	}
-	
-	// Metadata
-	
-	override fun getDrops(state: BlockState, context: LootContext.Builder): MutableList<ItemStack>{
-		return super.getDrops(state, context) // UPDATE
-	}
-	
-	override fun getStateForPlacement(context: BlockItemUseContext): BlockState{
-		return this.with(TYPE, Type.values().getOrNull(context.item.damage) ?: HUB)
 	}
 	
 	// Breaking

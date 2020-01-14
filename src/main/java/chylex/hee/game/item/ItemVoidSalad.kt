@@ -55,7 +55,7 @@ class ItemVoidSalad(properties: Properties) : Item(properties){
 	}
 	
 	enum class Type{
-		SINGLE, DOUBLE, MEGA // UPDATE fix texture
+		SINGLE, DOUBLE, MEGA
 	}
 	
 	init{

@@ -14,7 +14,6 @@ import chylex.hee.system.migration.vanilla.BlockHorizontal
 import chylex.hee.system.migration.vanilla.BlockRotatedPillar
 import chylex.hee.system.migration.vanilla.BlockSlab
 import chylex.hee.system.migration.vanilla.BlockStairs
-import chylex.hee.system.migration.vanilla.BlockTorchWall
 import chylex.hee.system.migration.vanilla.BlockTrapDoor
 import chylex.hee.system.migration.vanilla.BlockVine
 import net.minecraft.state.properties.DoubleBlockHalf
@@ -42,14 +41,6 @@ object PaletteMappings{
 		"ew" to AXIS_X,
 		"ud" to AXIS_Y,
 		"ns" to AXIS_Z
-	)
-	
-	val FACING_WALL_TORCH = BlockTorchWall.HORIZONTAL_FACING to mapOf(
-		"" to UP,
-		"north" to NORTH,
-		"south" to SOUTH,
-		"east" to EAST,
-		"west" to WEST
 	)
 	
 	val DOOR_HALF = BlockDoor.HALF to mapOf(

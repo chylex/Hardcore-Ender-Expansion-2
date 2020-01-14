@@ -68,7 +68,7 @@ tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile){
 }
 
 minecraft{
-    mappings channel: "snapshot", version: "20200101-1.14.3"
+    mappings channel: "snapshot", version: "20200113-1.14.3"
 
     accessTransformer = file("src/main/resources/META-INF/accesstransformer.cfg")
 

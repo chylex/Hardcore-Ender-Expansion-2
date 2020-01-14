@@ -83,7 +83,7 @@ class SlotTrinketItemInventory(trinketHandler: IItemHandler, slotNumber: Int) : 
 			val gui = e.gui
 			
 			if (gui is InventoryScreen){
-				val allSlots = gui.container.inventorySlots // UPDATE test
+				val allSlots = gui.container.inventorySlots
 				findTrinketSlot(allSlots)?.moveSlotToEmptyPos(allSlots, SURVIVAL_INVENTORY_SLOT_POSITIONS)
 			}
 		}
@@ -94,7 +94,7 @@ class SlotTrinketItemInventory(trinketHandler: IItemHandler, slotNumber: Int) : 
 			
 			if (gui is InventoryScreen && (e.button == 0 || e.button == 1) && Screen.hasShiftDown()){
 				val hoveredSlot = gui.slotUnderMouse ?: return
-				val trinketSlot = findTrinketSlot(gui.container.inventorySlots) ?: return // UPDATE test
+				val trinketSlot = findTrinketSlot(gui.container.inventorySlots) ?: return
 				
 				if (canShiftClickTrinket(hoveredSlot, trinketSlot)){
 					PacketServerShiftClickTrinket(hoveredSlot.slotNumber).sendToServer()

@@ -111,10 +111,10 @@ object StrongholdPieces : IStructureDescription{
 		add("door.iron.*.*", Blocks.IRON_DOOR, listOf(PaletteMappings.DOOR_HALF, PaletteMappings.FACING_HORIZONTAL))
 		
 		add("torch", Blocks.TORCH)
-		add("torch.*", Blocks.WALL_TORCH, PaletteMappings.FACING_WALL_TORCH)
+		add("torch.*", Blocks.WALL_TORCH, PaletteMappings.FACING_HORIZONTAL)
 		add("chest.*", Blocks.CHEST, PaletteMappings.FACING_HORIZONTAL)
 		add("furnace.*", Blocks.FURNACE, PaletteMappings.FACING_HORIZONTAL)
-		add("stone_button.*", Blocks.STONE_BUTTON, PaletteMappings.FACING_ALL)
+		add("stone_button.*", Blocks.STONE_BUTTON, PaletteMappings.FACING_HORIZONTAL)
 		
 		add("endportal.inner", ModBlocks.END_PORTAL_INNER)
 		add("endportal.frame", ModBlocks.END_PORTAL_FRAME)

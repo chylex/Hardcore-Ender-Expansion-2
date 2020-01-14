@@ -33,8 +33,6 @@ class BlockExperienceGateOutline(builder: BlockBuilder) : BlockExperienceGate(bu
 		return pos.offset(facing).getBlock(world) === this
 	}
 	
-	// UPDATE placement state
-	
 	override fun updatePostPlacement(state: BlockState, facing: Direction, neighborState: BlockState, world: IWorld, pos: BlockPos, neighborPos: BlockPos): BlockState{
 		val north = checkSide(world, pos, NORTH)
 		val west = checkSide(world, pos, WEST)

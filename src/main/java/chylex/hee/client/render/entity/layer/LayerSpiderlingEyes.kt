@@ -43,7 +43,7 @@ class LayerSpiderlingEyes(spiderlingRenderer: RenderEntityMobSpiderling, private
 		}
 		
 		MC.gameRenderer.setupFogColor(false)
-		func_215334_a(entity) // UPDATE resets lightmap
+		func_215334_a(entity) // RENAME resets lightmap
 		
 		GL.depthMask(true)
 		GL.disableBlend()

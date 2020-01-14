@@ -5,6 +5,7 @@ import chylex.hee.game.mechanics.dust.DustLayers
 import chylex.hee.game.mechanics.dust.DustLayers.Side.BOTTOM
 import chylex.hee.game.mechanics.dust.DustLayers.Side.TOP
 import chylex.hee.game.mechanics.dust.DustType
+import chylex.hee.system.migration.Facing.DOWN
 import chylex.hee.system.migration.forge.Side
 import chylex.hee.system.migration.forge.Sided
 import chylex.hee.system.migration.vanilla.EntityLivingBase
@@ -18,10 +19,12 @@ import chylex.hee.system.util.heeTagOrNull
 import chylex.hee.system.util.isTopSolid
 import chylex.hee.system.util.size
 import net.minecraft.block.BlockState
+import net.minecraft.block.Blocks
 import net.minecraft.client.util.ITooltipFlag
 import net.minecraft.item.ItemStack
 import net.minecraft.tileentity.TileEntity
 import net.minecraft.util.BlockRenderLayer.TRANSLUCENT
+import net.minecraft.util.Direction
 import net.minecraft.util.Hand
 import net.minecraft.util.math.AxisAlignedBB
 import net.minecraft.util.math.BlockPos
@@ -29,6 +32,7 @@ import net.minecraft.util.math.BlockRayTraceResult
 import net.minecraft.util.math.RayTraceResult
 import net.minecraft.util.text.ITextComponent
 import net.minecraft.world.IBlockReader
+import net.minecraft.world.IWorld
 import net.minecraft.world.IWorldReader
 import net.minecraft.world.World
 import net.minecraft.world.storage.loot.LootContext
@@ -69,13 +73,13 @@ class BlockJarODust(builder: BlockBuilder) : BlockSimpleShaped(builder, AABB){
 	override fun isValidPosition(state: BlockState, world: IWorldReader, pos: BlockPos): Boolean{
 		return super.isValidPosition(state, world, pos) && pos.down().isTopSolid(world)
 	}
-	/* UPDATE
-	override fun neighborChanged(state: BlockState, world: World, pos: BlockPos, neighborBlock: Block, neighborPos: BlockPos){
-		if (!pos.down().isTopSolid(world)){
-			dropBlockAsItem(world, pos, state, 0)
-			pos.setAir(world)
-		}
-	}*/
+	
+	override fun updatePostPlacement(state: BlockState, facing: Direction, neighborState: BlockState, world: IWorld, pos: BlockPos, neighborPos: BlockPos): BlockState{
+		return if (facing == DOWN && !isValidPosition(state, world, pos))
+			Blocks.AIR.defaultState
+		else
+			super.updatePostPlacement(state, facing, neighborState, world, pos, neighborPos)
+	}
 	
 	override fun onBlockPlacedBy(world: World, pos: BlockPos, state: BlockState, placer: EntityLivingBase?, stack: ItemStack){
 		val list = stack.heeTagOrNull?.getListOfCompounds(LAYERS_TAG)

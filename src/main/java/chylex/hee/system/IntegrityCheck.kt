@@ -18,12 +18,6 @@ object IntegrityCheck{
 	
 	// Utilities
 	
-	private fun warnIfFalse(value: Boolean, message: String){
-		if (!value){
-			failIntegrityCheck(message, Debug.enabled)
-		}
-	}
-	
 	private fun crashIfFalse(value: Boolean, message: String){
 		if (!value){
 			failIntegrityCheck(message, true)
@@ -32,6 +26,6 @@ object IntegrityCheck{
 	
 	private fun failIntegrityCheck(message: String, crash: Boolean){
 		HEE.log.error("[IntegrityCheck] $message")
-		// UPDATE check(!crash){ "Integrity check failed: $message" }
+		check(!crash){ "Integrity check failed: $message" }
 	}
 }

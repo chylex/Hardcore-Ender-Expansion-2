@@ -50,8 +50,7 @@ class BlockAncientCobweb(builder: BlockBuilder) : BlockWeb(builder.p){
 	
 	override fun onEntityCollision(state: BlockState, world: World, pos: BlockPos, entity: Entity){
 		if (entity is EntityItem){
-			entity.setMotionMultiplier(state, Vec3d(0.25, 0.05, 0.25))
-			// UPDATE test entity.motionY = -0.25
+			entity.setMotionMultiplier(state, Vec3d(0.6, 0.6, 0.6))
 		}
 		else if (!world.isRemote){
 			val canBreak = when(entity){

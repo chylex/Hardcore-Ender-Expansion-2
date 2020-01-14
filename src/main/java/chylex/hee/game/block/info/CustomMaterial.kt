@@ -13,7 +13,6 @@ class CustomMaterial{
 	
 	var requiresTool = false
 	var blocksMovement = true
-	var blocksLight = true // UPDATE not used anywhere
 	
 	private var pushReaction = PushReaction.NORMAL
 	
@@ -28,7 +27,6 @@ class CustomMaterial{
 	fun makeTransparent(){
 		solid = false
 		blocksMovement = false
-		blocksLight = false
 	}
 	
 	fun makeLiquid(){

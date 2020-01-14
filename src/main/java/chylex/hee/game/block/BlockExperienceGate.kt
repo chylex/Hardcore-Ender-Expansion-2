@@ -54,10 +54,8 @@ abstract class BlockExperienceGate(builder: BlockBuilder) : BlockSimple(builder)
 		}
 	}
 	
-	// UPDATE test onentitywalk
-	
 	override fun getCollisionShape(state: BlockState, world: IBlockReader, pos: BlockPos, context: ISelectionContext): VoxelShape{
-		return AxisAlignedBB(0.0, 0.0, 0.0, 1.0, 1.0 - (2.0 * MagicValues.BLOCK_COLLISION_SHRINK), 1.0).asVoxelShape // UPDATE
+		return AxisAlignedBB(0.0, 0.0, 0.0, 1.0, 1.0 - (2.0 * MagicValues.BLOCK_COLLISION_SHRINK), 1.0).asVoxelShape
 	}
 	
 	override fun onEntityCollision(state: BlockState, world: World, pos: BlockPos, entity: Entity){

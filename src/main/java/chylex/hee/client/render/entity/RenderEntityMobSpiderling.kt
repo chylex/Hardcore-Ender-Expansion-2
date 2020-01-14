@@ -15,7 +15,7 @@ class RenderEntityMobSpiderling(manager: RenderManager) : RenderLiving<EntityMob
 	private val texture = Resource.Custom("textures/entity/spiderling.png")
 	
 	init{
-		addLayer(LayerSpiderlingEyes(this, (entityModel as SpiderModel).field_78209_a)) // UPDATE spiderHead
+		addLayer(LayerSpiderlingEyes(this, (entityModel as SpiderModel).field_78209_a)) // RENAME spiderHead
 	}
 	
 	override fun preRenderCallback(entity: EntityMobSpiderling, partialTicks: Float){

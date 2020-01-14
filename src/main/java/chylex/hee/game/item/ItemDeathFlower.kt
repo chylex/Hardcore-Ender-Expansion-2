@@ -32,6 +32,8 @@ class ItemDeathFlower(block: Block, properties: Properties) : ItemBlock(block, p
 	// UPDATE fix flower pot metadata
 	
 	override fun fillItemGroup(tab: ItemGroup, items: NonNullList<ItemStack>){
-		items.add(ItemStack(this).also { setDeathLevel(it, IBlockDeathFlowerDecaying.MIN_LEVEL) })
+		if (isInGroup(tab)){
+			items.add(ItemStack(this).also { setDeathLevel(it, IBlockDeathFlowerDecaying.MIN_LEVEL) })
+		}
 	}
 }

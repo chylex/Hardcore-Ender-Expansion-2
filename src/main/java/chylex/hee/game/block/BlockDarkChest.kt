@@ -11,10 +11,6 @@ import net.minecraft.world.IBlockReader
 import net.minecraft.world.IWorldReader
 
 class BlockDarkChest(builder: BlockBuilder) : BlockChest(builder.p), IOcelotCanSitOn{
-	companion object{
-		// UPDATE val TYPE = EnumHelper.addEnum(Type::class.java, "HEE_DARK", emptyArray())!!
-	}
-	
 	override fun createTileEntity(state: BlockState, world: IBlockReader): TileEntity{
 		return TileEntityDarkChest()
 	}

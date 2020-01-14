@@ -20,6 +20,7 @@ import chylex.hee.system.util.getTile
 import net.minecraft.block.Block
 import net.minecraft.block.BlockRenderType.ENTITYBLOCK_ANIMATED
 import net.minecraft.block.BlockState
+import net.minecraft.block.Blocks
 import net.minecraft.item.BlockItemUseContext
 import net.minecraft.item.ItemStack
 import net.minecraft.state.StateContainer.Builder
@@ -34,6 +35,7 @@ import net.minecraft.util.math.BlockRayTraceResult
 import net.minecraft.util.math.shapes.ISelectionContext
 import net.minecraft.util.math.shapes.VoxelShape
 import net.minecraft.world.IBlockReader
+import net.minecraft.world.IWorld
 import net.minecraft.world.IWorldReader
 import net.minecraft.world.World
 
@@ -102,13 +104,12 @@ class BlockIgneousPlate(builder: BlockBuilder) : BlockSimple(builder){
 		pos.offset(state[FACING_NOT_DOWN].opposite).getTile<TileEntityFurnace>(world)?.let(EntityTechnicalIgneousPlateLogic.Companion::createForFurnace)
 	}
 	
-	/* UPDATE
-	override fun neighborChanged(state: BlockState, world: World, pos: BlockPos, neighborBlock: Block, neighborPos: BlockPos){
-		if (!canPlacePlateAt(world, pos, state[FACING_NOT_DOWN]) && pos.getBlock(world) === this){
-			dropBlockAsItem(world, pos, state, 0)
-			pos.setAir(world)
-		}
-	}*/
+	override fun updatePostPlacement(state: BlockState, facing: Direction, neighborState: BlockState, world: IWorld, pos: BlockPos, neighborPos: BlockPos): BlockState{
+		return if (!canPlacePlateAt(world, pos, state[FACING_NOT_DOWN]))
+			Blocks.AIR.defaultState
+		else
+			super.updatePostPlacement(state, facing, neighborState, world, pos, neighborPos)
+	}
 	
 	// Interactions
 	

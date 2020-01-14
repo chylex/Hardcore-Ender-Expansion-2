@@ -124,7 +124,7 @@ object ModEntities{
 		
 		// spawns
 		
-		val defaultSpawnPredicate = MonsterEntity::func_223325_c // UPDATE this is the one that includes a light level check
+		val defaultSpawnPredicate = MonsterEntity::func_223325_c // RENAME this is the one that includes a light level check
 		
 		EntitySpawnPlacementRegistry.register(ENDERMAN, PlacementType.ON_GROUND, Type.MOTION_BLOCKING_NO_LEAVES, EntityMobEnderman.Companion::canSpawnAt)
 		

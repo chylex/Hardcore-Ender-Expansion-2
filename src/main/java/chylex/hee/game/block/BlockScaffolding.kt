@@ -7,6 +7,8 @@ import chylex.hee.system.migration.Facing.NORTH
 import chylex.hee.system.migration.Facing.SOUTH
 import chylex.hee.system.migration.Facing.UP
 import chylex.hee.system.migration.Facing.WEST
+import chylex.hee.system.migration.forge.Side
+import chylex.hee.system.migration.forge.Sided
 import chylex.hee.system.migration.vanilla.Blocks
 import chylex.hee.system.util.Pos
 import chylex.hee.system.util.getBlock
@@ -110,6 +112,11 @@ class BlockScaffolding(builder: BlockBuilder) : BlockSimple(builder){
 			VoxelShapes.fullCube()
 		else
 			VoxelShapes.empty()
+	}
+	
+	@Sided(Side.CLIENT)
+	override fun getAmbientOcclusionLightValue(state: BlockState, world: IBlockReader, pos: BlockPos): Float{
+		return 1F
 	}
 	
 	override fun getRenderLayer() = CUTOUT

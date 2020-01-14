@@ -48,7 +48,6 @@ object Materials{
 	}
 	
 	val SCAFFOLDING = CustomMaterial().build {
-		blocksLight = false
 		translucent = true
 		blockWhenPushed()
 	}

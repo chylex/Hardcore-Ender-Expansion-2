@@ -281,9 +281,9 @@ object ModBlocks{
 	@JvmField val WHITEBARK_SAPLING_AUTUMN_ORANGE      = BlockWhitebarkSapling(buildWhitebarkSapling, AutumnTreeGenerator.Orange) named "autumn_sapling_orange"
 	@JvmField val WHITEBARK_SAPLING_AUTUMN_YELLOWGREEN = BlockWhitebarkSapling(buildWhitebarkSapling, AutumnTreeGenerator.YellowGreen) named "autumn_sapling_yellowgreen"
 	
-	@JvmField val WHITEBARK_LEAVES_AUTUMN_BROWN       = BlockWhitebarkLeaves(buildWhitebarkLeaves, WHITEBARK_SAPLING_AUTUMN_BROWN) named "autumn_leaves_brown"
-	@JvmField val WHITEBARK_LEAVES_AUTUMN_ORANGE      = BlockWhitebarkLeaves(buildWhitebarkLeaves, WHITEBARK_SAPLING_AUTUMN_ORANGE) named "autumn_leaves_orange"
-	@JvmField val WHITEBARK_LEAVES_AUTUMN_YELLOWGREEN = BlockWhitebarkLeaves(buildWhitebarkLeaves, WHITEBARK_SAPLING_AUTUMN_YELLOWGREEN) named "autumn_leaves_yellowgreen"
+	@JvmField val WHITEBARK_LEAVES_AUTUMN_BROWN       = BlockWhitebarkLeaves(buildWhitebarkLeaves) named "autumn_leaves_brown"
+	@JvmField val WHITEBARK_LEAVES_AUTUMN_ORANGE      = BlockWhitebarkLeaves(buildWhitebarkLeaves) named "autumn_leaves_orange"
+	@JvmField val WHITEBARK_LEAVES_AUTUMN_YELLOWGREEN = BlockWhitebarkLeaves(buildWhitebarkLeaves) named "autumn_leaves_yellowgreen"
 	
 	@JvmField val POTTED_WHITEBARK_SAPLING_AUTUMN_BROWN       = BlockFlowerPotCustom(buildFlowerPot, WHITEBARK_SAPLING_AUTUMN_BROWN) named "potted_autumn_sapling_brown"
 	@JvmField val POTTED_WHITEBARK_SAPLING_AUTUMN_ORANGE      = BlockFlowerPotCustom(buildFlowerPot, WHITEBARK_SAPLING_AUTUMN_ORANGE) named "potted_autumn_sapling_orange"
@@ -492,10 +492,10 @@ object ModBlocks{
 			
 			register(SPAWNER_OBSIDIAN_TOWERS)
 			
-			register(END_PORTAL_INNER with hiddenItemBlock)
+			register(END_PORTAL_INNER)
 			register(END_PORTAL_FRAME with basicItemBlock)
 			register(END_PORTAL_ACCEPTOR with basicItemBlock)
-			register(VOID_PORTAL_INNER with hiddenItemBlock)
+			register(VOID_PORTAL_INNER)
 			register(VOID_PORTAL_FRAME with basicItemBlock)
 			register(VOID_PORTAL_STORAGE with basicItemBlock)
 			register(VOID_PORTAL_FRAME_CRAFTED with hiddenItemBlock)

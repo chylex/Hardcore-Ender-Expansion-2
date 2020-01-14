@@ -356,7 +356,7 @@ class EntityItemIgneousRock : EntityItemNoBob{
 				
 				Blocks.ICE,
 				Blocks.FROSTED_ICE,
-				Blocks.SNOW -> {
+				Blocks.SNOW_BLOCK -> {
 					if (Facing4.any { pos.offset(it).getBlock(world) === Blocks.WATER } || Facing4.all { pos.offset(it).isFullBlock(world) })
 						Blocks.WATER
 					else

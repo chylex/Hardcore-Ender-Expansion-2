@@ -12,9 +12,9 @@ class BlockBuilder(val material: Material, var color: MaterialColor, var sound: 
 		explosionResistance = original.explosionResistance
 		
 		lightLevel = original.lightLevel
-		lightOpacity = original.lightOpacity
 		slipperiness = original.slipperiness
 		
+		randomTicks = original.randomTicks
 		noDrops = original.noDrops
 	}
 	
@@ -23,14 +23,10 @@ class BlockBuilder(val material: Material, var color: MaterialColor, var sound: 
 	var explosionResistance: Float = 0F
 	
 	var lightLevel: Int = 0
-	var lightOpacity: Int? = null // UPDATE
 	var slipperiness: Float = 0.6F
 	
 	var randomTicks: Boolean = false
 	var noDrops: Boolean = false
-	
-	val isIndestructible: Boolean
-		get() = harvestHardness == INDESTRUCTIBLE_HARDNESS
 	
 	val p: Block.Properties
 		get() = Block.Properties.create(material, color).apply {

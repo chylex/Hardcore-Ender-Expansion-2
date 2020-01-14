@@ -41,7 +41,7 @@ class BlockFlowerPotDeathFlowerDecaying(builder: BlockBuilder, private val flowe
 	}
 	
 	override fun onBlockPlacedBy(world: World, pos: BlockPos, state: BlockState, placer: LivingEntity?, stack: ItemStack){
-		pos.setState(world, state.with(LEVEL, ItemDeathFlower.getDeathLevel(stack)))
+		pos.setState(world, state.with(LEVEL, ItemDeathFlower.getDeathLevel(stack))) // UPDATE broken
 	}
 	
 	private fun getDrop(state: BlockState): ItemStack{

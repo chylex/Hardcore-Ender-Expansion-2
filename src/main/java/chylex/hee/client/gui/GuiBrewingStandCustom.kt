@@ -29,7 +29,7 @@ class GuiBrewingStandCustom(container: ContainerBrewingStand, inventory: PlayerI
 		blit(x, y, 0, 0, xSize, ySize)
 		
 		val worldTime = MC.world!!.totalTime
-		val brewTime = container.func_216981_f() // UPDATE getBrewTime
+		val brewTime = container.func_216981_f() // RENAME getBrewTime
 		
 		if (brewTime > 0){
 			val brewProgress = (28F * (1F - (brewTime / 400F))).toInt()

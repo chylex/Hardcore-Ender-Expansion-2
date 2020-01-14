@@ -13,7 +13,6 @@ import chylex.hee.init.ModCreativeTabs
 import chylex.hee.init.ModLoot
 import chylex.hee.init.ModNetwork
 import chylex.hee.init.ModPotions
-import chylex.hee.init.ModRecipes
 import chylex.hee.init.ModTileEntities
 import chylex.hee.proxy.Environment
 import chylex.hee.system.Debug

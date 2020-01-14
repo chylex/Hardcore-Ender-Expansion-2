@@ -21,8 +21,10 @@ import chylex.hee.system.util.playServer
 import chylex.hee.system.util.posVec
 import chylex.hee.system.util.toYaw
 import chylex.hee.system.util.totalTime
+import chylex.hee.system.util.with
 import net.minecraft.block.Block
 import net.minecraft.block.BlockState
+import net.minecraft.item.BlockItemUseContext
 import net.minecraft.item.ItemStack
 import net.minecraft.state.StateContainer.Builder
 import net.minecraft.tileentity.TileEntity
@@ -66,6 +68,10 @@ open class BlockGraveDirt(builder: BlockBuilder) : BlockSimpleShaped(builder, Ax
 	}
 	
 	// Bounding box
+	
+	override fun getStateForPlacement(context: BlockItemUseContext): BlockState{
+		return this.with(FULL, context.pos.up().getBlock(context.world) is BlockGraveDirt)
+	}
 	
 	override fun updatePostPlacement(state: BlockState, facing: Direction, neighborState: BlockState, world: IWorld, pos: BlockPos, neighborPos: BlockPos): BlockState{
 		return if (facing == UP)

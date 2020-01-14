@@ -14,6 +14,7 @@ import net.minecraft.block.Block
 import net.minecraft.block.BlockState
 import net.minecraft.item.BlockItemUseContext
 import net.minecraft.state.StateContainer.Builder
+import net.minecraft.util.BlockRenderLayer.TRANSLUCENT
 import net.minecraft.util.Direction
 import net.minecraft.util.math.BlockPos
 import net.minecraft.world.IWorld
@@ -57,4 +58,5 @@ class BlockInfusedGlass(builder: BlockBuilder) : BlockAbstractGlass(builder.p){
 		return state.with(CONNECT_MAPPINGS.getValue(facing), pos.offset(facing).getBlock(world) === this)
 	}
 	
+	override fun getRenderLayer() = TRANSLUCENT
 }

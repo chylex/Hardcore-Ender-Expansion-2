@@ -77,7 +77,7 @@ object ModNetwork{
 	fun onServerPacket(e: ClientCustomPayloadEvent){
 		val ctx = e.source.get()
 		
-		readPacket(e.payload).handle(LogicalSide.SERVER, ctx.sender!!) // UPDATE can be null?
+		readPacket(e.payload).handle(LogicalSide.SERVER, ctx.sender!!)
 		ctx.packetHandled = true
 	}
 	

@@ -40,7 +40,7 @@ object BlockEditor{
 		val world = player.world
 		
 		if (!player.canPlayerEdit(targetPos, clickedFacing, stack) ||
-			!world.func_217350_a(state, targetPos, ISelectionContext.dummy()) || // UPDATE checks entity collisions
+			!world.func_217350_a(state, targetPos, ISelectionContext.dummy()) || // RENAME checks entity collisions
 			!ForgeEventFactory.onBlockPlace(player, BlockSnapshot.getBlockSnapshot(world, targetPos), UP)
 		){
 			return null

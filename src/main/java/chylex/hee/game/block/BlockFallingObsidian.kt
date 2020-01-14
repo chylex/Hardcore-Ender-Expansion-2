@@ -2,10 +2,6 @@ package chylex.hee.game.block
 import chylex.hee.game.block.info.BlockBuilder
 import chylex.hee.game.entity.item.EntityFallingBlockHeavy
 import chylex.hee.game.entity.item.EntityFallingObsidian
-import chylex.hee.system.migration.Facing.DOWN
-import chylex.hee.system.util.offsetUntil
-import chylex.hee.system.util.setAir
-import chylex.hee.system.util.setBlock
 import net.minecraft.block.BlockState
 import net.minecraft.util.Direction
 import net.minecraft.util.math.BlockPos
@@ -34,13 +30,7 @@ class BlockFallingObsidian(builder: BlockBuilder) : BlockSimple(builder){
 		}
 		
 		if (EntityFallingBlockHeavy.canFallThrough(world, pos.down()) && pos.y >= 0){
-			if (world.isAreaLoaded(pos, 32)){ // UPDATE
-				world.addEntity(EntityFallingObsidian(world, pos, defaultState))
-			}
-			else{
-				pos.setAir(world)
-				pos.offsetUntil(DOWN, 2..(pos.y)){ !EntityFallingBlockHeavy.canFallThrough(world, it) }?.up()?.setBlock(world, this)
-			}
+			world.addEntity(EntityFallingObsidian(world, pos, defaultState))
 		}
 	}
 }

@@ -28,7 +28,7 @@ class ItemScorchingTool(
 	properties: Properties,
 	private val toolType: ToolType,
 	attackSpeed: Float
-) : ItemTool(0F /* UPDATE? */, attackSpeed, SCORCHING_TOOL, emptySet(), properties.addToolType(toolType, SCORCHING_TOOL.harvestLevel)), IScorchingItem, ICustomRepairBehavior by ScorchingHelper.Repair(SCORCHING_TOOL){
+) : ItemTool(0F, attackSpeed, SCORCHING_TOOL, emptySet(), properties.addToolType(toolType, SCORCHING_TOOL.harvestLevel)), IScorchingItem, ICustomRepairBehavior by ScorchingHelper.Repair(SCORCHING_TOOL){
 	override val material
 		get() = SCORCHING_TOOL
 	

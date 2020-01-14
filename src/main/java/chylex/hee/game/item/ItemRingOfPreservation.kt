@@ -78,6 +78,11 @@ class ItemRingOfPreservation(properties: Properties) : ItemAbstractTrinket(prope
 	
 	@SubscribeEvent(EventPriority.HIGHEST)
 	fun onPlayerDestroyItem(e: PlayerDestroyItemEvent){
+		@Suppress("SENSELESS_COMPARISON")
+		if (e.original == null){
+			return // UPDATE the event is completely fucked and triggers with null stacks
+		}
+		
 		val player = e.player
 		val inventory = player.inventory
 		

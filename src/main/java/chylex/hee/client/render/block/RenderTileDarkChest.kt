@@ -17,8 +17,6 @@ object RenderTileDarkChest : ChestTileEntityRenderer<TileEntityDarkChest>(){
 		isChristmas = false
 	}
 	
-	// UPDATE replace
-	
 	override fun render(tile: TileEntityDarkChest, x: Double, y: Double, z: Double, partialTicks: Float, destroyStage: Int){
 		val prevTexSingle = TEXTURE_NORMAL
 		val prevTexDouble = TEXTURE_NORMAL_DOUBLE
