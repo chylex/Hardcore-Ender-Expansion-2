@@ -31,6 +31,10 @@ class InfusionList private constructor(private val infusions: ImmutableSet<Infus
 		return InfusionList(infusion, *infusions.toTypedArray())
 	}
 	
+	fun except(infusion: Infusion): InfusionList{
+		return InfusionList(ImmutableSet.copyOf(infusions.minusElement(infusion)))
+	}
+	
 	fun determineLevel(infusion: Infusion): Int{
 		val vigor = has(VIGOR)
 		val itself = has(infusion)
