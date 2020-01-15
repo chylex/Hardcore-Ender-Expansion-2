@@ -31,7 +31,6 @@ import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap
 import net.minecraft.block.Block
 import net.minecraft.client.gui.screen.Screen
 import net.minecraft.client.gui.screen.inventory.InventoryScreen
-import net.minecraft.client.resources.I18n
 import net.minecraft.client.util.ITooltipFlag
 import net.minecraft.entity.player.PlayerInventory
 import net.minecraft.inventory.Inventory
@@ -43,7 +42,8 @@ import net.minecraft.util.ActionResult
 import net.minecraft.util.Hand
 import net.minecraft.util.NonNullList
 import net.minecraft.util.text.ITextComponent
-import net.minecraft.util.text.TextFormatting
+import net.minecraft.util.text.TextFormatting.GRAY
+import net.minecraft.util.text.TextFormatting.ITALIC
 import net.minecraft.world.World
 import net.minecraftforge.client.event.GuiScreenEvent
 
@@ -168,11 +168,11 @@ class ItemShulkerBoxOverride(block: Block, properties: Properties) : ItemBlock(b
 				val sorted = counts.entries.sortedWith(compareBy({ -it.value }, { it.key }))
 				
 				for((name, count) in sorted.take(TOOLTIP_ENTRY_COUNT)){
-					lines.add(TextComponentString("%s x%d".format(name, count)))
+					lines.add(TextComponentString("%s x%d".format(name, count)).applyTextStyle(GRAY))
 				}
 				
 				if (sorted.size > TOOLTIP_ENTRY_COUNT){
-					lines.add(TextComponentString("${TextFormatting.ITALIC}${I18n.format("container.shulkerBox.more", sorted.size - TOOLTIP_ENTRY_COUNT)}"))
+					lines.add(TextComponentTranslation("container.shulkerBox.more", sorted.size - TOOLTIP_ENTRY_COUNT).applyTextStyles(GRAY, ITALIC))
 				}
 			}
 		}

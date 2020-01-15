@@ -66,7 +66,7 @@
   "block.hee.miners_burial_altar": "Miner's Burial Altar",
 
   "block.hee.jar_o_dust": "Jar o' Dust",
-  "block.hee.jar_o_dust.tooltip.entry": "%sx %s",
+  "block.hee.jar_o_dust.tooltip.entry": "§7%sx %s",
   "block.hee.dark_chest": "Dark Chest",
   "block.hee.loot_chest": "Loot Chest",
   "block.hee.loot_chest.tooltip": "§5§o(Editable in creative mode)",
@@ -128,7 +128,7 @@
   "block.hee.eternal_fire": "Eternal Fire",
   "block.hee.scaffolding": "Scaffolding",
 
-  "block.tooltip.hee.table.tier": "Tier %s",
+  "block.tooltip.hee.table.tier": "§7Tier %s",
 
   "item.hee.ancient_dust": "Ancient Dust",
   "item.hee.ethereum": "Ethereum",
@@ -181,17 +181,17 @@
   "item.hee.spatial_dash_gem": "Spatial Dash Gem",
   "item.hee.linking_gem": "Linking Gem",
   "item.hee.portal_token": "Portal Token",
-  "item.hee.portal_token.tooltip.rare": "Rare",
-  "item.hee.portal_token.tooltip.solitary": "Solitary",
+  "item.hee.portal_token.tooltip.rare": "§7Rare",
+  "item.hee.portal_token.tooltip.solitary": "§7Solitary",
   "item.hee.portal_token.tooltip.activate": "§6Right-click to activate",
   "item.hee.portal_token.tooltip.creative.generate": "§6Hold and right-click to generate (creative)",
   "item.hee.portal_token.tooltip.creative.teleport": "§6Hold and right-click to teleport (creative)",
-  "item.hee.portal_token.tooltip.advanced": "Index: %s",
+  "item.hee.portal_token.tooltip.advanced": "§7Index: %s",
   "item.hee.portal_token_concrete": "Portal Token (%s)",
   "item.hee.blank_token": "Blank Token",
 
   "item.hee.trinket_pouch": "Trinket Pouch",
-  "item.hee.trinket_pouch.tooltip": "Right-click to open",
+  "item.hee.trinket_pouch.tooltip": "§7Right-click to open",
   "item.hee.amulet_of_recovery": "Amulet of Recovery",
   "item.hee.ring_of_hunger": "Ring of Hunger",
   "item.hee.ring_of_preservation": "Ring of Preservation",
@@ -206,7 +206,7 @@
   "item.hee.vampire_bat_spawn_egg":"Spawn Vampire Bat",
 
   "item.hee.chorus_berry": "Chorus Berry",
-  "item.hee.shulker_box.tooltip": "Right-click to open",
+  "item.hee.shulker_box.tooltip": "§7Right-click to open",
 
   "item.tooltip.hee.energy.level": "§9Energy: §3%s§9 / §3%s",
   "item.tooltip.hee.energy.uses": "§9Uses Left: §3%s",
