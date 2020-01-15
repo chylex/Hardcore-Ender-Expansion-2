@@ -16,6 +16,7 @@ import chylex.hee.system.util.playServer
 import chylex.hee.system.util.use
 import net.minecraft.block.ChestBlock.FACING
 import net.minecraft.inventory.IInventory
+import net.minecraft.inventory.container.INamedContainerProvider
 import net.minecraft.tileentity.ITickableTileEntity
 import net.minecraft.tileentity.TileEntityType
 import net.minecraft.util.Direction
@@ -24,7 +25,7 @@ import net.minecraft.util.SoundCategory
 import net.minecraft.util.SoundEvent
 import net.minecraft.util.text.ITextComponent
 
-abstract class TileEntityBaseChest(type: TileEntityType<out TileEntityBaseChest>) : TileEntityBase(type), ITickableTileEntity, INameable{
+abstract class TileEntityBaseChest(type: TileEntityType<out TileEntityBaseChest>) : TileEntityBase(type), ITickableTileEntity, INamedContainerProvider, INameable{
 	private companion object{
 		private const val CUSTOM_NAME_TAG = "CustomName"
 		private const val VIEWER_COUNT_TAG = "ViewerCount"
@@ -75,15 +76,11 @@ abstract class TileEntityBaseChest(type: TileEntityType<out TileEntityBaseChest>
 	
 	// Inventory handling
 	
-	protected abstract fun getInventoryFor(player: EntityPlayer): IInventory
-	
 	fun isUsableByPlayer(player: EntityPlayer): Boolean{
 		return pos.getTile<TileEntityBaseChest>(wrld) === this && pos.distanceSqTo(player) <= 64
 	}
 	
-	fun getChestInventoryFor(player: EntityPlayer): IInventory{
-		val wrapped = getInventoryFor(player)
-		
+	protected fun createChestInventory(wrapped: IInventory): IInventory{
 		return object : IInventory by wrapped{
 			override fun openInventory(player: EntityPlayer){
 				wrapped.openInventory(player)
@@ -118,6 +115,10 @@ abstract class TileEntityBaseChest(type: TileEntityType<out TileEntityBaseChest>
 	
 	final override fun getCustomName(): ITextComponent?{
 		return customName
+	}
+	
+	final override fun getDisplayName(): ITextComponent{
+		return name
 	}
 	
 	fun setCustomName(customName: ITextComponent){

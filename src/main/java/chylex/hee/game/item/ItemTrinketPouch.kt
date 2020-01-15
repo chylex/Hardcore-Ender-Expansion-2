@@ -11,8 +11,8 @@ import chylex.hee.game.mechanics.trinket.ITrinketHandler
 import chylex.hee.game.mechanics.trinket.ITrinketHandlerProvider
 import chylex.hee.game.mechanics.trinket.ITrinketItem
 import chylex.hee.game.mechanics.trinket.TrinketHandler
-import chylex.hee.init.ModGuiHandler.GuiType.TRINKET_POUCH
-import chylex.hee.network.server.PacketServerOpenGui
+import chylex.hee.init.ModContainers
+import chylex.hee.network.server.PacketServerOpenInventoryItem
 import chylex.hee.system.migration.ActionResult.PASS
 import chylex.hee.system.migration.ActionResult.SUCCESS
 import chylex.hee.system.migration.forge.EventPriority
@@ -36,7 +36,10 @@ import chylex.hee.system.util.setStack
 import net.minecraft.client.gui.screen.Screen
 import net.minecraft.client.gui.screen.inventory.InventoryScreen
 import net.minecraft.client.util.ITooltipFlag
+import net.minecraft.entity.player.PlayerInventory
 import net.minecraft.inventory.Inventory
+import net.minecraft.inventory.container.Container
+import net.minecraft.inventory.container.INamedContainerProvider
 import net.minecraft.item.ItemStack
 import net.minecraft.util.ActionResult
 import net.minecraft.util.Hand
@@ -67,10 +70,20 @@ class ItemTrinketPouch(properties: Properties) : ItemAbstractTrinket(properties)
 		}
 	}
 	
+	class ContainerProvider(private val stack: ItemStack, private val slot: Int) : INamedContainerProvider{
+		override fun getDisplayName(): ITextComponent{
+			return stack.displayName
+		}
+		
+		override fun createMenu(id: Int, inventory: PlayerInventory, player: EntityPlayer): Container{
+			return ContainerTrinketPouch(id, player, slot)
+		}
+	}
+	
 	class Inv(
 		override val player: EntityPlayer,
 		private val inventorySlot: Int
-	) : Inventory(/* UPDATE "gui.hee.trinket_pouch.title", false, */getSlotCount(getInventoryStack(player, inventorySlot))), IInventoryFromPlayerItem, ITrinketHandler{
+	) : Inventory(getSlotCount(getInventoryStack(player, inventorySlot))), IInventoryFromPlayerItem, ITrinketHandler{
 		private var noLongerValid = false
 		private var modCounter = 0
 		
@@ -174,7 +187,7 @@ class ItemTrinketPouch(properties: Properties) : ItemAbstractTrinket(properties)
 	}
 	
 	override fun createTrinketHandler(player: EntityPlayer): ITrinketHandler{
-		return ((player.openContainer as? ContainerTrinketPouch)?.containerInventory as? Inv) ?: Inv(player, INVENTORY_SLOT_TRINKET) // helpfully updates the opened GUI too
+		return (player.openContainer as? ContainerTrinketPouch)?.containerInventory ?: Inv(player, INVENTORY_SLOT_TRINKET) // helpfully updates the opened GUI too
 	}
 	
 	override fun canApplyInfusion(infusion: Infusion): Boolean{
@@ -189,7 +202,7 @@ class ItemTrinketPouch(properties: Properties) : ItemAbstractTrinket(properties)
 			return ActionResult(PASS, stack)
 		}
 		
-		TRINKET_POUCH.open(player, slot.slot)
+		ModContainers.open(player, ContainerProvider(stack, slot.slot), slot.slot)
 		return ActionResult(SUCCESS, stack)
 	}
 	
@@ -229,7 +242,7 @@ class ItemTrinketPouch(properties: Properties) : ItemAbstractTrinket(properties)
 					else -> hoveredSlot.slotIndex
 				}
 				
-				PacketServerOpenGui(TRINKET_POUCH, slotIndex).sendToServer()
+				PacketServerOpenInventoryItem(slotIndex).sendToServer()
 				e.isCanceled = true
 			}
 		}

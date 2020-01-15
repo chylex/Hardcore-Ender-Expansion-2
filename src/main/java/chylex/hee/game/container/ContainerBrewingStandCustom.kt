@@ -1,4 +1,5 @@
 package chylex.hee.game.container
+import chylex.hee.game.block.entity.TileEntityBrewingStandCustom
 import chylex.hee.game.block.entity.TileEntityBrewingStandCustom.Companion.SLOT_MODIFIER
 import chylex.hee.game.block.entity.TileEntityBrewingStandCustom.Companion.SLOT_REAGENT
 import chylex.hee.game.block.entity.TileEntityBrewingStandCustom.Companion.TOTAL_FIELDS
@@ -9,19 +10,23 @@ import chylex.hee.game.container.slot.SlotBrewingReagent
 import chylex.hee.init.ModContainers
 import chylex.hee.system.migration.vanilla.ContainerBrewingStand
 import chylex.hee.system.migration.vanilla.EntityPlayer
+import chylex.hee.system.util.getTile
+import chylex.hee.system.util.readPos
 import net.minecraft.entity.player.PlayerInventory
 import net.minecraft.inventory.IInventory
 import net.minecraft.inventory.Inventory
 import net.minecraft.inventory.container.ContainerType
 import net.minecraft.item.ItemStack
+import net.minecraft.network.PacketBuffer
 import net.minecraft.util.IIntArray
 import net.minecraft.util.IntArray
 
-class ContainerBrewingStandCustom(id: Int, inventory: PlayerInventory, private val brewingStand: IInventory, fields: IIntArray) : ContainerBrewingStand(id, inventory, brewingStand, fields), IContainerSlotTransferLogic{
-	constructor(id: Int, inventory: PlayerInventory) : this(id, inventory, Inventory(TOTAL_SLOTS), IntArray(TOTAL_FIELDS))
+class ContainerBrewingStandCustom(id: Int, inventory: PlayerInventory, private val brewingStand: IInventory, fields: IIntArray, tile: TileEntityBrewingStandCustom?) : ContainerBrewingStand(id, inventory, brewingStand, fields), IContainerSlotTransferLogic{
+	@Suppress("unused")
+	constructor(id: Int, inventory: PlayerInventory, buffer: PacketBuffer) : this(id, inventory, Inventory(TOTAL_SLOTS), IntArray(TOTAL_FIELDS), buffer.readPos().getTile(inventory.player.world))
 	
 	init{
-		SLOT_REAGENT.let { inventorySlots[it] = SlotBrewingReagent(inventorySlots[it], false /* UPDATE brewingStand.isEnhanced*/) }
+		SLOT_REAGENT.let { inventorySlots[it] = SlotBrewingReagent(inventorySlots[it], tile?.isEnhanced == true) }
 		SLOT_MODIFIER.let { inventorySlots[it] = SlotBrewingModifier(inventorySlots[it]) }
 	}
 	

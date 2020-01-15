@@ -2,6 +2,7 @@ package chylex.hee.game.block.entity
 import chylex.hee.HEE
 import chylex.hee.game.block.entity.base.TileEntityBase.Context.STORAGE
 import chylex.hee.game.block.entity.base.TileEntityBaseChest
+import chylex.hee.game.container.ContainerLootChest
 import chylex.hee.init.ModSounds
 import chylex.hee.init.ModTileEntities
 import chylex.hee.system.migration.vanilla.EntityPlayer
@@ -13,18 +14,23 @@ import chylex.hee.system.util.playServer
 import chylex.hee.system.util.saveInventory
 import chylex.hee.system.util.setStack
 import chylex.hee.system.util.use
+import net.minecraft.entity.player.PlayerInventory
 import net.minecraft.inventory.IInventory
 import net.minecraft.inventory.Inventory
+import net.minecraft.inventory.container.Container
 import net.minecraft.tileentity.TileEntityType
 import net.minecraft.util.SoundCategory
 import net.minecraft.util.SoundEvent
+import net.minecraft.util.text.ITextComponent
 import java.util.UUID
 
 class TileEntityLootChest(type: TileEntityType<TileEntityLootChest>) : TileEntityBaseChest(type){
 	constructor() : this(ModTileEntities.LOOT_CHEST)
 	
-	private companion object{
-		private const val SLOT_COUNT = 9 * 3
+	companion object{
+		const val ROWS = 3
+		
+		private const val SLOT_COUNT = 9 * ROWS
 		
 		private const val SOURCE_INV_TAG = "SourceInventory"
 		private const val PLAYER_INV_TAG = "PlayerInventories"
@@ -35,6 +41,13 @@ class TileEntityLootChest(type: TileEntityType<TileEntityLootChest>) : TileEntit
 			for((slot, stack) in source.nonEmptySlots){
 				it.setStack(slot, stack.copy())
 			}
+		}
+		
+		fun getClientTitle(player: EntityPlayer, text: ITextComponent): ITextComponent{
+			return if (player.abilities.isCreativeMode)
+				TextComponentTranslation("gui.hee.loot_chest.title.creative")
+			else
+				text
 		}
 	}
 	
@@ -49,22 +62,10 @@ class TileEntityLootChest(type: TileEntityType<TileEntityLootChest>) : TileEntit
 		sound.playServer(wrld, pos, SoundCategory.BLOCKS, volume = 0.5F)
 	}
 	
-	override fun getInventoryFor(player: EntityPlayer): IInventory{
-		return if (wrld.isRemote)
-			getInventoryForClient(player)
-		else
-			getInventoryForServer(player)
-	}
-	
 	// Sided inventory handling
 	
-	private fun getInventoryForClient(player: EntityPlayer): IInventory{
-		return createInventory()
-		/* UPDATE
-		return if (player.isCreative)
-			InventoryBasic("$defaultName.creative", false, SLOT_COUNT)
-		else
-			InventoryBasic(name, hasCustomName(), SLOT_COUNT)*/
+	override fun createMenu(id: Int, inventory: PlayerInventory, player: EntityPlayer): Container{
+		return ContainerLootChest(id, player, createChestInventory(getInventoryForServer(player)))
 	}
 	
 	private fun getInventoryForServer(player: EntityPlayer): IInventory{

@@ -2,7 +2,7 @@ package chylex.hee.game.block
 import chylex.hee.game.block.entity.base.TileEntityBaseChest
 import chylex.hee.game.block.info.BlockBuilder
 import chylex.hee.game.entity.living.ai.AIOcelotSitOverride.IOcelotCanSitOn
-import chylex.hee.init.ModGuiHandler.GuiType
+import chylex.hee.init.ModContainers
 import chylex.hee.system.migration.Facing.NORTH
 import chylex.hee.system.migration.vanilla.EntityCat
 import chylex.hee.system.migration.vanilla.EntityLivingBase
@@ -41,7 +41,6 @@ abstract class BlockAbstractChest<T : TileEntityBaseChest>(builder: BlockBuilder
 	// Placement and interaction
 	
 	abstract fun createTileEntity(): T
-	abstract val guiType: GuiType
 	
 	override fun hasTileEntity(state: BlockState): Boolean{
 		return true
@@ -77,7 +76,7 @@ abstract class BlockAbstractChest<T : TileEntityBaseChest>(builder: BlockBuilder
 		}
 		
 		pos.getTile<TileEntityBaseChest>(world)?.let {
-			guiType.open(player, pos.x, pos.y, pos.z)
+			ModContainers.open(player, it, pos)
 		}
 		
 		return true

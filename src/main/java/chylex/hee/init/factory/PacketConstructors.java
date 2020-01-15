@@ -9,7 +9,7 @@ import chylex.hee.network.client.PacketClientTeleportInstantly;
 import chylex.hee.network.client.PacketClientTrinketBreak;
 import chylex.hee.network.client.PacketClientUpdateExperience;
 import chylex.hee.network.server.PacketServerContainerEvent;
-import chylex.hee.network.server.PacketServerOpenGui;
+import chylex.hee.network.server.PacketServerOpenInventoryItem;
 import chylex.hee.network.server.PacketServerShiftClickTrinket;
 import kotlin.Pair;
 import javax.annotation.Nonnull;
@@ -31,7 +31,7 @@ public final class PacketConstructors{
 			packet(PacketClientUpdateExperience.class, PacketClientUpdateExperience::new),
 			
 			packet(PacketServerContainerEvent.class, PacketServerContainerEvent::new),
-			packet(PacketServerOpenGui.class, PacketServerOpenGui::new),
+			packet(PacketServerOpenInventoryItem.class, PacketServerOpenInventoryItem::new),
 			packet(PacketServerShiftClickTrinket.class, PacketServerShiftClickTrinket::new)
 		);
 	}

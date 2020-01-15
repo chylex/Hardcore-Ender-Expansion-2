@@ -7,12 +7,12 @@ import chylex.hee.init.ModContainers
 import chylex.hee.system.migration.vanilla.EntityPlayer
 import chylex.hee.system.util.size
 import net.minecraft.entity.player.PlayerInventory
-import net.minecraft.inventory.IInventory
-import net.minecraft.inventory.Inventory
+import net.minecraft.network.PacketBuffer
 import net.minecraftforge.items.wrapper.InvWrapper
 
-class ContainerTrinketPouch(id: Int, player: EntityPlayer, pouchInventory: IInventory) : ContainerBaseCustomInventory<ItemTrinketPouch.Inv>(ModContainers.TRINKET_POUCH, id, player, pouchInventory, HEIGHT){
-	constructor(id: Int, inventory: PlayerInventory) : this(id, inventory.player, Inventory(9 * 3))
+class ContainerTrinketPouch(id: Int, player: EntityPlayer, slot: Int) : ContainerBaseCustomInventory<ItemTrinketPouch.Inv>(ModContainers.TRINKET_POUCH, id, player, ItemTrinketPouch.Inv(player, slot), HEIGHT){
+	@Suppress("unused")
+	constructor(id: Int, inventory: PlayerInventory, buffer: PacketBuffer) : this(id, inventory.player, buffer.readVarInt())
 	
 	companion object{
 		const val HEIGHT = 132
@@ -31,10 +31,6 @@ class ContainerTrinketPouch(id: Int, player: EntityPlayer, pouchInventory: IInve
 	}
 	
 	override fun detectAndSendChanges(){
-		val inventory = containerInventory as? ItemTrinketPouch.Inv
-		
-		if (inventory != null){ // UPDATE test
-			slotChangeListener.restart(listeners){ super.detectAndSendChanges() }?.let(inventory::validatePlayerItemOnModification)
-		}
+		slotChangeListener.restart(listeners){ super.detectAndSendChanges() }?.let(containerInventory::validatePlayerItemOnModification)
 	}
 }

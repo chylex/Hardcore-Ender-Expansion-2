@@ -1,10 +1,12 @@
 package chylex.hee.game.block.entity
+import chylex.hee.game.container.ContainerBrewingStandCustom
 import chylex.hee.game.mechanics.potion.brewing.PotionItems
 import chylex.hee.init.ModBlocks
 import chylex.hee.init.ModItems
 import chylex.hee.init.ModTileEntities
 import chylex.hee.system.migration.vanilla.BlockBrewingStand
 import chylex.hee.system.migration.vanilla.Sounds
+import chylex.hee.system.migration.vanilla.TextComponentTranslation
 import chylex.hee.system.migration.vanilla.TileEntityBrewingStand
 import chylex.hee.system.util.FLAG_SYNC_CLIENT
 import chylex.hee.system.util.getStack
@@ -13,14 +15,15 @@ import chylex.hee.system.util.isNotEmpty
 import chylex.hee.system.util.playServer
 import chylex.hee.system.util.setStack
 import chylex.hee.system.util.setState
+import net.minecraft.entity.player.PlayerInventory
 import net.minecraft.inventory.InventoryHelper
+import net.minecraft.inventory.container.Container
 import net.minecraft.item.Item
 import net.minecraft.item.ItemStack
 import net.minecraft.tileentity.TileEntityType
 import net.minecraft.util.NonNullList
 import net.minecraft.util.SoundCategory
 import net.minecraft.util.text.ITextComponent
-import net.minecraft.util.text.TranslationTextComponent
 import net.minecraftforge.common.brewing.BrewingRecipeRegistry
 import net.minecraftforge.event.ForgeEventFactory
 import java.util.Arrays
@@ -198,14 +201,13 @@ class TileEntityBrewingStandCustom : TileEntityBrewingStand(){
 		}
 	}
 	
-	/* UPDATE
-	override fun createContainer(inventory: PlayerInventory, player: EntityPlayer): Container{
-		return ContainerBrewingStandCustom(inventory, this)
-	}*/
+	override fun createMenu(id: Int, inventory: PlayerInventory): Container{
+		return ContainerBrewingStandCustom(id, inventory, this, field_213954_a, this)
+	}
 	
 	override fun getDefaultName(): ITextComponent{
 		return if (isEnhanced)
-			TranslationTextComponent("gui.hee.enhanced_brewing_stand.title")
+			TextComponentTranslation("gui.hee.enhanced_brewing_stand.title")
 		else
 			super.getDefaultName()
 	}

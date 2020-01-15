@@ -2,7 +2,7 @@ package chylex.hee.game.block
 import chylex.hee.game.block.entity.TileEntityVoidPortalStorage
 import chylex.hee.game.block.info.BlockBuilder
 import chylex.hee.init.ModBlocks
-import chylex.hee.init.ModGuiHandler.GuiType
+import chylex.hee.init.ModContainers
 import chylex.hee.system.migration.vanilla.EntityPlayer
 import chylex.hee.system.util.getTile
 import net.minecraft.block.BlockState
@@ -33,7 +33,7 @@ class BlockVoidPortalStorage(builder: BlockBuilder, aabb: AxisAlignedBB) : Block
 		}
 		
 		pos.getTile<TileEntityVoidPortalStorage>(world)?.let {
-			GuiType.PORTAL_TOKEN_STORAGE.open(player, pos.x, pos.y, pos.z)
+			ModContainers.open(player, it, pos)
 		}
 		
 		return true

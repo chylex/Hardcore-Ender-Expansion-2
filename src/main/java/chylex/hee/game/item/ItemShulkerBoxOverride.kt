@@ -1,9 +1,10 @@
 package chylex.hee.game.item
 import chylex.hee.HEE
 import chylex.hee.client.util.MC
+import chylex.hee.game.container.ContainerShulkerBoxInInventory
 import chylex.hee.game.container.base.IInventoryFromPlayerItem
-import chylex.hee.init.ModGuiHandler.GuiType.SHULKER_BOX
-import chylex.hee.network.server.PacketServerOpenGui
+import chylex.hee.init.ModContainers
+import chylex.hee.network.server.PacketServerOpenInventoryItem
 import chylex.hee.system.migration.ActionResult.PASS
 import chylex.hee.system.migration.ActionResult.SUCCESS
 import chylex.hee.system.migration.forge.EventPriority
@@ -18,6 +19,7 @@ import chylex.hee.system.migration.vanilla.TextComponentTranslation
 import chylex.hee.system.util.allSlots
 import chylex.hee.system.util.find
 import chylex.hee.system.util.getCompoundOrNull
+import chylex.hee.system.util.getOrCreateCompound
 import chylex.hee.system.util.getStack
 import chylex.hee.system.util.isNotEmpty
 import chylex.hee.system.util.nbt
@@ -31,8 +33,11 @@ import net.minecraft.client.gui.screen.Screen
 import net.minecraft.client.gui.screen.inventory.InventoryScreen
 import net.minecraft.client.resources.I18n
 import net.minecraft.client.util.ITooltipFlag
+import net.minecraft.entity.player.PlayerInventory
 import net.minecraft.inventory.Inventory
 import net.minecraft.inventory.ItemStackHelper
+import net.minecraft.inventory.container.Container
+import net.minecraft.inventory.container.INamedContainerProvider
 import net.minecraft.item.ItemStack
 import net.minecraft.util.ActionResult
 import net.minecraft.util.Hand
@@ -56,9 +61,17 @@ class ItemShulkerBoxOverride(block: Block, properties: Properties) : ItemBlock(b
 		LARGE(27)
 	}
 	
-	class Inv(override val player: EntityPlayer, private val inventorySlot: Int) : Inventory(BoxSize.LARGE.slots), IInventoryFromPlayerItem{
-		// UPDATE name
+	class ContainerProvider(private val stack: ItemStack, private val slot: Int) : INamedContainerProvider{
+		override fun getDisplayName(): ITextComponent{
+			return stack.displayName
+		}
 		
+		override fun createMenu(id: Int, inventory: PlayerInventory, player: EntityPlayer): Container{
+			return ContainerShulkerBoxInInventory(id, player, slot)
+		}
+	}
+	
+	class Inv(override val player: EntityPlayer, private val inventorySlot: Int) : Inventory(BoxSize.LARGE.slots), IInventoryFromPlayerItem{
 		private val boxStack
 			get() = player.inventory.getStack(inventorySlot)
 		
@@ -85,7 +98,7 @@ class ItemShulkerBoxOverride(block: Block, properties: Properties) : ItemBlock(b
 					it[slot] = stack
 				}
 				
-				ItemStackHelper.saveAllItems(boxStack.nbt.getCompound(TILE_ENTITY_TAG), it)
+				ItemStackHelper.saveAllItems(boxStack.nbt.getOrCreateCompound(TILE_ENTITY_TAG), it)
 			}
 			
 			return true
@@ -102,7 +115,7 @@ class ItemShulkerBoxOverride(block: Block, properties: Properties) : ItemBlock(b
 			return ActionResult(PASS, stack)
 		}
 		
-		SHULKER_BOX.open(player, slot.slot) // TODO it'd be pretty funny if the open animation was shown in inventory/held model but holy shit effort
+		ModContainers.open(player, ContainerProvider(stack, slot.slot), slot.slot) // TODO it'd be pretty funny if the open animation was shown in inventory/held model but holy shit effort
 		return ActionResult(SUCCESS, stack)
 	}
 	
@@ -119,7 +132,7 @@ class ItemShulkerBoxOverride(block: Block, properties: Properties) : ItemBlock(b
 				val hoveredSlot = gui.slotUnderMouse
 				
 				if (hoveredSlot != null && isStackValid(hoveredSlot.stack)){
-					PacketServerOpenGui(SHULKER_BOX, hoveredSlot.slotIndex).sendToServer()
+					PacketServerOpenInventoryItem(hoveredSlot.slotIndex).sendToServer()
 					e.isCanceled = true
 				}
 			}

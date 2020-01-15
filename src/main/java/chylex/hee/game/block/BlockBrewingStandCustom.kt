@@ -1,7 +1,7 @@
 package chylex.hee.game.block
 import chylex.hee.game.block.entity.TileEntityBrewingStandCustom
 import chylex.hee.game.block.info.BlockBuilder
-import chylex.hee.init.ModGuiHandler.GuiType
+import chylex.hee.init.ModContainers
 import chylex.hee.system.migration.vanilla.BlockBrewingStand
 import chylex.hee.system.migration.vanilla.EntityPlayer
 import chylex.hee.system.util.getTile
@@ -24,7 +24,7 @@ open class BlockBrewingStandCustom(builder: BlockBuilder) : BlockBrewingStand(bu
 		}
 		
 		pos.getTile<TileEntityBrewingStandCustom>(world)?.let {
-			GuiType.BREWING_STAND.open(player, pos.x, pos.y, pos.z)
+			ModContainers.open(player, it, pos)
 		}
 		
 		return true

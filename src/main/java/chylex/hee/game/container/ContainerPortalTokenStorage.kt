@@ -6,8 +6,11 @@ import chylex.hee.game.container.util.ItemStackHandlerInventory
 import chylex.hee.game.world.territory.storage.TokenPlayerStorage.ROWS
 import chylex.hee.init.ModContainers
 import chylex.hee.system.migration.vanilla.EntityPlayer
+import chylex.hee.system.util.any
 import chylex.hee.system.util.getTile
 import chylex.hee.system.util.isNotEmpty
+import chylex.hee.system.util.nonEmptySlots
+import chylex.hee.system.util.readPos
 import net.minecraft.entity.player.PlayerInventory
 import net.minecraft.inventory.IInventory
 import net.minecraft.inventory.Inventory
@@ -15,11 +18,11 @@ import net.minecraft.inventory.container.ClickType
 import net.minecraft.inventory.container.ClickType.PICKUP
 import net.minecraft.inventory.container.Slot
 import net.minecraft.item.ItemStack
-import net.minecraft.util.IWorldPosCallable
+import net.minecraft.network.PacketBuffer
 
-class ContainerPortalTokenStorage(id: Int, player: EntityPlayer, storageInventory: IInventory, private val tile: IWorldPosCallable) : ContainerBaseChest<ItemStackHandlerInventory>(ModContainers.PORTAL_TOKEN_STORAGE, id, player, storageInventory, ROWS){
-	/* UPDATE player, ItemStackHandlerInventory(TokenPlayerStorage.forPlayer(player), "gui.hee.portal_token_storage.title") */
-	constructor(id: Int, inventory: PlayerInventory) : this(id, inventory.player, Inventory(9 * ROWS), IWorldPosCallable.DUMMY)
+class ContainerPortalTokenStorage(id: Int, player: EntityPlayer, storageInventory: IInventory, private val tile: TileEntityVoidPortalStorage?) : ContainerBaseChest<ItemStackHandlerInventory>(ModContainers.PORTAL_TOKEN_STORAGE, id, player, storageInventory, ROWS){
+	@Suppress("unused")
+	constructor(id: Int, inventory: PlayerInventory, buffer: PacketBuffer) : this(id, inventory.player, Inventory(9 * ROWS), buffer.readPos().getTile(inventory.player.world))
 	
 	override fun wrapChestSlot(slot: Slot): Slot{
 		return SlotFixValidityCheck(slot)
@@ -30,8 +33,8 @@ class ContainerPortalTokenStorage(id: Int, player: EntityPlayer, storageInventor
 			val stack = getSlot(slot).stack
 			
 			if (stack.isNotEmpty){
-				if (!player.world.isRemote){
-					tile.apply { world, pos -> pos.getTile<TileEntityVoidPortalStorage>(world) }.orElse(null)?.activateToken(stack)
+				if (!player.world.isRemote && canActivateToken(stack)){
+					tile?.activateToken(stack)
 					player.closeScreen()
 				}
 				
@@ -40,6 +43,10 @@ class ContainerPortalTokenStorage(id: Int, player: EntityPlayer, storageInventor
 		}
 		
 		return super.slotClick(slot, mouseButton, clickType, player)
+	}
+	
+	fun canActivateToken(stack: ItemStack): Boolean{
+		return lowerChestInventory.nonEmptySlots.any { it.stack === stack }
 	}
 	
 	override fun canInteractWith(player: EntityPlayer) = true

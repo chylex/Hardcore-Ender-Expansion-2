@@ -6,10 +6,15 @@ import chylex.hee.game.block.entity.base.TileEntityBasePortalController
 import chylex.hee.game.block.entity.base.TileEntityBasePortalController.ForegroundRenderState.Animating
 import chylex.hee.game.block.entity.base.TileEntityBasePortalController.ForegroundRenderState.Invisible
 import chylex.hee.game.block.entity.base.TileEntityBasePortalController.ForegroundRenderState.Visible
+import chylex.hee.game.container.ContainerPortalTokenStorage
+import chylex.hee.game.container.util.ItemStackHandlerInventory
 import chylex.hee.game.mechanics.portal.SpawnInfo
 import chylex.hee.game.world.territory.TerritoryInstance
+import chylex.hee.game.world.territory.storage.TokenPlayerStorage
 import chylex.hee.init.ModItems
 import chylex.hee.init.ModTileEntities
+import chylex.hee.system.migration.vanilla.EntityPlayer
+import chylex.hee.system.migration.vanilla.TextComponentTranslation
 import chylex.hee.system.util.FLAG_SKIP_RENDER
 import chylex.hee.system.util.FLAG_SYNC_CLIENT
 import chylex.hee.system.util.TagCompound
@@ -18,12 +23,16 @@ import chylex.hee.system.util.isAnyPlayerWithinRange
 import chylex.hee.system.util.square
 import chylex.hee.system.util.use
 import net.minecraft.entity.Entity
+import net.minecraft.entity.player.PlayerInventory
+import net.minecraft.inventory.container.Container
+import net.minecraft.inventory.container.INamedContainerProvider
 import net.minecraft.item.ItemStack
 import net.minecraft.tileentity.TileEntityType
+import net.minecraft.util.text.ITextComponent
 import kotlin.math.min
 import kotlin.math.nextUp
 
-class TileEntityVoidPortalStorage(type: TileEntityType<TileEntityVoidPortalStorage>) : TileEntityBasePortalController(type), IVoidPortalController{
+class TileEntityVoidPortalStorage(type: TileEntityType<TileEntityVoidPortalStorage>) : TileEntityBasePortalController(type), IVoidPortalController, INamedContainerProvider{
 	constructor() : this(ModTileEntities.VOID_PORTAL_STORAGE)
 	
 	private companion object{
@@ -75,6 +84,16 @@ class TileEntityVoidPortalStorage(type: TileEntityType<TileEntityVoidPortalStora
 	
 	fun prepareSpawnPoint(entity: Entity): SpawnInfo?{
 		return firstSpawnInfo ?: currentInstance?.prepareSpawnPoint(entity, clearanceRadius = 1).also { firstSpawnInfo = it }
+	}
+	
+	// Container
+	
+	override fun getDisplayName(): ITextComponent{
+		return TextComponentTranslation("gui.hee.portal_token_storage.title")
+	}
+	
+	override fun createMenu(id: Int, inventory: PlayerInventory, player: EntityPlayer): Container{
+		return ContainerPortalTokenStorage(id, player, ItemStackHandlerInventory(TokenPlayerStorage.forPlayer(player)), this)
 	}
 	
 	// Overrides

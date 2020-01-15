@@ -7,7 +7,7 @@ import net.minecraft.inventory.container.Slot
 import net.minecraft.item.ItemStack
 
 @Suppress("LeakingThis")
-abstract class ContainerBaseCustomInventory<T : IInventory>(type: ContainerType<out ContainerBaseCustomInventory<T>>, id: Int, player: EntityPlayer, val containerInventory: IInventory, ySize: Int) : Container(type, id), IContainerSlotTransferLogic{
+abstract class ContainerBaseCustomInventory<T : IInventory>(type: ContainerType<out ContainerBaseCustomInventory<T>>, id: Int, player: EntityPlayer, val containerInventory: T, ySize: Int) : Container(type, id), IContainerSlotTransferLogic{
 	init{
 		containerInventory.openInventory(player)
 		setupSlots()

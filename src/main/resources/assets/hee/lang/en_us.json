@@ -271,11 +271,9 @@
   "lingering_potion.effect.purity": "Lingering Potion of Purity",
   "tipped_arrow.effect.purity": "Arrow of Purity",
 
-  "gui.hee.amulet_of_recovery.title": "Amulet of Recovery",
   "gui.hee.amulet_of_recovery.move_all": "Move All",
   "gui.hee.loot_chest.title": "Loot Chest",
   "gui.hee.loot_chest.title.creative": "Loot Chest (Editing)",
-  "gui.hee.trinket_pouch.title": "Trinket Pouch",
   "gui.hee.portal_token_storage.title": "Portal Tokens",
   "gui.hee.enhanced_brewing_stand.title": "Enhanced Brewing Stand",
 

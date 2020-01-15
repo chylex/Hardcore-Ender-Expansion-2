@@ -9,11 +9,18 @@ import chylex.hee.game.container.ContainerTrinketPouch
 import chylex.hee.init.factory.ContainerConstructors
 import chylex.hee.system.migration.forge.SubscribeAllEvents
 import chylex.hee.system.migration.forge.SubscribeEvent
+import chylex.hee.system.migration.vanilla.EntityPlayer
+import chylex.hee.system.migration.vanilla.EntityPlayerMP
 import chylex.hee.system.util.named
+import chylex.hee.system.util.writePos
 import net.minecraft.inventory.container.Container
 import net.minecraft.inventory.container.ContainerType
+import net.minecraft.inventory.container.INamedContainerProvider
+import net.minecraft.util.math.BlockPos
+import net.minecraftforge.common.extensions.IForgeContainerType
 import net.minecraftforge.event.RegistryEvent
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber.Bus.MOD
+import net.minecraftforge.fml.network.NetworkHooks
 
 @SubscribeAllEvents(modid = HEE.ID, bus = MOD)
 object ModContainers{
@@ -36,9 +43,23 @@ object ModContainers{
 		}
 	}
 	
+	// Open
+	
+	fun open(player: EntityPlayer, container: INamedContainerProvider){
+		(player as? EntityPlayerMP)?.let { NetworkHooks.openGui(it, container) }
+	}
+	
+	fun open(player: EntityPlayer, container: INamedContainerProvider, parameter: Int){
+		(player as? EntityPlayerMP)?.let { NetworkHooks.openGui(it, container){ buffer -> buffer.writeVarInt(parameter) } }
+	}
+	
+	fun open(player: EntityPlayer, container: INamedContainerProvider, parameter: BlockPos){
+		(player as? EntityPlayerMP)?.let { NetworkHooks.openGui(it, container){ buffer -> buffer.writePos(parameter) } }
+	}
+	
 	// Utilities
 	
 	private inline fun <reified T : Container> build(): ContainerType<T>{
-		return ContainerType(ContainerConstructors.get(T::class.java))
+		return IForgeContainerType.create(ContainerConstructors.get(T::class.java))
 	}
 }

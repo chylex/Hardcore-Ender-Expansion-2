@@ -6,12 +6,12 @@ import chylex.hee.game.container.ContainerPortalTokenStorage;
 import chylex.hee.game.container.ContainerShulkerBoxInInventory;
 import chylex.hee.game.container.ContainerTrinketPouch;
 import net.minecraft.inventory.container.Container;
-import net.minecraft.inventory.container.ContainerType.IFactory;
+import net.minecraftforge.fml.network.IContainerFactory;
 import java.util.HashMap;
 import java.util.Map;
 
 public final class ContainerConstructors{
-	private static final Map<Class<? extends Container>, IFactory<?>> all = new HashMap<>();
+	private static final Map<Class<? extends Container>, IContainerFactory<?>> all = new HashMap<>();
 	
 	static{
 		add(ContainerAmuletOfRecovery.class, ContainerAmuletOfRecovery::new);
@@ -23,14 +23,14 @@ public final class ContainerConstructors{
 	}
 	
 	@SuppressWarnings("unchecked")
-	public static <T extends Container> IFactory<T> get(Class<T> cls){
-		return (IFactory<T>)all.get(cls);
+	public static <T extends Container> IContainerFactory<T> get(Class<T> cls){
+		return (IContainerFactory<T>)all.get(cls);
 	}
 	
 	/**
 	 * Ensures the class and constructor are compatible to catch typos.
 	 */
-	private static <T extends Container> void add(Class<T> cls, IFactory<T> constructor){
+	private static <T extends Container> void add(Class<T> cls, IContainerFactory<T> constructor){
 		all.put(cls, constructor);
 	}
 	

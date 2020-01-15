@@ -1,9 +1,10 @@
 package chylex.hee.game.item
+import chylex.hee.game.container.ContainerAmuletOfRecovery
 import chylex.hee.game.container.base.IInventoryFromPlayerItem
 import chylex.hee.game.mechanics.energy.IEnergyQuantity.Units
 import chylex.hee.game.mechanics.trinket.ITrinketItem
 import chylex.hee.game.mechanics.trinket.TrinketHandler
-import chylex.hee.init.ModGuiHandler.GuiType
+import chylex.hee.init.ModContainers
 import chylex.hee.system.migration.ActionResult.SUCCESS
 import chylex.hee.system.migration.forge.EventPriority
 import chylex.hee.system.migration.forge.Side
@@ -30,7 +31,10 @@ import chylex.hee.system.util.setStack
 import chylex.hee.system.util.writeTag
 import io.netty.buffer.Unpooled
 import net.minecraft.client.util.ITooltipFlag
+import net.minecraft.entity.player.PlayerInventory
 import net.minecraft.inventory.Inventory
+import net.minecraft.inventory.container.Container
+import net.minecraft.inventory.container.INamedContainerProvider
 import net.minecraft.item.ItemStack
 import net.minecraft.item.Rarity
 import net.minecraft.util.ActionResult
@@ -142,7 +146,17 @@ class ItemAmuletOfRecovery(properties: Properties) : ItemAbstractEnergyUser(prop
 		}
 	}
 	
-	class Inv(override val player: EntityPlayer, private val itemHeldIn: Hand) : Inventory(/* UPDATE "gui.hee.amulet_of_recovery.title", false, */SLOT_COUNT), IInventoryFromPlayerItem{
+	class ContainerProvider(private val stack: ItemStack, private val hand: Hand) : INamedContainerProvider{
+		override fun getDisplayName(): ITextComponent{
+			return stack.displayName
+		}
+		
+		override fun createMenu(id: Int, inventory: PlayerInventory, player: EntityPlayer): Container{
+			return ContainerAmuletOfRecovery(id, player, hand)
+		}
+	}
+	
+	class Inv(override val player: EntityPlayer, private val itemHeldIn: Hand) : Inventory(SLOT_COUNT), IInventoryFromPlayerItem{
 		init{
 			val heldItem = player.getHeldItem(itemHeldIn)
 			
@@ -235,7 +249,7 @@ class ItemAmuletOfRecovery(properties: Properties) : ItemAbstractEnergyUser(prop
 			return super.onItemRightClick(world, player, hand)
 		}
 		
-		GuiType.AMULET_OF_RECOVERY.open(player, hand.ordinal)
+		ModContainers.open(player, ContainerProvider(stack, hand), hand.ordinal)
 		return ActionResult(SUCCESS, stack)
 	}
 	

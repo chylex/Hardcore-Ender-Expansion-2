@@ -3,13 +3,15 @@ import chylex.hee.game.container.util.DetectSlotChangeListener
 import chylex.hee.game.item.ItemShulkerBoxOverride
 import chylex.hee.init.ModContainers
 import chylex.hee.system.migration.vanilla.ContainerShulkerBox
+import chylex.hee.system.migration.vanilla.EntityPlayer
 import net.minecraft.entity.player.PlayerInventory
-import net.minecraft.inventory.IInventory
-import net.minecraft.inventory.Inventory
 import net.minecraft.inventory.container.ContainerType
+import net.minecraft.network.PacketBuffer
 
-class ContainerShulkerBoxInInventory(id: Int, playerInventory: PlayerInventory, private val boxInventory: IInventory) : ContainerShulkerBox(id, playerInventory, boxInventory){
-	constructor(id: Int, inventory: PlayerInventory) : this(id, inventory, Inventory(9 * 3)) // TODO different sizes
+class ContainerShulkerBoxInInventory(id: Int, player: EntityPlayer, private val boxInventory: ItemShulkerBoxOverride.Inv) : ContainerShulkerBox(id, player.inventory, boxInventory){
+	@Suppress("unused")
+	constructor(id: Int, inventory: PlayerInventory, buffer: PacketBuffer) : this(id, inventory.player, buffer.readVarInt())
+	constructor(id: Int, player: EntityPlayer, slot: Int) : this(id, player, ItemShulkerBoxOverride.Inv(player, slot))
 	
 	private val slotChangeListener = DetectSlotChangeListener()
 	
@@ -18,10 +20,6 @@ class ContainerShulkerBoxInInventory(id: Int, playerInventory: PlayerInventory, 
 	}
 	
 	override fun detectAndSendChanges(){
-		val inventory = boxInventory as? ItemShulkerBoxOverride.Inv
-		
-		if (inventory != null){ // UPDATE test
-			slotChangeListener.restart(listeners){ super.detectAndSendChanges() }?.let(inventory::validatePlayerItemOnModification)
-		}
+		slotChangeListener.restart(listeners){ super.detectAndSendChanges() }?.let(boxInventory::validatePlayerItemOnModification)
 	}
 }
