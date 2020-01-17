@@ -53,14 +53,13 @@ object CommandServerHelp : ICommand{
 		
 		val actualPage: Int
 		
-		/* UPDATE client
 		if (source.entity is EntityPlayer){
 			actualPage = displayPage - 1
 			totalPages++
 		}
-		else{*/
+		else{
 			actualPage = displayPage
-		//}
+		}
 		
 		if (displayPage < 1 || displayPage > totalPages){
 			throw CommandException(TextComponentTranslation("commands.hee.help.failed", totalPages))
@@ -78,11 +77,13 @@ object CommandServerHelp : ICommand{
 			responseCommands = ModCommands.admin.drop((actualPage - 1) * COMMANDS_PER_PAGE).take(COMMANDS_PER_PAGE)
 		}
 		
-		sendCommandListPage(source, responseCommands, responseHeaderKey, displayPage, totalPages)
+		val commandNames = responseCommands.map { it.name }
+		val commandUsages = source.server.commandManager.dispatcher.let { it.getSmartUsage(it.root.getChild(ModCommands.ROOT), source) }.mapKeys { it.value }
+		
+		sendCommandListPage(source, commandNames, commandUsages, responseHeaderKey, displayPage, totalPages)
 	}
 	
-	private fun sendCommandListPage(source: CommandSource, commands: Iterable<ICommand>, headerKey: String, currentPage: Int, totalPages: Int?){
-		val usages = source.server.commandManager.dispatcher.let { it.getSmartUsage(it.root.getChild(ModCommands.ROOT), source) }
+	fun sendCommandListPage(source: CommandSource, commandNames: Iterable<String>, commandUsages: Map<String, String>, headerKey: String, currentPage: Int, totalPages: Int?){
 		val emptyLine = TextComponentString("")
 		
 		send(source, emptyLine)
@@ -91,9 +92,8 @@ object CommandServerHelp : ICommand{
 		})
 		send(source, emptyLine)
 		
-		for(command in commands){
-			val name = command.name
-			val entry = usages.entries.find { it.key.name == name }
+		for(name in commandNames){
+			val entry = commandUsages.entries.find { it.key == name }
 			val usage = entry?.value?.replaceFirst("[$name]", name) ?: name
 			
 			send(source, TextComponentString(usage).also {
