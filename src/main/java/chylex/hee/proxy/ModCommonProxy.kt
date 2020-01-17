@@ -8,7 +8,4 @@ open class ModCommonProxy{
 	open fun getClientSidePlayer(): EntityPlayer? = null
 	
 	open fun registerParticle(type: BasicParticleType, maker: IParticleMaker<*>, callback: (IAnimatedSprite) -> Unit){}
-	
-	open fun pauseParticles(){}
-	open fun resumeParticles(){}
 }

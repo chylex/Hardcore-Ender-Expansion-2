@@ -260,16 +260,7 @@ class EntityMobEnderman(type: EntityType<EntityMobEnderman>, world: World) : Ent
 	// Behavior
 	
 	override fun livingTick(){
-		if (isAggro){
-			with(HEE.proxy){
-				pauseParticles()
-				super.livingTick()
-				resumeParticles()
-			}
-		}
-		else{
-			super.livingTick()
-		}
+		super.livingTick()
 		
 		if (!world.isRemote){
 			teleportHandler.update()

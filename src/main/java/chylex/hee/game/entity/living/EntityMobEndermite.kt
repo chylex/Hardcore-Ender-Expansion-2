@@ -1,5 +1,4 @@
 package chylex.hee.game.entity.living
-import chylex.hee.HEE
 import chylex.hee.game.entity.CustomCreatureType
 import chylex.hee.game.entity.living.ai.AIForceWanderTiming
 import chylex.hee.game.entity.living.ai.AIWanderLand
@@ -72,12 +71,7 @@ open class EntityMobEndermite(type: EntityType<out EntityMobEndermite>, world: W
 		idleTime = 0
 		lifetime = 0
 		++realLifetime
-		
-		with(HEE.proxy){
-			pauseParticles()
-			super.livingTick()
-			resumeParticles()
-		}
+		super.livingTick()
 	}
 	
 	override fun attackEntityAsMob(entity: Entity): Boolean{

@@ -1,5 +1,4 @@
 package chylex.hee.game.entity.living
-import chylex.hee.HEE
 import chylex.hee.game.entity.living.ai.AIWanderLand
 import chylex.hee.game.entity.living.behavior.EndermanTeleportHandler
 import chylex.hee.game.entity.living.behavior.EndermanWaterHandler
@@ -71,14 +70,6 @@ class EntityMobAngryEnderman(type: EntityType<EntityMobAngryEnderman>, world: Wo
 		
 		targetSelector.addGoal(1, AITargetAttacker(this, callReinforcements = false))
 		targetSelector.addGoal(2, AITargetNearby<EntityPlayer>(this, chancePerTick = 1, checkSight = false, easilyReachableOnly = false){ getDistanceSq(it) < AGGRO_DISTANCE_SQ })
-	}
-	
-	override fun livingTick(){
-		with(HEE.proxy){
-			pauseParticles()
-			super.livingTick()
-			resumeParticles()
-		}
 	}
 	
 	override fun updateAITasks(){
