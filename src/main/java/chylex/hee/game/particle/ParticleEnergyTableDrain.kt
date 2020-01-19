@@ -16,12 +16,12 @@ object ParticleEnergyTableDrain : IParticleMaker.WithData<ParticleDataColorScale
 	@Sided(Side.CLIENT)
 	private class Instance(world: World, posX: Double, posY: Double, posZ: Double, motX: Double, motY: Double, motZ: Double, data: ParticleDataColorScale?) : ParticleBaseEnergy(world, posX, posY, posZ, motX, motY, motZ){
 		init{
+			selectSpriteRandomly(ParticleEnergyTableDrain.sprite)
+			
 			if (data == null){
 				setExpired()
 			}
 			else{
-				selectSpriteRandomly(ParticleEnergyTableDrain.sprite)
-				
 				loadColor(data.color)
 				particleAlpha = 1F
 				particleScale = 0.45F + (data.scale * 0.15F)

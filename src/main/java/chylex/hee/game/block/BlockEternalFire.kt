@@ -7,19 +7,25 @@ import chylex.hee.game.mechanics.damage.IDamageProcessor.Companion.PEACEFUL_EXCL
 import chylex.hee.game.mechanics.damage.IDamageProcessor.Companion.RAPID_DAMAGE
 import chylex.hee.game.particle.spawner.ParticleSpawnerVanilla
 import chylex.hee.game.particle.util.IShape.Point
+import chylex.hee.init.ModBlocks
 import chylex.hee.system.migration.forge.Side
 import chylex.hee.system.migration.forge.Sided
 import chylex.hee.system.migration.forge.SubscribeEvent
 import chylex.hee.system.migration.vanilla.BlockFire
+import chylex.hee.system.migration.vanilla.Blocks
 import chylex.hee.system.migration.vanilla.Sounds
 import chylex.hee.system.util.facades.Facing6
 import chylex.hee.system.util.getBlock
+import chylex.hee.system.util.getState
 import chylex.hee.system.util.isTopSolid
 import chylex.hee.system.util.nextFloat
+import chylex.hee.system.util.nextInt
 import chylex.hee.system.util.nextItem
 import chylex.hee.system.util.playClient
 import chylex.hee.system.util.playUniversal
-import chylex.hee.system.util.setAir
+import chylex.hee.system.util.removeBlock
+import chylex.hee.system.util.setState
+import chylex.hee.system.util.with
 import net.minecraft.block.BlockState
 import net.minecraft.entity.Entity
 import net.minecraft.particles.ParticleTypes.LARGE_SMOKE
@@ -33,6 +39,7 @@ import net.minecraft.world.World
 import net.minecraftforge.common.MinecraftForge
 import net.minecraftforge.event.entity.player.PlayerInteractEvent
 import java.util.Random
+import kotlin.math.max
 
 class BlockEternalFire(builder: BlockBuilder) : BlockFire(builder.p){
 	private companion object{
@@ -53,7 +60,7 @@ class BlockEternalFire(builder: BlockBuilder) : BlockFire(builder.p){
 		}
 		
 		if (!state.isValidPosition(world, pos)){
-			pos.setAir(world)
+			pos.removeBlock(world)
 		}
 		
 		world.pendingBlockTicks.scheduleTick(pos, this, tickRate(world) + rand.nextInt(10))
@@ -72,7 +79,6 @@ class BlockEternalFire(builder: BlockBuilder) : BlockFire(builder.p){
 	}
 	
 	private fun trySpread(world: World, pos: BlockPos, chance: Int, rand: Random, face: Direction){
-		/* UPDATE
 		val state = pos.getState(world)
 		val block = state.block
 		
@@ -86,25 +92,29 @@ class BlockEternalFire(builder: BlockBuilder) : BlockFire(builder.p){
 			for(neighborFacing in Facing6){
 				if (face != neighborFacing){
 					val neighborPos = pos.offset(neighborFacing)
-					val neighborFlammability = neighborPos.getBlock(world).getFlammability(world, neighborPos, neighborFacing.opposite)
+					val neighborFlammability = neighborPos.getState(world).getFlammability(world, neighborPos, neighborFacing.opposite)
 					
 					flammability = max(flammability, neighborFlammability)
 				}
 			}
 		}
 		else{
-			flammability = block.getFlammability(world, pos, face)
+			flammability = state.getFlammability(world, pos, face)
 		}
 		
 		if (rand.nextInt(chance) < flammability){
+			if (block === ModBlocks.INFUSED_TNT){
+				state.catchFire(world, pos, face, null)
+			}
+			
 			if (rand.nextInt(3) == 0 && !world.isRainingAt(pos)){
 				pos.setState(world, Blocks.FIRE.with(AGE, rand.nextInt(8, 12)))
 			}
 			
-			if (block === Blocks.TNT){
-				Blocks.TNT.onPlayerDestroy(world, pos, state.with(BlockTNT.EXPLODE, true))
+			if (block !== ModBlocks.INFUSED_TNT){
+				state.catchFire(world, pos, face, null)
 			}
-		}*/
+		}
 	}
 	
 	override fun onEntityCollision(state: BlockState, world: World, pos: BlockPos, entity: Entity){
@@ -118,7 +128,7 @@ class BlockEternalFire(builder: BlockBuilder) : BlockFire(builder.p){
 		
 		if (offsetPos?.getBlock(world) === this){
 			Sounds.BLOCK_FIRE_EXTINGUISH.playUniversal(e.player, offsetPos, SoundCategory.BLOCKS, volume = 0.5F, pitch = world.rand.nextFloat(1.8F, 3.4F))
-			offsetPos.setAir(world)
+			offsetPos.removeBlock(world)
 			e.isCanceled = true
 		}
 	}

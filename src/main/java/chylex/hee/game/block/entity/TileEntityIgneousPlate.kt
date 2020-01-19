@@ -1,7 +1,7 @@
 package chylex.hee.game.block.entity
 import chylex.hee.client.model.block.ModelBlockIgneousPlate.ANIMATION_PERIOD
 import chylex.hee.game.block.BlockIgneousPlate
-import chylex.hee.game.block.entity.base.TileEntityBase
+import chylex.hee.game.block.entity.base.TileEntityBaseSpecialFirstTick
 import chylex.hee.game.entity.item.EntityItemFreshlyCooked
 import chylex.hee.game.entity.technical.EntityTechnicalIgneousPlateLogic
 import chylex.hee.game.particle.ParticleFlameCustom
@@ -23,12 +23,10 @@ import chylex.hee.system.util.floorToInt
 import chylex.hee.system.util.getState
 import chylex.hee.system.util.getTile
 import chylex.hee.system.util.math.LerpedDouble
-import chylex.hee.system.util.motionVec
 import chylex.hee.system.util.nextFloat
-import chylex.hee.system.util.setAir
+import chylex.hee.system.util.removeBlock
 import chylex.hee.system.util.use
 import net.minecraft.item.ItemStack
-import net.minecraft.tileentity.ITickableTileEntity
 import net.minecraft.tileentity.TileEntityType
 import net.minecraft.util.Direction
 import net.minecraft.util.math.Vec3d
@@ -37,7 +35,7 @@ import kotlin.math.max
 import kotlin.math.min
 import kotlin.math.pow
 
-class TileEntityIgneousPlate(type: TileEntityType<TileEntityIgneousPlate>) : TileEntityBase(type), ITickableTileEntity{
+class TileEntityIgneousPlate(type: TileEntityType<TileEntityIgneousPlate>) : TileEntityBaseSpecialFirstTick(type){
 	constructor() : this(ModTileEntities.IGNEOUS_PLATE)
 	
 	private companion object{
@@ -107,11 +105,11 @@ class TileEntityIgneousPlate(type: TileEntityType<TileEntityIgneousPlate>) : Til
 		val rand = wrld.rand
 		
 		EntityItemFreshlyCooked(wrld, pos.center, ItemStack(ModBlocks.IGNEOUS_PLATE)).apply {
-			motionVec = Vec3d(facing.directionVec).scale(rand.nextFloat(2.5, 3.0)).add(rand.nextFloat(-0.2, 0.2), rand.nextFloat(0.1, 0.2), rand.nextFloat(-0.2, 0.2))
+			motion = Vec3d(facing.directionVec).scale(rand.nextFloat(2.5, 3.0)).add(rand.nextFloat(-0.2, 0.2), rand.nextFloat(0.1, 0.2), rand.nextFloat(-0.2, 0.2))
 			wrld.addEntity(this)
 		}
 		
-		pos.setAir(wrld)
+		pos.removeBlock(wrld)
 	}
 	
 	override fun firstTick(){
@@ -119,6 +117,8 @@ class TileEntityIgneousPlate(type: TileEntityType<TileEntityIgneousPlate>) : Til
 	}
 	
 	override fun tick(){
+		super.tick()
+		
 		if (!wrld.isAreaLoaded(pos, 1)){
 			return
 		}

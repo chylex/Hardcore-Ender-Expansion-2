@@ -17,7 +17,6 @@ import chylex.hee.system.migration.vanilla.EntityItem
 import chylex.hee.system.migration.vanilla.Sounds
 import chylex.hee.system.util.Pos
 import chylex.hee.system.util.getState
-import chylex.hee.system.util.motionVec
 import chylex.hee.system.util.playClient
 import chylex.hee.system.util.selectEntities
 import chylex.hee.system.util.setBlock
@@ -88,7 +87,7 @@ class EntityItemCauldronTrigger : EntityItemBase{
 					pos.setBlock(world, Blocks.CAULDRON)
 					
 					EntityItem(world, pos.x + 0.5, pos.y + 0.4, pos.z + 0.5, ItemStack(ModItems.PURITY_EXTRACT)).apply {
-						motionVec = Vec3d.ZERO
+						motion = Vec3d.ZERO
 						setDefaultPickupDelay()
 						world.addEntity(this)
 					}

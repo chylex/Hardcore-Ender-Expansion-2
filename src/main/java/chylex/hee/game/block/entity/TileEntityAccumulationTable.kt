@@ -16,9 +16,9 @@ import chylex.hee.system.util.color.IntColor.Companion.RGB
 import net.minecraft.item.ItemStack
 import net.minecraft.tileentity.TileEntityType
 import net.minecraft.util.math.BlockPos
-import net.minecraft.world.World
 
 class TileEntityAccumulationTable(type: TileEntityType<TileEntityAccumulationTable>) : TileEntityBaseTable(type){
+	@Suppress("unused")
 	constructor() : this(ModTileEntities.ACCUMULATION_TABLE)
 	
 	override val tableIndicatorColor = RGB(220, 89, 55)
@@ -31,7 +31,7 @@ class TileEntityAccumulationTable(type: TileEntityType<TileEntityAccumulationTab
 		
 		for(pedestal in unassignedPedestals){
 			if (pedestal.itemInputCopy.item is ItemAbstractEnergyUser){
-				newProcesses.add(Process(wrld, pedestal.pos))
+				newProcesses.add(Process(this, pedestal.pos))
 			}
 		}
 		
@@ -39,8 +39,8 @@ class TileEntityAccumulationTable(type: TileEntityType<TileEntityAccumulationTab
 	}
 	
 	private class Process : ProcessOnePedestal{
-		constructor(world: World, pos: BlockPos) : super(world, pos)
-		constructor(world: World, nbt: TagCompound) : super(world, nbt)
+		constructor(table: TileEntityBaseTable, pos: BlockPos) : super(table, pos)
+		constructor(table: TileEntityBaseTable, nbt: TagCompound) : super(table, nbt)
 		
 		override val energyPerTick =
 			Units(1)

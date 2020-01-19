@@ -10,6 +10,9 @@ import chylex.hee.system.migration.forge.Side
 import chylex.hee.system.migration.forge.Sided
 import chylex.hee.system.util.facades.Resource
 import chylex.hee.system.util.floorToInt
+import chylex.hee.system.util.getListOfCompounds
+import chylex.hee.system.util.heeTagOrNull
+import net.minecraft.block.Block
 import net.minecraft.client.renderer.RenderHelper
 import net.minecraft.client.renderer.tileentity.ItemStackTileEntityRenderer
 import net.minecraft.client.renderer.tileentity.TileEntityRenderer
@@ -110,17 +113,16 @@ object RenderTileJarODust : TileEntityRenderer<TileEntityJarODust>(){
 		private val layers = DustLayers(TileEntityJarODust.DUST_CAPACITY)
 		
 		override fun renderByItem(stack: ItemStack){
-			/* UPDATE
 			val dispatcher = MC.instance.blockRendererDispatcher
 			val state = Block.getBlockFromItem(stack.item).defaultState
-			val model = dispatcher.blockModelShapes.getModelForState(state)
+			val model = dispatcher.blockModelShapes.getModel(state)
 			
 			dispatcher.blockModelRenderer.renderModelBrightness(model, state, 1F, true)
 			
 			stack.heeTagOrNull?.getListOfCompounds(BlockJarODust.LAYERS_TAG)?.let {
 				layers.deserializeNBT(it)
 				renderLayers(layers, 0.0, 0.0, 0.0)
-			}*/
+			}
 		}
 	}
 }

@@ -16,7 +16,7 @@ class RenderEntityMobUndread(manager: RenderManager) : RenderBiped<EntityMobUndr
 	private val texture = Resource.Custom("textures/entity/undread.png")
 	
 	init{
-		addLayer(BipedArmorLayer(this, ModelEntityUndread(0.5125F, true), ModelEntityUndread(1F, true))) // UPDATE is tall texture needed?
+		addLayer(BipedArmorLayer(this, ModelEntityUndread(0.5125F, true), ModelEntityUndread(1F, true)))
 	}
 	
 	override fun preRenderCallback(entity: EntityMobUndread, partialTicks: Float){

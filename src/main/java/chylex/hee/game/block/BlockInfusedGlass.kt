@@ -46,7 +46,6 @@ class BlockInfusedGlass(builder: BlockBuilder) : BlockAbstractGlass(builder.p){
 		container.add(CONNECT_DOWN, CONNECT_UP, CONNECT_NORTH, CONNECT_SOUTH, CONNECT_EAST, CONNECT_WEST)
 	}
 	
-	// UPDATE check updatePostPlacement in various places if this is also needed
 	override fun getStateForPlacement(context: BlockItemUseContext): BlockState{
 		val world = context.world
 		val pos = context.pos

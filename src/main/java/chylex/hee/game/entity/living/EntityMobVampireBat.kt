@@ -15,8 +15,6 @@ import chylex.hee.game.particle.util.IOffset.InBox
 import chylex.hee.game.particle.util.IShape.Point
 import chylex.hee.game.world.territory.TerritoryType
 import chylex.hee.init.ModEntities
-import chylex.hee.system.migration.Difficulty.HARD
-import chylex.hee.system.migration.Difficulty.PEACEFUL
 import chylex.hee.system.migration.vanilla.BlockChorusPlant
 import chylex.hee.system.migration.vanilla.EntityBat
 import chylex.hee.system.migration.vanilla.EntityLivingBase
@@ -36,9 +34,9 @@ import chylex.hee.system.util.getEnum
 import chylex.hee.system.util.getState
 import chylex.hee.system.util.heeTag
 import chylex.hee.system.util.isAir
+import chylex.hee.system.util.isPeaceful
 import chylex.hee.system.util.lookPosVec
 import chylex.hee.system.util.makeEffect
-import chylex.hee.system.util.motionVec
 import chylex.hee.system.util.nextFloat
 import chylex.hee.system.util.nextInt
 import chylex.hee.system.util.nextItemOrNull
@@ -64,6 +62,7 @@ import net.minecraft.network.IPacket
 import net.minecraft.util.SoundCategory
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.Vec3d
+import net.minecraft.world.Difficulty.HARD
 import net.minecraft.world.Difficulty.NORMAL
 import net.minecraft.world.DifficultyInstance
 import net.minecraft.world.IWorld
@@ -73,6 +72,7 @@ import net.minecraftforge.fml.network.NetworkHooks
 import kotlin.math.cos
 
 class EntityMobVampireBat(type: EntityType<EntityMobVampireBat>, world: World) : EntityBat(type, world), IMob, IKnockbackMultiplier{
+	@Suppress("unused")
 	constructor(world: World) : this(ModEntities.VAMPIRE_BAT, world)
 	
 	private companion object{
@@ -252,7 +252,7 @@ class EntityMobVampireBat(type: EntityType<EntityMobVampireBat>, world: World) :
 				else if (lookPosVec.squareDistanceTo(sleepPos.center) < square(0.2) && canHangUnderCurrentBlock()){
 					isBatHanging = true // TODO figure out how to fix a fucking freeze frame where the bat is a block lower than it should
 					nextSleepPos = null
-					motionVec = Vec3d.ZERO
+					motion = Vec3d.ZERO
 					
 					moveHelper.tick()
 					moveForward = 0F
@@ -326,7 +326,7 @@ class EntityMobVampireBat(type: EntityType<EntityMobVampireBat>, world: World) :
 			return
 		}
 		
-		if (newTarget != null && (behaviorType == PASSIVE || world.difficulty == PEACEFUL)){
+		if (newTarget != null && (behaviorType == PASSIVE || world.isPeaceful)){
 			attackCooldown = MIN_ATTACK_COOLDOWN
 			return
 		}

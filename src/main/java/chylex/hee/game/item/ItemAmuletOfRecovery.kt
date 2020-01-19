@@ -113,19 +113,21 @@ class ItemAmuletOfRecovery(properties: Properties) : ItemAbstractEnergyUser(prop
 						
 						val nbtCopy = stack.nbtOrNull?.copy()
 						
-						if (nbtCopy != null){ // UPDATE: many changes in 1.13
+						if (nbtCopy != null){ // UPDATE 1.14
 							// general
+							nbtCopy.remove("Damage")
 							nbtCopy.remove("Unbreakable")
 							nbtCopy.remove("CanDestroy")
 							nbtCopy.remove("CanPlaceOn")
 							
 							// enchantments
-							nbtCopy.remove("ench")
+							nbtCopy.remove("Enchantments")
 							nbtCopy.remove("StoredEnchantments")
 							nbtCopy.remove("RepairCost")
 							
 							// attributes
 							nbtCopy.remove("AttributeModifiers")
+							nbtCopy.remove("HideFlags")
 							
 							// calculation & cleanup
 							try{

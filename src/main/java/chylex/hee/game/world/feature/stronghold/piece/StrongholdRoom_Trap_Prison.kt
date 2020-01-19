@@ -11,7 +11,6 @@ import chylex.hee.game.world.structure.IStructureWorld
 import chylex.hee.game.world.structure.piece.IStructurePieceConnection
 import chylex.hee.game.world.structure.trigger.EntityStructureTrigger
 import chylex.hee.game.world.structure.trigger.LootChestStructureTrigger
-import chylex.hee.system.migration.Difficulty.PEACEFUL
 import chylex.hee.system.migration.Facing.EAST
 import chylex.hee.system.migration.Facing.UP
 import chylex.hee.system.migration.Facing.WEST
@@ -26,6 +25,7 @@ import chylex.hee.system.util.component1
 import chylex.hee.system.util.component2
 import chylex.hee.system.util.component3
 import chylex.hee.system.util.getBlock
+import chylex.hee.system.util.isPeaceful
 import chylex.hee.system.util.max
 import chylex.hee.system.util.min
 import chylex.hee.system.util.nextFloat
@@ -49,7 +49,7 @@ class StrongholdRoom_Trap_Prison(file: String) : StrongholdAbstractPieceFromFile
 		private var spawnsLeft = -1
 		
 		override fun check(world: World): Boolean{
-			return !world.isRemote && world.difficulty != PEACEFUL
+			return !world.isRemote && !world.isPeaceful
 		}
 		
 		override fun update(entity: EntityTechnicalTrigger){

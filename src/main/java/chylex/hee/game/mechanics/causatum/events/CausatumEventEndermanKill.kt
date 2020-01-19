@@ -123,7 +123,7 @@ class CausatumEventEndermanKill() : ICausatumEventHandler{
 				
 				if (muppet.getDistanceSq(deathPos.x, deathPos.y, deathPos.z) > square(4.0) &&
 					world.getClosestPlayer(muppet, 7.0) == null &&
-					world.areCollisionShapesEmpty(muppet) && // UPDATE necessary?
+					world.areCollisionShapesEmpty(muppet) &&
 					muppet.isNotColliding(world)
 				){
 					val endPoint = muppet.posVec.addY(muppet.height * 0.5)

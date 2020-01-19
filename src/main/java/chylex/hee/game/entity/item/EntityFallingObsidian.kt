@@ -33,7 +33,6 @@ import java.util.Random
 import java.util.UUID
 import kotlin.math.ln
 import kotlin.math.pow
-import kotlin.streams.toList
 
 class EntityFallingObsidian : EntityFallingBlockHeavy{
 	@Suppress("unused")

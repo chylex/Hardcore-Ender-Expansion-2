@@ -15,7 +15,6 @@ import chylex.hee.game.world.feature.obsidiantower.ObsidianTowerRoomData
 import chylex.hee.game.world.feature.obsidiantower.ObsidianTowerSpawnerLevel
 import chylex.hee.init.ModTileEntities
 import chylex.hee.network.client.PacketClientFX
-import chylex.hee.system.migration.Difficulty.PEACEFUL
 import chylex.hee.system.migration.Facing.DOWN
 import chylex.hee.system.migration.forge.EventResult
 import chylex.hee.system.migration.vanilla.EntityLiving
@@ -36,6 +35,7 @@ import chylex.hee.system.util.getListOfCompounds
 import chylex.hee.system.util.getPos
 import chylex.hee.system.util.getState
 import chylex.hee.system.util.isAnyPlayerWithinRange
+import chylex.hee.system.util.isPeaceful
 import chylex.hee.system.util.nextFloat
 import chylex.hee.system.util.nextInt
 import chylex.hee.system.util.nextItemOrNull
@@ -149,7 +149,7 @@ class TileEntitySpawnerObsidianTower(type: TileEntityType<TileEntitySpawnerObsid
 	}
 	
 	override fun tickServer(){
-		if (wrld.difficulty == PEACEFUL){
+		if (wrld.isPeaceful){
 			return
 		}
 		

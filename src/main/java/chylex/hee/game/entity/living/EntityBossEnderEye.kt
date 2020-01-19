@@ -32,7 +32,6 @@ import chylex.hee.system.util.facades.Resource
 import chylex.hee.system.util.floorToInt
 import chylex.hee.system.util.heeTag
 import chylex.hee.system.util.math.LerpedFloat
-import chylex.hee.system.util.motionVec
 import chylex.hee.system.util.motionY
 import chylex.hee.system.util.nextInt
 import chylex.hee.system.util.nextItemOrNull
@@ -307,7 +306,7 @@ class EntityBossEnderEye(type: EntityType<EntityBossEnderEye>, world: World) : E
 			target.knockBack(this, strength, ratio.x, ratio.z)
 			
 			if (target is EntityPlayer){
-				PacketClientLaunchInstantly(target, target.motionVec).sendToPlayer(target)
+				PacketClientLaunchInstantly(target, target.motion).sendToPlayer(target)
 			}
 		}
 		else{
@@ -352,7 +351,7 @@ class EntityBossEnderEye(type: EntityType<EntityBossEnderEye>, world: World) : E
 		}
 		
 		if (!ForgeHooks.onLivingKnockBack(this, entity, strength, xRatio, zRatio).isCanceled){
-			motionVec = motionVec.add(Vec3.fromXZ(-xRatio, -zRatio).normalize().scale(KNOCKBACK_MP).withY(0.005))
+			motion = motion.add(Vec3.fromXZ(-xRatio, -zRatio).normalize().scale(KNOCKBACK_MP).withY(0.005))
 			
 			if (motionY > 0.05){
 				motionY = 0.05

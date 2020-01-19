@@ -14,9 +14,6 @@ import chylex.hee.game.mechanics.damage.IDamageProcessor.Companion.ALL_PROTECTIO
 import chylex.hee.game.mechanics.damage.IDamageProcessor.Companion.DIFFICULTY_SCALING
 import chylex.hee.game.mechanics.damage.IDamageProcessor.Companion.PEACEFUL_EXCLUSION
 import chylex.hee.init.ModEntities
-import chylex.hee.system.migration.Difficulty.HARD
-import chylex.hee.system.migration.Difficulty.NORMAL
-import chylex.hee.system.migration.Difficulty.PEACEFUL
 import chylex.hee.system.migration.Hand.MAIN_HAND
 import chylex.hee.system.migration.forge.EventResult
 import chylex.hee.system.migration.forge.Side
@@ -48,6 +45,7 @@ import chylex.hee.system.util.floorToInt
 import chylex.hee.system.util.getState
 import chylex.hee.system.util.heeTag
 import chylex.hee.system.util.isLoaded
+import chylex.hee.system.util.isPeaceful
 import chylex.hee.system.util.motionY
 import chylex.hee.system.util.nextFloat
 import chylex.hee.system.util.nextInt
@@ -83,6 +81,8 @@ import net.minecraft.util.math.RayTraceContext.BlockMode
 import net.minecraft.util.math.RayTraceContext.FluidMode
 import net.minecraft.util.math.RayTraceResult.Type
 import net.minecraft.util.math.Vec3d
+import net.minecraft.world.Difficulty.HARD
+import net.minecraft.world.Difficulty.NORMAL
 import net.minecraft.world.LightType.BLOCK
 import net.minecraft.world.LightType.SKY
 import net.minecraft.world.World
@@ -211,7 +211,7 @@ class EntityMobSpiderling(type: EntityType<EntityMobSpiderling>, world: World) :
 			return
 		}
 		
-		if (world.difficulty == PEACEFUL && attackTarget != null){
+		if (world.isPeaceful && attackTarget != null){
 			super.setAttackTarget(null)
 			lightStartleResetTime = 0L
 		}
@@ -364,7 +364,7 @@ class EntityMobSpiderling(type: EntityType<EntityMobSpiderling>, world: World) :
 	}
 	
 	override fun setAttackTarget(newTarget: EntityLivingBase?){
-		if (world.difficulty != PEACEFUL && newTarget !== attackTarget){
+		if (!world.isPeaceful && newTarget !== attackTarget){
 			super.setAttackTarget(newTarget)
 			
 			if (attackTarget == null && lightStartleResetTime == 0L){

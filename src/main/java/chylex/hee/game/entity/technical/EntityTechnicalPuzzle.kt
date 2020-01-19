@@ -13,7 +13,6 @@ import chylex.hee.system.util.getState
 import chylex.hee.system.util.heeTag
 import chylex.hee.system.util.max
 import chylex.hee.system.util.min
-import chylex.hee.system.util.motionVec
 import chylex.hee.system.util.putEnum
 import chylex.hee.system.util.putPos
 import chylex.hee.system.util.selectEntities
@@ -144,7 +143,7 @@ class EntityTechnicalPuzzle(type: EntityType<EntityTechnicalPuzzle>, world: Worl
 			// TODO fx
 			
 			EntityItem(world, (min.x + max.x + 1) / 2.0, posY + 1.5, (min.z + max.z + 1) / 2.0, ItemStack(ModItems.PUZZLE_MEDALLION)).apply {
-				motionVec = Vec3d.ZERO
+				motion = Vec3d.ZERO
 				world.addEntity(this)
 			}
 		}

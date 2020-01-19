@@ -543,7 +543,7 @@ object ModBlocks{
 			setFireInfo(WHITEBARK_LEAVES_AUTUMN_ORANGE, 30, 60)
 			setFireInfo(WHITEBARK_LEAVES_AUTUMN_YELLOWGREEN, 30, 60)
 			
-			// UPDATE hardcoded shit in BlockFire Blocks.FIRE.setFireInfo(INFUSED_TNT, 15, 100)
+			setFireInfo(INFUSED_TNT, 15, 100)
 			
 			setFireInfo(ANCIENT_COBWEB, 100, 300)
 			setFireInfo(DRY_VINES, 100, 300)

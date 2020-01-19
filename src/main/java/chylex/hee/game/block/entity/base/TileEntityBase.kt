@@ -15,8 +15,6 @@ abstract class TileEntityBase(type: TileEntityType<out TileEntityBase>) : TileEn
 		const val FLAG_MARK_DIRTY = 128
 	}
 	
-	protected open fun firstTick(){}
-	
 	// Synchronization
 	
 	protected fun <T> Notifying(initialValue: T, notifyFlags: Int) = NotifyOnChange(initialValue){
@@ -30,8 +28,8 @@ abstract class TileEntityBase(type: TileEntityType<out TileEntityBase>) : TileEn
 		private set
 	
 	final override fun onLoad(){
+		super.onLoad()
 		isLoaded = true
-		firstTick()
 	}
 	
 	protected fun notifyUpdate(flags: Int){

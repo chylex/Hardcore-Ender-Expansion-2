@@ -30,7 +30,6 @@ import chylex.hee.system.util.getTile
 import chylex.hee.system.util.heeTag
 import chylex.hee.system.util.isAir
 import chylex.hee.system.util.isNotEmpty
-import chylex.hee.system.util.motionVec
 import chylex.hee.system.util.nextFloat
 import chylex.hee.system.util.nextInt
 import chylex.hee.system.util.nextItemOrNull
@@ -60,7 +59,6 @@ import java.util.Random
 import kotlin.math.max
 import kotlin.math.min
 import kotlin.math.pow
-import kotlin.streams.toList
 
 class EntityTechnicalIgneousPlateLogic(type: EntityType<EntityTechnicalIgneousPlateLogic>, world: World) : Entity(type, world){
 	constructor(world: World) : this(ModEntities.IGNEOUS_PLATE_LOGIC, world)
@@ -131,7 +129,7 @@ class EntityTechnicalIgneousPlateLogic(type: EntityType<EntityTechnicalIgneousPl
 			
 			while(stack.isNotEmpty){
 				EntityItemFreshlyCooked(world, target, stack.split(rand.nextInt(10, 20))).apply {
-					motionVec = Vec3d.ZERO
+					motion = Vec3d.ZERO
 					world.addEntity(this)
 				}
 			}

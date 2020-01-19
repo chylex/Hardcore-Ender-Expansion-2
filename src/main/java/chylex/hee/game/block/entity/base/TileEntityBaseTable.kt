@@ -22,11 +22,10 @@ import chylex.hee.system.util.getState
 import chylex.hee.system.util.getTile
 import chylex.hee.system.util.use
 import net.minecraft.item.Item
-import net.minecraft.tileentity.ITickableTileEntity
 import net.minecraft.tileentity.TileEntityType
 import org.apache.commons.lang3.math.Fraction
 
-abstract class TileEntityBaseTable(type: TileEntityType<out TileEntityBaseTable>) : TileEntityBase(type), ITickableTileEntity{
+abstract class TileEntityBaseTable(type: TileEntityType<out TileEntityBaseTable>) : TileEntityBaseSpecialFirstTick(type){
 	private companion object{
 		private const val MAX_CLUSTER_DISTANCE = 12
 		private const val MAX_PEDESTAL_DISTANCE = 6
@@ -90,6 +89,8 @@ abstract class TileEntityBaseTable(type: TileEntityType<out TileEntityBaseTable>
 	}
 	
 	final override fun tick(){
+		super.tick()
+		
 		if (wrld.isRemote || !wrld.isAreaLoaded(pos, MAX_CLUSTER_DISTANCE)){
 			return
 		}
@@ -226,7 +227,7 @@ abstract class TileEntityBaseTable(type: TileEntityType<out TileEntityBaseTable>
 		if (context == STORAGE){
 			pedestalHandler.deserializeNBT(getCompound(PEDESTAL_INFO_TAG))
 			clusterHandler.deserializeNBT(getCompound(CLUSTER_INFO_TAG))
-			currentProcesses.deserializeFromList(wrld, getListOfCompounds(PROCESSES_TAG), processSerializer)
+			currentProcesses.deserializeFromList(this@TileEntityBaseTable, getListOfCompounds(PROCESSES_TAG), processSerializer)
 			
 			storedDust = Fraction.getFraction(getInt(DUST_FRACTION_N_TAG), getInt(DUST_FRACTION_D_TAG))
 		}

@@ -23,13 +23,13 @@ import chylex.hee.system.migration.vanilla.EntityPlayerMP
 import chylex.hee.system.util.Pos
 import chylex.hee.system.util.TagCompound
 import chylex.hee.system.util.heeTag
-import chylex.hee.system.util.motionVec
 import chylex.hee.system.util.posVec
 import chylex.hee.system.util.subtractY
 import chylex.hee.system.util.use
 import net.minecraft.block.BlockState
 import net.minecraft.entity.Entity
 import net.minecraft.entity.EntityType
+import net.minecraft.entity.LivingEntity
 import net.minecraft.network.IPacket
 import net.minecraft.network.PacketBuffer
 import net.minecraft.util.DamageSource
@@ -52,8 +52,11 @@ import net.minecraftforge.fml.network.NetworkHooks
 
 class EntityProjectileEnderPearl(type: EntityType<EntityProjectileEnderPearl>, world: World) : EntityEnderPearl(type, world), IEntityAdditionalSpawnData{
 	constructor(thrower: EntityLivingBase, infusions: InfusionList) : this(ModEntities.ENDER_PEARL, thrower.world){
-		// UPDATE constructor doesn't initialize "perlThrower", owner, ownerId and maybe more
+		owner = thrower
+		ownerId = thrower.uniqueID
+		
 		loadInfusions(infusions)
+		setPosition(thrower.posX, thrower.posY + thrower.eyeHeight - 0.1F, thrower.posZ)
 		shoot(thrower, thrower.rotationPitch, thrower.rotationYaw, 0F, 1.5F, 1F)
 	}
 	
@@ -64,7 +67,7 @@ class EntityProjectileEnderPearl(type: EntityType<EntityProjectileEnderPearl>, w
 		class RayTraceIndestructible(startVec: Vec3d, endVec: Vec3d, entity: Entity) : RayTraceContext(startVec, endVec, BlockMode.COLLIDER, FluidMode.NONE, entity){
 			override fun getBlockShape(state: BlockState, world: IBlockReader, pos: BlockPos): VoxelShape{
 				return if (state.getBlockHardness(world, pos) == INDESTRUCTIBLE_HARDNESS)
-					VoxelShapes.fullCube() // UPDATE test
+					VoxelShapes.fullCube()
 				else
 					VoxelShapes.empty()
 			}
@@ -136,7 +139,7 @@ class EntityProjectileEnderPearl(type: EntityType<EntityProjectileEnderPearl>, w
 		super.shoot(thrower, rotationPitch, rotationYaw, pitchOffset, velocity, inaccuracy)
 		
 		if (infusions.has(SLOW)){
-			motionVec = motionVec.scale(0.1)
+			motion = motion.scale(0.1)
 		}
 	}
 	
@@ -144,14 +147,14 @@ class EntityProjectileEnderPearl(type: EntityType<EntityProjectileEnderPearl>, w
 	
 	override fun tick(){
 		val prevPos = posVec
-		val prevMot = motionVec
+		val prevMot = motion
 		super.tick()
 		
 		if (infusions.has(SLOW)){
-			motionVec = prevMot.scale(0.999).subtractY(gravityVelocity * 0.01)
+			motion = prevMot.scale(0.999).subtractY(gravityVelocity * 0.01)
 		}
 		else if (!hasNoGravity()){
-			motionVec = prevMot.scale(0.99).subtractY(gravityVelocity * 0.01)
+			motion = prevMot.scale(0.99).subtractY(gravityVelocity.toDouble())
 		}
 		
 		if (!world.isRemote && infusions.has(PHASING) && hasPhasedIntoWall){
@@ -174,7 +177,7 @@ class EntityProjectileEnderPearl(type: EntityType<EntityProjectileEnderPearl>, w
 		val thrower: EntityLivingBase? = thrower
 		val hitEntity: Entity? = (result as? EntityRayTraceResult)?.entity
 		
-		if (hitEntity === thrower){
+		if (hitEntity != null && hitEntity === thrower){
 			return
 		}
 		
@@ -208,6 +211,17 @@ class EntityProjectileEnderPearl(type: EntityType<EntityProjectileEnderPearl>, w
 	}
 	
 	// Serialization
+	
+	override fun getThrower(): LivingEntity?{
+		val uuid = ownerId
+		val thrower = super.getThrower()
+		
+		if (thrower == null){
+			ownerId = uuid // UPDATE getThrower is fucked, apparently fixed in 1.15
+		}
+		
+		return thrower
+	}
 	
 	override fun writeAdditional(nbt: TagCompound) = nbt.heeTag.use {
 		super.writeAdditional(nbt)

@@ -68,7 +68,7 @@ abstract class BlockExperienceGate(builder: BlockBuilder) : BlockSimple(builder)
 		}
 		
 		if (world.isRemote && entity is EntityItem){
-			entity.posY = pos.y + 1.0 - (2.0 * MagicValues.BLOCK_COLLISION_SHRINK) // UPDATE works around shit physics where items spontaneously sink into blocks
+			entity.posY = pos.y + 1.0 - (2.0 * MagicValues.BLOCK_COLLISION_SHRINK) // works around shit physics where items spontaneously sink into blocks
 		}
 	}
 }

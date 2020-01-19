@@ -1,10 +1,10 @@
 package chylex.hee.game.mechanics.table
 import chylex.hee.game.block.entity.TileEntityTablePedestal
+import chylex.hee.game.block.entity.base.TileEntityBaseTable
 import chylex.hee.game.mechanics.table.interfaces.ITableProcess
 import chylex.hee.game.mechanics.table.interfaces.ITableProcessSerializer
 import chylex.hee.system.util.NBTObjectList
 import chylex.hee.system.util.TagCompound
-import net.minecraft.world.World
 
 class TableProcessList : Iterable<ITableProcess>{
 	val isNotEmpty
@@ -62,8 +62,8 @@ class TableProcessList : Iterable<ITableProcess>{
 		return NBTObjectList.of(currentProcesses.map { processSerializer.writeToNBT(it) })
 	}
 	
-	fun deserializeFromList(world: World, list: NBTObjectList<TagCompound>, processSerializer: ITableProcessSerializer){
+	fun deserializeFromList(table: TileEntityBaseTable, list: NBTObjectList<TagCompound>, processSerializer: ITableProcessSerializer){
 		currentProcesses.clear()
-		list.forEach { currentProcesses.add(processSerializer.readFromNBT(world, it)) }
+		list.forEach { currentProcesses.add(processSerializer.readFromNBT(table, it)) }
 	}
 }

@@ -1,4 +1,5 @@
 package chylex.hee.game.entity.item
+import chylex.hee.game.block.info.BlockBuilder.Companion.INDESTRUCTIBLE_HARDNESS
 import chylex.hee.game.item.ItemFlintAndInfernium
 import chylex.hee.game.item.infusion.Infusion.FIRE
 import chylex.hee.game.item.infusion.Infusion.HARMLESS
@@ -10,6 +11,7 @@ import chylex.hee.game.item.infusion.InfusionTag
 import chylex.hee.game.particle.spawner.ParticleSpawnerVanilla
 import chylex.hee.game.particle.util.IShape.Point
 import chylex.hee.game.world.util.ExplosionBuilder
+import chylex.hee.init.ModEntities
 import chylex.hee.proxy.Environment
 import chylex.hee.system.migration.vanilla.EntityItem
 import chylex.hee.system.migration.vanilla.EntityLivingBase
@@ -17,8 +19,10 @@ import chylex.hee.system.migration.vanilla.EntityTNTPrimed
 import chylex.hee.system.migration.vanilla.Items
 import chylex.hee.system.util.TagCompound
 import chylex.hee.system.util.allInCenteredSphereMutable
+import chylex.hee.system.util.asVoxelShape
 import chylex.hee.system.util.center
 import chylex.hee.system.util.getMaterial
+import chylex.hee.system.util.getState
 import chylex.hee.system.util.heeTag
 import chylex.hee.system.util.motionY
 import chylex.hee.system.util.nextFloat
@@ -26,7 +30,10 @@ import chylex.hee.system.util.nextItem
 import chylex.hee.system.util.nextRounded
 import chylex.hee.system.util.remapRange
 import chylex.hee.system.util.use
+import net.minecraft.block.BlockState
+import net.minecraft.block.Blocks
 import net.minecraft.block.material.Material
+import net.minecraft.entity.Entity
 import net.minecraft.entity.EntityType
 import net.minecraft.entity.MoverType
 import net.minecraft.entity.MoverType.SELF
@@ -35,16 +42,27 @@ import net.minecraft.item.ItemStack
 import net.minecraft.item.crafting.IRecipeType.SMELTING
 import net.minecraft.network.IPacket
 import net.minecraft.particles.ParticleTypes.SMOKE
+import net.minecraft.util.ReuseableStream
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.Vec3d
+import net.minecraft.util.math.shapes.IBooleanFunction
+import net.minecraft.util.math.shapes.ISelectionContext
+import net.minecraft.util.math.shapes.VoxelShapes
 import net.minecraft.world.Explosion
+import net.minecraft.world.IWorldReader
 import net.minecraft.world.World
+import net.minecraft.world.chunk.ChunkStatus
+import net.minecraft.world.chunk.IChunk
 import net.minecraft.world.server.ServerWorld
 import net.minecraft.world.storage.loot.LootContext
 import net.minecraft.world.storage.loot.LootParameterSets
 import net.minecraft.world.storage.loot.LootParameters
 import net.minecraft.world.storage.loot.LootTables
 import net.minecraftforge.fml.network.NetworkHooks
+import java.util.stream.Stream
+import kotlin.math.PI
+import kotlin.math.cos
+import kotlin.math.sin
 
 class EntityInfusedTNT : EntityTNTPrimed{
 	private companion object{
@@ -72,6 +90,7 @@ class EntityInfusedTNT : EntityTNTPrimed{
 		}
 	}
 	
+	private var igniter: EntityLivingBase? = null
 	private var infusions = InfusionList.EMPTY
 	private var hasInferniumPower = false
 	private var hasPhasedIntoWall = false
@@ -79,19 +98,32 @@ class EntityInfusedTNT : EntityTNTPrimed{
 	@Suppress("unused")
 	constructor(type: EntityType<EntityInfusedTNT>, world: World) : super(type, world)
 	
-	@Suppress("NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS")
-	constructor(world: World, pos: BlockPos, infusions: InfusionList, igniter: EntityLivingBase?, infernium: Boolean) : super(world, pos.x + 0.5, pos.y.toDouble(), pos.z + 0.5, igniter){
-		// UPDATE
+	constructor(world: World, pos: BlockPos, infusions: InfusionList, igniter: EntityLivingBase?, infernium: Boolean) : this(ModEntities.INFUSED_TNT, world){
+		setPosition(pos.x + 0.5, pos.y.toDouble(), pos.z + 0.5)
+		prevPosX = posX
+		prevPosY = posY
+		prevPosZ = posZ
+		
+		val angle = rand.nextFloat(0.0, 2.0 * PI)
+		setMotion(-sin(angle) * 0.02, 0.2, -cos(angle) * 0.02)
+		
 		loadInfusions(infusions)
+		
+		this.fuse = 80
+		this.igniter = igniter
 		this.hasInferniumPower = infernium
 	}
 	
 	constructor(world: World, pos: BlockPos, infusions: InfusionList, explosion: Explosion) : this(world, pos, infusions, explosion.explosivePlacedBy, infernium = false){
-		fuse = rand.nextInt(fuse / 4) + (fuse / 8)
+		this.fuse = rand.nextInt(fuse / 4) + (fuse / 8)
 	}
 	
 	override fun createSpawnPacket(): IPacket<*>{
 		return NetworkHooks.getEntitySpawningPacket(this)
+	}
+	
+	override fun getTntPlacedBy(): EntityLivingBase?{
+		return igniter
 	}
 	
 	private fun loadInfusions(infusions: InfusionList){
@@ -128,9 +160,13 @@ class EntityInfusedTNT : EntityTNTPrimed{
 	// Phasing
 	
 	override fun move(type: MoverType, by: Vec3d){
+		val wasNoclip = noClip
+		
+		noClip = false
+		super.move(type, by)
+		noClip = wasNoclip
+		
 		if (noClip && type == SELF){
-			collideWithIndestructibleBlocks()
-			
 			if (!world.areCollisionShapesEmpty(boundingBox)){
 				hasPhasedIntoWall = true
 			}
@@ -138,99 +174,61 @@ class EntityInfusedTNT : EntityTNTPrimed{
 				fuse = PHASING_INSTANT_FUSE_TICKS
 			}
 		}
-		else{
-			super.move(type, by)
-		}
 	}
 	
-	private fun collideWithIndestructibleBlocks(){
-		/* UPDATE
-		val (prevMotX, prevMotY, prevMotZ) = motionVec
-		
-		val collisionBoxes = getCollisionBoxesForIndestructibleBlocks(boundingBox.expand(motionX, motionY, motionZ))
-		
-		val newMotY = moveWithCollisionCheck(collisionBoxes, motionY, AxisAlignedBB::calculateYOffset){ offset(0.0, it, 0.0) }
-		val newMotX = moveWithCollisionCheck(collisionBoxes, motionX, AxisAlignedBB::calculateXOffset){ offset(it, 0.0, 0.0) }
-		val newMotZ = moveWithCollisionCheck(collisionBoxes, motionZ, AxisAlignedBB::calculateZOffset){ offset(0.0, 0.0, it) }
-		
-		val changedMotX = newMotX != prevMotX
-		val changedMotY = newMotY != prevMotY
-		val changedMotZ = newMotZ != prevMotZ
-		
-		resetPositionToBB()
-		
-		collidedHorizontally = changedMotX || changedMotZ
-		collidedVertically = changedMotY
-		
-		onGround = collidedVertically && motionY < 0.0
-		collided = collidedHorizontally || collidedVertically
-		
-		if (changedMotX){
-			motionX = 0.0
-		}
-		
-		if (changedMotZ){
-			motionZ = 0.0
-		}
-		
-		if (changedMotY){
-			motionY = 0.0
-		}*/
-	}
-	
-	/* UPDATE
-	private fun getCollisionBoxesForIndestructibleBlocks(box: AxisAlignedBB): List<AxisAlignedBB>{
-		val minX = box.minX.floorToInt() - 1
-		val minY = box.minY.floorToInt() - 1
-		val minZ = box.minZ.floorToInt() - 1
-		
-		val maxX = box.maxX.ceilToInt()
-		val maxY = box.maxY.ceilToInt()
-		val maxZ = box.maxZ.ceilToInt()
-		
-		val collisionBoxes = mutableListOf<AxisAlignedBB>()
-		val testPos = BlockPos.PooledMutableBlockPos.retain()
-		
-		try{
-			for(pX in minX..maxX){
-				for(pZ in minZ..maxZ){
-					val isEdgeX = pX == minX || pX == maxX
-					val isEdgeZ = pZ == minZ || pZ == maxZ
+	override fun getAllowedMovement(motion: Vec3d): Vec3d{
+		if (infusions.has(PHASING)){
+			if (motion.lengthSquared() == 0.0){
+				return motion
+			}
+			
+			val aabb = boundingBox
+			val context = ISelectionContext.forEntity(this)
+			
+			val borderShape = world.worldBorder.shape
+			val borderStream = if (VoxelShapes.compare(borderShape, aabb.shrink(1.0E-7).asVoxelShape, IBooleanFunction.AND))
+				Stream.empty()
+			else
+				Stream.of(borderShape)
+			
+			val shapeStream = world.getEmptyCollisionShapes(this, aabb.expand(motion), emptySet())
+			val stream = ReuseableStream(Stream.concat(shapeStream, borderStream))
+			
+			val indestructibleOnlyWorld = object : IWorldReader by world{
+				private fun returnOnlyIndestructible(state: BlockState, pos: BlockPos): BlockState{
+					return if (state.getBlockHardness(world, pos) == INDESTRUCTIBLE_HARDNESS)
+						state
+					else
+						Blocks.AIR.defaultState
+				}
+				
+				override fun getBlockState(pos: BlockPos): BlockState{
+					return returnOnlyIndestructible(pos.getState(world), pos)
+				}
+				
+				override fun getChunk(x: Int, z: Int, requiredStatus: ChunkStatus, nonNull: Boolean): IChunk?{
+					val chunk = world.getChunk(x, z, requiredStatus, nonNull) ?: return null
 					
-					if ((!isEdgeX || !isEdgeZ) && world.isBlockLoaded(testPos.setPos(pX, 64, pZ))){
-						for(pY in minY..maxY){
-							if ((!isEdgeX && !isEdgeZ) || pY != maxY){
-								val state = testPos.setPos(pX, pY, pZ).getState(world)
-								
-								if (state.getBlockHardness(world, testPos) == INDESTRUCTIBLE_HARDNESS){
-									state.addCollisionBoxToList(world, testPos, box, collisionBoxes, this, false)
-								}
-							}
+					return object : IChunk by chunk{
+						override fun getBlockState(pos: BlockPos): BlockState{
+							return returnOnlyIndestructible(chunk.getBlockState(pos), pos)
 						}
 					}
 				}
 			}
-		}finally{
-			testPos.release()
+			
+			val movingX = motion.x == 0.0
+			val movingY = motion.y == 0.0
+			val movingZ = motion.z == 0.0
+			
+			return if ((!movingX || !movingY) && (!movingX || !movingZ) && (!movingY || !movingZ))
+				Entity.collideBoundingBox(motion, aabb, ReuseableStream(Stream.concat(stream.createStream(), indestructibleOnlyWorld.getCollisionShapes(this, aabb.expand(motion)))))
+			else
+				Entity.getAllowedMovement(motion, aabb, indestructibleOnlyWorld, context, stream)
 		}
 		
-		return collisionBoxes
+		return super.getAllowedMovement(motion)
 	}
-	
-	private inline fun moveWithCollisionCheck(collisionBoxes: List<AxisAlignedBB>, initialMotion: Double, calculateFunc: AxisAlignedBB.(AxisAlignedBB, Double) -> Double, offsetFunc: AxisAlignedBB.(Double) -> AxisAlignedBB): Double{
-		if (initialMotion == 0.0){
-			return initialMotion
-		}
-		
-		val boundingBox2 = boundingBox // UPDATE
-		val finalOffset = collisionBoxes.fold(initialMotion){ acc, box -> box.calculateFunc(boundingBox2, acc) }
-		
-		if (finalOffset != 0.0){
-			boundingBox = boundingBox2.offsetFunc(finalOffset)
-		}
-		
-		return finalOffset
-	}*/
 	
 	// Explosion handling
 	
@@ -314,7 +312,7 @@ class EntityInfusedTNT : EntityTNTPrimed{
 					constructItemEntity(world, dropPos, droppedItem).apply {
 						motion = Vec3d(
 							rand.nextFloat(-0.25, 0.25),
-							rand.nextFloat(1.0, 1.2), // UPDATE: 1.13 makes items float upwards, review this
+							rand.nextFloat(1.0, 1.2),
 							rand.nextFloat(-0.25, 0.25)
 						)
 						

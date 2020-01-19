@@ -41,6 +41,7 @@ import kotlin.math.abs
 import kotlin.math.max
 
 class EntityMobUndread(type: EntityType<EntityMobUndread>, world: World) : EntityMob(type, world){
+	@Suppress("unused")
 	constructor(world: World) : this(ModEntities.UNDREAD, world)
 	
 	private companion object{

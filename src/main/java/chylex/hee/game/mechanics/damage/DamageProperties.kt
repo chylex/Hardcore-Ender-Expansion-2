@@ -91,7 +91,7 @@ class DamageProperties{
 		override fun getImmediateSource(): Entity? = directSource
 		override fun getTrueSource(): Entity? = remoteSource
 		
-		override fun getDamageLocation(): Vec3d? = // UPDATE: Make sure this is still only used for shield checking
+		override fun getDamageLocation(): Vec3d? = // UPDATE 1.14 (make sure this is still only used for shield checking)
 			if (ignoreShield)
 				null
 			else

@@ -10,7 +10,6 @@ import chylex.hee.game.world.feature.stronghold.connection.StrongholdConnectionT
 import chylex.hee.game.world.structure.IStructureWorld
 import chylex.hee.game.world.structure.piece.IStructurePieceConnection
 import chylex.hee.game.world.structure.trigger.EntityStructureTrigger
-import chylex.hee.system.migration.Difficulty.PEACEFUL
 import chylex.hee.system.migration.Facing.DOWN
 import chylex.hee.system.migration.Facing.EAST
 import chylex.hee.system.migration.Facing.NORTH
@@ -20,6 +19,7 @@ import chylex.hee.system.migration.vanilla.EntityPlayer
 import chylex.hee.system.util.Pos
 import chylex.hee.system.util.getBlock
 import chylex.hee.system.util.isAir
+import chylex.hee.system.util.isPeaceful
 import chylex.hee.system.util.nextFloat
 import chylex.hee.system.util.nextInt
 import chylex.hee.system.util.offsetUntil
@@ -34,7 +34,7 @@ import kotlin.math.min
 class StrongholdRoom_Main_Portal(file: String) : StrongholdAbstractPieceFromFile(file, StrongholdPieceType.ROOM){
 	class Spawner : ITriggerHandler{
 		override fun check(world: World): Boolean{
-			return !world.isRemote && world.difficulty != PEACEFUL
+			return !world.isRemote && !world.isPeaceful
 		}
 		
 		override fun update(entity: EntityTechnicalTrigger){

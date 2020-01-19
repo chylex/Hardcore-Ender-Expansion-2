@@ -3,7 +3,6 @@ import chylex.hee.network.BaseClientPacket
 import chylex.hee.system.migration.forge.Side
 import chylex.hee.system.migration.forge.Sided
 import chylex.hee.system.migration.vanilla.EntityPlayerSP
-import chylex.hee.system.util.motionVec
 import chylex.hee.system.util.readFloatVec
 import chylex.hee.system.util.use
 import chylex.hee.system.util.writeFloatVec
@@ -32,6 +31,6 @@ class PacketClientLaunchInstantly() : BaseClientPacket(){
 	
 	@Sided(Side.CLIENT)
 	override fun handle(player: EntityPlayerSP){
-		entityId?.let(player.world::getEntityByID)?.motionVec = motion
+		entityId?.let(player.world::getEntityByID)?.motion = motion
 	}
 }

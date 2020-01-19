@@ -49,14 +49,14 @@ object ParticleEnergyTransferToPlayer : IParticleMaker.WithData<TransferData?>()
 		private var newTargetPos = Vec3d.ZERO
 		
 		init{
+			selectSpriteRandomly(ParticleEnergyTransferToPlayer.sprite)
+			
 			if (data == null){
 				speed = 0.0
 				player = null
 				setExpired()
 			}
 			else{
-				selectSpriteRandomly(ParticleEnergyTransferToPlayer.sprite)
-				
 				loadColor(data.cluster.color)
 				particleAlpha = 0.75F
 				

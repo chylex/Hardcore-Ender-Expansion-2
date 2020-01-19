@@ -28,6 +28,7 @@ import net.minecraft.util.math.shapes.VoxelShape
 import net.minecraft.util.math.shapes.VoxelShapes
 import net.minecraft.world.IBlockReader
 import net.minecraft.world.IEnviromentBlockReader
+import net.minecraft.world.IWorld
 import net.minecraft.world.World
 import java.util.UUID
 import kotlin.math.abs
@@ -68,6 +69,7 @@ class BlockTablePedestal(builder: BlockBuilder) : BlockSimpleShaped(builder, COM
 			)
 		)
 		
+		const val ITEM_SPAWN_OFFSET_Y = TOP_SLAB_TOP_Y + 0.01
 		const val PARTICLE_TARGET_Y = BOTTOM_SLAB_TOP_Y + (MIDDLE_PILLAR_TOP_Y - BOTTOM_SLAB_TOP_Y) * 0.5
 		
 		val COMBINED_BOX: AxisAlignedBB = max(BOTTOM_SLAB_HALF_WIDTH, TOP_SLAB_HALF_WIDTH).let {
@@ -80,8 +82,8 @@ class BlockTablePedestal(builder: BlockBuilder) : BlockSimpleShaped(builder, COM
 			return (entity.posY - pos.y) >= PICKUP_TOP_Y && abs(pos.x + 0.5 - entity.posX) <= PICKUP_DIST_XZ && abs(pos.z + 0.5 - entity.posZ) <= PICKUP_DIST_XZ
 		}
 		
-		private fun isItemAreaBlocked(world: World, pos: BlockPos): Boolean{
-			return pos.up().getState(world).getCollisionShape(world, pos).isEmpty
+		private fun isItemAreaBlocked(world: IWorld, pos: BlockPos): Boolean{
+			return !pos.up().getState(world).getCollisionShape(world, pos).isEmpty
 		}
 	}
 	
@@ -167,16 +169,20 @@ class BlockTablePedestal(builder: BlockBuilder) : BlockSimpleShaped(builder, COM
 	}
 	
 	override fun onReplaced(state: BlockState, world: World, pos: BlockPos, newState: BlockState, isMoving: Boolean){
-		pos.getTile<TileEntityTablePedestal>(world)?.onPedestalDestroyed(dropTableLink = true)
+		if (newState.block !== this){
+			pos.getTile<TileEntityTablePedestal>(world)?.onPedestalDestroyed(dropTableLink = true)
+		}
+		
 		super.onReplaced(state, world, pos, newState, isMoving)
 	}
 	
-	/* UPDATE
-	override fun neighborChanged(state: BlockState, world: World, pos: BlockPos, neighborBlock: Block, neighborPos: BlockPos){
+	override fun neighborChanged(state: BlockState, world: World, pos: BlockPos, neighborBlock: Block, neighborPos: BlockPos, isMoving: Boolean){
 		if (!world.isRemote && neighborPos == pos.up() && isItemAreaBlocked(world, pos)){
 			pos.getTile<TileEntityTablePedestal>(world)?.dropAllItems()
 		}
-	}*/
+		
+		return super.neighborChanged(state, world, pos, neighborBlock, neighborPos, isMoving)
+	}
 	
 	override fun getCollisionShape(state: BlockState, world: IBlockReader, pos: BlockPos, context: ISelectionContext): VoxelShape{
 		return COLLISION_SHAPE

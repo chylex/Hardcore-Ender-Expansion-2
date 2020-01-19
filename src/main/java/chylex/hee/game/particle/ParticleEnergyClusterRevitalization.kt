@@ -8,6 +8,7 @@ import chylex.hee.system.migration.forge.Side
 import chylex.hee.system.migration.forge.Sided
 import chylex.hee.system.util.Pos
 import chylex.hee.system.util.center
+import chylex.hee.system.util.color.IntColor.Companion.RGB
 import chylex.hee.system.util.getTile
 import chylex.hee.system.util.nextFloat
 import chylex.hee.system.util.nextVector
@@ -38,9 +39,8 @@ object ParticleEnergyClusterRevitalization : IParticleMaker.Simple(){
 		private var motionOffset = rand.nextVector(1.0)
 		
 		init{
-			particleRed = 1F
-			particleGreen = 1F
-			particleBlue = 1F
+			selectSpriteRandomly(ParticleEnergyClusterRevitalization.sprite)
+			loadColor(RGB(255u))
 			particleAlpha = 0F
 			
 			maxAge = TOTAL_LIFESPAN

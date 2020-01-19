@@ -1,6 +1,6 @@
 package chylex.hee.system.migration
 
-// UPDATE
+// UPDATE 1.14
 
 /**
  * Contains magic numbers and other constants which cannot be easily accessed using code, and must be reviewed before updating Minecraft versions.

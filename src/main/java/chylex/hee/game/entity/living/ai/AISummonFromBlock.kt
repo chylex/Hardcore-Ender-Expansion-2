@@ -1,8 +1,8 @@
 package chylex.hee.game.entity.living.ai
-import chylex.hee.system.migration.Difficulty.PEACEFUL
 import chylex.hee.system.migration.vanilla.EntityCreature
 import chylex.hee.system.util.breakBlock
 import chylex.hee.system.util.getBlock
+import chylex.hee.system.util.isPeaceful
 import chylex.hee.system.util.nextInt
 import net.minecraft.block.Block
 import net.minecraft.entity.ai.goal.Goal
@@ -34,16 +34,15 @@ class AISummonFromBlock(
 		summonInTicks = Int.MAX_VALUE
 		
 		val world = entity.world
-		val difficulty = world.difficulty
 		
-		if (difficulty == PEACEFUL || !world.gameRules.getBoolean(MOB_GRIEFING)){
+		if (world.isPeaceful || !world.gameRules.getBoolean(MOB_GRIEFING)){
 			return
 		}
 		
 		val rand = entity.rng
 		val pos = entity.position
 		
-		var remainingSpawns = 1 + rand.nextInt(0, difficulty.id)
+		var remainingSpawns = 1 + rand.nextInt(0, world.difficulty.id)
 		
 		repeat(searchAttempts){
 			val checkedPos = pos.add(

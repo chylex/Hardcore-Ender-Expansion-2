@@ -24,7 +24,6 @@ import chylex.hee.system.util.getBlock
 import chylex.hee.system.util.getState
 import chylex.hee.system.util.max
 import chylex.hee.system.util.min
-import chylex.hee.system.util.motionVec
 import chylex.hee.system.util.offsetUntil
 import chylex.hee.system.util.setAir
 import chylex.hee.system.util.subtractY
@@ -33,12 +32,10 @@ import net.minecraft.block.BlockState
 import net.minecraft.entity.Entity
 import net.minecraft.state.StateContainer.Builder
 import net.minecraft.tileentity.TileEntity
-import net.minecraft.util.Direction
 import net.minecraft.util.IStringSerializable
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.Vec3d
 import net.minecraft.world.IBlockReader
-import net.minecraft.world.IWorld
 import net.minecraft.world.World
 import net.minecraft.world.dimension.DimensionType
 
@@ -63,7 +60,7 @@ class BlockVoidPortalInner(builder: BlockBuilder) : BlockAbstractPortal(builder)
 			}
 			else{
 				entity.setPositionAndUpdate(targetVec.x, targetVec.y, targetVec.z)
-				entity.motionVec = Vec3d.ZERO
+				entity.motion = Vec3d.ZERO
 			}
 		}
 	}
@@ -98,19 +95,14 @@ class BlockVoidPortalInner(builder: BlockBuilder) : BlockAbstractPortal(builder)
 	
 	// Breaking
 	
-	override fun updatePostPlacement(state: BlockState, facing: Direction, neighborState: BlockState, world: IWorld, pos: BlockPos, neighborPos: BlockPos): BlockState{
-		// UPDATE test??? maybe use neighbor update
-		if (neighborState.block is BlockVoidPortalCrafted && neighborPos.getBlock(world) !is BlockVoidPortalCrafted){
+	override fun neighborChanged(state: BlockState, world: World, pos: BlockPos, neighborBlock: Block, neighborPos: BlockPos, isMoving: Boolean){
+		if (neighborBlock is BlockVoidPortalCrafted && neighborPos.getBlock(world) !is BlockVoidPortalCrafted){
 			for(portalPos in pos.floodFill(Facing4){ it.getBlock(world) === this }){
 				portalPos.setAir(world)
 			}
 		}
 		
-		return super.updatePostPlacement(state, facing, neighborState, world, pos, neighborPos)
-	}
-	
-	override fun neighborChanged(state: BlockState, world: World, pos: BlockPos, p_220069_4_: Block, p_220069_5_: BlockPos, isMoving: Boolean){
-		super.neighborChanged(state, world, pos, p_220069_4_, p_220069_5_, isMoving)
+		super.neighborChanged(state, world, pos, neighborBlock, neighborPos, isMoving)
 	}
 	
 	// Interaction

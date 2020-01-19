@@ -31,7 +31,6 @@ import chylex.hee.system.util.component3
 import chylex.hee.system.util.directionTowards
 import chylex.hee.system.util.distanceSqTo
 import chylex.hee.system.util.heeTag
-import chylex.hee.system.util.motionVec
 import chylex.hee.system.util.nextInt
 import chylex.hee.system.util.playClient
 import chylex.hee.system.util.posVec
@@ -200,12 +199,10 @@ class EntityProjectileSpatialDash(type: EntityType<EntityProjectileSpatialDash>,
 	
 	private val cappedMotionVec: Vec3d
 		get(){
-			val currentMot = motionVec
-			
-			return if (currentMot.length() <= range)
-				currentMot
+			return if (motion.length() <= range)
+				motion
 			else
-				currentMot.normalize().scale(range)
+				motion.normalize().scale(range)
 		}
 	
 	init{
@@ -219,7 +216,7 @@ class EntityProjectileSpatialDash(type: EntityType<EntityProjectileSpatialDash>,
 	}
 	
 	override fun shoot(dirX: Double, dirY: Double, dirZ: Double, velocity: Float, inaccuracy: Float){
-		this.motionVec = Vec3d(dirX, dirY, dirZ).normalize().scale(velocity)
+		this.motion = Vec3d(dirX, dirY, dirZ).normalize().scale(velocity)
 	}
 	
 	override fun tick(){
@@ -242,10 +239,10 @@ class EntityProjectileSpatialDash(type: EntityType<EntityProjectileSpatialDash>,
 				
 				if (ownerEntity is EntityLivingBase && ownerEntity.world === world){
 					if (hitObject is BlockRayTraceResult){
-						handleBlockHit(ownerEntity, hitObject.hitVec, motionVec, hitObject.pos)
+						handleBlockHit(ownerEntity, hitObject.hitVec, motion, hitObject.pos)
 					}
 					else{
-						handleGenericHit(ownerEntity, hitObject.hitVec, motionVec)
+						handleGenericHit(ownerEntity, hitObject.hitVec, motion)
 					}
 				}
 				
@@ -258,7 +255,7 @@ class EntityProjectileSpatialDash(type: EntityType<EntityProjectileSpatialDash>,
 				return
 			}
 			
-			range -= motionVec.length().toFloat()
+			range -= motion.length().toFloat()
 		}
 		
 		move(SELF, motion)

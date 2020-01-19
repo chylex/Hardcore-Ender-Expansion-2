@@ -97,7 +97,7 @@ abstract class RenderTileAbstractPortal<T : TileEntityPortalInner, C : IPortalCo
 		animationProgress = controller?.clientAnimationProgress?.get(partialTicks) ?: 0F
 		isAnimating = animationProgress > 0F && animationProgress < 1F
 		
-		cameraTarget = MC.renderManager.info.projectedView // UPDATE test
+		cameraTarget = Vec3d.ZERO // UPDATE fix bobbing
 		globalTranslation = ((MC.systemTime % BlockAbstractPortal.TRANSLATION_SPEED_LONG) / BlockAbstractPortal.TRANSLATION_SPEED) - (controller?.clientPortalOffset?.get(partialTicks) ?: 0F)
 		
 		val offsetY = -y - 0.75

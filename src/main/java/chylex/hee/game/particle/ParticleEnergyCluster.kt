@@ -61,12 +61,12 @@ object ParticleEnergyCluster : IParticleMaker.WithData<ParticleDataColorScale>()
 		}
 		
 		init{
+			selectSpriteRandomly(ParticleEnergyCluster.sprite)
+			
 			if (data == null){
 				setExpired()
 			}
 			else{
-				selectSpriteRandomly(ParticleEnergyCluster.sprite)
-				
 				loadColor(data.color)
 				particleAlpha = 0F
 				particleScale = data.scale

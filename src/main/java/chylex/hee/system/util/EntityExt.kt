@@ -35,26 +35,20 @@ var Entity.posVec: Vec3d
 		this.posZ = value.z
 	}
 
-var Entity.motionVec: Vec3d
-	get() = this.motion
-	set(value){
-		this.motion = value
-	}
-
 var Entity.motionX
-	get() = this.motion.x // UPDATE
+	get() = this.motion.x
 	set(value){
 		this.motion = Vec3d(value, motion.y, motion.z)
 	}
 
 var Entity.motionY
-	get() = this.motion.y // UPDATE
+	get() = this.motion.y
 	set(value){
 		this.motion = Vec3d(motion.x, value, motion.z)
 	}
 
 var Entity.motionZ
-	get() = this.motion.z // UPDATE
+	get() = this.motion.z
 	set(value){
 		this.motion = Vec3d(motion.x, motion.y, value)
 	}
@@ -82,9 +76,8 @@ fun Entity.setFireTicks(ticks: Int){
 }
 
 fun EntityItem.cloneFrom(source: Entity){
-	posVec = source.posVec
+	setPositionAndRotation(source.posX, source.posY, source.posZ, source.rotationYaw, source.rotationPitch)
 	motion = source.motion
-	rotationYaw = source.rotationYaw
 	isAirBorne = source.isAirBorne
 	
 	if (source is EntityItem){

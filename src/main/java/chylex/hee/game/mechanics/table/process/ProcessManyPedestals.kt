@@ -1,5 +1,6 @@
 package chylex.hee.game.mechanics.table.process
 import chylex.hee.game.block.entity.TileEntityTablePedestal
+import chylex.hee.game.block.entity.base.TileEntityBaseTable
 import chylex.hee.game.mechanics.table.PedestalStatusIndicator
 import chylex.hee.game.mechanics.table.PedestalStatusIndicator.Process.BLOCKED
 import chylex.hee.game.mechanics.table.PedestalStatusIndicator.Process.PAUSED
@@ -22,10 +23,9 @@ import chylex.hee.system.util.totalTime
 import chylex.hee.system.util.use
 import net.minecraft.item.ItemStack
 import net.minecraft.util.math.BlockPos
-import net.minecraft.world.World
 
-abstract class ProcessManyPedestals(private val world: World, pos: Array<BlockPos>) : ITableProcess{
-	protected constructor(world: World, nbt: TagCompound) : this(world, nbt.getLongArray(PEDESTAL_POS_TAG).map(::Pos).toTypedArray())
+abstract class ProcessManyPedestals(private val table: TileEntityBaseTable, pos: Array<BlockPos>) : ITableProcess{
+	protected constructor(table: TileEntityBaseTable, nbt: TagCompound) : this(table, nbt.getLongArray(PEDESTAL_POS_TAG).map(::Pos).toTypedArray())
 	
 	private companion object{
 		private const val PEDESTAL_POS_TAG = "PedestalPos"
@@ -45,7 +45,7 @@ abstract class ProcessManyPedestals(private val world: World, pos: Array<BlockPo
 	// Helpers
 	
 	private fun getTile(index: Int): TileEntityTablePedestal?{
-		return pedestals[index].getTile(world)
+		return pedestals[index].getTile(table.wrld)
 	}
 	
 	private fun hasInputChanged(): Boolean{
@@ -94,7 +94,9 @@ abstract class ProcessManyPedestals(private val world: World, pos: Array<BlockPo
 		
 		when(val state = currentState){
 			is Work -> {
-				if (context.isPaused || tiles.any { world.totalTime - it.inputModTime < 20L } || !context.ensureDustAvailable(dustPerTick)){
+				val currentTime = table.wrld.totalTime
+				
+				if (context.isPaused || tiles.any { currentTime - it.inputModTime < 20L } || !context.ensureDustAvailable(dustPerTick)){
 					setStatusIndicator(tiles, PAUSED)
 				}
 				else{

@@ -25,7 +25,6 @@ import net.minecraftforge.fml.common.Mod
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber.Bus.MOD
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent
 import net.minecraftforge.fml.event.lifecycle.FMLLoadCompleteEvent
-import net.minecraftforge.fml.event.server.FMLServerStartingEvent
 import org.apache.logging.log4j.LogManager
 import org.apache.logging.log4j.Logger
 
@@ -74,10 +73,5 @@ object HEE{
 		ModTileEntities.setupVanillaValidBlocks()
 		OverworldFeatures.setupVanillaOverrides()
 		IntegrityCheck.verify()
-	}
-	
-	@SubscribeEvent
-	fun onServerStarting(@Suppress("UNUSED_PARAMETER") e: FMLServerStartingEvent){
-		// UPDATE e.registerServerCommand(HeeServerCommand)
 	}
 }

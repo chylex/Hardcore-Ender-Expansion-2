@@ -2,7 +2,6 @@ package chylex.hee.game.entity.living.behavior
 import chylex.hee.game.entity.living.EntityBossEnderEye
 import chylex.hee.system.util.directionTowards
 import chylex.hee.system.util.lookPosVec
-import chylex.hee.system.util.motionVec
 import chylex.hee.system.util.square
 import chylex.hee.system.util.totalTime
 
@@ -35,10 +34,8 @@ sealed class EnderEyeAttack{
 					moveHelper.setMoveTo(targetVec.x, targetVec.y, targetVec.z, 1.0)
 				}
 				else{
-					val motVec = motionVec
-					
-					if (currentVec.directionTowards(targetVec).dotProduct(motVec.normalize()) > 0.0){
-						motionVec = motVec.scale(0.4)
+					if (currentVec.directionTowards(targetVec).dotProduct(motion.normalize()) > 0.0){
+						motion = motion.scale(0.4)
 					}
 				}
 				

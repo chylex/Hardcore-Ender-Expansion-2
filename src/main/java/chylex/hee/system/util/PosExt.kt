@@ -7,6 +7,7 @@ import com.google.common.base.Function
 import com.google.common.collect.Iterables
 import net.minecraft.block.Block
 import net.minecraft.block.BlockState
+import net.minecraft.block.Blocks
 import net.minecraft.block.material.Material
 import net.minecraft.entity.Entity
 import net.minecraft.fluid.IFluidState
@@ -22,7 +23,6 @@ import net.minecraft.world.IWorldWriter
 import net.minecraft.world.World
 import net.minecraftforge.common.util.Constants.BlockFlags
 import java.util.Stack
-import java.util.stream.Stream
 import kotlin.math.max
 import kotlin.math.min
 import kotlin.math.sqrt
@@ -87,7 +87,7 @@ inline fun BlockPos.getFluidState(world: IBlockReader): IFluidState{
 // Block setters
 
 inline fun BlockPos.setAir(world: IWorldWriter): Boolean{
-	return world.removeBlock(this, false)
+	return world.setBlockState(this, Blocks.AIR.defaultState, BlockFlags.DEFAULT)
 }
 
 inline fun BlockPos.setBlock(world: IWorldWriter, block: Block): Boolean{
@@ -104,6 +104,10 @@ inline fun BlockPos.setState(world: IWorldWriter, state: BlockState): Boolean{
 
 inline fun BlockPos.setState(world: IWorldWriter, state: BlockState, flags: Int): Boolean{
 	return world.setBlockState(this, state, flags)
+}
+
+inline fun BlockPos.removeBlock(world: IWorldWriter): Boolean{
+	return world.removeBlock(this, false)
 }
 
 inline fun BlockPos.breakBlock(world: IWorldWriter, drops: Boolean): Boolean{
@@ -148,25 +152,26 @@ inline fun BlockPos.offsetUntil(facing: Direction, offsetRange: IntRange, testPr
 
 // Areas (Box)
 
+private val makeImmutable = Function<BlockPos, BlockPos> { pos -> pos!!.toImmutable() }
 private val castMutable = Function<BlockPos, MutableBlockPos> { pos -> pos as MutableBlockPos }
 
-fun BlockPos.allInBox(otherBound: BlockPos): Stream<BlockPos>{
-	return BlockPos.getAllInBox(this, otherBound)
+fun BlockPos.allInBox(otherBound: BlockPos): Iterable<BlockPos>{
+	return Iterables.transform(BlockPos.getAllInBoxMutable(this, otherBound), makeImmutable)
 }
 
 fun BlockPos.allInBoxMutable(otherBound: BlockPos): Iterable<MutableBlockPos>{
 	return Iterables.transform(BlockPos.getAllInBoxMutable(this, otherBound), castMutable)
 }
 
-fun BlockPos.allInCenteredBox(offsetX: Int, offsetY: Int, offsetZ: Int): Stream<BlockPos>{
-	return BlockPos.getAllInBox(this.x - offsetX, this.y - offsetY, this.z - offsetZ, this.x + offsetX, this.y + offsetY, this.z + offsetZ)
+fun BlockPos.allInCenteredBox(offsetX: Int, offsetY: Int, offsetZ: Int): Iterable<BlockPos>{
+	return Iterables.transform(BlockPos.getAllInBoxMutable(this.x - offsetX, this.y - offsetY, this.z - offsetZ, this.x + offsetX, this.y + offsetY, this.z + offsetZ), makeImmutable)
 }
 
 fun BlockPos.allInCenteredBoxMutable(offsetX: Int, offsetY: Int, offsetZ: Int): Iterable<MutableBlockPos>{
 	return Iterables.transform(BlockPos.getAllInBoxMutable(this.x - offsetX, this.y - offsetY, this.z - offsetZ, this.x + offsetX, this.y + offsetY, this.z + offsetZ), castMutable)
 }
 
-fun BlockPos.allInCenteredBox(offsetX: Double, offsetY: Double, offsetZ: Double): Stream<BlockPos>{
+fun BlockPos.allInCenteredBox(offsetX: Double, offsetY: Double, offsetZ: Double): Iterable<BlockPos>{
 	return this.allInCenteredBox(offsetX.ceilToInt(), offsetY.ceilToInt(), offsetZ.ceilToInt())
 }
 
@@ -176,12 +181,8 @@ fun BlockPos.allInCenteredBoxMutable(offsetX: Double, offsetY: Double, offsetZ: 
 
 // Areas (Sphere)
 
-private fun <T : BlockPos> BlockPos.allInCenteredSphereInternal(radiusSq: Double, iterable: Stream<T>): Stream<T>{
-	return iterable.filter { it.distanceSqTo(this) <= radiusSq }
-}
-
-private fun <T : MutableBlockPos> BlockPos.allInCenteredSphereInternalMutable(radiusSq: Double, iterable: Iterable<T>): Iterable<T>{
-	return iterable.filter { it.distanceSqTo(this) <= radiusSq }
+private fun <T : BlockPos> BlockPos.allInCenteredSphereInternal(radiusSq: Double, iterable: Iterable<T>): Iterable<T>{
+	return Iterables.filter(iterable){ it!!.distanceSqTo(this) <= radiusSq }
 }
 
 private fun getSphereRadiusSq(radius: Int, avoidNipples: Boolean): Double{
@@ -191,20 +192,20 @@ private fun getSphereRadiusSq(radius: Int, avoidNipples: Boolean): Double{
 		square(radius.toDouble())
 }
 
-fun BlockPos.allInCenteredSphere(radius: Double): Stream<BlockPos>{
+fun BlockPos.allInCenteredSphere(radius: Double): Iterable<BlockPos>{
 	return this.allInCenteredSphereInternal(square(radius), this.allInCenteredBox(radius, radius, radius))
 }
 
 fun BlockPos.allInCenteredSphereMutable(radius: Double): Iterable<MutableBlockPos>{
-	return this.allInCenteredSphereInternalMutable(square(radius), this.allInCenteredBoxMutable(radius, radius, radius))
+	return this.allInCenteredSphereInternal(square(radius), this.allInCenteredBoxMutable(radius, radius, radius))
 }
 
-fun BlockPos.allInCenteredSphere(radius: Int, avoidNipples: Boolean = false): Stream<BlockPos>{
+fun BlockPos.allInCenteredSphere(radius: Int, avoidNipples: Boolean = false): Iterable<BlockPos>{
 	return this.allInCenteredSphereInternal(getSphereRadiusSq(radius, avoidNipples), this.allInCenteredBox(radius, radius, radius))
 }
 
 fun BlockPos.allInCenteredSphereMutable(radius: Int, avoidNipples: Boolean = false): Iterable<MutableBlockPos>{
-	return this.allInCenteredSphereInternalMutable(getSphereRadiusSq(radius, avoidNipples), this.allInCenteredBoxMutable(radius, radius, radius))
+	return this.allInCenteredSphereInternal(getSphereRadiusSq(radius, avoidNipples), this.allInCenteredBoxMutable(radius, radius, radius))
 }
 
 // Areas (Flood-Fill)

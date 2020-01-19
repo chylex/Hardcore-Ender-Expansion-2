@@ -151,7 +151,6 @@ class ItemPortalToken(properties: Properties) : Item(properties){
 	// Client
 	
 	override fun getDisplayName(stack: ItemStack): ITextComponent{
-		// UPDATE custom names?
 		return TextComponentTranslation("item.hee.portal_token_concrete", TextComponentTranslation(getTerritoryType(stack)?.translationKey ?: TerritoryType.FALLBACK_TRANSLATION_KEY))
 	}
 	

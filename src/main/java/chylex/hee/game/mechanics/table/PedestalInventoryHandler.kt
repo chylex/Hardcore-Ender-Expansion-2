@@ -8,22 +8,19 @@ import chylex.hee.system.util.createSnapshot
 import chylex.hee.system.util.getStack
 import chylex.hee.system.util.isNotEmpty
 import chylex.hee.system.util.loadInventory
-import chylex.hee.system.util.motionVec
+import chylex.hee.system.util.nextFloat
+import chylex.hee.system.util.nextVector2
 import chylex.hee.system.util.nonEmptySlots
 import chylex.hee.system.util.putStack
 import chylex.hee.system.util.restoreSnapshot
 import chylex.hee.system.util.saveInventory
-import chylex.hee.system.util.selectExistingEntities
 import chylex.hee.system.util.size
 import chylex.hee.system.util.use
 import net.minecraft.entity.player.PlayerInventory
 import net.minecraft.inventory.Inventory
-import net.minecraft.inventory.InventoryHelper
 import net.minecraft.inventory.container.Container
 import net.minecraft.item.ItemStack
-import net.minecraft.util.math.AxisAlignedBB
 import net.minecraft.util.math.BlockPos
-import net.minecraft.util.math.Vec3d
 import net.minecraft.world.World
 import net.minecraftforge.common.util.INBTSerializable
 import net.minecraftforge.items.ItemHandlerHelper
@@ -149,38 +146,45 @@ class PedestalInventoryHandler(private val updateCallback: (Boolean) -> Unit) : 
 			return
 		}
 		
-		guardDroppedItems(world, pos){
-			InventoryHelper.spawnItemStack(world, pos.x.toDouble(), pos.y.toDouble(), pos.z.toDouble(), itemInput)
-		}
-		
+		spawnItem(world, pos, itemInput, addOffset = false)
 		itemInput = ItemStack.EMPTY
+		
 		onInventoryUpdated(updateInputModCounter = true)
 	}
 	
 	fun dropAllItems(world: World, pos: BlockPos){
-		guardDroppedItems(world, pos){
-			InventoryHelper.spawnItemStack(world, pos.x.toDouble(), pos.y.toDouble(), pos.z.toDouble(), itemInput)
-			InventoryHelper.dropInventoryItems(world, pos, itemOutput)
-		}
-		
+		spawnItem(world, pos, itemInput, addOffset = false)
 		itemInput = ItemStack.EMPTY
+		
+		itemOutput.nonEmptySlots.forEach { spawnItem(world, pos, it.stack, addOffset = true) }
 		itemOutput.clear()
+		
 		onInventoryUpdated(updateInputModCounter = true)
 	}
 	
-	private fun guardDroppedItems(world: World, pos: BlockPos, dropper: () -> Unit){
-		val itemArea = AxisAlignedBB(pos)
-		val previousItemEntities = world.selectExistingEntities.inBox<EntityItem>(itemArea).toSet()
+	private fun spawnItem(world: World, pos: BlockPos, stack: ItemStack, addOffset: Boolean){
+		val rand = world.rand
 		
-		// UPDATE: see if 1.13 fixes itemstacks spawning and spazzing out all over the fucking place
-		dropper()
+		val offsetX: Double
+		val offsetZ: Double
+		val motionXZ: Double
 		
-		for(itemEntity in world.selectExistingEntities.inBox<EntityItem>(itemArea)){
-			if (!previousItemEntities.contains(itemEntity)){
-				itemEntity.setNoPickupDelay()
-				itemEntity.motionVec = Vec3d.ZERO
-				itemEntity.throwerId = BlockTablePedestal.DROPPED_ITEM_THROWER
-			}
+		if (addOffset){
+			offsetX = rand.nextFloat(0.22, 0.78)
+			offsetZ = rand.nextFloat(0.22, 0.78)
+			motionXZ = rand.nextFloat(0.005, 0.007)
+		}
+		else{
+			offsetX = 0.5
+			offsetZ = 0.5
+			motionXZ = rand.nextFloat(0.032, 0.034)
+		}
+		
+		EntityItem(world, pos.x + offsetX, pos.y - 1.0 + BlockTablePedestal.ITEM_SPAWN_OFFSET_Y, pos.z + offsetZ, stack).apply {
+			setNoPickupDelay()
+			motion = rand.nextVector2(motionXZ, rand.nextFloat(0.152, 0.155))
+			throwerId = BlockTablePedestal.DROPPED_ITEM_THROWER
+			world.addEntity(this)
 		}
 	}
 	

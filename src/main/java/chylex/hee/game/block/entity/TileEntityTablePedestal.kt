@@ -28,6 +28,7 @@ import chylex.hee.system.migration.forge.Side
 import chylex.hee.system.migration.forge.Sided
 import chylex.hee.system.migration.vanilla.EntityItem
 import chylex.hee.system.migration.vanilla.Sounds
+import chylex.hee.system.util.FLAG_RENDER_IMMEDIATE
 import chylex.hee.system.util.FLAG_SYNC_CLIENT
 import chylex.hee.system.util.TagCompound
 import chylex.hee.system.util.color.IntColor
@@ -99,7 +100,7 @@ class TileEntityTablePedestal(type: TileEntityType<TileEntityTablePedestal>) : T
 	private val statusIndicator = PedestalStatusIndicator(this)
 	
 	var statusIndicatorColorClient by NotifyOnChange<Int?>(null){
-		-> // UPDATE wrld.markBlockRangeForRenderUpdate(pos, pos)
+		-> wrld.notifyBlockUpdate(pos, blockState, blockState, FLAG_RENDER_IMMEDIATE)
 	}
 	
 	var isDedicatedOutput

@@ -13,12 +13,15 @@ import chylex.hee.system.util.breakBlock
 import chylex.hee.system.util.getTile
 import chylex.hee.system.util.playServer
 import chylex.hee.system.util.posVec
-import chylex.hee.system.util.setAir
+import chylex.hee.system.util.removeBlock
 import net.minecraft.block.Block
 import net.minecraft.block.BlockState
+import net.minecraft.entity.LivingEntity
+import net.minecraft.fluid.IFluidState
 import net.minecraft.item.ItemStack
 import net.minecraft.state.StateContainer.Builder
 import net.minecraft.tileentity.TileEntity
+import net.minecraft.util.Direction
 import net.minecraft.util.SoundCategory
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.RayTraceResult
@@ -88,29 +91,28 @@ class BlockInfusedTNT : BlockTNT(Properties.from(Blocks.TNT)){
 		super.onBlockAdded(state, world, pos, Blocks.AIR.defaultState, false)
 	}
 	
-	/* UPDATE
-	override fun removedByPlayer(state: BlockState, world: World, pos: BlockPos, player: EntityPlayer, willHarvest: Boolean): Boolean{
+	override fun removedByPlayer(state: BlockState, world: World, pos: BlockPos, player: EntityPlayer, willHarvest: Boolean, fluid: IFluidState): Boolean{
 		if (pos.getTile<TileEntityInfusedTNT>(world)?.infusions?.has(TRAP) == true && !player.isCreative){
-			explode(world, pos, state.with(EXPLODE, true), player)
-			pos.setAir(world)
+			catchFire(state, world, pos, null, player)
+			pos.removeBlock(world)
 			return false
 		}
 		
-		if (willHarvest){
-			return true // skip super call before drops
-		}
-		
-		return super.removedByPlayer(state, world, pos, player, willHarvest)
-	}*/
-	
-	override fun harvestBlock(world: World, player: EntityPlayer, pos: BlockPos, state: BlockState, tile: TileEntity?, stack: ItemStack){
-		super.harvestBlock(world, player, pos, state, tile, stack)
-		pos.setAir(world)
+		return super.removedByPlayer(state, world, pos, player, willHarvest, fluid)
 	}
 	
 	// TNT overrides
 	
-	override fun onExplosionDestroy(world: World, pos: BlockPos, explosion: Explosion){
+	override fun catchFire(state: BlockState, world: World, pos: BlockPos, face: Direction?, igniter: LivingEntity?){
+		if (world.isRemote){
+			return
+		}
+		
+		// UPDATE FireBlock removes the TNT block and tile entity before calling this, FFS
+		igniteTNT(world, pos, state, igniter, ignoreTrap = false)
+	}
+	
+	override fun onBlockExploded(state: BlockState, world: World, pos: BlockPos, explosion: Explosion){
 		if (world.isRemote){
 			return
 		}
@@ -120,23 +122,20 @@ class BlockInfusedTNT : BlockTNT(Properties.from(Blocks.TNT)){
 		if (infusions != null){
 			world.addEntity(EntityInfusedTNT(world, pos, infusions, explosion))
 		}
+		
+		super.onBlockExploded(state, world, pos, explosion)
 	}
 	
-	/* UPDATE
-	override fun explode(world: World, pos: BlockPos, state: BlockState, igniter: EntityLivingBase?){
-		if (world.isRemote){
-			return
-		}
-		
-		igniteTNT(world, pos, state, igniter, ignoreTrap = false)
-	}*/
+	override fun onExplosionDestroy(world: World, pos: BlockPos, explosion: Explosion){
+		// disable super call and spawn TNT in onBlockExploded before the tile entity is removed
+	}
 	
 	fun igniteTNT(world: World, pos: BlockPos, state: BlockState, igniter: EntityLivingBase?, ignoreTrap: Boolean){
 		val infusions = pos.getTile<TileEntityInfusedTNT>(world)?.infusions
 		
 		if (infusions != null){
 			if (infusions.has(TRAP) && world.isBlockPowered(pos) && !ignoreTrap){
-				pos.breakBlock(world, true) // UPDATE test
+				pos.breakBlock(world, true)
 			}
 			else{
 				EntityInfusedTNT(world, pos, infusions, igniter, state[INFERNIUM]).apply {

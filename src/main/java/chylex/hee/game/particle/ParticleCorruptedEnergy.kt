@@ -1,24 +1,42 @@
 package chylex.hee.game.particle
-import chylex.hee.game.particle.base.ParticleBase
 import chylex.hee.game.particle.data.ParticleDataColorLifespanScale
 import chylex.hee.game.particle.spawner.IParticleMaker
 import chylex.hee.system.migration.forge.Side
 import chylex.hee.system.migration.forge.Sided
+import chylex.hee.system.util.color.IRandomColor
+import chylex.hee.system.util.color.IntColor
+import chylex.hee.system.util.color.IntColor.Companion.RGB
+import chylex.hee.system.util.floorToInt
 import chylex.hee.system.util.nextFloat
 import net.minecraft.client.particle.Particle
 import net.minecraft.world.World
 import java.util.Random
 
-object ParticleCorruptedEnergy : IParticleMaker<ParticleDataColorLifespanScale>{
+object ParticleCorruptedEnergy : IParticleMaker.Simple(){
 	private val rand = Random()
 	
-	@Sided(Side.CLIENT)
-	override fun create(world: World, posX: Double, posY: Double, posZ: Double, motX: Double, motY: Double, motZ: Double, data: ParticleDataColorLifespanScale?): Particle{
-		return ParticleTeleport.create(world, posX, posY, posZ, motX, motY, motZ, data).apply {
-			if (rand.nextInt(3) == 0){
-				val me = this as ParticleBase // UPDATE ugly
-				setColor(me.redF * rand.nextFloat(0F, 0.2F), me.greenF * rand.nextFloat(0F, 0.2F), me.blueF * rand.nextFloat(0.1F, 0.3F))
+	private object Color : IRandomColor{
+		override fun next(rand: Random): IntColor{
+			val color = ParticleTeleport.DefaultColor.next(rand)
+			
+			if (rand.nextInt(3) != 0){
+				return color
 			}
+			
+			val modified = color.asVec.mul(
+				rand.nextFloat(0.0, 0.2),
+				rand.nextFloat(0.0, 0.2),
+				rand.nextFloat(0.1, 0.3)
+			)
+			
+			return RGB((modified.x * 255.0).floorToInt(), (modified.y * 255.0).floorToInt(), (modified.z * 255.0).floorToInt())
 		}
+	}
+	
+	private val DATA = ParticleDataColorLifespanScale.Generator(Color, lifespan = 8..12, scale = (2.5F)..(5.0F))
+	
+	@Sided(Side.CLIENT)
+	override fun create(world: World, posX: Double, posY: Double, posZ: Double, motX: Double, motY: Double, motZ: Double): Particle{
+		return ParticleTeleport.create(world, posX, posY, posZ, motX, motY, motZ, DATA.generate(rand))
 	}
 }

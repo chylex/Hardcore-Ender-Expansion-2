@@ -57,7 +57,7 @@ class AITargetEyeContact<T : EntityLivingBase>(
 	}
 	
 	private fun isLookingIntoEyes(target: T): Boolean{
-		if (target.getItemStackFromSlot(HEAD).item === Blocks.CARVED_PUMPKIN.asItem()){ // UPDATE test
+		if (target.getItemStackFromSlot(HEAD).item === Blocks.CARVED_PUMPKIN.asItem()){
 			return false
 		}
 		

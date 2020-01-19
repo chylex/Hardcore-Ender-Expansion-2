@@ -28,7 +28,6 @@ import net.minecraft.util.IStringSerializable
 import net.minecraft.util.math.BlockPos
 import net.minecraft.world.IEnviromentBlockReader
 import net.minecraft.world.World
-import kotlin.streams.toList
 
 sealed class BlockPuzzleLogic(builder: BlockBuilder) : BlockSimple(builder){
 	companion object{

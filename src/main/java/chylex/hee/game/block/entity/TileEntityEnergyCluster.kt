@@ -46,7 +46,6 @@ import net.minecraft.tileentity.TileEntityType
 import net.minecraft.util.math.BlockPos
 import kotlin.math.max
 import kotlin.math.pow
-import kotlin.streams.toList
 
 class TileEntityEnergyCluster(type: TileEntityType<TileEntityEnergyCluster>) : TileEntityBase(type), ITickableTileEntity{
 	constructor() : this(ModTileEntities.ENERGY_CLUSTER)

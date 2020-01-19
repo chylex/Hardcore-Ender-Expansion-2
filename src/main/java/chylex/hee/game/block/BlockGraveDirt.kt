@@ -5,7 +5,6 @@ import chylex.hee.game.block.util.Property
 import chylex.hee.game.entity.living.EntityMobSpiderling
 import chylex.hee.init.ModBlocks
 import chylex.hee.proxy.Environment
-import chylex.hee.system.migration.Difficulty.PEACEFUL
 import chylex.hee.system.migration.Facing.UP
 import chylex.hee.system.migration.forge.Side
 import chylex.hee.system.migration.forge.Sided
@@ -14,6 +13,7 @@ import chylex.hee.system.migration.vanilla.EntityPlayer
 import chylex.hee.system.util.center
 import chylex.hee.system.util.floorToInt
 import chylex.hee.system.util.getBlock
+import chylex.hee.system.util.isPeaceful
 import chylex.hee.system.util.nextFloat
 import chylex.hee.system.util.nextInt
 import chylex.hee.system.util.playClient
@@ -113,7 +113,7 @@ open class BlockGraveDirt(builder: BlockBuilder) : BlockSimpleShaped(builder, Ax
 		private var clientLastSpiderlingSound = 0L
 		
 		override fun updatePostPlacement(state: BlockState, facing: Direction, neighborState: BlockState, world: IWorld, pos: BlockPos, neighborPos: BlockPos): BlockState{
-			if (world.difficulty != PEACEFUL && facing == UP && neighborState.block is BlockFire){
+			if (!world.isRemote && !world.isPeaceful && facing == UP && neighborState.block is BlockFire){
 				val wrld = world.world
 				
 				makeSpiderling(wrld, neighborPos, yaw = wrld.rand.nextFloat()).apply {
@@ -134,7 +134,7 @@ open class BlockGraveDirt(builder: BlockBuilder) : BlockSimpleShaped(builder, Ax
 		override fun harvestBlock(world: World, player: EntityPlayer, pos: BlockPos, state: BlockState, tile: TileEntity?, stack: ItemStack){
 			super.harvestBlock(world, player, pos, state, tile, stack)
 			
-			if (world.difficulty != PEACEFUL){
+			if (!world.isPeaceful){
 				makeSpiderling(world, pos, player.posVec.subtract(pos.center).toYaw()).apply {
 					world.addEntity(this)
 					attackTarget = player
@@ -162,7 +162,7 @@ open class BlockGraveDirt(builder: BlockBuilder) : BlockSimpleShaped(builder, Ax
 		
 		@Sided(Side.CLIENT)
 		override fun animateTick(state: BlockState, world: World, pos: BlockPos, rand: Random){
-			if (world.difficulty != PEACEFUL && world.totalTime - clientLastSpiderlingSound > 35L){
+			if (!world.isPeaceful && world.totalTime - clientLastSpiderlingSound > 35L){
 				val distanceSq = MC.player?.getDistanceSq(pos.center) ?: 0.0
 				
 				if (rand.nextInt(3 + (distanceSq.floorToInt() / 5)) == 0){

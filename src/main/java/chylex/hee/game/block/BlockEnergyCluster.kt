@@ -14,7 +14,7 @@ import chylex.hee.system.util.ceilToInt
 import chylex.hee.system.util.floorToInt
 import chylex.hee.system.util.getTile
 import chylex.hee.system.util.nextFloat
-import chylex.hee.system.util.setAir
+import chylex.hee.system.util.removeBlock
 import net.minecraft.block.BlockRenderType.INVISIBLE
 import net.minecraft.block.BlockState
 import net.minecraft.client.particle.ParticleManager
@@ -99,7 +99,7 @@ class BlockEnergyCluster(builder: BlockBuilder) : BlockSimpleShaped(builder, Axi
 	
 	override fun onEntityCollision(state: BlockState, world: World, pos: BlockPos, entity: Entity){
 		if (entity is IProjectile){
-			pos.setAir(world)
+			pos.removeBlock(world)
 		}
 	}
 	

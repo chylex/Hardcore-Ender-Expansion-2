@@ -29,6 +29,7 @@ import net.minecraft.world.World
 import net.minecraftforge.fml.network.NetworkHooks
 
 open class EntityMobEndermite(type: EntityType<out EntityMobEndermite>, world: World) : EntityEndermite(type, world){
+	@Suppress("unused")
 	constructor(world: World) : this(ModEntities.ENDERMITE, world)
 	
 	private companion object{

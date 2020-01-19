@@ -253,7 +253,6 @@ object BlockBuilders{
 	// Decorative (Plants)
 	
 	val buildPlant = BlockBuilder(Material.PLANTS, MaterialColor.AIR, SoundType.PLANT).apply {
-		// UPDATE different material colors?
 		harvestHardness = 0F
 		explosionResistance = 0F
 	}
@@ -297,7 +296,7 @@ object BlockBuilders{
 		lightLevel = 15
 	}
 	
-	val buildPortalFrame = BlockBuilder(Material.PORTAL, MaterialColor.SAND, SoundType.STONE).apply {
+	val buildPortalFrame = BlockBuilder(Materials.SOLID_WITH_TOOL, MaterialColor.SAND, SoundType.STONE).apply {
 		makeIndestructible()
 	}
 	

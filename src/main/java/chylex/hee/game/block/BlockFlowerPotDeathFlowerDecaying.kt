@@ -4,12 +4,12 @@ import chylex.hee.game.block.info.BlockBuilder
 import chylex.hee.game.item.ItemDeathFlower
 import chylex.hee.init.ModBlocks
 import chylex.hee.init.ModItems
+import chylex.hee.system.migration.vanilla.BlockFlowerPot
 import chylex.hee.system.migration.vanilla.EntityPlayer
-import chylex.hee.system.util.setState
+import chylex.hee.system.util.setBlock
 import net.minecraft.block.Block
 import net.minecraft.block.BlockState
 import net.minecraft.block.Blocks
-import net.minecraft.entity.LivingEntity
 import net.minecraft.item.ItemStack
 import net.minecraft.state.StateContainer.Builder
 import net.minecraft.util.Hand
@@ -21,8 +21,12 @@ import net.minecraft.world.IWorldReader
 import net.minecraft.world.World
 import net.minecraft.world.storage.loot.LootContext
 import java.util.Random
+import java.util.function.Supplier
 
-class BlockFlowerPotDeathFlowerDecaying(builder: BlockBuilder, private val flower: Block) : BlockFlowerPotCustom(builder, flower), IBlockDeathFlowerDecaying{
+class BlockFlowerPotDeathFlowerDecaying(
+	builder: BlockBuilder,
+	flower: Block
+) : BlockFlowerPot(Supplier { Blocks.FLOWER_POT as BlockFlowerPot /* prevents adding to flower->pot map */ }, Supplier { flower }, builder.p), IBlockDeathFlowerDecaying{
 	override fun fillStateContainer(container: Builder<Block, BlockState>){
 		container.add(LEVEL)
 	}
@@ -40,12 +44,8 @@ class BlockFlowerPotDeathFlowerDecaying(builder: BlockBuilder, private val flowe
 		return implTickRate()
 	}
 	
-	override fun onBlockPlacedBy(world: World, pos: BlockPos, state: BlockState, placer: LivingEntity?, stack: ItemStack){
-		pos.setState(world, state.with(LEVEL, ItemDeathFlower.getDeathLevel(stack))) // UPDATE broken
-	}
-	
 	private fun getDrop(state: BlockState): ItemStack{
-		return ItemStack(flower).also { ItemDeathFlower.setDeathLevel(it, state[LEVEL]) }
+		return ItemStack(func_220276_d() /* RENAME getFlower */).also { ItemDeathFlower.setDeathLevel(it, state[LEVEL]) }
 	}
 	
 	override fun getDrops(state: BlockState, context: LootContext.Builder): MutableList<ItemStack>{
@@ -67,10 +67,22 @@ class BlockFlowerPotDeathFlowerDecaying(builder: BlockBuilder, private val flowe
 	}
 	
 	override fun onBlockActivated(state: BlockState, world: World, pos: BlockPos, player: EntityPlayer, hand: Hand, hit: BlockRayTraceResult): Boolean{
-		if (player.getHeldItem(hand).item === ModItems.END_POWDER){
+		val heldItem = player.getHeldItem(hand)
+		
+		if (heldItem.item === ModItems.END_POWDER){
 			return false
 		}
 		
-		return super.onBlockActivated(state, world, pos, player, hand, hit)
+		val drop = getDrop(state)
+		
+		if (heldItem.isEmpty){
+			player.setHeldItem(hand, drop)
+		}
+		else if (!player.addItemStackToInventory(drop)){
+			player.dropItem(drop, false)
+		}
+		
+		pos.setBlock(world, emptyPot)
+		return true
 	}
 }

@@ -95,7 +95,7 @@ object ModItems{
 	// Items: Nature & food
 	
 	@JvmField val COMPOST    = ItemCompost(defaultProps) named "compost"
-	@JvmField val VOID_SALAD = ItemVoidSalad(baseProps.maxStackSize(1).maxDamage(3).food(ItemVoidSalad.FOOD)) named "void_salad" // UPDATE maxstacksize unnecessary?
+	@JvmField val VOID_SALAD = ItemVoidSalad(baseProps.maxStackSize(1).food(ItemVoidSalad.FOOD)) named "void_salad"
 	
 	// Items: Utilities
 	

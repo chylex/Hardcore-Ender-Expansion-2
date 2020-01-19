@@ -27,7 +27,7 @@ class BlockEndPortalAcceptor(builder: BlockBuilder, aabb: AxisAlignedBB) : Block
 	}
 	
 	override fun updatePostPlacement(state: BlockState, facing: Direction, neighborState: BlockState, world: IWorld, pos: BlockPos, neighborPos: BlockPos): BlockState{
-		if (facing == UP){
+		if (!world.isRemote && facing == UP){
 			pos.getTile<TileEntityEndPortalAcceptor>(world)?.refreshClusterState()
 		}
 		

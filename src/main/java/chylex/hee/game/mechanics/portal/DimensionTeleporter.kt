@@ -9,7 +9,6 @@ import chylex.hee.system.util.getTopSolidOrLiquidBlock
 import chylex.hee.system.util.hasKey
 import chylex.hee.system.util.heeTagPersistent
 import chylex.hee.system.util.heeTagPersistentOrNull
-import chylex.hee.system.util.motionVec
 import chylex.hee.system.util.putPos
 import chylex.hee.system.util.subtractY
 import net.minecraft.entity.Entity
@@ -36,7 +35,7 @@ sealed class DimensionTeleporter{
 		
 		private fun placeAt(entity: Entity, target: Vec3d, yaw: Float){
 			entity.setLocationAndAngles(target.x, target.y, target.z, yaw, 0F)
-			entity.motionVec = Vec3d.ZERO
+			entity.motion = Vec3d.ZERO
 		}
 		
 		private fun placeAt(entity: Entity, yaw: Float, spawnInfo: SpawnInfo){

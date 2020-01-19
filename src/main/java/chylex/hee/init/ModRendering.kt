@@ -5,7 +5,6 @@ import chylex.hee.client.gui.GuiBrewingStandCustom
 import chylex.hee.client.gui.GuiLootChest
 import chylex.hee.client.gui.GuiPortalTokenStorage
 import chylex.hee.client.gui.GuiTrinketPouch
-import chylex.hee.client.model.item.ModelItemAmuletOfRecovery
 import chylex.hee.client.render.block.RenderTileDarkChest
 import chylex.hee.client.render.block.RenderTileEndPortal
 import chylex.hee.client.render.block.RenderTileExperienceGate
@@ -84,7 +83,6 @@ import net.minecraft.inventory.container.Container
 import net.minecraft.inventory.container.ContainerType
 import net.minecraft.tileentity.TileEntity
 import net.minecraftforge.client.event.ColorHandlerEvent
-import net.minecraftforge.client.event.ModelRegistryEvent
 import net.minecraftforge.fml.client.registry.ClientRegistry
 import net.minecraftforge.fml.client.registry.RenderingRegistry
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber.Bus.MOD
@@ -173,11 +171,6 @@ object ModRendering{
 				register(BlockPuzzleLogic.Color.asItem(block), block)
 			}
 		}}
-	}
-	
-	@SubscribeEvent
-	fun onRegisterModels(@Suppress("UNUSED_PARAMETER") e: ModelRegistryEvent){
-		ModelItemAmuletOfRecovery.register()
 	}
 	
 	// Utilities

@@ -6,13 +6,13 @@ import chylex.hee.game.entity.technical.EntityTechnicalTrigger.Types.STRONGHOLD_
 import chylex.hee.game.world.feature.stronghold.StrongholdPieceType
 import chylex.hee.game.world.structure.IStructureWorld
 import chylex.hee.game.world.structure.trigger.EntityStructureTrigger
-import chylex.hee.system.migration.Difficulty.PEACEFUL
 import chylex.hee.system.migration.vanilla.EntityPlayer
 import chylex.hee.system.util.Pos
 import chylex.hee.system.util.TagCompound
 import chylex.hee.system.util.component1
 import chylex.hee.system.util.component2
 import chylex.hee.system.util.component3
+import chylex.hee.system.util.isPeaceful
 import chylex.hee.system.util.nextFloat
 import chylex.hee.system.util.nextInt
 import chylex.hee.system.util.nextItemOrNull
@@ -32,7 +32,7 @@ class StrongholdRoom_Trap_CornerHoles(file: String) : StrongholdAbstractPieceFro
 		private var spawnsLeft = -1
 		
 		override fun check(world: World): Boolean{
-			return !world.isRemote && world.difficulty != PEACEFUL
+			return !world.isRemote && !world.isPeaceful
 		}
 		
 		override fun update(entity: EntityTechnicalTrigger){

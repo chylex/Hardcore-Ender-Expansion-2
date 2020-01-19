@@ -35,7 +35,6 @@ import chylex.hee.system.util.directionTowards
 import chylex.hee.system.util.getHardness
 import chylex.hee.system.util.getListOfItemStacks
 import chylex.hee.system.util.lookPosVec
-import chylex.hee.system.util.motionVec
 import chylex.hee.system.util.nextInt
 import chylex.hee.system.util.nextItem
 import chylex.hee.system.util.playClient
@@ -308,7 +307,7 @@ class TileEntityMinersBurialAltar(type: TileEntityType<TileEntityMinersBurialAlt
 				PacketClientFX(FX_SPAWN, FxSpawnData(fxPos, redeemType)).sendToAllAround(wrld, fxPos, 16.0)
 				
 				EntityItem(wrld, spawnPos.x, spawnPos.y, spawnPos.z, split).apply {
-					motionVec = spawnMot
+					motion = spawnMot
 					setNoPickupDelay()
 					wrld.addEntity(this)
 				}

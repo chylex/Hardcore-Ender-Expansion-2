@@ -47,6 +47,10 @@ abstract class ParticleBase(world: World, posX: Double, posY: Double, posZ: Doub
 		}
 	}
 	
+	override fun getScale(partialTicks: Float): Float{
+		return super.getScale(partialTicks) * 0.1F // mimics particle rendering from 1.12
+	}
+	
 	override fun getRenderType(): IParticleRenderType{
 		return PARTICLE_SHEET_OPAQUE
 	}

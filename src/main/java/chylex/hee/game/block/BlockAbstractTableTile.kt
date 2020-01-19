@@ -33,7 +33,10 @@ abstract class BlockAbstractTableTile<T : TileEntityBaseTable>(builder: BlockBui
 	}
 	
 	override fun onReplaced(state: BlockState, world: World, pos: BlockPos, newState: BlockState, isMoving: Boolean){
-		pos.getTile<TileEntityBaseTable>(world)?.onTableDestroyed(dropTableLink = true)
+		if (newState.block !== this){
+			pos.getTile<TileEntityBaseTable>(world)?.onTableDestroyed(dropTableLink = true)
+		}
+		
 		super.onReplaced(state, world, pos, newState, isMoving)
 	}
 }

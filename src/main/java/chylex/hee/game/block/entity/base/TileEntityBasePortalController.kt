@@ -7,12 +7,11 @@ import chylex.hee.game.block.entity.base.TileEntityBasePortalController.Foregrou
 import chylex.hee.system.util.TagCompound
 import chylex.hee.system.util.math.LerpedFloat
 import chylex.hee.system.util.use
-import net.minecraft.tileentity.ITickableTileEntity
 import net.minecraft.tileentity.TileEntityType
 import kotlin.math.max
 import kotlin.math.min
 
-abstract class TileEntityBasePortalController(type: TileEntityType<out TileEntityBasePortalController>) : TileEntityBase(type), IPortalController, ITickableTileEntity{
+abstract class TileEntityBasePortalController(type: TileEntityType<out TileEntityBasePortalController>) : TileEntityBaseSpecialFirstTick(type), IPortalController{
 	private companion object{
 		private const val RENDER_STATE_TAG = "RenderState"
 		private const val RENDER_PROGRESS_TAG = "RenderProgress"
@@ -40,6 +39,8 @@ abstract class TileEntityBasePortalController(type: TileEntityType<out TileEntit
 	}
 	
 	override fun tick(){
+		super.tick()
+		
 		if (wrld.isRemote){
 			updateAnimation()
 		}

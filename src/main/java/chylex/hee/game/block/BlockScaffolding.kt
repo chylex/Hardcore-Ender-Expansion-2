@@ -1,6 +1,10 @@
 package chylex.hee.game.block
 import chylex.hee.HEE
 import chylex.hee.game.block.info.BlockBuilder
+import chylex.hee.game.commands.client.CommandClientScaffolding
+import chylex.hee.game.world.structure.file.StructureFile
+import chylex.hee.game.world.util.BoundingBox
+import chylex.hee.system.Debug
 import chylex.hee.system.migration.Facing.DOWN
 import chylex.hee.system.migration.Facing.EAST
 import chylex.hee.system.migration.Facing.NORTH
@@ -10,21 +14,27 @@ import chylex.hee.system.migration.Facing.WEST
 import chylex.hee.system.migration.forge.Side
 import chylex.hee.system.migration.forge.Sided
 import chylex.hee.system.migration.vanilla.Blocks
+import chylex.hee.system.migration.vanilla.EntityPlayer
+import chylex.hee.system.migration.vanilla.TextComponentString
 import chylex.hee.system.util.Pos
 import chylex.hee.system.util.getBlock
 import chylex.hee.system.util.offsetUntil
 import net.minecraft.block.BlockState
+import net.minecraft.nbt.CompressedStreamTools
 import net.minecraft.util.BlockRenderLayer.CUTOUT
 import net.minecraft.util.Direction
+import net.minecraft.util.Hand
 import net.minecraft.util.math.BlockPos
+import net.minecraft.util.math.BlockRayTraceResult
 import net.minecraft.util.math.shapes.ISelectionContext
 import net.minecraft.util.math.shapes.VoxelShape
 import net.minecraft.util.math.shapes.VoxelShapes
+import net.minecraft.util.text.TextFormatting
 import net.minecraft.world.IBlockReader
 import net.minecraft.world.World
+import java.nio.file.Files
 
 class BlockScaffolding(builder: BlockBuilder) : BlockSimple(builder){
-	/* UPDATE
 	override fun onBlockActivated(state: BlockState, world: World, pos: BlockPos, player: EntityPlayer, hand: Hand, hit: BlockRayTraceResult): Boolean{
 		if (world.isRemote && player.isSneaking && !player.abilities.isFlying && Debug.enabled){
 			val palette = CommandClientScaffolding.currentPalette
@@ -63,7 +73,7 @@ class BlockScaffolding(builder: BlockBuilder) : BlockSimple(builder){
 		}
 		
 		return false
-	}*/
+	}
 	
 	// Helpers
 	
@@ -105,7 +115,7 @@ class BlockScaffolding(builder: BlockBuilder) : BlockSimple(builder){
 			VoxelShapes.empty()
 	}
 	
-	override fun getRaytraceShape(state: BlockState, world: IBlockReader, pos: BlockPos): VoxelShape{ // UPDATE test
+	override fun getRaytraceShape(state: BlockState, world: IBlockReader, pos: BlockPos): VoxelShape{
 		val player = HEE.proxy.getClientSidePlayer()
 		
 		return if (player == null || player.isSneaking || player.abilities.isFlying)

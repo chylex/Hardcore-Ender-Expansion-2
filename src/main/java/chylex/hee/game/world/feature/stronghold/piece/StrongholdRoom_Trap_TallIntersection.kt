@@ -7,13 +7,13 @@ import chylex.hee.game.world.feature.stronghold.StrongholdPieceType
 import chylex.hee.game.world.feature.stronghold.StrongholdPieces
 import chylex.hee.game.world.structure.IStructureWorld
 import chylex.hee.game.world.structure.trigger.EntityStructureTrigger
-import chylex.hee.system.migration.Difficulty.PEACEFUL
 import chylex.hee.system.migration.vanilla.EntityPlayer
 import chylex.hee.system.util.Pos
 import chylex.hee.system.util.breakBlock
 import chylex.hee.system.util.facades.Facing4
 import chylex.hee.system.util.getBlock
 import chylex.hee.system.util.isAir
+import chylex.hee.system.util.isPeaceful
 import chylex.hee.system.util.nextFloat
 import chylex.hee.system.util.nextInt
 import chylex.hee.system.util.nextItem
@@ -24,7 +24,7 @@ import java.util.Random
 class StrongholdRoom_Trap_TallIntersection(file: String) : StrongholdAbstractPieceFromFile(file, StrongholdPieceType.ROOM){
 	object Trigger : ITriggerHandler{
 		override fun check(world: World): Boolean{
-			return !world.isRemote && world.difficulty != PEACEFUL
+			return !world.isRemote && !world.isPeaceful
 		}
 		
 		override fun update(entity: EntityTechnicalTrigger){

@@ -2,7 +2,6 @@ package chylex.hee.system.migration
 import net.minecraft.util.ActionResultType
 import net.minecraft.util.Direction
 import net.minecraft.util.Hand
-import net.minecraft.world.Difficulty
 
 object Facing{
 	val DOWN  get() = Direction.DOWN
@@ -15,13 +14,6 @@ object Facing{
 	val AXIS_X get() = Direction.Axis.X
 	val AXIS_Y get() = Direction.Axis.Y
 	val AXIS_Z get() = Direction.Axis.Z
-}
-
-object Difficulty{
-	val PEACEFUL get() = Difficulty.PEACEFUL
-	val EASY     get() = Difficulty.EASY
-	val NORMAL   get() = Difficulty.NORMAL
-	val HARD     get() = Difficulty.HARD
 }
 
 object Hand{

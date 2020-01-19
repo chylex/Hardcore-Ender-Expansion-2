@@ -4,7 +4,6 @@ import chylex.hee.game.entity.IMobBypassPeacefulDespawn
 import chylex.hee.game.mechanics.instability.Instability
 import chylex.hee.init.ModBlocks
 import chylex.hee.init.ModEntities
-import chylex.hee.system.migration.Difficulty.PEACEFUL
 import chylex.hee.system.migration.forge.Side
 import chylex.hee.system.migration.forge.Sided
 import chylex.hee.system.migration.vanilla.EntityLivingBase
@@ -12,6 +11,7 @@ import chylex.hee.system.util.Pos
 import chylex.hee.system.util.TagCompound
 import chylex.hee.system.util.facades.Resource
 import chylex.hee.system.util.heeTag
+import chylex.hee.system.util.isPeaceful
 import chylex.hee.system.util.square
 import chylex.hee.system.util.use
 import net.minecraft.entity.EntityType
@@ -31,13 +31,13 @@ class EntityMobEndermiteInstability(type: EntityType<EntityMobEndermiteInstabili
 	override fun livingTick(){
 		super.livingTick()
 		
-		if (world.difficulty == PEACEFUL && attackTarget != null){
+		if (world.isPeaceful && attackTarget != null){
 			super.setAttackTarget(null)
 		}
 	}
 	
 	override fun setAttackTarget(newTarget: EntityLivingBase?){
-		if (world.difficulty != PEACEFUL){
+		if (!world.isPeaceful){
 			super.setAttackTarget(newTarget)
 		}
 	}

@@ -32,7 +32,6 @@ import chylex.hee.system.util.heeTag
 import chylex.hee.system.util.lookDirVec
 import chylex.hee.system.util.lookPosVec
 import chylex.hee.system.util.math.LerpedFloat
-import chylex.hee.system.util.motionVec
 import chylex.hee.system.util.motionX
 import chylex.hee.system.util.motionZ
 import chylex.hee.system.util.nextInt
@@ -181,7 +180,7 @@ class EntityProjectileEyeOfEnder(type: EntityType<EntityProjectileEyeOfEnder>, w
 		super.tick()
 		
 		if (ticksExisted == 1){
-			motionVec = targetVecXZ.normalize().scale(0.27)
+			motion = targetVecXZ.normalize().scale(0.27)
 		}
 		
 		++timer
@@ -217,7 +216,7 @@ class EntityProjectileEyeOfEnder(type: EntityType<EntityProjectileEyeOfEnder>, w
 	
 	private fun updateTargetAltitude(){
 		val perpendicular = Vec3.fromXZ(-(motionZ * 3.0), motionX * 3.0)
-		val step = motionVec.scale(4)
+		val step = motion.scale(4)
 		
 		val parallelStarts = arrayOf(
 			posVec,
@@ -281,7 +280,7 @@ class EntityProjectileEyeOfEnder(type: EntityType<EntityProjectileEyeOfEnder>, w
 			}
 		}
 		
-		val (newX, _, newZ) = posVec.add(motionVec.scale(speed))
+		val (newX, _, newZ) = posVec.add(motion.scale(speed))
 		val newY = posY + (targetY - posY) * 0.03 * ySpeedMp
 		setPosition(newX, newY, newZ)
 	}

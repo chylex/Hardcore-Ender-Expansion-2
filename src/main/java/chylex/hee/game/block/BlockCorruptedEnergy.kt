@@ -17,7 +17,6 @@ import chylex.hee.game.mechanics.damage.IDamageProcessor.Companion.MAGIC_TYPE
 import chylex.hee.game.mechanics.damage.IDamageProcessor.Companion.NUDITY_DANGER
 import chylex.hee.game.mechanics.damage.IDamageProcessor.Companion.RAPID_DAMAGE
 import chylex.hee.game.particle.ParticleCorruptedEnergy
-import chylex.hee.game.particle.ParticleTeleport.Data
 import chylex.hee.game.particle.spawner.ParticleSpawnerCustom
 import chylex.hee.game.particle.util.IOffset.InBox
 import chylex.hee.game.particle.util.IShape.Point
@@ -31,8 +30,8 @@ import chylex.hee.system.util.facades.Facing6
 import chylex.hee.system.util.getState
 import chylex.hee.system.util.getTile
 import chylex.hee.system.util.nextInt
+import chylex.hee.system.util.removeBlock
 import chylex.hee.system.util.removeItem
-import chylex.hee.system.util.setAir
 import chylex.hee.system.util.setState
 import chylex.hee.system.util.with
 import net.minecraft.block.Block
@@ -41,9 +40,6 @@ import net.minecraft.block.BlockState
 import net.minecraft.entity.Entity
 import net.minecraft.state.StateContainer.Builder
 import net.minecraft.util.math.BlockPos
-import net.minecraft.util.math.shapes.ISelectionContext
-import net.minecraft.util.math.shapes.VoxelShape
-import net.minecraft.util.math.shapes.VoxelShapes
 import net.minecraft.world.IBlockReader
 import net.minecraft.world.IWorldReader
 import net.minecraft.world.World
@@ -64,7 +60,6 @@ class BlockCorruptedEnergy(builder: BlockBuilder) : BlockSimple(builder){
 		
 		private val PARTICLE_CORRUPTION = ParticleSpawnerCustom(
 			type = ParticleCorruptedEnergy,
-			data = Data(lifespan = 8..12, scale = (2.5F)..(5.0F)),
 			pos = InBox(0.75F),
 			mot = InBox(0.05F),
 			hideOnMinimalSetting = false
@@ -138,7 +133,7 @@ class BlockCorruptedEnergy(builder: BlockBuilder) : BlockSimple(builder){
 	
 	override fun randomTick(state: BlockState, world: World, pos: BlockPos, rand: Random){
 		if (!world.pendingBlockTicks.isTickScheduled(pos, this)){
-			pos.setAir(world)
+			pos.removeBlock(world)
 		}
 	}
 	
@@ -161,7 +156,7 @@ class BlockCorruptedEnergy(builder: BlockBuilder) : BlockSimple(builder){
 			val decreaseToLevel = level - rand.nextInt(1, 2)
 			
 			if (decreaseToLevel < MIN_LEVEL){
-				pos.setAir(world)
+				pos.removeBlock(world)
 				return
 			}
 			
@@ -174,6 +169,10 @@ class BlockCorruptedEnergy(builder: BlockBuilder) : BlockSimple(builder){
 	// Interactions
 	
 	override fun isAir(state: BlockState, world: IBlockReader, pos: BlockPos): Boolean{
+		return true
+	}
+	
+	override fun propagatesSkylightDown(state: BlockState, world: IBlockReader, pos: BlockPos): Boolean{
 		return true
 	}
 	
@@ -197,10 +196,9 @@ class BlockCorruptedEnergy(builder: BlockBuilder) : BlockSimple(builder){
 		}
 	}
 	
-	// General
-	
-	override fun getCollisionShape(state: BlockState, world: IBlockReader, pos: BlockPos, context: ISelectionContext): VoxelShape{
-		return VoxelShapes.empty()
+	@Sided(Side.CLIENT)
+	override fun getAmbientOcclusionLightValue(state: BlockState, world: IBlockReader, pos: BlockPos): Float{
+		return 1F
 	}
 	
 	override fun getRenderType(state: BlockState) = INVISIBLE

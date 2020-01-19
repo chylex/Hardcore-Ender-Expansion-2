@@ -161,7 +161,7 @@ class ItemShulkerBoxOverride(block: Block, properties: Properties) : ItemBlock(b
 				
 				for(invStack in inventory){
 					if (invStack.isNotEmpty){
-						counts.addTo(invStack.displayName.string /* UPDATE */, invStack.count)
+						counts.addTo(invStack.displayName.string, invStack.count)
 					}
 				}
 				

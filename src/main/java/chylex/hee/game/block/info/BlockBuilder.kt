@@ -43,7 +43,7 @@ class BlockBuilder(val material: Material, var color: MaterialColor, var sound: 
 			sound(sound)
 			
 			if (!material.blocksMovement()){
-				doesNotBlockMovement() // UPDATE
+				doesNotBlockMovement()
 			}
 			
 			if (randomTicks){

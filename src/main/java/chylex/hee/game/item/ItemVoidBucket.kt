@@ -30,7 +30,6 @@ import net.minecraft.util.math.RayTraceContext.FluidMode
 import net.minecraft.util.math.RayTraceResult.Type.BLOCK
 import net.minecraft.world.World
 import java.util.Collections
-import kotlin.streams.toList
 
 class ItemVoidBucket(properties: Properties) : ItemAbstractVoidTool(properties, VOID_BUCKET){
 	private companion object{
@@ -38,7 +37,7 @@ class ItemVoidBucket(properties: Properties) : ItemAbstractVoidTool(properties, 
 		
 		private fun getFluidColor(state: IFluidState) = when{
 			state.isEmpty -> 0
-			state.fluid.isEquivalentTo(Fluids.LAVA) -> RGB(205, 90, 17).i // UPDATE
+			state.fluid.isEquivalentTo(Fluids.LAVA) -> RGB(205, 90, 17).i
 			else -> state.fluid.attributes.color
 		}
 		

@@ -22,7 +22,7 @@ import chylex.hee.system.util.heeTagOrNull
 import chylex.hee.system.util.nextFloat
 import chylex.hee.system.util.playServer
 import chylex.hee.system.util.posVec
-import chylex.hee.system.util.setAir
+import chylex.hee.system.util.removeBlock
 import chylex.hee.system.util.setBlock
 import net.minecraft.item.Item
 import net.minecraft.item.ItemStack
@@ -63,7 +63,7 @@ class ItemFlintAndInfernium(properties: Properties) : Item(properties){
 		}
 		
 		ModBlocks.INFUSED_TNT.igniteTNT(world, pos, pos.getState(world).with(BlockInfusedTNT.INFERNIUM, true), player, ignoreTrap)
-		pos.setAir(world)
+		pos.removeBlock(world)
 	}
 	
 	override fun onItemUse(context: ItemUseContext): ActionResultType{

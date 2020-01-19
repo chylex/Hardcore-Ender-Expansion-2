@@ -23,7 +23,6 @@ import chylex.hee.system.util.getEnum
 import chylex.hee.system.util.heeTag
 import chylex.hee.system.util.lookPosVec
 import chylex.hee.system.util.math.LerpedFloat
-import chylex.hee.system.util.motionVec
 import chylex.hee.system.util.posVec
 import chylex.hee.system.util.putEnum
 import chylex.hee.system.util.square
@@ -136,7 +135,7 @@ class EntityTokenHolder(type: EntityType<EntityTokenHolder>, world: World) : Ent
 		
 		if (droppedToken != null){
 			droppedToken.setNoPickupDelay()
-			droppedToken.motionVec = motion
+			droppedToken.motion = motion
 			PacketClientLaunchInstantly(droppedToken, motion).sendToTracking(this)
 		}
 		

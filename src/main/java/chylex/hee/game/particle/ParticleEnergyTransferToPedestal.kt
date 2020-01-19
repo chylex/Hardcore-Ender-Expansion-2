@@ -31,13 +31,13 @@ object ParticleEnergyTransferToPedestal : IParticleMaker.WithData<Data>(){
 		override val targetPos: Vec3d
 		
 		init{
+			selectSpriteRandomly(ParticleEnergyTransferToPedestal.sprite)
+			
 			if (data == null){
 				targetPos = Vec3d.ZERO
 				setExpired()
 			}
 			else{
-				selectSpriteRandomly(ParticleEnergyTransferToPedestal.sprite)
-				
 				loadColor(RGB(40u))
 				particleAlpha = 0.9F
 				

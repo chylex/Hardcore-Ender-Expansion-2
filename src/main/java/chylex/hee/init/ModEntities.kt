@@ -28,8 +28,13 @@ import chylex.hee.game.entity.technical.EntityTechnicalIgneousPlateLogic
 import chylex.hee.game.entity.technical.EntityTechnicalPuzzle
 import chylex.hee.game.entity.technical.EntityTechnicalTrigger
 import chylex.hee.init.factory.EntityConstructors
+import chylex.hee.system.migration.forge.EventPriority
 import chylex.hee.system.migration.forge.SubscribeAllEvents
 import chylex.hee.system.migration.forge.SubscribeEvent
+import chylex.hee.system.migration.vanilla.EntityEnderman
+import chylex.hee.system.migration.vanilla.EntityEndermite
+import chylex.hee.system.migration.vanilla.EntitySilverfish
+import chylex.hee.system.util.TagCompound
 import chylex.hee.system.util.named
 import net.minecraft.entity.Entity
 import net.minecraft.entity.EntityClassification
@@ -41,7 +46,9 @@ import net.minecraft.entity.EntityType
 import net.minecraft.entity.MobEntity
 import net.minecraft.entity.monster.MonsterEntity
 import net.minecraft.world.gen.Heightmap.Type
+import net.minecraftforge.common.MinecraftForge
 import net.minecraftforge.event.RegistryEvent
+import net.minecraftforge.event.entity.EntityJoinWorldEvent
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber.Bus.MOD
 
 @SubscribeAllEvents(modid = HEE.ID, bus = MOD)
@@ -116,18 +123,11 @@ object ModEntities{
 			register(TECHNICAL_TRIGGER)
 		}
 		
-		// vanilla modifications
-		
-		override<EntityMobEnderman>("enderman")
-		override<EntityMobEndermite>("endermite")
-		override<EntityMobSilverfish>("silverfish")
-		
 		// spawns
 		
 		val defaultSpawnPredicate = MonsterEntity::func_223325_c // RENAME this is the one that includes a light level check
 		
 		EntitySpawnPlacementRegistry.register(ENDERMAN, PlacementType.ON_GROUND, Type.MOTION_BLOCKING_NO_LEAVES, EntityMobEnderman.Companion::canSpawnAt)
-		
 		EntitySpawnPlacementRegistry.register(ANGRY_ENDERMAN, PlacementType.ON_GROUND, Type.MOTION_BLOCKING_NO_LEAVES, defaultSpawnPredicate)
 		EntitySpawnPlacementRegistry.register(ENDERMITE, PlacementType.ON_GROUND, Type.MOTION_BLOCKING_NO_LEAVES, defaultSpawnPredicate)
 		EntitySpawnPlacementRegistry.register(ENDERMITE_INSTABILITY, PlacementType.ON_GROUND, Type.MOTION_BLOCKING_NO_LEAVES, defaultSpawnPredicate)
@@ -135,6 +135,29 @@ object ModEntities{
 		EntitySpawnPlacementRegistry.register(SPIDERLING, PlacementType.ON_GROUND, Type.MOTION_BLOCKING_NO_LEAVES, defaultSpawnPredicate)
 		EntitySpawnPlacementRegistry.register(UNDREAD, PlacementType.ON_GROUND, Type.MOTION_BLOCKING_NO_LEAVES, defaultSpawnPredicate)
 		EntitySpawnPlacementRegistry.register(VAMPIRE_BAT, PlacementType.ON_GROUND, Type.MOTION_BLOCKING_NO_LEAVES, MobEntity::canSpawnOn)
+		
+		MinecraftForge.EVENT_BUS.register(this)
+	}
+	
+	// Vanilla modifications
+	
+	@SubscribeEvent(priority = EventPriority.HIGHEST)
+	fun onEntityJoinWorld(e: EntityJoinWorldEvent){ // UPDATE any better way?
+		val world = e.world
+		val original = e.entity
+		
+		val overriden = when(original.javaClass){
+			EntityEnderman::class.java -> EntityMobEnderman(world)
+			EntityEndermite::class.java -> EntityMobEndermite(world)
+			EntitySilverfish::class.java -> EntityMobSilverfish(world)
+			else -> return
+		}
+		
+		// UPDATE check passengers
+		overriden.read(original.writeWithoutTypeId(TagCompound()))
+		
+		e.isCanceled = true
+		world.addEntity(overriden)
 	}
 	
 	// Utilities
@@ -149,19 +172,5 @@ object ModEntities{
 	
 	private fun <T : Entity> EntityType.Builder<T>.name(name: String): EntityType<T>{
 		return this.build("hee.$name") named name
-	}
-	
-	private fun override(vanillaName: String, mobClass: Class<out Entity>){ // TODO apparently this would break any mod that manually constructs & spawns the old entity class
-		/* UPDATE
-		ForgeRegistries.ENTITIES.getValue(Resource.Vanilla(vanillaName))!!.apply { // TODO is there a better way?
-			val entryFields = this::class.java.declaredFields
-			
-			entryFields.first { it.type === Class::class.java }.also { it.isAccessible = true }.set(this, mobClass)
-			entryFields.first { it.type === Function::class.java }.also { it.isAccessible = true }.set(this, EntityConstructors.get(mobClass))
-		}*/
-	}
-	
-	private inline fun <reified T : Entity> override(vanillaName: String){
-		override(vanillaName, T::class.java)
 	}
 }

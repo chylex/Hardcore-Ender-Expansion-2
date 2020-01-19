@@ -18,11 +18,10 @@ import chylex.hee.system.util.blocksMovement
 import chylex.hee.system.util.center
 import chylex.hee.system.util.getState
 import chylex.hee.system.util.isAir
-import chylex.hee.system.util.motionVec
 import chylex.hee.system.util.nextInt
 import chylex.hee.system.util.offsetUntil
 import chylex.hee.system.util.playClient
-import chylex.hee.system.util.setAir
+import chylex.hee.system.util.removeBlock
 import chylex.hee.system.util.setState
 import net.minecraft.block.BlockState
 import net.minecraft.item.ItemStack
@@ -89,7 +88,7 @@ class BlockDragonEggOverride(builder: BlockBuilder) : BlockDragonEgg(builder.p){
 					val finalPos = if (targetPos.y - solidPos.y <= 7) solidPos.up() else targetPos
 					
 					finalPos.setState(world, realState)
-					pos.setAir(world)
+					pos.removeBlock(world)
 					
 					FxTeleportData(
 						startPoint = pos.center,
@@ -113,12 +112,12 @@ class BlockDragonEggOverride(builder: BlockBuilder) : BlockDragonEgg(builder.p){
 			return
 		}
 		
-		pos.setAir(world)
+		pos.removeBlock(world)
 		PacketClientFX(FX_BREAK, FxBlockData(pos)).sendToAllAround(world, pos, 32.0)
 		
 		if (world.gameRules.getBoolean(DO_TILE_DROPS) && !world.restoringBlockSnapshots){
 			EntityItem(world, pos.x + 0.5, pos.y.toDouble(), pos.z + 0.5, ItemStack(this)).apply {
-				motionVec = Vec3d.ZERO
+				motion = Vec3d.ZERO
 				setDefaultPickupDelay()
 				world.addEntity(this)
 			}

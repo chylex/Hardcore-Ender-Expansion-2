@@ -7,11 +7,10 @@ import chylex.hee.system.util.nextFloat
 import chylex.hee.system.util.putPos
 import chylex.hee.system.util.use
 import net.minecraft.entity.Entity
-import net.minecraft.tileentity.ITickableTileEntity
 import net.minecraft.tileentity.TileEntityType
 import net.minecraft.util.math.BlockPos
 
-abstract class TileEntityBaseSpawner(type: TileEntityType<out TileEntityBaseSpawner>) : TileEntityBase(type), ITickableTileEntity{
+abstract class TileEntityBaseSpawner(type: TileEntityType<out TileEntityBaseSpawner>) : TileEntityBaseSpecialFirstTick(type){
 	private companion object{
 		private const val LAST_POS_TAG = "LastPos"
 	}
@@ -39,6 +38,8 @@ abstract class TileEntityBaseSpawner(type: TileEntityType<out TileEntityBaseSpaw
 	}
 	
 	final override fun tick(){
+		super.tick()
+		
 		if (wrld.isRemote){
 			clientRotation.update(clientRotation.currentValue + clientRotationSpeed)
 			tickClient()

@@ -14,7 +14,10 @@ import chylex.hee.system.migration.vanilla.EntityPlayer
 import chylex.hee.system.migration.vanilla.ItemTool
 import chylex.hee.system.util.doDamage
 import net.minecraft.block.BlockState
+import net.minecraft.enchantment.EnchantmentHelper
+import net.minecraft.enchantment.Enchantments
 import net.minecraft.entity.player.PlayerEntity
+import net.minecraft.fluid.IFluidState
 import net.minecraft.item.ItemStack
 import net.minecraft.particles.ParticleTypes.LAVA
 import net.minecraft.tileentity.TileEntity
@@ -34,10 +37,6 @@ class BlockIgneousRockOre(builder: BlockBuilder) : BlockSimple(builder){
 			type = LAVA,
 			pos = InBox(0.825F)
 		)
-		
-		private fun causeMiningDamage(player: EntityPlayer){
-			DAMAGE_MINING.dealTo(2F, player, Damage.TITLE_IN_FIRE)
-		}
 		
 		private fun getToolHarvestLevel(stack: ItemStack): Int?{
 			return (stack.item as? ItemTool)?.tier?.harvestLevel
@@ -60,18 +59,21 @@ class BlockIgneousRockOre(builder: BlockBuilder) : BlockSimple(builder){
 		
 		if (tierDifference > 0){
 			heldItem.doDamage(tierDifference, player, MAIN_HAND)
-			causeMiningDamage(player)
 		}
 		else{
 			super.harvestBlock(world, player, pos, state, tile, stack)
 		}
 	}
 	
-	/* UPDATE
-	override fun dropBlockAsItemWithChance(world: World, pos: BlockPos, state: BlockState, chance: Float, fortune: Int){
-		super.dropBlockAsItemWithChance(world, pos, state, chance, fortune)
-		harvesters.get()?.let(::causeMiningDamage)
-	}*/
+	override fun removedByPlayer(state: BlockState, world: World, pos: BlockPos, player: EntityPlayer, willHarvest: Boolean, fluid: IFluidState): Boolean{
+		val heldItem = player.getHeldItem(MAIN_HAND)
+		
+		if ((getToolHarvestLevel(heldItem) ?: 0) < super.getHarvestLevel(state) || EnchantmentHelper.getEnchantmentLevel(Enchantments.SILK_TOUCH, player.getHeldItem(MAIN_HAND)) == 0){
+			DAMAGE_MINING.dealTo(2F, player, Damage.TITLE_IN_FIRE)
+		}
+		
+		return super.removedByPlayer(state, world, pos, player, willHarvest, fluid)
+	}
 	
 	@SubscribeEvent
 	fun onBlockBreak(e: BreakEvent){

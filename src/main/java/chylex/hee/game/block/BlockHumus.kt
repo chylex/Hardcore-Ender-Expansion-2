@@ -10,7 +10,6 @@ import chylex.hee.system.migration.vanilla.Items
 import chylex.hee.system.util.breakBlock
 import chylex.hee.system.util.getBlock
 import chylex.hee.system.util.getState
-import chylex.hee.system.util.setAir
 import chylex.hee.system.util.size
 import net.minecraft.block.BlockState
 import net.minecraft.entity.Entity
@@ -23,6 +22,7 @@ import net.minecraft.world.World
 import net.minecraft.world.server.ServerWorld
 import net.minecraft.world.storage.loot.LootContext
 import net.minecraft.world.storage.loot.LootParameters
+import net.minecraftforge.common.ForgeHooks
 import net.minecraftforge.common.IPlantable
 import net.minecraftforge.common.MinecraftForge
 import net.minecraftforge.common.PlantType
@@ -67,7 +67,7 @@ class BlockHumus(builder: BlockBuilder) : BlockSimple(builder){
 			type == PlantType.Plains ||
 			plant is BlockSapling ||
 			plant is BlockReed ||
-			(plant is BlockBush && super.canSustainPlant(state, world, pos, direction, plant)) // UPDATE: check if BlockBush still returns before plantType switch
+			(plant is BlockBush && super.canSustainPlant(state, world, pos, direction, plant)) // UPDATE 1.14 (check if BlockBush still returns before plantType switch in super method)
 		)
 	}
 	
@@ -78,13 +78,12 @@ class BlockHumus(builder: BlockBuilder) : BlockSimple(builder){
 	override fun onFallenUpon(world: World, pos: BlockPos, entity: Entity, fallDistance: Float){
 		super.onFallenUpon(world, pos, entity, fallDistance)
 		
-		if (entity.canTrample(pos.getState(world), pos, fallDistance)){
+		if (ForgeHooks.onFarmlandTrample(world, pos, pos.getState(world), fallDistance, entity)){
 			val plantPos = pos.up()
 			val plant = plantPos.getBlock(world)
 			
 			if (plant is IPlantable && plant.getPlantType(world, plantPos) == PlantType.Crop){
-				plantPos.breakBlock(world, true) // UPDATE test
-				plantPos.setAir(world)
+				plantPos.breakBlock(world, true)
 			}
 		}
 	}

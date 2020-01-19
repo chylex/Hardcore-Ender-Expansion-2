@@ -19,7 +19,6 @@ import chylex.hee.system.util.getMaterial
 import chylex.hee.system.util.getState
 import chylex.hee.system.util.isAir
 import chylex.hee.system.util.isFullBlock
-import chylex.hee.system.util.motionVec
 import chylex.hee.system.util.nextFloat
 import chylex.hee.system.util.playServer
 import chylex.hee.system.util.posVec
@@ -195,7 +194,7 @@ class EndermanBlockHandler(private val enderman: EntityMobAbstractEnderman) : IB
 		val (x, y, z) = enderman.posVec.addY(0.55).add(Vec3.fromYaw(enderman.rotationYaw).scale(0.8))
 		
 		EntityItem(world, x, y, z, ItemStack(block)).apply {
-			motionVec = Vec3d.ZERO
+			motion = Vec3d.ZERO
 			setDefaultPickupDelay()
 			world.addEntity(this)
 		}

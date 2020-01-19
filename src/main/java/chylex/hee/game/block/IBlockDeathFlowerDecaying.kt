@@ -13,7 +13,6 @@ import chylex.hee.game.particle.util.IShape.Point
 import chylex.hee.game.world.util.Teleporter
 import chylex.hee.game.world.util.Teleporter.FxRange.Extended
 import chylex.hee.network.client.PacketClientFX
-import chylex.hee.system.migration.Difficulty.PEACEFUL
 import chylex.hee.system.migration.Facing.DOWN
 import chylex.hee.system.migration.vanilla.EntityPlayer
 import chylex.hee.system.migration.vanilla.Potions
@@ -24,6 +23,7 @@ import chylex.hee.system.util.blocksMovement
 import chylex.hee.system.util.center
 import chylex.hee.system.util.getBlock
 import chylex.hee.system.util.getState
+import chylex.hee.system.util.isPeaceful
 import chylex.hee.system.util.makeEffect
 import chylex.hee.system.util.nextFloat
 import chylex.hee.system.util.nextInt
@@ -90,7 +90,7 @@ interface IBlockDeathFlowerDecaying{
 		
 		world.pendingBlockTicks.scheduleTick(pos, thisAsBlock, implTickRate())
 		
-		if (world.difficulty == PEACEFUL){
+		if (world.isPeaceful){
 			return
 		}
 		

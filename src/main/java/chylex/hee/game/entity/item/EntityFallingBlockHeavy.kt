@@ -15,7 +15,7 @@ import chylex.hee.system.util.getState
 import chylex.hee.system.util.getTile
 import chylex.hee.system.util.motionY
 import chylex.hee.system.util.posVec
-import chylex.hee.system.util.setAir
+import chylex.hee.system.util.removeBlock
 import chylex.hee.system.util.setState
 import chylex.hee.system.util.subtractY
 import chylex.hee.system.util.use
@@ -99,7 +99,7 @@ open class EntityFallingBlockHeavy(type: EntityType<out EntityFallingBlockHeavy>
 			val pos = Pos(this)
 			
 			if (pos.getBlock(world) === state.block){
-				pos.setAir(world)
+				pos.removeBlock(world)
 			}
 			else if (!world.isRemote){
 				remove()
