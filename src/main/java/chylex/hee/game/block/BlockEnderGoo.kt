@@ -1,5 +1,6 @@
 package chylex.hee.game.block
 import chylex.hee.game.block.fluid.FluidEnderGoo
+import chylex.hee.game.block.fluid.distances.FlowingFluid5.Companion.FLOW_DISTANCE
 import chylex.hee.game.block.info.Materials
 import chylex.hee.game.entity.CustomCreatureType
 import chylex.hee.game.particle.ParticleEnderGoo

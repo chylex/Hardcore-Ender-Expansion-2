@@ -1,5 +1,6 @@
 package chylex.hee.game.block
 import chylex.hee.game.block.fluid.FluidEnderGooPurified
+import chylex.hee.game.block.fluid.distances.FlowingFluid5.Companion.FLOW_DISTANCE
 import chylex.hee.game.block.info.Materials
 import chylex.hee.game.fx.FxBlockData
 import chylex.hee.game.fx.FxBlockHandler

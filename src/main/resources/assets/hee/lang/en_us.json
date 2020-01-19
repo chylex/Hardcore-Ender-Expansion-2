@@ -216,8 +216,8 @@
   "item.tooltip.hee.trinket.not_in_slot.charged": "§cMust be placed in Trinket slot",
   "item.tooltip.hee.trinket.not_in_slot.uncharged": "§cMust be charged and placed in Trinket slot",
 
-  "fluid.ender_goo": "Ender Goo",
-  "fluid.purified_ender_goo": "Purified Ender Goo",
+  "fluid.hee.ender_goo": "Ender Goo",
+  "fluid.hee.purified_ender_goo": "Purified Ender Goo",
 
   "hee.infusions.list.title": "§aInfusions",
   "hee.infusions.list.item": "§2- %s",

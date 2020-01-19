@@ -1,5 +1,6 @@
 package chylex.hee.game.block
 import chylex.hee.game.block.fluid.FluidBase
+import chylex.hee.game.block.fluid.distances.FlowingFluid5
 import chylex.hee.system.migration.forge.Side
 import chylex.hee.system.migration.forge.Sided
 import chylex.hee.system.migration.vanilla.BlockFlowingFluid
@@ -30,8 +31,6 @@ abstract class BlockAbstractGoo(
 	protected companion object{
 		private const val LAST_TIME_TAG = "Time"
 		private const val TOTAL_TICKS_TAG = "Ticks"
-		
-		const val FLOW_DISTANCE = 5
 	}
 	
 	// Initialization
@@ -39,10 +38,6 @@ abstract class BlockAbstractGoo(
 	private var lastCollidingEntity = ThreadLocal<Pair<Long, UUID>?>()
 	
 	protected abstract val tickTrackingKey: String
-	
-	init{
-		// UPDATE setQuantaPerBlock(5)
-	}
 	
 	// Behavior
 	
@@ -67,7 +62,7 @@ abstract class BlockAbstractGoo(
 			var lowestLevel = Int.MAX_VALUE
 			
 			for(testPos in posMin.allInBoxMutable(posMax)){
-				val level = testPos.getState(world).takeIf { it.block === this }?.get(LEVEL) ?: continue
+				val level = testPos.getState(world).takeIf { it.block === this }?.let { FlowingFluid5.stateToLevel(it) } ?: continue
 				
 				if (level < lowestLevel){
 					lowestLevel = level
