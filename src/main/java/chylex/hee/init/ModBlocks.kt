@@ -43,6 +43,7 @@ import chylex.hee.game.block.BlockPuzzleLogic
 import chylex.hee.game.block.BlockScaffolding
 import chylex.hee.game.block.BlockSimple
 import chylex.hee.game.block.BlockSimpleShaped
+import chylex.hee.game.block.BlockSimpleWithMapColor
 import chylex.hee.game.block.BlockSkullCustom
 import chylex.hee.game.block.BlockSlabCustom
 import chylex.hee.game.block.BlockSpawnerObsidianTowers
@@ -136,6 +137,7 @@ import chylex.hee.system.util.facades.Resource
 import chylex.hee.system.util.named
 import chylex.hee.system.util.useVanillaName
 import net.minecraft.block.Block
+import net.minecraft.block.material.MaterialColor
 import net.minecraft.fluid.Fluid
 import net.minecraft.item.Item
 import net.minecraft.item.ItemGroup
@@ -200,9 +202,9 @@ object ModBlocks{
 	
 	// Blocks: Building (End Stone)
 	
-	@JvmField val END_STONE_INFESTED  = BlockSimple(buildEndStone) named "end_stone_infested"
-	@JvmField val END_STONE_BURNED    = BlockSimple(buildEndStone) named "end_stone_burned"
-	@JvmField val END_STONE_ENCHANTED = BlockSimple(buildEndStone) named "end_stone_enchanted"
+	@JvmField val END_STONE_INFESTED  = BlockSimpleWithMapColor(buildEndStone, MaterialColor.RED) named "end_stone_infested"
+	@JvmField val END_STONE_BURNED    = BlockSimpleWithMapColor(buildEndStone, MaterialColor.ADOBE /* RENAME ORANGE */) named "end_stone_burned"
+	@JvmField val END_STONE_ENCHANTED = BlockSimpleWithMapColor(buildEndStone, MaterialColor.PURPLE) named "end_stone_enchanted"
 	
 	// Blocks: Building (Dark Loam)
 	
@@ -281,9 +283,9 @@ object ModBlocks{
 	@JvmField val WHITEBARK_SAPLING_AUTUMN_ORANGE      = BlockWhitebarkSapling(buildWhitebarkSapling, AutumnTreeGenerator.Orange) named "autumn_sapling_orange"
 	@JvmField val WHITEBARK_SAPLING_AUTUMN_YELLOWGREEN = BlockWhitebarkSapling(buildWhitebarkSapling, AutumnTreeGenerator.YellowGreen) named "autumn_sapling_yellowgreen"
 	
-	@JvmField val WHITEBARK_LEAVES_AUTUMN_BROWN       = BlockWhitebarkLeaves(buildWhitebarkLeaves) named "autumn_leaves_brown"
-	@JvmField val WHITEBARK_LEAVES_AUTUMN_ORANGE      = BlockWhitebarkLeaves(buildWhitebarkLeaves) named "autumn_leaves_orange"
-	@JvmField val WHITEBARK_LEAVES_AUTUMN_YELLOWGREEN = BlockWhitebarkLeaves(buildWhitebarkLeaves) named "autumn_leaves_yellowgreen"
+	@JvmField val WHITEBARK_LEAVES_AUTUMN_BROWN       = BlockWhitebarkLeaves(buildWhitebarkLeaves, MaterialColor.BROWN_TERRACOTTA) named "autumn_leaves_brown"
+	@JvmField val WHITEBARK_LEAVES_AUTUMN_ORANGE      = BlockWhitebarkLeaves(buildWhitebarkLeaves, MaterialColor.ADOBE /* RENAME ORANGE */) named "autumn_leaves_orange"
+	@JvmField val WHITEBARK_LEAVES_AUTUMN_YELLOWGREEN = BlockWhitebarkLeaves(buildWhitebarkLeaves, MaterialColor.YELLOW) named "autumn_leaves_yellowgreen"
 	
 	@JvmField val POTTED_WHITEBARK_SAPLING_AUTUMN_BROWN       = BlockFlowerPotCustom(buildFlowerPot, WHITEBARK_SAPLING_AUTUMN_BROWN) named "potted_autumn_sapling_brown"
 	@JvmField val POTTED_WHITEBARK_SAPLING_AUTUMN_ORANGE      = BlockFlowerPotCustom(buildFlowerPot, WHITEBARK_SAPLING_AUTUMN_ORANGE) named "potted_autumn_sapling_orange"

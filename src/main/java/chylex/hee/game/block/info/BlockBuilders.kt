@@ -16,7 +16,7 @@ object BlockBuilders{
 	
 	// Building (Uncategorized)
 	
-	val buildEtherealLantern = BlockBuilder(Materials.SOLID_NO_TOOL, MaterialColor.PURPLE, SoundType.GLASS).apply {
+	val buildEtherealLantern = BlockBuilder(Materials.SOLID_NO_TOOL, MaterialColor.BLUE_TERRACOTTA, SoundType.GLASS).apply {
 		harvestTool = Pair(WOOD, PICKAXE)
 		harvestHardness = 0.9F
 		explosionResistance = 0.9F
@@ -29,7 +29,7 @@ object BlockBuilders{
 		explosionResistance = 1.25F
 	}
 	
-	val buildInfusedGlass = BlockBuilder(Materials.INFUSED_GLASS, MaterialColor.ORANGE_TERRACOTTA, SoundType.GLASS).apply {
+	val buildInfusedGlass = BlockBuilder(Materials.INFUSED_GLASS, MaterialColor.ADOBE /* RENAME ORANGE */, SoundType.GLASS).apply {
 		harvestTool = Pair(WOOD, PICKAXE)
 		harvestHardness = 0.5F
 		explosionResistance = 0.3F
@@ -41,7 +41,7 @@ object BlockBuilders{
 		explosionResistance = 0.6F
 	}
 	
-	val buildEndiumBlock = BlockBuilder(Materials.SOLID_WITH_TOOL, MaterialColor.BLUE, SoundType.METAL).apply {
+	val buildEndiumBlock = BlockBuilder(Materials.SOLID_WITH_TOOL, MaterialColor.LAPIS, SoundType.METAL).apply {
 		harvestTool = Pair(IRON, PICKAXE)
 		harvestHardness = 6.2F
 		explosionResistance = 12.0F
@@ -85,7 +85,7 @@ object BlockBuilders{
 	
 	// Building (Dusty Stone)
 	
-	val buildDustyStone = BlockBuilder(Materials.SOLID_NO_TOOL, MaterialColor.SAND, SoundType.STONE).apply {
+	val buildDustyStone = BlockBuilder(Materials.SOLID_NO_TOOL, MaterialColor.DIRT, SoundType.STONE).apply {
 		harvestTool = Pair(WOOD, PICKAXE) // + shovel
 		harvestHardness = 1.1F
 		explosionResistance = 0.3F
@@ -184,7 +184,7 @@ object BlockBuilders{
 	
 	// Interactive (Puzzle)
 	
-	val buildPuzzleLogic = BlockBuilder(Materials.SOLID_NO_TOOL, MaterialColor.ORANGE_TERRACOTTA, SoundType.STONE).apply {
+	val buildPuzzleLogic = BlockBuilder(Materials.SOLID_NO_TOOL, MaterialColor.ADOBE /* RENAME ORANGE */, SoundType.STONE).apply {
 		makeIndestructible()
 	}
 	
@@ -245,7 +245,6 @@ object BlockBuilders{
 	}
 	
 	val buildWhitebarkLeaves = BlockBuilder(Material.LEAVES, MaterialColor.AIR, SoundType.PLANT).apply {
-		// UPDATE different material colors?
 		harvestHardness = 0.2F
 		explosionResistance = 0.2F
 	}
