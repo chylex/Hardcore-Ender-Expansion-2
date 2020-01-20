@@ -10,8 +10,10 @@ import chylex.hee.system.migration.Facing.EAST
 import chylex.hee.system.migration.Facing.NORTH
 import chylex.hee.system.migration.Facing.SOUTH
 import chylex.hee.system.migration.Facing.WEST
+import chylex.hee.system.migration.vanilla.BlockChest
 import chylex.hee.system.util.Pos
 import chylex.hee.system.util.withFacing
+import net.minecraft.state.properties.ChestType
 
 class EnergyShrineRoom_Primary_TwoFloorFork(file: String) : EnergyShrineRoom_Generic(file){
 	override val connections = arrayOf<IStructurePieceConnection>(
@@ -25,10 +27,10 @@ class EnergyShrineRoom_Primary_TwoFloorFork(file: String) : EnergyShrineRoom_Gen
 		
 		val rand = world.rand
 		
-		world.setState(Pos(1, 6, maxZ - 1), ModBlocks.DARK_CHEST.withFacing(EAST))
+		world.setState(Pos(1, 6, maxZ - 1), ModBlocks.DARK_CHEST.withFacing(EAST).with(BlockChest.TYPE, ChestType.RIGHT))
 		world.addTrigger(Pos(1, 6, maxZ - 1), LootChestStructureTrigger(EnergyShrinePieces.LOOT_GENERAL, rand.nextLong()))
 		
-		world.setState(Pos(1, 6, maxZ - 2), ModBlocks.DARK_CHEST.withFacing(EAST))
+		world.setState(Pos(1, 6, maxZ - 2), ModBlocks.DARK_CHEST.withFacing(EAST).with(BlockChest.TYPE, ChestType.LEFT))
 		world.addTrigger(Pos(1, 6, maxZ - 2), LootChestStructureTrigger(EnergyShrinePieces.LOOT_GENERAL, rand.nextLong()))
 	}
 }

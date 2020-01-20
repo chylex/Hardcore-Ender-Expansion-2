@@ -17,6 +17,7 @@ import chylex.hee.system.migration.MagicValues
 import chylex.hee.system.migration.vanilla.BlockSkull
 import chylex.hee.system.migration.vanilla.Blocks
 import chylex.hee.system.migration.vanilla.TileEntityFurnace
+import chylex.hee.system.migration.vanilla.TileEntitySkull
 import chylex.hee.system.util.allInBoxMutable
 import chylex.hee.system.util.nextItem
 import chylex.hee.system.util.removeItemOrNull
@@ -89,7 +90,7 @@ abstract class ObsidianTowerRoom_General(file: String, val guaranteesSpawnersOnL
 	}
 	
 	protected fun placeEndermanHead(world: IStructureWorld, pos: BlockPos, rotation: Int){
-		world.setState(pos, ModBlocks.ENDERMAN_HEAD.with(BlockSkull.ROTATION, rotation))
+		world.addTrigger(pos, TileEntityStructureTrigger(ModBlocks.ENDERMAN_HEAD.with(BlockSkull.ROTATION, rotation), TileEntitySkull()))
 	}
 	
 	protected fun placeEndermanHead(world: IStructureWorld, pos: BlockPos, facing: Direction){

@@ -8,13 +8,15 @@ import chylex.hee.game.world.structure.IStructureWorld
 import chylex.hee.game.world.structure.piece.IStructurePieceConnection
 import chylex.hee.init.ModBlocks
 import chylex.hee.system.collection.MutableWeightedList.Companion.mutableWeightedListOf
+import chylex.hee.system.migration.Facing.EAST
 import chylex.hee.system.migration.Facing.NORTH
 import chylex.hee.system.migration.Facing.SOUTH
-import chylex.hee.system.migration.Facing.UP
 import chylex.hee.system.migration.Facing.WEST
+import chylex.hee.system.migration.vanilla.BlockButton
 import chylex.hee.system.migration.vanilla.Blocks
 import chylex.hee.system.util.Pos
 import chylex.hee.system.util.withFacing
+import net.minecraft.state.properties.AttachFace
 
 class EnergyShrineRoom_Primary_DisplayCase(file: String) : EnergyShrineRoom_Generic(file){
 	override val connections = arrayOf<IStructurePieceConnection>(
@@ -39,7 +41,7 @@ class EnergyShrineRoom_Primary_DisplayCase(file: String) : EnergyShrineRoom_Gene
 			25 to Weighted(
 				5 to Blocks.LIGHT_WEIGHTED_PRESSURE_PLATE.defaultState,
 				8 to Blocks.HEAVY_WEIGHTED_PRESSURE_PLATE.defaultState,
-				9 to Blocks.STONE_BUTTON.withFacing(UP)
+				9 to Blocks.STONE_BUTTON.withFacing(if (rand.nextBoolean()) NORTH else EAST).with(BlockButton.FACE, AttachFace.FLOOR)
 			),
 			
 			15 to Air,

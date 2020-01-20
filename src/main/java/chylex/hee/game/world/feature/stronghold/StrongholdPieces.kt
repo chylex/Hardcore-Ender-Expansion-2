@@ -55,6 +55,7 @@ import chylex.hee.system.util.nextInt
 import chylex.hee.system.util.nextItem
 import chylex.hee.system.util.removeItem
 import net.minecraft.block.Block
+import net.minecraft.fluid.Fluids
 import net.minecraft.item.DyeColor
 import net.minecraft.item.ItemStack
 import net.minecraft.tags.BlockTags
@@ -83,20 +84,18 @@ object StrongholdPieces : IStructureDescription{
 		add("obsidian", Blocks.OBSIDIAN)
 		add("ethereallantern", ModBlocks.ETHEREAL_LANTERN)
 		add("workbench", Blocks.CRAFTING_TABLE)
-		add("ironbars", Blocks.IRON_BARS)
 		add("redstone", Blocks.REDSTONE_WIRE)
-		add("water", Blocks.WATER)
-		add("lava", Blocks.LAVA)
 		
-		add("wall.stonebrick", ModBlocks.STONE_BRICK_WALL)
+		add("water", Fluids.WATER.getStillFluidState(false).blockState)
+		add("lava", Fluids.LAVA.getStillFluidState(false).blockState)
 		
-		add("slab.stone.*", Blocks.STONE_SLAB, PaletteMappings.SLAB_TYPE)
+		add("slab.stone.*", Blocks.SMOOTH_STONE_SLAB, PaletteMappings.SLAB_TYPE)
 		add("slab.stonebrick.*", Blocks.STONE_BRICK_SLAB, PaletteMappings.SLAB_TYPE)
 		add("slab.spruce.*", Blocks.SPRUCE_SLAB, PaletteMappings.SLAB_TYPE)
 		
-		add("stairs.stonebrick.*.*", Blocks.STONE_BRICK_STAIRS, PaletteMappings.STAIR_MAPPING_LIST)
-		add("stairs.spruce.*.*", Blocks.SPRUCE_STAIRS, PaletteMappings.STAIR_MAPPING_LIST)
-		add("stairs.darkoak.*.*", Blocks.DARK_OAK_STAIRS, PaletteMappings.STAIR_MAPPING_LIST)
+		add("stairs.stonebrick.*.*.*", Blocks.STONE_BRICK_STAIRS, PaletteMappings.STAIR_MAPPING_LIST)
+		add("stairs.spruce.*.*.*", Blocks.SPRUCE_STAIRS, PaletteMappings.STAIR_MAPPING_LIST)
+		add("stairs.darkoak.*.*.*", Blocks.DARK_OAK_STAIRS, PaletteMappings.STAIR_MAPPING_LIST)
 		
 		add("log.spruce.*", Blocks.SPRUCE_LOG, PaletteMappings.FACING_AXIS)
 		add("log.darkoak.*", Blocks.DARK_OAK_LOG, PaletteMappings.FACING_AXIS)
@@ -104,8 +103,6 @@ object StrongholdPieces : IStructureDescription{
 		add("planks.oak", Blocks.OAK_PLANKS)
 		add("planks.spruce", Blocks.SPRUCE_PLANKS)
 		add("planks.darkoak", Blocks.DARK_OAK_PLANKS)
-		
-		add("fence.oak", Blocks.OAK_FENCE)
 		
 		add("door.oak.*.*", Blocks.OAK_DOOR, listOf(PaletteMappings.DOOR_HALF, PaletteMappings.FACING_HORIZONTAL))
 		add("door.iron.*.*", Blocks.IRON_DOOR, listOf(PaletteMappings.DOOR_HALF, PaletteMappings.FACING_HORIZONTAL))
@@ -120,9 +117,10 @@ object StrongholdPieces : IStructureDescription{
 		add("endportal.frame", ModBlocks.END_PORTAL_FRAME)
 		add("endportal.acceptor", ModBlocks.END_PORTAL_ACCEPTOR)
 		
-		for((suffix, state) in PaletteMappings.VINE_WALLS(ModBlocks.DRY_VINES)){
-			add("dry_vines.$suffix", state)
-		}
+		add("wall.stonebrick.*", PaletteMappings.WALL_CONNECTIONS(ModBlocks.STONE_BRICK_WALL))
+		add("fence.oak.*", PaletteMappings.HORIZONTAL_CONNECTIONS(Blocks.OAK_FENCE))
+		add("ironbars.*", PaletteMappings.HORIZONTAL_CONNECTIONS(Blocks.IRON_BARS))
+		add("dry_vines.*", PaletteMappings.VINE_WALLS(ModBlocks.DRY_VINES))
 		
 		with(forGeneration){
 			add("stonebrick", PALETTE_ENTRY_STONE_BRICK)

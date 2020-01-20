@@ -66,7 +66,7 @@ object TombDungeonPieces : IStructureDescription{
 		add("dustystone.bricks", ModBlocks.DUSTY_STONE_BRICKS)
 		
 		add("slab.dustystonebrick.*", ModBlocks.DUSTY_STONE_BRICK_SLAB, PaletteMappings.SLAB_TYPE)
-		add("stairs.dustystonebrick.*.*", ModBlocks.DUSTY_STONE_BRICK_STAIRS, PaletteMappings.STAIR_MAPPING_LIST)
+		add("stairs.dustystonebrick.*.*", ModBlocks.DUSTY_STONE_BRICK_STAIRS, listOf(PaletteMappings.STAIR_FLIP, PaletteMappings.FACING_HORIZONTAL)) // UPDATE migrate mappings
 		
 		with(forDevelopment){
 			add("dustystone.wall", Blocks.LAPIS_BLOCK)

@@ -52,7 +52,7 @@ abstract class EnergyShrineCorridor_Staircase(file: String) : EnergyShrineAbstra
 	}
 	
 	private fun canAttachTorchTo(world: IStructureWorld, pos: BlockPos): Boolean{
-		return pos.x in 0..maxX && pos.y in 0..maxY && pos.z in 0..maxZ && world.getState(pos).isSolid // UPDATE probably replace isSolid now that isFullBlock is gone?
+		return pos.x in 0..maxX && pos.y in 0..maxY && pos.z in 0..maxZ && world.getState(pos).material.let { it.isSolid && it.isOpaque }
 	}
 	
 	protected abstract fun nextRandomXZ(rand: Random, angle: Double): PosXZ

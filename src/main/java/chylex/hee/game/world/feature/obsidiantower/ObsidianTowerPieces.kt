@@ -1,4 +1,5 @@
 package chylex.hee.game.world.feature.obsidiantower
+import chylex.hee.game.block.fluid.FluidEnderGoo
 import chylex.hee.game.item.ItemPortalToken.TokenType
 import chylex.hee.game.world.feature.obsidiantower.ObsidianTowerSpawnerLevel.LEVEL_1
 import chylex.hee.game.world.feature.obsidiantower.ObsidianTowerSpawnerLevel.LEVEL_2
@@ -38,10 +39,8 @@ import chylex.hee.game.world.territory.TerritoryType
 import chylex.hee.game.world.util.Size
 import chylex.hee.init.ModBlocks
 import chylex.hee.system.collection.WeightedList.Companion.weightedListOf
-import chylex.hee.system.migration.vanilla.BlockFlowingFluid
 import chylex.hee.system.migration.vanilla.Blocks
 import chylex.hee.system.util.facades.Resource
-import chylex.hee.system.util.with
 
 object ObsidianTowerPieces : IStructureDescription{
 	fun calculateStructureSize(floors: Int) = Size(
@@ -57,7 +56,6 @@ object ObsidianTowerPieces : IStructureDescription{
 		add("obsidian", Blocks.OBSIDIAN)
 		add("glowstone", Blocks.GLOWSTONE)
 		add("bookshelf", Blocks.BOOKSHELF)
-		add("ironbars", Blocks.IRON_BARS)
 		
 		add("obsidian.smooth", ModBlocks.OBSIDIAN_SMOOTH)
 		add("obsidian.chiseled", ModBlocks.OBSIDIAN_CHISELED)
@@ -73,20 +71,22 @@ object ObsidianTowerPieces : IStructureDescription{
 		add("slab.gloomrock.bricks.*", ModBlocks.GLOOMROCK_BRICK_SLAB, PaletteMappings.SLAB_TYPE)
 		add("slab.gloomrock.smooth.*", ModBlocks.GLOOMROCK_SMOOTH_SLAB, PaletteMappings.SLAB_TYPE)
 		
-		add("stairs.obsidian.*.*", ModBlocks.OBSIDIAN_STAIRS, PaletteMappings.STAIR_MAPPING_LIST)
-		add("stairs.gloomrock.bricks.*.*", ModBlocks.GLOOMROCK_BRICK_STAIRS, PaletteMappings.STAIR_MAPPING_LIST)
-		add("stairs.gloomrock.smooth.*.*", ModBlocks.GLOOMROCK_SMOOTH_STAIRS, PaletteMappings.STAIR_MAPPING_LIST)
+		add("stairs.obsidian.*.*.*", ModBlocks.OBSIDIAN_STAIRS, PaletteMappings.STAIR_MAPPING_LIST)
+		add("stairs.gloomrock.bricks.*.*.*", ModBlocks.GLOOMROCK_BRICK_STAIRS, PaletteMappings.STAIR_MAPPING_LIST)
+		add("stairs.gloomrock.smooth.*.*.*", ModBlocks.GLOOMROCK_SMOOTH_STAIRS, PaletteMappings.STAIR_MAPPING_LIST)
 		
 		add("ladder.*", Blocks.LADDER, PaletteMappings.FACING_HORIZONTAL)
-		add("trapdoor.*.*.*", Blocks.OAK_TRAPDOOR, PaletteMappings.TRAPDOOR_MAPPING_LIST) // UPDATE maybe a different wood?
-		add("fence.darkoak", Blocks.DARK_OAK_FENCE)
+		add("trapdoor.*.*.*", Blocks.SPRUCE_TRAPDOOR, PaletteMappings.TRAPDOOR_MAPPING_LIST)
 		
 		add("torch.up", Blocks.TORCH)
 		add("chest.*", Blocks.CHEST, PaletteMappings.FACING_HORIZONTAL)
 		add("furnace.*", Blocks.FURNACE, PaletteMappings.FACING_HORIZONTAL)
 		add("dropper.*", Blocks.DROPPER, PaletteMappings.FACING_ALL)
 		
-		add("endergoo", ModBlocks.ENDER_GOO.with(BlockFlowingFluid.LEVEL, 0))
+		add("fence.darkoak.*", PaletteMappings.HORIZONTAL_CONNECTIONS(Blocks.DARK_OAK_FENCE))
+		add("ironbars.*", PaletteMappings.HORIZONTAL_CONNECTIONS(Blocks.IRON_BARS))
+		
+		add("endergoo", FluidEnderGoo.still.getStillFluidState(false).blockState)
 		
 		with(forGeneration){
 			add("redstone.random", Weighted(
