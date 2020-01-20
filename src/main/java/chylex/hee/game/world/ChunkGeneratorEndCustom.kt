@@ -91,7 +91,6 @@ class ChunkGeneratorEndCustom(world: World, biomeProvider: BiomeProvider, settin
 	override fun decorate(region: WorldGenRegion){
 		val chunkX = region.mainChunkX
 		val chunkZ = region.mainChunkZ
-		val world = region.world
 		
 		val instance = getInstance(chunkX, chunkZ)?.takeIf { it.generatesChunk(chunkX, chunkZ) } ?: return
 		val constructed = territoryCache.get(instance).first
@@ -103,18 +102,9 @@ class ChunkGeneratorEndCustom(world: World, biomeProvider: BiomeProvider, settin
 			val blockOffset = pos.subtract(internalOffset)
 			
 			if (blockOffset.x in 0..15 && blockOffset.z in 0..15){
-				trigger.realize(world, startOffset.add(blockOffset), Transform.NONE)
+				trigger.realize(region, startOffset.add(blockOffset), Transform.NONE)
 			}
 		}
-		
-		/* UPDATE needed?
-		for(x in 0..15) for(y in 0..instance.territory.height.last) for(z in 0..15){
-			val pos = startOffset.add(x, y, z)
-			
-			if (pos.getState(world).lightValue > 0){
-				world.checkLightFor(BLOCK, pos) // TODO figure out something better?
-			}
-		}*/
 	}
 	
 	override fun getPossibleCreatures(type: EntityClassification, pos: BlockPos): List<SpawnListEntry>{
@@ -122,24 +112,23 @@ class ChunkGeneratorEndCustom(world: World, biomeProvider: BiomeProvider, settin
 	}
 	
 	override fun getGroundHeight(): Int{
-		return 50 // UPDATE
-	}
-	
-	override fun func_222529_a(x: Int, z: Int, heightmapType: Type): Int{
-		return 0 // UPDATE
+		return 128
 	}
 	
 	// Neutralization
+	
+	override fun func_222529_a(x: Int, z: Int, heightmapType: Type): Int{ // RENAME getHeightAt
+		return 256 // return a position outside the world, nothing should be calling this
+	}
 	
 	override fun hasStructure(biome: Biome, structure: Structure<out IFeatureConfig>): Boolean{
 		return false
 	}
 	
-	override fun <C : IFeatureConfig?> getStructureConfig(biome: Biome, structure: Structure<C>): C?{
-		return IFeatureConfig.NO_FEATURE_CONFIG as C // UPDATE
+	override fun findNearestStructure(world: World, name: String, pos: BlockPos, radius: Int, skipExistingChunks: Boolean): BlockPos?{
+		return null
 	}
 	
 	override fun initStructureStarts(chunk: IChunk, generator: ChunkGenerator<*>, templates: TemplateManager){}
-	
 	override fun generateStructureStarts(world: IWorld, chunk: IChunk){}
 }

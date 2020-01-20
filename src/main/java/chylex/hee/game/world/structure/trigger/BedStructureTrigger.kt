@@ -9,7 +9,7 @@ import net.minecraft.item.DyeColor
 import net.minecraft.state.properties.BedPart
 import net.minecraft.util.Direction
 import net.minecraft.util.math.BlockPos
-import net.minecraft.world.World
+import net.minecraft.world.IWorld
 
 class BedStructureTrigger(private val facing: Direction, private val color: DyeColor) : IStructureTrigger{
 	override fun setup(world: IStructureWorld, pos: BlockPos, transform: Transform){
@@ -24,5 +24,5 @@ class BedStructureTrigger(private val facing: Direction, private val color: DyeC
 		world.setState(headPos, baseState.with(BlockBed.PART, BedPart.HEAD))
 	}
 	
-	override fun realize(world: World, pos: BlockPos, transform: Transform){}
+	override fun realize(world: IWorld, pos: BlockPos, transform: Transform){}
 }

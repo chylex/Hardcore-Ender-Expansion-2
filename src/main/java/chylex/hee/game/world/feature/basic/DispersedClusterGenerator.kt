@@ -2,20 +2,20 @@ package chylex.hee.game.world.feature.basic
 import chylex.hee.game.block.entity.TileEntityEnergyCluster
 import chylex.hee.game.mechanics.energy.IClusterGenerator
 import chylex.hee.game.world.feature.OverworldFeatures
-import chylex.hee.game.world.feature.OverworldFeatures.IOverworldFeature
+import chylex.hee.game.world.feature.OverworldFeatures.OverworldFeature
 import chylex.hee.init.ModBlocks
-import chylex.hee.system.util.Pos
 import chylex.hee.system.util.component1
 import chylex.hee.system.util.component2
 import chylex.hee.system.util.getTile
 import chylex.hee.system.util.isAir
 import chylex.hee.system.util.nextInt
 import chylex.hee.system.util.setBlock
+import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.ChunkPos
-import net.minecraft.world.server.ServerWorld
+import net.minecraft.world.IWorld
 import java.util.Random
 
-object DispersedClusterGenerator : IOverworldFeature{
+object DispersedClusterGenerator : OverworldFeature(){
 	private const val GRID_CHUNKS = 12
 	
 	private fun findSpawnAt(seed: Long, chunkX: Int, chunkZ: Int): ChunkPos?{
@@ -32,21 +32,18 @@ object DispersedClusterGenerator : IOverworldFeature{
 		)
 	}
 	
-	override fun generate(world: ServerWorld, chunkX: Int, chunkZ: Int, rand: Random){
-		val (targetChunkX, targetChunkZ) = findSpawnAt(world.seed, chunkX, chunkZ) ?: return
+	override fun place(world: IWorld, rand: Random, pos: BlockPos, chunkX: Int, chunkZ: Int): Boolean{
+		val (targetChunkX, targetChunkZ) = findSpawnAt(world.seed, chunkX, chunkZ) ?: return false
 		
 		if (chunkX != targetChunkX || chunkZ != targetChunkZ){
-			return
+			return false
 		}
 		
-		val blockX = (chunkX * 16) + 8
-		val blockZ = (chunkZ * 16) + 8
-		
 		for(spawnAttempt in 1..64){
-			val spawnPos = Pos(
-				blockX + rand.nextInt(16),
+			val spawnPos = pos.add(
+				rand.nextInt(16),
 				rand.nextInt(4, 255 - (spawnAttempt * 3)),
-				blockZ + rand.nextInt(16)
+				rand.nextInt(16)
 			)
 			
 			if (!spawnPos.isAir(world)){
@@ -57,9 +54,11 @@ object DispersedClusterGenerator : IOverworldFeature{
 				if (!spawnPos.add(rand.nextInt(-3, 3), rand.nextInt(-3, 3), rand.nextInt(-3, 3)).isAir(world)){
 					spawnPos.setBlock(world, ModBlocks.ENERGY_CLUSTER)
 					spawnPos.getTile<TileEntityEnergyCluster>(world)?.loadClusterSnapshot(IClusterGenerator.OVERWORLD.generate(rand), inactive = true)
-					return
+					return true
 				}
 			}
 		}
+		
+		return false
 	}
 }

@@ -7,14 +7,14 @@ import chylex.hee.game.world.util.Transform
 import chylex.hee.init.ModBlocks
 import chylex.hee.system.util.getTile
 import net.minecraft.util.math.BlockPos
-import net.minecraft.world.World
+import net.minecraft.world.IWorld
 
 class EnergyClusterStructureTrigger(private val snapshot: ClusterSnapshot) : IStructureTrigger{
 	override fun setup(world: IStructureWorld, pos: BlockPos, transform: Transform){
 		world.setBlock(pos, ModBlocks.ENERGY_CLUSTER)
 	}
 	
-	override fun realize(world: World, pos: BlockPos, transform: Transform){
+	override fun realize(world: IWorld, pos: BlockPos, transform: Transform){
 		pos.getTile<TileEntityEnergyCluster>(world)?.loadClusterSnapshot(snapshot, inactive = true)
 	}
 }

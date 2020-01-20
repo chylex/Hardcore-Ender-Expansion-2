@@ -43,8 +43,8 @@ object CommandDebugStructure : ICommand{ // UPDATE
 		
 		builder.then(
 			argument("structure", validatedString(structureDescriptions.keys)).then(
-				literal("pieces").executes(this::executePieces, listOf(Transform.NONE)).then(
-					literal("notfs").executes(this::executePieces, Transform.ALL)
+				literal("pieces").executes(this::executePieces, Transform.ALL).then(
+					literal("notfs").executes(this::executePieces, listOf(Transform.NONE))
 				)
 			).then(
 				literal("piecesdev").executes(this::executePiecesDev, false).then(

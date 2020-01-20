@@ -1,5 +1,6 @@
 package chylex.hee.game.loot
 import chylex.hee.init.ModLoot.poolsExt
+import chylex.hee.system.util.isNotEmpty
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap
 import net.minecraft.inventory.IInventory
 import net.minecraft.item.ItemStack
@@ -36,7 +37,7 @@ class StackSortingLootTable(wrapped: LootTable) : LootTable(wrapped.parameterSet
 	}
 	
 	override fun fillInventory(inventory: IInventory, context: LootContext){
-		for((index, stack) in generate(context).withIndex()){
+		for((index, stack) in generate(context).filter { it.isNotEmpty }.withIndex()){
 			inventory.setInventorySlotContents(index, stack)
 		}
 	}

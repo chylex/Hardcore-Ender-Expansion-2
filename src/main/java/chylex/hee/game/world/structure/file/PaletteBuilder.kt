@@ -19,6 +19,14 @@ sealed class PaletteBuilder{
 		add(key, block.defaultState)
 	}
 	
+	// Add multiple
+	
+	fun add(key: String, stateMappings: Map<String, BlockState>){
+		for((suffix, state) in stateMappings){
+			add(updateKey(key, suffix), state)
+		}
+	}
+	
 	// Add variants
 	
 	fun add(key: String, baseState: BlockState, propertyMappings: List<Pair<IProperty<*>, Map<String, *>>>){

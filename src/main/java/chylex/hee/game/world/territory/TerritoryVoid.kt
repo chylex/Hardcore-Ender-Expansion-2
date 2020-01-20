@@ -117,7 +117,7 @@ object TerritoryVoid{
 			return
 		}
 		
-		for(entity in world.entities.toList()){ // UPDATE make sure this works
+		for(entity in world.entities.toList()){
 			val factor = getVoidFactorInternal(entity.posVec)
 			
 			if (factor < 0F){

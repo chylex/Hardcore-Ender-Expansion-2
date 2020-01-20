@@ -1,4 +1,5 @@
 package chylex.hee.game.world.structure.file
+import chylex.hee.game.block.BlockScaffolding
 import chylex.hee.game.world.structure.IBlockPicker
 import chylex.hee.game.world.structure.IBlockPicker.Fallback
 import chylex.hee.game.world.structure.IBlockPicker.Single
@@ -95,15 +96,15 @@ class StructureFile(nbt: TagCompound){
 				val pos = Pos(x, y, z)
 				val state = world.getState(pos)
 				
-				if (state === SKIP_BLOCK_STATE){
+				if (state.block is BlockScaffolding){
 					continue
 				}
 				
-				val mapping = paletteMapping[state]
+				var mapping = paletteMapping[state]
 				
 				if (mapping == null){
 					missingMappings.add(state)
-					continue
+					mapping = paletteMapping[Blocks.AIR.defaultState] ?: continue
 				}
 				
 				val key = (

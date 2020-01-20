@@ -9,7 +9,7 @@ import chylex.hee.game.world.util.Transform
 import chylex.hee.init.ModBlocks
 import chylex.hee.system.util.getTile
 import net.minecraft.util.math.BlockPos
-import net.minecraft.world.World
+import net.minecraft.world.IWorld
 
 class ObsidianTowerSpawnerStructureTrigger(spawner: TileEntitySpawnerObsidianTower, private val roomOffset: BlockPos, private val roomSize: Size) : IStructureTrigger{
 	private val spawner = TileEntityStructureTrigger(ModBlocks.SPAWNER_OBSIDIAN_TOWERS, spawner)
@@ -18,7 +18,7 @@ class ObsidianTowerSpawnerStructureTrigger(spawner: TileEntitySpawnerObsidianTow
 		spawner.setup(world, pos, transform)
 	}
 	
-	override fun realize(world: World, pos: BlockPos, transform: Transform){
+	override fun realize(world: IWorld, pos: BlockPos, transform: Transform){
 		spawner.realize(world, pos, transform)
 		pos.getTile<TileEntitySpawnerObsidianTower>(world)?.offset = calculateTransformedOffset(transform)
 	}
