@@ -7,6 +7,7 @@ import chylex.hee.system.migration.forge.SubscribeEvent
 import net.minecraft.client.renderer.BannerTextures
 import net.minecraft.util.SharedConstants
 import net.minecraftforge.client.event.GuiOpenEvent
+import net.minecraftforge.client.event.InputEvent.KeyInputEvent
 import net.minecraftforge.common.MinecraftForge
 import org.apache.commons.lang3.SystemUtils
 import org.lwjgl.glfw.GLFW
@@ -25,6 +26,22 @@ object Debug{
 					MC.instance.execute {
 						GLFW.glfwSetWindowTitle(MC.window.handle, "Minecraft ${SharedConstants.getVersion().name} - Hardcore Ender Expansion ${HEE.version}")
 					}
+					
+					MinecraftForge.EVENT_BUS.register(object : Any(){
+						@SubscribeEvent
+						fun onKeyPressed(e: KeyInputEvent){
+							if (e.action == 1 && e.key == GLFW.GLFW_KEY_GRAVE_ACCENT){
+								val player = MC.player ?: return
+								
+								if (player.isCreative){
+									player.sendChatMessage("/gamemode survival")
+								}
+								else{
+									player.sendChatMessage("/gamemode creative")
+								}
+							}
+						}
+					})
 					
 					try{
 						enableInfiniteBannerTextures()

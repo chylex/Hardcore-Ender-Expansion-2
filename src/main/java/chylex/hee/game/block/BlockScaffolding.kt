@@ -35,6 +35,8 @@ import net.minecraft.world.World
 import java.nio.file.Files
 
 class BlockScaffolding(builder: BlockBuilder) : BlockSimple(builder){
+	var enableShape = true
+	
 	override fun onBlockActivated(state: BlockState, world: World, pos: BlockPos, player: EntityPlayer, hand: Hand, hit: BlockRayTraceResult): Boolean{
 		if (world.isRemote && player.isSneaking && !player.abilities.isFlying && Debug.enabled){
 			val palette = CommandClientScaffolding.currentPalette
@@ -106,10 +108,17 @@ class BlockScaffolding(builder: BlockBuilder) : BlockSimple(builder){
 	override fun isNormalCube(state: BlockState, world: IBlockReader, pos: BlockPos) = false
 	override fun causesSuffocation(state: BlockState, world: IBlockReader, pos: BlockPos) = false
 	
+	override fun getShape(state: BlockState, world: IBlockReader, pos: BlockPos, context: ISelectionContext): VoxelShape{
+		return if (enableShape)
+			VoxelShapes.fullCube()
+		else
+			VoxelShapes.empty()
+	}
+	
 	override fun getCollisionShape(state: BlockState, world: IBlockReader, pos: BlockPos, context: ISelectionContext): VoxelShape{
 		val player = HEE.proxy.getClientSidePlayer()
 		
-		return if (player == null || !player.abilities.isFlying)
+		return if ((player == null || !player.abilities.isFlying) && enableShape)
 			VoxelShapes.fullCube()
 		else
 			VoxelShapes.empty()
@@ -118,7 +127,7 @@ class BlockScaffolding(builder: BlockBuilder) : BlockSimple(builder){
 	override fun getRaytraceShape(state: BlockState, world: IBlockReader, pos: BlockPos): VoxelShape{
 		val player = HEE.proxy.getClientSidePlayer()
 		
-		return if (player == null || player.isSneaking || player.abilities.isFlying)
+		return if ((player == null || player.isSneaking || player.abilities.isFlying) && enableShape)
 			VoxelShapes.fullCube()
 		else
 			VoxelShapes.empty()

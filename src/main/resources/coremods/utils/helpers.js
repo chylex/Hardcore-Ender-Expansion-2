@@ -11,6 +11,18 @@ var getSkipInst = function(label){
 };
 
 var printInstructions = function(instructions){
+    var appendSafe = function(title, getter){
+        try{
+            var item = getter();
+
+            if (item){
+                title += ", " + item;
+            }
+        }catch(e){}
+
+        return title;
+    };
+
     for(var index = 0, count = instructions.size(); index < count; index++){
         var instruction = instructions.get(index);
 
@@ -28,35 +40,22 @@ var printInstructions = function(instructions){
 
         if (opcodeName.length() > 0){
             opcodeName = " | " + opcodeName;
-
-            try{
-                var name = instruction.name;
-
-                if (name){
-                    opcodeName += ", " + name;
-                }
-            }catch(e){}
-
-            try{
-                var desc = instruction.desc;
-
-                if (desc){
-                    opcodeName += ", " + desc;
-                }
-            }catch(e){}
-
-            try{
+            opcodeName = appendSafe(opcodeName, function(){ return instruction.name; });
+            opcodeName = appendSafe(opcodeName, function(){ return instruction.desc; });
+            opcodeName = appendSafe(opcodeName, function(){ return instruction.var; });
+            opcodeName = appendSafe(opcodeName, function(){
                 var label = instruction.label;
 
                 if (label){
-                    for(var search = 0; search < instrcount; search++){
+                    for(var search = 0; search < count; search++){
                         if (instructions.get(search) == label){
-                            opcodeName += ", " + search;
-                            break;
+                            return search;
                         }
                     }
                 }
-            }catch(e){}
+
+                return null;
+            });
         }
 
         print(indexStr + typeName + opcodeName);
