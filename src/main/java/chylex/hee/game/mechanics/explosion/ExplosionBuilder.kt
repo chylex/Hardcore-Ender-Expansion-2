@@ -1,4 +1,4 @@
-package chylex.hee.game.world.util
+package chylex.hee.game.mechanics.explosion
 import chylex.hee.system.migration.vanilla.Blocks
 import chylex.hee.system.migration.vanilla.EntityLivingBase
 import chylex.hee.system.migration.vanilla.EntityPlayer
@@ -18,6 +18,8 @@ import chylex.hee.system.util.playServer
 import chylex.hee.system.util.setBlock
 import chylex.hee.system.util.square
 import net.minecraft.block.Block
+import net.minecraft.enchantment.EnchantmentHelper
+import net.minecraft.enchantment.Enchantments
 import net.minecraft.enchantment.ProtectionEnchantment
 import net.minecraft.entity.Entity
 import net.minecraft.item.ItemStack
@@ -39,7 +41,7 @@ import kotlin.math.max
 
 class ExplosionBuilder{
 	var destroyBlocks = true
-	var blockDropRate: Float? = null
+	var blockDropRateMultiplier: Float? = null
 	var blockDropFortune: Int = 0
 	
 	var spawnFire = false
@@ -67,7 +69,7 @@ class ExplosionBuilder{
 		
 		for(player in world.players){
 			if (player.getDistanceSq(x, y, z) < square(64)){
-				@Suppress("NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS") // UPDATE
+				@Suppress("NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS")
 				(player as EntityPlayerMP).connection.sendPacket(SExplosionPacket(x, y, z, strength, destroyedBlocks, playerKnockback[player]))
 			}
 		}
@@ -203,9 +205,14 @@ class ExplosionBuilder{
 		
 		private fun destroyAffectedBlocks(){
 			if (builder.destroyBlocks){
-				// UPDATE incorporate them into the context
-				val blockDropRate = builder.blockDropRate ?: 1F / size
-				val blockDropFortune = builder.blockDropFortune
+				val modifiedRadius = builder.blockDropRateMultiplier?.let { size / it } ?: size
+				
+				val miningTool = ItemStack(Blocks.TNT)
+				val fortuneLevel = builder.blockDropFortune
+				
+				if (fortuneLevel > 0){
+					EnchantmentHelper.setEnchantments(mapOf(Enchantments.FORTUNE to fortuneLevel), miningTool)
+				}
 				
 				for(pos in affectedBlockPositions){
 					val state = pos.getState(world)
@@ -220,8 +227,8 @@ class ExplosionBuilder{
 							val context = LootContext.Builder(world)
 								.withRandom(world.rand)
 								.withParameter(LootParameters.POSITION, pos)
-								.withParameter(LootParameters.TOOL, ItemStack.EMPTY)
-								.withParameter(LootParameters.EXPLOSION_RADIUS, size)
+								.withParameter(LootParameters.TOOL, miningTool)
+								.withParameter(LootParameters.EXPLOSION_RADIUS, modifiedRadius)
 								.withNullableParameter(LootParameters.BLOCK_ENTITY, tile)
 							
 							Block.spawnDrops(state, context)

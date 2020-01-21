@@ -8,9 +8,9 @@ import chylex.hee.game.item.infusion.Infusion.PHASING
 import chylex.hee.game.item.infusion.Infusion.POWER
 import chylex.hee.game.item.infusion.InfusionList
 import chylex.hee.game.item.infusion.InfusionTag
+import chylex.hee.game.mechanics.explosion.ExplosionBuilder
 import chylex.hee.game.particle.spawner.ParticleSpawnerVanilla
 import chylex.hee.game.particle.util.IShape.Point
-import chylex.hee.game.world.util.ExplosionBuilder
 import chylex.hee.init.ModEntities
 import chylex.hee.proxy.Environment
 import chylex.hee.system.migration.vanilla.EntityItem
@@ -260,7 +260,7 @@ class EntityInfusedTNT : EntityTNTPrimed{
 			this.damageEntities = !isHarmless
 			
 			this.spawnFire = isFiery
-			this.blockDropRate = dropRateMultiplier / strength
+			this.blockDropRateMultiplier = dropRateMultiplier
 			this.blockDropFortune = dropFortune
 			
 			trigger(world, this@EntityInfusedTNT, posX, posY + (height / 16.0), posZ, strength)

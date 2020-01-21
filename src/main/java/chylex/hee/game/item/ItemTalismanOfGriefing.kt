@@ -3,8 +3,8 @@ import chylex.hee.game.mechanics.damage.DamageProperties
 import chylex.hee.game.mechanics.damage.DamageType
 import chylex.hee.game.mechanics.damage.IDamageProcessor.Companion.ENCHANTMENT_PROTECTION
 import chylex.hee.game.mechanics.damage.IDamageProcessor.Companion.POTION_PROTECTION
+import chylex.hee.game.mechanics.explosion.ExplosionBuilder
 import chylex.hee.game.mechanics.trinket.TrinketHandler
-import chylex.hee.game.world.util.ExplosionBuilder
 import chylex.hee.system.migration.forge.SubscribeEvent
 import chylex.hee.system.migration.vanilla.EntityLivingBase
 import chylex.hee.system.migration.vanilla.EntityPlayer
