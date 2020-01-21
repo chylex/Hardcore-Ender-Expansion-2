@@ -130,7 +130,7 @@ fun IAttributeInstance.tryRemoveModifier(modifier: AttributeModifier){
 
 // AI (Movement)
 
-inline fun AISwim(entity: EntityCreature) =
+fun AISwim(entity: EntityCreature) =
 	SwimGoal(entity)
 
 inline fun <reified T : EntityLivingBase> AIWanderLandStopNear(entity: EntityCreature, movementSpeed: Double, chancePerTick: Int, maxDistanceXZ: Int = 10, maxDistanceY: Int = 7, detectDistance: Double) =
@@ -138,7 +138,7 @@ inline fun <reified T : EntityLivingBase> AIWanderLandStopNear(entity: EntityCre
 
 // AI (Looking)
 
-inline fun AIWatchIdle(entity: EntityCreature) =
+fun AIWatchIdle(entity: EntityCreature) =
 	LookRandomlyGoal(entity)
 
 inline fun <reified T : EntityLivingBase> AIWatchClosest(entity: EntityCreature, maxDistance: Float) =
@@ -146,14 +146,14 @@ inline fun <reified T : EntityLivingBase> AIWatchClosest(entity: EntityCreature,
 
 // AI (Actions)
 
-inline fun AIAttackMelee(entity: EntityCreature, movementSpeed: Double, chaseAfterLosingSight: Boolean) =
+fun AIAttackMelee(entity: EntityCreature, movementSpeed: Double, chaseAfterLosingSight: Boolean) =
 	MeleeAttackGoal(entity, movementSpeed, chaseAfterLosingSight)
 
 // AI (Targeting)
 
-inline fun AITargetAttacker(entity: EntityCreature, callReinforcements: Boolean): HurtByTargetGoal =
+fun AITargetAttacker(entity: EntityCreature, callReinforcements: Boolean): HurtByTargetGoal =
 	if (callReinforcements)
-		HurtByTargetGoal(entity).setCallsForHelp(entity::class.java) // UPDATE test
+		HurtByTargetGoal(entity).setCallsForHelp(entity::class.java) // UPDATE 1.14 (it seems HurtByTargetGoal.alertOthers is broken and only alerts the last entity)
 	else
 		HurtByTargetGoal(entity)
 
@@ -170,6 +170,10 @@ inline fun <reified T : EntityLivingBase> AITargetSwarmSwitch(entity: EntityCrea
 	AITargetSwarmSwitch(entity, checkSight, easilyReachableOnly, T::class.java, targetPredicate, rangeMultiplier)
 
 // Selectors
+
+fun Entity.isAnyVulnerablePlayerWithinRange(range: Double): Boolean{
+	return world.getClosestPlayer(posX, posY, posZ, range, true) != null
+}
 
 private val predicateAliveAndNotSpectating = EntityPredicates.IS_ALIVE.and(EntityPredicates.NOT_SPECTATING)
 private val predicateAliveAndTargetable = EntityPredicates.IS_ALIVE.and(EntityPredicates.CAN_AI_TARGET)

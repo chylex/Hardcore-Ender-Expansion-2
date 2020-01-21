@@ -41,9 +41,9 @@ class ItemDeathFlower(block: Block, properties: Properties) : ItemBlock(block, p
 	}
 	
 	override fun onItemUseFirst(stack: ItemStack, context: ItemUseContext): ActionResultType{
+		val player = context.player
 		val world = context.world
 		val pos = context.pos
-		val player = context.player
 		
 		if (player != null && pos.getBlock(world) === Blocks.FLOWER_POT){
 			pos.setState(world, ModBlocks.POTTED_DEATH_FLOWER_DECAYING.with(LEVEL, getDeathLevel(stack)))

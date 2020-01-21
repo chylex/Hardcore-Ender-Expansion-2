@@ -1,7 +1,7 @@
 package chylex.hee.game.world.feature.stronghold
 import chylex.hee.HEE
 import chylex.hee.game.world.feature.OverworldFeatures
-import chylex.hee.game.world.feature.OverworldFeatures.IOverworldFeature
+import chylex.hee.game.world.feature.OverworldFeatures.OverworldFeature
 import chylex.hee.game.world.feature.OverworldFeatures.preloadChunks
 import chylex.hee.game.world.structure.piece.IStructureBuild
 import chylex.hee.game.world.structure.world.WorldToStructureWorldAdapter
@@ -20,12 +20,13 @@ import chylex.hee.system.util.putPos
 import chylex.hee.system.util.use
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.ChunkPos
+import net.minecraft.world.IWorld
 import net.minecraft.world.server.ServerWorld
 import net.minecraft.world.storage.WorldSavedData
 import java.util.Random
 import kotlin.math.abs
 
-object StrongholdGenerator : IOverworldFeature{
+object StrongholdGenerator : OverworldFeature(){
 	private const val GRID_CHUNKS = 68
 	private const val DIST_CHUNKS = 18
 	
@@ -148,18 +149,20 @@ object StrongholdGenerator : IOverworldFeature{
 	
 	// Generation
 	
-	override fun generate(world: ServerWorld, chunkX: Int, chunkZ: Int, rand: Random){
-		val centerPos = findSpawnAt(world.seed, chunkX, chunkZ) ?: return
+	override fun place(world: IWorld, rand: Random, pos: BlockPos, chunkX: Int, chunkZ: Int): Boolean{
+		val world = world.world as ServerWorld // UPDATE
+		
+		val centerPos = findSpawnAt(world.seed, chunkX, chunkZ) ?: return false
 		
 		if (chunkX != (centerPos.x shr 4) || chunkZ != (centerPos.z shr 4)){
-			return
+			return false
 		}
 		
 		val (build, targetPos) = buildStructure(rand)
 		
 		if (build == null){
 			HEE.log.error("[StrongholdGenerator] failed all attempts at generating (chunkX = $chunkX, chunkZ = $chunkZ, seed = ${world.seed})")
-			return
+			return false
 		}
 		
 		val offset = centerPos.subtract(STRUCTURE_SIZE.centerPos)
@@ -168,5 +171,6 @@ object StrongholdGenerator : IOverworldFeature{
 		preloadChunks(world, chunkX, chunkZ, STRUCTURE_SIZE.centerX / 16, STRUCTURE_SIZE.centerZ / 16)
 		WorldToStructureWorldAdapter(world, rand, offset).apply(build::generate).finalize()
 		DimensionStrongholdData.get(world).addLocation(chunk, targetPos?.add(centerPos) ?: centerPos)
+		return true
 	}
 }

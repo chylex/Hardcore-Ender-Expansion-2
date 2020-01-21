@@ -15,6 +15,6 @@ object CommandDebugToggles : IClientCommand{
 			sender.sendFeedback(TextComponentString("Territory debugging ${if (WorldProviderEndCustom.debugMode) "enabled" else "disabled"}."), false)
 		}
 		
-		// TODO update
+		// UPDATE
 	}
 }

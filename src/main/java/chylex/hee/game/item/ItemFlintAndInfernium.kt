@@ -84,7 +84,7 @@ class ItemFlintAndInfernium(properties: Properties) : Item(properties){
 				igniteTNT(world, pos, player, ignoreTrap = false)
 			}
 			else{
-				BlockEditor.place(ModBlocks.ETERNAL_FIRE, player, heldItem, context)
+				BlockEditor.place(ModBlocks.ETERNAL_FIRE, player, heldItem, context) ?: return FAIL
 			}
 			
 			Sounds.ITEM_FLINTANDSTEEL_USE.playServer(world, pos, SoundCategory.BLOCKS, volume = 1.1F, pitch = world.rand.nextFloat(0.4F, 0.5F))

@@ -83,7 +83,7 @@ object ScorchingFortune{
 		return Spec(newRange, highestChance).also { FORTUNE_CACHED[block] = it }
 	}
 	
-	private fun estimateDropRange(world: ServerWorld, block: Block): IntRange{ // UPDATE test
+	private fun estimateDropRange(world: ServerWorld, block: Block): IntRange{
 		val rand = Random(96L)
 		
 		val lootTable = Environment.getServer().lootTableManager.getLootTableFromLocation(block.lootTable)

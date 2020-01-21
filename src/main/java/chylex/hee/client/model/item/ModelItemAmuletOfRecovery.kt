@@ -32,7 +32,7 @@ class ModelItemAmuletOfRecovery private constructor(sourceModel: IBakedModel) : 
 		private lateinit var modelRegistry: MutableMap<ResourceLocation, IBakedModel>
 		
 		@SubscribeEvent
-		fun onRegisterModels(e: ModelRegistryEvent){
+		fun onRegisterModels(@Suppress("UNUSED_PARAMETER") e: ModelRegistryEvent){
 			ModelLoader.addSpecialModel(RESOURCE_HELD)
 		}
 		

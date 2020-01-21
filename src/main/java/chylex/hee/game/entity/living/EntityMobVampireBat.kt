@@ -34,6 +34,7 @@ import chylex.hee.system.util.getEnum
 import chylex.hee.system.util.getState
 import chylex.hee.system.util.heeTag
 import chylex.hee.system.util.isAir
+import chylex.hee.system.util.isAnyVulnerablePlayerWithinRange
 import chylex.hee.system.util.isPeaceful
 import chylex.hee.system.util.lookPosVec
 import chylex.hee.system.util.makeEffect
@@ -296,7 +297,7 @@ class EntityMobVampireBat(type: EntityType<EntityMobVampireBat>, world: World) :
 	}
 	
 	private fun isHangingDisturbed(): Boolean{
-		return world.selectVulnerableEntities.inRange<EntityPlayer>(posVec, 4.0).any() // UPDATE optimize?
+		return isAnyVulnerablePlayerWithinRange(4.0)
 	}
 	
 	override fun setIsBatHanging(isHanging: Boolean){

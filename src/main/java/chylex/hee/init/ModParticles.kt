@@ -76,7 +76,7 @@ object ModParticles{
 		}
 		
 		@SubscribeEvent
-		fun onRegisterFactories(e: ParticleFactoryRegisterEvent){
+		fun onRegisterFactories(@Suppress("UNUSED_PARAMETER") e: ParticleFactoryRegisterEvent){
 			for(factory in factories){
 				factory.run()
 			}

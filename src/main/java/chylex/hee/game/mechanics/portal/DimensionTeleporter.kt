@@ -5,7 +5,6 @@ import chylex.hee.game.world.WorldProviderEndCustom
 import chylex.hee.system.migration.vanilla.EntityPlayer
 import chylex.hee.system.util.center
 import chylex.hee.system.util.getPosOrNull
-import chylex.hee.system.util.getTopSolidOrLiquidBlock
 import chylex.hee.system.util.hasKey
 import chylex.hee.system.util.heeTagPersistent
 import chylex.hee.system.util.heeTagPersistentOrNull
@@ -17,6 +16,7 @@ import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.Vec3d
 import net.minecraft.world.World
 import net.minecraft.world.dimension.DimensionType
+import net.minecraft.world.gen.Heightmap.Type.MOTION_BLOCKING
 
 sealed class DimensionTeleporter{
 	// UPDATE
@@ -30,7 +30,7 @@ sealed class DimensionTeleporter{
 		}
 		
 		private fun spawnPoint(world: World): Vec3d{
-			return world.spawnPoint.let(world::getTopSolidOrLiquidBlock).center.subtractY(0.49)
+			return world.getHeight(MOTION_BLOCKING, world.spawnPoint).center.subtractY(0.49)
 		}
 		
 		private fun placeAt(entity: Entity, target: Vec3d, yaw: Float){

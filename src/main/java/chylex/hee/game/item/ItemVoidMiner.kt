@@ -1,4 +1,5 @@
 package chylex.hee.game.item
+import chylex.hee.game.block.util.IBlockHarvestDropsOverride
 import chylex.hee.game.item.util.CustomToolMaterial.VOID_MINER
 import chylex.hee.game.item.util.Tool.Type.AXE
 import chylex.hee.game.item.util.Tool.Type.PICKAXE
@@ -19,9 +20,8 @@ import net.minecraft.world.World
 import net.minecraftforge.common.MinecraftForge
 import net.minecraftforge.event.entity.player.PlayerEvent.BreakSpeed
 import net.minecraftforge.event.world.BlockEvent.BreakEvent
-import net.minecraftforge.event.world.BlockEvent.HarvestDropsEvent
 
-class ItemVoidMiner(properties: Properties) : ItemAbstractVoidTool(setupToolClasses(properties), VOID_MINER){
+class ItemVoidMiner(properties: Properties) : ItemAbstractVoidTool(setupToolClasses(properties), VOID_MINER), IBlockHarvestDropsOverride{
 	private companion object{
 		private val toolClasses = arrayOf(PICKAXE, AXE, SHOVEL)
 		
@@ -39,8 +39,12 @@ class ItemVoidMiner(properties: Properties) : ItemAbstractVoidTool(setupToolClas
 	}
 	
 	override fun onBlockDestroyed(stack: ItemStack, world: World, state: BlockState, pos: BlockPos, entity: EntityLivingBase): Boolean{
-		guardItemBreaking(stack, entity, MAIN_HAND){ super.onBlockDestroyed(stack, world, state, pos, entity) }
+		guardItemBreaking(stack){ super.onBlockDestroyed(stack, world, state, pos, entity) }
 		return true
+	}
+	
+	override fun onHarvestDrops(state: BlockState, world: World, pos: BlockPos){
+		// drop nothing
 	}
 	
 	override fun canApplyAtEnchantingTable(stack: ItemStack, enchantment: Enchantment): Boolean{
@@ -77,14 +81,6 @@ class ItemVoidMiner(properties: Properties) : ItemAbstractVoidTool(setupToolClas
 	fun onBlockBreak(e: BreakEvent){
 		if (e.player?.let(::getHeldVoidMiner) != null){
 			e.expToDrop = 0
-		}
-	}
-	
-	@SubscribeEvent(EventPriority.LOWEST)
-	fun onHarvestDrops(e: HarvestDropsEvent){
-		if (e.harvester?.let(::getHeldVoidMiner) != null){
-			e.drops.clear()
-			e.dropChance = 0F
 		}
 	}
 }

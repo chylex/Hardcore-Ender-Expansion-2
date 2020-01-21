@@ -3,13 +3,11 @@ import chylex.hee.game.item.repair.ICustomRepairBehavior
 import chylex.hee.game.item.repair.RepairHandler
 import chylex.hee.game.item.repair.RepairInstance
 import chylex.hee.system.migration.vanilla.EntityLivingBase
-import chylex.hee.system.migration.vanilla.EntityPlayer
 import chylex.hee.system.migration.vanilla.ItemTool
 import chylex.hee.system.util.color.IntColor.Companion.RGB
-import chylex.hee.system.util.facades.Stats
+import chylex.hee.system.util.size
 import net.minecraft.item.IItemTier
 import net.minecraft.item.ItemStack
-import net.minecraft.util.Hand
 import kotlin.math.min
 
 abstract class ItemAbstractVoidTool(properties: Properties, tier: IItemTier) : ItemTool(0F, -2.8F, tier, emptySet(), properties), ICustomRepairBehavior{
@@ -23,21 +21,16 @@ abstract class ItemAbstractVoidTool(properties: Properties, tier: IItemTier) : I
 		super.setDamage(stack, min(damage, stack.maxDamage))
 	}
 	
-	protected inline fun guardItemBreaking(stack: ItemStack, entity: EntityLivingBase, hand: Hand, block: () -> Unit){
-		val wasNotBroken = stack.damage < stack.maxDamage
-		block()
-		val isNowBroken = stack.damage >= stack.maxDamage
-		
-		if (wasNotBroken && isNowBroken){
-			// UPDATE ??? onItemBroken(entity, hand)
+	protected inline fun guardItemBreaking(stack: ItemStack, block: () -> Unit){ // damage shrinks the stack and resets damage
+		if (stack.damage >= stack.maxDamage){
+			return
 		}
-	}
-	
-	protected fun onItemBroken(entity: EntityLivingBase, hand: Hand){
-		entity.sendBreakAnimation(hand)
 		
-		if (entity is EntityPlayer){
-			entity.addStat(Stats.breakItem(this))
+		block()
+		
+		if (stack.isEmpty){
+			stack.size += 1
+			stack.damage = stack.maxDamage
 		}
 	}
 	

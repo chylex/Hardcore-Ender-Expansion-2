@@ -47,7 +47,7 @@ class TableEnergyClusterHandler(private val table: TileEntityBaseTable, maxDista
 	
 	// Behavior
 	
-	private inner class RayTraceObstacles(startVec: Vec3d, endVec: Vec3d) : RayTraceContext(startVec, endVec, BlockMode.COLLIDER, FluidMode.NONE, FakePlayerFactory.getMinecraft(table.wrld as ServerWorld) /* UPDATE entity cannot be null */){
+	private inner class RayTraceObstacles(startVec: Vec3d, endVec: Vec3d) : RayTraceContext(startVec, endVec, BlockMode.COLLIDER, FluidMode.NONE, FakePlayerFactory.getMinecraft(table.wrld as ServerWorld) /* UPDATE 1.14 (entity cannot be null) */){
 		override fun getBlockShape(state: BlockState, world: IBlockReader, pos: BlockPos): VoxelShape{
 			val block = state.block
 			

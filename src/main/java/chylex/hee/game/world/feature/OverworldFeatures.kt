@@ -17,7 +17,6 @@ import net.minecraft.world.gen.feature.ConfiguredFeature
 import net.minecraft.world.gen.feature.Feature
 import net.minecraft.world.gen.feature.IFeatureConfig.NO_FEATURE_CONFIG
 import net.minecraft.world.gen.feature.NoFeatureConfig
-import net.minecraft.world.server.ServerWorld
 import net.minecraftforge.event.RegistryEvent
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber.Bus.MOD
 import net.minecraftforge.registries.ForgeRegistries
@@ -27,7 +26,6 @@ import java.util.function.Function
 @SubscribeAllEvents(modid = HEE.ID, bus = MOD)
 object OverworldFeatures{
 	fun register(){
-		// UPDATE GameRegistry.registerWorldGenerator(DispersedClusterGenerator, Int.MAX_VALUE)
 		// UPDATE GameRegistry.registerWorldGenerator(EnergyShrineGenerator, Int.MAX_VALUE - 1)
 		// UPDATE GameRegistry.registerWorldGenerator(StrongholdGenerator, Int.MAX_VALUE - 2)
 	}
@@ -73,10 +71,5 @@ object OverworldFeatures{
 		}
 		
 		protected abstract fun place(world: IWorld, rand: Random, pos: BlockPos, chunkX: Int, chunkZ: Int): Boolean
-	}
-	
-	// UPDATE
-	interface IOverworldFeature{
-		fun generate(world: ServerWorld, chunkX: Int, chunkZ: Int, rand: Random)
 	}
 }

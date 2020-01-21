@@ -17,8 +17,6 @@ import net.minecraft.util.Direction
 import net.minecraft.util.SoundCategory
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.shapes.ISelectionContext
-import net.minecraftforge.common.util.BlockSnapshot
-import net.minecraftforge.event.ForgeEventFactory
 
 object BlockEditor{
 	
@@ -40,8 +38,8 @@ object BlockEditor{
 		val world = player.world
 		
 		if (!player.canPlayerEdit(targetPos, clickedFacing, stack) ||
-			!world.func_217350_a(state, targetPos, ISelectionContext.dummy()) || // RENAME checks entity collisions
-			!ForgeEventFactory.onBlockPlace(player, BlockSnapshot.getBlockSnapshot(world, targetPos), UP)
+			!state.isValidPosition(world, targetPos) ||
+			!world.func_217350_a(state, targetPos, ISelectionContext.dummy()) // RENAME checks entity collisions
 		){
 			return null
 		}
@@ -59,7 +57,6 @@ object BlockEditor{
 		return targetPos
 	}
 	
-	// UPDATE test
 	fun place(block: Block, player: EntityPlayer, stack: ItemStack, context: ItemUseContext): BlockPos?{
 		val world = context.world
 		val blockContext = BlockItemUseContext(context)

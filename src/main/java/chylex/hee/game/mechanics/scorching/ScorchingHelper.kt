@@ -16,7 +16,6 @@ import chylex.hee.system.migration.forge.EventPriority
 import chylex.hee.system.migration.forge.SubscribeAllEvents
 import chylex.hee.system.migration.forge.SubscribeEvent
 import chylex.hee.system.migration.vanilla.EntityPlayer
-import chylex.hee.system.util.isNotEmpty
 import net.minecraft.entity.Entity
 import net.minecraft.item.IItemTier
 import net.minecraft.item.ItemStack
@@ -24,7 +23,6 @@ import net.minecraft.util.math.BlockPos
 import net.minecraft.world.World
 import net.minecraftforge.event.entity.player.CriticalHitEvent
 import net.minecraftforge.event.entity.player.PlayerEvent.BreakSpeed
-import net.minecraftforge.event.world.BlockEvent.HarvestDropsEvent
 import java.util.Random
 
 @SubscribeAllEvents(modid = HEE.ID)
@@ -67,19 +65,6 @@ object ScorchingHelper{
 		
 		if (world.isRemote && getHeldScorchingTool(e.player)?.canMine(e.state) == true){
 			PARTICLE_MINING.spawn(Point(e.pos, 5), world.rand)
-		}
-	}
-	
-	@SubscribeEvent(EventPriority.LOW)
-	fun onHarvestDrops(e: HarvestDropsEvent){
-		if (e.harvester?.let(::getHeldScorchingTool)?.canMine(e.state) == true){ // TODO not checking drops.isNotEmpty to support Vines, is that a problem?
-			val fortuneStack = ScorchingFortune.createSmeltedStack(e.world.world, e.state.block, e.harvester.rng)
-			
-			if (fortuneStack.isNotEmpty){
-				e.drops.clear()
-				e.drops.add(fortuneStack)
-				e.dropChance = 1F
-			}
 		}
 	}
 	

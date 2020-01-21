@@ -125,7 +125,7 @@ fun BlockPos.getHardness(world: IBlockReader): Float{
 }
 
 fun BlockPos.isFullBlock(world: IBlockReader): Boolean{
-	return this.getState(world).isOpaqueCube(world, this) // UPDATE test
+	return this.getState(world).isOpaqueCube(world, this)
 }
 
 fun BlockPos.isTopSolid(world: IBlockReader): Boolean{

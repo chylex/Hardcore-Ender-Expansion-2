@@ -48,7 +48,7 @@ class BlockDragonEggOverride(builder: BlockBuilder) : BlockDragonEgg(builder.p){
 			override fun handle(pos: BlockPos, world: World, rand: Random){
 				PARTICLE_BREAK.spawn(Point(pos, 30), rand)
 				
-				Blocks.DRAGON_EGG.getSoundType(Blocks.DRAGON_EGG.defaultState).let {
+				Blocks.DRAGON_EGG.defaultState.getSoundType(world, pos, null).let {
 					it.breakSound.playClient(pos, SoundCategory.BLOCKS, volume = (it.getVolume() + 1F) / 2F, pitch = it.getPitch() * 0.8F)
 				}
 			}

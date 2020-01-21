@@ -6,7 +6,6 @@ import chylex.hee.game.entity.living.behavior.EndermanBlockHandler.TargetBlockTy
 import chylex.hee.game.entity.living.behavior.EndermanBlockHandler.TargetBlockType.TRANSPARENT
 import chylex.hee.system.migration.vanilla.Blocks
 import chylex.hee.system.migration.vanilla.EntityItem
-import chylex.hee.system.migration.vanilla.EntityPlayer
 import chylex.hee.system.util.Pos
 import chylex.hee.system.util.Vec3
 import chylex.hee.system.util.addY
@@ -18,11 +17,12 @@ import chylex.hee.system.util.facades.Resource
 import chylex.hee.system.util.getMaterial
 import chylex.hee.system.util.getState
 import chylex.hee.system.util.isAir
+import chylex.hee.system.util.isAnyVulnerablePlayerWithinRange
 import chylex.hee.system.util.isFullBlock
+import chylex.hee.system.util.lookPosVec
 import chylex.hee.system.util.nextFloat
 import chylex.hee.system.util.playServer
 import chylex.hee.system.util.posVec
-import chylex.hee.system.util.selectVulnerableEntities
 import chylex.hee.system.util.setState
 import net.minecraft.block.Block
 import net.minecraft.block.BlockState
@@ -90,7 +90,7 @@ class EndermanBlockHandler(private val enderman: EntityMobAbstractEnderman) : IB
 		get() = enderman.heldBlockState == null
 	
 	private fun isPlayerInProximity(): Boolean{
-		return world.selectVulnerableEntities.inRange<EntityPlayer>(enderman.posVec, 14.0).isNotEmpty()
+		return enderman.isAnyVulnerablePlayerWithinRange(14.0)
 	}
 	
 	override fun onBeginSearch(): BlockPos?{
@@ -135,7 +135,7 @@ class EndermanBlockHandler(private val enderman: EntityMobAbstractEnderman) : IB
 		}
 		
 		if (!FULL.isValid(world, pos) && !FULL.isValid(world, pos.down())){ // make sure it can only pick the bottom block of a double plant
-			return false // UPDATE test
+			return false
 		}
 		
 		val state = pos.getState(world)
@@ -148,7 +148,7 @@ class EndermanBlockHandler(private val enderman: EntityMobAbstractEnderman) : IB
 			return false
 		}
 		
-		val result = world.rayTraceBlocks(RayTraceContext(enderman.lastPortalVec, pos.center, BlockMode.COLLIDER, FluidMode.ANY, enderman))
+		val result = world.rayTraceBlocks(RayTraceContext(enderman.lookPosVec, pos.center, BlockMode.COLLIDER, FluidMode.ANY, enderman))
 		return result.type == Type.MISS || result.pos == pos
 	}
 	

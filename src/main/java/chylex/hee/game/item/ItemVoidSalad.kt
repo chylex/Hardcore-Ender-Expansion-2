@@ -50,7 +50,7 @@ class ItemVoidSalad(properties: Properties) : Item(properties){
 				if (hunger > 0){
 					addExhaustion((4F * hunger) + 2.75F)
 				}
-			} // UPDATE make sure all of this still works as expected
+			}
 		}
 	}
 	

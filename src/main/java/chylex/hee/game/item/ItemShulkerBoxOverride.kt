@@ -165,7 +165,7 @@ class ItemShulkerBoxOverride(block: Block, properties: Properties) : ItemBlock(b
 					}
 				}
 				
-				val sorted = counts.entries.sortedWith(compareBy({ -it.value }, { it.key }))
+				val sorted = counts.object2IntEntrySet().sortedWith(compareBy({ -it.intValue }, { it.key }))
 				
 				for((name, count) in sorted.take(TOOLTIP_ENTRY_COUNT)){
 					lines.add(TextComponentString("%s x%d".format(name, count)).applyTextStyle(GRAY))

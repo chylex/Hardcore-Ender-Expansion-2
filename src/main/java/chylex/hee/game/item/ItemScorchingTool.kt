@@ -1,4 +1,5 @@
 package chylex.hee.game.item
+import chylex.hee.game.block.util.IBlockHarvestDropsOverride
 import chylex.hee.game.block.util.IBlockHarvestToolCheck
 import chylex.hee.game.fx.FxBlockData
 import chylex.hee.game.fx.FxEntityData
@@ -16,6 +17,8 @@ import chylex.hee.system.migration.forge.EventResult
 import chylex.hee.system.migration.vanilla.EntityLivingBase
 import chylex.hee.system.migration.vanilla.ItemTool
 import chylex.hee.system.util.doDamage
+import chylex.hee.system.util.isNotEmpty
+import net.minecraft.block.Block
 import net.minecraft.block.BlockState
 import net.minecraft.item.ItemStack
 import net.minecraft.util.math.BlockPos
@@ -28,7 +31,7 @@ class ItemScorchingTool(
 	properties: Properties,
 	private val toolType: ToolType,
 	attackSpeed: Float
-) : ItemTool(0F, attackSpeed, SCORCHING_TOOL, emptySet(), properties.addToolType(toolType, SCORCHING_TOOL.harvestLevel)), IScorchingItem, ICustomRepairBehavior by ScorchingHelper.Repair(SCORCHING_TOOL){
+) : ItemTool(0F, attackSpeed, SCORCHING_TOOL, emptySet(), properties.addToolType(toolType, SCORCHING_TOOL.harvestLevel)), IScorchingItem, IBlockHarvestDropsOverride, ICustomRepairBehavior by ScorchingHelper.Repair(SCORCHING_TOOL){
 	override val material
 		get() = SCORCHING_TOOL
 	
@@ -37,7 +40,7 @@ class ItemScorchingTool(
 	override fun canMine(state: BlockState): Boolean{
 		val block = state.block
 		
-		if (!ScorchingFortune.canSmelt(Environment.getServer().getWorld(DimensionType.OVERWORLD) /* UPDATE test */, block)){
+		if (!ScorchingFortune.canSmelt(Environment.getServer().getWorld(DimensionType.OVERWORLD), block)){
 			return false
 		}
 		
@@ -68,6 +71,16 @@ class ItemScorchingTool(
 		}
 		
 		return true
+	}
+	
+	override fun onHarvestDrops(state: BlockState, world: World, pos: BlockPos){
+		if (canMine(state)){
+			val fortuneStack = ScorchingFortune.createSmeltedStack(world, state.block, world.rand)
+			
+			if (fortuneStack.isNotEmpty){
+				Block.spawnAsEntity(world, pos, fortuneStack)
+			}
+		}
 	}
 	
 	// Hitting behavior

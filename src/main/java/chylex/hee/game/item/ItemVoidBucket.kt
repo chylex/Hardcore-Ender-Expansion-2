@@ -96,7 +96,7 @@ class ItemVoidBucket(properties: Properties) : ItemAbstractVoidTool(properties, 
 				}
 			}
 			
-			guardItemBreaking(heldItem, player, hand){
+			guardItemBreaking(heldItem){
 				heldItem.doDamage(totalRemoved, player, hand)
 			}
 		}

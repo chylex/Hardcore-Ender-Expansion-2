@@ -1,10 +1,10 @@
 package chylex.hee.game.world.util
 import chylex.hee.system.util.Pos
-import chylex.hee.system.util.getTopSolidOrLiquidBlock
 import chylex.hee.system.util.square
 import net.minecraft.util.Direction
 import net.minecraft.util.math.BlockPos
 import net.minecraft.world.World
+import net.minecraft.world.gen.Heightmap
 import kotlin.math.sqrt
 
 data class PosXZ(val x: Int, val z: Int){
@@ -36,7 +36,7 @@ data class PosXZ(val x: Int, val z: Int){
 		return sqrt(distanceSqTo(pos))
 	}
 	
-	fun getTopSolidOrLiquidBlock(world: World): BlockPos{
-		return world.getTopSolidOrLiquidBlock(withY(0))
+	fun getTopBlock(world: World, type: Heightmap.Type): BlockPos{
+		return withY(world.getHeight(type, x, z))
 	}
 }

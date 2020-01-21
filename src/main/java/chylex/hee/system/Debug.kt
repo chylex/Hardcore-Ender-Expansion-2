@@ -49,7 +49,7 @@ object Debug{
 			if (canExecutePowershell("maximize.ps1")){
 				MinecraftForge.EVENT_BUS.register(object : Any(){
 					@SubscribeEvent
-					fun test(e: GuiOpenEvent){
+					fun onGuiOpen(@Suppress("UNUSED_PARAMETER") e: GuiOpenEvent){
 						val pid = ManagementFactory.getRuntimeMXBean().name.split("@")[0]
 						ProcessBuilder("powershell.exe", "-ExecutionPolicy", "Unrestricted", "-File", "maximize.ps1", pid).start()
 						

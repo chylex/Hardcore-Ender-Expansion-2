@@ -22,7 +22,7 @@ class EntityLookSlerp(entity: EntityLiving, private val adjustmentSpeed: Float, 
 	}
 	
 	override fun setLookPositionWithEntity(entity: Entity, deltaYaw: Float, deltaPitch: Float){
-		entity.lastPortalVec.let { setLookPosition(it.x, it.y, it.z, deltaYaw, deltaPitch) }
+		entity.lookPosVec.let { setLookPosition(it.x, it.y, it.z, deltaYaw, deltaPitch) }
 	}
 	
 	override fun tick(){

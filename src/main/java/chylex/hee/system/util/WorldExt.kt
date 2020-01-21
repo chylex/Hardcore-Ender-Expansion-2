@@ -1,9 +1,7 @@
 package chylex.hee.system.util
-import net.minecraft.util.math.BlockPos
 import net.minecraft.world.Difficulty.PEACEFUL
 import net.minecraft.world.IWorld
 import net.minecraft.world.World
-import net.minecraft.world.gen.Heightmap.Type.WORLD_SURFACE
 import net.minecraft.world.server.ServerWorld
 import net.minecraft.world.storage.WorldSavedData
 
@@ -14,12 +12,6 @@ val World.totalTime
 
 val IWorld.isPeaceful
 	get() = this.difficulty == PEACEFUL
-
-// Porting
-
-fun World.getTopSolidOrLiquidBlock(pos: BlockPos): BlockPos{
-	return world.getHeight(WORLD_SURFACE, pos) // UPDATE test
-}
 
 // World data
 

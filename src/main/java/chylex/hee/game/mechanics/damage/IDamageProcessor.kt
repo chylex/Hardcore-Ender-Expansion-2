@@ -11,7 +11,6 @@ import net.minecraft.potion.EffectInstance
 import net.minecraft.util.CombatRules
 import net.minecraft.world.Difficulty.EASY
 import net.minecraft.world.Difficulty.HARD
-import net.minecraft.world.Difficulty.NORMAL
 import net.minecraft.world.Difficulty.PEACEFUL
 import kotlin.math.nextUp
 
@@ -84,11 +83,11 @@ interface IDamageProcessor{
 				return if (target !is EntityPlayer){
 					amount
 				}
-				else when(target.world.difficulty!!){
+				else when(target.world.difficulty){
 					PEACEFUL -> amount * 0.4F
 					EASY     -> amount * 0.7F
-					NORMAL   -> amount
 					HARD     -> amount * 1.4F
+					else     -> amount
 				}
 			}
 		}

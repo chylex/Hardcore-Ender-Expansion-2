@@ -26,7 +26,7 @@ abstract class FluidBase(fluidName: String, val rgbColor: IntColor, val mapColor
 		val supplyStill   = Supplier<Fluid> { still }
 		val supplyFlowing = Supplier<Fluid> { flowing }
 		
-		val attr = FluidAttributesFixColor.Builder(texStill, texFlowing).color(rgbColor.i).let(::attr) // TODO translation key
+		val attr = FluidAttributesFixColor.Builder(texStill, texFlowing).color(rgbColor.i).let(::attr)
 		val props = Properties(supplyStill, supplyFlowing, attr).explosionResistance(resistance).let(::props)
 		
 		still   = ForgeFlowingFluid.Source(props) named fluidName

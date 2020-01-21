@@ -212,8 +212,10 @@ object TerritoryRenderer{
 			GL.popMatrix()
 		}
 		
-		private fun drawTitle(x: Float, y: Float, color: IntColor) = with(MC.fontRenderer){
-			drawString(textTitle, x, y, color.i)
+		private fun drawTitle(x: Float, y: Float, color: IntColor){
+			if (color.alpha > 3){ // prevents flickering alpha
+				MC.fontRenderer.drawString(textTitle, x, y, color.i)
+			}
 		}
 	}
 }

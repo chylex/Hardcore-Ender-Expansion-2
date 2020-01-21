@@ -14,10 +14,10 @@ import chylex.hee.system.util.center
 import chylex.hee.system.util.component1
 import chylex.hee.system.util.component2
 import chylex.hee.system.util.floorToInt
-import chylex.hee.system.util.getTopSolidOrLiquidBlock
 import net.minecraft.entity.Entity
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.ChunkPos
+import net.minecraft.world.gen.Heightmap.Type.MOTION_BLOCKING
 import net.minecraft.world.server.ServerWorld
 import java.util.Random
 import kotlin.math.abs
@@ -110,6 +110,9 @@ data class TerritoryInstance(val territory: TerritoryType, val index: Int){
 	private val bottomCenterPos: BlockPos
 		get() = topLeftChunk.getBlock(chunks * 8, territory.height.first, chunks * 8)
 	
+	private val fallbackSpawnPoint: BlockPos
+		get() = bottomCenterPos.let { endWorld.getHeight(MOTION_BLOCKING, it) }.up()
+	
 	val centerPoint
 		get() = topLeftChunk.getBlock(chunks * 8, territory.height.let { (it.first + it.last) / 2 }, chunks * 8).center
 	
@@ -123,11 +126,11 @@ data class TerritoryInstance(val territory: TerritoryType, val index: Int){
 	}
 	
 	fun getSpawnPoint(): BlockPos{
-		return TerritoryGlobalStorage.get().forInstance(this)?.loadSpawn() ?: bottomCenterPos.let(endWorld::getTopSolidOrLiquidBlock).up()
+		return TerritoryGlobalStorage.get().forInstance(this)?.loadSpawn() ?: fallbackSpawnPoint
 	}
 	
 	fun getSpawnPoint(player: EntityPlayer): BlockPos{
-		return TerritoryGlobalStorage.get().forInstance(this)?.loadSpawnForPlayer(player) ?: bottomCenterPos.let(endWorld::getTopSolidOrLiquidBlock).up()
+		return TerritoryGlobalStorage.get().forInstance(this)?.loadSpawnForPlayer(player) ?: fallbackSpawnPoint
 	}
 	
 	fun updateSpawnPoint(player: EntityPlayer, pos: BlockPos){
