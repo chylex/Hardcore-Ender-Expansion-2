@@ -1,17 +1,10 @@
 {
-  "parent": "block/block",
-  "textures": {
-    "particle": "hee:block/jar_o_dust_base",
-    "side": "hee:block/jar_o_dust_side",
-    "base": "hee:block/jar_o_dust_base",
-    "top": "hee:block/jar_o_dust_top",
-    "lid": "hee:block/whitebark_planks"
-  },
+  "parent": "builtin/entity",
   "display": {
     "gui": {
       "rotation": [ 30, 225, 0 ],
       "translation": [ 0, 0, 0 ],
-      "scale":[ 0.7, 0.7, 0.7 ]
+      "scale": [ 0.7, 0.7, 0.7 ]
     },
     "thirdperson_righthand": {
       "rotation": [ 75, 45, 0 ],
@@ -27,31 +20,21 @@
       "rotation": [ 0, 225, 0 ],
       "translation": [ 0, 0.5, 0 ],
       "scale": [ 0.448, 0.448, 0.448 ]
-    }
-  },
-  "elements": [
-    {
-      "from": [ 3,   0,    3 ],
-      "to":   [ 13, 13.5, 13 ],
-      "faces": {
-        "down":  { "uv": [ 3, 3, 13, 13 ], "texture": "#base" },
-        "up":    { "uv": [ 3, 3, 13, 13 ], "texture": "#top" },
-        "north": { "uv": [ 3, 2, 13, 16 ], "texture": "#side" },
-        "south": { "uv": [ 3, 2, 13, 16 ], "texture": "#side" },
-        "west":  { "uv": [ 3, 2, 13, 16 ], "texture": "#side" },
-        "east":  { "uv": [ 3, 2, 13, 16 ], "texture": "#side" }
-      }
     },
-    {
-      "from": [  5.75, 13.5,   5.75 ],
-      "to":   [ 10.25, 14.75, 10.25 ],
-      "faces": {
-        "up":    { "uv": [ 0,  0, 15, 15 ], "texture": "#lid" },
-        "north": { "uv": [ 0, 11, 15, 15.75 ], "texture": "#lid" },
-        "south": { "uv": [ 0, 11, 15, 15.75 ], "texture": "#lid" },
-        "west":  { "uv": [ 0, 11, 15, 15.75 ], "texture": "#lid" },
-        "east":  { "uv": [ 0, 11, 15, 15.75 ], "texture": "#lid" }
-      }
+    "ground": {
+      "rotation": [ 0, 0, 0 ],
+      "translation": [ 0, 3, 0 ],
+      "scale": [ 0.33, 0.33, 0.33 ]
+    },
+    "head": {
+      "rotation": [ 0, 180, 0 ],
+      "translation": [ 0, 0, 0 ],
+      "scale": [ 1, 1, 1 ]
+    },
+    "fixed": {
+      "rotation": [ 0, 180, 0 ],
+      "translation": [ 0, 0, 0 ],
+      "scale": [ 0.5, 0.5, 0.5 ]
     }
-  ]
+  }
 }
