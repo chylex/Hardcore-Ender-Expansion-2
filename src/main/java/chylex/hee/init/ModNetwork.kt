@@ -63,8 +63,6 @@ object ModNetwork{
 	
 	// Packet receiving
 	
-	// TODO handle lan?
-	
 	@SubscribeEvent
 	fun onClientPacket(e: ServerCustomPayloadEvent){
 		val ctx = e.source.get()

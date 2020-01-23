@@ -128,7 +128,11 @@ abstract class ItemAbstractEnergyUser(properties: Properties) : Item(properties)
 	fun hasMaximumEnergy(stack: ItemStack) = getEnergyLevel(stack) >= calculateInternalEnergyCapacity(stack)
 	
 	open fun chargeEnergyUnit(stack: ItemStack) = offsetEnergyLevel(stack, getEnergyPerUse(stack).denominator)
-	open fun useEnergyUnit   (stack: ItemStack) = offsetEnergyLevel(stack, -getEnergyPerUse(stack).numerator) // TODO add FX when all Energy is used, maybe don't use any in creative mode
+	open fun useEnergyUnit   (stack: ItemStack) = offsetEnergyLevel(stack, -getEnergyPerUse(stack).numerator) // TODO add FX when all Energy is used
+	
+	fun useEnergyUnit(entity: Entity, stack: ItemStack): Boolean{
+		return (entity is EntityPlayer && entity.abilities.isCreativeMode) || useEnergyUnit(stack)
+	}
 	
 	fun getEnergyChargeLevel(stack: ItemStack): IEnergyQuantity{
 		return Units(getEnergyLevel(stack) / getEnergyPerUse(stack).denominator)

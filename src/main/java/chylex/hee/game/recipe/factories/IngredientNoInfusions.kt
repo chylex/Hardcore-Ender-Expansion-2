@@ -47,5 +47,7 @@ object IngredientNoInfusions : IIngredientSerializer<Instance>{
 		override fun test(ingredient: ItemStack?): Boolean{
 			return ingredient != null && ingredient.item === item && !InfusionTag.hasAny(ingredient)
 		}
+		
+		override fun getSerializer() = IngredientNoInfusions
 	}
 }

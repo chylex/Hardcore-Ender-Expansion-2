@@ -9,16 +9,20 @@ import chylex.hee.system.migration.vanilla.Enchantments
 import chylex.hee.system.migration.vanilla.EntityLivingBase
 import chylex.hee.system.migration.vanilla.EntityPlayer
 import chylex.hee.system.util.allInCenteredBox
+import chylex.hee.system.util.cleanupNBT
 import chylex.hee.system.util.color.IntColor.Companion.RGB
 import chylex.hee.system.util.doDamage
+import chylex.hee.system.util.facades.Resource
 import chylex.hee.system.util.facades.Stats
 import chylex.hee.system.util.getFluidState
+import chylex.hee.system.util.hasKey
 import chylex.hee.system.util.heeTag
 import chylex.hee.system.util.heeTagOrNull
 import chylex.hee.system.util.setAir
 import net.minecraft.block.BlockState
 import net.minecraft.client.renderer.color.IItemColor
 import net.minecraft.enchantment.Enchantment
+import net.minecraft.entity.Entity
 import net.minecraft.fluid.Fluids
 import net.minecraft.fluid.IFluidState
 import net.minecraft.item.ItemStack
@@ -33,7 +37,10 @@ import java.util.Collections
 
 class ItemVoidBucket(properties: Properties) : ItemAbstractVoidTool(properties, VOID_BUCKET){
 	private companion object{
+		private const val COOLDOWN_TAG = "Cooldown"
 		private const val COLOR_TAG = "Color"
+		
+		private const val COOLDOWN_TICKS = 13
 		
 		private fun getFluidColor(state: IFluidState) = when{
 			state.isEmpty -> 0
@@ -43,6 +50,12 @@ class ItemVoidBucket(properties: Properties) : ItemAbstractVoidTool(properties, 
 		
 		private fun isModifiableFluid(world: World, pos: BlockPos, player: EntityPlayer, stack: ItemStack): Boolean{
 			return !pos.getFluidState(world).isEmpty && world.isBlockModifiable(player, pos) && BlockEditor.canEdit(pos, player, stack)
+		}
+	}
+	
+	init{
+		addPropertyOverride(Resource.Custom("void_bucket_cooldown")){
+			stack, _, _ -> (stack.heeTagOrNull?.getByte(COOLDOWN_TAG) ?: 0) / COOLDOWN_TICKS.toFloat()
 		}
 	}
 	
@@ -63,7 +76,7 @@ class ItemVoidBucket(properties: Properties) : ItemAbstractVoidTool(properties, 
 	override fun onItemRightClick(world: World, player: EntityPlayer, hand: Hand): ActionResult<ItemStack>{
 		val heldItem = player.getHeldItem(hand)
 		
-		if (heldItem.damage >= heldItem.maxDamage){
+		if (heldItem.damage >= heldItem.maxDamage || heldItem.heeTagOrNull.hasKey(COOLDOWN_TAG)){
 			return ActionResult(FAIL, heldItem)
 		}
 		
@@ -101,21 +114,40 @@ class ItemVoidBucket(properties: Properties) : ItemAbstractVoidTool(properties, 
 			}
 		}
 		
-		heldItem.heeTag.putInt(COLOR_TAG, clickedBlockColor)
+		with(heldItem.heeTag){
+			putByte(COOLDOWN_TAG, COOLDOWN_TICKS.toByte())
+			putInt(COLOR_TAG, clickedBlockColor)
+		}
 		
 		// TODO sound
 		
-		player.cooldownTracker.setCooldown(this, 13)
 		player.addStat(Stats.useItem(this))
 		
 		return ActionResult(SUCCESS, heldItem)
+	}
+	
+	override fun inventoryTick(stack: ItemStack, world: World, entity: Entity, itemSlot: Int, isSelected: Boolean){
+		with(stack.heeTagOrNull ?: return){
+			if (hasKey(COOLDOWN_TAG)){
+				val cooldown = getByte(COOLDOWN_TAG).toInt()
+				
+				if (cooldown <= 1){
+					remove(COOLDOWN_TAG)
+					remove(COLOR_TAG)
+					stack.cleanupNBT()
+				}
+				else{
+					putByte(COOLDOWN_TAG, (cooldown - 1).toByte())
+				}
+			}
+		}
 	}
 	
 	// Client side
 	
 	object Color : IItemColor{
 		override fun getColor(stack: ItemStack, tintIndex: Int) = when(tintIndex){
-			1 -> stack.heeTagOrNull?.getInt(COLOR_TAG) ?: NO_TINT // TODO using cooldown to determine the textures looks funny w/ multiple buckets in inventory
+			1 -> stack.heeTagOrNull?.getInt(COLOR_TAG) ?: NO_TINT
 			else -> NO_TINT
 		}
 	}

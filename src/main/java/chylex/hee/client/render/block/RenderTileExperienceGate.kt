@@ -43,7 +43,7 @@ object RenderTileExperienceGate : TileEntityRendererFast<TileEntityExperienceGat
 	
 	@SubscribeEvent
 	fun onTextureStitchPre(e: TextureStitchEvent.Pre){
-		if (e.map.basePath != "textures/block"){
+		if (e.map.basePath != "textures"){
 			return
 		}
 		
@@ -54,7 +54,7 @@ object RenderTileExperienceGate : TileEntityRendererFast<TileEntityExperienceGat
 	
 	@SubscribeEvent
 	fun onTextureStitchPost(e: TextureStitchEvent.Post){
-		if (e.map.basePath != "textures/block"){
+		if (e.map.basePath != "textures"){
 			return
 		}
 		

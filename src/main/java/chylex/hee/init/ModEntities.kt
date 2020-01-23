@@ -153,7 +153,7 @@ object ModEntities{
 			else -> return
 		}
 		
-		// UPDATE check passengers
+		// no way to handle passengers on the initial spawn
 		overriden.read(original.writeWithoutTypeId(TagCompound()))
 		
 		e.isCanceled = true

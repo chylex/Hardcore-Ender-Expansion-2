@@ -69,7 +69,7 @@ class ItemRingOfHunger(properties: Properties) : ItemAbstractTrinket(properties)
 			var restoredDurability = 0F
 			
 			for((type, effect) in e.entityLiving.activePotionMap){
-				if (type.effectType == HARMFUL){ // UPDATE consider neutral?
+				if (type.effectType == HARMFUL){
 					if (effect.duration >= PotionBase.INFINITE_DURATION_THRESHOLD){
 						restoredDurability = it.maxDamage.toFloat()
 						break

@@ -51,5 +51,7 @@ object IngredientFullEnergy : IIngredientSerializer<Instance>{
 		override fun test(ingredient: ItemStack?): Boolean{
 			return ingredient != null && ingredient.item === item && item.hasMaximumEnergy(ingredient) && !InfusionTag.hasAny(ingredient)
 		}
+		
+		override fun getSerializer() = IngredientFullEnergy
 	}
 }

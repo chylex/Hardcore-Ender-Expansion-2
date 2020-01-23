@@ -44,7 +44,7 @@ class ItemSpatialDashGem(properties: Properties) : ItemAbstractEnergyUser(proper
 	override fun onItemRightClick(world: World, player: EntityPlayer, hand: Hand): ActionResult<ItemStack>{
 		val heldItem = player.getHeldItem(hand)
 		
-		if (!useEnergyUnit(heldItem)){
+		if (!useEnergyUnit(player, heldItem)){
 			return ActionResult(FAIL, heldItem)
 		}
 		

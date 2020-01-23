@@ -5,19 +5,19 @@
   },
   "overrides": [
     {
-      "predicate": { "cooldown": 0.01 },
+      "predicate": { "hee:void_bucket_cooldown": 0.01 },
       "model": "hee:item/void_bucket_fluid_level_1"
     },
     {
-      "predicate": { "cooldown": 0.3 },
+      "predicate": { "hee:void_bucket_cooldown": 0.3 },
       "model": "hee:item/void_bucket_fluid_level_2"
     },
     {
-      "predicate": { "cooldown": 0.5 },
+      "predicate": { "hee:void_bucket_cooldown": 0.5 },
       "model": "hee:item/void_bucket_fluid_level_3"
     },
     {
-      "predicate": { "cooldown": 0.7 },
+      "predicate": { "hee:void_bucket_cooldown": 0.7 },
       "model": "hee:item/void_bucket_fluid_level_4"
     }
   ]

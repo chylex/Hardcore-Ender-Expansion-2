@@ -255,7 +255,7 @@ class ItemEnergyOracle(properties: Properties) : ItemAbstractEnergyUser(properti
 				if (getPosOrNull(LAST_UPDATE_POS_TAG) != holderPos){
 					putPos(LAST_UPDATE_POS_TAG, holderPos)
 					
-					if (getShort(TRACKED_CLUSTER_HUE_TAG) != CLUSTER_HUE_PROXIMITY_OVERRIDE && !useEnergyUnit(stack)){
+					if (getShort(TRACKED_CLUSTER_HUE_TAG) != CLUSTER_HUE_PROXIMITY_OVERRIDE && !useEnergyUnit(entity, stack)){
 						removeTrackedClusterTags(this)
 					}
 				}

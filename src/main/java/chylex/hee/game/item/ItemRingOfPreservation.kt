@@ -74,13 +74,13 @@ class ItemRingOfPreservation(properties: Properties) : ItemAbstractTrinket(prope
 	
 	// Item destruction handling
 	
-	// UPDATE: check if EntityLivingBase.damageEntity still triggers the events in the same order to allow detecting armor breaking, or if PlayerDestroyItemEvent gets fixed
+	// UPDATE 1.14 (PlayerDestroyItemEvent doesn't include armor, see if that changed or if EntityLivingBase.damageEntity still triggers events in the same order to allow detecting armor breaking)
 	
 	@SubscribeEvent(EventPriority.HIGHEST)
 	fun onPlayerDestroyItem(e: PlayerDestroyItemEvent){
 		@Suppress("SENSELESS_COMPARISON")
 		if (e.original == null){
-			return // UPDATE the event is completely fucked and triggers with null stacks
+			return // UPDATE 1.14 (the event is completely fucked and triggers with null stacks when placing blocks)
 		}
 		
 		val player = e.player

@@ -120,12 +120,17 @@ class EntityMobSpiderling(type: EntityType<EntityMobSpiderling>, world: World) :
 		}
 		
 		private fun findTopBlockMaxY(world: World, pos: BlockPos): Double?{
+			var lastTop: Double? = null
+			
 			for(y in 0..3){
 				val testPos = pos.up(y)
 				val testBox = testPos.getState(world).getCollisionShape(world, testPos)
 				
 				if (testBox.isEmpty){
-					return testPos.y + testBox.boundingBox.maxY // UPDATE test
+					return lastTop?.let { it + testPos.y - 1 }
+				}
+				else{
+					lastTop = testBox.boundingBox.maxY
 				}
 			}
 			
