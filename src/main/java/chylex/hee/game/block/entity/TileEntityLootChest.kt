@@ -5,9 +5,12 @@ import chylex.hee.game.block.entity.base.TileEntityBaseChest
 import chylex.hee.game.container.ContainerLootChest
 import chylex.hee.init.ModSounds
 import chylex.hee.init.ModTileEntities
+import chylex.hee.proxy.Environment
 import chylex.hee.system.migration.vanilla.EntityPlayer
 import chylex.hee.system.migration.vanilla.TextComponentTranslation
 import chylex.hee.system.util.TagCompound
+import chylex.hee.system.util.getStringOrNull
+import chylex.hee.system.util.hasInventory
 import chylex.hee.system.util.loadInventory
 import chylex.hee.system.util.nonEmptySlots
 import chylex.hee.system.util.playServer
@@ -19,9 +22,14 @@ import net.minecraft.inventory.IInventory
 import net.minecraft.inventory.Inventory
 import net.minecraft.inventory.container.Container
 import net.minecraft.tileentity.TileEntityType
+import net.minecraft.util.ResourceLocation
 import net.minecraft.util.SoundCategory
 import net.minecraft.util.SoundEvent
 import net.minecraft.util.text.ITextComponent
+import net.minecraft.world.server.ServerWorld
+import net.minecraft.world.storage.loot.LootContext
+import net.minecraft.world.storage.loot.LootParameterSets
+import net.minecraft.world.storage.loot.LootParameters
 import java.util.UUID
 
 class TileEntityLootChest(type: TileEntityType<TileEntityLootChest>) : TileEntityBaseChest(type){
@@ -54,12 +62,28 @@ class TileEntityLootChest(type: TileEntityType<TileEntityLootChest>) : TileEntit
 	override val defaultName = TextComponentTranslation("gui.hee.loot_chest.title")
 	override val soundOpening = ModSounds.BLOCK_LOOT_CHEST_OPEN
 	
-	val sourceInventory = createInventory() // TODO add support for loot tables
+	val sourceInventory = createInventory()
+	private var sourceLootTable: String? = null
 	
 	private val playerInventories = mutableMapOf<UUID, IInventory>()
 	
+	val hasLootTable
+		get() = sourceLootTable != null
+	
 	override fun playChestSound(sound: SoundEvent){
 		sound.playServer(wrld, pos, SoundCategory.BLOCKS, volume = 0.5F)
+	}
+	
+	// Command handling
+	
+	fun resetPlayerInventories(): Int{
+		val total = playerInventories.count()
+		playerInventories.clear()
+		return total
+	}
+	
+	fun setLootTable(resource: ResourceLocation?){
+		sourceLootTable = resource?.toString()
 	}
 	
 	// Sided inventory handling
@@ -72,7 +96,26 @@ class TileEntityLootChest(type: TileEntityType<TileEntityLootChest>) : TileEntit
 		return if (player.isCreative)
 			sourceInventory
 		else
-			playerInventories.getOrPut(player.uniqueID){ createInventoryClone(sourceInventory) }
+			playerInventories.getOrPut(player.uniqueID){ generateNewLoot(player) }
+	}
+	
+	private fun generateNewLoot(player: EntityPlayer): IInventory{
+		val lootTable = sourceLootTable
+		
+		if (lootTable == null){
+			return createInventoryClone(sourceInventory)
+		}
+		
+		val world = wrld as ServerWorld
+		val lootManager = Environment.getServer().lootTableManager
+		val lootContext = LootContext.Builder(world)
+			.withRandom(world.rand)
+			.withParameter(LootParameters.POSITION, pos)
+			.withParameter(LootParameters.THIS_ENTITY, player)
+			.withLuck(player.luck)
+			.build(LootParameterSets.CHEST)
+		
+		return Inventory(SLOT_COUNT).apply { lootManager.getLootTableFromLocation(ResourceLocation(lootTable)).fillInventory(this, lootContext) }
 	}
 	
 	// Serialization
@@ -81,7 +124,14 @@ class TileEntityLootChest(type: TileEntityType<TileEntityLootChest>) : TileEntit
 		super.writeNBT(nbt, context)
 		
 		if (context == STORAGE){
-			saveInventory(SOURCE_INV_TAG, sourceInventory)
+			val lootTable = sourceLootTable
+			
+			if (lootTable == null){
+				saveInventory(SOURCE_INV_TAG, sourceInventory)
+			}
+			else{
+				putString(SOURCE_INV_TAG, lootTable)
+			}
 			
 			put(PLAYER_INV_TAG, TagCompound().also {
 				for((uuid, inventory) in playerInventories){
@@ -95,7 +145,12 @@ class TileEntityLootChest(type: TileEntityType<TileEntityLootChest>) : TileEntit
 		super.readNBT(nbt, context)
 		
 		if (context == STORAGE){
-			loadInventory(SOURCE_INV_TAG, sourceInventory)
+			if (hasInventory(SOURCE_INV_TAG)){
+				loadInventory(SOURCE_INV_TAG, sourceInventory)
+			}
+			else{
+				sourceLootTable = getStringOrNull(SOURCE_INV_TAG)
+			}
 			
 			with(getCompound(PLAYER_INV_TAG)){
 				for(key in keySet()){

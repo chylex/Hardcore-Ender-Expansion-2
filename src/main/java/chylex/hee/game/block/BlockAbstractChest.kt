@@ -75,11 +75,14 @@ abstract class BlockAbstractChest<T : TileEntityBaseChest>(builder: BlockBuilder
 			return true
 		}
 		
+		openChest(world, pos, player)
+		return true
+	}
+	
+	protected open fun openChest(world: World, pos: BlockPos, player: EntityPlayer){
 		pos.getTile<TileEntityBaseChest>(world)?.let {
 			ModContainers.open(player, it, pos)
 		}
-		
-		return true
 	}
 	
 	// Ocelot behavior

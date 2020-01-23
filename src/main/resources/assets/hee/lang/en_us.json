@@ -70,6 +70,7 @@
   "block.hee.dark_chest": "Dark Chest",
   "block.hee.loot_chest": "Loot Chest",
   "block.hee.loot_chest.tooltip": "§5§o(Editable in creative mode)",
+  "block.hee.loot_chest.error_has_loot_table": "Cannot edit a Loot Chest that uses a predefined loot table",
 
   "block.hee.puzzle_block_wall": "Puzzle Block (Wall)",
   "block.hee.puzzle_block_plain": "Puzzle Block (Plain)",
@@ -316,6 +317,13 @@
   "commands.hee.infusions.not_applicable": "Infusion cannot be applied to this item",
   "commands.hee.infusions.already_present": "Infusion is already present on this item",
   "commands.hee.infusions.not_present": "Infusion is not present on this item",
+
+  "commands.hee.lootchest.info": "manipulates Loot Chests",
+  "commands.hee.lootchest.set_table_success": "Updated loot table",
+  "commands.hee.lootchest.remove_table_success": "Removed loot table",
+  "commands.hee.lootchest.reset_success": "Reset loot generated for %s player(s)",
+  "commands.hee.lootchest.table_not_found": "Loot table not found",
+  "commands.hee.lootchest.not_loot_chest": "No Loot Chest at the specified location",
 
   "commands.hee.token.info": "generates a Portal Token item",
   "commands.hee.token.success": "Created Portal Token leading to %s.",

@@ -74,6 +74,10 @@ fun TagCompound.getStack(key: String): ItemStack{
 
 private const val SLOT_TAG = "Slot"
 
+fun TagCompound.hasInventory(key: String): Boolean{
+	return this.contains(key, NBT.TAG_LIST)
+}
+
 fun TagCompound.saveInventory(key: String, inventory: IInventory){
 	val list = TagList()
 	

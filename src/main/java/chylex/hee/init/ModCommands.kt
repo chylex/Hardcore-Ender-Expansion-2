@@ -5,6 +5,7 @@ import chylex.hee.game.commands.server.CommandDebugTestWorld
 import chylex.hee.game.commands.server.CommandServerCausatum
 import chylex.hee.game.commands.server.CommandServerHelp
 import chylex.hee.game.commands.server.CommandServerInfusions
+import chylex.hee.game.commands.server.CommandServerLootChest
 import chylex.hee.game.commands.server.CommandServerPortalToken
 import chylex.hee.system.Debug
 import chylex.hee.system.migration.forge.SubscribeAllEvents
@@ -20,6 +21,7 @@ object ModCommands{
 		CommandServerHelp,
 		CommandServerCausatum,
 		CommandServerInfusions,
+		CommandServerLootChest,
 		CommandServerPortalToken
 	)
 	
