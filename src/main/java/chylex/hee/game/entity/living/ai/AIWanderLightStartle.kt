@@ -83,7 +83,7 @@ class AIWanderLightStartle(
 			
 			val testLight = getCombinedLight(testPos)
 			
-			if (startLight - testLight >= minCombinedLightDecrease && testLight < foundLight && nav.getPathToPos(testPos, 0)?.let { validatePath(it, testPos) } == true){
+			if (startLight - testLight >= minCombinedLightDecrease && testLight < foundLight && nav.func_179680_a(testPos, 0)?.let { validatePath(it, testPos) } == true){ // RENAME getPathToPos
 				foundTarget = testPos
 				foundLight = testLight
 			}

@@ -86,7 +86,7 @@ object ScorchingFortune{
 	private fun estimateDropRange(world: ServerWorld, block: Block): IntRange{
 		val rand = Random(96L)
 		
-		val lootTable = Environment.getServer().lootTableManager.getLootTableFromLocation(block.lootTable)
+		val lootTable = Environment.getLootTable(block.lootTable)
 		val lootContext = LootContext.Builder(world)
 			.withRandom(rand)
 			.withParameter(LootParameters.BLOCK_STATE, block.defaultState)

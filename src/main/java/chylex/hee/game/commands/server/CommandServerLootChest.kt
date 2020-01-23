@@ -5,6 +5,8 @@ import chylex.hee.game.commands.util.exception
 import chylex.hee.game.commands.util.getPos
 import chylex.hee.game.commands.util.message
 import chylex.hee.game.commands.util.returning
+import chylex.hee.game.commands.util.world
+import chylex.hee.proxy.Environment
 import chylex.hee.system.util.getTile
 import com.mojang.brigadier.builder.ArgumentBuilder
 import com.mojang.brigadier.context.CommandContext
@@ -46,7 +48,7 @@ object CommandServerLootChest : ICommand{
 		val tile = getLootChest(ctx)
 		val lootTable = getResourceLocation(ctx, "loot_table")
 		
-		if (ctx.source.server.lootTableManager.getLootTableFromLocation(lootTable) === LootTable.EMPTY_LOOT_TABLE){
+		if (Environment.getLootTable(lootTable) === LootTable.EMPTY_LOOT_TABLE){
 			throw TABLE_NOT_FOUND.create()
 		}
 		

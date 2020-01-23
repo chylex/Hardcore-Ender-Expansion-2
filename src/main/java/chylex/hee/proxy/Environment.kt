@@ -1,6 +1,10 @@
 package chylex.hee.proxy
 import chylex.hee.system.migration.forge.Side
 import net.minecraft.server.MinecraftServer
+import net.minecraft.util.ResourceLocation
+import net.minecraft.world.dimension.DimensionType
+import net.minecraft.world.server.ServerWorld
+import net.minecraft.world.storage.loot.LootTable
 import net.minecraftforge.fml.loading.FMLEnvironment
 import net.minecraftforge.fml.server.ServerLifecycleHooks
 
@@ -18,5 +22,13 @@ object Environment{
 	
 	fun getServer(): MinecraftServer{
 		return ServerLifecycleHooks.getCurrentServer()
+	}
+	
+	fun getDimension(dimension: DimensionType): ServerWorld{
+		return getServer().func_71218_a(dimension)
+	}
+	
+	fun getLootTable(location: ResourceLocation): LootTable{
+		return getServer().lootTableManager.getLootTableFromLocation(location)
 	}
 }

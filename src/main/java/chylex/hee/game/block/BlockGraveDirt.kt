@@ -154,7 +154,7 @@ open class BlockGraveDirt(builder: BlockBuilder) : BlockSimpleShaped(builder, Ax
 			else if (world is ServerWorld && world.gameRules.getBoolean(DO_MOB_LOOT)){
 				val lootContext = LootContext.Builder(world).withRandom(world.rand).build(LootParameterSets.EMPTY)
 				
-				for(drop in Environment.getServer().lootTableManager.getLootTableFromLocation(EntityMobSpiderling.LOOT_TABLE).generate(lootContext)){
+				for(drop in Environment.getLootTable(EntityMobSpiderling.LOOT_TABLE).generate(lootContext)){
 					spawnAsEntity(world, pos, drop)
 				}
 			}

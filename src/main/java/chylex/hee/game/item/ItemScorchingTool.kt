@@ -40,7 +40,7 @@ class ItemScorchingTool(
 	override fun canMine(state: BlockState): Boolean{
 		val block = state.block
 		
-		if (!ScorchingFortune.canSmelt(Environment.getServer().getWorld(DimensionType.OVERWORLD), block)){
+		if (!ScorchingFortune.canSmelt(Environment.getDimension(DimensionType.OVERWORLD), block)){
 			return false
 		}
 		

@@ -107,7 +107,6 @@ class TileEntityLootChest(type: TileEntityType<TileEntityLootChest>) : TileEntit
 		}
 		
 		val world = wrld as ServerWorld
-		val lootManager = Environment.getServer().lootTableManager
 		val lootContext = LootContext.Builder(world)
 			.withRandom(world.rand)
 			.withParameter(LootParameters.POSITION, pos)
@@ -115,7 +114,7 @@ class TileEntityLootChest(type: TileEntityType<TileEntityLootChest>) : TileEntit
 			.withLuck(player.luck)
 			.build(LootParameterSets.CHEST)
 		
-		return Inventory(SLOT_COUNT).apply { lootManager.getLootTableFromLocation(ResourceLocation(lootTable)).fillInventory(this, lootContext) }
+		return Inventory(SLOT_COUNT).apply { Environment.getLootTable(ResourceLocation(lootTable)).fillInventory(this, lootContext) }
 	}
 	
 	// Serialization

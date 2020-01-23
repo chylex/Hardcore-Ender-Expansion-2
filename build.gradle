@@ -30,7 +30,7 @@ apply plugin: "eclipse"
 apply plugin: "kotlin"
 
 def mcversion = "1.14.4"
-def forgeversion = "28.1.111"
+def forgeversion = "28.1.116"
 def kottleversion = "1.4.0"
 
 def prefixName = "displayName = "
@@ -68,7 +68,7 @@ tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile){
 }
 
 minecraft{
-    mappings channel: "snapshot", version: "20200113-1.14.3"
+    mappings channel: "snapshot", version: "20200119-1.14.4"
 
     accessTransformer = file("src/main/resources/META-INF/accesstransformer.cfg")
 

@@ -30,7 +30,7 @@ class PathNavigateGroundUnrestricted(entity: EntityLiving, world: World) : Groun
 	}
 	
 	override fun tryMoveToEntityLiving(entity: Entity, speed: Double): Boolean{
-		val path = getPathToEntityLiving(entity, 1)
+		val path = func_75494_a(entity, 1) // RENAME getPathToEntityLiving
 		
 		if (path != null){
 			overrideSpeed = 0.0

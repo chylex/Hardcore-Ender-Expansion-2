@@ -112,8 +112,8 @@ abstract class ObsidianTowerRoom_General(file: String, val guaranteesSpawnersOnL
 	}
 	
 	protected fun placeFurnace(world: IStructureWorld, pos: BlockPos, facing: Direction){
-		val overworld = Environment.getServer().getWorld(DimensionType.OVERWORLD)
-		val table = Environment.getServer().lootTableManager.getLootTableFromLocation(ObsidianTowerPieces.LOOT_FUEL)
+		val overworld = Environment.getDimension(DimensionType.OVERWORLD)
+		val table = Environment.getLootTable(ObsidianTowerPieces.LOOT_FUEL)
 		
 		val fuel = table.generate(LootContext.Builder(overworld).withRandom(world.rand).build(LootParameterSets.EMPTY)).firstOrNull() ?: ItemStack.EMPTY
 		world.addTrigger(pos, TileEntityStructureTrigger(Blocks.FURNACE.withFacing(facing), TileEntityFurnace().apply { setStack(MagicValues.FURNACE_FUEL_SLOT, fuel) }))

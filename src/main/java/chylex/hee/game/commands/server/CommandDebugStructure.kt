@@ -4,6 +4,7 @@ import chylex.hee.game.commands.util.ValidatedStringArgument.Companion.validated
 import chylex.hee.game.commands.util.executes
 import chylex.hee.game.commands.util.getString
 import chylex.hee.game.commands.util.returning
+import chylex.hee.game.commands.util.world
 import chylex.hee.game.world.feature.energyshrine.EnergyShrinePieces
 import chylex.hee.game.world.feature.obsidiantower.ObsidianTowerPieces
 import chylex.hee.game.world.feature.stronghold.StrongholdPieces

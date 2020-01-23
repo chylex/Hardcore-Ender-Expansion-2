@@ -292,7 +292,7 @@ class EntityInfusedTNT : EntityTNTPrimed{
 				else             -> remapRange(waterRatio, (0.4F)..(1.0F), (4.0F)..(5.8F))
 			}
 			
-			val lootTable = Environment.getServer().lootTableManager.getLootTableFromLocation(LootTables.GAMEPLAY_FISHING)
+			val lootTable = Environment.getLootTable(LootTables.GAMEPLAY_FISHING)
 			val lootContext = LootContext.Builder(world as ServerWorld)
 				.withRandom(rand)
 				.withParameter(LootParameters.POSITION, position)
