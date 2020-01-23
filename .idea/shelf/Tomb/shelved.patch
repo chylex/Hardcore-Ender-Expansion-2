@@ -1,0 +1,671 @@
+Index: src/main/java/chylex/hee/game/world/feature/tombdungeon/piece/TombDungeonCorridor_StraightTombs.kt
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- src/main/java/chylex/hee/game/world/feature/tombdungeon/piece/TombDungeonCorridor_StraightTombs.kt	(date 1579593033167)
++++ src/main/java/chylex/hee/game/world/feature/tombdungeon/piece/TombDungeonCorridor_StraightTombs.kt	(date 1579593033167)
+@@ -0,0 +1,43 @@
++package chylex.hee.game.world.feature.tombdungeon.piece
++import chylex.hee.game.world.feature.tombdungeon.connection.TombDungeonConnection
++import chylex.hee.game.world.feature.tombdungeon.connection.TombDungeonConnectionType.CORRIDOR
++import chylex.hee.game.world.feature.tombdungeon.connection.TombDungeonConnectionType.TOMB_ENTRANCE
++import chylex.hee.game.world.structure.IBlockPicker.Single.Air
++import chylex.hee.game.world.structure.IStructureWorld
++import chylex.hee.game.world.structure.piece.IStructurePieceConnection
++import chylex.hee.game.world.util.Size
++import chylex.hee.system.migration.Facing.EAST
++import chylex.hee.system.migration.Facing.NORTH
++import chylex.hee.system.migration.Facing.SOUTH
++import chylex.hee.system.migration.Facing.WEST
++import chylex.hee.system.util.Pos
++
++class TombDungeonCorridor_StraightTombs(piece: TombDungeonRoom_Tomb, configuration: Configuration, tombsPerSide: Int, override val isFancy: Boolean) : TombDungeonAbstractPiece(){
++	enum class Configuration{
++		WEST, EAST, BOTH
++	}
++	
++	override val size = Size(5, 5, 5 + ((tombsPerSide - 1) * piece.size.x))
++	
++	override val connections = mutableListOf<IStructurePieceConnection>().also {
++		it.add(TombDungeonConnection(CORRIDOR, Pos(size.centerX, 0, size.maxZ), SOUTH))
++		it.add(TombDungeonConnection(CORRIDOR, Pos(size.centerX, 0, 0), NORTH))
++		
++		val spacing = piece.size.x
++		
++		for(tombIndex in 0 until tombsPerSide){
++			if (configuration == Configuration.WEST || configuration == Configuration.BOTH){
++				it.add(TombDungeonConnection(TOMB_ENTRANCE, Pos(0, 0, 2 + (tombIndex * spacing)), WEST))
++			}
++			
++			if (configuration == Configuration.EAST || configuration == Configuration.BOTH){
++				it.add(TombDungeonConnection(TOMB_ENTRANCE, Pos(size.maxX, 0, 2 + (tombIndex * spacing)), EAST))
++			}
++		}
++	}.toTypedArray()
++	
++	override fun generate(world: IStructureWorld, instance: Instance){
++		super.generate(world, instance)
++		world.placeCube(Pos(1, 1, 1), Pos(size.maxX - 1, size.maxY - 1, size.maxZ - 1), Air)
++	}
++}
+Index: src/main/java/chylex/hee/game/world/feature/tombdungeon/piece/TombDungeonCorridor_Straight.kt
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- src/main/java/chylex/hee/game/world/feature/tombdungeon/piece/TombDungeonCorridor_Straight.kt	(date 1579593033167)
++++ src/main/java/chylex/hee/game/world/feature/tombdungeon/piece/TombDungeonCorridor_Straight.kt	(date 1579593033167)
+@@ -0,0 +1,24 @@
++package chylex.hee.game.world.feature.tombdungeon.piece
++import chylex.hee.game.world.feature.tombdungeon.connection.TombDungeonConnection
++import chylex.hee.game.world.feature.tombdungeon.connection.TombDungeonConnectionType.CORRIDOR
++import chylex.hee.game.world.structure.IBlockPicker.Single.Air
++import chylex.hee.game.world.structure.IStructureWorld
++import chylex.hee.game.world.structure.piece.IStructurePieceConnection
++import chylex.hee.game.world.util.Size
++import chylex.hee.system.migration.Facing.NORTH
++import chylex.hee.system.migration.Facing.SOUTH
++import chylex.hee.system.util.Pos
++
++class TombDungeonCorridor_Straight(length: Int, override val isFancy: Boolean) : TombDungeonAbstractPiece(){
++	override val size = Size(5, 5, length)
++	
++	override val connections = arrayOf<IStructurePieceConnection>(
++		TombDungeonConnection(CORRIDOR, Pos(size.centerX, 0, size.maxZ), SOUTH),
++		TombDungeonConnection(CORRIDOR, Pos(size.centerX, 0, 0), NORTH)
++	)
++	
++	override fun generate(world: IStructureWorld, instance: Instance){
++		super.generate(world, instance)
++		world.placeCube(Pos(1, 1, 1), Pos(size.maxX - 1, size.maxY - 1, size.maxZ - 1), Air)
++	}
++}
+Index: src/main/java/chylex/hee/game/world/feature/tombdungeon/piece/TombDungeonRoom_End.kt
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- src/main/java/chylex/hee/game/world/feature/tombdungeon/piece/TombDungeonRoom_End.kt	(date 1579594244672)
++++ src/main/java/chylex/hee/game/world/feature/tombdungeon/piece/TombDungeonRoom_End.kt	(date 1579594244672)
+@@ -0,0 +1,108 @@
++package chylex.hee.game.world.feature.tombdungeon.piece
++import chylex.hee.game.block.BlockVoidPortalInner
++import chylex.hee.game.entity.item.EntityTokenHolder
++import chylex.hee.game.item.ItemPortalToken.TokenType.NORMAL
++import chylex.hee.game.world.feature.tombdungeon.connection.TombDungeonConnection
++import chylex.hee.game.world.feature.tombdungeon.connection.TombDungeonConnectionType.ROOM_ENTRANCE
++import chylex.hee.game.world.structure.IBlockPicker.Single.Air
++import chylex.hee.game.world.structure.IStructureWorld
++import chylex.hee.game.world.structure.piece.IStructurePieceConnection
++import chylex.hee.game.world.structure.trigger.EntityStructureTrigger
++import chylex.hee.game.world.structure.trigger.TileEntityStructureTrigger
++import chylex.hee.game.world.territory.TerritoryType.FORGOTTEN_TOMBS
++import chylex.hee.init.ModBlocks
++import chylex.hee.system.migration.Facing.EAST
++import chylex.hee.system.migration.Facing.NORTH
++import chylex.hee.system.migration.Facing.SOUTH
++import chylex.hee.system.migration.Facing.WEST
++import chylex.hee.system.migration.vanilla.Blocks
++import chylex.hee.system.util.Pos
++import chylex.hee.system.util.TagCompound
++import chylex.hee.system.util.allInCenteredBox
++import chylex.hee.system.util.with
++import chylex.hee.system.util.withFacing
++import net.minecraft.util.Direction
++import net.minecraft.util.math.BlockPos
++import kotlin.math.abs
++
++class TombDungeonRoom_End(file: String) : TombDungeonAbstractPieceFromFile(file, isFancy = true){
++	override val connections = arrayOf<IStructurePieceConnection>(
++		TombDungeonConnection(ROOM_ENTRANCE, Pos(centerX, 6, maxZ), SOUTH)
++	)
++	
++	override fun generate(world: IStructureWorld, instance: Instance){
++		world.placeCube(Pos(1, 2, 1), Pos(maxX - 1, maxY - 1, maxZ - 1), Air)
++		super.generate(world, instance)
++		
++		val portalCenter = Pos(centerX, 1, centerZ - 12)
++		val tombOffset = portalCenter.up(2)
++		
++		for(pos in portalCenter.allInCenteredBox(1, 0, 1)){
++			world.addTrigger(pos, TileEntityStructureTrigger(ModBlocks.VOID_PORTAL_INNER.with(BlockVoidPortalInner.TYPE, BlockVoidPortalInner.Type.RETURN_INACTIVE), TagCompound()))
++		}
++		
++		placeTokenHolders(world, tombOffset)
++		placeChests(world, tombOffset)
++	}
++	
++	private fun placeTokenHolders(world: IStructureWorld, tombOffset: BlockPos){
++		val rand = world.rand
++		val tokenTombs = TOMBS.asList().shuffled(rand).take(2)
++		
++		for(tokenTomb in tokenTombs){
++			val xOffset = (tokenTomb.offsetX1 + tokenTomb.offsetX2) * 0.5
++			val zOffset = (tokenTomb.offsetZ1 + tokenTomb.offsetZ2) * 0.5
++			
++			val nudge = if (tokenTomb.isShortX) EAST else SOUTH
++			val trigger = EntityStructureTrigger({ realWorld -> EntityTokenHolder(realWorld, NORMAL, /*TODO*/FORGOTTEN_TOMBS) }, nudgeFacing = nudge, nudgeAmount = 0.5, yOffset = 0.35)
++			
++			world.addTrigger(tombOffset.add(xOffset, 0.0, zOffset), trigger)
++		}
++	}
++	
++	private fun placeChests(world: IStructureWorld, tombOffset: BlockPos){
++		val rand = world.rand
++		val chestTombs = TOMBS.flatMap { listOf(it to false, it to true) }.shuffled(rand).take(4)
++		
++		for((chestTomb, offsetType) in chestTombs){
++			val x: IntArray
++			val z: IntArray
++			val facing: Direction
++			
++			if (chestTomb.isShortX){
++				x = intArrayOf(chestTomb.offsetX1, chestTomb.offsetX2)
++				z = (if (offsetType) chestTomb.offsetZ1 else chestTomb.offsetZ2).let { intArrayOf(it, it) }
++				facing = if (offsetType) SOUTH else NORTH
++			}
++			else{
++				z = intArrayOf(chestTomb.offsetZ1, chestTomb.offsetZ2)
++				x = (if (offsetType) chestTomb.offsetX1 else chestTomb.offsetX2).let { intArrayOf(it, it) }
++				facing = if (offsetType) EAST else WEST
++			}
++			
++			val picks = when(rand.nextInt(6)){
++				0 -> intArrayOf(0)
++				1 -> intArrayOf(1)
++				else -> intArrayOf(0, 1)
++			}
++			
++			for(pick in picks){
++				world.setState(tombOffset.add(x[pick], 0, z[pick]), Blocks.CHEST.withFacing(facing))
++				// TODO loot
++			}
++		}
++	}
++	
++	private companion object{
++		private class Tomb(val offsetX1: Int, val offsetZ1: Int, val offsetX2: Int, val offsetZ2: Int){
++			val isShortX = abs(offsetX1 - offsetX2) < abs(offsetZ1 - offsetZ2)
++		}
++		
++		private val TOMBS = arrayOf(
++			Tomb(offsetX1 = -10, offsetZ1 = -2, offsetX2 = -9, offsetZ2 =  2),
++			Tomb(offsetX1 =   9, offsetZ1 = -2, offsetX2 = 10, offsetZ2 =  2),
++			Tomb(offsetX1 =   3, offsetZ1 = -9, offsetX2 =  7, offsetZ2 = -8),
++			Tomb(offsetX1 =  -7, offsetZ1 = -9, offsetX2 = -3, offsetZ2 = -8)
++		)
++	}
++}
+Index: src/main/java/chylex/hee/game/world/feature/tombdungeon/piece/TombDungeonCorridor_Intersection.kt
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- src/main/java/chylex/hee/game/world/feature/tombdungeon/piece/TombDungeonCorridor_Intersection.kt	(date 1579593033167)
++++ src/main/java/chylex/hee/game/world/feature/tombdungeon/piece/TombDungeonCorridor_Intersection.kt	(date 1579593033167)
+@@ -0,0 +1,28 @@
++package chylex.hee.game.world.feature.tombdungeon.piece
++import chylex.hee.game.world.feature.tombdungeon.connection.TombDungeonConnection
++import chylex.hee.game.world.feature.tombdungeon.connection.TombDungeonConnectionType.CORRIDOR
++import chylex.hee.game.world.structure.IBlockPicker.Single.Air
++import chylex.hee.game.world.structure.IStructureWorld
++import chylex.hee.game.world.structure.piece.IStructurePieceConnection
++import chylex.hee.game.world.util.Size
++import chylex.hee.system.migration.Facing.EAST
++import chylex.hee.system.migration.Facing.NORTH
++import chylex.hee.system.migration.Facing.SOUTH
++import chylex.hee.system.migration.Facing.WEST
++import chylex.hee.system.util.Pos
++
++class TombDungeonCorridor_Intersection(override val isFancy: Boolean) : TombDungeonAbstractPiece(){
++	override val size = Size(5, 5, 5)
++	
++	override val connections = arrayOf<IStructurePieceConnection>(
++		TombDungeonConnection(CORRIDOR, Pos(size.centerX, 0, 0), NORTH),
++		TombDungeonConnection(CORRIDOR, Pos(size.centerX, 0, size.maxZ), SOUTH),
++		TombDungeonConnection(CORRIDOR, Pos(size.maxX, 0, size.centerZ), EAST),
++		TombDungeonConnection(CORRIDOR, Pos(0, 0, size.centerZ), WEST)
++	)
++	
++	override fun generate(world: IStructureWorld, instance: Instance){
++		super.generate(world, instance)
++		world.placeCube(Pos(1, 1, 1), Pos(size.maxX - 1, size.maxY - 1, size.maxZ - 1), Air)
++	}
++}
+Index: src/main/java/chylex/hee/game/world/feature/tombdungeon/TombDungeonLevel.kt
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- src/main/java/chylex/hee/game/world/feature/tombdungeon/TombDungeonLevel.kt	(date 1579593033167)
++++ src/main/java/chylex/hee/game/world/feature/tombdungeon/TombDungeonLevel.kt	(date 1579593033167)
+@@ -0,0 +1,16 @@
++package chylex.hee.game.world.feature.tombdungeon
++import chylex.hee.system.util.nextInt
++import java.util.Random
++
++@Suppress("unused")
++enum class TombDungeonLevel(val isFancy: Boolean, private val corridorFactor: Int){
++	FIRST (isFancy = false, corridorFactor = 1),
++	SECOND(isFancy = false, corridorFactor = 5),
++	THIRD (isFancy = false, corridorFactor = 2),
++	FOURTH(isFancy = true,  corridorFactor = 4),
++	LAST  (isFancy = true,  corridorFactor = 6);
++	
++	fun getCorridorLength(rand: Random): Int{
++		return rand.nextInt(43 + (corridorFactor * 2), 55) + ((corridorFactor - 1) * rand.nextInt(12, 14)) + (if (this == LAST) 10 else 0)
++	}
++}
+Index: src/main/java/chylex/hee/game/world/feature/tombdungeon/piece/TombDungeonCorridor_Stairs.kt
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- src/main/java/chylex/hee/game/world/feature/tombdungeon/piece/TombDungeonCorridor_Stairs.kt	(date 1579593033167)
++++ src/main/java/chylex/hee/game/world/feature/tombdungeon/piece/TombDungeonCorridor_Stairs.kt	(date 1579593033167)
+@@ -0,0 +1,56 @@
++package chylex.hee.game.world.feature.tombdungeon.piece
++import chylex.hee.game.world.feature.tombdungeon.connection.TombDungeonConnection
++import chylex.hee.game.world.feature.tombdungeon.connection.TombDungeonConnectionType.STAIR_BOTTOM
++import chylex.hee.game.world.feature.tombdungeon.connection.TombDungeonConnectionType.STAIR_TOP
++import chylex.hee.game.world.structure.IStructureWorld
++import chylex.hee.game.world.structure.piece.IStructurePieceConnection
++import chylex.hee.init.ModBlocks
++import chylex.hee.system.migration.Facing.NORTH
++import chylex.hee.system.migration.Facing.SOUTH
++import chylex.hee.system.util.Pos
++import chylex.hee.system.util.nextInt
++
++sealed class TombDungeonCorridor_Stairs(file: String) : TombDungeonAbstractPieceFromFile(file, isFancy = false){
++	class Start(file: String) : TombDungeonCorridor_Stairs(file){
++		override val connections = arrayOf<IStructurePieceConnection>(
++			TombDungeonConnection(STAIR_TOP, Pos(centerX, 2, 0), NORTH),
++			TombDungeonConnection(STAIR_BOTTOM, Pos(centerX, 0, maxZ), SOUTH)
++		)
++		
++		override fun generate(world: IStructureWorld, instance: Instance){
++			super.generate(world, instance)
++			
++			val rand = world.rand
++			
++			for(z in 0..maxZ){
++				if (rand.nextInt(5) <= 1){
++					world.setBlock(Pos(rand.nextInt(1, maxX - 1), 2 - z, z), ModBlocks.DUSTY_STONE_BRICK_SLAB)
++				}
++			}
++		}
++	}
++	
++	class Middle(file: String) : TombDungeonCorridor_Stairs(file){
++		override val connections = arrayOf<IStructurePieceConnection>(
++			TombDungeonConnection(STAIR_TOP, Pos(centerX, 1, 0), NORTH),
++			TombDungeonConnection(STAIR_BOTTOM, Pos(centerX, 0, maxZ), SOUTH)
++		)
++		
++		override fun generate(world: IStructureWorld, instance: Instance){
++			super.generate(world, instance)
++			
++			val rand = world.rand
++			
++			if (rand.nextInt(5) <= 1){
++				world.setBlock(Pos(rand.nextInt(1, maxX - 1), 1, 0), ModBlocks.DUSTY_STONE_BRICK_SLAB)
++			}
++		}
++	}
++	
++	class End(file: String) : TombDungeonCorridor_Stairs(file){
++		override val connections = arrayOf<IStructurePieceConnection>(
++			TombDungeonConnection(STAIR_TOP, Pos(centerX, 0, 0), NORTH),
++			TombDungeonConnection(STAIR_BOTTOM, Pos(centerX, 0, maxZ), SOUTH)
++		)
++	}
++}
+Index: src/main/java/chylex/hee/game/world/feature/tombdungeon/TombDungeonPieces.kt
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package chylex.hee.game.world.feature.tombdungeon\r\nimport chylex.hee.game.world.structure.IBlockPicker.Weighted.Companion.Weighted\r\nimport chylex.hee.game.world.structure.IStructureDescription\r\nimport chylex.hee.game.world.structure.IStructureDescription.Companion.NULL_LOCATOR\r\nimport chylex.hee.game.world.structure.file.PaletteBuilder\r\nimport chylex.hee.game.world.structure.file.PaletteMappings\r\nimport chylex.hee.game.world.structure.piece.StructurePiece\r\nimport chylex.hee.game.world.util.Size\r\nimport chylex.hee.init.ModBlocks\r\nimport chylex.hee.system.migration.Facing.EAST\r\nimport chylex.hee.system.migration.Facing.NORTH\r\nimport chylex.hee.system.migration.Facing.SOUTH\r\nimport chylex.hee.system.migration.Facing.WEST\r\nimport chylex.hee.system.migration.vanilla.BlockSlab\r\nimport chylex.hee.system.migration.vanilla.BlockStairs\r\nimport chylex.hee.system.migration.vanilla.Blocks\r\nimport chylex.hee.system.util.with\r\nimport chylex.hee.system.util.withFacing\r\nimport net.minecraft.state.properties.Half\r\nimport net.minecraft.state.properties.SlabType\r\n\r\nobject TombDungeonPieces : IStructureDescription{\r\n\toverride val STRUCTURE_SIZE = Size(300, 110, 300)\r\n\t\r\n\toverride val STRUCTURE_BUILDER = TombDungeonBuilder\r\n\toverride val STRUCTURE_LOCATOR = NULL_LOCATOR\r\n\t\r\n\t// Palette\r\n\t\r\n\tval PALETTE_ENTRY_PLAIN_WALL_CEILING = Weighted(\r\n\t\t840 to ModBlocks.DUSTY_STONE_BRICKS,\r\n\t\t125 to ModBlocks.DUSTY_STONE,\r\n\t\t 35 to ModBlocks.DUSTY_STONE_CRACKED_BRICKS\r\n\t)\r\n\t\r\n\tval PALETTE_ENTRY_FANCY_WALL = Weighted(\r\n\t\t94 to ModBlocks.DUSTY_STONE_BRICKS,\r\n\t\t 6 to ModBlocks.DUSTY_STONE_CRACKED_BRICKS\r\n\t)\r\n\t\r\n\tval PALETTE_ENTRY_FANCY_CEILING = Weighted(\r\n\t\t860 to ModBlocks.DUSTY_STONE_BRICKS.defaultState,\r\n\t\t 82 to ModBlocks.DUSTY_STONE_CRACKED_BRICKS.defaultState,\r\n\t\t 30 to ModBlocks.DUSTY_STONE_BRICK_SLAB.with(BlockSlab.TYPE, SlabType.TOP),\r\n\t\t  7 to ModBlocks.DUSTY_STONE_BRICK_STAIRS.with(BlockStairs.HALF, Half.TOP).withFacing(NORTH),\r\n\t\t  7 to ModBlocks.DUSTY_STONE_BRICK_STAIRS.with(BlockStairs.HALF, Half.TOP).withFacing(SOUTH),\r\n\t\t  7 to ModBlocks.DUSTY_STONE_BRICK_STAIRS.with(BlockStairs.HALF, Half.TOP).withFacing(EAST),\r\n\t\t  7 to ModBlocks.DUSTY_STONE_BRICK_STAIRS.with(BlockStairs.HALF, Half.TOP).withFacing(WEST)\r\n\t)\r\n\t\r\n\tprivate val PALETTE_ENTRY_PLAIN_GRAVE = Weighted(\r\n\t\t74 to ModBlocks.GRAVE_DIRT_PLAIN,\r\n\t\t18 to ModBlocks.GRAVE_DIRT_SPIDERLING,\r\n\t\t 8 to ModBlocks.GRAVE_DIRT_LOOT\r\n\t)\r\n\t\r\n\tprivate val PALETTE_ENTRY_FANCY_GRAVE = Weighted(\r\n\t\t69 to ModBlocks.GRAVE_DIRT_PLAIN,\r\n\t\t27 to ModBlocks.GRAVE_DIRT_LOOT,\r\n\t\t 4 to ModBlocks.GRAVE_DIRT_SPIDERLING\r\n\t)\r\n\t\r\n\tprivate fun generateCommonPalette() = PaletteBuilder.Combined().apply {\r\n\t\tadd(\"air\", Blocks.AIR)\r\n\t\tadd(\"dustystone\", ModBlocks.DUSTY_STONE)\r\n\t\tadd(\"dustystone.bricks\", ModBlocks.DUSTY_STONE_BRICKS)\r\n\t\t\r\n\t\tadd(\"slab.dustystonebrick.*\", ModBlocks.DUSTY_STONE_BRICK_SLAB, PaletteMappings.SLAB_TYPE)\r\n\t\tadd(\"stairs.dustystonebrick.*.*\", ModBlocks.DUSTY_STONE_BRICK_STAIRS, listOf(PaletteMappings.STAIR_FLIP, PaletteMappings.FACING_HORIZONTAL)) // UPDATE migrate mappings\r\n\t\t\r\n\t\twith(forDevelopment){\r\n\t\t\tadd(\"dustystone.wall\", Blocks.LAPIS_BLOCK)\r\n\t\t\tadd(\"dustystone.ceiling\", Blocks.COAL_BLOCK)\r\n\t\t\tadd(\"gravedirt\", ModBlocks.GRAVE_DIRT_PLAIN)\r\n\t\t}\r\n\t}\r\n\t\r\n\toverride val PALETTE = with(generateCommonPalette()){\r\n\t\twith(forGeneration){\r\n\t\t\tadd(\"dustystone.wall\", PALETTE_ENTRY_PLAIN_WALL_CEILING)\r\n\t\t\tadd(\"dustystone.ceiling\", PALETTE_ENTRY_PLAIN_WALL_CEILING)\r\n\t\t\tadd(\"gravedirt\", PALETTE_ENTRY_PLAIN_GRAVE)\r\n\t\t}\r\n\t\t\r\n\t\tbuild()\r\n\t}\r\n\t\r\n\tval PALETTE_FANCY = with(generateCommonPalette()){\r\n\t\twith(forGeneration){\r\n\t\t\tadd(\"dustystone.wall\", PALETTE_ENTRY_FANCY_WALL)\r\n\t\t\tadd(\"dustystone.ceiling\", PALETTE_ENTRY_FANCY_CEILING)\r\n\t\t\tadd(\"gravedirt\", PALETTE_ENTRY_FANCY_GRAVE)\r\n\t\t}\r\n\t\t\r\n\t\tbuild()\r\n\t}\r\n\t\r\n\t// Pieces\r\n\t\r\n\toverride val ALL_PIECES\r\n\t\tget() = arrayOf<StructurePiece<*>>()\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- src/main/java/chylex/hee/game/world/feature/tombdungeon/TombDungeonPieces.kt	(revision 41aa0b6695a1ac98e2d75beae7cb260618fe1f25)
++++ src/main/java/chylex/hee/game/world/feature/tombdungeon/TombDungeonPieces.kt	(date 1579594244682)
+@@ -1,10 +1,15 @@
+ package chylex.hee.game.world.feature.tombdungeon
++import chylex.hee.game.world.feature.tombdungeon.piece.TombDungeonAbstractPiece
++import chylex.hee.game.world.feature.tombdungeon.piece.TombDungeonCorridor_Intersection
++import chylex.hee.game.world.feature.tombdungeon.piece.TombDungeonCorridor_Stairs
++import chylex.hee.game.world.feature.tombdungeon.piece.TombDungeonCorridor_Straight
++import chylex.hee.game.world.feature.tombdungeon.piece.TombDungeonRoom_End
++import chylex.hee.game.world.feature.tombdungeon.piece.TombDungeonRoom_Tomb
+ import chylex.hee.game.world.structure.IBlockPicker.Weighted.Companion.Weighted
+ import chylex.hee.game.world.structure.IStructureDescription
+ import chylex.hee.game.world.structure.IStructureDescription.Companion.NULL_LOCATOR
+ import chylex.hee.game.world.structure.file.PaletteBuilder
+ import chylex.hee.game.world.structure.file.PaletteMappings
+-import chylex.hee.game.world.structure.piece.StructurePiece
+ import chylex.hee.game.world.util.Size
+ import chylex.hee.init.ModBlocks
+ import chylex.hee.system.migration.Facing.EAST
+@@ -14,10 +19,13 @@
+ import chylex.hee.system.migration.vanilla.BlockSlab
+ import chylex.hee.system.migration.vanilla.BlockStairs
+ import chylex.hee.system.migration.vanilla.Blocks
++import chylex.hee.system.util.nextInt
+ import chylex.hee.system.util.with
+ import chylex.hee.system.util.withFacing
+ import net.minecraft.state.properties.Half
+ import net.minecraft.state.properties.SlabType
++import java.util.Random
++import kotlin.math.min
+ 
+ object TombDungeonPieces : IStructureDescription{
+ 	override val STRUCTURE_SIZE = Size(300, 110, 300)
+@@ -68,6 +76,13 @@
+ 		add("slab.dustystonebrick.*", ModBlocks.DUSTY_STONE_BRICK_SLAB, PaletteMappings.SLAB_TYPE)
+ 		add("stairs.dustystonebrick.*.*", ModBlocks.DUSTY_STONE_BRICK_STAIRS, listOf(PaletteMappings.STAIR_FLIP, PaletteMappings.FACING_HORIZONTAL)) // UPDATE migrate mappings
+ 		
++		add("torch", Blocks.TORCH)
++		add("torch.*", Blocks.WALL_TORCH, PaletteMappings.FACING_HORIZONTAL)
++		add("redstonetorch", Blocks.REDSTONE_TORCH)
++		add("redstonetorch.*", Blocks.REDSTONE_WALL_TORCH, PaletteMappings.FACING_HORIZONTAL)
++		
++		add("voidportal.frame", ModBlocks.VOID_PORTAL_FRAME)
++		
+ 		with(forDevelopment){
+ 			add("dustystone.wall", Blocks.LAPIS_BLOCK)
+ 			add("dustystone.ceiling", Blocks.COAL_BLOCK)
+@@ -97,6 +112,56 @@
+ 	
+ 	// Pieces
+ 	
++	//val PIECE_ROOM_TOMB_NARROW = TombDungeonRoom_Tomb("tomb.single.narrow.nbt", isFancy = false)
++	
++	val PIECE_ROOM_END = TombDungeonRoom_End("main.end.nbt")
++	
++	private val PIECES_STAIRS = arrayOf(
++		TombDungeonCorridor_Stairs.Start("corridor.stairs.start.nbt"),
++		TombDungeonCorridor_Stairs.Middle("corridor.stairs.middle.nbt"),
++		TombDungeonCorridor_Stairs.End("corridor.stairs.end.nbt")
++	)
++	
++	fun PIECES_STAIRCASE(middle: Int): List<TombDungeonCorridor_Stairs>{
++		return listOf(PIECES_STAIRS[0], *Array(middle){ PIECES_STAIRS[1] }, PIECES_STAIRS[2])
++	}
++	
++	fun PIECES_MAIN_CORRIDOR(rand: Random, level: TombDungeonLevel, cornerCount: Int): List<TombDungeonAbstractPiece>{
++		return mutableListOf<TombDungeonAbstractPiece>().apply {
++			val isFancy = level.isFancy
++			var lengthRemaining = level.getCorridorLength(rand)
++			
++			while(lengthRemaining > 0){
++				val nextLength = if (level == TombDungeonLevel.LAST)
++					rand.nextInt(1, min(lengthRemaining, (lengthRemaining / 5) + 3))
++				else
++					rand.nextInt(1, min(lengthRemaining, (lengthRemaining / 3) + 5))
++				
++				lengthRemaining -= nextLength
++				add(TombDungeonCorridor_Straight(nextLength, isFancy))
++			}
++			
++			repeat(cornerCount){
++				add(TombDungeonCorridor_Intersection(isFancy))
++			}
++		}
++	}
++	
+ 	override val ALL_PIECES
+-		get() = arrayOf<StructurePiece<*>>()
++		get() = arrayOf(
++			TombDungeonCorridor_Straight(length = 5, isFancy = false),
++			TombDungeonCorridor_Intersection(isFancy = false),
++			
++			*PIECES_STAIRS,
++			
++			// TODO
++			TombDungeonRoom_Tomb("tomb.single.narrow.nbt", entranceY = 2, isFancy = false),
++			TombDungeonRoom_Tomb("tomb.single.narrow.nbt", entranceY = 2, isFancy = true),
++			TombDungeonRoom_Tomb("tomb.multi2x4.narrow.nbt", entranceY = 1, isFancy = false),
++			TombDungeonRoom_Tomb("tomb.multi2x4.narrow.nbt", entranceY = 1, isFancy = true),
++			TombDungeonRoom_Tomb("tomb.multi2x4.spacious.nbt", entranceY = 3, isFancy = false),
++			TombDungeonRoom_Tomb("tomb.multi2x4.spacious.nbt", entranceY = 3, isFancy = true),
++			
++			PIECE_ROOM_END
++		)
+ }
+Index: src/main/java/chylex/hee/game/world/feature/tombdungeon/TombDungeonBuilder.kt
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package chylex.hee.game.world.feature.tombdungeon\r\nimport chylex.hee.game.world.feature.tombdungeon.TombDungeonPieces.STRUCTURE_SIZE\r\nimport chylex.hee.game.world.feature.tombdungeon.piece.TombDungeonStart\r\nimport chylex.hee.game.world.structure.piece.IStructureBuild\r\nimport chylex.hee.game.world.structure.piece.IStructureBuilder\r\nimport chylex.hee.game.world.structure.piece.StructureBuild\r\nimport chylex.hee.game.world.structure.piece.StructureBuild.PositionedPiece\r\nimport chylex.hee.game.world.util.Size.Alignment.CENTER\r\nimport chylex.hee.game.world.util.Size.Alignment.MAX\r\nimport chylex.hee.game.world.util.Transform\r\nimport net.minecraft.util.math.BlockPos\r\nimport java.util.Random\r\n\r\nobject TombDungeonBuilder : IStructureBuilder{\r\n\tval ENTRANCE_POS: BlockPos = STRUCTURE_SIZE.getPos(CENTER, MAX, MAX).add(-TombDungeonStart.size.centerX, -TombDungeonStart.size.y, -STRUCTURE_SIZE.x / 3)\r\n\t\r\n\toverride fun build(rand: Random): IStructureBuild?{\r\n\t\tval startingPiece = TombDungeonStart.MutableInstance(Transform.NONE)\r\n\t\tval startingPiecePos = ENTRANCE_POS\r\n\t\t\r\n\t\tval build = StructureBuild(STRUCTURE_SIZE, PositionedPiece(startingPiece, startingPiecePos))\r\n\t\t// TODO\r\n\t\treturn build.freeze()\r\n\t}\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- src/main/java/chylex/hee/game/world/feature/tombdungeon/TombDungeonBuilder.kt	(revision 41aa0b6695a1ac98e2d75beae7cb260618fe1f25)
++++ src/main/java/chylex/hee/game/world/feature/tombdungeon/TombDungeonBuilder.kt	(date 1579593033167)
+@@ -1,13 +1,21 @@
+ package chylex.hee.game.world.feature.tombdungeon
+ import chylex.hee.game.world.feature.tombdungeon.TombDungeonPieces.STRUCTURE_SIZE
++import chylex.hee.game.world.feature.tombdungeon.piece.TombDungeonAbstractPiece
++import chylex.hee.game.world.feature.tombdungeon.piece.TombDungeonCorridor_Straight
+ import chylex.hee.game.world.feature.tombdungeon.piece.TombDungeonStart
+ import chylex.hee.game.world.structure.piece.IStructureBuild
+ import chylex.hee.game.world.structure.piece.IStructureBuilder
++import chylex.hee.game.world.structure.piece.IStructureBuilder.ProcessBase
+ import chylex.hee.game.world.structure.piece.StructureBuild
++import chylex.hee.game.world.structure.piece.StructureBuild.AddMode
++import chylex.hee.game.world.structure.piece.StructureBuild.AddMode.APPEND
+ import chylex.hee.game.world.structure.piece.StructureBuild.PositionedPiece
++import chylex.hee.game.world.structure.piece.StructurePiece
+ import chylex.hee.game.world.util.Size.Alignment.CENTER
+ import chylex.hee.game.world.util.Size.Alignment.MAX
+ import chylex.hee.game.world.util.Transform
++import chylex.hee.system.util.nextInt
++import chylex.hee.system.util.removeItem
+ import net.minecraft.util.math.BlockPos
+ import java.util.Random
+ 
+@@ -19,7 +27,81 @@
+ 		val startingPiecePos = ENTRANCE_POS
+ 		
+ 		val build = StructureBuild(STRUCTURE_SIZE, PositionedPiece(startingPiece, startingPiecePos))
+-		// TODO
++		val process = Process(build, rand)
++		
++		var lastPiece = build.generatedPieces.last()
++		
++		run {
++			val stairLengths = mutableListOf<Int>().apply {
++				add(rand.nextInt(4, 7))
++				add(rand.nextInt(6, 13))
++				add(rand.nextInt(27, 28) - sum())
++				shuffle(rand)
++			}
++			
++			for((index, stairLength) in stairLengths.withIndex()){
++				lastPiece = process.appendPieces(lastPiece, TombDungeonPieces.PIECES_STAIRCASE(stairLength)) ?: return null
++				
++				val corridorLength = if (index == stairLengths.lastIndex) rand.nextInt(11, 13) else rand.nextInt(2, rand.nextInt(4, 5))
++				val corridorPiece = TombDungeonCorridor_Straight(corridorLength, isFancy = false)
++				
++				lastPiece = process.appendPiece(lastPiece, corridorPiece) ?: return null
++			}
++		}
++		
++		run {
++			val cornerCounts = mutableListOf(
++				rand.nextInt(2, 3),
++				rand.nextInt(4, 5),
++				rand.nextInt(5, 7),
++				rand.nextInt(6, 8)
++			)
++			
++			for(level in TombDungeonLevel.values().dropLast(1)){
++				val corridorPieces = TombDungeonPieces.PIECES_MAIN_CORRIDOR(rand, level, rand.removeItem(cornerCounts))
++				
++				if (!build.guardChain(10){
++					lastPiece = process.appendPieces(lastPiece, corridorPieces.shuffled(rand)) ?: return@guardChain false
++					lastPiece = process.appendPieces(lastPiece, TombDungeonPieces.PIECES_STAIRCASE(rand.nextInt(9, 17))) ?: return@guardChain false
++					return@guardChain true
++				}){
++					return null
++				}
++			}
++		}
++		
++		run {
++			val cornerCount = rand.nextInt(10, 11)
++			val corridorPieces = TombDungeonPieces.PIECES_MAIN_CORRIDOR(rand, TombDungeonLevel.LAST, cornerCount)
++			
++			if (!build.guardChain(10){
++				lastPiece = process.appendPieces(lastPiece, corridorPieces.shuffled(rand)) ?: return@guardChain false
++				return@guardChain true
++			}){
++				return null
++			}
++		}
++		
++		process.appendPiece(lastPiece, TombDungeonPieces.PIECE_ROOM_END) ?: return null
+ 		return build.freeze()
+ 	}
++	
++	private class Process(build: StructureBuild<StructurePiece<Unit>.MutableInstance>, rand: Random) : ProcessBase<StructurePiece<Unit>.MutableInstance>(build, rand){
++		
++		// Piece placement
++		
++		fun appendPiece(targetPiece: PositionedPiece<StructurePiece<Unit>.MutableInstance>, generatedPiece: TombDungeonAbstractPiece): PositionedPiece<StructurePiece<Unit>.MutableInstance>?{
++			return addPiece(targetPiece, generatedPiece)
++		}
++		
++		fun appendPieces(targetPiece: PositionedPiece<StructurePiece<Unit>.MutableInstance>, generatedPieces: List<TombDungeonAbstractPiece>): PositionedPiece<StructurePiece<Unit>.MutableInstance>?{
++			return generatedPieces.fold(targetPiece){ lastPiece, nextPiece -> addPiece(lastPiece, nextPiece) ?: return null }
++		}
++		
++		// Helpers
++		
++		private fun addPiece(targetPiece: PositionedPiece<StructurePiece<Unit>.MutableInstance>, generatedPiece: TombDungeonAbstractPiece, mode: AddMode = APPEND): PositionedPiece<StructurePiece<Unit>.MutableInstance>?{
++			return baseAddPiece(mode, targetPiece, generatedPiece::MutableInstance)
++		}
++	}
+ }
+Index: src/main/java/chylex/hee/game/world/territory/descriptions/Territory_ForgottenTombs.kt
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package chylex.hee.game.world.territory.descriptions\r\nimport chylex.hee.client.render.territory.lightmaps.ILightmap\r\nimport chylex.hee.client.render.territory.lightmaps.ILightmap.Companion.calcLightFactor\r\nimport chylex.hee.client.util.MC\r\nimport chylex.hee.game.world.territory.ITerritoryDescription\r\nimport chylex.hee.game.world.territory.properties.TerritoryColors\r\nimport chylex.hee.game.world.territory.properties.TerritoryEnvironment\r\nimport chylex.hee.system.migration.forge.Side\r\nimport chylex.hee.system.migration.forge.Sided\r\nimport chylex.hee.system.migration.vanilla.Potions\r\nimport chylex.hee.system.util.Pos\r\nimport chylex.hee.system.util.allInCenteredBoxMutable\r\nimport chylex.hee.system.util.color.IntColor.Companion.RGB\r\nimport chylex.hee.system.util.lookPosVec\r\nimport chylex.hee.system.util.math.LerpedFloat\r\nimport chylex.hee.system.util.nextFloat\r\nimport net.minecraft.util.math.Vec3d\r\nimport net.minecraft.world.LightType.BLOCK\r\nimport net.minecraft.world.LightType.SKY\r\nimport java.util.Random\r\nimport kotlin.math.max\r\nimport kotlin.math.pow\r\n\r\nobject Territory_ForgottenTombs : ITerritoryDescription{\r\n\toverride val colors = object : TerritoryColors(){\r\n\t\toverride val tokenTop    = RGB(211, 212, 152)\r\n\t\toverride val tokenBottom = RGB(160, 151, 116)\r\n\t\t\r\n\t\toverride val portalSeed = 410L\r\n\t\t\r\n\t\toverride fun nextPortalColor(rand: Random, color: FloatArray){\r\n\t\t\tif (rand.nextBoolean()){\r\n\t\t\t\tcolor[0] = rand.nextFloat(0.65F, 0.9F)\r\n\t\t\t\tcolor[1] = rand.nextFloat(0.45F, 0.7F)\r\n\t\t\t\tcolor[2] = rand.nextFloat(0.15F, 0.4F)\r\n\t\t\t}\r\n\t\t\telse{\r\n\t\t\t\tcolor.fill(rand.nextFloat(0.95F, 1F))\r\n\t\t\t}\r\n\t\t}\r\n\t}\r\n\t\r\n\tprivate const val MAX_FOG_DENSITY = 0.069F\r\n\t\r\n\toverride val environment = object : TerritoryEnvironment(){\r\n\t\toverride val fogColor\r\n\t\t\tget() = (fogDensity / 0.275F).let { Vec3d(0.15 + it, 0.08 + it, 0.03) }\r\n\t\t\r\n\t\toverride val fogDensity\r\n\t\t\tget() = currentFogDensity.get(MC.partialTicks)\r\n\t\t\r\n\t\toverride val skyLight = 15\r\n\t\t\r\n\t\toverride val voidRadiusMpXZ = 1.35F\r\n\t\toverride val voidRadiusMpY = 0.975F\r\n\t\toverride val voidCenterOffset = Vec3d(0.0, -8.0, 0.0)\r\n\t\t\r\n\t\toverride val lightmap = object : ILightmap{\r\n\t\t\toverride fun update(colors: FloatArray, sunBrightness: Float, skyLight: Float, blockLight: Float, partialTicks: Float){\r\n\t\t\t\tval blockFactor = calcLightFactor(blockLight)\r\n\t\t\t\t\r\n\t\t\t\tcolors[0] = (blockLight * 0.9F) + skyLight + 0.12F\r\n\t\t\t\tcolors[1] = (blockFactor * 0.7F) + (skyLight * 0.8F) + 0.08F\r\n\t\t\t\tcolors[2] = (blockFactor * 0.5F) + (skyLight * 1.2F) + (0.09F * nightVisionFactor)\r\n\t\t\t}\r\n\t\t}\r\n\t\t\r\n\t\tprivate val currentFogDensity = LerpedFloat(MAX_FOG_DENSITY)\r\n\t\tprivate var nightVisionFactor = 0F\r\n\t\t\r\n\t\t@Sided(Side.CLIENT)\r\n\t\toverride fun setupClient(){\r\n\t\t\ttickClient()\r\n\t\t\tcurrentFogDensity.updateImmediately(MAX_FOG_DENSITY * 0.8F)\r\n\t\t}\r\n\t\t\r\n\t\t@Sided(Side.CLIENT)\r\n\t\toverride fun tickClient(){\r\n\t\t\tval player = MC.player\r\n\t\t\tval pos = player?.lookPosVec?.let(::Pos)\r\n\t\t\t\r\n\t\t\tval light: Float\r\n\t\t\t\r\n\t\t\tif (pos == null){\r\n\t\t\t\tlight = 1F\r\n\t\t\t}\r\n\t\t\telse{\r\n\t\t\t\tval world = player.world\r\n\t\t\t\t\r\n\t\t\t\tvar levelBlock = 0\r\n\t\t\t\tvar levelSky = 0\r\n\t\t\t\t\r\n\t\t\t\tfor(offset in pos.allInCenteredBoxMutable(1, 1, 1)){\r\n\t\t\t\t\tlevelBlock = max(levelBlock, world.getLightFor(BLOCK, offset))\r\n\t\t\t\t\tlevelSky = max(levelSky, world.getLightFor(SKY, offset))\r\n\t\t\t\t}\r\n\t\t\t\t\r\n\t\t\t\tlight = max(levelBlock / 15F, levelSky / 12F)\r\n\t\t\t}\r\n\t\t\t\r\n\t\t\tval prev = currentFogDensity.currentValue\r\n\t\t\tval next = MAX_FOG_DENSITY - (light.pow(0.2F) * 0.85F * MAX_FOG_DENSITY)\r\n\t\t\tval speed = if (next > prev) 0.025F else 0.055F\r\n\t\t\t\r\n\t\t\tcurrentFogDensity.update(prev + (next - prev) * speed)\r\n\t\t\tnightVisionFactor = if (player?.isPotionActive(Potions.NIGHT_VISION) == true) 1F else 0F\r\n\t\t}\r\n\t}\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- src/main/java/chylex/hee/game/world/territory/descriptions/Territory_ForgottenTombs.kt	(revision 41aa0b6695a1ac98e2d75beae7cb260618fe1f25)
++++ src/main/java/chylex/hee/game/world/territory/descriptions/Territory_ForgottenTombs.kt	(date 1579593955530)
+@@ -1,4 +1,5 @@
+ package chylex.hee.game.world.territory.descriptions
++import chylex.hee.client.render.territory.EnvironmentRenderer
+ import chylex.hee.client.render.territory.lightmaps.ILightmap
+ import chylex.hee.client.render.territory.lightmaps.ILightmap.Companion.calcLightFactor
+ import chylex.hee.client.util.MC
+@@ -7,6 +8,7 @@
+ import chylex.hee.game.world.territory.properties.TerritoryEnvironment
+ import chylex.hee.system.migration.forge.Side
+ import chylex.hee.system.migration.forge.Sided
++import chylex.hee.system.migration.vanilla.EntityPlayer
+ import chylex.hee.system.migration.vanilla.Potions
+ import chylex.hee.system.util.Pos
+ import chylex.hee.system.util.allInCenteredBoxMutable
+@@ -55,6 +57,14 @@
+ 		override val voidRadiusMpY = 0.975F
+ 		override val voidCenterOffset = Vec3d(0.0, -8.0, 0.0)
+ 		
++		override val renderer = EnvironmentRenderer(
++			/* TODO SkyCubeStatic(
++				texture = Resource.Vanilla("textures/environment/end_sky.png"),
++				color = Vec3d(0.99, 0.5, 0.7),
++				alpha = 1F
++			)*/
++		)
++		
+ 		override val lightmap = object : ILightmap{
+ 			override fun update(colors: FloatArray, sunBrightness: Float, skyLight: Float, blockLight: Float, partialTicks: Float){
+ 				val blockFactor = calcLightFactor(blockLight)
+@@ -69,41 +79,32 @@
+ 		private var nightVisionFactor = 0F
+ 		
+ 		@Sided(Side.CLIENT)
+-		override fun setupClient(){
+-			tickClient()
++		override fun setupClient(player: EntityPlayer){
++			tickClient(player)
+ 			currentFogDensity.updateImmediately(MAX_FOG_DENSITY * 0.8F)
+ 		}
+ 		
+ 		@Sided(Side.CLIENT)
+-		override fun tickClient(){
+-			val player = MC.player
+-			val pos = player?.lookPosVec?.let(::Pos)
+-			
+-			val light: Float
+-			
+-			if (pos == null){
+-				light = 1F
+-			}
+-			else{
+-				val world = player.world
+-				
+-				var levelBlock = 0
+-				var levelSky = 0
+-				
+-				for(offset in pos.allInCenteredBoxMutable(1, 1, 1)){
+-					levelBlock = max(levelBlock, world.getLightFor(BLOCK, offset))
+-					levelSky = max(levelSky, world.getLightFor(SKY, offset))
+-				}
+-				
+-				light = max(levelBlock / 15F, levelSky / 12F)
+-			}
++		override fun tickClient(player: EntityPlayer){
++			val world = player.world
++			val pos = Pos(player.lookPosVec)
++			
++			var levelBlock = 0
++			var levelSky = 0
++			
++			for(offset in pos.allInCenteredBoxMutable(1, 1, 1)){
++				levelBlock = max(levelBlock, world.getLightFor(BLOCK, offset))
++				levelSky = max(levelSky, world.getLightFor(SKY, offset))
++			}
++			
++			val light = max(levelBlock / 15F, levelSky / 12F)
+ 			
+ 			val prev = currentFogDensity.currentValue
+ 			val next = MAX_FOG_DENSITY - (light.pow(0.2F) * 0.85F * MAX_FOG_DENSITY)
+ 			val speed = if (next > prev) 0.025F else 0.055F
+ 			
+ 			currentFogDensity.update(prev + (next - prev) * speed)
+-			nightVisionFactor = if (player?.isPotionActive(Potions.NIGHT_VISION) == true) 1F else 0F
++			nightVisionFactor = if (player.isPotionActive(Potions.NIGHT_VISION)) 1F else 0F
+ 		}
+ 	}
+ }
+Index: src/main/java/chylex/hee/game/world/feature/tombdungeon/piece/TombDungeonRoom_Tomb.kt
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- src/main/java/chylex/hee/game/world/feature/tombdungeon/piece/TombDungeonRoom_Tomb.kt	(date 1579593033167)
++++ src/main/java/chylex/hee/game/world/feature/tombdungeon/piece/TombDungeonRoom_Tomb.kt	(date 1579593033167)
+@@ -0,0 +1,18 @@
++package chylex.hee.game.world.feature.tombdungeon.piece
++import chylex.hee.game.world.feature.tombdungeon.connection.TombDungeonConnection
++import chylex.hee.game.world.feature.tombdungeon.connection.TombDungeonConnectionType.TOMB_ENTRANCE
++import chylex.hee.game.world.structure.IStructureWorld
++import chylex.hee.game.world.structure.piece.IStructurePieceConnection
++import chylex.hee.system.migration.Facing.SOUTH
++import chylex.hee.system.util.Pos
++
++class TombDungeonRoom_Tomb(file: String, entranceY: Int, isFancy: Boolean) : TombDungeonAbstractPieceFromFile(file, isFancy){
++	override val connections = arrayOf<IStructurePieceConnection>(
++		TombDungeonConnection(TOMB_ENTRANCE, Pos(centerX, entranceY, maxZ), SOUTH)
++	)
++	
++	override fun generate(world: IStructureWorld, instance: Instance){
++		super.generate(world, instance)
++		// TODO
++	}
++}

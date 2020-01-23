@@ -1,0 +1,39 @@
+<changelist name="Tomb" date="1579750369609" recycled="false">
+  <option name="PATH" value="$PROJECT_DIR$/.idea/shelf/Tomb/shelved.patch" />
+  <option name="DESCRIPTION" value="Tomb" />
+  <binary>
+    <option name="BEFORE_PATH" />
+    <option name="AFTER_PATH" value="src/main/resources/data/hee/structure/tombdungeon/corridor.stairs.end.nbt" />
+    <option name="SHELVED_PATH" value="$PROJECT_DIR$/.idea/shelf/Tomb/corridor.stairs.end.nbt" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" />
+    <option name="AFTER_PATH" value="src/main/resources/data/hee/structure/tombdungeon/corridor.stairs.middle.nbt" />
+    <option name="SHELVED_PATH" value="$PROJECT_DIR$/.idea/shelf/Tomb/corridor.stairs.middle.nbt" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" />
+    <option name="AFTER_PATH" value="src/main/resources/data/hee/structure/tombdungeon/corridor.stairs.start.nbt" />
+    <option name="SHELVED_PATH" value="$PROJECT_DIR$/.idea/shelf/Tomb/corridor.stairs.start.nbt" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" />
+    <option name="AFTER_PATH" value="src/main/resources/data/hee/structure/tombdungeon/main.end.nbt" />
+    <option name="SHELVED_PATH" value="$PROJECT_DIR$/.idea/shelf/Tomb/main.end.nbt" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" />
+    <option name="AFTER_PATH" value="src/main/resources/data/hee/structure/tombdungeon/tomb.multi2x4.narrow.nbt" />
+    <option name="SHELVED_PATH" value="$PROJECT_DIR$/.idea/shelf/Tomb/tomb.multi2x4.narrow.nbt" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" />
+    <option name="AFTER_PATH" value="src/main/resources/data/hee/structure/tombdungeon/tomb.multi2x4.spacious.nbt" />
+    <option name="SHELVED_PATH" value="$PROJECT_DIR$/.idea/shelf/Tomb/tomb.multi2x4.spacious.nbt" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" />
+    <option name="AFTER_PATH" value="src/main/resources/data/hee/structure/tombdungeon/tomb.single.narrow.nbt" />
+    <option name="SHELVED_PATH" value="$PROJECT_DIR$/.idea/shelf/Tomb/tomb.single.narrow.nbt" />
+  </binary>
+</changelist>

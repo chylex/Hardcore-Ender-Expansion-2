@@ -1,0 +1,153 @@
+Index: src/main/java/chylex/hee/game/world/territory/properties/TerritoryEnvironment.kt
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package chylex.hee.game.world.territory.properties\r\nimport chylex.hee.client.render.territory.EnvironmentRenderer\r\nimport chylex.hee.client.render.territory.lightmaps.ILightmap\r\nimport chylex.hee.client.render.territory.lightmaps.VanillaEndLightmap\r\nimport chylex.hee.game.world.WorldProviderEndCustom.Companion.DEFAULT_CELESTIAL_ANGLE\r\nimport chylex.hee.game.world.WorldProviderEndCustom.Companion.DEFAULT_SKY_LIGHT\r\nimport chylex.hee.game.world.WorldProviderEndCustom.Companion.DEFAULT_SUN_BRIGHTNESS\r\nimport chylex.hee.system.migration.forge.Side\r\nimport chylex.hee.system.migration.forge.Sided\r\nimport net.minecraft.util.math.Vec3d\r\n\r\nabstract class TerritoryEnvironment{\r\n\topen val lightBrightnessTable: FloatArray?\r\n\t\tget() = null\r\n\t\r\n\topen val celestialAngle: Float\r\n\t\tget() = DEFAULT_CELESTIAL_ANGLE\r\n\t\r\n\topen val sunBrightness: Float\r\n\t\tget() = DEFAULT_SUN_BRIGHTNESS\r\n\t\r\n\topen val skyLight: Int\r\n\t\tget() = DEFAULT_SKY_LIGHT // TODO use custom chunk for custom skylight levels & check where skylight matters (such as mob spawning)\r\n\t\r\n\tabstract val fogColor: Vec3d\r\n\tabstract val fogDensity: Float\r\n\t\r\n\tabstract val voidRadiusMpXZ: Float\r\n\tabstract val voidRadiusMpY: Float\r\n\topen val voidCenterOffset: Vec3d = Vec3d.ZERO\r\n\t\r\n\topen val renderer: EnvironmentRenderer? = null\r\n\topen val lightmap: ILightmap = VanillaEndLightmap\r\n\t\r\n\t@Sided(Side.CLIENT)\r\n\topen fun setupClient(){}\r\n\t\r\n\t@Sided(Side.CLIENT)\r\n\topen fun tickClient(){}\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- src/main/java/chylex/hee/game/world/territory/properties/TerritoryEnvironment.kt	(revision 41aa0b6695a1ac98e2d75beae7cb260618fe1f25)
++++ src/main/java/chylex/hee/game/world/territory/properties/TerritoryEnvironment.kt	(date 1579593955530)
+@@ -7,6 +7,7 @@
+ import chylex.hee.game.world.WorldProviderEndCustom.Companion.DEFAULT_SUN_BRIGHTNESS
+ import chylex.hee.system.migration.forge.Side
+ import chylex.hee.system.migration.forge.Sided
++import chylex.hee.system.migration.vanilla.EntityPlayer
+ import net.minecraft.util.math.Vec3d
+ 
+ abstract class TerritoryEnvironment{
+@@ -33,8 +34,8 @@
+ 	open val lightmap: ILightmap = VanillaEndLightmap
+ 	
+ 	@Sided(Side.CLIENT)
+-	open fun setupClient(){}
++	open fun setupClient(player: EntityPlayer){}
+ 	
+ 	@Sided(Side.CLIENT)
+-	open fun tickClient(){}
++	open fun tickClient(player: EntityPlayer){}
+ }
+Index: src/main/java/chylex/hee/client/render/TerritoryRenderer.kt
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package chylex.hee.client.render\r\nimport chylex.hee.HEE\r\nimport chylex.hee.client.render.util.GL\r\nimport chylex.hee.client.render.util.GL.DF_ONE_MINUS_SRC_ALPHA\r\nimport chylex.hee.client.render.util.GL.DF_ZERO\r\nimport chylex.hee.client.render.util.GL.SF_ONE\r\nimport chylex.hee.client.render.util.GL.SF_SRC_ALPHA\r\nimport chylex.hee.client.util.MC\r\nimport chylex.hee.game.particle.ParticleVoid\r\nimport chylex.hee.game.particle.spawner.ParticleSpawnerCustom\r\nimport chylex.hee.game.particle.util.IOffset.InBox\r\nimport chylex.hee.game.particle.util.IShape.Point\r\nimport chylex.hee.game.world.WorldProviderEndCustom\r\nimport chylex.hee.game.world.territory.TerritoryType\r\nimport chylex.hee.game.world.territory.TerritoryVoid\r\nimport chylex.hee.system.Debug\r\nimport chylex.hee.system.migration.forge.EventPriority\r\nimport chylex.hee.system.migration.forge.Side\r\nimport chylex.hee.system.migration.forge.SubscribeAllEvents\r\nimport chylex.hee.system.migration.forge.SubscribeEvent\r\nimport chylex.hee.system.migration.vanilla.EntityPlayer\r\nimport chylex.hee.system.util.color.IntColor\r\nimport chylex.hee.system.util.color.IntColor.Companion.RGB\r\nimport chylex.hee.system.util.floorToInt\r\nimport chylex.hee.system.util.lookDirVec\r\nimport chylex.hee.system.util.math.LerpedFloat\r\nimport chylex.hee.system.util.posVec\r\nimport chylex.hee.system.util.scale\r\nimport net.minecraft.client.resources.I18n\r\nimport net.minecraftforge.client.event.RenderGameOverlayEvent\r\nimport net.minecraftforge.common.MinecraftForge\r\nimport net.minecraftforge.event.TickEvent.ClientTickEvent\r\nimport net.minecraftforge.event.TickEvent.Phase\r\nimport org.lwjgl.opengl.GL11.GL_GREATER\r\nimport kotlin.math.min\r\nimport kotlin.math.pow\r\n\r\n@SubscribeAllEvents(Side.CLIENT, modid = HEE.ID)\r\nobject TerritoryRenderer{\r\n\tprivate var prevChunkX = Int.MAX_VALUE\r\n\tprivate var prevTerritory: TerritoryType? = null\r\n\t\r\n\t@SubscribeEvent\r\n\tfun onClientTick(e: ClientTickEvent){\r\n\t\tif (e.phase == Phase.START){\r\n\t\t\tval player = MC.player\r\n\t\t\t\r\n\t\t\tif (player != null && player.world.dimension is WorldProviderEndCustom && player.ticksExisted > 0){\r\n\t\t\t\tVoid.tick(player)\r\n\t\t\t\tTitle.tick()\r\n\t\t\t\t\r\n\t\t\t\tval newChunkX = player.chunkCoordX\r\n\t\t\t\t\r\n\t\t\t\tif (prevChunkX != newChunkX){\r\n\t\t\t\t\tprevChunkX = newChunkX\r\n\t\t\t\t\t\r\n\t\t\t\t\tval newTerritory = TerritoryType.fromX(player.posX.floorToInt())\r\n\t\t\t\t\t\r\n\t\t\t\t\tif (prevTerritory != newTerritory){\r\n\t\t\t\t\t\tprevTerritory = newTerritory\r\n\t\t\t\t\t\t\r\n\t\t\t\t\t\tif (newTerritory != null){\r\n\t\t\t\t\t\t\tVoid.reset()\r\n\t\t\t\t\t\t\tTitle.display(newTerritory)\r\n\t\t\t\t\t\t\tnewTerritory.desc.environment.setupClient()\r\n\t\t\t\t\t\t}\r\n\t\t\t\t\t}\r\n\t\t\t\t}\r\n\t\t\t\t\r\n\t\t\t\tprevTerritory?.desc?.environment?.tickClient()\r\n\t\t\t}\r\n\t\t\telse if (prevTerritory != null){\r\n\t\t\t\tprevTerritory = null\r\n\t\t\t\tprevChunkX = Int.MAX_VALUE\r\n\t\t\t\t\r\n\t\t\t\tVoid.reset()\r\n\t\t\t\tTitle.reset()\r\n\t\t\t}\r\n\t\t}\r\n\t}\r\n\t\r\n\t// Void handling\r\n\t\r\n\tval VOID_FACTOR_VALUE\r\n\t\tget() = Void.voidFactor.get(MC.partialTicks)\r\n\t\r\n\tprivate object Void{\r\n\t\tprivate val VOID_PARTICLE = ParticleSpawnerCustom(\r\n\t\t\ttype = ParticleVoid,\r\n\t\t\tpos = InBox(8F)\r\n\t\t)\r\n\t\t\r\n\t\tval voidFactor = LerpedFloat(TerritoryVoid.OUTSIDE_VOID_FACTOR)\r\n\t\t\r\n\t\tinit{\r\n\t\t\tif (Debug.enabled){\r\n\t\t\t\tMinecraftForge.EVENT_BUS.register(this)\r\n\t\t\t}\r\n\t\t}\r\n\t\t\r\n\t\tfun tick(player: EntityPlayer){\r\n\t\t\tval factor = TerritoryVoid.getVoidFactor(player).also(voidFactor::update)\r\n\t\t\t\r\n\t\t\tif (factor == TerritoryVoid.OUTSIDE_VOID_FACTOR || MC.instance.isGamePaused){\r\n\t\t\t\treturn\r\n\t\t\t}\r\n\t\t\t\r\n\t\t\tif (factor > -1F){\r\n\t\t\t\tval rand = player.rng\r\n\t\t\t\t\r\n\t\t\t\tval mp = min(1F, (factor * 0.275F) + 0.275F)\r\n\t\t\t\tval extra = (mp.pow(1.5F) * 12F).floorToInt()\r\n\t\t\t\t\r\n\t\t\t\tVOID_PARTICLE.spawn(Point(player, heightMp = 0.5F, amount = 2 + extra), rand)\r\n\t\t\t\tVOID_PARTICLE.spawn(Point(player.posVec.add(player.lookDirVec.scale(5)), amount = extra / 2), rand)\r\n\t\t\t}\r\n\t\t}\r\n\t\t\r\n\t\tfun reset(){\r\n\t\t\tvoidFactor.updateImmediately(TerritoryVoid.OUTSIDE_VOID_FACTOR)\r\n\t\t}\r\n\t\t\r\n\t\t@SubscribeEvent\r\n\t\tfun onRenderGameOverlayText(e: RenderGameOverlayEvent.Text){\r\n\t\t\tif (MC.settings.showDebugInfo && MC.player?.dimension === HEE.dim){\r\n\t\t\t\twith(e.left){\r\n\t\t\t\t\tadd(\"\")\r\n\t\t\t\t\tadd(\"End Void Factor: ${\"%.3f\".format(voidFactor.currentValue)}\")\r\n\t\t\t\t}\r\n\t\t\t}\r\n\t\t}\r\n\t}\r\n\t\r\n\t// Text rendering\r\n\t\r\n\t@SubscribeAllEvents(Side.CLIENT, modid = HEE.ID)\r\n\tprivate object Title{\r\n\t\tprivate const val FADE_TICKS = 22\r\n\t\t\r\n\t\tprivate var textTime = 0\r\n\t\tprivate var textFade = 0\r\n\t\tprivate var textTitle = \"\"\r\n\t\tprivate var textMainColor = RGB(0u)\r\n\t\tprivate var textShadowColor = RGB(0u)\r\n\t\t\r\n\t\tfun display(newTerritory: TerritoryType){\r\n\t\t\tval title = I18n.format(newTerritory.translationKey)\r\n\t\t\t\r\n\t\t\ttextTime = 60 + (2 * title.length)\r\n\t\t\ttextFade = FADE_TICKS\r\n\t\t\ttextTitle = title\r\n\t\t\t\r\n\t\t\twith(newTerritory.desc.colors){\r\n\t\t\t\tif (tokenTop.asVec.lengthSquared() > tokenBottom.asVec.lengthSquared()){\r\n\t\t\t\t\ttextMainColor = tokenTop\r\n\t\t\t\t\ttextShadowColor = tokenBottom\r\n\t\t\t\t}\r\n\t\t\t\telse{\r\n\t\t\t\t\ttextMainColor = tokenBottom\r\n\t\t\t\t\ttextShadowColor = tokenTop\r\n\t\t\t\t}\r\n\t\t\t\t\r\n\t\t\t\ttextShadowColor = textShadowColor.let { RGB(it.red / 2, it.green / 2, it.blue / 2) }\r\n\t\t\t}\r\n\t\t}\r\n\t\t\r\n\t\tfun tick(){\r\n\t\t\tif (textTime > 0){\r\n\t\t\t\t--textTime\r\n\t\t\t\t--textFade\r\n\t\t\t}\r\n\t\t}\r\n\t\t\r\n\t\tfun reset(){\r\n\t\t\ttextTime = 0\r\n\t\t}\r\n\t\t\r\n\t\t@SubscribeEvent(EventPriority.HIGHEST)\r\n\t\tfun onRenderGameOverlayText(e: RenderGameOverlayEvent.Text){\r\n\t\t\tif (textTime == 0){\r\n\t\t\t\treturn\r\n\t\t\t}\r\n\t\t\t\r\n\t\t\tval fontRenderer = MC.fontRenderer\r\n\t\t\tval resolution = e.window\r\n\t\t\tval width = resolution.scaledWidth\r\n\t\t\tval height = resolution.scaledHeight\r\n\t\t\t\r\n\t\t\tval opacity = when{\r\n\t\t\t\ttextFade > 0          -> ((FADE_TICKS - (textFade - e.partialTicks)) / FADE_TICKS.toFloat()).coerceIn(0F, 1F)\r\n\t\t\t\ttextTime < FADE_TICKS -> ((textTime - e.partialTicks) / FADE_TICKS.toFloat()).coerceIn(0F, 1F)\r\n\t\t\t\telse                  -> 1F\r\n\t\t\t}\r\n\t\t\t\r\n\t\t\tGL.pushMatrix()\r\n\t\t\tGL.translate(width * 0.5F, height * 0.5F, 0F)\r\n\t\t\tGL.enableBlend()\r\n\t\t\tGL.blendFunc(SF_SRC_ALPHA, DF_ONE_MINUS_SRC_ALPHA, SF_ONE, DF_ZERO)\r\n\t\t\tGL.alphaFunc(GL_GREATER, 0F)\r\n\t\t\tGL.pushMatrix()\r\n\t\t\tGL.scale(3F, 3F, 3F)\r\n\t\t\t\r\n\t\t\tval x = -fontRenderer.getStringWidth(textTitle) * 0.5F\r\n\t\t\tval y = -fontRenderer.FONT_HEIGHT - 2F\r\n\t\t\t\r\n\t\t\tdrawTitle(x + 0.5F, y + 0.5F, textShadowColor.withAlpha(opacity.pow(1.25F)))\r\n\t\t\tdrawTitle(x, y, textMainColor.withAlpha(opacity))\r\n\t\t\t\r\n\t\t\tGL.popMatrix()\r\n\t\t\tGL.alphaFunc(GL_GREATER, 0.1F)\r\n\t\t\tGL.disableBlend()\r\n\t\t\tGL.popMatrix()\r\n\t\t}\r\n\t\t\r\n\t\tprivate fun drawTitle(x: Float, y: Float, color: IntColor){\r\n\t\t\tif (color.alpha > 3){ // prevents flickering alpha\r\n\t\t\t\tMC.fontRenderer.drawString(textTitle, x, y, color.i)\r\n\t\t\t}\r\n\t\t}\r\n\t}\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- src/main/java/chylex/hee/client/render/TerritoryRenderer.kt	(revision 41aa0b6695a1ac98e2d75beae7cb260618fe1f25)
++++ src/main/java/chylex/hee/client/render/TerritoryRenderer.kt	(date 1579593033489)
+@@ -62,12 +62,12 @@
+ 						if (newTerritory != null){
+ 							Void.reset()
+ 							Title.display(newTerritory)
+-							newTerritory.desc.environment.setupClient()
++							newTerritory.desc.environment.setupClient(player)
+ 						}
+ 					}
+ 				}
+ 				
+-				prevTerritory?.desc?.environment?.tickClient()
++				prevTerritory?.desc?.environment?.tickClient(player)
+ 			}
+ 			else if (prevTerritory != null){
+ 				prevTerritory = null
+Index: src/main/java/chylex/hee/game/world/territory/TerritoryTicker.kt
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- src/main/java/chylex/hee/game/world/territory/TerritoryTicker.kt	(date 1579594179142)
++++ src/main/java/chylex/hee/game/world/territory/TerritoryTicker.kt	(date 1579594179142)
+@@ -0,0 +1,54 @@
++package chylex.hee.game.world.territory
++import chylex.hee.HEE
++import chylex.hee.system.migration.forge.SubscribeAllEvents
++import chylex.hee.system.migration.forge.SubscribeEvent
++import chylex.hee.system.util.totalTime
++import net.minecraft.world.World
++import net.minecraftforge.event.world.WorldEvent
++
++@SubscribeAllEvents(modid = HEE.ID)
++object TerritoryTicker{
++	private val active = mutableMapOf<TerritoryInstance, Entry>()
++	
++	private class Entry{
++		var lastTickTime = -1L
++	}
++	
++	fun onWorldTick(world: World){
++		val currentTime = world.totalTime
++		
++		if (currentTime % 600L == 0L){
++			active.values.removeAll { currentTime - it.lastTickTime > 1L }
++		}
++		
++		for(player in world.players){
++			val instance = TerritoryInstance.fromPos(player)
++			
++			if (instance == null){
++				continue
++			}
++			
++			val entry = active.getOrPut(instance){ Entry() }
++			
++			if (entry.lastTickTime == currentTime){
++				continue
++			}
++			
++			entry.lastTickTime = currentTime
++			// TODO update
++		}
++	}
++	
++	@SubscribeEvent
++	fun onWorldUnload(e: WorldEvent.Save){
++		if (e.world.dimension.type !== HEE.dim){
++			return
++		}
++		
++		for((instance, entry) in active){
++			// TODO save
++		}
++		
++		active.clear()
++	}
++}
+Index: src/main/java/chylex/hee/game/world/WorldProviderEndCustom.kt
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package chylex.hee.game.world\r\nimport chylex.hee.HEE\r\nimport chylex.hee.client.render.territory.EmptyRenderer\r\nimport chylex.hee.client.render.territory.EnvironmentRenderer\r\nimport chylex.hee.client.render.util.GL\r\nimport chylex.hee.client.render.util.GL.FOG_EXP2\r\nimport chylex.hee.game.mechanics.portal.SpawnInfo\r\nimport chylex.hee.game.world.provider.DragonFightManagerNull\r\nimport chylex.hee.game.world.provider.WorldBorderNull\r\nimport chylex.hee.game.world.territory.TerritoryInstance\r\nimport chylex.hee.game.world.territory.TerritoryInstance.Companion.THE_HUB_INSTANCE\r\nimport chylex.hee.game.world.territory.TerritoryVoid\r\nimport chylex.hee.proxy.ModCommonProxy\r\nimport chylex.hee.system.migration.forge.Side\r\nimport chylex.hee.system.migration.forge.Sided\r\nimport chylex.hee.system.util.Pos\r\nimport chylex.hee.system.util.xz\r\nimport net.minecraft.block.Blocks\r\nimport net.minecraft.util.math.BlockPos\r\nimport net.minecraft.util.math.Vec3d\r\nimport net.minecraft.world.World\r\nimport net.minecraft.world.biome.Biomes\r\nimport net.minecraft.world.biome.provider.SingleBiomeProvider\r\nimport net.minecraft.world.biome.provider.SingleBiomeProviderSettings\r\nimport net.minecraft.world.dimension.DimensionType\r\nimport net.minecraft.world.dimension.EndDimension\r\nimport net.minecraft.world.gen.ChunkGenerator\r\nimport net.minecraft.world.gen.EndGenerationSettings\r\nimport net.minecraft.world.server.ServerWorld\r\nimport net.minecraftforge.client.IRenderHandler\r\nimport java.util.function.BiFunction\r\n\r\nclass WorldProviderEndCustom(world: World, type: DimensionType) : EndDimension(world, type){\r\n\tcompanion object{\r\n\t\tconst val DEFAULT_CELESTIAL_ANGLE = 0.5F\r\n\t\tconst val DEFAULT_SUN_BRIGHTNESS = 1F\r\n\t\tconst val DEFAULT_SKY_LIGHT = 0\r\n\t\t\r\n\t\tconst val SAVE_FOLDER = \"DIM-HEE\"\r\n\t\tval CONSTRUCTOR = BiFunction(::WorldProviderEndCustom)\r\n\t\t\r\n\t\tfun register(){\r\n\t\t\twith(HEE.dim){\r\n\t\t\t\tdirectory = SAVE_FOLDER\r\n\t\t\t\tfactory = CONSTRUCTOR\r\n\t\t\t\thasSkyLight = true\r\n\t\t\t}\r\n\t\t}\r\n\t\t\r\n\t\tvar debugMode = false\r\n\t}\r\n\t\r\n\tprivate var clientProxy: ModCommonProxy? = null\r\n\t\r\n\tprivate val clientEnvironment\r\n\t\tget() = clientProxy?.getClientSidePlayer()?.let(TerritoryInstance.Companion::fromPos)?.territory?.desc?.environment\r\n\t\r\n\tinit{\r\n\t\twhen(val w = this.world){\r\n\t\t\tis ServerWorld -> {\r\n\t\t\t\tdragonFightManager = DragonFightManagerNull(w, this)\r\n\t\t\t}\r\n\t\t\t\r\n\t\t\telse -> {\r\n\t\t\t\tclientProxy = HEE.proxy\r\n\t\t\t}\r\n\t\t}\r\n\t}\r\n\t\r\n\toverride fun createChunkGenerator(): ChunkGenerator<EndGenerationSettings>{\r\n\t\tval settings = EndGenerationSettings().apply {\r\n\t\t\tdefaultBlock = Blocks.END_STONE.defaultState\r\n\t\t\tdefaultFluid = Blocks.AIR.defaultState\r\n\t\t\tspawnPos = Pos(THE_HUB_INSTANCE.centerPoint).xz.withY(255)\r\n\t\t}\r\n\t\t\r\n\t\treturn ChunkGeneratorEndCustom(world, SingleBiomeProvider(SingleBiomeProviderSettings().setBiome(Biomes.THE_END)), settings)\r\n\t}\r\n\t\r\n\t// Spawn point\r\n\t\r\n\tfun getSpawnInfo(): SpawnInfo{\r\n\t\treturn THE_HUB_INSTANCE.prepareSpawnPoint(null, clearanceRadius = 1)\r\n\t}\r\n\t\r\n\toverride fun getSpawnPoint(): BlockPos{\r\n\t\treturn THE_HUB_INSTANCE.getSpawnPoint()\r\n\t}\r\n\t\r\n\toverride fun getSpawnCoordinate(): BlockPos?{\r\n\t\treturn null\r\n\t}\r\n\t\r\n\t// Behavior properties\r\n\t\r\n\toverride fun tick(){ // stops triggering a few seconds after all players leave the dimension (if still loaded)\r\n\t\tif (!debugMode){\r\n\t\t\tTerritoryVoid.onWorldTick(world as ServerWorld)\r\n\t\t}\r\n\t}\r\n\t\r\n\toverride fun createWorldBorder() = WorldBorderNull()\r\n\t\r\n\t// TODO shitton of things to play around with, also test if default values work on server\r\n\t\r\n\t// Visual properties (Light)\r\n\t\r\n\toverride fun getLightmapColors(partialTicks: Float, sunBrightness: Float, skyLight: Float, blockLight: Float, colors: FloatArray){\r\n\t\tclientEnvironment?.lightmap?.update(colors, sunBrightness, skyLight, blockLight, partialTicks)\r\n\t}\r\n\t\r\n\toverride fun getLightBrightnessTable(): FloatArray{\r\n\t\treturn clientEnvironment?.lightBrightnessTable ?: super.getLightBrightnessTable()\r\n\t}\r\n\t\r\n\toverride fun calculateCelestialAngle(worldTime: Long, partialTicks: Float): Float{\r\n\t\treturn clientEnvironment?.celestialAngle ?: DEFAULT_CELESTIAL_ANGLE\r\n\t}\r\n\t\r\n\t@Sided(Side.CLIENT)\r\n\toverride fun getSunBrightness(partialTicks: Float): Float{\r\n\t\treturn clientEnvironment?.sunBrightness ?: DEFAULT_SUN_BRIGHTNESS\r\n\t}\r\n\t\r\n\t// Visual Properties (Sky)\r\n\t\r\n\t@Sided(Side.CLIENT)\r\n\toverride fun isSkyColored(): Boolean{\r\n\t\treturn true\r\n\t}\r\n\t\r\n\t@Sided(Side.CLIENT)\r\n\toverride fun getSkyRenderer(): IRenderHandler?{\r\n\t\treturn clientEnvironment?.renderer ?: EmptyRenderer\r\n\t}\r\n\t\r\n\t@Sided(Side.CLIENT)\r\n\toverride fun getSkyColor(pos: BlockPos, partialTicks: Float): Vec3d{\r\n\t\treturn clientEnvironment?.fogColor ?: Vec3d.ZERO // return fog color because vanilla blends fog into sky color based on chunk render distance\r\n\t}\r\n\t\r\n\t// Visual properties (Fog)\r\n\t\r\n\t@Sided(Side.CLIENT)\r\n\toverride fun getFogColor(celestialAngle: Float, partialTicks: Float): Vec3d{\r\n\t\treturn clientEnvironment?.fogColor ?: Vec3d.ZERO\r\n\t}\r\n\t\r\n\t@Sided(Side.CLIENT)\r\n\toverride fun doesXZShowFog(x: Int, z: Int): Boolean{\r\n\t\tif (debugMode){\r\n\t\t\treturn false\r\n\t\t}\r\n\t\t\r\n\t\tGL.setFogMode(FOG_EXP2)\r\n\t\tGL.setFogDensity(clientEnvironment?.fogDensity?.times(EnvironmentRenderer.currentFogDensityMp) ?: 0F) // TODO adjust fog density by render distance\r\n\t\treturn true\r\n\t}\r\n\t\r\n\t@Sided(Side.CLIENT)\r\n\toverride fun getVoidFogYFactor(): Double{\r\n\t\treturn 1.0\r\n\t}\r\n\t\r\n\t// Neutralization\r\n\t\r\n\toverride fun setSpawnPoint(pos: BlockPos){}\r\n\t\r\n\t@Sided(Side.CLIENT)\r\n\toverride fun setSkyRenderer(renderer: IRenderHandler){}\r\n\t\r\n\t@Sided(Side.CLIENT)\r\n\toverride fun setCloudRenderer(renderer: IRenderHandler){}\r\n\t\r\n\t@Sided(Side.CLIENT)\r\n\toverride fun setWeatherRenderer(renderer: IRenderHandler){}\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- src/main/java/chylex/hee/game/world/WorldProviderEndCustom.kt	(revision 41aa0b6695a1ac98e2d75beae7cb260618fe1f25)
++++ src/main/java/chylex/hee/game/world/WorldProviderEndCustom.kt	(date 1579593899028)
+@@ -9,6 +9,7 @@
+ import chylex.hee.game.world.provider.WorldBorderNull
+ import chylex.hee.game.world.territory.TerritoryInstance
+ import chylex.hee.game.world.territory.TerritoryInstance.Companion.THE_HUB_INSTANCE
++import chylex.hee.game.world.territory.TerritoryTicker
+ import chylex.hee.game.world.territory.TerritoryVoid
+ import chylex.hee.proxy.ModCommonProxy
+ import chylex.hee.system.migration.forge.Side
+@@ -55,6 +56,9 @@
+ 	private val clientEnvironment
+ 		get() = clientProxy?.getClientSidePlayer()?.let(TerritoryInstance.Companion::fromPos)?.territory?.desc?.environment
+ 	
++	private val serverWorld
++		get() = world as ServerWorld
++	
+ 	init{
+ 		when(val w = this.world){
+ 			is ServerWorld -> {
+@@ -94,8 +98,10 @@
+ 	// Behavior properties
+ 	
+ 	override fun tick(){ // stops triggering a few seconds after all players leave the dimension (if still loaded)
++		TerritoryTicker.onWorldTick(serverWorld)
++		
+ 		if (!debugMode){
+-			TerritoryVoid.onWorldTick(world as ServerWorld)
++			TerritoryVoid.onWorldTick(serverWorld)
+ 		}
+ 	}
+ 	

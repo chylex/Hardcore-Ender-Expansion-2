@@ -1,0 +1,145 @@
+Index: src/main/resources/coremods/fire_fix_infused_tnt_tile_entity.js
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- src/main/resources/coremods/fire_fix_infused_tnt_tile_entity.js	(date 1579752162870)
++++ src/main/resources/coremods/fire_fix_infused_tnt_tile_entity.js	(date 1579752162870)
+@@ -0,0 +1,10 @@
++function initializeCoreMod(){
++    Java.type("net.minecraftforge.coremod.api.ASMAPI").loadFile("coremods/utils/bootstrap.js");
++
++    return {
++        "HEE_FireFixInfusedTNTTileEntity": classTransformer("net.minecraft.block.FireBlock", function(cls){
++
++            return null;
++        })
++    };
++}
+Index: src/main/java/chylex/hee/game/block/util/BlockCollisionLimiter.kt
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- src/main/java/chylex/hee/game/block/util/BlockCollisionLimiter.kt	(date 1579751914629)
++++ src/main/java/chylex/hee/game/block/util/BlockCollisionLimiter.kt	(date 1579751914629)
+@@ -0,0 +1,28 @@
++package chylex.hee.game.block.util
++import chylex.hee.system.util.totalTime
++import net.minecraft.entity.Entity
++import net.minecraft.world.World
++import java.util.UUID
++
++class BlockCollisionLimiter{
++	private var lastCollidingEntity = ThreadLocal<Pair<Long, UUID>?>()
++	
++	/**
++	 * Prevents handling collision for an entity multiple times if the entity is touching 2 or more blocks.
++	 *
++	 * Because onEntityCollision is always called in succession for all blocks colliding with an entity,
++	 * it is enough to compare if either the world time or the entity has changed since last call (on the same thread).
++	 *
++	 * Returns true if the collision should be handled.
++	 */
++	fun check(world: World, entity: Entity): Boolean{
++		val currentWorldTime = world.totalTime
++		
++		if (lastCollidingEntity.get()?.takeUnless { it.first != currentWorldTime || it.second != entity.uniqueID } == null){
++			lastCollidingEntity.set(Pair(currentWorldTime, entity.uniqueID))
++			return true
++		}
++		
++		return false
++	}
++}
+Index: src/main/java/chylex/hee/game/world/territory/descriptions/Territory_ObsidianTowers.kt
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package chylex.hee.game.world.territory.descriptions\r\nimport chylex.hee.game.world.territory.ITerritoryDescription\r\nimport chylex.hee.game.world.territory.properties.TerritoryColors\r\nimport chylex.hee.game.world.territory.properties.TerritoryEnvironment\r\nimport chylex.hee.system.util.color.IntColor.Companion.RGB\r\nimport chylex.hee.system.util.nextFloat\r\nimport net.minecraft.util.math.Vec3d\r\nimport java.util.Random\r\n\r\nobject Territory_ObsidianTowers : ITerritoryDescription{\r\n\toverride val colors = object : TerritoryColors(){\r\n\t\toverride val tokenTop    = RGB(146, 130, 185)\r\n\t\toverride val tokenBottom = RGB( 81, 173, 250)\r\n\t\t\r\n\t\toverride val portalSeed = 5555L\r\n\t\t\r\n\t\toverride fun nextPortalColor(rand: Random, color: FloatArray){\r\n\t\t\tif (rand.nextBoolean()){\r\n\t\t\t\tcolor[0] = rand.nextFloat(0.2F, 0.5F)\r\n\t\t\t\tcolor[1] = rand.nextFloat(0.7F, 0.9F)\r\n\t\t\t\tcolor[2] = 1F\r\n\t\t\t}\r\n\t\t\telse{\r\n\t\t\t\tcolor[0] = rand.nextFloat(0.5F, 0.7F)\r\n\t\t\t\tcolor[1] = 0.5F\r\n\t\t\t\tcolor[2] = rand.nextFloat(0.9F, 1F)\r\n\t\t\t}\r\n\t\t}\r\n\t}\r\n\t\r\n\toverride val environment = object : TerritoryEnvironment(){\r\n\t\toverride val fogColor = Vec3d(0.0, 0.0, 0.0)\r\n\t\toverride val fogDensity = 0.01F\r\n\t\t\r\n\t\toverride val voidRadiusMpXZ = 2F\r\n\t\toverride val voidRadiusMpY = 2.5F\r\n\t}\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- src/main/java/chylex/hee/game/world/territory/descriptions/Territory_ObsidianTowers.kt	(revision 41aa0b6695a1ac98e2d75beae7cb260618fe1f25)
++++ src/main/java/chylex/hee/game/world/territory/descriptions/Territory_ObsidianTowers.kt	(date 1579750426469)
+@@ -1,4 +1,5 @@
+ package chylex.hee.game.world.territory.descriptions
++import chylex.hee.client.render.territory.EnvironmentRenderer
+ import chylex.hee.game.world.territory.ITerritoryDescription
+ import chylex.hee.game.world.territory.properties.TerritoryColors
+ import chylex.hee.game.world.territory.properties.TerritoryEnvironment
+@@ -34,5 +35,7 @@
+ 		
+ 		override val voidRadiusMpXZ = 2F
+ 		override val voidRadiusMpY = 2.5F
++		
++		override val renderer = EnvironmentRenderer.VANILLA // TODO
+ 	}
+ }
+Index: src/main/java/chylex/hee/game/block/BlockEnergyCluster.kt
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package chylex.hee.game.block\r\nimport chylex.hee.game.block.entity.TileEntityEnergyCluster\r\nimport chylex.hee.game.block.info.BlockBuilder\r\nimport chylex.hee.game.mechanics.energy.IEnergyQuantity\r\nimport chylex.hee.game.mechanics.instability.Instability\r\nimport chylex.hee.init.ModBlocks\r\nimport chylex.hee.init.ModItems\r\nimport chylex.hee.system.migration.forge.Side\r\nimport chylex.hee.system.migration.forge.Sided\r\nimport chylex.hee.system.migration.vanilla.EntityLivingBase\r\nimport chylex.hee.system.migration.vanilla.EntityPlayer\r\nimport chylex.hee.system.util.allInCenteredSphereMutable\r\nimport chylex.hee.system.util.ceilToInt\r\nimport chylex.hee.system.util.floorToInt\r\nimport chylex.hee.system.util.getTile\r\nimport chylex.hee.system.util.nextFloat\r\nimport chylex.hee.system.util.removeBlock\r\nimport net.minecraft.block.BlockRenderType.INVISIBLE\r\nimport net.minecraft.block.BlockState\r\nimport net.minecraft.client.particle.ParticleManager\r\nimport net.minecraft.entity.Entity\r\nimport net.minecraft.entity.IProjectile\r\nimport net.minecraft.item.ItemStack\r\nimport net.minecraft.tileentity.TileEntity\r\nimport net.minecraft.util.math.AxisAlignedBB\r\nimport net.minecraft.util.math.BlockPos\r\nimport net.minecraft.util.math.RayTraceResult\r\nimport net.minecraft.util.math.shapes.ISelectionContext\r\nimport net.minecraft.util.math.shapes.VoxelShape\r\nimport net.minecraft.util.math.shapes.VoxelShapes\r\nimport net.minecraft.world.Explosion.Mode\r\nimport net.minecraft.world.IBlockReader\r\nimport net.minecraft.world.World\r\nimport net.minecraft.world.server.ServerWorld\r\nimport kotlin.math.pow\r\n\r\nclass BlockEnergyCluster(builder: BlockBuilder) : BlockSimpleShaped(builder, AxisAlignedBB(0.2, 0.2, 0.2, 0.8, 0.8, 0.8)){\r\n\tcompanion object{\r\n\t\tfun createSmallLeak(world: World, pos: BlockPos, amount: IEnergyQuantity, causeInstability: Boolean = false){\r\n\t\t\tval units = amount.units.value.toFloat()\r\n\t\t\tval corruptedEnergyLevel = (2F + (units.pow(0.74F) / 9F)).ceilToInt()\r\n\t\t\t\r\n\t\t\tModBlocks.CORRUPTED_ENERGY.spawnCorruptedEnergy(world, pos, corruptedEnergyLevel)\r\n\t\t\t\r\n\t\t\tif (causeInstability){\r\n\t\t\t\tInstability.get(world).triggerAction((10 + 2 * corruptedEnergyLevel).toUShort(), pos)\r\n\t\t\t}\r\n\t\t}\r\n\t\t\r\n\t\tfun createFullLeak(world: World, pos: BlockPos, amount: IEnergyQuantity){\r\n\t\t\tval units = amount.units.value.toFloat()\r\n\t\t\t\r\n\t\t\tval corruptedEnergyRadius = 1.5 + (units.pow(0.77F) / 70F)\r\n\t\t\tval corruptedEnergyLevel = (2F + (units.pow(0.74F) / 9F)).ceilToInt()\r\n\t\t\t\r\n\t\t\tfor(testPos in pos.allInCenteredSphereMutable(corruptedEnergyRadius)){\r\n\t\t\t\tModBlocks.CORRUPTED_ENERGY.spawnCorruptedEnergy(world, testPos, corruptedEnergyLevel)\r\n\t\t\t}\r\n\t\t}\r\n\t}\r\n\t\r\n\toverride fun hasTileEntity(state: BlockState): Boolean{\r\n\t\treturn true\r\n\t}\r\n\t\r\n\toverride fun createTileEntity(state: BlockState, world: IBlockReader): TileEntity{\r\n\t\treturn TileEntityEnergyCluster()\r\n\t}\r\n\t\r\n\toverride fun onBlockHarvested(world: World, pos: BlockPos, state: BlockState, player: EntityPlayer){\r\n\t\tif (player.abilities.isCreativeMode && !player.isSneaking){\r\n\t\t\tpos.getTile<TileEntityEnergyCluster>(world)?.breakWithoutExplosion = true\r\n\t\t}\r\n\t}\r\n\t\r\n\toverride fun onReplaced(state: BlockState, world: World, pos: BlockPos, newState: BlockState, isMoving: Boolean){\r\n\t\tval tile = pos.getTile<TileEntityEnergyCluster>(world) ?: return\r\n\t\tsuper.onReplaced(state, world, pos, newState, isMoving) // removes the tile entity\r\n\t\t\r\n\t\tif (tile.breakWithoutExplosion){\r\n\t\t\treturn\r\n\t\t}\r\n\t\t\r\n\t\tval level = tile.energyLevel\r\n\t\tval units = level.units.value.toFloat()\r\n\t\t\r\n\t\tval explosionStength = 2.5F + (units.pow(0.6F) * 0.1F)\r\n\t\tval ethereumToDrop = (world.rand.nextFloat(1.6F, 2.0F) * (units * 0.01F).pow(1.4F)).floorToInt()\r\n\t\t\r\n\t\tworld.createExplosion(null, pos.x + 0.5, pos.y + 0.5, pos.z + 0.5, explosionStength, false, Mode.DESTROY)\r\n\t\t\r\n\t\tInstability.get(world).triggerAction((100F + units.pow(0.785F)).ceilToInt().toUShort(), pos)\r\n\t\tcreateFullLeak(world, pos, level)\r\n\t\t\r\n\t\trepeat(ethereumToDrop){\r\n\t\t\tspawnAsEntity(world, pos, ItemStack(ModItems.ETHEREUM))\r\n\t\t}\r\n\t}\r\n\t\r\n\toverride fun onEntityCollision(state: BlockState, world: World, pos: BlockPos, entity: Entity){\r\n\t\tif (entity is IProjectile){\r\n\t\t\tpos.removeBlock(world)\r\n\t\t}\r\n\t}\r\n\t\r\n\t@Sided(Side.CLIENT) override fun addHitEffects(state: BlockState, world: World, target: RayTraceResult, manager: ParticleManager) = true\r\n\t@Sided(Side.CLIENT) override fun addDestroyEffects(state: BlockState, world: World, pos: BlockPos, manager: ParticleManager) = true\r\n\t@Sided(Side.CLIENT) override fun addRunningEffects(state: BlockState, world: World, pos: BlockPos, entity: Entity) = true\r\n\t@Sided(Side.CLIENT) override fun addLandingEffects(state: BlockState, world: ServerWorld, pos: BlockPos, stateAgain: BlockState, entity: EntityLivingBase, particleAmount: Int) = true\r\n\t\r\n\toverride fun getCollisionShape(state: BlockState, world: IBlockReader, pos: BlockPos, context: ISelectionContext): VoxelShape{\r\n\t\treturn VoxelShapes.empty()\r\n\t}\r\n\t\r\n\toverride fun getRenderType(state: BlockState) = INVISIBLE\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- src/main/java/chylex/hee/game/block/BlockEnergyCluster.kt	(revision 41aa0b6695a1ac98e2d75beae7cb260618fe1f25)
++++ src/main/java/chylex/hee/game/block/BlockEnergyCluster.kt	(date 1579752162860)
+@@ -1,7 +1,11 @@
+ package chylex.hee.game.block
+ import chylex.hee.game.block.entity.TileEntityEnergyCluster
+ import chylex.hee.game.block.info.BlockBuilder
++import chylex.hee.game.mechanics.energy.ClusterColor
++import chylex.hee.game.mechanics.energy.ClusterSnapshot
++import chylex.hee.game.mechanics.energy.IClusterHealth.HealthStatus.HEALTHY
+ import chylex.hee.game.mechanics.energy.IEnergyQuantity
++import chylex.hee.game.mechanics.energy.IEnergyQuantity.Units
+ import chylex.hee.game.mechanics.instability.Instability
+ import chylex.hee.init.ModBlocks
+ import chylex.hee.init.ModItems
+@@ -67,6 +71,18 @@
+ 		return TileEntityEnergyCluster()
+ 	}
+ 	
++	override fun onBlockPlacedBy(world: World, pos: BlockPos, state: BlockState, placer: EntityLivingBase?, stack: ItemStack){
++		val devSnapshot = ClusterSnapshot(
++			energyLevel    = Units(100),
++			energyCapacity = Units(100),
++			healthStatus   = HEALTHY,
++			healthOverride = null,
++			color          = ClusterColor.generate(world.rand)
++		)
++		
++		pos.getTile<TileEntityEnergyCluster>(world)?.loadClusterSnapshot(devSnapshot, inactive = false)
++	}
++	
+ 	override fun onBlockHarvested(world: World, pos: BlockPos, state: BlockState, player: EntityPlayer){
+ 		if (player.abilities.isCreativeMode && !player.isSneaking){
+ 			pos.getTile<TileEntityEnergyCluster>(world)?.breakWithoutExplosion = true
+@@ -97,6 +113,10 @@
+ 		}
+ 	}
+ 	
++	override fun getPlayerRelativeBlockHardness(state: BlockState, player: EntityPlayer, world: IBlockReader, pos: BlockPos): Float{
++		return super.getPlayerRelativeBlockHardness(state, player, world, pos) // TODO damage player and increase hardness?
++	}
++	
+ 	override fun onEntityCollision(state: BlockState, world: World, pos: BlockPos, entity: Entity){
+ 		if (entity is IProjectile){
+ 			pos.removeBlock(world)
+Index: src/main/resources/META-INF/coremods.json
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>{\r\n  \"HEE_VoidMinerPreventDrops\": \"coremods/block_void_miner_prevent_drops.js\",\r\n  \"HEE_ChorusPlantsGrowOnHumus\": \"coremods/chorus_plants_grow_on_humus.js\",\r\n  \"HEE_MobBypassPeacefulDespawn\": \"coremods/mob_bypass_peaceful_despawn.js\",\r\n  \"HEE_MobDisableTickParticles\": \"coremods/mob_disable_tick_particles.js\"\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- src/main/resources/META-INF/coremods.json	(revision 41aa0b6695a1ac98e2d75beae7cb260618fe1f25)
++++ src/main/resources/META-INF/coremods.json	(date 1579752162870)
+@@ -1,6 +1,7 @@
+ {
+   "HEE_VoidMinerPreventDrops": "coremods/block_void_miner_prevent_drops.js",
+   "HEE_ChorusPlantsGrowOnHumus": "coremods/chorus_plants_grow_on_humus.js",
++  "HEE_FireFixInfusedTNTTileEntity": "coremods/fire_fix_infused_tnt_tile_entity.js",
+   "HEE_MobBypassPeacefulDespawn": "coremods/mob_bypass_peaceful_despawn.js",
+   "HEE_MobDisableTickParticles": "coremods/mob_disable_tick_particles.js"
+ }
