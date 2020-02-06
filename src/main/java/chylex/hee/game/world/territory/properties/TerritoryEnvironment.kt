@@ -7,6 +7,7 @@ import chylex.hee.game.world.WorldProviderEndCustom.Companion.DEFAULT_SKY_LIGHT
 import chylex.hee.game.world.WorldProviderEndCustom.Companion.DEFAULT_SUN_BRIGHTNESS
 import chylex.hee.system.migration.forge.Side
 import chylex.hee.system.migration.forge.Sided
+import chylex.hee.system.migration.vanilla.EntityPlayer
 import net.minecraft.util.math.Vec3d
 
 abstract class TerritoryEnvironment{
@@ -33,8 +34,8 @@ abstract class TerritoryEnvironment{
 	open val lightmap: ILightmap = VanillaEndLightmap
 	
 	@Sided(Side.CLIENT)
-	open fun setupClient(){}
+	open fun setupClient(player: EntityPlayer){}
 	
 	@Sided(Side.CLIENT)
-	open fun tickClient(){}
+	open fun tickClient(player: EntityPlayer){}
 }

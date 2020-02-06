@@ -62,12 +62,12 @@ object TerritoryRenderer{
 						if (newTerritory != null){
 							Void.reset()
 							Title.display(newTerritory)
-							newTerritory.desc.environment.setupClient()
+							newTerritory.desc.environment.setupClient(player)
 						}
 					}
 				}
 				
-				prevTerritory?.desc?.environment?.tickClient()
+				prevTerritory?.desc?.environment?.tickClient(player)
 			}
 			else if (prevTerritory != null){
 				prevTerritory = null
