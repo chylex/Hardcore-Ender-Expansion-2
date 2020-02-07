@@ -9,6 +9,7 @@ import chylex.hee.system.migration.forge.SubscribeEvent
 import chylex.hee.system.migration.vanilla.EntityLivingBase
 import chylex.hee.system.migration.vanilla.EntityPlayer
 import chylex.hee.system.util.ceilToInt
+import chylex.hee.system.util.compatibility.MinecraftForgeEventBus
 import chylex.hee.system.util.posVec
 import chylex.hee.system.util.square
 import chylex.hee.system.util.totalTime
@@ -23,7 +24,6 @@ import net.minecraft.world.Difficulty.HARD
 import net.minecraft.world.Difficulty.NORMAL
 import net.minecraft.world.Difficulty.PEACEFUL
 import net.minecraft.world.Explosion
-import net.minecraftforge.common.MinecraftForge
 import net.minecraftforge.event.entity.living.LivingHurtEvent
 import net.minecraftforge.event.world.ExplosionEvent
 import java.util.UUID
@@ -69,7 +69,7 @@ class ItemTalismanOfGriefing(properties: Properties) : ItemAbstractTrinket(prope
 	private val lastRepairMarkEntities = ThreadLocal.withInitial { HashSet<UUID>(4) }
 	
 	init{
-		MinecraftForge.EVENT_BUS.register(this)
+		MinecraftForgeEventBus.register(this)
 	}
 	
 	override fun canPlaceIntoTrinketSlot(stack: ItemStack): Boolean{

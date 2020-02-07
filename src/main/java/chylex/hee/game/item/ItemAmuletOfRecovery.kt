@@ -15,6 +15,7 @@ import chylex.hee.system.migration.vanilla.TextComponentTranslation
 import chylex.hee.system.util.NBTItemStackList
 import chylex.hee.system.util.NBTList.Companion.putList
 import chylex.hee.system.util.allSlots
+import chylex.hee.system.util.compatibility.MinecraftForgeEventBus
 import chylex.hee.system.util.enchantmentMap
 import chylex.hee.system.util.getIntegerOrNull
 import chylex.hee.system.util.getListOfCompounds
@@ -43,7 +44,6 @@ import net.minecraft.util.NonNullList
 import net.minecraft.util.text.ITextComponent
 import net.minecraft.world.GameRules.KEEP_INVENTORY
 import net.minecraft.world.World
-import net.minecraftforge.common.MinecraftForge
 import net.minecraftforge.event.entity.living.LivingDeathEvent
 import net.minecraftforge.event.entity.living.LivingDropsEvent
 import net.minecraftforge.event.entity.player.PlayerEvent
@@ -215,7 +215,7 @@ class ItemAmuletOfRecovery(properties: Properties) : ItemAbstractEnergyUser(prop
 	// Initialization
 	
 	init{
-		MinecraftForge.EVENT_BUS.register(this)
+		MinecraftForgeEventBus.register(this)
 	}
 	
 	// Energy properties

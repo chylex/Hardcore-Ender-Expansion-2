@@ -12,6 +12,7 @@ import chylex.hee.system.migration.vanilla.EntityPlayer
 import chylex.hee.system.migration.vanilla.EntityVillager
 import chylex.hee.system.migration.vanilla.Potions
 import chylex.hee.system.migration.vanilla.Sounds
+import chylex.hee.system.util.compatibility.MinecraftForgeEventBus
 import chylex.hee.system.util.facades.Resource
 import chylex.hee.system.util.hasKey
 import chylex.hee.system.util.heeTag
@@ -29,7 +30,6 @@ import net.minecraft.particles.ParticleTypes
 import net.minecraft.util.DamageSource
 import net.minecraft.util.Hand
 import net.minecraft.world.World
-import net.minecraftforge.common.MinecraftForge
 import net.minecraftforge.event.entity.living.LivingDeathEvent
 
 class ItemTotemOfUndyingCustom(properties: Properties) : ItemAbstractTrinket(properties){
@@ -42,7 +42,7 @@ class ItemTotemOfUndyingCustom(properties: Properties) : ItemAbstractTrinket(pro
 			stack, _, _ -> if (stack.heeTagOrNull.hasKey(SHAKING_TAG)) 1F else 0F
 		}
 		
-		MinecraftForge.EVENT_BUS.register(this)
+		MinecraftForgeEventBus.register(this)
 	}
 	
 	override fun getTranslationKey(): String{

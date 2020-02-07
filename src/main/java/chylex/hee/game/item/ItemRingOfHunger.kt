@@ -6,10 +6,10 @@ import chylex.hee.system.migration.forge.SubscribeEvent
 import chylex.hee.system.migration.vanilla.EntityPlayer
 import chylex.hee.system.migration.vanilla.Potion
 import chylex.hee.system.util.ceilToInt
+import chylex.hee.system.util.compatibility.MinecraftForgeEventBus
 import chylex.hee.system.util.makeEffect
 import net.minecraft.potion.EffectInstance
 import net.minecraft.potion.EffectType.HARMFUL
-import net.minecraftforge.common.MinecraftForge
 import net.minecraftforge.event.TickEvent.Phase
 import net.minecraftforge.event.TickEvent.PlayerTickEvent
 import net.minecraftforge.event.entity.living.LivingEntityUseItemEvent
@@ -21,7 +21,7 @@ class ItemRingOfHunger(properties: Properties) : ItemAbstractTrinket(properties)
 	private val foodUseTracker = mutableMapOf<UUID, Map<Potion, EffectInstance>>()
 	
 	init{
-		MinecraftForge.EVENT_BUS.register(this)
+		MinecraftForgeEventBus.register(this)
 	}
 	
 	@SubscribeEvent

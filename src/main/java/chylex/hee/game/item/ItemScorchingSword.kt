@@ -21,6 +21,7 @@ import chylex.hee.system.migration.vanilla.EntitySquid
 import chylex.hee.system.migration.vanilla.ItemSword
 import chylex.hee.system.migration.vanilla.Potions
 import chylex.hee.system.migration.vanilla.Sounds
+import chylex.hee.system.util.compatibility.MinecraftForgeEventBus
 import chylex.hee.system.util.doDamage
 import chylex.hee.system.util.floorToInt
 import chylex.hee.system.util.nextFloat
@@ -34,7 +35,6 @@ import net.minecraft.block.BlockState
 import net.minecraft.entity.SharedMonsterAttributes
 import net.minecraft.item.ItemStack
 import net.minecraft.util.DamageSource
-import net.minecraftforge.common.MinecraftForge
 import net.minecraftforge.event.entity.living.LivingDamageEvent
 import net.minecraftforge.event.entity.living.LootingLevelEvent
 import net.minecraftforge.event.entity.player.CriticalHitEvent
@@ -51,7 +51,7 @@ class ItemScorchingSword(
 	private val stopDamageRecursion = ThreadLocal.withInitial { false }
 	
 	init{
-		MinecraftForge.EVENT_BUS.register(this)
+		MinecraftForgeEventBus.register(this)
 	}
 	
 	private fun validateDamageSource(source: DamageSource): Pair<EntityLivingBase, ItemStack>?{

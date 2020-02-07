@@ -14,6 +14,7 @@ import chylex.hee.system.migration.vanilla.EntityLivingBase
 import chylex.hee.system.migration.vanilla.EntityPlayer
 import chylex.hee.system.migration.vanilla.Sounds
 import chylex.hee.system.util.FLAG_NONE
+import chylex.hee.system.util.compatibility.MinecraftForgeEventBus
 import chylex.hee.system.util.doDamage
 import chylex.hee.system.util.getBlock
 import chylex.hee.system.util.getState
@@ -32,7 +33,6 @@ import net.minecraft.util.Hand
 import net.minecraft.util.SoundCategory
 import net.minecraft.util.math.BlockPos
 import net.minecraft.world.World
-import net.minecraftforge.common.MinecraftForge
 import net.minecraftforge.event.world.ExplosionEvent
 
 class ItemFlintAndInfernium(properties: Properties) : Item(properties){
@@ -54,7 +54,7 @@ class ItemFlintAndInfernium(properties: Properties) : Item(properties){
 	}
 	
 	init{
-		MinecraftForge.EVENT_BUS.register(this)
+		MinecraftForgeEventBus.register(this)
 	}
 	
 	fun igniteTNT(world: World, pos: BlockPos, player: EntityPlayer?, ignoreTrap: Boolean){

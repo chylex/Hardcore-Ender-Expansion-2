@@ -11,13 +11,13 @@ import chylex.hee.system.migration.vanilla.Enchantments
 import chylex.hee.system.migration.vanilla.EntityLivingBase
 import chylex.hee.system.migration.vanilla.EntityPlayer
 import chylex.hee.system.migration.vanilla.Items
+import chylex.hee.system.util.compatibility.MinecraftForgeEventBus
 import net.minecraft.block.BlockState
 import net.minecraft.enchantment.Enchantment
 import net.minecraft.enchantment.EnchantmentHelper
 import net.minecraft.item.ItemStack
 import net.minecraft.util.math.BlockPos
 import net.minecraft.world.World
-import net.minecraftforge.common.MinecraftForge
 import net.minecraftforge.event.entity.player.PlayerEvent.BreakSpeed
 import net.minecraftforge.event.world.BlockEvent.BreakEvent
 
@@ -31,7 +31,7 @@ class ItemVoidMiner(properties: Properties) : ItemAbstractVoidTool(setupToolClas
 	}
 	
 	init{
-		MinecraftForge.EVENT_BUS.register(this)
+		MinecraftForgeEventBus.register(this)
 	}
 	
 	override fun getDestroySpeed(stack: ItemStack, state: BlockState): Float{

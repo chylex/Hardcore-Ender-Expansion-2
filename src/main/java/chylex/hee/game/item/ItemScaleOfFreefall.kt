@@ -3,15 +3,15 @@ import chylex.hee.game.mechanics.trinket.TrinketHandler
 import chylex.hee.system.migration.forge.EventPriority
 import chylex.hee.system.migration.forge.SubscribeEvent
 import chylex.hee.system.migration.vanilla.EntityPlayer
+import chylex.hee.system.util.compatibility.MinecraftForgeEventBus
 import net.minecraft.item.ItemStack
 import net.minecraft.util.DamageSource
-import net.minecraftforge.common.MinecraftForge
 import net.minecraftforge.event.entity.living.LivingDamageEvent
 import net.minecraftforge.event.entity.living.LivingDeathEvent
 
 class ItemScaleOfFreefall(properties: Properties) : ItemAbstractTrinket(properties){
 	init{
-		MinecraftForge.EVENT_BUS.register(this)
+		MinecraftForgeEventBus.register(this)
 	}
 	
 	override fun canPlaceIntoTrinketSlot(stack: ItemStack): Boolean{

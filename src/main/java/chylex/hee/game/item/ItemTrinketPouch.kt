@@ -25,6 +25,7 @@ import chylex.hee.system.util.NBTItemStackList
 import chylex.hee.system.util.NBTList.Companion.putList
 import chylex.hee.system.util.allSlots
 import chylex.hee.system.util.any
+import chylex.hee.system.util.compatibility.MinecraftForgeEventBus
 import chylex.hee.system.util.find
 import chylex.hee.system.util.getListOfItemStacks
 import chylex.hee.system.util.getStack
@@ -46,7 +47,6 @@ import net.minecraft.util.Hand
 import net.minecraft.util.text.ITextComponent
 import net.minecraft.world.World
 import net.minecraftforge.client.event.GuiScreenEvent
-import net.minecraftforge.common.MinecraftForge
 
 class ItemTrinketPouch(properties: Properties) : ItemAbstractTrinket(properties), ITrinketHandlerProvider, IInfusableItem{
 	private companion object{
@@ -183,7 +183,7 @@ class ItemTrinketPouch(properties: Properties) : ItemAbstractTrinket(properties)
 	// Instance
 	
 	init{
-		MinecraftForge.EVENT_BUS.register(this)
+		MinecraftForgeEventBus.register(this)
 	}
 	
 	override fun createTrinketHandler(player: EntityPlayer): ITrinketHandler{

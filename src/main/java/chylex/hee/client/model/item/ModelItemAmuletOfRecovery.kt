@@ -24,7 +24,7 @@ import javax.vecmath.Matrix4f
 
 @Sided(Side.CLIENT)
 class ModelItemAmuletOfRecovery private constructor(sourceModel: IBakedModel) : BakedModelWrapper<IBakedModel>(sourceModel){
-	@SubscribeAllEvents(modid = HEE.ID, bus = MOD)
+	@SubscribeAllEvents(Side.CLIENT, modid = HEE.ID, bus = MOD)
 	companion object{
 		private val RESOURCE_NORMAL = ModelResourceLocation(Resource.Custom("amulet_of_recovery"), "inventory")
 		private val RESOURCE_HELD   = Resource.Custom("item/amulet_of_recovery_held")

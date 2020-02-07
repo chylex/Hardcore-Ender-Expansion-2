@@ -10,13 +10,13 @@ import chylex.hee.system.migration.forge.Sided
 import chylex.hee.system.migration.forge.SubscribeEvent
 import chylex.hee.system.migration.vanilla.EntityPlayer
 import chylex.hee.system.migration.vanilla.Items
+import chylex.hee.system.util.compatibility.MinecraftForgeEventBus
 import chylex.hee.system.util.copyIf
 import chylex.hee.system.util.isNotEmpty
 import chylex.hee.system.util.totalTime
 import net.minecraft.entity.Entity
 import net.minecraft.item.ItemStack
 import net.minecraft.util.NonNullList
-import net.minecraftforge.common.MinecraftForge
 import net.minecraftforge.event.entity.living.LivingDamageEvent
 import net.minecraftforge.event.entity.living.LivingHurtEvent
 import net.minecraftforge.event.entity.player.PlayerDestroyItemEvent
@@ -34,7 +34,7 @@ class ItemRingOfPreservation(properties: Properties) : ItemAbstractTrinket(prope
 	private var lastHurtPlayerArmor: Pair<HurtPlayerInfo, Array<ItemStack>>? = null
 	
 	init{
-		MinecraftForge.EVENT_BUS.register(this)
+		MinecraftForgeEventBus.register(this)
 	}
 	
 	// Trinket handling
