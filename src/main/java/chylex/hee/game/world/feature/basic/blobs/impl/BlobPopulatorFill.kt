@@ -18,10 +18,9 @@ class BlobPopulatorFill(
 	override fun generate(world: SegmentedWorld, rand: Random){
 		val size = world.worldSize
 		
-		for(pos in size.minPos.allInBox(size.maxPos)){
-			if (world.getBlock(pos) === base && Facing6.all { facing -> pos.offset(facing).let { world.isInside(it) && world.getBlock(it) === base } }){
-				world.placeBlock(pos, picker)
-			}
-		}
+		size.minPos
+			.allInBox(size.maxPos)
+			.filter { pos -> world.getBlock(pos) === base && Facing6.all { facing -> pos.offset(facing).let { world.isInside(it) && world.getBlock(it) === base } } }
+			.forEach { world.placeBlock(it, picker) }
 	}
 }
