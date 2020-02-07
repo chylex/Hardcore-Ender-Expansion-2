@@ -1,66 +1,42 @@
 package chylex.hee.system
-import chylex.hee.HEE
 import chylex.hee.client.util.MC
 import chylex.hee.proxy.Environment
 import chylex.hee.system.migration.forge.Side
 import chylex.hee.system.migration.forge.SubscribeEvent
 import net.minecraft.client.renderer.BannerTextures
-import net.minecraft.util.SharedConstants
 import net.minecraftforge.client.event.GuiOpenEvent
 import net.minecraftforge.client.event.InputEvent.KeyInputEvent
 import net.minecraftforge.common.MinecraftForge
 import org.apache.commons.lang3.SystemUtils
 import org.lwjgl.glfw.GLFW
 import java.io.File
-import java.io.FileOutputStream
 import java.lang.management.ManagementFactory
-import java.util.Properties
 
 object Debug{
 	val enabled = System.getProperty("hee.debug") != null
 	
 	fun initialize(){
-		if (enabled){
-			when(Environment.side){
-				Side.CLIENT -> {
-					MC.instance.execute {
-						GLFW.glfwSetWindowTitle(MC.window.handle, "Minecraft ${SharedConstants.getVersion().name} - Hardcore Ender Expansion ${HEE.version}")
-					}
-					
-					MinecraftForge.EVENT_BUS.register(object : Any(){
-						@SubscribeEvent
-						fun onKeyPressed(e: KeyInputEvent){
-							if (e.action == 1 && e.key == GLFW.GLFW_KEY_GRAVE_ACCENT){
-								val player = MC.player ?: return
-								
-								if (player.isCreative){
-									player.sendChatMessage("/gamemode survival")
-								}
-								else{
-									player.sendChatMessage("/gamemode creative")
-								}
-							}
+		if (enabled && Environment.side == Side.CLIENT){
+			MinecraftForge.EVENT_BUS.register(object : Any(){
+				@SubscribeEvent
+				fun onKeyPressed(e: KeyInputEvent){
+					if (e.action == 1 && e.key == GLFW.GLFW_KEY_GRAVE_ACCENT){
+						val player = MC.player ?: return
+						
+						if (player.isCreative){
+							player.sendChatMessage("/gamemode survival")
 						}
-					})
-					
-					try{
-						enableInfiniteBannerTextures()
-					}catch(t: Throwable){
-						t.printStackTrace()
+						else{
+							player.sendChatMessage("/gamemode creative")
+						}
 					}
 				}
-				
-				Side.DEDICATED_SERVER -> {
-					try{
-						FileOutputStream("eula.txt").use {
-							val properties = Properties()
-							properties["eula"] = "true"
-							properties.store(it, "End User License Annoyance")
-						}
-					}catch(e: Exception){
-						// ignore
-					}
-				}
+			})
+			
+			try{
+				enableInfiniteBannerTextures()
+			}catch(t: Throwable){
+				t.printStackTrace()
 			}
 			
 			if (canExecutePowershell("maximize.ps1")){

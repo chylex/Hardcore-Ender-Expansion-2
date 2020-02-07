@@ -26,3 +26,10 @@ build
 # game
 run/*
 !run/*.ps1
+!run/eula.txt
+!run/mods
+run/mods/*
+!run/mods/CustomWindowTitle-*
+!run/config
+run/config/*
+!run/config/customwindowtitle-client.toml
