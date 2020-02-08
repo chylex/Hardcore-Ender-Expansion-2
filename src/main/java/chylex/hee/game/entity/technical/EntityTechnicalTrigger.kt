@@ -1,6 +1,8 @@
 package chylex.hee.game.entity.technical
 import chylex.hee.game.entity.technical.EntityTechnicalTrigger.Types.INVALID
+import chylex.hee.game.world.feature.energyshrine.EnergyShrineGenerator
 import chylex.hee.game.world.feature.energyshrine.piece.EnergyShrineRoom_Main_Start
+import chylex.hee.game.world.feature.stronghold.StrongholdGenerator
 import chylex.hee.game.world.feature.stronghold.piece.StrongholdRoom_Main_Portal
 import chylex.hee.game.world.feature.stronghold.piece.StrongholdRoom_Trap_CornerHoles
 import chylex.hee.game.world.feature.stronghold.piece.StrongholdRoom_Trap_Prison
@@ -51,10 +53,12 @@ class EntityTechnicalTrigger(type: EntityType<EntityTechnicalTrigger>, world: Wo
 	
 	enum class Types(val handlerConstructor: () -> ITriggerHandler){
 		INVALID({ InvalidTriggerHandler }),
+		STRONGHOLD_GENERATOR({ StrongholdGenerator.GeneratorTrigger }),
 		STRONGHOLD_GLOBAL(StrongholdRoom_Main_Portal::Spawner),
 		STRONGHOLD_TRAP_CORNER_HOLES(StrongholdRoom_Trap_CornerHoles::Trigger),
 		STRONGHOLD_TRAP_PRISON(StrongholdRoom_Trap_Prison::Trigger),
 		STRONGHOLD_TRAP_TALL_INTERSECTION({ StrongholdRoom_Trap_TallIntersection.Trigger }),
+		ENERGY_SHRINE_GENERATOR({ EnergyShrineGenerator.GeneratorTrigger }),
 		ENERGY_SHRINE_GLOBAL({ EnergyShrineRoom_Main_Start.Particles })
 	}
 	

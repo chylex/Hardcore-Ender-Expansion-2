@@ -1,6 +1,9 @@
 package chylex.hee.game.world.feature.energyshrine
 import chylex.hee.HEE
+import chylex.hee.game.entity.technical.EntityTechnicalTrigger
+import chylex.hee.game.entity.technical.EntityTechnicalTrigger.Types.ENERGY_SHRINE_GENERATOR
 import chylex.hee.game.world.feature.OverworldFeatures
+import chylex.hee.game.world.feature.OverworldFeatures.GeneratorTriggerBase
 import chylex.hee.game.world.feature.OverworldFeatures.OverworldFeature
 import chylex.hee.game.world.feature.OverworldFeatures.preloadChunks
 import chylex.hee.game.world.feature.stronghold.StrongholdGenerator
@@ -23,7 +26,7 @@ import net.minecraft.util.math.BlockPos
 import net.minecraft.world.IWorld
 import net.minecraft.world.World
 import net.minecraft.world.gen.Heightmap.Type.MOTION_BLOCKING_NO_LEAVES
-import net.minecraft.world.gen.Heightmap.Type.OCEAN_FLOOR_WG
+import net.minecraft.world.gen.Heightmap.Type.OCEAN_FLOOR
 import net.minecraft.world.server.ServerWorld
 import java.util.Random
 import kotlin.math.min
@@ -122,7 +125,7 @@ object EnergyShrineGenerator : OverworldFeature(){
 	
 	private fun getTopSolidNonLeavesBlock(world: World, xz: PosXZ): Int{
 		val topBlockingNonLeaves = xz.getTopBlock(world, MOTION_BLOCKING_NO_LEAVES) // includes fluids so it cannot be used alone
-		val topUnderwater = xz.getTopBlock(world, OCEAN_FLOOR_WG)
+		val topUnderwater = xz.getTopBlock(world, OCEAN_FLOOR)
 		
 		return min(topBlockingNonLeaves.y, topUnderwater.y)
 	}
@@ -177,49 +180,63 @@ object EnergyShrineGenerator : OverworldFeature(){
 	}
 	
 	override fun place(world: IWorld, rand: Random, pos: BlockPos, chunkX: Int, chunkZ: Int): Boolean{
-		val world = world.world as ServerWorld // UPDATE
+		val wrld = world.world as ServerWorld
+		val centerXZ = findSpawnMatchingChunk(wrld, chunkX, chunkZ) ?: return false
 		
-		val centerXZ = findSpawnMatchingChunk(world, chunkX, chunkZ) ?: return false
-		val build = buildStructure(rand)
-		
-		if (build == null){
-			HEE.log.error("[EnergyShrineGenerator] failed all attempts at generating (chunkX = $chunkX, chunkZ = $chunkZ, seed = ${world.seed})")
-			return false
+		EntityTechnicalTrigger(wrld, ENERGY_SHRINE_GENERATOR).apply {
+			setLocationAndAngles(centerXZ.x + 0.5, 0.5, centerXZ.z + 0.5, 0F, 0F)
+			world.addEntity(this)
 		}
 		
-		val boundingBoxes = build.boundingBoxes
-		val structureHeight = 1 + boundingBoxes.maxBy { it.max.y }!!.max.y - boundingBoxes.minBy { it.min.y }!!.min.y
-		
-		val topY = getTopSolidNonLeavesBlock(world, centerXZ)
-		val topOffset = MIN_GROUND_LAYERS + rand.nextInt(0, 2)
-		
-		if (topY - topOffset - structureHeight <= MIN_STRUCTURE_Y){
-			HEE.log.error("[EnergyShrineGenerator] topmost block is too low (chunkX = $chunkX, chunkZ = $chunkZ, seed = ${world.seed})")
-			return false
-		}
-		
-		val structureOffset = BlockPos.ZERO.subtract(STRUCTURE_SIZE.getPos(CENTER, MAX, CENTER))
-		val structurePos = findStructureTop(world, rand, build, centerXZ.withY(topY - topOffset), structureOffset, structureHeight)
-		
-		if (structurePos == null){
-			HEE.log.error("[EnergyShrineGenerator] failed finding good altitude for structure (chunkX = $chunkX, chunkZ = $chunkZ, seed = ${world.seed})")
-			return false
-		}
-		
-		val surfacePos = findSurfaceAbove(world, structurePos.up(topOffset))
-		
-		if (surfacePos == null){
-			HEE.log.error("[EnergyShrineGenerator] failed finding good altitude for surface pillars (chunkX = $chunkX, chunkZ = $chunkZ, seed = ${world.seed})")
-			return false
-		}
-		
-		if (!EnergyShrinePillars.tryGenerate(world, rand, surfacePos)){
-			HEE.log.error("[EnergyShrineGenerator] failed generating surface pillars (chunkX = $chunkX, chunkZ = $chunkZ, seed = ${world.seed})")
-			return false
-		}
-		
-		preloadChunks(world, chunkX, chunkZ, (STRUCTURE_SIZE.centerX / 16) - 1, (STRUCTURE_SIZE.centerZ / 16) - 1)
-		WorldToStructureWorldAdapter(world, rand, structurePos.add(structureOffset)).apply(build::generate).finalize()
 		return true
+	}
+	
+	object GeneratorTrigger : GeneratorTriggerBase(){
+		override fun place(world: ServerWorld, rand: Random, pos: BlockPos){
+			val xz = pos.xz
+			val chunkX = xz.chunkX
+			val chunkZ = xz.chunkZ
+			
+			val build = buildStructure(rand)
+			
+			if (build == null){
+				HEE.log.error("[EnergyShrineGenerator] failed all attempts at generating (chunkX = $chunkX, chunkZ = $chunkZ, seed = ${world.seed})")
+				return
+			}
+			
+			val boundingBoxes = build.boundingBoxes
+			val structureHeight = 1 + boundingBoxes.maxBy { it.max.y }!!.max.y - boundingBoxes.minBy { it.min.y }!!.min.y
+			
+			val topY = getTopSolidNonLeavesBlock(world, xz)
+			val topOffset = MIN_GROUND_LAYERS + rand.nextInt(0, 2)
+			
+			if (topY - topOffset - structureHeight <= MIN_STRUCTURE_Y){
+				HEE.log.error("[EnergyShrineGenerator] topmost block is too low (chunkX = $chunkX, chunkZ = $chunkZ, seed = ${world.seed})")
+				return
+			}
+			
+			val structureOffset = BlockPos.ZERO.subtract(STRUCTURE_SIZE.getPos(CENTER, MAX, CENTER))
+			val structurePos = findStructureTop(world, rand, build, xz.withY(topY - topOffset), structureOffset, structureHeight)
+			
+			if (structurePos == null){
+				HEE.log.error("[EnergyShrineGenerator] failed finding good altitude for structure (chunkX = $chunkX, chunkZ = $chunkZ, seed = ${world.seed})")
+				return
+			}
+			
+			val surfacePos = findSurfaceAbove(world, structurePos.up(topOffset))
+			
+			if (surfacePos == null){
+				HEE.log.error("[EnergyShrineGenerator] failed finding good altitude for surface pillars (chunkX = $chunkX, chunkZ = $chunkZ, seed = ${world.seed})")
+				return
+			}
+			
+			if (!EnergyShrinePillars.tryGenerate(world, rand, surfacePos)){
+				HEE.log.error("[EnergyShrineGenerator] failed generating surface pillars (chunkX = $chunkX, chunkZ = $chunkZ, seed = ${world.seed})")
+				return
+			}
+			
+			preloadChunks(world, chunkX, chunkZ, (STRUCTURE_SIZE.centerX / 16) - 1, (STRUCTURE_SIZE.centerZ / 16) - 1)
+			WorldToStructureWorldAdapter(world, rand, structurePos.add(structureOffset)).apply(build::generate).finalize()
+		}
 	}
 }

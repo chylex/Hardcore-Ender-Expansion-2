@@ -62,7 +62,6 @@ object HEE{
 		EnderCausatum.register()
 		Instability.register()
 		TokenPlayerStorage.register()
-		OverworldFeatures.register()
 	}
 	
 	@SubscribeEvent

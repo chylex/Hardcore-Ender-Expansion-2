@@ -1,6 +1,9 @@
 package chylex.hee.game.world.feature.stronghold
 import chylex.hee.HEE
+import chylex.hee.game.entity.technical.EntityTechnicalTrigger
+import chylex.hee.game.entity.technical.EntityTechnicalTrigger.Types.STRONGHOLD_GENERATOR
 import chylex.hee.game.world.feature.OverworldFeatures
+import chylex.hee.game.world.feature.OverworldFeatures.GeneratorTriggerBase
 import chylex.hee.game.world.feature.OverworldFeatures.OverworldFeature
 import chylex.hee.game.world.feature.OverworldFeatures.preloadChunks
 import chylex.hee.game.world.structure.piece.IStructureBuild
@@ -102,7 +105,7 @@ object StrongholdGenerator : OverworldFeature(){
 	}
 	
 	private fun isChunkPopulated(world: ServerWorld, chunk: ChunkPos): Boolean{
-		return true // UPDATE (world.chunkProvider as? ServerChunkProvider)?.loadChunk(chunk.x, chunk.z).let { it != null && it.isTerrainPopulated }
+		return false // UPDATE (world.chunkProvider as? ServerChunkProvider)?.loadChunk(chunk.x, chunk.z).let { it != null && it.isTerrainPopulated }
 	}
 	
 	fun findNearest(world: ServerWorld, xz: PosXZ): BlockPos?{
@@ -150,27 +153,35 @@ object StrongholdGenerator : OverworldFeature(){
 	// Generation
 	
 	override fun place(world: IWorld, rand: Random, pos: BlockPos, chunkX: Int, chunkZ: Int): Boolean{
-		val world = world.world as ServerWorld // UPDATE
+		val spawnPos = findSpawnAt(world.seed, chunkX, chunkZ) ?: return false
 		
-		val centerPos = findSpawnAt(world.seed, chunkX, chunkZ) ?: return false
-		
-		if (chunkX != (centerPos.x shr 4) || chunkZ != (centerPos.z shr 4)){
+		if (ChunkPos(spawnPos).let { it.x != chunkX || it.z != chunkZ }){
 			return false
 		}
 		
-		val (build, targetPos) = buildStructure(rand)
-		
-		if (build == null){
-			HEE.log.error("[StrongholdGenerator] failed all attempts at generating (chunkX = $chunkX, chunkZ = $chunkZ, seed = ${world.seed})")
-			return false
+		EntityTechnicalTrigger(world.world, STRONGHOLD_GENERATOR).apply {
+			setLocationAndAngles(spawnPos.x + 0.5, spawnPos.y + 0.5, spawnPos.z + 0.5, 0F, 0F)
+			world.addEntity(this)
 		}
 		
-		val offset = centerPos.subtract(STRUCTURE_SIZE.centerPos)
-		val chunk = ChunkPos(chunkX, chunkZ)
-		
-		preloadChunks(world, chunkX, chunkZ, STRUCTURE_SIZE.centerX / 16, STRUCTURE_SIZE.centerZ / 16)
-		WorldToStructureWorldAdapter(world, rand, offset).apply(build::generate).finalize()
-		DimensionStrongholdData.get(world).addLocation(chunk, targetPos?.add(centerPos) ?: centerPos)
 		return true
+	}
+	
+	object GeneratorTrigger : GeneratorTriggerBase(){
+		override fun place(world: ServerWorld, rand: Random, pos: BlockPos){
+			val chunk = ChunkPos(pos)
+			val (build, targetPos) = buildStructure(rand)
+			
+			if (build == null){
+				HEE.log.error("[StrongholdGenerator] failed all attempts at generating (chunkX = ${chunk.x}, chunkZ = ${chunk.z}, seed = ${world.seed})")
+				return
+			}
+			
+			val offset = pos.subtract(STRUCTURE_SIZE.centerPos)
+			
+			preloadChunks(world, chunk.x, chunk.z, STRUCTURE_SIZE.centerX / 16, STRUCTURE_SIZE.centerZ / 16)
+			WorldToStructureWorldAdapter(world, rand, offset).apply(build::generate).finalize()
+			DimensionStrongholdData.get(world).addLocation(chunk, targetPos?.add(pos) ?: pos)
+		}
 	}
 }
