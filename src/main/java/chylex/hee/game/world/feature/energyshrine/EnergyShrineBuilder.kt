@@ -17,6 +17,7 @@ import chylex.hee.game.world.util.Size.Alignment.MAX
 import chylex.hee.game.world.util.Transform
 import chylex.hee.system.util.nextInt
 import chylex.hee.system.util.nextItem
+import chylex.hee.system.util.nextItemOrNull
 import chylex.hee.system.util.removeItemOrNull
 import java.util.Random
 
@@ -36,7 +37,7 @@ object EnergyShrineBuilder : IStructureBuilder{
 		while(true){
 			val nextGeneratedPiece = rand.removeItemOrNull(remainingRooms.mainPath) ?: break
 			
-			if (!build.guardChain(30){ process.placeRoom(remainingCorridors.mainPath, build.generatedPieces.last(), nextGeneratedPiece) }){
+			if (!build.guardChain(30){ process.placeRoom(remainingCorridors.mainPath, build.lastPiece, nextGeneratedPiece) }){
 				return null
 			}
 		}
@@ -46,7 +47,7 @@ object EnergyShrineBuilder : IStructureBuilder{
 		run {
 			val finalRoomPiece = rand.nextItem(PIECES_END) to EnergyShrineRoomData.DEFAULT
 			
-			if (!build.guardChain(30){ process.placeRoom(remainingCorridors.mainPath, build.generatedPieces.last(), finalRoomPiece) }){
+			if (!build.guardChain(30){ process.placeRoom(remainingCorridors.mainPath, build.lastPiece, finalRoomPiece) }){
 				return null
 			}
 		}
@@ -76,18 +77,23 @@ object EnergyShrineBuilder : IStructureBuilder{
 			
 			for(corridorPiece in corridorChain){
 				lastPiece = when(corridorPiece){
-					is EnergyShrineCorridor_Staircase_180_Top -> baseAddPiece(APPEND, lastPiece){ stairTransform = it; corridorPiece.MutableInstance(it) }
-					is EnergyShrineCorridor_Staircase_180_Bottom -> baseAddPiece(APPEND, lastPiece){ corridorPiece.MutableInstance(stairTransform) }
-					else -> baseAddPiece(APPEND, lastPiece, corridorPiece::MutableInstance)
+					is EnergyShrineCorridor_Staircase_180_Top -> appendPiece(lastPiece){ stairTransform = it; corridorPiece.MutableInstance(it) }
+					is EnergyShrineCorridor_Staircase_180_Bottom -> appendPiece(lastPiece){ corridorPiece.MutableInstance(stairTransform) }
+					else -> appendPiece(lastPiece, corridorPiece::MutableInstance)
 				} ?: return false
 			}
 			
-			if (baseAddPiece(APPEND, lastPiece){ generatedPiece.first.MutableInstance(generatedPiece.second, it) } == null){
+			if (appendPiece(lastPiece){ generatedPiece.first.MutableInstance(generatedPiece.second, it) } == null){
 				return false
 			}
 			
 			corridorList.remove(corridorChain)
 			return true
+		}
+		
+		private fun appendPiece(targetPiece: PositionedPiece<StructurePiece<EnergyShrineRoomData>.MutableInstance>, generatedPieceConstructor: (Transform) -> StructurePiece<EnergyShrineRoomData>.MutableInstance): PositionedPiece<StructurePiece<EnergyShrineRoomData>.MutableInstance>?{
+			val targetConnection = rand.nextItemOrNull(targetPiece.instance.findAvailableConnections()) ?: return null
+			return baseAddPiece(APPEND, targetPiece, targetConnection, generatedPieceConstructor)
 		}
 	}
 }

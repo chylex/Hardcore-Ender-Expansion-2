@@ -4,7 +4,6 @@ import chylex.hee.game.world.structure.piece.StructureBuild.PositionedPiece
 import chylex.hee.game.world.util.Transform
 import chylex.hee.system.util.facades.Rotation4
 import chylex.hee.system.util.nextItem
-import chylex.hee.system.util.nextItemOrNull
 import java.util.Random
 
 interface IStructureBuilder{
@@ -24,10 +23,6 @@ interface IStructureBuilder{
 			}
 			
 			return null
-		}
-		
-		protected fun baseAddPiece(mode: AddMode, targetPiece: PositionedPiece<T>, generatedPieceConstructor: (Transform) -> T): PositionedPiece<T>?{
-			return rand.nextItemOrNull(targetPiece.instance.findAvailableConnections())?.let { targetConnection -> baseAddPiece(mode, targetPiece, targetConnection, generatedPieceConstructor) }
 		}
 	}
 }

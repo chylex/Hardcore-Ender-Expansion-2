@@ -1,4 +1,5 @@
 package chylex.hee.game.world.structure.piece
+import chylex.hee.HEE
 import chylex.hee.game.world.structure.IStructureWorld
 import chylex.hee.game.world.structure.piece.IStructurePieceConnection.AlignmentType.EVEN
 import chylex.hee.game.world.structure.piece.IStructurePieceConnection.AlignmentType.EVEN_MIRRORED
@@ -6,6 +7,7 @@ import chylex.hee.game.world.structure.piece.StructureBuild.AddMode.APPEND
 import chylex.hee.game.world.structure.piece.StructureBuild.AddMode.MERGE
 import chylex.hee.game.world.structure.world.OffsetStructureWorld
 import chylex.hee.game.world.util.Size
+import chylex.hee.system.Debug
 import net.minecraft.util.math.BlockPos
 
 class StructureBuild<T : StructurePiece<*>.MutableInstance>(val size: Size){
@@ -33,6 +35,9 @@ class StructureBuild<T : StructurePiece<*>.MutableInstance>(val size: Size){
 	
 	val generatedPieces: List<PositionedPiece<T>> = pieces
 	
+	val lastPiece
+		get() = pieces.last()
+	
 	private fun commitPiece(newPiece: PositionedPiece<T>){
 		pieces.add(newPiece)
 		
@@ -53,6 +58,10 @@ class StructureBuild<T : StructurePiece<*>.MutableInstance>(val size: Size){
 	}
 	
 	fun addPiece(newPiece: T, newPieceConnection: IStructurePieceConnection, targetPiece: PositionedPiece<T>, targetPieceConnection: IStructurePieceConnection, mode: AddMode = APPEND): PositionedPiece<T>?{
+		if (Debug.enabled && !pieces.contains(targetPiece)){
+			HEE.log.error("[StructureBuild] attempted to connect to a piece that is not present in the structure")
+		}
+		
 		val alignedPos = targetPiece.offset.add(alignConnections(newPieceConnection, targetPieceConnection, mode))
 		
 		val addedPiece = PositionedPiece(newPiece, alignedPos)
