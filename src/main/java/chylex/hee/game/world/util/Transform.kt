@@ -1,4 +1,5 @@
 package chylex.hee.game.world.util
+import chylex.hee.system.migration.vanilla.BlockStairs
 import chylex.hee.system.util.Pos
 import chylex.hee.system.util.component1
 import chylex.hee.system.util.component2
@@ -7,6 +8,10 @@ import chylex.hee.system.util.facades.Rotation4
 import chylex.hee.system.util.nextItem
 import net.minecraft.block.BlockState
 import net.minecraft.entity.Entity
+import net.minecraft.state.properties.StairsShape.INNER_LEFT
+import net.minecraft.state.properties.StairsShape.INNER_RIGHT
+import net.minecraft.state.properties.StairsShape.OUTER_LEFT
+import net.minecraft.state.properties.StairsShape.OUTER_RIGHT
 import net.minecraft.tileentity.TileEntity
 import net.minecraft.util.Direction
 import net.minecraft.util.Mirror
@@ -43,12 +48,27 @@ data class Transform(val rotation: Rotation, val mirror: Boolean){
 		return Transform(target.rotation.add(rotation), target.mirror xor mirror)
 	}
 	
+	private fun unfuckStairMirror(state: BlockState): BlockState{
+		val transformed = state.rotate(rotation).mirror(mirroring)
+		
+		return when(transformed[BlockStairs.SHAPE]){
+			INNER_LEFT -> transformed.with(BlockStairs.SHAPE, INNER_RIGHT)
+			INNER_RIGHT -> transformed.with(BlockStairs.SHAPE, INNER_LEFT)
+			OUTER_LEFT -> if (rotation == Rotation.CLOCKWISE_90 || rotation == Rotation.COUNTERCLOCKWISE_90) transformed.with(BlockStairs.SHAPE, OUTER_RIGHT) else transformed
+			OUTER_RIGHT -> if (rotation == Rotation.CLOCKWISE_90 || rotation == Rotation.COUNTERCLOCKWISE_90) transformed.with(BlockStairs.SHAPE, OUTER_LEFT) else transformed
+			else -> transformed
+		}
+	}
+	
 	operator fun invoke(facing: Direction): Direction{
 		return mirroring.mirror(rotation.rotate(facing))
 	}
 	
 	operator fun invoke(state: BlockState): BlockState{
-		return state.rotate(rotation).mirror(mirroring)
+		return if (mirror && state.block is BlockStairs)
+			unfuckStairMirror(state) // UPDATE 1.14 (check if stairs still need unfucking)
+		else
+			state.rotate(rotation).mirror(mirroring)
 	}
 	
 	operator fun invoke(entity: Entity){

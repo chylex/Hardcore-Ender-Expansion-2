@@ -9,6 +9,7 @@ import chylex.hee.system.migration.vanilla.BlockFlowingFluid
 import chylex.hee.system.migration.vanilla.BlockRedstoneWire
 import chylex.hee.system.migration.vanilla.BlockTorch
 import chylex.hee.system.migration.vanilla.BlockVine
+import chylex.hee.system.util.FLAG_REPLACE_NO_DROPS
 import chylex.hee.system.util.FLAG_SYNC_CLIENT
 import chylex.hee.system.util.getState
 import chylex.hee.system.util.setState
@@ -44,7 +45,7 @@ class WorldToStructureWorldAdapter(private val world: World, override val rand: 
 		}
 		
 		val worldPos = pos.add(offset)
-		worldPos.setState(world, state, FLAG_SYNC_CLIENT)
+		worldPos.setState(world, state, FLAG_SYNC_CLIENT or FLAG_REPLACE_NO_DROPS)
 		
 		if (block is BlockFlowingFluid){
 			FluidStructureTrigger(block).realize(world, worldPos, Transform.NONE)
@@ -58,7 +59,7 @@ class WorldToStructureWorldAdapter(private val world: World, override val rand: 
 	
 	override fun finalize(){
 		for((pos, state) in secondPass){
-			pos.add(offset).setState(world, state, FLAG_SYNC_CLIENT)
+			pos.add(offset).setState(world, state, FLAG_SYNC_CLIENT or FLAG_REPLACE_NO_DROPS)
 		}
 		
 		secondPass.clear()

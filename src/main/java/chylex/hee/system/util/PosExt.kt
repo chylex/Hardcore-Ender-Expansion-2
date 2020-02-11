@@ -53,6 +53,7 @@ const val FLAG_NOTIFY_NEIGHBORS = BlockFlags.NOTIFY_NEIGHBORS
 const val FLAG_SYNC_CLIENT      = BlockFlags.BLOCK_UPDATE
 const val FLAG_SKIP_RENDER      = BlockFlags.NO_RERENDER
 const val FLAG_RENDER_IMMEDIATE = BlockFlags.RERENDER_MAIN_THREAD
+const val FLAG_REPLACE_NO_DROPS = BlockFlags.NO_NEIGHBOR_DROPS
 
 // Block getters
 
