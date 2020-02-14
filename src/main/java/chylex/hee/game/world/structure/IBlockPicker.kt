@@ -10,6 +10,18 @@ import java.util.Random
 interface IBlockPicker{
 	fun pick(rand: Random): BlockState
 	
+	@JvmDefault
+	fun thenApplying(function: (BlockState, Random) -> BlockState): IBlockPicker{
+		return object : IBlockPicker{
+			override fun pick(rand: Random) = function(this@IBlockPicker.pick(rand), rand)
+		}
+	}
+	
+	@JvmDefault
+	fun <T : Comparable<T>> thenSetting(property: IProperty<T>, value: T): IBlockPicker{
+		return thenApplying { state, _ -> state.with(property, value) }
+	}
+	
 	// Implementations
 	
 	open class Single(private val state: BlockState) : IBlockPicker{
