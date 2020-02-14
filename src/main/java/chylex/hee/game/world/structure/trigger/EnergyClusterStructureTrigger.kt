@@ -14,6 +14,6 @@ class EnergyClusterStructureTrigger(private val snapshot: ClusterSnapshot) : ISt
 	}
 	
 	override fun realize(world: IWorld, pos: BlockPos, transform: Transform){
-		world.getChunk(pos).addTileEntity(pos, TileEntityEnergyCluster().apply { loadClusterSnapshot(snapshot, inactive = true) })
+		TileEntityStructureTrigger.addTileSafe(world, pos, TileEntityEnergyCluster().apply { loadClusterSnapshot(snapshot, inactive = true) })
 	}
 }

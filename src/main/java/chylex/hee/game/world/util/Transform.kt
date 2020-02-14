@@ -1,4 +1,5 @@
 package chylex.hee.game.world.util
+import chylex.hee.system.migration.vanilla.BlockChest
 import chylex.hee.system.migration.vanilla.BlockStairs
 import chylex.hee.system.util.Pos
 import chylex.hee.system.util.component1
@@ -48,27 +49,21 @@ data class Transform(val rotation: Rotation, val mirror: Boolean){
 		return Transform(target.rotation.add(rotation), target.mirror xor mirror)
 	}
 	
-	private fun unfuckStairMirror(state: BlockState): BlockState{
-		val transformed = state.rotate(rotation).mirror(mirroring)
-		
-		return when(transformed[BlockStairs.SHAPE]){
-			INNER_LEFT -> transformed.with(BlockStairs.SHAPE, INNER_RIGHT)
-			INNER_RIGHT -> transformed.with(BlockStairs.SHAPE, INNER_LEFT)
-			OUTER_LEFT -> if (rotation == Rotation.CLOCKWISE_90 || rotation == Rotation.COUNTERCLOCKWISE_90) transformed.with(BlockStairs.SHAPE, OUTER_RIGHT) else transformed
-			OUTER_RIGHT -> if (rotation == Rotation.CLOCKWISE_90 || rotation == Rotation.COUNTERCLOCKWISE_90) transformed.with(BlockStairs.SHAPE, OUTER_LEFT) else transformed
-			else -> transformed
-		}
-	}
-	
 	operator fun invoke(facing: Direction): Direction{
 		return mirroring.mirror(rotation.rotate(facing))
 	}
 	
 	operator fun invoke(state: BlockState): BlockState{
-		return if (mirror && state.block is BlockStairs)
-			unfuckStairMirror(state) // UPDATE 1.14 (check if stairs still need unfucking)
-		else
-			state.rotate(rotation).mirror(mirroring)
+		val transformed = state.rotate(rotation).mirror(mirroring)
+		
+		if (mirror){
+			when(state.block){
+				is BlockStairs -> return unfuckStairMirror(transformed) // UPDATE 1.14 (check if stairs still need unfucking)
+				is BlockChest -> return unfuckChestMirror(transformed) // UPDATE 1.14 (check if chests still need unfucking)
+			}
+		}
+		
+		return transformed
 	}
 	
 	operator fun invoke(entity: Entity){
@@ -109,5 +104,24 @@ data class Transform(val rotation: Rotation, val mirror: Boolean){
 		}
 		
 		return Pos(transformedX, y, transformedZ)
+	}
+	
+	// Unfucking
+	
+	private fun unfuckStairMirror(state: BlockState): BlockState{
+		return when(state[BlockStairs.SHAPE]){
+			INNER_LEFT -> state.with(BlockStairs.SHAPE, INNER_RIGHT)
+			INNER_RIGHT -> state.with(BlockStairs.SHAPE, INNER_LEFT)
+			OUTER_LEFT -> if (rotation == Rotation.CLOCKWISE_90 || rotation == Rotation.COUNTERCLOCKWISE_90) state.with(BlockStairs.SHAPE, OUTER_RIGHT) else state
+			OUTER_RIGHT -> if (rotation == Rotation.CLOCKWISE_90 || rotation == Rotation.COUNTERCLOCKWISE_90) state.with(BlockStairs.SHAPE, OUTER_LEFT) else state
+			else -> state
+		}
+	}
+	
+	private fun unfuckChestMirror(state: BlockState): BlockState{
+		return if (mirror)
+			state.with(BlockChest.TYPE, state[BlockChest.TYPE].opposite())
+		else
+			state
 	}
 }

@@ -20,7 +20,7 @@ class LootChestStructureTrigger(private val resource: ResourceLocation, private 
 		}
 		else{
 			tile.setLootTable(resource, seed)
-			world.getChunk(pos).addTileEntity(pos, tile)
+			TileEntityStructureTrigger.addTileSafe(world, pos, tile)
 		}
 	}
 }

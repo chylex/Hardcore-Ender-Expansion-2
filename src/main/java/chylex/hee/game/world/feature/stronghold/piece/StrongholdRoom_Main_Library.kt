@@ -189,7 +189,7 @@ class StrongholdRoom_Main_Library(file: String) : StrongholdAbstractPieceFromFil
 				val pos2 = Pos(centerX + (7 * xMp), 12, centerZ + (2 * zMp))
 				
 				world.placeCube(pos1, pos2.up(), Single(Blocks.BOOKSHELF))
-				world.setState(pos1.up(2), Blocks.STONE_BRICK_STAIRS.withFacing(EAST))
+				world.setState(pos1.up(2), Blocks.STONE_BRICK_STAIRS.withFacing(if (xMp > 0) EAST else WEST))
 				world.setBlock(pos2.up(2), Blocks.STONE_BRICKS)
 			}
 		}
