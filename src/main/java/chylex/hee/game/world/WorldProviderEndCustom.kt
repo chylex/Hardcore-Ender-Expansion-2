@@ -48,6 +48,8 @@ class WorldProviderEndCustom(world: World, type: DimensionType) : EndDimension(w
 		}
 		
 		var debugMode = false
+		
+		private val CLIENT_SIDE_SPAWN_POINT = Pos(THE_HUB_INSTANCE.centerPoint).xz.withY(255)
 	}
 	
 	private var clientProxy: ModCommonProxy? = null
@@ -71,7 +73,7 @@ class WorldProviderEndCustom(world: World, type: DimensionType) : EndDimension(w
 		val settings = EndGenerationSettings().apply {
 			defaultBlock = Blocks.END_STONE.defaultState
 			defaultFluid = Blocks.AIR.defaultState
-			spawnPos = Pos(THE_HUB_INSTANCE.centerPoint).xz.withY(255)
+			spawnPos = CLIENT_SIDE_SPAWN_POINT
 		}
 		
 		return ChunkGeneratorEndCustom(world, SingleBiomeProvider(SingleBiomeProviderSettings().setBiome(Biomes.THE_END)), settings)
@@ -84,7 +86,10 @@ class WorldProviderEndCustom(world: World, type: DimensionType) : EndDimension(w
 	}
 	
 	override fun getSpawnPoint(): BlockPos{
-		return THE_HUB_INSTANCE.getSpawnPoint()
+		return if (world.isRemote)
+			CLIENT_SIDE_SPAWN_POINT
+		else
+			THE_HUB_INSTANCE.getSpawnPoint()
 	}
 	
 	override fun getSpawnCoordinate(): BlockPos?{
