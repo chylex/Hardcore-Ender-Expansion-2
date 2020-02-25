@@ -3,7 +3,7 @@ import chylex.hee.HEE
 import chylex.hee.game.mechanics.potion.PotionLifeless
 import chylex.hee.game.mechanics.potion.PotionPurity
 import chylex.hee.game.mechanics.potion.brewing.PotionBrewing
-import chylex.hee.game.mechanics.potion.brewing.PotionItems
+import chylex.hee.game.mechanics.potion.brewing.PotionTypeMap
 import chylex.hee.game.mechanics.potion.brewing.recipes.BrewBasicEffects
 import chylex.hee.game.mechanics.potion.brewing.recipes.BrewUnalteredPotions
 import chylex.hee.game.mechanics.potion.brewing.recipes.BrewWaterToAwkward
@@ -42,7 +42,7 @@ object ModPotions{
 		with(e.registry){
 			register(PotionPurity.TYPE named "purity")
 			
-			val alteredTypes = PotionItems.ALTERED_TYPES.map { it.registryName!!.path }.toSet()
+			val alteredTypes = PotionTypeMap.ALTERED_TYPES.map { it.registryName!!.path }.toSet()
 			
 			for(type in this){
 				val location = type.registryName!!
@@ -63,16 +63,16 @@ object ModPotions{
 						// register type overrides so that brewing recipes can convert them
 						
 						type.effects = ImmutableList.of(info.baseEffect)
-						PotionItems.registerNoEffectOverride(type, override)
+						PotionTypeMap.registerNoEffectOverride(type, override)
 						
 						getIfExists(Resource.Vanilla("strong_$path"))?.let {
 							it.effects = ImmutableList.of(info.vanillaOverrideStrongEffect)
-							PotionItems.registerNoEffectOverride(it, override)
+							PotionTypeMap.registerNoEffectOverride(it, override)
 						}
 						
 						getIfExists(Resource.Vanilla("long_$path"))?.let {
 							it.effects = ImmutableList.of(info.vanillaOverrideLongEffect)
-							PotionItems.registerNoEffectOverride(it, override)
+							PotionTypeMap.registerNoEffectOverride(it, override)
 						}
 					}
 				}

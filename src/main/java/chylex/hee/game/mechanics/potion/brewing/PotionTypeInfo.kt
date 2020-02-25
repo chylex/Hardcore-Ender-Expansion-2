@@ -98,7 +98,7 @@ class PotionTypeInfo(
 			return with(stack.copy()){
 				nbt.remove(PotionItems.CUSTOM_EFFECTS_TAG)
 				
-				PotionUtils.addPotionToItemStack(this, PotionItems.findNoEffectOverride(PotionUtils.getPotionFromItem(this)))
+				PotionUtils.addPotionToItemStack(this, PotionTypeMap.findNoEffectOverride(PotionUtils.getPotionFromItem(this)))
 				PotionUtils.appendEffects(this, listOf(newEffect))
 			}
 		}
