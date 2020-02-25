@@ -82,10 +82,10 @@ class PotionTypeInfo(
 				val info = PotionBrewing.INFO[reversed] ?: return null
 				
 				if (durationSteps == 0 && amplifier == 0){
-					return PotionItems.getBottle(stack.item, potion, withBaseEffect = true)
+					return PotionItems.getBottle(stack.item, reversed, withBaseEffect = true)
 				}
 				
-				val newItem = PotionItems.getBottle(stack.item, potion, withBaseEffect = false)
+				val newItem = PotionItems.getBottle(stack.item, reversed, withBaseEffect = false)
 				val newEffect = reversed.makeEffect(0, 0, effect.isAmbient, effect.doesShowParticles())
 				
 				return info.Instance(newItem, newEffect).createNewEffect(durationSteps, newEffect.amplifier)
