@@ -23,7 +23,7 @@ object PotionBrewing{
 		PotionTypeInfo(Potions.SLOW_FALLING,    Duration(baseTicks = 1 min 15, stepTicks = 1 min 15,    maxSteps = 3), maxLevel = 1),
 		PotionTypeInfo(Potions.LEVITATION,      Duration(baseTicks = 0 min 30, stepTicks = 0 min 30,    maxSteps = 3), maxLevel = 2),
 		PotionTypeInfo(ModPotions.PURITY,       Duration(baseTicks = 2 min 30, stepTicks = 2 min 15,    maxSteps = 4), maxLevel = 3),
-//		PotionTypeInfo(ModPotions.CORRUPTION,   Duration(baseTicks = 0 min 20, stepTicks = 0 min 13.34, maxSteps = 3), maxLevel = 1), // TODO
+		PotionTypeInfo(ModPotions.CORRUPTION,   Duration(baseTicks = 0 min 20, stepTicks = 0 min 13.34, maxSteps = 3), maxLevel = 1),
 		PotionTypeInfo(Potions.BLINDNESS,       Duration(baseTicks = 0 min 20, stepTicks = 0 min 13.34, maxSteps = 3), maxLevel = 1),
 		PotionTypeInfo(Potions.WEAKNESS,        Duration(baseTicks = 1 min 15, stepTicks = 1 min 15,    maxSteps = 3), maxLevel = 3),
 		

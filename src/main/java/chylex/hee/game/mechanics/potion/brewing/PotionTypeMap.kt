@@ -1,5 +1,6 @@
 package chylex.hee.game.mechanics.potion.brewing
 import chylex.hee.game.mechanics.potion.PotionBase
+import chylex.hee.game.mechanics.potion.PotionCorruption
 import chylex.hee.game.mechanics.potion.PotionPurity
 import chylex.hee.system.migration.vanilla.Potion
 import chylex.hee.system.migration.vanilla.PotionType
@@ -21,7 +22,8 @@ object PotionTypeMap{
 		Potions.REGENERATION    to PotionTypes.REGENERATION,
 		Potions.STRENGTH        to PotionTypes.STRENGTH,
 		Potions.WEAKNESS        to PotionTypes.WEAKNESS,
-		PotionPurity            to makeType(PotionPurity)
+		PotionPurity            to makeType(PotionPurity),
+		PotionCorruption        to makeType(PotionCorruption)
 	)
 	
 	private val TYPE_NO_EFFECT_OVERRIDES = mutableMapOf<PotionType, PotionType>()

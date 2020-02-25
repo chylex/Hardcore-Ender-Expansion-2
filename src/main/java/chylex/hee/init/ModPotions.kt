@@ -1,5 +1,6 @@
 package chylex.hee.init
 import chylex.hee.HEE
+import chylex.hee.game.mechanics.potion.PotionCorruption
 import chylex.hee.game.mechanics.potion.PotionLifeless
 import chylex.hee.game.mechanics.potion.PotionPurity
 import chylex.hee.game.mechanics.potion.brewing.PotionBrewing
@@ -26,14 +27,16 @@ import net.minecraftforge.fml.common.Mod.EventBusSubscriber.Bus.MOD
 
 @SubscribeAllEvents(modid = HEE.ID, bus = MOD)
 object ModPotions{
-	val LIFELESS get() = PotionLifeless
-	val PURITY   get() = PotionPurity
+	val LIFELESS   get() = PotionLifeless
+	val PURITY     get() = PotionPurity
+	val CORRUPTION get() = PotionCorruption
 	
 	@SubscribeEvent
 	fun onRegisterPotions(e: RegistryEvent.Register<Potion>){
 		with(e.registry){
 			register(LIFELESS named "lifeless")
 			register(PURITY named "purity")
+			register(CORRUPTION named "corruption")
 		}
 	}
 	
@@ -41,6 +44,7 @@ object ModPotions{
 	fun onRegisterTypes(e: RegistryEvent.Register<PotionType>){
 		with(e.registry){
 			register(PotionPurity.TYPE named "purity")
+			register(PotionCorruption.TYPE named "corruption")
 			
 			val alteredTypes = PotionTypeMap.ALTERED_TYPES.map { it.registryName!!.path }.toSet()
 			
