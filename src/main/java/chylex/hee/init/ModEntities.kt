@@ -157,7 +157,10 @@ object ModEntities{
 		overriden.read(original.writeWithoutTypeId(TagCompound()))
 		
 		e.isCanceled = true
-		world.addEntity(overriden)
+		
+		if (world.chunkProvider.isChunkLoaded(original)){ // TODO deletes entity if added during chunk loading, i.e. old world, maybe try to fix?
+			world.addEntity(overriden)
+		}
 	}
 	
 	// Utilities
