@@ -7,6 +7,7 @@ import chylex.hee.game.world.territory.properties.TerritoryColors
 import chylex.hee.game.world.territory.properties.TerritoryEnvironment
 import chylex.hee.system.migration.forge.Side
 import chylex.hee.system.migration.forge.Sided
+import chylex.hee.system.migration.vanilla.EntityPlayer
 import chylex.hee.system.migration.vanilla.Potions
 import chylex.hee.system.util.Pos
 import chylex.hee.system.util.allInCenteredBoxMutable
@@ -69,41 +70,32 @@ object Territory_ForgottenTombs : ITerritoryDescription{
 		private var nightVisionFactor = 0F
 		
 		@Sided(Side.CLIENT)
-		override fun setupClient(){
-			tickClient()
+		override fun setupClient(player: EntityPlayer){
+			tickClient(player)
 			currentFogDensity.updateImmediately(MAX_FOG_DENSITY * 0.8F)
 		}
 		
 		@Sided(Side.CLIENT)
-		override fun tickClient(){
-			val player = MC.player
-			val pos = player?.lookPosVec?.let(::Pos)
+		override fun tickClient(player: EntityPlayer){
+			val pos = Pos(player.lookPosVec)
+			val world = player.world
 			
-			val light: Float
+			var levelBlock = 0
+			var levelSky = 0
 			
-			if (pos == null){
-				light = 1F
+			for(offset in pos.allInCenteredBoxMutable(1, 1, 1)){
+				levelBlock = max(levelBlock, world.getLightFor(BLOCK, offset))
+				levelSky = max(levelSky, world.getLightFor(SKY, offset))
 			}
-			else{
-				val world = player.world
-				
-				var levelBlock = 0
-				var levelSky = 0
-				
-				for(offset in pos.allInCenteredBoxMutable(1, 1, 1)){
-					levelBlock = max(levelBlock, world.getLightFor(BLOCK, offset))
-					levelSky = max(levelSky, world.getLightFor(SKY, offset))
-				}
-				
-				light = max(levelBlock / 15F, levelSky / 12F)
-			}
+			
+			val light = max(levelBlock / 15F, levelSky / 12F)
 			
 			val prev = currentFogDensity.currentValue
 			val next = MAX_FOG_DENSITY - (light.pow(0.2F) * 0.85F * MAX_FOG_DENSITY)
 			val speed = if (next > prev) 0.025F else 0.055F
 			
 			currentFogDensity.update(prev + (next - prev) * speed)
-			nightVisionFactor = if (player?.isPotionActive(Potions.NIGHT_VISION) == true) 1F else 0F
+			nightVisionFactor = if (player.isPotionActive(Potions.NIGHT_VISION)) 1F else 0F
 		}
 	}
 }
