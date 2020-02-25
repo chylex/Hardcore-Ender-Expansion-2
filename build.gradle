@@ -30,7 +30,7 @@ apply plugin: "eclipse"
 apply plugin: "kotlin"
 
 def mcversion = "1.14.4"
-def forgeversion = "28.1.116"
+def forgeversion = "28.2.0"
 def kottleversion = "1.4.0"
 
 def prefixName = "displayName = "

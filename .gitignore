@@ -5,8 +5,11 @@ out
 *.iml
 
 .idea/gradle.xml
+.idea/jarRepositories.xml
 .idea/tasks.xml
 .idea/workspace.xml
+.idea/runConfigurations/runClient.xml
+.idea/runConfigurations/runServer.xml
 
 .idea/codeStyles
 .idea/libraries
