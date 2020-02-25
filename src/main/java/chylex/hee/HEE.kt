@@ -23,6 +23,7 @@ import net.minecraft.world.dimension.DimensionType
 import net.minecraftforge.fml.ModLoadingContext
 import net.minecraftforge.fml.common.Mod
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber.Bus.MOD
+import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent
 import net.minecraftforge.fml.event.lifecycle.FMLLoadCompleteEvent
 import org.apache.logging.log4j.LogManager
@@ -52,9 +53,12 @@ object HEE{
 	}
 	
 	@SubscribeEvent
+	fun onClientSetup(@Suppress("UNUSED_PARAMETER") e: FMLClientSetupEvent){
+		Debug.initializeClient()
+	}
+	
+	@SubscribeEvent
 	fun onCommonSetup(@Suppress("UNUSED_PARAMETER") e: FMLCommonSetupEvent){
-		Debug.initialize()
-		
 		ModNetwork.initialize()
 		ModLoot.initialize()
 		

@@ -2,8 +2,8 @@ package chylex.hee.system
 import chylex.hee.client.util.MC
 import chylex.hee.proxy.Environment
 import chylex.hee.system.migration.forge.Side
+import chylex.hee.system.migration.forge.Sided
 import chylex.hee.system.migration.forge.SubscribeEvent
-import net.minecraft.client.renderer.BannerTextures
 import net.minecraftforge.client.event.GuiOpenEvent
 import net.minecraftforge.client.event.InputEvent.KeyInputEvent
 import net.minecraftforge.common.MinecraftForge
@@ -15,8 +15,9 @@ import java.lang.management.ManagementFactory
 object Debug{
 	val enabled = System.getProperty("hee.debug") != null
 	
-	fun initialize(){
-		if (enabled && Environment.side == Side.CLIENT){
+	@Sided(Side.CLIENT)
+	fun initializeClient(){
+		if (enabled){
 			MinecraftForge.EVENT_BUS.register(object : Any(){
 				@SubscribeEvent
 				fun onKeyPressed(e: KeyInputEvent){
@@ -32,12 +33,6 @@ object Debug{
 					}
 				}
 			})
-			
-			try{
-				enableInfiniteBannerTextures()
-			}catch(t: Throwable){
-				t.printStackTrace()
-			}
 			
 			if (canExecutePowershell("maximize.ps1")){
 				MinecraftForge.EVENT_BUS.register(object : Any(){
@@ -61,20 +56,5 @@ object Debug{
 	
 	private fun canExecutePowershell(scriptName: String): Boolean{
 		return SystemUtils.IS_OS_WINDOWS && Environment.side == Side.CLIENT && File(scriptName).exists()
-	}
-	
-	// Special features
-	
-	private fun enableInfiniteBannerTextures(){
-		with(BannerTextures.BANNER_DESIGNS.javaClass.getDeclaredField("cacheMap")){
-			isAccessible = true
-			
-			@Suppress("UNCHECKED_CAST")
-			val original = get(BannerTextures.BANNER_DESIGNS) as MutableMap<Any, Any>
-			
-			set(BannerTextures.BANNER_DESIGNS, object : MutableMap<Any, Any> by original{
-				override val size = 0
-			})
-		}
 	}
 }

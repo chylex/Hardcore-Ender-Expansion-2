@@ -18,7 +18,6 @@ function initializeCoreMod(){
                 node.visitInsn(op.RETURN);
             }));
 
-            printInstructions(instructions);
             return method;
         })
     };
