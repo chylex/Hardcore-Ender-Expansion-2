@@ -1,7 +1,9 @@
 package chylex.hee.game.mechanics.potion
+import chylex.hee.game.mechanics.potion.brewing.PotionBrewing.INFINITE_DURATION_THRESHOLD
 import chylex.hee.game.mechanics.potion.brewing.PotionTypeMap
 import chylex.hee.system.migration.MagicValues
 import chylex.hee.system.migration.vanilla.EntityLivingBase
+import chylex.hee.system.migration.vanilla.Potion
 import chylex.hee.system.migration.vanilla.Potions
 import chylex.hee.system.util.color.IntColor.Companion.RGB
 import chylex.hee.system.util.floorToInt
@@ -10,7 +12,7 @@ import net.minecraft.potion.EffectType.BENEFICIAL
 import net.minecraft.potion.EffectType.HARMFUL
 import kotlin.math.max
 
-object PotionPurity : PotionBase(color = RGB(73, 217, 255), kind = BENEFICIAL){
+object PotionPurity : Potion(BENEFICIAL, RGB(73, 217, 255).i){
 	const val MIN_DURATION = 60 // allow animations to finish, must be > 10
 	
 	val TYPE

@@ -1,5 +1,4 @@
 package chylex.hee.game.mechanics.potion.brewing
-import chylex.hee.game.mechanics.potion.PotionBase
 import chylex.hee.game.mechanics.potion.PotionCorruption
 import chylex.hee.game.mechanics.potion.PotionPurity
 import chylex.hee.system.migration.vanilla.Potion
@@ -31,7 +30,7 @@ object PotionTypeMap{
 	val ALTERED_TYPES
 		get() = TYPE_MAPPING.values
 	
-	private fun makeType(potion: PotionBase): PotionType{
+	private fun makeType(potion: Potion): PotionType{
 		return PotionType(PotionBrewing.INFO.getValue(potion).baseEffect)
 	}
 	

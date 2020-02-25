@@ -4,11 +4,12 @@ import chylex.hee.game.block.fluid.FluidEnderGoo
 import chylex.hee.system.migration.forge.EventPriority
 import chylex.hee.system.migration.forge.SubscribeAllEvents
 import chylex.hee.system.migration.forge.SubscribeEvent
+import chylex.hee.system.migration.vanilla.Potion
 import net.minecraft.potion.EffectType.HARMFUL
 import net.minecraftforge.event.entity.living.LivingHealEvent
 
 @SubscribeAllEvents(modid = HEE.ID)
-object PotionLifeless : PotionBase(color = FluidEnderGoo.rgbColor, kind = HARMFUL){
+object PotionLifeless : Potion(HARMFUL, FluidEnderGoo.rgbColor.i){
 	@SubscribeEvent(EventPriority.LOWEST)
 	fun onLivingHeal(e: LivingHealEvent){
 		if (e.entityLiving.isPotionActive(this)){

@@ -1,5 +1,5 @@
 package chylex.hee.game.item
-import chylex.hee.game.mechanics.potion.PotionBase
+import chylex.hee.game.mechanics.potion.brewing.PotionBrewing.INFINITE_DURATION_THRESHOLD
 import chylex.hee.game.mechanics.trinket.TrinketHandler
 import chylex.hee.system.migration.forge.EventPriority
 import chylex.hee.system.migration.forge.SubscribeEvent
@@ -70,7 +70,7 @@ class ItemRingOfHunger(properties: Properties) : ItemAbstractTrinket(properties)
 			
 			for((type, effect) in e.entityLiving.activePotionMap){
 				if (type.effectType == HARMFUL){
-					if (effect.duration >= PotionBase.INFINITE_DURATION_THRESHOLD){
+					if (effect.duration >= INFINITE_DURATION_THRESHOLD){
 						restoredDurability = it.maxDamage.toFloat()
 						break
 					}

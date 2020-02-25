@@ -9,6 +9,9 @@ import net.minecraft.item.ItemStack
 import net.minecraft.potion.PotionUtils
 
 object PotionBrewing{
+	const val INFINITE_DURATION = 32767
+	const val INFINITE_DURATION_THRESHOLD = 32147 // values >= this threshold should be considered infinite
+	
 	val INFO = arrayOf(
 		PotionTypeInfo(Potions.INSTANT_HEALTH,  maxLevel = 2),
 		PotionTypeInfo(Potions.FIRE_RESISTANCE, Duration(baseTicks = 3 min 20, stepTicks = 3 min 10,    maxSteps = 4), maxLevel = 1),

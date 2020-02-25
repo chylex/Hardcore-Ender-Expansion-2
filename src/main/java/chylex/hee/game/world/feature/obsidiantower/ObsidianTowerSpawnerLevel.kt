@@ -1,5 +1,5 @@
 package chylex.hee.game.world.feature.obsidiantower
-import chylex.hee.game.mechanics.potion.PotionBase.Companion.INFINITE_DURATION
+import chylex.hee.game.mechanics.potion.brewing.PotionBrewing.INFINITE_DURATION
 import chylex.hee.system.migration.vanilla.Potion
 import chylex.hee.system.migration.vanilla.Potions
 import chylex.hee.system.util.makeEffect

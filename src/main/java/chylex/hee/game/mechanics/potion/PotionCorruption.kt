@@ -14,7 +14,7 @@ import net.minecraft.potion.EffectType.HARMFUL
 import net.minecraft.potion.HealthBoostEffect
 
 @SubscribeAllEvents(modid = HEE.ID)
-object PotionCorruption : PotionBase(color = RGB(1, 1, 1), kind = HARMFUL){
+object PotionCorruption : Potion(HARMFUL, RGB(1, 1, 1).i){
 	val TYPE
 		get() = PotionTypeMap.getType(this)
 	

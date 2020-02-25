@@ -4,8 +4,8 @@ import chylex.hee.game.block.fluid.distances.FlowingFluid5.Companion.FLOW_DISTAN
 import chylex.hee.game.block.info.Materials
 import chylex.hee.game.fx.FxBlockData
 import chylex.hee.game.fx.FxBlockHandler
-import chylex.hee.game.mechanics.potion.PotionBase.Companion.INFINITE_DURATION_THRESHOLD
 import chylex.hee.game.mechanics.potion.PotionPurity.MIN_DURATION
+import chylex.hee.game.mechanics.potion.brewing.PotionBrewing.INFINITE_DURATION_THRESHOLD
 import chylex.hee.game.particle.ParticleSmokeCustom
 import chylex.hee.game.particle.spawner.ParticleSpawnerCustom
 import chylex.hee.game.particle.util.IOffset.Constant
