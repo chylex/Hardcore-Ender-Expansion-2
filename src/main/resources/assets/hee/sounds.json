@@ -19,22 +19,22 @@
   },
   "item.revitalization_substance.use.success": {
     "sounds": [ "hee:item/revitalization_substance_use" ],
-    "subtitle": "subtitles.item.revitalization_substance.use.success"
+    "subtitle": "subtitles.hee.item.revitalization_substance.use.success"
   },
   "item.revitalization_substance.use.fail": {
     "sounds": [ "hee:item/revitalization_substance_use_fail" ],
-    "subtitle": "subtitles.item.revitalization_substance.use.fail"
+    "subtitle": "subtitles.hee.item.revitalization_substance.use.fail"
   },
   "item.table_link.use.success": {
     "sounds": [ "hee:item/table_link_use" ],
-    "subtitle": "subtitles.item.table_link.use.success"
+    "subtitle": "subtitles.hee.item.table_link.use.success"
   },
   "item.table_link.use.special": {
     "sounds": [ "hee:item/table_link_use" ]
   },
   "item.table_link.use.fail": {
     "sounds": [ "hee:item/table_link_use_fail" ],
-    "subtitle": "subtitles.item.table_link.use.fail"
+    "subtitle": "subtitles.hee.item.table_link.use.fail"
   },
   "entity.revitalization_substance.heal": {
     "sounds": [ "minecraft:random/fizz" ],
