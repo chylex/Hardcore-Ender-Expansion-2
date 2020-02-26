@@ -23,12 +23,13 @@ import chylex.hee.system.util.getTile
 import chylex.hee.system.util.use
 import net.minecraft.item.Item
 import net.minecraft.tileentity.TileEntityType
+import net.minecraft.util.math.BlockPos
 import org.apache.commons.lang3.math.Fraction
 
 abstract class TileEntityBaseTable(type: TileEntityType<out TileEntityBaseTable>) : TileEntityBaseSpecialFirstTick(type){
 	private companion object{
 		private const val MAX_CLUSTER_DISTANCE = 12
-		private const val MAX_PEDESTAL_DISTANCE = 6
+		private const val MAX_PEDESTAL_DISTANCE = 4.5
 		
 		private const val PROCESS_REFRESH_RATE = 10
 		
@@ -47,6 +48,12 @@ abstract class TileEntityBaseTable(type: TileEntityType<out TileEntityBaseTable>
 	
 	protected abstract val processSerializer: ITableProcessSerializer
 	protected abstract val processTickRate: Int
+	
+	val hasSupportingItem
+		get() = currentProcesses.any { it is ProcessSupportingItemHolder }
+	
+	val totalFreePedestals
+		get() = pedestalHandler.inputPedestalTiles.count { !isPedestalBusy(it) }
 	
 	private var tickCounterRefresh = 0
 	private var tickCounterProcessing = 0
@@ -193,11 +200,17 @@ abstract class TileEntityBaseTable(type: TileEntityType<out TileEntityBaseTable>
 			return false
 		}
 		
-		override fun requestUseSupportingItem(item: Item, amount: Int): Boolean{
-			return currentProcesses.firstOrNull { it is ProcessSupportingItemHolder && it.useItem(item, amount) } != null
+		override fun requestUseSupportingItem(item: Item, amount: Int): BlockPos?{
+			for(foundProcess in currentProcesses){
+				if (foundProcess is ProcessSupportingItemHolder && foundProcess.useItem(item, amount)){
+					return foundProcess.pedestalPos
+				}
+			}
+			
+			return null
 		}
 		
-		override fun getOutputPedestal(candidate: TileEntityTablePedestal): TileEntityTablePedestal {
+		override fun getOutputPedestal(candidate: TileEntityTablePedestal): TileEntityTablePedestal{
 			return pedestalHandler.dedicatedOutputPedestalTile ?: candidate
 		}
 		

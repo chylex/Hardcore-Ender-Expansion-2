@@ -12,7 +12,7 @@ import chylex.hee.system.util.use
 import net.minecraft.util.math.BlockPos
 import net.minecraftforge.common.util.INBTSerializable
 
-class TableLinkedPedestalHandler(private val table: TileEntityBaseTable, maxDistance: Int) : INBTSerializable<TagCompound>{
+class TableLinkedPedestalHandler(private val table: TileEntityBaseTable, maxDistance: Double) : INBTSerializable<TagCompound>{
 	private companion object{
 		private const val POS_TAG = "Pos"
 		private const val OUTPUT_TAG = "Output"

@@ -3,6 +3,7 @@ import chylex.hee.client.render.util.NO_TINT
 import chylex.hee.game.block.entity.TileEntityTablePedestal
 import chylex.hee.game.block.info.BlockBuilder
 import chylex.hee.game.block.util.Property
+import chylex.hee.game.mechanics.table.PedestalStatusIndicator
 import chylex.hee.init.ModItems
 import chylex.hee.system.migration.forge.Side
 import chylex.hee.system.migration.forge.Sided
@@ -155,6 +156,9 @@ class BlockTablePedestal(builder: BlockBuilder) : BlockSimpleShaped(builder, COM
 				tile.dropAllItems()
 			}
 		}
+		else if (tile.isDedicatedOutput){
+			tile.dropAllItems()
+		}
 		else if (!isItemAreaBlocked(world, pos)){
 			tile.addToInput(heldItem.copyIf { player.isCreative })
 		}
@@ -211,7 +215,7 @@ class BlockTablePedestal(builder: BlockBuilder) : BlockSimpleShaped(builder, COM
 			
 			return when(tintIndex){
 				1 -> pos.getTile<TileEntityTablePedestal>(world)?.tableIndicatorColor?.i ?: NO_TINT
-				2 -> pos.getTile<TileEntityTablePedestal>(world)?.statusIndicatorColorClient ?: NO_TINT
+				2 -> pos.getTile<TileEntityTablePedestal>(world)?.statusIndicatorColorClient ?: PedestalStatusIndicator.Contents.NONE.color.i
 				else -> NO_TINT
 			}
 		}

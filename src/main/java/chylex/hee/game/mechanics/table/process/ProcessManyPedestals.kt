@@ -96,8 +96,11 @@ abstract class ProcessManyPedestals(private val table: TileEntityBaseTable, pos:
 			is Work -> {
 				val currentTime = table.wrld.totalTime
 				
-				if (context.isPaused || tiles.any { currentTime - it.inputModTime < 20L } || !context.ensureDustAvailable(dustPerTick)){
+				if (context.isPaused || tiles.any { currentTime - it.inputModTime < 20L }){
 					setStatusIndicator(tiles, PAUSED)
+				}
+				else if (!context.ensureDustAvailable(dustPerTick)){
+					setStatusIndicator(tiles, BLOCKED)
 				}
 				else{
 					val inputs = Array(tiles.size){ tiles[it].itemInputCopy }
@@ -125,7 +128,7 @@ abstract class ProcessManyPedestals(private val table: TileEntityBaseTable, pos:
 				if (context.isPaused){
 					setStatusIndicator(tiles, PAUSED)
 				}
-				else if (tiles.find { it.pos == state.pedestal }?.let(context::getOutputPedestal)?.addToOutput(state.stacks) == true){
+				else if (state.pedestal.getTile<TileEntityTablePedestal>(table.wrld)?.let(context::getOutputPedestal)?.addToOutput(state.stacks) == true){
 					for(tile in tiles){
 						tile.replaceInput(tile.itemInputCopy.apply(whenFinished::transform), silent = false)
 					}
