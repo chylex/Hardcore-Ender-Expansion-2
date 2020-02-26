@@ -267,6 +267,7 @@
   "effect.hee.lifeless": "Lifeless",
   "effect.hee.purity": "Purity",
   "effect.hee.corruption": "Corruption",
+  "effect.hee.banishment": "Banishment",
 
   "item.minecraft.potion.effect.purity": "Potion of Purity",
   "item.minecraft.splash_potion.effect.purity": "Splash Potion of Purity",
@@ -277,6 +278,11 @@
   "item.minecraft.splash_potion.effect.corruption": "Splash Potion of Corruption",
   "item.minecraft.lingering_potion.effect.corruption": "Lingering Potion of Corruption",
   "item.minecraft.tipped_arrow.effect.corruption": "Arrow of Corruption",
+
+  "item.minecraft.potion.effect.banishment": "Potion of Banishment",
+  "item.minecraft.splash_potion.effect.banishment": "Splash Potion of Banishment",
+  "item.minecraft.lingering_potion.effect.banishment": "Lingering Potion of Banishment",
+  "item.minecraft.tipped_arrow.effect.banishment": "Arrow of Banishment",
 
   "gui.hee.amulet_of_recovery.move_all": "Move All",
   "gui.hee.loot_chest.title": "Loot Chest",

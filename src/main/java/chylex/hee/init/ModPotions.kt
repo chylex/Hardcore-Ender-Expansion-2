@@ -1,5 +1,6 @@
 package chylex.hee.init
 import chylex.hee.HEE
+import chylex.hee.game.mechanics.potion.PotionBanishment
 import chylex.hee.game.mechanics.potion.PotionCorruption
 import chylex.hee.game.mechanics.potion.PotionLifeless
 import chylex.hee.game.mechanics.potion.PotionPurity
@@ -30,6 +31,7 @@ object ModPotions{
 	val LIFELESS   get() = PotionLifeless
 	val PURITY     get() = PotionPurity
 	val CORRUPTION get() = PotionCorruption
+	val BANISHMENT get() = PotionBanishment
 	
 	@SubscribeEvent
 	fun onRegisterPotions(e: RegistryEvent.Register<Potion>){
@@ -37,6 +39,7 @@ object ModPotions{
 			register(LIFELESS named "lifeless")
 			register(PURITY named "purity")
 			register(CORRUPTION named "corruption")
+			register(BANISHMENT named "banishment")
 		}
 	}
 	
@@ -45,6 +48,7 @@ object ModPotions{
 		with(e.registry){
 			register(PotionPurity.TYPE named "purity")
 			register(PotionCorruption.TYPE named "corruption")
+			register(PotionBanishment.TYPE named "banishment")
 			
 			val alteredTypes = PotionTypeMap.ALTERED_TYPES.map { it.registryName!!.path }.toSet()
 			

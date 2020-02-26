@@ -20,6 +20,7 @@ import chylex.hee.game.item.ItemAbstractEnergyUser
 import chylex.hee.game.item.ItemCompost
 import chylex.hee.game.item.ItemRevitalizationSubstance
 import chylex.hee.game.item.ItemTableLink
+import chylex.hee.game.mechanics.potion.PotionBanishment
 import chylex.hee.game.mechanics.scorching.ScorchingHelper
 import chylex.hee.game.mechanics.table.TableParticleHandler
 import chylex.hee.game.world.util.Teleporter
@@ -63,7 +64,8 @@ class PacketClientFX<T : IFxData>() : BaseClientPacket(){
 			EntityTechnicalIgneousPlateLogic.FX_OVERHEAT,
 			EntityTokenHolder.FX_BREAK,
 			EndermanTeleportHandler.FX_TELEPORT_FAIL,
-			EndermanTeleportHandler.FX_TELEPORT_OUT_OF_WORLD
+			EndermanTeleportHandler.FX_TELEPORT_OUT_OF_WORLD,
+			PotionBanishment.FX_BANISH
 		)
 	}
 	

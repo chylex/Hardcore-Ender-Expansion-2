@@ -33,7 +33,7 @@ object PotionBrewing{
 		PotionTypeInfo(Potions.INSTANT_DAMAGE,  maxLevel = 2),
 		PotionTypeInfo(Potions.SLOWNESS,        Duration(baseTicks = 1 min 15, stepTicks = 1 min 7.5, maxSteps = 4), maxLevel = 3),
 		PotionTypeInfo(Potions.INVISIBILITY,    Duration(baseTicks = 1 min 20, stepTicks = 1 min 16,  maxSteps = 4), maxLevel = 1),
-//		PotionTypeInfo(ModPotions.BANISHMENT,   Duration(baseTicks = 0 min 15, stepTicks = 0 min 10,  maxSteps = 3), maxLevel = 1), // TODO
+		PotionTypeInfo(ModPotions.BANISHMENT,   Duration(baseTicks = 0 min 15, stepTicks = 0 min 10,  maxSteps = 3), maxLevel = 1),
 		PotionTypeInfo(Potions.GLOWING,         Duration(baseTicks = 0 min 12, stepTicks = 0 min 8,   maxSteps = 3), maxLevel = 1)
 	).associateBy { it.potion }
 	
@@ -67,7 +67,7 @@ object PotionBrewing{
 		Potions.SPEED          to Potions.SLOWNESS,
 		Potions.JUMP_BOOST     to Potions.SLOWNESS,
 		Potions.NIGHT_VISION   to Potions.INVISIBILITY,
-		// TODO CORRUPTION     to BANISHMENT,
+		ModPotions.CORRUPTION  to ModPotions.BANISHMENT,
 		Potions.BLINDNESS      to Potions.GLOWING
 	)
 	
