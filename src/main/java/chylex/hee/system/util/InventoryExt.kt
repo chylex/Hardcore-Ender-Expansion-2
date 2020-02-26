@@ -3,6 +3,7 @@
 package chylex.hee.system.util
 import net.minecraft.inventory.IInventory
 import net.minecraft.item.ItemStack
+import kotlin.math.min
 
 // Renaming
 
@@ -75,5 +76,38 @@ fun IInventory.createSnapshot(): Array<ItemStack>{
 fun IInventory.restoreSnapshot(backup: Array<ItemStack>){
 	for((slot, stack) in backup.withIndex()){
 		this.setStack(slot, stack)
+	}
+}
+
+// Management
+
+fun IInventory.mergeStackProperly(merging: ItemStack){ // addItem is pretty fucking useless because it ignores NBT...
+	for((_, stack) in this.nonEmptySlots){
+		if (merging.item === stack.item && ItemStack.areItemStackTagsEqual(merging, stack)){
+			val maxMovable = min(inventoryStackLimit, stack.maxStackSize) - stack.size
+			val movedItems = min(merging.size, maxMovable)
+			
+			if (movedItems > 0){
+				stack.grow(movedItems)
+				merging.shrink(movedItems)
+				markDirty()
+				
+				if (stack.isEmpty){
+					break
+				}
+			}
+		}
+	}
+	
+	if (merging.isEmpty){
+		return
+	}
+	
+	for((slot, stack) in this.allSlots){
+		if (stack.isEmpty){
+			this.setStack(slot, merging.copy())
+			merging.size = 0
+			break
+		}
 	}
 }

@@ -8,6 +8,7 @@ import chylex.hee.system.util.createSnapshot
 import chylex.hee.system.util.getStack
 import chylex.hee.system.util.isNotEmpty
 import chylex.hee.system.util.loadInventory
+import chylex.hee.system.util.mergeStackProperly
 import chylex.hee.system.util.nextFloat
 import chylex.hee.system.util.nextVector2
 import chylex.hee.system.util.nonEmptySlots
@@ -96,7 +97,7 @@ class PedestalInventoryHandler(private val updateCallback: (Boolean) -> Unit) : 
 		pauseInventoryUpdates = true
 		
 		val prevOutput = itemOutput.createSnapshot()
-		val hasStoredEverything = stacks.all { itemOutput.addItem(it).isEmpty }
+		val hasStoredEverything = stacks.all { it.copy().apply(itemOutput::mergeStackProperly).isEmpty }
 		
 		if (!hasStoredEverything){
 			itemOutput.restoreSnapshot(prevOutput)
