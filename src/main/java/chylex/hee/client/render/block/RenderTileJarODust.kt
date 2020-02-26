@@ -172,19 +172,22 @@ object RenderTileJarODust : TileEntityRendererFast<TileEntityJarODust>(){
 		private val layers = DustLayers(TileEntityJarODust.DUST_CAPACITY)
 		
 		override fun renderByItem(stack: ItemStack){
-			val nbt = stack.heeTagOrNull?.getListOfCompounds(BlockJarODust.LAYERS_TAG) ?: return
+			val nbt = stack.heeTagOrNull?.getListOfCompounds(BlockJarODust.LAYERS_TAG)
 			val player = MC.player ?: return
 			
-			layers.deserializeNBT(nbt)
-			
 			GL.enableCull()
-			RenderHelper.disableStandardItemLighting()
 			
-			TESSELLATOR.draw(GL_QUADS, DefaultVertexFormats.BLOCK){
-				renderLayers(layers, 0.0, 0.0, 0.0, world.getCombinedLight(Pos(player), 0), this, renderBottom = true)
+			if (nbt != null){
+				layers.deserializeNBT(nbt)
+				RenderHelper.disableStandardItemLighting()
+				
+				TESSELLATOR.draw(GL_QUADS, DefaultVertexFormats.BLOCK){
+					renderLayers(layers, 0.0, 0.0, 0.0, world.getCombinedLight(Pos(player), 0), this, renderBottom = true)
+				}
+				
+				RenderHelper.enableStandardItemLighting()
 			}
 			
-			RenderHelper.enableStandardItemLighting()
 			MC.instance.blockRendererDispatcher.blockModelRenderer.renderModelBrightnessColor(MODEL, 1F, 1F, 1F, 1F)
 			GL.disableCull()
 		}
