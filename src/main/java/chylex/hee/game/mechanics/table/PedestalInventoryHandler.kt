@@ -1,6 +1,7 @@
 package chylex.hee.game.mechanics.table
 import chylex.hee.game.block.BlockTablePedestal
 import chylex.hee.game.container.util.InvReverseWrapper
+import chylex.hee.init.ModItems
 import chylex.hee.system.migration.vanilla.EntityItem
 import chylex.hee.system.util.TagCompound
 import chylex.hee.system.util.copyIf
@@ -97,7 +98,7 @@ class PedestalInventoryHandler(private val updateCallback: (Boolean) -> Unit) : 
 		pauseInventoryUpdates = true
 		
 		val prevOutput = itemOutput.createSnapshot()
-		val hasStoredEverything = stacks.all { it.copy().apply(itemOutput::mergeStackProperly).isEmpty }
+		val hasStoredEverything = stacks.all { it.copy().apply(::tryMergeIntoOutput).isEmpty }
 		
 		if (!hasStoredEverything){
 			itemOutput.restoreSnapshot(prevOutput)
@@ -111,6 +112,31 @@ class PedestalInventoryHandler(private val updateCallback: (Boolean) -> Unit) : 
 		}
 		
 		return false
+	}
+	
+	private fun tryMergeIntoOutput(merging: ItemStack){
+		if (merging.item === ModItems.EXPERIENCE_BOTTLE){
+			val bottle = ModItems.EXPERIENCE_BOTTLE
+			
+			for((_, stack) in itemOutput.nonEmptySlots){
+				if (stack.item === bottle){
+					while(bottle.mergeBottles(merging, stack) && bottle.isFullOfExperience(stack)){
+						val moved = stack.copy().also { it.size = 1 }
+						
+						stack.shrink(1)
+						itemOutput.mergeStackProperly(moved)
+					}
+					
+					if (merging.isEmpty){
+						return
+					}
+				}
+			}
+		}
+		
+		if (merging.isNotEmpty){
+			itemOutput.mergeStackProperly(merging)
+		}
 	}
 	
 	fun replaceInput(newInput: ItemStack, silent: Boolean): Boolean{

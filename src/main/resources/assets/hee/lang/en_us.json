@@ -162,6 +162,7 @@
 
   "item.hee.table_link": "Table Link",
   "item.hee.knowledge_note": "Knowledge Note",
+  "item.hee.experience_bottle.tooltip": "§a%s §2experience",
 
   "item.hee.void_miner": "Void Miner",
   "item.hee.void_bucket": "Void Bucket",

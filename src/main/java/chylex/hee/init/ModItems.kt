@@ -1,6 +1,7 @@
 package chylex.hee.init
 import chylex.hee.HEE
 import chylex.hee.game.block.dispenser.DispenseEndermanHead
+import chylex.hee.game.block.dispenser.DispenseExperienceBottle
 import chylex.hee.game.block.dispenser.DispenseWaterExtinguishIgneousPlate
 import chylex.hee.game.block.fluid.FluidEnderGoo
 import chylex.hee.game.block.fluid.FluidEnderGooPurified
@@ -14,6 +15,7 @@ import chylex.hee.game.item.ItemElytraOverride
 import chylex.hee.game.item.ItemEndPowder
 import chylex.hee.game.item.ItemEnergyOracle
 import chylex.hee.game.item.ItemEnergyReceptacle
+import chylex.hee.game.item.ItemExperienceBottleCustom
 import chylex.hee.game.item.ItemEyeOfEnderOverride
 import chylex.hee.game.item.ItemFlintAndInfernium
 import chylex.hee.game.item.ItemIgneousRock
@@ -99,9 +101,10 @@ object ModItems{
 	
 	// Items: Utilities
 	
-	@JvmField val TABLE_LINK     = ItemTableLink(defaultProps) named "table_link"
-	@JvmField val KNOWLEDGE_NOTE = Item(defaultProps) named "knowledge_note" // TODO
-	@JvmField val ENDERMAN_HEAD  = ItemBlockHead(ModBlocks.ENDERMAN_HEAD, ModBlocks.ENDERMAN_WALL_HEAD, defaultProps) named "enderman_head"
+	@JvmField val TABLE_LINK        = ItemTableLink(defaultProps) named "table_link"
+	@JvmField val KNOWLEDGE_NOTE    = Item(defaultProps) named "knowledge_note" // TODO
+	@JvmField val ENDERMAN_HEAD     = ItemBlockHead(ModBlocks.ENDERMAN_HEAD, ModBlocks.ENDERMAN_WALL_HEAD, defaultProps) named "enderman_head"
+	@JvmField val EXPERIENCE_BOTTLE = ItemExperienceBottleCustom(defaultProps) named "experience_bottle"
 	
 	// Items: Tools
 	
@@ -184,6 +187,7 @@ object ModItems{
 			register(TABLE_LINK)
 			register(KNOWLEDGE_NOTE)
 			register(ENDERMAN_HEAD)
+			register(EXPERIENCE_BOTTLE)
 			
 			register(VOID_MINER)
 			register(VOID_BUCKET)
@@ -241,6 +245,7 @@ object ModItems{
 		// dispenser behavior
 		
 		BlockDispenser.registerDispenseBehavior(ENDERMAN_HEAD, DispenseEndermanHead)
+		BlockDispenser.registerDispenseBehavior(EXPERIENCE_BOTTLE, DispenseExperienceBottle)
 		BlockDispenser.registerDispenseBehavior(Items.WATER_BUCKET, DispenseWaterExtinguishIgneousPlate(BlockDispenser.DISPENSE_BEHAVIOR_REGISTRY[Items.WATER_BUCKET]))
 	}
 	

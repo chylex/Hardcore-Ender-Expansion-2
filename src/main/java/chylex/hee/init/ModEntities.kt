@@ -21,6 +21,7 @@ import chylex.hee.game.entity.living.EntityMobUndread
 import chylex.hee.game.entity.living.EntityMobVampireBat
 import chylex.hee.game.entity.living.EntityMobVillagerDying
 import chylex.hee.game.entity.projectile.EntityProjectileEnderPearl
+import chylex.hee.game.entity.projectile.EntityProjectileExperienceBottle
 import chylex.hee.game.entity.projectile.EntityProjectileEyeOfEnder
 import chylex.hee.game.entity.projectile.EntityProjectileSpatialDash
 import chylex.hee.game.entity.technical.EntityTechnicalCausatumEvent
@@ -77,9 +78,10 @@ object ModEntities{
 	val VAMPIRE_BAT           = build<EntityMobVampireBat>(MONSTER).size(0.5F, 0.9F).tracker(80, 3, true).name("vampire_bat")
 	val VILLAGER_DYING        = build<EntityMobVillagerDying>(MISC).size(0.6F, 1.95F).tracker(80, 3, false).name("villager_dying")
 	
-	val ENDER_PEARL  = build<EntityProjectileEnderPearl>(MISC).size(0.35F, 0.35F).tracker(64, 10, true).name("ender_pearl")
-	val EYE_OF_ENDER = build<EntityProjectileEyeOfEnder>(MISC).size(0.5F, 1F).tracker(64, 60, false).name("eye_of_ender")
-	val SPATIAL_DASH = build<EntityProjectileSpatialDash>(MISC).size(0.2F, 0.2F).tracker(64, 10, true).name("spatial_dash")
+	val ENDER_PEARL       = build<EntityProjectileEnderPearl>(MISC).size(0.35F, 0.35F).tracker(64, 10, true).name("ender_pearl")
+	val EXPERIENCE_BOTTLE = build<EntityProjectileExperienceBottle>(MISC).size(0.25F, 0.25F).tracker(64, 10, false).name("experience_bottle")
+	val EYE_OF_ENDER      = build<EntityProjectileEyeOfEnder>(MISC).size(0.5F, 1F).tracker(64, 60, false).name("eye_of_ender")
+	val SPATIAL_DASH      = build<EntityProjectileSpatialDash>(MISC).size(0.2F, 0.2F).tracker(64, 10, true).name("spatial_dash")
 	
 	val CAUSATUM_EVENT      = build<EntityTechnicalCausatumEvent>(MISC).size(0F, 0F).immuneToFire().tracker(1, Int.MAX_VALUE, false).name("causatum_event")
 	val IGNEOUS_PLATE_LOGIC = build<EntityTechnicalIgneousPlateLogic>(MISC).size(0F, 0F).tracker(32, 10, false).name("igneous_plate_logic")
@@ -114,6 +116,7 @@ object ModEntities{
 			register(VILLAGER_DYING)
 			
 			register(ENDER_PEARL)
+			register(EXPERIENCE_BOTTLE)
 			register(EYE_OF_ENDER)
 			register(SPATIAL_DASH)
 			
