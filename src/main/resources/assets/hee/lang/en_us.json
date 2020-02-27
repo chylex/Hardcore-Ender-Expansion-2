@@ -162,6 +162,9 @@
   "item.hee.void_salad.double": "Void Void Salad",
   "item.hee.void_salad.mega": "Mega Void Salad",
 
+  "item.hee.accumulation_table_core": "Accumulation Table Core",
+  "item.hee.experience_table_core": "Experience Table Core",
+
   "item.hee.table_link": "Table Link",
   "item.hee.knowledge_note": "Knowledge Note",
   "item.hee.experience_bottle.tooltip": "§a%s §2experience",

@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "VBV",
+    "L#L",
+    "VBV"
+  ],
+  "key": {
+    "#": { "item": "hee:ticking_core" },
+    "V": { "item": "hee:void_essence" },
+    "L": { "item": "minecraft:lapis_lazuli" },
+    "B": { "tag": "hee:experience_bottles" }
+  },
+  "result": {
+    "item": "hee:experience_table_core"
+  }
+}

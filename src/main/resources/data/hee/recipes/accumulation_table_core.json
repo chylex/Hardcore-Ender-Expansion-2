@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "GEG",
+    "E#E",
+    "GEG"
+  ],
+  "key": {
+    "#": { "item": "hee:ticking_core" },
+    "G": { "item": "minecraft:gold_nugget" },
+    "E": { "item": "hee:ethereum" }
+  },
+  "result": {
+    "item": "hee:accumulation_table_core"
+  }
+}

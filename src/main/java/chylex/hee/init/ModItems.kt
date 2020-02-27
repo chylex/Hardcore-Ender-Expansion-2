@@ -31,6 +31,7 @@ import chylex.hee.game.item.ItemScorchingSword
 import chylex.hee.game.item.ItemScorchingTool
 import chylex.hee.game.item.ItemShulkerBoxOverride
 import chylex.hee.game.item.ItemSpatialDashGem
+import chylex.hee.game.item.ItemTableCore
 import chylex.hee.game.item.ItemTableLink
 import chylex.hee.game.item.ItemTalismanOfGriefing
 import chylex.hee.game.item.ItemTotemOfUndyingCustom
@@ -99,6 +100,11 @@ object ModItems{
 	
 	@JvmField val COMPOST    = ItemCompost(defaultProps) named "compost"
 	@JvmField val VOID_SALAD = ItemVoidSalad(baseProps.maxStackSize(1).food(ItemVoidSalad.FOOD)) named "void_salad"
+	
+	// Items: Table cores
+	
+	@JvmField val ACCUMULATION_TABLE_CORE = ItemTableCore(arrayOf(ModBlocks.ACCUMULATION_TABLE_TIER_1, ModBlocks.ACCUMULATION_TABLE_TIER_2, ModBlocks.ACCUMULATION_TABLE_TIER_3), defaultProps) named "accumulation_table_core"
+	@JvmField val EXPERIENCE_TABLE_CORE   = ItemTableCore(arrayOf(ModBlocks.EXPERIENCE_TABLE_TIER_1, ModBlocks.EXPERIENCE_TABLE_TIER_2, ModBlocks.EXPERIENCE_TABLE_TIER_3), defaultProps) named "experience_table_core"
 	
 	// Items: Utilities
 	
@@ -185,6 +191,9 @@ object ModItems{
 			
 			register(COMPOST)
 			register(VOID_SALAD)
+			
+			register(ACCUMULATION_TABLE_CORE)
+			register(EXPERIENCE_TABLE_CORE)
 			
 			register(TABLE_LINK)
 			register(KNOWLEDGE_NOTE)
