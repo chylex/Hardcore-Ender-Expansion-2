@@ -90,6 +90,7 @@ object ModItems{
 	@JvmField val OBSIDIAN_ROD             = Item(defaultProps) named "obsidian_rod"
 	@JvmField val PURITY_EXTRACT           = Item(defaultProps) named "purity_extract"
 	@JvmField val STATIC_CORE              = Item(defaultProps) named "static_core"
+	@JvmField val TICKING_CORE             = Item(defaultProps) named "ticking_core"
 	@JvmField val DIRTY_INFERNIUM_INGOT    = Item(defaultProps) named "dirty_infernium_ingot"
 	@JvmField val REVITALIZATION_SUBSTANCE = ItemRevitalizationSubstance(baseProps.maxStackSize(16)) named "revitalization_substance"
 	@JvmField val BINDING_ESSENCE          = ItemBindingEssence(baseProps.maxStackSize(16)) named "binding_essence"
@@ -177,6 +178,7 @@ object ModItems{
 			register(OBSIDIAN_ROD)
 			register(PURITY_EXTRACT)
 			register(STATIC_CORE)
+			register(TICKING_CORE)
 			register(DIRTY_INFERNIUM_INGOT)
 			register(REVITALIZATION_SUBSTANCE)
 			register(BINDING_ESSENCE)
