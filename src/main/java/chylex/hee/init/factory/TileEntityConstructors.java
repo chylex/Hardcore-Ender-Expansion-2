@@ -5,6 +5,7 @@ import chylex.hee.game.block.entity.TileEntityDarkChest;
 import chylex.hee.game.block.entity.TileEntityEndPortalAcceptor;
 import chylex.hee.game.block.entity.TileEntityEnergyCluster;
 import chylex.hee.game.block.entity.TileEntityExperienceGate;
+import chylex.hee.game.block.entity.TileEntityExperienceTable;
 import chylex.hee.game.block.entity.TileEntityIgneousPlate;
 import chylex.hee.game.block.entity.TileEntityInfusedTNT;
 import chylex.hee.game.block.entity.TileEntityJarODust;
@@ -29,6 +30,7 @@ public final class TileEntityConstructors{
 		add(TileEntityEndPortalAcceptor.class, TileEntityEndPortalAcceptor::new);
 		add(TileEntityEnergyCluster.class, TileEntityEnergyCluster::new);
 		add(TileEntityExperienceGate.class, TileEntityExperienceGate::new);
+		add(TileEntityExperienceTable.class, TileEntityExperienceTable::new);
 		add(TileEntityIgneousPlate.class, TileEntityIgneousPlate::new);
 		add(TileEntityInfusedTNT.class, TileEntityInfusedTNT::new);
 		add(TileEntityJarODust.class, TileEntityJarODust::new);

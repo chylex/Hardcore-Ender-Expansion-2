@@ -28,9 +28,10 @@ import net.minecraft.world.World
 import kotlin.math.min
 
 class ItemExperienceBottleCustom(builder: Properties) : ItemExpBottle(builder){
-	private companion object{
+	companion object{
 		private const val EXPERIENCE_TAG = "Experience"
-		private const val MAX_EXPERIENCE = 25
+		
+		const val MAX_EXPERIENCE = 25
 	}
 	
 	private fun setExperienceAmount(stack: ItemStack, amount: Int){

@@ -6,6 +6,7 @@ import chylex.hee.game.block.entity.TileEntityDarkChest
 import chylex.hee.game.block.entity.TileEntityEndPortalAcceptor
 import chylex.hee.game.block.entity.TileEntityEnergyCluster
 import chylex.hee.game.block.entity.TileEntityExperienceGate
+import chylex.hee.game.block.entity.TileEntityExperienceTable
 import chylex.hee.game.block.entity.TileEntityIgneousPlate
 import chylex.hee.game.block.entity.TileEntityInfusedTNT
 import chylex.hee.game.block.entity.TileEntityJarODust
@@ -34,6 +35,7 @@ object ModTileEntities{
 	val END_PORTAL_ACCEPTOR    = build<TileEntityEndPortalAcceptor>(ModBlocks.END_PORTAL_ACCEPTOR) named "end_portal_acceptor"
 	val ENERGY_CLUSTER         = build<TileEntityEnergyCluster>(ModBlocks.ENERGY_CLUSTER) named "energy_cluster"
 	val EXPERIENCE_GATE        = build<TileEntityExperienceGate>(ModBlocks.EXPERIENCE_GATE_CONTROLLER) named "experience_gate"
+	val EXPERIENCE_TABLE       = build<TileEntityExperienceTable>(ModBlocks.EXPERIENCE_TABLE_TIER_1, ModBlocks.EXPERIENCE_TABLE_TIER_2, ModBlocks.EXPERIENCE_TABLE_TIER_3) named "experience_table"
 	val IGNEOUS_PLATE          = build<TileEntityIgneousPlate>(ModBlocks.IGNEOUS_PLATE) named "igneous_plate"
 	val INFUSED_TNT            = build<TileEntityInfusedTNT>(ModBlocks.INFUSED_TNT) named "infused_tnt"
 	val JAR_O_DUST             = build<TileEntityJarODust>(ModBlocks.JAR_O_DUST) named "jar_o_dust"
@@ -54,6 +56,7 @@ object ModTileEntities{
 			register(END_PORTAL_ACCEPTOR)
 			register(ENERGY_CLUSTER)
 			register(EXPERIENCE_GATE)
+			register(EXPERIENCE_TABLE)
 			register(IGNEOUS_PLATE)
 			register(INFUSED_TNT)
 			register(JAR_O_DUST)
