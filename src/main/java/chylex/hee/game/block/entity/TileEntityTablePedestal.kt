@@ -13,7 +13,11 @@ import chylex.hee.game.mechanics.table.PedestalStatusIndicator
 import chylex.hee.game.mechanics.table.PedestalStatusIndicator.Contents.NONE
 import chylex.hee.game.mechanics.table.PedestalStatusIndicator.Contents.OUTPUTTED
 import chylex.hee.game.mechanics.table.PedestalStatusIndicator.Contents.WITH_INPUT
+import chylex.hee.game.mechanics.table.PedestalStatusIndicator.Process.BLOCKED
 import chylex.hee.game.mechanics.table.PedestalStatusIndicator.Process.DEDICATED_OUTPUT
+import chylex.hee.game.mechanics.table.PedestalStatusIndicator.Process.PAUSED
+import chylex.hee.game.mechanics.table.PedestalStatusIndicator.Process.SUPPORTING_ITEM
+import chylex.hee.game.mechanics.table.PedestalStatusIndicator.Process.WORKING
 import chylex.hee.game.particle.ParticleSmokeCustom
 import chylex.hee.game.particle.spawner.ParticleSpawnerCustom
 import chylex.hee.game.particle.util.IOffset.Constant
@@ -132,7 +136,14 @@ class TileEntityTablePedestal(type: TileEntityType<TileEntityTablePedestal>) : T
 		private set
 	
 	val outputComparatorStrength
-		get() = inventoryHandler.outputComparatorStrength
+		get() = when(statusIndicator.process ?: statusIndicator.contents){
+			PAUSED  -> 2
+			WORKING -> 3
+			BLOCKED -> 4
+			WITH_INPUT, SUPPORTING_ITEM -> 1
+			OUTPUTTED, DEDICATED_OUTPUT -> 6 + inventoryHandler.nonEmptyOutputSlots
+			else -> 0
+		}
 	
 	var stacksForRendering = emptyArray<ItemStack>()
 		private set

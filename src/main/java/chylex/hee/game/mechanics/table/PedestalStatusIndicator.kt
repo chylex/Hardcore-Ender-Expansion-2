@@ -29,8 +29,8 @@ class PedestalStatusIndicator(private val pedestal: TileEntityTablePedestal) : I
 	}
 	
 	enum class Process(override val color: IntColor) : IIndicatorColor{
-		WORKING(HCL(230.0, 100F, 72F)),
 		PAUSED(HCL(70.0, 100F, 85F)),
+		WORKING(HCL(230.0, 100F, 72F)),
 		BLOCKED(HCL(15.0, 100F, 64F)),
 		DEDICATED_OUTPUT(HCL(286.0, 100F, 82F)),
 		SUPPORTING_ITEM(RGB(255u))
