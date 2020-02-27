@@ -5,6 +5,4 @@ class BlockTableBase(builder: BlockBuilder, tier: Int, firstTier: Int) : BlockAb
 	override fun getTranslationKey(): String{
 		return "block.hee.table_base"
 	}
-	
-	// TODO
 }
