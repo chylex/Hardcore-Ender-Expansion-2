@@ -9,7 +9,7 @@ import net.minecraft.tileentity.TileEntityType
 import net.minecraft.util.math.BlockPos
 
 abstract class TileEntityBaseTableWithSupportingItem(type: TileEntityType<out TileEntityBaseTableWithSupportingItem>) : TileEntityBaseTable(type){
-	protected companion object{
+	companion object{
 		val SUPPORTING_ITEM_MAPPINGS = arrayOf(
 			Mapping("Supporting", ::ProcessSupportingItemHolder),
 			Mapping("Blocking", ::ProcessSupportingItemBlocker)

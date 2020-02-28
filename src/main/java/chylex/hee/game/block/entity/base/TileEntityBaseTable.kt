@@ -21,7 +21,7 @@ import chylex.hee.system.util.getListOfCompounds
 import chylex.hee.system.util.getState
 import chylex.hee.system.util.getTile
 import chylex.hee.system.util.use
-import net.minecraft.item.Item
+import net.minecraft.item.ItemStack
 import net.minecraft.tileentity.TileEntityType
 import net.minecraft.util.math.BlockPos
 import org.apache.commons.lang3.math.Fraction
@@ -200,10 +200,14 @@ abstract class TileEntityBaseTable(type: TileEntityType<out TileEntityBaseTable>
 			return false
 		}
 		
-		override fun requestUseSupportingItem(item: Item, amount: Int): BlockPos?{
+		override fun requestUseSupportingItem(getRequiredAmount: (ItemStack) -> Int): Pair<BlockPos, ItemStack>?{
 			for(foundProcess in currentProcesses){
-				if (foundProcess is ProcessSupportingItemHolder && foundProcess.useItem(item, amount)){
-					return foundProcess.pedestalPos
+				if (foundProcess is ProcessSupportingItemHolder){
+					val consumed = foundProcess.useItem(getRequiredAmount)
+					
+					if (consumed != null){
+						return foundProcess.pedestalPos to consumed
+					}
 				}
 			}
 			

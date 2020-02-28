@@ -11,7 +11,7 @@ import chylex.hee.system.util.getPos
 import chylex.hee.system.util.getTile
 import chylex.hee.system.util.putPos
 import chylex.hee.system.util.size
-import net.minecraft.item.Item
+import net.minecraft.item.ItemStack
 import net.minecraft.util.math.BlockPos
 
 class ProcessSupportingItemHolder(private val table: TileEntityBaseTable, pos: BlockPos) : ITableProcess{
@@ -50,13 +50,21 @@ class ProcessSupportingItemHolder(private val table: TileEntityBaseTable, pos: B
 	
 	// Methods
 	
-	fun useItem(item: Item, amount: Int): Boolean{
-		val tile = pedestalTile ?: return false
-		val input = tile.itemInputCopy.takeIf { it.item === item && it.size >= amount } ?: return false
+	fun useItem(getRequiredAmount: (ItemStack) -> Int): ItemStack?{
+		val tile = pedestalTile ?: return null
+		val input = tile.itemInputCopy
 		
-		input.shrink(amount)
+		val testCopy = input.copy()
+		val useAmount = getRequiredAmount(testCopy)
+		
+		if (useAmount == 0 || input.size < useAmount){
+			return null
+		}
+		
+		input.shrink(useAmount)
 		tile.replaceInput(input, silent = false)
-		return true
+		
+		return testCopy.also { it.size = useAmount }
 	}
 	
 	// Serialization
