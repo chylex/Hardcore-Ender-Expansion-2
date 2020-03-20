@@ -8,6 +8,7 @@ import chylex.hee.system.migration.forge.Sided
 import chylex.hee.system.migration.vanilla.TextComponentString
 import chylex.hee.system.migration.vanilla.TextComponentTranslation
 import chylex.hee.system.util.color.IntColor.Companion.RGB
+import chylex.hee.system.util.facades.Resource
 import net.minecraft.client.renderer.color.IItemColor
 import net.minecraft.client.util.ITooltipFlag
 import net.minecraft.item.ItemGroup
@@ -47,7 +48,7 @@ class ItemBindingEssence(properties: Properties) : ItemAbstractInfusable(propert
 		}
 		
 		val applicableTo = list
-			.flatMap { it.targetItems.asIterable() }
+			.flatMap { it.targetItems.filter { item -> Resource.isCustom(item.registryName!!) } }
 			.groupingBy { it }
 			.eachCount()
 			.entries
