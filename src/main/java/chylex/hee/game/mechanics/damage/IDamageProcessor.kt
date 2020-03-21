@@ -153,7 +153,7 @@ interface IDamageProcessor{
 		@JvmField
 		val POTION_PROTECTION = object : IDamageProcessor{
 			/**
-			 * [EntityLivingBase.applyPotionDamageCalculations]
+			 * [net.minecraft.entity.LivingEntity.applyPotionDamageCalculations]
 			 */
 			override fun modifyDamage(amount: Float, target: Entity, properties: DamageProperties.Reader): Float{
 				return if (target !is EntityLivingBase)

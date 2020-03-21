@@ -46,7 +46,7 @@ object BlockEditor{
 		
 		targetPos.setState(world, state)
 		
-		if (player is ServerPlayerEntity) {
+		if (player is ServerPlayerEntity){
 			CriteriaTriggers.PLACED_BLOCK.trigger(player, targetPos, stack)
 		}
 		

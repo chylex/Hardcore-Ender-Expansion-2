@@ -60,10 +60,10 @@ public final class EntityConstructors{
 		add(EntityMobVampireBat.class, EntityMobVampireBat::new);
 		add(EntityMobVillagerDying.class, EntityMobVillagerDying::new);
 		
-		add(EntityProjectileSpatialDash.class, EntityProjectileSpatialDash::new);
 		add(EntityProjectileEyeOfEnder.class, EntityProjectileEyeOfEnder::new);
 		add(EntityProjectileExperienceBottle.class, EntityProjectileExperienceBottle::new);
 		add(EntityProjectileEnderPearl.class, EntityProjectileEnderPearl::new);
+		add(EntityProjectileSpatialDash.class, EntityProjectileSpatialDash::new);
 		
 		add(EntityTechnicalCausatumEvent.class, EntityTechnicalCausatumEvent::new);
 		add(EntityTechnicalIgneousPlateLogic.class, EntityTechnicalIgneousPlateLogic::new);

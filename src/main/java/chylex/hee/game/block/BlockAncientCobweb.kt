@@ -66,7 +66,7 @@ class BlockAncientCobweb(builder: BlockBuilder) : BlockWeb(builder.p){
 		}
 	}
 	
-	override fun getCollisionShape(state: BlockState, world: IBlockReader, pos: BlockPos, context: ISelectionContext): VoxelShape {
+	override fun getCollisionShape(state: BlockState, world: IBlockReader, pos: BlockPos, context: ISelectionContext): VoxelShape{
 		return VoxelShapes.empty()
 	}
 }

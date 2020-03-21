@@ -394,6 +394,10 @@ class EntityBossEnderEye(type: EntityType<EntityBossEnderEye>, world: World) : E
 		return isSleepingProp
 	}
 	
+	override fun isNonBoss(): Boolean{
+		return false
+	}
+	
 	// Serialization
 	
 	override fun writeAdditional(nbt: TagCompound) = nbt.heeTag.use {
