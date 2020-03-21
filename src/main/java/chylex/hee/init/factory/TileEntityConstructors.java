@@ -8,6 +8,7 @@ import chylex.hee.game.block.entity.TileEntityExperienceGate;
 import chylex.hee.game.block.entity.TileEntityExperienceTable;
 import chylex.hee.game.block.entity.TileEntityIgneousPlate;
 import chylex.hee.game.block.entity.TileEntityInfusedTNT;
+import chylex.hee.game.block.entity.TileEntityInfusionTable;
 import chylex.hee.game.block.entity.TileEntityJarODust;
 import chylex.hee.game.block.entity.TileEntityLootChest;
 import chylex.hee.game.block.entity.TileEntityMinersBurialAltar;
@@ -33,6 +34,7 @@ public final class TileEntityConstructors{
 		add(TileEntityExperienceTable.class, TileEntityExperienceTable::new);
 		add(TileEntityIgneousPlate.class, TileEntityIgneousPlate::new);
 		add(TileEntityInfusedTNT.class, TileEntityInfusedTNT::new);
+		add(TileEntityInfusionTable.class, TileEntityInfusionTable::new);
 		add(TileEntityJarODust.class, TileEntityJarODust::new);
 		add(TileEntityLootChest.class, TileEntityLootChest::new);
 		add(TileEntityMinersBurialAltar.class, TileEntityMinersBurialAltar::new);

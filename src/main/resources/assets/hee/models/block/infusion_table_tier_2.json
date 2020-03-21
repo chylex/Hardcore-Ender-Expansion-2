@@ -1,0 +1,7 @@
+{
+  "parent": "hee:block/table_tier_2",
+  "textures": {
+    "overlay_top": "hee:block/infusion_table_top",
+    "overlay_side": "hee:block/infusion_table_side"
+  }
+}

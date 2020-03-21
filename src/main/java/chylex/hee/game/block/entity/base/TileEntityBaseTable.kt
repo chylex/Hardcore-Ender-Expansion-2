@@ -49,6 +49,9 @@ abstract class TileEntityBaseTable(type: TileEntityType<out TileEntityBaseTable>
 	protected abstract val processSerializer: ITableProcessSerializer
 	protected abstract val processTickRate: Int
 	
+	protected val currentProcessList: Iterable<ITableProcess>
+		get() = currentProcesses
+	
 	val hasSupportingItem
 		get() = currentProcesses.any { it is ProcessSupportingItemHolder }
 	

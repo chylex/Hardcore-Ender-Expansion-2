@@ -61,6 +61,7 @@ import chylex.hee.game.block.BlockWhitebarkLog
 import chylex.hee.game.block.BlockWhitebarkSapling
 import chylex.hee.game.block.entity.TileEntityAccumulationTable
 import chylex.hee.game.block.entity.TileEntityExperienceTable
+import chylex.hee.game.block.entity.TileEntityInfusionTable
 import chylex.hee.game.block.fluid.FluidEnderGoo
 import chylex.hee.game.block.fluid.FluidEnderGooPurified
 import chylex.hee.game.block.info.BlockBuilders.buildAncientCobweb
@@ -345,6 +346,9 @@ object ModBlocks{
 	@JvmField val EXPERIENCE_TABLE_TIER_1   = BlockTableTile(buildTable, "experience_table", TileEntityExperienceTable::class.java, tier = 1, firstTier = 1) named "experience_table_tier_1"
 	@JvmField val EXPERIENCE_TABLE_TIER_2   = BlockTableTile(buildTable, "experience_table", TileEntityExperienceTable::class.java, tier = 2, firstTier = 1) named "experience_table_tier_2"
 	@JvmField val EXPERIENCE_TABLE_TIER_3   = BlockTableTile(buildTable, "experience_table", TileEntityExperienceTable::class.java, tier = 3, firstTier = 1) named "experience_table_tier_3"
+	@JvmField val INFUSION_TABLE_TIER_1     = BlockTableTile(buildTable, "infusion_table", TileEntityInfusionTable::class.java, tier = 1, firstTier = 1) named "infusion_table_tier_1"
+	@JvmField val INFUSION_TABLE_TIER_2     = BlockTableTile(buildTable, "infusion_table", TileEntityInfusionTable::class.java, tier = 2, firstTier = 1) named "infusion_table_tier_2"
+	@JvmField val INFUSION_TABLE_TIER_3     = BlockTableTile(buildTable, "infusion_table", TileEntityInfusionTable::class.java, tier = 3, firstTier = 1) named "infusion_table_tier_3"
 	
 	// Blocks: Utilities
 	
@@ -520,6 +524,9 @@ object ModBlocks{
 			register(EXPERIENCE_TABLE_TIER_1 with basicItemBlock)
 			register(EXPERIENCE_TABLE_TIER_2 with basicItemBlock)
 			register(EXPERIENCE_TABLE_TIER_3 with basicItemBlock)
+			register(INFUSION_TABLE_TIER_1 with basicItemBlock)
+			register(INFUSION_TABLE_TIER_2 with basicItemBlock)
+			register(INFUSION_TABLE_TIER_3 with basicItemBlock)
 			
 			register(ETERNAL_FIRE)
 			register(SCAFFOLDING with basicItemBlock)
