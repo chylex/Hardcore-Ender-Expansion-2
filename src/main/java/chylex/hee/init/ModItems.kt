@@ -105,6 +105,7 @@ object ModItems{
 	
 	@JvmField val ACCUMULATION_TABLE_CORE = ItemTableCore(arrayOf(ModBlocks.ACCUMULATION_TABLE_TIER_1, ModBlocks.ACCUMULATION_TABLE_TIER_2, ModBlocks.ACCUMULATION_TABLE_TIER_3), defaultProps) named "accumulation_table_core"
 	@JvmField val EXPERIENCE_TABLE_CORE   = ItemTableCore(arrayOf(ModBlocks.EXPERIENCE_TABLE_TIER_1, ModBlocks.EXPERIENCE_TABLE_TIER_2, ModBlocks.EXPERIENCE_TABLE_TIER_3), defaultProps) named "experience_table_core"
+	@JvmField val INFUSION_TABLE_CORE     = ItemTableCore(arrayOf(ModBlocks.INFUSION_TABLE_TIER_1, ModBlocks.INFUSION_TABLE_TIER_2, ModBlocks.INFUSION_TABLE_TIER_3), defaultProps) named "infusion_table_core"
 	
 	// Items: Utilities
 	
@@ -194,6 +195,7 @@ object ModItems{
 			
 			register(ACCUMULATION_TABLE_CORE)
 			register(EXPERIENCE_TABLE_CORE)
+			register(INFUSION_TABLE_CORE)
 			
 			register(TABLE_LINK)
 			register(KNOWLEDGE_NOTE)

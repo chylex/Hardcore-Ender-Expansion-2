@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "BEB",
+    "S#S",
+    "BEB"
+  ],
+  "key": {
+    "#": { "item": "hee:ticking_core" },
+    "B": { "item": "hee:binding_essence" },
+    "E": { "item": "hee:end_powder" },
+    "S": { "item": "hee:stardust" }
+  },
+  "result": {
+    "item": "hee:infusion_table_core"
+  }
+}
