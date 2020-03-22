@@ -21,6 +21,7 @@ import net.minecraft.inventory.container.Container
 import net.minecraft.item.Item
 import net.minecraft.item.ItemStack
 import net.minecraft.tileentity.TileEntityType
+import net.minecraft.util.Direction
 import net.minecraft.util.NonNullList
 import net.minecraft.util.SoundCategory
 import net.minecraft.util.text.ITextComponent
@@ -38,6 +39,17 @@ class TileEntityBrewingStandCustom : TileEntityBrewingStand(){
 		const val TOTAL_FIELDS = 2 // UPDATE 1.14
 		
 		private val POTION_SLOTS = SLOTS_POTIONS.toList().toIntArray()
+		
+		fun canInsertIntoReagentSlot(stack: ItemStack, isEnhanced: Boolean): Boolean{
+			return if (stack.item === ModItems.END_POWDER)
+				isEnhanced
+			else
+				PotionItems.isReagent(stack)
+		}
+		
+		fun canInsertIntoModifierSlot(stack: ItemStack): Boolean{
+			return PotionItems.isModifier(stack)
+		}
 	}
 	
 	val wrld
@@ -195,8 +207,8 @@ class TileEntityBrewingStandCustom : TileEntityBrewingStand(){
 	
 	override fun isItemValidForSlot(index: Int, stack: ItemStack): Boolean{
 		return when(index){
-			SLOT_REAGENT -> PotionItems.isReagent(stack)
-			SLOT_MODIFIER -> PotionItems.isModifier(stack)
+			SLOT_REAGENT -> canInsertIntoReagentSlot(stack, isEnhanced)
+			SLOT_MODIFIER -> canInsertIntoModifierSlot(stack)
 			else -> super.isItemValidForSlot(index, stack)
 		}
 	}

@@ -23,6 +23,7 @@ import chylex.hee.system.migration.forge.SubscribeEvent
 import chylex.hee.system.util.named
 import com.google.common.collect.ImmutableSet
 import net.minecraft.block.Block
+import net.minecraft.block.Blocks
 import net.minecraft.tileentity.TileEntity
 import net.minecraft.tileentity.TileEntityType
 import net.minecraftforge.event.RegistryEvent
@@ -74,6 +75,13 @@ object ModTileEntities{
 	}
 	
 	fun setupVanillaValidBlocks(){
+		with(BREWING_STAND){
+			validBlocks = ImmutableSet.builder<Block>()
+				.addAll(validBlocks)
+				.add(Blocks.BREWING_STAND) // needs the replaced one
+				.build()
+		}
+		
 		with(TileEntityType.SKULL){
 			validBlocks = ImmutableSet.builder<Block>()
 				.addAll(validBlocks)
