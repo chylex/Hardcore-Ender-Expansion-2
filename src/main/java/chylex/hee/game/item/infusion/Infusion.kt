@@ -72,6 +72,7 @@ enum class Infusion(
 		}
 		
 		private val TRANSFORMATIONS = arrayOf(
+			ModItems.ANCIENT_DUST to ModItems.BINDING_ESSENCE,
 			Blocks.TNT.asItem() to ModBlocks.INFUSED_TNT.asItem(),
 			Items.ENDER_PEARL to ModItems.INFUSED_ENDER_PEARL
 		)
