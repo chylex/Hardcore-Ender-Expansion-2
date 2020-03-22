@@ -8,4 +8,11 @@ class SlotBrewingReagent(wrapped: Slot, private val isEnhanced: Boolean) : SlotW
 	override fun isItemValid(stack: ItemStack): Boolean{
 		return TileEntityBrewingStandCustom.canInsertIntoReagentSlot(stack, isEnhanced)
 	}
+	
+	override fun getItemStackLimit(stack: ItemStack): Int{
+		return if (stack.item === ModItems.AMELIOR)
+			1
+		else
+			super.getItemStackLimit(stack)
+	}
 }

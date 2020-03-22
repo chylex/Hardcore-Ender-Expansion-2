@@ -1,20 +1,32 @@
 package chylex.hee.game.block.entity
 import chylex.hee.game.container.ContainerBrewingStandCustom
+import chylex.hee.game.fx.FxBlockData
+import chylex.hee.game.fx.FxBlockHandler
 import chylex.hee.game.mechanics.potion.brewing.PotionItems
+import chylex.hee.game.particle.ParticleSmokeCustom
+import chylex.hee.game.particle.spawner.ParticleSpawnerCustom
+import chylex.hee.game.particle.util.IOffset.InBox
+import chylex.hee.game.particle.util.IShape.Point
 import chylex.hee.init.ModBlocks
 import chylex.hee.init.ModItems
 import chylex.hee.init.ModTileEntities
+import chylex.hee.network.client.PacketClientFX
 import chylex.hee.system.migration.vanilla.BlockBrewingStand
 import chylex.hee.system.migration.vanilla.Sounds
 import chylex.hee.system.migration.vanilla.TextComponentTranslation
 import chylex.hee.system.migration.vanilla.TileEntityBrewingStand
 import chylex.hee.system.util.FLAG_SYNC_CLIENT
+import chylex.hee.system.util.color.IRandomColor
+import chylex.hee.system.util.color.IntColor.Companion.RGB
+import chylex.hee.system.util.compatibility.EraseGenerics
 import chylex.hee.system.util.getStack
 import chylex.hee.system.util.getState
 import chylex.hee.system.util.isNotEmpty
+import chylex.hee.system.util.playClient
 import chylex.hee.system.util.playServer
 import chylex.hee.system.util.setStack
 import chylex.hee.system.util.setState
+import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.entity.player.PlayerInventory
 import net.minecraft.inventory.InventoryHelper
 import net.minecraft.inventory.container.Container
@@ -24,10 +36,13 @@ import net.minecraft.tileentity.TileEntityType
 import net.minecraft.util.Direction
 import net.minecraft.util.NonNullList
 import net.minecraft.util.SoundCategory
+import net.minecraft.util.math.BlockPos
 import net.minecraft.util.text.ITextComponent
+import net.minecraft.world.World
 import net.minecraftforge.common.brewing.BrewingRecipeRegistry
 import net.minecraftforge.event.ForgeEventFactory
 import java.util.Arrays
+import java.util.Random
 
 class TileEntityBrewingStandCustom : TileEntityBrewingStand(){
 	companion object{
@@ -43,12 +58,27 @@ class TileEntityBrewingStandCustom : TileEntityBrewingStand(){
 		fun canInsertIntoReagentSlot(stack: ItemStack, isEnhanced: Boolean): Boolean{
 			return if (stack.item === ModItems.END_POWDER)
 				isEnhanced
+			else if (stack.item === ModItems.AMELIOR)
+				!isEnhanced
 			else
 				PotionItems.isReagent(stack)
 		}
 		
 		fun canInsertIntoModifierSlot(stack: ItemStack): Boolean{
 			return PotionItems.isModifier(stack)
+		}
+		
+		private val PARTICLE_AMELIORATE = ParticleSpawnerCustom(
+			type = ParticleSmokeCustom,
+			data = ParticleSmokeCustom.Data(IRandomColor.Static(RGB(180, 46, 214)), lifespan = 10..18, scale = 0.9F),
+			pos = InBox(-0.325F, 0.325F, -0.4F, 0.25F, -0.3F, 0.325F)
+		)
+		
+		val FX_AMELIORATE = object : FxBlockHandler(){
+			override fun handle(pos: BlockPos, world: World, rand: Random){
+				PARTICLE_AMELIORATE.spawn(Point(pos, 21), rand)
+				Sounds.BLOCK_BREWING_STAND_BREW.playClient(pos, SoundCategory.BLOCKS, volume = 1.35F, pitch = 1.1F)
+			}
 		}
 	}
 	
@@ -64,6 +94,9 @@ class TileEntityBrewingStandCustom : TileEntityBrewingStand(){
 	
 	private var prevReagentItem: Item? = null
 	private var prevFilledSlots: BooleanArray? = null
+	
+	private var playersViewingGUI = 0
+	private var ameliorTimer = 0
 	
 	override fun getType(): TileEntityType<*>{
 		return ModTileEntities.BREWING_STAND
@@ -103,6 +136,23 @@ class TileEntityBrewingStandCustom : TileEntityBrewingStand(){
 				if (state.block is BlockBrewingStand){
 					pos.setState(wrld, filledSlots.zip(BlockBrewingStand.HAS_BOTTLE).fold(state){ acc, (on, prop) -> acc.with(prop, on) }, FLAG_SYNC_CLIENT)
 				}
+			}
+			
+			if (!isEnhanced && getStack(SLOT_REAGENT).item === ModItems.AMELIOR && playersViewingGUI == 0){
+				if (++ameliorTimer > 25){
+					getStack(SLOT_REAGENT).shrink(1)
+					
+					val prevState = pos.getState(wrld)
+					val newState = prevState.properties.fold(ModBlocks.ENHANCED_BREWING_STAND.defaultState){ acc, prop -> EraseGenerics.copyProperty(acc, prevState, prop) }
+					
+					pos.setState(wrld, newState, FLAG_SYNC_CLIENT)
+					markDirty()
+					
+					PacketClientFX(FX_AMELIORATE, FxBlockData(pos)).sendToAllAround(this, 24.0)
+				}
+			}
+			else if (ameliorTimer > 0){
+				ameliorTimer = 0
 			}
 		}
 	}
@@ -204,6 +254,20 @@ class TileEntityBrewingStandCustom : TileEntityBrewingStand(){
 	}
 	
 	// Container
+	
+	override fun openInventory(player: PlayerEntity){
+		super.openInventory(player)
+		++playersViewingGUI
+	}
+	
+	override fun closeInventory(player: PlayerEntity){
+		super.closeInventory(player)
+		--playersViewingGUI
+	}
+	
+	override fun canInsertItem(index: Int, stack: ItemStack, direction: Direction?): Boolean{
+		return super.canInsertItem(index, stack, direction) && (stack.item !== ModItems.AMELIOR || getStack(index).isEmpty) // try to limit Amelior stack to 1 item, it's mostly futile though
+	}
 	
 	override fun isItemValidForSlot(index: Int, stack: ItemStack): Boolean{
 		return when(index){

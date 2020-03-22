@@ -15,6 +15,11 @@ public final class EraseGenerics{
 	}
 	
 	@SuppressWarnings({"unchecked", "rawtypes"})
+	public static BlockState copyProperty(BlockState baseState, BlockState originalState, IProperty property){
+		return baseState.with(property, originalState.get(property));
+	}
+	
+	@SuppressWarnings({"unchecked", "rawtypes"})
 	public static EnumArgument<?> createEnumArgument(Class<?> cls){
 		if (!cls.isEnum()){
 			throw new IllegalArgumentException("cannot create an EnumArgument for class: " + cls.getName());

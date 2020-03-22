@@ -12,6 +12,7 @@ import chylex.hee.system.migration.vanilla.ContainerBrewingStand
 import chylex.hee.system.migration.vanilla.EntityPlayer
 import chylex.hee.system.util.getTile
 import chylex.hee.system.util.readPos
+import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.entity.player.PlayerInventory
 import net.minecraft.inventory.IInventory
 import net.minecraft.inventory.Inventory
@@ -28,6 +29,8 @@ class ContainerBrewingStandCustom(id: Int, inventory: PlayerInventory, private v
 	init{
 		SLOT_REAGENT.let { inventorySlots[it] = SlotBrewingReagent(inventorySlots[it], tile?.isEnhanced == true) }
 		SLOT_MODIFIER.let { inventorySlots[it] = SlotBrewingModifier(inventorySlots[it]) }
+		
+		brewingStand.openInventory(inventory.player)
 	}
 	
 	override fun getType(): ContainerType<*>{
@@ -44,5 +47,10 @@ class ContainerBrewingStandCustom(id: Int, inventory: PlayerInventory, private v
 	
 	override fun transferStackInSlot(player: EntityPlayer, index: Int): ItemStack{
 		return implTransferStackInSlot(inventorySlots, brewingStand, player, index)
+	}
+	
+	override fun onContainerClosed(player: PlayerEntity){
+		super.onContainerClosed(player)
+		brewingStand.closeInventory(player)
 	}
 }

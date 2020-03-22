@@ -1,0 +1,15 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "###",
+    "#O#",
+    "###"
+  ],
+  "key": {
+    "#": { "item": "hee:end_powder" },
+    "O": { "item": "hee:instability_orb" }
+  },
+  "result": {
+    "item": "hee:amelior"
+  }
+}
