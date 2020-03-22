@@ -37,7 +37,8 @@ object VanillaModelOverrides : ISelectiveResourceReloadListener{
 	
 	// Overrides
 	
-	
+	private val BREWING_STAND_TEX = Resource.Custom("item/brewing_stand")
+	private val BREWING_STAND_MODEL = ModelResourceLocation(Resource.Custom("brewing_stand"), "inventory")
 	
 	@SubscribeEvent
 	fun onTextureStitchPre(e: TextureStitchEvent.Pre){
@@ -46,15 +47,18 @@ object VanillaModelOverrides : ISelectiveResourceReloadListener{
 		}
 		
 		with(e){
+			addSprite(BREWING_STAND_TEX)
 		}
 	}
 	
 	@SubscribeEvent
 	fun onRegisterModels(@Suppress("UNUSED_PARAMETER") e: ModelRegistryEvent){
+		ModelLoader.addSpecialModel(BREWING_STAND_MODEL)
 	}
 	
 	private fun overrideModels(){
 		with(MC.itemRenderer.itemModelMesher){
+			register(Items.BREWING_STAND, BREWING_STAND_MODEL)
 		}
 	}
 }
