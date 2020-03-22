@@ -83,6 +83,9 @@ object ModItems{
 	@JvmField val INFERNIUM_INGOT   = Item(defaultProps) named "infernium_ingot"
 	@JvmField val AURICION          = Item(defaultProps) named "auricion"
 	@JvmField val DRAGON_SCALE      = Item(defaultProps) named "dragon_scale"
+	@JvmField val INSTABILITY_ORB   = Item(defaultProps) named "instability_orb"
+	@JvmField val ECTOPLASM         = Item(defaultProps) named "ectoplasm"
+	@JvmField val ENCHANTED_CLAW    = Item(defaultProps) named "enchanted_claw"
 	
 	// Items: Manufactured resources
 	
@@ -179,6 +182,9 @@ object ModItems{
 			register(INFERNIUM_INGOT)
 			register(AURICION)
 			register(DRAGON_SCALE)
+			register(INSTABILITY_ORB)
+			register(ECTOPLASM)
+			register(ENCHANTED_CLAW)
 			
 			register(ALTERATION_NEXUS)
 			register(VOID_ESSENCE)
