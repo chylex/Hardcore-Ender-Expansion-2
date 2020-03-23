@@ -211,7 +211,7 @@ fun BlockPos.allInCenteredSphereMutable(radius: Int, avoidNipples: Boolean = fal
 
 // Areas (Flood-Fill)
 
-inline fun BlockPos.floodFill(facings: Iterable<Direction>, condition: (BlockPos) -> Boolean): List<BlockPos>{
+inline fun BlockPos.floodFill(facings: Iterable<Direction>, limit: Int = Int.MAX_VALUE, condition: (BlockPos) -> Boolean): List<BlockPos>{
 	val found = mutableListOf<BlockPos>()
 	
 	val stack = Stack<BlockPos>().apply { push(this@floodFill) }
@@ -222,6 +222,10 @@ inline fun BlockPos.floodFill(facings: Iterable<Direction>, condition: (BlockPos
 		
 		if (condition(current)){
 			found.add(current)
+			
+			if (found.size >= limit){
+				break
+			}
 			
 			for(facing in facings){
 				val offset = current.offset(facing)

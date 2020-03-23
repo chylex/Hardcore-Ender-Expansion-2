@@ -24,6 +24,8 @@ object GL{
 	fun enableRescaleNormal() = GLSM.enableRescaleNormal()
 	fun disableRescaleNormal() = GLSM.disableRescaleNormal()
 	
+	fun lineWidth(width: Float) = GLSM.lineWidth(width)
+	
 	// Blend
 	
 	fun enableBlend() = GLSM.enableBlend()
