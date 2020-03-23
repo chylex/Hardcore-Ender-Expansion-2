@@ -7,10 +7,10 @@ import chylex.hee.game.particle.util.IOffset.InBox
 import chylex.hee.game.particle.util.IOffset.MutableOffsetPoint
 import chylex.hee.game.particle.util.IShape.Point
 import chylex.hee.init.ModEntities
+import chylex.hee.init.ModSounds
 import chylex.hee.system.migration.vanilla.EntityAgeable
 import chylex.hee.system.migration.vanilla.EntityPlayer
 import chylex.hee.system.migration.vanilla.EntityVillager
-import chylex.hee.system.migration.vanilla.Sounds
 import chylex.hee.system.util.TagCompound
 import chylex.hee.system.util.color.IntColor.Companion.RGB
 import chylex.hee.system.util.facades.Facing4
@@ -38,27 +38,33 @@ import java.util.Random
 class EntityMobVillagerDying(type: EntityType<EntityMobVillagerDying>, world: World) : EntityAgeable(type, world), IVillagerDataHolder, IEntityAdditionalSpawnData{
 	constructor(world: World) : this(ModEntities.VILLAGER_DYING, world)
 	
-	private object DecayParticlePos : IOffset{
-		private const val halfSize = 0.25F
+	private class DecayParticlePos private constructor(private val heightMp: Float) : IOffset{
+		companion object{
+			private const val HALF_SIZE = 0.3F
+			
+			val ADULT = DecayParticlePos(1F)
+			val CHILD = DecayParticlePos(0.5F)
+		}
 		
 		override fun next(out: MutableOffsetPoint, rand: Random){
 			if (rand.nextInt(5) == 0){
-				out.x = rand.nextFloat(-halfSize, halfSize)
-				out.y = rand.nextFloat(1F, 1.25F) * (if (rand.nextBoolean()) -1 else 1)
-				out.z = rand.nextFloat(-halfSize, halfSize)
+				out.x = rand.nextFloat(-HALF_SIZE, HALF_SIZE)
+				out.y = rand.nextFloat(1F, 1.25F) * heightMp * (if (rand.nextBoolean()) -1 else 1)
+				out.z = rand.nextFloat(-HALF_SIZE, HALF_SIZE)
 			}
 			else{
 				val facing = rand.nextItem(Facing4)
 				
-				val offsetFull = halfSize + rand.nextFloat(0F, 0.3F)
-				val offsetPerpendicular = rand.nextFloat(-halfSize, halfSize)
+				val offsetFull = HALF_SIZE + rand.nextFloat(0F, 0.3F)
+				val offsetPerpendicular = rand.nextFloat(-HALF_SIZE, HALF_SIZE)
 				
 				out.x = (facing.xOffset * offsetFull) + (facing.zOffset * offsetPerpendicular)
-				out.y = rand.nextFloat(-1.1F, 1.1F)
+				out.y = rand.nextFloat(-1.1F, 1.1F) * heightMp
 				out.z = (facing.zOffset * offsetFull) + (facing.xOffset * offsetPerpendicular)
 			}
 		}
 	}
+	
 	var villager: VillagerData? = null
 		private set
 	
@@ -114,15 +120,21 @@ class EntityMobVillagerDying(type: EntityType<EntityMobVillagerDying>, world: Wo
 	}
 	
 	override fun onDeathUpdate(){
-		if (world.isRemote && deathTime < 60){
+		if (world.isRemote && deathTime < 66){
+			if (deathTime == 0){
+				ModSounds.MOB_VILLAGER_TOTEM_DYING.playClient(posVec, SoundCategory.HOSTILE, volume = 1.25F)
+			}
+			
+			val isChild = isChild
+			
 			ParticleSpawnerCustom(
 				type = ParticleGrowingSpot,
-				data = ParticleGrowingSpot.Data(color = RGB(rand.nextInt(20).toUByte()), lifespan = 65 - deathTime),
-				pos = DecayParticlePos
-			).spawn(Point(this, heightMp = 0.5F, amount = 10), rand)
+				data = ParticleGrowingSpot.Data(color = RGB(rand.nextInt(20).toUByte()), lifespan = 71 - deathTime),
+				pos = if (isChild) DecayParticlePos.CHILD else DecayParticlePos.ADULT
+			).spawn(Point(this, heightMp = 0.5F, amount = if (isChild) 4 else 12), rand)
 		}
 		
-		if (++deathTime == 65){
+		if (++deathTime == 71){
 			remove()
 		}
 	}
@@ -135,7 +147,7 @@ class EntityMobVillagerDying(type: EntityType<EntityMobVillagerDying>, world: Wo
 				pos = InBox(this, 0.25F)
 			).spawn(Point(this, heightMp = 0.5F, amount = 100), rand)
 			
-			Sounds.ENTITY_VILLAGER_DEATH.playClient(posVec, SoundCategory.HOSTILE, volume = 1.5F, pitch = 1.5F) // TODO new sound fx
+			ModSounds.MOB_VILLAGER_TOTEM_DEATH.playClient(posVec, SoundCategory.HOSTILE, volume = 2F, pitch = if (isChild) 1.6F else 1.1F)
 		}
 		
 		super.remove()

@@ -55,5 +55,12 @@
   "mob.undread.death": {
     "sounds": [ "hee:mob/undread_death" ],
     "subtitle": "subtitles.hee.mob.undread.death"
+  },
+  "mob.villager.totem_dying": {
+    "sounds": [ "hee:mob/villager_totem_dying" ]
+  },
+  "mob.villager.totem_death": {
+    "sounds": [ "hee:mob/villager_totem_death" ],
+    "subtitle": "subtitles.entity.villager.death"
   }
 }

@@ -116,7 +116,7 @@ class ItemTotemOfUndyingCustom(properties: Properties) : ItemAbstractTrinket(pro
 			return true
 		}
 		
-		stack.damage -= if (target.isChild) 1 else 2
+		stack.damage -= if (target.isChild) 2 else 1
 		stack.heeTagOrNull?.remove(SHAKING_TAG)
 		
 		player.setHeldItem(hand, stack)
@@ -126,6 +126,7 @@ class ItemTotemOfUndyingCustom(properties: Properties) : ItemAbstractTrinket(pro
 			copyLocationAndAnglesFrom(target)
 			copyVillagerDataFrom(target)
 			world.addEntity(this)
+			// TODO improve freezing during movement
 		}
 		
 		target.remove()

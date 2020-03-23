@@ -18,7 +18,9 @@ object ModSounds{
 	@JvmField val ENTITY_REVITALIZATION_SUBSTANCE_HEAL = SoundEvent(Resource.Custom("entity.revitalization_substance.heal"))
 	@JvmField val ENTITY_SPATIAL_DASH_EXPIRE           = SoundEvent(Resource.Custom("entity.spatial_dash.expire"))
 	
-	@JvmField val MOB_ENDERMAN_FIRST_KILL = SoundEvent(Resource.Custom("mob.enderman.first_kill"))
-	@JvmField val MOB_UNDREAD_HURT        = SoundEvent(Resource.Custom("mob.undread.hurt"))
-	@JvmField val MOB_UNDREAD_DEATH       = SoundEvent(Resource.Custom("mob.undread.death"))
+	@JvmField val MOB_ENDERMAN_FIRST_KILL  = SoundEvent(Resource.Custom("mob.enderman.first_kill"))
+	@JvmField val MOB_UNDREAD_HURT         = SoundEvent(Resource.Custom("mob.undread.hurt"))
+	@JvmField val MOB_UNDREAD_DEATH        = SoundEvent(Resource.Custom("mob.undread.death"))
+	@JvmField val MOB_VILLAGER_TOTEM_DYING = SoundEvent(Resource.Custom("mob.villager.totem_dying"))
+	@JvmField val MOB_VILLAGER_TOTEM_DEATH = SoundEvent(Resource.Custom("mob.villager.totem_death"))
 }
