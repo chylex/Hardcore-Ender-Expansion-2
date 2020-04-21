@@ -56,7 +56,11 @@ object Debug{
 			MinecraftForge.EVENT_BUS.register(object : Any(){
 				@SubscribeEvent
 				fun onKeyPressed(e: KeyInputEvent){
-					if (e.action == 1 && e.key == GLFW.GLFW_KEY_GRAVE_ACCENT){
+					if (e.action != GLFW.GLFW_PRESS){
+						return
+					}
+					
+					if (e.key == GLFW.GLFW_KEY_GRAVE_ACCENT){
 						val player = MC.player ?: return
 						
 						if (player.isCreative){
@@ -65,6 +69,12 @@ object Debug{
 						else{
 							player.sendChatMessage("/gamemode creative")
 						}
+					}
+					else if (e.key == GLFW.GLFW_KEY_RIGHT_ALT){
+						forceCancelCtrl = true
+					}
+					else if (e.key == GLFW.GLFW_KEY_LEFT_CONTROL){
+						forceCancelCtrl = false
 					}
 				}
 				
@@ -167,6 +177,14 @@ object Debug{
 				})
 			}
 		}
+	}
+	
+	private var forceCancelCtrl = false
+	
+	@JvmStatic
+	@Suppress("unused")
+	fun cancelControlKey(): Boolean{
+		return forceCancelCtrl
 	}
 	
 	fun setClipboardContents(file: File){

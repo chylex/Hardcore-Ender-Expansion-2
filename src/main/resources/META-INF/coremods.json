@@ -3,5 +3,6 @@
   "HEE_ChorusPlantsGrowOnHumus": "coremods/chorus_plants_grow_on_humus.js",
   "HEE_MobBypassPeacefulDespawn": "coremods/mob_bypass_peaceful_despawn.js",
   "HEE_MobDisableTickParticles": "coremods/mob_disable_tick_particles.js",
-  "HEE_PotionHookCorruption": "coremods/potion_hook_corruption.js"
+  "HEE_PotionHookCorruption": "coremods/potion_hook_corruption.js",
+  "HEE_UnfuckAltGr": "coremods/unfuck_alt_gr.js"
 }
