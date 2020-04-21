@@ -10,6 +10,7 @@ import chylex.hee.system.migration.forge.Side
 import chylex.hee.system.migration.forge.Sided
 import chylex.hee.system.migration.forge.SubscribeEvent
 import chylex.hee.system.migration.vanilla.EntityPlayer
+import chylex.hee.system.migration.vanilla.ItemBlock
 import chylex.hee.system.util.floodFill
 import chylex.hee.system.util.getBlock
 import chylex.hee.system.util.getState
@@ -29,6 +30,7 @@ import net.minecraft.util.Direction.SOUTH
 import net.minecraft.util.Direction.UP
 import net.minecraft.util.Direction.WEST
 import net.minecraft.util.Hand.MAIN_HAND
+import net.minecraft.util.Hand.OFF_HAND
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.BlockRayTraceResult
 import net.minecraft.util.math.shapes.ISelectionContext
@@ -100,16 +102,19 @@ object Debug{
 				@SubscribeEvent
 				fun onRightClickBlock(e: RightClickBlock){
 					val world = e.world
+					val player = e.player
 					
-					if (isHoldingBuildStick(e.player) && !world.isRemote){
+					if (isHoldingBuildStick(player) && !world.isRemote){
 						val state = e.pos.getState(world)
 						val face = e.face!!
+						
+						val place = (player.getHeldItem(OFF_HAND).item as? ItemBlock)?.block?.defaultState ?: state
 						
 						for(pos in getBuildStickBlocks(world, e.pos, state, face)){
 							val offset = pos.offset(face)
 							
 							if (offset.isAir(world)){
-								offset.setState(world, state)
+								offset.setState(world, place)
 							}
 						}
 					}
