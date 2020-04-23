@@ -64,7 +64,8 @@ object Debug{
 						val player = MC.player ?: return
 						
 						if (player.isCreative){
-							player.sendChatMessage("/gamemode survival")
+							val ctrl = (e.modifiers and GLFW.GLFW_MOD_CONTROL) != 0
+							player.sendChatMessage(if (ctrl) "/gamemode spectator" else "/gamemode survival")
 						}
 						else{
 							player.sendChatMessage("/gamemode creative")
