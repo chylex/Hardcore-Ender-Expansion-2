@@ -29,6 +29,10 @@ apply plugin: "net.minecraftforge.gradle"
 apply plugin: "eclipse"
 apply plugin: "kotlin"
 
+if (file("run/mods_deobf.gradle").exists()){
+    apply from: "run/mods_deobf.gradle"
+}
+
 def mcversion = "1.14.4"
 def forgeversion = "28.2.0"
 def kottleversion = "1.4.0"
