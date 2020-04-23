@@ -21,12 +21,13 @@ class EnergyShrineRoom_Secondary_Dormitory(file: String) : EnergyShrineRoom_Gene
 		super.generate(world, instance)
 		
 		val rand = world.rand
+		val mirror = instance.transform.mirror
 		
-		for((index, color) in generateBedColors(rand).withIndex()){
+		for((index, color) in generateBedColors(rand, mirror).withIndex()){
 			world.addTrigger(Pos(6 + index, 1, 5), BedStructureTrigger(SOUTH, color))
 		}
 		
-		for((index, color) in generateBedColors(rand).withIndex()){
+		for((index, color) in generateBedColors(rand, mirror).withIndex()){
 			world.addTrigger(Pos(6 + index, 3, 5), BedStructureTrigger(SOUTH, color))
 		}
 		
@@ -34,7 +35,15 @@ class EnergyShrineRoom_Secondary_Dormitory(file: String) : EnergyShrineRoom_Gene
 		placeWallBanner(world, instance, Pos(4, 2, 4), WEST)
 	}
 	
-	private fun generateBedColors(rand: Random): Array<DyeColor>{
+	private fun generateBedColors(rand: Random, mirror: Boolean): Array<DyeColor>{
+		if (rand.nextInt(1332) == 0){
+			return arrayOf(DyeColor.RED, DyeColor.ORANGE, DyeColor.YELLOW, DyeColor.LIME, DyeColor.LIGHT_BLUE, DyeColor.BLUE, DyeColor.PURPLE).apply {
+				if (!mirror){
+					reverse()
+				}
+			}
+		}
+		
 		val colors = Array(7){ DyeColor.LIGHT_GRAY }
 		
 		val param1 = rand.nextInt(0, 1)
