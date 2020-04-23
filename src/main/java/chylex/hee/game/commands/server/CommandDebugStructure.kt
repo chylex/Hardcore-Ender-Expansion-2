@@ -79,7 +79,7 @@ object CommandDebugStructure : ICommand{ // UPDATE
 				val transformedWorld = TransformedStructureWorld(adaptedWorld, size, transform)
 				
 				transformedWorld.placeCube(size.minPos, size.maxPos, Single(Blocks.BEDROCK))
-				transformedWorld.apply(piece::generate).finalize()
+				transformedWorld.apply { piece.generateWithTransformHint(this, transform) }.finalize()
 			}
 			
 			x += transforms.map { it(size).x }.max()!! + 2

@@ -12,7 +12,11 @@ abstract class StructurePiece<T> : IStructurePiece, IStructureGenerator{
 	protected abstract val connections: Array<IStructurePieceConnection>
 	
 	final override fun generate(world: IStructureWorld){
-		generate(world, MutableInstance(null, Transform.NONE).apply { connections.forEach { useConnection(it, MutableInstance(null, Transform.NONE)) } })
+		generateWithTransformHint(world, Transform.NONE)
+	}
+	
+	fun generateWithTransformHint(world: IStructureWorld, transform: Transform){
+		generate(world, MutableInstance(null, transform).apply { connections.forEach { useConnection(it, MutableInstance(null, Transform.NONE)) } })
 		
 		for(connection in connections){
 			world.setBlock(connection.offset, ColoredBlocks.WOOL.getValue(DyeColor.values()[connection.facing.index - 2]))
@@ -49,8 +53,11 @@ abstract class StructurePiece<T> : IStructurePiece, IStructureGenerator{
 	
 	// Frozen instance
 	
-	open inner class Instance private constructor(val context: T?, private val transform: Transform, private val availableConnections: List<TransformedStructurePieceConnection>) : IStructureGenerator{
+	open inner class Instance private constructor(val context: T?, val transform: Transform, private val availableConnections: List<TransformedStructurePieceConnection>) : IStructureGenerator{
 		protected constructor(context: T?, transform: Transform) : this(context, transform, this@StructurePiece.connections.map { TransformedStructurePieceConnection(it, this@StructurePiece.size, transform) }.toMutableList())
+		
+		val owner
+			get() = this@StructurePiece
 		
 		final override val size = transform(this@StructurePiece.size)
 		
