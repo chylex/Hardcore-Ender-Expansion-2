@@ -39,6 +39,7 @@ import net.minecraftforge.client.event.DrawBlockHighlightEvent
 import net.minecraftforge.client.event.GuiOpenEvent
 import net.minecraftforge.client.event.InputEvent.KeyInputEvent
 import net.minecraftforge.common.MinecraftForge
+import net.minecraftforge.event.entity.player.PlayerInteractEvent.LeftClickBlock
 import net.minecraftforge.event.entity.player.PlayerInteractEvent.RightClickBlock
 import net.minecraftforge.event.world.BlockEvent.BreakEvent
 import org.apache.commons.lang3.SystemUtils
@@ -97,12 +98,23 @@ object Debug{
 					return pos.floodFill(floodFaces, limit){ it.getBlock(world) === block }.takeIf { it.size < limit }.orEmpty()
 				}
 				
+				private var lastLeftClickHit: BlockRayTraceResult? = null
+				
 				@SubscribeEvent
-				fun onLeftClickBlock(e: BreakEvent){
+				fun onLeftClickBlock(e: LeftClickBlock){
 					val world = e.world
 					
 					if (isHoldingBuildStick(e.player) && !world.isRemote){
-						val hit = MC.instance.objectMouseOver as? BlockRayTraceResult ?: return
+						lastLeftClickHit = MC.instance.objectMouseOver as? BlockRayTraceResult
+					}
+				}
+				
+				@SubscribeEvent
+				fun onBlockBreak(e: BreakEvent){
+					val world = e.world
+					
+					if (isHoldingBuildStick(e.player) && !world.isRemote){
+						val hit = lastLeftClickHit ?: return
 						
 						for(pos in getBuildStickBlocks(world, e.pos, e.state, hit.face)){
 							pos.removeBlock(world)
