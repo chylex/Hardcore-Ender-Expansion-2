@@ -103,7 +103,11 @@ minecraft{
 
 dependencies{
     minecraft "net.minecraftforge:forge:" + mcversion + "-" + forgeversion
-    implementation "kottle:Kottle:" + kottleversion
+
+    implementation "kottle:Kottle:" + kottleversion + ":slim"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
+    implementation "org.jetbrains.kotlin:kotlin-reflect"
 
     testImplementation "org.junit.jupiter:junit-jupiter-api:5.3.0-RC1"
 }
