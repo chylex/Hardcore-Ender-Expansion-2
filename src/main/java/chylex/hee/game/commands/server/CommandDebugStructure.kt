@@ -2,6 +2,7 @@ package chylex.hee.game.commands.server
 import chylex.hee.game.commands.ICommand
 import chylex.hee.game.commands.util.ValidatedStringArgument.Companion.validatedString
 import chylex.hee.game.commands.util.executes
+import chylex.hee.game.commands.util.getLong
 import chylex.hee.game.commands.util.getString
 import chylex.hee.game.commands.util.returning
 import chylex.hee.game.commands.util.world
@@ -20,12 +21,14 @@ import chylex.hee.game.world.util.Transform
 import chylex.hee.system.migration.vanilla.Blocks
 import chylex.hee.system.migration.vanilla.TextComponentString
 import chylex.hee.system.util.Pos
+import com.mojang.brigadier.arguments.LongArgumentType.longArg
 import com.mojang.brigadier.builder.ArgumentBuilder
 import com.mojang.brigadier.context.CommandContext
 import net.minecraft.command.CommandSource
 import net.minecraft.command.Commands.argument
 import net.minecraft.command.Commands.literal
 import net.minecraft.util.Rotation
+import java.util.Random
 
 object CommandDebugStructure : ICommand{ // UPDATE
 	val structureDescriptions = mapOf(
@@ -52,7 +55,9 @@ object CommandDebugStructure : ICommand{ // UPDATE
 					argument("transform", validatedString(setOf("0", "90", "180", "270", "M0", "M90", "M180", "M270"))).executes(this::executePiecesDev, true)
 				)
 			).then(
-				literal("build").executes(this::executeBuild)
+				literal("build").executes(this::executeBuild, false).then(
+					argument("seed", longArg()).executes(this::executeBuild, true)
+				)
 			).then(
 				literal("locate").executes(this::executeLocate)
 			)
@@ -115,11 +120,11 @@ object CommandDebugStructure : ICommand{ // UPDATE
 		}
 	}
 	
-	private fun executeBuild(ctx: CommandContext<CommandSource>): Int{
+	private fun executeBuild(ctx: CommandContext<CommandSource>, hasSeedArg: Boolean): Int{
 		with(ctx.source){
 			val structure = structureDescriptions.getValue(ctx.getString("structure"))
 			
-			val rand = world.rand
+			val rand = Random(if (hasSeedArg) ctx.getLong("seed") else world.rand.nextLong())
 			val world = WorldToStructureWorldAdapter(world, rand, Pos(pos).subtract(structure.STRUCTURE_SIZE.centerPos))
 			
 			for(attempt in 1..100){

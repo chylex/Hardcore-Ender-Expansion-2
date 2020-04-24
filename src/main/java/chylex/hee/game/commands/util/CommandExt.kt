@@ -42,6 +42,10 @@ fun CommandContext<CommandSource>.getInt(name: String): Int{
 	return this.getArgument(name, Int::class.java)
 }
 
+fun CommandContext<CommandSource>.getLong(name: String): Long{
+	return this.getArgument(name, Long::class.java)
+}
+
 fun CommandContext<CommandSource>.getPos(name: String): BlockPos{
 	return this.getArgument(name, LocationInput::class.java).getBlockPos(this.source)
 }
