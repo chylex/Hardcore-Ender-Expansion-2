@@ -188,6 +188,7 @@ object ModBlocks{
 	@JvmField val DUSTY_STONE_DAMAGED        = BlockDustyStonePlain(buildDustyStoneDamaged) named "dusty_stone_damaged"
 	@JvmField val DUSTY_STONE_BRICKS         = BlockDustyStoneBricks(buildDustyStoneBricks) named "dusty_stone_bricks"
 	@JvmField val DUSTY_STONE_CRACKED_BRICKS = BlockDustyStoneBricks(buildDustyStoneBricks) named "dusty_stone_cracked_bricks"
+	@JvmField val DUSTY_STONE_DECORATION     = BlockDustyStoneBricks(buildDustyStoneBricks) named "dusty_stone_decoration"
 	@JvmField val DUSTY_STONE_BRICK_STAIRS   = BlockStairsCustom(DUSTY_STONE_BRICKS) named "dusty_stone_brick_stairs"
 	@JvmField val DUSTY_STONE_BRICK_SLAB     = BlockSlabCustom(buildDustyStoneBricks) named "dusty_stone_brick_slab"
 	
@@ -414,6 +415,7 @@ object ModBlocks{
 			register(DUSTY_STONE_DAMAGED with basicItemBlock)
 			register(DUSTY_STONE_BRICKS with basicItemBlock)
 			register(DUSTY_STONE_CRACKED_BRICKS with basicItemBlock)
+			register(DUSTY_STONE_DECORATION with basicItemBlock)
 			register(DUSTY_STONE_BRICK_STAIRS with basicItemBlock)
 			register(DUSTY_STONE_BRICK_SLAB with basicItemBlock)
 			
