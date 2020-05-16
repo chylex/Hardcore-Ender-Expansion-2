@@ -12,14 +12,12 @@ import chylex.hee.system.migration.vanilla.EntityPlayer
 import chylex.hee.system.migration.vanilla.EntityXPOrb
 import chylex.hee.system.util.Pos
 import chylex.hee.system.util.allInCenteredBox
-import chylex.hee.system.util.asVoxelShape
 import chylex.hee.system.util.getBlock
 import chylex.hee.system.util.getTile
 import chylex.hee.system.util.offsetUntil
 import chylex.hee.system.util.setBlock
 import net.minecraft.block.BlockState
 import net.minecraft.entity.Entity
-import net.minecraft.util.math.AxisAlignedBB
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.shapes.ISelectionContext
 import net.minecraft.util.math.shapes.VoxelShape
@@ -55,7 +53,7 @@ abstract class BlockExperienceGate(builder: BlockBuilder) : BlockSimple(builder)
 	}
 	
 	override fun getCollisionShape(state: BlockState, world: IBlockReader, pos: BlockPos, context: ISelectionContext): VoxelShape{
-		return AxisAlignedBB(0.0, 0.0, 0.0, 1.0, 1.0 - (2.0 * MagicValues.BLOCK_COLLISION_SHRINK), 1.0).asVoxelShape
+		return MagicValues.BLOCK_COLLISION_SHRINK_SHAPE
 	}
 	
 	override fun onEntityCollision(state: BlockState, world: World, pos: BlockPos, entity: Entity){

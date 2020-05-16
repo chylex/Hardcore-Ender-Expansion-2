@@ -1,4 +1,6 @@
 package chylex.hee.system.migration
+import chylex.hee.system.util.asVoxelShape
+import net.minecraft.util.math.AxisAlignedBB
 
 // UPDATE 1.14
 
@@ -19,6 +21,7 @@ object MagicValues{
 	 * Found in [Entity.doBlockCollisions][net.minecraft.entity.Entity.doBlockCollisions].
 	 */
 	const val BLOCK_COLLISION_SHRINK = 0.001
+	val BLOCK_COLLISION_SHRINK_SHAPE = AxisAlignedBB(0.0, 0.0, 0.0, 1.0, 1.0 - (2.0 * BLOCK_COLLISION_SHRINK), 1.0).asVoxelShape
 	
 	/**
 	 * Default player damage added to [IItemTier.getAttackDamage][net.minecraft.item.IItemTier.getAttackDamage].
