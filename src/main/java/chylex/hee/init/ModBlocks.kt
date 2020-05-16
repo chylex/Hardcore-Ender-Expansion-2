@@ -10,7 +10,7 @@ import chylex.hee.game.block.BlockDeathFlowerDecaying
 import chylex.hee.game.block.BlockDragonEggOverride
 import chylex.hee.game.block.BlockDryVines
 import chylex.hee.game.block.BlockDustyStoneBricks
-import chylex.hee.game.block.BlockDustyStonePlain
+import chylex.hee.game.block.BlockDustyStoneUnstable
 import chylex.hee.game.block.BlockEndPlant
 import chylex.hee.game.block.BlockEndPortalAcceptor
 import chylex.hee.game.block.BlockEndPortalInner
@@ -183,9 +183,9 @@ object ModBlocks{
 	
 	// Blocks: Building (Dusty Stone)
 	
-	@JvmField val DUSTY_STONE                = BlockDustyStonePlain(buildDustyStone) named "dusty_stone"
-	@JvmField val DUSTY_STONE_CRACKED        = BlockDustyStonePlain(buildDustyStoneCracked) named "dusty_stone_cracked"
-	@JvmField val DUSTY_STONE_DAMAGED        = BlockDustyStonePlain(buildDustyStoneDamaged) named "dusty_stone_damaged"
+	@JvmField val DUSTY_STONE                = BlockDustyStoneUnstable(buildDustyStone) named "dusty_stone"
+	@JvmField val DUSTY_STONE_CRACKED        = BlockDustyStoneUnstable(buildDustyStoneCracked) named "dusty_stone_cracked"
+	@JvmField val DUSTY_STONE_DAMAGED        = BlockDustyStoneUnstable(buildDustyStoneDamaged) named "dusty_stone_damaged"
 	@JvmField val DUSTY_STONE_BRICKS         = BlockDustyStoneBricks(buildDustyStoneBricks) named "dusty_stone_bricks"
 	@JvmField val DUSTY_STONE_CRACKED_BRICKS = BlockDustyStoneBricks(buildDustyStoneBricks) named "dusty_stone_cracked_bricks"
 	@JvmField val DUSTY_STONE_DECORATION     = BlockDustyStoneBricks(buildDustyStoneBricks) named "dusty_stone_decoration"
