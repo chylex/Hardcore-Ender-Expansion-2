@@ -9,8 +9,6 @@ import chylex.hee.game.loot.conditions.ConditionSilkTouch
 import chylex.hee.game.loot.conditions.ConditionWasExploded
 import chylex.hee.game.loot.conditions.ConditionWasSheared
 import chylex.hee.game.loot.functions.FunctionInfuse
-import chylex.hee.game.loot.functions.FunctionPickColoredGloomrock
-import chylex.hee.game.loot.functions.FunctionPickMusicDisk
 import chylex.hee.game.loot.functions.FunctionPickUndreadGem
 import chylex.hee.game.loot.functions.FunctionSetItem
 import chylex.hee.game.loot.rng.RandomBiasedValueRange
@@ -49,8 +47,6 @@ object ModLoot{
 		LootConditionManager.registerCondition(ConditionWasSheared.Serializer)
 		
 		LootFunctionManager.registerFunction(FunctionInfuse.Serializer)
-		LootFunctionManager.registerFunction(FunctionPickColoredGloomrock.Serializer)
-		LootFunctionManager.registerFunction(FunctionPickMusicDisk.Serializer)
 		LootFunctionManager.registerFunction(FunctionPickUndreadGem.Serializer)
 		LootFunctionManager.registerFunction(FunctionSetItem.Serializer)
 	}
