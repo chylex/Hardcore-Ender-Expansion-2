@@ -12,6 +12,7 @@ import chylex.hee.game.loot.functions.FunctionInfuse
 import chylex.hee.game.loot.functions.FunctionPickColoredGloomrock
 import chylex.hee.game.loot.functions.FunctionPickMusicDisk
 import chylex.hee.game.loot.functions.FunctionPickUndreadGem
+import chylex.hee.game.loot.functions.FunctionSetItem
 import chylex.hee.game.loot.rng.RandomBiasedValueRange
 import chylex.hee.game.loot.rng.RandomRoundingValueRange
 import chylex.hee.proxy.Environment
@@ -51,6 +52,7 @@ object ModLoot{
 		LootFunctionManager.registerFunction(FunctionPickColoredGloomrock.Serializer)
 		LootFunctionManager.registerFunction(FunctionPickMusicDisk.Serializer)
 		LootFunctionManager.registerFunction(FunctionPickUndreadGem.Serializer)
+		LootFunctionManager.registerFunction(FunctionSetItem.Serializer)
 	}
 	
 	@SubscribeEvent
