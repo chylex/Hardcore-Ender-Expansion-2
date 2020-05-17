@@ -25,7 +25,7 @@ object Environment{
 	}
 	
 	fun getDimension(dimension: DimensionType): ServerWorld{
-		return getServer().func_71218_a(dimension)
+		return getServer().getWorld(dimension)
 	}
 	
 	fun getLootTable(location: ResourceLocation): LootTable{

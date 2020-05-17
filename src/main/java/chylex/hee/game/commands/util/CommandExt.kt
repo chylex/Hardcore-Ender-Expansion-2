@@ -8,7 +8,6 @@ import net.minecraft.command.CommandSource
 import net.minecraft.command.arguments.LocationInput
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.text.ITextComponent
-import net.minecraft.world.server.ServerWorld
 
 fun <C, T : ArgumentBuilder<CommandSource, T>> ArgumentBuilder<CommandSource, T>.executes(function: (CommandContext<CommandSource>, C) -> Int, extra: C): T{
 	return this.executes { function(it, extra) }
@@ -26,9 +25,6 @@ fun ICommand.message(name: String, vararg params: Any): ITextComponent{
 fun ICommand.exception(name: String): SimpleCommandExceptionType{
 	return SimpleCommandExceptionType(TextComponentTranslation("commands.hee.${this.name}.$name"))
 }
-
-inline val CommandSource.world: ServerWorld
-	get() = this.func_197023_e() // RENAME
 
 inline fun <reified T : Enum<T>> CommandContext<CommandSource>.getEnum(name: String): T{
 	return this.getArgument(name, T::class.java)

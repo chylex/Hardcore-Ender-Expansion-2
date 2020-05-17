@@ -79,7 +79,7 @@ data class TerritoryInstance(val territory: TerritoryType, val index: Int){
 		}
 		
 		val endWorld: ServerWorld
-			get() = Environment.getServer().func_71218_a(HEE.dim)
+			get() = Environment.getServer().getWorld(HEE.dim)
 	}
 	
 	private val ordinal

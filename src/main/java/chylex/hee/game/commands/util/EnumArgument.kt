@@ -21,7 +21,7 @@ class EnumArgument<T : Enum<T>>(private val enumClass: Class<T>) : ArgumentType<
 	}
 	
 	object Serializer : IArgumentSerializer<EnumArgument<*>>{
-		override fun func_197072_a(argument: EnumArgument<*>, buffer: PacketBuffer) = buffer.use {
+		override fun write(argument: EnumArgument<*>, buffer: PacketBuffer) = buffer.use {
 			writeString(argument.enumClass.name, 256)
 		}
 		

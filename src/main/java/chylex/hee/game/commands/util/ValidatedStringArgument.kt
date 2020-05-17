@@ -22,7 +22,7 @@ class ValidatedStringArgument(private val strings: Set<String>) : ArgumentType<S
 	}
 	
 	object Serializer : IArgumentSerializer<ValidatedStringArgument>{
-		override fun func_197072_a(argument: ValidatedStringArgument, buffer: PacketBuffer) = buffer.use {
+		override fun write(argument: ValidatedStringArgument, buffer: PacketBuffer) = buffer.use {
 			writeVarInt(argument.strings.size)
 			argument.strings.forEach { writeString(it, MAX_LENGTH) }
 		}
