@@ -46,6 +46,25 @@ class StructureBuild<T : StructurePiece<*>.MutableInstance>(val size: Size){
 		}
 	}
 	
+	/**
+	 * Adds a new piece. Allows intersection with the specified piece.
+	 */
+	fun addPiece(newPiece: T, newPiecePos: BlockPos, ignoreIntersectionWith: PositionedPiece<T>): PositionedPiece<T>?{
+		val addedPiece = PositionedPiece(newPiece, newPiecePos)
+		val addedBox = addedPiece.pieceBox
+		
+		if (addedBox.isInside(structureBox) && pieces.none { addedBox.intersects(it.pieceBox) && it !== ignoreIntersectionWith }){
+			return addedPiece.apply(::commitPiece)
+		}
+		
+		return null
+	}
+	
+	/**
+	 * Adds a new piece.
+	 * [APPEND] mode allows no intersection with any other piece.
+	 * [MERGE] mode allows intersection with all pieces.
+	 */
 	fun addPiece(newPiece: T, newPiecePos: BlockPos, mode: AddMode = APPEND): PositionedPiece<T>?{
 		val addedPiece = PositionedPiece(newPiece, newPiecePos)
 		val addedBox = addedPiece.pieceBox
@@ -57,6 +76,11 @@ class StructureBuild<T : StructurePiece<*>.MutableInstance>(val size: Size){
 		return null
 	}
 	
+	/**
+	 * Adds a new piece and connects it to another piece.
+	 * [APPEND] mode allows no intersection with any other piece.
+	 * [MERGE] mode allows intersection with [targetPiece] but no other pieces.
+	 */
 	fun addPiece(newPiece: T, newPieceConnection: IStructurePieceConnection, targetPiece: PositionedPiece<T>, targetPieceConnection: IStructurePieceConnection, mode: AddMode = APPEND): PositionedPiece<T>?{
 		if (Debug.enabled && !pieces.contains(targetPiece)){
 			HEE.log.error("[StructureBuild] attempted to connect to a piece that is not present in the structure")
@@ -79,7 +103,7 @@ class StructureBuild<T : StructurePiece<*>.MutableInstance>(val size: Size){
 		return null
 	}
 	
-	private fun alignConnections(newPieceConnection: IStructurePieceConnection, targetPieceConnection: IStructurePieceConnection, mode: AddMode): BlockPos{
+	fun alignConnections(newPieceConnection: IStructurePieceConnection, targetPieceConnection: IStructurePieceConnection, mode: AddMode): BlockPos{
 		val newWidth = newPieceConnection.alignment
 		val targetWidth = targetPieceConnection.alignment
 		
