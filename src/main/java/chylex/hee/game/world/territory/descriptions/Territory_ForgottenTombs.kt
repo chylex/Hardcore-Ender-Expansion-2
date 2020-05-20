@@ -1,4 +1,5 @@
 package chylex.hee.game.world.territory.descriptions
+import chylex.hee.client.render.territory.EnvironmentRenderer
 import chylex.hee.client.render.territory.lightmaps.ILightmap
 import chylex.hee.client.render.territory.lightmaps.ILightmap.Companion.calcLightFactor
 import chylex.hee.client.util.MC
@@ -56,6 +57,14 @@ object Territory_ForgottenTombs : ITerritoryDescription{
 		override val voidRadiusMpY = 0.975F
 		override val voidCenterOffset = Vec3d(0.0, -8.0, 0.0)
 		
+		override val renderer = EnvironmentRenderer(
+			/* TODO SkyCubeStatic(
+				texture = Resource.Vanilla("textures/environment/end_sky.png"),
+				color = Vec3d(0.99, 0.5, 0.7),
+				alpha = 1F
+			)*/
+		)
+		
 		override val lightmap = object : ILightmap{
 			override fun update(colors: FloatArray, sunBrightness: Float, skyLight: Float, blockLight: Float, partialTicks: Float){
 				val blockFactor = calcLightFactor(blockLight)
@@ -77,8 +86,8 @@ object Territory_ForgottenTombs : ITerritoryDescription{
 		
 		@Sided(Side.CLIENT)
 		override fun tickClient(player: EntityPlayer){
-			val pos = Pos(player.lookPosVec)
 			val world = player.world
+			val pos = Pos(player.lookPosVec)
 			
 			var levelBlock = 0
 			var levelSky = 0
