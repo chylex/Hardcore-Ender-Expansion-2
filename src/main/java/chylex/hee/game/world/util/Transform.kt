@@ -1,4 +1,6 @@
 package chylex.hee.game.world.util
+import chylex.hee.system.migration.Facing.NORTH
+import chylex.hee.system.migration.Facing.SOUTH
 import chylex.hee.system.migration.vanilla.BlockChest
 import chylex.hee.system.migration.vanilla.BlockStairs
 import chylex.hee.system.util.Pos
@@ -13,6 +15,7 @@ import net.minecraft.state.properties.StairsShape.INNER_LEFT
 import net.minecraft.state.properties.StairsShape.INNER_RIGHT
 import net.minecraft.state.properties.StairsShape.OUTER_LEFT
 import net.minecraft.state.properties.StairsShape.OUTER_RIGHT
+import net.minecraft.state.properties.StairsShape.STRAIGHT
 import net.minecraft.tileentity.TileEntity
 import net.minecraft.util.Direction
 import net.minecraft.util.Mirror
@@ -110,18 +113,16 @@ data class Transform(val rotation: Rotation, val mirror: Boolean){
 	
 	private fun unfuckStairMirror(state: BlockState): BlockState{
 		return when(state[BlockStairs.SHAPE]){
-			INNER_LEFT -> state.with(BlockStairs.SHAPE, INNER_RIGHT)
+			STRAIGHT    -> state
+			INNER_LEFT  -> state.with(BlockStairs.SHAPE, INNER_RIGHT)
 			INNER_RIGHT -> state.with(BlockStairs.SHAPE, INNER_LEFT)
-			OUTER_LEFT -> if (rotation == Rotation.CLOCKWISE_90 || rotation == Rotation.COUNTERCLOCKWISE_90) state.with(BlockStairs.SHAPE, OUTER_RIGHT) else state
-			OUTER_RIGHT -> if (rotation == Rotation.CLOCKWISE_90 || rotation == Rotation.COUNTERCLOCKWISE_90) state.with(BlockStairs.SHAPE, OUTER_LEFT) else state
-			else -> state
+			OUTER_LEFT  -> if (state[BlockStairs.FACING].let { it === NORTH || it === SOUTH }) state.with(BlockStairs.SHAPE, OUTER_RIGHT) else state
+			OUTER_RIGHT -> if (state[BlockStairs.FACING].let { it === NORTH || it === SOUTH }) state.with(BlockStairs.SHAPE, OUTER_LEFT) else state
+			else        -> state
 		}
 	}
 	
 	private fun unfuckChestMirror(state: BlockState): BlockState{
-		return if (mirror)
-			state.with(BlockChest.TYPE, state[BlockChest.TYPE].opposite())
-		else
-			state
+		return state.with(BlockChest.TYPE, state[BlockChest.TYPE].opposite())
 	}
 }
