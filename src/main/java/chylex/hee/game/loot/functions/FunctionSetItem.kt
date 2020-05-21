@@ -1,5 +1,6 @@
 package chylex.hee.game.loot.functions
 import chylex.hee.system.util.facades.Resource
+import chylex.hee.system.util.getIfExists
 import chylex.hee.system.util.nextItem
 import com.google.gson.JsonArray
 import com.google.gson.JsonDeserializationContext
@@ -52,7 +53,7 @@ sealed class FunctionSetItem(conditions: Array<ILootCondition>) : LootFunction(c
 			return when{
 				json.has("items") -> {
 					val items = json.getAsJsonArray("items").map { it.asString }
-					FromList(conditions, items.onEach { ForgeRegistries.ITEMS.getValue(ResourceLocation(it)) ?: throw JsonParseException("Can't find item: $it") }.toTypedArray())
+					FromList(conditions, items.onEach { ForgeRegistries.ITEMS.getIfExists(ResourceLocation(it)) ?: throw JsonParseException("Can't find item: $it") }.toTypedArray())
 				}
 				
 				json.has("tag") -> {
