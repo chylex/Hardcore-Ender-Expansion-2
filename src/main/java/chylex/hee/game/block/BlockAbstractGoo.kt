@@ -1,6 +1,7 @@
 package chylex.hee.game.block
 import chylex.hee.game.block.fluid.FluidBase
 import chylex.hee.game.block.fluid.distances.FlowingFluid5
+import chylex.hee.game.block.util.BlockCollisionLimiter
 import chylex.hee.system.migration.forge.Side
 import chylex.hee.system.migration.forge.Sided
 import chylex.hee.system.migration.vanilla.BlockFlowingFluid
@@ -21,7 +22,6 @@ import net.minecraft.util.math.Vec3d
 import net.minecraft.world.IBlockReader
 import net.minecraft.world.IWorldReader
 import net.minecraft.world.World
-import java.util.UUID
 import java.util.function.Supplier
 
 abstract class BlockAbstractGoo(
@@ -35,25 +35,14 @@ abstract class BlockAbstractGoo(
 	
 	// Initialization
 	
-	private var lastCollidingEntity = ThreadLocal<Pair<Long, UUID>?>()
+	private var collisionLimiter = BlockCollisionLimiter()
 	
 	protected abstract val tickTrackingKey: String
 	
 	// Behavior
 	
 	final override fun onEntityCollision(state: BlockState, world: World, pos: BlockPos, entity: Entity){
-		/*
-		 * this prevents calling onInsideGoo/modifyMotion multiple times if the entity is touching 2 or more goo blocks
-		 *
-		 * because onEntityCollision is always called in succession for all blocks colliding with an entity,
-		 * it is enough to compare if either the world time or the entity has changed since last call (on the same thread)
-		 */
-		
-		val currentWorldTime = world.totalTime
-		
-		if (lastCollidingEntity.get()?.takeUnless { it.first != currentWorldTime || it.second != entity.uniqueID } == null){
-			lastCollidingEntity.set(Pair(currentWorldTime, entity.uniqueID))
-			
+		if (collisionLimiter.check(world, entity)){
 			// handling from Entity.doBlockCollisions
 			val bb = entity.boundingBox
 			val posMin = Pos(bb.minX - 0.001, bb.minY - 0.001, bb.minZ - 0.001)
