@@ -2,10 +2,18 @@ package chylex.hee.game.world.generation
 import chylex.hee.HEE
 import chylex.hee.game.world.generation.segments.SegmentSingleState
 import chylex.hee.game.world.territory.TerritoryInstance
+import com.google.common.cache.CacheBuilder
 import net.minecraft.world.World
+import java.util.concurrent.TimeUnit
 
 class TerritoryGenerationCache(private val world: World){
-	private val definitelyTemporaryTerritoryWorldCache = mutableMapOf<TerritoryInstance, Pair<SegmentedWorld, TerritoryGenerationInfo>>() // TODO DEFINITELY TEMPORARY
+	private val cache = CacheBuilder
+		.newBuilder()
+		.initialCapacity(4)
+		.maximumSize(24)
+		.concurrencyLevel(2)
+		.expireAfterAccess(5, TimeUnit.MINUTES)
+		.build<TerritoryInstance, Pair<SegmentedWorld, TerritoryGenerationInfo>>()
 	
 	private fun constructInstance(instance: TerritoryInstance): Pair<SegmentedWorld, TerritoryGenerationInfo>{
 		val territory = instance.territory
@@ -30,6 +38,6 @@ class TerritoryGenerationCache(private val world: World){
 	}
 	
 	fun get(instance: TerritoryInstance): Pair<SegmentedWorld, TerritoryGenerationInfo>{
-		return definitelyTemporaryTerritoryWorldCache.getOrPut(instance){ constructInstance(instance) }
+		return cache.getIfPresent(instance) ?: constructInstance(instance).also { cache.put(instance, it) }
 	}
 }
