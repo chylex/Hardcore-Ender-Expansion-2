@@ -23,7 +23,7 @@ class TombDungeonRoom_Tomb_MultiSpacious(file: String, private val tombsPerColum
 			val pos = Pos(centerX + offset, 1, 3 + (3 * rand.nextInt(tombsPerColumn)))
 			
 			if (world.getBlock(pos) is BlockGraveDirt){
-				placeChest(world, pos, facing)
+				placeChest(world, instance, pos, facing)
 			}
 		}
 	}

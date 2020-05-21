@@ -1,6 +1,7 @@
 package chylex.hee.game.world.feature.tombdungeon.piece
 import chylex.hee.game.world.feature.tombdungeon.connection.TombDungeonConnection
 import chylex.hee.game.world.feature.tombdungeon.connection.TombDungeonConnectionType.ROOM_ENTRANCE
+import chylex.hee.game.world.structure.IStructureWorld
 import chylex.hee.game.world.structure.piece.IStructurePieceConnection
 import chylex.hee.system.migration.Facing.EAST
 import chylex.hee.system.migration.Facing.NORTH
@@ -15,4 +16,9 @@ class TombDungeonRoom_Main_CrossroadRooms(file: String, isFancy: Boolean) : Tomb
 		TombDungeonConnection(ROOM_ENTRANCE, Pos(maxX, 0, centerZ), EAST),
 		TombDungeonConnection(ROOM_ENTRANCE, Pos(0, 0, centerZ), WEST)
 	)
+	
+	override fun generate(world: IStructureWorld, instance: Instance){
+		super.generate(world, instance)
+		placeChest(world, instance, Pos(1, maxY - 2, 9), EAST)
+	}
 }

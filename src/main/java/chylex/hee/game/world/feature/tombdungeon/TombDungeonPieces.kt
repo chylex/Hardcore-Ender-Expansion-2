@@ -20,6 +20,7 @@ import chylex.hee.game.world.feature.tombdungeon.piece.TombDungeonRoom_Side_Foun
 import chylex.hee.game.world.feature.tombdungeon.piece.TombDungeonRoom_Side_Shelves
 import chylex.hee.game.world.feature.tombdungeon.piece.TombDungeonRoom_Tomb
 import chylex.hee.game.world.feature.tombdungeon.piece.TombDungeonRoom_Tomb_Mass
+import chylex.hee.game.world.feature.tombdungeon.piece.TombDungeonRoom_Tomb_MassSpacious
 import chylex.hee.game.world.feature.tombdungeon.piece.TombDungeonRoom_Tomb_MultiDeep
 import chylex.hee.game.world.feature.tombdungeon.piece.TombDungeonRoom_Tomb_MultiSpacious
 import chylex.hee.game.world.feature.tombdungeon.piece.TombDungeonRoom_Tomb_Single
@@ -320,6 +321,10 @@ object TombDungeonPieces : IStructureDescription{
 		return { TombDungeonRoom_Tomb_Mass(width, depth, border, split, isFancy = it) }
 	}
 	
+	private fun TOMB_MASS_SPACIOUS(file: String): (Boolean) -> TombDungeonAbstractPiece{
+		return { TombDungeonRoom_Tomb_MassSpacious(file, entranceY = 1, allowSecrets = false, isFancy = it) }
+	}
+	
 	private fun TOMB_MULTI_DEEP(file: String, tombsPerColumn: Int): (Boolean) -> TombDungeonAbstractPiece{
 		return { TombDungeonRoom_Tomb_MultiDeep(file, tombsPerColumn, entranceY = 2, allowSecrets = false, isFancy = it) }
 	}
@@ -381,11 +386,11 @@ object TombDungeonPieces : IStructureDescription{
 	)
 	
 	val PIECE_TOMB_RANDOM_MASS_SPACIOUS = weightedListOf(
-		5 to TOMB("tomb.mass.spacious_2x6x3.nbt", entranceY = 1),
-		5 to TOMB("tomb.mass.spacious_2x7x3.nbt", entranceY = 1),
-		5 to TOMB("tomb.mass.spacious_2x8x3.nbt", entranceY = 1),
-		2 to TOMB("tomb.mass.spacious_4x3x3.nbt", entranceY = 1),
-		2 to TOMB("tomb.mass.spacious_6x2x2.nbt", entranceY = 1)
+		5 to TOMB_MASS_SPACIOUS("tomb.mass.spacious_2x6x3.nbt"),
+		5 to TOMB_MASS_SPACIOUS("tomb.mass.spacious_2x7x3.nbt"),
+		5 to TOMB_MASS_SPACIOUS("tomb.mass.spacious_2x8x3.nbt"),
+		2 to TOMB_MASS_SPACIOUS("tomb.mass.spacious_4x3x3.nbt"),
+		2 to TOMB_MASS_SPACIOUS("tomb.mass.spacious_6x2x2.nbt")
 	)
 	
 	val PIECE_TOMB_RANDOM_MULTI_NARROW = weightedListOf(
