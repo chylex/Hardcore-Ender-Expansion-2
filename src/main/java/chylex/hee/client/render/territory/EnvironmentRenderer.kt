@@ -2,6 +2,7 @@ package chylex.hee.client.render.territory
 import chylex.hee.client.render.TerritoryRenderer
 import chylex.hee.client.render.territory.components.SkyCubeStatic
 import chylex.hee.client.render.util.GL
+import chylex.hee.client.util.MC
 import chylex.hee.system.migration.forge.Side
 import chylex.hee.system.migration.forge.Sided
 import chylex.hee.system.util.facades.Resource
@@ -21,6 +22,10 @@ class EnvironmentRenderer(private vararg val renderers: IRenderHandler) : IRende
 		val currentFogDensityMp
 			@Sided(Side.CLIENT)
 			get() = 1F + (9F * remapRange(TerritoryRenderer.VOID_FACTOR_VALUE, (-0.5F)..(1F), (0F)..(1F)).coerceIn(0F, 1F).pow(1.5F))
+		
+		val currentRenderDistanceMp
+			@Sided(Side.CLIENT)
+			get() = MC.settings.renderDistanceChunks.let { if (it > 12) 0F else (1F - (it / 16.5F)).pow((it - 1) * 0.25F) }
 		
 		val VANILLA = EnvironmentRenderer(
 			SkyCubeStatic(

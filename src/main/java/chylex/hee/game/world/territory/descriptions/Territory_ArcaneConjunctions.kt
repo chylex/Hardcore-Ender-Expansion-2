@@ -24,6 +24,7 @@ object Territory_ArcaneConjunctions : ITerritoryDescription{
 	override val environment = object : TerritoryEnvironment(){
 		override val fogColor = RGB(60, 50, 55).asVec
 		override val fogDensity = 0.015F
+		override val fogRenderDistanceModifier = 0.01F
 		
 		override val voidRadiusMpXZ = 1.25F
 		override val voidRadiusMpY = 1.5F

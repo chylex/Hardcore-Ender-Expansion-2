@@ -51,6 +51,8 @@ object Territory_ForgottenTombs : ITerritoryDescription{
 		override val fogDensity
 			get() = currentFogDensity.get(MC.partialTicks)
 		
+		override val fogRenderDistanceModifier = 0.003F
+		
 		override val skyLight = 15
 		
 		override val voidRadiusMpXZ = 1.35F

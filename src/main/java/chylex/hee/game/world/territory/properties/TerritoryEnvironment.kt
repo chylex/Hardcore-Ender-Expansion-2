@@ -25,6 +25,7 @@ abstract class TerritoryEnvironment{
 	
 	abstract val fogColor: Vec3d
 	abstract val fogDensity: Float
+	open val fogRenderDistanceModifier = 0F
 	
 	abstract val voidRadiusMpXZ: Float
 	abstract val voidRadiusMpY: Float

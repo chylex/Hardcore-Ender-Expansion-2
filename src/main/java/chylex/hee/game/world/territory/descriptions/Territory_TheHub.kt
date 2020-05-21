@@ -38,6 +38,7 @@ object Territory_TheHub : ITerritoryDescription{
 	override val environment = object : TerritoryEnvironment(){
 		override val fogColor = RGB(10u).asVec
 		override val fogDensity = 0.0115F
+		override val fogRenderDistanceModifier = 0.01F
 		
 		override val voidRadiusMpXZ = 1.1F
 		override val voidRadiusMpY = 2F

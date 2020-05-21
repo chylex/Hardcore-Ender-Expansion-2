@@ -31,6 +31,7 @@ object Territory_ObsidianTowers : ITerritoryDescription{
 	override val environment = object : TerritoryEnvironment(){
 		override val fogColor = Vec3d(0.0, 0.0, 0.0)
 		override val fogDensity = 0.01F
+		override val fogRenderDistanceModifier = 0.005F
 		
 		override val voidRadiusMpXZ = 2F
 		override val voidRadiusMpY = 2.5F

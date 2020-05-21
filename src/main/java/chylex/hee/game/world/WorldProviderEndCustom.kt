@@ -157,8 +157,12 @@ class WorldProviderEndCustom(world: World, type: DimensionType) : EndDimension(w
 			return false
 		}
 		
+		val density = clientEnvironment?.let {
+			(it.fogDensity * EnvironmentRenderer.currentFogDensityMp) + (it.fogRenderDistanceModifier * EnvironmentRenderer.currentRenderDistanceMp)
+		}
+		
 		GL.setFogMode(FOG_EXP2)
-		GL.setFogDensity(clientEnvironment?.fogDensity?.times(EnvironmentRenderer.currentFogDensityMp) ?: 0F) // TODO adjust fog density by render distance
+		GL.setFogDensity(density ?: 0F)
 		return true
 	}
 	

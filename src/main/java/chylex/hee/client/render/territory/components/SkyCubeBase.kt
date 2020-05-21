@@ -33,7 +33,7 @@ abstract class SkyCubeBase : IRenderHandler{
 	
 	@Sided(Side.CLIENT)
 	override fun render(ticks: Int, partialTicks: Float, world: ClientWorld, mc: Minecraft){
-		val dist = distance
+		val dist = distance.coerceAtMost(18.5 * mc.gameSettings.renderDistanceChunks)
 		val col = color
 		
 		val red = col.x.toFloat()
