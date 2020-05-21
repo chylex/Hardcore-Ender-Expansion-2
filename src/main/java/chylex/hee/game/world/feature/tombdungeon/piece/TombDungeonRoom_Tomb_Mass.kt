@@ -51,5 +51,7 @@ class TombDungeonRoom_Tomb_Mass(width: Int, depth: Int, private val border: Bool
 		else{
 			world.setBlock(Pos(centerX, 1, maxZ - 1), ModBlocks.DUSTY_STONE)
 		}
+		
+		placeCobwebs(world, instance)
 	}
 }

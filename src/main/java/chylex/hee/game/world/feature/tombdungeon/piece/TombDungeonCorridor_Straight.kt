@@ -30,6 +30,12 @@ class TombDungeonCorridor_Straight(length: Int, override val isFancy: Boolean) :
 		
 		if (length > 2){
 			world.placeCube(Pos(1, 1, 1), Pos(size.maxX - 1, size.maxY - 1, size.maxZ - 1), Air)
+			
+			if (world.rand.nextInt(4) == 0){
+				placeCrumblingCeiling(world, instance, 1)
+			}
 		}
+		
+		placeCobwebs(world, instance)
 	}
 }

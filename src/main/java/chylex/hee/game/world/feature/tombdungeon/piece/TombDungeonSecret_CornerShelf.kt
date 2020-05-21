@@ -1,6 +1,7 @@
 package chylex.hee.game.world.feature.tombdungeon.piece
 import chylex.hee.game.world.feature.tombdungeon.connection.TombDungeonConnection
 import chylex.hee.game.world.feature.tombdungeon.connection.TombDungeonConnectionType.SECRET_CONNECTOR
+import chylex.hee.game.world.structure.IStructureWorld
 import chylex.hee.game.world.structure.piece.IStructurePieceConnection
 import chylex.hee.system.migration.Facing
 import chylex.hee.system.migration.Facing.WEST
@@ -14,6 +15,8 @@ class TombDungeonSecret_CornerShelf(file: String) : TombDungeonSecret(file){
 	override val connections = arrayOf<IStructurePieceConnection>(
 		TombDungeonConnection(SECRET_CONNECTOR, Pos(2, 0, maxZ), Facing.SOUTH)
 	)
+	
+	override fun placeCobwebs(world: IStructureWorld, chancePerXZ: Float){}
 	
 	override fun pickRandomEntrancePoint(rand: Random): BlockPos{
 		return Pos(

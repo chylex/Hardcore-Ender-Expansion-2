@@ -76,6 +76,8 @@ class TombDungeonDeadEnd_Tomb(length: Int, private val tombConstructor: (Boolean
 				}
 			}
 		}
+		
+		placeCobwebs(world, instance)
 	}
 	
 	override fun constructTomb(): TombDungeonAbstractPiece{

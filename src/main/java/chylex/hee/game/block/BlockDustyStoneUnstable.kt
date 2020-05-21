@@ -8,6 +8,7 @@ import chylex.hee.system.migration.vanilla.EntityLivingBase
 import chylex.hee.system.migration.vanilla.EntityPlayer
 import chylex.hee.system.util.Pos
 import chylex.hee.system.util.allInBox
+import chylex.hee.system.util.facades.Facing4
 import chylex.hee.system.util.floorToInt
 import chylex.hee.system.util.getBlock
 import chylex.hee.system.util.getState
@@ -41,6 +42,14 @@ class BlockDustyStoneUnstable(builder: BlockBuilder) : BlockDustyStone(builder){
 		if (state.block === ModBlocks.DUSTY_STONE_DAMAGED){
 			world.addEntity(EntityFallingBlock(world, pos.x + 0.5, pos.y.toDouble(), pos.z + 0.5, state))
 			
+			for(facing in Facing4){
+				val adjacentPos = pos.offset(facing)
+				
+				if (adjacentPos.getBlock(world) is BlockDustyStoneUnstable){
+					doCrumbleTest(world, adjacentPos)
+				}
+			}
+			
 			if (pos.up().getBlock(world) is BlockDustyStoneUnstable){
 				succeedCrumbleTest(world, pos.up())
 			}
@@ -68,7 +77,17 @@ class BlockDustyStoneUnstable(builder: BlockBuilder) : BlockDustyStone(builder){
 	
 	override fun onEntityCollision(state: BlockState, world: World, pos: BlockPos, entity: Entity){
 		if (!world.isRemote && world.totalTime % 4L == 0L && !(entity.height <= 0.5F || (entity.height <= 1F && entity.width <= 0.5F)) && isNonCreative(entity)){
-			doCrumbleTest(world, pos)
+			if (!doCrumbleTest(world, pos)){
+				return
+			}
+			
+			for(facing in Facing4){
+				val adjacentPos = pos.offset(facing)
+				
+				if (adjacentPos.getBlock(world) is BlockDustyStoneUnstable){
+					doCrumbleTest(world, adjacentPos)
+				}
+			}
 		}
 	}
 	
@@ -109,7 +128,7 @@ class BlockDustyStoneUnstable(builder: BlockBuilder) : BlockDustyStone(builder){
 		return entity !is EntityPlayer || !entity.isCreative
 	}
 	
-	private fun doCrumbleTest(world: World, pos: BlockPos){
+	private fun doCrumbleTest(world: World, pos: BlockPos): Boolean{
 		for(offset in 1..8){
 			val testPos = pos.down(offset)
 			val isDustyStone = testPos.getBlock(world) is BlockDustyStoneUnstable
@@ -117,11 +136,14 @@ class BlockDustyStoneUnstable(builder: BlockBuilder) : BlockDustyStone(builder){
 			if (!isDustyStone){
 				if (!testPos.isTopSolid(world)){
 					succeedCrumbleTest(world, testPos.up())
+					return true
 				}
 				
 				break
 			}
 		}
+		
+		return false
 	}
 	
 	private fun succeedCrumbleTest(world: World, pos: BlockPos){

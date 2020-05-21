@@ -31,6 +31,8 @@ class TombDungeonSecret_LootChest(file: String) : TombDungeonSecret(file){
 		world.addTrigger(Pos(centerX, 1, 2), TileEntityStructureTrigger(chestState, chestTile))
 	}
 	
+	override fun placeCobwebs(world: IStructureWorld, chancePerXZ: Float){}
+	
 	override fun pickRandomEntrancePoint(rand: Random): BlockPos{
 		return Pos(
 			rand.nextInt(rand.nextInt(centerX - 2, centerX - 1), rand.nextInt(centerX + 1, centerX + 2)),

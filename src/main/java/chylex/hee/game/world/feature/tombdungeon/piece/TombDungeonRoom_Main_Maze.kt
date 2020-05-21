@@ -36,6 +36,8 @@ class TombDungeonRoom_Main_Maze(file: String, isFancy: Boolean) : TombDungeonRoo
 		val brick = Single(ModBlocks.DUSTY_STONE_BRICKS)
 		val top = maxY - 1
 		
+		placeCrumblingCeiling(world, instance, rand.nextInt(0, 3))
+		
 		if (rand.nextBoolean()){
 			world.placeWalls(Pos(1, 1, 4), Pos(3, top, 4), brick)
 			world.placeWalls(Pos(5, 1, 8), Pos(7, top, 8), Air)

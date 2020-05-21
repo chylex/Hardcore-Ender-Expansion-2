@@ -52,6 +52,8 @@ class TombDungeonRoom_End(file: String) : TombDungeonRoom(file, isFancy = true){
 		placeChests(world, tombs, tombOffset)
 	}
 	
+	override fun placeCobwebs(world: IStructureWorld, chancePerXZ: Float){}
+	
 	private fun placeTokenHolders(world: IStructureWorld, tombs: Array<Tomb>, tombOffset: BlockPos){
 		val rand = world.rand
 		val tokenTombs = tombs.asList().shuffled(rand).take(2)

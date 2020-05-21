@@ -51,7 +51,14 @@ class TombDungeonCorridor_StraightTombs(entranceSpacing: Int, configuration: Con
 	
 	override fun generate(world: IStructureWorld, instance: Instance){
 		super.generate(world, instance)
+		
 		world.placeCube(Pos(1, 1, 1), Pos(size.maxX - 1, size.maxY - 1, size.maxZ - 1), Air)
+		
+		if (world.rand.nextInt(5) == 0){
+			placeCrumblingCeiling(world, instance, 1)
+		}
+		
+		placeCobwebs(world, instance)
 	}
 	
 	override fun constructTomb(): TombDungeonAbstractPiece{
