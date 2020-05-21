@@ -14,6 +14,7 @@ import chylex.hee.system.migration.vanilla.EntityVillager
 import chylex.hee.system.util.TagCompound
 import chylex.hee.system.util.color.IntColor.Companion.RGB
 import chylex.hee.system.util.facades.Facing4
+import chylex.hee.system.util.heeTag
 import chylex.hee.system.util.nextFloat
 import chylex.hee.system.util.nextItem
 import chylex.hee.system.util.playClient
@@ -37,6 +38,10 @@ import java.util.Random
 
 class EntityMobVillagerDying(type: EntityType<EntityMobVillagerDying>, world: World) : EntityAgeable(type, world), IVillagerDataHolder, IEntityAdditionalSpawnData{
 	constructor(world: World) : this(ModEntities.VILLAGER_DYING, world)
+	
+	private companion object{
+		private const val VILLAGER_TAG = "Villager"
+	}
 	
 	private class DecayParticlePos private constructor(private val heightMp: Float) : IOffset{
 		companion object{
@@ -65,8 +70,7 @@ class EntityMobVillagerDying(type: EntityType<EntityMobVillagerDying>, world: Wo
 		}
 	}
 	
-	var villager: VillagerData? = null
-		private set
+	private var villager: VillagerData? = null
 	
 	init{
 		isInvulnerable = true
@@ -98,6 +102,8 @@ class EntityMobVillagerDying(type: EntityType<EntityMobVillagerDying>, world: Wo
 	
 	override fun writeSpawnData(buffer: PacketBuffer) = buffer.use {
 		writeTag(villagerData.serialize(NBTDynamicOps.INSTANCE) as TagCompound)
+		writeVarInt(deathTime)
+		
 		writeFloat(renderYawOffset)
 		writeFloat(rotationYawHead)
 		writeFloat(limbSwing)
@@ -105,6 +111,7 @@ class EntityMobVillagerDying(type: EntityType<EntityMobVillagerDying>, world: Wo
 	
 	override fun readSpawnData(buffer: PacketBuffer) = buffer.use {
 		villager = VillagerData(Dynamic(NBTDynamicOps.INSTANCE, buffer.readTag()))
+		deathTime = readVarInt()
 		
 		renderYawOffset = readFloat()
 		rotationYawHead = readFloat()
@@ -151,6 +158,16 @@ class EntityMobVillagerDying(type: EntityType<EntityMobVillagerDying>, world: Wo
 		}
 		
 		super.remove()
+	}
+	
+	override fun writeAdditional(nbt: TagCompound) = nbt.heeTag.use {
+		super.writeAdditional(nbt)
+		put(VILLAGER_TAG, villagerData.serialize(NBTDynamicOps.INSTANCE))
+	}
+	
+	override fun readAdditional(nbt: TagCompound) = nbt.heeTag.use {
+		super.readAdditional(nbt)
+		villager = VillagerData(Dynamic(NBTDynamicOps.INSTANCE, getCompound(VILLAGER_TAG)))
 	}
 	
 	override fun processInteract(player: EntityPlayer, hand: Hand) = true
