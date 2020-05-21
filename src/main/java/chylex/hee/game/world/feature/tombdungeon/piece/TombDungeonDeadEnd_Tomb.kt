@@ -69,7 +69,7 @@ class TombDungeonDeadEnd_Tomb(length: Int, private val tombConstructor: (Boolean
 				val shelfPos = Pos(2, 2, 1)
 				
 				if (rand.nextInt(3) == 0){
-					placeChest(world, shelfPos, SOUTH)
+					placeChest(world, instance, shelfPos, SOUTH)
 				}
 				else{
 					world.setBlock(shelfPos, Blocks.REDSTONE_TORCH)

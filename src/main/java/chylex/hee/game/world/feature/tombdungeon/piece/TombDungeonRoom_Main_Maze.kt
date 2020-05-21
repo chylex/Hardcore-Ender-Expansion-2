@@ -75,21 +75,21 @@ class TombDungeonRoom_Main_Maze(file: String, isFancy: Boolean) : TombDungeonRoo
 		
 		repeat(rand.nextInt(2, 3)){
 			for(attempt in 1..5){
-				if (tryPlaceChest(world, rand.nextItem(chestPositions).withY(1))){
+				if (tryPlaceChest(world, instance, rand.nextItem(chestPositions).withY(1))){
 					break
 				}
 			}
 		}
 	}
 	
-	private fun tryPlaceChest(world: IStructureWorld, pos: BlockPos): Boolean{
+	private fun tryPlaceChest(world: IStructureWorld, instance: Instance, pos: BlockPos): Boolean{
 		if (!world.isAir(pos)){
 			return false
 		}
 		
 		val facing = Facing4.singleOrNull { world.isAir(pos.offset(it, 2)) } ?: return false
 		
-		placeChest(world, pos, facing)
+		placeChest(world, instance, pos, facing)
 		return true
 	}
 }

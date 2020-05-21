@@ -1,0 +1,51 @@
+{
+  "type": "minecraft:chest",
+  "pools": [
+
+    {
+      "rolls": 1,
+      "name": "pool",
+      "entries": [
+
+        { "type": "item", "name": "hee:binding_essence", "weight": 28, "functions": [
+          { "function": "set_count", "count": 1 },
+          { "function": "hee:infuse", "picks": [ "HARMLESS", "PHASING", "SLOW", "RIDING" ], "amount": 1 }
+        ], "entryName": "infusions#ender_pearl_1" },
+
+        { "type": "item", "name": "hee:binding_essence", "weight": 15, "functions": [
+          { "function": "set_count", "count": 1 },
+          { "function": "hee:infuse", "picks": [ "HARMLESS", "PHASING", "SLOW", "RIDING" ], "amount": 2 }
+        ], "entryName": "infusions#ender_pearl_2" },
+
+        { "type": "item", "name": "hee:binding_essence", "weight": 7, "functions": [
+          { "function": "set_count", "count": 1 },
+          { "function": "hee:infuse", "picks": [ "HARMLESS", "PHASING", "SLOW", "RIDING" ], "amount": 3 }
+        ], "entryName": "infusions#ender_pearl_3" },
+
+
+        { "type": "item", "name": "hee:binding_essence", "weight": 26, "functions": [
+          { "function": "set_count", "count": 1 },
+          { "function": "hee:infuse", "picks": [ "POWER", "FIRE", "TRAP", "HARMLESS", "PHASING" ], "amount": 1 }
+        ], "entryName": "infusions#tnt_1" },
+
+        { "type": "item", "name": "hee:binding_essence", "weight": 14, "functions": [
+          { "function": "set_count", "count": 1 },
+          { "function": "hee:infuse", "picks": [ "POWER", "FIRE", "TRAP", "HARMLESS", "PHASING" ], "amount": 2 }
+        ], "entryName": "infusions#tnt_2" },
+
+        { "type": "item", "name": "hee:binding_essence", "weight": 5, "functions": [
+          { "function": "set_count", "count": 1 },
+          { "function": "hee:infuse", "picks": [ "POWER", "FIRE", "TRAP", "HARMLESS", "PHASING" ], "amount": 3 }
+        ], "entryName": "infusions#tnt_3" },
+
+
+        { "type": "item", "name": "hee:binding_essence", "weight": 2, "functions": [
+          { "function": "set_count", "count": 1 },
+          { "function": "hee:infuse", "picks": [ "STABILITY", "SAFETY" ], "amount": 1 }
+        ], "entryName": "infusions#energy_receptacle_and_shell" }
+
+      ]
+    }
+
+  ]
+}

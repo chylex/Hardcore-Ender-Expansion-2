@@ -1,17 +1,18 @@
 package chylex.hee.game.world.feature.tombdungeon.piece
 import chylex.hee.game.world.feature.tombdungeon.TombDungeonLevel
+import chylex.hee.game.world.feature.tombdungeon.TombDungeonLoot
 import chylex.hee.game.world.feature.tombdungeon.TombDungeonPieces
 import chylex.hee.game.world.structure.IBlockPicker.Single
 import chylex.hee.game.world.structure.IStructureWorld
 import chylex.hee.game.world.structure.piece.StructurePiece
-import chylex.hee.game.world.structure.trigger.LootChestStructureTrigger
+import chylex.hee.game.world.structure.trigger.TileEntityStructureTrigger
 import chylex.hee.game.world.util.PosXZ
 import chylex.hee.init.ModBlocks
 import chylex.hee.system.migration.vanilla.BlockSlab
+import chylex.hee.system.migration.vanilla.TileEntityChest
 import chylex.hee.system.util.Pos
 import chylex.hee.system.util.distanceSqTo
 import chylex.hee.system.util.facades.Facing6
-import chylex.hee.system.util.facades.Resource
 import chylex.hee.system.util.floorToInt
 import chylex.hee.system.util.nextInt
 import chylex.hee.system.util.with
@@ -106,8 +107,10 @@ abstract class TombDungeonAbstractPiece : StructurePiece<TombDungeonLevel>(){
 		}
 	}
 	
-	protected fun placeChest(world: IStructureWorld, pos: BlockPos, facing: Direction, secret: Boolean = false){
-		world.setState(pos, Blocks.CHEST.withFacing(facing))
-		world.addTrigger(pos, LootChestStructureTrigger(Resource.Custom("chests/stronghold_generic"), world.rand.nextLong())) // TODO
+	protected fun placeChest(world: IStructureWorld, instance: Instance, pos: BlockPos, facing: Direction, secret: Boolean = false){
+		val level = instance.context ?: TombDungeonLevel.FIRST
+		val chest = TileEntityChest().apply { TombDungeonLoot.generate(this, world.rand, level, secret) }
+		
+		world.addTrigger(pos, TileEntityStructureTrigger(Blocks.CHEST.withFacing(facing), chest))
 	}
 }

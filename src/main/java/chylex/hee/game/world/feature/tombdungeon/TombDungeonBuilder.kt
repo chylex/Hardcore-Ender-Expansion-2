@@ -131,7 +131,7 @@ object TombDungeonBuilder : IStructureBuilder{
 					}
 					
 					if (level == TombDungeonLevel.LAST){
-						process.addPiece(build.generatedPieces[lastCorridorIndex], TombDungeonPieces.PIECE_ROOM_END, level = null) ?: return@guardChain false
+						process.addPiece(build.generatedPieces[lastCorridorIndex], TombDungeonPieces.PIECE_ROOM_END, level) ?: return@guardChain false
 					}
 					else{
 						process.appendPieces(build.generatedPieces[lastCorridorIndex], TombDungeonPieces.PIECES_STAIRCASE(rand.nextInt(9, 17)), level) ?: return@guardChain false

@@ -8,7 +8,7 @@ class TombDungeonRoom_Tomb_Single(file: String, entranceY: Int, allowSecrets: Bo
 		super.generate(world, instance)
 		
 		if (world.rand.nextInt(10) < 3){
-			placeChest(world, Pos(centerX, 1, maxZ - 4), SOUTH)
+			placeChest(world, instance, Pos(centerX, 1, maxZ - 4), SOUTH)
 		}
 	}
 }

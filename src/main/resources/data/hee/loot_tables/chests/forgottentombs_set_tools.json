@@ -1,0 +1,40 @@
+{
+  "type": "minecraft:chest",
+  "pools": [
+
+    {
+      "rolls": 1,
+      "name": "pool",
+      "entries": [
+        { "type": "item", "name": "minecraft:oak_planks", "weight": 50, "functions": [
+          { "function": "hee:set_item", "items": [ "minecraft:wooden_pickaxe", "minecraft:wooden_axe", "minecraft:wooden_shovel", "minecraft:wooden_hoe" ] },
+          { "function": "set_count", "count": 1 },
+          { "function": "set_damage", "damage": { "min": 0.10, "max": 0.45 } },
+          { "function": "enchant_with_levels", "treasure": false, "levels": { "min": 4, "max": 10 }, "conditions": [{ "condition": "random_chance", "chance": 0.91 }] }
+        ], "entryName": "#wood" },
+
+        { "type": "item", "name": "minecraft:cobblestone", "weight": 35, "functions": [
+          { "function": "hee:set_item", "items": [ "minecraft:stone_pickaxe", "minecraft:stone_axe", "minecraft:stone_shovel", "minecraft:stone_hoe" ] },
+          { "function": "set_count", "count": 1 },
+          { "function": "set_damage", "damage": { "min": 0.50, "max": 0.85 } },
+          { "function": "enchant_with_levels", "treasure": false, "levels": { "min": 9, "max": 15 }, "conditions": [{ "condition": "random_chance", "chance": 0.91 }] }
+        ], "entryName": "#stone" },
+
+        { "type": "item", "name": "minecraft:iron_ingot", "weight": 22, "functions": [
+          { "function": "hee:set_item", "items": [ "minecraft:iron_pickaxe", "minecraft:iron_axe", "minecraft:iron_shovel", "minecraft:iron_hoe" ] },
+          { "function": "set_count", "count": 1 },
+          { "function": "set_damage", "damage": { "min": 0.25, "max": 0.80 } },
+          { "function": "enchant_with_levels", "treasure": false, "levels": { "min": 5, "max": 12 }, "conditions": [{ "condition": "random_chance", "chance": 0.91 }] }
+        ], "entryName": "#iron" },
+
+        { "type": "item", "name": "minecraft:gold_ingot", "weight": 20, "functions": [
+          { "function": "hee:set_item", "items": [ "minecraft:golden_pickaxe", "minecraft:golden_axe", "minecraft:golden_shovel", "minecraft:golden_hoe" ] },
+          { "function": "set_count", "count": 1 },
+          { "function": "set_damage", "damage": { "min": 0.60, "max": 0.95 } },
+          { "function": "enchant_with_levels", "treasure": false, "levels": { "min": 6, "max": 15 }, "conditions": [{ "condition": "random_chance", "chance": 0.91 }] }
+        ], "entryName": "#gold" }
+      ]
+    }
+
+  ]
+}

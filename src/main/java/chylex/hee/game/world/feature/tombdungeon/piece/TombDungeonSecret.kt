@@ -46,7 +46,7 @@ abstract class TombDungeonSecret(file: String) : TombDungeonAbstractPieceFromFil
 			world.setState(pickRandomEntrancePoint(rand), ModBlocks.DUSTY_STONE_BRICK_STAIRS.withFacing(NORTH))
 		}
 		
-		pickChestPosition(rand)?.let { (chestPos, chestFacing) -> placeChest(world, chestPos, chestFacing, secret = true) }
+		pickChestPosition(rand)?.let { (chestPos, chestFacing) -> placeChest(world, instance, chestPos, chestFacing, secret = true) }
 	}
 	
 	protected abstract fun pickRandomEntrancePoint(rand: Random): BlockPos

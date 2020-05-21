@@ -1,0 +1,42 @@
+{
+  "type": "minecraft:chest",
+  "pools": [
+
+    {
+      "rolls": 1,
+      "name": "pool",
+      "entries": [
+        { "type": "item", "name": "minecraft:bow", "weight": 35, "functions": [
+          { "function": "set_count", "count": 1 },
+          { "function": "set_damage", "damage": { "min": 0.05, "max": 0.35 } },
+          { "function": "enchant_with_levels", "treasure": false, "levels": { "min": 1, "max": 10 }, "conditions": [{ "condition": "random_chance", "chance": 0.91 }] }
+        ], "entryName": "bow" },
+
+        { "type": "item", "name": "minecraft:wooden_sword", "weight": 50, "functions": [
+          { "function": "set_count", "count": 1 },
+          { "function": "set_damage", "damage": { "min": 0.05, "max": 0.40 } },
+          { "function": "enchant_with_levels", "treasure": false, "levels": { "min": 1, "max": 10 }, "conditions": [{ "condition": "random_chance", "chance": 0.91 }] }
+        ], "entryName": "wooden_sword" },
+
+        { "type": "item", "name": "minecraft:stone_sword", "weight": 32, "functions": [
+          { "function": "set_count", "count": 1 },
+          { "function": "set_damage", "damage": { "min": 0.40, "max": 0.80 } },
+          { "function": "enchant_with_levels", "treasure": false, "levels": { "min": 7, "max": 12 }, "conditions": [{ "condition": "random_chance", "chance": 0.91 }] }
+        ], "entryName": "stone_sword" },
+
+        { "type": "item", "name": "minecraft:iron_sword", "weight": 15, "functions": [
+          { "function": "set_count", "count": 1 },
+          { "function": "set_damage", "damage": { "min": 0.15, "max": 0.75 } },
+          { "function": "enchant_with_levels", "treasure": false, "levels": { "min": 4, "max": 8 }, "conditions": [{ "condition": "random_chance", "chance": 0.91 }] }
+        ], "entryName": "iron_sword" },
+
+        { "type": "item", "name": "minecraft:golden_sword", "weight": 12, "functions": [
+          { "function": "set_count", "count": 1 },
+          { "function": "set_damage", "damage": { "min": 0.50, "max": 0.95 } },
+          { "function": "enchant_with_levels", "treasure": false, "levels": { "min": 2, "max": 14 }, "conditions": [{ "condition": "random_chance", "chance": 0.91 }] }
+        ], "entryName": "golden_sword" }
+      ]
+    }
+
+  ]
+}

@@ -49,7 +49,7 @@ class TombDungeonRoom_End(file: String) : TombDungeonRoom(file, isFancy = true){
 		)
 		
 		placeTokenHolders(world, tombs, tombOffset)
-		placeChests(world, tombs, tombOffset)
+		placeChests(world, instance, tombs, tombOffset)
 	}
 	
 	override fun placeCobwebs(world: IStructureWorld, chancePerXZ: Float){}
@@ -69,7 +69,7 @@ class TombDungeonRoom_End(file: String) : TombDungeonRoom(file, isFancy = true){
 		}
 	}
 	
-	private fun placeChests(world: IStructureWorld, tombs: Array<Tomb>, tombOffset: BlockPos){
+	private fun placeChests(world: IStructureWorld, instance: Instance, tombs: Array<Tomb>, tombOffset: BlockPos){
 		val rand = world.rand
 		val chestTombs = tombs.flatMap { listOf(it to false, it to true) }.shuffled(rand).take(4)
 		
@@ -96,7 +96,7 @@ class TombDungeonRoom_End(file: String) : TombDungeonRoom(file, isFancy = true){
 			}
 			
 			for(pick in picks){
-				placeChest(world, tombOffset.add(x[pick], 0, z[pick]), facing)
+				placeChest(world, instance, tombOffset.add(x[pick], 0, z[pick]), facing)
 			}
 		}
 	}

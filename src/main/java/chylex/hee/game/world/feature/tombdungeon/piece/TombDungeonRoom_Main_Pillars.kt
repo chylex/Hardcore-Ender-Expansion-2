@@ -43,7 +43,7 @@ class TombDungeonRoom_Main_Pillars(file: String, isFancy: Boolean) : TombDungeon
 			
 			if (world.getBlock(chestPos) === ModBlocks.DUSTY_STONE_BRICKS){
 				world.setBlock(chestPos.up(), ModBlocks.DUSTY_STONE_CRACKED)
-				placeChest(world, chestPos, rand.nextItem(Facing4))
+				placeChest(world, instance, chestPos, rand.nextItem(Facing4))
 			}
 		}
 	}

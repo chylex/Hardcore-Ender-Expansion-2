@@ -1,0 +1,33 @@
+{
+  "type": "minecraft:chest",
+  "pools": [
+
+    {
+      "rolls": 1,
+      "name": "pool",
+      "entries": [
+        { "type": "item", "name": "minecraft:leather", "weight": 50, "functions": [
+          { "function": "hee:set_item", "items": [ "minecraft:leather_helmet", "minecraft:leather_chestplate", "minecraft:leather_leggings", "minecraft:leather_boots" ] },
+          { "function": "set_count", "count": 1 },
+          { "function": "set_damage", "damage": { "min": 0.05, "max": 0.25 } },
+          { "function": "enchant_with_levels", "treasure": false, "levels": { "min": 5, "max": 12 }, "conditions": [{ "condition": "random_chance", "chance": 0.91 }] }
+        ], "entryName": "#leather" },
+
+        { "type": "item", "name": "minecraft:iron_ingot", "weight": 30, "functions": [
+          { "function": "hee:set_item", "items": [ "minecraft:chainmail_helmet", "minecraft:chainmail_chestplate", "minecraft:chainmail_leggings", "minecraft:chainmail_boots" ] },
+          { "function": "set_count", "count": 1 },
+          { "function": "set_damage", "damage": { "min": 0.15, "max": 0.75 } },
+          { "function": "enchant_with_levels", "treasure": false, "levels": { "min": 4, "max": 8 }, "conditions": [{ "condition": "random_chance", "chance": 0.91 }] }
+        ], "entryName": "#chainmail" },
+
+        { "type": "item", "name": "minecraft:gold_ingot", "weight": 24, "functions": [
+          { "function": "hee:set_item", "items": [ "minecraft:golden_helmet", "minecraft:golden_chestplate", "minecraft:golden_leggings", "minecraft:golden_boots" ] },
+          { "function": "set_count", "count": 1 },
+          { "function": "set_damage", "damage": { "min": 0.50, "max": 0.95 } },
+          { "function": "enchant_with_levels", "treasure": false, "levels": { "min": 2, "max": 14 }, "conditions": [{ "condition": "random_chance", "chance": 0.91 }] }
+        ], "entryName": "#gold" }
+      ]
+    }
+
+  ]
+}

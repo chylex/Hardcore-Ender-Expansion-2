@@ -30,7 +30,7 @@ class TombDungeonRoom_Side_Shelves(file: String, isFancy: Boolean) : TombDungeon
 			)
 			
 			if (world.isAir(chestPos)){
-				placeChest(world, chestPos, if (chestPos.x < centerX) EAST else WEST)
+				placeChest(world, instance, chestPos, if (chestPos.x < centerX) EAST else WEST)
 			}
 		}
 	}
