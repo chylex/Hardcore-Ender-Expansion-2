@@ -1,52 +1,77 @@
 package chylex.hee.game.commands.server
 import chylex.hee.game.commands.ICommand
 import chylex.hee.game.commands.util.EnumArgument.Companion.enum
-import chylex.hee.game.commands.util.exception
 import chylex.hee.game.commands.util.executes
 import chylex.hee.game.commands.util.getEnum
 import chylex.hee.game.commands.util.message
 import chylex.hee.game.commands.util.returning
 import chylex.hee.game.mechanics.causatum.CausatumStage
 import chylex.hee.game.mechanics.causatum.EnderCausatum
+import chylex.hee.system.migration.vanilla.TextComponentString
 import com.mojang.brigadier.builder.ArgumentBuilder
 import com.mojang.brigadier.context.CommandContext
 import net.minecraft.command.CommandSource
 import net.minecraft.command.Commands.argument
 import net.minecraft.command.Commands.literal
+import net.minecraft.command.arguments.EntityArgument
+import net.minecraft.command.arguments.EntityArgument.player
+import net.minecraft.command.arguments.EntityArgument.players
+import java.util.Locale
 
 object CommandServerCausatum : ICommand{
 	override val name = "causatum"
 	
 	override fun register(builder: ArgumentBuilder<CommandSource, *>){
-		builder.executes(this::executeCheck) // TODO add a way to check someone else's stage
+		builder.then(
+			literal("list").executes(this::executeList)
+		)
+		builder.then(
+			literal("check").executes(this::executeCheck, false).then(
+				argument("player", player()).executes(this::executeCheck, true)
+			)
+		)
 		
 		builder.then(
-			argument("new_stage", enum<CausatumStage>()).executes(this::executeTrigger, false).then(
-				literal("force").executes(this::executeTrigger, true)
+			literal("set").then(
+				argument("stage", enum<CausatumStage>()).executes(this::executeSet, false).then(
+					argument("players", players()).executes(this::executeSet, true)
+				)
 			)
 		)
 	}
 	
-	private val TRIGGER_FAIL = exception("trigger_fail")
-	
-	private fun executeCheck(ctx: CommandContext<CommandSource>): Int{
+	private fun executeList(ctx: CommandContext<CommandSource>) = returning(1){
 		with(ctx.source){
-			val stage = EnderCausatum.getStage(asPlayer())
+			sendFeedback(message("list"), false)
 			
-			sendFeedback(message("check", stage.key), false)
+			for(stage in CausatumStage.values()){
+				sendFeedback(TextComponentString(stage.name.toLowerCase(Locale.ENGLISH)), false)
+			}
+		}
+	}
+	
+	private fun executeCheck(ctx: CommandContext<CommandSource>, hasPlayerParameter: Boolean): Int{
+		with(ctx.source){
+			val player = if (hasPlayerParameter) EntityArgument.getPlayer(ctx, "player") else asPlayer()
+			val stage = EnderCausatum.getStage(player)
+			
+			sendFeedback(message("check", stage.name.toLowerCase(Locale.ENGLISH)), false)
 			return stage.ordinal
 		}
 	}
 	
-	private fun executeTrigger(ctx: CommandContext<CommandSource>, force: Boolean) = returning(1){
-		val newStage = ctx.getEnum<CausatumStage>("new_stage")
+	private fun executeSet(ctx: CommandContext<CommandSource>, hasPlayerParameter: Boolean): Int{
+		val newStage = ctx.getEnum<CausatumStage>("stage")
 		
 		with(ctx.source){
-			if (!EnderCausatum.triggerStage(asPlayer(), newStage, force)){
-				throw TRIGGER_FAIL.create()
+			val players = if (hasPlayerParameter) EntityArgument.getPlayers(ctx, "players") else listOf(asPlayer())
+			
+			for(player in players){
+				EnderCausatum.triggerStage(player, newStage, force = true)
 			}
 			
-			sendFeedback(message("trigger_success"), true)
+			sendFeedback(message("set", players.size), true)
+			return players.size
 		}
 	}
 }

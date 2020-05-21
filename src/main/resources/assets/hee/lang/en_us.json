@@ -331,9 +331,9 @@
   "commands.hee.help.footer.end": "§2 ---",
 
   "commands.hee.causatum.info": "checks or triggers Ender Causatum stages",
+  "commands.hee.causatum.list": "Ender Causatum stages:",
   "commands.hee.causatum.check": "Ender Causatum stage: %s",
-  "commands.hee.causatum.trigger_success": "Ender Causatum stage updated",
-  "commands.hee.causatum.trigger_fail": "Failed updating Ender Causatum stage",
+  "commands.hee.causatum.set": "Ender Causatum stage updated for %s player(s)",
 
   "commands.hee.infusions.info": "manipulates infusions on held item",
   "commands.hee.infusions.reset_success": "Removed %s infusion(s)",
