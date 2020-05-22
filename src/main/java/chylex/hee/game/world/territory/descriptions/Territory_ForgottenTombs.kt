@@ -1,5 +1,6 @@
 package chylex.hee.game.world.territory.descriptions
 import chylex.hee.client.render.territory.EnvironmentRenderer
+import chylex.hee.client.render.territory.components.SkyPlaneTopFoggy
 import chylex.hee.client.render.territory.lightmaps.ILightmap
 import chylex.hee.client.render.territory.lightmaps.ILightmap.Companion.calcLightFactor
 import chylex.hee.client.util.MC
@@ -13,6 +14,7 @@ import chylex.hee.system.migration.vanilla.Potions
 import chylex.hee.system.util.Pos
 import chylex.hee.system.util.allInCenteredBoxMutable
 import chylex.hee.system.util.color.IntColor.Companion.RGB
+import chylex.hee.system.util.facades.Resource
 import chylex.hee.system.util.lookPosVec
 import chylex.hee.system.util.math.LerpedFloat
 import chylex.hee.system.util.nextFloat
@@ -60,11 +62,13 @@ object Territory_ForgottenTombs : ITerritoryDescription{
 		override val voidCenterOffset = Vec3d(0.0, -8.0, 0.0)
 		
 		override val renderer = EnvironmentRenderer(
-			/* TODO SkyCubeStatic(
-				texture = Resource.Vanilla("textures/environment/end_sky.png"),
-				color = Vec3d(0.99, 0.5, 0.7),
-				alpha = 1F
-			)*/
+			SkyPlaneTopFoggy(
+				texture = Resource.Custom("textures/environment/stars.png"),
+				color = Vec3d(0.58, 0.58, 0.54),
+				rescale = 29.0,
+				distance = 65.0,
+				width = 300.0
+			)
 		)
 		
 		override val lightmap = object : ILightmap{
