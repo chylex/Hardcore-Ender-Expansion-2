@@ -13,6 +13,8 @@ import chylex.hee.system.util.nextFloat
 import chylex.hee.system.util.nextVector
 import chylex.hee.system.util.offsetTowards
 import chylex.hee.system.util.scale
+import net.minecraft.client.particle.IParticleRenderType
+import net.minecraft.client.particle.IParticleRenderType.PARTICLE_SHEET_TRANSLUCENT
 import net.minecraft.client.particle.Particle
 import net.minecraft.util.math.Vec3d
 import net.minecraft.world.World
@@ -75,6 +77,14 @@ object ParticleVoid : IParticleMaker.Simple(){
 			else{
 				particleAlpha = min(1F, particleAlpha + 0.4F)
 			}
+		}
+		
+		override fun getBrightnessForRender(partialTicks: Float): Int{
+			return 0
+		}
+		
+		override fun getRenderType(): IParticleRenderType{
+			return PARTICLE_SHEET_TRANSLUCENT
 		}
 	}
 }

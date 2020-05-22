@@ -7,6 +7,8 @@ import chylex.hee.system.migration.forge.Sided
 import chylex.hee.system.util.color.IRandomColor
 import chylex.hee.system.util.color.IntColor
 import chylex.hee.system.util.nextInt
+import net.minecraft.client.particle.IParticleRenderType
+import net.minecraft.client.particle.IParticleRenderType.PARTICLE_SHEET_TRANSLUCENT
 import net.minecraft.client.particle.Particle
 import net.minecraft.world.World
 
@@ -63,6 +65,10 @@ object ParticleFadingSpot : IParticleMaker.WithData<ParticleDataColorLifespanSca
 			
 			particleAlpha -= alphaPerTick
 			particleScale -= scalePerTick
+		}
+		
+		override fun getRenderType(): IParticleRenderType{
+			return PARTICLE_SHEET_TRANSLUCENT
 		}
 	}
 }

@@ -7,6 +7,8 @@ import chylex.hee.system.migration.forge.Sided
 import chylex.hee.system.util.color.IRandomColor
 import chylex.hee.system.util.color.IntColor
 import chylex.hee.system.util.nextFloat
+import net.minecraft.client.particle.IParticleRenderType
+import net.minecraft.client.particle.IParticleRenderType.PARTICLE_SHEET_TRANSLUCENT
 import net.minecraft.client.particle.Particle
 import net.minecraft.world.World
 import kotlin.math.min
@@ -44,6 +46,10 @@ object ParticleGrowingSpot : IParticleMaker.WithData<ParticleDataColorLifespanSc
 			
 			particleAlpha = min(0.9F, particleAlpha + rand.nextFloat(0.03F, 0.09F))
 			particleScale += rand.nextFloat(0.01F, 0.02F)
+		}
+		
+		override fun getRenderType(): IParticleRenderType{
+			return PARTICLE_SHEET_TRANSLUCENT
 		}
 	}
 }

@@ -8,6 +8,8 @@ import chylex.hee.system.migration.forge.Sided
 import chylex.hee.system.util.color.IRandomColor
 import chylex.hee.system.util.nextFloat
 import chylex.hee.system.util.nextInt
+import net.minecraft.client.particle.IParticleRenderType
+import net.minecraft.client.particle.IParticleRenderType.PARTICLE_SHEET_TRANSLUCENT
 import net.minecraft.client.particle.Particle
 import net.minecraft.world.World
 import java.util.Random
@@ -52,6 +54,10 @@ object ParticleGlitter : IParticleMaker.WithData<ParticleDataColorLifespanScale>
 			}
 			
 			particleAlpha -= 0.025F
+		}
+		
+		override fun getRenderType(): IParticleRenderType{
+			return PARTICLE_SHEET_TRANSLUCENT
 		}
 	}
 }
