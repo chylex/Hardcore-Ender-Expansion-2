@@ -1,5 +1,6 @@
 package chylex.hee.game.block
 import chylex.hee.game.block.entity.TileEntityInfusedTNT
+import chylex.hee.game.block.util.IBlockFireCatchOverride
 import chylex.hee.game.block.util.Property
 import chylex.hee.game.entity.item.EntityInfusedTNT
 import chylex.hee.game.item.infusion.Infusion.TRAP
@@ -10,6 +11,7 @@ import chylex.hee.system.migration.vanilla.EntityLivingBase
 import chylex.hee.system.migration.vanilla.EntityPlayer
 import chylex.hee.system.migration.vanilla.Sounds
 import chylex.hee.system.util.breakBlock
+import chylex.hee.system.util.getState
 import chylex.hee.system.util.getTile
 import chylex.hee.system.util.playServer
 import chylex.hee.system.util.posVec
@@ -22,6 +24,7 @@ import net.minecraft.item.ItemStack
 import net.minecraft.state.StateContainer.Builder
 import net.minecraft.tileentity.TileEntity
 import net.minecraft.util.Direction
+import net.minecraft.util.Direction.UP
 import net.minecraft.util.SoundCategory
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.RayTraceResult
@@ -32,7 +35,7 @@ import net.minecraft.world.storage.loot.LootContext
 import net.minecraft.world.storage.loot.LootParameters
 import java.util.Random
 
-class BlockInfusedTNT : BlockTNT(Properties.from(Blocks.TNT)){
+class BlockInfusedTNT : BlockTNT(Properties.from(Blocks.TNT)), IBlockFireCatchOverride{
 	companion object{
 		val INFERNIUM = Property.bool("infernium")
 	}
@@ -103,12 +106,21 @@ class BlockInfusedTNT : BlockTNT(Properties.from(Blocks.TNT)){
 	
 	// TNT overrides
 	
+	override fun tryCatchFire(world: World, pos: BlockPos, chance: Int, rand: Random){
+		val state = pos.getState(world)
+		
+		if (rand.nextInt(chance) < state.getFlammability(world, pos, UP)){
+			igniteTNT(world, pos, state, null, ignoreTrap = true)
+			pos.removeBlock(world)
+		}
+	}
+	
 	override fun catchFire(state: BlockState, world: World, pos: BlockPos, face: Direction?, igniter: LivingEntity?){
 		if (world.isRemote){
 			return
 		}
 		
-		// UPDATE FireBlock removes the TNT block and tile entity before calling this, FFS
+		// UPDATE check if FireBlock still removes the TNT block and tile entity before calling this
 		igniteTNT(world, pos, state, igniter, ignoreTrap = false)
 	}
 	
