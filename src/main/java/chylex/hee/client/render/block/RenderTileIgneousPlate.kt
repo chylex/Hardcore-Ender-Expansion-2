@@ -11,9 +11,6 @@ import chylex.hee.system.migration.Facing.WEST
 import chylex.hee.system.migration.forge.Side
 import chylex.hee.system.migration.forge.Sided
 import chylex.hee.system.util.color.IntColor.Companion.RGB
-import chylex.hee.system.util.component1
-import chylex.hee.system.util.component2
-import chylex.hee.system.util.component3
 import chylex.hee.system.util.facades.Resource
 import chylex.hee.system.util.floorToInt
 import chylex.hee.system.util.getState
@@ -90,9 +87,7 @@ object RenderTileIgneousPlate : TileEntityRenderer<TileEntityIgneousPlate>(){
 		
 		if (destroyStage < 0){
 			ModelBlockIgneousPlate.renderOuterBox()
-			
-			val (r, g, b) = getInnerBoxColor(tile.clientCombinedHeat)
-			GL.color(r.toFloat(), g.toFloat(), b.toFloat())
+			GL.color(getInnerBoxColor(tile.clientCombinedHeat))
 		}
 		
 		GL.disableLighting()

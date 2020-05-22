@@ -40,11 +40,6 @@ abstract class SunBase : IRenderHandler{
 	override fun render(ticks: Int, partialTicks: Float, world: ClientWorld, mc: Minecraft){
 		val width = size
 		val dist = distance
-		val col = color
-		
-		val red = col.x.toFloat()
-		val green = col.y.toFloat()
-		val blue = col.z.toFloat()
 		
 		GL.enableBlend()
 		GL.blendFunc(SF_SRC_ALPHA, DF_ONE, SF_ONE, DF_ZERO)
@@ -55,7 +50,7 @@ abstract class SunBase : IRenderHandler{
 		
 		setRotation(world, partialTicks)
 		
-		GL.color(red, green, blue, alpha)
+		GL.color(color, alpha)
 		MC.textureManager.bindTexture(texture)
 		
 		TESSELLATOR.draw(GL_QUADS, DefaultVertexFormats.POSITION_TEX){

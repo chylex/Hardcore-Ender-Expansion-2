@@ -7,6 +7,7 @@ import com.mojang.blaze3d.platform.GlStateManager.DestFactor
 import com.mojang.blaze3d.platform.GlStateManager.FogMode
 import com.mojang.blaze3d.platform.GlStateManager.SourceFactor
 import com.mojang.blaze3d.platform.GlStateManager.TexGen
+import net.minecraft.util.math.Vec3d
 import java.nio.FloatBuffer
 
 typealias GLSM = GlStateManager
@@ -77,6 +78,9 @@ object GL{
 	
 	fun color(red: Float, green: Float, blue: Float) = GLSM.color3f(red, green, blue)
 	fun color(red: Float, green: Float, blue: Float, alpha: Float) = GLSM.color4f(red, green, blue, alpha)
+	
+	fun color(color: Vec3d) = GLSM.color3f(color.x.toFloat(), color.y.toFloat(), color.z.toFloat())
+	fun color(color: Vec3d, alpha: Float) = GLSM.color4f(color.x.toFloat(), color.y.toFloat(), color.z.toFloat(), alpha)
 	
 	// Texture
 	

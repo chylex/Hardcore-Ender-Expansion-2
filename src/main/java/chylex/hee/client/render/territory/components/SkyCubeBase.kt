@@ -34,11 +34,6 @@ abstract class SkyCubeBase : IRenderHandler{
 	@Sided(Side.CLIENT)
 	override fun render(ticks: Int, partialTicks: Float, world: ClientWorld, mc: Minecraft){
 		val dist = distance.coerceAtMost(18.5 * mc.gameSettings.renderDistanceChunks)
-		val col = color
-		
-		val red = col.x.toFloat()
-		val green = col.y.toFloat()
-		val blue = col.z.toFloat()
 		
 		GL.enableBlend()
 		GL.blendFunc(SF_SRC_ALPHA, DF_ONE_MINUS_SRC_ALPHA, SF_ONE, DF_ZERO)
@@ -47,7 +42,7 @@ abstract class SkyCubeBase : IRenderHandler{
 		GL.disableFog()
 		RenderHelper.disableStandardItemLighting()
 		
-		GL.color(red, green, blue, alpha * EnvironmentRenderer.currentSkyAlpha)
+		GL.color(color, alpha * EnvironmentRenderer.currentSkyAlpha)
 		MC.textureManager.bindTexture(texture)
 		
 		for(side in 0..5){
