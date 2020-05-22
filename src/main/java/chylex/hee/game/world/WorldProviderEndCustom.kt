@@ -19,6 +19,7 @@ import net.minecraft.block.Blocks
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.Vec3d
 import net.minecraft.world.World
+import net.minecraft.world.biome.Biome
 import net.minecraft.world.biome.Biomes
 import net.minecraft.world.biome.provider.SingleBiomeProvider
 import net.minecraft.world.biome.provider.SingleBiomeProviderSettings
@@ -77,6 +78,10 @@ class WorldProviderEndCustom(world: World, type: DimensionType) : EndDimension(w
 		}
 		
 		return ChunkGeneratorEndCustom(world, SingleBiomeProvider(SingleBiomeProviderSettings().setBiome(Biomes.THE_END)), settings)
+	}
+	
+	override fun getBiome(pos: BlockPos): Biome{
+		return Biomes.THE_END // prevents client from falling back to Plains and rendering rain while loading
 	}
 	
 	// Spawn point
@@ -174,6 +179,7 @@ class WorldProviderEndCustom(world: World, type: DimensionType) : EndDimension(w
 	// Neutralization
 	
 	override fun setSpawnPoint(pos: BlockPos){}
+	override fun updateWeather(defaultLogic: Runnable){}
 	
 	@Sided(Side.CLIENT)
 	override fun setSkyRenderer(renderer: IRenderHandler){}
