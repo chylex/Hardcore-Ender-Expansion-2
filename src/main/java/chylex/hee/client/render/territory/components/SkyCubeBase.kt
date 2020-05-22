@@ -23,17 +23,29 @@ import org.lwjgl.opengl.GL11.GL_QUADS
 abstract class SkyCubeBase : IRenderHandler{
 	protected companion object{
 		const val DEFAULT_ALPHA = 1F
+		const val DEFAULT_RESCALE = 16.0
 		const val DEFAULT_DISTANCE = 125.0
+		
+		fun renderPlane(y: Double, size: Double, rescale: Double){
+			TESSELLATOR.draw(GL_QUADS, DefaultVertexFormats.POSITION_TEX){
+				pos(-size, -y, -size).tex(0.0, 0.0).endVertex()
+				pos(-size, -y,  size).tex(0.0, rescale).endVertex()
+				pos( size, -y,  size).tex(rescale, rescale).endVertex()
+				pos( size, -y, -size).tex(rescale, 0.0).endVertex()
+			}
+		}
 	}
 	
 	protected abstract val texture: ResourceLocation
 	protected abstract val color: Vec3d
 	protected open val alpha = DEFAULT_ALPHA
+	protected open val rescale = DEFAULT_RESCALE
 	protected open val distance = DEFAULT_DISTANCE
 	
 	@Sided(Side.CLIENT)
 	override fun render(ticks: Int, partialTicks: Float, world: ClientWorld, mc: Minecraft){
 		val dist = distance.coerceAtMost(18.5 * mc.gameSettings.renderDistanceChunks)
+		val rescale = rescale
 		
 		GL.enableBlend()
 		GL.blendFunc(SF_SRC_ALPHA, DF_ONE_MINUS_SRC_ALPHA, SF_ONE, DF_ZERO)
@@ -56,13 +68,7 @@ abstract class SkyCubeBase : IRenderHandler{
 				5 -> GL.rotate(-90F, 0F, 0F, 1F)
 			}
 			
-			TESSELLATOR.draw(GL_QUADS, DefaultVertexFormats.POSITION_TEX){
-				pos(-dist, -dist, -dist).tex( 0.0,  0.0).endVertex()
-				pos(-dist, -dist,  dist).tex( 0.0, 16.0).endVertex()
-				pos( dist, -dist,  dist).tex(16.0, 16.0).endVertex()
-				pos( dist, -dist, -dist).tex(16.0,  0.0).endVertex()
-			}
-			
+			renderPlane(dist, dist, rescale)
 			GL.popMatrix()
 		}
 		
