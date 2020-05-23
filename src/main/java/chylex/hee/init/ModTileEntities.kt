@@ -75,11 +75,13 @@ object ModTileEntities{
 	}
 	
 	fun setupVanillaValidBlocks(){
-		with(BREWING_STAND){
-			validBlocks = ImmutableSet.builder<Block>()
-				.addAll(validBlocks)
-				.add(Blocks.BREWING_STAND) // needs the replaced one
-				.build()
+		for(block in arrayOf(BREWING_STAND, TileEntityType.BREWING_STAND)){
+			with(block){
+				validBlocks = ImmutableSet.builder<Block>()
+					.addAll(validBlocks)
+					.add(Blocks.BREWING_STAND) // needs the replaced one
+					.build()
+			}
 		}
 		
 		with(TileEntityType.SKULL){

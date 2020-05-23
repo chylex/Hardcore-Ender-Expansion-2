@@ -4,7 +4,10 @@ import chylex.hee.game.block.info.BlockBuilder
 import chylex.hee.init.ModContainers
 import chylex.hee.system.migration.vanilla.BlockBrewingStand
 import chylex.hee.system.migration.vanilla.EntityPlayer
+import chylex.hee.system.migration.vanilla.TileEntityBrewingStand
+import chylex.hee.system.util.breakBlock
 import chylex.hee.system.util.getTile
+import chylex.hee.system.util.setBlock
 import net.minecraft.block.BlockState
 import net.minecraft.tileentity.TileEntity
 import net.minecraft.util.Hand
@@ -23,8 +26,15 @@ open class BlockBrewingStandCustom(builder: BlockBuilder) : BlockBrewingStand(bu
 			return true
 		}
 		
-		pos.getTile<TileEntityBrewingStandCustom>(world)?.let {
-			ModContainers.open(player, it, pos)
+		val tile = pos.getTile<TileEntityBrewingStand>(world)
+		
+		if (tile is TileEntityBrewingStandCustom){
+			ModContainers.open(player, tile, pos)
+		}
+		else{
+			// TODO maybe make the tile entity upgrade smoother but this is fine lol
+			pos.breakBlock(world, false)
+			pos.setBlock(world, this)
 		}
 		
 		return true
