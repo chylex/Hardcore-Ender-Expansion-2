@@ -91,8 +91,8 @@ import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent
 @SubscribeAllEvents(Side.CLIENT, modid = HEE.ID, bus = MOD)
 object ModRendering{
 	val RENDER_ITEM_DARK_CHEST = RenderTileDarkChest.AsItem
-	val RENDER_ITEM_LOOT_CHEST = RenderTileLootChest.AsItem
 	val RENDER_ITEM_JAR_O_DUST = RenderTileJarODust.AsItem
+	val RENDER_ITEM_LOOT_CHEST = RenderTileLootChest.AsItem
 	
 	@SubscribeEvent
 	@Suppress("unused", "UNUSED_PARAMETER", "RemoveExplicitTypeArguments")

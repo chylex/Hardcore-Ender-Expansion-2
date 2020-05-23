@@ -49,8 +49,8 @@ public final class EntityConstructors{
 		
 		add(EntityBossEnderEye.class, EntityBossEnderEye::new);
 		
-		add(EntityMobEnderman.class, EntityMobEnderman::new);
 		add(EntityMobAngryEnderman.class, EntityMobAngryEnderman::new);
+		add(EntityMobEnderman.class, EntityMobEnderman::new);
 		add(EntityMobEndermanMuppet.class, EntityMobEndermanMuppet::new);
 		add(EntityMobEndermite.class, EntityMobEndermite::new);
 		add(EntityMobEndermiteInstability.class, EntityMobEndermiteInstability::new);
@@ -60,9 +60,9 @@ public final class EntityConstructors{
 		add(EntityMobVampireBat.class, EntityMobVampireBat::new);
 		add(EntityMobVillagerDying.class, EntityMobVillagerDying::new);
 		
-		add(EntityProjectileEyeOfEnder.class, EntityProjectileEyeOfEnder::new);
-		add(EntityProjectileExperienceBottle.class, EntityProjectileExperienceBottle::new);
 		add(EntityProjectileEnderPearl.class, EntityProjectileEnderPearl::new);
+		add(EntityProjectileExperienceBottle.class, EntityProjectileExperienceBottle::new);
+		add(EntityProjectileEyeOfEnder.class, EntityProjectileEyeOfEnder::new);
 		add(EntityProjectileSpatialDash.class, EntityProjectileSpatialDash::new);
 		
 		add(EntityTechnicalCausatumEvent.class, EntityTechnicalCausatumEvent::new);

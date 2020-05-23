@@ -30,13 +30,14 @@ object ModRecipes{
 			// TODO figure out what to do with the broken advancements
 			
 			register(NullRecipe.serializer named "null")
+			register(ShapedRecipeWithEnergy named "crafting_shaped_with_energy")
+			
 			register(RecipeBindingEssence.serializer named "dynamic_binding_essence")
 			register(RecipeEndPowderRepair.serializer named "dynamic_end_powder_repair")
 			register(RecipeJarODustExtract.serializer named "dynamic_jar_o_dust_extract")
 			register(RecipePortalTokenDuplication.serializer named "dynamic_portal_token_duplication")
 			register(RecipeScaleOfFreefallRepair.serializer named "dynamic_scale_of_freefall_repair")
 			register(RecipeVoidSalad.serializer named "dynamic_void_salad")
-			register(ShapedRecipeWithEnergy named "crafting_shaped_with_energy")
 		}
 	}
 }
