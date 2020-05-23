@@ -13,6 +13,7 @@ import chylex.hee.game.block.entity.TileEntityJarODust;
 import chylex.hee.game.block.entity.TileEntityLootChest;
 import chylex.hee.game.block.entity.TileEntityMinersBurialAltar;
 import chylex.hee.game.block.entity.TileEntityPortalInner;
+import chylex.hee.game.block.entity.TileEntityShulkerBoxCustom;
 import chylex.hee.game.block.entity.TileEntitySpawnerObsidianTower;
 import chylex.hee.game.block.entity.TileEntityTablePedestal;
 import chylex.hee.game.block.entity.TileEntityVoidPortalStorage;
@@ -40,6 +41,7 @@ public final class TileEntityConstructors{
 		add(TileEntityMinersBurialAltar.class, TileEntityMinersBurialAltar::new);
 		add(TileEntityPortalInner.End.class, TileEntityPortalInner.End::new);
 		add(TileEntityPortalInner.Void.class, TileEntityPortalInner.Void::new);
+		add(TileEntityShulkerBoxCustom.class, TileEntityShulkerBoxCustom::new);
 		add(TileEntitySpawnerObsidianTower.class, TileEntitySpawnerObsidianTower::new);
 		add(TileEntityTablePedestal.class, TileEntityTablePedestal::new);
 		add(TileEntityVoidPortalStorage.class, TileEntityVoidPortalStorage::new);

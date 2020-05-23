@@ -4,6 +4,7 @@ import chylex.hee.client.gui.GuiAmuletOfRecovery
 import chylex.hee.client.gui.GuiBrewingStandCustom
 import chylex.hee.client.gui.GuiLootChest
 import chylex.hee.client.gui.GuiPortalTokenStorage
+import chylex.hee.client.gui.GuiShulkerBox
 import chylex.hee.client.gui.GuiTrinketPouch
 import chylex.hee.client.render.block.RenderTileDarkChest
 import chylex.hee.client.render.block.RenderTileEndPortal
@@ -45,6 +46,7 @@ import chylex.hee.game.block.util.CustomSkulls
 import chylex.hee.game.container.ContainerAmuletOfRecovery
 import chylex.hee.game.container.ContainerLootChest
 import chylex.hee.game.container.ContainerPortalTokenStorage
+import chylex.hee.game.container.ContainerShulkerBox
 import chylex.hee.game.container.ContainerTrinketPouch
 import chylex.hee.game.entity.item.EntityItemNoBob
 import chylex.hee.game.entity.item.EntityTokenHolder
@@ -69,11 +71,9 @@ import chylex.hee.system.migration.forge.Side
 import chylex.hee.system.migration.forge.SubscribeAllEvents
 import chylex.hee.system.migration.forge.SubscribeEvent
 import chylex.hee.system.migration.vanilla.ContainerBrewingStand
-import chylex.hee.system.migration.vanilla.ContainerShulkerBox
 import chylex.hee.system.util.facades.Resource
 import net.minecraft.client.gui.ScreenManager
 import net.minecraft.client.gui.screen.inventory.ContainerScreen
-import net.minecraft.client.gui.screen.inventory.ShulkerBoxScreen
 import net.minecraft.client.renderer.entity.EntityRenderer
 import net.minecraft.client.renderer.entity.model.GenericHeadModel
 import net.minecraft.client.renderer.tileentity.SkullTileEntityRenderer
@@ -104,7 +104,8 @@ object ModRendering{
 		registerScreen<GuiBrewingStandCustom, ContainerBrewingStand>(ModContainers.BREWING_STAND)
 		registerScreen<GuiLootChest, ContainerLootChest>(ModContainers.LOOT_CHEST)
 		registerScreen<GuiPortalTokenStorage, ContainerPortalTokenStorage>(ModContainers.PORTAL_TOKEN_STORAGE)
-		registerScreen<ShulkerBoxScreen, ContainerShulkerBox>(ModContainers.SHULKER_BOX_IN_INVENTORY)
+		registerScreen<GuiShulkerBox, ContainerShulkerBox>(ModContainers.SHULKER_BOX)
+		registerScreen<GuiShulkerBox, ContainerShulkerBox>(ModContainers.SHULKER_BOX_IN_INVENTORY)
 		registerScreen<GuiTrinketPouch, ContainerTrinketPouch>(ModContainers.TRINKET_POUCH)
 		
 		// entities

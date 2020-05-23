@@ -48,4 +48,9 @@ object MagicValues{
 	 * Found in [AbstractFurnaceTileEntity.SLOTS_HORIZONTAL][net.minecraft.tileentity.AbstractFurnaceTileEntity.SLOTS_HORIZONTAL].
 	 */
 	const val FURNACE_FUEL_SLOT = 1
+	
+	/**
+	 * Found in [SetContents.doApply][net.minecraft.world.storage.loot.functions.SetContents.doApply].
+	 */
+	const val TILE_ENTITY_TAG = "BlockEntityTag"
 }

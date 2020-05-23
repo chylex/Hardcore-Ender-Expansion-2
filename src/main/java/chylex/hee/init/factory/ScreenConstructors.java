@@ -3,11 +3,11 @@ import chylex.hee.client.gui.GuiAmuletOfRecovery;
 import chylex.hee.client.gui.GuiBrewingStandCustom;
 import chylex.hee.client.gui.GuiLootChest;
 import chylex.hee.client.gui.GuiPortalTokenStorage;
+import chylex.hee.client.gui.GuiShulkerBox;
 import chylex.hee.client.gui.GuiTrinketPouch;
 import net.minecraft.client.gui.ScreenManager.IScreenFactory;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;
-import net.minecraft.client.gui.screen.inventory.ShulkerBoxScreen;
 import net.minecraft.inventory.container.Container;
 import java.util.HashMap;
 import java.util.Map;
@@ -20,7 +20,7 @@ public final class ScreenConstructors{
 		add(GuiBrewingStandCustom.class, GuiBrewingStandCustom::new);
 		add(GuiLootChest.class, GuiLootChest::new);
 		add(GuiPortalTokenStorage.class, GuiPortalTokenStorage::new);
-		add(ShulkerBoxScreen.class, ShulkerBoxScreen::new);
+		add(GuiShulkerBox.class, GuiShulkerBox::new);
 		add(GuiTrinketPouch.class, GuiTrinketPouch::new);
 	}
 	

@@ -3,6 +3,7 @@ import chylex.hee.game.container.ContainerAmuletOfRecovery;
 import chylex.hee.game.container.ContainerBrewingStandCustom;
 import chylex.hee.game.container.ContainerLootChest;
 import chylex.hee.game.container.ContainerPortalTokenStorage;
+import chylex.hee.game.container.ContainerShulkerBox;
 import chylex.hee.game.container.ContainerShulkerBoxInInventory;
 import chylex.hee.game.container.ContainerTrinketPouch;
 import net.minecraft.inventory.container.Container;
@@ -18,6 +19,7 @@ public final class ContainerConstructors{
 		add(ContainerBrewingStandCustom.class, ContainerBrewingStandCustom::new);
 		add(ContainerLootChest.class, ContainerLootChest::new);
 		add(ContainerPortalTokenStorage.class, ContainerPortalTokenStorage::new);
+		add(ContainerShulkerBox.class, ContainerShulkerBox::new);
 		add(ContainerShulkerBoxInInventory.class, ContainerShulkerBoxInInventory::new);
 		add(ContainerTrinketPouch.class, ContainerTrinketPouch::new);
 	}

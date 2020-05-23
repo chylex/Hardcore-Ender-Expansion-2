@@ -13,4 +13,5 @@ object Stats{
 	val CAULDRON_FILLED get() = Stats.FILL_CAULDRON!!
 	val CAULDRON_USED get() = Stats.USE_CAULDRON!!
 	val FLOWER_POTTED get() = Stats.POT_FLOWER!!
+	val OPEN_SHULKER_BOX get() = Stats.OPEN_SHULKER_BOX!!
 }

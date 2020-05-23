@@ -132,6 +132,11 @@
   "block.hee.eternal_fire": "Eternal Fire",
   "block.hee.scaffolding": "Scaffolding",
 
+  "block.hee.shulker_box": "Shulker Box",
+  "block.hee.small_shulker_box": "Small Shulker Box",
+  "block.hee.medium_shulker_box": "Medium Shulker Box",
+  "block.hee.large_shulker_box": "Large Shulker Box",
+
   "block.tooltip.hee.table.tier": "§7Tier %s",
 
   "item.hee.ancient_dust": "Ancient Dust",

@@ -1,12 +1,15 @@
 package chylex.hee.game.item
 import chylex.hee.HEE
 import chylex.hee.client.util.MC
+import chylex.hee.game.block.BlockShulkerBoxOverride.BoxSize
+import chylex.hee.game.block.entity.TileEntityShulkerBoxCustom
 import chylex.hee.game.container.ContainerShulkerBoxInInventory
 import chylex.hee.game.container.base.IInventoryFromPlayerItem
 import chylex.hee.init.ModContainers
 import chylex.hee.network.server.PacketServerOpenInventoryItem
 import chylex.hee.system.migration.ActionResult.PASS
 import chylex.hee.system.migration.ActionResult.SUCCESS
+import chylex.hee.system.migration.MagicValues
 import chylex.hee.system.migration.forge.EventPriority
 import chylex.hee.system.migration.forge.Side
 import chylex.hee.system.migration.forge.Sided
@@ -17,14 +20,19 @@ import chylex.hee.system.migration.vanilla.ItemBlock
 import chylex.hee.system.migration.vanilla.TextComponentString
 import chylex.hee.system.migration.vanilla.TextComponentTranslation
 import chylex.hee.system.util.allSlots
+import chylex.hee.system.util.facades.Stats
 import chylex.hee.system.util.find
 import chylex.hee.system.util.getCompoundOrNull
+import chylex.hee.system.util.getEnum
 import chylex.hee.system.util.getOrCreateCompound
 import chylex.hee.system.util.getStack
+import chylex.hee.system.util.heeTag
+import chylex.hee.system.util.heeTagOrNull
 import chylex.hee.system.util.isNotEmpty
 import chylex.hee.system.util.nbt
 import chylex.hee.system.util.nbtOrNull
 import chylex.hee.system.util.nonEmptySlots
+import chylex.hee.system.util.putEnum
 import chylex.hee.system.util.setStack
 import chylex.hee.system.util.size
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap
@@ -37,6 +45,7 @@ import net.minecraft.inventory.Inventory
 import net.minecraft.inventory.ItemStackHelper
 import net.minecraft.inventory.container.Container
 import net.minecraft.inventory.container.INamedContainerProvider
+import net.minecraft.item.ItemGroup
 import net.minecraft.item.ItemStack
 import net.minecraft.util.ActionResult
 import net.minecraft.util.Hand
@@ -48,17 +57,24 @@ import net.minecraft.world.World
 import net.minecraftforge.client.event.GuiScreenEvent
 
 class ItemShulkerBoxOverride(block: Block, properties: Properties) : ItemBlock(block, properties){
-	private companion object{
-		private const val TILE_ENTITY_TAG = "BlockEntityTag"
+	companion object{
 		private const val TOOLTIP_ENTRY_COUNT = 5
 		
 		private fun isStackValid(stack: ItemStack): Boolean{
 			return stack.item is ItemShulkerBoxOverride
 		}
-	}
-	
-	enum class BoxSize(val slots: Int){
-		LARGE(27)
+		
+		fun getBoxSize(stack: ItemStack): BoxSize{
+			return stack.nbtOrNull
+				?.getCompoundOrNull(MagicValues.TILE_ENTITY_TAG)
+				?.heeTagOrNull
+				?.getEnum<BoxSize>(TileEntityShulkerBoxCustom.BOX_SIZE_TAG)
+				?: BoxSize.LARGE
+		}
+		
+		fun setBoxSize(stack: ItemStack, boxSize: BoxSize){
+			stack.nbt.getOrCreateCompound(MagicValues.TILE_ENTITY_TAG).heeTag.putEnum(TileEntityShulkerBoxCustom.BOX_SIZE_TAG, boxSize)
+		}
 	}
 	
 	class ContainerProvider(private val stack: ItemStack, private val slot: Int) : INamedContainerProvider{
@@ -71,7 +87,7 @@ class ItemShulkerBoxOverride(block: Block, properties: Properties) : ItemBlock(b
 		}
 	}
 	
-	class Inv(override val player: EntityPlayer, private val inventorySlot: Int) : Inventory(BoxSize.LARGE.slots), IInventoryFromPlayerItem{
+	class Inv(override val player: EntityPlayer, boxSize: BoxSize, private val inventorySlot: Int) : Inventory(boxSize.slots), IInventoryFromPlayerItem{
 		private val boxStack
 			get() = player.inventory.getStack(inventorySlot)
 		
@@ -80,9 +96,11 @@ class ItemShulkerBoxOverride(block: Block, properties: Properties) : ItemBlock(b
 			
 			if (isStackValid(boxStack)){
 				NonNullList.withSize(size, ItemStack.EMPTY).also {
-					ItemStackHelper.loadAllItems(boxStack.nbt.getCompound(TILE_ENTITY_TAG), it)
+					ItemStackHelper.loadAllItems(boxStack.nbt.getCompound(MagicValues.TILE_ENTITY_TAG), it)
 					it.forEachIndexed(::setStack)
 				}
+				
+				player.addStat(Stats.OPEN_SHULKER_BOX)
 			}
 		}
 		
@@ -98,10 +116,24 @@ class ItemShulkerBoxOverride(block: Block, properties: Properties) : ItemBlock(b
 					it[slot] = stack
 				}
 				
-				ItemStackHelper.saveAllItems(boxStack.nbt.getOrCreateCompound(TILE_ENTITY_TAG), it)
+				ItemStackHelper.saveAllItems(boxStack.nbt.getOrCreateCompound(MagicValues.TILE_ENTITY_TAG), it)
 			}
 			
 			return true
+		}
+	}
+	
+	// Properties
+	
+	override fun getTranslationKey(stack: ItemStack): String{
+		return getBoxSize(stack).translationKey
+	}
+	
+	override fun fillItemGroup(group: ItemGroup, items: NonNullList<ItemStack>){
+		if (isInGroup(group)){
+			for(boxSize in BoxSize.values()){
+				items.add(ItemStack(this).also { setBoxSize(it, boxSize) })
+			}
 		}
 	}
 	
@@ -150,7 +182,7 @@ class ItemShulkerBoxOverride(block: Block, properties: Properties) : ItemBlock(b
 			lines.add(TextComponentString(""))
 		}
 		
-		val contentsTag = stack.nbtOrNull?.getCompoundOrNull(TILE_ENTITY_TAG)
+		val contentsTag = stack.nbtOrNull?.getCompoundOrNull(MagicValues.TILE_ENTITY_TAG)
 		
 		if (contentsTag != null){
 			val inventory = NonNullList.withSize(BoxSize.LARGE.slots, ItemStack.EMPTY)
@@ -177,7 +209,7 @@ class ItemShulkerBoxOverride(block: Block, properties: Properties) : ItemBlock(b
 			}
 		}
 		
-		if ((lines.lastOrNull() as? TextComponentString)?.text.isNullOrEmpty()){
+		if ((lines.lastOrNull() as? TextComponentString)?.let { it.text.isEmpty() && it.siblings.isEmpty() } == true){
 			lines.removeAt(lines.lastIndex)
 		}
 	}

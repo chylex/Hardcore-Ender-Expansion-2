@@ -29,7 +29,6 @@ import chylex.hee.game.item.ItemRingOfPreservation
 import chylex.hee.game.item.ItemScaleOfFreefall
 import chylex.hee.game.item.ItemScorchingSword
 import chylex.hee.game.item.ItemScorchingTool
-import chylex.hee.game.item.ItemShulkerBoxOverride
 import chylex.hee.game.item.ItemSpatialDashGem
 import chylex.hee.game.item.ItemTableCore
 import chylex.hee.game.item.ItemTableLink
@@ -48,13 +47,11 @@ import chylex.hee.init.ModCreativeTabs.OrderedCreativeTab
 import chylex.hee.system.migration.forge.SubscribeAllEvents
 import chylex.hee.system.migration.forge.SubscribeEvent
 import chylex.hee.system.migration.vanilla.BlockDispenser
-import chylex.hee.system.migration.vanilla.BlockShulkerBox
 import chylex.hee.system.migration.vanilla.ItemSpawnEgg
 import chylex.hee.system.migration.vanilla.Items
 import chylex.hee.system.util.color.IntColor.Companion.RGB
 import chylex.hee.system.util.facades.Resource
 import chylex.hee.system.util.useVanillaName
-import net.minecraft.item.DyeColor
 import net.minecraft.item.Item
 import net.minecraft.item.ItemGroup
 import net.minecraftforge.event.RegistryEvent
@@ -256,11 +253,6 @@ object ModItems{
 			register(ItemElytraOverride(baseProps.maxDamage(432)).apply { override(Items.ELYTRA) })
 			register(ItemEyeOfEnderOverride(defaultProps).apply { override(Items.ENDER_EYE) })
 			register(ItemTotemOfUndyingOverride(toolProps).apply { override(Items.TOTEM_OF_UNDYING, newCreativeTab = null) })
-			
-			for(color in DyeColor.values()){
-				val box = BlockShulkerBox.getBlockByColor(color)
-				register(ItemShulkerBoxOverride(box, baseProps).apply { override(box.asItem()) })
-			}
 		}
 		
 		// dispenser behavior

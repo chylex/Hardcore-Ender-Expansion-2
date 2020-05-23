@@ -6,6 +6,8 @@ import chylex.hee.game.recipe.RecipeEndPowderRepair
 import chylex.hee.game.recipe.RecipeJarODustExtract
 import chylex.hee.game.recipe.RecipePortalTokenDuplication
 import chylex.hee.game.recipe.RecipeScaleOfFreefallRepair
+import chylex.hee.game.recipe.RecipeShulkerBox
+import chylex.hee.game.recipe.RecipeShulkerBoxUpgrade
 import chylex.hee.game.recipe.RecipeVoidSalad
 import chylex.hee.game.recipe.ShapedRecipeWithEnergy
 import chylex.hee.game.recipe.factories.IngredientFullEnergy
@@ -31,12 +33,15 @@ object ModRecipes{
 			
 			register(NullRecipe.serializer named "null")
 			register(ShapedRecipeWithEnergy named "crafting_shaped_with_energy")
+			register(RecipeShulkerBox named "shulker_box")
 			
 			register(RecipeBindingEssence.serializer named "dynamic_binding_essence")
 			register(RecipeEndPowderRepair.serializer named "dynamic_end_powder_repair")
 			register(RecipeJarODustExtract.serializer named "dynamic_jar_o_dust_extract")
 			register(RecipePortalTokenDuplication.serializer named "dynamic_portal_token_duplication")
 			register(RecipeScaleOfFreefallRepair.serializer named "dynamic_scale_of_freefall_repair")
+			register(RecipeShulkerBoxUpgrade.SmallToMedium.serializer named "dynamic_shulker_box_small_to_medium")
+			register(RecipeShulkerBoxUpgrade.MediumToLarge.serializer named "dynamic_shulker_box_medium_to_large")
 			register(RecipeVoidSalad.serializer named "dynamic_void_salad")
 		}
 	}

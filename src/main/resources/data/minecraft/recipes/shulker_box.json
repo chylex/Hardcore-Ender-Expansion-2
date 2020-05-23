@@ -1,0 +1,15 @@
+{
+  "type": "hee:shulker_box",
+  "pattern": [
+    "#",
+    "X",
+    "#"
+  ],
+  "key": {
+    "#": { "item": "minecraft:shulker_shell" },
+    "X": { "item": "hee:alteration_nexus" }
+  },
+  "result": {
+    "item": "minecraft:shulker_box"
+  }
+}

@@ -41,6 +41,7 @@ import chylex.hee.game.block.BlockMinersBurialAltar
 import chylex.hee.game.block.BlockPillarCustom
 import chylex.hee.game.block.BlockPuzzleLogic
 import chylex.hee.game.block.BlockScaffolding
+import chylex.hee.game.block.BlockShulkerBoxOverride
 import chylex.hee.game.block.BlockSimple
 import chylex.hee.game.block.BlockSimpleShaped
 import chylex.hee.game.block.BlockSimpleWithMapColor
@@ -125,6 +126,7 @@ import chylex.hee.game.item.ItemBlockFuel
 import chylex.hee.game.item.ItemDeathFlower
 import chylex.hee.game.item.ItemDragonEgg
 import chylex.hee.game.item.ItemInfusedTNT
+import chylex.hee.game.item.ItemShulkerBoxOverride
 import chylex.hee.game.world.feature.basic.trees.types.AutumnTreeGenerator
 import chylex.hee.init.ModCreativeTabs.OrderedCreativeTab
 import chylex.hee.system.migration.Facing.NORTH
@@ -540,6 +542,12 @@ object ModBlocks{
 			register(BlockEndPortalOverride(buildEndPortalOverride).apply { override(Blocks.END_PORTAL){ null } })
 			register(BlockBrewingStandCustom(buildBrewingStand).apply { override(Blocks.BREWING_STAND){ ItemBlock(it, Item.Properties().group(ItemGroup.BREWING)) } })
 			register(BlockDragonEggOverride(buildDragonEgg).apply { override(Blocks.DRAGON_EGG){ ItemDragonEgg(it, itemBlockDefaultProps) } })
+			
+			for(block in BlockShulkerBoxOverride.ALL_BLOCKS){
+				register(BlockShulkerBoxOverride(Block.Properties.from(block), block.color).apply {
+					override(block){ ItemShulkerBoxOverride(it, Item.Properties().maxStackSize(1).group(ItemGroup.DECORATIONS)) }
+				})
+			}
 		}
 	}
 	

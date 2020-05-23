@@ -1,5 +1,6 @@
 package chylex.hee.init
 import chylex.hee.HEE
+import chylex.hee.game.block.BlockShulkerBoxOverride
 import chylex.hee.game.block.entity.TileEntityAccumulationTable
 import chylex.hee.game.block.entity.TileEntityBrewingStandCustom
 import chylex.hee.game.block.entity.TileEntityDarkChest
@@ -14,6 +15,7 @@ import chylex.hee.game.block.entity.TileEntityJarODust
 import chylex.hee.game.block.entity.TileEntityLootChest
 import chylex.hee.game.block.entity.TileEntityMinersBurialAltar
 import chylex.hee.game.block.entity.TileEntityPortalInner
+import chylex.hee.game.block.entity.TileEntityShulkerBoxCustom
 import chylex.hee.game.block.entity.TileEntitySpawnerObsidianTower
 import chylex.hee.game.block.entity.TileEntityTablePedestal
 import chylex.hee.game.block.entity.TileEntityVoidPortalStorage
@@ -45,6 +47,7 @@ object ModTileEntities{
 	val JAR_O_DUST             = build<TileEntityJarODust>(ModBlocks.JAR_O_DUST) named "jar_o_dust"
 	val LOOT_CHEST             = build<TileEntityLootChest>(ModBlocks.LOOT_CHEST) named "loot_chest"
 	val MINERS_BURIAL_ALTAR    = build<TileEntityMinersBurialAltar>(ModBlocks.MINERS_BURIAL_ALTAR) named "miners_burial_altar"
+	val SHULKER_BOX            = build<TileEntityShulkerBoxCustom>(*BlockShulkerBoxOverride.ALL_BLOCKS.toTypedArray()) named "shulker_box"
 	val SPAWNER_OBSIDIAN_TOWER = build<TileEntitySpawnerObsidianTower>(ModBlocks.SPAWNER_OBSIDIAN_TOWERS) named "spawner_obsidian_tower"
 	val TABLE_PEDESTAL         = build<TileEntityTablePedestal>(ModBlocks.TABLE_PEDESTAL) named "table_pedestal"
 	val VOID_PORTAL_INNER      = build<TileEntityPortalInner.Void>(ModBlocks.VOID_PORTAL_INNER) named "void_portal_inner"
@@ -67,6 +70,7 @@ object ModTileEntities{
 			register(JAR_O_DUST)
 			register(LOOT_CHEST)
 			register(MINERS_BURIAL_ALTAR)
+			register(SHULKER_BOX)
 			register(SPAWNER_OBSIDIAN_TOWER)
 			register(TABLE_PEDESTAL)
 			register(VOID_PORTAL_INNER)
@@ -80,6 +84,15 @@ object ModTileEntities{
 				validBlocks = ImmutableSet.builder<Block>()
 					.addAll(validBlocks)
 					.add(Blocks.BREWING_STAND) // needs the replaced one
+					.build()
+			}
+		}
+		
+		for(block in arrayOf(SHULKER_BOX, TileEntityType.SHULKER_BOX)){
+			with(block){
+				validBlocks = ImmutableSet.builder<Block>()
+					.addAll(validBlocks)
+					.addAll(BlockShulkerBoxOverride.ALL_BLOCKS) // needs the replaced ones
 					.build()
 			}
 		}
