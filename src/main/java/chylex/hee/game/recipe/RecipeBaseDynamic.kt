@@ -1,4 +1,6 @@
 package chylex.hee.game.recipe
+import chylex.hee.system.util.getStack
+import net.minecraft.inventory.CraftingInventory
 import net.minecraft.item.ItemStack
 import net.minecraft.item.crafting.ICraftingRecipe
 import net.minecraft.item.crafting.SpecialRecipeSerializer
@@ -11,4 +13,8 @@ abstract class RecipeBaseDynamic : ICraftingRecipe{
 	
 	final override fun isDynamic() = true
 	final override fun getRecipeOutput(): ItemStack = ItemStack.EMPTY
+	
+	protected fun getStackInRowAndColumn(inv: CraftingInventory, row: Int, column: Int): ItemStack{
+		return inv.getStack(column + (row * inv.width))
+	}
 }

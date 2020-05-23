@@ -2,7 +2,6 @@ package chylex.hee.game.recipe
 import chylex.hee.game.item.ItemVoidSalad.Type
 import chylex.hee.init.ModItems
 import chylex.hee.system.migration.vanilla.Items
-import chylex.hee.system.util.getStack
 import chylex.hee.system.util.nonEmptySlots
 import com.google.common.collect.Iterators
 import net.minecraft.inventory.CraftingInventory
@@ -19,9 +18,9 @@ object RecipeVoidSalad : RecipeBaseDynamic(){
 		
 		return (
 			bowlRow != null &&
-			isValidFood(getStackInRowAndColumn(inv, 0, bowlRow - 1)) &&
-			getStackInRowAndColumn(inv, 1, bowlRow - 1).item === ModItems.VOID_ESSENCE &&
-			isValidFood(getStackInRowAndColumn(inv, 2, bowlRow - 1)) &&
+			getStackInRowAndColumn(inv, bowlRow - 1, 0).let(::isValidFood) &&
+			getStackInRowAndColumn(inv, bowlRow - 1, 1).item === ModItems.VOID_ESSENCE &&
+			getStackInRowAndColumn(inv, bowlRow - 1, 2).let(::isValidFood) &&
 			Iterators.size(inv.nonEmptySlots) == 4
 		)
 	}
@@ -29,8 +28,8 @@ object RecipeVoidSalad : RecipeBaseDynamic(){
 	override fun getCraftingResult(inv: CraftingInventory): ItemStack{
 		val bowlRow = findBowlRow(inv) ?: return ItemStack.EMPTY
 		
-		val isLeftVoidSalad = isSingleVoidSalad(getStackInRowAndColumn(inv, 0, bowlRow - 1))
-		val isRightVoidSalad = isSingleVoidSalad(getStackInRowAndColumn(inv, 2, bowlRow - 1))
+		val isLeftVoidSalad = isSingleVoidSalad(getStackInRowAndColumn(inv, bowlRow - 1, 0))
+		val isRightVoidSalad = isSingleVoidSalad(getStackInRowAndColumn(inv, bowlRow - 1, 2))
 		
 		return when{
 			isLeftVoidSalad && isRightVoidSalad -> ItemStack(ModItems.VOID_SALAD).also { ModItems.VOID_SALAD.setSaladType(it, Type.MEGA) }
@@ -40,7 +39,7 @@ object RecipeVoidSalad : RecipeBaseDynamic(){
 	}
 	
 	private fun findBowlRow(inv: CraftingInventory): Int?{
-		return (0 until inv.height).find { row -> getStackInRowAndColumn(inv, 1, row).item === Items.BOWL }
+		return (0 until inv.height).find { row -> getStackInRowAndColumn(inv, row, 1).item === Items.BOWL }
 	}
 	
 	private fun isValidFood(stack: ItemStack): Boolean{
@@ -49,9 +48,5 @@ object RecipeVoidSalad : RecipeBaseDynamic(){
 	
 	private fun isSingleVoidSalad(stack: ItemStack): Boolean{
 		return stack.item === ModItems.VOID_SALAD && ModItems.VOID_SALAD.getSaladType(stack) == Type.SINGLE
-	}
-	
-	private fun getStackInRowAndColumn(inv: CraftingInventory, row: Int, column: Int): ItemStack{
-		return inv.getStack(row + (column * inv.width))
 	}
 }
