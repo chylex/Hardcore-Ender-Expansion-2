@@ -10,13 +10,16 @@ import chylex.hee.system.migration.forge.Side
 import chylex.hee.system.migration.forge.Sided
 import chylex.hee.system.migration.vanilla.EntityLivingBase
 import chylex.hee.system.migration.vanilla.EntityPlayer
+import chylex.hee.system.migration.vanilla.Sounds
 import chylex.hee.system.migration.vanilla.TextComponentTranslation
 import chylex.hee.system.util.NBTList.Companion.putList
+import chylex.hee.system.util.center
 import chylex.hee.system.util.getListOfCompounds
 import chylex.hee.system.util.getTile
 import chylex.hee.system.util.heeTag
 import chylex.hee.system.util.heeTagOrNull
 import chylex.hee.system.util.isTopSolid
+import chylex.hee.system.util.playServer
 import chylex.hee.system.util.size
 import net.minecraft.block.BlockState
 import net.minecraft.block.Blocks
@@ -26,11 +29,13 @@ import net.minecraft.tileentity.TileEntity
 import net.minecraft.util.BlockRenderLayer.TRANSLUCENT
 import net.minecraft.util.Direction
 import net.minecraft.util.Hand
+import net.minecraft.util.SoundCategory
 import net.minecraft.util.math.AxisAlignedBB
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.BlockRayTraceResult
 import net.minecraft.util.math.RayTraceResult
 import net.minecraft.util.text.ITextComponent
+import net.minecraft.world.Explosion
 import net.minecraft.world.IBlockReader
 import net.minecraft.world.IWorld
 import net.minecraft.world.IWorldReader
@@ -108,6 +113,22 @@ class BlockJarODust(builder: BlockBuilder) : BlockSimpleShaped(builder, AABB){
 		return pos.getTile<TileEntityJarODust>(world)?.let(::getDrop) ?: ItemStack(this)
 	}
 	
+	override fun canDropFromExplosion(explosion: Explosion): Boolean{
+		return false
+	}
+	
+	override fun onBlockExploded(state: BlockState, world: World, pos: BlockPos, explosion: Explosion){
+		pos.getTile<TileEntityJarODust>(world)?.let {
+			val layers = it.layers
+			
+			repeat(layers.contents.size){
+				spawnAsEntity(world, pos, layers.removeDust(BOTTOM))
+			}
+		}
+		
+		Sounds.BLOCK_GLASS_BREAK.playServer(world, pos.center, SoundCategory.BLOCKS)
+		super.onBlockExploded(state, world, pos, explosion)
+	}
 	
 	// Interaction
 	
