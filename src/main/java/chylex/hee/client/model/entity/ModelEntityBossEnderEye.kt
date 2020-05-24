@@ -1,5 +1,7 @@
 package chylex.hee.client.model.entity
+import chylex.hee.client.render.util.FACE_FRONT
 import chylex.hee.client.render.util.beginBox
+import chylex.hee.client.render.util.retainFace
 import chylex.hee.game.entity.living.EntityBossEnderEye
 import chylex.hee.system.migration.forge.Side
 import chylex.hee.system.migration.forge.Sided
@@ -28,7 +30,7 @@ object ModelEntityBossEnderEye : EntityModel<EntityBossEnderEye>(){
 			RendererModel(this).apply {
 				setRotationPoint(0F, 15F, 0F)
 				beginBox.offset(-8F, -8F, -9F).size(16, 16, 1).tex(-1 + (16 * it), 47).add()
-				cubeList[0].let { it.quads = arrayOf(it.quads[4]) } // front face only
+				cubeList[0].retainFace(FACE_FRONT)
 			}
 		}
 		
