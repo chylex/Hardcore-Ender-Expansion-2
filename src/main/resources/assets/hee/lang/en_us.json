@@ -217,12 +217,12 @@
   "item.hee.talisman_of_griefing": "Talisman of Griefing",
   "item.hee.scale_of_freefall": "Scale of Freefall",
 
-  "item.hee.ender_eye_spawn_egg": "Spawn Ender Eye",
-  "item.hee.angry_enderman_spawn_egg":"Spawn Angry Enderman",
-  "item.hee.endermite_instability_spawn_egg": "Spawn Endermite (Instability)",
-  "item.hee.spiderling_spawn_egg":"Spawn Spiderling",
-  "item.hee.undread_spawn_egg": "Spawn Undread",
-  "item.hee.vampire_bat_spawn_egg":"Spawn Vampire Bat",
+  "item.hee.ender_eye_spawn_egg": "Ender Eye Spawn Egg",
+  "item.hee.angry_enderman_spawn_egg":"Angry Enderman Spawn Egg",
+  "item.hee.endermite_instability_spawn_egg": "Endermite Spawn Egg (Instability)",
+  "item.hee.spiderling_spawn_egg": "Spiderling Spawn Egg",
+  "item.hee.undread_spawn_egg": "Undread Spawn Egg",
+  "item.hee.vampire_bat_spawn_egg": "Vampire Bat Spawn Egg",
 
   "item.hee.chorus_berry": "Chorus Berry",
   "item.hee.shulker_box.tooltip": "§7Right-click to open",
