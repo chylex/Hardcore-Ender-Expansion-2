@@ -1,0 +1,10 @@
+{
+  "type": "minecraft:block",
+  "pools": [
+    {
+      "rolls": 1,
+      "name": "pool#auto=block",
+      "entries": []
+    }
+  ]
+}

@@ -284,14 +284,17 @@ object ModBlocks{
 	
 	// Blocks: Decorative (Trees)
 	
+	@JvmField val WHITEBARK_SAPLING_AUTUMN_RED         = BlockWhitebarkSapling(buildWhitebarkSapling, AutumnTreeGenerator.Red) named "autumn_sapling_red"
 	@JvmField val WHITEBARK_SAPLING_AUTUMN_BROWN       = BlockWhitebarkSapling(buildWhitebarkSapling, AutumnTreeGenerator.Brown) named "autumn_sapling_brown"
 	@JvmField val WHITEBARK_SAPLING_AUTUMN_ORANGE      = BlockWhitebarkSapling(buildWhitebarkSapling, AutumnTreeGenerator.Orange) named "autumn_sapling_orange"
 	@JvmField val WHITEBARK_SAPLING_AUTUMN_YELLOWGREEN = BlockWhitebarkSapling(buildWhitebarkSapling, AutumnTreeGenerator.YellowGreen) named "autumn_sapling_yellowgreen"
 	
+	@JvmField val WHITEBARK_LEAVES_AUTUMN_RED         = BlockWhitebarkLeaves(buildWhitebarkLeaves, MaterialColor.RED) named "autumn_leaves_red"
 	@JvmField val WHITEBARK_LEAVES_AUTUMN_BROWN       = BlockWhitebarkLeaves(buildWhitebarkLeaves, MaterialColor.BROWN_TERRACOTTA) named "autumn_leaves_brown"
 	@JvmField val WHITEBARK_LEAVES_AUTUMN_ORANGE      = BlockWhitebarkLeaves(buildWhitebarkLeaves, MaterialColor.ADOBE /* RENAME ORANGE */) named "autumn_leaves_orange"
 	@JvmField val WHITEBARK_LEAVES_AUTUMN_YELLOWGREEN = BlockWhitebarkLeaves(buildWhitebarkLeaves, MaterialColor.YELLOW) named "autumn_leaves_yellowgreen"
 	
+	@JvmField val POTTED_WHITEBARK_SAPLING_AUTUMN_RED         = BlockFlowerPotCustom(buildFlowerPot, WHITEBARK_SAPLING_AUTUMN_RED) named "potted_autumn_sapling_red"
 	@JvmField val POTTED_WHITEBARK_SAPLING_AUTUMN_BROWN       = BlockFlowerPotCustom(buildFlowerPot, WHITEBARK_SAPLING_AUTUMN_BROWN) named "potted_autumn_sapling_brown"
 	@JvmField val POTTED_WHITEBARK_SAPLING_AUTUMN_ORANGE      = BlockFlowerPotCustom(buildFlowerPot, WHITEBARK_SAPLING_AUTUMN_ORANGE) named "potted_autumn_sapling_orange"
 	@JvmField val POTTED_WHITEBARK_SAPLING_AUTUMN_YELLOWGREEN = BlockFlowerPotCustom(buildFlowerPot, WHITEBARK_SAPLING_AUTUMN_YELLOWGREEN) named "potted_autumn_sapling_yellowgreen"
@@ -483,12 +486,15 @@ object ModBlocks{
 			register(STARDUST_ORE with basicItemBlock)
 			register(IGNEOUS_ROCK_ORE with basicItemBlock)
 			
+			register(WHITEBARK_LEAVES_AUTUMN_RED with basicItemBlock)
 			register(WHITEBARK_LEAVES_AUTUMN_BROWN with basicItemBlock)
 			register(WHITEBARK_LEAVES_AUTUMN_ORANGE with basicItemBlock)
 			register(WHITEBARK_LEAVES_AUTUMN_YELLOWGREEN with basicItemBlock)
 			register(WHITEBARK_SAPLING_AUTUMN_BROWN with fuelItemBlock(burnTicks = 100))
+			register(WHITEBARK_SAPLING_AUTUMN_RED with fuelItemBlock(burnTicks = 100))
 			register(WHITEBARK_SAPLING_AUTUMN_ORANGE with fuelItemBlock(burnTicks = 100))
 			register(WHITEBARK_SAPLING_AUTUMN_YELLOWGREEN with fuelItemBlock(burnTicks = 100))
+			register(POTTED_WHITEBARK_SAPLING_AUTUMN_RED)
 			register(POTTED_WHITEBARK_SAPLING_AUTUMN_BROWN)
 			register(POTTED_WHITEBARK_SAPLING_AUTUMN_ORANGE)
 			register(POTTED_WHITEBARK_SAPLING_AUTUMN_YELLOWGREEN)
@@ -565,6 +571,7 @@ object ModBlocks{
 			setFireInfo(WHITEBARK_STAIRS, 5, 20)
 			setFireInfo(WHITEBARK_SLAB, 5, 20)
 			
+			setFireInfo(WHITEBARK_LEAVES_AUTUMN_RED, 30, 60)
 			setFireInfo(WHITEBARK_LEAVES_AUTUMN_BROWN, 30, 60)
 			setFireInfo(WHITEBARK_LEAVES_AUTUMN_ORANGE, 30, 60)
 			setFireInfo(WHITEBARK_LEAVES_AUTUMN_YELLOWGREEN, 30, 60)

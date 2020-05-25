@@ -1,0 +1,37 @@
+{
+  "type": "minecraft:block",
+  "pools": [
+
+    {
+      "rolls": 1,
+      "name": "pool",
+      "conditions": [
+        {
+          "condition": "alternative",
+          "terms": [
+            { "condition": "hee:has_silk_touch", "value": true },
+            { "condition": "hee:was_sheared", "value": true }
+          ]
+        }
+      ],
+      "entries": [
+        { "type": "item", "name": "hee:autumn_leaves_red", "entryName": "#1" }
+      ]
+    },
+
+    {
+      "rolls": 1,
+      "name": "pool",
+      "conditions": [
+        { "condition": "hee:has_silk_touch", "value": false },
+        { "condition": "hee:was_sheared", "value": false },
+        { "condition": "minecraft:survives_explosion" },
+        { "condition": "minecraft:table_bonus", "enchantment": "minecraft:fortune", "chances": [ 0.05, 0.0625, 0.0833, 0.1 ] }
+      ],
+      "entries": [
+        { "type": "item", "name": "hee:autumn_sapling_red", "entryName": "#1" }
+      ]
+    }
+
+  ]
+}

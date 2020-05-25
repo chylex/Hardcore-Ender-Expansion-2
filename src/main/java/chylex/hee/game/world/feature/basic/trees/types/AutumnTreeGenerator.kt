@@ -4,9 +4,11 @@ import chylex.hee.game.world.feature.basic.trees.WhitebarkTreeGenerator
 import chylex.hee.game.world.generation.SegmentedWorld
 import chylex.hee.game.world.util.Size
 import chylex.hee.init.ModBlocks
+import chylex.hee.system.migration.vanilla.BlockLeaves
 import chylex.hee.system.util.allInCenteredBoxMutable
 import chylex.hee.system.util.facades.Facing4
 import chylex.hee.system.util.nextInt
+import chylex.hee.system.util.with
 import net.minecraft.util.math.BlockPos
 import java.util.Random
 import kotlin.math.abs
@@ -22,6 +24,8 @@ abstract class AutumnTreeGenerator : WhitebarkTreeGenerator(){
 	final override val size = Size(5, 10, 5)
 	
 	final override fun place(world: SegmentedWorld, rand: Random, root: BlockPos){
+		val leaf = leafBlock.with(BlockLeaves.DISTANCE, 1)
+		
 		val rootHeight = if (rand.nextBoolean())
 			rand.nextInt(6, 7)
 		else
@@ -37,7 +41,7 @@ abstract class AutumnTreeGenerator : WhitebarkTreeGenerator(){
 			else -> LEAVES_TALL
 		}
 		
-		world.setBlock(root.up(rootHeight), leafBlock)
+		world.setState(root.up(rootHeight), leaf)
 		
 		for((y, size) in leafArrangement){
 			for(pos in root.up(rootHeight - 1 - y).allInCenteredBoxMutable(size, 0, size)){
@@ -49,7 +53,7 @@ abstract class AutumnTreeGenerator : WhitebarkTreeGenerator(){
 					continue
 				}
 				
-				world.setBlock(pos, leafBlock)
+				world.setState(pos, leaf)
 			}
 		}
 		
@@ -64,11 +68,16 @@ abstract class AutumnTreeGenerator : WhitebarkTreeGenerator(){
 				)
 				
 				if (world.isAir(pos) && world.getBlock(pos.up()) === leafBlock && Facing4.all { facing -> pos.offset(facing).let { !world.isInside(it) || world.getBlock(it) !== leafBlock } }){
-					world.setBlock(pos, leafBlock)
+					world.setState(pos, leaf)
 					break
 				}
 			}
 		}
+	}
+	
+	object Red : AutumnTreeGenerator(){
+		override val leafBlock
+			get() = ModBlocks.WHITEBARK_LEAVES_AUTUMN_RED
 	}
 	
 	object Brown : AutumnTreeGenerator(){
