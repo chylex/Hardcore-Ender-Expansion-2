@@ -1,4 +1,5 @@
 package chylex.hee.proxy
+import chylex.hee.client.VanillaResourceOverrides
 import chylex.hee.client.util.MC
 import chylex.hee.game.particle.spawner.IParticleMaker
 import chylex.hee.init.ModParticles
@@ -10,6 +11,10 @@ import net.minecraft.particles.BasicParticleType
 @Suppress("unused", "RemoveExplicitTypeArguments")
 @Sided(Side.CLIENT)
 class ModClientProxy : ModCommonProxy(){
+	init{
+		VanillaResourceOverrides.register()
+	}
+	
 	override fun getClientSidePlayer() = MC.player
 	
 	override fun registerParticle(type: BasicParticleType, maker: IParticleMaker<*>, callback: (IAnimatedSprite) -> Unit){
