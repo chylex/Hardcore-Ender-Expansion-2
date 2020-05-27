@@ -16,9 +16,13 @@ import net.minecraft.util.math.BlockPos
 import net.minecraft.world.IWorld
 
 class BlockEndersol(builder: BlockBuilder) : BlockSimple(builder){
-	private companion object{
-		private val MERGE_TOP = Property.bool("merge_top")
-		private val MERGE_BOTTOM = Property.bool("merge_bottom")
+	companion object{
+		val MERGE_TOP = Property.bool("merge_top")
+		val MERGE_BOTTOM = Property.bool("merge_bottom")
+	}
+	
+	init{
+		defaultState = stateContainer.baseState.with(MERGE_TOP, false).with(MERGE_BOTTOM, false)
 	}
 	
 	override fun fillStateContainer(container: Builder<Block, BlockState>){

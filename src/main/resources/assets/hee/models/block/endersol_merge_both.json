@@ -1,7 +1,7 @@
 {
   "parent": "block/cube_column",
   "textures": {
-    "end": "hee:block/endersol",
+    "end": "hee:block/endersol_top",
     "side": "hee:block/endersol_merge_both"
   }
 }
