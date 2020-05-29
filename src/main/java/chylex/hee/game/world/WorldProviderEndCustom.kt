@@ -110,6 +110,14 @@ class WorldProviderEndCustom(world: World, type: DimensionType) : EndDimension(w
 		}
 	}
 	
+	override fun updateWeather(defaultLogic: Runnable){
+		world.prevRainingStrength = 0F
+		world.rainingStrength = 0F
+		
+		world.prevThunderingStrength = 0F
+		world.thunderingStrength = 0F
+	}
+	
 	override fun createWorldBorder() = WorldBorderNull()
 	
 	// TODO shitton of things to play around with, also test if default values work on server
@@ -180,7 +188,6 @@ class WorldProviderEndCustom(world: World, type: DimensionType) : EndDimension(w
 	// Neutralization
 	
 	override fun setSpawnPoint(pos: BlockPos){}
-	override fun updateWeather(defaultLogic: Runnable){}
 	
 	@Sided(Side.CLIENT)
 	override fun setSkyRenderer(renderer: IRenderHandler){}
