@@ -35,6 +35,7 @@ import chylex.hee.system.util.math.LerpedFloat
 import chylex.hee.system.util.motionX
 import chylex.hee.system.util.motionZ
 import chylex.hee.system.util.nextInt
+import chylex.hee.system.util.offsetTowards
 import chylex.hee.system.util.offsetUntil
 import chylex.hee.system.util.playClient
 import chylex.hee.system.util.posVec
@@ -281,7 +282,7 @@ class EntityProjectileEyeOfEnder(type: EntityType<EntityProjectileEyeOfEnder>, w
 		}
 		
 		val (newX, _, newZ) = posVec.add(motion.scale(speed))
-		val newY = posY + (targetY - posY) * 0.03 * ySpeedMp
+		val newY = offsetTowards(posY, targetY, 0.03 * ySpeedMp)
 		setPosition(newX, newY, newZ)
 	}
 	

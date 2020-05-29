@@ -12,6 +12,7 @@ import chylex.hee.system.util.TagCompound
 import chylex.hee.system.util.facades.Resource
 import chylex.hee.system.util.heeTag
 import chylex.hee.system.util.lookPosVec
+import chylex.hee.system.util.offsetTowards
 import chylex.hee.system.util.posVec
 import chylex.hee.system.util.selectVulnerableEntities
 import chylex.hee.system.util.square
@@ -109,7 +110,7 @@ class EntityMobAngryEnderman(type: EntityType<EntityMobAngryEnderman>, world: Wo
 		}
 		
 		val currentTarget = attackTarget ?: return false
-		val teleportPos = Vec3d(aabb.minX + (aabb.maxX - aabb.minX) * 0.5, aabb.minY + eyeHeight.toDouble(), aabb.minZ + (aabb.maxZ - aabb.minZ) * 0.5)
+		val teleportPos = Vec3d(offsetTowards(aabb.minX, aabb.maxX, 0.5), aabb.minY + eyeHeight.toDouble(), offsetTowards(aabb.minZ, aabb.maxZ, 0.5))
 		
 		return world.rayTraceBlocks(RayTraceContext(teleportPos, currentTarget.lookPosVec, BlockMode.COLLIDER, FluidMode.NONE, this)).type == Type.MISS
 	}

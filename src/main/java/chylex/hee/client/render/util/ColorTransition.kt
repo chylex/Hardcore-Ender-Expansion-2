@@ -3,6 +3,7 @@ import chylex.hee.client.util.MC
 import chylex.hee.system.migration.forge.Side
 import chylex.hee.system.migration.forge.Sided
 import chylex.hee.system.util.color.HCL
+import chylex.hee.system.util.offsetTowards
 
 @Sided(Side.CLIENT)
 class ColorTransition(private val defaultColor: HCL, private val transitionDuration: Float){
@@ -70,8 +71,8 @@ class ColorTransition(private val defaultColor: HCL, private val transitionDurat
 			
 			return HCL(
 				hue = hueSource.hue,
-				chroma = currentFrom.chroma + (transitionTo.chroma - currentFrom.chroma) * currentProgress,
-				luminance = currentFrom.luminance + (transitionTo.luminance - currentFrom.luminance) * currentProgress
+				chroma = offsetTowards(currentFrom.chroma, transitionTo.chroma, currentProgress),
+				luminance = offsetTowards(currentFrom.luminance, transitionTo.luminance, currentProgress)
 			)
 		}
 	}

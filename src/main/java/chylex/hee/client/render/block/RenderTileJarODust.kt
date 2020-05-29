@@ -16,6 +16,7 @@ import chylex.hee.system.util.facades.Resource
 import chylex.hee.system.util.floorToInt
 import chylex.hee.system.util.getListOfCompounds
 import chylex.hee.system.util.heeTagOrNull
+import chylex.hee.system.util.offsetTowards
 import net.minecraft.client.renderer.BufferBuilder
 import net.minecraft.client.renderer.RenderHelper
 import net.minecraft.client.renderer.model.IBakedModel
@@ -79,7 +80,7 @@ object RenderTileJarODust : TileEntityRendererFast<TileEntityJarODust>(){
 		val maxZ = z + AABB.maxZ - EPSILON_XZ
 		
 		val minU = SPRITE_LAYER.minU.toDouble()
-		val maxU = SPRITE_LAYER.let { it.minU + (it.maxU - it.minU) * 0.5 } // texture is 16x32 to support repeating pattern
+		val maxU = SPRITE_LAYER.let { offsetTowards(it.minU, it.maxU, 0.5F) }.toDouble() // texture is 16x32 to support repeating pattern
 		val minV = SPRITE_LAYER.minV.toDouble()
 		val maxV = SPRITE_LAYER.maxV.toDouble()
 		val texHalfSize = (maxU - minU)

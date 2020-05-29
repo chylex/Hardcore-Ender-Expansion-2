@@ -32,6 +32,7 @@ import chylex.hee.system.util.directionTowards
 import chylex.hee.system.util.distanceSqTo
 import chylex.hee.system.util.heeTag
 import chylex.hee.system.util.nextInt
+import chylex.hee.system.util.offsetTowards
 import chylex.hee.system.util.playClient
 import chylex.hee.system.util.posVec
 import chylex.hee.system.util.readCompactVec
@@ -125,7 +126,7 @@ class EntityProjectileSpatialDash(type: EntityType<EntityProjectileSpatialDash>,
 						point
 					}
 					else{
-						playerPos.add(playerPos.directionTowards(point).scale(10.0 + (distance - 10.0) * 0.04)) // makes the sound audible even at max distance of ~100 blocks
+						playerPos.add(playerPos.directionTowards(point).scale(offsetTowards(10.0, distance, 0.04))) // makes the sound audible even at max distance of ~100 blocks
 					}
 				}
 				else{

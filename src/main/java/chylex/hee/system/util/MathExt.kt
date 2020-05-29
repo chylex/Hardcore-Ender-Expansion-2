@@ -30,6 +30,14 @@ infix fun Int.shlong(bitCount: Int): Long{
 	return this.toLong() shl bitCount
 }
 
+fun offsetTowards(from: Float, to: Float, progress: Float): Float{
+	return from + (to - from) * progress
+}
+
+fun offsetTowards(from: Double, to: Double, progress: Double): Double{
+	return from + (to - from) * progress
+}
+
 /**
  * Maps a range of values in [from] range to values in [to] range using linear interpolation.
  */
