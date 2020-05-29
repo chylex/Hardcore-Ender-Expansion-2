@@ -1,5 +1,4 @@
 package chylex.hee.game.world.territory.descriptions
-import chylex.hee.client.render.territory.EnvironmentRenderer
 import chylex.hee.client.render.territory.components.SkyCubeStatic
 import chylex.hee.game.entity.item.EntityTokenHolder
 import chylex.hee.game.world.territory.ITerritoryDescription
@@ -43,11 +42,9 @@ object Territory_TheHub : ITerritoryDescription{
 		override val voidRadiusMpXZ = 1.1F
 		override val voidRadiusMpY = 2F
 		
-		override val renderer = EnvironmentRenderer(
-			SkyCubeStatic(
-				texture = Resource.Vanilla("textures/environment/end_sky.png"),
-				color = RGB(51u).asVec
-			)
+		override val renderer = SkyCubeStatic(
+			texture = Resource.Vanilla("textures/environment/end_sky.png"),
+			color = RGB(51u).asVec
 		)
 	}
 	

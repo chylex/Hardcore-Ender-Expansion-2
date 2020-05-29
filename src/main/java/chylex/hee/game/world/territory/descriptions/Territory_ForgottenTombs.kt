@@ -1,5 +1,4 @@
 package chylex.hee.game.world.territory.descriptions
-import chylex.hee.client.render.territory.EnvironmentRenderer
 import chylex.hee.client.render.territory.components.SkyPlaneTopFoggy
 import chylex.hee.client.render.territory.lightmaps.ILightmap
 import chylex.hee.client.render.territory.lightmaps.ILightmap.Companion.calcLightFactor
@@ -18,6 +17,7 @@ import chylex.hee.system.util.facades.Resource
 import chylex.hee.system.util.lookPosVec
 import chylex.hee.system.util.math.LerpedFloat
 import chylex.hee.system.util.nextFloat
+import chylex.hee.system.util.offsetTowards
 import net.minecraft.util.math.Vec3d
 import net.minecraft.world.LightType.BLOCK
 import net.minecraft.world.LightType.SKY
@@ -61,14 +61,12 @@ object Territory_ForgottenTombs : ITerritoryDescription{
 		override val voidRadiusMpY = 0.975F
 		override val voidCenterOffset = Vec3d(0.0, -8.0, 0.0)
 		
-		override val renderer = EnvironmentRenderer(
-			SkyPlaneTopFoggy(
-				texture = Resource.Custom("textures/environment/stars.png"),
-				color = Vec3d(0.58, 0.58, 0.54),
-				rescale = 29.0,
-				distance = 65.0,
-				width = 300.0
-			)
+		override val renderer = SkyPlaneTopFoggy(
+			texture = Resource.Custom("textures/environment/stars.png"),
+			color = Vec3d(0.58, 0.58, 0.54),
+			rescale = 29.0,
+			distance = 65.0,
+			width = 300.0
 		)
 		
 		override val lightmap = object : ILightmap{
@@ -109,7 +107,7 @@ object Territory_ForgottenTombs : ITerritoryDescription{
 			val next = MAX_FOG_DENSITY - (light.pow(0.2F) * 0.85F * MAX_FOG_DENSITY)
 			val speed = if (next > prev) 0.025F else 0.055F
 			
-			currentFogDensity.update(prev + (next - prev) * speed)
+			currentFogDensity.update(offsetTowards(prev, next, speed))
 			nightVisionFactor = if (player.isPotionActive(Potions.NIGHT_VISION)) 1F else 0F
 		}
 	}

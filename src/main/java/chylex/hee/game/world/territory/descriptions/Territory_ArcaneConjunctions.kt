@@ -1,5 +1,4 @@
 package chylex.hee.game.world.territory.descriptions
-import chylex.hee.client.render.territory.EnvironmentRenderer
 import chylex.hee.game.world.territory.ITerritoryDescription
 import chylex.hee.game.world.territory.properties.TerritoryColors
 import chylex.hee.game.world.territory.properties.TerritoryEnvironment
@@ -29,6 +28,6 @@ object Territory_ArcaneConjunctions : ITerritoryDescription{
 		override val voidRadiusMpXZ = 1.25F
 		override val voidRadiusMpY = 1.5F
 		
-		override val renderer = EnvironmentRenderer.VANILLA
+		override val renderer = VANILLA
 	}
 }

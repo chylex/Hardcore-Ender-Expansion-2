@@ -1,7 +1,7 @@
 package chylex.hee.game.world
 import chylex.hee.HEE
+import chylex.hee.client.render.territory.AbstractEnvironmentRenderer
 import chylex.hee.client.render.territory.EmptyRenderer
-import chylex.hee.client.render.territory.EnvironmentRenderer
 import chylex.hee.client.render.util.GL
 import chylex.hee.client.render.util.GL.FOG_EXP2
 import chylex.hee.game.mechanics.portal.SpawnInfo
@@ -9,6 +9,7 @@ import chylex.hee.game.world.provider.DragonFightManagerNull
 import chylex.hee.game.world.provider.WorldBorderNull
 import chylex.hee.game.world.territory.TerritoryInstance
 import chylex.hee.game.world.territory.TerritoryInstance.Companion.THE_HUB_INSTANCE
+import chylex.hee.game.world.territory.TerritoryTicker
 import chylex.hee.game.world.territory.TerritoryVoid
 import chylex.hee.proxy.ModCommonProxy
 import chylex.hee.system.migration.forge.Side
@@ -116,7 +117,7 @@ class WorldProviderEndCustom(world: World, type: DimensionType) : EndDimension(w
 	// Visual properties (Light)
 	
 	override fun getLightmapColors(partialTicks: Float, sunBrightness: Float, skyLight: Float, blockLight: Float, colors: FloatArray){
-		clientEnvironment?.lightmap?.update(colors, sunBrightness, skyLight, blockLight, partialTicks)
+		clientEnvironment?.let { it.lightmap.update(colors, sunBrightness, skyLight.coerceAtMost(it.skyLight / 16F), blockLight, partialTicks) }
 	}
 	
 	override fun getLightBrightnessTable(): FloatArray{
@@ -163,7 +164,7 @@ class WorldProviderEndCustom(world: World, type: DimensionType) : EndDimension(w
 		}
 		
 		val density = clientEnvironment?.let {
-			(it.fogDensity * EnvironmentRenderer.currentFogDensityMp) + (it.fogRenderDistanceModifier * EnvironmentRenderer.currentRenderDistanceMp)
+			(it.fogDensity * AbstractEnvironmentRenderer.currentFogDensityMp) + (it.fogRenderDistanceModifier * AbstractEnvironmentRenderer.currentRenderDistanceMp)
 		}
 		
 		GL.setFogMode(FOG_EXP2)

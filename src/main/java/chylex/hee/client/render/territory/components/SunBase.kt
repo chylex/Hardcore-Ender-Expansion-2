@@ -1,27 +1,19 @@
 package chylex.hee.client.render.territory.components
+import chylex.hee.client.render.territory.AbstractEnvironmentRenderer
 import chylex.hee.client.render.util.GL
 import chylex.hee.client.render.util.GL.DF_ONE
 import chylex.hee.client.render.util.GL.DF_ZERO
 import chylex.hee.client.render.util.GL.SF_ONE
 import chylex.hee.client.render.util.GL.SF_SRC_ALPHA
-import chylex.hee.client.render.util.TESSELLATOR
-import chylex.hee.client.render.util.draw
 import chylex.hee.client.util.MC
 import chylex.hee.system.migration.forge.Side
 import chylex.hee.system.migration.forge.Sided
-import net.minecraft.client.Minecraft
-import net.minecraft.client.renderer.vertex.DefaultVertexFormats
 import net.minecraft.client.world.ClientWorld
 import net.minecraft.util.ResourceLocation
-import net.minecraft.util.math.Vec3d
-import net.minecraftforge.client.IRenderHandler
 import org.lwjgl.opengl.GL11.GL_GREATER
-import org.lwjgl.opengl.GL11.GL_QUADS
 
-abstract class SunBase : IRenderHandler{
+abstract class SunBase : AbstractEnvironmentRenderer(){
 	protected companion object{
-		val DEFAULT_COLOR = Vec3d(1.0, 1.0, 1.0)
-		const val DEFAULT_ALPHA = 1F
 		const val DEFAULT_DISTANCE = 100.0
 	}
 	
@@ -31,13 +23,14 @@ abstract class SunBase : IRenderHandler{
 	protected abstract val size: Double
 	protected open val distance = DEFAULT_DISTANCE
 	
+	@Sided(Side.CLIENT)
 	protected open fun setRotation(world: ClientWorld, partialTicks: Float){
 		GL.rotate(-90F, 0F, 1F, 0F)
 		GL.rotate(world.getCelestialAngle(partialTicks) * 360F, 1F, 0F, 0F)
 	}
 	
 	@Sided(Side.CLIENT)
-	override fun render(ticks: Int, partialTicks: Float, world: ClientWorld, mc: Minecraft){
+	override fun render(world: ClientWorld, partialTicks: Float){
 		val width = size
 		val dist = distance
 		
@@ -46,21 +39,15 @@ abstract class SunBase : IRenderHandler{
 		GL.enableAlpha()
 		GL.alphaFunc(GL_GREATER, 0F)
 		GL.disableFog()
-		GL.pushMatrix()
-		
-		setRotation(world, partialTicks)
 		
 		GL.color(color, alpha)
 		MC.textureManager.bindTexture(texture)
 		
-		TESSELLATOR.draw(GL_QUADS, DefaultVertexFormats.POSITION_TEX){
-			pos(-width, dist, -width).tex(0.0, 0.0).endVertex()
-			pos( width, dist, -width).tex(1.0, 0.0).endVertex()
-			pos( width, dist,  width).tex(1.0, 1.0).endVertex()
-			pos(-width, dist,  width).tex(0.0, 1.0).endVertex()
-		}
-		
+		GL.pushMatrix()
+		setRotation(world, partialTicks)
+		renderPlane(dist, width, 1.0)
 		GL.popMatrix()
+		
 		GL.enableFog()
 		GL.disableAlpha()
 		GL.disableBlend()

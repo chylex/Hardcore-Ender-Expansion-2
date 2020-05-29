@@ -1,50 +1,31 @@
 package chylex.hee.client.render.territory.components
-import chylex.hee.client.render.territory.EnvironmentRenderer
+import chylex.hee.client.render.territory.AbstractEnvironmentRenderer
 import chylex.hee.client.render.util.GL
 import chylex.hee.client.render.util.GL.DF_ONE_MINUS_SRC_ALPHA
 import chylex.hee.client.render.util.GL.DF_ZERO
 import chylex.hee.client.render.util.GL.SF_ONE
 import chylex.hee.client.render.util.GL.SF_SRC_ALPHA
-import chylex.hee.client.render.util.TESSELLATOR
-import chylex.hee.client.render.util.draw
 import chylex.hee.client.util.MC
 import chylex.hee.system.migration.forge.Side
 import chylex.hee.system.migration.forge.Sided
-import net.minecraft.client.Minecraft
-import net.minecraft.client.renderer.RenderHelper
-import net.minecraft.client.renderer.vertex.DefaultVertexFormats
 import net.minecraft.client.world.ClientWorld
-import net.minecraft.util.ResourceLocation
-import net.minecraft.util.math.Vec3d
-import net.minecraftforge.client.IRenderHandler
 import org.lwjgl.opengl.GL11.GL_GREATER
-import org.lwjgl.opengl.GL11.GL_QUADS
 
-abstract class SkyCubeBase : IRenderHandler{
+abstract class SkyCubeBase : AbstractEnvironmentRenderer(){
 	protected companion object{
-		const val DEFAULT_ALPHA = 1F
 		const val DEFAULT_RESCALE = 16.0
 		const val DEFAULT_DISTANCE = 125.0
-		
-		fun renderPlane(y: Double, size: Double, rescale: Double){
-			TESSELLATOR.draw(GL_QUADS, DefaultVertexFormats.POSITION_TEX){
-				pos(-size, -y, -size).tex(0.0, 0.0).endVertex()
-				pos(-size, -y,  size).tex(0.0, rescale).endVertex()
-				pos( size, -y,  size).tex(rescale, rescale).endVertex()
-				pos( size, -y, -size).tex(rescale, 0.0).endVertex()
-			}
-		}
 	}
 	
-	protected abstract val texture: ResourceLocation
-	protected abstract val color: Vec3d
+	protected open val texture = DEFAULT_TEXTURE
+	protected open val color = DEFAULT_COLOR
 	protected open val alpha = DEFAULT_ALPHA
 	protected open val rescale = DEFAULT_RESCALE
 	protected open val distance = DEFAULT_DISTANCE
 	
 	@Sided(Side.CLIENT)
-	override fun render(ticks: Int, partialTicks: Float, world: ClientWorld, mc: Minecraft){
-		val dist = distance.coerceAtMost(18.5 * mc.gameSettings.renderDistanceChunks)
+	override fun render(world: ClientWorld, partialTicks: Float){
+		val distance = distance.coerceAtMost(18.5 * MC.settings.renderDistanceChunks)
 		val rescale = rescale
 		
 		GL.enableBlend()
@@ -52,9 +33,8 @@ abstract class SkyCubeBase : IRenderHandler{
 		GL.enableAlpha()
 		GL.alphaFunc(GL_GREATER, 0F)
 		GL.disableFog()
-		RenderHelper.disableStandardItemLighting()
 		
-		GL.color(color, alpha * EnvironmentRenderer.currentSkyAlpha)
+		GL.color(color, alpha * currentSkyAlpha)
 		MC.textureManager.bindTexture(texture)
 		
 		for(side in 0..5){
@@ -68,7 +48,7 @@ abstract class SkyCubeBase : IRenderHandler{
 				5 -> GL.rotate(-90F, 0F, 0F, 1F)
 			}
 			
-			renderPlane(dist, dist, rescale)
+			renderPlane(distance, distance, rescale)
 			GL.popMatrix()
 		}
 		

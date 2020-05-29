@@ -1,5 +1,6 @@
 package chylex.hee.game.world.territory.properties
-import chylex.hee.client.render.territory.EnvironmentRenderer
+import chylex.hee.client.render.territory.AbstractEnvironmentRenderer
+import chylex.hee.client.render.territory.components.SkyCubeStatic
 import chylex.hee.client.render.territory.lightmaps.ILightmap
 import chylex.hee.client.render.territory.lightmaps.VanillaEndLightmap
 import chylex.hee.game.world.WorldProviderEndCustom.Companion.DEFAULT_CELESTIAL_ANGLE
@@ -8,19 +9,28 @@ import chylex.hee.game.world.WorldProviderEndCustom.Companion.DEFAULT_SUN_BRIGHT
 import chylex.hee.system.migration.forge.Side
 import chylex.hee.system.migration.forge.Sided
 import chylex.hee.system.migration.vanilla.EntityPlayer
+import chylex.hee.system.util.facades.Resource
 import net.minecraft.util.math.Vec3d
 
 abstract class TerritoryEnvironment{
+	protected companion object{
+		val VANILLA = SkyCubeStatic(
+			texture = Resource.Vanilla("textures/environment/end_sky.png"),
+			color = (40.0 / 255.0).let { Vec3d(it, it, it) },
+			distance = 100.0
+		)
+	}
+	
 	open val lightBrightnessTable: FloatArray?
 		get() = null
 	
-	open val celestialAngle: Float
+	open val celestialAngle
 		get() = DEFAULT_CELESTIAL_ANGLE
 	
-	open val sunBrightness: Float
+	open val sunBrightness
 		get() = DEFAULT_SUN_BRIGHTNESS
 	
-	open val skyLight: Int
+	open val skyLight
 		get() = DEFAULT_SKY_LIGHT // TODO use custom chunk for custom skylight levels & check where skylight matters (such as mob spawning)
 	
 	abstract val fogColor: Vec3d
@@ -31,7 +41,7 @@ abstract class TerritoryEnvironment{
 	abstract val voidRadiusMpY: Float
 	open val voidCenterOffset: Vec3d = Vec3d.ZERO
 	
-	open val renderer: EnvironmentRenderer? = null
+	open val renderer: AbstractEnvironmentRenderer? = null
 	open val lightmap: ILightmap = VanillaEndLightmap
 	
 	@Sided(Side.CLIENT)
