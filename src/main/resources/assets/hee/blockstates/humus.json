@@ -1,5 +1,6 @@
 {
   "variants": {
-    "": { "model": "hee:block/humus" }
+    "merge=false": { "model": "hee:block/humus" },
+    "merge=true": { "model": "hee:block/humus_merge" }
   }
 }

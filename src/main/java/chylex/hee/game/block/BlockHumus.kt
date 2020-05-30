@@ -11,6 +11,7 @@ import chylex.hee.system.util.breakBlock
 import chylex.hee.system.util.getBlock
 import chylex.hee.system.util.getState
 import chylex.hee.system.util.size
+import net.minecraft.block.Block
 import net.minecraft.block.BlockState
 import net.minecraft.entity.Entity
 import net.minecraft.item.ItemStack
@@ -29,7 +30,7 @@ import net.minecraftforge.common.PlantType
 import net.minecraftforge.event.world.BlockEvent.HarvestDropsEvent
 import java.util.Random
 
-class BlockHumus(builder: BlockBuilder) : BlockSimple(builder){
+class BlockHumus(builder: BlockBuilder, mergeBottom: Block) : BlockSimpleMergingBottom(builder, mergeBottom){
 	init{
 		MinecraftForge.EVENT_BUS.register(this)
 	}

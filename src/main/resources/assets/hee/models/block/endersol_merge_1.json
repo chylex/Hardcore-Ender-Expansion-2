@@ -2,6 +2,6 @@
   "parent": "block/cube_column",
   "textures": {
     "end": "hee:block/endersol_top",
-    "side": "hee:block/endersol_merge_bottom_2"
+    "side": "hee:block/endersol_merge_1"
   }
 }

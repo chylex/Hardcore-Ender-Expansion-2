@@ -1,14 +1,9 @@
 {
   "variants": {
-    "merge_bottom=false,merge_top=false": { "model": "hee:block/endersol" },
-    "merge_bottom=true,merge_top=true": { "model": "hee:block/endersol_merge_both" },
-    "merge_bottom=true,merge_top=false": [
-      { "model": "hee:block/endersol_merge_bottom_1" },
-      { "model": "hee:block/endersol_merge_bottom_2" }
-    ],
-    "merge_bottom=false,merge_top=true": [
-      { "model": "hee:block/endersol_merge_top_1" },
-      { "model": "hee:block/endersol_merge_top_2" }
+    "merge=false": { "model": "hee:block/endersol" },
+    "merge=true": [
+      { "model": "hee:block/endersol_merge_1" },
+      { "model": "hee:block/endersol_merge_2" }
     ]
   }
 }

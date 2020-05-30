@@ -18,7 +18,6 @@ import chylex.hee.game.block.BlockEndPortalOverride
 import chylex.hee.game.block.BlockEndPowderOre
 import chylex.hee.game.block.BlockEnderGoo
 import chylex.hee.game.block.BlockEnderGooPurified
-import chylex.hee.game.block.BlockEndersol
 import chylex.hee.game.block.BlockEndium
 import chylex.hee.game.block.BlockEnergyCluster
 import chylex.hee.game.block.BlockEternalFire
@@ -43,6 +42,7 @@ import chylex.hee.game.block.BlockPuzzleLogic
 import chylex.hee.game.block.BlockScaffolding
 import chylex.hee.game.block.BlockShulkerBoxOverride
 import chylex.hee.game.block.BlockSimple
+import chylex.hee.game.block.BlockSimpleMergingBottom
 import chylex.hee.game.block.BlockSimpleShaped
 import chylex.hee.game.block.BlockSimpleWithMapColor
 import chylex.hee.game.block.BlockSkullCustom
@@ -160,8 +160,8 @@ object ModBlocks{
 	@JvmField val INFUSED_GLASS    = BlockInfusedGlass(buildInfusedGlass) named "infused_glass"
 	@JvmField val VANTABLOCK       = BlockSimple(buildVantablock) named "vantablock"
 	@JvmField val ENDIUM_BLOCK     = BlockEndium(buildEndiumBlock) named "endium_block"
-	@JvmField val ENDERSOL         = BlockEndersol(buildEnderSol) named "endersol"
-	@JvmField val HUMUS            = BlockHumus(buildHumus) named "humus"
+	@JvmField val ENDERSOL         = BlockSimpleMergingBottom(buildEnderSol, mergeBottom = Blocks.END_STONE) named "endersol"
+	@JvmField val HUMUS            = BlockHumus(buildHumus, mergeBottom = ENDERSOL) named "humus"
 	
 	// Blocks: Building (Gloomrock)
 	
