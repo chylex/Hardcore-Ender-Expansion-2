@@ -20,7 +20,7 @@ import net.minecraft.world.IBlockReader
 import net.minecraft.world.World
 import java.util.Random
 
-class BlockWhitebarkSapling(builder: BlockBuilder, private val generator: WhitebarkTreeGenerator) : BlockEndPlant(builder), IGrowable{
+class BlockWhitebarkSapling(builder: BlockBuilder, private val generator: WhitebarkTreeGenerator<*>) : BlockEndPlant(builder), IGrowable{
 	companion object{
 		val STAGE = Property.int("stage", 0..2)
 		val AABB = AxisAlignedBB(0.1, 0.0, 0.1, 0.9, 0.8, 0.9).asVoxelShape
