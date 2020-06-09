@@ -1,4 +1,5 @@
 package chylex.hee.system.capability
+import chylex.hee.system.util.LazyOptional
 import chylex.hee.system.util.NBTBase
 import net.minecraft.util.Direction
 import net.minecraftforge.common.capabilities.Capability
@@ -11,11 +12,12 @@ abstract class CapabilityProvider<T : INBTSerializable<U>, U : NBTBase>(
 	private val impl: T
 ) : ICapabilitySerializable<U>{
 	private val instance = instance!!
+	private val cap = LazyOptional(impl)
 	
 	@Suppress("UNCHECKED_CAST")
 	override fun <T : Any?> getCapability(capability: Capability<T>, facing: Direction?): LazyOptional<T>{
 		return if (capability === instance)
-			LazyOptional.of { impl }.cast()
+			cap.cast()
 		else
 			LazyOptional.empty()
 	}

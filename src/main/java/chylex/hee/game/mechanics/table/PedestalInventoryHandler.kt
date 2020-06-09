@@ -3,6 +3,7 @@ import chylex.hee.game.block.BlockTablePedestal
 import chylex.hee.game.container.util.InvReverseWrapper
 import chylex.hee.init.ModItems
 import chylex.hee.system.migration.vanilla.EntityItem
+import chylex.hee.system.util.LazyOptional
 import chylex.hee.system.util.TagCompound
 import chylex.hee.system.util.copyIf
 import chylex.hee.system.util.createSnapshot
@@ -41,7 +42,7 @@ class PedestalInventoryHandler(private val updateCallback: (Boolean) -> Unit) : 
 		addListener { onInventoryUpdated(updateInputModCounter = false) }
 	}
 	
-	val itemOutputCap = InvReverseWrapper(itemOutput)
+	val itemOutputCap = LazyOptional(InvReverseWrapper(itemOutput))
 	
 	val hasOutput
 		get() = itemOutput.nonEmptySlots.hasNext()

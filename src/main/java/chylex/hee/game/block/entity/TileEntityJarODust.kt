@@ -7,6 +7,7 @@ import chylex.hee.init.ModTileEntities
 import chylex.hee.system.migration.Facing.DOWN
 import chylex.hee.system.migration.Facing.UP
 import chylex.hee.system.util.FLAG_SYNC_CLIENT
+import chylex.hee.system.util.LazyOptional
 import chylex.hee.system.util.NBTList.Companion.putList
 import chylex.hee.system.util.TagCompound
 import chylex.hee.system.util.getListOfCompounds
@@ -28,16 +29,16 @@ class TileEntityJarODust(type: TileEntityType<TileEntityJarODust>) : TileEntityB
 	
 	// Inventory
 	
-	private val inventoryIntake = DustLayerInventory(layers, true)
-	private val inventoryDispenser = DustLayerInventory(layers, false)
+	private val inventoryIntake = LazyOptional(DustLayerInventory(layers, true))
+	private val inventoryDispenser = LazyOptional(DustLayerInventory(layers, false))
 	
 	override fun <T : Any?> getCapability(capability: Capability<T>, facing: Direction?): LazyOptional<T>{
 		if (capability === ITEM_HANDLER_CAPABILITY){
 			if (facing == UP){
-				return LazyOptional.of { inventoryIntake }.cast()
+				return inventoryIntake.cast()
 			}
 			else if (facing == DOWN){
-				return LazyOptional.of { inventoryDispenser }.cast()
+				return inventoryDispenser.cast()
 			}
 		}
 		

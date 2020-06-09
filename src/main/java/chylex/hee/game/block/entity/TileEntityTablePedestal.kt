@@ -291,7 +291,7 @@ class TileEntityTablePedestal(type: TileEntityType<TileEntityTablePedestal>) : T
 	
 	override fun <T : Any?> getCapability(capability: Capability<T>, facing: Direction?): LazyOptional<T>{
 		return if (capability === ITEM_HANDLER_CAPABILITY && facing == DOWN)
-			LazyOptional.of { inventoryHandler.itemOutputCap }.cast()
+			inventoryHandler.itemOutputCap.cast()
 		else
 			super.getCapability(capability, facing)
 	}
