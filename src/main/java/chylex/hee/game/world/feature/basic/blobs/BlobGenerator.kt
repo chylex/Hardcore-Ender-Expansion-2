@@ -12,10 +12,12 @@ import net.minecraft.block.Block
 import net.minecraft.util.math.BlockPos
 import java.util.Random
 
-object BlobGenerator{
-	val BASE: Block = Blocks.END_STONE
+class BlobGenerator(val base: Block){
+	companion object{
+		val END_STONE = BlobGenerator(Blocks.END_STONE)
+	}
 	
-	fun place(world: SegmentedWorld, center: BlockPos, radius: Double, block: Block = BASE): Boolean{
+	fun place(world: SegmentedWorld, center: BlockPos, radius: Double): Boolean{
 		val offset = radius.ceilToInt()
 		
 		if (!world.isInside(center) || Facing6.any { !world.isInside(center.offset(it, offset)) }){
@@ -23,18 +25,18 @@ object BlobGenerator{
 		}
 		
 		for(pos in center.allInCenteredSphereMutable(radius)){
-			world.setBlock(pos, block)
+			world.setBlock(pos, base)
 		}
 		
 		return true
 	}
 	
 	fun generate(world: SegmentedWorld, rand: Random, center: BlockPos, smoothing: BlobSmoothing, pattern: BlobPattern): Boolean{
-		val generator = pattern.pickGenerator(rand)
+		val layout = pattern.pickLayout(rand)
 		val populators = pattern.pickPopulators(rand)
 		
 		val extraSize = populators.fold(BlockPos.ZERO){ acc, populator -> acc.max(populator.expandSizeBy) }
-		val allocatedSize = generator.size.expand(extraSize)
+		val allocatedSize = layout.size.expand(extraSize)
 		
 		val origin = center.subtract(allocatedSize.centerPos)
 		
@@ -44,7 +46,7 @@ object BlobGenerator{
 		
 		val blobWorld = ScaffoldedWorld(rand, allocatedSize)
 		
-		generator.generate(blobWorld, rand)
+		layout.generate(blobWorld, rand, this)
 		
 		if (smoothing == FULL){
 			runSmoothingPass(blobWorld, adjacentAirCount = 4)
@@ -55,7 +57,7 @@ object BlobGenerator{
 		}
 		
 		for(populator in populators){
-			populator.generate(blobWorld, rand)
+			populator.generate(blobWorld, rand, this)
 		}
 		
 		blobWorld.cloneInto(world, origin)
@@ -64,7 +66,7 @@ object BlobGenerator{
 	
 	private fun runSmoothingPass(blobWorld: ScaffoldedWorld, adjacentAirCount: Int){
 		for(pos in blobWorld.allPositionsMutable){
-			if (blobWorld.getBlock(pos) === BASE && Facing6.count { facing -> pos.offset(facing).let { !blobWorld.isInside(it) || blobWorld.isUnused(it) } } >= adjacentAirCount){
+			if (blobWorld.getBlock(pos) === base && Facing6.count { facing -> pos.offset(facing).let { !blobWorld.isInside(it) || blobWorld.isUnused(it) } } >= adjacentAirCount){
 				blobWorld.markUnused(pos)
 			}
 		}

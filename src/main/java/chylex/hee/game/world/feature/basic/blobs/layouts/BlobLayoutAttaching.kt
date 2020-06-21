@@ -1,7 +1,7 @@
-package chylex.hee.game.world.feature.basic.blobs.impl
+package chylex.hee.game.world.feature.basic.blobs.layouts
 import chylex.hee.game.world.feature.basic.blobs.BlobGenerator
-import chylex.hee.game.world.feature.basic.blobs.IBlobGenerator
-import chylex.hee.game.world.generation.SegmentedWorld
+import chylex.hee.game.world.feature.basic.blobs.IBlobLayout
+import chylex.hee.game.world.generation.ScaffoldedWorld
 import chylex.hee.game.world.util.Size
 import chylex.hee.system.util.Pos
 import chylex.hee.system.util.center
@@ -9,13 +9,13 @@ import chylex.hee.system.util.nextVector
 import net.minecraft.util.math.BlockPos
 import java.util.Random
 
-open class BlobGeneratorAttaching(
+open class BlobLayoutAttaching(
 	private val amount: (Random) -> Int,
 	private val radius: (Int, Random) -> Double,
 	private val distance: (Random) -> Double,
 	private val strategy: AttachingStrategy,
 	maxSize: Int
-) : IBlobGenerator{
+) : IBlobLayout{
 	constructor(
 		amount: (Random) -> Int,
 		radiusFirst: (Random) -> Double,
@@ -55,14 +55,14 @@ open class BlobGeneratorAttaching(
 	
 	override val size = Size(maxSize)
 	
-	override fun generate(world: SegmentedWorld, rand: Random){
+	override fun generate(world: ScaffoldedWorld, rand: Random, generator: BlobGenerator){
 		val totalBlobs = amount(rand).takeIf { it > 0 } ?: return
 		
 		val generated = mutableListOf(
 			world.worldSize.centerPos to radius(0, rand)
 		)
 		
-		if (!BlobGenerator.place(world, generated[0].first, generated[0].second)){
+		if (!generator.place(world, generated[0].first, generated[0].second)){
 			return
 		}
 		
@@ -73,7 +73,7 @@ open class BlobGeneratorAttaching(
 				val nextRad = radius(1 + it, rand)
 				val nextDistance = (attachRad + nextRad) * distance(rand)
 				
-				if (BlobGenerator.place(world, Pos(attachPos.center.add(rand.nextVector(nextDistance))), nextRad)){
+				if (generator.place(world, Pos(attachPos.center.add(rand.nextVector(nextDistance))), nextRad)){
 					break
 				}
 			}

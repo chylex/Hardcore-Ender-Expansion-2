@@ -8,9 +8,9 @@ import chylex.hee.game.world.feature.basic.PortalGenerator
 import chylex.hee.game.world.feature.basic.blobs.BlobGenerator
 import chylex.hee.game.world.feature.basic.blobs.BlobPattern
 import chylex.hee.game.world.feature.basic.blobs.BlobSmoothing
-import chylex.hee.game.world.feature.basic.blobs.impl.BlobGeneratorAttaching
-import chylex.hee.game.world.feature.basic.blobs.impl.BlobGeneratorAttaching.AttachingStrategy.FIRST_BLOB
-import chylex.hee.game.world.feature.basic.blobs.impl.BlobGeneratorSingle
+import chylex.hee.game.world.feature.basic.blobs.layouts.BlobLayoutAttaching
+import chylex.hee.game.world.feature.basic.blobs.layouts.BlobLayoutAttaching.AttachingStrategy.FIRST_BLOB
+import chylex.hee.game.world.feature.basic.blobs.layouts.BlobLayoutSingle
 import chylex.hee.game.world.feature.basic.caves.CaveGenerator
 import chylex.hee.game.world.feature.basic.caves.impl.CaveCarverSphere
 import chylex.hee.game.world.feature.basic.caves.impl.CavePatherRotatingBase
@@ -512,9 +512,9 @@ object Generator_TheHub : ITerritoryGenerator{
 	}
 	
 	private object EndstoneBlobs{
-		private val BLOB = BlobPattern(
+		private val PATTERN = BlobPattern(
 			weightedListOf(
-				75 to BlobGeneratorAttaching(
+				75 to BlobLayoutAttaching(
 					amount = { rand -> rand.nextInt(2, rand.nextInt(3, 4)) },
 					radiusFirst = Linear(2.6, 4.4),
 					radiusOther = Linear(2.2, 3.4),
@@ -522,7 +522,7 @@ object Generator_TheHub : ITerritoryGenerator{
 					strategy = FIRST_BLOB,
 					maxSize = 16
 				),
-				25 to BlobGeneratorSingle(
+				25 to BlobLayoutSingle(
 					radius = Linear(2.3, 4.6)
 				)
 			)
@@ -539,7 +539,7 @@ object Generator_TheHub : ITerritoryGenerator{
 						rand.nextInt(5, size.maxZ - 5)
 					)
 					
-					if (blobPos.distanceSqTo(center) > square(MainIsland.RADIUS + 28.0) && BlobGenerator.generate(world, rand, blobPos, BlobSmoothing.FULL, BLOB)){
+					if (blobPos.distanceSqTo(center) > square(MainIsland.RADIUS + 28.0) && BlobGenerator.END_STONE.generate(world, rand, blobPos, BlobSmoothing.FULL, PATTERN)){
 						break
 					}
 				}

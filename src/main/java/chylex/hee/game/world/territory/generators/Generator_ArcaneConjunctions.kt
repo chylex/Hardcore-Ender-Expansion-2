@@ -7,9 +7,9 @@ import chylex.hee.game.world.feature.basic.blobs.BlobPattern
 import chylex.hee.game.world.feature.basic.blobs.BlobSmoothing
 import chylex.hee.game.world.feature.basic.blobs.IBlobPopulator
 import chylex.hee.game.world.feature.basic.blobs.PopulatorBuilder
-import chylex.hee.game.world.feature.basic.blobs.impl.BlobGeneratorSingle
-import chylex.hee.game.world.feature.basic.blobs.impl.BlobPopulatorFill
-import chylex.hee.game.world.feature.basic.blobs.impl.BlobPopulatorOre
+import chylex.hee.game.world.feature.basic.blobs.layouts.BlobLayoutSingle
+import chylex.hee.game.world.feature.basic.blobs.populators.BlobPopulatorFill
+import chylex.hee.game.world.feature.basic.blobs.populators.BlobPopulatorOre
 import chylex.hee.game.world.feature.basic.ores.OreGenerator
 import chylex.hee.game.world.feature.basic.ores.impl.OreTechniqueAdjacent
 import chylex.hee.game.world.feature.basic.ores.impl.OreTechniqueDistance
@@ -17,6 +17,7 @@ import chylex.hee.game.world.feature.basic.ores.impl.OreTechniqueSingle
 import chylex.hee.game.world.feature.basic.ores.impl.withAdjacentAirCheck
 import chylex.hee.game.world.generation.IBlockPlacer.BlockPlacer
 import chylex.hee.game.world.generation.IBlockPlacer.BlockReplacer
+import chylex.hee.game.world.generation.ScaffoldedWorld
 import chylex.hee.game.world.generation.SegmentedWorld
 import chylex.hee.game.world.generation.TerritoryGenerationInfo
 import chylex.hee.game.world.structure.trigger.EnergyClusterStructureTrigger
@@ -322,8 +323,8 @@ object Generator_ArcaneConjunctions : ITerritoryGenerator{
 		}
 		
 		fun generateHollow(world: SegmentedWorld, rand: Random, contents: BlobContents){
-			BlobGenerator.generate(world, rand, center, BlobSmoothing.MILD, BlobPattern(
-				BlobGeneratorSingle(Constant(radius)),
+			BlobGenerator.END_STONE.generate(world, rand, center, BlobSmoothing.MILD, BlobPattern(
+				BlobLayoutSingle(Constant(radius)),
 				PopulatorBuilder().apply {
 					guarantee(FILL_POPULATOR, contents)
 				}
@@ -331,8 +332,8 @@ object Generator_ArcaneConjunctions : ITerritoryGenerator{
 		}
 		
 		fun generateFilled(world: SegmentedWorld, rand: Random){
-			BlobGenerator.generate(world, rand, center, BlobSmoothing.NONE, BlobPattern(
-				BlobGeneratorSingle(Constant(radius)),
+			BlobGenerator.END_STONE.generate(world, rand, center, BlobSmoothing.NONE, BlobPattern(
+				BlobLayoutSingle(Constant(radius)),
 				FILLED_BLOB_POPULATORS
 			))
 		}
@@ -457,13 +458,13 @@ object Generator_ArcaneConjunctions : ITerritoryGenerator{
 	}
 	
 	private sealed class BlobContents : IBlobPopulator{
-		override fun generate(world: SegmentedWorld, rand: Random){}
+		override fun generate(world: ScaffoldedWorld, rand: Random, generator: BlobGenerator){}
 		open fun after(world: SegmentedWorld, rand: Random, blob: Blob){}
 		
 		object Nothing : BlobContents()
 		
 		object ReturnPortal : BlobContents(){
-			override fun generate(world: SegmentedWorld, rand: Random){
+			override fun generate(world: ScaffoldedWorld, rand: Random, generator: BlobGenerator){
 				val size = world.worldSize
 				val center = size.centerPos
 				
@@ -472,8 +473,8 @@ object Generator_ArcaneConjunctions : ITerritoryGenerator{
 			}
 		}
 		
-		class EnergyCluster(private val generator: IClusterGenerator) : BlobContents(){
-			override fun generate(world: SegmentedWorld, rand: Random){
+		class EnergyCluster(private val cluster: IClusterGenerator) : BlobContents(){
+			override fun generate(world: ScaffoldedWorld, rand: Random, generator: BlobGenerator){
 				val size = world.worldSize
 				val center = size.centerPos
 				
@@ -482,12 +483,12 @@ object Generator_ArcaneConjunctions : ITerritoryGenerator{
 				else
 					Pos(center.center.add(rand.nextVector(rand.nextFloat(0.0, (min(size.x, size.z) - 1) * 0.3))))
 				
-				world.addTrigger(pos, EnergyClusterStructureTrigger(generator.generate(rand)))
+				world.addTrigger(pos, EnergyClusterStructureTrigger(cluster.generate(rand)))
 			}
 		}
 		
 		object EnderGoo : BlobContents(){
-			override fun generate(world: SegmentedWorld, rand: Random){
+			override fun generate(world: ScaffoldedWorld, rand: Random, generator: BlobGenerator){
 				val size = world.worldSize
 				val center = size.centerPos
 				val radius = min(size.x, size.z) / 2

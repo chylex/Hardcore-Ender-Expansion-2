@@ -4,17 +4,17 @@ import chylex.hee.system.collection.WeightedList.Companion.weightedListOf
 import java.util.Random
 
 class BlobPattern private constructor(
-	private val generators: WeightedList<IBlobGenerator>,
+	private val layouts: WeightedList<IBlobLayout>,
 	private val populators: List<IPopulatorPicker>?
 ){
-	constructor(generators: WeightedList<IBlobGenerator>) : this(generators, null)
-	constructor(generators: WeightedList<IBlobGenerator>, populators: PopulatorBuilder) : this(generators, populators.build())
+	constructor(layouts: WeightedList<IBlobLayout>) : this(layouts, null)
+	constructor(layouts: WeightedList<IBlobLayout>, populators: PopulatorBuilder) : this(layouts, populators.build())
 	
-	constructor(generator: IBlobGenerator) : this(weightedListOf(1 to generator), null)
-	constructor(generator: IBlobGenerator, populators: PopulatorBuilder) : this(weightedListOf(1 to generator), populators.build())
+	constructor(layout: IBlobLayout) : this(weightedListOf(1 to layout), null)
+	constructor(layout: IBlobLayout, populators: PopulatorBuilder) : this(weightedListOf(1 to layout), populators.build())
 	
-	fun pickGenerator(rand: Random): IBlobGenerator{
-		return generators.generateItem(rand)
+	fun pickLayout(rand: Random): IBlobLayout{
+		return layouts.generateItem(rand)
 	}
 	
 	fun pickPopulators(rand: Random): List<IBlobPopulator>{

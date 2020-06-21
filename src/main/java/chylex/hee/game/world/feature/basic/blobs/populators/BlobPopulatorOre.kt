@@ -1,8 +1,9 @@
-package chylex.hee.game.world.feature.basic.blobs.impl
+package chylex.hee.game.world.feature.basic.blobs.populators
+import chylex.hee.game.world.feature.basic.blobs.BlobGenerator
 import chylex.hee.game.world.feature.basic.blobs.IBlobPopulator
 import chylex.hee.game.world.feature.basic.ores.IOreTechnique
 import chylex.hee.game.world.generation.IBlockPlacer
-import chylex.hee.game.world.generation.SegmentedWorld
+import chylex.hee.game.world.generation.ScaffoldedWorld
 import chylex.hee.system.util.Pos
 import chylex.hee.system.util.nextInt
 import java.util.Random
@@ -14,7 +15,7 @@ class BlobPopulatorOre(
 	private val attemptsPerBlob: Int,
 	private val clustersPerBlob: (Random) -> Int
 ) : IBlobPopulator{
-	override fun generate(world: SegmentedWorld, rand: Random){
+	override fun generate(world: ScaffoldedWorld, rand: Random, generator: BlobGenerator){
 		val size = world.worldSize
 		var clustersLeft = clustersPerBlob(rand).takeIf { it > 0 } ?: return
 		
