@@ -13,7 +13,8 @@ class CaveGenerator(
 	private val carver: ICaveCarver,
 	private val radius: ICaveRadius,
 	private val placer: IBlockPlacer = BlockReplacer(fill = Blocks.AIR, replace = Blocks.END_STONE),
-	private val stepSize: Double
+	private val stepSize: Double,
+	private val maxConsecutiveFails: Int = Int.MAX_VALUE
 ){
 	fun generate(world: SegmentedWorld, start: Vec3d, length: Double, pather: ICavePather): Int{
 		val rand = world.rand
@@ -25,6 +26,7 @@ class CaveGenerator(
 		var stepCounter = 0
 		var failCounter = 0
 		var successfulSteps = 0
+		var failsLeft = maxConsecutiveFails
 		
 		while(stepCounter < steps){
 			point = point.add(pather.nextOffset(rand, point).normalize().scale(stepSize))
@@ -35,10 +37,16 @@ class CaveGenerator(
 			if (carveBox.intersects(worldBox) && carver.carve(world, point, nextRadius, placer)){
 				++successfulSteps
 				++stepCounter
+				failsLeft = maxConsecutiveFails
 			}
-			else if (++failCounter == 4){
-				failCounter = 0
-				++stepCounter
+			else{
+				if (--failsLeft < 0){
+					break
+				}
+				else if (++failCounter == 4){
+					failCounter = 0
+					++stepCounter
+				}
 			}
 		}
 		
