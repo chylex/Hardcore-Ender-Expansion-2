@@ -43,6 +43,9 @@ class WorldToStructureWorldAdapter(private val world: World, override val rand: 
 			secondPass[pos] = state
 			return
 		}
+		else{
+			secondPass.remove(pos) // avoids attempting to generate 2 blocks in one position if one requires second pass
+		}
 		
 		val worldPos = pos.add(offset)
 		worldPos.setState(world, state, FLAG_SYNC_CLIENT or FLAG_REPLACE_NO_DROPS)
