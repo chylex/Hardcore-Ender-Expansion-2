@@ -1,5 +1,6 @@
 package chylex.hee.game.block
 import chylex.hee.game.block.info.BlockBuilder
+import chylex.hee.game.world.territory.TerritoryInstance
 import chylex.hee.system.migration.forge.Side
 import chylex.hee.system.migration.forge.Sided
 import chylex.hee.system.migration.vanilla.BlockVine
@@ -13,6 +14,7 @@ import net.minecraft.world.IEnviromentBlockReader
 import net.minecraft.world.IWorldReader
 import net.minecraft.world.World
 import net.minecraft.world.biome.BiomeColors
+import net.minecraft.world.biome.Biomes
 import java.util.Random
 
 class BlockDryVines(builder: BlockBuilder) : BlockVine(builder.p){
@@ -29,6 +31,8 @@ class BlockDryVines(builder: BlockBuilder) : BlockVine(builder.p){
 	
 	@Sided(Side.CLIENT)
 	object Color : IBlockColor{
+		private val DEFAULT = dryify(FoliageColors.getDefault())
+		
 		private fun dryify(color: Int): Int{
 			val hsb = IntColor(color).asHSB
 			
@@ -39,10 +43,12 @@ class BlockDryVines(builder: BlockBuilder) : BlockVine(builder.p){
 		}
 		
 		override fun getColor(state: BlockState, world: IEnviromentBlockReader?, pos: BlockPos?, tintIndex: Int): Int{
-			return if (world != null && pos != null)
-				dryify(BiomeColors.getFoliageColor(world, pos))
-			else
-				dryify(FoliageColors.getDefault())
+			if (world == null || pos == null){
+				return DEFAULT
+			}
+			
+			val fromTerritory = world.getBiome(pos).takeIf { it === Biomes.THE_END }?.let { TerritoryInstance.fromPos(pos) }?.let { it.territory.desc.colors.dryVines }
+			return fromTerritory ?: dryify(BiomeColors.getFoliageColor(world, pos))
 		}
 	}
 }
