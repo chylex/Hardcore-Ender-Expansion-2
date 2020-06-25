@@ -33,7 +33,7 @@ abstract class BlockAbstractPortal(builder: BlockBuilder) : BlockSimpleShaped(bu
 		const val MAX_SIZE = 5
 		
 		const val TRANSLATION_SPEED_LONG = 600000L
-		const val TRANSLATION_SPEED = TRANSLATION_SPEED_LONG.toFloat()
+		const val TRANSLATION_SPEED_INV = 1.0 / TRANSLATION_SPEED_LONG
 		
 		private val COLLISION_AABB = AxisAlignedBB(0.0, 0.0, 0.0, 1.0, 0.025, 1.0).asVoxelShape
 		

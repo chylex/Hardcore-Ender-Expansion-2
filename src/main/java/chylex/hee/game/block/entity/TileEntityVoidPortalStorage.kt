@@ -44,7 +44,7 @@ class TileEntityVoidPortalStorage(type: TileEntityType<TileEntityVoidPortalStora
 		
 		private const val SLOWING_DURATION_TICKS = 75
 		private const val SLOWING_EXTRA_DELAY_TICKS = 4
-		private val SLOWING_PROGRESS_PER_UPDATE = ((1000F / 20F) / BlockAbstractPortal.TRANSLATION_SPEED).nextUp()
+		private val SLOWING_PROGRESS_PER_UPDATE = ((1000F / 20F) * BlockAbstractPortal.TRANSLATION_SPEED_INV).toFloat().nextUp()
 		
 		private const val INSTANCE_TAG = "Instance"
 	}

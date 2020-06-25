@@ -65,7 +65,7 @@ abstract class RenderTileAbstractPortal<T : TileEntityPortalInner, C : IPortalCo
 	}
 	
 	private var cameraTarget = Vec3d.ZERO
-	private var globalTranslation = 0F
+	private var globalTranslation = 0.0
 	
 	private var isAnimating = false
 	private var animationProgress = 0F
@@ -98,7 +98,7 @@ abstract class RenderTileAbstractPortal<T : TileEntityPortalInner, C : IPortalCo
 		isAnimating = animationProgress > 0F && animationProgress < 1F
 		
 		cameraTarget = Vec3d.ZERO // UPDATE fix bobbing
-		globalTranslation = ((MC.systemTime % BlockAbstractPortal.TRANSLATION_SPEED_LONG) / BlockAbstractPortal.TRANSLATION_SPEED) - (controller?.clientPortalOffset?.get(partialTicks) ?: 0F)
+		globalTranslation = ((MC.systemTime % BlockAbstractPortal.TRANSLATION_SPEED_LONG) * BlockAbstractPortal.TRANSLATION_SPEED_INV) - (controller?.clientPortalOffset?.get(partialTicks) ?: 0F)
 		
 		val offsetY = -y - 0.75
 		val topY = offsetY + cameraTarget.y
@@ -178,9 +178,9 @@ abstract class RenderTileAbstractPortal<T : TileEntityPortalInner, C : IPortalCo
 	}
 	
 	private fun renderLayer(renderX: Double, renderY: Double, renderZ: Double, texture: ResourceLocation, layerPosition: Double, layerRotation: Float, layerScale: Float, cameraOffsetMp: Double){
-		val globalX = TileEntityRendererDispatcher.staticPlayerX
+		val globalX = TileEntityRendererDispatcher.staticPlayerX % 69420.0 // TODO works around extreme coordinates, but causes a sudden jump at boundary
 		val globalY = TileEntityRendererDispatcher.staticPlayerY
-		val globalZ = TileEntityRendererDispatcher.staticPlayerZ
+		val globalZ = TileEntityRendererDispatcher.staticPlayerZ % 69420.0
 		
 		// texture
 		
@@ -211,7 +211,7 @@ abstract class RenderTileAbstractPortal<T : TileEntityPortalInner, C : IPortalCo
 		GL.pushMatrix()
 		GL.loadIdentity()
 		
-		GL.translate(0F, globalTranslation, 0F)
+		GL.translate(0.0, globalTranslation, 0.0)
 		GL.scale(layerScale, layerScale, layerScale)
 		GL.translate(0.5F, 0.5F, 0.5F)
 		GL.rotate(layerRotation, 0F, 0F, 1F)
