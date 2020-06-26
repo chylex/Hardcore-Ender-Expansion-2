@@ -115,5 +115,6 @@
         { "type": "item", "name": "hee:ancient_dust", "weight": 15, "functions": [{ "function": "set_count", "count": 1 }], "entryName": "#1" }
       ]
     }
+
   ]
 }
