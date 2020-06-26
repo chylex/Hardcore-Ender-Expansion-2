@@ -6,10 +6,12 @@ import chylex.hee.game.world.generation.SegmentedWorld
 import chylex.hee.game.world.generation.TerritoryGenerationInfo
 import chylex.hee.game.world.territory.descriptions.Territory_ArcaneConjunctions
 import chylex.hee.game.world.territory.descriptions.Territory_ForgottenTombs
+import chylex.hee.game.world.territory.descriptions.Territory_LostGarden
 import chylex.hee.game.world.territory.descriptions.Territory_ObsidianTowers
 import chylex.hee.game.world.territory.descriptions.Territory_TheHub
 import chylex.hee.game.world.territory.generators.Generator_ArcaneConjunctions
 import chylex.hee.game.world.territory.generators.Generator_ForgottenTombs
+import chylex.hee.game.world.territory.generators.Generator_LostGarden
 import chylex.hee.game.world.territory.generators.Generator_ObsidianTowers
 import chylex.hee.game.world.territory.generators.Generator_TheHub
 import chylex.hee.game.world.territory.properties.TerritoryColors
@@ -61,10 +63,10 @@ enum class TerritoryType(
 	
 	LOST_GARDEN(
 		title  = "lost_garden",
-		desc   = TerritoryDummy,
-		gen    = GeneratorDummy,
-		chunks = 45,
-		height = 128 until 256
+		desc   = Territory_LostGarden,
+		gen    = Generator_LostGarden,
+		chunks = 43,
+		height = 144 until 240
 	),
 	
 	ENDER_CITY(
