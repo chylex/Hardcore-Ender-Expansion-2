@@ -33,9 +33,9 @@ if (file("run/mods_deobf.gradle").exists()){
     apply from: "run/mods_deobf.gradle"
 }
 
-def mcversion = "1.14.4"
-def forgeversion = "28.2.0"
-def kottleversion = "1.4.0"
+def mcversion = "1.15.2"
+def forgeversion = "31.2.27"
+def kottleversion = "1.5.0"
 
 def prefixName = "displayName = "
 def prefixVersion = "version = "
@@ -72,7 +72,7 @@ tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile){
 }
 
 minecraft{
-    mappings channel: "snapshot", version: "20200119-1.14.3"
+    mappings channel: "snapshot", version: "20200626-1.15.1"
 
     accessTransformer = file("src/main/resources/META-INF/accesstransformer.cfg")
 
