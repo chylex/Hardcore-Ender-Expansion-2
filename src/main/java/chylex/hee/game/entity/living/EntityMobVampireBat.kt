@@ -44,6 +44,7 @@ import chylex.hee.system.util.nextItemOrNull
 import chylex.hee.system.util.nextVector
 import chylex.hee.system.util.playClient
 import chylex.hee.system.util.posVec
+import chylex.hee.system.util.positionY
 import chylex.hee.system.util.putEnum
 import chylex.hee.system.util.selectVulnerableEntities
 import chylex.hee.system.util.square
@@ -187,7 +188,7 @@ class EntityMobVampireBat(type: EntityType<EntityMobVampireBat>, world: World) :
 		super.tick()
 		
 		if (isBatHanging && Pos(this).up().getBlock(world) is BlockChorusPlant){
-			posY = posY.floorToInt() + 1.25 - height // TODO some variations of chorus plants are extra thicc
+			positionY = posY.floorToInt() + 1.25 - height // TODO some variations of chorus plants are extra thicc
 		}
 	}
 	

@@ -1,5 +1,6 @@
 package chylex.hee.game.world.feature.basic
 import chylex.hee.system.util.remapRange
+import net.minecraft.util.SharedSeedRandom
 import net.minecraft.world.gen.PerlinNoiseGenerator
 import java.util.Random
 import kotlin.math.abs
@@ -64,8 +65,8 @@ sealed class NoiseGenerator(private val xScale: Double, private val zScale: Doub
 	open class Perlin(rand: Random, private val xScale: Double, private val zScale: Double, octaves: Int) : NoiseGenerator(xScale, zScale){
 		constructor(rand: Random, scale: Double, octaves: Int) : this(rand, scale, scale, octaves)
 		
-		private val generator = PerlinNoiseGenerator(rand, octaves)
-		override fun getRawValue(x: Double, z: Double) = generator.getValue(x / xScale, z / zScale)
+		private val generator = PerlinNoiseGenerator(SharedSeedRandom(rand.nextLong()), octaves - 1, 0)
+		override fun getRawValue(x: Double, z: Double) = generator.noiseAt(x / xScale, z / zScale, false)
 	}
 	
 	class PerlinNormalized(rand: Random, xScale: Double, zScale: Double, octaves: Int) : Perlin(rand, xScale, zScale, octaves){

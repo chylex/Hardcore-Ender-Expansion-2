@@ -1,9 +1,11 @@
 package chylex.hee.system
-import chylex.hee.client.render.util.GL
 import chylex.hee.client.render.util.GL.DF_ONE
 import chylex.hee.client.render.util.GL.DF_ZERO
 import chylex.hee.client.render.util.GL.SF_ONE_MINUS_SRC_ALPHA
 import chylex.hee.client.render.util.GL.SF_SRC_ALPHA
+import chylex.hee.client.render.util.RenderStateBuilder
+import chylex.hee.client.render.util.RenderStateBuilder.Companion.LAYERING_PROJECTION
+import chylex.hee.client.render.util.RenderStateBuilder.Companion.MASK_COLOR
 import chylex.hee.client.util.MC
 import chylex.hee.proxy.Environment
 import chylex.hee.system.migration.forge.Side
@@ -20,7 +22,7 @@ import chylex.hee.system.util.nbtOrNull
 import chylex.hee.system.util.removeBlock
 import chylex.hee.system.util.setState
 import net.minecraft.block.BlockState
-import net.minecraft.client.renderer.WorldRenderer
+import net.minecraft.client.renderer.vertex.DefaultVertexFormats
 import net.minecraft.item.Items
 import net.minecraft.util.Direction
 import net.minecraft.util.Direction.DOWN
@@ -35,7 +37,7 @@ import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.BlockRayTraceResult
 import net.minecraft.util.math.shapes.ISelectionContext
 import net.minecraft.world.IWorld
-import net.minecraftforge.client.event.DrawBlockHighlightEvent
+import net.minecraftforge.client.event.DrawHighlightEvent
 import net.minecraftforge.client.event.GuiOpenEvent
 import net.minecraftforge.client.event.InputEvent.KeyInputEvent
 import net.minecraftforge.common.MinecraftForge
@@ -44,7 +46,7 @@ import net.minecraftforge.event.entity.player.PlayerInteractEvent.RightClickBloc
 import net.minecraftforge.event.world.BlockEvent.BreakEvent
 import org.apache.commons.lang3.SystemUtils
 import org.lwjgl.glfw.GLFW
-import org.lwjgl.opengl.GL11.GL_PROJECTION
+import org.lwjgl.opengl.GL11
 import java.io.File
 import java.lang.management.ManagementFactory
 
@@ -143,8 +145,16 @@ object Debug{
 					}
 				}
 				
+				private val RENDER_TYPE_LINE = with(RenderStateBuilder()){
+					line(2.25)
+					blend(SF_SRC_ALPHA, DF_ONE, SF_ONE_MINUS_SRC_ALPHA, DF_ZERO)
+					layering(LAYERING_PROJECTION)
+					mask(MASK_COLOR)
+					buildType("hee:debug_line", DefaultVertexFormats.POSITION_COLOR, GL11.GL_LINES, bufferSize = 256)
+				}
+				
 				@SubscribeEvent
-				fun onRenderOverlay(e: DrawBlockHighlightEvent.HighlightBlock){
+				fun onRenderOverlay(e: DrawHighlightEvent.HighlightBlock){
 					val player = MC.player!!
 					
 					if (isHoldingBuildStick(player)){
@@ -153,24 +163,20 @@ object Debug{
 						val center = hit.pos
 						val info = e.info
 						
+						val matrix = e.matrix.last.matrix
+						val builder = e.buffers.getBuffer(RENDER_TYPE_LINE)
+						
 						for(pos in getBuildStickBlocks(world, center, center.getState(world), hit.face)){
-							GL.enableBlend()
-							GL.blendFunc(SF_SRC_ALPHA, DF_ONE, SF_ONE_MINUS_SRC_ALPHA, DF_ZERO)
-							GL.lineWidth(2.25F)
-							GL.disableTexture()
-							GL.depthMask(false)
-							GL.matrixMode(GL_PROJECTION)
-							GL.pushMatrix()
-							GL.scale(1F, 1F, 0.999F)
 							val x = pos.x - info.projectedView.x
 							val y = pos.y - info.projectedView.y
 							val z = pos.z - info.projectedView.z
-							WorldRenderer.drawShape(pos.getState(world).getShape(world, pos, ISelectionContext.forEntity(info.renderViewEntity)), x, y, z, 1F, 1F, 1F, 1F)
-							GL.popMatrix()
-							GL.matrixMode(5888)
-							GL.depthMask(true)
-							GL.enableTexture()
-							GL.disableBlend()
+							
+							val shape = pos.getState(world).getShape(world, pos, ISelectionContext.forEntity(info.renderViewEntity))
+							
+							shape.forEachEdge { x1, y1, z1, x2, y2, z2 ->
+								builder.pos(matrix, (x1 + x).toFloat(), (y1 + y).toFloat(), (z1 + z).toFloat()).color(1F, 1F, 1F, 1F).endVertex()
+								builder.pos(matrix, (x2 + x).toFloat(), (y2 + y).toFloat(), (z2 + z).toFloat()).color(1F, 1F, 1F, 1F).endVertex()
+							}
 						}
 						
 						e.isCanceled = true

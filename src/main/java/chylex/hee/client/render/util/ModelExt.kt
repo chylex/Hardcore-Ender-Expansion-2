@@ -1,17 +1,16 @@
 package chylex.hee.client.render.util
-import net.minecraft.client.renderer.entity.model.RendererModel
-import net.minecraft.client.renderer.model.ModelBox
+import chylex.hee.system.migration.forge.Side
+import chylex.hee.system.migration.forge.Sided
+import net.minecraft.client.renderer.model.ModelRenderer
+import net.minecraft.client.renderer.model.ModelRenderer.ModelBox
 
-val RendererModel.beginBox
+val ModelRenderer.beginBox
 	get() = ModelBoxBuilder(this)
-
-fun RendererModel.render(){
-	this.render(1F / 16F)
-}
 
 const val FACE_FRONT = 4
 const val FACE_BACK = 5
 
+@Sided(Side.CLIENT)
 fun ModelBox.retainFace(face: Int){
 	quads = arrayOf(quads[face])
 }

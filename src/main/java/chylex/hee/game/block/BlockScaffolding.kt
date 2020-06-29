@@ -21,7 +21,9 @@ import chylex.hee.system.util.getBlock
 import chylex.hee.system.util.offsetUntil
 import net.minecraft.block.BlockState
 import net.minecraft.nbt.CompressedStreamTools
-import net.minecraft.util.BlockRenderLayer.CUTOUT
+import net.minecraft.util.ActionResultType
+import net.minecraft.util.ActionResultType.FAIL
+import net.minecraft.util.ActionResultType.SUCCESS
 import net.minecraft.util.Direction
 import net.minecraft.util.Hand
 import net.minecraft.util.math.BlockPos
@@ -37,13 +39,13 @@ import java.nio.file.Files
 class BlockScaffolding(builder: BlockBuilder) : BlockSimple(builder){
 	var enableShape = true
 	
-	override fun onBlockActivated(state: BlockState, world: World, pos: BlockPos, player: EntityPlayer, hand: Hand, hit: BlockRayTraceResult): Boolean{
+	override fun onBlockActivated(state: BlockState, world: World, pos: BlockPos, player: EntityPlayer, hand: Hand, hit: BlockRayTraceResult): ActionResultType{
 		if (world.isRemote && player.isSneaking && !player.abilities.isFlying && Debug.enabled){
 			val palette = CommandClientScaffolding.currentPalette
 			
 			if (palette == null){
 				player.sendMessage(TextComponentString("No structure set."))
-				return true
+				return FAIL
 			}
 			
 			val minPos = findMinPos(world, pos)?.let { findMinPos(world, it) } // double pass to find min from any side
@@ -51,7 +53,7 @@ class BlockScaffolding(builder: BlockBuilder) : BlockSimple(builder){
 			
 			if (minPos == null || maxPos == null){
 				player.sendMessage(TextComponentString("Could not find structure boundaries."))
-				return true
+				return FAIL
 			}
 			
 			val box = BoundingBox(minPos, maxPos)
@@ -71,10 +73,10 @@ class BlockScaffolding(builder: BlockBuilder) : BlockSimple(builder){
 			}
 			
 			player.sendMessage(TextComponentString("Generated structure file of ${box.size}."))
-			return true
+			return SUCCESS
 		}
 		
-		return false
+		return FAIL
 	}
 	
 	// Helpers
@@ -137,6 +139,4 @@ class BlockScaffolding(builder: BlockBuilder) : BlockSimple(builder){
 	override fun getAmbientOcclusionLightValue(state: BlockState, world: IBlockReader, pos: BlockPos): Float{
 		return 1F
 	}
-	
-	override fun getRenderLayer() = CUTOUT
 }

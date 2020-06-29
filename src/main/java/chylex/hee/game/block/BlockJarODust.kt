@@ -26,7 +26,9 @@ import net.minecraft.block.Blocks
 import net.minecraft.client.util.ITooltipFlag
 import net.minecraft.item.ItemStack
 import net.minecraft.tileentity.TileEntity
-import net.minecraft.util.BlockRenderLayer.TRANSLUCENT
+import net.minecraft.util.ActionResultType
+import net.minecraft.util.ActionResultType.PASS
+import net.minecraft.util.ActionResultType.SUCCESS
 import net.minecraft.util.Direction
 import net.minecraft.util.Hand
 import net.minecraft.util.SoundCategory
@@ -132,13 +134,15 @@ class BlockJarODust(builder: BlockBuilder) : BlockSimpleShaped(builder, AABB){
 	
 	// Interaction
 	
-	override fun onBlockActivated(state: BlockState, world: World, pos: BlockPos, player: EntityPlayer, hand: Hand, hit: BlockRayTraceResult): Boolean{
+	override fun onBlockActivated(state: BlockState, world: World, pos: BlockPos, player: EntityPlayer, hand: Hand, hit: BlockRayTraceResult): ActionResultType{
 		val heldItem = player.getHeldItem(hand)
 		
-		return if (heldItem.isEmpty)
+		val result = if (heldItem.isEmpty)
 			tryExtractDust(world, pos, player, hand)
 		else
 			tryInsertDust(world, pos, player, heldItem)
+		
+		return if (result) SUCCESS else PASS
 	}
 	
 	private fun tryExtractDust(world: World, pos: BlockPos, player: EntityPlayer, hand: Hand): Boolean{
@@ -190,6 +194,4 @@ class BlockJarODust(builder: BlockBuilder) : BlockSimpleShaped(builder, AABB){
 			}
 		}
 	}
-	
-	override fun getRenderLayer() = TRANSLUCENT
 }

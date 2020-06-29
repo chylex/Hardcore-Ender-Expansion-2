@@ -12,6 +12,9 @@ import net.minecraft.block.BlockState
 import net.minecraft.block.Blocks
 import net.minecraft.item.ItemStack
 import net.minecraft.state.StateContainer.Builder
+import net.minecraft.util.ActionResultType
+import net.minecraft.util.ActionResultType.PASS
+import net.minecraft.util.ActionResultType.SUCCESS
 import net.minecraft.util.Hand
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.BlockRayTraceResult
@@ -19,6 +22,7 @@ import net.minecraft.util.math.RayTraceResult
 import net.minecraft.world.IBlockReader
 import net.minecraft.world.IWorldReader
 import net.minecraft.world.World
+import net.minecraft.world.server.ServerWorld
 import net.minecraft.world.storage.loot.LootContext
 import java.util.Random
 import java.util.function.Supplier
@@ -61,16 +65,16 @@ class BlockFlowerPotDeathFlowerDecaying(
 		implOnBlockAdded(world, pos)
 	}
 	
-	override fun tick(state: BlockState, world: World, pos: BlockPos, rand: Random){
+	override fun tick(state: BlockState, world: ServerWorld, pos: BlockPos, rand: Random){
 		super.tick(state, world, pos, rand)
 		implUpdateTick(world, pos, state, rand)
 	}
 	
-	override fun onBlockActivated(state: BlockState, world: World, pos: BlockPos, player: EntityPlayer, hand: Hand, hit: BlockRayTraceResult): Boolean{
+	override fun onBlockActivated(state: BlockState, world: World, pos: BlockPos, player: EntityPlayer, hand: Hand, hit: BlockRayTraceResult): ActionResultType{
 		val heldItem = player.getHeldItem(hand)
 		
 		if (heldItem.item === ModItems.END_POWDER){
-			return false
+			return PASS
 		}
 		
 		val drop = getDrop(state)
@@ -83,6 +87,6 @@ class BlockFlowerPotDeathFlowerDecaying(
 		}
 		
 		pos.setBlock(world, emptyPot)
-		return true
+		return SUCCESS
 	}
 }

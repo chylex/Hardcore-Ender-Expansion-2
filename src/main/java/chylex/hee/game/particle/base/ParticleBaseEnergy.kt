@@ -2,8 +2,7 @@ package chylex.hee.game.particle.base
 import chylex.hee.client.render.util.GL
 import chylex.hee.client.render.util.GL.DF_ONE
 import chylex.hee.client.render.util.GL.SF_SRC_ALPHA
-import chylex.hee.client.render.util.TESSELLATOR
-import chylex.hee.client.util.MC
+import chylex.hee.client.render.util.RenderStateBuilder
 import chylex.hee.game.block.entity.TileEntityEnergyCluster
 import chylex.hee.game.mechanics.energy.IClusterHealth.HealthOverride.POWERED
 import chylex.hee.game.mechanics.energy.IClusterHealth.HealthOverride.REVITALIZING
@@ -17,11 +16,12 @@ import chylex.hee.system.migration.forge.Side
 import chylex.hee.system.migration.forge.Sided
 import chylex.hee.system.util.color.IntColor
 import chylex.hee.system.util.color.IntColor.Companion.RGB
+import com.mojang.blaze3d.systems.RenderSystem
 import net.minecraft.client.particle.IParticleRenderType
-import net.minecraft.client.particle.IParticleRenderType.CUSTOM
-import net.minecraft.client.renderer.ActiveRenderInfo
 import net.minecraft.client.renderer.BufferBuilder
+import net.minecraft.client.renderer.Tessellator
 import net.minecraft.client.renderer.texture.AtlasTexture
+import net.minecraft.client.renderer.texture.TextureManager
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats
 import net.minecraft.world.World
 import org.lwjgl.opengl.GL11.GL_QUADS
@@ -74,32 +74,34 @@ abstract class ParticleBaseEnergy(world: World, posX: Double, posY: Double, posZ
 		}
 	}
 	
-	override fun renderParticle(buffer: BufferBuilder, info: ActiveRenderInfo, partialTicks: Float, rotationX: Float, rotationZ: Float, rotationYZ: Float, rotationXY: Float, rotationXZ: Float){
-		GL.enableBlend()
-		GL.blendFunc(SF_SRC_ALPHA, DF_ONE)
+	private object RenderType : IParticleRenderType{
+		override fun beginRender(buffer: BufferBuilder, textureManager: TextureManager){
+			GL.enableBlend()
+			GL.blendFunc(SF_SRC_ALPHA, DF_ONE)
+			GL.disableAlpha()
+			GL.disableLighting()
+			GL.depthMask(false)
+			GL.color(1F, 1F, 1F, 1F)
+			RenderStateBuilder.FOG_BLACK.setupRenderState()
+			
+			GL.bindTexture(AtlasTexture.LOCATION_PARTICLES_TEXTURE)
+			buffer.begin(GL_QUADS, DefaultVertexFormats.PARTICLE_POSITION_TEX_COLOR_LMAP)
+		}
 		
-		GL.disableAlpha()
-		GL.disableLighting()
-		GL.depthMask(false)
-		
-		GL.color(1F, 1F, 1F, 1F)
-		
-		MC.gameRenderer.setupFogColor(true)
-		MC.textureManager.bindTexture(AtlasTexture.LOCATION_PARTICLES_TEXTURE)
-		
-		buffer.begin(GL_QUADS, DefaultVertexFormats.PARTICLE_POSITION_TEX_COLOR_LMAP)
-		super.renderParticle(buffer, info, partialTicks, rotationX, rotationZ, rotationYZ, rotationXY, rotationXZ)
-		TESSELLATOR.draw()
-		
-		MC.gameRenderer.setupFogColor(false)
-		
-		GL.depthMask(true)
-		GL.enableLighting()
-		GL.enableAlpha()
-		GL.disableBlend()
+		override fun finishRender(tessellator: Tessellator){
+			tessellator.draw()
+			
+			RenderStateBuilder.FOG_BLACK.clearRenderState()
+			GL.depthMask(true)
+			GL.enableLighting()
+			GL.enableAlpha()
+			GL.disableBlend()
+			
+			RenderSystem.enableColorMaterial() // UPDATE works around broken GL state when this render type runs before other types
+		}
 	}
 	
 	override fun getRenderType(): IParticleRenderType{
-		return CUSTOM
+		return RenderType
 	}
 }

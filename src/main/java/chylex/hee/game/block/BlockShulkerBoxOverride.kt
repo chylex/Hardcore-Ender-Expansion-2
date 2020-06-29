@@ -16,6 +16,9 @@ import net.minecraft.item.DyeColor
 import net.minecraft.item.ItemStack
 import net.minecraft.tileentity.ShulkerBoxTileEntity.AnimationStatus.CLOSED
 import net.minecraft.tileentity.TileEntity
+import net.minecraft.util.ActionResultType
+import net.minecraft.util.ActionResultType.PASS
+import net.minecraft.util.ActionResultType.SUCCESS
 import net.minecraft.util.Hand
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.BlockRayTraceResult
@@ -60,9 +63,9 @@ class BlockShulkerBoxOverride(properties: Properties, color: DyeColor?) : BlockS
 		})
 	}
 	
-	override fun onBlockActivated(state: BlockState, world: World, pos: BlockPos, player: EntityPlayer, hand: Hand, hit: BlockRayTraceResult): Boolean{
+	override fun onBlockActivated(state: BlockState, world: World, pos: BlockPos, player: EntityPlayer, hand: Hand, hit: BlockRayTraceResult): ActionResultType{
 		if (world.isRemote || player.isSpectator){
-			return true
+			return SUCCESS
 		}
 		
 		pos.getTile<TileEntityShulkerBox>(world)?.let {
@@ -75,7 +78,7 @@ class BlockShulkerBoxOverride(properties: Properties, color: DyeColor?) : BlockS
 					.expand(0.5 * facing.xOffset, 0.5 * facing.yOffset, 0.5 * facing.zOffset)
 					.contract(facing.xOffset.toDouble(), facing.yOffset.toDouble(), facing.zOffset.toDouble())
 					.offset(pos.offset(facing))
-					.let(world::areCollisionShapesEmpty)
+					.let(world::hasNoCollisions)
 				
 				else -> true
 			}
@@ -93,9 +96,9 @@ class BlockShulkerBoxOverride(properties: Properties, color: DyeColor?) : BlockS
 				player.addStat(Stats.OPEN_SHULKER_BOX)
 			}
 			
-			return true
+			return SUCCESS
 		}
 		
-		return false
+		return PASS
 	}
 }

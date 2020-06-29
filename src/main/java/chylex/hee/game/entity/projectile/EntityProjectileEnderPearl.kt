@@ -29,7 +29,6 @@ import chylex.hee.system.util.use
 import net.minecraft.block.BlockState
 import net.minecraft.entity.Entity
 import net.minecraft.entity.EntityType
-import net.minecraft.entity.LivingEntity
 import net.minecraft.network.IPacket
 import net.minecraft.network.PacketBuffer
 import net.minecraft.util.DamageSource
@@ -210,17 +209,6 @@ class EntityProjectileEnderPearl(type: EntityType<EntityProjectileEnderPearl>, w
 	}
 	
 	// Serialization
-	
-	override fun getThrower(): LivingEntity?{
-		val uuid = ownerId
-		val thrower = super.getThrower()
-		
-		if (thrower == null){
-			ownerId = uuid // UPDATE getThrower is fucked, apparently fixed in 1.15
-		}
-		
-		return thrower
-	}
 	
 	override fun writeAdditional(nbt: TagCompound) = nbt.heeTag.use {
 		super.writeAdditional(nbt)

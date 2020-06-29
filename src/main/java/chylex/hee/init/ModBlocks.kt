@@ -361,6 +361,62 @@ object ModBlocks{
 	@JvmField val ETERNAL_FIRE = BlockEternalFire(buildEternalFire) named "eternal_fire"
 	@JvmField val SCAFFOLDING  = BlockScaffolding(buildScaffolding) named "scaffolding"
 	
+	// Sets
+	
+	val ALL_PUZZLE_LOGIC = arrayOf(
+		PUZZLE_PLAIN,
+		PUZZLE_BURST_3,
+		PUZZLE_BURST_5,
+		PUZZLE_REDIRECT_1,
+		PUZZLE_REDIRECT_2,
+		PUZZLE_REDIRECT_4,
+		PUZZLE_TELEPORT
+	)
+	
+	val ALL_WHITEBARK_LEAVES = arrayOf(
+		WHITEBARK_LEAVES_AUTUMN_RED,
+		WHITEBARK_LEAVES_AUTUMN_BROWN,
+		WHITEBARK_LEAVES_AUTUMN_ORANGE,
+		WHITEBARK_LEAVES_AUTUMN_YELLOWGREEN
+	)
+	
+	val ALL_PLANTS = arrayOf(
+		WHITEBARK_SAPLING_AUTUMN_RED,
+		WHITEBARK_SAPLING_AUTUMN_BROWN,
+		WHITEBARK_SAPLING_AUTUMN_ORANGE,
+		WHITEBARK_SAPLING_AUTUMN_YELLOWGREEN,
+		
+		DEATH_FLOWER_DECAYING,
+		DEATH_FLOWER_HEALED,
+		DEATH_FLOWER_WITHERED
+	)
+	
+	val ALL_POTS = arrayOf(
+		POTTED_WHITEBARK_SAPLING_AUTUMN_RED,
+		POTTED_WHITEBARK_SAPLING_AUTUMN_BROWN,
+		POTTED_WHITEBARK_SAPLING_AUTUMN_ORANGE,
+		POTTED_WHITEBARK_SAPLING_AUTUMN_YELLOWGREEN,
+		
+		POTTED_DEATH_FLOWER_DECAYING,
+		POTTED_DEATH_FLOWER_HEALED,
+		POTTED_DEATH_FLOWER_WITHERED
+	)
+	
+	val ALL_TABLES = arrayOf(
+		TABLE_BASE_TIER_1,
+		TABLE_BASE_TIER_2,
+		TABLE_BASE_TIER_3,
+		ACCUMULATION_TABLE_TIER_1,
+		ACCUMULATION_TABLE_TIER_2,
+		ACCUMULATION_TABLE_TIER_3,
+		EXPERIENCE_TABLE_TIER_1,
+		EXPERIENCE_TABLE_TIER_2,
+		EXPERIENCE_TABLE_TIER_3,
+		INFUSION_TABLE_TIER_1,
+		INFUSION_TABLE_TIER_2,
+		INFUSION_TABLE_TIER_3
+	)
+	
 	// Registry
 	
 	private val itemBlockBaseProps
@@ -462,9 +518,9 @@ object ModBlocks{
 			register(CAULDRON_PURIFIED_ENDER_GOO)
 			register(CAULDRON_DRAGONS_BREATH)
 			
-			register(JAR_O_DUST with { ItemBlock(it, itemBlockBaseProps.maxStackSize(1).setTEISR { Callable { ModRendering.RENDER_ITEM_JAR_O_DUST } }) })
-			register(DARK_CHEST with { ItemBlock(it, itemBlockBaseProps.setTEISR { Callable { ModRendering.RENDER_ITEM_DARK_CHEST } }) })
-			register(LOOT_CHEST with { ItemBlock(it, itemBlockBaseProps.setTEISR { Callable { ModRendering.RENDER_ITEM_LOOT_CHEST } }) })
+			register(JAR_O_DUST with { ItemBlock(it, itemBlockBaseProps.maxStackSize(1).setISTER { Callable { ModRendering.RENDER_ITEM_JAR_O_DUST } }) })
+			register(DARK_CHEST with { ItemBlock(it, itemBlockBaseProps.setISTER { Callable { ModRendering.RENDER_ITEM_DARK_CHEST } }) })
+			register(LOOT_CHEST with { ItemBlock(it, itemBlockBaseProps.setISTER { Callable { ModRendering.RENDER_ITEM_LOOT_CHEST } }) })
 			
 			register(PUZZLE_WALL with basicItemBlock)
 			register(PUZZLE_PLAIN with basicItemBlock)

@@ -72,7 +72,7 @@ object OverworldFeatures{
 		}
 	}
 	
-	abstract class OverworldFeature : Feature<NoFeatureConfig>(Function { NoFeatureConfig.deserialize(it) }, false){
+	abstract class OverworldFeature : Feature<NoFeatureConfig>(Function { NoFeatureConfig.deserialize(it) }){
 		val feature
 			get() = ConfiguredFeature(this, NO_FEATURE_CONFIG)
 		

@@ -19,6 +19,8 @@ import net.minecraft.item.BlockItemUseContext
 import net.minecraft.item.ItemStack
 import net.minecraft.state.StateContainer.Builder
 import net.minecraft.tileentity.TileEntity
+import net.minecraft.util.ActionResultType
+import net.minecraft.util.ActionResultType.SUCCESS
 import net.minecraft.util.Hand
 import net.minecraft.util.Mirror
 import net.minecraft.util.Rotation
@@ -60,23 +62,23 @@ abstract class BlockAbstractChest<T : TileEntityBaseChest>(builder: BlockBuilder
 		}
 	}
 	
-	final override fun onBlockActivated(state: BlockState, world: World, pos: BlockPos, player: EntityPlayer, hand: Hand, hit: BlockRayTraceResult): Boolean{
+	final override fun onBlockActivated(state: BlockState, world: World, pos: BlockPos, player: EntityPlayer, hand: Hand, hit: BlockRayTraceResult): ActionResultType{
 		if (world.isRemote){
-			return true
+			return SUCCESS
 		}
 		
 		val posAbove = pos.up()
 		
 		if (posAbove.getState(world).isNormalCube(world, posAbove)){
-			return true
+			return SUCCESS
 		}
 		
 		if (world.selectExistingEntities.inBox<EntityCat>(AxisAlignedBB(posAbove)).any { it.isSitting }){
-			return true
+			return SUCCESS
 		}
 		
 		openChest(world, pos, player)
-		return true
+		return SUCCESS
 	}
 	
 	protected open fun openChest(world: World, pos: BlockPos, player: EntityPlayer){
@@ -104,5 +106,4 @@ abstract class BlockAbstractChest<T : TileEntityBaseChest>(builder: BlockBuilder
 	// Rendering
 	
 	final override fun getRenderType(state: BlockState) = ENTITYBLOCK_ANIMATED
-	final override fun hasCustomBreakingProgress(state: BlockState) = true
 }

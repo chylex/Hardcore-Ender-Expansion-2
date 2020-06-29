@@ -22,11 +22,10 @@ import net.minecraft.block.HorizontalBlock.HORIZONTAL_FACING
 import net.minecraft.client.renderer.color.IBlockColor
 import net.minecraft.item.BlockItemUseContext
 import net.minecraft.state.StateContainer.Builder
-import net.minecraft.util.BlockRenderLayer.CUTOUT
 import net.minecraft.util.Direction
 import net.minecraft.util.IStringSerializable
 import net.minecraft.util.math.BlockPos
-import net.minecraft.world.IEnviromentBlockReader
+import net.minecraft.world.ILightReader
 import net.minecraft.world.World
 
 sealed class BlockPuzzleLogic(builder: BlockBuilder) : BlockSimple(builder){
@@ -68,10 +67,6 @@ sealed class BlockPuzzleLogic(builder: BlockBuilder) : BlockSimple(builder){
 	
 	override fun fillStateContainer(container: Builder<Block, BlockState>){
 		container.add(STATE)
-	}
-	
-	override fun isSolid(state: BlockState): Boolean{
-		return true
 	}
 	
 	// Logic
@@ -157,11 +152,9 @@ sealed class BlockPuzzleLogic(builder: BlockBuilder) : BlockSimple(builder){
 	
 	// Client side
 	
-	override fun getRenderLayer() = CUTOUT
-	
 	@Sided(Side.CLIENT)
 	object Color : IBlockColor{
-		override fun getColor(state: BlockState, world: IEnviromentBlockReader?, pos: BlockPos?, tintIndex: Int): Int{
+		override fun getColor(state: BlockState, world: ILightReader?, pos: BlockPos?, tintIndex: Int): Int{
 			if (tintIndex != 1){
 				return NO_TINT
 			}

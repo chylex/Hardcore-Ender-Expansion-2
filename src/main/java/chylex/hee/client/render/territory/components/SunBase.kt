@@ -5,32 +5,34 @@ import chylex.hee.client.render.util.GL.DF_ONE
 import chylex.hee.client.render.util.GL.DF_ZERO
 import chylex.hee.client.render.util.GL.SF_ONE
 import chylex.hee.client.render.util.GL.SF_SRC_ALPHA
-import chylex.hee.client.util.MC
+import chylex.hee.client.render.util.rotateX
+import chylex.hee.client.render.util.rotateY
 import chylex.hee.system.migration.forge.Side
 import chylex.hee.system.migration.forge.Sided
+import com.mojang.blaze3d.matrix.MatrixStack
 import net.minecraft.client.world.ClientWorld
 import net.minecraft.util.ResourceLocation
 import org.lwjgl.opengl.GL11.GL_GREATER
 
 abstract class SunBase : AbstractEnvironmentRenderer(){
 	protected companion object{
-		const val DEFAULT_DISTANCE = 100.0
+		const val DEFAULT_DISTANCE = 100F
 	}
 	
 	protected abstract val texture: ResourceLocation
 	protected open val color = DEFAULT_COLOR
 	protected open val alpha = DEFAULT_ALPHA
-	protected abstract val size: Double
+	protected abstract val size: Float
 	protected open val distance = DEFAULT_DISTANCE
 	
 	@Sided(Side.CLIENT)
-	protected open fun setRotation(world: ClientWorld, partialTicks: Float){
-		GL.rotate(-90F, 0F, 1F, 0F)
-		GL.rotate(world.getCelestialAngle(partialTicks) * 360F, 1F, 0F, 0F)
+	protected open fun setRotation(world: ClientWorld, matrix: MatrixStack, partialTicks: Float){
+		matrix.rotateY(-90F)
+		matrix.rotateX(world.getCelestialAngle(partialTicks) * 360F)
 	}
 	
 	@Sided(Side.CLIENT)
-	override fun render(world: ClientWorld, partialTicks: Float){
+	override fun render(world: ClientWorld, matrix: MatrixStack, partialTicks: Float){
 		val width = size
 		val dist = distance
 		
@@ -41,12 +43,12 @@ abstract class SunBase : AbstractEnvironmentRenderer(){
 		GL.disableFog()
 		
 		GL.color(color, alpha)
-		MC.textureManager.bindTexture(texture)
+		GL.bindTexture(texture)
 		
-		GL.pushMatrix()
-		setRotation(world, partialTicks)
-		renderPlane(dist, width, 1.0)
-		GL.popMatrix()
+		matrix.push()
+		setRotation(world, matrix, partialTicks)
+		renderPlane(matrix, dist, width, 1F)
+		matrix.pop()
 		
 		GL.enableFog()
 		GL.disableAlpha()

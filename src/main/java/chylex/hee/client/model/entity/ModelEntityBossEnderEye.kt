@@ -6,35 +6,39 @@ import chylex.hee.game.entity.living.EntityBossEnderEye
 import chylex.hee.system.migration.forge.Side
 import chylex.hee.system.migration.forge.Sided
 import chylex.hee.system.util.toRadians
+import com.mojang.blaze3d.matrix.MatrixStack
+import com.mojang.blaze3d.vertex.IVertexBuilder
 import net.minecraft.client.renderer.entity.model.EntityModel
-import net.minecraft.client.renderer.entity.model.RendererModel
+import net.minecraft.client.renderer.model.ModelRenderer
 
 @Sided(Side.CLIENT)
 object ModelEntityBossEnderEye : EntityModel<EntityBossEnderEye>(){
 	const val SCALE = 16F / 18F
 	
-	private val head: RendererModel
-	private val eyes: Array<RendererModel>
-	private val arms: RendererModel
+	private val head: ModelRenderer
+	private val eyes: Array<ModelRenderer>
+	private val arms: ModelRenderer
+	
+	private var eyeState = 0
 	
 	init{
 		textureWidth = 128
 		textureHeight = 64
 		
-		head = RendererModel(this).apply {
+		head = ModelRenderer(this).apply {
 			setRotationPoint(0F, 15F, 0F)
 			beginBox.offset(-9F, -9F, -9F).size(18, 18, 18).tex(0, 0).add()
 		}
 		
 		eyes = Array(8){
-			RendererModel(this).apply {
+			ModelRenderer(this).apply {
 				setRotationPoint(0F, 15F, 0F)
 				beginBox.offset(-8F, -8F, -9F).size(16, 16, 1).tex(-1 + (16 * it), 47).add()
 				cubeList[0].retainFace(FACE_FRONT)
 			}
 		}
 		
-		arms = RendererModel(this).apply {
+		arms = ModelRenderer(this).apply {
 			setRotationPoint(0F, 15.5F, -0.5F)
 			beginBox.offset(-12F, -1.5F, -1.5F).size(3, 27, 3).tex(73, 0).add()
 			beginBox.offset(  9F, -1.5F, -1.5F).size(3, 27, 3).tex(73, 0).mirror().add()
@@ -42,28 +46,17 @@ object ModelEntityBossEnderEye : EntityModel<EntityBossEnderEye>(){
 	}
 	
 	override fun setLivingAnimations(entity: EntityBossEnderEye, limbSwing: Float, limbSwingAmount: Float, partialTicks: Float){
-		super.setLivingAnimations(entity, limbSwing, limbSwingAmount, partialTicks)
-		arms.rotateAngleX = (entity as? EntityBossEnderEye)?.clientArmAngle?.get(partialTicks)?.toRadians() ?: 0F
+		arms.rotateAngleX = entity.clientArmAngle.get(partialTicks).toRadians()
+		eyeState = if (entity.isSleeping) 0 else entity.demonLevel + 1
 	}
 	
-	override fun setRotationAngles(entity: EntityBossEnderEye, limbSwing: Float, limbSwingAmount: Float, ageInTicks: Float, netHeadYaw: Float, headPitch: Float, scale: Float){
-		super.setRotationAngles(entity, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch, scale)
+	override fun setRotationAngles(entity: EntityBossEnderEye, limbSwing: Float, limbSwingAmount: Float, age: Float, headYaw: Float, headPitch: Float){
 		head.rotateAngleX = headPitch.toRadians()
 	}
 	
-	override fun render(entity: EntityBossEnderEye, limbSwing: Float, limbSwingAmount: Float, ageInTicks: Float, netHeadYaw: Float, headPitch: Float, scale: Float){
-		super.render(entity, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch, scale)
-		
-		val boss = entity as? EntityBossEnderEye
-		
-		val eyeState = when{
-			boss == null -> 1
-			boss.isSleeping -> 0
-			else -> boss.demonLevel + 1
-		}
-		
-		head.render(scale)
-		eyes[eyeState].also { it.rotateAngleX = head.rotateAngleX }.render(scale)
-		arms.render(scale)
+	override fun render(matrix: MatrixStack, builder: IVertexBuilder, combinedLight: Int, combinedOverlay: Int, red: Float, green: Float, blue: Float, alpha: Float){
+		head.render(matrix, builder, combinedLight, combinedOverlay, red, green, blue, alpha)
+		eyes[eyeState].also { it.rotateAngleX = head.rotateAngleX }.render(matrix, builder, combinedLight, combinedOverlay, red, green, blue, alpha)
+		arms.render(matrix, builder, combinedLight, combinedOverlay, red, green, blue, alpha)
 	}
 }

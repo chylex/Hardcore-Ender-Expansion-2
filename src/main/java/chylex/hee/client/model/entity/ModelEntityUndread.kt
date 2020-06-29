@@ -9,7 +9,7 @@ class ModelEntityUndread private constructor(modelSize: Float, textureWidth: Int
 	constructor(modelSize: Float, tallTexture: Boolean) : this(modelSize, 64, if (tallTexture) 32 else 64)
 	constructor() : this(0F, false)
 	
-	override fun func_212850_a_(entity: EntityMobUndread): Boolean{
+	override fun isAggressive(entity: EntityMobUndread): Boolean{
 		return entity.isAggressive
 	}
 }

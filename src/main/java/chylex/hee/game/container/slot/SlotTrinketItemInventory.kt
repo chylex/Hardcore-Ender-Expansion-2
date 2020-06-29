@@ -1,5 +1,6 @@
 package chylex.hee.game.container.slot
 import chylex.hee.HEE
+import chylex.hee.client.render.util.GL
 import chylex.hee.client.util.MC
 import chylex.hee.game.container.slot.SlotTrinketItemInventory.Client.isRenderingGUI
 import chylex.hee.network.server.PacketServerShiftClickTrinket
@@ -8,6 +9,7 @@ import chylex.hee.system.migration.forge.Side
 import chylex.hee.system.migration.forge.Sided
 import chylex.hee.system.migration.forge.SubscribeAllEvents
 import chylex.hee.system.migration.forge.SubscribeEvent
+import chylex.hee.system.util.facades.Resource
 import net.minecraft.client.gui.AbstractGui
 import net.minecraft.client.gui.screen.Screen
 import net.minecraft.client.gui.screen.inventory.InventoryScreen
@@ -19,6 +21,11 @@ import net.minecraftforge.items.IItemHandler
 
 class SlotTrinketItemInventory(trinketHandler: IItemHandler, slotNumber: Int) : SlotTrinketItem(trinketHandler, 0, -2000, -2000){
 	companion object{
+		private val TEX_SLOT_BACKGROUND = Resource.Custom("textures/gui/slot_background.png")
+		
+		private const val TEX_SLOT_W = 32
+		private const val TEX_SLOT_H = 32
+		
 		fun findTrinketSlot(allSlots: List<Slot>): Slot?{
 			return allSlots.asReversed().firstOrNull { it is SlotTrinketItemInventory }
 		}
@@ -42,11 +49,8 @@ class SlotTrinketItemInventory(trinketHandler: IItemHandler, slotNumber: Int) : 
 			isRenderingGUI = false
 			
 			RenderHelper.disableStandardItemLighting()
-			
-			MC.textureManager.bindTexture(SlotTrinketItem.Client.TEX_SLOT)
-			AbstractGui.blit(xPos - 1, yPos - 1, 18, 18, 0F, 0F, 18, 18, SlotTrinketItem.Client.TEX_SLOT_W, SlotTrinketItem.Client.TEX_SLOT_H)
-			
-			RenderHelper.enableGUIStandardItemLighting()
+			GL.bindTexture(TEX_SLOT_BACKGROUND)
+			AbstractGui.blit(xPos - 1, yPos - 1, 18, 18, 0F, 0F, 18, 18, TEX_SLOT_W, TEX_SLOT_H)
 		}
 		
 		return true

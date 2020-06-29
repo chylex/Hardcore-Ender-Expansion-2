@@ -47,7 +47,7 @@ class BlockHumus(builder: BlockBuilder, mergeBottom: Block) : BlockSimpleMerging
 		}
 	}
 	
-	override fun randomTick(state: BlockState, world: World, pos: BlockPos, rand: Random){
+	override fun randomTick(state: BlockState, world: ServerWorld, pos: BlockPos, rand: Random){
 		super.randomTick(state, world, pos, rand)
 		
 		if (rand.nextInt(5) <= 1){
@@ -68,7 +68,7 @@ class BlockHumus(builder: BlockBuilder, mergeBottom: Block) : BlockSimpleMerging
 			type == PlantType.Plains ||
 			plant is BlockSapling ||
 			plant is BlockReed ||
-			(plant is BlockBush && super.canSustainPlant(state, world, pos, direction, plant)) // UPDATE 1.14 (check if BlockBush still returns before plantType switch in super method)
+			(plant is BlockBush && super.canSustainPlant(state, world, pos, direction, plant)) // UPDATE 1.15 (check if BlockBush still returns before plantType switch in super method)
 		)
 	}
 	
@@ -103,7 +103,8 @@ class BlockHumus(builder: BlockBuilder, mergeBottom: Block) : BlockSimpleMerging
 				.withParameter(LootParameters.EXPLOSION_RADIUS, explosion.size)
 				.withParameter(LootParameters.TOOL, ItemStack.EMPTY)
 				.withNullableParameter(LootParameters.BLOCK_ENTITY, null)
-				.let { spawnDrops(state, it) }
+				.let(state::getDrops)
+				.forEach { spawnAsEntity(world, pos, it) }
 		}
 	}
 }

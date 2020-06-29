@@ -275,9 +275,9 @@ class TestNbtExt{
 			
 			@Test fun `'get' returns correct value`(){
 				val list = makeFilledTestList()
-				assertEquals(TagInt(1), list.get(0))
-				assertEquals(TagInt(2), list.get(1))
-				assertEquals(TagInt(3), list.get(2))
+				assertEquals(TagInt.valueOf(1), list.get(0))
+				assertEquals(TagInt.valueOf(2), list.get(1))
+				assertEquals(TagInt.valueOf(3), list.get(2))
 			}
 			
 			@Test fun `'get' throws when out of bounds`(){
@@ -298,7 +298,7 @@ class TestNbtExt{
 			
 			@Test fun `iterating goes through all items`(){
 				val list = makeFilledTestList()
-				assertIterableEquals(intArrayOf(1, 2, 3, Int.MIN_VALUE, Int.MAX_VALUE).map(::TagInt).asIterable(), list)
+				assertIterableEquals(intArrayOf(1, 2, 3, Int.MIN_VALUE, Int.MAX_VALUE).map { TagInt.valueOf(it) }.asIterable(), list)
 			}
 			
 			@Test fun `'hasNext' returns false and 'next' throws if empty`(){
@@ -314,7 +314,7 @@ class TestNbtExt{
 				val iterator = list.iterator()
 				
 				assertTrue(iterator.hasNext())
-				assertEquals(TagInt(1), iterator.next())
+				assertEquals(TagInt.valueOf(1), iterator.next())
 			}
 			
 			@Test fun `'remove' throws before calling 'next'`(){
@@ -328,26 +328,26 @@ class TestNbtExt{
 				val list = makeFilledTestList()
 				val iterator = list.iterator()
 				
-				assertEquals(TagInt(1), iterator.next())
+				assertEquals(TagInt.valueOf(1), iterator.next())
 				iterator.remove()
-				assertEquals(TagInt(2), iterator.next())
+				assertEquals(TagInt.valueOf(2), iterator.next())
 				
-				assertIterableEquals(intArrayOf(2, 3, Int.MIN_VALUE, Int.MAX_VALUE).map(::TagInt).asIterable(), list)
+				assertIterableEquals(intArrayOf(2, 3, Int.MIN_VALUE, Int.MAX_VALUE).map { TagInt.valueOf(it) }.asIterable(), list)
 			}
 			
 			@Test fun `'remove' removes several elements correctly`(){
 				val list = makeFilledTestList()
 				val iterator = list.iterator()
 				
-				assertEquals(TagInt(1), iterator.next())
-				assertEquals(TagInt(2), iterator.next())
+				assertEquals(TagInt.valueOf(1), iterator.next())
+				assertEquals(TagInt.valueOf(2), iterator.next())
 				iterator.remove()
-				assertEquals(TagInt(3), iterator.next())
-				assertEquals(TagInt(Int.MIN_VALUE), iterator.next())
+				assertEquals(TagInt.valueOf(3), iterator.next())
+				assertEquals(TagInt.valueOf(Int.MIN_VALUE), iterator.next())
 				iterator.remove()
-				assertEquals(TagInt(Int.MAX_VALUE), iterator.next())
+				assertEquals(TagInt.valueOf(Int.MAX_VALUE), iterator.next())
 				
-				assertIterableEquals(intArrayOf(1, 3, Int.MAX_VALUE).map(::TagInt).asIterable(), list)
+				assertIterableEquals(intArrayOf(1, 3, Int.MAX_VALUE).map { TagInt.valueOf(it) }.asIterable(), list)
 			}
 		}
 		

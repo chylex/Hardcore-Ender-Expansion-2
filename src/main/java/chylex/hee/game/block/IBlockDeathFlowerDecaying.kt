@@ -127,7 +127,7 @@ interface IBlockDeathFlowerDecaying{
 						if (testPos != null){
 							enderman.setLocationAndAngles(testPos.x + rand.nextFloat(-0.5, 0.5), testPos.y + 0.01, testPos.z + rand.nextFloat(-0.5, 0.5), yaw, 0F)
 							
-							if (world.isCollisionBoxesEmpty(enderman, enderman.boundingBox.grow(0.2, 0.0, 0.2))){
+							if (world.hasNoCollisions(enderman, enderman.boundingBox.grow(0.2, 0.0, 0.2))){
 								world.addEntity(enderman)
 								break
 							}

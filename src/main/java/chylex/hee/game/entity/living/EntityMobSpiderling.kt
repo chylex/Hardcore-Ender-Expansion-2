@@ -16,8 +16,6 @@ import chylex.hee.game.mechanics.damage.IDamageProcessor.Companion.PEACEFUL_EXCL
 import chylex.hee.init.ModEntities
 import chylex.hee.system.migration.Hand.MAIN_HAND
 import chylex.hee.system.migration.forge.EventResult
-import chylex.hee.system.migration.forge.Side
-import chylex.hee.system.migration.forge.Sided
 import chylex.hee.system.migration.forge.SubscribeAllEvents
 import chylex.hee.system.migration.forge.SubscribeEvent
 import chylex.hee.system.migration.vanilla.BlockWeb
@@ -36,15 +34,12 @@ import chylex.hee.system.util.AIWanderLandStopNear
 import chylex.hee.system.util.AIWatchClosest
 import chylex.hee.system.util.AIWatchIdle
 import chylex.hee.system.util.OPERATION_MUL_INCR_INDIVIDUAL
-import chylex.hee.system.util.Pos
 import chylex.hee.system.util.TagCompound
 import chylex.hee.system.util.addY
 import chylex.hee.system.util.directionTowards
 import chylex.hee.system.util.facades.Resource
-import chylex.hee.system.util.floorToInt
 import chylex.hee.system.util.getState
 import chylex.hee.system.util.heeTag
-import chylex.hee.system.util.isLoaded
 import chylex.hee.system.util.isPeaceful
 import chylex.hee.system.util.motionY
 import chylex.hee.system.util.nextFloat
@@ -502,20 +497,6 @@ class EntityMobSpiderling(type: EntityType<EntityMobSpiderling>, world: World) :
 	
 	public override fun getSoundPitch(): Float{
 		return rand.nextFloat(1.2F, 1.5F)
-	}
-	
-	@Sided(Side.CLIENT)
-	override fun getBrightnessForRender(): Int{
-		val pos = Pos(this)
-		
-		if (!pos.isLoaded(world)){
-			return 0
-		}
-		
-		val sky = (world.getLightFor(SKY, pos) * 0.77).floorToInt()
-		val block = (world.getLightFor(BLOCK, pos) * 0.77).floorToInt()
-		
-		return (sky shl 20) or (block shl 4)
 	}
 	
 	// Serialization

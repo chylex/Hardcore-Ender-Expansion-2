@@ -7,6 +7,7 @@ import net.minecraft.potion.Effects
 import net.minecraft.potion.Potion
 import net.minecraft.potion.Potions
 import net.minecraft.util.SoundEvents
+import net.minecraft.util.math.BlockPos
 
 typealias Blocks = Blocks
 typealias Items = Items
@@ -16,6 +17,8 @@ typealias Potions = Effects
 typealias PotionType = Potion
 typealias PotionTypes = Potions
 typealias Enchantments = Enchantments
+
+typealias MutableBlockPos = BlockPos.Mutable
 
 typealias BlockAbstractBanner = net.minecraft.block.AbstractBannerBlock
 typealias BlockAbstractFurnace = net.minecraft.block.AbstractFurnaceBlock
@@ -507,8 +510,6 @@ typealias RenderElderGuardian = net.minecraft.client.renderer.entity.ElderGuardi
 typealias RenderEnderCrystal = net.minecraft.client.renderer.entity.EnderCrystalRenderer
 typealias RenderEnderman = net.minecraft.client.renderer.entity.EndermanRenderer
 typealias RenderEndermite = net.minecraft.client.renderer.entity.EndermiteRenderer
-typealias RenderEntity = net.minecraft.client.renderer.entity.DefaultRenderer
-typealias RenderEntityItem = net.minecraft.client.renderer.entity.ItemRenderer
 typealias RenderEvoker<T> = net.minecraft.client.renderer.entity.EvokerRenderer<T>
 typealias RenderEvokerFangs = net.minecraft.client.renderer.entity.EvokerFangsRenderer
 typealias RenderFallingBlock = net.minecraft.client.renderer.entity.FallingBlockRenderer

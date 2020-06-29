@@ -1,4 +1,5 @@
 package chylex.hee.game.block
+import chylex.hee.client.util.MC
 import chylex.hee.game.block.info.BlockBuilder
 import chylex.hee.game.world.territory.TerritoryInstance
 import chylex.hee.system.migration.forge.Side
@@ -10,18 +11,18 @@ import net.minecraft.block.BlockState
 import net.minecraft.client.renderer.color.IBlockColor
 import net.minecraft.util.math.BlockPos
 import net.minecraft.world.FoliageColors
-import net.minecraft.world.IEnviromentBlockReader
+import net.minecraft.world.ILightReader
 import net.minecraft.world.IWorldReader
-import net.minecraft.world.World
 import net.minecraft.world.biome.BiomeColors
 import net.minecraft.world.biome.Biomes
+import net.minecraft.world.server.ServerWorld
 import java.util.Random
 
 class BlockDryVines(builder: BlockBuilder) : BlockVine(builder.p){
 	
 	// Custom behavior
 	
-	override fun tick(state: BlockState, world: World, pos: BlockPos, rand: Random){}
+	override fun tick(state: BlockState, world: ServerWorld, pos: BlockPos, rand: Random){}
 	
 	override fun isLadder(state: BlockState, world: IWorldReader, pos: BlockPos, entity: EntityLivingBase): Boolean{
 		return !entity.onGround
@@ -42,7 +43,9 @@ class BlockDryVines(builder: BlockBuilder) : BlockVine(builder.p){
 			).i
 		}
 		
-		override fun getColor(state: BlockState, world: IEnviromentBlockReader?, pos: BlockPos?, tintIndex: Int): Int{
+		override fun getColor(state: BlockState, uselessWorld: ILightReader?, pos: BlockPos?, tintIndex: Int): Int{
+			val world = MC.world
+			
 			if (world == null || pos == null){
 				return DEFAULT
 			}

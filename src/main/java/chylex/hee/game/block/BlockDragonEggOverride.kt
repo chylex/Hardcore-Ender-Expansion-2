@@ -25,6 +25,8 @@ import chylex.hee.system.util.removeBlock
 import chylex.hee.system.util.setState
 import net.minecraft.block.BlockState
 import net.minecraft.item.ItemStack
+import net.minecraft.util.ActionResultType
+import net.minecraft.util.ActionResultType.SUCCESS
 import net.minecraft.util.Hand
 import net.minecraft.util.SoundCategory
 import net.minecraft.util.math.BlockPos
@@ -33,6 +35,7 @@ import net.minecraft.util.math.Vec3d
 import net.minecraft.world.GameRules.DO_TILE_DROPS
 import net.minecraft.world.World
 import net.minecraft.world.gen.Heightmap.Type.OCEAN_FLOOR
+import net.minecraft.world.server.ServerWorld
 import java.util.Random
 
 class BlockDragonEggOverride(builder: BlockBuilder) : BlockDragonEgg(builder.p){
@@ -55,7 +58,7 @@ class BlockDragonEggOverride(builder: BlockBuilder) : BlockDragonEgg(builder.p){
 		}
 	}
 	
-	override fun tick(state: BlockState, world: World, pos: BlockPos, rand: Random){
+	override fun tick(state: BlockState, world: ServerWorld, pos: BlockPos, rand: Random){
 		if (world.isRemote){
 			return
 		}
@@ -65,11 +68,11 @@ class BlockDragonEggOverride(builder: BlockBuilder) : BlockDragonEgg(builder.p){
 		}
 	}
 	
-	override fun onBlockActivated(state: BlockState, world: World, pos: BlockPos, player: EntityPlayer, hand: Hand, hit: BlockRayTraceResult): Boolean{
+	override fun onBlockActivated(state: BlockState, world: World, pos: BlockPos, player: EntityPlayer, hand: Hand, hit: BlockRayTraceResult): ActionResultType{
 		val realState = pos.getState(world)
 		
 		if (world.isRemote || realState.block !== this){
-			return true
+			return SUCCESS
 		}
 		
 		val rand = world.rand
@@ -99,12 +102,12 @@ class BlockDragonEggOverride(builder: BlockBuilder) : BlockDragonEgg(builder.p){
 						soundVolume = 0.7F
 					).send(world)
 					
-					return true
+					return SUCCESS
 				}
 			}
 		}
 		
-		return true
+		return SUCCESS
 	}
 	
 	override fun onBlockClicked(state: BlockState, world: World, pos: BlockPos, player: EntityPlayer){

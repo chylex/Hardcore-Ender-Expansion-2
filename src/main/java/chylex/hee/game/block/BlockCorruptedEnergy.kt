@@ -43,6 +43,7 @@ import net.minecraft.util.math.BlockPos
 import net.minecraft.world.IBlockReader
 import net.minecraft.world.IWorldReader
 import net.minecraft.world.World
+import net.minecraft.world.server.ServerWorld
 import java.util.Random
 
 class BlockCorruptedEnergy(builder: BlockBuilder) : BlockSimple(builder){
@@ -131,13 +132,13 @@ class BlockCorruptedEnergy(builder: BlockBuilder) : BlockSimple(builder){
 		world.pendingBlockTicks.scheduleTick(pos, this, tickRateForLevel(state[LEVEL]))
 	}
 	
-	override fun randomTick(state: BlockState, world: World, pos: BlockPos, rand: Random){
+	override fun randomTick(state: BlockState, world: ServerWorld, pos: BlockPos, rand: Random){
 		if (!world.pendingBlockTicks.isTickScheduled(pos, this)){
 			pos.removeBlock(world)
 		}
 	}
 	
-	override fun tick(state: BlockState, world: World, pos: BlockPos, rand: Random){
+	override fun tick(state: BlockState, world: ServerWorld, pos: BlockPos, rand: Random){
 		val level = state[LEVEL]
 		val remainingFacings = Facing6.toMutableList()
 		

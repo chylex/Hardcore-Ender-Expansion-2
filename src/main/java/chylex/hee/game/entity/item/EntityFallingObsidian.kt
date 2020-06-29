@@ -86,13 +86,15 @@ class EntityFallingObsidian : EntityFallingBlockHeavy{
 		}
 	}
 	
-	override fun fall(distance: Float, blockDampeningMultiplier: Float){
-		super.fall(distance, blockDampeningMultiplier)
+	override fun onLivingFall(distance: Float, blockDampeningMultiplier: Float): Boolean{
+		super.onLivingFall(distance, blockDampeningMultiplier)
 		
 		if (!world.isRemote){
 			val volume = (0.2F + (distance * 0.2F)).coerceAtMost(3F)
 			PacketClientFX(FX_FALL, FxFallData(position, volume)).sendToAllAround(this, 48.0)
 		}
+		
+		return false
 	}
 	
 	override fun placeAfterLanding(pos: BlockPos, collidingWith: BlockState): PlacementResult{

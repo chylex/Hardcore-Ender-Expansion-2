@@ -2,7 +2,7 @@ package chylex.hee.system.migration
 import chylex.hee.system.util.asVoxelShape
 import net.minecraft.util.math.AxisAlignedBB
 
-// UPDATE 1.14
+// UPDATE 1.15
 
 /**
  * Contains magic numbers and other constants which cannot be easily accessed using code, and must be reviewed before updating Minecraft versions.

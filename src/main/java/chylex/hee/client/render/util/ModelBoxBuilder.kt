@@ -1,8 +1,8 @@
 package chylex.hee.client.render.util
-import net.minecraft.client.renderer.entity.model.RendererModel
-import net.minecraft.client.renderer.model.ModelBox
+import net.minecraft.client.renderer.model.ModelRenderer
+import net.minecraft.client.renderer.model.ModelRenderer.ModelBox
 
-class ModelBoxBuilder(private val model: RendererModel){
+class ModelBoxBuilder(private val model: ModelRenderer){
 	private var x = 0F
 	private var y = 0F
 	private var z = 0F
@@ -46,10 +46,10 @@ class ModelBoxBuilder(private val model: RendererModel){
 		val v = v
 		
 		if (u == null || v == null){
-			model.addBox(x, y, z, w, h, d, mirror)
+			model.addBox(x, y, z, w.toFloat(), h.toFloat(), d.toFloat(), mirror)
 		}
 		else{
-			model.cubeList.add(ModelBox(model, u, v, x, y, z, w, h, d, 0F, mirror))
+			model.cubeList.add(ModelBox(u, v, x, y, z, w.toFloat(), h.toFloat(), d.toFloat(), 0F, 0F, 0F, mirror, model.textureWidth, model.textureHeight))
 		}
 	}
 }

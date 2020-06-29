@@ -1,40 +1,47 @@
 package chylex.hee.client.render.block
 import chylex.hee.game.block.entity.TileEntityDarkChest
+import chylex.hee.init.ModAtlases
 import chylex.hee.system.migration.forge.Side
 import chylex.hee.system.migration.forge.Sided
 import chylex.hee.system.util.facades.Resource
+import com.mojang.blaze3d.matrix.MatrixStack
+import net.minecraft.client.renderer.IRenderTypeBuffer
+import net.minecraft.client.renderer.model.Material
 import net.minecraft.client.renderer.tileentity.ChestTileEntityRenderer
 import net.minecraft.client.renderer.tileentity.ItemStackTileEntityRenderer
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher
 import net.minecraft.item.ItemStack
+import net.minecraft.state.properties.ChestType
+import net.minecraft.state.properties.ChestType.LEFT
+import net.minecraft.state.properties.ChestType.RIGHT
 
 @Sided(Side.CLIENT)
-object RenderTileDarkChest : ChestTileEntityRenderer<TileEntityDarkChest>(){
-	private val TEX_SINGLE = Resource.Custom("textures/entity/dark_chest_single.png")
-	private val TEX_DOUBLE = Resource.Custom("textures/entity/dark_chest_double.png")
+class RenderTileDarkChest(dispatcher: TileEntityRendererDispatcher) : ChestTileEntityRenderer<TileEntityDarkChest>(dispatcher){
+	companion object{
+		val TEX_SINGLE = Resource.Custom("entity/dark_chest_single")
+		val TEX_DOUBLE_LEFT = Resource.Custom("entity/dark_chest_left")
+		val TEX_DOUBLE_RIGHT = Resource.Custom("entity/dark_chest_right")
+		
+		private val MAT_SINGLE = Material(ModAtlases.ATLAS_TILES, TEX_SINGLE)
+		private val MAT_DOUBLE_LEFT = Material(ModAtlases.ATLAS_TILES, TEX_DOUBLE_LEFT)
+		private val MAT_DOUBLE_RIGHT = Material(ModAtlases.ATLAS_TILES, TEX_DOUBLE_RIGHT)
+	}
 	
 	init{
 		isChristmas = false
 	}
 	
-	override fun render(tile: TileEntityDarkChest, x: Double, y: Double, z: Double, partialTicks: Float, destroyStage: Int){
-		val prevTexSingle = TEXTURE_NORMAL
-		val prevTexDouble = TEXTURE_NORMAL_DOUBLE
-		
-		TEXTURE_NORMAL = TEX_SINGLE
-		TEXTURE_NORMAL_DOUBLE = TEX_DOUBLE
-		
-		super.render(tile, x, y, z, partialTicks, destroyStage)
-		
-		TEXTURE_NORMAL = prevTexSingle
-		TEXTURE_NORMAL_DOUBLE = prevTexDouble
+	override fun getMaterial(tile: TileEntityDarkChest, type: ChestType) = when(type){
+		LEFT  -> MAT_DOUBLE_LEFT
+		RIGHT -> MAT_DOUBLE_RIGHT
+		else  -> MAT_SINGLE
 	}
 	
 	object AsItem : ItemStackTileEntityRenderer(){
 		private val tile = TileEntityDarkChest()
 		
-		override fun renderByItem(stack: ItemStack){
-			TileEntityRendererDispatcher.instance.renderAsItem(tile)
+		override fun render(stack: ItemStack, matrix: MatrixStack, buffer: IRenderTypeBuffer, combinedLight: Int, combinedOverlay: Int){
+			TileEntityRendererDispatcher.instance.renderItem(tile, matrix, buffer, combinedLight, combinedOverlay)
 		}
 	}
 }

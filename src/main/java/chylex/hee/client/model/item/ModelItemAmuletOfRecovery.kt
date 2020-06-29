@@ -6,6 +6,7 @@ import chylex.hee.system.migration.forge.Sided
 import chylex.hee.system.migration.forge.SubscribeAllEvents
 import chylex.hee.system.migration.forge.SubscribeEvent
 import chylex.hee.system.util.facades.Resource
+import com.mojang.blaze3d.matrix.MatrixStack
 import net.minecraft.client.renderer.model.IBakedModel
 import net.minecraft.client.renderer.model.ItemCameraTransforms.TransformType
 import net.minecraft.client.renderer.model.ItemCameraTransforms.TransformType.FIRST_PERSON_LEFT_HAND
@@ -19,8 +20,6 @@ import net.minecraftforge.client.event.ModelRegistryEvent
 import net.minecraftforge.client.model.BakedModelWrapper
 import net.minecraftforge.client.model.ModelLoader
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber.Bus.MOD
-import org.apache.commons.lang3.tuple.Pair
-import javax.vecmath.Matrix4f
 
 @Sided(Side.CLIENT)
 class ModelItemAmuletOfRecovery private constructor(sourceModel: IBakedModel) : BakedModelWrapper<IBakedModel>(sourceModel){
@@ -43,14 +42,14 @@ class ModelItemAmuletOfRecovery private constructor(sourceModel: IBakedModel) : 
 		}
 	}
 	
-	override fun handlePerspective(transformType: TransformType): Pair<out IBakedModel, Matrix4f> = when(transformType){
+	override fun handlePerspective(transformType: TransformType, matrix: MatrixStack): IBakedModel = when(transformType){
 		FIRST_PERSON_LEFT_HAND,
 		FIRST_PERSON_RIGHT_HAND,
 		THIRD_PERSON_LEFT_HAND,
 		THIRD_PERSON_RIGHT_HAND ->
-			modelRegistry.getOrElse(RESOURCE_HELD){ MC.instance.modelManager.missingModel }.handlePerspective(transformType)
+			modelRegistry.getOrElse(RESOURCE_HELD){ MC.instance.modelManager.missingModel }.handlePerspective(transformType, matrix)
 		
 		else ->
-			super.handlePerspective(transformType)
+			super.handlePerspective(transformType, matrix)
 	}
 }

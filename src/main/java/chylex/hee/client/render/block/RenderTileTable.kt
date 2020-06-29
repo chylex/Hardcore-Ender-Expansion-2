@@ -1,8 +1,6 @@
 package chylex.hee.client.render.block
-import chylex.hee.client.render.util.GL
-import chylex.hee.client.render.util.ItemRenderHelper
-import chylex.hee.client.render.util.TESSELLATOR
-import chylex.hee.client.render.util.draw
+import chylex.hee.client.model.ModelHelper
+import chylex.hee.client.render.util.rotateY
 import chylex.hee.client.util.MC
 import chylex.hee.game.block.entity.TileEntityJarODust
 import chylex.hee.game.block.entity.base.TileEntityBaseTable
@@ -12,58 +10,58 @@ import chylex.hee.system.migration.forge.Sided
 import chylex.hee.system.util.Vec3
 import chylex.hee.system.util.addY
 import chylex.hee.system.util.center
-import chylex.hee.system.util.color.IntColor.Companion.RGBA
 import chylex.hee.system.util.getTile
 import chylex.hee.system.util.lookPosVec
+import com.mojang.blaze3d.matrix.MatrixStack
+import net.minecraft.client.renderer.IRenderTypeBuffer
+import net.minecraft.client.renderer.ItemRenderer
+import net.minecraft.client.renderer.LightTexture
+import net.minecraft.client.renderer.RenderTypeLookup
 import net.minecraft.client.renderer.model.ItemCameraTransforms.TransformType.GUI
+import net.minecraft.client.renderer.texture.OverlayTexture
 import net.minecraft.client.renderer.tileentity.TileEntityRenderer
-import net.minecraft.client.renderer.vertex.DefaultVertexFormats
+import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher
 import net.minecraft.item.ItemStack
 import net.minecraftforge.client.ForgeHooksClient
-import net.minecraftforge.client.model.pipeline.LightUtil
-import org.lwjgl.opengl.GL11.GL_QUADS
 
 @Sided(Side.CLIENT)
-object RenderTileTable : TileEntityRenderer<TileEntityBaseTable>(){
-	private val COLOR = RGBA(180, 180, 180, 120).i
-	private const val Y_OFFSET = 0.8F
+class RenderTileTable(dispatcher: TileEntityRendererDispatcher) : TileEntityRenderer<TileEntityBaseTable>(dispatcher){
+	private companion object{
+		private const val COLOR_SHADE = 80F / 255F
+		private const val COLOR_ALPHA = 30F / 255F
+		private val LIGHT = LightTexture.packLight(15, 0)
+		
+		private const val Y_OFFSET = 0.8
+	}
 	
-	override fun render(tile: TileEntityBaseTable, x: Double, y: Double, z: Double, partialTicks: Float, destroyStage: Int){
+	override fun render(tile: TileEntityBaseTable, partialTicks: Float, matrix: MatrixStack, buffer: IRenderTypeBuffer, combinedLight: Int, combinedOverlay: Int){
+		val world = tile.world ?: return
 		val dustType = tile.tableDustType ?: return
 		
 		if (tile.pos.up().getTile<TileEntityJarODust>(world)?.layers?.getDustType(DustLayers.Side.BOTTOM) == dustType){
 			return
 		}
 		
-		ItemRenderHelper.beginItemModel()
-		GL.pushMatrix()
-		GL.translate(x, y, z)
-		GL.pushMatrix()
-		
 		val rotation = (MC.systemTime % 360000L) / 25F
-		val center = tile.pos.center.addY(Y_OFFSET.toDouble())
+		val center = tile.pos.center.addY(Y_OFFSET)
 		val flip = if (center.subtract(MC.player!!.lookPosVec).dotProduct(Vec3.fromYaw(360F - rotation)) > 0.0) 180F else 0F
 		
-		GL.translate(0.5F, 0.5F + Y_OFFSET, 0.5F)
-		GL.rotate(rotation + flip, 0F, 1F, 0F)
-		GL.scale(0.5F, 0.5F, 0.02F)
+		matrix.push()
+		matrix.translate(0.5, 0.5 + Y_OFFSET, 0.5)
+		matrix.rotateY(rotation + flip)
+		matrix.scale(0.5F, 0.5F, 0.02F)
+		matrix.translate(-0.5, -0.5, -0.5)
 		
 		val itemStack = ItemStack(dustType.item)
-		val itemModel = ForgeHooksClient.handleCameraTransforms(ItemRenderHelper.getItemModel(itemStack), GUI, false)
+		val itemModel = ForgeHooksClient.handleCameraTransforms(matrix, ModelHelper.getItemModel(itemStack), GUI, false)
 		
-		GL.setLightmapCoords(61680F, 0F)
-		GL.translate(-0.5F, -0.5F, -0.5F)
+		val mat = matrix.last
+		val builder = ItemRenderer.getBuffer(buffer, RenderTypeLookup.getRenderType(itemStack), true /* isItem */, false /* hasGlint */)
 		
-		TESSELLATOR.draw(GL_QUADS, DefaultVertexFormats.ITEM){
-			val quads = itemModel.getQuads(null, null, tile.wrld.rand)
-			
-			for(quad in quads){
-				LightUtil.renderQuadColor(this, quad, COLOR)
-			}
+		for(quad in itemModel.getQuads(null, null, tile.wrld.rand)){
+			builder.addVertexData(mat, quad, COLOR_SHADE, COLOR_SHADE, COLOR_SHADE, COLOR_ALPHA, LIGHT, OverlayTexture.NO_OVERLAY)
 		}
 		
-		GL.popMatrix()
-		GL.popMatrix()
-		ItemRenderHelper.endItemModel()
+		matrix.pop()
 	}
 }

@@ -1,6 +1,5 @@
 package chylex.hee.client.gui.base
 import chylex.hee.client.render.util.GL
-import chylex.hee.client.util.MC
 import chylex.hee.game.container.base.ContainerBaseCustomInventory
 import chylex.hee.system.migration.forge.Side
 import chylex.hee.system.migration.forge.Sided
@@ -30,7 +29,7 @@ abstract class GuiBaseCustomInventory<T : ContainerBaseCustomInventory<*>>(conta
 		val y = (height - ySize) / 2
 		
 		GL.color(1F, 1F, 1F, 1F)
-		MC.textureManager.bindTexture(texBackground)
+		GL.bindTexture(texBackground)
 		blit(x, y, 0, 0, xSize, ySize)
 	}
 	

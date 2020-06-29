@@ -18,6 +18,7 @@ import chylex.hee.system.util.lookPosVec
 import chylex.hee.system.util.math.LerpedFloat
 import chylex.hee.system.util.nextFloat
 import chylex.hee.system.util.offsetTowards
+import net.minecraft.client.renderer.Vector3f
 import net.minecraft.util.math.Vec3d
 import net.minecraft.world.LightType.BLOCK
 import net.minecraft.world.LightType.SKY
@@ -64,18 +65,18 @@ object Territory_ForgottenTombs : ITerritoryDescription{
 		override val renderer = SkyPlaneTopFoggy(
 			texture = Resource.Custom("textures/environment/stars.png"),
 			color = Vec3d(0.58, 0.58, 0.54),
-			rescale = 29.0,
-			distance = 65.0,
-			width = 300.0
+			rescale = 29F,
+			distance = 65F,
+			width = 300F
 		)
 		
 		override val lightmap = object : ILightmap{
-			override fun update(colors: FloatArray, sunBrightness: Float, skyLight: Float, blockLight: Float, partialTicks: Float){
+			override fun update(colors: Vector3f, sunBrightness: Float, skyLight: Float, blockLight: Float, partialTicks: Float){
 				val blockFactor = calcLightFactor(blockLight)
 				
-				colors[0] = (blockLight * 0.9F) + skyLight + 0.12F
-				colors[1] = (blockFactor * 0.7F) + (skyLight * 0.8F) + 0.08F
-				colors[2] = (blockFactor * 0.5F) + (skyLight * 1.2F) + (0.09F * nightVisionFactor)
+				colors.x = (blockLight * 0.9F) + skyLight + 0.12F
+				colors.y = (blockFactor * 0.7F) + (skyLight * 0.8F) + 0.08F
+				colors.z = (blockFactor * 0.5F) + (skyLight * 1.2F) + (0.09F * nightVisionFactor)
 			}
 		}
 		

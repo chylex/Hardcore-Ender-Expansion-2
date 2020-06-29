@@ -1,12 +1,12 @@
 function initializeCoreMod(){
     Java.type("net.minecraftforge.coremod.api.ASMAPI").loadFile("coremods/utils/bootstrap.js");
 
-    var endStoneField = api.mapField("field_150377_bs") // END_STONE
+    var endStoneField = api.mapField("field_150377_bs"); // END_STONE
 
     var translateReplacements = function(replacements){
         var translated = {};
 
-        for(key in replacements){
+        for(var key in replacements){
             translated[api.mapMethod(key)] = replacements[key];
         }
 
@@ -67,7 +67,7 @@ function initializeCoreMod(){
     return {
         "HEE_ChorusPlantsGrowOnHumus_Flower": classTransformer("net.minecraft.block.ChorusFlowerBlock", function(cls){
             return performReplacements(cls, translateReplacements({
-                "func_196267_b": 2, // tick
+                "func_227033_a_": 2, // tick
                 "func_196260_a": 1, // isValidPosition
             }));
         }),

@@ -10,6 +10,8 @@ import chylex.hee.system.util.getTile
 import chylex.hee.system.util.setBlock
 import net.minecraft.block.BlockState
 import net.minecraft.tileentity.TileEntity
+import net.minecraft.util.ActionResultType
+import net.minecraft.util.ActionResultType.SUCCESS
 import net.minecraft.util.Hand
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.BlockRayTraceResult
@@ -21,9 +23,9 @@ open class BlockBrewingStandCustom(builder: BlockBuilder) : BlockBrewingStand(bu
 		return TileEntityBrewingStandCustom()
 	}
 	
-	override fun onBlockActivated(state: BlockState, world: World, pos: BlockPos, player: EntityPlayer, hand: Hand, hit: BlockRayTraceResult): Boolean{
+	override fun onBlockActivated(state: BlockState, world: World, pos: BlockPos, player: EntityPlayer, hand: Hand, hit: BlockRayTraceResult): ActionResultType{
 		if (world.isRemote){
-			return true
+			return SUCCESS
 		}
 		
 		val tile = pos.getTile<TileEntityBrewingStand>(world)
@@ -37,6 +39,6 @@ open class BlockBrewingStandCustom(builder: BlockBuilder) : BlockBrewingStand(bu
 			pos.setBlock(world, this)
 		}
 		
-		return true
+		return SUCCESS
 	}
 }

@@ -16,6 +16,9 @@ import chylex.hee.system.util.playUniversal
 import net.minecraft.block.BlockState
 import net.minecraft.entity.Entity
 import net.minecraft.item.ItemStack
+import net.minecraft.util.ActionResultType
+import net.minecraft.util.ActionResultType.PASS
+import net.minecraft.util.ActionResultType.SUCCESS
 import net.minecraft.util.Hand
 import net.minecraft.util.SoundCategory
 import net.minecraft.util.math.BlockPos
@@ -59,11 +62,11 @@ abstract class BlockAbstractCauldron(builder: BlockBuilder) : BlockCauldron(buil
 		}
 	}
 	
-	final override fun onBlockActivated(state: BlockState, world: World, pos: BlockPos, player: EntityPlayer, hand: Hand, hit: BlockRayTraceResult): Boolean{
+	final override fun onBlockActivated(state: BlockState, world: World, pos: BlockPos, player: EntityPlayer, hand: Hand, hit: BlockRayTraceResult): ActionResultType{
 		val item = player.getHeldItem(hand).takeIf { it.isNotEmpty }?.item
 		
 		if (item == null){
-			return true
+			return PASS
 		}
 		
 		if (item === Items.BUCKET){
@@ -79,7 +82,7 @@ abstract class BlockAbstractCauldron(builder: BlockBuilder) : BlockCauldron(buil
 				Sounds.ITEM_BUCKET_FILL.playUniversal(player, pos, SoundCategory.BLOCKS)
 			}
 			
-			return true
+			return SUCCESS
 		}
 		else if (item === Items.GLASS_BOTTLE){
 			val filledBottle = createFilledBottle()
@@ -94,10 +97,10 @@ abstract class BlockAbstractCauldron(builder: BlockBuilder) : BlockCauldron(buil
 				Sounds.ITEM_BOTTLE_FILL.playUniversal(player, pos, SoundCategory.BLOCKS)
 			}
 			
-			return true
+			return SUCCESS
 		}
 		
-		return false
+		return PASS
 	}
 	
 	override fun onEntityCollision(state: BlockState, world: World, pos: BlockPos, entity: Entity){}

@@ -204,6 +204,7 @@ object BlockBuilders{
 	val buildIgneousPlate = BlockBuilder(Materials.IGNEOUS_ROCK_PLATE, MaterialColor.AIR, SoundType.STONE)
 	
 	val buildBrewingStand = BlockBuilder(Material.IRON, MaterialColor.YELLOW, SoundType.STONE).apply {
+		isSolid = false
 		harvestHardness = 0.5F
 		explosionResistance = 0.5F
 		lightLevel = 2
@@ -240,11 +241,13 @@ object BlockBuilders{
 	// Decorative (Trees)
 	
 	val buildWhitebarkSapling = BlockBuilder(Material.PLANTS, MaterialColor.FOLIAGE, SoundType.PLANT).apply {
+		isSolid = false
 		harvestHardness = 0F
 		explosionResistance = 0F
 	}
 	
 	val buildWhitebarkLeaves = BlockBuilder(Material.LEAVES, MaterialColor.AIR, SoundType.PLANT).apply {
+		isSolid = false
 		harvestHardness = 0.2F
 		explosionResistance = 0.2F
 	}
@@ -252,11 +255,13 @@ object BlockBuilders{
 	// Decorative (Plants)
 	
 	val buildPlant = BlockBuilder(Material.PLANTS, MaterialColor.AIR, SoundType.PLANT).apply {
+		isSolid = false
 		harvestHardness = 0F
 		explosionResistance = 0F
 	}
 	
 	val buildFlowerPot = BlockBuilder(Material.MISCELLANEOUS, MaterialColor.AIR, SoundType.STONE).apply {
+		isSolid = false
 		harvestHardness = 0F
 		explosionResistance = 0F
 	}
@@ -264,17 +269,20 @@ object BlockBuilders{
 	// Decorative (Uncategorized)
 	
 	val buildAncientCobweb = BlockBuilder(Materials.ANCIENT_COBWEB, MaterialColor.WOOL, SoundType.STONE).apply {
+		isSolid = false
 		harvestHardness = 0.2F
 		explosionResistance = 0.2F
 	}
 	
 	val buildDryVines = BlockBuilder(Material.TALL_PLANTS, MaterialColor.FOLIAGE, SoundType.PLANT).apply {
+		isSolid = false
 		harvestTool = Pair(WOOD, AXE)
 		harvestHardness = 0.1F
 		explosionResistance = 0.1F
 	}
 	
 	val buildEndermanHead = BlockBuilder(Material.MISCELLANEOUS, MaterialColor.BLACK, SoundType.STONE).apply {
+		isSolid = false
 		harvestHardness = 1.0F
 		explosionResistance = 1.0F
 	}
@@ -282,6 +290,7 @@ object BlockBuilders{
 	// Spawners
 	
 	val buildSpawnerObsidianTowers = BlockBuilder(Material.ROCK, MaterialColor.STONE, SoundType.METAL).apply {
+		isSolid = false
 		harvestTool = Pair(STONE, PICKAXE)
 		harvestHardness = 8.0F
 		explosionResistance = 8.0F
@@ -292,6 +301,7 @@ object BlockBuilders{
 	
 	val buildPortalInner = BlockBuilder(Material.PORTAL, MaterialColor.BLACK, SoundType.STONE).apply {
 		makeIndestructible()
+		isSolid = false
 		lightLevel = 15
 	}
 	
@@ -308,11 +318,13 @@ object BlockBuilders{
 	// Energy
 	
 	val buildEnergyCluster = BlockBuilder(Materials.ENERGY_CLUSTER, MaterialColor.SNOW, SoundType.GLASS.clone(volume = 1.25F, pitch = 1.35F)).apply {
+		isSolid = false
 		lightLevel = 13
 		noDrops = true
 	}
 	
 	val buildCorruptedEnergy = BlockBuilder(Materials.CORRUPTED_ENERGY, MaterialColor.PURPLE, SoundType.SAND).apply {
+		isSolid = false
 		randomTicks = true // just to be safe
 		noDrops = true
 	}
@@ -333,6 +345,7 @@ object BlockBuilders{
 	// Utilities
 	
 	val buildEternalFire = BlockBuilder(Material.FIRE, MaterialColor.AIR, SoundType.CLOTH).apply {
+		isSolid = false
 		harvestHardness = 0F
 		explosionResistance = 0F
 		noDrops = true
@@ -341,17 +354,20 @@ object BlockBuilders{
 	
 	val buildScaffolding = BlockBuilder(Materials.SCAFFOLDING, MaterialColor.AIR, SoundType.STONE).apply {
 		makeIndestructible()
+		isSolid = false
 	}
 	
 	// Overrides
 	
 	val buildEndPortalOverride = BlockBuilder(Material.PORTAL, MaterialColor.BLACK, SoundType.STONE).apply {
 		makeIndestructible()
+		isSolid = false
 		lightLevel = 15
 		randomTicks = true
 	}
 	
 	val buildDragonEgg = BlockBuilder(Material.DRAGON_EGG, MaterialColor.BLACK, SoundType.STONE).apply {
+		isSolid = false
 		harvestHardness = INDESTRUCTIBLE_HARDNESS
 		explosionResistance = 9F
 		lightLevel = 2

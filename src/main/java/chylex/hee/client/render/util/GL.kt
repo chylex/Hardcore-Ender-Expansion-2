@@ -1,16 +1,18 @@
 package chylex.hee.client.render.util
+import chylex.hee.client.util.MC
 import chylex.hee.system.migration.forge.Side
 import chylex.hee.system.migration.forge.Sided
-import com.mojang.blaze3d.platform.GLX
 import com.mojang.blaze3d.platform.GlStateManager
 import com.mojang.blaze3d.platform.GlStateManager.DestFactor
 import com.mojang.blaze3d.platform.GlStateManager.FogMode
 import com.mojang.blaze3d.platform.GlStateManager.SourceFactor
 import com.mojang.blaze3d.platform.GlStateManager.TexGen
+import com.mojang.blaze3d.systems.RenderSystem
+import net.minecraft.util.ResourceLocation
 import net.minecraft.util.math.Vec3d
 import java.nio.FloatBuffer
 
-typealias GLSM = GlStateManager
+private typealias GLSM = RenderSystem
 
 @Sided(Side.CLIENT)
 object GL{
@@ -18,14 +20,6 @@ object GL{
 	// General
 	
 	fun depthMask(enable: Boolean) = GLSM.depthMask(enable)
-	
-	fun enableCull() = GLSM.enableCull()
-	fun disableCull() = GLSM.disableCull()
-	
-	fun enableRescaleNormal() = GLSM.enableRescaleNormal()
-	fun disableRescaleNormal() = GLSM.disableRescaleNormal()
-	
-	fun lineWidth(width: Float) = GLSM.lineWidth(width)
 	
 	// Blend
 	
@@ -57,29 +51,9 @@ object GL{
 	
 	fun shadeModel(model: Int) = GLSM.shadeModel(model)
 	
-	// Lightmap
-	
-	fun setLightmapCoords(x: Float, y: Float){
-		GLX.glMultiTexCoord2f(GLX.GL_TEXTURE1, x, y)
-	}
-	
-	fun setLightmapCoords(x: Int, y: Int){
-		setLightmapCoords(x.toFloat(), y.toFloat())
-	}
-	
-	fun setLightmapCoords(brightness: Int){
-		setLightmapCoords(brightness % 65536, brightness / 65536)
-	}
-	
 	// Color
 	
-	fun enableColorMaterial() = GLSM.enableColorMaterial()
-	fun disableColorMaterial() = GLSM.disableColorMaterial()
-	
-	fun color(red: Float, green: Float, blue: Float) = GLSM.color3f(red, green, blue)
 	fun color(red: Float, green: Float, blue: Float, alpha: Float) = GLSM.color4f(red, green, blue, alpha)
-	
-	fun color(color: Vec3d) = GLSM.color3f(color.x.toFloat(), color.y.toFloat(), color.z.toFloat())
 	fun color(color: Vec3d, alpha: Float) = GLSM.color4f(color.x.toFloat(), color.y.toFloat(), color.z.toFloat(), alpha)
 	
 	// Texture
@@ -87,14 +61,13 @@ object GL{
 	fun enableTexture() = GLSM.enableTexture()
 	fun disableTexture() = GLSM.disableTexture()
 	
-	fun enableOutlineMode(color: Int) = GLSM.setupSolidRenderingTextureCombine(color)
-	fun disableOutlineMode() = GLSM.tearDownSolidRenderingTextureCombine()
+	fun bindTexture(texture: ResourceLocation) = MC.textureManager.bindTexture(texture)
 	
-	fun enableTexGenCoord(tex: TexGen) = GLSM.enableTexGen(tex)
-	fun disableTexGenCoord(tex: TexGen) = GLSM.disableTexGen(tex)
+	fun enableTexGenCoord(tex: TexGen) = GlStateManager.enableTexGen(tex)
+	fun disableTexGenCoord(tex: TexGen) = GlStateManager.disableTexGen(tex)
 	
-	fun texGenMode(tex: TexGen, mode: Int) = GLSM.texGenMode(tex, mode)
-	fun texGenParam(tex: TexGen, param: Int, buffer: FloatBuffer) = GLSM.texGenParam(tex, param, buffer)
+	fun texGenMode(tex: TexGen, mode: Int) = GlStateManager.texGenMode(tex, mode)
+	fun texGenParam(tex: TexGen, param: Int, buffer: FloatBuffer) = GlStateManager.texGenParam(tex, param, buffer)
 	
 	// Matrix
 	
@@ -108,10 +81,8 @@ object GL{
 	fun translate(x: Double, y: Double, z: Double) = GLSM.translated(x, y, z)
 	
 	fun scale(x: Float, y: Float, z: Float) = GLSM.scalef(x, y, z)
-	fun scale(x: Double, y: Double, z: Double) = GLSM.scaled(x, y, z)
 	
 	fun rotate(angle: Float, x: Float, y: Float, z: Float) = GLSM.rotatef(angle, x, y, z)
-	fun rotate(angle: Double, x: Double, y: Double, z: Double) = GLSM.rotated(angle, x, y, z)
 	
 	// Constants
 	

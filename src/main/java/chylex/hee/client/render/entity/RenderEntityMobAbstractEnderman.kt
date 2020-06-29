@@ -1,7 +1,12 @@
 package chylex.hee.client.render.entity
-import chylex.hee.client.render.util.GL
 import chylex.hee.client.render.util.GL.DF_ONE_MINUS_SRC_ALPHA
 import chylex.hee.client.render.util.GL.SF_SRC_ALPHA
+import chylex.hee.client.render.util.RenderStateBuilder
+import chylex.hee.client.render.util.RenderStateBuilder.Companion.CULL_DISABLED
+import chylex.hee.client.render.util.RenderStateBuilder.Companion.LIGHTING_ENABLED
+import chylex.hee.client.render.util.RenderStateBuilder.Companion.LIGHTMAP_ENABLED
+import chylex.hee.client.render.util.RenderStateBuilder.Companion.MASK_COLOR
+import chylex.hee.client.render.util.RenderStateBuilder.Companion.OVERLAY_DISABLED
 import chylex.hee.game.entity.living.EntityMobAbstractEnderman
 import chylex.hee.system.migration.forge.Side
 import chylex.hee.system.migration.forge.Sided
@@ -10,24 +15,63 @@ import chylex.hee.system.migration.vanilla.RenderEnderman
 import chylex.hee.system.migration.vanilla.RenderManager
 import chylex.hee.system.util.nextFloat
 import chylex.hee.system.util.totalTime
-import org.lwjgl.opengl.GL11.GL_GREATER
+import com.mojang.blaze3d.matrix.MatrixStack
+import com.mojang.blaze3d.vertex.IVertexBuilder
+import net.minecraft.client.renderer.IRenderTypeBuffer
+import net.minecraft.client.renderer.RenderType
+import net.minecraft.client.renderer.entity.layers.LayerRenderer
+import net.minecraft.client.renderer.entity.model.EndermanModel
+import net.minecraft.client.renderer.vertex.DefaultVertexFormats
+import net.minecraft.entity.monster.EndermanEntity
+import net.minecraft.util.ResourceLocation
+import org.lwjgl.opengl.GL11
 import java.util.Random
 
 @Sided(Side.CLIENT)
 open class RenderEntityMobAbstractEnderman(manager: RenderManager) : RenderEnderman(manager){
-	private val rand = Random()
+	private companion object{
+		private fun RENDER_TYPE_CLONE(tex: ResourceLocation) = with(RenderStateBuilder()){
+			tex(tex)
+			blend(SF_SRC_ALPHA, DF_ONE_MINUS_SRC_ALPHA)
+			lighting(LIGHTING_ENABLED)
+			alpha(0.004F)
+			cull(CULL_DISABLED)
+			lightmap(LIGHTMAP_ENABLED)
+			overlay(OVERLAY_DISABLED)
+			mask(MASK_COLOR)
+			buildType("hee:enderman_clone", DefaultVertexFormats.ENTITY, GL11.GL_QUADS, bufferSize = 256, useDelegate = true)
+		}
+	}
 	
-	override fun doRender(entity: EntityEnderman, x: Double, y: Double, z: Double, rotationYaw: Float, partialTicks: Float){
+	private val rand = Random()
+	private val originalLayerList: List<LayerRenderer<EntityEnderman, EndermanModel<EntityEnderman>>>
+	private var isRenderingClone = false
+	
+	init{
+		entityModel = object : EndermanModel<EntityEnderman>(0F){
+			override fun render(matrix: MatrixStack, builder: IVertexBuilder, combinedLight: Int, combinedOverlay: Int, red: Float, green: Float, blue: Float, alpha: Float){
+				super.render(matrix, builder, combinedLight, combinedOverlay, red, green, blue, if (isRenderingClone) rand.nextFloat(0.05F, 0.3F) else alpha)
+			}
+		}
+		
+		originalLayerList = ArrayList(layerRenderers)
+	}
+	
+	override fun render(entity: EndermanEntity, yaw: Float, partialTicks: Float, matrix: MatrixStack, buffer: IRenderTypeBuffer, combinedLight: Int){
 		if (entity !is EntityMobAbstractEnderman){
 			return
 		}
 		
 		if (entity.isShaking){
 			rand.setSeed(entity.world.totalTime)
-			super.doRender(entity, x + (rand.nextGaussian() * 0.01), y + (rand.nextGaussian() * 0.01), z + (rand.nextGaussian() * 0.01), rotationYaw, partialTicks)
+			
+			matrix.push()
+			matrix.translate(rand.nextGaussian() * 0.01, rand.nextGaussian() * 0.01, rand.nextGaussian() * 0.01)
+			super.render(entity, yaw, partialTicks, matrix, buffer, combinedLight)
+			matrix.pop()
 		}
 		else{
-			super.doRender(entity, x, y, z, rotationYaw, partialTicks)
+			super.render(entity, yaw, partialTicks, matrix, buffer, combinedLight)
 		}
 		
 		val cloneCount = getCloneCount(entity)
@@ -41,13 +85,10 @@ open class RenderEntityMobAbstractEnderman(manager: RenderManager) : RenderEnder
 			val prevPrevPitch = entity.prevRotationPitch
 			val prevPitch = entity.rotationPitch
 			
+			isRenderingClone = true
+			layerRenderers.clear()
+			
 			repeat(cloneCount){
-				GL.enableBlend()
-				GL.blendFunc(SF_SRC_ALPHA, DF_ONE_MINUS_SRC_ALPHA)
-				GL.alphaFunc(GL_GREATER, 0.004F)
-				GL.depthMask(false)
-				GL.color(1F, 1F, 1F, rand.nextFloat(0.05F, 0.3F))
-				
 				if (rand.nextInt(3) == 0){
 					entity.rotationYawHead += rand.nextFloat(-45F, 45F)
 					entity.prevRotationYawHead = entity.rotationYawHead
@@ -56,7 +97,10 @@ open class RenderEntityMobAbstractEnderman(manager: RenderManager) : RenderEnder
 					entity.prevRotationPitch = entity.rotationPitch
 				}
 				
-				super.doRender(entity, x + rand.nextGaussian() * 0.04, y + rand.nextGaussian() * 0.025, z + rand.nextGaussian() * 0.04, rotationYaw, partialTicks)
+				matrix.push()
+				matrix.translate(rand.nextGaussian() * 0.04, rand.nextGaussian() * 0.025, rand.nextGaussian() * 0.04)
+				super.render(entity, yaw, partialTicks, matrix, buffer, combinedLight)
+				matrix.pop()
 			}
 			
 			entity.prevRotationYawHead = prevPrevYaw
@@ -65,13 +109,19 @@ open class RenderEntityMobAbstractEnderman(manager: RenderManager) : RenderEnder
 			entity.prevRotationPitch = prevPrevPitch
 			entity.rotationPitch = prevPitch
 			
-			GL.depthMask(true)
-			GL.alphaFunc(GL_GREATER, 0.1F)
-			GL.disableBlend()
+			layerRenderers.addAll(originalLayerList)
+			isRenderingClone = false
 		}
 	}
 	
 	protected open fun getCloneCount(entity: EntityMobAbstractEnderman): Int{
 		return if (entity.hurtTime == 0 && entity.isAggro) 2 else 0
+	}
+	
+	override fun func_230042_a_(entity: EndermanEntity, isVisible: Boolean, isTranslucent: Boolean): RenderType?{
+		return if (isRenderingClone)
+			RENDER_TYPE_CLONE(getEntityTexture(entity))
+		else
+			super.func_230042_a_(entity, isVisible, isTranslucent)
 	}
 }

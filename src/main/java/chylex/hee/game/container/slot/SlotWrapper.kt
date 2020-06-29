@@ -42,9 +42,6 @@ abstract class SlotWrapper(private val wrapped: Slot) : Slot(wrapped.inventory, 
 	override fun onCrafting(stack: ItemStack){}
 	override fun onSwapCraft(amount: Int){}
 	
-	override fun setBackgroundName(name: String?) = wrapped.setBackgroundName(name)
-	@Sided(Side.CLIENT) override fun setBackgroundLocation(texture: ResourceLocation) = wrapped.setBackgroundLocation(texture)
-	@Sided(Side.CLIENT) override fun getBackgroundLocation(): ResourceLocation = wrapped.backgroundLocation
-	@Sided(Side.CLIENT) override fun getBackgroundSprite() = wrapped.backgroundSprite
-	@Sided(Side.CLIENT) override fun getSlotTexture() = wrapped.slotTexture
+	@Sided(Side.CLIENT) override fun getBackground() = wrapped.background
+	@Sided(Side.CLIENT) override fun setBackground(atlas: ResourceLocation, sprite: ResourceLocation): Slot = wrapped.setBackground(atlas, sprite)
 }

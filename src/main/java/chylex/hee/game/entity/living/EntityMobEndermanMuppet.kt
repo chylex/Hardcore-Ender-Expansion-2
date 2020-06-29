@@ -89,12 +89,12 @@ class EntityMobEndermanMuppet(type: EntityType<EntityMobEndermanMuppet>, world: 
 	override fun writeAdditional(nbt: TagCompound) = nbt.heeTag.use {
 		super.writeAdditional(nbt)
 		
-		putEnum(TYPE_TAG, type)
+		putEnum(TYPE_TAG, this@EntityMobEndermanMuppet.type)
 	}
 	
 	override fun readAdditional(nbt: TagCompound) = nbt.heeTag.use {
 		super.readAdditional(nbt)
 		
-		type = getEnum<Type>(TYPE_TAG) ?: INVALID
+		this@EntityMobEndermanMuppet.type = getEnum<Type>(TYPE_TAG) ?: INVALID
 	}
 }

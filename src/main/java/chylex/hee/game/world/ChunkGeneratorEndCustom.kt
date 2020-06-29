@@ -13,6 +13,7 @@ import net.minecraft.world.IWorld
 import net.minecraft.world.World
 import net.minecraft.world.biome.Biome
 import net.minecraft.world.biome.Biome.SpawnListEntry
+import net.minecraft.world.biome.BiomeManager
 import net.minecraft.world.biome.provider.BiomeProvider
 import net.minecraft.world.chunk.IChunk
 import net.minecraft.world.gen.ChunkGenerator
@@ -52,7 +53,7 @@ class ChunkGeneratorEndCustom(world: World, biomeProvider: BiomeProvider, settin
 	
 	override fun makeBase(world: IWorld, chunk: IChunk){}
 	
-	override fun generateSurface(chunk: IChunk){
+	override fun generateSurface(region: WorldGenRegion, chunk: IChunk){
 		val (chunkX, chunkZ) = chunk.pos
 		
 		val instance = getInstance(chunkX, chunkZ) ?: return
@@ -129,6 +130,6 @@ class ChunkGeneratorEndCustom(world: World, biomeProvider: BiomeProvider, settin
 		return null
 	}
 	
-	override fun initStructureStarts(chunk: IChunk, generator: ChunkGenerator<*>, templates: TemplateManager){}
+	override fun generateStructures(biomes: BiomeManager, chunk: IChunk, generator: ChunkGenerator<*>, templates: TemplateManager){}
 	override fun generateStructureStarts(world: IWorld, chunk: IChunk){}
 }

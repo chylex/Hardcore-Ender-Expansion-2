@@ -10,7 +10,7 @@ function initializeCoreMod(){
                     var inserted = makeInstructions(function(node){
                         node.visitVarInsn(op.ALOAD, 0);
                         node.visitMethodInsn(op.INVOKESTATIC, "chylex/hee/game/entity/living/EntityMobAbstractEnderman", "livingParticleCount", "(Lnet/minecraft/entity/monster/EndermanEntity;)I");
-                    })
+                    });
 
                     instructions.set(instructions.get(index), inserted.getFirst());
                     instructions.insert(instructions.get(index), inserted.getLast());

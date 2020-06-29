@@ -3,6 +3,7 @@
 package chylex.hee.system.util
 import chylex.hee.game.world.util.PosXZ
 import chylex.hee.system.migration.Facing.UP
+import chylex.hee.system.migration.vanilla.MutableBlockPos
 import com.google.common.base.Function
 import com.google.common.collect.Iterables
 import net.minecraft.block.Block
@@ -14,7 +15,6 @@ import net.minecraft.fluid.IFluidState
 import net.minecraft.tileentity.TileEntity
 import net.minecraft.util.Direction
 import net.minecraft.util.math.BlockPos
-import net.minecraft.util.math.BlockPos.MutableBlockPos
 import net.minecraft.util.math.ChunkPos
 import net.minecraft.util.math.Vec3d
 import net.minecraft.world.IBlockReader

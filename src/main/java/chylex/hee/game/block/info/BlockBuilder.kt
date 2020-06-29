@@ -7,6 +7,8 @@ import net.minecraftforge.common.ToolType
 
 class BlockBuilder(val material: Material, var color: MaterialColor, var sound: SoundType){
 	constructor(original: BlockBuilder) : this(original.material, original.color, original.sound){
+		isSolid = original.isSolid
+		
 		harvestTool = original.harvestTool
 		harvestHardness = original.harvestHardness
 		explosionResistance = original.explosionResistance
@@ -17,6 +19,8 @@ class BlockBuilder(val material: Material, var color: MaterialColor, var sound: 
 		randomTicks = original.randomTicks
 		noDrops = original.noDrops
 	}
+	
+	var isSolid = true
 	
 	var harvestTool: Pair<Int, ToolType?> = Pair(-1, null)
 	var harvestHardness: Float = 0F
@@ -42,8 +46,16 @@ class BlockBuilder(val material: Material, var color: MaterialColor, var sound: 
 			slipperiness(slipperiness)
 			sound(sound)
 			
+			if (!isSolid){
+				notSolid()
+			}
+			
 			if (!material.blocksMovement()){
 				doesNotBlockMovement()
+				
+				if (isSolid){
+					throw UnsupportedOperationException("[BlockBuilder] cannot create a block that does not block movement and is solid at the same time")
+				}
 			}
 			
 			if (randomTicks){

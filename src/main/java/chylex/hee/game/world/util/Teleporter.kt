@@ -156,7 +156,7 @@ class Teleporter(
 		}
 		
 		if (entity.isSleeping && entity is EntityPlayer){
-			entity.wakeUpPlayer(true, true, false)
+			entity.stopSleepInBed(true, true)
 		}
 		
 		val world = entity.world
@@ -220,7 +220,7 @@ class Teleporter(
 			val randomPos = position.add(rand.nextVector(rand.nextFloat(distance)))
 			val newPos = Vec3d(randomPos.x, randomPos.y.floorToInt() + 0.01, randomPos.z)
 			
-			if (Pos(newPos).down().blocksMovement(world) && world.isCollisionBoxesEmpty(entity, originalBox.offset(newPos.subtract(originalPos)))){
+			if (Pos(newPos).down().blocksMovement(world) && world.hasNoCollisions(entity, originalBox.offset(newPos.subtract(originalPos)))){
 				return toLocation(entity, newPos, soundCategory)
 			}
 		}

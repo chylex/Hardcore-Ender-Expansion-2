@@ -1,7 +1,8 @@
 package chylex.hee.client.render.territory.lightmaps
+import net.minecraft.client.renderer.Vector3f
 
 interface ILightmap{
-	fun update(colors: FloatArray, sunBrightness: Float, skyLight: Float, blockLight: Float, partialTicks: Float)
+	fun update(colors: Vector3f, sunBrightness: Float, skyLight: Float, blockLight: Float, partialTicks: Float)
 	
 	companion object{
 		fun calcLightFactor(light: Float, mp: Float = 0.6F): Float{

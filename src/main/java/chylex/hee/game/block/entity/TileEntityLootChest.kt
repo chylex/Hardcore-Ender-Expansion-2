@@ -77,7 +77,7 @@ class TileEntityLootChest(type: TileEntityType<TileEntityLootChest>) : TileEntit
 	// Command handling
 	
 	fun resetPlayerInventories(): Int{
-		val total = playerInventories.count()
+		val total = playerInventories.size
 		playerInventories.clear()
 		return total
 	}

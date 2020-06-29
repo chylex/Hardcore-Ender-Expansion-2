@@ -1,56 +1,41 @@
 package chylex.hee.client.render.entity.layer
 import chylex.hee.client.render.entity.RenderEntityMobSpiderling
-import chylex.hee.client.render.util.GL
-import chylex.hee.client.render.util.GL.DF_ONE
-import chylex.hee.client.render.util.GL.SF_ONE
-import chylex.hee.client.util.MC
+import chylex.hee.client.render.util.scale
 import chylex.hee.game.entity.living.EntityMobSpiderling
 import chylex.hee.system.migration.forge.Side
 import chylex.hee.system.migration.forge.Sided
 import chylex.hee.system.util.facades.Resource
-import net.minecraft.client.renderer.entity.layers.LayerRenderer
-import net.minecraft.client.renderer.entity.model.RendererModel
+import com.mojang.blaze3d.matrix.MatrixStack
+import net.minecraft.client.renderer.IRenderTypeBuffer
+import net.minecraft.client.renderer.RenderType
+import net.minecraft.client.renderer.entity.layers.AbstractEyesLayer
 import net.minecraft.client.renderer.entity.model.SpiderModel
+import net.minecraft.client.renderer.model.ModelRenderer
+import net.minecraft.client.renderer.texture.OverlayTexture
 
 @Sided(Side.CLIENT)
-class LayerSpiderlingEyes(spiderlingRenderer: RenderEntityMobSpiderling, private val headRenderer: RendererModel) : LayerRenderer<EntityMobSpiderling, SpiderModel<EntityMobSpiderling>>(spiderlingRenderer){
-	private val texture = Resource.Custom("textures/entity/spiderling_eyes.png")
+class LayerSpiderlingEyes(spiderlingRenderer: RenderEntityMobSpiderling, private val headRenderer: ModelRenderer) : AbstractEyesLayer<EntityMobSpiderling, SpiderModel<EntityMobSpiderling>>(spiderlingRenderer){
+	private val renderType = RenderType.getEyes(Resource.Custom("textures/entity/spiderling_eyes.png"))
 	
-	override fun render(entity: EntityMobSpiderling, limbSwing: Float, limbSwingAmount: Float, partialTicks: Float, ageInTicks: Float, netHeadYaw: Float, headPitch: Float, scale: Float){
+	override fun render(matrix: MatrixStack, buffer: IRenderTypeBuffer, combinedLight: Int, entity: EntityMobSpiderling, limbSwing: Float, limbSwingAmount: Float, partialTicks: Float, age: Float, headYaw: Float, headPitch: Float){
 		if (entity.isSleeping){
 			return
 		}
 		
-		bindTexture(texture)
-		
-		GL.disableAlpha()
-		GL.enableBlend()
-		GL.blendFunc(SF_ONE, DF_ONE)
-		GL.depthMask(!entity.isInvisible)
-		
-		GL.color(1F, 1F, 1F, 1F)
-		GL.setLightmapCoords(61680F, 0F)
-		MC.gameRenderer.setupFogColor(true)
+		val builder = buffer.getBuffer(getRenderType())
 		
 		if (headPitch == 0F){
-			GL.pushMatrix()
-			GL.scale(1.001, 1.001, 1.001) // hack around z-fighting
-			headRenderer.render(scale)
-			GL.popMatrix()
+			matrix.push()
+			matrix.scale(1.001F) // hack around z-fighting
+			headRenderer.render(matrix, builder, 15728640, OverlayTexture.NO_OVERLAY, 1F, 1F, 1F, 1F)
+			matrix.pop()
 		}
 		else{
-			headRenderer.render(scale)
+			headRenderer.render(matrix, builder, 15728640, OverlayTexture.NO_OVERLAY, 1F, 1F, 1F, 1F)
 		}
-		
-		MC.gameRenderer.setupFogColor(false)
-		func_215334_a(entity) // RENAME resets lightmap
-		
-		GL.depthMask(true)
-		GL.disableBlend()
-		GL.enableAlpha()
 	}
 	
-	override fun shouldCombineTextures(): Boolean{
-		return false
+	override fun getRenderType(): RenderType{
+		return renderType
 	}
 }

@@ -19,6 +19,7 @@ import net.minecraft.util.math.shapes.VoxelShape
 import net.minecraft.util.math.shapes.VoxelShapes
 import net.minecraft.world.IBlockReader
 import net.minecraft.world.World
+import net.minecraft.world.server.ServerWorld
 import net.minecraftforge.common.MinecraftForge
 import net.minecraftforge.event.entity.player.PlayerEvent.BreakSpeed
 import java.util.Random
@@ -44,7 +45,7 @@ class BlockAncientCobweb(builder: BlockBuilder) : BlockWeb(builder.p){
 		}
 	}
 	
-	override fun tick(state: BlockState, world: World, pos: BlockPos, rand: Random){
+	override fun tick(state: BlockState, world: ServerWorld, pos: BlockPos, rand: Random){
 		pos.breakBlock(world, true)
 	}
 	

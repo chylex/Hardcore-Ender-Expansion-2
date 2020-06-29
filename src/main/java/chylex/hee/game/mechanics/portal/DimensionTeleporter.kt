@@ -127,7 +127,7 @@ sealed class DimensionTeleporter{
 			
 			val target = (entity as? EntityPlayer)
 				?.let { entity.getBedLocation(dimension) }
-				?.let { EntityPlayer.func_213822_a(world, it, entity.isSpawnForced(dimension)).orElse(null) }
+				?.let { EntityPlayer.checkBedValidRespawnPosition(world, it, entity.isSpawnForced(dimension)).orElse(null) }
 			
 			placeAt(entity, target ?: spawnPoint(world), yaw)
 		}

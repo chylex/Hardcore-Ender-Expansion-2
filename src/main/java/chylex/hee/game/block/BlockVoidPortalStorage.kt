@@ -7,6 +7,8 @@ import chylex.hee.system.migration.vanilla.EntityPlayer
 import chylex.hee.system.util.getTile
 import net.minecraft.block.BlockState
 import net.minecraft.tileentity.TileEntity
+import net.minecraft.util.ActionResultType
+import net.minecraft.util.ActionResultType.SUCCESS
 import net.minecraft.util.Hand
 import net.minecraft.util.math.AxisAlignedBB
 import net.minecraft.util.math.BlockPos
@@ -27,15 +29,15 @@ class BlockVoidPortalStorage(builder: BlockBuilder, aabb: AxisAlignedBB) : Block
 		BlockAbstractPortal.spawnInnerBlocks(world, pos, ModBlocks.VOID_PORTAL_FRAME, ModBlocks.VOID_PORTAL_INNER, minSize = 1)
 	}
 	
-	override fun onBlockActivated(state: BlockState, world: World, pos: BlockPos, player: EntityPlayer, hand: Hand, hit: BlockRayTraceResult): Boolean{
+	override fun onBlockActivated(state: BlockState, world: World, pos: BlockPos, player: EntityPlayer, hand: Hand, hit: BlockRayTraceResult): ActionResultType{
 		if (world.isRemote){
-			return true
+			return SUCCESS
 		}
 		
 		pos.getTile<TileEntityVoidPortalStorage>(world)?.let {
 			ModContainers.open(player, it, pos)
 		}
 		
-		return true
+		return SUCCESS
 	}
 }

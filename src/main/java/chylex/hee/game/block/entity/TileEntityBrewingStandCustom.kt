@@ -51,7 +51,7 @@ class TileEntityBrewingStandCustom : TileEntityBrewingStand(){
 		const val SLOT_MODIFIER = 4
 		
 		const val TOTAL_SLOTS = 5
-		const val TOTAL_FIELDS = 2 // UPDATE 1.14
+		const val TOTAL_FIELDS = 2 // UPDATE 1.15
 		
 		private val POTION_SLOTS = SLOTS_POTIONS.toList().toIntArray()
 		

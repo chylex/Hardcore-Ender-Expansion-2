@@ -167,7 +167,7 @@ class EntityInfusedTNT : EntityTNTPrimed{
 		noClip = wasNoclip
 		
 		if (noClip && type == SELF){
-			if (!world.areCollisionShapesEmpty(boundingBox)){
+			if (!world.hasNoCollisions(boundingBox)){
 				hasPhasedIntoWall = true
 			}
 			else if (hasPhasedIntoWall && fuse > PHASING_INSTANT_FUSE_TICKS){

@@ -358,7 +358,7 @@ class ItemEnergyOracle(properties: Properties) : ItemAbstractEnergyUser(properti
 			val tag = stack.heeTagOrNull ?: return INACTIVE_INT
 			val player = MC.player
 			
-			if (player == null || !MC.renderManager.isRenderShadow){ // do not render on player model in inventory // UPDATE 1.14 (make sure RenderManager.renderShadow is still only set in InventoryScreen)
+			if (player == null || !MC.renderManager.renderShadow){ // do not render on player model in inventory // UPDATE 1.15 (make sure RenderManager.renderShadow is still only set in InventoryScreen)
 				return INACTIVE_INT
 			}
 			

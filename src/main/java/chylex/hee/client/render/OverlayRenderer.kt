@@ -3,7 +3,6 @@ import chylex.hee.HEE
 import chylex.hee.client.render.util.GL
 import chylex.hee.client.render.util.GL.DF_ONE_MINUS_SRC_ALPHA
 import chylex.hee.client.render.util.GL.DF_ZERO
-import chylex.hee.client.render.util.GL.FOG_EXP
 import chylex.hee.client.render.util.GL.SF_ONE
 import chylex.hee.client.render.util.GL.SF_SRC_ALPHA
 import chylex.hee.client.util.MC
@@ -27,7 +26,7 @@ import chylex.hee.system.util.getTile
 import net.minecraft.client.gui.AbstractGui
 import net.minecraft.client.resources.I18n
 import net.minecraft.util.text.TextFormatting
-import net.minecraftforge.client.event.DrawBlockHighlightEvent
+import net.minecraftforge.client.event.DrawHighlightEvent
 import net.minecraftforge.client.event.EntityViewRenderEvent.FogDensity
 import net.minecraftforge.client.event.RenderGameOverlayEvent
 import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType.HELMET
@@ -49,7 +48,7 @@ object OverlayRenderer{
 		val inside = e.info.blockAtCamera.material
 		
 		if (inside === Materials.ENDER_GOO || inside === Materials.PURIFIED_ENDER_GOO){
-			GL.setFogMode(FOG_EXP)
+			GL.setFogMode(GL.FOG_EXP)
 			e.density = if (inside === Materials.ENDER_GOO) 0.66F else 0.06F
 			e.isCanceled = true // otherwise the event is ignored
 		}
@@ -72,10 +71,10 @@ object OverlayRenderer{
 			GL.blendFunc(SF_SRC_ALPHA, DF_ONE_MINUS_SRC_ALPHA, SF_ONE, DF_ZERO)
 			
 			if (inside === Materials.ENDER_GOO){
-				MC.textureManager.bindTexture(TEX_ENDER_GOO_OVERLAY)
+				GL.bindTexture(TEX_ENDER_GOO_OVERLAY)
 			}
 			else{
-				MC.textureManager.bindTexture(TEX_PURIFIED_ENDER_GOO_OVERLAY)
+				GL.bindTexture(TEX_PURIFIED_ENDER_GOO_OVERLAY)
 			}
 			
 			MC.instance.ingameGUI.blit(0, 0, 0, 0, window.scaledWidth, window.scaledHeight)
@@ -135,7 +134,7 @@ object OverlayRenderer{
 	// Block outlines
 	
 	@SubscribeEvent
-	fun onRenderBlockOutline(e: DrawBlockHighlightEvent.HighlightBlock){
+	fun onRenderBlockOutline(e: DrawHighlightEvent.HighlightBlock){
 		val world = MC.world ?: return
 		
 		val pos = e.target.pos

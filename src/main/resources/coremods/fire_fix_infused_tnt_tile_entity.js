@@ -1,8 +1,8 @@
 function initializeCoreMod(){
     Java.type("net.minecraftforge.coremod.api.ASMAPI").loadFile("coremods/utils/bootstrap.js");
 
-    var tryCatchFireName = "tryCatchFire"
-    var tryCatchFireDesc = "(Lnet/minecraft/world/World;Lnet/minecraft/util/math/BlockPos;ILjava/util/Random;ILnet/minecraft/util/Direction;)V"
+    var tryCatchFireName = "tryCatchFire";
+    var tryCatchFireDesc = "(Lnet/minecraft/world/World;Lnet/minecraft/util/math/BlockPos;ILjava/util/Random;ILnet/minecraft/util/Direction;)V";
 
     return {
         "HEE_FireFixInfusedTNTTileEntity": methodTransformer("net.minecraft.block.FireBlock", tryCatchFireName, tryCatchFireDesc, function(method, instructions){

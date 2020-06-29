@@ -93,7 +93,7 @@ abstract class EntityMobAbstractEnderman(type: EntityType<out EntityMobAbstractE
 	}
 	
 	open fun canTeleportTo(aabb: AxisAlignedBB): Boolean{
-		return world.isCollisionBoxesEmpty(null, aabb, emptySet()) && !world.containsAnyLiquid(aabb)
+		return world.hasNoCollisions(null, aabb, emptySet()) && !world.containsAnyLiquid(aabb)
 	}
 	
 	override fun teleportRandomly(): Boolean{

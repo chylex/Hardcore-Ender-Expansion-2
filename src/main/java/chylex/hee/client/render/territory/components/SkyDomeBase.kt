@@ -5,11 +5,11 @@ import chylex.hee.client.render.util.GL.DF_ONE_MINUS_SRC_ALPHA
 import chylex.hee.client.render.util.GL.SF_SRC_ALPHA
 import chylex.hee.client.render.util.TESSELLATOR
 import chylex.hee.client.render.util.draw
-import chylex.hee.client.util.MC
 import chylex.hee.system.migration.forge.Side
 import chylex.hee.system.migration.forge.Sided
 import chylex.hee.system.util.offsetTowards
 import chylex.hee.system.util.square
+import com.mojang.blaze3d.matrix.MatrixStack
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats
 import net.minecraft.client.world.ClientWorld
 import org.lwjgl.opengl.GL11.GL_FLAT
@@ -79,7 +79,9 @@ abstract class SkyDomeBase : AbstractEnvironmentRenderer(){
 	protected open val alpha2 = DEFAULT_ALPHA
 	
 	@Sided(Side.CLIENT)
-	override fun render(world: ClientWorld, partialTicks: Float){
+	override fun render(world: ClientWorld, matrix: MatrixStack, partialTicks: Float){
+		val mat = matrix.last.matrix
+		
 		val color1 = color1
 		val color2 = color2
 		val alpha1 = alpha1 * currentSkyAlpha
@@ -101,7 +103,7 @@ abstract class SkyDomeBase : AbstractEnvironmentRenderer(){
 		GL.shadeModel(GL_SMOOTH)
 		
 		GL.enableTexture()
-		MC.textureManager.bindTexture(texture)
+		GL.bindTexture(texture)
 		
 		TESSELLATOR.draw(GL_QUADS, DefaultVertexFormats.POSITION_TEX_COLOR){
 			for((x, y, z, c, u, v) in Skybox.VERTICES.value){
@@ -110,8 +112,8 @@ abstract class SkyDomeBase : AbstractEnvironmentRenderer(){
 				val b = offsetTowards(b2, b1, c)
 				val a = offsetTowards(alpha2, alpha1, c)
 				
-				pos(x.toDouble(), y.toDouble(), z.toDouble())
-				tex(u.toDouble(), v.toDouble())
+				pos(mat, x, y, z)
+				tex(u.toFloat(), v.toFloat())
 				color(r, g, b, a)
 				endVertex()
 			}

@@ -25,6 +25,9 @@ import net.minecraft.item.BlockItemUseContext
 import net.minecraft.item.ItemStack
 import net.minecraft.state.StateContainer.Builder
 import net.minecraft.tileentity.TileEntity
+import net.minecraft.util.ActionResultType
+import net.minecraft.util.ActionResultType.PASS
+import net.minecraft.util.ActionResultType.SUCCESS
 import net.minecraft.util.Direction
 import net.minecraft.util.Hand
 import net.minecraft.util.Mirror
@@ -123,7 +126,7 @@ class BlockIgneousPlate(builder: BlockBuilder) : BlockSimple(builder){
 		}
 	}
 	
-	override fun onBlockActivated(state: BlockState, world: World, pos: BlockPos, player: EntityPlayer, hand: Hand, hit: BlockRayTraceResult): Boolean{
+	override fun onBlockActivated(state: BlockState, world: World, pos: BlockPos, player: EntityPlayer, hand: Hand, hit: BlockRayTraceResult): ActionResultType{
 		val heldItem = player.getHeldItem(hand)
 		
 		if (heldItem.item === Items.WATER_BUCKET){
@@ -131,10 +134,10 @@ class BlockIgneousPlate(builder: BlockBuilder) : BlockSimple(builder){
 				player.setHeldItem(hand, ItemStack(Items.BUCKET))
 			}
 			
-			return true
+			return SUCCESS
 		}
 		
-		return false
+		return PASS
 	}
 	
 	fun tryCoolPlate(world: World, pos: BlockPos, state: BlockState): Boolean{
@@ -158,5 +161,4 @@ class BlockIgneousPlate(builder: BlockBuilder) : BlockSimple(builder){
 	}
 	
 	override fun getRenderType(state: BlockState) = ENTITYBLOCK_ANIMATED
-	override fun hasCustomBreakingProgress(state: BlockState) = true
 }

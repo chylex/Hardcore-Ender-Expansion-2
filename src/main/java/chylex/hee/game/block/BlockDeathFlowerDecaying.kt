@@ -14,6 +14,7 @@ import net.minecraft.util.math.RayTraceResult
 import net.minecraft.world.IBlockReader
 import net.minecraft.world.IWorldReader
 import net.minecraft.world.World
+import net.minecraft.world.server.ServerWorld
 import net.minecraft.world.storage.loot.LootContext
 import java.util.Random
 
@@ -56,7 +57,7 @@ class BlockDeathFlowerDecaying(builder: BlockBuilder) : BlockEndPlant(builder), 
 		implOnBlockAdded(world, pos)
 	}
 	
-	override fun tick(state: BlockState, world: World, pos: BlockPos, rand: Random){
+	override fun tick(state: BlockState, world: ServerWorld, pos: BlockPos, rand: Random){
 		super.tick(state, world, pos, rand)
 		implUpdateTick(world, pos, state, rand)
 	}

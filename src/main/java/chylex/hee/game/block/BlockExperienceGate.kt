@@ -15,6 +15,7 @@ import chylex.hee.system.util.allInCenteredBox
 import chylex.hee.system.util.getBlock
 import chylex.hee.system.util.getTile
 import chylex.hee.system.util.offsetUntil
+import chylex.hee.system.util.positionY
 import chylex.hee.system.util.setBlock
 import net.minecraft.block.BlockState
 import net.minecraft.entity.Entity
@@ -66,7 +67,7 @@ abstract class BlockExperienceGate(builder: BlockBuilder) : BlockSimple(builder)
 		}
 		
 		if (world.isRemote && entity is EntityItem){
-			entity.posY = pos.y + 1.0 - (2.0 * MagicValues.BLOCK_COLLISION_SHRINK) // works around shit physics where items spontaneously sink into blocks
+			entity.positionY = pos.y + 1.0 - (2.0 * MagicValues.BLOCK_COLLISION_SHRINK) // works around shit physics where items spontaneously sink into blocks
 		}
 	}
 }

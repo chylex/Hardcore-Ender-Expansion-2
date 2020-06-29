@@ -3,11 +3,11 @@ import chylex.hee.game.world.generation.segments.SegmentFull
 import chylex.hee.game.world.structure.IStructureWorld
 import chylex.hee.game.world.util.Size
 import chylex.hee.init.ModBlocks
+import chylex.hee.system.migration.vanilla.MutableBlockPos
 import chylex.hee.system.util.allInBoxMutable
 import com.google.common.collect.Iterables
 import net.minecraft.block.BlockState
 import net.minecraft.util.math.BlockPos
-import net.minecraft.util.math.BlockPos.MutableBlockPos
 import java.util.Random
 
 class ScaffoldedWorld(rand: Random, size: Size) : SegmentedWorld(rand, size, size, SEGMENTER){

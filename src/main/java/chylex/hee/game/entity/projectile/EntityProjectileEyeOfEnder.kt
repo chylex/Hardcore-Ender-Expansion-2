@@ -31,7 +31,7 @@ import chylex.hee.system.util.getState
 import chylex.hee.system.util.heeTag
 import chylex.hee.system.util.lookDirVec
 import chylex.hee.system.util.lookPosVec
-import chylex.hee.system.util.math.LerpedFloat
+import chylex.hee.system.util.math.LerpedDouble
 import chylex.hee.system.util.motionX
 import chylex.hee.system.util.motionZ
 import chylex.hee.system.util.nextInt
@@ -134,13 +134,13 @@ class EntityProjectileEyeOfEnder(type: EntityType<EntityProjectileEyeOfEnder>, w
 	
 	// Instance
 	
-	val renderBob = LerpedFloat(nextRenderBobOffset)
+	val renderBob = LerpedDouble(nextRenderBobOffset)
 	
 	private val posVecWithOffset
 		get() = posVec.addY(0.1 + renderBob.currentValue)
 	
 	private val nextRenderBobOffset
-		get() = 0.35F + (sin(timer * 0.15F) * 0.25F) // 0.35 offset for bounding box
+		get() = 0.35 + (sin(timer * 0.15) * 0.25) // 0.35 offset for bounding box
 	
 	private val targetVecXZ
 		get() = targetPos?.let { Vec3.fromXZ(it.x + 0.5 - posX, it.z + 0.5 - posZ) } ?: Vec3d.ZERO

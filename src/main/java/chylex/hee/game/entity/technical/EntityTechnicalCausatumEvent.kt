@@ -50,7 +50,7 @@ class EntityTechnicalCausatumEvent(type: EntityType<EntityTechnicalCausatumEvent
 	}
 	
 	override fun writeAdditional(nbt: TagCompound) = nbt.heeTag.use {
-		val entry = TYPE_MAPPING[type]
+		val entry = TYPE_MAPPING[this@EntityTechnicalCausatumEvent.type]
 		
 		if (entry != null){
 			putString(TYPE_TAG, entry.first)

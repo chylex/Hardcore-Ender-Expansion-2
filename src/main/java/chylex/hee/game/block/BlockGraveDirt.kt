@@ -103,7 +103,8 @@ open class BlockGraveDirt(builder: BlockBuilder) : BlockSimpleShaped(builder, Ax
 				.withParameter(LootParameters.EXPLOSION_RADIUS, explosion.size)
 				.withParameter(LootParameters.TOOL, ItemStack.EMPTY)
 				.withNullableParameter(LootParameters.BLOCK_ENTITY, null)
-				.let { spawnDrops(state, it) }
+				.let(state::getDrops)
+				.forEach { spawnAsEntity(world, pos, it) }
 		}
 	}
 	

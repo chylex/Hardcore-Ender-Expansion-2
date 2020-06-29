@@ -19,7 +19,9 @@ import net.minecraft.client.renderer.color.IBlockColor
 import net.minecraft.entity.Entity
 import net.minecraft.state.StateContainer.Builder
 import net.minecraft.tileentity.TileEntity
-import net.minecraft.util.BlockRenderLayer.CUTOUT
+import net.minecraft.util.ActionResultType
+import net.minecraft.util.ActionResultType.PASS
+import net.minecraft.util.ActionResultType.SUCCESS
 import net.minecraft.util.Hand
 import net.minecraft.util.math.AxisAlignedBB
 import net.minecraft.util.math.BlockPos
@@ -28,7 +30,7 @@ import net.minecraft.util.math.shapes.ISelectionContext
 import net.minecraft.util.math.shapes.VoxelShape
 import net.minecraft.util.math.shapes.VoxelShapes
 import net.minecraft.world.IBlockReader
-import net.minecraft.world.IEnviromentBlockReader
+import net.minecraft.world.ILightReader
 import net.minecraft.world.IWorld
 import net.minecraft.world.World
 import java.util.UUID
@@ -136,16 +138,16 @@ class BlockTablePedestal(builder: BlockBuilder) : BlockSimpleShaped(builder, COM
 		}
 	}
 	
-	override fun onBlockActivated(state: BlockState, world: World, pos: BlockPos, player: EntityPlayer, hand: Hand, hit: BlockRayTraceResult): Boolean{
+	override fun onBlockActivated(state: BlockState, world: World, pos: BlockPos, player: EntityPlayer, hand: Hand, hit: BlockRayTraceResult): ActionResultType{
 		if (world.isRemote){
-			return true
+			return SUCCESS
 		}
 		
-		val tile = pos.getTile<TileEntityTablePedestal>(world) ?: return true
+		val tile = pos.getTile<TileEntityTablePedestal>(world) ?: return SUCCESS
 		val heldItem = player.getHeldItem(hand)
 		
 		if (heldItem.item === ModItems.TABLE_LINK){
-			return false
+			return PASS
 		}
 		
 		if (heldItem.isEmpty){
@@ -163,7 +165,7 @@ class BlockTablePedestal(builder: BlockBuilder) : BlockSimpleShaped(builder, COM
 			tile.addToInput(heldItem.copyIf { player.isCreative })
 		}
 		
-		return true
+		return SUCCESS
 	}
 	
 	override fun onBlockHarvested(world: World, pos: BlockPos, state: BlockState, player: EntityPlayer){
@@ -204,11 +206,9 @@ class BlockTablePedestal(builder: BlockBuilder) : BlockSimpleShaped(builder, COM
 	
 	// Client side
 	
-	override fun getRenderLayer() = CUTOUT
-	
 	@Sided(Side.CLIENT)
 	object Color : IBlockColor{
-		override fun getColor(state: BlockState, world: IEnviromentBlockReader?, pos: BlockPos?, tintIndex: Int): Int{
+		override fun getColor(state: BlockState, world: ILightReader?, pos: BlockPos?, tintIndex: Int): Int{
 			if (world == null || pos == null){
 				return NO_TINT
 			}

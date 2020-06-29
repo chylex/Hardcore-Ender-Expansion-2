@@ -18,6 +18,7 @@ import net.minecraft.util.math.shapes.ISelectionContext
 import net.minecraft.util.math.shapes.VoxelShape
 import net.minecraft.world.IBlockReader
 import net.minecraft.world.World
+import net.minecraft.world.server.ServerWorld
 import java.util.Random
 
 class BlockWhitebarkSapling(builder: BlockBuilder, private val generator: WhitebarkTreeGenerator<*>) : BlockEndPlant(builder), IGrowable{
@@ -50,7 +51,7 @@ class BlockWhitebarkSapling(builder: BlockBuilder, private val generator: Whiteb
 	
 	// Growth rules
 	
-	override fun tick(state: BlockState, world: World, pos: BlockPos, rand: Random){
+	override fun tick(state: BlockState, world: ServerWorld, pos: BlockPos, rand: Random){
 		super.tick(state, world, pos, rand)
 		
 		if (rand.nextInt(7) == 0){
@@ -66,7 +67,7 @@ class BlockWhitebarkSapling(builder: BlockBuilder, private val generator: Whiteb
 		return rand.nextFloat() < 0.45F
 	}
 	
-	override fun grow(world: World, rand: Random, pos: BlockPos, state: BlockState){
+	override fun grow(world: ServerWorld, rand: Random, pos: BlockPos, state: BlockState){
 		val stage = state[STAGE]
 		
 		if (stage < STAGE.allowedValues.max()!!){

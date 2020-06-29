@@ -29,11 +29,19 @@ import java.util.function.Predicate
 
 var Entity.posVec: Vec3d
 	get() = this.positionVector
-	set(value){
-		this.posX = value.x
-		this.posY = value.y
-		this.posZ = value.z
-	}
+	set(value) = this.setRawPosition(value.x, value.y, value.z)
+
+var Entity.positionX
+	get() = this.posX
+	set(value) = this.setRawPosition(value, posY, posZ)
+
+var Entity.positionY
+	get() = this.posY
+	set(value) = this.setRawPosition(posX, value, posZ)
+
+var Entity.positionZ
+	get() = this.posZ
+	set(value) = this.setRawPosition(posX, posY, value)
 
 var Entity.motionX
 	get() = this.motion.x
@@ -153,7 +161,7 @@ fun AIAttackMelee(entity: EntityCreature, movementSpeed: Double, chaseAfterLosin
 
 fun AITargetAttacker(entity: EntityCreature, callReinforcements: Boolean): HurtByTargetGoal =
 	if (callReinforcements)
-		HurtByTargetGoal(entity).setCallsForHelp(entity::class.java) // UPDATE 1.14 (it seems HurtByTargetGoal.alertOthers is broken and only alerts the last entity)
+		HurtByTargetGoal(entity).setCallsForHelp(entity::class.java) // UPDATE 1.15 (it seems HurtByTargetGoal.alertOthers is broken and only alerts the last entity)
 	else
 		HurtByTargetGoal(entity)
 

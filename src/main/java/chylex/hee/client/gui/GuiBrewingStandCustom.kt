@@ -25,7 +25,7 @@ class GuiBrewingStandCustom(container: ContainerBrewingStand, inventory: PlayerI
 		val y = (height - ySize) / 2
 		
 		GL.color(1F, 1F, 1F, 1F)
-		MC.textureManager.bindTexture(TEX_BACKGROUND)
+		GL.bindTexture(TEX_BACKGROUND)
 		blit(x, y, 0, 0, xSize, ySize)
 		
 		val worldTime = MC.world!!.totalTime

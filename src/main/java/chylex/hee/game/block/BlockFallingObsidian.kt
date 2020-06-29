@@ -8,6 +8,7 @@ import net.minecraft.util.math.BlockPos
 import net.minecraft.world.IWorld
 import net.minecraft.world.IWorldReader
 import net.minecraft.world.World
+import net.minecraft.world.server.ServerWorld
 import java.util.Random
 
 class BlockFallingObsidian(builder: BlockBuilder) : BlockSimple(builder){
@@ -24,7 +25,7 @@ class BlockFallingObsidian(builder: BlockBuilder) : BlockSimple(builder){
 		return super.updatePostPlacement(state, facing, neighborState, world, pos, neighborPos)
 	}
 	
-	override fun tick(state: BlockState, world: World, pos: BlockPos, rand: Random){
+	override fun tick(state: BlockState, world: ServerWorld, pos: BlockPos, rand: Random){
 		if (world.isRemote){
 			return
 		}

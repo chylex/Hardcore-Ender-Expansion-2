@@ -1,6 +1,5 @@
 package chylex.hee.client.gui.base
 import chylex.hee.client.render.util.GL
-import chylex.hee.client.util.MC
 import chylex.hee.system.migration.forge.Side
 import chylex.hee.system.migration.forge.Sided
 import chylex.hee.system.migration.vanilla.ContainerChest
@@ -36,7 +35,7 @@ abstract class GuiBaseChestContainer<T : ContainerChest>(container: T, inventory
 		val heightContainer = 17 + (containerRows * 18)
 		
 		GL.color(1F, 1F, 1F, 1F)
-		MC.textureManager.bindTexture(TEX_BACKGROUND)
+		GL.bindTexture(TEX_BACKGROUND)
 		blit(x, y, 0, 0, xSize, heightContainer)
 		blit(x, y + heightContainer, 0, 126, xSize, 96)
 	}

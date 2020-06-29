@@ -6,6 +6,6 @@ class SunStatic(
 	override val texture: ResourceLocation,
 	override val color: Vec3d = DEFAULT_COLOR,
 	override val alpha: Float = DEFAULT_ALPHA,
-	override val size: Double,
-	override val distance: Double = DEFAULT_DISTANCE
+	override val size: Float,
+	override val distance: Float = DEFAULT_DISTANCE
 ) : SunBase()

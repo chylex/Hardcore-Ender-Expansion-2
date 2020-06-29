@@ -13,11 +13,12 @@ import chylex.hee.system.migration.forge.Sided
 import chylex.hee.system.util.closestTickingTile
 import chylex.hee.system.util.getState
 import chylex.hee.system.util.math.LerpedFloat
+import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher
 import net.minecraft.util.math.BlockPos
 import net.minecraft.world.World
 
 @Sided(Side.CLIENT)
-object RenderTileVoidPortal : RenderTileAbstractPortal<TileEntityPortalInner.Void, IVoidPortalController>(){
+class RenderTileVoidPortal(dispatcher: TileEntityRendererDispatcher) : RenderTileAbstractPortal<TileEntityPortalInner.Void, IVoidPortalController>(dispatcher){
 	private object ActiveReturnController : IVoidPortalController{
 		override val currentInstance = THE_HUB_INSTANCE
 		override val clientAnimationProgress = LerpedFloat(1F)

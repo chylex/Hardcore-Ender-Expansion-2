@@ -9,7 +9,6 @@ import net.minecraft.block.material.MaterialColor
 import net.minecraft.entity.EntityType
 import net.minecraft.item.ItemStack
 import net.minecraft.tileentity.TileEntity
-import net.minecraft.util.BlockRenderLayer.CUTOUT
 import net.minecraft.util.math.BlockPos
 import net.minecraft.world.IBlockReader
 import net.minecraft.world.World
@@ -31,6 +30,4 @@ class BlockWhitebarkLeaves(builder: BlockBuilder, private val color: MaterialCol
 	override fun getMaterialColor(state: BlockState, world: IBlockReader, pos: BlockPos): MaterialColor{
 		return color
 	}
-	
-	override fun getRenderLayer() = CUTOUT
 }

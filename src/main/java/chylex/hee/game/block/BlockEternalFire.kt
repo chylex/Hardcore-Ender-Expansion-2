@@ -36,6 +36,7 @@ import net.minecraft.util.math.Vec3d
 import net.minecraft.world.GameRules.DO_FIRE_TICK
 import net.minecraft.world.IWorldReader
 import net.minecraft.world.World
+import net.minecraft.world.server.ServerWorld
 import net.minecraftforge.common.MinecraftForge
 import net.minecraftforge.event.entity.player.PlayerInteractEvent
 import java.util.Random
@@ -54,7 +55,7 @@ class BlockEternalFire(builder: BlockBuilder) : BlockFire(builder.p){
 	override fun tickRate(world: IWorldReader) = super.tickRate(world) * 2
 	override fun canDie(world: World, pos: BlockPos) = false
 	
-	override fun tick(state: BlockState, world: World, pos: BlockPos, rand: Random){
+	override fun tick(state: BlockState, world: ServerWorld, pos: BlockPos, rand: Random){
 		if (!world.gameRules.getBoolean(DO_FIRE_TICK) || !world.isAreaLoaded(pos, 2)){
 			return
 		}

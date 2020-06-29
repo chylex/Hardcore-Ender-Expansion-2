@@ -16,7 +16,6 @@ import net.minecraft.block.Block
 import net.minecraft.block.BlockState
 import net.minecraft.item.BlockItemUseContext
 import net.minecraft.state.StateContainer.Builder
-import net.minecraft.util.BlockRenderLayer.CUTOUT
 import net.minecraft.util.Direction
 import net.minecraft.util.Mirror
 import net.minecraft.util.Rotation
@@ -95,6 +94,4 @@ class BlockGloomtorch(builder: BlockBuilder) : BlockDirectional(builder.p){
 	override fun getShape(state: BlockState, source: IBlockReader, pos: BlockPos, context: ISelectionContext): VoxelShape{
 		return BOUNDING_BOX[state[FACING]] ?: BOUNDING_BOX.getValue(UP)
 	}
-	
-	override fun getRenderLayer() = CUTOUT
 }

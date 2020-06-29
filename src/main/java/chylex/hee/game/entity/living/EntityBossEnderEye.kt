@@ -65,8 +65,8 @@ import net.minecraft.util.text.ITextComponent
 import net.minecraft.world.BossInfo
 import net.minecraft.world.DifficultyInstance
 import net.minecraft.world.IWorld
-import net.minecraft.world.ServerBossInfo
 import net.minecraft.world.World
+import net.minecraft.world.server.ServerBossInfo
 import net.minecraftforge.common.ForgeHooks
 import net.minecraftforge.fml.network.NetworkHooks
 import kotlin.math.abs

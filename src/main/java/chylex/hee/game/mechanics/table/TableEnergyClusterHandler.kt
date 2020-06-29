@@ -20,8 +20,6 @@ import net.minecraft.util.math.shapes.ISelectionContext
 import net.minecraft.util.math.shapes.VoxelShape
 import net.minecraft.util.math.shapes.VoxelShapes
 import net.minecraft.world.IBlockReader
-import net.minecraft.world.server.ServerWorld
-import net.minecraftforge.common.util.FakePlayerFactory
 import net.minecraftforge.common.util.INBTSerializable
 
 class TableEnergyClusterHandler(private val table: TileEntityBaseTable, maxDistance: Int) : INBTSerializable<TagCompound>{
@@ -47,7 +45,7 @@ class TableEnergyClusterHandler(private val table: TileEntityBaseTable, maxDista
 	
 	// Behavior
 	
-	private inner class RayTraceObstacles(startVec: Vec3d, endVec: Vec3d) : RayTraceContext(startVec, endVec, BlockMode.COLLIDER, FluidMode.NONE, FakePlayerFactory.getMinecraft(table.wrld as ServerWorld) /* UPDATE 1.14 (entity cannot be null) */){
+	private inner class RayTraceObstacles(startVec: Vec3d, endVec: Vec3d) : RayTraceContext(startVec, endVec, BlockMode.COLLIDER, FluidMode.NONE, null){
 		override fun getBlockShape(state: BlockState, world: IBlockReader, pos: BlockPos): VoxelShape{
 			val block = state.block
 			

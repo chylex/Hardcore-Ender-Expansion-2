@@ -31,6 +31,7 @@ import net.minecraft.util.math.RayTraceResult
 import net.minecraft.world.Explosion
 import net.minecraft.world.IBlockReader
 import net.minecraft.world.World
+import net.minecraft.world.server.ServerWorld
 import net.minecraft.world.storage.loot.LootContext
 import net.minecraft.world.storage.loot.LootParameters
 import java.util.Random
@@ -90,7 +91,7 @@ class BlockInfusedTNT : BlockTNT(Properties.from(Blocks.TNT)), IBlockFireCatchOv
 		world.pendingBlockTicks.scheduleTick(pos, this, 1)
 	}
 	
-	override fun tick(state: BlockState, world: World, pos: BlockPos, rand: Random){
+	override fun tick(state: BlockState, world: ServerWorld, pos: BlockPos, rand: Random){
 		super.onBlockAdded(state, world, pos, Blocks.AIR.defaultState, false)
 	}
 	
@@ -120,7 +121,7 @@ class BlockInfusedTNT : BlockTNT(Properties.from(Blocks.TNT)), IBlockFireCatchOv
 			return
 		}
 		
-		// UPDATE check if FireBlock still removes the TNT block and tile entity before calling this
+		// UPDATE 1.15 check if FireBlock still removes the TNT block and tile entity before calling this
 		igniteTNT(world, pos, state, igniter, ignoreTrap = false)
 	}
 	

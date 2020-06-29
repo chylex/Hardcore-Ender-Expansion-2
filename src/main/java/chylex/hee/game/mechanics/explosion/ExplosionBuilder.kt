@@ -224,14 +224,14 @@ class ExplosionBuilder{
 							else
 								null
 							
-							val context = LootContext.Builder(world)
+							LootContext.Builder(world)
 								.withRandom(world.rand)
 								.withParameter(LootParameters.POSITION, pos)
 								.withParameter(LootParameters.TOOL, miningTool)
 								.withParameter(LootParameters.EXPLOSION_RADIUS, modifiedRadius)
 								.withNullableParameter(LootParameters.BLOCK_ENTITY, tile)
-							
-							Block.spawnDrops(state, context)
+								.let(state::getDrops)
+								.forEach { Block.spawnAsEntity(world, pos, it) }
 						}
 						
 						state.onBlockExploded(world, pos, this)

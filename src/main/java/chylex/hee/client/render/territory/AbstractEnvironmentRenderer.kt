@@ -8,16 +8,17 @@ import chylex.hee.system.migration.forge.Side
 import chylex.hee.system.migration.forge.Sided
 import chylex.hee.system.util.facades.Resource
 import chylex.hee.system.util.remapRange
+import com.mojang.blaze3d.matrix.MatrixStack
 import net.minecraft.client.Minecraft
 import net.minecraft.client.renderer.RenderHelper
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats
 import net.minecraft.client.world.ClientWorld
 import net.minecraft.util.math.Vec3d
-import net.minecraftforge.client.IRenderHandler
+import net.minecraftforge.client.SkyRenderHandler
 import org.lwjgl.opengl.GL11.GL_QUADS
 import kotlin.math.pow
 
-abstract class AbstractEnvironmentRenderer : IRenderHandler{
+abstract class AbstractEnvironmentRenderer : SkyRenderHandler{
 	companion object{
 		val currentSkyAlpha
 			@Sided(Side.CLIENT)
@@ -35,24 +36,26 @@ abstract class AbstractEnvironmentRenderer : IRenderHandler{
 		val DEFAULT_COLOR = Vec3d(1.0, 1.0, 1.0)
 		const val DEFAULT_ALPHA = 1F
 		
-		fun renderPlane(y: Double, size: Double, rescale: Double){
+		fun renderPlane(matrix: MatrixStack, y: Float, size: Float, rescale: Float){
+			val mat = matrix.last.matrix
+			
 			TESSELLATOR.draw(GL_QUADS, DefaultVertexFormats.POSITION_TEX){
-				pos(-size, -y, -size).tex(0.0, 0.0).endVertex()
-				pos(-size, -y,  size).tex(0.0, rescale).endVertex()
-				pos( size, -y,  size).tex(rescale, rescale).endVertex()
-				pos( size, -y, -size).tex(rescale, 0.0).endVertex()
+				pos(mat, -size, -y, -size).tex(0F, 0F).endVertex()
+				pos(mat, -size, -y,  size).tex(0F, rescale).endVertex()
+				pos(mat,  size, -y,  size).tex(rescale, rescale).endVertex()
+				pos(mat,  size, -y, -size).tex(rescale, 0F).endVertex()
 			}
 		}
 	}
 	
 	@Sided(Side.CLIENT)
-	final override fun render(ticks: Int, partialTicks: Float, world: ClientWorld, mc: Minecraft){
+	final override fun render(ticks: Int, partialTicks: Float, matrix: MatrixStack, world: ClientWorld, mc: Minecraft){
 		GL.depthMask(false)
 		RenderHelper.disableStandardItemLighting()
-		render(world, partialTicks)
+		render(world, matrix, partialTicks)
 		GL.depthMask(true)
 	}
 	
 	@Sided(Side.CLIENT)
-	abstract fun render(world: ClientWorld, partialTicks: Float)
+	abstract fun render(world: ClientWorld, matrix: MatrixStack, partialTicks: Float)
 }

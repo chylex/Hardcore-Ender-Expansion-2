@@ -5,7 +5,6 @@ import chylex.hee.client.render.territory.lightmaps.ILightmap
 import chylex.hee.client.render.territory.lightmaps.VanillaEndLightmap
 import chylex.hee.game.world.WorldProviderEndCustom.Companion.DEFAULT_CELESTIAL_ANGLE
 import chylex.hee.game.world.WorldProviderEndCustom.Companion.DEFAULT_SKY_LIGHT
-import chylex.hee.game.world.WorldProviderEndCustom.Companion.DEFAULT_SUN_BRIGHTNESS
 import chylex.hee.system.migration.forge.Side
 import chylex.hee.system.migration.forge.Sided
 import chylex.hee.system.migration.vanilla.EntityPlayer
@@ -17,7 +16,7 @@ abstract class TerritoryEnvironment{
 		val VANILLA = SkyCubeStatic(
 			texture = Resource.Vanilla("textures/environment/end_sky.png"),
 			color = (40.0 / 255.0).let { Vec3d(it, it, it) },
-			distance = 100.0
+			distance = 100F
 		)
 	}
 	
@@ -26,9 +25,6 @@ abstract class TerritoryEnvironment{
 	
 	open val celestialAngle
 		get() = DEFAULT_CELESTIAL_ANGLE
-	
-	open val sunBrightness
-		get() = DEFAULT_SUN_BRIGHTNESS
 	
 	open val skyLight
 		get() = DEFAULT_SKY_LIGHT // TODO use custom chunk for custom skylight levels & check where skylight matters (such as mob spawning)

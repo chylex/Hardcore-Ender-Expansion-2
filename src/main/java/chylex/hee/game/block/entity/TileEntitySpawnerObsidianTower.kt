@@ -164,7 +164,7 @@ class TileEntitySpawnerObsidianTower(type: TileEntityType<TileEntitySpawnerObsid
 			return
 		}
 		
-		val spawnedEndermen = getEntitiesInSpawnArea<EntityMobEnderman>(searchArea).count()
+		val spawnedEndermen = getEntitiesInSpawnArea<EntityMobEnderman>(searchArea).size
 		val maxEndermen = level.mobLimitInSpawnArea
 		
 		if (spawnedEndermen >= maxEndermen){

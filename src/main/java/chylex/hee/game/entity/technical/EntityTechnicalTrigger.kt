@@ -92,14 +92,14 @@ class EntityTechnicalTrigger(type: EntityType<EntityTechnicalTrigger>, world: Wo
 	}
 	
 	override fun writeAdditional(nbt: TagCompound) = nbt.heeTag.use {
-		putEnum(TYPE_TAG, type)
+		putEnum(TYPE_TAG, this@EntityTechnicalTrigger.type)
 		put(DATA_TAG, handler.serializeNBT())
 		
 		putShort(TIMER_TAG, timer.toShort())
 	}
 	
 	override fun readAdditional(nbt: TagCompound) = nbt.heeTag.use {
-		type = getEnum<Types>(TYPE_TAG) ?: INVALID
+		this@EntityTechnicalTrigger.type = getEnum<Types>(TYPE_TAG) ?: INVALID
 		handler.deserializeNBT(getCompound(DATA_TAG))
 		
 		timer = getShort(TIMER_TAG).toInt()

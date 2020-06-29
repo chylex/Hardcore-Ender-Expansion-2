@@ -29,6 +29,7 @@ import net.minecraft.util.math.shapes.VoxelShape
 import net.minecraft.util.math.shapes.VoxelShapes
 import net.minecraft.world.IBlockReader
 import net.minecraft.world.World
+import net.minecraft.world.server.ServerWorld
 import java.util.Random
 
 class BlockDustyStoneUnstable(builder: BlockBuilder) : BlockDustyStone(builder){
@@ -36,7 +37,7 @@ class BlockDustyStoneUnstable(builder: BlockBuilder) : BlockDustyStone(builder){
 		return player.getHeldItem(MAIN_HAND).let { EnchantmentHelper.getEnchantmentLevel(Enchantments.SILK_TOUCH, it) == 0 || isPickaxeOrShovel(it) }
 	}
 	
-	override fun tick(state: BlockState, world: World, pos: BlockPos, rand: Random){
+	override fun tick(state: BlockState, world: ServerWorld, pos: BlockPos, rand: Random){
 		// TODO fx
 		
 		if (state.block === ModBlocks.DUSTY_STONE_DAMAGED){

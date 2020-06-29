@@ -7,6 +7,8 @@ import chylex.hee.system.migration.vanilla.EntityPlayer
 import chylex.hee.system.util.Vec3
 import chylex.hee.system.util.lookPosVec
 import chylex.hee.system.util.subtractY
+import net.minecraft.client.renderer.model.IBakedModel
+import net.minecraft.item.ItemStack
 import net.minecraft.util.Hand
 import net.minecraft.util.HandSide.RIGHT
 import net.minecraft.util.math.MathHelper
@@ -15,6 +17,11 @@ import kotlin.math.abs
 import kotlin.math.pow
 
 object ModelHelper{
+	@Sided(Side.CLIENT)
+	fun getItemModel(stack: ItemStack): IBakedModel{
+		return MC.itemRenderer.getItemModelWithOverrides(stack, MC.world, null)
+	}
+	
 	@Sided(Side.CLIENT)
 	fun getHandPosition(player: EntityPlayer, hand: Hand): Vec3d{
 		val yawOffsetMp = (if (player.primaryHand == RIGHT) 1 else -1) * (if (hand == MAIN_HAND) 1 else -1)

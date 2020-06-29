@@ -38,48 +38,48 @@ object EnergyShrineBanners{
 		val fadeColor = colors.fade
 		
 		val patterns = BannerPattern.Builder().apply {
-			func_222477_a(STRIPE_CENTER, BLACK)
-			func_222477_a(BRICKS, baseColor)
+			setPatternWithColor(STRIPE_CENTER, BLACK)
+			setPatternWithColor(BRICKS, baseColor)
 			
 			// primary shapes
 			
 			when(rand.nextInt(10)){
-				in 0..3 -> func_222477_a(SQUARE_TOP_LEFT, baseColor)
-				in 4..7 -> func_222477_a(SQUARE_TOP_RIGHT, baseColor)
+				in 0..3 -> setPatternWithColor(SQUARE_TOP_LEFT, baseColor)
+				in 4..7 -> setPatternWithColor(SQUARE_TOP_RIGHT, baseColor)
 				// 8..9
 			}
 			
 			when(rand.nextInt(8)){
-				in 0..2 -> func_222477_a(SQUARE_BOTTOM_LEFT, baseColor)
-				in 3..5 -> func_222477_a(SQUARE_BOTTOM_RIGHT, baseColor)
+				in 0..2 -> setPatternWithColor(SQUARE_BOTTOM_LEFT, baseColor)
+				in 3..5 -> setPatternWithColor(SQUARE_BOTTOM_RIGHT, baseColor)
 				// 6..7
 			}
 			
 			if (rand.nextInt(3) != 0){
-				func_222477_a(STRIPE_MIDDLE, baseColor)
+				setPatternWithColor(STRIPE_MIDDLE, baseColor)
 			}
 			
 			if (rand.nextInt(3) == 0){
-				func_222477_a(BORDER, baseColor)
+				setPatternWithColor(BORDER, baseColor)
 			}
 			
 			// special shapes
 			
 			if (rand.nextInt(6) == 0){
-				func_222477_a(SKULL, baseColor)
+				setPatternWithColor(SKULL, baseColor)
 			}
 			
 			if (rand.nextInt(5) == 0){
-				func_222477_a(MOJANG, baseColor)
+				setPatternWithColor(MOJANG, baseColor)
 			}
 			
 			if (rand.nextInt(4) == 0){
-				func_222477_a(FLOWER, baseColor)
+				setPatternWithColor(FLOWER, baseColor)
 			}
 			
 			// fade gradient
 			
-			func_222477_a(GRADIENT_UP, fadeColor)
+			setPatternWithColor(GRADIENT_UP, fadeColor)
 		}
 		
 		return baseColor to TagCompound().apply {

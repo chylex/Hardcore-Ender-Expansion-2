@@ -279,12 +279,12 @@ class NBTPrimitiveList(tagList: TagList = TagList()) : NBTList<NBTPrimitive>(tag
 	val allDoubles
 		get() = this.map(NBTPrimitive::getDouble)
 	
-	fun append(value: Byte)   = tagList.add(TagByte(value))
-	fun append(value: Short)  = tagList.add(TagShort(value))
-	fun append(value: Int)    = tagList.add(TagInt(value))
-	fun append(value: Long)   = tagList.add(TagLong(value))
-	fun append(value: Float)  = tagList.add(TagFloat(value))
-	fun append(value: Double) = tagList.add(TagDouble(value))
+	fun append(value: Byte)   = tagList.add(TagByte.valueOf(value))
+	fun append(value: Short)  = tagList.add(TagShort.valueOf(value))
+	fun append(value: Int)    = tagList.add(TagInt.valueOf(value))
+	fun append(value: Long)   = tagList.add(TagLong.valueOf(value))
+	fun append(value: Float)  = tagList.add(TagFloat.valueOf(value))
+	fun append(value: Double) = tagList.add(TagDouble.valueOf(value))
 	
 	override fun convert(element: NBTPrimitive) = element
 	
@@ -298,7 +298,7 @@ class NBTPrimitiveList(tagList: TagList = TagList()) : NBTList<NBTPrimitive>(tag
 class NBTObjectList<T : Any>(tagList: TagList = TagList()) : NBTList<T>(tagList){
 	override fun convert(element: T) = when(element){
 		is TagCompound -> element
-		is String      -> TagString(element)
+		is String      -> TagString.valueOf(element)
 		is ByteArray   -> TagByteArray(element)
 		is IntArray    -> TagIntArray(element)
 		is LongArray   -> TagLongArray(element)
@@ -352,7 +352,7 @@ class NBTEnumList<T : Enum<T>>(private val cls: Class<T>, tagList: TagList) : NB
 	}
 	
 	override fun convert(element: T): NBTBase{
-		return TagString(element.name.toLowerCase(Locale.ROOT))
+		return TagString.valueOf(element.name.toLowerCase(Locale.ROOT))
 	}
 	
 	override fun get(index: Int): T{

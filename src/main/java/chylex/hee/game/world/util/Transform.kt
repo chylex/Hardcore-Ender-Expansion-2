@@ -61,8 +61,8 @@ data class Transform(val rotation: Rotation, val mirror: Boolean){
 		
 		if (mirror){
 			when(state.block){
-				is BlockStairs -> return unfuckStairMirror(transformed) // UPDATE 1.14 (check if stairs still need unfucking)
-				is BlockChest -> return unfuckChestMirror(transformed) // UPDATE 1.14 (check if chests still need unfucking)
+				is BlockStairs -> return unfuckStairMirror(transformed) // UPDATE 1.15 (check if stairs still need unfucking)
+				is BlockChest -> return unfuckChestMirror(transformed) // UPDATE 1.15 (check if chests still need unfucking)
 			}
 		}
 		

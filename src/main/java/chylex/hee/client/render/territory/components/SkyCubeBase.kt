@@ -5,16 +5,19 @@ import chylex.hee.client.render.util.GL.DF_ONE_MINUS_SRC_ALPHA
 import chylex.hee.client.render.util.GL.DF_ZERO
 import chylex.hee.client.render.util.GL.SF_ONE
 import chylex.hee.client.render.util.GL.SF_SRC_ALPHA
+import chylex.hee.client.render.util.rotateX
+import chylex.hee.client.render.util.rotateZ
 import chylex.hee.client.util.MC
 import chylex.hee.system.migration.forge.Side
 import chylex.hee.system.migration.forge.Sided
+import com.mojang.blaze3d.matrix.MatrixStack
 import net.minecraft.client.world.ClientWorld
 import org.lwjgl.opengl.GL11.GL_GREATER
 
 abstract class SkyCubeBase : AbstractEnvironmentRenderer(){
 	protected companion object{
-		const val DEFAULT_RESCALE = 16.0
-		const val DEFAULT_DISTANCE = 125.0
+		const val DEFAULT_RESCALE = 16F
+		const val DEFAULT_DISTANCE = 125F
 	}
 	
 	protected open val texture = DEFAULT_TEXTURE
@@ -24,8 +27,8 @@ abstract class SkyCubeBase : AbstractEnvironmentRenderer(){
 	protected open val distance = DEFAULT_DISTANCE
 	
 	@Sided(Side.CLIENT)
-	override fun render(world: ClientWorld, partialTicks: Float){
-		val distance = distance.coerceAtMost(18.5 * MC.settings.renderDistanceChunks)
+	override fun render(world: ClientWorld, matrix: MatrixStack, partialTicks: Float){
+		val distance = distance.coerceAtMost(18.5F * MC.settings.renderDistanceChunks)
 		val rescale = rescale
 		
 		GL.enableBlend()
@@ -35,21 +38,21 @@ abstract class SkyCubeBase : AbstractEnvironmentRenderer(){
 		GL.disableFog()
 		
 		GL.color(color, alpha * currentSkyAlpha)
-		MC.textureManager.bindTexture(texture)
+		GL.bindTexture(texture)
 		
 		for(side in 0..5){
-			GL.pushMatrix()
+			matrix.push()
 			
 			when(side){
-				1 -> GL.rotate( 90F, 1F, 0F, 0F)
-				2 -> GL.rotate(-90F, 1F, 0F, 0F)
-				3 -> GL.rotate(180F, 1F, 0F, 0F)
-				4 -> GL.rotate( 90F, 0F, 0F, 1F)
-				5 -> GL.rotate(-90F, 0F, 0F, 1F)
+				1 -> matrix.rotateX( 90F)
+				2 -> matrix.rotateX(-90F)
+				3 -> matrix.rotateX(180F)
+				4 -> matrix.rotateZ( 90F)
+				5 -> matrix.rotateZ(-90F)
 			}
 			
-			renderPlane(distance, distance, rescale)
-			GL.popMatrix()
+			renderPlane(matrix, distance, distance, rescale)
+			matrix.pop()
 		}
 		
 		GL.enableFog()

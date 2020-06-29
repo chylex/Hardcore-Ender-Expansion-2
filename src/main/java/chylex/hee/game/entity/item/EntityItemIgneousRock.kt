@@ -250,7 +250,7 @@ class EntityItemIgneousRock : EntityItemNoBob{
 	}
 	
 	override fun playSound(sound: SoundEvent, volume: Float, pitch: Float){
-		if (sound === Sounds.ENTITY_GENERIC_BURN && volume == 0.4F && pitch >= 2.0F){ // UPDATE 1.14 (check if this still applies, or find a better way)
+		if (sound === Sounds.ENTITY_GENERIC_BURN && volume == 0.4F && pitch >= 2.0F){ // UPDATE 1.15 (check if this still applies, or find a better way)
 			motion = prevMotion // this disables vanilla lava handling, but also breaks hasNoGravity
 		}
 		else{
