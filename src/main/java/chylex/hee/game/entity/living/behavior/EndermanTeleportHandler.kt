@@ -101,6 +101,9 @@ class EndermanTeleportHandler(private val enderman: EntityMobAbstractEnderman) :
 		}
 	}
 	
+	val preventDespawn
+		get() = tpDelayTicks > 0
+	
 	private val world = enderman.world
 	private val rand = enderman.rng
 	

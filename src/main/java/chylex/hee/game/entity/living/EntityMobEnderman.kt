@@ -509,10 +509,14 @@ class EntityMobEnderman(type: EntityType<EntityMobEnderman>, world: World) : Ent
 		super.onDeath(cause)
 	}
 	
-	// Spawning
+	// Spawning & despawning
 	
 	override fun getBlockPathWeight(pos: BlockPos): Float{
 		return 1F
+	}
+	
+	override fun canDespawn(distanceToClosestPlayerSq: Double): Boolean{
+		return super.canDespawn(distanceToClosestPlayerSq) && !teleportHandler.preventDespawn
 	}
 	
 	// Properties
