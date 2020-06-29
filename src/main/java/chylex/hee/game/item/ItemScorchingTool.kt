@@ -13,7 +13,6 @@ import chylex.hee.game.mechanics.scorching.ScorchingHelper.FX_ENTITY_HIT
 import chylex.hee.network.client.PacketClientFX
 import chylex.hee.proxy.Environment
 import chylex.hee.system.migration.Hand.MAIN_HAND
-import chylex.hee.system.migration.forge.EventResult
 import chylex.hee.system.migration.vanilla.EntityLivingBase
 import chylex.hee.system.migration.vanilla.ItemTool
 import chylex.hee.system.util.doDamage
@@ -25,7 +24,6 @@ import net.minecraft.util.math.BlockPos
 import net.minecraft.world.World
 import net.minecraft.world.dimension.DimensionType
 import net.minecraftforge.common.ToolType
-import net.minecraftforge.event.entity.player.CriticalHitEvent
 
 class ItemScorchingTool(
 	properties: Properties,
@@ -84,10 +82,6 @@ class ItemScorchingTool(
 	}
 	
 	// Hitting behavior
-	
-	override fun onHit(e: CriticalHitEvent){
-		e.result = EventResult.DENY
-	}
 	
 	override fun hitEntity(stack: ItemStack, target: EntityLivingBase, attacker: EntityLivingBase): Boolean{
 		target.setFire(1)

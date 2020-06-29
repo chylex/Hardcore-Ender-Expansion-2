@@ -13,6 +13,7 @@ import chylex.hee.init.ModItems
 import chylex.hee.system.migration.Facing.UP
 import chylex.hee.system.migration.Hand.MAIN_HAND
 import chylex.hee.system.migration.forge.EventPriority
+import chylex.hee.system.migration.forge.EventResult
 import chylex.hee.system.migration.forge.SubscribeAllEvents
 import chylex.hee.system.migration.forge.SubscribeEvent
 import chylex.hee.system.migration.vanilla.EntityPlayer
@@ -70,7 +71,9 @@ object ScorchingHelper{
 	
 	@SubscribeEvent(EventPriority.LOW)
 	fun onCriticalHit(e: CriticalHitEvent){
-		getHeldScorchingTool(e.player)?.onHit(e)
+		if (getHeldScorchingTool(e.player) != null){
+			e.result = EventResult.DENY
+		}
 	}
 	
 	// Overrides

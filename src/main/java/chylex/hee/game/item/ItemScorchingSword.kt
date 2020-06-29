@@ -11,7 +11,6 @@ import chylex.hee.game.mechanics.scorching.ScorchingHelper.FX_ENTITY_HIT
 import chylex.hee.network.client.PacketClientFX
 import chylex.hee.system.migration.Hand.MAIN_HAND
 import chylex.hee.system.migration.forge.EventPriority
-import chylex.hee.system.migration.forge.EventResult
 import chylex.hee.system.migration.forge.SubscribeEvent
 import chylex.hee.system.migration.vanilla.EntityAmbientCreature
 import chylex.hee.system.migration.vanilla.EntityAnimal
@@ -37,7 +36,6 @@ import net.minecraft.item.ItemStack
 import net.minecraft.util.DamageSource
 import net.minecraftforge.event.entity.living.LivingDamageEvent
 import net.minecraftforge.event.entity.living.LootingLevelEvent
-import net.minecraftforge.event.entity.player.CriticalHitEvent
 import kotlin.math.cos
 import kotlin.math.max
 import kotlin.math.sin
@@ -77,20 +75,11 @@ class ItemScorchingSword(
 		return true
 	}
 	
-	override fun onHit(e: CriticalHitEvent){ // UPDATE abusing crit flag to disable sweep and modify damage, also doesn't work when held by a mob
-		val target = e.target
-		
-		if (target !is EntityLivingBase){
-			e.result = EventResult.DENY
-			return
-		}
-		
+	fun handleDamageMultiplier(target: EntityLivingBase): Float{
 		val type = getTargetType(target)
 		
 		target.setFireTicks(type.fire) // set fire before drops
-		
-		e.damageModifier = type.damageMultiplier
-		e.result = EventResult.ALLOW // prevents sweep
+		return type.damageMultiplier
 	}
 	
 	@SubscribeEvent(EventPriority.LOWEST)
