@@ -1,4 +1,5 @@
 package chylex.hee.system.util
+import chylex.hee.game.entity.living.ai.AITargetAttackerFixed
 import chylex.hee.game.entity.living.ai.AITargetEyeContact
 import chylex.hee.game.entity.living.ai.AITargetRandom
 import chylex.hee.game.entity.living.ai.AITargetSwarmSwitch
@@ -13,7 +14,6 @@ import net.minecraft.entity.Entity
 import net.minecraft.entity.ai.attributes.AttributeModifier
 import net.minecraft.entity.ai.attributes.AttributeModifier.Operation
 import net.minecraft.entity.ai.attributes.IAttributeInstance
-import net.minecraft.entity.ai.goal.HurtByTargetGoal
 import net.minecraft.entity.ai.goal.LookAtGoal
 import net.minecraft.entity.ai.goal.LookRandomlyGoal
 import net.minecraft.entity.ai.goal.MeleeAttackGoal
@@ -159,11 +159,8 @@ fun AIAttackMelee(entity: EntityCreature, movementSpeed: Double, chaseAfterLosin
 
 // AI (Targeting)
 
-fun AITargetAttacker(entity: EntityCreature, callReinforcements: Boolean): HurtByTargetGoal =
-	if (callReinforcements)
-		HurtByTargetGoal(entity).setCallsForHelp(entity::class.java) // UPDATE 1.15 (it seems HurtByTargetGoal.alertOthers is broken and only alerts the last entity)
-	else
-		HurtByTargetGoal(entity)
+fun AITargetAttacker(entity: EntityCreature, callReinforcements: Boolean): AITargetAttackerFixed =
+	AITargetAttackerFixed(entity, callReinforcements)
 
 inline fun <reified T : EntityLivingBase> AITargetNearby(entity: EntityCreature, chancePerTick: Int, checkSight: Boolean, easilyReachableOnly: Boolean, noinline targetPredicate: ((T) -> Boolean)? = null) =
 	NearestAttackableTargetGoal(entity, T::class.java, chancePerTick, checkSight, easilyReachableOnly, targetPredicate?.let { p -> Predicate<EntityLivingBase> { p(it as T) } })
