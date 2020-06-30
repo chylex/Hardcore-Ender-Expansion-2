@@ -29,6 +29,11 @@ class RenderEntityTokenHolder(manager: RenderManager) : Render<EntityTokenHolder
 		SOLITARY to Resource.Custom("textures/entity/token_holder_solitary.png")
 	)
 	
+	init{
+		shadowSize = 0.4F
+		shadowOpaque = 0.6F
+	}
+	
 	override fun render(entity: EntityTokenHolder, yaw: Float, partialTicks: Float, matrix: MatrixStack, buffer: IRenderTypeBuffer, combinedLight: Int){
 		val charge = entity.renderCharge.get(partialTicks)
 		val scale = 0.25F + (0.25F * charge.pow(1.5F))
