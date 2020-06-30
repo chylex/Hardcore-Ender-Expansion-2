@@ -138,6 +138,20 @@ class TileEntityEndPortalAcceptor(type: TileEntityType<TileEntityEndPortalAccept
 		ticksToRefresh = chargeState.refreshRate
 	}
 	
+	fun toggleChargeFromCreativeMode(){
+		if (chargeState == FINISHED){
+			chargeState = IDLE
+			chargedEnergy = Units(0)
+		}
+		else{
+			chargeState = FINISHED
+			chargedEnergy = ENERGY_REQUIRED
+		}
+		
+		notifyUpdate(FLAG_SYNC_CLIENT or FLAG_SKIP_RENDER)
+		markDirty()
+	}
+	
 	// Overrides
 	
 	override fun firstTick(){
