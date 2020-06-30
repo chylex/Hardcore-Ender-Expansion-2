@@ -1,4 +1,5 @@
 package chylex.hee.game.entity.living.behavior
+import chylex.hee.HEE
 import chylex.hee.game.entity.living.EntityMobAbstractEnderman
 import chylex.hee.game.fx.FxEntityData
 import chylex.hee.game.fx.FxEntityHandler
@@ -14,11 +15,11 @@ import chylex.hee.game.world.util.Teleporter
 import chylex.hee.game.world.util.Teleporter.Companion.FxTeleportData
 import chylex.hee.game.world.util.Teleporter.FxRange.Extended
 import chylex.hee.game.world.util.Teleporter.FxRange.Silent
+import chylex.hee.init.ModSounds
 import chylex.hee.network.client.PacketClientFX
 import chylex.hee.system.migration.Facing.DOWN
 import chylex.hee.system.migration.Facing.UP
 import chylex.hee.system.migration.vanilla.Potions
-import chylex.hee.system.migration.vanilla.Sounds
 import chylex.hee.system.util.Pos
 import chylex.hee.system.util.TagCompound
 import chylex.hee.system.util.Vec3
@@ -31,6 +32,7 @@ import chylex.hee.system.util.component3
 import chylex.hee.system.util.directionTowards
 import chylex.hee.system.util.floorToInt
 import chylex.hee.system.util.isLoaded
+import chylex.hee.system.util.lookPosVec
 import chylex.hee.system.util.makeEffect
 import chylex.hee.system.util.motionX
 import chylex.hee.system.util.motionZ
@@ -42,6 +44,7 @@ import chylex.hee.system.util.playClient
 import chylex.hee.system.util.posVec
 import chylex.hee.system.util.toRadians
 import chylex.hee.system.util.use
+import chylex.hee.system.util.withY
 import net.minecraft.entity.Entity
 import net.minecraft.util.SoundCategory
 import net.minecraft.util.math.AxisAlignedBB
@@ -51,6 +54,7 @@ import net.minecraftforge.common.util.INBTSerializable
 import java.util.Random
 import java.util.UUID
 import kotlin.math.min
+import kotlin.math.sqrt
 
 class EndermanTeleportHandler(private val enderman: EntityMobAbstractEnderman) : INBTSerializable<TagCompound>{
 	companion object{
@@ -81,17 +85,26 @@ class EndermanTeleportHandler(private val enderman: EntityMobAbstractEnderman) :
 		val FX_TELEPORT_FAIL = object : FxEntityHandler(){
 			override fun handle(entity: Entity, rand: Random){
 				PARTICLE_TELEPORT_FAIL(entity).spawn(Point(entity, heightMp = 0.5F, amount = 55), rand)
-				Sounds.ENTITY_ENDERMAN_TELEPORT.playClient(entity.posVec, SoundCategory.HOSTILE, volume = 0.75F) // TODO custom sound
+				ModSounds.MOB_ENDERMAN_TELEPORT_FAIL.playClient(entity.posVec, SoundCategory.HOSTILE, volume = 2.5F)
 			}
 		}
 		
 		val FX_TELEPORT_OUT_OF_WORLD = object : FxEntityHandler(){
 			override fun handle(entity: Entity, rand: Random){
+				val player = HEE.proxy.getClientSidePlayer() ?: return
+				
 				val startPoint = entity.posVec
 				val endPoint = startPoint.addY(256.0)
 				
+				val lookPos = player.lookPosVec
+				val soundPoint = startPoint.withY((startPoint.y + lookPos.y) * 0.5)
+				val volume = 1F - sqrt(lookPos.distanceTo(soundPoint) / 104F).toFloat()
+				
 				PARTICLE_TELEPORT_OUT_OF_WORLD.spawn(Line(startPoint, endPoint, 0.5), rand)
-				Sounds.ENTITY_ENDERMAN_TELEPORT.playClient(startPoint, SoundCategory.HOSTILE, volume = 2F) // TODO custom sound
+				
+				repeat(2){
+					ModSounds.MOB_ENDERMAN_TELEPORT_OUT.playClient(soundPoint, SoundCategory.HOSTILE, if (it == 0) volume else volume * 0.75F)
+				}
 			}
 		}
 		
@@ -360,7 +373,7 @@ class EndermanTeleportHandler(private val enderman: EntityMobAbstractEnderman) :
 			return false
 		}
 		
-		PacketClientFX(FX_TELEPORT_OUT_OF_WORLD, FxEntityData(enderman)).sendToAllAround(enderman, 64.0)
+		PacketClientFX(FX_TELEPORT_OUT_OF_WORLD, FxEntityData(enderman)).sendToAllAround(enderman, 96.0)
 		enderman.remove()
 		return true
 	}

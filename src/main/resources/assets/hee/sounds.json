@@ -52,6 +52,14 @@
     "sounds": [ "mob/endermen/stare" ],
     "subtitle": "subtitles.hee.mob.enderman.first_kill"
   },
+  "mob.enderman.teleport.fail": {
+    "sounds": [ "hee:mob/enderman_teleport_fail" ],
+    "subtitle": "subtitles.hee.mob.enderman.teleport.fail"
+  },
+  "mob.enderman.teleport.out": {
+    "sounds": [{ "name": "hee:mob/enderman_teleport_out", "attenuation_distance": 416 }],
+    "subtitle": "subtitles.hee.mob.enderman.teleport.out"
+  },
   "mob.undread.hurt": {
     "sounds": [ "hee:mob/undread_hurt" ],
     "subtitle": "subtitles.hee.mob.undread.hurt"
