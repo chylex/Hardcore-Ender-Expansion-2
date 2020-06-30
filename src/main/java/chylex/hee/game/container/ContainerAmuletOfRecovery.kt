@@ -11,7 +11,7 @@ import net.minecraft.entity.player.PlayerInventory
 import net.minecraft.network.PacketBuffer
 import net.minecraft.util.Hand
 
-class ContainerAmuletOfRecovery(id: Int, private val player: EntityPlayer, hand: Hand) : ContainerChest(ModContainers.AMULET_OF_RECOVERY, id, player.inventory, ItemAmuletOfRecovery.Inv(player, hand), 3), IContainerWithEvents{
+class ContainerAmuletOfRecovery(id: Int, private val player: EntityPlayer, hand: Hand) : ContainerChest(ModContainers.AMULET_OF_RECOVERY, id, player.inventory, ItemAmuletOfRecovery.Inv(player, hand), 5), IContainerWithEvents{
 	@Suppress("unused")
 	constructor(id: Int, inventory: PlayerInventory, buffer: PacketBuffer) : this(id, inventory.player, Hand.values()[buffer.readVarInt()])
 	

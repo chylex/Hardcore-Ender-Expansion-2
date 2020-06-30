@@ -215,6 +215,7 @@
   "item.hee.trinket_pouch": "Trinket Pouch",
   "item.hee.trinket_pouch.tooltip": "§7Right-click to open",
   "item.hee.amulet_of_recovery": "Amulet of Recovery",
+  "item.hee.amulet_of_recovery.cost_error": "Error calculating Energy cost for Amulet of Recovery. Please check server logs for the full error and report it.",
   "item.hee.ring_of_hunger": "Ring of Hunger",
   "item.hee.ring_of_preservation": "Ring of Preservation",
   "item.hee.talisman_of_griefing": "Talisman of Griefing",

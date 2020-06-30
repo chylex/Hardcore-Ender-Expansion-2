@@ -1,4 +1,5 @@
 package chylex.hee.game.item
+import chylex.hee.HEE
 import chylex.hee.game.container.ContainerAmuletOfRecovery
 import chylex.hee.game.container.base.IInventoryFromPlayerItem
 import chylex.hee.game.mechanics.energy.IEnergyQuantity.Units
@@ -11,6 +12,7 @@ import chylex.hee.system.migration.forge.Side
 import chylex.hee.system.migration.forge.Sided
 import chylex.hee.system.migration.forge.SubscribeEvent
 import chylex.hee.system.migration.vanilla.EntityPlayer
+import chylex.hee.system.migration.vanilla.TextComponentString
 import chylex.hee.system.migration.vanilla.TextComponentTranslation
 import chylex.hee.system.util.NBTItemStackList
 import chylex.hee.system.util.NBTList.Companion.putList
@@ -32,6 +34,7 @@ import chylex.hee.system.util.setStack
 import chylex.hee.system.util.writeTag
 import io.netty.buffer.Unpooled
 import net.minecraft.client.util.ITooltipFlag
+import net.minecraft.command.ICommandSource
 import net.minecraft.entity.player.PlayerInventory
 import net.minecraft.inventory.Inventory
 import net.minecraft.inventory.container.Container
@@ -42,6 +45,8 @@ import net.minecraft.util.ActionResult
 import net.minecraft.util.Hand
 import net.minecraft.util.NonNullList
 import net.minecraft.util.text.ITextComponent
+import net.minecraft.util.text.TextFormatting.DARK_RED
+import net.minecraft.util.text.TextFormatting.RED
 import net.minecraft.world.GameRules.KEEP_INVENTORY
 import net.minecraft.world.World
 import net.minecraftforge.event.entity.living.LivingDeathEvent
@@ -96,7 +101,7 @@ class ItemAmuletOfRecovery(properties: Properties) : ItemAbstractEnergyUser(prop
 			trinketItem.heeTag.putList(CONTENTS_TAG, NBTItemStackList.of(saved.asIterable()))
 		}
 		
-		private fun updateRetrievalCost(trinketItem: ItemStack){
+		private fun updateRetrievalCost(errorMessenger: ICommandSource, trinketItem: ItemStack){
 			val buffer = Unpooled.buffer()
 			
 			var sumOfSlots = 0
@@ -134,7 +139,11 @@ class ItemAmuletOfRecovery(properties: Properties) : ItemAbstractEnergyUser(prop
 								buffer.writeTag(nbtCopy)
 								sumOfFilteredTagSizes += buffer.writerIndex().coerceAtMost(2500)
 							}catch(e: Exception){
-								// TODO handle
+								sumOfFilteredTagSizes += 2500
+								HEE.log.error("[ItemAmuletOfRecovery] failed processing NBT data when calculating Energy cost", e)
+								
+								errorMessenger.sendMessage(TextComponentTranslation("item.hee.amulet_of_recovery.cost_error").applyTextStyle(RED))
+								e.message?.let { errorMessenger.sendMessage(TextComponentString(it).applyTextStyle(DARK_RED)) }
 							}
 							
 							buffer.clear()
@@ -315,7 +324,7 @@ class ItemAmuletOfRecovery(properties: Properties) : ItemAbstractEnergyUser(prop
 			val trinketItem = getStack(PLAYER_RESPAWN_ITEM_TAG)
 			
 			if (trinketItem.isNotEmpty){
-				updateRetrievalCost(trinketItem)
+				updateRetrievalCost(newPlayer, trinketItem)
 				
 				if (!newPlayer.inventory.addItemStackToInventory(trinketItem)){
 					newPlayer.dropItem(trinketItem, false, false)
