@@ -170,7 +170,10 @@ class TileEntityMinersBurialAltar(type: TileEntityType<TileEntityMinersBurialAlt
 		if (wrld.isRemote){
 			if (redeemTick > 0 && redeemType != REDEEM_TYPE_FINISHED){
 				++redeemTick
-				// TODO sound of huge stones rubbing against each other for the insertion animation
+				
+				if (redeemTick == MEDALLION_ANIM_DELAY){
+					ModSounds.BLOCK_MINERS_BURIAL_ALTAR_INSERT.playClient(pos, SoundCategory.BLOCKS)
+				}
 			}
 			
 			return

@@ -367,6 +367,7 @@
   "commands.hee.testworld.info": "converts overworld into a test world",
 
   "subtitles.hee.block.igneous_plate.cool": "Igneous Plate cools",
+  "subtitles.hee.block.miners_burial_altar.insert": "Puzzle Medallion descends",
   "subtitles.hee.block.obsidian.land": "Obsidian landed",
   "subtitles.hee.item.revitalization_substance.use.success": "Revitalization Substance accepted",
   "subtitles.hee.item.revitalization_substance.use.fail": "Revitalization Substance rejected",

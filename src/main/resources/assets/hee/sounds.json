@@ -7,6 +7,10 @@
     "sounds": [ "hee:block/loot_chest_open" ],
     "subtitle": "subtitles.block.chest.open"
   },
+  "block.miners_burial_altar.insert": {
+    "sounds": [ "hee:block/miners_burial_altar_insert" ],
+    "subtitle": "subtitles.hee.block.miners_burial_altar.insert"
+  },
   "block.miners_burial_altar.spawn": {
     "sounds": [ "hee:block/miners_burial_altar_spawn" ]
   },
