@@ -33,6 +33,8 @@ object ModPotions{
 	val CORRUPTION get() = PotionCorruption
 	val BANISHMENT get() = PotionBanishment
 	
+	private const val VANILLA_OVERRIDE_SUFFIX = "_no_effect_override"
+	
 	@SubscribeEvent
 	fun onRegisterPotions(e: RegistryEvent.Register<Potion>){
 		with(e.registry){
@@ -64,8 +66,8 @@ object ModPotions{
 						// custom brewing system uses NBT to apply duration/level modifiers
 						// to disable the original effect, each potion type is duplicated with no base effects
 						
-						val override = PotionType(path) named "${path}_no_effect_override"
-						register(override) // TODO the duplicates still show up in creative menu etc
+						val override = PotionType(path) named "$path$VANILLA_OVERRIDE_SUFFIX"
+						register(override)
 						
 						// change base effects for vanilla potions to avoid breaking creative menu and compatibility w/ original items
 						// register type overrides so that brewing recipes can convert them
@@ -86,6 +88,12 @@ object ModPotions{
 				}
 			}
 		}
+	}
+	
+	@JvmStatic
+	@Suppress("unused")
+	fun excludeFromCreativeMenu(potion: PotionType): Boolean{
+		return potion.registryName?.let { it.namespace == HEE.ID && it.path.endsWith(VANILLA_OVERRIDE_SUFFIX) } == true
 	}
 	
 	// Recipes
