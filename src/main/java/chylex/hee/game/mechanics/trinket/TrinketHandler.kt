@@ -125,9 +125,10 @@ object TrinketHandler{
 			return
 		}
 		
+		val world = player.world
 		val handler = player.getCapOrNull(CAP_TRINKET_SLOT)
 		
-		if (handler == null || handler.item.isEmpty){
+		if (handler == null || handler.item.isEmpty || world.isRemote || world.gameRules.getBoolean(KEEP_INVENTORY)){
 			return
 		}
 		
