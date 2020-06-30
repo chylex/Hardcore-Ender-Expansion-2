@@ -56,6 +56,7 @@ class WorldProviderEndCustom(world: World, type: DimensionType) : EndDimension(w
 		var debugMode = false
 		
 		private val CLIENT_SIDE_SPAWN_POINT = Pos(THE_HUB_INSTANCE.centerPoint).xz.withY(255)
+		private val SERVER_SIDE_SPAWN_POINT = Pos(THE_HUB_INSTANCE.centerPoint).xz.withY(4095) // blocks vanilla attempt to spawn portal platform
 		
 		@Sided(Side.CLIENT)
 		@SubscribeEvent(priority = EventPriority.LOWEST)
@@ -116,8 +117,8 @@ class WorldProviderEndCustom(world: World, type: DimensionType) : EndDimension(w
 			THE_HUB_INSTANCE.getSpawnPoint()
 	}
 	
-	override fun getSpawnCoordinate(): BlockPos?{
-		return null
+	override fun getSpawnCoordinate(): BlockPos{
+		return SERVER_SIDE_SPAWN_POINT
 	}
 	
 	// Behavior properties

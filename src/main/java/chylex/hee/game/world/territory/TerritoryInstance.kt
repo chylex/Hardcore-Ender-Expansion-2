@@ -139,13 +139,7 @@ data class TerritoryInstance(val territory: TerritoryType, val index: Int){
 	
 	fun prepareSpawnPoint(entity: Entity?, clearanceRadius: Int): SpawnInfo{
 		val world = endWorld
-		
 		val spawnPoint = entity?.let(::determineOwningPlayer)?.let { getSpawnPoint(it) } ?: getSpawnPoint()
-		val spawnChunk = ChunkPos(spawnPoint)
-		
-		for(chunkX in -7..7) for(chunkZ in -7..7){
-			world.getChunk(spawnChunk.x + chunkX, spawnChunk.z + chunkZ)
-		}
 		
 		BlockAbstractPortal.ensureClearance(world, spawnPoint, clearanceRadius)
 		BlockAbstractPortal.ensurePlatform(world, spawnPoint, territory.gen.groundBlock, clearanceRadius)

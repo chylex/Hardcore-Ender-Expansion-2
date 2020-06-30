@@ -17,16 +17,25 @@ import net.minecraft.util.math.Vec3d
 import net.minecraft.world.World
 import net.minecraft.world.dimension.DimensionType
 import net.minecraft.world.gen.Heightmap.Type.MOTION_BLOCKING
+import net.minecraft.world.server.ServerWorld
+import net.minecraftforge.common.util.ITeleporter
+import java.util.function.Function
 
 sealed class DimensionTeleporter{
-	// UPDATE
-	interface ITeleporter{
+	interface ICustomTeleporter : ITeleporter{
+		@JvmDefault
+		override fun placeEntity(entity: Entity, currentWorld: ServerWorld, destWorld: ServerWorld, yaw: Float, repositionEntity: Function<Boolean, Entity>): Entity{
+			val newEntity = repositionEntity.apply(false)
+			placeEntity(destWorld, newEntity, yaw)
+			return newEntity
+		}
+		
 		fun placeEntity(world: World, entity: Entity, yaw: Float)
 	}
 	
 	companion object{
-		fun changeDimension(entity: Entity, dimension: DimensionType, teleporter: ITeleporter){
-			// UPDATE
+		fun changeDimension(entity: Entity, dimension: DimensionType, teleporter: ICustomTeleporter){
+			entity.changeDimension(dimension, teleporter)
 		}
 		
 		private fun spawnPoint(world: World): Vec3d{
@@ -34,7 +43,9 @@ sealed class DimensionTeleporter{
 		}
 		
 		private fun placeAt(entity: Entity, target: Vec3d, yaw: Float){
-			entity.setLocationAndAngles(target.x, target.y, target.z, yaw, 0F)
+			entity.rotationYaw = yaw
+			entity.rotationPitch = 0F
+			entity.setPositionAndUpdate(target.x, target.y, target.z)
 			entity.motion = Vec3d.ZERO
 		}
 		
@@ -55,14 +66,14 @@ sealed class DimensionTeleporter{
 	
 	// To End
 	
-	object EndSpawnPortal : ITeleporter{
+	object EndSpawnPortal : ICustomTeleporter{
 		override fun placeEntity(world: World, entity: Entity, yaw: Float){
 			val spawnInfo = (world.dimension as? WorldProviderEndCustom)?.getSpawnInfo() ?: return
 			placeAt(entity, yaw, spawnInfo)
 		}
 	}
 	
-	class EndTerritoryPortal(private val spawnInfo: SpawnInfo) : ITeleporter{
+	class EndTerritoryPortal(private val spawnInfo: SpawnInfo) : ICustomTeleporter{
 		override fun placeEntity(world: World, entity: Entity, yaw: Float){
 			placeAt(entity, yaw, spawnInfo)
 		}
@@ -70,7 +81,7 @@ sealed class DimensionTeleporter{
 	
 	// From End
 	
-	object LastEndPortal : ITeleporter{
+	object LastEndPortal : ICustomTeleporter{
 		private const val LAST_PORTAL_POS_TAG = "LastEndPortal"
 		
 		fun updateForEntity(entity: Entity, pos: BlockPos){
@@ -84,7 +95,7 @@ sealed class DimensionTeleporter{
 		}
 	}
 	
-	object LastHubPortal : ITeleporter{
+	object LastHubPortal : ICustomTeleporter{
 		private const val LAST_PORTAL_POS_TAG = "LastVoidPortal"
 		private const val LAST_PORTAL_DIM_TAG = "LastVoidPortalDim"
 		
@@ -121,7 +132,7 @@ sealed class DimensionTeleporter{
 		}
 	}
 	
-	object Bed : ITeleporter{ // TODO use at the end
+	object Bed : ICustomTeleporter{ // TODO use at the end
 		override fun placeEntity(world: World, entity: Entity, yaw: Float){
 			val dimension = world.dimension.type
 			
