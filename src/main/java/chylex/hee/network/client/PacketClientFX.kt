@@ -46,6 +46,7 @@ class PacketClientFX<T : IFxData>() : BaseClientPacket(){
 			TableParticleHandler.FX_PROCESS_PEDESTALS,
 			TableParticleHandler.FX_DRAIN_CLUSTER,
 			IBlockDeathFlowerDecaying.FX_HEAL,
+			IBlockDeathFlowerDecaying.FX_WITHER,
 			BlockDragonEggOverride.FX_BREAK,
 			BlockEnderGooPurified.FX_PLACE,
 			TileEntityBaseSpawner.FX_TAINT_TICK,

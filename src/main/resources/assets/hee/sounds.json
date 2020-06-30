@@ -1,4 +1,8 @@
 {
+  "block.death_flower.wither": {
+    "sounds": [{ "name": "hee:block/death_flower_wither", "attenuation_distance": 1536 }],
+    "subtitle": "subtitles.hee.block.death_flower.wither"
+  },
   "block.igneous_plate.cool": {
     "sounds": [ "minecraft:random/fizz" ],
     "subtitle": "subtitles.hee.block.igneous_plate.cool"

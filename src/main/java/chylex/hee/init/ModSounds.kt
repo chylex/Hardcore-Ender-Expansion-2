@@ -3,6 +3,7 @@ import chylex.hee.system.util.facades.Resource
 import net.minecraft.util.SoundEvent
 
 object ModSounds{
+	@JvmField val BLOCK_DEATH_FLOWER_WITHER        = SoundEvent(Resource.Custom("block.death_flower.wither"))
 	@JvmField val BLOCK_IGNEOUS_PLATE_COOL         = SoundEvent(Resource.Custom("block.igneous_plate.cool"))
 	@JvmField val BLOCK_LOOT_CHEST_OPEN            = SoundEvent(Resource.Custom("block.loot_chest.open"))
 	@JvmField val BLOCK_MINERS_BURIAL_ALTAR_INSERT = SoundEvent(Resource.Custom("block.miners_burial_altar.insert"))

@@ -17,7 +17,7 @@ import net.minecraft.item.ItemGroup
 import net.minecraft.item.ItemStack
 import net.minecraft.item.ItemUseContext
 import net.minecraft.util.ActionResultType
-import net.minecraft.util.ActionResultType.FAIL
+import net.minecraft.util.ActionResultType.PASS
 import net.minecraft.util.ActionResultType.SUCCESS
 import net.minecraft.util.NonNullList
 
@@ -56,7 +56,7 @@ class ItemDeathFlower(block: Block, properties: Properties) : ItemBlock(block, p
 			return SUCCESS
 		}
 		
-		return FAIL
+		return PASS
 	}
 	
 	override fun fillItemGroup(tab: ItemGroup, items: NonNullList<ItemStack>){

@@ -2,6 +2,8 @@ package chylex.hee.game.block
 import chylex.hee.game.block.util.Property
 import chylex.hee.game.entity.living.EntityMobAngryEnderman
 import chylex.hee.game.entity.living.EntityMobEnderman
+import chylex.hee.game.fx.FxBlockData
+import chylex.hee.game.fx.FxBlockHandler
 import chylex.hee.game.fx.IFxData
 import chylex.hee.game.fx.IFxHandler
 import chylex.hee.game.particle.ParticleDeathFlowerHeal
@@ -12,6 +14,7 @@ import chylex.hee.game.particle.util.IOffset.InBox
 import chylex.hee.game.particle.util.IShape.Point
 import chylex.hee.game.world.util.Teleporter
 import chylex.hee.game.world.util.Teleporter.FxRange.Extended
+import chylex.hee.init.ModSounds
 import chylex.hee.network.client.PacketClientFX
 import chylex.hee.system.migration.Facing.DOWN
 import chylex.hee.system.migration.vanilla.EntityPlayer
@@ -29,6 +32,7 @@ import chylex.hee.system.util.nextFloat
 import chylex.hee.system.util.nextInt
 import chylex.hee.system.util.offsetUntil
 import chylex.hee.system.util.perDimensionData
+import chylex.hee.system.util.playClient
 import chylex.hee.system.util.playServer
 import chylex.hee.system.util.posVec
 import chylex.hee.system.util.readPos
@@ -137,12 +141,14 @@ interface IBlockDeathFlowerDecaying{
 				
 				Sounds.ENTITY_ENDERMAN_TELEPORT.playServer(world, center, SoundCategory.HOSTILE, volume = 1.25F)
 				
+				val broadcastSoundPacket = PacketClientFX(FX_WITHER, FxBlockData(pos))
+				
 				for(player in world.selectExistingEntities.inRange<EntityPlayer>(center, WITHER_PLAYER_RADIUS)){
 					val distanceMp = center.distanceTo(player.posVec) / WITHER_PLAYER_RADIUS
 					val witherSeconds = 30 - (25 * distanceMp).roundToInt()
 					
 					player.addPotionEffect(Potions.WITHER.makeEffect(20 * witherSeconds))
-					// TODO broadcast
+					broadcastSoundPacket.sendToPlayer(player)
 				}
 			}
 		}
@@ -202,6 +208,14 @@ interface IBlockDeathFlowerDecaying{
 					pos = PARTICLE_POS,
 					mot = PARTICLE_MOT
 				).spawn(Point(pos, particleAmount), rand)
+			}
+		}
+		
+		val FX_WITHER = object : FxBlockHandler(){
+			override fun handle(pos: BlockPos, world: World, rand: Random){
+				repeat(2){
+					ModSounds.BLOCK_DEATH_FLOWER_WITHER.playClient(pos, SoundCategory.BLOCKS)
+				}
 			}
 		}
 	}
