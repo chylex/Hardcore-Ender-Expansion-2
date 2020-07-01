@@ -1,6 +1,5 @@
 package chylex.hee.game.entity.living
 import chylex.hee.game.entity.IImmuneToCorruptedEnergy
-import chylex.hee.game.entity.IMobBypassPeacefulDespawn
 import chylex.hee.game.mechanics.instability.Instability
 import chylex.hee.init.ModBlocks
 import chylex.hee.init.ModEntities
@@ -19,7 +18,7 @@ import net.minecraft.util.DamageSource
 import net.minecraft.util.ResourceLocation
 import net.minecraft.world.World
 
-class EntityMobEndermiteInstability(type: EntityType<EntityMobEndermiteInstability>, world: World) : EntityMobEndermite(type, world), IImmuneToCorruptedEnergy, IMobBypassPeacefulDespawn{
+class EntityMobEndermiteInstability(type: EntityType<EntityMobEndermiteInstability>, world: World) : EntityMobEndermite(type, world), IImmuneToCorruptedEnergy{
 	constructor(world: World) : this(ModEntities.ENDERMITE_INSTABILITY, world)
 	
 	private companion object{
@@ -45,6 +44,10 @@ class EntityMobEndermiteInstability(type: EntityType<EntityMobEndermiteInstabili
 	override fun onDeath(cause: DamageSource){
 		super.onDeath(cause)
 		spawnCorruptedEnergy = true
+	}
+	
+	override fun isDespawnPeaceful(): Boolean{
+		return false
 	}
 	
 	override fun remove(){

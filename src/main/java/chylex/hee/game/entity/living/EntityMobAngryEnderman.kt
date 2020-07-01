@@ -30,6 +30,7 @@ import net.minecraft.util.math.RayTraceContext.BlockMode
 import net.minecraft.util.math.RayTraceContext.FluidMode
 import net.minecraft.util.math.RayTraceResult.Type
 import net.minecraft.util.math.Vec3d
+import net.minecraft.world.Difficulty.PEACEFUL
 import net.minecraft.world.World
 
 class EntityMobAngryEnderman(type: EntityType<EntityMobAngryEnderman>, world: World) : EntityMobAbstractEnderman(type, world){
@@ -128,6 +129,11 @@ class EntityMobAngryEnderman(type: EntityType<EntityMobAngryEnderman>, world: Wo
 	}
 	
 	override fun checkDespawn(){
+		if (world.difficulty == PEACEFUL && isDespawnPeaceful){
+			remove()
+			return
+		}
+		
 		if (despawnCooldown > 0){
 			--despawnCooldown
 		}

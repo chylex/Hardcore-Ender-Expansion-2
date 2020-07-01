@@ -25,6 +25,7 @@ import net.minecraft.entity.SharedMonsterAttributes.ATTACK_DAMAGE
 import net.minecraft.entity.SharedMonsterAttributes.MAX_HEALTH
 import net.minecraft.network.IPacket
 import net.minecraft.util.ResourceLocation
+import net.minecraft.world.Difficulty.PEACEFUL
 import net.minecraft.world.World
 import net.minecraftforge.fml.network.NetworkHooks
 
@@ -88,6 +89,11 @@ open class EntityMobEndermite(type: EntityType<out EntityMobEndermite>, world: W
 	}
 	
 	override fun checkDespawn(){
+		if (world.difficulty == PEACEFUL && isDespawnPeaceful){
+			remove()
+			return
+		}
+		
 		if (isNoDespawnRequired || preventDespawn()){
 			return
 		}

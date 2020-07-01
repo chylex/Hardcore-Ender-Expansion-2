@@ -1,5 +1,4 @@
 package chylex.hee.game.entity.living
-import chylex.hee.game.entity.IMobBypassPeacefulDespawn
 import chylex.hee.game.entity.living.ai.AIAttackLeap
 import chylex.hee.game.entity.living.ai.AIWanderLightStartle
 import chylex.hee.game.entity.living.ai.AIWanderLightStartle.ILightStartleHandler
@@ -85,7 +84,7 @@ import kotlin.math.log10
 import kotlin.math.roundToInt
 import kotlin.math.sin
 
-class EntityMobSpiderling(type: EntityType<EntityMobSpiderling>, world: World) : EntityMob(type, world), ILightStartleHandler, IMobBypassPeacefulDespawn{
+class EntityMobSpiderling(type: EntityType<EntityMobSpiderling>, world: World) : EntityMob(type, world), ILightStartleHandler{
 	constructor(world: World) : this(ModEntities.SPIDERLING, world)
 	
 	companion object{
@@ -440,6 +439,12 @@ class EntityMobSpiderling(type: EntityType<EntityMobSpiderling>, world: World) :
 		}
 		
 		return true
+	}
+	
+	// Despawning
+	
+	override fun isDespawnPeaceful(): Boolean{
+		return false
 	}
 	
 	// Properties
