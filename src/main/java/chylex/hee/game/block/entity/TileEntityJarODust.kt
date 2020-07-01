@@ -1,5 +1,4 @@
 package chylex.hee.game.block.entity
-import chylex.hee.game.block.BlockJarODust
 import chylex.hee.game.block.entity.base.TileEntityBase
 import chylex.hee.game.mechanics.dust.DustLayerInventory
 import chylex.hee.game.mechanics.dust.DustLayers
@@ -23,6 +22,7 @@ class TileEntityJarODust(type: TileEntityType<TileEntityJarODust>) : TileEntityB
 	
 	companion object{
 		const val DUST_CAPACITY = 256
+		const val LAYERS_TAG = "Layers"
 	}
 	
 	val layers = DustLayers(DUST_CAPACITY).apply { onUpdate { notifyUpdate(FLAG_SYNC_CLIENT or FLAG_MARK_DIRTY) } }
@@ -52,10 +52,10 @@ class TileEntityJarODust(type: TileEntityType<TileEntityJarODust>) : TileEntityB
 	// Serialization
 	
 	override fun writeNBT(nbt: TagCompound, context: Context) = nbt.use {
-		putList(BlockJarODust.LAYERS_TAG, layers.serializeNBT())
+		putList(LAYERS_TAG, layers.serializeNBT())
 	}
 	
 	override fun readNBT(nbt: TagCompound, context: Context) = nbt.use {
-		layers.deserializeNBT(getListOfCompounds(BlockJarODust.LAYERS_TAG))
+		layers.deserializeNBT(getListOfCompounds(LAYERS_TAG))
 	}
 }

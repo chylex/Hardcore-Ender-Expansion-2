@@ -1,6 +1,8 @@
 package chylex.hee.game.block.entity.base
 import chylex.hee.game.block.entity.base.TileEntityBase.Context.NETWORK
 import chylex.hee.system.migration.Facing.UP
+import chylex.hee.system.migration.forge.Side
+import chylex.hee.system.migration.forge.Sided
 import chylex.hee.system.migration.vanilla.EntityPlayer
 import chylex.hee.system.migration.vanilla.Sounds
 import chylex.hee.system.util.FLAG_SKIP_RENDER
@@ -17,6 +19,7 @@ import chylex.hee.system.util.use
 import net.minecraft.block.ChestBlock.FACING
 import net.minecraft.inventory.IInventory
 import net.minecraft.inventory.container.INamedContainerProvider
+import net.minecraft.tileentity.IChestLid
 import net.minecraft.tileentity.ITickableTileEntity
 import net.minecraft.tileentity.TileEntityType
 import net.minecraft.util.Direction
@@ -25,7 +28,7 @@ import net.minecraft.util.SoundCategory
 import net.minecraft.util.SoundEvent
 import net.minecraft.util.text.ITextComponent
 
-abstract class TileEntityBaseChest(type: TileEntityType<out TileEntityBaseChest>) : TileEntityBase(type), ITickableTileEntity, INamedContainerProvider, INameable{
+abstract class TileEntityBaseChest(type: TileEntityType<out TileEntityBaseChest>) : TileEntityBase(type), IChestLid, ITickableTileEntity, INamedContainerProvider, INameable{
 	private companion object{
 		private const val CUSTOM_NAME_TAG = "CustomName"
 		private const val VIEWER_COUNT_TAG = "ViewerCount"
@@ -37,16 +40,20 @@ abstract class TileEntityBaseChest(type: TileEntityType<out TileEntityBaseChest>
 	val isLidClosed: Boolean
 		get() = viewerCount == 0
 	
-	val lidAngle = LerpedFloat(0F)
-	
 	protected abstract val defaultName: ITextComponent
 	protected open val soundOpening: SoundEvent = Sounds.BLOCK_CHEST_OPEN
 	protected open val soundClosing: SoundEvent = Sounds.BLOCK_CHEST_CLOSE
 	
+	private val lidAngle = LerpedFloat(0F)
 	private var viewerCount by Notifying(0, FLAG_SYNC_CLIENT or FLAG_SKIP_RENDER)
 	private var customName: ITextComponent? = null
 	
 	// Animation
+	
+	@Sided(Side.CLIENT)
+	override fun getLidAngle(partialTicks: Float): Float{
+		return lidAngle.get(partialTicks)
+	}
 	
 	final override fun tick(){
 		val currentLidAngle = lidAngle.currentValue

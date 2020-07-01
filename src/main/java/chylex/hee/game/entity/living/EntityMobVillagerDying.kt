@@ -41,27 +41,23 @@ class EntityMobVillagerDying(type: EntityType<EntityMobVillagerDying>, world: Wo
 	
 	private companion object{
 		private const val VILLAGER_TAG = "Villager"
+		
+		private val DECAY_ADULT = DecayParticlePos(halfSize = 0.3F, heightMp = 1F)
+		private val DECAY_CHILD = DecayParticlePos(halfSize = 0.3F, heightMp = 0.5F)
 	}
 	
-	private class DecayParticlePos private constructor(private val heightMp: Float) : IOffset{
-		companion object{
-			private const val HALF_SIZE = 0.3F
-			
-			val ADULT = DecayParticlePos(1F)
-			val CHILD = DecayParticlePos(0.5F)
-		}
-		
+	private class DecayParticlePos(private val halfSize: Float, private val heightMp: Float) : IOffset{
 		override fun next(out: MutableOffsetPoint, rand: Random){
 			if (rand.nextInt(5) == 0){
-				out.x = rand.nextFloat(-HALF_SIZE, HALF_SIZE)
+				out.x = rand.nextFloat(-halfSize, halfSize)
 				out.y = rand.nextFloat(1F, 1.25F) * heightMp * (if (rand.nextBoolean()) -1 else 1)
-				out.z = rand.nextFloat(-HALF_SIZE, HALF_SIZE)
+				out.z = rand.nextFloat(-halfSize, halfSize)
 			}
 			else{
 				val facing = rand.nextItem(Facing4)
 				
-				val offsetFull = HALF_SIZE + rand.nextFloat(0F, 0.3F)
-				val offsetPerpendicular = rand.nextFloat(-HALF_SIZE, HALF_SIZE)
+				val offsetFull = halfSize + rand.nextFloat(0F, 0.3F)
+				val offsetPerpendicular = rand.nextFloat(-halfSize, halfSize)
 				
 				out.x = (facing.xOffset * offsetFull) + (facing.zOffset * offsetPerpendicular)
 				out.y = rand.nextFloat(-1.1F, 1.1F) * heightMp
@@ -137,7 +133,7 @@ class EntityMobVillagerDying(type: EntityType<EntityMobVillagerDying>, world: Wo
 			ParticleSpawnerCustom(
 				type = ParticleGrowingSpot,
 				data = ParticleGrowingSpot.Data(color = RGB(rand.nextInt(20).toUByte()), lifespan = 71 - deathTime),
-				pos = if (isChild) DecayParticlePos.CHILD else DecayParticlePos.ADULT
+				pos = if (isChild) DECAY_CHILD else DECAY_ADULT
 			).spawn(Point(this, heightMp = 0.5F, amount = if (isChild) 4 else 12), rand)
 		}
 		

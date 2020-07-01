@@ -37,7 +37,7 @@ sealed class NoiseGenerator(private val xScale: Double, private val zScale: Doub
 			remapRange(it, (0.0)..(1.0), newRange)
 		}
 		
-		fun ifNonZero(block: NoiseValue.() -> Unit){
+		inline fun ifNonZero(block: NoiseValue.() -> Unit){
 			if (abs(value) > 0.001){
 				block()
 			}

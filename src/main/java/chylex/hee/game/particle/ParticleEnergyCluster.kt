@@ -1,4 +1,5 @@
 package chylex.hee.game.particle
+import chylex.hee.client.util.MC
 import chylex.hee.game.particle.base.ParticleBaseEnergy
 import chylex.hee.game.particle.data.ParticleDataColorScale
 import chylex.hee.game.particle.spawner.IParticleMaker
@@ -54,7 +55,7 @@ object ParticleEnergyCluster : IParticleMaker.WithData<ParticleDataColorScale>()
 	private class Instance(world: World, posX: Double, posY: Double, posZ: Double, motX: Double, motY: Double, motZ: Double, data: ParticleDataColorScale?) : ParticleBaseEnergy(world, posX, posY, posZ, motX, motY, motZ){
 		private val clusterPos = Pos(posX, posY, posZ)
 		
-		private val alphaMultiplier = when(ParticleSetting.current){
+		private val alphaMultiplier = when(MC.particleSetting){
 			ALL       -> 0.32F
 			DECREASED -> 0.46F
 			MINIMAL   -> 0.58F

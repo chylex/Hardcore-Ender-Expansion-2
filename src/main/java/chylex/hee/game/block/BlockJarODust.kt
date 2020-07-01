@@ -48,8 +48,6 @@ import net.minecraft.world.storage.loot.LootParameters
 class BlockJarODust(builder: BlockBuilder) : BlockSimpleShaped(builder, AABB){
 	companion object{
 		val AABB = AxisAlignedBB(0.1875, 0.0, 0.1875, 0.8125, 0.84375, 0.8125)
-		
-		const val LAYERS_TAG = "Layers"
 	}
 	
 	override fun hasTileEntity(state: BlockState): Boolean{
@@ -64,14 +62,14 @@ class BlockJarODust(builder: BlockBuilder) : BlockSimpleShaped(builder, AABB){
 	
 	fun getLayersFromStack(stack: ItemStack): DustLayers?{
 		return if (stack.item === this.asItem())
-			stack.heeTagOrNull?.getListOfCompounds(LAYERS_TAG)?.let { list -> DustLayers(TileEntityJarODust.DUST_CAPACITY).apply { deserializeNBT(list) } }
+			stack.heeTagOrNull?.getListOfCompounds(TileEntityJarODust.LAYERS_TAG)?.let { list -> DustLayers(TileEntityJarODust.DUST_CAPACITY).apply { deserializeNBT(list) } }
 		else
 			null
 	}
 	
 	fun setLayersInStack(stack: ItemStack, layers: DustLayers){
 		if (stack.item === this.asItem()){
-			stack.heeTag.putList(LAYERS_TAG, layers.serializeNBT())
+			stack.heeTag.putList(TileEntityJarODust.LAYERS_TAG, layers.serializeNBT())
 		}
 	}
 	
@@ -89,7 +87,7 @@ class BlockJarODust(builder: BlockBuilder) : BlockSimpleShaped(builder, AABB){
 	}
 	
 	override fun onBlockPlacedBy(world: World, pos: BlockPos, state: BlockState, placer: EntityLivingBase?, stack: ItemStack){
-		val list = stack.heeTagOrNull?.getListOfCompounds(LAYERS_TAG)
+		val list = stack.heeTagOrNull?.getListOfCompounds(TileEntityJarODust.LAYERS_TAG)
 		
 		if (list != null){
 			pos.getTile<TileEntityJarODust>(world)?.layers?.deserializeNBT(list)

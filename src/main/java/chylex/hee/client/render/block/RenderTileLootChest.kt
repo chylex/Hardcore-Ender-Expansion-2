@@ -1,25 +1,26 @@
 package chylex.hee.client.render.block
 import chylex.hee.game.block.entity.TileEntityLootChest
+import chylex.hee.init.ModAtlases
 import chylex.hee.system.migration.forge.Side
 import chylex.hee.system.migration.forge.Sided
 import chylex.hee.system.util.facades.Resource
-import com.mojang.blaze3d.matrix.MatrixStack
-import net.minecraft.client.renderer.IRenderTypeBuffer
-import net.minecraft.client.renderer.tileentity.ItemStackTileEntityRenderer
+import net.minecraft.client.renderer.model.Material
+import net.minecraft.client.renderer.tileentity.ChestTileEntityRenderer
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher
-import net.minecraft.item.ItemStack
+import net.minecraft.state.properties.ChestType
 
 @Sided(Side.CLIENT)
-class RenderTileLootChest(dispatcher: TileEntityRendererDispatcher) : RenderTileAbstractChest<TileEntityLootChest>(dispatcher, TEX){
+class RenderTileLootChest(dispatcher: TileEntityRendererDispatcher) : ChestTileEntityRenderer<TileEntityLootChest>(dispatcher){
 	companion object{
 		val TEX = Resource.Custom("entity/loot_chest")
+		private val MAT = Material(ModAtlases.ATLAS_TILES, TEX)
 	}
 	
-	object AsItem : ItemStackTileEntityRenderer(){
-		private val tile = TileEntityLootChest()
-		
-		override fun render(stack: ItemStack, matrix: MatrixStack, buffer: IRenderTypeBuffer, combinedLight: Int, combinedOverlay: Int){
-			TileEntityRendererDispatcher.instance.renderItem(tile, matrix, buffer, combinedLight, combinedOverlay)
-		}
+	init{
+		isChristmas = false
+	}
+	
+	override fun getMaterial(tile: TileEntityLootChest, type: ChestType): Material{
+		return MAT
 	}
 }

@@ -1,4 +1,5 @@
 package chylex.hee.client.util
+import chylex.hee.game.particle.util.ParticleSetting
 import chylex.hee.system.migration.forge.Side
 import chylex.hee.system.migration.forge.Sided
 import chylex.hee.system.migration.vanilla.EntityPlayerSP
@@ -12,6 +13,7 @@ import net.minecraft.client.particle.ParticleManager
 import net.minecraft.client.renderer.GameRenderer
 import net.minecraft.client.renderer.ItemRenderer
 import net.minecraft.client.renderer.texture.TextureManager
+import net.minecraft.client.settings.ParticleStatus
 import net.minecraft.client.world.ClientWorld
 import net.minecraft.util.Util
 
@@ -22,14 +24,23 @@ object MC{
 	
 	// General
 	
-	val settings: GameSettings
-		get() = instance.gameSettings
-	
 	val window: MainWindow
 		get() = instance.mainWindow
 	
 	val systemTime
 		get() = Util.milliTime()
+	
+	// Settings
+	
+	val settings: GameSettings
+		get() = instance.gameSettings
+	
+	val particleSetting
+		get() = when(instance.gameSettings.particles){
+			ParticleStatus.MINIMAL -> ParticleSetting.MINIMAL
+			ParticleStatus.DECREASED -> ParticleSetting.DECREASED
+			else -> ParticleSetting.ALL
+		}
 	
 	// Game state
 	

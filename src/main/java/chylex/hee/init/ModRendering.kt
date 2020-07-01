@@ -30,6 +30,7 @@ import chylex.hee.client.render.entity.RenderEntityNothing
 import chylex.hee.client.render.entity.RenderEntityProjectileEyeOfEnder
 import chylex.hee.client.render.entity.RenderEntitySprite
 import chylex.hee.client.render.entity.RenderEntityTokenHolder
+import chylex.hee.client.render.item.RenderItemTileEntitySimple
 import chylex.hee.client.render.util.asItem
 import chylex.hee.game.block.BlockDryVines
 import chylex.hee.game.block.BlockPuzzleLogic
@@ -101,6 +102,7 @@ import net.minecraft.client.renderer.RenderType
 import net.minecraft.client.renderer.RenderTypeLookup
 import net.minecraft.client.renderer.entity.EntityRenderer
 import net.minecraft.client.renderer.entity.model.GenericHeadModel
+import net.minecraft.client.renderer.tileentity.ItemStackTileEntityRenderer
 import net.minecraft.client.renderer.tileentity.ShulkerBoxTileEntityRenderer
 import net.minecraft.client.renderer.tileentity.SkullTileEntityRenderer
 import net.minecraft.client.renderer.tileentity.TileEntityRenderer
@@ -115,12 +117,13 @@ import net.minecraftforge.fml.client.registry.ClientRegistry
 import net.minecraftforge.fml.client.registry.RenderingRegistry
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber.Bus.MOD
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent
+import java.util.concurrent.Callable
 
 @SubscribeAllEvents(Side.CLIENT, modid = HEE.ID, bus = MOD)
 object ModRendering{
-	val RENDER_ITEM_DARK_CHEST = RenderTileDarkChest.AsItem
-	val RENDER_ITEM_JAR_O_DUST = RenderTileJarODust.AsItem
-	val RENDER_ITEM_LOOT_CHEST = RenderTileLootChest.AsItem
+	val RENDER_ITEM_DARK_CHEST = callable(RenderItemTileEntitySimple(TileEntityDarkChest()))
+	val RENDER_ITEM_JAR_O_DUST = callable(RenderTileJarODust.AsItem)
+	val RENDER_ITEM_LOOT_CHEST = callable(RenderItemTileEntitySimple(TileEntityLootChest()))
 	
 	@SubscribeEvent
 	@Suppress("unused", "UNUSED_PARAMETER", "RemoveExplicitTypeArguments")
@@ -247,6 +250,8 @@ object ModRendering{
 	}
 	
 	// Utilities
+	
+	private fun <T : ItemStackTileEntityRenderer> callable(obj: T) = Callable<ItemStackTileEntityRenderer> { obj }
 	
 	private fun setLayerCutout(block: Block){
 		RenderTypeLookup.setRenderLayer(block, RenderType.getCutout())

@@ -148,7 +148,6 @@ import net.minecraft.item.ItemGroup
 import net.minecraft.util.math.AxisAlignedBB
 import net.minecraftforge.event.RegistryEvent
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber.Bus.MOD
-import java.util.concurrent.Callable
 
 @SubscribeAllEvents(modid = HEE.ID, bus = MOD)
 object ModBlocks{
@@ -518,9 +517,9 @@ object ModBlocks{
 			register(CAULDRON_PURIFIED_ENDER_GOO)
 			register(CAULDRON_DRAGONS_BREATH)
 			
-			register(JAR_O_DUST with { ItemBlock(it, itemBlockBaseProps.maxStackSize(1).setISTER { Callable { ModRendering.RENDER_ITEM_JAR_O_DUST } }) })
-			register(DARK_CHEST with { ItemBlock(it, itemBlockBaseProps.setISTER { Callable { ModRendering.RENDER_ITEM_DARK_CHEST } }) })
-			register(LOOT_CHEST with { ItemBlock(it, itemBlockBaseProps.setISTER { Callable { ModRendering.RENDER_ITEM_LOOT_CHEST } }) })
+			register(JAR_O_DUST with { ItemBlock(it, itemBlockBaseProps.maxStackSize(1).setISTER { ModRendering.RENDER_ITEM_JAR_O_DUST }) })
+			register(DARK_CHEST with { ItemBlock(it, itemBlockBaseProps.setISTER { ModRendering.RENDER_ITEM_DARK_CHEST }) })
+			register(LOOT_CHEST with { ItemBlock(it, itemBlockBaseProps.setISTER { ModRendering.RENDER_ITEM_LOOT_CHEST }) })
 			
 			register(PUZZLE_WALL with basicItemBlock)
 			register(PUZZLE_PLAIN with basicItemBlock)

@@ -19,16 +19,14 @@ import net.minecraft.util.ResourceLocation
 
 @Sided(Side.CLIENT)
 class RenderEntityProjectileEyeOfEnder(manager: RenderManager) : Render<EntityProjectileEyeOfEnder>(manager){
-	private companion object{
-		private val RENDERED_ITEM = ItemStack(Items.ENDER_EYE)
-	}
+	private val renderedItem = ItemStack(Items.ENDER_EYE)
 	
 	override fun render(entity: EntityProjectileEyeOfEnder, yaw: Float, partialTicks: Float, matrix: MatrixStack, buffer: IRenderTypeBuffer, combinedLight: Int){
 		matrix.push()
 		matrix.translateY(entity.renderBob.get(partialTicks))
 		matrix.rotateY(yaw)
 		
-		MC.itemRenderer.renderItem(RENDERED_ITEM, GROUND, false, matrix, buffer, combinedLight, OverlayTexture.NO_OVERLAY, ModelHelper.getItemModel(RENDERED_ITEM))
+		MC.itemRenderer.renderItem(renderedItem, GROUND, false, matrix, buffer, combinedLight, OverlayTexture.NO_OVERLAY, ModelHelper.getItemModel(renderedItem))
 		
 		matrix.pop()
 		

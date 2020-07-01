@@ -181,7 +181,7 @@ class RenderTileJarODust(dispatcher: TileEntityRendererDispatcher) : TileEntityR
 		private val layers = DustLayers(TileEntityJarODust.DUST_CAPACITY)
 		
 		override fun render(stack: ItemStack, matrix: MatrixStack, buffer: IRenderTypeBuffer, combinedLight: Int, combinedOverlay: Int){
-			val nbt = stack.heeTagOrNull?.getListOfCompounds(BlockJarODust.LAYERS_TAG)
+			val nbt = stack.heeTagOrNull?.getListOfCompounds(TileEntityJarODust.LAYERS_TAG)
 			
 			if (nbt != null){
 				layers.deserializeNBT(nbt)

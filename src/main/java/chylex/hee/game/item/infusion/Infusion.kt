@@ -22,30 +22,28 @@ enum class Infusion(
 	val secondaryColor: IntColor,
 	val targetItems: Array<out Item>
 ){
-	POWER   (Name("power"),    Colors(primary = Hcl( 15, l = 60F), secondary = Gray(144u)),                 Matching(Blocks.TNT, ModBlocks.INFUSED_TNT)),
-	FIRE    (Name("fire"),     Colors(primary = Hue( 35), secondary = Gray(144u)),                          Matching(Blocks.TNT, ModBlocks.INFUSED_TNT)),
-	TRAP    (Name("trap"),     Colors(primary = Hue(340), secondary = Gray(144u)),                          Matching(Blocks.TNT, ModBlocks.INFUSED_TNT)),
-	MINING  (Name("mining"),   Colors(primary = Hue( 70), secondary = Gray(144u)),                          Matching(Blocks.TNT, ModBlocks.INFUSED_TNT)),
-	HARMLESS(Name("harmless"), Colors(primary = Hue(180), secondary = Hcl(165, c = 10F, l = 70F)),          Matching(Blocks.TNT, ModBlocks.INFUSED_TNT, Items.ENDER_PEARL, ModItems.INFUSED_ENDER_PEARL)),
-	PHASING (Name("phasing"),  Colors(primary = Hue(285), secondary = Hcl(165, c = 10F, l = 70F)),          Matching(Blocks.TNT, ModBlocks.INFUSED_TNT, Items.ENDER_PEARL, ModItems.INFUSED_ENDER_PEARL)),
-	SLOW    (Name("slow"),     Colors(primary = Hue(110), secondary = Hcl(165, c = 32F, l = 70F)),          Matching(Items.ENDER_PEARL, ModItems.INFUSED_ENDER_PEARL)),
-	RIDING  (Name("riding"),   Colors(primary = Hcl( 82, c = 50F), secondary = Hcl(165, c = 32F, l = 70F)), Matching(Items.ENDER_PEARL, ModItems.INFUSED_ENDER_PEARL)),
+	POWER   ("power",    Colors(primary = Hcl( 15, l = 60F), secondary = Gray(144u)),                 Matching(Blocks.TNT, ModBlocks.INFUSED_TNT)),
+	FIRE    ("fire",     Colors(primary = Hue( 35), secondary = Gray(144u)),                          Matching(Blocks.TNT, ModBlocks.INFUSED_TNT)),
+	TRAP    ("trap",     Colors(primary = Hue(340), secondary = Gray(144u)),                          Matching(Blocks.TNT, ModBlocks.INFUSED_TNT)),
+	MINING  ("mining",   Colors(primary = Hue( 70), secondary = Gray(144u)),                          Matching(Blocks.TNT, ModBlocks.INFUSED_TNT)),
+	HARMLESS("harmless", Colors(primary = Hue(180), secondary = Hcl(165, c = 10F, l = 70F)),          Matching(Blocks.TNT, ModBlocks.INFUSED_TNT, Items.ENDER_PEARL, ModItems.INFUSED_ENDER_PEARL)),
+	PHASING ("phasing",  Colors(primary = Hue(285), secondary = Hcl(165, c = 10F, l = 70F)),          Matching(Blocks.TNT, ModBlocks.INFUSED_TNT, Items.ENDER_PEARL, ModItems.INFUSED_ENDER_PEARL)),
+	SLOW    ("slow",     Colors(primary = Hue(110), secondary = Hcl(165, c = 32F, l = 70F)),          Matching(Items.ENDER_PEARL, ModItems.INFUSED_ENDER_PEARL)),
+	RIDING  ("riding",   Colors(primary = Hcl( 82, c = 50F), secondary = Hcl(165, c = 32F, l = 70F)), Matching(Items.ENDER_PEARL, ModItems.INFUSED_ENDER_PEARL)),
 	
-	VIGOR   (Name("vigor"),    Colors(primary = Gray(244u), secondary = Hue(115)),        Matching(ModItems.ENERGY_ORACLE, ModItems.SPATIAL_DASH_GEM)),
-	CAPACITY(Name("capacity"), Colors(primary = Hue(350), secondary = Hue(210)),          Matching(ModItems.ENERGY_ORACLE, ModItems.SPATIAL_DASH_GEM)),
-	DISTANCE(Name("distance"), Colors(primary = Hcl( 70, l = 85F), secondary = Hue(210)), Matching(ModItems.ENERGY_ORACLE, ModItems.SPATIAL_DASH_GEM)),
-	SPEED   (Name("speed"),    Colors(primary = Hue( 28), secondary = Hue(210)),          Matching(ModItems.SPATIAL_DASH_GEM)),
+	VIGOR   ("vigor",    Colors(primary = Gray(244u), secondary = Hue(115)),        Matching(ModItems.ENERGY_ORACLE, ModItems.SPATIAL_DASH_GEM)),
+	CAPACITY("capacity", Colors(primary = Hue(350), secondary = Hue(210)),          Matching(ModItems.ENERGY_ORACLE, ModItems.SPATIAL_DASH_GEM)),
+	DISTANCE("distance", Colors(primary = Hcl( 70, l = 85F), secondary = Hue(210)), Matching(ModItems.ENERGY_ORACLE, ModItems.SPATIAL_DASH_GEM)),
+	SPEED   ("speed",    Colors(primary = Hue( 28), secondary = Hue(210)),          Matching(ModItems.SPATIAL_DASH_GEM)),
 	
-	STABILITY(Name("stability"), Colors(primary = Hue(130), secondary = Hue(275)), Matching(ModItems.ENERGY_RECEPTACLE)),
-	SAFETY   (Name("safety"),    Colors(primary = Hue(180), secondary = Hue(275)), Matching(ModItems.ENERGY_RECEPTACLE)),
+	STABILITY("stability", Colors(primary = Hue(130), secondary = Hue(275)), Matching(ModItems.ENERGY_RECEPTACLE)),
+	SAFETY   ("safety",    Colors(primary = Hue(180), secondary = Hue(275)), Matching(ModItems.ENERGY_RECEPTACLE)),
 	
-	EXPANSION(Name("expansion"), Colors(primary = Hue(55), secondary = Hcl(45, c = 80F, l = 60F)), Matching(ModItems.TRINKET_POUCH));
+	EXPANSION("expansion", Colors(primary = Hue(55), secondary = Hcl(45, c = 80F, l = 60F)), Matching(ModItems.TRINKET_POUCH));
 	
 	// Construction helpers
 	
-	constructor(name: Name, colors: Colors, matching: Matching) : this("hee.infusion.${name.name}", colors.primary, colors.secondary, matching.items)
-	
-	private class Name(val name: String)
+	constructor(name: String, colors: Colors, matching: Matching) : this("hee.infusion.${name}", colors.primary, colors.secondary, matching.items)
 	
 	private class Colors(val primary: IntColor, val secondary: IntColor){
 		@Suppress("NOTHING_TO_INLINE", "FunctionName")

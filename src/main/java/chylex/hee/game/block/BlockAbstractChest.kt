@@ -4,21 +4,28 @@ import chylex.hee.game.block.info.BlockBuilder
 import chylex.hee.game.entity.living.ai.AIOcelotSitOverride.IOcelotCanSitOn
 import chylex.hee.init.ModContainers
 import chylex.hee.system.migration.Facing.NORTH
+import chylex.hee.system.migration.forge.Side
+import chylex.hee.system.migration.forge.Sided
 import chylex.hee.system.migration.vanilla.EntityCat
 import chylex.hee.system.migration.vanilla.EntityLivingBase
 import chylex.hee.system.migration.vanilla.EntityPlayer
+import chylex.hee.system.util.asVoxelShape
 import chylex.hee.system.util.getState
 import chylex.hee.system.util.getTile
 import chylex.hee.system.util.selectExistingEntities
 import chylex.hee.system.util.withFacing
+import net.minecraft.block.AbstractChestBlock
 import net.minecraft.block.Block
 import net.minecraft.block.BlockRenderType.ENTITYBLOCK_ANIMATED
 import net.minecraft.block.BlockState
+import net.minecraft.block.Blocks
 import net.minecraft.block.ChestBlock.FACING
 import net.minecraft.item.BlockItemUseContext
 import net.minecraft.item.ItemStack
 import net.minecraft.state.StateContainer.Builder
+import net.minecraft.tileentity.ChestTileEntity
 import net.minecraft.tileentity.TileEntity
+import net.minecraft.tileentity.TileEntityMerger.ICallbackWrapper
 import net.minecraft.util.ActionResultType
 import net.minecraft.util.ActionResultType.SUCCESS
 import net.minecraft.util.Hand
@@ -27,11 +34,17 @@ import net.minecraft.util.Rotation
 import net.minecraft.util.math.AxisAlignedBB
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.BlockRayTraceResult
+import net.minecraft.util.math.shapes.ISelectionContext
+import net.minecraft.util.math.shapes.VoxelShape
 import net.minecraft.world.IBlockReader
 import net.minecraft.world.IWorldReader
 import net.minecraft.world.World
 
-abstract class BlockAbstractChest<T : TileEntityBaseChest>(builder: BlockBuilder) : BlockSimpleShaped(builder, AxisAlignedBB(0.0625, 0.0, 0.0625, 0.9375, 0.875, 0.9375)), IOcelotCanSitOn{
+abstract class BlockAbstractChest<T : TileEntityBaseChest>(builder: BlockBuilder) : AbstractChestBlock<T>(builder.p, null), IOcelotCanSitOn{
+	private companion object{
+		private val AABB = AxisAlignedBB(0.0625, 0.0, 0.0625, 0.9375, 0.875, 0.9375).asVoxelShape
+	}
+	
 	init{
 		defaultState = stateContainer.baseState.withFacing(NORTH)
 	}
@@ -40,7 +53,11 @@ abstract class BlockAbstractChest<T : TileEntityBaseChest>(builder: BlockBuilder
 		container.add(FACING)
 	}
 	
-	// Placement and interaction
+	override fun getShape(state: BlockState, world: IBlockReader, pos: BlockPos, context: ISelectionContext): VoxelShape{
+		return AABB
+	}
+	
+	// Tile entity
 	
 	abstract fun createTileEntity(): T
 	
@@ -51,6 +68,17 @@ abstract class BlockAbstractChest<T : TileEntityBaseChest>(builder: BlockBuilder
 	final override fun createTileEntity(state: BlockState, world: IBlockReader): TileEntity{
 		return createTileEntity()
 	}
+	
+	final override fun createNewTileEntity(world: IBlockReader): TileEntity{
+		return createTileEntity()
+	}
+	
+	@Sided(Side.CLIENT)
+	override fun combine(state: BlockState, world: World, pos: BlockPos, unknown: Boolean): ICallbackWrapper<out ChestTileEntity>{
+		return (Blocks.ENDER_CHEST as AbstractChestBlock<*>).combine(state, world, pos, unknown) // UPDATE reduce hackiness
+	}
+	
+	// Placement and interaction
 	
 	override fun getStateForPlacement(context: BlockItemUseContext): BlockState{
 		return this.withFacing(context.placementHorizontalFacing.opposite)

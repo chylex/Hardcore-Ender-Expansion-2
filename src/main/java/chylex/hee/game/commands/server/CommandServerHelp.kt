@@ -1,5 +1,6 @@
 package chylex.hee.game.commands.server
 import chylex.hee.game.commands.ICommand
+import chylex.hee.game.commands.util.CommandExecutionFunctionCtx
 import chylex.hee.game.commands.util.executes
 import chylex.hee.game.commands.util.getInt
 import chylex.hee.game.commands.util.returning
@@ -22,24 +23,20 @@ import net.minecraft.util.text.event.ClickEvent
 import net.minecraft.util.text.event.ClickEvent.Action.RUN_COMMAND
 import net.minecraft.util.text.event.ClickEvent.Action.SUGGEST_COMMAND
 
-object CommandServerHelp : ICommand{
+object CommandServerHelp : ICommand, CommandExecutionFunctionCtx<Boolean>{
 	private const val COMMANDS_PER_PAGE = 7
 	
 	override val name = "help"
 	
 	override fun register(builder: ArgumentBuilder<CommandSource, *>){
-		builder.executes(this::execute)
+		builder.executes(this, false)
 		
 		builder.then(
-			argument("page", integer(1)).executes(this::execute, true)
+			argument("page", integer(1)).executes(this, true)
 		)
 	}
 	
-	fun execute(ctx: CommandContext<CommandSource>): Int{
-		return execute(ctx, false)
-	}
-	
-	private fun execute(ctx: CommandContext<CommandSource>, hasDisplayPage: Boolean) = returning(1){
+	override fun invoke(ctx: CommandContext<CommandSource>, hasDisplayPage: Boolean) = returning(1){
 		val source = ctx.source
 		val displayPage = if (hasDisplayPage) ctx.getInt("page") else 1
 		

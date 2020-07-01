@@ -9,6 +9,7 @@ import chylex.hee.game.commands.server.CommandServerLootChest
 import chylex.hee.game.commands.server.CommandServerPortalToken
 import chylex.hee.game.commands.util.EnumArgument
 import chylex.hee.game.commands.util.ValidatedStringArgument
+import chylex.hee.game.commands.util.executes
 import chylex.hee.system.Debug
 import chylex.hee.system.migration.forge.SubscribeAllEvents
 import chylex.hee.system.migration.forge.SubscribeEvent
@@ -40,7 +41,7 @@ object ModCommands{
 	
 	@SubscribeEvent
 	fun onServerStart(e: FMLServerStartingEvent){
-		val baseCommand = literal(ROOT).executes(CommandServerHelp::execute)
+		val baseCommand = literal(ROOT).executes(CommandServerHelp, false)
 		
 		for(command in admin + debug){
 			baseCommand.then(literal(command.name).requires { it.hasPermissionLevel(command.permissionLevel) }.apply(command::register))

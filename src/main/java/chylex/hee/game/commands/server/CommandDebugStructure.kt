@@ -40,22 +40,26 @@ object CommandDebugStructure : ICommand{ // UPDATE
 	override val name = "structure"
 	
 	override fun register(builder: ArgumentBuilder<CommandSource, *>){
+		val execPieces = this::executePieces
+		val execPiecesDev = this::executePiecesDev
+		val execBuild = this::executeBuild
+		
 		builder.then(
 			literal("resetcache").executes(this::executeResetCache)
 		)
 		
 		builder.then(
 			argument("structure", validatedString(structureDescriptions.keys)).then(
-				literal("pieces").executes(this::executePieces, Transform.ALL).then(
-					literal("notfs").executes(this::executePieces, listOf(Transform.NONE))
+				literal("pieces").executes(execPieces, Transform.ALL).then(
+					literal("notfs").executes(execPieces, listOf(Transform.NONE))
 				)
 			).then(
-				literal("piecesdev").executes(this::executePiecesDev, false).then(
-					argument("transform", validatedString(setOf("0", "90", "180", "270", "M0", "M90", "M180", "M270"))).executes(this::executePiecesDev, true)
+				literal("piecesdev").executes(execPiecesDev, false).then(
+					argument("transform", validatedString(setOf("0", "90", "180", "270", "M0", "M90", "M180", "M270"))).executes(execPiecesDev, true)
 				)
 			).then(
-				literal("build").executes(this::executeBuild, false).then(
-					argument("seed", longArg()).executes(this::executeBuild, true)
+				literal("build").executes(execBuild, false).then(
+					argument("seed", longArg()).executes(execBuild, true)
 				)
 			).then(
 				literal("locate").executes(this::executeLocate)

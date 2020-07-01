@@ -22,19 +22,23 @@ object CommandServerCausatum : ICommand{
 	override val name = "causatum"
 	
 	override fun register(builder: ArgumentBuilder<CommandSource, *>){
+		val execCheck = this::executeCheck
+		val execSet = this::executeSet
+		
 		builder.then(
 			literal("list").executes(this::executeList)
 		)
+		
 		builder.then(
-			literal("check").executes(this::executeCheck, false).then(
-				argument("player", player()).executes(this::executeCheck, true)
+			literal("check").executes(execCheck, false).then(
+				argument("player", player()).executes(execCheck, true)
 			)
 		)
 		
 		builder.then(
 			literal("set").then(
-				argument("stage", enum<CausatumStage>()).executes(this::executeSet, false).then(
-					argument("players", players()).executes(this::executeSet, true)
+				argument("stage", enum<CausatumStage>()).executes(execSet, false).then(
+					argument("players", players()).executes(execSet, true)
 				)
 			)
 		)

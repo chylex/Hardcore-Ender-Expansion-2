@@ -1,6 +1,7 @@
 package chylex.hee.game.commands.util
 import chylex.hee.game.commands.ICommand
 import chylex.hee.system.migration.vanilla.TextComponentTranslation
+import com.mojang.brigadier.Command
 import com.mojang.brigadier.builder.ArgumentBuilder
 import com.mojang.brigadier.context.CommandContext
 import com.mojang.brigadier.exceptions.SimpleCommandExceptionType
@@ -8,6 +9,13 @@ import net.minecraft.command.CommandSource
 import net.minecraft.command.arguments.LocationInput
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.text.ITextComponent
+
+typealias CommandExecutionFunction = Command<CommandSource>
+typealias CommandExecutionFunctionCtx<C> = (CommandContext<CommandSource>, C) -> Int
+
+fun <C> ArgumentBuilder<CommandSource, *>.executes(function: (CommandContext<CommandSource>, C) -> Int, extra: C){
+	this.executes { function(it, extra) }
+}
 
 fun <C, T : ArgumentBuilder<CommandSource, T>> ArgumentBuilder<CommandSource, T>.executes(function: (CommandContext<CommandSource>, C) -> Int, extra: C): T{
 	return this.executes { function(it, extra) }

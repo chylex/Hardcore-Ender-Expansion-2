@@ -29,18 +29,16 @@ import java.util.Random
 
 @Sided(Side.CLIENT)
 open class RenderEntityMobAbstractEnderman(manager: RenderManager) : RenderEnderman(manager){
-	private companion object{
-		private fun RENDER_TYPE_CLONE(tex: ResourceLocation) = with(RenderStateBuilder()){
-			tex(tex)
-			blend(SF_SRC_ALPHA, DF_ONE_MINUS_SRC_ALPHA)
-			lighting(LIGHTING_ENABLED)
-			alpha(0.004F)
-			cull(CULL_DISABLED)
-			lightmap(LIGHTMAP_ENABLED)
-			overlay(OVERLAY_DISABLED)
-			mask(MASK_COLOR)
-			buildType("hee:enderman_clone", DefaultVertexFormats.ENTITY, GL11.GL_QUADS, bufferSize = 256, useDelegate = true)
-		}
+	private fun RENDER_TYPE_CLONE(tex: ResourceLocation) = with(RenderStateBuilder()){
+		tex(tex)
+		blend(SF_SRC_ALPHA, DF_ONE_MINUS_SRC_ALPHA)
+		lighting(LIGHTING_ENABLED)
+		alpha(0.004F)
+		cull(CULL_DISABLED)
+		lightmap(LIGHTMAP_ENABLED)
+		overlay(OVERLAY_DISABLED)
+		mask(MASK_COLOR)
+		buildType("hee:enderman_clone", DefaultVertexFormats.ENTITY, GL11.GL_QUADS, bufferSize = 256, useDelegate = true)
 	}
 	
 	private val rand = Random()

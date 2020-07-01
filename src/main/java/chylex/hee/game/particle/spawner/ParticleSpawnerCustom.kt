@@ -37,7 +37,7 @@ class ParticleSpawnerCustom<D : IParticleData<T>, T>(
 		val playerPos = MC.instance.renderViewEntity?.posVec ?: return
 		
 		val particleManager = MC.particleManager
-		val particleSetting = ParticleSetting.current
+		val particleSetting = MC.particleSetting
 		
 		for(point in shape.points){
 			pos.next(tmpOffsetPos, rand)

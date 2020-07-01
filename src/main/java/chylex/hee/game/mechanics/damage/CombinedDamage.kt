@@ -4,13 +4,21 @@ import chylex.hee.system.migration.vanilla.EntityLivingBase
 import net.minecraft.entity.Entity
 
 class CombinedDamage(private vararg val definitions: Pair<Damage, Float>){
-	private fun dealToInternal(target: Entity, damageCall: (Pair<Damage, Float>) -> Boolean): Boolean{
+	private fun shouldPreventDamage(target: Entity): Boolean{
 		if (target is EntityLivingBase && target.hurtResistantTime > (target.maxHurtResistantTime / 2F)){
 			val lastDamage = target.lastDamage
 			
 			if (definitions.all { it.second <= lastDamage }){
-				return false
+				return true
 			}
+		}
+		
+		return false
+	}
+	
+	private inline fun dealToInternal(target: Entity, damageCall: (Pair<Damage, Float>) -> Boolean): Boolean{
+		if (shouldPreventDamage(target)){
+			return false
 		}
 		
 		var causedAnyDamage = false
