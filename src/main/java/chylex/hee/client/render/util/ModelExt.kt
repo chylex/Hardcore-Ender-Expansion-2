@@ -1,8 +1,13 @@
 package chylex.hee.client.render.util
 import chylex.hee.system.migration.forge.Side
 import chylex.hee.system.migration.forge.Sided
+import net.minecraft.client.renderer.model.BakedQuad
+import net.minecraft.client.renderer.model.IBakedModel
 import net.minecraft.client.renderer.model.ModelRenderer
 import net.minecraft.client.renderer.model.ModelRenderer.ModelBox
+import net.minecraft.util.Direction
+import java.util.Random
+import kotlin.concurrent.getOrSet
 
 val ModelRenderer.beginBox
 	get() = ModelBoxBuilder(this)
@@ -13,4 +18,11 @@ const val FACE_BACK = 5
 @Sided(Side.CLIENT)
 fun ModelBox.retainFace(face: Int){
 	quads = arrayOf(quads[face])
+}
+
+private val seedRand = ThreadLocal<Random>()
+
+@Sided(Side.CLIENT)
+fun IBakedModel.getQuads(facing: Direction? = null): MutableList<BakedQuad>{
+	return this.getQuads(null, facing, seedRand.getOrSet { Random() }.apply { setSeed(42L) })
 }

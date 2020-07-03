@@ -1,5 +1,6 @@
 package chylex.hee.client.render.block
 import chylex.hee.client.model.ModelHelper
+import chylex.hee.client.render.util.getQuads
 import chylex.hee.client.render.util.rotateY
 import chylex.hee.client.util.MC
 import chylex.hee.game.block.entity.TileEntityJarODust
@@ -58,7 +59,7 @@ class RenderTileTable(dispatcher: TileEntityRendererDispatcher) : TileEntityRend
 		val mat = matrix.last
 		val builder = ItemRenderer.getBuffer(buffer, RenderTypeLookup.getRenderType(itemStack), true /* isItem */, false /* hasGlint */)
 		
-		for(quad in itemModel.getQuads(null, null, tile.wrld.rand)){
+		for(quad in itemModel.getQuads()){
 			builder.addVertexData(mat, quad, COLOR_SHADE, COLOR_SHADE, COLOR_SHADE, COLOR_ALPHA, LIGHT, OverlayTexture.NO_OVERLAY)
 		}
 		
