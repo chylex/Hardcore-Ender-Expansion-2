@@ -132,7 +132,7 @@ sealed class EnderEyePhase : INBTSerializable<TagCompound>{
 			}
 			
 			if (!::startRot.isInitialized){
-				startRot = Quaternion.fromYawPitch(entity.rotationYaw, entity.rotationPitch)
+				startRot = Quaternion.fromYawPitch(entity.rotationYawHead, entity.rotationPitch)
 			}
 			
 			if (timer < 50){
@@ -143,7 +143,7 @@ sealed class EnderEyePhase : INBTSerializable<TagCompound>{
 				}
 				
 				val next = startRot.slerp(targetRot, slerpProgress)
-				entity.rotationYaw = next.rotationYaw
+				entity.rotationYawHead = next.rotationYaw
 				entity.rotationPitch = next.rotationPitch
 			}
 			

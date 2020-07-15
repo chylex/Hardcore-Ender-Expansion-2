@@ -6,7 +6,7 @@ import chylex.hee.game.entity.living.behavior.EnderEyePhase.Hibernated
 import chylex.hee.game.entity.living.behavior.EnderEyePhase.OpenEye
 import chylex.hee.game.entity.living.behavior.EnderEyePhase.Ready
 import chylex.hee.game.entity.living.behavior.EnderEyePhase.Staring
-import chylex.hee.game.entity.living.helpers.EntityBodyHeadless
+import chylex.hee.game.entity.living.helpers.EntityBodyHeadOnly
 import chylex.hee.game.entity.living.helpers.EntityLookSlerp
 import chylex.hee.game.entity.living.helpers.EntityMoveFlyingForward
 import chylex.hee.game.entity.util.EntityData
@@ -222,7 +222,9 @@ class EntityBossEnderEye(type: EntityType<EntityBossEnderEye>, world: World) : E
 	
 	override fun onInitialSpawn(world: IWorld, difficulty: DifficultyInstance, reason: SpawnReason, data: ILivingEntityData?, nbt: CompoundNBT?): ILivingEntityData?{
 		val yaw = ((rotationYaw + 45F).toInt() / 90) * 90F
+		
 		setPositionAndRotation(posX, posY, posZ, yaw, 0F)
+		rotationYawHead = yaw
 		
 		return super.onInitialSpawn(world, difficulty, reason, data, nbt)
 	}
@@ -317,7 +319,7 @@ class EntityBossEnderEye(type: EntityType<EntityBossEnderEye>, world: World) : E
 	// Movement
 	
 	override fun createBodyController(): BodyController{
-		return EntityBodyHeadless(this)
+		return EntityBodyHeadOnly(this)
 	}
 	
 	override fun moveRelative(friction: Float, dir: Vec3d){

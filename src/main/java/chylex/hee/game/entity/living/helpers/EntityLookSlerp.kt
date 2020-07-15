@@ -31,16 +31,16 @@ class EntityLookSlerp(entity: EntityLiving, private val adjustmentSpeed: Float, 
 			
 			val dir = mob.lookPosVec.directionTowards(Vec3d(posX, posY, posZ))
 			
-			if (Vec3d.fromPitchYaw(mob.rotationPitch, mob.rotationYaw).dotProduct(dir) >= maxInstantAngleCos){
-				mob.rotationYaw = dir.toYaw()
+			if (Vec3d.fromPitchYaw(mob.rotationPitch, mob.rotationYawHead).dotProduct(dir) >= maxInstantAngleCos){
+				mob.rotationYawHead = dir.toYaw()
 				mob.rotationPitch = dir.toPitch()
 			}
 			else{
-				val current = Quaternion.fromYawPitch(mob.rotationYaw, mob.rotationPitch)
+				val current = Quaternion.fromYawPitch(mob.rotationYawHead, mob.rotationPitch)
 				val target = Quaternion.fromYawPitch(dir.toYaw(), dir.toPitch())
 				
 				val next = current.slerp(target, adjustmentSpeed)
-				mob.rotationYaw = next.rotationYaw
+				mob.rotationYawHead = next.rotationYaw
 				mob.rotationPitch = next.rotationPitch
 			}
 		}
