@@ -7,9 +7,9 @@ class ModelBoxBuilder(private val model: ModelRenderer){
 	private var y = 0F
 	private var z = 0F
 	
-	private var w = 0
-	private var h = 0
-	private var d = 0
+	private var w = 0F
+	private var h = 0F
+	private var d = 0F
 	
 	private var u: Int? = null
 	private var v: Int? = null
@@ -23,11 +23,15 @@ class ModelBoxBuilder(private val model: ModelRenderer){
 		return this
 	}
 	
-	fun size(w: Int, h: Int, d: Int): ModelBoxBuilder{
+	fun size(w: Float, h: Float, d: Float): ModelBoxBuilder{
 		this.w = w
 		this.h = h
 		this.d = d
 		return this
+	}
+	
+	fun size(w: Int, h: Int, d: Int): ModelBoxBuilder{
+		return this.size(w.toFloat(), h.toFloat(), d.toFloat())
 	}
 	
 	fun tex(u: Int, v: Int): ModelBoxBuilder{
@@ -46,10 +50,10 @@ class ModelBoxBuilder(private val model: ModelRenderer){
 		val v = v
 		
 		if (u == null || v == null){
-			model.addBox(x, y, z, w.toFloat(), h.toFloat(), d.toFloat(), mirror)
+			model.addBox(x, y, z, w, h, d, mirror)
 		}
 		else{
-			model.cubeList.add(ModelBox(u, v, x, y, z, w.toFloat(), h.toFloat(), d.toFloat(), 0F, 0F, 0F, mirror, model.textureWidth, model.textureHeight))
+			model.cubeList.add(ModelBox(u, v, x, y, z, w, h, d, 0F, 0F, 0F, mirror, model.textureWidth, model.textureHeight))
 		}
 	}
 }

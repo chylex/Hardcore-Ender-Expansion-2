@@ -6,6 +6,7 @@ import net.minecraft.client.renderer.model.IBakedModel
 import net.minecraft.client.renderer.model.ModelRenderer
 import net.minecraft.client.renderer.model.ModelRenderer.ModelBox
 import net.minecraft.util.Direction
+import org.apache.commons.lang3.ArrayUtils
 import java.util.Random
 import kotlin.concurrent.getOrSet
 
@@ -18,6 +19,11 @@ const val FACE_BACK = 5
 @Sided(Side.CLIENT)
 fun ModelBox.retainFace(face: Int){
 	quads = arrayOf(quads[face])
+}
+
+@Sided(Side.CLIENT)
+fun ModelBox.removeFace(face: Int){
+	quads = ArrayUtils.remove(quads, face)
 }
 
 private val seedRand = ThreadLocal<Random>()
