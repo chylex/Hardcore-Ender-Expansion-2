@@ -1,6 +1,5 @@
 package chylex.hee.game.commands.util
 import chylex.hee.game.commands.ICommand
-import chylex.hee.system.migration.vanilla.TextComponentTranslation
 import com.mojang.brigadier.Command
 import com.mojang.brigadier.builder.ArgumentBuilder
 import com.mojang.brigadier.context.CommandContext
@@ -9,6 +8,7 @@ import net.minecraft.command.CommandSource
 import net.minecraft.command.arguments.LocationInput
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.text.ITextComponent
+import net.minecraft.util.text.TranslationTextComponent
 
 typealias CommandExecutionFunction = Command<CommandSource>
 typealias CommandExecutionFunctionCtx<C> = (CommandContext<CommandSource>, C) -> Int
@@ -27,11 +27,11 @@ inline fun returning(result: Int, code: () -> Unit): Int{
 }
 
 fun ICommand.message(name: String, vararg params: Any): ITextComponent{
-	return TextComponentTranslation("commands.hee.${this.name}.$name", *params)
+	return TranslationTextComponent("commands.hee.${this.name}.$name", *params)
 }
 
 fun ICommand.exception(name: String): SimpleCommandExceptionType{
-	return SimpleCommandExceptionType(TextComponentTranslation("commands.hee.${this.name}.$name"))
+	return SimpleCommandExceptionType(TranslationTextComponent("commands.hee.${this.name}.$name"))
 }
 
 inline fun <reified T : Enum<T>> CommandContext<CommandSource>.getEnum(name: String): T{

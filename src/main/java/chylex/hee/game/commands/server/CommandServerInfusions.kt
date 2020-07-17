@@ -9,13 +9,13 @@ import chylex.hee.game.item.infusion.Infusion
 import chylex.hee.game.item.infusion.InfusionList
 import chylex.hee.game.item.infusion.InfusionTag
 import chylex.hee.system.migration.Hand.MAIN_HAND
-import chylex.hee.system.migration.vanilla.TextComponentTranslation
 import com.mojang.brigadier.builder.ArgumentBuilder
 import com.mojang.brigadier.context.CommandContext
 import net.minecraft.command.CommandSource
 import net.minecraft.command.Commands.argument
 import net.minecraft.command.Commands.literal
 import net.minecraft.item.ItemStack
+import net.minecraft.util.text.TranslationTextComponent
 
 object CommandServerInfusions : ICommand{
 	override val name = "infusions"
@@ -83,7 +83,7 @@ object CommandServerInfusions : ICommand{
 			infusion.tryInfuse(stack) ?: throw NOT_APPLICABLE.create()
 		}
 		
-		ctx.source.sendFeedback(message("add_success", TextComponentTranslation(infusion.translationKey)), true)
+		ctx.source.sendFeedback(message("add_success", TranslationTextComponent(infusion.translationKey)), true)
 	}
 	
 	private fun executeRemove(ctx: CommandContext<CommandSource>) = returning(1){
@@ -97,6 +97,6 @@ object CommandServerInfusions : ICommand{
 			stack.also { InfusionTag.setList(it, list.except(infusion)) }
 		}
 		
-		ctx.source.sendFeedback(message("remove_success", TextComponentTranslation(infusion.translationKey)), true)
+		ctx.source.sendFeedback(message("remove_success", TranslationTextComponent(infusion.translationKey)), true)
 	}
 }

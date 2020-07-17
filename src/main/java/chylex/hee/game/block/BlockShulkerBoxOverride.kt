@@ -4,7 +4,6 @@ import chylex.hee.init.ModContainers
 import chylex.hee.system.migration.MagicValues
 import chylex.hee.system.migration.vanilla.BlockShulkerBox
 import chylex.hee.system.migration.vanilla.EntityPlayer
-import chylex.hee.system.migration.vanilla.TextComponentTranslation
 import chylex.hee.system.migration.vanilla.TileEntityShulkerBox
 import chylex.hee.system.util.TagCompound
 import chylex.hee.system.util.facades.Stats
@@ -23,6 +22,7 @@ import net.minecraft.util.Hand
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.BlockRayTraceResult
 import net.minecraft.util.math.shapes.VoxelShapes
+import net.minecraft.util.text.TranslationTextComponent
 import net.minecraft.world.IBlockReader
 import net.minecraft.world.World
 import net.minecraft.world.storage.loot.LootContext.Builder
@@ -89,7 +89,7 @@ class BlockShulkerBoxOverride(properties: Properties, color: DyeColor?) : BlockS
 				}
 				else{
 					ModContainers.open(player, object : INamedContainerProvider by it {
-						override fun getDisplayName() = TextComponentTranslation(BoxSize.LARGE.translationKey)
+						override fun getDisplayName() = TranslationTextComponent(BoxSize.LARGE.translationKey)
 					}, BoxSize.LARGE.slots)
 				}
 				

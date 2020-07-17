@@ -2,7 +2,6 @@ package chylex.hee.game.block.entity
 import chylex.hee.game.block.BlockShulkerBoxOverride.BoxSize
 import chylex.hee.game.container.ContainerShulkerBox
 import chylex.hee.init.ModTileEntities
-import chylex.hee.system.migration.vanilla.TextComponentTranslation
 import chylex.hee.system.migration.vanilla.TileEntityShulkerBox
 import chylex.hee.system.util.TagCompound
 import chylex.hee.system.util.delegate.NotifyOnChange
@@ -19,6 +18,7 @@ import net.minecraft.tileentity.TileEntityType
 import net.minecraft.util.Direction
 import net.minecraft.util.NonNullList
 import net.minecraft.util.text.ITextComponent
+import net.minecraft.util.text.TranslationTextComponent
 
 class TileEntityShulkerBoxCustom : TileEntityShulkerBox(){
 	companion object{
@@ -42,7 +42,7 @@ class TileEntityShulkerBoxCustom : TileEntityShulkerBox(){
 	// Container
 	
 	override fun getDefaultName(): ITextComponent{
-		return TextComponentTranslation(boxSize.translationKey)
+		return TranslationTextComponent(boxSize.translationKey)
 	}
 	
 	override fun getSlotsForFace(side: Direction): IntArray{

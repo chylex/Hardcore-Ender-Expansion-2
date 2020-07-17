@@ -18,7 +18,6 @@ import chylex.hee.system.migration.ActionResult.FAIL
 import chylex.hee.system.migration.ActionResult.SUCCESS
 import chylex.hee.system.migration.forge.Side
 import chylex.hee.system.migration.forge.Sided
-import chylex.hee.system.migration.vanilla.TextComponentTranslation
 import chylex.hee.system.util.Pos
 import chylex.hee.system.util.TagCompound
 import chylex.hee.system.util.breakBlock
@@ -39,6 +38,7 @@ import net.minecraft.item.ItemUseContext
 import net.minecraft.util.ActionResultType
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.text.ITextComponent
+import net.minecraft.util.text.TranslationTextComponent
 import net.minecraft.world.World
 import kotlin.math.pow
 
@@ -214,13 +214,13 @@ class ItemEnergyReceptacle(properties: Properties) : ItemAbstractInfusable(prope
 			val tag = stack.heeTagOrNull
 			
 			if (!tag.hasKey(CLUSTER_SNAPSHOT_TAG)){
-				lines.add(TextComponentTranslation("item.hee.energy_receptacle.tooltip.empty"))
+				lines.add(TranslationTextComponent("item.hee.energy_receptacle.tooltip.empty"))
 			}
 			else{
 				val snapshot = ClusterSnapshot(tag.getCompound(CLUSTER_SNAPSHOT_TAG))
 				val level = calculateNewEnergyLevel(snapshot, world.totalTime - tag.getLong(UPDATE_TIME_TAG), InfusionTag.getList(stack))
 				
-				lines.add(TextComponentTranslation("item.hee.energy_receptacle.tooltip.holding", level.displayString))
+				lines.add(TranslationTextComponent("item.hee.energy_receptacle.tooltip.holding", level.displayString))
 			}
 		}
 		

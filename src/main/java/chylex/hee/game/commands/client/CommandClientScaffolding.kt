@@ -1,8 +1,8 @@
 package chylex.hee.game.commands.client
 import chylex.hee.game.commands.ClientCommandHandler.IClientCommand
 import chylex.hee.game.commands.server.CommandDebugStructure
-import chylex.hee.system.migration.vanilla.TextComponentString
 import net.minecraft.command.CommandSource
+import net.minecraft.util.text.StringTextComponent
 import java.util.prefs.Preferences
 
 object CommandClientScaffolding : IClientCommand{
@@ -21,7 +21,7 @@ object CommandClientScaffolding : IClientCommand{
 		val structure = args.getOrNull(0) ?: return
 		
 		if (!CommandDebugStructure.structureDescriptions.containsKey(structure)){
-			sender.sendFeedback(TextComponentString("Unknown structure."), false)
+			sender.sendFeedback(StringTextComponent("Unknown structure."), false)
 			return
 		}
 		
@@ -30,6 +30,6 @@ object CommandClientScaffolding : IClientCommand{
 			put("File", args.getOrElse(1){ "" })
 		}
 		
-		sender.sendFeedback(TextComponentString("Structure set."), false)
+		sender.sendFeedback(StringTextComponent("Structure set."), false)
 	}
 }

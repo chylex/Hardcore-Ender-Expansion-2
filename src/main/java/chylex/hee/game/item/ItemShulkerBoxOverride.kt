@@ -17,8 +17,6 @@ import chylex.hee.system.migration.forge.SubscribeAllEvents
 import chylex.hee.system.migration.forge.SubscribeEvent
 import chylex.hee.system.migration.vanilla.EntityPlayer
 import chylex.hee.system.migration.vanilla.ItemBlock
-import chylex.hee.system.migration.vanilla.TextComponentString
-import chylex.hee.system.migration.vanilla.TextComponentTranslation
 import chylex.hee.system.util.allSlots
 import chylex.hee.system.util.facades.Stats
 import chylex.hee.system.util.find
@@ -51,8 +49,10 @@ import net.minecraft.util.ActionResult
 import net.minecraft.util.Hand
 import net.minecraft.util.NonNullList
 import net.minecraft.util.text.ITextComponent
+import net.minecraft.util.text.StringTextComponent
 import net.minecraft.util.text.TextFormatting.GRAY
 import net.minecraft.util.text.TextFormatting.ITALIC
+import net.minecraft.util.text.TranslationTextComponent
 import net.minecraft.world.World
 import net.minecraftforge.client.event.GuiScreenEvent
 
@@ -178,8 +178,8 @@ class ItemShulkerBoxOverride(block: Block, properties: Properties) : ItemBlock(b
 	@Sided(Side.CLIENT)
 	override fun addInformation(stack: ItemStack, world: World?, lines: MutableList<ITextComponent>, flags: ITooltipFlag){
 		if (MC.currentScreen is InventoryScreen){
-			lines.add(TextComponentTranslation("item.hee.shulker_box.tooltip"))
-			lines.add(TextComponentString(""))
+			lines.add(TranslationTextComponent("item.hee.shulker_box.tooltip"))
+			lines.add(StringTextComponent(""))
 		}
 		
 		val contentsTag = stack.nbtOrNull?.getCompoundOrNull(MagicValues.TILE_ENTITY_TAG)
@@ -200,16 +200,16 @@ class ItemShulkerBoxOverride(block: Block, properties: Properties) : ItemBlock(b
 				val sorted = counts.object2IntEntrySet().sortedWith(compareBy({ -it.intValue }, { it.key }))
 				
 				for((name, count) in sorted.take(TOOLTIP_ENTRY_COUNT)){
-					lines.add(TextComponentString("%s x%d".format(name, count)).applyTextStyle(GRAY))
+					lines.add(StringTextComponent("%s x%d".format(name, count)).applyTextStyle(GRAY))
 				}
 				
 				if (sorted.size > TOOLTIP_ENTRY_COUNT){
-					lines.add(TextComponentTranslation("container.shulkerBox.more", sorted.size - TOOLTIP_ENTRY_COUNT).applyTextStyles(GRAY, ITALIC))
+					lines.add(TranslationTextComponent("container.shulkerBox.more", sorted.size - TOOLTIP_ENTRY_COUNT).applyTextStyles(GRAY, ITALIC))
 				}
 			}
 		}
 		
-		if ((lines.lastOrNull() as? TextComponentString)?.let { it.text.isEmpty() && it.siblings.isEmpty() } == true){
+		if ((lines.lastOrNull() as? StringTextComponent)?.let { it.text.isEmpty() && it.siblings.isEmpty() } == true){
 			lines.removeAt(lines.lastIndex)
 		}
 	}

@@ -7,7 +7,6 @@ import chylex.hee.game.commands.util.message
 import chylex.hee.game.commands.util.returning
 import chylex.hee.game.mechanics.causatum.CausatumStage
 import chylex.hee.game.mechanics.causatum.EnderCausatum
-import chylex.hee.system.migration.vanilla.TextComponentString
 import com.mojang.brigadier.builder.ArgumentBuilder
 import com.mojang.brigadier.context.CommandContext
 import net.minecraft.command.CommandSource
@@ -16,6 +15,7 @@ import net.minecraft.command.Commands.literal
 import net.minecraft.command.arguments.EntityArgument
 import net.minecraft.command.arguments.EntityArgument.player
 import net.minecraft.command.arguments.EntityArgument.players
+import net.minecraft.util.text.StringTextComponent
 import java.util.Locale
 
 object CommandServerCausatum : ICommand{
@@ -49,7 +49,7 @@ object CommandServerCausatum : ICommand{
 			sendFeedback(message("list"), false)
 			
 			for(stage in CausatumStage.values()){
-				sendFeedback(TextComponentString(stage.name.toLowerCase(Locale.ENGLISH)), false)
+				sendFeedback(StringTextComponent(stage.name.toLowerCase(Locale.ENGLISH)), false)
 			}
 		}
 	}

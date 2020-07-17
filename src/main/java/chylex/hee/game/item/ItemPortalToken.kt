@@ -20,8 +20,6 @@ import chylex.hee.system.migration.Facing.UP
 import chylex.hee.system.migration.forge.Side
 import chylex.hee.system.migration.forge.Sided
 import chylex.hee.system.migration.vanilla.EntityPlayer
-import chylex.hee.system.migration.vanilla.TextComponentString
-import chylex.hee.system.migration.vanilla.TextComponentTranslation
 import chylex.hee.system.util.color.IntColor.Companion.RGB
 import chylex.hee.system.util.facades.Resource
 import chylex.hee.system.util.getEnum
@@ -43,6 +41,8 @@ import net.minecraft.util.Hand
 import net.minecraft.util.NonNullList
 import net.minecraft.util.math.AxisAlignedBB
 import net.minecraft.util.text.ITextComponent
+import net.minecraft.util.text.StringTextComponent
+import net.minecraft.util.text.TranslationTextComponent
 import net.minecraft.world.World
 
 class ItemPortalToken(properties: Properties) : Item(properties){
@@ -151,7 +151,7 @@ class ItemPortalToken(properties: Properties) : Item(properties){
 	// Client
 	
 	override fun getDisplayName(stack: ItemStack): ITextComponent{
-		return TextComponentTranslation("item.hee.portal_token_concrete", TextComponentTranslation(getTerritoryType(stack)?.translationKey ?: TerritoryType.FALLBACK_TRANSLATION_KEY))
+		return TranslationTextComponent("item.hee.portal_token_concrete", TranslationTextComponent(getTerritoryType(stack)?.translationKey ?: TerritoryType.FALLBACK_TRANSLATION_KEY))
 	}
 	
 	override fun fillItemGroup(tab: ItemGroup, items: NonNullList<ItemStack>){
@@ -167,20 +167,20 @@ class ItemPortalToken(properties: Properties) : Item(properties){
 	@Sided(Side.CLIENT)
 	override fun addInformation(stack: ItemStack, world: World?, lines: MutableList<ITextComponent>, flags: ITooltipFlag){
 		if ((MC.currentScreen as? GuiPortalTokenStorage)?.canActivateToken(stack) == true){
-			lines.add(TextComponentTranslation("item.hee.portal_token.tooltip.activate"))
+			lines.add(TranslationTextComponent("item.hee.portal_token.tooltip.activate"))
 		}
 		else if (MC.player?.let { it.isCreative && it.dimension === HEE.dim } == true){
-			lines.add(TextComponentTranslation("item.hee.portal_token.tooltip.creative.${if (hasTerritoryInstance(stack)) "teleport" else "generate"}"))
+			lines.add(TranslationTextComponent("item.hee.portal_token.tooltip.creative.${if (hasTerritoryInstance(stack)) "teleport" else "generate"}"))
 		}
 		
 		getTokenType(stack).translationKey?.let {
-			lines.add(TextComponentTranslation(it))
+			lines.add(TranslationTextComponent(it))
 		}
 		
 		if (flags.isAdvanced){
 			stack.heeTagOrNull?.getIntegerOrNull(TERRITORY_INDEX_TAG)?.let {
-				lines.add(TextComponentString(""))
-				lines.add(TextComponentTranslation("item.hee.portal_token.tooltip.advanced", it))
+				lines.add(StringTextComponent(""))
+				lines.add(TranslationTextComponent("item.hee.portal_token.tooltip.advanced", it))
 			}
 		}
 		

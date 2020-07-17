@@ -19,7 +19,6 @@ import chylex.hee.system.migration.Hand.OFF_HAND
 import chylex.hee.system.migration.forge.Side
 import chylex.hee.system.migration.forge.Sided
 import chylex.hee.system.migration.vanilla.EntityPlayer
-import chylex.hee.system.migration.vanilla.TextComponentTranslation
 import chylex.hee.system.util.TagCompound
 import chylex.hee.system.util.ceilToInt
 import chylex.hee.system.util.distanceTo
@@ -43,6 +42,7 @@ import net.minecraft.network.PacketBuffer
 import net.minecraft.util.ActionResultType
 import net.minecraft.util.math.MathHelper
 import net.minecraft.util.text.ITextComponent
+import net.minecraft.util.text.TranslationTextComponent
 import net.minecraft.world.World
 import org.apache.commons.lang3.math.Fraction
 import java.util.Random
@@ -224,9 +224,9 @@ abstract class ItemAbstractEnergyUser(properties: Properties) : Item(properties)
 		super.addInformation(stack, world, lines, flags)
 		
 		if (flags.isAdvanced){
-			lines.add(TextComponentTranslation("item.tooltip.hee.energy.level", getEnergyLevel(stack), calculateInternalEnergyCapacity(stack)))
+			lines.add(TranslationTextComponent("item.tooltip.hee.energy.level", getEnergyLevel(stack), calculateInternalEnergyCapacity(stack)))
 		}
 		
-		lines.add(TextComponentTranslation("item.tooltip.hee.energy.uses", (getEnergyLevel(stack).toDouble() / getEnergyPerUse(stack).numerator).ceilToInt()))
+		lines.add(TranslationTextComponent("item.tooltip.hee.energy.uses", (getEnergyLevel(stack).toDouble() / getEnergyPerUse(stack).numerator).ceilToInt()))
 	}
 }

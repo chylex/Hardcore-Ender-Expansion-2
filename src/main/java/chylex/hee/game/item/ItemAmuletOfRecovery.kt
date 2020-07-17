@@ -12,8 +12,6 @@ import chylex.hee.system.migration.forge.Side
 import chylex.hee.system.migration.forge.Sided
 import chylex.hee.system.migration.forge.SubscribeEvent
 import chylex.hee.system.migration.vanilla.EntityPlayer
-import chylex.hee.system.migration.vanilla.TextComponentString
-import chylex.hee.system.migration.vanilla.TextComponentTranslation
 import chylex.hee.system.util.NBTItemStackList
 import chylex.hee.system.util.NBTList.Companion.putList
 import chylex.hee.system.util.allSlots
@@ -45,8 +43,10 @@ import net.minecraft.util.ActionResult
 import net.minecraft.util.Hand
 import net.minecraft.util.NonNullList
 import net.minecraft.util.text.ITextComponent
+import net.minecraft.util.text.StringTextComponent
 import net.minecraft.util.text.TextFormatting.DARK_RED
 import net.minecraft.util.text.TextFormatting.RED
+import net.minecraft.util.text.TranslationTextComponent
 import net.minecraft.world.GameRules.KEEP_INVENTORY
 import net.minecraft.world.World
 import net.minecraftforge.event.entity.living.LivingDeathEvent
@@ -142,8 +142,8 @@ class ItemAmuletOfRecovery(properties: Properties) : ItemAbstractEnergyUser(prop
 								sumOfFilteredTagSizes += 2500
 								HEE.log.error("[ItemAmuletOfRecovery] failed processing NBT data when calculating Energy cost", e)
 								
-								errorMessenger.sendMessage(TextComponentTranslation("item.hee.amulet_of_recovery.cost_error").applyTextStyle(RED))
-								e.message?.let { errorMessenger.sendMessage(TextComponentString(it).applyTextStyle(DARK_RED)) }
+								errorMessenger.sendMessage(TranslationTextComponent("item.hee.amulet_of_recovery.cost_error").applyTextStyle(RED))
+								e.message?.let { errorMessenger.sendMessage(StringTextComponent(it).applyTextStyle(DARK_RED)) }
 							}
 							
 							buffer.clear()
@@ -352,7 +352,7 @@ class ItemAmuletOfRecovery(properties: Properties) : ItemAbstractEnergyUser(prop
 			ItemAbstractTrinket.onAddInformation(stack, this, lines)
 		}
 		
-		lines.add(TextComponentTranslation("item.tooltip.hee.energy.level", getEnergyChargeLevel(stack).units.value, getEnergyCapacity(stack).units.value))
+		lines.add(TranslationTextComponent("item.tooltip.hee.energy.level", getEnergyChargeLevel(stack).units.value, getEnergyCapacity(stack).units.value))
 	}
 	
 	@Sided(Side.CLIENT)

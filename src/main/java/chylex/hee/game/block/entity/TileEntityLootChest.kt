@@ -7,7 +7,6 @@ import chylex.hee.init.ModSounds
 import chylex.hee.init.ModTileEntities
 import chylex.hee.proxy.Environment
 import chylex.hee.system.migration.vanilla.EntityPlayer
-import chylex.hee.system.migration.vanilla.TextComponentTranslation
 import chylex.hee.system.util.TagCompound
 import chylex.hee.system.util.getStringOrNull
 import chylex.hee.system.util.hasInventory
@@ -26,6 +25,7 @@ import net.minecraft.util.ResourceLocation
 import net.minecraft.util.SoundCategory
 import net.minecraft.util.SoundEvent
 import net.minecraft.util.text.ITextComponent
+import net.minecraft.util.text.TranslationTextComponent
 import net.minecraft.world.server.ServerWorld
 import net.minecraft.world.storage.loot.LootContext
 import net.minecraft.world.storage.loot.LootParameterSets
@@ -53,13 +53,13 @@ class TileEntityLootChest(type: TileEntityType<TileEntityLootChest>) : TileEntit
 		
 		fun getClientTitle(player: EntityPlayer, text: ITextComponent): ITextComponent{
 			return if (player.abilities.isCreativeMode)
-				TextComponentTranslation("gui.hee.loot_chest.title.creative")
+				TranslationTextComponent("gui.hee.loot_chest.title.creative")
 			else
 				text
 		}
 	}
 	
-	override val defaultName = TextComponentTranslation("gui.hee.loot_chest.title")
+	override val defaultName = TranslationTextComponent("gui.hee.loot_chest.title")
 	override val soundOpening = ModSounds.BLOCK_LOOT_CHEST_OPEN
 	
 	val sourceInventory = createInventory()

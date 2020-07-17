@@ -14,7 +14,6 @@ import chylex.hee.game.world.territory.storage.TokenPlayerStorage
 import chylex.hee.init.ModItems
 import chylex.hee.init.ModTileEntities
 import chylex.hee.system.migration.vanilla.EntityPlayer
-import chylex.hee.system.migration.vanilla.TextComponentTranslation
 import chylex.hee.system.util.FLAG_SKIP_RENDER
 import chylex.hee.system.util.FLAG_SYNC_CLIENT
 import chylex.hee.system.util.TagCompound
@@ -29,6 +28,7 @@ import net.minecraft.inventory.container.INamedContainerProvider
 import net.minecraft.item.ItemStack
 import net.minecraft.tileentity.TileEntityType
 import net.minecraft.util.text.ITextComponent
+import net.minecraft.util.text.TranslationTextComponent
 import kotlin.math.min
 import kotlin.math.nextUp
 
@@ -89,7 +89,7 @@ class TileEntityVoidPortalStorage(type: TileEntityType<TileEntityVoidPortalStora
 	// Container
 	
 	override fun getDisplayName(): ITextComponent{
-		return TextComponentTranslation("gui.hee.portal_token_storage.title")
+		return TranslationTextComponent("gui.hee.portal_token_storage.title")
 	}
 	
 	override fun createMenu(id: Int, inventory: PlayerInventory, player: EntityPlayer): Container{

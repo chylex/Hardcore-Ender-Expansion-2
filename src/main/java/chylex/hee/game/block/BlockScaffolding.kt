@@ -15,7 +15,6 @@ import chylex.hee.system.migration.forge.Side
 import chylex.hee.system.migration.forge.Sided
 import chylex.hee.system.migration.vanilla.Blocks
 import chylex.hee.system.migration.vanilla.EntityPlayer
-import chylex.hee.system.migration.vanilla.TextComponentString
 import chylex.hee.system.util.Pos
 import chylex.hee.system.util.getBlock
 import chylex.hee.system.util.offsetUntil
@@ -31,6 +30,7 @@ import net.minecraft.util.math.BlockRayTraceResult
 import net.minecraft.util.math.shapes.ISelectionContext
 import net.minecraft.util.math.shapes.VoxelShape
 import net.minecraft.util.math.shapes.VoxelShapes
+import net.minecraft.util.text.StringTextComponent
 import net.minecraft.util.text.TextFormatting
 import net.minecraft.world.IBlockReader
 import net.minecraft.world.World
@@ -44,7 +44,7 @@ class BlockScaffolding(builder: BlockBuilder) : BlockSimple(builder){
 			val palette = CommandClientScaffolding.currentPalette
 			
 			if (palette == null){
-				player.sendMessage(TextComponentString("No structure set."))
+				player.sendMessage(StringTextComponent("No structure set."))
 				return FAIL
 			}
 			
@@ -52,7 +52,7 @@ class BlockScaffolding(builder: BlockBuilder) : BlockSimple(builder){
 			val maxPos = minPos?.let { findMaxPos(world, it) }
 			
 			if (minPos == null || maxPos == null){
-				player.sendMessage(TextComponentString("Could not find structure boundaries."))
+				player.sendMessage(StringTextComponent("Could not find structure boundaries."))
 				return FAIL
 			}
 			
@@ -65,14 +65,14 @@ class BlockScaffolding(builder: BlockBuilder) : BlockSimple(builder){
 			Debug.setClipboardContents(structureFile)
 			
 			if (missingMappings.isNotEmpty()){
-				player.sendMessage(TextComponentString("Missing mappings for states:"))
+				player.sendMessage(StringTextComponent("Missing mappings for states:"))
 				
 				for(missingMapping in missingMappings){
-					player.sendMessage(TextComponentString(" - ${TextFormatting.GRAY}$missingMapping"))
+					player.sendMessage(StringTextComponent(" - ${TextFormatting.GRAY}$missingMapping"))
 				}
 			}
 			
-			player.sendMessage(TextComponentString("Generated structure file of ${box.size}."))
+			player.sendMessage(StringTextComponent("Generated structure file of ${box.size}."))
 			return SUCCESS
 		}
 		

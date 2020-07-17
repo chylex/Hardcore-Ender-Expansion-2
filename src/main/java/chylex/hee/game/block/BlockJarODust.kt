@@ -11,7 +11,6 @@ import chylex.hee.system.migration.forge.Sided
 import chylex.hee.system.migration.vanilla.EntityLivingBase
 import chylex.hee.system.migration.vanilla.EntityPlayer
 import chylex.hee.system.migration.vanilla.Sounds
-import chylex.hee.system.migration.vanilla.TextComponentTranslation
 import chylex.hee.system.util.NBTList.Companion.putList
 import chylex.hee.system.util.center
 import chylex.hee.system.util.getListOfCompounds
@@ -37,6 +36,7 @@ import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.BlockRayTraceResult
 import net.minecraft.util.math.RayTraceResult
 import net.minecraft.util.text.ITextComponent
+import net.minecraft.util.text.TranslationTextComponent
 import net.minecraft.world.Explosion
 import net.minecraft.world.IBlockReader
 import net.minecraft.world.IWorld
@@ -188,7 +188,7 @@ class BlockJarODust(builder: BlockBuilder) : BlockSimpleShaped(builder, AABB){
 				.sortedWith(compareBy({ -it.value }, { it.key.key }))
 			
 			for((dustType, dustAmount) in entries){
-				lines.add(TextComponentTranslation("block.hee.jar_o_dust.tooltip.entry", dustAmount, TextComponentTranslation(dustType.item.translationKey)))
+				lines.add(TranslationTextComponent("block.hee.jar_o_dust.tooltip.entry", dustAmount, TranslationTextComponent(dustType.item.translationKey)))
 			}
 		}
 	}

@@ -18,7 +18,6 @@ import chylex.hee.game.world.structure.world.WorldToStructureWorldAdapter
 import chylex.hee.game.world.util.PosXZ
 import chylex.hee.game.world.util.Transform
 import chylex.hee.system.migration.vanilla.Blocks
-import chylex.hee.system.migration.vanilla.TextComponentString
 import chylex.hee.system.util.Pos
 import com.mojang.brigadier.arguments.LongArgumentType.longArg
 import com.mojang.brigadier.builder.ArgumentBuilder
@@ -27,6 +26,7 @@ import net.minecraft.command.CommandSource
 import net.minecraft.command.Commands.argument
 import net.minecraft.command.Commands.literal
 import net.minecraft.util.Rotation
+import net.minecraft.util.text.StringTextComponent
 import java.util.Random
 
 object CommandDebugStructure : ICommand{ // UPDATE
@@ -69,7 +69,7 @@ object CommandDebugStructure : ICommand{ // UPDATE
 	
 	private fun executeResetCache(ctx: CommandContext<CommandSource>) = returning(1){
 		StructureFiles.resetCache()
-		ctx.source.sendFeedback(TextComponentString("Done."), false)
+		ctx.source.sendFeedback(StringTextComponent("Done."), false)
 	}
 	
 	private fun executePieces(ctx: CommandContext<CommandSource>, transforms: List<Transform>) = returning(1){
@@ -134,13 +134,13 @@ object CommandDebugStructure : ICommand{ // UPDATE
 				val builder = structure.STRUCTURE_BUILDER.build(rand)
 				
 				if (builder != null){
-					sendFeedback(TextComponentString("Successful attempt: $attempt"), false)
+					sendFeedback(StringTextComponent("Successful attempt: $attempt"), false)
 					world.apply(builder::generate).finalize()
 					return 1
 				}
 			}
 			
-			sendFeedback(TextComponentString("Failed all attempts..."), false)
+			sendFeedback(StringTextComponent("Failed all attempts..."), false)
 			return 0
 		}
 	}
@@ -150,11 +150,11 @@ object CommandDebugStructure : ICommand{ // UPDATE
 			val closest = structureDescriptions.getValue(ctx.getString("structure")).STRUCTURE_LOCATOR(world, PosXZ(Pos(pos)))
 			
 			if (closest == null){
-				sendFeedback(TextComponentString("Structure not found."), false)
+				sendFeedback(StringTextComponent("Structure not found."), false)
 				return 0
 			}
 			
-			sendFeedback(TextComponentString("Structure found at $closest."), false)
+			sendFeedback(StringTextComponent("Structure found at $closest."), false)
 			return 1
 		}
 	}

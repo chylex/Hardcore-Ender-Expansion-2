@@ -5,13 +5,13 @@ import chylex.hee.game.mechanics.trinket.ITrinketItem
 import chylex.hee.game.mechanics.trinket.TrinketHandler
 import chylex.hee.system.migration.forge.Side
 import chylex.hee.system.migration.forge.Sided
-import chylex.hee.system.migration.vanilla.TextComponentString
-import chylex.hee.system.migration.vanilla.TextComponentTranslation
 import net.minecraft.client.util.ITooltipFlag
 import net.minecraft.item.Item
 import net.minecraft.item.ItemStack
 import net.minecraft.item.Rarity
 import net.minecraft.util.text.ITextComponent
+import net.minecraft.util.text.StringTextComponent
+import net.minecraft.util.text.TranslationTextComponent
 import net.minecraft.world.World
 
 open class ItemAbstractTrinket(properties: Properties) : Item(properties), ITrinketItem{
@@ -25,13 +25,13 @@ open class ItemAbstractTrinket(properties: Properties) : Item(properties), ITrin
 			val player = MC.player ?: return
 			
 			if (lines.size > 1){ // first line is item name
-				lines.add(TextComponentString(""))
+				lines.add(StringTextComponent(""))
 			}
 			
 			val keyInSlot = if (TrinketHandler.isInTrinketSlot(player, stack)) "in_slot" else "not_in_slot"
 			val keyIsCharged = if (trinket.canPlaceIntoTrinketSlot(stack)) "charged" else "uncharged"
 			
-			lines.add(TextComponentTranslation("item.tooltip.hee.trinket.$keyInSlot.$keyIsCharged"))
+			lines.add(TranslationTextComponent("item.tooltip.hee.trinket.$keyInSlot.$keyIsCharged"))
 		}
 	}
 	

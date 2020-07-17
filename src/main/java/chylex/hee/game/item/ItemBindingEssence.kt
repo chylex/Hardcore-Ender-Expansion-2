@@ -5,8 +5,6 @@ import chylex.hee.game.item.infusion.InfusionList
 import chylex.hee.game.item.infusion.InfusionTag
 import chylex.hee.system.migration.forge.Side
 import chylex.hee.system.migration.forge.Sided
-import chylex.hee.system.migration.vanilla.TextComponentString
-import chylex.hee.system.migration.vanilla.TextComponentTranslation
 import chylex.hee.system.util.color.IntColor.Companion.RGB
 import chylex.hee.system.util.facades.Resource
 import net.minecraft.client.renderer.color.IItemColor
@@ -16,6 +14,8 @@ import net.minecraft.item.ItemStack
 import net.minecraft.item.Rarity
 import net.minecraft.util.NonNullList
 import net.minecraft.util.text.ITextComponent
+import net.minecraft.util.text.StringTextComponent
+import net.minecraft.util.text.TranslationTextComponent
 import net.minecraft.world.World
 
 class ItemBindingEssence(properties: Properties) : ItemAbstractInfusable(properties){
@@ -54,11 +54,11 @@ class ItemBindingEssence(properties: Properties) : ItemAbstractInfusable(propert
 			.entries
 			.sortedWith(compareBy({ -it.value }, { getIdFromItem(it.key) }))
 		
-		lines.add(TextComponentString(""))
-		lines.add(TextComponentTranslation("hee.infusions.applicable.title"))
+		lines.add(StringTextComponent(""))
+		lines.add(TranslationTextComponent("hee.infusions.applicable.title"))
 		
 		for((item, count) in applicableTo){
-			lines.add(TextComponentTranslation("hee.infusions.applicable.item", item.getDisplayName(ItemStack(item)), count))
+			lines.add(TranslationTextComponent("hee.infusions.applicable.item", item.getDisplayName(ItemStack(item)), count))
 		}
 	}
 	

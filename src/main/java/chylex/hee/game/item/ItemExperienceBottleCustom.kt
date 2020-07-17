@@ -6,7 +6,6 @@ import chylex.hee.system.migration.forge.Sided
 import chylex.hee.system.migration.vanilla.EntityPlayer
 import chylex.hee.system.migration.vanilla.ItemExpBottle
 import chylex.hee.system.migration.vanilla.Sounds
-import chylex.hee.system.migration.vanilla.TextComponentTranslation
 import chylex.hee.system.util.facades.Stats
 import chylex.hee.system.util.heeTag
 import chylex.hee.system.util.heeTagOrNull
@@ -24,6 +23,7 @@ import net.minecraft.util.Hand
 import net.minecraft.util.NonNullList
 import net.minecraft.util.SoundCategory
 import net.minecraft.util.text.ITextComponent
+import net.minecraft.util.text.TranslationTextComponent
 import net.minecraft.world.World
 import kotlin.math.min
 
@@ -113,6 +113,6 @@ class ItemExperienceBottleCustom(builder: Properties) : ItemExpBottle(builder){
 	
 	@Sided(Side.CLIENT)
 	override fun addInformation(stack: ItemStack, world: World?, lines: MutableList<ITextComponent>, flags: ITooltipFlag){
-		lines.add(TextComponentTranslation("item.hee.experience_bottle.tooltip", getExperienceAmountPerItem(stack)))
+		lines.add(TranslationTextComponent("item.hee.experience_bottle.tooltip", getExperienceAmountPerItem(stack)))
 	}
 }

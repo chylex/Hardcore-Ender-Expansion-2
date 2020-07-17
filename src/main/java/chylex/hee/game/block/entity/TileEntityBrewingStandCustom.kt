@@ -13,7 +13,6 @@ import chylex.hee.init.ModTileEntities
 import chylex.hee.network.client.PacketClientFX
 import chylex.hee.system.migration.vanilla.BlockBrewingStand
 import chylex.hee.system.migration.vanilla.Sounds
-import chylex.hee.system.migration.vanilla.TextComponentTranslation
 import chylex.hee.system.migration.vanilla.TileEntityBrewingStand
 import chylex.hee.system.util.FLAG_SYNC_CLIENT
 import chylex.hee.system.util.color.IRandomColor
@@ -38,6 +37,7 @@ import net.minecraft.util.NonNullList
 import net.minecraft.util.SoundCategory
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.text.ITextComponent
+import net.minecraft.util.text.TranslationTextComponent
 import net.minecraft.world.World
 import net.minecraftforge.common.brewing.BrewingRecipeRegistry
 import net.minecraftforge.event.ForgeEventFactory
@@ -283,7 +283,7 @@ class TileEntityBrewingStandCustom : TileEntityBrewingStand(){
 	
 	override fun getDefaultName(): ITextComponent{
 		return if (isEnhanced)
-			TextComponentTranslation("gui.hee.enhanced_brewing_stand.title")
+			TranslationTextComponent("gui.hee.enhanced_brewing_stand.title")
 		else
 			super.getDefaultName()
 	}

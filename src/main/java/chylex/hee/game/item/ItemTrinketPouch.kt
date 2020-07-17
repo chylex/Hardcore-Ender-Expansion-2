@@ -20,7 +20,6 @@ import chylex.hee.system.migration.forge.Side
 import chylex.hee.system.migration.forge.Sided
 import chylex.hee.system.migration.forge.SubscribeEvent
 import chylex.hee.system.migration.vanilla.EntityPlayer
-import chylex.hee.system.migration.vanilla.TextComponentTranslation
 import chylex.hee.system.util.NBTItemStackList
 import chylex.hee.system.util.NBTList.Companion.putList
 import chylex.hee.system.util.allSlots
@@ -45,6 +44,7 @@ import net.minecraft.item.ItemStack
 import net.minecraft.util.ActionResult
 import net.minecraft.util.Hand
 import net.minecraft.util.text.ITextComponent
+import net.minecraft.util.text.TranslationTextComponent
 import net.minecraft.world.World
 import net.minecraftforge.client.event.GuiScreenEvent
 
@@ -215,7 +215,7 @@ class ItemTrinketPouch(properties: Properties) : ItemAbstractTrinket(properties)
 		super.addInformation(stack, world, lines, flags)
 		
 		if (MC.currentScreen is InventoryScreen){
-			lines.add(TextComponentTranslation("item.hee.trinket_pouch.tooltip"))
+			lines.add(TranslationTextComponent("item.hee.trinket_pouch.tooltip"))
 		}
 		
 		ItemAbstractInfusable.onAddInformation(stack, lines)

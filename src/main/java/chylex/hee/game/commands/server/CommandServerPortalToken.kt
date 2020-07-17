@@ -9,11 +9,11 @@ import chylex.hee.game.commands.util.returning
 import chylex.hee.game.item.ItemPortalToken.TokenType
 import chylex.hee.game.world.territory.TerritoryType
 import chylex.hee.init.ModItems
-import chylex.hee.system.migration.vanilla.TextComponentTranslation
 import com.mojang.brigadier.builder.ArgumentBuilder
 import com.mojang.brigadier.context.CommandContext
 import net.minecraft.command.CommandSource
 import net.minecraft.command.Commands.argument
+import net.minecraft.util.text.TranslationTextComponent
 
 object CommandServerPortalToken : ICommand, CommandExecutionFunctionCtx<Boolean>{
 	override val name = "token"
@@ -32,7 +32,7 @@ object CommandServerPortalToken : ICommand, CommandExecutionFunctionCtx<Boolean>
 		
 		with(ctx.source){
 			asPlayer().addItemStackToInventory(ModItems.PORTAL_TOKEN.forTerritory(type, territory))
-			sendFeedback(message("success", TextComponentTranslation(territory.translationKey)), true)
+			sendFeedback(message("success", TranslationTextComponent(territory.translationKey)), true)
 		}
 	}
 }

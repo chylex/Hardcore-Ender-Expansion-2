@@ -1,6 +1,5 @@
 package chylex.hee.test.system.util
 import chylex.hee.system.migration.vanilla.Items
-import chylex.hee.system.migration.vanilla.TextComponentString
 import chylex.hee.system.util.NBTBase
 import chylex.hee.system.util.NBTList.Companion.putList
 import chylex.hee.system.util.NBTObjectList
@@ -26,6 +25,7 @@ import chylex.hee.system.util.nbt
 import chylex.hee.system.util.nbtOrNull
 import net.minecraft.item.ItemStack
 import net.minecraft.util.registry.Bootstrap
+import net.minecraft.util.text.StringTextComponent
 import net.minecraftforge.common.util.Constants.NBT
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertFalse
@@ -75,7 +75,7 @@ class TestNbtExt{
 	@Nested inner class ItemStacks{
 		@Nested inner class Nbt{
 			@Test fun `'nbt' returns an existing ItemStack tag`(){
-				val stack = ItemStack(Items.BOW).apply { displayName = TextComponentString("Hello") }
+				val stack = ItemStack(Items.BOW).apply { displayName = StringTextComponent("Hello") }
 				assertTrue(stack.nbt.hasKey("display", NBT.TAG_COMPOUND))
 			}
 			
@@ -93,7 +93,7 @@ class TestNbtExt{
 		
 		@Nested inner class NbtOrNull{
 			@Test fun `'nbtOrNull' returns an existing ItemStack tag`(){
-				val stack = ItemStack(Items.BOW).apply { displayName = TextComponentString("Hello") }
+				val stack = ItemStack(Items.BOW).apply { displayName = StringTextComponent("Hello") }
 				assertTrue(stack.nbtOrNull.hasKey("display"))
 			}
 			

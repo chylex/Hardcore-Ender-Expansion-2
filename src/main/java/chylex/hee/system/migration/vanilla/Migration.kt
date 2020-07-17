@@ -476,15 +476,6 @@ typealias ContainerSmoker = net.minecraft.inventory.container.SmokerContainer
 typealias ContainerStonecutter = net.minecraft.inventory.container.StonecutterContainer
 typealias ContainerWorkbench = net.minecraft.inventory.container.WorkbenchContainer
 
-typealias TextComponentBase = net.minecraft.util.text.TextComponent
-typealias TextComponentKeybind = net.minecraft.util.text.KeybindTextComponent
-typealias TextComponentNbt = net.minecraft.util.text.NBTTextComponent
-typealias TextComponentScore = net.minecraft.util.text.ScoreTextComponent
-typealias TextComponentSelector = net.minecraft.util.text.SelectorTextComponent
-typealias TextComponentString = net.minecraft.util.text.StringTextComponent
-typealias TextComponentTranslation = net.minecraft.util.text.TranslationTextComponent
-typealias TextComponentTranslationFormatException = net.minecraft.util.text.TranslationTextComponentFormatException
-
 typealias Render<T> = net.minecraft.client.renderer.entity.EntityRenderer<T>
 typealias RenderAbstractHorse<T, R> = net.minecraft.client.renderer.entity.AbstractHorseRenderer<T, R>
 typealias RenderAbstractIllager<T> = net.minecraft.client.renderer.entity.IllagerRenderer<T>

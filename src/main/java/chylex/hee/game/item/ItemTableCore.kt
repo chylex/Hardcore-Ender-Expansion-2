@@ -4,7 +4,6 @@ import chylex.hee.game.block.BlockTableBase
 import chylex.hee.game.world.util.BlockEditor
 import chylex.hee.system.migration.forge.Side
 import chylex.hee.system.migration.forge.Sided
-import chylex.hee.system.migration.vanilla.TextComponentTranslation
 import chylex.hee.system.util.breakBlock
 import chylex.hee.system.util.getBlock
 import chylex.hee.system.util.setBlock
@@ -17,6 +16,7 @@ import net.minecraft.util.ActionResultType.FAIL
 import net.minecraft.util.ActionResultType.PASS
 import net.minecraft.util.ActionResultType.SUCCESS
 import net.minecraft.util.text.ITextComponent
+import net.minecraft.util.text.TranslationTextComponent
 import net.minecraft.world.World
 
 class ItemTableCore(private val tableBlocks: Array<BlockAbstractTableTile<*>>, properties: Properties) : Item(properties){
@@ -50,6 +50,6 @@ class ItemTableCore(private val tableBlocks: Array<BlockAbstractTableTile<*>>, p
 	
 	@Sided(Side.CLIENT)
 	override fun addInformation(stack: ItemStack, world: World?, lines: MutableList<ITextComponent>, flags: ITooltipFlag){
-		lines.add(TextComponentTranslation("item.tooltip.hee.table_core.tooltip", tableBlocks.map { it.tier }.min()))
+		lines.add(TranslationTextComponent("item.tooltip.hee.table_core.tooltip", tableBlocks.map { it.tier }.min()))
 	}
 }

@@ -5,12 +5,12 @@ import chylex.hee.system.migration.forge.EventPriority
 import chylex.hee.system.migration.forge.SubscribeAllEvents
 import chylex.hee.system.migration.forge.SubscribeEvent
 import chylex.hee.system.migration.vanilla.EntityLivingBase
-import chylex.hee.system.migration.vanilla.TextComponentTranslation
 import net.minecraft.entity.Entity
 import net.minecraft.item.ItemStack
 import net.minecraft.util.DamageSource
 import net.minecraft.util.math.Vec3d
 import net.minecraft.util.text.ITextComponent
+import net.minecraft.util.text.TranslationTextComponent
 import net.minecraftforge.event.entity.living.LivingDamageEvent
 
 class DamageProperties{
@@ -109,9 +109,9 @@ class DamageProperties{
 			val translationKeyItem = "$translationKeyGeneric.item"
 			
 			return if (!heldItem.isEmpty && heldItem.hasDisplayName())
-				TextComponentTranslation(translationKeyItem, victim.displayName, realSource.displayName, heldItem.textComponent)
+				TranslationTextComponent(translationKeyItem, victim.displayName, realSource.displayName, heldItem.textComponent)
 			else
-				TextComponentTranslation(translationKeyGeneric, victim.displayName, realSource.displayName)
+				TranslationTextComponent(translationKeyGeneric, victim.displayName, realSource.displayName)
 		}
 	}
 	

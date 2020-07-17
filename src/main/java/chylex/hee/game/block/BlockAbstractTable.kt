@@ -2,10 +2,10 @@ package chylex.hee.game.block
 import chylex.hee.game.block.info.BlockBuilder
 import chylex.hee.system.migration.forge.Side
 import chylex.hee.system.migration.forge.Sided
-import chylex.hee.system.migration.vanilla.TextComponentTranslation
 import net.minecraft.client.util.ITooltipFlag
 import net.minecraft.item.ItemStack
 import net.minecraft.util.text.ITextComponent
+import net.minecraft.util.text.TranslationTextComponent
 import net.minecraft.world.IBlockReader
 
 abstract class BlockAbstractTable(builder: BlockBuilder, val tier: Int, val firstTier: Int) : BlockSimple(builder){
@@ -16,6 +16,6 @@ abstract class BlockAbstractTable(builder: BlockBuilder, val tier: Int, val firs
 	
 	@Sided(Side.CLIENT)
 	override fun addInformation(stack: ItemStack, world: IBlockReader?, lines: MutableList<ITextComponent>, flags: ITooltipFlag){
-		lines.add(TextComponentTranslation("block.tooltip.hee.table.tier", tier))
+		lines.add(TranslationTextComponent("block.tooltip.hee.table.tier", tier))
 	}
 }
