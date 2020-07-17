@@ -5,12 +5,18 @@ import java.util.Random
 
 abstract class CavePatherRotatingBase(initialDirection: Vec3d) : ICavePather{
 	protected var direction = initialDirection
+		private set
+	
 	protected var rotation = initialDirection
 	
-	override fun nextOffset(rand: Random, point: Vec3d): Vec3d{
+	protected fun setDirectionAndNormalize(newDirection: Vec3d){
+		direction = newDirection.normalize()
+	}
+	
+	override fun nextOffset(rand: Random, point: Vec3d, stepSize: Double): Vec3d{
 		direction = direction.add(rotation).normalize()
 		update(rand, point)
-		return direction
+		return direction.scale(stepSize)
 	}
 	
 	abstract fun update(rand: Random, point: Vec3d)

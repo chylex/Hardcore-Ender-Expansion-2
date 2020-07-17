@@ -22,7 +22,6 @@ object PotionBrewing{
 		PotionTypeInfo(Potions.WATER_BREATHING, Duration(baseTicks = 3 min 20, stepTicks = 3 min 10,    maxSteps = 4), maxLevel = 1),
 		PotionTypeInfo(Potions.JUMP_BOOST,      Duration(baseTicks = 2 min 30, stepTicks = 2 min 15,    maxSteps = 4), maxLevel = 3),
 		PotionTypeInfo(Potions.POISON,          Duration(baseTicks = 0 min 30, stepTicks = 0 min 30,    maxSteps = 3), maxLevel = 2),
-//		PotionTypeInfo(Potions.TURTLE_MASTER,   Duration(baseTicks = 0 min 20, stepTicks = 0 min 13.34, maxSteps = 3), maxLevel = 2), // TODO it's a bit more complicated
 		PotionTypeInfo(Potions.SLOW_FALLING,    Duration(baseTicks = 1 min 15, stepTicks = 1 min 15,    maxSteps = 3), maxLevel = 1),
 		PotionTypeInfo(Potions.LEVITATION,      Duration(baseTicks = 0 min 30, stepTicks = 0 min 30,    maxSteps = 3), maxLevel = 2),
 		PotionTypeInfo(ModPotions.PURITY,       Duration(baseTicks = 2 min 30, stepTicks = 2 min 15,    maxSteps = 4), maxLevel = 3),
@@ -39,6 +38,8 @@ object PotionBrewing{
 	
 	// TODO register levitation type and other custom potions
 	
+	// UPDATE 1.15 check new potions
+	
 	val AWKWARD = mapOf(
 		Items.GLISTERING_MELON_SLICE to Potions.INSTANT_HEALTH,
 		Items.MAGMA_CREAM            to Potions.FIRE_RESISTANCE,
@@ -49,12 +50,11 @@ object PotionBrewing{
 		Items.PUFFERFISH             to Potions.WATER_BREATHING,
 		Items.RABBIT_FOOT            to Potions.JUMP_BOOST,
 		Items.SPIDER_EYE             to Potions.POISON,
-		// TODO Items.SCUTE                  to Potions.TURTLE_MASTER,
 		Items.PHANTOM_MEMBRANE       to Potions.SLOW_FALLING,
 		ModItems.DRAGON_SCALE        to Potions.LEVITATION,
-		ModItems.PURITY_EXTRACT      to ModPotions.PURITY
-		// TODO (ModItems.INSTABILITY_ORB to 0)     to ModPotions.CORRUPTION,
-		// TODO (ModItems.MURKY_CRYSTAL to 0)       to Potions.BLINDNESS
+		ModItems.PURITY_EXTRACT      to ModPotions.PURITY,
+		ModItems.INSTABILITY_ORB     to ModPotions.CORRUPTION
+		// TODO ModItems.MURKY_CRYSTAL       to Potions.BLINDNESS
 	)
 	
 	val WATER = mapOf(

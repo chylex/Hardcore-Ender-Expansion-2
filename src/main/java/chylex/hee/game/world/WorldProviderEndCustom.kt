@@ -26,6 +26,7 @@ import net.minecraft.world.World
 import net.minecraft.world.biome.Biomes
 import net.minecraft.world.biome.provider.SingleBiomeProvider
 import net.minecraft.world.biome.provider.SingleBiomeProviderSettings
+import net.minecraft.world.chunk.Chunk
 import net.minecraft.world.dimension.DimensionType
 import net.minecraft.world.dimension.EndDimension
 import net.minecraft.world.gen.ChunkGenerator
@@ -137,9 +138,15 @@ class WorldProviderEndCustom(world: World, type: DimensionType) : EndDimension(w
 		world.thunderingStrength = 0F
 	}
 	
-	override fun createWorldBorder() = WorldBorderNull()
+	override fun canDoRainSnowIce(chunk: Chunk): Boolean{
+		return false
+	}
 	
-	// TODO shitton of things to play around with, also test if default values work on server
+	override fun canDoLightning(chunk: Chunk): Boolean{
+		return false
+	}
+	
+	override fun createWorldBorder() = WorldBorderNull()
 	
 	// Visual properties (Light)
 	

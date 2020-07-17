@@ -29,7 +29,7 @@ class CaveGenerator(
 		var failsLeft = maxConsecutiveFails
 		
 		while(stepCounter < steps){
-			point = point.add(pather.nextOffset(rand, point).normalize().scale(stepSize))
+			point = point.add(pather.nextOffset(rand, point, stepSize))
 			
 			val nextRadius = radius.next(rand, stepCounter)
 			val carveBox = Size(nextRadius.ceilToInt()).toBoundingBox(Pos(point))

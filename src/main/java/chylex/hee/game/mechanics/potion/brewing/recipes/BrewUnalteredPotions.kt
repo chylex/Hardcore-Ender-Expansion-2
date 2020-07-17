@@ -8,7 +8,7 @@ object BrewUnalteredPotions : IBrewingRecipe{
 	private val vanilla = VanillaBrewingRecipe()
 	
 	override fun isInput(input: ItemStack): Boolean{
-		return !PotionBrewing.isAltered(input) && vanilla.isInput(input)
+		return vanilla.isInput(input)
 	}
 	
 	override fun isIngredient(ingredient: ItemStack): Boolean{
@@ -16,6 +16,6 @@ object BrewUnalteredPotions : IBrewingRecipe{
 	}
 	
 	override fun brew(input: ItemStack, ingredient: ItemStack): ItemStack{
-		return vanilla.getOutput(input, ingredient)
+		return vanilla.getOutput(input, ingredient).takeUnless(PotionBrewing::isAltered) ?: ItemStack.EMPTY
 	}
 }

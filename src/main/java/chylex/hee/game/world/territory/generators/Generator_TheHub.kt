@@ -292,7 +292,7 @@ object Generator_TheHub : ITerritoryGenerator{
 				if (reachedCenter){
 					if (abs(direction.y) > 0.4){
 						rotation = rotation.scaleY(0.9)
-						direction = direction.scaleY(0.9)
+						setDirectionAndNormalize(direction.scaleY(0.9))
 					}
 					
 					val pos = Pos(point)

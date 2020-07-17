@@ -140,7 +140,7 @@ open class BlockEnderGooPurified : BlockAbstractGoo(FluidEnderGooPurified, Mater
 		super.onBlockAdded(state, world, pos, oldState, isMoving)
 		
 		if (!state.fluidState.isSource){
-			PacketClientFX(FX_PLACE, FxBlockData(pos)).sendToAllAround(world, pos, 16.0) // TODO optimize somehow?
+			PacketClientFX(FX_PLACE, FxBlockData(pos)).sendToAllAround(world, pos, 16.0)
 		}
 	}
 	

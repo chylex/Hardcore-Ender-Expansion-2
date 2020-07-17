@@ -27,7 +27,7 @@ abstract class TerritoryEnvironment{
 		get() = DEFAULT_CELESTIAL_ANGLE
 	
 	open val skyLight
-		get() = DEFAULT_SKY_LIGHT // TODO use custom chunk for custom skylight levels & check where skylight matters (such as mob spawning)
+		get() = DEFAULT_SKY_LIGHT // TODO use in a custom light manager & check where skylight matters (such as mob spawning)
 	
 	abstract val fogColor: Vec3d
 	abstract val fogDensity: Float

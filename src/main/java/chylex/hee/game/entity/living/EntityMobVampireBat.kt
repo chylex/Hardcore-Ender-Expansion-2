@@ -252,7 +252,7 @@ class EntityMobVampireBat(type: EntityType<EntityMobVampireBat>, world: World) :
 					nextSleepPos = null
 				}
 				else if (lookPosVec.squareDistanceTo(sleepPos.center) < square(0.2) && canHangUnderCurrentBlock()){
-					isBatHanging = true // TODO figure out how to fix a fucking freeze frame where the bat is a block lower than it should
+					isBatHanging = true
 					nextSleepPos = null
 					motion = Vec3d.ZERO
 					
