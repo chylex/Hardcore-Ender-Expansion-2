@@ -45,7 +45,7 @@ class AIWatchTargetInShock(
 	override fun tick(){
 		val target = entity.attackTarget ?: return
 		
-		entity.lookController.setLookPosition(target.posX, target.posY + target.eyeHeight, target.posZ, entity.horizontalFaceSpeed.toFloat(), entity.verticalFaceSpeed.toFloat())
+		entity.lookController.setLookPosition(target.posX, target.posY + target.eyeHeight, target.posZ)
 		--remainingTicks
 	}
 	

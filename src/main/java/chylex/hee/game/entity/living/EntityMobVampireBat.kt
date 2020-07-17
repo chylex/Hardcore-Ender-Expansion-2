@@ -392,11 +392,15 @@ class EntityMobVampireBat(type: EntityType<EntityMobVampireBat>, world: World) :
 	// Serialization
 	
 	override fun writeAdditional(nbt: TagCompound) = nbt.heeTag.use {
+		super.writeAdditional(nbt)
+		
 		putEnum(BEHAVIOR_TYPE_TAG, behaviorType)
 		putInt(ATTACK_COOLDOWN_TAG, attackCooldown)
 	}
 	
 	override fun readAdditional(nbt: TagCompound) = nbt.heeTag.use {
+		super.readAdditional(nbt)
+		
 		behaviorType = getEnum<BehaviorType>(BEHAVIOR_TYPE_TAG) ?: behaviorType
 		updateHostilityAttributes()
 		

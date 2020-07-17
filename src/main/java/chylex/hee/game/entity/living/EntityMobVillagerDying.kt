@@ -158,11 +158,13 @@ class EntityMobVillagerDying(type: EntityType<EntityMobVillagerDying>, world: Wo
 	
 	override fun writeAdditional(nbt: TagCompound) = nbt.heeTag.use {
 		super.writeAdditional(nbt)
+		
 		put(VILLAGER_TAG, villagerData.serialize(NBTDynamicOps.INSTANCE))
 	}
 	
 	override fun readAdditional(nbt: TagCompound) = nbt.heeTag.use {
 		super.readAdditional(nbt)
+		
 		villager = VillagerData(Dynamic(NBTDynamicOps.INSTANCE, getCompound(VILLAGER_TAG)))
 	}
 	

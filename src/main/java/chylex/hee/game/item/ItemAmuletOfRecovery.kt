@@ -296,14 +296,15 @@ class ItemAmuletOfRecovery(properties: Properties) : ItemAbstractEnergyUser(prop
 		}
 		
 		with(player.heeTagOrNull?.getStack(PLAYER_RESPAWN_ITEM_TAG)?.heeTag ?: return){
-			val list = getListOfItemStacks(CONTENTS_TAG)
+			val list = getListOfItemStacks(CONTENTS_TAG).takeIf { it.size >= SLOT_COUNT } ?: return
+			val iter = drops.iterator()
 			
 			for(slot in BACKFILL_SLOT_ORDER){
 				if (list.get(slot).isEmpty){
-					list.set(slot, drops.first().item)
-					drops.iterator().remove()
+					list.set(slot, iter.next().item)
+					iter.remove()
 					
-					if (drops.isEmpty()){
+					if (!iter.hasNext()){
 						break
 					}
 				}

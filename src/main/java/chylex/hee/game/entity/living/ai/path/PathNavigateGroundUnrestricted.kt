@@ -13,7 +13,7 @@ class PathNavigateGroundUnrestricted(entity: EntityLiving, world: World) : Groun
 	private var overrideSpeed = 0.0
 	
 	override fun noPath(): Boolean{
-		return super.noPath() || overrideSpeed > 0.0
+		return super.noPath() && overrideSpeed == 0.0
 	}
 	
 	override fun tryMoveToXYZ(x: Double, y: Double, z: Double, speed: Double): Boolean{
@@ -26,6 +26,7 @@ class PathNavigateGroundUnrestricted(entity: EntityLiving, world: World) : Groun
 		
 		overrideTarget = Vec3d(x, y, z)
 		overrideSpeed = speed
+		timeoutTimer = 0L
 		return true
 	}
 	
@@ -39,6 +40,7 @@ class PathNavigateGroundUnrestricted(entity: EntityLiving, world: World) : Groun
 		
 		overrideTarget = entity.posVec
 		overrideSpeed = speed
+		timeoutTimer = 0L
 		return true
 	}
 	
@@ -57,5 +59,10 @@ class PathNavigateGroundUnrestricted(entity: EntityLiving, world: World) : Groun
 				overrideSpeed = 0.0
 			}
 		}
+	}
+	
+	override fun clearPath(){
+		super.clearPath()
+		overrideSpeed = 0.0
 	}
 }

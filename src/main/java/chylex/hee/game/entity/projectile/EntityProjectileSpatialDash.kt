@@ -194,9 +194,9 @@ class EntityProjectileSpatialDash(type: EntityType<EntityProjectileSpatialDash>,
 		}
 	}
 	
-	private var owner: SerializedEntity
-	private var lifespan: Short
-	private var range: Float
+	private var owner = SerializedEntity()
+	private var lifespan: Short = 0
+	private var range = 0F
 	
 	private val cappedMotionVec: Vec3d
 		get(){
@@ -307,11 +307,5 @@ class EntityProjectileSpatialDash(type: EntityType<EntityProjectileSpatialDash>,
 		owner.readFromNBT(this, OWNER_TAG)
 		lifespan = getShort(LIFESPAN_TAG)
 		range = getFloat(RANGE_TAG)
-	}
-	
-	init {
-		this.owner = SerializedEntity()
-		this.lifespan = 0
-		this.range = 0F
 	}
 }

@@ -494,6 +494,8 @@ class EntityMobSpiderling(type: EntityType<EntityMobSpiderling>, world: World) :
 	// Serialization
 	
 	override fun writeAdditional(nbt: TagCompound) = nbt.heeTag.use {
+		super.writeAdditional(nbt)
+		
 		putInt(SLEEP_STATE_TAG, when{
 			isSleeping -> 2
 			canSleepAgain -> 1
@@ -504,6 +506,8 @@ class EntityMobSpiderling(type: EntityType<EntityMobSpiderling>, world: World) :
 	}
 	
 	override fun readAdditional(nbt: TagCompound) = nbt.heeTag.use {
+		super.readAdditional(nbt)
+		
 		val sleepState = getInt(SLEEP_STATE_TAG)
 		
 		if (sleepState != 2){

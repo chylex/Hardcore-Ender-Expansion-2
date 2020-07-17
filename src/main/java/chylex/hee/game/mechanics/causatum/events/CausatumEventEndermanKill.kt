@@ -92,7 +92,7 @@ class CausatumEventEndermanKill() : ICausatumEventHandler{
 		
 		muppets.removeAll {
 			with(it.get(world) as? EntityMobEndermanMuppet ?: return@removeAll true){
-				lookController.setLookPosition(lookX, lookY, lookZ, horizontalFaceSpeed.toFloat(), verticalFaceSpeed.toFloat())
+				lookController.setLookPosition(lookX, lookY, lookZ)
 				
 				if (lastDamageSource?.trueSource is EntityPlayer || world.getClosestPlayer(this, 2.0) != null){
 					if (timer < DESPAWN_START_TIME){

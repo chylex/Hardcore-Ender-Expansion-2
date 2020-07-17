@@ -449,10 +449,14 @@ class EntityItemIgneousRock : EntityItemNoBob{
 	// Serialization
 	
 	override fun writeAdditional(nbt: TagCompound) = nbt.heeTag.use {
+		super.writeAdditional(nbt)
+		
 		putEnum(FACING_TAG, throwFacing)
 	}
 	
 	override fun readAdditional(nbt: TagCompound) = nbt.heeTag.use {
+		super.readAdditional(nbt)
+		
 		throwFacing = getEnum<Direction>(FACING_TAG) ?: throwFacing
 	}
 }
