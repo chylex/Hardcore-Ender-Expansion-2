@@ -10,6 +10,7 @@ import chylex.hee.game.entity.item.EntityItemRevitalizationSubstance;
 import chylex.hee.game.entity.item.EntityTokenHolder;
 import chylex.hee.game.entity.living.EntityBossEnderEye;
 import chylex.hee.game.entity.living.EntityMobAngryEnderman;
+import chylex.hee.game.entity.living.EntityMobBlobby;
 import chylex.hee.game.entity.living.EntityMobEnderman;
 import chylex.hee.game.entity.living.EntityMobEndermanMuppet;
 import chylex.hee.game.entity.living.EntityMobEndermite;
@@ -50,6 +51,7 @@ public final class EntityConstructors{
 		add(EntityBossEnderEye.class, EntityBossEnderEye::new);
 		
 		add(EntityMobAngryEnderman.class, EntityMobAngryEnderman::new);
+		add(EntityMobBlobby.class, EntityMobBlobby::new);
 		add(EntityMobEnderman.class, EntityMobEnderman::new);
 		add(EntityMobEndermanMuppet.class, EntityMobEndermanMuppet::new);
 		add(EntityMobEndermite.class, EntityMobEndermite::new);

@@ -22,6 +22,7 @@ import chylex.hee.client.render.entity.RenderEntityItem
 import chylex.hee.client.render.entity.RenderEntityItemNoBob
 import chylex.hee.client.render.entity.RenderEntityMobAbstractEnderman
 import chylex.hee.client.render.entity.RenderEntityMobAngryEnderman
+import chylex.hee.client.render.entity.RenderEntityMobBlobby
 import chylex.hee.client.render.entity.RenderEntityMobSpiderling
 import chylex.hee.client.render.entity.RenderEntityMobUndread
 import chylex.hee.client.render.entity.RenderEntityMobVampireBat
@@ -66,6 +67,7 @@ import chylex.hee.game.entity.item.EntityTokenHolder
 import chylex.hee.game.entity.living.EntityBossEnderEye
 import chylex.hee.game.entity.living.EntityMobAbstractEnderman
 import chylex.hee.game.entity.living.EntityMobAngryEnderman
+import chylex.hee.game.entity.living.EntityMobBlobby
 import chylex.hee.game.entity.living.EntityMobEndermite
 import chylex.hee.game.entity.living.EntityMobEndermiteInstability
 import chylex.hee.game.entity.living.EntityMobSilverfish
@@ -182,6 +184,7 @@ object ModRendering{
 		registerEntity<EntityMobAbstractEnderman, RenderEntityMobAbstractEnderman>(ModEntities.ENDERMAN)
 		registerEntity<EntityMobAbstractEnderman, RenderEntityMobAbstractEnderman>(ModEntities.ENDERMAN_MUPPET)
 		registerEntity<EntityMobAngryEnderman, RenderEntityMobAngryEnderman>(ModEntities.ANGRY_ENDERMAN)
+		registerEntity<EntityMobBlobby, RenderEntityMobBlobby>(ModEntities.BLOBBY)
 		registerEntity<EntityMobEndermite, RenderEndermite>(ModEntities.ENDERMITE)
 		registerEntity<EntityMobEndermiteInstability, RenderEndermite>(ModEntities.ENDERMITE_INSTABILITY)
 		registerEntity<EntityMobSilverfish, RenderSilverfish>(ModEntities.SILVERFISH)

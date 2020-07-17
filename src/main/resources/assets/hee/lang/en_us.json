@@ -223,6 +223,7 @@
 
   "item.hee.ender_eye_spawn_egg": "Ender Eye Spawn Egg",
   "item.hee.angry_enderman_spawn_egg":"Angry Enderman Spawn Egg",
+  "item.hee.blobby_spawn_egg": "Blobby Spawn Egg",
   "item.hee.endermite_instability_spawn_egg": "Endermite Spawn Egg (Instability)",
   "item.hee.spiderling_spawn_egg": "Spiderling Spawn Egg",
   "item.hee.undread_spawn_egg": "Undread Spawn Egg",
@@ -282,6 +283,7 @@
 
   "entity.hee.ender_eye": "Ender Eye",
   "entity.hee.angry_enderman": "Angry Enderman",
+  "entity.hee.blobby": "Blobby",
   "entity.hee.endermite_instability": "Endermite (Instability)",
   "entity.hee.spiderling": "Spiderling",
   "entity.hee.undread": "Undread",

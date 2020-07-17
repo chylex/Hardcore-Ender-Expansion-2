@@ -157,6 +157,7 @@ object ModItems{
 	
 	@JvmField val SPAWN_ENDER_EYE             = ItemSpawnEgg(ModEntities.ENDER_EYE, RGB(22u).i, RGB(219, 58, 115).i, baseProps) named "ender_eye_spawn_egg"
 	@JvmField val SPAWN_ANGRY_ENDERMAN        = ItemSpawnEgg(ModEntities.ANGRY_ENDERMAN, RGB(21u).i, RGB(111, 75, 36).i, baseProps) named "angry_enderman_spawn_egg"
+	@JvmField val SPAWN_BLOBBY                = ItemSpawnEgg(ModEntities.BLOBBY, RGB(103, 140, 94).i, RGB(255u).i, baseProps) named "blobby_spawn_egg"
 	@JvmField val SPAWN_ENDERMITE_INSTABILITY = ItemSpawnEgg(ModEntities.ENDERMITE_INSTABILITY, RGB(21u).i, RGB(94, 122, 108).i, baseProps) named "endermite_instability_spawn_egg"
 	@JvmField val SPAWN_SPIDERLING            = ItemSpawnEgg(ModEntities.SPIDERLING, RGB(32, 30, 16).i, RGB(182, 25, 0).i, baseProps) named "spiderling_spawn_egg"
 	@JvmField val SPAWN_UNDREAD               = ItemSpawnEgg(ModEntities.UNDREAD, TerritoryType.FORGOTTEN_TOMBS.desc.colors.tokenTop.i, TerritoryType.FORGOTTEN_TOMBS.desc.colors.tokenBottom.i, baseProps) named "undread_spawn_egg"
@@ -237,6 +238,7 @@ object ModItems{
 			
 			register(SPAWN_ENDER_EYE)
 			register(SPAWN_ANGRY_ENDERMAN)
+			register(SPAWN_BLOBBY)
 			register(SPAWN_ENDERMITE_INSTABILITY)
 			register(SPAWN_SPIDERLING)
 			register(SPAWN_UNDREAD)

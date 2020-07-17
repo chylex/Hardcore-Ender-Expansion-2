@@ -15,6 +15,7 @@ import chylex.hee.client.render.entity.RenderEntityItem;
 import chylex.hee.client.render.entity.RenderEntityItemNoBob;
 import chylex.hee.client.render.entity.RenderEntityMobAbstractEnderman;
 import chylex.hee.client.render.entity.RenderEntityMobAngryEnderman;
+import chylex.hee.client.render.entity.RenderEntityMobBlobby;
 import chylex.hee.client.render.entity.RenderEntityMobSpiderling;
 import chylex.hee.client.render.entity.RenderEntityMobUndread;
 import chylex.hee.client.render.entity.RenderEntityMobVampireBat;
@@ -53,6 +54,7 @@ public final class RendererConstructors{
 		entities.put(RenderEntityItemNoBob.class, RenderEntityItemNoBob::new);
 		entities.put(RenderEntityMobAbstractEnderman.class, RenderEntityMobAbstractEnderman::new);
 		entities.put(RenderEntityMobAngryEnderman.class, RenderEntityMobAngryEnderman::new);
+		entities.put(RenderEntityMobBlobby.class, RenderEntityMobBlobby::new);
 		entities.put(RenderEntityMobSpiderling.class, RenderEntityMobSpiderling::new);
 		entities.put(RenderEntityMobUndread.class, RenderEntityMobUndread::new);
 		entities.put(RenderEntityMobVampireBat.class, RenderEntityMobVampireBat::new);

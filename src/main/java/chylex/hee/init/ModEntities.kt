@@ -11,6 +11,7 @@ import chylex.hee.game.entity.item.EntityItemRevitalizationSubstance
 import chylex.hee.game.entity.item.EntityTokenHolder
 import chylex.hee.game.entity.living.EntityBossEnderEye
 import chylex.hee.game.entity.living.EntityMobAngryEnderman
+import chylex.hee.game.entity.living.EntityMobBlobby
 import chylex.hee.game.entity.living.EntityMobEnderman
 import chylex.hee.game.entity.living.EntityMobEndermanMuppet
 import chylex.hee.game.entity.living.EntityMobEndermite
@@ -28,6 +29,7 @@ import chylex.hee.game.entity.technical.EntityTechnicalCausatumEvent
 import chylex.hee.game.entity.technical.EntityTechnicalIgneousPlateLogic
 import chylex.hee.game.entity.technical.EntityTechnicalPuzzle
 import chylex.hee.game.entity.technical.EntityTechnicalTrigger
+import chylex.hee.game.entity.util.ColorDataSerializer
 import chylex.hee.init.factory.EntityConstructors
 import chylex.hee.system.migration.forge.EventPriority
 import chylex.hee.system.migration.forge.SubscribeAllEvents
@@ -39,6 +41,7 @@ import chylex.hee.system.util.TagCompound
 import chylex.hee.system.util.named
 import net.minecraft.entity.Entity
 import net.minecraft.entity.EntityClassification
+import net.minecraft.entity.EntityClassification.CREATURE
 import net.minecraft.entity.EntityClassification.MISC
 import net.minecraft.entity.EntityClassification.MONSTER
 import net.minecraft.entity.EntitySpawnPlacementRegistry
@@ -46,6 +49,7 @@ import net.minecraft.entity.EntitySpawnPlacementRegistry.PlacementType
 import net.minecraft.entity.EntityType
 import net.minecraft.entity.MobEntity
 import net.minecraft.entity.monster.MonsterEntity
+import net.minecraft.network.datasync.DataSerializers
 import net.minecraft.world.gen.Heightmap.Type
 import net.minecraftforge.common.MinecraftForge
 import net.minecraftforge.event.RegistryEvent
@@ -68,6 +72,7 @@ object ModEntities{
 	val ENDER_EYE = build<EntityBossEnderEye>(MONSTER).size(1.1F, 1F).immuneToFire().tracker(160, 1, true).name("ender_eye")
 	
 	val ANGRY_ENDERMAN        = build<EntityMobAngryEnderman>(MONSTER).size(0.6F, 2.9F).tracker(80, 3, true).name("angry_enderman")
+	val BLOBBY                = build<EntityMobBlobby>(CREATURE).size(0.5F, 0.5F).tracker(80, 3, true).name("blobby")
 	val ENDERMAN              = build<EntityMobEnderman>(MONSTER).size(0.6F, 2.9F).tracker(80, 3, true).name("enderman")
 	val ENDERMAN_MUPPET       = build<EntityMobEndermanMuppet>(MISC).size(0.6F, 2.9F).tracker(96, 3, false).name("enderman_muppet")
 	val ENDERMITE             = build<EntityMobEndermite>(MONSTER).size(0.425F, 0.325F).tracker(80, 3, true).name("endermite")
@@ -105,6 +110,7 @@ object ModEntities{
 			register(ENDER_EYE)
 			
 			register(ANGRY_ENDERMAN)
+			register(BLOBBY)
 			register(ENDERMAN)
 			register(ENDERMAN_MUPPET)
 			register(ENDERMITE)
@@ -126,18 +132,24 @@ object ModEntities{
 			register(TECHNICAL_TRIGGER)
 		}
 		
+		// data
+		
+		DataSerializers.registerSerializer(ColorDataSerializer)
+		
 		// spawns
 		
-		val defaultSpawnPredicate = MonsterEntity::canMonsterSpawnInLight
+		val defaultSpawnPredicateHostile = MonsterEntity::canMonsterSpawnInLight
+		val defaultSpawnPredicatePassive = MobEntity::canSpawnOn
 		
-		EntitySpawnPlacementRegistry.register(ANGRY_ENDERMAN, PlacementType.ON_GROUND, Type.MOTION_BLOCKING_NO_LEAVES, defaultSpawnPredicate)
+		EntitySpawnPlacementRegistry.register(ANGRY_ENDERMAN, PlacementType.ON_GROUND, Type.MOTION_BLOCKING_NO_LEAVES, defaultSpawnPredicateHostile)
+		EntitySpawnPlacementRegistry.register(BLOBBY, PlacementType.ON_GROUND, Type.MOTION_BLOCKING_NO_LEAVES, defaultSpawnPredicatePassive)
 		EntitySpawnPlacementRegistry.register(ENDERMAN, PlacementType.ON_GROUND, Type.MOTION_BLOCKING_NO_LEAVES, EntityMobEnderman.Companion::canSpawnAt)
-		EntitySpawnPlacementRegistry.register(ENDERMITE, PlacementType.ON_GROUND, Type.MOTION_BLOCKING_NO_LEAVES, defaultSpawnPredicate)
-		EntitySpawnPlacementRegistry.register(ENDERMITE_INSTABILITY, PlacementType.ON_GROUND, Type.MOTION_BLOCKING_NO_LEAVES, defaultSpawnPredicate)
-		EntitySpawnPlacementRegistry.register(SILVERFISH, PlacementType.ON_GROUND, Type.MOTION_BLOCKING_NO_LEAVES, defaultSpawnPredicate)
-		EntitySpawnPlacementRegistry.register(SPIDERLING, PlacementType.ON_GROUND, Type.MOTION_BLOCKING_NO_LEAVES, defaultSpawnPredicate)
-		EntitySpawnPlacementRegistry.register(UNDREAD, PlacementType.ON_GROUND, Type.MOTION_BLOCKING_NO_LEAVES, defaultSpawnPredicate)
-		EntitySpawnPlacementRegistry.register(VAMPIRE_BAT, PlacementType.ON_GROUND, Type.MOTION_BLOCKING_NO_LEAVES, MobEntity::canSpawnOn)
+		EntitySpawnPlacementRegistry.register(ENDERMITE, PlacementType.ON_GROUND, Type.MOTION_BLOCKING_NO_LEAVES, defaultSpawnPredicateHostile)
+		EntitySpawnPlacementRegistry.register(ENDERMITE_INSTABILITY, PlacementType.ON_GROUND, Type.MOTION_BLOCKING_NO_LEAVES, defaultSpawnPredicateHostile)
+		EntitySpawnPlacementRegistry.register(SILVERFISH, PlacementType.ON_GROUND, Type.MOTION_BLOCKING_NO_LEAVES, defaultSpawnPredicateHostile)
+		EntitySpawnPlacementRegistry.register(SPIDERLING, PlacementType.ON_GROUND, Type.MOTION_BLOCKING_NO_LEAVES, defaultSpawnPredicateHostile)
+		EntitySpawnPlacementRegistry.register(UNDREAD, PlacementType.ON_GROUND, Type.MOTION_BLOCKING_NO_LEAVES, defaultSpawnPredicateHostile)
+		EntitySpawnPlacementRegistry.register(VAMPIRE_BAT, PlacementType.ON_GROUND, Type.MOTION_BLOCKING_NO_LEAVES, defaultSpawnPredicatePassive)
 		
 		MinecraftForge.EVENT_BUS.register(this)
 	}
