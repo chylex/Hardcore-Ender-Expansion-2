@@ -4,7 +4,7 @@ import chylex.hee.game.particle.data.IParticleData
 import chylex.hee.game.particle.spawner.IParticleMaker
 import chylex.hee.system.migration.forge.Side
 import chylex.hee.system.migration.forge.Sided
-import chylex.hee.system.migration.vanilla.ParticleFlame
+import net.minecraft.client.particle.FlameParticle
 import net.minecraft.client.particle.Particle
 import net.minecraft.world.World
 
@@ -19,7 +19,7 @@ object ParticleFlameCustom : IParticleMaker.WithData<Data>(){
 	) : IParticleData.Self<Data>()
 	
 	@Sided(Side.CLIENT)
-	private class Instance(world: World, posX: Double, posY: Double, posZ: Double, motX: Double, motY: Double, motZ: Double, data: Data?) : ParticleFlame(world, posX, posY, posZ, motX, motY, motZ){
+	private class Instance(world: World, posX: Double, posY: Double, posZ: Double, motX: Double, motY: Double, motZ: Double, data: Data?) : FlameParticle(world, posX, posY, posZ, motX, motY, motZ){
 		init{
 			selectSpriteRandomly(ParticleFlameCustom.sprite)
 			maxAge = data?.maxAge ?: 0

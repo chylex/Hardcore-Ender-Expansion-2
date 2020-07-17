@@ -4,15 +4,15 @@ import chylex.hee.client.util.MC
 import chylex.hee.game.block.entity.TileEntityBrewingStandCustom
 import chylex.hee.system.migration.forge.Side
 import chylex.hee.system.migration.forge.Sided
-import chylex.hee.system.migration.vanilla.ContainerBrewingStand
 import chylex.hee.system.util.facades.Resource
 import chylex.hee.system.util.totalTime
 import net.minecraft.client.gui.screen.inventory.BrewingStandScreen
 import net.minecraft.entity.player.PlayerInventory
+import net.minecraft.inventory.container.BrewingStandContainer
 import net.minecraft.util.text.ITextComponent
 
 @Sided(Side.CLIENT)
-class GuiBrewingStandCustom(container: ContainerBrewingStand, inventory: PlayerInventory, title: ITextComponent) : BrewingStandScreen(container, inventory, title){
+class GuiBrewingStandCustom(container: BrewingStandContainer, inventory: PlayerInventory, title: ITextComponent) : BrewingStandScreen(container, inventory, title){
 	private companion object{
 		private val TEX_BACKGROUND = Resource.Custom("textures/gui/brewing_stand.png")
 		private val BUBBLE_LENGTHS = intArrayOf(0, 6, 11, 16, 20, 24, 29)

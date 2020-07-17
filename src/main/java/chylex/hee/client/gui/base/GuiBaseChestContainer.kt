@@ -2,16 +2,16 @@ package chylex.hee.client.gui.base
 import chylex.hee.client.render.util.GL
 import chylex.hee.system.migration.forge.Side
 import chylex.hee.system.migration.forge.Sided
-import chylex.hee.system.migration.vanilla.ContainerChest
 import chylex.hee.system.util.color.IntColor.Companion.RGB
 import chylex.hee.system.util.facades.Resource
 import chylex.hee.system.util.size
 import net.minecraft.client.gui.screen.inventory.ContainerScreen
 import net.minecraft.entity.player.PlayerInventory
+import net.minecraft.inventory.container.ChestContainer
 import net.minecraft.util.text.ITextComponent
 
 @Sided(Side.CLIENT)
-abstract class GuiBaseChestContainer<T : ContainerChest>(container: T, inventory: PlayerInventory, title: ITextComponent) : ContainerScreen<T>(container, inventory, title){
+abstract class GuiBaseChestContainer<T : ChestContainer>(container: T, inventory: PlayerInventory, title: ITextComponent) : ContainerScreen<T>(container, inventory, title){
 	private companion object{
 		private val TEX_BACKGROUND = Resource.Vanilla("textures/gui/container/generic_54.png")
 		private val COLOR_TEXT = RGB(64u).i

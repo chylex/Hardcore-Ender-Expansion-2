@@ -3,10 +3,10 @@ import chylex.hee.game.particle.data.ParticleDataColorScale
 import chylex.hee.game.particle.spawner.IParticleMaker
 import chylex.hee.system.migration.forge.Side
 import chylex.hee.system.migration.forge.Sided
-import chylex.hee.system.migration.vanilla.ParticleSpell
 import chylex.hee.system.util.color.IRandomColor
 import chylex.hee.system.util.color.IntColor
 import net.minecraft.client.particle.Particle
+import net.minecraft.client.particle.SpellParticle
 import net.minecraft.world.World
 
 object ParticleSpellCustom : IParticleMaker.WithData<ParticleDataColorScale>(){
@@ -21,7 +21,11 @@ object ParticleSpellCustom : IParticleMaker.WithData<ParticleDataColorScale>(){
 	) = ParticleDataColorScale.Generator(IRandomColor.Static(color), scale)
 	
 	@Sided(Side.CLIENT)
-	private class Instance(world: World, posX: Double, posY: Double, posZ: Double, motX: Double, motY: Double, motZ: Double, data: ParticleDataColorScale?) : ParticleSpell(world, posX, posY, posZ, 0.0, 0.0, 0.0, sprite){
+	private class Instance(
+		world: World, posX: Double, posY: Double, posZ: Double, motX: Double, motY: Double, motZ: Double, data: ParticleDataColorScale?
+	) : SpellParticle(
+		world, posX, posY, posZ, 0.0, 0.0, 0.0, sprite
+	){
 		init{
 			motionX = motX
 			motionY = motY

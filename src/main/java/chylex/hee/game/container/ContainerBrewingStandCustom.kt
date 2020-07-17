@@ -8,7 +8,6 @@ import chylex.hee.game.container.base.IContainerSlotTransferLogic
 import chylex.hee.game.container.slot.SlotBrewingModifier
 import chylex.hee.game.container.slot.SlotBrewingReagent
 import chylex.hee.init.ModContainers
-import chylex.hee.system.migration.vanilla.ContainerBrewingStand
 import chylex.hee.system.migration.vanilla.EntityPlayer
 import chylex.hee.system.util.getTile
 import chylex.hee.system.util.readPos
@@ -16,13 +15,14 @@ import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.entity.player.PlayerInventory
 import net.minecraft.inventory.IInventory
 import net.minecraft.inventory.Inventory
+import net.minecraft.inventory.container.BrewingStandContainer
 import net.minecraft.inventory.container.ContainerType
 import net.minecraft.item.ItemStack
 import net.minecraft.network.PacketBuffer
 import net.minecraft.util.IIntArray
 import net.minecraft.util.IntArray
 
-class ContainerBrewingStandCustom(id: Int, inventory: PlayerInventory, private val brewingStand: IInventory, fields: IIntArray, tile: TileEntityBrewingStandCustom?) : ContainerBrewingStand(id, inventory, brewingStand, fields), IContainerSlotTransferLogic{
+class ContainerBrewingStandCustom(id: Int, inventory: PlayerInventory, private val brewingStand: IInventory, fields: IIntArray, tile: TileEntityBrewingStandCustom?) : BrewingStandContainer(id, inventory, brewingStand, fields), IContainerSlotTransferLogic{
 	@Suppress("unused")
 	constructor(id: Int, inventory: PlayerInventory, buffer: PacketBuffer) : this(id, inventory, Inventory(TOTAL_SLOTS), IntArray(TOTAL_FIELDS), buffer.readPos().getTile(inventory.player.world))
 	

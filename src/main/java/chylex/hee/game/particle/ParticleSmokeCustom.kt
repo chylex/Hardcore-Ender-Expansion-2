@@ -3,13 +3,13 @@ import chylex.hee.game.particle.data.ParticleDataColorLifespanScale
 import chylex.hee.game.particle.spawner.IParticleMaker
 import chylex.hee.system.migration.forge.Side
 import chylex.hee.system.migration.forge.Sided
-import chylex.hee.system.migration.vanilla.ParticleSmokeNormal
 import chylex.hee.system.util.color.IRandomColor
 import chylex.hee.system.util.color.IntColor
 import chylex.hee.system.util.color.IntColor.Companion.RGB
 import chylex.hee.system.util.floorToInt
 import chylex.hee.system.util.nextFloat
 import net.minecraft.client.particle.Particle
+import net.minecraft.client.particle.SmokeParticle
 import net.minecraft.world.World
 import java.util.Random
 
@@ -49,7 +49,7 @@ object ParticleSmokeCustom : IParticleMaker.WithData<ParticleDataColorLifespanSc
 	@Sided(Side.CLIENT)
 	private class Instance(
 		world: World, posX: Double, posY: Double, posZ: Double, motX: Double, motY: Double, motZ: Double, data: ParticleDataColorLifespanScale
-	) : ParticleSmokeNormal(
+	) : SmokeParticle(
 		world, posX, posY, posZ, motX, motY, motZ, data.scale, sprite
 	){
 		init{

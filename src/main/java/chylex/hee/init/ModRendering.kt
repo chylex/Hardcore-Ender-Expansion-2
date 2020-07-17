@@ -91,7 +91,6 @@ import chylex.hee.init.factory.ScreenConstructors
 import chylex.hee.system.migration.forge.Side
 import chylex.hee.system.migration.forge.SubscribeAllEvents
 import chylex.hee.system.migration.forge.SubscribeEvent
-import chylex.hee.system.migration.vanilla.ContainerBrewingStand
 import chylex.hee.system.migration.vanilla.RenderEndermite
 import chylex.hee.system.migration.vanilla.RenderFallingBlock
 import chylex.hee.system.migration.vanilla.RenderSilverfish
@@ -110,6 +109,7 @@ import net.minecraft.client.renderer.tileentity.SkullTileEntityRenderer
 import net.minecraft.client.renderer.tileentity.TileEntityRenderer
 import net.minecraft.entity.Entity
 import net.minecraft.entity.EntityType
+import net.minecraft.inventory.container.BrewingStandContainer
 import net.minecraft.inventory.container.Container
 import net.minecraft.inventory.container.ContainerType
 import net.minecraft.tileentity.TileEntity
@@ -163,7 +163,7 @@ object ModRendering{
 		// screens
 		
 		registerScreen<GuiAmuletOfRecovery, ContainerAmuletOfRecovery>(ModContainers.AMULET_OF_RECOVERY)
-		registerScreen<GuiBrewingStandCustom, ContainerBrewingStand>(ModContainers.BREWING_STAND)
+		registerScreen<GuiBrewingStandCustom, BrewingStandContainer>(ModContainers.BREWING_STAND)
 		registerScreen<GuiLootChest, ContainerLootChest>(ModContainers.LOOT_CHEST)
 		registerScreen<GuiPortalTokenStorage, ContainerPortalTokenStorage>(ModContainers.PORTAL_TOKEN_STORAGE)
 		registerScreen<GuiShulkerBox, ContainerShulkerBox>(ModContainers.SHULKER_BOX)

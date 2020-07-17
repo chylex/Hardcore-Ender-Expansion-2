@@ -4,13 +4,13 @@ import chylex.hee.game.particle.data.IParticleData
 import chylex.hee.game.particle.spawner.IParticleMaker
 import chylex.hee.system.migration.forge.Side
 import chylex.hee.system.migration.forge.Sided
-import chylex.hee.system.migration.vanilla.ParticleSuspendedTown
 import chylex.hee.system.util.color.IntColor.Companion.RGB
 import chylex.hee.system.util.component1
 import chylex.hee.system.util.component2
 import chylex.hee.system.util.component3
 import chylex.hee.system.util.offsetTowards
 import net.minecraft.client.particle.Particle
+import net.minecraft.client.particle.SuspendedTownParticle
 import net.minecraft.world.World
 
 object ParticleDeathFlowerHeal : IParticleMaker.WithData<Data>(){
@@ -25,7 +25,7 @@ object ParticleDeathFlowerHeal : IParticleMaker.WithData<Data>(){
 	private val COLOR_MAX = RGB(232, 85, 252).asVec
 	
 	@Sided(Side.CLIENT)
-	private class Instance(world: World, posX: Double, posY: Double, posZ: Double, motX: Double, motY: Double, motZ: Double, data: Data?) : ParticleSuspendedTown(world, posX, posY, posZ, motX, motY, motZ){
+	private class Instance(world: World, posX: Double, posY: Double, posZ: Double, motX: Double, motY: Double, motZ: Double, data: Data?) : SuspendedTownParticle(world, posX, posY, posZ, motX, motY, motZ){
 		init{
 			selectSpriteRandomly(ParticleDeathFlowerHeal.sprite)
 			

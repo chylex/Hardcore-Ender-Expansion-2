@@ -4,14 +4,14 @@ import chylex.hee.game.container.util.DetectSlotChangeListener
 import chylex.hee.game.item.ItemAmuletOfRecovery
 import chylex.hee.init.ModContainers
 import chylex.hee.network.server.PacketServerContainerEvent.IContainerWithEvents
-import chylex.hee.system.migration.vanilla.ContainerChest
 import chylex.hee.system.migration.vanilla.EntityPlayer
 import chylex.hee.system.util.size
 import net.minecraft.entity.player.PlayerInventory
+import net.minecraft.inventory.container.ChestContainer
 import net.minecraft.network.PacketBuffer
 import net.minecraft.util.Hand
 
-class ContainerAmuletOfRecovery(id: Int, private val player: EntityPlayer, hand: Hand) : ContainerChest(ModContainers.AMULET_OF_RECOVERY, id, player.inventory, ItemAmuletOfRecovery.Inv(player, hand), 5), IContainerWithEvents{
+class ContainerAmuletOfRecovery(id: Int, private val player: EntityPlayer, hand: Hand) : ChestContainer(ModContainers.AMULET_OF_RECOVERY, id, player.inventory, ItemAmuletOfRecovery.Inv(player, hand), 5), IContainerWithEvents{
 	@Suppress("unused")
 	constructor(id: Int, inventory: PlayerInventory, buffer: PacketBuffer) : this(id, inventory.player, Hand.values()[buffer.readVarInt()])
 	
