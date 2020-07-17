@@ -53,14 +53,12 @@ class ItemTrinketPouch(properties: Properties) : ItemAbstractTrinket(properties)
 		private const val CONTENTS_TAG = "Contents"
 		private const val MOD_COUNTER_TAG = "Version"
 		
-		private const val INVENTORY_SLOT_TRINKET = Int.MAX_VALUE
-		
 		private fun isStackValid(stack: ItemStack): Boolean{
 			return stack.item is ItemTrinketPouch
 		}
 		
 		private fun getInventoryStack(player: EntityPlayer, slot: Int) = when(slot){
-			INVENTORY_SLOT_TRINKET -> TrinketHandler.getTrinketSlotItem(player)
+			SlotTrinketItemInventory.INTERNAL_INDEX -> TrinketHandler.getTrinketSlotItem(player)
 			else -> player.inventory.getStack(slot)
 		}
 		
@@ -187,7 +185,7 @@ class ItemTrinketPouch(properties: Properties) : ItemAbstractTrinket(properties)
 	}
 	
 	override fun createTrinketHandler(player: EntityPlayer): ITrinketHandler{
-		return (player.openContainer as? ContainerTrinketPouch)?.containerInventory ?: Inv(player, INVENTORY_SLOT_TRINKET) // helpfully updates the opened GUI too
+		return (player.openContainer as? ContainerTrinketPouch)?.containerInventory ?: Inv(player, SlotTrinketItemInventory.INTERNAL_INDEX) // helpfully updates the opened GUI too
 	}
 	
 	override fun canApplyInfusion(infusion: Infusion): Boolean{
@@ -238,7 +236,7 @@ class ItemTrinketPouch(properties: Properties) : ItemAbstractTrinket(properties)
 			
 			if (hoveredSlot != null && hoveredSlot.stack.item === this){
 				val slotIndex = when(hoveredSlot){
-					is SlotTrinketItemInventory -> INVENTORY_SLOT_TRINKET
+					is SlotTrinketItemInventory -> SlotTrinketItemInventory.INTERNAL_INDEX
 					else -> hoveredSlot.slotIndex
 				}
 				

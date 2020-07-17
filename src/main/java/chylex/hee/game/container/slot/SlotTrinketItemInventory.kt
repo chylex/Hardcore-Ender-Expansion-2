@@ -26,6 +26,8 @@ class SlotTrinketItemInventory(trinketHandler: IItemHandler, slotNumber: Int) : 
 		private const val TEX_SLOT_W = 32
 		private const val TEX_SLOT_H = 32
 		
+		const val INTERNAL_INDEX = Int.MAX_VALUE
+		
 		fun findTrinketSlot(allSlots: List<Slot>): Slot?{
 			return allSlots.asReversed().firstOrNull { it is SlotTrinketItemInventory }
 		}
