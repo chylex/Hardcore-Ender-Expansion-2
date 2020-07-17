@@ -108,7 +108,7 @@ class RenderEntityMobBlobby(manager: EntityRendererManager) : RenderLiving<Entit
 		if (model.isBuiltInRenderer){
 			val overrideType = when((stack.item as? ItemBlock)?.block){
 				is AbstractChestBlock<*> -> RenderType.getEntityTranslucentCull(Atlases.CHEST_ATLAS)
-				else -> null // TODO implement more special cases
+				else -> null // POLISH implement more special cases
 			}
 			
 			if (overrideType != null){

@@ -369,7 +369,7 @@ class EntityMobSpiderling(type: EntityType<EntityMobSpiderling>, world: World) :
 		return 25F - world.getLightFor(BLOCK, pos) - (world.getLightFor(SKY, pos) * 0.5F)
 	}
 	
-	override fun jump(){ // TODO could improve by making the motion less smooth when starting the jump, somehow
+	override fun jump(){ // POLISH could improve by making the motion less smooth when starting the jump, somehow
 		if (jumpCooldown == 0){
 			getAttribute(ATTACK_DAMAGE).tryApplyModifier(FALL_CRIT_DAMAGE)
 			super.jump()

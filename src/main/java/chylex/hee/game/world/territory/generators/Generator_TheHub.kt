@@ -139,7 +139,7 @@ object Generator_TheHub : ITerritoryGenerator{
 				}
 			}
 			
-			// TODO maybe run a second air gen pass on the edges to make them look nicer
+			// POLISH maybe run a second air gen pass on the edges to make them look nicer
 		}
 		
 		private fun determineDistance(x: Int, z: Int): Double{

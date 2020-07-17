@@ -147,7 +147,7 @@ class ItemShulkerBoxOverride(block: Block, properties: Properties) : ItemBlock(b
 			return ActionResult(PASS, stack)
 		}
 		
-		ModContainers.open(player, ContainerProvider(stack, slot.slot), slot.slot) // TODO it'd be pretty funny if the open animation was shown in inventory/held model but holy shit effort
+		ModContainers.open(player, ContainerProvider(stack, slot.slot), slot.slot) // POLISH it'd be pretty funny if the open animation was shown in inventory/held model but holy shit effort
 		return ActionResult(SUCCESS, stack)
 	}
 	

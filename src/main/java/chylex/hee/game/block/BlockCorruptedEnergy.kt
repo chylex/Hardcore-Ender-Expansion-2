@@ -193,7 +193,7 @@ class BlockCorruptedEnergy(builder: BlockBuilder) : BlockSimple(builder){
 		val amount = rand.nextInt(0, 2)
 		
 		if (amount > 0){
-			PARTICLE_CORRUPTION.spawn(Point(pos, amount), rand) // TODO figure out how to show particles outside animateTick range
+			PARTICLE_CORRUPTION.spawn(Point(pos, amount), rand) // POLISH figure out how to show particles outside animateTick range
 		}
 	}
 	

@@ -37,7 +37,7 @@ abstract class ItemAbstractInfusable(properties: Properties) : Item(properties),
 		}
 		
 		fun onHasEffect(stack: ItemStack): Boolean{
-			return InfusionTag.hasAny(stack) // TODO use a custom milder and slower texture
+			return InfusionTag.hasAny(stack) // POLISH use a custom milder and slower texture
 		}
 	}
 	

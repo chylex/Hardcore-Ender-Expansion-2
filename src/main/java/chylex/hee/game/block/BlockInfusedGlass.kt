@@ -49,7 +49,7 @@ class BlockInfusedGlass(builder: BlockBuilder) : BlockAbstractGlass(builder.p){
 		val world = context.world
 		val pos = context.pos
 		
-		return Facing6.fold(defaultState){ acc, facing -> acc.with(CONNECT_MAPPINGS.getValue(facing), pos.offset(facing).getBlock(world) === this) } // TODO improve corners
+		return Facing6.fold(defaultState){ acc, facing -> acc.with(CONNECT_MAPPINGS.getValue(facing), pos.offset(facing).getBlock(world) === this) } // POLISH improve corners
 	}
 	
 	override fun updatePostPlacement(state: BlockState, facing: Direction, neighborState: BlockState, world: IWorld, pos: BlockPos, neighborPos: BlockPos): BlockState{

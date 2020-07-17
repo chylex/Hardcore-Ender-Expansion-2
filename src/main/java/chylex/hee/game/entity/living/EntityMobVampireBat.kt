@@ -188,7 +188,7 @@ class EntityMobVampireBat(type: EntityType<EntityMobVampireBat>, world: World) :
 		super.tick()
 		
 		if (isBatHanging && Pos(this).up().getBlock(world) is BlockChorusPlant){
-			positionY = posY.floorToInt() + 1.25 - height // TODO some variations of chorus plants are extra thicc
+			positionY = posY.floorToInt() + 1.25 - height // POLISH some variations of chorus plants are extra thicc
 		}
 	}
 	

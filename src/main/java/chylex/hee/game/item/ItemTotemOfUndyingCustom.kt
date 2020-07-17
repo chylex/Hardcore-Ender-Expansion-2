@@ -126,7 +126,7 @@ class ItemTotemOfUndyingCustom(properties: Properties) : ItemAbstractTrinket(pro
 			copyLocationAndAnglesFrom(target)
 			copyVillagerDataFrom(target)
 			world.addEntity(this)
-			// TODO improve freezing during movement
+			// POLISH improve freezing during movement
 		}
 		
 		target.remove()

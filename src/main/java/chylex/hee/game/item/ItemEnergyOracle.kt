@@ -265,8 +265,6 @@ class ItemEnergyOracle(properties: Properties) : ItemAbstractEnergyUser(properti
 	
 	// Client side
 	
-	// TODO tooltip could maybe show remaining time?
-	
 	override fun shouldCauseReequipAnimation(oldStack: ItemStack, newStack: ItemStack, slotChanged: Boolean): Boolean{
 		return (oldStack.item === this) != (newStack.item === this) // disabling the animation looks a bit nicer, otherwise it happens a bit too fast
 	}
@@ -275,6 +273,7 @@ class ItemEnergyOracle(properties: Properties) : ItemAbstractEnergyUser(properti
 	override fun addInformation(stack: ItemStack, world: World?, lines: MutableList<ITextComponent>, flags: ITooltipFlag){
 		super.addInformation(stack, world, lines, flags)
 		ItemAbstractInfusable.onAddInformation(stack, lines)
+		// POLISH tooltip could maybe show remaining time?
 	}
 	
 	@Sided(Side.CLIENT)

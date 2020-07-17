@@ -119,7 +119,7 @@ class BlockDustyStoneUnstable(builder: BlockBuilder) : BlockDustyStone(builder){
 				}
 			}
 			
-			// TODO would like to avoid damaging the player if all blocks break and accumulate fall distance, but the caller resets it
+			// POLISH would like to avoid damaging the player if all blocks break and accumulate fall distance, but the caller resets it
 		}
 		
 		super.onFallenUpon(world, pos, entity, fallDistance)

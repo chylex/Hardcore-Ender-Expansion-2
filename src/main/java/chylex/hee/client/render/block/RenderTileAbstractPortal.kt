@@ -83,7 +83,7 @@ abstract class RenderTileAbstractPortal<T : TileEntityPortalInner, C : IPortalCo
 					cameraOffsetMp = layerIndexRev / topY
 				}
 				
-				val globalX = MC.player!!.posX % 69420.0 // TODO works around extreme coordinates, but causes a sudden jump at boundary
+				val globalX = MC.player!!.posX % 69420.0 // POLISH works around extreme coordinates, but causes a sudden jump at boundary
 				val globalY = MC.player!!.posY
 				val globalZ = MC.player!!.posZ % 69420.0
 				

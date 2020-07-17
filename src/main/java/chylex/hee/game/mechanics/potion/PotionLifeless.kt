@@ -17,5 +17,5 @@ object PotionLifeless : Potion(HARMFUL, FluidEnderGoo.rgbColor.i){
 		}
 	}
 	
-	// TODO maybe render a custom heart texture over empty hearts in the HUD
+	// POLISH maybe render a custom heart texture over empty hearts in the HUD
 }

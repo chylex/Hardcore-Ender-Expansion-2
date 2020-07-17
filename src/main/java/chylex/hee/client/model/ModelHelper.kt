@@ -37,7 +37,7 @@ object ModelHelper{
 				.add(Vec3.fromYaw(yaw + (yawOffsetMp * fov * 0.6F)).scale(0.25))
 				.add(Vec3.fromYaw(yaw + 165F - (fov - 90F) / 2F).scale(abs(pitch.coerceIn(0F, 90F) / 90.0).pow(1.5) * (0.3 - abs(fov - 90.0) / 600F)))
 			
-			// TODO kinda weird and inaccurate, maybe use the camera transformations somehow?
+			// POLISH kinda weird and inaccurate, maybe use the camera transformations somehow?
 		}
 		else{
 			val handOffset = if (player.isSneaking) 1.15 else 0.75

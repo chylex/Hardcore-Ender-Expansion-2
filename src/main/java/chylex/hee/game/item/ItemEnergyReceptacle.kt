@@ -103,7 +103,7 @@ class ItemEnergyReceptacle(properties: Properties) : ItemAbstractInfusable(prope
 			stack, _, _ -> if (stack.heeTagOrNull.hasKey(CLUSTER_SNAPSHOT_TAG)) 1F else 0F
 		}
 		
-		// TODO tweak animation
+		// POLISH tweak animation
 	}
 	
 	override fun onItemUse(context: ItemUseContext): ActionResultType{

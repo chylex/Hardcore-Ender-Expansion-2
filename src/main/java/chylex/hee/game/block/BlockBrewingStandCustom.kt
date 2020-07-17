@@ -34,7 +34,7 @@ open class BlockBrewingStandCustom(builder: BlockBuilder) : BlockBrewingStand(bu
 			ModContainers.open(player, tile, pos)
 		}
 		else{
-			// TODO maybe make the tile entity upgrade smoother but this is fine lol
+			// POLISH maybe make the tile entity upgrade smoother but this is fine lol
 			pos.breakBlock(world, false)
 			pos.setBlock(world, this)
 		}
