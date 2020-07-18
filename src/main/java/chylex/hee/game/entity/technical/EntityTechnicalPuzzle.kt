@@ -11,12 +11,15 @@ import chylex.hee.system.util.getEnum
 import chylex.hee.system.util.getPos
 import chylex.hee.system.util.getState
 import chylex.hee.system.util.heeTag
-import chylex.hee.system.util.max
-import chylex.hee.system.util.min
+import chylex.hee.system.util.lookDirVec
+import chylex.hee.system.util.lookPosVec
+import chylex.hee.system.util.nextItem
 import chylex.hee.system.util.putEnum
 import chylex.hee.system.util.putPos
 import chylex.hee.system.util.selectEntities
 import chylex.hee.system.util.setState
+import chylex.hee.system.util.square
+import chylex.hee.system.util.toRadians
 import chylex.hee.system.util.totalTime
 import chylex.hee.system.util.use
 import net.minecraft.entity.EntityType
@@ -24,8 +27,13 @@ import net.minecraft.item.ItemStack
 import net.minecraft.util.Direction
 import net.minecraft.util.math.AxisAlignedBB
 import net.minecraft.util.math.BlockPos
+import net.minecraft.util.math.RayTraceContext
+import net.minecraft.util.math.RayTraceContext.BlockMode
+import net.minecraft.util.math.RayTraceContext.FluidMode
+import net.minecraft.util.math.RayTraceResult.Type
 import net.minecraft.util.math.Vec3d
 import net.minecraft.world.World
+import kotlin.math.cos
 
 class EntityTechnicalPuzzle(type: EntityType<EntityTechnicalPuzzle>, world: World) : EntityTechnicalBase(type, world){
 	constructor(world: World) : this(ModEntities.TECHNICAL_PUZZLE, world)
@@ -134,18 +142,38 @@ class EntityTechnicalPuzzle(type: EntityType<EntityTechnicalPuzzle>, world: Worl
 		}
 		
 		if (allBlocks.all { it.getState(world)[BlockPuzzleLogic.STATE] == BlockPuzzleLogic.State.ACTIVE }){
-			allBlocks.forEach { it.setState(world, it.getState(world).with(BlockPuzzleLogic.STATE, BlockPuzzleLogic.State.DISABLED)) }
+			val candidatesInitial = BlockPuzzleLogic.findAllRectangles(world, allBlocks)
+				.map { box -> Vec3d((box.min.x + box.max.x + 1) * 0.5, posY + 1.5, (box.min.z + box.max.z + 1) * 0.5) }
 			
-			val min = allBlocks.reduce(BlockPos::min)
-			val max = allBlocks.reduce(BlockPos::max)
+			val candidatesWithPlayerVisibility = candidatesInitial
+				.filter(::isPointInPlayerView)
+				.ifEmpty { candidatesInitial }
 			
-			// TODO will need to be adjusted for different shapes
+			val candidatesOutsidePickupRange = candidatesInitial
+				.filter { center -> world.players.none { it.getDistanceSq(center) < square(5.0) } }
+				.ifEmpty { candidatesWithPlayerVisibility }
+			
+			val pickedCandidate = rand.nextItem(candidatesOutsidePickupRange)
+			
 			// TODO fx
 			
-			EntityItem(world, (min.x + max.x + 1) / 2.0, posY + 1.5, (min.z + max.z + 1) / 2.0, ItemStack(ModItems.PUZZLE_MEDALLION)).apply {
+			EntityItem(world, pickedCandidate.x, pickedCandidate.y, pickedCandidate.z, ItemStack(ModItems.PUZZLE_MEDALLION)).apply {
 				motion = Vec3d.ZERO
 				world.addEntity(this)
 			}
+			
+			allBlocks.forEach { it.setState(world, it.getState(world).with(BlockPuzzleLogic.STATE, BlockPuzzleLogic.State.DISABLED)) }
+		}
+	}
+	
+	private fun isPointInPlayerView(point: Vec3d): Boolean{
+		return world.players.any {
+			val lookPos = it.lookPosVec
+			val lookDir = it.lookDirVec
+			val pointDir = point.subtract(lookPos).normalize()
+			
+			lookDir.dotProduct(pointDir) > cos(80.0.toRadians()) &&
+			world.rayTraceBlocks(RayTraceContext(lookPos, point, BlockMode.COLLIDER, FluidMode.NONE, this)).type == Type.MISS
 		}
 	}
 	

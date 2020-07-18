@@ -5,9 +5,12 @@ import chylex.hee.game.block.BlockPuzzleLogic.State.DISABLED
 import chylex.hee.game.block.BlockPuzzleLogic.State.INACTIVE
 import chylex.hee.game.block.info.BlockBuilder
 import chylex.hee.game.block.util.Property
+import chylex.hee.game.world.util.BoundingBox
 import chylex.hee.system.migration.Facing.NORTH
 import chylex.hee.system.migration.forge.Side
 import chylex.hee.system.migration.forge.Sided
+import chylex.hee.system.util.Pos
+import chylex.hee.system.util.allInBox
 import chylex.hee.system.util.allInCenteredBox
 import chylex.hee.system.util.color.IntColor.Companion.RGB
 import chylex.hee.system.util.facades.Facing4
@@ -35,8 +38,57 @@ sealed class BlockPuzzleLogic(builder: BlockBuilder) : BlockSimple(builder){
 		const val UPDATE_RATE = 7
 		const val MAX_SIZE = 20
 		
+		private fun isPuzzleBlockEnabled(state: BlockState): Boolean{
+			return state.block is BlockPuzzleLogic && state[STATE] != DISABLED
+		}
+		
 		fun findAllBlocks(world: World, pos: BlockPos): List<BlockPos>{
-			return pos.floodFill(Facing4){ it.getState(world).let { state -> state.block is BlockPuzzleLogic && state[STATE] != DISABLED } }
+			return pos.floodFill(Facing4){ isPuzzleBlockEnabled(it.getState(world)) }
+		}
+		
+		fun findAllRectangles(world: World, allBlocks: List<BlockPos>): List<BoundingBox>{
+			val rects = mutableListOf<BoundingBox>()
+			val remainingBlocks = allBlocks.toMutableSet()
+			
+			while(remainingBlocks.isNotEmpty()){
+				val startPos = remainingBlocks.first()
+				val y = startPos.y
+				
+				var coordPos = startPos
+				var coordNeg = startPos
+				
+				while(true){
+					val prevCoordPos = coordPos
+					val prevCoordNeg = coordNeg
+					
+					if (Pos(coordPos.x + 1, y, coordNeg.z).allInBox(Pos(coordPos.x + 1, y, coordPos.z)).all { isPuzzleBlockEnabled(it.getState(world)) }){
+						coordPos = coordPos.add(1, 0, 0)
+					}
+					
+					if (Pos(coordPos.x, y, coordPos.z + 1).allInBox(Pos(coordNeg.x, y, coordPos.z + 1)).all { isPuzzleBlockEnabled(it.getState(world)) }){
+						coordPos = coordPos.add(0, 0, 1)
+					}
+					
+					if (Pos(coordNeg.x - 1, y, coordNeg.z).allInBox(Pos(coordNeg.x - 1, y, coordPos.z)).all { isPuzzleBlockEnabled(it.getState(world)) }){
+						coordNeg = coordNeg.add(-1, 0, 0)
+					}
+					
+					if (Pos(coordPos.x, y, coordNeg.z - 1).allInBox(Pos(coordNeg.x, y, coordNeg.z - 1)).all { isPuzzleBlockEnabled(it.getState(world)) }){
+						coordNeg = coordNeg.add(0, 0, -1)
+					}
+					
+					if (coordPos == prevCoordPos && coordNeg == prevCoordNeg){
+						break
+					}
+				}
+				
+				val rect = BoundingBox(coordPos, coordNeg)
+				
+				remainingBlocks.removeIf(rect::isInside)
+				rects.add(rect)
+			}
+			
+			return rects
 		}
 		
 		private fun makePair(pos: BlockPos, facing: Direction): Pair<BlockPos, Direction>{
