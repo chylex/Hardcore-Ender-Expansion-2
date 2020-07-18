@@ -50,6 +50,7 @@ import chylex.hee.system.util.nextItem
 import chylex.hee.system.util.nextVector
 import chylex.hee.system.util.offsetTowards
 import chylex.hee.system.util.offsetUntil
+import chylex.hee.system.util.offsetUntilExcept
 import chylex.hee.system.util.removeItem
 import chylex.hee.system.util.square
 import net.minecraft.util.math.BlockPos
@@ -468,7 +469,7 @@ object Generator_ArcaneConjunctions : ITerritoryGenerator{
 				val size = world.worldSize
 				val center = size.centerPos
 				
-				val pos = center.offsetUntil(DOWN, 1..((size.y + 1) / 2)){ !world.isAir(it) }?.up() ?: center
+				val pos = center.offsetUntilExcept(DOWN, 1..((size.y + 1) / 2)){ !world.isAir(it) } ?: center
 				PortalGenerator.VoidPortalReturnActive.place(world, pos, outline = BlockPlacer(Blocks.END_STONE))
 			}
 		}

@@ -53,6 +53,7 @@ import chylex.hee.system.util.nextItemOrNull
 import chylex.hee.system.util.nextVector
 import chylex.hee.system.util.nextVector2
 import chylex.hee.system.util.offsetUntil
+import chylex.hee.system.util.offsetUntilExcept
 import chylex.hee.system.util.remapRange
 import chylex.hee.system.util.removeItem
 import chylex.hee.system.util.removeItemOrNull
@@ -662,9 +663,9 @@ object Generator_LostGarden : ITerritoryGenerator{
 						rand.nextInt(density, 11) * (if (rand.nextBoolean()) -1 else 1),
 						4,
 						rand.nextInt(density, 11) * (if (rand.nextBoolean()) -1 else 1)
-					).offsetUntil(DOWN, 0..8){
+					).offsetUntilExcept(DOWN, 0..8){
 						canPlantOnTop(world, it)
-					}?.up()
+					}
 					
 					if (testPos != null && world.isAir(testPos)){
 						val generator = weights.generateItem(rand)

@@ -22,7 +22,7 @@ import chylex.hee.system.util.isAir
 import chylex.hee.system.util.isPeaceful
 import chylex.hee.system.util.nextFloat
 import chylex.hee.system.util.nextInt
-import chylex.hee.system.util.offsetUntil
+import chylex.hee.system.util.offsetUntilExcept
 import chylex.hee.system.util.posVec
 import chylex.hee.system.util.removeItem
 import chylex.hee.system.util.selectVulnerableEntities
@@ -70,9 +70,9 @@ class StrongholdRoom_Main_Portal(file: String) : StrongholdAbstractPieceFromFile
 						rand.nextInt(8, 20) * (if (rand.nextBoolean()) 1 else -1),
 						rand.nextInt(-4, 10),
 						rand.nextInt(8, 20) * (if (rand.nextBoolean()) 1 else -1)
-					).offsetUntil(DOWN, 0..5){
+					).offsetUntilExcept(DOWN, 0..5){
 						StrongholdPieces.isStoneBrick(it.getBlock(world))
-					}?.up()
+					}
 					
 					if (spawnPos == null || !spawnPos.isAir(world) || world.getLight(spawnPos) > 7){
 						continue

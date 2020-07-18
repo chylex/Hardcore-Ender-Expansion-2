@@ -53,6 +53,7 @@ import chylex.hee.system.util.nextItemOrNull
 import chylex.hee.system.util.nextVector
 import chylex.hee.system.util.nextVector2
 import chylex.hee.system.util.offsetUntil
+import chylex.hee.system.util.offsetUntilExcept
 import chylex.hee.system.util.remapRange
 import chylex.hee.system.util.removeItemOrNull
 import chylex.hee.system.util.scale
@@ -346,7 +347,7 @@ object Generator_TheHub : ITerritoryGenerator{
 	
 	private object VoidPortal{
 		fun findSpawnPos(world: SegmentedWorld, size: Size): BlockPos{
-			var portalCenterPos = size.centerPos.offsetUntil(UP, 0..24){ world.isAir(it) }?.down()!!
+			var portalCenterPos = size.centerPos.offsetUntilExcept(UP, 0..24, world::isAir)!!
 			
 			for(pos in portalCenterPos.allInCenteredBoxMutable(2, 0, 2)){
 				val testPos = pos.offsetUntil(DOWN, 0..5){ !world.isAir(it) }
@@ -431,14 +432,14 @@ object Generator_TheHub : ITerritoryGenerator{
 			}
 			
 			private fun paintPoint(world: SegmentedWorld, point: Vec3d){
-				val top = Pos(point).offsetUntil(UP, -8..8){ world.isAir(it) }?.down() ?: return
+				val top = Pos(point).offsetUntilExcept(UP, -8..8, world::isAir) ?: return
 				
 				val paintOffset = PAINT_RADIUS.ceilToInt()
 				val paintedPositions = mutableListOf<BlockPos>()
 				
 				for(x in -paintOffset..paintOffset) for(z in -paintOffset..paintOffset){
 					if (square(x) + square(z) <= square(PAINT_RADIUS)){
-						val pos = Pos(point.x + x, top.y.toDouble(), point.z + z).offsetUntil(UP, -3..3){ world.isAir(it) }?.down() ?: continue
+						val pos = Pos(point.x + x, top.y.toDouble(), point.z + z).offsetUntilExcept(UP, -3..3, world::isAir) ?: continue
 						
 						if (world.getBlock(pos) === Blocks.END_STONE){
 							world.setBlock(pos, ModBlocks.DARK_LOAM_SLAB)
@@ -494,7 +495,7 @@ object Generator_TheHub : ITerritoryGenerator{
 				
 				for(attempt in 1..200){
 					val pillarOffset = rand.nextVector2(xz = rand.nextFloat(PILLAR_MIN_DISTANCE, PILLAR_MAX_DISTANCE), y = 0.0)
-					val pillarPos = Pos(pos.center.add(pillarOffset)).offsetUntil(DOWN, -6..6){ world.getBlock(it) === Blocks.END_STONE }?.up()
+					val pillarPos = Pos(pos.center.add(pillarOffset)).offsetUntilExcept(DOWN, -6..6){ world.getBlock(it) === Blocks.END_STONE }
 					
 					if (pillarPos != null && world.isAir(pillarPos) && usedPositions.add(PosXZ(pillarPos))){
 						val height = min(2, rand.nextInt(1, 3) - rand.nextInt(0, 1))

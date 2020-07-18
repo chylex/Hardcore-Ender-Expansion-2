@@ -139,7 +139,7 @@ fun BlockPos.isTopSolid(world: IBlockReader): Boolean{
  * Offsets the block position in the direction of [facing] by distances defined by [offsetRange] until [testPredicate] returns true.
  * Returns the first [BlockPos] for which [testPredicate] returned true, or null if [testPredicate] didn't return true for any blocks within the [offsetRange].
  */
-inline fun BlockPos.offsetUntil(facing: Direction, offsetRange: IntRange, testPredicate: (BlockPos) -> Boolean): BlockPos?{
+inline fun BlockPos.offsetUntil(facing: Direction, offsetRange: IntProgression, testPredicate: (BlockPos) -> Boolean): BlockPos?{
 	for(offset in offsetRange){
 		val testPos = this.offset(facing, offset)
 		
@@ -149,6 +149,35 @@ inline fun BlockPos.offsetUntil(facing: Direction, offsetRange: IntRange, testPr
 	}
 	
 	return null
+}
+
+/**
+ * Offsets the block position in the direction of [facing] by distances defined by [offsetRange] until [testPredicate] returns true.
+ * Returns the last [BlockPos] for which [testPredicate] didn't return true, or null if [testPredicate] didn't return true for any blocks within the [offsetRange].
+ */
+inline fun BlockPos.offsetUntilExcept(facing: Direction, offsetRange: IntProgression, testPredicate: (BlockPos) -> Boolean): BlockPos?{
+	return this.offsetUntil(facing, offsetRange, testPredicate)?.offset(facing.opposite, offsetRange.step)
+}
+
+/**
+ * Offsets the block position in the direction of [facing] by distances defined by [offsetRange] until [testPredicate] returns false.
+ * Returns the last [BlockPos] for which [testPredicate] returned true, or the original [BlockPos] if [testPredicate] returned false immediately.
+ */
+inline fun BlockPos.offsetWhile(facing: Direction, offsetRange: IntProgression, testPredicate: (BlockPos) -> Boolean): BlockPos{
+	var last = this
+	
+	for(offset in offsetRange){
+		val testPos = this.offset(facing, offset)
+		
+		if (testPredicate(testPos)){
+			last = testPos
+		}
+		else{
+			break
+		}
+	}
+	
+	return last
 }
 
 // Areas (Box)

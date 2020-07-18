@@ -14,7 +14,7 @@ import chylex.hee.system.util.facades.Stats
 import chylex.hee.system.util.makeEffect
 import chylex.hee.system.util.nextFloat
 import chylex.hee.system.util.nextInt
-import chylex.hee.system.util.offsetUntil
+import chylex.hee.system.util.offsetUntilExcept
 import chylex.hee.system.util.playUniversal
 import chylex.hee.system.util.posVec
 import net.minecraft.advancements.CriteriaTriggers
@@ -55,7 +55,7 @@ class ItemChorusBerry(properties: Properties) : Item(properties){
 				)
 				
 				if (targetPos.y > 0 && !targetPos.blocksMovement(world) && !targetPos.up().blocksMovement(world)){
-					val finalPos = targetPos.offsetUntil(DOWN, 1..teleportYSearchRange){ it.blocksMovement(world) }?.up() ?: targetPos.down(teleportYSearchRange)
+					val finalPos = targetPos.offsetUntilExcept(DOWN, 1..teleportYSearchRange){ it.blocksMovement(world) } ?: targetPos.down(teleportYSearchRange)
 					
 					if (finalPos.distanceSqTo(entity) > MIN_TELEPORT_DISTANCE_SQ){
 						return TELEPORT.toBlock(entity, finalPos)

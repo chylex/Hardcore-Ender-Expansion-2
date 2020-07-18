@@ -39,7 +39,7 @@ import chylex.hee.system.util.motionZ
 import chylex.hee.system.util.nextFloat
 import chylex.hee.system.util.nextInt
 import chylex.hee.system.util.nextVector2
-import chylex.hee.system.util.offsetUntil
+import chylex.hee.system.util.offsetUntilExcept
 import chylex.hee.system.util.playClient
 import chylex.hee.system.util.posVec
 import chylex.hee.system.util.toRadians
@@ -215,7 +215,7 @@ class EndermanTeleportHandler(private val enderman: EntityMobAbstractEnderman) :
 	}
 	
 	private fun findTop(target: BlockPos, maxDecreaseY: Int): BlockPos?{
-		return target.offsetUntil(DOWN, 0..maxDecreaseY){ it.blocksMovement(world) }?.up()
+		return target.offsetUntilExcept(DOWN, 0..maxDecreaseY){ it.blocksMovement(world) }
 	}
 	
 	// General teleports

@@ -51,6 +51,7 @@ import chylex.hee.system.util.nextFloat
 import chylex.hee.system.util.nextInt
 import chylex.hee.system.util.nextVector
 import chylex.hee.system.util.offsetUntil
+import chylex.hee.system.util.offsetUntilExcept
 import chylex.hee.system.util.playClient
 import chylex.hee.system.util.posVec
 import chylex.hee.system.util.putEnum
@@ -192,7 +193,7 @@ class EntityItemIgneousRock : EntityItemNoBob{
 					
 					val randomTopBlock = getRandomBlock().let { randomPos ->
 						if (randomPos.isAir(world))
-							randomPos.offsetUntil(DOWN, 1..checkRange){ !it.isAir(world) || it.distanceSqTo(this) > BURN_DISTANCE_SQ }?.up()
+							randomPos.offsetUntilExcept(DOWN, 1..checkRange){ !it.isAir(world) || it.distanceSqTo(this) > BURN_DISTANCE_SQ }
 						else
 							randomPos.offsetUntil(UP, 0..checkRange){ it.isAir(world) || it.distanceSqTo(this) > BURN_DISTANCE_SQ }
 					}

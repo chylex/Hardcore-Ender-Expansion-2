@@ -17,7 +17,7 @@ import chylex.hee.system.migration.vanilla.Blocks
 import chylex.hee.system.migration.vanilla.EntityPlayer
 import chylex.hee.system.util.Pos
 import chylex.hee.system.util.getBlock
-import chylex.hee.system.util.offsetUntil
+import chylex.hee.system.util.offsetUntilExcept
 import net.minecraft.block.BlockState
 import net.minecraft.nbt.CompressedStreamTools
 import net.minecraft.util.ActionResultType
@@ -82,7 +82,7 @@ class BlockScaffolding(builder: BlockBuilder) : BlockSimple(builder){
 	// Helpers
 	
 	private fun find(world: World, pos: BlockPos?, direction: Direction): BlockPos?{
-		return pos?.offsetUntil(direction, 0..255){ it.getBlock(world) === Blocks.AIR }?.offset(direction.opposite)
+		return pos?.offsetUntilExcept(direction, 0..255){ it.getBlock(world) === Blocks.AIR }
 	}
 	
 	private fun findMinPos(world: World, pos: BlockPos): BlockPos?{

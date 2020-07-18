@@ -47,7 +47,7 @@ import chylex.hee.system.util.nextFloat
 import chylex.hee.system.util.nextInt
 import chylex.hee.system.util.nextItem
 import chylex.hee.system.util.nextRounded
-import chylex.hee.system.util.offsetUntil
+import chylex.hee.system.util.offsetUntilExcept
 import chylex.hee.system.util.remapRange
 import chylex.hee.system.util.removeItem
 import chylex.hee.system.util.square
@@ -379,8 +379,8 @@ object Generator_ObsidianTowers : ITerritoryGenerator{
 				
 				generatePile(world, rand, center, Blocks.END_STONE, height, radius)
 				
-				center.offsetUntil(UP, 1..(1 + height.ceilToInt()), world::isAir)?.let {
-					world.setBlock(it.down(), ModBlocks.ENDIUM_BLOCK)
+				center.offsetUntilExcept(UP, 1..(1 + height.ceilToInt()), world::isAir)?.let {
+					world.setBlock(it, ModBlocks.ENDIUM_BLOCK)
 				}
 			}
 		},

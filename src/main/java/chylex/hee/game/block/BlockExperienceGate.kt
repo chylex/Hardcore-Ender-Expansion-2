@@ -14,7 +14,7 @@ import chylex.hee.system.util.Pos
 import chylex.hee.system.util.allInCenteredBox
 import chylex.hee.system.util.getBlock
 import chylex.hee.system.util.getTile
-import chylex.hee.system.util.offsetUntil
+import chylex.hee.system.util.offsetWhile
 import chylex.hee.system.util.positionY
 import chylex.hee.system.util.setBlock
 import net.minecraft.block.BlockState
@@ -40,8 +40,8 @@ abstract class BlockExperienceGate(builder: BlockBuilder) : BlockSimple(builder)
 	
 	override fun onBlockAdded(state: BlockState, world: World, pos: BlockPos, oldState: BlockState, isMoving: Boolean){
 		if (world.isAreaLoaded(pos, 3)){
-			val nw = pos.offsetUntil(NORTH, 1..3){ it.getBlock(world) !== this }?.south()?.offsetUntil(WEST, 1..3){ it.getBlock(world) !== this }?.east() ?: return
-			val se = pos.offsetUntil(SOUTH, 1..3){ it.getBlock(world) !== this }?.north()?.offsetUntil(EAST, 1..3){ it.getBlock(world) !== this }?.west() ?: return
+			val nw = pos.offsetWhile(NORTH, 1..3){ it.getBlock(world) === this }.offsetWhile(WEST, 1..3){ it.getBlock(world) === this }
+			val se = pos.offsetWhile(SOUTH, 1..3){ it.getBlock(world) === this }.offsetWhile(EAST, 1..3){ it.getBlock(world) === this }
 			
 			if (se.x - nw.x == 2 && se.z - nw.z == 2){
 				val center = Pos((se.x + nw.x) / 2, pos.y, (se.z + nw.z) / 2)

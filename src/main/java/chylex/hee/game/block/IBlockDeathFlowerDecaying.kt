@@ -30,7 +30,7 @@ import chylex.hee.system.util.isPeaceful
 import chylex.hee.system.util.makeEffect
 import chylex.hee.system.util.nextFloat
 import chylex.hee.system.util.nextInt
-import chylex.hee.system.util.offsetUntil
+import chylex.hee.system.util.offsetUntilExcept
 import chylex.hee.system.util.perDimensionData
 import chylex.hee.system.util.playClient
 import chylex.hee.system.util.playServer
@@ -124,9 +124,9 @@ interface IBlockDeathFlowerDecaying{
 							rand.nextInt(1, 6) * (if (rand.nextBoolean()) 1 else -1),
 							rand.nextInt(1, 4),
 							rand.nextInt(1, 6) * (if (rand.nextBoolean()) 1 else -1)
-						).offsetUntil(DOWN, 1..8){
+						).offsetUntilExcept(DOWN, 1..8){
 							it.blocksMovement(world)
-						}?.up()
+						}
 						
 						if (testPos != null){
 							enderman.setLocationAndAngles(testPos.x + rand.nextFloat(-0.5, 0.5), testPos.y + 0.01, testPos.z + rand.nextFloat(-0.5, 0.5), yaw, 0F)

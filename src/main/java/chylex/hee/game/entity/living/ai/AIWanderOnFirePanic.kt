@@ -6,7 +6,7 @@ import chylex.hee.system.util.Pos
 import chylex.hee.system.util.center
 import chylex.hee.system.util.getMaterial
 import chylex.hee.system.util.nextInt
-import chylex.hee.system.util.offsetUntil
+import chylex.hee.system.util.offsetUntilExcept
 import net.minecraft.block.material.Material
 import net.minecraft.entity.ai.RandomPositionGenerator
 import net.minecraft.util.math.Vec3d
@@ -51,7 +51,7 @@ class AIWanderOnFirePanic(
 				)
 				
 				if (testPos.getMaterial(world) === Material.WATER){
-					return testPos.offsetUntil(UP, 1..256){ it.getMaterial(world) !== Material.WATER }?.down()?.center
+					return testPos.offsetUntilExcept(UP, 1..256){ it.getMaterial(world) !== Material.WATER }?.center
 				}
 			}
 		}
