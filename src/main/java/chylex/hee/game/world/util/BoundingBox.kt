@@ -28,6 +28,14 @@ class BoundingBox(pos1: BlockPos, pos2: BlockPos){
 		)
 	}
 	
+	fun isInside(pos: BlockPos): Boolean{
+		return (
+			pos.x.let { it >= min.x && it <= max.x } &&
+			pos.y.let { it >= min.y && it <= max.y } &&
+			pos.z.let { it >= min.z && it <= max.z }
+		)
+	}
+	
 	override fun toString(): String{
 		return "BoundingBox (${min.x}, ${min.y}, ${min.z} -> ${max.x}, ${max.y}, ${max.z})"
 	}
