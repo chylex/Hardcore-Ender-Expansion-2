@@ -1,10 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="CompilerConfiguration">
-    <bytecodeTargetLevel target="1.8">
-      <module name="Hardcore-Ender-Expansion-2.api" target="1.8" />
-      <module name="Hardcore-Ender-Expansion-2.main" target="1.8" />
-      <module name="Hardcore-Ender-Expansion-2.test" target="1.8" />
-    </bytecodeTargetLevel>
+    <bytecodeTargetLevel target="1.8" />
   </component>
 </project>
