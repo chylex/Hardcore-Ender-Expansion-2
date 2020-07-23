@@ -1,5 +1,7 @@
 package chylex.hee.game.world.territory.generators
+import chylex.hee.HEE
 import chylex.hee.game.entity.item.EntityTokenHolder
+import chylex.hee.game.entity.living.EntityBossEnderEye
 import chylex.hee.game.item.ItemPortalToken.TokenType
 import chylex.hee.game.world.feature.basic.NoiseGenerator
 import chylex.hee.game.world.feature.basic.PortalGenerator
@@ -9,10 +11,12 @@ import chylex.hee.game.world.feature.basic.ores.impl.OreTechniqueSingle
 import chylex.hee.game.world.feature.basic.ores.impl.withAdjacentAirCheck
 import chylex.hee.game.world.feature.obsidiantower.ObsidianTowerBuilder
 import chylex.hee.game.world.feature.obsidiantower.ObsidianTowerPieces
+import chylex.hee.game.world.feature.obsidiantower.piece.ObsidianTowerLevel_Top
 import chylex.hee.game.world.generation.IBlockPlacer.BlockReplacer
 import chylex.hee.game.world.generation.SegmentedWorld
 import chylex.hee.game.world.generation.TerritoryGenerationInfo
 import chylex.hee.game.world.structure.trigger.EntityStructureTrigger
+import chylex.hee.game.world.structure.trigger.ObsidianTowerSpawnerStructureTrigger
 import chylex.hee.game.world.structure.world.OffsetStructureWorld
 import chylex.hee.game.world.territory.ITerritoryGenerator
 import chylex.hee.game.world.territory.TerritoryType
@@ -117,6 +121,16 @@ object Generator_ObsidianTowers : ITerritoryGenerator{
 			
 			islands.add(island)
 			towers.add(island)
+		}
+		
+		val totalSpawners = world.getTriggers().count { it.second.wrappedInstance is ObsidianTowerSpawnerStructureTrigger }
+		val bossPlaceholder = world.getTriggers().find { it.second.wrappedInstance is ObsidianTowerLevel_Top.Boss.PlaceholderTrigger }
+		
+		if (bossPlaceholder == null){
+			HEE.log.error("[Generator_ObsidianTowers] did not find Ender Eye placeholder trigger")
+		}
+		else{
+			world.addTrigger(bossPlaceholder.first, bossPlaceholder.second.rewrapInstance(EntityStructureTrigger({ realWorld -> EntityBossEnderEye(realWorld, totalSpawners) }, yOffset = 0.0)))
 		}
 		
 		repeat(rand.nextInt(5, 9)){

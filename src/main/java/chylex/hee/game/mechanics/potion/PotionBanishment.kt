@@ -1,11 +1,13 @@
 package chylex.hee.game.mechanics.potion
 import chylex.hee.HEE
 import chylex.hee.game.entity.CustomCreatureType
+import chylex.hee.game.entity.living.EntityBossEnderEye
 import chylex.hee.game.fx.FxEntityData
 import chylex.hee.game.fx.FxEntityHandler
 import chylex.hee.game.mechanics.damage.Damage
 import chylex.hee.game.mechanics.damage.IDamageProcessor.Companion.FIRE_TYPE
 import chylex.hee.game.mechanics.damage.IDamageProcessor.Companion.IGNORE_INVINCIBILITY
+import chylex.hee.game.mechanics.potion.PotionBanishment.EntityKind.DEMON_EYE
 import chylex.hee.game.mechanics.potion.PotionBanishment.EntityKind.ENDERDEMON
 import chylex.hee.game.mechanics.potion.PotionBanishment.EntityKind.GENERIC_DEMON
 import chylex.hee.game.mechanics.potion.PotionBanishment.EntityKind.GENERIC_SHADOW
@@ -43,6 +45,7 @@ import net.minecraft.entity.LivingEntity
 import net.minecraft.entity.ai.attributes.AbstractAttributeMap
 import net.minecraft.particles.ParticleTypes.EXPLOSION
 import net.minecraft.potion.EffectType.BENEFICIAL
+import net.minecraft.util.DamageSource
 import net.minecraft.util.math.Vec3d
 import net.minecraftforge.event.entity.living.LivingDamageEvent
 import java.util.Random
@@ -90,12 +93,12 @@ object PotionBanishment : Potion(BENEFICIAL, RGB(253, 253, 253).i){
 	
 	fun determineEntityKind(entity: EntityLivingBase): EntityKind{
 		return when{
-			// TODO
-			CustomCreatureType.isDemon(entity)  -> GENERIC_DEMON
-			CustomCreatureType.isShadow(entity) -> GENERIC_SHADOW
-			entity is EntityZombieVillager      -> ZOMBIE_VILLAGER
-			entity.creatureAttribute == UNDEAD  -> GENERIC_UNDEAD
-			else                                -> NONE
+			entity is EntityBossEnderEye && entity.isDemonEye -> DEMON_EYE
+			CustomCreatureType.isDemon(entity)                -> GENERIC_DEMON
+			CustomCreatureType.isShadow(entity)               -> GENERIC_SHADOW
+			entity is EntityZombieVillager                    -> ZOMBIE_VILLAGER
+			entity.creatureAttribute == UNDEAD                -> GENERIC_UNDEAD
+			else                                              -> NONE
 		}
 	}
 	
@@ -103,7 +106,10 @@ object PotionBanishment : Potion(BENEFICIAL, RGB(253, 253, 253).i){
 		val source = damageEvent?.source?.trueSource
 		val kind = determineEntityKind(entity)
 		
-		if (kind == ENDERDEMON){
+		if (kind == DEMON_EYE){
+			// handled in EntityBossEnderEye
+		}
+		else if (kind == ENDERDEMON){
 			// TODO
 		}
 		else if (kind == GENERIC_DEMON){
@@ -157,11 +163,14 @@ object PotionBanishment : Potion(BENEFICIAL, RGB(253, 253, 253).i){
 		}
 	}
 	
+	fun canBanish(entity: EntityLivingBase, source: DamageSource): Boolean{
+		val attacker = source.trueSource
+		return attacker is EntityPlayer && (entity.isPotionActive(this) || attacker.isPotionActive(this))
+	}
+	
 	@SubscribeEvent(priority = EventPriority.LOW)
 	fun onLivingDamage(e: LivingDamageEvent){
-		val source = e.source.trueSource
-		
-		if (source is EntityPlayer && (e.entityLiving.isPotionActive(PotionBanishment) || source.isPotionActive(PotionBanishment))){
+		if (canBanish(e.entityLiving, e.source)){
 			banish(e.entityLiving, e)
 		}
 	}

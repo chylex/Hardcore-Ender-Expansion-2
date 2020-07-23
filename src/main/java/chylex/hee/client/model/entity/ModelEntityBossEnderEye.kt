@@ -47,7 +47,12 @@ object ModelEntityBossEnderEye : EntityModel<EntityBossEnderEye>(){
 	
 	override fun setLivingAnimations(entity: EntityBossEnderEye, limbSwing: Float, limbSwingAmount: Float, partialTicks: Float){
 		arms.rotateAngleX = entity.clientArmAngle.get(partialTicks).toRadians()
-		eyeState = if (entity.isSleeping) 0 else entity.demonLevel + 1
+		
+		eyeState = when{
+			entity.isSleeping -> 0
+			entity.isDemonEye -> 7
+			else -> entity.demonLevel + 1
+		}
 	}
 	
 	override fun setRotationAngles(entity: EntityBossEnderEye, limbSwing: Float, limbSwingAmount: Float, age: Float, headYaw: Float, headPitch: Float){

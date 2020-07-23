@@ -2,6 +2,7 @@ package chylex.hee.game.entity.technical
 import chylex.hee.game.entity.technical.EntityTechnicalTrigger.Types.INVALID
 import chylex.hee.game.world.feature.energyshrine.EnergyShrineGenerator
 import chylex.hee.game.world.feature.energyshrine.piece.EnergyShrineRoom_Main_Start
+import chylex.hee.game.world.feature.obsidiantower.piece.ObsidianTowerLevel_Top
 import chylex.hee.game.world.feature.stronghold.StrongholdGenerator
 import chylex.hee.game.world.feature.stronghold.piece.StrongholdRoom_Main_Portal
 import chylex.hee.game.world.feature.stronghold.piece.StrongholdRoom_Trap_CornerHoles
@@ -59,7 +60,8 @@ class EntityTechnicalTrigger(type: EntityType<EntityTechnicalTrigger>, world: Wo
 		STRONGHOLD_TRAP_PRISON(StrongholdRoom_Trap_Prison::Trigger),
 		STRONGHOLD_TRAP_TALL_INTERSECTION({ StrongholdRoom_Trap_TallIntersection.Trigger }),
 		ENERGY_SHRINE_GENERATOR({ EnergyShrineGenerator.GeneratorTrigger }),
-		ENERGY_SHRINE_GLOBAL({ EnergyShrineRoom_Main_Start.Particles })
+		ENERGY_SHRINE_GLOBAL({ EnergyShrineRoom_Main_Start.Particles }),
+		OBSIDIAN_TOWER_TOP_GLOWSTONE(ObsidianTowerLevel_Top::GlowstoneTrigger)
 	}
 	
 	// Entity
