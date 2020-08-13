@@ -99,9 +99,9 @@ object Generator_TheHub : ITerritoryGenerator{
 		const val ELEVATION_BOTTOM = 13.0
 		
 		fun generate(world: SegmentedWorld, rand: Random, size: Size){
-			val noiseIslandTop    = NoiseGenerator.PerlinNormalized(rand, scale =  48.0, octaves = 2)
-			val noiseIslandBottom = NoiseGenerator.PerlinNormalized(rand, scale = 104.0, octaves = 1)
-			val noiseIslandEdge   = NoiseGenerator.PerlinNormalized(rand, scale =  52.0, octaves = 1)
+			val noiseIslandTop    = NoiseGenerator.OldPerlinNormalized(rand, scale =  48.0, octaves = 2)
+			val noiseIslandBottom = NoiseGenerator.OldPerlinNormalized(rand, scale = 104.0, octaves = 1)
+			val noiseIslandEdge   = NoiseGenerator.OldPerlinNormalized(rand, scale =  52.0, octaves = 1)
 			
 			val centerPos = size.centerPos
 			

@@ -184,13 +184,13 @@ object Generator_LostGarden : ITerritoryGenerator{
 	
 	private class Island(val offset: BlockPos, val radius: Double, val height: Double){
 		fun generate(world: SegmentedWorld, rand: Random){
-			val noiseXZ = NoiseGenerator.PerlinNormalized(rand, scale = 80.0, octaves = 3)
-			val noiseXY = NoiseGenerator.PerlinNormalized(rand, scale = 32.0, octaves = 2)
-			val noiseZY = NoiseGenerator.PerlinNormalized(rand, scale = 32.0, octaves = 2)
+			val noiseXZ = NoiseGenerator.OldPerlinNormalized(rand, scale = 80.0, octaves = 3)
+			val noiseXY = NoiseGenerator.OldPerlinNormalized(rand, scale = 32.0, octaves = 2)
+			val noiseZY = NoiseGenerator.OldPerlinNormalized(rand, scale = 32.0, octaves = 2)
 			
-			val noiseValley = NoiseGenerator.PerlinNormalized(rand, scale = 136.0, octaves = 1)
-			val noiseThreshold = NoiseGenerator.PerlinNormalized(rand, scale = 44.0, octaves = 2)
-			val noiseEndersol = NoiseGenerator.PerlinNormalized(rand, scale = 32.0, octaves = 3)
+			val noiseValley = NoiseGenerator.OldPerlinNormalized(rand, scale = 136.0, octaves = 1)
+			val noiseThreshold = NoiseGenerator.OldPerlinNormalized(rand, scale = 44.0, octaves = 2)
+			val noiseEndersol = NoiseGenerator.OldPerlinNormalized(rand, scale = 32.0, octaves = 3)
 			
 			val maxDistXZ = radius.ceilToInt()
 			val baseDistY = (height * 0.32).ceilToInt()
@@ -464,8 +464,8 @@ object Generator_LostGarden : ITerritoryGenerator{
 				val top = xz.withY(size.maxY).offsetUntil(DOWN, offsetRange){ !world.isAir(it) } ?: continue
 				
 				if (center.y - bottom.y > 12 && top.y - center.y > 16){
-					val noise1 = NoiseGenerator.PerlinNormalized(rand, scale = 8.0, octaves = 2)
-					val noise2 = NoiseGenerator.PerlinNormalized(rand, xScale = 8.0, zScale = 4.0, octaves = 2)
+					val noise1 = NoiseGenerator.OldPerlinNormalized(rand, scale = 8.0, octaves = 2)
+					val noise2 = NoiseGenerator.OldPerlinNormalized(rand, xScale = 8.0, zScale = 4.0, octaves = 2)
 					
 					val radiusX = rand.nextFloat(11.0, 16.0)
 					val radiusY = rand.nextFloat(7.2, 9.4)

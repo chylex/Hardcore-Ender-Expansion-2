@@ -270,7 +270,7 @@ object Generator_ObsidianTowers : ITerritoryGenerator{
 			
 			var offset = 0.0
 			val tested = mutableSetOf<BlockPos>()
-			val noise = NoiseGenerator.PerlinNormalized(rand, scale = 3.0, octaves = 1)
+			val noise = NoiseGenerator.OldPerlinNormalized(rand, scale = 3.0, octaves = 1)
 			
 			while(offset < dist){
 				offset += 0.33

@@ -2,6 +2,7 @@ package chylex.hee.game.world.feature.basic
 import chylex.hee.system.util.remapRange
 import net.minecraft.util.SharedSeedRandom
 import net.minecraft.world.gen.PerlinNoiseGenerator
+import net.minecraft.world.gen.SimplexNoiseGenerator
 import java.util.Random
 import kotlin.math.abs
 import kotlin.math.pow
@@ -62,17 +63,38 @@ sealed class NoiseGenerator(private val xScale: Double, private val zScale: Doub
 	
 	// Implementations
 	
-	open class Perlin(rand: Random, private val xScale: Double, private val zScale: Double, octaves: Int) : NoiseGenerator(xScale, zScale){
+	open class OldPerlin(rand: Random, private val xScale: Double, private val zScale: Double, octaves: Int) : NoiseGenerator(xScale, zScale){
 		constructor(rand: Random, scale: Double, octaves: Int) : this(rand, scale, scale, octaves)
 		
-		private val generator = PerlinNoiseGenerator(SharedSeedRandom(rand.nextLong()), octaves - 1, 0)
-		override fun getRawValue(x: Double, z: Double) = generator.noiseAt(x / xScale, z / zScale, false)
+		private val noiseLevels = Array(octaves){ SimplexNoiseGenerator(rand) }
+		
+		override fun getRawValue(x: Double, z: Double): Double{
+			val scaledX = x / xScale
+			val scaledZ = z / zScale
+			
+			var value = 0.0
+			var mp = 1.0
+			
+			for(level in noiseLevels){
+				value += level.getValue(scaledX * mp, scaledZ * mp) / mp
+				mp /= 2.0
+			}
+			
+			return value
+		}
 	}
 	
-	class PerlinNormalized(rand: Random, xScale: Double, zScale: Double, octaves: Int) : Perlin(rand, xScale, zScale, octaves){
+	class OldPerlinNormalized(rand: Random, xScale: Double, zScale: Double, octaves: Int) : OldPerlin(rand, xScale, zScale, octaves){
 		constructor(rand: Random, scale: Double, octaves: Int) : this(rand, scale, scale, octaves)
 		
 		private val normalizationApproxBoundary = ((1 shl octaves) - 1) * 0.998.pow(octaves)
 		override fun getRawValue(x: Double, z: Double) = (super.getRawValue(x, z) + normalizationApproxBoundary) / (2 * normalizationApproxBoundary)
+	}
+	
+	class NewPerlin(rand: Random, private val xScale: Double, private val zScale: Double, octaves: Int) : NoiseGenerator(xScale, zScale){
+		constructor(rand: Random, scale: Double, octaves: Int) : this(rand, scale, scale, octaves)
+		
+		private val generator = PerlinNoiseGenerator(SharedSeedRandom(rand.nextLong()), octaves - 1, 0)
+		override fun getRawValue(x: Double, z: Double) = generator.noiseAt(x / xScale, z / zScale, false)
 	}
 }
