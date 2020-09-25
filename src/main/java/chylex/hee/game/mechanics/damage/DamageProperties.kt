@@ -118,7 +118,7 @@ class DamageProperties{
 	// Non-lethal damage handling
 	
 	@SubscribeAllEvents(modid = HEE.ID)
-	private companion object{
+	companion object{
 		@SubscribeEvent(EventPriority.HIGHEST)
 		fun onLivingDamage(e: LivingDamageEvent){
 			val source = e.source as? CustomDamageSource ?: return

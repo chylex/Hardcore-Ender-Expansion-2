@@ -51,7 +51,7 @@ class PotionTypeInfo(
 				unrolled /= mp(it)
 			}
 			
-			return (0..maxSteps).minBy { abs(getBaseDuration(it) - unrolled) } ?: 0
+			return (0..maxSteps).minByOrNull { abs(getBaseDuration(it) - unrolled) } ?: 0
 		}
 	}
 	

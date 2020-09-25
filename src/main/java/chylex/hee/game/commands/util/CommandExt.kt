@@ -13,10 +13,6 @@ import net.minecraft.util.text.TranslationTextComponent
 typealias CommandExecutionFunction = Command<CommandSource>
 typealias CommandExecutionFunctionCtx<C> = (CommandContext<CommandSource>, C) -> Int
 
-fun <C> ArgumentBuilder<CommandSource, *>.executes(function: (CommandContext<CommandSource>, C) -> Int, extra: C){
-	this.executes { function(it, extra) }
-}
-
 fun <C, T : ArgumentBuilder<CommandSource, T>> ArgumentBuilder<CommandSource, T>.executes(function: (CommandContext<CommandSource>, C) -> Int, extra: C): T{
 	return this.executes { function(it, extra) }
 }

@@ -93,7 +93,7 @@ class EntityMobAngryEnderman(type: EntityType<EntityMobAngryEnderman>, world: Wo
 					.selectVulnerableEntities
 					.inRange<EntityPlayer>(posVec, AGGRO_DISTANCE.toDouble())
 					.filter { predicate.canTarget(this, it) }
-					.minBy(::getDistanceSq)
+					.minByOrNull(::getDistanceSq)
 				
 				if (alternativeTarget != null){
 					attackTarget = alternativeTarget

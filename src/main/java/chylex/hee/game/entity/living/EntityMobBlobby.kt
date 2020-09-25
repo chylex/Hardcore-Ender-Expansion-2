@@ -283,7 +283,7 @@ class EntityMobBlobby(type: EntityType<out EntityCreature>, world: World) : Enti
 				blobby.groupId = newId
 			}
 			
-			group.maxBy { it.scale }?.setLeaderStatusAndRefresh(isLeader = true)
+			group.maxByOrNull { it.scale }?.setLeaderStatusAndRefresh(isLeader = true)
 		}
 	}
 	

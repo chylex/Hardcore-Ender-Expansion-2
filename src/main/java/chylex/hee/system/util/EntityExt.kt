@@ -163,7 +163,7 @@ fun AITargetAttacker(entity: EntityCreature, callReinforcements: Boolean): AITar
 	AITargetAttackerFixed(entity, callReinforcements)
 
 inline fun <reified T : EntityLivingBase> AITargetNearby(entity: EntityCreature, chancePerTick: Int, checkSight: Boolean, easilyReachableOnly: Boolean, noinline targetPredicate: ((T) -> Boolean)? = null) =
-	NearestAttackableTargetGoal(entity, T::class.java, chancePerTick, checkSight, easilyReachableOnly, targetPredicate?.let { p -> Predicate<EntityLivingBase> { p(it as T) } })
+	NearestAttackableTargetGoal(entity, T::class.java, chancePerTick, checkSight, easilyReachableOnly, targetPredicate?.let { p -> Predicate { p(it as T) } })
 
 inline fun <reified T : EntityLivingBase> AITargetEyeContact(entity: EntityCreature, fieldOfView: Float, headRadius: Float, minStareTicks: Int, easilyReachableOnly: Boolean, noinline targetPredicate: ((T) -> Boolean)? = null) =
 	AITargetEyeContact(entity, easilyReachableOnly, T::class.java, targetPredicate, fieldOfView, headRadius, minStareTicks)

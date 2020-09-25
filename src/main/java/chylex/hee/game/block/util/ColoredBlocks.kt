@@ -1,11 +1,10 @@
 package chylex.hee.game.block.util
-import net.minecraft.block.Block
 import net.minecraft.block.Blocks
 import net.minecraft.item.DyeColor
 import java.util.EnumMap
 
 object ColoredBlocks{
-	val CARPET = EnumMap<DyeColor, Block>(mapOf(
+	val CARPET = EnumMap(mapOf(
 		DyeColor.WHITE      to Blocks.WHITE_CARPET,
 		DyeColor.ORANGE     to Blocks.ORANGE_CARPET,
 		DyeColor.MAGENTA    to Blocks.MAGENTA_CARPET,
@@ -24,7 +23,7 @@ object ColoredBlocks{
 		DyeColor.BLACK      to Blocks.BLACK_CARPET
 	))
 	
-	val WOOL = EnumMap<DyeColor, Block>(mapOf(
+	val WOOL = EnumMap(mapOf(
 		DyeColor.WHITE      to Blocks.WHITE_WOOL,
 		DyeColor.ORANGE     to Blocks.ORANGE_WOOL,
 		DyeColor.MAGENTA    to Blocks.MAGENTA_WOOL,
@@ -43,7 +42,7 @@ object ColoredBlocks{
 		DyeColor.BLACK      to Blocks.BLACK_WOOL
 	))
 	
-	val BED = EnumMap<DyeColor, Block>(mapOf(
+	val BED = EnumMap(mapOf(
 		DyeColor.WHITE      to Blocks.WHITE_BED,
 		DyeColor.ORANGE     to Blocks.ORANGE_BED,
 		DyeColor.MAGENTA    to Blocks.MAGENTA_BED,
@@ -62,7 +61,7 @@ object ColoredBlocks{
 		DyeColor.BLACK      to Blocks.BLACK_BED
 	))
 	
-	val STAINED_GLASS = EnumMap<DyeColor, Block>(mapOf(
+	val STAINED_GLASS = EnumMap(mapOf(
 		DyeColor.WHITE      to Blocks.WHITE_STAINED_GLASS,
 		DyeColor.ORANGE     to Blocks.ORANGE_STAINED_GLASS,
 		DyeColor.MAGENTA    to Blocks.MAGENTA_STAINED_GLASS,
@@ -81,7 +80,7 @@ object ColoredBlocks{
 		DyeColor.BLACK      to Blocks.BLACK_STAINED_GLASS
 	))
 	
-	val WALL_BANNER = EnumMap<DyeColor, Block>(mapOf(
+	val WALL_BANNER = EnumMap(mapOf(
 		DyeColor.WHITE      to Blocks.WHITE_WALL_BANNER,
 		DyeColor.ORANGE     to Blocks.ORANGE_WALL_BANNER,
 		DyeColor.MAGENTA    to Blocks.MAGENTA_WALL_BANNER,

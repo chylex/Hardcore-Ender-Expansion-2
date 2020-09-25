@@ -44,9 +44,9 @@ import chylex.hee.system.util.facades.Resource
 
 object ObsidianTowerPieces : IStructureDescription{
 	fun calculateStructureSize(floors: Int) = Size(
-		PIECES_BASE.map { it.size.x }.max()!!,
+		PIECES_BASE.maxOf { it.size.x },
 		PIECES_BASE.sumBy { it.size.y } + ((floors - 2) * PIECE_LEVEL_MIDDLE.size.y),
-		PIECES_BASE.map { it.size.z }.max()!!
+		PIECES_BASE.maxOf { it.size.z }
 	)
 	
 	// Palette

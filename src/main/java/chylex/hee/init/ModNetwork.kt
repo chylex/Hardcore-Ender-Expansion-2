@@ -41,7 +41,7 @@ object ModNetwork{
 			it == HEE.version
 		}
 		
-		network = NetworkRegistry.newEventChannel(CHANNEL, Supplier { HEE.version }, checkVersion, checkVersion)
+		network = NetworkRegistry.newEventChannel(CHANNEL, { HEE.version }, checkVersion, checkVersion)
 		network.registerObject(this)
 		
 		for((cls, constructor) in PacketConstructors.getAll()){

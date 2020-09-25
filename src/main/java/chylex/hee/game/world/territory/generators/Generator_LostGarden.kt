@@ -166,7 +166,7 @@ object Generator_LostGarden : ITerritoryGenerator{
 			val bottom = pos
 				.allInCenteredBox(2, 0, 2)
 				.mapNotNull { top -> top.offsetUntil(DOWN, offsetRange){ !world.isAir(it) } }
-				.minBy { it.y }
+				.minByOrNull { it.y }
 			
 			if (bottom != null){
 				val testPos = Pos(pos.x, bottom.y, pos.z)

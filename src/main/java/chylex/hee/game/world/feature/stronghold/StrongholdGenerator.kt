@@ -137,7 +137,7 @@ object StrongholdGenerator : OverworldFeature(){
 			}
 		}
 		
-		return found.minBy { PosXZ(it).distanceSqTo(xz) }
+		return found.minByOrNull { PosXZ(it).distanceSqTo(xz) }
 	}
 	
 	// Helpers

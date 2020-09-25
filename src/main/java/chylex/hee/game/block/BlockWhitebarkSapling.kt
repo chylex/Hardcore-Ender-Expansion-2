@@ -70,7 +70,7 @@ class BlockWhitebarkSapling(builder: BlockBuilder, private val generator: Whiteb
 	override fun grow(world: ServerWorld, rand: Random, pos: BlockPos, state: BlockState){
 		val stage = state[STAGE]
 		
-		if (stage < STAGE.allowedValues.max()!!){
+		if (stage < STAGE.allowedValues.maxOrNull()!!){
 			pos.setState(world, state.with(STAGE, stage + 1), FLAG_SKIP_RENDER)
 		}
 		else{

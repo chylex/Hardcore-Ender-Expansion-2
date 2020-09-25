@@ -1,4 +1,4 @@
-modLoader = "kotlinfml"
+modLoader = "kotlinforforge"
 loaderVersion = "[1,)"
 
 authors = "https://hee.chylex.com/authors"

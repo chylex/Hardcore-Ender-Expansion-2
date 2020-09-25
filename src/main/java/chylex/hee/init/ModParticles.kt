@@ -68,7 +68,7 @@ object ModParticles{
 				MC.particleManager.registerFactory(type, IParticleMetaFactory {
 					callback(it)
 					
-					IParticleFactory<BasicParticleType> { _, world, posX, posY, posZ, motX, motY, motZ ->
+					IParticleFactory { _, world, posX, posY, posZ, motX, motY, motZ ->
 						maker.create(world, posX, posY, posZ, motX, motY, motZ, null)
 					}
 				})

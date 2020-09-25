@@ -88,7 +88,7 @@ object EnergyShrineGenerator : OverworldFeature(){
 			findSpawnAtMaybe(world, testChunkX, testChunkZ)?.let(found::add)
 		}
 		
-		return found.minBy { it.distanceSqTo(xz) }?.withY(0)
+		return found.minByOrNull { it.distanceSqTo(xz) }?.withY(0)
 	}
 	
 	// Helpers
@@ -205,7 +205,7 @@ object EnergyShrineGenerator : OverworldFeature(){
 			}
 			
 			val boundingBoxes = build.boundingBoxes
-			val structureHeight = 1 + boundingBoxes.maxBy { it.max.y }!!.max.y - boundingBoxes.minBy { it.min.y }!!.min.y
+			val structureHeight = 1 + boundingBoxes.maxOf { it.max.y } - boundingBoxes.minOf { it.min.y }
 			
 			val topY = getTopSolidNonLeavesBlock(world, xz)
 			val topOffset = MIN_GROUND_LAYERS + rand.nextInt(0, 2)

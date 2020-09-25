@@ -50,6 +50,6 @@ class ItemTableCore(private val tableBlocks: Array<BlockAbstractTableTile<*>>, p
 	
 	@Sided(Side.CLIENT)
 	override fun addInformation(stack: ItemStack, world: World?, lines: MutableList<ITextComponent>, flags: ITooltipFlag){
-		lines.add(TranslationTextComponent("item.tooltip.hee.table_core.tooltip", tableBlocks.map { it.tier }.min()))
+		lines.add(TranslationTextComponent("item.tooltip.hee.table_core.tooltip", tableBlocks.minOf { it.tier }))
 	}
 }

@@ -11,7 +11,7 @@ object VanillaDamageHooks{
 	@JvmStatic
 	fun getDamageMultiplier(attacker: EntityLivingBase, target: Entity): Float{
 		if (target is EntityLivingBase){
-			val heldItem = attacker.getHeldItem(MAIN_HAND).item;
+			val heldItem = attacker.getHeldItem(MAIN_HAND).item
 			
 			if (heldItem is ItemScorchingSword){
 				return heldItem.handleDamageMultiplier(target)

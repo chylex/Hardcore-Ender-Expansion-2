@@ -90,7 +90,7 @@ object CommandDebugStructure : ICommand{ // UPDATE
 				transformedWorld.apply { piece.generateWithTransformHint(this, transform) }.finalize()
 			}
 			
-			x += transforms.map { it(size).x }.max()!! + 2
+			x += transforms.maxOf { it(size).x } + 2
 		}
 	}
 	

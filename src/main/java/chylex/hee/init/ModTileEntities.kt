@@ -107,6 +107,6 @@ object ModTileEntities{
 	}
 	
 	private inline fun <reified T : TileEntity> build(vararg blocks: Block): TileEntityType<T>{
-		return TileEntityType.Builder.create<T>(TileEntityConstructors.get(T::class.java), *blocks).build(null) // UPDATE
+		return TileEntityType.Builder.create(TileEntityConstructors.get(T::class.java), *blocks).build(null) // UPDATE
 	}
 }

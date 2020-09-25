@@ -102,7 +102,7 @@ class EntityFallingObsidian : EntityFallingBlockHeavy{
 			return SUCCESS
 		}
 		
-		val relocationPos = pos.allInCenteredBox(1, 0, 1).toList().filter { canFallThrough(world, it) }.minBy { it.distanceSqTo(this) }
+		val relocationPos = pos.allInCenteredBox(1, 0, 1).toList().filter { canFallThrough(world, it) }.minByOrNull { it.distanceSqTo(this) }
 		
 		return if (relocationPos != null){
 			if (super.placeAfterLanding(relocationPos, collidingWith) == SUCCESS){
