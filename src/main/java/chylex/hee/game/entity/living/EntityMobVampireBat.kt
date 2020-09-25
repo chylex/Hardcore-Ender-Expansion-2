@@ -46,6 +46,7 @@ import chylex.hee.system.util.playClient
 import chylex.hee.system.util.posVec
 import chylex.hee.system.util.positionY
 import chylex.hee.system.util.putEnum
+import chylex.hee.system.util.selectEntities
 import chylex.hee.system.util.selectVulnerableEntities
 import chylex.hee.system.util.square
 import chylex.hee.system.util.totalTime
@@ -62,6 +63,7 @@ import net.minecraft.entity.monster.IMob
 import net.minecraft.nbt.CompoundNBT
 import net.minecraft.network.IPacket
 import net.minecraft.util.SoundCategory
+import net.minecraft.util.math.AxisAlignedBB
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.Vec3d
 import net.minecraft.world.Difficulty.HARD
@@ -294,7 +296,12 @@ class EntityMobVampireBat(type: EntityType<EntityMobVampireBat>, world: World) :
 	
 	private fun canHangUnderBlock(pos: BlockPos): Boolean{
 		val state = pos.getState(world)
-		return state.isNormalCube(world, pos) || state.block is BlockChorusPlant
+		
+		if (!state.isNormalCube(world, pos) && state.block !is BlockChorusPlant){
+			return false
+		}
+		
+		return world.selectEntities.inBox<EntityBat>(AxisAlignedBB(pos)).none { it.isBatHanging && it !== this }
 	}
 	
 	private fun isHangingDisturbed(): Boolean{
