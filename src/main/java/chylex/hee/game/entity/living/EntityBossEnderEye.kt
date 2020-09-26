@@ -1,5 +1,7 @@
 package chylex.hee.game.entity.living
 import chylex.hee.game.entity.CustomCreatureType
+import chylex.hee.game.entity.living.behavior.EnderEyeAttack.KnockbackDash
+import chylex.hee.game.entity.living.behavior.EnderEyeAttack.Melee
 import chylex.hee.game.entity.living.behavior.EnderEyePhase
 import chylex.hee.game.entity.living.behavior.EnderEyePhase.Floating
 import chylex.hee.game.entity.living.behavior.EnderEyePhase.Hibernated
@@ -42,6 +44,7 @@ import chylex.hee.system.util.nextItemOrNull
 import chylex.hee.system.util.posVec
 import chylex.hee.system.util.scale
 import chylex.hee.system.util.selectVulnerableEntities
+import chylex.hee.system.util.totalTime
 import chylex.hee.system.util.use
 import chylex.hee.system.util.withY
 import net.minecraft.block.material.PushReaction
@@ -145,6 +148,8 @@ class EntityBossEnderEye(type: EntityType<EntityBossEnderEye>, world: World) : E
 	
 	private var bossPhase: EnderEyePhase = Hibernated
 	private var fallAsleepTimer = 0
+	private var knockbackDashChance = 5 // slightly higher chance of knockback after fight (re)starts
+	private var lastKnockbackDashTime = 0L
 	
 	init{
 		moveController = EntityMoveFlyingForward(this)
@@ -327,7 +332,15 @@ class EntityBossEnderEye(type: EntityType<EntityBossEnderEye>, world: World) : E
 			return false
 		}
 		
-		return bossPhase is Ready && super.attackEntityFrom(source, amount)
+		if (bossPhase is Ready && super.attackEntityFrom(source, amount - 2F)){
+			if (knockbackDashChance > 2 && world.totalTime - lastKnockbackDashTime >= 50L && rand.nextInt(3) != 0){
+				knockbackDashChance--
+			}
+			
+			return true
+		}
+		
+		return false
 	}
 	
 	override fun isInvulnerableTo(source: DamageSource): Boolean{
@@ -385,7 +398,13 @@ class EntityBossEnderEye(type: EntityType<EntityBossEnderEye>, world: World) : E
 			return
 		}
 		
-		if (!ForgeHooks.onLivingKnockBack(this, entity, strength, xRatio, zRatio).isCanceled){
+		if (bossPhase.currentAttack is Melee && rand.nextInt(knockbackDashChance) == 0){
+			super.knockBack(entity, strength * 1.4F, xRatio, zRatio)
+			bossPhase.currentAttack = KnockbackDash()
+			knockbackDashChance = 7
+			lastKnockbackDashTime = world.totalTime
+		}
+		else if (!ForgeHooks.onLivingKnockBack(this, entity, strength, xRatio, zRatio).isCanceled){
 			motion = motion.add(Vec3.fromXZ(-xRatio, -zRatio).normalize().scale(KNOCKBACK_MP).withY(0.005))
 			
 			if (motionY > 0.05){
