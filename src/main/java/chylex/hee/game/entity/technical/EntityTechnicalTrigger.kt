@@ -61,7 +61,8 @@ class EntityTechnicalTrigger(type: EntityType<EntityTechnicalTrigger>, world: Wo
 		STRONGHOLD_TRAP_TALL_INTERSECTION({ StrongholdRoom_Trap_TallIntersection.Trigger }),
 		ENERGY_SHRINE_GENERATOR({ EnergyShrineGenerator.GeneratorTrigger }),
 		ENERGY_SHRINE_GLOBAL({ EnergyShrineRoom_Main_Start.Particles }),
-		OBSIDIAN_TOWER_TOP_GLOWSTONE(ObsidianTowerLevel_Top::GlowstoneTrigger)
+		OBSIDIAN_TOWER_TOP_GLOWSTONE(ObsidianTowerLevel_Top::GlowstoneTrigger),
+		OBSIDIAN_TOWER_DEATH_ANIMATION(ObsidianTowerLevel_Top::DeathAnimationTrigger)
 	}
 	
 	// Entity

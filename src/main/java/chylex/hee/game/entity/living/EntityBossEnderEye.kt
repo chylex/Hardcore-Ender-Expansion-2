@@ -13,6 +13,8 @@ import chylex.hee.game.entity.living.behavior.EnderEyeSpawnerParticles
 import chylex.hee.game.entity.living.helpers.EntityBodyHeadOnly
 import chylex.hee.game.entity.living.helpers.EntityLookSlerp
 import chylex.hee.game.entity.living.helpers.EntityMoveFlyingForward
+import chylex.hee.game.entity.technical.EntityTechnicalTrigger
+import chylex.hee.game.entity.technical.EntityTechnicalTrigger.Types.OBSIDIAN_TOWER_DEATH_ANIMATION
 import chylex.hee.game.entity.util.EntityData
 import chylex.hee.game.mechanics.damage.Damage
 import chylex.hee.game.mechanics.damage.IDamageProcessor.Companion.ALL_PROTECTIONS
@@ -31,17 +33,20 @@ import chylex.hee.system.migration.vanilla.EntityFlying
 import chylex.hee.system.migration.vanilla.EntityLivingBase
 import chylex.hee.system.migration.vanilla.EntityPlayer
 import chylex.hee.system.migration.vanilla.EntityPlayerMP
+import chylex.hee.system.util.Pos
 import chylex.hee.system.util.TagCompound
 import chylex.hee.system.util.Vec3
 import chylex.hee.system.util.directionTowards
 import chylex.hee.system.util.facades.Resource
 import chylex.hee.system.util.floorToInt
+import chylex.hee.system.util.getPosOrNull
 import chylex.hee.system.util.heeTag
 import chylex.hee.system.util.math.LerpedFloat
 import chylex.hee.system.util.motionY
 import chylex.hee.system.util.nextInt
 import chylex.hee.system.util.nextItemOrNull
 import chylex.hee.system.util.posVec
+import chylex.hee.system.util.putPos
 import chylex.hee.system.util.scale
 import chylex.hee.system.util.selectVulnerableEntities
 import chylex.hee.system.util.totalTime
@@ -67,6 +72,7 @@ import net.minecraft.network.datasync.DataSerializers
 import net.minecraft.util.DamageSource
 import net.minecraft.util.ResourceLocation
 import net.minecraft.util.math.AxisAlignedBB
+import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.Vec3d
 import net.minecraft.util.text.ITextComponent
 import net.minecraft.world.BossInfo
@@ -100,6 +106,7 @@ class EntityBossEnderEye(type: EntityType<EntityBossEnderEye>, world: World) : E
 		
 		private const val KNOCKBACK_MP = 0.15
 		
+		private const val TOWER_CENTER_POS_TAG = "TowerCenter"
 		private const val TOTAL_SPAWNERS_TAG = "TotalSpawners"
 		private const val SPAWNER_PARTICLES_TAG = "SpawnerParticles"
 		private const val REAL_MAX_HEALTH_TAG = "RealMaxHealth"
@@ -147,6 +154,7 @@ class EntityBossEnderEye(type: EntityType<EntityBossEnderEye>, world: World) : E
 		get() = if (isDemonEye) 6F else DEMON_LEVEL_XP.getOrElse(demonLevel.toInt()){ 1F }
 	
 	private var bossPhase: EnderEyePhase = Hibernated
+	private var towerCenterPos: BlockPos? = null
 	private var fallAsleepTimer = 0
 	private var knockbackDashChance = 5 // slightly higher chance of knockback after fight (re)starts
 	private var lastKnockbackDashTime = 0L
@@ -269,6 +277,7 @@ class EntityBossEnderEye(type: EntityType<EntityBossEnderEye>, world: World) : E
 		
 		if (bossPhase !is Ready){
 			bossPhase = OpenEye()
+			towerCenterPos = Pos(this).down(2).offset(horizontalFacing, 3)
 		}
 		
 		attackTarget = source.trueSource as? EntityPlayer
@@ -359,6 +368,22 @@ class EntityBossEnderEye(type: EntityType<EntityBossEnderEye>, world: World) : E
 		}
 		else{
 			target.addVelocity(ratio.x, strength.toDouble(), ratio.z)
+		}
+	}
+	
+	override fun onDeath(cause: DamageSource){
+		val wasDead = dead
+		super.onDeath(cause)
+		
+		if (!wasDead && dead && !world.isRemote){
+			val centerPos = towerCenterPos!!
+			
+			// TODO screech
+			
+			EntityTechnicalTrigger(world, OBSIDIAN_TOWER_DEATH_ANIMATION).apply {
+				setLocationAndAngles(centerPos.x + 0.5, centerPos.y + 0.5, centerPos.z + 0.5, 0F, 0F)
+				world.addEntity(this)
+			}
 		}
 	}
 	
@@ -479,6 +504,10 @@ class EntityBossEnderEye(type: EntityType<EntityBossEnderEye>, world: World) : E
 	override fun writeAdditional(nbt: TagCompound) = nbt.heeTag.use {
 		super.writeAdditional(nbt)
 		
+		towerCenterPos?.let {
+			putPos(TOWER_CENTER_POS_TAG, it)
+		}
+		
 		putShort(TOTAL_SPAWNERS_TAG, totalSpawners)
 		put(SPAWNER_PARTICLES_TAG, spawnerParticles.serializeNBT())
 		
@@ -500,6 +529,8 @@ class EntityBossEnderEye(type: EntityType<EntityBossEnderEye>, world: World) : E
 	
 	override fun readAdditional(nbt: TagCompound) = nbt.heeTag.use {
 		super.readAdditional(nbt)
+		
+		towerCenterPos = getPosOrNull(TOWER_CENTER_POS_TAG)
 		
 		totalSpawners = getShort(TOTAL_SPAWNERS_TAG)
 		spawnerParticles.deserializeNBT(getCompound(SPAWNER_PARTICLES_TAG))

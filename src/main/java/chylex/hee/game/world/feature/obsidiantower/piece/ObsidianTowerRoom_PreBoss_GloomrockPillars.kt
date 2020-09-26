@@ -35,7 +35,7 @@ class ObsidianTowerRoom_PreBoss_GloomrockPillars(file: String) : ObsidianTowerRo
 			placeSpawner(world, nextPos(pillarOffsets, rand), instance)
 		}
 		
-		world.addTrigger(Pos(centerX, 1, centerZ), EntityStructureTrigger({ realWorld -> EntityTokenHolder(realWorld, TokenType.NORMAL, TerritoryType.ENDER_CITY) }, yOffset = 0.65))
+		world.addTrigger(Pos(centerX, 1, centerZ), EntityStructureTrigger({ realWorld -> EntityTokenHolder(realWorld, TokenType.NORMAL, TerritoryType.ENDER_CITY).apply { currentCharge = 0F } }, yOffset = 0.65))
 	}
 	
 	private fun nextPos(list: MutableList<PosXZ>, rand: Random): BlockPos{
