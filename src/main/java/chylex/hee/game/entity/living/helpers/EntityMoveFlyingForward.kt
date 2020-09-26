@@ -23,7 +23,7 @@ class EntityMoveFlyingForward(entity: EntityLiving) : MovementController(entity)
 			val xz = sqrt(square(diff.x) + square(diff.z))
 			
 			val dot = Vec3d.fromPitchYaw(mob.rotationPitch, mob.rotationYaw).dotProduct(diff).coerceAtLeast(0.0)
-			val speed = mob.getAttribute(FLYING_SPEED).value * square(dot)
+			val speed = mob.getAttribute(FLYING_SPEED).value * square(dot) * super.speed
 			
 			mob.setMoveForward((xz * speed).toFloat())
 			mob.setMoveVertical((diff.y * speed).toFloat())
