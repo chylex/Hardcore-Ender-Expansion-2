@@ -19,11 +19,12 @@ import chylex.hee.game.mechanics.damage.IDamageProcessor.Companion.DIFFICULTY_SC
 import chylex.hee.game.mechanics.damage.IDamageProcessor.Companion.ENCHANTMENT_PROTECTION
 import chylex.hee.game.mechanics.damage.IDamageProcessor.Companion.FIRE_TYPE
 import chylex.hee.game.mechanics.damage.IDamageProcessor.Companion.NUDITY_DANGER
-import chylex.hee.game.mechanics.damage.IDamageProcessor.Companion.PEACEFUL_EXCLUSION
 import chylex.hee.game.mechanics.damage.IDamageProcessor.Companion.RAPID_DAMAGE
 import chylex.hee.game.mechanics.potion.PotionBanishment
 import chylex.hee.init.ModEntities
 import chylex.hee.network.client.PacketClientLaunchInstantly
+import chylex.hee.system.migration.forge.Side
+import chylex.hee.system.migration.forge.Sided
 import chylex.hee.system.migration.vanilla.EntityFlying
 import chylex.hee.system.migration.vanilla.EntityLivingBase
 import chylex.hee.system.migration.vanilla.EntityPlayer
@@ -82,9 +83,9 @@ class EntityBossEnderEye(type: EntityType<EntityBossEnderEye>, world: World) : E
 	}
 	
 	companion object{
-		private val DAMAGE_MELEE = Damage(DIFFICULTY_SCALING, ARMOR_PROTECTION(false), ENCHANTMENT_PROTECTION)
-		private val DAMAGE_LASER = Damage(FIRE_TYPE(5), DIFFICULTY_SCALING, *ALL_PROTECTIONS, NUDITY_DANGER, RAPID_DAMAGE(2))
-		private val DAMAGE_DASH = Damage(DIFFICULTY_SCALING, PEACEFUL_EXCLUSION)
+		val DAMAGE_MELEE = Damage(DIFFICULTY_SCALING, ARMOR_PROTECTION(false), ENCHANTMENT_PROTECTION)
+		val DAMAGE_LASER = Damage(FIRE_TYPE(5), DIFFICULTY_SCALING, *ALL_PROTECTIONS, NUDITY_DANGER, RAPID_DAMAGE(2))
+		val DAMAGE_DASH = Damage(DIFFICULTY_SCALING, ARMOR_PROTECTION(false))
 		
 		private val DATA_SLEEPING = EntityData.register<EntityBossEnderEye, Boolean>(DataSerializers.BOOLEAN)
 		private val DATA_DEMON_LEVEL = EntityData.register<EntityBossEnderEye, Byte>(DataSerializers.BYTE)
@@ -98,6 +99,7 @@ class EntityBossEnderEye(type: EntityType<EntityBossEnderEye>, world: World) : E
 		
 		private const val TOTAL_SPAWNERS_TAG = "TotalSpawners"
 		private const val SPAWNER_PARTICLES_TAG = "SpawnerParticles"
+		private const val REAL_MAX_HEALTH_TAG = "RealMaxHealth"
 		private const val SLEEPING_TAG = "Sleeping"
 		private const val DEMON_LEVEL_TAG = "DemonLevel"
 		private const val PHASE_TAG = "Phase"
@@ -116,6 +118,8 @@ class EntityBossEnderEye(type: EntityType<EntityBossEnderEye>, world: World) : E
 	
 	var totalSpawners: Short = 0
 		private set
+	
+	var realMaxHealth = 0F
 	
 	var isSleepingProp by EntityData(DATA_SLEEPING)
 		private set
@@ -166,7 +170,7 @@ class EntityBossEnderEye(type: EntityType<EntityBossEnderEye>, world: World) : E
 		
 		getAttribute(MAX_HEALTH).baseValue = 300.0
 		getAttribute(ATTACK_DAMAGE).baseValue = 4.0
-		getAttribute(FLYING_SPEED).baseValue = 0.0925
+		getAttribute(FLYING_SPEED).baseValue = 0.093
 		getAttribute(FOLLOW_RANGE).baseValue = 16.0
 		
 		experienceValue = 50
@@ -206,13 +210,6 @@ class EntityBossEnderEye(type: EntityType<EntityBossEnderEye>, world: World) : E
 			else{
 				clientArmAngle.update(currentArmAngle + ((targetArmAngle - currentArmAngle) * 0.6F).coerceIn(-25F, 25F))
 			}
-			
-			if (!isSleeping){
-				rotateTargetId.takeIf { it != Int.MIN_VALUE }?.let(world::getEntityByID)?.let {
-					lookController.setLookPositionWithEntity(it, 0F, 0F)
-					lookController.tick() // reduces rotation latency
-				}
-			}
 		}
 		else{
 			if (ticksExisted == 1){
@@ -224,6 +221,7 @@ class EntityBossEnderEye(type: EntityType<EntityBossEnderEye>, world: World) : E
 			if (currentTarget == null){
 				if (!isSleeping && (bossPhase is Ready && ++fallAsleepTimer > rand.nextInt(35, 75))){
 					isSleepingProp = true
+					attackTarget = null
 				}
 			}
 			else if (!currentTarget.isAlive || (currentTarget is EntityPlayer && (currentTarget.isCreative || currentTarget.isSpectator))){
@@ -233,6 +231,13 @@ class EntityBossEnderEye(type: EntityType<EntityBossEnderEye>, world: World) : E
 			
 			bossPhase = bossPhase.tick(this)
 			spawnerParticles.tick()
+		}
+		
+		if (!isSleeping){
+			rotateTargetId.takeIf { it != Int.MIN_VALUE }?.let(world::getEntityByID)?.let {
+				lookController.setLookPositionWithEntity(it, 0F, 0F)
+				lookController.tick() // reduces rotation latency
+			}
 		}
 		
 		super.livingTick()
@@ -259,8 +264,9 @@ class EntityBossEnderEye(type: EntityType<EntityBossEnderEye>, world: World) : E
 		
 		if (bossPhase !is Ready){
 			bossPhase = OpenEye()
-			attackTarget = source.trueSource as? EntityPlayer
 		}
+		
+		attackTarget = source.trueSource as? EntityPlayer
 	}
 	
 	fun updateDemonLevel(newLevel: Byte){
@@ -305,7 +311,9 @@ class EntityBossEnderEye(type: EntityType<EntityBossEnderEye>, world: World) : E
 	}
 	
 	override fun attackEntityAsMob(entity: Entity): Boolean{
-		return DAMAGE_MELEE.dealToFrom(entity, this)
+		val attack = (bossPhase as? Ready)?.currentAttack ?: return false
+		val amount = getAttribute(ATTACK_DAMAGE).value.toFloat() * attack.damageMultiplier
+		return attack.damageType.dealToFrom(amount, entity, this)
 	}
 	
 	override fun attackEntityFrom(source: DamageSource, amount: Float): Boolean{
@@ -403,6 +411,25 @@ class EntityBossEnderEye(type: EntityType<EntityBossEnderEye>, world: World) : E
 		bossInfo.name = displayName
 	}
 	
+	// Client (disable server-side rotation)
+	
+	@Sided(Side.CLIENT)
+	override fun setPositionAndRotationDirect(x: Double, y: Double, z: Double, yaw: Float, pitch: Float, posRotationIncrements: Int, teleport: Boolean){
+		if (rotateTargetId == Int.MIN_VALUE){
+			super.setPositionAndRotationDirect(x, y, z, yaw, pitch, posRotationIncrements, teleport)
+		}
+		else{
+			setPosition(x, y, z)
+		}
+	}
+	
+	@Sided(Side.CLIENT)
+	override fun setHeadRotation(yaw: Float, pitch: Int){
+		if (rotateTargetId == Int.MIN_VALUE){
+			super.setHeadRotation(yaw, pitch)
+		}
+	}
+	
 	// Properties
 	
 	override fun getLootTable(): ResourceLocation{
@@ -436,6 +463,7 @@ class EntityBossEnderEye(type: EntityType<EntityBossEnderEye>, world: World) : E
 		putShort(TOTAL_SPAWNERS_TAG, totalSpawners)
 		put(SPAWNER_PARTICLES_TAG, spawnerParticles.serializeNBT())
 		
+		putFloat(REAL_MAX_HEALTH_TAG, realMaxHealth)
 		putBoolean(SLEEPING_TAG, isSleeping)
 		putByte(DEMON_LEVEL_TAG, demonLevel)
 		
@@ -457,6 +485,7 @@ class EntityBossEnderEye(type: EntityType<EntityBossEnderEye>, world: World) : E
 		totalSpawners = getShort(TOTAL_SPAWNERS_TAG)
 		spawnerParticles.deserializeNBT(getCompound(SPAWNER_PARTICLES_TAG))
 		
+		realMaxHealth = getFloat(REAL_MAX_HEALTH_TAG)
 		isSleepingProp = getBoolean(SLEEPING_TAG)
 		demonLevel = getByte(DEMON_LEVEL_TAG)
 		

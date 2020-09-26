@@ -17,6 +17,7 @@ import chylex.hee.system.util.lookPosVec
 import chylex.hee.system.util.nextInt
 import chylex.hee.system.util.readVec
 import chylex.hee.system.util.square
+import chylex.hee.system.util.subtractY
 import chylex.hee.system.util.use
 import chylex.hee.system.util.writeVec
 import net.minecraft.network.PacketBuffer
@@ -35,6 +36,7 @@ class EnderEyeSpawnerParticles(private val entity: EntityBossEnderEye) : INBTSer
 		private const val Y_TAG = "Y"
 		private const val Z_TAG = "Z"
 		private const val DELAY_TAG = "Delay"
+		private const val PREV_DIST_SQ_TAG = "PrevDistSq"
 		private const val ORIG_DISTANCE_XZ_TAG = "OrigDistXZ"
 		
 		private val PARTICLE_TICK = ParticleSpawnerCustom(
@@ -57,8 +59,8 @@ class EnderEyeSpawnerParticles(private val entity: EntityBossEnderEye) : INBTSer
 		}
 	}
 	
-	private class ParticleInstance(pos: Vec3d, delay: Int, private var originalDistanceXZ: Double) : INBTSerializable<TagCompound>{
-		constructor() : this(Vec3d.ZERO, 0, 0.0)
+	private class ParticleInstance(pos: Vec3d, delay: Int, private var originalDistanceXZ: Float) : INBTSerializable<TagCompound>{
+		constructor() : this(Vec3d.ZERO, 0, 0F)
 		
 		var pos = pos
 			private set
@@ -66,16 +68,20 @@ class EnderEyeSpawnerParticles(private val entity: EntityBossEnderEye) : INBTSer
 		var delay = delay
 			private set
 		
+		private var prevDistSq = Float.MAX_VALUE
+		
 		fun tick(entity: EntityBossEnderEye): Boolean{
 			if (delay > 0){
 				--delay
 				return false
 			}
 			
-			val dir = entity.lookPosVec.subtract(pos).normalize()
-			val distSq = entity.getDistanceSq(pos)
+			val lookPos = entity.lookPosVec.subtractY(entity.height * 0.25)
 			
-			pos = pos.add(dir.scale(0.04 + (0.08 * (distSq - 1.0).coerceAtLeast(0.0).pow(0.33))))
+			val dir = lookPos.subtract(pos).normalize()
+			val distSq = lookPos.squareDistanceTo(pos)
+			
+			pos = pos.add(dir.scale(0.04 + (0.08 * (distSq - 0.5).coerceAtLeast(0.0).pow(0.33))))
 			
 			if (entity.rng.nextInt(3) == 0){
 				val progress = sqrt(square(pos.x - entity.posX) + square(pos.z - entity.posZ)) / originalDistanceXZ
@@ -88,7 +94,12 @@ class EnderEyeSpawnerParticles(private val entity: EntityBossEnderEye) : INBTSer
 				PacketClientFX(FX_PARTICLE, ParticleData(pos.addY(sqrt(progressCurvePoint) * 6.0))).sendToAllAround(entity.world, pos, 256.0)
 			}
 			
-			return distSq < square(0.7)
+			if (distSq > prevDistSq || distSq < square(0.15)){
+				return true
+			}
+			
+			prevDistSq = distSq.toFloat()
+			return false
 		}
 		
 		override fun serializeNBT() = TagCompound().apply {
@@ -96,7 +107,8 @@ class EnderEyeSpawnerParticles(private val entity: EntityBossEnderEye) : INBTSer
 			putDouble(Y_TAG, pos.y)
 			putDouble(Z_TAG, pos.z)
 			putInt(DELAY_TAG, delay)
-			putDouble(ORIG_DISTANCE_XZ_TAG, originalDistanceXZ)
+			putFloat(PREV_DIST_SQ_TAG, prevDistSq)
+			putFloat(ORIG_DISTANCE_XZ_TAG, originalDistanceXZ)
 		}
 		
 		override fun deserializeNBT(nbt: TagCompound) = nbt.use {
@@ -107,7 +119,8 @@ class EnderEyeSpawnerParticles(private val entity: EntityBossEnderEye) : INBTSer
 			)
 			
 			delay = getInt(DELAY_TAG)
-			originalDistanceXZ = getDouble(ORIG_DISTANCE_XZ_TAG)
+			prevDistSq = getFloat(PREV_DIST_SQ_TAG)
+			originalDistanceXZ = getFloat(ORIG_DISTANCE_XZ_TAG)
 		}
 	}
 	
@@ -125,7 +138,7 @@ class EnderEyeSpawnerParticles(private val entity: EntityBossEnderEye) : INBTSer
 			}
 		}
 		
-		particles.add(ParticleInstance(center, delay, sqrt(square(entity.posX - center.x) + square(entity.posZ - center.z))))
+		particles.add(ParticleInstance(center, delay, sqrt(square(entity.posX - center.x) + square(entity.posZ - center.z)).toFloat()))
 	}
 	
 	fun tick(){

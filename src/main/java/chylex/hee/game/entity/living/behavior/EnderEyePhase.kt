@@ -24,7 +24,9 @@ import chylex.hee.system.util.component3
 import chylex.hee.system.util.directionTowards
 import chylex.hee.system.util.distanceSqTo
 import chylex.hee.system.util.floorToInt
+import chylex.hee.system.util.getBlock
 import chylex.hee.system.util.getTile
+import chylex.hee.system.util.isAir
 import chylex.hee.system.util.lookPosVec
 import chylex.hee.system.util.math.Quaternion
 import chylex.hee.system.util.motionY
@@ -37,10 +39,12 @@ import chylex.hee.system.util.playServer
 import chylex.hee.system.util.posVec
 import chylex.hee.system.util.removeItemOrNull
 import chylex.hee.system.util.selectExistingEntities
+import chylex.hee.system.util.setBlock
 import chylex.hee.system.util.square
 import chylex.hee.system.util.toPitch
 import chylex.hee.system.util.toYaw
 import chylex.hee.system.util.use
+import net.minecraft.block.Blocks
 import net.minecraft.client.particle.DiggingParticle
 import net.minecraft.entity.Entity
 import net.minecraft.network.play.server.SPlaySoundEffectPacket
@@ -322,8 +326,33 @@ sealed class EnderEyePhase : INBTSerializable<TagCompound>{
 			}
 			
 			if (animatedSpawnerPercentage >= targetSpawnerPercentage){
+				entity.realMaxHealth = entity.health
 				entity.motionY = 0.0
 				PacketClientFX(FX_FINISH, FxEntityData(entity)).sendToAllAround(entity, 32.0)
+				
+				val world = entity.world
+				val pos = Pos(entity)
+				
+				for(yOffset in 1..5){
+					val obsidianPos = pos.down(yOffset)
+					
+					if (obsidianPos.isAir(world)){
+						continue
+					}
+					
+					if (obsidianPos.getBlock(world) === ModBlocks.OBSIDIAN_CHISELED_LIT){
+						obsidianPos.breakBlock(world, false)
+					}
+					
+					val ladderPos = obsidianPos.down().offset(entity.horizontalFacing, 7)
+					
+					if (ladderPos.getBlock(world) === Blocks.LADDER){
+						ladderPos.setBlock(world, Blocks.OBSIDIAN)
+					}
+					
+					break
+				}
+				
 				return Staring()
 			}
 			
@@ -382,7 +411,7 @@ sealed class EnderEyePhase : INBTSerializable<TagCompound>{
 		
 		override fun tick(entity: EntityBossEnderEye): EnderEyePhase{
 			if (entity.isSleeping || !currentAttack.tick(entity)){
-				currentAttack = defaultAttack
+				currentAttack = defaultAttack.also { it.reset(entity) }
 			}
 			
 			return this
