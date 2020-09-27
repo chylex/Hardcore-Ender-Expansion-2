@@ -1,26 +1,35 @@
-buildscript{
-    ext.kotlin_version = "1.4.10"
-    
-    repositories{
-        jcenter()
-        mavenCentral()
-        
-        maven{
-            url = "https://files.minecraftforge.net/maven"
-        }
-    }
-    
-    dependencies{
-        classpath(group: "net.minecraftforge.gradle", name: "ForgeGradle", version: "3.+", changing: true){
-            exclude group: "trove", module: "trove"
-        }
-
-        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:" + kotlin_version
-    }
+ext {
+	mc_version = "1.15.2"
+	forge_version = "31.2.27"
+	mapping_version = "20200626-1.15.1"
+	kotlin_mod_version = "1.6.0"
 }
 
-repositories{
-	maven{
+buildscript {
+	ext {
+		kotlin_version = "1.4.10"
+	}
+	
+	repositories {
+		jcenter()
+		mavenCentral()
+		
+		maven {
+			url = "https://files.minecraftforge.net/maven"
+		}
+	}
+	
+	dependencies {
+		classpath(group: "net.minecraftforge.gradle", name: "ForgeGradle", version: "3.+", changing: true) {
+			exclude group: "trove", module: "trove"
+		}
+		
+		classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:" + kotlin_version
+	}
+}
+
+repositories {
+	maven {
 		name = "kotlinforforge"
 		url = "https://thedarkcolour.github.io/KotlinForForge/"
 	}
@@ -28,15 +37,10 @@ repositories{
 
 apply plugin: "net.minecraftforge.gradle"
 apply plugin: "eclipse"
-apply plugin: "kotlin"
 
 if (file("run/mods_deobf.gradle").exists()){
-    apply from: "run/mods_deobf.gradle"
+	apply from: "run/mods_deobf.gradle"
 }
-
-def mcversion = "1.15.2"
-def forgeversion = "31.2.27"
-def kotlinmodversion = "1.6.0"
 
 def prefixName = "displayName = "
 def prefixVersion = "version = "
@@ -49,93 +53,106 @@ group = "chylex.hee"
 version = metaVersion
 archivesBaseName = metaName.replaceAll("\\s", "")
 
-sourceCompatibility = targetCompatibility = "1.8"
-
-tasks.withType(JavaCompile){
-    sourceCompatibility = targetCompatibility = "1.8"
-}
-
-tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile){
-    kotlinOptions{
-        jvmTarget = "1.8"
-        apiVersion = "1.4"
-        languageVersion = "1.4"
-        freeCompilerArgs = [
-            "-Xno-call-assertions",
-            "-Xno-param-assertions",
-            "-Xno-receiver-assertions",
-            "-Xjvm-default=all",
-            "-Xuse-experimental=kotlin.ExperimentalUnsignedTypes",
-            "-Xuse-experimental=kotlin.contracts.ExperimentalContracts",
-            "-XXLanguage:+InlineClasses"
-        ]
-    }
-}
-
-minecraft{
-    mappings channel: "snapshot", version: "20200626-1.15.1"
-
-    accessTransformer = file("src/main/resources/META-INF/accesstransformer.cfg")
-
-    runs{
-        client{
-            properties "hee.debug": ""
-            workingDirectory file("run")
-
-            mods{
-                hee{
-                    source sourceSets.main
-                }
-            }
-        }
-
-        server{
-            properties "hee.debug": ""
-            workingDirectory file("run")
-
-            mods{
-                hee{
-                    source sourceSets.main
-                }
-            }
-        }
-    }
-}
-
-dependencies{
-    minecraft "net.minecraftforge:forge:" + mcversion + "-" + forgeversion
+allprojects {
+	apply plugin: "kotlin"
 	
+	sourceCompatibility = targetCompatibility = "1.8"
 	
-	implementation "thedarkcolour:kotlinforforge:" + kotlinmodversion
-    implementation "org.jetbrains.kotlin:kotlin-stdlib"
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
-    implementation "org.jetbrains.kotlin:kotlin-reflect"
-
-    testImplementation "org.junit.jupiter:junit-jupiter-api:5.3.0-RC1"
+	tasks.withType(JavaCompile) {
+		sourceCompatibility = targetCompatibility = "1.8"
+	}
+	
+	tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile) {
+		kotlinOptions {
+			jvmTarget = "1.8"
+			apiVersion = "1.4"
+			languageVersion = "1.4"
+			freeCompilerArgs = [
+				"-Xno-call-assertions",
+				"-Xno-param-assertions",
+				"-Xno-receiver-assertions",
+				"-Xjvm-default=all",
+				"-Xuse-experimental=kotlin.ExperimentalUnsignedTypes",
+				"-Xuse-experimental=kotlin.contracts.ExperimentalContracts",
+				"-XXLanguage:+InlineClasses"
+			]
+		}
+	}
+	
+	dependencies {
+		implementation "org.jetbrains.kotlin:kotlin-stdlib"
+		implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
+		implementation "org.jetbrains.kotlin:kotlin-reflect"
+	}
 }
 
-test{
-    systemProperty "junit.jupiter.testinstance.lifecycle.default", "per_class"
+minecraft {
+	mappings channel: "snapshot", version: rootProject.mapping_version
+	
+	accessTransformer = file("src/main/resources/META-INF/accesstransformer.cfg")
+	
+	runs {
+		client {
+			properties "hee.debug": ""
+			workingDirectory file("run")
+			
+			mods {
+				hee {
+					source sourceSets.main
+					source project(":system").sourceSets.main
+				}
+			}
+		}
+		
+		server {
+			properties "hee.debug": ""
+			workingDirectory file("run")
+			
+			mods {
+				hee {
+					source sourceSets.main
+					source project(":system").sourceSets.main
+				}
+			}
+		}
+	}
 }
 
-jar{
-    archiveName = archivesBaseName + "-" + mcversion + "-v" + version + ".jar"
+dependencies {
+	minecraft "net.minecraftforge:forge:" + mc_version + "-" + forge_version
+	implementation "thedarkcolour:kotlinforforge:" + kotlin_mod_version
+	implementation project(":system")
+	
+	testImplementation "org.junit.jupiter:junit-jupiter-api:5.3.0-RC1"
+	testImplementation project(":system")
+}
 
-    from("./"){
-        include "LICENSE"
-    }
+test {
+	systemProperty "junit.jupiter.testinstance.lifecycle.default", "per_class"
+}
 
-    manifest{
-        attributes([
-                "Specification-Title"  : "bettersprinting",
-                "Specification-Version": "1",
-                "Specification-Vendor" : "chylex",
-
-                "Implementation-Title"  : metaName,
-                "Implementation-Version": metaVersion,
-                "Implementation-Vendor" : "chylex",
-
-                "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ")
-        ])
-    }
+jar {
+	archiveName = archivesBaseName + "-" + mc_version + "-v" + version + ".jar"
+	
+	from(project(":system").sourceSets.main.output) {
+		exclude "META-INF"
+	}
+	
+	from("./") {
+		include "LICENSE"
+	}
+	
+	manifest {
+		attributes([
+			"Specification-Title"     : "bettersprinting",
+			"Specification-Version"   : "1",
+			"Specification-Vendor"    : "chylex",
+			
+			"Implementation-Title"    : metaName,
+			"Implementation-Version"  : metaVersion,
+			"Implementation-Vendor"   : "chylex",
+			
+			"Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ")
+		])
+	}
 }

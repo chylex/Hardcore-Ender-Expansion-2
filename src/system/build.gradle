@@ -1,0 +1,47 @@
+buildscript {
+	repositories {
+		jcenter()
+		mavenCentral()
+		
+		maven {
+			url = "https://files.minecraftforge.net/maven"
+		}
+	}
+	
+	dependencies {
+		classpath(group: "net.minecraftforge.gradle", name: "ForgeGradle", version: "3.+", changing: true) {
+			exclude group: "trove", module: "trove"
+		}
+		
+		classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:" + kotlin_version
+	}
+}
+
+repositories {
+	jcenter()
+	mavenCentral()
+	
+	maven {
+		url = "https://files.minecraftforge.net/maven"
+	}
+}
+
+apply plugin: "net.minecraftforge.gradle"
+apply plugin: "eclipse"
+
+minecraft {
+	mappings channel: "snapshot", version: rootProject.mapping_version
+	accessTransformer = file("../../src/main/resources/META-INF/accesstransformer.cfg")
+}
+
+dependencies {
+	minecraft "net.minecraftforge:forge:" + mc_version + "-" + forge_version
+}
+
+jar {
+	manifest {
+		attributes([
+			"FMLModType": "LIBRARY"
+		])
+	}
+}
