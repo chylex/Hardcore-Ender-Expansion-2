@@ -4,9 +4,9 @@ import chylex.hee.game.block.entity.base.TileEntityBase.Context.NETWORK
 import chylex.hee.game.block.entity.base.TileEntityBasePortalController.ForegroundRenderState.Animating
 import chylex.hee.game.block.entity.base.TileEntityBasePortalController.ForegroundRenderState.Invisible
 import chylex.hee.game.block.entity.base.TileEntityBasePortalController.ForegroundRenderState.Visible
-import chylex.hee.system.util.TagCompound
-import chylex.hee.system.util.math.LerpedFloat
-import chylex.hee.system.util.use
+import chylex.hee.system.math.LerpedFloat
+import chylex.hee.system.serialization.TagCompound
+import chylex.hee.system.serialization.use
 import net.minecraft.tileentity.TileEntityType
 import kotlin.math.max
 import kotlin.math.min

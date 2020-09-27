@@ -1,5 +1,5 @@
 package chylex.hee.game.block.dispenser
-import chylex.hee.system.migration.vanilla.ItemArmor
+import chylex.hee.system.migration.ItemArmor
 import net.minecraft.dispenser.IBlockSource
 import net.minecraft.dispenser.OptionalDispenseBehavior
 import net.minecraft.item.ItemStack

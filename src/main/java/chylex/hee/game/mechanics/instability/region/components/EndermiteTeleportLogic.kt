@@ -1,9 +1,9 @@
 package chylex.hee.game.mechanics.instability.region.components
+import chylex.hee.game.entity.Teleporter
+import chylex.hee.game.entity.Teleporter.FxRange.Extended
 import chylex.hee.game.entity.living.EntityMobEndermiteInstability
-import chylex.hee.game.world.util.Teleporter
-import chylex.hee.game.world.util.Teleporter.FxRange.Extended
-import chylex.hee.system.util.posVec
-import chylex.hee.system.util.removeItem
+import chylex.hee.game.entity.posVec
+import chylex.hee.system.random.removeItem
 import java.util.Random
 import kotlin.math.min
 

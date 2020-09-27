@@ -1,7 +1,7 @@
 package chylex.hee.test.mechanics.damage
 import chylex.hee.game.mechanics.damage.DamageProperties
 import chylex.hee.game.mechanics.damage.DamageType
-import chylex.hee.system.migration.vanilla.EntitySnowball
+import chylex.hee.system.migration.EntitySnowball
 import net.minecraft.entity.Entity
 import net.minecraft.entity.EntityType
 import net.minecraft.util.DamageSource

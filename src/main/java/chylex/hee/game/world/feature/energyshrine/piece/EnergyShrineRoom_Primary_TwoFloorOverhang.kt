@@ -1,4 +1,6 @@
 package chylex.hee.game.world.feature.energyshrine.piece
+import chylex.hee.game.block.withFacing
+import chylex.hee.game.world.Pos
 import chylex.hee.game.world.feature.energyshrine.EnergyShrinePieces
 import chylex.hee.game.world.feature.energyshrine.connection.EnergyShrineConnection
 import chylex.hee.game.world.feature.energyshrine.connection.EnergyShrineConnectionType.ROOM
@@ -10,8 +12,6 @@ import chylex.hee.system.migration.Facing.EAST
 import chylex.hee.system.migration.Facing.NORTH
 import chylex.hee.system.migration.Facing.SOUTH
 import chylex.hee.system.migration.Facing.WEST
-import chylex.hee.system.util.Pos
-import chylex.hee.system.util.withFacing
 
 class EnergyShrineRoom_Primary_TwoFloorOverhang(file: String) : EnergyShrineRoom_Generic(file){
 	override val connections = arrayOf<IStructurePieceConnection>(

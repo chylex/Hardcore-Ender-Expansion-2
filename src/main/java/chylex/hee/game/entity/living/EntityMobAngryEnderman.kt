@@ -1,22 +1,22 @@
 package chylex.hee.game.entity.living
-import chylex.hee.game.entity.living.ai.AIWanderLand
+import chylex.hee.game.entity.living.ai.AttackMelee
+import chylex.hee.game.entity.living.ai.Swim
+import chylex.hee.game.entity.living.ai.TargetAttacker
+import chylex.hee.game.entity.living.ai.TargetNearby
+import chylex.hee.game.entity.living.ai.WanderLand
 import chylex.hee.game.entity.living.behavior.EndermanTeleportHandler
 import chylex.hee.game.entity.living.behavior.EndermanWaterHandler
+import chylex.hee.game.entity.lookPosVec
+import chylex.hee.game.entity.posVec
+import chylex.hee.game.entity.selectVulnerableEntities
 import chylex.hee.init.ModEntities
-import chylex.hee.system.migration.vanilla.EntityPlayer
-import chylex.hee.system.util.AIAttackMelee
-import chylex.hee.system.util.AISwim
-import chylex.hee.system.util.AITargetAttacker
-import chylex.hee.system.util.AITargetNearby
-import chylex.hee.system.util.TagCompound
-import chylex.hee.system.util.facades.Resource
-import chylex.hee.system.util.heeTag
-import chylex.hee.system.util.lookPosVec
-import chylex.hee.system.util.offsetTowards
-import chylex.hee.system.util.posVec
-import chylex.hee.system.util.selectVulnerableEntities
-import chylex.hee.system.util.square
-import chylex.hee.system.util.use
+import chylex.hee.system.facades.Resource
+import chylex.hee.system.math.offsetTowards
+import chylex.hee.system.math.square
+import chylex.hee.system.migration.EntityPlayer
+import chylex.hee.system.serialization.TagCompound
+import chylex.hee.system.serialization.heeTag
+import chylex.hee.system.serialization.use
 import net.minecraft.entity.EntityPredicate
 import net.minecraft.entity.EntityType
 import net.minecraft.entity.SharedMonsterAttributes.ATTACK_DAMAGE
@@ -66,12 +66,12 @@ class EntityMobAngryEnderman(type: EntityType<EntityMobAngryEnderman>, world: Wo
 		teleportHandler = EndermanTeleportHandler(this)
 		waterHandler = EndermanWaterHandler(this, takeDamageAfterWetTicks = Int.MAX_VALUE)
 		
-		goalSelector.addGoal(1, AISwim(this))
-		goalSelector.addGoal(2, AIAttackMelee(this, movementSpeed = 1.0, chaseAfterLosingSight = true))
-		goalSelector.addGoal(3, AIWanderLand(this, movementSpeed = 0.8, chancePerTick = 90))
+		goalSelector.addGoal(1, Swim(this))
+		goalSelector.addGoal(2, AttackMelee(this, movementSpeed = 1.0, chaseAfterLosingSight = true))
+		goalSelector.addGoal(3, WanderLand(this, movementSpeed = 0.8, chancePerTick = 90))
 		
-		targetSelector.addGoal(1, AITargetAttacker(this, callReinforcements = false))
-		targetSelector.addGoal(2, AITargetNearby<EntityPlayer>(this, chancePerTick = 1, checkSight = false, easilyReachableOnly = false){ getDistanceSq(it) < AGGRO_DISTANCE_SQ })
+		targetSelector.addGoal(1, TargetAttacker(this, callReinforcements = false))
+		targetSelector.addGoal(2, TargetNearby<EntityPlayer>(this, chancePerTick = 1, checkSight = false, easilyReachableOnly = false){ getDistanceSq(it) < AGGRO_DISTANCE_SQ })
 	}
 	
 	override fun updateAITasks(){

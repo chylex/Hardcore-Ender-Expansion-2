@@ -1,5 +1,5 @@
 package chylex.hee.game.mechanics.instability.dimension
-import chylex.hee.system.util.TagCompound
+import chylex.hee.system.serialization.TagCompound
 import net.minecraft.util.math.BlockPos
 
 object DimensionInstabilityNull : IDimensionInstability{

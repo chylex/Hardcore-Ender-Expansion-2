@@ -1,9 +1,9 @@
 package chylex.hee.game.entity.living.ai
-import chylex.hee.system.migration.vanilla.EntityCreature
-import chylex.hee.system.util.breakBlock
-import chylex.hee.system.util.getBlock
-import chylex.hee.system.util.isPeaceful
-import chylex.hee.system.util.nextInt
+import chylex.hee.game.world.breakBlock
+import chylex.hee.game.world.getBlock
+import chylex.hee.game.world.isPeaceful
+import chylex.hee.system.migration.EntityCreature
+import chylex.hee.system.random.nextInt
 import net.minecraft.block.Block
 import net.minecraft.entity.ai.goal.Goal
 import net.minecraft.world.GameRules.MOB_GRIEFING

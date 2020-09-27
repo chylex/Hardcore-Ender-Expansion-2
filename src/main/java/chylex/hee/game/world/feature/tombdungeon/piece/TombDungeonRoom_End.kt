@@ -1,10 +1,13 @@
 package chylex.hee.game.world.feature.tombdungeon.piece
 import chylex.hee.game.block.BlockVoidPortalInner
+import chylex.hee.game.block.with
 import chylex.hee.game.entity.item.EntityTokenHolder
 import chylex.hee.game.item.ItemPortalToken.TokenType.NORMAL
+import chylex.hee.game.world.Pos
+import chylex.hee.game.world.allInCenteredBox
 import chylex.hee.game.world.feature.tombdungeon.connection.TombDungeonConnection
 import chylex.hee.game.world.feature.tombdungeon.connection.TombDungeonConnectionType.ROOM_ENTRANCE
-import chylex.hee.game.world.structure.IBlockPicker.Single.Air
+import chylex.hee.game.world.generation.IBlockPicker.Single.Air
 import chylex.hee.game.world.structure.IStructureWorld
 import chylex.hee.game.world.structure.piece.IStructurePieceConnection
 import chylex.hee.game.world.structure.trigger.EntityStructureTrigger
@@ -15,10 +18,7 @@ import chylex.hee.system.migration.Facing.EAST
 import chylex.hee.system.migration.Facing.NORTH
 import chylex.hee.system.migration.Facing.SOUTH
 import chylex.hee.system.migration.Facing.WEST
-import chylex.hee.system.util.Pos
-import chylex.hee.system.util.TagCompound
-import chylex.hee.system.util.allInCenteredBox
-import chylex.hee.system.util.with
+import chylex.hee.system.serialization.TagCompound
 import net.minecraft.util.Direction
 import net.minecraft.util.math.BlockPos
 import kotlin.math.abs

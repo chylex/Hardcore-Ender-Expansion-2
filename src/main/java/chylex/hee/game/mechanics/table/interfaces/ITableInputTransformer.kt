@@ -1,5 +1,5 @@
 package chylex.hee.game.mechanics.table.interfaces
-import chylex.hee.system.util.size
+import chylex.hee.game.inventory.size
 import net.minecraft.item.ItemStack
 
 interface ITableInputTransformer{

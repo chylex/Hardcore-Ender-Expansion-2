@@ -1,6 +1,6 @@
 package chylex.hee.game.loot.conditions
-import chylex.hee.system.migration.vanilla.Enchantments
-import chylex.hee.system.util.facades.Resource
+import chylex.hee.system.facades.Resource
+import chylex.hee.system.migration.Enchantments
 import net.minecraft.enchantment.EnchantmentHelper
 import net.minecraft.world.storage.loot.LootContext
 import net.minecraft.world.storage.loot.LootParameter

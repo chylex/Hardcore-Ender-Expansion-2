@@ -1,11 +1,11 @@
 package chylex.hee.game.world.feature.obsidiantower.piece
-import chylex.hee.game.world.structure.IBlockPicker.Single.Air
+import chylex.hee.game.world.generation.IBlockPicker.Single.Air
+import chylex.hee.game.world.math.Size.Alignment.CENTER
+import chylex.hee.game.world.math.Size.Alignment.MIN
 import chylex.hee.game.world.structure.IStructureWorld
 import chylex.hee.game.world.structure.piece.IStructurePieceConnection
 import chylex.hee.game.world.structure.piece.StructurePiece
 import chylex.hee.game.world.structure.world.OffsetStructureWorld
-import chylex.hee.game.world.util.Size.Alignment.CENTER
-import chylex.hee.game.world.util.Size.Alignment.MIN
 
 class ObsidianTowerDebugRoomPiece(private val level: ObsidianTowerLevel_General, private val room: ObsidianTowerRoom_General) : StructurePiece<Unit>(){
 	override val connections = emptyArray<IStructurePieceConnection>()

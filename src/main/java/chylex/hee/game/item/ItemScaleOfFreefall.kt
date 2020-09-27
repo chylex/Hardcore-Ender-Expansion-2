@@ -1,9 +1,9 @@
 package chylex.hee.game.item
 import chylex.hee.game.mechanics.trinket.TrinketHandler
-import chylex.hee.system.migration.forge.EventPriority
-import chylex.hee.system.migration.forge.SubscribeEvent
-import chylex.hee.system.migration.vanilla.EntityPlayer
-import chylex.hee.system.util.compatibility.MinecraftForgeEventBus
+import chylex.hee.system.compatibility.MinecraftForgeEventBus
+import chylex.hee.system.forge.EventPriority
+import chylex.hee.system.forge.SubscribeEvent
+import chylex.hee.system.migration.EntityPlayer
 import net.minecraft.item.ItemStack
 import net.minecraft.util.DamageSource
 import net.minecraftforge.event.entity.living.LivingDamageEvent

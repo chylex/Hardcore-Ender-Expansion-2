@@ -1,6 +1,7 @@
 package chylex.hee.game.block.entity
 import chylex.hee.game.block.entity.base.TileEntityBaseTable
 import chylex.hee.game.block.entity.base.TileEntityBaseTableWithSupportingItem.Companion.SUPPORTING_ITEM_MAPPINGS
+import chylex.hee.game.inventory.size
 import chylex.hee.game.item.infusion.Infusion
 import chylex.hee.game.item.infusion.InfusionRecipe
 import chylex.hee.game.mechanics.dust.DustType
@@ -15,12 +16,11 @@ import chylex.hee.game.mechanics.table.process.ProcessSupportingItemHolder
 import chylex.hee.game.mechanics.table.process.serializer.MultiProcessSerializer
 import chylex.hee.game.mechanics.table.process.serializer.MultiProcessSerializer.Companion.Mapping
 import chylex.hee.init.ModTileEntities
-import chylex.hee.system.util.TagCompound
-import chylex.hee.system.util.color.IntColor.Companion.RGB
-import chylex.hee.system.util.getEnum
-import chylex.hee.system.util.over
-import chylex.hee.system.util.putEnum
-import chylex.hee.system.util.size
+import chylex.hee.system.color.IntColor.Companion.RGB
+import chylex.hee.system.math.over
+import chylex.hee.system.serialization.TagCompound
+import chylex.hee.system.serialization.getEnum
+import chylex.hee.system.serialization.putEnum
 import net.minecraft.item.ItemStack
 import net.minecraft.tileentity.TileEntityType
 import net.minecraft.util.math.BlockPos

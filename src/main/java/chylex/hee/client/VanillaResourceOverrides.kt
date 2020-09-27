@@ -1,7 +1,6 @@
 package chylex.hee.client
 import chylex.hee.HEE
-import chylex.hee.client.util.MC
-import chylex.hee.system.util.facades.Resource
+import chylex.hee.system.facades.Resource
 import net.minecraft.resources.IPackFinder
 import net.minecraft.resources.IResourcePack
 import net.minecraft.resources.ResourcePackInfo

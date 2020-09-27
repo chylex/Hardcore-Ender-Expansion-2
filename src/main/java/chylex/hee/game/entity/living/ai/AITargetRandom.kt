@@ -1,8 +1,7 @@
 package chylex.hee.game.entity.living.ai
-import chylex.hee.game.entity.living.ai.util.AIBaseTargetFiltered
-import chylex.hee.system.migration.vanilla.EntityCreature
-import chylex.hee.system.migration.vanilla.EntityLivingBase
-import chylex.hee.system.util.nextItemOrNull
+import chylex.hee.system.migration.EntityCreature
+import chylex.hee.system.migration.EntityLivingBase
+import chylex.hee.system.random.nextItemOrNull
 
 class AITargetRandom<T : EntityLivingBase>(
 	entity: EntityCreature,

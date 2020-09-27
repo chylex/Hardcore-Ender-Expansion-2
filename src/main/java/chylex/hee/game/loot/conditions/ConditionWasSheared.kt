@@ -1,6 +1,6 @@
 package chylex.hee.game.loot.conditions
-import chylex.hee.system.migration.vanilla.ItemShears
-import chylex.hee.system.util.facades.Resource
+import chylex.hee.system.facades.Resource
+import chylex.hee.system.migration.ItemShears
 import net.minecraft.world.storage.loot.LootContext
 import net.minecraft.world.storage.loot.LootParameter
 import net.minecraft.world.storage.loot.LootParameters

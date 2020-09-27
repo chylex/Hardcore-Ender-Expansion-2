@@ -1,11 +1,11 @@
 package chylex.hee.game.world.feature.tombdungeon.piece
+import chylex.hee.game.world.Pos
 import chylex.hee.game.world.feature.tombdungeon.connection.TombDungeonConnection
 import chylex.hee.game.world.feature.tombdungeon.connection.TombDungeonConnectionType.ROOM_ENTRANCE
 import chylex.hee.game.world.structure.piece.IStructurePieceConnection
 import chylex.hee.system.migration.Facing.EAST
 import chylex.hee.system.migration.Facing.SOUTH
 import chylex.hee.system.migration.Facing.WEST
-import chylex.hee.system.util.Pos
 
 class TombDungeonRoom_Side_CrossroadsLounge(file: String, isFancy: Boolean) : TombDungeonRoom_Side_Crossroads(file, isFancy){
 	override val connections = arrayOf<IStructurePieceConnection>(

@@ -1,8 +1,8 @@
 package chylex.hee.network.server
 import chylex.hee.HEE
 import chylex.hee.network.BaseServerPacket
-import chylex.hee.system.migration.vanilla.EntityPlayerMP
-import chylex.hee.system.util.use
+import chylex.hee.system.migration.EntityPlayerMP
+import chylex.hee.system.serialization.use
 import net.minecraft.network.PacketBuffer
 
 class PacketServerContainerEvent() : BaseServerPacket(){

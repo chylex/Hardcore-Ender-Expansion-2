@@ -1,8 +1,8 @@
 package chylex.hee.client.render.entity
 import chylex.hee.game.entity.living.EntityMobAbstractEnderman
-import chylex.hee.system.migration.forge.Side
-import chylex.hee.system.migration.forge.Sided
-import chylex.hee.system.migration.vanilla.RenderManager
+import chylex.hee.system.forge.Side
+import chylex.hee.system.forge.Sided
+import chylex.hee.system.migration.RenderManager
 
 @Sided(Side.CLIENT)
 class RenderEntityMobAngryEnderman(manager: RenderManager) : RenderEntityMobAbstractEnderman(manager){

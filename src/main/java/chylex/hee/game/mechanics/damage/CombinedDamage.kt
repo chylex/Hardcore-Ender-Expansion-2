@@ -1,6 +1,6 @@
 package chylex.hee.game.mechanics.damage
 import chylex.hee.game.mechanics.damage.Damage.Companion.TITLE_GENERIC
-import chylex.hee.system.migration.vanilla.EntityLivingBase
+import chylex.hee.system.migration.EntityLivingBase
 import net.minecraft.entity.Entity
 
 class CombinedDamage(private vararg val definitions: Pair<Damage, Float>){

@@ -1,6 +1,6 @@
 package chylex.hee.client.render.territory
-import chylex.hee.system.migration.forge.Side
-import chylex.hee.system.migration.forge.Sided
+import chylex.hee.system.forge.Side
+import chylex.hee.system.forge.Sided
 import com.mojang.blaze3d.matrix.MatrixStack
 import net.minecraft.client.world.ClientWorld
 

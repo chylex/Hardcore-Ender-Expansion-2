@@ -1,6 +1,6 @@
 package chylex.hee.game.item
 import chylex.hee.game.entity.item.EntityItemNoBob
-import chylex.hee.system.migration.vanilla.ItemBlock
+import chylex.hee.system.migration.ItemBlock
 import net.minecraft.block.Block
 import net.minecraft.entity.Entity
 import net.minecraft.item.ItemStack

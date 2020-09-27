@@ -1,9 +1,9 @@
 package chylex.hee.game.particle
 import chylex.hee.game.particle.base.ParticleBase
 import chylex.hee.game.particle.spawner.IParticleMaker
-import chylex.hee.system.migration.forge.Side
-import chylex.hee.system.migration.forge.Sided
-import chylex.hee.system.util.nextFloat
+import chylex.hee.system.forge.Side
+import chylex.hee.system.forge.Sided
+import chylex.hee.system.random.nextFloat
 import net.minecraft.client.particle.Particle
 import net.minecraft.world.World
 

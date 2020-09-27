@@ -3,9 +3,9 @@ import chylex.hee.HEE
 import chylex.hee.client.render.block.RenderTileDarkChest
 import chylex.hee.client.render.block.RenderTileLootChest
 import chylex.hee.game.container.slot.SlotTrinketItem
-import chylex.hee.system.migration.forge.Side
-import chylex.hee.system.migration.forge.SubscribeAllEvents
-import chylex.hee.system.migration.forge.SubscribeEvent
+import chylex.hee.system.forge.Side
+import chylex.hee.system.forge.SubscribeAllEvents
+import chylex.hee.system.forge.SubscribeEvent
 import net.minecraft.client.renderer.Atlases
 import net.minecraft.util.ResourceLocation
 import net.minecraftforge.client.event.TextureStitchEvent

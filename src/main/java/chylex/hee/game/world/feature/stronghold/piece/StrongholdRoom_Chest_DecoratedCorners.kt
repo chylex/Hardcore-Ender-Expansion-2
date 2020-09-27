@@ -1,15 +1,15 @@
 package chylex.hee.game.world.feature.stronghold.piece
+import chylex.hee.game.block.withFacing
+import chylex.hee.game.world.Pos
 import chylex.hee.game.world.feature.stronghold.StrongholdPieceType
 import chylex.hee.game.world.feature.stronghold.StrongholdPieces
 import chylex.hee.game.world.structure.IStructureWorld
 import chylex.hee.game.world.structure.trigger.LootChestStructureTrigger
 import chylex.hee.init.ModBlocks
-import chylex.hee.system.migration.vanilla.Blocks
-import chylex.hee.system.util.Pos
-import chylex.hee.system.util.facades.Facing4
-import chylex.hee.system.util.nextInt
-import chylex.hee.system.util.nextItem
-import chylex.hee.system.util.withFacing
+import chylex.hee.system.facades.Facing4
+import chylex.hee.system.migration.Blocks
+import chylex.hee.system.random.nextInt
+import chylex.hee.system.random.nextItem
 
 class StrongholdRoom_Chest_DecoratedCorners(file: String) : StrongholdAbstractPieceFromFile(file, StrongholdPieceType.ROOM){
 	override fun generate(world: IStructureWorld, instance: Instance){

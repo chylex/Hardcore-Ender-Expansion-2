@@ -1,9 +1,9 @@
 package chylex.hee.game.mechanics.damage
 import chylex.hee.game.entity.living.EntityMobSpiderling
 import chylex.hee.game.item.ItemScorchingSword
+import chylex.hee.system.migration.EntityLivingBase
+import chylex.hee.system.migration.EntityPlayer
 import chylex.hee.system.migration.Hand.MAIN_HAND
-import chylex.hee.system.migration.vanilla.EntityLivingBase
-import chylex.hee.system.migration.vanilla.EntityPlayer
 import net.minecraft.entity.Entity
 
 @Suppress("unused")

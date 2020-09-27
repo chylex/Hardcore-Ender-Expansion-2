@@ -1,7 +1,7 @@
 package chylex.hee.game.mechanics.instability.dimension
 import chylex.hee.game.mechanics.instability.dimension.components.EndermiteSpawnLogicEndTerritory
 import chylex.hee.game.world.territory.TerritoryInstance
-import chylex.hee.system.util.TagCompound
+import chylex.hee.system.serialization.TagCompound
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap
 import net.minecraft.util.math.BlockPos
 import net.minecraft.world.World

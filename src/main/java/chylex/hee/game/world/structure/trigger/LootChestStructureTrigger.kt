@@ -1,10 +1,10 @@
 package chylex.hee.game.world.structure.trigger
 import chylex.hee.HEE
+import chylex.hee.game.world.getState
+import chylex.hee.game.world.math.Transform
 import chylex.hee.game.world.structure.IStructureTrigger
 import chylex.hee.game.world.structure.IStructureWorld
-import chylex.hee.game.world.util.Transform
-import chylex.hee.system.migration.vanilla.TileEntityLockableLoot
-import chylex.hee.system.util.getState
+import chylex.hee.system.migration.TileEntityLockableLoot
 import net.minecraft.util.ResourceLocation
 import net.minecraft.util.math.BlockPos
 import net.minecraft.world.IWorld

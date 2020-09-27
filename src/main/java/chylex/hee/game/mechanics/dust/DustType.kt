@@ -1,8 +1,8 @@
 package chylex.hee.game.mechanics.dust
 import chylex.hee.init.ModItems
-import chylex.hee.system.migration.vanilla.Items
-import chylex.hee.system.util.color.IntColor
-import chylex.hee.system.util.color.IntColor.Companion.RGB
+import chylex.hee.system.color.IntColor
+import chylex.hee.system.color.IntColor.Companion.RGB
+import chylex.hee.system.migration.Items
 import net.minecraft.item.Item
 import net.minecraft.item.ItemStack
 

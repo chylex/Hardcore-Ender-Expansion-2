@@ -1,10 +1,10 @@
 package chylex.hee.game.world.feature.stronghold.piece
+import chylex.hee.game.block.with
+import chylex.hee.game.world.Pos
 import chylex.hee.game.world.structure.IStructureWorld
-import chylex.hee.system.migration.vanilla.BlockSkull
-import chylex.hee.system.migration.vanilla.Blocks
-import chylex.hee.system.util.Pos
-import chylex.hee.system.util.nextInt
-import chylex.hee.system.util.with
+import chylex.hee.system.migration.BlockSkull
+import chylex.hee.system.migration.Blocks
+import chylex.hee.system.random.nextInt
 import net.minecraft.item.ItemStack
 
 class StrongholdRoom_Relic_Dungeon(file: String, relicItem: ItemStack) : StrongholdRoom_Relic(file, relicItem){

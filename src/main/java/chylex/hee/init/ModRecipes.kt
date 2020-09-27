@@ -12,10 +12,10 @@ import chylex.hee.game.recipe.RecipeVoidSalad
 import chylex.hee.game.recipe.ShapedRecipeWithEnergy
 import chylex.hee.game.recipe.factories.IngredientFullEnergy
 import chylex.hee.game.recipe.factories.IngredientNoInfusions
-import chylex.hee.system.migration.forge.SubscribeAllEvents
-import chylex.hee.system.migration.forge.SubscribeEvent
-import chylex.hee.system.util.facades.Resource
-import chylex.hee.system.util.named
+import chylex.hee.system.facades.Resource
+import chylex.hee.system.forge.SubscribeAllEvents
+import chylex.hee.system.forge.SubscribeEvent
+import chylex.hee.system.forge.named
 import net.minecraft.item.crafting.IRecipeSerializer
 import net.minecraftforge.common.crafting.CraftingHelper
 import net.minecraftforge.event.RegistryEvent

@@ -9,7 +9,7 @@ import chylex.hee.game.mechanics.energy.IEnergyQuantity.Floating
 import chylex.hee.game.mechanics.energy.IEnergyQuantity.Units
 import chylex.hee.system.collection.WeightedList
 import chylex.hee.system.collection.WeightedList.Companion.weightedListOf
-import chylex.hee.system.util.nextFloat
+import chylex.hee.system.random.nextFloat
 import java.util.Random
 
 interface IClusterGenerator{

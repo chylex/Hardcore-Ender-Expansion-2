@@ -1,54 +1,55 @@
 package chylex.hee.game.entity.living
-import chylex.hee.game.entity.living.ai.AIFollowLeaderJumping
-import chylex.hee.game.entity.living.ai.AIPickUpItemDetour
-import chylex.hee.game.entity.living.ai.AIWanderLand
+import chylex.hee.game.entity.EntityData
+import chylex.hee.game.entity.living.ai.AIToggle
+import chylex.hee.game.entity.living.ai.AIToggle.Companion.addGoal
 import chylex.hee.game.entity.living.ai.AIWatchDyingLeader
-import chylex.hee.game.entity.living.ai.AIWatchIdleJumping
-import chylex.hee.game.entity.living.ai.path.PathNavigateGroundPreferBeeLine
-import chylex.hee.game.entity.living.ai.util.AIToggle
-import chylex.hee.game.entity.living.ai.util.AIToggle.Companion.addGoal
+import chylex.hee.game.entity.living.ai.FollowLeaderJumping
+import chylex.hee.game.entity.living.ai.PickUpItemDetour
+import chylex.hee.game.entity.living.ai.Swim
+import chylex.hee.game.entity.living.ai.WanderLand
+import chylex.hee.game.entity.living.ai.WatchDyingLeader
+import chylex.hee.game.entity.living.ai.WatchIdleJumping
 import chylex.hee.game.entity.living.behavior.BlobbyItemPickupHandler
-import chylex.hee.game.entity.living.helpers.EntityBodyHeadOnly
-import chylex.hee.game.entity.living.helpers.EntityLookWhileJumping
-import chylex.hee.game.entity.living.helpers.EntityMoveJumping
-import chylex.hee.game.entity.util.ColorDataSerializer
-import chylex.hee.game.entity.util.EntityData
+import chylex.hee.game.entity.living.controller.EntityBodyHeadOnly
+import chylex.hee.game.entity.living.controller.EntityLookWhileJumping
+import chylex.hee.game.entity.living.controller.EntityMoveJumping
+import chylex.hee.game.entity.living.path.PathNavigateGroundPreferBeeLine
+import chylex.hee.game.entity.posVec
+import chylex.hee.game.entity.selectEntities
+import chylex.hee.game.entity.selectExistingEntities
+import chylex.hee.game.inventory.isNotEmpty
+import chylex.hee.game.world.Pos
+import chylex.hee.game.world.blocksMovement
 import chylex.hee.init.ModEntities
 import chylex.hee.init.ModItems
-import chylex.hee.system.migration.vanilla.EntityCreature
-import chylex.hee.system.migration.vanilla.EntityPlayer
-import chylex.hee.system.migration.vanilla.ItemSword
-import chylex.hee.system.migration.vanilla.Sounds
-import chylex.hee.system.util.AISwim
-import chylex.hee.system.util.Pos
-import chylex.hee.system.util.TagCompound
-import chylex.hee.system.util.Vec3
-import chylex.hee.system.util.addY
-import chylex.hee.system.util.blocksMovement
-import chylex.hee.system.util.ceilToInt
-import chylex.hee.system.util.color.IntColor
-import chylex.hee.system.util.color.IntColor.Companion.HCL
-import chylex.hee.system.util.color.IntColor.Companion.RGB
-import chylex.hee.system.util.facades.Resource
-import chylex.hee.system.util.getFloatOrNull
-import chylex.hee.system.util.getIntegerOrNull
-import chylex.hee.system.util.getStack
-import chylex.hee.system.util.heeTag
-import chylex.hee.system.util.isNotEmpty
-import chylex.hee.system.util.math.LerpedFloat
-import chylex.hee.system.util.nextFloat
-import chylex.hee.system.util.nextInt
-import chylex.hee.system.util.nextItem
-import chylex.hee.system.util.nextVector2
-import chylex.hee.system.util.offsetTowards
-import chylex.hee.system.util.posVec
-import chylex.hee.system.util.putStack
-import chylex.hee.system.util.scale
-import chylex.hee.system.util.selectEntities
-import chylex.hee.system.util.selectExistingEntities
-import chylex.hee.system.util.square
-import chylex.hee.system.util.use
-import chylex.hee.system.util.withY
+import chylex.hee.network.data.ColorDataSerializer
+import chylex.hee.system.color.IntColor
+import chylex.hee.system.color.IntColor.Companion.HCL
+import chylex.hee.system.color.IntColor.Companion.RGB
+import chylex.hee.system.facades.Resource
+import chylex.hee.system.math.LerpedFloat
+import chylex.hee.system.math.Vec3
+import chylex.hee.system.math.addY
+import chylex.hee.system.math.ceilToInt
+import chylex.hee.system.math.offsetTowards
+import chylex.hee.system.math.scale
+import chylex.hee.system.math.square
+import chylex.hee.system.math.withY
+import chylex.hee.system.migration.EntityCreature
+import chylex.hee.system.migration.EntityPlayer
+import chylex.hee.system.migration.ItemSword
+import chylex.hee.system.migration.Sounds
+import chylex.hee.system.random.nextFloat
+import chylex.hee.system.random.nextInt
+import chylex.hee.system.random.nextItem
+import chylex.hee.system.random.nextVector2
+import chylex.hee.system.serialization.TagCompound
+import chylex.hee.system.serialization.getFloatOrNull
+import chylex.hee.system.serialization.getIntegerOrNull
+import chylex.hee.system.serialization.getStack
+import chylex.hee.system.serialization.heeTag
+import chylex.hee.system.serialization.putStack
+import chylex.hee.system.serialization.use
 import net.minecraft.entity.Entity
 import net.minecraft.entity.EntitySize
 import net.minecraft.entity.EntityType
@@ -238,12 +239,12 @@ class EntityMobBlobby(type: EntityType<out EntityCreature>, world: World) : Enti
 		
 		itemPickupHandler = BlobbyItemPickupHandler(this)
 		
-		goalSelector.addGoal(1, AISwim(this))
-		goalSelector.addGoal(2, AIWatchDyingLeader(this, ticksBeforeResuming = 49), aiLeaderDisabledToggle)
-		goalSelector.addGoal(3, AIPickUpItemDetour(this, chancePerTick = 100, maxDetourTicks = 65..200, searchRadius = 8.0, speedMp = 1.25, handler = itemPickupHandler))
-		goalSelector.addGoal(4, AIWanderLand(this, movementSpeed = 1.0, chancePerTick = 45, maxDistanceXZ = 22, maxDistanceY = 6), aiLeaderEnabledToggle)
-		goalSelector.addGoal(4, AIFollowLeaderJumping(this), aiLeaderDisabledToggle)
-		goalSelector.addGoal(5, AIWatchIdleJumping(this, chancePerTick = 0.07F, delayTicks = 13))
+		goalSelector.addGoal(1, Swim(this))
+		goalSelector.addGoal(2, WatchDyingLeader(this, ticksBeforeResuming = 49), aiLeaderDisabledToggle)
+		goalSelector.addGoal(3, PickUpItemDetour(this, chancePerTick = 100, maxDetourTicks = 65..200, searchRadius = 8.0, speedMp = 1.25, handler = itemPickupHandler))
+		goalSelector.addGoal(4, WanderLand(this, movementSpeed = 1.0, chancePerTick = 45, maxDistanceXZ = 22, maxDistanceY = 6), aiLeaderEnabledToggle)
+		goalSelector.addGoal(4, FollowLeaderJumping(this), aiLeaderDisabledToggle)
+		goalSelector.addGoal(5, WatchIdleJumping(this, chancePerTick = 0.07F, delayTicks = 13))
 	}
 	
 	override fun createSpawnPacket(): IPacket<*>{

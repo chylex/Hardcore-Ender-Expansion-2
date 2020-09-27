@@ -1,11 +1,10 @@
 package chylex.hee.game.container
 import chylex.hee.game.container.base.ContainerBaseCustomInventory
 import chylex.hee.game.container.slot.SlotTrinketItemNoContainers
-import chylex.hee.game.container.util.DetectSlotChangeListener
+import chylex.hee.game.inventory.size
 import chylex.hee.game.item.ItemTrinketPouch
 import chylex.hee.init.ModContainers
-import chylex.hee.system.migration.vanilla.EntityPlayer
-import chylex.hee.system.util.size
+import chylex.hee.system.migration.EntityPlayer
 import net.minecraft.entity.player.PlayerInventory
 import net.minecraft.network.PacketBuffer
 import net.minecraftforge.items.wrapper.InvWrapper

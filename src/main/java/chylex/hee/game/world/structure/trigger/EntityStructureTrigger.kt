@@ -1,12 +1,12 @@
 package chylex.hee.game.world.structure.trigger
 import chylex.hee.game.entity.technical.EntityTechnicalTrigger
+import chylex.hee.game.world.math.Transform
 import chylex.hee.game.world.structure.IStructureTrigger
 import chylex.hee.game.world.structure.IStructureWorld
-import chylex.hee.game.world.util.Transform
+import chylex.hee.system.math.component1
+import chylex.hee.system.math.component2
+import chylex.hee.system.math.component3
 import chylex.hee.system.migration.Facing.SOUTH
-import chylex.hee.system.util.component1
-import chylex.hee.system.util.component2
-import chylex.hee.system.util.component3
 import net.minecraft.entity.Entity
 import net.minecraft.util.Direction
 import net.minecraft.util.math.BlockPos

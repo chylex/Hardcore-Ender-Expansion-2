@@ -1,6 +1,6 @@
 package chylex.hee.game.entity.living.ai
-import chylex.hee.system.migration.vanilla.EntityCreature
-import chylex.hee.system.util.square
+import chylex.hee.system.math.square
+import chylex.hee.system.migration.EntityCreature
 import net.minecraft.entity.ai.goal.Goal
 import net.minecraft.entity.ai.goal.Goal.Flag.LOOK
 import net.minecraft.entity.ai.goal.Goal.Flag.MOVE

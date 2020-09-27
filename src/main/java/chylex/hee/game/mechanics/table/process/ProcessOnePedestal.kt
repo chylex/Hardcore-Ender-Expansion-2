@@ -2,7 +2,7 @@ package chylex.hee.game.mechanics.table.process
 import chylex.hee.game.block.entity.base.TileEntityBaseTable
 import chylex.hee.game.mechanics.table.interfaces.ITableContext
 import chylex.hee.game.mechanics.table.process.ProcessManyPedestals.State.Output
-import chylex.hee.system.util.TagCompound
+import chylex.hee.system.serialization.TagCompound
 import net.minecraft.item.ItemStack
 import net.minecraft.util.math.BlockPos
 

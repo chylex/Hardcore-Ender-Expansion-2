@@ -1,6 +1,6 @@
 package chylex.hee.init
 import chylex.hee.HEE
-import chylex.hee.client.util.MC
+import chylex.hee.client.MC
 import chylex.hee.game.particle.ParticleBubbleCustom
 import chylex.hee.game.particle.ParticleDeathFlowerHeal
 import chylex.hee.game.particle.ParticleEnderGoo
@@ -19,11 +19,11 @@ import chylex.hee.game.particle.ParticleSpellCustom
 import chylex.hee.game.particle.ParticleTeleport
 import chylex.hee.game.particle.ParticleVoid
 import chylex.hee.game.particle.spawner.IParticleMaker
-import chylex.hee.system.migration.forge.Side
-import chylex.hee.system.migration.forge.Sided
-import chylex.hee.system.migration.forge.SubscribeAllEvents
-import chylex.hee.system.migration.forge.SubscribeEvent
-import chylex.hee.system.util.named
+import chylex.hee.system.forge.Side
+import chylex.hee.system.forge.Sided
+import chylex.hee.system.forge.SubscribeAllEvents
+import chylex.hee.system.forge.SubscribeEvent
+import chylex.hee.system.forge.named
 import net.minecraft.client.particle.IAnimatedSprite
 import net.minecraft.client.particle.IParticleFactory
 import net.minecraft.client.particle.ParticleManager.IParticleMetaFactory

@@ -13,7 +13,7 @@ function initializeCoreMod(){
                 node.visitVarInsn(op.ALOAD, 1);
                 node.visitVarInsn(op.ALOAD, 2);
                 node.visitVarInsn(op.ALOAD, 5);
-                node.visitMethodInsn(op.INVOKESTATIC, "chylex/hee/game/block/util/IBlockHarvestDropsOverride", "checkHarvest", "(Lnet/minecraft/block/BlockState;Lnet/minecraft/world/World;Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/item/ItemStack;)Z");
+                node.visitMethodInsn(op.INVOKESTATIC, "chylex/hee/game/block/logic/IBlockHarvestDropsOverride", "checkHarvest", "(Lnet/minecraft/block/BlockState;Lnet/minecraft/world/World;Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/item/ItemStack;)Z");
                 node.visitJumpInsn(op.IFEQ, getSkipInst(start));
                 node.visitInsn(op.RETURN);
             }));

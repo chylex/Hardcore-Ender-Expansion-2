@@ -1,12 +1,12 @@
 package chylex.hee.game.entity.item
 import chylex.hee.game.particle.spawner.ParticleSpawnerVanilla
-import chylex.hee.game.particle.util.IOffset.Constant
-import chylex.hee.game.particle.util.IOffset.InBox
-import chylex.hee.game.particle.util.IShape.Point
+import chylex.hee.game.particle.spawner.properties.IOffset.Constant
+import chylex.hee.game.particle.spawner.properties.IOffset.InBox
+import chylex.hee.game.particle.spawner.properties.IShape.Point
 import chylex.hee.init.ModEntities
+import chylex.hee.system.math.square
 import chylex.hee.system.migration.Facing.UP
-import chylex.hee.system.util.square
-import chylex.hee.system.util.use
+import chylex.hee.system.serialization.use
 import net.minecraft.entity.EntityType
 import net.minecraft.item.ItemStack
 import net.minecraft.network.PacketBuffer

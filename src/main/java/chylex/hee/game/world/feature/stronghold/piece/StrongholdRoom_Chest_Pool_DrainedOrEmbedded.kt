@@ -1,4 +1,5 @@
 package chylex.hee.game.world.feature.stronghold.piece
+import chylex.hee.game.world.Pos
 import chylex.hee.game.world.feature.stronghold.StrongholdPieceType
 import chylex.hee.game.world.feature.stronghold.StrongholdPieces
 import chylex.hee.game.world.feature.stronghold.connection.StrongholdConnection
@@ -10,7 +11,6 @@ import chylex.hee.system.migration.Facing.EAST
 import chylex.hee.system.migration.Facing.NORTH
 import chylex.hee.system.migration.Facing.SOUTH
 import chylex.hee.system.migration.Facing.WEST
-import chylex.hee.system.util.Pos
 
 class StrongholdRoom_Chest_Pool_DrainedOrEmbedded(file: String) : StrongholdAbstractPieceFromFile(file, StrongholdPieceType.ROOM){
 	override val connections = arrayOf<IStructurePieceConnection>(

@@ -1,8 +1,8 @@
 package chylex.hee.game.block.entity
 import chylex.hee.init.ModTileEntities
-import chylex.hee.system.migration.forge.Side
-import chylex.hee.system.migration.forge.Sided
-import chylex.hee.system.migration.vanilla.TileEntityChest
+import chylex.hee.system.forge.Side
+import chylex.hee.system.forge.Sided
+import chylex.hee.system.migration.TileEntityChest
 import net.minecraft.tileentity.TileEntityType
 import net.minecraft.util.math.AxisAlignedBB
 

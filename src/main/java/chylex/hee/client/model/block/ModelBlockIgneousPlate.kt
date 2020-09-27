@@ -1,8 +1,8 @@
 package chylex.hee.client.model.block
-import chylex.hee.client.render.util.beginBox
-import chylex.hee.client.render.util.translateZ
-import chylex.hee.system.migration.forge.Side
-import chylex.hee.system.migration.forge.Sided
+import chylex.hee.client.model.beginBox
+import chylex.hee.client.render.gl.translateZ
+import chylex.hee.system.forge.Side
+import chylex.hee.system.forge.Sided
 import com.mojang.blaze3d.matrix.MatrixStack
 import com.mojang.blaze3d.vertex.IVertexBuilder
 import net.minecraft.client.renderer.RenderType

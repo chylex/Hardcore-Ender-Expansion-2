@@ -1,12 +1,12 @@
 package chylex.hee.game.block
 import chylex.hee.HEE
-import chylex.hee.game.block.info.BlockBuilder
+import chylex.hee.game.block.properties.BlockBuilder
+import chylex.hee.game.entity.posVec
+import chylex.hee.game.entity.selectEntities
 import chylex.hee.game.entity.technical.EntityTechnicalTrigger
 import chylex.hee.game.entity.technical.EntityTechnicalTrigger.Types.ENERGY_SHRINE_GLOBAL
+import chylex.hee.game.world.center
 import chylex.hee.game.world.feature.energyshrine.EnergyShrinePieces
-import chylex.hee.system.util.center
-import chylex.hee.system.util.posVec
-import chylex.hee.system.util.selectEntities
 import net.minecraft.block.BlockState
 import net.minecraft.entity.EntitySpawnPlacementRegistry.PlacementType
 import net.minecraft.entity.EntityType

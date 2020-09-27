@@ -1,8 +1,8 @@
 package chylex.hee.game.world.structure.trigger
+import chylex.hee.game.world.math.Transform
 import chylex.hee.game.world.structure.IStructureTrigger
 import chylex.hee.game.world.structure.IStructureWorld
-import chylex.hee.game.world.util.Transform
-import chylex.hee.system.migration.vanilla.BlockFlowingFluid
+import chylex.hee.system.migration.BlockFlowingFluid
 import net.minecraft.util.math.BlockPos
 import net.minecraft.world.IWorld
 

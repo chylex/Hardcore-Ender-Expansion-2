@@ -1,8 +1,8 @@
 package chylex.hee.game.particle.base
-import chylex.hee.client.render.util.GL
-import chylex.hee.client.render.util.GL.DF_ONE
-import chylex.hee.client.render.util.GL.SF_SRC_ALPHA
-import chylex.hee.client.render.util.RenderStateBuilder
+import chylex.hee.client.render.gl.DF_ONE
+import chylex.hee.client.render.gl.GL
+import chylex.hee.client.render.gl.RenderStateBuilder
+import chylex.hee.client.render.gl.SF_SRC_ALPHA
 import chylex.hee.game.block.entity.TileEntityEnergyCluster
 import chylex.hee.game.mechanics.energy.IClusterHealth.HealthOverride.POWERED
 import chylex.hee.game.mechanics.energy.IClusterHealth.HealthOverride.REVITALIZING
@@ -12,10 +12,10 @@ import chylex.hee.game.mechanics.energy.IClusterHealth.HealthStatus.UNSTABLE
 import chylex.hee.game.mechanics.energy.IClusterHealth.HealthStatus.WEAKENED
 import chylex.hee.game.particle.data.IParticleData
 import chylex.hee.game.particle.data.ParticleDataColorScale
-import chylex.hee.system.migration.forge.Side
-import chylex.hee.system.migration.forge.Sided
-import chylex.hee.system.util.color.IntColor
-import chylex.hee.system.util.color.IntColor.Companion.RGB
+import chylex.hee.system.color.IntColor
+import chylex.hee.system.color.IntColor.Companion.RGB
+import chylex.hee.system.forge.Side
+import chylex.hee.system.forge.Sided
 import com.mojang.blaze3d.systems.RenderSystem
 import net.minecraft.client.particle.IParticleRenderType
 import net.minecraft.client.renderer.BufferBuilder

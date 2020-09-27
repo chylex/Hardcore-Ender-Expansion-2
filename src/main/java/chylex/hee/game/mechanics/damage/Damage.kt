@@ -1,7 +1,7 @@
 package chylex.hee.game.mechanics.damage
-import chylex.hee.system.migration.vanilla.EntityLivingBase
-import chylex.hee.system.migration.vanilla.EntityPlayer
-import chylex.hee.system.migration.vanilla.EntityThrowable
+import chylex.hee.system.migration.EntityLivingBase
+import chylex.hee.system.migration.EntityPlayer
+import chylex.hee.system.migration.EntityThrowable
 import net.minecraft.entity.Entity
 import net.minecraft.entity.SharedMonsterAttributes.ATTACK_DAMAGE
 

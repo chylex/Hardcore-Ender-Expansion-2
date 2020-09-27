@@ -1,12 +1,12 @@
 package chylex.hee.game.world.feature.basic.caves.impl
+import chylex.hee.game.world.Pos
+import chylex.hee.game.world.allInCenteredBoxMutable
+import chylex.hee.game.world.distanceSqTo
 import chylex.hee.game.world.feature.basic.caves.ICaveCarver
 import chylex.hee.game.world.generation.IBlockPlacer
 import chylex.hee.game.world.generation.SegmentedWorld
-import chylex.hee.system.util.Pos
-import chylex.hee.system.util.allInCenteredBoxMutable
-import chylex.hee.system.util.distanceSqTo
-import chylex.hee.system.util.nextFloat
-import chylex.hee.system.util.square
+import chylex.hee.system.math.square
+import chylex.hee.system.random.nextFloat
 import net.minecraft.util.math.Vec3d
 
 class CaveCarverSphere(private val maxRandomRadiusReduction: Float) : ICaveCarver{

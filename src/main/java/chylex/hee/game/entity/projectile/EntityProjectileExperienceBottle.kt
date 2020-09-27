@@ -1,10 +1,10 @@
 package chylex.hee.game.entity.projectile
+import chylex.hee.game.world.Pos
 import chylex.hee.init.ModEntities
 import chylex.hee.init.ModItems
-import chylex.hee.system.migration.vanilla.EntityLivingBase
-import chylex.hee.system.migration.vanilla.EntityXPOrb
-import chylex.hee.system.migration.vanilla.PotionTypes
-import chylex.hee.system.util.Pos
+import chylex.hee.system.migration.EntityLivingBase
+import chylex.hee.system.migration.EntityXPOrb
+import chylex.hee.system.migration.PotionTypes
 import net.minecraft.entity.EntityType
 import net.minecraft.entity.item.ExperienceBottleEntity
 import net.minecraft.item.ItemStack

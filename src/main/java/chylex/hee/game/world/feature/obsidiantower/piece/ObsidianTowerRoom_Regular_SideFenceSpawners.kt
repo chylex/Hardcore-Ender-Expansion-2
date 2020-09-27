@@ -1,11 +1,11 @@
 package chylex.hee.game.world.feature.obsidiantower.piece
+import chylex.hee.game.block.with
+import chylex.hee.game.world.math.PosXZ
 import chylex.hee.game.world.structure.IStructureWorld
-import chylex.hee.game.world.util.PosXZ
-import chylex.hee.system.migration.vanilla.BlockFence
-import chylex.hee.system.migration.vanilla.Blocks
-import chylex.hee.system.util.nextInt
-import chylex.hee.system.util.removeItem
-import chylex.hee.system.util.with
+import chylex.hee.system.migration.BlockFence
+import chylex.hee.system.migration.Blocks
+import chylex.hee.system.random.nextInt
+import chylex.hee.system.random.removeItem
 
 class ObsidianTowerRoom_Regular_SideFenceSpawners(file: String) : ObsidianTowerRoom_General(file, guaranteesSpawnersOnLevel1 = true){
 	override fun generateContents(world: IStructureWorld, instance: Instance){

@@ -1,11 +1,11 @@
 package chylex.hee.game.world.feature.basic.blobs.layouts
+import chylex.hee.game.world.Pos
+import chylex.hee.game.world.center
 import chylex.hee.game.world.feature.basic.blobs.BlobGenerator
 import chylex.hee.game.world.feature.basic.blobs.IBlobLayout
 import chylex.hee.game.world.generation.ScaffoldedWorld
-import chylex.hee.game.world.util.Size
-import chylex.hee.system.util.Pos
-import chylex.hee.system.util.center
-import chylex.hee.system.util.nextVector
+import chylex.hee.game.world.math.Size
+import chylex.hee.system.random.nextVector
 import net.minecraft.util.math.BlockPos
 import java.util.Random
 

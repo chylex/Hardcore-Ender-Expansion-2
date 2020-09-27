@@ -2,7 +2,7 @@ package chylex.hee.game.mechanics.table.process.serializer
 import chylex.hee.game.block.entity.base.TileEntityBaseTable
 import chylex.hee.game.mechanics.table.interfaces.ITableProcess
 import chylex.hee.game.mechanics.table.interfaces.ITableProcessSerializer
-import chylex.hee.system.util.TagCompound
+import chylex.hee.system.serialization.TagCompound
 
 class MultiProcessSerializer(private vararg val mappings: Mapping) : ITableProcessSerializer{
 	companion object{

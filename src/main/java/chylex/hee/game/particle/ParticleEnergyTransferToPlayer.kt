@@ -7,11 +7,11 @@ import chylex.hee.game.particle.base.ParticleBaseEnergyTransfer
 import chylex.hee.game.particle.data.IParticleData
 import chylex.hee.game.particle.data.ParticleDataColorScale
 import chylex.hee.game.particle.spawner.IParticleMaker
+import chylex.hee.system.forge.Side
+import chylex.hee.system.forge.Sided
+import chylex.hee.system.migration.EntityPlayer
 import chylex.hee.system.migration.Hand.MAIN_HAND
 import chylex.hee.system.migration.Hand.OFF_HAND
-import chylex.hee.system.migration.forge.Side
-import chylex.hee.system.migration.forge.Sided
-import chylex.hee.system.migration.vanilla.EntityPlayer
 import net.minecraft.client.particle.Particle
 import net.minecraft.util.math.Vec3d
 import net.minecraft.world.World

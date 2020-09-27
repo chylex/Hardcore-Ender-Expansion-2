@@ -2,8 +2,8 @@ package chylex.hee.game.world.territory.descriptions
 import chylex.hee.game.world.territory.ITerritoryDescription
 import chylex.hee.game.world.territory.properties.TerritoryColors
 import chylex.hee.game.world.territory.properties.TerritoryEnvironment
-import chylex.hee.system.util.color.IntColor.Companion.RGB
-import chylex.hee.system.util.nextFloat
+import chylex.hee.system.color.IntColor.Companion.RGB
+import chylex.hee.system.random.nextFloat
 import java.util.Random
 
 object Territory_ArcaneConjunctions : ITerritoryDescription{

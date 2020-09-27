@@ -2,11 +2,11 @@ package chylex.hee.game.particle
 import chylex.hee.game.particle.base.ParticleBaseFloating
 import chylex.hee.game.particle.data.ParticleDataColorLifespanScale
 import chylex.hee.game.particle.spawner.IParticleMaker
-import chylex.hee.system.migration.forge.Side
-import chylex.hee.system.migration.forge.Sided
-import chylex.hee.system.util.color.IRandomColor
-import chylex.hee.system.util.color.IntColor
-import chylex.hee.system.util.nextFloat
+import chylex.hee.system.color.IntColor
+import chylex.hee.system.forge.Side
+import chylex.hee.system.forge.Sided
+import chylex.hee.system.random.IRandomColor
+import chylex.hee.system.random.nextFloat
 import net.minecraft.client.particle.IParticleRenderType
 import net.minecraft.client.particle.IParticleRenderType.PARTICLE_SHEET_TRANSLUCENT
 import net.minecraft.client.particle.Particle

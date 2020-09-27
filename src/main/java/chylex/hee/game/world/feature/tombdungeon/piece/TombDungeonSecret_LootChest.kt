@@ -1,5 +1,8 @@
 package chylex.hee.game.world.feature.tombdungeon.piece
 import chylex.hee.game.block.entity.TileEntityLootChest
+import chylex.hee.game.block.withFacing
+import chylex.hee.game.inventory.setStack
+import chylex.hee.game.world.Pos
 import chylex.hee.game.world.feature.tombdungeon.connection.TombDungeonConnection
 import chylex.hee.game.world.feature.tombdungeon.connection.TombDungeonConnectionType.SECRET_CONNECTOR
 import chylex.hee.game.world.structure.IStructureWorld
@@ -8,10 +11,7 @@ import chylex.hee.game.world.structure.trigger.TileEntityStructureTrigger
 import chylex.hee.init.ModBlocks
 import chylex.hee.init.ModItems
 import chylex.hee.system.migration.Facing
-import chylex.hee.system.util.Pos
-import chylex.hee.system.util.nextInt
-import chylex.hee.system.util.setStack
-import chylex.hee.system.util.withFacing
+import chylex.hee.system.random.nextInt
 import net.minecraft.item.ItemStack
 import net.minecraft.util.Direction
 import net.minecraft.util.math.BlockPos

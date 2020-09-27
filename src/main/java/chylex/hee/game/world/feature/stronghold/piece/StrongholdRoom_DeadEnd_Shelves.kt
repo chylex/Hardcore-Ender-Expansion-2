@@ -1,4 +1,7 @@
 package chylex.hee.game.world.feature.stronghold.piece
+import chylex.hee.game.block.with
+import chylex.hee.game.block.withFacing
+import chylex.hee.game.world.Pos
 import chylex.hee.game.world.feature.stronghold.StrongholdPieceType
 import chylex.hee.game.world.feature.stronghold.StrongholdPieces
 import chylex.hee.game.world.feature.stronghold.connection.StrongholdConnection
@@ -6,15 +9,12 @@ import chylex.hee.game.world.feature.stronghold.connection.StrongholdConnectionT
 import chylex.hee.game.world.structure.IStructureWorld
 import chylex.hee.game.world.structure.piece.IStructurePieceConnection
 import chylex.hee.game.world.structure.trigger.LootChestStructureTrigger
+import chylex.hee.system.migration.BlockSkull
+import chylex.hee.system.migration.Blocks
 import chylex.hee.system.migration.Facing.EAST
 import chylex.hee.system.migration.Facing.SOUTH
 import chylex.hee.system.migration.Facing.WEST
-import chylex.hee.system.migration.vanilla.BlockSkull
-import chylex.hee.system.migration.vanilla.Blocks
-import chylex.hee.system.util.Pos
-import chylex.hee.system.util.nextItem
-import chylex.hee.system.util.with
-import chylex.hee.system.util.withFacing
+import chylex.hee.system.random.nextItem
 
 class StrongholdRoom_DeadEnd_Shelves(file: String) : StrongholdAbstractPieceFromFile(file, StrongholdPieceType.OTHER){
 	override val connections = arrayOf<IStructurePieceConnection>(

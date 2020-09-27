@@ -1,7 +1,7 @@
 package chylex.hee.init
-import chylex.hee.system.migration.forge.Side
-import chylex.hee.system.migration.forge.Sided
-import chylex.hee.system.migration.vanilla.ItemBlock
+import chylex.hee.system.forge.Side
+import chylex.hee.system.forge.Sided
+import chylex.hee.system.migration.ItemBlock
 import it.unimi.dsi.fastutil.objects.Reference2ShortOpenHashMap
 import net.minecraft.item.Item
 import net.minecraft.item.ItemGroup

@@ -1,10 +1,9 @@
 package chylex.hee.game.entity.living.ai
-import chylex.hee.game.entity.living.ai.util.AIBaseWanderConditioned
-import chylex.hee.system.migration.vanilla.EntityCreature
-import chylex.hee.system.util.Pos
-import chylex.hee.system.util.distanceTo
-import chylex.hee.system.util.isAir
-import chylex.hee.system.util.nextInt
+import chylex.hee.game.world.Pos
+import chylex.hee.game.world.distanceTo
+import chylex.hee.game.world.isAir
+import chylex.hee.system.migration.EntityCreature
+import chylex.hee.system.random.nextInt
 import net.minecraft.pathfinding.Path
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.Vec3d

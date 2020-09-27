@@ -1,15 +1,15 @@
 package chylex.hee.game.world.feature.stronghold.piece
+import chylex.hee.game.world.Pos
 import chylex.hee.game.world.feature.stronghold.connection.StrongholdConnection
 import chylex.hee.game.world.feature.stronghold.connection.StrongholdConnectionType.ROOM
-import chylex.hee.game.world.structure.IBlockPicker.Single
+import chylex.hee.game.world.generation.IBlockPicker.Single
 import chylex.hee.game.world.structure.IStructureWorld
 import chylex.hee.game.world.structure.piece.IStructurePieceConnection
+import chylex.hee.system.migration.Blocks
 import chylex.hee.system.migration.Facing.EAST
 import chylex.hee.system.migration.Facing.NORTH
 import chylex.hee.system.migration.Facing.SOUTH
 import chylex.hee.system.migration.Facing.WEST
-import chylex.hee.system.migration.vanilla.Blocks
-import chylex.hee.system.util.Pos
 
 class StrongholdRoom_Decor_TwoFloorIntersection(file: String) : StrongholdRoom_Decor_Generic(file){
 	override val connections = arrayOf<IStructurePieceConnection>(

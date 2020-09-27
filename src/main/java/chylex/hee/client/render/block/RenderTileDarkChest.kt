@@ -1,9 +1,9 @@
 package chylex.hee.client.render.block
 import chylex.hee.game.block.entity.TileEntityDarkChest
 import chylex.hee.init.ModAtlases
-import chylex.hee.system.migration.forge.Side
-import chylex.hee.system.migration.forge.Sided
-import chylex.hee.system.util.facades.Resource
+import chylex.hee.system.facades.Resource
+import chylex.hee.system.forge.Side
+import chylex.hee.system.forge.Sided
 import net.minecraft.client.renderer.model.Material
 import net.minecraft.client.renderer.tileentity.ChestTileEntityRenderer
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher

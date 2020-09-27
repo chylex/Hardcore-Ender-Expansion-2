@@ -1,8 +1,8 @@
 package chylex.hee.game.world.territory
 import chylex.hee.game.world.generation.SegmentedWorld
 import chylex.hee.game.world.generation.TerritoryGenerationInfo
-import chylex.hee.game.world.util.Size
-import chylex.hee.system.migration.vanilla.Blocks
+import chylex.hee.game.world.math.Size
+import chylex.hee.system.migration.Blocks
 import net.minecraft.block.Block
 
 interface ITerritoryGenerator{

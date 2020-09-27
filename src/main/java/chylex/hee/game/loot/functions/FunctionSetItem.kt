@@ -1,7 +1,7 @@
 package chylex.hee.game.loot.functions
-import chylex.hee.system.util.facades.Resource
-import chylex.hee.system.util.getIfExists
-import chylex.hee.system.util.nextItem
+import chylex.hee.system.facades.Resource
+import chylex.hee.system.forge.getIfExists
+import chylex.hee.system.random.nextItem
 import com.google.gson.JsonArray
 import com.google.gson.JsonDeserializationContext
 import com.google.gson.JsonObject

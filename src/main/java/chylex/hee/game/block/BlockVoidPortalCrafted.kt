@@ -1,8 +1,8 @@
 package chylex.hee.game.block
-import chylex.hee.game.block.info.BlockBuilder
+import chylex.hee.game.block.properties.BlockBuilder
+import chylex.hee.game.world.getBlock
 import chylex.hee.init.ModBlocks
-import chylex.hee.system.util.facades.Facing4
-import chylex.hee.system.util.getBlock
+import chylex.hee.system.facades.Facing4
 import net.minecraft.block.BlockState
 import net.minecraft.util.math.AxisAlignedBB
 import net.minecraft.util.math.BlockPos

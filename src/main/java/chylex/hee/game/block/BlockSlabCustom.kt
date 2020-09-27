@@ -1,5 +1,5 @@
 package chylex.hee.game.block
-import chylex.hee.game.block.info.BlockBuilder
-import chylex.hee.system.migration.vanilla.BlockSlab
+import chylex.hee.game.block.properties.BlockBuilder
+import chylex.hee.system.migration.BlockSlab
 
 class BlockSlabCustom(builder: BlockBuilder) : BlockSlab(builder.p)

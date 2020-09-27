@@ -1,11 +1,11 @@
 package chylex.hee.client.gui
-import chylex.hee.client.render.util.GL
-import chylex.hee.client.util.MC
+import chylex.hee.client.MC
+import chylex.hee.client.render.gl.GL
 import chylex.hee.game.block.entity.TileEntityBrewingStandCustom
-import chylex.hee.system.migration.forge.Side
-import chylex.hee.system.migration.forge.Sided
-import chylex.hee.system.util.facades.Resource
-import chylex.hee.system.util.totalTime
+import chylex.hee.game.world.totalTime
+import chylex.hee.system.facades.Resource
+import chylex.hee.system.forge.Side
+import chylex.hee.system.forge.Sided
 import net.minecraft.client.gui.screen.inventory.BrewingStandScreen
 import net.minecraft.entity.player.PlayerInventory
 import net.minecraft.inventory.container.BrewingStandContainer

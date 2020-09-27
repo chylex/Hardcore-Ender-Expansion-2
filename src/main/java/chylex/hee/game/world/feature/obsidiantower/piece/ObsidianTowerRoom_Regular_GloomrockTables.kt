@@ -1,14 +1,14 @@
 package chylex.hee.game.world.feature.obsidiantower.piece
+import chylex.hee.game.world.Pos
 import chylex.hee.game.world.feature.obsidiantower.ObsidianTowerSpawnerLevel.LEVEL_1
+import chylex.hee.game.world.math.PosXZ
 import chylex.hee.game.world.structure.IStructureWorld
-import chylex.hee.game.world.util.PosXZ
+import chylex.hee.system.migration.Blocks
 import chylex.hee.system.migration.Facing.EAST
 import chylex.hee.system.migration.Facing.WEST
-import chylex.hee.system.migration.vanilla.Blocks
-import chylex.hee.system.util.Pos
-import chylex.hee.system.util.nextInt
-import chylex.hee.system.util.nextItem
-import chylex.hee.system.util.removeItem
+import chylex.hee.system.random.nextInt
+import chylex.hee.system.random.nextItem
+import chylex.hee.system.random.removeItem
 
 class ObsidianTowerRoom_Regular_GloomrockTables(file: String) : ObsidianTowerRoom_General(file, guaranteesSpawnersOnLevel1 = true){
 	override fun generateContents(world: IStructureWorld, instance: Instance){

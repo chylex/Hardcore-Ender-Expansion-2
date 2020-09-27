@@ -1,8 +1,8 @@
 package chylex.hee.client.render.entity
-import chylex.hee.client.util.MC
-import chylex.hee.system.migration.forge.Side
-import chylex.hee.system.migration.forge.Sided
-import chylex.hee.system.migration.vanilla.RenderManager
+import chylex.hee.client.MC
+import chylex.hee.system.forge.Side
+import chylex.hee.system.forge.Sided
+import chylex.hee.system.migration.RenderManager
 import net.minecraft.client.renderer.entity.ItemRenderer
 
 @Sided(Side.CLIENT)

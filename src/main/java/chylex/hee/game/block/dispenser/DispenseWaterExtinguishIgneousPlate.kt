@@ -1,8 +1,8 @@
 package chylex.hee.game.block.dispenser
+import chylex.hee.game.world.getState
 import chylex.hee.init.ModBlocks
-import chylex.hee.system.migration.vanilla.BlockDispenser
-import chylex.hee.system.migration.vanilla.Items
-import chylex.hee.system.util.getState
+import chylex.hee.system.migration.BlockDispenser
+import chylex.hee.system.migration.Items
 import net.minecraft.dispenser.DefaultDispenseItemBehavior
 import net.minecraft.dispenser.IBlockSource
 import net.minecraft.dispenser.IDispenseItemBehavior

@@ -1,5 +1,5 @@
 package chylex.hee.game.world.territory.properties
-import chylex.hee.system.util.color.IntColor
+import chylex.hee.system.color.IntColor
 import java.util.Random
 
 abstract class TerritoryColors{

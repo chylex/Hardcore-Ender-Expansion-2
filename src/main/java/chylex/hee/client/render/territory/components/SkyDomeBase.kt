@@ -1,15 +1,14 @@
 package chylex.hee.client.render.territory.components
+import chylex.hee.client.render.gl.DF_ONE_MINUS_SRC_ALPHA
+import chylex.hee.client.render.gl.GL
+import chylex.hee.client.render.gl.SF_SRC_ALPHA
 import chylex.hee.client.render.territory.AbstractEnvironmentRenderer
-import chylex.hee.client.render.util.GL
-import chylex.hee.client.render.util.GL.DF_ONE_MINUS_SRC_ALPHA
-import chylex.hee.client.render.util.GL.SF_SRC_ALPHA
-import chylex.hee.client.render.util.TESSELLATOR
-import chylex.hee.client.render.util.draw
-import chylex.hee.system.migration.forge.Side
-import chylex.hee.system.migration.forge.Sided
-import chylex.hee.system.util.offsetTowards
-import chylex.hee.system.util.square
+import chylex.hee.system.forge.Side
+import chylex.hee.system.forge.Sided
+import chylex.hee.system.math.offsetTowards
+import chylex.hee.system.math.square
 import com.mojang.blaze3d.matrix.MatrixStack
+import net.minecraft.client.renderer.Tessellator
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats
 import net.minecraft.client.world.ClientWorld
 import org.lwjgl.opengl.GL11.GL_FLAT
@@ -105,18 +104,22 @@ abstract class SkyDomeBase : AbstractEnvironmentRenderer(){
 		GL.enableTexture()
 		GL.bindTexture(texture)
 		
-		TESSELLATOR.draw(GL_QUADS, DefaultVertexFormats.POSITION_TEX_COLOR){
+		with(Tessellator.getInstance()){
+			buffer.begin(GL_QUADS, DefaultVertexFormats.POSITION_TEX_COLOR)
+			
 			for((x, y, z, c, u, v) in Skybox.VERTICES.value){
 				val r = offsetTowards(r2, r1, c)
 				val g = offsetTowards(g2, g1, c)
 				val b = offsetTowards(b2, b1, c)
 				val a = offsetTowards(alpha2, alpha1, c)
 				
-				pos(mat, x, y, z)
-				tex(u.toFloat(), v.toFloat())
-				color(r, g, b, a)
-				endVertex()
+				buffer.pos(mat, x, y, z)
+				buffer.tex(u.toFloat(), v.toFloat())
+				buffer.color(r, g, b, a)
+				buffer.endVertex()
 			}
+			
+			draw()
 		}
 		
 		GL.shadeModel(GL_FLAT)

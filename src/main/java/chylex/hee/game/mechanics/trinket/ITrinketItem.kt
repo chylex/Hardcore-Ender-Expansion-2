@@ -1,6 +1,6 @@
 package chylex.hee.game.mechanics.trinket
-import chylex.hee.system.migration.forge.Side
-import chylex.hee.system.migration.forge.Sided
+import chylex.hee.system.forge.Side
+import chylex.hee.system.forge.Sided
 import net.minecraft.entity.Entity
 import net.minecraft.item.ItemStack
 

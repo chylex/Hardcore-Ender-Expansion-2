@@ -5,10 +5,10 @@ import chylex.hee.game.mechanics.energy.IClusterHealth.HealthStatus.HEALTHY
 import chylex.hee.game.mechanics.energy.IClusterHealth.HealthStatus.TIRED
 import chylex.hee.game.mechanics.energy.IClusterHealth.HealthStatus.WEAKENED
 import chylex.hee.system.collection.WeightedList
-import chylex.hee.system.migration.vanilla.EntityLightningBolt
-import chylex.hee.system.util.ceilToInt
-import chylex.hee.system.util.nextInt
-import chylex.hee.system.util.removeItem
+import chylex.hee.system.math.ceilToInt
+import chylex.hee.system.migration.EntityLightningBolt
+import chylex.hee.system.random.nextInt
+import chylex.hee.system.random.removeItem
 import net.minecraft.world.gen.Heightmap.Type.MOTION_BLOCKING
 import net.minecraft.world.server.ServerWorld
 import java.util.Random

@@ -1,7 +1,7 @@
 package chylex.hee.game.mechanics.explosion
 import chylex.hee.HEE
-import chylex.hee.system.migration.forge.SubscribeAllEvents
-import chylex.hee.system.migration.forge.SubscribeEvent
+import chylex.hee.system.forge.SubscribeAllEvents
+import chylex.hee.system.forge.SubscribeEvent
 import net.minecraft.entity.item.TNTEntity
 import net.minecraft.entity.item.minecart.TNTMinecartEntity
 import net.minecraft.world.Explosion.Mode

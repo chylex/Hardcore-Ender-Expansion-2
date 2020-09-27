@@ -1,11 +1,11 @@
 package chylex.hee.game.world.feature.basic.caves
+import chylex.hee.game.world.Pos
 import chylex.hee.game.world.generation.IBlockPlacer
 import chylex.hee.game.world.generation.IBlockPlacer.BlockReplacer
 import chylex.hee.game.world.generation.SegmentedWorld
-import chylex.hee.game.world.util.Size
-import chylex.hee.system.migration.vanilla.Blocks
-import chylex.hee.system.util.Pos
-import chylex.hee.system.util.ceilToInt
+import chylex.hee.game.world.math.Size
+import chylex.hee.system.math.ceilToInt
+import chylex.hee.system.migration.Blocks
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.Vec3d
 

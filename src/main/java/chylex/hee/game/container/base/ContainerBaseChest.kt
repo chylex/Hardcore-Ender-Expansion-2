@@ -1,5 +1,5 @@
 package chylex.hee.game.container.base
-import chylex.hee.system.migration.vanilla.EntityPlayer
+import chylex.hee.system.migration.EntityPlayer
 import net.minecraft.inventory.IInventory
 import net.minecraft.inventory.container.ChestContainer
 import net.minecraft.inventory.container.ContainerType

@@ -1,18 +1,18 @@
 package chylex.hee.game.world.feature.stronghold.piece
+import chylex.hee.game.block.with
+import chylex.hee.game.block.withFacing
+import chylex.hee.game.world.Pos
 import chylex.hee.game.world.feature.stronghold.StrongholdPieceType
 import chylex.hee.game.world.feature.stronghold.StrongholdPieces
 import chylex.hee.game.world.feature.stronghold.connection.StrongholdConnection
 import chylex.hee.game.world.feature.stronghold.connection.StrongholdConnectionType.STAIR
-import chylex.hee.game.world.structure.IBlockPicker.Single.Air
+import chylex.hee.game.world.generation.IBlockPicker.Single.Air
+import chylex.hee.game.world.math.Size
 import chylex.hee.game.world.structure.IStructureWorld
 import chylex.hee.game.world.structure.piece.IStructurePieceConnection
-import chylex.hee.game.world.util.Size
-import chylex.hee.system.migration.vanilla.BlockSlab
-import chylex.hee.system.migration.vanilla.Blocks
-import chylex.hee.system.migration.vanilla.MutableBlockPos
-import chylex.hee.system.util.Pos
-import chylex.hee.system.util.with
-import chylex.hee.system.util.withFacing
+import chylex.hee.system.migration.BlockSlab
+import chylex.hee.system.migration.Blocks
+import chylex.hee.system.migration.MutableBlockPos
 import net.minecraft.state.properties.SlabType
 import net.minecraft.util.Direction
 

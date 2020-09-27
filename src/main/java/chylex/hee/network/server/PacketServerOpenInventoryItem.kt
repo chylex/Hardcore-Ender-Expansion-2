@@ -1,13 +1,13 @@
 package chylex.hee.network.server
 import chylex.hee.game.container.slot.SlotTrinketItemInventory
+import chylex.hee.game.inventory.getStack
 import chylex.hee.game.item.ItemShulkerBoxOverride
 import chylex.hee.game.item.ItemTrinketPouch
 import chylex.hee.game.mechanics.trinket.TrinketHandler
 import chylex.hee.init.ModContainers
 import chylex.hee.network.BaseServerPacket
-import chylex.hee.system.migration.vanilla.EntityPlayerMP
-import chylex.hee.system.util.getStack
-import chylex.hee.system.util.use
+import chylex.hee.system.migration.EntityPlayerMP
+import chylex.hee.system.serialization.use
 import net.minecraft.network.PacketBuffer
 
 class PacketServerOpenInventoryItem() : BaseServerPacket(){

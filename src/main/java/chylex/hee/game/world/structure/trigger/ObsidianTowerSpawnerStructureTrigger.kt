@@ -1,13 +1,13 @@
 package chylex.hee.game.world.structure.trigger
 import chylex.hee.game.block.entity.TileEntitySpawnerObsidianTower
+import chylex.hee.game.world.getTile
+import chylex.hee.game.world.math.Size
+import chylex.hee.game.world.math.Size.Alignment.CENTER
+import chylex.hee.game.world.math.Size.Alignment.MIN
+import chylex.hee.game.world.math.Transform
 import chylex.hee.game.world.structure.IStructureTrigger
 import chylex.hee.game.world.structure.IStructureWorld
-import chylex.hee.game.world.util.Size
-import chylex.hee.game.world.util.Size.Alignment.CENTER
-import chylex.hee.game.world.util.Size.Alignment.MIN
-import chylex.hee.game.world.util.Transform
 import chylex.hee.init.ModBlocks
-import chylex.hee.system.util.getTile
 import net.minecraft.util.math.BlockPos
 import net.minecraft.world.IWorld
 

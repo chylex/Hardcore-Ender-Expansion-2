@@ -1,5 +1,5 @@
 package chylex.hee.game.mechanics.instability.region.entry
-import chylex.hee.system.util.TagLongArray
+import chylex.hee.system.serialization.TagLongArray
 import it.unimi.dsi.fastutil.longs.Long2LongOpenHashMap
 import net.minecraftforge.common.util.INBTSerializable
 

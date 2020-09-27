@@ -1,10 +1,15 @@
 package chylex.hee.game.entity.living
 import chylex.hee.HEE
-import chylex.hee.game.entity.living.ai.AIHideInBlock
 import chylex.hee.game.entity.living.ai.AISummonFromBlock
 import chylex.hee.game.entity.living.ai.AITargetSwarmSwitch
-import chylex.hee.game.entity.living.ai.AIWander
-import chylex.hee.game.entity.util.ICritTracker
+import chylex.hee.game.entity.living.ai.AttackMelee
+import chylex.hee.game.entity.living.ai.HideInBlock
+import chylex.hee.game.entity.living.ai.SummonFromBlock
+import chylex.hee.game.entity.living.ai.Swim
+import chylex.hee.game.entity.living.ai.TargetAttacker
+import chylex.hee.game.entity.living.ai.TargetRandom
+import chylex.hee.game.entity.living.ai.TargetSwarmSwitch
+import chylex.hee.game.entity.living.ai.Wander
 import chylex.hee.game.mechanics.damage.Damage
 import chylex.hee.game.mechanics.damage.IDamageProcessor.Companion.ALL_PROTECTIONS
 import chylex.hee.game.mechanics.damage.IDamageProcessor.Companion.DIFFICULTY_SCALING
@@ -12,21 +17,16 @@ import chylex.hee.game.mechanics.damage.IDamageProcessor.Companion.PEACEFUL_EXCL
 import chylex.hee.game.mechanics.damage.IDamageProcessor.Companion.PEACEFUL_KNOCKBACK
 import chylex.hee.game.mechanics.damage.IDamageProcessor.Companion.RAPID_DAMAGE
 import chylex.hee.init.ModEntities
-import chylex.hee.system.migration.forge.EventPriority
-import chylex.hee.system.migration.forge.SubscribeAllEvents
-import chylex.hee.system.migration.forge.SubscribeEvent
-import chylex.hee.system.migration.vanilla.BlockSilverfish
-import chylex.hee.system.migration.vanilla.EntityPlayer
-import chylex.hee.system.migration.vanilla.EntitySilverfish
-import chylex.hee.system.util.AIAttackMelee
-import chylex.hee.system.util.AISwim
-import chylex.hee.system.util.AITargetAttacker
-import chylex.hee.system.util.AITargetRandom
-import chylex.hee.system.util.AITargetSwarmSwitch
-import chylex.hee.system.util.TagCompound
-import chylex.hee.system.util.facades.Resource
-import chylex.hee.system.util.heeTag
-import chylex.hee.system.util.use
+import chylex.hee.system.facades.Resource
+import chylex.hee.system.forge.EventPriority
+import chylex.hee.system.forge.SubscribeAllEvents
+import chylex.hee.system.forge.SubscribeEvent
+import chylex.hee.system.migration.BlockSilverfish
+import chylex.hee.system.migration.EntityPlayer
+import chylex.hee.system.migration.EntitySilverfish
+import chylex.hee.system.serialization.TagCompound
+import chylex.hee.system.serialization.heeTag
+import chylex.hee.system.serialization.use
 import net.minecraft.block.Block
 import net.minecraft.block.BlockState
 import net.minecraft.entity.Entity
@@ -93,18 +93,18 @@ class EntityMobSilverfish(type: EntityType<EntityMobSilverfish>, world: World) :
 	}
 	
 	override fun registerGoals(){
-		aiSummonFromBlock = AISummonFromBlock(this, searchAttempts = 500, searchDistance = 6, searchingFor = ::isSilverfishBlock)
+		aiSummonFromBlock = SummonFromBlock(this, searchAttempts = 500, searchDistance = 6, searchingFor = ::isSilverfishBlock)
 		
-		goalSelector.addGoal(1, AISwim(this))
-		goalSelector.addGoal(2, AIAttackMelee(this, movementSpeed = 1.0, chaseAfterLosingSight = false))
-		goalSelector.addGoal(3, AIWander(this, movementSpeed = 1.0, chancePerTick = 10))
-		goalSelector.addGoal(4, AIHideInBlock(this, chancePerTick = 15, tryHideInBlock = ::tryHideInBlock))
+		goalSelector.addGoal(1, Swim(this))
+		goalSelector.addGoal(2, AttackMelee(this, movementSpeed = 1.0, chaseAfterLosingSight = false))
+		goalSelector.addGoal(3, Wander(this, movementSpeed = 1.0, chancePerTick = 10))
+		goalSelector.addGoal(4, HideInBlock(this, chancePerTick = 15, tryHideInBlock = ::tryHideInBlock))
 		goalSelector.addGoal(5, aiSummonFromBlock)
 		
-		aiTargetSwarmSwitch = AITargetSwarmSwitch(this, rangeMultiplier = 0.5F, checkSight = true, easilyReachableOnly = false)
+		aiTargetSwarmSwitch = TargetSwarmSwitch(this, rangeMultiplier = 0.5F, checkSight = true, easilyReachableOnly = false)
 		
-		targetSelector.addGoal(1, AITargetAttacker(this, callReinforcements = true))
-		targetSelector.addGoal(2, AITargetRandom<EntityPlayer>(this, chancePerTick = 5, checkSight = true, easilyReachableOnly = false))
+		targetSelector.addGoal(1, TargetAttacker(this, callReinforcements = true))
+		targetSelector.addGoal(2, TargetRandom<EntityPlayer>(this, chancePerTick = 5, checkSight = true, easilyReachableOnly = false))
 		targetSelector.addGoal(3, aiTargetSwarmSwitch)
 	}
 	

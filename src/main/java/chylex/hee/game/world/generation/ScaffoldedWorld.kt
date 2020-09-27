@@ -1,10 +1,10 @@
 package chylex.hee.game.world.generation
+import chylex.hee.game.world.allInBoxMutable
 import chylex.hee.game.world.generation.segments.SegmentFull
+import chylex.hee.game.world.math.Size
 import chylex.hee.game.world.structure.IStructureWorld
-import chylex.hee.game.world.util.Size
 import chylex.hee.init.ModBlocks
-import chylex.hee.system.migration.vanilla.MutableBlockPos
-import chylex.hee.system.util.allInBoxMutable
+import chylex.hee.system.migration.MutableBlockPos
 import com.google.common.collect.Iterables
 import net.minecraft.block.BlockState
 import net.minecraft.util.math.BlockPos

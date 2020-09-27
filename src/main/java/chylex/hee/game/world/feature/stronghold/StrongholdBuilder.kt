@@ -12,6 +12,7 @@ import chylex.hee.game.world.feature.stronghold.StrongholdPieces.STRUCTURE_SIZE
 import chylex.hee.game.world.feature.stronghold.piece.StrongholdAbstractPiece
 import chylex.hee.game.world.feature.stronghold.piece.StrongholdAbstractPiece.StrongholdInst
 import chylex.hee.game.world.feature.stronghold.piece.StrongholdRoom_Relic
+import chylex.hee.game.world.math.Transform
 import chylex.hee.game.world.structure.piece.IStructureBuild
 import chylex.hee.game.world.structure.piece.IStructureBuilder
 import chylex.hee.game.world.structure.piece.IStructureBuilder.ProcessBase
@@ -20,13 +21,12 @@ import chylex.hee.game.world.structure.piece.StructureBuild.AddMode
 import chylex.hee.game.world.structure.piece.StructureBuild.AddMode.APPEND
 import chylex.hee.game.world.structure.piece.StructureBuild.AddMode.MERGE
 import chylex.hee.game.world.structure.piece.StructureBuild.PositionedPiece
-import chylex.hee.game.world.util.Transform
 import chylex.hee.system.collection.MutableWeightedList
 import chylex.hee.system.collection.WeightedList
-import chylex.hee.system.util.nextInt
-import chylex.hee.system.util.nextItem
-import chylex.hee.system.util.nextItemOrNull
-import chylex.hee.system.util.removeItemOrNull
+import chylex.hee.system.random.nextInt
+import chylex.hee.system.random.nextItem
+import chylex.hee.system.random.nextItemOrNull
+import chylex.hee.system.random.removeItemOrNull
 import net.minecraft.util.Direction
 import net.minecraft.util.math.BlockPos
 import java.util.Random
@@ -35,7 +35,7 @@ import kotlin.math.min
 
 object StrongholdBuilder : IStructureBuilder{
 	fun buildWithEyeOfEnderTarget(rand: Random): Pair<IStructureBuild, BlockPos?>?{
-		val build = StructureBuild(STRUCTURE_SIZE, rand.nextItem(PIECES_START).StrongholdInst(distanceToPortal = 0, facingFromPortal = null, transform = Transform.random(rand)))
+		val build = StructureBuild(STRUCTURE_SIZE, rand.nextItem(PIECES_START).StrongholdInst(distanceToPortal = 0, facingFromPortal = null, transform = rand.nextItem(Transform.ALL)))
 		val process = Process(build, rand)
 		
 		// normal rooms

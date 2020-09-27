@@ -1,5 +1,6 @@
 package chylex.hee.game.world.feature.energyshrine.piece
 import chylex.hee.game.mechanics.energy.IClusterGenerator.Companion.ENERGY_SHRINE
+import chylex.hee.game.world.Pos
 import chylex.hee.game.world.feature.energyshrine.EnergyShrinePieces
 import chylex.hee.game.world.feature.energyshrine.connection.EnergyShrineConnection
 import chylex.hee.game.world.feature.energyshrine.connection.EnergyShrineConnectionType.TERMINAL
@@ -11,7 +12,6 @@ import chylex.hee.game.world.structure.trigger.EnergyClusterStructureTrigger
 import chylex.hee.system.migration.Facing.EAST
 import chylex.hee.system.migration.Facing.SOUTH
 import chylex.hee.system.migration.Facing.WEST
-import chylex.hee.system.util.Pos
 
 class EnergyShrineRoom_Main_Final(file: String) : EnergyShrineAbstractPiece(), IStructurePieceFromFile by Delegate("energyshrine/$file", EnergyShrinePieces.PALETTE){
 	override val connections = arrayOf<IStructurePieceConnection>(

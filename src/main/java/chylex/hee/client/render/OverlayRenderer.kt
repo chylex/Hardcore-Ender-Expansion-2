@@ -1,28 +1,29 @@
 package chylex.hee.client.render
 import chylex.hee.HEE
-import chylex.hee.client.render.util.GL
-import chylex.hee.client.render.util.GL.DF_ONE_MINUS_SRC_ALPHA
-import chylex.hee.client.render.util.GL.DF_ZERO
-import chylex.hee.client.render.util.GL.SF_ONE
-import chylex.hee.client.render.util.GL.SF_SRC_ALPHA
-import chylex.hee.client.util.MC
+import chylex.hee.client.MC
+import chylex.hee.client.render.gl.DF_ONE_MINUS_SRC_ALPHA
+import chylex.hee.client.render.gl.DF_ZERO
+import chylex.hee.client.render.gl.FOG_EXP
+import chylex.hee.client.render.gl.GL
+import chylex.hee.client.render.gl.SF_ONE
+import chylex.hee.client.render.gl.SF_SRC_ALPHA
 import chylex.hee.game.block.BlockAbstractPortal
 import chylex.hee.game.block.entity.TileEntityEnergyCluster
-import chylex.hee.game.block.info.Materials
+import chylex.hee.game.block.properties.Materials
 import chylex.hee.game.mechanics.energy.IEnergyQuantity
 import chylex.hee.game.mechanics.energy.IEnergyQuantity.Companion.MAX_POSSIBLE_VALUE
 import chylex.hee.game.mechanics.energy.IEnergyQuantity.Companion.displayString
+import chylex.hee.game.world.getBlock
+import chylex.hee.game.world.getTile
 import chylex.hee.init.ModBlocks
 import chylex.hee.init.ModItems
-import chylex.hee.system.migration.forge.Side
-import chylex.hee.system.migration.forge.SubscribeAllEvents
-import chylex.hee.system.migration.forge.SubscribeEvent
-import chylex.hee.system.util.color.IntColor
-import chylex.hee.system.util.color.IntColor.Companion.RGB
-import chylex.hee.system.util.color.IntColor.Companion.RGBA
-import chylex.hee.system.util.facades.Resource
-import chylex.hee.system.util.getBlock
-import chylex.hee.system.util.getTile
+import chylex.hee.system.color.IntColor
+import chylex.hee.system.color.IntColor.Companion.RGB
+import chylex.hee.system.color.IntColor.Companion.RGBA
+import chylex.hee.system.facades.Resource
+import chylex.hee.system.forge.Side
+import chylex.hee.system.forge.SubscribeAllEvents
+import chylex.hee.system.forge.SubscribeEvent
 import net.minecraft.client.gui.AbstractGui
 import net.minecraft.client.resources.I18n
 import net.minecraft.util.text.TextFormatting
@@ -48,7 +49,7 @@ object OverlayRenderer{
 		val inside = e.info.blockAtCamera.material
 		
 		if (inside === Materials.ENDER_GOO || inside === Materials.PURIFIED_ENDER_GOO){
-			GL.setFogMode(GL.FOG_EXP)
+			GL.setFogMode(FOG_EXP)
 			e.density = if (inside === Materials.ENDER_GOO) 0.66F else 0.06F
 			e.isCanceled = true // otherwise the event is ignored
 		}

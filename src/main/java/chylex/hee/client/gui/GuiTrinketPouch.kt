@@ -2,11 +2,11 @@ package chylex.hee.client.gui
 import chylex.hee.client.gui.base.GuiBaseCustomInventory
 import chylex.hee.game.container.ContainerTrinketPouch
 import chylex.hee.game.container.base.ContainerBaseCustomInventory
-import chylex.hee.system.migration.forge.Side
-import chylex.hee.system.migration.forge.Sided
-import chylex.hee.system.util.color.IntColor.Companion.RGBA
-import chylex.hee.system.util.facades.Resource
-import chylex.hee.system.util.size
+import chylex.hee.game.inventory.size
+import chylex.hee.system.color.IntColor.Companion.RGBA
+import chylex.hee.system.facades.Resource
+import chylex.hee.system.forge.Side
+import chylex.hee.system.forge.Sided
 import net.minecraft.entity.player.PlayerInventory
 import net.minecraft.util.text.ITextComponent
 

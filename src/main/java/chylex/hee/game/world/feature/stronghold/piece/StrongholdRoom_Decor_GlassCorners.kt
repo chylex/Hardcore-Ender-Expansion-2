@@ -1,8 +1,8 @@
 package chylex.hee.game.world.feature.stronghold.piece
-import chylex.hee.game.block.util.ColoredBlocks
-import chylex.hee.game.world.structure.IBlockPicker.Single
+import chylex.hee.game.world.Pos
+import chylex.hee.game.world.generation.IBlockPicker.Single
 import chylex.hee.game.world.structure.IStructureWorld
-import chylex.hee.system.util.Pos
+import chylex.hee.game.world.structure.palette.ColoredBlocks
 import net.minecraft.item.DyeColor
 
 class StrongholdRoom_Decor_GlassCorners(file: String, private val glassColor: DyeColor) : StrongholdRoom_Decor_Generic(file){

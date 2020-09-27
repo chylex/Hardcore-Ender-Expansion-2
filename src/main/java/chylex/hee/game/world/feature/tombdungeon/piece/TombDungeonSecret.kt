@@ -1,9 +1,9 @@
 package chylex.hee.game.world.feature.tombdungeon.piece
+import chylex.hee.game.block.withFacing
 import chylex.hee.game.world.structure.IStructureWorld
 import chylex.hee.init.ModBlocks
 import chylex.hee.system.migration.Facing.NORTH
-import chylex.hee.system.util.nextInt
-import chylex.hee.system.util.withFacing
+import chylex.hee.system.random.nextInt
 import net.minecraft.util.Direction
 import net.minecraft.util.math.BlockPos
 import java.util.Random

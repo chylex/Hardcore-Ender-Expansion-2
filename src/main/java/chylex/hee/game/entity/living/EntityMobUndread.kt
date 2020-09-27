@@ -1,24 +1,24 @@
 package chylex.hee.game.entity.living
-import chylex.hee.game.entity.living.ai.AIWanderLand
+import chylex.hee.game.entity.living.ai.AttackMelee
+import chylex.hee.game.entity.living.ai.Swim
+import chylex.hee.game.entity.living.ai.TargetAttacker
+import chylex.hee.game.entity.living.ai.TargetNearby
+import chylex.hee.game.entity.living.ai.WanderLand
+import chylex.hee.game.entity.living.ai.WatchIdle
+import chylex.hee.game.entity.motionY
 import chylex.hee.game.mechanics.damage.Damage
 import chylex.hee.game.mechanics.damage.IDamageProcessor.Companion.ALL_PROTECTIONS_WITH_SHIELD
 import chylex.hee.game.mechanics.damage.IDamageProcessor.Companion.DIFFICULTY_SCALING
 import chylex.hee.game.mechanics.damage.IDamageProcessor.Companion.PEACEFUL_EXCLUSION
 import chylex.hee.init.ModEntities
 import chylex.hee.init.ModSounds
-import chylex.hee.system.migration.MagicValues.DEATH_TIME_MAX
-import chylex.hee.system.migration.vanilla.EntityMob
-import chylex.hee.system.migration.vanilla.EntityPlayer
-import chylex.hee.system.migration.vanilla.Sounds
-import chylex.hee.system.util.AIAttackMelee
-import chylex.hee.system.util.AISwim
-import chylex.hee.system.util.AITargetAttacker
-import chylex.hee.system.util.AITargetNearby
-import chylex.hee.system.util.AIWatchIdle
-import chylex.hee.system.util.facades.Resource
-import chylex.hee.system.util.motionY
-import chylex.hee.system.util.nextFloat
-import chylex.hee.system.util.square
+import chylex.hee.system.MagicValues.DEATH_TIME_MAX
+import chylex.hee.system.facades.Resource
+import chylex.hee.system.math.square
+import chylex.hee.system.migration.EntityMob
+import chylex.hee.system.migration.EntityPlayer
+import chylex.hee.system.migration.Sounds
+import chylex.hee.system.random.nextFloat
 import net.minecraft.block.BlockState
 import net.minecraft.entity.CreatureAttribute
 import net.minecraft.entity.Entity
@@ -60,13 +60,13 @@ class EntityMobUndread(type: EntityType<EntityMobUndread>, world: World) : Entit
 	}
 	
 	override fun registerGoals(){
-		goalSelector.addGoal(1, AISwim(this))
-		goalSelector.addGoal(2, AIAttackMelee(this, movementSpeed = 1.0, chaseAfterLosingSight = true))
-		goalSelector.addGoal(3, AIWanderLand(this, movementSpeed = 0.9, chancePerTick = 12, maxDistanceXZ = 7, maxDistanceY = 3))
-		goalSelector.addGoal(4, AIWatchIdle(this))
+		goalSelector.addGoal(1, Swim(this))
+		goalSelector.addGoal(2, AttackMelee(this, movementSpeed = 1.0, chaseAfterLosingSight = true))
+		goalSelector.addGoal(3, WanderLand(this, movementSpeed = 0.9, chancePerTick = 12, maxDistanceXZ = 7, maxDistanceY = 3))
+		goalSelector.addGoal(4, WatchIdle(this))
 		
-		targetSelector.addGoal(1, AITargetAttacker(this, callReinforcements = false))
-		targetSelector.addGoal(2, AITargetNearby(this, chancePerTick = 1, checkSight = false, easilyReachableOnly = false, targetPredicate = ::isPlayerNearby ))
+		targetSelector.addGoal(1, TargetAttacker(this, callReinforcements = false))
+		targetSelector.addGoal(2, TargetNearby(this, chancePerTick = 1, checkSight = false, easilyReachableOnly = false, targetPredicate = ::isPlayerNearby ))
 	}
 	
 	override fun createSpawnPacket(): IPacket<*>{

@@ -1,9 +1,9 @@
 package chylex.hee.game.recipe
+import chylex.hee.game.inventory.nonEmptySlots
+import chylex.hee.game.inventory.size
 import chylex.hee.game.item.infusion.InfusionList
 import chylex.hee.game.item.infusion.InfusionTag
 import chylex.hee.init.ModItems
-import chylex.hee.system.util.nonEmptySlots
-import chylex.hee.system.util.size
 import net.minecraft.inventory.CraftingInventory
 import net.minecraft.item.ItemStack
 import net.minecraft.world.World

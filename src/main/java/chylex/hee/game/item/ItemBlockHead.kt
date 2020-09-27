@@ -1,5 +1,5 @@
 package chylex.hee.game.item
-import chylex.hee.system.migration.vanilla.ItemWallOrFloor
+import chylex.hee.system.migration.ItemWallOrFloor
 import net.minecraft.block.Block
 import net.minecraft.inventory.EquipmentSlotType
 import net.minecraft.inventory.EquipmentSlotType.HEAD

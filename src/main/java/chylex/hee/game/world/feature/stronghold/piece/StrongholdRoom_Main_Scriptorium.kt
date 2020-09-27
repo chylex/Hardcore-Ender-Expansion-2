@@ -1,23 +1,23 @@
 package chylex.hee.game.world.feature.stronghold.piece
+import chylex.hee.game.block.withFacing
+import chylex.hee.game.world.Pos
 import chylex.hee.game.world.feature.stronghold.StrongholdPieceType
 import chylex.hee.game.world.feature.stronghold.StrongholdPieces
 import chylex.hee.game.world.feature.stronghold.connection.StrongholdConnection
 import chylex.hee.game.world.feature.stronghold.connection.StrongholdConnectionType.ROOM
+import chylex.hee.game.world.offsetUntil
 import chylex.hee.game.world.structure.IStructureWorld
 import chylex.hee.game.world.structure.piece.IStructurePieceConnection
 import chylex.hee.game.world.structure.trigger.LootChestStructureTrigger
 import chylex.hee.init.ModBlocks
+import chylex.hee.system.facades.Facing4
+import chylex.hee.system.migration.Blocks
 import chylex.hee.system.migration.Facing.EAST
 import chylex.hee.system.migration.Facing.NORTH
 import chylex.hee.system.migration.Facing.SOUTH
 import chylex.hee.system.migration.Facing.UP
 import chylex.hee.system.migration.Facing.WEST
-import chylex.hee.system.migration.vanilla.Blocks
-import chylex.hee.system.util.Pos
-import chylex.hee.system.util.facades.Facing4
-import chylex.hee.system.util.nextInt
-import chylex.hee.system.util.offsetUntil
-import chylex.hee.system.util.withFacing
+import chylex.hee.system.random.nextInt
 
 class StrongholdRoom_Main_Scriptorium(file: String) : StrongholdAbstractPieceFromFile(file, StrongholdPieceType.ROOM){
 	override val connections = arrayOf<IStructurePieceConnection>(

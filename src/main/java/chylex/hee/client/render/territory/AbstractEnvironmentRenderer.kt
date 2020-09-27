@@ -1,16 +1,15 @@
 package chylex.hee.client.render.territory
+import chylex.hee.client.MC
 import chylex.hee.client.render.TerritoryRenderer
-import chylex.hee.client.render.util.GL
-import chylex.hee.client.render.util.TESSELLATOR
-import chylex.hee.client.render.util.draw
-import chylex.hee.client.util.MC
-import chylex.hee.system.migration.forge.Side
-import chylex.hee.system.migration.forge.Sided
-import chylex.hee.system.util.facades.Resource
-import chylex.hee.system.util.remapRange
+import chylex.hee.client.render.gl.GL
+import chylex.hee.system.facades.Resource
+import chylex.hee.system.forge.Side
+import chylex.hee.system.forge.Sided
+import chylex.hee.system.math.remapRange
 import com.mojang.blaze3d.matrix.MatrixStack
 import net.minecraft.client.Minecraft
 import net.minecraft.client.renderer.RenderHelper
+import net.minecraft.client.renderer.Tessellator
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats
 import net.minecraft.client.world.ClientWorld
 import net.minecraft.util.math.Vec3d
@@ -39,11 +38,13 @@ abstract class AbstractEnvironmentRenderer : SkyRenderHandler{
 		fun renderPlane(matrix: MatrixStack, y: Float, size: Float, rescale: Float){
 			val mat = matrix.last.matrix
 			
-			TESSELLATOR.draw(GL_QUADS, DefaultVertexFormats.POSITION_TEX){
-				pos(mat, -size, -y, -size).tex(0F, 0F).endVertex()
-				pos(mat, -size, -y,  size).tex(0F, rescale).endVertex()
-				pos(mat,  size, -y,  size).tex(rescale, rescale).endVertex()
-				pos(mat,  size, -y, -size).tex(rescale, 0F).endVertex()
+			with(Tessellator.getInstance()){
+				buffer.begin(GL_QUADS, DefaultVertexFormats.POSITION_TEX)
+				buffer.pos(mat, -size, -y, -size).tex(0F, 0F).endVertex()
+				buffer.pos(mat, -size, -y,  size).tex(0F, rescale).endVertex()
+				buffer.pos(mat,  size, -y,  size).tex(rescale, rescale).endVertex()
+				buffer.pos(mat,  size, -y, -size).tex(rescale, 0F).endVertex()
+				draw()
 			}
 		}
 	}

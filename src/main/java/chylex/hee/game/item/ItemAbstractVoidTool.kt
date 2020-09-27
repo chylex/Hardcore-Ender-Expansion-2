@@ -1,11 +1,11 @@
 package chylex.hee.game.item
+import chylex.hee.game.inventory.size
 import chylex.hee.game.item.repair.ICustomRepairBehavior
 import chylex.hee.game.item.repair.RepairHandler
 import chylex.hee.game.item.repair.RepairInstance
-import chylex.hee.system.migration.vanilla.EntityLivingBase
-import chylex.hee.system.migration.vanilla.ItemTool
-import chylex.hee.system.util.color.IntColor.Companion.RGB
-import chylex.hee.system.util.size
+import chylex.hee.system.color.IntColor.Companion.RGB
+import chylex.hee.system.migration.EntityLivingBase
+import chylex.hee.system.migration.ItemTool
 import net.minecraft.item.IItemTier
 import net.minecraft.item.ItemStack
 import kotlin.math.min

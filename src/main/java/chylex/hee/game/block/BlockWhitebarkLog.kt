@@ -1,5 +1,5 @@
 package chylex.hee.game.block
-import chylex.hee.game.block.info.BlockBuilder
-import chylex.hee.system.migration.vanilla.BlockLog
+import chylex.hee.game.block.properties.BlockBuilder
+import chylex.hee.system.migration.BlockLog
 
 class BlockWhitebarkLog(builder: BlockBuilder) : BlockLog(builder.color, builder.p)

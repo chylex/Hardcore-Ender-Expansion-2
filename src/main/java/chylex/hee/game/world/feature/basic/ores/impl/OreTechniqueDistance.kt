@@ -1,11 +1,11 @@
 package chylex.hee.game.world.feature.basic.ores.impl
+import chylex.hee.game.world.Pos
+import chylex.hee.game.world.center
 import chylex.hee.game.world.feature.basic.ores.IOreTechnique
 import chylex.hee.game.world.generation.IBlockPlacer
 import chylex.hee.game.world.generation.SegmentedWorld
-import chylex.hee.system.util.Pos
-import chylex.hee.system.util.ceilToInt
-import chylex.hee.system.util.center
-import chylex.hee.system.util.nextVector
+import chylex.hee.system.math.ceilToInt
+import chylex.hee.system.random.nextVector
 import net.minecraft.util.math.BlockPos
 import java.util.Random
 import kotlin.math.pow

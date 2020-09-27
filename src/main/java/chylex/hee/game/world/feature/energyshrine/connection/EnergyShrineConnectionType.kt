@@ -1,6 +1,6 @@
 package chylex.hee.game.world.feature.energyshrine.connection
-import chylex.hee.game.world.structure.IBlockPicker.Single
-import chylex.hee.game.world.structure.IBlockPicker.Single.Air
+import chylex.hee.game.world.generation.IBlockPicker.Single
+import chylex.hee.game.world.generation.IBlockPicker.Single.Air
 import chylex.hee.game.world.structure.IStructureWorld
 import chylex.hee.game.world.structure.piece.IStructurePieceConnection
 import chylex.hee.game.world.structure.piece.IStructurePieceConnectionType

@@ -1,6 +1,6 @@
 package chylex.hee.game.loot.conditions
-import chylex.hee.game.entity.util.ICritTracker
-import chylex.hee.system.util.facades.Resource
+import chylex.hee.game.entity.living.ICritTracker
+import chylex.hee.system.facades.Resource
 import net.minecraft.world.storage.loot.LootContext
 import net.minecraft.world.storage.loot.LootParameter
 import net.minecraft.world.storage.loot.LootParameters

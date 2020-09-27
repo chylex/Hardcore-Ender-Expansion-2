@@ -1,13 +1,13 @@
 package chylex.hee.game.world.feature.obsidiantower.piece
 import chylex.hee.game.entity.item.EntityTokenHolder
 import chylex.hee.game.item.ItemPortalToken.TokenType
+import chylex.hee.game.world.Pos
+import chylex.hee.game.world.math.PosXZ
 import chylex.hee.game.world.structure.IStructureWorld
 import chylex.hee.game.world.structure.trigger.EntityStructureTrigger
 import chylex.hee.game.world.territory.TerritoryType
-import chylex.hee.game.world.util.PosXZ
-import chylex.hee.system.migration.vanilla.Blocks
-import chylex.hee.system.util.Pos
-import chylex.hee.system.util.removeItem
+import chylex.hee.system.migration.Blocks
+import chylex.hee.system.random.removeItem
 import net.minecraft.util.math.BlockPos
 import java.util.Random
 

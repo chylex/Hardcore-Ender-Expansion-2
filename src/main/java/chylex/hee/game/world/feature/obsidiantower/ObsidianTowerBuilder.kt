@@ -1,14 +1,14 @@
 package chylex.hee.game.world.feature.obsidiantower
 import chylex.hee.game.world.feature.obsidiantower.ObsidianTowerSpawnerLevel.LEVEL_1
+import chylex.hee.game.world.math.Size.Alignment.CENTER
+import chylex.hee.game.world.math.Size.Alignment.MIN
+import chylex.hee.game.world.math.Transform
 import chylex.hee.game.world.structure.piece.IStructureBuild
 import chylex.hee.game.world.structure.piece.IStructureBuilder
 import chylex.hee.game.world.structure.piece.StructureBuild
 import chylex.hee.game.world.structure.piece.StructureBuild.AddMode.MERGE
 import chylex.hee.game.world.structure.piece.StructurePiece
-import chylex.hee.game.world.util.Size.Alignment.CENTER
-import chylex.hee.game.world.util.Size.Alignment.MIN
-import chylex.hee.game.world.util.Transform
-import chylex.hee.system.util.nextItem
+import chylex.hee.system.random.nextItem
 import net.minecraft.util.Rotation
 import java.util.Random
 

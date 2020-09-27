@@ -1,13 +1,12 @@
 package chylex.hee.game.entity.living.ai
-import chylex.hee.game.entity.living.ai.util.AIBaseContinuous
-import chylex.hee.system.migration.vanilla.EntityCreature
-import chylex.hee.system.util.Pos
-import chylex.hee.system.util.addY
-import chylex.hee.system.util.facades.Facing6
-import chylex.hee.system.util.getState
-import chylex.hee.system.util.nextItem
-import chylex.hee.system.util.posVec
-import chylex.hee.system.util.setState
+import chylex.hee.game.entity.posVec
+import chylex.hee.game.world.Pos
+import chylex.hee.game.world.getState
+import chylex.hee.game.world.setState
+import chylex.hee.system.facades.Facing6
+import chylex.hee.system.math.addY
+import chylex.hee.system.migration.EntityCreature
+import chylex.hee.system.random.nextItem
 import net.minecraft.block.BlockState
 import net.minecraft.world.GameRules.MOB_GRIEFING
 

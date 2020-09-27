@@ -1,5 +1,5 @@
 package chylex.hee.game.recipe
-import chylex.hee.system.util.getStack
+import chylex.hee.game.inventory.getStack
 import net.minecraft.inventory.CraftingInventory
 import net.minecraft.item.ItemStack
 import net.minecraft.item.crafting.ICraftingRecipe

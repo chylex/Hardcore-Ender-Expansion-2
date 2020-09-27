@@ -1,11 +1,11 @@
 package chylex.hee.client.model.item
 import chylex.hee.HEE
-import chylex.hee.client.util.MC
-import chylex.hee.system.migration.forge.Side
-import chylex.hee.system.migration.forge.Sided
-import chylex.hee.system.migration.forge.SubscribeAllEvents
-import chylex.hee.system.migration.forge.SubscribeEvent
-import chylex.hee.system.util.facades.Resource
+import chylex.hee.client.MC
+import chylex.hee.system.facades.Resource
+import chylex.hee.system.forge.Side
+import chylex.hee.system.forge.Sided
+import chylex.hee.system.forge.SubscribeAllEvents
+import chylex.hee.system.forge.SubscribeEvent
 import com.mojang.blaze3d.matrix.MatrixStack
 import net.minecraft.client.renderer.model.IBakedModel
 import net.minecraft.client.renderer.model.ItemCameraTransforms.TransformType

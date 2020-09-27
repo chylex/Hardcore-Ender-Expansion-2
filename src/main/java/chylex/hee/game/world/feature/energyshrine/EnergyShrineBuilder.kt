@@ -5,6 +5,9 @@ import chylex.hee.game.world.feature.energyshrine.EnergyShrinePieces.STRUCTURE_S
 import chylex.hee.game.world.feature.energyshrine.piece.EnergyShrineAbstractPiece
 import chylex.hee.game.world.feature.energyshrine.piece.EnergyShrineCorridor_Staircase_180_Bottom
 import chylex.hee.game.world.feature.energyshrine.piece.EnergyShrineCorridor_Staircase_180_Top
+import chylex.hee.game.world.math.Size.Alignment.CENTER
+import chylex.hee.game.world.math.Size.Alignment.MAX
+import chylex.hee.game.world.math.Transform
 import chylex.hee.game.world.structure.piece.IStructureBuild
 import chylex.hee.game.world.structure.piece.IStructureBuilder
 import chylex.hee.game.world.structure.piece.IStructureBuilder.ProcessBase
@@ -12,13 +15,10 @@ import chylex.hee.game.world.structure.piece.StructureBuild
 import chylex.hee.game.world.structure.piece.StructureBuild.AddMode.APPEND
 import chylex.hee.game.world.structure.piece.StructureBuild.PositionedPiece
 import chylex.hee.game.world.structure.piece.StructurePiece
-import chylex.hee.game.world.util.Size.Alignment.CENTER
-import chylex.hee.game.world.util.Size.Alignment.MAX
-import chylex.hee.game.world.util.Transform
-import chylex.hee.system.util.nextInt
-import chylex.hee.system.util.nextItem
-import chylex.hee.system.util.nextItemOrNull
-import chylex.hee.system.util.removeItemOrNull
+import chylex.hee.system.random.nextInt
+import chylex.hee.system.random.nextItem
+import chylex.hee.system.random.nextItemOrNull
+import chylex.hee.system.random.removeItemOrNull
 import java.util.Random
 
 object EnergyShrineBuilder : IStructureBuilder{
@@ -26,7 +26,7 @@ object EnergyShrineBuilder : IStructureBuilder{
 		val remainingRooms = EnergyShrinePieces.generateRoomConfiguration(rand, targetMainPathRoomAmount = rand.nextInt(3, 4))
 		val remainingCorridors = EnergyShrinePieces.generateCorridorConfiguration(rand, remainingRooms)
 		
-		val startingPiece = rand.nextItem(PIECES_START).MutableInstance(EnergyShrineRoomData.DEFAULT, Transform.random(rand))
+		val startingPiece = rand.nextItem(PIECES_START).MutableInstance(EnergyShrineRoomData.DEFAULT, rand.nextItem(Transform.ALL))
 		val startingPiecePos = STRUCTURE_SIZE.getPos(CENTER, MAX, CENTER).subtract(startingPiece.size.getPos(CENTER, MAX, CENTER)).down()
 		
 		val build = StructureBuild(STRUCTURE_SIZE, PositionedPiece(startingPiece, startingPiecePos))

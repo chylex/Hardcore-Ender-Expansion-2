@@ -11,16 +11,16 @@ import chylex.hee.game.mechanics.table.interfaces.ITableProcess
 import chylex.hee.game.mechanics.table.process.ProcessManyPedestals.State.Cancel
 import chylex.hee.game.mechanics.table.process.ProcessManyPedestals.State.Output
 import chylex.hee.game.mechanics.table.process.ProcessManyPedestals.State.Work
-import chylex.hee.system.util.NBTItemStackList
-import chylex.hee.system.util.NBTList.Companion.putList
-import chylex.hee.system.util.Pos
-import chylex.hee.system.util.TagCompound
-import chylex.hee.system.util.getListOfItemStacks
-import chylex.hee.system.util.getPos
-import chylex.hee.system.util.getTile
-import chylex.hee.system.util.putPos
-import chylex.hee.system.util.totalTime
-import chylex.hee.system.util.use
+import chylex.hee.game.world.Pos
+import chylex.hee.game.world.getTile
+import chylex.hee.game.world.totalTime
+import chylex.hee.system.serialization.NBTItemStackList
+import chylex.hee.system.serialization.NBTList.Companion.putList
+import chylex.hee.system.serialization.TagCompound
+import chylex.hee.system.serialization.getListOfItemStacks
+import chylex.hee.system.serialization.getPos
+import chylex.hee.system.serialization.putPos
+import chylex.hee.system.serialization.use
 import net.minecraft.item.ItemStack
 import net.minecraft.util.math.BlockPos
 

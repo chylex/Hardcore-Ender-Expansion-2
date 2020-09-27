@@ -3,9 +3,9 @@ import chylex.hee.game.mechanics.energy.IClusterHealth.HealthOverride
 import chylex.hee.game.mechanics.energy.IClusterHealth.HealthStatus
 import chylex.hee.game.mechanics.energy.IClusterHealth.HealthStatus.HEALTHY
 import chylex.hee.game.mechanics.energy.IEnergyQuantity.Internal
-import chylex.hee.system.util.TagCompound
-import chylex.hee.system.util.getEnum
-import chylex.hee.system.util.putEnum
+import chylex.hee.system.serialization.TagCompound
+import chylex.hee.system.serialization.getEnum
+import chylex.hee.system.serialization.putEnum
 
 class ClusterSnapshot(
 	val energyLevel: IEnergyQuantity,

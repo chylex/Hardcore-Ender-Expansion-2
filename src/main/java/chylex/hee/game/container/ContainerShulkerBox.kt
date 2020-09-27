@@ -1,9 +1,9 @@
 package chylex.hee.game.container
 import chylex.hee.game.container.base.ContainerBaseChest
 import chylex.hee.game.container.slot.SlotShulkerBox
+import chylex.hee.game.inventory.size
 import chylex.hee.init.ModContainers
-import chylex.hee.system.migration.vanilla.EntityPlayer
-import chylex.hee.system.util.size
+import chylex.hee.system.migration.EntityPlayer
 import net.minecraft.entity.player.PlayerInventory
 import net.minecraft.inventory.IInventory
 import net.minecraft.inventory.Inventory

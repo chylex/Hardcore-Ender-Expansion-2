@@ -1,9 +1,8 @@
 package chylex.hee.game.block
-import chylex.hee.game.block.info.BlockBuilder
-import chylex.hee.game.block.util.Property
+import chylex.hee.game.block.properties.BlockBuilder
+import chylex.hee.game.block.properties.Property
+import chylex.hee.game.world.getBlock
 import chylex.hee.system.migration.Facing.DOWN
-import chylex.hee.system.util.getBlock
-import chylex.hee.system.util.with
 import net.minecraft.block.Block
 import net.minecraft.block.BlockState
 import net.minecraft.item.BlockItemUseContext

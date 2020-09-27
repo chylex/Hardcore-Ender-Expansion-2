@@ -3,8 +3,8 @@ import chylex.hee.game.block.entity.TileEntityTablePedestal
 import chylex.hee.game.block.entity.base.TileEntityBaseTable
 import chylex.hee.game.mechanics.table.interfaces.ITableProcess
 import chylex.hee.game.mechanics.table.interfaces.ITableProcessSerializer
-import chylex.hee.system.util.NBTObjectList
-import chylex.hee.system.util.TagCompound
+import chylex.hee.system.serialization.NBTObjectList
+import chylex.hee.system.serialization.TagCompound
 
 class TableProcessList : Iterable<ITableProcess>{
 	val isNotEmpty

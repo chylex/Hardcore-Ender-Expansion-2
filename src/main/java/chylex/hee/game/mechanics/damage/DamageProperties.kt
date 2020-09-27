@@ -1,10 +1,10 @@
 package chylex.hee.game.mechanics.damage
 import chylex.hee.HEE
+import chylex.hee.system.forge.EventPriority
+import chylex.hee.system.forge.SubscribeAllEvents
+import chylex.hee.system.forge.SubscribeEvent
+import chylex.hee.system.migration.EntityLivingBase
 import chylex.hee.system.migration.Hand.MAIN_HAND
-import chylex.hee.system.migration.forge.EventPriority
-import chylex.hee.system.migration.forge.SubscribeAllEvents
-import chylex.hee.system.migration.forge.SubscribeEvent
-import chylex.hee.system.migration.vanilla.EntityLivingBase
 import net.minecraft.entity.Entity
 import net.minecraft.item.ItemStack
 import net.minecraft.util.DamageSource

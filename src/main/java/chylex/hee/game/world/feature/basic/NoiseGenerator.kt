@@ -1,5 +1,5 @@
 package chylex.hee.game.world.feature.basic
-import chylex.hee.system.util.remapRange
+import chylex.hee.system.math.remapRange
 import net.minecraft.util.SharedSeedRandom
 import net.minecraft.world.gen.PerlinNoiseGenerator
 import net.minecraft.world.gen.SimplexNoiseGenerator

@@ -1,6 +1,6 @@
 package chylex.hee.game.entity
-import chylex.hee.system.migration.vanilla.EntityCreature
-import chylex.hee.system.migration.vanilla.EntityLivingBase
+import chylex.hee.system.migration.EntityCreature
+import chylex.hee.system.migration.EntityLivingBase
 import net.minecraft.entity.CreatureAttribute
 
 object CustomCreatureType{

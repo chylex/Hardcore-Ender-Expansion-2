@@ -6,10 +6,10 @@ import chylex.hee.game.mechanics.table.PedestalStatusIndicator.Process.BLOCKED
 import chylex.hee.game.mechanics.table.interfaces.ITableContext
 import chylex.hee.game.mechanics.table.interfaces.ITableProcess
 import chylex.hee.game.mechanics.table.interfaces.ITableProcess.Companion.NO_DUST
-import chylex.hee.system.util.TagCompound
-import chylex.hee.system.util.getPos
-import chylex.hee.system.util.getTile
-import chylex.hee.system.util.putPos
+import chylex.hee.game.world.getTile
+import chylex.hee.system.serialization.TagCompound
+import chylex.hee.system.serialization.getPos
+import chylex.hee.system.serialization.putPos
 import net.minecraft.util.math.BlockPos
 
 class ProcessSupportingItemBlocker(private val table: TileEntityBaseTable, pos: BlockPos) : ITableProcess{

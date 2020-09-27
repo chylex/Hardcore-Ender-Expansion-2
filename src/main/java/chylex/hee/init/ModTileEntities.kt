@@ -20,12 +20,12 @@ import chylex.hee.game.block.entity.TileEntitySpawnerObsidianTower
 import chylex.hee.game.block.entity.TileEntityTablePedestal
 import chylex.hee.game.block.entity.TileEntityVoidPortalStorage
 import chylex.hee.init.factory.TileEntityConstructors
-import chylex.hee.system.migration.forge.SubscribeAllEvents
-import chylex.hee.system.migration.forge.SubscribeEvent
-import chylex.hee.system.util.named
+import chylex.hee.system.forge.SubscribeAllEvents
+import chylex.hee.system.forge.SubscribeEvent
+import chylex.hee.system.forge.named
+import chylex.hee.system.migration.Blocks
 import com.google.common.collect.ImmutableSet
 import net.minecraft.block.Block
-import net.minecraft.block.Blocks
 import net.minecraft.tileentity.TileEntity
 import net.minecraft.tileentity.TileEntityType
 import net.minecraftforge.event.RegistryEvent

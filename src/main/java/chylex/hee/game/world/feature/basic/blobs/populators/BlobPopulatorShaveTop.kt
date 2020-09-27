@@ -1,11 +1,11 @@
 package chylex.hee.game.world.feature.basic.blobs.populators
+import chylex.hee.game.world.Pos
+import chylex.hee.game.world.allInBoxMutable
 import chylex.hee.game.world.feature.basic.blobs.BlobGenerator
 import chylex.hee.game.world.feature.basic.blobs.IBlobPopulator
 import chylex.hee.game.world.generation.ScaffoldedWorld
-import chylex.hee.system.util.Pos
-import chylex.hee.system.util.allInBoxMutable
-import chylex.hee.system.util.floorToInt
-import chylex.hee.system.util.math.RandomDouble
+import chylex.hee.system.math.floorToInt
+import chylex.hee.system.random.RandomDouble
 import java.util.Random
 
 class BlobPopulatorShaveTop(

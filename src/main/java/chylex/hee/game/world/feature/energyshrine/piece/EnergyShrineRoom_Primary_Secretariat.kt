@@ -1,20 +1,20 @@
 package chylex.hee.game.world.feature.energyshrine.piece
+import chylex.hee.game.block.withFacing
+import chylex.hee.game.world.Pos
 import chylex.hee.game.world.feature.energyshrine.connection.EnergyShrineConnection
 import chylex.hee.game.world.feature.energyshrine.connection.EnergyShrineConnectionType.ROOM
-import chylex.hee.game.world.structure.IBlockPicker.Single
-import chylex.hee.game.world.structure.IBlockPicker.Single.Air
+import chylex.hee.game.world.generation.IBlockPicker.Single
+import chylex.hee.game.world.generation.IBlockPicker.Single.Air
 import chylex.hee.game.world.structure.IStructureWorld
 import chylex.hee.game.world.structure.piece.IStructurePieceConnection
 import chylex.hee.init.ModBlocks
 import chylex.hee.system.collection.WeightedList.Companion.weightedListOf
+import chylex.hee.system.migration.BlockButton
+import chylex.hee.system.migration.Blocks
 import chylex.hee.system.migration.Facing.EAST
 import chylex.hee.system.migration.Facing.NORTH
 import chylex.hee.system.migration.Facing.SOUTH
 import chylex.hee.system.migration.Facing.WEST
-import chylex.hee.system.migration.vanilla.BlockButton
-import chylex.hee.system.migration.vanilla.Blocks
-import chylex.hee.system.util.Pos
-import chylex.hee.system.util.withFacing
 import net.minecraft.state.properties.AttachFace
 
 class EnergyShrineRoom_Primary_Secretariat(file: String) : EnergyShrineRoom_Generic(file){

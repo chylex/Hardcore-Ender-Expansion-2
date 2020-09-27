@@ -1,13 +1,13 @@
 package chylex.hee.game.mechanics.table
 import chylex.hee.game.block.entity.TileEntityTablePedestal
-import chylex.hee.system.util.TagCompound
-import chylex.hee.system.util.color.IntColor
-import chylex.hee.system.util.color.IntColor.Companion.HCL
-import chylex.hee.system.util.color.IntColor.Companion.RGB
-import chylex.hee.system.util.delegate.NotifyOnChange
-import chylex.hee.system.util.getEnum
-import chylex.hee.system.util.putEnum
-import chylex.hee.system.util.use
+import chylex.hee.system.color.IntColor
+import chylex.hee.system.color.IntColor.Companion.HCL
+import chylex.hee.system.color.IntColor.Companion.RGB
+import chylex.hee.system.delegate.NotifyOnChange
+import chylex.hee.system.serialization.TagCompound
+import chylex.hee.system.serialization.getEnum
+import chylex.hee.system.serialization.putEnum
+import chylex.hee.system.serialization.use
 import net.minecraftforge.common.util.INBTSerializable
 
 class PedestalStatusIndicator(private val pedestal: TileEntityTablePedestal) : INBTSerializable<TagCompound>{

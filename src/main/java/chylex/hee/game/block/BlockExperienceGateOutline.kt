@@ -1,11 +1,11 @@
 package chylex.hee.game.block
-import chylex.hee.game.block.info.BlockBuilder
-import chylex.hee.game.block.util.Property
+import chylex.hee.game.block.properties.BlockBuilder
+import chylex.hee.game.block.properties.Property
+import chylex.hee.game.world.getBlock
 import chylex.hee.system.migration.Facing.EAST
 import chylex.hee.system.migration.Facing.NORTH
 import chylex.hee.system.migration.Facing.SOUTH
 import chylex.hee.system.migration.Facing.WEST
-import chylex.hee.system.util.getBlock
 import net.minecraft.block.Block
 import net.minecraft.block.BlockState
 import net.minecraft.state.StateContainer.Builder

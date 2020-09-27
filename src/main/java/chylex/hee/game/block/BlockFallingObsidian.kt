@@ -1,5 +1,5 @@
 package chylex.hee.game.block
-import chylex.hee.game.block.info.BlockBuilder
+import chylex.hee.game.block.properties.BlockBuilder
 import chylex.hee.game.entity.item.EntityFallingBlockHeavy
 import chylex.hee.game.entity.item.EntityFallingObsidian
 import net.minecraft.block.BlockState

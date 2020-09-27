@@ -1,5 +1,5 @@
 package chylex.hee.game.entity.living.ai
-import chylex.hee.system.migration.vanilla.EntityCreature
+import chylex.hee.system.migration.EntityCreature
 import net.minecraft.entity.ai.RandomPositionGenerator
 import net.minecraft.entity.ai.goal.RandomWalkingGoal
 import net.minecraft.util.math.Vec3d

@@ -1,12 +1,12 @@
 package chylex.hee.game.world.feature.tombdungeon.piece
+import chylex.hee.game.world.Pos
 import chylex.hee.game.world.feature.tombdungeon.connection.TombDungeonConnection
 import chylex.hee.game.world.feature.tombdungeon.connection.TombDungeonConnectionType.SECRET_CONNECTOR
 import chylex.hee.game.world.structure.IStructureWorld
 import chylex.hee.game.world.structure.piece.IStructurePieceConnection
 import chylex.hee.system.migration.Facing
 import chylex.hee.system.migration.Facing.WEST
-import chylex.hee.system.util.Pos
-import chylex.hee.system.util.nextInt
+import chylex.hee.system.random.nextInt
 import net.minecraft.util.Direction
 import net.minecraft.util.math.BlockPos
 import java.util.Random

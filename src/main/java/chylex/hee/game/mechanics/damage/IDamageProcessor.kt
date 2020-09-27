@@ -1,10 +1,10 @@
 package chylex.hee.game.mechanics.damage
+import chylex.hee.game.entity.setFireTicks
 import chylex.hee.game.mechanics.damage.Damage.Companion.CANCEL_DAMAGE
-import chylex.hee.system.migration.vanilla.EntityLivingBase
-import chylex.hee.system.migration.vanilla.EntityPlayer
-import chylex.hee.system.migration.vanilla.ItemArmor
-import chylex.hee.system.migration.vanilla.Potions
-import chylex.hee.system.util.setFireTicks
+import chylex.hee.system.migration.EntityLivingBase
+import chylex.hee.system.migration.EntityPlayer
+import chylex.hee.system.migration.ItemArmor
+import chylex.hee.system.migration.Potions
 import net.minecraft.enchantment.EnchantmentHelper
 import net.minecraft.entity.Entity
 import net.minecraft.potion.EffectInstance

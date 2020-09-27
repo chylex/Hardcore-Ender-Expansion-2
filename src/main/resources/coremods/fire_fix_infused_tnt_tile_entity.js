@@ -13,7 +13,7 @@ function initializeCoreMod(){
                 node.visitVarInsn(op.ALOAD, 2);
                 node.visitVarInsn(op.ILOAD, 3);
                 node.visitVarInsn(op.ALOAD, 4);
-                node.visitMethodInsn(op.INVOKESTATIC, "chylex/hee/game/block/util/IBlockFireCatchOverride", "tryCatchFire", "(Lnet/minecraft/world/World;Lnet/minecraft/util/math/BlockPos;ILjava/util/Random;)Z");
+                node.visitMethodInsn(op.INVOKESTATIC, "chylex/hee/game/block/logic/IBlockFireCatchOverride", "tryCatchFire", "(Lnet/minecraft/world/World;Lnet/minecraft/util/math/BlockPos;ILjava/util/Random;)Z");
                 node.visitJumpInsn(op.IFEQ, getSkipInst(start));
                 node.visitInsn(op.RETURN);
             }));

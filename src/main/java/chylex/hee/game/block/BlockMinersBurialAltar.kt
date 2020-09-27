@@ -1,6 +1,6 @@
 package chylex.hee.game.block
 import chylex.hee.game.block.entity.TileEntityMinersBurialAltar
-import chylex.hee.game.block.info.BlockBuilder
+import chylex.hee.game.block.properties.BlockBuilder
 import net.minecraft.block.BlockState
 import net.minecraft.tileentity.TileEntity
 import net.minecraft.util.math.AxisAlignedBB

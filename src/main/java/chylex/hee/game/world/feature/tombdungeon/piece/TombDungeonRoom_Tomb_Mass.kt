@@ -1,16 +1,16 @@
 package chylex.hee.game.world.feature.tombdungeon.piece
 import chylex.hee.game.block.BlockGraveDirt
+import chylex.hee.game.world.Pos
 import chylex.hee.game.world.feature.tombdungeon.TombDungeonPieces
 import chylex.hee.game.world.feature.tombdungeon.connection.TombDungeonConnection
 import chylex.hee.game.world.feature.tombdungeon.connection.TombDungeonConnectionType.TOMB_ENTRANCE_INSIDE
-import chylex.hee.game.world.structure.IBlockPicker.Single
-import chylex.hee.game.world.structure.IBlockPicker.Single.Air
+import chylex.hee.game.world.generation.IBlockPicker.Single
+import chylex.hee.game.world.generation.IBlockPicker.Single.Air
+import chylex.hee.game.world.math.Size
 import chylex.hee.game.world.structure.IStructureWorld
 import chylex.hee.game.world.structure.piece.IStructurePieceConnection
-import chylex.hee.game.world.util.Size
 import chylex.hee.init.ModBlocks
 import chylex.hee.system.migration.Facing.SOUTH
-import chylex.hee.system.util.Pos
 
 class TombDungeonRoom_Tomb_Mass(width: Int, depth: Int, private val border: Boolean, private val split: Boolean, override val isFancy: Boolean) : TombDungeonAbstractPiece(){
 	override val size = Size(width + 2, 6, depth + 2)

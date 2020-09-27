@@ -1,7 +1,7 @@
 package chylex.hee.game.container.slot
-import chylex.hee.system.migration.forge.Side
-import chylex.hee.system.migration.forge.Sided
-import chylex.hee.system.migration.vanilla.EntityPlayer
+import chylex.hee.system.forge.Side
+import chylex.hee.system.forge.Sided
+import chylex.hee.system.migration.EntityPlayer
 import net.minecraft.inventory.container.CraftingResultSlot
 import net.minecraft.inventory.container.FurnaceResultSlot
 import net.minecraft.inventory.container.MerchantResultSlot

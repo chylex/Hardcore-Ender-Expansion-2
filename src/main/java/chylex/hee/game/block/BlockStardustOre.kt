@@ -1,7 +1,7 @@
 package chylex.hee.game.block
-import chylex.hee.game.block.info.BlockBuilder
-import chylex.hee.system.util.ceilToInt
-import chylex.hee.system.util.nextBiasedFloat
+import chylex.hee.game.block.properties.BlockBuilder
+import chylex.hee.system.math.ceilToInt
+import chylex.hee.system.random.nextBiasedFloat
 import net.minecraft.block.BlockState
 import net.minecraft.util.math.BlockPos
 import net.minecraft.world.IWorldReader

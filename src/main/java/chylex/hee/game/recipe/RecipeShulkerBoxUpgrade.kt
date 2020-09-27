@@ -2,11 +2,11 @@ package chylex.hee.game.recipe
 import chylex.hee.game.block.BlockShulkerBoxOverride.BoxSize
 import chylex.hee.game.item.ItemShulkerBoxOverride
 import chylex.hee.init.ModItems
-import net.minecraft.block.Blocks
+import chylex.hee.system.migration.Blocks
+import chylex.hee.system.migration.Items
 import net.minecraft.inventory.CraftingInventory
 import net.minecraft.item.Item
 import net.minecraft.item.ItemStack
-import net.minecraft.item.Items
 import net.minecraft.world.World
 
 sealed class RecipeShulkerBoxUpgrade(private val fromSize: BoxSize, private val toSize: BoxSize, private val upgradeItem: Item) : RecipeBaseDynamic(){

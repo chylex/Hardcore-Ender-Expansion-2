@@ -1,7 +1,7 @@
 package chylex.hee.game.block
-import chylex.hee.game.block.info.BlockBuilder
-import chylex.hee.system.migration.vanilla.BlockEndPortal
-import chylex.hee.system.util.setAir
+import chylex.hee.game.block.properties.BlockBuilder
+import chylex.hee.game.world.setAir
+import chylex.hee.system.migration.BlockEndPortal
 import net.minecraft.block.BlockState
 import net.minecraft.entity.Entity
 import net.minecraft.util.math.BlockPos

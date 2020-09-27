@@ -1,9 +1,9 @@
 package chylex.hee.game.world.feature.obsidiantower
-import chylex.hee.game.mechanics.potion.brewing.PotionBrewing.INFINITE_DURATION
-import chylex.hee.system.migration.vanilla.Potion
-import chylex.hee.system.migration.vanilla.Potions
-import chylex.hee.system.util.makeEffect
-import chylex.hee.system.util.nextItem
+import chylex.hee.game.potion.brewing.PotionBrewing.INFINITE_DURATION
+import chylex.hee.game.potion.makeEffect
+import chylex.hee.system.migration.Potion
+import chylex.hee.system.migration.Potions
+import chylex.hee.system.random.nextItem
 import net.minecraft.potion.EffectInstance
 import java.util.Random
 

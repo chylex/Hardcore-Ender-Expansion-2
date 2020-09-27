@@ -1,7 +1,7 @@
 package chylex.hee.game.mechanics.dust
-import chylex.hee.system.util.NBTObjectList
-import chylex.hee.system.util.TagCompound
-import chylex.hee.system.util.size
+import chylex.hee.game.inventory.size
+import chylex.hee.system.serialization.NBTObjectList
+import chylex.hee.system.serialization.TagCompound
 import net.minecraft.item.ItemStack
 import kotlin.math.min
 

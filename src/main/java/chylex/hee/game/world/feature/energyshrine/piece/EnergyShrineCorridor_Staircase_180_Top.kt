@@ -1,13 +1,13 @@
 package chylex.hee.game.world.feature.energyshrine.piece
+import chylex.hee.game.world.Pos
 import chylex.hee.game.world.feature.energyshrine.connection.EnergyShrineConnection
 import chylex.hee.game.world.feature.energyshrine.connection.EnergyShrineConnectionType.STAIR_MIDDLE
 import chylex.hee.game.world.feature.energyshrine.connection.EnergyShrineConnectionType.STAIR_TOP
+import chylex.hee.game.world.math.PosXZ
 import chylex.hee.game.world.structure.piece.IStructurePieceConnection
-import chylex.hee.game.world.util.PosXZ
 import chylex.hee.system.migration.Facing.EAST
 import chylex.hee.system.migration.Facing.SOUTH
-import chylex.hee.system.util.Pos
-import chylex.hee.system.util.nextFloat
+import chylex.hee.system.random.nextFloat
 import java.util.Random
 import kotlin.math.cos
 import kotlin.math.roundToInt

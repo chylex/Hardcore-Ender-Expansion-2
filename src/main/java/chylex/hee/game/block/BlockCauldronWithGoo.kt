@@ -1,8 +1,8 @@
 package chylex.hee.game.block
-import chylex.hee.game.block.info.BlockBuilder
-import chylex.hee.game.mechanics.potion.brewing.PotionItems
-import chylex.hee.system.migration.vanilla.Items
-import chylex.hee.system.migration.vanilla.PotionTypes
+import chylex.hee.game.block.properties.BlockBuilder
+import chylex.hee.game.potion.brewing.PotionItems
+import chylex.hee.system.migration.Items
+import chylex.hee.system.migration.PotionTypes
 import net.minecraft.block.BlockState
 import net.minecraft.entity.Entity
 import net.minecraft.item.ItemStack

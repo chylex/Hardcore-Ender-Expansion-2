@@ -1,24 +1,23 @@
 package chylex.hee.game.world
 import chylex.hee.HEE
+import chylex.hee.client.MC
+import chylex.hee.client.render.EmptyRenderer
+import chylex.hee.client.render.gl.FOG_EXP2
+import chylex.hee.client.render.gl.GL
 import chylex.hee.client.render.territory.AbstractEnvironmentRenderer
-import chylex.hee.client.render.territory.EmptyRenderer
-import chylex.hee.client.render.util.GL
-import chylex.hee.client.util.MC
 import chylex.hee.game.mechanics.portal.SpawnInfo
 import chylex.hee.game.world.provider.DragonFightManagerNull
 import chylex.hee.game.world.provider.WorldBorderNull
 import chylex.hee.game.world.territory.TerritoryInstance
 import chylex.hee.game.world.territory.TerritoryInstance.Companion.THE_HUB_INSTANCE
 import chylex.hee.game.world.territory.TerritoryVoid
-import chylex.hee.proxy.ModCommonProxy
-import chylex.hee.system.migration.forge.EventPriority
-import chylex.hee.system.migration.forge.Side
-import chylex.hee.system.migration.forge.Sided
-import chylex.hee.system.migration.forge.SubscribeAllEvents
-import chylex.hee.system.migration.forge.SubscribeEvent
-import chylex.hee.system.util.Pos
-import chylex.hee.system.util.xz
-import net.minecraft.block.Blocks
+import chylex.hee.proxy.ISidedProxy
+import chylex.hee.system.forge.EventPriority
+import chylex.hee.system.forge.Side
+import chylex.hee.system.forge.Sided
+import chylex.hee.system.forge.SubscribeAllEvents
+import chylex.hee.system.forge.SubscribeEvent
+import chylex.hee.system.migration.Blocks
 import net.minecraft.client.renderer.Vector3f
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.Vec3d
@@ -68,12 +67,12 @@ class WorldProviderEndCustom(world: World, type: DimensionType) : EndDimension(w
 				(it.fogDensity * AbstractEnvironmentRenderer.currentFogDensityMp) + (it.fogRenderDistanceModifier * AbstractEnvironmentRenderer.currentRenderDistanceMp)
 			}
 			
-			GL.setFogMode(GL.FOG_EXP2)
+			GL.setFogMode(FOG_EXP2)
 			GL.setFogDensity(density ?: 0F)
 		}
 	}
 	
-	private var clientProxy: ModCommonProxy? = null
+	private var clientProxy: ISidedProxy? = null
 	
 	private val clientEnvironment
 		get() = clientProxy?.getClientSidePlayer()?.let(TerritoryInstance.Companion::fromPos)?.let { it.territory.desc.environment }

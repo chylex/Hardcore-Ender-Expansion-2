@@ -1,11 +1,11 @@
 package chylex.hee.client.render.entity
 import chylex.hee.client.model.entity.ModelEntityUndread
 import chylex.hee.game.entity.living.EntityMobUndread
-import chylex.hee.system.migration.forge.Side
-import chylex.hee.system.migration.forge.Sided
-import chylex.hee.system.migration.vanilla.RenderBiped
-import chylex.hee.system.migration.vanilla.RenderManager
-import chylex.hee.system.util.facades.Resource
+import chylex.hee.system.facades.Resource
+import chylex.hee.system.forge.Side
+import chylex.hee.system.forge.Sided
+import chylex.hee.system.migration.RenderBiped
+import chylex.hee.system.migration.RenderManager
 import com.mojang.blaze3d.matrix.MatrixStack
 import net.minecraft.client.renderer.entity.layers.BipedArmorLayer
 import net.minecraft.client.renderer.entity.model.AbstractZombieModel

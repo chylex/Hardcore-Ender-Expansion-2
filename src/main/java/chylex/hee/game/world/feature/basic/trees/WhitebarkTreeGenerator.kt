@@ -3,10 +3,10 @@ import chylex.hee.game.block.BlockWhitebarkLeaves
 import chylex.hee.game.block.BlockWhitebarkSapling
 import chylex.hee.game.world.generation.ScaffoldedWorld
 import chylex.hee.game.world.generation.SegmentedWorld
+import chylex.hee.game.world.math.Size
+import chylex.hee.game.world.math.Size.Alignment.CENTER
+import chylex.hee.game.world.math.Size.Alignment.MIN
 import chylex.hee.game.world.structure.IStructureWorld
-import chylex.hee.game.world.util.Size
-import chylex.hee.game.world.util.Size.Alignment.CENTER
-import chylex.hee.game.world.util.Size.Alignment.MIN
 import net.minecraft.util.math.BlockPos
 import java.util.Random
 

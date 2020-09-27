@@ -1,9 +1,8 @@
 package chylex.hee.game.container
-import chylex.hee.game.container.util.DetectSlotChangeListener
+import chylex.hee.game.inventory.getStack
 import chylex.hee.game.item.ItemShulkerBoxOverride
 import chylex.hee.init.ModContainers
-import chylex.hee.system.migration.vanilla.EntityPlayer
-import chylex.hee.system.util.getStack
+import chylex.hee.system.migration.EntityPlayer
 import net.minecraft.entity.player.PlayerInventory
 import net.minecraft.network.PacketBuffer
 

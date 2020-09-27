@@ -1,5 +1,8 @@
 package chylex.hee.game.world.feature.stronghold.piece
 import chylex.hee.game.block.entity.TileEntityLootChest
+import chylex.hee.game.block.withFacing
+import chylex.hee.game.inventory.setStack
+import chylex.hee.game.world.Pos
 import chylex.hee.game.world.feature.stronghold.StrongholdPieceType
 import chylex.hee.game.world.feature.stronghold.StrongholdPieces
 import chylex.hee.game.world.feature.stronghold.connection.StrongholdConnection
@@ -11,9 +14,6 @@ import chylex.hee.game.world.structure.piece.IStructurePieceConnection
 import chylex.hee.game.world.structure.trigger.TileEntityStructureTrigger
 import chylex.hee.init.ModBlocks
 import chylex.hee.system.migration.Facing.SOUTH
-import chylex.hee.system.util.Pos
-import chylex.hee.system.util.setStack
-import chylex.hee.system.util.withFacing
 import net.minecraft.item.ItemStack
 import net.minecraft.util.math.BlockPos
 

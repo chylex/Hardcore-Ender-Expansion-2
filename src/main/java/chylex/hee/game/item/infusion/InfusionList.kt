@@ -1,8 +1,8 @@
 package chylex.hee.game.item.infusion
 import chylex.hee.game.item.infusion.Infusion.VIGOR
 import chylex.hee.system.collection.EmptyIterator
-import chylex.hee.system.util.NBTEnumList
-import chylex.hee.system.util.square
+import chylex.hee.system.math.square
+import chylex.hee.system.serialization.NBTEnumList
 import com.google.common.collect.ImmutableSet
 import com.google.common.collect.Sets
 

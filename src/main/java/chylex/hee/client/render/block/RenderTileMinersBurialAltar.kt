@@ -1,11 +1,11 @@
 package chylex.hee.client.render.block
+import chylex.hee.client.MC
 import chylex.hee.client.model.ModelHelper
-import chylex.hee.client.render.util.rotateX
-import chylex.hee.client.util.MC
+import chylex.hee.client.render.gl.rotateX
 import chylex.hee.game.block.entity.TileEntityMinersBurialAltar
 import chylex.hee.init.ModItems
-import chylex.hee.system.migration.forge.Side
-import chylex.hee.system.migration.forge.Sided
+import chylex.hee.system.forge.Side
+import chylex.hee.system.forge.Sided
 import com.mojang.blaze3d.matrix.MatrixStack
 import net.minecraft.client.renderer.IRenderTypeBuffer
 import net.minecraft.client.renderer.model.ItemCameraTransforms.TransformType.GROUND

@@ -1,7 +1,7 @@
 package chylex.hee.game.mechanics.energy
 import chylex.hee.game.block.entity.TileEntityEnergyCluster
-import chylex.hee.system.util.color.IntColor
-import chylex.hee.system.util.color.IntColor.Companion.HCL
+import chylex.hee.system.color.IntColor
+import chylex.hee.system.color.IntColor.Companion.HCL
 import kotlin.math.pow
 
 interface IClusterHealth{

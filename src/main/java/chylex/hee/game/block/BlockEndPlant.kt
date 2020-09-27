@@ -1,8 +1,8 @@
 package chylex.hee.game.block
-import chylex.hee.game.block.info.BlockBuilder
-import chylex.hee.game.block.util.CustomPlantType
-import chylex.hee.system.migration.vanilla.BlockBush
-import chylex.hee.system.migration.vanilla.Blocks
+import chylex.hee.game.block.properties.BlockBuilder
+import chylex.hee.game.block.properties.CustomPlantType
+import chylex.hee.system.migration.BlockBush
+import chylex.hee.system.migration.Blocks
 import net.minecraft.block.BlockState
 import net.minecraft.util.math.BlockPos
 import net.minecraft.world.IBlockReader

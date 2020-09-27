@@ -1,8 +1,8 @@
 package chylex.hee.game.world.provider
 import chylex.hee.game.world.WorldProviderEndCustom
-import chylex.hee.system.migration.vanilla.EntityEnderCrystal
-import chylex.hee.system.migration.vanilla.EntityPlayerMP
-import chylex.hee.system.util.TagCompound
+import chylex.hee.system.migration.EntityEnderCrystal
+import chylex.hee.system.migration.EntityPlayerMP
+import chylex.hee.system.serialization.TagCompound
 import net.minecraft.entity.boss.dragon.EnderDragonEntity
 import net.minecraft.util.DamageSource
 import net.minecraft.world.end.DragonFightManager

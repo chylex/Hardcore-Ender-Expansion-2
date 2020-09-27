@@ -15,9 +15,9 @@ import chylex.hee.game.world.feature.tombdungeon.TombDungeonPieces.PIECE_TOMB_SI
 import chylex.hee.game.world.feature.tombdungeon.TombDungeonPieces.PIECE_TOMB_SINGLE_SPACIOUS
 import chylex.hee.game.world.feature.tombdungeon.TombDungeonPieces.TOMB_RANDOM
 import chylex.hee.game.world.feature.tombdungeon.piece.TombDungeonAbstractPiece
-import chylex.hee.system.util.floorToInt
-import chylex.hee.system.util.nextFloat
-import chylex.hee.system.util.nextInt
+import chylex.hee.system.math.floorToInt
+import chylex.hee.system.random.nextFloat
+import chylex.hee.system.random.nextInt
 import java.util.Random
 import kotlin.math.max
 import kotlin.math.min

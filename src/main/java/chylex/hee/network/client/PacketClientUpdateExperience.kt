@@ -1,9 +1,9 @@
 package chylex.hee.network.client
 import chylex.hee.network.BaseClientPacket
-import chylex.hee.system.migration.forge.Side
-import chylex.hee.system.migration.forge.Sided
-import chylex.hee.system.migration.vanilla.EntityPlayerSP
-import chylex.hee.system.util.use
+import chylex.hee.system.forge.Side
+import chylex.hee.system.forge.Sided
+import chylex.hee.system.migration.EntityPlayerSP
+import chylex.hee.system.serialization.use
 import net.minecraft.network.PacketBuffer
 
 class PacketClientUpdateExperience() : BaseClientPacket(){

@@ -4,6 +4,7 @@ import chylex.hee.game.mechanics.causatum.CausatumStage.S2_ENTERED_END
 import chylex.hee.game.mechanics.causatum.CausatumStage.S3_FINISHED_CURSED_LIBRARY
 import chylex.hee.game.world.generation.SegmentedWorld
 import chylex.hee.game.world.generation.TerritoryGenerationInfo
+import chylex.hee.game.world.math.Size
 import chylex.hee.game.world.territory.descriptions.Territory_ArcaneConjunctions
 import chylex.hee.game.world.territory.descriptions.Territory_ForgottenTombs
 import chylex.hee.game.world.territory.descriptions.Territory_LostGarden
@@ -16,8 +17,7 @@ import chylex.hee.game.world.territory.generators.Generator_ObsidianTowers
 import chylex.hee.game.world.territory.generators.Generator_TheHub
 import chylex.hee.game.world.territory.properties.TerritoryColors
 import chylex.hee.game.world.territory.properties.TerritoryEnvironment
-import chylex.hee.game.world.util.Size
-import chylex.hee.system.util.color.IntColor.Companion.RGB
+import chylex.hee.system.color.IntColor.Companion.RGB
 import java.util.Random
 import kotlin.math.abs
 

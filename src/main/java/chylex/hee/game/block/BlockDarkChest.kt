@@ -1,10 +1,10 @@
 package chylex.hee.game.block
 import chylex.hee.game.block.entity.TileEntityDarkChest
-import chylex.hee.game.block.info.BlockBuilder
+import chylex.hee.game.block.properties.BlockBuilder
 import chylex.hee.game.entity.living.ai.AIOcelotSitOverride.IOcelotCanSitOn
 import chylex.hee.init.ModTileEntities
-import chylex.hee.system.migration.vanilla.BlockChest
-import chylex.hee.system.migration.vanilla.TileEntityChest
+import chylex.hee.system.migration.BlockChest
+import chylex.hee.system.migration.TileEntityChest
 import net.minecraft.block.BlockState
 import net.minecraft.tileentity.TileEntity
 import net.minecraft.tileentity.TileEntityType

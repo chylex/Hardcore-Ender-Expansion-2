@@ -1,8 +1,8 @@
 package chylex.hee.game.entity.living.ai
-import chylex.hee.system.migration.vanilla.EntityCreature
-import chylex.hee.system.migration.vanilla.EntityLivingBase
-import chylex.hee.system.util.posVec
-import chylex.hee.system.util.selectVulnerableEntities
+import chylex.hee.game.entity.posVec
+import chylex.hee.game.entity.selectVulnerableEntities
+import chylex.hee.system.migration.EntityCreature
+import chylex.hee.system.migration.EntityLivingBase
 
 class AIWanderLandStopNear<T : EntityLivingBase>(
 	entity: EntityCreature,

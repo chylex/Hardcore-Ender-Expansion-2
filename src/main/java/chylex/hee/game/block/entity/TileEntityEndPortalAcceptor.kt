@@ -11,13 +11,13 @@ import chylex.hee.game.block.entity.base.TileEntityBasePortalController.Foregrou
 import chylex.hee.game.block.entity.base.TileEntityBasePortalController.ForegroundRenderState.Visible
 import chylex.hee.game.mechanics.energy.IEnergyQuantity
 import chylex.hee.game.mechanics.energy.IEnergyQuantity.Units
+import chylex.hee.game.world.FLAG_SKIP_RENDER
+import chylex.hee.game.world.FLAG_SYNC_CLIENT
+import chylex.hee.game.world.breakBlock
+import chylex.hee.game.world.getTile
 import chylex.hee.init.ModTileEntities
-import chylex.hee.system.util.FLAG_SKIP_RENDER
-import chylex.hee.system.util.FLAG_SYNC_CLIENT
-import chylex.hee.system.util.TagCompound
-import chylex.hee.system.util.breakBlock
-import chylex.hee.system.util.getTile
-import chylex.hee.system.util.use
+import chylex.hee.system.serialization.TagCompound
+import chylex.hee.system.serialization.use
 import net.minecraft.tileentity.TileEntityType
 
 class TileEntityEndPortalAcceptor(type: TileEntityType<TileEntityEndPortalAcceptor>) : TileEntityBasePortalController(type){

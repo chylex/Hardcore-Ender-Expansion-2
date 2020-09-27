@@ -1,17 +1,17 @@
 package chylex.hee.game.world.feature.tombdungeon.piece
+import chylex.hee.game.world.Pos
 import chylex.hee.game.world.feature.tombdungeon.TombDungeonPieces
 import chylex.hee.game.world.feature.tombdungeon.connection.TombDungeonConnection
 import chylex.hee.game.world.feature.tombdungeon.connection.TombDungeonConnectionType.CORRIDOR
-import chylex.hee.game.world.structure.IBlockPicker.Single
-import chylex.hee.game.world.structure.IBlockPicker.Single.Air
+import chylex.hee.game.world.generation.IBlockPicker.Single
+import chylex.hee.game.world.generation.IBlockPicker.Single.Air
+import chylex.hee.game.world.math.Size
 import chylex.hee.game.world.structure.IStructureWorld
 import chylex.hee.game.world.structure.piece.IStructurePieceConnection
-import chylex.hee.game.world.util.Size
 import chylex.hee.init.ModBlocks
 import chylex.hee.system.migration.Facing.NORTH
 import chylex.hee.system.migration.Facing.SOUTH
-import chylex.hee.system.util.Pos
-import chylex.hee.system.util.nextInt
+import chylex.hee.system.random.nextInt
 
 class TombDungeonCorridor_StraightCrumbling(length: Int, fallHeight: Int, override val isFancy: Boolean) : TombDungeonAbstractPiece(){
 	override val size = Size(5, 6 + fallHeight, length)

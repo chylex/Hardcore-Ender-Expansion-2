@@ -1,6 +1,6 @@
 package chylex.hee.game.block
-import chylex.hee.game.block.info.BlockBuilder
-import chylex.hee.system.util.nextInt
+import chylex.hee.game.block.properties.BlockBuilder
+import chylex.hee.system.random.nextInt
 import net.minecraft.block.BlockState
 import net.minecraft.util.math.BlockPos
 import net.minecraft.world.IWorldReader

@@ -1,9 +1,9 @@
 package chylex.hee.game.block
 import chylex.hee.game.block.IBlockDeathFlowerDecaying.Companion.LEVEL
-import chylex.hee.game.block.info.BlockBuilder
+import chylex.hee.game.block.properties.BlockBuilder
 import chylex.hee.game.item.ItemDeathFlower
 import chylex.hee.init.ModBlocks
-import chylex.hee.system.migration.vanilla.EntityPlayer
+import chylex.hee.system.migration.EntityPlayer
 import net.minecraft.block.Block
 import net.minecraft.block.BlockState
 import net.minecraft.item.BlockItemUseContext

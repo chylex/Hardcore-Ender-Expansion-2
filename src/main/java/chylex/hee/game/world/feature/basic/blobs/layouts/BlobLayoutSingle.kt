@@ -2,9 +2,9 @@ package chylex.hee.game.world.feature.basic.blobs.layouts
 import chylex.hee.game.world.feature.basic.blobs.BlobGenerator
 import chylex.hee.game.world.feature.basic.blobs.IBlobLayout
 import chylex.hee.game.world.generation.ScaffoldedWorld
-import chylex.hee.game.world.util.Size
-import chylex.hee.system.util.ceilToInt
-import chylex.hee.system.util.math.RandomDouble
+import chylex.hee.game.world.math.Size
+import chylex.hee.system.math.ceilToInt
+import chylex.hee.system.random.RandomDouble
 import java.util.Random
 
 class BlobLayoutSingle(

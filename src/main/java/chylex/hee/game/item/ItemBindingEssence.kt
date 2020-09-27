@@ -1,12 +1,12 @@
 package chylex.hee.game.item
-import chylex.hee.client.render.util.NO_TINT
+import chylex.hee.client.color.NO_TINT
 import chylex.hee.game.item.infusion.Infusion
 import chylex.hee.game.item.infusion.InfusionList
 import chylex.hee.game.item.infusion.InfusionTag
-import chylex.hee.system.migration.forge.Side
-import chylex.hee.system.migration.forge.Sided
-import chylex.hee.system.util.color.IntColor.Companion.RGB
-import chylex.hee.system.util.facades.Resource
+import chylex.hee.system.color.IntColor.Companion.RGB
+import chylex.hee.system.facades.Resource
+import chylex.hee.system.forge.Side
+import chylex.hee.system.forge.Sided
 import net.minecraft.client.renderer.color.IItemColor
 import net.minecraft.client.util.ITooltipFlag
 import net.minecraft.item.ItemGroup

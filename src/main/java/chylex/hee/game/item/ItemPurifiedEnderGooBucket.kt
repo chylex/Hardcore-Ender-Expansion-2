@@ -1,9 +1,9 @@
 package chylex.hee.game.item
 import chylex.hee.game.block.BlockEnderGooPurified
-import chylex.hee.game.fx.FxBlockData
 import chylex.hee.network.client.PacketClientFX
-import chylex.hee.system.migration.vanilla.BlockCauldron
-import chylex.hee.system.migration.vanilla.EntityPlayer
+import chylex.hee.network.fx.FxBlockData
+import chylex.hee.system.migration.BlockCauldron
+import chylex.hee.system.migration.EntityPlayer
 import net.minecraft.fluid.Fluid
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.BlockRayTraceResult

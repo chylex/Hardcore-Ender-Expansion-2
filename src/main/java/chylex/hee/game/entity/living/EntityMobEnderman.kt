@@ -1,44 +1,44 @@
 package chylex.hee.game.entity.living
 import chylex.hee.HEE
-import chylex.hee.game.entity.living.ai.AIPickUpBlock
 import chylex.hee.game.entity.living.ai.AITargetEyeContact
-import chylex.hee.game.entity.living.ai.AIWanderLand
+import chylex.hee.game.entity.living.ai.AIToggle
+import chylex.hee.game.entity.living.ai.AIToggle.Companion.addGoal
 import chylex.hee.game.entity.living.ai.AIWatchTargetInShock
-import chylex.hee.game.entity.living.ai.util.AIToggle
-import chylex.hee.game.entity.living.ai.util.AIToggle.Companion.addGoal
+import chylex.hee.game.entity.living.ai.AttackMelee
+import chylex.hee.game.entity.living.ai.PickUpBlock
+import chylex.hee.game.entity.living.ai.Swim
+import chylex.hee.game.entity.living.ai.TargetEyeContact
+import chylex.hee.game.entity.living.ai.WanderLand
+import chylex.hee.game.entity.living.ai.WatchIdle
 import chylex.hee.game.entity.living.behavior.EndermanBlockHandler
 import chylex.hee.game.entity.living.behavior.EndermanTeleportHandler
 import chylex.hee.game.entity.living.behavior.EndermanWaterHandler
+import chylex.hee.game.entity.posVec
 import chylex.hee.game.entity.projectile.EntityProjectileSpatialDash
+import chylex.hee.game.entity.selectEntities
 import chylex.hee.game.entity.technical.EntityTechnicalCausatumEvent
 import chylex.hee.game.mechanics.causatum.CausatumStage
 import chylex.hee.game.mechanics.causatum.CausatumStage.S0_INITIAL
 import chylex.hee.game.mechanics.causatum.EnderCausatum
 import chylex.hee.game.mechanics.causatum.events.CausatumEventEndermanKill
+import chylex.hee.game.world.playServer
 import chylex.hee.init.ModEntities
 import chylex.hee.init.ModSounds
-import chylex.hee.system.migration.forge.SubscribeAllEvents
-import chylex.hee.system.migration.forge.SubscribeEvent
-import chylex.hee.system.migration.vanilla.EntityArrow
-import chylex.hee.system.migration.vanilla.EntityLivingBase
-import chylex.hee.system.migration.vanilla.EntityLlamaSpit
-import chylex.hee.system.migration.vanilla.EntityPlayer
-import chylex.hee.system.migration.vanilla.EntityPotion
-import chylex.hee.system.migration.vanilla.EntityThrowable
-import chylex.hee.system.util.AIAttackMelee
-import chylex.hee.system.util.AISwim
-import chylex.hee.system.util.AITargetEyeContact
-import chylex.hee.system.util.AIWatchIdle
-import chylex.hee.system.util.TagCompound
-import chylex.hee.system.util.facades.Resource
-import chylex.hee.system.util.heeTag
-import chylex.hee.system.util.nextFloat
-import chylex.hee.system.util.nextInt
-import chylex.hee.system.util.playServer
-import chylex.hee.system.util.posVec
-import chylex.hee.system.util.selectEntities
-import chylex.hee.system.util.square
-import chylex.hee.system.util.use
+import chylex.hee.system.facades.Resource
+import chylex.hee.system.forge.SubscribeAllEvents
+import chylex.hee.system.forge.SubscribeEvent
+import chylex.hee.system.math.square
+import chylex.hee.system.migration.EntityArrow
+import chylex.hee.system.migration.EntityLivingBase
+import chylex.hee.system.migration.EntityLlamaSpit
+import chylex.hee.system.migration.EntityPlayer
+import chylex.hee.system.migration.EntityPotion
+import chylex.hee.system.migration.EntityThrowable
+import chylex.hee.system.random.nextFloat
+import chylex.hee.system.random.nextInt
+import chylex.hee.system.serialization.TagCompound
+import chylex.hee.system.serialization.heeTag
+import chylex.hee.system.serialization.use
 import net.minecraft.block.BlockState
 import net.minecraft.entity.EntityClassification.MONSTER
 import net.minecraft.entity.EntityType
@@ -247,14 +247,14 @@ class EntityMobEnderman(type: EntityType<EntityMobEnderman>, world: World) : Ent
 		aiPickUpBlocks = AIToggle()
 		aiPickUpBlocks.enabled = rand.nextInt(5) == 0
 		
-		goalSelector.addGoal(1, AISwim(this))
+		goalSelector.addGoal(1, Swim(this))
 		goalSelector.addGoal(2, aiWatchTargetInShock)
-		goalSelector.addGoal(3, AIAttackMelee(this, movementSpeed = 1.0, chaseAfterLosingSight = false), aiAttackTarget)
-		goalSelector.addGoal(4, AIWanderLand(this, movementSpeed = 0.9, chancePerTick = 70))
-		goalSelector.addGoal(5, AIWatchIdle(this))
-		goalSelector.addGoal(6, AIPickUpBlock(this, ticksPerAttempt = 20 * 30, handler = blockHandler), aiPickUpBlocks)
+		goalSelector.addGoal(3, AttackMelee(this, movementSpeed = 1.0, chaseAfterLosingSight = false), aiAttackTarget)
+		goalSelector.addGoal(4, WanderLand(this, movementSpeed = 0.9, chancePerTick = 70))
+		goalSelector.addGoal(5, WatchIdle(this))
+		goalSelector.addGoal(6, PickUpBlock(this, ticksPerAttempt = 20 * 30, handler = blockHandler), aiPickUpBlocks)
 		
-		targetSelector.addGoal(1, AITargetEyeContact(this, fieldOfView = 140F, headRadius = 0.19F, minStareTicks = 9, easilyReachableOnly = false, targetPredicate = ::canTriggerEyeContact))
+		targetSelector.addGoal(1, TargetEyeContact(this, fieldOfView = 140F, headRadius = 0.19F, minStareTicks = 9, easilyReachableOnly = false, targetPredicate = ::canTriggerEyeContact))
 	}
 	
 	// Behavior

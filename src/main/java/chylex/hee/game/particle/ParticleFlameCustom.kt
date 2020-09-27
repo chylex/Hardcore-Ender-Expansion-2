@@ -2,8 +2,8 @@ package chylex.hee.game.particle
 import chylex.hee.game.particle.ParticleFlameCustom.Data
 import chylex.hee.game.particle.data.IParticleData
 import chylex.hee.game.particle.spawner.IParticleMaker
-import chylex.hee.system.migration.forge.Side
-import chylex.hee.system.migration.forge.Sided
+import chylex.hee.system.forge.Side
+import chylex.hee.system.forge.Sided
 import net.minecraft.client.particle.FlameParticle
 import net.minecraft.client.particle.Particle
 import net.minecraft.world.World

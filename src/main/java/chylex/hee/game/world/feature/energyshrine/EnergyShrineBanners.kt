@@ -1,6 +1,6 @@
 package chylex.hee.game.world.feature.energyshrine
-import chylex.hee.system.util.TagCompound
-import chylex.hee.system.util.nextItem
+import chylex.hee.system.random.nextItem
+import chylex.hee.system.serialization.TagCompound
 import net.minecraft.item.DyeColor
 import net.minecraft.item.DyeColor.BLACK
 import net.minecraft.item.DyeColor.BLUE

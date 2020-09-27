@@ -1,9 +1,9 @@
 package chylex.hee.game.block
-import chylex.hee.game.block.info.BlockBuilder
-import chylex.hee.system.migration.vanilla.BlockLeaves
-import chylex.hee.system.migration.vanilla.EntityPlayer
-import chylex.hee.system.migration.vanilla.Items
-import chylex.hee.system.util.facades.Stats
+import chylex.hee.game.block.properties.BlockBuilder
+import chylex.hee.system.facades.Stats
+import chylex.hee.system.migration.BlockLeaves
+import chylex.hee.system.migration.EntityPlayer
+import chylex.hee.system.migration.Items
 import net.minecraft.block.BlockState
 import net.minecraft.block.material.MaterialColor
 import net.minecraft.entity.EntityType

@@ -1,14 +1,14 @@
 package chylex.hee.game.world.territory.properties
+import chylex.hee.client.render.lightmaps.ILightmap
+import chylex.hee.client.render.lightmaps.VanillaEndLightmap
 import chylex.hee.client.render.territory.AbstractEnvironmentRenderer
 import chylex.hee.client.render.territory.components.SkyCubeStatic
-import chylex.hee.client.render.territory.lightmaps.ILightmap
-import chylex.hee.client.render.territory.lightmaps.VanillaEndLightmap
 import chylex.hee.game.world.WorldProviderEndCustom.Companion.DEFAULT_CELESTIAL_ANGLE
 import chylex.hee.game.world.WorldProviderEndCustom.Companion.DEFAULT_SKY_LIGHT
-import chylex.hee.system.migration.forge.Side
-import chylex.hee.system.migration.forge.Sided
-import chylex.hee.system.migration.vanilla.EntityPlayer
-import chylex.hee.system.util.facades.Resource
+import chylex.hee.system.facades.Resource
+import chylex.hee.system.forge.Side
+import chylex.hee.system.forge.Sided
+import chylex.hee.system.migration.EntityPlayer
 import net.minecraft.util.math.Vec3d
 
 abstract class TerritoryEnvironment{

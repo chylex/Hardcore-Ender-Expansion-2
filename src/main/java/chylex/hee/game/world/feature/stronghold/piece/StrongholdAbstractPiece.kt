@@ -2,10 +2,10 @@ package chylex.hee.game.world.feature.stronghold.piece
 import chylex.hee.game.world.feature.stronghold.StrongholdPieceType
 import chylex.hee.game.world.feature.stronghold.StrongholdPieceType.CORRIDOR
 import chylex.hee.game.world.feature.stronghold.StrongholdPieces
+import chylex.hee.game.world.math.Transform
 import chylex.hee.game.world.structure.IStructureWorld
 import chylex.hee.game.world.structure.piece.StructurePiece
-import chylex.hee.game.world.util.Transform
-import chylex.hee.system.util.ceilToInt
+import chylex.hee.system.math.ceilToInt
 import net.minecraft.util.Direction
 import kotlin.math.pow
 

@@ -1,54 +1,55 @@
 package chylex.hee.game.entity.living
+import chylex.hee.game.entity.EntityData
+import chylex.hee.game.entity.OPERATION_MUL_INCR_INDIVIDUAL
 import chylex.hee.game.entity.living.ai.AIAttackLeap
-import chylex.hee.game.entity.living.ai.AIWanderLightStartle
+import chylex.hee.game.entity.living.ai.AIToggle
+import chylex.hee.game.entity.living.ai.AIToggle.Companion.addGoal
 import chylex.hee.game.entity.living.ai.AIWanderLightStartle.ILightStartleHandler
-import chylex.hee.game.entity.living.ai.AIWanderOnFirePanic
-import chylex.hee.game.entity.living.ai.path.PathNavigateGroundUnrestricted
-import chylex.hee.game.entity.living.ai.util.AIToggle
-import chylex.hee.game.entity.living.ai.util.AIToggle.Companion.addGoal
-import chylex.hee.game.entity.util.EntityData
+import chylex.hee.game.entity.living.ai.AttackLeap
+import chylex.hee.game.entity.living.ai.AttackMelee
+import chylex.hee.game.entity.living.ai.Swim
+import chylex.hee.game.entity.living.ai.TargetAttacker
+import chylex.hee.game.entity.living.ai.TargetNearby
+import chylex.hee.game.entity.living.ai.WanderLandStopNear
+import chylex.hee.game.entity.living.ai.WanderLightStartle
+import chylex.hee.game.entity.living.ai.WanderOnFirePanic
+import chylex.hee.game.entity.living.ai.WatchClosest
+import chylex.hee.game.entity.living.ai.WatchIdle
+import chylex.hee.game.entity.living.path.PathNavigateGroundUnrestricted
+import chylex.hee.game.entity.motionY
+import chylex.hee.game.entity.posVec
+import chylex.hee.game.entity.selectEntities
+import chylex.hee.game.entity.selectExistingEntities
+import chylex.hee.game.entity.selectVulnerableEntities
+import chylex.hee.game.entity.tryApplyModifier
+import chylex.hee.game.entity.tryRemoveModifier
 import chylex.hee.game.mechanics.damage.Damage
 import chylex.hee.game.mechanics.damage.IDamageProcessor.Companion.ALL_PROTECTIONS
 import chylex.hee.game.mechanics.damage.IDamageProcessor.Companion.DIFFICULTY_SCALING
 import chylex.hee.game.mechanics.damage.IDamageProcessor.Companion.PEACEFUL_EXCLUSION
+import chylex.hee.game.world.getState
+import chylex.hee.game.world.isPeaceful
+import chylex.hee.game.world.totalTime
 import chylex.hee.init.ModEntities
+import chylex.hee.system.facades.Resource
+import chylex.hee.system.math.addY
+import chylex.hee.system.math.directionTowards
+import chylex.hee.system.math.square
+import chylex.hee.system.math.toRadians
+import chylex.hee.system.migration.BlockWeb
+import chylex.hee.system.migration.EntityLivingBase
+import chylex.hee.system.migration.EntityMob
+import chylex.hee.system.migration.EntityPlayer
 import chylex.hee.system.migration.Hand.MAIN_HAND
-import chylex.hee.system.migration.vanilla.BlockWeb
-import chylex.hee.system.migration.vanilla.EntityLivingBase
-import chylex.hee.system.migration.vanilla.EntityMob
-import chylex.hee.system.migration.vanilla.EntityPlayer
-import chylex.hee.system.migration.vanilla.ItemAxe
-import chylex.hee.system.migration.vanilla.ItemSword
-import chylex.hee.system.migration.vanilla.Potions
-import chylex.hee.system.migration.vanilla.Sounds
-import chylex.hee.system.util.AIAttackMelee
-import chylex.hee.system.util.AISwim
-import chylex.hee.system.util.AITargetAttacker
-import chylex.hee.system.util.AITargetNearby
-import chylex.hee.system.util.AIWanderLandStopNear
-import chylex.hee.system.util.AIWatchClosest
-import chylex.hee.system.util.AIWatchIdle
-import chylex.hee.system.util.OPERATION_MUL_INCR_INDIVIDUAL
-import chylex.hee.system.util.TagCompound
-import chylex.hee.system.util.addY
-import chylex.hee.system.util.directionTowards
-import chylex.hee.system.util.facades.Resource
-import chylex.hee.system.util.getState
-import chylex.hee.system.util.heeTag
-import chylex.hee.system.util.isPeaceful
-import chylex.hee.system.util.motionY
-import chylex.hee.system.util.nextFloat
-import chylex.hee.system.util.nextInt
-import chylex.hee.system.util.posVec
-import chylex.hee.system.util.selectEntities
-import chylex.hee.system.util.selectExistingEntities
-import chylex.hee.system.util.selectVulnerableEntities
-import chylex.hee.system.util.square
-import chylex.hee.system.util.toRadians
-import chylex.hee.system.util.totalTime
-import chylex.hee.system.util.tryApplyModifier
-import chylex.hee.system.util.tryRemoveModifier
-import chylex.hee.system.util.use
+import chylex.hee.system.migration.ItemAxe
+import chylex.hee.system.migration.ItemSword
+import chylex.hee.system.migration.Potions
+import chylex.hee.system.migration.Sounds
+import chylex.hee.system.random.nextFloat
+import chylex.hee.system.random.nextInt
+import chylex.hee.system.serialization.TagCompound
+import chylex.hee.system.serialization.heeTag
+import chylex.hee.system.serialization.use
 import net.minecraft.block.BlockState
 import net.minecraft.entity.CreatureAttribute
 import net.minecraft.entity.Entity
@@ -166,17 +167,17 @@ class EntityMobSpiderling(type: EntityType<EntityMobSpiderling>, world: World) :
 		aiMovement = AIToggle()
 		aiMovement.enabled = false
 		
-		goalSelector.addGoal(1, AISwim(this))
-		goalSelector.addGoal(2, AIWanderOnFirePanic(this, movementSpeed = 1.2, searchWaterChance = ::panicSearchWaterChance, maxWaterDistanceXZ = 20, maxLandDistanceY = 5, searchLandChance = ::panicSearchLandChance, maxLandDistanceXZ = 5, maxWaterDistanceY = 2))
-		goalSelector.addGoal(3, AIWanderLightStartle(this, movementSpeed = 1.2, minBlockLightIncrease = 3, minCombinedLightDecrease = 6, searchAttempts = 1000, maxDistanceXZ = 15, maxDistanceY = 2, handler = this))
-		goalSelector.addGoal(4, AIAttackLeap(this, triggerDistance = (1.5)..(3.5), triggerChance = 0.75F, triggerCooldown = 45, leapStrengthXZ = (0.9)..(1.1), leapStrengthY = (0.4)..(0.5)), aiMovement)
-		goalSelector.addGoal(5, AIAttackMelee(this, movementSpeed = 1.1, chaseAfterLosingSight = true), aiMovement)
-		goalSelector.addGoal(6, AIWanderLandStopNear<EntityPlayer>(this, movementSpeed = 0.9, chancePerTick = 30, detectDistance = 7.5), aiMovement)
-		goalSelector.addGoal(7, AIWatchClosest<EntityPlayer>(this, maxDistance = 3.5F), aiMovement)
-		goalSelector.addGoal(8, AIWatchIdle(this), aiMovement)
+		goalSelector.addGoal(1, Swim(this))
+		goalSelector.addGoal(2, WanderOnFirePanic(this, movementSpeed = 1.2, searchWaterChance = ::panicSearchWaterChance, maxWaterDistanceXZ = 20, maxLandDistanceY = 5, searchLandChance = ::panicSearchLandChance, maxLandDistanceXZ = 5, maxWaterDistanceY = 2))
+		goalSelector.addGoal(3, WanderLightStartle(this, movementSpeed = 1.2, minBlockLightIncrease = 3, minCombinedLightDecrease = 6, searchAttempts = 1000, maxDistanceXZ = 15, maxDistanceY = 2, handler = this))
+		goalSelector.addGoal(4, AttackLeap(this, triggerDistance = (1.5)..(3.5), triggerChance = 0.75F, triggerCooldown = 45, leapStrengthXZ = (0.9)..(1.1), leapStrengthY = (0.4)..(0.5)), aiMovement)
+		goalSelector.addGoal(5, AttackMelee(this, movementSpeed = 1.1, chaseAfterLosingSight = true), aiMovement)
+		goalSelector.addGoal(6, WanderLandStopNear<EntityPlayer>(this, movementSpeed = 0.9, chancePerTick = 30, detectDistance = 7.5), aiMovement)
+		goalSelector.addGoal(7, WatchClosest<EntityPlayer>(this, maxDistance = 3.5F), aiMovement)
+		goalSelector.addGoal(8, WatchIdle(this), aiMovement)
 		
-		targetSelector.addGoal(1, AITargetAttacker(this, callReinforcements = false))
-		targetSelector.addGoal(2, AITargetNearby(this, chancePerTick = 18, checkSight = true, easilyReachableOnly = false, targetPredicate = ::isPlayerNearbyForAttack), aiMovement)
+		targetSelector.addGoal(1, TargetAttacker(this, callReinforcements = false))
+		targetSelector.addGoal(2, TargetNearby(this, chancePerTick = 18, checkSight = true, easilyReachableOnly = false, targetPredicate = ::isPlayerNearbyForAttack), aiMovement)
 	}
 	
 	override fun createSpawnPacket(): IPacket<*>{

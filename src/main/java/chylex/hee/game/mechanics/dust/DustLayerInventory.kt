@@ -1,6 +1,6 @@
 package chylex.hee.game.mechanics.dust
+import chylex.hee.game.inventory.size
 import chylex.hee.game.mechanics.dust.DustLayers.Side.BOTTOM
-import chylex.hee.system.util.size
 import net.minecraft.item.ItemStack
 import net.minecraftforge.items.IItemHandler
 import kotlin.math.max

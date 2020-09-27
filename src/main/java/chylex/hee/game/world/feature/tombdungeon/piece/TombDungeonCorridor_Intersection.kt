@@ -1,15 +1,15 @@
 package chylex.hee.game.world.feature.tombdungeon.piece
+import chylex.hee.game.world.Pos
 import chylex.hee.game.world.feature.tombdungeon.connection.TombDungeonConnection
 import chylex.hee.game.world.feature.tombdungeon.connection.TombDungeonConnectionType.CORRIDOR
-import chylex.hee.game.world.structure.IBlockPicker.Single.Air
+import chylex.hee.game.world.generation.IBlockPicker.Single.Air
+import chylex.hee.game.world.math.Size
 import chylex.hee.game.world.structure.IStructureWorld
 import chylex.hee.game.world.structure.piece.IStructurePieceConnection
-import chylex.hee.game.world.util.Size
 import chylex.hee.system.migration.Facing.EAST
 import chylex.hee.system.migration.Facing.NORTH
 import chylex.hee.system.migration.Facing.SOUTH
 import chylex.hee.system.migration.Facing.WEST
-import chylex.hee.system.util.Pos
 
 class TombDungeonCorridor_Intersection(override val isFancy: Boolean) : TombDungeonAbstractPiece(){
 	override val size = Size(5, 5, 5)

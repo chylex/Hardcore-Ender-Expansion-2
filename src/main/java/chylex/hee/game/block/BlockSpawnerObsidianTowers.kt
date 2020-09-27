@@ -1,7 +1,7 @@
 package chylex.hee.game.block
 import chylex.hee.game.block.entity.TileEntitySpawnerObsidianTower
-import chylex.hee.game.block.info.BlockBuilder
-import chylex.hee.system.migration.vanilla.BlockMobSpawner
+import chylex.hee.game.block.properties.BlockBuilder
+import chylex.hee.system.migration.BlockMobSpawner
 import net.minecraft.block.BlockState
 import net.minecraft.tileentity.TileEntity
 import net.minecraft.util.math.BlockPos

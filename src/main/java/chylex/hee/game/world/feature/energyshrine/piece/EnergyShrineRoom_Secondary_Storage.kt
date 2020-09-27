@@ -1,4 +1,7 @@
 package chylex.hee.game.world.feature.energyshrine.piece
+import chylex.hee.game.block.withFacing
+import chylex.hee.game.world.Pos
+import chylex.hee.game.world.allInBoxMutable
 import chylex.hee.game.world.feature.energyshrine.EnergyShrinePieces
 import chylex.hee.game.world.feature.energyshrine.connection.EnergyShrineConnection
 import chylex.hee.game.world.feature.energyshrine.connection.EnergyShrineConnectionType.TERMINAL
@@ -6,14 +9,11 @@ import chylex.hee.game.world.structure.IStructureWorld
 import chylex.hee.game.world.structure.piece.IStructurePieceConnection
 import chylex.hee.game.world.structure.trigger.LootChestStructureTrigger
 import chylex.hee.init.ModBlocks
+import chylex.hee.system.migration.Blocks
 import chylex.hee.system.migration.Facing.NORTH
 import chylex.hee.system.migration.Facing.SOUTH
-import chylex.hee.system.migration.vanilla.Blocks
-import chylex.hee.system.util.Pos
-import chylex.hee.system.util.allInBoxMutable
-import chylex.hee.system.util.nextInt
-import chylex.hee.system.util.nextItem
-import chylex.hee.system.util.withFacing
+import chylex.hee.system.random.nextInt
+import chylex.hee.system.random.nextItem
 import net.minecraft.util.math.BlockPos
 
 class EnergyShrineRoom_Secondary_Storage(file: String) : EnergyShrineRoom_Generic(file){

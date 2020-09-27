@@ -1,11 +1,11 @@
 package chylex.hee.game.entity.living.behavior
+import chylex.hee.game.entity.OPERATION_MUL_INCR_INDIVIDUAL
 import chylex.hee.game.entity.living.EntityMobAbstractEnderman
-import chylex.hee.system.util.OPERATION_MUL_INCR_INDIVIDUAL
-import chylex.hee.system.util.TagCompound
-import chylex.hee.system.util.nextInt
-import chylex.hee.system.util.tryApplyModifier
-import chylex.hee.system.util.tryRemoveModifier
-import chylex.hee.system.util.use
+import chylex.hee.game.entity.tryApplyModifier
+import chylex.hee.game.entity.tryRemoveModifier
+import chylex.hee.system.random.nextInt
+import chylex.hee.system.serialization.TagCompound
+import chylex.hee.system.serialization.use
 import net.minecraft.entity.SharedMonsterAttributes.ATTACK_DAMAGE
 import net.minecraft.entity.ai.attributes.AttributeModifier
 import net.minecraft.util.DamageSource

@@ -1,16 +1,18 @@
 package chylex.hee.game.world.feature.energyshrine.piece
-import chylex.hee.game.block.util.ColoredBlocks
+import chylex.hee.game.block.withFacing
+import chylex.hee.game.world.Pos
 import chylex.hee.game.world.feature.energyshrine.EnergyShrineBanners
 import chylex.hee.game.world.feature.energyshrine.EnergyShrinePieces
 import chylex.hee.game.world.feature.energyshrine.EnergyShrineRoomData
 import chylex.hee.game.world.feature.energyshrine.connection.EnergyShrineConnection
 import chylex.hee.game.world.feature.energyshrine.connection.EnergyShrineConnectionType.ROOM
-import chylex.hee.game.world.structure.IBlockPicker
-import chylex.hee.game.world.structure.IBlockPicker.Single
-import chylex.hee.game.world.structure.IBlockPicker.Single.Air
+import chylex.hee.game.world.generation.IBlockPicker
+import chylex.hee.game.world.generation.IBlockPicker.Single
+import chylex.hee.game.world.generation.IBlockPicker.Single.Air
 import chylex.hee.game.world.structure.IStructurePieceFromFile
 import chylex.hee.game.world.structure.IStructurePieceFromFile.Delegate
 import chylex.hee.game.world.structure.IStructureWorld
+import chylex.hee.game.world.structure.palette.ColoredBlocks
 import chylex.hee.game.world.structure.piece.IStructurePieceConnection
 import chylex.hee.game.world.structure.trigger.LootChestStructureTrigger
 import chylex.hee.game.world.structure.trigger.TileEntityStructureTrigger
@@ -19,8 +21,6 @@ import chylex.hee.system.migration.Facing.EAST
 import chylex.hee.system.migration.Facing.NORTH
 import chylex.hee.system.migration.Facing.SOUTH
 import chylex.hee.system.migration.Facing.WEST
-import chylex.hee.system.util.Pos
-import chylex.hee.system.util.withFacing
 import net.minecraft.util.Direction
 import net.minecraft.util.math.BlockPos
 

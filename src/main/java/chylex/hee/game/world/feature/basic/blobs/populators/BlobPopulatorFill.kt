@@ -1,11 +1,11 @@
 package chylex.hee.game.world.feature.basic.blobs.populators
+import chylex.hee.game.world.allInBox
 import chylex.hee.game.world.feature.basic.blobs.BlobGenerator
 import chylex.hee.game.world.feature.basic.blobs.IBlobPopulator
+import chylex.hee.game.world.generation.IBlockPicker
+import chylex.hee.game.world.generation.IBlockPicker.Single
 import chylex.hee.game.world.generation.ScaffoldedWorld
-import chylex.hee.game.world.structure.IBlockPicker
-import chylex.hee.game.world.structure.IBlockPicker.Single
-import chylex.hee.system.util.allInBox
-import chylex.hee.system.util.facades.Facing6
+import chylex.hee.system.facades.Facing6
 import net.minecraft.block.Block
 import java.util.Random
 

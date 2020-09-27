@@ -11,8 +11,8 @@ import chylex.hee.game.mechanics.table.process.ProcessManyPedestals.State.Work
 import chylex.hee.game.mechanics.table.process.ProcessOnePedestal
 import chylex.hee.game.mechanics.table.process.serializer.BasicProcessSerializer
 import chylex.hee.init.ModTileEntities
-import chylex.hee.system.util.TagCompound
-import chylex.hee.system.util.color.IntColor.Companion.RGB
+import chylex.hee.system.color.IntColor.Companion.RGB
+import chylex.hee.system.serialization.TagCompound
 import net.minecraft.item.ItemStack
 import net.minecraft.tileentity.TileEntityType
 import net.minecraft.util.math.BlockPos

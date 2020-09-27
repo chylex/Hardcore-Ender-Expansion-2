@@ -1,9 +1,9 @@
 package chylex.hee.game.world.structure.trigger
+import chylex.hee.game.world.getBlock
+import chylex.hee.game.world.math.Transform
 import chylex.hee.game.world.structure.IStructureTrigger
 import chylex.hee.game.world.structure.IStructureWorld
-import chylex.hee.game.world.util.Transform
-import chylex.hee.system.util.TagCompound
-import chylex.hee.system.util.getBlock
+import chylex.hee.system.serialization.TagCompound
 import net.minecraft.block.Block
 import net.minecraft.block.BlockState
 import net.minecraft.tileentity.TileEntity

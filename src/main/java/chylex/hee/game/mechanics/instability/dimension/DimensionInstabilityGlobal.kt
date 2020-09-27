@@ -1,11 +1,11 @@
 package chylex.hee.game.mechanics.instability.dimension
 import chylex.hee.game.mechanics.instability.dimension.components.EndermiteSpawnLogic
-import chylex.hee.system.util.TagCompound
-import chylex.hee.system.util.ceilToInt
-import chylex.hee.system.util.floorToInt
-import chylex.hee.system.util.remapRange
-import chylex.hee.system.util.totalTime
-import chylex.hee.system.util.use
+import chylex.hee.game.world.totalTime
+import chylex.hee.system.math.ceilToInt
+import chylex.hee.system.math.floorToInt
+import chylex.hee.system.math.remapRange
+import chylex.hee.system.serialization.TagCompound
+import chylex.hee.system.serialization.use
 import net.minecraft.util.math.BlockPos
 import net.minecraft.world.World
 import net.minecraft.world.server.ServerWorld

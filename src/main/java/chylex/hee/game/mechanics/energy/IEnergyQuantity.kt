@@ -1,5 +1,5 @@
 package chylex.hee.game.mechanics.energy
-import chylex.hee.system.util.floorToInt
+import chylex.hee.system.math.floorToInt
 
 interface IEnergyQuantity: Comparable<IEnergyQuantity>{
 	val internal: Internal

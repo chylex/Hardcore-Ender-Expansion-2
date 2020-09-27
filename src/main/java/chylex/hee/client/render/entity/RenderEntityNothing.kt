@@ -1,8 +1,8 @@
 package chylex.hee.client.render.entity
-import chylex.hee.system.migration.forge.Side
-import chylex.hee.system.migration.forge.Sided
-import chylex.hee.system.migration.vanilla.Render
-import chylex.hee.system.migration.vanilla.RenderManager
+import chylex.hee.system.forge.Side
+import chylex.hee.system.forge.Sided
+import chylex.hee.system.migration.Render
+import chylex.hee.system.migration.RenderManager
 import net.minecraft.client.renderer.culling.ClippingHelperImpl
 import net.minecraft.entity.Entity
 import net.minecraft.util.ResourceLocation

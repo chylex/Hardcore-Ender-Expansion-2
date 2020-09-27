@@ -13,7 +13,7 @@ function initializeCoreMod(){
         hookStart(instructions, function(node, skipInst){
             node.visitVarInsn(op.ALOAD, 0);
             node.visitVarInsn(op.ALOAD, 1);
-            node.visitMethodInsn(op.INVOKESTATIC, "chylex/hee/game/mechanics/potion/PotionCorruption", "shouldSkipAttributeChange", "(Lnet/minecraft/potion/Effect;Lnet/minecraft/entity/LivingEntity;)Z");
+            node.visitMethodInsn(op.INVOKESTATIC, "chylex/hee/game/potion/PotionCorruption", "shouldSkipAttributeChange", "(Lnet/minecraft/potion/Effect;Lnet/minecraft/entity/LivingEntity;)Z");
             node.visitJumpInsn(op.IFEQ, skipInst);
             node.visitInsn(op.RETURN);
         });
@@ -24,7 +24,7 @@ function initializeCoreMod(){
             hookStart(instructions, function(node, skipInst){
                 node.visitVarInsn(op.ALOAD, 0);
                 node.visitVarInsn(op.ALOAD, 3);
-                node.visitMethodInsn(op.INVOKESTATIC, "chylex/hee/game/mechanics/potion/PotionCorruption", "shouldCorrupt", "(Lnet/minecraft/potion/Effect;Lnet/minecraft/entity/LivingEntity;)Z");
+                node.visitMethodInsn(op.INVOKESTATIC, "chylex/hee/game/potion/PotionCorruption", "shouldCorrupt", "(Lnet/minecraft/potion/Effect;Lnet/minecraft/entity/LivingEntity;)Z");
                 node.visitJumpInsn(op.IFEQ, skipInst);
                 node.visitInsn(op.RETURN);
             });
@@ -36,7 +36,7 @@ function initializeCoreMod(){
             hookStart(instructions, function(node, skipInst){
                 node.visitVarInsn(op.ALOAD, 0);
                 node.visitVarInsn(op.ALOAD, 1);
-                node.visitMethodInsn(op.INVOKESTATIC, "chylex/hee/game/mechanics/potion/PotionCorruption", "shouldCorrupt", "(Lnet/minecraft/potion/EffectInstance;Lnet/minecraft/entity/LivingEntity;)Z");
+                node.visitMethodInsn(op.INVOKESTATIC, "chylex/hee/game/potion/PotionCorruption", "shouldCorrupt", "(Lnet/minecraft/potion/EffectInstance;Lnet/minecraft/entity/LivingEntity;)Z");
                 node.visitJumpInsn(op.IFEQ, skipInst);
                 node.visitInsn(op.RETURN);
             });
@@ -48,7 +48,7 @@ function initializeCoreMod(){
             hookStart(instructions, function(node, skipInst){
                 node.visitVarInsn(op.ALOAD, 1);
                 node.visitVarInsn(op.ALOAD, 0);
-                node.visitMethodInsn(op.INVOKESTATIC, "chylex/hee/game/mechanics/potion/PotionCorruption", "shouldCorrupt", "(Lnet/minecraft/potion/Effect;Lnet/minecraft/entity/LivingEntity;)Z");
+                node.visitMethodInsn(op.INVOKESTATIC, "chylex/hee/game/potion/PotionCorruption", "shouldCorrupt", "(Lnet/minecraft/potion/Effect;Lnet/minecraft/entity/LivingEntity;)Z");
                 node.visitJumpInsn(op.IFEQ, skipInst);
                 node.visitInsn(op.ICONST_0);
                 node.visitInsn(op.IRETURN);

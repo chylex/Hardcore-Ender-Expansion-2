@@ -1,7 +1,7 @@
 package chylex.hee.game.block
-import chylex.hee.game.block.info.BlockBuilder
-import chylex.hee.system.migration.forge.Side
-import chylex.hee.system.migration.forge.Sided
+import chylex.hee.game.block.properties.BlockBuilder
+import chylex.hee.system.forge.Side
+import chylex.hee.system.forge.Sided
 import net.minecraft.client.util.ITooltipFlag
 import net.minecraft.item.ItemStack
 import net.minecraft.util.text.ITextComponent

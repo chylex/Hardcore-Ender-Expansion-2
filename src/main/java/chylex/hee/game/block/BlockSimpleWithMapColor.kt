@@ -1,5 +1,5 @@
 package chylex.hee.game.block
-import chylex.hee.game.block.info.BlockBuilder
+import chylex.hee.game.block.properties.BlockBuilder
 import net.minecraft.block.BlockState
 import net.minecraft.block.material.MaterialColor
 import net.minecraft.util.math.BlockPos

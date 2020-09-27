@@ -1,10 +1,9 @@
 package chylex.hee.game.entity.living.ai
-import chylex.hee.game.entity.living.ai.util.AIBaseTargetFiltered
-import chylex.hee.system.migration.vanilla.EntityCreature
-import chylex.hee.system.migration.vanilla.EntityLivingBase
-import chylex.hee.system.util.nextItemOrNull
-import chylex.hee.system.util.posVec
-import chylex.hee.system.util.selectExistingEntities
+import chylex.hee.game.entity.posVec
+import chylex.hee.game.entity.selectExistingEntities
+import chylex.hee.system.migration.EntityCreature
+import chylex.hee.system.migration.EntityLivingBase
+import chylex.hee.system.random.nextItemOrNull
 import java.util.EnumSet
 
 class AITargetSwarmSwitch<T : EntityLivingBase>(

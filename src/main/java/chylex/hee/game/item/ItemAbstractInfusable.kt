@@ -2,8 +2,8 @@ package chylex.hee.game.item
 import chylex.hee.game.item.infusion.IInfusableItem
 import chylex.hee.game.item.infusion.Infusion
 import chylex.hee.game.item.infusion.InfusionTag
-import chylex.hee.system.migration.forge.Side
-import chylex.hee.system.migration.forge.Sided
+import chylex.hee.system.forge.Side
+import chylex.hee.system.forge.Sided
 import net.minecraft.client.util.ITooltipFlag
 import net.minecraft.item.Item
 import net.minecraft.item.ItemStack

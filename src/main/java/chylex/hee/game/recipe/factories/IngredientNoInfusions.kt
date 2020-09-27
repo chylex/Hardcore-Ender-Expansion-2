@@ -2,7 +2,7 @@ package chylex.hee.game.recipe.factories
 import chylex.hee.game.item.infusion.IInfusableItem
 import chylex.hee.game.item.infusion.InfusionTag
 import chylex.hee.game.recipe.factories.IngredientNoInfusions.Instance
-import chylex.hee.system.util.getIfExists
+import chylex.hee.system.forge.getIfExists
 import com.google.gson.JsonObject
 import com.google.gson.JsonSyntaxException
 import net.minecraft.item.Item

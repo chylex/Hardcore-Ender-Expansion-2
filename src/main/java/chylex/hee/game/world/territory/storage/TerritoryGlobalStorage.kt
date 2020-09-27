@@ -1,13 +1,13 @@
 package chylex.hee.game.world.territory.storage
+import chylex.hee.game.world.perDimensionData
 import chylex.hee.game.world.territory.TerritoryInstance
 import chylex.hee.game.world.territory.TerritoryInstance.Companion.THE_HUB_INSTANCE
 import chylex.hee.game.world.territory.TerritoryType
-import chylex.hee.system.util.NBTList.Companion.putList
-import chylex.hee.system.util.NBTObjectList
-import chylex.hee.system.util.TagCompound
-import chylex.hee.system.util.getListOfCompounds
-import chylex.hee.system.util.perDimensionData
-import chylex.hee.system.util.use
+import chylex.hee.system.serialization.NBTList.Companion.putList
+import chylex.hee.system.serialization.NBTObjectList
+import chylex.hee.system.serialization.TagCompound
+import chylex.hee.system.serialization.getListOfCompounds
+import chylex.hee.system.serialization.use
 import net.minecraft.world.storage.WorldSavedData
 import java.util.EnumMap
 

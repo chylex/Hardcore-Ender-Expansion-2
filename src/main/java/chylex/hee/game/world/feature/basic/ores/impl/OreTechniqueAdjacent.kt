@@ -2,9 +2,9 @@ package chylex.hee.game.world.feature.basic.ores.impl
 import chylex.hee.game.world.feature.basic.ores.IOreTechnique
 import chylex.hee.game.world.generation.IBlockPlacer
 import chylex.hee.game.world.generation.SegmentedWorld
-import chylex.hee.system.util.facades.Facing6
-import chylex.hee.system.util.nextInt
-import chylex.hee.system.util.nextItem
+import chylex.hee.system.facades.Facing6
+import chylex.hee.system.random.nextInt
+import chylex.hee.system.random.nextItem
 import net.minecraft.util.math.BlockPos
 import java.util.Random
 import kotlin.math.abs

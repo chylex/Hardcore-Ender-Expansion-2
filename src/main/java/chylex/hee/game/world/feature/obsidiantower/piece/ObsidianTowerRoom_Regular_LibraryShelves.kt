@@ -1,18 +1,18 @@
 package chylex.hee.game.world.feature.obsidiantower.piece
+import chylex.hee.game.block.with
+import chylex.hee.game.world.Pos
 import chylex.hee.game.world.feature.obsidiantower.ObsidianTowerSpawnerLevel.LEVEL_1
+import chylex.hee.game.world.math.PosXZ
 import chylex.hee.game.world.structure.IStructureWorld
-import chylex.hee.game.world.util.PosXZ
 import chylex.hee.init.ModBlocks
+import chylex.hee.system.migration.BlockSlab
+import chylex.hee.system.migration.Blocks
 import chylex.hee.system.migration.Facing.EAST
 import chylex.hee.system.migration.Facing.NORTH
 import chylex.hee.system.migration.Facing.SOUTH
 import chylex.hee.system.migration.Facing.WEST
-import chylex.hee.system.migration.vanilla.BlockSlab
-import chylex.hee.system.migration.vanilla.Blocks
-import chylex.hee.system.util.Pos
-import chylex.hee.system.util.nextInt
-import chylex.hee.system.util.nextItem
-import chylex.hee.system.util.with
+import chylex.hee.system.random.nextInt
+import chylex.hee.system.random.nextItem
 import net.minecraft.state.properties.SlabType
 
 class ObsidianTowerRoom_Regular_LibraryShelves(file: String) : ObsidianTowerRoom_General(file, guaranteesSpawnersOnLevel1 = true){

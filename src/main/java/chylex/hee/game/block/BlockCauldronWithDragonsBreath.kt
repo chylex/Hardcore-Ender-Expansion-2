@@ -1,6 +1,6 @@
 package chylex.hee.game.block
-import chylex.hee.game.block.info.BlockBuilder
-import chylex.hee.system.migration.vanilla.Items
+import chylex.hee.game.block.properties.BlockBuilder
+import chylex.hee.system.migration.Items
 import net.minecraft.item.ItemStack
 
 class BlockCauldronWithDragonsBreath(builder: BlockBuilder) : BlockAbstractCauldron(builder){

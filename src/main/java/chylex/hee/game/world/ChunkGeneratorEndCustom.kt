@@ -1,11 +1,8 @@
 package chylex.hee.game.world
 import chylex.hee.game.world.generation.TerritoryGenerationCache
 import chylex.hee.game.world.generation.TerritoryGenerationInfo
+import chylex.hee.game.world.math.Transform
 import chylex.hee.game.world.territory.TerritoryInstance
-import chylex.hee.game.world.util.Transform
-import chylex.hee.system.util.Pos
-import chylex.hee.system.util.component1
-import chylex.hee.system.util.component2
 import net.minecraft.block.BlockState
 import net.minecraft.entity.EntityClassification
 import net.minecraft.util.math.BlockPos

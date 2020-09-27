@@ -1,9 +1,9 @@
 package chylex.hee.game.world.structure.trigger
 import chylex.hee.game.block.entity.TileEntityEnergyCluster
 import chylex.hee.game.mechanics.energy.ClusterSnapshot
+import chylex.hee.game.world.math.Transform
 import chylex.hee.game.world.structure.IStructureTrigger
 import chylex.hee.game.world.structure.IStructureWorld
-import chylex.hee.game.world.util.Transform
 import chylex.hee.init.ModBlocks
 import net.minecraft.util.math.BlockPos
 import net.minecraft.world.IWorld

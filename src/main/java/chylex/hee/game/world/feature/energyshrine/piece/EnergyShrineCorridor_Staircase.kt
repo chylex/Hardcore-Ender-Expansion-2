@@ -1,17 +1,17 @@
 package chylex.hee.game.world.feature.energyshrine.piece
+import chylex.hee.game.block.withFacing
 import chylex.hee.game.world.feature.energyshrine.EnergyShrinePieces
+import chylex.hee.game.world.math.PosXZ
 import chylex.hee.game.world.structure.IStructurePieceFromFile
 import chylex.hee.game.world.structure.IStructurePieceFromFile.Delegate
 import chylex.hee.game.world.structure.IStructureWorld
-import chylex.hee.game.world.util.PosXZ
 import chylex.hee.init.ModBlocks
-import chylex.hee.system.util.ceilToInt
-import chylex.hee.system.util.facades.Facing6
-import chylex.hee.system.util.nextFloat
-import chylex.hee.system.util.nextInt
-import chylex.hee.system.util.nextItemOrNull
-import chylex.hee.system.util.toRadians
-import chylex.hee.system.util.withFacing
+import chylex.hee.system.facades.Facing6
+import chylex.hee.system.math.ceilToInt
+import chylex.hee.system.math.toRadians
+import chylex.hee.system.random.nextFloat
+import chylex.hee.system.random.nextInt
+import chylex.hee.system.random.nextItemOrNull
 import net.minecraft.util.math.BlockPos
 import java.util.Random
 

@@ -1,8 +1,8 @@
 package chylex.hee.game.world.feature.stronghold.piece
+import chylex.hee.game.world.Pos
 import chylex.hee.game.world.structure.IStructureWorld
 import chylex.hee.init.ModBlocks
-import chylex.hee.system.util.Pos
-import chylex.hee.system.util.nextInt
+import chylex.hee.system.random.nextInt
 
 class StrongholdRoom_Decor_StairSnake(file: String) : StrongholdRoom_Decor_Generic(file){
 	override fun generate(world: IStructureWorld, instance: Instance){

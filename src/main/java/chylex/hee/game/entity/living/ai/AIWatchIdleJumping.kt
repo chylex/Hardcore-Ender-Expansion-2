@@ -1,5 +1,5 @@
 package chylex.hee.game.entity.living.ai
-import chylex.hee.system.migration.vanilla.EntityLiving
+import chylex.hee.system.migration.EntityLiving
 import net.minecraft.entity.ai.goal.Goal.Flag.JUMP
 import net.minecraft.entity.ai.goal.Goal.Flag.LOOK
 import net.minecraft.entity.ai.goal.Goal.Flag.MOVE

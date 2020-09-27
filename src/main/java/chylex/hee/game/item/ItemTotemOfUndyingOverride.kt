@@ -1,6 +1,6 @@
 package chylex.hee.game.item
 import chylex.hee.init.ModItems
-import chylex.hee.system.migration.vanilla.EntityPlayer
+import chylex.hee.system.migration.EntityPlayer
 import net.minecraft.entity.Entity
 import net.minecraft.item.Item
 import net.minecraft.item.ItemStack

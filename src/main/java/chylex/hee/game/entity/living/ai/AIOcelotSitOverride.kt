@@ -1,11 +1,11 @@
 package chylex.hee.game.entity.living.ai
 import chylex.hee.HEE
-import chylex.hee.system.migration.forge.EventPriority
-import chylex.hee.system.migration.forge.SubscribeAllEvents
-import chylex.hee.system.migration.forge.SubscribeEvent
-import chylex.hee.system.migration.vanilla.EntityCat
-import chylex.hee.system.util.getBlock
-import chylex.hee.system.util.isAir
+import chylex.hee.game.world.getBlock
+import chylex.hee.game.world.isAir
+import chylex.hee.system.forge.EventPriority
+import chylex.hee.system.forge.SubscribeAllEvents
+import chylex.hee.system.forge.SubscribeEvent
+import chylex.hee.system.migration.EntityCat
 import net.minecraft.entity.ai.goal.CatSitOnBlockGoal
 import net.minecraft.entity.passive.CatEntity
 import net.minecraft.util.math.BlockPos

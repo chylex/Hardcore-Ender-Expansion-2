@@ -1,7 +1,7 @@
 package chylex.hee.game.entity.item
-import chylex.hee.system.migration.vanilla.EntityItem
-import chylex.hee.system.util.cloneFrom
-import chylex.hee.system.util.nextFloat
+import chylex.hee.game.entity.cloneFrom
+import chylex.hee.system.migration.EntityItem
+import chylex.hee.system.random.nextFloat
 import net.minecraft.entity.Entity
 import net.minecraft.entity.EntityType
 import net.minecraft.item.ItemStack

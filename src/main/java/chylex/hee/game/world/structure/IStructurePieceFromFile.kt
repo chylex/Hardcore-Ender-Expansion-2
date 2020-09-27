@@ -1,6 +1,5 @@
 package chylex.hee.game.world.structure
-import chylex.hee.game.world.structure.file.Palette
-import chylex.hee.game.world.structure.file.StructureFiles
+import chylex.hee.game.world.structure.palette.Palette
 
 interface IStructurePieceFromFile : IStructurePiece{
 	val path: String

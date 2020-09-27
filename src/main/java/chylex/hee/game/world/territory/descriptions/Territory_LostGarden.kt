@@ -1,11 +1,11 @@
 package chylex.hee.game.world.territory.descriptions
+import chylex.hee.client.render.lightmaps.OverworldLightmap
 import chylex.hee.client.render.territory.components.SkyDomeStatic
-import chylex.hee.client.render.territory.lightmaps.OverworldLightmap
 import chylex.hee.game.world.territory.ITerritoryDescription
 import chylex.hee.game.world.territory.properties.TerritoryColors
 import chylex.hee.game.world.territory.properties.TerritoryEnvironment
-import chylex.hee.system.util.color.IntColor.Companion.RGB
-import chylex.hee.system.util.nextFloat
+import chylex.hee.system.color.IntColor.Companion.RGB
+import chylex.hee.system.random.nextFloat
 import net.minecraft.util.math.Vec3d
 import java.util.Random
 

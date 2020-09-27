@@ -1,7 +1,7 @@
 package chylex.hee.client.sound
 import chylex.hee.game.entity.projectile.EntityProjectileSpatialDash
-import chylex.hee.system.migration.vanilla.Sounds
-import chylex.hee.system.util.nextFloat
+import chylex.hee.system.migration.Sounds
+import chylex.hee.system.random.nextFloat
 import net.minecraft.client.audio.TickableSound
 import net.minecraft.util.SoundCategory
 

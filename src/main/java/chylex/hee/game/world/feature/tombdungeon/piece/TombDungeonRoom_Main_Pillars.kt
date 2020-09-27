@@ -1,17 +1,17 @@
 package chylex.hee.game.world.feature.tombdungeon.piece
+import chylex.hee.game.world.Pos
 import chylex.hee.game.world.feature.tombdungeon.connection.TombDungeonConnection
 import chylex.hee.game.world.feature.tombdungeon.connection.TombDungeonConnectionType.ROOM_ENTRANCE
 import chylex.hee.game.world.structure.IStructureWorld
 import chylex.hee.game.world.structure.piece.IStructurePieceConnection
 import chylex.hee.init.ModBlocks
+import chylex.hee.system.facades.Facing4
 import chylex.hee.system.migration.Facing.EAST
 import chylex.hee.system.migration.Facing.NORTH
 import chylex.hee.system.migration.Facing.SOUTH
 import chylex.hee.system.migration.Facing.WEST
-import chylex.hee.system.util.Pos
-import chylex.hee.system.util.facades.Facing4
-import chylex.hee.system.util.nextInt
-import chylex.hee.system.util.nextItem
+import chylex.hee.system.random.nextInt
+import chylex.hee.system.random.nextItem
 
 class TombDungeonRoom_Main_Pillars(file: String, isFancy: Boolean) : TombDungeonRoom(file, isFancy){
 	override val connections = arrayOf<IStructurePieceConnection>(

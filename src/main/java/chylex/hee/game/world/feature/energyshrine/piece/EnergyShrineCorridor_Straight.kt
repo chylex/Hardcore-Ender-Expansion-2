@@ -1,14 +1,14 @@
 package chylex.hee.game.world.feature.energyshrine.piece
+import chylex.hee.game.world.Pos
 import chylex.hee.game.world.feature.energyshrine.connection.EnergyShrineConnection
 import chylex.hee.game.world.feature.energyshrine.connection.EnergyShrineConnectionType.CORRIDOR
-import chylex.hee.game.world.structure.IBlockPicker.Single.Air
+import chylex.hee.game.world.generation.IBlockPicker.Single.Air
+import chylex.hee.game.world.math.Size
 import chylex.hee.game.world.structure.IStructureWorld
 import chylex.hee.game.world.structure.piece.IStructurePieceConnection
-import chylex.hee.game.world.util.Size
 import chylex.hee.init.ModBlocks
 import chylex.hee.system.migration.Facing.NORTH
 import chylex.hee.system.migration.Facing.SOUTH
-import chylex.hee.system.util.Pos
 
 class EnergyShrineCorridor_Straight(length: Int) : EnergyShrineAbstractPiece(){
 	override val size = Size(4, 6, length)

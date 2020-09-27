@@ -1,11 +1,11 @@
 package chylex.hee.client.model.entity
-import chylex.hee.client.render.util.FACE_FRONT
-import chylex.hee.client.render.util.beginBox
-import chylex.hee.client.render.util.retainFace
+import chylex.hee.client.model.FACE_FRONT
+import chylex.hee.client.model.beginBox
+import chylex.hee.client.model.retainFace
 import chylex.hee.game.entity.living.EntityBossEnderEye
-import chylex.hee.system.migration.forge.Side
-import chylex.hee.system.migration.forge.Sided
-import chylex.hee.system.util.toRadians
+import chylex.hee.system.forge.Side
+import chylex.hee.system.forge.Sided
+import chylex.hee.system.math.toRadians
 import com.mojang.blaze3d.matrix.MatrixStack
 import com.mojang.blaze3d.vertex.IVertexBuilder
 import net.minecraft.client.renderer.entity.model.EntityModel

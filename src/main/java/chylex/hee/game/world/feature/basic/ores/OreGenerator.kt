@@ -1,9 +1,9 @@
 package chylex.hee.game.world.feature.basic.ores
+import chylex.hee.game.world.Pos
 import chylex.hee.game.world.generation.IBlockPlacer
 import chylex.hee.game.world.generation.SegmentedWorld
-import chylex.hee.game.world.util.BoundingBox
-import chylex.hee.system.util.Pos
-import chylex.hee.system.util.nextInt
+import chylex.hee.game.world.math.BoundingBox
+import chylex.hee.system.random.nextInt
 import net.minecraft.util.math.BlockPos
 import java.util.Random
 

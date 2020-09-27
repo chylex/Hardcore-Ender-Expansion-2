@@ -1,8 +1,8 @@
 package chylex.hee.game.block
 import chylex.hee.game.block.entity.base.TileEntityBaseTable
-import chylex.hee.game.block.info.BlockBuilder
-import chylex.hee.system.migration.vanilla.EntityPlayer
-import chylex.hee.system.util.getTile
+import chylex.hee.game.block.properties.BlockBuilder
+import chylex.hee.game.world.getTile
+import chylex.hee.system.migration.EntityPlayer
 import net.minecraft.block.BlockState
 import net.minecraft.tileentity.TileEntity
 import net.minecraft.util.math.BlockPos

@@ -4,12 +4,12 @@ import chylex.hee.game.particle.ParticleEnergyTransferToPedestal.Data
 import chylex.hee.game.particle.base.ParticleBaseEnergyTransfer
 import chylex.hee.game.particle.data.IParticleData
 import chylex.hee.game.particle.spawner.IParticleMaker
+import chylex.hee.game.world.Pos
+import chylex.hee.game.world.getBlock
 import chylex.hee.init.ModBlocks
-import chylex.hee.system.migration.forge.Side
-import chylex.hee.system.migration.forge.Sided
-import chylex.hee.system.util.Pos
-import chylex.hee.system.util.color.IntColor.Companion.RGB
-import chylex.hee.system.util.getBlock
+import chylex.hee.system.color.IntColor.Companion.RGB
+import chylex.hee.system.forge.Side
+import chylex.hee.system.forge.Sided
 import net.minecraft.client.particle.Particle
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.Vec3d

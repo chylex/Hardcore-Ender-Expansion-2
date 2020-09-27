@@ -1,11 +1,11 @@
 package chylex.hee.game.world.feature.basic.blobs.populators
+import chylex.hee.game.world.Pos
 import chylex.hee.game.world.feature.basic.blobs.BlobGenerator
 import chylex.hee.game.world.feature.basic.blobs.IBlobPopulator
+import chylex.hee.game.world.generation.IBlockPicker
+import chylex.hee.game.world.generation.IBlockPicker.Single
 import chylex.hee.game.world.generation.ScaffoldedWorld
-import chylex.hee.game.world.structure.IBlockPicker
-import chylex.hee.game.world.structure.IBlockPicker.Single
-import chylex.hee.system.util.Pos
-import chylex.hee.system.util.offsetUntil
+import chylex.hee.game.world.offsetUntil
 import net.minecraft.block.Block
 import net.minecraft.util.Direction.DOWN
 import java.util.Random

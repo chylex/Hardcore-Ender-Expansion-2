@@ -30,17 +30,17 @@ import chylex.hee.game.world.feature.obsidiantower.piece.ObsidianTowerRoom_Regul
 import chylex.hee.game.world.feature.obsidiantower.piece.ObsidianTowerRoom_Regular_SideWorkTables
 import chylex.hee.game.world.feature.obsidiantower.piece.ObsidianTowerRoom_Regular_StaringHeads
 import chylex.hee.game.world.feature.obsidiantower.piece.ObsidianTowerRoom_Regular_SurroundFenceSpawners
-import chylex.hee.game.world.structure.IBlockPicker.Weighted.Companion.Weighted
+import chylex.hee.game.world.generation.IBlockPicker.Weighted.Companion.Weighted
+import chylex.hee.game.world.math.Size
 import chylex.hee.game.world.structure.IStructureDescription
 import chylex.hee.game.world.structure.IStructureDescription.Companion.NULL_LOCATOR
-import chylex.hee.game.world.structure.file.PaletteBuilder
-import chylex.hee.game.world.structure.file.PaletteMappings
+import chylex.hee.game.world.structure.palette.PaletteBuilder
+import chylex.hee.game.world.structure.palette.PaletteMappings
 import chylex.hee.game.world.territory.TerritoryType
-import chylex.hee.game.world.util.Size
 import chylex.hee.init.ModBlocks
 import chylex.hee.system.collection.WeightedList.Companion.weightedListOf
-import chylex.hee.system.migration.vanilla.Blocks
-import chylex.hee.system.util.facades.Resource
+import chylex.hee.system.facades.Resource
+import chylex.hee.system.migration.Blocks
 
 object ObsidianTowerPieces : IStructureDescription{
 	fun calculateStructureSize(floors: Int) = Size(

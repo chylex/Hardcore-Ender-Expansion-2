@@ -1,10 +1,10 @@
 package chylex.hee.proxy
+import chylex.hee.client.MC
 import chylex.hee.client.VanillaResourceOverrides
-import chylex.hee.client.util.MC
 import chylex.hee.game.particle.spawner.IParticleMaker
 import chylex.hee.init.ModParticles
-import chylex.hee.system.migration.forge.Side
-import chylex.hee.system.migration.forge.Sided
+import chylex.hee.system.forge.Side
+import chylex.hee.system.forge.Sided
 import net.minecraft.client.particle.IAnimatedSprite
 import net.minecraft.particles.BasicParticleType
 

@@ -1,6 +1,6 @@
 package chylex.hee.game.world.feature.basic.blobs
 import chylex.hee.game.world.generation.ScaffoldedWorld
-import chylex.hee.game.world.util.Size
+import chylex.hee.game.world.math.Size
 import java.util.Random
 
 interface IBlobLayout{

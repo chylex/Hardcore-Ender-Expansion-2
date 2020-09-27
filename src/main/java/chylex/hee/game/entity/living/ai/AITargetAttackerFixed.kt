@@ -1,8 +1,8 @@
 package chylex.hee.game.entity.living.ai
-import chylex.hee.system.util.component1
-import chylex.hee.system.util.component2
-import chylex.hee.system.util.component3
-import chylex.hee.system.util.posVec
+import chylex.hee.game.entity.posVec
+import chylex.hee.system.math.component1
+import chylex.hee.system.math.component2
+import chylex.hee.system.math.component3
 import net.minecraft.entity.EntityPredicate
 import net.minecraft.entity.MobEntity
 import net.minecraft.entity.ai.goal.Goal.Flag.TARGET

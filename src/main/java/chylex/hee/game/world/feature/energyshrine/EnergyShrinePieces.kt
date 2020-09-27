@@ -19,17 +19,17 @@ import chylex.hee.game.world.feature.energyshrine.piece.EnergyShrineRoom_Primary
 import chylex.hee.game.world.feature.energyshrine.piece.EnergyShrineRoom_Secondary_Dormitory
 import chylex.hee.game.world.feature.energyshrine.piece.EnergyShrineRoom_Secondary_Portal
 import chylex.hee.game.world.feature.energyshrine.piece.EnergyShrineRoom_Secondary_Storage
+import chylex.hee.game.world.math.Size
 import chylex.hee.game.world.structure.IStructureDescription
-import chylex.hee.game.world.structure.file.PaletteBuilder
-import chylex.hee.game.world.structure.file.PaletteMappings
-import chylex.hee.game.world.util.Size
+import chylex.hee.game.world.structure.palette.PaletteBuilder
+import chylex.hee.game.world.structure.palette.PaletteMappings
 import chylex.hee.init.ModBlocks
 import chylex.hee.system.collection.WeightedList.Companion.weightedListOf
-import chylex.hee.system.migration.vanilla.Blocks
-import chylex.hee.system.util.facades.Resource
-import chylex.hee.system.util.nextInt
-import chylex.hee.system.util.nextItem
-import chylex.hee.system.util.removeItem
+import chylex.hee.system.facades.Resource
+import chylex.hee.system.migration.Blocks
+import chylex.hee.system.random.nextInt
+import chylex.hee.system.random.nextItem
+import chylex.hee.system.random.removeItem
 import java.util.Random
 
 object EnergyShrinePieces : IStructureDescription{

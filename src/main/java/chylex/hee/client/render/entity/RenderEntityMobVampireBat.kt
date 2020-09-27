@@ -1,10 +1,10 @@
 package chylex.hee.client.render.entity
-import chylex.hee.system.migration.forge.Side
-import chylex.hee.system.migration.forge.Sided
-import chylex.hee.system.migration.vanilla.EntityBat
-import chylex.hee.system.migration.vanilla.RenderBat
-import chylex.hee.system.migration.vanilla.RenderManager
-import chylex.hee.system.util.facades.Resource
+import chylex.hee.system.facades.Resource
+import chylex.hee.system.forge.Side
+import chylex.hee.system.forge.Sided
+import chylex.hee.system.migration.EntityBat
+import chylex.hee.system.migration.RenderBat
+import chylex.hee.system.migration.RenderManager
 import net.minecraft.util.ResourceLocation
 
 @Sided(Side.CLIENT)

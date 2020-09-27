@@ -1,5 +1,6 @@
 package chylex.hee.init
 import chylex.hee.HEE
+import chylex.hee.client.color.asItem
 import chylex.hee.client.gui.GuiAmuletOfRecovery
 import chylex.hee.client.gui.GuiBrewingStandCustom
 import chylex.hee.client.gui.GuiLootChest
@@ -32,7 +33,6 @@ import chylex.hee.client.render.entity.RenderEntityProjectileEyeOfEnder
 import chylex.hee.client.render.entity.RenderEntitySprite
 import chylex.hee.client.render.entity.RenderEntityTokenHolder
 import chylex.hee.client.render.item.RenderItemTileEntitySimple
-import chylex.hee.client.render.util.asItem
 import chylex.hee.game.block.BlockDryVines
 import chylex.hee.game.block.BlockPuzzleLogic
 import chylex.hee.game.block.BlockTablePedestal
@@ -49,7 +49,7 @@ import chylex.hee.game.block.entity.base.TileEntityBaseSpawner
 import chylex.hee.game.block.entity.base.TileEntityBaseTable
 import chylex.hee.game.block.fluid.FluidEnderGoo
 import chylex.hee.game.block.fluid.FluidEnderGooPurified
-import chylex.hee.game.block.util.CustomSkulls
+import chylex.hee.game.block.properties.CustomSkull
 import chylex.hee.game.container.ContainerAmuletOfRecovery
 import chylex.hee.game.container.ContainerLootChest
 import chylex.hee.game.container.ContainerPortalTokenStorage
@@ -88,14 +88,14 @@ import chylex.hee.game.item.ItemPortalToken
 import chylex.hee.game.item.ItemVoidBucket
 import chylex.hee.init.factory.RendererConstructors
 import chylex.hee.init.factory.ScreenConstructors
-import chylex.hee.system.migration.forge.Side
-import chylex.hee.system.migration.forge.SubscribeAllEvents
-import chylex.hee.system.migration.forge.SubscribeEvent
-import chylex.hee.system.migration.vanilla.RenderEndermite
-import chylex.hee.system.migration.vanilla.RenderFallingBlock
-import chylex.hee.system.migration.vanilla.RenderSilverfish
-import chylex.hee.system.migration.vanilla.RenderTNTPrimed
-import chylex.hee.system.util.facades.Resource
+import chylex.hee.system.facades.Resource
+import chylex.hee.system.forge.Side
+import chylex.hee.system.forge.SubscribeAllEvents
+import chylex.hee.system.forge.SubscribeEvent
+import chylex.hee.system.migration.RenderEndermite
+import chylex.hee.system.migration.RenderFallingBlock
+import chylex.hee.system.migration.RenderSilverfish
+import chylex.hee.system.migration.RenderTNTPrimed
 import net.minecraft.block.Block
 import net.minecraft.client.gui.ScreenManager
 import net.minecraft.client.gui.screen.inventory.ContainerScreen
@@ -221,8 +221,8 @@ object ModRendering{
 		
 		// miscellaneous
 		
-		SkullTileEntityRenderer.MODELS[CustomSkulls.Enderman] = GenericHeadModel(0, 0, 64, 32)
-		SkullTileEntityRenderer.SKINS[CustomSkulls.Enderman] = Resource.Custom("textures/entity/enderman_head.png")
+		SkullTileEntityRenderer.MODELS[CustomSkull.Enderman] = GenericHeadModel(0, 0, 64, 32)
+		SkullTileEntityRenderer.SKINS[CustomSkull.Enderman] = Resource.Custom("textures/entity/enderman_head.png")
 	}
 	
 	@SubscribeEvent

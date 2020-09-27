@@ -1,9 +1,8 @@
 package chylex.hee.game.block.fluid
-import chylex.hee.game.block.fluid.distances.FlowingFluid5
 import chylex.hee.init.ModBlocks
 import chylex.hee.init.ModItems
-import chylex.hee.system.util.color.IntColor.Companion.RGB
-import chylex.hee.system.util.facades.Resource
+import chylex.hee.system.color.IntColor.Companion.RGB
+import chylex.hee.system.facades.Resource
 import net.minecraft.block.material.MaterialColor
 import net.minecraftforge.fluids.FluidAttributes.Builder
 import net.minecraftforge.fluids.ForgeFlowingFluid.Properties

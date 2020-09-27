@@ -1,10 +1,10 @@
 package chylex.hee.game.particle
 import chylex.hee.game.particle.data.ParticleDataColorScale
 import chylex.hee.game.particle.spawner.IParticleMaker
-import chylex.hee.system.migration.forge.Side
-import chylex.hee.system.migration.forge.Sided
-import chylex.hee.system.util.color.IRandomColor
-import chylex.hee.system.util.color.IntColor
+import chylex.hee.system.color.IntColor
+import chylex.hee.system.forge.Side
+import chylex.hee.system.forge.Sided
+import chylex.hee.system.random.IRandomColor
 import net.minecraft.client.particle.Particle
 import net.minecraft.client.particle.SpellParticle
 import net.minecraft.world.World

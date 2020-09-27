@@ -1,7 +1,7 @@
 package chylex.hee.game.mechanics.instability.region.entry.types
 import chylex.hee.game.mechanics.instability.region.entry.IRegionEntry
 import chylex.hee.game.mechanics.instability.region.entry.IRegionEntryConstructor
-import chylex.hee.system.util.shlong
+import chylex.hee.system.math.shlong
 import net.minecraft.util.math.BlockPos
 
 inline class Entry5x5(override val compacted: Long) : IRegionEntry{

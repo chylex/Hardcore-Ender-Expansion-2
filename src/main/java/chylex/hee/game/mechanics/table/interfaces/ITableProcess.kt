@@ -1,6 +1,6 @@
 package chylex.hee.game.mechanics.table.interfaces
 import chylex.hee.game.mechanics.energy.IEnergyQuantity.Units
-import chylex.hee.system.util.TagCompound
+import chylex.hee.system.serialization.TagCompound
 import net.minecraft.util.math.BlockPos
 import net.minecraftforge.common.util.INBTSerializable
 import org.apache.commons.lang3.math.Fraction

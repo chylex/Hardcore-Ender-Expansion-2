@@ -1,10 +1,10 @@
 package chylex.hee.game.world.structure.trigger
-import chylex.hee.game.block.util.ColoredBlocks
+import chylex.hee.game.block.withFacing
+import chylex.hee.game.world.math.Transform
 import chylex.hee.game.world.structure.IStructureTrigger
 import chylex.hee.game.world.structure.IStructureWorld
-import chylex.hee.game.world.util.Transform
-import chylex.hee.system.migration.vanilla.BlockBed
-import chylex.hee.system.util.withFacing
+import chylex.hee.game.world.structure.palette.ColoredBlocks
+import chylex.hee.system.migration.BlockBed
 import net.minecraft.item.DyeColor
 import net.minecraft.state.properties.BedPart
 import net.minecraft.util.Direction
