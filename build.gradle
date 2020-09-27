@@ -144,7 +144,7 @@ jar {
 	
 	manifest {
 		attributes([
-			"Specification-Title"     : "bettersprinting",
+			"Specification-Title"     : "hee",
 			"Specification-Version"   : "1",
 			"Specification-Vendor"    : "chylex",
 			
