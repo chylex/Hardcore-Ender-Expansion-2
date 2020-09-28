@@ -1,5 +1,6 @@
 package chylex.hee.init
 import chylex.hee.HEE
+import chylex.hee.game.entity.effect.EntityTerritoryLightningBolt
 import chylex.hee.game.entity.item.EntityFallingBlockHeavy
 import chylex.hee.game.entity.item.EntityFallingObsidian
 import chylex.hee.game.entity.item.EntityInfusedTNT
@@ -58,6 +59,8 @@ import net.minecraftforge.fml.common.Mod.EventBusSubscriber.Bus.MOD
 
 @SubscribeAllEvents(modid = HEE.ID, bus = MOD)
 object ModEntities{
+	val TERRITORY_LIGHTNING_BOLT = build<EntityTerritoryLightningBolt>(MISC).size(0F, 0F).tracker(256, 3, false).disableSerialization().name("territory_lightning_bolt")
+	
 	val ITEM_CAULDRON_TRIGGER         = build<EntityItemCauldronTrigger>(MISC).size(0.25F, 0.25F).tracker(64, 3, true).name("item_cauldron_trigger")
 	val ITEM_FRESHLY_COOKED           = build<EntityItemFreshlyCooked>(MISC).size(0.25F, 0.25F).tracker(64, 3, true).name("item_freshly_cooked")
 	val ITEM_IGNEOUS_ROCK             = build<EntityItemIgneousRock>(MISC).size(0.25F, 0.25F).immuneToFire().tracker(64, 3, true).name("item_igneous_rock")
@@ -96,6 +99,8 @@ object ModEntities{
 	@SubscribeEvent
 	fun onRegister(e: RegistryEvent.Register<EntityType<*>>){
 		with(e.registry){
+			register(TERRITORY_LIGHTNING_BOLT)
+			
 			register(ITEM_CAULDRON_TRIGGER)
 			register(ITEM_FRESHLY_COOKED)
 			register(ITEM_IGNEOUS_ROCK)

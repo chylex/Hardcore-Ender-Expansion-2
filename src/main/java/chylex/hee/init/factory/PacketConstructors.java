@@ -8,6 +8,7 @@ import chylex.hee.network.client.PacketClientRotateInstantly;
 import chylex.hee.network.client.PacketClientTeleportInstantly;
 import chylex.hee.network.client.PacketClientTrinketBreak;
 import chylex.hee.network.client.PacketClientUpdateExperience;
+import chylex.hee.network.client.PacketClientWeather;
 import chylex.hee.network.server.PacketServerContainerEvent;
 import chylex.hee.network.server.PacketServerOpenInventoryItem;
 import chylex.hee.network.server.PacketServerShiftClickTrinket;
@@ -29,6 +30,7 @@ public final class PacketConstructors{
 			packet(PacketClientTeleportInstantly.class, PacketClientTeleportInstantly::new),
 			packet(PacketClientTrinketBreak.class, PacketClientTrinketBreak::new),
 			packet(PacketClientUpdateExperience.class, PacketClientUpdateExperience::new),
+			packet(PacketClientWeather.class, PacketClientWeather::new),
 			
 			packet(PacketServerContainerEvent.class, PacketServerContainerEvent::new),
 			packet(PacketServerOpenInventoryItem.class, PacketServerOpenInventoryItem::new),

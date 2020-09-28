@@ -116,6 +116,9 @@ data class TerritoryInstance(val territory: TerritoryType, val index: Int){
 	val centerPoint
 		get() = topLeftChunk.getBlock(chunks * 8, territory.height.let { (it.first + it.last) / 2 }, chunks * 8).center
 	
+	val players
+		get() = endWorld.players.filter { this == fromPos(it) }
+	
 	fun generatesChunk(chunkX: Int, chunkZ: Int): Boolean{
 		val (startX, startZ) = topLeftChunk
 		return chunkX >= startX && chunkZ >= startZ && chunkX < startX + chunks && chunkZ < startZ + chunks

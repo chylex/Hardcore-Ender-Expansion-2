@@ -31,6 +31,7 @@ import chylex.hee.client.render.entity.RenderEntityMobVillagerDying
 import chylex.hee.client.render.entity.RenderEntityNothing
 import chylex.hee.client.render.entity.RenderEntityProjectileEyeOfEnder
 import chylex.hee.client.render.entity.RenderEntitySprite
+import chylex.hee.client.render.entity.RenderEntityTerritoryLightningBolt
 import chylex.hee.client.render.entity.RenderEntityTokenHolder
 import chylex.hee.client.render.item.RenderItemTileEntitySimple
 import chylex.hee.game.block.BlockDryVines
@@ -55,6 +56,7 @@ import chylex.hee.game.container.ContainerLootChest
 import chylex.hee.game.container.ContainerPortalTokenStorage
 import chylex.hee.game.container.ContainerShulkerBox
 import chylex.hee.game.container.ContainerTrinketPouch
+import chylex.hee.game.entity.effect.EntityTerritoryLightningBolt
 import chylex.hee.game.entity.item.EntityFallingBlockHeavy
 import chylex.hee.game.entity.item.EntityFallingObsidian
 import chylex.hee.game.entity.item.EntityInfusedTNT
@@ -200,6 +202,7 @@ object ModRendering{
 		registerEntity<EntityTechnicalBase, RenderEntityNothing>(ModEntities.TECHNICAL_PUZZLE)
 		registerEntity<EntityTechnicalBase, RenderEntityNothing>(ModEntities.TECHNICAL_TRIGGER)
 		registerEntity<EntityTechnicalIgneousPlateLogic, RenderEntityNothing>(ModEntities.IGNEOUS_PLATE_LOGIC)
+		registerEntity<EntityTerritoryLightningBolt, RenderEntityTerritoryLightningBolt>(ModEntities.TERRITORY_LIGHTNING_BOLT)
 		registerEntity<EntityTokenHolder, RenderEntityTokenHolder>(ModEntities.TOKEN_HOLDER)
 		
 		// tile entities

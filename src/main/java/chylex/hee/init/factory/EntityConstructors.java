@@ -1,4 +1,5 @@
 package chylex.hee.init.factory;
+import chylex.hee.game.entity.effect.EntityTerritoryLightningBolt;
 import chylex.hee.game.entity.item.EntityFallingBlockHeavy;
 import chylex.hee.game.entity.item.EntityFallingObsidian;
 import chylex.hee.game.entity.item.EntityInfusedTNT;
@@ -37,6 +38,8 @@ public final class EntityConstructors{
 	private static final Map<Class<? extends Entity>, EntityType.IFactory<? extends Entity>> all = new HashMap<>();
 	
 	static{
+		add(EntityTerritoryLightningBolt.class, EntityTerritoryLightningBolt::new);
+		
 		add(EntityItemCauldronTrigger.class, EntityItemCauldronTrigger::new);
 		add(EntityItemFreshlyCooked.class, EntityItemFreshlyCooked::new);
 		add(EntityItemIgneousRock.class, EntityItemIgneousRock::new);

@@ -23,6 +23,7 @@ import chylex.hee.client.render.entity.RenderEntityMobVillagerDying;
 import chylex.hee.client.render.entity.RenderEntityNothing;
 import chylex.hee.client.render.entity.RenderEntityProjectileEyeOfEnder;
 import chylex.hee.client.render.entity.RenderEntitySprite;
+import chylex.hee.client.render.entity.RenderEntityTerritoryLightningBolt;
 import chylex.hee.client.render.entity.RenderEntityTokenHolder;
 import net.minecraft.client.renderer.entity.EndermiteRenderer;
 import net.minecraft.client.renderer.entity.EntityRenderer;
@@ -61,6 +62,7 @@ public final class RendererConstructors{
 		entities.put(RenderEntityMobVillagerDying.class, RenderEntityMobVillagerDying::new);
 		entities.put(RenderEntityNothing.class, RenderEntityNothing::new);
 		entities.put(RenderEntityProjectileEyeOfEnder.class, RenderEntityProjectileEyeOfEnder::new);
+		entities.put(RenderEntityTerritoryLightningBolt.class, RenderEntityTerritoryLightningBolt::new);
 		entities.put(RenderEntityTokenHolder.class, RenderEntityTokenHolder::new);
 		entities.put(SilverfishRenderer.class, SilverfishRenderer::new);
 		entities.put(TNTRenderer.class, TNTRenderer::new);
