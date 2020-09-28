@@ -48,7 +48,10 @@ import chylex.hee.system.math.remapRange
 import chylex.hee.system.math.square
 import chylex.hee.system.math.toRadians
 import chylex.hee.system.migration.Facing.DOWN
+import chylex.hee.system.migration.Facing.EAST
+import chylex.hee.system.migration.Facing.NORTH
 import chylex.hee.system.migration.Facing.UP
+import chylex.hee.system.migration.Facing.WEST
 import chylex.hee.system.random.RandomInt.Companion.Constant
 import chylex.hee.system.random.nextFloat
 import chylex.hee.system.random.nextInt
@@ -57,6 +60,7 @@ import chylex.hee.system.random.nextRounded
 import chylex.hee.system.random.removeItem
 import net.minecraft.block.Block
 import net.minecraft.block.Blocks
+import net.minecraft.util.Rotation
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.Vec3d
 import java.util.Random
@@ -111,7 +115,7 @@ object Generator_ObsidianTowers : ITerritoryGenerator{
 			)
 			
 			if (mp == 2){
-				Tower.generateBoss(world, rand, island)
+				Tower.generateBoss(world, rand, island, spawnIsland)
 				Path.generate(world, rand, island, spawnIsland, cutBase = 0.99F, cutMultiplier = 0.94F)
 			}
 			else{
@@ -314,8 +318,15 @@ object Generator_ObsidianTowers : ITerritoryGenerator{
 	}
 	
 	private object Tower{
-		fun generateBoss(world: SegmentedWorld, rand: Random, island: Island){
-			generate(world, rand, island, ObsidianTowerBuilder(ObsidianTowerPieces.ARRANGEMENTS_BOSS.generateItem(rand)))
+		fun generateBoss(world: SegmentedWorld, rand: Random, island: Island, spawn: Island){
+			val rotation = when(Facing4.fromDirection(island.center.center, spawn.center.center)){
+				NORTH -> Rotation.CLOCKWISE_180
+				WEST  -> Rotation.CLOCKWISE_90
+				EAST  -> Rotation.COUNTERCLOCKWISE_90
+				else  -> Rotation.NONE
+			}
+			
+			generate(world, rand, island, ObsidianTowerBuilder(ObsidianTowerPieces.ARRANGEMENTS_BOSS.generateItem(rand), rotation))
 		}
 		
 		fun generateRegular(world: SegmentedWorld, rand: Random, island: Island, tokenInfo: Pair<TerritoryType, TokenType>){

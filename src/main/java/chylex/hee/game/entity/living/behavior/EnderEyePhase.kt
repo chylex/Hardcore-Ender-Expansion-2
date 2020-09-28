@@ -1,6 +1,7 @@
 package chylex.hee.game.entity.living.behavior
 import chylex.hee.client.MC
 import chylex.hee.game.block.entity.TileEntitySpawnerObsidianTower
+import chylex.hee.game.entity.effect.EntityTerritoryLightningBolt
 import chylex.hee.game.entity.living.EntityBossEnderEye
 import chylex.hee.game.entity.living.behavior.EnderEyeAttack.Melee
 import chylex.hee.game.entity.lookPosVec
@@ -37,7 +38,6 @@ import chylex.hee.system.math.floorToInt
 import chylex.hee.system.math.square
 import chylex.hee.system.math.toPitch
 import chylex.hee.system.math.toYaw
-import chylex.hee.system.migration.EntityLightningBolt
 import chylex.hee.system.migration.Sounds
 import chylex.hee.system.random.nextFloat
 import chylex.hee.system.random.nextItem
@@ -52,7 +52,6 @@ import net.minecraft.entity.Entity
 import net.minecraft.util.SoundCategory
 import net.minecraft.util.math.BlockPos
 import net.minecraft.world.dimension.DimensionType
-import net.minecraft.world.server.ServerWorld
 import net.minecraftforge.common.util.INBTSerializable
 import java.util.Random
 import kotlin.math.min
@@ -189,10 +188,8 @@ sealed class EnderEyePhase : INBTSerializable<TagCompound>{
 				}
 				
 				if ((101 - timer) % 18 == 0){
-					val world = entity.world as ServerWorld
-					
 					entity.rng.removeItemOrNull(remainingLightningPositions)?.let {
-						world.addLightningBolt(EntityLightningBolt(world, it.x + 0.5, it.y.toDouble(), it.z + 0.5, true)) // TODO make lightning visible from all distances in the End
+						EntityTerritoryLightningBolt(entity.world, it.x + 0.5, it.y.toDouble(), it.z + 0.5).spawnInTerritory()
 					}
 				}
 			}
