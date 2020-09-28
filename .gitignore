@@ -4,16 +4,16 @@ out
 *.iws
 *.iml
 
-.idea/gradle.xml
-.idea/jarRepositories.xml
-.idea/tasks.xml
-.idea/workspace.xml
-.idea/runConfigurations/runClient.xml
-.idea/runConfigurations/runServer.xml
-
-.idea/codeStyles
-.idea/dictionaries
-.idea/libraries
+.idea/*
+!.idea/inspectionProfiles
+!.idea/codeInsightSettings.xml
+!.idea/compiler.xml
+!.idea/encodings.xml
+!.idea/gradle.xml
+!.idea/jsLibraryMappings.xml
+!.idea/kotlinc.xml
+!.idea/statistic.xml
+!.idea/vcs.xml
 
 # eclipse
 bin
