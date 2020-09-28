@@ -18,6 +18,7 @@ import chylex.hee.game.world.getBlock
 import chylex.hee.game.world.getTile
 import chylex.hee.game.world.isAir
 import chylex.hee.game.world.playClient
+import chylex.hee.game.world.playPlayer
 import chylex.hee.game.world.playServer
 import chylex.hee.game.world.setBlock
 import chylex.hee.game.world.territory.TerritoryInstance
@@ -36,9 +37,7 @@ import chylex.hee.system.math.floorToInt
 import chylex.hee.system.math.square
 import chylex.hee.system.math.toPitch
 import chylex.hee.system.math.toYaw
-import net.minecraft.block.Blocks
 import chylex.hee.system.migration.EntityLightningBolt
-import chylex.hee.system.migration.EntityPlayerMP
 import chylex.hee.system.migration.Sounds
 import chylex.hee.system.random.nextFloat
 import chylex.hee.system.random.nextItem
@@ -47,9 +46,9 @@ import chylex.hee.system.random.nextVector2
 import chylex.hee.system.random.removeItemOrNull
 import chylex.hee.system.serialization.TagCompound
 import chylex.hee.system.serialization.use
+import net.minecraft.block.Blocks
 import net.minecraft.client.particle.DiggingParticle
 import net.minecraft.entity.Entity
-import net.minecraft.network.play.server.SPlaySoundEffectPacket
 import net.minecraft.util.SoundCategory
 import net.minecraft.util.math.BlockPos
 import net.minecraft.world.dimension.DimensionType
@@ -229,10 +228,7 @@ sealed class EnderEyePhase : INBTSerializable<TagCompound>{
 			
 			for(player in entity.world.players){
 				if (player.getDistanceSq(entity) < square(32.0)){
-					val conn = (player as EntityPlayerMP).connection
-					val packet = SPlaySoundEffectPacket(soundType.breakSound, SoundCategory.BLOCKS, player.posX + offX, player.posY + offY, player.posZ + offZ, soundType.volume * 1.6F, soundType.pitch * 0.95F)
-					
-					conn.sendPacket(packet)
+					soundType.breakSound.playPlayer(player, player.posX + offX, player.posY + offY, player.posZ + offZ, SoundCategory.BLOCKS, soundType.volume * 1.6F, soundType.pitch * 0.95F)
 				}
 			}
 		}
