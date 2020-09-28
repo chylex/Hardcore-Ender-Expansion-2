@@ -612,7 +612,7 @@ object Generator_LostGarden : ITerritoryGenerator{
 		private fun findSideStream(world: SegmentedWorld, rand: Random, pos: BlockPos): BlockPos?{
 			return pos
 				.up(rand.nextInt(1, 3))
-				.takeIf { world.isAir(it) }
+				.takeIf(world::isAir)
 				?.offsetUntil(rand.nextItem(Facing4), 1..10){ !world.isAir(it) }
 				?.takeIf { testPos -> !isGoo(world, testPos) && blocksGoo(world, testPos.up()) && Facing4.count { !blocksGoo(world, testPos.offset(it)) } == 1 }
 		}

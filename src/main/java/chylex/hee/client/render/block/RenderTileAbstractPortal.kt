@@ -195,7 +195,7 @@ abstract class RenderTileAbstractPortal<T : TileEntityPortalInner, C : IPortalCo
 	override fun render(tile: T, partialTicks: Float, matrix: MatrixStack, buffer: IRenderTypeBuffer, combinedLight: Int, combinedOverlay: Int){
 		val controller = findController(tile.world ?: return, tile.pos)
 		
-		rand.setSeed(controller?.let { generateSeed(it) } ?: 0L)
+		rand.setSeed(controller?.let(::generateSeed) ?: 0L)
 		
 		animationProgress = controller?.clientAnimationProgress?.get(partialTicks) ?: 0F
 		isAnimating = animationProgress > 0F && animationProgress < 1F

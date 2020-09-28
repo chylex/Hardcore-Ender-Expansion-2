@@ -34,9 +34,7 @@ abstract class AutumnTreeGenerator : WhitebarkTreeGenerator<IntRange>(){
 		val leaf = leafBlock.with(BlockLeaves.DISTANCE, 1)
 		val rootHeight = parameter?.let(rand::nextInt) ?: pickRandomHeight(rand)
 		
-		if (rootHeight >= size.y){
-			throw IllegalArgumentException("autumn tree root must be at most ${size.y - 1} block tall")
-		}
+		require(rootHeight < size.y){ "autumn tree root must be at most ${size.y - 1} block tall" }
 		
 		for(y in 0 until rootHeight){
 			world.setBlock(root.up(y), ModBlocks.WHITEBARK_LOG)

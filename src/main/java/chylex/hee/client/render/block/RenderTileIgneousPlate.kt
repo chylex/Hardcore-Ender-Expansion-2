@@ -62,7 +62,7 @@ class RenderTileIgneousPlate(dispatcher: TileEntityRendererDispatcher) : TileEnt
 	}
 	
 	override fun render(tile: TileEntityIgneousPlate, partialTicks: Float, matrix: MatrixStack, buffer: IRenderTypeBuffer, combinedLight: Int, combinedOverlay: Int){
-		val state = tile.world?.let { tile.pos.getState(it) }
+		val state = tile.world?.let(tile.pos::getState)
 		
 		if (state?.block !== ModBlocks.IGNEOUS_PLATE){
 			return

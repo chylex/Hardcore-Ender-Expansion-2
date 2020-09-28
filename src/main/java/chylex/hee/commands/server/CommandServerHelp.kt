@@ -160,6 +160,6 @@ object CommandServerHelp : ICommand, CommandExecutionFunctionCtx<Boolean>{
 	}
 	
 	private fun chainTextComponents(vararg components: ITextComponent): ITextComponent{
-		return components.reduce { component, next -> component.appendSibling(next) }
+		return components.reduce(ITextComponent::appendSibling)
 	}
 }

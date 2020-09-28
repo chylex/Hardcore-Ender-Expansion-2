@@ -152,9 +152,8 @@ sealed class EnderEyeAttack{
 						hitEntities.clear()
 						return true
 					}
-					else{
-						return false
-					}
+					
+					return false
 				}
 				
 				causeDamageInFront(this)

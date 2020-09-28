@@ -64,7 +64,7 @@ class TileEntityShulkerBoxCustom : TileEntityShulkerBox(){
 	}
 	
 	override fun getUpdatePacket(): SUpdateTileEntityPacket{
-		return SUpdateTileEntityPacket(pos, 0, TagCompound().also { writeCustomNBT(it) })
+		return SUpdateTileEntityPacket(pos, 0, TagCompound().also(::writeCustomNBT))
 	}
 	
 	override fun onDataPacket(net: NetworkManager, packet: SUpdateTileEntityPacket){

@@ -22,6 +22,7 @@ import net.minecraftforge.client.model.ModelLoader
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber.Bus.MOD
 
 @Sided(Side.CLIENT)
+@Suppress("unused")
 class ModelItemAmuletOfRecovery private constructor(sourceModel: IBakedModel) : BakedModelWrapper<IBakedModel>(sourceModel){
 	@SubscribeAllEvents(Side.CLIENT, modid = HEE.ID, bus = MOD)
 	companion object{

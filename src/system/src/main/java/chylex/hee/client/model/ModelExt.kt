@@ -30,5 +30,5 @@ private val seedRand = ThreadLocal<Random>()
 
 @Sided(Side.CLIENT)
 fun IBakedModel.getQuads(facing: Direction? = null): MutableList<BakedQuad>{
-	return this.getQuads(null, facing, seedRand.getOrSet { Random() }.apply { setSeed(42L) })
+	return this.getQuads(null, facing, seedRand.getOrSet(::Random).apply { setSeed(42L) })
 }

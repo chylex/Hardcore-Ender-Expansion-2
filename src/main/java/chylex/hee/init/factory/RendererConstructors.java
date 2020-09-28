@@ -80,12 +80,12 @@ public final class RendererConstructors{
 	}
 	
 	@SuppressWarnings({"unchecked", "rawtypes"})
-	public static <T extends Entity, R extends EntityRenderer<? super T>> IRenderFactory getEntity(Class<R> cls){
+	public static <T extends Entity, R extends EntityRenderer<? super T>> IRenderFactory getEntity(final Class<R> cls){
 		return (IRenderFactory<T>)entities.get(cls);
 	}
 	
 	@SuppressWarnings("unchecked")
-	public static <T extends TileEntity, R extends TileEntityRenderer<? super T>> Function<? super TileEntityRendererDispatcher, ? extends TileEntityRenderer<? super T>> getTile(Class<R> cls){
+	public static <T extends TileEntity, R extends TileEntityRenderer<? super T>> Function<? super TileEntityRendererDispatcher, ? extends TileEntityRenderer<? super T>> getTile(final Class<R> cls){
 		return (Function<? super TileEntityRendererDispatcher, ? extends TileEntityRenderer<? super T>>)(Object)tiles.get(cls);
 	}
 	

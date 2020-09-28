@@ -46,7 +46,7 @@ class StrongholdRoom_Main_Scriptorium(file: String) : StrongholdAbstractPieceFro
 		
 		repeat(rand.nextInt(7, 12)){
 			for(attempt in 1..50){
-				val testPos = Pos(rand.nextInt(1, maxX - 1), 1, rand.nextInt(1, maxZ - 1)).offsetUntil(UP, 0 until maxY){ world.isAir(it) }
+				val testPos = Pos(rand.nextInt(1, maxX - 1), 1, rand.nextInt(1, maxZ - 1)).offsetUntil(UP, 0 until maxY, world::isAir)
 				
 				if (testPos == null || (testPos.y == 1 && rand.nextInt(4) != 0)){
 					continue

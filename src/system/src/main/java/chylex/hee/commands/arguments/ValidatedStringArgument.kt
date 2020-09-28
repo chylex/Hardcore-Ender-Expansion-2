@@ -29,7 +29,7 @@ class ValidatedStringArgument(private val strings: Set<String>) : ArgumentType<S
 		
 		override fun write(argument: ValidatedStringArgument, json: JsonObject){
 			json.add("strings", JsonArray().apply {
-				argument.strings.forEach { add(it) }
+				argument.strings.forEach(this::add)
 			})
 		}
 		
@@ -39,13 +39,8 @@ class ValidatedStringArgument(private val strings: Set<String>) : ArgumentType<S
 	}
 	
 	init{
-		if (strings.any { it.contains(' ') }){
-			throw IllegalArgumentException("[StringFromSetArgument] strings must not contain any spaces")
-		}
-		
-		if (strings.any { it.length > MAX_LENGTH }){
-			throw IllegalArgumentException("[StringFromSetArgument] strings must be at most $MAX_LENGTH characters")
-		}
+		require(strings.none { it.contains(' ') }){ "[StringFromSetArgument] strings must not contain any spaces" }
+		require(strings.none { it.length > MAX_LENGTH }){ "[StringFromSetArgument] strings must be at most $MAX_LENGTH characters" }
 	}
 	
 	override fun parse(reader: StringReader): String{

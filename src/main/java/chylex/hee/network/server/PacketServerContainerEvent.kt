@@ -30,7 +30,7 @@ class PacketServerContainerEvent() : BaseServerPacket(){
 		val container = player.openContainer
 		
 		if (container is IContainerWithEvents){
-			eventId?.let { container.handleContainerEvent(it) }
+			eventId?.let(container::handleContainerEvent)
 		}
 		else{
 			HEE.log.warn("[PacketServerContainerEvent] handling client container event with incorrect 'openContainer' instance: $container")

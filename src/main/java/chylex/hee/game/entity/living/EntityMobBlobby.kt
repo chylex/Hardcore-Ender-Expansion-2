@@ -439,7 +439,7 @@ class EntityMobBlobby(type: EntityType<out EntityCreature>, world: World) : Enti
 				.selectExistingEntities
 				.inRange<EntityPlayer>(posVec, 10.0)
 				.filter { it.getHeldItem(MAIN_HAND).item === ModItems.SPAWN_BLOBBY || it.getHeldItem(OFF_HAND).item === ModItems.SPAWN_BLOBBY }
-				.minBy(::getDistanceSq)
+				.minByOrNull(::getDistanceSq)
 			
 			if (probableSpawningPlayer == null || !probableSpawningPlayer.isSneaking){
 				repeat(rand.nextInt(1, 7)){

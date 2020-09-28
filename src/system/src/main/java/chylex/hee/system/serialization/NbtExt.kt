@@ -8,6 +8,7 @@ import chylex.hee.game.inventory.setStack
 import chylex.hee.game.world.Pos
 import net.minecraft.inventory.IInventory
 import net.minecraft.item.ItemStack
+import net.minecraft.nbt.INBT
 import net.minecraft.util.math.BlockPos
 import net.minecraftforge.common.util.Constants.NBT
 import java.util.Locale
@@ -300,7 +301,7 @@ class NBTPrimitiveList(tagList: TagList = TagList()) : NBTList<NBTPrimitive>(tag
 }
 
 class NBTObjectList<T : Any>(tagList: TagList = TagList()) : NBTList<T>(tagList){
-	override fun convert(element: T) = when(element){
+	override fun convert(element: T): INBT = when(element){
 		is TagCompound -> element
 		is String      -> TagString.valueOf(element)
 		is ByteArray   -> TagByteArray(element)

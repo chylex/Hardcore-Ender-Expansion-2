@@ -10,17 +10,17 @@ import org.apache.commons.lang3.tuple.Pair;
 
 public final class EraseGenerics{
 	@SuppressWarnings({"unchecked", "rawtypes"})
-	public static BlockState withProperty(BlockState baseState, IProperty property, Comparable value){
+	public static BlockState withProperty(final BlockState baseState, final IProperty property, final Comparable value){
 		return baseState.with(property, value);
 	}
 	
 	@SuppressWarnings({"unchecked", "rawtypes"})
-	public static BlockState copyProperty(BlockState baseState, BlockState originalState, IProperty property){
+	public static BlockState copyProperty(final BlockState baseState, final BlockState originalState, final IProperty property){
 		return baseState.with(property, originalState.get(property));
 	}
 	
 	@SuppressWarnings({"unchecked", "rawtypes"})
-	public static EnumArgument<?> createEnumArgument(Class<?> cls){
+	public static EnumArgument<?> createEnumArgument(final Class<?> cls){
 		if (!cls.isEnum()){
 			throw new IllegalArgumentException("cannot create an EnumArgument for class: " + cls.getName());
 		}
@@ -28,7 +28,9 @@ public final class EraseGenerics{
 		return new EnumArgument(cls);
 	}
 	
-	public static IPacket<?> buildPacket(NetworkDirection direction, Pair<PacketBuffer, Integer> packet, ResourceLocation channel){
+	public static IPacket<?> buildPacket(final NetworkDirection direction, final Pair<PacketBuffer, Integer> packet, final ResourceLocation channel){
 		return direction.buildPacket(packet, channel).getThis();
 	}
+	
+	private EraseGenerics(){}
 }

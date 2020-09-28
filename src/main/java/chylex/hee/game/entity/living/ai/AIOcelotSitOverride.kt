@@ -12,6 +12,7 @@ import net.minecraft.util.math.BlockPos
 import net.minecraft.world.IWorldReader
 import net.minecraftforge.event.entity.EntityJoinWorldEvent
 
+@Suppress("unused")
 class AIOcelotSitOverride(ocelot: CatEntity, overridden: CatSitOnBlockGoal) : CatSitOnBlockGoal(ocelot, overridden.movementSpeed){
 	interface IOcelotCanSitOn{
 		fun canOcelotSitOn(world: IWorldReader, pos: BlockPos): Boolean

@@ -48,14 +48,14 @@ public final class TileEntityConstructors{
 	}
 	
 	@SuppressWarnings("unchecked")
-	public static <T extends TileEntity> Supplier<T> get(Class<T> cls){
+	public static <T extends TileEntity> Supplier<T> get(final Class<T> cls){
 		return (Supplier<T>)all.get(cls);
 	}
 	
 	/**
 	 * Ensures the class and constructor are compatible to catch typos.
 	 */
-	private static <T extends TileEntity> void add(Class<T> cls, Supplier<T> constructor){
+	private static <T extends TileEntity> void add(final Class<T> cls, final Supplier<T> constructor){
 		all.put(cls, constructor);
 	}
 	

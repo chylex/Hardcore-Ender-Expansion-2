@@ -71,12 +71,10 @@ object ParticleVoid : IParticleMaker.Simple(){
 			
 			motionVec = motionVec.scale(0.996)
 			
-			if (age >= maxAge - 3){
-				particleAlpha = max(0F, particleAlpha - 0.25F)
-			}
-			else{
-				particleAlpha = min(1F, particleAlpha + 0.4F)
-			}
+			particleAlpha = if (age >= maxAge - 3)
+				max(0F, particleAlpha - 0.25F)
+			else
+				min(1F, particleAlpha + 0.4F)
 		}
 		
 		override fun getBrightnessForRender(partialTicks: Float): Int{

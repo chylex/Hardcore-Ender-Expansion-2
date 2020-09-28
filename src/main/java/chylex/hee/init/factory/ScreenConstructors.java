@@ -25,14 +25,14 @@ public final class ScreenConstructors{
 	}
 	
 	@SuppressWarnings("unchecked")
-	public static <T extends Container, U extends ContainerScreen<T>> IScreenFactory<T, U> get(Class<U> cls){
+	public static <T extends Container, U extends ContainerScreen<T>> IScreenFactory<T, U> get(final Class<U> cls){
 		return (IScreenFactory<T, U>)all.get(cls);
 	}
 	
 	/**
 	 * Ensures the class and constructor are compatible to catch typos.
 	 */
-	private static <T extends Container, U extends ContainerScreen<T>> void add(Class<U> cls, IScreenFactory<T, U> constructor){
+	private static <T extends Container, U extends ContainerScreen<T>> void add(final Class<U> cls, final IScreenFactory<T, U> constructor){
 		all.put(cls, constructor);
 	}
 	

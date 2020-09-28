@@ -39,7 +39,7 @@ public final class PacketConstructors{
 	/**
 	 * Ensures the class and constructor are compatible to catch typos.
 	 */
-	private static <T extends IPacket> Pair packet(Class<T> cls, Supplier<T> constructor){
+	private static <T extends IPacket> Pair packet(final Class<T> cls, final Supplier<T> constructor){
 		return new Pair<>(cls, constructor);
 	}
 	

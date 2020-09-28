@@ -25,14 +25,14 @@ public final class ContainerConstructors{
 	}
 	
 	@SuppressWarnings("unchecked")
-	public static <T extends Container> IContainerFactory<T> get(Class<T> cls){
+	public static <T extends Container> IContainerFactory<T> get(final Class<T> cls){
 		return (IContainerFactory<T>)all.get(cls);
 	}
 	
 	/**
 	 * Ensures the class and constructor are compatible to catch typos.
 	 */
-	private static <T extends Container> void add(Class<T> cls, IContainerFactory<T> constructor){
+	private static <T extends Container> void add(final Class<T> cls, final IContainerFactory<T> constructor){
 		all.put(cls, constructor);
 	}
 	

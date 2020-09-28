@@ -59,7 +59,7 @@ class TableProcessList : Iterable<ITableProcess>{
 	}
 	
 	fun serializeToList(processSerializer: ITableProcessSerializer): NBTObjectList<TagCompound>{
-		return NBTObjectList.of(currentProcesses.map { processSerializer.writeToNBT(it) })
+		return NBTObjectList.of(currentProcesses.map(processSerializer::writeToNBT))
 	}
 	
 	fun deserializeFromList(table: TileEntityBaseTable, list: NBTObjectList<TagCompound>, processSerializer: ITableProcessSerializer){

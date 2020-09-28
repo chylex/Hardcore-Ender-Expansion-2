@@ -74,14 +74,14 @@ public final class EntityConstructors{
 	}
 	
 	@SuppressWarnings("unchecked")
-	public static <T extends Entity> EntityType.IFactory<T> get(Class<T> cls){
+	public static <T extends Entity> EntityType.IFactory<T> get(final Class<T> cls){
 		return (EntityType.IFactory<T>)all.get(cls);
 	}
 	
 	/**
 	 * Ensures the class and constructor are compatible to catch typos.
 	 */
-	private static <T extends Entity> void add(Class<T> cls, EntityType.IFactory<T> constructor){
+	private static <T extends Entity> void add(final Class<T> cls, final EntityType.IFactory<T> constructor){
 		all.put(cls, constructor);
 	}
 	
