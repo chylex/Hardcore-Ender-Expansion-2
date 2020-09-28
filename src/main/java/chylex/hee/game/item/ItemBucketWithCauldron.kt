@@ -8,13 +8,13 @@ import chylex.hee.game.world.setState
 import chylex.hee.system.facades.Stats
 import chylex.hee.system.migration.ActionResult.SUCCESS
 import chylex.hee.system.migration.BlockCauldron
-import chylex.hee.system.migration.Blocks
 import chylex.hee.system.migration.ItemBucket
-import chylex.hee.system.migration.Items
 import chylex.hee.system.migration.Sounds
+import net.minecraft.block.Blocks
 import net.minecraft.fluid.Fluid
 import net.minecraft.item.ItemStack
 import net.minecraft.item.ItemUseContext
+import net.minecraft.item.Items
 import net.minecraft.util.ActionResultType
 import net.minecraft.util.SoundCategory
 import java.util.function.Supplier

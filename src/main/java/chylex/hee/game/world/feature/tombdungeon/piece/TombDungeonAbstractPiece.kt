@@ -15,9 +15,9 @@ import chylex.hee.init.ModBlocks
 import chylex.hee.system.facades.Facing6
 import chylex.hee.system.math.floorToInt
 import chylex.hee.system.migration.BlockSlab
-import chylex.hee.system.migration.Blocks
 import chylex.hee.system.migration.TileEntityChest
 import chylex.hee.system.random.nextInt
+import net.minecraft.block.Blocks
 import net.minecraft.state.properties.SlabType
 import net.minecraft.util.Direction
 import net.minecraft.util.math.BlockPos

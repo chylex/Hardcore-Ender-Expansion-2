@@ -42,7 +42,6 @@ import chylex.hee.system.facades.Facing6
 import chylex.hee.system.math.ceilToInt
 import chylex.hee.system.math.offsetTowards
 import chylex.hee.system.math.square
-import chylex.hee.system.migration.Blocks
 import chylex.hee.system.migration.Facing.DOWN
 import chylex.hee.system.migration.Facing.UP
 import chylex.hee.system.random.RandomDouble.Companion.Constant
@@ -53,6 +52,7 @@ import chylex.hee.system.random.nextInt
 import chylex.hee.system.random.nextItem
 import chylex.hee.system.random.nextVector
 import chylex.hee.system.random.removeItem
+import net.minecraft.block.Blocks
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.Vec3d
 import java.util.Random

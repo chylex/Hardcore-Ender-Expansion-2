@@ -4,15 +4,15 @@ import chylex.hee.game.entity.living.EntityMobUndread
 import chylex.hee.system.facades.Resource
 import chylex.hee.system.forge.Side
 import chylex.hee.system.forge.Sided
-import chylex.hee.system.migration.RenderBiped
-import chylex.hee.system.migration.RenderManager
 import com.mojang.blaze3d.matrix.MatrixStack
+import net.minecraft.client.renderer.entity.BipedRenderer
+import net.minecraft.client.renderer.entity.EntityRendererManager
 import net.minecraft.client.renderer.entity.layers.BipedArmorLayer
 import net.minecraft.client.renderer.entity.model.AbstractZombieModel
 import net.minecraft.util.ResourceLocation
 
 @Sided(Side.CLIENT)
-class RenderEntityMobUndread(manager: RenderManager) : RenderBiped<EntityMobUndread, AbstractZombieModel<EntityMobUndread>>(manager, ModelEntityUndread(), 0.5F){
+class RenderEntityMobUndread(manager: EntityRendererManager) : BipedRenderer<EntityMobUndread, AbstractZombieModel<EntityMobUndread>>(manager, ModelEntityUndread(), 0.5F){
 	private val texture = Resource.Custom("textures/entity/undread.png")
 	
 	init{

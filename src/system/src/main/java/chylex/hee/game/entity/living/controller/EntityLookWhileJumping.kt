@@ -1,8 +1,8 @@
 package chylex.hee.game.entity.living.controller
-import net.minecraft.entity.MobEntity
+import chylex.hee.system.migration.EntityLiving
 import net.minecraft.entity.ai.controller.LookController
 
-class EntityLookWhileJumping(mob: MobEntity) : LookController(mob){
+class EntityLookWhileJumping(mob: EntityLiving) : LookController(mob){
 	override fun tick(){
 		if (mob.onGround){
 			isLooking = false

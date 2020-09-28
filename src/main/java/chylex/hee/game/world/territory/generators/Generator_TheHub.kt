@@ -46,7 +46,6 @@ import chylex.hee.system.math.scale
 import chylex.hee.system.math.scaleY
 import chylex.hee.system.math.square
 import chylex.hee.system.math.withY
-import chylex.hee.system.migration.Blocks
 import chylex.hee.system.migration.Facing.DOWN
 import chylex.hee.system.migration.Facing.UP
 import chylex.hee.system.random.RandomDouble.Companion.Linear
@@ -60,6 +59,7 @@ import chylex.hee.system.random.nextVector
 import chylex.hee.system.random.nextVector2
 import chylex.hee.system.random.removeItemOrNull
 import chylex.hee.system.serialization.TagCompound
+import net.minecraft.block.Blocks
 import net.minecraft.util.Direction
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.Vec3d

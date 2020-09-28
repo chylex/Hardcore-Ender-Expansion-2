@@ -8,17 +8,17 @@ import chylex.hee.system.facades.Resource
 import chylex.hee.system.forge.Side
 import chylex.hee.system.forge.Sided
 import chylex.hee.system.math.floorToInt
-import chylex.hee.system.migration.RenderLiving
-import chylex.hee.system.migration.RenderManager
 import com.mojang.blaze3d.matrix.MatrixStack
 import net.minecraft.client.renderer.LightTexture
+import net.minecraft.client.renderer.entity.EntityRendererManager
+import net.minecraft.client.renderer.entity.MobRenderer
 import net.minecraft.client.renderer.entity.model.SpiderModel
 import net.minecraft.util.ResourceLocation
 import net.minecraft.world.LightType.BLOCK
 import net.minecraft.world.LightType.SKY
 
 @Sided(Side.CLIENT)
-class RenderEntityMobSpiderling(manager: RenderManager) : RenderLiving<EntityMobSpiderling, SpiderModel<EntityMobSpiderling>>(manager, SpiderModel(), 0.5F){
+class RenderEntityMobSpiderling(manager: EntityRendererManager) : MobRenderer<EntityMobSpiderling, SpiderModel<EntityMobSpiderling>>(manager, SpiderModel(), 0.5F){
 	private val texture = Resource.Custom("textures/entity/spiderling.png")
 	
 	init{

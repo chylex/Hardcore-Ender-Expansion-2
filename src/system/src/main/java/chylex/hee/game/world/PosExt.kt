@@ -4,13 +4,13 @@ package chylex.hee.game.world
 import chylex.hee.game.world.math.PosXZ
 import chylex.hee.system.math.ceilToInt
 import chylex.hee.system.math.square
-import chylex.hee.system.migration.Blocks
 import chylex.hee.system.migration.Facing.UP
 import chylex.hee.system.migration.MutableBlockPos
 import com.google.common.base.Function
 import com.google.common.collect.Iterables
 import net.minecraft.block.Block
 import net.minecraft.block.BlockState
+import net.minecraft.block.Blocks
 import net.minecraft.block.material.Material
 import net.minecraft.entity.Entity
 import net.minecraft.fluid.IFluidState

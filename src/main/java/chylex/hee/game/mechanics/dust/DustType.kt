@@ -2,9 +2,9 @@ package chylex.hee.game.mechanics.dust
 import chylex.hee.init.ModItems
 import chylex.hee.system.color.IntColor
 import chylex.hee.system.color.IntColor.Companion.RGB
-import chylex.hee.system.migration.Items
 import net.minecraft.item.Item
 import net.minecraft.item.ItemStack
+import net.minecraft.item.Items
 
 enum class DustType(val key: String, val item: Item, val color: IntArray){
 	STARDUST("stardust", ModItems.STARDUST, RGB(255, 255, 72)),

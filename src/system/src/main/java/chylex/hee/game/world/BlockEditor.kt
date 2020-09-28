@@ -1,10 +1,10 @@
 package chylex.hee.game.world
 import chylex.hee.system.migration.EntityPlayer
+import chylex.hee.system.migration.EntityPlayerMP
 import chylex.hee.system.migration.Facing.UP
 import net.minecraft.advancements.CriteriaTriggers
 import net.minecraft.block.Block
 import net.minecraft.block.BlockState
-import net.minecraft.entity.player.ServerPlayerEntity
 import net.minecraft.item.BlockItemUseContext
 import net.minecraft.item.ItemStack
 import net.minecraft.item.ItemUseContext
@@ -41,7 +41,7 @@ object BlockEditor{
 		
 		targetPos.setState(world, state)
 		
-		if (player is ServerPlayerEntity){
+		if (player is EntityPlayerMP){
 			CriteriaTriggers.PLACED_BLOCK.trigger(player, targetPos, stack)
 		}
 		

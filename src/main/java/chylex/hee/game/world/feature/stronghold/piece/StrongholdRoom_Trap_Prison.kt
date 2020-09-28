@@ -24,7 +24,6 @@ import chylex.hee.system.math.component1
 import chylex.hee.system.math.component2
 import chylex.hee.system.math.component3
 import chylex.hee.system.migration.BlockSkull
-import chylex.hee.system.migration.Blocks
 import chylex.hee.system.migration.EntityPlayer
 import chylex.hee.system.migration.Facing.EAST
 import chylex.hee.system.migration.Facing.UP
@@ -35,6 +34,7 @@ import chylex.hee.system.random.nextItemOrNull
 import chylex.hee.system.random.nextRounded
 import chylex.hee.system.serialization.TagCompound
 import chylex.hee.system.serialization.use
+import net.minecraft.block.Blocks
 import net.minecraft.util.math.AxisAlignedBB
 import net.minecraft.world.World
 import java.util.Random

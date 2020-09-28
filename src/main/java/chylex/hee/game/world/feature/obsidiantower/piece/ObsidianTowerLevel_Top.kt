@@ -23,10 +23,10 @@ import chylex.hee.network.client.PacketClientFX
 import chylex.hee.system.facades.Facing4
 import chylex.hee.system.math.addY
 import chylex.hee.system.math.offsetTowards
-import chylex.hee.system.migration.Blocks
 import chylex.hee.system.migration.EntityLightningBolt
 import chylex.hee.system.serialization.TagCompound
 import chylex.hee.system.serialization.use
+import net.minecraft.block.Blocks
 import net.minecraft.util.math.AxisAlignedBB
 import net.minecraft.util.math.BlockPos
 import net.minecraft.world.IWorld

@@ -41,7 +41,6 @@ import chylex.hee.system.migration.Potion
 import chylex.hee.system.migration.Potions
 import net.minecraft.entity.CreatureAttribute.UNDEAD
 import net.minecraft.entity.Entity
-import net.minecraft.entity.LivingEntity
 import net.minecraft.entity.ai.attributes.AbstractAttributeMap
 import net.minecraft.particles.ParticleTypes.EXPLOSION
 import net.minecraft.potion.EffectType.BENEFICIAL
@@ -175,7 +174,7 @@ object PotionBanishment : Potion(BENEFICIAL, RGB(253, 253, 253).i){
 		}
 	}
 	
-	override fun applyAttributesModifiersToEntity(entity: LivingEntity, attributes: AbstractAttributeMap, amplifier: Int){
+	override fun applyAttributesModifiersToEntity(entity: EntityLivingBase, attributes: AbstractAttributeMap, amplifier: Int){
 		super.applyAttributesModifiersToEntity(entity, attributes, amplifier)
 		banish(entity, null)
 	}

@@ -18,12 +18,12 @@ import chylex.hee.network.client.PacketClientFX
 import chylex.hee.network.fx.FxBlockData
 import chylex.hee.network.fx.FxBlockHandler
 import chylex.hee.system.migration.BlockDragonEgg
-import chylex.hee.system.migration.Blocks
 import chylex.hee.system.migration.EntityItem
 import chylex.hee.system.migration.EntityPlayer
 import chylex.hee.system.migration.Facing.DOWN
 import chylex.hee.system.random.nextInt
 import net.minecraft.block.BlockState
+import net.minecraft.block.Blocks
 import net.minecraft.item.ItemStack
 import net.minecraft.util.ActionResultType
 import net.minecraft.util.ActionResultType.SUCCESS

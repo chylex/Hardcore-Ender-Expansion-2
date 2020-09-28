@@ -28,7 +28,6 @@ import chylex.hee.system.math.component1
 import chylex.hee.system.math.component2
 import chylex.hee.system.math.component3
 import chylex.hee.system.math.floorToInt
-import chylex.hee.system.migration.Blocks
 import chylex.hee.system.migration.Facing.UP
 import chylex.hee.system.migration.Sounds
 import chylex.hee.system.migration.TileEntityFurnace
@@ -40,6 +39,7 @@ import chylex.hee.system.serialization.heeTag
 import chylex.hee.system.serialization.readPos
 import chylex.hee.system.serialization.use
 import chylex.hee.system.serialization.writePos
+import net.minecraft.block.Blocks
 import net.minecraft.entity.Entity
 import net.minecraft.entity.EntityType
 import net.minecraft.item.ItemStack

@@ -7,9 +7,9 @@ import chylex.hee.game.world.structure.IStructureWorld
 import chylex.hee.game.world.structure.trigger.LootChestStructureTrigger
 import chylex.hee.init.ModBlocks
 import chylex.hee.system.facades.Facing4
-import chylex.hee.system.migration.Blocks
 import chylex.hee.system.random.nextInt
 import chylex.hee.system.random.nextItem
+import net.minecraft.block.Blocks
 
 class StrongholdRoom_Chest_DecoratedCorners(file: String) : StrongholdAbstractPieceFromFile(file, StrongholdPieceType.ROOM){
 	override fun generate(world: IStructureWorld, instance: Instance){

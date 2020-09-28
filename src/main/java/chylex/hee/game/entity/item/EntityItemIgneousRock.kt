@@ -51,7 +51,6 @@ import chylex.hee.system.migration.BlockSkull
 import chylex.hee.system.migration.BlockSkullWall
 import chylex.hee.system.migration.BlockStainedGlass
 import chylex.hee.system.migration.BlockStainedGlassPane
-import chylex.hee.system.migration.Blocks
 import chylex.hee.system.migration.Facing.DOWN
 import chylex.hee.system.migration.Facing.UP
 import chylex.hee.system.migration.ItemBlock
@@ -67,6 +66,7 @@ import chylex.hee.system.serialization.putEnum
 import chylex.hee.system.serialization.use
 import net.minecraft.block.Block
 import net.minecraft.block.BlockState
+import net.minecraft.block.Blocks
 import net.minecraft.block.material.Material
 import net.minecraft.entity.Entity
 import net.minecraft.entity.EntityType

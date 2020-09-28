@@ -3,9 +3,9 @@ import chylex.hee.game.potion.brewing.PotionTypeInfo.Duration
 import chylex.hee.init.ModItems
 import chylex.hee.init.ModPotions
 import chylex.hee.system.math.floorToInt
-import chylex.hee.system.migration.Items
 import chylex.hee.system.migration.Potions
 import net.minecraft.item.ItemStack
+import net.minecraft.item.Items
 import net.minecraft.potion.PotionUtils
 
 object PotionBrewing{

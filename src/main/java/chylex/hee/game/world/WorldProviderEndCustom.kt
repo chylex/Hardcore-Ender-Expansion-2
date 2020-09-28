@@ -17,7 +17,7 @@ import chylex.hee.system.forge.Side
 import chylex.hee.system.forge.Sided
 import chylex.hee.system.forge.SubscribeAllEvents
 import chylex.hee.system.forge.SubscribeEvent
-import chylex.hee.system.migration.Blocks
+import net.minecraft.block.Blocks
 import net.minecraft.client.renderer.Vector3f
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.Vec3d

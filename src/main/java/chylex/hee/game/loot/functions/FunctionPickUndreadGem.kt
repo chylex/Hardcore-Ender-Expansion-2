@@ -3,13 +3,13 @@ import chylex.hee.game.inventory.size
 import chylex.hee.system.collection.WeightedList
 import chylex.hee.system.collection.WeightedList.Companion.weightedListOf
 import chylex.hee.system.facades.Resource
-import chylex.hee.system.migration.Items
 import com.google.common.collect.ImmutableBiMap
 import com.google.gson.JsonDeserializationContext
 import com.google.gson.JsonObject
 import com.google.gson.JsonSerializationContext
 import net.minecraft.item.Item
 import net.minecraft.item.ItemStack
+import net.minecraft.item.Items
 import net.minecraft.world.storage.loot.LootContext
 import net.minecraft.world.storage.loot.LootFunction
 import net.minecraft.world.storage.loot.conditions.ILootCondition

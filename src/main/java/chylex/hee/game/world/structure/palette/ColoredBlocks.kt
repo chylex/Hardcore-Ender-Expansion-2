@@ -1,5 +1,5 @@
 package chylex.hee.game.world.structure.palette
-import chylex.hee.system.migration.Blocks
+import net.minecraft.block.Blocks
 import net.minecraft.item.DyeColor
 import java.util.EnumMap
 

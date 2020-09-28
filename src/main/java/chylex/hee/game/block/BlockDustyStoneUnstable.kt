@@ -21,7 +21,6 @@ import net.minecraft.block.BlockState
 import net.minecraft.enchantment.EnchantmentHelper
 import net.minecraft.enchantment.Enchantments
 import net.minecraft.entity.Entity
-import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.shapes.EntitySelectionContext
 import net.minecraft.util.math.shapes.ISelectionContext
@@ -33,7 +32,7 @@ import net.minecraft.world.server.ServerWorld
 import java.util.Random
 
 class BlockDustyStoneUnstable(builder: BlockBuilder) : BlockDustyStone(builder){
-	override fun canHarvestBlock(state: BlockState, world: IBlockReader, pos: BlockPos, player: PlayerEntity): Boolean{
+	override fun canHarvestBlock(state: BlockState, world: IBlockReader, pos: BlockPos, player: EntityPlayer): Boolean{
 		return player.getHeldItem(MAIN_HAND).let { EnchantmentHelper.getEnchantmentLevel(Enchantments.SILK_TOUCH, it) == 0 || isPickaxeOrShovel(it) }
 	}
 	

@@ -35,7 +35,6 @@ import chylex.hee.system.migration.EntityItem
 import chylex.hee.system.migration.EntityLivingBase
 import chylex.hee.system.migration.Facing.DOWN
 import chylex.hee.system.migration.Facing.UP
-import chylex.hee.system.migration.Items
 import chylex.hee.system.migration.Sounds
 import chylex.hee.system.random.IRandomColor
 import chylex.hee.system.random.nextInt
@@ -50,6 +49,7 @@ import net.minecraft.block.BlockState
 import net.minecraft.entity.Entity
 import net.minecraft.entity.EntityType
 import net.minecraft.item.ItemStack
+import net.minecraft.item.Items
 import net.minecraft.network.IPacket
 import net.minecraft.network.PacketBuffer
 import net.minecraft.particles.ParticleTypes.SMOKE

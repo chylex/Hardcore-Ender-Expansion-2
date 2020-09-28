@@ -3,8 +3,8 @@ import chylex.hee.game.block.with
 import chylex.hee.game.world.Pos
 import chylex.hee.game.world.structure.IStructureWorld
 import chylex.hee.system.migration.BlockSkull
-import chylex.hee.system.migration.Blocks
 import chylex.hee.system.random.nextInt
+import net.minecraft.block.Blocks
 import net.minecraft.item.ItemStack
 
 class StrongholdRoom_Relic_Dungeon(file: String, relicItem: ItemStack) : StrongholdRoom_Relic(file, relicItem){

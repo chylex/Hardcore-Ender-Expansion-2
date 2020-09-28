@@ -15,13 +15,13 @@ import chylex.hee.system.facades.Stats
 import chylex.hee.system.migration.ActionResult.FAIL
 import chylex.hee.system.migration.ActionResult.PASS
 import chylex.hee.system.migration.ActionResult.SUCCESS
-import chylex.hee.system.migration.Enchantments
 import chylex.hee.system.migration.EntityLivingBase
 import chylex.hee.system.migration.EntityPlayer
 import chylex.hee.system.serialization.hasKey
 import net.minecraft.block.BlockState
 import net.minecraft.client.renderer.color.IItemColor
 import net.minecraft.enchantment.Enchantment
+import net.minecraft.enchantment.Enchantments
 import net.minecraft.entity.Entity
 import net.minecraft.fluid.Fluids
 import net.minecraft.fluid.IFluidState

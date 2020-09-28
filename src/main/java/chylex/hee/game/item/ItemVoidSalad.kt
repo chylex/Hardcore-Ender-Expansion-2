@@ -14,7 +14,6 @@ import chylex.hee.system.forge.SubscribeAllEvents
 import chylex.hee.system.forge.SubscribeEvent
 import chylex.hee.system.migration.EntityLivingBase
 import chylex.hee.system.migration.EntityPlayer
-import chylex.hee.system.migration.Items
 import chylex.hee.system.migration.Potions
 import chylex.hee.system.migration.Sounds
 import chylex.hee.system.random.nextFloat
@@ -23,6 +22,7 @@ import chylex.hee.system.serialization.putEnum
 import net.minecraft.item.Food
 import net.minecraft.item.Item
 import net.minecraft.item.ItemStack
+import net.minecraft.item.Items
 import net.minecraft.world.World
 import net.minecraftforge.event.entity.player.PlayerEvent
 

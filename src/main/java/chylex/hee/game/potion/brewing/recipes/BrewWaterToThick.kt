@@ -1,9 +1,9 @@
 package chylex.hee.game.potion.brewing.recipes
 import chylex.hee.game.potion.brewing.IBrewingRecipe
 import chylex.hee.game.potion.brewing.PotionItems
-import chylex.hee.system.migration.Items
 import chylex.hee.system.migration.PotionTypes
 import net.minecraft.item.ItemStack
+import net.minecraft.item.Items
 
 object BrewWaterToThick : IBrewingRecipe{
 	override fun isInput(input: ItemStack): Boolean{

@@ -8,13 +8,13 @@ import chylex.hee.system.forge.SubscribeEvent
 import chylex.hee.system.migration.BlockBush
 import chylex.hee.system.migration.BlockReed
 import chylex.hee.system.migration.BlockSapling
-import chylex.hee.system.migration.Blocks
 import chylex.hee.system.migration.Facing.UP
-import chylex.hee.system.migration.Items
 import net.minecraft.block.Block
 import net.minecraft.block.BlockState
+import net.minecraft.block.Blocks
 import net.minecraft.entity.Entity
 import net.minecraft.item.ItemStack
+import net.minecraft.item.Items
 import net.minecraft.util.Direction
 import net.minecraft.util.math.BlockPos
 import net.minecraft.world.Explosion

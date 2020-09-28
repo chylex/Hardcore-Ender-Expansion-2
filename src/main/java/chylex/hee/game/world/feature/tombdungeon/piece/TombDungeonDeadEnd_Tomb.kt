@@ -11,10 +11,10 @@ import chylex.hee.game.world.structure.IStructureWorld
 import chylex.hee.game.world.structure.piece.IStructurePieceConnection
 import chylex.hee.init.ModBlocks
 import chylex.hee.system.migration.BlockSlab
-import chylex.hee.system.migration.Blocks
 import chylex.hee.system.migration.Facing.NORTH
 import chylex.hee.system.migration.Facing.SOUTH
 import chylex.hee.system.random.nextInt
+import net.minecraft.block.Blocks
 import net.minecraft.state.properties.SlabType
 
 class TombDungeonDeadEnd_Tomb(length: Int, private val tombConstructor: (Boolean) -> TombDungeonAbstractPiece, override val isFancy: Boolean) : TombDungeonAbstractPiece(), ITombDungeonPieceWithTombs{

@@ -6,19 +6,19 @@ import chylex.hee.client.render.gl.translateY
 import chylex.hee.game.entity.projectile.EntityProjectileEyeOfEnder
 import chylex.hee.system.forge.Side
 import chylex.hee.system.forge.Sided
-import chylex.hee.system.migration.Items
-import chylex.hee.system.migration.Render
-import chylex.hee.system.migration.RenderManager
 import com.mojang.blaze3d.matrix.MatrixStack
 import net.minecraft.client.renderer.IRenderTypeBuffer
+import net.minecraft.client.renderer.entity.EntityRenderer
+import net.minecraft.client.renderer.entity.EntityRendererManager
 import net.minecraft.client.renderer.model.ItemCameraTransforms.TransformType.GROUND
 import net.minecraft.client.renderer.texture.OverlayTexture
 import net.minecraft.inventory.container.PlayerContainer
 import net.minecraft.item.ItemStack
+import net.minecraft.item.Items
 import net.minecraft.util.ResourceLocation
 
 @Sided(Side.CLIENT)
-class RenderEntityProjectileEyeOfEnder(manager: RenderManager) : Render<EntityProjectileEyeOfEnder>(manager){
+class RenderEntityProjectileEyeOfEnder(manager: EntityRendererManager) : EntityRenderer<EntityProjectileEyeOfEnder>(manager){
 	private val renderedItem = ItemStack(Items.ENDER_EYE)
 	
 	override fun render(entity: EntityProjectileEyeOfEnder, yaw: Float, partialTicks: Float, matrix: MatrixStack, buffer: IRenderTypeBuffer, combinedLight: Int){

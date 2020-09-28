@@ -10,7 +10,6 @@ import chylex.hee.game.world.getTile
 import chylex.hee.init.ModContainers
 import chylex.hee.system.migration.EntityPlayer
 import chylex.hee.system.serialization.readPos
-import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.entity.player.PlayerInventory
 import net.minecraft.inventory.IInventory
 import net.minecraft.inventory.Inventory
@@ -48,7 +47,7 @@ class ContainerBrewingStandCustom(id: Int, inventory: PlayerInventory, private v
 		return implTransferStackInSlot(inventorySlots, brewingStand, player, index)
 	}
 	
-	override fun onContainerClosed(player: PlayerEntity){
+	override fun onContainerClosed(player: EntityPlayer){
 		super.onContainerClosed(player)
 		brewingStand.closeInventory(player)
 	}

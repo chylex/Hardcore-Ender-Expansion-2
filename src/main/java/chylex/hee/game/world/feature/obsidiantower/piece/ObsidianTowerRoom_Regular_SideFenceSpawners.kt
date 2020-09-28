@@ -3,9 +3,9 @@ import chylex.hee.game.block.with
 import chylex.hee.game.world.math.PosXZ
 import chylex.hee.game.world.structure.IStructureWorld
 import chylex.hee.system.migration.BlockFence
-import chylex.hee.system.migration.Blocks
 import chylex.hee.system.random.nextInt
 import chylex.hee.system.random.removeItem
+import net.minecraft.block.Blocks
 
 class ObsidianTowerRoom_Regular_SideFenceSpawners(file: String) : ObsidianTowerRoom_General(file, guaranteesSpawnersOnLevel1 = true){
 	override fun generateContents(world: IStructureWorld, instance: Instance){

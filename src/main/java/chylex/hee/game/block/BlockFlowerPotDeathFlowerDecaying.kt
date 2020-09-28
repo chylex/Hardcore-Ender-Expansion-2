@@ -6,10 +6,10 @@ import chylex.hee.game.world.setBlock
 import chylex.hee.init.ModBlocks
 import chylex.hee.init.ModItems
 import chylex.hee.system.migration.BlockFlowerPot
-import chylex.hee.system.migration.Blocks
 import chylex.hee.system.migration.EntityPlayer
 import net.minecraft.block.Block
 import net.minecraft.block.BlockState
+import net.minecraft.block.Blocks
 import net.minecraft.item.ItemStack
 import net.minecraft.state.StateContainer.Builder
 import net.minecraft.util.ActionResultType

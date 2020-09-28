@@ -7,8 +7,8 @@ import chylex.hee.game.world.generation.SegmentedWorld
 import chylex.hee.game.world.max
 import chylex.hee.system.facades.Facing6
 import chylex.hee.system.math.ceilToInt
-import chylex.hee.system.migration.Blocks
 import net.minecraft.block.Block
+import net.minecraft.block.Blocks
 import net.minecraft.util.math.BlockPos
 import java.util.Random
 

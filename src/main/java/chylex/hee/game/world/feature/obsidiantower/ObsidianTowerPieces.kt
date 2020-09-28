@@ -40,7 +40,7 @@ import chylex.hee.game.world.territory.TerritoryType
 import chylex.hee.init.ModBlocks
 import chylex.hee.system.collection.WeightedList.Companion.weightedListOf
 import chylex.hee.system.facades.Resource
-import chylex.hee.system.migration.Blocks
+import net.minecraft.block.Blocks
 
 object ObsidianTowerPieces : IStructureDescription{
 	fun calculateStructureSize(floors: Int) = Size(

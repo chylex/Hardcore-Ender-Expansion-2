@@ -16,17 +16,17 @@ import chylex.hee.system.facades.Facing6
 import chylex.hee.system.facades.Resource
 import chylex.hee.system.forge.Side
 import chylex.hee.system.forge.Sided
-import chylex.hee.system.migration.Blocks
 import chylex.hee.system.migration.ItemBlock
-import chylex.hee.system.migration.RenderLiving
 import chylex.hee.system.random.nextFloat
 import com.mojang.blaze3d.matrix.MatrixStack
 import com.mojang.blaze3d.vertex.IVertexBuilder
 import net.minecraft.block.AbstractChestBlock
+import net.minecraft.block.Blocks
 import net.minecraft.client.renderer.Atlases
 import net.minecraft.client.renderer.IRenderTypeBuffer
 import net.minecraft.client.renderer.RenderType
 import net.minecraft.client.renderer.entity.EntityRendererManager
+import net.minecraft.client.renderer.entity.MobRenderer
 import net.minecraft.client.renderer.model.IBakedModel
 import net.minecraft.client.renderer.model.ItemCameraTransforms.TransformType.GROUND
 import net.minecraft.client.renderer.texture.OverlayTexture
@@ -37,7 +37,7 @@ import net.minecraftforge.client.ForgeHooksClient
 import java.util.Random
 
 @Sided(Side.CLIENT)
-class RenderEntityMobBlobby(manager: EntityRendererManager) : RenderLiving<EntityMobBlobby, ModelEntityMobBlobby>(manager, ModelEntityMobBlobby, 0.27F){
+class RenderEntityMobBlobby(manager: EntityRendererManager) : MobRenderer<EntityMobBlobby, ModelEntityMobBlobby>(manager, ModelEntityMobBlobby, 0.27F){
 	private val texture = Resource.Custom("textures/entity/blobby.png")
 	private val renderType = RenderType.getEntityTranslucent(texture)
 	private val fallbackStack = ItemStack(Blocks.BEDROCK)

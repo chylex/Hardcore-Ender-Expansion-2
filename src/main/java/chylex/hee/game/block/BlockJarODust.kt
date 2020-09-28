@@ -14,7 +14,6 @@ import chylex.hee.game.world.isTopSolid
 import chylex.hee.game.world.playServer
 import chylex.hee.system.forge.Side
 import chylex.hee.system.forge.Sided
-import chylex.hee.system.migration.Blocks
 import chylex.hee.system.migration.EntityLivingBase
 import chylex.hee.system.migration.EntityPlayer
 import chylex.hee.system.migration.Facing.DOWN
@@ -22,6 +21,7 @@ import chylex.hee.system.migration.Sounds
 import chylex.hee.system.serialization.NBTList.Companion.putList
 import chylex.hee.system.serialization.getListOfCompounds
 import net.minecraft.block.BlockState
+import net.minecraft.block.Blocks
 import net.minecraft.client.util.ITooltipFlag
 import net.minecraft.item.ItemStack
 import net.minecraft.tileentity.TileEntity

@@ -4,10 +4,10 @@ import chylex.hee.game.entity.lookPosVec
 import chylex.hee.game.world.totalTime
 import chylex.hee.system.math.square
 import chylex.hee.system.math.toRadians
-import chylex.hee.system.migration.Blocks
 import chylex.hee.system.migration.EntityCreature
 import chylex.hee.system.migration.EntityLivingBase
 import it.unimi.dsi.fastutil.objects.Object2LongArrayMap
+import net.minecraft.block.Blocks
 import net.minecraft.inventory.EquipmentSlotType.HEAD
 import kotlin.math.abs
 import kotlin.math.cos

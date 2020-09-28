@@ -20,12 +20,12 @@ import chylex.hee.system.forge.Side
 import chylex.hee.system.forge.Sided
 import chylex.hee.system.forge.SubscribeEvent
 import chylex.hee.system.migration.BlockFire
-import chylex.hee.system.migration.Blocks
 import chylex.hee.system.migration.Sounds
 import chylex.hee.system.random.nextFloat
 import chylex.hee.system.random.nextInt
 import chylex.hee.system.random.nextItem
 import net.minecraft.block.BlockState
+import net.minecraft.block.Blocks
 import net.minecraft.entity.Entity
 import net.minecraft.particles.ParticleTypes.LARGE_SMOKE
 import net.minecraft.util.Direction

@@ -5,10 +5,10 @@ import chylex.hee.game.world.component3
 import chylex.hee.game.world.generation.IBlockPicker
 import chylex.hee.game.world.max
 import chylex.hee.game.world.min
-import chylex.hee.system.migration.Blocks
 import chylex.hee.system.migration.MutableBlockPos
 import net.minecraft.block.Block
 import net.minecraft.block.BlockState
+import net.minecraft.block.Blocks
 import net.minecraft.block.material.Material
 import net.minecraft.util.math.BlockPos
 import java.util.Random

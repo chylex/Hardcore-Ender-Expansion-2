@@ -36,7 +36,7 @@ import chylex.hee.system.math.floorToInt
 import chylex.hee.system.math.square
 import chylex.hee.system.math.toPitch
 import chylex.hee.system.math.toYaw
-import chylex.hee.system.migration.Blocks
+import net.minecraft.block.Blocks
 import chylex.hee.system.migration.EntityLightningBolt
 import chylex.hee.system.migration.EntityPlayerMP
 import chylex.hee.system.migration.Sounds

@@ -5,7 +5,7 @@ import chylex.hee.game.world.structure.IStructureGenerator
 import chylex.hee.game.world.structure.IStructurePiece
 import chylex.hee.game.world.structure.IStructureWorld
 import chylex.hee.game.world.structure.world.TransformedStructureWorld
-import chylex.hee.system.migration.Blocks
+import net.minecraft.block.Blocks
 import net.minecraft.util.Direction.EAST
 import net.minecraft.util.Direction.NORTH
 import net.minecraft.util.Direction.SOUTH

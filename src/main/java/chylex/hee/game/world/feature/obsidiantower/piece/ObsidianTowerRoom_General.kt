@@ -16,7 +16,6 @@ import chylex.hee.init.ModBlocks
 import chylex.hee.proxy.Environment
 import chylex.hee.system.MagicValues
 import chylex.hee.system.migration.BlockSkull
-import chylex.hee.system.migration.Blocks
 import chylex.hee.system.migration.Facing.EAST
 import chylex.hee.system.migration.Facing.SOUTH
 import chylex.hee.system.migration.Facing.WEST
@@ -24,6 +23,7 @@ import chylex.hee.system.migration.TileEntityFurnace
 import chylex.hee.system.migration.TileEntitySkull
 import chylex.hee.system.random.nextItem
 import chylex.hee.system.random.removeItemOrNull
+import net.minecraft.block.Blocks
 import net.minecraft.item.ItemStack
 import net.minecraft.util.Direction
 import net.minecraft.util.math.BlockPos

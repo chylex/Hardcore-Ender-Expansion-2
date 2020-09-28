@@ -3,7 +3,6 @@ import chylex.hee.game.particle.ParticleSetting
 import chylex.hee.system.forge.Side
 import chylex.hee.system.forge.Sided
 import chylex.hee.system.migration.EntityPlayerSP
-import chylex.hee.system.migration.RenderManager
 import net.minecraft.client.GameSettings
 import net.minecraft.client.MainWindow
 import net.minecraft.client.Minecraft
@@ -12,6 +11,7 @@ import net.minecraft.client.gui.screen.Screen
 import net.minecraft.client.particle.ParticleManager
 import net.minecraft.client.renderer.GameRenderer
 import net.minecraft.client.renderer.ItemRenderer
+import net.minecraft.client.renderer.entity.EntityRendererManager
 import net.minecraft.client.renderer.texture.TextureManager
 import net.minecraft.client.settings.ParticleStatus
 import net.minecraft.client.world.ClientWorld
@@ -61,7 +61,7 @@ object MC{
 	val textureManager: TextureManager
 		get() = instance.textureManager
 	
-	val renderManager: RenderManager
+	val renderManager: EntityRendererManager
 		get() = instance.renderManager
 	
 	val particleManager: ParticleManager

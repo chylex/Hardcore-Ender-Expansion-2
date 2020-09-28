@@ -9,7 +9,6 @@ import chylex.hee.system.facades.Resource
 import chylex.hee.system.math.floorToInt
 import chylex.hee.system.migration.ItemArmor
 import chylex.hee.system.migration.ItemTiered
-import chylex.hee.system.migration.Items
 import chylex.hee.system.random.nextBiasedFloat
 import chylex.hee.system.random.nextFloat
 import chylex.hee.system.random.nextInt
@@ -18,6 +17,7 @@ import net.minecraft.inventory.IInventory
 import net.minecraft.item.IArmorMaterial
 import net.minecraft.item.IItemTier
 import net.minecraft.item.ItemStack
+import net.minecraft.item.Items
 import net.minecraft.util.ResourceLocation
 import net.minecraft.world.dimension.DimensionType
 import net.minecraft.world.storage.loot.LootContext

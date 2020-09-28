@@ -18,10 +18,10 @@ import chylex.hee.game.world.structure.IStructurePieceFromFile
 import chylex.hee.game.world.structure.StructureFile
 import chylex.hee.game.world.structure.StructureFiles
 import chylex.hee.game.world.structure.world.TransformedStructureWorld
-import chylex.hee.system.migration.Blocks
 import com.mojang.brigadier.arguments.LongArgumentType.longArg
 import com.mojang.brigadier.builder.ArgumentBuilder
 import com.mojang.brigadier.context.CommandContext
+import net.minecraft.block.Blocks
 import net.minecraft.command.CommandSource
 import net.minecraft.command.Commands.argument
 import net.minecraft.command.Commands.literal

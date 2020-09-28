@@ -9,13 +9,13 @@ import chylex.hee.system.facades.Stats
 import chylex.hee.system.forge.SubscribeAllEvents
 import chylex.hee.system.forge.SubscribeEvent
 import chylex.hee.system.migration.BlockCauldron
-import chylex.hee.system.migration.Blocks
 import chylex.hee.system.migration.EntityPlayer
-import chylex.hee.system.migration.Items
 import chylex.hee.system.migration.Sounds
 import net.minecraft.block.BlockState
+import net.minecraft.block.Blocks
 import net.minecraft.entity.Entity
 import net.minecraft.item.ItemStack
+import net.minecraft.item.Items
 import net.minecraft.util.ActionResultType
 import net.minecraft.util.ActionResultType.PASS
 import net.minecraft.util.ActionResultType.SUCCESS

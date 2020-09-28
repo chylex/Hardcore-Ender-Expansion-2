@@ -92,16 +92,16 @@ import chylex.hee.system.facades.Resource
 import chylex.hee.system.forge.Side
 import chylex.hee.system.forge.SubscribeAllEvents
 import chylex.hee.system.forge.SubscribeEvent
-import chylex.hee.system.migration.RenderEndermite
-import chylex.hee.system.migration.RenderFallingBlock
-import chylex.hee.system.migration.RenderSilverfish
-import chylex.hee.system.migration.RenderTNTPrimed
 import net.minecraft.block.Block
 import net.minecraft.client.gui.ScreenManager
 import net.minecraft.client.gui.screen.inventory.ContainerScreen
 import net.minecraft.client.renderer.RenderType
 import net.minecraft.client.renderer.RenderTypeLookup
+import net.minecraft.client.renderer.entity.EndermiteRenderer
 import net.minecraft.client.renderer.entity.EntityRenderer
+import net.minecraft.client.renderer.entity.FallingBlockRenderer
+import net.minecraft.client.renderer.entity.SilverfishRenderer
+import net.minecraft.client.renderer.entity.TNTRenderer
 import net.minecraft.client.renderer.entity.model.GenericHeadModel
 import net.minecraft.client.renderer.tileentity.ItemStackTileEntityRenderer
 import net.minecraft.client.renderer.tileentity.ShulkerBoxTileEntityRenderer
@@ -173,9 +173,9 @@ object ModRendering{
 		// entities
 		
 		registerEntity<EntityBossEnderEye, RenderEntityBossEnderEye>(ModEntities.ENDER_EYE)
-		registerEntity<EntityFallingBlockHeavy, RenderFallingBlock>(ModEntities.FALLING_BLOCK_HEAVY)
-		registerEntity<EntityFallingObsidian, RenderFallingBlock>(ModEntities.FALLING_OBSIDIAN)
-		registerEntity<EntityInfusedTNT, RenderTNTPrimed>(ModEntities.INFUSED_TNT)
+		registerEntity<EntityFallingBlockHeavy, FallingBlockRenderer>(ModEntities.FALLING_BLOCK_HEAVY)
+		registerEntity<EntityFallingObsidian, FallingBlockRenderer>(ModEntities.FALLING_OBSIDIAN)
+		registerEntity<EntityInfusedTNT, TNTRenderer>(ModEntities.INFUSED_TNT)
 		registerEntity<EntityItemCauldronTrigger, RenderEntityItem>(ModEntities.ITEM_CAULDRON_TRIGGER)
 		registerEntity<EntityItemFreshlyCooked, RenderEntityItem>(ModEntities.ITEM_FRESHLY_COOKED)
 		registerEntity<EntityItemIgneousRock, RenderEntityItemNoBob>(ModEntities.ITEM_IGNEOUS_ROCK)
@@ -185,9 +185,9 @@ object ModRendering{
 		registerEntity<EntityMobAbstractEnderman, RenderEntityMobAbstractEnderman>(ModEntities.ENDERMAN_MUPPET)
 		registerEntity<EntityMobAngryEnderman, RenderEntityMobAngryEnderman>(ModEntities.ANGRY_ENDERMAN)
 		registerEntity<EntityMobBlobby, RenderEntityMobBlobby>(ModEntities.BLOBBY)
-		registerEntity<EntityMobEndermite, RenderEndermite>(ModEntities.ENDERMITE)
-		registerEntity<EntityMobEndermiteInstability, RenderEndermite>(ModEntities.ENDERMITE_INSTABILITY)
-		registerEntity<EntityMobSilverfish, RenderSilverfish>(ModEntities.SILVERFISH)
+		registerEntity<EntityMobEndermite, EndermiteRenderer>(ModEntities.ENDERMITE)
+		registerEntity<EntityMobEndermiteInstability, EndermiteRenderer>(ModEntities.ENDERMITE_INSTABILITY)
+		registerEntity<EntityMobSilverfish, SilverfishRenderer>(ModEntities.SILVERFISH)
 		registerEntity<EntityMobSpiderling, RenderEntityMobSpiderling>(ModEntities.SPIDERLING)
 		registerEntity<EntityMobUndread, RenderEntityMobUndread>(ModEntities.UNDREAD)
 		registerEntity<EntityMobVampireBat, RenderEntityMobVampireBat>(ModEntities.VAMPIRE_BAT)

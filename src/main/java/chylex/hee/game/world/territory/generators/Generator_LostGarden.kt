@@ -49,10 +49,10 @@ import chylex.hee.system.math.remapRange
 import chylex.hee.system.math.scale
 import chylex.hee.system.math.scaleY
 import chylex.hee.system.math.square
+import chylex.hee.system.migration.BlockChorusFlower
 import chylex.hee.system.migration.BlockLeaves
 import chylex.hee.system.migration.BlockSixWay
 import chylex.hee.system.migration.BlockVine
-import chylex.hee.system.migration.Blocks
 import chylex.hee.system.random.RandomDouble.Companion.Exp
 import chylex.hee.system.random.RandomDouble.Companion.Linear
 import chylex.hee.system.random.nextFloat
@@ -65,7 +65,7 @@ import chylex.hee.system.random.removeItem
 import chylex.hee.system.random.removeItemOrNull
 import net.minecraft.block.Block
 import net.minecraft.block.BlockState
-import net.minecraft.block.ChorusFlowerBlock
+import net.minecraft.block.Blocks
 import net.minecraft.util.Direction
 import net.minecraft.util.Direction.DOWN
 import net.minecraft.util.Direction.UP
@@ -851,7 +851,7 @@ object Generator_LostGarden : ITerritoryGenerator{
 				}
 				
 				if (shouldGenerateFlower){
-					world.setState(branchStart.up(branchHeight), Blocks.CHORUS_FLOWER.with(ChorusFlowerBlock.AGE, 5))
+					world.setState(branchStart.up(branchHeight), Blocks.CHORUS_FLOWER.with(BlockChorusFlower.AGE, 5))
 				}
 			}
 			

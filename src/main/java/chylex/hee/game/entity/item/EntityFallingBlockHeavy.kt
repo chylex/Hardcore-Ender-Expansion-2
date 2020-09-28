@@ -15,12 +15,12 @@ import chylex.hee.game.world.setState
 import chylex.hee.init.ModEntities
 import chylex.hee.system.math.subtractY
 import chylex.hee.system.migration.BlockFalling
-import chylex.hee.system.migration.Blocks
 import chylex.hee.system.migration.EntityFallingBlock
 import chylex.hee.system.serialization.TagCompound
 import chylex.hee.system.serialization.use
 import net.minecraft.block.Block
 import net.minecraft.block.BlockState
+import net.minecraft.block.Blocks
 import net.minecraft.block.material.Material
 import net.minecraft.entity.EntityType
 import net.minecraft.entity.MoverType.SELF

@@ -4,7 +4,6 @@ import chylex.hee.game.inventory.heeTag
 import chylex.hee.game.inventory.heeTagOrNull
 import chylex.hee.game.inventory.nbt
 import chylex.hee.game.inventory.nbtOrNull
-import chylex.hee.system.migration.Items
 import chylex.hee.system.serialization.NBTBase
 import chylex.hee.system.serialization.NBTList.Companion.putList
 import chylex.hee.system.serialization.NBTObjectList
@@ -26,6 +25,7 @@ import chylex.hee.system.serialization.hasKey
 import chylex.hee.system.serialization.heeTag
 import chylex.hee.system.serialization.heeTagOrNull
 import net.minecraft.item.ItemStack
+import net.minecraft.item.Items
 import net.minecraft.util.registry.Bootstrap
 import net.minecraft.util.text.StringTextComponent
 import net.minecraftforge.common.util.Constants.NBT

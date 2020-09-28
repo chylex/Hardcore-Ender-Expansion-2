@@ -6,13 +6,13 @@ import chylex.hee.game.world.math.PosXZ
 import chylex.hee.game.world.structure.IStructureWorld
 import chylex.hee.init.ModBlocks
 import chylex.hee.system.migration.BlockSlab
-import chylex.hee.system.migration.Blocks
 import chylex.hee.system.migration.Facing.EAST
 import chylex.hee.system.migration.Facing.NORTH
 import chylex.hee.system.migration.Facing.SOUTH
 import chylex.hee.system.migration.Facing.WEST
 import chylex.hee.system.random.nextInt
 import chylex.hee.system.random.nextItem
+import net.minecraft.block.Blocks
 import net.minecraft.state.properties.SlabType
 
 class ObsidianTowerRoom_Regular_LibraryShelves(file: String) : ObsidianTowerRoom_General(file, guaranteesSpawnersOnLevel1 = true){

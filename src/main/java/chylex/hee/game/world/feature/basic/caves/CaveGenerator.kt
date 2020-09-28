@@ -5,7 +5,7 @@ import chylex.hee.game.world.generation.IBlockPlacer.BlockReplacer
 import chylex.hee.game.world.generation.SegmentedWorld
 import chylex.hee.game.world.math.Size
 import chylex.hee.system.math.ceilToInt
-import chylex.hee.system.migration.Blocks
+import net.minecraft.block.Blocks
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.Vec3d
 

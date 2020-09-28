@@ -11,11 +11,11 @@ import chylex.hee.system.forge.Sided
 import chylex.hee.system.migration.ActionResult.SUCCESS
 import chylex.hee.system.migration.EntityPlayer
 import chylex.hee.system.migration.ItemEnderPearl
-import chylex.hee.system.migration.Items
 import chylex.hee.system.migration.Sounds
 import chylex.hee.system.random.nextFloat
 import net.minecraft.client.util.ITooltipFlag
 import net.minecraft.item.ItemStack
+import net.minecraft.item.Items
 import net.minecraft.util.ActionResult
 import net.minecraft.util.Hand
 import net.minecraft.util.SoundCategory

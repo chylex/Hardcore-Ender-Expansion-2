@@ -36,7 +36,6 @@ import chylex.hee.system.migration.BlockRotatedPillar
 import chylex.hee.system.migration.EntityItem
 import chylex.hee.system.migration.EntityPlayer
 import chylex.hee.system.migration.Facing
-import chylex.hee.system.migration.Items
 import chylex.hee.system.random.nextInt
 import chylex.hee.system.random.nextItem
 import chylex.hee.system.serialization.NBTItemStackList
@@ -48,6 +47,7 @@ import chylex.hee.system.serialization.use
 import chylex.hee.system.serialization.writeCompactVec
 import net.minecraft.item.Item
 import net.minecraft.item.ItemStack
+import net.minecraft.item.Items
 import net.minecraft.network.PacketBuffer
 import net.minecraft.tileentity.ITickableTileEntity
 import net.minecraft.tileentity.TileEntityType

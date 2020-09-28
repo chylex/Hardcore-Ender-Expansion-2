@@ -9,6 +9,7 @@ import chylex.hee.system.migration.BlockSlab
 import chylex.hee.system.migration.BlockStairs
 import chylex.hee.system.migration.BlockTrapDoor
 import chylex.hee.system.migration.BlockVine
+import chylex.hee.system.migration.BlockWall
 import chylex.hee.system.migration.Facing.AXIS_X
 import chylex.hee.system.migration.Facing.AXIS_Y
 import chylex.hee.system.migration.Facing.AXIS_Z
@@ -19,7 +20,6 @@ import chylex.hee.system.migration.Facing.SOUTH
 import chylex.hee.system.migration.Facing.UP
 import chylex.hee.system.migration.Facing.WEST
 import net.minecraft.block.Block
-import net.minecraft.block.WallBlock
 import net.minecraft.state.properties.DoubleBlockHalf
 import net.minecraft.state.properties.Half
 import net.minecraft.state.properties.SlabType
@@ -104,13 +104,13 @@ object PaletteMappings{
 	}
 	
 	fun WALL_CONNECTIONS(block: Block) = (LIST_NSEW + LIST_UP_NSEW).associate {
-		Pair(it, it.fold(block.with(WallBlock.UP, false)){
+		Pair(it, it.fold(block.with(BlockWall.UP, false)){
 			state, chr -> when(chr){
-				'u' -> state.with(WallBlock.UP, true)
-				'n' -> state.with(WallBlock.NORTH, true)
-				's' -> state.with(WallBlock.SOUTH, true)
-				'e' -> state.with(WallBlock.EAST, true)
-				'w' -> state.with(WallBlock.WEST, true)
+				'u' -> state.with(BlockWall.UP, true)
+				'n' -> state.with(BlockWall.NORTH, true)
+				's' -> state.with(BlockWall.SOUTH, true)
+				'e' -> state.with(BlockWall.EAST, true)
+				'w' -> state.with(BlockWall.WEST, true)
 				else -> throw IllegalStateException()
 			}
 		})

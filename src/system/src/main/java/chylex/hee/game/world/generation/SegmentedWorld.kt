@@ -11,8 +11,8 @@ import chylex.hee.game.world.structure.IStructureTrigger
 import chylex.hee.game.world.structure.IStructureWorld
 import chylex.hee.system.Debug
 import chylex.hee.system.math.ceilToInt
-import chylex.hee.system.migration.Blocks
 import net.minecraft.block.BlockState
+import net.minecraft.block.Blocks
 import net.minecraft.util.math.BlockPos
 import java.util.Random
 

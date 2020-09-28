@@ -29,6 +29,7 @@ import chylex.hee.system.forge.SubscribeAllEvents
 import chylex.hee.system.forge.SubscribeEvent
 import chylex.hee.system.math.square
 import chylex.hee.system.migration.EntityArrow
+import chylex.hee.system.migration.EntityLiving
 import chylex.hee.system.migration.EntityLivingBase
 import chylex.hee.system.migration.EntityLlamaSpit
 import chylex.hee.system.migration.EntityPlayer
@@ -46,7 +47,6 @@ import net.minecraft.entity.SharedMonsterAttributes.ATTACK_DAMAGE
 import net.minecraft.entity.SharedMonsterAttributes.FOLLOW_RANGE
 import net.minecraft.entity.SharedMonsterAttributes.MAX_HEALTH
 import net.minecraft.entity.SpawnReason
-import net.minecraft.entity.monster.MonsterEntity
 import net.minecraft.network.datasync.DataParameter
 import net.minecraft.util.DamageSource
 import net.minecraft.util.IndirectEntityDamageSource
@@ -171,7 +171,7 @@ class EntityMobEnderman(type: EntityType<EntityMobEnderman>, world: World) : Ent
 		
 		// Spawn conditions
 		
-		fun canSpawnAt(type: EntityType<out MonsterEntity>, world: IWorld, reason: SpawnReason, pos: BlockPos, rand: Random): Boolean{
+		fun canSpawnAt(type: EntityType<out EntityLiving>, world: IWorld, reason: SpawnReason, pos: BlockPos, rand: Random): Boolean{
 			return world.difficulty != Difficulty.PEACEFUL && checkSpawnLightLevel(world, pos, rand) && canSpawnOn(type, world, reason, pos, rand)
 		}
 		

@@ -3,11 +3,11 @@ import chylex.hee.game.block.properties.BlockBuilder
 import chylex.hee.system.facades.Stats
 import chylex.hee.system.migration.BlockLeaves
 import chylex.hee.system.migration.EntityPlayer
-import chylex.hee.system.migration.Items
 import net.minecraft.block.BlockState
 import net.minecraft.block.material.MaterialColor
 import net.minecraft.entity.EntityType
 import net.minecraft.item.ItemStack
+import net.minecraft.item.Items
 import net.minecraft.tileentity.TileEntity
 import net.minecraft.util.math.BlockPos
 import net.minecraft.world.IBlockReader

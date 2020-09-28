@@ -40,13 +40,13 @@ import chylex.hee.system.migration.EntityItem
 import chylex.hee.system.migration.EntityPlayer
 import chylex.hee.system.migration.EntityXPOrb
 import chylex.hee.system.migration.Facing.UP
-import chylex.hee.system.migration.Items
 import chylex.hee.system.migration.Sounds
 import chylex.hee.system.random.nextFloat
 import chylex.hee.system.random.nextInt
 import chylex.hee.system.serialization.TagCompound
 import chylex.hee.system.serialization.use
 import net.minecraft.entity.Entity
+import net.minecraft.item.Items
 import net.minecraft.tileentity.ITickableTileEntity
 import net.minecraft.tileentity.TileEntityType
 import net.minecraft.util.SoundCategory

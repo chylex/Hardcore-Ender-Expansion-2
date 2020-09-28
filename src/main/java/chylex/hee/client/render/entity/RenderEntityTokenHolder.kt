@@ -12,17 +12,17 @@ import chylex.hee.game.item.ItemPortalToken.TokenType.SOLITARY
 import chylex.hee.system.facades.Resource
 import chylex.hee.system.forge.Side
 import chylex.hee.system.forge.Sided
-import chylex.hee.system.migration.Render
-import chylex.hee.system.migration.RenderManager
 import com.mojang.blaze3d.matrix.MatrixStack
 import net.minecraft.client.renderer.IRenderTypeBuffer
 import net.minecraft.client.renderer.RenderType
+import net.minecraft.client.renderer.entity.EntityRenderer
+import net.minecraft.client.renderer.entity.EntityRendererManager
 import net.minecraft.client.renderer.texture.OverlayTexture
 import net.minecraft.util.ResourceLocation
 import kotlin.math.pow
 
 @Sided(Side.CLIENT)
-class RenderEntityTokenHolder(manager: RenderManager) : Render<EntityTokenHolder>(manager){
+class RenderEntityTokenHolder(manager: EntityRendererManager) : EntityRenderer<EntityTokenHolder>(manager){
 	private val textures = mapOf(
 		NORMAL   to Resource.Custom("textures/entity/token_holder.png"),
 		RARE     to Resource.Custom("textures/entity/token_holder_rare.png"),

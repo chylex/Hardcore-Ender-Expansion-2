@@ -19,13 +19,13 @@ import chylex.hee.system.forge.SubscribeEvent
 import chylex.hee.system.migration.EntityLivingBase
 import chylex.hee.system.migration.EntityPlayer
 import chylex.hee.system.migration.EntityVillager
-import chylex.hee.system.migration.Items
 import chylex.hee.system.migration.Potions
 import chylex.hee.system.migration.Sounds
 import chylex.hee.system.serialization.hasKey
 import net.minecraft.entity.Entity
 import net.minecraft.entity.player.PlayerEntity.REACH_DISTANCE
 import net.minecraft.item.ItemStack
+import net.minecraft.item.Items
 import net.minecraft.particles.ParticleTypes
 import net.minecraft.util.DamageSource
 import net.minecraft.util.Hand

@@ -41,7 +41,6 @@ import chylex.hee.system.collection.WeightedList
 import chylex.hee.system.collection.WeightedList.Companion.weightedListOf
 import chylex.hee.system.migration.BlockSlab
 import chylex.hee.system.migration.BlockStairs
-import chylex.hee.system.migration.Blocks
 import chylex.hee.system.migration.Facing.EAST
 import chylex.hee.system.migration.Facing.NORTH
 import chylex.hee.system.migration.Facing.SOUTH
@@ -49,6 +48,7 @@ import chylex.hee.system.migration.Facing.WEST
 import chylex.hee.system.random.nextInt
 import chylex.hee.system.random.nextItem
 import chylex.hee.system.random.removeItem
+import net.minecraft.block.Blocks
 import net.minecraft.state.properties.Half
 import net.minecraft.state.properties.SlabType
 import java.util.Random

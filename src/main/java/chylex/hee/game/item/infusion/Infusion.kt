@@ -9,10 +9,10 @@ import chylex.hee.init.ModItems
 import chylex.hee.system.color.IntColor
 import chylex.hee.system.color.IntColor.Companion.HCL
 import chylex.hee.system.color.IntColor.Companion.RGB
-import chylex.hee.system.migration.Blocks
-import chylex.hee.system.migration.Items
+import net.minecraft.block.Blocks
 import net.minecraft.item.Item
 import net.minecraft.item.ItemStack
+import net.minecraft.item.Items
 import net.minecraft.util.IItemProvider
 import java.util.Locale
 

@@ -13,9 +13,9 @@ import chylex.hee.system.forge.SubscribeEvent
 import chylex.hee.system.migration.EntityPlayer
 import chylex.hee.system.migration.Hand.MAIN_HAND
 import chylex.hee.system.migration.Hand.OFF_HAND
-import chylex.hee.system.migration.Items
 import net.minecraft.entity.Entity
 import net.minecraft.item.ItemStack
+import net.minecraft.item.Items
 import net.minecraft.util.NonNullList
 import net.minecraftforge.event.entity.living.LivingDamageEvent
 import net.minecraftforge.event.entity.living.LivingHurtEvent

@@ -6,9 +6,9 @@ import chylex.hee.game.world.feature.basic.trees.WhitebarkTreeGenerator
 import chylex.hee.game.world.generation.WorldToStructureWorldAdapter
 import chylex.hee.game.world.setState
 import chylex.hee.init.ModBlocks
-import chylex.hee.system.migration.Blocks
 import net.minecraft.block.Block
 import net.minecraft.block.BlockState
+import net.minecraft.block.Blocks
 import net.minecraft.block.IGrowable
 import net.minecraft.state.StateContainer.Builder
 import net.minecraft.util.math.AxisAlignedBB

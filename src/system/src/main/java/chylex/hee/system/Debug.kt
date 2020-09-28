@@ -20,10 +20,10 @@ import chylex.hee.system.forge.Sided
 import chylex.hee.system.forge.SubscribeEvent
 import chylex.hee.system.migration.EntityPlayer
 import chylex.hee.system.migration.ItemBlock
-import chylex.hee.system.migration.Items
 import chylex.hee.system.serialization.hasKey
 import net.minecraft.block.BlockState
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats
+import net.minecraft.item.Items
 import net.minecraft.util.Direction
 import net.minecraft.util.Direction.DOWN
 import net.minecraft.util.Direction.EAST

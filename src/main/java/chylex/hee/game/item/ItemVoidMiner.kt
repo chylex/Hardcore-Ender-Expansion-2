@@ -7,15 +7,15 @@ import chylex.hee.game.item.properties.CustomToolMaterial.VOID_MINER
 import chylex.hee.system.compatibility.MinecraftForgeEventBus
 import chylex.hee.system.forge.EventPriority
 import chylex.hee.system.forge.SubscribeEvent
-import chylex.hee.system.migration.Enchantments
 import chylex.hee.system.migration.EntityLivingBase
 import chylex.hee.system.migration.EntityPlayer
 import chylex.hee.system.migration.Hand.MAIN_HAND
-import chylex.hee.system.migration.Items
 import net.minecraft.block.BlockState
 import net.minecraft.enchantment.Enchantment
 import net.minecraft.enchantment.EnchantmentHelper
+import net.minecraft.enchantment.Enchantments
 import net.minecraft.item.ItemStack
+import net.minecraft.item.Items
 import net.minecraft.util.math.BlockPos
 import net.minecraft.world.World
 import net.minecraftforge.event.entity.player.PlayerEvent.BreakSpeed

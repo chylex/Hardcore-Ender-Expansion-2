@@ -7,9 +7,9 @@ import chylex.hee.game.item.Tool.Type.SHOVEL
 import chylex.hee.game.world.getState
 import chylex.hee.system.forge.Side
 import chylex.hee.system.forge.Sided
+import chylex.hee.system.migration.EntityPlayer
 import net.minecraft.block.BlockState
 import net.minecraft.client.particle.ParticleManager
-import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.item.ItemStack
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.BlockRayTraceResult
@@ -19,7 +19,7 @@ import net.minecraft.world.World
 import net.minecraftforge.common.ToolType
 
 abstract class BlockDustyStone(builder: BlockBuilder) : BlockSimple(builder), IBlockHarvestToolCheck{
-	abstract override fun canHarvestBlock(state: BlockState, world: IBlockReader, pos: BlockPos, player: PlayerEntity): Boolean
+	abstract override fun canHarvestBlock(state: BlockState, world: IBlockReader, pos: BlockPos, player: EntityPlayer): Boolean
 	
 	override fun canHarvestUsing(toolClass: ToolType, toolLevel: Int): Boolean{
 		return isToolEffective(defaultState, toolClass) && toolLevel >= 0

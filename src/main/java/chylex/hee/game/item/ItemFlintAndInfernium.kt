@@ -19,12 +19,12 @@ import chylex.hee.system.forge.SubscribeAllEvents
 import chylex.hee.system.forge.SubscribeEvent
 import chylex.hee.system.migration.ActionResult.FAIL
 import chylex.hee.system.migration.ActionResult.SUCCESS
-import chylex.hee.system.migration.Blocks
 import chylex.hee.system.migration.EntityCreeper
 import chylex.hee.system.migration.EntityLivingBase
 import chylex.hee.system.migration.EntityPlayer
 import chylex.hee.system.migration.Sounds
 import chylex.hee.system.random.nextFloat
+import net.minecraft.block.Blocks
 import net.minecraft.item.Item
 import net.minecraft.item.ItemStack
 import net.minecraft.item.ItemUseContext

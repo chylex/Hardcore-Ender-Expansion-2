@@ -12,13 +12,12 @@ import chylex.hee.game.world.getTile
 import chylex.hee.game.world.playServer
 import chylex.hee.game.world.removeBlock
 import chylex.hee.system.migration.BlockTNT
-import chylex.hee.system.migration.Blocks
 import chylex.hee.system.migration.EntityLivingBase
 import chylex.hee.system.migration.EntityPlayer
 import chylex.hee.system.migration.Sounds
 import net.minecraft.block.Block
 import net.minecraft.block.BlockState
-import net.minecraft.entity.LivingEntity
+import net.minecraft.block.Blocks
 import net.minecraft.fluid.IFluidState
 import net.minecraft.item.ItemStack
 import net.minecraft.state.StateContainer.Builder
@@ -116,7 +115,7 @@ class BlockInfusedTNT : BlockTNT(Properties.from(Blocks.TNT)), IBlockFireCatchOv
 		}
 	}
 	
-	override fun catchFire(state: BlockState, world: World, pos: BlockPos, face: Direction?, igniter: LivingEntity?){
+	override fun catchFire(state: BlockState, world: World, pos: BlockPos, face: Direction?, igniter: EntityLivingBase?){
 		if (world.isRemote){
 			return
 		}

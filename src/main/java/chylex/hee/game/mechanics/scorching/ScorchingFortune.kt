@@ -4,13 +4,13 @@ import chylex.hee.game.inventory.isNotEmpty
 import chylex.hee.game.inventory.size
 import chylex.hee.init.ModBlocks
 import chylex.hee.proxy.Environment
-import chylex.hee.system.migration.Blocks
 import chylex.hee.system.migration.ItemBlock
-import chylex.hee.system.migration.Items
 import chylex.hee.system.random.nextRounded
 import net.minecraft.block.Block
+import net.minecraft.block.Blocks
 import net.minecraft.inventory.Inventory
 import net.minecraft.item.ItemStack
+import net.minecraft.item.Items
 import net.minecraft.item.crafting.IRecipeType
 import net.minecraft.util.math.BlockPos
 import net.minecraft.world.World

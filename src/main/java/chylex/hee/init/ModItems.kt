@@ -51,9 +51,9 @@ import chylex.hee.system.forge.SubscribeEvent
 import chylex.hee.system.forge.useVanillaName
 import chylex.hee.system.migration.BlockDispenser
 import chylex.hee.system.migration.ItemSpawnEgg
-import chylex.hee.system.migration.Items
 import net.minecraft.item.Item
 import net.minecraft.item.ItemGroup
+import net.minecraft.item.Items
 import net.minecraftforge.event.RegistryEvent
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber.Bus.MOD
 

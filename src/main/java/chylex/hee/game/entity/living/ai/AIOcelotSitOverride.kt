@@ -7,13 +7,12 @@ import chylex.hee.system.forge.SubscribeAllEvents
 import chylex.hee.system.forge.SubscribeEvent
 import chylex.hee.system.migration.EntityCat
 import net.minecraft.entity.ai.goal.CatSitOnBlockGoal
-import net.minecraft.entity.passive.CatEntity
 import net.minecraft.util.math.BlockPos
 import net.minecraft.world.IWorldReader
 import net.minecraftforge.event.entity.EntityJoinWorldEvent
 
 @Suppress("unused")
-class AIOcelotSitOverride(ocelot: CatEntity, overridden: CatSitOnBlockGoal) : CatSitOnBlockGoal(ocelot, overridden.movementSpeed){
+class AIOcelotSitOverride(ocelot: EntityCat, overridden: CatSitOnBlockGoal) : CatSitOnBlockGoal(ocelot, overridden.movementSpeed){
 	interface IOcelotCanSitOn{
 		fun canOcelotSitOn(world: IWorldReader, pos: BlockPos): Boolean
 	}

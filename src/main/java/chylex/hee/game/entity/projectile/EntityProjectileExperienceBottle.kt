@@ -3,10 +3,10 @@ import chylex.hee.game.world.Pos
 import chylex.hee.init.ModEntities
 import chylex.hee.init.ModItems
 import chylex.hee.system.migration.EntityLivingBase
+import chylex.hee.system.migration.EntityXPBottle
 import chylex.hee.system.migration.EntityXPOrb
 import chylex.hee.system.migration.PotionTypes
 import net.minecraft.entity.EntityType
-import net.minecraft.entity.item.ExperienceBottleEntity
 import net.minecraft.item.ItemStack
 import net.minecraft.network.IPacket
 import net.minecraft.potion.PotionUtils
@@ -14,7 +14,7 @@ import net.minecraft.util.math.RayTraceResult
 import net.minecraft.world.World
 import net.minecraftforge.fml.network.NetworkHooks
 
-class EntityProjectileExperienceBottle(type: EntityType<out ExperienceBottleEntity>, world: World) : ExperienceBottleEntity(type, world){
+class EntityProjectileExperienceBottle(type: EntityType<out EntityXPBottle>, world: World) : EntityXPBottle(type, world){
 	constructor(thrower: EntityLivingBase, stack: ItemStack) : this(ModEntities.EXPERIENCE_BOTTLE, thrower.world){
 		owner = thrower
 		ownerId = thrower.uniqueID

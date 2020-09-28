@@ -7,7 +7,6 @@ import chylex.hee.game.world.getState
 import chylex.hee.game.world.getTile
 import chylex.hee.system.facades.Facing6
 import chylex.hee.system.migration.BlockFurnace
-import chylex.hee.system.migration.Blocks
 import chylex.hee.system.migration.EntityPlayer
 import chylex.hee.system.migration.Facing.DOWN
 import chylex.hee.system.migration.Facing.EAST
@@ -15,13 +14,14 @@ import chylex.hee.system.migration.Facing.NORTH
 import chylex.hee.system.migration.Facing.SOUTH
 import chylex.hee.system.migration.Facing.UP
 import chylex.hee.system.migration.Facing.WEST
-import chylex.hee.system.migration.Items
 import chylex.hee.system.migration.TileEntityFurnace
 import net.minecraft.block.Block
 import net.minecraft.block.BlockRenderType.ENTITYBLOCK_ANIMATED
 import net.minecraft.block.BlockState
+import net.minecraft.block.Blocks
 import net.minecraft.item.BlockItemUseContext
 import net.minecraft.item.ItemStack
+import net.minecraft.item.Items
 import net.minecraft.state.StateContainer.Builder
 import net.minecraft.tileentity.TileEntity
 import net.minecraft.util.ActionResultType

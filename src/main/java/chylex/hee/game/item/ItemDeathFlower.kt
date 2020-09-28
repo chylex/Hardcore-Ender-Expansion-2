@@ -9,10 +9,10 @@ import chylex.hee.game.world.setState
 import chylex.hee.init.ModBlocks
 import chylex.hee.system.facades.Resource
 import chylex.hee.system.facades.Stats
-import chylex.hee.system.migration.Blocks
 import chylex.hee.system.migration.ItemBlock
 import chylex.hee.system.serialization.getIntegerOrNull
 import net.minecraft.block.Block
+import net.minecraft.block.Blocks
 import net.minecraft.item.ItemGroup
 import net.minecraft.item.ItemStack
 import net.minecraft.item.ItemUseContext

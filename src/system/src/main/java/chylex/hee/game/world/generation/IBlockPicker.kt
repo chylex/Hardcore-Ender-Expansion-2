@@ -1,9 +1,9 @@
 package chylex.hee.game.world.generation
 import chylex.hee.HEE
 import chylex.hee.system.collection.WeightedList
-import chylex.hee.system.migration.Blocks
 import net.minecraft.block.Block
 import net.minecraft.block.BlockState
+import net.minecraft.block.Blocks
 import net.minecraft.state.IProperty
 import java.util.Random
 

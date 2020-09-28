@@ -20,10 +20,10 @@ import chylex.hee.init.ModItems
 import chylex.hee.network.client.PacketClientFX
 import chylex.hee.network.fx.FxBlockData
 import chylex.hee.network.fx.FxBlockHandler
-import chylex.hee.system.migration.Blocks
 import chylex.hee.system.migration.EntityItem
 import chylex.hee.system.migration.Facing.UP
 import chylex.hee.system.migration.Sounds
+import net.minecraft.block.Blocks
 import net.minecraft.block.CauldronBlock.LEVEL
 import net.minecraft.entity.Entity
 import net.minecraft.entity.EntityType

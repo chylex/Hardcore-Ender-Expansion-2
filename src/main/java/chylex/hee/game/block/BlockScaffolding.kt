@@ -10,7 +10,6 @@ import chylex.hee.game.world.structure.StructureFile
 import chylex.hee.system.Debug
 import chylex.hee.system.forge.Side
 import chylex.hee.system.forge.Sided
-import chylex.hee.system.migration.Blocks
 import chylex.hee.system.migration.EntityPlayer
 import chylex.hee.system.migration.Facing.DOWN
 import chylex.hee.system.migration.Facing.EAST
@@ -19,6 +18,7 @@ import chylex.hee.system.migration.Facing.SOUTH
 import chylex.hee.system.migration.Facing.UP
 import chylex.hee.system.migration.Facing.WEST
 import net.minecraft.block.BlockState
+import net.minecraft.block.Blocks
 import net.minecraft.nbt.CompressedStreamTools
 import net.minecraft.util.ActionResultType
 import net.minecraft.util.ActionResultType.FAIL

@@ -20,11 +20,9 @@ import chylex.hee.game.world.getState
 import chylex.hee.init.ModEntities
 import chylex.hee.proxy.Environment
 import chylex.hee.system.math.remapRange
-import chylex.hee.system.migration.Blocks
 import chylex.hee.system.migration.EntityItem
 import chylex.hee.system.migration.EntityLivingBase
 import chylex.hee.system.migration.EntityTNTPrimed
-import chylex.hee.system.migration.Items
 import chylex.hee.system.random.nextFloat
 import chylex.hee.system.random.nextItem
 import chylex.hee.system.random.nextRounded
@@ -32,6 +30,7 @@ import chylex.hee.system.serialization.TagCompound
 import chylex.hee.system.serialization.heeTag
 import chylex.hee.system.serialization.use
 import net.minecraft.block.BlockState
+import net.minecraft.block.Blocks
 import net.minecraft.block.material.Material
 import net.minecraft.entity.Entity
 import net.minecraft.entity.EntityType
@@ -39,6 +38,7 @@ import net.minecraft.entity.MoverType
 import net.minecraft.entity.MoverType.SELF
 import net.minecraft.inventory.Inventory
 import net.minecraft.item.ItemStack
+import net.minecraft.item.Items
 import net.minecraft.item.crafting.IRecipeType.SMELTING
 import net.minecraft.network.IPacket
 import net.minecraft.particles.ParticleTypes.SMOKE

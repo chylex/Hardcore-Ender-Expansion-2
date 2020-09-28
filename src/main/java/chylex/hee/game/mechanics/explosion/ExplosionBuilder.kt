@@ -11,13 +11,13 @@ import chylex.hee.system.math.component2
 import chylex.hee.system.math.component3
 import chylex.hee.system.math.directionTowards
 import chylex.hee.system.math.square
-import chylex.hee.system.migration.Blocks
 import chylex.hee.system.migration.EntityLivingBase
 import chylex.hee.system.migration.EntityPlayer
 import chylex.hee.system.migration.EntityPlayerMP
 import chylex.hee.system.migration.Sounds
 import chylex.hee.system.random.nextFloat
 import net.minecraft.block.Block
+import net.minecraft.block.Blocks
 import net.minecraft.enchantment.EnchantmentHelper
 import net.minecraft.enchantment.Enchantments
 import net.minecraft.enchantment.ProtectionEnchantment

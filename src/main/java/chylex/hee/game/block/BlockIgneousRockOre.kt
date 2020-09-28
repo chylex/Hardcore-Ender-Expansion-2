@@ -16,7 +16,6 @@ import chylex.hee.system.migration.ItemTool
 import net.minecraft.block.BlockState
 import net.minecraft.enchantment.EnchantmentHelper
 import net.minecraft.enchantment.Enchantments
-import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.fluid.IFluidState
 import net.minecraft.item.ItemStack
 import net.minecraft.particles.ParticleTypes.LAVA
@@ -87,7 +86,7 @@ class BlockIgneousRockOre(builder: BlockBuilder) : BlockSimple(builder){
 	}
 	
 	override fun getHarvestLevel(state: BlockState) = 0 // use super.getHarvestLevel for the real value
-	override fun canHarvestBlock(state: BlockState, world: IBlockReader, pos: BlockPos, player: PlayerEntity): Boolean = true
+	override fun canHarvestBlock(state: BlockState, world: IBlockReader, pos: BlockPos, player: EntityPlayer): Boolean = true
 	
 	// Client side
 	

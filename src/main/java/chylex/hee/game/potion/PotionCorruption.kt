@@ -5,7 +5,6 @@ import chylex.hee.system.color.IntColor.Companion.RGB
 import chylex.hee.system.forge.SubscribeAllEvents
 import chylex.hee.system.migration.EntityLivingBase
 import chylex.hee.system.migration.Potion
-import net.minecraft.entity.LivingEntity
 import net.minecraft.entity.ai.attributes.AbstractAttributeMap
 import net.minecraft.potion.AttackDamageEffect
 import net.minecraft.potion.Effect
@@ -43,7 +42,7 @@ object PotionCorruption : Potion(HARMFUL, RGB(1, 1, 1).i){
 		return potion.isBeneficial && potion.javaClass.let { it === Effect::class.java || it === AttackDamageEffect::class.java || it === HealthBoostEffect::class.java }
 	}
 	
-	private inline fun processCurrentlyRunningPotions(entity: LivingEntity, callback: (EffectInstance) -> Unit){
+	private inline fun processCurrentlyRunningPotions(entity: EntityLivingBase, callback: (EffectInstance) -> Unit){
 		pauseAttributeSkipping.set(true)
 		
 		for((potion, effect) in entity.activePotionMap){
@@ -55,11 +54,11 @@ object PotionCorruption : Potion(HARMFUL, RGB(1, 1, 1).i){
 		pauseAttributeSkipping.set(false)
 	}
 	
-	override fun applyAttributesModifiersToEntity(entity: LivingEntity, attributes: AbstractAttributeMap, amplifier: Int){
+	override fun applyAttributesModifiersToEntity(entity: EntityLivingBase, attributes: AbstractAttributeMap, amplifier: Int){
 		processCurrentlyRunningPotions(entity){ it.potion.removeAttributesModifiersFromEntity(entity, attributes, it.amplifier) }
 	}
 	
-	override fun removeAttributesModifiersFromEntity(entity: LivingEntity, attributes: AbstractAttributeMap, amplifier: Int){
+	override fun removeAttributesModifiersFromEntity(entity: EntityLivingBase, attributes: AbstractAttributeMap, amplifier: Int){
 		processCurrentlyRunningPotions(entity){ it.potion.applyAttributesModifiersToEntity(entity, attributes, it.amplifier) }
 	}
 }

@@ -21,12 +21,12 @@ import chylex.hee.system.math.ceilToInt
 import chylex.hee.system.math.floorToInt
 import chylex.hee.system.math.over
 import chylex.hee.system.migration.ItemBlock
-import chylex.hee.system.migration.Items
 import chylex.hee.system.random.nextFloat
 import chylex.hee.system.serialization.TagCompound
 import net.minecraft.enchantment.EnchantmentHelper
 import net.minecraft.inventory.Inventory
 import net.minecraft.item.ItemStack
+import net.minecraft.item.Items
 import net.minecraft.item.crafting.IRecipeType
 import net.minecraft.tileentity.TileEntityType
 import net.minecraft.util.math.BlockPos

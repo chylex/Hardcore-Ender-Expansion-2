@@ -11,11 +11,11 @@ import chylex.hee.game.world.structure.piece.IStructurePieceConnection
 import chylex.hee.init.ModBlocks
 import chylex.hee.system.collection.MutableWeightedList.Companion.mutableWeightedListOf
 import chylex.hee.system.migration.BlockButton
-import chylex.hee.system.migration.Blocks
 import chylex.hee.system.migration.Facing.EAST
 import chylex.hee.system.migration.Facing.NORTH
 import chylex.hee.system.migration.Facing.SOUTH
 import chylex.hee.system.migration.Facing.WEST
+import net.minecraft.block.Blocks
 import net.minecraft.state.properties.AttachFace
 
 class EnergyShrineRoom_Primary_DisplayCase(file: String) : EnergyShrineRoom_Generic(file){

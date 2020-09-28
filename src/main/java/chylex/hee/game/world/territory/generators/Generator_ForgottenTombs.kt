@@ -32,7 +32,6 @@ import chylex.hee.system.facades.Facing4
 import chylex.hee.system.facades.Facing6
 import chylex.hee.system.math.remapRange
 import chylex.hee.system.math.square
-import chylex.hee.system.migration.Blocks
 import chylex.hee.system.migration.Facing.DOWN
 import chylex.hee.system.migration.Facing.NORTH
 import chylex.hee.system.migration.Facing.SOUTH
@@ -43,6 +42,7 @@ import chylex.hee.system.random.nextFloat
 import chylex.hee.system.random.nextInt
 import chylex.hee.system.random.nextItem
 import net.minecraft.block.Block
+import net.minecraft.block.Blocks
 import net.minecraft.util.math.BlockPos
 import java.util.Random
 import kotlin.math.PI

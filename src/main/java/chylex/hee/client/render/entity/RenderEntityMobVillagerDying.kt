@@ -6,11 +6,11 @@ import chylex.hee.game.world.totalTime
 import chylex.hee.system.facades.Resource
 import chylex.hee.system.forge.Side
 import chylex.hee.system.forge.Sided
-import chylex.hee.system.migration.RenderLiving
-import chylex.hee.system.migration.RenderManager
 import com.mojang.blaze3d.matrix.MatrixStack
 import com.mojang.blaze3d.vertex.IVertexBuilder
 import net.minecraft.client.renderer.IRenderTypeBuffer
+import net.minecraft.client.renderer.entity.EntityRendererManager
+import net.minecraft.client.renderer.entity.MobRenderer
 import net.minecraft.client.renderer.entity.layers.CrossedArmsItemLayer
 import net.minecraft.client.renderer.entity.layers.HeadLayer
 import net.minecraft.client.renderer.entity.layers.VillagerLevelPendantLayer
@@ -22,7 +22,7 @@ import java.util.Random
 import kotlin.math.min
 
 @Sided(Side.CLIENT)
-class RenderEntityMobVillagerDying(manager: RenderManager) : RenderLiving<EntityMobVillagerDying, VillagerModel<EntityMobVillagerDying>>(manager, Model, 0.5F){
+class RenderEntityMobVillagerDying(manager: EntityRendererManager) : MobRenderer<EntityMobVillagerDying, VillagerModel<EntityMobVillagerDying>>(manager, Model, 0.5F){
 	private object Model : VillagerModel<EntityMobVillagerDying>(0F){
 		private val overrideOverlay = OverlayTexture.getPackedUV(OverlayTexture.getU(0F), OverlayTexture.getV(false)) // disable red hurt overlay
 		

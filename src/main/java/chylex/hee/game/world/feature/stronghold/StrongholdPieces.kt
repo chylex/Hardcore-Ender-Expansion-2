@@ -45,19 +45,19 @@ import chylex.hee.system.collection.MutableWeightedList
 import chylex.hee.system.collection.WeightedList.Companion.weightedListOf
 import chylex.hee.system.facades.Resource
 import chylex.hee.system.migration.BlockSilverfish
-import chylex.hee.system.migration.Blocks
 import chylex.hee.system.migration.Facing.EAST
 import chylex.hee.system.migration.Facing.NORTH
 import chylex.hee.system.migration.Facing.SOUTH
 import chylex.hee.system.migration.Facing.WEST
-import chylex.hee.system.migration.Items
 import chylex.hee.system.random.nextInt
 import chylex.hee.system.random.nextItem
 import chylex.hee.system.random.removeItem
 import net.minecraft.block.Block
+import net.minecraft.block.Blocks
 import net.minecraft.fluid.Fluids
 import net.minecraft.item.DyeColor
 import net.minecraft.item.ItemStack
+import net.minecraft.item.Items
 import net.minecraft.tags.BlockTags
 import java.util.Random
 

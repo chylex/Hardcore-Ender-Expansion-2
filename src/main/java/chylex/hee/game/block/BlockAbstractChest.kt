@@ -8,20 +8,20 @@ import chylex.hee.game.world.getTile
 import chylex.hee.init.ModContainers
 import chylex.hee.system.forge.Side
 import chylex.hee.system.forge.Sided
-import chylex.hee.system.migration.Blocks
 import chylex.hee.system.migration.EntityCat
 import chylex.hee.system.migration.EntityLivingBase
 import chylex.hee.system.migration.EntityPlayer
 import chylex.hee.system.migration.Facing.NORTH
+import chylex.hee.system.migration.TileEntityChest
 import net.minecraft.block.AbstractChestBlock
 import net.minecraft.block.Block
 import net.minecraft.block.BlockRenderType.ENTITYBLOCK_ANIMATED
 import net.minecraft.block.BlockState
+import net.minecraft.block.Blocks
 import net.minecraft.block.ChestBlock.FACING
 import net.minecraft.item.BlockItemUseContext
 import net.minecraft.item.ItemStack
 import net.minecraft.state.StateContainer.Builder
-import net.minecraft.tileentity.ChestTileEntity
 import net.minecraft.tileentity.TileEntity
 import net.minecraft.tileentity.TileEntityMerger.ICallbackWrapper
 import net.minecraft.util.ActionResultType
@@ -72,7 +72,7 @@ abstract class BlockAbstractChest<T : TileEntityBaseChest>(builder: BlockBuilder
 	}
 	
 	@Sided(Side.CLIENT)
-	override fun combine(state: BlockState, world: World, pos: BlockPos, unknown: Boolean): ICallbackWrapper<out ChestTileEntity>{
+	override fun combine(state: BlockState, world: World, pos: BlockPos, unknown: Boolean): ICallbackWrapper<out TileEntityChest>{
 		return (Blocks.ENDER_CHEST as AbstractChestBlock<*>).combine(state, world, pos, unknown) // UPDATE reduce hackiness
 	}
 	

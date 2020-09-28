@@ -1,8 +1,8 @@
 package chylex.hee.game.potion.brewing.modifiers
 import chylex.hee.game.potion.brewing.IBrewingModifier
 import chylex.hee.game.potion.brewing.PotionBrewing
-import chylex.hee.system.migration.Items
 import net.minecraft.item.ItemStack
+import net.minecraft.item.Items
 
 object BrewIncreaseDuration : IBrewingModifier{
 	override val ingredient = Items.REDSTONE!!

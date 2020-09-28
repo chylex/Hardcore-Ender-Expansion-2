@@ -2,10 +2,10 @@ package chylex.hee.game.recipe
 import chylex.hee.game.inventory.nonEmptySlots
 import chylex.hee.game.item.ItemVoidSalad.Type
 import chylex.hee.init.ModItems
-import chylex.hee.system.migration.Items
 import com.google.common.collect.Iterators
 import net.minecraft.inventory.CraftingInventory
 import net.minecraft.item.ItemStack
+import net.minecraft.item.Items
 import net.minecraft.world.World
 
 object RecipeVoidSalad : RecipeBaseDynamic(){

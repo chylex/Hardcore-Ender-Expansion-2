@@ -22,10 +22,10 @@ import chylex.hee.network.fx.FxBlockHandler
 import chylex.hee.system.color.IntColor.Companion.RGB
 import chylex.hee.system.compatibility.EraseGenerics
 import chylex.hee.system.migration.BlockBrewingStand
+import chylex.hee.system.migration.EntityPlayer
 import chylex.hee.system.migration.Sounds
 import chylex.hee.system.migration.TileEntityBrewingStand
 import chylex.hee.system.random.IRandomColor
-import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.entity.player.PlayerInventory
 import net.minecraft.inventory.InventoryHelper
 import net.minecraft.inventory.container.Container
@@ -255,12 +255,12 @@ class TileEntityBrewingStandCustom : TileEntityBrewingStand(){
 	
 	// Container
 	
-	override fun openInventory(player: PlayerEntity){
+	override fun openInventory(player: EntityPlayer){
 		super.openInventory(player)
 		++playersViewingGUI
 	}
 	
-	override fun closeInventory(player: PlayerEntity){
+	override fun closeInventory(player: EntityPlayer){
 		super.closeInventory(player)
 		--playersViewingGUI
 	}

@@ -1,14 +1,14 @@
 package chylex.hee.game.entity.living.path
 import chylex.hee.game.entity.posVec
 import chylex.hee.system.math.square
+import chylex.hee.system.migration.EntityLiving
 import chylex.hee.system.random.nextInt
 import net.minecraft.entity.Entity
-import net.minecraft.entity.MobEntity
 import net.minecraft.pathfinding.GroundPathNavigator
 import net.minecraft.util.math.Vec3d
 import net.minecraft.world.World
 
-class PathNavigateGroundPreferBeeLine(entity: MobEntity, world: World, private val maxStuckTicks: Int, private val fallbackPathfindingResetTicks: IntRange) : GroundPathNavigator(entity, world){
+class PathNavigateGroundPreferBeeLine(entity: EntityLiving, world: World, private val maxStuckTicks: Int, private val fallbackPathfindingResetTicks: IntRange) : GroundPathNavigator(entity, world){
 	private var beelineTarget = Vec3d.ZERO
 	private var beelineSpeed = 0.0
 	

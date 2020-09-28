@@ -21,11 +21,11 @@ import chylex.hee.system.math.addY
 import chylex.hee.system.math.component1
 import chylex.hee.system.math.component2
 import chylex.hee.system.math.component3
-import chylex.hee.system.migration.Blocks
 import chylex.hee.system.migration.EntityItem
 import chylex.hee.system.random.nextFloat
 import net.minecraft.block.Block
 import net.minecraft.block.BlockState
+import net.minecraft.block.Blocks
 import net.minecraft.item.ItemStack
 import net.minecraft.tags.BlockTags
 import net.minecraft.tags.Tag

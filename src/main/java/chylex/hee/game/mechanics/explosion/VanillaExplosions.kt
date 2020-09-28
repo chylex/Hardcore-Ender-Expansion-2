@@ -2,8 +2,8 @@ package chylex.hee.game.mechanics.explosion
 import chylex.hee.HEE
 import chylex.hee.system.forge.SubscribeAllEvents
 import chylex.hee.system.forge.SubscribeEvent
-import net.minecraft.entity.item.TNTEntity
-import net.minecraft.entity.item.minecart.TNTMinecartEntity
+import chylex.hee.system.migration.EntityTNTMinecart
+import chylex.hee.system.migration.EntityTNTPrimed
 import net.minecraft.world.Explosion.Mode
 import net.minecraftforge.event.world.ExplosionEvent
 
@@ -14,7 +14,7 @@ object VanillaExplosions{
 		val explosion = e.explosion
 		val exploder = explosion.exploder ?: return
 		
-		if (explosion.mode == Mode.BREAK && exploder.javaClass.let { it === TNTEntity::class.java || it === TNTMinecartEntity::class.java }){
+		if (explosion.mode == Mode.BREAK && exploder.javaClass.let { it === EntityTNTPrimed::class.java || it === EntityTNTMinecart::class.java }){
 			explosion.mode = Mode.DESTROY
 		}
 	}

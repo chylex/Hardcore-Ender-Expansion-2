@@ -136,11 +136,11 @@ import chylex.hee.system.forge.named
 import chylex.hee.system.forge.useVanillaName
 import chylex.hee.system.migration.BlockFire
 import chylex.hee.system.migration.BlockWall
-import chylex.hee.system.migration.Blocks
 import chylex.hee.system.migration.Facing.NORTH
 import chylex.hee.system.migration.Facing.SOUTH
 import chylex.hee.system.migration.ItemBlock
 import net.minecraft.block.Block
+import net.minecraft.block.Blocks
 import net.minecraft.block.material.MaterialColor
 import net.minecraft.fluid.Fluid
 import net.minecraft.item.Item

@@ -11,8 +11,8 @@ import chylex.hee.game.world.math.Size
 import chylex.hee.game.world.structure.IStructureWorld
 import chylex.hee.game.world.structure.piece.IStructurePieceConnection
 import chylex.hee.system.migration.BlockSlab
-import chylex.hee.system.migration.Blocks
 import chylex.hee.system.migration.MutableBlockPos
+import net.minecraft.block.Blocks
 import net.minecraft.state.properties.SlabType
 import net.minecraft.util.Direction
 
