@@ -25,6 +25,10 @@
     "sounds": [ "hee:block/obsidian_land" ],
     "subtitle": "subtitles.hee.block.obsidian.land"
   },
+  "block.puzzle_logic.click": {
+    "sounds": [ "hee:block/puzzle_logic_click" ],
+    "subtitle": "subtitles.hee.block.puzzle_logic.click"
+  },
   "item.revitalization_substance.use.success": {
     "sounds": [ "hee:item/revitalization_substance_use" ],
     "subtitle": "subtitles.hee.item.revitalization_substance.use.success"
@@ -32,6 +36,10 @@
   "item.revitalization_substance.use.fail": {
     "sounds": [ "hee:item/revitalization_substance_use_fail" ],
     "subtitle": "subtitles.hee.item.revitalization_substance.use.fail"
+  },
+  "item.ring_of_preservation.use": {
+    "sounds": [ "hee:item/ring_of_preservation_use" ],
+    "subtitle": "subtitles.hee.item.ring_of_preservation.use"
   },
   "item.table_link.use.success": {
     "sounds": [ "hee:item/table_link_use" ],
@@ -51,6 +59,14 @@
   "entity.spatial_dash.expire": {
     "sounds": [ "minecraft:random/fizz" ],
     "subtitle": "subtitles.hee.entity.spatial_dash.expire"
+  },
+  "entity.token_holder.drop": {
+    "sounds": [ "minecraft:random/successful_hit" ],
+    "subtitle": "subtitles.hee.entity.token_holder.drop"
+  },
+  "mob.ender_eye.hit.fail": {
+    "sounds": [ "hee:mob/ender_eye_hit_fail_1", "hee:mob/ender_eye_hit_fail_2" ],
+    "subtitle": "subtitles.hee.mob.ender_eye.hit.fail"
   },
   "mob.enderman.first_kill": {
     "sounds": [ "mob/endermen/stare" ],

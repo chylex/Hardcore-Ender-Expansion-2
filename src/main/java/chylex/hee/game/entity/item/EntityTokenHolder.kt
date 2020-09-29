@@ -7,11 +7,13 @@ import chylex.hee.game.particle.ParticleSmokeCustom
 import chylex.hee.game.particle.spawner.ParticleSpawnerCustom
 import chylex.hee.game.particle.spawner.properties.IOffset.InSphere
 import chylex.hee.game.particle.spawner.properties.IShape.Point
+import chylex.hee.game.world.playClient
 import chylex.hee.game.world.territory.TerritoryInstance
 import chylex.hee.game.world.territory.TerritoryType
 import chylex.hee.game.world.totalTime
 import chylex.hee.init.ModEntities
 import chylex.hee.init.ModItems
+import chylex.hee.init.ModSounds
 import chylex.hee.network.client.PacketClientFX
 import chylex.hee.network.client.PacketClientLaunchInstantly
 import chylex.hee.network.fx.FxEntityData
@@ -34,6 +36,7 @@ import net.minecraft.network.IPacket
 import net.minecraft.network.PacketBuffer
 import net.minecraft.network.datasync.DataSerializers
 import net.minecraft.util.DamageSource
+import net.minecraft.util.SoundCategory
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.Vec3d
 import net.minecraft.world.World
@@ -67,7 +70,7 @@ class EntityTokenHolder(type: EntityType<EntityTokenHolder>, world: World) : Ent
 		val FX_BREAK = object : FxEntityHandler(){
 			override fun handle(entity: Entity, rand: Random){
 				PARTICLE_BREAK.spawn(Point(entity, 0.5F, 75), rand)
-				// TODO sound
+				ModSounds.ENTITY_TOKEN_HOLDER_DROP.playClient(entity.posVec, SoundCategory.BLOCKS, volume = 0.28F, pitch = 0.65F)
 			}
 		}
 	}

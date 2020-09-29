@@ -1,9 +1,16 @@
 package chylex.hee.game.item
+import chylex.hee.game.entity.posVec
 import chylex.hee.game.mechanics.trinket.TrinketHandler
+import chylex.hee.game.world.playClient
+import chylex.hee.network.client.PacketClientTrinketBreak
 import chylex.hee.system.compatibility.MinecraftForgeEventBus
 import chylex.hee.system.forge.EventPriority
+import chylex.hee.system.forge.Side
+import chylex.hee.system.forge.Sided
 import chylex.hee.system.forge.SubscribeEvent
 import chylex.hee.system.migration.EntityPlayer
+import chylex.hee.system.migration.Sounds
+import net.minecraft.entity.Entity
 import net.minecraft.item.ItemStack
 import net.minecraft.util.DamageSource
 import net.minecraftforge.event.entity.living.LivingDamageEvent
@@ -16,6 +23,12 @@ class ItemScaleOfFreefall(properties: Properties) : ItemAbstractTrinket(properti
 	
 	override fun canPlaceIntoTrinketSlot(stack: ItemStack): Boolean{
 		return stack.damage < stack.maxDamage
+	}
+	
+	@Sided(Side.CLIENT)
+	override fun spawnClientTrinketBreakFX(target: Entity){
+		Sounds.ENTITY_PLAYER_DEATH.playClient(target.posVec, target.soundCategory)
+		Sounds.ITEM_TOTEM_USE.playClient(target.posVec, target.soundCategory, volume = 0.6F)
 	}
 	
 	@SubscribeEvent(EventPriority.HIGHEST)
@@ -45,7 +58,7 @@ class ItemScaleOfFreefall(properties: Properties) : ItemAbstractTrinket(properti
 			player.health = 1F
 			e.isCanceled = true
 			
-			// TODO sound effect
+			PacketClientTrinketBreak(player, item).sendToAllAround(player, 24.0)
 		}
 	}
 }

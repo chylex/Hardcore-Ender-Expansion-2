@@ -1,34 +1,56 @@
 package chylex.hee.game.block
+import chylex.hee.HEE
 import chylex.hee.client.color.NO_TINT
 import chylex.hee.game.block.BlockPuzzleLogic.State.ACTIVE
 import chylex.hee.game.block.BlockPuzzleLogic.State.DISABLED
 import chylex.hee.game.block.BlockPuzzleLogic.State.INACTIVE
 import chylex.hee.game.block.properties.BlockBuilder
 import chylex.hee.game.block.properties.Property
+import chylex.hee.game.entity.posVec
+import chylex.hee.game.particle.ParticleSmokeCustom
+import chylex.hee.game.particle.spawner.ParticleSpawnerCustom
+import chylex.hee.game.particle.spawner.properties.IOffset.Constant
+import chylex.hee.game.particle.spawner.properties.IOffset.InBox
+import chylex.hee.game.particle.spawner.properties.IOffset.InSphere
+import chylex.hee.game.particle.spawner.properties.IShape.Point
 import chylex.hee.game.world.Pos
 import chylex.hee.game.world.allInBox
 import chylex.hee.game.world.allInCenteredBox
+import chylex.hee.game.world.distanceSqTo
 import chylex.hee.game.world.floodFill
 import chylex.hee.game.world.getBlock
 import chylex.hee.game.world.getState
 import chylex.hee.game.world.math.BoundingBox
+import chylex.hee.game.world.playClient
 import chylex.hee.game.world.setState
+import chylex.hee.game.world.totalTime
+import chylex.hee.init.ModSounds
+import chylex.hee.network.client.PacketClientFX
+import chylex.hee.network.fx.FxBlockData
+import chylex.hee.network.fx.FxBlockHandler
+import chylex.hee.network.fx.FxEntityHandler
 import chylex.hee.system.color.IntColor.Companion.RGB
 import chylex.hee.system.facades.Facing4
 import chylex.hee.system.forge.Side
 import chylex.hee.system.forge.Sided
 import chylex.hee.system.migration.Facing.NORTH
+import chylex.hee.system.migration.Facing.UP
+import chylex.hee.system.migration.Sounds
+import chylex.hee.system.random.nextFloat
 import net.minecraft.block.Block
 import net.minecraft.block.BlockState
 import net.minecraft.block.HorizontalBlock.HORIZONTAL_FACING
 import net.minecraft.client.renderer.color.IBlockColor
+import net.minecraft.entity.Entity
 import net.minecraft.item.BlockItemUseContext
 import net.minecraft.state.StateContainer.Builder
 import net.minecraft.util.Direction
 import net.minecraft.util.IStringSerializable
+import net.minecraft.util.SoundCategory
 import net.minecraft.util.math.BlockPos
 import net.minecraft.world.ILightReader
 import net.minecraft.world.World
+import java.util.Random
 
 sealed class BlockPuzzleLogic(builder: BlockBuilder) : BlockSimple(builder){
 	companion object{
@@ -36,6 +58,62 @@ sealed class BlockPuzzleLogic(builder: BlockBuilder) : BlockSimple(builder){
 		
 		const val UPDATE_RATE = 7
 		const val MAX_SIZE = 20
+		
+		private var lastClientClickSoundTime = 0L
+		
+		private val PARTICLE_TOGGLE = ParticleSpawnerCustom(
+			type = ParticleSmokeCustom,
+			data = ParticleSmokeCustom.Data(lifespan = 5..13, scale = 0.55F),
+			pos = Constant(0.6F, UP) + InBox(0.5F, 0.05F, 0.5F)
+		)
+		
+		private val PARTICLE_SPAWN_MEDALLION = ParticleSpawnerCustom(
+			type = ParticleSmokeCustom,
+			data = ParticleSmokeCustom.Data(lifespan = 17..31, scale = 0.85F),
+			pos = InSphere(1.25F)
+		)
+		
+		val FX_TOGGLE = object : FxBlockHandler(){
+			override fun handle(pos: BlockPos, world: World, rand: Random){
+				PARTICLE_TOGGLE.spawn(Point(pos, 5), rand)
+				
+				val currentTime = world.totalTime
+				
+				if (currentTime - lastClientClickSoundTime > UPDATE_RATE / 2){
+					lastClientClickSoundTime = currentTime
+					ModSounds.BLOCK_PUZZLE_LOGIC_CLICK.playClient(pos, SoundCategory.BLOCKS, pitch = world.rand.nextFloat(0.9F, 1F))
+				}
+			}
+		}
+		
+		val FX_SOLVE_TOGGLE = object : FxBlockHandler(){
+			override fun handle(pos: BlockPos, world: World, rand: Random){
+				val player = HEE.proxy.getClientSidePlayer() ?: return
+				
+				var closest = pos
+				var closestDistSq = pos.distanceSqTo(player)
+				
+				for(testPos in pos.floodFill(Facing4){ it.getBlock(world) is BlockPuzzleLogic }){
+					PARTICLE_TOGGLE.spawn(Point(testPos, 3), rand)
+					
+					val distSq = testPos.distanceSqTo(player)
+					
+					if (distSq < closestDistSq){
+						closestDistSq = distSq
+						closest = testPos
+					}
+				}
+				
+				ModSounds.BLOCK_PUZZLE_LOGIC_CLICK.playClient(closest, SoundCategory.BLOCKS, volume = 3F, pitch = 1.1F)
+			}
+		}
+		
+		val FX_SOLVE_SPAWN = object : FxEntityHandler(){
+			override fun handle(entity: Entity, rand: Random){
+				PARTICLE_SPAWN_MEDALLION.spawn(Point(entity, heightMp = 0.3F, amount = 75), rand)
+				Sounds.ENTITY_ITEM_PICKUP.playClient(entity.posVec, SoundCategory.BLOCKS, volume = 3F, pitch = 5F)
+			}
+		}
 		
 		private fun isPuzzleBlockEnabled(state: BlockState): Boolean{
 			return state.block is BlockPuzzleLogic && state[STATE] != DISABLED
@@ -138,7 +216,8 @@ sealed class BlockPuzzleLogic(builder: BlockBuilder) : BlockSimple(builder){
 			return false
 		}
 		
-		pos.setState(world, state.with(STATE, type.toggled)) // TODO fx
+		pos.setState(world, state.with(STATE, type.toggled))
+		PacketClientFX(FX_TOGGLE, FxBlockData(pos)).sendToAllAround(world, pos, 24.0)
 		return true
 	}
 	

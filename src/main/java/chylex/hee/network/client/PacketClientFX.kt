@@ -1,6 +1,7 @@
 package chylex.hee.network.client
 import chylex.hee.game.block.BlockDragonEggOverride
 import chylex.hee.game.block.BlockEnderGooPurified
+import chylex.hee.game.block.BlockPuzzleLogic
 import chylex.hee.game.block.IBlockDeathFlowerDecaying
 import chylex.hee.game.block.entity.TileEntityBrewingStandCustom
 import chylex.hee.game.block.entity.TileEntityExperienceGate
@@ -51,6 +52,9 @@ class PacketClientFX<T : IFxData>() : BaseClientPacket(){
 			IBlockDeathFlowerDecaying.FX_WITHER,
 			BlockDragonEggOverride.FX_BREAK,
 			BlockEnderGooPurified.FX_PLACE,
+			BlockPuzzleLogic.FX_TOGGLE,
+			BlockPuzzleLogic.FX_SOLVE_TOGGLE,
+			BlockPuzzleLogic.FX_SOLVE_SPAWN,
 			TileEntityBaseSpawner.FX_TAINT_TICK,
 			TileEntityBrewingStandCustom.FX_AMELIORATE,
 			TileEntityExperienceGate.FX_CONSUME,

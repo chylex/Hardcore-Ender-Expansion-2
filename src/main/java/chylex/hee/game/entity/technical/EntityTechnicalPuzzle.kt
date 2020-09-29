@@ -10,6 +10,9 @@ import chylex.hee.game.world.setState
 import chylex.hee.game.world.totalTime
 import chylex.hee.init.ModEntities
 import chylex.hee.init.ModItems
+import chylex.hee.network.client.PacketClientFX
+import chylex.hee.network.fx.FxBlockData
+import chylex.hee.network.fx.FxEntityData
 import chylex.hee.system.math.square
 import chylex.hee.system.math.toRadians
 import chylex.hee.system.migration.EntityItem
@@ -155,14 +158,15 @@ class EntityTechnicalPuzzle(type: EntityType<EntityTechnicalPuzzle>, world: Worl
 			
 			val pickedCandidate = rand.nextItem(candidatesOutsidePickupRange)
 			
-			// TODO fx
-			
-			EntityItem(world, pickedCandidate.x, pickedCandidate.y, pickedCandidate.z, ItemStack(ModItems.PUZZLE_MEDALLION)).apply {
+			val medallion = EntityItem(world, pickedCandidate.x, pickedCandidate.y, pickedCandidate.z, ItemStack(ModItems.PUZZLE_MEDALLION)).apply {
 				motion = Vec3d.ZERO
 				world.addEntity(this)
 			}
 			
 			allBlocks.forEach { it.setState(world, it.getState(world).with(BlockPuzzleLogic.STATE, BlockPuzzleLogic.State.DISABLED)) }
+			
+			PacketClientFX(BlockPuzzleLogic.FX_SOLVE_TOGGLE, FxBlockData(allBlocks[0])).sendToAllAround(medallion, 48.0)
+			PacketClientFX(BlockPuzzleLogic.FX_SOLVE_SPAWN, FxEntityData(medallion)).sendToAllAround(medallion, 24.0)
 		}
 	}
 	

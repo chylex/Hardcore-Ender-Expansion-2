@@ -32,6 +32,7 @@ import chylex.hee.game.potion.PotionBanishment
 import chylex.hee.game.world.Pos
 import chylex.hee.game.world.totalTime
 import chylex.hee.init.ModEntities
+import chylex.hee.init.ModSounds
 import chylex.hee.network.client.PacketClientLaunchInstantly
 import chylex.hee.system.facades.Resource
 import chylex.hee.system.forge.Side
@@ -46,6 +47,7 @@ import chylex.hee.system.migration.EntityFlying
 import chylex.hee.system.migration.EntityLivingBase
 import chylex.hee.system.migration.EntityPlayer
 import chylex.hee.system.migration.EntityPlayerMP
+import chylex.hee.system.random.nextFloat
 import chylex.hee.system.random.nextInt
 import chylex.hee.system.random.nextItemOrNull
 import chylex.hee.system.serialization.TagCompound
@@ -282,6 +284,7 @@ class EntityBossEnderEye(type: EntityType<EntityBossEnderEye>, world: World) : E
 			towerCenterPos = Pos(this).down(2).offset(horizontalFacing, 3)
 		}
 		
+		playHurtSound(source)
 		attackTarget = source.trueSource as? EntityPlayer
 	}
 	
@@ -334,12 +337,17 @@ class EntityBossEnderEye(type: EntityType<EntityBossEnderEye>, world: World) : E
 	
 	override fun attackEntityFrom(source: DamageSource, amount: Float): Boolean{
 		if (isInvulnerableTo(source) || amount < 6F){
+			if (source.immediateSource is EntityPlayer || source.isProjectile){
+				playSound(ModSounds.MOB_ENDER_EYE_HIT_FAIL, 0.8F, rand.nextFloat(0.6F, 0.8F))
+			}
+			
 			return false
 		}
 		
 		wakeUp(source)
 		
 		if (isDemonEye && (amount < 8.5F || !PotionBanishment.canBanish(this, source))){
+			playSound(ModSounds.MOB_ENDER_EYE_HIT_FAIL, 1F, rand.nextFloat(1F, 1.7F))
 			return false
 		}
 		

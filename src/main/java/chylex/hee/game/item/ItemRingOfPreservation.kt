@@ -1,10 +1,13 @@
 package chylex.hee.game.item
+import chylex.hee.game.entity.posVec
 import chylex.hee.game.inventory.copyIf
 import chylex.hee.game.inventory.isNotEmpty
 import chylex.hee.game.item.repair.ICustomRepairBehavior
 import chylex.hee.game.item.repair.RepairInstance
 import chylex.hee.game.mechanics.trinket.TrinketHandler
+import chylex.hee.game.world.playClient
 import chylex.hee.game.world.totalTime
+import chylex.hee.init.ModSounds
 import chylex.hee.system.compatibility.MinecraftForgeEventBus
 import chylex.hee.system.forge.EventPriority
 import chylex.hee.system.forge.Side
@@ -45,7 +48,7 @@ class ItemRingOfPreservation(properties: Properties) : ItemAbstractTrinket(prope
 	
 	@Sided(Side.CLIENT)
 	override fun spawnClientTrinketBreakFX(target: Entity){
-		// TODO sound effect
+		ModSounds.ITEM_RING_OF_PRESERVATION_USE.playClient(target.posVec, target.soundCategory, volume = 0.7F)
 	}
 	
 	private fun onItemDestroyed(player: EntityPlayer, stack: ItemStack, info: Pair<NonNullList<ItemStack>, Int>){
