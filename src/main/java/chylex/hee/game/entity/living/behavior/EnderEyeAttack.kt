@@ -61,14 +61,14 @@ sealed class EnderEyeAttack{
 						movementSpeed = (movementSpeed + 0.1).coerceAtMost(3.5)
 					}
 					
-					moveHelper.setMoveTo(targetVec.x, targetVec.y + (movementSpeed - 1.0) * 0.6, targetVec.z, movementSpeed)
+					navigator.tryMoveToXYZ(targetVec.x, targetVec.y + (movementSpeed - 1.0) * 0.6, targetVec.z, movementSpeed)
 				}
 				else if (distSq > square(1.2)){
 					if (movementSpeed > 1.0){
 						movementSpeed = (movementSpeed - 0.3).coerceAtLeast(1.0)
 					}
 					
-					moveHelper.setMoveTo(targetVec.x, targetVec.y, targetVec.z, movementSpeed)
+					navigator.tryMoveToXYZ(targetVec.x, targetVec.y, targetVec.z, movementSpeed)
 				}
 				else{
 					if (currentVec.directionTowards(targetVec).dotProduct(motion.normalize()) > 0.0){

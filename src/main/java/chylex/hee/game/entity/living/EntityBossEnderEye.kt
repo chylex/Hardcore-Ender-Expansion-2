@@ -14,6 +14,7 @@ import chylex.hee.game.entity.living.behavior.EnderEyeSpawnerParticles
 import chylex.hee.game.entity.living.controller.EntityBodyHeadOnly
 import chylex.hee.game.entity.living.controller.EntityLookSlerp
 import chylex.hee.game.entity.living.controller.EntityMoveFlyingForward
+import chylex.hee.game.entity.living.path.PathNavigateFlyingPreferBeeLineOrStrafe
 import chylex.hee.game.entity.motionY
 import chylex.hee.game.entity.posVec
 import chylex.hee.game.entity.selectVulnerableEntities
@@ -69,6 +70,7 @@ import net.minecraft.entity.monster.IMob
 import net.minecraft.nbt.CompoundNBT
 import net.minecraft.network.IPacket
 import net.minecraft.network.datasync.DataSerializers
+import net.minecraft.pathfinding.PathNavigator
 import net.minecraft.util.DamageSource
 import net.minecraft.util.ResourceLocation
 import net.minecraft.util.math.AxisAlignedBB
@@ -388,6 +390,10 @@ class EntityBossEnderEye(type: EntityType<EntityBossEnderEye>, world: World) : E
 	}
 	
 	// Movement
+	
+	override fun createNavigator(world: World): PathNavigator{
+		return PathNavigateFlyingPreferBeeLineOrStrafe(this, world)
+	}
 	
 	override fun createBodyController(): BodyController{
 		return EntityBodyHeadOnly(this)
