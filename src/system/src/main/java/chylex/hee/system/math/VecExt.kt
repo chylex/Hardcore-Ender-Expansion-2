@@ -66,6 +66,10 @@ fun Vec3d.toPitch(): Float{
 	return -atan2(this.y, sqrt(square(this.x) + square(this.z))).toDegrees().toFloat()
 }
 
+fun Vec3d.sign(other: Vec3d): Int{
+	return if (this.z * other.x > this.x * other.z) -1 else 1
+}
+
 fun Vec3d.angleBetween(other: Vec3d): Double{
 	return acos(this.dotProduct(other) / (this.length() * other.length()))
 }
