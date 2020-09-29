@@ -74,12 +74,6 @@ object Debug{
 							player.sendChatMessage("/gamemode creative")
 						}
 					}
-					else if (e.key == GLFW.GLFW_KEY_RIGHT_ALT){
-						forceCancelCtrl = true
-					}
-					else if (e.key == GLFW.GLFW_KEY_LEFT_CONTROL){
-						forceCancelCtrl = false
-					}
 				}
 				
 				private fun isHoldingBuildStick(player: EntityPlayer): Boolean{
@@ -196,14 +190,6 @@ object Debug{
 				})
 			}
 		}
-	}
-	
-	private var forceCancelCtrl = false
-	
-	@JvmStatic
-	@Suppress("unused")
-	fun cancelControlKey(): Boolean{
-		return forceCancelCtrl
 	}
 	
 	fun setClipboardContents(file: File){

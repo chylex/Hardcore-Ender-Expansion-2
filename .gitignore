@@ -34,6 +34,7 @@ run/*
 !run/mods
 run/mods/*
 !run/mods/CustomWindowTitle-*
+!run/mods/FixAltGr.jar
 !run/config
 run/config/*
 !run/config/customwindowtitle-client.toml
