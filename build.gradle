@@ -28,13 +28,6 @@ buildscript {
 	}
 }
 
-repositories {
-	maven {
-		name = "kotlinforforge"
-		url = "https://thedarkcolour.github.io/KotlinForForge/"
-	}
-}
-
 apply plugin: "net.minecraftforge.gradle"
 apply plugin: "eclipse"
 apply plugin: "idea"
@@ -88,10 +81,26 @@ allprojects {
 		}
 	}
 	
+	repositories {
+		maven {
+			name = "kotlinforforge"
+			url = "https://thedarkcolour.github.io/KotlinForForge/"
+		}
+	}
+	
 	dependencies {
 		implementation "org.jetbrains.kotlin:kotlin-stdlib"
 		implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
 		implementation "org.jetbrains.kotlin:kotlin-reflect"
+	}
+}
+
+sourceSets {
+	main {
+		resources {
+			srcDirs += file("data/gen")
+			exclude ".cache"
+		}
 	}
 }
 
@@ -124,6 +133,24 @@ minecraft {
 				}
 			}
 		}
+		
+		data {
+			args "--mod", "hee"
+			args "--all"
+			args "--output", file("data/gen")
+			args "--existing", sourceSets.main.resources.srcDirs.first().toString()
+			
+			workingDirectory file("run")
+			ideaModule project.name + "." + project(":datagen").name + ".main"
+			
+			mods {
+				hee {
+					source sourceSets.main
+					source project(":system").sourceSets.main
+					source project(":datagen").sourceSets.main
+				}
+			}
+		}
 	}
 }
 
@@ -145,6 +172,10 @@ jar {
 	
 	from(project(":system").sourceSets.main.output) {
 		exclude "META-INF"
+	}
+	
+	from("./data/gen") {
+		exclude ".cache"
 	}
 	
 	from("./") {

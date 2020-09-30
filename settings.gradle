@@ -1,2 +1,5 @@
 include ":system"
+include ":datagen"
+
 project(":system").projectDir = file("./src/system")
+project(":datagen").projectDir = file("./data")
