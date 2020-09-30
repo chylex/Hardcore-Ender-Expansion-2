@@ -32,3 +32,11 @@ fun <T : IForgeRegistryEntry<T>> IForgeRegistry<T>.getIfExists(key: ResourceLoca
 infix fun <T : IForgeRegistryEntry<*>> T.named(registryName: String) = apply {
 	this.registryName = Resource.Custom(registryName)
 }
+
+inline fun <reified T : IForgeRegistryEntry<T>> IForgeRegistry<T>.registerAllFields(obj: Any){
+	for(field in obj.javaClass.fields){
+		if (field.type === T::class.java){
+			register(field.get(null) as T)
+		}
+	}
+}
