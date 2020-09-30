@@ -335,7 +335,7 @@ sealed class EnderEyePhase : INBTSerializable<TagCompound>{
 						continue
 					}
 					
-					if (obsidianPos.getBlock(world) === ModBlocks.OBSIDIAN_CHISELED_LIT){
+					if (obsidianPos.getBlock(world) === ModBlocks.OBSIDIAN_TOWER_TOP){
 						obsidianPos.breakBlock(world, false)
 					}
 					

@@ -123,6 +123,10 @@ object BlockBuilders{
 		lightLevel = 15
 	}
 	
+	val buildObsidianTowerTop = buildObsidianVariationLit.clone {
+		makeIndestructible()
+	}
+	
 	// Building (End Stone)
 	
 	val buildEndStone = BlockBuilder(Materials.SOLID_WITH_TOOL, MaterialColor.SAND, SoundType.STONE).apply {

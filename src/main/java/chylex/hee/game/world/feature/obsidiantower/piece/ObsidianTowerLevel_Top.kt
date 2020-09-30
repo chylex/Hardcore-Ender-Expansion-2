@@ -63,7 +63,7 @@ abstract class ObsidianTowerLevel_Top(file: String) : ObsidianTowerLevel_General
 	class Boss(file: String) : ObsidianTowerLevel_Top(file){
 		override fun generate(world: IStructureWorld, instance: Instance){
 			super.generate(world, instance)
-			world.setBlock(Pos(centerX, 1, centerZ - 3), ModBlocks.OBSIDIAN_CHISELED_LIT)
+			world.setBlock(Pos(centerX, 1, centerZ - 3), ModBlocks.OBSIDIAN_TOWER_TOP)
 			world.addTrigger(Pos(centerX, 2, centerZ - 3), PlaceholderTrigger())
 		}
 		

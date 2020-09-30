@@ -102,6 +102,7 @@ import chylex.hee.game.block.properties.BlockBuilders.buildLootChest
 import chylex.hee.game.block.properties.BlockBuilders.buildMinersBurial
 import chylex.hee.game.block.properties.BlockBuilders.buildMinersBurialIndestructible
 import chylex.hee.game.block.properties.BlockBuilders.buildObsidian
+import chylex.hee.game.block.properties.BlockBuilders.buildObsidianTowerTop
 import chylex.hee.game.block.properties.BlockBuilders.buildObsidianVariation
 import chylex.hee.game.block.properties.BlockBuilders.buildObsidianVariationLit
 import chylex.hee.game.block.properties.BlockBuilders.buildPlant
@@ -203,6 +204,7 @@ object ModBlocks{
 	@JvmField val OBSIDIAN_SMOOTH_LIT   = BlockSimple(buildObsidianVariationLit) named "obsidian_smooth_lit"
 	@JvmField val OBSIDIAN_CHISELED_LIT = BlockSimple(buildObsidianVariationLit) named "obsidian_chiseled_lit"
 	@JvmField val OBSIDIAN_PILLAR_LIT   = BlockPillarCustom(buildObsidianVariationLit) named "obsidian_pillar_lit"
+	@JvmField val OBSIDIAN_TOWER_TOP    = BlockSimple(buildObsidianTowerTop) named "obsidian_tower_top"
 	
 	// Blocks: Building (End Stone)
 	
@@ -487,6 +489,7 @@ object ModBlocks{
 			register(OBSIDIAN_SMOOTH_LIT with basicItemBlock)
 			register(OBSIDIAN_CHISELED_LIT with basicItemBlock)
 			register(OBSIDIAN_PILLAR_LIT with basicItemBlock)
+			register(OBSIDIAN_TOWER_TOP with hiddenItemBlock)
 			
 			register(END_STONE_INFESTED with basicItemBlock)
 			register(END_STONE_BURNED with basicItemBlock)
