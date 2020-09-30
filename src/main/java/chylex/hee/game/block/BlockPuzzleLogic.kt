@@ -35,7 +35,6 @@ import chylex.hee.system.forge.Side
 import chylex.hee.system.forge.Sided
 import chylex.hee.system.migration.Facing.NORTH
 import chylex.hee.system.migration.Facing.UP
-import chylex.hee.system.migration.Sounds
 import chylex.hee.system.random.nextFloat
 import net.minecraft.block.Block
 import net.minecraft.block.BlockState
@@ -111,7 +110,7 @@ sealed class BlockPuzzleLogic(builder: BlockBuilder) : BlockSimple(builder){
 		val FX_SOLVE_SPAWN = object : FxEntityHandler(){
 			override fun handle(entity: Entity, rand: Random){
 				PARTICLE_SPAWN_MEDALLION.spawn(Point(entity, heightMp = 0.3F, amount = 75), rand)
-				Sounds.ENTITY_ITEM_PICKUP.playClient(entity.posVec, SoundCategory.BLOCKS, volume = 3F, pitch = 5F)
+				ModSounds.ITEM_PUZZLE_MEDALLION_SPAWN.playClient(entity.posVec, SoundCategory.BLOCKS, volume = 3F, pitch = 5F)
 			}
 		}
 		

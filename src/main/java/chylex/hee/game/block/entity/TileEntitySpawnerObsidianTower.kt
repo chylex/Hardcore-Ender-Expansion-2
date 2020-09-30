@@ -23,6 +23,7 @@ import chylex.hee.game.world.isAnyPlayerWithinRange
 import chylex.hee.game.world.isPeaceful
 import chylex.hee.game.world.playClient
 import chylex.hee.game.world.totalTime
+import chylex.hee.init.ModSounds
 import chylex.hee.init.ModTileEntities
 import chylex.hee.network.client.PacketClientFX
 import chylex.hee.network.fx.FxBlockData
@@ -33,7 +34,6 @@ import chylex.hee.system.math.square
 import chylex.hee.system.migration.EntityLiving
 import chylex.hee.system.migration.EntityPlayer
 import chylex.hee.system.migration.Facing.DOWN
-import chylex.hee.system.migration.Sounds
 import chylex.hee.system.random.nextFloat
 import chylex.hee.system.random.nextInt
 import chylex.hee.system.random.nextItemOrNull
@@ -90,7 +90,7 @@ class TileEntitySpawnerObsidianTower(type: TileEntityType<TileEntitySpawnerObsid
 		val FX_BREAK = object : FxBlockHandler(){
 			override fun handle(pos: BlockPos, world: World, rand: Random){
 				PARTICLE_BREAK.spawn(Point(pos, rand.nextInt(18, 20)), rand)
-				Sounds.BLOCK_GLASS_BREAK.playClient(pos, SoundCategory.BLOCKS, volume = 1.3F, pitch = rand.nextFloat(0.7F, 0.8F))
+				ModSounds.BLOCK_SPAWNER_EXPIRE.playClient(pos, SoundCategory.BLOCKS, volume = 1.3F, pitch = rand.nextFloat(0.7F, 0.8F))
 			}
 		}
 	}

@@ -3,10 +3,10 @@ import chylex.hee.game.block.entity.TileEntityMinersBurialAltar
 import chylex.hee.game.world.BlockEditor
 import chylex.hee.game.world.getTile
 import chylex.hee.game.world.playUniversal
+import chylex.hee.init.ModSounds
 import chylex.hee.system.migration.ActionResult.FAIL
 import chylex.hee.system.migration.ActionResult.PASS
 import chylex.hee.system.migration.ActionResult.SUCCESS
-import chylex.hee.system.migration.Sounds
 import net.minecraft.item.Item
 import net.minecraft.item.ItemUseContext
 import net.minecraft.util.ActionResultType
@@ -30,7 +30,7 @@ class ItemPuzzleMedallion(properties: Properties) : Item(properties){
 			tile.hasMedallion = true
 			heldItem.shrink(1)
 			
-			Sounds.BLOCK_STONE_HIT.playUniversal(player, pos, SoundCategory.BLOCKS, volume = 2F, pitch = 0.8F)
+			ModSounds.ITEM_PUZZLE_MEDALLION_INSERT.playUniversal(player, pos, SoundCategory.BLOCKS, volume = 2F, pitch = 0.8F)
 			return SUCCESS
 		}
 		

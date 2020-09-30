@@ -12,12 +12,12 @@ import chylex.hee.game.world.center
 import chylex.hee.game.world.getTile
 import chylex.hee.game.world.isTopSolid
 import chylex.hee.game.world.playServer
+import chylex.hee.init.ModSounds
 import chylex.hee.system.forge.Side
 import chylex.hee.system.forge.Sided
 import chylex.hee.system.migration.EntityLivingBase
 import chylex.hee.system.migration.EntityPlayer
 import chylex.hee.system.migration.Facing.DOWN
-import chylex.hee.system.migration.Sounds
 import chylex.hee.system.serialization.NBTList.Companion.putList
 import chylex.hee.system.serialization.getListOfCompounds
 import net.minecraft.block.BlockState
@@ -126,7 +126,7 @@ class BlockJarODust(builder: BlockBuilder) : BlockSimpleShaped(builder, AABB){
 			}
 		}
 		
-		Sounds.BLOCK_GLASS_BREAK.playServer(world, pos.center, SoundCategory.BLOCKS)
+		ModSounds.BLOCK_JAR_O_DUST_SHATTER.playServer(world, pos.center, SoundCategory.BLOCKS)
 		super.onBlockExploded(state, world, pos, explosion)
 	}
 	

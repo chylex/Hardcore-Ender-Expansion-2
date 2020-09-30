@@ -1,11 +1,27 @@
 {
+  "block.cauldron.brew": {
+    "sounds": [ "minecraft:block/brewing_stand/brew1", "minecraft:block/brewing_stand/brew2" ],
+    "subtitle": "subtitles.hee.block.cauldron.brew"
+  },
   "block.death_flower.wither": {
     "sounds": [{ "name": "hee:block/death_flower_wither", "attenuation_distance": 1536 }],
     "subtitle": "subtitles.hee.block.death_flower.wither"
   },
+  "block.experience_gate.pickup": {
+    "sounds": [ "minecraft:random/orb" ],
+    "subtitle": "subtitles.hee.block.experience_gate.pickup"
+  },
+  "block.experience_gate.levelup": {
+    "sounds": [ "minecraft:random/levelup" ],
+    "subtitle": "subtitles.hee.block.experience_gate.levelup"
+  },
   "block.igneous_plate.cool": {
     "sounds": [ "minecraft:random/fizz" ],
     "subtitle": "subtitles.hee.block.igneous_plate.cool"
+  },
+  "block.jar_o_dust.shatter": {
+    "sounds": [ "minecraft:random/glass1", "minecraft:random/glass2", "minecraft:random/glass3" ],
+    "subtitle": "subtitles.hee.block.jar_o_dust.shatter"
   },
   "block.loot_chest.open": {
     "sounds": [ "hee:block/loot_chest_open" ],
@@ -29,6 +45,17 @@
     "sounds": [ "hee:block/puzzle_logic_click" ],
     "subtitle": "subtitles.hee.block.puzzle_logic.click"
   },
+  "block.spawner.expire": {
+    "sounds": [ "minecraft:random/glass1", "minecraft:random/glass2", "minecraft:random/glass3" ],
+    "subtitle": "subtitles.hee.block.spawner.expire"
+  },
+  "item.puzzle_medallion.insert": {
+    "sounds": [ "minecraft:step/stone1", "minecraft:step/stone2", "minecraft:step/stone3", "minecraft:step/stone4", "minecraft:step/stone5", "minecraft:step/stone6" ]
+  },
+  "item.puzzle_medallion.spawn": {
+    "sounds": [ "minecraft:random/pop" ],
+    "subtitle": "subtitles.hee.item.puzzle_medallion.spawn"
+  },
   "item.revitalization_substance.use.success": {
     "sounds": [ "hee:item/revitalization_substance_use" ],
     "subtitle": "subtitles.hee.item.revitalization_substance.use.success"
@@ -41,6 +68,10 @@
     "sounds": [ "hee:item/ring_of_preservation_use" ],
     "subtitle": "subtitles.hee.item.ring_of_preservation.use"
   },
+  "item.scale_of_freefall.use": {
+    "sounds": [ "hee:item/ring_of_preservation_use" ],
+    "subtitle": "subtitles.hee.item.scale_of_freefall.use"
+  },
   "item.table_link.use.success": {
     "sounds": [ "hee:item/table_link_use" ],
     "subtitle": "subtitles.hee.item.table_link.use.success"
@@ -51,6 +82,21 @@
   "item.table_link.use.fail": {
     "sounds": [ "hee:item/table_link_use_fail" ],
     "subtitle": "subtitles.hee.item.table_link.use.fail"
+  },
+  "entity.generic.teleport": {
+    "sounds": [ "minecraft:mob/endermen/portal", "minecraft:mob/endermen/portal2" ],
+    "subtitle": "subtitles.hee.entity.generic.teleport"
+  },
+  "entity.igneous_rock.burn": {
+    "sounds": [ "minecraft:random/fizz" ],
+    "subtitle": "subtitles.hee.entity.igneous_rock.burn"
+  },
+  "entity.player.death.no_subtitles": {
+    "sounds": [ "minecraft:damage/hit1", "minecraft:damage/hit2", "minecraft:damage/hit3" ]
+  },
+  "entity.player.teleport": {
+    "sounds": [ "minecraft:mob/endermen/portal", "minecraft:mob/endermen/portal2" ],
+    "subtitle": "subtitles.hee.entity.player.teleport"
   },
   "entity.revitalization_substance.heal": {
     "sounds": [ "minecraft:random/fizz" ],

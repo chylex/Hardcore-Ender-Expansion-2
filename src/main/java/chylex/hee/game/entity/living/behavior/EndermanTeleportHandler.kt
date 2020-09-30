@@ -40,6 +40,7 @@ import chylex.hee.system.math.withY
 import chylex.hee.system.migration.Facing.DOWN
 import chylex.hee.system.migration.Facing.UP
 import chylex.hee.system.migration.Potions
+import chylex.hee.system.migration.Sounds
 import chylex.hee.system.random.nextFloat
 import chylex.hee.system.random.nextInt
 import chylex.hee.system.random.nextVector2
@@ -110,7 +111,7 @@ class EndermanTeleportHandler(private val enderman: EntityMobAbstractEnderman) :
 		
 		private fun sendDelayedTeleportFX(entity: Entity){
 			val point = entity.posVec.addY(entity.height.toDouble())
-			FxTeleportData(point, point, entity.width, entity.height, entity.soundCategory, soundVolume = 0.8F).send(entity.world)
+			FxTeleportData(point, point, entity.width, entity.height, Sounds.ENTITY_ENDERMAN_TELEPORT, entity.soundCategory, soundVolume = 0.8F).send(entity.world)
 		}
 	}
 	

@@ -33,6 +33,7 @@ import chylex.hee.game.world.totalTime
 import chylex.hee.init.ModBlocks
 import chylex.hee.init.ModEntities
 import chylex.hee.init.ModItems
+import chylex.hee.init.ModSounds
 import chylex.hee.network.client.PacketClientFX
 import chylex.hee.network.fx.FxBlockData
 import chylex.hee.network.fx.FxBlockHandler
@@ -132,14 +133,14 @@ class EntityItemIgneousRock : EntityItemNoBob{
 		val FX_BLOCK_SMELT = object : FxBlockHandler(){
 			override fun handle(pos: BlockPos, world: World, rand: Random){
 				PARTICLE_SMELT.spawn(Point(pos, 20), rand)
-				Sounds.ENTITY_GENERIC_BURN.playClient(pos, SoundCategory.NEUTRAL, volume = 0.3F, pitch = rand.nextFloat(1F, 2F))
+				ModSounds.ENTITY_IGNEOUS_ROCK_BURN.playClient(pos, SoundCategory.NEUTRAL, volume = 0.3F, pitch = rand.nextFloat(1F, 2F))
 			}
 		}
 		
 		val FX_ENTITY_BURN = object : FxEntityHandler(){
 			override fun handle(entity: Entity, rand: Random){
 				PARTICLE_BURN(entity).spawn(Point(entity, heightMp = 0.5F, amount = 24), rand)
-				Sounds.ENTITY_GENERIC_BURN.playClient(entity.posVec, SoundCategory.NEUTRAL, volume = 0.3F, pitch = rand.nextFloat(1F, 2F))
+				ModSounds.ENTITY_IGNEOUS_ROCK_BURN.playClient(entity.posVec, SoundCategory.NEUTRAL, volume = 0.3F, pitch = rand.nextFloat(1F, 2F))
 			}
 		}
 	}

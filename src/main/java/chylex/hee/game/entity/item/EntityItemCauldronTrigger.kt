@@ -17,12 +17,12 @@ import chylex.hee.game.world.totalTime
 import chylex.hee.init.ModBlocks
 import chylex.hee.init.ModEntities
 import chylex.hee.init.ModItems
+import chylex.hee.init.ModSounds
 import chylex.hee.network.client.PacketClientFX
 import chylex.hee.network.fx.FxBlockData
 import chylex.hee.network.fx.FxBlockHandler
 import chylex.hee.system.migration.EntityItem
 import chylex.hee.system.migration.Facing.UP
-import chylex.hee.system.migration.Sounds
 import net.minecraft.block.Blocks
 import net.minecraft.block.CauldronBlock.LEVEL
 import net.minecraft.entity.Entity
@@ -63,8 +63,8 @@ class EntityItemCauldronTrigger : EntityItemBase{
 		val FX_RECIPE_FINISH = object : FxBlockHandler(){
 			override fun handle(pos: BlockPos, world: World, rand: Random){
 				PARTICLE_RECIPE_FINISH.spawn(Point(pos, 22), rand)
-				Sounds.BLOCK_BREWING_STAND_BREW.playClient(pos, SoundCategory.BLOCKS, volume = 0.5F, pitch = 1.2F)
-				Sounds.BLOCK_BREWING_STAND_BREW.playClient(pos, SoundCategory.BLOCKS, volume = 0.8F, pitch = 0.8F)
+				ModSounds.BLOCK_CAULDRON_BREW.playClient(pos, SoundCategory.BLOCKS, volume = 0.5F, pitch = 1.2F)
+				ModSounds.BLOCK_CAULDRON_BREW.playClient(pos, SoundCategory.BLOCKS, volume = 0.8F, pitch = 0.8F)
 			}
 		}
 	}

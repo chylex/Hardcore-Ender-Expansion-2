@@ -14,6 +14,7 @@ import chylex.hee.game.world.offsetUntil
 import chylex.hee.game.world.playClient
 import chylex.hee.game.world.removeBlock
 import chylex.hee.game.world.setState
+import chylex.hee.init.ModSounds
 import chylex.hee.network.client.PacketClientFX
 import chylex.hee.network.fx.FxBlockData
 import chylex.hee.network.fx.FxBlockHandler
@@ -98,6 +99,7 @@ class BlockDragonEggOverride(builder: BlockBuilder) : BlockDragonEgg(builder.p){
 						endPoint = finalPos.center,
 						width = 0.2F,
 						height = 0.2F,
+						soundEvent = ModSounds.ENTITY_GENERIC_TELEPORT,
 						soundCategory = SoundCategory.BLOCKS,
 						soundVolume = 0.7F
 					).send(world)

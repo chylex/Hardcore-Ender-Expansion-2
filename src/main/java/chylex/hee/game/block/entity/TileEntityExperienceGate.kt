@@ -26,6 +26,7 @@ import chylex.hee.game.world.playClient
 import chylex.hee.game.world.playServer
 import chylex.hee.game.world.totalTime
 import chylex.hee.init.ModItems
+import chylex.hee.init.ModSounds
 import chylex.hee.init.ModTileEntities
 import chylex.hee.network.client.PacketClientFX
 import chylex.hee.network.client.PacketClientUpdateExperience
@@ -40,7 +41,6 @@ import chylex.hee.system.migration.EntityItem
 import chylex.hee.system.migration.EntityPlayer
 import chylex.hee.system.migration.EntityXPOrb
 import chylex.hee.system.migration.Facing.UP
-import chylex.hee.system.migration.Sounds
 import chylex.hee.system.random.nextFloat
 import chylex.hee.system.random.nextInt
 import chylex.hee.system.serialization.TagCompound
@@ -109,7 +109,7 @@ class TileEntityExperienceGate(type: TileEntityType<TileEntityExperienceGate>) :
 				val pos = entity.posVec.addY(offset)
 				
 				PARTICLE_CONSUME.spawn(Point(pos, amount = 9), rand)
-				Sounds.ENTITY_EXPERIENCE_ORB_PICKUP.playClient(pos, SoundCategory.BLOCKS, volume = 0.2F, pitch = rand.nextFloat(0.55F, 1.25F))
+				ModSounds.BLOCK_EXPERIENCE_GATE_PICKUP.playClient(pos, SoundCategory.BLOCKS, volume = 0.2F, pitch = rand.nextFloat(0.55F, 1.25F))
 			}
 		}
 		
@@ -245,7 +245,7 @@ class TileEntityExperienceGate(type: TileEntityType<TileEntityExperienceGate>) :
 			experience += xpDrain
 			
 			if (currentTime % 3L == 0L){
-				Sounds.ENTITY_EXPERIENCE_ORB_PICKUP.playServer(wrld, player.posVec, SoundCategory.BLOCKS, volume = 0.1F, pitch = wrld.rand.nextFloat(0.55F, 1.25F))
+				ModSounds.BLOCK_EXPERIENCE_GATE_PICKUP.playServer(wrld, player.posVec, SoundCategory.BLOCKS, volume = 0.1F, pitch = wrld.rand.nextFloat(0.55F, 1.25F))
 			}
 		}
 	}
@@ -311,7 +311,7 @@ class TileEntityExperienceGate(type: TileEntityType<TileEntityExperienceGate>) :
 				val current = getFloat(EXPERIENCE_TAG)
 				
 				if ((previous < TARGET_LEVEL_UP && current >= TARGET_LEVEL_UP) || (previous < TARGET_XP && current >= TARGET_XP)){
-					Sounds.ENTITY_PLAYER_LEVELUP.playClient(pos, SoundCategory.BLOCKS, volume = 0.7F)
+					ModSounds.BLOCK_EXPERIENCE_GATE_LEVELUP.playClient(pos, SoundCategory.BLOCKS, volume = 0.7F)
 				}
 				
 				if ((previous < TARGET_XP && current >= TARGET_XP) || (previous >= TARGET_XP && current < TARGET_XP)){

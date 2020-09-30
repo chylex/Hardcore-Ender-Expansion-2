@@ -15,6 +15,7 @@ import chylex.hee.game.world.Pos
 import chylex.hee.game.world.blocksMovement
 import chylex.hee.game.world.center
 import chylex.hee.game.world.playClient
+import chylex.hee.init.ModSounds
 import chylex.hee.network.client.PacketClientFX
 import chylex.hee.network.client.PacketClientMoveYourAss
 import chylex.hee.network.client.PacketClientRotateInstantly
@@ -27,6 +28,7 @@ import chylex.hee.system.math.floorToInt
 import chylex.hee.system.math.offsetTowards
 import chylex.hee.system.math.subtractY
 import chylex.hee.system.migration.EntityCreature
+import chylex.hee.system.migration.EntityEnderman
 import chylex.hee.system.migration.EntityLivingBase
 import chylex.hee.system.migration.EntityPlayer
 import chylex.hee.system.migration.EntityPlayerMP
@@ -38,6 +40,7 @@ import chylex.hee.system.serialization.use
 import chylex.hee.system.serialization.writeCompactVec
 import net.minecraft.network.PacketBuffer
 import net.minecraft.util.SoundCategory
+import net.minecraft.util.SoundEvent
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.Vec3d
 import net.minecraft.world.World
@@ -67,6 +70,7 @@ class Teleporter(
 			private val endPoint: Vec3d,
 			private val width: Float,
 			private val height: Float,
+			private val soundEvent: SoundEvent,
 			private val soundCategory: SoundCategory,
 			private val soundVolume: Float,
 			private val extraRange: Float = 0F
@@ -77,6 +81,7 @@ class Teleporter(
 				writeByte((width * 10F).floorToInt().coerceIn(0, 100))
 				writeByte((height * 10F).floorToInt().coerceIn(0, 100))
 				
+				writeRegistryId(soundEvent)
 				writeEnumValue(soundCategory)
 				writeByte((soundVolume * 10F).floorToInt().coerceIn(0, 250))
 				writeByte(extraRange.floorToInt().coerceIn(0, 255))
@@ -101,6 +106,7 @@ class Teleporter(
 				val halfWidth = (readByte() / 10F) * 0.5F
 				val halfHeight = (readByte() / 10F) * 0.5F
 				
+				val soundEvent = readRegistryIdSafe(SoundEvent::class.java)
 				val soundCategory = readEnumValue(SoundCategory::class.java)
 				val soundVolume = readByte() / 10F
 				val soundRange = 16F + readByte()
@@ -113,11 +119,11 @@ class Teleporter(
 				val soundDistance = playerPos.distanceTo(soundPosition)
 				
 				if (soundDistance < RANGE_FOR_MINIMUM_VOLUME){
-					Sounds.ENTITY_ENDERMAN_TELEPORT.playClient(soundPosition, soundCategory, volume = soundVolume)
+					soundEvent.playClient(soundPosition, soundCategory, volume = soundVolume)
 				}
 				else if (soundDistance < soundRange){
 					val closerPosition = playerPos.add(playerPos.directionTowards(soundPosition).scale(RANGE_FOR_MINIMUM_VOLUME))
-					Sounds.ENTITY_ENDERMAN_TELEPORT.playClient(closerPosition, soundCategory, volume = soundVolume)
+					soundEvent.playClient(closerPosition, soundCategory, volume = soundVolume)
 				}
 				
 				ParticleSpawnerCustom(
@@ -171,8 +177,14 @@ class Teleporter(
 				else -> 0F
 			}
 			
+			val soundEvent = when(entity){
+				is EntityPlayer   -> ModSounds.ENTITY_PLAYER_TELEPORT
+				is EntityEnderman -> Sounds.ENTITY_ENDERMAN_TELEPORT
+				else              -> ModSounds.ENTITY_GENERIC_TELEPORT
+			}
+			
 			val halfHeight = entity.height * 0.5
-			FxTeleportData(prevPos.addY(halfHeight), newPos.addY(halfHeight), entity.width, entity.height, soundCategory, 1F, extraRange).send(world)
+			FxTeleportData(prevPos.addY(halfHeight), newPos.addY(halfHeight), entity.width, entity.height, soundEvent, soundCategory, 1F, extraRange).send(world)
 		}
 		
 		if (resetFall){

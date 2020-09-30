@@ -19,6 +19,7 @@ import chylex.hee.system.math.component3
 import chylex.hee.system.math.square
 import chylex.hee.system.migration.EntityPlayer
 import chylex.hee.system.migration.Facing.DOWN
+import chylex.hee.system.migration.Sounds
 import chylex.hee.system.random.nextFloat
 import chylex.hee.system.random.nextInt
 import chylex.hee.system.random.nextVector2
@@ -129,7 +130,7 @@ class CausatumEventEndermanKill() : ICausatumEventHandler{
 					val endPoint = muppet.posVec.addY(muppet.height * 0.5)
 					val startPoint = endPoint.addY(64.0)
 					
-					FxTeleportData(startPoint, endPoint, muppet.width, muppet.height, muppet.soundCategory, soundVolume = 0.7F).send(world)
+					FxTeleportData(startPoint, endPoint, muppet.width, muppet.height, Sounds.ENTITY_ENDERMAN_TELEPORT, muppet.soundCategory, soundVolume = 0.7F).send(world)
 					
 					val (lookX, lookY, lookZ) = getLookPos(world)
 					
