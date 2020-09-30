@@ -1,0 +1,9 @@
+{
+  "parent": "item/generated",
+  "textures": {
+    "layer0": "hee:item/binding_essence_primary",
+    "layer1": "hee:item/binding_essence_secondary",
+    "layer2": "hee:item/binding_essence_tertiary",
+    "layer3": "hee:item/binding_essence_quaternary"
+  }
+}

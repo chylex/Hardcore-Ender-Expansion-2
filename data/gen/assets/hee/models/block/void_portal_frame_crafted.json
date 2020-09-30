@@ -1,0 +1,9 @@
+{
+  "parent": "hee:block/portal_frame",
+  "textures": {
+    "particle": "hee:block/void_portal_frame_side",
+    "side": "hee:block/void_portal_frame_side",
+    "top": "hee:block/void_portal_frame_top_plain",
+    "bottom": "block/end_stone"
+  }
+}

@@ -1,0 +1,7 @@
+{
+  "parent": "hee:block/cube_overlay",
+  "textures": {
+    "particle": "hee:block/stardust_ore_particle",
+    "base": "block/end_stone"
+  }
+}

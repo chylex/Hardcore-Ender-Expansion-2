@@ -1,7 +1,0 @@
-{
-  "parent": "item/generated",
-  "textures": {
-    "layer0": "hee:item/energy_receptacle",
-    "layer1": "hee:item/energy_receptacle_cluster"
-  }
-}

@@ -1,7 +1,0 @@
-{
-  "parent": "hee:block/table_tier_2",
-  "textures": {
-    "overlay_top": "hee:block/transparent",
-    "overlay_side": "hee:block/transparent"
-  }
-}

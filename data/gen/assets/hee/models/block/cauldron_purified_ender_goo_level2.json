@@ -1,0 +1,6 @@
+{
+  "parent": "block/cauldron_level2",
+  "textures": {
+    "water": "hee:block/purified_ender_goo_still"
+  }
+}

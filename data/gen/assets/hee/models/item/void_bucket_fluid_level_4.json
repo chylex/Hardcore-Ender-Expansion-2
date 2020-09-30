@@ -1,0 +1,7 @@
+{
+  "parent": "item/generated",
+  "textures": {
+    "layer0": "hee:item/void_bucket",
+    "layer1": "hee:item/void_bucket_fluid_level_4"
+  }
+}

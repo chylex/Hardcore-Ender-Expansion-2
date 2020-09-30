@@ -1,0 +1,26 @@
+{
+  "parent": "item/generated",
+  "textures": {
+    "layer0": "hee:block/death_flower_1"
+  },
+  "overrides": [
+    {
+      "predicate": {
+        "hee:death_level": 4.0
+      },
+      "model": "hee:item/death_flower_2"
+    },
+    {
+      "predicate": {
+        "hee:death_level": 8.0
+      },
+      "model": "hee:item/death_flower_3"
+    },
+    {
+      "predicate": {
+        "hee:death_level": 12.0
+      },
+      "model": "hee:item/death_flower_4"
+    }
+  ]
+}

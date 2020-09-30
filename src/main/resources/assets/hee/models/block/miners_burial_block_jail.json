@@ -1,6 +1,0 @@
-{
-  "parent": "block/cube_all",
-  "textures": {
-    "all": "hee:block/miners_burial_block_jail"
-  }
-}

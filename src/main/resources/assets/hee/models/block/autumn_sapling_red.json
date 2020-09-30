@@ -1,6 +1,0 @@
-{
-  "parent": "block/cross",
-  "textures": {
-    "cross": "hee:block/autumn_sapling_red"
-  }
-}

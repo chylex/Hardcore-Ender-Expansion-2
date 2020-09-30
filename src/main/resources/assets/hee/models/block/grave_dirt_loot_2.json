@@ -1,6 +1,0 @@
-{
-  "parent": "hee:block/grave_dirt_low",
-  "textures": {
-    "top": "hee:block/grave_dirt_loot_2"
-  }
-}

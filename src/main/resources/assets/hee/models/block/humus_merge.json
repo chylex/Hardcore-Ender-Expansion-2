@@ -1,8 +1,0 @@
-{
-  "parent": "block/cube_bottom_top",
-  "textures": {
-    "top": "hee:block/humus",
-    "side": "hee:block/humus_merge",
-    "bottom": "hee:block/endersol_top"
-  }
-}

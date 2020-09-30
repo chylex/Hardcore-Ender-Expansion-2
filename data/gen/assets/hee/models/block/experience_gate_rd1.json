@@ -1,0 +1,6 @@
+{
+  "parent": "hee:block/experience_gate",
+  "textures": {
+    "top": "hee:block/experience_gate_top_rd1"
+  }
+}

@@ -1,0 +1,9 @@
+{
+  "parent": "item/generated",
+  "textures": {
+    "layer0": "hee:item/portal_token_outline",
+    "layer1": "hee:item/portal_token_color_top",
+    "layer2": "hee:item/portal_token_color_bottom",
+    "layer3": "hee:item/portal_token_border_rare"
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "parent": "item/generated",
+  "textures": {
+    "layer0": "hee:item/energy_oracle",
+    "layer1": "hee:item/energy_oracle_indicator_inactive"
+  },
+  "overrides": [
+    {
+      "predicate": {
+        "hee:activity_intensity": 0.5
+      },
+      "model": "hee:item/energy_oracle_active_mild"
+    },
+    {
+      "predicate": {
+        "hee:activity_intensity": 1.0
+      },
+      "model": "hee:item/energy_oracle_active_full"
+    }
+  ]
+}

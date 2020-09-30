@@ -65,7 +65,7 @@ object ModItems{
 	private val defaultProps = baseProps
 	private val toolProps = baseProps.maxStackSize(1)
 	
-	// Items: Raw resources
+	// Items: Raw Resources
 	
 	@JvmField val ETHEREUM          = Item(defaultProps) named "ethereum"
 	@JvmField val ANCIENT_DUST      = Item(defaultProps) named "ancient_dust"
@@ -84,7 +84,7 @@ object ModItems{
 	@JvmField val ECTOPLASM         = Item(defaultProps) named "ectoplasm"
 	@JvmField val ENCHANTED_CLAW    = Item(defaultProps) named "enchanted_claw"
 	
-	// Items: Manufactured resources
+	// Items: Manufactured Resources
 	
 	@JvmField val ALTERATION_NEXUS         = Item(defaultProps) named "alteration_nexus"
 	@JvmField val VOID_ESSENCE             = Item(defaultProps) named "void_essence"
@@ -97,12 +97,12 @@ object ModItems{
 	@JvmField val REVITALIZATION_SUBSTANCE = ItemRevitalizationSubstance(baseProps.maxStackSize(16)) named "revitalization_substance"
 	@JvmField val BINDING_ESSENCE          = ItemBindingEssence(baseProps.maxStackSize(16)) named "binding_essence"
 	
-	// Items: Nature & food
+	// Items: Nature & Food
 	
 	@JvmField val COMPOST    = ItemCompost(defaultProps) named "compost"
 	@JvmField val VOID_SALAD = ItemVoidSalad(baseProps.maxStackSize(1).food(ItemVoidSalad.FOOD)) named "void_salad"
 	
-	// Items: Table cores
+	// Items: Table Cores
 	
 	@JvmField val ACCUMULATION_TABLE_CORE = ItemTableCore(arrayOf(ModBlocks.ACCUMULATION_TABLE_TIER_1, ModBlocks.ACCUMULATION_TABLE_TIER_2, ModBlocks.ACCUMULATION_TABLE_TIER_3), defaultProps) named "accumulation_table_core"
 	@JvmField val EXPERIENCE_TABLE_CORE   = ItemTableCore(arrayOf(ModBlocks.EXPERIENCE_TABLE_TIER_1, ModBlocks.EXPERIENCE_TABLE_TIER_2, ModBlocks.EXPERIENCE_TABLE_TIER_3), defaultProps) named "experience_table_core"
@@ -135,7 +135,7 @@ object ModItems{
 	@JvmField val ENERGY_ORACLE     = ItemEnergyOracle(toolProps) named "energy_oracle"
 	@JvmField val ENERGY_RECEPTACLE = ItemEnergyReceptacle(toolProps) named "energy_receptacle"
 	
-	// Items: Gems & teleportation
+	// Items: Gems & Teleportation
 	
 	@JvmField val INFUSED_ENDER_PEARL = ItemInfusedEnderPearl(Item.Properties().maxStackSize(16)) named "infused_ender_pearl"
 	@JvmField val SPATIAL_DASH_GEM    = ItemSpatialDashGem(toolProps) named "spatial_dash_gem"

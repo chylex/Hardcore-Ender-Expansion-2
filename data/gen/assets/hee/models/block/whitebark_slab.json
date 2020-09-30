@@ -1,0 +1,8 @@
+{
+  "parent": "block/slab",
+  "textures": {
+    "side": "hee:block/whitebark_planks",
+    "bottom": "hee:block/whitebark_planks",
+    "top": "hee:block/whitebark_planks"
+  }
+}

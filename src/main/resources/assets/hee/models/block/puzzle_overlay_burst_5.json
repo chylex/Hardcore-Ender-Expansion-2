@@ -1,6 +1,0 @@
-{
-  "parent": "hee:block/puzzle_overlay",
-  "textures": {
-    "overlay": "hee:block/puzzle_overlay_burst_5"
-  }
-}

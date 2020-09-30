@@ -1,9 +1,0 @@
-{
-  "parent": "hee:block/portal_frame",
-  "textures": {
-    "particle": "hee:block/end_portal_frame_side",
-    "bottom": "minecraft:block/end_stone",
-    "top": "hee:block/end_portal_frame_top_acceptor",
-    "side": "hee:block/end_portal_frame_side"
-  }
-}

@@ -1,8 +1,0 @@
-{
-  "parent": "block/cube_bottom_top",
-  "textures": {
-    "top": "hee:block/experience_gate_top_controller",
-    "side": "hee:block/experience_gate_side",
-    "bottom": "hee:block/experience_gate_bottom"
-  }
-}

@@ -1,7 +1,0 @@
-{
-  "parent": "hee:block/table_tier_3",
-  "textures": {
-    "overlay_top": "hee:block/experience_table_top",
-    "overlay_side": "hee:block/experience_table_side"
-  }
-}

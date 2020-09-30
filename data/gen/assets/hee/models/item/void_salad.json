@@ -1,0 +1,20 @@
+{
+  "parent": "item/generated",
+  "textures": {
+    "layer0": "hee:item/void_salad"
+  },
+  "overrides": [
+    {
+      "predicate": {
+        "hee:void_salad_type": 1.0
+      },
+      "model": "hee:item/void_void_salad"
+    },
+    {
+      "predicate": {
+        "hee:void_salad_type": 2.0
+      },
+      "model": "hee:item/mega_void_salad"
+    }
+  ]
+}

@@ -1,7 +1,0 @@
-{
-  "parent": "block/cube_all",
-  "textures": {
-    "particle": "hee:block/grave_dirt",
-    "all": "hee:block/grave_dirt"
-  }
-}
