@@ -37,6 +37,7 @@ repositories {
 
 apply plugin: "net.minecraftforge.gradle"
 apply plugin: "eclipse"
+apply plugin: "idea"
 
 if (file("run/mods_deobf.gradle").exists()){
 	apply from: "run/mods_deobf.gradle"
@@ -52,6 +53,14 @@ def metaVersion = metaLines.find { line -> line.startsWith(prefixVersion) }.subs
 group = "chylex.hee"
 version = metaVersion
 archivesBaseName = metaName.replaceAll("\\s", "")
+
+idea {
+	module {
+		[".idea", ".settings", ".classpath", ".project", "gradle", "out", "run"].each {
+			excludeDirs << file(it)
+		}
+	}
+}
 
 allprojects {
 	apply plugin: "kotlin"
