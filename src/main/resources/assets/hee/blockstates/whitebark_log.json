@@ -1,7 +1,0 @@
-{
-  "variants": {
-    "axis=y": { "model": "hee:block/whitebark_log" },
-    "axis=z": { "model": "hee:block/whitebark_log", "x": 90 },
-    "axis=x": { "model": "hee:block/whitebark_log", "x": 90, "y": 90 }
-  }
-}

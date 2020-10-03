@@ -1,7 +1,7 @@
 {
   "parent": "block/cube_column",
   "textures": {
-    "side": "hee:block/whitebark_log_side",
+    "side": "hee:block/whitebark_log",
     "end": "hee:block/whitebark_log_top"
   }
 }

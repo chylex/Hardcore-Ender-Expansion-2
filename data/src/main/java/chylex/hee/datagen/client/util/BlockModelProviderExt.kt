@@ -1,17 +1,13 @@
 package chylex.hee.datagen.client.util
 import chylex.hee.datagen.Callback
-import chylex.hee.datagen.isVanilla
 import chylex.hee.datagen.path
 import chylex.hee.datagen.r
-import chylex.hee.datagen.resource
 import chylex.hee.datagen.safe
 import chylex.hee.datagen.safeUnit
 import chylex.hee.datagen.then
 import chylex.hee.game.block.BlockAbstractTable
 import chylex.hee.system.facades.Resource
 import chylex.hee.system.forge.named
-import chylex.hee.system.migration.BlockSlab
-import chylex.hee.system.migration.BlockStairs
 import chylex.hee.system.migration.BlockWall
 import net.minecraft.block.Block
 import net.minecraft.block.Blocks
@@ -71,21 +67,6 @@ fun BlockModelProvider.multi(block: Block, parent: ResourceLocation, suffixes: A
 
 fun BlockModelProvider.multi(block: Block, parent: ResourceLocation, suffixes: IntRange, callback: BlockModelBuilder.(Callback<Block>) -> Unit){
 	multi(block, parent, Array(1 + suffixes.last - suffixes.first){ "_${suffixes.first + it}" }, callback)
-}
-
-fun BlockModelProvider.stairs(stairBlock: BlockStairs, fullBlock: Block, side: ResourceLocation? = null) = safeUnit {
-	resource("block/" + fullBlock.path, fullBlock.isVanilla).let {
-		stairs(stairBlock.path, side ?: it, it, it)
-		stairsInner(stairBlock.path + "_inner", side ?: it, it, it)
-		stairsOuter(stairBlock.path + "_outer", side ?: it, it, it)
-	}
-}
-
-fun BlockModelProvider.slab(slabBlock: BlockSlab, fullBlock: Block, side: ResourceLocation? = null) = safeUnit {
-	resource("block/" + fullBlock.path, fullBlock.isVanilla).let {
-		slab(slabBlock.path, side ?: it, it, it)
-		slabTop(slabBlock.path + "_top", side ?: it, it, it)
-	}
 }
 
 fun BlockModelProvider.wall(block: BlockWall, texture: ResourceLocation) = safeUnit {

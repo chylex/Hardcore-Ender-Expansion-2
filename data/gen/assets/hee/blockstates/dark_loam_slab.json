@@ -1,0 +1,13 @@
+{
+  "variants": {
+    "type=top": {
+      "model": "hee:block/dark_loam_slab_top"
+    },
+    "type=bottom": {
+      "model": "hee:block/dark_loam_slab"
+    },
+    "type=double": {
+      "model": "hee:block/dark_loam"
+    }
+  }
+}

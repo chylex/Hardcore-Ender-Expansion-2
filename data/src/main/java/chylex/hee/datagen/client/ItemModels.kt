@@ -52,10 +52,12 @@ class ItemModels(generator: DataGenerator, modid: String, existingFileHelper: Ex
 		// Items: Nature & Food
 		
 		simple(ModItems.COMPOST)
+		
 		simple(ModItems.VOID_SALAD).then {
 			override(Resource.Custom("item/void_void_salad")){ predicate(Resource.Custom("void_salad_type"), 1F) }
 			override(Resource.Custom("item/mega_void_salad")){ predicate(Resource.Custom("void_salad_type"), 2F) }
 		}
+		
 		simple("void_void_salad")
 		simple("mega_void_salad")
 		
@@ -75,16 +77,19 @@ class ItemModels(generator: DataGenerator, modid: String, existingFileHelper: Ex
 		// Items: Tools
 		
 		simple(ModItems.VOID_MINER)
+		
 		simple(ModItems.VOID_BUCKET).then {
 			override(ModItems.VOID_BUCKET.r("_fluid_level_1")){ predicate(Resource.Custom("void_bucket_cooldown"), 0.01F) }
 			override(ModItems.VOID_BUCKET.r("_fluid_level_2")){ predicate(Resource.Custom("void_bucket_cooldown"), 0.3F) }
 			override(ModItems.VOID_BUCKET.r("_fluid_level_3")){ predicate(Resource.Custom("void_bucket_cooldown"), 0.5F) }
 			override(ModItems.VOID_BUCKET.r("_fluid_level_4")){ predicate(Resource.Custom("void_bucket_cooldown"), 0.7F) }
 		}
+		
 		multi(ModItems.VOID_BUCKET, Resource.Vanilla("item/generated"), Array(4){ "_fluid_level_${it + 1}" }){
 			texture("layer0", Resource.Custom("item/void_bucket"))
 			texture("layer1", Resource.Custom("item/$it"))
 		}
+		
 		simple(ModItems.SCORCHING_PICKAXE)
 		simple(ModItems.SCORCHING_SHOVEL)
 		simple(ModItems.SCORCHING_AXE)
@@ -102,13 +107,16 @@ class ItemModels(generator: DataGenerator, modid: String, existingFileHelper: Ex
 			override(ModItems.ENERGY_ORACLE.r("_active_mild")){ predicate(Resource.Custom("activity_intensity"), 0.5F) }
 			override(ModItems.ENERGY_ORACLE.r("_active_full")){ predicate(Resource.Custom("activity_intensity"), 1F) }
 		}
+		
 		multi(ModItems.ENERGY_ORACLE, Resource.Vanilla("item/generated"), arrayOf("_active_mild", "_active_full")){
 			texture("layer0", Resource.Custom("item/energy_oracle"))
 			texture("layer1", Resource.Custom("item/energy_oracle_indicator" + it.suffix))
 		}
+		
 		simple(ModItems.ENERGY_RECEPTACLE).then {
 			override(ModItems.ENERGY_RECEPTACLE.r("_with_cluster")){ predicate(Resource.Custom("has_cluster"), 1F) }
 		}
+		
 		layers(ModItems.ENERGY_RECEPTACLE.suffixed("_with_cluster"), arrayOf("energy_receptacle", "energy_receptacle_cluster"))
 		
 		// Items: Gems & Teleportation
@@ -116,10 +124,12 @@ class ItemModels(generator: DataGenerator, modid: String, existingFileHelper: Ex
 		simple(ModItems.INFUSED_ENDER_PEARL, Items.ENDER_PEARL.r)
 		simple(ModItems.SPATIAL_DASH_GEM)
 		simple(ModItems.LINKING_GEM)
+		
 		layers(ModItems.PORTAL_TOKEN, arrayOf("portal_token_outline", "portal_token_color_top", "portal_token_color_bottom")).then {
 			override(ModItems.PORTAL_TOKEN.r("_rare")){ predicate(Resource.Custom("token_type"), 1F) }
 			override(ModItems.PORTAL_TOKEN.r("_solitary")){ predicate(Resource.Custom("token_type"), 2F) }
 		}
+		
 		layers(ModItems.PORTAL_TOKEN.suffixed("_rare"), arrayOf("portal_token_outline", "portal_token_color_top", "portal_token_color_bottom", "portal_token_border_rare"))
 		layers(ModItems.PORTAL_TOKEN.suffixed("_solitary"), arrayOf("portal_token_outline", "portal_token_color_top", "portal_token_color_bottom", "portal_token_border_solitary"))
 		simple(ModItems.BLANK_TOKEN)
@@ -127,9 +137,11 @@ class ItemModels(generator: DataGenerator, modid: String, existingFileHelper: Ex
 		// Items: Trinkets
 		
 		simple(ModItems.TRINKET_POUCH)
+		
 		simple(ModItems.TOTEM_OF_UNDYING).then {
 			override(ModItems.TOTEM_OF_UNDYING.r("_shaking")){ predicate(Resource.Custom("is_shaking"), 1F) }
 		}
+		
 		simple(ModItems.TOTEM_OF_UNDYING.suffixed("_shaking"))
 		simple(ModItems.AMULET_OF_RECOVERY)
 		simple(ModItems.AMULET_OF_RECOVERY.suffixed("_held"))

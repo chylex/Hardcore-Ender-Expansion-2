@@ -1,7 +1,0 @@
-{
-  "variants": {
-    "type=bottom": { "model": "hee:block/whitebark_slab" },
-    "type=top": { "model": "hee:block/whitebark_slab_top" },
-    "type=double": { "model": "hee:block/whitebark_planks" }
-  }
-}

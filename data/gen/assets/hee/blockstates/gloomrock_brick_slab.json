@@ -1,0 +1,13 @@
+{
+  "variants": {
+    "type=top": {
+      "model": "hee:block/gloomrock_brick_slab_top"
+    },
+    "type=bottom": {
+      "model": "hee:block/gloomrock_brick_slab"
+    },
+    "type=double": {
+      "model": "hee:block/gloomrock_bricks"
+    }
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "variants": {
+    "axis=x": {
+      "model": "hee:block/miners_burial_block_pillar",
+      "x": 90,
+      "y": 90
+    },
+    "axis=y": {
+      "model": "hee:block/miners_burial_block_pillar"
+    },
+    "axis=z": {
+      "model": "hee:block/miners_burial_block_pillar",
+      "x": 90
+    }
+  }
+}

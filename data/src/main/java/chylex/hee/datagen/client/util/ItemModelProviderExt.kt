@@ -69,7 +69,7 @@ fun ItemModelProvider.multi(item: IItemProvider, parent: ResourceLocation, suffi
 }
 
 fun ItemModelProvider.block(block: Block, parent: Block = block) = safe {
-	this.getBuilder(block.path).parent(UncheckedModelFile(Resource.Custom("block/" + parent.path)))
+	this.getBuilder(block.path).parent(UncheckedModelFile(parent.r))
 }
 
 fun ItemModelBuilder.override(model: ResourceLocation, callback: OverrideBuilder.() -> OverrideBuilder): ItemModelBuilder?{

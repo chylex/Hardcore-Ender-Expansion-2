@@ -2,6 +2,7 @@ package chylex.hee.datagen
 import chylex.hee.HEE
 import chylex.hee.system.facades.Resource
 import net.minecraft.block.Block
+import net.minecraft.data.IDataProvider
 import net.minecraft.item.Item
 import net.minecraft.util.IItemProvider
 import net.minecraft.util.ResourceLocation
@@ -32,6 +33,14 @@ fun IItemProvider.r(suffix: String): ResourceLocation{
 
 fun resource(path: String, vanilla: Boolean): ResourceLocation{
 	return if (vanilla) Resource.Vanilla(path) else Resource.Custom(path)
+}
+
+inline fun <T : IDataProvider> T?.safeUnit(callback: T.() -> Unit){
+	try{
+		this?.callback()
+	}catch(e: Exception){
+		HEE.log.error("[DataGen] " + e.message)
+	}
 }
 
 inline fun <T : ModelBuilder<T>, U : ModelProvider<T>> U?.safeUnit(callback: U.() -> Unit){

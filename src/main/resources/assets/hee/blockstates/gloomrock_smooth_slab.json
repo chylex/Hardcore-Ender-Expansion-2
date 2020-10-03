@@ -1,7 +1,0 @@
-{
-  "variants": {
-    "type=bottom": { "model": "hee:block/gloomrock_smooth_slab" },
-    "type=top": { "model": "hee:block/gloomrock_smooth_slab_top" },
-    "type=double": { "model": "hee:block/gloomrock_smooth" }
-  }
-}

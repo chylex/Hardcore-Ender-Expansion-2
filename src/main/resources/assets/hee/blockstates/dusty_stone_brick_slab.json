@@ -1,7 +1,0 @@
-{
-  "variants": {
-    "type=bottom": { "model": "hee:block/dusty_stone_brick_slab" },
-    "type=top": { "model": "hee:block/dusty_stone_brick_slab_top" },
-    "type=double": { "model": "hee:block/dusty_stone_bricks" }
-  }
-}
