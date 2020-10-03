@@ -2,7 +2,7 @@ ext {
 	mc_version = "1.15.2"
 	forge_version = "31.2.27"
 	mapping_version = "20200626-1.15.1"
-	kotlin_mod_version = "1.6.0"
+	kotlin_mod_version = "1.6.1"
 }
 
 buildscript {

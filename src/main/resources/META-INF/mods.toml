@@ -15,12 +15,12 @@ description = ""
     modId = "minecraft"
     mandatory = true
     versionRange = "[1.15.2]"
-    ordering = "NONE"
+    ordering = "AFTER"
     side = "BOTH"
 
 [[dependencies.hee]]
     modId = "forge"
     mandatory = true
     versionRange = "[31.2.27,)"
-    ordering = "NONE"
+    ordering = "AFTER"
     side = "BOTH"
