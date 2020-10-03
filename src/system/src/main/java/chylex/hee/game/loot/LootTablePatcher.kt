@@ -14,16 +14,12 @@ import net.minecraft.client.resources.ReloadListener
 import net.minecraft.profiler.EmptyProfiler
 import net.minecraft.profiler.IProfiler
 import net.minecraft.resources.IResourceManager
-import net.minecraft.util.ResourceLocation
 import net.minecraft.world.storage.loot.ConstantRange
 import net.minecraft.world.storage.loot.IRandomRange
-import net.minecraft.world.storage.loot.ItemLootEntry
 import net.minecraft.world.storage.loot.LootPool
 import net.minecraft.world.storage.loot.LootTable
 import net.minecraft.world.storage.loot.RandomValueRange
-import net.minecraft.world.storage.loot.conditions.SurvivesExplosion
 import net.minecraftforge.fml.event.server.FMLServerStartingEvent
-import net.minecraftforge.registries.ForgeRegistries
 import java.util.Random
 
 @SubscribeAllEvents(modid = HEE.ID)
@@ -45,7 +41,7 @@ object LootTablePatcher{
 			
 			for(key in tables.keys){
 				if (Resource.isCustom(key)){
-					tables[key] = processCustomTable(key, tables.getValue(key))
+					tables[key] = processCustomTable(tables.getValue(key))
 				}
 			}
 			
@@ -69,41 +65,16 @@ object LootTablePatcher{
 		this.apply(work).freeze()
 	}
 	
-	private fun processCustomTable(name: ResourceLocation, originalTable: LootTable): LootTable{
+	private fun processCustomTable(originalTable: LootTable): LootTable{
 		val table = reconfigureLootTable(originalTable)
 		
-		for((index, pool) in table.poolsExt.withIndex()){
+		for(pool in table.poolsExt){
 			if (!pool.name.contains('#')){
 				continue
 			}
 			
 			for((key, value) in parseParameters(pool)){
 				when(key){
-					"auto" -> {
-						val definition = value.split(';')
-						
-						val type = definition[0]
-						val parameters = definition.drop(1).toMutableSet()
-						
-						if (type == "block"){
-							val block = ForgeRegistries.BLOCKS.getValue(Resource.Custom(name.path.removePrefix("blocks/")))!!
-							
-							table.poolsExt[index] = with(LootPool.builder()){
-								rolls(ConstantRange(1))
-								addEntry(ItemLootEntry.builder(block))
-								acceptCondition(SurvivesExplosion.builder())
-								build()
-							}
-						}
-						else{
-							throw UnsupportedOperationException("$key=$type")
-						}
-						
-						if (parameters.isNotEmpty()){
-							throw UnsupportedOperationException("unused auto loot table parameters: ${parameters.joinToString(",")} where full definition is $value")
-						}
-					}
-					
 					"rolls_type" -> {
 						val parameters = value.split(';').iterator()
 						val range = determineRange(pool.rolls)
