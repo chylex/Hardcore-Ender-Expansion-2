@@ -1,9 +1,11 @@
 package chylex.hee.datagen.server.util
+import chylex.hee.system.migration.BlockFlowerPot
 import com.mojang.datafixers.util.Pair
 import net.minecraft.block.Block
 import net.minecraft.data.DataGenerator
 import net.minecraft.data.LootTableProvider
 import net.minecraft.data.loot.BlockLootTables
+import net.minecraft.util.IItemProvider
 import net.minecraft.util.ResourceLocation
 import net.minecraft.world.storage.loot.LootParameterSet
 import net.minecraft.world.storage.loot.LootParameterSets
@@ -32,10 +34,6 @@ abstract class BlockLootTableProvider(generator: DataGenerator) : LootTableProvi
 		
 		override fun addTables(){}
 		
-		final override fun registerLootTable(block: Block, table: Builder){
-			check(lootTables.put(block.lootTable, table) == null)
-		}
-		
 		final override fun accept(consumer: BiConsumer<ResourceLocation?, Builder?>){
 			addTables()
 			
@@ -44,6 +42,30 @@ abstract class BlockLootTableProvider(generator: DataGenerator) : LootTableProvi
 			}
 			
 			lootTables.clear()
+		}
+		
+		final override fun registerLootTable(block: Block, table: Builder){
+			check(lootTables.put(block.lootTable, table) == null)
+		}
+		
+		protected fun dropSelf(block: Block){
+			registerDropSelfLootTable(block)
+		}
+		
+		protected fun dropOther(block: Block, drop: IItemProvider){
+			registerDropping(block, drop)
+		}
+		
+		protected fun dropFunc(block: Block, func: (Block) -> Builder){
+			registerLootTable(block, func)
+		}
+		
+		protected fun dropFlowerPot(block: BlockFlowerPot){
+			registerFlowerPot(block)
+		}
+		
+		protected companion object{
+			val withName = BlockLootTables::droppingWithName
 		}
 	}
 }
