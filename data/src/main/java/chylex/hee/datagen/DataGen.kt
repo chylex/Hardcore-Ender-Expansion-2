@@ -5,6 +5,8 @@ import chylex.hee.datagen.client.BlockModels
 import chylex.hee.datagen.client.BlockStates
 import chylex.hee.datagen.client.ItemModels
 import chylex.hee.datagen.server.BlockLootTables
+import chylex.hee.datagen.server.BlockTags
+import chylex.hee.datagen.server.ItemTags
 import chylex.hee.system.forge.SubscribeAllEvents
 import chylex.hee.system.forge.SubscribeEvent
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber.Bus.MOD
@@ -27,6 +29,8 @@ object DataGen{
 			
 			if (e.includeServer()){
 				addProvider(BlockLootTables(this))
+				addProvider(BlockTags(this))
+				addProvider(ItemTags(this))
 			}
 		}
 	}

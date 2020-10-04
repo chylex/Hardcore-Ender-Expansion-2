@@ -33,10 +33,10 @@ infix fun <T : IForgeRegistryEntry<*>> T.named(registryName: String) = apply {
 	this.registryName = Resource.Custom(registryName)
 }
 
+inline fun <reified T : IForgeRegistryEntry<T>> getRegistryEntries(obj: Any): List<T>{
+	return obj.javaClass.fields.filter { T::class.java.isAssignableFrom(it.type) }.map { it.get(null) as T }
+}
+
 inline fun <reified T : IForgeRegistryEntry<T>> IForgeRegistry<T>.registerAllFields(obj: Any){
-	for(field in obj.javaClass.fields){
-		if (field.type === T::class.java){
-			register(field.get(null) as T)
-		}
-	}
+	getRegistryEntries<T>(obj).forEach(this::register)
 }

@@ -1,0 +1,10 @@
+{
+  "replace": false,
+  "values": [
+    "hee:gloomrock_brick_stairs",
+    "hee:gloomrock_smooth_stairs",
+    "hee:dusty_stone_brick_stairs",
+    "hee:obsidian_stairs",
+    "hee:whitebark_stairs"
+  ]
+}

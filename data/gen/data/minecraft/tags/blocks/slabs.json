@@ -1,0 +1,10 @@
+{
+  "replace": false,
+  "values": [
+    "hee:gloomrock_brick_slab",
+    "hee:gloomrock_smooth_slab",
+    "hee:dusty_stone_brick_slab",
+    "hee:dark_loam_slab",
+    "hee:whitebark_slab"
+  ]
+}
