@@ -1,5 +1,6 @@
 package chylex.hee.game.block
 import chylex.hee.HEE
+import chylex.hee.client.render.block.IBlockLayerCutout
 import chylex.hee.commands.client.CommandClientScaffolding
 import chylex.hee.game.block.properties.BlockBuilder
 import chylex.hee.game.world.Pos
@@ -36,7 +37,7 @@ import net.minecraft.world.IBlockReader
 import net.minecraft.world.World
 import java.nio.file.Files
 
-class BlockScaffolding(builder: BlockBuilder) : BlockSimple(builder){
+class BlockScaffolding(builder: BlockBuilder) : BlockSimple(builder), IBlockLayerCutout{
 	var enableShape = true
 	
 	override fun onBlockActivated(state: BlockState, world: World, pos: BlockPos, player: EntityPlayer, hand: Hand, hit: BlockRayTraceResult): ActionResultType{

@@ -1,4 +1,5 @@
 package chylex.hee.game.block
+import chylex.hee.client.render.block.IBlockLayerCutout
 import chylex.hee.game.block.properties.BlockBuilder
 import chylex.hee.game.world.breakBlock
 import chylex.hee.system.forge.SubscribeEvent
@@ -24,7 +25,7 @@ import net.minecraftforge.common.MinecraftForge
 import net.minecraftforge.event.entity.player.PlayerEvent.BreakSpeed
 import java.util.Random
 
-class BlockAncientCobweb(builder: BlockBuilder) : BlockWeb(builder.p){
+class BlockAncientCobweb(builder: BlockBuilder) : BlockWeb(builder.p), IBlockLayerCutout{
 	init{
 		MinecraftForge.EVENT_BUS.register(this)
 	}

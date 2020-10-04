@@ -1,5 +1,6 @@
 package chylex.hee.game.block
 import chylex.hee.client.MC
+import chylex.hee.client.render.block.IBlockLayerCutout
 import chylex.hee.game.block.properties.BlockBuilder
 import chylex.hee.game.world.territory.TerritoryInstance
 import chylex.hee.system.color.IntColor
@@ -18,7 +19,7 @@ import net.minecraft.world.biome.Biomes
 import net.minecraft.world.server.ServerWorld
 import java.util.Random
 
-class BlockDryVines(builder: BlockBuilder) : BlockVine(builder.p){
+class BlockDryVines(builder: BlockBuilder) : BlockVine(builder.p), IBlockLayerCutout{
 	
 	// Custom behavior
 	

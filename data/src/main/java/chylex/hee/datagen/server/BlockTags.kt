@@ -3,6 +3,8 @@ import chylex.hee.datagen.server.util.add
 import chylex.hee.game.block.BlockWhitebarkSapling
 import chylex.hee.init.ModBlocks
 import chylex.hee.system.forge.getRegistryEntries
+import chylex.hee.system.migration.BlockFlowerPot
+import chylex.hee.system.migration.BlockLeaves
 import chylex.hee.system.migration.BlockSlab
 import chylex.hee.system.migration.BlockStairs
 import chylex.hee.system.migration.BlockWall
@@ -17,9 +19,9 @@ class BlockTags(generator: DataGenerator) : BlockTagsProvider(generator){
 	
 	override fun registerTags(){
 		getBuilder(BlockTags.BAMBOO_PLANTABLE_ON).add(ModBlocks.HUMUS)
-		getBuilder(BlockTags.FLOWER_POTS).add(*ModBlocks.ALL_POTS)
+		getBuilder(BlockTags.FLOWER_POTS).add(blocks.filterIsInstance<BlockFlowerPot>())
 		getBuilder(BlockTags.IMPERMEABLE).add(ModBlocks.INFUSED_GLASS)
-		getBuilder(BlockTags.LEAVES).add(*ModBlocks.ALL_WHITEBARK_LEAVES)
+		getBuilder(BlockTags.LEAVES).add(blocks.filterIsInstance<BlockLeaves>())
 		getBuilder(BlockTags.LOGS).add(ModBlocks.WHITEBARK_LOG, ModBlocks.WHITEBARK)
 		getBuilder(BlockTags.PORTALS).add(ModBlocks.END_PORTAL_INNER, ModBlocks.VOID_PORTAL_INNER)
 		getBuilder(BlockTags.PLANKS).add(ModBlocks.WHITEBARK_PLANKS)

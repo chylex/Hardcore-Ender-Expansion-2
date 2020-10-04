@@ -1,4 +1,5 @@
 package chylex.hee.game.block
+import chylex.hee.client.render.block.IBlockLayerCutout
 import chylex.hee.game.block.IBlockDeathFlowerDecaying.Companion.LEVEL
 import chylex.hee.game.block.properties.BlockBuilder
 import chylex.hee.game.item.ItemDeathFlower
@@ -30,7 +31,7 @@ import java.util.function.Supplier
 class BlockFlowerPotDeathFlowerDecaying(
 	builder: BlockBuilder,
 	flower: Block
-) : BlockFlowerPot(Supplier { Blocks.FLOWER_POT as BlockFlowerPot /* prevents adding to flower->pot map */ }, Supplier { flower }, builder.p), IBlockDeathFlowerDecaying{
+) : BlockFlowerPot(Supplier { Blocks.FLOWER_POT as BlockFlowerPot /* prevents adding to flower->pot map */ }, Supplier { flower }, builder.p), IBlockDeathFlowerDecaying, IBlockLayerCutout{
 	override fun fillStateContainer(container: Builder<Block, BlockState>){
 		container.add(LEVEL)
 	}

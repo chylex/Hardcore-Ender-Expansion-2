@@ -2,6 +2,7 @@ package chylex.hee.system.forge
 import chylex.hee.HEE
 import chylex.hee.system.facades.Resource
 import net.minecraft.util.ResourceLocation
+import net.minecraftforge.event.RegistryEvent
 import net.minecraftforge.fml.ModList
 import net.minecraftforge.fml.ModLoadingContext
 import net.minecraftforge.registries.IForgeRegistry
@@ -34,9 +35,12 @@ infix fun <T : IForgeRegistryEntry<*>> T.named(registryName: String) = apply {
 }
 
 inline fun <reified T : IForgeRegistryEntry<T>> getRegistryEntries(obj: Any): List<T>{
-	return obj.javaClass.fields.filter { T::class.java.isAssignableFrom(it.type) }.map { it.get(null) as T }
+	return obj.javaClass
+		.fields
+		.filter { T::class.java.isAssignableFrom(it.type) }.map { it.get(null) as T }
+		.ifEmpty { throw IllegalStateException("[RegistryExt] no registry entries found in $obj") }
 }
 
-inline fun <reified T : IForgeRegistryEntry<T>> IForgeRegistry<T>.registerAllFields(obj: Any){
-	getRegistryEntries<T>(obj).forEach(this::register)
+inline fun <reified T : IForgeRegistryEntry<T>> RegistryEvent.Register<T>.registerAllFields(obj: Any){
+	getRegistryEntries<T>(obj).forEach(this.registry::register)
 }

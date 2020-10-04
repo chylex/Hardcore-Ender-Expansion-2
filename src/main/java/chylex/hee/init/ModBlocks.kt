@@ -347,76 +347,20 @@ object ModBlocks{
 	@JvmField val TABLE_BASE_TIER_1         = BlockTableBase(buildTable, tier = 1, firstTier = 1) named "table_base_tier_1"
 	@JvmField val TABLE_BASE_TIER_2         = BlockTableBase(buildTable, tier = 2, firstTier = 1) named "table_base_tier_2"
 	@JvmField val TABLE_BASE_TIER_3         = BlockTableBase(buildTable, tier = 3, firstTier = 1) named "table_base_tier_3"
-	@JvmField val ACCUMULATION_TABLE_TIER_1 = BlockTableTile(buildTable, "accumulation_table", TileEntityAccumulationTable::class.java, tier = 1, firstTier = 1) named "accumulation_table_tier_1"
-	@JvmField val ACCUMULATION_TABLE_TIER_2 = BlockTableTile(buildTable, "accumulation_table", TileEntityAccumulationTable::class.java, tier = 2, firstTier = 1) named "accumulation_table_tier_2"
-	@JvmField val ACCUMULATION_TABLE_TIER_3 = BlockTableTile(buildTable, "accumulation_table", TileEntityAccumulationTable::class.java, tier = 3, firstTier = 1) named "accumulation_table_tier_3"
-	@JvmField val EXPERIENCE_TABLE_TIER_1   = BlockTableTile(buildTable, "experience_table", TileEntityExperienceTable::class.java, tier = 1, firstTier = 1) named "experience_table_tier_1"
-	@JvmField val EXPERIENCE_TABLE_TIER_2   = BlockTableTile(buildTable, "experience_table", TileEntityExperienceTable::class.java, tier = 2, firstTier = 1) named "experience_table_tier_2"
-	@JvmField val EXPERIENCE_TABLE_TIER_3   = BlockTableTile(buildTable, "experience_table", TileEntityExperienceTable::class.java, tier = 3, firstTier = 1) named "experience_table_tier_3"
-	@JvmField val INFUSION_TABLE_TIER_1     = BlockTableTile(buildTable, "infusion_table", TileEntityInfusionTable::class.java, tier = 1, firstTier = 1) named "infusion_table_tier_1"
-	@JvmField val INFUSION_TABLE_TIER_2     = BlockTableTile(buildTable, "infusion_table", TileEntityInfusionTable::class.java, tier = 2, firstTier = 1) named "infusion_table_tier_2"
-	@JvmField val INFUSION_TABLE_TIER_3     = BlockTableTile(buildTable, "infusion_table", TileEntityInfusionTable::class.java, tier = 3, firstTier = 1) named "infusion_table_tier_3"
+	@JvmField val ACCUMULATION_TABLE_TIER_1 = BlockTableTile<TileEntityAccumulationTable>(buildTable, "accumulation_table", tier = 1, firstTier = 1) named "accumulation_table_tier_1"
+	@JvmField val ACCUMULATION_TABLE_TIER_2 = BlockTableTile<TileEntityAccumulationTable>(buildTable, "accumulation_table", tier = 2, firstTier = 1) named "accumulation_table_tier_2"
+	@JvmField val ACCUMULATION_TABLE_TIER_3 = BlockTableTile<TileEntityAccumulationTable>(buildTable, "accumulation_table", tier = 3, firstTier = 1) named "accumulation_table_tier_3"
+	@JvmField val EXPERIENCE_TABLE_TIER_1   = BlockTableTile<TileEntityExperienceTable>(buildTable, "experience_table", tier = 1, firstTier = 1) named "experience_table_tier_1"
+	@JvmField val EXPERIENCE_TABLE_TIER_2   = BlockTableTile<TileEntityExperienceTable>(buildTable, "experience_table", tier = 2, firstTier = 1) named "experience_table_tier_2"
+	@JvmField val EXPERIENCE_TABLE_TIER_3   = BlockTableTile<TileEntityExperienceTable>(buildTable, "experience_table", tier = 3, firstTier = 1) named "experience_table_tier_3"
+	@JvmField val INFUSION_TABLE_TIER_1     = BlockTableTile<TileEntityInfusionTable>(buildTable, "infusion_table", tier = 1, firstTier = 1) named "infusion_table_tier_1"
+	@JvmField val INFUSION_TABLE_TIER_2     = BlockTableTile<TileEntityInfusionTable>(buildTable, "infusion_table", tier = 2, firstTier = 1) named "infusion_table_tier_2"
+	@JvmField val INFUSION_TABLE_TIER_3     = BlockTableTile<TileEntityInfusionTable>(buildTable, "infusion_table", tier = 3, firstTier = 1) named "infusion_table_tier_3"
 	
 	// Blocks: Utilities
 	
 	@JvmField val ETERNAL_FIRE = BlockEternalFire(buildEternalFire) named "eternal_fire"
 	@JvmField val SCAFFOLDING  = BlockScaffolding(buildScaffolding) named "scaffolding"
-	
-	// Sets
-	
-	val ALL_PUZZLE_LOGIC = arrayOf(
-		PUZZLE_PLAIN,
-		PUZZLE_BURST_3,
-		PUZZLE_BURST_5,
-		PUZZLE_REDIRECT_1,
-		PUZZLE_REDIRECT_2,
-		PUZZLE_REDIRECT_4,
-		PUZZLE_TELEPORT
-	)
-	
-	val ALL_WHITEBARK_LEAVES = arrayOf(
-		WHITEBARK_LEAVES_AUTUMN_RED,
-		WHITEBARK_LEAVES_AUTUMN_BROWN,
-		WHITEBARK_LEAVES_AUTUMN_ORANGE,
-		WHITEBARK_LEAVES_AUTUMN_YELLOWGREEN
-	)
-	
-	val ALL_PLANTS = arrayOf(
-		WHITEBARK_SAPLING_AUTUMN_RED,
-		WHITEBARK_SAPLING_AUTUMN_BROWN,
-		WHITEBARK_SAPLING_AUTUMN_ORANGE,
-		WHITEBARK_SAPLING_AUTUMN_YELLOWGREEN,
-		
-		DEATH_FLOWER_DECAYING,
-		DEATH_FLOWER_HEALED,
-		DEATH_FLOWER_WITHERED
-	)
-	
-	val ALL_POTS = arrayOf(
-		POTTED_WHITEBARK_SAPLING_AUTUMN_RED,
-		POTTED_WHITEBARK_SAPLING_AUTUMN_BROWN,
-		POTTED_WHITEBARK_SAPLING_AUTUMN_ORANGE,
-		POTTED_WHITEBARK_SAPLING_AUTUMN_YELLOWGREEN,
-		
-		POTTED_DEATH_FLOWER_DECAYING,
-		POTTED_DEATH_FLOWER_HEALED,
-		POTTED_DEATH_FLOWER_WITHERED
-	)
-	
-	val ALL_TABLES = arrayOf(
-		TABLE_BASE_TIER_1,
-		TABLE_BASE_TIER_2,
-		TABLE_BASE_TIER_3,
-		ACCUMULATION_TABLE_TIER_1,
-		ACCUMULATION_TABLE_TIER_2,
-		ACCUMULATION_TABLE_TIER_3,
-		EXPERIENCE_TABLE_TIER_1,
-		EXPERIENCE_TABLE_TIER_2,
-		EXPERIENCE_TABLE_TIER_3,
-		INFUSION_TABLE_TIER_1,
-		INFUSION_TABLE_TIER_2,
-		INFUSION_TABLE_TIER_3
-	)
 	
 	// Registry
 	

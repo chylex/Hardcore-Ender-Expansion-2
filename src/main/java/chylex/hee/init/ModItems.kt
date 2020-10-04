@@ -48,6 +48,7 @@ import chylex.hee.system.color.IntColor.Companion.RGB
 import chylex.hee.system.facades.Resource
 import chylex.hee.system.forge.SubscribeAllEvents
 import chylex.hee.system.forge.SubscribeEvent
+import chylex.hee.system.forge.registerAllFields
 import chylex.hee.system.forge.useVanillaName
 import chylex.hee.system.migration.BlockDispenser
 import chylex.hee.system.migration.ItemSpawnEgg
@@ -167,83 +168,7 @@ object ModItems{
 	
 	@SubscribeEvent
 	fun onRegister(e: RegistryEvent.Register<Item>){
-		with(e.registry){
-			register(ETHEREUM)
-			register(ANCIENT_DUST)
-			register(END_POWDER)
-			register(STARDUST)
-			register(ENDIUM_INGOT)
-			register(ENDIUM_NUGGET)
-			register(OBSIDIAN_FRAGMENT)
-			register(IGNEOUS_ROCK)
-			register(PUZZLE_MEDALLION)
-			register(INFERNIUM)
-			register(INFERNIUM_INGOT)
-			register(AURICION)
-			register(DRAGON_SCALE)
-			register(INSTABILITY_ORB)
-			register(ECTOPLASM)
-			register(ENCHANTED_CLAW)
-			
-			register(ALTERATION_NEXUS)
-			register(VOID_ESSENCE)
-			register(OBSIDIAN_ROD)
-			register(PURITY_EXTRACT)
-			register(STATIC_CORE)
-			register(TICKING_CORE)
-			register(DIRTY_INFERNIUM_INGOT)
-			register(AMELIOR)
-			register(REVITALIZATION_SUBSTANCE)
-			register(BINDING_ESSENCE)
-			
-			register(COMPOST)
-			register(VOID_SALAD)
-			
-			register(ACCUMULATION_TABLE_CORE)
-			register(EXPERIENCE_TABLE_CORE)
-			register(INFUSION_TABLE_CORE)
-			
-			register(TABLE_LINK)
-			register(KNOWLEDGE_NOTE)
-			register(ENDERMAN_HEAD)
-			register(EXPERIENCE_BOTTLE)
-			
-			register(VOID_MINER)
-			register(VOID_BUCKET)
-			register(SCORCHING_PICKAXE)
-			register(SCORCHING_SHOVEL)
-			register(SCORCHING_AXE)
-			register(SCORCHING_SWORD)
-			register(FLINT_AND_INFERNIUM)
-			
-			register(ENDER_GOO_BUCKET)
-			register(PURIFIED_ENDER_GOO_BUCKET)
-			
-			register(ENERGY_ORACLE)
-			register(ENERGY_RECEPTACLE)
-			
-			register(INFUSED_ENDER_PEARL)
-			register(SPATIAL_DASH_GEM)
-			register(LINKING_GEM)
-			register(PORTAL_TOKEN)
-			register(BLANK_TOKEN)
-			
-			register(TRINKET_POUCH)
-			register(TOTEM_OF_UNDYING)
-			register(AMULET_OF_RECOVERY)
-			register(RING_OF_HUNGER)
-			register(RING_OF_PRESERVATION)
-			register(TALISMAN_OF_GRIEFING)
-			register(SCALE_OF_FREEFALL)
-			
-			register(SPAWN_ENDER_EYE)
-			register(SPAWN_ANGRY_ENDERMAN)
-			register(SPAWN_BLOBBY)
-			register(SPAWN_ENDERMITE_INSTABILITY)
-			register(SPAWN_SPIDERLING)
-			register(SPAWN_UNDREAD)
-			register(SPAWN_VAMPIRE_BAT)
-		}
+		e.registerAllFields(this)
 		
 		// vanilla modifications
 		

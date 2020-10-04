@@ -1,4 +1,5 @@
 package chylex.hee.game.block
+import chylex.hee.client.render.block.IBlockLayerTranslucent
 import chylex.hee.game.block.properties.BlockBuilder
 import chylex.hee.game.block.properties.Property
 import chylex.hee.game.world.getBlock
@@ -18,7 +19,7 @@ import net.minecraft.util.Direction
 import net.minecraft.util.math.BlockPos
 import net.minecraft.world.IWorld
 
-class BlockInfusedGlass(builder: BlockBuilder) : BlockAbstractGlass(builder.p){
+class BlockInfusedGlass(builder: BlockBuilder) : BlockAbstractGlass(builder.p), IBlockLayerTranslucent{
 	companion object{
 		val CONNECT_DOWN = Property.bool("connect_d")
 		val CONNECT_UP = Property.bool("connect_u")

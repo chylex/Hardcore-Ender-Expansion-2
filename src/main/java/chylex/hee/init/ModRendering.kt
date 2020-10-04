@@ -7,6 +7,9 @@ import chylex.hee.client.gui.GuiLootChest
 import chylex.hee.client.gui.GuiPortalTokenStorage
 import chylex.hee.client.gui.GuiShulkerBox
 import chylex.hee.client.gui.GuiTrinketPouch
+import chylex.hee.client.render.block.IBlockLayerCutout
+import chylex.hee.client.render.block.IBlockLayerCutoutMipped
+import chylex.hee.client.render.block.IBlockLayerTranslucent
 import chylex.hee.client.render.block.RenderTileDarkChest
 import chylex.hee.client.render.block.RenderTileEndPortal
 import chylex.hee.client.render.block.RenderTileExperienceGate
@@ -14,6 +17,7 @@ import chylex.hee.client.render.block.RenderTileIgneousPlate
 import chylex.hee.client.render.block.RenderTileJarODust
 import chylex.hee.client.render.block.RenderTileLootChest
 import chylex.hee.client.render.block.RenderTileMinersBurialAltar
+import chylex.hee.client.render.block.RenderTileShulkerBox
 import chylex.hee.client.render.block.RenderTileSpawner
 import chylex.hee.client.render.block.RenderTileTable
 import chylex.hee.client.render.block.RenderTileTablePedestal
@@ -51,11 +55,6 @@ import chylex.hee.game.block.entity.base.TileEntityBaseTable
 import chylex.hee.game.block.fluid.FluidEnderGoo
 import chylex.hee.game.block.fluid.FluidEnderGooPurified
 import chylex.hee.game.block.properties.CustomSkull
-import chylex.hee.game.container.ContainerAmuletOfRecovery
-import chylex.hee.game.container.ContainerLootChest
-import chylex.hee.game.container.ContainerPortalTokenStorage
-import chylex.hee.game.container.ContainerShulkerBox
-import chylex.hee.game.container.ContainerTrinketPouch
 import chylex.hee.game.entity.effect.EntityTerritoryLightningBolt
 import chylex.hee.game.entity.item.EntityFallingBlockHeavy
 import chylex.hee.game.entity.item.EntityFallingObsidian
@@ -88,36 +87,38 @@ import chylex.hee.game.item.ItemEnergyOracle
 import chylex.hee.game.item.ItemEnergyReceptacle
 import chylex.hee.game.item.ItemPortalToken
 import chylex.hee.game.item.ItemVoidBucket
-import chylex.hee.init.factory.RendererConstructors
-import chylex.hee.init.factory.ScreenConstructors
 import chylex.hee.system.facades.Resource
 import chylex.hee.system.forge.Side
 import chylex.hee.system.forge.SubscribeAllEvents
 import chylex.hee.system.forge.SubscribeEvent
+import chylex.hee.system.forge.getRegistryEntries
+import chylex.hee.system.reflection.ObjectConstructors
 import net.minecraft.block.Block
 import net.minecraft.client.gui.ScreenManager
+import net.minecraft.client.gui.ScreenManager.IScreenFactory
 import net.minecraft.client.gui.screen.inventory.ContainerScreen
 import net.minecraft.client.renderer.RenderType
 import net.minecraft.client.renderer.RenderTypeLookup
 import net.minecraft.client.renderer.entity.EndermiteRenderer
 import net.minecraft.client.renderer.entity.EntityRenderer
+import net.minecraft.client.renderer.entity.EntityRendererManager
 import net.minecraft.client.renderer.entity.FallingBlockRenderer
 import net.minecraft.client.renderer.entity.SilverfishRenderer
 import net.minecraft.client.renderer.entity.TNTRenderer
 import net.minecraft.client.renderer.entity.model.GenericHeadModel
 import net.minecraft.client.renderer.tileentity.ItemStackTileEntityRenderer
-import net.minecraft.client.renderer.tileentity.ShulkerBoxTileEntityRenderer
 import net.minecraft.client.renderer.tileentity.SkullTileEntityRenderer
 import net.minecraft.client.renderer.tileentity.TileEntityRenderer
+import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher
 import net.minecraft.entity.Entity
 import net.minecraft.entity.EntityType
-import net.minecraft.inventory.container.BrewingStandContainer
 import net.minecraft.inventory.container.Container
 import net.minecraft.inventory.container.ContainerType
 import net.minecraft.tileentity.TileEntity
 import net.minecraft.tileentity.TileEntityType
 import net.minecraftforge.client.event.ColorHandlerEvent
 import net.minecraftforge.fml.client.registry.ClientRegistry
+import net.minecraftforge.fml.client.registry.IRenderFactory
 import net.minecraftforge.fml.client.registry.RenderingRegistry
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber.Bus.MOD
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent
@@ -130,29 +131,18 @@ object ModRendering{
 	val RENDER_ITEM_LOOT_CHEST = callable(RenderItemTileEntitySimple(TileEntityLootChest()))
 	
 	@SubscribeEvent
-	@Suppress("unused", "UNUSED_PARAMETER", "RemoveExplicitTypeArguments")
+	@Suppress("unused", "UNUSED_PARAMETER")
 	fun onRegisterRenderers(e: FMLClientSetupEvent){
 		
 		// blocks
 		
-		setLayerCutout(ModBlocks.ANCIENT_COBWEB)
-		setLayerCutout(ModBlocks.DRY_VINES)
-		setLayerCutout(ModBlocks.ENHANCED_BREWING_STAND)
-		setLayerCutout(ModBlocks.ETERNAL_FIRE)
-		setLayerCutout(ModBlocks.GLOOMTORCH)
-		setLayerCutout(ModBlocks.SCAFFOLDING)
-		setLayerCutout(ModBlocks.SPAWNER_OBSIDIAN_TOWERS)
-		setLayerCutout(ModBlocks.STARDUST_ORE)
-		setLayerCutout(ModBlocks.TABLE_PEDESTAL)
-		
-		ModBlocks.ALL_PUZZLE_LOGIC.forEach(::setLayerCutout)
-		ModBlocks.ALL_TABLES.forEach(::setLayerCutout)
-		ModBlocks.ALL_WHITEBARK_LEAVES.forEach(::setLayerCutout)
-		ModBlocks.ALL_PLANTS.forEach(::setLayerCutout)
-		ModBlocks.ALL_POTS.forEach(::setLayerCutout)
-		
-		setLayerTranslucent(ModBlocks.INFUSED_GLASS)
-		setLayerTranslucent(ModBlocks.JAR_O_DUST)
+		for(block in getRegistryEntries<Block>(ModBlocks)){
+			when(block){
+				is IBlockLayerCutout       -> RenderTypeLookup.setRenderLayer(block, RenderType.getCutout())
+				is IBlockLayerCutoutMipped -> RenderTypeLookup.setRenderLayer(block, RenderType.getCutoutMipped())
+				is IBlockLayerTranslucent  -> RenderTypeLookup.setRenderLayer(block, RenderType.getTranslucent())
+			}
+		}
 		
 		// fluids
 		
@@ -164,13 +154,15 @@ object ModRendering{
 		
 		// screens
 		
-		registerScreen<GuiAmuletOfRecovery, ContainerAmuletOfRecovery>(ModContainers.AMULET_OF_RECOVERY)
-		registerScreen<GuiBrewingStandCustom, BrewingStandContainer>(ModContainers.BREWING_STAND)
-		registerScreen<GuiLootChest, ContainerLootChest>(ModContainers.LOOT_CHEST)
-		registerScreen<GuiPortalTokenStorage, ContainerPortalTokenStorage>(ModContainers.PORTAL_TOKEN_STORAGE)
-		registerScreen<GuiShulkerBox, ContainerShulkerBox>(ModContainers.SHULKER_BOX)
-		registerScreen<GuiShulkerBox, ContainerShulkerBox>(ModContainers.SHULKER_BOX_IN_INVENTORY)
-		registerScreen<GuiTrinketPouch, ContainerTrinketPouch>(ModContainers.TRINKET_POUCH)
+		val shulkerBox = ::GuiShulkerBox
+		
+		registerScreen(ModContainers.AMULET_OF_RECOVERY, ::GuiAmuletOfRecovery)
+		registerScreen(ModContainers.BREWING_STAND, ::GuiBrewingStandCustom)
+		registerScreen(ModContainers.LOOT_CHEST, ::GuiLootChest)
+		registerScreen(ModContainers.PORTAL_TOKEN_STORAGE, ::GuiPortalTokenStorage)
+		registerScreen(ModContainers.SHULKER_BOX, shulkerBox)
+		registerScreen(ModContainers.SHULKER_BOX_IN_INVENTORY, shulkerBox)
+		registerScreen(ModContainers.TRINKET_POUCH, ::GuiTrinketPouch)
 		
 		// entities
 		
@@ -219,7 +211,7 @@ object ModRendering{
 		registerTile<TileEntityMinersBurialAltar, RenderTileMinersBurialAltar>(ModTileEntities.MINERS_BURIAL_ALTAR)
 		registerTile<TileEntityPortalInner.End, RenderTileEndPortal>(ModTileEntities.END_PORTAL_INNER)
 		registerTile<TileEntityPortalInner.Void, RenderTileVoidPortal>(ModTileEntities.VOID_PORTAL_INNER)
-		registerTile<TileEntityShulkerBoxCustom, ShulkerBoxTileEntityRenderer>(ModTileEntities.SHULKER_BOX)
+		registerTile<TileEntityShulkerBoxCustom, RenderTileShulkerBox>(ModTileEntities.SHULKER_BOX)
 		registerTile<TileEntityTablePedestal, RenderTileTablePedestal>(ModTileEntities.TABLE_PEDESTAL)
 		
 		// miscellaneous
@@ -259,27 +251,18 @@ object ModRendering{
 	
 	private fun <T : ItemStackTileEntityRenderer> callable(obj: T) = Callable<ItemStackTileEntityRenderer> { obj }
 	
-	private fun setLayerCutout(block: Block){
-		RenderTypeLookup.setRenderLayer(block, RenderType.getCutout())
+	private inline fun <reified T : ContainerScreen<U>, U : Container> registerScreen(type: ContainerType<out U>, constructor: IScreenFactory<U, T>){
+		ScreenManager.registerFactory(type, constructor)
 	}
 	
-	private fun setLayerCutoutMipped(block: Block){
-		RenderTypeLookup.setRenderLayer(block, RenderType.getCutoutMipped())
-	}
-	
-	private fun setLayerTranslucent(block: Block){
-		RenderTypeLookup.setRenderLayer(block, RenderType.getTranslucent())
-	}
-	
-	private inline fun <reified T : ContainerScreen<U>, U : Container> registerScreen(type: ContainerType<out U>){
-		ScreenManager.registerFactory(type, ScreenConstructors.get(T::class.java))
-	}
-	
+	@Suppress("UNCHECKED_CAST")
 	private inline fun <reified T : Entity, reified U : EntityRenderer<in T>> registerEntity(type: EntityType<out T>){
-		RenderingRegistry.registerEntityRenderingHandler(type, RendererConstructors.getEntity(U::class.java))
+		val handle = ObjectConstructors.generic<U, EntityRenderer<in T>, IRenderFactory<T>>("createRenderFor", EntityRendererManager::class.java)
+		RenderingRegistry.registerEntityRenderingHandler(type, handle.invokeExact() as IRenderFactory<T>)
 	}
 	
+	@Suppress("UNCHECKED_CAST")
 	private inline fun <reified T : TileEntity, reified U : TileEntityRenderer<in T>> registerTile(type: TileEntityType<out T>){
-		ClientRegistry.bindTileEntityRenderer(type, RendererConstructors.getTile(U::class.java))
+		ClientRegistry.bindTileEntityRenderer(type, ObjectConstructors.oneArg<U, TileEntityRendererDispatcher>())
 	}
 }

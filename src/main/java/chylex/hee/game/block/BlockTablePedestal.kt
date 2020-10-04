@@ -1,5 +1,6 @@
 package chylex.hee.game.block
 import chylex.hee.client.color.NO_TINT
+import chylex.hee.client.render.block.IBlockLayerCutout
 import chylex.hee.game.block.entity.TileEntityTablePedestal
 import chylex.hee.game.block.properties.BlockBuilder
 import chylex.hee.game.block.properties.Property
@@ -36,7 +37,7 @@ import java.util.UUID
 import kotlin.math.abs
 import kotlin.math.max
 
-class BlockTablePedestal(builder: BlockBuilder) : BlockSimpleShaped(builder, COMBINED_BOX){
+class BlockTablePedestal(builder: BlockBuilder) : BlockSimpleShaped(builder, COMBINED_BOX), IBlockLayerCutout{
 	companion object{
 		val IS_LINKED = Property.bool("linked")
 		

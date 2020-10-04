@@ -1,6 +1,7 @@
 package chylex.hee.game.block
 import chylex.hee.HEE
 import chylex.hee.client.color.NO_TINT
+import chylex.hee.client.render.block.IBlockLayerCutout
 import chylex.hee.game.block.BlockPuzzleLogic.State.ACTIVE
 import chylex.hee.game.block.BlockPuzzleLogic.State.DISABLED
 import chylex.hee.game.block.BlockPuzzleLogic.State.INACTIVE
@@ -51,7 +52,7 @@ import net.minecraft.world.ILightReader
 import net.minecraft.world.World
 import java.util.Random
 
-sealed class BlockPuzzleLogic(builder: BlockBuilder) : BlockSimple(builder){
+sealed class BlockPuzzleLogic(builder: BlockBuilder) : BlockSimple(builder), IBlockLayerCutout{
 	companion object{
 		val STATE = Property.enum<State>("state")
 		

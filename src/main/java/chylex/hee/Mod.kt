@@ -15,9 +15,9 @@ import chylex.hee.game.world.feature.OverworldFeatures
 import chylex.hee.game.world.territory.storage.TokenPlayerStorage
 import chylex.hee.init.ModCreativeTabs
 import chylex.hee.init.ModLoot
+import chylex.hee.init.ModPackets
 import chylex.hee.init.ModPotions
 import chylex.hee.init.ModTileEntities
-import chylex.hee.init.factory.PacketConstructors
 import chylex.hee.network.NetworkManager
 import chylex.hee.proxy.ModClientProxy
 import chylex.hee.proxy.ModCommonProxy
@@ -63,7 +63,7 @@ object Mod{
 	
 	@SubscribeEvent
 	fun onCommonSetup(@Suppress("UNUSED_PARAMETER") e: FMLCommonSetupEvent){
-		NetworkManager.initialize(PacketConstructors.getAll())
+		NetworkManager.initialize(ModPackets.ALL)
 		ModLoot.initialize()
 		
 		TrinketHandler.register()

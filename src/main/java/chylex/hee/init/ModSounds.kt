@@ -54,7 +54,7 @@ object ModSounds{
 	
 	@SubscribeEvent
 	fun onRegisterSounds(e: RegistryEvent.Register<SoundEvent>){
-		e.registry.registerAllFields(this)
+		e.registerAllFields(this)
 	}
 	
 	private fun sound(name: String): SoundEvent{

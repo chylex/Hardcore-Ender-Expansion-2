@@ -1,4 +1,5 @@
 package chylex.hee.game.block
+import chylex.hee.client.render.block.IBlockLayerCutout
 import chylex.hee.game.block.properties.BlockBuilder
 import chylex.hee.system.facades.Facing6
 import chylex.hee.system.migration.BlockDirectional
@@ -25,7 +26,7 @@ import net.minecraft.world.IBlockReader
 import net.minecraft.world.IWorld
 import net.minecraft.world.IWorldReader
 
-class BlockGloomtorch(builder: BlockBuilder) : BlockDirectional(builder.p){
+class BlockGloomtorch(builder: BlockBuilder) : BlockDirectional(builder.p), IBlockLayerCutout{
 	private companion object{
 		private const val BB_SIDE_MIN = 0.421875
 		private const val BB_SIDE_MAX = 0.578125

@@ -1,4 +1,5 @@
 package chylex.hee.game.block
+import chylex.hee.client.render.block.IBlockLayerCutout
 import chylex.hee.game.block.IBlockDeathFlowerDecaying.Companion.LEVEL
 import chylex.hee.game.block.properties.BlockBuilder
 import chylex.hee.game.item.ItemDeathFlower
@@ -18,7 +19,7 @@ import net.minecraft.world.server.ServerWorld
 import net.minecraft.world.storage.loot.LootContext
 import java.util.Random
 
-class BlockDeathFlowerDecaying(builder: BlockBuilder) : BlockEndPlant(builder), IBlockDeathFlowerDecaying{
+class BlockDeathFlowerDecaying(builder: BlockBuilder) : BlockEndPlant(builder), IBlockDeathFlowerDecaying, IBlockLayerCutout{
 	override fun fillStateContainer(container: Builder<Block, BlockState>){
 		container.add(LEVEL)
 	}

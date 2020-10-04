@@ -1,4 +1,5 @@
 package chylex.hee.game.block
+import chylex.hee.client.render.block.IBlockLayerTranslucent
 import chylex.hee.game.block.entity.TileEntityJarODust
 import chylex.hee.game.block.properties.BlockBuilder
 import chylex.hee.game.inventory.heeTag
@@ -45,7 +46,7 @@ import net.minecraft.world.World
 import net.minecraft.world.storage.loot.LootContext
 import net.minecraft.world.storage.loot.LootParameters
 
-class BlockJarODust(builder: BlockBuilder) : BlockSimpleShaped(builder, AABB){
+class BlockJarODust(builder: BlockBuilder) : BlockSimpleShaped(builder, AABB), IBlockLayerTranslucent{
 	companion object{
 		val AABB = AxisAlignedBB(0.1875, 0.0, 0.1875, 0.8125, 0.84375, 0.8125)
 	}
