@@ -1,5 +1,4 @@
 package chylex.hee.game.loot
-
 import chylex.hee.HEE
 import chylex.hee.game.loot.rng.RandomBiasedValueRange
 import chylex.hee.game.loot.rng.RandomRoundingValueRange
@@ -146,7 +145,7 @@ object LootTablePatcher{
 		}
 	}
 	
-	private fun parseParameters(pool: LootPool): Sequence<Pair<String, String>>{
-		return pool.name.splitToSequence('#').drop(1).map { it.split('=').let { (k, v) -> Pair(k, v) } }
+	private fun parseParameters(pool: LootPool): List<Pair<String, String>>{
+		return pool.name.split("#").drop(1).filter { it.startsWith("hee:") }.map { it.substringAfter("hee:").split('=').let { (k, v) -> Pair(k, v) } }
 	}
 }

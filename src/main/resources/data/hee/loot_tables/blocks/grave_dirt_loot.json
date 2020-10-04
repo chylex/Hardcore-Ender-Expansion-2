@@ -12,7 +12,7 @@
     },
     {
       "rolls": 1.18,
-      "name": "pool#rolls_type=rounding",
+      "name": "pool#hee:rolls_type=rounding",
       "conditions": [{ "condition": "hee:was_exploded", "value": false }],
       "entries": [
         { "type": "item", "name": "minecraft:bone", "weight": 100, "functions": [{ "function": "set_count", "count": 1 }], "entryName": "bone" },

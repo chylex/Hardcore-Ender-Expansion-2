@@ -4,20 +4,20 @@
 
     {
       "rolls": 0,
-      "name": "table#stack_sorting=on",
+      "name": "table#hee:stack_sorting=on",
       "entries": []
     },
 
     {
       "rolls": 1,
-      "name": "solid_blocks_1#sort_order=1",
+      "name": "solid_blocks_1#hee:sort_order=1",
       "entries": [
         { "type": "item", "name": "hee:gloomrock", "weight": 100, "functions": [{ "function": "set_count", "count": { "min": 4, "max": 6 } }], "entryName": "#1" }
       ]
     },
     {
       "rolls": 1,
-      "name": "solid_blocks_2#sort_order=1",
+      "name": "solid_blocks_2#hee:sort_order=1",
       "entries": [
         { "type": "item", "name": "hee:gloomrock_smooth", "weight": 38, "functions": [{ "function": "set_count", "count": 0 }], "entryName": "#0" },
         { "type": "item", "name": "hee:gloomrock_smooth", "weight": 62, "functions": [{ "function": "set_count", "count": { "min": 8, "max": 24 } }], "entryName": "#1" }
@@ -25,7 +25,7 @@
     },
     {
       "rolls": 1,
-      "name": "solid_blocks_3#sort_order=1",
+      "name": "solid_blocks_3#hee:sort_order=1",
       "entries": [
         { "type": "item", "name": "hee:gloomrock_bricks", "weight": 38, "functions": [{ "function": "set_count", "count": 0 }], "entryName": "#0" },
         { "type": "item", "name": "hee:gloomrock_bricks", "weight": 62, "functions": [{ "function": "set_count", "count": { "min": 8, "max": 24 } }], "entryName": "#1" }
@@ -34,14 +34,14 @@
 
     {
       "rolls": 1,
-      "name": "colored_blocks_1#sort_order=2",
+      "name": "colored_blocks_1#hee:sort_order=2",
       "entries": [
         { "type": "item", "name": "hee:gloomrock_smooth", "weight": 100, "functions": [{ "function": "hee:set_item", "tag": "hee:gloomrock_colors" }, { "function": "set_count", "count": { "min": 1, "max": 7 } }], "entryName": "#1" }
       ]
     },
     {
       "rolls": 1,
-      "name": "colored_blocks_2#sort_order=2",
+      "name": "colored_blocks_2#hee:sort_order=2",
       "entries": [
         { "type": "item", "name": "hee:gloomrock_smooth", "weight": 25, "functions": [{ "function": "set_count", "count": 0 }], "entryName": "#0" },
         { "type": "item", "name": "hee:gloomrock_smooth", "weight": 75, "functions": [{ "function": "hee:set_item", "tag": "hee:gloomrock_colors" }, { "function": "set_count", "count": { "min": 1, "max": 6 } }], "entryName": "#1" }
@@ -49,7 +49,7 @@
     },
     {
       "rolls": 1,
-      "name": "colored_blocks_3#sort_order=2",
+      "name": "colored_blocks_3#hee:sort_order=2",
       "entries": [
         { "type": "item", "name": "hee:gloomrock_smooth", "weight": 70, "functions": [{ "function": "set_count", "count": 0 }], "entryName": "#0" },
         { "type": "item", "name": "hee:gloomrock_smooth", "weight": 30, "functions": [{ "function": "hee:set_item", "tag": "hee:gloomrock_colors" }, { "function": "set_count", "count": { "min": 1, "max": 5 } }], "entryName": "#1" }
@@ -57,7 +57,7 @@
     },
     {
       "rolls": 1,
-      "name": "colored_blocks_4#sort_order=2",
+      "name": "colored_blocks_4#hee:sort_order=2",
       "entries": [
         { "type": "item", "name": "hee:gloomrock_smooth", "weight": 88, "functions": [{ "function": "set_count", "count": 0 }], "entryName": "#0" },
         { "type": "item", "name": "hee:gloomrock_smooth", "weight": 12, "functions": [{ "function": "hee:set_item", "tag": "hee:gloomrock_colors" }, { "function": "set_count", "count": { "min": 1, "max": 4 } }], "entryName": "#1" }
@@ -66,7 +66,7 @@
 
     {
       "rolls": 1,
-      "name": "stairs_1#sort_order=3",
+      "name": "stairs_1#hee:sort_order=3",
       "entries": [
         { "type": "item", "name": "hee:gloomrock_smooth_stairs", "weight": 55, "functions": [{ "function": "set_count", "count": 0 }], "entryName": "#0" },
         { "type": "item", "name": "hee:gloomrock_smooth_stairs", "weight": 45, "functions": [{ "function": "set_count", "count": { "min": 1, "max": 8 } }], "entryName": "#1" }
@@ -74,7 +74,7 @@
     },
     {
       "rolls": 1,
-      "name": "stairs_2#sort_order=3",
+      "name": "stairs_2#hee:sort_order=3",
       "entries": [
         { "type": "item", "name": "hee:gloomrock_brick_stairs", "weight": 55, "functions": [{ "function": "set_count", "count": 0 }], "entryName": "#0" },
         { "type": "item", "name": "hee:gloomrock_brick_stairs", "weight": 45, "functions": [{ "function": "set_count", "count": { "min": 1, "max": 8 } }], "entryName": "#1" }
@@ -83,7 +83,7 @@
 
     {
       "rolls": 1,
-      "name": "slabs_1#sort_order=4",
+      "name": "slabs_1#hee:sort_order=4",
       "entries": [
         { "type": "item", "name": "hee:gloomrock_smooth_slab", "weight": 40, "functions": [{ "function": "set_count", "count": 0 }], "entryName": "#0" },
         { "type": "item", "name": "hee:gloomrock_smooth_slab", "weight": 60, "functions": [{ "function": "set_count", "count": { "min": 1, "max": 10 } }], "entryName": "#1" }
@@ -91,7 +91,7 @@
     },
     {
       "rolls": 1,
-      "name": "slabs_2#sort_order=4",
+      "name": "slabs_2#hee:sort_order=4",
       "entries": [
         { "type": "item", "name": "hee:gloomrock_brick_slab", "weight": 40, "functions": [{ "function": "set_count", "count": 0 }], "entryName": "#0" },
         { "type": "item", "name": "hee:gloomrock_brick_slab", "weight": 60, "functions": [{ "function": "set_count", "count": { "min": 1, "max": 10 } }], "entryName": "#1" }
@@ -100,7 +100,7 @@
 
     {
       "rolls": 1,
-      "name": "lighting_1#sort_order=5",
+      "name": "lighting_1#hee:sort_order=5",
       "entries": [
         { "type": "item", "name": "hee:gloomtorch", "weight": 75, "functions": [{ "function": "set_count", "count": 0 }], "entryName": "#0" },
         { "type": "item", "name": "hee:gloomtorch", "weight": 25, "functions": [{ "function": "set_count", "count": { "min": 1, "max": 5 } }], "entryName": "#1" }
