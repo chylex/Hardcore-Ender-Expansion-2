@@ -30,6 +30,7 @@ object BlockBuilders{
 	}
 	
 	val buildInfusedGlass = BlockBuilder(Materials.INFUSED_GLASS, MaterialColor.ADOBE /* RENAME ORANGE */, SoundType.GLASS).apply {
+		isSolid = false
 		harvestTool = Pair(WOOD, PICKAXE)
 		harvestHardness = 0.5F
 		explosionResistance = 0.3F

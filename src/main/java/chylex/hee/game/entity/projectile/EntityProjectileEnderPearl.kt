@@ -156,12 +156,16 @@ class EntityProjectileEnderPearl(type: EntityType<EntityProjectileEnderPearl>, w
 		}
 		
 		if (!world.isRemote && infusions.has(PHASING) && hasPhasedIntoWall){
-			val airCheckBox = boundingBox.grow(0.15, 0.15, 0.15)
-			
-			if (!world.checkBlockCollision(airCheckBox) || world.rayTraceBlocks(RayTraceIndestructible(prevPos, prevPos.add(prevMot), this)).type == Type.BLOCK){
+			if (world.rayTraceBlocks(RayTraceIndestructible(prevPos, prevPos.add(prevMot), this)).type == Type.BLOCK){
 				hasPhasingFinished = true
 				posVec = prevPos
-				onImpact(BlockRayTraceResult.createMiss(prevPos, DOWN, Pos(this)))
+			}
+			else if (!world.checkBlockCollision(boundingBox.grow(0.15, 0.15, 0.15))){
+				hasPhasingFinished = true
+			}
+			
+			if (hasPhasingFinished){
+				onImpact(BlockRayTraceResult.createMiss(posVec, DOWN, Pos(this)))
 			}
 		}
 	}

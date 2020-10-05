@@ -1,10 +1,10 @@
 {
   "parent": "block/block",
   "textures": {
-    "particle": "hee:block/miners_burial_block_pillar",
+    "particle": "hee:block/miners_burial_block_pillar_side",
     "top": "hee:block/miners_burial_altar_top",
     "side": "hee:block/miners_burial_altar_side",
-    "bottom": "hee:block/miners_burial_block_pillar_top"
+    "bottom": "hee:block/miners_burial_block_pillar_end"
   },
   "elements": [
     {

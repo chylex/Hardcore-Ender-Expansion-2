@@ -20,6 +20,9 @@ object CommandDebugTestWorld : ICommand, CommandExecutionFunction{
 			handleCommand(source, "/gamerule keepInventory true")
 			handleCommand(source, "/gamerule doDaylightCycle false")
 			handleCommand(source, "/gamerule doWeatherCycle false")
+			handleCommand(source, "/gamerule doInsomnia false")
+			handleCommand(source, "/gamerule doPatrolSpawning false")
+			handleCommand(source, "/gamerule doTraderSpawning false")
 			
 			handleCommand(source, "/time set 1000")
 			handleCommand(source, "/weather clear")

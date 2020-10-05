@@ -93,6 +93,10 @@ allprojects {
 		implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
 		implementation "org.jetbrains.kotlin:kotlin-reflect"
 	}
+	
+	if (file("$buildDir/classes").exists()){
+		file("$buildDir/classes/java/main").mkdirs() // Forge complains when the java folder is missing
+	}
 }
 
 sourceSets {

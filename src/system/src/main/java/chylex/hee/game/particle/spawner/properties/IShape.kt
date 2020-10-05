@@ -6,6 +6,7 @@ import net.minecraft.entity.Entity
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.Vec3d
 import java.util.Collections
+import kotlin.math.nextUp
 
 interface IShape{
 	val points: Iterable<Vec3d>
@@ -23,7 +24,7 @@ interface IShape{
 	class Line(startPoint: Vec3d, endPoint: Vec3d, points: Int) : IShape{
 		constructor(startPos: BlockPos, endPos: BlockPos, points: Int) : this(startPos.center, endPos.center, points)
 		
-		constructor(startPoint: Vec3d, endPoint: Vec3d, distanceBetweenPoints: Double) : this(startPoint, endPoint, (startPoint.distanceTo(endPoint) / distanceBetweenPoints).ceilToInt())
+		constructor(startPoint: Vec3d, endPoint: Vec3d, distanceBetweenPoints: Double) : this(startPoint, endPoint, (startPoint.distanceTo(endPoint).let { if (it == 0.0) it.nextUp() else it } / distanceBetweenPoints).ceilToInt())
 		constructor(startPos: BlockPos, endPos: BlockPos, distanceBetweenPoints: Double) : this(startPos.center, endPos.center, distanceBetweenPoints)
 		
 		override val points: Collection<Vec3d> = if (points == 1)

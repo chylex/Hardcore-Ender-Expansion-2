@@ -43,6 +43,7 @@ import chylex.hee.system.serialization.writeCompactVec
 import net.minecraft.entity.Entity
 import net.minecraft.entity.EntityType
 import net.minecraft.entity.IProjectile
+import net.minecraft.entity.MoverType
 import net.minecraft.entity.MoverType.SELF
 import net.minecraft.entity.projectile.ProjectileHelper
 import net.minecraft.network.IPacket
@@ -220,14 +221,17 @@ class EntityProjectileSpatialDash(type: EntityType<EntityProjectileSpatialDash>,
 		this.motion = Vec3d(dirX, dirY, dirZ).normalize().scale(velocity)
 	}
 	
+	override fun move(type: MoverType, pos: Vec3d){
+		super.move(type, pos)
+		
+		if (type == SELF && world.isRemote){
+			PARTICLE_TICK.spawn(Line(Vec3d(prevPosX, prevPosY, prevPosZ), posVec, 0.75), rand)
+		}
+	}
+	
 	override fun tick(){
-		if (world.isRemote){
-			if (ticksExisted == 1){
-				MC.instance.soundHandler.play(MovingSoundSpatialDash(this))
-			}
-			else{
-				PARTICLE_TICK.spawn(Line(Vec3d(prevPosX, prevPosY, prevPosZ), posVec, 0.75), rand)
-			}
+		if (world.isRemote && ticksExisted == 1){
+			MC.instance.soundHandler.play(MovingSoundSpatialDash(this))
 		}
 		
 		super.tick()

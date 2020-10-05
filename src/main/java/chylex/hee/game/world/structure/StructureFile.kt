@@ -111,7 +111,8 @@ class StructureFile(nbt: TagCompound){
 					((pos.z and 255) shl  8)
 				)
 				
-				blockMapping[key] = mapping // kotlin indexer boxes the values
+				@Suppress("ReplacePutWithAssignment")
+				blockMapping.put(key, mapping) // kotlin indexer boxes the values
 			}
 			
 			val generatedBlocks = IntArrayList(blockMapping.size)
