@@ -179,6 +179,7 @@ class BlockTablePedestal(builder: BlockBuilder) : BlockSimpleShaped(builder, COM
 			pos.getTile<TileEntityTablePedestal>(world)?.onPedestalDestroyed(dropTableLink = true)
 		}
 		
+		@Suppress("DEPRECATION")
 		super.onReplaced(state, world, pos, newState, isMoving)
 	}
 	
@@ -187,6 +188,7 @@ class BlockTablePedestal(builder: BlockBuilder) : BlockSimpleShaped(builder, COM
 			pos.getTile<TileEntityTablePedestal>(world)?.dropAllItems()
 		}
 		
+		@Suppress("DEPRECATION")
 		return super.neighborChanged(state, world, pos, neighborBlock, neighborPos, isMoving)
 	}
 	

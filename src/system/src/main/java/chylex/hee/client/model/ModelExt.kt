@@ -6,6 +6,7 @@ import net.minecraft.client.renderer.model.IBakedModel
 import net.minecraft.client.renderer.model.ModelRenderer
 import net.minecraft.client.renderer.model.ModelRenderer.ModelBox
 import net.minecraft.util.Direction
+import net.minecraftforge.client.model.data.EmptyModelData
 import org.apache.commons.lang3.ArrayUtils
 import java.util.Random
 import kotlin.concurrent.getOrSet
@@ -30,5 +31,5 @@ private val seedRand = ThreadLocal<Random>()
 
 @Sided(Side.CLIENT)
 fun IBakedModel.getQuads(facing: Direction? = null): MutableList<BakedQuad>{
-	return this.getQuads(null, facing, seedRand.getOrSet(::Random).apply { setSeed(42L) })
+	return this.getQuads(null, facing, seedRand.getOrSet(::Random).apply { setSeed(42L) }, EmptyModelData.INSTANCE)
 }

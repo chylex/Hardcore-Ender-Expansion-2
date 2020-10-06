@@ -72,6 +72,7 @@ class BlockGloomtorch(builder: BlockBuilder) : BlockDirectional(builder.p), IBlo
 	}
 	
 	override fun updatePostPlacement(state: BlockState, facing: Direction, neighborState: BlockState, world: IWorld, pos: BlockPos, neighborPos: BlockPos): BlockState{
+		@Suppress("DEPRECATION")
 		return if (facing.opposite == state[FACING] && !canPlaceGloomtorchAt(world, pos, state[FACING]))
 			Blocks.AIR.defaultState
 		else

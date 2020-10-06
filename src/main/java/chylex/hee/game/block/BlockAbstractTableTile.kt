@@ -37,6 +37,7 @@ abstract class BlockAbstractTableTile<T : TileEntityBaseTable>(builder: BlockBui
 			pos.getTile<TileEntityBaseTable>(world)?.onTableDestroyed(dropTableLink = true)
 		}
 		
+		@Suppress("DEPRECATION")
 		super.onReplaced(state, world, pos, newState, isMoving)
 	}
 }

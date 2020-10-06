@@ -46,6 +46,7 @@ class BlockEndPortalAcceptor(builder: BlockBuilder, aabb: AxisAlignedBB) : Block
 			pos.getTile<TileEntityEndPortalAcceptor>(world)?.refreshClusterState()
 		}
 		
+		@Suppress("DEPRECATION")
 		return super.updatePostPlacement(state, facing, neighborState, world, pos, neighborPos)
 	}
 }

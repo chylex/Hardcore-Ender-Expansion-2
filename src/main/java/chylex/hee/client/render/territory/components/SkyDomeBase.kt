@@ -105,7 +105,7 @@ abstract class SkyDomeBase : AbstractEnvironmentRenderer(){
 		GL.bindTexture(texture)
 		
 		with(Tessellator.getInstance()){
-			buffer.begin(GL_QUADS, DefaultVertexFormats.POSITION_TEX_COLOR)
+			buffer.begin(GL_QUADS, DefaultVertexFormats.POSITION_COLOR_TEX)
 			
 			for((x, y, z, c, u, v) in Skybox.VERTICES.value){
 				val r = offsetTowards(r2, r1, c)
@@ -114,8 +114,8 @@ abstract class SkyDomeBase : AbstractEnvironmentRenderer(){
 				val a = offsetTowards(alpha2, alpha1, c)
 				
 				buffer.pos(mat, x, y, z)
-				buffer.tex(u.toFloat(), v.toFloat())
 				buffer.color(r, g, b, a)
+				buffer.tex(u.toFloat(), v.toFloat())
 				buffer.endVertex()
 			}
 			

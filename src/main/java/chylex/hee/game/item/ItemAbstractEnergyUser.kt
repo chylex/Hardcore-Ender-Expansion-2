@@ -71,6 +71,7 @@ abstract class ItemAbstractEnergyUser(properties: Properties) : Item(properties)
 		val FX_CHARGE = object : IFxHandler<FxChargeData>{
 			private var particleSkipCounter = 0
 			
+			@Suppress("UNUSED_PARAMETER")
 			private fun particleSkipTest(distanceSq: Double, particleSetting: ParticleSetting, rand: Random): Boolean{
 				return when(particleSetting){
 					ALL       -> false
@@ -96,6 +97,7 @@ abstract class ItemAbstractEnergyUser(properties: Properties) : Item(properties)
 	}
 	
 	init{
+		@Suppress("DEPRECATION")
 		require(maxStackSize == 1){ "energy item must have a maximum stack size of 1" }
 	}
 	

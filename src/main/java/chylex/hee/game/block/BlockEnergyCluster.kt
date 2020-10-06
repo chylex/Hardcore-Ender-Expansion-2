@@ -75,6 +75,7 @@ class BlockEnergyCluster(builder: BlockBuilder) : BlockSimpleShaped(builder, Axi
 	
 	override fun onReplaced(state: BlockState, world: World, pos: BlockPos, newState: BlockState, isMoving: Boolean){
 		val tile = pos.getTile<TileEntityEnergyCluster>(world) ?: return
+		@Suppress("DEPRECATION")
 		super.onReplaced(state, world, pos, newState, isMoving) // removes the tile entity
 		
 		if (tile.breakWithoutExplosion){

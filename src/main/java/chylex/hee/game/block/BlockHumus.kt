@@ -48,6 +48,7 @@ class BlockHumus(builder: BlockBuilder, mergeBottom: Block) : BlockSimpleMerging
 	}
 	
 	override fun randomTick(state: BlockState, world: ServerWorld, pos: BlockPos, rand: Random){
+		@Suppress("DEPRECATION")
 		super.randomTick(state, world, pos, rand)
 		
 		if (rand.nextInt(5) <= 1){
@@ -55,6 +56,7 @@ class BlockHumus(builder: BlockBuilder, mergeBottom: Block) : BlockSimpleMerging
 			val plant = plantPos.getBlock(world)
 			
 			if (plant is IPlantable && canSustainPlant(state, world, pos, UP, plant)){
+				@Suppress("DEPRECATION")
 				plant.randomTick(plantPos.getState(world), world, plantPos, rand)
 			}
 		}

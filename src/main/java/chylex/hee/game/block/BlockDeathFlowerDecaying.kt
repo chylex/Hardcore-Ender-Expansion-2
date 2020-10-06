@@ -54,11 +54,13 @@ class BlockDeathFlowerDecaying(builder: BlockBuilder) : BlockEndPlant(builder), 
 	}
 	
 	override fun onBlockAdded(state: BlockState, world: World, pos: BlockPos, oldState: BlockState, isMoving: Boolean){
+		@Suppress("DEPRECATION")
 		super.onBlockAdded(state, world, pos, oldState, isMoving)
 		implOnBlockAdded(world, pos)
 	}
 	
 	override fun tick(state: BlockState, world: ServerWorld, pos: BlockPos, rand: Random){
+		@Suppress("DEPRECATION")
 		super.tick(state, world, pos, rand)
 		implUpdateTick(world, pos, state, rand)
 	}

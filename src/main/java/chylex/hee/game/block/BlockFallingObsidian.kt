@@ -22,6 +22,7 @@ class BlockFallingObsidian(builder: BlockBuilder) : BlockSimple(builder){
 	
 	override fun updatePostPlacement(state: BlockState, facing: Direction, neighborState: BlockState, world: IWorld, pos: BlockPos, neighborPos: BlockPos): BlockState{
 		world.pendingBlockTicks.scheduleTick(pos, this, tickRate(world))
+		@Suppress("DEPRECATION")
 		return super.updatePostPlacement(state, facing, neighborState, world, pos, neighborPos)
 	}
 	

@@ -170,6 +170,6 @@ class ItemScorchingSword(
 	// Repair handling
 	
 	override fun getIsRepairable(toRepair: ItemStack, repairWith: ItemStack): Boolean{
-		return ScorchingHelper.onGetIsRepairable(this, toRepair, repairWith)
+		return ScorchingHelper.onGetIsRepairable(this, repairWith)
 	}
 }

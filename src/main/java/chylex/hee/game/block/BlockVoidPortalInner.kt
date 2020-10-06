@@ -102,6 +102,7 @@ class BlockVoidPortalInner(builder: BlockBuilder) : BlockAbstractPortal(builder)
 			}
 		}
 		
+		@Suppress("DEPRECATION")
 		super.neighborChanged(state, world, pos, neighborBlock, neighborPos, isMoving)
 	}
 	

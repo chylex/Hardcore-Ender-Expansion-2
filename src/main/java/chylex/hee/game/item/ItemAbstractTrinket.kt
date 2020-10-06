@@ -36,6 +36,7 @@ open class ItemAbstractTrinket(properties: Properties) : Item(properties), ITrin
 	}
 	
 	init{
+		@Suppress("DEPRECATION")
 		require(maxStackSize == 1){ "trinket item must have a maximum stack size of 1" }
 	}
 	

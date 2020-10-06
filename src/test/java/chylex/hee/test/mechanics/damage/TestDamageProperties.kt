@@ -80,6 +80,7 @@ class TestDamageProperties{
 			
 			assertTrue(createDamageSource().isDamageAbsolute)
 			assertFalse(createDamageSource().isDifficultyScaled)
+			@Suppress("NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS")
 			assertNull(createDamageSource(EntitySnowball(EntityType.SNOWBALL, null)).damageLocation)
 		}
 		
@@ -90,6 +91,7 @@ class TestDamageProperties{
 			assertTrue(Reader().ignoreShield)
 			
 			assertFalse(createDamageSource().isUnblockable)
+			@Suppress("NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS")
 			assertNull(createDamageSource(EntitySnowball(EntityType.SNOWBALL, null)).damageLocation)
 		}
 		
@@ -100,6 +102,7 @@ class TestDamageProperties{
 			assertFalse(Reader().ignoreShield)
 			
 			assertFalse(createDamageSource().isUnblockable)
+			@Suppress("NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS")
 			assertNotNull(createDamageSource(EntitySnowball(EntityType.SNOWBALL, null)).damageLocation)
 		}
 		

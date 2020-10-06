@@ -80,6 +80,7 @@ inline fun <reified T : TileEntity> BlockPos.getTile(world: IBlockReader): T?{
 }
 
 inline fun BlockPos.isLoaded(world: IWorldReader): Boolean{
+	@Suppress("DEPRECATION")
 	return world.isBlockLoaded(this)
 }
 

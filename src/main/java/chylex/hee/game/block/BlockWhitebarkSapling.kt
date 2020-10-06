@@ -52,6 +52,7 @@ class BlockWhitebarkSapling(builder: BlockBuilder, private val generator: Whiteb
 	// Growth rules
 	
 	override fun tick(state: BlockState, world: ServerWorld, pos: BlockPos, rand: Random){
+		@Suppress("DEPRECATION")
 		super.tick(state, world, pos, rand)
 		
 		if (rand.nextInt(7) == 0){

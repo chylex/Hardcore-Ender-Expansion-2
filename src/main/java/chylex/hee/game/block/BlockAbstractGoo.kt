@@ -11,6 +11,7 @@ import chylex.hee.system.forge.Side
 import chylex.hee.system.forge.Sided
 import chylex.hee.system.migration.BlockFlowingFluid
 import chylex.hee.system.migration.EntityPlayer
+import chylex.hee.system.migration.supply
 import chylex.hee.system.serialization.getLongOrNull
 import chylex.hee.system.serialization.getOrCreateCompound
 import net.minecraft.block.BlockState
@@ -22,12 +23,11 @@ import net.minecraft.util.math.Vec3d
 import net.minecraft.world.IBlockReader
 import net.minecraft.world.IWorldReader
 import net.minecraft.world.World
-import java.util.function.Supplier
 
 abstract class BlockAbstractGoo(
 	private val fluid: FluidBase,
 	material: Material
-) : BlockFlowingFluid(Supplier { fluid.still }, Properties.create(material, fluid.mapColor).hardnessAndResistance(fluid.resistance).doesNotBlockMovement().noDrops()){
+) : BlockFlowingFluid(supply(fluid.still), Properties.create(material, fluid.mapColor).hardnessAndResistance(fluid.resistance).doesNotBlockMovement().noDrops()){
 	protected companion object{
 		private const val LAST_TIME_TAG = "Time"
 		private const val TOTAL_TICKS_TAG = "Ticks"

@@ -1,3 +1,5 @@
+@file:Suppress("DEPRECATION")
+
 package chylex.hee.client.render.gl
 import chylex.hee.client.MC
 import chylex.hee.system.forge.Side

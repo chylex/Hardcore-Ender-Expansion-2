@@ -10,6 +10,7 @@ import chylex.hee.system.migration.ActionResult.SUCCESS
 import chylex.hee.system.migration.BlockCauldron
 import chylex.hee.system.migration.ItemBucket
 import chylex.hee.system.migration.Sounds
+import chylex.hee.system.migration.supply
 import net.minecraft.block.Blocks
 import net.minecraft.fluid.Fluid
 import net.minecraft.item.ItemStack
@@ -17,9 +18,8 @@ import net.minecraft.item.ItemUseContext
 import net.minecraft.item.Items
 import net.minecraft.util.ActionResultType
 import net.minecraft.util.SoundCategory
-import java.util.function.Supplier
 
-open class ItemBucketWithCauldron(fluid: Fluid, private val cauldronBlock: BlockCauldron, properties: Properties) : ItemBucket(Supplier { fluid }, properties){
+open class ItemBucketWithCauldron(fluid: Fluid, private val cauldronBlock: BlockCauldron, properties: Properties) : ItemBucket(supply(fluid), properties){
 	override fun onItemUse(context: ItemUseContext): ActionResultType{
 		val world = context.world
 		val pos = context.pos

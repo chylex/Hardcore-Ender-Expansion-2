@@ -8,6 +8,7 @@ import chylex.hee.init.ModBlocks
 import chylex.hee.init.ModItems
 import chylex.hee.system.migration.BlockFlowerPot
 import chylex.hee.system.migration.EntityPlayer
+import chylex.hee.system.migration.supply
 import net.minecraft.block.Block
 import net.minecraft.block.BlockState
 import net.minecraft.block.Blocks
@@ -26,12 +27,11 @@ import net.minecraft.world.World
 import net.minecraft.world.server.ServerWorld
 import net.minecraft.world.storage.loot.LootContext
 import java.util.Random
-import java.util.function.Supplier
 
 class BlockFlowerPotDeathFlowerDecaying(
 	builder: BlockBuilder,
 	flower: Block
-) : BlockFlowerPot(Supplier { Blocks.FLOWER_POT as BlockFlowerPot /* prevents adding to flower->pot map */ }, Supplier { flower }, builder.p), IBlockDeathFlowerDecaying, IBlockLayerCutout{
+) : BlockFlowerPot(supply(Blocks.FLOWER_POT as BlockFlowerPot) /* prevents adding to flower->pot map */, supply(flower), builder.p), IBlockDeathFlowerDecaying, IBlockLayerCutout{
 	override fun fillStateContainer(container: Builder<Block, BlockState>){
 		container.add(LEVEL)
 	}
@@ -62,11 +62,13 @@ class BlockFlowerPotDeathFlowerDecaying(
 	}
 	
 	override fun onBlockAdded(state: BlockState, world: World, pos: BlockPos, oldState: BlockState, isMoving: Boolean){
+		@Suppress("DEPRECATION")
 		super.onBlockAdded(state, world, pos, oldState, isMoving)
 		implOnBlockAdded(world, pos)
 	}
 	
 	override fun tick(state: BlockState, world: ServerWorld, pos: BlockPos, rand: Random){
+		@Suppress("DEPRECATION")
 		super.tick(state, world, pos, rand)
 		implUpdateTick(world, pos, state, rand)
 	}

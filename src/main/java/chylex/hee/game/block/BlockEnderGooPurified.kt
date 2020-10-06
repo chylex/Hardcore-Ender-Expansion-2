@@ -137,6 +137,7 @@ open class BlockEnderGooPurified : BlockAbstractGoo(FluidEnderGooPurified, Mater
 	}
 	
 	override fun onBlockAdded(state: BlockState, world: World, pos: BlockPos, oldState: BlockState, isMoving: Boolean){
+		@Suppress("DEPRECATION")
 		super.onBlockAdded(state, world, pos, oldState, isMoving)
 		
 		if (!state.fluidState.isSource){

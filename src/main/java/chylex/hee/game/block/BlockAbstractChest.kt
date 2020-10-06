@@ -13,6 +13,7 @@ import chylex.hee.system.migration.EntityLivingBase
 import chylex.hee.system.migration.EntityPlayer
 import chylex.hee.system.migration.Facing.NORTH
 import chylex.hee.system.migration.TileEntityChest
+import chylex.hee.system.migration.supply
 import net.minecraft.block.AbstractChestBlock
 import net.minecraft.block.Block
 import net.minecraft.block.BlockRenderType.ENTITYBLOCK_ANIMATED
@@ -38,7 +39,7 @@ import net.minecraft.world.IBlockReader
 import net.minecraft.world.IWorldReader
 import net.minecraft.world.World
 
-abstract class BlockAbstractChest<T : TileEntityBaseChest>(builder: BlockBuilder) : AbstractChestBlock<T>(builder.p, null), IOcelotCanSitOn{
+abstract class BlockAbstractChest<T : TileEntityBaseChest>(builder: BlockBuilder) : AbstractChestBlock<T>(builder.p, supply(null)), IOcelotCanSitOn{
 	private companion object{
 		private val AABB = AxisAlignedBB(0.0625, 0.0, 0.0625, 0.9375, 0.875, 0.9375).asVoxelShape
 	}

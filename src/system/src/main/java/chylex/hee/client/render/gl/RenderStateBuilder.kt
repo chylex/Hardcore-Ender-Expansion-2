@@ -100,6 +100,7 @@ class RenderStateBuilder{
 	}
 	
 	fun buildType(name: String, vertexFormat: VertexFormat, drawMode: Int, bufferSize: Int, useDelegate: Boolean = false, needsSorting: Boolean = true, affectsOutline: Boolean = false): RenderType{
+		@Suppress("INACCESSIBLE_TYPE")
 		return RenderType.makeType(name, vertexFormat, drawMode, bufferSize, useDelegate, needsSorting, build(affectsOutline))
 	}
 	
@@ -121,6 +122,7 @@ class RenderStateBuilder{
 	 * LineState line = RenderState.DEFAULT_LINE;
 	 */
 	
+	@Suppress("NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS")
 	companion object : RenderState(null, null, null){
 		val LAYERING_NONE:       LayerState get() = NO_LAYERING
 		val LAYERING_PROJECTION: LayerState get() = PROJECTION_LAYERING

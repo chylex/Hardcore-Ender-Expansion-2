@@ -31,6 +31,7 @@ import net.minecraftforge.client.event.ModelBakeEvent
 import net.minecraftforge.client.event.ModelRegistryEvent
 import net.minecraftforge.client.event.TextureStitchEvent
 import net.minecraftforge.client.model.ModelLoader
+import net.minecraftforge.client.model.data.EmptyModelData
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber.Bus.MOD
 import org.lwjgl.opengl.GL11
 
@@ -188,7 +189,7 @@ class RenderTileJarODust(dispatcher: TileEntityRendererDispatcher) : TileEntityR
 				renderLayers(layers, matrix, buffer, combinedLight, combinedOverlay, renderBottom = true)
 			}
 			
-			MC.instance.blockRendererDispatcher.blockModelRenderer.renderModelBrightnessColor(matrix.last, buffer.getBuffer(Atlases.getTranslucentCullBlockType()), null, MODEL, 1F, 1F, 1F, combinedLight, combinedOverlay)
+			MC.instance.blockRendererDispatcher.blockModelRenderer.renderModel(matrix.last, buffer.getBuffer(Atlases.getTranslucentCullBlockType()), null, MODEL, 1F, 1F, 1F, combinedLight, combinedOverlay, EmptyModelData.INSTANCE)
 		}
 	}
 }

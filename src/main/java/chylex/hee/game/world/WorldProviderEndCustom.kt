@@ -60,7 +60,7 @@ class WorldProviderEndCustom(world: World, type: DimensionType) : EndDimension(w
 		
 		@Sided(Side.CLIENT)
 		@SubscribeEvent(priority = EventPriority.LOWEST)
-		fun onFog(e: RenderFogEvent){
+		fun onFog(@Suppress("UNUSED_PARAMETER") e: RenderFogEvent){
 			val player = MC.player?.takeIf { it.world.dimension.type == DimensionType.THE_END } ?: return
 			
 			val density = TerritoryInstance.fromPos(player)?.let { it.territory.desc.environment }?.let {

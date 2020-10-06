@@ -75,6 +75,7 @@ abstract class ParticleBaseEnergy(world: World, posX: Double, posY: Double, posZ
 	}
 	
 	private object RenderType : IParticleRenderType{
+		@Suppress("DEPRECATION")
 		override fun beginRender(buffer: BufferBuilder, textureManager: TextureManager){
 			GL.enableBlend()
 			GL.blendFunc(SF_SRC_ALPHA, DF_ONE)

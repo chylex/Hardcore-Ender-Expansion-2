@@ -78,7 +78,7 @@ object ScorchingHelper{
 	
 	// Overrides
 	
-	fun onGetIsRepairable(tool: IScorchingItem, toRepair: ItemStack, repairWith: ItemStack): Boolean{
+	fun onGetIsRepairable(tool: IScorchingItem, repairWith: ItemStack): Boolean{
 		return repairWith.item === ModItems.INFERNIUM || tool.material.repairMaterial.test(repairWith)
 	}
 	

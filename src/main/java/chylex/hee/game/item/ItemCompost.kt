@@ -20,6 +20,8 @@ import net.minecraft.item.ItemUseContext
 import net.minecraft.util.ActionResultType
 import net.minecraft.util.math.BlockPos
 import net.minecraft.world.World
+import net.minecraft.world.server.ServerWorld
+import net.minecraftforge.common.util.FakePlayerFactory
 import java.util.Random
 
 class ItemCompost(properties: Properties) : Item(properties){
@@ -33,11 +35,15 @@ class ItemCompost(properties: Properties) : Item(properties){
 		}
 		
 		private fun applyCompost(world: World, pos: BlockPos, player: EntityPlayer? = null): Boolean{
+			if (world !is ServerWorld){
+				return false
+			}
+			
 			val simulatedItem = ItemStack(ModItems.COMPOST, BONE_MEAL_EQUIVALENT)
 			
 			repeat(BONE_MEAL_EQUIVALENT){
 				if (player == null){
-					ItemBoneMeal.applyBonemeal(simulatedItem, world, pos)
+					ItemBoneMeal.applyBonemeal(simulatedItem, world, pos, FakePlayerFactory.getMinecraft(world))
 				}
 				else{
 					ItemBoneMeal.applyBonemeal(simulatedItem, world, pos, player)
@@ -48,10 +54,7 @@ class ItemCompost(properties: Properties) : Item(properties){
 				return false
 			}
 			
-			if (!world.isRemote){
-				PacketClientFX(FX_USE, FxBlockData(pos)).sendToAllAround(world, pos, 64.0)
-			}
-			
+			PacketClientFX(FX_USE, FxBlockData(pos)).sendToAllAround(world, pos, 64.0)
 			return true
 		}
 	}
@@ -83,6 +86,9 @@ class ItemCompost(properties: Properties) : Item(properties){
 		
 		if (!BlockEditor.canEdit(pos, player, heldItem)){
 			return FAIL
+		}
+		else if (world.isRemote){
+			return SUCCESS
 		}
 		
 		if (applyCompost(world, pos, player)){

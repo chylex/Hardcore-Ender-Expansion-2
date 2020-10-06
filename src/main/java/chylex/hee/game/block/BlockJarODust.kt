@@ -77,10 +77,12 @@ class BlockJarODust(builder: BlockBuilder) : BlockSimpleShaped(builder, AABB), I
 	// Placement
 	
 	override fun isValidPosition(state: BlockState, world: IWorldReader, pos: BlockPos): Boolean{
+		@Suppress("DEPRECATION")
 		return super.isValidPosition(state, world, pos) && pos.down().isTopSolid(world)
 	}
 	
 	override fun updatePostPlacement(state: BlockState, facing: Direction, neighborState: BlockState, world: IWorld, pos: BlockPos, neighborPos: BlockPos): BlockState{
+		@Suppress("DEPRECATION")
 		return if (facing == DOWN && !isValidPosition(state, world, pos))
 			Blocks.AIR.defaultState
 		else

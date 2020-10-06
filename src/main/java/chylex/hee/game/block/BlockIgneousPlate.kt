@@ -107,6 +107,7 @@ class BlockIgneousPlate(builder: BlockBuilder) : BlockSimple(builder){
 	}
 	
 	override fun updatePostPlacement(state: BlockState, facing: Direction, neighborState: BlockState, world: IWorld, pos: BlockPos, neighborPos: BlockPos): BlockState{
+		@Suppress("DEPRECATION")
 		return if (!canPlacePlateAt(world, pos, state[FACING_NOT_DOWN]))
 			Blocks.AIR.defaultState
 		else
