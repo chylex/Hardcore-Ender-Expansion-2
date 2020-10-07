@@ -12,7 +12,7 @@ sealed class TileEntityPortalInner(type: TileEntityType<out TileEntityPortalInne
 	override fun getMaxRenderDistanceSquared() = square(180.0)
 	
 	@Sided(Side.CLIENT)
-	override fun getRenderBoundingBox() = AxisAlignedBB(pos, pos.add(1, 1, 1))
+	override fun getRenderBoundingBox() = AxisAlignedBB(pos.add(-2, 0, -2), pos.add(3, 1, 3))
 	
 	class End(type: TileEntityType<End>) : TileEntityPortalInner(type){
 		constructor() : this(ModTileEntities.END_PORTAL_INNER)

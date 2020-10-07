@@ -50,6 +50,10 @@ abstract class BlockAbstractPortal(builder: BlockBuilder) : BlockSimpleShaped(bu
 				val minPos = controllerPos.min(mirrorPos).min(perpendicular1).min(perpendicular2).add(1, 0, 1)
 				val maxPos = controllerPos.max(mirrorPos).max(perpendicular1).max(perpendicular2).add(-1, 0, -1)
 				
+				if (maxPos.x - minPos.x != maxPos.z - minPos.z){
+					return null
+				}
+				
 				return minPos to maxPos
 			}
 			
