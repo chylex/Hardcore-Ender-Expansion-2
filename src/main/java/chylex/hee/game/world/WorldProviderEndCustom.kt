@@ -10,6 +10,7 @@ import chylex.hee.game.world.provider.DragonFightManagerNull
 import chylex.hee.game.world.provider.WorldBorderNull
 import chylex.hee.game.world.territory.TerritoryInstance
 import chylex.hee.game.world.territory.TerritoryInstance.Companion.THE_HUB_INSTANCE
+import chylex.hee.game.world.territory.TerritoryTicker
 import chylex.hee.game.world.territory.TerritoryVoid
 import chylex.hee.proxy.ISidedProxy
 import chylex.hee.system.forge.EventPriority
@@ -77,6 +78,9 @@ class WorldProviderEndCustom(world: World, type: DimensionType) : EndDimension(w
 	private val clientEnvironment
 		get() = clientProxy?.getClientSidePlayer()?.let(TerritoryInstance.Companion::fromPos)?.let { it.territory.desc.environment }
 	
+	private val serverWorld
+		get() = world as ServerWorld
+	
 	init{
 		when(val w = this.world){
 			is ServerWorld -> {
@@ -124,8 +128,10 @@ class WorldProviderEndCustom(world: World, type: DimensionType) : EndDimension(w
 	// Behavior properties
 	
 	override fun tick(){ // stops triggering a few seconds after all players leave the dimension (if still loaded)
+		TerritoryTicker.onWorldTick(serverWorld)
+		
 		if (!debugMode){
-			TerritoryVoid.onWorldTick(world as ServerWorld)
+			TerritoryVoid.onWorldTick(serverWorld)
 		}
 	}
 	

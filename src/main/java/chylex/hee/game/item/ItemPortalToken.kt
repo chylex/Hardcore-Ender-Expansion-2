@@ -96,7 +96,7 @@ class ItemPortalToken(properties: Properties) : Item(properties){
 		val territory = getTerritoryType(stack) ?: return null
 		
 		val index = with(stack.heeTag){
-			getIntegerOrNull(TERRITORY_INDEX_TAG) ?: TerritoryGlobalStorage.get().assignNewIndex(territory).also { putInt(TERRITORY_INDEX_TAG, it) }
+			getIntegerOrNull(TERRITORY_INDEX_TAG) ?: TerritoryGlobalStorage.get().assignNewIndex(territory, getTokenType(stack)).also { putInt(TERRITORY_INDEX_TAG, it) }
 		}
 		
 		return TerritoryInstance(territory, index)
@@ -112,7 +112,7 @@ class ItemPortalToken(properties: Properties) : Item(properties){
 			return super.onItemRightClick(world, player, hand)
 		}
 		
-		val index = heldItem.heeTagOrNull?.getIntegerOrNull(TERRITORY_INDEX_TAG) ?: TerritoryGlobalStorage.get().assignNewIndex(territory)
+		val index = heldItem.heeTagOrNull?.getIntegerOrNull(TERRITORY_INDEX_TAG) ?: TerritoryGlobalStorage.get().assignNewIndex(territory, getTokenType(heldItem))
 		val instance = TerritoryInstance(territory, index)
 		
 		if (!EntityPortalContact.shouldTeleport(player)){

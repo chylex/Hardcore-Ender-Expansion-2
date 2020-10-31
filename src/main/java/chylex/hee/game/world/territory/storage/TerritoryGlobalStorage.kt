@@ -1,4 +1,5 @@
 package chylex.hee.game.world.territory.storage
+import chylex.hee.game.item.ItemPortalToken.TokenType
 import chylex.hee.game.world.perDimensionData
 import chylex.hee.game.world.territory.TerritoryInstance
 import chylex.hee.game.world.territory.TerritoryInstance.Companion.THE_HUB_INSTANCE
@@ -20,14 +21,18 @@ class TerritoryGlobalStorage private constructor() : WorldSavedData(NAME){
 	
 	// Instance
 	
-	private val spawnEntry = TerritoryEntry(this, THE_HUB_INSTANCE)
+	private val spawnEntry = TerritoryEntry(this, THE_HUB_INSTANCE, TokenType.NORMAL)
 	private val territoryData = EnumMap(TerritoryType.values().filterNot { it.isSpawn }.associateWith { mutableListOf<TerritoryEntry>() })
 	
-	private fun makeEntry(territory: TerritoryType, index: Int): TerritoryEntry{
-		return TerritoryEntry(this, TerritoryInstance(territory, index))
+	private fun makeEntry(territory: TerritoryType, index: Int, type: TokenType): TerritoryEntry{
+		return TerritoryEntry(this, TerritoryInstance(territory, index), type)
 	}
 	
-	fun assignNewIndex(territory: TerritoryType): Int{
+	private fun makeEntry(territory: TerritoryType, index: Int, tag: TagCompound): TerritoryEntry{
+		return TerritoryEntry.fromTag(this, TerritoryInstance(territory, index), tag)
+	}
+	
+	fun assignNewIndex(territory: TerritoryType, tokenType: TokenType): Int{
 		if (territory.isSpawn){
 			return 0
 		}
@@ -35,7 +40,7 @@ class TerritoryGlobalStorage private constructor() : WorldSavedData(NAME){
 		val list = territoryData.getValue(territory)
 		val newIndex = list.size
 		
-		list.add(makeEntry(territory, newIndex))
+		list.add(makeEntry(territory, newIndex, tokenType))
 		markDirty()
 		
 		return newIndex
@@ -68,7 +73,7 @@ class TerritoryGlobalStorage private constructor() : WorldSavedData(NAME){
 			val list = territoryData.getValue(territory)
 			
 			list.clear()
-			list.addAll(getListOfCompounds(key).mapIndexed { index, nbt -> makeEntry(territory, index).also { it.deserializeNBT(nbt) } })
+			list.addAll(getListOfCompounds(key).mapIndexed { index, nbt -> makeEntry(territory, index, nbt) })
 		}
 		
 		isDirty = false
