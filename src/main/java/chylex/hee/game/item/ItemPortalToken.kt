@@ -9,12 +9,14 @@ import chylex.hee.game.entity.selectExistingEntities
 import chylex.hee.game.inventory.heeTag
 import chylex.hee.game.inventory.heeTagOrNull
 import chylex.hee.game.item.ItemPortalToken.TokenType.NORMAL
+import chylex.hee.game.item.ItemPortalToken.TokenType.RARE
 import chylex.hee.game.mechanics.portal.EntityPortalContact
 import chylex.hee.game.world.BlockEditor
 import chylex.hee.game.world.territory.TerritoryInstance
 import chylex.hee.game.world.territory.TerritoryType
 import chylex.hee.game.world.territory.properties.TerritoryColors
 import chylex.hee.game.world.territory.storage.TerritoryGlobalStorage
+import chylex.hee.game.world.territory.storage.data.VoidData
 import chylex.hee.init.ModItems
 import chylex.hee.system.color.IntColor.Companion.RGB
 import chylex.hee.system.facades.Resource
@@ -31,6 +33,7 @@ import chylex.hee.system.serialization.hasKey
 import chylex.hee.system.serialization.putEnum
 import net.minecraft.client.renderer.color.IItemColor
 import net.minecraft.client.util.ITooltipFlag
+import net.minecraft.entity.Entity
 import net.minecraft.item.Item
 import net.minecraft.item.ItemGroup
 import net.minecraft.item.ItemStack
@@ -50,6 +53,7 @@ class ItemPortalToken(properties: Properties) : Item(properties){
 		private const val TYPE_TAG = "Type"
 		private const val TERRITORY_TYPE_TAG = "Territory"
 		private const val TERRITORY_INDEX_TAG = "Index"
+		private const val IS_CORRUPTED_TAG = "IsCorrupted"
 		
 		const val MAX_STACK_SIZE = 16
 	}
@@ -65,7 +69,7 @@ class ItemPortalToken(properties: Properties) : Item(properties){
 	
 	init{
 		addPropertyOverride(Resource.Custom("token_type")){
-			stack, _, _ -> getTokenType(stack).propertyValue
+			stack, _, _ -> getTokenType(stack).propertyValue + (if (stack.heeTagOrNull.hasKey(IS_CORRUPTED_TAG)) 0.5F else 0F)
 		}
 	}
 	
@@ -88,18 +92,40 @@ class ItemPortalToken(properties: Properties) : Item(properties){
 		return stack.heeTagOrNull?.getEnum<TerritoryType>(TERRITORY_TYPE_TAG)
 	}
 	
+	private fun getTerritoryIndex(stack: ItemStack): Int?{
+		return stack.heeTagOrNull?.getIntegerOrNull(TERRITORY_INDEX_TAG)
+	}
+	
 	fun hasTerritoryInstance(stack: ItemStack): Boolean{
 		return stack.heeTagOrNull.hasKey(TERRITORY_INDEX_TAG)
 	}
 	
 	fun getOrCreateTerritoryInstance(stack: ItemStack): TerritoryInstance?{
 		val territory = getTerritoryType(stack) ?: return null
-		
-		val index = with(stack.heeTag){
-			getIntegerOrNull(TERRITORY_INDEX_TAG) ?: TerritoryGlobalStorage.get().assignNewIndex(territory, getTokenType(stack)).also { putInt(TERRITORY_INDEX_TAG, it) }
-		}
+		val index = getTerritoryIndex(stack) ?: TerritoryGlobalStorage.get().assignNewIndex(territory, getTokenType(stack)).also { stack.heeTag.putInt(TERRITORY_INDEX_TAG, it) }
 		
 		return TerritoryInstance(territory, index)
+	}
+	
+	// Corruption
+	
+	override fun inventoryTick(stack: ItemStack, world: World, entity: Entity, itemSlot: Int, isSelected: Boolean){
+		if (!world.isRemote){
+			updateCorruptedState(stack)
+		}
+	}
+	
+	fun updateCorruptedState(stack: ItemStack){
+		if (getTokenType(stack) != RARE || stack.heeTagOrNull.hasKey(IS_CORRUPTED_TAG)){
+			return
+		}
+		
+		val index = getTerritoryIndex(stack) ?: return
+		val territory = getTerritoryType(stack) ?: return
+		
+		if (TerritoryGlobalStorage.get().forInstance(TerritoryInstance(territory, index))?.getComponent<VoidData>()?.isCorrupting == true){
+			stack.heeTag.putBoolean(IS_CORRUPTED_TAG, true)
+		}
 	}
 	
 	// Creative mode
@@ -112,7 +138,7 @@ class ItemPortalToken(properties: Properties) : Item(properties){
 			return super.onItemRightClick(world, player, hand)
 		}
 		
-		val index = heldItem.heeTagOrNull?.getIntegerOrNull(TERRITORY_INDEX_TAG) ?: TerritoryGlobalStorage.get().assignNewIndex(territory, getTokenType(heldItem))
+		val index = getTerritoryIndex(heldItem) ?: TerritoryGlobalStorage.get().assignNewIndex(territory, getTokenType(heldItem))
 		val instance = TerritoryInstance(territory, index)
 		
 		if (!EntityPortalContact.shouldTeleport(player)){
@@ -178,7 +204,7 @@ class ItemPortalToken(properties: Properties) : Item(properties){
 		}
 		
 		if (flags.isAdvanced){
-			stack.heeTagOrNull?.getIntegerOrNull(TERRITORY_INDEX_TAG)?.let {
+			getTerritoryIndex(stack)?.let {
 				lines.add(StringTextComponent(""))
 				lines.add(TranslationTextComponent("item.hee.portal_token.tooltip.advanced", it))
 			}

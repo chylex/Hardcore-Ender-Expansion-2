@@ -127,10 +127,12 @@ class ItemModels(generator: DataGenerator, modid: String, existingFileHelper: Ex
 		
 		layers(ModItems.PORTAL_TOKEN, arrayOf("portal_token_outline", "portal_token_color_top", "portal_token_color_bottom")).then {
 			override(ModItems.PORTAL_TOKEN.r("_rare")){ predicate(Resource.Custom("token_type"), 1F) }
+			override(ModItems.PORTAL_TOKEN.r("_rare_corrupted")){ predicate(Resource.Custom("token_type"), 1.5F) }
 			override(ModItems.PORTAL_TOKEN.r("_solitary")){ predicate(Resource.Custom("token_type"), 2F) }
 		}
 		
 		layers(ModItems.PORTAL_TOKEN.suffixed("_rare"), arrayOf("portal_token_outline", "portal_token_color_top", "portal_token_color_bottom", "portal_token_border_rare"))
+		layers(ModItems.PORTAL_TOKEN.suffixed("_rare_corrupted"), arrayOf("portal_token_outline", "portal_token_color_top", "portal_token_color_bottom", "portal_token_border_rare", "portal_token_corruption"))
 		layers(ModItems.PORTAL_TOKEN.suffixed("_solitary"), arrayOf("portal_token_outline", "portal_token_color_top", "portal_token_color_bottom", "portal_token_border_solitary"))
 		simple(ModItems.BLANK_TOKEN)
 		

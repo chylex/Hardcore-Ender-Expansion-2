@@ -14,6 +14,12 @@
     },
     {
       "predicate": {
+        "hee:token_type": 1.5
+      },
+      "model": "hee:item/portal_token_rare_corrupted"
+    },
+    {
+      "predicate": {
         "hee:token_type": 2.0
       },
       "model": "hee:item/portal_token_solitary"

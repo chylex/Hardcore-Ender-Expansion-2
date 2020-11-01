@@ -1,4 +1,6 @@
 package chylex.hee.game.world.territory.storage
+import chylex.hee.game.inventory.isNotEmpty
+import chylex.hee.game.item.ItemPortalToken
 import chylex.hee.game.world.territory.storage.TokenPlayerStorage.TokenStorageCapability.Provider
 import chylex.hee.init.ModItems
 import chylex.hee.system.facades.Resource
@@ -24,7 +26,14 @@ object TokenPlayerStorage{
 	}
 	
 	fun forPlayer(player: EntityPlayer): ItemStackHandler{
-		return Handler.retrieve(player)
+		return Handler.retrieve(player).also {
+			for(slot in 0 until it.slots){
+				val stack = it.getStackInSlot(slot).takeIf { it.isNotEmpty } ?: continue
+				val token = stack.item as? ItemPortalToken ?: continue
+				
+				token.updateCorruptedState(stack)
+			}
+		}
 	}
 	
 	// Capability handling
