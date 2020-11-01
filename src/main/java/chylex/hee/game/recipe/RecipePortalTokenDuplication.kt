@@ -1,7 +1,6 @@
 package chylex.hee.game.recipe
 import chylex.hee.game.inventory.nonEmptySlots
 import chylex.hee.game.inventory.size
-import chylex.hee.game.item.ItemPortalToken.TokenType.NORMAL
 import chylex.hee.init.ModItems
 import net.minecraft.inventory.CraftingInventory
 import net.minecraft.item.ItemStack
@@ -36,7 +35,7 @@ object RecipePortalTokenDuplication : RecipeBaseDynamic(){
 			val item = stack.item
 			
 			if (item === ModItems.PORTAL_TOKEN){
-				if (originalToken != null || ModItems.PORTAL_TOKEN.getTokenType(stack) != NORMAL || !ModItems.PORTAL_TOKEN.hasTerritoryInstance(stack)){
+				if (originalToken != null || !ModItems.PORTAL_TOKEN.hasTerritoryInstance(stack)){
 					return null
 				}
 				
