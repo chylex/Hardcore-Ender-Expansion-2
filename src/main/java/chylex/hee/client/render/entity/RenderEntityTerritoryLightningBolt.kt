@@ -2,7 +2,6 @@ package chylex.hee.client.render.entity
 import chylex.hee.game.entity.effect.EntityTerritoryLightningBolt
 import chylex.hee.system.forge.Side
 import chylex.hee.system.forge.Sided
-import chylex.hee.system.random.nextFloat
 import com.mojang.blaze3d.matrix.MatrixStack
 import com.mojang.blaze3d.vertex.IVertexBuilder
 import net.minecraft.client.renderer.IRenderTypeBuffer
@@ -59,8 +58,8 @@ class RenderEntityTerritoryLightningBolt(manager: EntityRendererManager) : Entit
 						z += rand.nextInt(31) - 15
 					}
 					
-					val off1 = rand.nextFloat(0.1F, 0.3F) * (if (branch == 0) ((y * 0.1F + 1F)) else 1F)
-					val off2 = rand.nextFloat(0.1F, 0.3F) * (if (branch == 0) (((y - 1) * 0.1F + 1F)) else 1F)
+					val off1 = (0.1F + (iter * 0.2F)) * (if (branch == 0) ((y * 0.1F + 1F)) else 1F)
+					val off2 = (0.1F + (iter * 0.2F)) * (if (branch == 0) (((y - 1) * 0.1F + 1F)) else 1F)
 					
 					addVertex(mat, builder, x, z, y, origX, origZ, off1, off2, offX1 = false, offZ1 = false, offX2 = true, offZ2 = false)
 					addVertex(mat, builder, x, z, y, origX, origZ, off1, off2, offX1 = true, offZ1 = false, offX2 = true, offZ2 = true)
