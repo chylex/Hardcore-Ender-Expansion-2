@@ -105,7 +105,7 @@ object TerritoryRenderer{
 				return
 			}
 			
-			if (factor > -1F){
+			if (factor > TerritoryVoid.OUTSIDE_VOID_FACTOR){
 				val rand = player.rng
 				
 				val mp = min(1F, (factor * 0.275F) + 0.275F)

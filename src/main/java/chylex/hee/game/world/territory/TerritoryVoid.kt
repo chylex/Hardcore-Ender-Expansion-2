@@ -1,6 +1,7 @@
 package chylex.hee.game.world.territory
 import chylex.hee.HEE
 import chylex.hee.client.MC
+import chylex.hee.game.block.BlockAbstractPortal
 import chylex.hee.game.entity.heeTag
 import chylex.hee.game.entity.posVec
 import chylex.hee.game.mechanics.damage.Damage
@@ -10,6 +11,10 @@ import chylex.hee.game.mechanics.damage.IDamageProcessor.Companion.IGNORE_INVINC
 import chylex.hee.game.particle.ParticleFadingSpot
 import chylex.hee.game.particle.spawner.ParticleSpawnerCustom
 import chylex.hee.game.particle.spawner.properties.IShape.Point
+import chylex.hee.game.world.Pos
+import chylex.hee.game.world.getBlock
+import chylex.hee.game.world.territory.storage.TerritoryGlobalStorage
+import chylex.hee.game.world.territory.storage.data.VoidData
 import chylex.hee.game.world.totalTime
 import chylex.hee.system.color.IntColor.Companion.RGB
 import chylex.hee.system.forge.EventPriority
@@ -40,6 +45,11 @@ object TerritoryVoid{
 	const val OUTSIDE_VOID_FACTOR = -1F
 	const val INSTANT_DEATH_FACTOR = 3F
 	
+	const val RARE_TERRITORY_START_CORRUPTION_FACTOR = -0.5F
+	const val RARE_TERRITORY_MAX_CORRUPTION_FACTOR = 2F
+	
+	val CLIENT_VOID_DATA = VoidData {}
+	
 	private fun intersectEllipsoidEdge(center: Vec3d, point: Vec3d, xzRadius: Float, yRadius: Float): Vec3d?{
 		val xzRadSq = square(xzRadius)
 		val yRadSq = square(yRadius)
@@ -63,7 +73,7 @@ object TerritoryVoid{
 	/**
 	 * Returns a value between -1 and infinity, representing signed distance from the edge of the territory's void, where negative values are safely inside the territory.
 	 */
-	private fun getVoidFactorInternal(point: Vec3d): Float{
+	private fun getVoidFactorInternal(world: World, point: Vec3d): Float{
 		val instance = TerritoryInstance.fromPos(point.x.floorToInt(), point.z.floorToInt())
 		
 		if (instance == null){
@@ -79,14 +89,19 @@ object TerritoryVoid{
 		val center = instance.centerPoint.add(environment.voidCenterOffset)
 		val edge = intersectEllipsoidEdge(center, point, xzRadius, yRadius)
 		
+		val outsideVoidFactor = if (world.isRemote)
+			CLIENT_VOID_DATA.voidFactor
+		else
+			TerritoryGlobalStorage.get().forInstance(instance)?.getComponent<VoidData>()?.voidFactor ?: OUTSIDE_VOID_FACTOR
+		
 		if (edge == null){
-			return OUTSIDE_VOID_FACTOR
+			return outsideVoidFactor
 		}
 		
 		val distance = point.distanceTo(edge) * (if (point.squareDistanceTo(center) < edge.squareDistanceTo(center)) -1 else 1)
 		val factor = distance.toFloat() / 64F
 		
-		return max(OUTSIDE_VOID_FACTOR, factor)
+		return max(outsideVoidFactor, factor)
 	}
 	
 	fun getVoidFactor(world: World, point: Vec3d): Float{
@@ -94,7 +109,7 @@ object TerritoryVoid{
 			return OUTSIDE_VOID_FACTOR
 		}
 		
-		return getVoidFactorInternal(point)
+		return getVoidFactorInternal(world, point)
 	}
 	
 	fun getVoidFactor(entity: Entity): Float{
@@ -102,7 +117,7 @@ object TerritoryVoid{
 			return OUTSIDE_VOID_FACTOR
 		}
 		
-		return getVoidFactorInternal(entity.posVec)
+		return getVoidFactorInternal(entity.world, entity.posVec)
 	}
 	
 	// Tick handling
@@ -118,7 +133,7 @@ object TerritoryVoid{
 		}
 		
 		for(entity in world.entities.toList()){
-			val factor = getVoidFactorInternal(entity.posVec)
+			val factor = getVoidFactorInternal(world, entity.posVec)
 			
 			if (factor < 0F){
 				continue
@@ -129,7 +144,7 @@ object TerritoryVoid{
 				continue
 			}
 			
-			if (entity !is EntityLivingBase){
+			if (entity !is EntityLivingBase || Pos(entity).getBlock(world) is BlockAbstractPortal){ // protecting entities inside portals should help with server lag frustrations
 				continue
 			}
 			
