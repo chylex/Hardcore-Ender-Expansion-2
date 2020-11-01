@@ -97,15 +97,29 @@ class ItemPortalToken(properties: Properties) : Item(properties){
 		return stack.heeTagOrNull?.getIntegerOrNull(TERRITORY_INDEX_TAG)
 	}
 	
+	private fun remapInstanceIndex(instance: TerritoryInstance, tokenType: TokenType, entity: Entity): TerritoryInstance?{
+		if (tokenType != TokenType.SOLITARY){
+			return instance
+		}
+		
+		return if (entity is EntityPlayer)
+			TerritoryGlobalStorage.get().remapSolitaryIndex(instance, entity)
+		else
+			null
+	}
+	
 	fun hasTerritoryInstance(stack: ItemStack): Boolean{
 		return stack.heeTagOrNull.hasKey(TERRITORY_INDEX_TAG)
 	}
 	
-	fun getOrCreateTerritoryInstance(stack: ItemStack): TerritoryInstance?{
+	fun getOrCreateTerritoryInstance(stack: ItemStack, entity: Entity): TerritoryInstance?{
 		val territory = getTerritoryType(stack) ?: return null
-		val index = getTerritoryIndex(stack) ?: TerritoryGlobalStorage.get().assignNewIndex(territory, getTokenType(stack)).also { stack.heeTag.putInt(TERRITORY_INDEX_TAG, it) }
+		val tokenType = getTokenType(stack)
 		
-		return TerritoryInstance(territory, index)
+		val index = getTerritoryIndex(stack) ?: TerritoryGlobalStorage.get().assignNewIndex(territory, tokenType).also { stack.heeTag.putInt(TERRITORY_INDEX_TAG, it) }
+		val instance = TerritoryInstance(territory, index)
+		
+		return remapInstanceIndex(instance, tokenType, entity)
 	}
 	
 	// Corruption
@@ -139,10 +153,12 @@ class ItemPortalToken(properties: Properties) : Item(properties){
 			return super.onItemRightClick(world, player, hand)
 		}
 		
-		val index = getTerritoryIndex(heldItem) ?: TerritoryGlobalStorage.get().assignNewIndex(territory, getTokenType(heldItem))
-		val instance = TerritoryInstance(territory, index)
+		val tokenType = getTokenType(heldItem)
 		
-		if (!EntityPortalContact.shouldTeleport(player)){
+		val index = getTerritoryIndex(heldItem) ?: TerritoryGlobalStorage.get().assignNewIndex(territory, tokenType)
+		val instance = remapInstanceIndex(TerritoryInstance(territory, index), tokenType, player)
+		
+		if (instance == null || !EntityPortalContact.shouldTeleport(player)){
 			return ActionResult(FAIL, heldItem)
 		}
 		

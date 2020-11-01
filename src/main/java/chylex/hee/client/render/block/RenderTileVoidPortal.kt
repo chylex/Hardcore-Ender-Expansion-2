@@ -1,6 +1,7 @@
 package chylex.hee.client.render.block
 import chylex.hee.game.block.BlockAbstractPortal
 import chylex.hee.game.block.BlockVoidPortalInner.Companion.TYPE
+import chylex.hee.game.block.BlockVoidPortalInner.ITerritoryInstanceFactory
 import chylex.hee.game.block.BlockVoidPortalInner.IVoidPortalController
 import chylex.hee.game.block.BlockVoidPortalInner.Type.HUB
 import chylex.hee.game.block.BlockVoidPortalInner.Type.RETURN_ACTIVE
@@ -14,13 +15,18 @@ import chylex.hee.system.forge.Side
 import chylex.hee.system.forge.Sided
 import chylex.hee.system.math.LerpedFloat
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher
+import net.minecraft.entity.Entity
 import net.minecraft.util.math.BlockPos
 import net.minecraft.world.World
 
 @Sided(Side.CLIENT)
 class RenderTileVoidPortal(dispatcher: TileEntityRendererDispatcher) : RenderTileAbstractPortal<TileEntityPortalInner.Void, IVoidPortalController>(dispatcher){
 	private object ActiveReturnController : IVoidPortalController{
-		override val currentInstance = THE_HUB_INSTANCE
+		override val currentInstanceFactory = object : ITerritoryInstanceFactory{
+			override val territory = THE_HUB_INSTANCE.territory
+			override fun create(entity: Entity) = THE_HUB_INSTANCE
+		}
+		
 		override val clientAnimationProgress = LerpedFloat(1F)
 		override val clientPortalOffset = LerpedFloat(0F)
 	}
@@ -32,10 +38,10 @@ class RenderTileVoidPortal(dispatcher: TileEntityRendererDispatcher) : RenderTil
 	}
 	
 	override fun generateSeed(controller: IVoidPortalController): Long{
-		return controller.currentInstance?.territory?.desc?.colors?.portalSeed ?: 0L
+		return controller.currentInstanceFactory?.territory?.desc?.colors?.portalSeed ?: 0L
 	}
 	
 	override fun generateNextColor(controller: IVoidPortalController, layer: Int){
-		controller.currentInstance?.territory?.desc?.colors?.nextPortalColor(rand, color)
+		controller.currentInstanceFactory?.territory?.desc?.colors?.nextPortalColor(rand, color)
 	}
 }

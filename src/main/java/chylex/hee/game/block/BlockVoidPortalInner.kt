@@ -23,6 +23,7 @@ import chylex.hee.game.world.min
 import chylex.hee.game.world.offsetUntil
 import chylex.hee.game.world.setAir
 import chylex.hee.game.world.territory.TerritoryInstance
+import chylex.hee.game.world.territory.TerritoryType
 import chylex.hee.system.facades.Facing4
 import chylex.hee.system.math.subtractY
 import chylex.hee.system.migration.EntityLivingBase
@@ -76,7 +77,12 @@ class BlockVoidPortalInner(builder: BlockBuilder) : BlockAbstractPortal(builder)
 	}
 	
 	interface IVoidPortalController : IPortalController{
-		val currentInstance: TerritoryInstance?
+		val currentInstanceFactory: ITerritoryInstanceFactory?
+	}
+	
+	interface ITerritoryInstanceFactory{
+		val territory: TerritoryType
+		fun create(entity: Entity): TerritoryInstance?
 	}
 	
 	// Instance

@@ -1,28 +1,40 @@
 package chylex.hee.game.world.territory.storage
+import chylex.hee.HEE
 import chylex.hee.game.item.ItemPortalToken.TokenType
 import chylex.hee.game.world.perDimensionData
 import chylex.hee.game.world.territory.TerritoryInstance
 import chylex.hee.game.world.territory.TerritoryInstance.Companion.THE_HUB_INSTANCE
 import chylex.hee.game.world.territory.TerritoryType
+import chylex.hee.system.migration.EntityPlayer
 import chylex.hee.system.serialization.NBTList.Companion.putList
 import chylex.hee.system.serialization.NBTObjectList
 import chylex.hee.system.serialization.TagCompound
 import chylex.hee.system.serialization.getListOfCompounds
 import chylex.hee.system.serialization.use
+import it.unimi.dsi.fastutil.objects.Object2IntMap
+import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap
 import net.minecraft.world.storage.WorldSavedData
 import java.util.EnumMap
+import java.util.UUID
 
 class TerritoryGlobalStorage private constructor() : WorldSavedData(NAME){
 	companion object{
 		fun get() = TerritoryInstance.endWorld.perDimensionData(NAME, ::TerritoryGlobalStorage)
 		
 		private const val NAME = "HEE_TERRITORIES"
+		
+		private const val SPAWN_TAG = "Spawn"
+		private const val TERRITORIES_TAG = "Territories"
+		private const val SOLITARY_TAG = "Solitary"
+		
+		private const val SOLITARY_MISSING = -1
 	}
 	
 	// Instance
 	
 	private val spawnEntry = TerritoryEntry(this, THE_HUB_INSTANCE, TokenType.NORMAL)
 	private val territoryData = EnumMap(TerritoryType.values().filterNot { it.isSpawn }.associateWith { mutableListOf<TerritoryEntry>() })
+	private val solitaryPlayers = mutableMapOf<TerritoryInstance, Object2IntMap<UUID>>()
 	
 	private fun makeEntry(territory: TerritoryType, index: Int, type: TokenType): TerritoryEntry{
 		return TerritoryEntry(this, TerritoryInstance(territory, index), type)
@@ -55,25 +67,90 @@ class TerritoryGlobalStorage private constructor() : WorldSavedData(NAME){
 			territoryData.getValue(territory).getOrNull(index)
 	}
 	
+	fun remapSolitaryIndex(instance: TerritoryInstance, player: EntityPlayer): TerritoryInstance{
+		val territory = instance.territory
+		
+		val players = solitaryPlayers.getOrPut(instance){ Object2IntOpenHashMap<UUID>().apply { defaultReturnValue(SOLITARY_MISSING) } }
+		val remapped = players.getInt(player.uniqueID)
+		
+		if (remapped != SOLITARY_MISSING){
+			return TerritoryInstance(territory, remapped)
+		}
+		
+		val newIndex = assignNewIndex(territory, TokenType.SOLITARY)
+		
+		@Suppress("ReplacePutWithAssignment")
+		players.put(player.uniqueID, newIndex)
+		markDirty()
+		
+		return TerritoryInstance(territory, newIndex)
+	}
+	
 	// Serialization
 	
 	override fun write(nbt: TagCompound) = nbt.apply {
-		put("[Spawn]", spawnEntry.serializeNBT())
+		put(SPAWN_TAG, spawnEntry.serializeNBT())
 		
-		for((key, list) in territoryData){
-			putList(key.title, NBTObjectList.of(list.map(TerritoryEntry::serializeNBT)))
-		}
+		put(TERRITORIES_TAG, TagCompound().apply {
+			for((key, list) in territoryData){
+				putList(key.title, NBTObjectList.of(list.map(TerritoryEntry::serializeNBT)))
+			}
+		})
+		
+		put(SOLITARY_TAG, TagCompound().apply {
+			for((instance, map) in solitaryPlayers){
+				val solitaryPlayersTag = TagCompound()
+				
+				for(entry in map.object2IntEntrySet()){
+					solitaryPlayersTag.putInt(entry.key.toString(), entry.intValue)
+				}
+				
+				put(instance.hash.toString(), solitaryPlayersTag)
+			}
+		})
 	}
 	
 	override fun read(nbt: TagCompound) = nbt.use {
-		spawnEntry.deserializeNBT(getCompound("[Spawn]"))
+		spawnEntry.deserializeNBT(getCompound(SPAWN_TAG))
 		
-		for(key in keySet()){
-			val territory = TerritoryType.fromTitle(key) ?: continue
-			val list = territoryData.getValue(territory)
+		with(getCompound(TERRITORIES_TAG)){
+			for(key in keySet()){
+				val territory = TerritoryType.fromTitle(key) ?: continue
+				val list = territoryData.getValue(territory)
+				
+				list.clear()
+				list.addAll(getListOfCompounds(key).mapIndexed { index, nbt -> makeEntry(territory, index, nbt) })
+			}
+		}
+		
+		with(getCompound(SOLITARY_TAG)){
+			solitaryPlayers.clear()
 			
-			list.clear()
-			list.addAll(getListOfCompounds(key).mapIndexed { index, nbt -> makeEntry(territory, index, nbt) })
+			for(keyHash in keySet()){
+				val hash = keyHash.toIntOrNull()
+				val instance = hash?.let(TerritoryInstance::fromHash)
+				
+				if (instance == null){
+					HEE.log.error("[TerritoryGlobalStorage] invalid solitary territory hash: $keyHash")
+					continue
+				}
+				
+				val solitaryPlayersMap = Object2IntOpenHashMap<UUID>().apply { defaultReturnValue(SOLITARY_MISSING) }
+				val solitaryPlayersTag = getCompound(keyHash)
+				
+				for(keyUUID in solitaryPlayersTag.keySet()){
+					val uuid = try{
+						UUID.fromString(keyUUID)
+					}catch(e: Exception){
+						HEE.log.error("[TerritoryGlobalStorage] could not parse solitary player UUID: $keyUUID")
+						continue
+					}
+					
+					solitaryPlayersMap[uuid] = solitaryPlayersTag.getInt(keyUUID)
+				}
+				
+				solitaryPlayers[instance] = solitaryPlayersMap
+			}
 		}
 		
 		isDirty = false
