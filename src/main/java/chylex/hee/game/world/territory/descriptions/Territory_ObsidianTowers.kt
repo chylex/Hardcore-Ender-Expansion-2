@@ -1,5 +1,6 @@
 package chylex.hee.game.world.territory.descriptions
 import chylex.hee.game.world.territory.ITerritoryDescription
+import chylex.hee.game.world.territory.TerritoryDifficulty
 import chylex.hee.game.world.territory.properties.TerritoryColors
 import chylex.hee.game.world.territory.properties.TerritoryEnvironment
 import chylex.hee.system.color.IntColor.Companion.RGB
@@ -8,6 +9,9 @@ import net.minecraft.util.math.Vec3d
 import java.util.Random
 
 object Territory_ObsidianTowers : ITerritoryDescription{
+	override val difficulty
+		get() = TerritoryDifficulty.BOSS
+	
 	override val colors = object : TerritoryColors(){
 		override val tokenTop    = RGB(146, 130, 185)
 		override val tokenBottom = RGB( 81, 173, 250)

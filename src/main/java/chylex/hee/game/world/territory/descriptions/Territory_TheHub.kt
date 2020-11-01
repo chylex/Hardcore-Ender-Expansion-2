@@ -2,6 +2,7 @@ package chylex.hee.game.world.territory.descriptions
 import chylex.hee.client.render.territory.components.SkyCubeStatic
 import chylex.hee.game.entity.item.EntityTokenHolder
 import chylex.hee.game.world.territory.ITerritoryDescription
+import chylex.hee.game.world.territory.TerritoryDifficulty
 import chylex.hee.game.world.territory.TerritoryInstance
 import chylex.hee.game.world.territory.TerritoryType.FORGOTTEN_TOMBS
 import chylex.hee.game.world.territory.properties.TerritoryColors
@@ -14,6 +15,9 @@ import java.util.Random
 import kotlin.math.min
 
 object Territory_TheHub : ITerritoryDescription{
+	override val difficulty
+		get() = TerritoryDifficulty.PEACEFUL
+	
 	override val colors = object : TerritoryColors(){
 		override val tokenTop    = RGB(255, 216, 131)
 		override val tokenBottom = RGB(139, 138, 151)

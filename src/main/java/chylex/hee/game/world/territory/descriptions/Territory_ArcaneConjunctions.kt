@@ -1,5 +1,6 @@
 package chylex.hee.game.world.territory.descriptions
 import chylex.hee.game.world.territory.ITerritoryDescription
+import chylex.hee.game.world.territory.TerritoryDifficulty
 import chylex.hee.game.world.territory.properties.TerritoryColors
 import chylex.hee.game.world.territory.properties.TerritoryEnvironment
 import chylex.hee.system.color.IntColor.Companion.RGB
@@ -7,6 +8,9 @@ import chylex.hee.system.random.nextFloat
 import java.util.Random
 
 object Territory_ArcaneConjunctions : ITerritoryDescription{
+	override val difficulty
+		get() = TerritoryDifficulty.NEUTRAL
+	
 	override val colors = object : TerritoryColors(){
 		override val tokenTop    = RGB(174, 104, 128)
 		override val tokenBottom = RGB( 98,  93, 102)

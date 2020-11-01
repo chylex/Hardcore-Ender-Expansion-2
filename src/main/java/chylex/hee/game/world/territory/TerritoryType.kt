@@ -149,6 +149,9 @@ enum class TerritoryType(
 		// TODO remove once no longer necessary
 		
 		private object TerritoryDummy : ITerritoryDescription{
+			override val difficulty
+				get() = TerritoryDifficulty.PEACEFUL
+			
 			override val colors = object : TerritoryColors(){
 				override val tokenTop    = RGB(255u)
 				override val tokenBottom = RGB(255u)

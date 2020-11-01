@@ -8,6 +8,8 @@ import chylex.hee.game.world.territory.storage.TerritoryStorageComponent
 import chylex.hee.game.world.territory.tickers.VoidTicker
 
 interface ITerritoryDescription{
+	val difficulty: TerritoryDifficulty
+	
 	val colors: TerritoryColors
 	val environment: TerritoryEnvironment
 	

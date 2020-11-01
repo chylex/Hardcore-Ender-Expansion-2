@@ -7,6 +7,7 @@ import chylex.hee.game.entity.lookPosVec
 import chylex.hee.game.world.Pos
 import chylex.hee.game.world.allInCenteredBoxMutable
 import chylex.hee.game.world.territory.ITerritoryDescription
+import chylex.hee.game.world.territory.TerritoryDifficulty
 import chylex.hee.game.world.territory.properties.TerritoryColors
 import chylex.hee.game.world.territory.properties.TerritoryEnvironment
 import chylex.hee.system.color.IntColor.Companion.RGB
@@ -27,6 +28,9 @@ import kotlin.math.max
 import kotlin.math.pow
 
 object Territory_ForgottenTombs : ITerritoryDescription{
+	override val difficulty
+		get() = TerritoryDifficulty.HOSTILE
+	
 	override val colors = object : TerritoryColors(){
 		override val tokenTop    = RGB(211, 212, 152)
 		override val tokenBottom = RGB(160, 151, 116)

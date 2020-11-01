@@ -2,6 +2,7 @@ package chylex.hee.game.world.territory.descriptions
 import chylex.hee.client.render.lightmaps.OverworldLightmap
 import chylex.hee.client.render.territory.components.SkyDomeStatic
 import chylex.hee.game.world.territory.ITerritoryDescription
+import chylex.hee.game.world.territory.TerritoryDifficulty
 import chylex.hee.game.world.territory.properties.TerritoryColors
 import chylex.hee.game.world.territory.properties.TerritoryEnvironment
 import chylex.hee.system.color.IntColor.Companion.RGB
@@ -10,6 +11,9 @@ import net.minecraft.util.math.Vec3d
 import java.util.Random
 
 object Territory_LostGarden : ITerritoryDescription{
+	override val difficulty
+		get() = TerritoryDifficulty.PEACEFUL
+	
 	override val colors = object : TerritoryColors(){
 		override val tokenTop    = RGB(148, 169, 54)
 		override val tokenBottom = RGB( 98,  93, 102)

@@ -8,8 +8,6 @@ import chylex.hee.game.entity.item.EntityTokenHolder
 import chylex.hee.game.entity.selectExistingEntities
 import chylex.hee.game.inventory.heeTag
 import chylex.hee.game.inventory.heeTagOrNull
-import chylex.hee.game.item.ItemPortalToken.TokenType.NORMAL
-import chylex.hee.game.item.ItemPortalToken.TokenType.RARE
 import chylex.hee.game.mechanics.portal.EntityPortalContact
 import chylex.hee.game.world.BlockEditor
 import chylex.hee.game.world.territory.TerritoryInstance
@@ -58,13 +56,16 @@ class ItemPortalToken(properties: Properties) : Item(properties){
 		const val MAX_STACK_SIZE = 16
 	}
 	
-	enum class TokenType(val propertyValue: Float, private val translationKeySuffix: String? = null){
-		NORMAL  (0F),
+	enum class TokenType(val propertyValue: Float, private val translationKeySuffix: String){
+		NORMAL  (0F, "normal"),
 		RARE    (1F, "rare"),
 		SOLITARY(2F, "solitary");
 		
-		val translationKey
-			get() = translationKeySuffix?.let { "item.hee.portal_token.tooltip.$it" }
+		val genericTranslationKey
+			get() = "item.hee.portal_token.$translationKeySuffix"
+		
+		val concreteTranslationKey
+			get() = "item.hee.portal_token.$translationKeySuffix.concrete"
 	}
 	
 	init{
@@ -85,7 +86,7 @@ class ItemPortalToken(properties: Properties) : Item(properties){
 	// Token data
 	
 	fun getTokenType(stack: ItemStack): TokenType{
-		return stack.heeTagOrNull?.getEnum<TokenType>(TYPE_TAG) ?: NORMAL
+		return stack.heeTagOrNull?.getEnum<TokenType>(TYPE_TAG) ?: TokenType.NORMAL
 	}
 	
 	fun getTerritoryType(stack: ItemStack): TerritoryType?{
@@ -116,7 +117,7 @@ class ItemPortalToken(properties: Properties) : Item(properties){
 	}
 	
 	fun updateCorruptedState(stack: ItemStack){
-		if (getTokenType(stack) != RARE || stack.heeTagOrNull.hasKey(IS_CORRUPTED_TAG)){
+		if (getTokenType(stack) != TokenType.RARE || stack.heeTagOrNull.hasKey(IS_CORRUPTED_TAG)){
 			return
 		}
 		
@@ -176,15 +177,23 @@ class ItemPortalToken(properties: Properties) : Item(properties){
 	
 	// Client
 	
+	override fun getDefaultTranslationKey(): String {
+		return TokenType.NORMAL.genericTranslationKey
+	}
+	
+	override fun getTranslationKey(stack: ItemStack): String{
+		return getTokenType(stack).genericTranslationKey
+	}
+	
 	override fun getDisplayName(stack: ItemStack): ITextComponent{
-		return TranslationTextComponent("item.hee.portal_token_concrete", TranslationTextComponent(getTerritoryType(stack)?.translationKey ?: TerritoryType.FALLBACK_TRANSLATION_KEY))
+		return TranslationTextComponent(getTokenType(stack).concreteTranslationKey, TranslationTextComponent(getTerritoryType(stack)?.translationKey ?: TerritoryType.FALLBACK_TRANSLATION_KEY))
 	}
 	
 	override fun fillItemGroup(tab: ItemGroup, items: NonNullList<ItemStack>){
 		if (isInGroup(tab)){
 			for(territory in TerritoryType.ALL){
 				if (!territory.isSpawn){
-					items.add(forTerritory(NORMAL, territory))
+					items.add(forTerritory(TokenType.NORMAL, territory))
 				}
 			}
 		}
@@ -192,6 +201,20 @@ class ItemPortalToken(properties: Properties) : Item(properties){
 	
 	@Sided(Side.CLIENT)
 	override fun addInformation(stack: ItemStack, world: World?, lines: MutableList<ITextComponent>, flags: ITooltipFlag){
+		val territory = getTerritoryType(stack)
+		var insertEmptyLineAt = -1
+		
+		if (territory != null){
+			lines.add(TranslationTextComponent(territory.desc.difficulty.tooltipTranslationKey))
+			insertEmptyLineAt = lines.size
+		}
+		
+		if (flags.isAdvanced){
+			getTerritoryIndex(stack)?.let {
+				lines.add(TranslationTextComponent("item.hee.portal_token.tooltip.advanced", it))
+			}
+		}
+		
 		if ((MC.currentScreen as? GuiPortalTokenStorage)?.canActivateToken(stack) == true){
 			lines.add(TranslationTextComponent("item.hee.portal_token.tooltip.activate"))
 		}
@@ -199,15 +222,8 @@ class ItemPortalToken(properties: Properties) : Item(properties){
 			lines.add(TranslationTextComponent("item.hee.portal_token.tooltip.creative.${if (hasTerritoryInstance(stack)) "teleport" else "generate"}"))
 		}
 		
-		getTokenType(stack).translationKey?.let {
-			lines.add(TranslationTextComponent(it))
-		}
-		
-		if (flags.isAdvanced){
-			getTerritoryIndex(stack)?.let {
-				lines.add(StringTextComponent(""))
-				lines.add(TranslationTextComponent("item.hee.portal_token.tooltip.advanced", it))
-			}
+		if (lines.size > insertEmptyLineAt){
+			lines.add(insertEmptyLineAt, StringTextComponent(""))
 		}
 		
 		super.addInformation(stack, world, lines, flags)
