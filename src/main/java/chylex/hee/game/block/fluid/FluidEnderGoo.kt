@@ -9,7 +9,7 @@ import net.minecraftforge.fluids.ForgeFlowingFluid.Properties
 
 object FluidEnderGoo : FluidBase(
 	fluidName  = "ender_goo",
-	rgbColor   = RGB(136, 26, 190),
+	rgbColor   = RGB(147, 37, 194),
 	mapColor   = MaterialColor.PURPLE,
 	resistance = 150F,
 	texStill   = Resource.Custom("block/ender_goo_still"),

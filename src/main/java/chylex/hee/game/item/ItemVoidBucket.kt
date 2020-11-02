@@ -145,6 +145,10 @@ class ItemVoidBucket(properties: Properties) : ItemAbstractVoidTool(properties, 
 	
 	// Client side
 	
+	override fun shouldCauseReequipAnimation(oldStack: ItemStack, newStack: ItemStack, slotChanged: Boolean): Boolean{
+		return slotChanged && super.shouldCauseReequipAnimation(oldStack, newStack, slotChanged)
+	}
+	
 	object Color : IItemColor{
 		override fun getColor(stack: ItemStack, tintIndex: Int) = when(tintIndex){
 			1 -> stack.heeTagOrNull?.getInt(COLOR_TAG) ?: NO_TINT
