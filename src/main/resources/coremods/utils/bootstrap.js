@@ -4,25 +4,6 @@ var op = Java.type("org.objectweb.asm.Opcodes");
 api.loadFile("coremods/utils/constants.js");
 api.loadFile("coremods/utils/helpers.js");
 
-var classTransformer = function(className, callback){
-    return {
-        target: {
-            "type": "CLASS",
-            "name": className
-        },
-        transformer: function(cls){
-            var result = callback(cls);
-
-            if (result == null){
-                throw "Failed applying HEE2 transformer to class " + className;
-            }
-
-            api.log("INFO", "Successfully patched " + className);
-            return result;
-        }
-    };
-};
-
 var methodTransformer = function(className, methodName, methodDesc, callback){
     var fullName = className + "." + methodName + methodDesc;
 

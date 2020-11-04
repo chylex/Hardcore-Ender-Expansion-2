@@ -20,19 +20,16 @@ object PotionCorruption : Potion(HARMFUL, RGB(1, 1, 1).i){
 	private val pauseAttributeSkipping = ThreadLocal.withInitial { false }
 	
 	@JvmStatic
-	@Suppress("unused")
 	fun shouldCorrupt(potion: Potion, entity: EntityLivingBase): Boolean{
 		return potion.isBeneficial && entity.isPotionActive(PotionCorruption) // PotionCorruption being set as harmful also prevents infinite loop from isPotionActive
 	}
 	
 	@JvmStatic
-	@Suppress("unused")
 	fun shouldCorrupt(effect: EffectInstance, entity: EntityLivingBase): Boolean{
 		return effect.potion.isBeneficial && entity.isPotionActive(PotionCorruption)
 	}
 	
 	@JvmStatic
-	@Suppress("unused")
 	fun shouldSkipAttributeChange(potion: Potion, entity: EntityLivingBase): Boolean{
 		return !pauseAttributeSkipping.get() && canCorruptAttributes(potion) && entity.isPotionActive(PotionCorruption)
 	}

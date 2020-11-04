@@ -27,19 +27,9 @@ import net.minecraft.world.World
 import net.minecraftforge.fml.network.NetworkHooks
 
 abstract class EntityMobAbstractEnderman(type: EntityType<out EntityMobAbstractEnderman>, world: World) : EntityEnderman(type, world){
-	companion object{
+	private companion object{
 		private val DATA_SHAKING = EntityData.register<EntityMobAbstractEnderman, Boolean>(DataSerializers.BOOLEAN)
 		private val DAMAGE_GENERAL = Damage(DIFFICULTY_SCALING, PEACEFUL_EXCLUSION, *ALL_PROTECTIONS_WITH_SHIELD, NUDITY_DANGER)
-		
-		@JvmStatic
-		@Suppress("unused")
-		fun livingParticleCount(entity: EntityEnderman): Int{
-			return when(entity){
-				is EntityMobAngryEnderman -> 0
-				is EntityMobEnderman -> if (entity.isAggro) 0 else 2
-				else -> 2
-			}
-		}
 	}
 	
 	var isAggro: Boolean by EntityData(SCREAMING)

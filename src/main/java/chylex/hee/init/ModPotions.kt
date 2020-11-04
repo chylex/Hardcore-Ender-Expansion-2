@@ -91,7 +91,6 @@ object ModPotions{
 	}
 	
 	@JvmStatic
-	@Suppress("unused")
 	fun excludeFromCreativeMenu(potion: PotionType): Boolean{
 		return potion.registryName?.let { it.namespace == HEE.ID && it.path.endsWith(VANILLA_OVERRIDE_SUFFIX) } == true
 	}

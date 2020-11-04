@@ -1,0 +1,21 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "chylex.hee.mixin",
+  "compatibilityLevel": "JAVA_8",
+  "mixins": [
+    "HookBlockDrops",
+    "HookChorusFlowerSoil",
+    "HookChorusPlantSoil",
+    "HookEffectCorruption",
+    "HookEffectInstanceCorruption",
+    "HookEndermanParticles",
+    "HookEndermiteParticles",
+    "HookEntityPotionCorruption",
+    "HookFireSpread",
+    "HookPotionCreativeMenu"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

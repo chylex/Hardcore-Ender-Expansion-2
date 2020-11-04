@@ -1,10 +1,4 @@
 {
-  "HEE_VoidMinerPreventDrops": "coremods/block_void_miner_prevent_drops.js",
-  "HEE_ChorusPlantsGrowOnHumus": "coremods/chorus_plants_grow_on_humus.js",
   "HEE_DamageMultiplierHook": "coremods/damage_multiplier_hook.js",
-  "HEE_FireFixInfusedTNTTileEntity": "coremods/fire_fix_infused_tnt_tile_entity.js",
-  "HEE_MobDisableTickParticles": "coremods/mob_disable_tick_particles.js",
-  "HEE_PotionCreativeMenuDuplicates": "coremods/potion_creative_menu_duplicates.js",
-  "HEE_PotionHookCorruption": "coremods/potion_hook_corruption.js",
   "HEE_SwordHookSweep": "coremods/sword_hook_sweep.js"
 }

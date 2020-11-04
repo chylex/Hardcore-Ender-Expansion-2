@@ -21,6 +21,6 @@ description = ""
 [[dependencies.hee]]
     modId = "forge"
     mandatory = true
-    versionRange = "[31.2.27,)"
+    versionRange = "[31.2.45,)"
     ordering = "AFTER"
     side = "BOTH"
