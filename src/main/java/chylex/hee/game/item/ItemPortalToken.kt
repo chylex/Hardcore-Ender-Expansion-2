@@ -8,6 +8,7 @@ import chylex.hee.game.entity.item.EntityTokenHolder
 import chylex.hee.game.entity.selectExistingEntities
 import chylex.hee.game.inventory.heeTag
 import chylex.hee.game.inventory.heeTagOrNull
+import chylex.hee.game.mechanics.portal.DimensionTeleporter
 import chylex.hee.game.mechanics.portal.EntityPortalContact
 import chylex.hee.game.world.BlockEditor
 import chylex.hee.game.world.territory.TerritoryInstance
@@ -45,6 +46,7 @@ import net.minecraft.util.text.ITextComponent
 import net.minecraft.util.text.StringTextComponent
 import net.minecraft.util.text.TranslationTextComponent
 import net.minecraft.world.World
+import net.minecraft.world.dimension.DimensionType
 
 class ItemPortalToken(properties: Properties) : Item(properties){
 	companion object{
@@ -149,7 +151,7 @@ class ItemPortalToken(properties: Properties) : Item(properties){
 		val heldItem = player.getHeldItem(hand)
 		val territory = getTerritoryType(heldItem)
 		
-		if (world.isRemote || !player.isCreative || player.dimension !== HEE.dim || territory == null){
+		if (world.isRemote || !player.isCreative || territory == null){
 			return super.onItemRightClick(world, player, hand)
 		}
 		
@@ -158,11 +160,20 @@ class ItemPortalToken(properties: Properties) : Item(properties){
 		val index = getTerritoryIndex(heldItem) ?: TerritoryGlobalStorage.get().assignNewIndex(territory, tokenType)
 		val instance = remapInstanceIndex(TerritoryInstance(territory, index), tokenType, player)
 		
-		if (instance == null || !EntityPortalContact.shouldTeleport(player)){
+		if (instance == null){
 			return ActionResult(FAIL, heldItem)
 		}
 		
-		BlockVoidPortalInner.teleportEntity(player, instance.prepareSpawnPoint(player, clearanceRadius = 1))
+		EntityPortalContact.shouldTeleport(player) // ignore the result but prevent immediately teleporting back
+		val spawnInfo = instance.prepareSpawnPoint(player, clearanceRadius = 1)
+		
+		if (player.dimension === HEE.dim){
+			BlockVoidPortalInner.teleportEntity(player, spawnInfo)
+		}
+		else{
+			DimensionTeleporter.changeDimension(player, DimensionType.THE_END, DimensionTeleporter.EndTerritoryPortal(spawnInfo))
+		}
+		
 		return ActionResult(SUCCESS, heldItem)
 	}
 	
