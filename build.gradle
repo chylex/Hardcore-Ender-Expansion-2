@@ -1,6 +1,6 @@
 ext {
 	mc_version = "1.15.2"
-	forge_version = "31.2.27"
+	forge_version = "31.2.45"
 	mapping_version = "20200626-1.15.1"
 	kotlin_mod_version = "1.6.1"
 }
@@ -115,7 +115,8 @@ minecraft {
 	
 	runs {
 		client {
-			properties "hee.debug": ""
+			property "hee.debug", ""
+			property "mixin.env.disableRefMap", "true"
 			workingDirectory file("run")
 			
 			mods {
@@ -127,7 +128,8 @@ minecraft {
 		}
 		
 		server {
-			properties "hee.debug": ""
+			property "hee.debug", ""
+			property "mixin.env.disableRefMap", "true"
 			workingDirectory file("run")
 			
 			mods {
