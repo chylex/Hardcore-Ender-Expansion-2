@@ -168,8 +168,8 @@ object TerritoryVoid{
 	
 	@SubscribeEvent(EventPriority.HIGHEST)
 	fun onPlayerDamage(e: LivingDamageEvent){
-		if (e.source === DamageSource.OUT_OF_WORLD && e.entity.let { it is EntityLivingBase && it.dimension === HEE.dim }){
-			e.isCanceled = true
+		if (e.source === DamageSource.OUT_OF_WORLD && e.amount < Float.MAX_VALUE && e.entity.let { it is EntityLivingBase && it.dimension === HEE.dim }){
+			e.isCanceled = true // delegate out of world damage to custom void damage handling
 		}
 	}
 	
