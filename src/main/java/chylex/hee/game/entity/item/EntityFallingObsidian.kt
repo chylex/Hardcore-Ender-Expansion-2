@@ -4,7 +4,7 @@ import chylex.hee.game.entity.item.EntityFallingBlockHeavy.PlacementResult.RELOC
 import chylex.hee.game.entity.item.EntityFallingBlockHeavy.PlacementResult.SUCCESS
 import chylex.hee.game.entity.selectVulnerableEntities
 import chylex.hee.game.mechanics.damage.Damage
-import chylex.hee.game.mechanics.damage.Damage.Companion.TITLE_FALLING_BLOCK
+import chylex.hee.game.mechanics.damage.IDamageDealer.Companion.TITLE_FALLING_BLOCK
 import chylex.hee.game.mechanics.damage.IDamageProcessor.Companion.ARMOR_PROTECTION
 import chylex.hee.game.mechanics.damage.IDamageProcessor.Companion.ENCHANTMENT_PROTECTION
 import chylex.hee.game.mechanics.damage.IDamageProcessor.Companion.PEACEFUL_EXCLUSION

@@ -5,7 +5,7 @@ import chylex.hee.game.entity.heeTagOrNull
 import chylex.hee.game.inventory.heeTag
 import chylex.hee.game.inventory.heeTagOrNull
 import chylex.hee.game.mechanics.damage.Damage
-import chylex.hee.game.mechanics.damage.Damage.Companion.TITLE_STARVE
+import chylex.hee.game.mechanics.damage.IDamageDealer.Companion.TITLE_STARVE
 import chylex.hee.game.mechanics.damage.IDamageProcessor.Companion.MAGIC_TYPE
 import chylex.hee.game.mechanics.damage.IDamageProcessor.Companion.NON_LETHAL
 import chylex.hee.game.potion.makeEffect

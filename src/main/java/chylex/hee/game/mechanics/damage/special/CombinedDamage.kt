@@ -1,9 +1,12 @@
-package chylex.hee.game.mechanics.damage
-import chylex.hee.game.mechanics.damage.Damage.Companion.TITLE_GENERIC
+package chylex.hee.game.mechanics.damage.special
+import chylex.hee.game.mechanics.damage.IDamageDealer
+import chylex.hee.game.mechanics.damage.IDamageDealer.Companion.TITLE_GENERIC
+import chylex.hee.game.mechanics.damage.IDamageDealer.Companion.determineTitleDirect
+import chylex.hee.game.mechanics.damage.IDamageDealer.Companion.determineTitleIndirect
 import chylex.hee.system.migration.EntityLivingBase
 import net.minecraft.entity.Entity
 
-class CombinedDamage(private vararg val definitions: Pair<Damage, Float>){
+class CombinedDamage(private vararg val definitions: Pair<IDamageDealer, Float>){
 	private fun shouldPreventDamage(target: Entity): Boolean{
 		if (target is EntityLivingBase && target.hurtResistantTime > (target.maxHurtResistantTime / 2F)){
 			val lastDamage = target.lastDamage
@@ -16,7 +19,7 @@ class CombinedDamage(private vararg val definitions: Pair<Damage, Float>){
 		return false
 	}
 	
-	private inline fun dealToInternal(target: Entity, damageCall: (Pair<Damage, Float>) -> Boolean): Boolean{
+	private inline fun dealToInternal(target: Entity, damageCall: (Pair<IDamageDealer, Float>) -> Boolean): Boolean{
 		if (shouldPreventDamage(target)){
 			return false
 		}
@@ -39,9 +42,9 @@ class CombinedDamage(private vararg val definitions: Pair<Damage, Float>){
 	fun dealTo(target: Entity, title: String = TITLE_GENERIC) =
 		dealToInternal(target){ (damage, amount) -> damage.dealTo(amount, target, title) }
 	
-	fun dealToFrom(target: Entity, source: Entity, title: String = Damage.determineTitleDirect(source)) =
+	fun dealToFrom(target: Entity, source: Entity, title: String = determineTitleDirect(source)) =
 		dealToInternal(target){ (damage, amount) -> damage.dealToFrom(amount, target, source, title) }
 	
-	fun dealToIndirectly(target: Entity, triggeringSource: Entity, remoteSource: Entity, title: String = Damage.determineTitleIndirect(triggeringSource, remoteSource)) =
+	fun dealToIndirectly(target: Entity, triggeringSource: Entity, remoteSource: Entity, title: String = determineTitleIndirect(triggeringSource, remoteSource)) =
 		dealToInternal(target){ (damage, amount) -> damage.dealToIndirectly(amount, target, triggeringSource, remoteSource, title) }
 }

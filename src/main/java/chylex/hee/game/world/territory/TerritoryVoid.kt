@@ -5,7 +5,7 @@ import chylex.hee.game.block.BlockAbstractPortal
 import chylex.hee.game.entity.heeTag
 import chylex.hee.game.entity.posVec
 import chylex.hee.game.mechanics.damage.Damage
-import chylex.hee.game.mechanics.damage.Damage.Companion.TITLE_WITHER
+import chylex.hee.game.mechanics.damage.IDamageDealer.Companion.TITLE_WITHER
 import chylex.hee.game.mechanics.damage.IDamageProcessor.Companion.DEAL_CREATIVE
 import chylex.hee.game.mechanics.damage.IDamageProcessor.Companion.IGNORE_INVINCIBILITY
 import chylex.hee.game.particle.ParticleFadingSpot

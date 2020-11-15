@@ -4,7 +4,7 @@ import chylex.hee.game.entity.Teleporter.FxRange.Extended
 import chylex.hee.game.entity.Teleporter.FxRange.Normal
 import chylex.hee.game.entity.Teleporter.FxRange.Silent
 import chylex.hee.game.mechanics.damage.Damage
-import chylex.hee.game.mechanics.damage.Damage.Companion.TITLE_FALL
+import chylex.hee.game.mechanics.damage.IDamageDealer.Companion.TITLE_FALL
 import chylex.hee.game.mechanics.damage.IDamageProcessor.Companion.MAGIC_TYPE
 import chylex.hee.game.mechanics.instability.Instability
 import chylex.hee.game.particle.ParticleTeleport

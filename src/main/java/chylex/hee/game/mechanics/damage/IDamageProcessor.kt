@@ -1,6 +1,7 @@
 package chylex.hee.game.mechanics.damage
 import chylex.hee.game.entity.setFireTicks
-import chylex.hee.game.mechanics.damage.Damage.Companion.CANCEL_DAMAGE
+import chylex.hee.game.mechanics.damage.DamageProperties.Reader
+import chylex.hee.game.mechanics.damage.IDamageDealer.Companion.CANCEL_DAMAGE
 import chylex.hee.system.migration.EntityLivingBase
 import chylex.hee.system.migration.EntityPlayer
 import chylex.hee.system.migration.ItemArmor
@@ -32,12 +33,16 @@ interface IDamageProcessor{
 		
 		@JvmStatic
 		fun FIRE_TYPE(setOnFireTicks: Int = 0) = object : IDamageProcessor{
-			override fun setup(properties: DamageProperties.Writer) = properties.addType(DamageType.FIRE)
+			override fun setup(properties: DamageProperties.Writer){
+				properties.addType(DamageType.FIRE)
+			}
 			
-			override fun afterDamage(target: Entity, properties: DamageProperties.Reader){
+			override fun modifyDamage(amount: Float, target: Entity, properties: Reader): Float{
 				if (setOnFireTicks > 0){
 					target.setFireTicks(setOnFireTicks)
 				}
+				
+				return super.modifyDamage(amount, target, properties)
 			}
 		}
 		

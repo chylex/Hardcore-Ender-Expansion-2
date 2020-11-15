@@ -2,6 +2,7 @@ package chylex.hee.game.item
 import chylex.hee.game.entity.Teleporter
 import chylex.hee.game.entity.posVec
 import chylex.hee.game.mechanics.damage.Damage
+import chylex.hee.game.mechanics.damage.IDamageDealer.Companion.TITLE_MAGIC
 import chylex.hee.game.mechanics.damage.IDamageProcessor.Companion.MAGIC_TYPE
 import chylex.hee.game.mechanics.damage.IDamageProcessor.Companion.PEACEFUL_EXCLUSION
 import chylex.hee.game.potion.makeEffect
@@ -107,7 +108,7 @@ class ItemChorusBerry(properties: Properties) : Item(properties){
 				}
 				
 				if (!teleportEntity(entity, hungerOvercharge, rand)){
-					DAMAGE_TELEPORT_FAIL.dealTo(1F, entity, Damage.TITLE_MAGIC)
+					DAMAGE_TELEPORT_FAIL.dealTo(1F, entity, TITLE_MAGIC)
 				}
 			}
 		}

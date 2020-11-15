@@ -2,6 +2,7 @@ package chylex.hee.game.block
 import chylex.hee.client.render.block.IBlockLayerCutout
 import chylex.hee.game.block.properties.BlockBuilder
 import chylex.hee.game.mechanics.damage.Damage
+import chylex.hee.game.mechanics.damage.IDamageDealer.Companion.TITLE_IN_FIRE
 import chylex.hee.game.mechanics.damage.IDamageProcessor.Companion.ALL_PROTECTIONS
 import chylex.hee.game.mechanics.damage.IDamageProcessor.Companion.FIRE_TYPE
 import chylex.hee.game.mechanics.damage.IDamageProcessor.Companion.PEACEFUL_EXCLUSION
@@ -119,7 +120,7 @@ class BlockEternalFire(builder: BlockBuilder) : BlockFire(builder.p), IBlockLaye
 	}
 	
 	override fun onEntityCollision(state: BlockState, world: World, pos: BlockPos, entity: Entity){
-		DAMAGE_CONTACT.dealTo(1F, entity, Damage.TITLE_IN_FIRE)
+		DAMAGE_CONTACT.dealTo(1F, entity, TITLE_IN_FIRE)
 	}
 	
 	@SubscribeEvent

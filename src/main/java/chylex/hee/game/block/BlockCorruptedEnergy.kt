@@ -7,15 +7,15 @@ import chylex.hee.game.block.properties.BlockBuilder
 import chylex.hee.game.block.properties.Property
 import chylex.hee.game.entity.CustomCreatureType
 import chylex.hee.game.entity.living.IImmuneToCorruptedEnergy
-import chylex.hee.game.mechanics.damage.CombinedDamage
 import chylex.hee.game.mechanics.damage.Damage
-import chylex.hee.game.mechanics.damage.Damage.Companion.TITLE_MAGIC
+import chylex.hee.game.mechanics.damage.IDamageDealer.Companion.TITLE_MAGIC
 import chylex.hee.game.mechanics.damage.IDamageProcessor.Companion.ARMOR_PROTECTION
 import chylex.hee.game.mechanics.damage.IDamageProcessor.Companion.DIFFICULTY_SCALING
 import chylex.hee.game.mechanics.damage.IDamageProcessor.Companion.ENCHANTMENT_PROTECTION
 import chylex.hee.game.mechanics.damage.IDamageProcessor.Companion.MAGIC_TYPE
 import chylex.hee.game.mechanics.damage.IDamageProcessor.Companion.NUDITY_DANGER
 import chylex.hee.game.mechanics.damage.IDamageProcessor.Companion.RAPID_DAMAGE
+import chylex.hee.game.mechanics.damage.special.CombinedDamage
 import chylex.hee.game.particle.ParticleCorruptedEnergy
 import chylex.hee.game.particle.spawner.ParticleSpawnerCustom
 import chylex.hee.game.particle.spawner.properties.IOffset.InBox

@@ -2,6 +2,7 @@ package chylex.hee.game.block
 import chylex.hee.game.block.properties.BlockBuilder
 import chylex.hee.game.inventory.doDamage
 import chylex.hee.game.mechanics.damage.Damage
+import chylex.hee.game.mechanics.damage.IDamageDealer.Companion.TITLE_IN_FIRE
 import chylex.hee.game.mechanics.damage.IDamageProcessor.Companion.FIRE_TYPE
 import chylex.hee.game.mechanics.damage.IDamageProcessor.Companion.PEACEFUL_EXCLUSION
 import chylex.hee.game.particle.spawner.ParticleSpawnerVanilla
@@ -68,7 +69,7 @@ class BlockIgneousRockOre(builder: BlockBuilder) : BlockSimple(builder){
 		val heldItem = player.getHeldItem(MAIN_HAND)
 		
 		if ((getToolHarvestLevel(heldItem) ?: 0) < super.getHarvestLevel(state) || EnchantmentHelper.getEnchantmentLevel(Enchantments.SILK_TOUCH, player.getHeldItem(MAIN_HAND)) == 0){
-			DAMAGE_MINING.dealTo(2F, player, Damage.TITLE_IN_FIRE)
+			DAMAGE_MINING.dealTo(2F, player, TITLE_IN_FIRE)
 		}
 		
 		return super.removedByPlayer(state, world, pos, player, willHarvest, fluid)
