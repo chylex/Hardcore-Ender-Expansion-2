@@ -3,6 +3,7 @@ import chylex.hee.client.MC
 import chylex.hee.game.block.entity.TileEntitySpawnerObsidianTower
 import chylex.hee.game.entity.effect.EntityTerritoryLightningBolt
 import chylex.hee.game.entity.living.EntityBossEnderEye
+import chylex.hee.game.entity.living.behavior.EnderEyeAttack.LaserEye
 import chylex.hee.game.entity.living.behavior.EnderEyeAttack.Melee
 import chylex.hee.game.entity.lookPosVec
 import chylex.hee.game.entity.motionY
@@ -62,7 +63,17 @@ sealed class EnderEyePhase : INBTSerializable<TagCompound>{
 	override fun serializeNBT() = TagCompound()
 	override fun deserializeNBT(nbt: TagCompound){}
 	
-	object Hibernated : EnderEyePhase()
+	sealed class SleepingPhase : EnderEyePhase(){
+		abstract fun wakeUp(): EnderEyePhase
+		
+		object Hibernated : SleepingPhase(){
+			override fun wakeUp() = OpenEye()
+		}
+		
+		object Sleeping : SleepingPhase(){
+			override fun wakeUp() = Attacking()
+		}
+	}
 	
 	class OpenEye : EnderEyePhase(){
 		private companion object{
@@ -376,7 +387,7 @@ sealed class EnderEyePhase : INBTSerializable<TagCompound>{
 			val target = entity.attackTarget ?: entity.forceFindNewTarget()
 			
 			if (target == null || --timer < 0){
-				return Ready()
+				return Attacking()
 			}
 			
 			if (!::startRot.isInitialized){
@@ -399,14 +410,19 @@ sealed class EnderEyePhase : INBTSerializable<TagCompound>{
 		}
 	}
 	
-	class Ready : EnderEyePhase(){
+	class Attacking : EnderEyePhase(){
 		private val defaultAttack = Melee()
 		
 		var currentAttack: EnderEyeAttack = defaultAttack
 		
 		override fun tick(entity: EntityBossEnderEye): EnderEyePhase{
-			if (entity.isSleeping || !currentAttack.tick(entity)){
-				currentAttack = defaultAttack.also { it.reset(entity) }
+			if (!currentAttack.tick(entity)){
+				if (currentAttack === defaultAttack){
+					currentAttack = LaserEye()
+				}
+				else{
+					currentAttack = defaultAttack.also { it.reset(entity) }
+				}
 			}
 			
 			return this

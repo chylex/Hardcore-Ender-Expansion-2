@@ -5,7 +5,7 @@ import chylex.hee.game.entity.lookPosVec
 import chylex.hee.game.entity.motionX
 import chylex.hee.game.entity.motionZ
 import chylex.hee.game.entity.selectVulnerableEntities
-import chylex.hee.game.mechanics.damage.Damage
+import chylex.hee.game.mechanics.damage.IDamageDealer
 import chylex.hee.game.world.totalTime
 import chylex.hee.network.client.PacketClientLaunchInstantly
 import chylex.hee.system.math.Vec3
@@ -17,27 +17,34 @@ import chylex.hee.system.math.withY
 import chylex.hee.system.migration.EntityLivingBase
 import chylex.hee.system.migration.EntityPlayer
 import chylex.hee.system.random.nextFloat
+import chylex.hee.system.random.nextInt
 import net.minecraft.util.math.AxisAlignedBB
 import java.util.UUID
 import kotlin.math.abs
 import kotlin.math.cos
+import kotlin.math.pow
 
 sealed class EnderEyeAttack{
-	abstract val damageType: Damage
-	abstract val damageMultiplier: Float
+	abstract val dealtDamageType: IDamageDealer
+	abstract val dealtDamageMultiplier: Float
+	abstract val dealtKnockbackMultiplier: Float
 	abstract val canTakeKnockback: Boolean
 	abstract fun tick(entity: EntityBossEnderEye): Boolean
 	
 	class Melee : EnderEyeAttack(){
-		override val damageType
+		override val dealtDamageType
 			get() = EntityBossEnderEye.DAMAGE_MELEE
 		
-		override val damageMultiplier
+		override val dealtDamageMultiplier
+			get() = 1F
+		
+		override val dealtKnockbackMultiplier
 			get() = 1F
 		
 		override val canTakeKnockback = true
 		private var movementSpeed = 1.0
 		private var lastAttackTime = 0L
+		private var laserEyeTicksRemaining = 260
 		
 		override fun tick(entity: EntityBossEnderEye): Boolean = with(entity){
 			val target = attackTarget ?: forceFindNewTarget()
@@ -84,6 +91,11 @@ sealed class EnderEyeAttack{
 						attackEntityAsMob(target)
 					}
 				}
+				
+				if (--laserEyeTicksRemaining == 0){
+					laserEyeTicksRemaining = rng.nextInt(160, 260)
+					return false
+				}
 			}
 			
 			return true
@@ -92,15 +104,94 @@ sealed class EnderEyeAttack{
 		fun reset(entity: EntityBossEnderEye){
 			movementSpeed = 1.0
 			lastAttackTime = entity.world.totalTime
+			laserEyeTicksRemaining = laserEyeTicksRemaining.coerceAtLeast(35)
+		}
+	}
+	
+	class LaserEye : EnderEyeAttack(){
+		override val dealtDamageType
+			get() = EntityBossEnderEye.DAMAGE_LASER
+		
+		override val dealtDamageMultiplier
+			get() = 0.75F
+		
+		override val dealtKnockbackMultiplier
+			get() = 0F
+		
+		override val canTakeKnockback = true
+		
+		private var closedEyeTimer = 18
+		private var laserTicksLeft = 210
+		private var rotationSpeedTimer = 0
+		private var hasSwitchedTarget = false
+		
+		override fun tick(entity: EntityBossEnderEye): Boolean = with(entity){
+			if (closedEyeTimer > 0){
+				--closedEyeTimer
+				armPosition = EntityBossEnderEye.ARMS_LIMP
+				eyeState = EntityBossEnderEye.EYE_CLOSED
+				navigator.clearPath()
+				setRotateTarget(null)
+				return true
+			}
+			
+			if (laserTicksLeft == 0){
+				eyeState = EntityBossEnderEye.EYE_OPEN
+				return false
+			}
+			
+			val target = attackTarget ?: forceFindNewTarget()
+			
+			if (target == null || --laserTicksLeft <= rng.nextInt(0, 30)){
+				laserTicksLeft = 0
+				closedEyeTimer = 15
+				setRotateTarget(null)
+				return true
+			}
+			
+			if (rng.nextInt(100) < health * 0.2F){
+				--laserTicksLeft
+			}
+			
+			armPosition = EntityBossEnderEye.ARMS_ATTACK
+			eyeState = EntityBossEnderEye.EYE_LASER
+			setRotateTarget(target, 0.01F + ((rotationSpeedTimer++) * 0.0045F).pow(1.666F).coerceAtMost(0.59F))
+			
+			val laserStart = lookPosVec
+			val laserEnd = getLaserHit(1F)
+			val laserLen = laserEnd.distanceTo(laserStart)
+			
+			for(testEntity in world.selectVulnerableEntities.inBox<EntityLivingBase>(boundingBox.grow(laserLen))){
+				if (testEntity.boundingBox.rayTrace(laserStart, laserEnd).isPresent){
+					attackEntityAsMob(testEntity)
+				}
+			}
+			
+			if (!canEntityBeSeen(target)){
+				laserTicksLeft -= 4
+				
+				if (!hasSwitchedTarget){
+					hasSwitchedTarget = true
+					
+					if (forceFindNewTarget() == null){
+						attackTarget = target
+					}
+				}
+			}
+			
+			return true
 		}
 	}
 	
 	class KnockbackDash : EnderEyeAttack(){
-		override val damageType
+		override val dealtDamageType
 			get() = EntityBossEnderEye.DAMAGE_DASH
 		
-		override val damageMultiplier
+		override val dealtDamageMultiplier
 			get() = 2F
+		
+		override val dealtKnockbackMultiplier
+			get() = 1F // additional knockback is dealt manually per entity
 		
 		override val canTakeKnockback = false
 		

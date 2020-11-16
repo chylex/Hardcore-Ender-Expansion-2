@@ -11,8 +11,18 @@ import net.minecraft.entity.ai.controller.LookController
 import net.minecraft.util.math.Vec3d
 import kotlin.math.cos
 
-class EntityLookSlerp(entity: EntityLiving, private val adjustmentSpeed: Float, maxInstantAngle: Float) : LookController(entity){
-	private val maxInstantAngleCos = cos(maxInstantAngle.toRadians())
+class EntityLookSlerp(entity: EntityLiving, private var adjustmentSpeed: Float, maxInstantAngle: Float) : LookController(entity){
+	private var prevMaxInstantAngle = maxInstantAngle
+	private var maxInstantAngleCos = cos(maxInstantAngle.toRadians())
+	
+	fun setRotationParams(adjustmentSpeed: Float, maxInstantAngle: Float){
+		this.adjustmentSpeed = adjustmentSpeed
+		
+		if (maxInstantAngle != prevMaxInstantAngle){
+			this.prevMaxInstantAngle = maxInstantAngle
+			this.maxInstantAngleCos = cos(maxInstantAngle.toRadians())
+		}
+	}
 	
 	override fun setLookPosition(x: Double, y: Double, z: Double, deltaYaw: Float, deltaPitch: Float){
 		posX = x

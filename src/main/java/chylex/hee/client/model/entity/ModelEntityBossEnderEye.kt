@@ -49,7 +49,8 @@ object ModelEntityBossEnderEye : EntityModel<EntityBossEnderEye>(){
 		arms.rotateAngleX = entity.clientArmAngle.get(partialTicks).toRadians()
 		
 		eyeState = when{
-			entity.isSleeping -> 0
+			entity.eyeState == EntityBossEnderEye.EYE_CLOSED -> 0
+			entity.eyeState == EntityBossEnderEye.EYE_LASER -> 7
 			entity.isDemonEye -> 7
 			else -> entity.demonLevel + 1
 		}
