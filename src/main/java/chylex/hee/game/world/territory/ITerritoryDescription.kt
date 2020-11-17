@@ -6,6 +6,8 @@ import chylex.hee.game.world.territory.properties.TerritoryTokenHolders
 import chylex.hee.game.world.territory.storage.TerritoryEntry
 import chylex.hee.game.world.territory.storage.TerritoryStorageComponent
 import chylex.hee.game.world.territory.tickers.VoidTicker
+import net.minecraft.util.math.BlockPos
+import net.minecraft.world.World
 
 interface ITerritoryDescription{
 	val difficulty: TerritoryDifficulty
@@ -23,4 +25,7 @@ interface ITerritoryDescription{
 			tickers.add(VoidTicker(entry.registerComponent(TerritoryStorageComponent.VOID_DATA)))
 		}
 	}
+	
+	@JvmDefault
+	fun prepareSpawnPoint(world: World, spawnPoint: BlockPos, instance: TerritoryInstance){}
 }

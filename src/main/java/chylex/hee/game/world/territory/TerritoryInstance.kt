@@ -147,6 +147,7 @@ data class TerritoryInstance(val territory: TerritoryType, val index: Int){
 		BlockAbstractPortal.ensureClearance(world, spawnPoint, clearanceRadius)
 		BlockAbstractPortal.ensurePlatform(world, spawnPoint, territory.gen.groundBlock, clearanceRadius)
 		
+		territory.desc.prepareSpawnPoint(world, spawnPoint, this)
 		return SpawnInfo(spawnPoint, TerritoryGlobalStorage.get().forInstance(this)?.spawnYaw)
 	}
 	
