@@ -1,11 +1,17 @@
 package chylex.hee.game.world.territory.descriptions
+import chylex.hee.game.entity.living.EntityBossEnderEye
+import chylex.hee.game.world.component1
+import chylex.hee.game.world.component2
 import chylex.hee.game.world.territory.ITerritoryDescription
 import chylex.hee.game.world.territory.TerritoryDifficulty
+import chylex.hee.game.world.territory.TerritoryInstance
 import chylex.hee.game.world.territory.properties.TerritoryColors
 import chylex.hee.game.world.territory.properties.TerritoryEnvironment
 import chylex.hee.system.color.IntColor.Companion.RGB
 import chylex.hee.system.random.nextFloat
+import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.Vec3d
+import net.minecraft.world.World
 import java.util.Random
 
 object Territory_ObsidianTowers : ITerritoryDescription{
@@ -39,5 +45,31 @@ object Territory_ObsidianTowers : ITerritoryDescription{
 		
 		override val voidRadiusMpXZ = 2F
 		override val voidRadiusMpY = 2.5F
+	}
+	
+	override fun prepareSpawnPoint(world: World, spawnPoint: BlockPos, instance: TerritoryInstance){
+		super.prepareSpawnPoint(world, spawnPoint, instance)
+		
+		if (world.players.none { TerritoryInstance.fromPos(it) == instance }){
+			val chunks = instance.territory.chunks
+			val (startChunkX, startChunkZ) = instance.topLeftChunk
+			
+			var boss: EntityBossEnderEye? = null
+			
+			for(chunkX in startChunkX until (startChunkX + chunks))
+			for(chunkZ in startChunkZ until (startChunkZ + chunks)){
+				val chunk = world.getChunk(chunkX, chunkZ)
+				
+				for(entityList in chunk.entityLists){
+					val bosses = entityList.getByClass(EntityBossEnderEye::class.java)
+					
+					if (bosses.isNotEmpty()){
+						boss = bosses.takeIf { boss == null }?.singleOrNull() ?: return
+					}
+				}
+			}
+			
+			boss?.resetToSpawnAfterTerritoryReloads(spawnPoint)
+		}
 	}
 }

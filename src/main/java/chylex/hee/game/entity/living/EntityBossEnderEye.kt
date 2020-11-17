@@ -33,6 +33,7 @@ import chylex.hee.game.mechanics.damage.IDamageProcessor.Companion.RAPID_DAMAGE
 import chylex.hee.game.mechanics.damage.special.FallbackDamage
 import chylex.hee.game.potion.PotionBanishment
 import chylex.hee.game.world.Pos
+import chylex.hee.game.world.center
 import chylex.hee.game.world.totalTime
 import chylex.hee.init.ModEntities
 import chylex.hee.init.ModSounds
@@ -45,6 +46,8 @@ import chylex.hee.system.math.Vec3
 import chylex.hee.system.math.directionTowards
 import chylex.hee.system.math.floorToInt
 import chylex.hee.system.math.scale
+import chylex.hee.system.math.square
+import chylex.hee.system.math.toYaw
 import chylex.hee.system.math.withY
 import chylex.hee.system.migration.EntityFlying
 import chylex.hee.system.migration.EntityLivingBase
@@ -91,6 +94,7 @@ import net.minecraftforge.common.ForgeHooks
 import net.minecraftforge.fml.network.NetworkHooks
 import kotlin.math.abs
 import kotlin.math.min
+import kotlin.math.sqrt
 
 class EntityBossEnderEye(type: EntityType<EntityBossEnderEye>, world: World) : EntityFlying(type, world), IMob, IKnockbackMultiplier{
 	constructor(world: World) : this(ModEntities.ENDER_EYE, world)
@@ -267,16 +271,24 @@ class EntityBossEnderEye(type: EntityType<EntityBossEnderEye>, world: World) : E
 				motion = motion.scale(0.9)
 				
 				if (!isSleeping && (bossPhase is Attacking && ++fallAsleepTimer > rand.nextInt(35, 75))){
-					eyeState = EYE_CLOSED
-					armPosition = ARMS_LIMP
-					attackTarget = null
-					bossPhase = Sleeping
-					setRotateTarget(null)
+					fallAsleep()
 				}
 			}
 			else if (!currentTarget.isAlive || (currentTarget is EntityPlayer && (currentTarget.isCreative || currentTarget.isSpectator))){
 				attackTarget = null
 				setRotateTarget(null)
+			}
+			else{
+				val distanceFromTargetSq = getDistanceSq(currentTarget)
+				
+				if (distanceFromTargetSq > square(getAttribute(FOLLOW_RANGE).value * 0.375)){
+					val closerRange = sqrt(distanceFromTargetSq) * 0.25
+					val closerCandidate = rand.nextItemOrNull(world.selectVulnerableEntities.inRange<EntityPlayer>(posVec, closerRange).filter(::canEntityBeSeen))
+					
+					if (closerCandidate != null){
+						attackTarget = closerCandidate
+					}
+				}
 			}
 			
 			bossPhase = bossPhase.tick(this)
@@ -327,9 +339,30 @@ class EntityBossEnderEye(type: EntityType<EntityBossEnderEye>, world: World) : E
 		return
 	}
 	
+	private fun fallAsleep(){
+		eyeState = EYE_CLOSED
+		armPosition = ARMS_LIMP
+		attackTarget = null
+		bossPhase = Sleeping
+		setRotateTarget(null)
+	}
+	
 	fun updateDemonLevel(newLevel: Byte){
 		demonLevel = newLevel
 		updateDemonLevelAttributes()
+	}
+	
+	fun resetToSpawnAfterTerritoryReloads(spawnPoint: BlockPos){
+		if (bossPhase is Attacking || bossPhase === Sleeping){
+			fallAsleep()
+			
+			val pos = towerCenterPos?.takeIf { world.checkNoEntityCollision(this) && world.hasNoCollisions(this) } ?: return
+			val yaw = pos.center.directionTowards(spawnPoint.center).toYaw()
+			
+			setLocationAndAngles(pos.x + 0.5, pos.y.toDouble() + 2.5, pos.z + 0.5, yaw, 0F)
+			rotationYawHead = yaw
+			motion = Vec3d.ZERO
+		}
 	}
 	
 	override fun canDespawn(distanceToClosestPlayerSq: Double): Boolean{
