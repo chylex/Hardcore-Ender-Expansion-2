@@ -94,7 +94,6 @@ import net.minecraftforge.common.ForgeHooks
 import net.minecraftforge.fml.network.NetworkHooks
 import kotlin.math.abs
 import kotlin.math.min
-import kotlin.math.sqrt
 
 class EntityBossEnderEye(type: EntityType<EntityBossEnderEye>, world: World) : EntityFlying(type, world), IMob, IKnockbackMultiplier{
 	constructor(world: World) : this(ModEntities.ENDER_EYE, world)
@@ -281,8 +280,8 @@ class EntityBossEnderEye(type: EntityType<EntityBossEnderEye>, world: World) : E
 			else{
 				val distanceFromTargetSq = getDistanceSq(currentTarget)
 				
-				if (distanceFromTargetSq > square(getAttribute(FOLLOW_RANGE).value * 0.375)){
-					val closerRange = sqrt(distanceFromTargetSq) * 0.25
+				if (distanceFromTargetSq > square(getAttribute(FOLLOW_RANGE).value * 0.75)){
+					val closerRange = getAttribute(FOLLOW_RANGE).value * 0.375
 					val closerCandidate = rand.nextItemOrNull(world.selectVulnerableEntities.inRange<EntityPlayer>(posVec, closerRange).filter(::canEntityBeSeen))
 					
 					if (closerCandidate != null){
@@ -355,6 +354,7 @@ class EntityBossEnderEye(type: EntityType<EntityBossEnderEye>, world: World) : E
 	fun resetToSpawnAfterTerritoryReloads(spawnPoint: BlockPos){
 		if (bossPhase is Attacking || bossPhase === Sleeping){
 			fallAsleep()
+			health = realMaxHealth
 			
 			val pos = towerCenterPos?.takeIf { world.checkNoEntityCollision(this) && world.hasNoCollisions(this) } ?: return
 			val yaw = pos.center.directionTowards(spawnPoint.center).toYaw()
@@ -375,7 +375,7 @@ class EntityBossEnderEye(type: EntityType<EntityBossEnderEye>, world: World) : E
 	
 	// Battle
 	
-	fun forceFindNewTarget(): EntityPlayer?{
+	fun forceFindNewTarget(): EntityLivingBase?{
 		val attacker = revengeTarget as? EntityPlayer
 		
 		if (attacker != null){

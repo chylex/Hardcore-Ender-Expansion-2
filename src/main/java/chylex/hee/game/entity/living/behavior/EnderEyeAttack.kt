@@ -140,7 +140,7 @@ sealed class EnderEyeAttack{
 				return false
 			}
 			
-			val target = attackTarget ?: forceFindNewTarget()
+			val target = attackTarget ?: tryFindNewTarget()
 			
 			if (target == null || --laserTicksLeft <= rng.nextInt(0, 30)){
 				laserTicksLeft = 0
@@ -172,14 +172,22 @@ sealed class EnderEyeAttack{
 				
 				if (!hasSwitchedTarget){
 					hasSwitchedTarget = true
-					
-					if (forceFindNewTarget() == null){
-						attackTarget = target
-					}
+					tryFindNewTarget()
 				}
 			}
 			
 			return true
+		}
+		
+		private fun EntityBossEnderEye.tryFindNewTarget(): EntityLivingBase?{
+			val prevTarget = attackTarget
+			
+			if (forceFindNewTarget() == null){
+				attackTarget = prevTarget
+				return null // used to reset the attack if the player gets too far with no other nearby targets
+			}
+			
+			return prevTarget
 		}
 	}
 	
