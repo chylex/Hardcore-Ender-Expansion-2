@@ -4,6 +4,7 @@ import chylex.hee.game.mechanics.causatum.CausatumStage.S2_ENTERED_END
 import chylex.hee.game.mechanics.causatum.CausatumStage.S3_FINISHED_CURSED_LIBRARY
 import chylex.hee.game.world.generation.SegmentedWorld
 import chylex.hee.game.world.generation.TerritoryGenerationInfo
+import chylex.hee.game.world.generation.segments.SegmentSingleState
 import chylex.hee.game.world.math.Size
 import chylex.hee.game.world.territory.descriptions.Territory_ArcaneConjunctions
 import chylex.hee.game.world.territory.descriptions.Territory_ForgottenTombs
@@ -189,4 +190,18 @@ enum class TerritoryType(
 	
 	val isSpawn
 		get() = ordinal == 0
+	
+	fun generate(rand: Random): Pair<SegmentedWorld, TerritoryGenerationInfo>{
+		val generator = gen
+		val worldSize = size
+		val segmentSize = generator.segmentSize
+		val defaultBlock = generator.defaultBlock
+		
+		require(worldSize.x % 16 == 0 && worldSize.z % 16 == 0){ "territory world size must be chunk-aligned" }
+		
+		val world = SegmentedWorld(rand, worldSize, segmentSize){ SegmentSingleState(segmentSize, defaultBlock) }
+		val info = generator.provide(world)
+		
+		return world to info
+	}
 }
