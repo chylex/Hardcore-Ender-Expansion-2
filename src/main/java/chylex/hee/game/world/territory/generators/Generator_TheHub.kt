@@ -30,6 +30,7 @@ import chylex.hee.game.world.math.PosXZ
 import chylex.hee.game.world.math.Size
 import chylex.hee.game.world.offsetUntil
 import chylex.hee.game.world.offsetUntilExcept
+import chylex.hee.game.world.offsetWhile
 import chylex.hee.game.world.structure.trigger.EntityStructureTrigger
 import chylex.hee.game.world.structure.trigger.TileEntityStructureTrigger
 import chylex.hee.game.world.territory.ITerritoryGenerator
@@ -81,7 +82,7 @@ object Generator_TheHub : ITerritoryGenerator{
 		MainIsland.generate(world, rand, size)
 		
 		val spawnIslandCenter = SpawnIsland.findSpawnPos(world, rand, size)
-		val voidPortalCenter = VoidPortal.findSpawnPos(world, size)
+		val voidPortalCenter = VoidPortal.findSpawnPos(world, rand, size)
 		val voidPortalFacing = VoidPortal.generatePath(world, voidPortalCenter, spawnIslandCenter)
 		
 		CaveSystem.generate(world, rand, size)
@@ -346,19 +347,57 @@ object Generator_TheHub : ITerritoryGenerator{
 	}
 	
 	private object VoidPortal{
-		fun findSpawnPos(world: SegmentedWorld, size: Size): BlockPos{
-			var portalCenterPos = size.centerPos.offsetUntilExcept(UP, 0..24, world::isAir)!!
+		fun findSpawnPos(world: SegmentedWorld, rand: Random, size: Size): BlockPos{
+			var bestPos = BlockPos.ZERO
+			var bestHeightDifference = Int.MAX_VALUE
 			
-			for(pos in portalCenterPos.allInCenteredBoxMutable(2, 0, 2)){
-				val testPos = pos.offsetUntil(DOWN, 0..5){ !world.isAir(it) }
+			for(attempt in 1..100){
+				var testPos = size.centerPos
+					.add(rand.nextInt(-18, 18), 0, rand.nextInt(-18, 18))
+					.offsetUntilExcept(UP, 0..24, world::isAir)!!
 				
-				if (testPos != null && testPos.y < portalCenterPos.y){
-					portalCenterPos = portalCenterPos.down(portalCenterPos.y - testPos.y)
+				for(pos in testPos.allInCenteredBoxMutable(3, 0, 3)){
+					val topPos = pos.offsetUntil(DOWN, 0..5){ !world.isAir(it) }
+					
+					if (topPos != null && topPos.y < testPos.y){
+						testPos = testPos.down(testPos.y - topPos.y)
+					}
+				}
+				
+				var highestY = testPos.y
+				var lowestY = testPos.y
+				
+				for(pos in testPos.allInCenteredBoxMutable(6, 0, 6)){
+					if (pos.distanceSqTo(testPos) <= square(2.0)){
+						continue
+					}
+					
+					val topY = if (world.isAir(pos))
+						pos.offsetWhile(DOWN, 0..4, world::isAir).y
+					else
+						pos.offsetWhile(UP, 0..3){ !world.isAir(it) }.y
+					
+					if (topY > highestY){
+						highestY = topY
+					}
+					else if (topY < lowestY){
+						lowestY = topY
+					}
+				}
+				
+				val maxHeightDifference = highestY - lowestY
+				
+				if (maxHeightDifference < bestHeightDifference){
+					bestPos = testPos
+					bestHeightDifference = maxHeightDifference
+					
+					if (maxHeightDifference <= 1){
+						break
+					}
 				}
 			}
 			
-			// TODO attempt to find a slightly better position
-			return portalCenterPos
+			return bestPos
 		}
 		
 		fun generatePath(world: SegmentedWorld, portalCenter: BlockPos, spawnIslandCenter: BlockPos): Direction{
