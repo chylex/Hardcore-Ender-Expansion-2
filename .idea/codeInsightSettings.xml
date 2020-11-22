@@ -14,6 +14,7 @@
       <name>javax.swing</name>
       <name>javax.xml</name>
       <name>jdk.internal</name>
+      <name>kotlin.random.Random</name>
       <name>net.java.games.input.Component.Identifier.Key</name>
       <name>net.minecraft.init.Blocks</name>
       <name>net.minecraft.init.Items</name>
