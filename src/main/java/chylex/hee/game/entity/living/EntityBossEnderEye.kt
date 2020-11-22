@@ -100,6 +100,7 @@ class EntityBossEnderEye(type: EntityType<EntityBossEnderEye>, world: World) : E
 	
 	constructor(world: World, totalSpawners: Int) : this(world){
 		this.totalSpawners = totalSpawners.toShort()
+		this.rotationYaw = 0F
 	}
 	
 	companion object{
@@ -312,11 +313,14 @@ class EntityBossEnderEye(type: EntityType<EntityBossEnderEye>, world: World) : E
 	
 	// Spawning
 	
+	override fun onAddedToWorld(){
+		super.onAddedToWorld()
+		rotationYawHead = rotationYaw
+	}
+	
 	override fun onInitialSpawn(world: IWorld, difficulty: DifficultyInstance, reason: SpawnReason, data: ILivingEntityData?, nbt: CompoundNBT?): ILivingEntityData?{
 		val yaw = ((rotationYaw + 45F).toInt() / 90) * 90F
-		
 		setPositionAndRotation(posX, posY, posZ, yaw, 0F)
-		rotationYawHead = yaw
 		
 		return super.onInitialSpawn(world, difficulty, reason, data, nbt)
 	}
