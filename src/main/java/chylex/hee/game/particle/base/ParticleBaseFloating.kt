@@ -1,13 +1,13 @@
 package chylex.hee.game.particle.base
 import chylex.hee.system.forge.Side
 import chylex.hee.system.forge.Sided
-import net.minecraft.world.World
+import net.minecraft.client.world.ClientWorld
 
 /**
  * Particle with no gravity, no block collisions, and no motion randomness.
  */
 @Sided(Side.CLIENT)
-abstract class ParticleBaseFloating(world: World, posX: Double, posY: Double, posZ: Double, motX: Double, motY: Double, motZ: Double) : ParticleBase(world, posX, posY, posZ, motX, motY, motZ){
+abstract class ParticleBaseFloating(world: ClientWorld, posX: Double, posY: Double, posZ: Double, motX: Double, motY: Double, motZ: Double) : ParticleBase(world, posX, posY, posZ, motX, motY, motZ){
 	init{
 		motionX = motX
 		motionY = motY

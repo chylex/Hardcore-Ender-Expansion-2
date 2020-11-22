@@ -8,7 +8,7 @@ import com.mojang.blaze3d.vertex.IVertexBuilder
 import net.minecraft.client.renderer.RenderType
 import net.minecraft.client.renderer.model.Model
 import net.minecraft.client.renderer.model.ModelRenderer
-import net.minecraft.util.math.Vec3d
+import net.minecraft.util.math.vector.Vector3d
 import kotlin.math.PI
 import kotlin.math.abs
 import kotlin.math.sin
@@ -40,7 +40,7 @@ object ModelBlockIgneousPlate : Model(RenderType::getEntityCutout){
 		outerBox.render(matrix, builder, combinedLight, combinedOverlay, red, green, blue, alpha)
 	}
 	
-	fun renderInnerBox(matrix: MatrixStack, builder: IVertexBuilder, combinedLight: Int, combinedOverlay: Int, color: Vec3d, animation: Double){
+	fun renderInnerBox(matrix: MatrixStack, builder: IVertexBuilder, combinedLight: Int, combinedOverlay: Int, color: Vector3d, animation: Double){
 		matrix.push()
 		matrix.translateZ(-abs(sin(-animation)).toFloat() * 0.0925)
 		innerBox.render(matrix, builder, combinedLight, combinedOverlay, color.x.toFloat(), color.y.toFloat(), color.z.toFloat(), 1F)

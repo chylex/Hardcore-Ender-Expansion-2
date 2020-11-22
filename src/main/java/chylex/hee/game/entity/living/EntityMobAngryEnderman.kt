@@ -1,4 +1,6 @@
 package chylex.hee.game.entity.living
+import chylex.hee.game.entity.add
+import chylex.hee.game.entity.extend
 import chylex.hee.game.entity.living.ai.AttackMelee
 import chylex.hee.game.entity.living.ai.Swim
 import chylex.hee.game.entity.living.ai.TargetAttacker
@@ -13,36 +15,44 @@ import chylex.hee.init.ModEntities
 import chylex.hee.system.facades.Resource
 import chylex.hee.system.math.offsetTowards
 import chylex.hee.system.math.square
+import chylex.hee.system.migration.EntityEnderman
 import chylex.hee.system.migration.EntityPlayer
 import chylex.hee.system.serialization.TagCompound
 import chylex.hee.system.serialization.heeTag
 import chylex.hee.system.serialization.use
 import net.minecraft.entity.EntityPredicate
 import net.minecraft.entity.EntityType
-import net.minecraft.entity.SharedMonsterAttributes.ATTACK_DAMAGE
-import net.minecraft.entity.SharedMonsterAttributes.FOLLOW_RANGE
-import net.minecraft.entity.SharedMonsterAttributes.MAX_HEALTH
-import net.minecraft.entity.SharedMonsterAttributes.MOVEMENT_SPEED
+import net.minecraft.entity.ai.attributes.Attributes.ATTACK_DAMAGE
+import net.minecraft.entity.ai.attributes.Attributes.FOLLOW_RANGE
+import net.minecraft.entity.ai.attributes.Attributes.MAX_HEALTH
+import net.minecraft.entity.ai.attributes.Attributes.MOVEMENT_SPEED
 import net.minecraft.util.ResourceLocation
 import net.minecraft.util.math.AxisAlignedBB
 import net.minecraft.util.math.RayTraceContext
 import net.minecraft.util.math.RayTraceContext.BlockMode
 import net.minecraft.util.math.RayTraceContext.FluidMode
 import net.minecraft.util.math.RayTraceResult.Type
-import net.minecraft.util.math.Vec3d
+import net.minecraft.util.math.vector.Vector3d
 import net.minecraft.world.Difficulty.PEACEFUL
 import net.minecraft.world.World
 
 class EntityMobAngryEnderman(type: EntityType<EntityMobAngryEnderman>, world: World) : EntityMobAbstractEnderman(type, world){
 	constructor(world: World) : this(ModEntities.ANGRY_ENDERMAN, world)
 	
-	private companion object{
+	companion object{
 		private const val TELEPORT_HANDLER_TAG = "Teleport"
 		private const val WATER_HANDLER_TAG = "Water"
 		private const val DESPAWN_COOLDOWN_TAG = "DespawnCooldown"
 		
 		private const val AGGRO_DISTANCE = 12
 		private const val AGGRO_DISTANCE_SQ = AGGRO_DISTANCE * AGGRO_DISTANCE
+		
+		fun createAttributes() = EntityEnderman.func_233666_p_().extend {
+			add(MAX_HEALTH, 40.0)
+			add(ATTACK_DAMAGE, 7.0)
+			add(MOVEMENT_SPEED, 0.315)
+			add(FOLLOW_RANGE, 32.0)
+		}
 	}
 	
 	private lateinit var teleportHandler: EndermanTeleportHandler
@@ -51,14 +61,7 @@ class EntityMobAngryEnderman(type: EntityType<EntityMobAngryEnderman>, world: Wo
 	override val teleportCooldown = 35
 	private var despawnCooldown = 300
 	
-	override fun registerAttributes(){
-		super.registerAttributes()
-		
-		getAttribute(MAX_HEALTH).baseValue = 40.0
-		getAttribute(ATTACK_DAMAGE).baseValue = 7.0
-		getAttribute(MOVEMENT_SPEED).baseValue = 0.315
-		getAttribute(FOLLOW_RANGE).baseValue = 32.0
-		
+	init{
 		experienceValue = 7
 	}
 	
@@ -83,7 +86,7 @@ class EntityMobAngryEnderman(type: EntityType<EntityMobAngryEnderman>, world: Wo
 		if (currentTarget != null){
 			val distanceSq = getDistanceSq(currentTarget)
 			
-			if (distanceSq > square(getAttribute(FOLLOW_RANGE).value * 0.75) && !entitySenses.canSee(currentTarget)){
+			if (distanceSq > square(getAttributeValue(FOLLOW_RANGE) * 0.75) && !entitySenses.canSee(currentTarget)){
 				attackTarget = null
 			}
 			else if (distanceSq > AGGRO_DISTANCE_SQ){
@@ -111,7 +114,7 @@ class EntityMobAngryEnderman(type: EntityType<EntityMobAngryEnderman>, world: Wo
 		}
 		
 		val currentTarget = attackTarget ?: return false
-		val teleportPos = Vec3d(offsetTowards(aabb.minX, aabb.maxX, 0.5), aabb.minY + eyeHeight.toDouble(), offsetTowards(aabb.minZ, aabb.maxZ, 0.5))
+		val teleportPos = Vector3d(offsetTowards(aabb.minX, aabb.maxX, 0.5), aabb.minY + eyeHeight.toDouble(), offsetTowards(aabb.minZ, aabb.maxZ, 0.5))
 		
 		return world.rayTraceBlocks(RayTraceContext(teleportPos, currentTarget.lookPosVec, BlockMode.COLLIDER, FluidMode.NONE, this)).type == Type.MISS
 	}

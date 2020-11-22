@@ -48,7 +48,7 @@ import net.minecraft.util.Direction
 import net.minecraft.util.IStringSerializable
 import net.minecraft.util.SoundCategory
 import net.minecraft.util.math.BlockPos
-import net.minecraft.world.ILightReader
+import net.minecraft.world.IBlockDisplayReader
 import net.minecraft.world.World
 import java.util.Random
 
@@ -185,7 +185,7 @@ sealed class BlockPuzzleLogic(builder: BlockBuilder) : BlockSimple(builder), IBl
 				DISABLED -> DISABLED
 			}
 		
-		override fun getName(): String{
+		override fun getString(): String{
 			return serializableName
 		}
 	}
@@ -284,7 +284,7 @@ sealed class BlockPuzzleLogic(builder: BlockBuilder) : BlockSimple(builder), IBl
 	
 	@Sided(Side.CLIENT)
 	object Color : IBlockColor{
-		override fun getColor(state: BlockState, world: ILightReader?, pos: BlockPos?, tintIndex: Int): Int{
+		override fun getColor(state: BlockState, world: IBlockDisplayReader?, pos: BlockPos?, tintIndex: Int): Int{
 			if (tintIndex != 1){
 				return NO_TINT
 			}

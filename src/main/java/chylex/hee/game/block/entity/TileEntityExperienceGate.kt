@@ -51,7 +51,7 @@ import net.minecraft.tileentity.ITickableTileEntity
 import net.minecraft.tileentity.TileEntityType
 import net.minecraft.util.SoundCategory
 import net.minecraft.util.math.AxisAlignedBB
-import net.minecraft.util.math.Vec3d
+import net.minecraft.util.math.vector.Vector3d
 import java.util.Random
 import java.util.WeakHashMap
 import kotlin.math.min
@@ -189,7 +189,7 @@ class TileEntityExperienceGate(type: TileEntityType<TileEntityExperienceGate>) :
 				val newCharge = tokenHolder.currentCharge + (1F / 175F)
 				
 				if (newCharge >= 1F){
-					tokenHolder.forceDropToken(Vec3d.ZERO)
+					tokenHolder.forceDropToken(Vector3d.ZERO)
 					tokenHolder.currentCharge = 0F
 					experience = 0F
 				}

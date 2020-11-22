@@ -3,7 +3,7 @@ import chylex.hee.game.entity.living.path.PathNavigateGroundPreferBeeLine
 import chylex.hee.system.math.Vec3
 import chylex.hee.system.math.toRadians
 import chylex.hee.system.migration.EntityLiving
-import net.minecraft.entity.SharedMonsterAttributes.MOVEMENT_SPEED
+import net.minecraft.entity.ai.attributes.Attributes.MOVEMENT_SPEED
 import net.minecraft.entity.ai.controller.MovementController
 import net.minecraft.entity.ai.controller.MovementController.Action.MOVE_TO
 import net.minecraft.entity.ai.controller.MovementController.Action.WAIT
@@ -18,7 +18,7 @@ class EntityMoveJumping(entity: EntityLiving, private val jumpDelay: () -> Int, 
 			action = WAIT
 			mob.lookController.setLookPosition(posX, posY, posZ)
 			
-			if (mob.onGround){
+			if (mob.isOnGround){
 				disableMovement()
 				
 				if (jumpDelayRemaining == 0){
@@ -65,7 +65,7 @@ class EntityMoveJumping(entity: EntityLiving, private val jumpDelay: () -> Int, 
 	}
 	
 	private fun enableMovement(){
-		mob.aiMoveSpeed = if (waitForRotation()) 0F else (mob.getAttribute(MOVEMENT_SPEED).value * speed).toFloat()
+		mob.aiMoveSpeed = if (waitForRotation()) 0F else (mob.getAttributeValue(MOVEMENT_SPEED) * speed).toFloat()
 	}
 	
 	private fun disableMovement(){

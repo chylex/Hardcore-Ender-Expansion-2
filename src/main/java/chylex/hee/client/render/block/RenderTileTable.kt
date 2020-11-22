@@ -57,7 +57,7 @@ class RenderTileTable(dispatcher: TileEntityRendererDispatcher) : TileEntityRend
 		val itemModel = ForgeHooksClient.handleCameraTransforms(matrix, ModelHelper.getItemModel(itemStack), GUI, false)
 		
 		val mat = matrix.last
-		val builder = ItemRenderer.getBuffer(buffer, RenderTypeLookup.getRenderType(itemStack), true /* isItem */, false /* hasGlint */)
+		val builder = ItemRenderer.getBuffer(buffer, RenderTypeLookup.func_239219_a_(itemStack, true), true /* isItem */, false /* hasGlint */)
 		
 		for(quad in itemModel.getQuads()){
 			builder.addVertexData(mat, quad, COLOR_SHADE, COLOR_SHADE, COLOR_SHADE, COLOR_ALPHA, LIGHT, OverlayTexture.NO_OVERLAY)

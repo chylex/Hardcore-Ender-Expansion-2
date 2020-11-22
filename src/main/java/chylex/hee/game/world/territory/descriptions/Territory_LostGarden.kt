@@ -7,7 +7,7 @@ import chylex.hee.game.world.territory.properties.TerritoryColors
 import chylex.hee.game.world.territory.properties.TerritoryEnvironment
 import chylex.hee.system.color.IntColor.Companion.RGB
 import chylex.hee.system.random.nextFloat
-import net.minecraft.util.math.Vec3d
+import net.minecraft.util.math.vector.Vector3d
 import java.util.Random
 
 object Territory_LostGarden : ITerritoryDescription{
@@ -50,7 +50,7 @@ object Territory_LostGarden : ITerritoryDescription{
 		override val voidRadiusMpY = 2F
 		
 		override val renderer = SkyDomeStatic(
-			color = Vec3d(0.91, 0.93, 0.85),
+			color = Vector3d(0.91, 0.93, 0.85),
 			alpha1 = 1F,
 			alpha2 = 0F
 		)

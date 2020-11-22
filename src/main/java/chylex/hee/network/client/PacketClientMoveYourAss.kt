@@ -7,14 +7,14 @@ import chylex.hee.system.serialization.readVec
 import chylex.hee.system.serialization.use
 import chylex.hee.system.serialization.writeVec
 import net.minecraft.network.PacketBuffer
-import net.minecraft.util.math.Vec3d
+import net.minecraft.util.math.vector.Vector3d
 
 class PacketClientMoveYourAss() : BaseClientPacket(){
-	constructor(position: Vec3d) : this(){
+	constructor(position: Vector3d) : this(){
 		this.position = position
 	}
 	
-	private lateinit var position: Vec3d
+	private lateinit var position: Vector3d
 	
 	override fun write(buffer: PacketBuffer) = buffer.use {
 		writeVec(position)

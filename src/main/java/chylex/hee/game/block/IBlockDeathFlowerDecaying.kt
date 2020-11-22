@@ -76,14 +76,8 @@ interface IBlockDeathFlowerDecaying{
 	}
 	
 	@JvmDefault
-	fun implTickRate(): Int{
-		return 1600
-	}
-	
-	@JvmDefault
 	fun implOnBlockAdded(world: World, pos: BlockPos){
-		val tickRate = implTickRate()
-		world.pendingBlockTicks.scheduleTick(pos, thisAsBlock, world.rand.nextInt(tickRate / 4, tickRate))
+		world.pendingBlockTicks.scheduleTick(pos, thisAsBlock, world.rand.nextInt(TICK_RATE / 4, TICK_RATE))
 	}
 	
 	@JvmDefault
@@ -92,7 +86,7 @@ interface IBlockDeathFlowerDecaying{
 			return
 		}
 		
-		world.pendingBlockTicks.scheduleTick(pos, thisAsBlock, implTickRate())
+		world.pendingBlockTicks.scheduleTick(pos, thisAsBlock, TICK_RATE)
 		
 		if (world.isPeaceful){
 			return
@@ -170,6 +164,7 @@ interface IBlockDeathFlowerDecaying{
 		
 		val LEVEL = Property.int("level", MIN_LEVEL..MAX_LEVEL)
 		
+		private const val TICK_RATE = 1600
 		private const val WITHER_FLOWER_RADIUS = 4
 		private const val WITHER_PLAYER_RADIUS = 1024.0
 		

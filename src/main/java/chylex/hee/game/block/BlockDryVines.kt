@@ -12,7 +12,7 @@ import net.minecraft.block.BlockState
 import net.minecraft.client.renderer.color.IBlockColor
 import net.minecraft.util.math.BlockPos
 import net.minecraft.world.FoliageColors
-import net.minecraft.world.ILightReader
+import net.minecraft.world.IBlockDisplayReader
 import net.minecraft.world.IWorldReader
 import net.minecraft.world.biome.BiomeColors
 import net.minecraft.world.biome.Biomes
@@ -26,7 +26,7 @@ class BlockDryVines(builder: BlockBuilder) : BlockVine(builder.p), IBlockLayerCu
 	override fun tick(state: BlockState, world: ServerWorld, pos: BlockPos, rand: Random){}
 	
 	override fun isLadder(state: BlockState, world: IWorldReader, pos: BlockPos, entity: EntityLivingBase): Boolean{
-		return !entity.onGround
+		return !entity.isOnGround
 	}
 	
 	// Client side
@@ -44,7 +44,7 @@ class BlockDryVines(builder: BlockBuilder) : BlockVine(builder.p), IBlockLayerCu
 			).i
 		}
 		
-		override fun getColor(state: BlockState, uselessWorld: ILightReader?, pos: BlockPos?, tintIndex: Int): Int{
+		override fun getColor(state: BlockState, uselessWorld: IBlockDisplayReader?, pos: BlockPos?, tintIndex: Int): Int{
 			val world = MC.world
 			
 			if (world == null || pos == null){

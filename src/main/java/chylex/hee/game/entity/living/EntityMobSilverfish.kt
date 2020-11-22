@@ -1,5 +1,7 @@
 package chylex.hee.game.entity.living
 import chylex.hee.HEE
+import chylex.hee.game.entity.add
+import chylex.hee.game.entity.extend
 import chylex.hee.game.entity.living.ai.AISummonFromBlock
 import chylex.hee.game.entity.living.ai.AITargetSwarmSwitch
 import chylex.hee.game.entity.living.ai.AttackMelee
@@ -31,9 +33,9 @@ import net.minecraft.block.Block
 import net.minecraft.block.BlockState
 import net.minecraft.entity.Entity
 import net.minecraft.entity.EntityType
-import net.minecraft.entity.SharedMonsterAttributes.ATTACK_DAMAGE
-import net.minecraft.entity.SharedMonsterAttributes.FOLLOW_RANGE
-import net.minecraft.entity.SharedMonsterAttributes.MAX_HEALTH
+import net.minecraft.entity.ai.attributes.Attributes.ATTACK_DAMAGE
+import net.minecraft.entity.ai.attributes.Attributes.FOLLOW_RANGE
+import net.minecraft.entity.ai.attributes.Attributes.MAX_HEALTH
 import net.minecraft.network.IPacket
 import net.minecraft.util.DamageSource
 import net.minecraft.util.EntityDamageSource
@@ -73,6 +75,12 @@ class EntityMobSilverfish(type: EntityType<EntityMobSilverfish>, world: World) :
 				}
 			}
 		}
+		
+		fun createAttributes() = EntitySilverfish.func_233666_p_().extend {
+			add(MAX_HEALTH, 8.0)
+			add(ATTACK_DAMAGE, 2.0)
+			add(FOLLOW_RANGE, 12.0)
+		}
 	}
 	
 	private lateinit var aiSummonFromBlock: AISummonFromBlock
@@ -82,13 +90,7 @@ class EntityMobSilverfish(type: EntityType<EntityMobSilverfish>, world: World) :
 	
 	override var wasLastHitCritical = false
 	
-	override fun registerAttributes(){
-		super.registerAttributes()
-		
-		getAttribute(MAX_HEALTH).baseValue = 8.0
-		getAttribute(ATTACK_DAMAGE).baseValue = 2.0
-		getAttribute(FOLLOW_RANGE).baseValue = 12.0
-		
+	init{
 		experienceValue = 3
 	}
 	

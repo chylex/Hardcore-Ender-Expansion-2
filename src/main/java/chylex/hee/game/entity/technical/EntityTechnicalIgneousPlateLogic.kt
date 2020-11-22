@@ -52,7 +52,7 @@ import net.minecraft.particles.ParticleTypes.SMOKE
 import net.minecraft.util.SoundCategory
 import net.minecraft.util.math.AxisAlignedBB
 import net.minecraft.util.math.BlockPos
-import net.minecraft.util.math.Vec3d
+import net.minecraft.util.math.vector.Vector3d
 import net.minecraft.world.World
 import net.minecraftforge.fml.network.NetworkHooks
 import java.util.Random
@@ -129,7 +129,7 @@ class EntityTechnicalIgneousPlateLogic(type: EntityType<EntityTechnicalIgneousPl
 			
 			while(stack.isNotEmpty){
 				EntityItemFreshlyCooked(world, target, stack.split(rand.nextInt(10, 20))).apply {
-					motion = Vec3d.ZERO
+					motion = Vector3d.ZERO
 					world.addEntity(this)
 				}
 			}

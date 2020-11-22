@@ -8,18 +8,23 @@ import chylex.hee.system.serialization.heeTagOrNull
 import com.google.common.base.Predicates
 import net.minecraft.enchantment.ProtectionEnchantment
 import net.minecraft.entity.Entity
+import net.minecraft.entity.EntityType
+import net.minecraft.entity.ai.attributes.Attribute
 import net.minecraft.entity.ai.attributes.AttributeModifier
 import net.minecraft.entity.ai.attributes.AttributeModifier.Operation
-import net.minecraft.entity.ai.attributes.IAttributeInstance
+import net.minecraft.entity.ai.attributes.AttributeModifierMap.MutableAttribute
+import net.minecraft.entity.ai.attributes.ModifiableAttributeInstance
 import net.minecraft.entity.player.PlayerEntity.PERSISTED_NBT_TAG
 import net.minecraft.util.EntityPredicates
-import net.minecraft.util.math.Vec3d
+import net.minecraft.util.RegistryKey
+import net.minecraft.util.math.vector.Vector3d
 import net.minecraft.world.IEntityReader
+import net.minecraft.world.World
 
 // Properties
 
-var Entity.posVec: Vec3d
-	get() = this.positionVector
+var Entity.posVec: Vector3d
+	get() = this.positionVec
 	set(value) = this.setRawPosition(value.x, value.y, value.z)
 
 var Entity.positionX
@@ -37,26 +42,29 @@ var Entity.positionZ
 var Entity.motionX
 	get() = this.motion.x
 	set(value){
-		this.motion = Vec3d(value, motion.y, motion.z)
+		this.motion = Vector3d(value, motion.y, motion.z)
 	}
 
 var Entity.motionY
 	get() = this.motion.y
 	set(value){
-		this.motion = Vec3d(motion.x, value, motion.z)
+		this.motion = Vector3d(motion.x, value, motion.z)
 	}
 
 var Entity.motionZ
 	get() = this.motion.z
 	set(value){
-		this.motion = Vec3d(motion.x, motion.y, value)
+		this.motion = Vector3d(motion.x, motion.y, value)
 	}
 
-val Entity.lookPosVec: Vec3d
+val Entity.lookPosVec: Vector3d
 	get() = this.getEyePosition(1F)
 
-val Entity.lookDirVec: Vec3d
+val Entity.lookDirVec: Vector3d
 	get() = this.getLook(1F)
+
+val Entity.dimensionKey: RegistryKey<World>
+	get() = this.world.dimensionKey
 
 // Methods
 
@@ -88,6 +96,12 @@ fun EntityItem.cloneFrom(source: Entity){
 	}
 }
 
+// Spawning
+
+fun <T : Entity> EntityType<T>.spawn(world: World, setup: T.() -> Unit){
+	this.create(world)!!.apply(setup).apply(world::addEntity)
+}
+
 // NBT
 
 val Entity.heeTag
@@ -115,14 +129,28 @@ val OPERATION_MUL_INCR_INDIVIDUAL = Operation.MULTIPLY_TOTAL
 
 // Attributes (Helpers)
 
-fun IAttributeInstance.tryApplyModifier(modifier: AttributeModifier){
-	if (!this.hasModifier(modifier)){
-		this.applyModifier(modifier)
+inline fun MutableAttribute.extend(extender: MutableAttribute.() -> Unit): MutableAttribute{
+	return this.apply(extender)
+}
+
+fun MutableAttribute.add(attribute: Attribute, value: Double){
+	this.createMutableAttribute(attribute, value)
+}
+
+fun ModifiableAttributeInstance?.tryApplyPersistentModifier(modifier: AttributeModifier){
+	if (this != null && !this.hasModifier(modifier)){
+		this.applyPersistentModifier(modifier)
 	}
 }
 
-fun IAttributeInstance.tryRemoveModifier(modifier: AttributeModifier){
-	if (this.hasModifier(modifier)){
+fun ModifiableAttributeInstance?.tryApplyNonPersistentModifier(modifier: AttributeModifier){
+	if (this != null && !this.hasModifier(modifier)){
+		this.applyNonPersistentModifier(modifier)
+	}
+}
+
+fun ModifiableAttributeInstance?.tryRemoveModifier(modifier: AttributeModifier){
+	if (this != null && this.hasModifier(modifier)){
 		this.removeModifier(modifier)
 	}
 }

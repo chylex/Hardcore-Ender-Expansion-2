@@ -1,6 +1,6 @@
 package chylex.hee.client.render.gl
 import com.mojang.blaze3d.matrix.MatrixStack
-import net.minecraft.client.renderer.Vector3f
+import net.minecraft.util.math.vector.Vector3f
 
 fun MatrixStack.translateX(amount: Double){
 	this.translate(amount, 0.0, 0.0)

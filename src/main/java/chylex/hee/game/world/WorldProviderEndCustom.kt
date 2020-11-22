@@ -19,9 +19,9 @@ import chylex.hee.system.forge.Sided
 import chylex.hee.system.forge.SubscribeAllEvents
 import chylex.hee.system.forge.SubscribeEvent
 import net.minecraft.block.Blocks
-import net.minecraft.client.renderer.Vector3f
 import net.minecraft.util.math.BlockPos
-import net.minecraft.util.math.Vec3d
+import net.minecraft.util.math.vector.Vector3d
+import net.minecraft.util.math.vector.Vector3f
 import net.minecraft.world.World
 import net.minecraft.world.biome.Biomes
 import net.minecraft.world.biome.provider.SingleBiomeProvider
@@ -62,7 +62,7 @@ class WorldProviderEndCustom(world: World, type: DimensionType) : EndDimension(w
 		@Sided(Side.CLIENT)
 		@SubscribeEvent(priority = EventPriority.LOWEST)
 		fun onFog(@Suppress("UNUSED_PARAMETER") e: RenderFogEvent){
-			val player = MC.player?.takeIf { it.world.dimension.type == DimensionType.THE_END } ?: return
+			val player = MC.player?.takeIf { it.world.dimensionKey === HEE.dim } ?: return
 			
 			val density = TerritoryInstance.fromPos(player)?.let { it.territory.desc.environment }?.let {
 				(it.fogDensity * AbstractEnvironmentRenderer.currentFogDensityMp) + (it.fogRenderDistanceModifier * AbstractEnvironmentRenderer.currentRenderDistanceMp)
@@ -84,7 +84,7 @@ class WorldProviderEndCustom(world: World, type: DimensionType) : EndDimension(w
 	init{
 		when(val w = this.world){
 			is ServerWorld -> {
-				dragonFightManager = DragonFightManagerNull(w, this)
+				dragonFightManager = DragonFightManagerNull(w)
 			}
 			
 			else -> {
@@ -181,15 +181,15 @@ class WorldProviderEndCustom(world: World, type: DimensionType) : EndDimension(w
 	
 	/* UPDATE ASM
 	@Sided(Side.CLIENT)
-	override fun getSkyColor(pos: BlockPos, partialTicks: Float): Vec3d{
-		return clientEnvironment?.fogColor ?: Vec3d.ZERO // return fog color because vanilla blends fog into sky color based on chunk render distance
+	override fun getSkyColor(pos: BlockPos, partialTicks: Float): Vector3d{
+		return clientEnvironment?.fogColor ?: Vector3d.ZERO // return fog color because vanilla blends fog into sky color based on chunk render distance
 	}*/
 	
 	// Visual properties (Fog)
 	
 	@Sided(Side.CLIENT)
-	override fun getFogColor(celestialAngle: Float, partialTicks: Float): Vec3d{
-		return clientEnvironment?.fogColor ?: Vec3d.ZERO
+	override fun getFogColor(celestialAngle: Float, partialTicks: Float): Vector3d{
+		return clientEnvironment?.fogColor ?: Vector3d.ZERO
 	}
 	
 	@Sided(Side.CLIENT)

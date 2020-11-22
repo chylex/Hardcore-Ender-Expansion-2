@@ -13,6 +13,8 @@ import net.minecraft.block.BlockState
 import net.minecraft.inventory.container.INamedContainerProvider
 import net.minecraft.item.DyeColor
 import net.minecraft.item.ItemStack
+import net.minecraft.loot.LootContext.Builder
+import net.minecraft.loot.LootParameters
 import net.minecraft.tileentity.ShulkerBoxTileEntity.AnimationStatus.CLOSED
 import net.minecraft.tileentity.TileEntity
 import net.minecraft.util.ActionResultType
@@ -25,8 +27,6 @@ import net.minecraft.util.math.shapes.VoxelShapes
 import net.minecraft.util.text.TranslationTextComponent
 import net.minecraft.world.IBlockReader
 import net.minecraft.world.World
-import net.minecraft.world.storage.loot.LootContext.Builder
-import net.minecraft.world.storage.loot.LootParameters
 import java.util.stream.IntStream
 
 class BlockShulkerBoxOverride(properties: Properties, color: DyeColor?) : BlockShulkerBox(color, properties){

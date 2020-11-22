@@ -14,7 +14,6 @@ import chylex.hee.system.math.floorToInt
 import com.mojang.blaze3d.matrix.MatrixStack
 import com.mojang.blaze3d.vertex.IVertexBuilder
 import net.minecraft.client.renderer.IRenderTypeBuffer
-import net.minecraft.client.renderer.Matrix4f
 import net.minecraft.client.renderer.WorldRenderer
 import net.minecraft.client.renderer.texture.TextureAtlasSprite
 import net.minecraft.client.renderer.tileentity.TileEntityRenderer
@@ -22,6 +21,7 @@ import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats
 import net.minecraft.inventory.container.PlayerContainer
 import net.minecraft.util.math.BlockPos
+import net.minecraft.util.math.vector.Matrix4f
 import net.minecraft.world.World
 import net.minecraftforge.client.event.TextureStitchEvent
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber.Bus.MOD

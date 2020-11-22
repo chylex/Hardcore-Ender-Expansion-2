@@ -8,7 +8,7 @@ import chylex.hee.system.math.toYaw
 import chylex.hee.system.migration.EntityLiving
 import net.minecraft.entity.Entity
 import net.minecraft.entity.ai.controller.LookController
-import net.minecraft.util.math.Vec3d
+import net.minecraft.util.math.vector.Vector3d
 import kotlin.math.cos
 
 class EntityLookSlerp(entity: EntityLiving, private var adjustmentSpeed: Float, maxInstantAngle: Float) : LookController(entity){
@@ -39,9 +39,9 @@ class EntityLookSlerp(entity: EntityLiving, private var adjustmentSpeed: Float, 
 		if (isLooking){
 			isLooking = false
 			
-			val dir = mob.lookPosVec.directionTowards(Vec3d(posX, posY, posZ))
+			val dir = mob.lookPosVec.directionTowards(Vector3d(posX, posY, posZ))
 			
-			if (Vec3d.fromPitchYaw(mob.rotationPitch, mob.rotationYawHead).dotProduct(dir) >= maxInstantAngleCos){
+			if (Vector3d.fromPitchYaw(mob.rotationPitch, mob.rotationYawHead).dotProduct(dir) >= maxInstantAngleCos){
 				mob.rotationYawHead = dir.toYaw()
 				mob.rotationPitch = dir.toPitch()
 			}

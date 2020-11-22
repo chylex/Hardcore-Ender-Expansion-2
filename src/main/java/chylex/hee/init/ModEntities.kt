@@ -38,7 +38,9 @@ import chylex.hee.system.forge.named
 import chylex.hee.system.forge.registerAllFields
 import chylex.hee.system.migration.EntityEnderman
 import chylex.hee.system.migration.EntityEndermite
+import chylex.hee.system.migration.EntityLivingBase
 import chylex.hee.system.migration.EntitySilverfish
+import chylex.hee.system.migration.EntityVillager
 import chylex.hee.system.reflection.ObjectConstructors
 import chylex.hee.system.serialization.TagCompound
 import net.minecraft.entity.Entity
@@ -51,6 +53,8 @@ import net.minecraft.entity.EntitySpawnPlacementRegistry.PlacementType
 import net.minecraft.entity.EntityType
 import net.minecraft.entity.EntityType.IFactory
 import net.minecraft.entity.MobEntity
+import net.minecraft.entity.ai.attributes.AttributeModifierMap.MutableAttribute
+import net.minecraft.entity.ai.attributes.GlobalEntityTypeAttributes
 import net.minecraft.entity.monster.MonsterEntity
 import net.minecraft.network.datasync.DataSerializers
 import net.minecraft.world.World
@@ -107,6 +111,21 @@ object ModEntities{
 		
 		DataSerializers.registerSerializer(ColorDataSerializer)
 		
+		// attributes
+		
+		registerAttributes(ENDER_EYE, EntityBossEnderEye.createAttributes())
+		registerAttributes(ANGRY_ENDERMAN, EntityMobAngryEnderman.createAttributes())
+		registerAttributes(BLOBBY, EntityMobBlobby.createAttributes())
+		registerAttributes(ENDERMAN, EntityMobEnderman.createAttributes())
+		registerAttributes(ENDERMAN_MUPPET, EntityMobEndermanMuppet.createAttributes())
+		registerAttributes(ENDERMITE, EntityMobEndermite.createAttributes())
+		registerAttributes(ENDERMITE_INSTABILITY, EntityMobEndermite.createAttributes())
+		registerAttributes(SILVERFISH, EntityMobSilverfish.createAttributes())
+		registerAttributes(SPIDERLING, EntityMobSpiderling.createAttributes())
+		registerAttributes(UNDREAD, EntityMobUndread.createAttributes())
+		registerAttributes(VAMPIRE_BAT, EntityMobVampireBat.createAttributes())
+		registerAttributes(VILLAGER_DYING, EntityVillager.func_233666_p_())
+		
 		// spawns
 		
 		val defaultSpawnPredicateHostile = MonsterEntity::canMonsterSpawnInLight
@@ -160,6 +179,10 @@ object ModEntities{
 	}
 	
 	// Utilities
+	
+	private fun registerAttributes(type: EntityType<out EntityLivingBase>, attributes: MutableAttribute){
+		GlobalEntityTypeAttributes.put(type, attributes.create())
+	}
 	
 	@Suppress("UNCHECKED_CAST")
 	private inline fun <reified T : Entity> build(classification: EntityClassification): EntityType.Builder<T>{

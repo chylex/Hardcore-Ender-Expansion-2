@@ -9,14 +9,13 @@ import net.minecraft.block.Block
 import net.minecraft.block.BlockState
 import net.minecraft.item.BlockItemUseContext
 import net.minecraft.item.ItemStack
+import net.minecraft.loot.LootContext
 import net.minecraft.state.StateContainer.Builder
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.RayTraceResult
 import net.minecraft.world.IBlockReader
-import net.minecraft.world.IWorldReader
 import net.minecraft.world.World
 import net.minecraft.world.server.ServerWorld
-import net.minecraft.world.storage.loot.LootContext
 import java.util.Random
 
 class BlockDeathFlowerDecaying(builder: BlockBuilder) : BlockEndPlant(builder), IBlockDeathFlowerDecaying, IBlockLayerCutout{
@@ -32,10 +31,6 @@ class BlockDeathFlowerDecaying(builder: BlockBuilder) : BlockEndPlant(builder), 
 	
 	override val witheredFlowerBlock
 		get() = ModBlocks.DEATH_FLOWER_WITHERED
-	
-	override fun tickRate(world: IWorldReader): Int{
-		return implTickRate()
-	}
 	
 	override fun getStateForPlacement(context: BlockItemUseContext): BlockState{
 		return defaultState.with(LEVEL, ItemDeathFlower.getDeathLevel(context.item))

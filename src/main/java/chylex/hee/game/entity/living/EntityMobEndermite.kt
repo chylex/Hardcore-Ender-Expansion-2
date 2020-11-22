@@ -1,5 +1,7 @@
 package chylex.hee.game.entity.living
 import chylex.hee.game.entity.CustomCreatureType
+import chylex.hee.game.entity.add
+import chylex.hee.game.entity.extend
 import chylex.hee.game.entity.living.ai.AttackMelee
 import chylex.hee.game.entity.living.ai.ForceWanderTiming
 import chylex.hee.game.entity.living.ai.Swim
@@ -21,8 +23,8 @@ import chylex.hee.system.serialization.use
 import net.minecraft.entity.CreatureAttribute
 import net.minecraft.entity.Entity
 import net.minecraft.entity.EntityType
-import net.minecraft.entity.SharedMonsterAttributes.ATTACK_DAMAGE
-import net.minecraft.entity.SharedMonsterAttributes.MAX_HEALTH
+import net.minecraft.entity.ai.attributes.Attributes.ATTACK_DAMAGE
+import net.minecraft.entity.ai.attributes.Attributes.MAX_HEALTH
 import net.minecraft.network.IPacket
 import net.minecraft.util.ResourceLocation
 import net.minecraft.world.Difficulty.PEACEFUL
@@ -33,22 +35,22 @@ open class EntityMobEndermite(type: EntityType<out EntityMobEndermite>, world: W
 	@Suppress("unused")
 	constructor(world: World) : this(ModEntities.ENDERMITE, world)
 	
-	private companion object{
+	companion object{
 		private val DAMAGE_GENERAL = Damage(DIFFICULTY_SCALING, PEACEFUL_EXCLUSION, *ALL_PROTECTIONS)
 		
 		private const val AGE_TAG = "Age"
 		private const val IDLE_TAG = "Idle"
+		
+		fun createAttributes() = EntityEndermite.func_233666_p_().extend {
+			add(MAX_HEALTH, 8.0)
+			add(ATTACK_DAMAGE, 2.0)
+		}
 	}
 	
 	private var realLifetime = 0
 	private var idleDespawnTimer: Short = 0
 	
-	override fun registerAttributes(){
-		super.registerAttributes()
-		
-		getAttribute(MAX_HEALTH).baseValue = 8.0
-		getAttribute(ATTACK_DAMAGE).baseValue = 2.0
-		
+	init{
 		experienceValue = 3
 	}
 	

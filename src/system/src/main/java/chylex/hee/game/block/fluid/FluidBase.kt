@@ -6,7 +6,7 @@ import net.minecraft.block.material.MaterialColor
 import net.minecraft.fluid.Fluid
 import net.minecraft.util.ResourceLocation
 import net.minecraft.util.math.BlockPos
-import net.minecraft.world.ILightReader
+import net.minecraft.world.IBlockDisplayReader
 import net.minecraftforge.fluids.FluidAttributes
 import net.minecraftforge.fluids.FluidAttributes.Builder
 import net.minecraftforge.fluids.FluidStack
@@ -44,6 +44,6 @@ abstract class FluidBase(fluidName: String, val rgbColor: IntColor, val mapColor
 		// keep the color property, but stop it from tinting the texture
 		
 		override fun getColor(stack: FluidStack) = RGB(255u).i
-		override fun getColor(world: ILightReader, pos: BlockPos) = RGB(255u).i
+		override fun getColor(world: IBlockDisplayReader, pos: BlockPos) = RGB(255u).i
 	}
 }

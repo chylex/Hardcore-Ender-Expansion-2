@@ -29,7 +29,7 @@ import chylex.hee.system.serialization.use
 import net.minecraft.item.ItemStack
 import net.minecraft.tileentity.TileEntityType
 import net.minecraft.util.Direction
-import net.minecraft.util.math.Vec3d
+import net.minecraft.util.math.vector.Vector3d
 import kotlin.math.abs
 import kotlin.math.max
 import kotlin.math.min
@@ -105,7 +105,7 @@ class TileEntityIgneousPlate(type: TileEntityType<TileEntityIgneousPlate>) : Til
 		val rand = wrld.rand
 		
 		EntityItemFreshlyCooked(wrld, pos.center, ItemStack(ModBlocks.IGNEOUS_PLATE)).apply {
-			motion = Vec3d(facing.directionVec).scale(rand.nextFloat(2.5, 3.0)).add(rand.nextFloat(-0.2, 0.2), rand.nextFloat(0.1, 0.2), rand.nextFloat(-0.2, 0.2))
+			motion = Vector3d(facing.directionVec).scale(rand.nextFloat(2.5, 3.0)).add(rand.nextFloat(-0.2, 0.2), rand.nextFloat(0.1, 0.2), rand.nextFloat(-0.2, 0.2))
 			wrld.addEntity(this)
 		}
 		

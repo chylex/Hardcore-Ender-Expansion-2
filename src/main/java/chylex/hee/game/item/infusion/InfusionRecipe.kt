@@ -22,8 +22,8 @@ import net.minecraft.item.Items.REDSTONE_BLOCK
 import net.minecraft.item.Items.REDSTONE_TORCH
 import net.minecraft.item.Items.SCUTE
 import net.minecraft.item.crafting.Ingredient
+import net.minecraft.tags.ITag
 import net.minecraft.tags.ItemTags.WOOL
-import net.minecraft.tags.Tag
 import net.minecraft.util.IItemProvider
 import net.minecraftforge.common.Tags.Items.FEATHERS
 import net.minecraftforge.common.Tags.Items.GEMS_QUARTZ
@@ -64,7 +64,7 @@ enum class InfusionRecipe(val infusion: Infusion, val rate: Int, val updates: In
 		
 		@Suppress("NOTHING_TO_INLINE")
 		companion object{
-			inline fun tag(tag: Tag<Item>): Ingredient = Ingredient.fromTag(tag)
+			inline fun tag(tag: ITag<Item>): Ingredient = Ingredient.fromTag(tag)
 			inline fun item(item: IItemProvider): Ingredient = Ingredient.fromItems(item)
 		}
 	}

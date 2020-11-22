@@ -1,4 +1,6 @@
 package chylex.hee.game.entity.living
+import chylex.hee.game.entity.add
+import chylex.hee.game.entity.extend
 import chylex.hee.game.entity.living.ai.AttackMelee
 import chylex.hee.game.entity.living.ai.Swim
 import chylex.hee.game.entity.living.ai.TargetAttacker
@@ -25,10 +27,10 @@ import net.minecraft.entity.Entity
 import net.minecraft.entity.EntitySize
 import net.minecraft.entity.EntityType
 import net.minecraft.entity.Pose
-import net.minecraft.entity.SharedMonsterAttributes.ATTACK_DAMAGE
-import net.minecraft.entity.SharedMonsterAttributes.FOLLOW_RANGE
-import net.minecraft.entity.SharedMonsterAttributes.MAX_HEALTH
-import net.minecraft.entity.SharedMonsterAttributes.MOVEMENT_SPEED
+import net.minecraft.entity.ai.attributes.Attributes.ATTACK_DAMAGE
+import net.minecraft.entity.ai.attributes.Attributes.FOLLOW_RANGE
+import net.minecraft.entity.ai.attributes.Attributes.MAX_HEALTH
+import net.minecraft.entity.ai.attributes.Attributes.MOVEMENT_SPEED
 import net.minecraft.network.IPacket
 import net.minecraft.util.DamageSource
 import net.minecraft.util.Hand
@@ -44,18 +46,18 @@ class EntityMobUndread(type: EntityType<EntityMobUndread>, world: World) : Entit
 	@Suppress("unused")
 	constructor(world: World) : this(ModEntities.UNDREAD, world)
 	
-	private companion object{
+	companion object{
 		private val DAMAGE_GENERAL = Damage(DIFFICULTY_SCALING, PEACEFUL_EXCLUSION, *ALL_PROTECTIONS_WITH_SHIELD)
+		
+		fun createAttributes() = EntityMob.func_233666_p_().extend {
+			add(MAX_HEALTH, 12.0)
+			add(ATTACK_DAMAGE, 4.0)
+			add(MOVEMENT_SPEED, 0.18)
+			add(FOLLOW_RANGE, 24.0)
+		}
 	}
 	
-	override fun registerAttributes(){
-		super.registerAttributes()
-		
-		getAttribute(MAX_HEALTH).baseValue = 12.0
-		getAttribute(ATTACK_DAMAGE).baseValue = 4.0
-		getAttribute(MOVEMENT_SPEED).baseValue = 0.18
-		getAttribute(FOLLOW_RANGE).baseValue = 24.0
-		
+	init{
 		experienceValue = 5
 	}
 	

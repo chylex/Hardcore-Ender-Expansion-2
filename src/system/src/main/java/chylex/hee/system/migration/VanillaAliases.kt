@@ -43,7 +43,6 @@ typealias BlockFurnace = net.minecraft.block.FurnaceBlock
 typealias BlockHorizontal = net.minecraft.block.HorizontalBlock
 typealias BlockHorizontalFace = net.minecraft.block.HorizontalFaceBlock
 typealias BlockLeaves = net.minecraft.block.LeavesBlock
-typealias BlockLog = net.minecraft.block.LogBlock
 typealias BlockMobSpawner = net.minecraft.block.SpawnerBlock
 typealias BlockRedstoneWire = net.minecraft.block.RedstoneWireBlock
 typealias BlockReed = net.minecraft.block.SugarCaneBlock

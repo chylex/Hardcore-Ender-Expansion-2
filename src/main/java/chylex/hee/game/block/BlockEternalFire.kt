@@ -33,9 +33,8 @@ import net.minecraft.particles.ParticleTypes.LARGE_SMOKE
 import net.minecraft.util.Direction
 import net.minecraft.util.SoundCategory
 import net.minecraft.util.math.BlockPos
-import net.minecraft.util.math.Vec3d
+import net.minecraft.util.math.vector.Vector3d
 import net.minecraft.world.GameRules.DO_FIRE_TICK
-import net.minecraft.world.IWorldReader
 import net.minecraft.world.World
 import net.minecraft.world.server.ServerWorld
 import net.minecraftforge.common.MinecraftForge
@@ -53,7 +52,6 @@ class BlockEternalFire(builder: BlockBuilder) : BlockFire(builder.p), IBlockLaye
 		MinecraftForge.EVENT_BUS.register(this)
 	}
 	
-	override fun tickRate(world: IWorldReader) = super.tickRate(world) * 2
 	override fun canDie(world: World, pos: BlockPos) = false
 	
 	override fun tick(state: BlockState, world: ServerWorld, pos: BlockPos, rand: Random){
@@ -65,7 +63,7 @@ class BlockEternalFire(builder: BlockBuilder) : BlockFire(builder.p), IBlockLaye
 			pos.removeBlock(world)
 		}
 		
-		world.pendingBlockTicks.scheduleTick(pos, this, tickRate(world) + rand.nextInt(10))
+		world.pendingBlockTicks.scheduleTick(pos, this, (2 * (30 + rand.nextInt(10))) + rand.nextInt(10))
 		
 		val baseChance = if (world.isBlockinHighHumidity(pos))
 			250
@@ -143,7 +141,7 @@ class BlockEternalFire(builder: BlockBuilder) : BlockFire(builder.p), IBlockLaye
 		
 		if (rand.nextInt(3) != 0){
 			if (pos.down().isTopSolid(world)){
-				PARTICLE_SMOKE.spawn(Point(Vec3d(
+				PARTICLE_SMOKE.spawn(Point(Vector3d(
 					pos.x + rand.nextFloat(0.0, 1.0),
 					pos.y + rand.nextFloat(0.5, 1.0),
 					pos.z + rand.nextFloat(0.0, 1.0)
@@ -159,7 +157,7 @@ class BlockEternalFire(builder: BlockBuilder) : BlockFire(builder.p), IBlockLaye
 						val offsetFacing = rand.nextFloat(0.4, 0.5)
 						val offsetSide = rand.nextFloat(-0.5, 0.5)
 						
-						PARTICLE_SMOKE.spawn(Point(Vec3d(
+						PARTICLE_SMOKE.spawn(Point(Vector3d(
 							pos.x + 0.5 + (facing.xOffset * offsetFacing) + (perpendicular.xOffset * offsetSide),
 							pos.y + rand.nextFloat(0.0, 1.0),
 							pos.z + 0.5 + (facing.zOffset * offsetFacing) + (perpendicular.zOffset * offsetSide)

@@ -63,7 +63,7 @@ import chylex.hee.system.serialization.TagCompound
 import net.minecraft.block.Blocks
 import net.minecraft.util.Direction
 import net.minecraft.util.math.BlockPos
-import net.minecraft.util.math.Vec3d
+import net.minecraft.util.math.vector.Vector3d
 import java.util.Random
 import kotlin.math.abs
 import kotlin.math.min
@@ -276,13 +276,13 @@ object Generator_TheHub : ITerritoryGenerator{
 			return tokenPos
 		}
 		
-		private class Pather(private val world: SegmentedWorld, initialDirection: Vec3d) : CavePatherRotatingBase(initialDirection){
+		private class Pather(private val world: SegmentedWorld, initialDirection: Vector3d) : CavePatherRotatingBase(initialDirection){
 			val randomPositions = mutableListOf<BlockPos>()
 			
 			private var reachedCenter = false
 			private val centerY = world.worldSize.centerY
 			
-			override fun update(rand: Random, point: Vec3d){
+			override fun update(rand: Random, point: Vector3d){
 				if (point.y <= centerY){
 					reachedCenter = true
 				}
@@ -445,7 +445,7 @@ object Generator_TheHub : ITerritoryGenerator{
 				return Facing4.fromDirection(destination.center, points[1])
 			}
 			
-			private fun generatePoints(rand: Random, start: BlockPos, destination: BlockPos): List<Vec3d>{
+			private fun generatePoints(rand: Random, start: BlockPos, destination: BlockPos): List<Vector3d>{
 				val destinationVec = destination.center
 				val startVec = start.center
 				
@@ -453,7 +453,7 @@ object Generator_TheHub : ITerritoryGenerator{
 				val diffLength = diffVec.length() - SpawnIsland.RADIUS - 20
 				
 				val offsetVec = diffVec.normalize()
-				val perpendicularVec = Vec3d(-offsetVec.z, 0.0, offsetVec.x)
+				val perpendicularVec = Vector3d(-offsetVec.z, 0.0, offsetVec.x)
 				var distance = 8.0
 				
 				val points = mutableListOf(destinationVec)
@@ -470,7 +470,7 @@ object Generator_TheHub : ITerritoryGenerator{
 				return points
 			}
 			
-			private fun paintPoint(world: SegmentedWorld, point: Vec3d){
+			private fun paintPoint(world: SegmentedWorld, point: Vector3d){
 				val top = Pos(point).offsetUntilExcept(UP, -8..8, world::isAir) ?: return
 				
 				val paintOffset = PAINT_RADIUS.ceilToInt()

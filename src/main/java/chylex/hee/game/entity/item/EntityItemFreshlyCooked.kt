@@ -11,14 +11,14 @@ import net.minecraft.entity.EntityType
 import net.minecraft.item.ItemStack
 import net.minecraft.network.PacketBuffer
 import net.minecraft.particles.ParticleTypes.SMOKE
-import net.minecraft.util.math.Vec3d
+import net.minecraft.util.math.vector.Vector3d
 import net.minecraft.world.World
 import net.minecraftforge.fml.common.registry.IEntityAdditionalSpawnData
 
 class EntityItemFreshlyCooked : EntityItemBase, IEntityAdditionalSpawnData{
 	@Suppress("unused")
 	constructor(type: EntityType<EntityItemFreshlyCooked>, world: World) : super(type, world)
-	constructor(world: World, pos: Vec3d, stack: ItemStack) : super(ModEntities.ITEM_FRESHLY_COOKED, world, pos, stack)
+	constructor(world: World, pos: Vector3d, stack: ItemStack) : super(ModEntities.ITEM_FRESHLY_COOKED, world, pos, stack)
 	
 	private companion object{
 		private const val STOP_SMOKING_AFTER_TICKS = 20 * 90

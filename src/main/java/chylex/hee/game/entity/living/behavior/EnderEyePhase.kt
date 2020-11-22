@@ -1,6 +1,8 @@
 package chylex.hee.game.entity.living.behavior
+import chylex.hee.HEE
 import chylex.hee.client.MC
 import chylex.hee.game.block.entity.TileEntitySpawnerObsidianTower
+import chylex.hee.game.entity.dimensionKey
 import chylex.hee.game.entity.effect.EntityTerritoryLightningBolt
 import chylex.hee.game.entity.living.EntityBossEnderEye
 import chylex.hee.game.entity.living.behavior.EnderEyeAttack.LaserEye
@@ -52,7 +54,6 @@ import net.minecraft.client.particle.DiggingParticle
 import net.minecraft.entity.Entity
 import net.minecraft.util.SoundCategory
 import net.minecraft.util.math.BlockPos
-import net.minecraft.world.dimension.DimensionType
 import net.minecraftforge.common.util.INBTSerializable
 import java.util.Random
 import kotlin.math.min
@@ -97,7 +98,7 @@ sealed class EnderEyePhase : INBTSerializable<TagCompound>{
 			else if (timer < 0){
 				val totalSpawners = entity.totalSpawners.toInt()
 				
-				if (totalSpawners == 0 || entity.dimension != DimensionType.THE_END){
+				if (totalSpawners == 0 || entity.dimensionKey !== HEE.dim){
 					return Floating.withScreech(entity, 0)
 				}
 				

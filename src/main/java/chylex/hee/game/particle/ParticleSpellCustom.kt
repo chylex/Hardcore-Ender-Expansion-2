@@ -7,11 +7,11 @@ import chylex.hee.system.forge.Sided
 import chylex.hee.system.random.IRandomColor
 import net.minecraft.client.particle.Particle
 import net.minecraft.client.particle.SpellParticle
-import net.minecraft.world.World
+import net.minecraft.client.world.ClientWorld
 
 object ParticleSpellCustom : IParticleMaker.WithData<ParticleDataColorScale>(){
 	@Sided(Side.CLIENT)
-	override fun create(world: World, posX: Double, posY: Double, posZ: Double, motX: Double, motY: Double, motZ: Double, data: ParticleDataColorScale?): Particle{
+	override fun create(world: ClientWorld, posX: Double, posY: Double, posZ: Double, motX: Double, motY: Double, motZ: Double, data: ParticleDataColorScale?): Particle{
 		return Instance(world, posX, posY, posZ, motX, motY, motZ, data)
 	}
 	
@@ -22,7 +22,7 @@ object ParticleSpellCustom : IParticleMaker.WithData<ParticleDataColorScale>(){
 	
 	@Sided(Side.CLIENT)
 	private class Instance(
-		world: World, posX: Double, posY: Double, posZ: Double, motX: Double, motY: Double, motZ: Double, data: ParticleDataColorScale?
+		world: ClientWorld, posX: Double, posY: Double, posZ: Double, motX: Double, motY: Double, motZ: Double, data: ParticleDataColorScale?
 	) : SpellParticle(
 		world, posX, posY, posZ, 0.0, 0.0, 0.0, sprite
 	){

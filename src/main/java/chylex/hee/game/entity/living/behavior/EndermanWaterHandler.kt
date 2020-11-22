@@ -6,7 +6,7 @@ import chylex.hee.game.entity.tryRemoveModifier
 import chylex.hee.system.random.nextInt
 import chylex.hee.system.serialization.TagCompound
 import chylex.hee.system.serialization.use
-import net.minecraft.entity.SharedMonsterAttributes.ATTACK_DAMAGE
+import net.minecraft.entity.ai.attributes.Attributes.ATTACK_DAMAGE
 import net.minecraft.entity.ai.attributes.AttributeModifier
 import net.minecraft.util.DamageSource
 import net.minecraftforge.common.util.INBTSerializable

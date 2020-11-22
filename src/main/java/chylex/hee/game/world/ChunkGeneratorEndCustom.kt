@@ -20,8 +20,9 @@ import net.minecraft.world.gen.WorldGenRegion
 import net.minecraft.world.gen.feature.IFeatureConfig
 import net.minecraft.world.gen.feature.structure.Structure
 import net.minecraft.world.gen.feature.template.TemplateManager
+import net.minecraft.world.server.ServerWorld
 
-class ChunkGeneratorEndCustom(world: World, biomeProvider: BiomeProvider, settings: EndGenerationSettings) : ChunkGenerator<EndGenerationSettings>(world, biomeProvider, settings){
+class ChunkGeneratorEndCustom(world: ServerWorld, biomeProvider: BiomeProvider, settings: EndGenerationSettings) : ChunkGenerator<EndGenerationSettings>(world, biomeProvider, settings){
 	private val territoryCache = TerritoryGenerationCache(world)
 	
 	// Instances

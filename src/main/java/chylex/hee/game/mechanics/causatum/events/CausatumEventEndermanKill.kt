@@ -29,7 +29,7 @@ import chylex.hee.system.serialization.NBTObjectList
 import chylex.hee.system.serialization.TagCompound
 import chylex.hee.system.serialization.getListOfCompounds
 import chylex.hee.system.serialization.use
-import net.minecraft.util.math.Vec3d
+import net.minecraft.util.math.vector.Vector3d
 import net.minecraft.world.World
 
 class CausatumEventEndermanKill() : ICausatumEventHandler{
@@ -50,7 +50,7 @@ class CausatumEventEndermanKill() : ICausatumEventHandler{
 		this.killer.set(killer)
 	}
 	
-	private lateinit var deathPos: Vec3d
+	private lateinit var deathPos: Vector3d
 	private var timer = 0
 	private val killer = SerializedEntity()
 	private val muppets = mutableListOf<SerializedEntity>()
@@ -113,7 +113,7 @@ class CausatumEventEndermanKill() : ICausatumEventHandler{
 		val rand = world.rand
 		val muppet = EntityMobEndermanMuppet(world, FIRST_KILL)
 		
-		val killerLookDir = killer.get(world)?.lookDirVec?.scale(3.0) ?: Vec3d.ZERO
+		val killerLookDir = killer.get(world)?.lookDirVec?.scale(3.0) ?: Vector3d.ZERO
 		
 		for(attempt in 1..1000){
 			val testVec = deathPos.add(killerLookDir).add(rand.nextVector2(xz = rand.nextFloat(5.0, 11.0), y = 0.0))
@@ -156,7 +156,7 @@ class CausatumEventEndermanKill() : ICausatumEventHandler{
 		(muppet.get(world) as? EntityMobEndermanMuppet)?.despawnOutOfWorld()
 	}
 	
-	private fun getLookPos(world: World): Vec3d{
+	private fun getLookPos(world: World): Vector3d{
 		return killer.get(world)?.lookPosVec ?: deathPos
 	}
 	
@@ -172,7 +172,7 @@ class CausatumEventEndermanKill() : ICausatumEventHandler{
 	}
 	
 	override fun deserializeNBT(nbt: TagCompound) = nbt.use {
-		deathPos = Vec3d(getDouble(ENDERMAN_X_TAG), getDouble(ENDERMAN_Y_TAG), getDouble(ENDERMAN_Z_TAG))
+		deathPos = Vector3d(getDouble(ENDERMAN_X_TAG), getDouble(ENDERMAN_Y_TAG), getDouble(ENDERMAN_Z_TAG))
 		
 		killer.readFromNBT(this, KILLER_TAG)
 		muppets.clear()

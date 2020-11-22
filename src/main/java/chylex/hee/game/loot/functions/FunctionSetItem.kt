@@ -9,12 +9,12 @@ import com.google.gson.JsonParseException
 import com.google.gson.JsonSerializationContext
 import net.minecraft.item.Item
 import net.minecraft.item.ItemStack
+import net.minecraft.loot.LootContext
+import net.minecraft.loot.LootFunction
+import net.minecraft.loot.conditions.ILootCondition
 import net.minecraft.tags.ItemTags
 import net.minecraft.tags.Tag
 import net.minecraft.util.ResourceLocation
-import net.minecraft.world.storage.loot.LootContext
-import net.minecraft.world.storage.loot.LootFunction
-import net.minecraft.world.storage.loot.conditions.ILootCondition
 import net.minecraftforge.registries.ForgeRegistries
 
 sealed class FunctionSetItem(conditions: Array<ILootCondition>) : LootFunction(conditions){

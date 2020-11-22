@@ -28,7 +28,7 @@ import net.minecraft.network.IPacket
 import net.minecraft.network.PacketBuffer
 import net.minecraft.tileentity.TileEntity
 import net.minecraft.util.math.BlockPos
-import net.minecraft.util.math.Vec3d
+import net.minecraft.util.math.vector.Vector3d
 import net.minecraft.world.GameRules.DO_ENTITY_DROPS
 import net.minecraft.world.World
 import net.minecraftforge.fml.common.registry.IEntityAdditionalSpawnData
@@ -52,7 +52,7 @@ open class EntityFallingBlockHeavy(type: EntityType<out EntityFallingBlockHeavy>
 		prevPosX = x
 		prevPosY = y
 		prevPosZ = z
-		motion = Vec3d.ZERO
+		motion = Vector3d.ZERO
 	}
 	
 	companion object{

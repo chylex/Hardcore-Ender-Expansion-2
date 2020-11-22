@@ -15,7 +15,7 @@ import net.minecraft.entity.Entity
 import net.minecraft.entity.EntitySize
 import net.minecraft.entity.EntityType
 import net.minecraft.entity.Pose
-import net.minecraft.entity.SharedMonsterAttributes.MOVEMENT_SPEED
+import net.minecraft.entity.ai.attributes.Attributes.MOVEMENT_SPEED
 import net.minecraft.network.IPacket
 import net.minecraft.network.datasync.DataSerializers
 import net.minecraft.util.DamageSource

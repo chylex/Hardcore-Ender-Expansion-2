@@ -11,12 +11,12 @@ import chylex.hee.system.forge.Sided
 import com.mojang.blaze3d.matrix.MatrixStack
 import net.minecraft.client.world.ClientWorld
 import net.minecraft.util.ResourceLocation
-import net.minecraft.util.math.Vec3d
+import net.minecraft.util.math.vector.Vector3d
 import org.lwjgl.opengl.GL11.GL_GREATER
 
 class SkyPlaneTopFoggy(
 	override val texture: ResourceLocation = DEFAULT_TEXTURE,
-	override val color: Vec3d = DEFAULT_COLOR,
+	override val color: Vector3d = DEFAULT_COLOR,
 	override val alpha: Float = DEFAULT_ALPHA,
 	override val rescale: Float = DEFAULT_RESCALE,
 	override val distance: Float = DEFAULT_DISTANCE,

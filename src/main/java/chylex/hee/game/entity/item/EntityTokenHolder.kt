@@ -38,7 +38,7 @@ import net.minecraft.network.datasync.DataSerializers
 import net.minecraft.util.DamageSource
 import net.minecraft.util.SoundCategory
 import net.minecraft.util.math.BlockPos
-import net.minecraft.util.math.Vec3d
+import net.minecraft.util.math.vector.Vector3d
 import net.minecraft.world.World
 import net.minecraftforge.fml.common.registry.IEntityAdditionalSpawnData
 import net.minecraftforge.fml.network.NetworkHooks
@@ -133,7 +133,7 @@ class EntityTokenHolder(type: EntityType<EntityTokenHolder>, world: World) : Ent
 		}
 	}
 	
-	fun forceDropToken(motion: Vec3d){
+	fun forceDropToken(motion: Vector3d){
 		val droppedToken = territoryType?.let { entityDropItem(ModItems.PORTAL_TOKEN.forTerritory(tokenType, it), (height * 0.5F) - 0.25F) }
 		
 		if (droppedToken != null){

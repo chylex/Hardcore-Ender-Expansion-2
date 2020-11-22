@@ -1,6 +1,6 @@
 package chylex.hee.game.loot.conditions
 import chylex.hee.system.facades.Resource
-import net.minecraft.world.storage.loot.LootContext
+import net.minecraft.loot.LootContext
 
 class ConditionLooting(override val minLevel: Int, override val maxLevel: Int): ILootConditionWithRange{
 	override fun test(context: LootContext): Boolean{

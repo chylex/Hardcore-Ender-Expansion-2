@@ -41,11 +41,11 @@ import chylex.hee.system.migration.Potion
 import chylex.hee.system.migration.Potions
 import net.minecraft.entity.CreatureAttribute.UNDEAD
 import net.minecraft.entity.Entity
-import net.minecraft.entity.ai.attributes.AbstractAttributeMap
+import net.minecraft.entity.ai.attributes.AttributeModifierManager
 import net.minecraft.particles.ParticleTypes.EXPLOSION
 import net.minecraft.potion.EffectType.BENEFICIAL
 import net.minecraft.util.DamageSource
-import net.minecraft.util.math.Vec3d
+import net.minecraft.util.math.vector.Vector3d
 import net.minecraftforge.event.entity.living.LivingDamageEvent
 import java.util.Random
 import kotlin.math.max
@@ -127,7 +127,7 @@ object PotionBanishment : Potion(BENEFICIAL, RGB(253, 253, 253).i){
 						nearby.knockBack(entity, 1.25F, entity.posX - nearby.posX, entity.posZ - nearby.posZ)
 						val (newX, newY, newZ) = nearby.motion
 						
-						nearby.motion = Vec3d(prevX * 0.1 + newX, max(prevY, newY + 0.1), prevZ * 0.1 + newZ)
+						nearby.motion = Vector3d(prevX * 0.1 + newX, max(prevY, newY + 0.1), prevZ * 0.1 + newZ)
 						
 						if (nearby is EntityPlayer){
 							instantLaunch.add(nearby)
@@ -174,7 +174,7 @@ object PotionBanishment : Potion(BENEFICIAL, RGB(253, 253, 253).i){
 		}
 	}
 	
-	override fun applyAttributesModifiersToEntity(entity: EntityLivingBase, attributes: AbstractAttributeMap, amplifier: Int){
+	override fun applyAttributesModifiersToEntity(entity: EntityLivingBase, attributes: AttributeModifierManager, amplifier: Int){
 		super.applyAttributesModifiersToEntity(entity, attributes, amplifier)
 		banish(entity, null)
 	}

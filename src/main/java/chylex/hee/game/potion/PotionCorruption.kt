@@ -5,7 +5,7 @@ import chylex.hee.system.color.IntColor.Companion.RGB
 import chylex.hee.system.forge.SubscribeAllEvents
 import chylex.hee.system.migration.EntityLivingBase
 import chylex.hee.system.migration.Potion
-import net.minecraft.entity.ai.attributes.AbstractAttributeMap
+import net.minecraft.entity.ai.attributes.AttributeModifierManager
 import net.minecraft.potion.AttackDamageEffect
 import net.minecraft.potion.Effect
 import net.minecraft.potion.EffectInstance
@@ -51,11 +51,11 @@ object PotionCorruption : Potion(HARMFUL, RGB(1, 1, 1).i){
 		pauseAttributeSkipping.set(false)
 	}
 	
-	override fun applyAttributesModifiersToEntity(entity: EntityLivingBase, attributes: AbstractAttributeMap, amplifier: Int){
+	override fun applyAttributesModifiersToEntity(entity: EntityLivingBase, attributes: AttributeModifierManager, amplifier: Int){
 		processCurrentlyRunningPotions(entity){ it.potion.removeAttributesModifiersFromEntity(entity, attributes, it.amplifier) }
 	}
 	
-	override fun removeAttributesModifiersFromEntity(entity: EntityLivingBase, attributes: AbstractAttributeMap, amplifier: Int){
+	override fun removeAttributesModifiersFromEntity(entity: EntityLivingBase, attributes: AttributeModifierManager, amplifier: Int){
 		processCurrentlyRunningPotions(entity){ it.potion.applyAttributesModifiersToEntity(entity, attributes, it.amplifier) }
 	}
 }

@@ -1,5 +1,7 @@
 package chylex.hee.game.entity.living
 import chylex.hee.HEE
+import chylex.hee.game.entity.add
+import chylex.hee.game.entity.extend
 import chylex.hee.game.entity.living.ai.AITargetEyeContact
 import chylex.hee.game.entity.living.ai.AIToggle
 import chylex.hee.game.entity.living.ai.AIToggle.Companion.addGoal
@@ -29,6 +31,7 @@ import chylex.hee.system.forge.SubscribeAllEvents
 import chylex.hee.system.forge.SubscribeEvent
 import chylex.hee.system.math.square
 import chylex.hee.system.migration.EntityArrow
+import chylex.hee.system.migration.EntityEnderman
 import chylex.hee.system.migration.EntityLiving
 import chylex.hee.system.migration.EntityLivingBase
 import chylex.hee.system.migration.EntityLlamaSpit
@@ -43,10 +46,10 @@ import chylex.hee.system.serialization.use
 import net.minecraft.block.BlockState
 import net.minecraft.entity.EntityClassification.MONSTER
 import net.minecraft.entity.EntityType
-import net.minecraft.entity.SharedMonsterAttributes.ATTACK_DAMAGE
-import net.minecraft.entity.SharedMonsterAttributes.FOLLOW_RANGE
-import net.minecraft.entity.SharedMonsterAttributes.MAX_HEALTH
 import net.minecraft.entity.SpawnReason
+import net.minecraft.entity.ai.attributes.Attributes.ATTACK_DAMAGE
+import net.minecraft.entity.ai.attributes.Attributes.FOLLOW_RANGE
+import net.minecraft.entity.ai.attributes.Attributes.MAX_HEALTH
 import net.minecraft.network.datasync.DataParameter
 import net.minecraft.util.DamageSource
 import net.minecraft.util.IndirectEntityDamageSource
@@ -184,7 +187,7 @@ class EntityMobEnderman(type: EntityType<EntityMobEnderman>, world: World) : Ent
 				return false
 			}
 			
-			return !world.dimension.isSurfaceWorld || checkSkylightLevel(world, rand)
+			return !world.dimensionType.isSurfaceWorld || checkSkylightLevel(world, rand)
 		}
 		
 		private fun checkSkylightLevel(world: IWorld, rand: Random): Boolean{
@@ -194,6 +197,14 @@ class EntityMobEnderman(type: EntityType<EntityMobEnderman>, world: World) : Ent
 			val extra = min(5, world.players.count { !it.isSpectator } - 1) // TODO use chunk set for better precision
 			
 			return (skylight >= 11 && endermen <= 40 + (extra * 5)) || (skylight >= rand.nextInt(3, 9) && endermen < (skylight * 2) + (extra * 2))
+		}
+		
+		// Attributes
+		
+		fun createAttributes() = EntityEnderman.func_233666_p_().extend {
+			add(MAX_HEALTH, 40.0)
+			add(ATTACK_DAMAGE, 5.0)
+			add(FOLLOW_RANGE, 64.0)
 		}
 	}
 	
@@ -224,13 +235,7 @@ class EntityMobEnderman(type: EntityType<EntityMobEnderman>, world: World) : Ent
 	
 	// Initialization
 	
-	override fun registerAttributes(){
-		super.registerAttributes()
-		
-		getAttribute(MAX_HEALTH).baseValue = 40.0
-		getAttribute(ATTACK_DAMAGE).baseValue = 5.0
-		getAttribute(FOLLOW_RANGE).baseValue = 64.0
-		
+	init{
 		experienceValue = 10
 	}
 	

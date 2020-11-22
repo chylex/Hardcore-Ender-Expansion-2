@@ -32,7 +32,7 @@ import net.minecraft.util.Hand
 import net.minecraft.util.SoundCategory
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.BlockRayTraceResult
-import net.minecraft.util.math.Vec3d
+import net.minecraft.util.math.vector.Vector3d
 import net.minecraft.world.GameRules.DO_TILE_DROPS
 import net.minecraft.world.World
 import net.minecraft.world.gen.Heightmap.Type.OCEAN_FLOOR
@@ -122,7 +122,7 @@ class BlockDragonEggOverride(builder: BlockBuilder) : BlockDragonEgg(builder.p){
 		
 		if (world.gameRules.getBoolean(DO_TILE_DROPS) && !world.restoringBlockSnapshots){
 			EntityItem(world, pos.x + 0.5, pos.y.toDouble(), pos.z + 0.5, ItemStack(this)).apply {
-				motion = Vec3d.ZERO
+				motion = Vector3d.ZERO
 				setDefaultPickupDelay()
 				world.addEntity(this)
 			}

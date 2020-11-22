@@ -83,7 +83,7 @@ import net.minecraft.util.Direction
 import net.minecraft.util.SoundCategory
 import net.minecraft.util.SoundEvent
 import net.minecraft.util.math.BlockPos
-import net.minecraft.util.math.Vec3d
+import net.minecraft.util.math.vector.Vector3d
 import net.minecraft.world.World
 import net.minecraft.world.server.ServerWorld
 import java.util.Random
@@ -146,7 +146,7 @@ class EntityItemIgneousRock : EntityItemNoBob{
 	}
 	
 	private var throwFacing = DOWN
-	private var prevMotion = Vec3d.ZERO
+	private var prevMotion = Vector3d.ZERO
 	
 	private val smeltingInventory = Inventory(1)
 	
@@ -242,7 +242,7 @@ class EntityItemIgneousRock : EntityItemNoBob{
 		}
 	}
 	
-	override fun move(type: MoverType, by: Vec3d){
+	override fun move(type: MoverType, by: Vector3d){
 		if (isInLava){
 			super.move(type, by.mul(0.2, 0.01, 0.2))
 		}

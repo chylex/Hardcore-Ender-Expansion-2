@@ -8,11 +8,12 @@ import chylex.hee.system.math.subtractY
 import chylex.hee.system.migration.EntityPlayer
 import chylex.hee.system.migration.Hand.MAIN_HAND
 import net.minecraft.client.renderer.model.IBakedModel
+import net.minecraft.client.settings.PointOfView.FIRST_PERSON
 import net.minecraft.item.ItemStack
 import net.minecraft.util.Hand
 import net.minecraft.util.HandSide.RIGHT
 import net.minecraft.util.math.MathHelper
-import net.minecraft.util.math.Vec3d
+import net.minecraft.util.math.vector.Vector3d
 import kotlin.math.abs
 import kotlin.math.pow
 
@@ -23,10 +24,10 @@ object ModelHelper{
 	}
 	
 	@Sided(Side.CLIENT)
-	fun getHandPosition(player: EntityPlayer, hand: Hand): Vec3d{
+	fun getHandPosition(player: EntityPlayer, hand: Hand): Vector3d{
 		val yawOffsetMp = (if (player.primaryHand == RIGHT) 1 else -1) * (if (hand == MAIN_HAND) 1 else -1)
 		
-		if (player === MC.player && MC.settings.thirdPersonView == 0){
+		if (player === MC.player && MC.settings.pointOfView == FIRST_PERSON){ // UPDATE test
 			val pitch = MathHelper.wrapDegrees(player.rotationPitch)
 			val yaw = MathHelper.wrapDegrees(player.rotationYaw)
 			val fov = MC.settings.fov.toFloat()

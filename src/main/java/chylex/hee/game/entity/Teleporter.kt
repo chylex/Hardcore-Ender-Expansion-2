@@ -42,7 +42,7 @@ import net.minecraft.network.PacketBuffer
 import net.minecraft.util.SoundCategory
 import net.minecraft.util.SoundEvent
 import net.minecraft.util.math.BlockPos
-import net.minecraft.util.math.Vec3d
+import net.minecraft.util.math.vector.Vector3d
 import net.minecraft.world.World
 import net.minecraftforge.common.MinecraftForge
 import net.minecraftforge.event.entity.living.EnderTeleportEvent
@@ -66,8 +66,8 @@ class Teleporter(
 		private val PARTICLE_MOT = InBox(0.035F)
 		
 		class FxTeleportData(
-			private val startPoint: Vec3d,
-			private val endPoint: Vec3d,
+			private val startPoint: Vector3d,
+			private val endPoint: Vector3d,
 			private val width: Float,
 			private val height: Float,
 			private val soundEvent: SoundEvent,
@@ -145,7 +145,7 @@ class Teleporter(
 	
 	// Target
 	
-	fun toLocation(entity: EntityLivingBase, position: Vec3d, soundCategory: SoundCategory = entity.soundCategory): Boolean{
+	fun toLocation(entity: EntityLivingBase, position: Vector3d, soundCategory: SoundCategory = entity.soundCategory): Boolean{
 		val event = EnderTeleportEvent(entity, position.x, position.y, position.z, damageDealt)
 		
 		if (postEvent && MinecraftForge.EVENT_BUS.post(event)){
@@ -166,7 +166,7 @@ class Teleporter(
 		
 		val world = entity.world
 		val prevPos = entity.posVec
-		val newPos = Vec3d(event.targetX, event.targetY, event.targetZ)
+		val newPos = Vector3d(event.targetX, event.targetY, event.targetZ)
 		
 		PacketClientTeleportInstantly(entity, newPos).sendToTracking(entity)
 		entity.setPositionAndUpdate(newPos.x, newPos.y, newPos.z)
@@ -222,14 +222,14 @@ class Teleporter(
 		return true
 	}
 	
-	fun nearLocation(entity: EntityLivingBase, rand: Random, position: Vec3d, distance: ClosedFloatingPointRange<Double>, attempts: Int, soundCategory: SoundCategory = entity.soundCategory): Boolean{
+	fun nearLocation(entity: EntityLivingBase, rand: Random, position: Vector3d, distance: ClosedFloatingPointRange<Double>, attempts: Int, soundCategory: SoundCategory = entity.soundCategory): Boolean{
 		val world = entity.world
 		val originalPos = entity.posVec
 		val originalBox = entity.boundingBox
 		
 		repeat(attempts){
 			val randomPos = position.add(rand.nextVector(rand.nextFloat(distance)))
-			val newPos = Vec3d(randomPos.x, randomPos.y.floorToInt() + 0.01, randomPos.z)
+			val newPos = Vector3d(randomPos.x, randomPos.y.floorToInt() + 0.01, randomPos.z)
 			
 			if (Pos(newPos).down().blocksMovement(world) && world.hasNoCollisions(entity, originalBox.offset(newPos.subtract(originalPos)))){
 				return toLocation(entity, newPos, soundCategory)
@@ -239,7 +239,7 @@ class Teleporter(
 		return false
 	}
 	
-	fun nearLocation(entity: EntityLivingBase, position: Vec3d, distance: ClosedFloatingPointRange<Double>, attempts: Int, soundCategory: SoundCategory = entity.soundCategory): Boolean{
+	fun nearLocation(entity: EntityLivingBase, position: Vector3d, distance: ClosedFloatingPointRange<Double>, attempts: Int, soundCategory: SoundCategory = entity.soundCategory): Boolean{
 		return nearLocation(entity, entity.rng, position, distance, attempts, soundCategory)
 	}
 	

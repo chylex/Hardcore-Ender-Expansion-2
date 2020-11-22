@@ -1,5 +1,8 @@
 package chylex.hee.game.world.territory.tickers
 import chylex.hee.HEE
+import chylex.hee.game.entity.dimensionKey
+import chylex.hee.game.entity.posVec
+import chylex.hee.game.entity.spawn
 import chylex.hee.game.world.territory.ITerritoryTicker
 import chylex.hee.game.world.territory.TerritoryInstance
 import chylex.hee.game.world.territory.TerritoryVoid
@@ -10,7 +13,7 @@ import chylex.hee.system.forge.EventPriority
 import chylex.hee.system.forge.SubscribeAllEvents
 import chylex.hee.system.forge.SubscribeEvent
 import chylex.hee.system.migration.EntityPlayer
-import net.minecraft.entity.effect.LightningBoltEntity
+import net.minecraft.entity.EntityType
 import net.minecraft.world.World
 import net.minecraft.world.server.ServerWorld
 import net.minecraftforge.event.entity.living.LivingDeathEvent
@@ -20,14 +23,18 @@ class VoidTicker(private val data: VoidData) : ITerritoryTicker{
 	companion object{
 		@SubscribeEvent(EventPriority.LOWEST)
 		fun onLivingDeath(e: LivingDeathEvent){
-			val player = (e.entity as? EntityPlayer)?.takeIf { !it.world.isRemote && it.dimension == HEE.dim } ?: return
+			val player = (e.entity as? EntityPlayer)?.takeIf { !it.world.isRemote && it.dimensionKey === HEE.dim } ?: return
 			
 			val instance = TerritoryInstance.fromPos(player) ?: return
 			val voidData = TerritoryGlobalStorage.get().forInstance(instance)?.getComponent<VoidData>() ?: return
 			
 			if (voidData.startCorrupting()){
 				val world = player.world as ServerWorld
-				world.addLightningBolt(LightningBoltEntity(world, player.posX, player.posY, player.posZ, true))
+				
+				EntityType.LIGHTNING_BOLT.spawn(world){
+					moveForced(player.posVec)
+					setEffectOnly(true)
+				}
 			}
 		}
 	}

@@ -6,13 +6,13 @@ import chylex.hee.client.render.gl.DF_ZERO
 import chylex.hee.client.render.gl.GL
 import chylex.hee.client.render.gl.SF_ONE
 import chylex.hee.client.render.gl.SF_SRC_ALPHA
+import chylex.hee.game.entity.dimensionKey
 import chylex.hee.game.entity.lookDirVec
 import chylex.hee.game.entity.posVec
 import chylex.hee.game.particle.ParticleVoid
 import chylex.hee.game.particle.spawner.ParticleSpawnerCustom
 import chylex.hee.game.particle.spawner.properties.IOffset.InBox
 import chylex.hee.game.particle.spawner.properties.IShape.Point
-import chylex.hee.game.world.WorldProviderEndCustom
 import chylex.hee.game.world.territory.TerritoryType
 import chylex.hee.game.world.territory.TerritoryVoid
 import chylex.hee.system.Debug
@@ -26,6 +26,7 @@ import chylex.hee.system.math.LerpedFloat
 import chylex.hee.system.math.floorToInt
 import chylex.hee.system.math.scale
 import chylex.hee.system.migration.EntityPlayer
+import com.mojang.blaze3d.matrix.MatrixStack
 import net.minecraft.client.resources.I18n
 import net.minecraftforge.client.event.RenderGameOverlayEvent
 import net.minecraftforge.common.MinecraftForge
@@ -45,7 +46,7 @@ object TerritoryRenderer{
 		if (e.phase == Phase.START){
 			val player = MC.player
 			
-			if (player != null && player.world.dimension is WorldProviderEndCustom && player.ticksExisted > 0){
+			if (player != null && player.dimensionKey === HEE.dim && player.ticksExisted > 0){
 				Void.tick(player)
 				Title.tick()
 				
@@ -122,7 +123,7 @@ object TerritoryRenderer{
 		
 		@SubscribeEvent
 		fun onRenderGameOverlayText(e: RenderGameOverlayEvent.Text){
-			if (MC.settings.showDebugInfo && MC.player?.dimension === HEE.dim){
+			if (MC.settings.showDebugInfo && MC.player?.dimensionKey === HEE.dim){
 				with(e.left){
 					add("")
 					add("End Void Factor: ${"%.3f".format(voidFactor.currentValue)}")
@@ -203,8 +204,8 @@ object TerritoryRenderer{
 			val x = -fontRenderer.getStringWidth(textTitle) * 0.5F
 			val y = -fontRenderer.FONT_HEIGHT - 2F
 			
-			drawTitle(x + 0.5F, y + 0.5F, textShadowColor.withAlpha(opacity.pow(1.25F)))
-			drawTitle(x, y, textMainColor.withAlpha(opacity))
+			drawTitle(e.matrixStack, x + 0.5F, y + 0.5F, textShadowColor.withAlpha(opacity.pow(1.25F)))
+			drawTitle(e.matrixStack, x, y, textMainColor.withAlpha(opacity))
 			
 			GL.popMatrix()
 			GL.alphaFunc(GL_GREATER, 0.1F)
@@ -212,9 +213,9 @@ object TerritoryRenderer{
 			GL.popMatrix()
 		}
 		
-		private fun drawTitle(x: Float, y: Float, color: IntColor){
+		private fun drawTitle(matrix: MatrixStack, x: Float, y: Float, color: IntColor){
 			if (color.alpha > 3){ // prevents flickering alpha
-				MC.fontRenderer.drawString(textTitle, x, y, color.i)
+				MC.fontRenderer.drawString(matrix, textTitle, x, y, color.i)
 			}
 		}
 	}

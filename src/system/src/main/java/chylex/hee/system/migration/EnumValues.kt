@@ -21,7 +21,7 @@ object Hand{
 	val OFF_HAND  get() = Hand.OFF_HAND
 }
 
-object ActionResult{
+object ActionResult{ // UPDATE get rid of
 	val SUCCESS get() = ActionResultType.SUCCESS
 	val PASS    get() = ActionResultType.PASS
 	val FAIL    get() = ActionResultType.FAIL

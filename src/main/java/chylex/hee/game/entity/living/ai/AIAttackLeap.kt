@@ -35,7 +35,7 @@ class AIAttackLeap(
 	}
 	
 	override fun shouldExecute(): Boolean{
-		if (!entity.onGround){ // also prevents instant jump after taking damage
+		if (!entity.isOnGround){ // also prevents instant jump after taking damage
 			return false
 		}
 		
@@ -60,7 +60,7 @@ class AIAttackLeap(
 	}
 	
 	override fun shouldContinueExecuting(): Boolean{
-		return !entity.onGround
+		return !entity.isOnGround
 	}
 	
 	override fun startExecuting(){

@@ -42,9 +42,9 @@ import chylex.hee.system.serialization.use
 import chylex.hee.system.serialization.writeCompactVec
 import net.minecraft.entity.Entity
 import net.minecraft.entity.EntityType
-import net.minecraft.entity.IProjectile
 import net.minecraft.entity.MoverType
 import net.minecraft.entity.MoverType.SELF
+import net.minecraft.entity.projectile.ProjectileEntity
 import net.minecraft.entity.projectile.ProjectileHelper
 import net.minecraft.network.IPacket
 import net.minecraft.network.PacketBuffer
@@ -57,13 +57,13 @@ import net.minecraft.util.math.RayTraceContext.BlockMode
 import net.minecraft.util.math.RayTraceContext.FluidMode
 import net.minecraft.util.math.RayTraceResult
 import net.minecraft.util.math.RayTraceResult.Type
-import net.minecraft.util.math.Vec3d
+import net.minecraft.util.math.vector.Vector3d
 import net.minecraft.world.World
 import net.minecraftforge.event.ForgeEventFactory
 import net.minecraftforge.fml.network.NetworkHooks
 import java.util.Random
 
-class EntityProjectileSpatialDash(type: EntityType<EntityProjectileSpatialDash>, world: World) : Entity(type, world), IProjectile{
+class EntityProjectileSpatialDash(type: EntityType<EntityProjectileSpatialDash>, world: World) : ProjectileEntity(type, world){
 	constructor(world: World, owner: EntityLivingBase, speedMp: Float, distanceMp: Float) : this(ModEntities.SPATIAL_DASH, world){
 		this.owner = SerializedEntity(owner)
 		this.setPosition(owner.posX, owner.posY + owner.eyeHeight - 0.1, owner.posZ)
@@ -71,7 +71,7 @@ class EntityProjectileSpatialDash(type: EntityType<EntityProjectileSpatialDash>,
 		val realSpeed = PROJECTILE_SPEED_BASE * speedMp
 		val realDistance = PROJECTILE_DISTANCE_BASE * distanceMp
 		
-		val (dirX, dirY, dirZ) = Vec3d.fromPitchYaw(owner.rotationPitch, owner.rotationYaw)
+		val (dirX, dirY, dirZ) = Vector3d.fromPitchYaw(owner.rotationPitch, owner.rotationYaw)
 		shoot(dirX, dirY, dirZ, realSpeed, 0F)
 		
 		this.lifespan = (realDistance / realSpeed).ceilToInt().toShort()
@@ -105,7 +105,7 @@ class EntityProjectileSpatialDash(type: EntityType<EntityProjectileSpatialDash>,
 			maxRange = 128.0
 		)
 		
-		class FxExpireData(private val point: Vec3d, private val ownerEntity: Entity?) : IFxData{
+		class FxExpireData(private val point: Vector3d, private val ownerEntity: Entity?) : IFxData{
 			override fun write(buffer: PacketBuffer) = buffer.use {
 				writeCompactVec(point)
 				writeInt(ownerEntity?.entityId ?: -1)
@@ -158,7 +158,7 @@ class EntityProjectileSpatialDash(type: EntityType<EntityProjectileSpatialDash>,
 			return pos.blocksMovement(world) && !pos.up().blocksMovement(world) && !pos.up(2).blocksMovement(world)
 		}
 		
-		private fun handleBlockHit(entity: EntityLivingBase, hit: Vec3d, motion: Vec3d, pos: BlockPos){
+		private fun handleBlockHit(entity: EntityLivingBase, hit: Vector3d, motion: Vector3d, pos: BlockPos){
 			if (canTeleportPlayerOnTop(pos, entity.world)){
 				TELEPORT.toBlock(entity, pos.up())
 			}
@@ -170,11 +170,11 @@ class EntityProjectileSpatialDash(type: EntityType<EntityProjectileSpatialDash>,
 			}
 		}
 		
-		private fun handleGenericHit(entity: EntityLivingBase, hit: Vec3d, motion: Vec3d){
+		private fun handleGenericHit(entity: EntityLivingBase, hit: Vector3d, motion: Vector3d){
 			teleportEntityNear(entity, hit.add(motion.normalize().scale(-1.26)), true)
 		}
 		
-		private fun teleportEntityNear(entity: EntityLivingBase, target: Vec3d, fallback: Boolean): Boolean{
+		private fun teleportEntityNear(entity: EntityLivingBase, target: Vector3d, fallback: Boolean): Boolean{
 			val world = entity.world
 			
 			val finalBlock = TELEPORT_OFFSETS
@@ -199,7 +199,7 @@ class EntityProjectileSpatialDash(type: EntityType<EntityProjectileSpatialDash>,
 	private var lifespan: Short = 0
 	private var range = 0F
 	
-	private val cappedMotionVec: Vec3d
+	private val cappedMotionVec: Vector3d
 		get(){
 			return if (motion.length() <= range)
 				motion
@@ -218,14 +218,14 @@ class EntityProjectileSpatialDash(type: EntityType<EntityProjectileSpatialDash>,
 	}
 	
 	override fun shoot(dirX: Double, dirY: Double, dirZ: Double, velocity: Float, inaccuracy: Float){
-		this.motion = Vec3d(dirX, dirY, dirZ).normalize().scale(velocity)
+		this.motion = Vector3d(dirX, dirY, dirZ).normalize().scale(velocity)
 	}
 	
-	override fun move(type: MoverType, pos: Vec3d){
+	override fun move(type: MoverType, pos: Vector3d){
 		super.move(type, pos)
 		
 		if (type == SELF && world.isRemote){
-			PARTICLE_TICK.spawn(Line(Vec3d(prevPosX, prevPosY, prevPosZ), posVec, 0.75), rand)
+			PARTICLE_TICK.spawn(Line(Vector3d(prevPosX, prevPosY, prevPosZ), posVec, 0.75), rand)
 		}
 	}
 	

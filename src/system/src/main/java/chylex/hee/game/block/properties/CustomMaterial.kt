@@ -6,13 +6,11 @@ import net.minecraft.block.material.PushReaction
 class CustomMaterial{
 	var solid = true
 	private var liquid = false
+	var blocksMovement = true
 	
 	var translucent = false
 	var replaceable = false
 	var flammable = false
-	
-	var requiresTool = false
-	var blocksMovement = true
 	
 	private var pushReaction = PushReaction.NORMAL
 	
@@ -40,7 +38,7 @@ class CustomMaterial{
 	// Building
 	
 	fun build(): Material{
-		return Material(MaterialColor.AIR, liquid, solid, blocksMovement, blocksMovement && !translucent, !requiresTool, flammable, replaceable, pushReaction)
+		return Material(MaterialColor.AIR, liquid, solid, blocksMovement, blocksMovement && !translucent, flammable, replaceable, pushReaction)
 	}
 	
 	inline fun build(block: CustomMaterial.() -> Unit): Material{

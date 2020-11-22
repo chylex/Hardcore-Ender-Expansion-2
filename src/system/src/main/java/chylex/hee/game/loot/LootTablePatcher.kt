@@ -10,14 +10,15 @@ import chylex.hee.system.forge.SubscribeAllEvents
 import chylex.hee.system.forge.SubscribeEvent
 import com.google.common.collect.ImmutableMap
 import net.minecraft.client.resources.ReloadListener
+import net.minecraft.loot.ConstantRange
+import net.minecraft.loot.IRandomRange
+import net.minecraft.loot.LootPool
+import net.minecraft.loot.LootTable
+import net.minecraft.loot.RandomValueRange
 import net.minecraft.profiler.EmptyProfiler
 import net.minecraft.profiler.IProfiler
+import net.minecraft.resources.IReloadableResourceManager
 import net.minecraft.resources.IResourceManager
-import net.minecraft.world.storage.loot.ConstantRange
-import net.minecraft.world.storage.loot.IRandomRange
-import net.minecraft.world.storage.loot.LootPool
-import net.minecraft.world.storage.loot.LootTable
-import net.minecraft.world.storage.loot.RandomValueRange
 import net.minecraftforge.fml.event.server.FMLServerStartingEvent
 import java.util.Random
 
@@ -25,7 +26,7 @@ import java.util.Random
 object LootTablePatcher{
 	@SubscribeEvent
 	fun onServerStarting(e: FMLServerStartingEvent){
-		with(e.server.resourceManager){
+		with(e.server.resourceManager.resourceManager as IReloadableResourceManager){
 			addReloadListener(LootReloadListener)
 			LootReloadListener.run(this)
 		}

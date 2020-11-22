@@ -83,7 +83,7 @@ object EnergyShrineBanners{
 		}
 		
 		return baseColor to TagCompound().apply {
-			put("Patterns", patterns.func_222476_a())
+			put("Patterns", patterns.buildNBT())
 		}
 	}
 	

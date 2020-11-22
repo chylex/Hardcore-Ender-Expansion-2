@@ -1,12 +1,12 @@
 package chylex.hee.game.particle.base
 import chylex.hee.system.forge.Side
 import chylex.hee.system.forge.Sided
-import net.minecraft.util.math.Vec3d
-import net.minecraft.world.World
+import net.minecraft.client.world.ClientWorld
+import net.minecraft.util.math.vector.Vector3d
 
 @Sided(Side.CLIENT)
-abstract class ParticleBaseEnergyTransfer(world: World, posX: Double, posY: Double, posZ: Double) : ParticleBaseEnergy(world, posX, posY, posZ, 0.0, 0.0, 0.0){
-	protected abstract val targetPos: Vec3d
+abstract class ParticleBaseEnergyTransfer(world: ClientWorld, posX: Double, posY: Double, posZ: Double) : ParticleBaseEnergy(world, posX, posY, posZ, 0.0, 0.0, 0.0){
+	protected abstract val targetPos: Vector3d
 	
 	init{
 		maxAge = 200

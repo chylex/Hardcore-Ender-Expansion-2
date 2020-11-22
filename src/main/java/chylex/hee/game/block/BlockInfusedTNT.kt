@@ -18,8 +18,10 @@ import chylex.hee.system.migration.Sounds
 import net.minecraft.block.Block
 import net.minecraft.block.BlockState
 import net.minecraft.block.Blocks
-import net.minecraft.fluid.IFluidState
+import net.minecraft.fluid.FluidState
 import net.minecraft.item.ItemStack
+import net.minecraft.loot.LootContext
+import net.minecraft.loot.LootParameters
 import net.minecraft.state.StateContainer.Builder
 import net.minecraft.tileentity.TileEntity
 import net.minecraft.util.Direction
@@ -31,8 +33,6 @@ import net.minecraft.world.Explosion
 import net.minecraft.world.IBlockReader
 import net.minecraft.world.World
 import net.minecraft.world.server.ServerWorld
-import net.minecraft.world.storage.loot.LootContext
-import net.minecraft.world.storage.loot.LootParameters
 import java.util.Random
 
 class BlockInfusedTNT : BlockTNT(Properties.from(Blocks.TNT)), IBlockFireCatchOverride{
@@ -94,7 +94,7 @@ class BlockInfusedTNT : BlockTNT(Properties.from(Blocks.TNT)), IBlockFireCatchOv
 		super.onBlockAdded(state, world, pos, Blocks.AIR.defaultState, false)
 	}
 	
-	override fun removedByPlayer(state: BlockState, world: World, pos: BlockPos, player: EntityPlayer, willHarvest: Boolean, fluid: IFluidState): Boolean{
+	override fun removedByPlayer(state: BlockState, world: World, pos: BlockPos, player: EntityPlayer, willHarvest: Boolean, fluid: FluidState): Boolean{
 		if (pos.getTile<TileEntityInfusedTNT>(world)?.infusions?.has(TRAP) == true && !player.isCreative){
 			catchFire(state, world, pos, null, player)
 			pos.removeBlock(world)

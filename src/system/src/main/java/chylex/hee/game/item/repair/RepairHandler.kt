@@ -10,9 +10,6 @@ import net.minecraftforge.event.AnvilUpdateEvent
 object RepairHandler{
 	const val MAX_EXPERIENCE_COST = 39
 	
-	@JvmField
-	val isPlayerCreative: ThreadLocal<Boolean> = ThreadLocal.withInitial { false }
-	
 	@SubscribeEvent
 	fun onAnvilUpdate(e: AnvilUpdateEvent){
 		val target = e.left
@@ -23,7 +20,7 @@ object RepairHandler{
 		if (item is ICustomRepairBehavior && item.getIsRepairable(target, ingredient)){
 			val instance = RepairInstance(target, ingredient).apply(item::onRepairUpdate)
 			
-			if (instance.repaired.isEmpty || (instance.experienceCost > MAX_EXPERIENCE_COST && !isPlayerCreative.get())){
+			if (instance.repaired.isEmpty || (instance.experienceCost > MAX_EXPERIENCE_COST && e.player?.abilities?.isCreativeMode == false)){
 				e.output = ItemStack.EMPTY
 				e.cost = 0
 			}
@@ -33,7 +30,7 @@ object RepairHandler{
 				val repairName = e.name
 				var changedName = false
 				
-				if (repairName.isBlank()){
+				if (repairName.isNullOrBlank()){
 					if (target.hasDisplayName()){
 						changedName = true
 						output.clearCustomName()

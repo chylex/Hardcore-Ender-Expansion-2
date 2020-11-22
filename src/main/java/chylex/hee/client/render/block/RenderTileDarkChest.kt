@@ -4,7 +4,7 @@ import chylex.hee.init.ModAtlases
 import chylex.hee.system.facades.Resource
 import chylex.hee.system.forge.Side
 import chylex.hee.system.forge.Sided
-import net.minecraft.client.renderer.model.Material
+import net.minecraft.client.renderer.model.RenderMaterial
 import net.minecraft.client.renderer.tileentity.ChestTileEntityRenderer
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher
 import net.minecraft.state.properties.ChestType
@@ -18,9 +18,9 @@ class RenderTileDarkChest(dispatcher: TileEntityRendererDispatcher) : ChestTileE
 		val TEX_DOUBLE_LEFT = Resource.Custom("entity/dark_chest_left")
 		val TEX_DOUBLE_RIGHT = Resource.Custom("entity/dark_chest_right")
 		
-		private val MAT_SINGLE = Material(ModAtlases.ATLAS_TILES, TEX_SINGLE)
-		private val MAT_DOUBLE_LEFT = Material(ModAtlases.ATLAS_TILES, TEX_DOUBLE_LEFT)
-		private val MAT_DOUBLE_RIGHT = Material(ModAtlases.ATLAS_TILES, TEX_DOUBLE_RIGHT)
+		private val MAT_SINGLE = RenderMaterial(ModAtlases.ATLAS_TILES, TEX_SINGLE)
+		private val MAT_DOUBLE_LEFT = RenderMaterial(ModAtlases.ATLAS_TILES, TEX_DOUBLE_LEFT)
+		private val MAT_DOUBLE_RIGHT = RenderMaterial(ModAtlases.ATLAS_TILES, TEX_DOUBLE_RIGHT)
 	}
 	
 	init{

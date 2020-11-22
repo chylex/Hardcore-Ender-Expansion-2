@@ -78,7 +78,7 @@ object OverlayRenderer{
 				GL.bindTexture(TEX_PURIFIED_ENDER_GOO_OVERLAY)
 			}
 			
-			MC.instance.ingameGUI.blit(0, 0, 0, 0, window.scaledWidth, window.scaledHeight)
+			MC.instance.ingameGUI.blit(e.matrixStack, 0, 0, 0, 0, window.scaledWidth, window.scaledHeight)
 			
 			GL.color(1F, 1F, 1F, 1F)
 		}
@@ -90,6 +90,7 @@ object OverlayRenderer{
 	fun onRenderText(@Suppress("UNUSED_PARAMETER") e: RenderGameOverlayEvent.Text){
 		fun drawTextOffScreenCenter(x: Int, y: Int, line: Int, text: String, color: IntColor){
 			val window = MC.window
+			val matrix = e.matrixStack
 			
 			with(MC.fontRenderer){
 				val centerX = x + (window.scaledWidth / 2)
@@ -101,8 +102,8 @@ object OverlayRenderer{
 				val offsetX = -(textWidth / 2)
 				val offsetY = -(textHeight / 2)
 				
-				AbstractGui.fill(centerX + offsetX - BORDER_SIZE, centerY + offsetY - BORDER_SIZE, centerX - offsetX + BORDER_SIZE - 1, centerY - offsetY + BORDER_SIZE - 1, RGBA(0u, 0.6F).i)
-				drawStringWithShadow(text, (centerX + offsetX).toFloat(), (centerY + offsetY).toFloat(), color.i)
+				AbstractGui.fill(matrix, centerX + offsetX - BORDER_SIZE, centerY + offsetY - BORDER_SIZE, centerX - offsetX + BORDER_SIZE - 1, centerY - offsetY + BORDER_SIZE - 1, RGBA(0u, 0.6F).i)
+				drawStringWithShadow(matrix, text, (centerX + offsetX).toFloat(), (centerY + offsetY).toFloat(), color.i)
 			}
 		}
 		

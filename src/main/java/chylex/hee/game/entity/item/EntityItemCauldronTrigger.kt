@@ -32,7 +32,7 @@ import net.minecraft.item.ItemStack
 import net.minecraft.util.SoundCategory
 import net.minecraft.util.math.AxisAlignedBB
 import net.minecraft.util.math.BlockPos
-import net.minecraft.util.math.Vec3d
+import net.minecraft.util.math.vector.Vector3d
 import net.minecraft.world.World
 import java.util.Random
 import kotlin.math.min
@@ -87,7 +87,7 @@ class EntityItemCauldronTrigger : EntityItemBase{
 					pos.setBlock(world, Blocks.CAULDRON)
 					
 					EntityItem(world, pos.x + 0.5, pos.y + 0.4, pos.z + 0.5, ItemStack(ModItems.PURITY_EXTRACT)).apply {
-						motion = Vec3d.ZERO
+						motion = Vector3d.ZERO
 						setDefaultPickupDelay()
 						world.addEntity(this)
 					}

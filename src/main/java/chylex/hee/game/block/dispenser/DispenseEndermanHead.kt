@@ -6,7 +6,7 @@ import net.minecraft.item.ItemStack
 
 object DispenseEndermanHead : OptionalDispenseBehavior(){
 	override fun dispenseStack(source: IBlockSource, stack: ItemStack): ItemStack{
-		successful = ItemArmor.func_226626_a_(source, stack) // RENAME dispenseArmor
+		isSuccessful = ItemArmor.func_226626_a_(source, stack) // RENAME dispenseArmor
 		return stack
 	}
 }

@@ -6,7 +6,7 @@ import chylex.hee.system.migration.BlockHorizontal
 import net.minecraft.block.Block
 import net.minecraft.block.BlockState
 import net.minecraft.block.SoundType
-import net.minecraft.state.IProperty
+import net.minecraft.state.Property
 import net.minecraft.util.Direction
 import net.minecraft.util.SoundEvent
 import net.minecraft.util.math.AxisAlignedBB
@@ -15,7 +15,7 @@ import net.minecraft.util.math.shapes.VoxelShapes
 
 // Properties
 
-inline fun <T : Comparable<T>, V : T> Block.with(property: IProperty<T>, value: V): BlockState{
+inline fun <T : Comparable<T>, V : T> Block.with(property: Property<T>, value: V): BlockState{
 	return this.defaultState.with(property, value)
 }
 

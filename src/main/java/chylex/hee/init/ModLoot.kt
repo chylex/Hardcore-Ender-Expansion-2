@@ -8,8 +8,8 @@ import chylex.hee.game.loot.conditions.ConditionWasSheared
 import chylex.hee.game.loot.functions.FunctionInfuse
 import chylex.hee.game.loot.functions.FunctionPickUndreadGem
 import chylex.hee.game.loot.functions.FunctionSetItem
-import net.minecraft.world.storage.loot.conditions.LootConditionManager
-import net.minecraft.world.storage.loot.functions.LootFunctionManager
+import net.minecraft.loot.conditions.LootConditionManager
+import net.minecraft.loot.functions.LootFunctionManager
 
 object ModLoot{
 	fun initialize(){

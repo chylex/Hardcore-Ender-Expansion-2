@@ -5,11 +5,11 @@ import chylex.hee.system.math.square
 import chylex.hee.system.migration.EntityLiving
 import net.minecraft.entity.Entity
 import net.minecraft.pathfinding.GroundPathNavigator
-import net.minecraft.util.math.Vec3d
+import net.minecraft.util.math.vector.Vector3d
 import net.minecraft.world.World
 
 class PathNavigateGroundUnrestricted(entity: EntityLiving, world: World) : GroundPathNavigator(entity, world){
-	private var overrideTarget = Vec3d.ZERO
+	private var overrideTarget = Vector3d.ZERO
 	private var overrideSpeed = 0.0
 	
 	override fun noPath(): Boolean{
@@ -24,7 +24,7 @@ class PathNavigateGroundUnrestricted(entity: EntityLiving, world: World) : Groun
 			return setPath(path, speed)
 		}
 		
-		overrideTarget = Vec3d(x, y, z)
+		overrideTarget = Vector3d(x, y, z)
 		overrideSpeed = speed
 		timeoutTimer = 0L
 		return true

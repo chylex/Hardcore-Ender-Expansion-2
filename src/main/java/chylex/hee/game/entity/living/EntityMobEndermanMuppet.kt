@@ -1,4 +1,6 @@
 package chylex.hee.game.entity.living
+import chylex.hee.game.entity.add
+import chylex.hee.game.entity.extend
 import chylex.hee.game.entity.living.EntityMobEndermanMuppet.Type.FIRST_KILL
 import chylex.hee.game.entity.living.EntityMobEndermanMuppet.Type.INVALID
 import chylex.hee.game.entity.living.behavior.EndermanTeleportHandler
@@ -8,14 +10,15 @@ import chylex.hee.game.entity.technical.EntityTechnicalCausatumEvent
 import chylex.hee.game.mechanics.causatum.events.CausatumEventEndermanKill
 import chylex.hee.game.world.Pos
 import chylex.hee.init.ModEntities
+import chylex.hee.system.migration.EntityEnderman
 import chylex.hee.system.serialization.TagCompound
 import chylex.hee.system.serialization.getEnum
 import chylex.hee.system.serialization.heeTag
 import chylex.hee.system.serialization.putEnum
 import chylex.hee.system.serialization.use
 import net.minecraft.entity.EntityType
-import net.minecraft.entity.SharedMonsterAttributes.MAX_HEALTH
-import net.minecraft.entity.SharedMonsterAttributes.MOVEMENT_SPEED
+import net.minecraft.entity.ai.attributes.Attributes.MAX_HEALTH
+import net.minecraft.entity.ai.attributes.Attributes.MOVEMENT_SPEED
 import net.minecraft.world.World
 
 class EntityMobEndermanMuppet(type: EntityType<EntityMobEndermanMuppet>, world: World) : EntityMobAbstractEnderman(type, world){
@@ -23,8 +26,13 @@ class EntityMobEndermanMuppet(type: EntityType<EntityMobEndermanMuppet>, world: 
 		this.type = type
 	}
 	
-	private companion object{
+	companion object{
 		private const val TYPE_TAG = "Type"
+		
+		fun createAttributes() = EntityEnderman.func_233666_p_().extend {
+			add(MAX_HEALTH, 40.0)
+			add(MOVEMENT_SPEED, 0.0)
+		}
 	}
 	
 	enum class Type{
@@ -37,12 +45,7 @@ class EntityMobEndermanMuppet(type: EntityType<EntityMobEndermanMuppet>, world: 
 	override val teleportCooldown = Int.MAX_VALUE
 	private var type = INVALID
 	
-	override fun registerAttributes(){
-		super.registerAttributes()
-		
-		getAttribute(MAX_HEALTH).baseValue = 40.0
-		getAttribute(MOVEMENT_SPEED).baseValue = 0.0
-		
+	init{
 		experienceValue = 0
 	}
 	

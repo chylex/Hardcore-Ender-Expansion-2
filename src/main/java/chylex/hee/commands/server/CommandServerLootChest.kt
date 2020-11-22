@@ -15,7 +15,7 @@ import net.minecraft.command.Commands.literal
 import net.minecraft.command.arguments.BlockPosArgument.blockPos
 import net.minecraft.command.arguments.ResourceLocationArgument.getResourceLocation
 import net.minecraft.command.arguments.ResourceLocationArgument.resourceLocation
-import net.minecraft.world.storage.loot.LootTable
+import net.minecraft.loot.LootTable
 
 object CommandServerLootChest : ICommand{
 	override val name = "lootchest"

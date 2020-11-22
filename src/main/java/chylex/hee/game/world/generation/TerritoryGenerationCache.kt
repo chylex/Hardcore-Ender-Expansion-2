@@ -2,10 +2,10 @@ package chylex.hee.game.world.generation
 import chylex.hee.HEE
 import chylex.hee.game.world.territory.TerritoryInstance
 import com.google.common.cache.CacheBuilder
-import net.minecraft.world.World
+import net.minecraft.world.server.ServerWorld
 import java.util.concurrent.TimeUnit
 
-class TerritoryGenerationCache(private val world: World){
+class TerritoryGenerationCache(private val world: ServerWorld){
 	private val cache = CacheBuilder
 		.newBuilder()
 		.initialCapacity(4)

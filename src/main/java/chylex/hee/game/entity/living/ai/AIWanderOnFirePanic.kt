@@ -8,7 +8,7 @@ import chylex.hee.system.migration.Facing.UP
 import chylex.hee.system.random.nextInt
 import net.minecraft.block.material.Material
 import net.minecraft.entity.ai.RandomPositionGenerator
-import net.minecraft.util.math.Vec3d
+import net.minecraft.util.math.vector.Vector3d
 
 class AIWanderOnFirePanic(
 	entity: EntityCreature,
@@ -35,7 +35,7 @@ class AIWanderOnFirePanic(
 		return entity.isBurning && !entity.navigator.noPath()
 	}
 	
-	override fun getPosition(): Vec3d?{
+	override fun getPosition(): Vector3d?{
 		val world = entity.world
 		val rand = entity.rng
 		

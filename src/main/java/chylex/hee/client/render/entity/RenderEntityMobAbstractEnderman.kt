@@ -115,10 +115,10 @@ open class RenderEntityMobAbstractEnderman(manager: EntityRendererManager) : End
 		return if (entity.hurtTime == 0 && entity.isAggro) 2 else 0
 	}
 	
-	override fun func_230042_a_(entity: EntityEnderman, isVisible: Boolean, isTranslucent: Boolean): RenderType?{
+	override fun func_230496_a_(entity: EntityEnderman, isVisible: Boolean, isTranslucent: Boolean, isGlowing: Boolean): RenderType?{
 		return if (isRenderingClone)
 			RENDER_TYPE_CLONE(getEntityTexture(entity))
 		else
-			super.func_230042_a_(entity, isVisible, isTranslucent)
+			super.func_230496_a_(entity, isVisible, isTranslucent, isGlowing)
 	}
 }

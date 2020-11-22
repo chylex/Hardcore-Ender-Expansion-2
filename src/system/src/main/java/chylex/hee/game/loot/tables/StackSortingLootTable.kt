@@ -4,9 +4,9 @@ import chylex.hee.game.loot.LootTablePatcher.poolsExt
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap
 import net.minecraft.inventory.IInventory
 import net.minecraft.item.ItemStack
-import net.minecraft.world.storage.loot.LootContext
-import net.minecraft.world.storage.loot.LootPool
-import net.minecraft.world.storage.loot.LootTable
+import net.minecraft.loot.LootContext
+import net.minecraft.loot.LootPool
+import net.minecraft.loot.LootTable
 import java.util.Comparator.comparingInt
 import java.util.function.Consumer
 

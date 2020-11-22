@@ -17,7 +17,6 @@ import net.minecraft.tileentity.TileEntity
 import net.minecraft.util.math.BlockPos
 import net.minecraft.world.IBlockReader
 import net.minecraft.world.World
-import net.minecraft.world.dimension.DimensionType
 
 class BlockEndPortalInner(builder: BlockBuilder) : BlockAbstractPortal(builder){
 	override fun createTileEntity(state: BlockState, world: IBlockReader): TileEntity{
@@ -29,8 +28,8 @@ class BlockEndPortalInner(builder: BlockBuilder) : BlockAbstractPortal(builder){
 			return
 		}
 		
-		if (world.dimension.type === HEE.dim){
-			DimensionTeleporter.changeDimension(entity, DimensionType.OVERWORLD, DimensionTeleporter.LastEndPortal)
+		if (world.dimensionKey === HEE.dim){
+			DimensionTeleporter.changeDimension(entity, World.OVERWORLD, DimensionTeleporter.LastEndPortal)
 		}
 		else{
 			val acceptor = pos.closestTickingTile<TileEntityEndPortalAcceptor>(world, MAX_DISTANCE_FROM_FRAME)
@@ -44,7 +43,7 @@ class BlockEndPortalInner(builder: BlockBuilder) : BlockAbstractPortal(builder){
 					EnderCausatum.triggerStage(entity, CausatumStage.S2_ENTERED_END)
 				}
 				
-				DimensionTeleporter.changeDimension(entity, DimensionType.THE_END, DimensionTeleporter.EndSpawnPortal)
+				DimensionTeleporter.changeDimension(entity, World.THE_END, DimensionTeleporter.EndSpawnPortal)
 			}
 		}
 	}

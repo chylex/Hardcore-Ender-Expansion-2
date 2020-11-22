@@ -22,7 +22,7 @@ import chylex.hee.system.serialization.heeTag
 import chylex.hee.system.serialization.readTag
 import chylex.hee.system.serialization.use
 import chylex.hee.system.serialization.writeTag
-import com.mojang.datafixers.Dynamic
+import com.mojang.serialization.Dynamic
 import net.minecraft.entity.EntityType
 import net.minecraft.entity.merchant.villager.VillagerData
 import net.minecraft.entity.villager.IVillagerDataHolder
@@ -69,14 +69,9 @@ class EntityMobVillagerDying(type: EntityType<EntityMobVillagerDying>, world: Wo
 	private var villager: VillagerData? = null
 	
 	init{
+		experienceValue = 0
 		isInvulnerable = true
 		setNoGravity(true)
-	}
-	
-	override fun registerAttributes(){
-		super.registerAttributes()
-		
-		experienceValue = 0
 	}
 	
 	fun copyVillagerDataFrom(villager: EntityVillager){
@@ -97,7 +92,7 @@ class EntityMobVillagerDying(type: EntityType<EntityMobVillagerDying>, world: Wo
 	}
 	
 	override fun writeSpawnData(buffer: PacketBuffer) = buffer.use {
-		writeTag(villagerData.serialize(NBTDynamicOps.INSTANCE) as TagCompound)
+		writeTag(VillagerData.CODEC.encodeStart(NBTDynamicOps.INSTANCE, villagerData).result().get() as TagCompound)
 		writeVarInt(deathTime)
 		
 		writeFloat(renderYawOffset)
@@ -106,7 +101,7 @@ class EntityMobVillagerDying(type: EntityType<EntityMobVillagerDying>, world: Wo
 	}
 	
 	override fun readSpawnData(buffer: PacketBuffer) = buffer.use {
-		villager = VillagerData(Dynamic(NBTDynamicOps.INSTANCE, buffer.readTag()))
+		villager = VillagerData.CODEC.parse(Dynamic(NBTDynamicOps.INSTANCE, readTag())).result().get()
 		deathTime = readVarInt()
 		
 		renderYawOffset = readFloat()
@@ -159,13 +154,13 @@ class EntityMobVillagerDying(type: EntityType<EntityMobVillagerDying>, world: Wo
 	override fun writeAdditional(nbt: TagCompound) = nbt.heeTag.use {
 		super.writeAdditional(nbt)
 		
-		put(VILLAGER_TAG, villagerData.serialize(NBTDynamicOps.INSTANCE))
+		put(VILLAGER_TAG, VillagerData.CODEC.encodeStart(NBTDynamicOps.INSTANCE, villagerData).result().get())
 	}
 	
 	override fun readAdditional(nbt: TagCompound) = nbt.heeTag.use {
 		super.readAdditional(nbt)
 		
-		villager = VillagerData(Dynamic(NBTDynamicOps.INSTANCE, getCompound(VILLAGER_TAG)))
+		villager = VillagerData.CODEC.parse(Dynamic(NBTDynamicOps.INSTANCE, getCompound(VILLAGER_TAG))).result().get()
 	}
 	
 	override fun processInteract(player: EntityPlayer, hand: Hand) = true

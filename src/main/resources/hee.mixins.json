@@ -4,7 +4,6 @@
   "package": "chylex.hee.mixin",
   "compatibilityLevel": "JAVA_8",
   "mixins": [
-    "HookAnvilRepair",
     "HookBlockDrops",
     "HookChorusFlowerSoil",
     "HookChorusPlantSoil",

@@ -4,6 +4,7 @@ import chylex.hee.client.MC
 import chylex.hee.client.color.NO_TINT
 import chylex.hee.client.gui.GuiPortalTokenStorage
 import chylex.hee.game.block.BlockVoidPortalInner
+import chylex.hee.game.entity.dimensionKey
 import chylex.hee.game.entity.item.EntityTokenHolder
 import chylex.hee.game.entity.selectExistingEntities
 import chylex.hee.game.inventory.heeTag
@@ -18,7 +19,6 @@ import chylex.hee.game.world.territory.storage.TerritoryGlobalStorage
 import chylex.hee.game.world.territory.storage.data.VoidData
 import chylex.hee.init.ModItems
 import chylex.hee.system.color.IntColor.Companion.RGB
-import chylex.hee.system.facades.Resource
 import chylex.hee.system.forge.Side
 import chylex.hee.system.forge.Sided
 import chylex.hee.system.migration.ActionResult.FAIL
@@ -46,7 +46,6 @@ import net.minecraft.util.text.ITextComponent
 import net.minecraft.util.text.StringTextComponent
 import net.minecraft.util.text.TranslationTextComponent
 import net.minecraft.world.World
-import net.minecraft.world.dimension.DimensionType
 
 class ItemPortalToken(properties: Properties) : Item(properties){
 	companion object{
@@ -56,6 +55,10 @@ class ItemPortalToken(properties: Properties) : Item(properties){
 		private const val IS_CORRUPTED_TAG = "IsCorrupted"
 		
 		const val MAX_STACK_SIZE = 16
+		
+		fun isCorrupted(stack: ItemStack): Boolean{
+			return stack.heeTagOrNull.hasKey(IS_CORRUPTED_TAG)
+		}
 	}
 	
 	enum class TokenType(val propertyValue: Float, private val translationKeySuffix: String){
@@ -68,12 +71,6 @@ class ItemPortalToken(properties: Properties) : Item(properties){
 		
 		val concreteTranslationKey
 			get() = "item.hee.portal_token.$translationKeySuffix.concrete"
-	}
-	
-	init{
-		addPropertyOverride(Resource.Custom("token_type")){
-			stack, _, _ -> getTokenType(stack).propertyValue + (if (stack.heeTagOrNull.hasKey(IS_CORRUPTED_TAG)) 0.5F else 0F)
-		}
 	}
 	
 	// Token construction
@@ -133,7 +130,7 @@ class ItemPortalToken(properties: Properties) : Item(properties){
 	}
 	
 	fun updateCorruptedState(stack: ItemStack){
-		if (getTokenType(stack) != TokenType.RARE || stack.heeTagOrNull.hasKey(IS_CORRUPTED_TAG)){
+		if (getTokenType(stack) != TokenType.RARE || isCorrupted(stack)){
 			return
 		}
 		
@@ -167,11 +164,11 @@ class ItemPortalToken(properties: Properties) : Item(properties){
 		EntityPortalContact.shouldTeleport(player) // ignore the result but prevent immediately teleporting back
 		val spawnInfo = instance.prepareSpawnPoint(player, clearanceRadius = 1)
 		
-		if (player.dimension === HEE.dim){
+		if (player.dimensionKey === HEE.dim){
 			BlockVoidPortalInner.teleportEntity(player, spawnInfo)
 		}
 		else{
-			DimensionTeleporter.changeDimension(player, DimensionType.THE_END, DimensionTeleporter.EndTerritoryPortal(spawnInfo))
+			DimensionTeleporter.changeDimension(player, World.THE_END, DimensionTeleporter.EndTerritoryPortal(spawnInfo))
 		}
 		
 		return ActionResult(SUCCESS, heldItem)
@@ -245,7 +242,7 @@ class ItemPortalToken(properties: Properties) : Item(properties){
 		if ((MC.currentScreen as? GuiPortalTokenStorage)?.canActivateToken(stack) == true){
 			lines.add(TranslationTextComponent("item.hee.portal_token.tooltip.activate"))
 		}
-		else if (MC.player?.let { it.isCreative && it.dimension === HEE.dim } == true){
+		else if (MC.player?.let { it.isCreative && it.dimensionKey === HEE.dim } == true){
 			lines.add(TranslationTextComponent("item.hee.portal_token.tooltip.creative.${if (hasTerritoryInstance(stack)) "teleport" else "generate"}"))
 		}
 		

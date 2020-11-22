@@ -11,7 +11,6 @@ import chylex.hee.game.world.playClient
 import chylex.hee.game.world.totalTime
 import chylex.hee.init.ModItems
 import chylex.hee.system.compatibility.MinecraftForgeEventBus
-import chylex.hee.system.facades.Resource
 import chylex.hee.system.forge.EventPriority
 import chylex.hee.system.forge.Side
 import chylex.hee.system.forge.Sided
@@ -23,25 +22,25 @@ import chylex.hee.system.migration.Potions
 import chylex.hee.system.migration.Sounds
 import chylex.hee.system.serialization.hasKey
 import net.minecraft.entity.Entity
-import net.minecraft.entity.player.PlayerEntity.REACH_DISTANCE
 import net.minecraft.item.ItemStack
 import net.minecraft.item.Items
 import net.minecraft.particles.ParticleTypes
 import net.minecraft.util.DamageSource
 import net.minecraft.util.Hand
 import net.minecraft.world.World
+import net.minecraftforge.common.ForgeMod.REACH_DISTANCE
 import net.minecraftforge.event.entity.living.LivingDeathEvent
 
 class ItemTotemOfUndyingCustom(properties: Properties) : ItemAbstractTrinket(properties){
-	private companion object{
+	companion object{
 		private const val SHAKING_TAG = "Shaking"
+		
+		fun isShaking(stack: ItemStack): Boolean{
+			return stack.heeTagOrNull.hasKey(SHAKING_TAG)
+		}
 	}
 	
 	init{
-		addPropertyOverride(Resource.Custom("is_shaking")){
-			stack, _, _ -> if (stack.heeTagOrNull.hasKey(SHAKING_TAG)) 1F else 0F
-		}
-		
 		MinecraftForgeEventBus.register(this)
 	}
 	
@@ -94,8 +93,8 @@ class ItemTotemOfUndyingCustom(properties: Properties) : ItemAbstractTrinket(pro
 			return
 		}
 		
-		val isNearVillager = world.selectExistingEntities.inRange<EntityVillager>(entity.posVec, entity.getAttribute(REACH_DISTANCE).value).isNotEmpty()
-		val wasNearVillager = stack.heeTagOrNull.hasKey(SHAKING_TAG)
+		val isNearVillager = world.selectExistingEntities.inRange<EntityVillager>(entity.posVec, entity.getAttributeValue(REACH_DISTANCE.get())).isNotEmpty()
+		val wasNearVillager = isShaking(stack)
 		
 		if (isNearVillager && !wasNearVillager){
 			stack.heeTag.putBoolean(SHAKING_TAG, true)

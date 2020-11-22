@@ -12,7 +12,7 @@ interface IKnockbackMultiplier{
 	object EventHandler{
 		@SubscribeEvent(EventPriority.HIGHEST)
 		fun onCriticalHit(e: LivingKnockBackEvent){
-			val mp = (e.originalAttacker as? IKnockbackMultiplier)?.lastHitKnockbackMultiplier ?: return
+			val mp = (null /*UPDATE*/ as? IKnockbackMultiplier)?.lastHitKnockbackMultiplier ?: return
 			
 			if (mp == 0F){
 				e.strength = 0F

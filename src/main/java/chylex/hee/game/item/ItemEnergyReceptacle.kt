@@ -21,7 +21,6 @@ import chylex.hee.game.world.territory.TerritoryInstance
 import chylex.hee.game.world.totalTime
 import chylex.hee.init.ModBlocks
 import chylex.hee.system.color.IntColor.Companion.RGB
-import chylex.hee.system.facades.Resource
 import chylex.hee.system.forge.Side
 import chylex.hee.system.forge.Sided
 import chylex.hee.system.migration.ActionResult.FAIL
@@ -43,7 +42,7 @@ import net.minecraft.world.World
 import kotlin.math.pow
 
 class ItemEnergyReceptacle(properties: Properties) : ItemAbstractInfusable(properties){
-	private companion object{
+	companion object{
 		private const val CLUSTER_SNAPSHOT_TAG = "Cluster"
 		private const val UPDATE_TIME_TAG = "UpdateTime"
 		private const val RENDER_COLOR_TAG = "RenderColor"
@@ -96,14 +95,10 @@ class ItemEnergyReceptacle(properties: Properties) : ItemAbstractInfusable(prope
 			
 			return false
 		}
-	}
-	
-	init{
-		addPropertyOverride(Resource.Custom("has_cluster")){
-			stack, _, _ -> if (stack.heeTagOrNull.hasKey(CLUSTER_SNAPSHOT_TAG)) 1F else 0F
-		}
 		
-		// POLISH tweak animation
+		fun hasCluster(stack: ItemStack): Boolean{
+			return stack.heeTagOrNull.hasKey(CLUSTER_SNAPSHOT_TAG)
+		}
 	}
 	
 	override fun onItemUse(context: ItemUseContext): ActionResultType{

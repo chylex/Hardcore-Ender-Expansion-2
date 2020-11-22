@@ -34,7 +34,7 @@ import net.minecraft.util.math.RayTraceContext
 import net.minecraft.util.math.RayTraceContext.BlockMode
 import net.minecraft.util.math.RayTraceContext.FluidMode
 import net.minecraft.util.math.RayTraceResult.Type
-import net.minecraft.util.math.Vec3d
+import net.minecraft.util.math.vector.Vector3d
 import net.minecraft.world.World
 import kotlin.math.cos
 
@@ -146,7 +146,7 @@ class EntityTechnicalPuzzle(type: EntityType<EntityTechnicalPuzzle>, world: Worl
 		
 		if (allBlocks.all { it.getState(world)[BlockPuzzleLogic.STATE] == BlockPuzzleLogic.State.ACTIVE }){
 			val candidatesInitial = BlockPuzzleLogic.findAllRectangles(world, allBlocks)
-				.map { box -> Vec3d((box.min.x + box.max.x + 1) * 0.5, posY + 1.5, (box.min.z + box.max.z + 1) * 0.5) }
+				.map { box -> Vector3d((box.min.x + box.max.x + 1) * 0.5, posY + 1.5, (box.min.z + box.max.z + 1) * 0.5) }
 			
 			val candidatesWithPlayerVisibility = candidatesInitial
 				.filter(::isPointInPlayerView)
@@ -159,7 +159,7 @@ class EntityTechnicalPuzzle(type: EntityType<EntityTechnicalPuzzle>, world: Worl
 			val pickedCandidate = rand.nextItem(candidatesOutsidePickupRange)
 			
 			val medallion = EntityItem(world, pickedCandidate.x, pickedCandidate.y, pickedCandidate.z, ItemStack(ModItems.PUZZLE_MEDALLION)).apply {
-				motion = Vec3d.ZERO
+				motion = Vector3d.ZERO
 				world.addEntity(this)
 			}
 			
@@ -170,7 +170,7 @@ class EntityTechnicalPuzzle(type: EntityType<EntityTechnicalPuzzle>, world: Worl
 		}
 	}
 	
-	private fun isPointInPlayerView(point: Vec3d): Boolean{
+	private fun isPointInPlayerView(point: Vector3d): Boolean{
 		return world.players.any {
 			val lookPos = it.lookPosVec
 			val lookDir = it.lookDirVec

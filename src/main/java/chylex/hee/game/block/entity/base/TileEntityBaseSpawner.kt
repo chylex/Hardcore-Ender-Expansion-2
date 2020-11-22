@@ -28,10 +28,10 @@ import chylex.hee.system.serialization.getPosOrNull
 import chylex.hee.system.serialization.putPos
 import chylex.hee.system.serialization.use
 import net.minecraft.entity.Entity
-import net.minecraft.entity.SharedMonsterAttributes.FLYING_SPEED
-import net.minecraft.entity.SharedMonsterAttributes.MAX_HEALTH
-import net.minecraft.entity.SharedMonsterAttributes.MOVEMENT_SPEED
 import net.minecraft.entity.ai.attributes.AttributeModifier
+import net.minecraft.entity.ai.attributes.Attributes.FLYING_SPEED
+import net.minecraft.entity.ai.attributes.Attributes.MAX_HEALTH
+import net.minecraft.entity.ai.attributes.Attributes.MOVEMENT_SPEED
 import net.minecraft.tileentity.TileEntityType
 import net.minecraft.util.math.BlockPos
 import net.minecraftforge.event.entity.living.LivingDropsEvent
@@ -48,8 +48,8 @@ abstract class TileEntityBaseSpawner(type: TileEntityType<out TileEntityBaseSpaw
 		private const val NEXT_SPAWN_COOLDOWN_TAG = "NextSpawnCooldown"
 		
 		private const val ENTITY_TAINTED_TAG = "Tainted"
-		private val BUFF_HEALTH = AttributeModifier(UUID.fromString("2A023243-1D08-4955-8056-C35959129CDF"), "Tainted health buff", 1.0, OPERATION_MUL_INCR_INDIVIDUAL).setSaved(true)
-		private val DEBUFF_SPEED = AttributeModifier(UUID.fromString("9BEF400C-05DD-49A7-91E1-036EF7B73766"), "Tainted speed debuff", -0.33, OPERATION_MUL_INCR_INDIVIDUAL).setSaved(true)
+		private val BUFF_HEALTH = AttributeModifier(UUID.fromString("2A023243-1D08-4955-8056-C35959129CDF"), "Tainted health buff", 1.0, OPERATION_MUL_INCR_INDIVIDUAL)
+		private val DEBUFF_SPEED = AttributeModifier(UUID.fromString("9BEF400C-05DD-49A7-91E1-036EF7B73766"), "Tainted speed debuff", -0.33, OPERATION_MUL_INCR_INDIVIDUAL)
 		
 		private val PARTICLE_TAINT_COLOR = IRandomColor { RGB(nextInt(4, 40).toUByte()) }
 		
@@ -110,7 +110,7 @@ abstract class TileEntityBaseSpawner(type: TileEntityType<out TileEntityBaseSpaw
 	private var lastPos: BlockPos? = null
 	private var nextSpawnCooldown = 0
 	
-	val clientEntity by lazy { createClientEntity() }
+	val clientEntity by lazy(::createClientEntity)
 	val clientRotation = LerpedFloat(0F)
 	
 	protected abstract val clientRotationSpeed: Float
@@ -180,9 +180,9 @@ abstract class TileEntityBaseSpawner(type: TileEntityType<out TileEntityBaseSpaw
 	protected fun spawnMob(entity: EntityLiving){
 		if (isTainted){
 			entity.heeTag.putBoolean(ENTITY_TAINTED_TAG, true)
-			entity.getAttribute(MAX_HEALTH)?.applyModifier(BUFF_HEALTH)
-			entity.getAttribute(MOVEMENT_SPEED)?.applyModifier(DEBUFF_SPEED)
-			entity.getAttribute(FLYING_SPEED)?.applyModifier(DEBUFF_SPEED)
+			entity.getAttribute(MAX_HEALTH)?.applyPersistentModifier(BUFF_HEALTH)
+			entity.getAttribute(MOVEMENT_SPEED)?.applyPersistentModifier(DEBUFF_SPEED)
+			entity.getAttribute(FLYING_SPEED)?.applyPersistentModifier(DEBUFF_SPEED)
 			entity.health = entity.maxHealth
 		}
 		

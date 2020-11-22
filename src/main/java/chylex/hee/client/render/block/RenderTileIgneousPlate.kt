@@ -29,7 +29,7 @@ import net.minecraft.client.renderer.RenderType
 import net.minecraft.client.renderer.tileentity.TileEntityRenderer
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats
-import net.minecraft.util.math.Vec3d
+import net.minecraft.util.math.vector.Vector3d
 import org.lwjgl.opengl.GL11
 
 @Sided(Side.CLIENT)
@@ -53,7 +53,7 @@ class RenderTileIgneousPlate(dispatcher: TileEntityRendererDispatcher) : TileEnt
 			RGB(235,  23,  23).asVec
 		)
 		
-		private fun getInnerBoxColor(combinedHeat: Float): Vec3d{
+		private fun getInnerBoxColor(combinedHeat: Float): Vector3d{
 			val index = combinedHeat.floorToInt().coerceIn(0, COLOR_TRANSITIONS.lastIndex - 1)
 			val progress = combinedHeat.toDouble() - index
 			

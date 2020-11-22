@@ -10,17 +10,17 @@ import chylex.hee.system.migration.Facing.SOUTH
 import net.minecraft.entity.Entity
 import net.minecraft.util.Direction
 import net.minecraft.util.math.BlockPos
-import net.minecraft.util.math.Vec3d
+import net.minecraft.util.math.vector.Vector3d
 import net.minecraft.world.IWorld
 import net.minecraft.world.World
 
-class EntityStructureTrigger private constructor(private val entityConstructor: (World) -> Entity, private val entityLocator: (BlockPos, Transform) -> Vec3d) : IStructureTrigger{
+class EntityStructureTrigger private constructor(private val entityConstructor: (World) -> Entity, private val entityLocator: (BlockPos, Transform) -> Vector3d) : IStructureTrigger{
 	constructor(
 		entityConstructor: (World) -> Entity,
 		yOffset: Double
 	) : this(
 		entityConstructor,
-		{ pos, _ -> Vec3d(pos.x + 0.5, pos.y + yOffset, pos.z + 0.5) }
+		{ pos, _ -> Vector3d(pos.x + 0.5, pos.y + yOffset, pos.z + 0.5) }
 	)
 	
 	constructor(
@@ -30,7 +30,7 @@ class EntityStructureTrigger private constructor(private val entityConstructor: 
 		yOffset: Double
 	) : this(
 		entityConstructor,
-		{ pos, transform -> transform(nudgeFacing).let { Vec3d(pos.x + 0.5 + (nudgeAmount * it.xOffset), pos.y + yOffset, pos.z + 0.5 + (nudgeAmount * it.zOffset)) } }
+		{ pos, transform -> transform(nudgeFacing).let { Vector3d(pos.x + 0.5 + (nudgeAmount * it.xOffset), pos.y + yOffset, pos.z + 0.5 + (nudgeAmount * it.zOffset)) } }
 	){
 		require(nudgeFacing.yOffset == 0){ "entity trigger can only be nudged on x/z axis" }
 	}

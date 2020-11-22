@@ -29,8 +29,8 @@ import net.minecraft.util.math.BlockRayTraceResult
 import net.minecraft.util.math.shapes.ISelectionContext
 import net.minecraft.util.math.shapes.VoxelShape
 import net.minecraft.util.math.shapes.VoxelShapes
+import net.minecraft.world.IBlockDisplayReader
 import net.minecraft.world.IBlockReader
-import net.minecraft.world.ILightReader
 import net.minecraft.world.IWorld
 import net.minecraft.world.World
 import java.util.UUID
@@ -210,7 +210,7 @@ class BlockTablePedestal(builder: BlockBuilder) : BlockSimpleShaped(builder, COM
 	
 	@Sided(Side.CLIENT)
 	object Color : IBlockColor{
-		override fun getColor(state: BlockState, world: ILightReader?, pos: BlockPos?, tintIndex: Int): Int{
+		override fun getColor(state: BlockState, world: IBlockDisplayReader?, pos: BlockPos?, tintIndex: Int): Int{
 			if (world == null || pos == null){
 				return NO_TINT
 			}

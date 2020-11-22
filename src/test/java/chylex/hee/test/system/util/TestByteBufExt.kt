@@ -12,7 +12,7 @@ import chylex.hee.system.serialization.writeVec
 import io.netty.buffer.Unpooled
 import net.minecraft.network.PacketBuffer
 import net.minecraft.util.math.BlockPos
-import net.minecraft.util.math.Vec3d
+import net.minecraft.util.math.vector.Vector3d
 import net.minecraft.util.registry.Bootstrap
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Nested
@@ -36,22 +36,22 @@ class TestByteBufExt{
 			}
 		}
 		
-		@Test fun `writing and reading full 'Vec3d' objects works`() = with(PacketBuffer(Unpooled.buffer())){
+		@Test fun `writing and reading full 'Vector3d' objects works`() = with(PacketBuffer(Unpooled.buffer())){
 			arrayOf(
-				Vec3d.ZERO,
-				Vec3d(-1.23, 45.6, -789.0),
-				Vec3d(Double.MIN_VALUE, Double.MIN_VALUE, Double.MIN_VALUE),
-				Vec3d(Double.MAX_VALUE, Double.MAX_VALUE, Double.MAX_VALUE)
+				Vector3d.ZERO,
+				Vector3d(-1.23, 45.6, -789.0),
+				Vector3d(Double.MIN_VALUE, Double.MIN_VALUE, Double.MIN_VALUE),
+				Vector3d(Double.MAX_VALUE, Double.MAX_VALUE, Double.MAX_VALUE)
 			).forEach {
 				writeVec(it)
 				assertEquals(it, readVec())
 			}
 		}
 		
-		@Test fun `writing and reading compact 'Vec3d' objects works`() = with(PacketBuffer(Unpooled.buffer())){
+		@Test fun `writing and reading compact 'Vector3d' objects works`() = with(PacketBuffer(Unpooled.buffer())){
 			mapOf(
-				Vec3d.ZERO to Vec3d.ZERO,
-				Vec3d(-1.23, 45.6, -789.0) to Vec3d(-1.25, 45.5, -789.0)
+				Vector3d.ZERO to Vector3d.ZERO,
+				Vector3d(-1.23, 45.6, -789.0) to Vector3d(-1.25, 45.5, -789.0)
 			).forEach {
 				writeCompactVec(it.key)
 				assertEquals(it.value, readCompactVec())

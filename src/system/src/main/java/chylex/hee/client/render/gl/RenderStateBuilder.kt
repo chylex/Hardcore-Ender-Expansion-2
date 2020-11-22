@@ -125,7 +125,7 @@ class RenderStateBuilder{
 	@Suppress("NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS")
 	companion object : RenderState(null, null, null){
 		val LAYERING_NONE:       LayerState get() = NO_LAYERING
-		val LAYERING_PROJECTION: LayerState get() = PROJECTION_LAYERING
+		val LAYERING_PROJECTION: LayerState get() = field_239235_M_
 		
 		val BLEND_NONE: TransparencyState get() = NO_TRANSPARENCY
 		

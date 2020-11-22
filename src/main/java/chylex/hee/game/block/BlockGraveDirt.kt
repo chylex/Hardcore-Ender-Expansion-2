@@ -25,6 +25,9 @@ import net.minecraft.block.Block
 import net.minecraft.block.BlockState
 import net.minecraft.item.BlockItemUseContext
 import net.minecraft.item.ItemStack
+import net.minecraft.loot.LootContext
+import net.minecraft.loot.LootParameterSets
+import net.minecraft.loot.LootParameters
 import net.minecraft.state.StateContainer.Builder
 import net.minecraft.tileentity.TileEntity
 import net.minecraft.util.DamageSource
@@ -40,9 +43,6 @@ import net.minecraft.world.IBlockReader
 import net.minecraft.world.IWorld
 import net.minecraft.world.World
 import net.minecraft.world.server.ServerWorld
-import net.minecraft.world.storage.loot.LootContext
-import net.minecraft.world.storage.loot.LootParameterSets
-import net.minecraft.world.storage.loot.LootParameters
 import java.util.Random
 
 open class BlockGraveDirt(builder: BlockBuilder) : BlockSimpleShaped(builder, AxisAlignedBB(0.0, 0.0, 0.0, 1.0, 0.9375, 1.0)){
@@ -98,7 +98,7 @@ open class BlockGraveDirt(builder: BlockBuilder) : BlockSimpleShaped(builder, Ax
 		if (world is ServerWorld){
 			LootContext.Builder(world)
 				.withRandom(world.rand)
-				.withParameter(LootParameters.POSITION, pos)
+				.withParameter(LootParameters.field_237457_g_, pos)
 				.withParameter(LootParameters.EXPLOSION_RADIUS, explosion.size)
 				.withParameter(LootParameters.TOOL, ItemStack.EMPTY)
 				.withNullableParameter(LootParameters.BLOCK_ENTITY, null)

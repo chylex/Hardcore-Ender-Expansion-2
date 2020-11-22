@@ -20,7 +20,7 @@ class RenderTileEndPortal(dispatcher: TileEntityRendererDispatcher) : RenderTile
 	}
 	
 	override fun findController(world: World, pos: BlockPos): IPortalController?{
-		if (world.dimension.type === HEE.dim){
+		if (world.dimensionKey === HEE.dim){
 			return AlwaysOnController
 		}
 		

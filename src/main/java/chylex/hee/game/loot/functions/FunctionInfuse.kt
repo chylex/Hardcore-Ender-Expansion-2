@@ -7,11 +7,11 @@ import com.google.gson.JsonDeserializationContext
 import com.google.gson.JsonObject
 import com.google.gson.JsonSerializationContext
 import net.minecraft.item.ItemStack
+import net.minecraft.loot.LootContext
+import net.minecraft.loot.LootFunction
+import net.minecraft.loot.RandomValueRange
+import net.minecraft.loot.conditions.ILootCondition
 import net.minecraft.util.JSONUtils
-import net.minecraft.world.storage.loot.LootContext
-import net.minecraft.world.storage.loot.LootFunction
-import net.minecraft.world.storage.loot.RandomValueRange
-import net.minecraft.world.storage.loot.conditions.ILootCondition
 
 class FunctionInfuse(conditions: Array<ILootCondition>, private val picks: Array<Infusion>, private val amount: RandomValueRange) : LootFunction(conditions){
 	override fun doApply(stack: ItemStack, context: LootContext): ItemStack{

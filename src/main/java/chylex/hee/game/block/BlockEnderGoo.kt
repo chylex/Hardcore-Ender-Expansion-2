@@ -26,7 +26,6 @@ import chylex.hee.system.migration.Potions
 import net.minecraft.block.BlockState
 import net.minecraft.entity.Entity
 import net.minecraft.util.math.BlockPos
-import net.minecraft.world.IWorldReader
 import net.minecraft.world.World
 import java.util.Random
 import kotlin.math.pow
@@ -109,10 +108,6 @@ open class BlockEnderGoo : BlockAbstractGoo(FluidEnderGoo, Materials.ENDER_GOO){
 		get() = "EnderGoo"
 	
 	// Behavior
-	
-	override fun tickRate(world: IWorldReader): Int{
-		return 18
-	}
 	
 	override fun onInsideGoo(entity: Entity){
 		if (entity is EntityLivingBase && !CustomCreatureType.isEnder(entity)){

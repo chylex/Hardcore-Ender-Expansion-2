@@ -18,7 +18,6 @@ import net.minecraft.entity.Entity
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.ChunkPos
 import net.minecraft.world.gen.Heightmap.Type.MOTION_BLOCKING
-import net.minecraft.world.server.ServerWorld
 import java.util.Random
 import kotlin.math.abs
 
@@ -78,8 +77,8 @@ data class TerritoryInstance(val territory: TerritoryType, val index: Int){
 			return TerritoryInstance(territory, indexStart + indexOffsetX + indexOffsetZ)
 		}
 		
-		val endWorld: ServerWorld
-			get() = Environment.getServer().getWorld(HEE.dim)
+		val endWorld
+			get() = Environment.getDimension(HEE.dim)
 	}
 	
 	private val ordinal
@@ -108,13 +107,13 @@ data class TerritoryInstance(val territory: TerritoryType, val index: Int){
 	}
 	
 	private val bottomCenterPos: BlockPos
-		get() = topLeftChunk.getBlock(chunks * 8, territory.height.first, chunks * 8)
+		get() = topLeftChunk.asBlockPos().add(chunks * 8, territory.height.first, chunks * 8)
 	
 	private val fallbackSpawnPoint: BlockPos
 		get() = bottomCenterPos.let { endWorld.getHeight(MOTION_BLOCKING, it) }.up()
 	
 	val centerPoint
-		get() = topLeftChunk.getBlock(chunks * 8, territory.height.let { (it.first + it.last) / 2 }, chunks * 8).center
+		get() = topLeftChunk.asBlockPos().add(chunks * 8, territory.height.let { (it.first + it.last) / 2 }, chunks * 8).center
 	
 	val players
 		get() = endWorld.players.filter { this == fromPos(it) }

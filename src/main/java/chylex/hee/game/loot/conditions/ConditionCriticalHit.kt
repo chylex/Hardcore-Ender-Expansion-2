@@ -1,9 +1,9 @@
 package chylex.hee.game.loot.conditions
 import chylex.hee.game.entity.living.ICritTracker
 import chylex.hee.system.facades.Resource
-import net.minecraft.world.storage.loot.LootContext
-import net.minecraft.world.storage.loot.LootParameter
-import net.minecraft.world.storage.loot.LootParameters
+import net.minecraft.loot.LootContext
+import net.minecraft.loot.LootParameter
+import net.minecraft.loot.LootParameters
 
 class ConditionCriticalHit(override val expectedValue: Boolean) : ILootConditionBoolean{
 	override fun isTrue(context: LootContext): Boolean{

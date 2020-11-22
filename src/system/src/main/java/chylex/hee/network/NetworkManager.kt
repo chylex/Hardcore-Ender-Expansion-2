@@ -10,7 +10,8 @@ import it.unimi.dsi.fastutil.bytes.Byte2ObjectOpenHashMap
 import it.unimi.dsi.fastutil.objects.Object2ByteOpenHashMap
 import net.minecraft.entity.Entity
 import net.minecraft.network.PacketBuffer
-import net.minecraft.world.dimension.DimensionType
+import net.minecraft.util.RegistryKey
+import net.minecraft.world.World
 import net.minecraftforge.fml.LogicalSide
 import net.minecraftforge.fml.network.NetworkDirection.PLAY_TO_CLIENT
 import net.minecraftforge.fml.network.NetworkDirection.PLAY_TO_SERVER
@@ -89,7 +90,7 @@ object NetworkManager{
 		(player as? EntityPlayerMP)?.let { PacketDistributor.PLAYER.with { it }.send(buildPacket(PLAY_TO_CLIENT, writePacket(packet), CHANNEL)) }
 	}
 	
-	fun sendToDimension(packet: BaseClientPacket, dimension: DimensionType){
+	fun sendToDimension(packet: BaseClientPacket, dimension: RegistryKey<World>){
 		PacketDistributor.DIMENSION.with { dimension }.send(buildPacket(PLAY_TO_CLIENT, writePacket(packet), CHANNEL))
 	}
 	

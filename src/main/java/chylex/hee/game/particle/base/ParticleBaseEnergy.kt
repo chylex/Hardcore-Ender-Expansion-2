@@ -23,12 +23,12 @@ import net.minecraft.client.renderer.Tessellator
 import net.minecraft.client.renderer.texture.AtlasTexture
 import net.minecraft.client.renderer.texture.TextureManager
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats
-import net.minecraft.world.World
+import net.minecraft.client.world.ClientWorld
 import org.lwjgl.opengl.GL11.GL_QUADS
 import java.util.Random
 
 @Sided(Side.CLIENT)
-abstract class ParticleBaseEnergy(world: World, posX: Double, posY: Double, posZ: Double, motX: Double, motY: Double, motZ: Double) : ParticleBaseFloating(world, posX, posY, posZ, motX, motY, motZ){
+abstract class ParticleBaseEnergy(world: ClientWorld, posX: Double, posY: Double, posZ: Double, motX: Double, motY: Double, motZ: Double) : ParticleBaseFloating(world, posX, posY, posZ, motX, motY, motZ){
 	private companion object{
 		private val COLOR_GRAY = adjustColorComponents(RGB(60u))
 		

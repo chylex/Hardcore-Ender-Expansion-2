@@ -10,9 +10,9 @@ import com.google.gson.JsonSerializationContext
 import net.minecraft.item.Item
 import net.minecraft.item.ItemStack
 import net.minecraft.item.Items
-import net.minecraft.world.storage.loot.LootContext
-import net.minecraft.world.storage.loot.LootFunction
-import net.minecraft.world.storage.loot.conditions.ILootCondition
+import net.minecraft.loot.LootContext
+import net.minecraft.loot.LootFunction
+import net.minecraft.loot.conditions.ILootCondition
 
 class FunctionPickUndreadGem(conditions: Array<ILootCondition>, private val items: WeightedList<Item>) : LootFunction(conditions){
 	private companion object{

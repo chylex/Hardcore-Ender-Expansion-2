@@ -53,7 +53,7 @@ import net.minecraft.tileentity.ITickableTileEntity
 import net.minecraft.tileentity.TileEntityType
 import net.minecraft.util.SoundCategory
 import net.minecraft.util.math.AxisAlignedBB
-import net.minecraft.util.math.Vec3d
+import net.minecraft.util.math.vector.Vector3d
 import net.minecraft.world.World
 import java.util.Random
 import kotlin.math.max
@@ -110,7 +110,7 @@ class TileEntityMinersBurialAltar(type: TileEntityType<TileEntityMinersBurialAlt
 			pos = InBox(0.175F)
 		)
 		
-		class FxSpawnData(private val pos: Vec3d, private val type: Byte) : IFxData{
+		class FxSpawnData(private val pos: Vector3d, private val type: Byte) : IFxData{
 			override fun write(buffer: PacketBuffer) = buffer.use {
 				writeCompactVec(pos)
 				writeByte(type.toInt())
@@ -231,7 +231,7 @@ class TileEntityMinersBurialAltar(type: TileEntityType<TileEntityMinersBurialAlt
 			
 			if (tick == 0){
 				if (tokenHolder == null){
-					val fxPos = Vec3d(tokenHolderPos.x + 0.5, tokenHolderPos.y + 0.95, tokenHolderPos.z + 0.5)
+					val fxPos = Vector3d(tokenHolderPos.x + 0.5, tokenHolderPos.y + 0.95, tokenHolderPos.z + 0.5)
 					PacketClientFX(FX_SPAWN, FxSpawnData(fxPos, redeemType)).sendToAllAround(wrld, fxPos, 16.0)
 					
 					EntityTokenHolder(wrld, tokenHolderPos, TokenType.NORMAL, TerritoryType.CURSED_LIBRARY).apply {

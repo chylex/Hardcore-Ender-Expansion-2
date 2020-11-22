@@ -22,7 +22,7 @@ import chylex.hee.system.serialization.use
 import chylex.hee.system.serialization.writeVec
 import net.minecraft.network.PacketBuffer
 import net.minecraft.util.math.BlockPos
-import net.minecraft.util.math.Vec3d
+import net.minecraft.util.math.vector.Vector3d
 import net.minecraft.world.World
 import net.minecraftforge.common.util.INBTSerializable
 import java.util.Random
@@ -46,7 +46,7 @@ class EnderEyeSpawnerParticles(private val entity: EntityBossEnderEye) : INBTSer
 			hideOnMinimalSetting = false
 		)
 		
-		class ParticleData(private val point: Vec3d) : IFxData{
+		class ParticleData(private val point: Vector3d) : IFxData{
 			override fun write(buffer: PacketBuffer) = buffer.use {
 				writeVec(point)
 			}
@@ -59,8 +59,8 @@ class EnderEyeSpawnerParticles(private val entity: EntityBossEnderEye) : INBTSer
 		}
 	}
 	
-	private class ParticleInstance(pos: Vec3d, delay: Int, private var originalDistanceXZ: Float) : INBTSerializable<TagCompound>{
-		constructor() : this(Vec3d.ZERO, 0, 0F)
+	private class ParticleInstance(pos: Vector3d, delay: Int, private var originalDistanceXZ: Float) : INBTSerializable<TagCompound>{
+		constructor() : this(Vector3d.ZERO, 0, 0F)
 		
 		var pos = pos
 			private set
@@ -112,7 +112,7 @@ class EnderEyeSpawnerParticles(private val entity: EntityBossEnderEye) : INBTSer
 		}
 		
 		override fun deserializeNBT(nbt: TagCompound) = nbt.use {
-			pos = Vec3d(
+			pos = Vector3d(
 				getDouble(X_TAG),
 				getDouble(Y_TAG),
 				getDouble(Z_TAG)
@@ -129,7 +129,7 @@ class EnderEyeSpawnerParticles(private val entity: EntityBossEnderEye) : INBTSer
 	private val particles = mutableListOf<ParticleInstance>()
 	
 	fun add(start: BlockPos){
-		val center = Vec3d(start.x + 0.5, start.y.toDouble(), start.z + 0.5)
+		val center = Vector3d(start.x + 0.5, start.y.toDouble(), start.z + 0.5)
 		var delay = 0
 		
 		for(particle in particles){

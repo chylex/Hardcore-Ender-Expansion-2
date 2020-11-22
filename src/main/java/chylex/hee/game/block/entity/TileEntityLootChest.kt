@@ -5,6 +5,7 @@ import chylex.hee.game.block.entity.base.TileEntityBaseChest
 import chylex.hee.game.container.ContainerLootChest
 import chylex.hee.game.inventory.nonEmptySlots
 import chylex.hee.game.inventory.setStack
+import chylex.hee.game.world.center
 import chylex.hee.game.world.playServer
 import chylex.hee.init.ModSounds
 import chylex.hee.init.ModTileEntities
@@ -20,6 +21,9 @@ import net.minecraft.entity.player.PlayerInventory
 import net.minecraft.inventory.IInventory
 import net.minecraft.inventory.Inventory
 import net.minecraft.inventory.container.Container
+import net.minecraft.loot.LootContext
+import net.minecraft.loot.LootParameterSets
+import net.minecraft.loot.LootParameters
 import net.minecraft.tileentity.TileEntityType
 import net.minecraft.util.ResourceLocation
 import net.minecraft.util.SoundCategory
@@ -27,9 +31,6 @@ import net.minecraft.util.SoundEvent
 import net.minecraft.util.text.ITextComponent
 import net.minecraft.util.text.TranslationTextComponent
 import net.minecraft.world.server.ServerWorld
-import net.minecraft.world.storage.loot.LootContext
-import net.minecraft.world.storage.loot.LootParameterSets
-import net.minecraft.world.storage.loot.LootParameters
 import java.util.UUID
 
 class TileEntityLootChest(type: TileEntityType<TileEntityLootChest>) : TileEntityBaseChest(type){
@@ -109,7 +110,7 @@ class TileEntityLootChest(type: TileEntityType<TileEntityLootChest>) : TileEntit
 		val world = wrld as ServerWorld
 		val lootContext = LootContext.Builder(world)
 			.withRandom(world.rand)
-			.withParameter(LootParameters.POSITION, pos)
+			.withParameter(LootParameters.field_237457_g_, pos.center)
 			.withParameter(LootParameters.THIS_ENTITY, player)
 			.withLuck(player.luck)
 			.build(LootParameterSets.CHEST)

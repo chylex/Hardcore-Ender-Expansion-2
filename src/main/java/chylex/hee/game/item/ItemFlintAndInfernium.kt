@@ -18,6 +18,7 @@ import chylex.hee.system.forge.EventPriority
 import chylex.hee.system.forge.SubscribeAllEvents
 import chylex.hee.system.forge.SubscribeEvent
 import chylex.hee.system.migration.ActionResult.FAIL
+import chylex.hee.system.migration.ActionResult.PASS
 import chylex.hee.system.migration.ActionResult.SUCCESS
 import chylex.hee.system.migration.EntityCreeper
 import chylex.hee.system.migration.EntityLivingBase
@@ -94,7 +95,7 @@ class ItemFlintAndInfernium(properties: Properties) : Item(properties){
 		return SUCCESS
 	}
 	
-	override fun itemInteractionForEntity(stack: ItemStack, player: EntityPlayer, target: EntityLivingBase, hand: Hand): Boolean{
+	override fun itemInteractionForEntity(stack: ItemStack, player: EntityPlayer, target: EntityLivingBase, hand: Hand): ActionResultType{
 		if (target is EntityCreeper){
 			Sounds.ITEM_FLINTANDSTEEL_USE.playServer(target.world, target.posVec, target.soundCategory, volume = 1.1F, pitch = target.rng.nextFloat(0.4F, 0.5F))
 			player.swingArm(hand)
@@ -102,9 +103,9 @@ class ItemFlintAndInfernium(properties: Properties) : Item(properties){
 			
 			target.heeTag.putBoolean(CREEPER_INFERNIUM_TAG, true)
 			target.ignite()
-			return true
+			return SUCCESS
 		}
 		
-		return false
+		return PASS
 	}
 }

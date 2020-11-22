@@ -29,7 +29,6 @@ import net.minecraft.block.BlockState
 import net.minecraft.entity.Entity
 import net.minecraft.potion.EffectType.HARMFUL
 import net.minecraft.util.math.BlockPos
-import net.minecraft.world.IWorldReader
 import net.minecraft.world.World
 import java.util.Random
 import kotlin.math.max
@@ -120,10 +119,6 @@ open class BlockEnderGooPurified : BlockAbstractGoo(FluidEnderGooPurified, Mater
 		get() = "PurifiedGoo"
 	
 	// Behavior
-	
-	override fun tickRate(world: IWorldReader): Int{
-		return 16
-	}
 	
 	override fun onInsideGoo(entity: Entity){
 		if (entity is EntityLivingBase){

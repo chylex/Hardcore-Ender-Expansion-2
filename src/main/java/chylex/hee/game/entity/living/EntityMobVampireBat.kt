@@ -1,5 +1,7 @@
 package chylex.hee.game.entity.living
 import chylex.hee.HEE
+import chylex.hee.game.entity.add
+import chylex.hee.game.entity.extend
 import chylex.hee.game.entity.isAnyVulnerablePlayerWithinRange
 import chylex.hee.game.entity.living.EntityMobVampireBat.BehaviorType.HOSTILE
 import chylex.hee.game.entity.living.EntityMobVampireBat.BehaviorType.NEUTRAL
@@ -53,22 +55,22 @@ import chylex.hee.system.serialization.use
 import net.minecraft.entity.Entity
 import net.minecraft.entity.EntityType
 import net.minecraft.entity.ILivingEntityData
-import net.minecraft.entity.SharedMonsterAttributes.ATTACK_DAMAGE
-import net.minecraft.entity.SharedMonsterAttributes.FLYING_SPEED
-import net.minecraft.entity.SharedMonsterAttributes.FOLLOW_RANGE
-import net.minecraft.entity.SharedMonsterAttributes.MAX_HEALTH
 import net.minecraft.entity.SpawnReason
+import net.minecraft.entity.ai.attributes.Attributes.ATTACK_DAMAGE
+import net.minecraft.entity.ai.attributes.Attributes.FLYING_SPEED
+import net.minecraft.entity.ai.attributes.Attributes.FOLLOW_RANGE
+import net.minecraft.entity.ai.attributes.Attributes.MAX_HEALTH
 import net.minecraft.entity.monster.IMob
 import net.minecraft.nbt.CompoundNBT
 import net.minecraft.network.IPacket
 import net.minecraft.util.SoundCategory
 import net.minecraft.util.math.AxisAlignedBB
 import net.minecraft.util.math.BlockPos
-import net.minecraft.util.math.Vec3d
+import net.minecraft.util.math.vector.Vector3d
 import net.minecraft.world.Difficulty.HARD
 import net.minecraft.world.Difficulty.NORMAL
 import net.minecraft.world.DifficultyInstance
-import net.minecraft.world.IWorld
+import net.minecraft.world.IServerWorld
 import net.minecraft.world.LightType.BLOCK
 import net.minecraft.world.World
 import net.minecraftforge.fml.network.NetworkHooks
@@ -78,7 +80,7 @@ class EntityMobVampireBat(type: EntityType<EntityMobVampireBat>, world: World) :
 	@Suppress("unused")
 	constructor(world: World) : this(ModEntities.VAMPIRE_BAT, world)
 	
-	private companion object{
+	companion object{
 		private const val MIN_ATTACK_COOLDOWN = 30
 		
 		private val DAMAGE_GENERAL = Damage(PEACEFUL_EXCLUSION, *ALL_PROTECTIONS_WITH_SHIELD, STATUS {
@@ -97,6 +99,13 @@ class EntityMobVampireBat(type: EntityType<EntityMobVampireBat>, world: World) :
 			data = ParticleSmokeCustom.Data(color = IRandomColor { RGB(nextInt(60, 162), nextInt(7, 71), nextInt(1, 19)) }, scale = 0.475F),
 			pos = InBox(0.175F)
 		)
+		
+		fun createAttributes() = EntityBat.func_233666_p_().extend {
+			add(MAX_HEALTH, 4.0)
+			add(ATTACK_DAMAGE, 3.0)
+			add(FOLLOW_RANGE, 14.5)
+			add(FLYING_SPEED, 0.1)
+		}
 	}
 	
 	enum class BehaviorType{
@@ -106,9 +115,9 @@ class EntityMobVampireBat(type: EntityType<EntityMobVampireBat>, world: World) :
 	// Instance
 	
 	private var behaviorType = NEUTRAL
-	private var prevTargetPos: Vec3d? = null
+	private var prevTargetPos: Vector3d? = null
 	
-	private val nextTargetPos: Vec3d
+	private val nextTargetPos: Vector3d
 		get(){
 			val currentTarget = attackTarget
 			
@@ -119,7 +128,7 @@ class EntityMobVampireBat(type: EntityType<EntityMobVampireBat>, world: World) :
 			val currentSleep = nextSleepPos
 			
 			if (currentSleep != null){
-				return Vec3d(currentSleep.x + 0.5, currentSleep.y + 0.1, currentSleep.z + 0.5).also { prevTargetPos = null }
+				return Vector3d(currentSleep.x + 0.5, currentSleep.y + 0.1, currentSleep.z + 0.5).also { prevTargetPos = null }
 			}
 			
 			val pos = prevTargetPos?.takeIf { Pos(it).isAir(world) && it.y >= 1 }
@@ -130,7 +139,7 @@ class EntityMobVampireBat(type: EntityType<EntityMobVampireBat>, world: World) :
 					rand.nextInt(-2, 4),
 					rand.nextInt(-7, 7)
 				).let {
-					Vec3d(it.x + 0.5, it.y + 0.1, it.z + 0.5)
+					Vector3d(it.x + 0.5, it.y + 0.1, it.z + 0.5)
 				}.also {
 					prevTargetPos = it
 				}
@@ -151,28 +160,18 @@ class EntityMobVampireBat(type: EntityType<EntityMobVampireBat>, world: World) :
 	
 	init{
 		moveController = EntityMoveFlyingBat(this)
-	}
-	
-	override fun registerAttributes(){
-		super.registerAttributes()
-		
-		attributes.registerAttribute(ATTACK_DAMAGE)
-		attributes.registerAttribute(FLYING_SPEED)
-		
-		getAttribute(FOLLOW_RANGE).baseValue = 14.5
-		getAttribute(FLYING_SPEED).baseValue = 0.1
 		updateHostilityAttributes()
 	}
 	
 	private fun updateHostilityAttributes(){
 		if (behaviorType == PASSIVE){
-			getAttribute(MAX_HEALTH).baseValue = 6.0
-			getAttribute(ATTACK_DAMAGE).baseValue = 0.0
+			getAttribute(MAX_HEALTH)!!.baseValue = 6.0
+			getAttribute(ATTACK_DAMAGE)!!.baseValue = 0.0
 			experienceValue = 0
 		}
 		else{
-			getAttribute(MAX_HEALTH).baseValue = 4.0
-			getAttribute(ATTACK_DAMAGE).baseValue = 3.0
+			getAttribute(MAX_HEALTH)!!.baseValue = 4.0
+			getAttribute(ATTACK_DAMAGE)!!.baseValue = 3.0
 			experienceValue = 1
 		}
 		
@@ -214,7 +213,7 @@ class EntityMobVampireBat(type: EntityType<EntityMobVampireBat>, world: World) :
 				tryPickNextTarget()
 			}
 		}
-		else if (getDistanceSq(currentTarget) > square(getAttribute(FOLLOW_RANGE).value) || (attackTimer > 0 && --attackTimer == 0)){
+		else if (getDistanceSq(currentTarget) > square(getAttributeValue(FOLLOW_RANGE)) || (attackTimer > 0 && --attackTimer == 0)){
 			attackTarget = null
 		}
 	}
@@ -255,7 +254,7 @@ class EntityMobVampireBat(type: EntityType<EntityMobVampireBat>, world: World) :
 				else if (lookPosVec.squareDistanceTo(sleepPos.center) < square(0.2) && canHangUnderCurrentBlock()){
 					isBatHanging = true
 					nextSleepPos = null
-					motion = Vec3d.ZERO
+					motion = Vector3d.ZERO
 					
 					moveHelper.tick()
 					moveForward = 0F
@@ -370,10 +369,10 @@ class EntityMobVampireBat(type: EntityType<EntityMobVampireBat>, world: World) :
 	
 	// Spawning
 	
-	override fun onInitialSpawn(world: IWorld, difficulty: DifficultyInstance, reason: SpawnReason, data: ILivingEntityData?, nbt: CompoundNBT?): ILivingEntityData?{
+	override fun onInitialSpawn(world: IServerWorld, difficulty: DifficultyInstance, reason: SpawnReason, data: ILivingEntityData?, nbt: CompoundNBT?): ILivingEntityData?{
 		// TODO use onInitialSpawn for territory generation, call enablePersistence to stop despawning
 		
-		if (world.dimension.type === HEE.dim){
+		if (world.world.dimensionKey === HEE.dim){
 			when(TerritoryType.fromX(posX.floorToInt())){
 				else -> {}
 			}

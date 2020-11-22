@@ -62,7 +62,7 @@ import net.minecraft.block.Block
 import net.minecraft.block.Blocks
 import net.minecraft.util.Rotation
 import net.minecraft.util.math.BlockPos
-import net.minecraft.util.math.Vec3d
+import net.minecraft.util.math.vector.Vector3d
 import java.util.Random
 import kotlin.math.abs
 import kotlin.math.pow
@@ -178,7 +178,7 @@ object Generator_ObsidianTowers : ITerritoryGenerator{
 	
 	private class Island(val center: BlockPos, val radius: Double){
 		fun getRelativePos(angle: Float, distance: Double): BlockPos{
-			return Pos(center.center.add(Vec3d(distance, 0.0, 0.0).rotateYaw(angle)))
+			return Pos(center.center.add(Vector3d(distance, 0.0, 0.0).rotateYaw(angle)))
 		}
 		
 		fun getBoundingBox(yOffsets: IntRange): Pair<Int, BoundingBox>{

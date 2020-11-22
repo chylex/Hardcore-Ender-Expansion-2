@@ -1,6 +1,7 @@
 @file:Suppress("NOTHING_TO_INLINE")
 
 package chylex.hee.game.world
+import chylex.hee.game.entity.posVec
 import chylex.hee.game.world.math.PosXZ
 import chylex.hee.system.math.ceilToInt
 import chylex.hee.system.math.square
@@ -13,12 +14,12 @@ import net.minecraft.block.BlockState
 import net.minecraft.block.Blocks
 import net.minecraft.block.material.Material
 import net.minecraft.entity.Entity
-import net.minecraft.fluid.IFluidState
+import net.minecraft.fluid.FluidState
 import net.minecraft.tileentity.TileEntity
 import net.minecraft.util.Direction
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.ChunkPos
-import net.minecraft.util.math.Vec3d
+import net.minecraft.util.math.vector.Vector3d
 import net.minecraft.world.IBlockReader
 import net.minecraft.world.IWorldReader
 import net.minecraft.world.IWorldWriter
@@ -31,8 +32,8 @@ import kotlin.math.sqrt
 
 inline fun Pos(x: Int, y: Int, z: Int) = BlockPos(x, y, z)
 inline fun Pos(x: Double, y: Double, z: Double) = BlockPos(x, y, z)
-inline fun Pos(vector: Vec3d) = BlockPos(vector)
-inline fun Pos(entity: Entity) = BlockPos(entity)
+inline fun Pos(vector: Vector3d) = BlockPos(vector)
+inline fun Pos(entity: Entity) = BlockPos(entity.posVec)
 inline fun Pos(packed: Long): BlockPos = BlockPos.fromLong(packed)
 
 inline val BlockPos.xz
@@ -46,7 +47,7 @@ operator fun ChunkPos.component1() = x
 operator fun ChunkPos.component2() = z
 
 val BlockPos.center
-	get() = Vec3d(x + 0.5, y + 0.5, z + 0.5)
+	get() = Vector3d(x + 0.5, y + 0.5, z + 0.5)
 
 // Constants
 
@@ -84,7 +85,7 @@ inline fun BlockPos.isLoaded(world: IWorldReader): Boolean{
 	return world.isBlockLoaded(this)
 }
 
-inline fun BlockPos.getFluidState(world: IBlockReader): IFluidState{
+inline fun BlockPos.getFluidState(world: IBlockReader): FluidState{
 	return world.getFluidState(this)
 }
 
@@ -293,7 +294,7 @@ fun BlockPos.distanceSqTo(pos: BlockPos): Double{
 	return distanceSqTo(pos.x, pos.y, pos.z)
 }
 
-fun BlockPos.distanceSqTo(vec: Vec3d): Double{
+fun BlockPos.distanceSqTo(vec: Vector3d): Double{
 	return square(vec.x - (this.x + 0.5)) + square(vec.y - (this.y + 0.5)) + square(vec.z - (this.z + 0.5))
 }
 
@@ -303,7 +304,7 @@ fun BlockPos.distanceSqTo(entity: Entity): Double{
 
 inline fun BlockPos.distanceTo(x: Int, y: Int, z: Int) = sqrt(distanceSqTo(x, y, z))
 inline fun BlockPos.distanceTo(pos: BlockPos) = sqrt(distanceSqTo(pos))
-inline fun BlockPos.distanceTo(vec: Vec3d) = sqrt(distanceSqTo(vec))
+inline fun BlockPos.distanceTo(vec: Vector3d) = sqrt(distanceSqTo(vec))
 inline fun BlockPos.distanceTo(entity: Entity) = sqrt(distanceSqTo(entity))
 
 // Distance utilities

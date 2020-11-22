@@ -25,7 +25,6 @@ import chylex.hee.system.Debug
 import chylex.hee.system.forge.SubscribeAllEvents
 import chylex.hee.system.forge.SubscribeEvent
 import net.minecraft.block.Blocks
-import net.minecraft.world.dimension.DimensionType
 import net.minecraftforge.fml.DistExecutor
 import net.minecraftforge.fml.DistExecutor.SafeSupplier
 import net.minecraftforge.fml.ModLoadingContext

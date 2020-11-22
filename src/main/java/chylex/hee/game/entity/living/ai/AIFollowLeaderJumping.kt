@@ -12,15 +12,15 @@ import chylex.hee.system.random.nextVector2
 import net.minecraft.entity.ai.goal.Goal
 import net.minecraft.entity.ai.goal.Goal.Flag.JUMP
 import net.minecraft.entity.ai.goal.Goal.Flag.MOVE
-import net.minecraft.util.math.Vec3d
+import net.minecraft.util.math.vector.Vector3d
 import java.util.EnumSet
 import kotlin.math.abs
 
 class AIFollowLeaderJumping(private val entity: EntityMobBlobby) : Goal(){
 	private var leader: EntityMobBlobby? = null
 	
-	private var offset = Vec3d.ZERO
-	private var targetOffset = Vec3d.ZERO
+	private var offset = Vector3d.ZERO
+	private var targetOffset = Vector3d.ZERO
 	private var offsetChangeTicks = 0
 	private var stoppedTicks = 0
 	

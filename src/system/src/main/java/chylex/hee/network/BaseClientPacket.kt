@@ -1,15 +1,16 @@
 package chylex.hee.network
 import chylex.hee.client.MC
+import chylex.hee.game.entity.dimensionKey
 import chylex.hee.system.forge.Side
 import chylex.hee.system.forge.Sided
 import chylex.hee.system.migration.EntityPlayer
 import chylex.hee.system.migration.EntityPlayerSP
 import net.minecraft.entity.Entity
 import net.minecraft.tileentity.TileEntity
+import net.minecraft.util.RegistryKey
 import net.minecraft.util.math.BlockPos
-import net.minecraft.util.math.Vec3d
+import net.minecraft.util.math.vector.Vector3d
 import net.minecraft.world.World
-import net.minecraft.world.dimension.DimensionType
 import net.minecraftforge.fml.LogicalSide
 import net.minecraftforge.fml.LogicalSide.CLIENT
 import net.minecraftforge.fml.LogicalSide.SERVER
@@ -39,7 +40,7 @@ abstract class BaseClientPacket : IPacket{
 	}
 	
 	@Suppress("NOTHING_TO_INLINE")
-	inline fun sendToDimension(dimension: DimensionType){
+	inline fun sendToDimension(dimension: RegistryKey<World>){
 		NetworkManager.sendToDimension(this, dimension)
 	}
 	
@@ -48,20 +49,20 @@ abstract class BaseClientPacket : IPacket{
 		NetworkManager.sendToTracking(this, entity)
 	}
 	
-	fun sendToAllAround(x: Double, y: Double, z: Double, dimension: DimensionType, range: Double){
+	fun sendToAllAround(x: Double, y: Double, z: Double, dimension: RegistryKey<World>, range: Double){
 		NetworkManager.sendToAllAround(this, TargetPoint(x, y, z, range, dimension))
 	}
 	
-	fun sendToAllAround(world: World, vec: Vec3d, range: Double){
-		this.sendToAllAround(vec.x, vec.y, vec.z, world.dimension.type, range)
+	fun sendToAllAround(world: World, vec: Vector3d, range: Double){
+		this.sendToAllAround(vec.x, vec.y, vec.z, world.dimensionKey, range)
 	}
 	
 	fun sendToAllAround(world: World, pos: BlockPos, range: Double){
-		this.sendToAllAround(pos.x + 0.5, pos.y + 0.5, pos.z + 0.5, world.dimension.type, range)
+		this.sendToAllAround(pos.x + 0.5, pos.y + 0.5, pos.z + 0.5, world.dimensionKey, range)
 	}
 	
 	fun sendToAllAround(entity: Entity, range: Double){
-		this.sendToAllAround(entity.posX, entity.posY, entity.posZ, entity.dimension, range)
+		this.sendToAllAround(entity.posX, entity.posY, entity.posZ, entity.dimensionKey, range)
 	}
 	
 	fun sendToAllAround(tile: TileEntity, range: Double){

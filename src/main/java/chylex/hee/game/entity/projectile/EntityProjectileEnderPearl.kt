@@ -38,7 +38,7 @@ import net.minecraft.util.math.EntityRayTraceResult
 import net.minecraft.util.math.RayTraceContext
 import net.minecraft.util.math.RayTraceResult
 import net.minecraft.util.math.RayTraceResult.Type
-import net.minecraft.util.math.Vec3d
+import net.minecraft.util.math.vector.Vector3d
 import net.minecraft.util.math.shapes.VoxelShape
 import net.minecraft.util.math.shapes.VoxelShapes
 import net.minecraft.world.IBlockReader
@@ -62,7 +62,7 @@ class EntityProjectileEnderPearl(type: EntityType<EntityProjectileEnderPearl>, w
 	companion object{
 		private val DAMAGE_HIT_ENTITY = Damage(PEACEFUL_EXCLUSION, *ALL_PROTECTIONS_WITH_SHIELD)
 		
-		class RayTraceIndestructible(startVec: Vec3d, endVec: Vec3d, entity: Entity) : RayTraceContext(startVec, endVec, BlockMode.COLLIDER, FluidMode.NONE, entity){
+		class RayTraceIndestructible(startVec: Vector3d, endVec: Vector3d, entity: Entity) : RayTraceContext(startVec, endVec, BlockMode.COLLIDER, FluidMode.NONE, entity){
 			override fun getBlockShape(state: BlockState, world: IBlockReader, pos: BlockPos): VoxelShape{
 				return if (state.getBlockHardness(world, pos) == INDESTRUCTIBLE_HARDNESS)
 					VoxelShapes.fullCube()

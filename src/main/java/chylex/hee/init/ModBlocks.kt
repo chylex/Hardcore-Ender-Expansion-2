@@ -140,6 +140,7 @@ import chylex.hee.system.migration.BlockWall
 import chylex.hee.system.migration.Facing.NORTH
 import chylex.hee.system.migration.Facing.SOUTH
 import chylex.hee.system.migration.ItemBlock
+import net.minecraft.block.AbstractBlock
 import net.minecraft.block.Block
 import net.minecraft.block.Blocks
 import net.minecraft.block.material.MaterialColor
@@ -156,7 +157,7 @@ object ModBlocks{
 	// Blocks: Building (Uncategorized)
 	
 	@JvmField val ETHEREAL_LANTERN = BlockSimple(buildEtherealLantern) named "ethereal_lantern"
-	@JvmField val STONE_BRICK_WALL = BlockWall(Block.Properties.from(Blocks.STONE_BRICKS)) named "stone_brick_wall"
+	@JvmField val STONE_BRICK_WALL = BlockWall(AbstractBlock.Properties.from(Blocks.STONE_BRICKS)) named "stone_brick_wall"
 	@JvmField val INFUSED_GLASS    = BlockInfusedGlass(buildInfusedGlass) named "infused_glass"
 	@JvmField val VANTABLOCK       = BlockSimple(buildVantablock) named "vantablock"
 	@JvmField val ENDIUM_BLOCK     = BlockEndium(buildEndiumBlock) named "endium_block"
@@ -552,7 +553,7 @@ object ModBlocks{
 			register(BlockDragonEggOverride(buildDragonEgg).apply { override(Blocks.DRAGON_EGG){ ItemDragonEgg(it, itemBlockDefaultProps) } })
 			
 			for(block in BlockShulkerBoxOverride.ALL_BLOCKS){
-				register(BlockShulkerBoxOverride(Block.Properties.from(block), block.color).apply {
+				register(BlockShulkerBoxOverride(AbstractBlock.Properties.from(block), block.color).apply {
 					override(block){ ItemShulkerBoxOverride(it, Item.Properties().maxStackSize(1).group(ItemGroup.DECORATIONS)) }
 				})
 			}

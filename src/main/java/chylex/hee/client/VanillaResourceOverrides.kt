@@ -4,12 +4,14 @@ import chylex.hee.system.facades.Resource
 import chylex.hee.system.migration.supply
 import net.minecraft.client.Minecraft
 import net.minecraft.resources.IPackFinder
+import net.minecraft.resources.IPackNameDecorator
 import net.minecraft.resources.IResourcePack
 import net.minecraft.resources.ResourcePackInfo
 import net.minecraft.resources.ResourcePackInfo.IFactory
 import net.minecraft.resources.ResourcePackInfo.Priority
 import net.minecraft.resources.ResourcePackType
 import net.minecraftforge.fml.packs.ResourcePackLoader
+import java.util.function.Consumer
 
 object VanillaResourceOverrides : IPackFinder{
 	fun register(){
@@ -19,11 +21,11 @@ object VanillaResourceOverrides : IPackFinder{
 		}
 	}
 	
-	override fun <T : ResourcePackInfo> addPackInfosToMap(map: MutableMap<String, T>, factory: IFactory<T>){
+	override fun findPacks(consumer: Consumer<ResourcePackInfo>, factory: IFactory) {
 		val delegate = ResourcePackLoader.getResourcePackFor(HEE.ID).get()
 		val supplier = supply<IResourcePack>(Pack(delegate))
 		
-		map[HEE.ID] = ResourcePackInfo.createResourcePack("HEE 2", true /* isAlwaysEnabled */, supplier, factory, Priority.TOP)!!
+		consumer.accept(ResourcePackInfo.createResourcePack("HEE 2", true /* isAlwaysEnabled */, supplier, factory, Priority.TOP, IPackNameDecorator.BUILTIN)!!)
 	}
 	
 	private class Pack(delegate: IResourcePack) : IResourcePack by delegate {

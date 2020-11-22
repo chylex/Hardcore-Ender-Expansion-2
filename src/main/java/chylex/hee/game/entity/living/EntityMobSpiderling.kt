@@ -1,6 +1,8 @@
 package chylex.hee.game.entity.living
 import chylex.hee.game.entity.EntityData
 import chylex.hee.game.entity.OPERATION_MUL_INCR_INDIVIDUAL
+import chylex.hee.game.entity.add
+import chylex.hee.game.entity.extend
 import chylex.hee.game.entity.living.ai.AIAttackLeap
 import chylex.hee.game.entity.living.ai.AIToggle
 import chylex.hee.game.entity.living.ai.AIToggle.Companion.addGoal
@@ -22,6 +24,7 @@ import chylex.hee.game.entity.selectEntities
 import chylex.hee.game.entity.selectExistingEntities
 import chylex.hee.game.entity.selectVulnerableEntities
 import chylex.hee.game.entity.tryApplyModifier
+import chylex.hee.game.entity.tryApplyNonPersistentModifier
 import chylex.hee.game.entity.tryRemoveModifier
 import chylex.hee.game.mechanics.damage.Damage
 import chylex.hee.game.mechanics.damage.IDamageProcessor.Companion.ALL_PROTECTIONS
@@ -54,11 +57,11 @@ import net.minecraft.block.BlockState
 import net.minecraft.entity.CreatureAttribute
 import net.minecraft.entity.Entity
 import net.minecraft.entity.EntityType
-import net.minecraft.entity.SharedMonsterAttributes.ATTACK_DAMAGE
-import net.minecraft.entity.SharedMonsterAttributes.FOLLOW_RANGE
-import net.minecraft.entity.SharedMonsterAttributes.MAX_HEALTH
-import net.minecraft.entity.SharedMonsterAttributes.MOVEMENT_SPEED
 import net.minecraft.entity.ai.attributes.AttributeModifier
+import net.minecraft.entity.ai.attributes.Attributes.ATTACK_DAMAGE
+import net.minecraft.entity.ai.attributes.Attributes.FOLLOW_RANGE
+import net.minecraft.entity.ai.attributes.Attributes.MAX_HEALTH
+import net.minecraft.entity.ai.attributes.Attributes.MOVEMENT_SPEED
 import net.minecraft.network.IPacket
 import net.minecraft.network.datasync.DataSerializers
 import net.minecraft.pathfinding.PathNavigator
@@ -71,7 +74,7 @@ import net.minecraft.util.math.RayTraceContext
 import net.minecraft.util.math.RayTraceContext.BlockMode
 import net.minecraft.util.math.RayTraceContext.FluidMode
 import net.minecraft.util.math.RayTraceResult.Type
-import net.minecraft.util.math.Vec3d
+import net.minecraft.util.math.vector.Vector3d
 import net.minecraft.world.Difficulty.HARD
 import net.minecraft.world.Difficulty.NORMAL
 import net.minecraft.world.LightType.BLOCK
@@ -118,6 +121,13 @@ class EntityMobSpiderling(type: EntityType<EntityMobSpiderling>, world: World) :
 			
 			return null
 		}
+		
+		fun createAttributes() = EntityMob.func_233666_p_().extend {
+			add(MAX_HEALTH, 11.0)
+			add(ATTACK_DAMAGE, 1.5)
+			add(MOVEMENT_SPEED, 0.32)
+			add(FOLLOW_RANGE, 20.0)
+		}
 	}
 	
 	// Instance
@@ -144,23 +154,16 @@ class EntityMobSpiderling(type: EntityType<EntityMobSpiderling>, world: World) :
 	// Initialization
 	
 	init{
+		experienceValue = 2
 		stepHeight = 0F
+		
+		// TODO
+		getAttribute(MAX_HEALTH)!!.baseValue = rand.nextInt(11, 13).toDouble()
 	}
 	
 	override fun registerData(){
 		super.registerData()
 		dataManager.register(DATA_SLEEPING, true)
-	}
-	
-	override fun registerAttributes(){
-		super.registerAttributes()
-		
-		getAttribute(MAX_HEALTH).baseValue = rand.nextInt(11, 13).toDouble()
-		getAttribute(ATTACK_DAMAGE).baseValue = 1.5
-		getAttribute(MOVEMENT_SPEED).baseValue = 0.32
-		getAttribute(FOLLOW_RANGE).baseValue = 20.0
-		
-		experienceValue = 2
 	}
 	
 	override fun registerGoals(){
@@ -245,7 +248,7 @@ class EntityMobSpiderling(type: EntityType<EntityMobSpiderling>, world: World) :
 			}
 			else{
 				val start = posVec.addY(0.5)
-				val target = Vec3d(moveHelper.x, start.y, moveHelper.z)
+				val target = Vector3d(moveHelper.x, start.y, moveHelper.z)
 				
 				val direction = start.directionTowards(target)
 				val obstacle = world.rayTraceBlocks(RayTraceContext(start, start.add(direction.scale(3.0)), BlockMode.COLLIDER, FluidMode.NONE, this))
@@ -267,7 +270,7 @@ class EntityMobSpiderling(type: EntityType<EntityMobSpiderling>, world: World) :
 						ForgeHooks.onLivingJump(this)
 						
 						jumpCooldown = rand.nextInt(18, 22)
-						getAttribute(ATTACK_DAMAGE).tryApplyModifier(FALL_CRIT_DAMAGE)
+						getAttribute(ATTACK_DAMAGE).tryApplyNonPersistentModifier(FALL_CRIT_DAMAGE)
 					}
 				}
 			}
@@ -385,7 +388,7 @@ class EntityMobSpiderling(type: EntityType<EntityMobSpiderling>, world: World) :
 		return 256
 	}
 	
-	override fun setMotionMultiplier(state: BlockState, mp: Vec3d){
+	override fun setMotionMultiplier(state: BlockState, mp: Vector3d){
 		if (state.block !is BlockWeb){
 			super.setMotionMultiplier(state, mp)
 		}

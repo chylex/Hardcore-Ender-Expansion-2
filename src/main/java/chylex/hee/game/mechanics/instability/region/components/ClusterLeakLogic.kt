@@ -1,14 +1,15 @@
 package chylex.hee.game.mechanics.instability.region.components
 import chylex.hee.game.block.entity.TileEntityEnergyCluster
 import chylex.hee.game.block.entity.TileEntityEnergyCluster.LeakType
+import chylex.hee.game.entity.spawn
 import chylex.hee.game.mechanics.energy.IClusterHealth.HealthStatus.HEALTHY
 import chylex.hee.game.mechanics.energy.IClusterHealth.HealthStatus.TIRED
 import chylex.hee.game.mechanics.energy.IClusterHealth.HealthStatus.WEAKENED
 import chylex.hee.system.collection.WeightedList
 import chylex.hee.system.math.ceilToInt
-import chylex.hee.system.migration.EntityLightningBolt
 import chylex.hee.system.random.nextInt
 import chylex.hee.system.random.removeItem
+import net.minecraft.entity.EntityType
 import net.minecraft.world.gen.Heightmap.Type.MOTION_BLOCKING
 import net.minecraft.world.server.ServerWorld
 import java.util.Random
@@ -68,7 +69,10 @@ internal object ClusterLeakLogic{
 				val world = toDeteriorate.wrld as ServerWorld
 				val lightningPos = world.getHeight(MOTION_BLOCKING, toDeteriorate.pos.add(rand.nextInt(-24, 24), 0, rand.nextInt(-24, 24)))
 				
-				world.addLightningBolt(EntityLightningBolt(world, lightningPos.x + 0.5, lightningPos.y.toDouble(), lightningPos.z + 0.5, true))
+				EntityType.LIGHTNING_BOLT.spawn(world){
+					moveForced(lightningPos.x + 0.5, lightningPos.y.toDouble(), lightningPos.z + 0.5)
+					setEffectOnly(true)
+				}
 			}
 		}
 	}

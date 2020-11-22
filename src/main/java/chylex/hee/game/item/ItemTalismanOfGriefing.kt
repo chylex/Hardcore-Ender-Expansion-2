@@ -14,7 +14,7 @@ import chylex.hee.system.math.square
 import chylex.hee.system.migration.EntityLivingBase
 import chylex.hee.system.migration.EntityPlayer
 import net.minecraft.entity.Entity
-import net.minecraft.entity.SharedMonsterAttributes.ARMOR_TOUGHNESS
+import net.minecraft.entity.ai.attributes.Attributes.ARMOR_TOUGHNESS
 import net.minecraft.item.ItemStack
 import net.minecraft.util.CombatRules
 import net.minecraft.util.Hand
@@ -50,7 +50,7 @@ class ItemTalismanOfGriefing(properties: Properties) : ItemAbstractTrinket(prope
 			
 			var finalDamage = explosionDamage
 			
-			finalDamage = CombatRules.getDamageAfterAbsorb(finalDamage, player.totalArmorValue.toFloat(), player.getAttribute(ARMOR_TOUGHNESS).value.toFloat())
+			finalDamage = CombatRules.getDamageAfterAbsorb(finalDamage, player.totalArmorValue.toFloat(), player.getAttributeValue(ARMOR_TOUGHNESS).toFloat())
 			finalDamage = POTION_PROTECTION.modifyDamage(finalDamage, player, BLAST_DAMAGE_PROPERTIES)
 			finalDamage = ENCHANTMENT_PROTECTION.modifyDamage(finalDamage, player, BLAST_DAMAGE_PROPERTIES)
 			

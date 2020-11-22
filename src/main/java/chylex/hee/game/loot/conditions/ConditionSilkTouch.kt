@@ -2,9 +2,9 @@ package chylex.hee.game.loot.conditions
 import chylex.hee.system.facades.Resource
 import net.minecraft.enchantment.EnchantmentHelper
 import net.minecraft.enchantment.Enchantments
-import net.minecraft.world.storage.loot.LootContext
-import net.minecraft.world.storage.loot.LootParameter
-import net.minecraft.world.storage.loot.LootParameters
+import net.minecraft.loot.LootContext
+import net.minecraft.loot.LootParameter
+import net.minecraft.loot.LootParameters
 
 class ConditionSilkTouch(override val expectedValue: Boolean): ILootConditionBoolean{
 	override fun isTrue(context: LootContext): Boolean{

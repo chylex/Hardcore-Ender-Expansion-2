@@ -1,7 +1,7 @@
 package chylex.hee.game.loot.rng
 import chylex.hee.system.random.nextFloat
 import chylex.hee.system.random.nextRounded
-import net.minecraft.world.storage.loot.RandomValueRange
+import net.minecraft.loot.RandomValueRange
 import java.util.Random
 import kotlin.math.ceil
 import kotlin.math.floor

@@ -6,7 +6,7 @@ import chylex.hee.system.migration.EntityCreature
 import chylex.hee.system.random.nextInt
 import net.minecraft.pathfinding.Path
 import net.minecraft.util.math.BlockPos
-import net.minecraft.util.math.Vec3d
+import net.minecraft.util.math.vector.Vector3d
 import net.minecraft.world.LightType.BLOCK
 import net.minecraft.world.LightType.SKY
 
@@ -58,7 +58,7 @@ class AIWanderLightStartle(
 		return false
 	}
 	
-	override fun getPosition(): Vec3d?{
+	override fun getPosition(): Vector3d?{
 		val world = entity.world
 		val rand = entity.rng
 		val nav = entity.navigator
@@ -88,7 +88,7 @@ class AIWanderLightStartle(
 			}
 		}
 		
-		return foundTarget?.let { Vec3d(it.x + 0.5, it.y.toDouble(), it.z + 0.5) }
+		return foundTarget?.let { Vector3d(it.x + 0.5, it.y.toDouble(), it.z + 0.5) }
 	}
 	
 	private fun getCombinedLight(pos: BlockPos): Int{

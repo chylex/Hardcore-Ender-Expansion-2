@@ -9,7 +9,6 @@ import chylex.hee.game.mechanics.damage.IDamageDealer.Companion.TITLE_STARVE
 import chylex.hee.game.mechanics.damage.IDamageProcessor.Companion.MAGIC_TYPE
 import chylex.hee.game.mechanics.damage.IDamageProcessor.Companion.NON_LETHAL
 import chylex.hee.game.potion.makeEffect
-import chylex.hee.system.facades.Resource
 import chylex.hee.system.forge.SubscribeAllEvents
 import chylex.hee.system.forge.SubscribeEvent
 import chylex.hee.system.migration.EntityLivingBase
@@ -58,12 +57,6 @@ class ItemVoidSalad(properties: Properties) : Item(properties){
 	
 	enum class Type{
 		SINGLE, DOUBLE, MEGA
-	}
-	
-	init{
-		addPropertyOverride(Resource.Custom("void_salad_type")){
-			stack, _, _ -> getSaladType(stack).ordinal.toFloat()
-		}
 	}
 	
 	fun getSaladType(stack: ItemStack): Type{

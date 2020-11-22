@@ -28,6 +28,7 @@ import net.minecraft.client.renderer.RenderType
 import net.minecraft.client.renderer.entity.EntityRendererManager
 import net.minecraft.client.renderer.entity.MobRenderer
 import net.minecraft.client.renderer.model.IBakedModel
+import net.minecraft.client.renderer.model.ItemCameraTransforms.TransformType
 import net.minecraft.client.renderer.model.ItemCameraTransforms.TransformType.GROUND
 import net.minecraft.client.renderer.texture.OverlayTexture
 import net.minecraft.item.ItemStack
@@ -66,7 +67,7 @@ class RenderEntityMobBlobby(manager: EntityRendererManager) : MobRenderer<Entity
 		super.render(entity, yaw, partialTicks, matrix, buffer, combinedLight)
 	}
 	
-	override fun func_230042_a_(entity: EntityMobBlobby, isVisible: Boolean, isTranslucent: Boolean): RenderType{
+	override fun func_230496_a_(entity: EntityMobBlobby, isVisible: Boolean, isTranslucent: Boolean, isGlowing: Boolean): RenderType{
 		return renderType
 	}
 	
@@ -111,8 +112,8 @@ class RenderEntityMobBlobby(manager: EntityRendererManager) : MobRenderer<Entity
 				else -> null // POLISH implement more special cases
 			}
 			
-			if (overrideType != null){
-				stack.item.itemStackTileEntityRenderer.render(stack, matrix, { buffer.getBuffer(overrideType) }, combinedLight, OverlayTexture.NO_OVERLAY)
+			if (overrideType != null){ // UPDATE test transform
+				stack.item.itemStackTileEntityRenderer.func_239207_a_(stack, TransformType.NONE, matrix, { buffer.getBuffer(overrideType) }, combinedLight, OverlayTexture.NO_OVERLAY)
 			}
 			else if (stack !== fallbackStack){
 				matrix.pop()

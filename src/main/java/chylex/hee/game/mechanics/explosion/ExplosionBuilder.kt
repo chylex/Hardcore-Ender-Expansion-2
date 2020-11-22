@@ -1,5 +1,6 @@
 package chylex.hee.game.mechanics.explosion
 import chylex.hee.game.entity.lookPosVec
+import chylex.hee.game.world.center
 import chylex.hee.game.world.getFluidState
 import chylex.hee.game.world.getState
 import chylex.hee.game.world.isAir
@@ -23,17 +24,17 @@ import net.minecraft.enchantment.Enchantments
 import net.minecraft.enchantment.ProtectionEnchantment
 import net.minecraft.entity.Entity
 import net.minecraft.item.ItemStack
+import net.minecraft.loot.LootContext
+import net.minecraft.loot.LootParameters
 import net.minecraft.network.play.server.SExplosionPacket
 import net.minecraft.util.DamageSource
 import net.minecraft.util.SoundCategory
 import net.minecraft.util.math.AxisAlignedBB
 import net.minecraft.util.math.BlockPos
-import net.minecraft.util.math.Vec3d
+import net.minecraft.util.math.vector.Vector3d
 import net.minecraft.world.Explosion
 import net.minecraft.world.World
 import net.minecraft.world.server.ServerWorld
-import net.minecraft.world.storage.loot.LootContext
-import net.minecraft.world.storage.loot.LootParameters
 import net.minecraftforge.event.ForgeEventFactory
 import java.util.Random
 import kotlin.math.floor
@@ -98,7 +99,7 @@ class ExplosionBuilder{
 				for(pY in 0..15){
 					for(pZ in 0..15){
 						if (pX == 0 || pX == 15 || pY == 0 || pY == 15 || pZ == 0 || pZ == 15){
-							val offset = Vec3d(
+							val offset = Vector3d(
 								(pX / 15.0) * 2.0 - 1.0,
 								(pY / 15.0) * 2.0 - 1.0,
 								(pZ / 15.0) * 2.0 - 1.0
@@ -226,7 +227,7 @@ class ExplosionBuilder{
 							
 							LootContext.Builder(world)
 								.withRandom(world.rand)
-								.withParameter(LootParameters.POSITION, pos)
+								.withParameter(LootParameters.field_237457_g_, pos.center)
 								.withParameter(LootParameters.TOOL, miningTool)
 								.withParameter(LootParameters.EXPLOSION_RADIUS, modifiedRadius)
 								.withNullableParameter(LootParameters.BLOCK_ENTITY, tile)

@@ -9,13 +9,13 @@ import chylex.hee.system.facades.Resource
 import chylex.hee.system.forge.Side
 import chylex.hee.system.forge.Sided
 import chylex.hee.system.migration.EntityPlayer
-import net.minecraft.util.math.Vec3d
+import net.minecraft.util.math.vector.Vector3d
 
 abstract class TerritoryEnvironment{
 	protected companion object{
 		val VANILLA = SkyCubeStatic(
 			texture = Resource.Vanilla("textures/environment/end_sky.png"),
-			color = (40.0 / 255.0).let { Vec3d(it, it, it) },
+			color = (40.0 / 255.0).let { Vector3d(it, it, it) },
 			distance = 100F
 		)
 	}
@@ -29,13 +29,13 @@ abstract class TerritoryEnvironment{
 	open val skyLight
 		get() = DEFAULT_SKY_LIGHT // TODO use in a custom light manager & check where skylight matters (such as mob spawning)
 	
-	abstract val fogColor: Vec3d
+	abstract val fogColor: Vector3d
 	abstract val fogDensity: Float
 	open val fogRenderDistanceModifier = 0F
 	
 	abstract val voidRadiusMpXZ: Float
 	abstract val voidRadiusMpY: Float
-	open val voidCenterOffset: Vec3d = Vec3d.ZERO
+	open val voidCenterOffset: Vector3d = Vector3d.ZERO
 	
 	open val renderer: AbstractEnvironmentRenderer? = null
 	open val lightmap: ILightmap = VanillaEndLightmap

@@ -83,9 +83,11 @@ import chylex.hee.game.entity.projectile.EntityProjectileSpatialDash
 import chylex.hee.game.entity.technical.EntityTechnicalBase
 import chylex.hee.game.entity.technical.EntityTechnicalIgneousPlateLogic
 import chylex.hee.game.item.ItemBindingEssence
+import chylex.hee.game.item.ItemDeathFlower
 import chylex.hee.game.item.ItemEnergyOracle
 import chylex.hee.game.item.ItemEnergyReceptacle
 import chylex.hee.game.item.ItemPortalToken
+import chylex.hee.game.item.ItemTotemOfUndyingCustom
 import chylex.hee.game.item.ItemVoidBucket
 import chylex.hee.system.facades.Resource
 import chylex.hee.system.forge.Side
@@ -114,8 +116,12 @@ import net.minecraft.entity.Entity
 import net.minecraft.entity.EntityType
 import net.minecraft.inventory.container.Container
 import net.minecraft.inventory.container.ContainerType
+import net.minecraft.item.IItemPropertyGetter
+import net.minecraft.item.ItemModelsProperties
 import net.minecraft.tileentity.TileEntity
 import net.minecraft.tileentity.TileEntityType
+import net.minecraft.util.IItemProvider
+import net.minecraft.util.ResourceLocation
 import net.minecraftforge.client.event.ColorHandlerEvent
 import net.minecraftforge.fml.client.registry.ClientRegistry
 import net.minecraftforge.fml.client.registry.IRenderFactory
@@ -151,6 +157,36 @@ object ModRendering{
 		
 		RenderTypeLookup.setRenderLayer(FluidEnderGooPurified.still, RenderType.getSolid())
 		RenderTypeLookup.setRenderLayer(FluidEnderGooPurified.flowing, RenderType.getSolid()) // UPDATE should be translucent but it's not rendering
+		
+		// items
+		
+		ModBlocks.DEATH_FLOWER_DECAYING.registerProperty(Resource.Custom("death_level")){
+			stack, _, _ -> ItemDeathFlower.getDeathLevel(stack).toFloat()
+		}
+		
+		ModItems.ENERGY_ORACLE.registerProperty(Resource.Custom("activity_intensity")){
+			stack, _, entity -> ItemEnergyOracle.getActivityIntensityProp(stack, entity)
+		}
+		
+		ModItems.ENERGY_RECEPTACLE.registerProperty(Resource.Custom("has_cluster")){
+			stack, _, _ -> if (ItemEnergyReceptacle.hasCluster(stack)) 1F else 0F // POLISH tweak animation
+		}
+		
+		ModItems.PORTAL_TOKEN.registerProperty(Resource.Custom("token_type")){
+			stack, _, _ -> ModItems.PORTAL_TOKEN.getTokenType(stack).propertyValue + (if (ItemPortalToken.isCorrupted(stack)) 0.5F else 0F)
+		}
+		
+		ModItems.TOTEM_OF_UNDYING.registerProperty(Resource.Custom("is_shaking")){
+			stack, _, _ -> if (ItemTotemOfUndyingCustom.isShaking(stack)) 1F else 0F
+		}
+		
+		ModItems.VOID_BUCKET.registerProperty(Resource.Custom("void_bucket_cooldown")){
+			stack, _, _ -> ItemVoidBucket.getCooldownRatio(stack)
+		}
+		
+		ModItems.VOID_SALAD.registerProperty(Resource.Custom("void_salad_type")){
+			stack, _, _ -> ModItems.VOID_SALAD.getSaladType(stack).ordinal.toFloat()
+		}
 		
 		// screens
 		
@@ -250,6 +286,10 @@ object ModRendering{
 	// Utilities
 	
 	private fun <T : ItemStackTileEntityRenderer> callable(obj: T) = Callable<ItemStackTileEntityRenderer> { obj }
+	
+	private fun IItemProvider.registerProperty(location: ResourceLocation, getter: IItemPropertyGetter){
+		ItemModelsProperties.registerProperty(this.asItem(), location, getter)
+	}
 	
 	private inline fun <reified T : ContainerScreen<U>, U : Container> registerScreen(type: ContainerType<out U>, constructor: IScreenFactory<U, T>){
 		ScreenManager.registerFactory(type, constructor)

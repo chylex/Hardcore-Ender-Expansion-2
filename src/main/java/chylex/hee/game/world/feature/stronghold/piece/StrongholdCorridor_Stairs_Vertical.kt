@@ -11,7 +11,6 @@ import chylex.hee.game.world.math.Size
 import chylex.hee.game.world.structure.IStructureWorld
 import chylex.hee.game.world.structure.piece.IStructurePieceConnection
 import chylex.hee.system.migration.BlockSlab
-import chylex.hee.system.migration.MutableBlockPos
 import net.minecraft.block.Blocks
 import net.minecraft.state.properties.SlabType
 import net.minecraft.util.Direction
@@ -54,7 +53,7 @@ class StrongholdCorridor_Stairs_Vertical(connectionAtEntrance: Direction, connec
 		val useStairs = rand.nextBoolean()
 		
 		var facing = connections[0].facing.opposite
-		val pos = MutableBlockPos(connections[0].offset).move(facing).move(facing.rotateYCCW())
+		val pos = connections[0].offset.toMutable().move(facing).move(facing.rotateYCCW())
 		
 		repeat(size.maxY - 4){
 			++pos.y

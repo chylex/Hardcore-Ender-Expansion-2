@@ -65,11 +65,11 @@ class ItemCompost(properties: Properties) : Item(properties){
 				val world = source.world
 				val pos = source.blockPos.offset(source.blockState[FACING])
 				
-				successful = false
+				isSuccessful = false
 				
 				if (applyCompost(world, pos)){
 					stack.shrink(1)
-					successful = true
+					isSuccessful = true
 				}
 				
 				return stack

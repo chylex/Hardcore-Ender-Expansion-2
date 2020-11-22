@@ -1,5 +1,7 @@
 package chylex.hee.game.entity.living
 import chylex.hee.game.entity.EntityData
+import chylex.hee.game.entity.add
+import chylex.hee.game.entity.extend
 import chylex.hee.game.entity.living.ai.AIToggle
 import chylex.hee.game.entity.living.ai.AIToggle.Companion.addGoal
 import chylex.hee.game.entity.living.ai.AIWatchDyingLeader
@@ -55,11 +57,11 @@ import net.minecraft.entity.EntitySize
 import net.minecraft.entity.EntityType
 import net.minecraft.entity.ILivingEntityData
 import net.minecraft.entity.Pose
-import net.minecraft.entity.SharedMonsterAttributes.FOLLOW_RANGE
-import net.minecraft.entity.SharedMonsterAttributes.MAX_HEALTH
-import net.minecraft.entity.SharedMonsterAttributes.MOVEMENT_SPEED
 import net.minecraft.entity.SpawnReason
 import net.minecraft.entity.SpawnReason.SPAWN_EGG
+import net.minecraft.entity.ai.attributes.Attributes.FOLLOW_RANGE
+import net.minecraft.entity.ai.attributes.Attributes.MAX_HEALTH
+import net.minecraft.entity.ai.attributes.Attributes.MOVEMENT_SPEED
 import net.minecraft.entity.ai.controller.BodyController
 import net.minecraft.item.ItemStack
 import net.minecraft.item.UseAction.SPEAR
@@ -75,8 +77,9 @@ import net.minecraft.util.Hand.OFF_HAND
 import net.minecraft.util.ResourceLocation
 import net.minecraft.util.SoundEvent
 import net.minecraft.world.DifficultyInstance
-import net.minecraft.world.IWorld
+import net.minecraft.world.IServerWorld
 import net.minecraft.world.World
+import net.minecraftforge.common.ForgeMod.ENTITY_GRAVITY
 import net.minecraftforge.fml.network.NetworkHooks
 import java.util.Random
 import kotlin.math.abs
@@ -161,6 +164,13 @@ class EntityMobBlobby(type: EntityType<out EntityCreature>, world: World) : Enti
 				it.jumpHeightMp = jumpHeightMp * rand.nextFloat(0.97F, 1.03F)
 			}
 		}
+		
+		fun createAttributes() = EntityCreature.func_233666_p_().extend {
+			add(MAX_HEALTH, 8.0)
+			add(MOVEMENT_SPEED, 0.19)
+			add(FOLLOW_RANGE, 44.0)
+			add(ENTITY_GRAVITY.get(), ENTITY_GRAVITY.get().defaultValue * 0.725)
+		}
 	}
 	
 	// Instance
@@ -191,13 +201,15 @@ class EntityMobBlobby(type: EntityType<out EntityCreature>, world: World) : Enti
 	private lateinit var aiLeaderDisabledToggle: AIToggle
 	
 	private val isFollowRangeAreaLoaded
-		get() = world.isAreaLoaded(Pos(this), getAttribute(FOLLOW_RANGE).value.ceilToInt())
+		get() = world.isAreaLoaded(Pos(this), getAttributeValue(FOLLOW_RANGE).ceilToInt())
 	
 	// Initialization
 	
 	init{
 		moveController = EntityMoveJumping(this, ::getJumpDelay, degreeDiffBeforeMovement = 22.5)
 		lookController = EntityLookWhileJumping(this)
+		
+		experienceValue = 1
 		
 		setPathPriority(PathNodeType.WATER, 2F)
 		setPathPriority(PathNodeType.WATER_BORDER, 4F)
@@ -210,19 +222,8 @@ class EntityMobBlobby(type: EntityType<out EntityCreature>, world: World) : Enti
 		dataManager.register(DATA_HELD_ITEM, ItemStack.EMPTY)
 	}
 	
-	override fun registerAttributes(){
-		super.registerAttributes()
-		
-		getAttribute(MAX_HEALTH).baseValue = 8.0
-		getAttribute(MOVEMENT_SPEED).baseValue = 0.19
-		getAttribute(FOLLOW_RANGE).baseValue = 44.0
-		getAttribute(ENTITY_GRAVITY).baseValue *= 0.725
-		
-		experienceValue = 1
-	}
-	
 	fun setMaxHealth(maxHealth: Float, resetCurrentHealth: Boolean){
-		getAttribute(MAX_HEALTH).baseValue = maxHealth.toDouble()
+		getAttribute(MAX_HEALTH)!!.baseValue = maxHealth.toDouble()
 		
 		health = if (resetCurrentHealth)
 			maxHealth
@@ -262,7 +263,7 @@ class EntityMobBlobby(type: EntityType<out EntityCreature>, world: World) : Enti
 	private fun recreateGroup(){
 		val originalGroup = world
 			.selectExistingEntities
-			.inRange<EntityMobBlobby>(posVec, getAttribute(FOLLOW_RANGE).value)
+			.inRange<EntityMobBlobby>(posVec, getAttributeValue(FOLLOW_RANGE))
 			.filter { it.groupId == groupId }
 			.ifEmpty { listOf(this) }
 		
@@ -289,7 +290,7 @@ class EntityMobBlobby(type: EntityType<out EntityCreature>, world: World) : Enti
 	}
 	
 	fun findLeader(): EntityMobBlobby?{
-		val maxDist = getAttribute(FOLLOW_RANGE).value
+		val maxDist = getAttributeValue(FOLLOW_RANGE)
 		val checkArea = boundingBox.grow(maxDist, maxDist * 0.5, maxDist)
 		
 		return world.selectEntities.inBox<EntityMobBlobby>(checkArea).firstOrNull { it.groupId == groupId && it.isGroupLeader && it !== this }
@@ -427,7 +428,7 @@ class EntityMobBlobby(type: EntityType<out EntityCreature>, world: World) : Enti
 	
 	// Spawning
 	
-	override fun onInitialSpawn(world: IWorld, difficulty: DifficultyInstance, reason: SpawnReason, data: ILivingEntityData?, nbt: CompoundNBT?): ILivingEntityData?{
+	override fun onInitialSpawn(world: IServerWorld, difficulty: DifficultyInstance, reason: SpawnReason, data: ILivingEntityData?, nbt: CompoundNBT?): ILivingEntityData?{
 		val rand = world.random
 		val wrld = world.world
 		val group = (data as? SpawnGroupData) ?: SpawnGroupData(rand)

@@ -4,7 +4,7 @@ import chylex.hee.system.collection.WeightedList
 import net.minecraft.block.Block
 import net.minecraft.block.BlockState
 import net.minecraft.block.Blocks
-import net.minecraft.state.IProperty
+import net.minecraft.state.Property
 import java.util.Random
 
 interface IBlockPicker{
@@ -18,7 +18,7 @@ interface IBlockPicker{
 	}
 	
 	@JvmDefault
-	fun <T : Comparable<T>> thenSetting(property: IProperty<T>, value: T): IBlockPicker{
+	fun <T : Comparable<T>> thenSetting(property: Property<T>, value: T): IBlockPicker{
 		return thenApplying { state, _ -> state.with(property, value) }
 	}
 	
@@ -35,11 +35,11 @@ interface IBlockPicker{
 	
 	class Weighted private constructor(private val weightedList: WeightedList<BlockState>) : IBlockPicker{
 		companion object{
-			fun <T : Comparable<T>> Weighted(baseState: BlockState, property: IProperty<T>, values: List<Pair<Int, T>>) : Weighted{
+			fun <T : Comparable<T>> Weighted(baseState: BlockState, property: Property<T>, values: List<Pair<Int, T>>) : Weighted{
 				return Weighted(WeightedList(values.map { (weight, value) -> Pair(weight, baseState.with(property, value)) }))
 			}
 			
-			fun <T : Comparable<T>> Weighted(block: Block, property: IProperty<T>, values: List<Pair<Int, T>>) : Weighted{
+			fun <T : Comparable<T>> Weighted(block: Block, property: Property<T>, values: List<Pair<Int, T>>) : Weighted{
 				return Weighted(block.defaultState, property, values)
 			}
 			

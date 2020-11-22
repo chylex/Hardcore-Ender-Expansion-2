@@ -7,7 +7,6 @@ import chylex.hee.game.inventory.heeTagOrNull
 import chylex.hee.game.world.getBlock
 import chylex.hee.game.world.setState
 import chylex.hee.init.ModBlocks
-import chylex.hee.system.facades.Resource
 import chylex.hee.system.facades.Stats
 import chylex.hee.system.migration.ItemBlock
 import chylex.hee.system.serialization.getIntegerOrNull
@@ -31,12 +30,6 @@ class ItemDeathFlower(block: Block, properties: Properties) : ItemBlock(block, p
 		
 		fun setDeathLevel(stack: ItemStack, level: Int){
 			stack.heeTag.putInt(LEVEL_TAG, level)
-		}
-	}
-	
-	init{
-		addPropertyOverride(Resource.Custom("death_level")){
-			stack, _, _ -> getDeathLevel(stack).toFloat()
 		}
 	}
 	

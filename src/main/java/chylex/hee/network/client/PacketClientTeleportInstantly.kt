@@ -8,16 +8,16 @@ import chylex.hee.system.serialization.use
 import chylex.hee.system.serialization.writeVec
 import net.minecraft.entity.Entity
 import net.minecraft.network.PacketBuffer
-import net.minecraft.util.math.Vec3d
+import net.minecraft.util.math.vector.Vector3d
 
 class PacketClientTeleportInstantly() : BaseClientPacket(){
-	constructor(entity: Entity, position: Vec3d) : this(){
+	constructor(entity: Entity, position: Vector3d) : this(){
 		this.entityId = entity.entityId
 		this.position = position
 	}
 	
 	private var entityId: Int? = null
-	private lateinit var position: Vec3d
+	private lateinit var position: Vector3d
 	
 	override fun write(buffer: PacketBuffer) = buffer.use {
 		writeInt(entityId!!)

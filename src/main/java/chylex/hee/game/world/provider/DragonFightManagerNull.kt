@@ -1,5 +1,4 @@
 package chylex.hee.game.world.provider
-import chylex.hee.game.world.WorldProviderEndCustom
 import chylex.hee.system.migration.EntityEnderCrystal
 import chylex.hee.system.migration.EntityEnderDragon
 import chylex.hee.system.migration.EntityPlayerMP
@@ -9,7 +8,7 @@ import net.minecraft.world.end.DragonFightManager
 import net.minecraft.world.end.DragonSpawnState
 import net.minecraft.world.server.ServerWorld
 
-class DragonFightManagerNull(world: ServerWorld, provider: WorldProviderEndCustom) : DragonFightManager(world, TagCompound(), provider){
+class DragonFightManagerNull(world: ServerWorld) : DragonFightManager(world, 0L, TagCompound()){
 	override fun tick(){}
 	override fun write() = TagCompound()
 	

@@ -20,7 +20,6 @@ import chylex.hee.game.world.isLoaded
 import chylex.hee.game.world.totalTime
 import chylex.hee.init.ModItems
 import chylex.hee.system.color.HCL
-import chylex.hee.system.facades.Resource
 import chylex.hee.system.forge.Side
 import chylex.hee.system.forge.Sided
 import chylex.hee.system.math.angleBetween
@@ -54,7 +53,7 @@ import net.minecraft.util.text.ITextComponent
 import net.minecraft.world.World
 
 class ItemEnergyOracle(properties: Properties) : ItemAbstractEnergyUser(properties), IInfusableItem{
-	private companion object{
+	companion object{
 		private const val ORACLE_IDENTIFIER_TAG = "ID"
 		private const val ORACLE_LAST_SLOT_TAG = "Slot"
 		
@@ -86,7 +85,7 @@ class ItemEnergyOracle(properties: Properties) : ItemAbstractEnergyUser(properti
 			return entity is EntityPlayer && (entity.getHeldItem(MAIN_HAND) === stack || entity.getHeldItem(OFF_HAND) === stack)
 		}
 		
-		private fun getActivityIntensityProp(stack: ItemStack, entity: EntityLivingBase?): Float{
+		fun getActivityIntensityProp(stack: ItemStack, entity: EntityLivingBase?): Float{
 			val tag = stack.heeTagOrNull
 			
 			return if (tag == null || !isPlayerHolding(entity, stack)){
@@ -101,12 +100,6 @@ class ItemEnergyOracle(properties: Properties) : ItemAbstractEnergyUser(properti
 			else{
 				0.5F // tracking
 			}
-		}
-	}
-	
-	init{
-		addPropertyOverride(Resource.Custom("activity_intensity")){
-			stack, _, entity -> getActivityIntensityProp(stack, entity)
 		}
 	}
 	

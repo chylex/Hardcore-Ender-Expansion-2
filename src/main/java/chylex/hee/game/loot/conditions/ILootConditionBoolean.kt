@@ -2,10 +2,10 @@ package chylex.hee.game.loot.conditions
 import com.google.gson.JsonDeserializationContext
 import com.google.gson.JsonObject
 import com.google.gson.JsonSerializationContext
+import net.minecraft.loot.LootContext
+import net.minecraft.loot.conditions.ILootCondition
 import net.minecraft.util.JSONUtils
 import net.minecraft.util.ResourceLocation
-import net.minecraft.world.storage.loot.LootContext
-import net.minecraft.world.storage.loot.conditions.ILootCondition
 
 interface ILootConditionBoolean : ILootCondition{
 	val expectedValue: Boolean

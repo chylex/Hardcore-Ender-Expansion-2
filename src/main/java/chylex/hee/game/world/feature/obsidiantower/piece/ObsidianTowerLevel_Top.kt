@@ -3,6 +3,7 @@ import chylex.hee.game.entity.item.EntityTokenHolder
 import chylex.hee.game.entity.living.behavior.EnderEyeSpawnerParticles
 import chylex.hee.game.entity.posVec
 import chylex.hee.game.entity.selectExistingEntities
+import chylex.hee.game.entity.spawn
 import chylex.hee.game.entity.technical.EntityTechnicalTrigger
 import chylex.hee.game.entity.technical.EntityTechnicalTrigger.ITriggerHandler
 import chylex.hee.game.entity.technical.EntityTechnicalTrigger.Types.OBSIDIAN_TOWER_TOP_GLOWSTONE
@@ -23,10 +24,10 @@ import chylex.hee.network.client.PacketClientFX
 import chylex.hee.system.facades.Facing4
 import chylex.hee.system.math.addY
 import chylex.hee.system.math.offsetTowards
-import chylex.hee.system.migration.EntityLightningBolt
 import chylex.hee.system.serialization.TagCompound
 import chylex.hee.system.serialization.use
 import net.minecraft.block.Blocks
+import net.minecraft.entity.EntityType
 import net.minecraft.util.math.AxisAlignedBB
 import net.minecraft.util.math.BlockPos
 import net.minecraft.world.IWorld
@@ -109,7 +110,10 @@ abstract class ObsidianTowerLevel_Top(file: String) : ObsidianTowerLevel_General
 			val pos = Pos(entity)
 			
 			if (stage == STAGE_LIGHTNING){
-				world.addLightningBolt(EntityLightningBolt(world, entity.posX, entity.posY + 0.49, entity.posZ, true))
+				EntityType.LIGHTNING_BOLT.spawn(world){
+					moveForced(entity.posX, entity.posY + 0.49, entity.posZ)
+					setEffectOnly(true)
+				}
 				
 				for(testPos in pos.allInCenteredBox(4, 0, 4)){
 					if (testPos.getBlock(world) === Blocks.OBSIDIAN){

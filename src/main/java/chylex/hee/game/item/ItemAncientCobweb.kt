@@ -1,6 +1,7 @@
 package chylex.hee.game.item
 import chylex.hee.game.block.BlockAncientCobweb
 import chylex.hee.game.entity.motionY
+import chylex.hee.game.entity.posVec
 import chylex.hee.game.inventory.size
 import chylex.hee.game.world.totalTime
 import chylex.hee.proxy.Environment
@@ -12,12 +13,12 @@ import chylex.hee.system.migration.ItemBlock
 import chylex.hee.system.random.nextInt
 import net.minecraft.entity.Entity
 import net.minecraft.item.ItemStack
-import net.minecraft.util.math.BlockPos
+import net.minecraft.loot.LootContext
+import net.minecraft.loot.LootParameterSets
+import net.minecraft.loot.LootParameters
+import net.minecraft.util.math.vector.Vector3d
 import net.minecraft.world.World
 import net.minecraft.world.server.ServerWorld
-import net.minecraft.world.storage.loot.LootContext
-import net.minecraft.world.storage.loot.LootParameterSets
-import net.minecraft.world.storage.loot.LootParameters
 import kotlin.math.min
 
 class ItemAncientCobweb(private val block: BlockAncientCobweb, properties: Properties) : ItemBlock(block, properties){
@@ -38,7 +39,7 @@ class ItemAncientCobweb(private val block: BlockAncientCobweb, properties: Prope
 		val lootContext = LootContext.Builder(world as ServerWorld)
 			.withRandom(world.rand)
 			.withParameter(LootParameters.BLOCK_STATE, block.defaultState)
-			.withParameter(LootParameters.POSITION, BlockPos.ZERO)
+			.withParameter(LootParameters.field_237457_g_, Vector3d.ZERO)
 			.withParameter(LootParameters.TOOL, ItemStack.EMPTY)
 			.build(LootParameterSets.BLOCK)
 		
@@ -47,7 +48,7 @@ class ItemAncientCobweb(private val block: BlockAncientCobweb, properties: Prope
 		
 		repeat(itemsDisintegrated){
 			val drops = lootTable.generate(lootContext)
-			val front = entity.positionVector.add(entity.lookVec.scale(0.6))
+			val front = entity.posVec.add(entity.lookVec.scale(0.6))
 			
 			for(drop in drops){
 				EntityItem(world, front.x, entity.posY + entity.height * 0.45, front.z, drop).apply {

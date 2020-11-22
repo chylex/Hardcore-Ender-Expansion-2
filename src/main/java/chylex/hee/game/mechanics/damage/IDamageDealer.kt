@@ -3,7 +3,7 @@ import chylex.hee.system.migration.EntityLivingBase
 import chylex.hee.system.migration.EntityPlayer
 import chylex.hee.system.migration.EntityThrowable
 import net.minecraft.entity.Entity
-import net.minecraft.entity.SharedMonsterAttributes.ATTACK_DAMAGE
+import net.minecraft.entity.ai.attributes.Attributes.ATTACK_DAMAGE
 
 interface IDamageDealer{
 	fun dealTo(amount: Float, target: Entity, title: String = TITLE_GENERIC): Boolean
@@ -12,7 +12,7 @@ interface IDamageDealer{
 	
 	@JvmDefault
 	fun dealToFrom(target: Entity, source: EntityLivingBase, title: String = determineTitleDirect(source)): Boolean{
-		return dealToFrom(source.getAttribute(ATTACK_DAMAGE).value.toFloat(), target, source, title)
+		return dealToFrom(source.getAttributeValue(ATTACK_DAMAGE).toFloat(), target, source, title)
 	}
 	
 	companion object{

@@ -44,6 +44,7 @@ import net.minecraft.util.math.MathHelper
 import net.minecraft.util.text.ITextComponent
 import net.minecraft.util.text.TranslationTextComponent
 import net.minecraft.world.World
+import net.minecraftforge.common.ForgeMod.REACH_DISTANCE
 import org.apache.commons.lang3.math.Fraction
 import java.util.Random
 import kotlin.math.max
@@ -171,7 +172,7 @@ abstract class ItemAbstractEnergyUser(properties: Properties) : Item(properties)
 			if (hasKey(CLUSTER_POS_TAG)){
 				removeClusterTags(this)
 			}
-			else if (pos.distanceTo(player) <= player.getAttribute(EntityPlayer.REACH_DISTANCE).value){
+			else if (pos.distanceTo(player) <= player.getAttributeValue(REACH_DISTANCE.get())){
 				putPos(CLUSTER_POS_TAG, pos)
 				putByte(CLUSTER_TICK_OFFSET_TAG, (4L - (world.totalTime % 4L)).toByte())
 			}
@@ -192,7 +193,7 @@ abstract class ItemAbstractEnergyUser(properties: Properties) : Item(properties)
 				
 				if ((isSelected || entity.getHeldItem(OFF_HAND) === stack) &&
 					getShort(ENERGY_LEVEL_TAG) < calculateInternalEnergyCapacity(stack) &&
-					pos.distanceTo(entity) <= entity.getAttribute(EntityPlayer.REACH_DISTANCE).value &&
+					pos.distanceTo(entity) <= entity.getAttributeValue(REACH_DISTANCE.get()) &&
 					tile != null &&
 					tile.drainEnergy(Units(1))
 				){

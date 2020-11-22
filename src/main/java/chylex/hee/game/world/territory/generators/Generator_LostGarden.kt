@@ -70,7 +70,7 @@ import net.minecraft.util.Direction
 import net.minecraft.util.Direction.DOWN
 import net.minecraft.util.Direction.UP
 import net.minecraft.util.math.BlockPos
-import net.minecraft.util.math.Vec3d
+import net.minecraft.util.math.vector.Vector3d
 import java.util.Random
 import kotlin.math.abs
 import kotlin.math.max
@@ -331,7 +331,7 @@ object Generator_LostGarden : ITerritoryGenerator{
 			)
 		}
 		
-		private val majorCaveStarts = mutableListOf<Vec3d>()
+		private val majorCaveStarts = mutableListOf<Vector3d>()
 		private val randomMinorCaveStarts = mutableListOf<Pair<BlockPos, Island>>()
 		
 		private val randomLargeHoleCandidates = mutableListOf<BlockPos>()
@@ -492,14 +492,14 @@ object Generator_LostGarden : ITerritoryGenerator{
 			}
 		}
 		
-		private class Pather(initialDirection: Vec3d, island: Island) : CavePatherRotatingBase(initialDirection){
+		private class Pather(initialDirection: Vector3d, island: Island) : CavePatherRotatingBase(initialDirection){
 			val randomPositions = mutableListOf<BlockPos>()
 			private var waitRandomPositions = 7
 			
 			private val thresholdMinY = island.offset.y - (island.height * 0.3).floorToInt()
 			private val thresholdMaxY = island.offset.y + (island.height * 0.4).floorToInt()
 			
-			override fun update(rand: Random, point: Vec3d){
+			override fun update(rand: Random, point: Vector3d){
 				val off = rand.nextVector(square(rand.nextFloat(0.1, 0.8)).coerceAtLeast(0.1)).scaleY(0.8)
 				rotation = rotation.add(off).normalize()
 				

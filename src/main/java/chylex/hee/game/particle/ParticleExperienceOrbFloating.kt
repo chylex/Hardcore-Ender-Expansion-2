@@ -9,8 +9,8 @@ import chylex.hee.system.random.IRandomColor.Companion.IRandomColor
 import chylex.hee.system.random.nextFloat
 import chylex.hee.system.random.nextInt
 import net.minecraft.client.particle.Particle
-import net.minecraft.util.math.Vec3d
-import net.minecraft.world.World
+import net.minecraft.client.world.ClientWorld
+import net.minecraft.util.math.vector.Vector3d
 import java.util.Random
 import kotlin.math.PI
 import kotlin.math.cos
@@ -21,7 +21,7 @@ object ParticleExperienceOrbFloating : IParticleMaker.WithData<ParticleDataColor
 	private val rand = Random()
 	
 	@Sided(Side.CLIENT)
-	override fun create(world: World, posX: Double, posY: Double, posZ: Double, motX: Double, motY: Double, motZ: Double, data: ParticleDataColorLifespanScale?): Particle{
+	override fun create(world: ClientWorld, posX: Double, posY: Double, posZ: Double, motX: Double, motY: Double, motZ: Double, data: ParticleDataColorLifespanScale?): Particle{
 		return Instance(world, posX, posY, posZ, motY, data ?: DEFAULT_DATA.generate(rand))
 	}
 	
@@ -34,7 +34,7 @@ object ParticleExperienceOrbFloating : IParticleMaker.WithData<ParticleDataColor
 	private val DEFAULT_DATA = Data(lifespan = 100)
 	
 	@Sided(Side.CLIENT)
-	class Instance(world: World, posX: Double, posY: Double, posZ: Double, motY: Double, data: ParticleDataColorLifespanScale) : ParticleBase(world, posX, posY, posZ, 0.0, 0.0, 0.0){
+	class Instance(world: ClientWorld, posX: Double, posY: Double, posZ: Double, motY: Double, data: ParticleDataColorLifespanScale) : ParticleBase(world, posX, posY, posZ, 0.0, 0.0, 0.0){
 		private val motionOffset: Double
 		
 		init{
@@ -45,7 +45,7 @@ object ParticleExperienceOrbFloating : IParticleMaker.WithData<ParticleDataColor
 			
 			maxAge = data.lifespan
 			
-			motionVec = Vec3d(0.0, motY, 0.0)
+			motionVec = Vector3d(0.0, motY, 0.0)
 			motionOffset = rand.nextFloat(-PI, PI)
 		}
 		

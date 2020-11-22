@@ -1,7 +1,7 @@
 package chylex.hee.game.block
 import chylex.hee.game.block.properties.BlockBuilder
-import chylex.hee.game.inventory.size
 import chylex.hee.game.world.breakBlock
+import chylex.hee.game.world.center
 import chylex.hee.game.world.getBlock
 import chylex.hee.game.world.getState
 import chylex.hee.system.forge.SubscribeEvent
@@ -15,14 +15,14 @@ import net.minecraft.block.Blocks
 import net.minecraft.entity.Entity
 import net.minecraft.item.ItemStack
 import net.minecraft.item.Items
+import net.minecraft.loot.LootContext
+import net.minecraft.loot.LootParameters
 import net.minecraft.util.Direction
 import net.minecraft.util.math.BlockPos
 import net.minecraft.world.Explosion
 import net.minecraft.world.IBlockReader
 import net.minecraft.world.World
 import net.minecraft.world.server.ServerWorld
-import net.minecraft.world.storage.loot.LootContext
-import net.minecraft.world.storage.loot.LootParameters
 import net.minecraftforge.common.ForgeHooks
 import net.minecraftforge.common.IPlantable
 import net.minecraftforge.common.MinecraftForge
@@ -101,7 +101,7 @@ class BlockHumus(builder: BlockBuilder, mergeBottom: Block) : BlockSimpleMerging
 		if (world is ServerWorld){
 			LootContext.Builder(world)
 				.withRandom(world.rand)
-				.withParameter(LootParameters.POSITION, pos)
+				.withParameter(LootParameters.field_237457_g_, pos.center)
 				.withParameter(LootParameters.EXPLOSION_RADIUS, explosion.size)
 				.withParameter(LootParameters.TOOL, ItemStack.EMPTY)
 				.withNullableParameter(LootParameters.BLOCK_ENTITY, null)

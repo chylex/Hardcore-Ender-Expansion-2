@@ -1,5 +1,5 @@
 package chylex.hee.game.block.properties
-import net.minecraft.block.Block
+import net.minecraft.block.AbstractBlock
 import net.minecraft.block.SoundType
 import net.minecraft.block.material.Material
 import net.minecraft.block.material.MaterialColor
@@ -32,9 +32,9 @@ class BlockBuilder(val material: Material, var color: MaterialColor, var sound: 
 	var randomTicks: Boolean = false
 	var noDrops: Boolean = false
 	
-	val p: Block.Properties
-		get() = Block.Properties.create(material, color).apply {
-			val (level, tool) = harvestTool
+	val p: AbstractBlock.Properties
+		get() = AbstractBlock.Properties.create(material, color).apply {
+			val (level, tool) = this@BlockBuilder.harvestTool
 			
 			if (tool != null){
 				harvestTool(tool)
@@ -42,7 +42,7 @@ class BlockBuilder(val material: Material, var color: MaterialColor, var sound: 
 			}
 			
 			hardnessAndResistance(harvestHardness, explosionResistance)
-			lightValue(lightLevel)
+			setLightLevel { lightLevel }
 			slipperiness(slipperiness)
 			sound(sound)
 			

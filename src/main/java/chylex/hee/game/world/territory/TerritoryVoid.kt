@@ -2,6 +2,7 @@ package chylex.hee.game.world.territory
 import chylex.hee.HEE
 import chylex.hee.client.MC
 import chylex.hee.game.block.BlockAbstractPortal
+import chylex.hee.game.entity.dimensionKey
 import chylex.hee.game.entity.heeTag
 import chylex.hee.game.entity.posVec
 import chylex.hee.game.mechanics.damage.Damage
@@ -31,7 +32,7 @@ import chylex.hee.system.migration.EntityLivingBase
 import chylex.hee.system.random.nextFloat
 import net.minecraft.entity.Entity
 import net.minecraft.util.DamageSource
-import net.minecraft.util.math.Vec3d
+import net.minecraft.util.math.vector.Vector3d
 import net.minecraft.world.World
 import net.minecraft.world.server.ServerWorld
 import net.minecraftforge.event.entity.living.LivingDamageEvent
@@ -50,7 +51,7 @@ object TerritoryVoid{
 	
 	val CLIENT_VOID_DATA = VoidData {}
 	
-	private fun intersectEllipsoidEdge(center: Vec3d, point: Vec3d, xzRadius: Float, yRadius: Float): Vec3d?{
+	private fun intersectEllipsoidEdge(center: Vector3d, point: Vector3d, xzRadius: Float, yRadius: Float): Vector3d?{
 		val xzRadSq = square(xzRadius)
 		val yRadSq = square(yRadius)
 		
@@ -73,7 +74,7 @@ object TerritoryVoid{
 	/**
 	 * Returns a value between -1 and infinity, representing signed distance from the edge of the territory's void, where negative values are safely inside the territory.
 	 */
-	private fun getVoidFactorInternal(world: World, point: Vec3d): Float{
+	private fun getVoidFactorInternal(world: World, point: Vector3d): Float{
 		val instance = TerritoryInstance.fromPos(point.x.floorToInt(), point.z.floorToInt())
 		
 		if (instance == null){
@@ -104,8 +105,8 @@ object TerritoryVoid{
 		return max(outsideVoidFactor, factor)
 	}
 	
-	fun getVoidFactor(world: World, point: Vec3d): Float{
-		if (world.dimension.type !== HEE.dim){
+	fun getVoidFactor(world: World, point: Vector3d): Float{
+		if (world.dimensionKey !== HEE.dim){
 			return OUTSIDE_VOID_FACTOR
 		}
 		
@@ -113,7 +114,7 @@ object TerritoryVoid{
 	}
 	
 	fun getVoidFactor(entity: Entity): Float{
-		if (entity.dimension !== HEE.dim){
+		if (entity.dimensionKey !== HEE.dim){
 			return OUTSIDE_VOID_FACTOR
 		}
 		
@@ -168,7 +169,7 @@ object TerritoryVoid{
 	
 	@SubscribeEvent(EventPriority.HIGHEST)
 	fun onPlayerDamage(e: LivingDamageEvent){
-		if (e.source === DamageSource.OUT_OF_WORLD && e.amount < Float.MAX_VALUE && e.entity.let { it is EntityLivingBase && it.dimension === HEE.dim }){
+		if (e.source === DamageSource.OUT_OF_WORLD && e.amount < Float.MAX_VALUE && e.entity.let { it is EntityLivingBase && it.dimensionKey === HEE.dim }){
 			e.isCanceled = true // delegate out of world damage to custom void damage handling
 		}
 	}

@@ -12,7 +12,7 @@ import net.minecraft.client.renderer.RenderHelper
 import net.minecraft.client.renderer.Tessellator
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats
 import net.minecraft.client.world.ClientWorld
-import net.minecraft.util.math.Vec3d
+import net.minecraft.util.math.vector.Vector3d
 import net.minecraftforge.client.SkyRenderHandler
 import org.lwjgl.opengl.GL11.GL_QUADS
 import kotlin.math.pow
@@ -32,7 +32,7 @@ abstract class AbstractEnvironmentRenderer : SkyRenderHandler{
 			get() = MC.settings.renderDistanceChunks.let { if (it > 12) 0F else (1F - (it / 16.5F)).pow((it - 1) * 0.25F) }
 		
 		val DEFAULT_TEXTURE = Resource.Custom("textures/environment/white.png")
-		val DEFAULT_COLOR = Vec3d(1.0, 1.0, 1.0)
+		val DEFAULT_COLOR = Vector3d(1.0, 1.0, 1.0)
 		const val DEFAULT_ALPHA = 1F
 		
 		fun renderPlane(matrix: MatrixStack, y: Float, size: Float, rescale: Float){

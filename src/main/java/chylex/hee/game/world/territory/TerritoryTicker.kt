@@ -7,6 +7,7 @@ import chylex.hee.system.forge.EventPriority
 import chylex.hee.system.forge.SubscribeAllEvents
 import chylex.hee.system.forge.SubscribeEvent
 import net.minecraft.world.World
+import net.minecraft.world.server.ServerWorld
 import net.minecraftforge.event.entity.player.PlayerEvent.PlayerChangedDimensionEvent
 import net.minecraftforge.event.entity.player.PlayerEvent.PlayerLoggedOutEvent
 import net.minecraftforge.event.world.WorldEvent
@@ -61,7 +62,7 @@ object TerritoryTicker{
 	
 	@SubscribeEvent
 	fun onWorldSave(e: WorldEvent.Save){
-		if (e.world.dimension.type !== HEE.dim){
+		if ((e.world as ServerWorld).dimensionKey !== HEE.dim){
 			return
 		}
 		

@@ -42,7 +42,7 @@ object CommandDebugTerritory : ICommand{
 			val instance = TerritoryInstance.fromPos(pos)
 			val seed = if (hasSeedArg) ctx.getLong("seed") else null
 			
-			if (world.dimension.type !== HEE.dim){
+			if (world.dimensionKey !== HEE.dim){
 				sendFeedback(StringTextComponent("Invalid dimension."), false)
 				return 0
 			}

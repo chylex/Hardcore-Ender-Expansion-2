@@ -54,7 +54,7 @@ import chylex.hee.system.random.nextVector
 import chylex.hee.system.random.removeItem
 import net.minecraft.block.Blocks
 import net.minecraft.util.math.BlockPos
-import net.minecraft.util.math.Vec3d
+import net.minecraft.util.math.vector.Vector3d
 import java.util.Random
 import kotlin.collections.set
 import kotlin.math.PI
@@ -375,14 +375,14 @@ object Generator_ArcaneConjunctions : ITerritoryGenerator{
 		private val swirlFreqZ = rand.nextInt(1, 3) * PI
 		
 		init{
-			val verticality = abs(center2.subtract(center1).normalize().dotProduct(Vec3d(0.0, 1.0, 0.0)))
+			val verticality = abs(center2.subtract(center1).normalize().dotProduct(Vector3d(0.0, 1.0, 0.0)))
 			val extra = (outerThickness - 1.0) * 0.5
 			
 			baseRadiusXZ = max(2.7 + extra, outerRadius * (0.8 + ((1.0 - verticality) * 0.2)))
 			baseRadiusY = max(2.4 + extra, outerRadius * (0.7 + (verticality * 0.2)))
 		}
 		
-		private fun getCenterPoint(progress: Double): Vec3d{
+		private fun getCenterPoint(progress: Double): Vector3d{
 			return center1.offsetTowards(center2, progress).add(
 				swirlMpX * sin(progress * swirlFreqX),
 				swirlMpY * sin(progress * swirlFreqY),
@@ -390,7 +390,7 @@ object Generator_ArcaneConjunctions : ITerritoryGenerator{
 			)
 		}
 		
-		private inline fun forEachPoint(callback: (Vec3d) -> Unit){
+		private inline fun forEachPoint(callback: (Vector3d) -> Unit){
 			val startOffset = blob1.radius - (outerRadius * 2.0)
 			val endOffset = length - (blob2.radius - (outerRadius * 2.0))
 			
@@ -430,7 +430,7 @@ object Generator_ArcaneConjunctions : ITerritoryGenerator{
 			val p1 = getCenterPoint(progress)
 			val p2 = getCenterPoint(progress + (1.0 / length))
 			
-			val offset: Vec3d
+			val offset: Vector3d
 			val radius: Double
 			
 			if (rand.nextInt(9) == 0){
@@ -448,7 +448,7 @@ object Generator_ArcaneConjunctions : ITerritoryGenerator{
 		}
 	}
 	
-	private class Hole(val origin: Vec3d, val offset: Vec3d, val radius: Double){
+	private class Hole(val origin: Vector3d, val offset: Vector3d, val radius: Double){
 		fun generate(world: SegmentedWorld){
 			for(pos in Pos(origin.add(offset)).allInCenteredSphereMutable(radius)){
 				if (world.isInside(pos) && world.getBlock(pos) === Blocks.END_STONE){

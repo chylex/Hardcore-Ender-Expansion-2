@@ -12,12 +12,12 @@ import net.minecraft.inventory.Inventory
 import net.minecraft.item.ItemStack
 import net.minecraft.item.Items
 import net.minecraft.item.crafting.IRecipeType
-import net.minecraft.util.math.BlockPos
+import net.minecraft.loot.LootContext
+import net.minecraft.loot.LootParameterSets
+import net.minecraft.loot.LootParameters
+import net.minecraft.util.math.vector.Vector3d
 import net.minecraft.world.World
 import net.minecraft.world.server.ServerWorld
-import net.minecraft.world.storage.loot.LootContext
-import net.minecraft.world.storage.loot.LootParameterSets
-import net.minecraft.world.storage.loot.LootParameters
 import java.util.Random
 import kotlin.math.pow
 
@@ -90,7 +90,7 @@ object ScorchingFortune{
 		val lootContext = LootContext.Builder(world)
 			.withRandom(rand)
 			.withParameter(LootParameters.BLOCK_STATE, block.defaultState)
-			.withParameter(LootParameters.POSITION, BlockPos.ZERO)
+			.withParameter(LootParameters.field_237457_g_, Vector3d.ZERO)
 			.withParameter(LootParameters.TOOL, ItemStack(Items.DIAMOND_PICKAXE))
 			.build(LootParameterSets.BLOCK)
 		

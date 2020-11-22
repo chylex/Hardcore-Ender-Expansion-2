@@ -7,10 +7,10 @@ import chylex.hee.game.world.generation.IBlockPlacer
 import chylex.hee.game.world.generation.SegmentedWorld
 import chylex.hee.system.math.square
 import chylex.hee.system.random.nextFloat
-import net.minecraft.util.math.Vec3d
+import net.minecraft.util.math.vector.Vector3d
 
 class CaveCarverSphere(private val maxRandomRadiusReduction: Float) : ICaveCarver{
-	override fun carve(world: SegmentedWorld, center: Vec3d, radius: Double, placer: IBlockPlacer): Boolean{
+	override fun carve(world: SegmentedWorld, center: Vector3d, radius: Double, placer: IBlockPlacer): Boolean{
 		val rand = world.rand
 		
 		val carveCenter = Pos(center)

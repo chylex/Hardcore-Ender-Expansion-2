@@ -13,14 +13,14 @@ import chylex.hee.system.migration.EntityPlayer
 import chylex.hee.system.migration.Hand.MAIN_HAND
 import chylex.hee.system.migration.Hand.OFF_HAND
 import net.minecraft.client.particle.Particle
-import net.minecraft.util.math.Vec3d
-import net.minecraft.world.World
+import net.minecraft.client.world.ClientWorld
+import net.minecraft.util.math.vector.Vector3d
 import java.lang.ref.WeakReference
 import java.util.Random
 
 object ParticleEnergyTransferToPlayer : IParticleMaker.WithData<TransferData?>(){
 	@Sided(Side.CLIENT)
-	override fun create(world: World, posX: Double, posY: Double, posZ: Double, motX: Double, motY: Double, motZ: Double, data: TransferData?): Particle{
+	override fun create(world: ClientWorld, posX: Double, posY: Double, posZ: Double, motX: Double, motY: Double, motZ: Double, data: TransferData?): Particle{
 		return Instance(world, posX, posY, posZ, data)
 	}
 	
@@ -40,13 +40,13 @@ object ParticleEnergyTransferToPlayer : IParticleMaker.WithData<TransferData?>()
 	class TransferData(val cluster: ParticleDataColorScale, val player: WeakReference<EntityPlayer>, val speed: Double)
 	
 	@Sided(Side.CLIENT)
-	class Instance(world: World, posX: Double, posY: Double, posZ: Double, data: TransferData?) : ParticleBaseEnergyTransfer(world, posX, posY, posZ){
-		override val targetPos: Vec3d
+	class Instance(world: ClientWorld, posX: Double, posY: Double, posZ: Double, data: TransferData?) : ParticleBaseEnergyTransfer(world, posX, posY, posZ){
+		override val targetPos: Vector3d
 			get() = newTargetPos
 		
 		private val speed: Double
 		private val player: WeakReference<EntityPlayer>?
-		private var newTargetPos = Vec3d.ZERO
+		private var newTargetPos = Vector3d.ZERO
 		
 		init{
 			selectSpriteRandomly(ParticleEnergyTransferToPlayer.sprite)

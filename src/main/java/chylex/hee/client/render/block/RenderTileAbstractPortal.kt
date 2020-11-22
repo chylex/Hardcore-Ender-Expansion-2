@@ -23,12 +23,12 @@ import chylex.hee.system.math.toRadians
 import com.mojang.blaze3d.matrix.MatrixStack
 import com.mojang.blaze3d.vertex.IVertexBuilder
 import net.minecraft.client.renderer.IRenderTypeBuffer
-import net.minecraft.client.renderer.Matrix4f
 import net.minecraft.client.renderer.tileentity.TileEntityRenderer
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats
 import net.minecraft.util.math.BlockPos
-import net.minecraft.util.math.Vec3d
+import net.minecraft.util.math.vector.Matrix4f
+import net.minecraft.util.math.vector.Vector3d
 import net.minecraft.world.World
 import org.lwjgl.opengl.GL11
 import java.util.Random
@@ -209,7 +209,7 @@ abstract class RenderTileAbstractPortal<T : TileEntityPortalInner, C : IPortalCo
 		builder.pos(mat, sizeNB, yB, sizeNB).color().tex(texW, 0F).endVertex()
 	}
 	
-	private fun renderLayer(mat: Matrix4f, builder: IVertexBuilder, layer: Int, dist: Int, diff: Vec3d){
+	private fun renderLayer(mat: Matrix4f, builder: IVertexBuilder, layer: Int, dist: Int, diff: Vector3d){
 		val layerIndexRev = 16 - layer
 		val parallaxMp = (1F + abs(diff.y.toFloat() / 32F)).pow(0.12F)
 		
