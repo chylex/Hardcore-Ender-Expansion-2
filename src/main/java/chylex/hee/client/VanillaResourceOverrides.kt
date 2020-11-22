@@ -13,7 +13,7 @@ import net.minecraftforge.fml.packs.ResourcePackLoader
 
 object VanillaResourceOverrides : IPackFinder{
 	fun register(){
-		// TODO Minecraft is null when running datagen, but moving this later breaks the override; investigate whether it only works by chance (i.e. happens to be first in a Set iterator or something)
+		// Minecraft is null when running datagen, but I cannot move this to FMLClientSetupEvent because it only runs after all resource packs are initialized
 		with(Minecraft.getInstance() ?: return){
 			resourcePackList.addPackFinder(this@VanillaResourceOverrides)
 		}

@@ -122,10 +122,15 @@ object ModEntities{
 		EntitySpawnPlacementRegistry.register(UNDREAD, PlacementType.ON_GROUND, Type.MOTION_BLOCKING_NO_LEAVES, defaultSpawnPredicateHostile)
 		EntitySpawnPlacementRegistry.register(VAMPIRE_BAT, PlacementType.ON_GROUND, Type.MOTION_BLOCKING_NO_LEAVES, defaultSpawnPredicatePassive)
 		
+		replaceVanillaFactories()
 		MinecraftForge.EVENT_BUS.register(this)
 	}
 	
 	// Vanilla modifications
+	
+	private fun replaceVanillaFactories(){
+		EntityType.SILVERFISH.factory = IFactory { _, world -> EntityMobSilverfish(SILVERFISH, world) }
+	}
 	
 	@SubscribeEvent(priority = EventPriority.HIGHEST)
 	fun onEntityJoinWorld(e: EntityJoinWorldEvent){ // UPDATE any better way?
