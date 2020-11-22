@@ -19,7 +19,5 @@ object CommandDebugToggles : IClientCommand{
 			ModBlocks.SCAFFOLDING.enableShape = !ModBlocks.SCAFFOLDING.enableShape
 			sender.sendFeedback(StringTextComponent("Scaffolding shape ${if (ModBlocks.SCAFFOLDING.enableShape) "enabled" else "disabled"}."), false)
 		}
-		
-		// UPDATE
 	}
 }

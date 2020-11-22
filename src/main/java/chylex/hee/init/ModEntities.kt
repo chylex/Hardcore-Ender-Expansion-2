@@ -122,16 +122,24 @@ object ModEntities{
 		EntitySpawnPlacementRegistry.register(UNDREAD, PlacementType.ON_GROUND, Type.MOTION_BLOCKING_NO_LEAVES, defaultSpawnPredicateHostile)
 		EntitySpawnPlacementRegistry.register(VAMPIRE_BAT, PlacementType.ON_GROUND, Type.MOTION_BLOCKING_NO_LEAVES, defaultSpawnPredicatePassive)
 		
+		replaceVanillaFactories()
 		MinecraftForge.EVENT_BUS.register(this)
 	}
 	
 	// Vanilla modifications
 	
+	private fun replaceVanillaFactories(){
+		EntityType.ENDERMAN.factory = IFactory { _, world -> EntityMobEnderman(ENDERMAN, world) }
+		EntityType.ENDERMITE.factory = IFactory { _, world -> EntityMobEndermite(ENDERMITE, world) }
+		EntityType.SILVERFISH.factory = IFactory { _, world -> EntityMobSilverfish(SILVERFISH, world) }
+	}
+	
 	@SubscribeEvent(priority = EventPriority.HIGHEST)
-	fun onEntityJoinWorld(e: EntityJoinWorldEvent){ // UPDATE any better way?
+	fun onEntityJoinWorld(e: EntityJoinWorldEvent){
 		val world = e.world
 		val original = e.entity
 		
+		// if a mod creates the entity manually instead of the factory, it must still be replaced
 		val overriden = when(original.javaClass){
 			EntityEnderman::class.java -> EntityMobEnderman(world)
 			EntityEndermite::class.java -> EntityMobEndermite(world)
@@ -144,7 +152,9 @@ object ModEntities{
 		
 		e.isCanceled = true
 		
-		if (world.chunkProvider.isChunkLoaded(original)){ // TODO deletes entity if added during chunk loading, i.e. old world, maybe try to fix?
+		// should not happen, but avoids a crash if the entity was added during chunk loading, and for some
+		// reason the entity was still the original type (for ex. if another mod messes with the factories)
+		if (world.chunkProvider.isChunkLoaded(original)){
 			world.addEntity(overriden)
 		}
 	}
