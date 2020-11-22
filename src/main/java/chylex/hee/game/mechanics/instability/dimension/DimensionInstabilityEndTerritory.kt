@@ -20,6 +20,10 @@ class DimensionInstabilityEndTerritory(private val world: World) : IDimensionIns
 		return territories[key] ?: putEntry(key)
 	}
 	
+	override fun getLevel(pos: BlockPos): Int{
+		return getEntry(pos).getLevel(pos)
+	}
+	
 	override fun resetActionMultiplier(pos: BlockPos){
 		getEntry(pos).resetActionMultiplier(pos)
 	}

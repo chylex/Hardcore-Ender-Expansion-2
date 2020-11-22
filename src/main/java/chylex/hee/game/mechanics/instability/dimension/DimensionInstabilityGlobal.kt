@@ -45,6 +45,10 @@ open class DimensionInstabilityGlobal(private val world: World, private val ende
 	private var lastActionTime = 0L
 	private var lastEndermiteSpawnTime = INITIAL_ENDERMITE_SPAWN_TIME
 	
+	override fun getLevel(pos: BlockPos): Int {
+		return level
+	}
+	
 	override fun resetActionMultiplier(pos: BlockPos){
 		lastEndermiteSpawnTime = INITIAL_ENDERMITE_SPAWN_TIME
 	}

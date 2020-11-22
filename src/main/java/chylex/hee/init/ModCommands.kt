@@ -3,6 +3,7 @@ import chylex.hee.HEE
 import chylex.hee.commands.arguments.EnumArgument
 import chylex.hee.commands.arguments.ValidatedStringArgument
 import chylex.hee.commands.executes
+import chylex.hee.commands.server.CommandDebugInstability
 import chylex.hee.commands.server.CommandDebugStructure
 import chylex.hee.commands.server.CommandDebugTerritory
 import chylex.hee.commands.server.CommandDebugTestWorld
@@ -31,6 +32,7 @@ object ModCommands{
 	)
 	
 	val debug = if (Debug.enabled) listOf(
+		CommandDebugInstability,
 		CommandDebugStructure,
 		CommandDebugTerritory,
 		CommandDebugTestWorld
