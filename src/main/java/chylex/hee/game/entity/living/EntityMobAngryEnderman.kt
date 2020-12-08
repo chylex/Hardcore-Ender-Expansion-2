@@ -11,6 +11,7 @@ import chylex.hee.game.entity.posVec
 import chylex.hee.game.entity.selectVulnerableEntities
 import chylex.hee.init.ModEntities
 import chylex.hee.system.facades.Resource
+import chylex.hee.system.math.Vec
 import chylex.hee.system.math.offsetTowards
 import chylex.hee.system.math.square
 import chylex.hee.system.migration.EntityPlayer
@@ -29,7 +30,6 @@ import net.minecraft.util.math.RayTraceContext
 import net.minecraft.util.math.RayTraceContext.BlockMode
 import net.minecraft.util.math.RayTraceContext.FluidMode
 import net.minecraft.util.math.RayTraceResult.Type
-import net.minecraft.util.math.Vec3d
 import net.minecraft.world.Difficulty.PEACEFUL
 import net.minecraft.world.World
 
@@ -111,7 +111,7 @@ class EntityMobAngryEnderman(type: EntityType<EntityMobAngryEnderman>, world: Wo
 		}
 		
 		val currentTarget = attackTarget ?: return false
-		val teleportPos = Vec3d(offsetTowards(aabb.minX, aabb.maxX, 0.5), aabb.minY + eyeHeight.toDouble(), offsetTowards(aabb.minZ, aabb.maxZ, 0.5))
+		val teleportPos = Vec(offsetTowards(aabb.minX, aabb.maxX, 0.5), aabb.minY + eyeHeight.toDouble(), offsetTowards(aabb.minZ, aabb.maxZ, 0.5))
 		
 		return world.rayTraceBlocks(RayTraceContext(teleportPos, currentTarget.lookPosVec, BlockMode.COLLIDER, FluidMode.NONE, this)).type == Type.MISS
 	}

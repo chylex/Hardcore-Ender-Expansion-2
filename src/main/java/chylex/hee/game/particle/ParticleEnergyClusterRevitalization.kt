@@ -10,6 +10,7 @@ import chylex.hee.game.world.getTile
 import chylex.hee.system.color.IntColor.Companion.RGB
 import chylex.hee.system.forge.Side
 import chylex.hee.system.forge.Sided
+import chylex.hee.system.math.Vec
 import chylex.hee.system.math.offsetTowards
 import chylex.hee.system.random.nextFloat
 import chylex.hee.system.random.nextVector
@@ -75,7 +76,7 @@ object ParticleEnergyClusterRevitalization : IParticleMaker.Simple(){
 			super.tick()
 			particleAlpha = interpolateAge(BASE_ALPHA, FADE_IN_DURATION, FADE_OUT_DURATION)
 			
-			val posVec = Vec3d(posX, posY, posZ)
+			val posVec = Vec(posX, posY, posZ)
 			val newPos: Vec3d
 			
 			if (isRevitalizing && age > TOTAL_LIFESPAN - FADE_OUT_DURATION){

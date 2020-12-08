@@ -18,6 +18,7 @@ import chylex.hee.system.forge.Side
 import chylex.hee.system.forge.Sided
 import chylex.hee.system.forge.SubscribeAllEvents
 import chylex.hee.system.forge.SubscribeEvent
+import chylex.hee.system.math.Vec3
 import net.minecraft.block.Blocks
 import net.minecraft.client.renderer.Vector3f
 import net.minecraft.util.math.BlockPos
@@ -189,7 +190,7 @@ class WorldProviderEndCustom(world: World, type: DimensionType) : EndDimension(w
 	
 	@Sided(Side.CLIENT)
 	override fun getFogColor(celestialAngle: Float, partialTicks: Float): Vec3d{
-		return clientEnvironment?.fogColor ?: Vec3d.ZERO
+		return clientEnvironment?.fogColor ?: Vec3.ZERO
 	}
 	
 	@Sided(Side.CLIENT)

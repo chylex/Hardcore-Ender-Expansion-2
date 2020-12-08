@@ -29,6 +29,7 @@ import chylex.hee.network.fx.IFxHandler
 import chylex.hee.system.collection.MutableWeightedList.Companion.mutableWeightedListOf
 import chylex.hee.system.collection.WeightedList.Companion.weightedListOf
 import chylex.hee.system.color.IntColor.Companion.RGB
+import chylex.hee.system.math.Vec
 import chylex.hee.system.math.addY
 import chylex.hee.system.math.directionTowards
 import chylex.hee.system.math.square
@@ -231,7 +232,7 @@ class TileEntityMinersBurialAltar(type: TileEntityType<TileEntityMinersBurialAlt
 			
 			if (tick == 0){
 				if (tokenHolder == null){
-					val fxPos = Vec3d(tokenHolderPos.x + 0.5, tokenHolderPos.y + 0.95, tokenHolderPos.z + 0.5)
+					val fxPos = Vec(tokenHolderPos.x + 0.5, tokenHolderPos.y + 0.95, tokenHolderPos.z + 0.5)
 					PacketClientFX(FX_SPAWN, FxSpawnData(fxPos, redeemType)).sendToAllAround(wrld, fxPos, 16.0)
 					
 					EntityTokenHolder(wrld, tokenHolderPos, TokenType.NORMAL, TerritoryType.CURSED_LIBRARY).apply {

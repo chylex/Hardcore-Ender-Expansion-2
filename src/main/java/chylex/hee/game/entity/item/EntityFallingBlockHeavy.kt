@@ -13,6 +13,7 @@ import chylex.hee.game.world.getTile
 import chylex.hee.game.world.removeBlock
 import chylex.hee.game.world.setState
 import chylex.hee.init.ModEntities
+import chylex.hee.system.math.Vec3
 import chylex.hee.system.math.subtractY
 import chylex.hee.system.migration.BlockFalling
 import chylex.hee.system.migration.EntityFallingBlock
@@ -28,7 +29,6 @@ import net.minecraft.network.IPacket
 import net.minecraft.network.PacketBuffer
 import net.minecraft.tileentity.TileEntity
 import net.minecraft.util.math.BlockPos
-import net.minecraft.util.math.Vec3d
 import net.minecraft.world.GameRules.DO_ENTITY_DROPS
 import net.minecraft.world.World
 import net.minecraftforge.fml.common.registry.IEntityAdditionalSpawnData
@@ -52,7 +52,7 @@ open class EntityFallingBlockHeavy(type: EntityType<out EntityFallingBlockHeavy>
 		prevPosX = x
 		prevPosY = y
 		prevPosZ = z
-		motion = Vec3d.ZERO
+		motion = Vec3.ZERO
 	}
 	
 	companion object{

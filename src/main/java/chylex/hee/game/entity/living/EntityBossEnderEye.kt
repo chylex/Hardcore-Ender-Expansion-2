@@ -365,7 +365,7 @@ class EntityBossEnderEye(type: EntityType<EntityBossEnderEye>, world: World) : E
 			
 			setLocationAndAngles(pos.x + 0.5, pos.y.toDouble() + 2.5, pos.z + 0.5, yaw, 0F)
 			rotationYawHead = yaw
-			motion = Vec3d.ZERO
+			motion = Vec3.ZERO
 		}
 	}
 	
@@ -448,7 +448,7 @@ class EntityBossEnderEye(type: EntityType<EntityBossEnderEye>, world: World) : E
 	}
 	
 	fun performBlastKnockback(target: Entity, strength: Float){
-		val ratio = Vec3.fromXZ(target.posX, target.posZ).directionTowards(Vec3.fromXZ(posX, posZ)).scale(strength)
+		val ratio = Vec3.xz(target.posX, target.posZ).directionTowards(Vec3.xz(posX, posZ)).scale(strength)
 		
 		if (target is EntityLivingBase){
 			target.knockBack(this, strength, ratio.x, ratio.z)
@@ -533,7 +533,7 @@ class EntityBossEnderEye(type: EntityType<EntityBossEnderEye>, world: World) : E
 			lastKnockbackDashTime = world.totalTime
 		}
 		else if (!ForgeHooks.onLivingKnockBack(this, entity, strength, xRatio, zRatio).isCanceled){
-			motion = motion.add(Vec3.fromXZ(-xRatio, -zRatio).normalize().scale(KNOCKBACK_MP).withY(0.005))
+			motion = motion.add(Vec3.xz(-xRatio, -zRatio).normalize().scale(KNOCKBACK_MP).withY(0.005))
 			
 			if (motionY > 0.05){
 				motionY = 0.05

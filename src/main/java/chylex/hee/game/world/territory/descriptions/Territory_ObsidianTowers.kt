@@ -8,9 +8,9 @@ import chylex.hee.game.world.territory.TerritoryInstance
 import chylex.hee.game.world.territory.properties.TerritoryColors
 import chylex.hee.game.world.territory.properties.TerritoryEnvironment
 import chylex.hee.system.color.IntColor.Companion.RGB
+import chylex.hee.system.math.Vec3
 import chylex.hee.system.random.nextFloat
 import net.minecraft.util.math.BlockPos
-import net.minecraft.util.math.Vec3d
 import net.minecraft.world.World
 import java.util.Random
 
@@ -39,7 +39,7 @@ object Territory_ObsidianTowers : ITerritoryDescription{
 	}
 	
 	override val environment = object : TerritoryEnvironment(){
-		override val fogColor = Vec3d(0.0, 0.0, 0.0)
+		override val fogColor = Vec3.ZERO
 		override val fogDensity = 0.01F
 		override val fogRenderDistanceModifier = 0.005F
 		

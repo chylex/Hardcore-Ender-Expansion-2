@@ -21,6 +21,7 @@ import chylex.hee.init.ModSounds
 import chylex.hee.network.client.PacketClientFX
 import chylex.hee.network.fx.FxBlockData
 import chylex.hee.network.fx.FxBlockHandler
+import chylex.hee.system.math.Vec3
 import chylex.hee.system.migration.EntityItem
 import chylex.hee.system.migration.Facing.UP
 import net.minecraft.block.Blocks
@@ -32,7 +33,6 @@ import net.minecraft.item.ItemStack
 import net.minecraft.util.SoundCategory
 import net.minecraft.util.math.AxisAlignedBB
 import net.minecraft.util.math.BlockPos
-import net.minecraft.util.math.Vec3d
 import net.minecraft.world.World
 import java.util.Random
 import kotlin.math.min
@@ -87,7 +87,7 @@ class EntityItemCauldronTrigger : EntityItemBase{
 					pos.setBlock(world, Blocks.CAULDRON)
 					
 					EntityItem(world, pos.x + 0.5, pos.y + 0.4, pos.z + 0.5, ItemStack(ModItems.PURITY_EXTRACT)).apply {
-						motion = Vec3d.ZERO
+						motion = Vec3.ZERO
 						setDefaultPickupDelay()
 						world.addEntity(this)
 					}

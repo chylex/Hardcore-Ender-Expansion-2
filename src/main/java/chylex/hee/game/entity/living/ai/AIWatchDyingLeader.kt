@@ -1,17 +1,17 @@
 package chylex.hee.game.entity.living.ai
 import chylex.hee.game.entity.living.EntityMobBlobby
 import chylex.hee.game.entity.lookPosVec
+import chylex.hee.system.math.Vec3
 import net.minecraft.entity.ai.goal.Goal
 import net.minecraft.entity.ai.goal.Goal.Flag.LOOK
 import net.minecraft.entity.ai.goal.Goal.Flag.MOVE
-import net.minecraft.util.math.Vec3d
 import java.util.EnumSet
 
 class AIWatchDyingLeader(
 	private val entity: EntityMobBlobby,
 	private val ticksBeforeResuming: Int
 ) : Goal(){
-	private var watchTarget = Vec3d.ZERO
+	private var watchTarget = Vec3.ZERO
 	private var remainingTicks = 0
 	
 	init{
@@ -37,7 +37,7 @@ class AIWatchDyingLeader(
 	}
 	
 	override fun resetTask(){
-		watchTarget = Vec3d.ZERO
+		watchTarget = Vec3.ZERO
 		remainingTicks = 0
 	}
 }

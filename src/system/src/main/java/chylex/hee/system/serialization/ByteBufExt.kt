@@ -2,6 +2,7 @@
 
 package chylex.hee.system.serialization
 import chylex.hee.game.world.Pos
+import chylex.hee.system.math.Vec
 import chylex.hee.system.math.floorToInt
 import io.netty.buffer.ByteBuf
 import io.netty.buffer.ByteBufInputStream
@@ -35,7 +36,7 @@ fun PacketBuffer.writeVec(vec: Vec3d){
 }
 
 fun PacketBuffer.readVec(): Vec3d{
-	return Vec3d(readDouble(), readDouble(), readDouble())
+	return Vec(readDouble(), readDouble(), readDouble())
 }
 
 // Vec3d (Float)
@@ -47,7 +48,7 @@ fun PacketBuffer.writeFloatVec(vec: Vec3d){
 }
 
 fun PacketBuffer.readFloatVec(): Vec3d{
-	return Vec3d(readFloat().toDouble(), readFloat().toDouble(), readFloat().toDouble())
+	return Vec(readFloat().toDouble(), readFloat().toDouble(), readFloat().toDouble())
 }
 
 // Vec3d (Compact)
@@ -59,7 +60,7 @@ fun PacketBuffer.writeCompactVec(vec: Vec3d){
 }
 
 fun PacketBuffer.readCompactVec(): Vec3d{
-	return Vec3d(readInt() * 0.125, readInt() * 0.125, readInt() * 0.125)
+	return Vec(readInt() * 0.125, readInt() * 0.125, readInt() * 0.125)
 }
 
 // NBT

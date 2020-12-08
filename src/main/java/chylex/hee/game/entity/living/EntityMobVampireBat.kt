@@ -20,6 +20,7 @@ import chylex.hee.game.particle.spawner.properties.IOffset.InBox
 import chylex.hee.game.particle.spawner.properties.IShape.Point
 import chylex.hee.game.potion.makeEffect
 import chylex.hee.game.world.Pos
+import chylex.hee.game.world.bottomCenter
 import chylex.hee.game.world.center
 import chylex.hee.game.world.getBlock
 import chylex.hee.game.world.getState
@@ -30,6 +31,8 @@ import chylex.hee.game.world.territory.TerritoryType
 import chylex.hee.game.world.totalTime
 import chylex.hee.init.ModEntities
 import chylex.hee.system.color.IntColor.Companion.RGB
+import chylex.hee.system.math.Vec
+import chylex.hee.system.math.Vec3
 import chylex.hee.system.math.addY
 import chylex.hee.system.math.ceilToInt
 import chylex.hee.system.math.floorToInt
@@ -119,7 +122,7 @@ class EntityMobVampireBat(type: EntityType<EntityMobVampireBat>, world: World) :
 			val currentSleep = nextSleepPos
 			
 			if (currentSleep != null){
-				return Vec3d(currentSleep.x + 0.5, currentSleep.y + 0.1, currentSleep.z + 0.5).also { prevTargetPos = null }
+				return currentSleep.bottomCenter.addY(0.1).also { prevTargetPos = null }
 			}
 			
 			val pos = prevTargetPos?.takeIf { Pos(it).isAir(world) && it.y >= 1 }
@@ -130,7 +133,7 @@ class EntityMobVampireBat(type: EntityType<EntityMobVampireBat>, world: World) :
 					rand.nextInt(-2, 4),
 					rand.nextInt(-7, 7)
 				).let {
-					Vec3d(it.x + 0.5, it.y + 0.1, it.z + 0.5)
+					Vec(it.x + 0.5, it.y + 0.1, it.z + 0.5)
 				}.also {
 					prevTargetPos = it
 				}
@@ -255,7 +258,7 @@ class EntityMobVampireBat(type: EntityType<EntityMobVampireBat>, world: World) :
 				else if (lookPosVec.squareDistanceTo(sleepPos.center) < square(0.2) && canHangUnderCurrentBlock()){
 					isBatHanging = true
 					nextSleepPos = null
-					motion = Vec3d.ZERO
+					motion = Vec3.ZERO
 					
 					moveHelper.tick()
 					moveForward = 0F

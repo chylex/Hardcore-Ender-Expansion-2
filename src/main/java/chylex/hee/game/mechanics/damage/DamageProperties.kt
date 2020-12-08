@@ -1,5 +1,6 @@
 package chylex.hee.game.mechanics.damage
 import chylex.hee.HEE
+import chylex.hee.game.entity.posVec
 import chylex.hee.system.forge.EventPriority
 import chylex.hee.system.forge.SubscribeAllEvents
 import chylex.hee.system.forge.SubscribeEvent
@@ -95,7 +96,7 @@ class DamageProperties{
 			if (ignoreShield)
 				null
 			else
-				directSource?.let { Vec3d(it.posX, it.posY, it.posZ) }
+				directSource?.let(Entity::posVec)
 		
 		override fun getDeathMessage(victim: EntityLivingBase): ITextComponent{
 			if (directSource == null){

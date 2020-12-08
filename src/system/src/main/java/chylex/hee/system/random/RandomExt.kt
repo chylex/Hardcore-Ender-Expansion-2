@@ -1,4 +1,5 @@
 package chylex.hee.system.random
+import chylex.hee.system.math.Vec
 import chylex.hee.system.math.Vec3
 import chylex.hee.system.math.addY
 import chylex.hee.system.math.ceilToInt
@@ -159,12 +160,12 @@ fun Random.nextItem(collection: IntArray, default: Int): Int{
  * Returns a random point inside a sphere, represented by a vector.
  */
 fun Random.nextVector(scale: Double): Vec3d{
-	return Vec3d(this.nextDouble() * 2.0 - 1.0, this.nextDouble() * 2.0 - 1.0, this.nextDouble() * 2.0 - 1.0).normalize().scale(scale)
+	return Vec(this.nextDouble() * 2.0 - 1.0, this.nextDouble() * 2.0 - 1.0, this.nextDouble() * 2.0 - 1.0).normalize().scale(scale)
 }
 
 /**
  * Returns a random point inside a circle, represented by the XZ components of a vector, with its Y component equal to [y].
  */
 fun Random.nextVector2(xz: Double, y: Double): Vec3d{
-	return Vec3.fromXZ(this.nextDouble() * 2.0 - 1.0, this.nextDouble() * 2.0 - 1.0).normalize().scale(xz).addY(y)
+	return Vec3.xz(this.nextDouble() * 2.0 - 1.0, this.nextDouble() * 2.0 - 1.0).normalize().scale(xz).addY(y)
 }

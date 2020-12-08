@@ -22,6 +22,7 @@ import chylex.hee.network.client.PacketClientRotateInstantly
 import chylex.hee.network.client.PacketClientTeleportInstantly
 import chylex.hee.network.fx.IFxData
 import chylex.hee.network.fx.IFxHandler
+import chylex.hee.system.math.Vec
 import chylex.hee.system.math.addY
 import chylex.hee.system.math.directionTowards
 import chylex.hee.system.math.floorToInt
@@ -166,7 +167,7 @@ class Teleporter(
 		
 		val world = entity.world
 		val prevPos = entity.posVec
-		val newPos = Vec3d(event.targetX, event.targetY, event.targetZ)
+		val newPos = Vec(event.targetX, event.targetY, event.targetZ)
 		
 		PacketClientTeleportInstantly(entity, newPos).sendToTracking(entity)
 		entity.setPositionAndUpdate(newPos.x, newPos.y, newPos.z)
@@ -229,7 +230,7 @@ class Teleporter(
 		
 		repeat(attempts){
 			val randomPos = position.add(rand.nextVector(rand.nextFloat(distance)))
-			val newPos = Vec3d(randomPos.x, randomPos.y.floorToInt() + 0.01, randomPos.z)
+			val newPos = Vec(randomPos.x, randomPos.y.floorToInt() + 0.01, randomPos.z)
 			
 			if (Pos(newPos).down().blocksMovement(world) && world.hasNoCollisions(entity, originalBox.offset(newPos.subtract(originalPos)))){
 				return toLocation(entity, newPos, soundCategory)

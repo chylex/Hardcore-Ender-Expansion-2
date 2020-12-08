@@ -1,4 +1,5 @@
 package chylex.hee.game.entity
+import chylex.hee.system.math.Vec
 import chylex.hee.system.migration.EntityItem
 import chylex.hee.system.migration.EntityLivingBase
 import chylex.hee.system.serialization.getCompoundOrNull
@@ -37,19 +38,19 @@ var Entity.positionZ
 var Entity.motionX
 	get() = this.motion.x
 	set(value){
-		this.motion = Vec3d(value, motion.y, motion.z)
+		this.motion = Vec(value, motion.y, motion.z)
 	}
 
 var Entity.motionY
 	get() = this.motion.y
 	set(value){
-		this.motion = Vec3d(motion.x, value, motion.z)
+		this.motion = Vec(motion.x, value, motion.z)
 	}
 
 var Entity.motionZ
 	get() = this.motion.z
 	set(value){
-		this.motion = Vec3d(motion.x, motion.y, value)
+		this.motion = Vec(motion.x, motion.y, value)
 	}
 
 val Entity.lookPosVec: Vec3d

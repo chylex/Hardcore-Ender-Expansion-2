@@ -5,6 +5,7 @@ import chylex.hee.game.world.territory.TerritoryInstance
 import chylex.hee.game.world.territory.TerritoryVoid
 import chylex.hee.system.forge.Side
 import chylex.hee.system.forge.Sided
+import chylex.hee.system.math.Vec
 import chylex.hee.system.math.addY
 import chylex.hee.system.math.ceilToInt
 import chylex.hee.system.math.directionTowards
@@ -16,7 +17,6 @@ import chylex.hee.system.random.nextVector
 import net.minecraft.client.particle.IParticleRenderType
 import net.minecraft.client.particle.IParticleRenderType.PARTICLE_SHEET_TRANSLUCENT
 import net.minecraft.client.particle.Particle
-import net.minecraft.util.math.Vec3d
 import net.minecraft.world.World
 import kotlin.math.max
 import kotlin.math.min
@@ -44,7 +44,7 @@ object ParticleVoid : IParticleMaker.Simple(){
 			
 			maxAge = (30F / rand.nextFloat(0.3F, 1F)).ceilToInt()
 			
-			motionVec = Vec3d(
+			motionVec = Vec(
 				rand.nextFloat(-1.0, 1.0),
 				rand.nextFloat(-1.0, 1.0),
 				rand.nextFloat(-1.0, 1.0)
@@ -54,7 +54,7 @@ object ParticleVoid : IParticleMaker.Simple(){
 			val center = instance?.centerPoint
 			
 			if (center != null){
-				val posVec = Vec3d(posX, posY, posZ)
+				val posVec = Vec(posX, posY, posZ)
 				val voidFactor = TerritoryVoid.getVoidFactor(world, posVec)
 				
 				if (voidFactor >= TerritoryVoid.INSTANT_DEATH_FACTOR){

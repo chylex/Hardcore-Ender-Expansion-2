@@ -3,6 +3,8 @@ import chylex.hee.game.entity.living.controller.EntityMoveFlyingForward
 import chylex.hee.game.entity.lookDirVec
 import chylex.hee.game.entity.lookPosVec
 import chylex.hee.game.entity.posVec
+import chylex.hee.system.math.Vec
+import chylex.hee.system.math.Vec3
 import chylex.hee.system.math.directionTowards
 import chylex.hee.system.math.sign
 import chylex.hee.system.math.square
@@ -10,11 +12,10 @@ import chylex.hee.system.math.withY
 import chylex.hee.system.migration.EntityLiving
 import net.minecraft.entity.Entity
 import net.minecraft.pathfinding.FlyingPathNavigator
-import net.minecraft.util.math.Vec3d
 import net.minecraft.world.World
 
 class PathNavigateFlyingPreferBeeLineOrStrafe(entity: EntityLiving, world: World) : FlyingPathNavigator(entity, world){
-	private var moveTarget = Vec3d.ZERO
+	private var moveTarget = Vec3.ZERO
 	private var moveSpeed = 0.0
 	
 	private val isBeelining
@@ -36,7 +37,7 @@ class PathNavigateFlyingPreferBeeLineOrStrafe(entity: EntityLiving, world: World
 	}
 	
 	private fun tryBeelineTo(x: Double, y: Double, z: Double, speed: Double): Boolean{
-		moveTarget = Vec3d(x, y, z)
+		moveTarget = Vec(x, y, z)
 		moveSpeed = speed
 		return true
 	}
@@ -58,13 +59,13 @@ class PathNavigateFlyingPreferBeeLineOrStrafe(entity: EntityLiving, world: World
 				
 				if (path != null && !path.isFinished){
 					val point = path.getPathPointFromIndex(0)
-					val pointDir = entity.lookPosVec.withY(0.0).directionTowards(Vec3d(point.x + 0.5, 0.0, point.z + 0.5))
+					val pointDir = entity.lookPosVec.withY(0.0).directionTowards(Vec3.xz(point.x + 0.5, point.z + 0.5))
 					
 					strafeDir = entity.lookDirVec.sign(pointDir)
 				}
 			}
 			
-			val strafe = moveTarget.subtract(entity.posVec).withY(0.0).normalize().crossProduct(Vec3d(0.0, strafeDir.toDouble(), 0.0))
+			val strafe = moveTarget.subtract(entity.posVec).withY(0.0).normalize().crossProduct(Vec3.y(strafeDir))
 			val target = entity.posVec.withY(moveTarget.y).add(strafe)
 			
 			moveHelper.setMoveTo(target.x, target.y, target.z, moveSpeed)
@@ -83,7 +84,7 @@ class PathNavigateFlyingPreferBeeLineOrStrafe(entity: EntityLiving, world: World
 	
 	override fun clearPath(){
 		super.clearPath()
-		moveTarget = Vec3d.ZERO
+		moveTarget = Vec3.ZERO
 		moveSpeed = 0.0
 	}
 }

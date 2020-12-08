@@ -39,6 +39,7 @@ import chylex.hee.game.world.territory.ITerritoryGenerator
 import chylex.hee.init.ModBlocks
 import chylex.hee.system.facades.Facing4
 import chylex.hee.system.facades.Facing6
+import chylex.hee.system.math.Vec3
 import chylex.hee.system.math.ceilToInt
 import chylex.hee.system.math.offsetTowards
 import chylex.hee.system.math.square
@@ -375,7 +376,7 @@ object Generator_ArcaneConjunctions : ITerritoryGenerator{
 		private val swirlFreqZ = rand.nextInt(1, 3) * PI
 		
 		init{
-			val verticality = abs(center2.subtract(center1).normalize().dotProduct(Vec3d(0.0, 1.0, 0.0)))
+			val verticality = abs(center2.subtract(center1).normalize().dotProduct(Vec3.y(1.0)))
 			val extra = (outerThickness - 1.0) * 0.5
 			
 			baseRadiusXZ = max(2.7 + extra, outerRadius * (0.8 + ((1.0 - verticality) * 0.2)))

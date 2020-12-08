@@ -185,7 +185,7 @@ object Generator_TheHub : ITerritoryGenerator{
 					val targetX = centerPos.x + rand.nextFloat(-MainIsland.RADIUS, MainIsland.RADIUS) * 0.5
 					val targetZ = centerPos.z + rand.nextFloat(-MainIsland.RADIUS, MainIsland.RADIUS) * 0.5
 					
-					val direction = Vec3.fromXZ(targetX - start.x, targetZ - start.z).normalize().withY(rand.nextFloat(-1.1, -0.6))
+					val direction = Vec3.xz(targetX - start.x, targetZ - start.z).normalize().withY(rand.nextFloat(-1.1, -0.6))
 					val pather = Pather(world, direction)
 					
 					if (MAIN_CAVE.generate(world, start, length, pather) > length * 0.3){
@@ -453,7 +453,7 @@ object Generator_TheHub : ITerritoryGenerator{
 				val diffLength = diffVec.length() - SpawnIsland.RADIUS - 20
 				
 				val offsetVec = diffVec.normalize()
-				val perpendicularVec = Vec3d(-offsetVec.z, 0.0, offsetVec.x)
+				val perpendicularVec = Vec3.xz(-offsetVec.z, offsetVec.x)
 				var distance = 8.0
 				
 				val points = mutableListOf(destinationVec)

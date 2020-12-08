@@ -28,6 +28,7 @@ import chylex.hee.network.client.PacketClientFX
 import chylex.hee.network.fx.FxEntityData
 import chylex.hee.network.fx.FxEntityHandler
 import chylex.hee.system.color.IntColor.Companion.RGB
+import chylex.hee.system.math.Vec
 import chylex.hee.system.math.Vec3
 import chylex.hee.system.math.addY
 import chylex.hee.system.math.component1
@@ -208,7 +209,7 @@ class EndermanTeleportHandler(private val enderman: EntityMobAbstractEnderman) :
 	private fun getPositionInsideBlock(target: BlockPos): Vec3d{
 		val xzMaxOffset = 0.5F - (enderman.width * 0.5F)
 		
-		return Vec3d(
+		return Vec(
 			target.x + 0.5 + rand.nextFloat(-xzMaxOffset, xzMaxOffset),
 			target.y.toDouble(),
 			target.z + 0.5 + rand.nextFloat(-xzMaxOffset, xzMaxOffset)
@@ -321,7 +322,7 @@ class EndermanTeleportHandler(private val enderman: EntityMobAbstractEnderman) :
 		val endermanPos = enderman.posVec
 		val dodgePos = dodge.posVec
 		
-		val perpendicularVec = Vec3.fromXZ(-dodge.motionZ, dodge.motionX).normalize()
+		val perpendicularVec = Vec3.xz(-dodge.motionZ, dodge.motionX).normalize()
 		val dodgeDist = (enderman.width * 0.75) + (dodge.width * 0.75) + 0.25
 		
 		val dir = maxOf(-1, 1, compareBy {
@@ -334,7 +335,7 @@ class EndermanTeleportHandler(private val enderman: EntityMobAbstractEnderman) :
 				.add(rand.nextVector2(xz = rand.nextFloat(0.0, 0.15), y = 1.5)))
 			
 			for(offset in 0..2){
-				val targetPos = Vec3d(basePos.x, basePos.y.floorToInt() - offset + 0.01, basePos.z)
+				val targetPos = Vec(basePos.x, basePos.y.floorToInt() - offset + 0.01, basePos.z)
 				
 				if (teleportCheckLocation(TELEPORTER_WEAK, targetPos)){
 					lastDodged = uuid

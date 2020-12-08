@@ -5,11 +5,15 @@ import chylex.hee.game.particle.base.ParticleBaseEnergyTransfer
 import chylex.hee.game.particle.data.IParticleData
 import chylex.hee.game.particle.spawner.IParticleMaker
 import chylex.hee.game.world.Pos
+import chylex.hee.game.world.bottomCenter
 import chylex.hee.game.world.getBlock
 import chylex.hee.init.ModBlocks
 import chylex.hee.system.color.IntColor.Companion.RGB
 import chylex.hee.system.forge.Side
 import chylex.hee.system.forge.Sided
+import chylex.hee.system.math.Vec
+import chylex.hee.system.math.Vec3
+import chylex.hee.system.math.addY
 import net.minecraft.client.particle.Particle
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.Vec3d
@@ -34,7 +38,7 @@ object ParticleEnergyTransferToPedestal : IParticleMaker.WithData<Data>(){
 			selectSpriteRandomly(ParticleEnergyTransferToPedestal.sprite)
 			
 			if (data == null){
-				targetPos = Vec3d.ZERO
+				targetPos = Vec3.ZERO
 				setExpired()
 			}
 			else{
@@ -43,8 +47,8 @@ object ParticleEnergyTransferToPedestal : IParticleMaker.WithData<Data>(){
 				
 				particleScale = 0.75F
 				
-				targetPos = data.targetPos.let { Vec3d(it.x + 0.5, it.y + BlockTablePedestal.PARTICLE_TARGET_Y, it.z + 0.5) }
-				setupMotion(Vec3d(posX, posY, posZ).distanceTo(targetPos) / data.travelTime)
+				targetPos = data.targetPos.bottomCenter.addY(BlockTablePedestal.PARTICLE_TARGET_Y)
+				setupMotion(Vec(posX, posY, posZ).distanceTo(targetPos) / data.travelTime)
 			}
 		}
 		

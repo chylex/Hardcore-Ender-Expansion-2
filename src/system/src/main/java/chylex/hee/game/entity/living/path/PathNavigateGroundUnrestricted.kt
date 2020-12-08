@@ -1,15 +1,16 @@
 package chylex.hee.game.entity.living.path
 import chylex.hee.game.entity.posVec
+import chylex.hee.system.math.Vec
+import chylex.hee.system.math.Vec3
 import chylex.hee.system.math.floorToInt
 import chylex.hee.system.math.square
 import chylex.hee.system.migration.EntityLiving
 import net.minecraft.entity.Entity
 import net.minecraft.pathfinding.GroundPathNavigator
-import net.minecraft.util.math.Vec3d
 import net.minecraft.world.World
 
 class PathNavigateGroundUnrestricted(entity: EntityLiving, world: World) : GroundPathNavigator(entity, world){
-	private var overrideTarget = Vec3d.ZERO
+	private var overrideTarget = Vec3.ZERO
 	private var overrideSpeed = 0.0
 	
 	override fun noPath(): Boolean{
@@ -24,7 +25,7 @@ class PathNavigateGroundUnrestricted(entity: EntityLiving, world: World) : Groun
 			return setPath(path, speed)
 		}
 		
-		overrideTarget = Vec3d(x, y, z)
+		overrideTarget = Vec(x, y, z)
 		overrideSpeed = speed
 		timeoutTimer = 0L
 		return true

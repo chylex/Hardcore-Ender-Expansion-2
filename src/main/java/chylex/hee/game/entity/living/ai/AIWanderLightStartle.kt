@@ -1,5 +1,6 @@
 package chylex.hee.game.entity.living.ai
 import chylex.hee.game.world.Pos
+import chylex.hee.game.world.bottomCenter
 import chylex.hee.game.world.distanceTo
 import chylex.hee.game.world.isAir
 import chylex.hee.system.migration.EntityCreature
@@ -88,7 +89,7 @@ class AIWanderLightStartle(
 			}
 		}
 		
-		return foundTarget?.let { Vec3d(it.x + 0.5, it.y.toDouble(), it.z + 0.5) }
+		return foundTarget?.let(BlockPos::bottomCenter)
 	}
 	
 	private fun getCombinedLight(pos: BlockPos): Int{

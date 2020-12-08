@@ -273,7 +273,7 @@ sealed class EnderEyeAttack{
 						else -> 1.0
 					}
 					
-					val knockback = Vec3.fromXZ(motionX, motionZ).normalize().scale(0.975 * multiplier).addY(0.075 * multiplier)
+					val knockback = Vec3.xz(motionX, motionZ).normalize().scale(0.975 * multiplier).addY(0.075 * multiplier)
 					
 					hitEntity.addVelocity(knockback.x, knockback.y, knockback.z)
 					hitEntities.add(hitEntity.uniqueID)

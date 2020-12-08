@@ -4,10 +4,13 @@ import chylex.hee.game.entity.lookPosVec
 import chylex.hee.game.particle.ParticleSmokeCustom
 import chylex.hee.game.particle.spawner.ParticleSpawnerCustom
 import chylex.hee.game.particle.spawner.properties.IShape.Point
+import chylex.hee.game.world.bottomCenter
 import chylex.hee.network.client.PacketClientFX
 import chylex.hee.network.fx.IFxData
 import chylex.hee.network.fx.IFxHandler
 import chylex.hee.system.color.IntColor.Companion.RGB
+import chylex.hee.system.math.Vec
+import chylex.hee.system.math.Vec3
 import chylex.hee.system.math.addY
 import chylex.hee.system.math.square
 import chylex.hee.system.math.subtractY
@@ -60,7 +63,7 @@ class EnderEyeSpawnerParticles(private val entity: EntityBossEnderEye) : INBTSer
 	}
 	
 	private class ParticleInstance(pos: Vec3d, delay: Int, private var originalDistanceXZ: Float) : INBTSerializable<TagCompound>{
-		constructor() : this(Vec3d.ZERO, 0, 0F)
+		constructor() : this(Vec3.ZERO, 0, 0F)
 		
 		var pos = pos
 			private set
@@ -112,7 +115,7 @@ class EnderEyeSpawnerParticles(private val entity: EntityBossEnderEye) : INBTSer
 		}
 		
 		override fun deserializeNBT(nbt: TagCompound) = nbt.use {
-			pos = Vec3d(
+			pos = Vec(
 				getDouble(X_TAG),
 				getDouble(Y_TAG),
 				getDouble(Z_TAG)
@@ -129,7 +132,7 @@ class EnderEyeSpawnerParticles(private val entity: EntityBossEnderEye) : INBTSer
 	private val particles = mutableListOf<ParticleInstance>()
 	
 	fun add(start: BlockPos){
-		val center = Vec3d(start.x + 0.5, start.y.toDouble(), start.z + 0.5)
+		val center = start.bottomCenter
 		var delay = 0
 		
 		for(particle in particles){

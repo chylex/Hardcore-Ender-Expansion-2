@@ -8,6 +8,7 @@ import chylex.hee.game.world.WorldProviderEndCustom.Companion.DEFAULT_SKY_LIGHT
 import chylex.hee.system.facades.Resource
 import chylex.hee.system.forge.Side
 import chylex.hee.system.forge.Sided
+import chylex.hee.system.math.Vec3
 import chylex.hee.system.migration.EntityPlayer
 import net.minecraft.util.math.Vec3d
 
@@ -15,7 +16,7 @@ abstract class TerritoryEnvironment{
 	protected companion object{
 		val VANILLA = SkyCubeStatic(
 			texture = Resource.Vanilla("textures/environment/end_sky.png"),
-			color = (40.0 / 255.0).let { Vec3d(it, it, it) },
+			color = Vec3.xyz(40.0 / 255.0),
 			distance = 100F
 		)
 	}
@@ -35,7 +36,7 @@ abstract class TerritoryEnvironment{
 	
 	abstract val voidRadiusMpXZ: Float
 	abstract val voidRadiusMpY: Float
-	open val voidCenterOffset: Vec3d = Vec3d.ZERO
+	open val voidCenterOffset: Vec3d = Vec3.ZERO
 	
 	open val renderer: AbstractEnvironmentRenderer? = null
 	open val lightmap: ILightmap = VanillaEndLightmap

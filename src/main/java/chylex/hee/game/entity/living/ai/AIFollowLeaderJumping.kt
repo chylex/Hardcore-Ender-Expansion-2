@@ -1,6 +1,7 @@
 package chylex.hee.game.entity.living.ai
 import chylex.hee.game.entity.living.EntityMobBlobby
 import chylex.hee.game.entity.lookDirVec
+import chylex.hee.system.math.Vec3
 import chylex.hee.system.math.offsetTowards
 import chylex.hee.system.math.scale
 import chylex.hee.system.math.square
@@ -12,15 +13,14 @@ import chylex.hee.system.random.nextVector2
 import net.minecraft.entity.ai.goal.Goal
 import net.minecraft.entity.ai.goal.Goal.Flag.JUMP
 import net.minecraft.entity.ai.goal.Goal.Flag.MOVE
-import net.minecraft.util.math.Vec3d
 import java.util.EnumSet
 import kotlin.math.abs
 
 class AIFollowLeaderJumping(private val entity: EntityMobBlobby) : Goal(){
 	private var leader: EntityMobBlobby? = null
 	
-	private var offset = Vec3d.ZERO
-	private var targetOffset = Vec3d.ZERO
+	private var offset = Vec3.ZERO
+	private var targetOffset = Vec3.ZERO
 	private var offsetChangeTicks = 0
 	private var stoppedTicks = 0
 	

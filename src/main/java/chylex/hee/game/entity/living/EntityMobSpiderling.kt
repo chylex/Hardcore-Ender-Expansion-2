@@ -32,6 +32,7 @@ import chylex.hee.game.world.isPeaceful
 import chylex.hee.game.world.totalTime
 import chylex.hee.init.ModEntities
 import chylex.hee.system.facades.Resource
+import chylex.hee.system.math.Vec
 import chylex.hee.system.math.addY
 import chylex.hee.system.math.directionTowards
 import chylex.hee.system.math.square
@@ -245,7 +246,7 @@ class EntityMobSpiderling(type: EntityType<EntityMobSpiderling>, world: World) :
 			}
 			else{
 				val start = posVec.addY(0.5)
-				val target = Vec3d(moveHelper.x, start.y, moveHelper.z)
+				val target = Vec(moveHelper.x, start.y, moveHelper.z)
 				
 				val direction = start.directionTowards(target)
 				val obstacle = world.rayTraceBlocks(RayTraceContext(start, start.add(direction.scale(3.0)), BlockMode.COLLIDER, FluidMode.NONE, this))

@@ -1,6 +1,6 @@
 package chylex.hee.system.color
+import chylex.hee.system.math.Vec
 import chylex.hee.system.math.floorToInt
-import net.minecraft.util.math.Vec3d
 
 inline class IntColor(val i: Int){
 	inline val alpha
@@ -36,7 +36,7 @@ inline class IntColor(val i: Int){
 	// conversion
 	
 	val asVec
-		get() = Vec3d(red / 255.0, green / 255.0, blue / 255.0)
+		get() = Vec(red / 255.0, green / 255.0, blue / 255.0)
 	
 	val asHSB
 		get() = HSB.fromRGB(this)

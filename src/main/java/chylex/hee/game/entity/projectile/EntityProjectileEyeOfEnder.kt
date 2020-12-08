@@ -55,7 +55,6 @@ import net.minecraft.network.PacketBuffer
 import net.minecraft.particles.ParticleTypes.SMOKE
 import net.minecraft.util.SoundCategory
 import net.minecraft.util.math.BlockPos
-import net.minecraft.util.math.Vec3d
 import net.minecraft.world.World
 import net.minecraft.world.gen.Heightmap.Type.WORLD_SURFACE
 import net.minecraftforge.fml.common.registry.IEntityAdditionalSpawnData
@@ -143,7 +142,7 @@ class EntityProjectileEyeOfEnder(type: EntityType<EntityProjectileEyeOfEnder>, w
 		get() = 0.35 + (sin(timer * 0.15) * 0.25) // 0.35 offset for bounding box
 	
 	private val targetVecXZ
-		get() = targetPos?.let { Vec3.fromXZ(it.x + 0.5 - posX, it.z + 0.5 - posZ) } ?: Vec3d.ZERO
+		get() = targetPos?.let { Vec3.xz(it.x + 0.5 - posX, it.z + 0.5 - posZ) } ?: Vec3.ZERO
 	
 	private var targetPos: BlockPos? = null
 	private var timer = 0
@@ -216,7 +215,7 @@ class EntityProjectileEyeOfEnder(type: EntityType<EntityProjectileEyeOfEnder>, w
 	}
 	
 	private fun updateTargetAltitude(){
-		val perpendicular = Vec3.fromXZ(-(motionZ * 3.0), motionX * 3.0)
+		val perpendicular = Vec3.xz(-(motionZ * 3.0), motionX * 3.0)
 		val step = motion.scale(4)
 		
 		val parallelStarts = arrayOf(

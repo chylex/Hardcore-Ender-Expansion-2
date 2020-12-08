@@ -23,6 +23,7 @@ import chylex.hee.network.client.PacketClientFX
 import chylex.hee.network.fx.IFxData
 import chylex.hee.network.fx.IFxHandler
 import chylex.hee.system.color.IntColor.Companion.RGB
+import chylex.hee.system.math.Vec
 import chylex.hee.system.math.ceilToInt
 import chylex.hee.system.math.component1
 import chylex.hee.system.math.component2
@@ -218,14 +219,14 @@ class EntityProjectileSpatialDash(type: EntityType<EntityProjectileSpatialDash>,
 	}
 	
 	override fun shoot(dirX: Double, dirY: Double, dirZ: Double, velocity: Float, inaccuracy: Float){
-		this.motion = Vec3d(dirX, dirY, dirZ).normalize().scale(velocity)
+		this.motion = Vec(dirX, dirY, dirZ).normalize().scale(velocity)
 	}
 	
 	override fun move(type: MoverType, pos: Vec3d){
 		super.move(type, pos)
 		
 		if (type == SELF && world.isRemote){
-			PARTICLE_TICK.spawn(Line(Vec3d(prevPosX, prevPosY, prevPosZ), posVec, 0.75), rand)
+			PARTICLE_TICK.spawn(Line(Vec(prevPosX, prevPosY, prevPosZ), posVec, 0.75), rand)
 		}
 	}
 	

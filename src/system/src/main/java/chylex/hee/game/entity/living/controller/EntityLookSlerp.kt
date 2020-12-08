@@ -1,6 +1,7 @@
 package chylex.hee.game.entity.living.controller
 import chylex.hee.game.entity.lookPosVec
 import chylex.hee.system.math.Quaternion
+import chylex.hee.system.math.Vec
 import chylex.hee.system.math.directionTowards
 import chylex.hee.system.math.toPitch
 import chylex.hee.system.math.toRadians
@@ -39,7 +40,7 @@ class EntityLookSlerp(entity: EntityLiving, private var adjustmentSpeed: Float, 
 		if (isLooking){
 			isLooking = false
 			
-			val dir = mob.lookPosVec.directionTowards(Vec3d(posX, posY, posZ))
+			val dir = mob.lookPosVec.directionTowards(Vec(posX, posY, posZ))
 			
 			if (Vec3d.fromPitchYaw(mob.rotationPitch, mob.rotationYawHead).dotProduct(dir) >= maxInstantAngleCos){
 				mob.rotationYawHead = dir.toYaw()

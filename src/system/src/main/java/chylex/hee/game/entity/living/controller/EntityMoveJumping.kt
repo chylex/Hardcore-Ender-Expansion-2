@@ -46,7 +46,7 @@ class EntityMoveJumping(entity: EntityLiving, private val jumpDelay: () -> Int, 
 	
 	private fun isLookingAt(x: Double, z: Double): Boolean{
 		val currentLook = Vec3.fromYaw(mob.rotationYawHead)
-		val targetLook = Vec3.fromXZ(x, z).subtract(mob.posX, 0.0, mob.posZ).normalize()
+		val targetLook = Vec3.xz(x, z).subtract(mob.posX, 0.0, mob.posZ).normalize()
 		
 		return currentLook.dotProduct(targetLook) > dotBeforeMovement
 	}

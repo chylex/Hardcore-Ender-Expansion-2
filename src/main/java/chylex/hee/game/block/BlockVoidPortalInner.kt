@@ -25,6 +25,7 @@ import chylex.hee.game.world.setAir
 import chylex.hee.game.world.territory.TerritoryInstance
 import chylex.hee.game.world.territory.TerritoryType
 import chylex.hee.system.facades.Facing4
+import chylex.hee.system.math.Vec3
 import chylex.hee.system.math.subtractY
 import chylex.hee.system.migration.EntityLivingBase
 import chylex.hee.system.migration.EntityPlayer
@@ -35,7 +36,6 @@ import net.minecraft.state.StateContainer.Builder
 import net.minecraft.tileentity.TileEntity
 import net.minecraft.util.IStringSerializable
 import net.minecraft.util.math.BlockPos
-import net.minecraft.util.math.Vec3d
 import net.minecraft.world.IBlockReader
 import net.minecraft.world.World
 import net.minecraft.world.dimension.DimensionType
@@ -61,7 +61,7 @@ class BlockVoidPortalInner(builder: BlockBuilder) : BlockAbstractPortal(builder)
 			}
 			else{
 				entity.setPositionAndUpdate(targetVec.x, targetVec.y, targetVec.z)
-				entity.motion = Vec3d.ZERO
+				entity.motion = Vec3.ZERO
 			}
 		}
 	}

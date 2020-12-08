@@ -6,17 +6,27 @@ import kotlin.math.acos
 import kotlin.math.atan2
 import kotlin.math.sqrt
 
+inline fun Vec(x: Double, y: Double, z: Double) = Vec3d(x, y, z)
+
 object Vec3{
-	/**
-	 * Constructs a vector with the provided X/Z values, and `0.0` as the Y value.
-	 */
-	inline fun fromXZ(x: Double, z: Double): Vec3d{
-		return Vec3d(x, 0.0, z)
+	val ZERO: Vec3d = Vec3d.ZERO
+	
+	inline fun xz(x: Double, z: Double): Vec3d{
+		return Vec(x, 0.0, z)
 	}
 	
-	/**
-	 * Constructs a normalized vector from a rotation yaw value in degrees.
-	 */
+	inline fun y(y: Double): Vec3d{
+		return Vec(0.0, y, 0.0)
+	}
+	
+	inline fun y(y: Int): Vec3d{
+		return Vec(0.0, y.toDouble(), 0.0)
+	}
+	
+	inline fun xyz(xyz: Double): Vec3d{
+		return Vec(xyz, xyz, xyz)
+	}
+	
 	inline fun fromYaw(yaw: Float): Vec3d{
 		return Vec3d.fromPitchYaw(0F, yaw)
 	}
@@ -35,27 +45,27 @@ inline fun Vec3d.scale(factor: Int): Vec3d{
 }
 
 fun Vec3d.withY(y: Double): Vec3d{
-	return Vec3d(this.x, y, this.z)
+	return Vec(this.x, y, this.z)
 }
 
 fun Vec3d.addY(y: Double): Vec3d{
-	return Vec3d(this.x, this.y + y, this.z)
+	return Vec(this.x, this.y + y, this.z)
 }
 
 fun Vec3d.addXZ(x: Double, z: Double): Vec3d{
-	return Vec3d(this.x + x, this.y, this.z + z)
+	return Vec(this.x + x, this.y, this.z + z)
 }
 
 fun Vec3d.subtractY(y: Double): Vec3d{
-	return Vec3d(this.x, this.y - y, this.z)
+	return Vec(this.x, this.y - y, this.z)
 }
 
 fun Vec3d.scaleXZ(factor: Double): Vec3d{
-	return Vec3d(this.x * factor, this.y, this.z * factor)
+	return Vec(this.x * factor, this.y, this.z * factor)
 }
 
 fun Vec3d.scaleY(factor: Double): Vec3d{
-	return Vec3d(this.x, this.y * factor, this.z)
+	return Vec(this.x, this.y * factor, this.z)
 }
 
 fun Vec3d.toYaw(): Float{
@@ -75,7 +85,7 @@ fun Vec3d.angleBetween(other: Vec3d): Double{
 }
 
 fun Vec3d.offsetTowards(other: Vec3d, progress: Double): Vec3d{
-	return Vec3d(
+	return Vec(
 		x + (other.x - x) * progress,
 		y + (other.y - y) * progress,
 		z + (other.z - z) * progress

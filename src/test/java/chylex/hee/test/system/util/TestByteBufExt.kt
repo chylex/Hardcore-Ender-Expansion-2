@@ -1,5 +1,7 @@
 package chylex.hee.test.system.util
 import chylex.hee.game.world.Pos
+import chylex.hee.system.math.Vec
+import chylex.hee.system.math.Vec3
 import chylex.hee.system.serialization.TagCompound
 import chylex.hee.system.serialization.readCompactVec
 import chylex.hee.system.serialization.readPos
@@ -12,7 +14,6 @@ import chylex.hee.system.serialization.writeVec
 import io.netty.buffer.Unpooled
 import net.minecraft.network.PacketBuffer
 import net.minecraft.util.math.BlockPos
-import net.minecraft.util.math.Vec3d
 import net.minecraft.util.registry.Bootstrap
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Nested
@@ -38,10 +39,10 @@ class TestByteBufExt{
 		
 		@Test fun `writing and reading full 'Vec3d' objects works`() = with(PacketBuffer(Unpooled.buffer())){
 			arrayOf(
-				Vec3d.ZERO,
-				Vec3d(-1.23, 45.6, -789.0),
-				Vec3d(Double.MIN_VALUE, Double.MIN_VALUE, Double.MIN_VALUE),
-				Vec3d(Double.MAX_VALUE, Double.MAX_VALUE, Double.MAX_VALUE)
+				Vec3.ZERO,
+				Vec(-1.23, 45.6, -789.0),
+				Vec3.xyz(Double.MIN_VALUE),
+				Vec3.xyz(Double.MAX_VALUE)
 			).forEach {
 				writeVec(it)
 				assertEquals(it, readVec())
@@ -50,8 +51,8 @@ class TestByteBufExt{
 		
 		@Test fun `writing and reading compact 'Vec3d' objects works`() = with(PacketBuffer(Unpooled.buffer())){
 			mapOf(
-				Vec3d.ZERO to Vec3d.ZERO,
-				Vec3d(-1.23, 45.6, -789.0) to Vec3d(-1.25, 45.5, -789.0)
+				Vec3.ZERO to Vec3.ZERO,
+				Vec(-1.23, 45.6, -789.0) to Vec(-1.25, 45.5, -789.0)
 			).forEach {
 				writeCompactVec(it.key)
 				assertEquals(it.value, readCompactVec())

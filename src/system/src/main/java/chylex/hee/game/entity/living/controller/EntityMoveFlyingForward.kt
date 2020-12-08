@@ -1,6 +1,7 @@
 package chylex.hee.game.entity.living.controller
 import chylex.hee.game.entity.lookDirVec
 import chylex.hee.game.entity.lookPosVec
+import chylex.hee.system.math.Vec
 import chylex.hee.system.math.directionTowards
 import chylex.hee.system.math.sign
 import chylex.hee.system.math.square
@@ -31,7 +32,7 @@ class EntityMoveFlyingForward(entity: EntityLiving, private val strafeSpeedMp: D
 			action = WAIT
 			
 			val dir = mob.lookDirVec
-			val diff = mob.lookPosVec.directionTowards(Vec3d(posX, posY, posZ))
+			val diff = mob.lookPosVec.directionTowards(Vec(posX, posY, posZ))
 			
 			val dot = dir.dotProduct(diff)
 			val speed = mob.getAttribute(FLYING_SPEED).value * strafeSpeedMp * super.speed
@@ -43,7 +44,7 @@ class EntityMoveFlyingForward(entity: EntityLiving, private val strafeSpeedMp: D
 		else if (action == MOVE_TO){
 			action = WAIT
 			
-			val diff = mob.lookPosVec.directionTowards(Vec3d(posX, posY, posZ))
+			val diff = mob.lookPosVec.directionTowards(Vec(posX, posY, posZ))
 			val xz = sqrt(square(diff.x) + square(diff.z))
 			
 			val dot = Vec3d.fromPitchYaw(mob.rotationPitch, mob.rotationYaw).dotProduct(diff).coerceAtLeast(0.0)

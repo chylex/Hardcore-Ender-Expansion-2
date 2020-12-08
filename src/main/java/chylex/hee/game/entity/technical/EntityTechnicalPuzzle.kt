@@ -13,6 +13,8 @@ import chylex.hee.init.ModItems
 import chylex.hee.network.client.PacketClientFX
 import chylex.hee.network.fx.FxBlockData
 import chylex.hee.network.fx.FxEntityData
+import chylex.hee.system.math.Vec
+import chylex.hee.system.math.Vec3
 import chylex.hee.system.math.square
 import chylex.hee.system.math.toRadians
 import chylex.hee.system.migration.EntityItem
@@ -146,7 +148,7 @@ class EntityTechnicalPuzzle(type: EntityType<EntityTechnicalPuzzle>, world: Worl
 		
 		if (allBlocks.all { it.getState(world)[BlockPuzzleLogic.STATE] == BlockPuzzleLogic.State.ACTIVE }){
 			val candidatesInitial = BlockPuzzleLogic.findAllRectangles(world, allBlocks)
-				.map { box -> Vec3d((box.min.x + box.max.x + 1) * 0.5, posY + 1.5, (box.min.z + box.max.z + 1) * 0.5) }
+				.map { box -> Vec((box.min.x + box.max.x + 1) * 0.5, posY + 1.5, (box.min.z + box.max.z + 1) * 0.5) }
 			
 			val candidatesWithPlayerVisibility = candidatesInitial
 				.filter(::isPointInPlayerView)
@@ -159,7 +161,7 @@ class EntityTechnicalPuzzle(type: EntityType<EntityTechnicalPuzzle>, world: Worl
 			val pickedCandidate = rand.nextItem(candidatesOutsidePickupRange)
 			
 			val medallion = EntityItem(world, pickedCandidate.x, pickedCandidate.y, pickedCandidate.z, ItemStack(ModItems.PUZZLE_MEDALLION)).apply {
-				motion = Vec3d.ZERO
+				motion = Vec3.ZERO
 				world.addEntity(this)
 			}
 			

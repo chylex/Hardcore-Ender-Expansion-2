@@ -9,6 +9,7 @@ import chylex.hee.game.particle.data.ParticleDataColorScale
 import chylex.hee.game.particle.spawner.IParticleMaker
 import chylex.hee.system.forge.Side
 import chylex.hee.system.forge.Sided
+import chylex.hee.system.math.Vec3
 import chylex.hee.system.migration.EntityPlayer
 import chylex.hee.system.migration.Hand.MAIN_HAND
 import chylex.hee.system.migration.Hand.OFF_HAND
@@ -46,7 +47,7 @@ object ParticleEnergyTransferToPlayer : IParticleMaker.WithData<TransferData?>()
 		
 		private val speed: Double
 		private val player: WeakReference<EntityPlayer>?
-		private var newTargetPos = Vec3d.ZERO
+		private var newTargetPos = Vec3.ZERO
 		
 		init{
 			selectSpriteRandomly(ParticleEnergyTransferToPlayer.sprite)

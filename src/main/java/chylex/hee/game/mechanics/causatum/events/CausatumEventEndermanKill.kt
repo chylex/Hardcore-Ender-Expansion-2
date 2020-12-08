@@ -12,6 +12,8 @@ import chylex.hee.game.entity.technical.EntityTechnicalCausatumEvent.ICausatumEv
 import chylex.hee.game.world.Pos
 import chylex.hee.game.world.blocksMovement
 import chylex.hee.game.world.offsetUntil
+import chylex.hee.system.math.Vec
+import chylex.hee.system.math.Vec3
 import chylex.hee.system.math.addY
 import chylex.hee.system.math.component1
 import chylex.hee.system.math.component2
@@ -113,7 +115,7 @@ class CausatumEventEndermanKill() : ICausatumEventHandler{
 		val rand = world.rand
 		val muppet = EntityMobEndermanMuppet(world, FIRST_KILL)
 		
-		val killerLookDir = killer.get(world)?.lookDirVec?.scale(3.0) ?: Vec3d.ZERO
+		val killerLookDir = killer.get(world)?.lookDirVec?.scale(3.0) ?: Vec3.ZERO
 		
 		for(attempt in 1..1000){
 			val testVec = deathPos.add(killerLookDir).add(rand.nextVector2(xz = rand.nextFloat(5.0, 11.0), y = 0.0))
@@ -172,7 +174,7 @@ class CausatumEventEndermanKill() : ICausatumEventHandler{
 	}
 	
 	override fun deserializeNBT(nbt: TagCompound) = nbt.use {
-		deathPos = Vec3d(getDouble(ENDERMAN_X_TAG), getDouble(ENDERMAN_Y_TAG), getDouble(ENDERMAN_Z_TAG))
+		deathPos = Vec(getDouble(ENDERMAN_X_TAG), getDouble(ENDERMAN_Y_TAG), getDouble(ENDERMAN_Z_TAG))
 		
 		killer.readFromNBT(this, KILLER_TAG)
 		muppets.clear()

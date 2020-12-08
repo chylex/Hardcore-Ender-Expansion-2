@@ -19,6 +19,7 @@ import chylex.hee.game.world.getMaterial
 import chylex.hee.game.world.getState
 import chylex.hee.init.ModEntities
 import chylex.hee.proxy.Environment
+import chylex.hee.system.math.Vec
 import chylex.hee.system.math.remapRange
 import chylex.hee.system.migration.EntityItem
 import chylex.hee.system.migration.EntityLivingBase
@@ -310,7 +311,7 @@ class EntityInfusedTNT : EntityTNTPrimed{
 					)
 					
 					constructItemEntity(world, dropPos, droppedItem).apply {
-						motion = Vec3d(
+						motion = Vec(
 							rand.nextFloat(-0.25, 0.25),
 							rand.nextFloat(1.0, 1.2),
 							rand.nextFloat(-0.25, 0.25)

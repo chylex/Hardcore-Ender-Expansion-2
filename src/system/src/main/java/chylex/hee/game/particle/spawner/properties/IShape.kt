@@ -1,5 +1,6 @@
 package chylex.hee.game.particle.spawner.properties
 import chylex.hee.game.world.center
+import chylex.hee.system.math.Vec
 import chylex.hee.system.math.ceilToInt
 import chylex.hee.system.math.offsetTowards
 import net.minecraft.entity.Entity
@@ -15,8 +16,8 @@ interface IShape{
 	
 	class Point(point: Vec3d, amount: Int) : IShape{
 		constructor(pos: BlockPos, amount: Int) : this(pos.center, amount)
-		constructor(entity: Entity, heightMp: Float, amount: Int) : this(Vec3d(entity.posX, entity.posY + entity.height * heightMp, entity.posZ), amount)
-		constructor(x: Double, y: Double, z: Double, amount: Int) : this(Vec3d(x, y, z), amount)
+		constructor(entity: Entity, heightMp: Float, amount: Int) : this(Vec(entity.posX, entity.posY + entity.height * heightMp, entity.posZ), amount)
+		constructor(x: Double, y: Double, z: Double, amount: Int) : this(Vec(x, y, z), amount)
 		
 		override val points: Collection<Vec3d> = Collections.nCopies(amount, point)
 	}

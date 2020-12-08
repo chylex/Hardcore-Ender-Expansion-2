@@ -1,5 +1,6 @@
 package chylex.hee.game.entity.living.ai
 import chylex.hee.game.entity.posVec
+import chylex.hee.game.world.bottomCenter
 import chylex.hee.game.world.breakBlock
 import chylex.hee.game.world.getState
 import chylex.hee.game.world.totalTime
@@ -55,7 +56,7 @@ class AIPickUpBlock(
 		
 		targetBlockPos = pos
 		targetBlockState = state
-		targetNavPos = Vec3d(nav.x + 0.5, nav.y.toDouble(), nav.z + 0.5)
+		targetNavPos = nav.bottomCenter
 		
 		return true
 	}

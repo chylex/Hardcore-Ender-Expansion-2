@@ -5,11 +5,11 @@ import chylex.hee.game.particle.spawner.IParticleMaker
 import chylex.hee.system.color.IntColor.Companion.RGB
 import chylex.hee.system.forge.Side
 import chylex.hee.system.forge.Sided
+import chylex.hee.system.math.Vec3
 import chylex.hee.system.random.IRandomColor.Companion.IRandomColor
 import chylex.hee.system.random.nextFloat
 import chylex.hee.system.random.nextInt
 import net.minecraft.client.particle.Particle
-import net.minecraft.util.math.Vec3d
 import net.minecraft.world.World
 import java.util.Random
 import kotlin.math.PI
@@ -45,7 +45,7 @@ object ParticleExperienceOrbFloating : IParticleMaker.WithData<ParticleDataColor
 			
 			maxAge = data.lifespan
 			
-			motionVec = Vec3d(0.0, motY, 0.0)
+			motionVec = Vec3.y(motY)
 			motionOffset = rand.nextFloat(-PI, PI)
 		}
 		

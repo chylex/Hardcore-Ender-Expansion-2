@@ -1,8 +1,10 @@
 package chylex.hee.game.world.structure.trigger
 import chylex.hee.game.entity.technical.EntityTechnicalTrigger
+import chylex.hee.game.world.bottomCenter
 import chylex.hee.game.world.math.Transform
 import chylex.hee.game.world.structure.IStructureTrigger
 import chylex.hee.game.world.structure.IStructureWorld
+import chylex.hee.system.math.addY
 import chylex.hee.system.math.component1
 import chylex.hee.system.math.component2
 import chylex.hee.system.math.component3
@@ -20,7 +22,7 @@ class EntityStructureTrigger private constructor(private val entityConstructor: 
 		yOffset: Double
 	) : this(
 		entityConstructor,
-		{ pos, _ -> Vec3d(pos.x + 0.5, pos.y + yOffset, pos.z + 0.5) }
+		{ pos, _ -> pos.bottomCenter.addY(yOffset) }
 	)
 	
 	constructor(
@@ -30,7 +32,7 @@ class EntityStructureTrigger private constructor(private val entityConstructor: 
 		yOffset: Double
 	) : this(
 		entityConstructor,
-		{ pos, transform -> transform(nudgeFacing).let { Vec3d(pos.x + 0.5 + (nudgeAmount * it.xOffset), pos.y + yOffset, pos.z + 0.5 + (nudgeAmount * it.zOffset)) } }
+		{ pos, transform -> transform(nudgeFacing).let { pos.bottomCenter.add(nudgeAmount * it.xOffset, yOffset, nudgeAmount * it.zOffset) } }
 	){
 		require(nudgeFacing.yOffset == 0){ "entity trigger can only be nudged on x/z axis" }
 	}

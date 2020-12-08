@@ -6,6 +6,7 @@ import chylex.hee.game.world.isAir
 import chylex.hee.game.world.isFullBlock
 import chylex.hee.game.world.playServer
 import chylex.hee.game.world.setBlock
+import chylex.hee.system.math.Vec
 import chylex.hee.system.math.component1
 import chylex.hee.system.math.component2
 import chylex.hee.system.math.component3
@@ -28,7 +29,6 @@ import net.minecraft.util.DamageSource
 import net.minecraft.util.SoundCategory
 import net.minecraft.util.math.AxisAlignedBB
 import net.minecraft.util.math.BlockPos
-import net.minecraft.util.math.Vec3d
 import net.minecraft.world.Explosion
 import net.minecraft.world.World
 import net.minecraft.world.server.ServerWorld
@@ -98,7 +98,7 @@ class ExplosionBuilder{
 				for(pY in 0..15){
 					for(pZ in 0..15){
 						if (pX == 0 || pX == 15 || pY == 0 || pY == 15 || pZ == 0 || pZ == 15){
-							val offset = Vec3d(
+							val offset = Vec(
 								(pX / 15.0) * 2.0 - 1.0,
 								(pY / 15.0) * 2.0 - 1.0,
 								(pZ / 15.0) * 2.0 - 1.0

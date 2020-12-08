@@ -35,6 +35,7 @@ import chylex.hee.network.fx.FxEntityHandler
 import chylex.hee.system.color.IntColor.Companion.RGB
 import chylex.hee.system.forge.Side
 import chylex.hee.system.forge.Sided
+import chylex.hee.system.math.Vec3
 import chylex.hee.system.math.addY
 import chylex.hee.system.math.floorToInt
 import chylex.hee.system.migration.EntityItem
@@ -51,7 +52,6 @@ import net.minecraft.tileentity.ITickableTileEntity
 import net.minecraft.tileentity.TileEntityType
 import net.minecraft.util.SoundCategory
 import net.minecraft.util.math.AxisAlignedBB
-import net.minecraft.util.math.Vec3d
 import java.util.Random
 import java.util.WeakHashMap
 import kotlin.math.min
@@ -189,7 +189,7 @@ class TileEntityExperienceGate(type: TileEntityType<TileEntityExperienceGate>) :
 				val newCharge = tokenHolder.currentCharge + (1F / 175F)
 				
 				if (newCharge >= 1F){
-					tokenHolder.forceDropToken(Vec3d.ZERO)
+					tokenHolder.forceDropToken(Vec3.ZERO)
 					tokenHolder.currentCharge = 0F
 					experience = 0F
 				}

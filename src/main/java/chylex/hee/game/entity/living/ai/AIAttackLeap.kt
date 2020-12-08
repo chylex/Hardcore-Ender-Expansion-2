@@ -65,7 +65,7 @@ class AIAttackLeap(
 	
 	override fun startExecuting(){
 		val target = leapTarget ?: return
-		val diff = Vec3.fromXZ(entity.posX, entity.posZ).directionTowards(Vec3.fromXZ(target.posX, target.posZ))
+		val diff = Vec3.xz(entity.posX, entity.posZ).directionTowards(Vec3.xz(target.posX, target.posZ))
 		
 		val rand = entity.rng
 		val strengthXZ = rand.nextFloat(leapStrengthXZ)

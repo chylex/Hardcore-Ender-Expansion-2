@@ -21,6 +21,7 @@ import chylex.hee.system.facades.Facing6
 import chylex.hee.system.forge.Side
 import chylex.hee.system.forge.Sided
 import chylex.hee.system.forge.SubscribeEvent
+import chylex.hee.system.math.Vec
 import chylex.hee.system.migration.BlockFire
 import chylex.hee.system.migration.Sounds
 import chylex.hee.system.random.nextFloat
@@ -33,7 +34,6 @@ import net.minecraft.particles.ParticleTypes.LARGE_SMOKE
 import net.minecraft.util.Direction
 import net.minecraft.util.SoundCategory
 import net.minecraft.util.math.BlockPos
-import net.minecraft.util.math.Vec3d
 import net.minecraft.world.GameRules.DO_FIRE_TICK
 import net.minecraft.world.IWorldReader
 import net.minecraft.world.World
@@ -143,7 +143,7 @@ class BlockEternalFire(builder: BlockBuilder) : BlockFire(builder.p), IBlockLaye
 		
 		if (rand.nextInt(3) != 0){
 			if (pos.down().isTopSolid(world)){
-				PARTICLE_SMOKE.spawn(Point(Vec3d(
+				PARTICLE_SMOKE.spawn(Point(Vec(
 					pos.x + rand.nextFloat(0.0, 1.0),
 					pos.y + rand.nextFloat(0.5, 1.0),
 					pos.z + rand.nextFloat(0.0, 1.0)
@@ -159,7 +159,7 @@ class BlockEternalFire(builder: BlockBuilder) : BlockFire(builder.p), IBlockLaye
 						val offsetFacing = rand.nextFloat(0.4, 0.5)
 						val offsetSide = rand.nextFloat(-0.5, 0.5)
 						
-						PARTICLE_SMOKE.spawn(Point(Vec3d(
+						PARTICLE_SMOKE.spawn(Point(Vec(
 							pos.x + 0.5 + (facing.xOffset * offsetFacing) + (perpendicular.xOffset * offsetSide),
 							pos.y + rand.nextFloat(0.0, 1.0),
 							pos.z + 0.5 + (facing.zOffset * offsetFacing) + (perpendicular.zOffset * offsetSide)

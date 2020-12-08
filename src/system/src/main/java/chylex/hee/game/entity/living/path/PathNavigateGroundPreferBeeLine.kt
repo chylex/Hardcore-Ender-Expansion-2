@@ -1,15 +1,16 @@
 package chylex.hee.game.entity.living.path
 import chylex.hee.game.entity.posVec
+import chylex.hee.system.math.Vec
+import chylex.hee.system.math.Vec3
 import chylex.hee.system.math.square
 import chylex.hee.system.migration.EntityLiving
 import chylex.hee.system.random.nextInt
 import net.minecraft.entity.Entity
 import net.minecraft.pathfinding.GroundPathNavigator
-import net.minecraft.util.math.Vec3d
 import net.minecraft.world.World
 
 class PathNavigateGroundPreferBeeLine(entity: EntityLiving, world: World, private val maxStuckTicks: Int, private val fallbackPathfindingResetTicks: IntRange) : GroundPathNavigator(entity, world){
-	private var beelineTarget = Vec3d.ZERO
+	private var beelineTarget = Vec3.ZERO
 	private var beelineSpeed = 0.0
 	
 	private var lastX = entity.posX
@@ -39,7 +40,7 @@ class PathNavigateGroundPreferBeeLine(entity: EntityLiving, world: World, privat
 			return false
 		}
 		
-		beelineTarget = Vec3d(x, y, z)
+		beelineTarget = Vec(x, y, z)
 		beelineSpeed = speed
 		return true
 	}
@@ -52,7 +53,7 @@ class PathNavigateGroundPreferBeeLine(entity: EntityLiving, world: World, privat
 			if (resetTicks > 0 && --resetTicks == 0){
 				resetStuck()
 				
-				if (beelineTarget != Vec3d.ZERO){
+				if (beelineTarget != Vec3.ZERO){
 					beelineSpeed = speed
 					timeoutTimer = 0L
 					super.clearPath()
@@ -113,7 +114,7 @@ class PathNavigateGroundPreferBeeLine(entity: EntityLiving, world: World, privat
 		resetStuck()
 		stuckLongTicks = 0
 		resetTicks = 0
-		beelineTarget = Vec3d.ZERO
+		beelineTarget = Vec3.ZERO
 		beelineSpeed = 0.0
 	}
 }

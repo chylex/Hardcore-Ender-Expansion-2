@@ -15,12 +15,13 @@ import chylex.hee.system.facades.Resource
 import chylex.hee.system.forge.Side
 import chylex.hee.system.forge.Sided
 import chylex.hee.system.math.LerpedFloat
+import chylex.hee.system.math.Vec
+import chylex.hee.system.math.Vec3
 import chylex.hee.system.math.offsetTowards
 import chylex.hee.system.migration.EntityPlayer
 import chylex.hee.system.migration.Potions
 import chylex.hee.system.random.nextFloat
 import net.minecraft.client.renderer.Vector3f
-import net.minecraft.util.math.Vec3d
 import net.minecraft.world.LightType.BLOCK
 import net.minecraft.world.LightType.SKY
 import java.util.Random
@@ -53,7 +54,7 @@ object Territory_ForgottenTombs : ITerritoryDescription{
 	
 	override val environment = object : TerritoryEnvironment(){
 		override val fogColor
-			get() = (fogDensity / 0.275F).let { Vec3d(0.15 + it, 0.08 + it, 0.03) }
+			get() = (fogDensity / 0.275F).let { Vec(0.15 + it, 0.08 + it, 0.03) }
 		
 		override val fogDensity
 			get() = currentFogDensity.get(MC.partialTicks)
@@ -64,11 +65,11 @@ object Territory_ForgottenTombs : ITerritoryDescription{
 		
 		override val voidRadiusMpXZ = 1.35F
 		override val voidRadiusMpY = 0.975F
-		override val voidCenterOffset = Vec3d(0.0, -8.0, 0.0)
+		override val voidCenterOffset = Vec3.y(-8.0)
 		
 		override val renderer = SkyPlaneTopFoggy(
 			texture = Resource.Custom("textures/environment/stars.png"),
-			color = Vec3d(0.58, 0.58, 0.54),
+			color = Vec(0.58, 0.58, 0.54),
 			rescale = 29F,
 			distance = 65F,
 			width = 300F

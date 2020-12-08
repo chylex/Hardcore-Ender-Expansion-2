@@ -3,6 +3,7 @@ import chylex.hee.client.render.block.IBlockLayerCutout
 import chylex.hee.game.block.properties.BlockBuilder
 import chylex.hee.game.world.breakBlock
 import chylex.hee.system.forge.SubscribeEvent
+import chylex.hee.system.math.Vec3
 import chylex.hee.system.migration.BlockWeb
 import chylex.hee.system.migration.EntityItem
 import chylex.hee.system.migration.EntityLivingBase
@@ -14,7 +15,6 @@ import chylex.hee.system.migration.ItemSword
 import net.minecraft.block.BlockState
 import net.minecraft.entity.Entity
 import net.minecraft.util.math.BlockPos
-import net.minecraft.util.math.Vec3d
 import net.minecraft.util.math.shapes.ISelectionContext
 import net.minecraft.util.math.shapes.VoxelShape
 import net.minecraft.util.math.shapes.VoxelShapes
@@ -52,7 +52,7 @@ class BlockAncientCobweb(builder: BlockBuilder) : BlockWeb(builder.p), IBlockLay
 	
 	override fun onEntityCollision(state: BlockState, world: World, pos: BlockPos, entity: Entity){
 		if (entity is EntityItem){
-			entity.setMotionMultiplier(state, Vec3d(0.6, 0.6, 0.6))
+			entity.setMotionMultiplier(state, Vec3.xyz(0.6))
 		}
 		else if (!world.isRemote){
 			val canBreak = when(entity){

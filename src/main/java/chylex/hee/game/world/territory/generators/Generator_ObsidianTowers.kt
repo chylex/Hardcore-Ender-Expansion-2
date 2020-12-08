@@ -42,6 +42,7 @@ import chylex.hee.game.world.territory.generators.Generator_ObsidianTowers.Float
 import chylex.hee.init.ModBlocks
 import chylex.hee.system.collection.MutableWeightedList.Companion.mutableWeightedListOf
 import chylex.hee.system.facades.Facing4
+import chylex.hee.system.math.Vec
 import chylex.hee.system.math.ceilToInt
 import chylex.hee.system.math.directionTowards
 import chylex.hee.system.math.remapRange
@@ -62,7 +63,6 @@ import net.minecraft.block.Block
 import net.minecraft.block.Blocks
 import net.minecraft.util.Rotation
 import net.minecraft.util.math.BlockPos
-import net.minecraft.util.math.Vec3d
 import java.util.Random
 import kotlin.math.abs
 import kotlin.math.pow
@@ -178,7 +178,7 @@ object Generator_ObsidianTowers : ITerritoryGenerator{
 	
 	private class Island(val center: BlockPos, val radius: Double){
 		fun getRelativePos(angle: Float, distance: Double): BlockPos{
-			return Pos(center.center.add(Vec3d(distance, 0.0, 0.0).rotateYaw(angle)))
+			return Pos(center.center.add(Vec(distance, 0.0, 0.0).rotateYaw(angle)))
 		}
 		
 		fun getBoundingBox(yOffsets: IntRange): Pair<Int, BoundingBox>{

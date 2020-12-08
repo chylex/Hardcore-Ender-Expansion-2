@@ -40,6 +40,7 @@ import chylex.hee.network.fx.FxBlockHandler
 import chylex.hee.network.fx.FxEntityData
 import chylex.hee.network.fx.FxEntityHandler
 import chylex.hee.system.facades.Facing4
+import chylex.hee.system.math.Vec3
 import chylex.hee.system.math.ceilToInt
 import chylex.hee.system.math.floorToInt
 import chylex.hee.system.math.scaleXZ
@@ -146,7 +147,7 @@ class EntityItemIgneousRock : EntityItemNoBob{
 	}
 	
 	private var throwFacing = DOWN
-	private var prevMotion = Vec3d.ZERO
+	private var prevMotion = Vec3.ZERO
 	
 	private val smeltingInventory = Inventory(1)
 	

@@ -29,6 +29,7 @@ import chylex.hee.system.color.IntColor.Companion.RGB
 import chylex.hee.system.forge.EventPriority
 import chylex.hee.system.forge.SubscribeAllEvents
 import chylex.hee.system.forge.SubscribeEvent
+import chylex.hee.system.math.Vec
 import chylex.hee.system.math.component1
 import chylex.hee.system.math.component2
 import chylex.hee.system.math.component3
@@ -45,7 +46,6 @@ import net.minecraft.entity.ai.attributes.AbstractAttributeMap
 import net.minecraft.particles.ParticleTypes.EXPLOSION
 import net.minecraft.potion.EffectType.BENEFICIAL
 import net.minecraft.util.DamageSource
-import net.minecraft.util.math.Vec3d
 import net.minecraftforge.event.entity.living.LivingDamageEvent
 import java.util.Random
 import kotlin.math.max
@@ -127,7 +127,7 @@ object PotionBanishment : Potion(BENEFICIAL, RGB(253, 253, 253).i){
 						nearby.knockBack(entity, 1.25F, entity.posX - nearby.posX, entity.posZ - nearby.posZ)
 						val (newX, newY, newZ) = nearby.motion
 						
-						nearby.motion = Vec3d(prevX * 0.1 + newX, max(prevY, newY + 0.1), prevZ * 0.1 + newZ)
+						nearby.motion = Vec(prevX * 0.1 + newX, max(prevY, newY + 0.1), prevZ * 0.1 + newZ)
 						
 						if (nearby is EntityPlayer){
 							instantLaunch.add(nearby)

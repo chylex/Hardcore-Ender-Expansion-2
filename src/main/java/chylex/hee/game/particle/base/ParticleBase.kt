@@ -2,6 +2,7 @@ package chylex.hee.game.particle.base
 import chylex.hee.system.color.IntColor
 import chylex.hee.system.forge.Side
 import chylex.hee.system.forge.Sided
+import chylex.hee.system.math.Vec
 import net.minecraft.client.particle.IParticleRenderType
 import net.minecraft.client.particle.IParticleRenderType.PARTICLE_SHEET_OPAQUE
 import net.minecraft.client.particle.SpriteTexturedParticle
@@ -11,7 +12,7 @@ import net.minecraft.world.World
 @Sided(Side.CLIENT)
 abstract class ParticleBase(world: World, posX: Double, posY: Double, posZ: Double, motX: Double, motY: Double, motZ: Double) : SpriteTexturedParticle(world, posX, posY, posZ, motX, motY, motZ){
 	protected var motionVec: Vec3d
-		get() = Vec3d(motionX, motionY, motionZ)
+		get() = Vec(motionX, motionY, motionZ)
 		set(value){
 			motionX = value.x
 			motionY = value.y

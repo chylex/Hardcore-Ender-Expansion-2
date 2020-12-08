@@ -5,6 +5,7 @@ import chylex.hee.game.entity.heeTagPersistent
 import chylex.hee.game.entity.heeTagPersistentOrNull
 import chylex.hee.game.world.WorldProviderEndCustom
 import chylex.hee.game.world.center
+import chylex.hee.system.math.Vec3
 import chylex.hee.system.math.subtractY
 import chylex.hee.system.migration.EntityPlayer
 import chylex.hee.system.serialization.getPosOrNull
@@ -46,7 +47,7 @@ sealed class DimensionTeleporter{
 			entity.rotationYaw = yaw
 			entity.rotationPitch = 0F
 			entity.setPositionAndUpdate(target.x, target.y, target.z)
-			entity.motion = Vec3d.ZERO
+			entity.motion = Vec3.ZERO
 		}
 		
 		private fun placeAt(entity: Entity, yaw: Float, spawnInfo: SpawnInfo){

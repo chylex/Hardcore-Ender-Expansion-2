@@ -2,6 +2,7 @@
 
 package chylex.hee.game.world
 import chylex.hee.game.world.math.PosXZ
+import chylex.hee.system.math.Vec
 import chylex.hee.system.math.ceilToInt
 import chylex.hee.system.math.square
 import chylex.hee.system.migration.Facing.UP
@@ -46,7 +47,10 @@ operator fun ChunkPos.component1() = x
 operator fun ChunkPos.component2() = z
 
 val BlockPos.center
-	get() = Vec3d(x + 0.5, y + 0.5, z + 0.5)
+	get() = Vec(x + 0.5, y + 0.5, z + 0.5)
+
+val BlockPos.bottomCenter
+	get() = Vec(x + 0.5, y.toDouble(), z + 0.5)
 
 // Constants
 
