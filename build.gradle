@@ -49,8 +49,16 @@ archivesBaseName = metaName.replaceAll("\\s", "")
 
 idea {
 	module {
-		[".idea", ".settings", ".classpath", ".project", "gradle", "out", "run"].each {
-			excludeDirs << file(it)
+		[".idea", ".settings", ".classpath", ".project", "gradle", "out", "run", "src/main/kotlin", "src/test/kotlin"].each {
+			excludeDirs += file(it)
+		}
+		
+		["out", "src/main/kotlin", "src/test/kotlin"].each {
+			excludeDirs += file("src/system/" + it)
+		}
+		
+		["src/main/kotlin", "src/test/kotlin"].each {
+			excludeDirs += file("data/" + it)
 		}
 	}
 }
