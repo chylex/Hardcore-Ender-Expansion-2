@@ -31,6 +31,7 @@ class SkyPlaneTopFoggy(
 		GL.blendFunc(SF_SRC_ALPHA, DF_ONE_MINUS_SRC_ALPHA, SF_ONE, DF_ZERO)
 		GL.enableAlpha()
 		GL.alphaFunc(GL_GREATER, 0F)
+		GL.enableFog()
 		
 		GL.color(color, alpha * currentSkyAlpha)
 		GL.bindTexture(texture)

@@ -57,6 +57,9 @@ class WorldProviderEndCustom(world: World, type: DimensionType) : EndDimension(w
 		
 		var debugMode = false
 		
+		@JvmStatic
+		var blockLight = 0F
+		
 		private val CLIENT_SIDE_SPAWN_POINT = Pos(THE_HUB_INSTANCE.centerPoint).xz.withY(255)
 		private val SERVER_SIDE_SPAWN_POINT = Pos(THE_HUB_INSTANCE.centerPoint).xz.withY(4095) // blocks vanilla attempt to spawn portal platform
 		
@@ -156,7 +159,8 @@ class WorldProviderEndCustom(world: World, type: DimensionType) : EndDimension(w
 	
 	// Visual properties (Light)
 	
-	override fun getLightmapColors(partialTicks: Float, sunBrightness: Float, skyLight: Float, blockLight: Float, colors: Vector3f){
+	override fun getLightmapColors(partialTicks: Float, sunBrightness: Float, torchFlicker: Float, skyLight: Float, colors: Vector3f) {
+		// POLISH fix slightly weird edges compared to 1.14
 		clientEnvironment?.let { it.lightmap.update(colors, sunBrightness, skyLight.coerceAtMost(it.skyLight / 16F), blockLight, partialTicks) }
 	}
 	
