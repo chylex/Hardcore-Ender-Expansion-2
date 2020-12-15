@@ -26,6 +26,10 @@ inline fun ItemStack.copyIf(predicate: (ItemStack) -> Boolean): ItemStack{
 		this
 }
 
+fun ItemStack.copyIfNotEmpty(): ItemStack {
+	return this.copyIf(ItemStack::isNotEmpty)
+}
+
 // Enchantments
 
 inline val ItemStack.enchantmentMap: Map<Enchantment, Int>

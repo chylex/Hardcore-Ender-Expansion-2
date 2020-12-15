@@ -69,7 +69,7 @@ val IInventory.nonEmptySlots
 
 fun IInventory.createSnapshot(): Array<ItemStack>{
 	return Array(this.size){
-		slot -> this.getStack(slot).copyIf { it.isNotEmpty }
+		slot -> this.getStack(slot).copyIfNotEmpty()
 	}
 }
 

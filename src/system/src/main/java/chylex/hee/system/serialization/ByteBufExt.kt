@@ -65,11 +65,10 @@ fun PacketBuffer.readCompactVec(): Vec3d{
 
 // NBT
 
-inline fun ByteBuf.writeTag(tag: TagCompound){
+fun ByteBuf.writeTag(tag: TagCompound){
 	CompressedStreamTools.write(tag, ByteBufOutputStream(this))
 }
 
-inline fun ByteBuf.readTag(): TagCompound{
+fun ByteBuf.readTag(): TagCompound{
 	return CompressedStreamTools.read(ByteBufInputStream(this), NBTSizeTracker(2097152L))
 }
-

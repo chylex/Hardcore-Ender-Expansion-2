@@ -1,23 +1,16 @@
 package chylex.hee.game.world
 import chylex.hee.HEE
-import chylex.hee.client.MC
 import chylex.hee.client.render.EmptyRenderer
-import chylex.hee.client.render.gl.FOG_EXP2
-import chylex.hee.client.render.gl.GL
-import chylex.hee.client.render.territory.AbstractEnvironmentRenderer
 import chylex.hee.game.mechanics.portal.SpawnInfo
 import chylex.hee.game.world.provider.DragonFightManagerNull
 import chylex.hee.game.world.provider.WorldBorderNull
-import chylex.hee.game.world.territory.TerritoryInstance
 import chylex.hee.game.world.territory.TerritoryInstance.Companion.THE_HUB_INSTANCE
 import chylex.hee.game.world.territory.TerritoryTicker
+import chylex.hee.game.world.territory.TerritoryType
 import chylex.hee.game.world.territory.TerritoryVoid
 import chylex.hee.proxy.ISidedProxy
-import chylex.hee.system.forge.EventPriority
 import chylex.hee.system.forge.Side
 import chylex.hee.system.forge.Sided
-import chylex.hee.system.forge.SubscribeAllEvents
-import chylex.hee.system.forge.SubscribeEvent
 import chylex.hee.system.math.Vec3
 import net.minecraft.block.Blocks
 import net.minecraft.client.renderer.Vector3f
@@ -25,6 +18,7 @@ import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.Vec3d
 import net.minecraft.world.World
 import net.minecraft.world.biome.Biomes
+import net.minecraft.world.biome.IBiomeMagnifier
 import net.minecraft.world.biome.provider.SingleBiomeProvider
 import net.minecraft.world.biome.provider.SingleBiomeProviderSettings
 import net.minecraft.world.chunk.Chunk
@@ -33,13 +27,10 @@ import net.minecraft.world.dimension.EndDimension
 import net.minecraft.world.gen.ChunkGenerator
 import net.minecraft.world.gen.EndGenerationSettings
 import net.minecraft.world.server.ServerWorld
-import net.minecraftforge.api.distmarker.Dist
 import net.minecraftforge.client.IRenderHandler
-import net.minecraftforge.client.event.EntityViewRenderEvent.RenderFogEvent
 import java.util.function.BiFunction
 
 class WorldProviderEndCustom(world: World, type: DimensionType) : EndDimension(world, type){
-	@SubscribeAllEvents(Dist.CLIENT, modid = HEE.ID)
 	companion object{
 		const val DEFAULT_CELESTIAL_ANGLE = 1F
 		const val DEFAULT_SKY_LIGHT = 0
@@ -52,6 +43,7 @@ class WorldProviderEndCustom(world: World, type: DimensionType) : EndDimension(w
 				directory = SAVE_FOLDER
 				factory = CONSTRUCTOR
 				hasSkyLight = true
+				magnifier = IBiomeMagnifier { _, _, _, _, _ -> Biomes.THE_END }
 			}
 		}
 		
@@ -62,25 +54,12 @@ class WorldProviderEndCustom(world: World, type: DimensionType) : EndDimension(w
 		
 		private val CLIENT_SIDE_SPAWN_POINT = Pos(THE_HUB_INSTANCE.centerPoint).xz.withY(255)
 		private val SERVER_SIDE_SPAWN_POINT = Pos(THE_HUB_INSTANCE.centerPoint).xz.withY(4095) // blocks vanilla attempt to spawn portal platform
-		
-		@Sided(Side.CLIENT)
-		@SubscribeEvent(priority = EventPriority.LOWEST)
-		fun onFog(@Suppress("UNUSED_PARAMETER") e: RenderFogEvent){
-			val player = MC.player?.takeIf { it.world.dimension.type == DimensionType.THE_END } ?: return
-			
-			val density = TerritoryInstance.fromPos(player)?.let { it.territory.desc.environment }?.let {
-				(it.fogDensity * AbstractEnvironmentRenderer.currentFogDensityMp) + (it.fogRenderDistanceModifier * AbstractEnvironmentRenderer.currentRenderDistanceMp)
-			}
-			
-			GL.setFogMode(FOG_EXP2)
-			GL.setFogDensity(density ?: 0F)
-		}
 	}
 	
 	private var clientProxy: ISidedProxy? = null
 	
 	private val clientEnvironment
-		get() = clientProxy?.getClientSidePlayer()?.let(TerritoryInstance.Companion::fromPos)?.let { it.territory.desc.environment }
+		get() = clientProxy?.getClientSidePlayer()?.let(TerritoryType.Companion::fromPos)?.desc?.environment
 	
 	private val serverWorld
 		get() = world as ServerWorld
@@ -106,11 +85,6 @@ class WorldProviderEndCustom(world: World, type: DimensionType) : EndDimension(w
 		
 		return ChunkGeneratorEndCustom(world, SingleBiomeProvider(SingleBiomeProviderSettings(world.worldInfo).setBiome(Biomes.THE_END)), settings)
 	}
-	
-	/* UPDATE
-	override fun getBiome(pos: BlockPos): Biome{
-		return Biomes.THE_END // prevents client from falling back to Plains and rendering rain while loading
-	}*/
 	
 	// Spawn point
 	
@@ -180,15 +154,9 @@ class WorldProviderEndCustom(world: World, type: DimensionType) : EndDimension(w
 	}
 	
 	@Sided(Side.CLIENT)
-	override fun getSkyRenderer(): IRenderHandler?{
+	override fun getSkyRenderer(): IRenderHandler{
 		return clientEnvironment?.renderer ?: EmptyRenderer
 	}
-	
-	/* UPDATE ASM
-	@Sided(Side.CLIENT)
-	override fun getSkyColor(pos: BlockPos, partialTicks: Float): Vec3d{
-		return clientEnvironment?.fogColor ?: Vec3d.ZERO // return fog color because vanilla blends fog into sky color based on chunk render distance
-	}*/
 	
 	// Visual properties (Fog)
 	

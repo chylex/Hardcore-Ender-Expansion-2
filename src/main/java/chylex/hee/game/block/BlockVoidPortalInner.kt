@@ -51,7 +51,7 @@ class BlockVoidPortalInner(builder: BlockBuilder) : BlockAbstractPortal(builder)
 			
 			if (entity is EntityLivingBase){
 				if (entity is EntityPlayer){
-					TerritoryInstance.fromPos(info.pos)?.let { EnderCausatum.triggerStage(entity, it.territory.stage) }
+					TerritoryType.fromPos(info.pos)?.let { EnderCausatum.triggerStage(entity, it.stage) }
 				}
 				
 				info.yaw?.let { entity.rotationYaw = it }

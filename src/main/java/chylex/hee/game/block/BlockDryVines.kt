@@ -2,7 +2,7 @@ package chylex.hee.game.block
 import chylex.hee.client.MC
 import chylex.hee.client.render.block.IBlockLayerCutout
 import chylex.hee.game.block.properties.BlockBuilder
-import chylex.hee.game.world.territory.TerritoryInstance
+import chylex.hee.game.world.territory.TerritoryType
 import chylex.hee.system.color.IntColor
 import chylex.hee.system.forge.Side
 import chylex.hee.system.forge.Sided
@@ -51,7 +51,7 @@ class BlockDryVines(builder: BlockBuilder) : BlockVine(builder.p), IBlockLayerCu
 				return DEFAULT
 			}
 			
-			val fromTerritory = world.getBiome(pos).takeIf { it === Biomes.THE_END }?.let { TerritoryInstance.fromPos(pos) }?.let { it.territory.desc.colors.dryVines }
+			val fromTerritory = world.getBiome(pos).takeIf { it === Biomes.THE_END }?.let { TerritoryType.fromPos(pos) }?.let { it.desc.colors.dryVines }
 			return fromTerritory ?: dryify(BiomeColors.getFoliageColor(world, pos))
 		}
 	}

@@ -1,5 +1,5 @@
 package chylex.hee.game.mechanics.scorching
-import chylex.hee.game.inventory.copyIf
+import chylex.hee.game.inventory.copyIfNotEmpty
 import chylex.hee.game.inventory.isNotEmpty
 import chylex.hee.game.inventory.size
 import chylex.hee.init.ModBlocks
@@ -126,7 +126,7 @@ object ScorchingFortune{
 		val inventory = Inventory(ItemStack(block))
 		val recipe = world.recipeManager.getRecipe(IRecipeType.SMELTING, inventory, world).orElse(null)
 		
-		return recipe?.recipeOutput?.copyIf { it.isNotEmpty } ?: ItemStack.EMPTY
+		return recipe?.recipeOutput?.copyIfNotEmpty() ?: ItemStack.EMPTY
 	}
 	
 	// Public

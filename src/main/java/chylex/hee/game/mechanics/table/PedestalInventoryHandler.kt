@@ -1,7 +1,7 @@
 package chylex.hee.game.mechanics.table
 import chylex.hee.game.block.BlockTablePedestal
 import chylex.hee.game.inventory.InvReverseWrapper
-import chylex.hee.game.inventory.copyIf
+import chylex.hee.game.inventory.copyIfNotEmpty
 import chylex.hee.game.inventory.createSnapshot
 import chylex.hee.game.inventory.isNotEmpty
 import chylex.hee.game.inventory.mergeStackProperly
@@ -145,7 +145,7 @@ class PedestalInventoryHandler(private val updateCallback: (Boolean) -> Unit) : 
 			return false
 		}
 		
-		itemInput = newInput.copyIf { it.isNotEmpty }
+		itemInput = newInput.copyIfNotEmpty()
 		onInventoryUpdated(updateInputModCounter = !silent)
 		return true
 	}

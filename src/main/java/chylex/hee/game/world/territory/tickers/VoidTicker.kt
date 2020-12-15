@@ -20,7 +20,7 @@ class VoidTicker(private val data: VoidData) : ITerritoryTicker{
 	companion object{
 		@SubscribeEvent(EventPriority.LOWEST)
 		fun onLivingDeath(e: LivingDeathEvent){
-			val player = (e.entity as? EntityPlayer)?.takeIf { !it.world.isRemote && it.dimension == HEE.dim } ?: return
+			val player = (e.entity as? EntityPlayer)?.takeIf { !it.world.isRemote && it.dimension === HEE.dim } ?: return
 			
 			val instance = TerritoryInstance.fromPos(player) ?: return
 			val voidData = TerritoryGlobalStorage.get().forInstance(instance)?.getComponent<VoidData>() ?: return

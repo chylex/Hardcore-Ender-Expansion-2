@@ -16,7 +16,7 @@ fun <T> IForgeRegistryEntry<T>.useVanillaName(from: IForgeRegistryEntry<*>){
 		val me = activeContainer ?: throw IllegalStateException("no mod container set during registration")
 		val ext = extension<Any>()
 		
-		// UPDATE ugly hack to remove warnings
+		// ugly hack to remove warnings
 		setActiveContainer(ModList.get().getModContainerById("minecraft").get(), null)
 		registryName = name
 		setActiveContainer(me, ext)

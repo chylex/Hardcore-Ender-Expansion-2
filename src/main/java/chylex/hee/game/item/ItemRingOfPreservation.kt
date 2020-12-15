@@ -1,12 +1,10 @@
 package chylex.hee.game.item
 import chylex.hee.game.entity.posVec
-import chylex.hee.game.inventory.copyIf
-import chylex.hee.game.inventory.isNotEmpty
+import chylex.hee.game.inventory.copyIfNotEmpty
 import chylex.hee.game.item.repair.ICustomRepairBehavior
 import chylex.hee.game.item.repair.RepairInstance
 import chylex.hee.game.mechanics.trinket.TrinketHandler
 import chylex.hee.game.world.playClient
-import chylex.hee.game.world.totalTime
 import chylex.hee.init.ModSounds
 import chylex.hee.system.compatibility.MinecraftForgeEventBus
 import chylex.hee.system.forge.EventPriority
@@ -17,25 +15,15 @@ import chylex.hee.system.migration.EntityPlayer
 import chylex.hee.system.migration.Hand.MAIN_HAND
 import chylex.hee.system.migration.Hand.OFF_HAND
 import net.minecraft.entity.Entity
+import net.minecraft.entity.LivingEntity
+import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.item.ItemStack
 import net.minecraft.item.Items
 import net.minecraft.util.NonNullList
-import net.minecraftforge.event.entity.living.LivingDamageEvent
-import net.minecraftforge.event.entity.living.LivingHurtEvent
 import net.minecraftforge.event.entity.player.PlayerDestroyItemEvent
-import java.util.UUID
+import java.util.function.Consumer
 
 class ItemRingOfPreservation(properties: Properties) : ItemAbstractTrinket(properties), ICustomRepairBehavior{
-	private class HurtPlayerInfo private constructor(val playerId: UUID, val worldTime: Long){
-		constructor(player: EntityPlayer) : this(player.uniqueID, player.world.totalTime)
-		
-		fun matches(player: EntityPlayer): Boolean{
-			return player.uniqueID == playerId && player.world.totalTime == worldTime
-		}
-	}
-	
-	private var lastHurtPlayerArmor: Pair<HurtPlayerInfo, Array<ItemStack>>? = null
-	
 	init{
 		MinecraftForgeEventBus.register(this)
 	}
@@ -77,8 +65,6 @@ class ItemRingOfPreservation(properties: Properties) : ItemAbstractTrinket(prope
 	
 	// Item destruction handling
 	
-	// UPDATE 1.15 (PlayerDestroyItemEvent doesn't include armor, see if that changed or if LivingEntity.damageEntity still triggers events in the same order to allow detecting armor breaking)
-	
 	@SubscribeEvent(EventPriority.HIGHEST)
 	fun onPlayerDestroyItem(e: PlayerDestroyItemEvent){
 		val player = e.player
@@ -93,39 +79,21 @@ class ItemRingOfPreservation(properties: Properties) : ItemAbstractTrinket(prope
 		onItemDestroyed(player, e.original, info)
 	}
 	
-	@SubscribeEvent(EventPriority.LOWEST)
-	fun onLivingHurt(e: LivingHurtEvent){
-		val player = e.entity as? EntityPlayer
-		
-		if (player == null || !TrinketHandler.get(player).isItemActive(this)){
-			return
-		}
-		
+	fun onArmorDestroyed(player: EntityPlayer, originalStack: ItemStack, destroyedStack: ItemStack){
 		val armorInventory = player.inventory.armorInventory
+		val armorIndex = armorInventory.indexOfFirst { it === destroyedStack }
 		
-		val armorCopy = Array(armorInventory.size){
-			index -> armorInventory[index].copyIf { it.isNotEmpty }
+		if (armorIndex != -1){
+			onItemDestroyed(player, originalStack, armorInventory to armorIndex)
 		}
-		
-		lastHurtPlayerArmor = Pair(HurtPlayerInfo(player), armorCopy)
 	}
 	
-	@SubscribeEvent(EventPriority.HIGHEST, receiveCanceled = true)
-	fun onLivingDamage(e: LivingDamageEvent){
-		val (hurtInfo, prevArmor) = lastHurtPlayerArmor ?: return
-		val player = e.entity as? EntityPlayer ?: return
+	fun handleArmorDamage(entity: LivingEntity, stack: ItemStack, amount: Int, onBroken: Consumer<LivingEntity>){
+		val originalStack = stack.copyIfNotEmpty()
+		stack.damageItem(amount, entity, onBroken)
 		
-		if (hurtInfo.matches(player)){
-			val armorInventory = player.inventory.armorInventory
-			
-			for((slot, prevStack) in prevArmor.withIndex()){
-				if (prevStack.isNotEmpty && armorInventory[slot].isEmpty){
-					onItemDestroyed(player, prevStack, Pair(armorInventory, slot))
-					break
-				}
-			}
+		if (!originalStack.isEmpty && stack.isEmpty && entity is PlayerEntity){
+			onArmorDestroyed(entity, originalStack, stack)
 		}
-		
-		lastHurtPlayerArmor = null
 	}
 }

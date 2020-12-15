@@ -5,6 +5,7 @@ import com.mojang.blaze3d.systems.RenderSystem
 import net.minecraft.client.renderer.RenderState
 import net.minecraft.client.renderer.RenderState.AlphaState
 import net.minecraft.client.renderer.RenderState.CullState
+import net.minecraft.client.renderer.RenderState.DepthTestState
 import net.minecraft.client.renderer.RenderState.DiffuseLightingState
 import net.minecraft.client.renderer.RenderState.FogState
 import net.minecraft.client.renderer.RenderState.LayerState
@@ -79,6 +80,10 @@ class RenderStateBuilder{
 		state.cull(cull)
 	}
 	
+	fun depth(depth: DepthTestState){
+		state.depthTest(depth)
+	}
+	
 	fun lightmap(lightmap: LightmapState){
 		state.lightmap(lightmap)
 	}
@@ -144,6 +149,8 @@ class RenderStateBuilder{
 		
 		val CULL_DISABLED: CullState get() = RenderState.CULL_DISABLED
 		val CULL_ENABLED:  CullState get() = RenderState.CULL_ENABLED
+		
+		val DEPTH_ALWAYS: DepthTestState get() = RenderState.DEPTH_ALWAYS
 		
 		val LIGHTMAP_DISABLED: LightmapState get() = RenderState.LIGHTMAP_DISABLED
 		val LIGHTMAP_ENABLED:  LightmapState get() = RenderState.LIGHTMAP_ENABLED

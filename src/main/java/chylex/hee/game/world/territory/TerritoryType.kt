@@ -19,6 +19,9 @@ import chylex.hee.game.world.territory.generators.Generator_TheHub
 import chylex.hee.game.world.territory.properties.TerritoryColors
 import chylex.hee.game.world.territory.properties.TerritoryEnvironment
 import chylex.hee.system.color.IntColor.Companion.RGB
+import chylex.hee.system.math.floorToInt
+import net.minecraft.entity.Entity
+import net.minecraft.util.math.BlockPos
 import java.util.Random
 import kotlin.math.abs
 
@@ -141,6 +144,14 @@ enum class TerritoryType(
 			}
 			
 			return null
+		}
+		
+		fun fromPos(pos: BlockPos): TerritoryType?{
+			return fromX(pos.x)
+		}
+		
+		fun fromPos(entity: Entity): TerritoryType?{
+			return fromX(entity.posX.floorToInt())
 		}
 		
 		fun fromTitle(title: String): TerritoryType?{

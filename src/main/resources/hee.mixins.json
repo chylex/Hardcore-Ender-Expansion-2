@@ -10,12 +10,17 @@
     "HookChorusPlantSoil",
     "HookEffectCorruption",
     "HookEffectInstanceCorruption",
+    "HookEndBiome",
     "HookEndermanParticles",
     "HookEndermiteParticles",
+    "HookEntityHelmetBreaking",
     "HookEntityPotionCorruption",
     "HookFireSpread",
+    "HookItemEntityLavaCheck",
     "HookLightMapColors",
-    "HookPotionCreativeMenu"
+    "HookPlayerInventoryArmorBreaking",
+    "HookPotionCreativeMenu",
+    "HookThornsArmorBreaking"
   ],
   "injectors": {
     "defaultRequire": 1

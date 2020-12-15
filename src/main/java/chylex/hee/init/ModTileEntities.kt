@@ -88,6 +88,7 @@ object ModTileEntities{
 	}
 	
 	private inline fun <reified T : TileEntity> build(vararg blocks: Block): TileEntityType<T>{
-		return TileEntityType.Builder.create(ObjectConstructors.noArgs<T>(), *blocks).build(null) // UPDATE
+		@Suppress("NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS")
+		return TileEntityType.Builder.create(ObjectConstructors.noArgs<T>(), *blocks).build(null)
 	}
 }

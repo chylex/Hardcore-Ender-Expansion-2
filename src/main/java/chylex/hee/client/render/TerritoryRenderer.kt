@@ -3,9 +3,11 @@ import chylex.hee.HEE
 import chylex.hee.client.MC
 import chylex.hee.client.render.gl.DF_ONE_MINUS_SRC_ALPHA
 import chylex.hee.client.render.gl.DF_ZERO
+import chylex.hee.client.render.gl.FOG_EXP2
 import chylex.hee.client.render.gl.GL
 import chylex.hee.client.render.gl.SF_ONE
 import chylex.hee.client.render.gl.SF_SRC_ALPHA
+import chylex.hee.client.render.territory.AbstractEnvironmentRenderer
 import chylex.hee.game.entity.lookDirVec
 import chylex.hee.game.entity.posVec
 import chylex.hee.game.particle.ParticleVoid
@@ -15,6 +17,7 @@ import chylex.hee.game.particle.spawner.properties.IShape.Point
 import chylex.hee.game.world.WorldProviderEndCustom
 import chylex.hee.game.world.territory.TerritoryType
 import chylex.hee.game.world.territory.TerritoryVoid
+import chylex.hee.game.world.territory.properties.TerritoryEnvironment
 import chylex.hee.system.Debug
 import chylex.hee.system.color.IntColor
 import chylex.hee.system.color.IntColor.Companion.RGB
@@ -23,10 +26,13 @@ import chylex.hee.system.forge.Side
 import chylex.hee.system.forge.SubscribeAllEvents
 import chylex.hee.system.forge.SubscribeEvent
 import chylex.hee.system.math.LerpedFloat
+import chylex.hee.system.math.Vec3
 import chylex.hee.system.math.floorToInt
 import chylex.hee.system.math.scale
 import chylex.hee.system.migration.EntityPlayer
 import net.minecraft.client.resources.I18n
+import net.minecraft.world.dimension.DimensionType
+import net.minecraftforge.client.event.EntityViewRenderEvent.RenderFogEvent
 import net.minecraftforge.client.event.RenderGameOverlayEvent
 import net.minecraftforge.common.MinecraftForge
 import net.minecraftforge.event.TickEvent.ClientTickEvent
@@ -37,6 +43,17 @@ import kotlin.math.pow
 
 @SubscribeAllEvents(Side.CLIENT, modid = HEE.ID)
 object TerritoryRenderer{
+	@JvmStatic
+	val environment
+		get() = MC.player?.let { TerritoryType.fromX(it.posX.floorToInt()) }?.desc?.environment
+	
+	@JvmStatic
+	val skyColor
+		get() = (environment?.let(TerritoryEnvironment::fogColor) ?: Vec3.ZERO).let {
+			// use fog color because vanilla blends fog into sky color based on chunk render distance
+			RGB((it.x * 255).floorToInt(), (it.y * 255).floorToInt(), (it.z * 255).floorToInt()).i
+		}
+	
 	private var prevChunkX = Int.MAX_VALUE
 	private var prevTerritory: TerritoryType? = null
 	
@@ -76,6 +93,25 @@ object TerritoryRenderer{
 				Void.reset()
 				Title.reset()
 			}
+		}
+	}
+	
+	@SubscribeEvent(priority = EventPriority.LOWEST)
+	fun onFog(@Suppress("UNUSED_PARAMETER") e: RenderFogEvent){
+		val player = MC.player?.takeIf { it.world.dimension.type == DimensionType.THE_END } ?: return
+		val territory = TerritoryType.fromPos(player)
+		
+		if (territory == null){
+			GL.setFogMode(FOG_EXP2)
+			GL.setFogDensity(0F)
+		}
+		else{
+			val env = territory.desc.environment
+			val density = env.fogDensity * AbstractEnvironmentRenderer.currentFogDensityMp
+			val modifier = env.fogRenderDistanceModifier * AbstractEnvironmentRenderer.currentRenderDistanceMp
+			
+			GL.setFogMode(FOG_EXP2)
+			GL.setFogDensity(density + modifier)
 		}
 	}
 	

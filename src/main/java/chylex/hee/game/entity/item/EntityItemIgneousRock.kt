@@ -40,7 +40,6 @@ import chylex.hee.network.fx.FxBlockHandler
 import chylex.hee.network.fx.FxEntityData
 import chylex.hee.network.fx.FxEntityHandler
 import chylex.hee.system.facades.Facing4
-import chylex.hee.system.math.Vec3
 import chylex.hee.system.math.ceilToInt
 import chylex.hee.system.math.floorToInt
 import chylex.hee.system.math.scaleXZ
@@ -56,7 +55,6 @@ import chylex.hee.system.migration.BlockStainedGlassPane
 import chylex.hee.system.migration.Facing.DOWN
 import chylex.hee.system.migration.Facing.UP
 import chylex.hee.system.migration.ItemBlock
-import chylex.hee.system.migration.Sounds
 import chylex.hee.system.random.nextBiasedFloat
 import chylex.hee.system.random.nextFloat
 import chylex.hee.system.random.nextInt
@@ -82,7 +80,6 @@ import net.minecraft.tags.FluidTags
 import net.minecraft.util.DamageSource
 import net.minecraft.util.Direction
 import net.minecraft.util.SoundCategory
-import net.minecraft.util.SoundEvent
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.Vec3d
 import net.minecraft.world.World
@@ -147,12 +144,10 @@ class EntityItemIgneousRock : EntityItemNoBob{
 	}
 	
 	private var throwFacing = DOWN
-	private var prevMotion = Vec3.ZERO
 	
 	private val smeltingInventory = Inventory(1)
 	
 	override fun tick(){
-		prevMotion = motion
 		super.tick()
 		
 		val currentPos = Pos(this)
@@ -249,15 +244,6 @@ class EntityItemIgneousRock : EntityItemNoBob{
 		}
 		else{
 			super.move(type, by)
-		}
-	}
-	
-	override fun playSound(sound: SoundEvent, volume: Float, pitch: Float){
-		if (sound === Sounds.ENTITY_GENERIC_BURN && volume == 0.4F && pitch >= 2.0F){ // UPDATE 1.15 (check if this still applies, or find a better way)
-			motion = prevMotion // this disables vanilla lava handling, but also breaks hasNoGravity
-		}
-		else{
-			super.playSound(sound, volume, pitch)
 		}
 	}
 	
