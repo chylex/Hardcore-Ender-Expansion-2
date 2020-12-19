@@ -47,8 +47,8 @@ object Territory_TheHub : ITerritoryDescription{
 		override val voidRadiusMpY = 2F
 		
 		override val renderer = SkyCubeStatic(
-			texture = Resource.Vanilla("textures/environment/end_sky.png"),
-			color = RGB(51u).asVec
+			texture = Resource.Custom("textures/environment/end_sky_blurry.png"),
+			color = RGB(52u).asVec
 		)
 	}
 	
