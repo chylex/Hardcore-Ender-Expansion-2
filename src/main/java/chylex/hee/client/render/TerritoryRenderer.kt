@@ -101,7 +101,7 @@ object TerritoryRenderer{
 		val player = MC.player?.takeIf { it.world.dimension.type == DimensionType.THE_END } ?: return
 		val territory = TerritoryType.fromPos(player)
 		
-		if (territory == null){
+		if (territory == null || WorldProviderEndCustom.debugMode){
 			GL.setFogMode(FOG_EXP2)
 			GL.setFogDensity(0F)
 		}
