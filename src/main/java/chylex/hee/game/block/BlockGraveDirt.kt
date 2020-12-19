@@ -19,6 +19,7 @@ import chylex.hee.system.math.toYaw
 import chylex.hee.system.migration.BlockFire
 import chylex.hee.system.migration.EntityPlayer
 import chylex.hee.system.migration.Facing.UP
+import chylex.hee.system.random.nextBiasedFloat
 import chylex.hee.system.random.nextFloat
 import chylex.hee.system.random.nextInt
 import net.minecraft.block.Block
@@ -162,14 +163,17 @@ open class BlockGraveDirt(builder: BlockBuilder) : BlockSimpleShaped(builder, Ax
 		
 		@Sided(Side.CLIENT)
 		override fun animateTick(state: BlockState, world: World, pos: BlockPos, rand: Random){
-			if (!world.isPeaceful && world.totalTime - clientLastSpiderlingSound > 35L){
+			if (!world.isPeaceful && world.totalTime - clientLastSpiderlingSound > 27L){
 				val distanceSq = MC.player?.getDistanceSq(pos.center) ?: 0.0
 				
-				if (rand.nextInt(3 + (distanceSq.floorToInt() / 5)) == 0){
+				if (rand.nextInt(10 + ((distanceSq.floorToInt() * 4) / 5)) == 0){
 					clientLastSpiderlingSound = world.totalTime
 					
+					val volumeRand = Random(pos.toLong())
+					val volume = 0.05F + (0.25F * volumeRand.nextBiasedFloat(1F))
+					
 					makeSpiderling(world, pos, yaw = 0F).apply {
-						ambientSound.playClient(pos, soundCategory, volume = 0.35F, pitch = rand.nextFloat(0.4F, 0.6F))
+						ambientSound.playClient(pos, soundCategory, volume, pitch = rand.nextFloat(0.4F, 0.6F))
 					}
 				}
 			}

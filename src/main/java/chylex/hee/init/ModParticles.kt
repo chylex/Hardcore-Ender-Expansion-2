@@ -3,6 +3,7 @@ import chylex.hee.HEE
 import chylex.hee.client.MC
 import chylex.hee.game.particle.ParticleBubbleCustom
 import chylex.hee.game.particle.ParticleDeathFlowerHeal
+import chylex.hee.game.particle.ParticleDust
 import chylex.hee.game.particle.ParticleEnderGoo
 import chylex.hee.game.particle.ParticleEnergyCluster
 import chylex.hee.game.particle.ParticleEnergyClusterRevitalization
@@ -40,6 +41,7 @@ object ModParticles{
 		with(e.registry){
 			register(ParticleBubbleCustom.makeType named "bubble")
 			register(ParticleDeathFlowerHeal.makeType named "death_flower_heal")
+			register(ParticleDust.makeType named "dust")
 			register(ParticleEnderGoo.makeType named "ender_goo")
 			register(ParticleEnergyCluster.makeType named "energy_cluster")
 			register(ParticleEnergyClusterRevitalization.makeType named "energy_cluster_revitalization")

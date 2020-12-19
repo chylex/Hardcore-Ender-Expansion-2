@@ -4,10 +4,18 @@ import chylex.hee.game.block.logic.IBlockHarvestToolCheck
 import chylex.hee.game.block.properties.BlockBuilder
 import chylex.hee.game.item.Tool.Type.PICKAXE
 import chylex.hee.game.item.Tool.Type.SHOVEL
+import chylex.hee.game.particle.ParticleDust
+import chylex.hee.game.particle.spawner.ParticleSpawnerCustom
+import chylex.hee.game.particle.spawner.properties.IOffset.Constant
+import chylex.hee.game.particle.spawner.properties.IOffset.InBox
+import chylex.hee.game.particle.spawner.properties.IShape.Point
 import chylex.hee.game.world.getState
+import chylex.hee.game.world.isFullBlock
 import chylex.hee.system.forge.Side
 import chylex.hee.system.forge.Sided
 import chylex.hee.system.migration.EntityPlayer
+import chylex.hee.system.migration.Facing.DOWN
+import chylex.hee.system.random.nextInt
 import net.minecraft.block.BlockState
 import net.minecraft.client.particle.ParticleManager
 import net.minecraft.item.ItemStack
@@ -17,8 +25,17 @@ import net.minecraft.util.math.RayTraceResult
 import net.minecraft.world.IBlockReader
 import net.minecraft.world.World
 import net.minecraftforge.common.ToolType
+import java.util.Random
 
 abstract class BlockDustyStone(builder: BlockBuilder) : BlockSimple(builder), IBlockHarvestToolCheck{
+	private companion object{
+		private val PARTICLE_DUST = ParticleSpawnerCustom(
+			type = ParticleDust,
+			data = ParticleDust.Data(lifespan = 300..470, scale = (0.145F)..(0.165F), reactsToSkyLight = false),
+			pos = Constant(0.7F, DOWN) + InBox(0.75F, 0.2F, 0.75F)
+		)
+	}
+	
 	abstract override fun canHarvestBlock(state: BlockState, world: IBlockReader, pos: BlockPos, player: EntityPlayer): Boolean
 	
 	override fun canHarvestUsing(toolClass: ToolType, toolLevel: Int): Boolean{
@@ -40,6 +57,13 @@ abstract class BlockDustyStone(builder: BlockBuilder) : BlockSimple(builder), IB
 	
 	@Sided(Side.CLIENT)
 	private var isSpawningExtraBreakParticles = false
+	
+	@Sided(Side.CLIENT)
+	override fun animateTick(state: BlockState, world: World, pos: BlockPos, rand: Random){
+		if (rand.nextInt(18) == 0 && !pos.down().isFullBlock(world)){
+			PARTICLE_DUST.spawn(Point(pos, rand.nextInt(1, 2)), rand)
+		}
+	}
 	
 	@Sided(Side.CLIENT)
 	override fun addHitEffects(state: BlockState, world: World, target: RayTraceResult, manager: ParticleManager): Boolean{

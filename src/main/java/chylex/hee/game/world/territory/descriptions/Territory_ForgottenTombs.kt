@@ -4,8 +4,13 @@ import chylex.hee.client.render.lightmaps.ILightmap
 import chylex.hee.client.render.lightmaps.ILightmap.Companion.calcLightFactor
 import chylex.hee.client.render.territory.components.SkyPlaneTopFoggy
 import chylex.hee.game.entity.lookPosVec
+import chylex.hee.game.particle.ParticleDust
+import chylex.hee.game.particle.spawner.ParticleSpawnerCustom
+import chylex.hee.game.particle.spawner.properties.IOffset.InBox
+import chylex.hee.game.particle.spawner.properties.IShape.Point
 import chylex.hee.game.world.Pos
 import chylex.hee.game.world.allInCenteredBoxMutable
+import chylex.hee.game.world.isFullBlock
 import chylex.hee.game.world.territory.ITerritoryDescription
 import chylex.hee.game.world.territory.TerritoryDifficulty
 import chylex.hee.game.world.territory.properties.TerritoryColors
@@ -21,6 +26,7 @@ import chylex.hee.system.math.offsetTowards
 import chylex.hee.system.migration.EntityPlayer
 import chylex.hee.system.migration.Potions
 import chylex.hee.system.random.nextFloat
+import chylex.hee.system.random.nextInt
 import net.minecraft.client.renderer.Vector3f
 import net.minecraft.world.LightType.BLOCK
 import net.minecraft.world.LightType.SKY
@@ -51,6 +57,13 @@ object Territory_ForgottenTombs : ITerritoryDescription{
 	}
 	
 	private const val MAX_FOG_DENSITY = 0.069F
+	
+	private val PARTICLE_DUST = ParticleSpawnerCustom(
+		type = ParticleDust,
+		data = ParticleDust.Data(lifespan = 100..175, scale = (0.145F)..(0.165F), reactsToSkyLight = true),
+		pos = InBox(0.5F, 0.5F, 0.5F),
+		maxRange = 64.0
+	)
 	
 	override val environment = object : TerritoryEnvironment(){
 		override val fogColor
@@ -115,6 +128,31 @@ object Territory_ForgottenTombs : ITerritoryDescription{
 			
 			currentFogDensity.update(offsetTowards(prev, next, speed))
 			nightVisionFactor = if (player.isPotionActive(Potions.NIGHT_VISION)) 1F else 0F
+			
+			if (MC.instance.isGamePaused){
+				return
+			}
+			
+			val rand = world.rand
+			val count = 3 + ((levelSky * 2) / 5)
+			
+			repeat(count){
+				val distXZ = rand.nextInt(3 + (levelSky / 4), 25 + (levelSky * 2))
+				val distY = if (levelSky > 0) distXZ else distXZ / 2
+				
+				for(attempt in 1..3){
+					val testPos = pos.add(
+						rand.nextInt(-distXZ, distXZ),
+						rand.nextInt(-distY / 2, distY),
+						rand.nextInt(-distXZ, distXZ)
+					)
+					
+					if (!testPos.isFullBlock(world)){
+						PARTICLE_DUST.spawn(Point(testPos, 1), rand)
+						break
+					}
+				}
+			}
 		}
 	}
 }
