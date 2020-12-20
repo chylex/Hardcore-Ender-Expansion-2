@@ -33,9 +33,9 @@ abstract class ParticleBase(world: World, posX: Double, posY: Double, posZ: Doub
 	}
 	
 	protected fun loadColor(color: IntColor){
-		particleRed = color.red / 255F
-		particleGreen = color.green / 255F
-		particleBlue = color.blue / 255F
+		particleRed = color.redF
+		particleGreen = color.greenF
+		particleBlue = color.blueF
 	}
 	
 	protected fun interpolateAge(baseValue: Float, fadeInDuration: Int = 0, fadeOutDuration: Int = 0): Float{

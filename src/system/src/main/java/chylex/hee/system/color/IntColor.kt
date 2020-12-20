@@ -15,6 +15,20 @@ inline class IntColor(val i: Int){
 	inline val blue
 		get() = i and 255
 	
+	// floats
+	
+	val alphaF
+		get() = alpha / 255F
+	
+	val redF
+		get() = red / 255F
+	
+	val greenF
+		get() = green / 255F
+	
+	val blueF
+		get() = blue / 255F
+	
 	// destructuring
 	
 	operator fun component1(): Int = red

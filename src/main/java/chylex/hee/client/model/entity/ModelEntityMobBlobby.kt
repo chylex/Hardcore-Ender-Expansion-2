@@ -56,9 +56,9 @@ object ModelEntityMobBlobby : EntityModel<EntityMobBlobby>(){
 	
 	override fun setLivingAnimations(entity: EntityMobBlobby, limbSwing: Float, limbSwingAmount: Float, partialTicks: Float){
 		entity.color.let {
-			r = it.red / 255F
-			g = it.green / 255F
-			b = it.blue / 255F
+			r = it.redF
+			g = it.greenF
+			b = it.blueF
 		}
 	}
 	

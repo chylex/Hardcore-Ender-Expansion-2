@@ -37,9 +37,9 @@ object ParticleSpellCustom : IParticleMaker.WithData<ParticleDataColorScale>(){
 			else{
 				val color = data.color
 				
-				particleRed = color.red / 255F
-				particleGreen = color.green / 255F
-				particleBlue = color.blue / 255F
+				particleRed = color.redF
+				particleGreen = color.greenF
+				particleBlue = color.blueF
 				
 				particleScale *= data.scale
 			}

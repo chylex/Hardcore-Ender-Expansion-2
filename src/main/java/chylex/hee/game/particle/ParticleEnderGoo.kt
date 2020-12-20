@@ -17,7 +17,7 @@ object ParticleEnderGoo : IParticleMaker.Simple(){
 		return Instance(world, posX, posY, posZ, motX, motY, motZ)
 	}
 	
-	private val COLOR = FluidEnderGoo.rgbColor.let { floatArrayOf(it.red / 255F, it.green / 255F, it.blue / 255F) }
+	private val COLOR = FluidEnderGoo.rgbColor.let { floatArrayOf(it.redF, it.greenF, it.blueF) }
 	
 	@Sided(Side.CLIENT)
 	private class Instance(world: World, posX: Double, posY: Double, posZ: Double, motX: Double, motY: Double, motZ: Double) : ParticleBaseFloating(world, posX, posY, posZ, motX, motY, motZ){
