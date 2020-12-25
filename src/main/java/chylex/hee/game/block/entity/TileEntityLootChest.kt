@@ -1,4 +1,5 @@
 package chylex.hee.game.block.entity
+
 import chylex.hee.HEE
 import chylex.hee.game.block.entity.base.TileEntityBase.Context.STORAGE
 import chylex.hee.game.block.entity.base.TileEntityBaseChest
@@ -32,10 +33,10 @@ import net.minecraft.world.storage.loot.LootParameterSets
 import net.minecraft.world.storage.loot.LootParameters
 import java.util.UUID
 
-class TileEntityLootChest(type: TileEntityType<TileEntityLootChest>) : TileEntityBaseChest(type){
+class TileEntityLootChest(type: TileEntityType<TileEntityLootChest>) : TileEntityBaseChest(type) {
 	constructor() : this(ModTileEntities.LOOT_CHEST)
 	
-	companion object{
+	companion object {
 		const val ROWS = 3
 		
 		private const val SLOT_COUNT = 9 * ROWS
@@ -46,12 +47,12 @@ class TileEntityLootChest(type: TileEntityType<TileEntityLootChest>) : TileEntit
 		private fun createInventory() = Inventory(SLOT_COUNT)
 		
 		private fun createInventoryClone(source: IInventory) = createInventory().also {
-			for((slot, stack) in source.nonEmptySlots){
+			for((slot, stack) in source.nonEmptySlots) {
 				it.setStack(slot, stack.copy())
 			}
 		}
 		
-		fun getClientTitle(player: EntityPlayer, text: ITextComponent): ITextComponent{
+		fun getClientTitle(player: EntityPlayer, text: ITextComponent): ITextComponent {
 			return if (player.abilities.isCreativeMode)
 				TranslationTextComponent("gui.hee.loot_chest.title.creative")
 			else
@@ -70,39 +71,39 @@ class TileEntityLootChest(type: TileEntityType<TileEntityLootChest>) : TileEntit
 	val hasLootTable
 		get() = sourceLootTable != null
 	
-	override fun playChestSound(sound: SoundEvent){
+	override fun playChestSound(sound: SoundEvent) {
 		sound.playServer(wrld, pos, SoundCategory.BLOCKS, volume = 0.5F)
 	}
 	
 	// Command handling
 	
-	fun resetPlayerInventories(): Int{
+	fun resetPlayerInventories(): Int {
 		val total = playerInventories.size
 		playerInventories.clear()
 		return total
 	}
 	
-	fun setLootTable(resource: ResourceLocation?){
+	fun setLootTable(resource: ResourceLocation?) {
 		sourceLootTable = resource?.toString()
 	}
 	
 	// Sided inventory handling
 	
-	override fun createMenu(id: Int, inventory: PlayerInventory, player: EntityPlayer): Container{
+	override fun createMenu(id: Int, inventory: PlayerInventory, player: EntityPlayer): Container {
 		return ContainerLootChest(id, player, createChestInventory(getInventoryForServer(player)))
 	}
 	
-	private fun getInventoryForServer(player: EntityPlayer): IInventory{
+	private fun getInventoryForServer(player: EntityPlayer): IInventory {
 		return if (player.isCreative)
 			sourceInventory
 		else
-			playerInventories.getOrPut(player.uniqueID){ generateNewLoot(player) }
+			playerInventories.getOrPut(player.uniqueID) { generateNewLoot(player) }
 	}
 	
-	private fun generateNewLoot(player: EntityPlayer): IInventory{
+	private fun generateNewLoot(player: EntityPlayer): IInventory {
 		val lootTable = sourceLootTable
 		
-		if (lootTable == null){
+		if (lootTable == null) {
 			return createInventoryClone(sourceInventory)
 		}
 		
@@ -122,18 +123,18 @@ class TileEntityLootChest(type: TileEntityType<TileEntityLootChest>) : TileEntit
 	override fun writeNBT(nbt: TagCompound, context: Context) = nbt.use {
 		super.writeNBT(nbt, context)
 		
-		if (context == STORAGE){
+		if (context == STORAGE) {
 			val lootTable = sourceLootTable
 			
-			if (lootTable == null){
+			if (lootTable == null) {
 				saveInventory(SOURCE_INV_TAG, sourceInventory)
 			}
-			else{
+			else {
 				putString(SOURCE_INV_TAG, lootTable)
 			}
 			
 			put(PLAYER_INV_TAG, TagCompound().also {
-				for((uuid, inventory) in playerInventories){
+				for((uuid, inventory) in playerInventories) {
 					it.saveInventory(uuid.toString(), inventory)
 				}
 			})
@@ -143,19 +144,19 @@ class TileEntityLootChest(type: TileEntityType<TileEntityLootChest>) : TileEntit
 	override fun readNBT(nbt: TagCompound, context: Context) = nbt.use {
 		super.readNBT(nbt, context)
 		
-		if (context == STORAGE){
-			if (hasInventory(SOURCE_INV_TAG)){
+		if (context == STORAGE) {
+			if (hasInventory(SOURCE_INV_TAG)) {
 				loadInventory(SOURCE_INV_TAG, sourceInventory)
 			}
-			else{
+			else {
 				sourceLootTable = getStringOrNull(SOURCE_INV_TAG)
 			}
 			
-			with(getCompound(PLAYER_INV_TAG)){
-				for(key in keySet()){
-					val uuid = try{
+			with(getCompound(PLAYER_INV_TAG)) {
+				for(key in keySet()) {
+					val uuid = try {
 						UUID.fromString(key)
-					}catch(e: Exception){
+					} catch(e: Exception) {
 						HEE.log.error("[TileEntityLootChest] could not parse UUID: $key")
 						continue
 					}

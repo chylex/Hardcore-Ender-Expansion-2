@@ -1,4 +1,5 @@
 package chylex.hee.game.world.structure.trigger
+
 import chylex.hee.game.world.getBlock
 import chylex.hee.game.world.math.Transform
 import chylex.hee.game.world.structure.IStructureTrigger
@@ -11,27 +12,27 @@ import net.minecraft.util.math.BlockPos
 import net.minecraft.world.IWorld
 import net.minecraft.world.World
 
-class TileEntityStructureTrigger(private val state: BlockState, private val nbt: TagCompound) : IStructureTrigger{
+class TileEntityStructureTrigger(private val state: BlockState, private val nbt: TagCompound) : IStructureTrigger {
 	constructor(state: BlockState, tile: TileEntity) : this(state, tile.serializeNBT())
 	constructor(block: Block, nbt: TagCompound) : this(block.defaultState, nbt)
 	constructor(block: Block, tile: TileEntity) : this(block, tile.serializeNBT())
 	
-	companion object{
-		fun addTileSafe(world: IWorld, pos: BlockPos, tile: TileEntity){
+	companion object {
+		fun addTileSafe(world: IWorld, pos: BlockPos, tile: TileEntity) {
 			world.getChunk(pos).addTileEntity(pos, tile)
 			
-			if (world is World){
+			if (world is World) {
 				world.addTileEntity(tile)
 			}
 		}
 	}
 	
-	override fun setup(world: IStructureWorld, pos: BlockPos, transform: Transform){
+	override fun setup(world: IStructureWorld, pos: BlockPos, transform: Transform) {
 		world.setState(pos, transform(state))
 	}
 	
-	override fun realize(world: IWorld, pos: BlockPos, transform: Transform){
-		if (pos.getBlock(world) !== state.block){
+	override fun realize(world: IWorld, pos: BlockPos, transform: Transform) {
+		if (pos.getBlock(world) !== state.block) {
 			return
 		}
 		

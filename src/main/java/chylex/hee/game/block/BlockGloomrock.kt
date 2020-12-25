@@ -1,4 +1,5 @@
 package chylex.hee.game.block
+
 import chylex.hee.HEE
 import chylex.hee.game.block.properties.BlockBuilder
 import chylex.hee.game.entity.posVec
@@ -14,9 +15,9 @@ import net.minecraft.util.math.BlockPos
 import net.minecraft.world.IBlockReader
 import net.minecraft.world.IEntityReader
 
-class BlockGloomrock(builder: BlockBuilder) : BlockSimple(builder){
-	override fun canCreatureSpawn(state: BlockState, world: IBlockReader, pos: BlockPos, type: PlacementType, entityType: EntityType<*>?): Boolean{
-		if (world !is IEntityReader){
+class BlockGloomrock(builder: BlockBuilder) : BlockSimple(builder) {
+	override fun canCreatureSpawn(state: BlockState, world: IBlockReader, pos: BlockPos, type: PlacementType, entityType: EntityType<*>?): Boolean {
+		if (world !is IEntityReader) {
 			HEE.log.warn("[BlockGloomrock] attempted to check spawn on a world != IEntityReader (${world.javaClass})")
 			return false
 		}

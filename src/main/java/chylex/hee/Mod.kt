@@ -1,4 +1,5 @@
 package chylex.hee
+
 import chylex.hee.game.block.BlockBrewingStandCustom
 import chylex.hee.game.block.BlockEndPortalOverride
 import chylex.hee.game.block.BlockShulkerBoxOverride
@@ -37,16 +38,16 @@ import net.minecraftforge.fml.event.lifecycle.FMLLoadCompleteEvent
 
 @Mod(HEE.ID)
 @SubscribeAllEvents(modid = HEE.ID, bus = MOD)
-object Mod{
-	init{
-		with(ModLoadingContext.get()){
+object Mod {
+	init {
+		with(ModLoadingContext.get()) {
 			HEE.version = activeContainer.modInfo.version.toString()
 		}
 		
 		@Suppress("ConvertLambdaToReference")
 		HEE.proxy = DistExecutor.safeRunForDist(
-			{ SafeSupplier { ModClientProxy() }},
-			{ SafeSupplier { ModCommonProxy() }}
+			{ SafeSupplier { ModClientProxy() } },
+			{ SafeSupplier { ModCommonProxy() } }
 		)
 		
 		CustomRarity
@@ -57,12 +58,12 @@ object Mod{
 	}
 	
 	@SubscribeEvent
-	fun onClientSetup(@Suppress("UNUSED_PARAMETER") e: FMLClientSetupEvent){
+	fun onClientSetup(@Suppress("UNUSED_PARAMETER") e: FMLClientSetupEvent) {
 		Debug.initializeClient()
 	}
 	
 	@SubscribeEvent
-	fun onCommonSetup(@Suppress("UNUSED_PARAMETER") e: FMLCommonSetupEvent){
+	fun onCommonSetup(@Suppress("UNUSED_PARAMETER") e: FMLCommonSetupEvent) {
 		NetworkManager.initialize(ModPackets.ALL)
 		ModLoot.initialize()
 		
@@ -73,7 +74,7 @@ object Mod{
 	}
 	
 	@SubscribeEvent
-	fun onLoadComplete(@Suppress("UNUSED_PARAMETER") e: FMLLoadCompleteEvent){
+	fun onLoadComplete(@Suppress("UNUSED_PARAMETER") e: FMLLoadCompleteEvent) {
 		EntityMobEnderman.setupBiomeSpawns()
 		EndermanBlockHandler.setupCarriableBlocks()
 		ModPotions.setupVanillaOverrides()
@@ -82,12 +83,12 @@ object Mod{
 		IntegrityCheck.verify()
 	}
 	
-	private object IntegrityCheck{
-		fun verify(){
+	private object IntegrityCheck {
+		fun verify() {
 			crashIfFalse(Blocks.END_PORTAL::class.java === BlockEndPortalOverride::class.java, "invalid End Portal block: ${Blocks.END_PORTAL::class.java}")
 			crashIfFalse(Blocks.BREWING_STAND::class.java === BlockBrewingStandCustom::class.java, "invalid Brewing Stand block: ${Blocks.BREWING_STAND::class.java}")
 			
-			for(block in BlockShulkerBoxOverride.ALL_BLOCKS){
+			for(block in BlockShulkerBoxOverride.ALL_BLOCKS) {
 				crashIfFalse(block.javaClass === BlockShulkerBoxOverride::class.java, "invalid Shulker Box block: ${block.javaClass}")
 				crashIfFalse(block.asItem().javaClass === ItemShulkerBoxOverride::class.java, "invalid Shulker Box item: ${block.asItem().javaClass}")
 			}
@@ -99,15 +100,15 @@ object Mod{
 		
 		// Utilities
 		
-		private fun crashIfFalse(value: Boolean, message: String){
-			if (!value){
+		private fun crashIfFalse(value: Boolean, message: String) {
+			if (!value) {
 				failIntegrityCheck(message, true)
 			}
 		}
 		
-		private fun failIntegrityCheck(message: String, crash: Boolean){
+		private fun failIntegrityCheck(message: String, crash: Boolean) {
 			HEE.log.error("[IntegrityCheck] $message")
-			check(!crash){ "Integrity check failed: $message" }
+			check(!crash) { "Integrity check failed: $message" }
 		}
 	}
 }

@@ -1,4 +1,5 @@
 package chylex.hee.game.particle.base
+
 import chylex.hee.client.render.gl.DF_ONE
 import chylex.hee.client.render.gl.GL
 import chylex.hee.client.render.gl.RenderStateBuilder
@@ -28,16 +29,16 @@ import org.lwjgl.opengl.GL11.GL_QUADS
 import java.util.Random
 
 @Sided(Side.CLIENT)
-abstract class ParticleBaseEnergy(world: World, posX: Double, posY: Double, posZ: Double, motX: Double, motY: Double, motZ: Double) : ParticleBaseFloating(world, posX, posY, posZ, motX, motY, motZ){
-	private companion object{
+abstract class ParticleBaseEnergy(world: World, posX: Double, posY: Double, posZ: Double, motX: Double, motY: Double, motZ: Double) : ParticleBaseFloating(world, posX, posY, posZ, motX, motY, motZ) {
+	private companion object {
 		private val COLOR_GRAY = adjustColorComponents(RGB(60u))
 		
-		private fun adjustColorComponents(color: IntColor): IntColor{
+		private fun adjustColorComponents(color: IntColor): IntColor {
 			return RGB(color.red.coerceIn(64, 224), color.green.coerceIn(64, 224), color.blue.coerceIn(64, 224))
 		}
 	}
 	
-	class ClusterParticleDataGenerator(cluster: TileEntityEnergyCluster) : IParticleData<ParticleDataColorScale>{
+	class ClusterParticleDataGenerator(cluster: TileEntityEnergyCluster) : IParticleData<ParticleDataColorScale> {
 		private val level = cluster.energyLevel.floating.value
 		private val capacity = cluster.energyBaseCapacity.floating.value
 		private val health = cluster.currentHealth
@@ -45,38 +46,38 @@ abstract class ParticleBaseEnergy(world: World, posX: Double, posY: Double, posZ
 		private val colorPrimary = adjustColorComponents(cluster.color.primary(100F, 42F))
 		private val colorSecondary = adjustColorComponents(cluster.color.secondary(90F, 42F))
 		
-		override fun generate(rand: Random): ParticleDataColorScale{
-			val useSecondaryHue = when(health){
+		override fun generate(rand: Random): ParticleDataColorScale {
+			val useSecondaryHue = when(health) {
 				REVITALIZING, UNSTABLE -> true
 				POWERED                -> rand.nextBoolean()
 				else                   -> rand.nextInt(4) == 0
 			}
 			
-			val turnGray = useSecondaryHue && when(health){
+			val turnGray = useSecondaryHue && when(health) {
 				WEAKENED          -> rand.nextInt(100) < 25
 				TIRED             -> rand.nextInt(100) < 75
 				DAMAGED, UNSTABLE -> true
 				else              -> false
 			}
 			
-			val finalColor = when{
+			val finalColor = when {
 				turnGray        -> COLOR_GRAY
 				useSecondaryHue -> colorSecondary
 				else            -> colorPrimary
 			}
 			
-			val finalScale = when(useSecondaryHue){
+			val finalScale = when(useSecondaryHue) {
 				true  -> (0.6F + (capacity * 0.07F) + (level * 0.008F)) * (if (health == POWERED) 1.6F else 1F)
-				false ->  0.5F + (capacity * 0.03F) + (level * 0.06F)
+				false -> 0.5F + (capacity * 0.03F) + (level * 0.06F)
 			}
 			
 			return ParticleDataColorScale(color = finalColor, scale = finalScale)
 		}
 	}
 	
-	private object RenderType : IParticleRenderType{
+	private object RenderType : IParticleRenderType {
 		@Suppress("DEPRECATION")
-		override fun beginRender(buffer: BufferBuilder, textureManager: TextureManager){
+		override fun beginRender(buffer: BufferBuilder, textureManager: TextureManager) {
 			GL.enableBlend()
 			GL.blendFunc(SF_SRC_ALPHA, DF_ONE)
 			GL.disableAlpha()
@@ -89,7 +90,7 @@ abstract class ParticleBaseEnergy(world: World, posX: Double, posY: Double, posZ
 			buffer.begin(GL_QUADS, DefaultVertexFormats.PARTICLE_POSITION_TEX_COLOR_LMAP)
 		}
 		
-		override fun finishRender(tessellator: Tessellator){
+		override fun finishRender(tessellator: Tessellator) {
 			tessellator.draw()
 			
 			RenderStateBuilder.FOG_BLACK.clearRenderState()
@@ -102,7 +103,7 @@ abstract class ParticleBaseEnergy(world: World, posX: Double, posY: Double, posZ
 		}
 	}
 	
-	override fun getRenderType(): IParticleRenderType{
+	override fun getRenderType(): IParticleRenderType {
 		return RenderType
 	}
 }

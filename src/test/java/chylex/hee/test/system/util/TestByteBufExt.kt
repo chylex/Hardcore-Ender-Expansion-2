@@ -1,4 +1,5 @@
 package chylex.hee.test.system.util
+
 import chylex.hee.game.world.Pos
 import chylex.hee.system.math.Vec
 import chylex.hee.system.math.Vec3
@@ -19,13 +20,13 @@ import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 
-class TestByteBufExt{
-	init{
+class TestByteBufExt {
+	init {
 		Bootstrap.register()
 	}
 	
-	@Nested inner class Basic{
-		@Test fun `writing and reading 'Pos' objects works`() = with(PacketBuffer(Unpooled.buffer())){
+	@Nested inner class Basic {
+		@Test fun `writing and reading 'Pos' objects works`() = with(PacketBuffer(Unpooled.buffer())) {
 			arrayOf(
 				BlockPos.ZERO,
 				Pos(1, 20, -300),
@@ -37,7 +38,7 @@ class TestByteBufExt{
 			}
 		}
 		
-		@Test fun `writing and reading full 'Vec3d' objects works`() = with(PacketBuffer(Unpooled.buffer())){
+		@Test fun `writing and reading full 'Vec3d' objects works`() = with(PacketBuffer(Unpooled.buffer())) {
 			arrayOf(
 				Vec3.ZERO,
 				Vec(-1.23, 45.6, -789.0),
@@ -49,7 +50,7 @@ class TestByteBufExt{
 			}
 		}
 		
-		@Test fun `writing and reading compact 'Vec3d' objects works`() = with(PacketBuffer(Unpooled.buffer())){
+		@Test fun `writing and reading compact 'Vec3d' objects works`() = with(PacketBuffer(Unpooled.buffer())) {
 			mapOf(
 				Vec3.ZERO to Vec3.ZERO,
 				Vec(-1.23, 45.6, -789.0) to Vec(-1.25, 45.5, -789.0)
@@ -60,8 +61,8 @@ class TestByteBufExt{
 		}
 	}
 	
-	@Nested inner class Complex{
-		@Test fun `writing and reading 'TagCompound' works`() = with(PacketBuffer(Unpooled.buffer())){
+	@Nested inner class Complex {
+		@Test fun `writing and reading 'TagCompound' works`() = with(PacketBuffer(Unpooled.buffer())) {
 			arrayOf(
 				TagCompound(),
 				TagCompound().apply { putLong("test", 123L) },

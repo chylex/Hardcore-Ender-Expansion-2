@@ -1,4 +1,5 @@
 package chylex.hee.game.block.entity
+
 import chylex.hee.game.block.entity.base.TileEntityBase
 import chylex.hee.game.block.entity.base.TileEntityBase.Context.NETWORK
 import chylex.hee.game.entity.item.EntityItemNoBob
@@ -57,10 +58,10 @@ import java.util.WeakHashMap
 import kotlin.math.min
 import kotlin.math.sin
 
-class TileEntityExperienceGate(type: TileEntityType<TileEntityExperienceGate>) : TileEntityBase(type), ITickableTileEntity{
+class TileEntityExperienceGate(type: TileEntityType<TileEntityExperienceGate>) : TileEntityBase(type), ITickableTileEntity {
 	constructor() : this(ModTileEntities.EXPERIENCE_GATE)
 	
-	companion object{
+	companion object {
 		private val DAMAGE_START_EXTRACTION = Damage(MAGIC_TYPE, PEACEFUL_KNOCKBACK, IGNORE_INVINCIBILITY())
 		
 		private const val TARGET_XP = 2000
@@ -97,12 +98,12 @@ class TileEntityExperienceGate(type: TileEntityType<TileEntityExperienceGate>) :
 			pos = InBox(0.2F)
 		)
 		
-		val FX_CONSUME = object : FxEntityHandler(){
-			override fun handle(entity: Entity, rand: Random){
-				val offset = if (entity is EntityItem && entity !is EntityItemNoBob){
+		val FX_CONSUME = object : FxEntityHandler() {
+			override fun handle(entity: Entity, rand: Random) {
+				val offset = if (entity is EntityItem && entity !is EntityItemNoBob) {
 					0.35 + (sin((entity.age + 1.0) / 10.0 + entity.hoverStart) * 0.1) // UPDATE 1.15 (taken from ItemRenderer)
 				}
-				else{
+				else {
 					entity.height * 0.5
 				}
 				
@@ -113,13 +114,13 @@ class TileEntityExperienceGate(type: TileEntityType<TileEntityExperienceGate>) :
 			}
 		}
 		
-		private fun tryDrainXp(player: EntityPlayer, amount: Float): Boolean = with(player){
+		private fun tryDrainXp(player: EntityPlayer, amount: Float): Boolean = with(player) {
 			val xpDrainFloat = amount / xpBarCap()
 			
-			if (experienceLevel > 0 || experience >= xpDrainFloat){
+			if (experienceLevel > 0 || experience >= xpDrainFloat) {
 				experience -= xpDrainFloat
 				
-				while(experience < 0F){
+				while(experience < 0F) {
 					val mp = experience * xpBarCap()
 					val level = experienceLevel
 					
@@ -135,7 +136,7 @@ class TileEntityExperienceGate(type: TileEntityType<TileEntityExperienceGate>) :
 		}
 	}
 	
-	private class PlayerExtractionData(val startTime: Long){
+	private class PlayerExtractionData(val startTime: Long) {
 		var lastTriggerTime = 0L
 	}
 	
@@ -159,22 +160,22 @@ class TileEntityExperienceGate(type: TileEntityType<TileEntityExperienceGate>) :
 	
 	private var particlePauseTimer = 0
 	
-	override fun tick(){
-		if (wrld.isRemote){
+	override fun tick() {
+		if (wrld.isRemote) {
 			val rand = wrld.rand
 			
-			if (particlePauseTimer > 0){
+			if (particlePauseTimer > 0) {
 				--particlePauseTimer
 			}
-			else if (experience < TARGET_XP){
-				if (wrld.selectVulnerableEntities.inBox<EntityPlayer>(entityDetectionArea).any()){
+			else if (experience < TARGET_XP) {
+				if (wrld.selectVulnerableEntities.inBox<EntityPlayer>(entityDetectionArea).any()) {
 					PARTICLE_TICK_SLOW.spawn(Point(pos, rand.nextInt(1, 2)), rand)
 				}
-				else{
+				else {
 					PARTICLE_TICK.spawn(Point(pos, 6), rand)
 				}
 			}
-			else if (tokenHolderToCharge != null){
+			else if (tokenHolderToCharge != null) {
 				PARTICLE_EXPERIENCE.spawn(Point(pos, 1), rand)
 				// TODO sound fx
 			}
@@ -182,25 +183,25 @@ class TileEntityExperienceGate(type: TileEntityType<TileEntityExperienceGate>) :
 			return
 		}
 		
-		if (experience >= TARGET_XP){
+		if (experience >= TARGET_XP) {
 			val tokenHolder = tokenHolderToCharge
 			
-			if (tokenHolder != null){
+			if (tokenHolder != null) {
 				val newCharge = tokenHolder.currentCharge + (1F / 175F)
 				
-				if (newCharge >= 1F){
+				if (newCharge >= 1F) {
 					tokenHolder.forceDropToken(Vec3.ZERO)
 					tokenHolder.currentCharge = 0F
 					experience = 0F
 				}
-				else{
+				else {
 					tokenHolder.currentCharge = newCharge
 				}
 			}
 		}
-		else if (wrld.totalTime % 4L == 0L){
-			for(orb in wrld.selectEntities.inBox<EntityXPOrb>(entityDetectionArea)){ // makes throwing xp bottles into the gate a bit nicer
-				if (orb.ticksExisted > 6){
+		else if (wrld.totalTime % 4L == 0L) {
+			for(orb in wrld.selectEntities.inBox<EntityXPOrb>(entityDetectionArea)) { // makes throwing xp bottles into the gate a bit nicer
+				if (orb.ticksExisted > 6) {
 					onCollision(orb)
 				}
 			}
@@ -209,7 +210,7 @@ class TileEntityExperienceGate(type: TileEntityType<TileEntityExperienceGate>) :
 	
 	// Collision
 	
-	private fun calculateXpLimit(player: EntityPlayer): Float{
+	private fun calculateXpLimit(player: EntityPlayer): Float {
 		val xpBarCap = player.xpBarCap()
 		val xpDrainLimit = minOf(10F, TARGET_XP - experience, 0.2F * xpBarCap)
 		
@@ -219,8 +220,8 @@ class TileEntityExperienceGate(type: TileEntityType<TileEntityExperienceGate>) :
 			xpDrainLimit
 	}
 	
-	fun onCollision(player: EntityPlayer){
-		if (!canStartDraining || player.isCreative || player.isSpectator){
+	fun onCollision(player: EntityPlayer) {
+		if (!canStartDraining || player.isCreative || player.isSpectator) {
 			return
 		}
 		
@@ -233,7 +234,7 @@ class TileEntityExperienceGate(type: TileEntityType<TileEntityExperienceGate>) :
 			playerExtraction[player] = it
 		}
 		
-		if (extractionData.lastTriggerTime == currentTime){
+		if (extractionData.lastTriggerTime == currentTime) {
 			return
 		}
 		
@@ -241,31 +242,31 @@ class TileEntityExperienceGate(type: TileEntityType<TileEntityExperienceGate>) :
 		
 		val xpDrain = (0.6F + ((currentTime - extractionData.startTime) / 9L).toInt() * 0.2F).coerceAtMost(calculateXpLimit(player))
 		
-		if (xpDrain > 0F && tryDrainXp(player, xpDrain)){
+		if (xpDrain > 0F && tryDrainXp(player, xpDrain)) {
 			experience += xpDrain
 			
-			if (currentTime % 3L == 0L){
+			if (currentTime % 3L == 0L) {
 				ModSounds.BLOCK_EXPERIENCE_GATE_PICKUP.playServer(wrld, player.posVec, SoundCategory.BLOCKS, volume = 0.1F, pitch = wrld.rand.nextFloat(0.55F, 1.25F))
 			}
 		}
 	}
 	
-	fun onCollision(entity: EntityItem){
-		if (!canStartDraining){
+	fun onCollision(entity: EntityItem) {
+		if (!canStartDraining) {
 			return
 		}
 		
 		val stack = entity.item
 		val item = stack.item
 		
-		if (item === Items.ENCHANTED_BOOK){
+		if (item === Items.ENCHANTED_BOOK) {
 			// TODO
 		}
-		else if (item === ModItems.KNOWLEDGE_NOTE){
+		else if (item === ModItems.KNOWLEDGE_NOTE) {
 			// TODO
 			experience += stack.size
 		}
-		else{
+		else {
 			return
 		}
 		
@@ -273,8 +274,8 @@ class TileEntityExperienceGate(type: TileEntityType<TileEntityExperienceGate>) :
 		entity.remove()
 	}
 	
-	fun onCollision(orb: EntityXPOrb){
-		if (!canStartDraining){
+	fun onCollision(orb: EntityXPOrb) {
+		if (!canStartDraining) {
 			return
 		}
 		
@@ -283,7 +284,7 @@ class TileEntityExperienceGate(type: TileEntityType<TileEntityExperienceGate>) :
 		experience += toAdd
 		orb.xpValue -= toAdd
 		
-		if (orb.xpValue <= 0){
+		if (orb.xpValue <= 0) {
 			PacketClientFX(FX_CONSUME, FxEntityData(orb)).sendToAllAround(orb, 16.0)
 			orb.remove()
 		}
@@ -294,7 +295,7 @@ class TileEntityExperienceGate(type: TileEntityType<TileEntityExperienceGate>) :
 	override fun hasFastRenderer() = true
 	
 	@Sided(Side.CLIENT)
-	override fun getRenderBoundingBox(): AxisAlignedBB{
+	override fun getRenderBoundingBox(): AxisAlignedBB {
 		return AxisAlignedBB(pos.add(-1, 0, -1), pos.add(2, 0, 2))
 	}
 	
@@ -305,20 +306,20 @@ class TileEntityExperienceGate(type: TileEntityType<TileEntityExperienceGate>) :
 	}
 	
 	override fun readNBT(nbt: TagCompound, context: Context) = nbt.use {
-		if (context == NETWORK){
-			if (clientLoaded){
+		if (context == NETWORK) {
+			if (clientLoaded) {
 				val previous = experience
 				val current = getFloat(EXPERIENCE_TAG)
 				
-				if ((previous < TARGET_LEVEL_UP && current >= TARGET_LEVEL_UP) || (previous < TARGET_XP && current >= TARGET_XP)){
+				if ((previous < TARGET_LEVEL_UP && current >= TARGET_LEVEL_UP) || (previous < TARGET_XP && current >= TARGET_XP)) {
 					ModSounds.BLOCK_EXPERIENCE_GATE_LEVELUP.playClient(pos, SoundCategory.BLOCKS, volume = 0.7F)
 				}
 				
-				if ((previous < TARGET_XP && current >= TARGET_XP) || (previous >= TARGET_XP && current < TARGET_XP)){
+				if ((previous < TARGET_XP && current >= TARGET_XP) || (previous >= TARGET_XP && current < TARGET_XP)) {
 					particlePauseTimer = 24
 				}
 			}
-			else{
+			else {
 				clientLoaded = true
 			}
 		}

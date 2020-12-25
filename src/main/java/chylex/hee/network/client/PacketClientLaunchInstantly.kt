@@ -1,4 +1,5 @@
 package chylex.hee.network.client
+
 import chylex.hee.network.BaseClientPacket
 import chylex.hee.system.forge.Side
 import chylex.hee.system.forge.Sided
@@ -10,8 +11,8 @@ import net.minecraft.entity.Entity
 import net.minecraft.network.PacketBuffer
 import net.minecraft.util.math.Vec3d
 
-class PacketClientLaunchInstantly() : BaseClientPacket(){
-	constructor(entity: Entity, motion: Vec3d) : this(){
+class PacketClientLaunchInstantly() : BaseClientPacket() {
+	constructor(entity: Entity, motion: Vec3d) : this() {
 		this.entityId = entity.entityId
 		this.motion = motion
 	}
@@ -30,7 +31,7 @@ class PacketClientLaunchInstantly() : BaseClientPacket(){
 	}
 	
 	@Sided(Side.CLIENT)
-	override fun handle(player: EntityPlayerSP){
+	override fun handle(player: EntityPlayerSP) {
 		entityId?.let(player.world::getEntityByID)?.motion = motion
 	}
 }

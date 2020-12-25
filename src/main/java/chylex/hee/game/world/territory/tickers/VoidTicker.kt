@@ -1,4 +1,5 @@
 package chylex.hee.game.world.territory.tickers
+
 import chylex.hee.HEE
 import chylex.hee.game.world.territory.ITerritoryTicker
 import chylex.hee.game.world.territory.TerritoryInstance
@@ -15,17 +16,17 @@ import net.minecraft.world.World
 import net.minecraft.world.server.ServerWorld
 import net.minecraftforge.event.entity.living.LivingDeathEvent
 
-class VoidTicker(private val data: VoidData) : ITerritoryTicker{
+class VoidTicker(private val data: VoidData) : ITerritoryTicker {
 	@SubscribeAllEvents(modid = HEE.ID)
-	companion object{
+	companion object {
 		@SubscribeEvent(EventPriority.LOWEST)
-		fun onLivingDeath(e: LivingDeathEvent){
+		fun onLivingDeath(e: LivingDeathEvent) {
 			val player = (e.entity as? EntityPlayer)?.takeIf { !it.world.isRemote && it.dimension === HEE.dim } ?: return
 			
 			val instance = TerritoryInstance.fromPos(player) ?: return
 			val voidData = TerritoryGlobalStorage.get().forInstance(instance)?.getComponent<VoidData>() ?: return
 			
-			if (voidData.startCorrupting()){
+			if (voidData.startCorrupting()) {
 				val world = player.world as ServerWorld
 				world.addLightningBolt(LightningBoltEntity(world, player.posX, player.posY, player.posZ, true))
 			}
@@ -34,8 +35,8 @@ class VoidTicker(private val data: VoidData) : ITerritoryTicker{
 	
 	override var resendClientEnvironmentPacketOnWorldTick = Long.MIN_VALUE
 	
-	override fun tick(world: World){
-		if (!data.isCorrupting || data.voidFactor >= TerritoryVoid.RARE_TERRITORY_MAX_CORRUPTION_FACTOR){
+	override fun tick(world: World) {
+		if (!data.isCorrupting || data.voidFactor >= TerritoryVoid.RARE_TERRITORY_MAX_CORRUPTION_FACTOR) {
 			return
 		}
 		
@@ -43,7 +44,7 @@ class VoidTicker(private val data: VoidData) : ITerritoryTicker{
 		
 		data.onCorruptionTick(currentTime)
 		
-		if (currentTime % 10L == 0L){
+		if (currentTime % 10L == 0L) {
 			resendClientEnvironmentPacketOnWorldTick = currentTime
 		}
 	}

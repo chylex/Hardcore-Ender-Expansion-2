@@ -1,4 +1,5 @@
 package chylex.hee.game.block
+
 import chylex.hee.client.render.block.IBlockLayerCutout
 import chylex.hee.game.block.properties.BlockBuilder
 import chylex.hee.game.world.breakBlock
@@ -25,50 +26,50 @@ import net.minecraftforge.common.MinecraftForge
 import net.minecraftforge.event.entity.player.PlayerEvent.BreakSpeed
 import java.util.Random
 
-class BlockAncientCobweb(builder: BlockBuilder) : BlockWeb(builder.p), IBlockLayerCutout{
-	init{
+class BlockAncientCobweb(builder: BlockBuilder) : BlockWeb(builder.p), IBlockLayerCutout {
+	init {
 		MinecraftForge.EVENT_BUS.register(this)
 	}
 	
 	@SubscribeEvent
-	fun onBreakSpeed(e: BreakSpeed){
-		if (e.state.block !== this){
+	fun onBreakSpeed(e: BreakSpeed) {
+		if (e.state.block !== this) {
 			return
 		}
 		
 		val item = e.player.getHeldItem(MAIN_HAND).item
 		
-		if (item is ItemSword){
+		if (item is ItemSword) {
 			e.newSpeed = e.originalSpeed * 15.8F
 		}
-		else if (item is ItemShears){
+		else if (item is ItemShears) {
 			e.newSpeed = e.originalSpeed * 5.6F
 		}
 	}
 	
-	override fun tick(state: BlockState, world: ServerWorld, pos: BlockPos, rand: Random){
+	override fun tick(state: BlockState, world: ServerWorld, pos: BlockPos, rand: Random) {
 		pos.breakBlock(world, true)
 	}
 	
-	override fun onEntityCollision(state: BlockState, world: World, pos: BlockPos, entity: Entity){
-		if (entity is EntityItem){
+	override fun onEntityCollision(state: BlockState, world: World, pos: BlockPos, entity: Entity) {
+		if (entity is EntityItem) {
 			entity.setMotionMultiplier(state, Vec3.xyz(0.6))
 		}
-		else if (!world.isRemote){
-			val canBreak = when(entity){
+		else if (!world.isRemote) {
+			val canBreak = when(entity) {
 				is EntityPlayer     -> !entity.abilities.isFlying
 				is EntityMob        -> entity.attackTarget != null && (entity.width * entity.height) > 0.5F
 				is EntityLivingBase -> false
 				else                -> true
 			}
 			
-			if (canBreak){
+			if (canBreak) {
 				world.pendingBlockTicks.scheduleTick(pos, this, 1) // delay required to avoid client-side particle crash
 			}
 		}
 	}
 	
-	override fun getCollisionShape(state: BlockState, world: IBlockReader, pos: BlockPos, context: ISelectionContext): VoxelShape{
+	override fun getCollisionShape(state: BlockState, world: IBlockReader, pos: BlockPos, context: ISelectionContext): VoxelShape {
 		return VoxelShapes.empty()
 	}
 }

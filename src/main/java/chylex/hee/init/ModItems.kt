@@ -1,4 +1,5 @@
 package chylex.hee.init
+
 import chylex.hee.HEE
 import chylex.hee.game.block.dispenser.DispenseEndermanHead
 import chylex.hee.game.block.dispenser.DispenseExperienceBottle
@@ -59,7 +60,7 @@ import net.minecraftforge.event.RegistryEvent
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber.Bus.MOD
 
 @SubscribeAllEvents(modid = HEE.ID, bus = MOD)
-object ModItems{
+object ModItems {
 	private val baseProps
 		get() = Item.Properties().group(ModCreativeTabs.main)
 	
@@ -167,7 +168,7 @@ object ModItems{
 	// Registry
 	
 	@SubscribeEvent
-	fun onRegister(e: RegistryEvent.Register<Item>){
+	fun onRegister(e: RegistryEvent.Register<Item>) {
 		e.registerAllFields(this)
 		
 		// vanilla modifications
@@ -175,7 +176,7 @@ object ModItems{
 		Items.POPPED_CHORUS_FRUIT.group = null
 		Items.ELYTRA.group = null
 		
-		with(e.registry){
+		with(e.registry) {
 			register(ItemChorusBerry(baseProps.food(ItemChorusBerry.FOOD)).apply { override(Items.CHORUS_FRUIT) })
 			register(ItemElytraOverride(baseProps.maxDamage(432)).apply { override(Items.ELYTRA) })
 			register(ItemEyeOfEnderOverride(defaultProps).apply { override(Items.ENDER_EYE) })
@@ -196,11 +197,11 @@ object ModItems{
 		(this.group as? OrderedCreativeTab)?.registerOrder(this)
 	}
 	
-	private fun Item.override(vanillaItem: Item, newCreativeTab: ItemGroup? = ModCreativeTabs.main){
+	private fun Item.override(vanillaItem: Item, newCreativeTab: ItemGroup? = ModCreativeTabs.main) {
 		this.useVanillaName(vanillaItem)
 		this.group = newCreativeTab
 		
-		if (newCreativeTab is OrderedCreativeTab){
+		if (newCreativeTab is OrderedCreativeTab) {
 			newCreativeTab.registerOrder(this)
 		}
 	}

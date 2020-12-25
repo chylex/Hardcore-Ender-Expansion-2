@@ -1,4 +1,5 @@
 package chylex.hee.game.entity.living.ai
+
 import chylex.hee.system.math.square
 import chylex.hee.system.migration.EntityCreature
 import net.minecraft.entity.ai.goal.Goal
@@ -9,32 +10,32 @@ import kotlin.math.max
 
 class AIWatchTargetInShock(
 	private val entity: EntityCreature,
-	maxDistance: Double
-) : Goal(){
+	maxDistance: Double,
+) : Goal() {
 	val isWatching
 		get() = remainingTicks > 0
 	
 	private val maxDistanceSq = square(maxDistance)
 	private var remainingTicks = 0
 	
-	init{
+	init {
 		mutexFlags = EnumSet.of(MOVE, LOOK)
 	}
 	
-	fun startWatching(ticks: Int){
+	fun startWatching(ticks: Int) {
 		remainingTicks = max(0, ticks)
 	}
 	
-	fun stopWatching(){
+	fun stopWatching() {
 		remainingTicks = 0
 	}
 	
-	override fun shouldExecute(): Boolean{
+	override fun shouldExecute(): Boolean {
 		return remainingTicks > 0
 	}
 	
-	override fun shouldContinueExecuting(): Boolean{
-		if (remainingTicks == 0){
+	override fun shouldContinueExecuting(): Boolean {
+		if (remainingTicks == 0) {
 			return false
 		}
 		
@@ -42,14 +43,14 @@ class AIWatchTargetInShock(
 		return target != null && target.isAlive && entity.getDistanceSq(target) <= maxDistanceSq
 	}
 	
-	override fun tick(){
+	override fun tick() {
 		val target = entity.attackTarget ?: return
 		
 		entity.lookController.setLookPosition(target.posX, target.posY + target.eyeHeight, target.posZ)
 		--remainingTicks
 	}
 	
-	override fun resetTask(){
+	override fun resetTask() {
 		remainingTicks = 0
 	}
 }

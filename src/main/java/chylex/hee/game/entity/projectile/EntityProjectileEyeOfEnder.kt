@@ -1,4 +1,5 @@
 package chylex.hee.game.entity.projectile
+
 import chylex.hee.game.entity.lookDirVec
 import chylex.hee.game.entity.lookPosVec
 import chylex.hee.game.entity.motionX
@@ -62,13 +63,13 @@ import net.minecraftforge.fml.network.NetworkHooks
 import java.util.Random
 import kotlin.math.sin
 
-class EntityProjectileEyeOfEnder(type: EntityType<EntityProjectileEyeOfEnder>, world: World) : Entity(type, world), IEntityAdditionalSpawnData{
-	constructor(thrower: EntityLivingBase, targetPos: BlockPos?) : this(ModEntities.EYE_OF_ENDER, thrower.world){
+class EntityProjectileEyeOfEnder(type: EntityType<EntityProjectileEyeOfEnder>, world: World) : Entity(type, world), IEntityAdditionalSpawnData {
+	constructor(thrower: EntityLivingBase, targetPos: BlockPos?) : this(ModEntities.EYE_OF_ENDER, thrower.world) {
 		this.posVec = thrower.lookPosVec.subtractY(height * 0.5).add(thrower.lookDirVec.scale(1.5))
 		this.targetPos = targetPos
 	}
 	
-	private companion object{
+	private companion object {
 		private const val TICK_BEGIN_GLITTER = 30
 		private const val TICK_BEGIN_MOVEMENT = 40
 		private const val TICK_DROP_NO_TARGET = 50
@@ -108,8 +109,8 @@ class EntityProjectileEyeOfEnder(type: EntityType<EntityProjectileEyeOfEnder>, w
 			maxRange = 64.0
 		)
 		
-		private object GlitterColorTick : IRandomColor{
-			override fun next(rand: Random): IntColor{
+		private object GlitterColorTick : IRandomColor {
+			override fun next(rand: Random): IntColor {
 				return if (rand.nextInt(3) == 0)
 					RGB(rand.nextInt(76, 128), rand.nextInt(64, 76), rand.nextInt(128, 192))
 				else
@@ -117,8 +118,8 @@ class EntityProjectileEyeOfEnder(type: EntityType<EntityProjectileEyeOfEnder>, w
 			}
 		}
 		
-		private object GlitterColorDestroy : IRandomColor{
-			override fun next(rand: Random): IntColor{
+		private object GlitterColorDestroy : IRandomColor {
+			override fun next(rand: Random): IntColor {
 				return if (rand.nextInt(3) == 0)
 					RGB(rand.nextInt(102, 153), rand.nextInt(64, 76), rand.nextInt(153, 216))
 				else
@@ -126,7 +127,7 @@ class EntityProjectileEyeOfEnder(type: EntityType<EntityProjectileEyeOfEnder>, w
 			}
 		}
 		
-		private fun shouldFloatAbove(state: BlockState): Boolean{
+		private fun shouldFloatAbove(state: BlockState): Boolean {
 			return state.material.blocksMovement() || state.block is BlockFlowingFluid
 		}
 	}
@@ -153,9 +154,9 @@ class EntityProjectileEyeOfEnder(type: EntityType<EntityProjectileEyeOfEnder>, w
 	
 	// Initialization
 	
-	override fun registerData(){}
+	override fun registerData() {}
 	
-	override fun createSpawnPacket(): IPacket<*>{
+	override fun createSpawnPacket(): IPacket<*> {
 		return NetworkHooks.getEntitySpawningPacket(this)
 	}
 	
@@ -173,39 +174,39 @@ class EntityProjectileEyeOfEnder(type: EntityType<EntityProjectileEyeOfEnder>, w
 	
 	// Behavior
 	
-	override fun tick(){
+	override fun tick() {
 		lastTickPosX = posX
 		lastTickPosY = posY
 		lastTickPosZ = posZ
 		super.tick()
 		
-		if (ticksExisted == 1){
+		if (ticksExisted == 1) {
 			motion = targetVecXZ.normalize().scale(0.27)
 		}
 		
 		++timer
 		rotationYaw += 5F
 		
-		if (world.isRemote){
+		if (world.isRemote) {
 			renderBob.update(nextRenderBobOffset)
 			
-			if (timer == 1){
+			if (timer == 1) {
 				PARTICLE_SMOKE.spawn(Point(posVecWithOffset, 8), rand)
 			}
-			else if (timer > TICK_BEGIN_GLITTER && targetPos != null){
+			else if (timer > TICK_BEGIN_GLITTER && targetPos != null) {
 				PARTICLE_GLITTER_TICK.spawn(Point(posVecWithOffset, 3), rand)
 			}
 		}
 		
-		if (targetPos == null){
-			if (!world.isRemote && timer > TICK_DROP_NO_TARGET){
+		if (targetPos == null) {
+			if (!world.isRemote && timer > TICK_DROP_NO_TARGET) {
 				dropEye()
 			}
 		}
-		else if (timer > TICK_BEGIN_MOVEMENT){
+		else if (timer > TICK_BEGIN_MOVEMENT) {
 			val pos = Pos(this)
 			
-			if (prevPos != pos){
+			if (prevPos != pos) {
 				prevPos = pos
 				updateTargetAltitude()
 			}
@@ -214,7 +215,7 @@ class EntityProjectileEyeOfEnder(type: EntityType<EntityProjectileEyeOfEnder>, w
 		}
 	}
 	
-	private fun updateTargetAltitude(){
+	private fun updateTargetAltitude() {
 		val perpendicular = Vec3.xz(-(motionZ * 3.0), motionX * 3.0)
 		val step = motion.scale(4)
 		
@@ -226,17 +227,17 @@ class EntityProjectileEyeOfEnder(type: EntityType<EntityProjectileEyeOfEnder>, w
 		
 		val checkedBlocks = HashSet<BlockPos>(36, 1F)
 		
-		parallelStarts.flatMapTo(checkedBlocks){
-			start -> (0..11).map { world.getHeight(WORLD_SURFACE, Pos(start.add(step.scale(it)))) }
+		parallelStarts.flatMapTo(checkedBlocks) { start ->
+			(0..11).map { world.getHeight(WORLD_SURFACE, Pos(start.add(step.scale(it)))) }
 		}
 		
-		if (checkedBlocks.isEmpty()){
+		if (checkedBlocks.isEmpty()) {
 			targetY = posY
 			return
 		}
 		
 		val averageY = checkedBlocks
-			.map { pos -> 1 + (pos.offsetUntil(DOWN, 0..(pos.y)){ shouldFloatAbove(it.getState(world)) } ?: pos).y }
+			.map { pos -> 1 + (pos.offsetUntil(DOWN, 0..(pos.y)) { shouldFloatAbove(it.getState(world)) } ?: pos).y }
 			.sortedDescending()
 			.take(1 + (checkedBlocks.size / 4))
 			.average()
@@ -244,38 +245,38 @@ class EntityProjectileEyeOfEnder(type: EntityType<EntityProjectileEyeOfEnder>, w
 		targetY = averageY + 2.5
 	}
 	
-	private fun moveTowardsTarget(){
+	private fun moveTowardsTarget() {
 		val ySpeedMp: Float
 		
-		if (targetVecXZ.lengthSquared() < square(7.0)){
-			if (speed > 0F){
+		if (targetVecXZ.lengthSquared() < square(7.0)) {
+			if (speed > 0F) {
 				speed -= 0.025F
 			}
 			
 			ySpeedMp = speed
 			
-			if (timer < TICK_REACHED_TARGET_SKIP){
+			if (timer < TICK_REACHED_TARGET_SKIP) {
 				timer = TICK_REACHED_TARGET_SKIP
 			}
-			else if (!world.isRemote && timer > TICK_DROP_REACHED_TARGET){
+			else if (!world.isRemote && timer > TICK_DROP_REACHED_TARGET) {
 				dropEye()
 			}
 		}
-		else{
-			if (timer <= TICK_END_MOVEMENT && speed < 1F){
+		else {
+			if (timer <= TICK_END_MOVEMENT && speed < 1F) {
 				speed += 0.02F
 			}
-			else if (timer > TICK_END_MOVEMENT && speed > 0.25F){
+			else if (timer > TICK_END_MOVEMENT && speed > 0.25F) {
 				speed -= 0.015F
 			}
 			
-			if (speed > 0.7F && targetY - posY > 4.0){
+			if (speed > 0.7F && targetY - posY > 4.0) {
 				speed -= 0.05F
 			}
 			
 			ySpeedMp = if (timer < TICK_FULL_Y_MOVEMENT) speed else 1F
 			
-			if (!world.isRemote && timer > TICK_DESTROY_NO_ENERGY_MIN && timer > rand.nextInt(TICK_DESTROY_NO_ENERGY_MIN, TICK_DESTROY_NO_ENERGY_MAX)){
+			if (!world.isRemote && timer > TICK_DESTROY_NO_ENERGY_MIN && timer > rand.nextInt(TICK_DESTROY_NO_ENERGY_MIN, TICK_DESTROY_NO_ENERGY_MAX)) {
 				remove()
 			}
 		}
@@ -285,7 +286,7 @@ class EntityProjectileEyeOfEnder(type: EntityType<EntityProjectileEyeOfEnder>, w
 		setPosition(newX, newY, newZ)
 	}
 	
-	private fun dropEye(){
+	private fun dropEye() {
 		EntityItem(world, posX, posY + nextRenderBobOffset - 0.25, posZ, ItemStack(Items.ENDER_EYE)).apply {
 			setDefaultPickupDelay()
 			world.addEntity(this)
@@ -294,10 +295,10 @@ class EntityProjectileEyeOfEnder(type: EntityType<EntityProjectileEyeOfEnder>, w
 		remove()
 	}
 	
-	override fun remove(){
+	override fun remove() {
 		super.remove()
 		
-		if (world.isRemote){
+		if (world.isRemote) {
 			val pos = posVecWithOffset
 			
 			PARTICLE_SMOKE.spawn(Point(pos, 18), rand)
@@ -306,12 +307,12 @@ class EntityProjectileEyeOfEnder(type: EntityType<EntityProjectileEyeOfEnder>, w
 		}
 	}
 	
-	override fun canBeAttackedWithItem(): Boolean{
+	override fun canBeAttackedWithItem(): Boolean {
 		return false
 	}
 	
 	@Sided(Side.CLIENT)
-	override fun setPositionAndRotationDirect(x: Double, y: Double, z: Double, yaw: Float, pitch: Float, posRotationIncrements: Int, teleport: Boolean){}
+	override fun setPositionAndRotationDirect(x: Double, y: Double, z: Double, yaw: Float, pitch: Float, posRotationIncrements: Int, teleport: Boolean) {}
 	
 	// Serialization
 	

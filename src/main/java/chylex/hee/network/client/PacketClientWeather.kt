@@ -1,4 +1,5 @@
 package chylex.hee.network.client
+
 import chylex.hee.game.entity.effect.EntityTerritoryLightningBolt
 import chylex.hee.network.BaseClientPacket
 import chylex.hee.network.client.PacketClientWeather.Types.TERRITORY_LIGHTNING_BOLT
@@ -12,12 +13,12 @@ import net.minecraft.client.world.ClientWorld
 import net.minecraft.network.PacketBuffer
 import net.minecraft.util.math.Vec3d
 
-class PacketClientWeather() : BaseClientPacket(){
-	enum class Types{
+class PacketClientWeather() : BaseClientPacket() {
+	enum class Types {
 		TERRITORY_LIGHTNING_BOLT
 	}
 	
-	constructor(type: Types, pos: Vec3d) : this(){
+	constructor(type: Types, pos: Vec3d) : this() {
 		this.type = type
 		this.pos = pos
 	}
@@ -36,10 +37,10 @@ class PacketClientWeather() : BaseClientPacket(){
 	}
 	
 	@Sided(Side.CLIENT)
-	override fun handle(player: EntityPlayerSP){
-		val entity = when(type){
+	override fun handle(player: EntityPlayerSP) {
+		val entity = when(type) {
 			TERRITORY_LIGHTNING_BOLT -> EntityTerritoryLightningBolt(player.world, pos!!.x, pos!!.y, pos!!.z)
-			else -> return
+			else                     -> return
 		}
 		
 		(player.world as ClientWorld).globalEntities.add(entity)

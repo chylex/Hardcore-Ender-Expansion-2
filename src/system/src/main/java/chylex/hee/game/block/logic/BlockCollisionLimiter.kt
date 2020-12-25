@@ -1,10 +1,11 @@
 package chylex.hee.game.block.logic
+
 import chylex.hee.game.world.totalTime
 import net.minecraft.entity.Entity
 import net.minecraft.world.World
 import java.util.UUID
 
-class BlockCollisionLimiter{
+class BlockCollisionLimiter {
 	private var lastCollidingEntity = ThreadLocal<Pair<Long, UUID>?>()
 	
 	/**
@@ -15,10 +16,10 @@ class BlockCollisionLimiter{
 	 *
 	 * Returns true if the collision should be handled.
 	 */
-	fun check(world: World, entity: Entity): Boolean{
+	fun check(world: World, entity: Entity): Boolean {
 		val currentWorldTime = world.totalTime
 		
-		if (lastCollidingEntity.get()?.takeUnless { it.first != currentWorldTime || it.second != entity.uniqueID } == null){
+		if (lastCollidingEntity.get()?.takeUnless { it.first != currentWorldTime || it.second != entity.uniqueID } == null) {
 			lastCollidingEntity.set(Pair(currentWorldTime, entity.uniqueID))
 			return true
 		}

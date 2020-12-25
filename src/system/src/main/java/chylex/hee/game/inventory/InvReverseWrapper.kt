@@ -1,4 +1,5 @@
 package chylex.hee.game.inventory
+
 import net.minecraft.inventory.IInventory
 import net.minecraft.item.ItemStack
 import net.minecraftforge.items.IItemHandlerModifiable
@@ -7,7 +8,7 @@ import net.minecraftforge.items.wrapper.InvWrapper
 /**
  * Wrapper for [IItemHandlerModifiable] that reverses the slot order.
  */
-class InvReverseWrapper(private val wrapped: IItemHandlerModifiable) : IItemHandlerModifiable{
+class InvReverseWrapper(private val wrapped: IItemHandlerModifiable) : IItemHandlerModifiable {
 	constructor(inventory: IInventory) : this(InvWrapper(inventory))
 	
 	private fun reverse(slot: Int) = slots - slot - 1

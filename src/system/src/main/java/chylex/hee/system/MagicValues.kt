@@ -1,4 +1,5 @@
 package chylex.hee.system
+
 import chylex.hee.game.block.asVoxelShape
 import net.minecraft.util.math.AxisAlignedBB
 
@@ -7,7 +8,7 @@ import net.minecraft.util.math.AxisAlignedBB
 /**
  * Contains magic numbers and other constants which cannot be easily accessed using code, and must be reviewed before updating Minecraft versions.
  */
-object MagicValues{
+object MagicValues {
 	/**
 	 * Value of [LivingEntity.deathTime][net.minecraft.entity.LivingEntity.deathTime] animation at which an entity becomes officially dead.
 	 *

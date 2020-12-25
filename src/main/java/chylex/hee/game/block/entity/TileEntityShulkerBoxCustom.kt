@@ -1,4 +1,5 @@
 package chylex.hee.game.block.entity
+
 import chylex.hee.game.block.BlockShulkerBoxOverride.BoxSize
 import chylex.hee.game.container.ContainerShulkerBox
 import chylex.hee.init.ModTileEntities
@@ -20,71 +21,71 @@ import net.minecraft.util.NonNullList
 import net.minecraft.util.text.ITextComponent
 import net.minecraft.util.text.TranslationTextComponent
 
-class TileEntityShulkerBoxCustom : TileEntityShulkerBox(){
-	companion object{
+class TileEntityShulkerBoxCustom : TileEntityShulkerBox() {
+	companion object {
 		const val BOX_SIZE_TAG = "BoxSize"
 	}
 	
-	var boxSize by NotifyOnChange(BoxSize.LARGE){ newValue ->
+	var boxSize by NotifyOnChange(BoxSize.LARGE) { newValue ->
 		val newItems = NonNullList.withSize(newValue.slots, ItemStack.EMPTY)
 		
-		for(slot in 0 until newValue.slots){
+		for(slot in 0 until newValue.slots) {
 			newItems[slot] = items[slot]
 		}
 		
 		items = newItems
 	}
 	
-	override fun getType(): TileEntityType<*>{
+	override fun getType(): TileEntityType<*> {
 		return ModTileEntities.SHULKER_BOX
 	}
 	
 	// Container
 	
-	override fun getDefaultName(): ITextComponent{
+	override fun getDefaultName(): ITextComponent {
 		return TranslationTextComponent(boxSize.translationKey)
 	}
 	
-	override fun getSlotsForFace(side: Direction): IntArray{
+	override fun getSlotsForFace(side: Direction): IntArray {
 		return boxSize.slotIndices
 	}
 	
-	override fun createMenu(id: Int, inventory: PlayerInventory): Container{
+	override fun createMenu(id: Int, inventory: PlayerInventory): Container {
 		return ContainerShulkerBox(id, inventory, this)
 	}
 	
 	// Serialization
 	
-	private fun writeCustomNBT(nbt: TagCompound){
+	private fun writeCustomNBT(nbt: TagCompound) {
 		nbt.heeTag.putEnum(BOX_SIZE_TAG, boxSize)
 	}
 	
-	private fun readCustomNBT(nbt: TagCompound){
+	private fun readCustomNBT(nbt: TagCompound) {
 		boxSize = nbt.heeTagOrNull?.getEnum<BoxSize>(BOX_SIZE_TAG) ?: boxSize
 	}
 	
-	override fun getUpdatePacket(): SUpdateTileEntityPacket{
+	override fun getUpdatePacket(): SUpdateTileEntityPacket {
 		return SUpdateTileEntityPacket(pos, 0, TagCompound().also(::writeCustomNBT))
 	}
 	
-	override fun onDataPacket(net: NetworkManager, packet: SUpdateTileEntityPacket){
+	override fun onDataPacket(net: NetworkManager, packet: SUpdateTileEntityPacket) {
 		readCustomNBT(packet.nbtCompound)
 	}
 	
-	override fun getUpdateTag(): TagCompound{
+	override fun getUpdateTag(): TagCompound {
 		return super.write(TagCompound()).also(::writeCustomNBT)
 	}
 	
-	override fun handleUpdateTag(nbt: TagCompound){
+	override fun handleUpdateTag(nbt: TagCompound) {
 		super.read(nbt)
 		readCustomNBT(nbt)
 	}
 	
-	override fun saveToNbt(nbt: TagCompound): TagCompound{
+	override fun saveToNbt(nbt: TagCompound): TagCompound {
 		return super.saveToNbt(nbt).also(::writeCustomNBT)
 	}
 	
-	override fun loadFromNbt(nbt: TagCompound){
+	override fun loadFromNbt(nbt: TagCompound) {
 		super.loadFromNbt(nbt)
 		readCustomNBT(nbt)
 	}

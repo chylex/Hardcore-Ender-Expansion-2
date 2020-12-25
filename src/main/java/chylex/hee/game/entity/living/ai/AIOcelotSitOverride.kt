@@ -1,4 +1,5 @@
 package chylex.hee.game.entity.living.ai
+
 import chylex.hee.HEE
 import chylex.hee.game.world.getBlock
 import chylex.hee.game.world.isAir
@@ -12,22 +13,22 @@ import net.minecraft.world.IWorldReader
 import net.minecraftforge.event.entity.EntityJoinWorldEvent
 
 @Suppress("unused")
-class AIOcelotSitOverride(ocelot: EntityCat, overridden: CatSitOnBlockGoal) : CatSitOnBlockGoal(ocelot, overridden.movementSpeed){
-	interface IOcelotCanSitOn{
+class AIOcelotSitOverride(ocelot: EntityCat, overridden: CatSitOnBlockGoal) : CatSitOnBlockGoal(ocelot, overridden.movementSpeed) {
+	interface IOcelotCanSitOn {
 		fun canOcelotSitOn(world: IWorldReader, pos: BlockPos): Boolean
 	}
 	
 	@SubscribeAllEvents(modid = HEE.ID)
-	companion object{
+	companion object {
 		@SubscribeEvent(EventPriority.LOWEST, receiveCanceled = true)
-		fun onEntityJoinWorld(e: EntityJoinWorldEvent){
+		fun onEntityJoinWorld(e: EntityJoinWorldEvent) {
 			val entity = e.entity
 			
-			if (entity is EntityCat && !entity.world.isRemote){
+			if (entity is EntityCat && !entity.world.isRemote) {
 				val tasks = entity.goalSelector
 				val entry = tasks.goals.find { entry -> entry.goal.let { it is CatSitOnBlockGoal && it !is AIOcelotSitOverride } }
 				
-				if (entry != null){
+				if (entry != null) {
 					tasks.goals.remove(entry)
 					tasks.addGoal(entry.priority, AIOcelotSitOverride(entity, entry.goal as CatSitOnBlockGoal))
 				}
@@ -35,12 +36,12 @@ class AIOcelotSitOverride(ocelot: EntityCat, overridden: CatSitOnBlockGoal) : Ca
 		}
 	}
 	
-	override fun shouldMoveTo(world: IWorldReader, pos: BlockPos): Boolean{
-		if (super.shouldMoveTo(world, pos)){
+	override fun shouldMoveTo(world: IWorldReader, pos: BlockPos): Boolean {
+		if (super.shouldMoveTo(world, pos)) {
 			return true
 		}
 		
-		if (!pos.up().isAir(world)){
+		if (!pos.up().isAir(world)) {
 			return false
 		}
 		

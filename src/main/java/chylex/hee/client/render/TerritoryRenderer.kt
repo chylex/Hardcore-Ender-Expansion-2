@@ -1,4 +1,5 @@
 package chylex.hee.client.render
+
 import chylex.hee.HEE
 import chylex.hee.client.MC
 import chylex.hee.client.render.gl.DF_ONE_MINUS_SRC_ALPHA
@@ -42,7 +43,7 @@ import kotlin.math.min
 import kotlin.math.pow
 
 @SubscribeAllEvents(Side.CLIENT, modid = HEE.ID)
-object TerritoryRenderer{
+object TerritoryRenderer {
 	@JvmStatic
 	val environment
 		get() = MC.player?.let { TerritoryType.fromX(it.posX.floorToInt()) }?.desc?.environment
@@ -58,25 +59,25 @@ object TerritoryRenderer{
 	private var prevTerritory: TerritoryType? = null
 	
 	@SubscribeEvent
-	fun onClientTick(e: ClientTickEvent){
-		if (e.phase == Phase.START){
+	fun onClientTick(e: ClientTickEvent) {
+		if (e.phase == Phase.START) {
 			val player = MC.player
 			
-			if (player != null && player.world.dimension is WorldProviderEndCustom && player.ticksExisted > 0){
+			if (player != null && player.world.dimension is WorldProviderEndCustom && player.ticksExisted > 0) {
 				Void.tick(player)
 				Title.tick()
 				
 				val newChunkX = player.chunkCoordX
 				
-				if (prevChunkX != newChunkX){
+				if (prevChunkX != newChunkX) {
 					prevChunkX = newChunkX
 					
 					val newTerritory = TerritoryType.fromX(player.posX.floorToInt())
 					
-					if (prevTerritory != newTerritory){
+					if (prevTerritory != newTerritory) {
 						prevTerritory = newTerritory
 						
-						if (newTerritory != null){
+						if (newTerritory != null) {
 							Void.reset()
 							Title.display(newTerritory)
 							newTerritory.desc.environment.setupClient(player)
@@ -86,7 +87,7 @@ object TerritoryRenderer{
 				
 				prevTerritory?.desc?.environment?.tickClient(player)
 			}
-			else if (prevTerritory != null){
+			else if (prevTerritory != null) {
 				prevTerritory = null
 				prevChunkX = Int.MAX_VALUE
 				
@@ -97,15 +98,15 @@ object TerritoryRenderer{
 	}
 	
 	@SubscribeEvent(priority = EventPriority.LOWEST)
-	fun onFog(@Suppress("UNUSED_PARAMETER") e: RenderFogEvent){
+	fun onFog(@Suppress("UNUSED_PARAMETER") e: RenderFogEvent) {
 		val player = MC.player?.takeIf { it.world.dimension.type == DimensionType.THE_END } ?: return
 		val territory = TerritoryType.fromPos(player)
 		
-		if (territory == null || WorldProviderEndCustom.debugMode){
+		if (territory == null || WorldProviderEndCustom.debugMode) {
 			GL.setFogMode(FOG_EXP2)
 			GL.setFogDensity(0F)
 		}
-		else{
+		else {
 			val env = territory.desc.environment
 			val density = env.fogDensity * AbstractEnvironmentRenderer.currentFogDensityMp
 			val modifier = env.fogRenderDistanceModifier * AbstractEnvironmentRenderer.currentRenderDistanceMp
@@ -120,7 +121,7 @@ object TerritoryRenderer{
 	val VOID_FACTOR_VALUE
 		get() = Void.voidFactor.get(MC.partialTicks)
 	
-	private object Void{
+	private object Void {
 		private val VOID_PARTICLE = ParticleSpawnerCustom(
 			type = ParticleVoid,
 			pos = InBox(8F)
@@ -128,20 +129,20 @@ object TerritoryRenderer{
 		
 		val voidFactor = LerpedFloat(TerritoryVoid.OUTSIDE_VOID_FACTOR)
 		
-		init{
-			if (Debug.enabled){
+		init {
+			if (Debug.enabled) {
 				MinecraftForge.EVENT_BUS.register(this)
 			}
 		}
 		
-		fun tick(player: EntityPlayer){
+		fun tick(player: EntityPlayer) {
 			val factor = TerritoryVoid.getVoidFactor(player).also(voidFactor::update)
 			
-			if (factor == TerritoryVoid.OUTSIDE_VOID_FACTOR || MC.instance.isGamePaused){
+			if (factor == TerritoryVoid.OUTSIDE_VOID_FACTOR || MC.instance.isGamePaused) {
 				return
 			}
 			
-			if (factor > TerritoryVoid.OUTSIDE_VOID_FACTOR){
+			if (factor > TerritoryVoid.OUTSIDE_VOID_FACTOR) {
 				val rand = player.rng
 				
 				val mp = min(1F, (factor * 0.275F) + 0.275F)
@@ -152,14 +153,14 @@ object TerritoryRenderer{
 			}
 		}
 		
-		fun reset(){
+		fun reset() {
 			voidFactor.updateImmediately(TerritoryVoid.OUTSIDE_VOID_FACTOR)
 		}
 		
 		@SubscribeEvent
-		fun onRenderGameOverlayText(e: RenderGameOverlayEvent.Text){
-			if (MC.settings.showDebugInfo && MC.player?.dimension === HEE.dim){
-				with(e.left){
+		fun onRenderGameOverlayText(e: RenderGameOverlayEvent.Text) {
+			if (MC.settings.showDebugInfo && MC.player?.dimension === HEE.dim) {
+				with(e.left) {
 					add("")
 					add("End Void Factor: ${"%.3f".format(voidFactor.currentValue)}")
 				}
@@ -170,7 +171,7 @@ object TerritoryRenderer{
 	// Text rendering
 	
 	@SubscribeAllEvents(Side.CLIENT, modid = HEE.ID)
-	private object Title{
+	private object Title {
 		private const val FADE_TICKS = 22
 		
 		private var textTime = 0
@@ -179,19 +180,19 @@ object TerritoryRenderer{
 		private var textMainColor = RGB(0u)
 		private var textShadowColor = RGB(0u)
 		
-		fun display(newTerritory: TerritoryType){
+		fun display(newTerritory: TerritoryType) {
 			val title = I18n.format(newTerritory.translationKey)
 			
 			textTime = 60 + (2 * title.length)
 			textFade = FADE_TICKS
 			textTitle = title
 			
-			with(newTerritory.desc.colors){
-				if (tokenTop.asVec.lengthSquared() > tokenBottom.asVec.lengthSquared()){
+			with(newTerritory.desc.colors) {
+				if (tokenTop.asVec.lengthSquared() > tokenBottom.asVec.lengthSquared()) {
 					textMainColor = tokenTop
 					textShadowColor = tokenBottom
 				}
-				else{
+				else {
 					textMainColor = tokenBottom
 					textShadowColor = tokenTop
 				}
@@ -200,20 +201,20 @@ object TerritoryRenderer{
 			}
 		}
 		
-		fun tick(){
-			if (textTime > 0){
+		fun tick() {
+			if (textTime > 0) {
 				--textTime
 				--textFade
 			}
 		}
 		
-		fun reset(){
+		fun reset() {
 			textTime = 0
 		}
 		
 		@SubscribeEvent(EventPriority.HIGHEST)
-		fun onRenderGameOverlayText(e: RenderGameOverlayEvent.Text){
-			if (textTime == 0){
+		fun onRenderGameOverlayText(e: RenderGameOverlayEvent.Text) {
+			if (textTime == 0) {
 				return
 			}
 			
@@ -222,7 +223,7 @@ object TerritoryRenderer{
 			val width = resolution.scaledWidth
 			val height = resolution.scaledHeight
 			
-			val opacity = when{
+			val opacity = when {
 				textFade > 0          -> ((FADE_TICKS - (textFade - e.partialTicks)) / FADE_TICKS.toFloat()).coerceIn(0F, 1F)
 				textTime < FADE_TICKS -> ((textTime - e.partialTicks) / FADE_TICKS.toFloat()).coerceIn(0F, 1F)
 				else                  -> 1F
@@ -248,8 +249,8 @@ object TerritoryRenderer{
 			GL.popMatrix()
 		}
 		
-		private fun drawTitle(x: Float, y: Float, color: IntColor){
-			if (color.alpha > 3){ // prevents flickering alpha
+		private fun drawTitle(x: Float, y: Float, color: IntColor) {
+			if (color.alpha > 3) { // prevents flickering alpha
 				MC.fontRenderer.drawString(textTitle, x, y, color.i)
 			}
 		}

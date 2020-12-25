@@ -1,4 +1,5 @@
 package chylex.hee.game.mechanics.table.process
+
 import chylex.hee.game.block.entity.TileEntityTablePedestal
 import chylex.hee.game.block.entity.base.TileEntityBaseTable
 import chylex.hee.game.mechanics.energy.IEnergyQuantity.Units
@@ -12,7 +13,7 @@ import chylex.hee.system.serialization.getPos
 import chylex.hee.system.serialization.putPos
 import net.minecraft.util.math.BlockPos
 
-class ProcessSupportingItemBlocker(private val table: TileEntityBaseTable, pos: BlockPos) : ITableProcess{
+class ProcessSupportingItemBlocker(private val table: TileEntityBaseTable, pos: BlockPos) : ITableProcess {
 	constructor(table: TileEntityBaseTable, nbt: TagCompound) : this(table, nbt.getPos("PedestalPos"))
 	
 	override val pedestals = arrayOf(pos)
@@ -25,17 +26,17 @@ class ProcessSupportingItemBlocker(private val table: TileEntityBaseTable, pos: 
 	
 	// Handling
 	
-	override fun initialize(){
+	override fun initialize() {
 		pedestalTile!!.updateProcessStatus(BLOCKED)
 	}
 	
-	override fun revalidate(): Boolean{
+	override fun revalidate(): Boolean {
 		return pedestalTile?.hasInputItem == true && table.totalFreePedestals == 0
 	}
 	
-	override fun tick(context: ITableContext){}
+	override fun tick(context: ITableContext) {}
 	
-	override fun dispose(){
+	override fun dispose() {
 		pedestalTile?.updateProcessStatus(null)
 	}
 	
@@ -45,5 +46,5 @@ class ProcessSupportingItemBlocker(private val table: TileEntityBaseTable, pos: 
 		putPos("PedestalPos", pedestals[0])
 	}
 	
-	override fun deserializeNBT(nbt: TagCompound){}
+	override fun deserializeNBT(nbt: TagCompound) {}
 }

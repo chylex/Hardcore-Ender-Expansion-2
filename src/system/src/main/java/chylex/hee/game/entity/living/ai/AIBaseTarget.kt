@@ -1,4 +1,5 @@
 package chylex.hee.game.entity.living.ai
+
 import chylex.hee.system.migration.EntityCreature
 import chylex.hee.system.migration.EntityLiving
 import chylex.hee.system.migration.EntityLivingBase
@@ -10,9 +11,9 @@ abstract class AIBaseTarget<T : EntityLivingBase>(
 	entity: EntityCreature,
 	checkSight: Boolean,
 	easilyReachableOnly: Boolean,
-	mutexBits: EnumSet<Flag> = EnumSet.of(MOVE)
-) : TargetGoal(entity, checkSight, easilyReachableOnly){
-	init{
+	mutexBits: EnumSet<Flag> = EnumSet.of(MOVE),
+) : TargetGoal(entity, checkSight, easilyReachableOnly) {
+	init {
 		mutexFlags = mutexBits
 	}
 	
@@ -23,10 +24,10 @@ abstract class AIBaseTarget<T : EntityLivingBase>(
 	
 	abstract fun findTarget(): T?
 	
-	final override fun shouldExecute(): Boolean{
+	final override fun shouldExecute(): Boolean {
 		val newTarget = findTarget()
 		
-		if (newTarget == null){
+		if (newTarget == null) {
 			return false
 		}
 		
@@ -34,12 +35,12 @@ abstract class AIBaseTarget<T : EntityLivingBase>(
 		return true
 	}
 	
-	final override fun startExecuting(){
+	final override fun startExecuting() {
 		entity.attackTarget = selectedTarget
 		super.startExecuting()
 	}
 	
-	final override fun resetTask(){
+	final override fun resetTask() {
 		selectedTarget = null
 		super.resetTask()
 	}

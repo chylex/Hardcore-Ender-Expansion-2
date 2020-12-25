@@ -1,4 +1,5 @@
 package chylex.hee.game.block
+
 import chylex.hee.HEE
 import chylex.hee.game.block.properties.BlockBuilder
 import chylex.hee.game.inventory.isNotEmpty
@@ -26,17 +27,17 @@ import net.minecraft.util.math.BlockRayTraceResult
 import net.minecraft.world.World
 import net.minecraftforge.event.entity.player.EntityItemPickupEvent
 
-abstract class BlockAbstractCauldron(builder: BlockBuilder) : BlockCauldron(builder.p){
+abstract class BlockAbstractCauldron(builder: BlockBuilder) : BlockCauldron(builder.p) {
 	@SubscribeAllEvents(modid = HEE.ID)
-	companion object{
+	companion object {
 		const val MAX_LEVEL = 3
 		
 		@SubscribeEvent
-		fun onEntityItemPickup(e: EntityItemPickupEvent){
+		fun onEntityItemPickup(e: EntityItemPickupEvent) {
 			val item = e.item
 			val pos = Pos(item)
 			
-			if (pos.getBlock(item.world) is BlockCauldron && Pos(e.player) != pos){
+			if (pos.getBlock(item.world) is BlockCauldron && Pos(e.player) != pos) {
 				e.isCanceled = true
 			}
 		}
@@ -45,35 +46,35 @@ abstract class BlockAbstractCauldron(builder: BlockBuilder) : BlockCauldron(buil
 	protected abstract fun createFilledBucket(): ItemStack?
 	protected abstract fun createFilledBottle(): ItemStack?
 	
-	override fun setWaterLevel(world: World, pos: BlockPos, state: BlockState, level: Int){
+	override fun setWaterLevel(world: World, pos: BlockPos, state: BlockState, level: Int) {
 		super.setWaterLevel(world, pos, if (level == 0) Blocks.CAULDRON.defaultState else state, level)
 	}
 	
-	private fun useAndUpdateHeldItem(player: EntityPlayer, hand: Hand, newHeldItem: ItemStack){
+	private fun useAndUpdateHeldItem(player: EntityPlayer, hand: Hand, newHeldItem: ItemStack) {
 		val oldHeldItem = player.getHeldItem(hand)
 		
 		oldHeldItem.shrink(1)
 		
-		if (oldHeldItem.isEmpty){
+		if (oldHeldItem.isEmpty) {
 			player.setHeldItem(hand, newHeldItem)
 		}
-		else if (!player.inventory.addItemStackToInventory(newHeldItem)){
+		else if (!player.inventory.addItemStackToInventory(newHeldItem)) {
 			player.dropItem(newHeldItem, false)
 		}
 	}
 	
-	final override fun onBlockActivated(state: BlockState, world: World, pos: BlockPos, player: EntityPlayer, hand: Hand, hit: BlockRayTraceResult): ActionResultType{
+	final override fun onBlockActivated(state: BlockState, world: World, pos: BlockPos, player: EntityPlayer, hand: Hand, hit: BlockRayTraceResult): ActionResultType {
 		val item = player.getHeldItem(hand).takeIf { it.isNotEmpty }?.item
 		
-		if (item == null){
+		if (item == null) {
 			return PASS
 		}
 		
-		if (item === Items.BUCKET){
+		if (item === Items.BUCKET) {
 			val filledBucket = createFilledBucket()
 			
-			if (filledBucket != null && state[LEVEL] == MAX_LEVEL){
-				if (!world.isRemote){
+			if (filledBucket != null && state[LEVEL] == MAX_LEVEL) {
+				if (!world.isRemote) {
 					player.addStat(Stats.CAULDRON_USED)
 					useAndUpdateHeldItem(player, hand, filledBucket)
 					setWaterLevel(world, pos, state, 0)
@@ -84,11 +85,11 @@ abstract class BlockAbstractCauldron(builder: BlockBuilder) : BlockCauldron(buil
 			
 			return SUCCESS
 		}
-		else if (item === Items.GLASS_BOTTLE){
+		else if (item === Items.GLASS_BOTTLE) {
 			val filledBottle = createFilledBottle()
 			
-			if (filledBottle != null && state[LEVEL] > 0){
-				if (!world.isRemote){
+			if (filledBottle != null && state[LEVEL] > 0) {
+				if (!world.isRemote) {
 					player.addStat(Stats.CAULDRON_USED)
 					useAndUpdateHeldItem(player, hand, filledBottle)
 					setWaterLevel(world, pos, state, state[LEVEL] - 1)
@@ -103,6 +104,6 @@ abstract class BlockAbstractCauldron(builder: BlockBuilder) : BlockCauldron(buil
 		return PASS
 	}
 	
-	override fun onEntityCollision(state: BlockState, world: World, pos: BlockPos, entity: Entity){}
-	override fun fillWithRain(world: World, pos: BlockPos){}
+	override fun onEntityCollision(state: BlockState, world: World, pos: BlockPos, entity: Entity) {}
+	override fun fillWithRain(world: World, pos: BlockPos) {}
 }

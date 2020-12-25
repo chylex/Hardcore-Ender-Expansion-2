@@ -1,4 +1,5 @@
 package chylex.hee.game.world.feature.tombdungeon.piece
+
 import chylex.hee.game.world.Pos
 import chylex.hee.game.world.feature.tombdungeon.connection.TombDungeonConnection
 import chylex.hee.game.world.feature.tombdungeon.connection.TombDungeonConnectionType.CORRIDOR
@@ -7,7 +8,7 @@ import chylex.hee.game.world.structure.IStructureWorld
 import chylex.hee.game.world.structure.piece.IStructurePieceConnection
 import chylex.hee.system.migration.Facing.NORTH
 
-object TombDungeonStart : TombDungeonAbstractPiece(){
+object TombDungeonStart : TombDungeonAbstractPiece() {
 	override val size = Size(5, 5, 1)
 	override val isFancy = false
 	
@@ -18,5 +19,5 @@ object TombDungeonStart : TombDungeonAbstractPiece(){
 		TombDungeonConnection(CORRIDOR, Pos(size.centerX, 0, 0), NORTH)
 	)
 	
-	override fun generate(world: IStructureWorld, instance: Instance){}
+	override fun generate(world: IStructureWorld, instance: Instance) {}
 }

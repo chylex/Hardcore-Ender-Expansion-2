@@ -1,6 +1,6 @@
 package chylex.hee.system.collection
 
-object EmptyIterator : MutableIterator<Any>{
+object EmptyIterator : MutableIterator<Any> {
 	@Suppress("UNCHECKED_CAST")
 	fun <T> get(): Iterator<T> = this as Iterator<T>
 	

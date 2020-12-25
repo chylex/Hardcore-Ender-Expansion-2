@@ -1,4 +1,5 @@
 package chylex.hee.game.world.structure.palette
+
 import chylex.hee.game.block.with
 import chylex.hee.system.migration.BlockDirectional
 import chylex.hee.system.migration.BlockDoor
@@ -25,7 +26,7 @@ import net.minecraft.state.properties.Half
 import net.minecraft.state.properties.SlabType
 import net.minecraft.state.properties.StairsShape
 
-object PaletteMappings{
+object PaletteMappings {
 	val FACING_ALL = BlockDirectional.FACING to mapOf(
 		"up" to UP,
 		"down" to DOWN,
@@ -92,38 +93,38 @@ object PaletteMappings{
 		get() = arrayOf("u") + LIST_NSEW.map { "u$it" }
 	
 	fun HORIZONTAL_CONNECTIONS(block: Block) = (arrayOf("") + LIST_NSEW).associate {
-		Pair(it, it.fold(block.defaultState){
-			state, chr -> when(chr){
-				'n' -> state.with(BlockFourWay.NORTH, true)
-				's' -> state.with(BlockFourWay.SOUTH, true)
-				'e' -> state.with(BlockFourWay.EAST, true)
-				'w' -> state.with(BlockFourWay.WEST, true)
+		Pair(it, it.fold(block.defaultState) { state, chr ->
+			when(chr) {
+				'n'  -> state.with(BlockFourWay.NORTH, true)
+				's'  -> state.with(BlockFourWay.SOUTH, true)
+				'e'  -> state.with(BlockFourWay.EAST, true)
+				'w'  -> state.with(BlockFourWay.WEST, true)
 				else -> throw IllegalStateException()
 			}
 		})
 	}
 	
 	fun WALL_CONNECTIONS(block: Block) = (LIST_NSEW + LIST_UP_NSEW).associate {
-		Pair(it, it.fold(block.with(BlockWall.UP, false)){
-			state, chr -> when(chr){
-				'u' -> state.with(BlockWall.UP, true)
-				'n' -> state.with(BlockWall.NORTH, true)
-				's' -> state.with(BlockWall.SOUTH, true)
-				'e' -> state.with(BlockWall.EAST, true)
-				'w' -> state.with(BlockWall.WEST, true)
+		Pair(it, it.fold(block.with(BlockWall.UP, false)) { state, chr ->
+			when(chr) {
+				'u'  -> state.with(BlockWall.UP, true)
+				'n'  -> state.with(BlockWall.NORTH, true)
+				's'  -> state.with(BlockWall.SOUTH, true)
+				'e'  -> state.with(BlockWall.EAST, true)
+				'w'  -> state.with(BlockWall.WEST, true)
 				else -> throw IllegalStateException()
 			}
 		})
 	}
 	
 	fun VINE_WALLS(block: Block) = (arrayOf("u") + LIST_NSEW).associate {
-		Pair(it, it.fold(block.defaultState){
-			state, chr -> when(chr){
-				'u' -> state.with(BlockVine.UP, true)
-				'n' -> state.with(BlockVine.NORTH, true)
-				's' -> state.with(BlockVine.SOUTH, true)
-				'e' -> state.with(BlockVine.EAST, true)
-				'w' -> state.with(BlockVine.WEST, true)
+		Pair(it, it.fold(block.defaultState) { state, chr ->
+			when(chr) {
+				'u'  -> state.with(BlockVine.UP, true)
+				'n'  -> state.with(BlockVine.NORTH, true)
+				's'  -> state.with(BlockVine.SOUTH, true)
+				'e'  -> state.with(BlockVine.EAST, true)
+				'w'  -> state.with(BlockVine.WEST, true)
 				else -> throw IllegalStateException()
 			}
 		})

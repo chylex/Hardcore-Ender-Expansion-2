@@ -1,4 +1,5 @@
 package chylex.hee.game.entity.living
+
 import chylex.hee.game.entity.living.ai.AttackMelee
 import chylex.hee.game.entity.living.ai.Swim
 import chylex.hee.game.entity.living.ai.TargetAttacker
@@ -40,15 +41,15 @@ import net.minecraftforge.fml.network.NetworkHooks
 import kotlin.math.abs
 import kotlin.math.max
 
-class EntityMobUndread(type: EntityType<EntityMobUndread>, world: World) : EntityMob(type, world){
+class EntityMobUndread(type: EntityType<EntityMobUndread>, world: World) : EntityMob(type, world) {
 	@Suppress("unused")
 	constructor(world: World) : this(ModEntities.UNDREAD, world)
 	
-	private companion object{
+	private companion object {
 		private val DAMAGE_GENERAL = Damage(DIFFICULTY_SCALING, PEACEFUL_EXCLUSION, *ALL_PROTECTIONS_WITH_SHIELD)
 	}
 	
-	override fun registerAttributes(){
+	override fun registerAttributes() {
 		super.registerAttributes()
 		
 		getAttribute(MAX_HEALTH).baseValue = 12.0
@@ -59,66 +60,66 @@ class EntityMobUndread(type: EntityType<EntityMobUndread>, world: World) : Entit
 		experienceValue = 5
 	}
 	
-	override fun registerGoals(){
+	override fun registerGoals() {
 		goalSelector.addGoal(1, Swim(this))
 		goalSelector.addGoal(2, AttackMelee(this, movementSpeed = 1.0, chaseAfterLosingSight = true))
 		goalSelector.addGoal(3, WanderLand(this, movementSpeed = 0.9, chancePerTick = 12, maxDistanceXZ = 7, maxDistanceY = 3))
 		goalSelector.addGoal(4, WatchIdle(this))
 		
 		targetSelector.addGoal(1, TargetAttacker(this, callReinforcements = false))
-		targetSelector.addGoal(2, TargetNearby(this, chancePerTick = 1, checkSight = false, easilyReachableOnly = false, targetPredicate = ::isPlayerNearby ))
+		targetSelector.addGoal(2, TargetNearby(this, chancePerTick = 1, checkSight = false, easilyReachableOnly = false, targetPredicate = ::isPlayerNearby))
 	}
 	
-	override fun createSpawnPacket(): IPacket<*>{
+	override fun createSpawnPacket(): IPacket<*> {
 		return NetworkHooks.getEntitySpawningPacket(this)
 	}
 	
-	private fun isPlayerNearby(player: EntityPlayer): Boolean{
+	private fun isPlayerNearby(player: EntityPlayer): Boolean {
 		return abs(posY - player.posY) <= 3 && getDistanceSq(player) < square(16)
 	}
 	
-	override fun attackEntityAsMob(entity: Entity): Boolean{
+	override fun attackEntityAsMob(entity: Entity): Boolean {
 		return DAMAGE_GENERAL.dealToFrom(entity, this)
 	}
 	
-	override fun getLootTable(): ResourceLocation{
+	override fun getLootTable(): ResourceLocation {
 		return Resource.Custom("entities/undread")
 	}
 	
-	override fun getCreatureAttribute(): CreatureAttribute{
+	override fun getCreatureAttribute(): CreatureAttribute {
 		return CreatureAttribute.UNDEAD
 	}
 	
-	override fun getStandingEyeHeight(pose: Pose, size: EntitySize): Float{
+	override fun getStandingEyeHeight(pose: Pose, size: EntitySize): Float {
 		return 1.68F
 	}
 	
-	override fun swingArm(hand: Hand){}
+	override fun swingArm(hand: Hand) {}
 	
-	override fun onDeathUpdate(){
+	override fun onDeathUpdate() {
 		noClip = true
 		motionY = max(0.05, motionY)
 		
-		if (deathTime >= (DEATH_TIME_MAX / 2) + 1){
+		if (deathTime >= (DEATH_TIME_MAX / 2) + 1) {
 			deathTime = DEATH_TIME_MAX - 1
 		}
 		
 		super.onDeathUpdate()
 	}
 	
-	override fun playStepSound(pos: BlockPos, state: BlockState){
+	override fun playStepSound(pos: BlockPos, state: BlockState) {
 		playSound(Sounds.ENTITY_ZOMBIE_STEP, rand.nextFloat(0.4F, 0.5F), rand.nextFloat(0.9F, 1F))
 	}
 	
-	override fun getHurtSound(source: DamageSource): SoundEvent{
+	override fun getHurtSound(source: DamageSource): SoundEvent {
 		return ModSounds.MOB_UNDREAD_HURT
 	}
 	
-	override fun getDeathSound(): SoundEvent{
+	override fun getDeathSound(): SoundEvent {
 		return ModSounds.MOB_UNDREAD_DEATH
 	}
 	
-	override fun getSoundPitch(): Float{
+	override fun getSoundPitch(): Float {
 		return rand.nextFloat(0.8F, 1F)
 	}
 }

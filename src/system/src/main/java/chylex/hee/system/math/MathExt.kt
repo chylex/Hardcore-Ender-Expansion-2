@@ -1,6 +1,7 @@
 @file:Suppress("NOTHING_TO_INLINE")
 
 package chylex.hee.system.math
+
 import org.apache.commons.lang3.math.Fraction
 import kotlin.math.ceil
 import kotlin.math.floor
@@ -26,22 +27,22 @@ infix fun Int.over(denominator: Int): Fraction = Fraction.getFraction(this, deno
 /**
  * Extremely necessary utility method to bit shift an [Int] into a [Long].
  */
-infix fun Int.shlong(bitCount: Int): Long{
+infix fun Int.shlong(bitCount: Int): Long {
 	return this.toLong() shl bitCount
 }
 
-fun offsetTowards(from: Float, to: Float, progress: Float): Float{
+fun offsetTowards(from: Float, to: Float, progress: Float): Float {
 	return from + (to - from) * progress
 }
 
-fun offsetTowards(from: Double, to: Double, progress: Double): Double{
+fun offsetTowards(from: Double, to: Double, progress: Double): Double {
 	return from + (to - from) * progress
 }
 
 /**
  * Maps a range of values in [from] range to values in [to] range using linear interpolation.
  */
-fun remapRange(value: Float, from: ClosedFloatingPointRange<Float>, to: ClosedFloatingPointRange<Float>): Float{
+fun remapRange(value: Float, from: ClosedFloatingPointRange<Float>, to: ClosedFloatingPointRange<Float>): Float {
 	val remappedBetween0And1 = (value - from.start) / (from.endInclusive - from.start)
 	return to.start + remappedBetween0And1 * (to.endInclusive - to.start)
 }
@@ -49,7 +50,7 @@ fun remapRange(value: Float, from: ClosedFloatingPointRange<Float>, to: ClosedFl
 /**
  * Maps a range of values in [from] range to values in [to] range using linear interpolation.
  */
-fun remapRange(value: Double, from: ClosedFloatingPointRange<Double>, to: ClosedFloatingPointRange<Double>): Double{
+fun remapRange(value: Double, from: ClosedFloatingPointRange<Double>, to: ClosedFloatingPointRange<Double>): Double {
 	val remappedBetween0And1 = (value - from.start) / (from.endInclusive - from.start)
 	return to.start + remappedBetween0And1 * (to.endInclusive - to.start)
 }

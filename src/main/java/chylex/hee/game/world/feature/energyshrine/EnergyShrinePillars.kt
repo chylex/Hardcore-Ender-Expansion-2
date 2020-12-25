@@ -1,4 +1,5 @@
 package chylex.hee.game.world.feature.energyshrine
+
 import chylex.hee.game.block.withFacing
 import chylex.hee.game.world.blocksMovement
 import chylex.hee.game.world.getState
@@ -20,13 +21,13 @@ import net.minecraft.world.World
 import java.util.Random
 import kotlin.math.max
 
-object EnergyShrinePillars{
-	fun isReplaceable(world: World, pos: BlockPos): Boolean{
+object EnergyShrinePillars {
+	fun isReplaceable(world: World, pos: BlockPos): Boolean {
 		val state = pos.getState(world)
 		return !state.material.blocksMovement() || state.isIn(BlockTags.LEAVES)
 	}
 	
-	fun tryGenerate(world: World, rand: Random, surfacePos: BlockPos): Boolean{
+	fun tryGenerate(world: World, rand: Random, surfacePos: BlockPos): Boolean {
 		val surfaceXZ = PosXZ(surfacePos)
 		
 		val amount = if (rand.nextBoolean()) 3 else 4
@@ -35,52 +36,52 @@ object EnergyShrinePillars{
 		val usedXZ = mutableSetOf<PosXZ>()
 		val bottomLocations = mutableListOf<BlockPos>()
 		
-		for(attempt in 1..50){
+		for(attempt in 1..50) {
 			val testXZ = surfaceXZ.add( // starting room has even dimensions
 				rand.nextInt(-4, 3),
 				rand.nextInt(-4, 3)
 			)
 			
-			if (usedXZ.contains(testXZ)){
+			if (usedXZ.contains(testXZ)) {
 				continue
 			}
 			
 			val height = heights[bottomLocations.size]
-			val testPos = testXZ.withY(surfacePos.y + 3).offsetUntil(DOWN, 0..7){ !isReplaceable(world, it) }
+			val testPos = testXZ.withY(surfacePos.y + 3).offsetUntil(DOWN, 0..7) { !isReplaceable(world, it) }
 			
-			if (testPos == null || (1 until height).any { testPos.up(it).blocksMovement(world) }){
+			if (testPos == null || (1 until height).any { testPos.up(it).blocksMovement(world) }) {
 				continue
 			}
 			
 			bottomLocations.add(testPos.up())
 			
-			if (bottomLocations.size == amount){
+			if (bottomLocations.size == amount) {
 				break
 			}
 			
 			usedXZ.add(testXZ)
 			
-			for(facing in Facing4){
+			for(facing in Facing4) {
 				usedXZ.add(testXZ.offset(facing))
 			}
 		}
 		
-		if (bottomLocations.size != amount){
+		if (bottomLocations.size != amount) {
 			return false
 		}
 		
-		for((index, bottomPos) in bottomLocations.withIndex()){
+		for((index, bottomPos) in bottomLocations.withIndex()) {
 			val height = heights[index]
 			val fullBlock = if (rand.nextBoolean()) ModBlocks.GLOOMROCK_SMOOTH else ModBlocks.GLOOMROCK_BRICKS
 			
-			for(yOffset in 0..max(0, height - 2)){
+			for(yOffset in 0..max(0, height - 2)) {
 				bottomPos.up(yOffset).setBlock(world, fullBlock)
 			}
 			
-			if (height > 1){
+			if (height > 1) {
 				val topPos = bottomPos.up(height - 1)
 				
-				if (topPos.isAir(world)){
+				if (topPos.isAir(world)) {
 					topPos.setState(world, pickPillarTopBlock(rand, fullBlock))
 				}
 			}
@@ -89,8 +90,8 @@ object EnergyShrinePillars{
 		return true
 	}
 	
-	private fun pickPillarTopBlock(rand: Random, fullBlock: Block): BlockState{
-		if (rand.nextBoolean()){
+	private fun pickPillarTopBlock(rand: Random, fullBlock: Block): BlockState {
+		if (rand.nextBoolean()) {
 			val topBlock = if (fullBlock === ModBlocks.GLOOMROCK_SMOOTH)
 				ModBlocks.GLOOMROCK_SMOOTH_SLAB
 			else
@@ -98,7 +99,7 @@ object EnergyShrinePillars{
 			
 			return topBlock.defaultState
 		}
-		else{
+		else {
 			val topBlock = if (fullBlock === ModBlocks.GLOOMROCK_SMOOTH)
 				ModBlocks.GLOOMROCK_SMOOTH_STAIRS
 			else

@@ -1,4 +1,5 @@
 package chylex.hee.datagen.client
+
 import chylex.hee.datagen.client.util.cauldron
 import chylex.hee.datagen.client.util.cross
 import chylex.hee.datagen.client.util.cube
@@ -23,8 +24,8 @@ import net.minecraft.data.DataGenerator
 import net.minecraftforge.client.model.generators.BlockModelProvider
 import net.minecraftforge.client.model.generators.ExistingFileHelper
 
-class BlockModels(generator: DataGenerator, modid: String, existingFileHelper: ExistingFileHelper) : BlockModelProvider(generator, modid, existingFileHelper){
-	override fun registerModels(){
+class BlockModels(generator: DataGenerator, modid: String, existingFileHelper: ExistingFileHelper) : BlockModelProvider(generator, modid, existingFileHelper) {
+	override fun registerModels() {
 		
 		// Blocks: Building (Uncategorized)
 		
@@ -60,7 +61,7 @@ class BlockModels(generator: DataGenerator, modid: String, existingFileHelper: E
 			texture("particle", ModBlocks.GRAVE_DIRT_PLAIN.r)
 		}
 		
-		multi(ModBlocks.GRAVE_DIRT_LOOT, Resource.Custom("block/grave_dirt_low"), 1..6){
+		multi(ModBlocks.GRAVE_DIRT_LOOT, Resource.Custom("block/grave_dirt_low"), 1..6) {
 			texture("top", Resource.Custom("block/$it"))
 		}
 		
@@ -102,7 +103,7 @@ class BlockModels(generator: DataGenerator, modid: String, existingFileHelper: E
 		
 		cubeBottomTop(ModBlocks.EXPERIENCE_GATE, top = ModBlocks.EXPERIENCE_GATE.r("_bottom"))
 		
-		multi(ModBlocks.EXPERIENCE_GATE, ModBlocks.EXPERIENCE_GATE.r, arrayOf("_rd1", "_rd2", "_ud")){
+		multi(ModBlocks.EXPERIENCE_GATE, ModBlocks.EXPERIENCE_GATE.r, arrayOf("_rd1", "_rd2", "_ud")) {
 			texture("top", Resource.Custom("block/experience_gate_top" + it.suffix))
 		}
 		
@@ -143,14 +144,14 @@ class BlockModels(generator: DataGenerator, modid: String, existingFileHelper: E
 		
 		// Blocks: Decorative (Plants)
 		
-		multi(ModBlocks.DEATH_FLOWER_DECAYING, Resource.Vanilla("block/cross"), 1..4){
+		multi(ModBlocks.DEATH_FLOWER_DECAYING, Resource.Vanilla("block/cross"), 1..4) {
 			texture("cross", Resource.Custom("block/$it"))
 		}
 		
 		cross(ModBlocks.DEATH_FLOWER_HEALED)
 		cross(ModBlocks.DEATH_FLOWER_WITHERED)
 		
-		multi(ModBlocks.POTTED_DEATH_FLOWER_DECAYING, Resource.Vanilla("block/flower_pot_cross"), 1..4){
+		multi(ModBlocks.POTTED_DEATH_FLOWER_DECAYING, Resource.Vanilla("block/flower_pot_cross"), 1..4) {
 			texture("plant", Resource.Custom("block/death_flower" + it.suffix))
 		}
 		
@@ -176,7 +177,7 @@ class BlockModels(generator: DataGenerator, modid: String, existingFileHelper: E
 		
 		// Blocks: Tables
 		
-		for(tier in 1..3){
+		for(tier in 1..3) {
 			parent("table_tier_$tier", Resource.Custom("block/table")).then {
 				texture("particle", "hee:block/table_base")
 				texture("bottom", "hee:block/table_base")
@@ -185,20 +186,26 @@ class BlockModels(generator: DataGenerator, modid: String, existingFileHelper: E
 			}
 		}
 		
-		parent(ModBlocks.TABLE_BASE_TIER_1, Resource.Custom("block/table_tier_1")).then { Resource.Custom("block/transparent").let {
-			texture("overlay_top", it)
-			texture("overlay_side", it)
-		}}
+		parent(ModBlocks.TABLE_BASE_TIER_1, Resource.Custom("block/table_tier_1")).then {
+			Resource.Custom("block/transparent").let {
+				texture("overlay_top", it)
+				texture("overlay_side", it)
+			}
+		}
 		
-		parent(ModBlocks.TABLE_BASE_TIER_2, Resource.Custom("block/table_tier_2")).then { Resource.Custom("block/transparent").let {
-			texture("overlay_top", it)
-			texture("overlay_side", it)
-		}}
+		parent(ModBlocks.TABLE_BASE_TIER_2, Resource.Custom("block/table_tier_2")).then {
+			Resource.Custom("block/transparent").let {
+				texture("overlay_top", it)
+				texture("overlay_side", it)
+			}
+		}
 		
-		parent(ModBlocks.TABLE_BASE_TIER_3, Resource.Custom("block/table_tier_3")).then { Resource.Custom("block/transparent").let {
-			texture("overlay_top", it)
-			texture("overlay_side", it)
-		}}
+		parent(ModBlocks.TABLE_BASE_TIER_3, Resource.Custom("block/table_tier_3")).then {
+			Resource.Custom("block/transparent").let {
+				texture("overlay_top", it)
+				texture("overlay_side", it)
+			}
+		}
 		
 		table(ModBlocks.ACCUMULATION_TABLE_TIER_1)
 		table(ModBlocks.ACCUMULATION_TABLE_TIER_2)

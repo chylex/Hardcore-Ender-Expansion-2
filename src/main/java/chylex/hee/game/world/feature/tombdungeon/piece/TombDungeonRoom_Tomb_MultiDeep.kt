@@ -1,4 +1,5 @@
 package chylex.hee.game.world.feature.tombdungeon.piece
+
 import chylex.hee.game.block.BlockGraveDirt
 import chylex.hee.game.world.Pos
 import chylex.hee.game.world.structure.IStructureWorld
@@ -7,14 +8,14 @@ import chylex.hee.system.migration.Facing.WEST
 import chylex.hee.system.random.nextInt
 import chylex.hee.system.random.nextRounded
 
-class TombDungeonRoom_Tomb_MultiDeep(file: String, private val tombsPerColumn: Int, entranceY: Int, allowSecrets: Boolean, isFancy: Boolean) : TombDungeonRoom_Tomb(file, entranceY, allowSecrets, isFancy){
-	override fun generate(world: IStructureWorld, instance: Instance){
+class TombDungeonRoom_Tomb_MultiDeep(file: String, private val tombsPerColumn: Int, entranceY: Int, allowSecrets: Boolean, isFancy: Boolean) : TombDungeonRoom_Tomb(file, entranceY, allowSecrets, isFancy) {
+	override fun generate(world: IStructureWorld, instance: Instance) {
 		super.generate(world, instance)
 		
 		val rand = world.rand
 		val chests = rand.nextInt(0, (tombsPerColumn * 2) / 5) * rand.nextRounded(0.66F)
 		
-		repeat(chests){
+		repeat(chests) {
 			val (offset, facing) = if (rand.nextBoolean())
 				-3 to EAST
 			else
@@ -22,7 +23,7 @@ class TombDungeonRoom_Tomb_MultiDeep(file: String, private val tombsPerColumn: I
 			
 			val pos = Pos(centerX + offset, 1, 4 + (2 * rand.nextInt(tombsPerColumn)))
 			
-			if (world.getBlock(pos) is BlockGraveDirt){
+			if (world.getBlock(pos) is BlockGraveDirt) {
 				placeChest(world, instance, pos, facing)
 			}
 		}

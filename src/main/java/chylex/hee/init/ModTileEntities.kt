@@ -1,4 +1,5 @@
 package chylex.hee.init
+
 import chylex.hee.HEE
 import chylex.hee.game.block.BlockShulkerBoxOverride
 import chylex.hee.game.block.entity.TileEntityAccumulationTable
@@ -33,7 +34,7 @@ import net.minecraftforge.event.RegistryEvent
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber.Bus.MOD
 
 @SubscribeAllEvents(modid = HEE.ID, bus = MOD)
-object ModTileEntities{
+object ModTileEntities {
 	@JvmField val ACCUMULATION_TABLE     = build<TileEntityAccumulationTable>(ModBlocks.ACCUMULATION_TABLE_TIER_1, ModBlocks.ACCUMULATION_TABLE_TIER_2, ModBlocks.ACCUMULATION_TABLE_TIER_3) named "accumulation_table"
 	@JvmField val BREWING_STAND          = build<TileEntityBrewingStandCustom>(ModBlocks.ENHANCED_BREWING_STAND) named "brewing_stand"
 	@JvmField val DARK_CHEST             = build<TileEntityDarkChest>(ModBlocks.DARK_CHEST) named "dark_chest"
@@ -55,13 +56,13 @@ object ModTileEntities{
 	@JvmField val VOID_PORTAL_STORAGE    = build<TileEntityVoidPortalStorage>(ModBlocks.VOID_PORTAL_STORAGE, ModBlocks.VOID_PORTAL_STORAGE_CRAFTED) named "void_portal_storage"
 	
 	@SubscribeEvent
-	fun onRegister(e: RegistryEvent.Register<TileEntityType<*>>){
+	fun onRegister(e: RegistryEvent.Register<TileEntityType<*>>) {
 		e.registerAllFields(this)
 	}
 	
-	fun setupVanillaValidBlocks(){
-		for(block in arrayOf(BREWING_STAND, TileEntityType.BREWING_STAND)){
-			with(block){
+	fun setupVanillaValidBlocks() {
+		for(block in arrayOf(BREWING_STAND, TileEntityType.BREWING_STAND)) {
+			with(block) {
 				validBlocks = ImmutableSet.builder<Block>()
 					.addAll(validBlocks)
 					.add(Blocks.BREWING_STAND) // needs the replaced one
@@ -69,8 +70,8 @@ object ModTileEntities{
 			}
 		}
 		
-		for(block in arrayOf(SHULKER_BOX, TileEntityType.SHULKER_BOX)){
-			with(block){
+		for(block in arrayOf(SHULKER_BOX, TileEntityType.SHULKER_BOX)) {
+			with(block) {
 				validBlocks = ImmutableSet.builder<Block>()
 					.addAll(validBlocks)
 					.addAll(BlockShulkerBoxOverride.ALL_BLOCKS) // needs the replaced ones
@@ -78,7 +79,7 @@ object ModTileEntities{
 			}
 		}
 		
-		with(TileEntityType.SKULL){
+		with(TileEntityType.SKULL) {
 			validBlocks = ImmutableSet.builder<Block>()
 				.addAll(validBlocks)
 				.add(ModBlocks.ENDERMAN_HEAD)
@@ -87,7 +88,7 @@ object ModTileEntities{
 		}
 	}
 	
-	private inline fun <reified T : TileEntity> build(vararg blocks: Block): TileEntityType<T>{
+	private inline fun <reified T : TileEntity> build(vararg blocks: Block): TileEntityType<T> {
 		@Suppress("NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS")
 		return TileEntityType.Builder.create(ObjectConstructors.noArgs<T>(), *blocks).build(null)
 	}

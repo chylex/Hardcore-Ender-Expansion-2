@@ -1,4 +1,5 @@
 package chylex.hee.client.render.block
+
 import chylex.hee.client.model.block.ModelBlockIgneousPlate
 import chylex.hee.client.render.gl.RenderStateBuilder
 import chylex.hee.client.render.gl.RenderStateBuilder.Companion.BLEND_NONE
@@ -33,12 +34,12 @@ import net.minecraft.util.math.Vec3d
 import org.lwjgl.opengl.GL11
 
 @Sided(Side.CLIENT)
-class RenderTileIgneousPlate(dispatcher: TileEntityRendererDispatcher) : TileEntityRenderer<TileEntityIgneousPlate>(dispatcher){
-	private companion object{
+class RenderTileIgneousPlate(dispatcher: TileEntityRendererDispatcher) : TileEntityRenderer<TileEntityIgneousPlate>(dispatcher) {
+	private companion object {
 		private val TEX_PLATE = Resource.Custom("textures/entity/igneous_plate.png")
 		
 		private val RENDER_TYPE_OUTER = RenderType.getEntitySolid(TEX_PLATE)
-		private val RENDER_TYPE_INNER = with(RenderStateBuilder()){
+		private val RENDER_TYPE_INNER = with(RenderStateBuilder()) {
 			tex(TEX_PLATE)
 			blend(BLEND_NONE)
 			lighting(LIGHTING_DISABLED)
@@ -53,7 +54,7 @@ class RenderTileIgneousPlate(dispatcher: TileEntityRendererDispatcher) : TileEnt
 			RGB(235,  23,  23).asVec
 		)
 		
-		private fun getInnerBoxColor(combinedHeat: Float): Vec3d{
+		private fun getInnerBoxColor(combinedHeat: Float): Vec3d {
 			val index = combinedHeat.floorToInt().coerceIn(0, COLOR_TRANSITIONS.lastIndex - 1)
 			val progress = combinedHeat.toDouble() - index
 			
@@ -61,16 +62,16 @@ class RenderTileIgneousPlate(dispatcher: TileEntityRendererDispatcher) : TileEnt
 		}
 	}
 	
-	override fun render(tile: TileEntityIgneousPlate, partialTicks: Float, matrix: MatrixStack, buffer: IRenderTypeBuffer, combinedLight: Int, combinedOverlay: Int){
+	override fun render(tile: TileEntityIgneousPlate, partialTicks: Float, matrix: MatrixStack, buffer: IRenderTypeBuffer, combinedLight: Int, combinedOverlay: Int) {
 		val state = tile.world?.let(tile.pos::getState)
 		
-		if (state?.block !== ModBlocks.IGNEOUS_PLATE){
+		if (state?.block !== ModBlocks.IGNEOUS_PLATE) {
 			return
 		}
 		
 		matrix.push()
 		
-		when(state[BlockIgneousPlate.FACING_NOT_DOWN]){
+		when(state[BlockIgneousPlate.FACING_NOT_DOWN]) {
 			UP -> {
 				matrix.translateZ(1.0)
 				matrix.rotateX(-90F)

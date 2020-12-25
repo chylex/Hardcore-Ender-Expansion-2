@@ -1,4 +1,5 @@
 package chylex.hee.game.block.properties
+
 import chylex.hee.game.block.clone
 import chylex.hee.game.block.properties.BlockBuilder.Companion.INDESTRUCTIBLE_HARDNESS
 import chylex.hee.game.item.Tool.Level.DIAMOND
@@ -12,7 +13,7 @@ import net.minecraft.block.SoundType
 import net.minecraft.block.material.Material
 import net.minecraft.block.material.MaterialColor
 
-object BlockBuilders{
+object BlockBuilders {
 	
 	// Building (Uncategorized)
 	

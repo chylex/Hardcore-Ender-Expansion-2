@@ -1,4 +1,5 @@
 package chylex.hee.client.render.territory.components
+
 import chylex.hee.client.MC
 import chylex.hee.client.render.gl.DF_ONE_MINUS_SRC_ALPHA
 import chylex.hee.client.render.gl.DF_ZERO
@@ -20,10 +21,10 @@ class SkyPlaneTopFoggy(
 	override val alpha: Float = DEFAULT_ALPHA,
 	override val rescale: Float = DEFAULT_RESCALE,
 	override val distance: Float = DEFAULT_DISTANCE,
-	private val width: Float = distance
-) : SkyCubeBase(){
+	private val width: Float = distance,
+) : SkyCubeBase() {
 	@Sided(Side.CLIENT)
-	override fun render(world: ClientWorld, matrix: MatrixStack, partialTicks: Float){
+	override fun render(world: ClientWorld, matrix: MatrixStack, partialTicks: Float) {
 		val dist = distance.coerceAtMost(18.5F * MC.settings.renderDistanceChunks)
 		val rescale = rescale
 		

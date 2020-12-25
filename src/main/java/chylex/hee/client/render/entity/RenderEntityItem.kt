@@ -1,4 +1,5 @@
 package chylex.hee.client.render.entity
+
 import chylex.hee.client.MC
 import chylex.hee.system.forge.Side
 import chylex.hee.system.forge.Sided

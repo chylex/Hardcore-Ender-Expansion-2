@@ -1,4 +1,5 @@
 package chylex.hee.game.particle
+
 import chylex.hee.game.particle.data.ParticleDataColorScale
 import chylex.hee.game.particle.spawner.IParticleMaker
 import chylex.hee.system.color.IntColor
@@ -9,32 +10,32 @@ import net.minecraft.client.particle.Particle
 import net.minecraft.client.particle.SpellParticle
 import net.minecraft.world.World
 
-object ParticleSpellCustom : IParticleMaker.WithData<ParticleDataColorScale>(){
+object ParticleSpellCustom : IParticleMaker.WithData<ParticleDataColorScale>() {
 	@Sided(Side.CLIENT)
-	override fun create(world: World, posX: Double, posY: Double, posZ: Double, motX: Double, motY: Double, motZ: Double, data: ParticleDataColorScale?): Particle{
+	override fun create(world: World, posX: Double, posY: Double, posZ: Double, motX: Double, motY: Double, motZ: Double, data: ParticleDataColorScale?): Particle {
 		return Instance(world, posX, posY, posZ, motX, motY, motZ, data)
 	}
 	
 	fun Data(
 		color: IntColor,
-		scale: ClosedFloatingPointRange<Float>
+		scale: ClosedFloatingPointRange<Float>,
 	) = ParticleDataColorScale.Generator(IRandomColor.Static(color), scale)
 	
 	@Sided(Side.CLIENT)
 	private class Instance(
-		world: World, posX: Double, posY: Double, posZ: Double, motX: Double, motY: Double, motZ: Double, data: ParticleDataColorScale?
+		world: World, posX: Double, posY: Double, posZ: Double, motX: Double, motY: Double, motZ: Double, data: ParticleDataColorScale?,
 	) : SpellParticle(
 		world, posX, posY, posZ, 0.0, 0.0, 0.0, sprite
-	){
-		init{
+	) {
+		init {
 			motionX = motX
 			motionY = motY
 			motionZ = motZ
 			
-			if (data == null){
+			if (data == null) {
 				setExpired()
 			}
-			else{
+			else {
 				val color = data.color
 				
 				particleRed = color.redF

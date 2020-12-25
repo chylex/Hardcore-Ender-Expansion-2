@@ -1,4 +1,5 @@
 package chylex.hee.game.block.entity
+
 import chylex.hee.game.block.entity.base.TileEntityBase.Context.STORAGE
 import chylex.hee.game.block.entity.base.TileEntityBaseSpawner
 import chylex.hee.game.entity.living.EntityMobAngryEnderman
@@ -60,10 +61,10 @@ import net.minecraftforge.event.ForgeEventFactory
 import java.util.Random
 import kotlin.math.max
 
-class TileEntitySpawnerObsidianTower(type: TileEntityType<TileEntitySpawnerObsidianTower>) : TileEntityBaseSpawner(type){
+class TileEntitySpawnerObsidianTower(type: TileEntityType<TileEntitySpawnerObsidianTower>) : TileEntityBaseSpawner(type) {
 	constructor() : this(ModTileEntities.SPAWNER_OBSIDIAN_TOWER)
 	
-	companion object{
+	companion object {
 		private val PARTICLE_SMOKE = ParticleSpawnerVanilla(
 			type = SMOKE,
 			pos = InBox(0.5F)
@@ -87,8 +88,8 @@ class TileEntitySpawnerObsidianTower(type: TileEntityType<TileEntitySpawnerObsid
 		private const val TOWER_EFFECTS_TAG = "TowerEffects"
 		private const val REMAINING_MOB_SPAWNS_TAG = "RemainingMobSpawns"
 		
-		val FX_BREAK = object : FxBlockHandler(){
-			override fun handle(pos: BlockPos, world: World, rand: Random){
+		val FX_BREAK = object : FxBlockHandler() {
+			override fun handle(pos: BlockPos, world: World, rand: Random) {
 				PARTICLE_BREAK.spawn(Point(pos, rand.nextInt(18, 20)), rand)
 				ModSounds.BLOCK_SPAWNER_EXPIRE.playClient(pos, SoundCategory.BLOCKS, volume = 1.3F, pitch = rand.nextFloat(0.7F, 0.8F))
 			}
@@ -111,7 +112,7 @@ class TileEntitySpawnerObsidianTower(type: TileEntityType<TileEntitySpawnerObsid
 	override val clientRotationSpeed
 		get() = 2.25F
 	
-	constructor(data: ObsidianTowerRoomData, rand: Random) : this(){
+	constructor(data: ObsidianTowerRoomData, rand: Random) : this() {
 		this.level = data.spawnerLevel
 		this.effects = data.effects.toTypedArray()
 		
@@ -119,20 +120,20 @@ class TileEntitySpawnerObsidianTower(type: TileEntityType<TileEntitySpawnerObsid
 		this.startSpawnCooldown(resetSpawnCooldown)
 	}
 	
-	override fun createClientEntity(): Entity{
+	override fun createClientEntity(): Entity {
 		return EntityMobEnderman(wrld)
 	}
 	
 	// Tick handling
 	
-	override fun tickClient(){
+	override fun tickClient() {
 		val rand = wrld.rand
 		val time = wrld.totalTime
 		
-		if (time % 3L == 0L && rand.nextInt(max(2, 5 - effects.size)) == 0){
+		if (time % 3L == 0L && rand.nextInt(max(2, 5 - effects.size)) == 0) {
 			val color = rand.nextItemOrNull(effects)?.let { IntColor(it.potion.liquidColor) }
 			
-			if (color != null){
+			if (color != null) {
 				ParticleSpawnerCustom(
 					type = ParticleSpellCustom,
 					data = ParticleSpellCustom.Data(color, scale = (0.6F)..(0.7F)),
@@ -141,25 +142,25 @@ class TileEntitySpawnerObsidianTower(type: TileEntityType<TileEntitySpawnerObsid
 				).spawn(Point(pos, 1), rand)
 			}
 		}
-		else if (time % 5L == 0L && rand.nextBoolean()){
+		else if (time % 5L == 0L && rand.nextBoolean()) {
 			PARTICLE_SMOKE.spawn(Point(pos, 1), rand)
 		}
 	}
 	
-	override fun tickServer(){
-		if (wrld.isPeaceful){
+	override fun tickServer() {
+		if (wrld.isPeaceful) {
 			return
 		}
 		
 		val floorCenter = floorCenter
 		
-		if (!floorCenter.isAnyPlayerWithinRange(wrld, ACTIVATION_DISTANCE)){
+		if (!floorCenter.isAnyPlayerWithinRange(wrld, ACTIVATION_DISTANCE)) {
 			return
 		}
 		
 		val searchArea = AxisAlignedBB(floorCenter).expand(0.0, SPAWN_AREA_BOX_HEIGHT, 0.0).grow(SPAWN_AREA_BOX_RANGE_XZ, 0.0, SPAWN_AREA_BOX_RANGE_XZ)
 		
-		if (getEntitiesInSpawnArea<EntityPlayer>(searchArea).none()){
+		if (getEntitiesInSpawnArea<EntityPlayer>(searchArea).none()) {
 			startSpawnCooldown(resetSpawnCooldown)
 			return
 		}
@@ -167,26 +168,26 @@ class TileEntitySpawnerObsidianTower(type: TileEntityType<TileEntitySpawnerObsid
 		val spawnedEndermen = getEntitiesInSpawnArea<EntityMobEnderman>(searchArea).size
 		val maxEndermen = level.mobLimitInSpawnArea
 		
-		if (spawnedEndermen >= maxEndermen){
+		if (spawnedEndermen >= maxEndermen) {
 			startSpawnCooldown(30)
 			return
 		}
 		
-		if (tickSpawnCooldown()){
+		if (tickSpawnCooldown()) {
 			val rand = wrld.rand
 			val amount = minOf(remainingMobSpawns, maxEndermen - spawnedEndermen, modifySpawnAmount(rand.nextInt(1, 2)))
 			
-			repeat(amount){
+			repeat(amount) {
 				triggerSpawn(rand)
 			}
 			
 			remainingMobSpawns -= amount
 			
-			if (remainingMobSpawns <= 0 || level == ObsidianTowerSpawnerLevel.INTRODUCTION){
+			if (remainingMobSpawns <= 0 || level == ObsidianTowerSpawnerLevel.INTRODUCTION) {
 				PacketClientFX(FX_BREAK, FxBlockData(pos)).sendToAllAround(this, 12.0)
 				pos.breakBlock(wrld, false)
 			}
-			else{
+			else {
 				startSpawnCooldown(20 * (level.baseCooldown - wrld.difficulty.id - rand.nextInt(0, 2)))
 			}
 		}
@@ -194,15 +195,15 @@ class TileEntitySpawnerObsidianTower(type: TileEntityType<TileEntitySpawnerObsid
 	
 	// Spawn helpers
 	
-	private fun isEntityInRange(entity: Entity): Boolean{
+	private fun isEntityInRange(entity: Entity): Boolean {
 		return floorCenter.let { square(it.x + 0.5 - entity.posX) + square(it.z + 0.5 - entity.posZ) } <= square(SPAWN_AREA_RADIUS_XZ)
 	}
 	
-	private inline fun <reified T : Entity> getEntitiesInSpawnArea(searchArea: AxisAlignedBB): List<T>{
+	private inline fun <reified T : Entity> getEntitiesInSpawnArea(searchArea: AxisAlignedBB): List<T> {
 		return wrld.selectVulnerableEntities.inBox<T>(searchArea).filter(::isEntityInRange)
 	}
 	
-	private fun canEntitySpawn(entity: EntityLiving): Boolean{
+	private fun canEntitySpawn(entity: EntityLiving): Boolean {
 		val posBelow = Pos(entity).down()
 		
 		return (
@@ -213,17 +214,17 @@ class TileEntitySpawnerObsidianTower(type: TileEntityType<TileEntitySpawnerObsid
 		)
 	}
 	
-	private fun triggerSpawn(rand: Random){
+	private fun triggerSpawn(rand: Random) {
 		val (x, y, z) = floorCenter
 		val enderman = EntityMobAngryEnderman(wrld)
 		
-		for(attempt in 1..50){
+		for(attempt in 1..50) {
 			enderman.setPosition(x + 0.5 + rand.nextFloat(-SPAWN_AREA_BOX_RANGE_XZ, SPAWN_AREA_BOX_RANGE_XZ), y + 0.01, z + 0.5 + rand.nextFloat(-SPAWN_AREA_BOX_RANGE_XZ, SPAWN_AREA_BOX_RANGE_XZ))
 			
-			if (canEntitySpawn(enderman)){
+			if (canEntitySpawn(enderman)) {
 				enderman.setLocationAndAngles(enderman.posX, enderman.posY, enderman.posZ, rand.nextFloat(0F, 360F), 0F)
 				
-				for(effect in effects){
+				for(effect in effects) {
 					enderman.addPotionEffect(effect.clone())
 				}
 				
@@ -238,7 +239,7 @@ class TileEntitySpawnerObsidianTower(type: TileEntityType<TileEntitySpawnerObsid
 	override fun writeNBT(nbt: TagCompound, context: Context) = nbt.use {
 		super.writeNBT(nbt, context)
 		
-		if (context == STORAGE){
+		if (context == STORAGE) {
 			putPos(TOWER_OFFSET_TAG, offset)
 			putEnum(TOWER_LEVEL_TAG, level)
 			putInt(REMAINING_MOB_SPAWNS_TAG, remainingMobSpawns)
@@ -250,7 +251,7 @@ class TileEntitySpawnerObsidianTower(type: TileEntityType<TileEntitySpawnerObsid
 	override fun readNBT(nbt: TagCompound, context: Context) = nbt.use {
 		super.readNBT(nbt, context)
 		
-		if (context == STORAGE){
+		if (context == STORAGE) {
 			offset = getPos(TOWER_OFFSET_TAG)
 			level = getEnum<ObsidianTowerSpawnerLevel>(TOWER_LEVEL_TAG) ?: level
 			remainingMobSpawns = getInt(REMAINING_MOB_SPAWNS_TAG)

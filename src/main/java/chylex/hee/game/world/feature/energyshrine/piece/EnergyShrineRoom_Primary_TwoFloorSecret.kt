@@ -1,4 +1,5 @@
 package chylex.hee.game.world.feature.energyshrine.piece
+
 import chylex.hee.game.block.withFacing
 import chylex.hee.game.world.Pos
 import chylex.hee.game.world.feature.energyshrine.EnergyShrinePieces
@@ -15,14 +16,14 @@ import chylex.hee.system.migration.Facing.SOUTH
 import chylex.hee.system.migration.Facing.WEST
 import net.minecraft.state.properties.ChestType
 
-class EnergyShrineRoom_Primary_TwoFloorSecret(file: String) : EnergyShrineRoom_Generic(file){
+class EnergyShrineRoom_Primary_TwoFloorSecret(file: String) : EnergyShrineRoom_Generic(file) {
 	override val connections = arrayOf<IStructurePieceConnection>(
 		EnergyShrineConnection(ROOM, Pos(centerX, 0, maxZ), SOUTH),
 		EnergyShrineConnection(ROOM, Pos(maxX, 0, 1), EAST),
 		EnergyShrineConnection(ROOM, Pos(maxX, maxY - 5, maxZ - 2), EAST)
 	)
 	
-	override fun generate(world: IStructureWorld, instance: Instance){
+	override fun generate(world: IStructureWorld, instance: Instance) {
 		super.generate(world, instance)
 		
 		val rand = world.rand

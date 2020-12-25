@@ -1,4 +1,5 @@
 package chylex.hee.game.world.feature.energyshrine.piece
+
 import chylex.hee.game.block.withFacing
 import chylex.hee.game.world.Pos
 import chylex.hee.game.world.feature.energyshrine.EnergyShrineBanners
@@ -24,7 +25,7 @@ import chylex.hee.system.migration.Facing.WEST
 import net.minecraft.util.Direction
 import net.minecraft.util.math.BlockPos
 
-abstract class EnergyShrineRoom_Generic(file: String) : EnergyShrineAbstractPiece(), IStructurePieceFromFile by Delegate("energyshrine/$file", EnergyShrinePieces.PALETTE){
+abstract class EnergyShrineRoom_Generic(file: String) : EnergyShrineAbstractPiece(), IStructurePieceFromFile by Delegate("energyshrine/$file", EnergyShrinePieces.PALETTE) {
 	override val connections = arrayOf<IStructurePieceConnection>(
 		EnergyShrineConnection(ROOM, Pos(centerX - 1, 0, 0), NORTH),
 		EnergyShrineConnection(ROOM, Pos(centerX, 0, maxZ), SOUTH),
@@ -32,7 +33,7 @@ abstract class EnergyShrineRoom_Generic(file: String) : EnergyShrineAbstractPiec
 		EnergyShrineConnection(ROOM, Pos(0, 0, centerZ), WEST)
 	)
 	
-	override fun generate(world: IStructureWorld, instance: Instance){
+	override fun generate(world: IStructureWorld, instance: Instance) {
 		super.generate(world, instance)
 		
 		world.placeCube(Pos(1, 0, 1), Pos(maxX - 1, 0, maxZ - 1), Single(ModBlocks.GLOOMROCK_SMOOTH))
@@ -46,24 +47,24 @@ abstract class EnergyShrineRoom_Generic(file: String) : EnergyShrineAbstractPiec
 		generator.generate(world)
 	}
 	
-	protected fun getContext(instance: Instance): EnergyShrineRoomData{
+	protected fun getContext(instance: Instance): EnergyShrineRoomData {
 		return instance.context ?: EnergyShrineRoomData.DEFAULT
 	}
 	
-	protected fun placeWallBanner(world: IStructureWorld, instance: Instance, pos: BlockPos, facing: Direction){
+	protected fun placeWallBanner(world: IStructureWorld, instance: Instance, pos: BlockPos, facing: Direction) {
 		val (color, data) = EnergyShrineBanners.generate(world.rand, getContext(instance).bannerColors)
 		val state = ColoredBlocks.WALL_BANNER.getValue(color).withFacing(facing)
 		
 		world.addTrigger(pos, TileEntityStructureTrigger(state, data))
 	}
 	
-	protected fun placeDecoration(world: IStructureWorld, pos: BlockPos, picker: IBlockPicker?){
+	protected fun placeDecoration(world: IStructureWorld, pos: BlockPos, picker: IBlockPicker?) {
 		val rand = world.rand
 		val pick = (picker ?: Air).pick(rand)
 		
 		world.setState(pos, pick)
 		
-		if (pick.block === ModBlocks.DARK_CHEST){
+		if (pick.block === ModBlocks.DARK_CHEST) {
 			world.addTrigger(pos, LootChestStructureTrigger(EnergyShrinePieces.LOOT_PICK(rand), rand.nextLong()))
 		}
 	}

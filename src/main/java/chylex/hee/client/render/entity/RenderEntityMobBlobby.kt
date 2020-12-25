@@ -1,4 +1,5 @@
 package chylex.hee.client.render.entity
+
 import chylex.hee.client.MC
 import chylex.hee.client.model.ModelHelper
 import chylex.hee.client.model.entity.ModelEntityMobBlobby
@@ -37,28 +38,28 @@ import net.minecraftforge.client.ForgeHooksClient
 import java.util.Random
 
 @Sided(Side.CLIENT)
-class RenderEntityMobBlobby(manager: EntityRendererManager) : MobRenderer<EntityMobBlobby, ModelEntityMobBlobby>(manager, ModelEntityMobBlobby, 0.27F){
+class RenderEntityMobBlobby(manager: EntityRendererManager) : MobRenderer<EntityMobBlobby, ModelEntityMobBlobby>(manager, ModelEntityMobBlobby, 0.27F) {
 	private val texture = Resource.Custom("textures/entity/blobby.png")
 	private val renderType = RenderType.getEntityTranslucent(texture)
 	private val fallbackStack = ItemStack(Blocks.BEDROCK)
 	private val rand = Random()
 	
-	init{
+	init {
 		shadowOpaque = 0.6F
 	}
 	
-	override fun preRenderCallback(entity: EntityMobBlobby, matrix: MatrixStack, partialTicks: Float){
+	override fun preRenderCallback(entity: EntityMobBlobby, matrix: MatrixStack, partialTicks: Float) {
 		matrix.scale(entity.scale * GLOBAL_SCALE)
 		matrix.scaleY(1F + entity.renderSquishClient.get(partialTicks))
 		
 		super.preRenderCallback(entity, matrix, partialTicks)
 	}
 	
-	override fun render(entity: EntityMobBlobby, yaw: Float, partialTicks: Float, matrix: MatrixStack, buffer: IRenderTypeBuffer, combinedLight: Int){
+	override fun render(entity: EntityMobBlobby, yaw: Float, partialTicks: Float, matrix: MatrixStack, buffer: IRenderTypeBuffer, combinedLight: Int) {
 		val scale = entity.scale
 		val stack = entity.heldItem
 		
-		if (stack.isNotEmpty && entity.deathTime == 0){
+		if (stack.isNotEmpty && entity.deathTime == 0) {
 			renderItemInGel(stack, entity, matrix, buffer, combinedLight)
 		}
 		
@@ -66,15 +67,15 @@ class RenderEntityMobBlobby(manager: EntityRendererManager) : MobRenderer<Entity
 		super.render(entity, yaw, partialTicks, matrix, buffer, combinedLight)
 	}
 	
-	override fun func_230042_a_(entity: EntityMobBlobby, isVisible: Boolean, isTranslucent: Boolean): RenderType{
+	override fun func_230042_a_(entity: EntityMobBlobby, isVisible: Boolean, isTranslucent: Boolean): RenderType {
 		return renderType
 	}
 	
-	override fun getEntityTexture(entity: EntityMobBlobby): ResourceLocation{
+	override fun getEntityTexture(entity: EntityMobBlobby): ResourceLocation {
 		return texture
 	}
 	
-	private fun renderItemInGel(stack: ItemStack, entity: EntityMobBlobby, matrix: MatrixStack, buffer: IRenderTypeBuffer, combinedLight: Int){
+	private fun renderItemInGel(stack: ItemStack, entity: EntityMobBlobby, matrix: MatrixStack, buffer: IRenderTypeBuffer, combinedLight: Int) {
 		val scale = entity.scale
 		
 		matrix.push()
@@ -84,12 +85,12 @@ class RenderEntityMobBlobby(manager: EntityRendererManager) : MobRenderer<Entity
 		val modelRotOff: Double
 		val modelScale: Float
 		
-		if (model.isGui3d){
+		if (model.isGui3d) {
 			modelYOff = 0.75
 			modelRotOff = 0.0
 			modelScale = 0.75F
 		}
-		else{
+		else {
 			modelYOff = 0.5
 			modelRotOff = 0.1
 			modelScale = 0.66F
@@ -105,25 +106,25 @@ class RenderEntityMobBlobby(manager: EntityRendererManager) : MobRenderer<Entity
 		matrix.scale(modelScale * scale)
 		matrix.translate(-0.5, entity.height * scale * 0.5 - modelYOff, -0.5)
 		
-		if (model.isBuiltInRenderer){
-			val overrideType = when((stack.item as? ItemBlock)?.block){
+		if (model.isBuiltInRenderer) {
+			val overrideType = when((stack.item as? ItemBlock)?.block) {
 				is AbstractChestBlock<*> -> RenderType.getEntityTranslucentCull(Atlases.CHEST_ATLAS)
-				else -> null // POLISH implement more special cases
+				else                     -> null // POLISH implement more special cases
 			}
 			
-			if (overrideType != null){
+			if (overrideType != null) {
 				stack.item.itemStackTileEntityRenderer.render(stack, matrix, { buffer.getBuffer(overrideType) }, combinedLight, OverlayTexture.NO_OVERLAY)
 			}
-			else if (stack !== fallbackStack){
+			else if (stack !== fallbackStack) {
 				matrix.pop()
 				renderItemInGel(fallbackStack, entity, matrix, buffer, combinedLight)
 				return
 			}
 		}
-		else{
+		else {
 			val builder = buffer.getBuffer(Atlases.getTranslucentCullBlockType())
 			
-			for(facing in Facing6){
+			for(facing in Facing6) {
 				renderItemQuads(stack, model, facing, matrix, builder, combinedLight)
 			}
 			
@@ -133,7 +134,7 @@ class RenderEntityMobBlobby(manager: EntityRendererManager) : MobRenderer<Entity
 		matrix.pop()
 	}
 	
-	private fun renderItemQuads(stack: ItemStack, model: IBakedModel, facing: Direction?, matrix: MatrixStack, builder: IVertexBuilder, combinedLight: Int){
+	private fun renderItemQuads(stack: ItemStack, model: IBakedModel, facing: Direction?, matrix: MatrixStack, builder: IVertexBuilder, combinedLight: Int) {
 		MC.itemRenderer.renderQuads(matrix, builder, model.getQuads(facing), stack, combinedLight, OverlayTexture.NO_OVERLAY)
 	}
 }

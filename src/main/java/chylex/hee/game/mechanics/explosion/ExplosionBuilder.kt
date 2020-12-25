@@ -1,4 +1,5 @@
 package chylex.hee.game.mechanics.explosion
+
 import chylex.hee.game.entity.lookPosVec
 import chylex.hee.game.world.getFluidState
 import chylex.hee.game.world.getState
@@ -39,7 +40,7 @@ import java.util.Random
 import kotlin.math.floor
 import kotlin.math.max
 
-class ExplosionBuilder{
+class ExplosionBuilder {
 	var destroyBlocks = true
 	var blockDropRateMultiplier: Float? = null
 	var blockDropFortune: Int = 0
@@ -50,14 +51,14 @@ class ExplosionBuilder{
 	var damageEntities = true
 	var knockbackEntities = true
 	
-	fun trigger(world: World, source: Entity? = null, x: Double, y: Double, z: Double, strength: Float){
-		if (world.isRemote){
+	fun trigger(world: World, source: Entity? = null, x: Double, y: Double, z: Double, strength: Float) {
+		if (world.isRemote) {
 			return
 		}
 		
 		val explosion = CustomExplosion(world, source, x, y, z, strength, this)
 		
-		if (ForgeEventFactory.onExplosionStart(world, explosion)){
+		if (ForgeEventFactory.onExplosionStart(world, explosion)) {
 			return
 		}
 		
@@ -67,15 +68,15 @@ class ExplosionBuilder{
 		val destroyedBlocks = if (destroyBlocks) explosion.affectedBlockPositions else emptyList()
 		val playerKnockback = explosion.playerKnockbackMap
 		
-		for(player in world.players){
-			if (player.getDistanceSq(x, y, z) < square(64)){
+		for(player in world.players) {
+			if (player.getDistanceSq(x, y, z) < square(64)) {
 				@Suppress("NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS")
 				(player as EntityPlayerMP).connection.sendPacket(SExplosionPacket(x, y, z, strength, destroyedBlocks, playerKnockback[player]))
 			}
 		}
 	}
 	
-	fun clone(explosion: Explosion, source: Entity? = explosion.explosivePlacedBy, strength: Float = explosion.size){
+	fun clone(explosion: Explosion, source: Entity? = explosion.explosivePlacedBy, strength: Float = explosion.size) {
 		val (x, y, z) = explosion.position
 		trigger(explosion.world, source, x, y, z, strength)
 	}
@@ -87,17 +88,17 @@ class ExplosionBuilder{
 		private val centerY: Double,
 		private val centerZ: Double,
 		strength: Float,
-		private val builder: ExplosionBuilder
-	) : Explosion(world, source, centerX, centerY, centerZ, strength, false, Mode.NONE /* don't care */){
+		private val builder: ExplosionBuilder,
+	) : Explosion(world, source, centerX, centerY, centerZ, strength, false, Mode.NONE /* don't care */) {
 		private val rand = Random()
 		
-		private fun determineAffectedBlocks(){
+		private fun determineAffectedBlocks() {
 			val affectedBlocks = mutableSetOf<BlockPos>()
 			
-			for(pX in 0..15){
-				for(pY in 0..15){
-					for(pZ in 0..15){
-						if (pX == 0 || pX == 15 || pY == 0 || pY == 15 || pZ == 0 || pZ == 15){
+			for(pX in 0..15) {
+				for(pY in 0..15) {
+					for(pZ in 0..15) {
+						if (pX == 0 || pX == 15 || pY == 0 || pY == 15 || pZ == 0 || pZ == 15) {
 							val offset = Vec(
 								(pX / 15.0) * 2.0 - 1.0,
 								(pY / 15.0) * 2.0 - 1.0,
@@ -109,12 +110,12 @@ class ExplosionBuilder{
 							var testY = centerY
 							var testZ = centerZ
 							
-							while(remainingPower > 0F){
+							while(remainingPower > 0F) {
 								val pos = BlockPos(testX, testY, testZ)
 								val state = pos.getState(world)
 								val fluid = pos.getFluidState(world)
 								
-								if (!state.isAir(world, pos) || !fluid.isEmpty){
+								if (!state.isAir(world, pos) || !fluid.isEmpty) {
 									val blockResistance = max(
 										state.getExplosionResistance(world, pos, source, this),
 										fluid.getExplosionResistance(world, pos, source, this)
@@ -124,7 +125,7 @@ class ExplosionBuilder{
 									remainingPower -= (finalResistance + 0.3F) * 0.3F
 								}
 								
-								if (remainingPower > 0F && (source == null || source.canExplosionDestroyBlock(this, this.world, pos, state, remainingPower))){
+								if (remainingPower > 0F && (source == null || source.canExplosionDestroyBlock(this, this.world, pos, state, remainingPower))) {
 									affectedBlocks.add(pos)
 								}
 								
@@ -142,11 +143,11 @@ class ExplosionBuilder{
 			affectedBlockPositions.addAll(affectedBlocks)
 		}
 		
-		private fun determineAffectedEntitiesAndKnockback(){
+		private fun determineAffectedEntitiesAndKnockback() {
 			val damageEntities = builder.damageEntities
 			val knockbackEntities = builder.knockbackEntities
 			
-			if (!damageEntities && !knockbackEntities){
+			if (!damageEntities && !knockbackEntities) {
 				return
 			}
 			
@@ -165,13 +166,13 @@ class ExplosionBuilder{
 			val entitiesInArea = world.getEntitiesWithinAABBExcludingEntity(source, affectedArea)
 			ForgeEventFactory.onExplosionDetonate(world, this, entitiesInArea, doubleSize)
 			
-			for(entity in entitiesInArea){
-				if (entity.isImmuneToExplosions){
+			for(entity in entitiesInArea) {
+				if (entity.isImmuneToExplosions) {
 					continue
 				}
 				
-				if (entity is EntityPlayer){
-					if (entity.isSpectator || (entity.isCreative && entity.abilities.isFlying)){
+				if (entity is EntityPlayer) {
+					if (entity.isSpectator || (entity.isCreative && entity.abilities.isFlying)) {
 						continue
 					}
 				}
@@ -179,46 +180,46 @@ class ExplosionBuilder{
 				val lookPosVec = entity.lookPosVec
 				val distanceScaled = lookPosVec.distanceTo(centerVec) / doubleSize
 				
-				if (distanceScaled > 1){
+				if (distanceScaled > 1) {
 					continue
 				}
 				
 				val blastPower = (1 - distanceScaled) * getBlockDensity(centerVec, entity)
 				
-				if (damageEntities){
+				if (damageEntities) {
 					val finalDamage = 1F + ((square(blastPower) + blastPower) * size * 7).toInt()
 					entity.attackEntityFrom(DamageSource.causeExplosionDamage(this), finalDamage)
 				}
 				
-				if (knockbackEntities){
+				if (knockbackEntities) {
 					val knockbackPower = (entity as? EntityLivingBase)?.let { ProtectionEnchantment.getBlastDamageReduction(it, blastPower) } ?: blastPower
 					val knockbackVec = centerVec.directionTowards(lookPosVec).scale(knockbackPower)
 					
 					entity.motion = entity.motion.mul(knockbackVec)
 					
-					if (entity is EntityPlayer){
+					if (entity is EntityPlayer) {
 						playerKnockbackMap[entity] = knockbackVec // vanilla uses blastPower instead of knockbackPower here, bug?
 					}
 				}
 			}
 		}
 		
-		private fun destroyAffectedBlocks(){
-			if (builder.destroyBlocks){
+		private fun destroyAffectedBlocks() {
+			if (builder.destroyBlocks) {
 				val modifiedRadius = builder.blockDropRateMultiplier?.let { size / it } ?: size
 				
 				val miningTool = ItemStack(Blocks.TNT)
 				val fortuneLevel = builder.blockDropFortune
 				
-				if (fortuneLevel > 0){
+				if (fortuneLevel > 0) {
 					EnchantmentHelper.setEnchantments(mapOf(Enchantments.FORTUNE to fortuneLevel), miningTool)
 				}
 				
-				for(pos in affectedBlockPositions){
+				for(pos in affectedBlockPositions) {
 					val state = pos.getState(world)
 					
-					if (!state.isAir(world, pos)){
-						if (world is ServerWorld && state.canDropFromExplosion(world, pos, this)){
+					if (!state.isAir(world, pos)) {
+						if (world is ServerWorld && state.canDropFromExplosion(world, pos, this)) {
 							val tile = if (state.hasTileEntity())
 								world.getTileEntity(pos)
 							else
@@ -239,14 +240,14 @@ class ExplosionBuilder{
 				}
 			}
 			
-			if (builder.spawnFire){
+			if (builder.spawnFire) {
 				val fireChance = builder.blockFireChance
 				
-				if (fireChance > 0){
+				if (fireChance > 0) {
 					val candidates = if (builder.destroyBlocks) affectedBlockPositions else affectedBlockPositions.map(BlockPos::up)
 					
-					for(pos in candidates){
-						if (pos.isAir(world) && pos.down().isFullBlock(world) && rand.nextInt(fireChance) == 0){
+					for(pos in candidates) {
+						if (pos.isAir(world) && pos.down().isFullBlock(world) && rand.nextInt(fireChance) == 0) {
 							pos.setBlock(world, Blocks.FIRE)
 						}
 					}
@@ -256,12 +257,12 @@ class ExplosionBuilder{
 		
 		// Overrides
 		
-		override fun doExplosionA(){
+		override fun doExplosionA() {
 			determineAffectedBlocks()
 			determineAffectedEntitiesAndKnockback()
 		}
 		
-		override fun doExplosionB(spawnParticles: Boolean){
+		override fun doExplosionB(spawnParticles: Boolean) {
 			Sounds.ENTITY_GENERIC_EXPLODE.playServer(world, centerX, centerY, centerZ, SoundCategory.BLOCKS, volume = 4F, pitch = rand.nextFloat(0.56F, 0.84F))
 			destroyAffectedBlocks()
 		}

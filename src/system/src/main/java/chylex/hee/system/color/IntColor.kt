@@ -1,8 +1,9 @@
 package chylex.hee.system.color
+
 import chylex.hee.system.math.Vec
 import chylex.hee.system.math.floorToInt
 
-inline class IntColor(val i: Int){
+inline class IntColor(val i: Int) {
 	inline val alpha
 		get() = (i ushr 24) and 255
 	
@@ -58,7 +59,7 @@ inline class IntColor(val i: Int){
 	// construction
 	
 	@Suppress("FunctionName")
-	companion object{
+	companion object {
 		private fun c(component: Int) = component.coerceIn(0, 255)
 		
 		

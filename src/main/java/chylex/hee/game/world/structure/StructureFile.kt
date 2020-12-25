@@ -1,4 +1,5 @@
 package chylex.hee.game.world.structure
+
 import chylex.hee.game.block.BlockScaffolding
 import chylex.hee.game.world.Pos
 import chylex.hee.game.world.generation.IBlockPicker
@@ -20,13 +21,13 @@ import net.minecraft.block.Blocks
 import net.minecraft.util.math.BlockPos
 import net.minecraft.world.World
 
-class StructureFile(nbt: TagCompound){
+class StructureFile(nbt: TagCompound) {
 	private val palette: Array<String>
 	private val blocks = IntArrayList()
 	
 	val size: Size
 	
-	init{
+	init {
 		val tagPalette = nbt.getListOfStrings(PALETTE_TAG)
 		val tagBlocks = nbt.getIntArray(BLOCKS_TAG)
 		val tagSize = nbt.getIntArray(SIZE_TAG)
@@ -39,15 +40,15 @@ class StructureFile(nbt: TagCompound){
 		size = Size(tagSize[0], tagSize[1], tagSize[2])
 	}
 	
-	inner class Generator(paletteMapping: Map<String, IBlockPicker>) : IStructureGenerator{
+	inner class Generator(paletteMapping: Map<String, IBlockPicker>) : IStructureGenerator {
 		private val generators = palette.map { paletteMapping[it] ?: Fallback("[StructureFile] skipping unknown palette identifier: $it", Blocks.AIR) }.toTypedArray()
 		
 		override val size = this@StructureFile.size
 		
-		override fun generate(world: IStructureWorld){
+		override fun generate(world: IStructureWorld) {
 			val rand = world.rand
 			
-			for(block in blocks.elements()){
+			for(block in blocks.elements()) {
 				val x = (block shr 24) and 255
 				val y = (block shr 16) and 255
 				val z = (block shr  8) and 255
@@ -58,18 +59,18 @@ class StructureFile(nbt: TagCompound){
 		}
 	}
 	
-	companion object{
+	companion object {
 		private const val PALETTE_TAG = "Palette"
 		private const val BLOCKS_TAG = "Blocks"
 		private const val SIZE_TAG = "Size"
 		
 		private val SKIP_BLOCK_STATE = ModBlocks.SCAFFOLDING.defaultState
 		
-		fun spawn(world: World, offset: BlockPos, piece: IStructurePieceFromFile, palette: Palette){
+		fun spawn(world: World, offset: BlockPos, piece: IStructurePieceFromFile, palette: Palette) {
 			return spawn(WorldToStructureWorldAdapter(world, world.rand, offset), piece, palette)
 		}
 		
-		fun spawn(world: IStructureWorld, generator: IStructurePieceFromFile, palette: Palette){
+		fun spawn(world: IStructureWorld, generator: IStructurePieceFromFile, palette: Palette) {
 			val path = generator.path
 			val size = generator.size
 			
@@ -78,29 +79,29 @@ class StructureFile(nbt: TagCompound){
 			world.finalize()
 		}
 		
-		fun save(world: World, box: BoundingBox, palette: Palette): Pair<TagCompound, Set<BlockState>>{
+		fun save(world: World, box: BoundingBox, palette: Palette): Pair<TagCompound, Set<BlockState>> {
 			return save(WorldToStructureWorldAdapter(world, world.rand, box.min), box.size, palette)
 		}
 		
-		fun save(world: IStructureWorld, size: Size, palette: Palette): Pair<TagCompound, Set<BlockState>>{
-			require(size.x <= 256 && size.y <= 256 && size.z <= 256){ "structure files can only contain structures up to 256x256x256 blocks" }
+		fun save(world: IStructureWorld, size: Size, palette: Palette): Pair<TagCompound, Set<BlockState>> {
+			require(size.x <= 256 && size.y <= 256 && size.z <= 256) { "structure files can only contain structures up to 256x256x256 blocks" }
 			
 			val missingMappings = mutableSetOf<BlockState>()
 			
 			val paletteMapping = palette.lookupForDevelopment
 			val blockMapping = Int2ObjectArrayMap<String>()
 			
-			for(x in 0..size.maxX) for(y in 0..size.maxY) for(z in 0..size.maxZ){
+			for(x in 0..size.maxX) for(y in 0..size.maxY) for(z in 0..size.maxZ) {
 				val pos = Pos(x, y, z)
 				val state = world.getState(pos)
 				
-				if (state.block is BlockScaffolding){
+				if (state.block is BlockScaffolding) {
 					continue
 				}
 				
 				var mapping = paletteMapping[state]
 				
-				if (mapping == null){
+				if (mapping == null) {
 					missingMappings.add(state)
 					mapping = paletteMapping[Blocks.AIR.defaultState] ?: continue
 				}
@@ -118,9 +119,9 @@ class StructureFile(nbt: TagCompound){
 			val generatedBlocks = IntArrayList(blockMapping.size)
 			val generatedPalette = blockMapping.values.distinct().sorted()
 			
-			require(generatedPalette.size <= 256){ "structure files can only contain up to 256 different palette mappings" }
+			require(generatedPalette.size <= 256) { "structure files can only contain up to 256 different palette mappings" }
 			
-			for((key, mapping) in blockMapping){
+			for((key, mapping) in blockMapping) {
 				generatedBlocks.add(key or generatedPalette.indexOf(mapping))
 			}
 			

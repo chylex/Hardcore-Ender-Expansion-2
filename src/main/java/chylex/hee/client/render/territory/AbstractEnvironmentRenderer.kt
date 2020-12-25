@@ -1,4 +1,5 @@
 package chylex.hee.client.render.territory
+
 import chylex.hee.client.MC
 import chylex.hee.client.render.TerritoryRenderer
 import chylex.hee.client.render.gl.GL
@@ -17,8 +18,8 @@ import net.minecraftforge.client.SkyRenderHandler
 import org.lwjgl.opengl.GL11.GL_QUADS
 import kotlin.math.pow
 
-abstract class AbstractEnvironmentRenderer : SkyRenderHandler{
-	companion object{
+abstract class AbstractEnvironmentRenderer : SkyRenderHandler {
+	companion object {
 		val currentSkyAlpha
 			@Sided(Side.CLIENT)
 			get() = remapRange(TerritoryRenderer.VOID_FACTOR_VALUE, (-1F)..(0.5F), (1F)..(0F)).coerceIn(0F, 1F)
@@ -35,10 +36,10 @@ abstract class AbstractEnvironmentRenderer : SkyRenderHandler{
 		val DEFAULT_COLOR = Vec3.xyz(1.0)
 		const val DEFAULT_ALPHA = 1F
 		
-		fun renderPlane(matrix: MatrixStack, y: Float, size: Float, rescale: Float){
+		fun renderPlane(matrix: MatrixStack, y: Float, size: Float, rescale: Float) {
 			val mat = matrix.last.matrix
 			
-			with(Tessellator.getInstance()){
+			with(Tessellator.getInstance()) {
 				buffer.begin(GL_QUADS, DefaultVertexFormats.POSITION_TEX)
 				buffer.pos(mat, -size, -y, -size).tex(0F, 0F).endVertex()
 				buffer.pos(mat, -size, -y,  size).tex(0F, rescale).endVertex()
@@ -50,7 +51,7 @@ abstract class AbstractEnvironmentRenderer : SkyRenderHandler{
 	}
 	
 	@Sided(Side.CLIENT)
-	final override fun render(ticks: Int, partialTicks: Float, matrix: MatrixStack, world: ClientWorld, mc: Minecraft){
+	final override fun render(ticks: Int, partialTicks: Float, matrix: MatrixStack, world: ClientWorld, mc: Minecraft) {
 		GL.depthMask(false)
 		RenderHelper.disableStandardItemLighting()
 		render(world, matrix, partialTicks)

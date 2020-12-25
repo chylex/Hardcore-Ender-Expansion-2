@@ -1,4 +1,5 @@
 package chylex.hee.game.mechanics.instability.dimension.components
+
 import chylex.hee.game.entity.living.EntityMobEndermiteInstability
 import chylex.hee.game.potion.makeEffect
 import chylex.hee.game.world.Pos
@@ -15,23 +16,23 @@ import net.minecraft.world.World
 import net.minecraft.world.server.ServerWorld
 import java.util.Random
 
-abstract class EndermiteSpawnLogic{
+abstract class EndermiteSpawnLogic {
 	private val rand = Random()
 	
 	protected abstract fun checkMobLimits(world: ServerWorld, pos: BlockPos): Boolean
 	
 	abstract fun countExisting(world: ServerWorld, pos: BlockPos): Int
 	
-	fun trySpawnNear(world: World, pos: BlockPos): Boolean{
-		if (world !is ServerWorld || !checkMobLimits(world, pos)){
+	fun trySpawnNear(world: World, pos: BlockPos): Boolean {
+		if (world !is ServerWorld || !checkMobLimits(world, pos)) {
 			return false
 		}
 		
-		repeat(20){
+		repeat(20) {
 			val randomPos = Pos(pos.center.add(rand.nextVector(rand.nextFloat(8.0, 64.0))))
-			val finalPos = randomPos.offsetUntil(UP, -8..8){ !it.blocksMovement(world) && it.down().isTopSolid(world) }
+			val finalPos = randomPos.offsetUntil(UP, -8..8) { !it.blocksMovement(world) && it.down().isTopSolid(world) }
 			
-			if (finalPos != null){
+			if (finalPos != null) {
 				EntityMobEndermiteInstability(world).apply {
 					setLocationAndAngles(finalPos.x + 0.5, finalPos.y + 0.01, finalPos.z + 0.5, rand.nextFloat(0F, 360F), 0F)
 					addPotionEffect(Potions.RESISTANCE.makeEffect(20, 5, isAmbient = false, showParticles = false))

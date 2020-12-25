@@ -1,4 +1,5 @@
 package chylex.hee.game.item
+
 import chylex.hee.client.color.NO_TINT
 import chylex.hee.game.inventory.cleanupNBT
 import chylex.hee.game.inventory.doDamage
@@ -35,66 +36,66 @@ import net.minecraft.util.math.RayTraceResult.Type.BLOCK
 import net.minecraft.world.World
 import java.util.Collections
 
-class ItemVoidBucket(properties: Properties) : ItemAbstractVoidTool(properties, VOID_BUCKET){
-	private companion object{
+class ItemVoidBucket(properties: Properties) : ItemAbstractVoidTool(properties, VOID_BUCKET) {
+	private companion object {
 		private const val COOLDOWN_TAG = "Cooldown"
 		private const val COLOR_TAG = "Color"
 		
 		private const val COOLDOWN_TICKS = 13
 		
-		private fun getFluidColor(state: IFluidState) = when{
-			state.isEmpty -> 0
+		private fun getFluidColor(state: IFluidState) = when {
+			state.isEmpty                           -> 0
 			state.fluid.isEquivalentTo(Fluids.LAVA) -> RGB(205, 90, 17).i
-			else -> state.fluid.attributes.color
+			else                                    -> state.fluid.attributes.color
 		}
 		
-		private fun isModifiableFluid(world: World, pos: BlockPos, player: EntityPlayer, stack: ItemStack): Boolean{
+		private fun isModifiableFluid(world: World, pos: BlockPos, player: EntityPlayer, stack: ItemStack): Boolean {
 			return !pos.getFluidState(world).isEmpty && world.isBlockModifiable(player, pos) && BlockEditor.canEdit(pos, player, stack)
 		}
 	}
 	
-	init{
-		addPropertyOverride(Resource.Custom("void_bucket_cooldown")){
-			stack, _, _ -> (stack.heeTagOrNull?.getByte(COOLDOWN_TAG) ?: 0) / COOLDOWN_TICKS.toFloat()
+	init {
+		addPropertyOverride(Resource.Custom("void_bucket_cooldown")) { stack, _, _ ->
+			(stack.heeTagOrNull?.getByte(COOLDOWN_TAG) ?: 0) / COOLDOWN_TICKS.toFloat()
 		}
 	}
 	
-	override fun getDestroySpeed(stack: ItemStack, state: BlockState): Float{
+	override fun getDestroySpeed(stack: ItemStack, state: BlockState): Float {
 		return 1F
 	}
 	
-	override fun onBlockDestroyed(stack: ItemStack, world: World, state: BlockState, pos: BlockPos, entity: EntityLivingBase): Boolean{
+	override fun onBlockDestroyed(stack: ItemStack, world: World, state: BlockState, pos: BlockPos, entity: EntityLivingBase): Boolean {
 		return false
 	}
 	
-	override fun canApplyAtEnchantingTable(stack: ItemStack, enchantment: Enchantment): Boolean{
+	override fun canApplyAtEnchantingTable(stack: ItemStack, enchantment: Enchantment): Boolean {
 		return enchantment === Enchantments.UNBREAKING
 	}
 	
 	// Use handling
 	
-	override fun onItemRightClick(world: World, player: EntityPlayer, hand: Hand): ActionResult<ItemStack>{
+	override fun onItemRightClick(world: World, player: EntityPlayer, hand: Hand): ActionResult<ItemStack> {
 		val heldItem = player.getHeldItem(hand)
 		
-		if (heldItem.damage >= heldItem.maxDamage || heldItem.heeTagOrNull.hasKey(COOLDOWN_TAG)){
+		if (heldItem.damage >= heldItem.maxDamage || heldItem.heeTagOrNull.hasKey(COOLDOWN_TAG)) {
 			return ActionResult(FAIL, heldItem)
 		}
 		
 		val fluidResult = rayTrace(world, player, FluidMode.ANY)
 		
-		if (fluidResult.type != BLOCK){
+		if (fluidResult.type != BLOCK) {
 			return ActionResult(PASS, heldItem)
 		}
 		
 		val clickedPos = (fluidResult as BlockRayTraceResult).pos
 		
-		if (!isModifiableFluid(world, clickedPos, player, heldItem)){
+		if (!isModifiableFluid(world, clickedPos, player, heldItem)) {
 			return ActionResult(FAIL, heldItem)
 		}
 		
 		val clickedBlockColor = getFluidColor(clickedPos.getFluidState(world))
 		
-		if (!world.isRemote){
+		if (!world.isRemote) {
 			val blocksToRemove = if (player.isSneaking)
 				Collections.singleton(clickedPos)
 			else
@@ -102,19 +103,19 @@ class ItemVoidBucket(properties: Properties) : ItemAbstractVoidTool(properties, 
 			
 			var totalRemoved = 0
 			
-			for(pos in blocksToRemove){
-				if (isModifiableFluid(world, pos, player, heldItem)){
+			for(pos in blocksToRemove) {
+				if (isModifiableFluid(world, pos, player, heldItem)) {
 					pos.setAir(world)
 					++totalRemoved
 				}
 			}
 			
-			guardItemBreaking(heldItem){
+			guardItemBreaking(heldItem) {
 				heldItem.doDamage(totalRemoved, player, hand)
 			}
 		}
 		
-		with(heldItem.heeTag){
+		with(heldItem.heeTag) {
 			putByte(COOLDOWN_TAG, COOLDOWN_TICKS.toByte())
 			putInt(COLOR_TAG, clickedBlockColor)
 		}
@@ -126,17 +127,17 @@ class ItemVoidBucket(properties: Properties) : ItemAbstractVoidTool(properties, 
 		return ActionResult(SUCCESS, heldItem)
 	}
 	
-	override fun inventoryTick(stack: ItemStack, world: World, entity: Entity, itemSlot: Int, isSelected: Boolean){
-		with(stack.heeTagOrNull ?: return){
-			if (hasKey(COOLDOWN_TAG)){
+	override fun inventoryTick(stack: ItemStack, world: World, entity: Entity, itemSlot: Int, isSelected: Boolean) {
+		with(stack.heeTagOrNull ?: return) {
+			if (hasKey(COOLDOWN_TAG)) {
 				val cooldown = getByte(COOLDOWN_TAG).toInt()
 				
-				if (cooldown <= 1){
+				if (cooldown <= 1) {
 					remove(COOLDOWN_TAG)
 					remove(COLOR_TAG)
 					stack.cleanupNBT()
 				}
-				else{
+				else {
 					putByte(COOLDOWN_TAG, (cooldown - 1).toByte())
 				}
 			}
@@ -145,13 +146,13 @@ class ItemVoidBucket(properties: Properties) : ItemAbstractVoidTool(properties, 
 	
 	// Client side
 	
-	override fun shouldCauseReequipAnimation(oldStack: ItemStack, newStack: ItemStack, slotChanged: Boolean): Boolean{
+	override fun shouldCauseReequipAnimation(oldStack: ItemStack, newStack: ItemStack, slotChanged: Boolean): Boolean {
 		return slotChanged && super.shouldCauseReequipAnimation(oldStack, newStack, slotChanged)
 	}
 	
-	object Color : IItemColor{
-		override fun getColor(stack: ItemStack, tintIndex: Int) = when(tintIndex){
-			1 -> stack.heeTagOrNull?.getInt(COLOR_TAG) ?: NO_TINT
+	object Color : IItemColor {
+		override fun getColor(stack: ItemStack, tintIndex: Int) = when(tintIndex) {
+			1    -> stack.heeTagOrNull?.getInt(COLOR_TAG) ?: NO_TINT
 			else -> NO_TINT
 		}
 	}

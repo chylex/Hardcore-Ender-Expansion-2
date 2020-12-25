@@ -1,4 +1,5 @@
 package chylex.hee.game.world.math
+
 import chylex.hee.game.world.Pos
 import chylex.hee.game.world.math.Size.Alignment.CENTER
 import chylex.hee.game.world.math.Size.Alignment.MAX
@@ -16,10 +17,10 @@ import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.Vec3d
 import net.minecraft.util.math.Vec3i
 
-data class Size(val x: Int, val y: Int, val z: Int){
+data class Size(val x: Int, val y: Int, val z: Int) {
 	constructor(xyz: Int) : this(xyz, xyz, xyz)
 	
-	enum class Alignment{
+	enum class Alignment {
 		MIN, CENTER, MAX
 	}
 	
@@ -40,7 +41,7 @@ data class Size(val x: Int, val y: Int, val z: Int){
 	val centerPos: BlockPos
 		get() = Pos(centerX, centerY, centerZ)
 	
-	fun getPos(xAlignment: Alignment, yAlignment: Alignment, zAlignment: Alignment): BlockPos{
+	fun getPos(xAlignment: Alignment, yAlignment: Alignment, zAlignment: Alignment): BlockPos {
 		return Pos(
 			getPos(xAlignment).x,
 			getPos(yAlignment).y,
@@ -48,28 +49,28 @@ data class Size(val x: Int, val y: Int, val z: Int){
 		)
 	}
 	
-	fun getPos(alignment: Alignment): BlockPos{
-		return when(alignment){
+	fun getPos(alignment: Alignment): BlockPos {
+		return when(alignment) {
 			MIN    -> minPos
 			CENTER -> centerPos
 			MAX    -> maxPos
 		}
 	}
 	
-	fun rotate(rotation: Rotation) = when(rotation){
-		NONE, CLOCKWISE_180 -> this
+	fun rotate(rotation: Rotation) = when(rotation) {
+		NONE, CLOCKWISE_180               -> this
 		CLOCKWISE_90, COUNTERCLOCKWISE_90 -> Size(z, y, x)
 	}
 	
-	fun expand(by: Vec3i): Size{
+	fun expand(by: Vec3i): Size {
 		return Size(x + by.x, y + by.y, z + by.z)
 	}
 	
-	fun toBoundingBox(offset: BlockPos): BoundingBox{
+	fun toBoundingBox(offset: BlockPos): BoundingBox {
 		return BoundingBox(offset, offset.add(maxX, maxY, maxZ))
 	}
 	
-	fun toCenteredBoundingBox(offset: Vec3d): AxisAlignedBB{
+	fun toCenteredBoundingBox(offset: Vec3d): AxisAlignedBB {
 		val (x, y, z) = offset
 		return AxisAlignedBB(x - centerX, y - centerY, z - centerZ, x + centerX, y + centerY, z + centerZ)
 	}

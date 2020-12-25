@@ -1,4 +1,5 @@
 package chylex.hee.game.world.feature.stronghold.piece
+
 import chylex.hee.game.block.with
 import chylex.hee.game.block.withFacing
 import chylex.hee.game.world.Pos
@@ -16,12 +17,12 @@ import chylex.hee.system.migration.Facing.WEST
 import chylex.hee.system.random.nextItem
 import net.minecraft.block.Blocks
 
-class StrongholdRoom_DeadEnd_Shelves(file: String) : StrongholdAbstractPieceFromFile(file, StrongholdPieceType.OTHER){
+class StrongholdRoom_DeadEnd_Shelves(file: String) : StrongholdAbstractPieceFromFile(file, StrongholdPieceType.OTHER) {
 	override val connections = arrayOf<IStructurePieceConnection>(
 		StrongholdConnection(DEAD_END, Pos(centerX, 0, maxZ), SOUTH)
 	)
 	
-	override fun generate(world: IStructureWorld, instance: Instance){
+	override fun generate(world: IStructureWorld, instance: Instance) {
 		super.generate(world, instance)
 		
 		val rand = world.rand
@@ -53,17 +54,17 @@ class StrongholdRoom_DeadEnd_Shelves(file: String) : StrongholdAbstractPieceFrom
 			Blocks.POTTED_DANDELION
 		)
 		
-		repeat(rand.nextInt(3)){
-			for(attempt in 1..2){
+		repeat(rand.nextInt(3)) {
+			for(attempt in 1..2) {
 				val potSide = if (rand.nextBoolean()) EAST else WEST
 				
-				val potPos = when(rand.nextInt(3)){
-					0 -> Pos(centerX + (potSide.xOffset * 2), 2, 4)
-					1 -> Pos(centerX + (potSide.xOffset * 2), 2, 2)
+				val potPos = when(rand.nextInt(3)) {
+					0    -> Pos(centerX + (potSide.xOffset * 2), 2, 4)
+					1    -> Pos(centerX + (potSide.xOffset * 2), 2, 2)
 					else -> Pos(centerX + potSide.xOffset, 2, 1)
 				}
 				
-				if (world.isAir(potPos)){
+				if (world.isAir(potPos)) {
 					world.setBlock(potPos, rand.nextItem(flowerPotTypes))
 					break
 				}

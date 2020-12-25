@@ -1,4 +1,5 @@
 package chylex.hee.init
+
 import chylex.hee.HEE
 import chylex.hee.game.block.BlockAncientCobweb
 import chylex.hee.game.block.BlockBrewingStandCustom
@@ -151,7 +152,7 @@ import net.minecraftforge.event.RegistryEvent
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber.Bus.MOD
 
 @SubscribeAllEvents(modid = HEE.ID, bus = MOD)
-object ModBlocks{
+object ModBlocks {
 	
 	// Blocks: Building (Uncategorized)
 	
@@ -373,13 +374,13 @@ object ModBlocks{
 	private val basicItemBlock = { block: Block -> ItemBlock(block, itemBlockDefaultProps) }
 	private val hiddenItemBlock = { block: Block -> ItemBlock(block, itemBlockPropsHidden) }
 	
-	private fun fuelItemBlock(burnTicks: Int): (Block) -> ItemBlock{
+	private fun fuelItemBlock(burnTicks: Int): (Block) -> ItemBlock {
 		return { block -> ItemBlockFuel(block, itemBlockDefaultProps, burnTicks) }
 	}
 	
 	@SubscribeEvent
-	fun onRegisterFluids(e: RegistryEvent.Register<Fluid>){
-		with(e.registry){
+	fun onRegisterFluids(e: RegistryEvent.Register<Fluid>) {
+		with(e.registry) {
 			register(FluidEnderGoo.still)
 			register(FluidEnderGoo.flowing)
 			register(FluidEnderGooPurified.still)
@@ -388,8 +389,8 @@ object ModBlocks{
 	}
 	
 	@SubscribeEvent
-	fun onRegisterBlocks(e: RegistryEvent.Register<Block>){
-		with(e.registry){
+	fun onRegisterBlocks(e: RegistryEvent.Register<Block>) {
+		with(e.registry) {
 			register(ETHEREAL_LANTERN with basicItemBlock)
 			register(STONE_BRICK_WALL with basicItemBlock)
 			register(INFUSED_GLASS with basicItemBlock)
@@ -546,27 +547,27 @@ object ModBlocks{
 		
 		// vanilla modifications
 		
-		with(e.registry){
-			register(BlockEndPortalOverride(buildEndPortalOverride).apply { override(Blocks.END_PORTAL){ null } })
-			register(BlockBrewingStandCustom(buildBrewingStand).apply { override(Blocks.BREWING_STAND){ ItemBlock(it, Item.Properties().group(ItemGroup.BREWING)) } })
-			register(BlockDragonEggOverride(buildDragonEgg).apply { override(Blocks.DRAGON_EGG){ ItemDragonEgg(it, itemBlockDefaultProps) } })
+		with(e.registry) {
+			register(BlockEndPortalOverride(buildEndPortalOverride).apply { override(Blocks.END_PORTAL) { null } })
+			register(BlockBrewingStandCustom(buildBrewingStand).apply { override(Blocks.BREWING_STAND) { ItemBlock(it, Item.Properties().group(ItemGroup.BREWING)) } })
+			register(BlockDragonEggOverride(buildDragonEgg).apply { override(Blocks.DRAGON_EGG) { ItemDragonEgg(it, itemBlockDefaultProps) } })
 			
-			for(block in BlockShulkerBoxOverride.ALL_BLOCKS){
+			for(block in BlockShulkerBoxOverride.ALL_BLOCKS) {
 				register(BlockShulkerBoxOverride(Block.Properties.from(block), block.color).apply {
-					override(block){ ItemShulkerBoxOverride(it, Item.Properties().maxStackSize(1).group(ItemGroup.DECORATIONS)) }
+					override(block) { ItemShulkerBoxOverride(it, Item.Properties().maxStackSize(1).group(ItemGroup.DECORATIONS)) }
 				})
 			}
 		}
 	}
 	
 	@SubscribeEvent
-	fun onRegisterItemBlocks(e: RegistryEvent.Register<Item>){
+	fun onRegisterItemBlocks(e: RegistryEvent.Register<Item>) {
 		temporaryItemBlocks.forEach(e.registry::register)
 		temporaryItemBlocks.clear()
 		
 		// fire
 		
-		with(Blocks.FIRE as BlockFire){
+		with(Blocks.FIRE as BlockFire) {
 			setFireInfo(WHITEBARK_LOG, 5, 5)
 			setFireInfo(WHITEBARK, 5, 5)
 			setFireInfo(WHITEBARK_PLANKS, 5, 20)
@@ -593,16 +594,16 @@ object ModBlocks{
 	
 	private val temporaryItemBlocks = mutableListOf<ItemBlock>()
 	
-	private inline fun Block.override(vanillaBlock: Block, itemBlockConstructor: ((Block) -> ItemBlock?)){
+	private inline fun Block.override(vanillaBlock: Block, itemBlockConstructor: ((Block) -> ItemBlock?)) {
 		this.useVanillaName(vanillaBlock)
 		itemBlockConstructor(this)?.let { with(it) }
 	}
 	
 	private infix fun Block.with(itemBlock: ItemBlock) = apply {
-		if (Resource.isVanilla(this.registryName!!)){
+		if (Resource.isVanilla(this.registryName!!)) {
 			itemBlock.useVanillaName(this)
 		}
-		else{
+		else {
 			itemBlock.registryName = this.registryName
 		}
 		
@@ -610,7 +611,7 @@ object ModBlocks{
 		(itemBlock.group as? OrderedCreativeTab)?.registerOrder(itemBlock)
 	}
 	
-	private infix fun <T : Block> T.with(itemBlockConstructor: (T) -> ItemBlock): Block{
+	private infix fun <T : Block> T.with(itemBlockConstructor: (T) -> ItemBlock): Block {
 		return with(itemBlockConstructor(this))
 	}
 }

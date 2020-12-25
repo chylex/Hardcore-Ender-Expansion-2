@@ -1,4 +1,5 @@
 package chylex.hee.game.entity.living.ai
+
 import chylex.hee.system.migration.EntityCreature
 import chylex.hee.system.migration.EntityLivingBase
 import net.minecraft.entity.ai.goal.LookAtGoal

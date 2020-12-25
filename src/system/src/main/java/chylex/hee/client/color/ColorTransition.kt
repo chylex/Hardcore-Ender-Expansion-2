@@ -1,4 +1,5 @@
 package chylex.hee.client.color
+
 import chylex.hee.client.MC
 import chylex.hee.system.color.HCL
 import chylex.hee.system.forge.Side
@@ -6,7 +7,7 @@ import chylex.hee.system.forge.Sided
 import chylex.hee.system.math.offsetTowards
 
 @Sided(Side.CLIENT)
-class ColorTransition(private val defaultColor: HCL, private val transitionDuration: Float){
+class ColorTransition(private val defaultColor: HCL, private val transitionDuration: Float) {
 	private var currentFrom: HCL = defaultColor
 	private var currentTo: HCL? = null
 	private var currentProgress = 0F
@@ -21,7 +22,7 @@ class ColorTransition(private val defaultColor: HCL, private val transitionDurat
 	val lastColorInQueue
 		get() = transitionQueue.lastOrNull()
 	
-	fun resetAll(){
+	fun resetAll() {
 		resetQueue()
 		
 		currentFrom = defaultColor
@@ -31,20 +32,20 @@ class ColorTransition(private val defaultColor: HCL, private val transitionDurat
 		lastUpdateTime = MC.systemTime
 	}
 	
-	fun resetQueue(){
+	fun resetQueue() {
 		transitionQueue.clear()
 	}
 	
-	fun enqueue(color: HCL){
-		if (currentTo == null){
+	fun enqueue(color: HCL) {
+		if (currentTo == null) {
 			currentTo = color
 		}
-		else{
+		else {
 			transitionQueue.add(color)
 		}
 	}
 	
-	fun updateGetColor(): HCL{
+	fun updateGetColor(): HCL {
 		val currentTime = MC.systemTime
 		val elapsedTime = currentTime - lastUpdateTime
 		
@@ -52,13 +53,13 @@ class ColorTransition(private val defaultColor: HCL, private val transitionDurat
 		
 		val transitionTo = currentTo
 		
-		if (transitionTo == null){
+		if (transitionTo == null) {
 			return currentFrom
 		}
 		
 		currentProgress += elapsedTime / transitionDuration
 		
-		if (currentProgress >= 1F){
+		if (currentProgress >= 1F) {
 			currentProgress = 0F
 			
 			currentFrom = transitionTo
@@ -66,7 +67,7 @@ class ColorTransition(private val defaultColor: HCL, private val transitionDurat
 			
 			return currentFrom
 		}
-		else{
+		else {
 			val hueSource = if (transitionTo.chroma > 0F && currentFrom.chroma == 0F) transitionTo else currentFrom
 			
 			return HCL(

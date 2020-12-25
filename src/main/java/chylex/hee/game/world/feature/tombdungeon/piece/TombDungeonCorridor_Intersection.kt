@@ -1,4 +1,5 @@
 package chylex.hee.game.world.feature.tombdungeon.piece
+
 import chylex.hee.game.world.Pos
 import chylex.hee.game.world.feature.tombdungeon.connection.TombDungeonConnection
 import chylex.hee.game.world.feature.tombdungeon.connection.TombDungeonConnectionType.CORRIDOR
@@ -11,7 +12,7 @@ import chylex.hee.system.migration.Facing.NORTH
 import chylex.hee.system.migration.Facing.SOUTH
 import chylex.hee.system.migration.Facing.WEST
 
-class TombDungeonCorridor_Intersection(override val isFancy: Boolean) : TombDungeonAbstractPiece(){
+class TombDungeonCorridor_Intersection(override val isFancy: Boolean) : TombDungeonAbstractPiece() {
 	override val size = Size(5, 5, 5)
 	override val sidePathAttachWeight = 1
 	override val secretAttachWeight = 0
@@ -23,12 +24,12 @@ class TombDungeonCorridor_Intersection(override val isFancy: Boolean) : TombDung
 		TombDungeonConnection(CORRIDOR, Pos(0, 0, size.centerZ), WEST)
 	)
 	
-	override fun generate(world: IStructureWorld, instance: Instance){
+	override fun generate(world: IStructureWorld, instance: Instance) {
 		super.generate(world, instance)
 		
 		world.placeCube(Pos(1, 1, 1), Pos(size.maxX - 1, size.maxY - 1, size.maxZ - 1), Air)
 		
-		if (world.rand.nextInt(5) == 0){
+		if (world.rand.nextInt(5) == 0) {
 			placeCrumblingCeiling(world, instance, 1)
 		}
 		

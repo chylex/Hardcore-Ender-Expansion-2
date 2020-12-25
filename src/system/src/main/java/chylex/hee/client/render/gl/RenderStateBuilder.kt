@@ -1,4 +1,5 @@
 package chylex.hee.client.render.gl
+
 import com.mojang.blaze3d.platform.GlStateManager.DestFactor
 import com.mojang.blaze3d.platform.GlStateManager.SourceFactor
 import com.mojang.blaze3d.systems.RenderSystem
@@ -23,88 +24,88 @@ import net.minecraft.client.renderer.vertex.VertexFormat
 import net.minecraft.util.ResourceLocation
 import java.util.OptionalDouble
 
-class RenderStateBuilder{
+class RenderStateBuilder {
 	private val state = State.getBuilder()
 	
-	fun tex(location: ResourceLocation, blur: Boolean = false, mipmap: Boolean = false){
+	fun tex(location: ResourceLocation, blur: Boolean = false, mipmap: Boolean = false) {
 		state.texture(TextureState(location, blur, mipmap))
 	}
 	
-	fun texturing(texturing: TexturingState){
+	fun texturing(texturing: TexturingState) {
 		state.texturing(texturing)
 	}
 	
-	fun layering(layering: LayerState){
+	fun layering(layering: LayerState) {
 		state.layer(layering)
 	}
 	
-	fun blend(blend: TransparencyState){
+	fun blend(blend: TransparencyState) {
 		state.transparency(blend)
 	}
 	
-	fun blend(src: SourceFactor, dst: DestFactor){
+	fun blend(src: SourceFactor, dst: DestFactor) {
 		state.transparency(TransparencyState("hee:blend_${src.name}_${dst.name}",
 			{ RenderSystem.enableBlend(); RenderSystem.blendFunc(src, dst) },
 			{ RenderSystem.disableBlend() }
 		))
 	}
 	
-	fun blend(srgb: SourceFactor, drgb: DestFactor, sa: SourceFactor, da: DestFactor){
+	fun blend(srgb: SourceFactor, drgb: DestFactor, sa: SourceFactor, da: DestFactor) {
 		state.transparency(TransparencyState("hee:blend_${srgb.name}_${drgb.name}_${sa.name}_${da.name}",
 			{ RenderSystem.enableBlend(); RenderSystem.blendFuncSeparate(srgb, drgb, sa, da) },
 			{ RenderSystem.disableBlend() }
 		))
 	}
 	
-	fun lighting(lighting: DiffuseLightingState){
+	fun lighting(lighting: DiffuseLightingState) {
 		state.diffuseLighting(lighting)
 	}
 	
-	fun shade(shade: ShadeModelState){
+	fun shade(shade: ShadeModelState) {
 		state.shadeModel(shade)
 	}
 	
-	fun alpha(alpha: AlphaState){
+	fun alpha(alpha: AlphaState) {
 		state.alpha(alpha)
 	}
 	
-	fun alpha(greaterThan: Float){
+	fun alpha(greaterThan: Float) {
 		state.alpha(AlphaState(greaterThan))
 	}
 	
-	fun fog(fog: FogState){
+	fun fog(fog: FogState) {
 		state.fog(fog)
 	}
 	
-	fun cull(cull: CullState){
+	fun cull(cull: CullState) {
 		state.cull(cull)
 	}
 	
-	fun depth(depth: DepthTestState){
+	fun depth(depth: DepthTestState) {
 		state.depthTest(depth)
 	}
 	
-	fun lightmap(lightmap: LightmapState){
+	fun lightmap(lightmap: LightmapState) {
 		state.lightmap(lightmap)
 	}
 	
-	fun overlay(overlay: OverlayState){
+	fun overlay(overlay: OverlayState) {
 		state.overlay(overlay)
 	}
 	
-	fun mask(mask: WriteMaskState){
+	fun mask(mask: WriteMaskState) {
 		state.writeMask(mask)
 	}
 	
-	fun line(thickness: Double){
+	fun line(thickness: Double) {
 		state.line(LineState(OptionalDouble.of(thickness)))
 	}
 	
-	fun build(affectsOutline: Boolean = false): State{
+	fun build(affectsOutline: Boolean = false): State {
 		return state.build(affectsOutline)
 	}
 	
-	fun buildType(name: String, vertexFormat: VertexFormat, drawMode: Int, bufferSize: Int, useDelegate: Boolean = false, needsSorting: Boolean = true, affectsOutline: Boolean = false): RenderType{
+	fun buildType(name: String, vertexFormat: VertexFormat, drawMode: Int, bufferSize: Int, useDelegate: Boolean = false, needsSorting: Boolean = true, affectsOutline: Boolean = false): RenderType {
 		@Suppress("INACCESSIBLE_TYPE")
 		return RenderType.makeType(name, vertexFormat, drawMode, bufferSize, useDelegate, needsSorting, build(affectsOutline))
 	}
@@ -128,7 +129,7 @@ class RenderStateBuilder{
 	 */
 	
 	@Suppress("NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS")
-	companion object : RenderState(null, null, null){
+	companion object : RenderState(null, null, null) {
 		val LAYERING_NONE:       LayerState get() = NO_LAYERING
 		val LAYERING_PROJECTION: LayerState get() = PROJECTION_LAYERING
 		

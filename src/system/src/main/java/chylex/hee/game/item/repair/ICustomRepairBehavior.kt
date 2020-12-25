@@ -1,5 +1,5 @@
 package chylex.hee.game.item.repair
 
-interface ICustomRepairBehavior{
+interface ICustomRepairBehavior {
 	fun onRepairUpdate(instance: RepairInstance)
 }

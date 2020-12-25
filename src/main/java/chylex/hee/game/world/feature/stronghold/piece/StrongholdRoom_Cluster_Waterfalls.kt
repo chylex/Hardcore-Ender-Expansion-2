@@ -1,4 +1,5 @@
 package chylex.hee.game.world.feature.stronghold.piece
+
 import chylex.hee.game.mechanics.energy.IClusterGenerator.Companion.STRONGHOLD
 import chylex.hee.game.world.Pos
 import chylex.hee.game.world.feature.stronghold.StrongholdPieceType
@@ -12,7 +13,7 @@ import chylex.hee.system.migration.Facing.NORTH
 import chylex.hee.system.migration.Facing.SOUTH
 import chylex.hee.system.migration.Facing.WEST
 
-class StrongholdRoom_Cluster_Waterfalls(file: String) : StrongholdAbstractPieceFromFile(file, StrongholdPieceType.ROOM){
+class StrongholdRoom_Cluster_Waterfalls(file: String) : StrongholdAbstractPieceFromFile(file, StrongholdPieceType.ROOM) {
 	override val connections = arrayOf<IStructurePieceConnection>(
 		StrongholdConnection(ROOM, Pos(centerX, 2, 0), NORTH),
 		StrongholdConnection(ROOM, Pos(centerX, 2, maxZ), SOUTH),
@@ -20,7 +21,7 @@ class StrongholdRoom_Cluster_Waterfalls(file: String) : StrongholdAbstractPieceF
 		StrongholdConnection(ROOM, Pos(0, 2, centerZ), WEST)
 	)
 	
-	override fun generate(world: IStructureWorld, instance: Instance){
+	override fun generate(world: IStructureWorld, instance: Instance) {
 		super.generate(world, instance)
 		world.addTrigger(Pos(centerX, 4, centerZ), EnergyClusterStructureTrigger(STRONGHOLD.generate(world.rand)))
 	}

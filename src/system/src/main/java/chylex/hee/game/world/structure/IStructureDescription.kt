@@ -1,4 +1,5 @@
 package chylex.hee.game.world.structure
+
 import chylex.hee.game.world.math.PosXZ
 import chylex.hee.game.world.math.Size
 import chylex.hee.game.world.structure.palette.Palette
@@ -8,7 +9,7 @@ import net.minecraft.util.math.BlockPos
 import net.minecraft.world.server.ServerWorld
 
 @Suppress("PropertyName")
-interface IStructureDescription{
+interface IStructureDescription {
 	val STRUCTURE_SIZE: Size
 	
 	val STRUCTURE_BUILDER: IStructureBuilder
@@ -17,7 +18,7 @@ interface IStructureDescription{
 	val PALETTE: Palette
 	val ALL_PIECES: Array<out StructurePiece<*>>
 	
-	companion object{
-		val NULL_LOCATOR: (ServerWorld, PosXZ) -> BlockPos? = { _, _ -> null}
+	companion object {
+		val NULL_LOCATOR: (ServerWorld, PosXZ) -> BlockPos? = { _, _ -> null }
 	}
 }

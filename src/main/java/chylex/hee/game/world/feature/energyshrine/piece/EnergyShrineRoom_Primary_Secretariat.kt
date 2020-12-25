@@ -1,4 +1,5 @@
 package chylex.hee.game.world.feature.energyshrine.piece
+
 import chylex.hee.game.block.withFacing
 import chylex.hee.game.world.Pos
 import chylex.hee.game.world.feature.energyshrine.connection.EnergyShrineConnection
@@ -17,13 +18,13 @@ import chylex.hee.system.migration.Facing.WEST
 import net.minecraft.block.Blocks
 import net.minecraft.state.properties.AttachFace
 
-class EnergyShrineRoom_Primary_Secretariat(file: String) : EnergyShrineRoom_Generic(file){
+class EnergyShrineRoom_Primary_Secretariat(file: String) : EnergyShrineRoom_Generic(file) {
 	override val connections = arrayOf<IStructurePieceConnection>(
 		EnergyShrineConnection(ROOM, Pos(maxX - 3, 0, maxZ), SOUTH),
 		EnergyShrineConnection(ROOM, Pos(0, 0, maxZ - 3), WEST)
 	)
 	
-	override fun generate(world: IStructureWorld, instance: Instance){
+	override fun generate(world: IStructureWorld, instance: Instance) {
 		super.generate(world, instance)
 		
 		val rand = world.rand
@@ -36,7 +37,7 @@ class EnergyShrineRoom_Primary_Secretariat(file: String) : EnergyShrineRoom_Gene
 			15 to Single(ModBlocks.POTTED_DEATH_FLOWER_WITHERED)
 		)
 		
-		for(x in 2..6){
+		for(x in 2..6) {
 			world.setState(Pos(x, 2, 4), decorations.generateItem(rand).pick(rand))
 		}
 		

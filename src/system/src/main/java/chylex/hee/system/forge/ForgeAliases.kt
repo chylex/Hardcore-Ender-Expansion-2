@@ -1,4 +1,5 @@
 package chylex.hee.system.forge
+
 import net.minecraftforge.api.distmarker.Dist
 import net.minecraftforge.api.distmarker.OnlyIn
 import net.minecraftforge.eventbus.api.Event

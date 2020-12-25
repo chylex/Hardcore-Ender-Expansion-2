@@ -1,4 +1,5 @@
 package chylex.hee.game.world.territory
+
 import chylex.hee.HEE
 import chylex.hee.game.block.BlockAbstractPortal
 import chylex.hee.game.mechanics.portal.SpawnInfo
@@ -36,32 +37,32 @@ import kotlin.math.abs
  *  6|4
  */
 
-data class TerritoryInstance(val territory: TerritoryType, val index: Int){
-	companion object{
+data class TerritoryInstance(val territory: TerritoryType, val index: Int) {
+	companion object {
 		private const val HASH_ORDINAL_BITS = 8
 		private const val HASH_ORDINAL_MASK = (1 shl HASH_ORDINAL_BITS) - 1
 		
 		val THE_HUB_INSTANCE = TerritoryInstance(THE_HUB, 0)
 		
-		fun fromHash(hash: Int): TerritoryInstance?{
+		fun fromHash(hash: Int): TerritoryInstance? {
 			val territory = hash and HASH_ORDINAL_MASK
 			val index = hash shr HASH_ORDINAL_BITS
 			
 			return TerritoryType.ALL.getOrNull(territory)?.let { TerritoryInstance(it, index) }
 		}
 		
-		fun fromPos(pos: BlockPos): TerritoryInstance?{
+		fun fromPos(pos: BlockPos): TerritoryInstance? {
 			return fromPos(pos.x, pos.z)
 		}
 		
-		fun fromPos(entity: Entity): TerritoryInstance?{
+		fun fromPos(entity: Entity): TerritoryInstance? {
 			return fromPos(entity.posX.floorToInt(), entity.posZ.floorToInt())
 		}
 		
-		fun fromPos(x: Int, z: Int): TerritoryInstance?{
+		fun fromPos(x: Int, z: Int): TerritoryInstance? {
 			val territory = TerritoryType.fromX(x) ?: return null
 			
-			if (territory.isSpawn){
+			if (territory.isSpawn) {
 				return THE_HUB_INSTANCE
 			}
 			
@@ -91,7 +92,7 @@ data class TerritoryInstance(val territory: TerritoryType, val index: Int){
 	val hash
 		get() = (ordinal and HASH_ORDINAL_MASK) or (index shl HASH_ORDINAL_BITS)
 	
-	val topLeftChunk by lazy(LazyThreadSafetyMode.PUBLICATION){
+	val topLeftChunk by lazy(LazyThreadSafetyMode.PUBLICATION) {
 		val chunkOffX = if ((index / 2) % 2 == 0)
 			(0 until ordinal).sumBy { CHUNK_MARGIN + TerritoryType.ALL[it].chunks } // positive x
 		else
@@ -119,7 +120,7 @@ data class TerritoryInstance(val territory: TerritoryType, val index: Int){
 	val players
 		get() = endWorld.players.filter { this == fromPos(it) }
 	
-	fun generatesChunk(chunkX: Int, chunkZ: Int): Boolean{
+	fun generatesChunk(chunkX: Int, chunkZ: Int): Boolean {
 		val (startX, startZ) = topLeftChunk
 		return chunkX >= startX && chunkZ >= startZ && chunkX < startX + chunks && chunkZ < startZ + chunks
 	}
@@ -128,19 +129,19 @@ data class TerritoryInstance(val territory: TerritoryType, val index: Int){
 		setSeed(nextLong() xor (66L * index) + (ordinal * nextInt()))
 	}
 	
-	fun getSpawnPoint(): BlockPos{
+	fun getSpawnPoint(): BlockPos {
 		return TerritoryGlobalStorage.get().forInstance(this)?.loadSpawn() ?: fallbackSpawnPoint
 	}
 	
-	fun getSpawnPoint(player: EntityPlayer): BlockPos{
+	fun getSpawnPoint(player: EntityPlayer): BlockPos {
 		return TerritoryGlobalStorage.get().forInstance(this)?.loadSpawnForPlayer(player) ?: fallbackSpawnPoint
 	}
 	
-	fun updateSpawnPoint(player: EntityPlayer, pos: BlockPos){
+	fun updateSpawnPoint(player: EntityPlayer, pos: BlockPos) {
 		TerritoryGlobalStorage.get().forInstance(this)?.updateSpawnForPlayer(player, pos)
 	}
 	
-	fun prepareSpawnPoint(entity: Entity?, clearanceRadius: Int): SpawnInfo{
+	fun prepareSpawnPoint(entity: Entity?, clearanceRadius: Int): SpawnInfo {
 		val world = endWorld
 		val spawnPoint = entity?.let(::determineOwningPlayer)?.let(::getSpawnPoint) ?: getSpawnPoint()
 		
@@ -152,10 +153,10 @@ data class TerritoryInstance(val territory: TerritoryType, val index: Int){
 	}
 	
 	@Suppress("UNNECESSARY_SAFE_CALL")
-	private fun determineOwningPlayer(entity: Entity) = when(entity){
+	private fun determineOwningPlayer(entity: Entity) = when(entity) {
 		is EntityPlayer   -> entity
 		is EntityItem     -> entity.throwerId?.let(Environment.getServer().playerList::getPlayerByUUID)
 		is EntityTameable -> entity.owner as? EntityPlayer
-		else -> null
+		else              -> null
 	}
 }

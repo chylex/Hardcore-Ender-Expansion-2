@@ -1,4 +1,5 @@
 package chylex.hee.game.world.feature.energyshrine.piece
+
 import chylex.hee.game.world.Pos
 import chylex.hee.game.world.feature.energyshrine.EnergyShrineRoomData
 import chylex.hee.game.world.generation.IBlockPicker.Single
@@ -6,11 +7,11 @@ import chylex.hee.game.world.structure.IStructureWorld
 import chylex.hee.game.world.structure.piece.StructurePiece
 import chylex.hee.init.ModBlocks
 
-abstract class EnergyShrineAbstractPiece : StructurePiece<EnergyShrineRoomData>(){
+abstract class EnergyShrineAbstractPiece : StructurePiece<EnergyShrineRoomData>() {
 	protected open val ceilingBlock
 		get() = ModBlocks.GLOOMROCK_SMOOTH
 	
-	override fun generate(world: IStructureWorld, instance: Instance){
+	override fun generate(world: IStructureWorld, instance: Instance) {
 		val maxX = size.maxX
 		val maxY = size.maxY
 		val maxZ = size.maxZ

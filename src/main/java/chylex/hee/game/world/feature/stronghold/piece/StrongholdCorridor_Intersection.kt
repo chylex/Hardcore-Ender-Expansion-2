@@ -1,4 +1,5 @@
 package chylex.hee.game.world.feature.stronghold.piece
+
 import chylex.hee.game.world.Pos
 import chylex.hee.game.world.feature.stronghold.StrongholdPieceType
 import chylex.hee.game.world.feature.stronghold.connection.StrongholdConnection
@@ -13,8 +14,8 @@ import chylex.hee.system.migration.Facing.SOUTH
 import chylex.hee.system.migration.Facing.WEST
 import net.minecraft.util.Direction
 
-class StrongholdCorridor_Intersection private constructor(vararg connections: Direction) : StrongholdAbstractPiece(){
-	companion object{
+class StrongholdCorridor_Intersection private constructor(vararg connections: Direction) : StrongholdAbstractPiece() {
+	companion object {
 		val CORNER   = StrongholdCorridor_Intersection(SOUTH, WEST)
 		val THREEWAY = StrongholdCorridor_Intersection(SOUTH, WEST, EAST)
 		val FOURWAY  = StrongholdCorridor_Intersection(SOUTH, WEST, EAST, NORTH)
@@ -24,16 +25,16 @@ class StrongholdCorridor_Intersection private constructor(vararg connections: Di
 	override val size = Size(5, 5, 5)
 	
 	override val connections = connections.map {
-		when(it){
+		when(it) {
 			NORTH -> StrongholdConnection(CORRIDOR, Pos(size.centerX, 0, 0), NORTH)
 			SOUTH -> StrongholdConnection(CORRIDOR, Pos(size.centerX, 0, size.maxZ), SOUTH)
-			EAST -> StrongholdConnection(CORRIDOR, Pos(size.maxX, 0, size.centerZ), EAST)
-			WEST -> StrongholdConnection(CORRIDOR, Pos(0, 0, size.centerZ), WEST)
-			else -> throw IllegalArgumentException()
+			EAST  -> StrongholdConnection(CORRIDOR, Pos(size.maxX, 0, size.centerZ), EAST)
+			WEST  -> StrongholdConnection(CORRIDOR, Pos(0, 0, size.centerZ), WEST)
+			else  -> throw IllegalArgumentException()
 		}
 	}.toTypedArray<IStructurePieceConnection>()
 	
-	override fun generate(world: IStructureWorld, instance: Instance){
+	override fun generate(world: IStructureWorld, instance: Instance) {
 		super.generate(world, instance)
 		world.placeCube(Pos(1, 1, 1), Pos(size.maxX - 1, size.maxY - 1, size.maxZ - 1), Air)
 	}

@@ -1,4 +1,5 @@
 package chylex.hee.system.reflection
+
 import java.lang.invoke.LambdaMetafactory
 import java.lang.invoke.MethodHandle
 import java.lang.invoke.MethodHandles
@@ -6,9 +7,9 @@ import java.lang.invoke.MethodType
 import java.util.function.Function
 import java.util.function.Supplier
 
-object ObjectConstructors{
+object ObjectConstructors {
 	@Suppress("UNCHECKED_CAST")
-	inline fun <reified T> noArgs(): Supplier<T>{
+	inline fun <reified T> noArgs(): Supplier<T> {
 		val mh = MethodHandles.lookup()
 		val con = mh.unreflectConstructor(T::class.java.getConstructor())
 		
@@ -20,7 +21,7 @@ object ObjectConstructors{
 	}
 	
 	@Suppress("UNCHECKED_CAST")
-	inline fun <reified T, reified U> oneArg(): Function<U, T>{
+	inline fun <reified T, reified U> oneArg(): Function<U, T> {
 		val mh = MethodHandles.lookup()
 		val con = mh.unreflectConstructor(T::class.java.getConstructor(U::class.java))
 		
@@ -32,7 +33,7 @@ object ObjectConstructors{
 	}
 	
 	@Suppress("UNCHECKED_CAST")
-	inline fun <reified ConstructedType : ParentType, reified ParentType, reified FactoryType> generic(constructMethodName: String, vararg constructMethodArgs: Class<*>): MethodHandle{
+	inline fun <reified ConstructedType : ParentType, reified ParentType, reified FactoryType> generic(constructMethodName: String, vararg constructMethodArgs: Class<*>): MethodHandle {
 		val mh = MethodHandles.lookup()
 		val con = mh.unreflectConstructor(ConstructedType::class.java.getConstructor(*constructMethodArgs))
 		

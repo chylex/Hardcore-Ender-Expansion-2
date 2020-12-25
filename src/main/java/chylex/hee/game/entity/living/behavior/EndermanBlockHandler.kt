@@ -1,4 +1,5 @@
 package chylex.hee.game.entity.living.behavior
+
 import chylex.hee.game.entity.isAnyVulnerablePlayerWithinRange
 import chylex.hee.game.entity.living.EntityMobAbstractEnderman
 import chylex.hee.game.entity.living.ai.AIPickUpBlock.IBlockPickUpHandler
@@ -42,14 +43,14 @@ import net.minecraft.world.biome.Biome
 import net.minecraft.world.dimension.DimensionType
 import net.minecraftforge.registries.ForgeRegistries
 
-class EndermanBlockHandler(private val enderman: EntityMobAbstractEnderman) : IBlockPickUpHandler{
-	companion object{
+class EndermanBlockHandler(private val enderman: EntityMobAbstractEnderman) : IBlockPickUpHandler {
+	companion object {
 		private val SEARCH_AREA = AxisAlignedBB(-15.0, -2.0, -15.0, 15.0, 1.0, 15.0)
 		
 		private lateinit var GENERIC_CARRIABLE_BLOCKS: Tag<Block>
 		private val BIOME_CARRIABLE_BLOCKS = mutableMapOf<Biome, BlockState>()
 		
-		fun setupCarriableBlocks(){
+		fun setupCarriableBlocks() {
 			GENERIC_CARRIABLE_BLOCKS = Tag.Builder<Block>()
 				.add(BlockTags.SMALL_FLOWERS)
 				.add(Blocks.GRASS_BLOCK)
@@ -70,11 +71,11 @@ class EndermanBlockHandler(private val enderman: EntityMobAbstractEnderman) : IB
 				.build(Resource.Custom("enderman_carriable"))
 			
 			BIOME_CARRIABLE_BLOCKS.clear()
-			ForgeRegistries.BIOMES.associateWithTo(BIOME_CARRIABLE_BLOCKS){ it.surfaceBuilderConfig.top }
+			ForgeRegistries.BIOMES.associateWithTo(BIOME_CARRIABLE_BLOCKS) { it.surfaceBuilderConfig.top }
 		}
 	}
 	
-	private enum class TargetBlockType{
+	private enum class TargetBlockType {
 		NONE        { override fun isValid(world: World, pos: BlockPos) = false },
 		FULL        { override fun isValid(world: World, pos: BlockPos) = pos.isFullBlock(world) },
 		TRANSPARENT { override fun isValid(world: World, pos: BlockPos) = !pos.isFullBlock(world) };
@@ -88,35 +89,35 @@ class EndermanBlockHandler(private val enderman: EntityMobAbstractEnderman) : IB
 	override val canBeginSearch
 		get() = enderman.heldBlockState == null
 	
-	private fun isPlayerInProximity(): Boolean{
+	private fun isPlayerInProximity(): Boolean {
 		return enderman.isAnyVulnerablePlayerWithinRange(14.0)
 	}
 	
-	override fun onBeginSearch(): BlockPos?{
-		if (enderman.dimension != DimensionType.OVERWORLD || isPlayerInProximity()){
+	override fun onBeginSearch(): BlockPos? {
+		if (enderman.dimension != DimensionType.OVERWORLD || isPlayerInProximity()) {
 			return null
 		}
 		
-		val targetType = when(rand.nextInt(100)){
+		val targetType = when(rand.nextInt(100)) {
 			0       -> FULL
 			in 1..5 -> TRANSPARENT
 			else    -> NONE
 		}
 		
-		if (targetType == NONE){
+		if (targetType == NONE) {
 			return null
 		}
 		
 		val searchArea = SEARCH_AREA.offset(enderman.posVec)
 		
-		for(attempt in 1..75){
+		for(attempt in 1..75) {
 			val pos = Pos(
 				rand.nextFloat(searchArea.minX, searchArea.maxX),
 				rand.nextFloat(searchArea.minY, searchArea.maxY),
 				rand.nextFloat(searchArea.minZ, searchArea.maxZ)
 			)
 			
-			if (canPickUp(pos, targetType)){
+			if (canPickUp(pos, targetType)) {
 				return pos
 			}
 		}
@@ -124,26 +125,26 @@ class EndermanBlockHandler(private val enderman: EntityMobAbstractEnderman) : IB
 		return null
 	}
 	
-	private fun canPickUp(pos: BlockPos, targetType: TargetBlockType): Boolean{
-		if (!targetType.isValid(world, pos)){
+	private fun canPickUp(pos: BlockPos, targetType: TargetBlockType): Boolean {
+		if (!targetType.isValid(world, pos)) {
 			return false
 		}
 		
-		if (pos.up().getMaterial(world).blocksMovement()){
+		if (pos.up().getMaterial(world).blocksMovement()) {
 			return false
 		}
 		
-		if (!FULL.isValid(world, pos) && !FULL.isValid(world, pos.down())){ // make sure it can only pick the bottom block of a double plant
+		if (!FULL.isValid(world, pos) && !FULL.isValid(world, pos.down())) { // make sure it can only pick the bottom block of a double plant
 			return false
 		}
 		
 		val state = pos.getState(world)
 		
-		if (!state.isIn(GENERIC_CARRIABLE_BLOCKS) && state !== BIOME_CARRIABLE_BLOCKS[world.getBiome(pos)]){
+		if (!state.isIn(GENERIC_CARRIABLE_BLOCKS) && state !== BIOME_CARRIABLE_BLOCKS[world.getBiome(pos)]) {
 			return false
 		}
 		
-		if (world.getLightFor(BLOCK, pos) > 1){
+		if (world.getLightFor(BLOCK, pos) > 1) {
 			return false
 		}
 		
@@ -151,12 +152,12 @@ class EndermanBlockHandler(private val enderman: EntityMobAbstractEnderman) : IB
 		return result.type == Type.MISS || result.pos == pos
 	}
 	
-	override fun onBlockReached(state: BlockState){
+	override fun onBlockReached(state: BlockState) {
 		enderman.heldBlockState = state
 	}
 	
-	fun tryPlaceBlock(allowPlayerProximity: Boolean): Boolean{
-		if (!allowPlayerProximity && isPlayerInProximity()){
+	fun tryPlaceBlock(allowPlayerProximity: Boolean): Boolean {
+		if (!allowPlayerProximity && isPlayerInProximity()) {
 			return false
 		}
 		
@@ -166,11 +167,11 @@ class EndermanBlockHandler(private val enderman: EntityMobAbstractEnderman) : IB
 		val endermanVec = enderman.posVec
 		val endermanPos = Pos(endermanVec)
 		
-		for(attempt in 1..20){
+		for(attempt in 1..20) {
 			val dir = Vec3.fromYaw(enderman.rotationYaw + rand.nextFloat(-60F, 60F))
 			val pos = Pos(endermanVec.add(dir.scale(rand.nextFloat(0.5, 2.0))))
 			
-			if (pos != endermanPos && pos.isAir(world) && pos.down().isFullBlock(world) && state.isValidPosition(world, pos)){
+			if (pos != endermanPos && pos.isAir(world) && pos.down().isFullBlock(world) && state.isValidPosition(world, pos)) {
 				pos.setState(world, state)
 				block.onBlockPlacedBy(world, pos, state, enderman, ItemStack(block))
 				
@@ -186,7 +187,7 @@ class EndermanBlockHandler(private val enderman: EntityMobAbstractEnderman) : IB
 		return false
 	}
 	
-	fun dropBlockAsItem(){
+	fun dropBlockAsItem() {
 		val state = enderman.heldBlockState ?: return
 		val block = state.block
 		

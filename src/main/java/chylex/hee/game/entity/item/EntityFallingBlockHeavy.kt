@@ -1,4 +1,5 @@
 package chylex.hee.game.entity.item
+
 import chylex.hee.game.entity.item.EntityFallingBlockHeavy.PlacementResult.FAIL
 import chylex.hee.game.entity.item.EntityFallingBlockHeavy.PlacementResult.RELOCATION
 import chylex.hee.game.entity.item.EntityFallingBlockHeavy.PlacementResult.SUCCESS
@@ -34,11 +35,11 @@ import net.minecraft.world.World
 import net.minecraftforge.fml.common.registry.IEntityAdditionalSpawnData
 import net.minecraftforge.fml.network.NetworkHooks
 
-open class EntityFallingBlockHeavy(type: EntityType<out EntityFallingBlockHeavy>, world: World) : EntityFallingBlock(type, world), IEntityAdditionalSpawnData{
+open class EntityFallingBlockHeavy(type: EntityType<out EntityFallingBlockHeavy>, world: World) : EntityFallingBlock(type, world), IEntityAdditionalSpawnData {
 	constructor(world: World, pos: BlockPos, state: BlockState) : this(ModEntities.FALLING_BLOCK_HEAVY, world, pos, state)
 	
 	@Suppress("LeakingThis")
-	constructor(type: EntityType<out EntityFallingBlockHeavy>, world: World, pos: BlockPos, state: BlockState) : this(type, world){
+	constructor(type: EntityType<out EntityFallingBlockHeavy>, world: World, pos: BlockPos, state: BlockState) : this(type, world) {
 		val x = pos.x.toDouble()
 		val y = pos.y.toDouble()
 		val z = pos.z.toDouble()
@@ -55,20 +56,20 @@ open class EntityFallingBlockHeavy(type: EntityType<out EntityFallingBlockHeavy>
 		motion = Vec3.ZERO
 	}
 	
-	companion object{
+	companion object {
 		private val ignoredTileKeys = setOf("x", "y", "z")
 		
-		fun canFallThrough(world: World, pos: BlockPos): Boolean{
+		fun canFallThrough(world: World, pos: BlockPos): Boolean {
 			val state = pos.getState(world)
 			return BlockFalling.canFallThrough(state) || state.material.isReplaceable || (state.getBlockHardness(world, pos) == 0F && state.getCollisionShape(world, pos).isEmpty)
 		}
 	}
 	
-	protected enum class PlacementResult{
+	protected enum class PlacementResult {
 		SUCCESS, RELOCATION, FAIL
 	}
 	
-	override fun createSpawnPacket(): IPacket<*>{
+	override fun createSpawnPacket(): IPacket<*> {
 		return NetworkHooks.getEntitySpawningPacket(this)
 	}
 	
@@ -80,11 +81,11 @@ open class EntityFallingBlockHeavy(type: EntityType<out EntityFallingBlockHeavy>
 		fallTile = Block.getStateById(readInt())
 	}
 	
-	override fun tick(){
+	override fun tick() {
 		val state = this.fallTile
 		
-		if (state == null || state.material === Material.AIR){
-			if (!world.isRemote){
+		if (state == null || state.material === Material.AIR) {
+			if (!world.isRemote) {
 				remove()
 			}
 			
@@ -95,31 +96,31 @@ open class EntityFallingBlockHeavy(type: EntityType<out EntityFallingBlockHeavy>
 		prevPosY = posY
 		prevPosZ = posZ
 		
-		if (fallTime++ == 0){
+		if (fallTime++ == 0) {
 			val pos = Pos(this)
 			
-			if (pos.getBlock(world) === state.block){
+			if (pos.getBlock(world) === state.block) {
 				pos.removeBlock(world)
 			}
-			else if (!world.isRemote){
+			else if (!world.isRemote) {
 				remove()
 				return
 			}
 		}
 		
-		if (!hasNoGravity()){
+		if (!hasNoGravity()) {
 			motionY -= 0.04
 		}
 		
 		move(SELF, motion)
 		
-		if (!world.isRemote){
+		if (!world.isRemote) {
 			val pos = Pos(this)
 			
-			if (onGround){
+			if (onGround) {
 				val posSlightlyBelow = Pos(posVec.subtractY(0.01))
 				
-				if (canFallThrough(world, posSlightlyBelow) && posY != prevPosY){ // if posY hasn't changed, it's stuck on a solid replaceable block
+				if (canFallThrough(world, posSlightlyBelow) && posY != prevPosY) { // if posY hasn't changed, it's stuck on a solid replaceable block
 					onGround = false
 					return
 				}
@@ -128,20 +129,20 @@ open class EntityFallingBlockHeavy(type: EntityType<out EntityFallingBlockHeavy>
 				
 				val collidingWith = pos.getState(world)
 				
-				if (collidingWith.block !== Blocks.MOVING_PISTON){
+				if (collidingWith.block !== Blocks.MOVING_PISTON) {
 					val landedOnPos = if (canFallThrough(world, pos)) pos else pos.up() // allow landing on non-full solid blocks, even if it's kinda ugly
 					val placementResult = placeAfterLanding(landedOnPos, collidingWith)
 					
-					if (placementResult == FAIL){
+					if (placementResult == FAIL) {
 						dropBlockIfPossible()
 					}
 					
-					if (placementResult != RELOCATION){
+					if (placementResult != RELOCATION) {
 						remove()
 					}
 				}
 			}
-			else if ((fallTime > 100 && (pos.y < 1 || pos.y > 256)) || fallTime > 600){
+			else if ((fallTime > 100 && (pos.y < 1 || pos.y > 256)) || fallTime > 600) {
 				dropBlockIfPossible()
 				remove()
 			}
@@ -150,27 +151,27 @@ open class EntityFallingBlockHeavy(type: EntityType<out EntityFallingBlockHeavy>
 		motion = motion.scale(0.98)
 	}
 	
-	protected open fun placeAfterLanding(pos: BlockPos, collidingWith: BlockState): PlacementResult{
-		if (!canFallThrough(world, pos.down()) && canFallThrough(world, pos)){
-			if (pos.getHardness(world) == 0F){
+	protected open fun placeAfterLanding(pos: BlockPos, collidingWith: BlockState): PlacementResult {
+		if (!canFallThrough(world, pos.down()) && canFallThrough(world, pos)) {
+			if (pos.getHardness(world) == 0F) {
 				pos.breakBlock(world, true)
 			}
 			
 			val state = fallTile
 			
-			if (state.isValidPosition(world, pos) && pos.setState(world, state)){
+			if (state.isValidPosition(world, pos) && pos.setState(world, state)) {
 				val block = state.block
 				
-				if (block is BlockFalling){
+				if (block is BlockFalling) {
 					block.onEndFalling(world, pos, state, collidingWith)
 				}
 				
-				if (tileEntityData != null && block.hasTileEntity(state)){
+				if (tileEntityData != null && block.hasTileEntity(state)) {
 					pos.getTile<TileEntity>(world)?.let {
 						val nbt = it.write(TagCompound())
 						
-						for(key in tileEntityData.keySet()){
-							if (key !in ignoredTileKeys){
+						for(key in tileEntityData.keySet()) {
+							if (key !in ignoredTileKeys) {
 								nbt.put(key, tileEntityData.getCompound(key).copy())
 							}
 						}
@@ -187,10 +188,10 @@ open class EntityFallingBlockHeavy(type: EntityType<out EntityFallingBlockHeavy>
 		return FAIL
 	}
 	
-	protected open fun dropBlockIfPossible(){
+	protected open fun dropBlockIfPossible() {
 		val state = fallTile
 		
-		if (!world.isRemote && shouldDropItem && world.gameRules.getBoolean(DO_ENTITY_DROPS) && state != null){
+		if (!world.isRemote && shouldDropItem && world.gameRules.getBoolean(DO_ENTITY_DROPS) && state != null) {
 			entityDropItem(state.block)
 		}
 	}

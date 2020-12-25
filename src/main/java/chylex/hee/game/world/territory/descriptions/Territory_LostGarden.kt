@@ -1,4 +1,5 @@
 package chylex.hee.game.world.territory.descriptions
+
 import chylex.hee.client.render.lightmaps.OverworldLightmap
 import chylex.hee.client.render.territory.components.SkyDomeStatic
 import chylex.hee.game.world.territory.ITerritoryDescription
@@ -10,11 +11,11 @@ import chylex.hee.system.math.Vec
 import chylex.hee.system.random.nextFloat
 import java.util.Random
 
-object Territory_LostGarden : ITerritoryDescription{
+object Territory_LostGarden : ITerritoryDescription {
 	override val difficulty
 		get() = TerritoryDifficulty.PEACEFUL
 	
-	override val colors = object : TerritoryColors(){
+	override val colors = object : TerritoryColors() {
 		override val tokenTop    = RGB(148, 169, 54)
 		override val tokenBottom = RGB( 98,  93, 102)
 		
@@ -22,8 +23,8 @@ object Territory_LostGarden : ITerritoryDescription{
 		
 		override val portalSeed = 5558196322L
 		
-		override fun nextPortalColor(rand: Random, color: FloatArray){
-			return when(rand.nextInt(3)){
+		override fun nextPortalColor(rand: Random, color: FloatArray) {
+			return when(rand.nextInt(3)) {
 				in 0..1 -> {
 					color[0] = rand.nextFloat(0.64F, 0.91F)
 					color[1] = rand.nextFloat(0.63F, 0.94F)
@@ -39,7 +40,7 @@ object Territory_LostGarden : ITerritoryDescription{
 		}
 	}
 	
-	override val environment = object : TerritoryEnvironment(){
+	override val environment = object : TerritoryEnvironment() {
 		override val fogColor = RGB(200, 205, 170).asVec
 		override val fogDensity = 0.011F
 		override val fogRenderDistanceModifier = 0.008F

@@ -1,4 +1,5 @@
 package chylex.hee.game.block
+
 import chylex.hee.game.block.entity.TileEntityIgneousPlate
 import chylex.hee.game.block.properties.BlockBuilder
 import chylex.hee.game.block.properties.Property
@@ -41,8 +42,8 @@ import net.minecraft.world.IWorld
 import net.minecraft.world.IWorldReader
 import net.minecraft.world.World
 
-class BlockIgneousPlate(builder: BlockBuilder) : BlockSimple(builder){
-	companion object{
+class BlockIgneousPlate(builder: BlockBuilder) : BlockSimple(builder) {
+	companion object {
 		val FACING_NOT_DOWN = Property.facing("facing", Facing6.minusElement(DOWN))
 		
 		private const val BB_SIDE_MIN = 0.125
@@ -57,7 +58,7 @@ class BlockIgneousPlate(builder: BlockBuilder) : BlockSimple(builder){
 			WEST  to AxisAlignedBB(1.0 - BB_TOP, BB_SIDE_MIN, BB_SIDE_MIN, 1.0, BB_SIDE_MAX, BB_SIDE_MAX).asVoxelShape
 		)
 		
-		private fun canPlacePlateAt(world: IWorldReader, pos: BlockPos, facing: Direction): Boolean{
+		private fun canPlacePlateAt(world: IWorldReader, pos: BlockPos, facing: Direction): Boolean {
 			val furnacePos = pos.offset(facing.opposite)
 			val state = furnacePos.getState(world)
 			
@@ -69,29 +70,29 @@ class BlockIgneousPlate(builder: BlockBuilder) : BlockSimple(builder){
 		}
 	}
 	
-	init{
+	init {
 		defaultState = stateContainer.baseState.with(FACING_NOT_DOWN, UP)
 	}
 	
-	override fun fillStateContainer(container: Builder<Block, BlockState>){
+	override fun fillStateContainer(container: Builder<Block, BlockState>) {
 		container.add(FACING_NOT_DOWN)
 	}
 	
-	override fun hasTileEntity(state: BlockState): Boolean{
+	override fun hasTileEntity(state: BlockState): Boolean {
 		return true
 	}
 	
-	override fun createTileEntity(state: BlockState, world: IBlockReader): TileEntity{
+	override fun createTileEntity(state: BlockState, world: IBlockReader): TileEntity {
 		return TileEntityIgneousPlate()
 	}
 	
 	// Placement rules
 	
-	override fun isValidPosition(state: BlockState, world: IWorldReader, pos: BlockPos): Boolean{
+	override fun isValidPosition(state: BlockState, world: IWorldReader, pos: BlockPos): Boolean {
 		return FACING_NOT_DOWN.allowedValues.any { canPlacePlateAt(world, pos, it) }
 	}
 	
-	override fun getStateForPlacement(context: BlockItemUseContext): BlockState{
+	override fun getStateForPlacement(context: BlockItemUseContext): BlockState {
 		val world = context.world
 		val pos = context.pos
 		val facing = context.face
@@ -102,11 +103,11 @@ class BlockIgneousPlate(builder: BlockBuilder) : BlockSimple(builder){
 			FACING_NOT_DOWN.allowedValues.firstOrNull { canPlacePlateAt(world, pos, it) }?.let { defaultState.with(FACING_NOT_DOWN, it) } ?: defaultState
 	}
 	
-	override fun onBlockAdded(state: BlockState, world: World, pos: BlockPos, oldState: BlockState, isMoving: Boolean){
+	override fun onBlockAdded(state: BlockState, world: World, pos: BlockPos, oldState: BlockState, isMoving: Boolean) {
 		pos.offset(state[FACING_NOT_DOWN].opposite).getTile<TileEntityFurnace>(world)?.let(EntityTechnicalIgneousPlateLogic.Companion::createForFurnace)
 	}
 	
-	override fun updatePostPlacement(state: BlockState, facing: Direction, neighborState: BlockState, world: IWorld, pos: BlockPos, neighborPos: BlockPos): BlockState{
+	override fun updatePostPlacement(state: BlockState, facing: Direction, neighborState: BlockState, world: IWorld, pos: BlockPos, neighborPos: BlockPos): BlockState {
 		@Suppress("DEPRECATION")
 		return if (!canPlacePlateAt(world, pos, state[FACING_NOT_DOWN]))
 			Blocks.AIR.defaultState
@@ -116,21 +117,21 @@ class BlockIgneousPlate(builder: BlockBuilder) : BlockSimple(builder){
 	
 	// Interactions
 	
-	override fun getBlockHardness(state: BlockState, world: IBlockReader, pos: BlockPos): Float{
+	override fun getBlockHardness(state: BlockState, world: IBlockReader, pos: BlockPos): Float {
 		val tile = pos.getTile<TileEntityIgneousPlate>(world) ?: return 0F
 		
-		return when{
+		return when {
 			tile.isOverheating -> 10F
-			tile.isWorking -> 4F
-			else -> 0F
+			tile.isWorking     -> 4F
+			else               -> 0F
 		}
 	}
 	
-	override fun onBlockActivated(state: BlockState, world: World, pos: BlockPos, player: EntityPlayer, hand: Hand, hit: BlockRayTraceResult): ActionResultType{
+	override fun onBlockActivated(state: BlockState, world: World, pos: BlockPos, player: EntityPlayer, hand: Hand, hit: BlockRayTraceResult): ActionResultType {
 		val heldItem = player.getHeldItem(hand)
 		
-		if (heldItem.item === Items.WATER_BUCKET){
-			if (!world.isRemote && tryCoolPlate(world, pos, state) && !player.abilities.isCreativeMode){
+		if (heldItem.item === Items.WATER_BUCKET) {
+			if (!world.isRemote && tryCoolPlate(world, pos, state) && !player.abilities.isCreativeMode) {
 				player.setHeldItem(hand, ItemStack(Items.BUCKET))
 			}
 			
@@ -140,23 +141,23 @@ class BlockIgneousPlate(builder: BlockBuilder) : BlockSimple(builder){
 		return PASS
 	}
 	
-	fun tryCoolPlate(world: World, pos: BlockPos, state: BlockState): Boolean{
+	fun tryCoolPlate(world: World, pos: BlockPos, state: BlockState): Boolean {
 		return pos.offset(state[FACING_NOT_DOWN].opposite).getTile<TileEntityFurnace>(world)?.let(EntityTechnicalIgneousPlateLogic.Companion::triggerCooling) == true
 	}
 	
 	// State handling
 	
-	override fun rotate(state: BlockState, rot: Rotation): BlockState{
+	override fun rotate(state: BlockState, rot: Rotation): BlockState {
 		return state.with(FACING_NOT_DOWN, rot.rotate(state[FACING_NOT_DOWN]))
 	}
 	
-	override fun mirror(state: BlockState, mirror: Mirror): BlockState{
+	override fun mirror(state: BlockState, mirror: Mirror): BlockState {
 		return state.with(FACING_NOT_DOWN, mirror.mirror(state[FACING_NOT_DOWN]))
 	}
 	
 	// Rendering
 	
-	override fun getShape(state: BlockState, world: IBlockReader, pos: BlockPos, context: ISelectionContext): VoxelShape{
+	override fun getShape(state: BlockState, world: IBlockReader, pos: BlockPos, context: ISelectionContext): VoxelShape {
 		return BOUNDING_BOX[state[FACING_NOT_DOWN]] ?: BOUNDING_BOX.getValue(UP)
 	}
 	

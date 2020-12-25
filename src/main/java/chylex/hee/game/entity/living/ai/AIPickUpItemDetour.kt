@@ -1,4 +1,5 @@
 package chylex.hee.game.entity.living.ai
+
 import chylex.hee.game.entity.posVec
 import chylex.hee.game.entity.selectExistingEntities
 import chylex.hee.system.math.square
@@ -18,9 +19,9 @@ class AIPickUpItemDetour(
 	private val maxDetourTicks: IntRange,
 	private val searchRadius: Double,
 	private val speedMp: Double = 1.0,
-	private val handler: IItemPickupHandler
-) : Goal(){
-	interface IItemPickupHandler{
+	private val handler: IItemPickupHandler,
+) : Goal() {
+	interface IItemPickupHandler {
 		fun canPickUp(stack: ItemStack): Boolean
 		fun onPickUp(stack: ItemStack)
 	}
@@ -28,21 +29,21 @@ class AIPickUpItemDetour(
 	private var targetItem: EntityItem? = null
 	private var remainingTicks = 0
 	
-	init{
+	init {
 		mutexFlags = EnumSet.of(MOVE, JUMP)
 	}
 	
-	override fun shouldExecute(): Boolean{
+	override fun shouldExecute(): Boolean {
 		val rand = entity.rng
 		
-		if (rand.nextInt(chancePerTick) != 0){
+		if (rand.nextInt(chancePerTick) != 0) {
 			return false
 		}
 		
 		val nearbyItems = entity.world.selectExistingEntities.inRange<EntityItem>(entity.posVec, searchRadius).filter { entity.canEntityBeSeen(it) && handler.canPickUp(it.item) }
 		val selectedItem = rand.nextItemOrNull(nearbyItems)
 		
-		if (selectedItem == null){
+		if (selectedItem == null) {
 			return false
 		}
 		
@@ -51,26 +52,26 @@ class AIPickUpItemDetour(
 		return true
 	}
 	
-	override fun shouldContinueExecuting(): Boolean{
+	override fun shouldContinueExecuting(): Boolean {
 		return targetItem?.let { it.isAlive && it.getDistanceSq(entity) <= square(searchRadius) } == true && --remainingTicks >= 0
 	}
 	
-	override fun tick(){
+	override fun tick() {
 		val targetItem = targetItem!!
 		
-		if (!entity.navigator.tryMoveToXYZ(targetItem.posX, targetItem.posY, targetItem.posZ, speedMp)){
+		if (!entity.navigator.tryMoveToXYZ(targetItem.posX, targetItem.posY, targetItem.posZ, speedMp)) {
 			entity.moveHelper.setMoveTo(targetItem.posX, targetItem.posY, targetItem.posZ, speedMp)
 		}
 		
-		if (entity.getDistance(targetItem) < 0.5 * (entity.width + targetItem.width)){
+		if (entity.getDistance(targetItem) < 0.5 * (entity.width + targetItem.width)) {
 			val targetStack = targetItem.item
 			
 			handler.onPickUp(targetStack.split(1))
 			
-			if (targetStack.isEmpty){
+			if (targetStack.isEmpty) {
 				targetItem.remove()
 			}
-			else{
+			else {
 				targetItem.item = targetStack
 			}
 			
@@ -78,7 +79,7 @@ class AIPickUpItemDetour(
 		}
 	}
 	
-	override fun resetTask(){
+	override fun resetTask() {
 		targetItem = null
 	}
 }

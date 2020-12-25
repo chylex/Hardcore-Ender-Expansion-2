@@ -1,13 +1,14 @@
 package chylex.hee.datagen.server
+
 import chylex.hee.datagen.server.util.BlockLootTableProvider
 import chylex.hee.init.ModBlocks
 import chylex.hee.init.ModItems
 import net.minecraft.block.Blocks
 import net.minecraft.data.DataGenerator
 
-class BlockLootTables(generator: DataGenerator) : BlockLootTableProvider(generator){
-	override val consumer = object : RegistrationConsumer(){
-		override fun addTables(){
+class BlockLootTables(generator: DataGenerator) : BlockLootTableProvider(generator) {
+	override val consumer = object : RegistrationConsumer() {
+		override fun addTables() {
 			dropSelf(ModBlocks.ACCUMULATION_TABLE_TIER_1)
 			dropSelf(ModBlocks.ACCUMULATION_TABLE_TIER_2)
 			dropSelf(ModBlocks.ACCUMULATION_TABLE_TIER_3)

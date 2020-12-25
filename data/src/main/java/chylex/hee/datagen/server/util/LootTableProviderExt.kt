@@ -1,4 +1,5 @@
 package chylex.hee.datagen.server.util
+
 import chylex.hee.system.migration.BlockFlowerPot
 import com.mojang.datafixers.util.Pair
 import net.minecraft.block.Block
@@ -16,55 +17,55 @@ import java.util.function.BiConsumer
 import java.util.function.Consumer
 import java.util.function.Supplier
 
-abstract class BlockLootTableProvider(generator: DataGenerator) : LootTableProvider(generator){
+abstract class BlockLootTableProvider(generator: DataGenerator) : LootTableProvider(generator) {
 	protected abstract val consumer: RegistrationConsumer
 	
-	final override fun getName(): String{
+	final override fun getName(): String {
 		return "Block Loot Tables"
 	}
 	
-	final override fun getTables(): MutableList<Pair<Supplier<Consumer<BiConsumer<ResourceLocation, Builder>>>, LootParameterSet>>{
+	final override fun getTables(): MutableList<Pair<Supplier<Consumer<BiConsumer<ResourceLocation, Builder>>>, LootParameterSet>> {
 		return mutableListOf(Pair.of(Supplier(::consumer), LootParameterSets.BLOCK))
 	}
 	
-	final override fun validate(map: MutableMap<ResourceLocation, LootTable>, tracker: ValidationTracker){}
+	final override fun validate(map: MutableMap<ResourceLocation, LootTable>, tracker: ValidationTracker) {}
 	
-	protected abstract class RegistrationConsumer : BlockLootTables(){
+	protected abstract class RegistrationConsumer : BlockLootTables() {
 		private val lootTables = mutableMapOf<ResourceLocation, Builder>()
 		
-		override fun addTables(){}
+		override fun addTables() {}
 		
-		final override fun accept(consumer: BiConsumer<ResourceLocation?, Builder?>){
+		final override fun accept(consumer: BiConsumer<ResourceLocation?, Builder?>) {
 			addTables()
 			
-			for((location, table) in lootTables){
+			for((location, table) in lootTables) {
 				consumer.accept(location, table)
 			}
 			
 			lootTables.clear()
 		}
 		
-		final override fun registerLootTable(block: Block, table: Builder){
+		final override fun registerLootTable(block: Block, table: Builder) {
 			check(lootTables.put(block.lootTable, table) == null)
 		}
 		
-		protected fun dropSelf(block: Block){
+		protected fun dropSelf(block: Block) {
 			registerDropSelfLootTable(block)
 		}
 		
-		protected fun dropOther(block: Block, drop: IItemProvider){
+		protected fun dropOther(block: Block, drop: IItemProvider) {
 			registerDropping(block, drop)
 		}
 		
-		protected fun dropFunc(block: Block, func: (Block) -> Builder){
+		protected fun dropFunc(block: Block, func: (Block) -> Builder) {
 			registerLootTable(block, func)
 		}
 		
-		protected fun dropFlowerPot(block: BlockFlowerPot){
+		protected fun dropFlowerPot(block: BlockFlowerPot) {
 			registerFlowerPot(block)
 		}
 		
-		protected companion object{
+		protected companion object {
 			val withName = BlockLootTables::droppingWithName
 		}
 	}

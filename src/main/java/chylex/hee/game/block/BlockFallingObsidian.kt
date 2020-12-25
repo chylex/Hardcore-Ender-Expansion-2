@@ -1,4 +1,5 @@
 package chylex.hee.game.block
+
 import chylex.hee.game.block.properties.BlockBuilder
 import chylex.hee.game.entity.item.EntityFallingBlockHeavy
 import chylex.hee.game.entity.item.EntityFallingObsidian
@@ -11,27 +12,27 @@ import net.minecraft.world.World
 import net.minecraft.world.server.ServerWorld
 import java.util.Random
 
-class BlockFallingObsidian(builder: BlockBuilder) : BlockSimple(builder){
-	override fun tickRate(world: IWorldReader): Int{
+class BlockFallingObsidian(builder: BlockBuilder) : BlockSimple(builder) {
+	override fun tickRate(world: IWorldReader): Int {
 		return 2
 	}
 	
-	override fun onBlockAdded(state: BlockState, world: World, pos: BlockPos, oldState: BlockState, isMoving: Boolean){
+	override fun onBlockAdded(state: BlockState, world: World, pos: BlockPos, oldState: BlockState, isMoving: Boolean) {
 		world.pendingBlockTicks.scheduleTick(pos, this, tickRate(world))
 	}
 	
-	override fun updatePostPlacement(state: BlockState, facing: Direction, neighborState: BlockState, world: IWorld, pos: BlockPos, neighborPos: BlockPos): BlockState{
+	override fun updatePostPlacement(state: BlockState, facing: Direction, neighborState: BlockState, world: IWorld, pos: BlockPos, neighborPos: BlockPos): BlockState {
 		world.pendingBlockTicks.scheduleTick(pos, this, tickRate(world))
 		@Suppress("DEPRECATION")
 		return super.updatePostPlacement(state, facing, neighborState, world, pos, neighborPos)
 	}
 	
-	override fun tick(state: BlockState, world: ServerWorld, pos: BlockPos, rand: Random){
-		if (world.isRemote){
+	override fun tick(state: BlockState, world: ServerWorld, pos: BlockPos, rand: Random) {
+		if (world.isRemote) {
 			return
 		}
 		
-		if (EntityFallingBlockHeavy.canFallThrough(world, pos.down()) && pos.y >= 0){
+		if (EntityFallingBlockHeavy.canFallThrough(world, pos.down()) && pos.y >= 0) {
 			world.addEntity(EntityFallingObsidian(world, pos, defaultState))
 		}
 	}

@@ -1,4 +1,5 @@
 package chylex.hee.init
+
 import chylex.hee.HEE
 import chylex.hee.client.color.asItem
 import chylex.hee.client.gui.GuiAmuletOfRecovery
@@ -125,19 +126,19 @@ import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent
 import java.util.concurrent.Callable
 
 @SubscribeAllEvents(Side.CLIENT, modid = HEE.ID, bus = MOD)
-object ModRendering{
+object ModRendering {
 	val RENDER_ITEM_DARK_CHEST = callable(RenderItemTileEntitySimple(TileEntityDarkChest()))
 	val RENDER_ITEM_JAR_O_DUST = callable(RenderTileJarODust.AsItem)
 	val RENDER_ITEM_LOOT_CHEST = callable(RenderItemTileEntitySimple(TileEntityLootChest()))
 	
 	@SubscribeEvent
 	@Suppress("unused", "UNUSED_PARAMETER")
-	fun onRegisterRenderers(e: FMLClientSetupEvent){
+	fun onRegisterRenderers(e: FMLClientSetupEvent) {
 		
 		// blocks
 		
-		for(block in getRegistryEntries<Block>(ModBlocks)){
-			when(block){
+		for(block in getRegistryEntries<Block>(ModBlocks)) {
+			when(block) {
 				is IBlockLayerCutout       -> RenderTypeLookup.setRenderLayer(block, RenderType.getCutout())
 				is IBlockLayerCutoutMipped -> RenderTypeLookup.setRenderLayer(block, RenderType.getCutoutMipped())
 				is IBlockLayerTranslucent  -> RenderTypeLookup.setRenderLayer(block, RenderType.getTranslucent())
@@ -221,48 +222,50 @@ object ModRendering{
 	}
 	
 	@SubscribeEvent
-	fun onRegisterBlockItemColors(e: ColorHandlerEvent.Item){
-		with(e.blockColors){ with(e.itemColors){
-			register(BlockDryVines.Color, ModBlocks.DRY_VINES)
-			register(BlockDryVines.Color.asItem(ModBlocks.DRY_VINES), ModBlocks.DRY_VINES)
-			register(BlockTablePedestal.Color, ModBlocks.TABLE_PEDESTAL)
-			
-			register(ItemBindingEssence.Color, ModItems.BINDING_ESSENCE)
-			register(ItemEnergyOracle.Color, ModItems.ENERGY_ORACLE)
-			register(ItemEnergyReceptacle.Color, ModItems.ENERGY_RECEPTACLE)
-			register(ItemPortalToken.Color, ModItems.PORTAL_TOKEN)
-			register(ItemVoidBucket.Color, ModItems.VOID_BUCKET)
-			
-			for(block in arrayOf(
-				ModBlocks.PUZZLE_BURST_3,
-				ModBlocks.PUZZLE_BURST_5,
-				ModBlocks.PUZZLE_REDIRECT_1,
-				ModBlocks.PUZZLE_REDIRECT_2,
-				ModBlocks.PUZZLE_REDIRECT_4,
-				ModBlocks.PUZZLE_TELEPORT
-			)){
-				register(BlockPuzzleLogic.Color, block)
-				register(BlockPuzzleLogic.Color.asItem(block), block)
+	fun onRegisterBlockItemColors(e: ColorHandlerEvent.Item) {
+		with(e.blockColors) {
+			with(e.itemColors) {
+				register(BlockDryVines.Color, ModBlocks.DRY_VINES)
+				register(BlockDryVines.Color.asItem(ModBlocks.DRY_VINES), ModBlocks.DRY_VINES)
+				register(BlockTablePedestal.Color, ModBlocks.TABLE_PEDESTAL)
+				
+				register(ItemBindingEssence.Color, ModItems.BINDING_ESSENCE)
+				register(ItemEnergyOracle.Color, ModItems.ENERGY_ORACLE)
+				register(ItemEnergyReceptacle.Color, ModItems.ENERGY_RECEPTACLE)
+				register(ItemPortalToken.Color, ModItems.PORTAL_TOKEN)
+				register(ItemVoidBucket.Color, ModItems.VOID_BUCKET)
+				
+				for(block in arrayOf(
+					ModBlocks.PUZZLE_BURST_3,
+					ModBlocks.PUZZLE_BURST_5,
+					ModBlocks.PUZZLE_REDIRECT_1,
+					ModBlocks.PUZZLE_REDIRECT_2,
+					ModBlocks.PUZZLE_REDIRECT_4,
+					ModBlocks.PUZZLE_TELEPORT
+				)) {
+					register(BlockPuzzleLogic.Color, block)
+					register(BlockPuzzleLogic.Color.asItem(block), block)
+				}
 			}
-		}}
+		}
 	}
 	
 	// Utilities
 	
 	private fun <T : ItemStackTileEntityRenderer> callable(obj: T) = Callable<ItemStackTileEntityRenderer> { obj }
 	
-	private inline fun <reified T : ContainerScreen<U>, U : Container> registerScreen(type: ContainerType<out U>, constructor: IScreenFactory<U, T>){
+	private inline fun <reified T : ContainerScreen<U>, U : Container> registerScreen(type: ContainerType<out U>, constructor: IScreenFactory<U, T>) {
 		ScreenManager.registerFactory(type, constructor)
 	}
 	
 	@Suppress("UNCHECKED_CAST")
-	private inline fun <reified T : Entity, reified U : EntityRenderer<in T>> registerEntity(type: EntityType<out T>){
+	private inline fun <reified T : Entity, reified U : EntityRenderer<in T>> registerEntity(type: EntityType<out T>) {
 		val handle = ObjectConstructors.generic<U, EntityRenderer<in T>, IRenderFactory<T>>("createRenderFor", EntityRendererManager::class.java)
 		RenderingRegistry.registerEntityRenderingHandler(type, handle.invokeExact() as IRenderFactory<T>)
 	}
 	
 	@Suppress("UNCHECKED_CAST")
-	private inline fun <reified T : TileEntity, reified U : TileEntityRenderer<in T>> registerTile(type: TileEntityType<out T>){
+	private inline fun <reified T : TileEntity, reified U : TileEntityRenderer<in T>> registerTile(type: TileEntityType<out T>) {
 		ClientRegistry.bindTileEntityRenderer(type, ObjectConstructors.oneArg<U, TileEntityRendererDispatcher>())
 	}
 }

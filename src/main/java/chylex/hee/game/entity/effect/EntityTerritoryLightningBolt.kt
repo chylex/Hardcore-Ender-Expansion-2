@@ -1,4 +1,5 @@
 package chylex.hee.game.entity.effect
+
 import chylex.hee.game.entity.posVec
 import chylex.hee.game.world.playPlayer
 import chylex.hee.game.world.territory.TerritoryInstance
@@ -18,8 +19,8 @@ import net.minecraft.world.World
 import net.minecraft.world.server.ServerWorld
 import net.minecraftforge.fml.network.NetworkHooks
 
-class EntityTerritoryLightningBolt(type: EntityType<*>, world: World) : Entity(type, world){
-	constructor(world: World, x: Double, y: Double, z: Double) : this(ModEntities.TERRITORY_LIGHTNING_BOLT, world){
+class EntityTerritoryLightningBolt(type: EntityType<*>, world: World) : Entity(type, world) {
+	constructor(world: World, x: Double, y: Double, z: Double) : this(ModEntities.TERRITORY_LIGHTNING_BOLT, world) {
 		setLocationAndAngles(x, y, z, 0F, 0F)
 	}
 	
@@ -30,20 +31,20 @@ class EntityTerritoryLightningBolt(type: EntityType<*>, world: World) : Entity(t
 	
 	private var boltLivingTime = rand.nextInt(3) + 1
 	
-	init{
+	init {
 		ignoreFrustumCheck = true
 	}
 	
-	override fun registerData(){}
+	override fun registerData() {}
 	
-	override fun createSpawnPacket(): IPacket<*>{
+	override fun createSpawnPacket(): IPacket<*> {
 		return NetworkHooks.getEntitySpawningPacket(this)
 	}
 	
-	override fun tick(){
+	override fun tick() {
 		super.tick()
 		
-		if (lightningState == 2 && !world.isRemote){
+		if (lightningState == 2 && !world.isRemote) {
 			TerritoryInstance.fromPos(this)?.players?.forEach {
 				SoundEvents.ENTITY_LIGHTNING_BOLT_THUNDER.playPlayer(it, posX, posY, posZ, SoundCategory.WEATHER, volume = 10000F, pitch = rand.nextFloat(0.8F, 1F))
 				SoundEvents.ENTITY_LIGHTNING_BOLT_IMPACT.playPlayer(it, posX, posY, posZ, SoundCategory.WEATHER, volume = 2F, pitch = rand.nextFloat(0.5F, 0.7F))
@@ -52,38 +53,38 @@ class EntityTerritoryLightningBolt(type: EntityType<*>, world: World) : Entity(t
 		
 		--lightningState
 		
-		if (lightningState < 0){
-			if (boltLivingTime == 0){
+		if (lightningState < 0) {
+			if (boltLivingTime == 0) {
 				remove()
 			}
-			else if (lightningState < -rand.nextInt(10)){
+			else if (lightningState < -rand.nextInt(10)) {
 				--boltLivingTime
 				lightningState = 1
 				boltVertex = rand.nextLong()
 			}
 		}
 		
-		if (lightningState >= 0 && world.isRemote){
+		if (lightningState >= 0 && world.isRemote) {
 			world.setTimeLightningFlash(2)
 		}
 	}
 	
-	fun spawnInTerritory(){
+	fun spawnInTerritory() {
 		(world as ServerWorld).globalEntities.add(this)
 		
 		val packet = PacketClientWeather(TERRITORY_LIGHTNING_BOLT, posVec)
 		TerritoryInstance.fromPos(this)?.players?.forEach(packet::sendToPlayer)
 	}
 	
-	override fun getSoundCategory(): SoundCategory{
+	override fun getSoundCategory(): SoundCategory {
 		return SoundCategory.WEATHER
 	}
 	
 	@Sided(Side.CLIENT)
-	override fun isInRangeToRenderDist(distanceSq: Double): Boolean{
+	override fun isInRangeToRenderDist(distanceSq: Double): Boolean {
 		return true
 	}
 	
-	override fun writeAdditional(nbt: TagCompound){}
-	override fun readAdditional(nbt: TagCompound){}
+	override fun writeAdditional(nbt: TagCompound) {}
+	override fun readAdditional(nbt: TagCompound) {}
 }

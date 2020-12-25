@@ -1,4 +1,5 @@
 package chylex.hee.game.world.feature.obsidiantower
+
 import chylex.hee.game.block.fluid.FluidEnderGoo
 import chylex.hee.game.item.ItemPortalToken.TokenType
 import chylex.hee.game.world.feature.obsidiantower.ObsidianTowerSpawnerLevel.LEVEL_1
@@ -42,7 +43,7 @@ import chylex.hee.system.collection.WeightedList.Companion.weightedListOf
 import chylex.hee.system.facades.Resource
 import net.minecraft.block.Blocks
 
-object ObsidianTowerPieces : IStructureDescription{
+object ObsidianTowerPieces : IStructureDescription {
 	fun calculateStructureSize(floors: Int) = Size(
 		PIECES_BASE.maxOf { it.size.x },
 		PIECES_BASE.sumBy { it.size.y } + ((floors - 2) * PIECE_LEVEL_MIDDLE.size.y),
@@ -51,7 +52,7 @@ object ObsidianTowerPieces : IStructureDescription{
 	
 	// Palette
 	
-	override val PALETTE = with(PaletteBuilder.Combined()){
+	override val PALETTE = with(PaletteBuilder.Combined()) {
 		add("air", Blocks.AIR)
 		add("obsidian", Blocks.OBSIDIAN)
 		add("glowstone", Blocks.GLOWSTONE)
@@ -88,14 +89,14 @@ object ObsidianTowerPieces : IStructureDescription{
 		
 		add("endergoo", FluidEnderGoo.still.getStillFluidState(false).blockState)
 		
-		with(forGeneration){
+		with(forGeneration) {
 			add("redstone.random", Weighted(
 				7 to Blocks.AIR,
 				1 to Blocks.REDSTONE_WIRE
 			))
 		}
 		
-		with(forDevelopment){
+		with(forDevelopment) {
 			add("redstone.random", Blocks.REDSTONE_WIRE)
 		}
 		
@@ -114,7 +115,7 @@ object ObsidianTowerPieces : IStructureDescription{
 	val PIECE_LEVEL_MIDDLE = ObsidianTowerLevel_General("level.middle.nbt")
 	private val PIECE_LEVEL_TOP_BOSS = ObsidianTowerLevel_Top.Boss("level.top.nbt")
 	
-	private fun PIECE_LEVEL_TOP_TOKEN(tokenType: TokenType, territoryType: TerritoryType): ObsidianTowerLevel_Top{
+	private fun PIECE_LEVEL_TOP_TOKEN(tokenType: TokenType, territoryType: TerritoryType): ObsidianTowerLevel_Top {
 		return ObsidianTowerLevel_Top.Token("level.top.nbt", tokenType, territoryType)
 	}
 	
@@ -175,8 +176,8 @@ object ObsidianTowerPieces : IStructureDescription{
 	
 	// Arrangements
 	
-	fun ARRANGEMENTS_REGULAR(tokenType: TokenType, territoryType: TerritoryType) = PIECE_LEVEL_TOP_TOKEN(tokenType, territoryType).let {
-		topPiece -> weightedListOf(
+	fun ARRANGEMENTS_REGULAR(tokenType: TokenType, territoryType: TerritoryType) = PIECE_LEVEL_TOP_TOKEN(tokenType, territoryType).let { topPiece ->
+		weightedListOf(
 			10 to ObsidianTowerRoomArrangement(arrayOf(
 				PIECES_ROOMS_REGULAR to LEVEL_1,
 				PIECES_ROOMS_REGULAR to LEVEL_2,
@@ -188,7 +189,7 @@ object ObsidianTowerPieces : IStructureDescription{
 				PIECES_ROOMS_CHEST to LEVEL_2,
 				PIECES_ROOMS_REGULAR to LEVEL_2
 			), topPiece),
-		
+			
 			5 to ObsidianTowerRoomArrangement(arrayOf(
 				PIECES_ROOMS_REGULAR to LEVEL_1,
 				PIECES_ROOMS_REGULAR to LEVEL_2,

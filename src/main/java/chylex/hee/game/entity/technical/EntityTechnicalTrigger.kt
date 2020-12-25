@@ -1,4 +1,5 @@
 package chylex.hee.game.entity.technical
+
 import chylex.hee.game.entity.technical.EntityTechnicalTrigger.Types.INVALID
 import chylex.hee.game.world.feature.energyshrine.EnergyShrineGenerator
 import chylex.hee.game.world.feature.energyshrine.piece.EnergyShrineRoom_Main_Start
@@ -22,12 +23,12 @@ import net.minecraftforge.common.util.INBTSerializable
 import net.minecraftforge.fml.common.registry.IEntityAdditionalSpawnData
 import java.util.Random
 
-class EntityTechnicalTrigger(type: EntityType<EntityTechnicalTrigger>, world: World) : EntityTechnicalBase(type, world), IEntityAdditionalSpawnData{
-	constructor(world: World, type: Types) : this(ModEntities.TECHNICAL_TRIGGER, world){
+class EntityTechnicalTrigger(type: EntityType<EntityTechnicalTrigger>, world: World) : EntityTechnicalBase(type, world), IEntityAdditionalSpawnData {
+	constructor(world: World, type: Types) : this(ModEntities.TECHNICAL_TRIGGER, world) {
 		this.type = type
 	}
 	
-	private companion object{
+	private companion object {
 		private const val TYPE_TAG = "Type"
 		private const val DATA_TAG = "Data"
 		private const val TIMER_TAG = "Timer"
@@ -35,24 +36,24 @@ class EntityTechnicalTrigger(type: EntityType<EntityTechnicalTrigger>, world: Wo
 	
 	// Handler interface
 	
-	interface ITriggerHandler : INBTSerializable<TagCompound>{
+	interface ITriggerHandler : INBTSerializable<TagCompound> {
 		fun check(world: World): Boolean
 		fun update(entity: EntityTechnicalTrigger)
 		fun nextTimer(rand: Random): Int
 		
 		@JvmDefault override fun serializeNBT() = TagCompound()
-		@JvmDefault override fun deserializeNBT(nbt: TagCompound){}
+		@JvmDefault override fun deserializeNBT(nbt: TagCompound) {}
 	}
 	
 	// Known handlers
 	
-	private object InvalidTriggerHandler : ITriggerHandler{
+	private object InvalidTriggerHandler : ITriggerHandler {
 		override fun check(world: World) = true
 		override fun update(entity: EntityTechnicalTrigger) = entity.remove()
 		override fun nextTimer(rand: Random) = Int.MAX_VALUE
 	}
 	
-	enum class Types(val handlerConstructor: () -> ITriggerHandler){
+	enum class Types(val handlerConstructor: () -> ITriggerHandler) {
 		INVALID({ InvalidTriggerHandler }),
 		STRONGHOLD_GENERATOR({ StrongholdGenerator.GeneratorTrigger }),
 		STRONGHOLD_GLOBAL(StrongholdRoom_Main_Portal::Spawner),
@@ -70,12 +71,12 @@ class EntityTechnicalTrigger(type: EntityType<EntityTechnicalTrigger>, world: Wo
 	val triggerType
 		get() = type
 	
-	private var type by NotifyOnChange(INVALID){ newValue -> handler = newValue.handlerConstructor() }
+	private var type by NotifyOnChange(INVALID) { newValue -> handler = newValue.handlerConstructor() }
 	private var handler: ITriggerHandler = InvalidTriggerHandler
 	
 	private var timer = 0
 	
-	override fun registerData(){}
+	override fun registerData() {}
 	
 	override fun writeSpawnData(buffer: PacketBuffer) = buffer.use {
 		writeInt(type.ordinal)
@@ -85,10 +86,10 @@ class EntityTechnicalTrigger(type: EntityType<EntityTechnicalTrigger>, world: Wo
 		type = Types.values().getOrNull(readInt()) ?: INVALID
 	}
 	
-	override fun tick(){
+	override fun tick() {
 		super.tick()
 		
-		if (handler.check(world) && --timer < 0){
+		if (handler.check(world) && --timer < 0) {
 			handler.update(this)
 			timer = handler.nextTimer(rand)
 		}

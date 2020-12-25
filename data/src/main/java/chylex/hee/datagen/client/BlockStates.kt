@@ -1,4 +1,5 @@
 package chylex.hee.datagen.client
+
 import chylex.hee.datagen.client.util.cube
 import chylex.hee.datagen.client.util.log
 import chylex.hee.datagen.client.util.pillar
@@ -13,8 +14,8 @@ import net.minecraft.data.DataGenerator
 import net.minecraftforge.client.model.generators.BlockStateProvider
 import net.minecraftforge.client.model.generators.ExistingFileHelper
 
-class BlockStates(generator: DataGenerator, modid: String, existingFileHelper: ExistingFileHelper) : BlockStateProvider(generator, modid, existingFileHelper){
-	override fun registerStatesAndModels(){
+class BlockStates(generator: DataGenerator, modid: String, existingFileHelper: ExistingFileHelper) : BlockStateProvider(generator, modid, existingFileHelper) {
+	override fun registerStatesAndModels() {
 		
 		// Blocks: Building (Uncategorized)
 		

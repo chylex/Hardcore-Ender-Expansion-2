@@ -1,4 +1,5 @@
 package chylex.hee.game.recipe
+
 import chylex.hee.game.block.BlockShulkerBoxOverride.BoxSize
 import chylex.hee.game.item.ItemShulkerBoxOverride
 import chylex.hee.init.ModItems
@@ -9,12 +10,12 @@ import net.minecraft.item.ItemStack
 import net.minecraft.item.Items
 import net.minecraft.world.World
 
-sealed class RecipeShulkerBoxUpgrade(private val fromSize: BoxSize, private val toSize: BoxSize, private val upgradeItem: Item) : RecipeBaseDynamic(){
-	override fun canFit(width: Int, height: Int): Boolean{
+sealed class RecipeShulkerBoxUpgrade(private val fromSize: BoxSize, private val toSize: BoxSize, private val upgradeItem: Item) : RecipeBaseDynamic() {
+	override fun canFit(width: Int, height: Int): Boolean {
 		return width >= 3 && height >= 3
 	}
 	
-	override fun matches(inv: CraftingInventory, world: World): Boolean{
+	override fun matches(inv: CraftingInventory, world: World): Boolean {
 		return (
 			getStackInRowAndColumn(inv, 1, 1).let { it.item is ItemShulkerBoxOverride && ItemShulkerBoxOverride.getBoxSize(it) == fromSize } &&
 			
@@ -31,7 +32,7 @@ sealed class RecipeShulkerBoxUpgrade(private val fromSize: BoxSize, private val 
 		)
 	}
 	
-	override fun getCraftingResult(inv: CraftingInventory): ItemStack{
+	override fun getCraftingResult(inv: CraftingInventory): ItemStack {
 		return getStackInRowAndColumn(inv, 1, 1).copy().also { ItemShulkerBoxOverride.setBoxSize(it, toSize) }
 	}
 	

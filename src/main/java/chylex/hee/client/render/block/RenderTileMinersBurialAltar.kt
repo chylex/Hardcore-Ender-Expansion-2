@@ -1,4 +1,5 @@
 package chylex.hee.client.render.block
+
 import chylex.hee.client.MC
 import chylex.hee.client.model.ModelHelper
 import chylex.hee.client.render.gl.rotateX
@@ -15,14 +16,14 @@ import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher
 import net.minecraft.item.ItemStack
 
 @Sided(Side.CLIENT)
-class RenderTileMinersBurialAltar(dispatcher: TileEntityRendererDispatcher) : TileEntityRenderer<TileEntityMinersBurialAltar>(dispatcher){
-	private companion object{
+class RenderTileMinersBurialAltar(dispatcher: TileEntityRendererDispatcher) : TileEntityRenderer<TileEntityMinersBurialAltar>(dispatcher) {
+	private companion object {
 		private val PUZZLE_MEDALLION = ItemStack(ModItems.PUZZLE_MEDALLION)
 		private const val SCALE_XZ = 1.85F
 	}
 	
-	override fun render(tile: TileEntityMinersBurialAltar, partialTicks: Float, matrix: MatrixStack, buffer: IRenderTypeBuffer, combinedLight: Int, combinedOverlay: Int){
-		if (!tile.hasMedallion){
+	override fun render(tile: TileEntityMinersBurialAltar, partialTicks: Float, matrix: MatrixStack, buffer: IRenderTypeBuffer, combinedLight: Int, combinedOverlay: Int) {
+		if (!tile.hasMedallion) {
 			return
 		}
 		

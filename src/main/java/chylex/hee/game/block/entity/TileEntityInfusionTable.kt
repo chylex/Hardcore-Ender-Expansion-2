@@ -1,4 +1,5 @@
 package chylex.hee.game.block.entity
+
 import chylex.hee.game.block.entity.base.TileEntityBaseTable
 import chylex.hee.game.block.entity.base.TileEntityBaseTableWithSupportingItem.Companion.SUPPORTING_ITEM_MAPPINGS
 import chylex.hee.game.inventory.size
@@ -25,7 +26,7 @@ import net.minecraft.item.ItemStack
 import net.minecraft.tileentity.TileEntityType
 import net.minecraft.util.math.BlockPos
 
-class TileEntityInfusionTable(type: TileEntityType<TileEntityInfusionTable>) : TileEntityBaseTable(type){
+class TileEntityInfusionTable(type: TileEntityType<TileEntityInfusionTable>) : TileEntityBaseTable(type) {
 	@Suppress("unused")
 	constructor() : this(ModTileEntities.INFUSION_TABLE)
 	
@@ -37,25 +38,25 @@ class TileEntityInfusionTable(type: TileEntityType<TileEntityInfusionTable>) : T
 		*SUPPORTING_ITEM_MAPPINGS, Mapping("", ::Process)
 	)
 	
-	override fun createNewProcesses(unassignedPedestals: List<TileEntityTablePedestal>): List<ITableProcess>{
+	override fun createNewProcesses(unassignedPedestals: List<TileEntityTablePedestal>): List<ITableProcess> {
 		val newProcesses = ArrayList<ITableProcess>(1)
 		
-		while(true){
+		while(true) {
 			val process = tryAssignProcess(unassignedPedestals.filter { it.hasInputItem && checkNotUsed(newProcesses, it) })
 			
-			if (process == null){
+			if (process == null) {
 				break
 			}
-			else{
+			else {
 				newProcesses.add(process)
 			}
 		}
 		
-		for(pedestal in unassignedPedestals){
-			if (pedestal.hasInputItem && checkNotUsed(newProcesses, pedestal)){
+		for(pedestal in unassignedPedestals) {
+			if (pedestal.hasInputItem && checkNotUsed(newProcesses, pedestal)) {
 				val stack = pedestal.itemInputCopy
 				
-				if (Infusion.isInfusable(stack.item) && currentProcessList.any { it is Process && it.infusion.tryInfuse(stack) != null }){
+				if (Infusion.isInfusable(stack.item) && currentProcessList.any { it is Process && it.infusion.tryInfuse(stack) != null }) {
 					newProcesses.add(ProcessSupportingItemHolder(this, pedestal.pos))
 				}
 			}
@@ -64,28 +65,28 @@ class TileEntityInfusionTable(type: TileEntityType<TileEntityInfusionTable>) : T
 		return newProcesses
 	}
 	
-	private fun checkNotUsed(processes: List<ITableProcess>, pedestal: TileEntityTablePedestal): Boolean{
+	private fun checkNotUsed(processes: List<ITableProcess>, pedestal: TileEntityTablePedestal): Boolean {
 		return processes.none { it.pedestals.contains(pedestal.pos) }
 	}
 	
-	private fun tryAssignProcess(ingredientPedestals: List<TileEntityTablePedestal>): ITableProcess?{
-		for(recipe in InfusionRecipe.values()){
+	private fun tryAssignProcess(ingredientPedestals: List<TileEntityTablePedestal>): ITableProcess? {
+		for(recipe in InfusionRecipe.values()) {
 			val ingredients = recipe.ingredients
 			
-			if (ingredientPedestals.size >= ingredients.size){
+			if (ingredientPedestals.size >= ingredients.size) {
 				val usedPedestals = ArrayList<BlockPos>(ingredients.size)
 				val remainingIngredients = ingredients.toMutableList()
 				
-				for(pedestal in ingredientPedestals){
+				for(pedestal in ingredientPedestals) {
 					val index = remainingIngredients.indexOfFirst { it.test(pedestal.itemInputCopy) }
 					
-					if (index != -1){
+					if (index != -1) {
 						usedPedestals.add(pedestal.pos)
 						remainingIngredients.removeAt(index)
 					}
 				}
 				
-				if (remainingIngredients.isEmpty()){
+				if (remainingIngredients.isEmpty()) {
 					return Process(this, usedPedestals.toTypedArray(), recipe)
 				}
 			}
@@ -94,11 +95,11 @@ class TileEntityInfusionTable(type: TileEntityType<TileEntityInfusionTable>) : T
 		return null
 	}
 	
-	private class Process : ProcessManyPedestals{
+	private class Process : ProcessManyPedestals {
 		constructor(table: TileEntityBaseTable, pos: Array<BlockPos>) : super(table, pos)
 		constructor(table: TileEntityBaseTable, nbt: TagCompound) : super(table, nbt)
 		
-		constructor(table: TileEntityBaseTable, ingredientPedestals: Array<BlockPos>, recipe: InfusionRecipe) : this(table, ingredientPedestals){
+		constructor(table: TileEntityBaseTable, ingredientPedestals: Array<BlockPos>, recipe: InfusionRecipe) : this(table, ingredientPedestals) {
 			this.recipe = recipe
 		}
 		
@@ -118,20 +119,20 @@ class TileEntityInfusionTable(type: TileEntityType<TileEntityInfusionTable>) : T
 		private var tick = 0
 		private var updates = 0
 		
-		override fun isInputStillValid(oldInput: Array<ItemStack>, newInput: Array<ItemStack>): Boolean{
+		override fun isInputStillValid(oldInput: Array<ItemStack>, newInput: Array<ItemStack>): Boolean {
 			return oldInput.indices.all { oldInput[it].item === newInput[it].item } && ::recipe.isInitialized
 		}
 		
-		override fun onWorkTick(context: ITableContext, inputs: Array<ItemStack>): State{
-			if (updates >= recipe.updates){
+		override fun onWorkTick(context: ITableContext, inputs: Array<ItemStack>): State {
+			if (updates >= recipe.updates) {
 				return runInfusionStep(context)
 			}
 			
-			if (tick < recipe.rate && ++tick < recipe.rate){
+			if (tick < recipe.rate && ++tick < recipe.rate) {
 				return Work.Success
 			}
 			
-			if (!context.requestUseResources()){
+			if (!context.requestUseResources()) {
 				return Work.Blocked
 			}
 			
@@ -140,8 +141,8 @@ class TileEntityInfusionTable(type: TileEntityType<TileEntityInfusionTable>) : T
 			return Work.Success
 		}
 		
-		private fun runInfusionStep(context: ITableContext): State{
-			if (tick > 0 && --tick > 0){
+		private fun runInfusionStep(context: ITableContext): State {
+			if (tick > 0 && --tick > 0) {
 				return Work.Blocked
 			}
 			
@@ -151,10 +152,10 @@ class TileEntityInfusionTable(type: TileEntityType<TileEntityInfusionTable>) : T
 				if (infusion.tryInfuse(it) != null) it.size.coerceAtMost(4) else 0
 			}
 			
-			if (result != null){
+			if (result != null) {
 				val infused = infusion.tryInfuse(result.second)
 				
-				if (infused != null){
+				if (infused != null) {
 					return Output(infused, result.first)
 				}
 			}
@@ -169,7 +170,7 @@ class TileEntityInfusionTable(type: TileEntityType<TileEntityInfusionTable>) : T
 			putInt("Updates", updates)
 		}
 		
-		override fun deserializeNBT(nbt: TagCompound) = with(nbt){
+		override fun deserializeNBT(nbt: TagCompound) = with(nbt) {
 			super.deserializeNBT(nbt)
 			
 			getEnum<InfusionRecipe>("Recipe")?.let { recipe = it }

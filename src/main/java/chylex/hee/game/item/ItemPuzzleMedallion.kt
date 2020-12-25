@@ -1,4 +1,5 @@
 package chylex.hee.game.item
+
 import chylex.hee.game.block.entity.TileEntityMinersBurialAltar
 import chylex.hee.game.world.BlockEditor
 import chylex.hee.game.world.getTile
@@ -12,21 +13,21 @@ import net.minecraft.item.ItemUseContext
 import net.minecraft.util.ActionResultType
 import net.minecraft.util.SoundCategory
 
-class ItemPuzzleMedallion(properties: Properties) : Item(properties){
-	override fun onItemUse(context: ItemUseContext): ActionResultType{
+class ItemPuzzleMedallion(properties: Properties) : Item(properties) {
+	override fun onItemUse(context: ItemUseContext): ActionResultType {
 		val player = context.player ?: return FAIL
 		val world = context.world
 		val pos = context.pos
 		
 		val heldItem = player.getHeldItem(context.hand)
 		
-		if (!BlockEditor.canEdit(pos, player, heldItem)){
+		if (!BlockEditor.canEdit(pos, player, heldItem)) {
 			return FAIL
 		}
 		
 		val tile = pos.getTile<TileEntityMinersBurialAltar>(world)
 		
-		if (tile != null && !tile.hasMedallion){
+		if (tile != null && !tile.hasMedallion) {
 			tile.hasMedallion = true
 			heldItem.shrink(1)
 			

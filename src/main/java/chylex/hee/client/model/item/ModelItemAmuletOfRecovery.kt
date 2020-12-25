@@ -1,4 +1,5 @@
 package chylex.hee.client.model.item
+
 import chylex.hee.HEE
 import chylex.hee.client.MC
 import chylex.hee.system.facades.Resource
@@ -23,32 +24,32 @@ import net.minecraftforge.fml.common.Mod.EventBusSubscriber.Bus.MOD
 
 @Sided(Side.CLIENT)
 @Suppress("unused")
-class ModelItemAmuletOfRecovery private constructor(sourceModel: IBakedModel) : BakedModelWrapper<IBakedModel>(sourceModel){
+class ModelItemAmuletOfRecovery private constructor(sourceModel: IBakedModel) : BakedModelWrapper<IBakedModel>(sourceModel) {
 	@SubscribeAllEvents(Side.CLIENT, modid = HEE.ID, bus = MOD)
-	companion object{
+	companion object {
 		private val RESOURCE_NORMAL = ModelResourceLocation(Resource.Custom("amulet_of_recovery"), "inventory")
 		private val RESOURCE_HELD   = Resource.Custom("item/amulet_of_recovery_held")
 		
 		private lateinit var modelRegistry: MutableMap<ResourceLocation, IBakedModel>
 		
 		@SubscribeEvent
-		fun onRegisterModels(@Suppress("UNUSED_PARAMETER") e: ModelRegistryEvent){
+		fun onRegisterModels(@Suppress("UNUSED_PARAMETER") e: ModelRegistryEvent) {
 			ModelLoader.addSpecialModel(RESOURCE_HELD)
 		}
 		
 		@SubscribeEvent
-		fun onModelBake(e: ModelBakeEvent){
+		fun onModelBake(e: ModelBakeEvent) {
 			modelRegistry = e.modelRegistry
 			modelRegistry[RESOURCE_NORMAL] = ModelItemAmuletOfRecovery(modelRegistry.getValue(RESOURCE_NORMAL))
 		}
 	}
 	
-	override fun handlePerspective(transformType: TransformType, matrix: MatrixStack): IBakedModel = when(transformType){
+	override fun handlePerspective(transformType: TransformType, matrix: MatrixStack): IBakedModel = when(transformType) {
 		FIRST_PERSON_LEFT_HAND,
 		FIRST_PERSON_RIGHT_HAND,
 		THIRD_PERSON_LEFT_HAND,
 		THIRD_PERSON_RIGHT_HAND ->
-			modelRegistry.getOrElse(RESOURCE_HELD){ MC.instance.modelManager.missingModel }.handlePerspective(transformType, matrix)
+			modelRegistry.getOrElse(RESOURCE_HELD) { MC.instance.modelManager.missingModel }.handlePerspective(transformType, matrix)
 		
 		else ->
 			super.handlePerspective(transformType, matrix)

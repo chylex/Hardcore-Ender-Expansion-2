@@ -1,4 +1,5 @@
 package chylex.hee.init
+
 import chylex.hee.HEE
 import chylex.hee.game.potion.PotionBanishment
 import chylex.hee.game.potion.PotionCorruption
@@ -27,7 +28,7 @@ import net.minecraftforge.event.RegistryEvent
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber.Bus.MOD
 
 @SubscribeAllEvents(modid = HEE.ID, bus = MOD)
-object ModPotions{
+object ModPotions {
 	val LIFELESS   get() = PotionLifeless
 	val PURITY     get() = PotionPurity
 	val CORRUPTION get() = PotionCorruption
@@ -36,8 +37,8 @@ object ModPotions{
 	private const val VANILLA_OVERRIDE_SUFFIX = "_no_effect_override"
 	
 	@SubscribeEvent
-	fun onRegisterPotions(e: RegistryEvent.Register<Potion>){
-		with(e.registry){
+	fun onRegisterPotions(e: RegistryEvent.Register<Potion>) {
+		with(e.registry) {
 			register(LIFELESS named "lifeless")
 			register(PURITY named "purity")
 			register(CORRUPTION named "corruption")
@@ -46,22 +47,22 @@ object ModPotions{
 	}
 	
 	@SubscribeEvent
-	fun onRegisterTypes(e: RegistryEvent.Register<PotionType>){
-		with(e.registry){
+	fun onRegisterTypes(e: RegistryEvent.Register<PotionType>) {
+		with(e.registry) {
 			register(PotionPurity.TYPE named "purity")
 			register(PotionCorruption.TYPE named "corruption")
 			register(PotionBanishment.TYPE named "banishment")
 			
 			val alteredTypes = PotionTypeMap.ALTERED_TYPES.map { it.registryName!!.path }.toSet()
 			
-			for(type in this){
+			for(type in this) {
 				val location = type.registryName!!
 				val path = location.path
 				
-				if ((Resource.isVanilla(location) || Resource.isCustom(location)) && alteredTypes.contains(path) && type.baseName == null && type.effects.isNotEmpty()){
+				if ((Resource.isVanilla(location) || Resource.isCustom(location)) && alteredTypes.contains(path) && type.baseName == null && type.effects.isNotEmpty()) {
 					val info = PotionBrewing.INFO[type.effects[0].potion]
 					
-					if (info != null){
+					if (info != null) {
 						
 						// custom brewing system uses NBT to apply duration/level modifiers
 						// to disable the original effect, each potion type is duplicated with no base effects
@@ -91,18 +92,18 @@ object ModPotions{
 	}
 	
 	@JvmStatic
-	fun excludeFromCreativeMenu(potion: PotionType): Boolean{
+	fun excludeFromCreativeMenu(potion: PotionType): Boolean {
 		return potion.registryName?.let { it.namespace == HEE.ID && it.path.endsWith(VANILLA_OVERRIDE_SUFFIX) } == true
 	}
 	
 	// Recipes
 	
-	fun setupVanillaOverrides(){
+	fun setupVanillaOverrides() {
 		@Suppress("UNCHECKED_CAST")
 		val recipes = BrewingRecipeRegistry::class.java.getDeclaredField("recipes").also { it.isAccessible = true }.get(null) as ArrayList<IBrewingRecipe>
 		
-		with(recipes){
-			check(isNotEmpty() && removeAt(0) is VanillaBrewingRecipe){ "could not find vanilla brewing recipes in the registry" }
+		with(recipes) {
+			check(isNotEmpty() && removeAt(0) is VanillaBrewingRecipe) { "could not find vanilla brewing recipes in the registry" }
 			
 			addAll(0, listOf(
 				BrewBasicEffects.FromAwkward,

@@ -1,4 +1,5 @@
 package chylex.hee.game.item
+
 import chylex.hee.game.entity.Teleporter
 import chylex.hee.game.entity.posVec
 import chylex.hee.game.mechanics.damage.Damage
@@ -27,8 +28,8 @@ import net.minecraft.util.SoundEvents
 import net.minecraft.world.World
 import java.util.Random
 
-class ItemChorusBerry(properties: Properties) : Item(properties){
-	companion object{
+class ItemChorusBerry(properties: Properties) : Item(properties) {
+	companion object {
 		private const val MIN_TELEPORT_DISTANCE = 8
 		private const val MIN_TELEPORT_DISTANCE_SQ = MIN_TELEPORT_DISTANCE * MIN_TELEPORT_DISTANCE
 		
@@ -38,7 +39,7 @@ class ItemChorusBerry(properties: Properties) : Item(properties){
 		
 		val FOOD: Food = Food.Builder().hunger(0).saturation(0F).setAlwaysEdible().build()
 		
-		private fun teleportEntity(entity: EntityLivingBase, strength: Int, rand: Random): Boolean{
+		private fun teleportEntity(entity: EntityLivingBase, strength: Int, rand: Random): Boolean {
 			val world = entity.world
 			val playerPos = entity.position
 			
@@ -48,17 +49,17 @@ class ItemChorusBerry(properties: Properties) : Item(properties){
 			val teleportYMin = -teleportDistance
 			var teleportYMax = -teleportDistance / 4
 			
-			while(teleportYMax <= teleportDistance){
+			while(teleportYMax <= teleportDistance) {
 				val targetPos = playerPos.add(
 					rand.nextInt(-teleportDistance, teleportDistance),
 					rand.nextInt(teleportYMin, teleportYMax),
 					rand.nextInt(-teleportDistance, teleportDistance)
 				)
 				
-				if (targetPos.y > 0 && !targetPos.blocksMovement(world) && !targetPos.up().blocksMovement(world)){
-					val finalPos = targetPos.offsetUntilExcept(DOWN, 1..teleportYSearchRange){ it.blocksMovement(world) } ?: targetPos.down(teleportYSearchRange)
+				if (targetPos.y > 0 && !targetPos.blocksMovement(world) && !targetPos.up().blocksMovement(world)) {
+					val finalPos = targetPos.offsetUntilExcept(DOWN, 1..teleportYSearchRange) { it.blocksMovement(world) } ?: targetPos.down(teleportYSearchRange)
 					
-					if (finalPos.distanceSqTo(entity) > MIN_TELEPORT_DISTANCE_SQ){
+					if (finalPos.distanceSqTo(entity) > MIN_TELEPORT_DISTANCE_SQ) {
 						return TELEPORT.toBlock(entity, finalPos)
 					}
 				}
@@ -70,21 +71,21 @@ class ItemChorusBerry(properties: Properties) : Item(properties){
 		}
 	}
 	
-	override fun getTranslationKey(): String{
+	override fun getTranslationKey(): String {
 		return "item.hee.chorus_berry"
 	}
 	
-	override fun onItemUseFinish(stack: ItemStack, world: World, entity: EntityLivingBase): ItemStack{
+	override fun onItemUseFinish(stack: ItemStack, world: World, entity: EntityLivingBase): ItemStack {
 		val rand = world.rand
 		
-		if (entity is EntityPlayer){
+		if (entity is EntityPlayer) {
 			entity.addStat(Stats.useItem(this))
 			entity.getEatSound(stack).playUniversal(entity, entity.posVec, SoundCategory.NEUTRAL, volume = 1F, pitch = rand.nextFloat(0.6F, 1.4F))
 			SoundEvents.ENTITY_PLAYER_BURP.playUniversal(entity, entity.posVec, SoundCategory.PLAYERS, volume = 0.5F, pitch = rand.nextFloat(0.9F, 1.0F))
 		}
 		
-		if (!world.isRemote){
-			if (entity is EntityPlayerMP){
+		if (!world.isRemote) {
+			if (entity is EntityPlayerMP) {
 				CriteriaTriggers.CONSUME_ITEM.trigger(entity, stack)
 			}
 			
@@ -93,21 +94,21 @@ class ItemChorusBerry(properties: Properties) : Item(properties){
 			val hungerRestored = rand.nextInt(1, 3)
 			val hungerOvercharge = if (foodStats == null) hungerRestored else (foodStats.foodLevel + hungerRestored - 20).coerceAtLeast(0)
 			
-			if (hungerOvercharge == 0){
+			if (hungerOvercharge == 0) {
 				foodStats?.addStats(hungerRestored, 3.5F)
 				
-				if (rand.nextInt(4) == 0){
+				if (rand.nextInt(4) == 0) {
 					entity.addPotionEffect(Potions.WEAKNESS.makeEffect(20 * 60, 1))
 				}
 			}
-			else{
+			else {
 				foodStats?.addStats(hungerRestored, 16.5F)
 				
-				if (rand.nextInt(4) != 0){
+				if (rand.nextInt(4) != 0) {
 					entity.addPotionEffect(Potions.WEAKNESS.makeEffect(20 * (90 + hungerOvercharge * 30), 1))
 				}
 				
-				if (!teleportEntity(entity, hungerOvercharge, rand)){
+				if (!teleportEntity(entity, hungerOvercharge, rand)) {
 					DAMAGE_TELEPORT_FAIL.dealTo(1F, entity, TITLE_MAGIC)
 				}
 			}

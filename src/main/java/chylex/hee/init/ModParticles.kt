@@ -1,4 +1,5 @@
 package chylex.hee.init
+
 import chylex.hee.HEE
 import chylex.hee.client.MC
 import chylex.hee.game.particle.ParticleBubbleCustom
@@ -35,10 +36,10 @@ import net.minecraftforge.event.RegistryEvent
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber.Bus.MOD
 
 @SubscribeAllEvents(modid = HEE.ID, bus = MOD)
-object ModParticles{
+object ModParticles {
 	@SubscribeEvent
-	fun onRegister(e: RegistryEvent.Register<ParticleType<*>>){
-		with(e.registry){
+	fun onRegister(e: RegistryEvent.Register<ParticleType<*>>) {
+		with(e.registry) {
 			register(ParticleBubbleCustom.makeType named "bubble")
 			register(ParticleDeathFlowerHeal.makeType named "death_flower_heal")
 			register(ParticleDust.makeType named "dust")
@@ -62,10 +63,10 @@ object ModParticles{
 	
 	@Sided(Side.CLIENT)
 	@SubscribeAllEvents(Side.CLIENT, modid = HEE.ID, bus = MOD)
-	object Client{
+	object Client {
 		private val factories = mutableListOf<Runnable>()
 		
-		fun addFactory(type: BasicParticleType, maker: IParticleMaker<*>, callback: (IAnimatedSprite) -> Unit){
+		fun addFactory(type: BasicParticleType, maker: IParticleMaker<*>, callback: (IAnimatedSprite) -> Unit) {
 			factories.add(Runnable {
 				MC.particleManager.registerFactory(type, IParticleMetaFactory {
 					callback(it)
@@ -78,8 +79,8 @@ object ModParticles{
 		}
 		
 		@SubscribeEvent
-		fun onRegisterFactories(@Suppress("UNUSED_PARAMETER") e: ParticleFactoryRegisterEvent){
-			for(factory in factories){
+		fun onRegisterFactories(@Suppress("UNUSED_PARAMETER") e: ParticleFactoryRegisterEvent) {
+			for(factory in factories) {
 				factory.run()
 			}
 			

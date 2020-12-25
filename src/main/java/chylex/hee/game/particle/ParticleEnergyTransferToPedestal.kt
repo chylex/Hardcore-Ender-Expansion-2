@@ -1,4 +1,5 @@
 package chylex.hee.game.particle
+
 import chylex.hee.game.block.BlockTablePedestal
 import chylex.hee.game.particle.ParticleEnergyTransferToPedestal.Data
 import chylex.hee.game.particle.base.ParticleBaseEnergyTransfer
@@ -19,29 +20,29 @@ import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.Vec3d
 import net.minecraft.world.World
 
-object ParticleEnergyTransferToPedestal : IParticleMaker.WithData<Data>(){
+object ParticleEnergyTransferToPedestal : IParticleMaker.WithData<Data>() {
 	@Sided(Side.CLIENT)
-	override fun create(world: World, posX: Double, posY: Double, posZ: Double, motX: Double, motY: Double, motZ: Double, data: Data?): Particle{
+	override fun create(world: World, posX: Double, posY: Double, posZ: Double, motX: Double, motY: Double, motZ: Double, data: Data?): Particle {
 		return Instance(world, posX, posY, posZ, data)
 	}
 	
 	class Data(
 		val targetPos: BlockPos,
-		val travelTime: Int
+		val travelTime: Int,
 	) : IParticleData.Self<Data>()
 	
 	@Sided(Side.CLIENT)
-	class Instance(world: World, posX: Double, posY: Double, posZ: Double, data: Data?) : ParticleBaseEnergyTransfer(world, posX, posY, posZ){
+	class Instance(world: World, posX: Double, posY: Double, posZ: Double, data: Data?) : ParticleBaseEnergyTransfer(world, posX, posY, posZ) {
 		override val targetPos: Vec3d
 		
-		init{
+		init {
 			selectSpriteRandomly(ParticleEnergyTransferToPedestal.sprite)
 			
-			if (data == null){
+			if (data == null) {
 				targetPos = Vec3.ZERO
 				setExpired()
 			}
-			else{
+			else {
 				loadColor(RGB(40u))
 				particleAlpha = 0.9F
 				
@@ -52,11 +53,11 @@ object ParticleEnergyTransferToPedestal : IParticleMaker.WithData<Data>(){
 			}
 		}
 		
-		override fun tick(){
+		override fun tick() {
 			super.tick()
 			
-			if (Pos(targetPos).getBlock(world) !== ModBlocks.TABLE_PEDESTAL){
-				if (age < maxAge - 5){
+			if (Pos(targetPos).getBlock(world) !== ModBlocks.TABLE_PEDESTAL) {
+				if (age < maxAge - 5) {
 					maxAge = age + 5
 				}
 				

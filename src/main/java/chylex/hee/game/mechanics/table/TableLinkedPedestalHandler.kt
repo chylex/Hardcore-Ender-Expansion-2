@@ -1,4 +1,5 @@
 package chylex.hee.game.mechanics.table
+
 import chylex.hee.game.block.entity.TileEntityTablePedestal
 import chylex.hee.game.block.entity.base.TileEntityBaseTable
 import chylex.hee.game.world.Pos
@@ -12,8 +13,8 @@ import chylex.hee.system.serialization.use
 import net.minecraft.util.math.BlockPos
 import net.minecraftforge.common.util.INBTSerializable
 
-class TableLinkedPedestalHandler(private val table: TileEntityBaseTable, maxDistance: Double) : INBTSerializable<TagCompound>{
-	private companion object{
+class TableLinkedPedestalHandler(private val table: TileEntityBaseTable, maxDistance: Double) : INBTSerializable<TagCompound> {
+	private companion object {
 		private const val POS_TAG = "Pos"
 		private const val OUTPUT_TAG = "Output"
 	}
@@ -30,26 +31,26 @@ class TableLinkedPedestalHandler(private val table: TileEntityBaseTable, maxDist
 	
 	// Behavior
 	
-	fun tryLinkPedestal(pedestal: TileEntityTablePedestal): Boolean{
-		if (pedestal.hasLinkedTable){
+	fun tryLinkPedestal(pedestal: TileEntityTablePedestal): Boolean {
+		if (pedestal.hasLinkedTable) {
 			return false
 		}
 		
 		val tablePos = table.pos
 		val pedestalPos = pedestal.pos
 		
-		if (inputPedestals.contains(pedestalPos) || pedestalPos.y != tablePos.y || pedestalPos.distanceSqTo(tablePos) > maxDistanceSq){
+		if (inputPedestals.contains(pedestalPos) || pedestalPos.y != tablePos.y || pedestalPos.distanceSqTo(tablePos) > maxDistanceSq) {
 			return false
 		}
 		
-		if (inputPedestals.size >= table.maxInputPedestals){
+		if (inputPedestals.size >= table.maxInputPedestals) {
 			tryUnlinkOutputPedestal(dropTableLink = true)
 			dedicatedOutputPedestal = pedestalPos
 			
 			pedestal.setLinkedTable(table)
 			pedestal.isDedicatedOutput = true
 		}
-		else{
+		else {
 			inputPedestals.add(pedestalPos)
 			pedestal.setLinkedTable(table)
 		}
@@ -58,13 +59,13 @@ class TableLinkedPedestalHandler(private val table: TileEntityBaseTable, maxDist
 		return true
 	}
 	
-	fun tryUnlinkPedestal(pedestal: TileEntityTablePedestal, dropTableLink: Boolean): Boolean{
-		if (pedestal.pos == dedicatedOutputPedestal){
+	fun tryUnlinkPedestal(pedestal: TileEntityTablePedestal, dropTableLink: Boolean): Boolean {
+		if (pedestal.pos == dedicatedOutputPedestal) {
 			tryUnlinkOutputPedestal(dropTableLink)
 			return true
 		}
 		
-		if (inputPedestals.remove(pedestal.pos)){
+		if (inputPedestals.remove(pedestal.pos)) {
 			pedestal.onTableUnlinked(table, dropTableLink)
 			table.markDirty()
 			return true
@@ -73,16 +74,16 @@ class TableLinkedPedestalHandler(private val table: TileEntityBaseTable, maxDist
 		return false
 	}
 	
-	fun tryMarkInputPedestalAsOutput(pedestal: TileEntityTablePedestal): Boolean{
+	fun tryMarkInputPedestalAsOutput(pedestal: TileEntityTablePedestal): Boolean {
 		val pedestalPos = pedestal.pos
 		
-		if (!inputPedestals.remove(pedestalPos)){
+		if (!inputPedestals.remove(pedestalPos)) {
 			return false
 		}
 		
 		val currentOutputPedestal = dedicatedOutputPedestalTile
 		
-		if (currentOutputPedestal != null){
+		if (currentOutputPedestal != null) {
 			currentOutputPedestal.isDedicatedOutput = false
 			inputPedestals.add(currentOutputPedestal.pos)
 		}
@@ -94,7 +95,7 @@ class TableLinkedPedestalHandler(private val table: TileEntityBaseTable, maxDist
 		return true
 	}
 	
-	private fun tryUnlinkOutputPedestal(dropTableLink: Boolean){
+	private fun tryUnlinkOutputPedestal(dropTableLink: Boolean) {
 		val pedestal = dedicatedOutputPedestalTile ?: return
 		
 		pedestal.onTableUnlinked(table, dropTableLink)
@@ -102,7 +103,7 @@ class TableLinkedPedestalHandler(private val table: TileEntityBaseTable, maxDist
 		table.markDirty()
 	}
 	
-	fun onAllPedestalsUnlinked(){
+	fun onAllPedestalsUnlinked() {
 		inputPedestals.clear()
 		dedicatedOutputPedestal = null
 		table.markDirty()

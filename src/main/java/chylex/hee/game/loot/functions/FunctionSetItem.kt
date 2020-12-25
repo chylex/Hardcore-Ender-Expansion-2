@@ -1,4 +1,5 @@
 package chylex.hee.game.loot.functions
+
 import chylex.hee.system.facades.Resource
 import chylex.hee.system.forge.getIfExists
 import chylex.hee.system.random.nextItem
@@ -17,40 +18,40 @@ import net.minecraft.world.storage.loot.LootFunction
 import net.minecraft.world.storage.loot.conditions.ILootCondition
 import net.minecraftforge.registries.ForgeRegistries
 
-sealed class FunctionSetItem(conditions: Array<ILootCondition>) : LootFunction(conditions){
+sealed class FunctionSetItem(conditions: Array<ILootCondition>) : LootFunction(conditions) {
 	abstract fun serialize(json: JsonObject, context: JsonSerializationContext)
 	
-	private class FromList(conditions: Array<ILootCondition>, private val items: Array<String>) : FunctionSetItem(conditions){
-		override fun doApply(stack: ItemStack, context: LootContext): ItemStack{
+	private class FromList(conditions: Array<ILootCondition>, private val items: Array<String>) : FunctionSetItem(conditions) {
+		override fun doApply(stack: ItemStack, context: LootContext): ItemStack {
 			return ItemStack.read(stack.serializeNBT().apply {
 				putString("id", context.random.nextItem(items))
 			})
 		}
 		
-		override fun serialize(json: JsonObject, context: JsonSerializationContext){
+		override fun serialize(json: JsonObject, context: JsonSerializationContext) {
 			json.add("items", JsonArray().also { items.forEach(it::add) })
 		}
 	}
 	
-	private class FromTag(conditions: Array<ILootCondition>, private val tag: Tag<Item>) : FunctionSetItem(conditions){
-		override fun doApply(stack: ItemStack, context: LootContext): ItemStack{
+	private class FromTag(conditions: Array<ILootCondition>, private val tag: Tag<Item>) : FunctionSetItem(conditions) {
+		override fun doApply(stack: ItemStack, context: LootContext): ItemStack {
 			return ItemStack.read(stack.serializeNBT().apply {
 				putString("id", tag.getRandomElement(context.random).registryName.toString())
 			})
 		}
 		
-		override fun serialize(json: JsonObject, context: JsonSerializationContext){
+		override fun serialize(json: JsonObject, context: JsonSerializationContext) {
 			json.addProperty("tag", tag.id.toString())
 		}
 	}
 	
-	object Serializer : LootFunction.Serializer<FunctionSetItem>(Resource.Custom("set_item"), FunctionSetItem::class.java){
-		override fun serialize(json: JsonObject, value: FunctionSetItem, context: JsonSerializationContext){
+	object Serializer : LootFunction.Serializer<FunctionSetItem>(Resource.Custom("set_item"), FunctionSetItem::class.java) {
+		override fun serialize(json: JsonObject, value: FunctionSetItem, context: JsonSerializationContext) {
 			value.serialize(json, context)
 		}
 		
-		override fun deserialize(json: JsonObject, context: JsonDeserializationContext, conditions: Array<ILootCondition>): FunctionSetItem{
-			return when{
+		override fun deserialize(json: JsonObject, context: JsonDeserializationContext, conditions: Array<ILootCondition>): FunctionSetItem {
+			return when {
 				json.has("items") -> {
 					val items = json.getAsJsonArray("items").map { it.asString }
 					FromList(conditions, items.onEach { ForgeRegistries.ITEMS.getIfExists(ResourceLocation(it)) ?: throw JsonParseException("Can't find item: $it") }.toTypedArray())

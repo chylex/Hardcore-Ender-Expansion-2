@@ -1,4 +1,5 @@
 package chylex.hee.game.world.feature.tombdungeon.piece
+
 import chylex.hee.game.world.Pos
 import chylex.hee.game.world.feature.tombdungeon.TombDungeonPieces
 import chylex.hee.game.world.feature.tombdungeon.connection.TombDungeonConnection
@@ -13,7 +14,7 @@ import chylex.hee.system.migration.Facing.NORTH
 import chylex.hee.system.migration.Facing.SOUTH
 import chylex.hee.system.random.nextInt
 
-class TombDungeonCorridor_StraightCrumbling(length: Int, fallHeight: Int, override val isFancy: Boolean) : TombDungeonAbstractPiece(){
+class TombDungeonCorridor_StraightCrumbling(length: Int, fallHeight: Int, override val isFancy: Boolean) : TombDungeonAbstractPiece() {
 	override val size = Size(5, 6 + fallHeight, length)
 	
 	private val floorY
@@ -30,11 +31,11 @@ class TombDungeonCorridor_StraightCrumbling(length: Int, fallHeight: Int, overri
 		TombDungeonConnection(CORRIDOR, Pos(size.centerX, floorY, 0), NORTH)
 	)
 	
-	init{
-		require(length > 2){ "tomb dungeon crumbling corridor must be at least 3 blocks long"}
+	init {
+		require(length > 2) { "tomb dungeon crumbling corridor must be at least 3 blocks long" }
 	}
 	
-	override fun generate(world: IStructureWorld, instance: Instance){
+	override fun generate(world: IStructureWorld, instance: Instance) {
 		val rand = world.rand
 		val maxX = size.maxX
 		val maxY = size.maxY
@@ -46,7 +47,7 @@ class TombDungeonCorridor_StraightCrumbling(length: Int, fallHeight: Int, overri
 		world.placeCube(Pos(1, 1, 1), Pos(maxX - 1, floorY - 1, maxZ - 1), Air)
 		world.placeCube(Pos(1, floorY + 1, 1), Pos(maxX - 1, maxY - 1, maxZ - 1), Air)
 		
-		for(attempt in 1..(2 * (size.z - 2))){
+		for(attempt in 1..(2 * (size.z - 2))) {
 			val cobwebPos = Pos(
 				rand.nextInt(1, maxX - 1),
 				rand.nextInt(1, floorY - 1),

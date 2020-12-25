@@ -1,4 +1,5 @@
 package chylex.hee.game.block
+
 import chylex.hee.client.MC
 import chylex.hee.game.block.properties.BlockBuilder
 import chylex.hee.game.block.properties.Property
@@ -46,11 +47,11 @@ import net.minecraft.world.storage.loot.LootParameterSets
 import net.minecraft.world.storage.loot.LootParameters
 import java.util.Random
 
-open class BlockGraveDirt(builder: BlockBuilder) : BlockSimpleShaped(builder, AxisAlignedBB(0.0, 0.0, 0.0, 1.0, 0.9375, 1.0)){
-	companion object{
+open class BlockGraveDirt(builder: BlockBuilder) : BlockSimpleShaped(builder, AxisAlignedBB(0.0, 0.0, 0.0, 1.0, 0.9375, 1.0)) {
+	companion object {
 		val FULL = Property.bool("full")
 		
-		private fun makeSpiderling(world: World, pos: BlockPos, yaw: Float): EntityMobSpiderling{
+		private fun makeSpiderling(world: World, pos: BlockPos, yaw: Float): EntityMobSpiderling {
 			return EntityMobSpiderling(world).apply {
 				setLocationAndAngles(pos.x + 0.5, pos.y + 0.01, pos.z + 0.5, yaw, 0F)
 			}
@@ -59,28 +60,28 @@ open class BlockGraveDirt(builder: BlockBuilder) : BlockSimpleShaped(builder, Ax
 	
 	// Instance
 	
-	init{
+	init {
 		defaultState = stateContainer.baseState.with(FULL, true)
 	}
 	
-	override fun fillStateContainer(container: Builder<Block, BlockState>){
+	override fun fillStateContainer(container: Builder<Block, BlockState>) {
 		container.add(FULL)
 	}
 	
 	// Bounding box
 	
-	override fun getStateForPlacement(context: BlockItemUseContext): BlockState{
+	override fun getStateForPlacement(context: BlockItemUseContext): BlockState {
 		return this.with(FULL, context.pos.up().getBlock(context.world) is BlockGraveDirt)
 	}
 	
-	override fun updatePostPlacement(state: BlockState, facing: Direction, neighborState: BlockState, world: IWorld, pos: BlockPos, neighborPos: BlockPos): BlockState{
+	override fun updatePostPlacement(state: BlockState, facing: Direction, neighborState: BlockState, world: IWorld, pos: BlockPos, neighborPos: BlockPos): BlockState {
 		return if (facing == UP)
 			state.with(FULL, pos.up().getBlock(world) is BlockGraveDirt)
 		else
 			state
 	}
 	
-	override fun getShape(state: BlockState, source: IBlockReader, pos: BlockPos, context: ISelectionContext): VoxelShape{
+	override fun getShape(state: BlockState, source: IBlockReader, pos: BlockPos, context: ISelectionContext): VoxelShape {
 		return if (state[FULL])
 			VoxelShapes.fullCube()
 		else
@@ -89,14 +90,14 @@ open class BlockGraveDirt(builder: BlockBuilder) : BlockSimpleShaped(builder, Ax
 	
 	// Explosions
 	
-	override fun canDropFromExplosion(explosion: Explosion): Boolean{
+	override fun canDropFromExplosion(explosion: Explosion): Boolean {
 		return false
 	}
 	
-	override fun onBlockExploded(state: BlockState, world: World, pos: BlockPos, explosion: Explosion){
+	override fun onBlockExploded(state: BlockState, world: World, pos: BlockPos, explosion: Explosion) {
 		super.onBlockExploded(state, world, pos, explosion)
 		
-		if (world is ServerWorld){
+		if (world is ServerWorld) {
 			LootContext.Builder(world)
 				.withRandom(world.rand)
 				.withParameter(LootParameters.POSITION, pos)
@@ -110,11 +111,11 @@ open class BlockGraveDirt(builder: BlockBuilder) : BlockSimpleShaped(builder, Ax
 	
 	// Variations
 	
-	class Spiderling(builder: BlockBuilder) : BlockGraveDirt(builder){
+	class Spiderling(builder: BlockBuilder) : BlockGraveDirt(builder) {
 		private var clientLastSpiderlingSound = 0L
 		
-		override fun updatePostPlacement(state: BlockState, facing: Direction, neighborState: BlockState, world: IWorld, pos: BlockPos, neighborPos: BlockPos): BlockState{
-			if (!world.isRemote && !world.isPeaceful && facing == UP && neighborState.block is BlockFire){
+		override fun updatePostPlacement(state: BlockState, facing: Direction, neighborState: BlockState, world: IWorld, pos: BlockPos, neighborPos: BlockPos): BlockState {
+			if (!world.isRemote && !world.isPeaceful && facing == UP && neighborState.block is BlockFire) {
 				val wrld = world.world
 				
 				makeSpiderling(wrld, neighborPos, yaw = wrld.rand.nextFloat()).apply {
@@ -132,10 +133,10 @@ open class BlockGraveDirt(builder: BlockBuilder) : BlockSimpleShaped(builder, Ax
 			return super.updatePostPlacement(state, facing, neighborState, world, pos, neighborPos)
 		}
 		
-		override fun harvestBlock(world: World, player: EntityPlayer, pos: BlockPos, state: BlockState, tile: TileEntity?, stack: ItemStack){
+		override fun harvestBlock(world: World, player: EntityPlayer, pos: BlockPos, state: BlockState, tile: TileEntity?, stack: ItemStack) {
 			super.harvestBlock(world, player, pos, state, tile, stack)
 			
-			if (!world.isPeaceful){
+			if (!world.isPeaceful) {
 				makeSpiderling(world, pos, player.posVec.subtract(pos.center).toYaw()).apply {
 					world.addEntity(this)
 					attackTarget = player
@@ -143,30 +144,30 @@ open class BlockGraveDirt(builder: BlockBuilder) : BlockSimpleShaped(builder, Ax
 			}
 		}
 		
-		override fun onExplosionDestroy(world: World, pos: BlockPos, explosion: Explosion){
+		override fun onExplosionDestroy(world: World, pos: BlockPos, explosion: Explosion) {
 			super.onExplosionDestroy(world, pos, explosion)
 			
-			if (world.isRemote){
+			if (world.isRemote) {
 				makeSpiderling(world, pos, yaw = 0F).apply {
 					spawnExplosionParticle()
 					deathSound.playClient(pos, soundCategory, volume = 0.8F, pitch = soundPitch)
 				}
 			}
-			else if (world is ServerWorld && world.gameRules.getBoolean(DO_MOB_LOOT)){
+			else if (world is ServerWorld && world.gameRules.getBoolean(DO_MOB_LOOT)) {
 				val lootContext = LootContext.Builder(world).withRandom(world.rand).build(LootParameterSets.EMPTY)
 				
-				for(drop in Environment.getLootTable(EntityMobSpiderling.LOOT_TABLE).generate(lootContext)){
+				for(drop in Environment.getLootTable(EntityMobSpiderling.LOOT_TABLE).generate(lootContext)) {
 					spawnAsEntity(world, pos, drop)
 				}
 			}
 		}
 		
 		@Sided(Side.CLIENT)
-		override fun animateTick(state: BlockState, world: World, pos: BlockPos, rand: Random){
-			if (!world.isPeaceful && world.totalTime - clientLastSpiderlingSound > 27L){
+		override fun animateTick(state: BlockState, world: World, pos: BlockPos, rand: Random) {
+			if (!world.isPeaceful && world.totalTime - clientLastSpiderlingSound > 27L) {
 				val distanceSq = MC.player?.getDistanceSq(pos.center) ?: 0.0
 				
-				if (rand.nextInt(10 + ((distanceSq.floorToInt() * 4) / 5)) == 0){
+				if (rand.nextInt(10 + ((distanceSq.floorToInt() * 4) / 5)) == 0) {
 					clientLastSpiderlingSound = world.totalTime
 					
 					val volumeRand = Random(pos.toLong())

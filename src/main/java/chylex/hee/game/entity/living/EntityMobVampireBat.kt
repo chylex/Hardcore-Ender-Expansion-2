@@ -1,4 +1,5 @@
 package chylex.hee.game.entity.living
+
 import chylex.hee.HEE
 import chylex.hee.game.entity.isAnyVulnerablePlayerWithinRange
 import chylex.hee.game.entity.living.EntityMobVampireBat.BehaviorType.HOSTILE
@@ -77,17 +78,17 @@ import net.minecraft.world.World
 import net.minecraftforge.fml.network.NetworkHooks
 import kotlin.math.cos
 
-class EntityMobVampireBat(type: EntityType<EntityMobVampireBat>, world: World) : EntityBat(type, world), IMob, IKnockbackMultiplier{
+class EntityMobVampireBat(type: EntityType<EntityMobVampireBat>, world: World) : EntityBat(type, world), IMob, IKnockbackMultiplier {
 	@Suppress("unused")
 	constructor(world: World) : this(ModEntities.VAMPIRE_BAT, world)
 	
-	private companion object{
+	private companion object {
 		private const val MIN_ATTACK_COOLDOWN = 30
 		
 		private val DAMAGE_GENERAL = Damage(PEACEFUL_EXCLUSION, *ALL_PROTECTIONS_WITH_SHIELD, STATUS {
-			when(it.world.difficulty){
-				NORMAL -> if (it.rng.nextInt(12) == 0) Potions.POISON.makeEffect(it.rng.nextInt(40, 80))  else null
-				HARD   -> if (it.rng.nextInt(7) == 0)  Potions.POISON.makeEffect(it.rng.nextInt(50, 100)) else null
+			when(it.world.difficulty) {
+				NORMAL -> if (it.rng.nextInt(12) == 0) Potions.POISON.makeEffect(it.rng.nextInt(40,  80)) else null
+				HARD   -> if (it.rng.nextInt( 7) == 0) Potions.POISON.makeEffect(it.rng.nextInt(50, 100)) else null
 				else   -> null
 			}
 		})
@@ -102,7 +103,7 @@ class EntityMobVampireBat(type: EntityType<EntityMobVampireBat>, world: World) :
 		)
 	}
 	
-	enum class BehaviorType{
+	enum class BehaviorType {
 		PASSIVE, NEUTRAL, HOSTILE
 	}
 	
@@ -112,22 +113,22 @@ class EntityMobVampireBat(type: EntityType<EntityMobVampireBat>, world: World) :
 	private var prevTargetPos: Vec3d? = null
 	
 	private val nextTargetPos: Vec3d
-		get(){
+		get() {
 			val currentTarget = attackTarget
 			
-			if (currentTarget != null){
+			if (currentTarget != null) {
 				return currentTarget.posVec.addY(currentTarget.height * targetYOffsetMp.toDouble()).also { prevTargetPos = null }
 			}
 			
 			val currentSleep = nextSleepPos
 			
-			if (currentSleep != null){
+			if (currentSleep != null) {
 				return currentSleep.bottomCenter.addY(0.1).also { prevTargetPos = null }
 			}
 			
 			val pos = prevTargetPos?.takeIf { Pos(it).isAir(world) && it.y >= 1 }
 			
-			if (pos == null || pos.squareDistanceTo(posVec) < square(2.0) || rand.nextInt(30) == 0){
+			if (pos == null || pos.squareDistanceTo(posVec) < square(2.0) || rand.nextInt(30) == 0) {
 				return Pos(this).add(
 					rand.nextInt(-7, 7),
 					rand.nextInt(-2, 4),
@@ -152,11 +153,11 @@ class EntityMobVampireBat(type: EntityType<EntityMobVampireBat>, world: World) :
 	
 	override val lastHitKnockbackMultiplier = 0.4F
 	
-	init{
+	init {
 		moveController = EntityMoveFlyingBat(this)
 	}
 	
-	override fun registerAttributes(){
+	override fun registerAttributes() {
 		super.registerAttributes()
 		
 		attributes.registerAttribute(ATTACK_DAMAGE)
@@ -167,13 +168,13 @@ class EntityMobVampireBat(type: EntityType<EntityMobVampireBat>, world: World) :
 		updateHostilityAttributes()
 	}
 	
-	private fun updateHostilityAttributes(){
-		if (behaviorType == PASSIVE){
+	private fun updateHostilityAttributes() {
+		if (behaviorType == PASSIVE) {
 			getAttribute(MAX_HEALTH).baseValue = 6.0
 			getAttribute(ATTACK_DAMAGE).baseValue = 0.0
 			experienceValue = 0
 		}
-		else{
+		else {
 			getAttribute(MAX_HEALTH).baseValue = 4.0
 			getAttribute(ATTACK_DAMAGE).baseValue = 3.0
 			experienceValue = 1
@@ -182,28 +183,28 @@ class EntityMobVampireBat(type: EntityType<EntityMobVampireBat>, world: World) :
 		health = maxHealth
 	}
 	
-	override fun createSpawnPacket(): IPacket<*>{
+	override fun createSpawnPacket(): IPacket<*> {
 		return NetworkHooks.getEntitySpawningPacket(this)
 	}
 	
 	// Behavior
 	
-	override fun tick(){
+	override fun tick() {
 		super.tick()
 		
-		if (isBatHanging && Pos(this).up().getBlock(world) is BlockChorusPlant){
+		if (isBatHanging && Pos(this).up().getBlock(world) is BlockChorusPlant) {
 			positionY = posY.floorToInt() + 1.25 - height // POLISH some variations of chorus plants are extra thicc
 		}
 	}
 	
-	override fun livingTick(){
+	override fun livingTick() {
 		super.livingTick()
 		
-		if (world.isRemote){
-			if (isBatHanging){
+		if (world.isRemote) {
+			if (isBatHanging) {
 				PARTICLE_TICK.spawn(Point(this, heightMp = 0.5F, amount = 1), rand)
 			}
-			else{
+			else {
 				PARTICLE_TICK.spawn(Point(this, heightMp = 0.585F + (cos(ticksExisted * 0.3F) * 0.1F), amount = 2), rand)
 			}
 			
@@ -212,50 +213,50 @@ class EntityMobVampireBat(type: EntityType<EntityMobVampireBat>, world: World) :
 		
 		val currentTarget = attackTarget
 		
-		if (currentTarget == null){
-			if (attackCooldown > 0 && --attackCooldown == 0){
+		if (currentTarget == null) {
+			if (attackCooldown > 0 && --attackCooldown == 0) {
 				tryPickNextTarget()
 			}
 		}
-		else if (getDistanceSq(currentTarget) > square(getAttribute(FOLLOW_RANGE).value) || (attackTimer > 0 && --attackTimer == 0)){
+		else if (getDistanceSq(currentTarget) > square(getAttribute(FOLLOW_RANGE).value) || (attackTimer > 0 && --attackTimer == 0)) {
 			attackTarget = null
 		}
 	}
 	
-	override fun updateAITasks(){ // blocks vanilla hanging behavior
-		if (isBatHanging){
-			if (!canHangUnderCurrentBlock() || isHangingDisturbed()){
+	override fun updateAITasks() { // blocks vanilla hanging behavior
+		if (isBatHanging) {
+			if (!canHangUnderCurrentBlock() || isHangingDisturbed()) {
 				isBatHanging = false
 			}
-			else if (behaviorType == NEUTRAL && rand.nextInt(250) == 0){
+			else if (behaviorType == NEUTRAL && rand.nextInt(250) == 0) {
 				rotationYawHead = rand.nextFloat(0F, 360F)
 			}
 		}
-		else{
+		else {
 			nextTargetPos.let { moveHelper.setMoveTo(it.x, it.y, it.z, 1.0) }
 			
 			val currentTarget = attackTarget
 			
-			if (currentTarget != null && world.totalTime - lastAttackHit >= 20L){
+			if (currentTarget != null && world.totalTime - lastAttackHit >= 20L) {
 				val centerY = posY + height * 0.5
 				val maxSqDistXZ = square(width * 2F) + currentTarget.width
 				
 				if (centerY >= currentTarget.posY - 0.2 &&
-					centerY <= currentTarget.posY + 0.2 + currentTarget.height &&
-					square(posX - currentTarget.posX) + square(posZ - currentTarget.posZ) < maxSqDistXZ &&
-					attackEntityAsMob(currentTarget)
-				){
+				    centerY <= currentTarget.posY + 0.2 + currentTarget.height &&
+				    square(posX - currentTarget.posX) + square(posZ - currentTarget.posZ) < maxSqDistXZ &&
+				    attackEntityAsMob(currentTarget)
+				) {
 					lastAttackHit = world.totalTime
 				}
 			}
 			
 			val sleepPos = nextSleepPos
 			
-			if (sleepPos != null){
-				if (!canSleepAt(sleepPos) || --sleepAttemptTimer == 0){
+			if (sleepPos != null) {
+				if (!canSleepAt(sleepPos) || --sleepAttemptTimer == 0) {
 					nextSleepPos = null
 				}
-				else if (lookPosVec.squareDistanceTo(sleepPos.center) < square(0.2) && canHangUnderCurrentBlock()){
+				else if (lookPosVec.squareDistanceTo(sleepPos.center) < square(0.2) && canHangUnderCurrentBlock()) {
 					isBatHanging = true
 					nextSleepPos = null
 					motion = Vec3.ZERO
@@ -264,7 +265,7 @@ class EntityMobVampireBat(type: EntityType<EntityMobVampireBat>, world: World) :
 					moveForward = 0F
 				}
 			}
-			else if (rand.nextInt(175) == 0){
+			else if (rand.nextInt(175) == 0) {
 				tryPickNextSleepPos()
 			}
 		}
@@ -272,15 +273,15 @@ class EntityMobVampireBat(type: EntityType<EntityMobVampireBat>, world: World) :
 	
 	// Sleep
 	
-	private fun tryPickNextSleepPos(){
-		if (behaviorType == HOSTILE || (behaviorType == NEUTRAL && world.selectVulnerableEntities.inRange<EntityPlayer>(posVec, 32.0).any())){
+	private fun tryPickNextSleepPos() {
+		if (behaviorType == HOSTILE || (behaviorType == NEUTRAL && world.selectVulnerableEntities.inRange<EntityPlayer>(posVec, 32.0).any())) {
 			return
 		}
 		
-		for(attempt in 1..10){
+		for(attempt in 1..10) {
 			val pos = Pos(lookPosVec.add(rand.nextVector(rand.nextFloat(0.5, 3.0))))
 			
-			if (canSleepAt(pos) && world.getLightFor(BLOCK, pos) <= 2){
+			if (canSleepAt(pos) && world.getLightFor(BLOCK, pos) <= 2) {
 				nextSleepPos = pos
 				sleepAttemptTimer = 5 + (lookPosVec.distanceTo(pos.center) / 0.1).ceilToInt()
 				return
@@ -288,30 +289,30 @@ class EntityMobVampireBat(type: EntityType<EntityMobVampireBat>, world: World) :
 		}
 	}
 	
-	private fun canSleepAt(pos: BlockPos): Boolean{
+	private fun canSleepAt(pos: BlockPos): Boolean {
 		return pos.isAir(world) && canHangUnderBlock(pos.up())
 	}
 	
-	private fun canHangUnderCurrentBlock(): Boolean{
+	private fun canHangUnderCurrentBlock(): Boolean {
 		return canHangUnderBlock(Pos(this).up())
 	}
 	
-	private fun canHangUnderBlock(pos: BlockPos): Boolean{
+	private fun canHangUnderBlock(pos: BlockPos): Boolean {
 		val state = pos.getState(world)
 		
-		if (!state.isNormalCube(world, pos) && state.block !is BlockChorusPlant){
+		if (!state.isNormalCube(world, pos) && state.block !is BlockChorusPlant) {
 			return false
 		}
 		
 		return world.selectEntities.inBox<EntityBat>(AxisAlignedBB(pos)).none { it.isBatHanging && it !== this }
 	}
 	
-	private fun isHangingDisturbed(): Boolean{
+	private fun isHangingDisturbed(): Boolean {
 		return isAnyVulnerablePlayerWithinRange(4.0)
 	}
 	
-	override fun setIsBatHanging(isHanging: Boolean){
-		if (world.isRemote && isBatHanging && !isHanging){
+	override fun setIsBatHanging(isHanging: Boolean) {
+		if (world.isRemote && isBatHanging && !isHanging) {
 			Sounds.ENTITY_BAT_TAKEOFF.playClient(posVec, SoundCategory.NEUTRAL, volume = 0.05F, pitch = rand.nextFloat(0.8F, 1.2F))
 		}
 		
@@ -320,38 +321,38 @@ class EntityMobVampireBat(type: EntityType<EntityMobVampireBat>, world: World) :
 	
 	// Battle
 	
-	private fun tryPickNextTarget(){
-		if (behaviorType == HOSTILE){
+	private fun tryPickNextTarget() {
+		if (behaviorType == HOSTILE) {
 			attackTarget = rand.nextItemOrNull(world.selectVulnerableEntities.inRange<EntityPlayer>(posVec, 12.0).filter(::canEntityBeSeen))
 		}
-		else if (behaviorType == NEUTRAL && rand.nextInt(210) == 0){
+		else if (behaviorType == NEUTRAL && rand.nextInt(210) == 0) {
 			attackTarget = rand.nextItemOrNull(world.selectVulnerableEntities.inRange<EntityPlayer>(posVec, 7.0).filter(::canEntityBeSeen))
 		}
-		else{
+		else {
 			attackCooldown = 1
 		}
 	}
 	
-	override fun setAttackTarget(newTarget: EntityLivingBase?){
-		if (attackTarget === newTarget){
+	override fun setAttackTarget(newTarget: EntityLivingBase?) {
+		if (attackTarget === newTarget) {
 			return
 		}
 		
-		if (newTarget != null && (behaviorType == PASSIVE || world.isPeaceful)){
+		if (newTarget != null && (behaviorType == PASSIVE || world.isPeaceful)) {
 			attackCooldown = MIN_ATTACK_COOLDOWN
 			return
 		}
 		
 		super.setAttackTarget(newTarget)
 		
-		if (attackTarget == null){
+		if (attackTarget == null) {
 			beginAttackCooldown()
 		}
-		else{
-			attackTimer = when(behaviorType){
+		else {
+			attackTimer = when(behaviorType) {
 				NEUTRAL -> rand.nextInt(40, rand.nextInt(80, 120))
 				HOSTILE -> rand.nextInt(80, 160)
-				else -> 0
+				else    -> 0
 			}
 			
 			targetYOffsetMp = rand.nextFloat()
@@ -359,25 +360,25 @@ class EntityMobVampireBat(type: EntityType<EntityMobVampireBat>, world: World) :
 		}
 	}
 	
-	private fun beginAttackCooldown(){
-		attackCooldown = when(behaviorType){
+	private fun beginAttackCooldown() {
+		attackCooldown = when(behaviorType) {
 			NEUTRAL -> rand.nextInt(500, 1800)
 			HOSTILE -> rand.nextInt(90, 150)
-			else -> MIN_ATTACK_COOLDOWN
+			else    -> MIN_ATTACK_COOLDOWN
 		}
 	}
 	
-	override fun attackEntityAsMob(entity: Entity): Boolean{
+	override fun attackEntityAsMob(entity: Entity): Boolean {
 		return DAMAGE_GENERAL.dealToFrom(entity, this)
 	}
 	
 	// Spawning
 	
-	override fun onInitialSpawn(world: IWorld, difficulty: DifficultyInstance, reason: SpawnReason, data: ILivingEntityData?, nbt: CompoundNBT?): ILivingEntityData?{
+	override fun onInitialSpawn(world: IWorld, difficulty: DifficultyInstance, reason: SpawnReason, data: ILivingEntityData?, nbt: CompoundNBT?): ILivingEntityData? {
 		// TODO use onInitialSpawn for territory generation, call enablePersistence to stop despawning
 		
-		if (world.dimension.type === HEE.dim){
-			when(TerritoryType.fromX(posX.floorToInt())){
+		if (world.dimension.type === HEE.dim) {
+			when(TerritoryType.fromX(posX.floorToInt())) {
 				else -> {}
 			}
 		}
@@ -387,14 +388,14 @@ class EntityMobVampireBat(type: EntityType<EntityMobVampireBat>, world: World) :
 	
 	// Properties
 	
-	override fun getSoundCategory(): SoundCategory{
+	override fun getSoundCategory(): SoundCategory {
 		return if (behaviorType == PASSIVE)
 			SoundCategory.NEUTRAL
 		else
 			SoundCategory.HOSTILE
 	}
 	
-	override fun getSoundPitch(): Float{
+	override fun getSoundPitch(): Float {
 		return super.getSoundPitch() * 0.85F
 	}
 	

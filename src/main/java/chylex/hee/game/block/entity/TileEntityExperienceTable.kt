@@ -1,4 +1,5 @@
 package chylex.hee.game.block.entity
+
 import chylex.hee.game.block.entity.base.TileEntityBaseTable
 import chylex.hee.game.block.entity.base.TileEntityBaseTableWithSupportingItem
 import chylex.hee.game.inventory.setStack
@@ -32,7 +33,7 @@ import net.minecraft.tileentity.TileEntityType
 import net.minecraft.util.math.BlockPos
 import kotlin.math.pow
 
-class TileEntityExperienceTable(type: TileEntityType<TileEntityExperienceTable>) : TileEntityBaseTableWithSupportingItem(type){
+class TileEntityExperienceTable(type: TileEntityType<TileEntityExperienceTable>) : TileEntityBaseTableWithSupportingItem(type) {
 	@Suppress("unused")
 	constructor() : this(ModTileEntities.EXPERIENCE_TABLE)
 	
@@ -46,34 +47,34 @@ class TileEntityExperienceTable(type: TileEntityType<TileEntityExperienceTable>)
 	
 	private val smeltingInventory = Inventory(1)
 	
-	override fun isSupportingItem(stack: ItemStack): Boolean{
+	override fun isSupportingItem(stack: ItemStack): Boolean {
 		return stack.item === Items.GLASS_BOTTLE
 	}
 	
-	override fun getProcessFor(pedestalPos: BlockPos, stack: ItemStack): ITableProcess?{
+	override fun getProcessFor(pedestalPos: BlockPos, stack: ItemStack): ITableProcess? {
 		val rand = wrld.rand
 		val item = stack.item
 		
-		if (item === Items.EXPERIENCE_BOTTLE){
+		if (item === Items.EXPERIENCE_BOTTLE) {
 			return Process(this, pedestalPos, experience = (0 until stack.size).sumBy { 3 + rand.nextInt(5) + rand.nextInt(5) }, updates = 1, usesBottle = false)
 		}
-		else if (item === ModItems.EXPERIENCE_BOTTLE){
+		else if (item === ModItems.EXPERIENCE_BOTTLE) {
 			return Process(this, pedestalPos, experience = stack.size * ModItems.EXPERIENCE_BOTTLE.getExperienceAmountPerItem(stack), updates = 0, usesBottle = false)
 		}
-		else if (item === Items.ENCHANTED_BOOK){
+		else if (item === Items.ENCHANTED_BOOK) {
 			val enchantments = EnchantmentHelper.getEnchantments(stack)
 			val experience = enchantments.entries.sumBy { (ench, level) -> (1F + (level.toFloat() / ench.maxLevel)).pow(1.5F + (level.coerceAtMost(5) * 0.5F)).floorToInt() }
 			val updates = 1 + enchantments.values.sum()
 			
 			return Process(this, pedestalPos, experience, updates)
 		}
-		else if (item is ItemBlock){
+		else if (item is ItemBlock) {
 			val block = item.block
 			
-			for(attempt in 1..50){
+			for(attempt in 1..50) {
 				val experience = block.getExpDrop(block.defaultState, world, pedestalPos, 0, 0)
 				
-				if (experience > 0){
+				if (experience > 0) {
 					return Process(this, pedestalPos, (experience * 1.75F).floorToInt().coerceAtLeast(1), updates = 9)
 				}
 			}
@@ -83,18 +84,18 @@ class TileEntityExperienceTable(type: TileEntityType<TileEntityExperienceTable>)
 		val recipe = wrld.recipeManager.getRecipe(IRecipeType.SMELTING, smeltingInventory, wrld).orElse(null)
 		smeltingInventory.setStack(0, ItemStack.EMPTY)
 		
-		if (recipe != null){
+		if (recipe != null) {
 			return Process(this, pedestalPos, (recipe.experience * rand.nextFloat(1.75F, 3.25F)).ceilToInt(), updates = 5)
 		}
 		
 		return null
 	}
 	
-	private class Process : ProcessOnePedestal{
+	private class Process : ProcessOnePedestal {
 		constructor(table: TileEntityBaseTable, pos: BlockPos) : super(table, pos)
 		constructor(table: TileEntityBaseTable, nbt: TagCompound) : super(table, nbt)
 		
-		constructor(table: TileEntityBaseTable, pos: BlockPos, experience: Int, updates: Int, usesBottle: Boolean = true) : this(table, pos){
+		constructor(table: TileEntityBaseTable, pos: BlockPos, experience: Int, updates: Int, usesBottle: Boolean = true) : this(table, pos) {
 			this.experience = experience
 			this.updatesLeft = updates
 			this.usesBottle = usesBottle
@@ -116,20 +117,20 @@ class TileEntityExperienceTable(type: TileEntityType<TileEntityExperienceTable>)
 		private var updatesLeft = 0
 		private var usesBottle = false
 		
-		override fun isInputStillValid(oldInput: ItemStack, newInput: ItemStack): Boolean{
+		override fun isInputStillValid(oldInput: ItemStack, newInput: ItemStack): Boolean {
 			return oldInput.item === newInput.item
 		}
 		
-		override fun onWorkTick(context: ITableContext, input: ItemStack): State{
-			if (updatesLeft == 0){
-				if (usesBottle && context.requestUseSupportingItem(Items.GLASS_BOTTLE, (experience + ItemExperienceBottleCustom.MAX_EXPERIENCE - 1) / ItemExperienceBottleCustom.MAX_EXPERIENCE) == null){
+		override fun onWorkTick(context: ITableContext, input: ItemStack): State {
+			if (updatesLeft == 0) {
+				if (usesBottle && context.requestUseSupportingItem(Items.GLASS_BOTTLE, (experience + ItemExperienceBottleCustom.MAX_EXPERIENCE - 1) / ItemExperienceBottleCustom.MAX_EXPERIENCE) == null) {
 					return Work.Blocked
 				}
 				
 				return Output(ModItems.EXPERIENCE_BOTTLE.createBottles(experience).toTypedArray())
 			}
 			
-			if (!context.requestUseResources()){
+			if (!context.requestUseResources()) {
 				return Work.Blocked
 			}
 			
@@ -143,7 +144,7 @@ class TileEntityExperienceTable(type: TileEntityType<TileEntityExperienceTable>)
 			putBoolean("UsesBottle", usesBottle)
 		}
 		
-		override fun deserializeNBT(nbt: TagCompound) = with(nbt){
+		override fun deserializeNBT(nbt: TagCompound) = with(nbt) {
 			super.deserializeNBT(nbt)
 			experience = getShort("Experience").toInt()
 			updatesLeft = getShort("UpdatesLeft").toInt()

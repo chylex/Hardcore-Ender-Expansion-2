@@ -1,4 +1,5 @@
 package chylex.hee.network
+
 import chylex.hee.HEE
 import chylex.hee.system.compatibility.EraseGenerics.buildPacket
 import chylex.hee.system.facades.Resource
@@ -24,23 +25,23 @@ import org.apache.commons.lang3.tuple.Pair
 import java.util.function.Predicate
 import java.util.function.Supplier
 
-object NetworkManager{
+object NetworkManager {
 	private val CHANNEL = Resource.Custom("net")
 	
 	@Suppress("ReplacePutWithAssignment")
-	fun initialize(packetConstructors: Iterable<kotlin.Pair<Class<out IPacket>, Supplier<IPacket>>>){
-		if (NetworkManager::network.isInitialized){
+	fun initialize(packetConstructors: Iterable<kotlin.Pair<Class<out IPacket>, Supplier<IPacket>>>) {
+		if (NetworkManager::network.isInitialized) {
 			throw UnsupportedOperationException("cannot initialize NetworkManager multiple times")
 		}
 		
-		val checkVersion = Predicate<String>{
+		val checkVersion = Predicate<String> {
 			it == HEE.version
 		}
 		
 		network = NetworkRegistry.newEventChannel(CHANNEL, { HEE.version }, checkVersion, checkVersion)
 		network.registerObject(this)
 		
-		for((cls, constructor) in packetConstructors){
+		for((cls, constructor) in packetConstructors) {
 			val id = mapPacketIdToConstructor.size.toByte()
 			// kotlin indexer boxes the values
 			mapPacketIdToConstructor.put(id, constructor)
@@ -60,7 +61,7 @@ object NetworkManager{
 	// Packet receiving
 	
 	@SubscribeEvent
-	fun onClientPacket(e: ServerCustomPayloadEvent){
+	fun onClientPacket(e: ServerCustomPayloadEvent) {
 		val ctx = e.source.get()
 		
 		readPacket(e.payload).handle(LogicalSide.CLIENT, HEE.proxy.getClientSidePlayer()!!)
@@ -68,7 +69,7 @@ object NetworkManager{
 	}
 	
 	@SubscribeEvent
-	fun onServerPacket(e: ClientCustomPayloadEvent){
+	fun onServerPacket(e: ClientCustomPayloadEvent) {
 		val ctx = e.source.get()
 		
 		readPacket(e.payload).handle(LogicalSide.SERVER, ctx.sender!!)
@@ -77,33 +78,33 @@ object NetworkManager{
 	
 	// Packet sending
 	
-	fun sendToServer(packet: BaseServerPacket){
+	fun sendToServer(packet: BaseServerPacket) {
 		PacketDistributor.SERVER.noArg().send(buildPacket(PLAY_TO_SERVER, writePacket(packet), CHANNEL))
 	}
 	
-	fun sendToAll(packet: BaseClientPacket){
+	fun sendToAll(packet: BaseClientPacket) {
 		PacketDistributor.ALL.noArg().send(buildPacket(PLAY_TO_CLIENT, writePacket(packet), CHANNEL))
 	}
 	
-	fun sendToPlayer(packet: BaseClientPacket, player: EntityPlayer){
+	fun sendToPlayer(packet: BaseClientPacket, player: EntityPlayer) {
 		(player as? EntityPlayerMP)?.let { PacketDistributor.PLAYER.with { it }.send(buildPacket(PLAY_TO_CLIENT, writePacket(packet), CHANNEL)) }
 	}
 	
-	fun sendToDimension(packet: BaseClientPacket, dimension: DimensionType){
+	fun sendToDimension(packet: BaseClientPacket, dimension: DimensionType) {
 		PacketDistributor.DIMENSION.with { dimension }.send(buildPacket(PLAY_TO_CLIENT, writePacket(packet), CHANNEL))
 	}
 	
-	fun sendToTracking(packet: BaseClientPacket, entity: Entity){
+	fun sendToTracking(packet: BaseClientPacket, entity: Entity) {
 		PacketDistributor.TRACKING_ENTITY.with { entity }.send(buildPacket(PLAY_TO_CLIENT, writePacket(packet), CHANNEL))
 	}
 	
-	fun sendToAllAround(packet: BaseClientPacket, point: TargetPoint){
+	fun sendToAllAround(packet: BaseClientPacket, point: TargetPoint) {
 		PacketDistributor.NEAR.with { point }.send(buildPacket(PLAY_TO_CLIENT, writePacket(packet), CHANNEL))
 	}
 	
 	// Packet wrapping
 	
-	private fun readPacket(packet: PacketBuffer): IPacket{
+	private fun readPacket(packet: PacketBuffer): IPacket {
 		val buffer = packet.copy()
 		val id = buffer.readByte()
 		
@@ -111,10 +112,10 @@ object NetworkManager{
 		return constructor.get().also { it.read(PacketBuffer(buffer.slice())) }
 	}
 	
-	private fun writePacket(packet: IPacket): Pair<PacketBuffer, Int>{
+	private fun writePacket(packet: IPacket): Pair<PacketBuffer, Int> {
 		val id = mapPacketClassToId.getByte(packet::class.java)
 		
-		require(id != MISSING_ID){ "packet is not registered: ${packet::class.java.simpleName}" }
+		require(id != MISSING_ID) { "packet is not registered: ${packet::class.java.simpleName}" }
 		
 		val buffer = PacketBuffer(Unpooled.buffer())
 		buffer.writeByte(id.toInt())

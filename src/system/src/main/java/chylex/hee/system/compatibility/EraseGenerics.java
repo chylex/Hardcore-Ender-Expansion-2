@@ -9,17 +9,17 @@ import net.minecraftforge.fml.network.NetworkDirection;
 import org.apache.commons.lang3.tuple.Pair;
 
 public final class EraseGenerics{
-	@SuppressWarnings({"unchecked", "rawtypes"})
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public static BlockState withProperty(final BlockState baseState, final IProperty property, final Comparable value){
 		return baseState.with(property, value);
 	}
 	
-	@SuppressWarnings({"unchecked", "rawtypes"})
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public static BlockState copyProperty(final BlockState baseState, final BlockState originalState, final IProperty property){
 		return baseState.with(property, originalState.get(property));
 	}
 	
-	@SuppressWarnings({"unchecked", "rawtypes"})
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public static EnumArgument<?> createEnumArgument(final Class<?> cls){
 		if (!cls.isEnum()){
 			throw new IllegalArgumentException("cannot create an EnumArgument for class: " + cls.getName());

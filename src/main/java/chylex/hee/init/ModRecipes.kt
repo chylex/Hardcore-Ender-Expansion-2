@@ -1,4 +1,5 @@
 package chylex.hee.init
+
 import chylex.hee.HEE
 import chylex.hee.game.recipe.NullRecipe
 import chylex.hee.game.recipe.RecipeBindingEssence
@@ -22,13 +23,13 @@ import net.minecraftforge.event.RegistryEvent
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber.Bus.MOD
 
 @SubscribeAllEvents(modid = HEE.ID, bus = MOD)
-object ModRecipes{
+object ModRecipes {
 	@SubscribeEvent
-	fun onRegister(e: RegistryEvent.Register<IRecipeSerializer<*>>){
+	fun onRegister(e: RegistryEvent.Register<IRecipeSerializer<*>>) {
 		CraftingHelper.register(Resource.Custom("ingredient_full_energy"), IngredientFullEnergy)
 		CraftingHelper.register(Resource.Custom("ingredient_no_infusions"), IngredientNoInfusions)
 		
-		with(e.registry){
+		with(e.registry) {
 			// TODO figure out what to do with the broken advancements
 			
 			register(NullRecipe.serializer named "null")

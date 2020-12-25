@@ -1,4 +1,5 @@
 package chylex.hee.game.world.feature.stronghold.piece
+
 import chylex.hee.game.entity.living.EntityMobSilverfish
 import chylex.hee.game.entity.posVec
 import chylex.hee.game.entity.selectVulnerableEntities
@@ -31,13 +32,13 @@ import net.minecraft.world.server.ServerWorld
 import java.util.Random
 import kotlin.math.min
 
-class StrongholdRoom_Main_Portal(file: String) : StrongholdAbstractPieceFromFile(file, StrongholdPieceType.ROOM){
-	class Spawner : ITriggerHandler{
-		override fun check(world: World): Boolean{
+class StrongholdRoom_Main_Portal(file: String) : StrongholdAbstractPieceFromFile(file, StrongholdPieceType.ROOM) {
+	class Spawner : ITriggerHandler {
+		override fun check(world: World): Boolean {
 			return !world.isRemote && !world.isPeaceful
 		}
 		
-		override fun update(entity: EntityTechnicalTrigger){
+		override fun update(entity: EntityTechnicalTrigger) {
 			val world = entity.world as ServerWorld
 			val selector = world.selectVulnerableEntities
 			
@@ -45,36 +46,36 @@ class StrongholdRoom_Main_Portal(file: String) : StrongholdAbstractPieceFromFile
 			val playersInRange = selector.inBox<EntityPlayer>(box)
 			
 			if (playersInRange.isEmpty() ||
-				world.entities.filter { it is EntityMobSilverfish }.count() >= 60 ||
-				selector.inBox<EntityMobSilverfish>(box).size >= min(30, 15 + (5 * playersInRange.size))
-			){
+			    world.entities.filter { it is EntityMobSilverfish }.count() >= 60 ||
+			    selector.inBox<EntityMobSilverfish>(box).size >= min(30, 15 + (5 * playersInRange.size))
+			) {
 				return
 			}
 			
 			val maxNearby = 3 + (2 * playersInRange.size)
 			val targets = playersInRange.filter { selector.inRange<EntityMobSilverfish>(it.posVec, 32.0).size < maxNearby }.toMutableList()
 			
-			if (targets.isEmpty()){
+			if (targets.isEmpty()) {
 				return
 			}
 			
 			val rand = world.rand
 			var nextAttempts = 8
 			
-			do{
+			do {
 				val target = rand.removeItem(targets)
 				var spawnsLeft = rand.nextInt(2, 4)
 				
-				for(attempt in 1..nextAttempts){
+				for(attempt in 1..nextAttempts) {
 					val spawnPos = Pos(target).add(
 						rand.nextInt(8, 20) * (if (rand.nextBoolean()) 1 else -1),
 						rand.nextInt(-4, 10),
 						rand.nextInt(8, 20) * (if (rand.nextBoolean()) 1 else -1)
-					).offsetUntilExcept(DOWN, 0..5){
+					).offsetUntilExcept(DOWN, 0..5) {
 						StrongholdPieces.isStoneBrick(it.getBlock(world))
 					}
 					
-					if (spawnPos == null || !spawnPos.isAir(world) || world.getLight(spawnPos) > 7){
+					if (spawnPos == null || !spawnPos.isAir(world) || world.getLight(spawnPos) > 7) {
 						continue
 					}
 					
@@ -82,21 +83,21 @@ class StrongholdRoom_Main_Portal(file: String) : StrongholdAbstractPieceFromFile
 						.apply { setLocationAndAngles(spawnPos.x + 0.5, spawnPos.y.toDouble(), spawnPos.z + 0.5, rand.nextFloat(0F, 360F), 0F) }
 						.takeIf { playersInRange.none(it::canEntityBeSeen) }
 					
-					if (mob != null){
+					if (mob != null) {
 						mob.disableHideInBlockAI()
 						world.addEntity(mob)
 						
-						if (--spawnsLeft == 0){
+						if (--spawnsLeft == 0) {
 							break
 						}
 					}
 				}
 				
 				nextAttempts -= 2
-			}while(targets.isNotEmpty() && nextAttempts > 0)
+			} while(targets.isNotEmpty() && nextAttempts > 0)
 		}
 		
-		override fun nextTimer(rand: Random): Int{
+		override fun nextTimer(rand: Random): Int {
 			return rand.nextInt(20, 60)
 		}
 	}
@@ -114,14 +115,14 @@ class StrongholdRoom_Main_Portal(file: String) : StrongholdAbstractPieceFromFile
 		StrongholdConnection(ROOM, Pos(0, 6, centerZ), WEST)
 	)
 	
-	override fun generate(world: IStructureWorld, instance: Instance){
+	override fun generate(world: IStructureWorld, instance: Instance) {
 		super.generate(world, instance)
 		world.addTrigger(size.centerPos, EntityStructureTrigger(STRONGHOLD_GLOBAL))
 		
-		for(connection in connections){
+		for(connection in connections) {
 			val offset = connection.offset
 			
-			if (offset.y == 0 && !instance.isConnectionUsed(connection)){
+			if (offset.y == 0 && !instance.isConnectionUsed(connection)) {
 				val shifted = offset.offset(connection.facing, -1)
 				val perpendicular = connection.facing.rotateY()
 				

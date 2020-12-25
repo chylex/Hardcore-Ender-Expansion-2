@@ -1,4 +1,5 @@
 package chylex.hee.game.mechanics.damage
+
 import chylex.hee.game.entity.setFireTicks
 import chylex.hee.game.mechanics.damage.DamageProperties.Reader
 import chylex.hee.game.mechanics.damage.IDamageDealer.Companion.CANCEL_DAMAGE
@@ -15,30 +16,30 @@ import net.minecraft.world.Difficulty.HARD
 import net.minecraft.world.Difficulty.PEACEFUL
 import kotlin.math.nextUp
 
-interface IDamageProcessor{
-	@JvmDefault fun setup(properties: DamageProperties.Writer){}
+interface IDamageProcessor {
+	@JvmDefault fun setup(properties: DamageProperties.Writer) {}
 	@JvmDefault fun modifyDamage(amount: Float, target: Entity, properties: DamageProperties.Reader) = amount
-	@JvmDefault fun afterDamage(target: Entity, properties: DamageProperties.Reader){}
+	@JvmDefault fun afterDamage(target: Entity, properties: DamageProperties.Reader) {}
 	
-	companion object{
+	companion object {
 		
 		// Types
 		
 		@JvmField
-		val PROJECTILE_TYPE = object : IDamageProcessor{
-			override fun setup(properties: DamageProperties.Writer){
+		val PROJECTILE_TYPE = object : IDamageProcessor {
+			override fun setup(properties: DamageProperties.Writer) {
 				properties.addType(DamageType.PROJECTILE)
 			}
 		}
 		
 		@JvmStatic
-		fun FIRE_TYPE(setOnFireTicks: Int = 0) = object : IDamageProcessor{
-			override fun setup(properties: DamageProperties.Writer){
+		fun FIRE_TYPE(setOnFireTicks: Int = 0) = object : IDamageProcessor {
+			override fun setup(properties: DamageProperties.Writer) {
 				properties.addType(DamageType.FIRE)
 			}
 			
-			override fun modifyDamage(amount: Float, target: Entity, properties: Reader): Float{
-				if (setOnFireTicks > 0){
+			override fun modifyDamage(amount: Float, target: Entity, properties: Reader): Float {
+				if (setOnFireTicks > 0) {
 					target.setFireTicks(setOnFireTicks)
 				}
 				
@@ -47,15 +48,15 @@ interface IDamageProcessor{
 		}
 		
 		@JvmField
-		val BLAST_TYPE = object : IDamageProcessor{
-			override fun setup(properties: DamageProperties.Writer){
+		val BLAST_TYPE = object : IDamageProcessor {
+			override fun setup(properties: DamageProperties.Writer) {
 				properties.addType(DamageType.BLAST)
 			}
 		}
 		
 		@JvmField
-		val MAGIC_TYPE = object : IDamageProcessor{
-			override fun setup(properties: DamageProperties.Writer){
+		val MAGIC_TYPE = object : IDamageProcessor {
+			override fun setup(properties: DamageProperties.Writer) {
 				properties.addType(DamageType.MAGIC)
 			}
 		}
@@ -63,8 +64,8 @@ interface IDamageProcessor{
 		// Difficulty
 		
 		@JvmField
-		val PEACEFUL_EXCLUSION = object : IDamageProcessor{
-			override fun modifyDamage(amount: Float, target: Entity, properties: DamageProperties.Reader): Float{
+		val PEACEFUL_EXCLUSION = object : IDamageProcessor {
+			override fun modifyDamage(amount: Float, target: Entity, properties: DamageProperties.Reader): Float {
 				return if (target.world.difficulty != PEACEFUL || target !is EntityPlayer)
 					amount
 				else
@@ -73,8 +74,8 @@ interface IDamageProcessor{
 		}
 		
 		@JvmField
-		val PEACEFUL_KNOCKBACK = object : IDamageProcessor{
-			override fun modifyDamage(amount: Float, target: Entity, properties: DamageProperties.Reader): Float{
+		val PEACEFUL_KNOCKBACK = object : IDamageProcessor {
+			override fun modifyDamage(amount: Float, target: Entity, properties: DamageProperties.Reader): Float {
 				return if (target.world.difficulty != PEACEFUL || target !is EntityPlayer)
 					amount
 				else
@@ -83,12 +84,12 @@ interface IDamageProcessor{
 		}
 		
 		@JvmField
-		val DIFFICULTY_SCALING = object : IDamageProcessor{
-			override fun modifyDamage(amount: Float, target: Entity, properties: DamageProperties.Reader): Float{
-				return if (target !is EntityPlayer){
+		val DIFFICULTY_SCALING = object : IDamageProcessor {
+			override fun modifyDamage(amount: Float, target: Entity, properties: DamageProperties.Reader): Float {
+				return if (target !is EntityPlayer) {
 					amount
 				}
-				else when(target.world.difficulty){
+				else when(target.world.difficulty) {
 					PEACEFUL -> amount * 0.4F
 					EASY     -> amount * 0.7F
 					HARD     -> amount * 1.4F
@@ -100,21 +101,21 @@ interface IDamageProcessor{
 		// Equipment
 		
 		@JvmStatic
-		fun ARMOR_PROTECTION(allowShield: Boolean) = object : IDamageProcessor{
-			override fun setup(properties: DamageProperties.Writer){
-				if (allowShield){
+		fun ARMOR_PROTECTION(allowShield: Boolean) = object : IDamageProcessor {
+			override fun setup(properties: DamageProperties.Writer) {
+				if (allowShield) {
 					properties.setAllowArmorAndShield()
 				}
-				else{
+				else {
 					properties.setAllowArmor()
 				}
 			}
 		}
 		
 		@JvmField
-		val ENCHANTMENT_PROTECTION = object : IDamageProcessor{
-			override fun modifyDamage(amount: Float, target: Entity, properties: DamageProperties.Reader): Float{
-				if (target !is EntityLivingBase){
+		val ENCHANTMENT_PROTECTION = object : IDamageProcessor {
+			override fun modifyDamage(amount: Float, target: Entity, properties: DamageProperties.Reader): Float {
+				if (target !is EntityLivingBase) {
 					return amount
 				}
 				
@@ -128,8 +129,8 @@ interface IDamageProcessor{
 		}
 		
 		@JvmField
-		val NUDITY_DANGER = object : IDamageProcessor{
-			override fun modifyDamage(amount: Float, target: Entity, properties: DamageProperties.Reader): Float{
+		val NUDITY_DANGER = object : IDamageProcessor {
+			override fun modifyDamage(amount: Float, target: Entity, properties: DamageProperties.Reader): Float {
 				val bodyCoverageFactor = target.armorInventoryList.sumBy {
 					if (it.item is ItemArmor)
 						2
@@ -139,15 +140,15 @@ interface IDamageProcessor{
 						0
 				}
 				
-				return amount * when(bodyCoverageFactor){
-					0 -> 2.5F
-					1 -> 2.3F
-					2 -> 2.1F
-					3 -> 1.9F
-					4 -> 1.7F
-					5 -> 1.5F
-					6 -> 1.3F
-					7 -> 1.15F
+				return amount * when(bodyCoverageFactor) {
+					0    -> 2.5F
+					1    -> 2.3F
+					2    -> 2.1F
+					3    -> 1.9F
+					4    -> 1.7F
+					5    -> 1.5F
+					6    -> 1.3F
+					7    -> 1.15F
 					else -> 1F
 				}
 			}
@@ -156,11 +157,11 @@ interface IDamageProcessor{
 		// Status effects
 		
 		@JvmField
-		val POTION_PROTECTION = object : IDamageProcessor{
+		val POTION_PROTECTION = object : IDamageProcessor {
 			/**
 			 * [net.minecraft.entity.LivingEntity.applyPotionDamageCalculations]
 			 */
-			override fun modifyDamage(amount: Float, target: Entity, properties: DamageProperties.Reader): Float{
+			override fun modifyDamage(amount: Float, target: Entity, properties: DamageProperties.Reader): Float {
 				return if (target !is EntityLivingBase)
 					amount
 				else
@@ -169,9 +170,9 @@ interface IDamageProcessor{
 		}
 		
 		@JvmStatic
-		fun STATUS(effect: (EntityLivingBase) -> EffectInstance?) = object : IDamageProcessor{
-			override fun afterDamage(target: Entity, properties: DamageProperties.Reader){
-				if (target is EntityLivingBase){
+		fun STATUS(effect: (EntityLivingBase) -> EffectInstance?) = object : IDamageProcessor {
+			override fun afterDamage(target: Entity, properties: DamageProperties.Reader) {
+				if (target is EntityLivingBase) {
 					effect(target)?.let(target::addPotionEffect)
 				}
 			}
@@ -180,41 +181,41 @@ interface IDamageProcessor{
 		// Invincibility
 		
 		@JvmField
-		val DEAL_CREATIVE = object : IDamageProcessor{
-			override fun setup(properties: DamageProperties.Writer){
+		val DEAL_CREATIVE = object : IDamageProcessor {
+			override fun setup(properties: DamageProperties.Writer) {
 				properties.setDealCreative()
 			}
 		}
 		
 		@JvmStatic
-		fun RAPID_DAMAGE(reduceByTicks: Int) = object : IDamageProcessor{
-			override fun afterDamage(target: Entity, properties: DamageProperties.Reader){
+		fun RAPID_DAMAGE(reduceByTicks: Int) = object : IDamageProcessor {
+			override fun afterDamage(target: Entity, properties: DamageProperties.Reader) {
 				target.hurtResistantTime = (target.hurtResistantTime - reduceByTicks).coerceAtLeast(1)
 			}
 		}
 		
 		@JvmStatic
-		fun IGNORE_INVINCIBILITY() = object : IDamageProcessor{
+		fun IGNORE_INVINCIBILITY() = object : IDamageProcessor {
 			private var prevHurtResistantTime = 0
 			
-			override fun modifyDamage(amount: Float, target: Entity, properties: DamageProperties.Reader): Float{
+			override fun modifyDamage(amount: Float, target: Entity, properties: DamageProperties.Reader): Float {
 				prevHurtResistantTime = target.hurtResistantTime
 				target.hurtResistantTime = 0
 				return amount
 			}
 			
-			override fun afterDamage(target: Entity, properties: DamageProperties.Reader){
+			override fun afterDamage(target: Entity, properties: DamageProperties.Reader) {
 				target.hurtResistantTime = prevHurtResistantTime
 			}
 		}
 		
 		@JvmField
-		val NON_LETHAL = object : IDamageProcessor{
-			override fun setup(properties: DamageProperties.Writer){
+		val NON_LETHAL = object : IDamageProcessor {
+			override fun setup(properties: DamageProperties.Writer) {
 				properties.setNonLethal()
 			}
 			
-			override fun modifyDamage(amount: Float, target: Entity, properties: DamageProperties.Reader): Float{
+			override fun modifyDamage(amount: Float, target: Entity, properties: DamageProperties.Reader): Float {
 				return if (target is EntityLivingBase)
 					amount
 				else

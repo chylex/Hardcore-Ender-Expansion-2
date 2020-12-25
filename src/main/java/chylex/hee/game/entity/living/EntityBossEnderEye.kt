@@ -1,4 +1,5 @@
 package chylex.hee.game.entity.living
+
 import chylex.hee.game.entity.CustomCreatureType
 import chylex.hee.game.entity.EntityData
 import chylex.hee.game.entity.living.behavior.EnderEyeAttack.KnockbackDash
@@ -95,15 +96,15 @@ import net.minecraftforge.fml.network.NetworkHooks
 import kotlin.math.abs
 import kotlin.math.min
 
-class EntityBossEnderEye(type: EntityType<EntityBossEnderEye>, world: World) : EntityFlying(type, world), IMob, IKnockbackMultiplier{
+class EntityBossEnderEye(type: EntityType<EntityBossEnderEye>, world: World) : EntityFlying(type, world), IMob, IKnockbackMultiplier {
 	constructor(world: World) : this(ModEntities.ENDER_EYE, world)
 	
-	constructor(world: World, totalSpawners: Int) : this(world){
+	constructor(world: World, totalSpawners: Int) : this(world) {
 		this.totalSpawners = totalSpawners.toShort()
 		this.rotationYaw = 0F
 	}
 	
-	companion object{
+	companion object {
 		val DAMAGE_MELEE = Damage(DIFFICULTY_SCALING, ARMOR_PROTECTION(false), ENCHANTMENT_PROTECTION)
 		val DAMAGE_DASH = Damage(DIFFICULTY_SCALING, ARMOR_PROTECTION(false))
 		val DAMAGE_LASER = FallbackDamage(
@@ -176,10 +177,10 @@ class EntityBossEnderEye(type: EntityType<EntityBossEnderEye>, world: World) : E
 	private var towerCenterPos: BlockPos? = null
 	
 	private val damageMultiplier
-		get() = if (isDemonEye) 2.5F else DEMON_LEVEL_DMG.getOrElse(demonLevel.toInt()){ 1F }
+		get() = if (isDemonEye) 2.5F else DEMON_LEVEL_DMG.getOrElse(demonLevel.toInt()) { 1F }
 	
 	private val experienceMultiplier
-		get() = if (isDemonEye) 6F else DEMON_LEVEL_XP.getOrElse(demonLevel.toInt()){ 1F }
+		get() = if (isDemonEye) 6F else DEMON_LEVEL_XP.getOrElse(demonLevel.toInt()) { 1F }
 	
 	override var lastHitKnockbackMultiplier = 1F
 	
@@ -189,7 +190,7 @@ class EntityBossEnderEye(type: EntityType<EntityBossEnderEye>, world: World) : E
 	private var knockbackDashChance = 5 // slightly higher chance of knockback after fight (re)starts
 	private var lastKnockbackDashTime = 0L
 	
-	init{
+	init {
 		moveController = EntityMoveFlyingForward(this)
 		slerpLookController = EntityLookSlerp(this, DEFAULT_SLERP_ADJUSTMENT_SPEED, maxInstantAngle = 5F)
 		lookController = slerpLookController
@@ -198,7 +199,7 @@ class EntityBossEnderEye(type: EntityType<EntityBossEnderEye>, world: World) : E
 		bossInfo.percent = 0.5F
 	}
 	
-	override fun registerData(){
+	override fun registerData() {
 		super.registerData()
 		dataManager.register(DATA_SLEEPING, true)
 		dataManager.register(DATA_DEMON_LEVEL, 0)
@@ -208,7 +209,7 @@ class EntityBossEnderEye(type: EntityType<EntityBossEnderEye>, world: World) : E
 		dataManager.register(DATA_ROTATE_TARGET_SPEED, DEFAULT_SLERP_ADJUSTMENT_SPEED)
 	}
 	
-	override fun registerAttributes(){
+	override fun registerAttributes() {
 		super.registerAttributes()
 		
 		attributes.registerAttribute(ATTACK_DAMAGE)
@@ -222,70 +223,70 @@ class EntityBossEnderEye(type: EntityType<EntityBossEnderEye>, world: World) : E
 		experienceValue = 50
 	}
 	
-	private fun updateDemonLevelAttributes(){
+	private fun updateDemonLevelAttributes() {
 		getAttribute(ATTACK_DAMAGE).baseValue = 4.0 * damageMultiplier
 		experienceValue = (50 * experienceMultiplier).floorToInt()
 	}
 	
-	override fun createSpawnPacket(): IPacket<*>{
+	override fun createSpawnPacket(): IPacket<*> {
 		return NetworkHooks.getEntitySpawningPacket(this)
 	}
 	
-	override fun livingTick(){
+	override fun livingTick() {
 		val isSleeping = isSleeping
 		
-		if (world.isRemote){
+		if (world.isRemote) {
 			val currentArmAngle = clientArmAngle.currentValue
-			val targetArmAngle = when(armPosition){
+			val targetArmAngle = when(armPosition) {
 				ARMS_ATTACK -> rotationPitch - 180F
-				ARMS_HUG -> rotationPitch - 90F
-				else -> 0F
+				ARMS_HUG    -> rotationPitch - 90F
+				else        -> 0F
 			}
 			
-			if (abs(targetArmAngle - currentArmAngle) < 5F){
+			if (abs(targetArmAngle - currentArmAngle) < 5F) {
 				clientArmAngle.update(targetArmAngle)
 			}
-			else{
+			else {
 				clientArmAngle.update(currentArmAngle + ((targetArmAngle - currentArmAngle) * 0.6F).coerceIn(-25F, 25F))
 			}
 		}
-		else{
-			if (bossPhase === Sleeping){
+		else {
+			if (bossPhase === Sleeping) {
 				health = min(health + 0.2F, realMaxHealth)
 				bossInfo.isVisible = health < realMaxHealth
 			}
-			else{
+			else {
 				bossInfo.isVisible = bossPhase !== Hibernated
 			}
 			
 			bossInfo.percent = health / maxHealth
 			
-			if (ticksExisted == 1){
+			if (ticksExisted == 1) {
 				updateDemonLevelAttributes()
 			}
 			
 			val currentTarget = attackTarget
 			
-			if (currentTarget == null){
+			if (currentTarget == null) {
 				navigator.clearPath()
 				motion = motion.scale(0.9)
 				
-				if (!isSleeping && (bossPhase is Attacking && ++fallAsleepTimer > rand.nextInt(35, 75))){
+				if (!isSleeping && (bossPhase is Attacking && ++fallAsleepTimer > rand.nextInt(35, 75))) {
 					fallAsleep()
 				}
 			}
-			else if (!currentTarget.isAlive || (currentTarget is EntityPlayer && (currentTarget.isCreative || currentTarget.isSpectator))){
+			else if (!currentTarget.isAlive || (currentTarget is EntityPlayer && (currentTarget.isCreative || currentTarget.isSpectator))) {
 				attackTarget = null
 				setRotateTarget(null)
 			}
-			else{
+			else {
 				val distanceFromTargetSq = getDistanceSq(currentTarget)
 				
-				if (distanceFromTargetSq > square(getAttribute(FOLLOW_RANGE).value * 0.75)){
+				if (distanceFromTargetSq > square(getAttribute(FOLLOW_RANGE).value * 0.75)) {
 					val closerRange = getAttribute(FOLLOW_RANGE).value * 0.375
 					val closerCandidate = rand.nextItemOrNull(world.selectVulnerableEntities.inRange<EntityPlayer>(posVec, closerRange).filter(::canEntityBeSeen))
 					
-					if (closerCandidate != null){
+					if (closerCandidate != null) {
 						attackTarget = closerCandidate
 					}
 				}
@@ -294,12 +295,12 @@ class EntityBossEnderEye(type: EntityType<EntityBossEnderEye>, world: World) : E
 			bossPhase = bossPhase.tick(this)
 			spawnerParticles.tick()
 			
-			if (isSleepingClientProp != isSleeping){
+			if (isSleepingClientProp != isSleeping) {
 				isSleepingClientProp = isSleeping
 			}
 		}
 		
-		if (!isSleeping){
+		if (!isSleeping) {
 			slerpLookController.setRotationParams(rotateTargetSpeed, if (eyeState == EYE_LASER) 1F else 5F)
 			
 			rotateTargetId.takeIf { it != Int.MIN_VALUE }?.let(world::getEntityByID)?.let {
@@ -313,22 +314,22 @@ class EntityBossEnderEye(type: EntityType<EntityBossEnderEye>, world: World) : E
 	
 	// Spawning
 	
-	override fun onAddedToWorld(){
+	override fun onAddedToWorld() {
 		super.onAddedToWorld()
 		rotationYawHead = rotationYaw
 	}
 	
-	override fun onInitialSpawn(world: IWorld, difficulty: DifficultyInstance, reason: SpawnReason, data: ILivingEntityData?, nbt: CompoundNBT?): ILivingEntityData?{
+	override fun onInitialSpawn(world: IWorld, difficulty: DifficultyInstance, reason: SpawnReason, data: ILivingEntityData?, nbt: CompoundNBT?): ILivingEntityData? {
 		val yaw = ((rotationYaw + 45F).toInt() / 90) * 90F
 		setPositionAndRotation(posX, posY, posZ, yaw, 0F)
 		
 		return super.onInitialSpawn(world, difficulty, reason, data, nbt)
 	}
 	
-	private fun wakeUp(source: DamageSource){
+	private fun wakeUp(source: DamageSource) {
 		val phase = bossPhase as? SleepingPhase ?: return
 		
-		if (towerCenterPos == null){
+		if (towerCenterPos == null) {
 			towerCenterPos = Pos(this).down(2).offset(horizontalFacing, 3)
 		}
 		
@@ -342,7 +343,7 @@ class EntityBossEnderEye(type: EntityType<EntityBossEnderEye>, world: World) : E
 		return
 	}
 	
-	private fun fallAsleep(){
+	private fun fallAsleep() {
 		eyeState = EYE_CLOSED
 		armPosition = ARMS_LIMP
 		attackTarget = null
@@ -350,13 +351,13 @@ class EntityBossEnderEye(type: EntityType<EntityBossEnderEye>, world: World) : E
 		setRotateTarget(null)
 	}
 	
-	fun updateDemonLevel(newLevel: Byte){
+	fun updateDemonLevel(newLevel: Byte) {
 		demonLevel = newLevel
 		updateDemonLevelAttributes()
 	}
 	
-	fun resetToSpawnAfterTerritoryReloads(spawnPoint: BlockPos){
-		if (bossPhase is Attacking || bossPhase === Sleeping){
+	fun resetToSpawnAfterTerritoryReloads(spawnPoint: BlockPos) {
+		if (bossPhase is Attacking || bossPhase === Sleeping) {
 			fallAsleep()
 			health = realMaxHealth
 			
@@ -369,20 +370,20 @@ class EntityBossEnderEye(type: EntityType<EntityBossEnderEye>, world: World) : E
 		}
 	}
 	
-	override fun canDespawn(distanceToClosestPlayerSq: Double): Boolean{
+	override fun canDespawn(distanceToClosestPlayerSq: Double): Boolean {
 		return false
 	}
 	
-	override fun preventDespawn(): Boolean{
+	override fun preventDespawn(): Boolean {
 		return true
 	}
 	
 	// Battle
 	
-	fun forceFindNewTarget(): EntityLivingBase?{
+	fun forceFindNewTarget(): EntityLivingBase? {
 		val attacker = revengeTarget as? EntityPlayer
 		
-		if (attacker != null){
+		if (attacker != null) {
 			revengeTarget = null
 			return attacker
 		}
@@ -393,20 +394,20 @@ class EntityBossEnderEye(type: EntityType<EntityBossEnderEye>, world: World) : E
 		return rng.nextItemOrNull(targets).also { attackTarget = it }
 	}
 	
-	override fun setAttackTarget(newTarget: EntityLivingBase?){
+	override fun setAttackTarget(newTarget: EntityLivingBase?) {
 		super.setAttackTarget(newTarget)
 		
-		if (attackTarget != null){
+		if (attackTarget != null) {
 			fallAsleepTimer = 0
 		}
 	}
 	
-	fun setRotateTarget(target: EntityLivingBase?, speed: Float = DEFAULT_SLERP_ADJUSTMENT_SPEED){
+	fun setRotateTarget(target: EntityLivingBase?, speed: Float = DEFAULT_SLERP_ADJUSTMENT_SPEED) {
 		rotateTargetId = target?.entityId ?: Int.MIN_VALUE
 		rotateTargetSpeed = speed
 	}
 	
-	override fun attackEntityAsMob(entity: Entity): Boolean{
+	override fun attackEntityAsMob(entity: Entity): Boolean {
 		val attack = (bossPhase as? Attacking)?.currentAttack ?: return false
 		
 		lastHitKnockbackMultiplier = attack.dealtKnockbackMultiplier
@@ -416,9 +417,9 @@ class EntityBossEnderEye(type: EntityType<EntityBossEnderEye>, world: World) : E
 		return type.dealToFrom(amount, entity, this)
 	}
 	
-	override fun attackEntityFrom(source: DamageSource, amount: Float): Boolean{
-		if (isInvulnerableTo(source) || amount < 6F){
-			if (source.immediateSource is EntityPlayer || source.isProjectile){
+	override fun attackEntityFrom(source: DamageSource, amount: Float): Boolean {
+		if (isInvulnerableTo(source) || amount < 6F) {
+			if (source.immediateSource is EntityPlayer || source.isProjectile) {
 				playSound(ModSounds.MOB_ENDER_EYE_HIT_FAIL, 0.8F, rand.nextFloat(0.6F, 0.8F))
 			}
 			
@@ -427,13 +428,13 @@ class EntityBossEnderEye(type: EntityType<EntityBossEnderEye>, world: World) : E
 		
 		wakeUp(source)
 		
-		if ((isDemonEye || eyeState == EYE_LASER) && (amount < 8.5F || !PotionBanishment.canBanish(this, source))){
+		if ((isDemonEye || eyeState == EYE_LASER) && (amount < 8.5F || !PotionBanishment.canBanish(this, source))) {
 			playSound(ModSounds.MOB_ENDER_EYE_HIT_FAIL, 1F, rand.nextFloat(1F, 1.7F))
 			return false
 		}
 		
-		if (bossPhase is Attacking && super.attackEntityFrom(source, amount - 2F)){
-			if (knockbackDashChance > 2 && world.totalTime - lastKnockbackDashTime >= 50L && rand.nextInt(3) != 0){
+		if (bossPhase is Attacking && super.attackEntityFrom(source, amount - 2F)) {
+			if (knockbackDashChance > 2 && world.totalTime - lastKnockbackDashTime >= 50L && rand.nextInt(3) != 0) {
 				knockbackDashChance--
 			}
 			
@@ -443,38 +444,38 @@ class EntityBossEnderEye(type: EntityType<EntityBossEnderEye>, world: World) : E
 		return false
 	}
 	
-	override fun isInvulnerableTo(source: DamageSource): Boolean{
+	override fun isInvulnerableTo(source: DamageSource): Boolean {
 		return super.isInvulnerableTo(source) || source.isProjectile || source.immediateSource !is EntityPlayer
 	}
 	
-	fun performBlastKnockback(target: Entity, strength: Float){
+	fun performBlastKnockback(target: Entity, strength: Float) {
 		val ratio = Vec3.xz(target.posX, target.posZ).directionTowards(Vec3.xz(posX, posZ)).scale(strength)
 		
-		if (target is EntityLivingBase){
+		if (target is EntityLivingBase) {
 			target.knockBack(this, strength, ratio.x, ratio.z)
 			
-			if (target is EntityPlayer){
+			if (target is EntityPlayer) {
 				PacketClientLaunchInstantly(target, target.motion).sendToPlayer(target)
 			}
 		}
-		else{
+		else {
 			target.addVelocity(ratio.x, strength.toDouble(), ratio.z)
 		}
 	}
 	
-	fun getLaserHit(partialTicks: Float): Vec3d{
+	fun getLaserHit(partialTicks: Float): Vec3d {
 		return entity.pick(LASER_DISTANCE, partialTicks, false).hitVec
 	}
 	
-	fun getLaserLength(partialTicks: Float): Float{
+	fun getLaserLength(partialTicks: Float): Float {
 		return getLaserHit(partialTicks).distanceTo(getEyePosition(partialTicks)).toFloat()
 	}
 	
-	override fun onDeath(cause: DamageSource){
+	override fun onDeath(cause: DamageSource) {
 		val wasDead = dead
 		super.onDeath(cause)
 		
-		if (!wasDead && dead && !world.isRemote){
+		if (!wasDead && dead && !world.isRemote) {
 			val centerPos = towerCenterPos!!
 			
 			// TODO screech
@@ -488,54 +489,54 @@ class EntityBossEnderEye(type: EntityType<EntityBossEnderEye>, world: World) : E
 	
 	// Movement
 	
-	override fun createNavigator(world: World): PathNavigator{
+	override fun createNavigator(world: World): PathNavigator {
 		return PathNavigateFlyingPreferBeeLineOrStrafe(this, world)
 	}
 	
-	override fun createBodyController(): BodyController{
+	override fun createBodyController(): BodyController {
 		return EntityBodyHeadOnly(this)
 	}
 	
-	override fun moveRelative(friction: Float, dir: Vec3d){
+	override fun moveRelative(friction: Float, dir: Vec3d) {
 		super.moveRelative(EntityMoveFlyingForward.AIR_FRICTION, dir)
 	}
 	
-	override fun canBePushed(): Boolean{
+	override fun canBePushed(): Boolean {
 		return false
 	}
 	
-	override fun getPushReaction(): PushReaction{
+	override fun getPushReaction(): PushReaction {
 		return PushReaction.BLOCK
 	}
 	
-	override fun getCollisionBoundingBox(): AxisAlignedBB?{
+	override fun getCollisionBoundingBox(): AxisAlignedBB? {
 		return boundingBox.takeIf { isAlive && isSleeping }
 	}
 	
-	override fun collideWithEntity(entity: Entity){}
-	override fun applyEntityCollision(entity: Entity){}
+	override fun collideWithEntity(entity: Entity) {}
+	override fun applyEntityCollision(entity: Entity) {}
 	
-	override fun addVelocity(x: Double, y: Double, z: Double){
+	override fun addVelocity(x: Double, y: Double, z: Double) {
 		super.addVelocity(x * KNOCKBACK_MP, y * KNOCKBACK_MP, z * KNOCKBACK_MP)
 	}
 	
-	override fun knockBack(entity: Entity, strength: Float, xRatio: Double, zRatio: Double){
+	override fun knockBack(entity: Entity, strength: Float, xRatio: Double, zRatio: Double) {
 		val bossPhase = bossPhase
 		
-		if (isSleeping || bossPhase !is Attacking || !bossPhase.currentAttack.canTakeKnockback){
+		if (isSleeping || bossPhase !is Attacking || !bossPhase.currentAttack.canTakeKnockback) {
 			return
 		}
 		
-		if (bossPhase.currentAttack is Melee && rand.nextInt(knockbackDashChance) == 0 && lastKnockbackDashTime != world.totalTime){
+		if (bossPhase.currentAttack is Melee && rand.nextInt(knockbackDashChance) == 0 && lastKnockbackDashTime != world.totalTime) {
 			super.knockBack(entity, strength * 1.4F, xRatio, zRatio)
 			bossPhase.currentAttack = KnockbackDash()
 			knockbackDashChance = 7
 			lastKnockbackDashTime = world.totalTime
 		}
-		else if (!ForgeHooks.onLivingKnockBack(this, entity, strength, xRatio, zRatio).isCanceled){
+		else if (!ForgeHooks.onLivingKnockBack(this, entity, strength, xRatio, zRatio).isCanceled) {
 			motion = motion.add(Vec3.xz(-xRatio, -zRatio).normalize().scale(KNOCKBACK_MP).withY(0.005))
 			
-			if (motionY > 0.05){
+			if (motionY > 0.05) {
 				motionY = 0.05
 			}
 		}
@@ -543,51 +544,51 @@ class EntityBossEnderEye(type: EntityType<EntityBossEnderEye>, world: World) : E
 	
 	// Boss info
 	
-	override fun addTrackingPlayer(player: EntityPlayerMP){
+	override fun addTrackingPlayer(player: EntityPlayerMP) {
 		super.addTrackingPlayer(player)
 		bossInfo.addPlayer(player)
 	}
 	
-	override fun removeTrackingPlayer(player: EntityPlayerMP){
+	override fun removeTrackingPlayer(player: EntityPlayerMP) {
 		super.removeTrackingPlayer(player)
 		bossInfo.removePlayer(player)
 	}
 	
-	override fun setCustomName(name: ITextComponent?){
+	override fun setCustomName(name: ITextComponent?) {
 		super.setCustomName(name)
 		bossInfo.name = displayName
 	}
 	
 	// Client (disable server-side rotation and tweak render distance)
 	
-	private fun isRotationDelegatedToServer(): Boolean{
+	private fun isRotationDelegatedToServer(): Boolean {
 		return rotateTargetId == Int.MIN_VALUE
 	}
 	
 	@Sided(Side.CLIENT)
-	override fun setPositionAndRotationDirect(x: Double, y: Double, z: Double, yaw: Float, pitch: Float, posRotationIncrements: Int, teleport: Boolean){
-		if (isRotationDelegatedToServer()){
+	override fun setPositionAndRotationDirect(x: Double, y: Double, z: Double, yaw: Float, pitch: Float, posRotationIncrements: Int, teleport: Boolean) {
+		if (isRotationDelegatedToServer()) {
 			super.setPositionAndRotationDirect(x, y, z, yaw, pitch, posRotationIncrements, teleport)
 		}
-		else{
+		else {
 			setPosition(x, y, z)
 		}
 	}
 	
 	@Sided(Side.CLIENT)
-	override fun setHeadRotation(yaw: Float, pitch: Int){
-		if (isRotationDelegatedToServer()){
+	override fun setHeadRotation(yaw: Float, pitch: Int) {
+		if (isRotationDelegatedToServer()) {
 			super.setHeadRotation(yaw, pitch)
 		}
 	}
 	
 	@Sided(Side.CLIENT)
-	override fun isInRangeToRenderDist(distance: Double): Boolean{
+	override fun isInRangeToRenderDist(distance: Double): Boolean {
 		return eyeState == EYE_LASER || super.isInRangeToRenderDist(distance)
 	}
 	
 	@Sided(Side.CLIENT)
-	override fun getRenderBoundingBox(): AxisAlignedBB{
+	override fun getRenderBoundingBox(): AxisAlignedBB {
 		return if (eyeState == EYE_LASER)
 			super.getRenderBoundingBox().grow(LASER_DISTANCE)
 		else
@@ -596,26 +597,26 @@ class EntityBossEnderEye(type: EntityType<EntityBossEnderEye>, world: World) : E
 	
 	// Properties
 	
-	override fun getLootTable(): ResourceLocation{
+	override fun getLootTable(): ResourceLocation {
 		return Resource.Custom("entities/ender_eye") // TODO demon eye
 	}
 	
-	override fun getCreatureAttribute(): CreatureAttribute{
+	override fun getCreatureAttribute(): CreatureAttribute {
 		return if (isDemonEye)
 			CustomCreatureType.DEMON
 		else
 			CustomCreatureType.ENDER
 	}
 	
-	override fun getStandingEyeHeight(pose: Pose, size: EntitySize): Float{
+	override fun getStandingEyeHeight(pose: Pose, size: EntitySize): Float {
 		return size.height * 0.5F
 	}
 	
-	override fun isSleeping(): Boolean{
+	override fun isSleeping(): Boolean {
 		return if (world.isRemote) isSleepingClientProp else bossPhase is SleepingPhase
 	}
 	
-	override fun isNonBoss(): Boolean{
+	override fun isNonBoss(): Boolean {
 		return false
 	}
 	
@@ -635,7 +636,7 @@ class EntityBossEnderEye(type: EntityType<EntityBossEnderEye>, world: World) : E
 		putBoolean(SLEEPING_TAG, isSleeping)
 		putByte(DEMON_LEVEL_TAG, demonLevel)
 		
-		putString(PHASE_TAG, when(bossPhase){
+		putString(PHASE_TAG, when(bossPhase) {
 			Hibernated   -> "Hibernated"
 			is OpenEye   -> "OpenEye"
 			is Spawners  -> "Spawners"
@@ -659,7 +660,7 @@ class EntityBossEnderEye(type: EntityType<EntityBossEnderEye>, world: World) : E
 		realMaxHealth = getFloat(REAL_MAX_HEALTH_TAG)
 		demonLevel = getByte(DEMON_LEVEL_TAG)
 		
-		bossPhase = when(getString(PHASE_TAG)){
+		bossPhase = when(getString(PHASE_TAG)) {
 			"Hibernated" -> Hibernated
 			"OpenEye"    -> OpenEye()
 			"Spawners"   -> Spawners(mutableListOf(), mutableListOf(), mutableListOf(), 0)

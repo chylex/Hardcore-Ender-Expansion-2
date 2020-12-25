@@ -1,4 +1,5 @@
 package chylex.hee.game.world.territory
+
 import chylex.hee.HEE
 import chylex.hee.client.MC
 import chylex.hee.game.block.BlockAbstractPortal
@@ -41,7 +42,7 @@ import kotlin.math.sqrt
 import kotlin.streams.toList
 
 @SubscribeAllEvents(modid = HEE.ID)
-object TerritoryVoid{
+object TerritoryVoid {
 	const val OUTSIDE_VOID_FACTOR = -1F
 	const val INSTANT_DEATH_FACTOR = 3F
 	
@@ -50,7 +51,7 @@ object TerritoryVoid{
 	
 	val CLIENT_VOID_DATA = VoidData {}
 	
-	private fun intersectEllipsoidEdge(center: Vec3d, point: Vec3d, xzRadius: Float, yRadius: Float): Vec3d?{
+	private fun intersectEllipsoidEdge(center: Vec3d, point: Vec3d, xzRadius: Float, yRadius: Float): Vec3d? {
 		val xzRadSq = square(xzRadius)
 		val yRadSq = square(yRadius)
 		
@@ -59,13 +60,13 @@ object TerritoryVoid{
 		val a = (square(dir.x) / xzRadSq) + (square(dir.y) / yRadSq) + (square(dir.z) / xzRadSq)
 		val d = 4 * a // (-4) * a * (-1)
 		
-		if (d < 0.0){
+		if (d < 0.0) {
 			return null
 		}
 		
 		val dSqrt = sqrt(d)
 		val hit1 = -dSqrt / (2 * a)
-		val hit2 =  dSqrt / (2 * a)
+		val hit2 = +dSqrt / (2 * a)
 		
 		return center.add(dir.scale(max(hit1, hit2)))
 	}
@@ -73,10 +74,10 @@ object TerritoryVoid{
 	/**
 	 * Returns a value between -1 and infinity, representing signed distance from the edge of the territory's void, where negative values are safely inside the territory.
 	 */
-	private fun getVoidFactorInternal(world: World, point: Vec3d): Float{
+	private fun getVoidFactorInternal(world: World, point: Vec3d): Float {
 		val instance = TerritoryInstance.fromPos(point.x.floorToInt(), point.z.floorToInt())
 		
-		if (instance == null){
+		if (instance == null) {
 			return OUTSIDE_VOID_FACTOR
 		}
 		
@@ -94,7 +95,7 @@ object TerritoryVoid{
 		else
 			TerritoryGlobalStorage.get().forInstance(instance)?.getComponent<VoidData>()?.voidFactor ?: OUTSIDE_VOID_FACTOR
 		
-		if (edge == null){
+		if (edge == null) {
 			return outsideVoidFactor
 		}
 		
@@ -104,16 +105,16 @@ object TerritoryVoid{
 		return max(outsideVoidFactor, factor)
 	}
 	
-	fun getVoidFactor(world: World, point: Vec3d): Float{
-		if (world.dimension.type !== HEE.dim){
+	fun getVoidFactor(world: World, point: Vec3d): Float {
+		if (world.dimension.type !== HEE.dim) {
 			return OUTSIDE_VOID_FACTOR
 		}
 		
 		return getVoidFactorInternal(world, point)
 	}
 	
-	fun getVoidFactor(entity: Entity): Float{
-		if (entity.dimension !== HEE.dim){
+	fun getVoidFactor(entity: Entity): Float {
+		if (entity.dimension !== HEE.dim) {
 			return OUTSIDE_VOID_FACTOR
 		}
 		
@@ -127,35 +128,35 @@ object TerritoryVoid{
 	private val FACTOR_DAMAGE_REMAP_FROM = (0.5F)..(3.0F)
 	private val DAMAGE = Damage(DEAL_CREATIVE, IGNORE_INVINCIBILITY())
 	
-	fun onWorldTick(world: ServerWorld){
-		if (world.totalTime % 3L != 0L){
+	fun onWorldTick(world: ServerWorld) {
+		if (world.totalTime % 3L != 0L) {
 			return
 		}
 		
-		for(entity in world.entities.toList()){
+		for(entity in world.entities.toList()) {
 			val factor = getVoidFactorInternal(world, entity.posVec)
 			
-			if (factor < 0F){
+			if (factor < 0F) {
 				continue
 			}
 			
-			if (factor >= INSTANT_DEATH_FACTOR){
+			if (factor >= INSTANT_DEATH_FACTOR) {
 				DAMAGE.dealTo(Float.MAX_VALUE, entity, TITLE_WITHER)
 				continue
 			}
 			
-			if (entity !is EntityLivingBase || Pos(entity).getBlock(world) is BlockAbstractPortal){ // protecting entities inside portals should help with server lag frustrations
+			if (entity !is EntityLivingBase || Pos(entity).getBlock(world) is BlockAbstractPortal) { // protecting entities inside portals should help with server lag frustrations
 				continue
 			}
 			
-			with(entity.heeTag){
+			with(entity.heeTag) {
 				val currentTime = world.totalTime
 				val nextDamageTime = getLong(PLAYER_NEXT_DAMAGE_TIME_TAG)
 				
-				if (currentTime >= nextDamageTime){
+				if (currentTime >= nextDamageTime) {
 					val amount = remapRange(factor, FACTOR_DAMAGE_REMAP_FROM, (2F)..(6F)).ceilToInt().toFloat()
 					
-					if (DAMAGE.dealTo(amount, entity, TITLE_WITHER)){
+					if (DAMAGE.dealTo(amount, entity, TITLE_WITHER)) {
 						val cooldown = min(30, remapRange(factor, FACTOR_DAMAGE_REMAP_FROM, (30F)..(6F)).floorToInt())
 						putLong(PLAYER_NEXT_DAMAGE_TIME_TAG, currentTime + cooldown)
 					}
@@ -167,8 +168,8 @@ object TerritoryVoid{
 	// Event handling
 	
 	@SubscribeEvent(EventPriority.HIGHEST)
-	fun onPlayerDamage(e: LivingDamageEvent){
-		if (e.source === DamageSource.OUT_OF_WORLD && e.amount < Float.MAX_VALUE && e.entity.let { it is EntityLivingBase && it.dimension === HEE.dim }){
+	fun onPlayerDamage(e: LivingDamageEvent) {
+		if (e.source === DamageSource.OUT_OF_WORLD && e.amount < Float.MAX_VALUE && e.entity.let { it is EntityLivingBase && it.dimension === HEE.dim }) {
 			e.isCanceled = true // delegate out of world damage to custom void damage handling
 		}
 	}
@@ -176,7 +177,7 @@ object TerritoryVoid{
 	// Debug
 	
 	@Sided(Side.CLIENT)
-	private fun debugEllipsoidEdge(){
+	private fun debugEllipsoidEdge() {
 		val player = MC.player ?: return
 		val instance = TerritoryInstance.fromPos(player) ?: return
 		val rand = player.rng
@@ -193,11 +194,11 @@ object TerritoryVoid{
 			maxRange = 128.0
 		)
 		
-		repeat(1000){
+		repeat(1000) {
 			val pos = player.posVec.add(rand.nextFloat(-64.0, 64.0), rand.nextFloat(-64.0, 64.0), rand.nextFloat(-64.0, 64.0))
 			val edge = intersectEllipsoidEdge(center, pos, xzRadius, yRadius)
 			
-			if (edge != null){
+			if (edge != null) {
 				spawner.spawn(Point(edge, 1), rand)
 			}
 		}

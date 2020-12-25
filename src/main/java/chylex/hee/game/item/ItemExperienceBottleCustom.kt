@@ -1,4 +1,5 @@
 package chylex.hee.game.item
+
 import chylex.hee.game.entity.posVec
 import chylex.hee.game.entity.projectile.EntityProjectileExperienceBottle
 import chylex.hee.game.inventory.heeTag
@@ -27,35 +28,35 @@ import net.minecraft.util.text.TranslationTextComponent
 import net.minecraft.world.World
 import kotlin.math.min
 
-class ItemExperienceBottleCustom(builder: Properties) : ItemExpBottle(builder){
-	companion object{
+class ItemExperienceBottleCustom(builder: Properties) : ItemExpBottle(builder) {
+	companion object {
 		private const val EXPERIENCE_TAG = "Experience"
 		
 		const val MAX_EXPERIENCE = 25
 	}
 	
-	private fun setExperienceAmount(stack: ItemStack, amount: Int){
-		if (amount == 0){
+	private fun setExperienceAmount(stack: ItemStack, amount: Int) {
+		if (amount == 0) {
 			stack.size = 0
 		}
-		else{
+		else {
 			stack.heeTag.putInt(EXPERIENCE_TAG, amount)
 		}
 	}
 	
-	fun getExperienceAmountPerItem(stack: ItemStack): Int{
+	fun getExperienceAmountPerItem(stack: ItemStack): Int {
 		return stack.heeTagOrNull?.getInt(EXPERIENCE_TAG) ?: 0
 	}
 	
-	fun isFullOfExperience(stack: ItemStack): Boolean{
+	fun isFullOfExperience(stack: ItemStack): Boolean {
 		return getExperienceAmountPerItem(stack) >= MAX_EXPERIENCE
 	}
 	
-	fun createBottles(experience: Int): List<ItemStack>{
+	fun createBottles(experience: Int): List<ItemStack> {
 		val stacks = mutableListOf<ItemStack>()
 		var remaining = experience
 		
-		while(remaining > 0){
+		while(remaining > 0) {
 			val xp = min(remaining, MAX_EXPERIENCE)
 			
 			remaining -= xp
@@ -65,8 +66,8 @@ class ItemExperienceBottleCustom(builder: Properties) : ItemExpBottle(builder){
 		return stacks
 	}
 	
-	fun mergeBottles(from: ItemStack, into: ItemStack): Boolean{
-		if (from.size != 1 || into.size != 1){
+	fun mergeBottles(from: ItemStack, into: ItemStack): Boolean {
+		if (from.size != 1 || into.size != 1) {
 			return false
 		}
 		
@@ -74,7 +75,7 @@ class ItemExperienceBottleCustom(builder: Properties) : ItemExpBottle(builder){
 		val xpInto = getExperienceAmountPerItem(into)
 		val mergedAmount = min(xpFrom, MAX_EXPERIENCE - xpInto)
 		
-		if (mergedAmount == 0){
+		if (mergedAmount == 0) {
 			return false
 		}
 		
@@ -83,23 +84,23 @@ class ItemExperienceBottleCustom(builder: Properties) : ItemExpBottle(builder){
 		return true
 	}
 	
-	override fun getTranslationKey(): String{
+	override fun getTranslationKey(): String {
 		return Items.EXPERIENCE_BOTTLE.translationKey
 	}
 	
-	override fun getRarity(stack: ItemStack): Rarity{
+	override fun getRarity(stack: ItemStack): Rarity {
 		return Rarity.UNCOMMON
 	}
 	
-	override fun onItemRightClick(world: World, player: EntityPlayer, hand: Hand): ActionResult<ItemStack>{
+	override fun onItemRightClick(world: World, player: EntityPlayer, hand: Hand): ActionResult<ItemStack> {
 		val heldItem = player.getHeldItem(hand)
 		val originalItem = heldItem.copy()
 		
-		if (!player.abilities.isCreativeMode){
+		if (!player.abilities.isCreativeMode) {
 			heldItem.shrink(1)
 		}
 		
-		if (!world.isRemote){
+		if (!world.isRemote) {
 			world.addEntity(EntityProjectileExperienceBottle(player, originalItem))
 			Sounds.ENTITY_EXPERIENCE_BOTTLE_THROW.playServer(world, player.posVec, SoundCategory.NEUTRAL, volume = 0.5F, pitch = 0.4F / random.nextFloat(0.8F, 1.2F))
 		}
@@ -109,10 +110,10 @@ class ItemExperienceBottleCustom(builder: Properties) : ItemExpBottle(builder){
 		return ActionResult(SUCCESS, heldItem)
 	}
 	
-	override fun fillItemGroup(tab: ItemGroup, items: NonNullList<ItemStack>){}
+	override fun fillItemGroup(tab: ItemGroup, items: NonNullList<ItemStack>) {}
 	
 	@Sided(Side.CLIENT)
-	override fun addInformation(stack: ItemStack, world: World?, lines: MutableList<ITextComponent>, flags: ITooltipFlag){
+	override fun addInformation(stack: ItemStack, world: World?, lines: MutableList<ITextComponent>, flags: ITooltipFlag) {
 		lines.add(TranslationTextComponent("item.hee.experience_bottle.tooltip", getExperienceAmountPerItem(stack)))
 	}
 }

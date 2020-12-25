@@ -1,4 +1,5 @@
 package chylex.hee.client.render.block
+
 import chylex.hee.game.block.BlockAbstractPortal
 import chylex.hee.game.block.BlockVoidPortalInner.Companion.TYPE
 import chylex.hee.game.block.BlockVoidPortalInner.ITerritoryInstanceFactory
@@ -20,9 +21,9 @@ import net.minecraft.util.math.BlockPos
 import net.minecraft.world.World
 
 @Sided(Side.CLIENT)
-class RenderTileVoidPortal(dispatcher: TileEntityRendererDispatcher) : RenderTileAbstractPortal<TileEntityPortalInner.Void, IVoidPortalController>(dispatcher){
-	private object ActiveReturnController : IVoidPortalController{
-		override val currentInstanceFactory = object : ITerritoryInstanceFactory{
+class RenderTileVoidPortal(dispatcher: TileEntityRendererDispatcher) : RenderTileAbstractPortal<TileEntityPortalInner.Void, IVoidPortalController>(dispatcher) {
+	private object ActiveReturnController : IVoidPortalController {
+		override val currentInstanceFactory = object : ITerritoryInstanceFactory {
 			override val territory = THE_HUB_INSTANCE.territory
 			override fun create(entity: Entity) = THE_HUB_INSTANCE
 		}
@@ -31,17 +32,17 @@ class RenderTileVoidPortal(dispatcher: TileEntityRendererDispatcher) : RenderTil
 		override val clientPortalOffset = LerpedFloat(0F)
 	}
 	
-	override fun findController(world: World, pos: BlockPos) = when(pos.getState(world).takeIf { it.block === ModBlocks.VOID_PORTAL_INNER }?.get(TYPE)){
-		HUB -> pos.closestTickingTile<TileEntityVoidPortalStorage>(world, BlockAbstractPortal.MAX_DISTANCE_FROM_FRAME)
+	override fun findController(world: World, pos: BlockPos) = when(pos.getState(world).takeIf { it.block === ModBlocks.VOID_PORTAL_INNER }?.get(TYPE)) {
+		HUB           -> pos.closestTickingTile<TileEntityVoidPortalStorage>(world, BlockAbstractPortal.MAX_DISTANCE_FROM_FRAME)
 		RETURN_ACTIVE -> ActiveReturnController
-		else -> null
+		else          -> null
 	}
 	
-	override fun generateSeed(controller: IVoidPortalController): Long{
+	override fun generateSeed(controller: IVoidPortalController): Long {
 		return controller.currentInstanceFactory?.territory?.desc?.colors?.portalSeed ?: 0L
 	}
 	
-	override fun generateNextColor(controller: IVoidPortalController, layer: Int){
+	override fun generateNextColor(controller: IVoidPortalController, layer: Int) {
 		controller.currentInstanceFactory?.territory?.desc?.colors?.nextPortalColor(rand, color)
 	}
 }

@@ -1,15 +1,16 @@
 package chylex.hee.game.container.slot
+
 import chylex.hee.game.block.entity.TileEntityBrewingStandCustom
 import chylex.hee.init.ModItems
 import net.minecraft.inventory.container.Slot
 import net.minecraft.item.ItemStack
 
-class SlotBrewingReagent(wrapped: Slot, private val isEnhanced: Boolean) : SlotWrapper(wrapped){
-	override fun isItemValid(stack: ItemStack): Boolean{
+class SlotBrewingReagent(wrapped: Slot, private val isEnhanced: Boolean) : SlotWrapper(wrapped) {
+	override fun isItemValid(stack: ItemStack): Boolean {
 		return TileEntityBrewingStandCustom.canInsertIntoReagentSlot(stack, isEnhanced)
 	}
 	
-	override fun getItemStackLimit(stack: ItemStack): Int{
+	override fun getItemStackLimit(stack: ItemStack): Int {
 		return if (stack.item === ModItems.AMELIOR)
 			1
 		else

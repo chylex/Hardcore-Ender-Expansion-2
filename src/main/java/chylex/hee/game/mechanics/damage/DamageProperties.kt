@@ -1,4 +1,5 @@
 package chylex.hee.game.mechanics.damage
+
 import chylex.hee.HEE
 import chylex.hee.game.entity.posVec
 import chylex.hee.system.forge.EventPriority
@@ -14,41 +15,41 @@ import net.minecraft.util.text.ITextComponent
 import net.minecraft.util.text.TranslationTextComponent
 import net.minecraftforge.event.entity.living.LivingDamageEvent
 
-class DamageProperties{
+class DamageProperties {
 	private var typeBits = 0
 	private var ignoreArmorAndConsequentlyShield = true // due to how vanilla handles unblockable damage, isUnblockable controls both armor and shield
 	private var ignoreShield = true
 	private var nonLethal = false
 	private var dealCreative = false
 	
-	private fun hasType(type: DamageType): Boolean{
+	private fun hasType(type: DamageType): Boolean {
 		return typeBits and (1 shl type.ordinal) != 0
 	}
 	
-	inner class Writer{
-		fun setAllowArmor(){
+	inner class Writer {
+		fun setAllowArmor() {
 			ignoreArmorAndConsequentlyShield = false
 		}
 		
-		fun setAllowArmorAndShield(){
+		fun setAllowArmorAndShield() {
 			ignoreArmorAndConsequentlyShield = false
 			ignoreShield = false
 		}
 		
-		fun setNonLethal(){
+		fun setNonLethal() {
 			nonLethal = true
 		}
 		
-		fun setDealCreative(){
+		fun setDealCreative() {
 			dealCreative = true
 		}
 		
-		fun addType(type: DamageType){
+		fun addType(type: DamageType) {
 			typeBits = typeBits or (1 shl type.ordinal)
 		}
 	}
 	
-	inner class Reader{
+	inner class Reader {
 		val ignoreArmor
 			get() = this@DamageProperties.ignoreArmorAndConsequentlyShield
 		
@@ -61,11 +62,11 @@ class DamageProperties{
 		val dealCreative
 			get() = this@DamageProperties.dealCreative
 		
-		fun hasType(type: DamageType): Boolean{
+		fun hasType(type: DamageType): Boolean {
 			return this@DamageProperties.hasType(type)
 		}
 		
-		fun createDamageSourceForCalculations(): DamageSource{
+		fun createDamageSourceForCalculations(): DamageSource {
 			return createDamageSource("", null, null)
 		}
 	}
@@ -74,7 +75,7 @@ class DamageProperties{
 	
 	fun createDamageSource(damageTitle: String, directSource: Entity?, remoteSource: Entity?): DamageSource = CustomDamageSource(damageTitle, directSource, remoteSource)
 	
-	private inner class CustomDamageSource(damageTitle: String, val directSource: Entity?, val remoteSource: Entity?) : DamageSource(damageTitle){
+	private inner class CustomDamageSource(damageTitle: String, val directSource: Entity?, val remoteSource: Entity?) : DamageSource(damageTitle) {
 		val isNonLethal
 			get() = nonLethal
 		
@@ -98,8 +99,8 @@ class DamageProperties{
 			else
 				directSource?.let(Entity::posVec)
 		
-		override fun getDeathMessage(victim: EntityLivingBase): ITextComponent{
-			if (directSource == null){
+		override fun getDeathMessage(victim: EntityLivingBase): ITextComponent {
+			if (directSource == null) {
 				return super.getDeathMessage(victim)
 			}
 			
@@ -119,12 +120,12 @@ class DamageProperties{
 	// Non-lethal damage handling
 	
 	@SubscribeAllEvents(modid = HEE.ID)
-	companion object{
+	companion object {
 		@SubscribeEvent(EventPriority.HIGHEST)
-		fun onLivingDamage(e: LivingDamageEvent){
+		fun onLivingDamage(e: LivingDamageEvent) {
 			val source = e.source as? CustomDamageSource ?: return
 			
-			if (source.isNonLethal){
+			if (source.isNonLethal) {
 				e.amount = e.amount.coerceIn(0F, e.entityLiving.health - 1F)
 			}
 		}

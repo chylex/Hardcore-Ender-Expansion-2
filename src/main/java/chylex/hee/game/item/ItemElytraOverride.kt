@@ -1,4 +1,5 @@
 package chylex.hee.game.item
+
 import chylex.hee.game.inventory.cleanupNBT
 import chylex.hee.game.inventory.heeTag
 import chylex.hee.game.inventory.heeTagOrNull
@@ -18,8 +19,8 @@ import net.minecraft.world.World
 import kotlin.math.min
 import kotlin.math.sqrt
 
-class ItemElytraOverride(properties: Properties) : ItemElytra(properties){
-	private companion object{
+class ItemElytraOverride(properties: Properties) : ItemElytra(properties) {
+	private companion object {
 		private const val COUNTER_TAG = "Counter"
 		private const val LAST_POS_TAG = "LastPos"
 		private const val X_TAG = "X"
@@ -32,14 +33,14 @@ class ItemElytraOverride(properties: Properties) : ItemElytra(properties){
 			it.putDouble(Z_TAG, entity.posZ)
 		}
 		
-		private fun calculateCounterIncrement(entity: Entity, lastPosTag: TagCompound): Float{
+		private fun calculateCounterIncrement(entity: Entity, lastPosTag: TagCompound): Float {
 			val distance = sqrt(entity.getDistanceSq(lastPosTag.getDouble(X_TAG), lastPosTag.getDouble(Y_TAG), lastPosTag.getDouble(Z_TAG)))
 			return sqrt(min(distance.toFloat(), 60F)) / 7.25F
 		}
 		
-		private fun removeFlightTrackingTags(stack: ItemStack){
-			with(stack.heeTagOrNull ?: return){
-				if (hasKey(COUNTER_TAG)){
+		private fun removeFlightTrackingTags(stack: ItemStack) {
+			with(stack.heeTagOrNull ?: return) {
+				if (hasKey(COUNTER_TAG)) {
 					remove(COUNTER_TAG)
 					remove(LAST_POS_TAG)
 					stack.cleanupNBT()
@@ -48,22 +49,22 @@ class ItemElytraOverride(properties: Properties) : ItemElytra(properties){
 		}
 	}
 	
-	override fun inventoryTick(stack: ItemStack, world: World, entity: Entity, itemSlot: Int, isSelected: Boolean){
-		if (world.isRemote || entity !is EntityPlayerMP){
+	override fun inventoryTick(stack: ItemStack, world: World, entity: Entity, itemSlot: Int, isSelected: Boolean) {
+		if (world.isRemote || entity !is EntityPlayerMP) {
 			return
 		}
 		
-		if (entity.isElytraFlying && stack === entity.getItemStackFromSlot(CHEST) && !entity.abilities.isCreativeMode){
+		if (entity.isElytraFlying && stack === entity.getItemStackFromSlot(CHEST) && !entity.abilities.isCreativeMode) {
 			stack.heeTag.use {
-				if (!hasKey(LAST_POS_TAG)){
+				if (!hasKey(LAST_POS_TAG)) {
 					putFloat(COUNTER_TAG, 0F)
 					put(LAST_POS_TAG, createPositionTag(entity))
 				}
-				else if (world.totalTime % 20L == 0L){
+				else if (world.totalTime % 20L == 0L) {
 					var newCounter = getFloat(COUNTER_TAG) + calculateCounterIncrement(entity, getCompound(LAST_POS_TAG))
 					val damageAfter = 1F + (0.33F * EnchantmentHelper.getEnchantmentLevel(Enchantments.UNBREAKING, stack))
 					
-					while(newCounter >= damageAfter && isUsable(stack)){
+					while(newCounter >= damageAfter && isUsable(stack)) {
 						newCounter -= damageAfter
 						
 						val newDamage = stack.damage + 1
@@ -77,13 +78,13 @@ class ItemElytraOverride(properties: Properties) : ItemElytra(properties){
 				}
 			}
 		}
-		else{
+		else {
 			removeFlightTrackingTags(stack)
 		}
 	}
 	
-	override fun setDamage(stack: ItemStack, damage: Int){
-		if (!stack.heeTagOrNull.hasKey(COUNTER_TAG)){ // prevent vanilla from damaging the item while flying
+	override fun setDamage(stack: ItemStack, damage: Int) {
+		if (!stack.heeTagOrNull.hasKey(COUNTER_TAG)) { // prevent vanilla from damaging the item while flying
 			super.setDamage(stack, damage)
 		}
 	}

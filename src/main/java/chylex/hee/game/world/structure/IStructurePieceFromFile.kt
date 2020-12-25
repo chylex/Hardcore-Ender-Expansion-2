@@ -1,7 +1,8 @@
 package chylex.hee.game.world.structure
+
 import chylex.hee.game.world.structure.palette.Palette
 
-interface IStructurePieceFromFile : IStructurePiece{
+interface IStructurePieceFromFile : IStructurePiece {
 	val path: String
 	val palette: Palette
 	val generator: IStructureGenerator
@@ -13,7 +14,7 @@ interface IStructurePieceFromFile : IStructurePiece{
 	@JvmDefault val centerY get() = size.centerY
 	@JvmDefault val centerZ get() = size.centerZ
 	
-	class Delegate(override val path: String, override val palette: Palette) : IStructurePieceFromFile{
+	class Delegate(override val path: String, override val palette: Palette) : IStructurePieceFromFile {
 		override val generator = StructureFiles.loadWithCache(path).Generator(palette.mappingForGeneration)
 		override val size = generator.size
 		

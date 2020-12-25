@@ -1,4 +1,5 @@
 package chylex.hee.game.entity.living.controller
+
 import chylex.hee.game.entity.motionX
 import chylex.hee.game.entity.motionZ
 import chylex.hee.system.math.toDegrees
@@ -11,9 +12,9 @@ import net.minecraft.util.math.MathHelper
 import kotlin.math.atan2
 import kotlin.math.sign
 
-class EntityMoveFlyingBat(entity: EntityLiving) : MovementController(entity){
-	override fun tick(){
-		if (action != MOVE_TO){
+class EntityMoveFlyingBat(entity: EntityLiving) : MovementController(entity) {
+	override fun tick() {
+		if (action != MOVE_TO) {
 			return
 		}
 		

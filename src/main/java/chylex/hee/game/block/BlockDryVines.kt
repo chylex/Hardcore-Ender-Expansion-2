@@ -1,4 +1,5 @@
 package chylex.hee.game.block
+
 import chylex.hee.client.MC
 import chylex.hee.client.render.block.IBlockLayerCutout
 import chylex.hee.game.block.properties.BlockBuilder
@@ -19,23 +20,23 @@ import net.minecraft.world.biome.Biomes
 import net.minecraft.world.server.ServerWorld
 import java.util.Random
 
-class BlockDryVines(builder: BlockBuilder) : BlockVine(builder.p), IBlockLayerCutout{
+class BlockDryVines(builder: BlockBuilder) : BlockVine(builder.p), IBlockLayerCutout {
 	
 	// Custom behavior
 	
-	override fun tick(state: BlockState, world: ServerWorld, pos: BlockPos, rand: Random){}
+	override fun tick(state: BlockState, world: ServerWorld, pos: BlockPos, rand: Random) {}
 	
-	override fun isLadder(state: BlockState, world: IWorldReader, pos: BlockPos, entity: EntityLivingBase): Boolean{
+	override fun isLadder(state: BlockState, world: IWorldReader, pos: BlockPos, entity: EntityLivingBase): Boolean {
 		return !entity.onGround
 	}
 	
 	// Client side
 	
 	@Sided(Side.CLIENT)
-	object Color : IBlockColor{
+	object Color : IBlockColor {
 		private val DEFAULT = dryify(FoliageColors.getDefault())
 		
-		private fun dryify(color: Int): Int{
+		private fun dryify(color: Int): Int {
 			val hsb = IntColor(color).asHSB
 			
 			return hsb.copy(
@@ -44,10 +45,10 @@ class BlockDryVines(builder: BlockBuilder) : BlockVine(builder.p), IBlockLayerCu
 			).i
 		}
 		
-		override fun getColor(state: BlockState, uselessWorld: ILightReader?, pos: BlockPos?, tintIndex: Int): Int{
+		override fun getColor(state: BlockState, uselessWorld: ILightReader?, pos: BlockPos?, tintIndex: Int): Int {
 			val world = MC.world
 			
-			if (world == null || pos == null){
+			if (world == null || pos == null) {
 				return DEFAULT
 			}
 			

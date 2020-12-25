@@ -1,22 +1,23 @@
 package chylex.hee.system.color
+
 import chylex.hee.system.color.IntColor.Companion.RGB
 import chylex.hee.system.math.floorToInt
 
-data class HSB(val hue: Float, val saturation: Float, val brightness: Float){
-	companion object{
-		fun fromRGB(rgb: IntColor): HSB{
+data class HSB(val hue: Float, val saturation: Float, val brightness: Float) {
+	companion object {
+		fun fromRGB(rgb: IntColor): HSB {
 			val (r, g, b) = rgb
 			
 			val min = minOf(r, g, b)
 			val max = maxOf(r, g, b)
 			
-			if (min == max){
+			if (min == max) {
 				return HSB(0F, 0F, 0F)
 			}
 			
 			val d = u(max - min)
 			
-			val h = when(max){
+			val h = when(max) {
 				r -> 0F + (u(g - b) / d)
 				g -> 2F + (u(b - r) / d)
 				b -> 4F + (u(r - g) / d)
@@ -29,11 +30,11 @@ data class HSB(val hue: Float, val saturation: Float, val brightness: Float){
 			return HSB(hue, d / umax, umax)
 		}
 		
-		private fun c(component: Float): Int{
+		private fun c(component: Float): Int {
 			return (component * 255F).floorToInt()
 		}
 		
-		private fun u(component: Int): Float{
+		private fun u(component: Int): Float {
 			return component / 255F
 		}
 	}
@@ -41,8 +42,8 @@ data class HSB(val hue: Float, val saturation: Float, val brightness: Float){
 	val i
 		get() = toRGB().i
 	
-	fun toRGB(): IntColor{
-		if (saturation == 0F){
+	fun toRGB(): IntColor {
+		if (saturation == 0F) {
 			return RGB((brightness * 255F).floorToInt().toUByte())
 		}
 		
@@ -56,7 +57,7 @@ data class HSB(val hue: Float, val saturation: Float, val brightness: Float){
 		
 		val cobr = c(brightness)
 		
-		return when(h.toInt()){
+		return when(h.toInt()) {
 			0 -> RGB(cobr, c(t), c(p))
 			1 -> RGB(c(q), cobr, c(p))
 			2 -> RGB(c(p), cobr, c(t))

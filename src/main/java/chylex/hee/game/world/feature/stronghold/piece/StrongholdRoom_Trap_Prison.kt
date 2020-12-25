@@ -1,4 +1,5 @@
 package chylex.hee.game.world.feature.stronghold.piece
+
 import chylex.hee.game.block.with
 import chylex.hee.game.entity.living.EntityMobSilverfish
 import chylex.hee.game.entity.selectVulnerableEntities
@@ -40,19 +41,19 @@ import net.minecraft.world.World
 import java.util.Random
 import kotlin.math.min
 
-class StrongholdRoom_Trap_Prison(file: String) : StrongholdAbstractPieceFromFile(file, StrongholdPieceType.ROOM){
-	class Trigger : ITriggerHandler{
-		private companion object{
+class StrongholdRoom_Trap_Prison(file: String) : StrongholdAbstractPieceFromFile(file, StrongholdPieceType.ROOM) {
+	class Trigger : ITriggerHandler {
+		private companion object {
 			private const val SPAWNS_LEFT_TAG = "SpawnsLeft"
 		}
 		
 		private var spawnsLeft = -1
 		
-		override fun check(world: World): Boolean{
+		override fun check(world: World): Boolean {
 			return !world.isRemote && !world.isPeaceful
 		}
 		
-		override fun update(entity: EntityTechnicalTrigger){
+		override fun update(entity: EntityTechnicalTrigger) {
 			val world = entity.world
 			val facing = entity.horizontalFacing
 			
@@ -64,11 +65,11 @@ class StrongholdRoom_Trap_Prison(file: String) : StrongholdAbstractPieceFromFile
 			
 			val targets = world.selectVulnerableEntities.inBox<EntityPlayer>(AxisAlignedBB(x1, y1, z1, x2, y2, z2))
 			
-			if (spawnsLeft == -1){
-				if (targets.isEmpty()){
+			if (spawnsLeft == -1) {
+				if (targets.isEmpty()) {
 					return
 				}
-				else{
+				else {
 					spawnsLeft = 2 + world.difficulty.id
 				}
 			}
@@ -77,11 +78,11 @@ class StrongholdRoom_Trap_Prison(file: String) : StrongholdAbstractPieceFromFile
 			val minPos = pos1.min(pos2)
 			val maxPos = pos1.max(pos2)
 			
-			repeat(min(spawnsLeft, rand.nextRounded(1.66F))){
-				for(attempt in 1..8){
+			repeat(min(spawnsLeft, rand.nextRounded(1.66F))) {
+				for(attempt in 1..8) {
 					val testPos = Pos(rand.nextInt(minPos.x, maxPos.x), maxPos.y + 1, rand.nextInt(minPos.z, maxPos.z))
 					
-					if (StrongholdPieces.isStoneBrick(testPos.getBlock(world))){
+					if (StrongholdPieces.isStoneBrick(testPos.getBlock(world))) {
 						testPos.breakBlock(world, false)
 						
 						EntityMobSilverfish(world).apply {
@@ -98,12 +99,12 @@ class StrongholdRoom_Trap_Prison(file: String) : StrongholdAbstractPieceFromFile
 				}
 			}
 			
-			if (spawnsLeft == 0){
+			if (spawnsLeft == 0) {
 				entity.remove()
 			}
 		}
 		
-		override fun nextTimer(rand: Random): Int{
+		override fun nextTimer(rand: Random): Int {
 			return 14
 		}
 		
@@ -121,7 +122,7 @@ class StrongholdRoom_Trap_Prison(file: String) : StrongholdAbstractPieceFromFile
 		StrongholdConnection(ROOM, Pos(0, 0, maxZ - 2), WEST)
 	)
 	
-	override fun generate(world: IStructureWorld, instance: Instance){
+	override fun generate(world: IStructureWorld, instance: Instance) {
 		super.generate(world, instance)
 		world.addTrigger(Pos(1, 1, 5), EntityStructureTrigger(STRONGHOLD_TRAP_PRISON, EAST))
 		
@@ -138,10 +139,10 @@ class StrongholdRoom_Trap_Prison(file: String) : StrongholdAbstractPieceFromFile
 		
 		// Redstone
 		
-		repeat(5 + rand.nextInt(5 + rand.nextInt(6))){
+		repeat(5 + rand.nextInt(5 + rand.nextInt(6))) {
 			val redstonePos = Pos(rand.nextInt(1, maxX - 1), 1, rand.nextInt(1, 5))
 			
-			if (world.isAir(redstonePos)){
+			if (world.isAir(redstonePos)) {
 				world.setBlock(redstonePos, Blocks.REDSTONE_WIRE)
 			}
 		}

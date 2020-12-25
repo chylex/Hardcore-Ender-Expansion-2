@@ -1,4 +1,5 @@
 package chylex.hee.game.world.feature.tombdungeon.piece
+
 import chylex.hee.game.block.with
 import chylex.hee.game.block.withFacing
 import chylex.hee.game.world.Pos
@@ -19,7 +20,7 @@ import net.minecraft.state.properties.SlabType
 import net.minecraft.util.Direction
 import net.minecraft.util.math.BlockPos
 
-open class TombDungeonRoom_Side_Crossroads(file: String, isFancy: Boolean) : TombDungeonRoom(file, isFancy){
+open class TombDungeonRoom_Side_Crossroads(file: String, isFancy: Boolean) : TombDungeonRoom(file, isFancy) {
 	override val connections = arrayOf<IStructurePieceConnection>(
 		TombDungeonConnection(ROOM_ENTRANCE, Pos(centerX, 0, 0), NORTH),
 		TombDungeonConnection(ROOM_ENTRANCE, Pos(centerX, 0, maxZ), SOUTH),
@@ -27,7 +28,7 @@ open class TombDungeonRoom_Side_Crossroads(file: String, isFancy: Boolean) : Tom
 		TombDungeonConnection(ROOM_ENTRANCE, Pos(0, 0, centerZ), WEST)
 	)
 	
-	override fun generate(world: IStructureWorld, instance: Instance){
+	override fun generate(world: IStructureWorld, instance: Instance) {
 		super.generate(world, instance)
 		
 		val rand = world.rand
@@ -35,7 +36,7 @@ open class TombDungeonRoom_Side_Crossroads(file: String, isFancy: Boolean) : Tom
 		val reverseTransform = instance.transform.reverse
 		val availableChestSides = mutableListOf<Pair<BlockPos, Direction>>()
 		
-		for(connection in instance.findAvailableConnections()){
+		for(connection in instance.findAvailableConnections()) {
 			val pos = reverseTransform(connection.offset, instance.size).up(2)
 			val facing = reverseTransform(connection.facing)
 			val opposite = facing.opposite

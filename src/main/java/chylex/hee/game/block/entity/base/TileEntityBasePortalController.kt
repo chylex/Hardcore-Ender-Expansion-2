@@ -1,4 +1,5 @@
 package chylex.hee.game.block.entity.base
+
 import chylex.hee.game.block.BlockAbstractPortal.IPortalController
 import chylex.hee.game.block.entity.base.TileEntityBase.Context.NETWORK
 import chylex.hee.game.block.entity.base.TileEntityBasePortalController.ForegroundRenderState.Animating
@@ -11,14 +12,14 @@ import net.minecraft.tileentity.TileEntityType
 import kotlin.math.max
 import kotlin.math.min
 
-abstract class TileEntityBasePortalController(type: TileEntityType<out TileEntityBasePortalController>) : TileEntityBaseSpecialFirstTick(type), IPortalController{
-	private companion object{
+abstract class TileEntityBasePortalController(type: TileEntityType<out TileEntityBasePortalController>) : TileEntityBaseSpecialFirstTick(type), IPortalController {
+	private companion object {
 		private const val RENDER_STATE_TAG = "RenderState"
 		private const val RENDER_PROGRESS_TAG = "RenderProgress"
 	}
 	
-	sealed class ForegroundRenderState(val progress: Float){
-		class Animating(progress: Float): ForegroundRenderState(progress)
+	sealed class ForegroundRenderState(val progress: Float) {
+		class Animating(progress: Float) : ForegroundRenderState(progress)
 		object Visible : ForegroundRenderState(1F)
 		object Invisible : ForegroundRenderState(0F)
 	}
@@ -31,24 +32,24 @@ abstract class TileEntityBasePortalController(type: TileEntityType<out TileEntit
 	override val clientAnimationProgress = LerpedFloat(0F)
 	override val clientPortalOffset = LerpedFloat(0F)
 	
-	private fun updateAnimation(){
-		when(clientRenderState){
+	private fun updateAnimation() {
+		when(clientRenderState) {
 			Invisible    -> clientAnimationProgress.update(max(0F, clientAnimationProgress - clientAnimationFadeOutSpeed))
 			is Animating -> clientAnimationProgress.update(min(1F, clientAnimationProgress + clientAnimationFadeInSpeed))
 		}
 	}
 	
-	override fun tick(){
+	override fun tick() {
 		super.tick()
 		
-		if (wrld.isRemote){
+		if (wrld.isRemote) {
 			updateAnimation()
 		}
 	}
 	
 	override fun writeNBT(nbt: TagCompound, context: Context) = nbt.use {
-		if (context == NETWORK){
-			putString(RENDER_STATE_TAG, when(val state = serverRenderState){
+		if (context == NETWORK) {
+			putString(RENDER_STATE_TAG, when(val state = serverRenderState) {
 				is Animating -> "Animating".also { putFloat(RENDER_PROGRESS_TAG, state.progress) }
 				Visible      -> "Visible"
 				Invisible    -> ""
@@ -57,14 +58,14 @@ abstract class TileEntityBasePortalController(type: TileEntityType<out TileEntit
 	}
 	
 	override fun readNBT(nbt: TagCompound, context: Context) = nbt.use {
-		if (context == NETWORK){
-			clientRenderState = when(getString(RENDER_STATE_TAG)){
+		if (context == NETWORK) {
+			clientRenderState = when(getString(RENDER_STATE_TAG)) {
 				"Animating" -> Animating(getFloat(RENDER_PROGRESS_TAG))
 				"Visible"   -> Visible
 				else        -> Invisible
 			}
 			
-			if (clientRenderState != Invisible){
+			if (clientRenderState != Invisible) {
 				clientAnimationProgress.updateImmediately(clientRenderState.progress)
 			}
 		}

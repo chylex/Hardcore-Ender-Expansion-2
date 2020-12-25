@@ -1,4 +1,5 @@
 package chylex.hee.network.client
+
 import chylex.hee.client.MC
 import chylex.hee.game.mechanics.trinket.ITrinketItem
 import chylex.hee.network.BaseClientPacket
@@ -11,8 +12,8 @@ import net.minecraft.item.Item
 import net.minecraft.item.ItemStack
 import net.minecraft.network.PacketBuffer
 
-class PacketClientTrinketBreak() : BaseClientPacket(){
-	constructor(target: Entity, item: Item) : this(){
+class PacketClientTrinketBreak() : BaseClientPacket() {
+	constructor(target: Entity, item: Item) : this() {
 		this.entityId = target.entityId
 		this.item = item
 	}
@@ -31,9 +32,9 @@ class PacketClientTrinketBreak() : BaseClientPacket(){
 	}
 	
 	@Sided(Side.CLIENT)
-	override fun handle(player: EntityPlayerSP){
+	override fun handle(player: EntityPlayerSP) {
 		entityId?.let(player.world::getEntityByID)?.let {
-			if (it === player){
+			if (it === player) {
 				MC.gameRenderer.displayItemActivation(ItemStack(item))
 			}
 			

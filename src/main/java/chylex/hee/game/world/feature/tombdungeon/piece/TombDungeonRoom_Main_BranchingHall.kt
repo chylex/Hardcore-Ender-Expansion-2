@@ -1,4 +1,5 @@
 package chylex.hee.game.world.feature.tombdungeon.piece
+
 import chylex.hee.game.world.Pos
 import chylex.hee.game.world.feature.tombdungeon.connection.TombDungeonConnection
 import chylex.hee.game.world.feature.tombdungeon.connection.TombDungeonConnectionType.ROOM_ENTRANCE
@@ -8,7 +9,7 @@ import chylex.hee.system.migration.Facing.NORTH
 import chylex.hee.system.migration.Facing.SOUTH
 import chylex.hee.system.migration.Facing.WEST
 
-class TombDungeonRoom_Main_BranchingHall(file: String, isFancy: Boolean) : TombDungeonRoom(file, isFancy){
+class TombDungeonRoom_Main_BranchingHall(file: String, isFancy: Boolean) : TombDungeonRoom(file, isFancy) {
 	override val connections = arrayOf<IStructurePieceConnection>(
 		TombDungeonConnection(ROOM_ENTRANCE, Pos(centerX, 0, 0), NORTH),
 		TombDungeonConnection(ROOM_ENTRANCE, Pos(centerX, 0, maxZ), SOUTH),

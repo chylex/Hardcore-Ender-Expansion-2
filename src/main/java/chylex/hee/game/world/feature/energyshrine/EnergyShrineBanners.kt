@@ -1,4 +1,5 @@
 package chylex.hee.game.world.feature.energyshrine
+
 import chylex.hee.system.random.nextItem
 import chylex.hee.system.serialization.TagCompound
 import net.minecraft.item.DyeColor
@@ -32,8 +33,8 @@ import net.minecraft.tileentity.BannerPattern.STRIPE_CENTER
 import net.minecraft.tileentity.BannerPattern.STRIPE_MIDDLE
 import java.util.Random
 
-object EnergyShrineBanners{
-	fun generate(rand: Random, colors: BannerColors): Pair<DyeColor, TagCompound>{
+object EnergyShrineBanners {
+	fun generate(rand: Random, colors: BannerColors): Pair<DyeColor, TagCompound> {
 		val baseColor = colors.base
 		val fadeColor = colors.fade
 		
@@ -43,37 +44,37 @@ object EnergyShrineBanners{
 			
 			// primary shapes
 			
-			when(rand.nextInt(10)){
+			when(rand.nextInt(10)) {
 				in 0..3 -> setPatternWithColor(SQUARE_TOP_LEFT, baseColor)
 				in 4..7 -> setPatternWithColor(SQUARE_TOP_RIGHT, baseColor)
 				// 8..9
 			}
 			
-			when(rand.nextInt(8)){
+			when(rand.nextInt(8)) {
 				in 0..2 -> setPatternWithColor(SQUARE_BOTTOM_LEFT, baseColor)
 				in 3..5 -> setPatternWithColor(SQUARE_BOTTOM_RIGHT, baseColor)
 				// 6..7
 			}
 			
-			if (rand.nextInt(3) != 0){
+			if (rand.nextInt(3) != 0) {
 				setPatternWithColor(STRIPE_MIDDLE, baseColor)
 			}
 			
-			if (rand.nextInt(3) == 0){
+			if (rand.nextInt(3) == 0) {
 				setPatternWithColor(BORDER, baseColor)
 			}
 			
 			// special shapes
 			
-			if (rand.nextInt(6) == 0){
+			if (rand.nextInt(6) == 0) {
 				setPatternWithColor(SKULL, baseColor)
 			}
 			
-			if (rand.nextInt(5) == 0){
+			if (rand.nextInt(5) == 0) {
 				setPatternWithColor(MOJANG, baseColor)
 			}
 			
-			if (rand.nextInt(4) == 0){
+			if (rand.nextInt(4) == 0) {
 				setPatternWithColor(FLOWER, baseColor)
 			}
 			
@@ -89,21 +90,21 @@ object EnergyShrineBanners{
 	
 	class BannerColors(
 		val base: DyeColor,
-		val fade: DyeColor
-	){
-		companion object{
+		val fade: DyeColor,
+	) {
+		companion object {
 			val DEFAULT = BannerColors(WHITE, WHITE)
 			
 			private val BASE_COLORS = arrayOf(WHITE, ORANGE, MAGENTA, LIGHT_BLUE, YELLOW, LIME, PINK, CYAN, PURPLE, BLUE, BROWN, GREEN, RED, LIGHT_GRAY)
 			private val FADE_COLORS = arrayOf(WHITE, ORANGE, MAGENTA, LIGHT_BLUE, YELLOW, LIME, PINK, CYAN, PURPLE, BLUE, BROWN, GREEN, RED, BLACK)
 			
-			fun random(rand: Random): BannerColors{
+			fun random(rand: Random): BannerColors {
 				val base = rand.nextItem(BASE_COLORS)
 				
 				val remainingFadeColors = FADE_COLORS.toMutableList().apply {
 					remove(base)
 					
-					if (base == WHITE || base == LIGHT_GRAY){
+					if (base == WHITE || base == LIGHT_GRAY) {
 						remove(WHITE)
 						remove(BLACK)
 					}

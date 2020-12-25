@@ -1,4 +1,5 @@
 package chylex.hee.game.entity.living
+
 import chylex.hee.game.entity.living.ai.AttackMelee
 import chylex.hee.game.entity.living.ai.Swim
 import chylex.hee.game.entity.living.ai.TargetAttacker
@@ -33,10 +34,10 @@ import net.minecraft.util.math.RayTraceResult.Type
 import net.minecraft.world.Difficulty.PEACEFUL
 import net.minecraft.world.World
 
-class EntityMobAngryEnderman(type: EntityType<EntityMobAngryEnderman>, world: World) : EntityMobAbstractEnderman(type, world){
+class EntityMobAngryEnderman(type: EntityType<EntityMobAngryEnderman>, world: World) : EntityMobAbstractEnderman(type, world) {
 	constructor(world: World) : this(ModEntities.ANGRY_ENDERMAN, world)
 	
-	private companion object{
+	private companion object {
 		private const val TELEPORT_HANDLER_TAG = "Teleport"
 		private const val WATER_HANDLER_TAG = "Water"
 		private const val DESPAWN_COOLDOWN_TAG = "DespawnCooldown"
@@ -51,7 +52,7 @@ class EntityMobAngryEnderman(type: EntityType<EntityMobAngryEnderman>, world: Wo
 	override val teleportCooldown = 35
 	private var despawnCooldown = 300
 	
-	override fun registerAttributes(){
+	override fun registerAttributes() {
 		super.registerAttributes()
 		
 		getAttribute(MAX_HEALTH).baseValue = 40.0
@@ -62,7 +63,7 @@ class EntityMobAngryEnderman(type: EntityType<EntityMobAngryEnderman>, world: Wo
 		experienceValue = 7
 	}
 	
-	override fun registerGoals(){
+	override fun registerGoals() {
 		teleportHandler = EndermanTeleportHandler(this)
 		waterHandler = EndermanWaterHandler(this, takeDamageAfterWetTicks = Int.MAX_VALUE)
 		
@@ -71,22 +72,22 @@ class EntityMobAngryEnderman(type: EntityType<EntityMobAngryEnderman>, world: Wo
 		goalSelector.addGoal(3, WanderLand(this, movementSpeed = 0.8, chancePerTick = 90))
 		
 		targetSelector.addGoal(1, TargetAttacker(this, callReinforcements = false))
-		targetSelector.addGoal(2, TargetNearby<EntityPlayer>(this, chancePerTick = 1, checkSight = false, easilyReachableOnly = false){ getDistanceSq(it) < AGGRO_DISTANCE_SQ })
+		targetSelector.addGoal(2, TargetNearby<EntityPlayer>(this, chancePerTick = 1, checkSight = false, easilyReachableOnly = false) { getDistanceSq(it) < AGGRO_DISTANCE_SQ })
 	}
 	
-	override fun updateAITasks(){
+	override fun updateAITasks() {
 		teleportHandler.update()
 		waterHandler.update()
 		
 		val currentTarget = attackTarget
 		
-		if (currentTarget != null){
+		if (currentTarget != null) {
 			val distanceSq = getDistanceSq(currentTarget)
 			
-			if (distanceSq > square(getAttribute(FOLLOW_RANGE).value * 0.75) && !entitySenses.canSee(currentTarget)){
+			if (distanceSq > square(getAttribute(FOLLOW_RANGE).value * 0.75) && !entitySenses.canSee(currentTarget)) {
 				attackTarget = null
 			}
-			else if (distanceSq > AGGRO_DISTANCE_SQ){
+			else if (distanceSq > AGGRO_DISTANCE_SQ) {
 				val predicate = EntityPredicate().setLineOfSiteRequired()
 				
 				val alternativeTarget = world
@@ -95,18 +96,18 @@ class EntityMobAngryEnderman(type: EntityType<EntityMobAngryEnderman>, world: Wo
 					.filter { predicate.canTarget(this, it) }
 					.minByOrNull(::getDistanceSq)
 				
-				if (alternativeTarget != null){
+				if (alternativeTarget != null) {
 					attackTarget = alternativeTarget
 				}
-				else if (teleportHandler.checkCooldownSilent()){
+				else if (teleportHandler.checkCooldownSilent()) {
 					teleportHandler.teleportTowards(currentTarget, -40F..40F, (7.5)..(9.0))
 				}
 			}
 		}
 	}
 	
-	override fun canTeleportTo(aabb: AxisAlignedBB): Boolean{
-		if (!super.canTeleportTo(aabb)){
+	override fun canTeleportTo(aabb: AxisAlignedBB): Boolean {
+		if (!super.canTeleportTo(aabb)) {
 			return false
 		}
 		
@@ -116,36 +117,36 @@ class EntityMobAngryEnderman(type: EntityType<EntityMobAngryEnderman>, world: Wo
 		return world.rayTraceBlocks(RayTraceContext(teleportPos, currentTarget.lookPosVec, BlockMode.COLLIDER, FluidMode.NONE, this)).type == Type.MISS
 	}
 	
-	override fun getLootTable(): ResourceLocation{
+	override fun getLootTable(): ResourceLocation {
 		return Resource.Custom("entities/angry_enderman")
 	}
 	
-	override fun canDespawn(distanceToClosestPlayerSq: Double): Boolean{
+	override fun canDespawn(distanceToClosestPlayerSq: Double): Boolean {
 		return despawnCooldown == 0 && distanceToClosestPlayerSq > square(128.0)
 	}
 	
-	override fun preventDespawn(): Boolean{
+	override fun preventDespawn(): Boolean {
 		return despawnCooldown > 0
 	}
 	
-	override fun checkDespawn(){
-		if (world.difficulty == PEACEFUL && isDespawnPeaceful){
+	override fun checkDespawn() {
+		if (world.difficulty == PEACEFUL && isDespawnPeaceful) {
 			remove()
 			return
 		}
 		
-		if (despawnCooldown > 0){
+		if (despawnCooldown > 0) {
 			--despawnCooldown
 		}
 		
-		if (!isNoDespawnRequired && rand.nextInt(600) == 0){
+		if (!isNoDespawnRequired && rand.nextInt(600) == 0) {
 			val closestPlayer = world.getClosestPlayer(this, -1.0)
 			
-			if (closestPlayer != null && canDespawn(getDistanceSq(closestPlayer))){
+			if (closestPlayer != null && canDespawn(getDistanceSq(closestPlayer))) {
 				remove()
 			}
 		}
-		else{
+		else {
 			idleTime = 0
 		}
 	}

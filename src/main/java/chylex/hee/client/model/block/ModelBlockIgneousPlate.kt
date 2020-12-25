@@ -1,4 +1,5 @@
 package chylex.hee.client.model.block
+
 import chylex.hee.client.model.beginBox
 import chylex.hee.client.render.gl.translateZ
 import chylex.hee.system.forge.Side
@@ -14,13 +15,13 @@ import kotlin.math.abs
 import kotlin.math.sin
 
 @Sided(Side.CLIENT)
-object ModelBlockIgneousPlate : Model(RenderType::getEntityCutout){
+object ModelBlockIgneousPlate : Model(RenderType::getEntityCutout) {
 	const val ANIMATION_PERIOD = PI
 	
 	private val outerBox: ModelRenderer
 	private val innerBox: ModelRenderer
 	
-	init{
+	init {
 		textureWidth = 32
 		textureHeight = 16
 		
@@ -36,11 +37,11 @@ object ModelBlockIgneousPlate : Model(RenderType::getEntityCutout){
 		}
 	}
 	
-	override fun render(matrix: MatrixStack, builder: IVertexBuilder, combinedLight: Int, combinedOverlay: Int, red: Float, green: Float, blue: Float, alpha: Float){
+	override fun render(matrix: MatrixStack, builder: IVertexBuilder, combinedLight: Int, combinedOverlay: Int, red: Float, green: Float, blue: Float, alpha: Float) {
 		outerBox.render(matrix, builder, combinedLight, combinedOverlay, red, green, blue, alpha)
 	}
 	
-	fun renderInnerBox(matrix: MatrixStack, builder: IVertexBuilder, combinedLight: Int, combinedOverlay: Int, color: Vec3d, animation: Double){
+	fun renderInnerBox(matrix: MatrixStack, builder: IVertexBuilder, combinedLight: Int, combinedOverlay: Int, color: Vec3d, animation: Double) {
 		matrix.push()
 		matrix.translateZ(-abs(sin(-animation)).toFloat() * 0.0925)
 		innerBox.render(matrix, builder, combinedLight, combinedOverlay, color.x.toFloat(), color.y.toFloat(), color.z.toFloat(), 1F)

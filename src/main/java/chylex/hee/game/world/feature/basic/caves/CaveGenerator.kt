@@ -1,4 +1,5 @@
 package chylex.hee.game.world.feature.basic.caves
+
 import chylex.hee.game.world.Pos
 import chylex.hee.game.world.generation.IBlockPlacer
 import chylex.hee.game.world.generation.IBlockPlacer.BlockReplacer
@@ -14,9 +15,9 @@ class CaveGenerator(
 	private val radius: ICaveRadius,
 	private val placer: IBlockPlacer = BlockReplacer(fill = Blocks.AIR, replace = Blocks.END_STONE),
 	private val stepSize: Double,
-	private val maxConsecutiveFails: Int = Int.MAX_VALUE
-){
-	fun generate(world: SegmentedWorld, start: Vec3d, length: Double, pather: ICavePather): Int{
+	private val maxConsecutiveFails: Int = Int.MAX_VALUE,
+) {
+	fun generate(world: SegmentedWorld, start: Vec3d, length: Double, pather: ICavePather): Int {
 		val rand = world.rand
 		val worldBox = world.worldSize.toBoundingBox(BlockPos.ZERO)
 		
@@ -28,22 +29,22 @@ class CaveGenerator(
 		var successfulSteps = 0
 		var failsLeft = maxConsecutiveFails
 		
-		while(stepCounter < steps){
+		while(stepCounter < steps) {
 			point = point.add(pather.nextOffset(rand, point, stepSize))
 			
 			val nextRadius = radius.next(rand, stepCounter)
 			val carveBox = Size(nextRadius.ceilToInt()).toBoundingBox(Pos(point))
 			
-			if (carveBox.intersects(worldBox) && carver.carve(world, point, nextRadius, placer)){
+			if (carveBox.intersects(worldBox) && carver.carve(world, point, nextRadius, placer)) {
 				++successfulSteps
 				++stepCounter
 				failsLeft = maxConsecutiveFails
 			}
-			else{
-				if (--failsLeft < 0){
+			else {
+				if (--failsLeft < 0) {
 					break
 				}
-				else if (++failCounter == 4){
+				else if (++failCounter == 4) {
 					failCounter = 0
 					++stepCounter
 				}

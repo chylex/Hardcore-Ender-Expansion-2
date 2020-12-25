@@ -1,4 +1,5 @@
 package chylex.hee.game.entity
+
 import chylex.hee.HEE
 import chylex.hee.game.entity.Teleporter.FxRange.Extended
 import chylex.hee.game.entity.Teleporter.FxRange.Normal
@@ -56,9 +57,9 @@ class Teleporter(
 	private val damageDealt: Float = 0F,
 	private val damageTitle: String = TITLE_FALL,
 	private val causedInstability: UShort = 0u,
-	private val effectRange: FxRange = Normal
-){
-	companion object{
+	private val effectRange: FxRange = Normal,
+) {
+	companion object {
 		private val DAMAGE = Damage(MAGIC_TYPE)
 		
 		private const val EXTENDED_MINIMUM_VOLUME = 0.1F
@@ -74,8 +75,8 @@ class Teleporter(
 			private val soundEvent: SoundEvent,
 			private val soundCategory: SoundCategory,
 			private val soundVolume: Float,
-			private val extraRange: Float = 0F
-		) : IFxData{
+			private val extraRange: Float = 0F,
+		) : IFxData {
 			override fun write(buffer: PacketBuffer) = buffer.use {
 				writeCompactVec(startPoint)
 				writeCompactVec(endPoint)
@@ -88,7 +89,7 @@ class Teleporter(
 				writeByte(extraRange.floorToInt().coerceIn(0, 255))
 			}
 			
-			fun send(world: World){
+			fun send(world: World) {
 				val middlePoint = startPoint.offsetTowards(endPoint, 0.5)
 				val traveledDistance = startPoint.distanceTo(endPoint)
 				
@@ -96,7 +97,7 @@ class Teleporter(
 			}
 		}
 		
-		val FX_TELEPORT = object : IFxHandler<FxTeleportData>{
+		val FX_TELEPORT = object : IFxHandler<FxTeleportData> {
 			override fun handle(buffer: PacketBuffer, world: World, rand: Random) = buffer.use {
 				val player = HEE.proxy.getClientSidePlayer() ?: return
 				val playerPos = player.posVec
@@ -119,10 +120,10 @@ class Teleporter(
 				
 				val soundDistance = playerPos.distanceTo(soundPosition)
 				
-				if (soundDistance < RANGE_FOR_MINIMUM_VOLUME){
+				if (soundDistance < RANGE_FOR_MINIMUM_VOLUME) {
 					soundEvent.playClient(soundPosition, soundCategory, volume = soundVolume)
 				}
-				else if (soundDistance < soundRange){
+				else if (soundDistance < soundRange) {
 					val closerPosition = playerPos.add(playerPos.directionTowards(soundPosition).scale(RANGE_FOR_MINIMUM_VOLUME))
 					soundEvent.playClient(closerPosition, soundCategory, volume = soundVolume)
 				}
@@ -138,30 +139,30 @@ class Teleporter(
 		}
 	}
 	
-	sealed class FxRange{
+	sealed class FxRange {
 		object Silent : FxRange()
 		object Normal : FxRange()
-		class Extended(val extraRange: Float): FxRange()
+		class Extended(val extraRange: Float) : FxRange()
 	}
 	
 	// Target
 	
-	fun toLocation(entity: EntityLivingBase, position: Vec3d, soundCategory: SoundCategory = entity.soundCategory): Boolean{
+	fun toLocation(entity: EntityLivingBase, position: Vec3d, soundCategory: SoundCategory = entity.soundCategory): Boolean {
 		val event = EnderTeleportEvent(entity, position.x, position.y, position.z, damageDealt)
 		
-		if (postEvent && MinecraftForge.EVENT_BUS.post(event)){
+		if (postEvent && MinecraftForge.EVENT_BUS.post(event)) {
 			return false
 		}
 		
-		if (entity.isPassenger){
+		if (entity.isPassenger) {
 			entity.stopRiding()
 			
-			if (entity is EntityPlayerMP){
+			if (entity is EntityPlayerMP) {
 				PacketClientMoveYourAss(position).sendToPlayer(entity) // dismounting client ignores any attempts at teleporting
 			}
 		}
 		
-		if (entity.isSleeping && entity is EntityPlayer){
+		if (entity.isSleeping && entity is EntityPlayer) {
 			entity.stopSleepInBed(true, true)
 		}
 		
@@ -172,13 +173,13 @@ class Teleporter(
 		PacketClientTeleportInstantly(entity, newPos).sendToTracking(entity)
 		entity.setPositionAndUpdate(newPos.x, newPos.y, newPos.z)
 		
-		if (effectRange != Silent){
-			val extraRange = when(effectRange){
+		if (effectRange != Silent) {
+			val extraRange = when(effectRange) {
 				is Extended -> effectRange.extraRange
-				else -> 0F
+				else        -> 0F
 			}
 			
-			val soundEvent = when(entity){
+			val soundEvent = when(entity) {
 				is EntityPlayer   -> ModSounds.ENTITY_PLAYER_TELEPORT
 				is EntityEnderman -> Sounds.ENTITY_ENDERMAN_TELEPORT
 				else              -> ModSounds.ENTITY_GENERIC_TELEPORT
@@ -188,21 +189,21 @@ class Teleporter(
 			FxTeleportData(prevPos.addY(halfHeight), newPos.addY(halfHeight), entity.width, entity.height, soundEvent, soundCategory, 1F, extraRange).send(world)
 		}
 		
-		if (resetFall){
+		if (resetFall) {
 			entity.fallDistance = 0F
 		}
 		
-		if (damageDealt > 0F){
+		if (damageDealt > 0F) {
 			DAMAGE.dealTo(damageDealt, entity, damageTitle)
 		}
 		
-		if (entity is EntityCreature){
-			if (resetPathfinding){
+		if (entity is EntityCreature) {
+			if (resetPathfinding) {
 				entity.navigator.clearPath()
 			}
 			
-			if (entity.lookController.isLooking){ // must be called inside updateAITasks to apply
-				with(entity.lookController){
+			if (entity.lookController.isLooking) { // must be called inside updateAITasks to apply
+				with(entity.lookController) {
 					setLookPosition(lookPosX, lookPosY, lookPosZ, 360F, 360F)
 					tick()
 				}
@@ -216,23 +217,23 @@ class Teleporter(
 			}
 		}
 		
-		if (causedInstability > 0u){
+		if (causedInstability > 0u) {
 			Instability.get(world).triggerAction(causedInstability, Pos(position))
 		}
 		
 		return true
 	}
 	
-	fun nearLocation(entity: EntityLivingBase, rand: Random, position: Vec3d, distance: ClosedFloatingPointRange<Double>, attempts: Int, soundCategory: SoundCategory = entity.soundCategory): Boolean{
+	fun nearLocation(entity: EntityLivingBase, rand: Random, position: Vec3d, distance: ClosedFloatingPointRange<Double>, attempts: Int, soundCategory: SoundCategory = entity.soundCategory): Boolean {
 		val world = entity.world
 		val originalPos = entity.posVec
 		val originalBox = entity.boundingBox
 		
-		repeat(attempts){
+		repeat(attempts) {
 			val randomPos = position.add(rand.nextVector(rand.nextFloat(distance)))
 			val newPos = Vec(randomPos.x, randomPos.y.floorToInt() + 0.01, randomPos.z)
 			
-			if (Pos(newPos).down().blocksMovement(world) && world.hasNoCollisions(entity, originalBox.offset(newPos.subtract(originalPos)))){
+			if (Pos(newPos).down().blocksMovement(world) && world.hasNoCollisions(entity, originalBox.offset(newPos.subtract(originalPos)))) {
 				return toLocation(entity, newPos, soundCategory)
 			}
 		}
@@ -240,11 +241,11 @@ class Teleporter(
 		return false
 	}
 	
-	fun nearLocation(entity: EntityLivingBase, position: Vec3d, distance: ClosedFloatingPointRange<Double>, attempts: Int, soundCategory: SoundCategory = entity.soundCategory): Boolean{
+	fun nearLocation(entity: EntityLivingBase, position: Vec3d, distance: ClosedFloatingPointRange<Double>, attempts: Int, soundCategory: SoundCategory = entity.soundCategory): Boolean {
 		return nearLocation(entity, entity.rng, position, distance, attempts, soundCategory)
 	}
 	
-	fun toBlock(entity: EntityLivingBase, position: BlockPos, soundCategory: SoundCategory = entity.soundCategory): Boolean{
+	fun toBlock(entity: EntityLivingBase, position: BlockPos, soundCategory: SoundCategory = entity.soundCategory): Boolean {
 		return toLocation(entity, position.center.subtractY(0.49), soundCategory)
 	}
 }

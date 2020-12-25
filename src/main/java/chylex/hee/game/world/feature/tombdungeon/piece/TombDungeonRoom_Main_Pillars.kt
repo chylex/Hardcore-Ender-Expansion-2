@@ -1,4 +1,5 @@
 package chylex.hee.game.world.feature.tombdungeon.piece
+
 import chylex.hee.game.world.Pos
 import chylex.hee.game.world.feature.tombdungeon.connection.TombDungeonConnection
 import chylex.hee.game.world.feature.tombdungeon.connection.TombDungeonConnectionType.ROOM_ENTRANCE
@@ -13,7 +14,7 @@ import chylex.hee.system.migration.Facing.WEST
 import chylex.hee.system.random.nextInt
 import chylex.hee.system.random.nextItem
 
-class TombDungeonRoom_Main_Pillars(file: String, isFancy: Boolean) : TombDungeonRoom(file, isFancy){
+class TombDungeonRoom_Main_Pillars(file: String, isFancy: Boolean) : TombDungeonRoom(file, isFancy) {
 	override val connections = arrayOf<IStructurePieceConnection>(
 		TombDungeonConnection(ROOM_ENTRANCE, Pos(centerX,      0, 0), NORTH),
 		TombDungeonConnection(ROOM_ENTRANCE, Pos(centerX - 14, 0, 0), NORTH),
@@ -29,19 +30,19 @@ class TombDungeonRoom_Main_Pillars(file: String, isFancy: Boolean) : TombDungeon
 		TombDungeonConnection(ROOM_ENTRANCE, Pos(0, 0, centerZ + 14), WEST)
 	)
 	
-	override fun generate(world: IStructureWorld, instance: Instance){
+	override fun generate(world: IStructureWorld, instance: Instance) {
 		super.generate(world, instance)
 		
 		val rand = world.rand
 		
-		repeat(rand.nextInt(2, 3)){
+		repeat(rand.nextInt(2, 3)) {
 			val chestPos = Pos(
 				8 + (7 * rand.nextInt(0, 5)) + rand.nextInt(0, 1),
 				1,
 				8 + (7 * rand.nextInt(0, 5)) + rand.nextInt(0, 1)
 			)
 			
-			if (world.getBlock(chestPos) === ModBlocks.DUSTY_STONE_BRICKS){
+			if (world.getBlock(chestPos) === ModBlocks.DUSTY_STONE_BRICKS) {
 				world.setBlock(chestPos.up(), ModBlocks.DUSTY_STONE_CRACKED)
 				placeChest(world, instance, chestPos, rand.nextItem(Facing4))
 			}

@@ -1,4 +1,5 @@
 package chylex.hee.game.entity.living.behavior
+
 import chylex.hee.game.entity.OPERATION_MUL_INCR_INDIVIDUAL
 import chylex.hee.game.entity.living.EntityMobAbstractEnderman
 import chylex.hee.game.entity.tryApplyModifier
@@ -11,8 +12,8 @@ import net.minecraft.entity.ai.attributes.AttributeModifier
 import net.minecraft.util.DamageSource
 import net.minecraftforge.common.util.INBTSerializable
 
-class EndermanWaterHandler(private val enderman: EntityMobAbstractEnderman, private val takeDamageAfterWetTicks: Int): INBTSerializable<TagCompound>{
-	private companion object{
+class EndermanWaterHandler(private val enderman: EntityMobAbstractEnderman, private val takeDamageAfterWetTicks: Int) : INBTSerializable<TagCompound> {
+	private companion object {
 		private val DEBUFF_WEAKNESS = AttributeModifier("Water weakness", -0.5, OPERATION_MUL_INCR_INDIVIDUAL)
 		
 		private const val WET_COUNTER_TAG = "WetCounter"
@@ -22,39 +23,39 @@ class EndermanWaterHandler(private val enderman: EntityMobAbstractEnderman, priv
 	private var wetCounter = 0
 	private var debuffTicks = 0
 	
-	fun update(){
+	fun update() {
 		val isWet = enderman.isWet
 		
-		if (isWet){
+		if (isWet) {
 			++wetCounter
 			
-			if (wetCounter == 1){
+			if (wetCounter == 1) {
 				debuffTicks = enderman.rng.nextInt(20 * 6, 20 * 8)
 				updateDebuff()
 			}
-			else if (wetCounter > takeDamageAfterWetTicks){
+			else if (wetCounter > takeDamageAfterWetTicks) {
 				enderman.attackTarget = null
 				enderman.attackEntityFrom(DamageSource.DROWN, 3F) // causes teleportation attempt
 			}
 		}
-		else{
-			if (wetCounter > 65){
+		else {
+			if (wetCounter > 65) {
 				wetCounter = 65
 			}
 			
-			if (debuffTicks > 0 && --debuffTicks == 0){
+			if (debuffTicks > 0 && --debuffTicks == 0) {
 				wetCounter = 0
 				updateDebuff()
 			}
 		}
 	}
 	
-	private fun updateDebuff(){
-		if (debuffTicks > 0){
+	private fun updateDebuff() {
+		if (debuffTicks > 0) {
 			enderman.isShaking = true
 			enderman.getAttribute(ATTACK_DAMAGE).tryApplyModifier(DEBUFF_WEAKNESS)
 		}
-		else{
+		else {
 			enderman.isShaking = false
 			enderman.getAttribute(ATTACK_DAMAGE).tryRemoveModifier(DEBUFF_WEAKNESS)
 		}

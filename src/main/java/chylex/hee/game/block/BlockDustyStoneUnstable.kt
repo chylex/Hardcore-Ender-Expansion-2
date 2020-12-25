@@ -1,4 +1,5 @@
 package chylex.hee.game.block
+
 import chylex.hee.game.block.properties.BlockBuilder
 import chylex.hee.game.world.Pos
 import chylex.hee.game.world.allInBox
@@ -31,68 +32,68 @@ import net.minecraft.world.World
 import net.minecraft.world.server.ServerWorld
 import java.util.Random
 
-class BlockDustyStoneUnstable(builder: BlockBuilder) : BlockDustyStone(builder){
-	override fun canHarvestBlock(state: BlockState, world: IBlockReader, pos: BlockPos, player: EntityPlayer): Boolean{
+class BlockDustyStoneUnstable(builder: BlockBuilder) : BlockDustyStone(builder) {
+	override fun canHarvestBlock(state: BlockState, world: IBlockReader, pos: BlockPos, player: EntityPlayer): Boolean {
 		return player.getHeldItem(MAIN_HAND).let { EnchantmentHelper.getEnchantmentLevel(Enchantments.SILK_TOUCH, it) == 0 || isPickaxeOrShovel(it) }
 	}
 	
-	override fun tick(state: BlockState, world: ServerWorld, pos: BlockPos, rand: Random){
+	override fun tick(state: BlockState, world: ServerWorld, pos: BlockPos, rand: Random) {
 		// TODO fx
 		
-		if (state.block === ModBlocks.DUSTY_STONE_DAMAGED){
+		if (state.block === ModBlocks.DUSTY_STONE_DAMAGED) {
 			world.addEntity(EntityFallingBlock(world, pos.x + 0.5, pos.y.toDouble(), pos.z + 0.5, state))
 			
-			for(facing in Facing4){
+			for(facing in Facing4) {
 				val adjacentPos = pos.offset(facing)
 				
-				if (adjacentPos.getBlock(world) is BlockDustyStoneUnstable){
+				if (adjacentPos.getBlock(world) is BlockDustyStoneUnstable) {
 					doCrumbleTest(world, adjacentPos)
 				}
 			}
 			
-			if (pos.up().getBlock(world) is BlockDustyStoneUnstable){
+			if (pos.up().getBlock(world) is BlockDustyStoneUnstable) {
 				succeedCrumbleTest(world, pos.up())
 			}
 		}
-		else if (state.block === ModBlocks.DUSTY_STONE_CRACKED){
+		else if (state.block === ModBlocks.DUSTY_STONE_CRACKED) {
 			pos.setBlock(world, ModBlocks.DUSTY_STONE_DAMAGED)
 			succeedCrumbleTest(world, pos)
 		}
-		else{
+		else {
 			pos.setBlock(world, ModBlocks.DUSTY_STONE_CRACKED)
 			succeedCrumbleTest(world, pos)
 		}
 	}
 	
-	override fun getCollisionShape(state: BlockState, world: IBlockReader, pos: BlockPos, context: ISelectionContext): VoxelShape{
+	override fun getCollisionShape(state: BlockState, world: IBlockReader, pos: BlockPos, context: ISelectionContext): VoxelShape {
 		return if (context is EntitySelectionContext && context.entity is EntityLivingBase)
 			MagicValues.BLOCK_COLLISION_SHRINK_SHAPE
 		else
 			VoxelShapes.fullCube()
 	}
 	
-	override fun causesSuffocation(state: BlockState, world: IBlockReader, pos: BlockPos): Boolean{
+	override fun causesSuffocation(state: BlockState, world: IBlockReader, pos: BlockPos): Boolean {
 		return false // prevents sliding off the block
 	}
 	
-	override fun onEntityCollision(state: BlockState, world: World, pos: BlockPos, entity: Entity){
-		if (!world.isRemote && world.totalTime % 4L == 0L && !(entity.height <= 0.5F || (entity.height <= 1F && entity.width <= 0.5F)) && isNonCreative(entity)){
-			if (!doCrumbleTest(world, pos)){
+	override fun onEntityCollision(state: BlockState, world: World, pos: BlockPos, entity: Entity) {
+		if (!world.isRemote && world.totalTime % 4L == 0L && !(entity.height <= 0.5F || (entity.height <= 1F && entity.width <= 0.5F)) && isNonCreative(entity)) {
+			if (!doCrumbleTest(world, pos)) {
 				return
 			}
 			
-			for(facing in Facing4){
+			for(facing in Facing4) {
 				val adjacentPos = pos.offset(facing)
 				
-				if (adjacentPos.getBlock(world) is BlockDustyStoneUnstable){
+				if (adjacentPos.getBlock(world) is BlockDustyStoneUnstable) {
 					doCrumbleTest(world, adjacentPos)
 				}
 			}
 		}
 	}
 	
-	override fun onFallenUpon(world: World, pos: BlockPos, entity: Entity, fallDistance: Float){
-		if (!world.isRemote && entity is EntityLivingBase && fallDistance > 1.3F && isNonCreative(entity)){
+	override fun onFallenUpon(world: World, pos: BlockPos, entity: Entity, fallDistance: Float) {
+		if (!world.isRemote && entity is EntityLivingBase && fallDistance > 1.3F && isNonCreative(entity)) {
 			val rand = world.rand
 			val aabb = entity.boundingBox
 			val y = pos.y
@@ -102,18 +103,18 @@ class BlockDustyStoneUnstable(builder: BlockBuilder) : BlockDustyStone(builder){
 			val minZ = (aabb.minZ + 0.001).floorToInt()
 			val maxZ = (aabb.maxZ - 0.001).floorToInt()
 			
-			for(testPos in Pos(minX, y, minZ).allInBox(Pos(maxX, y, maxZ))){
+			for(testPos in Pos(minX, y, minZ).allInBox(Pos(maxX, y, maxZ))) {
 				val state = testPos.getState(world)
 				
-				if (state.block !is BlockDustyStoneUnstable){
+				if (state.block !is BlockDustyStoneUnstable) {
 					continue
 				}
 				
-				if (rand.nextBoolean()){
+				if (rand.nextBoolean()) {
 					world.playEvent(2001, testPos, getStateId(state))
 					testPos.setAir(world)
 				}
-				else{
+				else {
 					doCrumbleTest(world, testPos)
 				}
 			}
@@ -124,17 +125,17 @@ class BlockDustyStoneUnstable(builder: BlockBuilder) : BlockDustyStone(builder){
 		super.onFallenUpon(world, pos, entity, fallDistance)
 	}
 	
-	private fun isNonCreative(entity: Entity): Boolean{
+	private fun isNonCreative(entity: Entity): Boolean {
 		return entity !is EntityPlayer || !entity.isCreative
 	}
 	
-	private fun doCrumbleTest(world: World, pos: BlockPos): Boolean{
-		for(offset in 1..8){
+	private fun doCrumbleTest(world: World, pos: BlockPos): Boolean {
+		for(offset in 1..8) {
 			val testPos = pos.down(offset)
 			val isDustyStone = testPos.getBlock(world) is BlockDustyStoneUnstable
 			
-			if (!isDustyStone){
-				if (!testPos.isTopSolid(world)){
+			if (!isDustyStone) {
+				if (!testPos.isTopSolid(world)) {
 					succeedCrumbleTest(world, testPos.up())
 					return true
 				}
@@ -146,7 +147,7 @@ class BlockDustyStoneUnstable(builder: BlockBuilder) : BlockDustyStone(builder){
 		return false
 	}
 	
-	private fun succeedCrumbleTest(world: World, pos: BlockPos){
+	private fun succeedCrumbleTest(world: World, pos: BlockPos) {
 		val rand = world.rand
 		val block = pos.getBlock(world)
 		

@@ -1,4 +1,5 @@
 package chylex.hee.game.world.generation
+
 import chylex.hee.game.world.allInBoxMutable
 import chylex.hee.game.world.generation.segments.SegmentFull
 import chylex.hee.game.world.math.Size
@@ -10,8 +11,8 @@ import net.minecraft.block.BlockState
 import net.minecraft.util.math.BlockPos
 import java.util.Random
 
-class ScaffoldedWorld(rand: Random, size: Size) : SegmentedWorld(rand, size, size, SEGMENTER){
-	private companion object{
+class ScaffoldedWorld(rand: Random, size: Size) : SegmentedWorld(rand, size, size, SEGMENTER) {
+	private companion object {
 		private val SCAFFOLDING: BlockState = ModBlocks.SCAFFOLDING.defaultState
 		private val SEGMENTER = { size: Size -> SegmentFull(size, SCAFFOLDING) }
 	}
@@ -20,30 +21,30 @@ class ScaffoldedWorld(rand: Random, size: Size) : SegmentedWorld(rand, size, siz
 		get() = worldSize.minPos.allInBoxMutable(worldSize.maxPos)
 	
 	val usedPositionsMutable: Iterable<MutableBlockPos>
-		get() = Iterables.filter(allPositionsMutable){ !isUnused(it!!) }
+		get() = Iterables.filter(allPositionsMutable) { !isUnused(it!!) }
 	
-	override fun isAir(pos: BlockPos): Boolean{
+	override fun isAir(pos: BlockPos): Boolean {
 		return super.isAir(pos) || isUnused(pos)
 	}
 	
-	fun isUnused(pos: BlockPos): Boolean{
+	fun isUnused(pos: BlockPos): Boolean {
 		return getState(pos) === SCAFFOLDING
 	}
 	
-	fun markUnused(pos: BlockPos){
+	fun markUnused(pos: BlockPos) {
 		setState(pos, SCAFFOLDING)
 	}
 	
-	fun cloneInto(world: IStructureWorld, origin: BlockPos){
-		for(offset in allPositionsMutable){
+	fun cloneInto(world: IStructureWorld, origin: BlockPos) {
+		for(offset in allPositionsMutable) {
 			val state = getState(offset)
 			
-			if (state !== SCAFFOLDING){
+			if (state !== SCAFFOLDING) {
 				world.setState(origin.add(offset), state)
 			}
 		}
 		
-		for((offset, trigger) in getTriggers()){
+		for((offset, trigger) in getTriggers()) {
 			world.addTrigger(origin.add(offset), trigger)
 		}
 	}

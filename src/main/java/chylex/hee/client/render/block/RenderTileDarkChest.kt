@@ -1,4 +1,5 @@
 package chylex.hee.client.render.block
+
 import chylex.hee.game.block.entity.TileEntityDarkChest
 import chylex.hee.init.ModAtlases
 import chylex.hee.system.facades.Resource
@@ -12,8 +13,8 @@ import net.minecraft.state.properties.ChestType.LEFT
 import net.minecraft.state.properties.ChestType.RIGHT
 
 @Sided(Side.CLIENT)
-class RenderTileDarkChest(dispatcher: TileEntityRendererDispatcher) : ChestTileEntityRenderer<TileEntityDarkChest>(dispatcher){
-	companion object{
+class RenderTileDarkChest(dispatcher: TileEntityRendererDispatcher) : ChestTileEntityRenderer<TileEntityDarkChest>(dispatcher) {
+	companion object {
 		val TEX_SINGLE = Resource.Custom("entity/dark_chest_single")
 		val TEX_DOUBLE_LEFT = Resource.Custom("entity/dark_chest_left")
 		val TEX_DOUBLE_RIGHT = Resource.Custom("entity/dark_chest_right")
@@ -23,11 +24,11 @@ class RenderTileDarkChest(dispatcher: TileEntityRendererDispatcher) : ChestTileE
 		private val MAT_DOUBLE_RIGHT = Material(ModAtlases.ATLAS_TILES, TEX_DOUBLE_RIGHT)
 	}
 	
-	init{
+	init {
 		isChristmas = false
 	}
 	
-	override fun getMaterial(tile: TileEntityDarkChest, type: ChestType) = when(type){
+	override fun getMaterial(tile: TileEntityDarkChest, type: ChestType) = when(type) {
 		LEFT  -> MAT_DOUBLE_LEFT
 		RIGHT -> MAT_DOUBLE_RIGHT
 		else  -> MAT_SINGLE

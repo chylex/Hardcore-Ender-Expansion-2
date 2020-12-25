@@ -1,4 +1,5 @@
 package chylex.hee.game.world.feature.energyshrine.piece
+
 import chylex.hee.game.block.withFacing
 import chylex.hee.game.world.Pos
 import chylex.hee.game.world.allInBoxMutable
@@ -16,13 +17,13 @@ import chylex.hee.system.random.nextItem
 import net.minecraft.block.Blocks
 import net.minecraft.util.math.BlockPos
 
-class EnergyShrineRoom_Secondary_Storage(file: String) : EnergyShrineRoom_Generic(file){
+class EnergyShrineRoom_Secondary_Storage(file: String) : EnergyShrineRoom_Generic(file) {
 	override val connections = arrayOf<IStructurePieceConnection>(
 		EnergyShrineConnection(TERMINAL, Pos(centerX, 0, maxZ), SOUTH),
 		EnergyShrineConnection(TERMINAL, Pos(centerX - 1, 0, 0), NORTH)
 	)
 	
-	override fun generate(world: IStructureWorld, instance: Instance){
+	override fun generate(world: IStructureWorld, instance: Instance) {
 		super.generate(world, instance)
 		
 		val points = arrayOf(
@@ -32,7 +33,7 @@ class EnergyShrineRoom_Secondary_Storage(file: String) : EnergyShrineRoom_Generi
 			Pos(maxX - 3, 2, maxZ - 4)
 		)
 		
-		for(pos in points){
+		for(pos in points) {
 			placeShelfDecorations(world, pos)
 			placeShelfDecorations(world, pos.up(2))
 		}
@@ -45,18 +46,18 @@ class EnergyShrineRoom_Secondary_Storage(file: String) : EnergyShrineRoom_Generi
 		world.addTrigger(chestPos, LootChestStructureTrigger(EnergyShrinePieces.LOOT_PICK(rand), rand.nextLong()))
 	}
 	
-	private fun placeShelfDecorations(world: IStructureWorld, pos: BlockPos){
+	private fun placeShelfDecorations(world: IStructureWorld, pos: BlockPos) {
 		val rand = world.rand
 		
-		val block = when(rand.nextInt(100)){
+		val block = when(rand.nextInt(100)) {
 			in  0..59 -> ModBlocks.GLOOMTORCH
 			in 60..69 -> Blocks.LIGHT_WEIGHTED_PRESSURE_PLATE
 			in 70..79 -> Blocks.HEAVY_WEIGHTED_PRESSURE_PLATE
-			else -> return
+			else      -> return
 		}
 		
 		pos.allInBoxMutable(pos.add(2, 0, 1)).forEach {
-			if (rand.nextInt(4) != 0){
+			if (rand.nextInt(4) != 0) {
 				world.setBlock(it, block)
 			}
 		}

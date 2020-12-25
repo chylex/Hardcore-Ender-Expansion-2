@@ -1,4 +1,5 @@
 package chylex.hee.game.world.feature.energyshrine.piece
+
 import chylex.hee.HEE
 import chylex.hee.game.block.BlockGloomrock
 import chylex.hee.game.entity.posVec
@@ -25,8 +26,8 @@ import chylex.hee.system.random.nextInt
 import net.minecraft.world.World
 import java.util.Random
 
-class EnergyShrineRoom_Main_Start(file: String) : EnergyShrineRoom_Generic(file){
-	private companion object{
+class EnergyShrineRoom_Main_Start(file: String) : EnergyShrineRoom_Generic(file) {
+	private companion object {
 		private const val PARTICLE_DISTANCE = 18
 		private val PARTICLE_GLOOMROCK_CHECK_RANGE = 1..15
 		
@@ -41,38 +42,38 @@ class EnergyShrineRoom_Main_Start(file: String) : EnergyShrineRoom_Generic(file)
 		private val RAND = Random()
 	}
 	
-	object Particles : ITriggerHandler{
-		override fun check(world: World): Boolean{
+	object Particles : ITriggerHandler {
+		override fun check(world: World): Boolean {
 			return world.isRemote
 		}
 		
-		override fun update(entity: EntityTechnicalTrigger){
+		override fun update(entity: EntityTechnicalTrigger) {
 			val player = HEE.proxy.getClientSidePlayer() ?: return
 			val box = EnergyShrinePieces.STRUCTURE_SIZE.toCenteredBoundingBox(entity.posVec)
 			
-			if (!box.contains(player.posVec)){
+			if (!box.contains(player.posVec)) {
 				return
 			}
 			
 			val world = player.world
 			val playerPos = Pos(player.posVec)
 			
-			for(attempt in 1..250){
+			for(attempt in 1..250) {
 				val targetPos = playerPos.add(
 					RAND.nextInt(-PARTICLE_DISTANCE, PARTICLE_DISTANCE),
 					RAND.nextInt(-PARTICLE_DISTANCE / 3, PARTICLE_DISTANCE / 3),
 					RAND.nextInt(-PARTICLE_DISTANCE, PARTICLE_DISTANCE)
 				)
 				
-				if (targetPos.getState(world).isOpaqueCube(world, targetPos)){
+				if (targetPos.getState(world).isOpaqueCube(world, targetPos)) {
 					continue
 				}
 				
-				if (targetPos.offsetUntil(UP, PARTICLE_GLOOMROCK_CHECK_RANGE){ it.getBlock(world) is BlockGloomrock } == null){
+				if (targetPos.offsetUntil(UP, PARTICLE_GLOOMROCK_CHECK_RANGE) { it.getBlock(world) is BlockGloomrock } == null) {
 					continue
 				}
 				
-				if (targetPos.offsetUntil(DOWN, PARTICLE_GLOOMROCK_CHECK_RANGE){ it.getBlock(world) is BlockGloomrock } == null){
+				if (targetPos.offsetUntil(DOWN, PARTICLE_GLOOMROCK_CHECK_RANGE) { it.getBlock(world) is BlockGloomrock } == null) {
 					continue
 				}
 				
@@ -80,12 +81,12 @@ class EnergyShrineRoom_Main_Start(file: String) : EnergyShrineRoom_Generic(file)
 			}
 		}
 		
-		override fun nextTimer(rand: Random): Int{
+		override fun nextTimer(rand: Random): Int {
 			return 3
 		}
 	}
 	
-	override fun generate(world: IStructureWorld, instance: Instance){
+	override fun generate(world: IStructureWorld, instance: Instance) {
 		super.generate(world, instance)
 		world.addTrigger(Pos(centerX, maxY - EnergyShrinePieces.STRUCTURE_SIZE.centerY, centerZ), EntityStructureTrigger(ENERGY_SHRINE_GLOBAL))
 	}

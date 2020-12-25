@@ -1,4 +1,5 @@
 package chylex.hee.game.particle
+
 import chylex.hee.game.particle.base.ParticleBaseFloating
 import chylex.hee.game.particle.spawner.IParticleMaker
 import chylex.hee.game.world.territory.TerritoryInstance
@@ -21,15 +22,15 @@ import net.minecraft.world.World
 import kotlin.math.max
 import kotlin.math.min
 
-object ParticleVoid : IParticleMaker.Simple(){
+object ParticleVoid : IParticleMaker.Simple() {
 	@Sided(Side.CLIENT)
-	override fun create(world: World, posX: Double, posY: Double, posZ: Double, motX: Double, motY: Double, motZ: Double): Particle{
+	override fun create(world: World, posX: Double, posY: Double, posZ: Double, motX: Double, motY: Double, motZ: Double): Particle {
 		return Instance(world, posX, posY, posZ, motX, motY, motZ)
 	}
 	
 	@Sided(Side.CLIENT)
-	private class Instance(world: World, posX: Double, posY: Double, posZ: Double, motX: Double, motY: Double, motZ: Double) : ParticleBaseFloating(world, posX, posY, posZ, motX, motY, motZ){
-		init{
+	private class Instance(world: World, posX: Double, posY: Double, posZ: Double, motX: Double, motY: Double, motZ: Double) : ParticleBaseFloating(world, posX, posY, posZ, motX, motY, motZ) {
+		init {
 			selectSpriteRandomly(ParticleVoid.sprite)
 			
 			val color = rand.nextFloat(0.25F, 0.35F)
@@ -53,20 +54,20 @@ object ParticleVoid : IParticleMaker.Simple(){
 			val instance = TerritoryInstance.fromPos(posX.floorToInt(), posZ.floorToInt())
 			val center = instance?.centerPoint
 			
-			if (center != null){
+			if (center != null) {
 				val posVec = Vec(posX, posY, posZ)
 				val voidFactor = TerritoryVoid.getVoidFactor(world, posVec)
 				
-				if (voidFactor >= TerritoryVoid.INSTANT_DEATH_FACTOR){
+				if (voidFactor >= TerritoryVoid.INSTANT_DEATH_FACTOR) {
 					setExpired()
 				}
-				else{
+				else {
 					motionVec = motionVec.offsetTowards(posVec.directionTowards(center.add(rand.nextVector(64.0))), voidFactor * 0.15)
 				}
 			}
 		}
 		
-		override fun tick(){
+		override fun tick() {
 			super.tick()
 			
 			motionVec = motionVec.scale(0.996)
@@ -77,11 +78,11 @@ object ParticleVoid : IParticleMaker.Simple(){
 				min(1F, particleAlpha + 0.4F)
 		}
 		
-		override fun getBrightnessForRender(partialTicks: Float): Int{
+		override fun getBrightnessForRender(partialTicks: Float): Int {
 			return 0
 		}
 		
-		override fun getRenderType(): IParticleRenderType{
+		override fun getRenderType(): IParticleRenderType {
 			return PARTICLE_SHEET_TRANSLUCENT
 		}
 	}

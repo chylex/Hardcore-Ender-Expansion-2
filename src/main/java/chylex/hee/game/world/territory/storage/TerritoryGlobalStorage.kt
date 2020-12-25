@@ -1,4 +1,5 @@
 package chylex.hee.game.world.territory.storage
+
 import chylex.hee.HEE
 import chylex.hee.game.item.ItemPortalToken.TokenType
 import chylex.hee.game.world.perDimensionData
@@ -17,8 +18,8 @@ import net.minecraft.world.storage.WorldSavedData
 import java.util.EnumMap
 import java.util.UUID
 
-class TerritoryGlobalStorage private constructor() : WorldSavedData(NAME){
-	companion object{
+class TerritoryGlobalStorage private constructor() : WorldSavedData(NAME) {
+	companion object {
 		fun get() = TerritoryInstance.endWorld.perDimensionData(NAME, ::TerritoryGlobalStorage)
 		
 		private const val NAME = "HEE_TERRITORIES"
@@ -36,16 +37,16 @@ class TerritoryGlobalStorage private constructor() : WorldSavedData(NAME){
 	private val territoryData = EnumMap(TerritoryType.values().filterNot { it.isSpawn }.associateWith { mutableListOf<TerritoryEntry>() })
 	private val solitaryPlayers = mutableMapOf<TerritoryInstance, Object2IntMap<UUID>>()
 	
-	private fun makeEntry(territory: TerritoryType, index: Int, type: TokenType): TerritoryEntry{
+	private fun makeEntry(territory: TerritoryType, index: Int, type: TokenType): TerritoryEntry {
 		return TerritoryEntry(this, TerritoryInstance(territory, index), type)
 	}
 	
-	private fun makeEntry(territory: TerritoryType, index: Int, tag: TagCompound): TerritoryEntry{
+	private fun makeEntry(territory: TerritoryType, index: Int, tag: TagCompound): TerritoryEntry {
 		return TerritoryEntry.fromTag(this, TerritoryInstance(territory, index), tag)
 	}
 	
-	fun assignNewIndex(territory: TerritoryType, tokenType: TokenType): Int{
-		if (territory.isSpawn){
+	fun assignNewIndex(territory: TerritoryType, tokenType: TokenType): Int {
+		if (territory.isSpawn) {
 			return 0
 		}
 		
@@ -58,7 +59,7 @@ class TerritoryGlobalStorage private constructor() : WorldSavedData(NAME){
 		return newIndex
 	}
 	
-	fun forInstance(instance: TerritoryInstance): TerritoryEntry?{
+	fun forInstance(instance: TerritoryInstance): TerritoryEntry? {
 		val (territory, index) = instance
 		
 		return if (territory.isSpawn)
@@ -67,13 +68,13 @@ class TerritoryGlobalStorage private constructor() : WorldSavedData(NAME){
 			territoryData.getValue(territory).getOrNull(index)
 	}
 	
-	fun remapSolitaryIndex(instance: TerritoryInstance, player: EntityPlayer): TerritoryInstance{
+	fun remapSolitaryIndex(instance: TerritoryInstance, player: EntityPlayer): TerritoryInstance {
 		val territory = instance.territory
 		
-		val players = solitaryPlayers.getOrPut(instance){ Object2IntOpenHashMap<UUID>().apply { defaultReturnValue(SOLITARY_MISSING) } }
+		val players = solitaryPlayers.getOrPut(instance) { Object2IntOpenHashMap<UUID>().apply { defaultReturnValue(SOLITARY_MISSING) } }
 		val remapped = players.getInt(player.uniqueID)
 		
-		if (remapped != SOLITARY_MISSING){
+		if (remapped != SOLITARY_MISSING) {
 			return TerritoryInstance(territory, remapped)
 		}
 		
@@ -92,16 +93,16 @@ class TerritoryGlobalStorage private constructor() : WorldSavedData(NAME){
 		put(SPAWN_TAG, spawnEntry.serializeNBT())
 		
 		put(TERRITORIES_TAG, TagCompound().apply {
-			for((key, list) in territoryData){
+			for((key, list) in territoryData) {
 				putList(key.title, NBTObjectList.of(list.map(TerritoryEntry::serializeNBT)))
 			}
 		})
 		
 		put(SOLITARY_TAG, TagCompound().apply {
-			for((instance, map) in solitaryPlayers){
+			for((instance, map) in solitaryPlayers) {
 				val solitaryPlayersTag = TagCompound()
 				
-				for(entry in map.object2IntEntrySet()){
+				for(entry in map.object2IntEntrySet()) {
 					solitaryPlayersTag.putInt(entry.key.toString(), entry.intValue)
 				}
 				
@@ -113,8 +114,8 @@ class TerritoryGlobalStorage private constructor() : WorldSavedData(NAME){
 	override fun read(nbt: TagCompound) = nbt.use {
 		spawnEntry.deserializeNBT(getCompound(SPAWN_TAG))
 		
-		with(getCompound(TERRITORIES_TAG)){
-			for(key in keySet()){
+		with(getCompound(TERRITORIES_TAG)) {
+			for(key in keySet()) {
 				val territory = TerritoryType.fromTitle(key) ?: continue
 				val list = territoryData.getValue(territory)
 				
@@ -123,14 +124,14 @@ class TerritoryGlobalStorage private constructor() : WorldSavedData(NAME){
 			}
 		}
 		
-		with(getCompound(SOLITARY_TAG)){
+		with(getCompound(SOLITARY_TAG)) {
 			solitaryPlayers.clear()
 			
-			for(keyHash in keySet()){
+			for(keyHash in keySet()) {
 				val hash = keyHash.toIntOrNull()
 				val instance = hash?.let(TerritoryInstance::fromHash)
 				
-				if (instance == null){
+				if (instance == null) {
 					HEE.log.error("[TerritoryGlobalStorage] invalid solitary territory hash: $keyHash")
 					continue
 				}
@@ -138,10 +139,10 @@ class TerritoryGlobalStorage private constructor() : WorldSavedData(NAME){
 				val solitaryPlayersMap = Object2IntOpenHashMap<UUID>().apply { defaultReturnValue(SOLITARY_MISSING) }
 				val solitaryPlayersTag = getCompound(keyHash)
 				
-				for(keyUUID in solitaryPlayersTag.keySet()){
-					val uuid = try{
+				for(keyUUID in solitaryPlayersTag.keySet()) {
+					val uuid = try {
 						UUID.fromString(keyUUID)
-					}catch(e: Exception){
+					} catch(e: Exception) {
 						HEE.log.error("[TerritoryGlobalStorage] could not parse solitary player UUID: $keyUUID")
 						continue
 					}

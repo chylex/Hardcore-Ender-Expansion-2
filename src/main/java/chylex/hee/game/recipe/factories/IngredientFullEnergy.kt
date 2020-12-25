@@ -1,4 +1,5 @@
 package chylex.hee.game.recipe.factories
+
 import chylex.hee.game.item.ItemAbstractEnergyUser
 import chylex.hee.game.item.infusion.InfusionTag
 import chylex.hee.game.recipe.factories.IngredientFullEnergy.Instance
@@ -15,28 +16,28 @@ import net.minecraftforge.common.crafting.IIngredientSerializer
 import net.minecraftforge.registries.ForgeRegistries
 import java.util.stream.Stream
 
-object IngredientFullEnergy : IIngredientSerializer<Instance>{
-	override fun write(buffer: PacketBuffer, ingredient: Instance){
+object IngredientFullEnergy : IIngredientSerializer<Instance> {
+	override fun write(buffer: PacketBuffer, ingredient: Instance) {
 		buffer.writeRegistryId(ingredient.item)
 	}
 	
-	override fun parse(buffer: PacketBuffer): Instance{
+	override fun parse(buffer: PacketBuffer): Instance {
 		return construct(buffer.readRegistryIdSafe(Item::class.java))
 	}
 	
-	override fun parse(json: JsonObject): Instance{
+	override fun parse(json: JsonObject): Instance {
 		val itemName = JSONUtils.getString(json, "item")
 		val item = ForgeRegistries.ITEMS.getIfExists(ResourceLocation(itemName))
 		
-		if (item == null){
+		if (item == null) {
 			throw JsonSyntaxException("Unknown item '$itemName'")
 		}
 		
 		return construct(item)
 	}
 	
-	private fun construct(item: Item): Instance{
-		if (item !is ItemAbstractEnergyUser){
+	private fun construct(item: Item): Instance {
+		if (item !is ItemAbstractEnergyUser) {
 			throw JsonSyntaxException("Item '${item.registryName}' does not use Energy")
 		}
 		
@@ -47,8 +48,8 @@ object IngredientFullEnergy : IIngredientSerializer<Instance>{
 		return Instance(stack, item)
 	}
 	
-	class Instance(stack: ItemStack, val item: ItemAbstractEnergyUser) : Ingredient(Stream.of(SingleItemList(stack))){
-		override fun test(ingredient: ItemStack?): Boolean{
+	class Instance(stack: ItemStack, val item: ItemAbstractEnergyUser) : Ingredient(Stream.of(SingleItemList(stack))) {
+		override fun test(ingredient: ItemStack?): Boolean {
 			return ingredient != null && ingredient.item === item && item.hasMaximumEnergy(ingredient) && !InfusionTag.hasAny(ingredient)
 		}
 		

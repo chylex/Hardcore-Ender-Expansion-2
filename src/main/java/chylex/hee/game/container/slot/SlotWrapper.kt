@@ -1,4 +1,5 @@
 package chylex.hee.game.container.slot
+
 import chylex.hee.system.forge.Side
 import chylex.hee.system.forge.Sided
 import chylex.hee.system.migration.EntityPlayer
@@ -9,11 +10,11 @@ import net.minecraft.inventory.container.Slot
 import net.minecraft.item.ItemStack
 import net.minecraft.util.ResourceLocation
 
-abstract class SlotWrapper(private val wrapped: Slot) : Slot(wrapped.inventory, wrapped.slotIndex, wrapped.xPos, wrapped.yPos){
-	init{
+abstract class SlotWrapper(private val wrapped: Slot) : Slot(wrapped.inventory, wrapped.slotIndex, wrapped.xPos, wrapped.yPos) {
+	init {
 		slotNumber = wrapped.slotNumber
 		
-		if (wrapped is CraftingResultSlot || wrapped is FurnaceResultSlot || wrapped is MerchantResultSlot){
+		if (wrapped is CraftingResultSlot || wrapped is FurnaceResultSlot || wrapped is MerchantResultSlot) {
 			// these types override onCrafting and onSwapCraft and wrapping them would change behavior
 			throw UnsupportedOperationException("wrapping ${wrapped::class.java.simpleName} is not supported")
 		}
@@ -38,9 +39,9 @@ abstract class SlotWrapper(private val wrapped: Slot) : Slot(wrapped.inventory, 
 	override fun onSlotChange(modified: ItemStack, original: ItemStack) = wrapped.onSlotChange(modified, original)
 	override fun onSlotChanged() = wrapped.onSlotChanged()
 	
-	override fun onCrafting(stack: ItemStack, amount: Int){}
-	override fun onCrafting(stack: ItemStack){}
-	override fun onSwapCraft(amount: Int){}
+	override fun onCrafting(stack: ItemStack, amount: Int) {}
+	override fun onCrafting(stack: ItemStack) {}
+	override fun onSwapCraft(amount: Int) {}
 	
 	@Sided(Side.CLIENT) override fun getBackground() = wrapped.background
 	@Sided(Side.CLIENT) override fun setBackground(atlas: ResourceLocation, sprite: ResourceLocation): Slot = wrapped.setBackground(atlas, sprite)

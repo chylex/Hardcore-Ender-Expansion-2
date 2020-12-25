@@ -1,4 +1,5 @@
 package chylex.hee.game.block.entity
+
 import chylex.hee.game.block.BlockAbstractPortal
 import chylex.hee.game.block.BlockVoidPortalInner.ITerritoryInstanceFactory
 import chylex.hee.game.block.BlockVoidPortalInner.IVoidPortalController
@@ -35,10 +36,10 @@ import net.minecraft.util.text.TranslationTextComponent
 import kotlin.math.min
 import kotlin.math.nextUp
 
-class TileEntityVoidPortalStorage(type: TileEntityType<TileEntityVoidPortalStorage>) : TileEntityBasePortalController(type), IVoidPortalController, INamedContainerProvider{
+class TileEntityVoidPortalStorage(type: TileEntityType<TileEntityVoidPortalStorage>) : TileEntityBasePortalController(type), IVoidPortalController, INamedContainerProvider {
 	constructor() : this(ModTileEntities.VOID_PORTAL_STORAGE)
 	
-	private companion object{
+	private companion object {
 		private const val ACTIVATION_DURATION_TICKS = 20 * 10
 		
 		private const val FADE_IN_PROGRESS_PER_UPDATE = 0.04F
@@ -52,8 +53,8 @@ class TileEntityVoidPortalStorage(type: TileEntityType<TileEntityVoidPortalStora
 		private const val TERRITORY_TAG = "Territory"
 	}
 	
-	private class TerritoryInstanceFactory(override val territory: TerritoryType, private val stack: ItemStack) : ITerritoryInstanceFactory{
-		override fun create(entity: Entity): TerritoryInstance?{
+	private class TerritoryInstanceFactory(override val territory: TerritoryType, private val stack: ItemStack) : ITerritoryInstanceFactory {
+		override fun create(entity: Entity): TerritoryInstance? {
 			return ModItems.PORTAL_TOKEN.getOrCreateTerritoryInstance(stack, entity)
 		}
 	}
@@ -61,7 +62,7 @@ class TileEntityVoidPortalStorage(type: TileEntityType<TileEntityVoidPortalStora
 	// Client animation
 	
 	override val serverRenderState
-		get() = when(currentInstanceFactory){
+		get() = when(currentInstanceFactory) {
 			null -> Invisible
 			else ->
 				if (remainingTime > ACTIVATION_DURATION_TICKS - FADE_IN_DURATION_TICKS)
@@ -86,49 +87,49 @@ class TileEntityVoidPortalStorage(type: TileEntityType<TileEntityVoidPortalStora
 	private var remainingTime = 0
 	private var clientTime = 0
 	
-	fun activateToken(stack: ItemStack){
+	fun activateToken(stack: ItemStack) {
 		currentInstanceFactory = ModItems.PORTAL_TOKEN.getTerritoryType(stack)?.let { TerritoryInstanceFactory(it, stack) }
 		remainingTime = ACTIVATION_DURATION_TICKS
 	}
 	
-	fun prepareSpawnPoint(entity: Entity): SpawnInfo?{
-		return currentInstanceFactory?.create(entity)?.let { firstSpawnInfo.getOrPut(it){ it.prepareSpawnPoint(entity, clearanceRadius = 1) } }
+	fun prepareSpawnPoint(entity: Entity): SpawnInfo? {
+		return currentInstanceFactory?.create(entity)?.let { firstSpawnInfo.getOrPut(it) { it.prepareSpawnPoint(entity, clearanceRadius = 1) } }
 	}
 	
 	// Container
 	
-	override fun getDisplayName(): ITextComponent{
+	override fun getDisplayName(): ITextComponent {
 		return TranslationTextComponent("gui.hee.portal_token_storage.title")
 	}
 	
-	override fun createMenu(id: Int, inventory: PlayerInventory, player: EntityPlayer): Container{
+	override fun createMenu(id: Int, inventory: PlayerInventory, player: EntityPlayer): Container {
 		return ContainerPortalTokenStorage(id, player, ItemStackHandlerInventory(TokenPlayerStorage.forPlayer(player)), this)
 	}
 	
 	// Overrides
 	
-	override fun tick(){
+	override fun tick() {
 		super.tick()
 		
-		if (!wrld.isRemote){
-			if ((remainingTime > 0 && --remainingTime == 0) || !pos.isAnyPlayerWithinRange(wrld, 160)){
+		if (!wrld.isRemote) {
+			if ((remainingTime > 0 && --remainingTime == 0) || !pos.isAnyPlayerWithinRange(wrld, 160)) {
 				currentInstanceFactory = null
 				remainingTime = 0
 				firstSpawnInfo.clear()
 			}
 		}
-		else{
-			if (clientAnimationProgress.currentValue > 0F){ // just a small effect so don't care about syncing with server
+		else {
+			if (clientAnimationProgress.currentValue > 0F) { // just a small effect so don't care about syncing with server
 				val slowingStartTime = ACTIVATION_DURATION_TICKS - SLOWING_DURATION_TICKS - SLOWING_EXTRA_DELAY_TICKS
 				
-				if (++clientTime > slowingStartTime){
+				if (++clientTime > slowingStartTime) {
 					val progress = min(1F, (clientTime - slowingStartTime).toFloat() / SLOWING_DURATION_TICKS)
 					val offset = SLOWING_PROGRESS_PER_UPDATE * square(progress)
 					
 					clientPortalOffset.update(clientPortalOffset.currentValue + offset)
 				}
 			}
-			else{
+			else {
 				clientTime = 0
 				clientPortalOffset.updateImmediately(0F)
 			}
@@ -138,7 +139,7 @@ class TileEntityVoidPortalStorage(type: TileEntityType<TileEntityVoidPortalStora
 	override fun writeNBT(nbt: TagCompound, context: Context) = nbt.use {
 		super.writeNBT(nbt, context)
 		
-		if (context == NETWORK){
+		if (context == NETWORK) {
 			currentInstanceFactory?.let { putEnum(TERRITORY_TAG, it.territory) }
 		}
 	}
@@ -146,9 +147,9 @@ class TileEntityVoidPortalStorage(type: TileEntityType<TileEntityVoidPortalStora
 	override fun readNBT(nbt: TagCompound, context: Context) = nbt.use {
 		super.readNBT(nbt, context)
 		
-		if (context == NETWORK){
+		if (context == NETWORK) {
 			currentInstanceFactory = getEnum<TerritoryType>(TERRITORY_TAG)?.let {
-				object : ITerritoryInstanceFactory{
+				object : ITerritoryInstanceFactory {
 					override val territory = it
 					override fun create(entity: Entity): TerritoryInstance? = null
 				}

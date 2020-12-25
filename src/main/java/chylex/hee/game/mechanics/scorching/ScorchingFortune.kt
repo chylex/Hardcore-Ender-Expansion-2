@@ -1,4 +1,5 @@
 package chylex.hee.game.mechanics.scorching
+
 import chylex.hee.game.inventory.copyIfNotEmpty
 import chylex.hee.game.inventory.isNotEmpty
 import chylex.hee.game.inventory.size
@@ -21,11 +22,11 @@ import net.minecraft.world.storage.loot.LootParameters
 import java.util.Random
 import kotlin.math.pow
 
-object ScorchingFortune{
-	private class Spec(private val dropRange: ClosedFloatingPointRange<Float>, private val highestChance: Float){
+object ScorchingFortune {
+	private class Spec(private val dropRange: ClosedFloatingPointRange<Float>, private val highestChance: Float) {
 		constructor(dropRange: IntRange, highestChance: Float) : this((dropRange.first.toFloat())..(dropRange.last.toFloat()), highestChance)
 		
-		fun nextDropAmount(rand: Random): Int{
+		fun nextDropAmount(rand: Random): Int {
 			val curveScale = (dropRange.endInclusive - dropRange.start) * 0.5F
 			val fractionalAmount = highestChance + (rand.nextGaussian().toFloat() * curveScale)
 			
@@ -59,14 +60,14 @@ object ScorchingFortune{
 	
 	// Calculations
 	
-	private fun createGeneralFortuneSpec(world: ServerWorld, block: Block): Spec?{
-		if (FORTUNE_CACHED.containsKey(block)){
+	private fun createGeneralFortuneSpec(world: ServerWorld, block: Block): Spec? {
+		if (FORTUNE_CACHED.containsKey(block)) {
 			return FORTUNE_CACHED[block]
 		}
 		
 		val defaultRange = estimateDropRange(world, block)
 		
-		if (defaultRange.isEmpty()){
+		if (defaultRange.isEmpty()) {
 			FORTUNE_CACHED[block] = null
 			return null
 		}
@@ -83,7 +84,7 @@ object ScorchingFortune{
 		return Spec(newRange, highestChance).also { FORTUNE_CACHED[block] = it }
 	}
 	
-	private fun estimateDropRange(world: ServerWorld, block: Block): IntRange{
+	private fun estimateDropRange(world: ServerWorld, block: Block): IntRange {
 		val rand = Random(96L)
 		
 		val lootTable = Environment.getLootTable(block.lootTable)
@@ -97,24 +98,24 @@ object ScorchingFortune{
 		var minimum = Int.MAX_VALUE
 		var maximum = Int.MIN_VALUE
 		
-		repeat(200){
+		repeat(200) {
 			val items = lootTable.generate(lootContext)
 			
-			if (items.size != 1){
+			if (items.size != 1) {
 				return IntRange.EMPTY
 			}
 			
 			val amount = items.first().size
 			
-			if (amount == 0){
+			if (amount == 0) {
 				return IntRange.EMPTY
 			}
 			
-			if (amount < minimum){
+			if (amount < minimum) {
 				minimum = amount
 			}
 			
-			if (amount > maximum){
+			if (amount > maximum) {
 				maximum = amount
 			}
 		}
@@ -122,7 +123,7 @@ object ScorchingFortune{
 		return minimum..maximum
 	}
 	
-	private fun getSmeltingResult(world: World, block: Block): ItemStack{
+	private fun getSmeltingResult(world: World, block: Block): ItemStack {
 		val inventory = Inventory(ItemStack(block))
 		val recipe = world.recipeManager.getRecipe(IRecipeType.SMELTING, inventory, world).orElse(null)
 		
@@ -131,21 +132,21 @@ object ScorchingFortune{
 	
 	// Public
 	
-	fun canSmelt(world: World, block: Block): Boolean{
+	fun canSmelt(world: World, block: Block): Boolean {
 		return getSmeltingResult(world, block).isNotEmpty
 	}
 	
-	fun createSmeltedStack(world: World, block: Block, rand: Random): ItemStack{
-		if (world !is ServerWorld){
+	fun createSmeltedStack(world: World, block: Block, rand: Random): ItemStack {
+		if (world !is ServerWorld) {
 			return ItemStack.EMPTY
 		}
 		
 		val smelted = getSmeltingResult(world, block)
 		
-		if (smelted.isNotEmpty && !FORTUNE_BLACKLISTED.contains(block)){
+		if (smelted.isNotEmpty && !FORTUNE_BLACKLISTED.contains(block)) {
 			val fortuneSpec = FORTUNE_HARDCODED[block] ?: if (smelted.item is ItemBlock) null else createGeneralFortuneSpec(world, block)
 			
-			if (fortuneSpec != null){
+			if (fortuneSpec != null) {
 				smelted.size = fortuneSpec.nextDropAmount(rand)
 			}
 		}

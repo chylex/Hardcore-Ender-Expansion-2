@@ -1,4 +1,5 @@
 package chylex.hee.client.color
+
 import net.minecraft.block.Block
 import net.minecraft.client.renderer.color.IBlockColor
 import net.minecraft.client.renderer.color.IItemColor

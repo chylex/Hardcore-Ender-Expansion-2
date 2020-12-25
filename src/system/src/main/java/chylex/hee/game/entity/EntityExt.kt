@@ -1,4 +1,5 @@
 package chylex.hee.game.entity
+
 import chylex.hee.system.math.Vec
 import chylex.hee.system.migration.EntityItem
 import chylex.hee.system.migration.EntityLivingBase
@@ -37,19 +38,19 @@ var Entity.positionZ
 
 var Entity.motionX
 	get() = this.motion.x
-	set(value){
+	set(value) {
 		this.motion = Vec(value, motion.y, motion.z)
 	}
 
 var Entity.motionY
 	get() = this.motion.y
-	set(value){
+	set(value) {
 		this.motion = Vec(motion.x, value, motion.z)
 	}
 
 var Entity.motionZ
 	get() = this.motion.z
-	set(value){
+	set(value) {
 		this.motion = Vec(motion.x, motion.y, value)
 	}
 
@@ -61,26 +62,26 @@ val Entity.lookDirVec: Vec3d
 
 // Methods
 
-fun Entity.setFireTicks(ticks: Int){
+fun Entity.setFireTicks(ticks: Int) {
 	val prevFire = this.fire
 	this.setFire(ticks / 20) // in case something overrides it
 	
-	val finalTicks = when(this){
+	val finalTicks = when(this) {
 		is EntityLivingBase -> ProtectionEnchantment.getFireTimeForEntity(this, ticks)
-		else -> ticks
+		else                -> ticks
 	}
 	
-	if (finalTicks > prevFire){
+	if (finalTicks > prevFire) {
 		this.fire = finalTicks
 	}
 }
 
-fun EntityItem.cloneFrom(source: Entity){
+fun EntityItem.cloneFrom(source: Entity) {
 	setPositionAndRotation(source.posX, source.posY, source.posZ, source.rotationYaw, source.rotationPitch)
 	motion = source.motion
 	isAirBorne = source.isAirBorne
 	
-	if (source is EntityItem){
+	if (source is EntityItem) {
 		lifespan = source.lifespan
 		pickupDelay = source.pickupDelay
 		
@@ -116,21 +117,21 @@ val OPERATION_MUL_INCR_INDIVIDUAL = Operation.MULTIPLY_TOTAL
 
 // Attributes (Helpers)
 
-fun IAttributeInstance.tryApplyModifier(modifier: AttributeModifier){
-	if (!this.hasModifier(modifier)){
+fun IAttributeInstance.tryApplyModifier(modifier: AttributeModifier) {
+	if (!this.hasModifier(modifier)) {
 		this.applyModifier(modifier)
 	}
 }
 
-fun IAttributeInstance.tryRemoveModifier(modifier: AttributeModifier){
-	if (this.hasModifier(modifier)){
+fun IAttributeInstance.tryRemoveModifier(modifier: AttributeModifier) {
+	if (this.hasModifier(modifier)) {
 		this.removeModifier(modifier)
 	}
 }
 
 // Selectors
 
-fun Entity.isAnyVulnerablePlayerWithinRange(range: Double): Boolean{
+fun Entity.isAnyVulnerablePlayerWithinRange(range: Double): Boolean {
 	return world.getClosestPlayer(posX, posY, posZ, range, true) != null
 }
 

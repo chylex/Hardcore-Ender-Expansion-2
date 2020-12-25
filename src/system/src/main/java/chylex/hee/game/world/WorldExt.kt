@@ -1,4 +1,5 @@
 package chylex.hee.game.world
+
 import net.minecraft.world.Difficulty.PEACEFUL
 import net.minecraft.world.IWorld
 import net.minecraft.world.World
@@ -15,6 +16,6 @@ val IWorld.isPeaceful
 
 // World data
 
-fun <T : WorldSavedData> ServerWorld.perDimensionData(name: String, constructor: () -> T): T{
+fun <T : WorldSavedData> ServerWorld.perDimensionData(name: String, constructor: () -> T): T {
 	return this.savedData.getOrCreate(constructor, name)
 }

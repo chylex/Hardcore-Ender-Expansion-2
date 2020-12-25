@@ -1,4 +1,5 @@
 package chylex.hee.game.entity.living.ai
+
 import chylex.hee.game.entity.posVec
 import chylex.hee.game.world.bottomCenter
 import chylex.hee.game.world.breakBlock
@@ -18,9 +19,9 @@ import net.minecraft.util.math.Vec3d
 class AIPickUpBlock(
 	private val entity: EntityCreature,
 	private val ticksPerAttempt: Int,
-	private val handler: IBlockPickUpHandler
-) : Goal(){
-	interface IBlockPickUpHandler{
+	private val handler: IBlockPickUpHandler,
+) : Goal() {
+	interface IBlockPickUpHandler {
 		val canBeginSearch: Boolean
 		fun onBeginSearch(): BlockPos?
 		fun onBlockReached(state: BlockState)
@@ -32,14 +33,14 @@ class AIPickUpBlock(
 	private var targetBlockPos: BlockPos? = null
 	private var targetBlockState: BlockState? = null
 	
-	override fun shouldExecute(): Boolean{
-		if (entity.attackTarget != null || !handler.canBeginSearch){
+	override fun shouldExecute(): Boolean {
+		if (entity.attackTarget != null || !handler.canBeginSearch) {
 			return false
 		}
 		
 		val world = entity.world
 		
-		if (world.totalTime < timeOfNextAttempt){
+		if (world.totalTime < timeOfNextAttempt) {
 			return false
 		}
 		
@@ -47,7 +48,7 @@ class AIPickUpBlock(
 		
 		val pos = handler.onBeginSearch()
 		
-		if (pos == null){
+		if (pos == null) {
 			return false
 		}
 		
@@ -61,19 +62,19 @@ class AIPickUpBlock(
 		return true
 	}
 	
-	override fun startExecuting(){
+	override fun startExecuting() {
 		val (x, y, z) = targetNavPos ?: return
 		entity.navigator.tryMoveToXYZ(x, y, z, 1.0)
 	}
 	
-	override fun shouldContinueExecuting(): Boolean{
+	override fun shouldContinueExecuting(): Boolean {
 		return !entity.navigator.noPath() && targetNavPos != null && targetBlockPos?.getState(entity.world) === targetBlockState
 	}
 	
-	override fun tick(){
+	override fun tick() {
 		val target = targetNavPos ?: return
 		
-		if (entity.posVec.squareDistanceTo(target) < square(1.33)){
+		if (entity.posVec.squareDistanceTo(target) < square(1.33)) {
 			targetBlockPos?.let {
 				val world = entity.world
 				
@@ -85,7 +86,7 @@ class AIPickUpBlock(
 		}
 	}
 	
-	override fun resetTask(){
+	override fun resetTask() {
 		timeOfNextAttempt = entity.world.totalTime + ticksPerAttempt
 		targetBlockPos = null
 		targetBlockState = null

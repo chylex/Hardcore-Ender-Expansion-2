@@ -1,4 +1,5 @@
 package chylex.hee.game.block.entity
+
 import chylex.hee.game.block.entity.base.TileEntityBase
 import chylex.hee.game.mechanics.dust.DustLayerInventory
 import chylex.hee.game.mechanics.dust.DustLayers
@@ -17,10 +18,10 @@ import net.minecraftforge.common.capabilities.Capability
 import net.minecraftforge.common.util.LazyOptional
 import net.minecraftforge.items.CapabilityItemHandler.ITEM_HANDLER_CAPABILITY
 
-class TileEntityJarODust(type: TileEntityType<TileEntityJarODust>) : TileEntityBase(type){
+class TileEntityJarODust(type: TileEntityType<TileEntityJarODust>) : TileEntityBase(type) {
 	constructor() : this(ModTileEntities.JAR_O_DUST)
 	
-	companion object{
+	companion object {
 		const val DUST_CAPACITY = 256
 		const val LAYERS_TAG = "Layers"
 	}
@@ -32,12 +33,12 @@ class TileEntityJarODust(type: TileEntityType<TileEntityJarODust>) : TileEntityB
 	private val inventoryIntake = LazyOptional(DustLayerInventory(layers, true))
 	private val inventoryDispenser = LazyOptional(DustLayerInventory(layers, false))
 	
-	override fun <T : Any?> getCapability(capability: Capability<T>, facing: Direction?): LazyOptional<T>{
-		if (capability === ITEM_HANDLER_CAPABILITY){
-			if (facing == UP){
+	override fun <T : Any?> getCapability(capability: Capability<T>, facing: Direction?): LazyOptional<T> {
+		if (capability === ITEM_HANDLER_CAPABILITY) {
+			if (facing == UP) {
 				return inventoryIntake.cast()
 			}
-			else if (facing == DOWN){
+			else if (facing == DOWN) {
 				return inventoryDispenser.cast()
 			}
 		}

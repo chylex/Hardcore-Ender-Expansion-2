@@ -1,4 +1,5 @@
 package chylex.hee.commands.server
+
 import chylex.hee.commands.CommandExecutionFunctionCtx
 import chylex.hee.commands.ICommand
 import chylex.hee.commands.executes
@@ -23,12 +24,12 @@ import net.minecraft.util.text.event.ClickEvent
 import net.minecraft.util.text.event.ClickEvent.Action.RUN_COMMAND
 import net.minecraft.util.text.event.ClickEvent.Action.SUGGEST_COMMAND
 
-object CommandServerHelp : ICommand, CommandExecutionFunctionCtx<Boolean>{
+object CommandServerHelp : ICommand, CommandExecutionFunctionCtx<Boolean> {
 	private const val COMMANDS_PER_PAGE = 7
 	
 	override val name = "help"
 	
-	override fun register(builder: ArgumentBuilder<CommandSource, *>){
+	override fun register(builder: ArgumentBuilder<CommandSource, *>) {
 		builder.executes(this, false)
 		
 		builder.then(
@@ -36,40 +37,40 @@ object CommandServerHelp : ICommand, CommandExecutionFunctionCtx<Boolean>{
 		)
 	}
 	
-	override fun invoke(ctx: CommandContext<CommandSource>, hasDisplayPage: Boolean) = returning(1){
+	override fun invoke(ctx: CommandContext<CommandSource>, hasDisplayPage: Boolean) = returning(1) {
 		val source = ctx.source
 		val displayPage = if (hasDisplayPage) ctx.getInt("page") else 1
 		
 		var totalPages = (ModCommands.admin.size.toFloat() / COMMANDS_PER_PAGE).ceilToInt()
 		var debugPage = -1
 		
-		if (ModCommands.debug.isNotEmpty()){
+		if (ModCommands.debug.isNotEmpty()) {
 			totalPages++
 			debugPage = totalPages
 		}
 		
 		val actualPage: Int
 		
-		if (source.entity is EntityPlayer){
+		if (source.entity is EntityPlayer) {
 			actualPage = displayPage - 1
 			totalPages++
 		}
-		else{
+		else {
 			actualPage = displayPage
 		}
 		
-		if (displayPage < 1 || displayPage > totalPages){
+		if (displayPage < 1 || displayPage > totalPages) {
 			throw CommandException(TranslationTextComponent("commands.hee.help.failed", totalPages))
 		}
 		
 		val responseHeaderKey: String
 		val responseCommands: Iterable<ICommand>
 		
-		if (actualPage == debugPage){
+		if (actualPage == debugPage) {
 			responseHeaderKey = "commands.hee.help.header.debug"
 			responseCommands = ModCommands.debug.asIterable()
 		}
-		else{
+		else {
 			responseHeaderKey = "commands.hee.help.header.admin"
 			responseCommands = ModCommands.admin.drop((actualPage - 1) * COMMANDS_PER_PAGE).take(COMMANDS_PER_PAGE)
 		}
@@ -80,7 +81,7 @@ object CommandServerHelp : ICommand, CommandExecutionFunctionCtx<Boolean>{
 		sendCommandListPage(source, commandNames, commandUsages, responseHeaderKey, displayPage, totalPages)
 	}
 	
-	fun sendCommandListPage(source: CommandSource, commandNames: Iterable<String>, commandUsages: Map<String, String>, headerKey: String, currentPage: Int, totalPages: Int?){
+	fun sendCommandListPage(source: CommandSource, commandNames: Iterable<String>, commandUsages: Map<String, String>, headerKey: String, currentPage: Int, totalPages: Int?) {
 		val emptyLine = StringTextComponent("")
 		
 		send(source, emptyLine)
@@ -89,7 +90,7 @@ object CommandServerHelp : ICommand, CommandExecutionFunctionCtx<Boolean>{
 		})
 		send(source, emptyLine)
 		
-		for(name in commandNames){
+		for(name in commandNames) {
 			val entry = commandUsages.entries.find { it.key == name }
 			val usage = entry?.value?.replaceFirst("[$name]", name) ?: name
 			
@@ -105,22 +106,22 @@ object CommandServerHelp : ICommand, CommandExecutionFunctionCtx<Boolean>{
 			))
 		}
 		
-		if (source.entity is EntityPlayer){
+		if (source.entity is EntityPlayer) {
 			send(source, emptyLine)
 			sendInteractiveNavigation(source, currentPage, totalPages)
 			send(source, emptyLine)
 		}
 	}
 	
-	private fun sendInteractiveNavigation(source: CommandSource, currentPage: Int, totalPages: Int?){
+	private fun sendInteractiveNavigation(source: CommandSource, currentPage: Int, totalPages: Int?) {
 		val components = mutableListOf<ITextComponent>()
 		
-		if (totalPages == null){
+		if (totalPages == null) {
 			components.add(TranslationTextComponent("commands.hee.help.footer.admin").also {
 				it.style.clickEvent = ClickEvent(RUN_COMMAND, "/hee help ${currentPage + 1}")
 			})
 		}
-		else{
+		else {
 			val showPrev = currentPage > 1
 			val showNext = currentPage < totalPages
 			
@@ -142,24 +143,24 @@ object CommandServerHelp : ICommand, CommandExecutionFunctionCtx<Boolean>{
 		))
 	}
 	
-	private fun send(source: CommandSource, text: ITextComponent){
+	private fun send(source: CommandSource, text: ITextComponent) {
 		source.sendFeedback(text, false)
 	}
 	
-	private fun setupNavigation(text: ITextComponent, page: Int?){
+	private fun setupNavigation(text: ITextComponent, page: Int?) {
 		val style = text.style
 		
-		if (page != null){
+		if (page != null) {
 			style.clickEvent = ClickEvent(RUN_COMMAND, "/${ModCommands.ROOT} help $page")
 			style.color = GREEN
 			style.underlined = true
 		}
-		else{
+		else {
 			style.color = DARK_GREEN
 		}
 	}
 	
-	private fun chainTextComponents(vararg components: ITextComponent): ITextComponent{
+	private fun chainTextComponents(vararg components: ITextComponent): ITextComponent {
 		return components.reduce(ITextComponent::appendSibling)
 	}
 }

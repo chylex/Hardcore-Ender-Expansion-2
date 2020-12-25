@@ -1,4 +1,5 @@
 package chylex.hee.game.entity.living.ai
+
 import chylex.hee.game.entity.posVec
 import chylex.hee.game.entity.selectVulnerableEntities
 import chylex.hee.system.migration.EntityCreature
@@ -13,10 +14,10 @@ abstract class AIBaseTargetFiltered<T : EntityLivingBase>(
 	easilyReachableOnly: Boolean,
 	private val targetClass: Class<T>,
 	targetPredicate: ((T) -> Boolean)?,
-	mutexBits: EnumSet<Flag> = EnumSet.of(MOVE)
-) : AIBaseTarget<T>(entity, checkSight, easilyReachableOnly, mutexBits){
+	mutexBits: EnumSet<Flag> = EnumSet.of(MOVE),
+) : AIBaseTarget<T>(entity, checkSight, easilyReachableOnly, mutexBits) {
 	private val basicEntityPredicate = EntityPredicate().apply {
-		if (checkSight){
+		if (checkSight) {
 			setLineOfSiteRequired()
 		}
 	}
@@ -27,7 +28,7 @@ abstract class AIBaseTargetFiltered<T : EntityLivingBase>(
 		else
 			{ candidate -> isSuitableTarget(candidate, basicEntityPredicate) && targetPredicate(candidate) }
 	
-	protected fun findSuitableTargets(rangeMp: Float = 1F): List<T>{
+	protected fun findSuitableTargets(rangeMp: Float = 1F): List<T> {
 		return entity.world.selectVulnerableEntities.inRange(targetClass, entity.posVec, targetDistance * rangeMp).filter(finalTargetPredicate)
 	}
 }

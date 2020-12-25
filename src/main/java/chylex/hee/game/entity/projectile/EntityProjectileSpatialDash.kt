@@ -1,4 +1,5 @@
 package chylex.hee.game.entity.projectile
+
 import chylex.hee.HEE
 import chylex.hee.client.MC
 import chylex.hee.client.sound.MovingSoundSpatialDash
@@ -64,8 +65,8 @@ import net.minecraftforge.event.ForgeEventFactory
 import net.minecraftforge.fml.network.NetworkHooks
 import java.util.Random
 
-class EntityProjectileSpatialDash(type: EntityType<EntityProjectileSpatialDash>, world: World) : Entity(type, world), IProjectile{
-	constructor(world: World, owner: EntityLivingBase, speedMp: Float, distanceMp: Float) : this(ModEntities.SPATIAL_DASH, world){
+class EntityProjectileSpatialDash(type: EntityType<EntityProjectileSpatialDash>, world: World) : Entity(type, world), IProjectile {
+	constructor(world: World, owner: EntityLivingBase, speedMp: Float, distanceMp: Float) : this(ModEntities.SPATIAL_DASH, world) {
 		this.owner = SerializedEntity(owner)
 		this.setPosition(owner.posX, owner.posY + owner.eyeHeight - 0.1, owner.posZ)
 		
@@ -79,7 +80,7 @@ class EntityProjectileSpatialDash(type: EntityType<EntityProjectileSpatialDash>,
 		this.range = realDistance
 	}
 	
-	companion object{
+	companion object {
 		private const val PROJECTILE_SPEED_BASE = 1.5F
 		private const val PROJECTILE_DISTANCE_BASE = 32 // max distance is 98 blocks
 		
@@ -106,14 +107,14 @@ class EntityProjectileSpatialDash(type: EntityType<EntityProjectileSpatialDash>,
 			maxRange = 128.0
 		)
 		
-		class FxExpireData(private val point: Vec3d, private val ownerEntity: Entity?) : IFxData{
+		class FxExpireData(private val point: Vec3d, private val ownerEntity: Entity?) : IFxData {
 			override fun write(buffer: PacketBuffer) = buffer.use {
 				writeCompactVec(point)
 				writeInt(ownerEntity?.entityId ?: -1)
 			}
 		}
 		
-		val FX_EXPIRE = object : IFxHandler<FxExpireData>{
+		val FX_EXPIRE = object : IFxHandler<FxExpireData> {
 			override fun handle(buffer: PacketBuffer, world: World, rand: Random) = buffer.use {
 				val player = HEE.proxy.getClientSidePlayer() ?: return
 				val playerPos = player.posVec
@@ -121,17 +122,17 @@ class EntityProjectileSpatialDash(type: EntityType<EntityProjectileSpatialDash>,
 				val point = readCompactVec()
 				val forceAudible = readInt() == player.entityId
 				
-				val soundPoint = if (forceAudible){
+				val soundPoint = if (forceAudible) {
 					val distance = playerPos.distanceTo(point)
 					
-					if (distance < 10.0){
+					if (distance < 10.0) {
 						point
 					}
-					else{
+					else {
 						playerPos.add(playerPos.directionTowards(point).scale(offsetTowards(10.0, distance, 0.04))) // makes the sound audible even at max distance of ~100 blocks
 					}
 				}
-				else{
+				else {
 					point
 				}
 				
@@ -140,13 +141,13 @@ class EntityProjectileSpatialDash(type: EntityType<EntityProjectileSpatialDash>,
 			}
 		}
 		
-		init{
+		init {
 			val offsets = mutableListOf<BlockPos>()
 			
 			offsets.add(Pos(0, 2, 0))
 			offsets.add(Pos(0, 1, 0))
 			
-			for(pos in BlockPos.getAllInBox(Pos(-1, -1, -1), Pos(1, 0, 1))){
+			for(pos in BlockPos.getAllInBox(Pos(-1, -1, -1), Pos(1, 0, 1))) {
 				offsets.add(pos)
 			}
 			
@@ -155,27 +156,27 @@ class EntityProjectileSpatialDash(type: EntityType<EntityProjectileSpatialDash>,
 			TELEPORT_OFFSETS = offsets.toTypedArray()
 		}
 		
-		private fun canTeleportPlayerOnTop(pos: BlockPos, world: World): Boolean{
+		private fun canTeleportPlayerOnTop(pos: BlockPos, world: World): Boolean {
 			return pos.blocksMovement(world) && !pos.up().blocksMovement(world) && !pos.up(2).blocksMovement(world)
 		}
 		
-		private fun handleBlockHit(entity: EntityLivingBase, hit: Vec3d, motion: Vec3d, pos: BlockPos){
-			if (canTeleportPlayerOnTop(pos, entity.world)){
+		private fun handleBlockHit(entity: EntityLivingBase, hit: Vec3d, motion: Vec3d, pos: BlockPos) {
+			if (canTeleportPlayerOnTop(pos, entity.world)) {
 				TELEPORT.toBlock(entity, pos.up())
 			}
-			else if (!(entity is EntityPlayer && BlockEditor.canBreak(pos, entity))){
+			else if (!(entity is EntityPlayer && BlockEditor.canBreak(pos, entity))) {
 				handleGenericHit(entity, hit, motion)
 			}
-			else if (!teleportEntityNear(entity, hit.add(motion.normalize().scale(1.74)), false)){
+			else if (!teleportEntityNear(entity, hit.add(motion.normalize().scale(1.74)), false)) {
 				handleGenericHit(entity, hit, motion)
 			}
 		}
 		
-		private fun handleGenericHit(entity: EntityLivingBase, hit: Vec3d, motion: Vec3d){
+		private fun handleGenericHit(entity: EntityLivingBase, hit: Vec3d, motion: Vec3d) {
 			teleportEntityNear(entity, hit.add(motion.normalize().scale(-1.26)), true)
 		}
 		
-		private fun teleportEntityNear(entity: EntityLivingBase, target: Vec3d, fallback: Boolean): Boolean{
+		private fun teleportEntityNear(entity: EntityLivingBase, target: Vec3d, fallback: Boolean): Boolean {
 			val world = entity.world
 			
 			val finalBlock = TELEPORT_OFFSETS
@@ -183,11 +184,11 @@ class EntityProjectileSpatialDash(type: EntityType<EntityProjectileSpatialDash>,
 				.sortedBy { it.distanceSqTo(target) }
 				.firstOrNull { canTeleportPlayerOnTop(it, world) }
 			
-			if (finalBlock != null){
+			if (finalBlock != null) {
 				TELEPORT.toBlock(entity, finalBlock.up())
 				return true
 			}
-			else if (fallback){
+			else if (fallback) {
 				TELEPORT.toLocation(entity, target)
 				return true
 			}
@@ -201,53 +202,53 @@ class EntityProjectileSpatialDash(type: EntityType<EntityProjectileSpatialDash>,
 	private var range = 0F
 	
 	private val cappedMotionVec: Vec3d
-		get(){
+		get() {
 			return if (motion.length() <= range)
 				motion
 			else
 				motion.normalize().scale(range)
 		}
 	
-	init{
+	init {
 		noClip = true
 	}
 	
-	override fun registerData(){}
+	override fun registerData() {}
 	
-	override fun createSpawnPacket(): IPacket<*>{
+	override fun createSpawnPacket(): IPacket<*> {
 		return NetworkHooks.getEntitySpawningPacket(this)
 	}
 	
-	override fun shoot(dirX: Double, dirY: Double, dirZ: Double, velocity: Float, inaccuracy: Float){
+	override fun shoot(dirX: Double, dirY: Double, dirZ: Double, velocity: Float, inaccuracy: Float) {
 		this.motion = Vec(dirX, dirY, dirZ).normalize().scale(velocity)
 	}
 	
-	override fun move(type: MoverType, pos: Vec3d){
+	override fun move(type: MoverType, pos: Vec3d) {
 		super.move(type, pos)
 		
-		if (type == SELF && world.isRemote){
+		if (type == SELF && world.isRemote) {
 			PARTICLE_TICK.spawn(Line(Vec(prevPosX, prevPosY, prevPosZ), posVec, 0.75), rand)
 		}
 	}
 	
-	override fun tick(){
-		if (world.isRemote && ticksExisted == 1){
+	override fun tick() {
+		if (world.isRemote && ticksExisted == 1) {
 			MC.instance.soundHandler.play(MovingSoundSpatialDash(this))
 		}
 		
 		super.tick()
 		
-		if (!world.isRemote){
+		if (!world.isRemote) {
 			val hitObject = determineHitObject()
 			
-			if (hitObject != null && hitObject.type != Type.MISS){
+			if (hitObject != null && hitObject.type != Type.MISS) {
 				val ownerEntity = owner.get(world)
 				
-				if (ownerEntity is EntityLivingBase && ownerEntity.world === world){
-					if (hitObject is BlockRayTraceResult){
+				if (ownerEntity is EntityLivingBase && ownerEntity.world === world) {
+					if (hitObject is BlockRayTraceResult) {
 						handleBlockHit(ownerEntity, hitObject.hitVec, motion, hitObject.pos)
 					}
-					else{
+					else {
 						handleGenericHit(ownerEntity, hitObject.hitVec, motion)
 					}
 				}
@@ -256,7 +257,7 @@ class EntityProjectileSpatialDash(type: EntityType<EntityProjectileSpatialDash>,
 				return
 			}
 			
-			if (--lifespan <= 0){
+			if (--lifespan <= 0) {
 				setExpired()
 				return
 			}
@@ -267,7 +268,7 @@ class EntityProjectileSpatialDash(type: EntityType<EntityProjectileSpatialDash>,
 		move(SELF, motion)
 	}
 	
-	private fun determineHitObject(): RayTraceResult?{
+	private fun determineHitObject(): RayTraceResult? {
 		val currentPos = posVec
 		val nextPos = currentPos.add(cappedMotionVec)
 		
@@ -276,7 +277,7 @@ class EntityProjectileSpatialDash(type: EntityType<EntityProjectileSpatialDash>,
 		val ownerEntity = owner.get(world)
 		val tracedNextPos = blockResult?.hitVec ?: nextPos
 		
-		val entityResult = ProjectileHelper.rayTraceEntities(world, this, currentPos, nextPos, boundingBox.expand(motion).grow(1.0)){
+		val entityResult = ProjectileHelper.rayTraceEntities(world, this, currentPos, nextPos, boundingBox.expand(motion).grow(1.0)) {
 			// the projectile itself cannot collide with anything, therefore not even itself
 			it.canBeCollidedWith() && !it.isSpectator && it !== ownerEntity
 		}?.let {
@@ -287,14 +288,14 @@ class EntityProjectileSpatialDash(type: EntityType<EntityProjectileSpatialDash>,
 		return (entityResult ?: blockResult)?.takeUnless { ForgeEventFactory.onProjectileImpact(this, it) }
 	}
 	
-	private fun setExpired(){
+	private fun setExpired() {
 		val ownerEntity = owner.get(world)
 		val expirePos = posVec.add(cappedMotionVec)
 		
 		PacketClientFX(FX_EXPIRE, FxExpireData(expirePos, ownerEntity)).let {
 			it.sendToAllAround(this, 32.0)
 			
-			if (ownerEntity is EntityPlayer && expirePos.squareDistanceTo(ownerEntity.posVec) > square(32)){
+			if (ownerEntity is EntityPlayer && expirePos.squareDistanceTo(ownerEntity.posVec) > square(32)) {
 				it.sendToPlayer(ownerEntity)
 			}
 		}

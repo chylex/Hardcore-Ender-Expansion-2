@@ -1,4 +1,5 @@
 package chylex.hee.client.render
+
 import chylex.hee.HEE
 import chylex.hee.client.MC
 import chylex.hee.client.render.gl.DF_ONE_MINUS_SRC_ALPHA
@@ -33,8 +34,8 @@ import net.minecraftforge.client.event.RenderGameOverlayEvent
 import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType.HELMET
 
 @SubscribeAllEvents(Side.CLIENT, modid = HEE.ID)
-object OverlayRenderer{
-	private const val BORDER_SIZE  = 4
+object OverlayRenderer {
+	private const val BORDER_SIZE = 4
 	private const val LINE_SPACING = 7
 	
 	private val TEX_ENDER_GOO_OVERLAY = Resource.Custom("textures/overlay/ender_goo.png")
@@ -45,10 +46,10 @@ object OverlayRenderer{
 	// Ender Goo
 	
 	@SubscribeEvent
-	fun onFogDensity(e: FogDensity){
+	fun onFogDensity(e: FogDensity) {
 		val inside = e.info.blockAtCamera.material
 		
-		if (inside === Materials.ENDER_GOO || inside === Materials.PURIFIED_ENDER_GOO){
+		if (inside === Materials.ENDER_GOO || inside === Materials.PURIFIED_ENDER_GOO) {
 			GL.setFogMode(FOG_EXP)
 			e.density = if (inside === Materials.ENDER_GOO) 0.66F else 0.06F
 			e.isCanceled = true // otherwise the event is ignored
@@ -56,25 +57,25 @@ object OverlayRenderer{
 	}
 	
 	@SubscribeEvent
-	fun onRenderHelmetOverlayPre(e: RenderGameOverlayEvent.Pre){
-		if (e.type != HELMET){
+	fun onRenderHelmetOverlayPre(e: RenderGameOverlayEvent.Pre) {
+		if (e.type != HELMET) {
 			return
 		}
 		
 		val player = MC.player ?: return
 		val inside = MC.gameRenderer.activeRenderInfo.blockAtCamera.material
 		
-		if ((inside === Materials.ENDER_GOO || inside === Materials.PURIFIED_ENDER_GOO) && MC.settings.thirdPersonView == 0 && !player.isSpectator){
+		if ((inside === Materials.ENDER_GOO || inside === Materials.PURIFIED_ENDER_GOO) && MC.settings.thirdPersonView == 0 && !player.isSpectator) {
 			val window = MC.window
 			val brightness = player.brightness
 			
 			GL.color(brightness, brightness, brightness, 1F)
 			GL.blendFunc(SF_SRC_ALPHA, DF_ONE_MINUS_SRC_ALPHA, SF_ONE, DF_ZERO)
 			
-			if (inside === Materials.ENDER_GOO){
+			if (inside === Materials.ENDER_GOO) {
 				GL.bindTexture(TEX_ENDER_GOO_OVERLAY)
 			}
-			else{
+			else {
 				GL.bindTexture(TEX_PURIFIED_ENDER_GOO_OVERLAY)
 			}
 			
@@ -87,11 +88,11 @@ object OverlayRenderer{
 	// Energy Cluster
 	
 	@SubscribeEvent
-	fun onRenderText(@Suppress("UNUSED_PARAMETER") e: RenderGameOverlayEvent.Text){
-		fun drawTextOffScreenCenter(x: Int, y: Int, line: Int, text: String, color: IntColor){
+	fun onRenderText(@Suppress("UNUSED_PARAMETER") e: RenderGameOverlayEvent.Text) {
+		fun drawTextOffScreenCenter(x: Int, y: Int, line: Int, text: String, color: IntColor) {
 			val window = MC.window
 			
-			with(MC.fontRenderer){
+			with(MC.fontRenderer) {
 				val centerX = x + (window.scaledWidth / 2)
 				val centerY = y + (window.scaledHeight / 2) + (line * (LINE_SPACING + FONT_HEIGHT))
 				
@@ -109,7 +110,7 @@ object OverlayRenderer{
 		clusterLookedAt?.let {
 			clusterLookedAt = null
 			
-			fun getQuantityString(quantity: IEnergyQuantity): String{
+			fun getQuantityString(quantity: IEnergyQuantity): String {
 				return if (it.energyLevel == MAX_POSSIBLE_VALUE)
 					"${TextFormatting.OBFUSCATED}##${TextFormatting.RESET}"
 				else
@@ -126,7 +127,7 @@ object OverlayRenderer{
 			val capacity = getQuantityString(it.energyRegenCapacity)
 			drawTextOffScreenCenter(0, -40, firstLine + 1, I18n.format("hee.energy.overlay.level", level, capacity), RGB(220u))
 			
-			if (isIgnored){
+			if (isIgnored) {
 				drawTextOffScreenCenter(0, -40, firstLine + 2, I18n.format("hee.energy.overlay.ignored"), RGB(160u))
 			}
 		}
@@ -135,17 +136,17 @@ object OverlayRenderer{
 	// Block outlines
 	
 	@SubscribeEvent
-	fun onRenderBlockOutline(e: DrawHighlightEvent.HighlightBlock){
+	fun onRenderBlockOutline(e: DrawHighlightEvent.HighlightBlock) {
 		val world = MC.world ?: return
 		
 		val pos = e.target.pos
 		val block = pos.getBlock(world)
 		
-		if (block === ModBlocks.ENERGY_CLUSTER){
+		if (block === ModBlocks.ENERGY_CLUSTER) {
 			clusterLookedAt = pos.getTile(world)
 			e.isCanceled = true
 		}
-		else if (block is BlockAbstractPortal){
+		else if (block is BlockAbstractPortal) {
 			e.isCanceled = true
 		}
 	}

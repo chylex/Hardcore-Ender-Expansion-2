@@ -1,4 +1,5 @@
 package chylex.hee.system.compatibility
+
 import chylex.hee.HEE
 import chylex.hee.system.Debug
 import net.minecraft.item.Item
@@ -12,14 +13,14 @@ import java.lang.reflect.Modifier
  * Works around event bus issue where registering an Item object crashes dedicated servers.
  * Does not process parent classes or interfaces.
  */
-object MinecraftForgeEventBus{
-	fun register(item: Item){
+object MinecraftForgeEventBus {
+	fun register(item: Item) {
 		val registerListener = EventBus::class.java.getDeclaredMethod("registerListener", Any::class.java, Method::class.java, Method::class.java).also {
 			it.isAccessible = true
 		}
 		
-		for(listener in item.javaClass.methods.filter { !Modifier.isStatic(it.modifiers) && it.isAnnotationPresent(SubscribeEvent::class.java) }){
-			if (Debug.enabled){
+		for(listener in item.javaClass.methods.filter { !Modifier.isStatic(it.modifiers) && it.isAnnotationPresent(SubscribeEvent::class.java) }) {
+			if (Debug.enabled) {
 				HEE.log.info("[MinecraftForgeEventBus] registering ${listener.parameterTypes.firstOrNull()?.name?.substringAfterLast('.')} for ${item.javaClass.simpleName}")
 			}
 			

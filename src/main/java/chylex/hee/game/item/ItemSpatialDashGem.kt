@@ -1,4 +1,5 @@
 package chylex.hee.game.item
+
 import chylex.hee.game.entity.projectile.EntityProjectileSpatialDash
 import chylex.hee.game.item.infusion.IInfusableItem
 import chylex.hee.game.item.infusion.Infusion
@@ -22,8 +23,8 @@ import net.minecraft.util.Hand
 import net.minecraft.util.text.ITextComponent
 import net.minecraft.world.World
 
-class ItemSpatialDashGem(properties: Properties) : ItemAbstractEnergyUser(properties), IInfusableItem{
-	private companion object{
+class ItemSpatialDashGem(properties: Properties) : ItemAbstractEnergyUser(properties), IInfusableItem {
+	private companion object {
 		private const val INSTANT_SPEED_MP = 100F // just above the maximum possible distance
 	}
 	
@@ -37,23 +38,23 @@ class ItemSpatialDashGem(properties: Properties) : ItemAbstractEnergyUser(proper
 	
 	// Item handling
 	
-	override fun canApplyInfusion(infusion: Infusion): Boolean{
+	override fun canApplyInfusion(infusion: Infusion): Boolean {
 		return ItemAbstractInfusable.onCanApplyInfusion(this, infusion)
 	}
 	
-	override fun onItemRightClick(world: World, player: EntityPlayer, hand: Hand): ActionResult<ItemStack>{
+	override fun onItemRightClick(world: World, player: EntityPlayer, hand: Hand): ActionResult<ItemStack> {
 		val heldItem = player.getHeldItem(hand)
 		
-		if (!useEnergyUnit(player, heldItem)){
+		if (!useEnergyUnit(player, heldItem)) {
 			return ActionResult(FAIL, heldItem)
 		}
 		
-		if (!world.isRemote){
+		if (!world.isRemote) {
 			val infusions = InfusionTag.getList(heldItem)
 			
-			val speedMp = when(infusions.determineLevel(SPEED)){
-				2 -> INSTANT_SPEED_MP
-				1 -> 1.75F
+			val speedMp = when(infusions.determineLevel(SPEED)) {
+				2    -> INSTANT_SPEED_MP
+				1    -> 1.75F
 				else -> 1F
 			}
 			
@@ -71,13 +72,13 @@ class ItemSpatialDashGem(properties: Properties) : ItemAbstractEnergyUser(proper
 	// Client side
 	
 	@Sided(Side.CLIENT)
-	override fun addInformation(stack: ItemStack, world: World?, lines: MutableList<ITextComponent>, flags: ITooltipFlag){
+	override fun addInformation(stack: ItemStack, world: World?, lines: MutableList<ITextComponent>, flags: ITooltipFlag) {
 		super.addInformation(stack, world, lines, flags)
 		ItemAbstractInfusable.onAddInformation(stack, lines)
 	}
 	
 	@Sided(Side.CLIENT)
-	override fun hasEffect(stack: ItemStack): Boolean{
+	override fun hasEffect(stack: ItemStack): Boolean {
 		return super.hasEffect(stack) || ItemAbstractInfusable.onHasEffect(stack)
 	}
 }

@@ -1,4 +1,5 @@
 package chylex.hee.system
+
 import chylex.hee.client.MC
 import chylex.hee.client.render.gl.DF_ONE
 import chylex.hee.client.render.gl.DF_ZERO
@@ -50,39 +51,39 @@ import org.lwjgl.opengl.GL11
 import java.io.File
 import java.lang.management.ManagementFactory
 
-object Debug{
+object Debug {
 	val enabled = System.getProperty("hee.debug") != null
 	
 	@Sided(Side.CLIENT)
-	fun initializeClient(){
-		if (enabled){
-			MinecraftForge.EVENT_BUS.register(object : Any(){
+	fun initializeClient() {
+		if (enabled) {
+			MinecraftForge.EVENT_BUS.register(object : Any() {
 				@SubscribeEvent
-				fun onKeyPressed(e: KeyInputEvent){
-					if (e.action != GLFW.GLFW_PRESS){
+				fun onKeyPressed(e: KeyInputEvent) {
+					if (e.action != GLFW.GLFW_PRESS) {
 						return
 					}
 					
-					if (e.key == GLFW.GLFW_KEY_GRAVE_ACCENT){
+					if (e.key == GLFW.GLFW_KEY_GRAVE_ACCENT) {
 						val player = MC.player ?: return
 						
-						if (player.isCreative){
+						if (player.isCreative) {
 							val ctrl = (e.modifiers and GLFW.GLFW_MOD_CONTROL) != 0
 							player.sendChatMessage(if (ctrl) "/gamemode spectator" else "/gamemode survival")
 						}
-						else{
+						else {
 							player.sendChatMessage("/gamemode creative")
 						}
 					}
 				}
 				
-				private fun isHoldingBuildStick(player: EntityPlayer): Boolean{
+				private fun isHoldingBuildStick(player: EntityPlayer): Boolean {
 					val heldItem = player.getHeldItem(MAIN_HAND)
 					return heldItem.item === Items.STICK && heldItem.nbtOrNull.hasKey("HEE_BUILD")
 				}
 				
-				private fun getBuildStickBlocks(world: IWorld, pos: BlockPos, state: BlockState, face: Direction): List<BlockPos>{
-					val floodFaces = when(face){
+				private fun getBuildStickBlocks(world: IWorld, pos: BlockPos, state: BlockState, face: Direction): List<BlockPos> {
+					val floodFaces = when(face) {
 						UP, DOWN     -> listOf(NORTH, SOUTH, EAST, WEST)
 						NORTH, SOUTH -> listOf(UP, DOWN, EAST, WEST)
 						EAST, WEST   -> listOf(UP, DOWN, NORTH, SOUTH)
@@ -91,55 +92,55 @@ object Debug{
 					
 					val limit = 1000
 					val block = state.block
-					return pos.floodFill(floodFaces, limit){ it.getBlock(world) === block }.takeIf { it.size < limit }.orEmpty()
+					return pos.floodFill(floodFaces, limit) { it.getBlock(world) === block }.takeIf { it.size < limit }.orEmpty()
 				}
 				
 				private var lastLeftClickHit: BlockRayTraceResult? = null
 				
 				@SubscribeEvent
-				fun onLeftClickBlock(e: LeftClickBlock){
+				fun onLeftClickBlock(e: LeftClickBlock) {
 					val world = e.world
 					
-					if (isHoldingBuildStick(e.player) && !world.isRemote){
+					if (isHoldingBuildStick(e.player) && !world.isRemote) {
 						lastLeftClickHit = MC.instance.objectMouseOver as? BlockRayTraceResult
 					}
 				}
 				
 				@SubscribeEvent
-				fun onBlockBreak(e: BreakEvent){
+				fun onBlockBreak(e: BreakEvent) {
 					val world = e.world
 					
-					if (isHoldingBuildStick(e.player) && !world.isRemote){
+					if (isHoldingBuildStick(e.player) && !world.isRemote) {
 						val hit = lastLeftClickHit ?: return
 						
-						for(pos in getBuildStickBlocks(world, e.pos, e.state, hit.face)){
+						for(pos in getBuildStickBlocks(world, e.pos, e.state, hit.face)) {
 							pos.removeBlock(world)
 						}
 					}
 				}
 				
 				@SubscribeEvent
-				fun onRightClickBlock(e: RightClickBlock){
+				fun onRightClickBlock(e: RightClickBlock) {
 					val world = e.world
 					val player = e.player
 					
-					if (isHoldingBuildStick(player) && !world.isRemote){
+					if (isHoldingBuildStick(player) && !world.isRemote) {
 						val state = e.pos.getState(world)
 						val face = e.face!!
 						
 						val place = (player.getHeldItem(OFF_HAND).item as? ItemBlock)?.block?.defaultState ?: state
 						
-						for(pos in getBuildStickBlocks(world, e.pos, state, face)){
+						for(pos in getBuildStickBlocks(world, e.pos, state, face)) {
 							val offset = pos.offset(face)
 							
-							if (offset.isAir(world)){
+							if (offset.isAir(world)) {
 								offset.setState(world, place)
 							}
 						}
 					}
 				}
 				
-				private val RENDER_TYPE_LINE = with(RenderStateBuilder()){
+				private val RENDER_TYPE_LINE = with(RenderStateBuilder()) {
 					line(2.25)
 					blend(SF_SRC_ALPHA, DF_ONE, SF_ONE_MINUS_SRC_ALPHA, DF_ZERO)
 					layering(LAYERING_PROJECTION)
@@ -148,10 +149,10 @@ object Debug{
 				}
 				
 				@SubscribeEvent
-				fun onRenderOverlay(e: DrawHighlightEvent.HighlightBlock){
+				fun onRenderOverlay(e: DrawHighlightEvent.HighlightBlock) {
 					val player = MC.player!!
 					
-					if (isHoldingBuildStick(player)){
+					if (isHoldingBuildStick(player)) {
 						val hit = MC.instance.objectMouseOver as? BlockRayTraceResult ?: return
 						val world = player.world
 						val center = hit.pos
@@ -160,7 +161,7 @@ object Debug{
 						val matrix = e.matrix.last.matrix
 						val builder = e.buffers.getBuffer(RENDER_TYPE_LINE)
 						
-						for(pos in getBuildStickBlocks(world, center, center.getState(world), hit.face)){
+						for(pos in getBuildStickBlocks(world, center, center.getState(world), hit.face)) {
 							val x = pos.x - info.projectedView.x
 							val y = pos.y - info.projectedView.y
 							val z = pos.z - info.projectedView.z
@@ -178,10 +179,10 @@ object Debug{
 				}
 			})
 			
-			if (canExecutePowershell("maximize.ps1")){
-				MinecraftForge.EVENT_BUS.register(object : Any(){
+			if (canExecutePowershell("maximize.ps1")) {
+				MinecraftForge.EVENT_BUS.register(object : Any() {
 					@SubscribeEvent
-					fun onGuiOpen(@Suppress("UNUSED_PARAMETER") e: GuiOpenEvent){
+					fun onGuiOpen(@Suppress("UNUSED_PARAMETER") e: GuiOpenEvent) {
 						val pid = ManagementFactory.getRuntimeMXBean().name.split("@")[0]
 						ProcessBuilder("powershell.exe", "-ExecutionPolicy", "Unrestricted", "-File", "maximize.ps1", pid).start()
 						
@@ -192,13 +193,13 @@ object Debug{
 		}
 	}
 	
-	fun setClipboardContents(file: File){
-		if (canExecutePowershell("filecopy.ps1")){
+	fun setClipboardContents(file: File) {
+		if (canExecutePowershell("filecopy.ps1")) {
 			ProcessBuilder("powershell.exe", "-ExecutionPolicy", "Unrestricted", "-Sta", "-File", "filecopy.ps1", file.absolutePath).start()
 		}
 	}
 	
-	private fun canExecutePowershell(scriptName: String): Boolean{
+	private fun canExecutePowershell(scriptName: String): Boolean {
 		return SystemUtils.IS_OS_WINDOWS && Environment.side == Side.CLIENT && File(scriptName).exists()
 	}
 }

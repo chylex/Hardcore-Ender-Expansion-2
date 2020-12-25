@@ -1,4 +1,5 @@
 package chylex.hee.game.mechanics.table
+
 import chylex.hee.game.block.BlockTablePedestal
 import chylex.hee.game.inventory.InvReverseWrapper
 import chylex.hee.game.inventory.copyIfNotEmpty
@@ -29,8 +30,8 @@ import net.minecraftforge.common.util.INBTSerializable
 import net.minecraftforge.items.ItemHandlerHelper
 import kotlin.math.min
 
-class PedestalInventoryHandler(private val updateCallback: (Boolean) -> Unit) : INBTSerializable<TagCompound>{
-	private companion object{
+class PedestalInventoryHandler(private val updateCallback: (Boolean) -> Unit) : INBTSerializable<TagCompound> {
+	private companion object {
 		private const val INPUT_TAG = "Input"
 		private const val OUTPUT_TAG = "Output"
 	}
@@ -52,11 +53,11 @@ class PedestalInventoryHandler(private val updateCallback: (Boolean) -> Unit) : 
 	
 	val nonEmptyStacks
 		get() = ArrayList<ItemStack>(10).apply {
-			if (itemInput.isNotEmpty){
+			if (itemInput.isNotEmpty) {
 				add(itemInput)
 			}
 			
-			for((_, stack) in itemOutput.nonEmptySlots){
+			for((_, stack) in itemOutput.nonEmptySlots) {
 				add(stack)
 			}
 		}
@@ -65,29 +66,29 @@ class PedestalInventoryHandler(private val updateCallback: (Boolean) -> Unit) : 
 	
 	// Behavior
 	
-	fun addToInput(stack: ItemStack): Boolean{
-		if (stack.isEmpty){
+	fun addToInput(stack: ItemStack): Boolean {
+		if (stack.isEmpty) {
 			return false
 		}
 		
 		var success = false
 		
-		if (itemInput.isEmpty){
+		if (itemInput.isEmpty) {
 			itemInput = stack.copy()
 			stack.size = 0
 			success = true
 		}
-		else if (ItemHandlerHelper.canItemStacksStack(stack, itemInput)){
+		else if (ItemHandlerHelper.canItemStacksStack(stack, itemInput)) {
 			val movedAmount = min(itemInput.maxStackSize - itemInput.size, stack.size)
 			
-			if (movedAmount > 0){
+			if (movedAmount > 0) {
 				itemInput.size += movedAmount
 				stack.size -= movedAmount
 				success = true
 			}
 		}
 		
-		if (!success){
+		if (!success) {
 			return false
 		}
 		
@@ -95,19 +96,19 @@ class PedestalInventoryHandler(private val updateCallback: (Boolean) -> Unit) : 
 		return true
 	}
 	
-	fun addToOutput(stacks: Array<ItemStack>): Boolean{
+	fun addToOutput(stacks: Array<ItemStack>): Boolean {
 		pauseInventoryUpdates = true
 		
 		val prevOutput = itemOutput.createSnapshot()
 		val hasStoredEverything = stacks.all { it.copy().apply(::tryMergeIntoOutput).isEmpty }
 		
-		if (!hasStoredEverything){
+		if (!hasStoredEverything) {
 			itemOutput.restoreSnapshot(prevOutput)
 		}
 		
 		pauseInventoryUpdates = false
 		
-		if (hasStoredEverything){
+		if (hasStoredEverything) {
 			onInventoryUpdated(updateInputModCounter = false)
 			return true
 		}
@@ -115,33 +116,33 @@ class PedestalInventoryHandler(private val updateCallback: (Boolean) -> Unit) : 
 		return false
 	}
 	
-	private fun tryMergeIntoOutput(merging: ItemStack){
-		if (merging.item === ModItems.EXPERIENCE_BOTTLE){
+	private fun tryMergeIntoOutput(merging: ItemStack) {
+		if (merging.item === ModItems.EXPERIENCE_BOTTLE) {
 			val bottle = ModItems.EXPERIENCE_BOTTLE
 			
-			for((_, stack) in itemOutput.nonEmptySlots){
-				if (stack.item === bottle){
-					while(bottle.mergeBottles(merging, stack) && bottle.isFullOfExperience(stack)){
+			for((_, stack) in itemOutput.nonEmptySlots) {
+				if (stack.item === bottle) {
+					while(bottle.mergeBottles(merging, stack) && bottle.isFullOfExperience(stack)) {
 						val moved = stack.copy().also { it.size = 1 }
 						
 						stack.shrink(1)
 						itemOutput.mergeStackProperly(moved)
 					}
 					
-					if (merging.isEmpty){
+					if (merging.isEmpty) {
 						return
 					}
 				}
 			}
 		}
 		
-		if (merging.isNotEmpty){
+		if (merging.isNotEmpty) {
 			itemOutput.mergeStackProperly(merging)
 		}
 	}
 	
-	fun replaceInput(newInput: ItemStack, silent: Boolean): Boolean{
-		if (ItemStack.areItemStacksEqual(itemInput, newInput)){
+	fun replaceInput(newInput: ItemStack, silent: Boolean): Boolean {
+		if (ItemStack.areItemStacksEqual(itemInput, newInput)) {
 			return false
 		}
 		
@@ -150,18 +151,18 @@ class PedestalInventoryHandler(private val updateCallback: (Boolean) -> Unit) : 
 		return true
 	}
 	
-	fun moveOutputToPlayerInventory(inventory: PlayerInventory): Boolean{
+	fun moveOutputToPlayerInventory(inventory: PlayerInventory): Boolean {
 		var hasTransferedAnything = false
 		
-		for((_, stack) in itemOutput.nonEmptySlots){
+		for((_, stack) in itemOutput.nonEmptySlots) {
 			val prevStackSize = stack.size
 			
-			if (inventory.addItemStackToInventory(stack) || stack.size != prevStackSize){ // addItemStackToInventory returns false if combined w/ existing slot
+			if (inventory.addItemStackToInventory(stack) || stack.size != prevStackSize) { // addItemStackToInventory returns false if combined w/ existing slot
 				hasTransferedAnything = true
 			}
 		}
 		
-		if (!hasTransferedAnything){
+		if (!hasTransferedAnything) {
 			return false
 		}
 		
@@ -169,8 +170,8 @@ class PedestalInventoryHandler(private val updateCallback: (Boolean) -> Unit) : 
 		return true
 	}
 	
-	fun dropInputItem(world: World, pos: BlockPos){
-		if (itemInput.isEmpty){
+	fun dropInputItem(world: World, pos: BlockPos) {
+		if (itemInput.isEmpty) {
 			return
 		}
 		
@@ -180,7 +181,7 @@ class PedestalInventoryHandler(private val updateCallback: (Boolean) -> Unit) : 
 		onInventoryUpdated(updateInputModCounter = true)
 	}
 	
-	fun dropAllItems(world: World, pos: BlockPos){
+	fun dropAllItems(world: World, pos: BlockPos) {
 		spawnItem(world, pos, itemInput, addOffset = false)
 		itemInput = ItemStack.EMPTY
 		
@@ -190,19 +191,19 @@ class PedestalInventoryHandler(private val updateCallback: (Boolean) -> Unit) : 
 		onInventoryUpdated(updateInputModCounter = true)
 	}
 	
-	private fun spawnItem(world: World, pos: BlockPos, stack: ItemStack, addOffset: Boolean){
+	private fun spawnItem(world: World, pos: BlockPos, stack: ItemStack, addOffset: Boolean) {
 		val rand = world.rand
 		
 		val offsetX: Double
 		val offsetZ: Double
 		val motionXZ: Double
 		
-		if (addOffset){
+		if (addOffset) {
 			offsetX = rand.nextFloat(0.22, 0.78)
 			offsetZ = rand.nextFloat(0.22, 0.78)
 			motionXZ = rand.nextFloat(0.005, 0.007)
 		}
-		else{
+		else {
 			offsetX = 0.5
 			offsetZ = 0.5
 			motionXZ = rand.nextFloat(0.032, 0.034)
@@ -216,8 +217,8 @@ class PedestalInventoryHandler(private val updateCallback: (Boolean) -> Unit) : 
 		}
 	}
 	
-	private fun onInventoryUpdated(updateInputModCounter: Boolean){
-		if (!pauseInventoryUpdates){
+	private fun onInventoryUpdated(updateInputModCounter: Boolean) {
+		if (!pauseInventoryUpdates) {
 			updateCallback(updateInputModCounter)
 		}
 	}

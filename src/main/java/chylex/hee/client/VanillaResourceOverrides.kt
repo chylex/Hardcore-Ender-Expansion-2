@@ -1,4 +1,5 @@
 package chylex.hee.client
+
 import chylex.hee.HEE
 import chylex.hee.system.facades.Resource
 import chylex.hee.system.migration.supply
@@ -11,15 +12,15 @@ import net.minecraft.resources.ResourcePackInfo.Priority
 import net.minecraft.resources.ResourcePackType
 import net.minecraftforge.fml.packs.ResourcePackLoader
 
-object VanillaResourceOverrides : IPackFinder{
-	fun register(){
+object VanillaResourceOverrides : IPackFinder {
+	fun register() {
 		// Minecraft is null when running datagen, but I cannot move this to FMLClientSetupEvent because it only runs after all resource packs are initialized
-		with(Minecraft.getInstance() ?: return){
+		with(Minecraft.getInstance() ?: return) {
 			resourcePackList.addPackFinder(this@VanillaResourceOverrides)
 		}
 	}
 	
-	override fun <T : ResourcePackInfo> addPackInfosToMap(map: MutableMap<String, T>, factory: IFactory<T>){
+	override fun <T : ResourcePackInfo> addPackInfosToMap(map: MutableMap<String, T>, factory: IFactory<T>) {
 		val delegate = ResourcePackLoader.getResourcePackFor(HEE.ID).get()
 		val supplier = supply<IResourcePack>(Pack(delegate))
 		
@@ -30,7 +31,7 @@ object VanillaResourceOverrides : IPackFinder{
 		override fun getName() = "Hardcore Ender Expansion 2"
 		override fun isHidden() = true // minecraft doesn't remember the order across restarts anyway
 		
-		override fun getResourceNamespaces(type: ResourcePackType): MutableSet<String>{
+		override fun getResourceNamespaces(type: ResourcePackType): MutableSet<String> {
 			return mutableSetOf(Resource.NAMESPACE_VANILLA)
 		}
 	}

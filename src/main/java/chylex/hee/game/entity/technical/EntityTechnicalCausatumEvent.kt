@@ -1,4 +1,5 @@
 package chylex.hee.game.entity.technical
+
 import chylex.hee.game.mechanics.causatum.events.CausatumEventEndermanKill
 import chylex.hee.init.ModEntities
 import chylex.hee.system.serialization.TagCompound
@@ -10,12 +11,12 @@ import net.minecraft.entity.EntityType
 import net.minecraft.world.World
 import net.minecraftforge.common.util.INBTSerializable
 
-class EntityTechnicalCausatumEvent(type: EntityType<EntityTechnicalCausatumEvent>, world: World) : EntityTechnicalBase(type, world){
-	constructor(world: World, handler: ICausatumEventHandler) : this(ModEntities.CAUSATUM_EVENT, world){
+class EntityTechnicalCausatumEvent(type: EntityType<EntityTechnicalCausatumEvent>, world: World) : EntityTechnicalBase(type, world) {
+	constructor(world: World, handler: ICausatumEventHandler) : this(ModEntities.CAUSATUM_EVENT, world) {
 		this.handler = handler
 	}
 	
-	private companion object{
+	private companion object {
 		private const val TYPE_TAG = "Type"
 		private const val DATA_TAG = "Data"
 		
@@ -28,7 +29,7 @@ class EntityTechnicalCausatumEvent(type: EntityType<EntityTechnicalCausatumEvent
 	
 	// Handler interface
 	
-	interface ICausatumEventHandler : INBTSerializable<TagCompound>{
+	interface ICausatumEventHandler : INBTSerializable<TagCompound> {
 		fun update(entity: EntityTechnicalCausatumEvent)
 	}
 	
@@ -39,12 +40,12 @@ class EntityTechnicalCausatumEvent(type: EntityType<EntityTechnicalCausatumEvent
 	
 	private lateinit var handler: ICausatumEventHandler
 	
-	override fun registerData(){}
+	override fun registerData() {}
 	
-	override fun tick(){
+	override fun tick() {
 		super.tick()
 		
-		if (!world.isRemote){
+		if (!world.isRemote) {
 			handler.update(this)
 		}
 	}
@@ -52,7 +53,7 @@ class EntityTechnicalCausatumEvent(type: EntityType<EntityTechnicalCausatumEvent
 	override fun writeAdditional(nbt: TagCompound) = nbt.heeTag.use {
 		val entry = TYPE_MAPPING[this@EntityTechnicalCausatumEvent.type]
 		
-		if (entry != null){
+		if (entry != null) {
 			putString(TYPE_TAG, entry.first)
 			put(DATA_TAG, handler.serializeNBT())
 		}
@@ -61,11 +62,11 @@ class EntityTechnicalCausatumEvent(type: EntityType<EntityTechnicalCausatumEvent
 	override fun readAdditional(nbt: TagCompound) = nbt.heeTag.use {
 		val entry = getStringOrNull(TYPE_TAG)?.let { type -> TYPE_MAPPING.values.find { it.first == type } }
 		
-		if (entry != null){
+		if (entry != null) {
 			handler = entry.second()
 			handler.deserializeNBT(getCompound(DATA_TAG))
 		}
-		else{
+		else {
 			remove()
 		}
 	}

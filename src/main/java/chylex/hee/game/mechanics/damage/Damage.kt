@@ -1,18 +1,19 @@
 package chylex.hee.game.mechanics.damage
+
 import chylex.hee.game.mechanics.damage.IDamageDealer.Companion.CANCEL_DAMAGE
 import net.minecraft.entity.Entity
 
-class Damage(private vararg val processors: IDamageProcessor) : IDamageDealer{
+class Damage(private vararg val processors: IDamageProcessor) : IDamageDealer {
 	private val properties = DamageProperties().apply {
 		val writer = Writer()
 		processors.forEach { it.setup(writer) }
 	}
 	
-	private fun dealToInternal(amount: Float, target: Entity, directSource: Entity?, remoteSource: Entity?, damageTitle: String): Boolean{
+	private fun dealToInternal(amount: Float, target: Entity, directSource: Entity?, remoteSource: Entity?, damageTitle: String): Boolean {
 		val reader = properties.Reader()
-		val finalAmount = processors.fold(amount){ acc, processor -> processor.modifyDamage(acc, target, reader) }
+		val finalAmount = processors.fold(amount) { acc, processor -> processor.modifyDamage(acc, target, reader) }
 		
-		if (finalAmount == CANCEL_DAMAGE || !target.attackEntityFrom(properties.createDamageSource(damageTitle, directSource, remoteSource), finalAmount)){
+		if (finalAmount == CANCEL_DAMAGE || !target.attackEntityFrom(properties.createDamageSource(damageTitle, directSource, remoteSource), finalAmount)) {
 			return false
 		}
 		

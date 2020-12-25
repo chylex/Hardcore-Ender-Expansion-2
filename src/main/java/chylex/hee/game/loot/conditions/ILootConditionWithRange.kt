@@ -1,4 +1,5 @@
 package chylex.hee.game.loot.conditions
+
 import com.google.gson.JsonDeserializationContext
 import com.google.gson.JsonObject
 import com.google.gson.JsonSerializationContext
@@ -6,44 +7,44 @@ import net.minecraft.util.JSONUtils
 import net.minecraft.util.ResourceLocation
 import net.minecraft.world.storage.loot.conditions.ILootCondition
 
-interface ILootConditionWithRange : ILootCondition{
+interface ILootConditionWithRange : ILootCondition {
 	val minLevel: Int
 	val maxLevel: Int
 	
-	abstract class Serializer<T : ILootConditionWithRange>(key: ResourceLocation, cls: Class<T>) : ILootCondition.AbstractSerializer<T>(key, cls){
-		private companion object{
+	abstract class Serializer<T : ILootConditionWithRange>(key: ResourceLocation, cls: Class<T>) : ILootCondition.AbstractSerializer<T>(key, cls) {
+		private companion object {
 			private const val MIN_LEVEL = 0
 			private const val MAX_LEVEL = Int.MAX_VALUE
 		}
 		
 		protected abstract fun construct(minLevel: Int, maxLevel: Int): T
 		
-		final override fun serialize(json: JsonObject, value: T, context: JsonSerializationContext){
-			if (value.minLevel == value.maxLevel){
+		final override fun serialize(json: JsonObject, value: T, context: JsonSerializationContext) {
+			if (value.minLevel == value.maxLevel) {
 				json.addProperty("level", value.minLevel)
 			}
-			else{
+			else {
 				json.add("level", JsonObject().apply {
-					if (value.minLevel != MIN_LEVEL){
+					if (value.minLevel != MIN_LEVEL) {
 						addProperty("min", value.minLevel)
 					}
 					
-					if (value.maxLevel != MAX_LEVEL){
+					if (value.maxLevel != MAX_LEVEL) {
 						addProperty("max", value.maxLevel)
 					}
 				})
 			}
 		}
 		
-		final override fun deserialize(json: JsonObject, context: JsonDeserializationContext): T{
+		final override fun deserialize(json: JsonObject, context: JsonDeserializationContext): T {
 			val minLevel: Int
 			val maxLevel: Int
 			
-			if (JSONUtils.isNumber(json["level"])){
+			if (JSONUtils.isNumber(json["level"])) {
 				minLevel = JSONUtils.getInt(json, "level")
 				maxLevel = minLevel
 			}
-			else{
+			else {
 				val range = JSONUtils.getJsonObject(json, "level")
 				minLevel = JSONUtils.getInt(range, "min", MIN_LEVEL)
 				maxLevel = JSONUtils.getInt(range, "max", MAX_LEVEL)

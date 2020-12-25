@@ -1,4 +1,5 @@
 package chylex.hee.client.render.block
+
 import chylex.hee.client.MC
 import chylex.hee.client.render.gl.rotateX
 import chylex.hee.client.render.gl.rotateY
@@ -14,8 +15,8 @@ import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher
 import kotlin.math.max
 
 @Sided(Side.CLIENT)
-class RenderTileSpawner(dispatcher: TileEntityRendererDispatcher) : TileEntityRenderer<TileEntityBaseSpawner>(dispatcher){
-	override fun render(tile: TileEntityBaseSpawner, partialTicks: Float, matrix: MatrixStack, buffer: IRenderTypeBuffer, combinedLight: Int, combinedOverlay: Int){
+class RenderTileSpawner(dispatcher: TileEntityRendererDispatcher) : TileEntityRenderer<TileEntityBaseSpawner>(dispatcher) {
+	override fun render(tile: TileEntityBaseSpawner, partialTicks: Float, matrix: MatrixStack, buffer: IRenderTypeBuffer, combinedLight: Int, combinedOverlay: Int) {
 		val entity = tile.clientEntity
 		val scale = 0.53125F / max(entity.width, entity.height).coerceAtLeast(1F)
 		

@@ -1,4 +1,5 @@
 package chylex.hee.game.world.territory
+
 import chylex.hee.game.mechanics.causatum.CausatumStage
 import chylex.hee.game.mechanics.causatum.CausatumStage.S2_ENTERED_END
 import chylex.hee.game.mechanics.causatum.CausatumStage.S3_FINISHED_CURSED_LIBRARY
@@ -31,8 +32,8 @@ enum class TerritoryType(
 	val gen: ITerritoryGenerator,
 	val chunks: Int,
 	val height: IntRange,
-	val stage: CausatumStage = S2_ENTERED_END
-){
+	val stage: CausatumStage = S2_ENTERED_END,
+) {
 	THE_HUB(
 		title  = "the_hub",
 		desc   = Territory_TheHub,
@@ -122,21 +123,21 @@ enum class TerritoryType(
 		stage  = S3_FINISHED_CURSED_LIBRARY
 	);
 	
-	companion object{
+	companion object {
 		const val FALLBACK_TRANSLATION_KEY = "hee.territory.fallback.name"
 		const val CHUNK_MARGIN = 64 // must be a multiple of 2
 		
 		val ALL = values()
 		val CHUNK_X_OFFSET = -(ALL[0].chunks / 2)
 		
-		fun fromX(x: Int): TerritoryType?{
+		fun fromX(x: Int): TerritoryType? {
 			val adjustedX = if (x < 0) abs(x + 1) else x
 			var testX = adjustedX + (ALL[0].chunks + CHUNK_MARGIN) * 8
 			
-			for(territory in ALL){
+			for(territory in ALL) {
 				val totalBlocks = (territory.chunks + CHUNK_MARGIN) * 16
 				
-				if (testX < totalBlocks){
+				if (testX < totalBlocks) {
 					return territory
 				}
 				
@@ -146,36 +147,36 @@ enum class TerritoryType(
 			return null
 		}
 		
-		fun fromPos(pos: BlockPos): TerritoryType?{
+		fun fromPos(pos: BlockPos): TerritoryType? {
 			return fromX(pos.x)
 		}
 		
-		fun fromPos(entity: Entity): TerritoryType?{
+		fun fromPos(entity: Entity): TerritoryType? {
 			return fromX(entity.posX.floorToInt())
 		}
 		
-		fun fromTitle(title: String): TerritoryType?{
+		fun fromTitle(title: String): TerritoryType? {
 			return ALL.find { it.title == title }
 		}
 		
 		// TODO remove once no longer necessary
 		
-		private object TerritoryDummy : ITerritoryDescription{
+		private object TerritoryDummy : ITerritoryDescription {
 			override val difficulty
 				get() = TerritoryDifficulty.PEACEFUL
 			
-			override val colors = object : TerritoryColors(){
+			override val colors = object : TerritoryColors() {
 				override val tokenTop    = RGB(255u)
 				override val tokenBottom = RGB(255u)
 				
 				override val portalSeed = 0L
 				
-				override fun nextPortalColor(rand: Random, color: FloatArray){
+				override fun nextPortalColor(rand: Random, color: FloatArray) {
 					color.fill(1F)
 				}
 			}
 			
-			override val environment = object : TerritoryEnvironment(){
+			override val environment = object : TerritoryEnvironment() {
 				override val fogColor = RGB(0u).asVec
 				override val fogDensity = 0F
 				
@@ -184,10 +185,10 @@ enum class TerritoryType(
 			}
 		}
 		
-		private object GeneratorDummy : ITerritoryGenerator{
+		private object GeneratorDummy : ITerritoryGenerator {
 			override val segmentSize = Size(1)
 			
-			override fun provide(world: SegmentedWorld): TerritoryGenerationInfo{
+			override fun provide(world: SegmentedWorld): TerritoryGenerationInfo {
 				return TerritoryGenerationInfo(world.worldSize.centerPos)
 			}
 		}
@@ -202,15 +203,15 @@ enum class TerritoryType(
 	val isSpawn
 		get() = ordinal == 0
 	
-	fun generate(rand: Random): Pair<SegmentedWorld, TerritoryGenerationInfo>{
+	fun generate(rand: Random): Pair<SegmentedWorld, TerritoryGenerationInfo> {
 		val generator = gen
 		val worldSize = size
 		val segmentSize = generator.segmentSize
 		val defaultBlock = generator.defaultBlock
 		
-		require(worldSize.x % 16 == 0 && worldSize.z % 16 == 0){ "territory world size must be chunk-aligned" }
+		require(worldSize.x % 16 == 0 && worldSize.z % 16 == 0) { "territory world size must be chunk-aligned" }
 		
-		val world = SegmentedWorld(rand, worldSize, segmentSize){ SegmentSingleState(segmentSize, defaultBlock) }
+		val world = SegmentedWorld(rand, worldSize, segmentSize) { SegmentSingleState(segmentSize, defaultBlock) }
 		val info = generator.provide(world)
 		
 		return world to info

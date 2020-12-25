@@ -1,4 +1,5 @@
 package chylex.hee.game.world.feature.basic.blobs.populators
+
 import chylex.hee.game.world.allInBox
 import chylex.hee.game.world.feature.basic.blobs.BlobGenerator
 import chylex.hee.game.world.feature.basic.blobs.IBlobPopulator
@@ -10,11 +11,11 @@ import net.minecraft.block.Block
 import java.util.Random
 
 class BlobPopulatorFill(
-	private val picker: IBlockPicker
-) : IBlobPopulator{
+	private val picker: IBlockPicker,
+) : IBlobPopulator {
 	constructor(block: Block) : this(Single(block))
 	
-	override fun generate(world: ScaffoldedWorld, rand: Random, generator: BlobGenerator){
+	override fun generate(world: ScaffoldedWorld, rand: Random, generator: BlobGenerator) {
 		val size = world.worldSize
 		val base = generator.base
 		

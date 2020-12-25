@@ -1,4 +1,5 @@
 package chylex.hee.game.item
+
 import chylex.hee.HEE
 import chylex.hee.client.MC
 import chylex.hee.game.block.BlockShulkerBoxOverride.BoxSize
@@ -56,15 +57,15 @@ import net.minecraft.util.text.TranslationTextComponent
 import net.minecraft.world.World
 import net.minecraftforge.client.event.GuiScreenEvent
 
-class ItemShulkerBoxOverride(block: Block, properties: Properties) : ItemBlock(block, properties){
-	companion object{
+class ItemShulkerBoxOverride(block: Block, properties: Properties) : ItemBlock(block, properties) {
+	companion object {
 		private const val TOOLTIP_ENTRY_COUNT = 5
 		
-		private fun isStackValid(stack: ItemStack): Boolean{
+		private fun isStackValid(stack: ItemStack): Boolean {
 			return stack.item is ItemShulkerBoxOverride
 		}
 		
-		fun getBoxSize(stack: ItemStack): BoxSize{
+		fun getBoxSize(stack: ItemStack): BoxSize {
 			return stack.nbtOrNull
 				?.getCompoundOrNull(MagicValues.TILE_ENTITY_TAG)
 				?.heeTagOrNull
@@ -72,29 +73,29 @@ class ItemShulkerBoxOverride(block: Block, properties: Properties) : ItemBlock(b
 				?: BoxSize.LARGE
 		}
 		
-		fun setBoxSize(stack: ItemStack, boxSize: BoxSize){
+		fun setBoxSize(stack: ItemStack, boxSize: BoxSize) {
 			stack.nbt.getOrCreateCompound(MagicValues.TILE_ENTITY_TAG).heeTag.putEnum(TileEntityShulkerBoxCustom.BOX_SIZE_TAG, boxSize)
 		}
 	}
 	
-	class ContainerProvider(private val stack: ItemStack, private val slot: Int) : INamedContainerProvider{
-		override fun getDisplayName(): ITextComponent{
+	class ContainerProvider(private val stack: ItemStack, private val slot: Int) : INamedContainerProvider {
+		override fun getDisplayName(): ITextComponent {
 			return stack.displayName
 		}
 		
-		override fun createMenu(id: Int, inventory: PlayerInventory, player: EntityPlayer): Container{
+		override fun createMenu(id: Int, inventory: PlayerInventory, player: EntityPlayer): Container {
 			return ContainerShulkerBoxInInventory(id, player, slot)
 		}
 	}
 	
-	class Inv(override val player: EntityPlayer, boxSize: BoxSize, private val inventorySlot: Int) : Inventory(boxSize.slots), IInventoryFromPlayerItem{
+	class Inv(override val player: EntityPlayer, boxSize: BoxSize, private val inventorySlot: Int) : Inventory(boxSize.slots), IInventoryFromPlayerItem {
 		private val boxStack
 			get() = player.inventory.getStack(inventorySlot)
 		
-		init{
+		init {
 			val boxStack = boxStack
 			
-			if (isStackValid(boxStack)){
+			if (isStackValid(boxStack)) {
 				NonNullList.withSize(size, ItemStack.EMPTY).also {
 					ItemStackHelper.loadAllItems(boxStack.nbt.getCompound(MagicValues.TILE_ENTITY_TAG), it)
 					it.forEachIndexed(::setStack)
@@ -104,15 +105,15 @@ class ItemShulkerBoxOverride(block: Block, properties: Properties) : ItemBlock(b
 			}
 		}
 		
-		override fun tryUpdatePlayerItem(): Boolean{
+		override fun tryUpdatePlayerItem(): Boolean {
 			val boxStack = boxStack
 			
-			if (!isStackValid(boxStack)){
+			if (!isStackValid(boxStack)) {
 				return false
 			}
 			
 			NonNullList.withSize(size, ItemStack.EMPTY).also {
-				for((slot, stack) in allSlots){
+				for((slot, stack) in allSlots) {
 					it[slot] = stack
 				}
 				
@@ -125,13 +126,13 @@ class ItemShulkerBoxOverride(block: Block, properties: Properties) : ItemBlock(b
 	
 	// Properties
 	
-	override fun getTranslationKey(stack: ItemStack): String{
+	override fun getTranslationKey(stack: ItemStack): String {
 		return getBoxSize(stack).translationKey
 	}
 	
-	override fun fillItemGroup(group: ItemGroup, items: NonNullList<ItemStack>){
-		if (isInGroup(group)){
-			for(boxSize in BoxSize.values()){
+	override fun fillItemGroup(group: ItemGroup, items: NonNullList<ItemStack>) {
+		if (isInGroup(group)) {
+			for(boxSize in BoxSize.values()) {
 				items.add(ItemStack(this).also { setBoxSize(it, boxSize) })
 			}
 		}
@@ -139,11 +140,11 @@ class ItemShulkerBoxOverride(block: Block, properties: Properties) : ItemBlock(b
 	
 	// Use handling
 	
-	override fun onItemRightClick(world: World, player: EntityPlayer, hand: Hand): ActionResult<ItemStack>{
+	override fun onItemRightClick(world: World, player: EntityPlayer, hand: Hand): ActionResult<ItemStack> {
 		val stack = player.getHeldItem(hand)
 		val slot = player.inventory.nonEmptySlots.find { it.stack === stack }
 		
-		if (slot == null){
+		if (slot == null) {
 			return ActionResult(PASS, stack)
 		}
 		
@@ -155,15 +156,15 @@ class ItemShulkerBoxOverride(block: Block, properties: Properties) : ItemBlock(b
 	
 	@Sided(Side.CLIENT)
 	@SubscribeAllEvents(Side.CLIENT, modid = HEE.ID)
-	object EventHandler{
+	object EventHandler {
 		@SubscribeEvent(EventPriority.LOWEST)
-		fun onMouseInputPre(e: GuiScreenEvent.MouseClickedEvent.Pre){
+		fun onMouseInputPre(e: GuiScreenEvent.MouseClickedEvent.Pre) {
 			val gui = e.gui
 			
-			if (gui is InventoryScreen && e.button == 1 && !Screen.hasShiftDown()){
+			if (gui is InventoryScreen && e.button == 1 && !Screen.hasShiftDown()) {
 				val hoveredSlot = gui.slotUnderMouse
 				
-				if (hoveredSlot != null && isStackValid(hoveredSlot.stack)){
+				if (hoveredSlot != null && isStackValid(hoveredSlot.stack)) {
 					PacketServerOpenInventoryItem(hoveredSlot.slotIndex).sendToServer()
 					e.isCanceled = true
 				}
@@ -171,45 +172,45 @@ class ItemShulkerBoxOverride(block: Block, properties: Properties) : ItemBlock(b
 		}
 	}
 	
-	override fun shouldCauseReequipAnimation(oldStack: ItemStack, newStack: ItemStack, slotChanged: Boolean): Boolean{
+	override fun shouldCauseReequipAnimation(oldStack: ItemStack, newStack: ItemStack, slotChanged: Boolean): Boolean {
 		return slotChanged && super.shouldCauseReequipAnimation(oldStack, newStack, slotChanged)
 	}
 	
 	@Sided(Side.CLIENT)
-	override fun addInformation(stack: ItemStack, world: World?, lines: MutableList<ITextComponent>, flags: ITooltipFlag){
-		if (MC.currentScreen is InventoryScreen){
+	override fun addInformation(stack: ItemStack, world: World?, lines: MutableList<ITextComponent>, flags: ITooltipFlag) {
+		if (MC.currentScreen is InventoryScreen) {
 			lines.add(TranslationTextComponent("item.hee.shulker_box.tooltip"))
 			lines.add(StringTextComponent(""))
 		}
 		
 		val contentsTag = stack.nbtOrNull?.getCompoundOrNull(MagicValues.TILE_ENTITY_TAG)
 		
-		if (contentsTag != null){
+		if (contentsTag != null) {
 			val inventory = NonNullList.withSize(BoxSize.LARGE.slots, ItemStack.EMPTY)
 			ItemStackHelper.loadAllItems(contentsTag, inventory)
 			
-			if (inventory.any { it.isNotEmpty }){
+			if (inventory.any { it.isNotEmpty }) {
 				val counts = Object2IntOpenHashMap<String>()
 				
-				for(invStack in inventory){
-					if (invStack.isNotEmpty){
+				for(invStack in inventory) {
+					if (invStack.isNotEmpty) {
 						counts.addTo(invStack.displayName.string, invStack.count)
 					}
 				}
 				
 				val sorted = counts.object2IntEntrySet().sortedWith(compareBy({ -it.intValue }, { it.key }))
 				
-				for((name, count) in sorted.take(TOOLTIP_ENTRY_COUNT)){
+				for((name, count) in sorted.take(TOOLTIP_ENTRY_COUNT)) {
 					lines.add(StringTextComponent("%s x%d".format(name, count)).applyTextStyle(GRAY))
 				}
 				
-				if (sorted.size > TOOLTIP_ENTRY_COUNT){
+				if (sorted.size > TOOLTIP_ENTRY_COUNT) {
 					lines.add(TranslationTextComponent("container.shulkerBox.more", sorted.size - TOOLTIP_ENTRY_COUNT).applyTextStyles(GRAY, ITALIC))
 				}
 			}
 		}
 		
-		if ((lines.lastOrNull() as? StringTextComponent)?.let { it.text.isEmpty() && it.siblings.isEmpty() } == true){
+		if ((lines.lastOrNull() as? StringTextComponent)?.let { it.text.isEmpty() && it.siblings.isEmpty() } == true) {
 			lines.removeAt(lines.lastIndex)
 		}
 	}

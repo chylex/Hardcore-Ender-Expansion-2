@@ -1,8 +1,9 @@
 package chylex.hee.system.facades
+
 import chylex.hee.HEE
 import net.minecraft.util.ResourceLocation
 
-object Resource{
+object Resource {
 	const val NAMESPACE_VANILLA = "minecraft"
 	
 	fun Vanilla(path: String) = ResourceLocation(NAMESPACE_VANILLA, path)

@@ -1,4 +1,5 @@
 package chylex.hee.game.potion.brewing.modifiers
+
 import chylex.hee.game.inventory.nbtOrNull
 import chylex.hee.game.inventory.size
 import chylex.hee.game.potion.brewing.IBrewingModifier
@@ -7,12 +8,12 @@ import net.minecraft.item.Item
 import net.minecraft.item.ItemStack
 import net.minecraft.item.Items
 
-sealed class BrewConvertBottle(override val ingredient: Item, private val oldContainer: Item, private val newContainer: Item) : IBrewingModifier{
-	override fun check(input: ItemStack): Boolean{
+sealed class BrewConvertBottle(override val ingredient: Item, private val oldContainer: Item, private val newContainer: Item) : IBrewingModifier {
+	override fun check(input: ItemStack): Boolean {
 		return input.item === oldContainer && PotionBrewing.isAltered(input)
 	}
 	
-	override fun apply(input: ItemStack): ItemStack{
+	override fun apply(input: ItemStack): ItemStack {
 		return ItemStack(newContainer, input.size).also {
 			it.tag = input.nbtOrNull?.copy()
 		}

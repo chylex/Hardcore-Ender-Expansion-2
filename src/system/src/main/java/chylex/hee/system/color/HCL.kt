@@ -1,4 +1,5 @@
 package chylex.hee.system.color
+
 import chylex.hee.system.color.IntColor.Companion.RGB
 import chylex.hee.system.math.toRadians
 import kotlin.math.cos
@@ -13,8 +14,8 @@ import kotlin.math.sin
  * @param[chroma] value between 0-100
  * @param[luminance] value between 0-100
  */
-data class HCL(val hue: Double, val chroma: Float, val luminance: Float){
-	private companion object{
+data class HCL(val hue: Double, val chroma: Float, val luminance: Float) {
+	private companion object {
 		private const val X_NORMALIZED =  95.047
 		private const val Y_NORMALIZED = 100.000
 		private const val Z_NORMALIZED = 108.883
@@ -22,7 +23,7 @@ data class HCL(val hue: Double, val chroma: Float, val luminance: Float){
 		private const val U_NORMALIZED = (4 * X_NORMALIZED) / (X_NORMALIZED + 15 * Y_NORMALIZED + 3 * Z_NORMALIZED)
 		private const val V_NORMALIZED = (9 * Y_NORMALIZED) / (X_NORMALIZED + 15 * Y_NORMALIZED + 3 * Z_NORMALIZED)
 		
-		private fun fRGB(c: Double): Double{
+		private fun fRGB(c: Double): Double {
 			return if (c <= 0.0031308)
 				c * 12.92
 			else
@@ -33,14 +34,14 @@ data class HCL(val hue: Double, val chroma: Float, val luminance: Float){
 	val i
 		get() = toRGB().i
 	
-	fun toRGB(): IntColor{
+	fun toRGB(): IntColor {
 		val hueRad = hue.toRadians()
 		
 		val l = luminance
 		val u = chroma * cos(hueRad)
 		val v = chroma * sin(hueRad)
 		
-		if (luminance == 0F){
+		if (luminance == 0F) {
 			return RGB(0u)
 		}
 		
@@ -56,9 +57,9 @@ data class HCL(val hue: Double, val chroma: Float, val luminance: Float){
 		val z = y * (12 - 3 * uu - 20 * vv) / (4 * vv)
 		
 		return RGB(
-			(fRGB( 3.2404542 * x - 1.5371385 * y - 0.4985314 * z) * 255).roundToInt(),
+			(fRGB(+3.2404542 * x - 1.5371385 * y - 0.4985314 * z) * 255).roundToInt(),
 			(fRGB(-0.9692660 * x + 1.8760108 * y + 0.0415560 * z) * 255).roundToInt(),
-			(fRGB( 0.0556434 * x - 0.2040259 * y + 1.0572252 * z) * 255).roundToInt()
+			(fRGB(+0.0556434 * x - 0.2040259 * y + 1.0572252 * z) * 255).roundToInt()
 		)
 	}
 }

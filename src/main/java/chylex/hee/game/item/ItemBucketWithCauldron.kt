@@ -1,4 +1,5 @@
 package chylex.hee.game.item
+
 import chylex.hee.game.block.BlockAbstractCauldron
 import chylex.hee.game.block.with
 import chylex.hee.game.world.getState
@@ -19,17 +20,17 @@ import net.minecraft.item.Items
 import net.minecraft.util.ActionResultType
 import net.minecraft.util.SoundCategory
 
-open class ItemBucketWithCauldron(fluid: Fluid, private val cauldronBlock: BlockCauldron, properties: Properties) : ItemBucket(supply(fluid), properties){
-	override fun onItemUse(context: ItemUseContext): ActionResultType{
+open class ItemBucketWithCauldron(fluid: Fluid, private val cauldronBlock: BlockCauldron, properties: Properties) : ItemBucket(supply(fluid), properties) {
+	override fun onItemUse(context: ItemUseContext): ActionResultType {
 		val world = context.world
 		val pos = context.pos
 		
-		if (pos.getState(world).let { it.block === Blocks.CAULDRON && it[BlockCauldron.LEVEL] == 0 }){
+		if (pos.getState(world).let { it.block === Blocks.CAULDRON && it[BlockCauldron.LEVEL] == 0 }) {
 			val player = context.player
 			
-			if (!world.isRemote){
-				if (player != null){
-					if (!player.abilities.isCreativeMode){
+			if (!world.isRemote) {
+				if (player != null) {
+					if (!player.abilities.isCreativeMode) {
 						player.setHeldItem(context.hand, ItemStack(Items.BUCKET))
 					}
 					
@@ -39,10 +40,10 @@ open class ItemBucketWithCauldron(fluid: Fluid, private val cauldronBlock: Block
 				pos.setState(world, cauldronBlock.with(BlockCauldron.LEVEL, BlockAbstractCauldron.MAX_LEVEL))
 			}
 			
-			if (player == null){
+			if (player == null) {
 				Sounds.ITEM_BUCKET_EMPTY.playServer(world, pos, SoundCategory.BLOCKS)
 			}
-			else{
+			else {
 				Sounds.ITEM_BUCKET_EMPTY.playUniversal(player, pos, SoundCategory.BLOCKS)
 			}
 			

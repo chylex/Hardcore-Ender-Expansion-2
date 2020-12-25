@@ -1,4 +1,5 @@
 package chylex.hee.game.block
+
 import chylex.hee.HEE
 import chylex.hee.client.render.block.IBlockLayerCutout
 import chylex.hee.commands.client.CommandClientScaffolding
@@ -37,14 +38,14 @@ import net.minecraft.world.IBlockReader
 import net.minecraft.world.World
 import java.nio.file.Files
 
-class BlockScaffolding(builder: BlockBuilder) : BlockSimple(builder), IBlockLayerCutout{
+class BlockScaffolding(builder: BlockBuilder) : BlockSimple(builder), IBlockLayerCutout {
 	var enableShape = true
 	
-	override fun onBlockActivated(state: BlockState, world: World, pos: BlockPos, player: EntityPlayer, hand: Hand, hit: BlockRayTraceResult): ActionResultType{
-		if (world.isRemote && player.isSneaking && !player.abilities.isFlying && Debug.enabled){
+	override fun onBlockActivated(state: BlockState, world: World, pos: BlockPos, player: EntityPlayer, hand: Hand, hit: BlockRayTraceResult): ActionResultType {
+		if (world.isRemote && player.isSneaking && !player.abilities.isFlying && Debug.enabled) {
 			val palette = CommandClientScaffolding.currentPalette
 			
-			if (palette == null){
+			if (palette == null) {
 				player.sendMessage(StringTextComponent("No structure set."))
 				return FAIL
 			}
@@ -52,7 +53,7 @@ class BlockScaffolding(builder: BlockBuilder) : BlockSimple(builder), IBlockLaye
 			val minPos = findMinPos(world, pos)?.let { findMinPos(world, it) } // double pass to find min from any side
 			val maxPos = minPos?.let { findMaxPos(world, it) }
 			
-			if (minPos == null || maxPos == null){
+			if (minPos == null || maxPos == null) {
 				player.sendMessage(StringTextComponent("Could not find structure boundaries."))
 				return FAIL
 			}
@@ -65,10 +66,10 @@ class BlockScaffolding(builder: BlockBuilder) : BlockSimple(builder), IBlockLaye
 			CompressedStreamTools.write(structureTag, structureFile)
 			Debug.setClipboardContents(structureFile)
 			
-			if (missingMappings.isNotEmpty()){
+			if (missingMappings.isNotEmpty()) {
 				player.sendMessage(StringTextComponent("Missing mappings for states:"))
 				
-				for(missingMapping in missingMappings){
+				for(missingMapping in missingMappings) {
 					player.sendMessage(StringTextComponent(" - ${TextFormatting.GRAY}$missingMapping"))
 				}
 			}
@@ -82,11 +83,11 @@ class BlockScaffolding(builder: BlockBuilder) : BlockSimple(builder), IBlockLaye
 	
 	// Helpers
 	
-	private fun find(world: World, pos: BlockPos?, direction: Direction): BlockPos?{
-		return pos?.offsetUntilExcept(direction, 0..255){ it.getBlock(world) === Blocks.AIR }
+	private fun find(world: World, pos: BlockPos?, direction: Direction): BlockPos? {
+		return pos?.offsetUntilExcept(direction, 0..255) { it.getBlock(world) === Blocks.AIR }
 	}
 	
-	private fun findMinPos(world: World, pos: BlockPos): BlockPos?{
+	private fun findMinPos(world: World, pos: BlockPos): BlockPos? {
 		val bottomPos = find(world, pos, DOWN)
 		
 		val y = bottomPos?.y
@@ -96,7 +97,7 @@ class BlockScaffolding(builder: BlockBuilder) : BlockSimple(builder), IBlockLaye
 		return if (x == null || y == null || z == null) null else Pos(x, y, z)
 	}
 	
-	private fun findMaxPos(world: World, pos: BlockPos): BlockPos?{
+	private fun findMaxPos(world: World, pos: BlockPos): BlockPos? {
 		val topPos = find(world, pos, UP)
 		
 		val y = topPos?.y
@@ -111,14 +112,14 @@ class BlockScaffolding(builder: BlockBuilder) : BlockSimple(builder), IBlockLaye
 	override fun isNormalCube(state: BlockState, world: IBlockReader, pos: BlockPos) = false
 	override fun causesSuffocation(state: BlockState, world: IBlockReader, pos: BlockPos) = false
 	
-	override fun getShape(state: BlockState, world: IBlockReader, pos: BlockPos, context: ISelectionContext): VoxelShape{
+	override fun getShape(state: BlockState, world: IBlockReader, pos: BlockPos, context: ISelectionContext): VoxelShape {
 		return if (enableShape)
 			VoxelShapes.fullCube()
 		else
 			VoxelShapes.empty()
 	}
 	
-	override fun getCollisionShape(state: BlockState, world: IBlockReader, pos: BlockPos, context: ISelectionContext): VoxelShape{
+	override fun getCollisionShape(state: BlockState, world: IBlockReader, pos: BlockPos, context: ISelectionContext): VoxelShape {
 		val player = HEE.proxy.getClientSidePlayer()
 		
 		return if ((player == null || !player.abilities.isFlying) && enableShape)
@@ -127,7 +128,7 @@ class BlockScaffolding(builder: BlockBuilder) : BlockSimple(builder), IBlockLaye
 			VoxelShapes.empty()
 	}
 	
-	override fun getRaytraceShape(state: BlockState, world: IBlockReader, pos: BlockPos): VoxelShape{
+	override fun getRaytraceShape(state: BlockState, world: IBlockReader, pos: BlockPos): VoxelShape {
 		val player = HEE.proxy.getClientSidePlayer()
 		
 		return if ((player == null || player.isSneaking || player.abilities.isFlying) && enableShape)
@@ -137,7 +138,7 @@ class BlockScaffolding(builder: BlockBuilder) : BlockSimple(builder), IBlockLaye
 	}
 	
 	@Sided(Side.CLIENT)
-	override fun getAmbientOcclusionLightValue(state: BlockState, world: IBlockReader, pos: BlockPos): Float{
+	override fun getAmbientOcclusionLightValue(state: BlockState, world: IBlockReader, pos: BlockPos): Float {
 		return 1F
 	}
 }

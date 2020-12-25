@@ -1,4 +1,5 @@
 package chylex.hee.datagen.client.util
+
 import chylex.hee.datagen.Callback
 import chylex.hee.datagen.path
 import chylex.hee.datagen.r
@@ -15,20 +16,20 @@ import net.minecraftforge.client.model.generators.ItemModelBuilder.OverrideBuild
 import net.minecraftforge.client.model.generators.ItemModelProvider
 import net.minecraftforge.client.model.generators.ModelFile.UncheckedModelFile
 
-fun Item.suffixed(suffix: String): Item{
+fun Item.suffixed(suffix: String): Item {
 	return Item(Item.Properties()) named this.path + suffix
 }
 
 private val ItemModelProvider.generated
 	get() = getExistingFile(Resource.Vanilla("item/generated"))
 
-private fun IItemProvider.path() = when(this){
+private fun IItemProvider.path() = when(this) {
 	is Block -> this.path
 	is Item  -> this.path
 	else     -> throw IllegalArgumentException()
 }
 
-private fun ItemModelProvider.build(item: IItemProvider): ItemModelBuilder{
+private fun ItemModelProvider.build(item: IItemProvider): ItemModelBuilder {
 	return this.getBuilder(item.path())
 }
 
@@ -47,15 +48,15 @@ fun ItemModelProvider.simple(item: IItemProvider, texture: ResourceLocation = it
 fun ItemModelProvider.layers(item: Item, layers: Array<String>) = safe {
 	var builder = this.getBuilder(item.path).parent(generated)
 	
-	for((index, layer) in layers.withIndex()){
+	for((index, layer) in layers.withIndex()) {
 		builder = builder.texture("layer$index", Resource.Custom("item/$layer"))
 	}
 	
 	builder
 }
 
-fun ItemModelProvider.multi(item: IItemProvider, parent: ResourceLocation, suffixes: Array<String>, callback: ItemModelBuilder.(Callback<IItemProvider>) -> Unit){
-	for(suffix in suffixes){
+fun ItemModelProvider.multi(item: IItemProvider, parent: ResourceLocation, suffixes: Array<String>, callback: ItemModelBuilder.(Callback<IItemProvider>) -> Unit) {
+	for(suffix in suffixes) {
 		val path = item.path() + suffix
 		
 		this.safeUnit {
@@ -64,14 +65,14 @@ fun ItemModelProvider.multi(item: IItemProvider, parent: ResourceLocation, suffi
 	}
 }
 
-fun ItemModelProvider.multi(item: IItemProvider, parent: ResourceLocation, suffixes: IntRange, callback: ItemModelBuilder.(Callback<IItemProvider>) -> Unit){
-	multi(item, parent, Array(1 + suffixes.last - suffixes.first){ "_${suffixes.first + it}" }, callback)
+fun ItemModelProvider.multi(item: IItemProvider, parent: ResourceLocation, suffixes: IntRange, callback: ItemModelBuilder.(Callback<IItemProvider>) -> Unit) {
+	multi(item, parent, Array(1 + suffixes.last - suffixes.first) { "_${suffixes.first + it}" }, callback)
 }
 
 fun ItemModelProvider.block(block: Block, parent: Block = block) = safe {
 	this.getBuilder(block.path).parent(UncheckedModelFile(parent.r))
 }
 
-fun ItemModelBuilder.override(model: ResourceLocation, callback: OverrideBuilder.() -> OverrideBuilder): ItemModelBuilder?{
+fun ItemModelBuilder.override(model: ResourceLocation, callback: OverrideBuilder.() -> OverrideBuilder): ItemModelBuilder? {
 	return this.override().model(UncheckedModelFile(model)).let(callback).end()
 }

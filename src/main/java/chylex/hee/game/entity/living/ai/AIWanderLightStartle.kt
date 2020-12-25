@@ -1,4 +1,5 @@
 package chylex.hee.game.entity.living.ai
+
 import chylex.hee.game.world.Pos
 import chylex.hee.game.world.bottomCenter
 import chylex.hee.game.world.distanceTo
@@ -19,9 +20,9 @@ class AIWanderLightStartle(
 	private val searchAttempts: Int,
 	private val maxDistanceXZ: Int,
 	private val maxDistanceY: Int,
-	private val handler: ILightStartleHandler
-) : AIBaseWanderConditioned(entity, movementSpeed){
-	interface ILightStartleHandler{
+	private val handler: ILightStartleHandler,
+) : AIBaseWanderConditioned(entity, movementSpeed) {
+	interface ILightStartleHandler {
 		fun onLightStartled(): Boolean
 		fun onDarknessReached()
 	}
@@ -29,17 +30,17 @@ class AIWanderLightStartle(
 	private var lastLightLevel = 15
 	private var wanderDelay = 0
 	
-	override fun shouldExecute(): Boolean{
+	override fun shouldExecute(): Boolean {
 		val prevBlockLight = lastLightLevel
 		val newBlockLight = entity.world.getLightFor(BLOCK, Pos(entity))
 		
 		lastLightLevel = newBlockLight
 		
-		if (newBlockLight - prevBlockLight < minBlockLightIncrease){
+		if (newBlockLight - prevBlockLight < minBlockLightIncrease) {
 			return false
 		}
 		
-		if (!handler.onLightStartled()){
+		if (!handler.onLightStartled()) {
 			return false
 		}
 		
@@ -50,8 +51,8 @@ class AIWanderLightStartle(
 		return true
 	}
 	
-	override fun shouldContinueExecuting(): Boolean{
-		if (wanderDelay > 0 || super.shouldContinueExecuting()){
+	override fun shouldContinueExecuting(): Boolean {
+		if (wanderDelay > 0 || super.shouldContinueExecuting()) {
 			return true
 		}
 		
@@ -59,7 +60,7 @@ class AIWanderLightStartle(
 		return false
 	}
 	
-	override fun getPosition(): Vec3d?{
+	override fun getPosition(): Vec3d? {
 		val world = entity.world
 		val rand = entity.rng
 		val nav = entity.navigator
@@ -70,20 +71,20 @@ class AIWanderLightStartle(
 		var foundTarget: BlockPos? = null
 		var foundLight = Int.MAX_VALUE
 		
-		for(attempt in 1..searchAttempts){
+		for(attempt in 1..searchAttempts) {
 			val testPos = startPos.add(
 				rand.nextInt(-maxDistanceXZ, maxDistanceXZ),
 				rand.nextInt(-maxDistanceY, maxDistanceY),
 				rand.nextInt(-maxDistanceXZ, maxDistanceXZ)
 			)
 			
-			if (!testPos.isAir(world) || !nav.canEntityStandOnPos(testPos)){
+			if (!testPos.isAir(world) || !nav.canEntityStandOnPos(testPos)) {
 				continue
 			}
 			
 			val testLight = getCombinedLight(testPos)
 			
-			if (startLight - testLight >= minCombinedLightDecrease && testLight < foundLight && nav.getPathToPos(testPos, 0)?.let { validatePath(it, testPos) } == true){
+			if (startLight - testLight >= minCombinedLightDecrease && testLight < foundLight && nav.getPathToPos(testPos, 0)?.let { validatePath(it, testPos) } == true) {
 				foundTarget = testPos
 				foundLight = testLight
 			}
@@ -92,23 +93,23 @@ class AIWanderLightStartle(
 		return foundTarget?.let(BlockPos::bottomCenter)
 	}
 	
-	private fun getCombinedLight(pos: BlockPos): Int{
+	private fun getCombinedLight(pos: BlockPos): Int {
 		return entity.world.let { it.getLightFor(BLOCK, pos) + (it.getLightFor(SKY, pos) / 2) }
 	}
 	
-	private fun validatePath(path: Path, target: BlockPos): Boolean{
+	private fun validatePath(path: Path, target: BlockPos): Boolean {
 		return path.finalPathPoint?.let { target.distanceTo(it.x, it.y, it.z) < 2.0 } == true
 	}
 	
-	override fun startExecuting(){}
+	override fun startExecuting() {}
 	
-	override fun tick(){
-		if (wanderDelay > 0 && --wanderDelay == 0){
+	override fun tick() {
+		if (wanderDelay > 0 && --wanderDelay == 0) {
 			super.startExecuting()
 		}
 	}
 	
-	override fun resetTask(){
+	override fun resetTask() {
 		lastLightLevel = entity.world.getLightFor(BLOCK, Pos(entity))
 	}
 }

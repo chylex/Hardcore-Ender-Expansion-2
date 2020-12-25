@@ -1,4 +1,5 @@
 package chylex.hee.client.model.entity
+
 import chylex.hee.client.model.beginBox
 import chylex.hee.game.entity.item.EntityTokenHolder
 import chylex.hee.system.forge.Side
@@ -9,10 +10,10 @@ import net.minecraft.client.renderer.entity.model.EntityModel
 import net.minecraft.client.renderer.model.ModelRenderer
 
 @Sided(Side.CLIENT)
-object ModelEntityTokenHolder : EntityModel<EntityTokenHolder>(){
+object ModelEntityTokenHolder : EntityModel<EntityTokenHolder>() {
 	private val box: ModelRenderer
 	
-	init{
+	init {
 		textureWidth = 64
 		textureHeight = 32
 		
@@ -21,9 +22,9 @@ object ModelEntityTokenHolder : EntityModel<EntityTokenHolder>(){
 		}
 	}
 	
-	override fun setRotationAngles(entity: EntityTokenHolder, limbSwing: Float, limbSwingAmount: Float, age: Float, headYaw: Float, headPitch: Float){}
+	override fun setRotationAngles(entity: EntityTokenHolder, limbSwing: Float, limbSwingAmount: Float, age: Float, headYaw: Float, headPitch: Float) {}
 	
-	override fun render(matrix: MatrixStack, builder: IVertexBuilder, combinedLight: Int, combinedOverlay: Int, red: Float, green: Float, blue: Float, alpha: Float){
+	override fun render(matrix: MatrixStack, builder: IVertexBuilder, combinedLight: Int, combinedOverlay: Int, red: Float, green: Float, blue: Float, alpha: Float) {
 		box.render(matrix, builder, combinedLight, combinedOverlay, red, green, blue, alpha)
 	}
 }

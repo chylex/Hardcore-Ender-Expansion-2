@@ -1,4 +1,5 @@
 package chylex.hee.client.render.entity
+
 import chylex.hee.client.MC
 import chylex.hee.client.model.ModelHelper
 import chylex.hee.client.render.gl.rotateY
@@ -18,10 +19,10 @@ import net.minecraft.item.Items
 import net.minecraft.util.ResourceLocation
 
 @Sided(Side.CLIENT)
-class RenderEntityProjectileEyeOfEnder(manager: EntityRendererManager) : EntityRenderer<EntityProjectileEyeOfEnder>(manager){
+class RenderEntityProjectileEyeOfEnder(manager: EntityRendererManager) : EntityRenderer<EntityProjectileEyeOfEnder>(manager) {
 	private val renderedItem = ItemStack(Items.ENDER_EYE)
 	
-	override fun render(entity: EntityProjectileEyeOfEnder, yaw: Float, partialTicks: Float, matrix: MatrixStack, buffer: IRenderTypeBuffer, combinedLight: Int){
+	override fun render(entity: EntityProjectileEyeOfEnder, yaw: Float, partialTicks: Float, matrix: MatrixStack, buffer: IRenderTypeBuffer, combinedLight: Int) {
 		matrix.push()
 		matrix.translateY(entity.renderBob.get(partialTicks))
 		matrix.rotateY(yaw)
@@ -33,7 +34,7 @@ class RenderEntityProjectileEyeOfEnder(manager: EntityRendererManager) : EntityR
 		super.render(entity, yaw, partialTicks, matrix, buffer, combinedLight)
 	}
 	
-	override fun getEntityTexture(entity: EntityProjectileEyeOfEnder): ResourceLocation{
+	override fun getEntityTexture(entity: EntityProjectileEyeOfEnder): ResourceLocation {
 		return PlayerContainer.LOCATION_BLOCKS_TEXTURE
 	}
 }

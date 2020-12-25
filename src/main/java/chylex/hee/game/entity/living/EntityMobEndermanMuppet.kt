@@ -1,4 +1,5 @@
 package chylex.hee.game.entity.living
+
 import chylex.hee.game.entity.living.EntityMobEndermanMuppet.Type.FIRST_KILL
 import chylex.hee.game.entity.living.EntityMobEndermanMuppet.Type.INVALID
 import chylex.hee.game.entity.living.behavior.EndermanTeleportHandler
@@ -18,16 +19,16 @@ import net.minecraft.entity.SharedMonsterAttributes.MAX_HEALTH
 import net.minecraft.entity.SharedMonsterAttributes.MOVEMENT_SPEED
 import net.minecraft.world.World
 
-class EntityMobEndermanMuppet(type: EntityType<EntityMobEndermanMuppet>, world: World) : EntityMobAbstractEnderman(type, world){
-	constructor(world: World, type: Type) : this(ModEntities.ENDERMAN_MUPPET, world){
+class EntityMobEndermanMuppet(type: EntityType<EntityMobEndermanMuppet>, world: World) : EntityMobAbstractEnderman(type, world) {
+	constructor(world: World, type: Type) : this(ModEntities.ENDERMAN_MUPPET, world) {
 		this.type = type
 	}
 	
-	private companion object{
+	private companion object {
 		private const val TYPE_TAG = "Type"
 	}
 	
-	enum class Type{
+	enum class Type {
 		INVALID,
 		FIRST_KILL
 	}
@@ -37,7 +38,7 @@ class EntityMobEndermanMuppet(type: EntityType<EntityMobEndermanMuppet>, world: 
 	override val teleportCooldown = Int.MAX_VALUE
 	private var type = INVALID
 	
-	override fun registerAttributes(){
+	override fun registerAttributes() {
 		super.registerAttributes()
 		
 		getAttribute(MAX_HEALTH).baseValue = 40.0
@@ -46,21 +47,21 @@ class EntityMobEndermanMuppet(type: EntityType<EntityMobEndermanMuppet>, world: 
 		experienceValue = 0
 	}
 	
-	override fun tick(){
+	override fun tick() {
 		super.tick()
 		
-		if (ticksExisted == 1){
+		if (ticksExisted == 1) {
 			setRenderYawOffset(rotationYawHead)
 			prevRenderYawOffset = renderYawOffset
 		}
 	}
 	
-	override fun updateAITasks(){
-		if (type == INVALID){
+	override fun updateAITasks() {
+		if (type == INVALID) {
 			remove()
 		}
-		else if (type == FIRST_KILL){
-			if (world.isAreaLoaded(Pos(this), 24) && world.selectExistingEntities.inRange<EntityTechnicalCausatumEvent>(posVec, 24.0).none { it.type == CausatumEventEndermanKill::class.java }){
+		else if (type == FIRST_KILL) {
+			if (world.isAreaLoaded(Pos(this), 24) && world.selectExistingEntities.inRange<EntityTechnicalCausatumEvent>(posVec, 24.0).none { it.type == CausatumEventEndermanKill::class.java }) {
 				despawnOutOfWorld()
 			}
 		}
@@ -68,19 +69,19 @@ class EntityMobEndermanMuppet(type: EntityType<EntityMobEndermanMuppet>, world: 
 	
 	// Despawning
 	
-	fun despawnOutOfWorld(){
+	fun despawnOutOfWorld() {
 		EndermanTeleportHandler(this).teleportOutOfWorld(force = true)
 	}
 	
-	override fun canDespawn(distanceToClosestPlayerSq: Double): Boolean{
+	override fun canDespawn(distanceToClosestPlayerSq: Double): Boolean {
 		return false
 	}
 	
-	override fun preventDespawn(): Boolean{
+	override fun preventDespawn(): Boolean {
 		return true
 	}
 	
-	override fun checkDespawn(){
+	override fun checkDespawn() {
 		return
 	}
 	

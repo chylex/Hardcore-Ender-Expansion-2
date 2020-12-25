@@ -1,4 +1,5 @@
 package chylex.hee.game.entity.item
+
 import chylex.hee.game.entity.EntityData
 import chylex.hee.game.entity.lookPosVec
 import chylex.hee.game.entity.posVec
@@ -44,17 +45,17 @@ import net.minecraftforge.fml.common.registry.IEntityAdditionalSpawnData
 import net.minecraftforge.fml.network.NetworkHooks
 import java.util.Random
 
-class EntityTokenHolder(type: EntityType<EntityTokenHolder>, world: World) : Entity(type, world), IEntityAdditionalSpawnData{
-	constructor(world: World, tokenType: TokenType, territoryType: TerritoryType) : this(ModEntities.TOKEN_HOLDER, world){
+class EntityTokenHolder(type: EntityType<EntityTokenHolder>, world: World) : Entity(type, world), IEntityAdditionalSpawnData {
+	constructor(world: World, tokenType: TokenType, territoryType: TerritoryType) : this(ModEntities.TOKEN_HOLDER, world) {
 		this.tokenType = tokenType
 		this.territoryType = territoryType
 	}
 	
-	constructor(world: World, pos: BlockPos, tokenType: TokenType, territoryType: TerritoryType) : this(world, tokenType, territoryType){
+	constructor(world: World, pos: BlockPos, tokenType: TokenType, territoryType: TerritoryType) : this(world, tokenType, territoryType) {
 		setLocationAndAngles(pos.x + 0.5, pos.y + 0.5, pos.z + 0.5, 0F, 0F)
 	}
 	
-	companion object{
+	companion object {
 		private val DATA_CHARGE = EntityData.register<EntityTokenHolder, Float>(DataSerializers.FLOAT)
 		
 		private const val TOKEN_TYPE_TAG = "Type"
@@ -67,8 +68,8 @@ class EntityTokenHolder(type: EntityType<EntityTokenHolder>, world: World) : Ent
 			pos = InSphere(0.65F)
 		)
 		
-		val FX_BREAK = object : FxEntityHandler(){
-			override fun handle(entity: Entity, rand: Random){
+		val FX_BREAK = object : FxEntityHandler() {
+			override fun handle(entity: Entity, rand: Random) {
 				PARTICLE_BREAK.spawn(Point(entity, 0.5F, 75), rand)
 				ModSounds.ENTITY_TOKEN_HOLDER_DROP.playClient(entity.posVec, SoundCategory.BLOCKS, volume = 0.28F, pitch = 0.65F)
 			}
@@ -89,16 +90,16 @@ class EntityTokenHolder(type: EntityType<EntityTokenHolder>, world: World) : Ent
 	
 	var currentCharge by EntityData(DATA_CHARGE)
 	
-	init{
+	init {
 		isInvulnerable = true
 		setNoGravity(true)
 	}
 	
-	override fun createSpawnPacket(): IPacket<*>{
+	override fun createSpawnPacket(): IPacket<*> {
 		return NetworkHooks.getEntitySpawningPacket(this)
 	}
 	
-	override fun registerData(){
+	override fun registerData() {
 		dataManager.register(DATA_CHARGE, 1F)
 	}
 	
@@ -109,34 +110,34 @@ class EntityTokenHolder(type: EntityType<EntityTokenHolder>, world: World) : Ent
 	}
 	
 	override fun readSpawnData(buffer: PacketBuffer) = buffer.use {
-		tokenType = TokenType.values().getOrElse(readByte().toInt()){ TokenType.NORMAL }
+		tokenType = TokenType.values().getOrElse(readByte().toInt()) { TokenType.NORMAL }
 		territoryType = TerritoryType.values().getOrNull(readShort().toInt())
 		renderCharge.updateImmediately(readFloat())
 	}
 	
-	override fun tick(){
+	override fun tick() {
 		super.tick()
 		
-		if (world.isRemote){
+		if (world.isRemote) {
 			val prevRotation = renderRotation.currentValue
 			val nextRotation = nextRotation
 			
-			if (nextRotation < prevRotation){
+			if (nextRotation < prevRotation) {
 				renderRotation.updateImmediately(prevRotation - 360F)
 			}
 			
 			renderRotation.update(nextRotation)
 			renderCharge.update(currentCharge)
 		}
-		else{
+		else {
 			TerritoryInstance.fromPos(this)?.let { it.territory.desc.tokenHolders.onTick(this, it) }
 		}
 	}
 	
-	fun forceDropToken(motion: Vec3d){
+	fun forceDropToken(motion: Vec3d) {
 		val droppedToken = territoryType?.let { entityDropItem(ModItems.PORTAL_TOKEN.forTerritory(tokenType, it), (height * 0.5F) - 0.25F) }
 		
-		if (droppedToken != null){
+		if (droppedToken != null) {
 			droppedToken.setNoPickupDelay()
 			droppedToken.motion = motion
 			PacketClientLaunchInstantly(droppedToken, motion).sendToTracking(this)
@@ -145,21 +146,21 @@ class EntityTokenHolder(type: EntityType<EntityTokenHolder>, world: World) : Ent
 		PacketClientFX(FX_BREAK, FxEntityData(this)).sendToAllAround(this, 24.0)
 	}
 	
-	fun forceDropTokenTowards(player: EntityPlayer){
+	fun forceDropTokenTowards(player: EntityPlayer) {
 		forceDropToken(posVec.directionTowards(player.lookPosVec).scale(0.5).addY(0.1))
 	}
 	
-	override fun attackEntityFrom(source: DamageSource, amount: Float): Boolean{
-		if (world.isRemote){
+	override fun attackEntityFrom(source: DamageSource, amount: Float): Boolean {
+		if (world.isRemote) {
 			return false
 		}
 		
 		val player = source.immediateSource as? EntityPlayer ?: return false
 		
-		if (player.abilities.isCreativeMode && player.isSneaking){
+		if (player.abilities.isCreativeMode && player.isSneaking) {
 			remove()
 		}
-		else if (currentCharge >= 1F){
+		else if (currentCharge >= 1F) {
 			forceDropTokenTowards(player)
 			TerritoryInstance.fromPos(this)?.let { it.territory.desc.tokenHolders.afterUse(this, it) }
 		}
@@ -184,7 +185,7 @@ class EntityTokenHolder(type: EntityType<EntityTokenHolder>, world: World) : Ent
 	override fun canBeCollidedWith() = true
 	
 	@Sided(Side.CLIENT)
-	override fun isInRangeToRenderDist(distanceSq: Double): Boolean{
+	override fun isInRangeToRenderDist(distanceSq: Double): Boolean {
 		return distanceSq < square(128.0)
 	}
 }

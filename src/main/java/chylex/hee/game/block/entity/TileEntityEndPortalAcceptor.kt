@@ -1,4 +1,5 @@
 package chylex.hee.game.block.entity
+
 import chylex.hee.game.block.BlockEnergyCluster
 import chylex.hee.game.block.entity.TileEntityEndPortalAcceptor.ChargeState.CHARGING
 import chylex.hee.game.block.entity.TileEntityEndPortalAcceptor.ChargeState.FINISHED
@@ -20,10 +21,10 @@ import chylex.hee.system.serialization.TagCompound
 import chylex.hee.system.serialization.use
 import net.minecraft.tileentity.TileEntityType
 
-class TileEntityEndPortalAcceptor(type: TileEntityType<TileEntityEndPortalAcceptor>) : TileEntityBasePortalController(type){
+class TileEntityEndPortalAcceptor(type: TileEntityType<TileEntityEndPortalAcceptor>) : TileEntityBasePortalController(type) {
 	constructor() : this(ModTileEntities.END_PORTAL_ACCEPTOR)
 	
-	private companion object{
+	private companion object {
 		private const val NO_REFRESH = Int.MAX_VALUE
 		
 		private const val WAITING_REFRESH_RATE = 20
@@ -40,7 +41,7 @@ class TileEntityEndPortalAcceptor(type: TileEntityType<TileEntityEndPortalAccept
 	// Client animation
 	
 	override val serverRenderState
-		get() = when(chargeState){
+		get() = when(chargeState) {
 			IDLE, WAITING -> Invisible
 			CHARGING      -> Animating(chargedEnergy.units.value.toFloat() / ENERGY_REQUIRED.units.value)
 			FINISHED      -> Visible
@@ -54,7 +55,7 @@ class TileEntityEndPortalAcceptor(type: TileEntityType<TileEntityEndPortalAccept
 	
 	// Charge handling
 	
-	private enum class ChargeState(val refreshRate: Int){
+	private enum class ChargeState(val refreshRate: Int) {
 		IDLE(NO_REFRESH),
 		WAITING(WAITING_REFRESH_RATE),
 		CHARGING(CHARGING_REFRESH_RATE),
@@ -70,8 +71,8 @@ class TileEntityEndPortalAcceptor(type: TileEntityType<TileEntityEndPortalAccept
 	
 	private var chargedEnergy: IEnergyQuantity = Units(0)
 	
-	fun refreshClusterState(){
-		if (wrld.isRemote || isRefreshing){
+	fun refreshClusterState() {
+		if (wrld.isRemote || isRefreshing) {
 			return
 		}
 		
@@ -82,8 +83,8 @@ class TileEntityEndPortalAcceptor(type: TileEntityType<TileEntityEndPortalAccept
 		val posAbove = pos.up()
 		val cluster = posAbove.getTile<TileEntityEnergyCluster>(wrld)
 		
-		if (cluster == null){
-			newChargeState = when(chargeState){
+		if (cluster == null) {
+			newChargeState = when(chargeState) {
 				FINISHED -> FINISHED
 				IDLE     -> IDLE
 				WAITING  -> IDLE
@@ -95,8 +96,8 @@ class TileEntityEndPortalAcceptor(type: TileEntityType<TileEntityEndPortalAccept
 				}
 			}
 		}
-		else{
-			newChargeState = when(chargeState){
+		else {
+			newChargeState = when(chargeState) {
 				FINISHED -> FINISHED
 				IDLE     -> WAITING
 				
@@ -107,20 +108,20 @@ class TileEntityEndPortalAcceptor(type: TileEntityType<TileEntityEndPortalAccept
 						WAITING
 				
 				CHARGING ->
-					if (cluster.drainEnergy(ENERGY_PER_UPDATE)){
+					if (cluster.drainEnergy(ENERGY_PER_UPDATE)) {
 						chargedEnergy += ENERGY_PER_UPDATE
 						
-						if (chargedEnergy >= ENERGY_REQUIRED){
+						if (chargedEnergy >= ENERGY_REQUIRED) {
 							cluster.breakWithoutExplosion = true
 							cluster.pos.breakBlock(wrld, false)
 							FINISHED
 						}
-						else{
+						else {
 							markDirty()
 							CHARGING
 						}
 					}
-					else{
+					else {
 						cluster.breakWithoutExplosion = true
 						cluster.pos.breakBlock(wrld, false)
 						CHARGING
@@ -128,7 +129,7 @@ class TileEntityEndPortalAcceptor(type: TileEntityType<TileEntityEndPortalAccept
 			}
 		}
 		
-		if (chargeState != newChargeState){
+		if (chargeState != newChargeState) {
 			chargeState = newChargeState
 			notifyUpdate(FLAG_SYNC_CLIENT or FLAG_SKIP_RENDER)
 			markDirty()
@@ -138,12 +139,12 @@ class TileEntityEndPortalAcceptor(type: TileEntityType<TileEntityEndPortalAccept
 		ticksToRefresh = chargeState.refreshRate
 	}
 	
-	fun toggleChargeFromCreativeMode(){
-		if (chargeState == FINISHED){
+	fun toggleChargeFromCreativeMode() {
+		if (chargeState == FINISHED) {
 			chargeState = IDLE
 			chargedEnergy = Units(0)
 		}
-		else{
+		else {
 			chargeState = FINISHED
 			chargedEnergy = ENERGY_REQUIRED
 		}
@@ -154,14 +155,14 @@ class TileEntityEndPortalAcceptor(type: TileEntityType<TileEntityEndPortalAccept
 	
 	// Overrides
 	
-	override fun firstTick(){
+	override fun firstTick() {
 		refreshClusterState()
 	}
 	
-	override fun tick(){
+	override fun tick() {
 		super.tick()
 		
-		if (!wrld.isRemote && ticksToRefresh != NO_REFRESH && --ticksToRefresh <= 0){
+		if (!wrld.isRemote && ticksToRefresh != NO_REFRESH && --ticksToRefresh <= 0) {
 			refreshClusterState()
 		}
 	}
@@ -169,7 +170,7 @@ class TileEntityEndPortalAcceptor(type: TileEntityType<TileEntityEndPortalAccept
 	override fun writeNBT(nbt: TagCompound, context: Context) = nbt.use {
 		super.writeNBT(nbt, context)
 		
-		if (context == STORAGE){
+		if (context == STORAGE) {
 			putInt(ENERGY_CHARGE_TAG, chargedEnergy.units.value)
 		}
 	}
@@ -177,13 +178,13 @@ class TileEntityEndPortalAcceptor(type: TileEntityType<TileEntityEndPortalAccept
 	override fun readNBT(nbt: TagCompound, context: Context) = nbt.use {
 		super.readNBT(nbt, context)
 		
-		if (context == STORAGE){
+		if (context == STORAGE) {
 			chargedEnergy = Units(getInt(ENERGY_CHARGE_TAG))
 			
-			if (chargedEnergy >= ENERGY_REQUIRED){
+			if (chargedEnergy >= ENERGY_REQUIRED) {
 				chargeState = FINISHED
 			}
-			else if (chargedEnergy > Units(0)){
+			else if (chargedEnergy > Units(0)) {
 				chargeState = CHARGING
 			}
 		}

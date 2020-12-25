@@ -1,10 +1,11 @@
 package chylex.hee.client.render.lightmaps
+
 import chylex.hee.client.render.lightmaps.ILightmap.Companion.calcLightFactor
 import chylex.hee.client.render.lightmaps.ILightmap.Companion.calcLightSqFactor
 import net.minecraft.client.renderer.Vector3f
 
-object OverworldLightmap : ILightmap{
-	override fun update(colors: Vector3f, sunBrightness: Float, skyLight: Float, blockLight: Float, partialTicks: Float){
+object OverworldLightmap : ILightmap {
+	override fun update(colors: Vector3f, sunBrightness: Float, skyLight: Float, blockLight: Float, partialTicks: Float) {
 		val sunFactor = skyLight * ((sunBrightness * 0.65F) + 0.35F)
 		val blockFactor = calcLightFactor(blockLight)
 		val blockSqFactor = calcLightSqFactor(blockLight)

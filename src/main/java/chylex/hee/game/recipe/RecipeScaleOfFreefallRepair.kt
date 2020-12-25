@@ -1,20 +1,21 @@
 package chylex.hee.game.recipe
+
 import chylex.hee.game.inventory.nonEmptySlots
 import chylex.hee.init.ModItems
 import net.minecraft.inventory.CraftingInventory
 import net.minecraft.item.ItemStack
 import net.minecraft.world.World
 
-object RecipeScaleOfFreefallRepair : RecipeBaseDynamic(){
-	override fun canFit(width: Int, height: Int): Boolean{
+object RecipeScaleOfFreefallRepair : RecipeBaseDynamic() {
+	override fun canFit(width: Int, height: Int): Boolean {
 		return (width * height) >= 2
 	}
 	
-	override fun matches(inv: CraftingInventory, world: World): Boolean{
+	override fun matches(inv: CraftingInventory, world: World): Boolean {
 		return determineRepairInfo(inv) != null
 	}
 	
-	override fun getCraftingResult(inv: CraftingInventory): ItemStack{
+	override fun getCraftingResult(inv: CraftingInventory): ItemStack {
 		val (dragonScaleCount, damagedTrinket) = determineRepairInfo(inv) ?: return ItemStack.EMPTY
 		
 		return damagedTrinket.copy().also {
@@ -26,21 +27,21 @@ object RecipeScaleOfFreefallRepair : RecipeBaseDynamic(){
 	
 	private data class RepairInfo(val dragonScaleCount: Int, val damagedTrinket: ItemStack)
 	
-	private fun determineRepairInfo(inv: CraftingInventory): RepairInfo?{
+	private fun determineRepairInfo(inv: CraftingInventory): RepairInfo? {
 		var damagedTrinket: ItemStack? = null
 		var dragonScaleCount = 0
 		var dragonScaleLimit = 0
 		
-		for((_, stack) in inv.nonEmptySlots){
+		for((_, stack) in inv.nonEmptySlots) {
 			val item = stack.item
 			
-			if (item === ModItems.DRAGON_SCALE){
+			if (item === ModItems.DRAGON_SCALE) {
 				++dragonScaleCount
 				continue
 			}
 			
-			if (item === ModItems.SCALE_OF_FREEFALL){
-				if (damagedTrinket != null || !stack.isDamaged){
+			if (item === ModItems.SCALE_OF_FREEFALL) {
+				if (damagedTrinket != null || !stack.isDamaged) {
 					return null
 				}
 				
@@ -52,7 +53,7 @@ object RecipeScaleOfFreefallRepair : RecipeBaseDynamic(){
 			return null
 		}
 		
-		if (damagedTrinket == null || dragonScaleCount !in 1..dragonScaleLimit){
+		if (damagedTrinket == null || dragonScaleCount !in 1..dragonScaleLimit) {
 			return null
 		}
 		

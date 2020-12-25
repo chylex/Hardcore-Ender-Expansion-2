@@ -1,4 +1,5 @@
 package chylex.hee.game.item
+
 import chylex.hee.HEE
 import chylex.hee.game.container.ContainerAmuletOfRecovery
 import chylex.hee.game.entity.heeTag
@@ -56,8 +57,8 @@ import net.minecraftforge.event.entity.living.LivingDeathEvent
 import net.minecraftforge.event.entity.living.LivingDropsEvent
 import net.minecraftforge.event.entity.player.PlayerEvent
 
-class ItemAmuletOfRecovery(properties: Properties) : ItemAbstractEnergyUser(properties), ITrinketItem{
-	private companion object{
+class ItemAmuletOfRecovery(properties: Properties) : ItemAbstractEnergyUser(properties), ITrinketItem {
+	private companion object {
 		private const val CONTENTS_TAG = "Contents"
 		private const val RETRIEVAL_ENERGY_TAG = "RetrievalEnergy"
 		
@@ -76,26 +77,26 @@ class ItemAmuletOfRecovery(properties: Properties) : ItemAbstractEnergyUser(prop
 		private val BACKFILL_SLOT_ORDER
 			get() = sequenceOf(SLOTS_EXTRA, SLOTS_MAIN_BULK, SLOTS_MAIN_HOTBAR, SLOTS_OFFHAND).flatten() // no armor slots because contents aren't checked
 		
-		private fun isStackValid(stack: ItemStack): Boolean{
+		private fun isStackValid(stack: ItemStack): Boolean {
 			return stack.item is ItemAmuletOfRecovery
 		}
 		
-		private fun hasAnyContents(stack: ItemStack): Boolean{
+		private fun hasAnyContents(stack: ItemStack): Boolean {
 			return stack.heeTagOrNull.hasKey(CONTENTS_TAG)
 		}
 		
-		private fun processPlayerInventory(player: EntityPlayer, block: (inventory: NonNullList<ItemStack>, vanillaSlot: Int, savedSlot: Int) -> Unit){
-			with(player.inventory){
+		private fun processPlayerInventory(player: EntityPlayer, block: (inventory: NonNullList<ItemStack>, vanillaSlot: Int, savedSlot: Int) -> Unit) {
+			with(player.inventory) {
 				SLOTS_MAIN.forEachIndexed    { vanillaSlot, savedSlot -> block(mainInventory, vanillaSlot, savedSlot) }
 				SLOTS_ARMOR.forEachIndexed   { vanillaSlot, savedSlot -> block(armorInventory, vanillaSlot, savedSlot) }
 				SLOTS_OFFHAND.forEachIndexed { vanillaSlot, savedSlot -> block(offHandInventory, vanillaSlot, savedSlot) }
 			}
 		}
 		
-		private fun movePlayerInventoryToTrinket(player: EntityPlayer, trinketItem: ItemStack){
-			val saved = Array<ItemStack>(SLOT_COUNT){ ItemStack.EMPTY }
+		private fun movePlayerInventoryToTrinket(player: EntityPlayer, trinketItem: ItemStack) {
+			val saved = Array<ItemStack>(SLOT_COUNT) { ItemStack.EMPTY }
 			
-			fun moveFromInventory(sourceInventory: NonNullList<ItemStack>, sourceSlot: Int, savedSlot: Int){
+			fun moveFromInventory(sourceInventory: NonNullList<ItemStack>, sourceSlot: Int, savedSlot: Int) {
 				saved[savedSlot] = sourceInventory[sourceSlot]
 				sourceInventory[sourceSlot] = ItemStack.EMPTY
 			}
@@ -104,7 +105,7 @@ class ItemAmuletOfRecovery(properties: Properties) : ItemAbstractEnergyUser(prop
 			trinketItem.heeTag.putList(CONTENTS_TAG, NBTItemStackList.of(saved.asIterable()))
 		}
 		
-		private fun updateRetrievalCost(errorMessenger: ICommandSource, trinketItem: ItemStack){
+		private fun updateRetrievalCost(errorMessenger: ICommandSource, trinketItem: ItemStack) {
 			val buffer = Unpooled.buffer()
 			
 			var sumOfSlots = 0
@@ -112,16 +113,16 @@ class ItemAmuletOfRecovery(properties: Properties) : ItemAbstractEnergyUser(prop
 			var sumOfEnchantments = 0
 			var sumOfFilteredTagSizes = 0
 			
-			with(trinketItem.heeTag){
-				for(stack in getListOfItemStacks(CONTENTS_TAG)){
-					if (stack.isNotEmpty){
+			with(trinketItem.heeTag) {
+				for(stack in getListOfItemStacks(CONTENTS_TAG)) {
+					if (stack.isNotEmpty) {
 						sumOfSlots += 1
 						sumOfSizes += stack.count
 						sumOfEnchantments += stack.enchantmentMap.values.sum()
 						
 						val nbtCopy = stack.nbtOrNull?.copy()
 						
-						if (nbtCopy != null){ // UPDATE 1.15
+						if (nbtCopy != null) { // UPDATE 1.15
 							// general
 							nbtCopy.remove("Damage")
 							nbtCopy.remove("Unbreakable")
@@ -138,10 +139,10 @@ class ItemAmuletOfRecovery(properties: Properties) : ItemAbstractEnergyUser(prop
 							nbtCopy.remove("HideFlags")
 							
 							// calculation & cleanup
-							try{
+							try {
 								buffer.writeTag(nbtCopy)
 								sumOfFilteredTagSizes += buffer.writerIndex().coerceAtMost(2500)
-							}catch(e: Exception){
+							} catch(e: Exception) {
 								sumOfFilteredTagSizes += 2500
 								HEE.log.error("[ItemAmuletOfRecovery] failed processing NBT data when calculating Energy cost", e)
 								
@@ -160,32 +161,32 @@ class ItemAmuletOfRecovery(properties: Properties) : ItemAbstractEnergyUser(prop
 		}
 	}
 	
-	class ContainerProvider(private val stack: ItemStack, private val hand: Hand) : INamedContainerProvider{
-		override fun getDisplayName(): ITextComponent{
+	class ContainerProvider(private val stack: ItemStack, private val hand: Hand) : INamedContainerProvider {
+		override fun getDisplayName(): ITextComponent {
 			return stack.displayName
 		}
 		
-		override fun createMenu(id: Int, inventory: PlayerInventory, player: EntityPlayer): Container{
+		override fun createMenu(id: Int, inventory: PlayerInventory, player: EntityPlayer): Container {
 			return ContainerAmuletOfRecovery(id, player, hand)
 		}
 	}
 	
-	class Inv(override val player: EntityPlayer, private val itemHeldIn: Hand) : Inventory(SLOT_COUNT), IInventoryFromPlayerItem{
-		init{
+	class Inv(override val player: EntityPlayer, private val itemHeldIn: Hand) : Inventory(SLOT_COUNT), IInventoryFromPlayerItem {
+		init {
 			val heldItem = player.getHeldItem(itemHeldIn)
 			
-			if (isStackValid(heldItem)){
+			if (isStackValid(heldItem)) {
 				heldItem.heeTag.getListOfItemStacks(CONTENTS_TAG).forEachIndexed(::setStack)
 			}
 		}
 		
-		fun moveToPlayerInventory(): Boolean{
-			if (!isStackValid(player.getHeldItem(itemHeldIn))){
+		fun moveToPlayerInventory(): Boolean {
+			if (!isStackValid(player.getHeldItem(itemHeldIn))) {
 				return false
 			}
 			
-			fun moveToInventory(targetInventory: NonNullList<ItemStack>, targetSlot: Int, sourceSlot: Int){
-				if (targetInventory[targetSlot].isEmpty){
+			fun moveToInventory(targetInventory: NonNullList<ItemStack>, targetSlot: Int, sourceSlot: Int) {
+				if (targetInventory[targetSlot].isEmpty) {
 					targetInventory[targetSlot] = getStack(sourceSlot)
 					setStack(sourceSlot, ItemStack.EMPTY)
 				}
@@ -195,28 +196,28 @@ class ItemAmuletOfRecovery(properties: Properties) : ItemAbstractEnergyUser(prop
 			return true
 		}
 		
-		override fun tryUpdatePlayerItem(): Boolean{
+		override fun tryUpdatePlayerItem(): Boolean {
 			val heldItem = player.getHeldItem(itemHeldIn)
 			
-			if (!isStackValid(heldItem)){
+			if (!isStackValid(heldItem)) {
 				return false
 			}
 			
 			var isEmpty = true
 			val newList = NBTItemStackList()
 			
-			for((_, stack) in allSlots){
+			for((_, stack) in allSlots) {
 				newList.append(stack)
 				
-				if (stack.isNotEmpty){
+				if (stack.isNotEmpty) {
 					isEmpty = false
 				}
 			}
 			
-			if (isEmpty){
+			if (isEmpty) {
 				heldItem.heeTag.remove(CONTENTS_TAG)
 			}
-			else{
+			else {
 				heldItem.heeTag.putList(CONTENTS_TAG, newList)
 			}
 			
@@ -226,7 +227,7 @@ class ItemAmuletOfRecovery(properties: Properties) : ItemAbstractEnergyUser(prop
 	
 	// Initialization
 	
-	init{
+	init {
 		MinecraftForgeEventBus.register(this)
 	}
 	
@@ -240,26 +241,26 @@ class ItemAmuletOfRecovery(properties: Properties) : ItemAbstractEnergyUser(prop
 	
 	// Item handling
 	
-	override fun canPlaceIntoTrinketSlot(stack: ItemStack): Boolean{
+	override fun canPlaceIntoTrinketSlot(stack: ItemStack): Boolean {
 		return hasMaximumEnergy(stack) && !hasAnyContents(stack)
 	}
 	
-	override fun chargeEnergyUnit(stack: ItemStack): Boolean{
-		if (!super.chargeEnergyUnit(stack)){
+	override fun chargeEnergyUnit(stack: ItemStack): Boolean {
+		if (!super.chargeEnergyUnit(stack)) {
 			return false
 		}
 		
-		if (hasMaximumEnergy(stack) && hasAnyContents(stack) && stack.heeTag.getListOfCompounds(CONTENTS_TAG).all { it.isEmpty }){
+		if (hasMaximumEnergy(stack) && hasAnyContents(stack) && stack.heeTag.getListOfCompounds(CONTENTS_TAG).all { it.isEmpty }) {
 			stack.heeTag.remove(CONTENTS_TAG) // re-activate Trinket immediately after charging if the inventory is empty
 		}
 		
 		return true
 	}
 	
-	override fun onItemRightClick(world: World, player: EntityPlayer, hand: Hand): ActionResult<ItemStack>{
+	override fun onItemRightClick(world: World, player: EntityPlayer, hand: Hand): ActionResult<ItemStack> {
 		val stack = player.getHeldItem(hand)
 		
-		if (!hasAnyContents(stack) || !hasMaximumEnergy(stack)){
+		if (!hasAnyContents(stack) || !hasMaximumEnergy(stack)) {
 			return super.onItemRightClick(world, player, hand)
 		}
 		
@@ -270,15 +271,15 @@ class ItemAmuletOfRecovery(properties: Properties) : ItemAbstractEnergyUser(prop
 	// Death events
 	
 	@SubscribeEvent(EventPriority.HIGH)
-	fun onLivingDeath(e: LivingDeathEvent){
+	fun onLivingDeath(e: LivingDeathEvent) {
 		val player = e.entityLiving as? EntityPlayer ?: return
 		val world = player.world
 		
-		if (world.isRemote || world.gameRules.getBoolean(KEEP_INVENTORY)){
+		if (world.isRemote || world.gameRules.getBoolean(KEEP_INVENTORY)) {
 			return
 		}
 		
-		TrinketHandler.get(player).transformIfActive(this){
+		TrinketHandler.get(player).transformIfActive(this) {
 			val trinketItem = it.copy()
 			it.count = 0 // effectively removes the item from the trinket slot
 			
@@ -290,24 +291,24 @@ class ItemAmuletOfRecovery(properties: Properties) : ItemAbstractEnergyUser(prop
 	}
 	
 	@SubscribeEvent(EventPriority.LOW)
-	fun onPlayerDrops(e: LivingDropsEvent){
+	fun onPlayerDrops(e: LivingDropsEvent) {
 		val player = e.entity
 		val drops = e.drops
 		
-		if (player.world.isRemote || player !is EntityPlayer || drops.isEmpty()){
+		if (player.world.isRemote || player !is EntityPlayer || drops.isEmpty()) {
 			return
 		}
 		
-		with(player.heeTagOrNull?.getStack(PLAYER_RESPAWN_ITEM_TAG)?.heeTag ?: return){
+		with(player.heeTagOrNull?.getStack(PLAYER_RESPAWN_ITEM_TAG)?.heeTag ?: return) {
 			val list = getListOfItemStacks(CONTENTS_TAG).takeIf { it.size >= SLOT_COUNT } ?: return
 			val iter = drops.iterator()
 			
-			for(slot in BACKFILL_SLOT_ORDER){
-				if (list.get(slot).isEmpty){
+			for(slot in BACKFILL_SLOT_ORDER) {
+				if (list.get(slot).isEmpty) {
 					list.set(slot, iter.next().item)
 					iter.remove()
 					
-					if (!iter.hasNext()){
+					if (!iter.hasNext()) {
 						break
 					}
 				}
@@ -316,21 +317,21 @@ class ItemAmuletOfRecovery(properties: Properties) : ItemAbstractEnergyUser(prop
 	}
 	
 	@SubscribeEvent(EventPriority.LOWEST)
-	fun onPlayerClone(e: PlayerEvent.Clone){
-		if (!e.isWasDeath){
+	fun onPlayerClone(e: PlayerEvent.Clone) {
+		if (!e.isWasDeath) {
 			return
 		}
 		
 		val oldPlayer = e.original
 		val newPlayer = e.player
 		
-		with(oldPlayer.heeTagOrNull ?: return){
+		with(oldPlayer.heeTagOrNull ?: return) {
 			val trinketItem = getStack(PLAYER_RESPAWN_ITEM_TAG)
 			
-			if (trinketItem.isNotEmpty){
+			if (trinketItem.isNotEmpty) {
 				updateRetrievalCost(newPlayer, trinketItem)
 				
-				if (!newPlayer.inventory.addItemStackToInventory(trinketItem)){
+				if (!newPlayer.inventory.addItemStackToInventory(trinketItem)) {
 					newPlayer.dropItem(trinketItem, false, false)
 				}
 				
@@ -341,17 +342,17 @@ class ItemAmuletOfRecovery(properties: Properties) : ItemAbstractEnergyUser(prop
 	
 	// Client side
 	
-	override fun showDurabilityBar(stack: ItemStack): Boolean{
+	override fun showDurabilityBar(stack: ItemStack): Boolean {
 		return !hasMaximumEnergy(stack)
 	}
 	
-	override fun getRarity(stack: ItemStack): Rarity{
+	override fun getRarity(stack: ItemStack): Rarity {
 		return ItemAbstractTrinket.onGetRarity()
 	}
 	
 	@Sided(Side.CLIENT)
-	override fun addInformation(stack: ItemStack, world: World?, lines: MutableList<ITextComponent>, flags: ITooltipFlag){
-		if (!hasAnyContents(stack)){
+	override fun addInformation(stack: ItemStack, world: World?, lines: MutableList<ITextComponent>, flags: ITooltipFlag) {
+		if (!hasAnyContents(stack)) {
 			ItemAbstractTrinket.onAddInformation(stack, this, lines)
 		}
 		
@@ -359,7 +360,7 @@ class ItemAmuletOfRecovery(properties: Properties) : ItemAbstractEnergyUser(prop
 	}
 	
 	@Sided(Side.CLIENT)
-	override fun hasEffect(stack: ItemStack): Boolean{
+	override fun hasEffect(stack: ItemStack): Boolean {
 		return hasAnyContents(stack)
 	}
 }

@@ -1,4 +1,5 @@
 package chylex.hee.game.mechanics.table
+
 import chylex.hee.game.block.BlockAbstractTableTile
 import chylex.hee.game.block.entity.TileEntityEnergyCluster
 import chylex.hee.game.block.entity.base.TileEntityBaseTable
@@ -22,18 +23,18 @@ import net.minecraft.util.math.shapes.VoxelShapes
 import net.minecraft.world.IBlockReader
 import net.minecraftforge.common.util.INBTSerializable
 
-class TableEnergyClusterHandler(private val table: TileEntityBaseTable, maxDistance: Int) : INBTSerializable<TagCompound>{
-	private companion object{
+class TableEnergyClusterHandler(private val table: TileEntityBaseTable, maxDistance: Int) : INBTSerializable<TagCompound> {
+	private companion object {
 		private const val POS_TAG = "Pos"
 	}
 	
 	private val maxDistanceSq = square(maxDistance)
 	private var currentCluster: BlockPos? by table.MarkDirtyOnChange(null)
 	
-	fun drainEnergy(amount: IEnergyQuantity): Boolean{
+	fun drainEnergy(amount: IEnergyQuantity): Boolean {
 		val cluster = currentCluster?.getTile<TileEntityEnergyCluster>(table.wrld)?.takeIf(::checkLineOfSight) ?: findNewCluster()
 		
-		if (cluster == null || !cluster.drainEnergy(amount)){
+		if (cluster == null || !cluster.drainEnergy(amount)) {
 			currentCluster = null
 			return false
 		}
@@ -45,8 +46,8 @@ class TableEnergyClusterHandler(private val table: TileEntityBaseTable, maxDista
 	
 	// Behavior
 	
-	private inner class RayTraceObstacles(startVec: Vec3d, endVec: Vec3d) : RayTraceContext(startVec, endVec, BlockMode.COLLIDER, FluidMode.NONE, null){
-		override fun getBlockShape(state: BlockState, world: IBlockReader, pos: BlockPos): VoxelShape{
+	private inner class RayTraceObstacles(startVec: Vec3d, endVec: Vec3d) : RayTraceContext(startVec, endVec, BlockMode.COLLIDER, FluidMode.NONE, null) {
+		override fun getBlockShape(state: BlockState, world: IBlockReader, pos: BlockPos): VoxelShape {
 			val block = state.block
 			
 			return if (block is BlockAbstractTableTile<*> && pos == table.pos)
@@ -56,11 +57,11 @@ class TableEnergyClusterHandler(private val table: TileEntityBaseTable, maxDista
 		}
 	}
 	
-	private fun checkLineOfSight(cluster: TileEntityEnergyCluster): Boolean{
+	private fun checkLineOfSight(cluster: TileEntityEnergyCluster): Boolean {
 		return table.wrld.rayTraceBlocks(RayTraceObstacles(table.pos.center, cluster.pos.center)).type == Type.MISS
 	}
 	
-	private fun isValidCandidate(cluster: TileEntityEnergyCluster): Boolean{
+	private fun isValidCandidate(cluster: TileEntityEnergyCluster): Boolean {
 		return (
 			cluster.pos.distanceSqTo(table.pos) <= maxDistanceSq &&
 			cluster.currentHealth.regenSpeedMp > 0F &&
@@ -69,27 +70,27 @@ class TableEnergyClusterHandler(private val table: TileEntityBaseTable, maxDista
 		)
 	}
 	
-	private fun pickBetterCandidate(best: TileEntityEnergyCluster, potential: TileEntityEnergyCluster): TileEntityEnergyCluster{
-		if (!potential.wasUsedRecently && best.wasUsedRecently){
+	private fun pickBetterCandidate(best: TileEntityEnergyCluster, potential: TileEntityEnergyCluster): TileEntityEnergyCluster {
+		if (!potential.wasUsedRecently && best.wasUsedRecently) {
 			return potential
 		}
 		
-		if (potential.currentHealth.regenSpeedMp > best.currentHealth.regenSpeedMp){
+		if (potential.currentHealth.regenSpeedMp > best.currentHealth.regenSpeedMp) {
 			return potential
 		}
 		
-		if (potential.energyLevel > best.energyLevel){
+		if (potential.energyLevel > best.energyLevel) {
 			return potential
 		}
 		
 		return best
 	}
 	
-	private fun findNewCluster(): TileEntityEnergyCluster?{
+	private fun findNewCluster(): TileEntityEnergyCluster? {
 		val candidates = ArrayList<TileEntityEnergyCluster>(4)
 		
-		for(tile in table.wrld.tickableTileEntities){
-			if (tile is TileEntityEnergyCluster && isValidCandidate(tile)){
+		for(tile in table.wrld.tickableTileEntities) {
+			if (tile is TileEntityEnergyCluster && isValidCandidate(tile)) {
 				candidates.add(tile)
 			}
 		}

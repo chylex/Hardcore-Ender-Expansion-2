@@ -1,4 +1,5 @@
 package chylex.hee.game.recipe
+
 import chylex.hee.game.inventory.nonEmptySlots
 import chylex.hee.game.inventory.size
 import chylex.hee.game.item.infusion.InfusionList
@@ -9,20 +10,20 @@ import net.minecraft.item.ItemStack
 import net.minecraft.world.World
 import kotlin.math.max
 
-object RecipeBindingEssence : RecipeBaseDynamic(){
-	override fun canFit(width: Int, height: Int): Boolean{
+object RecipeBindingEssence : RecipeBaseDynamic() {
+	override fun canFit(width: Int, height: Int): Boolean {
 		return (width * height) >= 2
 	}
 	
-	override fun matches(inv: CraftingInventory, world: World): Boolean{
+	override fun matches(inv: CraftingInventory, world: World): Boolean {
 		return determineRepairInfo(inv) != null
 	}
 	
-	override fun getCraftingResult(inv: CraftingInventory): ItemStack{
+	override fun getCraftingResult(inv: CraftingInventory): ItemStack {
 		val (targetItem, infusionList) = determineRepairInfo(inv) ?: return ItemStack.EMPTY
 		
-		return infusionList.fold(targetItem){
-			acc, infusion -> infusion.tryInfuse(acc) ?: acc
+		return infusionList.fold(targetItem) { acc, infusion ->
+			infusion.tryInfuse(acc) ?: acc
 		}.also {
 			it.size = 1 // always applied to a clone of targetItem because infusionList cannot be empty
 		}
@@ -32,38 +33,38 @@ object RecipeBindingEssence : RecipeBaseDynamic(){
 	
 	private data class RepairInfo(val targetItem: ItemStack, val infusionList: InfusionList)
 	
-	private fun determineRepairInfo(inv: CraftingInventory): RepairInfo?{
+	private fun determineRepairInfo(inv: CraftingInventory): RepairInfo? {
 		var targetItem: ItemStack? = null
 		var bindingEssence: ItemStack? = null
 		
-		for((_, stack) in inv.nonEmptySlots){
+		for((_, stack) in inv.nonEmptySlots) {
 			val item = stack.item
 			
-			if (item === ModItems.BINDING_ESSENCE && bindingEssence == null){
+			if (item === ModItems.BINDING_ESSENCE && bindingEssence == null) {
 				bindingEssence = stack
 			}
-			else if (targetItem == null){
+			else if (targetItem == null) {
 				targetItem = stack
 			}
-			else{
+			else {
 				return null
 			}
 		}
 		
-		if (targetItem == null || bindingEssence == null){
+		if (targetItem == null || bindingEssence == null) {
 			return null
 		}
 		
 		val toApply = InfusionTag.getList(bindingEssence)
 		
-		if (toApply.isEmpty || toApply.none { it.tryInfuse(targetItem) != null }){
+		if (toApply.isEmpty || toApply.none { it.tryInfuse(targetItem) != null }) {
 			return null
 		}
 		
-		if (targetItem.item === ModItems.BINDING_ESSENCE){ // when combining two Binding Essences, one may be a subset of the other
+		if (targetItem.item === ModItems.BINDING_ESSENCE) { // when combining two Binding Essences, one may be a subset of the other
 			val toCombine = InfusionTag.getList(targetItem)
 			
-			if (toApply.union(toCombine).size == max(toApply.size, toCombine.size)){
+			if (toApply.union(toCombine).size == max(toApply.size, toCombine.size)) {
 				return null
 			}
 		}

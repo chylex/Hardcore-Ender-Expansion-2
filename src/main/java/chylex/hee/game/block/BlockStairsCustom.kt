@@ -1,4 +1,5 @@
 package chylex.hee.game.block
+
 import chylex.hee.system.migration.BlockStairs
 import chylex.hee.system.migration.supply
 import net.minecraft.block.Block

@@ -1,23 +1,24 @@
 package chylex.hee.game.particle.spawner.properties
+
 import chylex.hee.system.random.nextFloat
 import chylex.hee.system.random.nextVector
 import net.minecraft.entity.Entity
 import net.minecraft.util.Direction
 import java.util.Random
 
-interface IOffset{
+interface IOffset {
 	fun next(out: MutableOffsetPoint, rand: Random)
 	
 	operator fun plus(other: IOffset) = Sum(this, other)
 	
-	data class MutableOffsetPoint(var x: Float, var y: Float, var z: Float){
+	data class MutableOffsetPoint(var x: Float, var y: Float, var z: Float) {
 		constructor() : this(0F, 0F, 0F)
 	}
 	
 	// General
 	
-	object None : IOffset{
-		override fun next(out: MutableOffsetPoint, rand: Random){
+	object None : IOffset {
+		override fun next(out: MutableOffsetPoint, rand: Random) {
 			out.x = 0F
 			out.y = 0F
 			out.z = 0F
@@ -27,15 +28,15 @@ interface IOffset{
 	class Constant(
 		private val offsetX: Float,
 		private val offsetY: Float,
-		private val offsetZ: Float
-	) : IOffset{
+		private val offsetZ: Float,
+	) : IOffset {
 		constructor(offset: Float, towards: Direction) : this(
 			offsetX = offset * towards.xOffset,
 			offsetY = offset * towards.yOffset,
 			offsetZ = offset * towards.zOffset
 		)
 		
-		override fun next(out: MutableOffsetPoint, rand: Random){
+		override fun next(out: MutableOffsetPoint, rand: Random) {
 			out.x = offsetX
 			out.y = offsetY
 			out.z = offsetZ
@@ -48,15 +49,15 @@ interface IOffset{
 		private val minY: Float,
 		private val maxY: Float,
 		private val minZ: Float,
-		private val maxZ: Float
-	) : IOffset{
+		private val maxZ: Float,
+	) : IOffset {
 		constructor(maxOffsetX: Float, maxOffsetY: Float, maxOffsetZ: Float) : this(
 			minX = -maxOffsetX,
-			maxX =  maxOffsetX,
+			maxX = +maxOffsetX,
 			minY = -maxOffsetY,
-			maxY =  maxOffsetY,
+			maxY = +maxOffsetY,
 			minZ = -maxOffsetZ,
-			maxZ =  maxOffsetZ
+			maxZ = +maxOffsetZ
 		)
 		
 		constructor(maxOffset: Float) : this(maxOffset, maxOffset, maxOffset)
@@ -69,7 +70,7 @@ interface IOffset{
 		
 		constructor(entity: Entity, extraOffset: Float = 0F) : this(entity, extraOffset, extraOffset, extraOffset)
 		
-		override fun next(out: MutableOffsetPoint, rand: Random){
+		override fun next(out: MutableOffsetPoint, rand: Random) {
 			out.x = rand.nextFloat(minX, maxX)
 			out.y = rand.nextFloat(minY, maxY)
 			out.z = rand.nextFloat(minZ, maxZ)
@@ -78,11 +79,11 @@ interface IOffset{
 	
 	class InSphere(
 		private val minRadius: Float,
-		private val maxRadius: Float
-	) : IOffset{
+		private val maxRadius: Float,
+	) : IOffset {
 		constructor(radius: Float) : this(0F, radius)
 		
-		override fun next(out: MutableOffsetPoint, rand: Random){
+		override fun next(out: MutableOffsetPoint, rand: Random) {
 			val vec = rand.nextVector(rand.nextFloat(minRadius, maxRadius).toDouble())
 			out.x = vec.x.toFloat()
 			out.y = vec.y.toFloat()
@@ -93,11 +94,11 @@ interface IOffset{
 	class Gaussian(
 		private val mpX: Float,
 		private val mpY: Float,
-		private val mpZ: Float
-	) : IOffset{
+		private val mpZ: Float,
+	) : IOffset {
 		constructor(mp: Float) : this(mp, mp, mp)
 		
-		override fun next(out: MutableOffsetPoint, rand: Random){
+		override fun next(out: MutableOffsetPoint, rand: Random) {
 			out.x = (rand.nextGaussian() * mpX).toFloat()
 			out.y = (rand.nextGaussian() * mpY).toFloat()
 			out.z = (rand.nextGaussian() * mpZ).toFloat()
@@ -108,9 +109,9 @@ interface IOffset{
 	
 	class Sum(
 		private val offset1: IOffset,
-		private val offset2: IOffset
-	) : IOffset{
-		override fun next(out: MutableOffsetPoint, rand: Random){
+		private val offset2: IOffset,
+	) : IOffset {
+		override fun next(out: MutableOffsetPoint, rand: Random) {
 			offset1.next(out, rand)
 			val (firstX, firstY, firstZ) = out
 			

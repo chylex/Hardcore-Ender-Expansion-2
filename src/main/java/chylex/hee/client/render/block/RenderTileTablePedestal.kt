@@ -1,4 +1,5 @@
 package chylex.hee.client.render.block
+
 import chylex.hee.client.MC
 import chylex.hee.client.model.ModelHelper
 import chylex.hee.client.render.gl.DF_ONE_MINUS_SRC_ALPHA
@@ -39,11 +40,11 @@ import kotlin.math.cos
 import kotlin.math.sin
 
 @Sided(Side.CLIENT)
-class RenderTileTablePedestal(dispatcher: TileEntityRendererDispatcher) : TileEntityRenderer<TileEntityTablePedestal>(dispatcher){
-	private companion object{
+class RenderTileTablePedestal(dispatcher: TileEntityRendererDispatcher) : TileEntityRenderer<TileEntityTablePedestal>(dispatcher) {
+	private companion object {
 		private val RAND = Random()
 		
-		private val RENDER_TYPE_SHADOW = with(RenderStateBuilder()){
+		private val RENDER_TYPE_SHADOW = with(RenderStateBuilder()) {
 			tex(Resource.Vanilla("textures/misc/shadow.png"))
 			blend(SF_SRC_ALPHA, DF_ONE_MINUS_SRC_ALPHA, SF_ONE, DF_ZERO)
 			lighting(LIGHTING_ENABLED)
@@ -67,7 +68,7 @@ class RenderTileTablePedestal(dispatcher: TileEntityRendererDispatcher) : TileEn
 			map { (it - 0.5F) * section }
 		}
 		
-		private fun getItemModelCount(stackSize: Int) = when{
+		private fun getItemModelCount(stackSize: Int) = when {
 			stackSize > 48 -> 5
 			stackSize > 32 -> 4
 			stackSize > 16 -> 3
@@ -76,7 +77,7 @@ class RenderTileTablePedestal(dispatcher: TileEntityRendererDispatcher) : TileEn
 		}
 	}
 	
-	override fun render(tile: TileEntityTablePedestal, partialTicks: Float, matrix: MatrixStack, buffer: IRenderTypeBuffer, combinedLight: Int, combinedOverlay: Int){
+	override fun render(tile: TileEntityTablePedestal, partialTicks: Float, matrix: MatrixStack, buffer: IRenderTypeBuffer, combinedLight: Int, combinedOverlay: Int) {
 		val itemRenderer = MC.itemRenderer
 		
 		val pos = tile.pos
@@ -95,18 +96,18 @@ class RenderTileTablePedestal(dispatcher: TileEntityRendererDispatcher) : TileEn
 		else
 			0F
 		
-		for((index, stack) in stacks.withIndex()){
+		for((index, stack) in stacks.withIndex()) {
 			renderItemStack(matrix, buffer, itemRenderer, stack, index, itemRotation, baseSeed, offsetAngleIndices, shadowAlpha, combinedLight)
 		}
 	}
 	
-	private fun renderItemStack(matrix: MatrixStack, buffer: IRenderTypeBuffer, renderer: ItemRenderer, stack: ItemStack, index: Int, baseRotation: Float, baseSeed: Long, offsetAngleIndices: MutableList<Float>, shadowAlpha: Float, combinedLight: Int){
+	private fun renderItemStack(matrix: MatrixStack, buffer: IRenderTypeBuffer, renderer: ItemRenderer, stack: ItemStack, index: Int, baseRotation: Float, baseSeed: Long, offsetAngleIndices: MutableList<Float>, shadowAlpha: Float, combinedLight: Int) {
 		matrix.push()
 		
 		var offsetY = 0F
 		var rotationMp = 1F
 		
-		if (index > 0 && offsetAngleIndices.isNotEmpty()){
+		if (index > 0 && offsetAngleIndices.isNotEmpty()) {
 			val seed = baseSeed + (Item.getIdFromItem(stack.item) xor (33867 shl index))
 			RAND.setSeed(seed)
 			
@@ -120,7 +121,7 @@ class RenderTileTablePedestal(dispatcher: TileEntityRendererDispatcher) : TileEn
 			rotationMp = RAND.nextFloat(0.4F, 1.2F)
 		}
 		
-		if (shadowAlpha > 0F){
+		if (shadowAlpha > 0F) {
 			renderShadow(buffer, matrix.last.matrix, shadowAlpha)
 		}
 		
@@ -136,30 +137,30 @@ class RenderTileTablePedestal(dispatcher: TileEntityRendererDispatcher) : TileEn
 		matrix.pop()
 	}
 	
-	private fun renderItemWithSpread(matrix: MatrixStack, buffer: IRenderTypeBuffer, renderer: ItemRenderer, stack: ItemStack, model: IBakedModel, isModel3D: Boolean, combinedLight: Int){
+	private fun renderItemWithSpread(matrix: MatrixStack, buffer: IRenderTypeBuffer, renderer: ItemRenderer, stack: ItemStack, model: IBakedModel, isModel3D: Boolean, combinedLight: Int) {
 		val extraModels = getItemModelCount(stack.size) - 1
 		
-		if (extraModels > 0){
+		if (extraModels > 0) {
 			RAND.setSeed(Item.getIdFromItem(stack.item).toLong())
 			
-			if (!isModel3D){
+			if (!isModel3D) {
 				matrix.translateZ(-SPREAD_DEPTH_PER_2D_MODEL * (extraModels / 2.0))
 			}
 		}
 		
 		renderer.renderItem(stack, GROUND, false, matrix, buffer, combinedLight, OverlayTexture.NO_OVERLAY, model)
 		
-		repeat(extraModels){
+		repeat(extraModels) {
 			matrix.push()
 			
-			if (isModel3D){
+			if (isModel3D) {
 				matrix.translate(
 					RAND.nextFloat(-SPREAD_RAND_3D_XZ, SPREAD_RAND_3D_XZ),
 					RAND.nextFloat(-SPREAD_RAND_3D_Y, SPREAD_RAND_3D_Y),
 					RAND.nextFloat(-SPREAD_RAND_3D_XZ, SPREAD_RAND_3D_XZ)
 				)
 			}
-			else{
+			else {
 				matrix.translate(
 					RAND.nextFloat(-SPREAD_RAND_2D, SPREAD_RAND_2D),
 					RAND.nextFloat(-SPREAD_RAND_2D, SPREAD_RAND_2D),
@@ -172,8 +173,8 @@ class RenderTileTablePedestal(dispatcher: TileEntityRendererDispatcher) : TileEn
 		}
 	}
 	
-	private fun renderShadow(buffer: IRenderTypeBuffer, mat: Matrix4f, alpha: Float){
-		with(buffer.getBuffer(RENDER_TYPE_SHADOW)){
+	private fun renderShadow(buffer: IRenderTypeBuffer, mat: Matrix4f, alpha: Float) {
+		with(buffer.getBuffer(RENDER_TYPE_SHADOW)) {
 			pos(mat, SHADOW_XZ_MIN, SHADOW_Y, SHADOW_XZ_MIN).color(1F, 1F, 1F, alpha).tex(0F, 0F).endVertex()
 			pos(mat, SHADOW_XZ_MIN, SHADOW_Y, SHADOW_XZ_MAX).color(1F, 1F, 1F, alpha).tex(0F, 1F).endVertex()
 			pos(mat, SHADOW_XZ_MAX, SHADOW_Y, SHADOW_XZ_MAX).color(1F, 1F, 1F, alpha).tex(1F, 1F).endVertex()

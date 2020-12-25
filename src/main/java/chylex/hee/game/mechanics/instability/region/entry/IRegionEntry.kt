@@ -1,6 +1,6 @@
 package chylex.hee.game.mechanics.instability.region.entry
 
-interface IRegionEntry{
+interface IRegionEntry {
 	val compacted: Long
 	val key: Long
 	val x: Int

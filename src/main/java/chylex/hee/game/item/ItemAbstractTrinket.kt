@@ -1,4 +1,5 @@
 package chylex.hee.game.item
+
 import chylex.hee.client.MC
 import chylex.hee.game.item.properties.CustomRarity
 import chylex.hee.game.mechanics.trinket.ITrinketItem
@@ -14,17 +15,17 @@ import net.minecraft.util.text.StringTextComponent
 import net.minecraft.util.text.TranslationTextComponent
 import net.minecraft.world.World
 
-open class ItemAbstractTrinket(properties: Properties) : Item(properties), ITrinketItem{
-	companion object{
-		fun onGetRarity(): Rarity{
+open class ItemAbstractTrinket(properties: Properties) : Item(properties), ITrinketItem {
+	companion object {
+		fun onGetRarity(): Rarity {
 			return CustomRarity.TRINKET
 		}
 		
 		@Sided(Side.CLIENT)
-		fun onAddInformation(stack: ItemStack, trinket: ITrinketItem, lines: MutableList<ITextComponent>){
+		fun onAddInformation(stack: ItemStack, trinket: ITrinketItem, lines: MutableList<ITextComponent>) {
 			val player = MC.player ?: return
 			
-			if (lines.size > 1){ // first line is item name
+			if (lines.size > 1) { // first line is item name
 				lines.add(StringTextComponent(""))
 			}
 			
@@ -35,17 +36,17 @@ open class ItemAbstractTrinket(properties: Properties) : Item(properties), ITrin
 		}
 	}
 	
-	init{
+	init {
 		@Suppress("DEPRECATION")
-		require(maxStackSize == 1){ "trinket item must have a maximum stack size of 1" }
+		require(maxStackSize == 1) { "trinket item must have a maximum stack size of 1" }
 	}
 	
-	override fun getRarity(stack: ItemStack): Rarity{
+	override fun getRarity(stack: ItemStack): Rarity {
 		return onGetRarity()
 	}
 	
 	@Sided(Side.CLIENT)
-	override fun addInformation(stack: ItemStack, world: World?, lines: MutableList<ITextComponent>, flags: ITooltipFlag){
+	override fun addInformation(stack: ItemStack, world: World?, lines: MutableList<ITextComponent>, flags: ITooltipFlag) {
 		super.addInformation(stack, world, lines, flags)
 		onAddInformation(stack, this, lines)
 	}

@@ -1,4 +1,5 @@
 package chylex.hee.game.item
+
 import chylex.hee.client.color.NO_TINT
 import chylex.hee.game.block.entity.TileEntityEnergyCluster
 import chylex.hee.game.inventory.heeTag
@@ -42,8 +43,8 @@ import net.minecraft.util.text.TranslationTextComponent
 import net.minecraft.world.World
 import kotlin.math.pow
 
-class ItemEnergyReceptacle(properties: Properties) : ItemAbstractInfusable(properties){
-	private companion object{
+class ItemEnergyReceptacle(properties: Properties) : ItemAbstractInfusable(properties) {
+	private companion object {
 		private const val CLUSTER_SNAPSHOT_TAG = "Cluster"
 		private const val UPDATE_TIME_TAG = "UpdateTime"
 		private const val RENDER_COLOR_TAG = "RenderColor"
@@ -55,7 +56,7 @@ class ItemEnergyReceptacle(properties: Properties) : ItemAbstractInfusable(prope
 		private const val ENERGY_LOSS_TICK_RATE = 10L
 		private const val ITEM_COOLDOWN = 16
 		
-		private fun calculateNewEnergyLevel(snapshot: ClusterSnapshot, elapsedTicks: Long, infusions: InfusionList): IEnergyQuantity{
+		private fun calculateNewEnergyLevel(snapshot: ClusterSnapshot, elapsedTicks: Long, infusions: InfusionList): IEnergyQuantity {
 			// TODO make sure Table Pedestals keep updating the item, or at least perform an update just before the infusion
 			val power = if (infusions.has(STABILITY)) 0.0003F else 0.001F
 			
@@ -65,32 +66,32 @@ class ItemEnergyReceptacle(properties: Properties) : ItemAbstractInfusable(prope
 			return snapshot.energyLevel - (decreasePerCycle * elapsedCycles.toFloat())
 		}
 		
-		private fun hasMovedTooFar(nbt: TagCompound, currentWorld: World, currentPos: BlockPos): Boolean{
+		private fun hasMovedTooFar(nbt: TagCompound, currentWorld: World, currentPos: BlockPos): Boolean {
 			val dimension = currentWorld.dimension
 			
-			if (dimension.type.id != nbt.getInt(INITIAL_DIMENSION_TAG)){
+			if (dimension.type.id != nbt.getInt(INITIAL_DIMENSION_TAG)) {
 				return true
 			}
 			
-			if (dimension is WorldProviderEndCustom && TerritoryInstance.fromPos(currentPos) != nbt.getIntegerOrNull(INITIAL_TERRITORY_TAG)?.let(TerritoryInstance.Companion::fromHash)){
+			if (dimension is WorldProviderEndCustom && TerritoryInstance.fromPos(currentPos) != nbt.getIntegerOrNull(INITIAL_TERRITORY_TAG)?.let(TerritoryInstance.Companion::fromHash)) {
 				return true
 			}
 			
 			return false
 		}
 		
-		private fun shouldLoseHealth(cluster: TileEntityEnergyCluster, nbt: TagCompound, infusions: InfusionList): Boolean{
-			if (infusions.has(SAFETY)){
+		private fun shouldLoseHealth(cluster: TileEntityEnergyCluster, nbt: TagCompound, infusions: InfusionList): Boolean {
+			if (infusions.has(SAFETY)) {
 				return false
 			}
 			
-			if (hasMovedTooFar(nbt, cluster.world!!, cluster.pos)){
+			if (hasMovedTooFar(nbt, cluster.world!!, cluster.pos)) {
 				return true
 			}
 			
 			val totalEnergyLost = Internal(nbt.getInt(INITIAL_LEVEL_TAG)) - cluster.energyLevel
 			
-			if (totalEnergyLost > maxOf(Floating(1F), cluster.energyBaseCapacity * 0.2F)){
+			if (totalEnergyLost > maxOf(Floating(1F), cluster.energyBaseCapacity * 0.2F)) {
 				return true
 			}
 			
@@ -98,15 +99,15 @@ class ItemEnergyReceptacle(properties: Properties) : ItemAbstractInfusable(prope
 		}
 	}
 	
-	init{
-		addPropertyOverride(Resource.Custom("has_cluster")){
-			stack, _, _ -> if (stack.heeTagOrNull.hasKey(CLUSTER_SNAPSHOT_TAG)) 1F else 0F
+	init {
+		addPropertyOverride(Resource.Custom("has_cluster")) { stack, _, _ ->
+			if (stack.heeTagOrNull.hasKey(CLUSTER_SNAPSHOT_TAG)) 1F else 0F
 		}
 		
 		// POLISH tweak animation
 	}
 	
-	override fun onItemUse(context: ItemUseContext): ActionResultType{
+	override fun onItemUse(context: ItemUseContext): ActionResultType {
 		val player = context.player ?: return FAIL
 		val world = context.world
 		val pos = context.pos
@@ -114,18 +115,18 @@ class ItemEnergyReceptacle(properties: Properties) : ItemAbstractInfusable(prope
 		val stack = player.getHeldItem(context.hand)
 		
 		stack.heeTag.use {
-			if (hasKey(CLUSTER_SNAPSHOT_TAG)){
+			if (hasKey(CLUSTER_SNAPSHOT_TAG)) {
 				val finalPos = BlockEditor.place(ModBlocks.ENERGY_CLUSTER, player, stack, context)
 				
-				if (world.isRemote){
+				if (world.isRemote) {
 					return SUCCESS
 				}
 				
-				if (finalPos != null){
+				if (finalPos != null) {
 					finalPos.getTile<TileEntityEnergyCluster>(world)?.let {
 						it.loadClusterSnapshot(ClusterSnapshot(getCompound(CLUSTER_SNAPSHOT_TAG)), inactive = false)
 						
-						if (shouldLoseHealth(it, this, InfusionTag.getList(stack))){
+						if (shouldLoseHealth(it, this, InfusionTag.getList(stack))) {
 							it.deteriorateHealth()
 						}
 					}
@@ -140,14 +141,14 @@ class ItemEnergyReceptacle(properties: Properties) : ItemAbstractInfusable(prope
 					return SUCCESS
 				}
 			}
-			else if (BlockEditor.canEdit(pos, player, stack)){
-				if (world.isRemote){
+			else if (BlockEditor.canEdit(pos, player, stack)) {
+				if (world.isRemote) {
 					return SUCCESS
 				}
 				
 				val cluster = pos.getTile<TileEntityEnergyCluster>(world)
 				
-				if (cluster != null && cluster.tryDisturb()){
+				if (cluster != null && cluster.tryDisturb()) {
 					val dimension = world.dimension
 					
 					put(CLUSTER_SNAPSHOT_TAG, cluster.getClusterSnapshot().tag)
@@ -158,7 +159,7 @@ class ItemEnergyReceptacle(properties: Properties) : ItemAbstractInfusable(prope
 					putInt(INITIAL_LEVEL_TAG, cluster.energyLevel.internal.value)
 					putInt(INITIAL_DIMENSION_TAG, dimension.type.id)
 					
-					if (dimension is WorldProviderEndCustom){
+					if (dimension is WorldProviderEndCustom) {
 						TerritoryInstance.fromPos(pos)?.let { putInt(INITIAL_TERRITORY_TAG, it.hash) }
 					}
 					
@@ -174,20 +175,20 @@ class ItemEnergyReceptacle(properties: Properties) : ItemAbstractInfusable(prope
 		return FAIL
 	}
 	
-	override fun inventoryTick(stack: ItemStack, world: World, entity: Entity, itemSlot: Int, isSelected: Boolean){
-		if (world.isRemote){
+	override fun inventoryTick(stack: ItemStack, world: World, entity: Entity, itemSlot: Int, isSelected: Boolean) {
+		if (world.isRemote) {
 			return
 		}
 		
-		with(stack.heeTagOrNull ?: return){
-			if (!hasKey(CLUSTER_SNAPSHOT_TAG)){
+		with(stack.heeTagOrNull ?: return) {
+			if (!hasKey(CLUSTER_SNAPSHOT_TAG)) {
 				return
 			}
 			
 			val currentTime = world.totalTime
 			val ticksElapsed = currentTime - getLong(UPDATE_TIME_TAG)
 			
-			if (ticksElapsed < ENERGY_LOSS_TICK_RATE){
+			if (ticksElapsed < ENERGY_LOSS_TICK_RATE) {
 				return
 			}
 			
@@ -197,26 +198,26 @@ class ItemEnergyReceptacle(properties: Properties) : ItemAbstractInfusable(prope
 			put(CLUSTER_SNAPSHOT_TAG, snapshot.clone(energyLevel = newLevel).tag)
 			putLong(UPDATE_TIME_TAG, currentTime)
 			
-			if (hasMovedTooFar(this, world, Pos(entity))){ // force health deterioration
+			if (hasMovedTooFar(this, world, Pos(entity))) { // force health deterioration
 				putInt(INITIAL_DIMENSION_TAG, Int.MIN_VALUE)
 				remove(INITIAL_TERRITORY_TAG)
 			}
 		}
 	}
 	
-	override fun shouldCauseReequipAnimation(oldStack: ItemStack, newStack: ItemStack, slotChanged: Boolean): Boolean{
+	override fun shouldCauseReequipAnimation(oldStack: ItemStack, newStack: ItemStack, slotChanged: Boolean): Boolean {
 		return slotChanged && super.shouldCauseReequipAnimation(oldStack, newStack, slotChanged)
 	}
 	
 	@Sided(Side.CLIENT)
-	override fun addInformation(stack: ItemStack, world: World?, lines: MutableList<ITextComponent>, flags: ITooltipFlag){
-		if (world != null){
+	override fun addInformation(stack: ItemStack, world: World?, lines: MutableList<ITextComponent>, flags: ITooltipFlag) {
+		if (world != null) {
 			val tag = stack.heeTagOrNull
 			
-			if (!tag.hasKey(CLUSTER_SNAPSHOT_TAG)){
+			if (!tag.hasKey(CLUSTER_SNAPSHOT_TAG)) {
 				lines.add(TranslationTextComponent("item.hee.energy_receptacle.tooltip.empty"))
 			}
-			else{
+			else {
 				val snapshot = ClusterSnapshot(tag.getCompound(CLUSTER_SNAPSHOT_TAG))
 				val level = calculateNewEnergyLevel(snapshot, world.totalTime - tag.getLong(UPDATE_TIME_TAG), InfusionTag.getList(stack))
 				
@@ -228,11 +229,11 @@ class ItemEnergyReceptacle(properties: Properties) : ItemAbstractInfusable(prope
 	}
 	
 	@Sided(Side.CLIENT)
-	object Color : IItemColor{
+	object Color : IItemColor {
 		private val WHITE = RGB(255u).i
 		
-		override fun getColor(stack: ItemStack, tintIndex: Int) = when(tintIndex){
-			1 -> stack.heeTagOrNull?.getInt(RENDER_COLOR_TAG) ?: WHITE
+		override fun getColor(stack: ItemStack, tintIndex: Int) = when(tintIndex) {
+			1    -> stack.heeTagOrNull?.getInt(RENDER_COLOR_TAG) ?: WHITE
 			else -> NO_TINT
 		}
 	}

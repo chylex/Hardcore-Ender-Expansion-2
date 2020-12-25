@@ -1,4 +1,5 @@
 package chylex.hee.game.block.entity
+
 import chylex.hee.game.block.entity.base.TileEntityBaseTable
 import chylex.hee.game.item.ItemAbstractEnergyUser
 import chylex.hee.game.mechanics.energy.IEnergyQuantity.Units
@@ -17,7 +18,7 @@ import net.minecraft.item.ItemStack
 import net.minecraft.tileentity.TileEntityType
 import net.minecraft.util.math.BlockPos
 
-class TileEntityAccumulationTable(type: TileEntityType<TileEntityAccumulationTable>) : TileEntityBaseTable(type){
+class TileEntityAccumulationTable(type: TileEntityType<TileEntityAccumulationTable>) : TileEntityBaseTable(type) {
 	@Suppress("unused")
 	constructor() : this(ModTileEntities.ACCUMULATION_TABLE)
 	
@@ -26,11 +27,11 @@ class TileEntityAccumulationTable(type: TileEntityType<TileEntityAccumulationTab
 	override val processTickRate = 3
 	override val processSerializer = BasicProcessSerializer(::Process)
 	
-	override fun createNewProcesses(unassignedPedestals: List<TileEntityTablePedestal>): List<ITableProcess>{
+	override fun createNewProcesses(unassignedPedestals: List<TileEntityTablePedestal>): List<ITableProcess> {
 		val newProcesses = ArrayList<Process>(1)
 		
-		for(pedestal in unassignedPedestals){
-			if (pedestal.itemInputCopy.item is ItemAbstractEnergyUser){
+		for(pedestal in unassignedPedestals) {
+			if (pedestal.itemInputCopy.item is ItemAbstractEnergyUser) {
 				newProcesses.add(Process(this, pedestal.pos))
 			}
 		}
@@ -38,7 +39,7 @@ class TileEntityAccumulationTable(type: TileEntityType<TileEntityAccumulationTab
 		return newProcesses
 	}
 	
-	private class Process : ProcessOnePedestal{
+	private class Process : ProcessOnePedestal {
 		constructor(table: TileEntityBaseTable, pos: BlockPos) : super(table, pos)
 		constructor(table: TileEntityBaseTable, nbt: TagCompound) : super(table, nbt)
 		
@@ -51,22 +52,22 @@ class TileEntityAccumulationTable(type: TileEntityType<TileEntityAccumulationTab
 		override val whenFinished =
 			CONSUME_STACK
 		
-		override fun isInputStillValid(oldInput: ItemStack, newInput: ItemStack): Boolean{
+		override fun isInputStillValid(oldInput: ItemStack, newInput: ItemStack): Boolean {
 			return oldInput.item === newInput.item
 		}
 		
-		override fun onWorkTick(context: ITableContext, input: ItemStack): State{
+		override fun onWorkTick(context: ITableContext, input: ItemStack): State {
 			val item = input.item
 			
-			if (item !is ItemAbstractEnergyUser){
+			if (item !is ItemAbstractEnergyUser) {
 				return Cancel
 			}
 			
-			if (item.hasMaximumEnergy(input)){
+			if (item.hasMaximumEnergy(input)) {
 				return Output(input)
 			}
 			
-			if (!context.requestUseResources()){
+			if (!context.requestUseResources()) {
 				return Work.Blocked
 			}
 			

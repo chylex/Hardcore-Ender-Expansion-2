@@ -1,4 +1,5 @@
 package chylex.hee.init
+
 import chylex.hee.HEE
 import chylex.hee.client.render.block.RenderTileDarkChest
 import chylex.hee.client.render.block.RenderTileLootChest
@@ -12,17 +13,17 @@ import net.minecraftforge.client.event.TextureStitchEvent
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber.Bus.MOD
 
 @SubscribeAllEvents(Side.CLIENT, modid = HEE.ID, bus = MOD)
-object ModAtlases{
+object ModAtlases {
 	val ATLAS_GUIS: ResourceLocation = Atlases.CHEST_ATLAS
 	val ATLAS_TILES: ResourceLocation = Atlases.CHEST_ATLAS
 	
 	@SubscribeEvent
-	fun onTextureStitchPre(e: TextureStitchEvent.Pre){
-		if (e.map.textureLocation == ATLAS_GUIS){
+	fun onTextureStitchPre(e: TextureStitchEvent.Pre) {
+		if (e.map.textureLocation == ATLAS_GUIS) {
 			e.addSprite(SlotTrinketItem.TEX_SLOT_OVERLAY)
 		}
 		
-		if (e.map.textureLocation == ATLAS_TILES){
+		if (e.map.textureLocation == ATLAS_TILES) {
 			e.addSprite(RenderTileDarkChest.TEX_SINGLE)
 			e.addSprite(RenderTileDarkChest.TEX_DOUBLE_LEFT)
 			e.addSprite(RenderTileDarkChest.TEX_DOUBLE_RIGHT)

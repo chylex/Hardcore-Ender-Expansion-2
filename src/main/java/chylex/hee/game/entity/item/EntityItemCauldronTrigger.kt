@@ -1,4 +1,5 @@
 package chylex.hee.game.entity.item
+
 import chylex.hee.game.block.BlockAbstractCauldron
 import chylex.hee.game.block.with
 import chylex.hee.game.entity.selectEntities
@@ -37,12 +38,12 @@ import net.minecraft.world.World
 import java.util.Random
 import kotlin.math.min
 
-class EntityItemCauldronTrigger : EntityItemBase{
+class EntityItemCauldronTrigger : EntityItemBase {
 	@Suppress("unused")
 	constructor(type: EntityType<EntityItemCauldronTrigger>, world: World) : super(type, world)
 	constructor(world: World, stack: ItemStack, replacee: Entity) : super(ModEntities.ITEM_CAULDRON_TRIGGER, world, stack, replacee)
 	
-	companion object{
+	companion object {
 		private val RECIPE_DRAGONS_BREATH = arrayOf(
 			ModItems.END_POWDER to 1,
 			ModItems.ANCIENT_DUST to 1,
@@ -60,8 +61,8 @@ class EntityItemCauldronTrigger : EntityItemBase{
 			mot = Constant(0.45F, UP) + InBox(0F, 0.15F, 0F)
 		)
 		
-		val FX_RECIPE_FINISH = object : FxBlockHandler(){
-			override fun handle(pos: BlockPos, world: World, rand: Random){
+		val FX_RECIPE_FINISH = object : FxBlockHandler() {
+			override fun handle(pos: BlockPos, world: World, rand: Random) {
 				PARTICLE_RECIPE_FINISH.spawn(Point(pos, 22), rand)
 				ModSounds.BLOCK_CAULDRON_BREW.playClient(pos, SoundCategory.BLOCKS, volume = 0.5F, pitch = 1.2F)
 				ModSounds.BLOCK_CAULDRON_BREW.playClient(pos, SoundCategory.BLOCKS, volume = 0.8F, pitch = 0.8F)
@@ -69,21 +70,21 @@ class EntityItemCauldronTrigger : EntityItemBase{
 		}
 	}
 	
-	override fun tick(){
+	override fun tick() {
 		super.tick()
 		
-		if (!world.isRemote && world.totalTime % 5L == 0L){
+		if (!world.isRemote && world.totalTime % 5L == 0L) {
 			val pos = Pos(this)
 			val state = pos.getState(world)
 			val block = state.block
 			
-			if (block === Blocks.CAULDRON){
-				if (state[LEVEL] > 0 && tryUseIngredients(RECIPE_DRAGONS_BREATH)){
+			if (block === Blocks.CAULDRON) {
+				if (state[LEVEL] > 0 && tryUseIngredients(RECIPE_DRAGONS_BREATH)) {
 					pos.setState(world, ModBlocks.CAULDRON_DRAGONS_BREATH.with(LEVEL, state[LEVEL]))
 				}
 			}
-			else if (block === ModBlocks.CAULDRON_PURIFIED_ENDER_GOO){
-				if (state[LEVEL] == BlockAbstractCauldron.MAX_LEVEL && tryUseIngredients(RECIPE_PURITY_EXTRACT)){
+			else if (block === ModBlocks.CAULDRON_PURIFIED_ENDER_GOO) {
+				if (state[LEVEL] == BlockAbstractCauldron.MAX_LEVEL && tryUseIngredients(RECIPE_PURITY_EXTRACT)) {
 					pos.setBlock(world, Blocks.CAULDRON)
 					
 					EntityItem(world, pos.x + 0.5, pos.y + 0.4, pos.z + 0.5, ItemStack(ModItems.PURITY_EXTRACT)).apply {
@@ -96,21 +97,21 @@ class EntityItemCauldronTrigger : EntityItemBase{
 		}
 	}
 	
-	private fun tryUseIngredients(list: Array<Pair<Item, Int>>): Boolean{
+	private fun tryUseIngredients(list: Array<Pair<Item, Int>>): Boolean {
 		val pos = Pos(this)
 		val itemEntities = world.selectEntities.inBox<EntityItem>(AxisAlignedBB(pos))
 		
-		if (itemEntities.size < list.size){
+		if (itemEntities.size < list.size) {
 			return false
 		}
 		
 		val remainingIngredients = mutableMapOf(*list)
 		
-		if (!validateIngredients(itemEntities, remainingIngredients)){
+		if (!validateIngredients(itemEntities, remainingIngredients)) {
 			return false
 		}
 		
-		for(itemEntity in itemEntities){
+		for(itemEntity in itemEntities) {
 			val stack = itemEntity.item
 			val item = stack.item
 			
@@ -125,11 +126,11 @@ class EntityItemCauldronTrigger : EntityItemBase{
 		return true
 	}
 	
-	private fun validateIngredients(itemEntities: List<EntityItem>, remainingIngredients: Map<Item, Int>): Boolean{
+	private fun validateIngredients(itemEntities: List<EntityItem>, remainingIngredients: Map<Item, Int>): Boolean {
 		val testIngredients = HashMap(remainingIngredients)
 		
-		for(itemEntity in itemEntities){
-			if (itemEntity.ticksExisted < 15){
+		for(itemEntity in itemEntities) {
+			if (itemEntity.ticksExisted < 15) {
 				continue
 			}
 			

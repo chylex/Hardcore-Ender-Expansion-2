@@ -1,4 +1,5 @@
 package chylex.hee.datagen.server
+
 import chylex.hee.init.ModItems
 import net.minecraft.data.DataGenerator
 import net.minecraft.data.ItemTagsProvider
@@ -6,8 +7,8 @@ import net.minecraft.tags.BlockTags
 import net.minecraft.tags.ItemTags
 import net.minecraftforge.common.Tags
 
-class ItemTags(generator: DataGenerator) : ItemTagsProvider(generator){
-	override fun registerTags(){
+class ItemTags(generator: DataGenerator) : ItemTagsProvider(generator) {
+	override fun registerTags() {
 		copy(BlockTags.LEAVES, ItemTags.LEAVES)
 		copy(BlockTags.LOGS, ItemTags.LOGS)
 		copy(BlockTags.PLANKS, ItemTags.PLANKS)

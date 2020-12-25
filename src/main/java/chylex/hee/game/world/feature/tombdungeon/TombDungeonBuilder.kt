@@ -1,4 +1,5 @@
 package chylex.hee.game.world.feature.tombdungeon
+
 import chylex.hee.game.world.feature.tombdungeon.TombDungeonPieces.STRUCTURE_SIZE
 import chylex.hee.game.world.feature.tombdungeon.connection.TombDungeonConnection
 import chylex.hee.game.world.feature.tombdungeon.connection.TombDungeonConnectionType.SECRET_CONNECTOR
@@ -34,10 +35,10 @@ import org.apache.commons.lang3.mutable.MutableInt
 import java.util.Random
 import kotlin.math.min
 
-object TombDungeonBuilder : IStructureBuilder{
+object TombDungeonBuilder : IStructureBuilder {
 	val ENTRANCE_POS: BlockPos = STRUCTURE_SIZE.getPos(CENTER, MAX, MAX).add(-TombDungeonStart.size.centerX, -TombDungeonStart.size.y, -STRUCTURE_SIZE.x / 3)
 	
-	override fun build(rand: Random): IStructureBuild?{
+	override fun build(rand: Random): IStructureBuild? {
 		val startingPiece = TombDungeonStart.MutableInstance(Transform.NONE)
 		val startingPiecePos = ENTRANCE_POS
 		
@@ -54,7 +55,7 @@ object TombDungeonBuilder : IStructureBuilder{
 				shuffle(rand)
 			}
 			
-			for((index, stairLength) in stairLengths.withIndex()){
+			for((index, stairLength) in stairLengths.withIndex()) {
 				process.appendPieces(build.lastPiece, TombDungeonPieces.PIECES_STAIRCASE(stairLength), level = null) ?: return null
 				
 				val corridorLength = if (index == stairLengths.lastIndex) rand.nextInt(11, 13) else rand.nextInt(2, rand.nextInt(4, 5))
@@ -75,7 +76,7 @@ object TombDungeonBuilder : IStructureBuilder{
 			).apply {
 				shuffle(rand)
 				
-				for(level in indices){
+				for(level in indices) {
 					this[level] += (level - 1) * 2
 				}
 				
@@ -85,13 +86,13 @@ object TombDungeonBuilder : IStructureBuilder{
 			val crumblingCorridorCounts = mutableListOf<Pair<Int, MutableInt>>().apply {
 				var remaining = rand.nextInt(rand.nextInt(2, 3), 4)
 				
-				repeat(TombDungeonLevel.values().size - 2){
+				repeat(TombDungeonLevel.values().size - 2) {
 					val mainPath = rand.nextInt(0, remaining.coerceIn(0, 1)).also { remaining -= it }
 					val sidePath = rand.nextInt(0, remaining.coerceIn(0, 2)).also { remaining -= it }
 					add(mainPath to MutableInt(sidePath))
 				}
 				
-				if (remaining > 0){
+				if (remaining > 0) {
 					set(0, 0 to MutableInt(remaining))
 				}
 				
@@ -102,7 +103,7 @@ object TombDungeonBuilder : IStructureBuilder{
 			
 			var nextStartPiece = build.lastPiece
 			
-			for(level in TombDungeonLevel.values()){
+			for(level in TombDungeonLevel.values()) {
 				val crumblingCorridors = crumblingCorridorCounts[level.ordinal]
 				val mainPath = TombDungeonPieces.PIECES_MAIN_CORRIDOR(rand, level, cornerCounts[level.ordinal], crumblingCorridors.first)
 				
@@ -116,29 +117,29 @@ object TombDungeonBuilder : IStructureBuilder{
 				val mainPathRoomReverseOffset = rand.nextInt(0, mainPathRoomSpread - 1)
 				val mainPathRoomMaxForwardOffset = mainPathRoomSpread / 2
 				
-				for((index, room) in mainPathRooms.withIndex()){
+				for((index, room) in mainPathRooms.withIndex()) {
 					mainPath.add(((index + 1) * mainPathRoomSpread) - mainPathRoomReverseOffset + rand.nextInt(0, mainPathRoomMaxForwardOffset), room)
 				}
 				
 				val firstCorridorIndex = build.generatedPieces.lastIndex + 1
 				val lastCorridorIndex = firstCorridorIndex + mainPath.size - 1
 				
-				if (!build.guardChain(25){
+				if (!build.guardChain(25) {
 					process.appendPieces(nextStartPiece, mainPath, level) ?: return@guardChain false
 					
-					if (!process.generateTombs(firstCorridorIndex, lastCorridorIndex, level.getTombCount(rand), level)){
+					if (!process.generateTombs(firstCorridorIndex, lastCorridorIndex, level.getTombCount(rand), level)) {
 						return@guardChain false
 					}
 					
-					if (level == TombDungeonLevel.LAST){
+					if (level == TombDungeonLevel.LAST) {
 						process.addPiece(build.generatedPieces[lastCorridorIndex], TombDungeonPieces.PIECE_ROOM_END, level) ?: return@guardChain false
 					}
-					else{
+					else {
 						process.appendPieces(build.generatedPieces[lastCorridorIndex], TombDungeonPieces.PIECES_STAIRCASE(rand.nextInt(9, 17)), level) ?: return@guardChain false
 					}
 					
 					return@guardChain true
-				}){
+				}) {
 					return null
 				}
 				
@@ -147,7 +148,7 @@ object TombDungeonBuilder : IStructureBuilder{
 				var sidePathsRemaining = level.getSidePathCount(rand)
 				var sideRoomsSidePathIndex = sideRoomsMainPath
 				
-				outer@for(sidePathGenAttempt in 0 until sidePathsRemaining * 10){
+				outer@ for(sidePathGenAttempt in 0 until sidePathsRemaining * 10) {
 					val sideCrumblingCorridors = crumblingCorridors.second.value.coerceAtMost(rand.nextInt(1, 2))
 					val sidePath = TombDungeonPieces.PIECES_SIDE_CORRIDOR(rand, level, sideCrumblingCorridors, sideRooms.getOrNull(sideRoomsSidePathIndex))
 					
@@ -159,72 +160,72 @@ object TombDungeonBuilder : IStructureBuilder{
 						.takeIf { it.isNotEmpty() }
 						?.let(::WeightedList)
 					
-					if (targetPieces == null){
+					if (targetPieces == null) {
 						break@outer
 					}
 					
 					val firstSideIndex = build.generatedPieces.lastIndex + 1
 					val lastSideIndex = firstSideIndex + sidePath.size - 1
 					
-					for(sidePathAttachAttempt in 1..20){
+					for(sidePathAttachAttempt in 1..20) {
 						val targetPiece = targetPieces.generateItem(rand)
 						
-						if (build.guardChain { process.appendPieces(targetPiece, sidePath, level) != null }){
+						if (build.guardChain { process.appendPieces(targetPiece, sidePath, level) != null }) {
 							++sideRoomsSidePathIndex
 							
-							for(index in firstSideIndex..lastSideIndex){
+							for(index in firstSideIndex..lastSideIndex) {
 								val piece = build.generatedPieces[index]
 								
-								if (piece.instance.owner is ITombDungeonPieceWithTombs){
+								if (piece.instance.owner is ITombDungeonPieceWithTombs) {
 									process.generateTombs(index, index, rand.nextInt(1, 3), level)
 								}
 							}
 							
-							if (sideCrumblingCorridors > 0){
+							if (sideCrumblingCorridors > 0) {
 								crumblingCorridors.second.subtract(sideCrumblingCorridors)
 							}
 							
-							if (--sidePathsRemaining <= 0){
+							if (--sidePathsRemaining <= 0) {
 								break@outer
 							}
-							else{
+							else {
 								break
 							}
 						}
 					}
 				}
 				
-				if (sidePathsRemaining > 0){
+				if (sidePathsRemaining > 0) {
 					return null
 				}
 			}
 		}
 		
-		if (!process.generateSecrets(6)){
+		if (!process.generateSecrets(6)) {
 			return null
 		}
 		
 		return build.freeze()
 	}
 	
-	private class Process(build: StructureBuild<StructurePiece<TombDungeonLevel>.MutableInstance>, rand: Random) : ProcessBase<StructurePiece<TombDungeonLevel>.MutableInstance>(build, rand){
+	private class Process(build: StructureBuild<StructurePiece<TombDungeonLevel>.MutableInstance>, rand: Random) : ProcessBase<StructurePiece<TombDungeonLevel>.MutableInstance>(build, rand) {
 		private val roomsMain = mapOf(
 			false to TombDungeonPieces.PIECES_MAIN_ROOMS_NONFANCY.toMutableList(),
-			true  to TombDungeonPieces.PIECES_MAIN_ROOMS_FANCY.toMutableList()
+			true to TombDungeonPieces.PIECES_MAIN_ROOMS_FANCY.toMutableList()
 		)
 		
 		private val roomsSide = mapOf(
 			false to (TombDungeonPieces.PIECES_SIDE_ROOMS_NONFANCY + TombDungeonPieces.PIECES_SIDE_ROOMS_NONFANCY).toMutableList(),
-			true  to TombDungeonPieces.PIECES_SIDE_ROOMS_FANCY.toMutableList()
+			true to TombDungeonPieces.PIECES_SIDE_ROOMS_FANCY.toMutableList()
 		)
 		
 		// Room picking
 		
-		private fun pickRooms(roomList: MutableList<out TombDungeonAbstractPiece>, amount: Int): Array<TombDungeonAbstractPiece>{
+		private fun pickRooms(roomList: MutableList<out TombDungeonAbstractPiece>, amount: Int): Array<TombDungeonAbstractPiece> {
 			return if (amount == 0)
 				emptyArray()
 			else
-				Array(min(amount, roomList.size)){ rand.removeItem(roomList) }
+				Array(min(amount, roomList.size)) { rand.removeItem(roomList) }
 		}
 		
 		fun pickMainRooms(level: TombDungeonLevel) = pickRooms(roomsMain.getValue(level.isFancy), rand.nextInt(level.mainRooms))
@@ -232,7 +233,7 @@ object TombDungeonBuilder : IStructureBuilder{
 		
 		// Tomb generation
 		
-		fun generateTombs(firstIndex: Int, lastIndex: Int, attemptedAmount: Int, level: TombDungeonLevel): Boolean{
+		fun generateTombs(firstIndex: Int, lastIndex: Int, attemptedAmount: Int, level: TombDungeonLevel): Boolean {
 			val straightTombs = build
 				.generatedPieces
 				.subList(firstIndex, lastIndex + 1)
@@ -240,16 +241,16 @@ object TombDungeonBuilder : IStructureBuilder{
 				.associateWith { it.instance.owner as ITombDungeonPieceWithTombs }
 				.toList()
 			
-			if (straightTombs.isEmpty()){
+			if (straightTombs.isEmpty()) {
 				return false
 			}
 			
 			var totalGenerated = 0
 			
-			for(attempt in 0 until attemptedAmount * 4){
+			for(attempt in 0 until attemptedAmount * 4) {
 				val (corridor, constructor) = rand.nextItem(straightTombs)
 				
-				if (addPiece(corridor, constructor.constructTomb(), level, MERGE) != null && ++totalGenerated >= attemptedAmount){
+				if (addPiece(corridor, constructor.constructTomb(), level, MERGE) != null && ++totalGenerated >= attemptedAmount) {
 					break
 				}
 			}
@@ -259,7 +260,7 @@ object TombDungeonBuilder : IStructureBuilder{
 		
 		// Secret generation
 		
-		fun generateSecrets(amount: Int): Boolean{
+		fun generateSecrets(amount: Int): Boolean {
 			val remainingSecrets = TombDungeonPieces.PIECES_SECRET(rand, amount)
 			val attachableRooms = mutableWeightedListOf<PositionedPiece<StructurePiece<TombDungeonLevel>.MutableInstance>>()
 			
@@ -269,7 +270,7 @@ object TombDungeonBuilder : IStructureBuilder{
 				.filterValues { it.secretAttachWeight > 0 }
 				.forEach { attachableRooms.addItem(it.value.secretAttachWeight, it.key) }
 			
-			for(attempt in 1..(amount * 50)){
+			for(attempt in 1..(amount * 50)) {
 				val piece = attachableRooms.removeItem(rand) ?: return false
 				val instance = piece.instance
 				
@@ -281,19 +282,19 @@ object TombDungeonBuilder : IStructureBuilder{
 				val diffX = pieceSize.x - 5
 				val diffZ = pieceSize.z - 5
 				
-				if (diffX < 0 || diffZ < 0){
+				if (diffX < 0 || diffZ < 0) {
 					continue
 				}
 				
 				val attachOffset = 2
 				val attachY = (instance.owner as TombDungeonAbstractPiece).secretAttachY
 				
-				for(placementAttempt in 1..7){
+				for(placementAttempt in 1..7) {
 					val side = rand.nextItem(Facing4)
 					val attachX: Int
 					val attachZ: Int
 					
-					when(side){
+					when(side) {
 						NORTH -> { attachX = attachOffset + rand.nextInt(0, diffX); attachZ = 0 }
 						SOUTH -> { attachX = attachOffset + rand.nextInt(0, diffX); attachZ = pieceSize.maxZ }
 						EAST ->  { attachZ = attachOffset + rand.nextInt(0, diffZ); attachX = pieceSize.maxX }
@@ -308,13 +309,13 @@ object TombDungeonBuilder : IStructureBuilder{
 					
 					val alignOffset = build.alignConnections(secretConn, alignConn, MERGE)
 					
-					if (build.addPiece(secretInst, piece.offset.add(alignOffset), piece) != null){
+					if (build.addPiece(secretInst, piece.offset.add(alignOffset), piece) != null) {
 						remainingSecrets.remove(secret)
 						break
 					}
 				}
 				
-				if (remainingSecrets.isEmpty()){
+				if (remainingSecrets.isEmpty()) {
 					return true
 				}
 			}
@@ -324,15 +325,15 @@ object TombDungeonBuilder : IStructureBuilder{
 		
 		// Helpers
 		
-		fun appendPieces(targetPiece: PositionedPiece<StructurePiece<TombDungeonLevel>.MutableInstance>, generatedPieces: List<TombDungeonAbstractPiece>, level: TombDungeonLevel?): PositionedPiece<StructurePiece<TombDungeonLevel>.MutableInstance>?{
-			return generatedPieces.fold(targetPiece){ lastPiece, nextPiece -> addPiece(lastPiece, nextPiece, level) ?: return null }
+		fun appendPieces(targetPiece: PositionedPiece<StructurePiece<TombDungeonLevel>.MutableInstance>, generatedPieces: List<TombDungeonAbstractPiece>, level: TombDungeonLevel?): PositionedPiece<StructurePiece<TombDungeonLevel>.MutableInstance>? {
+			return generatedPieces.fold(targetPiece) { lastPiece, nextPiece -> addPiece(lastPiece, nextPiece, level) ?: return null }
 		}
 		
-		fun addPiece(targetPiece: PositionedPiece<StructurePiece<TombDungeonLevel>.MutableInstance>, generatedPiece: TombDungeonAbstractPiece, level: TombDungeonLevel?, mode: AddMode = APPEND): PositionedPiece<StructurePiece<TombDungeonLevel>.MutableInstance>?{
-			for(targetConnection in targetPiece.instance.findAvailableConnections().shuffled(rand)){
-				val piece = baseAddPiece(mode, targetPiece, targetConnection){ generatedPiece.MutableInstance(level, it) }
+		fun addPiece(targetPiece: PositionedPiece<StructurePiece<TombDungeonLevel>.MutableInstance>, generatedPiece: TombDungeonAbstractPiece, level: TombDungeonLevel?, mode: AddMode = APPEND): PositionedPiece<StructurePiece<TombDungeonLevel>.MutableInstance>? {
+			for(targetConnection in targetPiece.instance.findAvailableConnections().shuffled(rand)) {
+				val piece = baseAddPiece(mode, targetPiece, targetConnection) { generatedPiece.MutableInstance(level, it) }
 				
-				if (piece != null){
+				if (piece != null) {
 					return piece
 				}
 			}

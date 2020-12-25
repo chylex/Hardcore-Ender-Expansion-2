@@ -1,4 +1,5 @@
 package chylex.hee.game.item
+
 import chylex.hee.HEE
 import chylex.hee.client.MC
 import chylex.hee.client.color.NO_TINT
@@ -48,8 +49,8 @@ import net.minecraft.util.text.TranslationTextComponent
 import net.minecraft.world.World
 import net.minecraft.world.dimension.DimensionType
 
-class ItemPortalToken(properties: Properties) : Item(properties){
-	companion object{
+class ItemPortalToken(properties: Properties) : Item(properties) {
+	companion object {
 		private const val TYPE_TAG = "Type"
 		private const val TERRITORY_TYPE_TAG = "Territory"
 		private const val TERRITORY_INDEX_TAG = "Index"
@@ -58,7 +59,7 @@ class ItemPortalToken(properties: Properties) : Item(properties){
 		const val MAX_STACK_SIZE = 16
 	}
 	
-	enum class TokenType(val propertyValue: Float, private val translationKeySuffix: String){
+	enum class TokenType(val propertyValue: Float, private val translationKeySuffix: String) {
 		NORMAL  (0F, "normal"),
 		RARE    (1F, "rare"),
 		SOLITARY(2F, "solitary");
@@ -70,16 +71,16 @@ class ItemPortalToken(properties: Properties) : Item(properties){
 			get() = "item.hee.portal_token.$translationKeySuffix.concrete"
 	}
 	
-	init{
-		addPropertyOverride(Resource.Custom("token_type")){
-			stack, _, _ -> getTokenType(stack).propertyValue + (if (stack.heeTagOrNull.hasKey(IS_CORRUPTED_TAG)) 0.5F else 0F)
+	init {
+		addPropertyOverride(Resource.Custom("token_type")) { stack, _, _ ->
+			getTokenType(stack).propertyValue + (if (stack.heeTagOrNull.hasKey(IS_CORRUPTED_TAG)) 0.5F else 0F)
 		}
 	}
 	
 	// Token construction
 	
 	fun forTerritory(type: TokenType, territory: TerritoryType) = ItemStack(this).also {
-		with(it.heeTag){
+		with(it.heeTag) {
 			putEnum(TYPE_TAG, type)
 			putEnum(TERRITORY_TYPE_TAG, territory)
 		}
@@ -87,20 +88,20 @@ class ItemPortalToken(properties: Properties) : Item(properties){
 	
 	// Token data
 	
-	fun getTokenType(stack: ItemStack): TokenType{
+	fun getTokenType(stack: ItemStack): TokenType {
 		return stack.heeTagOrNull?.getEnum<TokenType>(TYPE_TAG) ?: TokenType.NORMAL
 	}
 	
-	fun getTerritoryType(stack: ItemStack): TerritoryType?{
+	fun getTerritoryType(stack: ItemStack): TerritoryType? {
 		return stack.heeTagOrNull?.getEnum<TerritoryType>(TERRITORY_TYPE_TAG)
 	}
 	
-	private fun getTerritoryIndex(stack: ItemStack): Int?{
+	private fun getTerritoryIndex(stack: ItemStack): Int? {
 		return stack.heeTagOrNull?.getIntegerOrNull(TERRITORY_INDEX_TAG)
 	}
 	
-	private fun remapInstanceIndex(instance: TerritoryInstance, tokenType: TokenType, entity: Entity): TerritoryInstance?{
-		if (tokenType != TokenType.SOLITARY){
+	private fun remapInstanceIndex(instance: TerritoryInstance, tokenType: TokenType, entity: Entity): TerritoryInstance? {
+		if (tokenType != TokenType.SOLITARY) {
 			return instance
 		}
 		
@@ -110,11 +111,11 @@ class ItemPortalToken(properties: Properties) : Item(properties){
 			null
 	}
 	
-	fun hasTerritoryInstance(stack: ItemStack): Boolean{
+	fun hasTerritoryInstance(stack: ItemStack): Boolean {
 		return stack.heeTagOrNull.hasKey(TERRITORY_INDEX_TAG)
 	}
 	
-	fun getOrCreateTerritoryInstance(stack: ItemStack, entity: Entity): TerritoryInstance?{
+	fun getOrCreateTerritoryInstance(stack: ItemStack, entity: Entity): TerritoryInstance? {
 		val territory = getTerritoryType(stack) ?: return null
 		val tokenType = getTokenType(stack)
 		
@@ -126,32 +127,32 @@ class ItemPortalToken(properties: Properties) : Item(properties){
 	
 	// Corruption
 	
-	override fun inventoryTick(stack: ItemStack, world: World, entity: Entity, itemSlot: Int, isSelected: Boolean){
-		if (!world.isRemote){
+	override fun inventoryTick(stack: ItemStack, world: World, entity: Entity, itemSlot: Int, isSelected: Boolean) {
+		if (!world.isRemote) {
 			updateCorruptedState(stack)
 		}
 	}
 	
-	fun updateCorruptedState(stack: ItemStack){
-		if (getTokenType(stack) != TokenType.RARE || stack.heeTagOrNull.hasKey(IS_CORRUPTED_TAG)){
+	fun updateCorruptedState(stack: ItemStack) {
+		if (getTokenType(stack) != TokenType.RARE || stack.heeTagOrNull.hasKey(IS_CORRUPTED_TAG)) {
 			return
 		}
 		
 		val index = getTerritoryIndex(stack) ?: return
 		val territory = getTerritoryType(stack) ?: return
 		
-		if (TerritoryGlobalStorage.get().forInstance(TerritoryInstance(territory, index))?.getComponent<VoidData>()?.isCorrupting == true){
+		if (TerritoryGlobalStorage.get().forInstance(TerritoryInstance(territory, index))?.getComponent<VoidData>()?.isCorrupting == true) {
 			stack.heeTag.putBoolean(IS_CORRUPTED_TAG, true)
 		}
 	}
 	
 	// Creative mode
 	
-	override fun onItemRightClick(world: World, player: EntityPlayer, hand: Hand): ActionResult<ItemStack>{
+	override fun onItemRightClick(world: World, player: EntityPlayer, hand: Hand): ActionResult<ItemStack> {
 		val heldItem = player.getHeldItem(hand)
 		val territory = getTerritoryType(heldItem)
 		
-		if (world.isRemote || !player.isCreative || territory == null){
+		if (world.isRemote || !player.isCreative || territory == null) {
 			return super.onItemRightClick(world, player, hand)
 		}
 		
@@ -160,32 +161,32 @@ class ItemPortalToken(properties: Properties) : Item(properties){
 		val index = getTerritoryIndex(heldItem) ?: TerritoryGlobalStorage.get().assignNewIndex(territory, tokenType)
 		val instance = remapInstanceIndex(TerritoryInstance(territory, index), tokenType, player)
 		
-		if (instance == null){
+		if (instance == null) {
 			return ActionResult(FAIL, heldItem)
 		}
 		
 		EntityPortalContact.shouldTeleport(player) // ignore the result but prevent immediately teleporting back
 		val spawnInfo = instance.prepareSpawnPoint(player, clearanceRadius = 1)
 		
-		if (player.dimension === HEE.dim){
+		if (player.dimension === HEE.dim) {
 			BlockVoidPortalInner.teleportEntity(player, spawnInfo)
 		}
-		else{
+		else {
 			DimensionTeleporter.changeDimension(player, DimensionType.THE_END, DimensionTeleporter.EndTerritoryPortal(spawnInfo))
 		}
 		
 		return ActionResult(SUCCESS, heldItem)
 	}
 	
-	override fun onItemUse(context: ItemUseContext): ActionResultType{
+	override fun onItemUse(context: ItemUseContext): ActionResultType {
 		val player = context.player ?: return FAIL
 		val world = context.world
 		
-		if (!player.isCreative || player.isSneaking){
+		if (!player.isCreative || player.isSneaking) {
 			return PASS
 		}
 		
-		if (world.isRemote){
+		if (world.isRemote) {
 			return SUCCESS
 		}
 		
@@ -194,7 +195,7 @@ class ItemPortalToken(properties: Properties) : Item(properties){
 		val heldItem = player.getHeldItem(context.hand)
 		val territoryType = getTerritoryType(heldItem)
 		
-		if (territoryType == null || context.face != UP || !BlockEditor.canEdit(targetPos, player, heldItem) || world.selectExistingEntities.inBox<EntityTokenHolder>(AxisAlignedBB(targetPos)).any()){
+		if (territoryType == null || context.face != UP || !BlockEditor.canEdit(targetPos, player, heldItem) || world.selectExistingEntities.inBox<EntityTokenHolder>(AxisAlignedBB(targetPos)).any()) {
 			return FAIL
 		}
 		
@@ -208,18 +209,18 @@ class ItemPortalToken(properties: Properties) : Item(properties){
 		return TokenType.NORMAL.genericTranslationKey
 	}
 	
-	override fun getTranslationKey(stack: ItemStack): String{
+	override fun getTranslationKey(stack: ItemStack): String {
 		return getTokenType(stack).genericTranslationKey
 	}
 	
-	override fun getDisplayName(stack: ItemStack): ITextComponent{
+	override fun getDisplayName(stack: ItemStack): ITextComponent {
 		return TranslationTextComponent(getTokenType(stack).concreteTranslationKey, TranslationTextComponent(getTerritoryType(stack)?.translationKey ?: TerritoryType.FALLBACK_TRANSLATION_KEY))
 	}
 	
-	override fun fillItemGroup(tab: ItemGroup, items: NonNullList<ItemStack>){
-		if (isInGroup(tab)){
-			for(territory in TerritoryType.ALL){
-				if (!territory.isSpawn){
+	override fun fillItemGroup(tab: ItemGroup, items: NonNullList<ItemStack>) {
+		if (isInGroup(tab)) {
+			for(territory in TerritoryType.ALL) {
+				if (!territory.isSpawn) {
 					items.add(forTerritory(TokenType.NORMAL, territory))
 				}
 			}
@@ -227,29 +228,29 @@ class ItemPortalToken(properties: Properties) : Item(properties){
 	}
 	
 	@Sided(Side.CLIENT)
-	override fun addInformation(stack: ItemStack, world: World?, lines: MutableList<ITextComponent>, flags: ITooltipFlag){
+	override fun addInformation(stack: ItemStack, world: World?, lines: MutableList<ITextComponent>, flags: ITooltipFlag) {
 		val territory = getTerritoryType(stack)
 		var insertEmptyLineAt = -1
 		
-		if (territory != null){
+		if (territory != null) {
 			lines.add(TranslationTextComponent(territory.desc.difficulty.tooltipTranslationKey))
 			insertEmptyLineAt = lines.size
 		}
 		
-		if (flags.isAdvanced){
+		if (flags.isAdvanced) {
 			getTerritoryIndex(stack)?.let {
 				lines.add(TranslationTextComponent("item.hee.portal_token.tooltip.advanced", it))
 			}
 		}
 		
-		if ((MC.currentScreen as? GuiPortalTokenStorage)?.canActivateToken(stack) == true){
+		if ((MC.currentScreen as? GuiPortalTokenStorage)?.canActivateToken(stack) == true) {
 			lines.add(TranslationTextComponent("item.hee.portal_token.tooltip.activate"))
 		}
-		else if (MC.player?.let { it.isCreative && it.dimension === HEE.dim } == true){
+		else if (MC.player?.let { it.isCreative && it.dimension === HEE.dim } == true) {
 			lines.add(TranslationTextComponent("item.hee.portal_token.tooltip.creative.${if (hasTerritoryInstance(stack)) "teleport" else "generate"}"))
 		}
 		
-		if (lines.size > insertEmptyLineAt){
+		if (lines.size > insertEmptyLineAt) {
 			lines.add(insertEmptyLineAt, StringTextComponent(""))
 		}
 		
@@ -257,16 +258,16 @@ class ItemPortalToken(properties: Properties) : Item(properties){
 	}
 	
 	@Sided(Side.CLIENT)
-	object Color : IItemColor{
+	object Color : IItemColor {
 		private val WHITE = RGB(255u).i
 		
-		private fun getColors(stack: ItemStack): TerritoryColors?{
+		private fun getColors(stack: ItemStack): TerritoryColors? {
 			return ModItems.PORTAL_TOKEN.getTerritoryType(stack)?.desc?.colors
 		}
 		
-		override fun getColor(stack: ItemStack, tintIndex: Int) = when(tintIndex){
-			1 -> getColors(stack)?.tokenTop?.i ?: WHITE
-			2 -> getColors(stack)?.tokenBottom?.i ?: WHITE
+		override fun getColor(stack: ItemStack, tintIndex: Int) = when(tintIndex) {
+			1    -> getColors(stack)?.tokenTop?.i ?: WHITE
+			2    -> getColors(stack)?.tokenBottom?.i ?: WHITE
 			else -> NO_TINT
 		}
 	}

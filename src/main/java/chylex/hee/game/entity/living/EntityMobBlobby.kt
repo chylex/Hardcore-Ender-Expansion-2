@@ -1,4 +1,5 @@
 package chylex.hee.game.entity.living
+
 import chylex.hee.game.entity.EntityData
 import chylex.hee.game.entity.living.ai.AIToggle
 import chylex.hee.game.entity.living.ai.AIToggle.Companion.addGoal
@@ -81,11 +82,11 @@ import net.minecraftforge.fml.network.NetworkHooks
 import java.util.Random
 import kotlin.math.abs
 
-class EntityMobBlobby(type: EntityType<out EntityCreature>, world: World) : EntityCreature(type, world){
+class EntityMobBlobby(type: EntityType<out EntityCreature>, world: World) : EntityCreature(type, world) {
 	@Suppress("unused")
 	constructor(world: World) : this(ModEntities.BLOBBY, world)
 	
-	companion object{
+	companion object {
 		private val DATA_SCALE = EntityData.register<EntityMobBlobby, Float>(DataSerializers.FLOAT)
 		private val DATA_COLOR = EntityData.register<EntityMobBlobby, IntColor>(ColorDataSerializer)
 		private val DATA_HELD_ITEM = EntityData.register<EntityMobBlobby, ItemStack>(DataSerializers.ITEMSTACK)
@@ -106,7 +107,7 @@ class EntityMobBlobby(type: EntityType<out EntityCreature>, world: World) : Enti
 		
 		private val MAX_JUMP_DELAY = Int.MAX_VALUE..Int.MAX_VALUE
 		
-		class SpawnGroupData(genRand: Random) : ILivingEntityData{
+		class SpawnGroupData(genRand: Random) : ILivingEntityData {
 			private val rngSeedBase = genRand.nextLong()
 			private val rngSeedOffset = genRand.nextInt(100, 10000)
 			
@@ -116,8 +117,8 @@ class EntityMobBlobby(type: EntityType<out EntityCreature>, world: World) : Enti
 			private val baseHealth = genRand.nextInt(1, 6).toFloat()
 			private val leaderHealth = baseHealth + genRand.nextInt(1, 2)
 			
-			private val scales = Array(subGroups){ genRand.nextFloat(0.55F, 1F) }.apply { sortDescending() }
-			private val hues = Array(subGroups){ genRand.nextFloat(0.0, 360.0) }
+			private val scales = Array(subGroups) { genRand.nextFloat(0.55F, 1F) }.apply { sortDescending() }
+			private val hues = Array(subGroups) { genRand.nextFloat(0.0, 360.0) }
 			
 			private val chroma = genRand.nextFloat(80F, 95F)
 			private val luminance = genRand.nextFloat(51F, 59F)
@@ -126,7 +127,7 @@ class EntityMobBlobby(type: EntityType<out EntityCreature>, world: World) : Enti
 			private val jumpSpeedMp = 1F + (0.025 + (genRand.nextGaussian() * 0.2)).coerceIn(-0.2, 0.3).toFloat()
 			private val jumpHeightMp = offsetTowards(jumpSpeedMp, 1F, 0.4F) + abs(genRand.nextGaussian() * 0.3).coerceAtMost(0.6).toFloat()
 			
-			fun setupLeader(blobby: EntityMobBlobby){
+			fun setupLeader(blobby: EntityMobBlobby) {
 				blobby.groupId = groupId
 				blobby.setLeaderStatusAndRefresh(true)
 				
@@ -195,7 +196,7 @@ class EntityMobBlobby(type: EntityType<out EntityCreature>, world: World) : Enti
 	
 	// Initialization
 	
-	init{
+	init {
 		moveController = EntityMoveJumping(this, ::getJumpDelay, degreeDiffBeforeMovement = 22.5)
 		lookController = EntityLookWhileJumping(this)
 		
@@ -203,14 +204,14 @@ class EntityMobBlobby(type: EntityType<out EntityCreature>, world: World) : Enti
 		setPathPriority(PathNodeType.WATER_BORDER, 4F)
 	}
 	
-	override fun registerData(){
+	override fun registerData() {
 		super.registerData()
 		dataManager.register(DATA_COLOR, RGB(255u))
 		dataManager.register(DATA_SCALE, 1F)
 		dataManager.register(DATA_HELD_ITEM, ItemStack.EMPTY)
 	}
 	
-	override fun registerAttributes(){
+	override fun registerAttributes() {
 		super.registerAttributes()
 		
 		getAttribute(MAX_HEALTH).baseValue = 8.0
@@ -221,7 +222,7 @@ class EntityMobBlobby(type: EntityType<out EntityCreature>, world: World) : Enti
 		experienceValue = 1
 	}
 	
-	fun setMaxHealth(maxHealth: Float, resetCurrentHealth: Boolean){
+	fun setMaxHealth(maxHealth: Float, resetCurrentHealth: Boolean) {
 		getAttribute(MAX_HEALTH).baseValue = maxHealth.toDouble()
 		
 		health = if (resetCurrentHealth)
@@ -230,7 +231,7 @@ class EntityMobBlobby(type: EntityType<out EntityCreature>, world: World) : Enti
 			health.coerceAtMost(maxHealth)
 	}
 	
-	override fun registerGoals(){
+	override fun registerGoals() {
 		aiLeaderEnabledToggle = AIToggle()
 		aiLeaderEnabledToggle.enabled = false
 		
@@ -247,19 +248,19 @@ class EntityMobBlobby(type: EntityType<out EntityCreature>, world: World) : Enti
 		goalSelector.addGoal(5, WatchIdleJumping(this, chancePerTick = 0.07F, delayTicks = 13))
 	}
 	
-	override fun createSpawnPacket(): IPacket<*>{
+	override fun createSpawnPacket(): IPacket<*> {
 		return NetworkHooks.getEntitySpawningPacket(this)
 	}
 	
 	// Leadership
 	
-	private fun setLeaderStatusAndRefresh(isLeader: Boolean){
+	private fun setLeaderStatusAndRefresh(isLeader: Boolean) {
 		isGroupLeader = isLeader
 		aiLeaderEnabledToggle.enabled = isLeader
 		aiLeaderDisabledToggle.enabled = !isLeader
 	}
 	
-	private fun recreateGroup(){
+	private fun recreateGroup() {
 		val originalGroup = world
 			.selectExistingEntities
 			.inRange<EntityMobBlobby>(posVec, getAttribute(FOLLOW_RANGE).value)
@@ -267,20 +268,20 @@ class EntityMobBlobby(type: EntityType<out EntityCreature>, world: World) : Enti
 			.ifEmpty { listOf(this) }
 		
 		val newGroupLimit = rand.nextInt(1, rand.nextInt(1, originalGroup.size))
-		val newGroups = Array(newGroupLimit){ mutableListOf<EntityMobBlobby>() }
+		val newGroups = Array(newGroupLimit) { mutableListOf<EntityMobBlobby>() }
 		
-		for(peer in originalGroup){
+		for(peer in originalGroup) {
 			rand.nextItem(newGroups).add(peer)
 		}
 		
-		for(group in newGroups){
-			if (group.isEmpty()){
+		for(group in newGroups) {
+			if (group.isEmpty()) {
 				continue
 			}
 			
 			val newId = rand.nextLong()
 			
-			for(blobby in group){
+			for(blobby in group) {
 				blobby.groupId = newId
 			}
 			
@@ -288,7 +289,7 @@ class EntityMobBlobby(type: EntityType<out EntityCreature>, world: World) : Enti
 		}
 	}
 	
-	fun findLeader(): EntityMobBlobby?{
+	fun findLeader(): EntityMobBlobby? {
 		val maxDist = getAttribute(FOLLOW_RANGE).value
 		val checkArea = boundingBox.grow(maxDist, maxDist * 0.5, maxDist)
 		
@@ -297,28 +298,28 @@ class EntityMobBlobby(type: EntityType<out EntityCreature>, world: World) : Enti
 	
 	// Behavior
 	
-	override fun livingTick(){
+	override fun livingTick() {
 		super.livingTick()
 		
-		if (world.isRemote){
-			if (wasOnGround && !onGround){
+		if (world.isRemote) {
+			if (wasOnGround && !onGround) {
 				squishTarget = 0.175F
 			}
-			else if (!wasOnGround && onGround){
+			else if (!wasOnGround && onGround) {
 				squishTarget = -0.15F
 			}
 			
 			renderSquishClient.update(offsetTowards(renderSquishClient.currentValue, squishTarget, 0.6F))
 			squishTarget *= 0.75F
 		}
-		else{
+		else {
 			itemPickupHandler.update()
 			
-			if (ticksExisted % 20 == 0 && heldItem.let { it.item is ItemSword || it.useAction == SPEAR }){
+			if (ticksExisted % 20 == 0 && heldItem.let { it.item is ItemSword || it.useAction == SPEAR }) {
 				val dangerousItemName = heldItem.item.registryName!!.toString()
 				
-				for(blobby in world.selectEntities.inRange<EntityMobBlobby>(posVec, 12.0)){
-					if (blobby === this || blobby.canEntityBeSeen(this)){
+				for(blobby in world.selectEntities.inRange<EntityMobBlobby>(posVec, 12.0)) {
+					if (blobby === this || blobby.canEntityBeSeen(this)) {
 						blobby.itemPickupHandler.banItem(dangerousItemName)
 					}
 				}
@@ -326,14 +327,14 @@ class EntityMobBlobby(type: EntityType<out EntityCreature>, world: World) : Enti
 				attackEntityFrom(DamageSource.GENERIC, 1F)
 			}
 			
-			if (ticksExisted % 10 == 0){
-				if (isGroupLeader){
+			if (ticksExisted % 10 == 0) {
+				if (isGroupLeader) {
 					idleTime = if (isFollowRangeAreaLoaded) 0 else 1000
 				}
-				else{
+				else {
 					idleTime = 0
 					
-					if (findLeader() == null && goalSelector.runningGoals.noneMatch { it.goal is AIWatchDyingLeader } && isFollowRangeAreaLoaded){
+					if (findLeader() == null && goalSelector.runningGoals.noneMatch { it.goal is AIWatchDyingLeader } && isFollowRangeAreaLoaded) {
 						recreateGroup()
 					}
 				}
@@ -343,8 +344,8 @@ class EntityMobBlobby(type: EntityType<out EntityCreature>, world: World) : Enti
 		wasOnGround = onGround
 	}
 	
-	override fun applyEntityCollision(other: Entity){
-		if (other is EntityMobBlobby){
+	override fun applyEntityCollision(other: Entity) {
+		if (other is EntityMobBlobby) {
 			isColliding = true
 			other.isColliding = true
 			
@@ -353,13 +354,13 @@ class EntityMobBlobby(type: EntityType<out EntityCreature>, world: World) : Enti
 			other.isColliding = false
 			isColliding = false
 		}
-		else{
+		else {
 			super.applyEntityCollision(other)
 		}
 	}
 	
-	override fun addVelocity(x: Double, y: Double, z: Double){
-		if (isColliding && isGroupLeader){
+	override fun addVelocity(x: Double, y: Double, z: Double) {
+		if (isColliding && isGroupLeader) {
 			return
 		}
 		
@@ -368,28 +369,28 @@ class EntityMobBlobby(type: EntityType<out EntityCreature>, world: World) : Enti
 	
 	// Movement
 	
-	override fun createNavigator(world: World): PathNavigator{
+	override fun createNavigator(world: World): PathNavigator {
 		return PathNavigateGroundPreferBeeLine(this, world, maxStuckTicks = 55, fallbackPathfindingResetTicks = 70..110)
 	}
 	
-	override fun createBodyController(): BodyController{
+	override fun createBodyController(): BodyController {
 		return EntityBodyHeadOnly(this)
 	}
 	
-	override fun setAIMoveSpeed(speed: Float){
+	override fun setAIMoveSpeed(speed: Float) {
 		super.setAIMoveSpeed(if (isInWater) speed * 1.175F else speed * jumpSpeedMp)
 	}
 	
-	override fun getHorizontalFaceSpeed(): Int{
+	override fun getHorizontalFaceSpeed(): Int {
 		return 15
 	}
 	
-	override fun getFaceRotSpeed(): Int{
+	override fun getFaceRotSpeed(): Int {
 		return 15
 	}
 	
-	private fun getJumpDelay(): Int{
-		val delayReduction = when{
+	private fun getJumpDelay(): Int {
+		val delayReduction = when {
 			isGroupLeader                           -> 0
 			itemPickupHandler.catchUpBonusTicks > 0 -> 9
 			else                                    -> 4
@@ -398,11 +399,11 @@ class EntityMobBlobby(type: EntityType<out EntityCreature>, world: World) : Enti
 		return (rand.nextInt(jumpDelay) - delayReduction).coerceAtLeast(5)
 	}
 	
-	override fun getJumpUpwardsMotion(): Float{
+	override fun getJumpUpwardsMotion(): Float {
 		return 0.42F * jumpHeightMp * super.getJumpUpwardsMotion()
 	}
 	
-	override fun jump(){
+	override fun jump() {
 		val baseMotion = jumpUpwardsMotion.toDouble()
 		val lookVec = Vec3.fromYaw(rotationYawHead)
 		
@@ -417,32 +418,32 @@ class EntityMobBlobby(type: EntityType<out EntityCreature>, world: World) : Enti
 	
 	// Death
 	
-	override fun dropInventory(){
+	override fun dropInventory() {
 		super.dropInventory()
 		
-		if (heldItem.isNotEmpty){
+		if (heldItem.isNotEmpty) {
 			entityDropItem(heldItem)
 		}
 	}
 	
 	// Spawning
 	
-	override fun onInitialSpawn(world: IWorld, difficulty: DifficultyInstance, reason: SpawnReason, data: ILivingEntityData?, nbt: CompoundNBT?): ILivingEntityData?{
+	override fun onInitialSpawn(world: IWorld, difficulty: DifficultyInstance, reason: SpawnReason, data: ILivingEntityData?, nbt: CompoundNBT?): ILivingEntityData? {
 		val rand = world.random
 		val wrld = world.world
 		val group = (data as? SpawnGroupData) ?: SpawnGroupData(rand)
 		
 		group.setupLeader(this)
 		
-		if (reason == SPAWN_EGG){
+		if (reason == SPAWN_EGG) {
 			val probableSpawningPlayer = world
 				.selectExistingEntities
 				.inRange<EntityPlayer>(posVec, 10.0)
 				.filter { it.getHeldItem(MAIN_HAND).item === ModItems.SPAWN_BLOBBY || it.getHeldItem(OFF_HAND).item === ModItems.SPAWN_BLOBBY }
 				.minByOrNull(::getDistanceSq)
 			
-			if (probableSpawningPlayer == null || !probableSpawningPlayer.isSneaking){
-				repeat(rand.nextInt(1, 7)){
+			if (probableSpawningPlayer == null || !probableSpawningPlayer.isSneaking) {
+				repeat(rand.nextInt(1, 7)) {
 					group.generateChild(wrld, it).apply {
 						copyLocationAndAnglesFrom(this@EntityMobBlobby)
 						posVec = posVec.add(rand.nextVector2(xz = 0.01, y = 0.0))
@@ -457,39 +458,39 @@ class EntityMobBlobby(type: EntityType<out EntityCreature>, world: World) : Enti
 	
 	// Despawning
 	
-	override fun checkDespawn(){}
+	override fun checkDespawn() {}
 	
 	// Properties
 	
-	override fun getLootTable(): ResourceLocation{
+	override fun getLootTable(): ResourceLocation {
 		return LOOT_TABLE
 	}
 	
-	override fun getExperiencePoints(player: EntityPlayer): Int{
+	override fun getExperiencePoints(player: EntityPlayer): Int {
 		return rand.nextInt(0, experienceValue)
 	}
 	
-	override fun getStandingEyeHeight(pose: Pose, size: EntitySize): Float{
+	override fun getStandingEyeHeight(pose: Pose, size: EntitySize): Float {
 		return size.height * 0.575F
 	}
 	
-	override fun getSoundVolume(): Float{
+	override fun getSoundVolume(): Float {
 		return 0.5F
 	}
 	
-	override fun getSoundPitch(): Float{
+	override fun getSoundPitch(): Float {
 		return 1.5F
 	}
 	
-	override fun getHurtSound(source: DamageSource): SoundEvent{
+	override fun getHurtSound(source: DamageSource): SoundEvent {
 		return Sounds.ENTITY_SLIME_HURT_SMALL
 	}
 	
-	override fun getDeathSound(): SoundEvent{
+	override fun getDeathSound(): SoundEvent {
 		return Sounds.ENTITY_SLIME_DEATH_SMALL
 	}
 	
-	override fun isInRangeToRenderDist(distanceSq: Double): Boolean{
+	override fun isInRangeToRenderDist(distanceSq: Double): Boolean {
 		return distanceSq < square(96.0)
 	}
 	

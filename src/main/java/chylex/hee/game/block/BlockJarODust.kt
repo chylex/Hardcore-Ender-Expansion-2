@@ -1,4 +1,5 @@
 package chylex.hee.game.block
+
 import chylex.hee.client.render.block.IBlockLayerTranslucent
 import chylex.hee.game.block.entity.TileEntityJarODust
 import chylex.hee.game.block.properties.BlockBuilder
@@ -46,42 +47,42 @@ import net.minecraft.world.World
 import net.minecraft.world.storage.loot.LootContext
 import net.minecraft.world.storage.loot.LootParameters
 
-class BlockJarODust(builder: BlockBuilder) : BlockSimpleShaped(builder, AABB), IBlockLayerTranslucent{
-	companion object{
+class BlockJarODust(builder: BlockBuilder) : BlockSimpleShaped(builder, AABB), IBlockLayerTranslucent {
+	companion object {
 		val AABB = AxisAlignedBB(0.1875, 0.0, 0.1875, 0.8125, 0.84375, 0.8125)
 	}
 	
-	override fun hasTileEntity(state: BlockState): Boolean{
+	override fun hasTileEntity(state: BlockState): Boolean {
 		return true
 	}
 	
-	override fun createTileEntity(state: BlockState, world: IBlockReader): TileEntity{
+	override fun createTileEntity(state: BlockState, world: IBlockReader): TileEntity {
 		return TileEntityJarODust()
 	}
 	
 	// ItemStack serialization
 	
-	fun getLayersFromStack(stack: ItemStack): DustLayers?{
+	fun getLayersFromStack(stack: ItemStack): DustLayers? {
 		return if (stack.item === this.asItem())
 			stack.heeTagOrNull?.getListOfCompounds(TileEntityJarODust.LAYERS_TAG)?.let { list -> DustLayers(TileEntityJarODust.DUST_CAPACITY).apply { deserializeNBT(list) } }
 		else
 			null
 	}
 	
-	fun setLayersInStack(stack: ItemStack, layers: DustLayers){
-		if (stack.item === this.asItem()){
+	fun setLayersInStack(stack: ItemStack, layers: DustLayers) {
+		if (stack.item === this.asItem()) {
 			stack.heeTag.putList(TileEntityJarODust.LAYERS_TAG, layers.serializeNBT())
 		}
 	}
 	
 	// Placement
 	
-	override fun isValidPosition(state: BlockState, world: IWorldReader, pos: BlockPos): Boolean{
+	override fun isValidPosition(state: BlockState, world: IWorldReader, pos: BlockPos): Boolean {
 		@Suppress("DEPRECATION")
 		return super.isValidPosition(state, world, pos) && pos.down().isTopSolid(world)
 	}
 	
-	override fun updatePostPlacement(state: BlockState, facing: Direction, neighborState: BlockState, world: IWorld, pos: BlockPos, neighborPos: BlockPos): BlockState{
+	override fun updatePostPlacement(state: BlockState, facing: Direction, neighborState: BlockState, world: IWorld, pos: BlockPos, neighborPos: BlockPos): BlockState {
 		@Suppress("DEPRECATION")
 		return if (facing == DOWN && !isValidPosition(state, world, pos))
 			Blocks.AIR.defaultState
@@ -89,21 +90,21 @@ class BlockJarODust(builder: BlockBuilder) : BlockSimpleShaped(builder, AABB), I
 			super.updatePostPlacement(state, facing, neighborState, world, pos, neighborPos)
 	}
 	
-	override fun onBlockPlacedBy(world: World, pos: BlockPos, state: BlockState, placer: EntityLivingBase?, stack: ItemStack){
+	override fun onBlockPlacedBy(world: World, pos: BlockPos, state: BlockState, placer: EntityLivingBase?, stack: ItemStack) {
 		val list = stack.heeTagOrNull?.getListOfCompounds(TileEntityJarODust.LAYERS_TAG)
 		
-		if (list != null){
+		if (list != null) {
 			pos.getTile<TileEntityJarODust>(world)?.layers?.deserializeNBT(list)
 		}
 	}
 	
 	// Drops
 	
-	private fun getDrop(tile: TileEntityJarODust): ItemStack?{
+	private fun getDrop(tile: TileEntityJarODust): ItemStack? {
 		return ItemStack(this).also { setLayersInStack(it, tile.layers) }
 	}
 	
-	override fun getDrops(state: BlockState, context: LootContext.Builder): MutableList<ItemStack>{
+	override fun getDrops(state: BlockState, context: LootContext.Builder): MutableList<ItemStack> {
 		val drop = (context.get(LootParameters.BLOCK_ENTITY) as? TileEntityJarODust)?.let(::getDrop)
 		
 		return if (drop != null)
@@ -112,19 +113,19 @@ class BlockJarODust(builder: BlockBuilder) : BlockSimpleShaped(builder, AABB), I
 			mutableListOf()
 	}
 	
-	override fun getPickBlock(state: BlockState, target: RayTraceResult, world: IBlockReader, pos: BlockPos, player: EntityPlayer): ItemStack{
+	override fun getPickBlock(state: BlockState, target: RayTraceResult, world: IBlockReader, pos: BlockPos, player: EntityPlayer): ItemStack {
 		return pos.getTile<TileEntityJarODust>(world)?.let(::getDrop) ?: ItemStack(this)
 	}
 	
-	override fun canDropFromExplosion(explosion: Explosion): Boolean{
+	override fun canDropFromExplosion(explosion: Explosion): Boolean {
 		return false
 	}
 	
-	override fun onBlockExploded(state: BlockState, world: World, pos: BlockPos, explosion: Explosion){
+	override fun onBlockExploded(state: BlockState, world: World, pos: BlockPos, explosion: Explosion) {
 		pos.getTile<TileEntityJarODust>(world)?.let {
 			val layers = it.layers
 			
-			repeat(layers.contents.size){
+			repeat(layers.contents.size) {
 				spawnAsEntity(world, pos, layers.removeDust(BOTTOM))
 			}
 		}
@@ -135,7 +136,7 @@ class BlockJarODust(builder: BlockBuilder) : BlockSimpleShaped(builder, AABB), I
 	
 	// Interaction
 	
-	override fun onBlockActivated(state: BlockState, world: World, pos: BlockPos, player: EntityPlayer, hand: Hand, hit: BlockRayTraceResult): ActionResultType{
+	override fun onBlockActivated(state: BlockState, world: World, pos: BlockPos, player: EntityPlayer, hand: Hand, hit: BlockRayTraceResult): ActionResultType {
 		val heldItem = player.getHeldItem(hand)
 		
 		val result = if (heldItem.isEmpty)
@@ -146,31 +147,31 @@ class BlockJarODust(builder: BlockBuilder) : BlockSimpleShaped(builder, AABB), I
 		return if (result) SUCCESS else PASS
 	}
 	
-	private fun tryExtractDust(world: World, pos: BlockPos, player: EntityPlayer, hand: Hand): Boolean{
-		if (world.isRemote){
+	private fun tryExtractDust(world: World, pos: BlockPos, player: EntityPlayer, hand: Hand): Boolean {
+		if (world.isRemote) {
 			return true
 		}
 		
 		val removed = pos.getTile<TileEntityJarODust>(world)?.layers?.removeDust(if (player.isSneaking) BOTTOM else TOP)
 		
-		if (removed != null){
+		if (removed != null) {
 			player.setHeldItem(hand, removed)
 		}
 		
 		return true
 	}
 	
-	private fun tryInsertDust(world: World, pos: BlockPos, player: EntityPlayer, stack: ItemStack): Boolean{
+	private fun tryInsertDust(world: World, pos: BlockPos, player: EntityPlayer, stack: ItemStack): Boolean {
 		val dustType = DustType.fromStack(stack) ?: return false
 		
-		if (world.isRemote){
+		if (world.isRemote) {
 			return true
 		}
 		
 		val tile = pos.getTile<TileEntityJarODust>(world) ?: return true
 		val added = tile.layers.addDust(dustType, stack.size)
 		
-		if (!player.isCreative){
+		if (!player.isCreative) {
 			stack.size -= added
 		}
 		
@@ -180,17 +181,17 @@ class BlockJarODust(builder: BlockBuilder) : BlockSimpleShaped(builder, AABB), I
 	// Client side
 	
 	@Sided(Side.CLIENT)
-	override fun addInformation(stack: ItemStack, world: IBlockReader?, lines: MutableList<ITextComponent>, flags: ITooltipFlag){
+	override fun addInformation(stack: ItemStack, world: IBlockReader?, lines: MutableList<ITextComponent>, flags: ITooltipFlag) {
 		val contents = getLayersFromStack(stack)?.contents
 		
-		if (contents != null){
+		if (contents != null) {
 			val entries = contents
 				.groupingBy { it.first }
-				.fold(0){ acc, entry -> acc + entry.second }
+				.fold(0) { acc, entry -> acc + entry.second }
 				.entries
 				.sortedWith(compareBy({ -it.value }, { it.key.key }))
 			
-			for((dustType, dustAmount) in entries){
+			for((dustType, dustAmount) in entries) {
 				lines.add(TranslationTextComponent("block.hee.jar_o_dust.tooltip.entry", dustAmount, TranslationTextComponent(dustType.item.translationKey)))
 			}
 		}

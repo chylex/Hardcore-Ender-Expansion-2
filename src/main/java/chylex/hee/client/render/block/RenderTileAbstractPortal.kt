@@ -1,4 +1,5 @@
 package chylex.hee.client.render.block
+
 import chylex.hee.client.MC
 import chylex.hee.client.render.gl.DF_ONE
 import chylex.hee.client.render.gl.DF_ONE_MINUS_SRC_ALPHA
@@ -39,20 +40,20 @@ import kotlin.math.sin
 import kotlin.math.sqrt
 
 @Sided(Side.CLIENT)
-abstract class RenderTileAbstractPortal<T : TileEntityPortalInner, C : IPortalController>(dispatcher: TileEntityRendererDispatcher) : TileEntityRenderer<T>(dispatcher){
-	private companion object{
+abstract class RenderTileAbstractPortal<T : TileEntityPortalInner, C : IPortalController>(dispatcher: TileEntityRendererDispatcher) : TileEntityRenderer<T>(dispatcher) {
+	private companion object {
 		private val TEX_BACKGROUND = Resource.Vanilla("textures/environment/end_sky.png")
 		private val TEX_PARTICLE_LAYER = Resource.Custom("textures/entity/portal.png")
 		
-		private val RENDER_TYPE_BACKGROUND = with(RenderStateBuilder()){
+		private val RENDER_TYPE_BACKGROUND = with(RenderStateBuilder()) {
 			tex(TEX_BACKGROUND)
 			fog(FOG_ENABLED)
 			blend(SF_SRC_ALPHA, DF_ONE_MINUS_SRC_ALPHA)
 			buildType("hee:portal_background_bottom", DefaultVertexFormats.POSITION_COLOR_TEX, GL11.GL_QUADS, bufferSize = 256)
 		}
 		
-		private val RENDER_TYPE_LAYER = Array(16){
-			with(RenderStateBuilder()){
+		private val RENDER_TYPE_LAYER = Array(16) {
+			with(RenderStateBuilder()) {
 				tex(TEX_PARTICLE_LAYER)
 				fog(FOG_ENABLED)
 				blend(SF_SRC_ALPHA, DF_ONE)
@@ -60,7 +61,7 @@ abstract class RenderTileAbstractPortal<T : TileEntityPortalInner, C : IPortalCo
 			}
 		}
 		
-		private fun getLayerCount(distSq: Double) = when{
+		private fun getLayerCount(distSq: Double) = when {
 			distSq > square(60) ->  5
 			distSq > square(48) ->  7
 			distSq > square(38) ->  9
@@ -76,7 +77,7 @@ abstract class RenderTileAbstractPortal<T : TileEntityPortalInner, C : IPortalCo
 	private var isAnimating = false
 	private var animationProgress = 0F
 	
-	private fun calculateEasing(layer: Int): Float{
+	private fun calculateEasing(layer: Int): Float {
 		return if (isAnimating)
 			(1.1F - square(animationProgress * 4.5F - 4.816F) + 22.1F * (1F - ((layer - 1F) / 14F).pow(1.2F))).coerceIn(0F, 1F).pow(1.5F)
 		else
@@ -95,21 +96,21 @@ abstract class RenderTileAbstractPortal<T : TileEntityPortalInner, C : IPortalCo
 	
 	// Rendering
 	
-	override fun render(tile: T, partialTicks: Float, matrix: MatrixStack, buffer: IRenderTypeBuffer, combinedLight: Int, combinedOverlay: Int){
+	override fun render(tile: T, partialTicks: Float, matrix: MatrixStack, buffer: IRenderTypeBuffer, combinedLight: Int, combinedOverlay: Int) {
 		val world = tile.world ?: return
 		val pos = tile.pos
 		val mat = matrix.last.matrix
 		
 		var dist = -1
 		
-		for(facing in Facing4){
-			val testPos = pos.offsetWhile(facing, 1 until BlockAbstractPortal.MAX_SIZE){ it.getTile<TileEntityPortalInner>(world) != null }
+		for(facing in Facing4) {
+			val testPos = pos.offsetWhile(facing, 1 until BlockAbstractPortal.MAX_SIZE) { it.getTile<TileEntityPortalInner>(world) != null }
 			val testDist = abs((testPos.x - pos.x) + (testPos.z - pos.z))
 			
-			if (dist == -1){
+			if (dist == -1) {
 				dist = testDist
 			}
-			else if (dist != testDist){
+			else if (dist != testDist) {
 				return
 			}
 		}
@@ -142,14 +143,14 @@ abstract class RenderTileAbstractPortal<T : TileEntityPortalInner, C : IPortalCo
 		val (x, y, z) = diff
 		val layerCount = getLayerCount((x * x) + (y * y) + (z * z))
 		
-		for(layer in 1..15){
+		for(layer in 1..15) {
 			val layerIndexRev = 16 - layer
 			val colorMultiplier = 1F / (layerIndexRev + 1F)
 			
 			controller?.let { generateNextColor(it, layer) }
 			transformColor { it * colorMultiplier * calculateEasing(layer) }
 			
-			if (layerIndexRev <= layerCount){
+			if (layerIndexRev <= layerCount) {
 				renderLayer(mat, buffer.getBuffer(RENDER_TYPE_LAYER[layer - 1]), layer, dist, diff)
 			}
 		}
@@ -159,13 +160,13 @@ abstract class RenderTileAbstractPortal<T : TileEntityPortalInner, C : IPortalCo
 	
 	// Utilities
 	
-	private inline fun transformColor(func: (Float) -> Float){
+	private inline fun transformColor(func: (Float) -> Float) {
 		color[0] = func(color[0])
 		color[1] = func(color[1])
 		color[2] = func(color[2])
 	}
 	
-	private fun renderBackgroundBottom(mat: Matrix4f, builder: IVertexBuilder, dist: Int){
+	private fun renderBackgroundBottom(mat: Matrix4f, builder: IVertexBuilder, dist: Int) {
 		val sizePT = 1F + dist
 		val sizeNT = -sizePT + 1F
 		val yB = 0.02F
@@ -177,7 +178,7 @@ abstract class RenderTileAbstractPortal<T : TileEntityPortalInner, C : IPortalCo
 		builder.pos(mat, sizePT, yB, sizeNT).color().tex(texW, 0F).endVertex()
 	}
 	
-	private fun renderBackgroundSides(mat: Matrix4f, builder: IVertexBuilder, dist: Int){
+	private fun renderBackgroundSides(mat: Matrix4f, builder: IVertexBuilder, dist: Int) {
 		val sizePT = 1F + dist
 		val sizePB = sizePT - 0.01F
 		val sizeNT = -sizePT + 1F
@@ -209,7 +210,7 @@ abstract class RenderTileAbstractPortal<T : TileEntityPortalInner, C : IPortalCo
 		builder.pos(mat, sizeNB, yB, sizeNB).color().tex(texW, 0F).endVertex()
 	}
 	
-	private fun renderLayer(mat: Matrix4f, builder: IVertexBuilder, layer: Int, dist: Int, diff: Vec3d){
+	private fun renderLayer(mat: Matrix4f, builder: IVertexBuilder, layer: Int, dist: Int, diff: Vec3d) {
 		val layerIndexRev = 16 - layer
 		val parallaxMp = (1F + abs(diff.y.toFloat() / 32F)).pow(0.12F)
 		
@@ -242,11 +243,11 @@ abstract class RenderTileAbstractPortal<T : TileEntityPortalInner, C : IPortalCo
 		builder.pos(mat, sizeP, yT, sizeN).color().tex(x2, y1, cx, cy, parallaxX, parallaxZ, rotCos, rotSin).endVertex()
 	}
 	
-	private fun IVertexBuilder.color(): IVertexBuilder{
+	private fun IVertexBuilder.color(): IVertexBuilder {
 		return this.color(color[0], color[1], color[2], 1F)
 	}
 	
-	private fun IVertexBuilder.tex(x: Float, y: Float, cx: Float, cy: Float, ox: Float, oy: Float, rotCos: Float, rotSin: Float): IVertexBuilder{
+	private fun IVertexBuilder.tex(x: Float, y: Float, cx: Float, cy: Float, ox: Float, oy: Float, rotCos: Float, rotSin: Float): IVertexBuilder {
 		return this.tex(
 			cx + (rotCos * (ox + x - cx)) - (rotSin * (oy + y - cy)),
 			cy + (rotSin * (ox + x - cx)) + (rotCos * (oy + y - cy))

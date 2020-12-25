@@ -1,4 +1,5 @@
 package chylex.hee.game.block
+
 import chylex.hee.game.block.fluid.FlowingFluid5
 import chylex.hee.game.block.fluid.FluidBase
 import chylex.hee.game.block.logic.BlockCollisionLimiter
@@ -26,9 +27,9 @@ import net.minecraft.world.World
 
 abstract class BlockAbstractGoo(
 	private val fluid: FluidBase,
-	material: Material
-) : BlockFlowingFluid(supply(fluid.still), Properties.create(material, fluid.mapColor).hardnessAndResistance(fluid.resistance).doesNotBlockMovement().noDrops()){
-	protected companion object{
+	material: Material,
+) : BlockFlowingFluid(supply(fluid.still), Properties.create(material, fluid.mapColor).hardnessAndResistance(fluid.resistance).doesNotBlockMovement().noDrops()) {
+	protected companion object {
 		private const val LAST_TIME_TAG = "Time"
 		private const val TOTAL_TICKS_TAG = "Ticks"
 	}
@@ -41,8 +42,8 @@ abstract class BlockAbstractGoo(
 	
 	// Behavior
 	
-	final override fun onEntityCollision(state: BlockState, world: World, pos: BlockPos, entity: Entity){
-		if (collisionLimiter.check(world, entity)){
+	final override fun onEntityCollision(state: BlockState, world: World, pos: BlockPos, entity: Entity) {
+		if (collisionLimiter.check(world, entity)) {
 			// handling from Entity.doBlockCollisions
 			val bb = entity.boundingBox
 			val posMin = Pos(bb.minX - 0.001, bb.minY - 0.001, bb.minZ - 0.001)
@@ -50,41 +51,41 @@ abstract class BlockAbstractGoo(
 			
 			var lowestLevel = Int.MAX_VALUE
 			
-			for(testPos in posMin.allInBoxMutable(posMax)){
+			for(testPos in posMin.allInBoxMutable(posMax)) {
 				val level = testPos.getState(world).takeIf { it.block === this }?.let { FlowingFluid5.stateToLevel(it) } ?: continue
 				
-				if (level < lowestLevel){
+				if (level < lowestLevel) {
 					lowestLevel = level
 				}
 			}
 			
-			if (lowestLevel != Int.MAX_VALUE){
-				if (!world.isRemote){
+			if (lowestLevel != Int.MAX_VALUE) {
+				if (!world.isRemote) {
 					onInsideGoo(entity)
 				}
 				
-				if (!(entity is EntityPlayer && entity.abilities.isFlying)){
+				if (!(entity is EntityPlayer && entity.abilities.isFlying)) {
 					modifyMotion(entity, lowestLevel)
 				}
 			}
 		}
 	}
 	
-	protected fun trackTick(entity: Entity, maxTicks: Int): Int{
+	protected fun trackTick(entity: Entity, maxTicks: Int): Int {
 		val world = entity.world
 		val currentWorldTime = world.totalTime
 		
-		with(entity.heeTag.getOrCreateCompound(tickTrackingKey)){
+		with(entity.heeTag.getOrCreateCompound(tickTrackingKey)) {
 			val lastWorldTime = getLongOrNull(LAST_TIME_TAG) ?: (currentWorldTime - 1)
 			var totalTicks = getInt(TOTAL_TICKS_TAG)
 			
 			val ticksSinceLastUpdate = currentWorldTime - lastWorldTime
 			
-			if (ticksSinceLastUpdate > 1L){
+			if (ticksSinceLastUpdate > 1L) {
 				totalTicks = (totalTicks - (ticksSinceLastUpdate / 2).toInt()).coerceAtLeast(0)
 			}
 			
-			if (totalTicks < maxTicks && world.rand.nextInt(10) != 0){
+			if (totalTicks < maxTicks && world.rand.nextInt(10) != 0) {
 				++totalTicks
 			}
 			
@@ -98,12 +99,12 @@ abstract class BlockAbstractGoo(
 	abstract fun onInsideGoo(entity: Entity)
 	abstract fun modifyMotion(entity: Entity, level: Int)
 	
-	override fun getMaterialColor(state: BlockState, world: IBlockReader, pos: BlockPos): MaterialColor{
+	override fun getMaterialColor(state: BlockState, world: IBlockReader, pos: BlockPos): MaterialColor {
 		return fluid.mapColor
 	}
 	
 	@Sided(Side.CLIENT)
-	override fun getFogColor(state: BlockState, world: IWorldReader, pos: BlockPos, entity: Entity, originalColor: Vec3d, partialTicks: Float): Vec3d{
+	override fun getFogColor(state: BlockState, world: IWorldReader, pos: BlockPos, entity: Entity, originalColor: Vec3d, partialTicks: Float): Vec3d {
 		return fluid.fogColor
 	}
 }

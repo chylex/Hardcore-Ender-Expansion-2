@@ -1,6 +1,6 @@
 package chylex.hee.game.particle
 
-enum class ParticleSetting{
+enum class ParticleSetting {
 	ALL,
 	DECREASED,
 	MINIMAL

@@ -1,4 +1,5 @@
 package chylex.hee.game.block
+
 import chylex.hee.game.block.properties.BlockBuilder
 import chylex.hee.game.block.properties.Property
 import chylex.hee.game.world.getBlock
@@ -14,26 +15,26 @@ import net.minecraft.util.math.BlockPos
 import net.minecraft.world.IBlockReader
 import net.minecraft.world.IWorld
 
-class BlockExperienceGateOutline(builder: BlockBuilder) : BlockExperienceGate(builder){
-	companion object{
+class BlockExperienceGateOutline(builder: BlockBuilder) : BlockExperienceGate(builder) {
+	companion object {
 		val NEIGHBOR_NORTH = Property.bool("neighbor_north")
 		val NEIGHBOR_WEST = Property.bool("neighbor_west")
 		val IS_STRAIGHT = Property.bool("is_straight")
 	}
 	
-	init{
+	init {
 		defaultState = stateContainer.baseState.with(NEIGHBOR_NORTH, false).with(NEIGHBOR_WEST, false).with(IS_STRAIGHT, false)
 	}
 	
-	override fun fillStateContainer(container: Builder<Block, BlockState>){
+	override fun fillStateContainer(container: Builder<Block, BlockState>) {
 		container.add(NEIGHBOR_NORTH, NEIGHBOR_WEST, IS_STRAIGHT)
 	}
 	
-	private fun checkSide(world: IBlockReader, pos: BlockPos, facing: Direction): Boolean{
+	private fun checkSide(world: IBlockReader, pos: BlockPos, facing: Direction): Boolean {
 		return pos.offset(facing).getBlock(world) === this
 	}
 	
-	override fun updatePostPlacement(state: BlockState, facing: Direction, neighborState: BlockState, world: IWorld, pos: BlockPos, neighborPos: BlockPos): BlockState{
+	override fun updatePostPlacement(state: BlockState, facing: Direction, neighborState: BlockState, world: IWorld, pos: BlockPos, neighborPos: BlockPos): BlockState {
 		val north = checkSide(world, pos, NORTH)
 		val west = checkSide(world, pos, WEST)
 		

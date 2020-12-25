@@ -1,4 +1,5 @@
 package chylex.hee.game.mechanics.causatum.events
+
 import chylex.hee.game.entity.SerializedEntity
 import chylex.hee.game.entity.Teleporter.Companion.FxTeleportData
 import chylex.hee.game.entity.living.EntityMobEnderman
@@ -34,8 +35,8 @@ import chylex.hee.system.serialization.use
 import net.minecraft.util.math.Vec3d
 import net.minecraft.world.World
 
-class CausatumEventEndermanKill() : ICausatumEventHandler{
-	private companion object{
+class CausatumEventEndermanKill() : ICausatumEventHandler {
+	private companion object {
 		private const val ENDERMAN_X_TAG = "EndermanX"
 		private const val ENDERMAN_Y_TAG = "EndermanY"
 		private const val ENDERMAN_Z_TAG = "EndermanZ"
@@ -47,7 +48,7 @@ class CausatumEventEndermanKill() : ICausatumEventHandler{
 		private const val DESPAWN_START_TIME = 270
 	}
 	
-	constructor(enderman: EntityMobEnderman, killer: EntityPlayer) : this(){
+	constructor(enderman: EntityMobEnderman, killer: EntityPlayer) : this() {
 		this.deathPos = enderman.posVec
 		this.killer.set(killer)
 	}
@@ -57,14 +58,14 @@ class CausatumEventEndermanKill() : ICausatumEventHandler{
 	private val killer = SerializedEntity()
 	private val muppets = mutableListOf<SerializedEntity>()
 	
-	override fun update(entity: EntityTechnicalCausatumEvent){
+	override fun update(entity: EntityTechnicalCausatumEvent) {
 		++timer
 		
 		val world = entity.world
 		val rand = world.rand
 		
-		if (timer == DESPAWN_START_TIME + 120){
-			for(muppet in muppets){
+		if (timer == DESPAWN_START_TIME + 120) {
+			for(muppet in muppets) {
 				despawn(world, muppet)
 			}
 			
@@ -72,11 +73,11 @@ class CausatumEventEndermanKill() : ICausatumEventHandler{
 			return
 		}
 		
-		if (timer == DESPAWN_START_TIME || (timer > DESPAWN_START_TIME + 10 && timer % 3 == 0 && rand.nextInt(5) <= 2)){
-			repeat(rand.nextInt(1, rand.nextInt(2, 3))){
+		if (timer == DESPAWN_START_TIME || (timer > DESPAWN_START_TIME + 10 && timer % 3 == 0 && rand.nextInt(5) <= 2)) {
+			repeat(rand.nextInt(1, rand.nextInt(2, 3))) {
 				val muppet = rand.removeItemOrNull(muppets)
 				
-				if (muppet == null){
+				if (muppet == null) {
 					entity.remove()
 					return
 				}
@@ -85,8 +86,8 @@ class CausatumEventEndermanKill() : ICausatumEventHandler{
 			}
 		}
 		
-		if (timer in 30..145 && timer % 5 == 0 && muppets.size < rand.nextInt(16, 28)){
-			repeat(rand.nextInt(1, rand.nextInt(1, 2))){
+		if (timer in 30..145 && timer % 5 == 0 && muppets.size < rand.nextInt(16, 28)) {
+			repeat(rand.nextInt(1, rand.nextInt(1, 2))) {
 				spawn(world)?.let(muppets::add)
 			}
 		}
@@ -94,11 +95,11 @@ class CausatumEventEndermanKill() : ICausatumEventHandler{
 		val (lookX, lookY, lookZ) = getLookPos(world)
 		
 		muppets.removeAll {
-			with(it.get(world) as? EntityMobEndermanMuppet ?: return@removeAll true){
+			with(it.get(world) as? EntityMobEndermanMuppet ?: return@removeAll true) {
 				lookController.setLookPosition(lookX, lookY, lookZ)
 				
-				if (lastDamageSource?.trueSource is EntityPlayer || world.getClosestPlayer(this, 2.0) != null){
-					if (timer < DESPAWN_START_TIME){
+				if (lastDamageSource?.trueSource is EntityPlayer || world.getClosestPlayer(this, 2.0) != null) {
+					if (timer < DESPAWN_START_TIME) {
 						timer = DESPAWN_START_TIME
 					}
 					
@@ -111,24 +112,24 @@ class CausatumEventEndermanKill() : ICausatumEventHandler{
 		}
 	}
 	
-	private fun spawn(world: World): SerializedEntity?{
+	private fun spawn(world: World): SerializedEntity? {
 		val rand = world.rand
 		val muppet = EntityMobEndermanMuppet(world, FIRST_KILL)
 		
 		val killerLookDir = killer.get(world)?.lookDirVec?.scale(3.0) ?: Vec3.ZERO
 		
-		for(attempt in 1..1000){
+		for(attempt in 1..1000) {
 			val testVec = deathPos.add(killerLookDir).add(rand.nextVector2(xz = rand.nextFloat(5.0, 11.0), y = 0.0))
-			val testY = Pos(testVec).offsetUntil(DOWN, -4..7){ it.blocksMovement(world) }
+			val testY = Pos(testVec).offsetUntil(DOWN, -4..7) { it.blocksMovement(world) }
 			
-			if (testY != null){
+			if (testY != null) {
 				muppet.setPosition(testVec.x, testY.y + 1.01, testVec.z)
 				
 				if (muppet.getDistanceSq(deathPos.x, deathPos.y, deathPos.z) > square(4.0) &&
-					world.getClosestPlayer(muppet, 7.0) == null &&
-					world.hasNoCollisions(muppet) &&
-					muppet.isNotColliding(world)
-				){
+				    world.getClosestPlayer(muppet, 7.0) == null &&
+				    world.hasNoCollisions(muppet) &&
+				    muppet.isNotColliding(world)
+				) {
 					val endPoint = muppet.posVec.addY(muppet.height * 0.5)
 					val startPoint = endPoint.addY(64.0)
 					
@@ -136,7 +137,7 @@ class CausatumEventEndermanKill() : ICausatumEventHandler{
 					
 					val (lookX, lookY, lookZ) = getLookPos(world)
 					
-					with(muppet){
+					with(muppet) {
 						lookController.setLookPosition(lookX, lookY, lookZ, 360F, 180F)
 						lookController.tick()
 						
@@ -154,11 +155,11 @@ class CausatumEventEndermanKill() : ICausatumEventHandler{
 		return null
 	}
 	
-	private fun despawn(world: World, muppet: SerializedEntity){
+	private fun despawn(world: World, muppet: SerializedEntity) {
 		(muppet.get(world) as? EntityMobEndermanMuppet)?.despawnOutOfWorld()
 	}
 	
-	private fun getLookPos(world: World): Vec3d{
+	private fun getLookPos(world: World): Vec3d {
 		return killer.get(world)?.lookPosVec ?: deathPos
 	}
 	

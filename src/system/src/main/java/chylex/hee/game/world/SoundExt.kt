@@ -1,4 +1,5 @@
 package chylex.hee.game.world
+
 import chylex.hee.HEE
 import chylex.hee.system.migration.EntityPlayer
 import chylex.hee.system.migration.EntityPlayerMP
@@ -11,7 +12,7 @@ import net.minecraft.world.World
 
 // Client
 
-fun SoundEvent.playClient(x: Double, y: Double, z: Double, category: SoundCategory, volume: Float = 1F, pitch: Float = 1F, distanceDelay: Boolean = false){
+fun SoundEvent.playClient(x: Double, y: Double, z: Double, category: SoundCategory, volume: Float = 1F, pitch: Float = 1F, distanceDelay: Boolean = false) {
 	HEE.proxy.getClientSidePlayer()?.world?.playSound(x, y, z, this, category, volume, pitch, distanceDelay)
 }
 
@@ -23,7 +24,7 @@ fun SoundEvent.playClient(pos: Vec3i, category: SoundCategory, volume: Float = 1
 
 // Server (Auto)
 
-fun SoundEvent.playServer(world: World, x: Double, y: Double, z: Double, category: SoundCategory, volume: Float = 1F, pitch: Float = 1F){
+fun SoundEvent.playServer(world: World, x: Double, y: Double, z: Double, category: SoundCategory, volume: Float = 1F, pitch: Float = 1F) {
 	world.playSound(null, x, y, z, this, category, volume, pitch)
 }
 
@@ -35,13 +36,13 @@ fun SoundEvent.playServer(world: World, pos: Vec3i, category: SoundCategory, vol
 
 // Server (Concrete)
 
-fun SoundEvent.playPlayer(player: EntityPlayer, x: Double, y: Double, z: Double, category: SoundCategory, volume: Float = 1F, pitch: Float = 1F){
+fun SoundEvent.playPlayer(player: EntityPlayer, x: Double, y: Double, z: Double, category: SoundCategory, volume: Float = 1F, pitch: Float = 1F) {
 	(player as EntityPlayerMP).connection.sendPacket(SPlaySoundEffectPacket(this, category, x, y, z, volume, pitch))
 }
 
 // Universal (client plays the sound, server sends packets to all clients but the specified player)
 
-fun SoundEvent.playUniversal(clientPlayer: EntityPlayer, x: Double, y: Double, z: Double, category: SoundCategory, volume: Float = 1F, pitch: Float = 1F){
+fun SoundEvent.playUniversal(clientPlayer: EntityPlayer, x: Double, y: Double, z: Double, category: SoundCategory, volume: Float = 1F, pitch: Float = 1F) {
 	clientPlayer.world.playSound(clientPlayer, x, y, z, this, category, volume, pitch)
 }
 

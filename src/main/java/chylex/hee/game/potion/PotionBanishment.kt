@@ -1,4 +1,5 @@
 package chylex.hee.game.potion
+
 import chylex.hee.HEE
 import chylex.hee.game.entity.CustomCreatureType
 import chylex.hee.game.entity.living.EntityBossEnderEye
@@ -52,11 +53,11 @@ import kotlin.math.max
 import kotlin.math.pow
 
 @SubscribeAllEvents(modid = HEE.ID)
-object PotionBanishment : Potion(BENEFICIAL, RGB(253, 253, 253).i){
+object PotionBanishment : Potion(BENEFICIAL, RGB(253, 253, 253).i) {
 	private val DAMAGE_BANISH = Damage(FIRE_TYPE(Int.MAX_VALUE), IGNORE_INVINCIBILITY())
 	
-	val FX_BANISH = object : FxEntityHandler(){
-		override fun handle(entity: Entity, rand: Random){
+	val FX_BANISH = object : FxEntityHandler() {
+		override fun handle(entity: Entity, rand: Random) {
 			val pos = InBox(entity, 0.1F)
 			val mot = Gaussian(0.03F)
 			val size = entity.width * entity.height
@@ -80,7 +81,7 @@ object PotionBanishment : Potion(BENEFICIAL, RGB(253, 253, 253).i){
 	val TYPE
 		get() = PotionTypeMap.getType(this)
 	
-	enum class EntityKind{
+	enum class EntityKind {
 		DEMON_EYE,
 		ENDERDEMON,
 		GENERIC_DEMON,
@@ -90,8 +91,8 @@ object PotionBanishment : Potion(BENEFICIAL, RGB(253, 253, 253).i){
 		NONE
 	}
 	
-	fun determineEntityKind(entity: EntityLivingBase): EntityKind{
-		return when{
+	fun determineEntityKind(entity: EntityLivingBase): EntityKind {
+		return when {
 			entity is EntityBossEnderEye && entity.isDemonEye -> DEMON_EYE
 			CustomCreatureType.isDemon(entity)                -> GENERIC_DEMON
 			CustomCreatureType.isShadow(entity)               -> GENERIC_SHADOW
@@ -101,80 +102,80 @@ object PotionBanishment : Potion(BENEFICIAL, RGB(253, 253, 253).i){
 		}
 	}
 	
-	private fun banish(entity: EntityLivingBase, damageEvent: LivingDamageEvent?){
+	private fun banish(entity: EntityLivingBase, damageEvent: LivingDamageEvent?) {
 		val source = damageEvent?.source?.trueSource
 		val kind = determineEntityKind(entity)
 		
-		if (kind == DEMON_EYE){
+		if (kind == DEMON_EYE) {
 			// handled in EntityBossEnderEye
 		}
-		else if (kind == ENDERDEMON){
+		else if (kind == ENDERDEMON) {
 			// TODO
 		}
-		else if (kind == GENERIC_DEMON){
+		else if (kind == GENERIC_DEMON) {
 			damageEvent?.let { it.amount *= 2F }
 		}
-		else if (kind == GENERIC_SHADOW){
-			if (entity.isNonBoss){
+		else if (kind == GENERIC_SHADOW) {
+			if (entity.isNonBoss) {
 				PacketClientFX(FX_BANISH, FxEntityData(entity)).sendToAllAround(entity, 24.0)
 				entity.remove()
 				
 				val instantLaunch = mutableListOf<EntityPlayer>()
 				
-				for(nearby in entity.world.selectExistingEntities.allInRange(entity.posVec, 6.0)){
-					if (nearby is EntityLivingBase){
+				for(nearby in entity.world.selectExistingEntities.allInRange(entity.posVec, 6.0)) {
+					if (nearby is EntityLivingBase) {
 						val (prevX, prevY, prevZ) = nearby.motion
 						nearby.knockBack(entity, 1.25F, entity.posX - nearby.posX, entity.posZ - nearby.posZ)
 						val (newX, newY, newZ) = nearby.motion
 						
 						nearby.motion = Vec(prevX * 0.1 + newX, max(prevY, newY + 0.1), prevZ * 0.1 + newZ)
 						
-						if (nearby is EntityPlayer){
+						if (nearby is EntityPlayer) {
 							instantLaunch.add(nearby)
 						}
 					}
-					else if (nearby is EntityItem){
+					else if (nearby is EntityItem) {
 						entity.posVec.subtract(nearby.posVec).normalize().let { nearby.addVelocity(it.x, it.y, it.z) }
 					}
 				}
 				
 				instantLaunch.forEach { PacketClientLaunchInstantly(it, it.motion).sendToPlayer(it) }
 			}
-			else{
+			else {
 				// TODO
 			}
 		}
-		else if (kind == ZOMBIE_VILLAGER){
+		else if (kind == ZOMBIE_VILLAGER) {
 			(entity as? EntityZombieVillager)?.startConverting(source?.uniqueID, 1)
 		}
-		else if (kind == GENERIC_UNDEAD){
+		else if (kind == GENERIC_UNDEAD) {
 			entity.removePotionEffect(Potions.FIRE_RESISTANCE)
 			entity.fire = Int.MAX_VALUE
 			
 			val damage = (entity.maxHealth * 0.5F).coerceAtMost(20F)
 			
-			if (damageEvent == null){
+			if (damageEvent == null) {
 				DAMAGE_BANISH.dealTo(damage, entity)
 			}
-			else{
+			else {
 				damageEvent.amount = max(damageEvent.amount, damage)
 			}
 		}
 	}
 	
-	fun canBanish(entity: EntityLivingBase, source: DamageSource): Boolean{
+	fun canBanish(entity: EntityLivingBase, source: DamageSource): Boolean {
 		val attacker = source.trueSource
 		return attacker is EntityPlayer && (entity.isPotionActive(this) || attacker.isPotionActive(this))
 	}
 	
 	@SubscribeEvent(priority = EventPriority.LOW)
-	fun onLivingDamage(e: LivingDamageEvent){
-		if (canBanish(e.entityLiving, e.source)){
+	fun onLivingDamage(e: LivingDamageEvent) {
+		if (canBanish(e.entityLiving, e.source)) {
 			banish(e.entityLiving, e)
 		}
 	}
 	
-	override fun applyAttributesModifiersToEntity(entity: EntityLivingBase, attributes: AbstractAttributeMap, amplifier: Int){
+	override fun applyAttributesModifiersToEntity(entity: EntityLivingBase, attributes: AbstractAttributeMap, amplifier: Int) {
 		super.applyAttributesModifiersToEntity(entity, attributes, amplifier)
 		banish(entity, null)
 	}

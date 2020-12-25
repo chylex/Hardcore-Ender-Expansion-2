@@ -1,4 +1,5 @@
 package chylex.hee.game.world.feature.energyshrine.piece
+
 import chylex.hee.game.block.withFacing
 import chylex.hee.game.world.Pos
 import chylex.hee.game.world.feature.energyshrine.connection.EnergyShrineConnection
@@ -14,7 +15,7 @@ import chylex.hee.system.migration.Facing.NORTH
 import chylex.hee.system.migration.Facing.SOUTH
 import chylex.hee.system.migration.Facing.WEST
 
-class EnergyShrineCorridor_StraightLit(length: Int) : EnergyShrineAbstractPiece(){
+class EnergyShrineCorridor_StraightLit(length: Int) : EnergyShrineAbstractPiece() {
 	override val size = Size(6, 6, length)
 	
 	override val connections = arrayOf<IStructurePieceConnection>(
@@ -25,7 +26,7 @@ class EnergyShrineCorridor_StraightLit(length: Int) : EnergyShrineAbstractPiece(
 	override val ceilingBlock
 		get() = ModBlocks.GLOOMROCK_BRICKS
 	
-	override fun generate(world: IStructureWorld, instance: Instance){
+	override fun generate(world: IStructureWorld, instance: Instance) {
 		super.generate(world, instance)
 		world.placeCube(Pos(2, 1, 1), Pos(size.maxX - 2, size.maxY - 2, size.maxZ - 1), Air)
 		

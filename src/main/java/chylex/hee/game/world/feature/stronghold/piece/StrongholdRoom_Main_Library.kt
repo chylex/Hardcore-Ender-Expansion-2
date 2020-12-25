@@ -1,4 +1,5 @@
 package chylex.hee.game.world.feature.stronghold.piece
+
 import chylex.hee.game.block.withFacing
 import chylex.hee.game.world.Pos
 import chylex.hee.game.world.feature.stronghold.StrongholdPieceType
@@ -19,7 +20,7 @@ import chylex.hee.system.migration.Facing.WEST
 import chylex.hee.system.random.nextItem
 import net.minecraft.block.Blocks
 
-class StrongholdRoom_Main_Library(file: String) : StrongholdAbstractPieceFromFile(file, StrongholdPieceType.ROOM){
+class StrongholdRoom_Main_Library(file: String) : StrongholdAbstractPieceFromFile(file, StrongholdPieceType.ROOM) {
 	override val extraWeightMultiplier = 4
 	
 	override val connections = arrayOf<IStructurePieceConnection>(
@@ -31,7 +32,7 @@ class StrongholdRoom_Main_Library(file: String) : StrongholdAbstractPieceFromFil
 		StrongholdConnection(ROOM, Pos(0, 11, centerZ), WEST)
 	)
 	
-	override fun generate(world: IStructureWorld, instance: Instance){
+	override fun generate(world: IStructureWorld, instance: Instance) {
 		super.generate(world, instance)
 		
 		placeFirstFloorDecorations(world)
@@ -39,7 +40,7 @@ class StrongholdRoom_Main_Library(file: String) : StrongholdAbstractPieceFromFil
 		placeThirdFloorDecorations(world)
 	}
 	
-	private fun placeFirstFloorDecorations(world: IStructureWorld){
+	private fun placeFirstFloorDecorations(world: IStructureWorld) {
 		val rand = world.rand
 		val chestPosition = rand.nextItem<FirstFloorChestPosition>()
 		
@@ -48,17 +49,17 @@ class StrongholdRoom_Main_Library(file: String) : StrongholdAbstractPieceFromFil
 		val centerFillHoles = rand.nextBoolean()
 		val centerExtraBookshelves = rand.nextBoolean()
 		
-		if (centerFillHoles || centerExtraBookshelves){
-			for(facing in Facing4){
-				if (centerFillHoles){
+		if (centerFillHoles || centerExtraBookshelves) {
+			for(facing in Facing4) {
+				if (centerFillHoles) {
 					world.setBlock(Pos(centerX, 2, centerZ).offset(facing), Blocks.BOOKSHELF)
 				}
 				
-				if (centerExtraBookshelves){
+				if (centerExtraBookshelves) {
 					val bookshelfPos = Pos(centerX, 1, centerZ).offset(facing).offset(facing.rotateY())
 					world.setBlock(bookshelfPos, Blocks.BOOKSHELF)
 					
-					if (centerFillHoles){
+					if (centerFillHoles) {
 						world.setBlock(bookshelfPos.up(), Blocks.SPRUCE_SLAB)
 					}
 				}
@@ -67,15 +68,15 @@ class StrongholdRoom_Main_Library(file: String) : StrongholdAbstractPieceFromFil
 		
 		// Group table
 		
-		for(x in 5..6) for(z in 5..6){
-			if (rand.nextInt(4) == 0){
+		for(x in 5..6) for(z in 5..6) {
+			if (rand.nextInt(4) == 0) {
 				world.setBlock(Pos(centerX + x, 2, centerZ + z), Blocks.FLOWER_POT)
 			}
 		}
 		
 		// Work table
 		
-		if (chestPosition == WORK_TABLE){
+		if (chestPosition == WORK_TABLE) {
 			val chestPos = Pos(centerX + 6, 2, centerZ - 8)
 			
 			world.setState(chestPos, Blocks.CHEST.withFacing(SOUTH))
@@ -91,7 +92,7 @@ class StrongholdRoom_Main_Library(file: String) : StrongholdAbstractPieceFromFil
 		
 		// Bookshelf section
 		
-		if (chestPosition == INSIDE_BOOKSHELVES){
+		if (chestPosition == INSIDE_BOOKSHELVES) {
 			val chestPos = Pos(centerX - 8, 4, centerZ - 6)
 			
 			world.setState(chestPos, Blocks.CHEST.withFacing(NORTH))
@@ -99,26 +100,26 @@ class StrongholdRoom_Main_Library(file: String) : StrongholdAbstractPieceFromFil
 		}
 	}
 	
-	private fun placeSecondFloorDecorations(world: IStructureWorld){
+	private fun placeSecondFloorDecorations(world: IStructureWorld) {
 		val rand = world.rand
 		
 		// Center
 		
-		if (rand.nextBoolean()){
-			for(facing in Facing4){
+		if (rand.nextBoolean()) {
+			for(facing in Facing4) {
 				world.setBlock(Pos(centerX, 8, centerZ).offset(facing), Blocks.BOOKSHELF)
 			}
 		}
 		
 		// Entrances
 		
-		for(facing in arrayOf(NORTH, SOUTH)){
-			if (rand.nextBoolean()){
-				for(xMp in intArrayOf(-1, 1)){
+		for(facing in arrayOf(NORTH, SOUTH)) {
+			if (rand.nextBoolean()) {
+				for(xMp in intArrayOf(-1, 1)) {
 					for(pos in arrayOf(
 						Pos(centerX + (xMp * 2), 7, centerZ + (5 * facing.zOffset)),
 						Pos(centerX + (xMp * 4), 7, centerZ + (3 * facing.zOffset))
-					)){
+					)) {
 						world.setBlock(pos, Blocks.BOOKSHELF)
 						world.setBlock(pos.up(), Blocks.SPRUCE_SLAB)
 					}
@@ -126,15 +127,15 @@ class StrongholdRoom_Main_Library(file: String) : StrongholdAbstractPieceFromFil
 					for(pos in arrayOf(
 						Pos(centerX + (xMp * 2), 7, centerZ + (4 * facing.zOffset)),
 						Pos(centerX + (xMp * 3), 7, centerZ + (3 * facing.zOffset))
-					)){
+					)) {
 						world.setBlock(pos, Blocks.BOOKSHELF)
 						world.setBlock(pos.up(), Blocks.BOOKSHELF)
 						world.setBlock(pos.up(2), Blocks.SPRUCE_SLAB)
 					}
 				}
 			}
-			else{
-				for(xMp in intArrayOf(-1, 1)){
+			else {
+				for(xMp in intArrayOf(-1, 1)) {
 					val pos1 = Pos(centerX + (xMp * 2), 7, centerZ + (4 * facing.zOffset))
 					val pos2 = Pos(centerX + (xMp * 2), 7, centerZ + (5 * facing.zOffset))
 					val pos3 = Pos(centerX + (xMp * 2), 7, centerZ + (6 * facing.zOffset))
@@ -148,7 +149,7 @@ class StrongholdRoom_Main_Library(file: String) : StrongholdAbstractPieceFromFil
 		
 		// Stairs
 		
-		if (rand.nextBoolean()){
+		if (rand.nextBoolean()) {
 			world.setAir(Pos(centerX - 8, 9, centerZ + 3))
 			world.setBlock(Pos(centerX - 8, 8, centerZ + 3), Blocks.SPRUCE_SLAB)
 		}
@@ -169,13 +170,13 @@ class StrongholdRoom_Main_Library(file: String) : StrongholdAbstractPieceFromFil
 		world.setState(chestBackPos.up(2), Blocks.SPRUCE_STAIRS.withFacing(chestFacing))
 	}
 	
-	private fun placeThirdFloorDecorations(world: IStructureWorld){
+	private fun placeThirdFloorDecorations(world: IStructureWorld) {
 		val rand = world.rand
 		
 		// Entrances
 		
-		if (rand.nextBoolean()){
-			for(xMp in intArrayOf(-1, 1)) for(zMp in intArrayOf(-1, 1)){
+		if (rand.nextBoolean()) {
+			for(xMp in intArrayOf(-1, 1)) for(zMp in intArrayOf(-1, 1)) {
 				val pos1 = Pos(centerX + (4 * xMp), 12, centerZ + (2 * zMp))
 				val pos2 = Pos(centerX + (5 * xMp), 12, centerZ + (2 * zMp))
 				
@@ -183,8 +184,8 @@ class StrongholdRoom_Main_Library(file: String) : StrongholdAbstractPieceFromFil
 				world.placeCube(pos1.up(), pos2.up(), Single(Blocks.SPRUCE_SLAB))
 			}
 		}
-		else{
-			for(xMp in intArrayOf(-1, 1)) for(zMp in intArrayOf(-1, 1)){
+		else {
+			for(xMp in intArrayOf(-1, 1)) for(zMp in intArrayOf(-1, 1)) {
 				val pos1 = Pos(centerX + (6 * xMp), 12, centerZ + (2 * zMp))
 				val pos2 = Pos(centerX + (7 * xMp), 12, centerZ + (2 * zMp))
 				
@@ -195,7 +196,7 @@ class StrongholdRoom_Main_Library(file: String) : StrongholdAbstractPieceFromFil
 		}
 	}
 	
-	private enum class FirstFloorChestPosition{
+	private enum class FirstFloorChestPosition {
 		WORK_TABLE, INSIDE_BOOKSHELVES
 	}
 }

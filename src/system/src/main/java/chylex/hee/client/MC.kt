@@ -1,4 +1,5 @@
 package chylex.hee.client
+
 import chylex.hee.game.particle.ParticleSetting
 import chylex.hee.system.forge.Side
 import chylex.hee.system.forge.Sided
@@ -18,7 +19,7 @@ import net.minecraft.client.world.ClientWorld
 import net.minecraft.util.Util
 
 @Sided(Side.CLIENT)
-object MC{
+object MC {
 	@JvmField
 	val instance: Minecraft = Minecraft.getInstance()
 	
@@ -36,10 +37,10 @@ object MC{
 		get() = instance.gameSettings
 	
 	val particleSetting
-		get() = when(instance.gameSettings.particles){
-			ParticleStatus.MINIMAL -> ParticleSetting.MINIMAL
+		get() = when(instance.gameSettings.particles) {
+			ParticleStatus.MINIMAL   -> ParticleSetting.MINIMAL
 			ParticleStatus.DECREASED -> ParticleSetting.DECREASED
-			else -> ParticleSetting.ALL
+			else                     -> ParticleSetting.ALL
 		}
 	
 	// Game state

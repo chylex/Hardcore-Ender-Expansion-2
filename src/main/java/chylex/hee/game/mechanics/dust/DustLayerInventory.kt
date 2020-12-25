@@ -1,30 +1,31 @@
 package chylex.hee.game.mechanics.dust
+
 import chylex.hee.game.inventory.size
 import chylex.hee.game.mechanics.dust.DustLayers.Side.BOTTOM
 import net.minecraft.item.ItemStack
 import net.minecraftforge.items.IItemHandler
 import kotlin.math.max
 
-class DustLayerInventory(private val layers: DustLayers, private val isIntake: Boolean) : IItemHandler{
+class DustLayerInventory(private val layers: DustLayers, private val isIntake: Boolean) : IItemHandler {
 	override fun getSlots() = layers.contents.size + 1
 	override fun getSlotLimit(slot: Int) = layers.totalCapacity
 	
-	override fun getStackInSlot(slot: Int): ItemStack{
+	override fun getStackInSlot(slot: Int): ItemStack {
 		return layers.contents.getOrNull(slot)?.let { ItemStack(it.first.item, it.second.toInt()) } ?: ItemStack.EMPTY
 	}
 	
-	override fun isItemValid(slot: Int, stack: ItemStack): Boolean{
+	override fun isItemValid(slot: Int, stack: ItemStack): Boolean {
 		return isIntake && DustType.fromStack(stack) != null
 	}
 	
-	override fun insertItem(slot: Int, stack: ItemStack, simulate: Boolean): ItemStack{
-		if (!isIntake){
+	override fun insertItem(slot: Int, stack: ItemStack, simulate: Boolean): ItemStack {
+		if (!isIntake) {
 			return stack
 		}
 		
 		val dustType = DustType.fromStack(stack)
 		
-		if (dustType == null){
+		if (dustType == null) {
 			return stack
 		}
 		
@@ -34,8 +35,8 @@ class DustLayerInventory(private val layers: DustLayers, private val isIntake: B
 			stack.copy().also { it.size -= layers.addDust(dustType, stack.size) }
 	}
 	
-	override fun extractItem(slot: Int, amount: Int, simulate: Boolean): ItemStack{
-		if (isIntake){
+	override fun extractItem(slot: Int, amount: Int, simulate: Boolean): ItemStack {
+		if (isIntake) {
 			return ItemStack.EMPTY
 		}
 		

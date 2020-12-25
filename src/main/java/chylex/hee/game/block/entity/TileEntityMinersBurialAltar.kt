@@ -1,4 +1,5 @@
 package chylex.hee.game.block.entity
+
 import chylex.hee.client.MC
 import chylex.hee.game.block.entity.base.TileEntityBase
 import chylex.hee.game.block.entity.base.TileEntityBase.Context.STORAGE
@@ -60,10 +61,10 @@ import java.util.Random
 import kotlin.math.max
 import kotlin.math.roundToInt
 
-class TileEntityMinersBurialAltar(type: TileEntityType<TileEntityMinersBurialAltar>) : TileEntityBase(type), ITickableTileEntity{
+class TileEntityMinersBurialAltar(type: TileEntityType<TileEntityMinersBurialAltar>) : TileEntityBase(type), ITickableTileEntity {
 	constructor() : this(ModTileEntities.MINERS_BURIAL_ALTAR)
 	
-	companion object{
+	companion object {
 		private const val HAS_MEDALLION_TAG = "HasMedallion"
 		private const val REDEEM_TYPE_TAG = "RedeemType"
 		private const val REDEEM_TICK_TAG = "RedeemTick"
@@ -111,18 +112,18 @@ class TileEntityMinersBurialAltar(type: TileEntityType<TileEntityMinersBurialAlt
 			pos = InBox(0.175F)
 		)
 		
-		class FxSpawnData(private val pos: Vec3d, private val type: Byte) : IFxData{
+		class FxSpawnData(private val pos: Vec3d, private val type: Byte) : IFxData {
 			override fun write(buffer: PacketBuffer) = buffer.use {
 				writeCompactVec(pos)
 				writeByte(type.toInt())
 			}
 		}
 		
-		val FX_SPAWN = object : IFxHandler<FxSpawnData>{
+		val FX_SPAWN = object : IFxHandler<FxSpawnData> {
 			override fun handle(buffer: PacketBuffer, world: World, rand: Random) = buffer.use {
 				val pos = readCompactVec()
 				
-				when(readByte()){
+				when(readByte()) {
 					REDEEM_TYPE_TOKEN -> {
 						PARTICLE_SPAWN.spawn(Point(pos, 9), rand)
 					}
@@ -133,7 +134,7 @@ class TileEntityMinersBurialAltar(type: TileEntityType<TileEntityMinersBurialAlt
 					}
 					
 					REDEEM_TYPE_FINISHED -> {
-						for(y in 0 until PILLAR_HEIGHT){
+						for(y in 0 until PILLAR_HEIGHT) {
 							MC.particleManager.addBlockDestroyEffects(Pos(pos).up(y), ModBlocks.MINERS_BURIAL_BLOCK_PILLAR.defaultState)
 						}
 						
@@ -156,23 +157,23 @@ class TileEntityMinersBurialAltar(type: TileEntityType<TileEntityMinersBurialAlt
 	
 	// Ticking
 	
-	override fun tick(){
+	override fun tick() {
 		val closestPlayer = wrld.getClosestPlayer(pos.x + 0.5, pos.y + 0.5, pos.z + 0.5, 12.0, false)
 		
-		if (closestPlayer == null){
+		if (closestPlayer == null) {
 			return
 		}
 		
-		if (!hasMedallion){
+		if (!hasMedallion) {
 			redeemTick = 0
 			return
 		}
 		
-		if (wrld.isRemote){
-			if (redeemTick > 0 && redeemType != REDEEM_TYPE_FINISHED){
+		if (wrld.isRemote) {
+			if (redeemTick > 0 && redeemType != REDEEM_TYPE_FINISHED) {
 				++redeemTick
 				
-				if (redeemTick == MEDALLION_ANIM_DELAY){
+				if (redeemTick == MEDALLION_ANIM_DELAY) {
 					ModSounds.BLOCK_MINERS_BURIAL_ALTAR_INSERT.playClient(pos, SoundCategory.BLOCKS)
 				}
 			}
@@ -180,14 +181,14 @@ class TileEntityMinersBurialAltar(type: TileEntityType<TileEntityMinersBurialAlt
 			return
 		}
 		
-		if (redeemType == REDEEM_TYPE_FINISHED){
-			if (--redeemTick < 0){
+		if (redeemType == REDEEM_TYPE_FINISHED) {
+			if (--redeemTick < 0) {
 				val pillar = ModBlocks.MINERS_BURIAL_BLOCK_PILLAR.with(BlockRotatedPillar.AXIS, Facing.AXIS_Y)
 				
-				for(y in 1 until PILLAR_HEIGHT){
+				for(y in 1 until PILLAR_HEIGHT) {
 					val offsetPos = pos.up(y)
 					
-					if (offsetPos.getHardness(wrld) >= 0F){
+					if (offsetPos.getHardness(wrld) >= 0F) {
 						offsetPos.setState(wrld, pillar)
 					}
 				}
@@ -200,15 +201,15 @@ class TileEntityMinersBurialAltar(type: TileEntityType<TileEntityMinersBurialAlt
 			
 			markDirty()
 		}
-		else if (redeemTick > 0 || (redeemTick == 0 && wrld.tickableTileEntities.none { it is TileEntityMinersBurialAltar && it.redeemTick > 0 && isGrouped(it) })){
+		else if (redeemTick > 0 || (redeemTick == 0 && wrld.tickableTileEntities.none { it is TileEntityMinersBurialAltar && it.redeemTick > 0 && isGrouped(it) })) {
 			++redeemTick
 			
-			if (redeemTick == 1){
+			if (redeemTick == 1) {
 				notifyUpdate(FLAG_SYNC_CLIENT)
 			}
-			else if (redeemTick > MEDALLION_ANIM_TOTAL_DURATION && (tickRedeemSequence(redeemTick - 1 - MEDALLION_ANIM_TOTAL_DURATION, closestPlayer) || redeemTick == Int.MAX_VALUE)){
-				for(tile in wrld.tickableTileEntities){
-					if (tile is TileEntityMinersBurialAltar && tile !== this && isGrouped(tile)){
+			else if (redeemTick > MEDALLION_ANIM_TOTAL_DURATION && (tickRedeemSequence(redeemTick - 1 - MEDALLION_ANIM_TOTAL_DURATION, closestPlayer) || redeemTick == Int.MAX_VALUE)) {
+				for(tile in wrld.tickableTileEntities) {
+					if (tile is TileEntityMinersBurialAltar && tile !== this && isGrouped(tile)) {
 						tile.redeemType = ((redeemType + 1) % 3).toByte()
 						tile.markDirty()
 					}
@@ -221,17 +222,17 @@ class TileEntityMinersBurialAltar(type: TileEntityType<TileEntityMinersBurialAlt
 		}
 	}
 	
-	private fun tickRedeemSequence(tick: Int, closestPlayer: EntityPlayer): Boolean{
-		if (redeemType == REDEEM_TYPE_TOKEN){
-			if (tick in 1..38){
+	private fun tickRedeemSequence(tick: Int, closestPlayer: EntityPlayer): Boolean {
+		if (redeemType == REDEEM_TYPE_TOKEN) {
+			if (tick in 1..38) {
 				return false
 			}
 			
 			val tokenHolderPos = pos.up(1)
 			val tokenHolder = wrld.selectExistingEntities.inBox<EntityTokenHolder>(AxisAlignedBB(tokenHolderPos)).firstOrNull()
 			
-			if (tick == 0){
-				if (tokenHolder == null){
+			if (tick == 0) {
+				if (tokenHolder == null) {
 					val fxPos = Vec(tokenHolderPos.x + 0.5, tokenHolderPos.y + 0.95, tokenHolderPos.z + 0.5)
 					PacketClientFX(FX_SPAWN, FxSpawnData(fxPos, redeemType)).sendToAllAround(wrld, fxPos, 16.0)
 					
@@ -244,14 +245,14 @@ class TileEntityMinersBurialAltar(type: TileEntityType<TileEntityMinersBurialAlt
 				return false
 			}
 			
-			if (tokenHolder != null){
+			if (tokenHolder != null) {
 				val newCharge = tokenHolder.currentCharge + (1F / 90F)
 				
-				if (newCharge < 1F){
+				if (newCharge < 1F) {
 					tokenHolder.currentCharge = newCharge
 					// TODO fx
 				}
-				else{
+				else {
 					tokenHolder.forceDropTokenTowards(closestPlayer)
 					tokenHolder.remove()
 					
@@ -262,14 +263,14 @@ class TileEntityMinersBurialAltar(type: TileEntityType<TileEntityMinersBurialAlt
 			
 			return false
 		}
-		else if (redeemType == REDEEM_TYPE_ITEMS){
-			if (tick == 0){
+		else if (redeemType == REDEEM_TYPE_ITEMS) {
+			if (tick == 0) {
 				itemDrops.clear()
 				
 				val rand = wrld.rand
 				val mainTables = ITEM_DROP_TABLES_MAIN.map { it.mutableCopy() }
 				
-				for(table in mainTables){
+				for(table in mainTables) {
 					table.removeItem(rand)?.let(::addItemDrop)
 				}
 				
@@ -278,7 +279,7 @@ class TileEntityMinersBurialAltar(type: TileEntityType<TileEntityMinersBurialAlt
 					addItems(ITEM_DROP_TABLE_MISC)
 				}
 				
-				repeat(6 - itemDrops.size){
+				repeat(6 - itemDrops.size) {
 					combinedTable.removeItem(rand)?.let(::addItemDrop)
 				}
 				
@@ -289,8 +290,8 @@ class TileEntityMinersBurialAltar(type: TileEntityType<TileEntityMinersBurialAlt
 				return false
 			}
 			
-			if (tick % 4 == 0){
-				if (itemDrops.isEmpty()){
+			if (tick % 4 == 0) {
+				if (itemDrops.isEmpty()) {
 					redeemTick = 14
 					return true
 				}
@@ -300,7 +301,7 @@ class TileEntityMinersBurialAltar(type: TileEntityType<TileEntityMinersBurialAlt
 				val stack = itemDrops.last()
 				val split = stack.split(rand.nextInt(1, 3))
 				
-				if (stack.isEmpty){
+				if (stack.isEmpty) {
 					itemDrops.removeAt(itemDrops.lastIndex)
 				}
 				
@@ -319,7 +320,7 @@ class TileEntityMinersBurialAltar(type: TileEntityType<TileEntityMinersBurialAlt
 			
 			return false
 		}
-		else if (redeemType == REDEEM_TYPE_BOSS){
+		else if (redeemType == REDEEM_TYPE_BOSS) {
 			// TODO
 		}
 		
@@ -328,11 +329,11 @@ class TileEntityMinersBurialAltar(type: TileEntityType<TileEntityMinersBurialAlt
 	
 	// Utilities
 	
-	private fun isGrouped(other: TileEntityMinersBurialAltar): Boolean{
+	private fun isGrouped(other: TileEntityMinersBurialAltar): Boolean {
 		return other.pos.distanceSq(pos) < square(8)
 	}
 	
-	private fun addItemDrop(item: Pair<Item, IntRange>){
+	private fun addItemDrop(item: Pair<Item, IntRange>) {
 		itemDrops.add(ItemStack(item.first, wrld.rand.nextInt(item.second)))
 	}
 	
@@ -343,7 +344,7 @@ class TileEntityMinersBurialAltar(type: TileEntityType<TileEntityMinersBurialAlt
 		putByte(REDEEM_TYPE_TAG, redeemType)
 		putInt(REDEEM_TICK_TAG, redeemTick)
 		
-		if (context == STORAGE){
+		if (context == STORAGE) {
 			putList(ITEM_DROPS_TAG, NBTItemStackList.of(itemDrops))
 		}
 	}
@@ -353,7 +354,7 @@ class TileEntityMinersBurialAltar(type: TileEntityType<TileEntityMinersBurialAlt
 		redeemType = getByte(REDEEM_TYPE_TAG)
 		redeemTick = getInt(REDEEM_TICK_TAG)
 		
-		if (context == STORAGE){
+		if (context == STORAGE) {
 			itemDrops.clear()
 			itemDrops.addAll(getListOfItemStacks(ITEM_DROPS_TAG))
 		}

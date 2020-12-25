@@ -1,4 +1,5 @@
 package chylex.hee.game.world.feature.stronghold
+
 import chylex.hee.game.mechanics.energy.IEnergyQuantity.Units
 import chylex.hee.game.world.feature.stronghold.piece.StrongholdAbstractPiece
 import chylex.hee.game.world.feature.stronghold.piece.StrongholdCorridor_Chest_Double
@@ -61,7 +62,7 @@ import net.minecraft.item.Items
 import net.minecraft.tags.BlockTags
 import java.util.Random
 
-object StrongholdPieces : IStructureDescription{
+object StrongholdPieces : IStructureDescription {
 	override val STRUCTURE_SIZE = Size(224, 32, 224)
 	
 	override val STRUCTURE_BUILDER = StrongholdBuilder
@@ -78,7 +79,7 @@ object StrongholdPieces : IStructureDescription{
 		  8 to Blocks.INFESTED_CRACKED_STONE_BRICKS
 	)
 	
-	override val PALETTE = with(PaletteBuilder.Combined()){
+	override val PALETTE = with(PaletteBuilder.Combined()) {
 		add("air", Blocks.AIR)
 		add("bookshelf", Blocks.BOOKSHELF)
 		add("obsidian", Blocks.OBSIDIAN)
@@ -122,7 +123,7 @@ object StrongholdPieces : IStructureDescription{
 		add("ironbars.*", PaletteMappings.HORIZONTAL_CONNECTIONS(Blocks.IRON_BARS))
 		add("dry_vines.*", PaletteMappings.VINE_WALLS(ModBlocks.DRY_VINES))
 		
-		with(forGeneration){
+		with(forGeneration) {
 			add("stonebrick", PALETTE_ENTRY_STONE_BRICK)
 			add("stonebrick.plain", Blocks.STONE_BRICKS)
 			add("stonebrick.chiseled", Blocks.CHISELED_STONE_BRICKS)
@@ -138,7 +139,7 @@ object StrongholdPieces : IStructureDescription{
 			))
 		}
 		
-		with(forDevelopment){
+		with(forDevelopment) {
 			add("stonebrick", Blocks.STONE_BRICKS)
 			add("stonebrick.plain", Blocks.DIAMOND_BLOCK)
 			add("stonebrick.chiseled", Blocks.IRON_BLOCK)
@@ -149,7 +150,7 @@ object StrongholdPieces : IStructureDescription{
 		build()
 	}
 	
-	fun isStoneBrick(block: Block): Boolean{
+	fun isStoneBrick(block: Block): Boolean {
 		return block.isIn(BlockTags.STONE_BRICKS) || (block is BlockSilverfish && block.mimickedBlock.isIn(BlockTags.STONE_BRICKS))
 	}
 	
@@ -212,7 +213,7 @@ object StrongholdPieces : IStructureDescription{
 		StrongholdRoom_Cluster_TwoFloorIntersection("cluster.two_floor_intersection.nbt")
 	)
 	
-	private fun PIECES_CHESTS_CLUSTERS(rand: Random): List<StrongholdAbstractPiece>{
+	private fun PIECES_CHESTS_CLUSTERS(rand: Random): List<StrongholdAbstractPiece> {
 		val chestsPools = PIECES_ROOMS_CHESTS_SMALL_POOLS.toMutableList()
 		
 		return mutableListOf(
@@ -258,7 +259,7 @@ object StrongholdPieces : IStructureDescription{
 		StrongholdRoom_Main_Workshop("main.workshop.nbt")
 	)
 	
-	fun PIECES_ROOMS(rand: Random): MutableList<StrongholdAbstractPiece>{
+	fun PIECES_ROOMS(rand: Random): MutableList<StrongholdAbstractPiece> {
 		val totalRoomsExceptLibrary = rand.nextInt(26, 27)
 		
 		val decorSmall = mutableListOf(*PIECES_ROOMS_DECOR_SMALL_GENERAL, *PIECES_ROOMS_DECOR_SMALL_GENERAL)
@@ -272,15 +273,15 @@ object StrongholdPieces : IStructureDescription{
 			addAll(PIECES_ROOMS_TRAPS_MAIN)
 			add(rand.nextItem(PIECES_ROOMS_TRAPS_PICK))
 			
-			repeat(rand.nextInt(1, 2)){
+			repeat(rand.nextInt(1, 2)) {
 				add(rand.removeItem(decorLarge))
 			}
 			
-			repeat(rand.nextInt(1, 3)){
+			repeat(rand.nextInt(1, 3)) {
 				add(rand.removeItem(decorGlass))
 			}
 			
-			while(size < totalRoomsExceptLibrary){
+			while(size < totalRoomsExceptLibrary) {
 				add(rand.removeItem(decorSmall))
 			}
 			
@@ -336,13 +337,13 @@ object StrongholdPieces : IStructureDescription{
 		10 to StrongholdCorridor_Chest_Double("corridor.two_chests.2.nbt")
 	)
 	
-	fun PIECES_CORRIDORS(rand: Random, distanceToPortal: Int): MutableWeightedList<StrongholdAbstractPiece>{
+	fun PIECES_CORRIDORS(rand: Random, distanceToPortal: Int): MutableWeightedList<StrongholdAbstractPiece> {
 		return PIECES_CORRIDOR_MAIN.mutableCopy().also {
-			if (distanceToPortal > 0 && rand.nextBoolean()){
+			if (distanceToPortal > 0 && rand.nextBoolean()) {
 				it.addItem(55, PIECES_CORRIDOR_STAIRS.generateItem(rand))
 			}
 			
-			if (distanceToPortal > 1){
+			if (distanceToPortal > 1) {
 				it.addItem(10, PIECES_CORRIDOR_CHESTS.generateItem(rand))
 			}
 		}
@@ -368,7 +369,7 @@ object StrongholdPieces : IStructureDescription{
 		120 to StrongholdCorridor_Stairs_Straight("corridor.stairs.straight.nbt")
 	)
 	
-	fun PIECES_RELICS(rand: Random): MutableList<StrongholdRoom_Relic>{
+	fun PIECES_RELICS(rand: Random): MutableList<StrongholdRoom_Relic> {
 		val availableRooms = mutableListOf<(ItemStack) -> StrongholdRoom_Relic>(
 			{ stack -> StrongholdRoom_Relic_Dungeon("relic.dungeon.nbt", stack) },
 			{ stack -> StrongholdRoom_Relic_Fountains("relic.fountains.nbt", stack) },
@@ -380,7 +381,7 @@ object StrongholdPieces : IStructureDescription{
 		for(relicStack in arrayOf(
 			ItemStack(ModItems.ENERGY_ORACLE).also { ModItems.ENERGY_ORACLE.setEnergyChargeLevel(it, Units(30)) },
 			ItemStack(ModItems.AMULET_OF_RECOVERY)
-		)){
+		)) {
 			pickedRooms.add(rand.removeItem(availableRooms)(relicStack))
 		}
 		
@@ -402,7 +403,7 @@ object StrongholdPieces : IStructureDescription{
 		30 to StrongholdCorridor_Intersection.CORNER
 	)
 	
-	fun PIECES_DEAD_ENDS(rand: Random): MutableList<StrongholdAbstractPiece>{
+	fun PIECES_DEAD_ENDS(rand: Random): MutableList<StrongholdAbstractPiece> {
 		val shelves = StrongholdRoom_DeadEnd_Shelves("deadend.shelves.nbt")
 		val waterfalls = StrongholdRoom_DeadEnd_Waterfalls("deadend.waterfalls.nbt")
 		

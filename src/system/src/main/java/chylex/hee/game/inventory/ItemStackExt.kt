@@ -1,4 +1,5 @@
 package chylex.hee.game.inventory
+
 import chylex.hee.system.migration.EntityLivingBase
 import chylex.hee.system.serialization.TagCompound
 import chylex.hee.system.serialization.heeTag
@@ -12,14 +13,16 @@ import net.minecraft.util.Hand
 
 inline var ItemStack.size: Int
 	get() = count
-	set(value){ count = value }
+	set(value) {
+		count = value
+	}
 
 inline val ItemStack.isNotEmpty
 	get() = !isEmpty
 
 // Copy
 
-inline fun ItemStack.copyIf(predicate: (ItemStack) -> Boolean): ItemStack{
+inline fun ItemStack.copyIf(predicate: (ItemStack) -> Boolean): ItemStack {
 	return if (predicate(this))
 		this.copy()
 	else
@@ -40,8 +43,8 @@ inline val ItemStack.enchantmentList: List<Pair<Enchantment, Int>>
 
 // Damage
 
-fun ItemStack.doDamage(amount: Int, owner: EntityLivingBase, hand: Hand){
-	this.damageItem(amount, owner){ it.sendBreakAnimation(hand) }
+fun ItemStack.doDamage(amount: Int, owner: EntityLivingBase, hand: Hand) {
+	this.damageItem(amount, owner) { it.sendBreakAnimation(hand) }
 }
 
 // NBT
@@ -73,8 +76,8 @@ val ItemStack.heeTagOrNull: TagCompound?
 /**
  * Recursively deletes all empty compound tags in the ItemStack.
  */
-fun ItemStack.cleanupNBT(){
-	fun cleanupTag(tag: TagCompound){
+fun ItemStack.cleanupNBT() {
+	fun cleanupTag(tag: TagCompound) {
 		tag.keySet().removeIf {
 			val nested = tag.get(it) as? TagCompound
 			nested != null && nested.apply(::cleanupTag).isEmpty
@@ -83,7 +86,7 @@ fun ItemStack.cleanupNBT(){
 	
 	val nbt = this.nbtOrNull
 	
-	if (nbt != null && nbt.apply(::cleanupTag).isEmpty){
+	if (nbt != null && nbt.apply(::cleanupTag).isEmpty) {
 		this.tag = null
 	}
 }

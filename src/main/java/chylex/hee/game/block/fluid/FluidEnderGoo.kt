@@ -1,4 +1,5 @@
 package chylex.hee.game.block.fluid
+
 import chylex.hee.init.ModBlocks
 import chylex.hee.init.ModItems
 import chylex.hee.system.color.IntColor.Companion.RGB
@@ -14,14 +15,14 @@ object FluidEnderGoo : FluidBase(
 	resistance = 150F,
 	texStill   = Resource.Custom("block/ender_goo_still"),
 	texFlowing = Resource.Custom("block/ender_goo_flowing")
-){
-	override fun attr(attributes: Builder): Builder = with(attributes){
+) {
+	override fun attr(attributes: Builder): Builder = with(attributes) {
 		density(1500)
 		viscosity(1500)
 		temperature(233)
 	}
 	
-	override fun props(properties: Properties): Properties = with(properties){
+	override fun props(properties: Properties): Properties = with(properties) {
 		block { ModBlocks.ENDER_GOO }
 		bucket { ModItems.ENDER_GOO_BUCKET }
 	}

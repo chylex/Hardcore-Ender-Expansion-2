@@ -1,4 +1,5 @@
 package chylex.hee.game.entity.living.behavior
+
 import chylex.hee.game.entity.living.EntityBossEnderEye
 import chylex.hee.game.entity.lookDirVec
 import chylex.hee.game.entity.lookPosVec
@@ -24,14 +25,14 @@ import kotlin.math.abs
 import kotlin.math.cos
 import kotlin.math.pow
 
-sealed class EnderEyeAttack{
+sealed class EnderEyeAttack {
 	abstract val dealtDamageType: IDamageDealer
 	abstract val dealtDamageMultiplier: Float
 	abstract val dealtKnockbackMultiplier: Float
 	abstract val canTakeKnockback: Boolean
 	abstract fun tick(entity: EntityBossEnderEye): Boolean
 	
-	class Melee : EnderEyeAttack(){
+	class Melee : EnderEyeAttack() {
 		override val dealtDamageType
 			get() = EntityBossEnderEye.DAMAGE_MELEE
 		
@@ -46,15 +47,15 @@ sealed class EnderEyeAttack{
 		private var lastAttackTime = 0L
 		private var laserEyeTicksRemaining = 260
 		
-		override fun tick(entity: EntityBossEnderEye): Boolean = with(entity){
+		override fun tick(entity: EntityBossEnderEye): Boolean = with(entity) {
 			val target = attackTarget ?: forceFindNewTarget()
 			
-			if (target == null){
+			if (target == null) {
 				armPosition = EntityBossEnderEye.ARMS_LIMP
 				aiMoveSpeed = 0F
 				setRotateTarget(null)
 			}
-			else{
+			else {
 				armPosition = EntityBossEnderEye.ARMS_HUG
 				lookController.setLookPositionWithEntity(target, 0F, 0F)
 				setRotateTarget(target)
@@ -63,36 +64,36 @@ sealed class EnderEyeAttack{
 				val targetVec = target.lookPosVec
 				val distSq = targetVec.squareDistanceTo(currentVec)
 				
-				if (distSq > square(6.0 - ((movementSpeed - 1.0) / 1.5))){
-					if (movementSpeed < 3.5){
+				if (distSq > square(6.0 - ((movementSpeed - 1.0) / 1.5))) {
+					if (movementSpeed < 3.5) {
 						movementSpeed = (movementSpeed + 0.1).coerceAtMost(3.5)
 					}
 					
 					navigator.tryMoveToXYZ(targetVec.x, targetVec.y + (movementSpeed - 1.0) * 0.6, targetVec.z, movementSpeed)
 				}
-				else if (distSq > square(1.2)){
-					if (movementSpeed > 1.0){
+				else if (distSq > square(1.2)) {
+					if (movementSpeed > 1.0) {
 						movementSpeed = (movementSpeed - 0.3).coerceAtLeast(1.0)
 					}
 					
 					navigator.tryMoveToXYZ(targetVec.x, targetVec.y, targetVec.z, movementSpeed)
 				}
-				else{
-					if (currentVec.directionTowards(targetVec).dotProduct(motion.normalize()) > 0.0){
+				else {
+					if (currentVec.directionTowards(targetVec).dotProduct(motion.normalize()) > 0.0) {
 						motion = motion.scale(0.4)
 					}
 				}
 				
-				if (distSq < square(1.4)){
+				if (distSq < square(1.4)) {
 					val currentTime = world.totalTime
 					
-					if (currentTime - lastAttackTime >= 20L){
+					if (currentTime - lastAttackTime >= 20L) {
 						lastAttackTime = currentTime
 						attackEntityAsMob(target)
 					}
 				}
 				
-				if (--laserEyeTicksRemaining == 0){
+				if (--laserEyeTicksRemaining == 0) {
 					laserEyeTicksRemaining = rng.nextInt(160, 260)
 					return false
 				}
@@ -101,14 +102,14 @@ sealed class EnderEyeAttack{
 			return true
 		}
 		
-		fun reset(entity: EntityBossEnderEye){
+		fun reset(entity: EntityBossEnderEye) {
 			movementSpeed = 1.0
 			lastAttackTime = entity.world.totalTime
 			laserEyeTicksRemaining = laserEyeTicksRemaining.coerceAtLeast(35)
 		}
 	}
 	
-	class LaserEye : EnderEyeAttack(){
+	class LaserEye : EnderEyeAttack() {
 		override val dealtDamageType
 			get() = EntityBossEnderEye.DAMAGE_LASER
 		
@@ -125,8 +126,8 @@ sealed class EnderEyeAttack{
 		private var rotationSpeedTimer = 0
 		private var hasSwitchedTarget = false
 		
-		override fun tick(entity: EntityBossEnderEye): Boolean = with(entity){
-			if (closedEyeTimer > 0){
+		override fun tick(entity: EntityBossEnderEye): Boolean = with(entity) {
+			if (closedEyeTimer > 0) {
 				--closedEyeTimer
 				armPosition = EntityBossEnderEye.ARMS_LIMP
 				eyeState = EntityBossEnderEye.EYE_CLOSED
@@ -135,21 +136,21 @@ sealed class EnderEyeAttack{
 				return true
 			}
 			
-			if (laserTicksLeft == 0){
+			if (laserTicksLeft == 0) {
 				eyeState = EntityBossEnderEye.EYE_OPEN
 				return false
 			}
 			
 			val target = attackTarget ?: tryFindNewTarget()
 			
-			if (target == null || --laserTicksLeft <= rng.nextInt(0, 30)){
+			if (target == null || --laserTicksLeft <= rng.nextInt(0, 30)) {
 				laserTicksLeft = 0
 				closedEyeTimer = 15
 				setRotateTarget(null)
 				return true
 			}
 			
-			if (rng.nextInt(100) < health * 0.2F){
+			if (rng.nextInt(100) < health * 0.2F) {
 				--laserTicksLeft
 			}
 			
@@ -161,16 +162,16 @@ sealed class EnderEyeAttack{
 			val laserEnd = getLaserHit(1F)
 			val laserLen = laserEnd.distanceTo(laserStart)
 			
-			for(testEntity in world.selectVulnerableEntities.inBox<EntityLivingBase>(boundingBox.grow(laserLen))){
-				if (testEntity.boundingBox.rayTrace(laserStart, laserEnd).isPresent){
+			for(testEntity in world.selectVulnerableEntities.inBox<EntityLivingBase>(boundingBox.grow(laserLen))) {
+				if (testEntity.boundingBox.rayTrace(laserStart, laserEnd).isPresent) {
 					attackEntityAsMob(testEntity)
 				}
 			}
 			
-			if (!canEntityBeSeen(target)){
+			if (!canEntityBeSeen(target)) {
 				laserTicksLeft -= 4
 				
-				if (!hasSwitchedTarget){
+				if (!hasSwitchedTarget) {
 					hasSwitchedTarget = true
 					tryFindNewTarget()
 				}
@@ -179,10 +180,10 @@ sealed class EnderEyeAttack{
 			return true
 		}
 		
-		private fun EntityBossEnderEye.tryFindNewTarget(): EntityLivingBase?{
+		private fun EntityBossEnderEye.tryFindNewTarget(): EntityLivingBase? {
 			val prevTarget = attackTarget
 			
-			if (forceFindNewTarget() == null){
+			if (forceFindNewTarget() == null) {
 				attackTarget = prevTarget
 				return null // used to reset the attack if the player gets too far with no other nearby targets
 			}
@@ -191,7 +192,7 @@ sealed class EnderEyeAttack{
 		}
 	}
 	
-	class KnockbackDash : EnderEyeAttack(){
+	class KnockbackDash : EnderEyeAttack() {
 		override val dealtDamageType
 			get() = EntityBossEnderEye.DAMAGE_DASH
 		
@@ -208,43 +209,43 @@ sealed class EnderEyeAttack{
 		private var attackRepeats = 0
 		private val hitEntities = mutableSetOf<UUID>()
 		
-		override fun tick(entity: EntityBossEnderEye): Boolean = with(entity){
+		override fun tick(entity: EntityBossEnderEye): Boolean = with(entity) {
 			val target = attackTarget ?: return false
 			
-			if (isSlowingDown){
+			if (isSlowingDown) {
 				armPosition = EntityBossEnderEye.ARMS_ATTACK
 				aiMoveSpeed = 0F
 				setRotateTarget(target)
 				
-				if (motion.withY(0.0).lengthSquared() < square(0.05)){
-					if (attackRepeats == 0){
+				if (motion.withY(0.0).lengthSquared() < square(0.05)) {
+					if (attackRepeats == 0) {
 						isSlowingDown = false
 					}
-					else{
+					else {
 						val lookDir = lookDirVec
 						val targetDir = target.lookPosVec.subtract(lookPosVec).normalize()
 						
-						if (abs(lookDir.dotProduct(targetDir)) > cos(10.0.toRadians())){
+						if (abs(lookDir.dotProduct(targetDir)) > cos(10.0.toRadians())) {
 							isSlowingDown = false
 						}
 					}
 				}
 			}
-			else{
+			else {
 				armPosition = EntityBossEnderEye.ARMS_HUG
 				setRotateTarget(null)
 				
-				if (attackTimer == 0){
+				if (attackTimer == 0) {
 					motion = target.lookPosVec.subtract(lookPosVec).scale(rng.nextFloat(0.15, 0.18))
 					attackTimer = 1
 				}
 				
-				if (hitEntities.isNotEmpty()){
+				if (hitEntities.isNotEmpty()) {
 					++attackTimer
 				}
 				
-				if (attackTimer == 24 || motion.withY(0.0).lengthSquared() < square(0.15)){
-					if (health < realMaxHealth * 0.5F && attackRepeats == 0){
+				if (attackTimer == 24 || motion.withY(0.0).lengthSquared() < square(0.15)) {
+					if (health < realMaxHealth * 0.5F && attackRepeats == 0) {
 						++attackRepeats
 						isSlowingDown = true
 						attackTimer = 0
@@ -261,16 +262,16 @@ sealed class EnderEyeAttack{
 			return true
 		}
 		
-		private fun causeDamageInFront(entity: EntityBossEnderEye) = with(entity){
+		private fun causeDamageInFront(entity: EntityBossEnderEye) = with(entity) {
 			val frontHurtCenter = lookPosVec.add(lookDirVec.scale(width * 0.75))
 			val frontHurtDist = width * 0.6
 			
-			for(hitEntity in world.selectVulnerableEntities.inBox<EntityLivingBase>(AxisAlignedBB(frontHurtCenter, frontHurtCenter).grow(frontHurtDist))){
-				if (hitEntity.isNonBoss && !hitEntities.contains(hitEntity.uniqueID) && attackEntityAsMob(hitEntity)){
-					val multiplier = when{
+			for(hitEntity in world.selectVulnerableEntities.inBox<EntityLivingBase>(AxisAlignedBB(frontHurtCenter, frontHurtCenter).grow(frontHurtDist))) {
+				if (hitEntity.isNonBoss && !hitEntities.contains(hitEntity.uniqueID) && attackEntityAsMob(hitEntity)) {
+					val multiplier = when {
 						hitEntity.isActiveItemStackBlocking -> 0.25
-						hitEntity.isSneaking -> 0.75
-						else -> 1.0
+						hitEntity.isSneaking                -> 0.75
+						else                                -> 1.0
 					}
 					
 					val knockback = Vec3.xz(motionX, motionZ).normalize().scale(0.975 * multiplier).addY(0.075 * multiplier)
@@ -278,7 +279,7 @@ sealed class EnderEyeAttack{
 					hitEntity.addVelocity(knockback.x, knockback.y, knockback.z)
 					hitEntities.add(hitEntity.uniqueID)
 					
-					if (hitEntity is EntityPlayer){
+					if (hitEntity is EntityPlayer) {
 						PacketClientLaunchInstantly(hitEntity, hitEntity.motion).sendToPlayer(hitEntity)
 					}
 				}

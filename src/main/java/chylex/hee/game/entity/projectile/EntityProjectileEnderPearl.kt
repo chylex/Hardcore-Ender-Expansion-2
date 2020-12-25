@@ -1,4 +1,5 @@
 package chylex.hee.game.entity.projectile
+
 import chylex.hee.HEE
 import chylex.hee.game.block.properties.BlockBuilder.Companion.INDESTRUCTIBLE_HARDNESS
 import chylex.hee.game.entity.Teleporter
@@ -48,8 +49,8 @@ import net.minecraftforge.event.entity.living.LivingAttackEvent
 import net.minecraftforge.fml.common.registry.IEntityAdditionalSpawnData
 import net.minecraftforge.fml.network.NetworkHooks
 
-class EntityProjectileEnderPearl(type: EntityType<EntityProjectileEnderPearl>, world: World) : EntityEnderPearl(type, world), IEntityAdditionalSpawnData{
-	constructor(thrower: EntityLivingBase, infusions: InfusionList) : this(ModEntities.ENDER_PEARL, thrower.world){
+class EntityProjectileEnderPearl(type: EntityType<EntityProjectileEnderPearl>, world: World) : EntityEnderPearl(type, world), IEntityAdditionalSpawnData {
+	constructor(thrower: EntityLivingBase, infusions: InfusionList) : this(ModEntities.ENDER_PEARL, thrower.world) {
 		owner = thrower
 		ownerId = thrower.uniqueID
 		
@@ -59,11 +60,11 @@ class EntityProjectileEnderPearl(type: EntityType<EntityProjectileEnderPearl>, w
 	}
 	
 	@SubscribeAllEvents(modid = HEE.ID)
-	companion object{
+	companion object {
 		private val DAMAGE_HIT_ENTITY = Damage(PEACEFUL_EXCLUSION, *ALL_PROTECTIONS_WITH_SHIELD)
 		
-		class RayTraceIndestructible(startVec: Vec3d, endVec: Vec3d, entity: Entity) : RayTraceContext(startVec, endVec, BlockMode.COLLIDER, FluidMode.NONE, entity){
-			override fun getBlockShape(state: BlockState, world: IBlockReader, pos: BlockPos): VoxelShape{
+		class RayTraceIndestructible(startVec: Vec3d, endVec: Vec3d, entity: Entity) : RayTraceContext(startVec, endVec, BlockMode.COLLIDER, FluidMode.NONE, entity) {
+			override fun getBlockShape(state: BlockState, world: IBlockReader, pos: BlockPos): VoxelShape {
 				return if (state.getBlockHardness(world, pos) == INDESTRUCTIBLE_HARDNESS)
 					VoxelShapes.fullCube()
 				else
@@ -74,21 +75,21 @@ class EntityProjectileEnderPearl(type: EntityType<EntityProjectileEnderPearl>, w
 		private const val HAS_PHASED_TAG = "HasPhased"
 		
 		@SubscribeEvent
-		fun onEntityJoinWorld(e: EntityJoinWorldEvent){
+		fun onEntityJoinWorld(e: EntityJoinWorldEvent) {
 			val original = e.entity
 			
-			if (original is EntityEnderPearl && original !is EntityProjectileEnderPearl){
+			if (original is EntityEnderPearl && original !is EntityProjectileEnderPearl) {
 				e.isCanceled = true
 				e.world.addEntity(EntityProjectileEnderPearl(original.thrower!!, InfusionList.EMPTY))
 			}
 		}
 		
 		@SubscribeEvent(EventPriority.LOWEST)
-		fun onLivingAttack(e: LivingAttackEvent){
-			if (e.source === DamageSource.IN_WALL && !e.entity.world.isRemote){
+		fun onLivingAttack(e: LivingAttackEvent) {
+			if (e.source === DamageSource.IN_WALL && !e.entity.world.isRemote) {
 				val riding = e.entityLiving.ridingEntity
 				
-				if (riding is EntityProjectileEnderPearl && riding.infusions.has(HARMLESS)){
+				if (riding is EntityProjectileEnderPearl && riding.infusions.has(HARMLESS)) {
 					e.isCanceled = true
 				}
 			}
@@ -101,16 +102,16 @@ class EntityProjectileEnderPearl(type: EntityType<EntityProjectileEnderPearl>, w
 	
 	// Initialization
 	
-	private fun loadInfusions(infusions: InfusionList){
+	private fun loadInfusions(infusions: InfusionList) {
 		this.infusions = infusions
 		this.noClip = infusions.has(PHASING)
 		
-		if (infusions.has(RIDING)){
+		if (infusions.has(RIDING)) {
 			thrower?.startRiding(this, true)
 		}
 	}
 	
-	override fun createSpawnPacket(): IPacket<*>{
+	override fun createSpawnPacket(): IPacket<*> {
 		return NetworkHooks.getEntitySpawningPacket(this)
 	}
 	
@@ -122,56 +123,56 @@ class EntityProjectileEnderPearl(type: EntityType<EntityProjectileEnderPearl>, w
 	override fun readSpawnData(buffer: PacketBuffer) = buffer.use {
 		var list = InfusionList.EMPTY
 		
-		if (readBoolean()){
+		if (readBoolean()) {
 			list = list.with(HARMLESS)
 		}
 		
-		if (readBoolean()){
+		if (readBoolean()) {
 			list = list.with(SLOW)
 		}
 		
 		loadInfusions(list)
 	}
 	
-	override fun shoot(thrower: Entity, rotationPitch: Float, rotationYaw: Float, pitchOffset: Float, velocity: Float, inaccuracy: Float){
+	override fun shoot(thrower: Entity, rotationPitch: Float, rotationYaw: Float, pitchOffset: Float, velocity: Float, inaccuracy: Float) {
 		super.shoot(thrower, rotationPitch, rotationYaw, pitchOffset, velocity, inaccuracy)
 		
-		if (infusions.has(SLOW)){
+		if (infusions.has(SLOW)) {
 			motion = motion.scale(0.1)
 		}
 	}
 	
 	// Behavior
 	
-	override fun tick(){
+	override fun tick() {
 		val prevPos = posVec
 		val prevMot = motion
 		super.tick()
 		
-		if (infusions.has(SLOW)){
+		if (infusions.has(SLOW)) {
 			motion = prevMot.scale(0.999).subtractY(gravityVelocity * 0.01)
 		}
-		else if (!hasNoGravity()){
+		else if (!hasNoGravity()) {
 			motion = prevMot.scale(0.99).subtractY(gravityVelocity.toDouble())
 		}
 		
-		if (!world.isRemote && infusions.has(PHASING) && hasPhasedIntoWall){
-			if (world.rayTraceBlocks(RayTraceIndestructible(prevPos, prevPos.add(prevMot), this)).type == Type.BLOCK){
+		if (!world.isRemote && infusions.has(PHASING) && hasPhasedIntoWall) {
+			if (world.rayTraceBlocks(RayTraceIndestructible(prevPos, prevPos.add(prevMot), this)).type == Type.BLOCK) {
 				hasPhasingFinished = true
 				posVec = prevPos
 			}
-			else if (!world.checkBlockCollision(boundingBox.grow(0.15, 0.15, 0.15))){
+			else if (!world.checkBlockCollision(boundingBox.grow(0.15, 0.15, 0.15))) {
 				hasPhasingFinished = true
 			}
 			
-			if (hasPhasingFinished){
+			if (hasPhasingFinished) {
 				onImpact(BlockRayTraceResult.createMiss(posVec, DOWN, Pos(this)))
 			}
 		}
 	}
 	
-	override fun onImpact(result: RayTraceResult){
-		if (infusions.has(PHASING) && !hasPhasingFinished){
+	override fun onImpact(result: RayTraceResult) {
+		if (infusions.has(PHASING) && !hasPhasingFinished) {
 			hasPhasedIntoWall = true
 			return
 		}
@@ -179,35 +180,35 @@ class EntityProjectileEnderPearl(type: EntityType<EntityProjectileEnderPearl>, w
 		val thrower: EntityLivingBase? = thrower
 		val hitEntity: Entity? = (result as? EntityRayTraceResult)?.entity
 		
-		if (hitEntity != null && hitEntity === thrower){
+		if (hitEntity != null && hitEntity === thrower) {
 			return
 		}
 		
-		if (hitEntity != null && !infusions.has(HARMLESS)){
+		if (hitEntity != null && !infusions.has(HARMLESS)) {
 			DAMAGE_HIT_ENTITY.dealToIndirectly(4F, hitEntity, this, thrower)
 		}
 		
-		if (!world.isRemote){
+		if (!world.isRemote) {
 			remove()
 			
 			val damage = if (infusions.has(HARMLESS)) 0F else 1F + world.difficulty.id
 			val teleport = Teleporter(damageDealt = damage, causedInstability = 20u)
 			
-			if (thrower is EntityPlayerMP){
-				if (thrower.connection.networkManager.isChannelOpen && thrower.world === world){
+			if (thrower is EntityPlayerMP) {
+				if (thrower.connection.networkManager.isChannelOpen && thrower.world === world) {
 					teleport.toLocation(thrower, posVec)
 				}
 			}
-			else if (thrower != null){
+			else if (thrower != null) {
 				teleport.toLocation(thrower, posVec)
 			}
 		}
 	}
 	
-	override fun removePassenger(passenger: Entity){
+	override fun removePassenger(passenger: Entity) {
 		super.removePassenger(passenger)
 		
-		if (passenger === thrower && isAlive){
+		if (passenger === thrower && isAlive) {
 			onImpact(BlockRayTraceResult.createMiss(posVec, UP, Pos(this)))
 		}
 	}

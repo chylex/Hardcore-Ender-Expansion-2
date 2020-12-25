@@ -12,15 +12,15 @@ displayURL = "https://hee.chylex.com"
 description = ""
 
 [[dependencies.hee]]
-    modId = "minecraft"
-    mandatory = true
-    versionRange = "[1.15.2]"
-    ordering = "AFTER"
-    side = "BOTH"
+modId = "minecraft"
+mandatory = true
+versionRange = "[1.15.2]"
+ordering = "AFTER"
+side = "BOTH"
 
 [[dependencies.hee]]
-    modId = "forge"
-    mandatory = true
-    versionRange = "[31.2.45,)"
-    ordering = "AFTER"
-    side = "BOTH"
+modId = "forge"
+mandatory = true
+versionRange = "[31.2.45,)"
+ordering = "AFTER"
+side = "BOTH"

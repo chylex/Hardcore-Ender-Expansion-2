@@ -1,4 +1,5 @@
 package chylex.hee.game.mechanics.energy
+
 import chylex.hee.game.mechanics.energy.IClusterHealth.HealthStatus
 import chylex.hee.game.mechanics.energy.IClusterHealth.HealthStatus.DAMAGED
 import chylex.hee.game.mechanics.energy.IClusterHealth.HealthStatus.HEALTHY
@@ -12,18 +13,18 @@ import chylex.hee.system.collection.WeightedList.Companion.weightedListOf
 import chylex.hee.system.random.nextFloat
 import java.util.Random
 
-interface IClusterGenerator{
+interface IClusterGenerator {
 	fun generate(rand: Random): ClusterSnapshot
 	
-	companion object{
-		private class SimpleGenerator(level: Pair<Int, Int>, capacity: Pair<Int, Int>, private val health: WeightedList<HealthStatus>) : IClusterGenerator{
+	companion object {
+		private class SimpleGenerator(level: Pair<Int, Int>, capacity: Pair<Int, Int>, private val health: WeightedList<HealthStatus>) : IClusterGenerator {
 			private val levelMin = Units(level.first).floating.value
 			private val levelMax = Units(level.second).floating.value
 			
 			private val capacityMin = Units(capacity.first).floating.value
 			private val capacityMax = Units(capacity.second).floating.value
 			
-			override fun generate(rand: Random): ClusterSnapshot{
+			override fun generate(rand: Random): ClusterSnapshot {
 				val generatedLevel = Floating(rand.nextFloat(levelMin, levelMax))
 				val generatedCapacity = Floating(rand.nextFloat(capacityMin, capacityMax))
 				
@@ -72,7 +73,7 @@ interface IClusterGenerator{
 		)
 		
 		@JvmStatic
-		fun ARCANE_CONJUNCTIONS(rand: Random, amount: Int): Array<IClusterGenerator>{
+		fun ARCANE_CONJUNCTIONS(rand: Random, amount: Int): Array<IClusterGenerator> {
 			val level = 2 to 80
 			
 			val tiers = listOf(
@@ -83,7 +84,7 @@ interface IClusterGenerator{
 				(310 to 375) to weightedListOf(               35 to WEAKENED, 50 to TIRED, 15 to UNSTABLE)
 			).shuffled(rand)
 			
-			return Array(amount){
+			return Array(amount) {
 				val (capacity, health) = tiers[it % tiers.size]
 				SimpleGenerator(level, capacity, health)
 			}

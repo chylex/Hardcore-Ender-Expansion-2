@@ -1,4 +1,5 @@
 package chylex.hee.game.world.feature.stronghold
+
 import chylex.hee.HEE
 import chylex.hee.game.entity.technical.EntityTechnicalTrigger
 import chylex.hee.game.entity.technical.EntityTechnicalTrigger.Types.STRONGHOLD_GENERATOR
@@ -29,15 +30,15 @@ import net.minecraft.world.storage.WorldSavedData
 import java.util.Random
 import kotlin.math.abs
 
-object StrongholdGenerator : OverworldFeature(){
+object StrongholdGenerator : OverworldFeature() {
 	private const val GRID_CHUNKS = 68
 	private const val DIST_CHUNKS = 18
 	
 	private val STRUCTURE_SIZE
 		get() = StrongholdPieces.STRUCTURE_SIZE
 	
-	class DimensionStrongholdData private constructor() : WorldSavedData(NAME){
-		companion object{
+	class DimensionStrongholdData private constructor() : WorldSavedData(NAME) {
+		companion object {
 			fun get(world: ServerWorld) = world.perDimensionData(NAME, ::DimensionStrongholdData)
 			
 			private const val NAME = "HEE_STRONGHOLDS"
@@ -50,19 +51,19 @@ object StrongholdGenerator : OverworldFeature(){
 		
 		private val locations = mutableMapOf<ChunkPos, BlockPos>()
 		
-		fun addLocation(chunk: ChunkPos, pos: BlockPos){
+		fun addLocation(chunk: ChunkPos, pos: BlockPos) {
 			locations[chunk] = pos
 			markDirty()
 		}
 		
-		fun getLocation(chunk: ChunkPos): BlockPos?{
+		fun getLocation(chunk: ChunkPos): BlockPos? {
 			return locations[chunk]
 		}
 		
 		override fun write(nbt: TagCompound) = nbt.apply {
 			val list = NBTObjectList<TagCompound>()
 			
-			for((chunk, pos) in locations){
+			for((chunk, pos) in locations) {
 				list.append(TagCompound().also {
 					it.putInt(CHUNK_X_TAG, chunk.x)
 					it.putInt(CHUNK_Z_TAG, chunk.z)
@@ -76,7 +77,7 @@ object StrongholdGenerator : OverworldFeature(){
 		override fun read(nbt: TagCompound) = nbt.use {
 			locations.clear()
 			
-			for(tag in getListOfCompounds(LOCATIONS_TAG)){
+			for(tag in getListOfCompounds(LOCATIONS_TAG)) {
 				val chunk = ChunkPos(tag.getInt(CHUNK_X_TAG), tag.getInt(CHUNK_Z_TAG))
 				locations[chunk] = tag.getPos(POS_TAG)
 			}
@@ -85,7 +86,7 @@ object StrongholdGenerator : OverworldFeature(){
 	
 	// Search
 	
-	private fun findSpawnAt(seed: Long, chunkX: Int, chunkZ: Int): BlockPos?{
+	private fun findSpawnAt(seed: Long, chunkX: Int, chunkZ: Int): BlockPos? {
 		val (startChunkX, startChunkZ) = OverworldFeatures.findStartChunkInGrid(GRID_CHUNKS, chunkX, chunkZ)
 		
 		val centerChunkX = startChunkX + (GRID_CHUNKS / 2)
@@ -93,7 +94,7 @@ object StrongholdGenerator : OverworldFeature(){
 		
 		val rand = Random((centerChunkX * 920419813L) + (centerChunkZ * 49979687L) + seed)
 		
-		if (rand.nextInt(5) > 2 || abs(centerChunkX) < 50 || abs(centerChunkZ) < 50){
+		if (rand.nextInt(5) > 2 || abs(centerChunkX) < 50 || abs(centerChunkZ) < 50) {
 			return null
 		}
 		
@@ -104,11 +105,11 @@ object StrongholdGenerator : OverworldFeature(){
 		)
 	}
 	
-	private fun isChunkPopulated(world: ServerWorld, chunk: ChunkPos): Boolean{
+	private fun isChunkPopulated(world: ServerWorld, chunk: ChunkPos): Boolean {
 		return false // UPDATE (world.chunkProvider as? ServerChunkProvider)?.loadChunk(chunk.x, chunk.z).let { it != null && it.isTerrainPopulated }
 	}
 	
-	fun findNearest(world: ServerWorld, xz: PosXZ): BlockPos?{
+	fun findNearest(world: ServerWorld, xz: PosXZ): BlockPos? {
 		val chunkX = xz.chunkX
 		val chunkZ = xz.chunkZ
 		
@@ -117,22 +118,22 @@ object StrongholdGenerator : OverworldFeature(){
 		val strongholds = DimensionStrongholdData.get(world)
 		val found = mutableListOf<BlockPos>()
 		
-		for(offX in -2..2) for(offZ in -2..2){
+		for(offX in -2..2) for(offZ in -2..2) {
 			val testChunkX = chunkX + (GRID_CHUNKS * offX)
 			val testChunkZ = chunkZ + (GRID_CHUNKS * offZ)
 			val foundPos = findSpawnAt(seed, testChunkX, testChunkZ)
 			
-			if (foundPos == null){
+			if (foundPos == null) {
 				continue
 			}
 			
 			val foundChunk = ChunkPos(foundPos)
 			val realPos = strongholds.getLocation(foundChunk)
 			
-			if (realPos != null){
+			if (realPos != null) {
 				found.add(realPos)
 			}
-			else if (!isChunkPopulated(world, foundChunk)){
+			else if (!isChunkPopulated(world, foundChunk)) {
 				found.add(foundPos)
 			}
 		}
@@ -142,8 +143,8 @@ object StrongholdGenerator : OverworldFeature(){
 	
 	// Helpers
 	
-	private fun buildStructure(rand: Random): Pair<IStructureBuild?, BlockPos?>{
-		for(attempt in 1..50){
+	private fun buildStructure(rand: Random): Pair<IStructureBuild?, BlockPos?> {
+		for(attempt in 1..50) {
 			return StrongholdBuilder.buildWithEyeOfEnderTarget(rand) ?: continue
 		}
 		
@@ -152,10 +153,10 @@ object StrongholdGenerator : OverworldFeature(){
 	
 	// Generation
 	
-	override fun place(world: IWorld, rand: Random, pos: BlockPos, chunkX: Int, chunkZ: Int): Boolean{
+	override fun place(world: IWorld, rand: Random, pos: BlockPos, chunkX: Int, chunkZ: Int): Boolean {
 		val spawnPos = findSpawnAt(world.seed, chunkX, chunkZ) ?: return false
 		
-		if (ChunkPos(spawnPos).let { it.x != chunkX || it.z != chunkZ }){
+		if (ChunkPos(spawnPos).let { it.x != chunkX || it.z != chunkZ }) {
 			return false
 		}
 		
@@ -167,12 +168,12 @@ object StrongholdGenerator : OverworldFeature(){
 		return true
 	}
 	
-	object GeneratorTrigger : GeneratorTriggerBase(){
-		override fun place(world: ServerWorld, rand: Random, pos: BlockPos){
+	object GeneratorTrigger : GeneratorTriggerBase() {
+		override fun place(world: ServerWorld, rand: Random, pos: BlockPos) {
 			val chunk = ChunkPos(pos)
 			val (build, targetPos) = buildStructure(rand)
 			
-			if (build == null){
+			if (build == null) {
 				HEE.log.error("[StrongholdGenerator] failed all attempts at generating (chunkX = ${chunk.x}, chunkZ = ${chunk.z}, seed = ${world.seed})")
 				return
 			}

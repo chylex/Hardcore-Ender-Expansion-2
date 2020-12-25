@@ -1,4 +1,5 @@
 package chylex.hee.game.block.entity
+
 import chylex.hee.client.model.block.ModelBlockIgneousPlate.ANIMATION_PERIOD
 import chylex.hee.game.block.BlockIgneousPlate
 import chylex.hee.game.block.entity.base.TileEntityBaseSpecialFirstTick
@@ -35,10 +36,10 @@ import kotlin.math.max
 import kotlin.math.min
 import kotlin.math.pow
 
-class TileEntityIgneousPlate(type: TileEntityType<TileEntityIgneousPlate>) : TileEntityBaseSpecialFirstTick(type){
+class TileEntityIgneousPlate(type: TileEntityType<TileEntityIgneousPlate>) : TileEntityBaseSpecialFirstTick(type) {
 	constructor() : this(ModTileEntities.IGNEOUS_PLATE)
 	
-	private companion object{
+	private companion object {
 		private const val TICKS_TO_HEAT_UP = 1100
 		private const val TICKS_TO_COOL_DOWN = 2600
 		
@@ -92,16 +93,16 @@ class TileEntityIgneousPlate(type: TileEntityType<TileEntityIgneousPlate>) : Til
 	val clientThrustAnimation = LerpedDouble(0.0)
 	private var animation = 0.0
 	
-	fun isAttachedTo(furnace: TileEntityFurnace): Boolean{
+	fun isAttachedTo(furnace: TileEntityFurnace): Boolean {
 		return pos.offset(facing.opposite) == furnace.pos
 	}
 	
-	fun reduceSpeed(amount: Float){
+	fun reduceSpeed(amount: Float) {
 		progress = max(0.0, progress - amount)
 		markDirty()
 	}
 	
-	fun blastOff(){
+	fun blastOff() {
 		val rand = wrld.rand
 		
 		EntityItemFreshlyCooked(wrld, pos.center, ItemStack(ModBlocks.IGNEOUS_PLATE)).apply {
@@ -112,14 +113,14 @@ class TileEntityIgneousPlate(type: TileEntityType<TileEntityIgneousPlate>) : Til
 		pos.removeBlock(wrld)
 	}
 	
-	override fun firstTick(){
+	override fun firstTick() {
 		facing = pos.getState(wrld)[BlockIgneousPlate.FACING_NOT_DOWN]
 	}
 	
-	override fun tick(){
+	override fun tick() {
 		super.tick()
 		
-		if (!wrld.isAreaLoaded(pos, 1)){
+		if (!wrld.isAreaLoaded(pos, 1)) {
 			return
 		}
 		
@@ -130,28 +131,28 @@ class TileEntityIgneousPlate(type: TileEntityType<TileEntityIgneousPlate>) : Til
 		else
 			furnace.isBurning
 		
-		if (isBurning){
-			if (progress < 1.0){
+		if (isBurning) {
+			if (progress < 1.0) {
 				progress = min(1.0, progress + PROGRESS_HEAT_UP_PER_TICK)
 				markDirty()
 			}
 		}
-		else if (potential > 0.0){
+		else if (potential > 0.0) {
 			progress = max(0.0, progress - PROGRESS_COOL_DOWN_PER_TICK)
 			markDirty()
 		}
 		
-		if (wrld.isRemote){
+		if (wrld.isRemote) {
 			val potential = potential
 			val threshold = if (isBurning) 0.001 else 0.03
 			
 			var prevThrustAnim = clientThrustAnimation.currentValue
 			
-			if (potential > threshold){
+			if (potential > threshold) {
 				val step = potential * 0.12
 				animation += step
 				
-				if (animation >= 1.0){
+				if (animation >= 1.0) {
 					animation -= 1.0
 					// TODO sound
 					
@@ -159,27 +160,27 @@ class TileEntityIgneousPlate(type: TileEntityType<TileEntityIgneousPlate>) : Til
 					
 					val overheatingLevel = EntityTechnicalIgneousPlateLogic.getOverheatingPercentage(furnace)
 					
-					if (overheatingLevel > 0.0){
+					if (overheatingLevel > 0.0) {
 						PARTICLE_OVERHEATING[facing]?.spawn(Point(pos, 1 + (max(0F, overheatingLevel - 0.125F) * 4F).floorToInt()), wrld.rand)
 					}
 				}
 				
-				if (prevThrustAnim >= ANIMATION_PERIOD){
+				if (prevThrustAnim >= ANIMATION_PERIOD) {
 					prevThrustAnim -= ANIMATION_PERIOD
 					clientThrustAnimation.updateImmediately(prevThrustAnim)
 				}
 				
 				clientThrustAnimation.update(prevThrustAnim + (step * ANIMATION_PERIOD))
 			}
-			else{
+			else {
 				animation = 0.0
 				
-				if (prevThrustAnim > ANIMATION_PERIOD / 2){
+				if (prevThrustAnim > ANIMATION_PERIOD / 2) {
 					prevThrustAnim = ANIMATION_PERIOD - prevThrustAnim
 					clientThrustAnimation.updateImmediately(prevThrustAnim)
 				}
 				
-				if (prevThrustAnim > 0.0){
+				if (prevThrustAnim > 0.0) {
 					clientThrustAnimation.update(max(0.0, (prevThrustAnim * 0.95) - 0.005))
 				}
 			}

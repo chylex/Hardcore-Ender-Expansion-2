@@ -1,4 +1,5 @@
 package chylex.hee.game.entity.living
+
 import chylex.hee.HEE
 import chylex.hee.game.entity.living.ai.AISummonFromBlock
 import chylex.hee.game.entity.living.ai.AITargetSwarmSwitch
@@ -43,21 +44,21 @@ import net.minecraftforge.event.entity.EntityJoinWorldEvent
 import net.minecraftforge.fml.network.NetworkHooks
 import kotlin.math.floor
 
-class EntityMobSilverfish(type: EntityType<EntityMobSilverfish>, world: World) : EntitySilverfish(type, world), ICritTracker{
+class EntityMobSilverfish(type: EntityType<EntityMobSilverfish>, world: World) : EntitySilverfish(type, world), ICritTracker {
 	constructor(world: World) : this(ModEntities.SILVERFISH, world)
 	
 	@SubscribeAllEvents(modid = HEE.ID)
-	companion object{
+	companion object {
 		private val DAMAGE_GENERAL          = Damage(DIFFICULTY_SCALING, PEACEFUL_EXCLUSION, *ALL_PROTECTIONS, RAPID_DAMAGE(5))
 		private val DAMAGE_HAUNTWOOD_FOREST = Damage(DIFFICULTY_SCALING, PEACEFUL_KNOCKBACK, *ALL_PROTECTIONS, RAPID_DAMAGE(5))
 		
 		private const val HIDE_DELAY_TAG = "HideDelay"
 		
 		@SubscribeEvent(EventPriority.LOWEST)
-		fun onEntityJoinWorld(e: EntityJoinWorldEvent){
+		fun onEntityJoinWorld(e: EntityJoinWorldEvent) {
 			val entity = e.entity
 			
-			if (entity::class.java === EntitySilverfish::class.java){
+			if (entity::class.java === EntitySilverfish::class.java) {
 				e.isCanceled = true
 				
 				val world = e.world
@@ -66,7 +67,7 @@ class EntityMobSilverfish(type: EntityType<EntityMobSilverfish>, world: World) :
 					copyLocationAndAnglesFrom(entity)
 					world.addEntity(this)
 					
-					if (rotationYaw == 0F && rotationPitch == 0F && posY == floor(posY) && (posX - 0.5) == floor(posX) && (posZ - 0.5) == floor(posZ)){
+					if (rotationYaw == 0F && rotationPitch == 0F && posY == floor(posY) && (posX - 0.5) == floor(posX) && (posZ - 0.5) == floor(posZ)) {
 						// high confidence of being spawned from BlockSilverfish
 						spawnExplosionParticle()
 					}
@@ -82,7 +83,7 @@ class EntityMobSilverfish(type: EntityType<EntityMobSilverfish>, world: World) :
 	
 	override var wasLastHitCritical = false
 	
-	override fun registerAttributes(){
+	override fun registerAttributes() {
 		super.registerAttributes()
 		
 		getAttribute(MAX_HEALTH).baseValue = 8.0
@@ -92,7 +93,7 @@ class EntityMobSilverfish(type: EntityType<EntityMobSilverfish>, world: World) :
 		experienceValue = 3
 	}
 	
-	override fun registerGoals(){
+	override fun registerGoals() {
 		aiSummonFromBlock = SummonFromBlock(this, searchAttempts = 500, searchDistance = 6, searchingFor = ::isSilverfishBlock)
 		
 		goalSelector.addGoal(1, Swim(this))
@@ -108,64 +109,64 @@ class EntityMobSilverfish(type: EntityType<EntityMobSilverfish>, world: World) :
 		targetSelector.addGoal(3, aiTargetSwarmSwitch)
 	}
 	
-	override fun createSpawnPacket(): IPacket<*>{
+	override fun createSpawnPacket(): IPacket<*> {
 		return NetworkHooks.getEntitySpawningPacket(this)
 	}
 	
-	override fun livingTick(){
+	override fun livingTick() {
 		super.livingTick()
 		
-		if (hideInBlockDelayTicks > 0){
+		if (hideInBlockDelayTicks > 0) {
 			--hideInBlockDelayTicks
 		}
 	}
 	
-	fun delayHideInBlockAI(delayTicks: Int){
+	fun delayHideInBlockAI(delayTicks: Int) {
 		hideInBlockDelayTicks = delayTicks
 	}
 	
-	fun disableHideInBlockAI(){
+	fun disableHideInBlockAI() {
 		hideInBlockDelayTicks = Int.MAX_VALUE
 	}
 	
-	private fun isSilverfishBlock(block: Block): Boolean{
+	private fun isSilverfishBlock(block: Block): Boolean {
 		return block is BlockSilverfish
 	}
 	
-	private fun tryHideInBlock(state: BlockState): BlockState?{
+	private fun tryHideInBlock(state: BlockState): BlockState? {
 		return if (BlockSilverfish.canContainSilverfish(state) && hideInBlockDelayTicks == 0)
 			BlockSilverfish.infest(state.block)
 		else
 			null
 	}
 	
-	override fun attackEntityFrom(source: DamageSource, amount: Float): Boolean{
-		if (!super.attackEntityFrom(source, amount)){
+	override fun attackEntityFrom(source: DamageSource, amount: Float): Boolean {
+		if (!super.attackEntityFrom(source, amount)) {
 			return false
 		}
 		
-		if (source is EntityDamageSource || source === DamageSource.MAGIC){
+		if (source is EntityDamageSource || source === DamageSource.MAGIC) {
 			aiSummonFromBlock.triggerSummonInTicks(20)
 		}
 		
 		return true
 	}
 	
-	override fun attackEntityAsMob(entity: Entity): Boolean{
+	override fun attackEntityAsMob(entity: Entity): Boolean {
 		val source = DAMAGE_GENERAL // TODO implement Hauntwood Forest checking
 		
-		if (!source.dealToFrom(entity, this)){
+		if (!source.dealToFrom(entity, this)) {
 			return false
 		}
 		
-		if (rand.nextInt(4) != 0){
+		if (rand.nextInt(4) != 0) {
 			aiTargetSwarmSwitch.triggerRetarget()
 		}
 		
 		return true
 	}
 	
-	override fun getLootTable(): ResourceLocation{
+	override fun getLootTable(): ResourceLocation {
 		return Resource.Custom("entities/silverfish")
 	}
 	

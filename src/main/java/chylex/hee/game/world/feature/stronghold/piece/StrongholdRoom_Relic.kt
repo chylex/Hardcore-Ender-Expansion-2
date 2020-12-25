@@ -1,4 +1,5 @@
 package chylex.hee.game.world.feature.stronghold.piece
+
 import chylex.hee.game.block.entity.TileEntityLootChest
 import chylex.hee.game.block.withFacing
 import chylex.hee.game.inventory.setStack
@@ -17,7 +18,7 @@ import chylex.hee.system.migration.Facing.SOUTH
 import net.minecraft.item.ItemStack
 import net.minecraft.util.math.BlockPos
 
-abstract class StrongholdRoom_Relic(file: String, private val relicItem: ItemStack) : StrongholdAbstractPiece(), IStructurePieceFromFile by Delegate("stronghold/$file", StrongholdPieces.PALETTE){
+abstract class StrongholdRoom_Relic(file: String, private val relicItem: ItemStack) : StrongholdAbstractPiece(), IStructurePieceFromFile by Delegate("stronghold/$file", StrongholdPieces.PALETTE) {
 	final override val type = StrongholdPieceType.ROOM
 	
 	override val connections = arrayOf<IStructurePieceConnection>(
@@ -26,7 +27,7 @@ abstract class StrongholdRoom_Relic(file: String, private val relicItem: ItemSta
 	
 	protected abstract val lootChestPos: BlockPos
 	
-	override fun generate(world: IStructureWorld, instance: Instance){
+	override fun generate(world: IStructureWorld, instance: Instance) {
 		
 		// floor and ceiling
 		

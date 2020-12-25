@@ -1,4 +1,5 @@
 package chylex.hee.game.block.fluid
+
 import chylex.hee.system.color.IntColor
 import chylex.hee.system.color.IntColor.Companion.RGB
 import chylex.hee.system.forge.named
@@ -16,20 +17,20 @@ import java.util.function.BiFunction
 import java.util.function.Supplier
 
 @Suppress("LeakingThis")
-abstract class FluidBase(fluidName: String, val rgbColor: IntColor, val mapColor: MaterialColor, val resistance: Float, texStill: ResourceLocation, texFlowing: ResourceLocation){
+abstract class FluidBase(fluidName: String, val rgbColor: IntColor, val mapColor: MaterialColor, val resistance: Float, texStill: ResourceLocation, texFlowing: ResourceLocation) {
 	val fogColor = rgbColor.asVec
 	
 	lateinit var still: ForgeFlowingFluid.Source
 	lateinit var flowing: ForgeFlowingFluid.Flowing
 	
-	init{
-		val supplyStill   = Supplier<Fluid> { still }
+	init {
+		val supplyStill = Supplier<Fluid> { still }
 		val supplyFlowing = Supplier<Fluid> { flowing }
 		
 		val attr = FluidAttributesFixColor.Builder(texStill, texFlowing).color(rgbColor.i).let(::attr)
 		val props = Properties(supplyStill, supplyFlowing, attr).explosionResistance(resistance).let(::props)
 		
-		still   = ForgeFlowingFluid.Source(props) named fluidName
+		still = ForgeFlowingFluid.Source(props) named fluidName
 		flowing = constructFlowingFluid(props) named "flowing_$fluidName"
 	}
 	
@@ -38,7 +39,7 @@ abstract class FluidBase(fluidName: String, val rgbColor: IntColor, val mapColor
 	
 	abstract fun constructFlowingFluid(properties: Properties): ForgeFlowingFluid.Flowing
 	
-	private class FluidAttributesFixColor(builder: FluidAttributes.Builder, fluid: Fluid) : FluidAttributes(builder, fluid){
+	private class FluidAttributesFixColor(builder: FluidAttributes.Builder, fluid: Fluid) : FluidAttributes(builder, fluid) {
 		class Builder(stillTexture: ResourceLocation, flowingTexture: ResourceLocation) : FluidAttributes.Builder(stillTexture, flowingTexture, BiFunction(::FluidAttributesFixColor))
 		
 		// keep the color property, but stop it from tinting the texture

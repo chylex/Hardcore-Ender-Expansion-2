@@ -1,4 +1,5 @@
 package chylex.hee.game.world.feature.stronghold.piece
+
 import chylex.hee.game.block.with
 import chylex.hee.game.block.withFacing
 import chylex.hee.game.world.Pos
@@ -16,8 +17,8 @@ import net.minecraft.block.Blocks
 import net.minecraft.state.properties.SlabType
 import net.minecraft.util.Direction
 
-class StrongholdCorridor_Stairs_Vertical(connectionAtEntrance: Direction, connectionAtExit: Direction, levels: Int) : StrongholdAbstractPiece(){
-	private companion object{
+class StrongholdCorridor_Stairs_Vertical(connectionAtEntrance: Direction, connectionAtExit: Direction, levels: Int) : StrongholdAbstractPiece() {
+	private companion object {
 		/*
 		 * base height for levels = 1 is 9
 		 * if exit is to the left of entrance, add 0
@@ -26,14 +27,14 @@ class StrongholdCorridor_Stairs_Vertical(connectionAtEntrance: Direction, connec
 		 * if exit is opposite of entrance (return), add 3
 		 * base height for levels = 2 is 13
 		 */
-		private fun calculateHeight(connectionAtEntrance: Direction, connectionAtExit: Direction, levels: Int): Int{
+		private fun calculateHeight(connectionAtEntrance: Direction, connectionAtExit: Direction, levels: Int): Int {
 			val revEntrance = connectionAtEntrance.opposite
 			
-			return 9 + ((levels - 1) * 4) + when(connectionAtExit){
-				revEntrance.opposite -> 3
+			return 9 + ((levels - 1) * 4) + when(connectionAtExit) {
+				revEntrance.opposite  -> 3
 				revEntrance.rotateY() -> 2
-				revEntrance -> 1
-				else -> 0
+				revEntrance           -> 1
+				else                  -> 0
 			}
 		}
 	}
@@ -46,7 +47,7 @@ class StrongholdCorridor_Stairs_Vertical(connectionAtEntrance: Direction, connec
 		StrongholdConnection(STAIR, Pos(size.centerX, size.maxY - 4, size.centerZ).offset(connectionAtExit, 2), connectionAtExit)
 	)
 	
-	override fun generate(world: IStructureWorld, instance: Instance){
+	override fun generate(world: IStructureWorld, instance: Instance) {
 		super.generate(world, instance)
 		world.placeCube(Pos(1, 1, 1), Pos(size.maxX - 1, size.maxY - 1, size.maxZ - 1), Air)
 		
@@ -56,7 +57,7 @@ class StrongholdCorridor_Stairs_Vertical(connectionAtEntrance: Direction, connec
 		var facing = connections[0].facing.opposite
 		val pos = MutableBlockPos(connections[0].offset).move(facing).move(facing.rotateYCCW())
 		
-		repeat(size.maxY - 4){
+		repeat(size.maxY - 4) {
 			++pos.y
 			
 			val firstBlock = if (useStairs)
@@ -72,7 +73,7 @@ class StrongholdCorridor_Stairs_Vertical(connectionAtEntrance: Direction, connec
 			facing = facing.rotateY()
 		}
 		
-		if (rand.nextBoolean()){
+		if (rand.nextBoolean()) {
 			world.placeCube(Pos(size.centerX, 1, size.centerZ), Pos(size.centerX, size.maxY - 1, size.centerZ), StrongholdPieces.PALETTE_ENTRY_STONE_BRICK)
 			
 			val endFacing = connections[1].facing.opposite

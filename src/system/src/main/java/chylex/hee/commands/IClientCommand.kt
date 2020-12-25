@@ -1,7 +1,8 @@
 package chylex.hee.commands
+
 import net.minecraft.command.CommandSource
 
-interface IClientCommand{
+interface IClientCommand {
 	val name: String
 	fun executeCommand(sender: CommandSource, args: Array<String>)
 }

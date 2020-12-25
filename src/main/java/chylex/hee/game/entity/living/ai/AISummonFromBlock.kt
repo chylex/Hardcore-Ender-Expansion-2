@@ -1,4 +1,5 @@
 package chylex.hee.game.entity.living.ai
+
 import chylex.hee.game.world.breakBlock
 import chylex.hee.game.world.getBlock
 import chylex.hee.game.world.isPeaceful
@@ -12,22 +13,22 @@ class AISummonFromBlock(
 	private val entity: EntityCreature,
 	private val searchAttempts: Int,
 	private val searchDistance: Int,
-	private val searchingFor: (Block) -> Boolean
-) : Goal(){
+	private val searchingFor: (Block) -> Boolean,
+) : Goal() {
 	private var summonInTicks = Int.MAX_VALUE
 	
-	fun triggerSummonInTicks(ticks: Int){
-		if (summonInTicks > ticks){
+	fun triggerSummonInTicks(ticks: Int) {
+		if (summonInTicks > ticks) {
 			summonInTicks = ticks.coerceAtLeast(0)
 		}
 	}
 	
-	override fun shouldExecute(): Boolean{
+	override fun shouldExecute(): Boolean {
 		return summonInTicks != Int.MAX_VALUE
 	}
 	
-	override fun tick(){
-		if (--summonInTicks > 0){
+	override fun tick() {
+		if (--summonInTicks > 0) {
 			return
 		}
 		
@@ -35,7 +36,7 @@ class AISummonFromBlock(
 		
 		val world = entity.world
 		
-		if (world.isPeaceful || !world.gameRules.getBoolean(MOB_GRIEFING)){
+		if (world.isPeaceful || !world.gameRules.getBoolean(MOB_GRIEFING)) {
 			return
 		}
 		
@@ -44,17 +45,17 @@ class AISummonFromBlock(
 		
 		var remainingSpawns = 1 + rand.nextInt(0, world.difficulty.id)
 		
-		repeat(searchAttempts){
+		repeat(searchAttempts) {
 			val checkedPos = pos.add(
 				rand.nextInt(-searchDistance, searchDistance),
 				rand.nextInt(-searchDistance / 2, searchDistance / 2),
 				rand.nextInt(-searchDistance, searchDistance)
 			)
 			
-			if (searchingFor(checkedPos.getBlock(world))){
+			if (searchingFor(checkedPos.getBlock(world))) {
 				checkedPos.breakBlock(world, true)
 				
-				if (--remainingSpawns == 0){
+				if (--remainingSpawns == 0) {
 					return
 				}
 			}

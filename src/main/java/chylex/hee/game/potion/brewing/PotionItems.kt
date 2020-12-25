@@ -1,4 +1,5 @@
 package chylex.hee.game.potion.brewing
+
 import chylex.hee.game.inventory.nbtOrNull
 import chylex.hee.game.potion.brewing.modifiers.BrewConvertBottle
 import chylex.hee.game.potion.brewing.modifiers.BrewIncreaseDuration
@@ -13,7 +14,7 @@ import net.minecraft.item.ItemStack
 import net.minecraft.potion.PotionUtils
 import net.minecraftforge.common.brewing.BrewingRecipeRegistry
 
-object PotionItems{
+object PotionItems {
 	const val CUSTOM_EFFECTS_TAG = "CustomPotionEffects"
 	
 	private val MODIFIERS = arrayOf(
@@ -24,11 +25,11 @@ object PotionItems{
 		BrewReversal
 	).associateBy { it.ingredient }
 	
-	fun getBottle(item: Item, type: PotionType): ItemStack{
+	fun getBottle(item: Item, type: PotionType): ItemStack {
 		return PotionUtils.addPotionToItemStack(ItemStack(item), type)
 	}
 	
-	fun getBottle(item: Item, potion: Potion, withBaseEffect: Boolean): ItemStack{
+	fun getBottle(item: Item, potion: Potion, withBaseEffect: Boolean): ItemStack {
 		val type = PotionTypeMap.getTypeOrWater(potion)
 		
 		return if (withBaseEffect)
@@ -37,23 +38,23 @@ object PotionItems{
 			getBottle(item, PotionTypeMap.findNoEffectOverride(type))
 	}
 	
-	fun checkBottle(stack: ItemStack, type: PotionType): Boolean{
+	fun checkBottle(stack: ItemStack, type: PotionType): Boolean {
 		return isPotion(stack) && PotionUtils.getPotionFromItem(stack) === type && !stack.nbtOrNull.hasKey(CUSTOM_EFFECTS_TAG)
 	}
 	
-	fun isPotion(stack: ItemStack): Boolean{
+	fun isPotion(stack: ItemStack): Boolean {
 		return stack.item is ItemPotion
 	}
 	
-	fun isReagent(stack: ItemStack): Boolean{
+	fun isReagent(stack: ItemStack): Boolean {
 		return BrewingRecipeRegistry.isValidIngredient(stack)
 	}
 	
-	fun isModifier(ingredient: ItemStack): Boolean{
+	fun isModifier(ingredient: ItemStack): Boolean {
 		return MODIFIERS.containsKey(ingredient.item)
 	}
 	
-	fun findModifier(ingredient: ItemStack): IBrewingModifier?{
+	fun findModifier(ingredient: ItemStack): IBrewingModifier? {
 		return MODIFIERS[ingredient.item]
 	}
 }

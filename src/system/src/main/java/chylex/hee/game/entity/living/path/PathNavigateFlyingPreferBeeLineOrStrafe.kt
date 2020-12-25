@@ -1,4 +1,5 @@
 package chylex.hee.game.entity.living.path
+
 import chylex.hee.game.entity.living.controller.EntityMoveFlyingForward
 import chylex.hee.game.entity.lookDirVec
 import chylex.hee.game.entity.lookPosVec
@@ -14,7 +15,7 @@ import net.minecraft.entity.Entity
 import net.minecraft.pathfinding.FlyingPathNavigator
 import net.minecraft.world.World
 
-class PathNavigateFlyingPreferBeeLineOrStrafe(entity: EntityLiving, world: World) : FlyingPathNavigator(entity, world){
+class PathNavigateFlyingPreferBeeLineOrStrafe(entity: EntityLiving, world: World) : FlyingPathNavigator(entity, world) {
 	private var moveTarget = Vec3.ZERO
 	private var moveSpeed = 0.0
 	
@@ -24,40 +25,40 @@ class PathNavigateFlyingPreferBeeLineOrStrafe(entity: EntityLiving, world: World
 	private var strafeDir = 0
 	private var strafeDirReset = 0
 	
-	override fun noPath(): Boolean{
+	override fun noPath(): Boolean {
 		return super.noPath() && moveSpeed == 0.0
 	}
 	
-	override fun tryMoveToXYZ(x: Double, y: Double, z: Double, speed: Double): Boolean{
+	override fun tryMoveToXYZ(x: Double, y: Double, z: Double, speed: Double): Boolean {
 		return tryBeelineTo(x, y, z, speed) || super.tryMoveToXYZ(x, y, z, speed)
 	}
 	
-	override fun tryMoveToEntityLiving(target: Entity, speed: Double): Boolean{
+	override fun tryMoveToEntityLiving(target: Entity, speed: Double): Boolean {
 		return tryBeelineTo(target.posX, target.posY, target.posZ, speed) || super.tryMoveToEntityLiving(target, speed)
 	}
 	
-	private fun tryBeelineTo(x: Double, y: Double, z: Double, speed: Double): Boolean{
+	private fun tryBeelineTo(x: Double, y: Double, z: Double, speed: Double): Boolean {
 		moveTarget = Vec(x, y, z)
 		moveSpeed = speed
 		return true
 	}
 	
-	override fun tick(){
-		if (!isBeelining){
+	override fun tick() {
+		if (!isBeelining) {
 			return
 		}
 		
 		val moveHelper = entity.moveHelper
 		
-		if (entity.collided && entity.motion.lengthSquared() < square(moveSpeed * 0.1)){
+		if (entity.collided && entity.motion.lengthSquared() < square(moveSpeed * 0.1)) {
 			strafeDirReset = 35
 			
-			if (strafeDir == 0){
+			if (strafeDir == 0) {
 				strafeDir = 1
 				
 				val path = getPathToPos(moveTarget.x, moveTarget.y, moveTarget.z, 1)
 				
-				if (path != null && !path.isFinished){
+				if (path != null && !path.isFinished) {
 					val point = path.getPathPointFromIndex(0)
 					val pointDir = entity.lookPosVec.withY(0.0).directionTowards(Vec3.xz(point.x + 0.5, point.z + 0.5))
 					
@@ -73,16 +74,16 @@ class PathNavigateFlyingPreferBeeLineOrStrafe(entity: EntityLiving, world: World
 			
 			// TODO improve vertical movement for short obstacles and eventually change the strategy completely for more open spaces
 		}
-		else{
+		else {
 			moveHelper.setMoveTo(moveTarget.x, moveTarget.y, moveTarget.z, moveSpeed)
 			
-			if (strafeDirReset > 0 && --strafeDirReset == 0){
+			if (strafeDirReset > 0 && --strafeDirReset == 0) {
 				strafeDir = 0
 			}
 		}
 	}
 	
-	override fun clearPath(){
+	override fun clearPath() {
 		super.clearPath()
 		moveTarget = Vec3.ZERO
 		moveSpeed = 0.0

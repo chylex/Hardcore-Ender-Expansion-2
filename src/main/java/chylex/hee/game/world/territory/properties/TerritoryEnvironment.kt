@@ -1,4 +1,5 @@
 package chylex.hee.game.world.territory.properties
+
 import chylex.hee.client.render.lightmaps.ILightmap
 import chylex.hee.client.render.lightmaps.VanillaEndLightmap
 import chylex.hee.client.render.territory.AbstractEnvironmentRenderer
@@ -12,8 +13,8 @@ import chylex.hee.system.math.Vec3
 import chylex.hee.system.migration.EntityPlayer
 import net.minecraft.util.math.Vec3d
 
-abstract class TerritoryEnvironment{
-	protected companion object{
+abstract class TerritoryEnvironment {
+	protected companion object {
 		val VANILLA = SkyCubeStatic(
 			texture = Resource.Vanilla("textures/environment/end_sky.png"),
 			color = Vec3.xyz(40.0 / 255.0),
@@ -42,8 +43,8 @@ abstract class TerritoryEnvironment{
 	open val lightmap: ILightmap = VanillaEndLightmap
 	
 	@Sided(Side.CLIENT)
-	open fun setupClient(player: EntityPlayer){}
+	open fun setupClient(player: EntityPlayer) {}
 	
 	@Sided(Side.CLIENT)
-	open fun tickClient(player: EntityPlayer){}
+	open fun tickClient(player: EntityPlayer) {}
 }

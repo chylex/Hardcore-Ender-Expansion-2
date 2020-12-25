@@ -1,4 +1,5 @@
 package chylex.hee.game.entity.living.behavior
+
 import chylex.hee.game.entity.living.EntityBossEnderEye
 import chylex.hee.game.entity.lookPosVec
 import chylex.hee.game.particle.ParticleSmokeCustom
@@ -32,8 +33,8 @@ import java.util.Random
 import kotlin.math.pow
 import kotlin.math.sqrt
 
-class EnderEyeSpawnerParticles(private val entity: EntityBossEnderEye) : INBTSerializable<TagCompound>{
-	companion object{
+class EnderEyeSpawnerParticles(private val entity: EntityBossEnderEye) : INBTSerializable<TagCompound> {
+	companion object {
 		private const val PARTICLE_LIST_TAG = "Particles"
 		private const val X_TAG = "X"
 		private const val Y_TAG = "Y"
@@ -49,20 +50,20 @@ class EnderEyeSpawnerParticles(private val entity: EntityBossEnderEye) : INBTSer
 			hideOnMinimalSetting = false
 		)
 		
-		class ParticleData(private val point: Vec3d) : IFxData{
+		class ParticleData(private val point: Vec3d) : IFxData {
 			override fun write(buffer: PacketBuffer) = buffer.use {
 				writeVec(point)
 			}
 		}
 		
-		val FX_PARTICLE = object : IFxHandler<ParticleData>{
+		val FX_PARTICLE = object : IFxHandler<ParticleData> {
 			override fun handle(buffer: PacketBuffer, world: World, rand: Random) = buffer.use {
 				PARTICLE_TICK.spawn(Point(readVec(), 2), rand)
 			}
 		}
 	}
 	
-	private class ParticleInstance(pos: Vec3d, delay: Int, private var originalDistanceXZ: Float) : INBTSerializable<TagCompound>{
+	private class ParticleInstance(pos: Vec3d, delay: Int, private var originalDistanceXZ: Float) : INBTSerializable<TagCompound> {
 		constructor() : this(Vec3.ZERO, 0, 0F)
 		
 		var pos = pos
@@ -73,8 +74,8 @@ class EnderEyeSpawnerParticles(private val entity: EntityBossEnderEye) : INBTSer
 		
 		private var prevDistSq = Float.MAX_VALUE
 		
-		fun tick(entity: EntityBossEnderEye): Boolean{
-			if (delay > 0){
+		fun tick(entity: EntityBossEnderEye): Boolean {
+			if (delay > 0) {
 				--delay
 				return false
 			}
@@ -86,9 +87,9 @@ class EnderEyeSpawnerParticles(private val entity: EntityBossEnderEye) : INBTSer
 			
 			pos = pos.add(dir.scale(0.04 + (0.08 * (distSq - 0.5).coerceAtLeast(0.0).pow(0.33))))
 			
-			if (entity.rng.nextInt(3) == 0){
+			if (entity.rng.nextInt(3) == 0) {
 				val progress = sqrt(square(pos.x - entity.posX) + square(pos.z - entity.posZ)) / originalDistanceXZ
-				val progressCurvePoint = when{
+				val progressCurvePoint = when {
 					progress < 0.3 -> progress / 0.3
 					progress > 0.7 -> (1.0 - progress) / 0.3
 					else           -> 1.0
@@ -97,7 +98,7 @@ class EnderEyeSpawnerParticles(private val entity: EntityBossEnderEye) : INBTSer
 				PacketClientFX(FX_PARTICLE, ParticleData(pos.addY(sqrt(progressCurvePoint) * 6.0))).sendToAllAround(entity.world, pos, 256.0)
 			}
 			
-			if (distSq > prevDistSq || distSq < square(0.15)){
+			if (distSq > prevDistSq || distSq < square(0.15)) {
 				return true
 			}
 			
@@ -131,12 +132,12 @@ class EnderEyeSpawnerParticles(private val entity: EntityBossEnderEye) : INBTSer
 	
 	private val particles = mutableListOf<ParticleInstance>()
 	
-	fun add(start: BlockPos){
+	fun add(start: BlockPos) {
 		val center = start.bottomCenter
 		var delay = 0
 		
-		for(particle in particles){
-			if (center.squareDistanceTo(particle.pos) < square(0.8)){
+		for(particle in particles) {
+			if (center.squareDistanceTo(particle.pos) < square(0.8)) {
 				delay = particle.delay + 15
 			}
 		}
@@ -144,7 +145,7 @@ class EnderEyeSpawnerParticles(private val entity: EntityBossEnderEye) : INBTSer
 		particles.add(ParticleInstance(center, delay, sqrt(square(entity.posX - center.x) + square(entity.posZ - center.z)).toFloat()))
 	}
 	
-	fun tick(){
+	fun tick() {
 		particles.removeAll { it.tick(entity) }
 	}
 	

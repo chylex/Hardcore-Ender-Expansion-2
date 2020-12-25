@@ -1,6 +1,6 @@
 package chylex.hee.game.mechanics.damage
 
-enum class DamageType{
+enum class DamageType {
 	PROJECTILE,
 	FIRE,
 	BLAST,

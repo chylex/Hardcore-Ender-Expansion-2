@@ -1,4 +1,5 @@
 package chylex.hee.game.entity.living.ai
+
 import chylex.hee.game.entity.living.EntityMobBlobby
 import chylex.hee.game.entity.lookDirVec
 import chylex.hee.system.math.Vec3
@@ -16,7 +17,7 @@ import net.minecraft.entity.ai.goal.Goal.Flag.MOVE
 import java.util.EnumSet
 import kotlin.math.abs
 
-class AIFollowLeaderJumping(private val entity: EntityMobBlobby) : Goal(){
+class AIFollowLeaderJumping(private val entity: EntityMobBlobby) : Goal() {
 	private var leader: EntityMobBlobby? = null
 	
 	private var offset = Vec3.ZERO
@@ -24,28 +25,28 @@ class AIFollowLeaderJumping(private val entity: EntityMobBlobby) : Goal(){
 	private var offsetChangeTicks = 0
 	private var stoppedTicks = 0
 	
-	init{
+	init {
 		mutexFlags = EnumSet.of(MOVE, JUMP)
 	}
 	
-	override fun shouldExecute(): Boolean{
+	override fun shouldExecute(): Boolean {
 		val leader = this.leader ?: entity.findLeader().also { this.leader = it } ?: return false
 		val distSq = entity.getDistanceSq(leader.posX + offset.x, leader.posY + offset.y, leader.posZ + offset.z)
 		
 		return distSq > square(2.0) || (distSq > square(0.8) && entity.motion.withY(0.0).lengthSquared() > square(0.05))
 	}
 	
-	override fun shouldContinueExecuting(): Boolean{
+	override fun shouldContinueExecuting(): Boolean {
 		return stoppedTicks < 10 && leader.let { it == null || it.deathTime == 0 }
 	}
 	
-	override fun tick(){
+	override fun tick() {
 		val leader = this.leader ?: return
 		
-		if (moveTo(leader.posX + offset.x, leader.posY + offset.y, leader.posZ + offset.z)){
+		if (moveTo(leader.posX + offset.x, leader.posY + offset.y, leader.posZ + offset.z)) {
 			val rand = entity.rng
 			
-			if (++offsetChangeTicks > rand.nextInt(17, 300)){
+			if (++offsetChangeTicks > rand.nextInt(17, 300)) {
 				offsetChangeTicks = 0
 				
 				val baseDist = entity.width + (rand.nextFloat(1.8F, 2.5F) * leader.width)
@@ -55,26 +56,26 @@ class AIFollowLeaderJumping(private val entity: EntityMobBlobby) : Goal(){
 				
 				targetOffset = rand.nextVector2(xz = baseDist * rand.nextFloat(0.01, 0.29), y = 0.0).add(yawVec.scale(baseDist * (10F + abs(yawRot)) * 0.014F))
 			}
-			else{
+			else {
 				offset = offset.offsetTowards(targetOffset, 0.005)
 			}
 			
 			stoppedTicks = 0
 		}
-		else{
+		else {
 			++stoppedTicks
 		}
 	}
 	
-	override fun resetTask(){
+	override fun resetTask() {
 		leader = null
 		stoppedTicks = 0
 	}
 	
-	private fun moveTo(x: Double, y: Double, z: Double): Boolean{
+	private fun moveTo(x: Double, y: Double, z: Double): Boolean {
 		val distSq = entity.getDistanceSq(x, y, z)
 		
-		if (distSq < 1.0){
+		if (distSq < 1.0) {
 			return false
 		}
 		

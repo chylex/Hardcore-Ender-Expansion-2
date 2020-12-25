@@ -1,4 +1,5 @@
 package chylex.hee.game.world.feature.tombdungeon.piece
+
 import chylex.hee.game.block.withFacing
 import chylex.hee.game.world.structure.IStructureWorld
 import chylex.hee.init.ModBlocks
@@ -8,14 +9,14 @@ import net.minecraft.util.Direction
 import net.minecraft.util.math.BlockPos
 import java.util.Random
 
-abstract class TombDungeonSecret(file: String) : TombDungeonAbstractPieceFromFile(file, isFancy = true){
+abstract class TombDungeonSecret(file: String) : TombDungeonAbstractPieceFromFile(file, isFancy = true) {
 	final override val sidePathAttachWeight = 0
 	final override val secretAttachWeight = 0
 	
 	val entranceFacing
 		get() = connections.single().facing
 	
-	override fun generate(world: IStructureWorld, instance: Instance){
+	override fun generate(world: IStructureWorld, instance: Instance) {
 		super.generate(world, instance)
 		
 		val rand = world.rand
@@ -23,10 +24,10 @@ abstract class TombDungeonSecret(file: String) : TombDungeonAbstractPieceFromFil
 		val crackedBricks = mutableSetOf<BlockPos>()
 		var canUseStair = true
 		
-		for(attempt in 1..(14 + size.y)){
+		for(attempt in 1..(14 + size.y)) {
 			val pos = pickRandomEntrancePoint(rand)
 			
-			when(rand.nextInt(0, 10)){
+			when(rand.nextInt(0, 10)) {
 				in 0..7 -> {
 					world.setBlock(pos, ModBlocks.DUSTY_STONE_CRACKED_BRICKS)
 					crackedBricks.add(pos)
@@ -35,14 +36,14 @@ abstract class TombDungeonSecret(file: String) : TombDungeonAbstractPieceFromFil
 				8 -> world.setBlock(pos, ModBlocks.DUSTY_STONE_CRACKED)
 				9 -> world.setBlock(pos, ModBlocks.DUSTY_STONE_DAMAGED)
 				
-				10 -> if (canUseStair){
+				10 -> if (canUseStair) {
 					world.setState(pos, ModBlocks.DUSTY_STONE_BRICK_STAIRS.withFacing(NORTH))
 					canUseStair = false
 				}
 			}
 		}
 		
-		if (crackedBricks.size < 3 && canUseStair){
+		if (crackedBricks.size < 3 && canUseStair) {
 			world.setState(pickRandomEntrancePoint(rand), ModBlocks.DUSTY_STONE_BRICK_STAIRS.withFacing(NORTH))
 		}
 		

@@ -1,4 +1,5 @@
 package chylex.hee.game.block
+
 import chylex.hee.client.render.block.IBlockLayerCutout
 import chylex.hee.game.block.properties.BlockBuilder
 import chylex.hee.game.mechanics.damage.Damage
@@ -43,25 +44,25 @@ import net.minecraftforge.event.entity.player.PlayerInteractEvent
 import java.util.Random
 import kotlin.math.max
 
-class BlockEternalFire(builder: BlockBuilder) : BlockFire(builder.p), IBlockLayerCutout{
-	private companion object{
+class BlockEternalFire(builder: BlockBuilder) : BlockFire(builder.p), IBlockLayerCutout {
+	private companion object {
 		private val PARTICLE_SMOKE = ParticleSpawnerVanilla(LARGE_SMOKE)
 		private val DAMAGE_CONTACT = Damage(PEACEFUL_EXCLUSION, *ALL_PROTECTIONS, FIRE_TYPE(12 * 20), RAPID_DAMAGE(5))
 	}
 	
-	init{
+	init {
 		MinecraftForge.EVENT_BUS.register(this)
 	}
 	
 	override fun tickRate(world: IWorldReader) = super.tickRate(world) * 2
 	override fun canDie(world: World, pos: BlockPos) = false
 	
-	override fun tick(state: BlockState, world: ServerWorld, pos: BlockPos, rand: Random){
-		if (!world.gameRules.getBoolean(DO_FIRE_TICK) || !world.isAreaLoaded(pos, 2)){
+	override fun tick(state: BlockState, world: ServerWorld, pos: BlockPos, rand: Random) {
+		if (!world.gameRules.getBoolean(DO_FIRE_TICK) || !world.isAreaLoaded(pos, 2)) {
 			return
 		}
 		
-		if (!state.isValidPosition(world, pos)){
+		if (!state.isValidPosition(world, pos)) {
 			pos.removeBlock(world)
 		}
 		
@@ -72,7 +73,7 @@ class BlockEternalFire(builder: BlockBuilder) : BlockFire(builder.p), IBlockLaye
 		else
 			300
 		
-		for(facing in Facing6){
+		for(facing in Facing6) {
 			val offset = pos.offset(facing).takeIf { !world.isRainingAt(it) } ?: continue
 			val chance = baseChance - (if (facing.yOffset == 0) 0 else 50)
 			
@@ -80,19 +81,19 @@ class BlockEternalFire(builder: BlockBuilder) : BlockFire(builder.p), IBlockLaye
 		}
 	}
 	
-	private fun trySpread(world: World, pos: BlockPos, chance: Int, rand: Random, face: Direction){
+	private fun trySpread(world: World, pos: BlockPos, chance: Int, rand: Random, face: Direction) {
 		val state = pos.getState(world)
 		val block = state.block
 		
-		if (block === this || !state.isValidPosition(world, pos)){
+		if (block === this || !state.isValidPosition(world, pos)) {
 			return
 		}
 		
 		var flammability = 0
 		
-		if (block.isAir(state, world, pos)){
-			for(neighborFacing in Facing6){
-				if (face != neighborFacing){
+		if (block.isAir(state, world, pos)) {
+			for(neighborFacing in Facing6) {
+				if (face != neighborFacing) {
 					val neighborPos = pos.offset(neighborFacing)
 					val neighborFlammability = neighborPos.getState(world).getFlammability(world, neighborPos, neighborFacing.opposite)
 					
@@ -100,35 +101,35 @@ class BlockEternalFire(builder: BlockBuilder) : BlockFire(builder.p), IBlockLaye
 				}
 			}
 		}
-		else{
+		else {
 			flammability = state.getFlammability(world, pos, face)
 		}
 		
-		if (rand.nextInt(chance) < flammability){
-			if (block === ModBlocks.INFUSED_TNT){
+		if (rand.nextInt(chance) < flammability) {
+			if (block === ModBlocks.INFUSED_TNT) {
 				state.catchFire(world, pos, face, null)
 			}
 			
-			if (rand.nextInt(3) == 0 && !world.isRainingAt(pos)){
+			if (rand.nextInt(3) == 0 && !world.isRainingAt(pos)) {
 				pos.setState(world, Blocks.FIRE.with(AGE, rand.nextInt(8, 12)))
 			}
 			
-			if (block !== ModBlocks.INFUSED_TNT){
+			if (block !== ModBlocks.INFUSED_TNT) {
 				state.catchFire(world, pos, face, null)
 			}
 		}
 	}
 	
-	override fun onEntityCollision(state: BlockState, world: World, pos: BlockPos, entity: Entity){
+	override fun onEntityCollision(state: BlockState, world: World, pos: BlockPos, entity: Entity) {
 		DAMAGE_CONTACT.dealTo(1F, entity, TITLE_IN_FIRE)
 	}
 	
 	@SubscribeEvent
-	fun onLeftClickBlock(e: PlayerInteractEvent.LeftClickBlock){
+	fun onLeftClickBlock(e: PlayerInteractEvent.LeftClickBlock) {
 		val world = e.world
 		val offsetPos = e.face?.let(e.pos::offset)
 		
-		if (offsetPos?.getBlock(world) === this){
+		if (offsetPos?.getBlock(world) === this) {
 			Sounds.BLOCK_FIRE_EXTINGUISH.playUniversal(e.player, offsetPos, SoundCategory.BLOCKS, volume = 0.5F, pitch = world.rand.nextFloat(1.8F, 3.4F))
 			offsetPos.removeBlock(world)
 			e.isCanceled = true
@@ -136,24 +137,24 @@ class BlockEternalFire(builder: BlockBuilder) : BlockFire(builder.p), IBlockLaye
 	}
 	
 	@Sided(Side.CLIENT)
-	override fun animateTick(state: BlockState, world: World, pos: BlockPos, rand: Random){
-		if (rand.nextInt(30) == 0){
+	override fun animateTick(state: BlockState, world: World, pos: BlockPos, rand: Random) {
+		if (rand.nextInt(30) == 0) {
 			Sounds.BLOCK_FIRE_AMBIENT.playClient(pos, SoundCategory.BLOCKS, volume = rand.nextFloat(0.5F, 0.6F), pitch = rand.nextFloat(0.3F, 1F))
 		}
 		
-		if (rand.nextInt(3) != 0){
-			if (pos.down().isTopSolid(world)){
+		if (rand.nextInt(3) != 0) {
+			if (pos.down().isTopSolid(world)) {
 				PARTICLE_SMOKE.spawn(Point(Vec(
 					pos.x + rand.nextFloat(0.0, 1.0),
 					pos.y + rand.nextFloat(0.5, 1.0),
 					pos.z + rand.nextFloat(0.0, 1.0)
 				), 1), rand)
 			}
-			else{
-				for(attempt in 1..4){
+			else {
+				for(attempt in 1..4) {
 					val facing = rand.nextItem(Facing6)
 					
-					if (canCatchFire(world, pos.offset(facing), facing.opposite)){
+					if (canCatchFire(world, pos.offset(facing), facing.opposite)) {
 						val perpendicular = facing.rotateY()
 						
 						val offsetFacing = rand.nextFloat(0.4, 0.5)

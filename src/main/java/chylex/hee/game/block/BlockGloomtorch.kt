@@ -1,4 +1,5 @@
 package chylex.hee.game.block
+
 import chylex.hee.client.render.block.IBlockLayerCutout
 import chylex.hee.game.block.properties.BlockBuilder
 import chylex.hee.system.facades.Facing6
@@ -26,8 +27,8 @@ import net.minecraft.world.IBlockReader
 import net.minecraft.world.IWorld
 import net.minecraft.world.IWorldReader
 
-class BlockGloomtorch(builder: BlockBuilder) : BlockDirectional(builder.p), IBlockLayerCutout{
-	private companion object{
+class BlockGloomtorch(builder: BlockBuilder) : BlockDirectional(builder.p), IBlockLayerCutout {
+	private companion object {
 		private const val BB_SIDE_MIN = 0.421875
 		private const val BB_SIDE_MAX = 0.578125
 		private const val BB_TOP = 0.59375
@@ -41,26 +42,26 @@ class BlockGloomtorch(builder: BlockBuilder) : BlockDirectional(builder.p), IBlo
 			WEST  to AxisAlignedBB(1.0 - BB_TOP, BB_SIDE_MIN, BB_SIDE_MIN, 1.0, BB_SIDE_MAX, BB_SIDE_MAX).asVoxelShape
 		)
 		
-		private fun canPlaceGloomtorchAt(world: IWorldReader, pos: BlockPos, facing: Direction): Boolean{
+		private fun canPlaceGloomtorchAt(world: IWorldReader, pos: BlockPos, facing: Direction): Boolean {
 			return BlockHorizontalFace.func_220185_b(world, pos, facing.opposite)
 		}
 	}
 	
-	init{
+	init {
 		defaultState = stateContainer.baseState.withFacing(UP)
 	}
 	
-	override fun fillStateContainer(container: Builder<Block, BlockState>){
+	override fun fillStateContainer(container: Builder<Block, BlockState>) {
 		container.add(FACING)
 	}
 	
 	// Placement rules
 	
-	override fun isValidPosition(state: BlockState, world: IWorldReader, pos: BlockPos): Boolean{
+	override fun isValidPosition(state: BlockState, world: IWorldReader, pos: BlockPos): Boolean {
 		return Facing6.any { canPlaceGloomtorchAt(world, pos, it) }
 	}
 	
-	override fun getStateForPlacement(context: BlockItemUseContext): BlockState{
+	override fun getStateForPlacement(context: BlockItemUseContext): BlockState {
 		val world = context.world
 		val pos = context.pos
 		val facing = context.face
@@ -71,7 +72,7 @@ class BlockGloomtorch(builder: BlockBuilder) : BlockDirectional(builder.p), IBlo
 			Facing6.firstOrNull { canPlaceGloomtorchAt(world, pos, it) }?.let(this::withFacing) ?: defaultState
 	}
 	
-	override fun updatePostPlacement(state: BlockState, facing: Direction, neighborState: BlockState, world: IWorld, pos: BlockPos, neighborPos: BlockPos): BlockState{
+	override fun updatePostPlacement(state: BlockState, facing: Direction, neighborState: BlockState, world: IWorld, pos: BlockPos, neighborPos: BlockPos): BlockState {
 		@Suppress("DEPRECATION")
 		return if (facing.opposite == state[FACING] && !canPlaceGloomtorchAt(world, pos, state[FACING]))
 			Blocks.AIR.defaultState
@@ -81,17 +82,17 @@ class BlockGloomtorch(builder: BlockBuilder) : BlockDirectional(builder.p), IBlo
 	
 	// State handling
 	
-	override fun rotate(state: BlockState, rot: Rotation): BlockState{
+	override fun rotate(state: BlockState, rot: Rotation): BlockState {
 		return state.withFacing(rot.rotate(state[FACING]))
 	}
 	
-	override fun mirror(state: BlockState, mirror: Mirror): BlockState{
+	override fun mirror(state: BlockState, mirror: Mirror): BlockState {
 		return state.withFacing(mirror.mirror(state[FACING]))
 	}
 	
 	// Shape and rendering
 	
-	override fun getShape(state: BlockState, source: IBlockReader, pos: BlockPos, context: ISelectionContext): VoxelShape{
+	override fun getShape(state: BlockState, source: IBlockReader, pos: BlockPos, context: ISelectionContext): VoxelShape {
 		return BOUNDING_BOX[state[FACING]] ?: BOUNDING_BOX.getValue(UP)
 	}
 }

@@ -1,4 +1,5 @@
 package chylex.hee.game.world.territory.descriptions
+
 import chylex.hee.client.MC
 import chylex.hee.client.render.lightmaps.ILightmap
 import chylex.hee.client.render.lightmaps.ILightmap.Companion.calcLightFactor
@@ -34,23 +35,23 @@ import java.util.Random
 import kotlin.math.max
 import kotlin.math.pow
 
-object Territory_ForgottenTombs : ITerritoryDescription{
+object Territory_ForgottenTombs : ITerritoryDescription {
 	override val difficulty
 		get() = TerritoryDifficulty.HOSTILE
 	
-	override val colors = object : TerritoryColors(){
+	override val colors = object : TerritoryColors() {
 		override val tokenTop    = RGB(211, 212, 152)
 		override val tokenBottom = RGB(160, 151, 116)
 		
 		override val portalSeed = 410L
 		
-		override fun nextPortalColor(rand: Random, color: FloatArray){
-			if (rand.nextBoolean()){
+		override fun nextPortalColor(rand: Random, color: FloatArray) {
+			if (rand.nextBoolean()) {
 				color[0] = rand.nextFloat(0.65F, 0.9F)
 				color[1] = rand.nextFloat(0.45F, 0.7F)
 				color[2] = rand.nextFloat(0.15F, 0.4F)
 			}
-			else{
+			else {
 				color.fill(rand.nextFloat(0.95F, 1F))
 			}
 		}
@@ -65,7 +66,7 @@ object Territory_ForgottenTombs : ITerritoryDescription{
 		maxRange = 64.0
 	)
 	
-	override val environment = object : TerritoryEnvironment(){
+	override val environment = object : TerritoryEnvironment() {
 		override val fogColor
 			get() = (fogDensity / 0.275F).let { Vec(0.15 + it, 0.08 + it, 0.03) }
 		
@@ -88,8 +89,8 @@ object Territory_ForgottenTombs : ITerritoryDescription{
 			width = 300F
 		)
 		
-		override val lightmap = object : ILightmap{
-			override fun update(colors: Vector3f, sunBrightness: Float, skyLight: Float, blockLight: Float, partialTicks: Float){
+		override val lightmap = object : ILightmap {
+			override fun update(colors: Vector3f, sunBrightness: Float, skyLight: Float, blockLight: Float, partialTicks: Float) {
 				val blockFactor = calcLightFactor(blockLight)
 				
 				colors.x = (blockLight * 0.9F) + skyLight + 0.12F
@@ -102,20 +103,20 @@ object Territory_ForgottenTombs : ITerritoryDescription{
 		private var nightVisionFactor = 0F
 		
 		@Sided(Side.CLIENT)
-		override fun setupClient(player: EntityPlayer){
+		override fun setupClient(player: EntityPlayer) {
 			tickClient(player)
 			currentFogDensity.updateImmediately(MAX_FOG_DENSITY * 0.8F)
 		}
 		
 		@Sided(Side.CLIENT)
-		override fun tickClient(player: EntityPlayer){
+		override fun tickClient(player: EntityPlayer) {
 			val world = player.world
 			val pos = Pos(player.lookPosVec)
 			
 			var levelBlock = 0
 			var levelSky = 0
 			
-			for(offset in pos.allInCenteredBoxMutable(1, 1, 1)){
+			for(offset in pos.allInCenteredBoxMutable(1, 1, 1)) {
 				levelBlock = max(levelBlock, world.getLightFor(BLOCK, offset))
 				levelSky = max(levelSky, world.getLightFor(SKY, offset))
 			}
@@ -129,25 +130,25 @@ object Territory_ForgottenTombs : ITerritoryDescription{
 			currentFogDensity.update(offsetTowards(prev, next, speed))
 			nightVisionFactor = if (player.isPotionActive(Potions.NIGHT_VISION)) 1F else 0F
 			
-			if (MC.instance.isGamePaused){
+			if (MC.instance.isGamePaused) {
 				return
 			}
 			
 			val rand = world.rand
 			val count = 3 + ((levelSky * 2) / 5)
 			
-			repeat(count){
+			repeat(count) {
 				val distXZ = rand.nextInt(3 + (levelSky / 4), 25 + (levelSky * 2))
 				val distY = if (levelSky > 0) distXZ else distXZ / 2
 				
-				for(attempt in 1..3){
+				for(attempt in 1..3) {
 					val testPos = pos.add(
 						rand.nextInt(-distXZ, distXZ),
 						rand.nextInt(-distY / 2, distY),
 						rand.nextInt(-distXZ, distXZ)
 					)
 					
-					if (!testPos.isFullBlock(world)){
+					if (!testPos.isFullBlock(world)) {
 						PARTICLE_DUST.spawn(Point(testPos, 1), rand)
 						break
 					}

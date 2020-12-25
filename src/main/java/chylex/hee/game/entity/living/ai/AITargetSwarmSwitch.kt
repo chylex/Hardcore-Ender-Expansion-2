@@ -1,4 +1,5 @@
 package chylex.hee.game.entity.living.ai
+
 import chylex.hee.game.entity.posVec
 import chylex.hee.game.entity.selectExistingEntities
 import chylex.hee.system.migration.EntityCreature
@@ -12,18 +13,18 @@ class AITargetSwarmSwitch<T : EntityLivingBase>(
 	easilyReachableOnly: Boolean,
 	targetClass: Class<T>,
 	targetPredicate: ((T) -> Boolean)?,
-	rangeMultiplier: Float
-) : AIBaseTargetFiltered<T>(entity, checkSight, easilyReachableOnly, targetClass, targetPredicate, mutexBits = EnumSet.noneOf(Flag::class.java)){
+	rangeMultiplier: Float,
+) : AIBaseTargetFiltered<T>(entity, checkSight, easilyReachableOnly, targetClass, targetPredicate, mutexBits = EnumSet.noneOf(Flag::class.java)) {
 	private val rangeMultiplier = if (rangeMultiplier in 0F..1F) rangeMultiplier else throw IllegalArgumentException("rangeMultiplier must be between 0 and 1 (inclusive)")
 	
 	private var triggerRetarget = false
 	
-	fun triggerRetarget(){
+	fun triggerRetarget() {
 		this.triggerRetarget = true
 	}
 	
-	override fun findTarget(): T?{
-		if (!triggerRetarget){
+	override fun findTarget(): T? {
+		if (!triggerRetarget) {
 			return null
 		}
 		
@@ -38,7 +39,7 @@ class AITargetSwarmSwitch<T : EntityLivingBase>(
 		val friendsInRange = world.selectExistingEntities.inRange(entity::class.java, position, maxRange * 2.0).filter { it != entity }
 		val friendsAttackingCurrentTarget = friendsInRange.count { it.attackTarget === currentTarget }
 		
-		if (friendsAttackingCurrentTarget == 0){
+		if (friendsAttackingCurrentTarget == 0) {
 			return null
 		}
 		

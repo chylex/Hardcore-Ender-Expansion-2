@@ -1,4 +1,5 @@
 package chylex.hee.client.render.entity
+
 import chylex.hee.client.render.entity.layer.LayerSpiderlingEyes
 import chylex.hee.client.render.gl.scale
 import chylex.hee.game.entity.living.EntityMobSpiderling
@@ -18,27 +19,27 @@ import net.minecraft.world.LightType.BLOCK
 import net.minecraft.world.LightType.SKY
 
 @Sided(Side.CLIENT)
-class RenderEntityMobSpiderling(manager: EntityRendererManager) : MobRenderer<EntityMobSpiderling, SpiderModel<EntityMobSpiderling>>(manager, SpiderModel(), 0.5F){
+class RenderEntityMobSpiderling(manager: EntityRendererManager) : MobRenderer<EntityMobSpiderling, SpiderModel<EntityMobSpiderling>>(manager, SpiderModel(), 0.5F) {
 	private val texture = Resource.Custom("textures/entity/spiderling.png")
 	
-	init{
+	init {
 		addLayer(LayerSpiderlingEyes(this, (entityModel as SpiderModel).spiderHead))
 	}
 	
-	override fun preRenderCallback(entity: EntityMobSpiderling, matrix: MatrixStack, partialTicks: Float){
+	override fun preRenderCallback(entity: EntityMobSpiderling, matrix: MatrixStack, partialTicks: Float) {
 		matrix.scale(0.5F)
 		super.preRenderCallback(entity, matrix, partialTicks)
 	}
 	
-	override fun getEntityTexture(entity: EntityMobSpiderling): ResourceLocation{
+	override fun getEntityTexture(entity: EntityMobSpiderling): ResourceLocation {
 		return texture
 	}
 	
-	override fun getPackedLight(entity: EntityMobSpiderling, partialTicks: Float): Int{
+	override fun getPackedLight(entity: EntityMobSpiderling, partialTicks: Float): Int {
 		val world = entity.world
 		val pos = Pos(entity)
 		
-		if (!pos.isLoaded(world)){
+		if (!pos.isLoaded(world)) {
 			return 0
 		}
 		
@@ -48,7 +49,7 @@ class RenderEntityMobSpiderling(manager: EntityRendererManager) : MobRenderer<En
 		return LightTexture.packLight(sky, block)
 	}
 	
-	override fun getDeathMaxRotation(entity: EntityMobSpiderling): Float{
+	override fun getDeathMaxRotation(entity: EntityMobSpiderling): Float {
 		return 180F
 	}
 }

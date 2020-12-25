@@ -1,4 +1,5 @@
 package chylex.hee.client.render.territory.components
+
 import chylex.hee.client.MC
 import chylex.hee.client.render.gl.DF_ONE_MINUS_SRC_ALPHA
 import chylex.hee.client.render.gl.DF_ZERO
@@ -14,8 +15,8 @@ import com.mojang.blaze3d.matrix.MatrixStack
 import net.minecraft.client.world.ClientWorld
 import org.lwjgl.opengl.GL11.GL_GREATER
 
-abstract class SkyCubeBase : AbstractEnvironmentRenderer(){
-	protected companion object{
+abstract class SkyCubeBase : AbstractEnvironmentRenderer() {
+	protected companion object {
 		const val DEFAULT_RESCALE = 16F
 		const val DEFAULT_DISTANCE = 125F
 	}
@@ -27,7 +28,7 @@ abstract class SkyCubeBase : AbstractEnvironmentRenderer(){
 	protected open val distance = DEFAULT_DISTANCE
 	
 	@Sided(Side.CLIENT)
-	override fun render(world: ClientWorld, matrix: MatrixStack, partialTicks: Float){
+	override fun render(world: ClientWorld, matrix: MatrixStack, partialTicks: Float) {
 		val distance = distance.coerceAtMost(18.5F * MC.settings.renderDistanceChunks)
 		val rescale = rescale
 		
@@ -40,14 +41,14 @@ abstract class SkyCubeBase : AbstractEnvironmentRenderer(){
 		GL.color(color, alpha * currentSkyAlpha)
 		GL.bindTexture(texture)
 		
-		for(side in 0..5){
+		for(side in 0..5) {
 			matrix.push()
 			
-			when(side){
-				1 -> matrix.rotateX( 90F)
+			when(side) {
+				1 -> matrix.rotateX(+90F)
 				2 -> matrix.rotateX(-90F)
 				3 -> matrix.rotateX(180F)
-				4 -> matrix.rotateZ( 90F)
+				4 -> matrix.rotateZ(+90F)
 				5 -> matrix.rotateZ(-90F)
 			}
 			

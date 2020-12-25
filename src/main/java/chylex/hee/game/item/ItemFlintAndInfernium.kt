@@ -1,4 +1,5 @@
 package chylex.hee.game.item
+
 import chylex.hee.HEE
 import chylex.hee.game.block.BlockInfusedTNT
 import chylex.hee.game.entity.heeTag
@@ -35,30 +36,30 @@ import net.minecraft.util.math.BlockPos
 import net.minecraft.world.World
 import net.minecraftforge.event.world.ExplosionEvent
 
-class ItemFlintAndInfernium(properties: Properties) : Item(properties){
+class ItemFlintAndInfernium(properties: Properties) : Item(properties) {
 	@SubscribeAllEvents(modid = HEE.ID)
-	companion object{
+	companion object {
 		private const val CREEPER_INFERNIUM_TAG = "Infernium"
 		
 		const val EXPLOSION_MULTIPLIER = 1.5F
 		
 		@SubscribeEvent(EventPriority.HIGHEST)
-		fun onExplosionStart(e: ExplosionEvent.Start){
+		fun onExplosionStart(e: ExplosionEvent.Start) {
 			val explosion = e.explosion
 			val creeper = explosion.explosivePlacedBy as? EntityCreeper
 			
-			if (creeper?.heeTagOrNull?.getBoolean(CREEPER_INFERNIUM_TAG) == true){
+			if (creeper?.heeTagOrNull?.getBoolean(CREEPER_INFERNIUM_TAG) == true) {
 				explosion.size *= EXPLOSION_MULTIPLIER
 			}
 		}
 	}
 	
-	init{
+	init {
 		MinecraftForgeEventBus.register(this)
 	}
 	
-	fun igniteTNT(world: World, pos: BlockPos, player: EntityPlayer?, ignoreTrap: Boolean){
-		if (pos.getBlock(world) === Blocks.TNT){
+	fun igniteTNT(world: World, pos: BlockPos, player: EntityPlayer?, ignoreTrap: Boolean) {
+		if (pos.getBlock(world) === Blocks.TNT) {
 			pos.setBlock(world, ModBlocks.INFUSED_TNT, FLAG_NONE)
 		}
 		
@@ -66,24 +67,24 @@ class ItemFlintAndInfernium(properties: Properties) : Item(properties){
 		pos.removeBlock(world)
 	}
 	
-	override fun onItemUse(context: ItemUseContext): ActionResultType{
+	override fun onItemUse(context: ItemUseContext): ActionResultType {
 		val player = context.player ?: return FAIL
 		val world = context.world
 		val pos = context.pos
 		
 		val heldItem = player.getHeldItem(context.hand)
 		
-		if (!BlockEditor.canEdit(pos, player, heldItem)){
+		if (!BlockEditor.canEdit(pos, player, heldItem)) {
 			return FAIL
 		}
 		
-		if (!world.isRemote){
+		if (!world.isRemote) {
 			val block = pos.getBlock(world)
 			
-			if (block === Blocks.TNT || block === ModBlocks.INFUSED_TNT){
+			if (block === Blocks.TNT || block === ModBlocks.INFUSED_TNT) {
 				igniteTNT(world, pos, player, ignoreTrap = false)
 			}
-			else{
+			else {
 				BlockEditor.place(ModBlocks.ETERNAL_FIRE, player, heldItem, context) ?: return FAIL
 			}
 			
@@ -94,8 +95,8 @@ class ItemFlintAndInfernium(properties: Properties) : Item(properties){
 		return SUCCESS
 	}
 	
-	override fun itemInteractionForEntity(stack: ItemStack, player: EntityPlayer, target: EntityLivingBase, hand: Hand): Boolean{
-		if (target is EntityCreeper){
+	override fun itemInteractionForEntity(stack: ItemStack, player: EntityPlayer, target: EntityLivingBase, hand: Hand): Boolean {
+		if (target is EntityCreeper) {
 			Sounds.ITEM_FLINTANDSTEEL_USE.playServer(target.world, target.posVec, target.soundCategory, volume = 1.1F, pitch = target.rng.nextFloat(0.4F, 0.5F))
 			player.swingArm(hand)
 			player.getHeldItem(hand).doDamage(1, player, hand)

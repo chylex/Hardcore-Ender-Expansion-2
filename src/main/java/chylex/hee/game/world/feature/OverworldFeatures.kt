@@ -1,4 +1,5 @@
 package chylex.hee.game.world.feature
+
 import chylex.hee.HEE
 import chylex.hee.game.entity.technical.EntityTechnicalTrigger
 import chylex.hee.game.entity.technical.EntityTechnicalTrigger.ITriggerHandler
@@ -32,29 +33,29 @@ import java.util.Random
 import java.util.function.Function
 
 @SubscribeAllEvents(modid = HEE.ID, bus = MOD)
-object OverworldFeatures{
+object OverworldFeatures {
 	@SubscribeEvent(priority = EventPriority.LOWEST)
-	fun onRegister(e: RegistryEvent.Register<Feature<*>>){
-		with(e.registry){
+	fun onRegister(e: RegistryEvent.Register<Feature<*>>) {
+		with(e.registry) {
 			register(DispersedClusterGenerator named "dispersed_clusters")
 			register(EnergyShrineGenerator named "energy_shrine")
 			register(StrongholdGenerator named "stronghold")
 		}
 		
-		for(biome in ForgeRegistries.BIOMES){
+		for(biome in ForgeRegistries.BIOMES) {
 			biome.addFeature(TOP_LAYER_MODIFICATION, DispersedClusterGenerator.feature)
 			biome.addFeature(TOP_LAYER_MODIFICATION, EnergyShrineGenerator.feature)
 			biome.addFeature(TOP_LAYER_MODIFICATION, StrongholdGenerator.feature)
 		}
 	}
 	
-	fun setupVanillaOverrides(){
-		for(biome in ForgeRegistries.BIOMES){
+	fun setupVanillaOverrides() {
+		for(biome in ForgeRegistries.BIOMES) {
 			biome.structures.remove(Feature.STRONGHOLD)
 		}
 	}
 	
-	fun findStartChunkInGrid(chunksInGrid: Int, chunkX: Int, chunkZ: Int): ChunkPos{
+	fun findStartChunkInGrid(chunksInGrid: Int, chunkX: Int, chunkZ: Int): ChunkPos {
 		val normalizedX = if (chunkX < 0) chunkX - (chunksInGrid - 1) else chunkX
 		val normalizedZ = if (chunkZ < 0) chunkZ - (chunksInGrid - 1) else chunkZ
 		
@@ -64,31 +65,31 @@ object OverworldFeatures{
 		)
 	}
 	
-	fun preloadChunks(world: World, chunkX: Int, chunkZ: Int, radiusX: Int, radiusZ: Int){
-		for(offsetX in -radiusX..radiusX){
-			for(offsetZ in -radiusZ..radiusZ){
+	fun preloadChunks(world: World, chunkX: Int, chunkZ: Int, radiusX: Int, radiusZ: Int) {
+		for(offsetX in -radiusX..radiusX) {
+			for(offsetZ in -radiusZ..radiusZ) {
 				world.getChunk(chunkX + offsetX, chunkZ + offsetZ) // UPDATE shitty hack to force nearby structures to gen first
 			}
 		}
 	}
 	
-	abstract class OverworldFeature : Feature<NoFeatureConfig>(Function { NoFeatureConfig.deserialize(it) }){
+	abstract class OverworldFeature : Feature<NoFeatureConfig>(Function { NoFeatureConfig.deserialize(it) }) {
 		val feature
 			get() = ConfiguredFeature(this, NO_FEATURE_CONFIG)
 		
-		final override fun place(world: IWorld, generator: ChunkGenerator<out GenerationSettings>, rand: Random, pos: BlockPos, config: NoFeatureConfig): Boolean{
+		final override fun place(world: IWorld, generator: ChunkGenerator<out GenerationSettings>, rand: Random, pos: BlockPos, config: NoFeatureConfig): Boolean {
 			return world.dimension.type == DimensionType.OVERWORLD && place(world, rand, pos, pos.x shr 4, pos.z shr 4)
 		}
 		
 		protected abstract fun place(world: IWorld, rand: Random, pos: BlockPos, chunkX: Int, chunkZ: Int): Boolean
 	}
 	
-	abstract class GeneratorTriggerBase : ITriggerHandler{
-		final override fun check(world: World): Boolean{
+	abstract class GeneratorTriggerBase : ITriggerHandler {
+		final override fun check(world: World): Boolean {
 			return !world.isRemote
 		}
 		
-		final override fun update(entity: EntityTechnicalTrigger){
+		final override fun update(entity: EntityTechnicalTrigger) {
 			val world = entity.world as ServerWorld
 			val pos = Pos(entity)
 			val xz = pos.xz
@@ -99,7 +100,7 @@ object OverworldFeatures{
 			entity.remove()
 		}
 		
-		final override fun nextTimer(rand: Random): Int{
+		final override fun nextTimer(rand: Random): Int {
 			return 10
 		}
 		

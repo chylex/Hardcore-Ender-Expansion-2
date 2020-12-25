@@ -1,4 +1,5 @@
 package chylex.hee.system.math
+
 import kotlin.math.PI
 import kotlin.math.abs
 import kotlin.math.acos
@@ -9,9 +10,9 @@ import kotlin.math.sin
 import kotlin.math.sqrt
 import kotlin.math.withSign
 
-data class Quaternion(val x: Float, val y: Float, val z: Float, val w: Float){
-	companion object{
-		fun fromYawPitch(yaw: Float, pitch: Float): Quaternion{
+data class Quaternion(val x: Float, val y: Float, val z: Float, val w: Float) {
+	companion object {
+		fun fromYawPitch(yaw: Float, pitch: Float): Quaternion {
 			val yawRad = yaw.toRadians()
 			val pitchRad = pitch.toRadians()
 			
@@ -22,9 +23,9 @@ data class Quaternion(val x: Float, val y: Float, val z: Float, val w: Float){
 			
 			return Quaternion(
 				(-sy * sp).toFloat(),
-				( cy * sp).toFloat(),
-				( sy * cp).toFloat(),
-				( cy * cp).toFloat()
+				(+cy * sp).toFloat(),
+				(+sy * cp).toFloat(),
+				(+cy * cp).toFloat()
 			)
 		}
 	}
@@ -36,14 +37,14 @@ data class Quaternion(val x: Float, val y: Float, val z: Float, val w: Float){
 		get() = this * (1F / length)
 	
 	val rotationYaw: Float
-		get(){
+		get() {
 			val sinYcosP = 2.0 * ((w * z) + (x * y))
 			val cosYcosP = 1.0 - 2.0 * ((y * y) + (z * z))
 			return atan2(sinYcosP, cosYcosP).toDegrees().toFloat()
 		}
 	
 	val rotationPitch: Float
-		get(){
+		get() {
 			val sinP = 2.0 * ((w * y) - (z * x))
 			
 			val rad = if (abs(sinP) >= 1)
@@ -54,46 +55,46 @@ data class Quaternion(val x: Float, val y: Float, val z: Float, val w: Float){
 			return rad.toDegrees().toFloat()
 		}
 	
-	operator fun unaryPlus(): Quaternion{
+	operator fun unaryPlus(): Quaternion {
 		return this
 	}
 	
-	operator fun unaryMinus(): Quaternion{
+	operator fun unaryMinus(): Quaternion {
 		return Quaternion(-x, -y, -z, -w)
 	}
 	
-	operator fun plus(q: Quaternion): Quaternion{
+	operator fun plus(q: Quaternion): Quaternion {
 		return Quaternion(x + q.x, y + q.y, z + q.z, w + q.w)
 	}
 	
-	operator fun minus(q: Quaternion): Quaternion{
+	operator fun minus(q: Quaternion): Quaternion {
 		return Quaternion(x - q.x, y - q.y, z - q.z, w - q.w)
 	}
 	
-	operator fun times(f: Float): Quaternion{
+	operator fun times(f: Float): Quaternion {
 		return Quaternion(x * f, y * f, z * f, w * f)
 	}
 	
-	operator fun times(f: Double): Quaternion{
+	operator fun times(f: Double): Quaternion {
 		return times(f.toFloat())
 	}
 	
-	fun dot(q: Quaternion): Float{
+	fun dot(q: Quaternion): Float {
 		return (x * q.x) + (y * q.y) + (z * q.z) + (w * q.w)
 	}
 	
-	fun slerp(target: Quaternion, progress: Float): Quaternion{
+	fun slerp(target: Quaternion, progress: Float): Quaternion {
 		var q1 = this.normalized
 		val q2 = target.normalized
 		
 		var dot = q1.dot(q2)
 		
-		if (dot < 0F){
+		if (dot < 0F) {
 			q1 = -q1
 			dot = -dot
 		}
 		
-		if (dot > 0.9995F){
+		if (dot > 0.9995F) {
 			return (q1 + ((q2 - q1) * progress)).normalized
 		}
 		

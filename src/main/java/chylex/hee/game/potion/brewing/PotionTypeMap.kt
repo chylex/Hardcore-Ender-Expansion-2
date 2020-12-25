@@ -1,4 +1,5 @@
 package chylex.hee.game.potion.brewing
+
 import chylex.hee.game.potion.PotionBanishment
 import chylex.hee.game.potion.PotionCorruption
 import chylex.hee.game.potion.PotionPurity
@@ -7,7 +8,7 @@ import chylex.hee.system.migration.PotionType
 import chylex.hee.system.migration.PotionTypes
 import chylex.hee.system.migration.Potions
 
-object PotionTypeMap{
+object PotionTypeMap {
 	private val TYPE_MAPPING = mapOf(
 		Potions.NIGHT_VISION    to PotionTypes.NIGHT_VISION,
 		Potions.INVISIBILITY    to PotionTypes.INVISIBILITY,
@@ -32,23 +33,23 @@ object PotionTypeMap{
 	val ALTERED_TYPES
 		get() = TYPE_MAPPING.values
 	
-	private fun makeType(potion: Potion): PotionType{
+	private fun makeType(potion: Potion): PotionType {
 		return PotionType(PotionBrewing.INFO.getValue(potion).baseEffect)
 	}
 	
-	fun getType(potion: Potion): PotionType{
+	fun getType(potion: Potion): PotionType {
 		return TYPE_MAPPING.getValue(potion)
 	}
 	
-	fun getTypeOrWater(potion: Potion): PotionType{
+	fun getTypeOrWater(potion: Potion): PotionType {
 		return TYPE_MAPPING.getOrDefault(potion, PotionTypes.WATER)
 	}
 	
-	fun registerNoEffectOverride(original: PotionType, override: PotionType){
+	fun registerNoEffectOverride(original: PotionType, override: PotionType) {
 		TYPE_NO_EFFECT_OVERRIDES[original] = override
 	}
 	
-	fun findNoEffectOverride(type: PotionType): PotionType{
+	fun findNoEffectOverride(type: PotionType): PotionType {
 		return TYPE_NO_EFFECT_OVERRIDES[type] ?: type
 	}
 }

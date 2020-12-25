@@ -1,4 +1,5 @@
 package chylex.hee.game.item
+
 import chylex.hee.game.entity.posVec
 import chylex.hee.game.mechanics.damage.DamageProperties
 import chylex.hee.game.mechanics.damage.DamageType
@@ -30,16 +31,16 @@ import java.util.UUID
 import kotlin.math.max
 import kotlin.math.min
 
-class ItemTalismanOfGriefing(properties: Properties) : ItemAbstractTrinket(properties){
-	private companion object{
+class ItemTalismanOfGriefing(properties: Properties) : ItemAbstractTrinket(properties) {
+	private companion object {
 		private val BLAST_DAMAGE_PROPERTIES = DamageProperties().apply {
-			with(Writer()){
+			with(Writer()) {
 				setAllowArmor()
 				addType(DamageType.BLAST)
 			}
 		}.Reader()
 		
-		private fun getBlastDamageAfterCalculations(explosion: Explosion, player: EntityPlayer): Float{
+		private fun getBlastDamageAfterCalculations(explosion: Explosion, player: EntityPlayer): Float {
 			val pos = explosion.position
 			val radius = explosion.size
 			
@@ -57,7 +58,7 @@ class ItemTalismanOfGriefing(properties: Properties) : ItemAbstractTrinket(prope
 			return finalDamage
 		}
 		
-		private fun getNormalDifficultyEquivalentDamage(amount: Float, currentDifficulty: Difficulty) = when(currentDifficulty){
+		private fun getNormalDifficultyEquivalentDamage(amount: Float, currentDifficulty: Difficulty) = when(currentDifficulty) {
 			PEACEFUL -> 0F
 			EASY     -> max(amount, (amount - 1F) * 2F)
 			NORMAL   -> amount
@@ -68,71 +69,71 @@ class ItemTalismanOfGriefing(properties: Properties) : ItemAbstractTrinket(prope
 	private val lastRepairMarkTime = ThreadLocal.withInitial { Long.MIN_VALUE }
 	private val lastRepairMarkEntities = ThreadLocal.withInitial { HashSet<UUID>(4) }
 	
-	init{
+	init {
 		MinecraftForgeEventBus.register(this)
 	}
 	
-	override fun canPlaceIntoTrinketSlot(stack: ItemStack): Boolean{
+	override fun canPlaceIntoTrinketSlot(stack: ItemStack): Boolean {
 		return stack.damage < stack.maxDamage
 	}
 	
-	private fun markEntitiesForTalismanRepair(explosion: Explosion, entities: List<Entity>){
+	private fun markEntitiesForTalismanRepair(explosion: Explosion, entities: List<Entity>) {
 		val currentTime = explosion.world.totalTime
 		val recentlyExploded = lastRepairMarkEntities.get()
 		
-		if (lastRepairMarkTime.get() != currentTime){
+		if (lastRepairMarkTime.get() != currentTime) {
 			lastRepairMarkTime.set(currentTime)
 			recentlyExploded.clear()
 		}
 		
-		for(entity in entities){
-			if (entity is EntityLivingBase){
+		for(entity in entities) {
+			if (entity is EntityLivingBase) {
 				recentlyExploded.add(entity.uniqueID)
 			}
 		}
 	}
 	
 	@SubscribeEvent
-	fun onExplosionDetonate(e: ExplosionEvent.Detonate){
+	fun onExplosionDetonate(e: ExplosionEvent.Detonate) {
 		val explosion = e.explosion
 		val entities = e.affectedEntities
 		val world = explosion.world
 		
-		if (world.isRemote || entities.isEmpty()){
+		if (world.isRemote || entities.isEmpty()) {
 			return
 		}
 		
 		val radius = explosion.size
 		
-		if (radius >= 6F){
+		if (radius >= 6F) {
 			markEntitiesForTalismanRepair(explosion, entities)
 		}
 		
 		val source = explosion.explosivePlacedBy
 		
-		if (source == null || source is EntityPlayer){ // TODO large fireballs don't set explosion source
+		if (source == null || source is EntityPlayer) { // TODO large fireballs don't set explosion source
 			return
 		}
 		
 		val diameter = radius * 2F
 		val position = explosion.position
 		
-		for(entity in entities){
-			if (entity is EntityPlayer && !entity.isImmuneToExplosions && entity.posVec.distanceTo(position) <= diameter){
+		for(entity in entities) {
+			if (entity is EntityPlayer && !entity.isImmuneToExplosions && entity.posVec.distanceTo(position) <= diameter) {
 				val trinketHandler = TrinketHandler.get(entity)
 				
-				if (trinketHandler.isItemActive(this)){
+				if (trinketHandler.isItemActive(this)) {
 					val finalDamage = getBlastDamageAfterCalculations(explosion, entity)
 					val durabilityTaken = (finalDamage / 10F).ceilToInt().coerceAtMost(3)
 					
-					trinketHandler.transformIfActive(this){
+					trinketHandler.transformIfActive(this) {
 						it.damage = min(it.maxDamage, it.damage + durabilityTaken)
 					}
 					
 					e.affectedBlocks.clear()
 					e.affectedEntities.clear()
 					
-					with(ExplosionBuilder()){
+					with(ExplosionBuilder()) {
 						this.destroyBlocks = false
 						this.damageEntities = false
 						this.knockbackEntities = true
@@ -147,15 +148,15 @@ class ItemTalismanOfGriefing(properties: Properties) : ItemAbstractTrinket(prope
 	}
 	
 	@SubscribeEvent
-	fun onLivingHurt(e: LivingHurtEvent){
-		if (!e.source.isExplosion){
+	fun onLivingHurt(e: LivingHurtEvent) {
+		if (!e.source.isExplosion) {
 			return
 		}
 		
 		val entity = e.entityLiving
 		val world = entity.world
 		
-		if (lastRepairMarkTime.get() != world.totalTime || !lastRepairMarkEntities.get().remove(entity.uniqueID)){
+		if (lastRepairMarkTime.get() != world.totalTime || !lastRepairMarkEntities.get().remove(entity.uniqueID)) {
 			return
 		}
 		
@@ -164,14 +165,14 @@ class ItemTalismanOfGriefing(properties: Properties) : ItemAbstractTrinket(prope
 		else
 			e.amount
 		
-		if (finalAmount < 50F){
+		if (finalAmount < 50F) {
 			return
 		}
 		
-		for(hand in Hand.values()){
+		for(hand in Hand.values()) {
 			val heldItem = entity.getHeldItem(hand)
 			
-			if (heldItem.item === this){
+			if (heldItem.item === this) {
 				heldItem.damage = 0
 				// TODO sound fx
 			}

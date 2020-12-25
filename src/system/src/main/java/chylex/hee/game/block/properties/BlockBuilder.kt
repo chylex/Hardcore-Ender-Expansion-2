@@ -1,12 +1,13 @@
 package chylex.hee.game.block.properties
+
 import net.minecraft.block.Block
 import net.minecraft.block.SoundType
 import net.minecraft.block.material.Material
 import net.minecraft.block.material.MaterialColor
 import net.minecraftforge.common.ToolType
 
-class BlockBuilder(val material: Material, var color: MaterialColor, var sound: SoundType){
-	constructor(original: BlockBuilder) : this(original.material, original.color, original.sound){
+class BlockBuilder(val material: Material, var color: MaterialColor, var sound: SoundType) {
+	constructor(original: BlockBuilder) : this(original.material, original.color, original.sound) {
 		isSolid = original.isSolid
 		
 		harvestTool = original.harvestTool
@@ -36,7 +37,7 @@ class BlockBuilder(val material: Material, var color: MaterialColor, var sound: 
 		get() = Block.Properties.create(material, color).apply {
 			val (level, tool) = harvestTool
 			
-			if (tool != null){
+			if (tool != null) {
 				harvestTool(tool)
 				harvestLevel(level)
 			}
@@ -46,39 +47,39 @@ class BlockBuilder(val material: Material, var color: MaterialColor, var sound: 
 			slipperiness(slipperiness)
 			sound(sound)
 			
-			if (!isSolid){
+			if (!isSolid) {
 				notSolid()
 			}
 			
-			if (!material.blocksMovement()){
+			if (!material.blocksMovement()) {
 				doesNotBlockMovement()
 				
-				if (isSolid){
+				if (isSolid) {
 					throw UnsupportedOperationException("[BlockBuilder] cannot create a block that does not block movement and is solid at the same time")
 				}
 			}
 			
-			if (randomTicks){
+			if (randomTicks) {
 				tickRandomly()
 			}
 			
-			if (noDrops){
+			if (noDrops) {
 				noDrops()
 			}
 		}
 	
-	fun makeIndestructible(){
+	fun makeIndestructible() {
 		harvestTool = Pair(-1, null)
 		harvestHardness = INDESTRUCTIBLE_HARDNESS
 		explosionResistance = INDESTRUCTIBLE_RESISTANCE
 		noDrops = true
 	}
 	
-	inline fun clone(modify: BlockBuilder.() -> Unit): BlockBuilder{
+	inline fun clone(modify: BlockBuilder.() -> Unit): BlockBuilder {
 		return BlockBuilder(this).apply(modify)
 	}
 	
-	companion object{
+	companion object {
 		const val INDESTRUCTIBLE_HARDNESS = -1F
 		const val INDESTRUCTIBLE_RESISTANCE = 3600000F
 	}

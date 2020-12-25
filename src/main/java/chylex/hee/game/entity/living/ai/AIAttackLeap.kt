@@ -1,4 +1,5 @@
 package chylex.hee.game.entity.living.ai
+
 import chylex.hee.game.entity.motionX
 import chylex.hee.game.entity.motionZ
 import chylex.hee.game.world.totalTime
@@ -22,35 +23,35 @@ class AIAttackLeap(
 	private val triggerChance: Float,
 	private val triggerCooldown: Int,
 	private val leapStrengthXZ: ClosedFloatingPointRange<Double>,
-	private val leapStrengthY: ClosedFloatingPointRange<Double>
-) : Goal(){
+	private val leapStrengthY: ClosedFloatingPointRange<Double>,
+) : Goal() {
 	private val triggerDistanceSq = square(triggerDistance.start)..square(triggerDistance.endInclusive)
 	
 	private var leapTarget: EntityLivingBase? = null
 	private var lastLeapTime = 0L
 	private var hasAttacked = false
 	
-	init{
+	init {
 		mutexFlags = EnumSet.of(MOVE, JUMP)
 	}
 	
-	override fun shouldExecute(): Boolean{
-		if (!entity.onGround){ // also prevents instant jump after taking damage
+	override fun shouldExecute(): Boolean {
+		if (!entity.onGround) { // also prevents instant jump after taking damage
 			return false
 		}
 		
 		val target = entity.attackTarget ?: return false
 		val currentTime = entity.world.totalTime
 		
-		if (currentTime - lastLeapTime < triggerCooldown){
+		if (currentTime - lastLeapTime < triggerCooldown) {
 			return false
 		}
 		
-		if (entity.getDistanceSq(target) !in triggerDistanceSq){
+		if (entity.getDistanceSq(target) !in triggerDistanceSq) {
 			return false
 		}
 		
-		if (entity.rng.nextFloat() >= triggerChance){
+		if (entity.rng.nextFloat() >= triggerChance) {
 			lastLeapTime = currentTime
 			return false
 		}
@@ -59,11 +60,11 @@ class AIAttackLeap(
 		return true
 	}
 	
-	override fun shouldContinueExecuting(): Boolean{
+	override fun shouldContinueExecuting(): Boolean {
 		return !entity.onGround
 	}
 	
-	override fun startExecuting(){
+	override fun startExecuting() {
 		val target = leapTarget ?: return
 		val diff = Vec3.xz(entity.posX, entity.posZ).directionTowards(Vec3.xz(target.posX, target.posZ))
 		
@@ -79,8 +80,8 @@ class AIAttackLeap(
 		lastLeapTime = entity.world.totalTime
 	}
 	
-	override fun tick(){
-		if (hasAttacked){
+	override fun tick() {
+		if (hasAttacked) {
 			return
 		}
 		
@@ -89,14 +90,14 @@ class AIAttackLeap(
 		val distSq = entity.getDistanceSq(target.posX, target.boundingBox.maxY, target.posZ)
 		val reachSq = square(entity.width) + (target.width * 0.5F)
 		
-		if (distSq <= reachSq){
+		if (distSq <= reachSq) {
 			entity.swingArm(MAIN_HAND)
 			entity.attackEntityAsMob(target)
 			hasAttacked = true
 		}
 	}
 	
-	override fun resetTask(){
+	override fun resetTask() {
 		leapTarget = null
 		hasAttacked = false
 	}

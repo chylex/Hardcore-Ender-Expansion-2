@@ -1,4 +1,5 @@
 package chylex.hee.game.world.feature.basic.ores.impl
+
 import chylex.hee.game.world.Pos
 import chylex.hee.game.world.center
 import chylex.hee.game.world.feature.basic.ores.IOreTechnique
@@ -14,24 +15,24 @@ class OreTechniqueDistance(
 	private val oresPerCluster: (Random) -> Int,
 	private val maxDistance: Double,
 	private val powDistance: Double = 1.0,
-	private val attemptMultiplier: Float = 3F
-) : IOreTechnique{
-	override fun place(world: SegmentedWorld, pos: BlockPos, placer: IBlockPlacer): Boolean{
+	private val attemptMultiplier: Float = 3F,
+) : IOreTechnique {
+	override fun place(world: SegmentedWorld, pos: BlockPos, placer: IBlockPlacer): Boolean {
 		val rand = world.rand
 		val ores = oresPerCluster(rand).takeIf { it > 0 } ?: return true
 		
-		if (!placer.place(world, pos)){
+		if (!placer.place(world, pos)) {
 			return false
 		}
 		
 		val center = pos.center
 		val attempts = (ores * attemptMultiplier).ceilToInt()
 		
-		repeat(ores - 1){
-			for(attempt in 1..attempts){
+		repeat(ores - 1) {
+			for(attempt in 1..attempts) {
 				val next = Pos(center.add(rand.nextVector(rand.nextDouble().pow(powDistance) * maxDistance)))
 				
-				if (placer.place(world, next)){
+				if (placer.place(world, next)) {
 					break
 				}
 			}

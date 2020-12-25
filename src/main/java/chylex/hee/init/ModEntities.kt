@@ -1,4 +1,5 @@
 package chylex.hee.init
+
 import chylex.hee.HEE
 import chylex.hee.game.entity.effect.EntityTerritoryLightningBolt
 import chylex.hee.game.entity.item.EntityFallingBlockHeavy
@@ -61,7 +62,7 @@ import net.minecraftforge.event.entity.EntityJoinWorldEvent
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber.Bus.MOD
 
 @SubscribeAllEvents(modid = HEE.ID, bus = MOD)
-object ModEntities{
+object ModEntities {
 	@JvmField val TERRITORY_LIGHTNING_BOLT = build<EntityTerritoryLightningBolt>(MISC).size(0F, 0F).tracker(256, 3, false).disableSerialization().name("territory_lightning_bolt")
 	
 	@JvmField val ITEM_CAULDRON_TRIGGER         = build<EntityItemCauldronTrigger>(MISC).size(0.25F, 0.25F).tracker(64, 3, true).name("item_cauldron_trigger")
@@ -100,7 +101,7 @@ object ModEntities{
 	@JvmField val TECHNICAL_TRIGGER   = build<EntityTechnicalTrigger>(MISC).size(0F, 0F).immuneToFire().tracker(256, Int.MAX_VALUE, false).name("technical_trigger")
 	
 	@SubscribeEvent
-	fun onRegister(e: RegistryEvent.Register<EntityType<*>>){
+	fun onRegister(e: RegistryEvent.Register<EntityType<*>>) {
 		e.registerAllFields(this)
 		
 		// data
@@ -128,23 +129,23 @@ object ModEntities{
 	
 	// Vanilla modifications
 	
-	private fun replaceVanillaFactories(){
+	private fun replaceVanillaFactories() {
 		EntityType.ENDERMAN.factory = IFactory { _, world -> EntityMobEnderman(ENDERMAN, world) }
 		EntityType.ENDERMITE.factory = IFactory { _, world -> EntityMobEndermite(ENDERMITE, world) }
 		EntityType.SILVERFISH.factory = IFactory { _, world -> EntityMobSilverfish(SILVERFISH, world) }
 	}
 	
 	@SubscribeEvent(priority = EventPriority.HIGHEST)
-	fun onEntityJoinWorld(e: EntityJoinWorldEvent){
+	fun onEntityJoinWorld(e: EntityJoinWorldEvent) {
 		val world = e.world
 		val original = e.entity
 		
 		// if a mod creates the entity manually instead of the factory, it must still be replaced
-		val overriden = when(original.javaClass){
-			EntityEnderman::class.java -> EntityMobEnderman(world)
-			EntityEndermite::class.java -> EntityMobEndermite(world)
+		val overriden = when(original.javaClass) {
+			EntityEnderman::class.java   -> EntityMobEnderman(world)
+			EntityEndermite::class.java  -> EntityMobEndermite(world)
 			EntitySilverfish::class.java -> EntityMobSilverfish(world)
-			else -> return
+			else                         -> return
 		}
 		
 		// no way to handle passengers on the initial spawn
@@ -154,7 +155,7 @@ object ModEntities{
 		
 		// should not happen, but avoids a crash if the entity was added during chunk loading, and for some
 		// reason the entity was still the original type (for ex. if another mod messes with the factories)
-		if (world.chunkProvider.isChunkLoaded(original)){
+		if (world.chunkProvider.isChunkLoaded(original)) {
 			world.addEntity(overriden)
 		}
 	}
@@ -162,16 +163,16 @@ object ModEntities{
 	// Utilities
 	
 	@Suppress("UNCHECKED_CAST")
-	private inline fun <reified T : Entity> build(classification: EntityClassification): EntityType.Builder<T>{
+	private inline fun <reified T : Entity> build(classification: EntityClassification): EntityType.Builder<T> {
 		val handle = ObjectConstructors.generic<T, Entity, IFactory<T>>("create", EntityType::class.java, World::class.java)
 		return EntityType.Builder.create(handle.invokeExact() as IFactory<T>, classification)
 	}
 	
-	private fun <T : Entity> EntityType.Builder<T>.tracker(trackingRange: Int, updateInterval: Int, receiveVelocityUpdates: Boolean): EntityType.Builder<T>{
+	private fun <T : Entity> EntityType.Builder<T>.tracker(trackingRange: Int, updateInterval: Int, receiveVelocityUpdates: Boolean): EntityType.Builder<T> {
 		return this.setTrackingRange(trackingRange).setUpdateInterval(updateInterval).setShouldReceiveVelocityUpdates(receiveVelocityUpdates)
 	}
 	
-	private fun <T : Entity> EntityType.Builder<T>.name(name: String): EntityType<T>{
+	private fun <T : Entity> EntityType.Builder<T>.name(name: String): EntityType<T> {
 		return this.build("hee.$name") named name
 	}
 }

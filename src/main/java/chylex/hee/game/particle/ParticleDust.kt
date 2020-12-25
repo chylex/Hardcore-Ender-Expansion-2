@@ -1,4 +1,5 @@
 package chylex.hee.game.particle
+
 import chylex.hee.game.entity.lookDirVec
 import chylex.hee.game.entity.selectExistingEntities
 import chylex.hee.game.particle.ParticleDust.Data
@@ -32,34 +33,34 @@ import kotlin.math.min
 import kotlin.math.sin
 import kotlin.math.sqrt
 
-object ParticleDust : IParticleMaker.WithData<Data>(){
+object ParticleDust : IParticleMaker.WithData<Data>() {
 	@Sided(Side.CLIENT)
-	override fun create(world: World, posX: Double, posY: Double, posZ: Double, motX: Double, motY: Double, motZ: Double, data: Data?): Particle{
+	override fun create(world: World, posX: Double, posY: Double, posZ: Double, motX: Double, motY: Double, motZ: Double, data: Data?): Particle {
 		return Instance(world, posX, posY, posZ, motX, motY, motZ, data)
 	}
 	
 	class Data(
 		val lifespan: IntRange,
 		val scale: ClosedFloatingPointRange<Float>,
-		val reactsToSkyLight: Boolean
+		val reactsToSkyLight: Boolean,
 	) : IParticleData.Self<Data>()
 	
 	private const val COLLISION_SIZE = 1.9
 	
 	@Sided(Side.CLIENT)
-	private class Instance(world: World, posX: Double, posY: Double, posZ: Double, motX: Double, motY: Double, motZ: Double, data: Data?) : ParticleBase(world, posX, posY, posZ, motX, motY, motZ){
+	private class Instance(world: World, posX: Double, posY: Double, posZ: Double, motX: Double, motY: Double, motZ: Double, data: Data?) : ParticleBase(world, posX, posY, posZ, motX, motY, motZ) {
 		private val preSkyLightColor: IntColor?
 		private var chaosVec = Vec3.ZERO
 		
-		init{
+		init {
 			selectSpriteRandomly(ParticleDust.sprite)
 			particleAlpha = 0F
 			
-			if (data == null){
+			if (data == null) {
 				preSkyLightColor = null
 				setExpired()
 			}
-			else{
+			else {
 				val color = RGB(rand.nextInt(90, 100), rand.nextInt(80, 90), 5)
 				loadColor(color)
 				preSkyLightColor = color.takeIf { data.reactsToSkyLight }
@@ -72,13 +73,13 @@ object ParticleDust : IParticleMaker.WithData<Data>(){
 			}
 		}
 		
-		override fun tick(){
+		override fun tick() {
 			super.tick()
 			
-			if (age < 35){
+			if (age < 35) {
 				particleAlpha = min(0.5F, particleAlpha + 0.015F)
 			}
-			else if (age > maxAge - 35){
+			else if (age > maxAge - 35) {
 				particleAlpha = max(0F, particleAlpha - 0.015F)
 			}
 			
@@ -91,16 +92,16 @@ object ParticleDust : IParticleMaker.WithData<Data>(){
 				posZ + COLLISION_SIZE
 			)
 			
-			for(entity in world.selectExistingEntities.allInBox(aabb)){
+			for(entity in world.selectExistingEntities.allInBox(aabb)) {
 				var mot = entity.motion
 				
-				if (mot.y < 0.0 && entity.onGround){
+				if (mot.y < 0.0 && entity.onGround) {
 					mot = mot.withY(0.0)
 				}
 				
 				val lenSq = mot.lengthSquared()
 				
-				if (lenSq > square(0.01)){
+				if (lenSq > square(0.01)) {
 					val len = sqrt(lenSq).coerceAtMost(2.5)
 					
 					chaosVec = chaosVec
@@ -108,7 +109,7 @@ object ParticleDust : IParticleMaker.WithData<Data>(){
 						.add(rand.nextVector(0.05 * len))
 				}
 				
-				if (entity is EntityLivingBase && entity.isSwingInProgress){
+				if (entity is EntityLivingBase && entity.isSwingInProgress) {
 					val strength = if (entity.getHeldItem(entity.swingingHand).isEmpty) 0.07 else 0.13
 					
 					chaosVec = chaosVec
@@ -117,11 +118,11 @@ object ParticleDust : IParticleMaker.WithData<Data>(){
 				}
 			}
 			
-			if (motionVec.lengthSquared() > square(0.01)){
+			if (motionVec.lengthSquared() > square(0.01)) {
 				motionVec = motionVec.scale(0.92)
 			}
 			
-			if (chaosVec.lengthSquared() > square(0.01)){
+			if (chaosVec.lengthSquared() > square(0.01)) {
 				val f1 = cos((age * 7.0).toRadians()) + 0.7
 				val f2 = sin((age * 3.7).toRadians())
 				motionVec = motionVec.add(chaosVec.scale(f1 * 0.03)).add(rand.nextVector(f2 * 0.01))
@@ -131,10 +132,10 @@ object ParticleDust : IParticleMaker.WithData<Data>(){
 			
 			val preSkyLightColor = preSkyLightColor
 			
-			if (preSkyLightColor != null){
+			if (preSkyLightColor != null) {
 				val pos = Pos(posX, posY, posZ)
 				
-				if (pos.isLoaded(world)){
+				if (pos.isLoaded(world)) {
 					val sky = world.getLightFor(SKY, pos) / 16F
 					particleRed = (preSkyLightColor.redF + (sky * 0.25F)).coerceIn(0F, 1F)
 					particleGreen = (preSkyLightColor.greenF - (sky * 0.1F)).coerceIn(0F, 1F)
@@ -143,10 +144,10 @@ object ParticleDust : IParticleMaker.WithData<Data>(){
 			}
 		}
 		
-		override fun getBrightnessForRender(partialTick: Float): Int{
+		override fun getBrightnessForRender(partialTick: Float): Int {
 			val pos = Pos(posX, posY, posZ)
 			
-			if (!pos.isLoaded(world)){
+			if (!pos.isLoaded(world)) {
 				return 0
 			}
 			
@@ -156,7 +157,7 @@ object ParticleDust : IParticleMaker.WithData<Data>(){
 			return (sky shl 20) or (block shl 4)
 		}
 		
-		override fun getRenderType(): IParticleRenderType{
+		override fun getRenderType(): IParticleRenderType {
 			return PARTICLE_SHEET_TRANSLUCENT
 		}
 	}

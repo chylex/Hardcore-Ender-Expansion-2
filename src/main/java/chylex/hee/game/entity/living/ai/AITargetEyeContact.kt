@@ -1,4 +1,5 @@
 package chylex.hee.game.entity.living.ai
+
 import chylex.hee.game.entity.lookDirVec
 import chylex.hee.game.entity.lookPosVec
 import chylex.hee.game.world.totalTime
@@ -19,18 +20,18 @@ class AITargetEyeContact<T : EntityLivingBase>(
 	targetPredicate: ((T) -> Boolean)?,
 	fieldOfView: Float,
 	headRadius: Float,
-	private val minStareTicks: Int
-) : AIBaseTargetFiltered<T>(entity, true, easilyReachableOnly, targetClass, targetPredicate){
+	private val minStareTicks: Int,
+) : AIBaseTargetFiltered<T>(entity, true, easilyReachableOnly, targetClass, targetPredicate) {
 	private val fieldOfViewCos = cos((fieldOfView / 2F).toRadians())
 	private val headRadiusSq = square(headRadius)
 	private val headCenterOffset = headRadius * 0.5 // kinda arbitrary
 	
 	private val stareStarts = Object2LongArrayMap<T>(4).apply { defaultReturnValue(Long.MIN_VALUE) }
 	
-	override fun findTarget(): T?{
+	override fun findTarget(): T? {
 		val foundTargets = findSuitableTargets().filter(::isLookingIntoEyes)
 		
-		if (foundTargets.isEmpty()){
+		if (foundTargets.isEmpty()) {
 			stareStarts.clear()
 			return null
 		}
@@ -39,14 +40,14 @@ class AITargetEyeContact<T : EntityLivingBase>(
 		
 		val currentTime = entity.world.totalTime
 		
-		for(target in foundTargets){
+		for(target in foundTargets) {
 			val stareStart = stareStarts.getLong(target)
 			
-			if (stareStart == Long.MIN_VALUE){
+			if (stareStart == Long.MIN_VALUE) {
 				@Suppress("ReplacePutWithAssignment")
 				stareStarts.put(target, currentTime) // kotlin indexer boxes the values
 			}
-			else if (currentTime - stareStart >= minStareTicks){
+			else if (currentTime - stareStart >= minStareTicks) {
 				stareStarts.clear()
 				return target
 			}
@@ -55,8 +56,8 @@ class AITargetEyeContact<T : EntityLivingBase>(
 		return null
 	}
 	
-	private fun isLookingIntoEyes(target: T): Boolean{
-		if (target.getItemStackFromSlot(HEAD).item === Blocks.CARVED_PUMPKIN.asItem()){
+	private fun isLookingIntoEyes(target: T): Boolean {
+		if (target.getItemStackFromSlot(HEAD).item === Blocks.CARVED_PUMPKIN.asItem()) {
 			return false
 		}
 		
@@ -64,7 +65,7 @@ class AITargetEyeContact<T : EntityLivingBase>(
 		val eyePosDiff = entity.lookPosVec.add(ownerLookDir.scale(headCenterOffset)).subtract(target.lookPosVec)
 		val eyePosDiffNormalized = eyePosDiff.normalize()
 		
-		if (-ownerLookDir.dotProduct(eyePosDiffNormalized) < fieldOfViewCos){
+		if (-ownerLookDir.dotProduct(eyePosDiffNormalized) < fieldOfViewCos) {
 			return false
 		}
 		

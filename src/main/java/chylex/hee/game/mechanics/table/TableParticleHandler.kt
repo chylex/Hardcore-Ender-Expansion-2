@@ -1,4 +1,5 @@
 package chylex.hee.game.mechanics.table
+
 import chylex.hee.game.block.entity.TileEntityEnergyCluster
 import chylex.hee.game.block.entity.base.TileEntityBaseTable
 import chylex.hee.game.particle.ParticleEnergyTableDrain
@@ -28,9 +29,9 @@ import net.minecraft.util.math.BlockPos
 import net.minecraft.world.World
 import java.util.Random
 
-class TableParticleHandler(private val table: TileEntityBaseTable){
-	companion object{
-		private fun getParticleRate(processTickRate: Int): Int{
+class TableParticleHandler(private val table: TileEntityBaseTable) {
+	companion object {
+		private fun getParticleRate(processTickRate: Int): Int {
 			val defaultRate = processTickRate * 2
 			
 			return if (defaultRate < 20)
@@ -44,27 +45,27 @@ class TableParticleHandler(private val table: TileEntityBaseTable){
 		private val PARTICLE_CLUSTER_POS = InSphere(0.05F)
 		private val PARTICLE_CLUSTER_MOT = InBox(0.004F)
 		
-		class FxProcessPedestalsData(private val table: TileEntityBaseTable, private val targetPositions: List<BlockPos>, private val travelTime: Int) : IFxData{
+		class FxProcessPedestalsData(private val table: TileEntityBaseTable, private val targetPositions: List<BlockPos>, private val travelTime: Int) : IFxData {
 			override fun write(buffer: PacketBuffer) = buffer.use {
 				writePos(table.pos)
 				writeByte(travelTime)
 				writeByte(targetPositions.size)
 				
-				for(pos in targetPositions){
+				for(pos in targetPositions) {
 					writeLong(pos.toLong())
 				}
 			}
 		}
 		
-		val FX_PROCESS_PEDESTALS = object : IFxHandler<FxProcessPedestalsData>{
+		val FX_PROCESS_PEDESTALS = object : IFxHandler<FxProcessPedestalsData> {
 			override fun handle(buffer: PacketBuffer, world: World, rand: Random) = buffer.use {
 				val table = readPos().getTile<TileEntityBaseTable>(world) ?: return
 				val travelTime = readByte().toInt()
 				
-				repeat(readByte().toInt()){
+				repeat(readByte().toInt()) {
 					val targetPos = readPos()
 					
-					if (targetPos.getBlock(world) === ModBlocks.TABLE_PEDESTAL){
+					if (targetPos.getBlock(world) === ModBlocks.TABLE_PEDESTAL) {
 						ParticleSpawnerCustom(
 							type = ParticleEnergyTransferToPedestal,
 							data = ParticleEnergyTransferToPedestal.Data(targetPos, travelTime),
@@ -76,14 +77,14 @@ class TableParticleHandler(private val table: TileEntityBaseTable){
 			}
 		}
 		
-		class FxDrainClusterData(private val table: TileEntityBaseTable, private val clusterPos: BlockPos) : IFxData{
+		class FxDrainClusterData(private val table: TileEntityBaseTable, private val clusterPos: BlockPos) : IFxData {
 			override fun write(buffer: PacketBuffer) = buffer.use {
 				writePos(clusterPos)
 				writePos(table.pos)
 			}
 		}
 		
-		val FX_DRAIN_CLUSTER = object : IFxHandler<FxDrainClusterData>{
+		val FX_DRAIN_CLUSTER = object : IFxHandler<FxDrainClusterData> {
 			override fun handle(buffer: PacketBuffer, world: World, rand: Random) = buffer.use {
 				val cluster = readPos().getTile<TileEntityEnergyCluster>(world) ?: return
 				val table = readPos().getTile<TileEntityBaseTable>(world) ?: return
@@ -109,29 +110,29 @@ class TableParticleHandler(private val table: TileEntityBaseTable){
 	private var lastUpdatedPedestals = mutableListOf<BlockPos>()
 	private var lastDrainedCluster: BlockPos? = null
 	
-	fun tick(processTickRate: Int){
+	fun tick(processTickRate: Int) {
 		val particleRate = getParticleRate(processTickRate)
 		val modTick = table.wrld.totalTime % particleRate
 		
-		if (modTick == 0L){
+		if (modTick == 0L) {
 			lastDrainedCluster?.let {
 				PacketClientFX(FX_DRAIN_CLUSTER, FxDrainClusterData(table, it)).sendToAllAround(table, 76.0)
 				lastDrainedCluster = null
 			}
 		}
-		else if (modTick == 3L){
-			if (lastUpdatedPedestals.isNotEmpty()){
+		else if (modTick == 3L) {
+			if (lastUpdatedPedestals.isNotEmpty()) {
 				PacketClientFX(FX_PROCESS_PEDESTALS, FxProcessPedestalsData(table, lastUpdatedPedestals, (particleRate - 2).coerceAtMost(30))).sendToAllAround(table, 70.0)
 				lastUpdatedPedestals.clear()
 			}
 		}
 	}
 	
-	fun onPedestalsTicked(pedestals: Array<BlockPos>){
+	fun onPedestalsTicked(pedestals: Array<BlockPos>) {
 		this.lastUpdatedPedestals.addAll(pedestals)
 	}
 	
-	fun onClusterDrained(cluster: BlockPos){
+	fun onClusterDrained(cluster: BlockPos) {
 		this.lastDrainedCluster = cluster
 	}
 }

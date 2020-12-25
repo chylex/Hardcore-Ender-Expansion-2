@@ -1,4 +1,5 @@
 package chylex.hee.game.entity.technical
+
 import chylex.hee.game.block.BlockPuzzleLogic
 import chylex.hee.game.entity.lookDirVec
 import chylex.hee.game.entity.lookPosVec
@@ -40,10 +41,10 @@ import net.minecraft.util.math.Vec3d
 import net.minecraft.world.World
 import kotlin.math.cos
 
-class EntityTechnicalPuzzle(type: EntityType<EntityTechnicalPuzzle>, world: World) : EntityTechnicalBase(type, world){
+class EntityTechnicalPuzzle(type: EntityType<EntityTechnicalPuzzle>, world: World) : EntityTechnicalBase(type, world) {
 	constructor(world: World) : this(ModEntities.TECHNICAL_PUZZLE, world)
 	
-	private companion object{
+	private companion object {
 		private const val START_POS_TAG = "StartPos"
 		private const val FACING_TAG = "Facing"
 	}
@@ -51,70 +52,70 @@ class EntityTechnicalPuzzle(type: EntityType<EntityTechnicalPuzzle>, world: Worl
 	private var startPos = BlockPos.ZERO
 	private var facing = DOWN
 	
-	override fun registerData(){}
+	override fun registerData() {}
 	
-	override fun tick(){
+	override fun tick() {
 		super.tick()
 		
-		if (world.isRemote){
+		if (world.isRemote) {
 			return
 		}
 		
-		if (ticksExisted == 1 && hasConflict()){
+		if (ticksExisted == 1 && hasConflict()) {
 			remove()
 			return
 		}
 		
 		val pos = Pos(this)
 		
-		if (world.isAreaLoaded(pos, BlockPuzzleLogic.MAX_SIZE) && ticksExisted > 5 && world.totalTime % BlockPuzzleLogic.UPDATE_RATE == 0L){
+		if (world.isAreaLoaded(pos, BlockPuzzleLogic.MAX_SIZE) && ticksExisted > 5 && world.totalTime % BlockPuzzleLogic.UPDATE_RATE == 0L) {
 			moveToBlockAndToggle(pos)
 		}
 	}
 	
-	private fun hasConflict(): Boolean{
+	private fun hasConflict(): Boolean {
 		return world.selectEntities.inBox<EntityTechnicalPuzzle>(AxisAlignedBB(Pos(this))).any { it !== this && it.facing == facing && it.isAlive }
 	}
 	
-	private fun setPosition(pos: BlockPos){
+	private fun setPosition(pos: BlockPos) {
 		setPosition(pos.x + 0.5, pos.y + 0.5, pos.z + 0.5)
 	}
 	
-	private fun moveToBlockAndToggle(pos: BlockPos){
+	private fun moveToBlockAndToggle(pos: BlockPos) {
 		val block = pos.getBlock(world)
 		
-		if (block is BlockPuzzleLogic){
+		if (block is BlockPuzzleLogic) {
 			setPosition(pos)
 			
 			val nextChains = block.onToggled(world, pos, facing)
 			
-			if (nextChains.isEmpty()){
+			if (nextChains.isEmpty()) {
 				endChain()
 			}
-			else{
+			else {
 				setPosition(nextChains[0].first)
 				facing = nextChains[0].second
 				
-				if (hasConflict()){
+				if (hasConflict()) {
 					remove()
 				}
 				
-				for(index in 1 until nextChains.size){
+				for(index in 1 until nextChains.size) {
 					EntityTechnicalPuzzle(world).apply {
-						if (startChain(nextChains[index].first, nextChains[index].second)){
+						if (startChain(nextChains[index].first, nextChains[index].second)) {
 							world.addEntity(this)
 						}
 					}
 				}
 			}
 		}
-		else{
+		else {
 			endChain()
 		}
 	}
 	
-	private fun isBlockingSolution(allBlocks: List<BlockPos>, other: EntityTechnicalPuzzle): Boolean{
-		if (!other.isAlive){
+	private fun isBlockingSolution(allBlocks: List<BlockPos>, other: EntityTechnicalPuzzle): Boolean {
+		if (!other.isAlive) {
 			return false
 		}
 		
@@ -122,11 +123,11 @@ class EntityTechnicalPuzzle(type: EntityType<EntityTechnicalPuzzle>, world: Worl
 		return allBlocks.any { it == entityPos }
 	}
 	
-	fun startChain(pos: BlockPos, facing: Direction): Boolean{
+	fun startChain(pos: BlockPos, facing: Direction): Boolean {
 		val state = pos.getState(world)
 		val block = state.block
 		
-		if (block !is BlockPuzzleLogic || state[BlockPuzzleLogic.STATE] == BlockPuzzleLogic.State.DISABLED){
+		if (block !is BlockPuzzleLogic || state[BlockPuzzleLogic.STATE] == BlockPuzzleLogic.State.DISABLED) {
 			return false
 		}
 		
@@ -136,17 +137,17 @@ class EntityTechnicalPuzzle(type: EntityType<EntityTechnicalPuzzle>, world: Worl
 		return !hasConflict()
 	}
 	
-	private fun endChain(){
+	private fun endChain() {
 		remove()
 		
 		val allBlocks = BlockPuzzleLogic.findAllBlocks(world, startPos)
 		val entityArea = BlockPuzzleLogic.MAX_SIZE.toDouble().let { AxisAlignedBB(startPos).grow(it, 0.0, it) }
 		
-		if (allBlocks.isEmpty() || world.selectEntities.inBox<EntityTechnicalPuzzle>(entityArea).any { isBlockingSolution(allBlocks, it) }){
+		if (allBlocks.isEmpty() || world.selectEntities.inBox<EntityTechnicalPuzzle>(entityArea).any { isBlockingSolution(allBlocks, it) }) {
 			return
 		}
 		
-		if (allBlocks.all { it.getState(world)[BlockPuzzleLogic.STATE] == BlockPuzzleLogic.State.ACTIVE }){
+		if (allBlocks.all { it.getState(world)[BlockPuzzleLogic.STATE] == BlockPuzzleLogic.State.ACTIVE }) {
 			val candidatesInitial = BlockPuzzleLogic.findAllRectangles(world, allBlocks)
 				.map { box -> Vec((box.min.x + box.max.x + 1) * 0.5, posY + 1.5, (box.min.z + box.max.z + 1) * 0.5) }
 			
@@ -172,7 +173,7 @@ class EntityTechnicalPuzzle(type: EntityType<EntityTechnicalPuzzle>, world: Worl
 		}
 	}
 	
-	private fun isPointInPlayerView(point: Vec3d): Boolean{
+	private fun isPointInPlayerView(point: Vec3d): Boolean {
 		return world.players.any {
 			val lookPos = it.lookPosVec
 			val lookDir = it.lookDirVec

@@ -1,4 +1,5 @@
 package chylex.hee.client.render.block
+
 import chylex.hee.client.MC
 import chylex.hee.client.model.ModelHelper
 import chylex.hee.client.model.getQuads
@@ -26,8 +27,8 @@ import net.minecraft.item.ItemStack
 import net.minecraftforge.client.ForgeHooksClient
 
 @Sided(Side.CLIENT)
-class RenderTileTable(dispatcher: TileEntityRendererDispatcher) : TileEntityRenderer<TileEntityBaseTable>(dispatcher){
-	private companion object{
+class RenderTileTable(dispatcher: TileEntityRendererDispatcher) : TileEntityRenderer<TileEntityBaseTable>(dispatcher) {
+	private companion object {
 		private const val COLOR_SHADE = 80F / 255F
 		private const val COLOR_ALPHA = 30F / 255F
 		private val LIGHT = LightTexture.packLight(15, 0)
@@ -35,11 +36,11 @@ class RenderTileTable(dispatcher: TileEntityRendererDispatcher) : TileEntityRend
 		private const val Y_OFFSET = 0.8
 	}
 	
-	override fun render(tile: TileEntityBaseTable, partialTicks: Float, matrix: MatrixStack, buffer: IRenderTypeBuffer, combinedLight: Int, combinedOverlay: Int){
+	override fun render(tile: TileEntityBaseTable, partialTicks: Float, matrix: MatrixStack, buffer: IRenderTypeBuffer, combinedLight: Int, combinedOverlay: Int) {
 		val world = tile.world ?: return
 		val dustType = tile.tableDustType ?: return
 		
-		if (tile.pos.up().getTile<TileEntityJarODust>(world)?.layers?.getDustType(DustLayers.Side.BOTTOM) == dustType){
+		if (tile.pos.up().getTile<TileEntityJarODust>(world)?.layers?.getDustType(DustLayers.Side.BOTTOM) == dustType) {
 			return
 		}
 		
@@ -59,7 +60,7 @@ class RenderTileTable(dispatcher: TileEntityRendererDispatcher) : TileEntityRend
 		val mat = matrix.last
 		val builder = ItemRenderer.getBuffer(buffer, RenderTypeLookup.getRenderType(itemStack), true /* isItem */, false /* hasGlint */)
 		
-		for(quad in itemModel.getQuads()){
+		for(quad in itemModel.getQuads()) {
 			builder.addVertexData(mat, quad, COLOR_SHADE, COLOR_SHADE, COLOR_SHADE, COLOR_ALPHA, LIGHT, OverlayTexture.NO_OVERLAY)
 		}
 		

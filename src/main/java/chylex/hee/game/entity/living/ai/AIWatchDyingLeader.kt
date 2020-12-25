@@ -1,4 +1,5 @@
 package chylex.hee.game.entity.living.ai
+
 import chylex.hee.game.entity.living.EntityMobBlobby
 import chylex.hee.game.entity.lookPosVec
 import chylex.hee.system.math.Vec3
@@ -9,16 +10,16 @@ import java.util.EnumSet
 
 class AIWatchDyingLeader(
 	private val entity: EntityMobBlobby,
-	private val ticksBeforeResuming: Int
-) : Goal(){
+	private val ticksBeforeResuming: Int,
+) : Goal() {
 	private var watchTarget = Vec3.ZERO
 	private var remainingTicks = 0
 	
-	init{
+	init {
 		mutexFlags = EnumSet.of(MOVE, LOOK)
 	}
 	
-	override fun shouldExecute(): Boolean{
+	override fun shouldExecute(): Boolean {
 		val leader = entity.findLeader()?.takeIf { it.deathTime > 0 } ?: return false
 		
 		watchTarget = leader.lookPosVec
@@ -26,17 +27,17 @@ class AIWatchDyingLeader(
 		return true
 	}
 	
-	override fun shouldContinueExecuting(): Boolean{
+	override fun shouldContinueExecuting(): Boolean {
 		return remainingTicks > 0
 	}
 	
-	override fun tick(){
+	override fun tick() {
 		entity.navigator.clearPath()
 		entity.lookController.setLookPosition(watchTarget.x, watchTarget.y, watchTarget.z)
 		--remainingTicks
 	}
 	
-	override fun resetTask(){
+	override fun resetTask() {
 		watchTarget = Vec3.ZERO
 		remainingTicks = 0
 	}

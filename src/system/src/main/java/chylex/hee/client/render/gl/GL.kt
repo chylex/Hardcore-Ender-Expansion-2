@@ -1,6 +1,7 @@
 @file:Suppress("DEPRECATION")
 
 package chylex.hee.client.render.gl
+
 import chylex.hee.client.MC
 import chylex.hee.system.forge.Side
 import chylex.hee.system.forge.Sided
@@ -17,7 +18,7 @@ import java.nio.FloatBuffer
 private typealias GLSM = RenderSystem
 
 @Sided(Side.CLIENT)
-object GL{
+object GL {
 	
 	// General
 	

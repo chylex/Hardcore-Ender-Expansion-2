@@ -1,4 +1,5 @@
 package chylex.hee.game.entity.item
+
 import chylex.hee.game.block.BlockPuzzleLogic
 import chylex.hee.game.block.with
 import chylex.hee.game.entity.posVec
@@ -87,16 +88,16 @@ import net.minecraft.world.server.ServerWorld
 import java.util.Random
 import kotlin.math.log2
 
-class EntityItemIgneousRock : EntityItemNoBob{
+class EntityItemIgneousRock : EntityItemNoBob {
 	@Suppress("unused")
 	constructor(type: EntityType<EntityItemIgneousRock>, world: World) : super(type, world)
 	
-	constructor(world: World, stack: ItemStack, replacee: Entity) : super(ModEntities.ITEM_IGNEOUS_ROCK, world, stack, replacee){
+	constructor(world: World, stack: ItemStack, replacee: Entity) : super(ModEntities.ITEM_IGNEOUS_ROCK, world, stack, replacee) {
 		lifespan = 1200 + (world.rand.nextBiasedFloat(3F) * 1200F).floorToInt()
 		throwFacing = Facing4.fromDirection(motion)
 	}
 	
-	companion object{
+	companion object {
 		private const val BURN_DISTANCE = 3.5
 		private const val BURN_DISTANCE_SQ = BURN_DISTANCE * BURN_DISTANCE
 		
@@ -128,15 +129,15 @@ class EntityItemIgneousRock : EntityItemNoBob{
 			mot = PARTICLE_FLAME_MOT
 		)
 		
-		val FX_BLOCK_SMELT = object : FxBlockHandler(){
-			override fun handle(pos: BlockPos, world: World, rand: Random){
+		val FX_BLOCK_SMELT = object : FxBlockHandler() {
+			override fun handle(pos: BlockPos, world: World, rand: Random) {
 				PARTICLE_SMELT.spawn(Point(pos, 20), rand)
 				ModSounds.ENTITY_IGNEOUS_ROCK_BURN.playClient(pos, SoundCategory.NEUTRAL, volume = 0.3F, pitch = rand.nextFloat(1F, 2F))
 			}
 		}
 		
-		val FX_ENTITY_BURN = object : FxEntityHandler(){
-			override fun handle(entity: Entity, rand: Random){
+		val FX_ENTITY_BURN = object : FxEntityHandler() {
+			override fun handle(entity: Entity, rand: Random) {
 				PARTICLE_BURN(entity).spawn(Point(entity, heightMp = 0.5F, amount = 24), rand)
 				ModSounds.ENTITY_IGNEOUS_ROCK_BURN.playClient(entity.posVec, SoundCategory.NEUTRAL, volume = 0.3F, pitch = rand.nextFloat(1F, 2F))
 			}
@@ -147,35 +148,35 @@ class EntityItemIgneousRock : EntityItemNoBob{
 	
 	private val smeltingInventory = Inventory(1)
 	
-	override fun tick(){
+	override fun tick() {
 		super.tick()
 		
 		val currentPos = Pos(this)
 		
-		if (!world.isRemote && age > 4 && (world.totalTime - 1L) % BlockPuzzleLogic.UPDATE_RATE == 0L){
+		if (!world.isRemote && age > 4 && (world.totalTime - 1L) % BlockPuzzleLogic.UPDATE_RATE == 0L) {
 			val posBelow = currentPos.down()
 			
-			if (posBelow.getBlock(world) is BlockPuzzleLogic){
+			if (posBelow.getBlock(world) is BlockPuzzleLogic) {
 				val entity = EntityTechnicalPuzzle(world)
 				
-				if (entity.startChain(posBelow, throwFacing)){
+				if (entity.startChain(posBelow, throwFacing)) {
 					world.addEntity(entity)
 					
 					val reducedStack = item.apply { shrink(1) }.takeIf { it.isNotEmpty }
 					
-					if (reducedStack == null){
+					if (reducedStack == null) {
 						remove()
 						return
 					}
-					else{
+					else {
 						item = reducedStack
 					}
 				}
 			}
 		}
 		
-		if (!world.isRemote && age >= ACTIVITY_DELAY_TICKS){
-			if (ticksExisted % 5 == 0){
+		if (!world.isRemote && age >= ACTIVITY_DELAY_TICKS) {
+			if (ticksExisted % 5 == 0) {
 				updateBurnNearbyEntities()
 			}
 			
@@ -184,23 +185,23 @@ class EntityItemIgneousRock : EntityItemNoBob{
 			val stack = item
 			val count = stack.size
 			
-			repeat(count){
-				if (rand.nextInt(6) == 0 || age < INITIAL_FIRE_UNTIL_TICKS){
+			repeat(count) {
+				if (rand.nextInt(6) == 0 || age < INITIAL_FIRE_UNTIL_TICKS) {
 					val checkRange = (BURN_DISTANCE * 2).ceilToInt()
 					
 					val randomTopBlock = getRandomBlock().let { randomPos ->
 						if (randomPos.isAir(world))
-							randomPos.offsetUntilExcept(DOWN, 1..checkRange){ !it.isAir(world) || it.distanceSqTo(this) > BURN_DISTANCE_SQ }
+							randomPos.offsetUntilExcept(DOWN, 1..checkRange) { !it.isAir(world) || it.distanceSqTo(this) > BURN_DISTANCE_SQ }
 						else
-							randomPos.offsetUntil(UP, 0..checkRange){ it.isAir(world) || it.distanceSqTo(this) > BURN_DISTANCE_SQ }
+							randomPos.offsetUntil(UP, 0..checkRange) { it.isAir(world) || it.distanceSqTo(this) > BURN_DISTANCE_SQ }
 					}
 					
-					if (randomTopBlock != null && randomTopBlock.isAir(world) && randomTopBlock.down().isTopSolid(world)){
+					if (randomTopBlock != null && randomTopBlock.isAir(world) && randomTopBlock.down().isTopSolid(world)) {
 						randomTopBlock.setBlock(world, Blocks.FIRE)
 						hasChangedAnyBlock = true
 					}
 				}
-				else if (rand.nextBoolean()){
+				else if (rand.nextBoolean()) {
 					getRandomBlock().takeUnless { it.isAir(world) }?.let {
 						updateBurnBlock(it)
 						hasChangedAnyBlock = true
@@ -208,46 +209,46 @@ class EntityItemIgneousRock : EntityItemNoBob{
 				}
 			}
 			
-			if (hasChangedAnyBlock && count > 1 && rand.nextInt(100) < (count * 4) / 10){
+			if (hasChangedAnyBlock && count > 1 && rand.nextInt(100) < (count * 4) / 10) {
 				item = stack.apply { shrink(1) }
 			}
 		}
 		
-		if (currentPos != Pos(prevPosX, prevPosY, prevPosZ) || ticksExisted % 25 == 0){
-			if (currentPos.getMaterial(world) === Material.WATER){
+		if (currentPos != Pos(prevPosX, prevPosY, prevPosZ) || ticksExisted % 25 == 0) {
+			if (currentPos.getMaterial(world) === Material.WATER) {
 				setMotion(rand.nextFloat(-0.2, 0.2), 0.2, rand.nextFloat(-0.2, 0.2))
 				// spawns bubble particles via Entity.doWaterSplashEffect
 				// plays hissing sound (ENTITY_GENERIC_EXTINGUISH_FIRE) via Entity.move, as the entity is on fire
 			}
 		}
 		
-		if (isInLava){
+		if (isInLava) {
 			lifespan -= 3
 			
 			handleFluidAcceleration(FluidTags.LAVA)
 			motion = motion.scaleXZ(0.9)
 		}
 		
-		if (world.isRemote){
+		if (world.isRemote) {
 			val stackSize = item.size.toFloat()
 			val particleChance = if (stackSize < 1F) 0F else 0.13F + (stackSize / 110F) + (log2(stackSize) / 18F)
 			
-			if (rand.nextFloat() < particleChance){
+			if (rand.nextFloat() < particleChance) {
 				PARTICLE_TICK.spawn(Point(this, heightMp = 0.5F, amount = 1), rand)
 			}
 		}
 	}
 	
-	override fun move(type: MoverType, by: Vec3d){
-		if (isInLava){
+	override fun move(type: MoverType, by: Vec3d) {
+		if (isInLava) {
 			super.move(type, by.mul(0.2, 0.01, 0.2))
 		}
-		else{
+		else {
 			super.move(type, by)
 		}
 	}
 	
-	override fun isInvulnerableTo(source: DamageSource): Boolean{
+	override fun isInvulnerableTo(source: DamageSource): Boolean {
 		return super.isInvulnerableTo(source) || source.isFireDamage
 	}
 	
@@ -255,15 +256,15 @@ class EntityItemIgneousRock : EntityItemNoBob{
 	
 	// In-world behavior
 	
-	private fun getRandomBlock(): BlockPos{
+	private fun getRandomBlock(): BlockPos {
 		val randomOffset = rand.nextVector(rand.nextBiasedFloat(6F) * BURN_DISTANCE)
 		return Pos(posVec.add(randomOffset))
 	}
 	
-	private fun updateBurnNearbyEntities(){
+	private fun updateBurnNearbyEntities() {
 		val pos = posVec
 		
-		for(entity in world.selectVulnerableEntities.allInRange(pos, BURN_DISTANCE).filter { !it.isImmuneToFire && it.fire < MIN_ENTITY_BURN_DURATION_TICKS }){
+		for(entity in world.selectVulnerableEntities.allInRange(pos, BURN_DISTANCE).filter { !it.isImmuneToFire && it.fire < MIN_ENTITY_BURN_DURATION_TICKS }) {
 			val distanceMp = 1F - (pos.squareDistanceTo(entity.posVec) / BURN_DISTANCE_SQ)
 			val extraDuration = (distanceMp * 40F) + rand.nextInt(20)
 			
@@ -272,7 +273,7 @@ class EntityItemIgneousRock : EntityItemNoBob{
 		}
 	}
 	
-	private fun updateBurnBlock(pos: BlockPos){
+	private fun updateBurnBlock(pos: BlockPos) {
 		val world = world as? ServerWorld ?: return
 		
 		val sourceState = pos.getState(world)
@@ -283,13 +284,13 @@ class EntityItemIgneousRock : EntityItemNoBob{
 		smeltingInventory.setStack(0, ItemStack(sourceState.block))
 		val output = world.recipeManager.getRecipe(IRecipeType.SMELTING, smeltingInventory, world).orElse(null)?.recipeOutput
 		
-		if (output != null && output.isNotEmpty){
-			targetState = (output.item as? ItemBlock)?.block?.getStateForPlacement(object : DirectionalPlaceContext(world, pos, Direction.DOWN, ItemStack.EMPTY, Direction.UP){
-				override fun canPlace(): Boolean{
+		if (output != null && output.isNotEmpty) {
+			targetState = (output.item as? ItemBlock)?.block?.getStateForPlacement(object : DirectionalPlaceContext(world, pos, Direction.DOWN, ItemStack.EMPTY, Direction.UP) {
+				override fun canPlace(): Boolean {
 					return true
 				}
 				
-				override fun replacingClickedOnBlock(): Boolean{
+				override fun replacingClickedOnBlock(): Boolean {
 					return true
 				}
 			})
@@ -297,16 +298,16 @@ class EntityItemIgneousRock : EntityItemNoBob{
 		
 		// secondary transformations
 		
-		if (targetState == null){
+		if (targetState == null) {
 			val fluid = pos.getFluidState(world)
 			
-			if (fluid.isTagged(FluidTags.WATER) && !fluid.isSource){
+			if (fluid.isTagged(FluidTags.WATER) && !fluid.isSource) {
 				targetState = Blocks.AIR.defaultState
 			}
 		}
 		
-		if (targetState == null){
-			targetState = when(sourceState.block){
+		if (targetState == null) {
+			targetState = when(sourceState.block) {
 				Blocks.MOSSY_COBBLESTONE -> Blocks.COBBLESTONE
 				Blocks.PACKED_ICE -> Blocks.ICE
 				Blocks.GRASS_BLOCK -> Blocks.DIRT
@@ -340,7 +341,7 @@ class EntityItemIgneousRock : EntityItemNoBob{
 				is BlockFlower -> Blocks.DEAD_BUSH
 				
 				is BlockDoublePlant -> {
-					if (pos.up().getBlock(world) !== sourceState.block){
+					if (pos.up().getBlock(world) !== sourceState.block) {
 						return
 					}
 					
@@ -350,7 +351,7 @@ class EntityItemIgneousRock : EntityItemNoBob{
 				is BlockLeaves -> {
 					val posAbove = pos.up()
 					
-					if (posAbove.isAir(world)){
+					if (posAbove.isAir(world)) {
 						posAbove.setBlock(world, Blocks.FIRE)
 						return
 					}
@@ -368,8 +369,8 @@ class EntityItemIgneousRock : EntityItemNoBob{
 			}?.defaultState
 		}
 		
-		if (targetState == null){
-			targetState = when(sourceState.block){
+		if (targetState == null) {
+			targetState = when(sourceState.block) {
 				Blocks.ZOMBIE_HEAD,
 				Blocks.PLAYER_HEAD -> Blocks.SKELETON_SKULL.with(BlockSkull.ROTATION, sourceState[BlockSkull.ROTATION])
 				
@@ -398,8 +399,8 @@ class EntityItemIgneousRock : EntityItemNoBob{
 		
 		// ternary transformations
 		
-		if (targetState == null && rand.nextInt(100) < 18){
-			targetState = when(sourceState.block){
+		if (targetState == null && rand.nextInt(100) < 18) {
+			targetState = when(sourceState.block) {
 				Blocks.WATER -> Blocks.COBBLESTONE // flowing water is already covered above
 				Blocks.DEAD_BUSH -> Blocks.AIR
 				
@@ -417,19 +418,19 @@ class EntityItemIgneousRock : EntityItemNoBob{
 		
 		// final handling
 		
-		if (targetState != null){
+		if (targetState != null) {
 			pos.setState(world, targetState)
 			PacketClientFX(FX_BLOCK_SMELT, FxBlockData(pos)).sendToAllAround(this, 32.0)
 		}
 	}
 	
-	private fun spreadFluidToNeighbors(pos: BlockPos, block: Block, level: Int){
+	private fun spreadFluidToNeighbors(pos: BlockPos, block: Block, level: Int) {
 		val state = block.with(BlockFlowingFluid.LEVEL, level)
 		
-		for(facing in Facing4){
+		for(facing in Facing4) {
 			val offset = pos.offset(facing)
 			
-			if (offset.isAir(world) || offset.getBlock(world) === Blocks.SNOW){
+			if (offset.isAir(world) || offset.getBlock(world) === Blocks.SNOW) {
 				offset.setState(world, state) // forces non-statinary fluids to spread out a bit
 			}
 		}

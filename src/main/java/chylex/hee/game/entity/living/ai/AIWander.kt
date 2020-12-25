@@ -1,4 +1,5 @@
 package chylex.hee.game.entity.living.ai
+
 import chylex.hee.system.migration.EntityCreature
 import net.minecraft.entity.ai.RandomPositionGenerator
 import net.minecraft.entity.ai.goal.RandomWalkingGoal
@@ -9,9 +10,9 @@ class AIWander(
 	movementSpeed: Double,
 	chancePerTick: Int,
 	private val maxDistanceXZ: Int = 10,
-	private val maxDistanceY: Int = 7
-) : RandomWalkingGoal(entity, movementSpeed, chancePerTick){
-	override fun getPosition(): Vec3d?{
+	private val maxDistanceY: Int = 7,
+) : RandomWalkingGoal(entity, movementSpeed, chancePerTick) {
+	override fun getPosition(): Vec3d? {
 		return RandomPositionGenerator.findRandomTarget(creature, maxDistanceXZ, maxDistanceY)
 	}
 }

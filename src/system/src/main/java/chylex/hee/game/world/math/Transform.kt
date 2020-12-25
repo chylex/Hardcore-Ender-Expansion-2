@@ -1,4 +1,5 @@
 package chylex.hee.game.world.math
+
 import chylex.hee.game.world.Pos
 import chylex.hee.game.world.component1
 import chylex.hee.game.world.component2
@@ -21,8 +22,8 @@ import net.minecraft.util.Mirror
 import net.minecraft.util.Rotation
 import net.minecraft.util.math.BlockPos
 
-data class Transform(val rotation: Rotation, val mirror: Boolean){
-	companion object{
+data class Transform(val rotation: Rotation, val mirror: Boolean) {
+	companion object {
 		val NONE = Transform(Rotation.NONE, mirror = false)
 		val ALL = booleanArrayOf(false, true).flatMap { mirror -> Rotation4.map { rotation -> Transform(rotation, mirror) } }
 	}
@@ -30,7 +31,7 @@ data class Transform(val rotation: Rotation, val mirror: Boolean){
 	private val mirroring = if (mirror) Mirror.FRONT_BACK else Mirror.NONE
 	
 	val reverse
-		get() = when(rotation){
+		get() = when(rotation) {
 			Rotation.NONE ->
 				Transform(Rotation.NONE, mirror)
 			
@@ -44,42 +45,42 @@ data class Transform(val rotation: Rotation, val mirror: Boolean){
 				Transform(if (mirror) Rotation.COUNTERCLOCKWISE_90 else Rotation.CLOCKWISE_90, mirror)
 		}
 	
-	fun applyTo(target: Transform): Transform{
+	fun applyTo(target: Transform): Transform {
 		return Transform(target.rotation.add(rotation), target.mirror xor mirror)
 	}
 	
-	operator fun invoke(facing: Direction): Direction{
+	operator fun invoke(facing: Direction): Direction {
 		return mirroring.mirror(rotation.rotate(facing))
 	}
 	
-	operator fun invoke(state: BlockState): BlockState{
+	operator fun invoke(state: BlockState): BlockState {
 		val transformed = state.rotate(rotation).mirror(mirroring)
 		
-		if (mirror){
-			when(state.block){
+		if (mirror) {
+			when(state.block) {
 				is BlockStairs -> return unfuckStairMirror(transformed) // UPDATE 1.15 (check if stairs still need unfucking)
-				is BlockChest -> return unfuckChestMirror(transformed) // UPDATE 1.15 (check if chests still need unfucking)
+				is BlockChest  -> return unfuckChestMirror(transformed) // UPDATE 1.15 (check if chests still need unfucking)
 			}
 		}
 		
 		return transformed
 	}
 	
-	operator fun invoke(entity: Entity){
+	operator fun invoke(entity: Entity) {
 		entity.rotationYaw = entity.getRotatedYaw(rotation)
 		entity.rotationYaw = entity.getMirroredYaw(mirroring)
 	}
 	
-	operator fun invoke(tile: TileEntity){
+	operator fun invoke(tile: TileEntity) {
 		tile.rotate(rotation)
 		tile.mirror(mirroring)
 	}
 	
-	operator fun invoke(size: Size): Size{
+	operator fun invoke(size: Size): Size {
 		return size.rotate(rotation)
 	}
 	
-	operator fun invoke(pos: BlockPos, size: Size): BlockPos{
+	operator fun invoke(pos: BlockPos, size: Size): BlockPos {
 		val (x, y, z) = pos
 		
 		val maxX = size.maxX
@@ -88,7 +89,7 @@ data class Transform(val rotation: Rotation, val mirror: Boolean){
 		val transformedX: Int
 		val transformedZ: Int
 		
-		when(rotation){
+		when(rotation) {
 			Rotation.NONE ->
 			{ transformedX = if (mirror) maxX - x else x; transformedZ = z }
 			
@@ -107,8 +108,8 @@ data class Transform(val rotation: Rotation, val mirror: Boolean){
 	
 	// Unfucking
 	
-	private fun unfuckStairMirror(state: BlockState): BlockState{
-		return when(state[BlockStairs.SHAPE]){
+	private fun unfuckStairMirror(state: BlockState): BlockState {
+		return when(state[BlockStairs.SHAPE]) {
 			STRAIGHT    -> state
 			INNER_LEFT  -> state.with(BlockStairs.SHAPE, INNER_RIGHT)
 			INNER_RIGHT -> state.with(BlockStairs.SHAPE, INNER_LEFT)
@@ -118,7 +119,7 @@ data class Transform(val rotation: Rotation, val mirror: Boolean){
 		}
 	}
 	
-	private fun unfuckChestMirror(state: BlockState): BlockState{
+	private fun unfuckChestMirror(state: BlockState): BlockState {
 		return state.with(BlockChest.TYPE, state[BlockChest.TYPE].opposite())
 	}
 }

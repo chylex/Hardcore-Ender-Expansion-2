@@ -1,4 +1,5 @@
 package chylex.hee.game.world.feature.tombdungeon.piece
+
 import chylex.hee.game.world.Pos
 import chylex.hee.game.world.feature.tombdungeon.connection.TombDungeonConnection
 import chylex.hee.game.world.feature.tombdungeon.connection.TombDungeonConnectionType.ROOM_ENTRANCE
@@ -7,7 +8,7 @@ import chylex.hee.system.migration.Facing.EAST
 import chylex.hee.system.migration.Facing.SOUTH
 import chylex.hee.system.migration.Facing.WEST
 
-class TombDungeonRoom_Side_CrossroadsLounge(file: String, isFancy: Boolean) : TombDungeonRoom_Side_Crossroads(file, isFancy){
+class TombDungeonRoom_Side_CrossroadsLounge(file: String, isFancy: Boolean) : TombDungeonRoom_Side_Crossroads(file, isFancy) {
 	override val connections = arrayOf<IStructurePieceConnection>(
 		TombDungeonConnection(ROOM_ENTRANCE, Pos(centerX, 0, maxZ), SOUTH),
 		TombDungeonConnection(ROOM_ENTRANCE, Pos(maxX, 0, centerZ), EAST),

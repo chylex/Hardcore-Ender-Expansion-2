@@ -1,4 +1,5 @@
 package chylex.hee.client.render.block
+
 import chylex.hee.HEE
 import chylex.hee.client.MC
 import chylex.hee.client.render.gl.RenderStateBuilder
@@ -36,15 +37,15 @@ import net.minecraftforge.fml.common.Mod.EventBusSubscriber.Bus.MOD
 import org.lwjgl.opengl.GL11
 
 @Sided(Side.CLIENT)
-class RenderTileJarODust(dispatcher: TileEntityRendererDispatcher) : TileEntityRenderer<TileEntityJarODust>(dispatcher){
+class RenderTileJarODust(dispatcher: TileEntityRendererDispatcher) : TileEntityRenderer<TileEntityJarODust>(dispatcher) {
 	@SubscribeAllEvents(Side.CLIENT, modid = HEE.ID, bus = MOD)
-	companion object{
+	companion object {
 		private val TEX_LAYER = Resource.Custom("block/dust_layer")
 		private const val TEX_MP = 1.6
 		
 		private lateinit var SPRITE_LAYER: TextureAtlasSprite
 		
-		private val RENDER_TYPE_LAYERS = with(RenderStateBuilder()){
+		private val RENDER_TYPE_LAYERS = with(RenderStateBuilder()) {
 			tex(PlayerContainer.LOCATION_BLOCKS_TEXTURE, mipmap = true)
 			shade(SHADE_ENABLED)
 			lightmap(LIGHTMAP_ENABLED)
@@ -57,20 +58,20 @@ class RenderTileJarODust(dispatcher: TileEntityRendererDispatcher) : TileEntityR
 		private const val EPSILON_XZ = 0.005
 		
 		@SubscribeEvent
-		fun onTextureStitchPre(e: TextureStitchEvent.Pre){
-			if (e.map.textureLocation == PlayerContainer.LOCATION_BLOCKS_TEXTURE){
+		fun onTextureStitchPre(e: TextureStitchEvent.Pre) {
+			if (e.map.textureLocation == PlayerContainer.LOCATION_BLOCKS_TEXTURE) {
 				e.addSprite(TEX_LAYER)
 			}
 		}
 		
 		@SubscribeEvent
-		fun onTextureStitchPost(e: TextureStitchEvent.Post){
-			if (e.map.textureLocation == PlayerContainer.LOCATION_BLOCKS_TEXTURE){
+		fun onTextureStitchPost(e: TextureStitchEvent.Post) {
+			if (e.map.textureLocation == PlayerContainer.LOCATION_BLOCKS_TEXTURE) {
 				SPRITE_LAYER = e.map.getSprite(TEX_LAYER)
 			}
 		}
 		
-		private fun renderLayers(layers: DustLayers, matrix: MatrixStack, buffer: IRenderTypeBuffer, combinedLight: Int, combinedOverlay: Int, renderBottom: Boolean){
+		private fun renderLayers(layers: DustLayers, matrix: MatrixStack, buffer: IRenderTypeBuffer, combinedLight: Int, combinedOverlay: Int, renderBottom: Boolean) {
 			val contents = layers.contents.takeUnless { it.isEmpty() } ?: return
 			val unit = AABB.let { it.maxY - it.minY - (EPSILON_Y * 2) } / layers.totalCapacity
 			
@@ -91,7 +92,7 @@ class RenderTileJarODust(dispatcher: TileEntityRendererDispatcher) : TileEntityR
 			
 			var relY = 0.0
 			
-			for((index, info) in contents.withIndex()){
+			for((index, info) in contents.withIndex()) {
 				val (dustType, dustAmount) = info
 				
 				val color = dustType.color
@@ -107,7 +108,7 @@ class RenderTileJarODust(dispatcher: TileEntityRendererDispatcher) : TileEntityR
 				val sideG = (color[1] / 1.125F).floorToInt().coerceAtLeast(0)
 				val sideB = (color[2] / 1.125F).floorToInt().coerceAtLeast(0)
 				
-				with(builder){
+				with(builder) {
 					pos(mat, minX, minY, minZ).color(sideR, sideG, sideB, 255).tex(texMin, minV).lightmap(combinedLight).overlay(combinedOverlay).endVertex()
 					pos(mat, minX, minY, maxZ).color(sideR, sideG, sideB, 255).tex(texMin, maxV).lightmap(combinedLight).overlay(combinedOverlay).endVertex()
 					pos(mat, minX, maxY, maxZ).color(sideR, sideG, sideB, 255).tex(texMax, maxV).lightmap(combinedLight).overlay(combinedOverlay).endVertex()
@@ -129,12 +130,12 @@ class RenderTileJarODust(dispatcher: TileEntityRendererDispatcher) : TileEntityR
 					pos(mat, minX, maxY, maxZ).color(sideR, sideG, sideB, 255).tex(texMax, minV).lightmap(combinedLight).overlay(combinedOverlay).endVertex()
 				}
 				
-				if (index == 0 && renderBottom){
+				if (index == 0 && renderBottom) {
 					val bottomR = color[0]
 					val bottomG = color[1]
 					val bottomB = color[2]
 					
-					with(builder){
+					with(builder) {
 						pos(mat, maxX, minY, minZ).color(bottomR, bottomG, bottomB, 255).tex(maxU, minV).lightmap(combinedLight).overlay(combinedOverlay).endVertex()
 						pos(mat, maxX, minY, maxZ).color(bottomR, bottomG, bottomB, 255).tex(maxU, maxV).lightmap(combinedLight).overlay(combinedOverlay).endVertex()
 						pos(mat, minX, minY, maxZ).color(bottomR, bottomG, bottomB, 255).tex(minU, maxV).lightmap(combinedLight).overlay(combinedOverlay).endVertex()
@@ -142,12 +143,12 @@ class RenderTileJarODust(dispatcher: TileEntityRendererDispatcher) : TileEntityR
 					}
 				}
 				
-				if (index == contents.lastIndex){
+				if (index == contents.lastIndex) {
 					val topR = (color[0] * 1.125F).floorToInt().coerceAtMost(255)
 					val topG = (color[1] * 1.125F).floorToInt().coerceAtMost(255)
 					val topB = (color[2] * 1.125F).floorToInt().coerceAtMost(255)
 					
-					with(builder){
+					with(builder) {
 						pos(mat, minX, maxY, minZ).color(topR, topG, topB, 255).tex(minU, minV).lightmap(combinedLight).overlay(combinedOverlay).endVertex()
 						pos(mat, minX, maxY, maxZ).color(topR, topG, topB, 255).tex(minU, maxV).lightmap(combinedLight).overlay(combinedOverlay).endVertex()
 						pos(mat, maxX, maxY, maxZ).color(topR, topG, topB, 255).tex(maxU, maxV).lightmap(combinedLight).overlay(combinedOverlay).endVertex()
@@ -160,31 +161,31 @@ class RenderTileJarODust(dispatcher: TileEntityRendererDispatcher) : TileEntityR
 		}
 	}
 	
-	override fun render(tile: TileEntityJarODust, partialTicks: Float, matrix: MatrixStack, buffer: IRenderTypeBuffer, combinedLight: Int, combinedOverlay: Int){
+	override fun render(tile: TileEntityJarODust, partialTicks: Float, matrix: MatrixStack, buffer: IRenderTypeBuffer, combinedLight: Int, combinedOverlay: Int) {
 		renderLayers(tile.layers, matrix, buffer, combinedLight, combinedOverlay, renderBottom = false)
 	}
 	
 	@SubscribeAllEvents(Side.CLIENT, modid = HEE.ID, bus = MOD)
-	object AsItem : ItemStackTileEntityRenderer(){
+	object AsItem : ItemStackTileEntityRenderer() {
 		private val RESOURCE_MODEL = Resource.Custom("block/jar_o_dust_simple")
 		private lateinit var MODEL: IBakedModel
 		
 		@SubscribeEvent
-		fun onRegisterModels(@Suppress("UNUSED_PARAMETER") e: ModelRegistryEvent){
+		fun onRegisterModels(@Suppress("UNUSED_PARAMETER") e: ModelRegistryEvent) {
 			ModelLoader.addSpecialModel(RESOURCE_MODEL)
 		}
 		
 		@SubscribeEvent
-		fun onModelBake(e: ModelBakeEvent){
+		fun onModelBake(e: ModelBakeEvent) {
 			MODEL = e.modelRegistry.getValue(RESOURCE_MODEL)
 		}
 		
 		private val layers = DustLayers(TileEntityJarODust.DUST_CAPACITY)
 		
-		override fun render(stack: ItemStack, matrix: MatrixStack, buffer: IRenderTypeBuffer, combinedLight: Int, combinedOverlay: Int){
+		override fun render(stack: ItemStack, matrix: MatrixStack, buffer: IRenderTypeBuffer, combinedLight: Int, combinedOverlay: Int) {
 			val nbt = stack.heeTagOrNull?.getListOfCompounds(TileEntityJarODust.LAYERS_TAG)
 			
-			if (nbt != null){
+			if (nbt != null) {
 				layers.deserializeNBT(nbt)
 				renderLayers(layers, matrix, buffer, combinedLight, combinedOverlay, renderBottom = true)
 			}

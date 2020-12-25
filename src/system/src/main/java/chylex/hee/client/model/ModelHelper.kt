@@ -1,4 +1,5 @@
 package chylex.hee.client.model
+
 import chylex.hee.client.MC
 import chylex.hee.game.entity.lookPosVec
 import chylex.hee.system.forge.Side
@@ -16,17 +17,17 @@ import net.minecraft.util.math.Vec3d
 import kotlin.math.abs
 import kotlin.math.pow
 
-object ModelHelper{
+object ModelHelper {
 	@Sided(Side.CLIENT)
-	fun getItemModel(stack: ItemStack): IBakedModel{
+	fun getItemModel(stack: ItemStack): IBakedModel {
 		return MC.itemRenderer.getItemModelWithOverrides(stack, MC.world, null)
 	}
 	
 	@Sided(Side.CLIENT)
-	fun getHandPosition(player: EntityPlayer, hand: Hand): Vec3d{
+	fun getHandPosition(player: EntityPlayer, hand: Hand): Vec3d {
 		val yawOffsetMp = (if (player.primaryHand == RIGHT) 1 else -1) * (if (hand == MAIN_HAND) 1 else -1)
 		
-		if (player === MC.player && MC.settings.thirdPersonView == 0){
+		if (player === MC.player && MC.settings.thirdPersonView == 0) {
 			val pitch = MathHelper.wrapDegrees(player.rotationPitch)
 			val yaw = MathHelper.wrapDegrees(player.rotationYaw)
 			val fov = MC.settings.fov.toFloat()
@@ -39,7 +40,7 @@ object ModelHelper{
 			
 			// POLISH kinda weird and inaccurate, maybe use the camera transformations somehow?
 		}
-		else{
+		else {
 			val handOffset = if (player.isSneaking) 1.15 else 0.75
 			
 			return player

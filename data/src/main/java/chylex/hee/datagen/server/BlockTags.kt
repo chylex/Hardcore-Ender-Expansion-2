@@ -1,4 +1,5 @@
 package chylex.hee.datagen.server
+
 import chylex.hee.datagen.server.util.add
 import chylex.hee.game.block.BlockWhitebarkSapling
 import chylex.hee.init.ModBlocks
@@ -14,10 +15,10 @@ import net.minecraft.data.DataGenerator
 import net.minecraft.tags.BlockTags
 import net.minecraftforge.common.Tags
 
-class BlockTags(generator: DataGenerator) : BlockTagsProvider(generator){
+class BlockTags(generator: DataGenerator) : BlockTagsProvider(generator) {
 	private val blocks = getRegistryEntries<Block>(ModBlocks)
 	
-	override fun registerTags(){
+	override fun registerTags() {
 		getBuilder(BlockTags.BAMBOO_PLANTABLE_ON).add(ModBlocks.HUMUS)
 		getBuilder(BlockTags.FLOWER_POTS).add(blocks.filterIsInstance<BlockFlowerPot>())
 		getBuilder(BlockTags.IMPERMEABLE).add(ModBlocks.INFUSED_GLASS)

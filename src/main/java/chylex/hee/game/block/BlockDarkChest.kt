@@ -1,4 +1,5 @@
 package chylex.hee.game.block
+
 import chylex.hee.game.block.entity.TileEntityDarkChest
 import chylex.hee.game.block.properties.BlockBuilder
 import chylex.hee.game.entity.living.ai.AIOcelotSitOverride.IOcelotCanSitOn
@@ -13,12 +14,12 @@ import net.minecraft.world.IBlockReader
 import net.minecraft.world.IWorldReader
 import java.util.function.Supplier
 
-class BlockDarkChest(builder: BlockBuilder) : BlockChest(builder.p, Supplier<TileEntityType<out TileEntityChest>> { ModTileEntities.DARK_CHEST }), IOcelotCanSitOn{
-	override fun createTileEntity(state: BlockState, world: IBlockReader): TileEntity{
+class BlockDarkChest(builder: BlockBuilder) : BlockChest(builder.p, Supplier<TileEntityType<out TileEntityChest>> { ModTileEntities.DARK_CHEST }), IOcelotCanSitOn {
+	override fun createTileEntity(state: BlockState, world: IBlockReader): TileEntity {
 		return TileEntityDarkChest()
 	}
 	
-	override fun canOcelotSitOn(world: IWorldReader, pos: BlockPos): Boolean{
+	override fun canOcelotSitOn(world: IWorldReader, pos: BlockPos): Boolean {
 		return TileEntityChest.getPlayersUsing(world, pos) < 1
 	}
 }

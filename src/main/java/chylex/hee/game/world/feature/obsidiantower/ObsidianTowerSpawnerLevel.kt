@@ -1,4 +1,5 @@
 package chylex.hee.game.world.feature.obsidiantower
+
 import chylex.hee.game.potion.brewing.PotionBrewing.INFINITE_DURATION
 import chylex.hee.game.potion.makeEffect
 import chylex.hee.system.migration.Potion
@@ -11,8 +12,8 @@ enum class ObsidianTowerSpawnerLevel(
 	val baseCooldown: Int,
 	val mobLimitPerSpawner: IntRange,
 	val mobLimitInSpawnArea: Int,
-	private val effects: Array<Array<Pair<Potion, Int>>>
-){
+	private val effects: Array<Array<Pair<Potion, Int>>>,
+) {
 	INTRODUCTION(
 		baseCooldown = 0,
 		mobLimitPerSpawner = IntRange.EMPTY,
@@ -79,14 +80,14 @@ enum class ObsidianTowerSpawnerLevel(
 		)
 	);
 	
-	fun generateEffects(rand: Random): Collection<EffectInstance>{
-		if (effects.isEmpty()){
+	fun generateEffects(rand: Random): Collection<EffectInstance> {
+		if (effects.isEmpty()) {
 			return emptyList()
 		}
 		
 		val picks = mutableMapOf<Potion, EffectInstance>()
 		
-		for(list in effects){
+		for(list in effects) {
 			val (potion, level) = rand.nextItem(list)
 			picks[potion] = potion.makeEffect(INFINITE_DURATION, level - 1)
 		}

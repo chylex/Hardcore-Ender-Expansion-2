@@ -1,4 +1,5 @@
 package chylex.hee.client.render.territory.components
+
 import chylex.hee.client.render.gl.DF_ONE
 import chylex.hee.client.render.gl.DF_ZERO
 import chylex.hee.client.render.gl.GL
@@ -14,8 +15,8 @@ import net.minecraft.client.world.ClientWorld
 import net.minecraft.util.ResourceLocation
 import org.lwjgl.opengl.GL11.GL_GREATER
 
-abstract class SunBase : AbstractEnvironmentRenderer(){
-	protected companion object{
+abstract class SunBase : AbstractEnvironmentRenderer() {
+	protected companion object {
 		const val DEFAULT_DISTANCE = 100F
 	}
 	
@@ -26,13 +27,13 @@ abstract class SunBase : AbstractEnvironmentRenderer(){
 	protected open val distance = DEFAULT_DISTANCE
 	
 	@Sided(Side.CLIENT)
-	protected open fun setRotation(world: ClientWorld, matrix: MatrixStack, partialTicks: Float){
+	protected open fun setRotation(world: ClientWorld, matrix: MatrixStack, partialTicks: Float) {
 		matrix.rotateY(-90F)
 		matrix.rotateX(world.getCelestialAngle(partialTicks) * 360F)
 	}
 	
 	@Sided(Side.CLIENT)
-	override fun render(world: ClientWorld, matrix: MatrixStack, partialTicks: Float){
+	override fun render(world: ClientWorld, matrix: MatrixStack, partialTicks: Float) {
 		val width = size
 		val dist = distance
 		

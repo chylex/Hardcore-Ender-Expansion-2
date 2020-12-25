@@ -1,4 +1,5 @@
 package chylex.hee.game.block
+
 import chylex.hee.client.render.block.IBlockLayerTranslucent
 import chylex.hee.game.block.properties.BlockBuilder
 import chylex.hee.game.block.properties.Property
@@ -19,8 +20,8 @@ import net.minecraft.util.Direction
 import net.minecraft.util.math.BlockPos
 import net.minecraft.world.IWorld
 
-class BlockInfusedGlass(builder: BlockBuilder) : BlockAbstractGlass(builder.p), IBlockLayerTranslucent{
-	companion object{
+class BlockInfusedGlass(builder: BlockBuilder) : BlockAbstractGlass(builder.p), IBlockLayerTranslucent {
+	companion object {
 		val CONNECT_DOWN = Property.bool("connect_d")
 		val CONNECT_UP = Property.bool("connect_u")
 		val CONNECT_NORTH = Property.bool("connect_n")
@@ -38,22 +39,22 @@ class BlockInfusedGlass(builder: BlockBuilder) : BlockAbstractGlass(builder.p), 
 		)
 	}
 	
-	init{
-		defaultState = Facing6.fold(stateContainer.baseState){ acc, facing -> acc.with(CONNECT_MAPPINGS.getValue(facing), false) }
+	init {
+		defaultState = Facing6.fold(stateContainer.baseState) { acc, facing -> acc.with(CONNECT_MAPPINGS.getValue(facing), false) }
 	}
 	
-	override fun fillStateContainer(container: Builder<Block, BlockState>){
+	override fun fillStateContainer(container: Builder<Block, BlockState>) {
 		container.add(CONNECT_DOWN, CONNECT_UP, CONNECT_NORTH, CONNECT_SOUTH, CONNECT_EAST, CONNECT_WEST)
 	}
 	
-	override fun getStateForPlacement(context: BlockItemUseContext): BlockState{
+	override fun getStateForPlacement(context: BlockItemUseContext): BlockState {
 		val world = context.world
 		val pos = context.pos
 		
-		return Facing6.fold(defaultState){ acc, facing -> acc.with(CONNECT_MAPPINGS.getValue(facing), pos.offset(facing).getBlock(world) === this) } // POLISH improve corners
+		return Facing6.fold(defaultState) { acc, facing -> acc.with(CONNECT_MAPPINGS.getValue(facing), pos.offset(facing).getBlock(world) === this) } // POLISH improve corners
 	}
 	
-	override fun updatePostPlacement(state: BlockState, facing: Direction, neighborState: BlockState, world: IWorld, pos: BlockPos, neighborPos: BlockPos): BlockState{
+	override fun updatePostPlacement(state: BlockState, facing: Direction, neighborState: BlockState, world: IWorld, pos: BlockPos, neighborPos: BlockPos): BlockState {
 		return state.with(CONNECT_MAPPINGS.getValue(facing), pos.offset(facing).getBlock(world) === this)
 	}
 }

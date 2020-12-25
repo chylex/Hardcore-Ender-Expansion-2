@@ -1,4 +1,5 @@
 package chylex.hee.game.world.structure.piece
+
 import chylex.hee.HEE
 import chylex.hee.game.world.math.Size
 import chylex.hee.game.world.structure.IStructureWorld
@@ -10,21 +11,21 @@ import chylex.hee.game.world.structure.world.OffsetStructureWorld
 import chylex.hee.system.Debug
 import net.minecraft.util.math.BlockPos
 
-class StructureBuild<T : StructurePiece<*>.MutableInstance>(val size: Size){
-	constructor(size: Size, startingPiece: PositionedPiece<T>) : this(size){
+class StructureBuild<T : StructurePiece<*>.MutableInstance>(val size: Size) {
+	constructor(size: Size, startingPiece: PositionedPiece<T>) : this(size) {
 		pieces.add(startingPiece)
 	}
 	
 	constructor(size: Size, startingPiece: T) : this(size, PositionedPiece<T>(startingPiece, size.centerPos.subtract(startingPiece.size.centerPos)))
 	
-	enum class AddMode{
+	enum class AddMode {
 		APPEND, MERGE
 	}
 	
-	class PositionedPiece<T : StructurePiece<*>.Instance>(val instance: T, val offset: BlockPos){
+	class PositionedPiece<T : StructurePiece<*>.Instance>(val instance: T, val offset: BlockPos) {
 		val pieceBox = instance.size.toBoundingBox(offset)
 		
-		fun freeze(): PositionedPiece<StructurePiece<*>.Instance>{
+		fun freeze(): PositionedPiece<StructurePiece<*>.Instance> {
 			return PositionedPiece(instance.freeze(), offset)
 		}
 	}
@@ -38,10 +39,10 @@ class StructureBuild<T : StructurePiece<*>.MutableInstance>(val size: Size){
 	val lastPiece
 		get() = pieces.last()
 	
-	private fun commitPiece(newPiece: PositionedPiece<T>){
+	private fun commitPiece(newPiece: PositionedPiece<T>) {
 		pieces.add(newPiece)
 		
-		if (chain != -1){
+		if (chain != -1) {
 			++chain
 		}
 	}
@@ -49,11 +50,11 @@ class StructureBuild<T : StructurePiece<*>.MutableInstance>(val size: Size){
 	/**
 	 * Adds a new piece. Allows intersection with the specified piece.
 	 */
-	fun addPiece(newPiece: T, newPiecePos: BlockPos, ignoreIntersectionWith: PositionedPiece<T>): PositionedPiece<T>?{
+	fun addPiece(newPiece: T, newPiecePos: BlockPos, ignoreIntersectionWith: PositionedPiece<T>): PositionedPiece<T>? {
 		val addedPiece = PositionedPiece(newPiece, newPiecePos)
 		val addedBox = addedPiece.pieceBox
 		
-		if (addedBox.isInside(structureBox) && pieces.none { addedBox.intersects(it.pieceBox) && it !== ignoreIntersectionWith }){
+		if (addedBox.isInside(structureBox) && pieces.none { addedBox.intersects(it.pieceBox) && it !== ignoreIntersectionWith }) {
 			return addedPiece.apply(::commitPiece)
 		}
 		
@@ -65,11 +66,11 @@ class StructureBuild<T : StructurePiece<*>.MutableInstance>(val size: Size){
 	 * [APPEND] mode allows no intersection with any other piece.
 	 * [MERGE] mode allows intersection with all pieces.
 	 */
-	fun addPiece(newPiece: T, newPiecePos: BlockPos, mode: AddMode = APPEND): PositionedPiece<T>?{
+	fun addPiece(newPiece: T, newPiecePos: BlockPos, mode: AddMode = APPEND): PositionedPiece<T>? {
 		val addedPiece = PositionedPiece(newPiece, newPiecePos)
 		val addedBox = addedPiece.pieceBox
 		
-		if (addedBox.isInside(structureBox) && (mode == MERGE || pieces.none { addedBox.intersects(it.pieceBox) })){
+		if (addedBox.isInside(structureBox) && (mode == MERGE || pieces.none { addedBox.intersects(it.pieceBox) })) {
 			return addedPiece.apply(::commitPiece)
 		}
 		
@@ -81,8 +82,8 @@ class StructureBuild<T : StructurePiece<*>.MutableInstance>(val size: Size){
 	 * [APPEND] mode allows no intersection with any other piece.
 	 * [MERGE] mode allows intersection with [targetPiece] but no other pieces.
 	 */
-	fun addPiece(newPiece: T, newPieceConnection: IStructurePieceConnection, targetPiece: PositionedPiece<T>, targetPieceConnection: IStructurePieceConnection, mode: AddMode = APPEND): PositionedPiece<T>?{
-		if (Debug.enabled && !pieces.contains(targetPiece)){
+	fun addPiece(newPiece: T, newPieceConnection: IStructurePieceConnection, targetPiece: PositionedPiece<T>, targetPieceConnection: IStructurePieceConnection, mode: AddMode = APPEND): PositionedPiece<T>? {
+		if (Debug.enabled && !pieces.contains(targetPiece)) {
 			HEE.log.error("[StructureBuild] attempted to connect to a piece that is not present in the structure")
 		}
 		
@@ -91,7 +92,7 @@ class StructureBuild<T : StructurePiece<*>.MutableInstance>(val size: Size){
 		val addedPiece = PositionedPiece(newPiece, alignedPos)
 		val addedBox = addedPiece.pieceBox
 		
-		if (addedBox.isInside(structureBox) && pieces.none { addedBox.intersects(it.pieceBox) && (mode == APPEND || it !== targetPiece) }){
+		if (addedBox.isInside(structureBox) && pieces.none { addedBox.intersects(it.pieceBox) && (mode == APPEND || it !== targetPiece) }) {
 			val targetInstance = targetPiece.instance
 			
 			newPiece.useConnection(newPieceConnection, targetInstance)
@@ -103,14 +104,14 @@ class StructureBuild<T : StructurePiece<*>.MutableInstance>(val size: Size){
 		return null
 	}
 	
-	fun alignConnections(newPieceConnection: IStructurePieceConnection, targetPieceConnection: IStructurePieceConnection, mode: AddMode): BlockPos{
+	fun alignConnections(newPieceConnection: IStructurePieceConnection, targetPieceConnection: IStructurePieceConnection, mode: AddMode): BlockPos {
 		val newWidth = newPieceConnection.alignment
 		val targetWidth = targetPieceConnection.alignment
 		
 		val targetFacing = targetPieceConnection.facing
 		val unalignedPos = targetPieceConnection.offset.offset(targetFacing, if (mode == MERGE) 0 else 1).subtract(newPieceConnection.offset)
 		
-		return when{
+		return when {
 			targetWidth == EVEN && newWidth == EVEN ->
 				unalignedPos.offset(targetFacing.rotateY(), 1)
 			
@@ -123,41 +124,41 @@ class StructureBuild<T : StructurePiece<*>.MutableInstance>(val size: Size){
 		
 	}
 	
-	fun beginChain(){
-		check(chain == -1){ "cannot begin a structure build chain when the last one has not finished" }
+	fun beginChain() {
+		check(chain == -1) { "cannot begin a structure build chain when the last one has not finished" }
 		chain = 0
 	}
 	
-	fun commitChain(){
+	fun commitChain() {
 		chain = -1
 	}
 	
-	fun revertChain(){
-		while(--chain >= 0){ // ends at -1
+	fun revertChain() {
+		while(--chain >= 0) { // ends at -1
 			val removed = pieces.removeAt(pieces.lastIndex).instance
 			
-			for(neighbor in removed.restoreAllConnections()){
-				check(neighbor.restoreConnection(removed)){ "failed reverting chain, found an asymmetric connection" }
+			for(neighbor in removed.restoreAllConnections()) {
+				check(neighbor.restoreConnection(removed)) { "failed reverting chain, found an asymmetric connection" }
 			}
 		}
 	}
 	
-	inline fun guardChain(func: () -> Boolean): Boolean{
+	inline fun guardChain(func: () -> Boolean): Boolean {
 		beginChain()
 		
-		return if (func()){
+		return if (func()) {
 			commitChain()
 			true
 		}
-		else{
+		else {
 			revertChain()
 			false
 		}
 	}
 	
-	inline fun guardChain(attempts: Int, func: () -> Boolean): Boolean{
-		for(attempt in 1..attempts){
-			if (guardChain(func)){
+	inline fun guardChain(attempts: Int, func: () -> Boolean): Boolean {
+		for(attempt in 1..attempts) {
+			if (guardChain(func)) {
 				return true
 			}
 		}
@@ -165,17 +166,17 @@ class StructureBuild<T : StructurePiece<*>.MutableInstance>(val size: Size){
 		return false
 	}
 	
-	fun freeze(): IStructureBuild{
+	fun freeze(): IStructureBuild {
 		val finalPieces = pieces.map(PositionedPiece<*>::freeze).toTypedArray()
 		
-		return object : IStructureBuild{
+		return object : IStructureBuild {
 			override val size = this@StructureBuild.size
 			
 			override val boundingBoxes
 				get() = finalPieces.map { it.pieceBox }
 			
-			override fun generate(world: IStructureWorld){
-				for(piece in finalPieces){
+			override fun generate(world: IStructureWorld) {
+				for(piece in finalPieces) {
 					piece.instance.generate(OffsetStructureWorld(world, piece.offset))
 				}
 			}

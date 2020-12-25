@@ -1,18 +1,19 @@
 package chylex.hee.network.data
+
 import chylex.hee.system.color.IntColor
 import net.minecraft.network.PacketBuffer
 import net.minecraft.network.datasync.IDataSerializer
 
-object ColorDataSerializer : IDataSerializer<IntColor>{
-	override fun write(buf: PacketBuffer, value: IntColor){
+object ColorDataSerializer : IDataSerializer<IntColor> {
+	override fun write(buf: PacketBuffer, value: IntColor) {
 		buf.writeInt(value.i)
 	}
 	
-	override fun read(buf: PacketBuffer): IntColor{
+	override fun read(buf: PacketBuffer): IntColor {
 		return IntColor(buf.readInt())
 	}
 	
-	override fun copyValue(value: IntColor): IntColor{
+	override fun copyValue(value: IntColor): IntColor {
 		return value
 	}
 }

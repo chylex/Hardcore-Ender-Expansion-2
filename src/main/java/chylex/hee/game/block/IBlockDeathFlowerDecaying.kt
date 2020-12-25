@@ -1,4 +1,5 @@
 package chylex.hee.game.block
+
 import chylex.hee.game.block.properties.Property
 import chylex.hee.game.entity.Teleporter
 import chylex.hee.game.entity.Teleporter.FxRange.Extended
@@ -54,21 +55,21 @@ import java.util.Random
 import kotlin.math.min
 import kotlin.math.roundToInt
 
-interface IBlockDeathFlowerDecaying{
+interface IBlockDeathFlowerDecaying {
 	val thisAsBlock: Block
 	
 	val healedFlowerBlock: Block
 	val witheredFlowerBlock: Block
 	
 	@JvmDefault
-	fun healDeathFlower(world: World, pos: BlockPos){
+	fun healDeathFlower(world: World, pos: BlockPos) {
 		val state = pos.getState(world)
 		val newDecayLevel = state[LEVEL] - world.rand.nextInt(1, 2)
 		
-		if (newDecayLevel < MIN_LEVEL){
+		if (newDecayLevel < MIN_LEVEL) {
 			pos.setBlock(world, healedFlowerBlock)
 		}
-		else{
+		else {
 			pos.setState(world, state.with(LEVEL, newDecayLevel))
 		}
 		
@@ -76,62 +77,62 @@ interface IBlockDeathFlowerDecaying{
 	}
 	
 	@JvmDefault
-	fun implTickRate(): Int{
+	fun implTickRate(): Int {
 		return 1600
 	}
 	
 	@JvmDefault
-	fun implOnBlockAdded(world: World, pos: BlockPos){
+	fun implOnBlockAdded(world: World, pos: BlockPos) {
 		val tickRate = implTickRate()
 		world.pendingBlockTicks.scheduleTick(pos, thisAsBlock, world.rand.nextInt(tickRate / 4, tickRate))
 	}
 	
 	@JvmDefault
-	fun implUpdateTick(world: World, pos: BlockPos, state: BlockState, rand: Random){
-		if (pos.getBlock(world) !== thisAsBlock || world !is ServerWorld){
+	fun implUpdateTick(world: World, pos: BlockPos, state: BlockState, rand: Random) {
+		if (pos.getBlock(world) !== thisAsBlock || world !is ServerWorld) {
 			return
 		}
 		
 		world.pendingBlockTicks.scheduleTick(pos, thisAsBlock, implTickRate())
 		
-		if (world.isPeaceful){
+		if (world.isPeaceful) {
 			return
 		}
 		
 		val currentDecayLevel = state[LEVEL]
 		
-		if (currentDecayLevel < MAX_LEVEL && rand.nextInt(45) == 0){
+		if (currentDecayLevel < MAX_LEVEL && rand.nextInt(45) == 0) {
 			pos.setState(world, state.with(LEVEL, currentDecayLevel + 1))
 		}
-		else if (currentDecayLevel == MAX_LEVEL && rand.nextInt(8) == 0 && (world.dayTime % 24000L) in 15600..20400){
-			for(testPos in pos.allInCenteredSphereMutable(WITHER_FLOWER_RADIUS, avoidNipples = true)){
+		else if (currentDecayLevel == MAX_LEVEL && rand.nextInt(8) == 0 && (world.dayTime % 24000L) in 15600..20400) {
+			for(testPos in pos.allInCenteredSphereMutable(WITHER_FLOWER_RADIUS, avoidNipples = true)) {
 				val block = testPos.getBlock(world)
 				
-				if (block is IBlockDeathFlowerDecaying){
+				if (block is IBlockDeathFlowerDecaying) {
 					testPos.setBlock(world, block.witheredFlowerBlock)
 				}
 			}
 			
-			if (DimensionWitherData.get(world).onWitherTriggered(world)){
+			if (DimensionWitherData.get(world).onWitherTriggered(world)) {
 				val center = pos.center
 				
-				repeat(rand.nextInt(4, 5)){
+				repeat(rand.nextInt(4, 5)) {
 					val enderman = EntityMobAngryEnderman(world)
 					val yaw = rand.nextFloat(0F, 360F)
 					
-					for(attempt in 1..64){
+					for(attempt in 1..64) {
 						val testPos = pos.add(
 							rand.nextInt(1, 6) * (if (rand.nextBoolean()) 1 else -1),
 							rand.nextInt(1, 4),
 							rand.nextInt(1, 6) * (if (rand.nextBoolean()) 1 else -1)
-						).offsetUntilExcept(DOWN, 1..8){
+						).offsetUntilExcept(DOWN, 1..8) {
 							it.blocksMovement(world)
 						}
 						
-						if (testPos != null){
+						if (testPos != null) {
 							enderman.setLocationAndAngles(testPos.x + rand.nextFloat(-0.5, 0.5), testPos.y + 0.01, testPos.z + rand.nextFloat(-0.5, 0.5), yaw, 0F)
 							
-							if (world.hasNoCollisions(enderman, enderman.boundingBox.grow(0.2, 0.0, 0.2))){
+							if (world.hasNoCollisions(enderman, enderman.boundingBox.grow(0.2, 0.0, 0.2))) {
 								world.addEntity(enderman)
 								break
 							}
@@ -143,7 +144,7 @@ interface IBlockDeathFlowerDecaying{
 				
 				val broadcastSoundPacket = PacketClientFX(FX_WITHER, FxBlockData(pos))
 				
-				for(player in world.selectExistingEntities.inRange<EntityPlayer>(center, WITHER_PLAYER_RADIUS)){
+				for(player in world.selectExistingEntities.inRange<EntityPlayer>(center, WITHER_PLAYER_RADIUS)) {
 					val distanceMp = center.distanceTo(player.posVec) / WITHER_PLAYER_RADIUS
 					val witherSeconds = 30 - (25 * distanceMp).roundToInt()
 					
@@ -152,19 +153,19 @@ interface IBlockDeathFlowerDecaying{
 				}
 			}
 		}
-		else if (rand.nextInt(18) == 0){
+		else if (rand.nextInt(18) == 0) {
 			val center = pos.center
 			val nearbyEndermen = world.selectExistingEntities.inRange<EntityMobEnderman>(center, 128.0).filter { it.attackTarget == null }.toMutableList()
 			
-			if (nearbyEndermen.isNotEmpty() && DimensionWitherData.get(world).onTeleportTriggered(world)){
-				repeat(min(rand.nextInt(2, 3), nearbyEndermen.size)){
+			if (nearbyEndermen.isNotEmpty() && DimensionWitherData.get(world).onTeleportTriggered(world)) {
+				repeat(min(rand.nextInt(2, 3), nearbyEndermen.size)) {
 					TELEPORT.nearLocation(rand.removeItem(nearbyEndermen), rand, center, distance = (1.5)..(5.0), attempts = 64)
 				}
 			}
 		}
 	}
 	
-	companion object{
+	companion object {
 		const val MIN_LEVEL = 1
 		const val MAX_LEVEL = 14
 		
@@ -178,26 +179,26 @@ interface IBlockDeathFlowerDecaying{
 		private val PARTICLE_POS = Constant(0.5F, DOWN) + InBox(-0.5F, 0.5F, 0F, 0.6F, -0.5F, 0.5F)
 		private val PARTICLE_MOT = Gaussian(0.02F)
 		
-		class FxHealData(private val pos: BlockPos, private val newLevel: Int) : IFxData{
+		class FxHealData(private val pos: BlockPos, private val newLevel: Int) : IFxData {
 			override fun write(buffer: PacketBuffer) = buffer.use {
 				writePos(pos)
 				writeByte(newLevel)
 			}
 		}
 		
-		val FX_HEAL = object : IFxHandler<FxHealData>{
-			override fun handle(buffer: PacketBuffer, world: World, rand: Random){
+		val FX_HEAL = object : IFxHandler<FxHealData> {
+			override fun handle(buffer: PacketBuffer, world: World, rand: Random) {
 				val pos = buffer.readPos()
 				val newLevel = buffer.readByte()
 				
 				val healLevel: Float
 				val particleAmount: Int
 				
-				if (newLevel < MIN_LEVEL){
+				if (newLevel < MIN_LEVEL) {
 					healLevel = 1F
 					particleAmount = 30
 				}
-				else{
+				else {
 					healLevel = 1F - ((1F + newLevel.toFloat() - MIN_LEVEL) / (1 + MAX_LEVEL - MIN_LEVEL)) // intentionally maps 13..1 to (0F)..(0.86F)
 					particleAmount = 4
 				}
@@ -211,17 +212,17 @@ interface IBlockDeathFlowerDecaying{
 			}
 		}
 		
-		val FX_WITHER = object : FxBlockHandler(){
-			override fun handle(pos: BlockPos, world: World, rand: Random){
-				repeat(2){
+		val FX_WITHER = object : FxBlockHandler() {
+			override fun handle(pos: BlockPos, world: World, rand: Random) {
+				repeat(2) {
 					ModSounds.BLOCK_DEATH_FLOWER_WITHER.playClient(pos, SoundCategory.BLOCKS)
 				}
 			}
 		}
 	}
 	
-	class DimensionWitherData private constructor() : WorldSavedData(NAME){
-		companion object{
+	class DimensionWitherData private constructor() : WorldSavedData(NAME) {
+		companion object {
 			fun get(world: ServerWorld) = world.perDimensionData(NAME, ::DimensionWitherData)
 			
 			private const val NAME = "HEE_DEATH_FLOWER_WITHER"
@@ -233,10 +234,10 @@ interface IBlockDeathFlowerDecaying{
 		private var lastTeleportTime = -24000L
 		private var lastWitherDay = -1L
 		
-		fun onTeleportTriggered(world: World): Boolean{
+		fun onTeleportTriggered(world: World): Boolean {
 			val currentTime = world.dayTime
 			
-			if (currentTime < lastTeleportTime + 21600L){
+			if (currentTime < lastTeleportTime + 21600L) {
 				return false
 			}
 			
@@ -245,10 +246,10 @@ interface IBlockDeathFlowerDecaying{
 			return true
 		}
 		
-		fun onWitherTriggered(world: World): Boolean{
+		fun onWitherTriggered(world: World): Boolean {
 			val currentDay = world.dayTime / 24000L
 			
-			if (currentDay == lastWitherDay){
+			if (currentDay == lastWitherDay) {
 				return false
 			}
 			

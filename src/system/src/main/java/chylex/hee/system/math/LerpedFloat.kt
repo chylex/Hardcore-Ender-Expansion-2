@@ -1,23 +1,23 @@
 package chylex.hee.system.math
 
-data class LerpedFloat(var currentValue: Float) : Comparable<LerpedFloat>{
+data class LerpedFloat(var currentValue: Float) : Comparable<LerpedFloat> {
 	private var previousValue = currentValue
 	
-	fun get(partialTicks: Float): Float{
+	fun get(partialTicks: Float): Float {
 		return previousValue + partialTicks * (currentValue - previousValue)
 	}
 	
-	fun update(newValue: Float){
+	fun update(newValue: Float) {
 		previousValue = currentValue
 		currentValue = newValue
 	}
 	
-	fun updateImmediately(newValue: Float){
+	fun updateImmediately(newValue: Float) {
 		previousValue = newValue
 		currentValue = newValue
 	}
 	
-	override fun compareTo(other: LerpedFloat): Int{
+	override fun compareTo(other: LerpedFloat): Int {
 		return currentValue.compareTo(other.currentValue)
 	}
 	

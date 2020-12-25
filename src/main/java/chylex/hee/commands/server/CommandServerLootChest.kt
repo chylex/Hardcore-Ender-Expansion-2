@@ -1,4 +1,5 @@
 package chylex.hee.commands.server
+
 import chylex.hee.commands.ICommand
 import chylex.hee.commands.exception
 import chylex.hee.commands.getPos
@@ -17,10 +18,10 @@ import net.minecraft.command.arguments.ResourceLocationArgument.getResourceLocat
 import net.minecraft.command.arguments.ResourceLocationArgument.resourceLocation
 import net.minecraft.world.storage.loot.LootTable
 
-object CommandServerLootChest : ICommand{
+object CommandServerLootChest : ICommand {
 	override val name = "lootchest"
 	
-	override fun register(builder: ArgumentBuilder<CommandSource, *>){
+	override fun register(builder: ArgumentBuilder<CommandSource, *>) {
 		builder.then(
 			argument("pos", blockPos()).then(
 				literal("table").then(
@@ -39,15 +40,15 @@ object CommandServerLootChest : ICommand{
 	private val TABLE_NOT_FOUND = exception("table_not_found")
 	private val NOT_LOOT_CHEST = exception("not_loot_chest")
 	
-	private fun getLootChest(ctx: CommandContext<CommandSource>): TileEntityLootChest{
+	private fun getLootChest(ctx: CommandContext<CommandSource>): TileEntityLootChest {
 		return ctx.getPos("pos").getTile(ctx.source.world) ?: throw NOT_LOOT_CHEST.create()
 	}
 	
-	private fun executeSetTable(ctx: CommandContext<CommandSource>) = returning(1){
+	private fun executeSetTable(ctx: CommandContext<CommandSource>) = returning(1) {
 		val tile = getLootChest(ctx)
 		val lootTable = getResourceLocation(ctx, "loot_table")
 		
-		if (Environment.getLootTable(lootTable) === LootTable.EMPTY_LOOT_TABLE){
+		if (Environment.getLootTable(lootTable) === LootTable.EMPTY_LOOT_TABLE) {
 			throw TABLE_NOT_FOUND.create()
 		}
 		
@@ -55,12 +56,12 @@ object CommandServerLootChest : ICommand{
 		ctx.source.sendFeedback(message("set_table_success"), true)
 	}
 	
-	private fun executeResetTable(ctx: CommandContext<CommandSource>) = returning(1){
+	private fun executeResetTable(ctx: CommandContext<CommandSource>) = returning(1) {
 		getLootChest(ctx).setLootTable(null)
 		ctx.source.sendFeedback(message("remove_table_success"), true)
 	}
 	
-	private fun executeResetPlayers(ctx: CommandContext<CommandSource>): Int{
+	private fun executeResetPlayers(ctx: CommandContext<CommandSource>): Int {
 		val total = getLootChest(ctx).resetPlayerInventories()
 		
 		ctx.source.sendFeedback(message("reset_success", total), true)

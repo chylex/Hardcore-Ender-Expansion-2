@@ -1,6 +1,6 @@
 package chylex.hee.game.block.properties
 
-object Materials{
+object Materials {
 	val SOLID_NO_TOOL = CustomMaterial().build {
 		requiresTool = false
 	}

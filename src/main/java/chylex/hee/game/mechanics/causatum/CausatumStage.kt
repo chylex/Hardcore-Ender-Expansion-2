@@ -1,6 +1,6 @@
 package chylex.hee.game.mechanics.causatum
 
-enum class CausatumStage(val key: String){
+enum class CausatumStage(val key: String) {
 	S0_INITIAL("initial"),
 	S1_KILLED_ENDERMAN("enderman"),
 	S2_ENTERED_END("enter_end"),
@@ -9,8 +9,8 @@ enum class CausatumStage(val key: String){
 	S5_FINISHED_DEMON_PASS("demon_pass"),
 	S6_ULTIMUS("ultimus");
 	
-	companion object{
-		fun fromKey(key: String): CausatumStage?{
+	companion object {
+		fun fromKey(key: String): CausatumStage? {
 			return values().firstOrNull { it.key == key }
 		}
 	}

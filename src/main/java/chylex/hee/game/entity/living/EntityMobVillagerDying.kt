@@ -1,4 +1,5 @@
 package chylex.hee.game.entity.living
+
 import chylex.hee.game.entity.posVec
 import chylex.hee.game.particle.ParticleGrowingSpot
 import chylex.hee.game.particle.ParticleSmokeCustom
@@ -36,24 +37,24 @@ import net.minecraftforge.fml.common.registry.IEntityAdditionalSpawnData
 import net.minecraftforge.fml.network.NetworkHooks
 import java.util.Random
 
-class EntityMobVillagerDying(type: EntityType<EntityMobVillagerDying>, world: World) : EntityAgeable(type, world), IVillagerDataHolder, IEntityAdditionalSpawnData{
+class EntityMobVillagerDying(type: EntityType<EntityMobVillagerDying>, world: World) : EntityAgeable(type, world), IVillagerDataHolder, IEntityAdditionalSpawnData {
 	constructor(world: World) : this(ModEntities.VILLAGER_DYING, world)
 	
-	private companion object{
+	private companion object {
 		private const val VILLAGER_TAG = "Villager"
 		
 		private val DECAY_ADULT = DecayParticlePos(halfSize = 0.3F, heightMp = 1F)
 		private val DECAY_CHILD = DecayParticlePos(halfSize = 0.3F, heightMp = 0.5F)
 	}
 	
-	private class DecayParticlePos(private val halfSize: Float, private val heightMp: Float) : IOffset{
-		override fun next(out: MutableOffsetPoint, rand: Random){
-			if (rand.nextInt(5) == 0){
+	private class DecayParticlePos(private val halfSize: Float, private val heightMp: Float) : IOffset {
+		override fun next(out: MutableOffsetPoint, rand: Random) {
+			if (rand.nextInt(5) == 0) {
 				out.x = rand.nextFloat(-halfSize, halfSize)
 				out.y = rand.nextFloat(1F, 1.25F) * heightMp * (if (rand.nextBoolean()) -1 else 1)
 				out.z = rand.nextFloat(-halfSize, halfSize)
 			}
-			else{
+			else {
 				val facing = rand.nextItem(Facing4)
 				
 				val offsetFull = halfSize + rand.nextFloat(0F, 0.3F)
@@ -68,18 +69,18 @@ class EntityMobVillagerDying(type: EntityType<EntityMobVillagerDying>, world: Wo
 	
 	private var villager: VillagerData? = null
 	
-	init{
+	init {
 		isInvulnerable = true
 		setNoGravity(true)
 	}
 	
-	override fun registerAttributes(){
+	override fun registerAttributes() {
 		super.registerAttributes()
 		
 		experienceValue = 0
 	}
 	
-	fun copyVillagerDataFrom(villager: EntityVillager){
+	fun copyVillagerDataFrom(villager: EntityVillager) {
 		setGrowingAge(villager.growingAge)
 		this.villager = villager.villagerData
 		
@@ -88,11 +89,11 @@ class EntityMobVillagerDying(type: EntityType<EntityMobVillagerDying>, world: Wo
 		limbSwing = villager.limbSwing
 	}
 	
-	override fun getVillagerData(): VillagerData{
+	override fun getVillagerData(): VillagerData {
 		return villager!!
 	}
 	
-	override fun createSpawnPacket(): IPacket<*>{
+	override fun createSpawnPacket(): IPacket<*> {
 		return NetworkHooks.getEntitySpawningPacket(this)
 	}
 	
@@ -117,14 +118,14 @@ class EntityMobVillagerDying(type: EntityType<EntityMobVillagerDying>, world: Wo
 		prevRotationYawHead = rotationYawHead
 	}
 	
-	override fun tick(){
+	override fun tick() {
 		firstUpdate = false
 		onDeathUpdate()
 	}
 	
-	override fun onDeathUpdate(){
-		if (world.isRemote && deathTime < 66){
-			if (deathTime == 0){
+	override fun onDeathUpdate() {
+		if (world.isRemote && deathTime < 66) {
+			if (deathTime == 0) {
 				ModSounds.MOB_VILLAGER_TOTEM_DYING.playClient(posVec, SoundCategory.HOSTILE, volume = 1.25F)
 			}
 			
@@ -137,13 +138,13 @@ class EntityMobVillagerDying(type: EntityType<EntityMobVillagerDying>, world: Wo
 			).spawn(Point(this, heightMp = 0.5F, amount = if (isChild) 4 else 12), rand)
 		}
 		
-		if (++deathTime == 71){
+		if (++deathTime == 71) {
 			remove()
 		}
 	}
 	
-	override fun remove(){
-		if (world.isRemote && isAlive){
+	override fun remove() {
+		if (world.isRemote && isAlive) {
 			ParticleSpawnerCustom(
 				type = ParticleSmokeCustom,
 				data = ParticleSmokeCustom.Data(scale = 1.66F),
@@ -172,7 +173,7 @@ class EntityMobVillagerDying(type: EntityType<EntityMobVillagerDying>, world: Wo
 	override fun canBeLeashedTo(player: EntityPlayer) = false
 	
 	override fun createChild(ageable: EntityAgeable): EntityAgeable? = null
-	override fun ageUp(growthSeconds: Int, updateForcedAge: Boolean){}
+	override fun ageUp(growthSeconds: Int, updateForcedAge: Boolean) {}
 	
 	override fun attackable() = false
 	override fun canBeCollidedWith() = false

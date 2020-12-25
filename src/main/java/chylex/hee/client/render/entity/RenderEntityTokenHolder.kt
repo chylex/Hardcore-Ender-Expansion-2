@@ -1,4 +1,5 @@
 package chylex.hee.client.render.entity
+
 import chylex.hee.client.model.entity.ModelEntityTokenHolder
 import chylex.hee.client.render.gl.rotateX
 import chylex.hee.client.render.gl.rotateY
@@ -22,19 +23,19 @@ import net.minecraft.util.ResourceLocation
 import kotlin.math.pow
 
 @Sided(Side.CLIENT)
-class RenderEntityTokenHolder(manager: EntityRendererManager) : EntityRenderer<EntityTokenHolder>(manager){
+class RenderEntityTokenHolder(manager: EntityRendererManager) : EntityRenderer<EntityTokenHolder>(manager) {
 	private val textures = mapOf(
 		NORMAL   to Resource.Custom("textures/entity/token_holder.png"),
 		RARE     to Resource.Custom("textures/entity/token_holder_rare.png"),
 		SOLITARY to Resource.Custom("textures/entity/token_holder_solitary.png")
 	)
 	
-	init{
+	init {
 		shadowSize = 0.4F
 		shadowOpaque = 0.6F
 	}
 	
-	override fun render(entity: EntityTokenHolder, yaw: Float, partialTicks: Float, matrix: MatrixStack, buffer: IRenderTypeBuffer, combinedLight: Int){
+	override fun render(entity: EntityTokenHolder, yaw: Float, partialTicks: Float, matrix: MatrixStack, buffer: IRenderTypeBuffer, combinedLight: Int) {
 		val charge = entity.renderCharge.get(partialTicks)
 		val scale = 0.25F + (0.25F * charge.pow(1.5F))
 		val alpha = 0.35F + (0.475F * charge.pow(5.5F))
@@ -54,7 +55,7 @@ class RenderEntityTokenHolder(manager: EntityRendererManager) : EntityRenderer<E
 		matrix.pop()
 	}
 	
-	override fun getEntityTexture(entity: EntityTokenHolder): ResourceLocation?{
+	override fun getEntityTexture(entity: EntityTokenHolder): ResourceLocation? {
 		return textures[entity.tokenType]
 	}
 }

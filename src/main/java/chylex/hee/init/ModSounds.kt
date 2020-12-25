@@ -1,4 +1,5 @@
 package chylex.hee.init
+
 import chylex.hee.HEE
 import chylex.hee.system.facades.Resource
 import chylex.hee.system.forge.SubscribeAllEvents
@@ -10,7 +11,7 @@ import net.minecraftforge.event.RegistryEvent
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber.Bus.MOD
 
 @SubscribeAllEvents(modid = HEE.ID, bus = MOD)
-object ModSounds{
+object ModSounds {
 	@JvmField val BLOCK_CAULDRON_BREW              = sound("block.cauldron.brew")
 	@JvmField val BLOCK_DEATH_FLOWER_WITHER        = sound("block.death_flower.wither")
 	@JvmField val BLOCK_EXPERIENCE_GATE_PICKUP     = sound("block.experience_gate.pickup")
@@ -53,11 +54,11 @@ object ModSounds{
 	@JvmField val MOB_VILLAGER_TOTEM_DYING   = sound("mob.villager.totem_dying")
 	
 	@SubscribeEvent
-	fun onRegisterSounds(e: RegistryEvent.Register<SoundEvent>){
+	fun onRegisterSounds(e: RegistryEvent.Register<SoundEvent>) {
 		e.registerAllFields(this)
 	}
 	
-	private fun sound(name: String): SoundEvent{
+	private fun sound(name: String): SoundEvent {
 		return SoundEvent(Resource.Custom(name)) named name
 	}
 }

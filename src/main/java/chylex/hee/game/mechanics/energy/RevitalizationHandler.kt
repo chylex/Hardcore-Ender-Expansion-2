@@ -1,4 +1,5 @@
 package chylex.hee.game.mechanics.energy
+
 import chylex.hee.game.block.entity.TileEntityEnergyCluster
 import chylex.hee.game.mechanics.energy.IEnergyQuantity.Internal
 import chylex.hee.game.mechanics.energy.IEnergyQuantity.Units
@@ -19,8 +20,8 @@ import net.minecraftforge.common.util.INBTSerializable
 import kotlin.math.pow
 import kotlin.math.sqrt
 
-class RevitalizationHandler(private val cluster: TileEntityEnergyCluster) : INBTSerializable<TagCompound>{
-	private companion object{
+class RevitalizationHandler(private val cluster: TileEntityEnergyCluster) : INBTSerializable<TagCompound> {
+	private companion object {
 		private const val SUBSTANCE_TAG = "Substance"
 		private const val LAST_DRAIN_TIME_TAG = "LastDrainTime"
 		private const val DRAIN_AMOUNT_TAG = "DrainAmount"
@@ -32,8 +33,8 @@ class RevitalizationHandler(private val cluster: TileEntityEnergyCluster) : INBT
 	private val isRevitalizing
 		get() = lastDrainTime > 0L
 	
-	private var substance by NotifyOnChange<Byte>(0){
-		newValue -> cluster.clientOrbitingOrbs = newValue
+	private var substance by NotifyOnChange<Byte>(0) { newValue ->
+		cluster.clientOrbitingOrbs = newValue
 	}
 	
 	private var lastDrainTime = 0L
@@ -41,22 +42,22 @@ class RevitalizationHandler(private val cluster: TileEntityEnergyCluster) : INBT
 	private var drainTarget = Units(0)
 	private var ignoreDisturbance = false
 	
-	fun tick(){
-		if (!isRevitalizing){
+	fun tick() {
+		if (!isRevitalizing) {
 			return
 		}
 		
 		val currentTime = cluster.wrld.totalTime
 		val timeDiff = currentTime - lastDrainTime
 		
-		if (timeDiff < DRAIN_RATE_TICKS){
+		if (timeDiff < DRAIN_RATE_TICKS) {
 			return
 		}
 		
 		lastDrainTime = currentTime
 		
-		for(cycle in 1..(timeDiff / DRAIN_RATE_TICKS)){
-			if (cluster.energyLevel <= drainTarget){
+		for(cycle in 1..(timeDiff / DRAIN_RATE_TICKS)) {
+			if (cluster.energyLevel <= drainTarget) {
 				cluster.revitalizeHealth()
 				
 				substance = 0
@@ -70,26 +71,26 @@ class RevitalizationHandler(private val cluster: TileEntityEnergyCluster) : INBT
 		}
 	}
 	
-	private fun drain(){
+	private fun drain() {
 		ignoreDisturbance = true
 		val result = cluster.drainEnergy(drainAmount)
 		ignoreDisturbance = false
 		
-		if (!result){
+		if (!result) {
 			disturb()
 		}
 	}
 	
-	fun disturb(): Boolean{
-		if (ignoreDisturbance){
+	fun disturb(): Boolean {
+		if (ignoreDisturbance) {
 			return true
 		}
 		
-		if (isRevitalizing){
+		if (isRevitalizing) {
 			cluster.pos.breakBlock(cluster.wrld, false)
 			return false
 		}
-		else if (substance > 0){
+		else if (substance > 0) {
 			val world = cluster.wrld
 			val rand = world.rand
 			
@@ -106,10 +107,10 @@ class RevitalizationHandler(private val cluster: TileEntityEnergyCluster) : INBT
 		return true
 	}
 	
-	fun addSubstance(): Boolean{
+	fun addSubstance(): Boolean {
 		val capacityUnits = cluster.energyBaseCapacity.units.value.toFloat()
 		
-		if (!isRevitalizing && ++substance >= ((capacityUnits + 8F) / 8F).pow(0.42F).floorToInt()){
+		if (!isRevitalizing && ++substance >= ((capacityUnits + 8F) / 8F).pow(0.42F).floorToInt()) {
 			val durationTicks = 20F * (50F + (30F * sqrt(capacityUnits))) / (0.25F + (0.75F * cluster.currentHealth.regenAmountMp))
 			val toDrain = cluster.energyBaseCapacity * 0.5F
 			
@@ -123,13 +124,13 @@ class RevitalizationHandler(private val cluster: TileEntityEnergyCluster) : INBT
 	}
 	
 	override fun serializeNBT() = TagCompound().apply {
-		if (isRevitalizing){
+		if (isRevitalizing) {
 			putLong(LAST_DRAIN_TIME_TAG, lastDrainTime)
 			putInt(DRAIN_AMOUNT_TAG, drainAmount.value)
 			putInt(DRAIN_TARGET_TAG, drainTarget.value)
 		}
 		
-		if (substance > 0){
+		if (substance > 0) {
 			putByte(SUBSTANCE_TAG, substance)
 		}
 	}

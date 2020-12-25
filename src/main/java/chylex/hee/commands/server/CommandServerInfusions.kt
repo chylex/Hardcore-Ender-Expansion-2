@@ -1,4 +1,5 @@
 package chylex.hee.commands.server
+
 import chylex.hee.commands.ICommand
 import chylex.hee.commands.arguments.EnumArgument.Companion.enum
 import chylex.hee.commands.exception
@@ -17,10 +18,10 @@ import net.minecraft.command.Commands.literal
 import net.minecraft.item.ItemStack
 import net.minecraft.util.text.TranslationTextComponent
 
-object CommandServerInfusions : ICommand{
+object CommandServerInfusions : ICommand {
 	override val name = "infusions"
 	
-	override fun register(builder: ArgumentBuilder<CommandSource, *>){
+	override fun register(builder: ArgumentBuilder<CommandSource, *>) {
 		builder.then(
 			literal("reset").executes(this::executeReset)
 		)
@@ -44,18 +45,18 @@ object CommandServerInfusions : ICommand{
 	private val ALREADY_PRESENT = exception("already_present")
 	private val NOT_PRESENT = exception("not_present")
 	
-	private inline fun updateHeldItem(ctx: CommandContext<CommandSource>, modify: (ItemStack, InfusionList) -> ItemStack){
+	private inline fun updateHeldItem(ctx: CommandContext<CommandSource>, modify: (ItemStack, InfusionList) -> ItemStack) {
 		val player = ctx.source.asPlayer()
 		val heldItem = player.getHeldItem(MAIN_HAND)
 		
-		if (heldItem.isEmpty){
+		if (heldItem.isEmpty) {
 			throw NO_HELD_ITEM.create()
 		}
 		
 		player.setHeldItem(MAIN_HAND, modify(heldItem, InfusionTag.getList(heldItem)))
 	}
 	
-	private fun executeReset(ctx: CommandContext<CommandSource>): Int{
+	private fun executeReset(ctx: CommandContext<CommandSource>): Int {
 		var removedInfusions = 0
 		
 		updateHeldItem(ctx) { stack, list ->
@@ -72,11 +73,11 @@ object CommandServerInfusions : ICommand{
 		return removedInfusions
 	}
 	
-	private fun executeAdd(ctx: CommandContext<CommandSource>) = returning(1){
+	private fun executeAdd(ctx: CommandContext<CommandSource>) = returning(1) {
 		val infusion = ctx.getEnum<Infusion>("infusion")
 		
 		updateHeldItem(ctx) { stack, list ->
-			if (list.has(infusion)){
+			if (list.has(infusion)) {
 				throw ALREADY_PRESENT.create()
 			}
 			
@@ -86,11 +87,11 @@ object CommandServerInfusions : ICommand{
 		ctx.source.sendFeedback(message("add_success", TranslationTextComponent(infusion.translationKey)), true)
 	}
 	
-	private fun executeRemove(ctx: CommandContext<CommandSource>) = returning(1){
+	private fun executeRemove(ctx: CommandContext<CommandSource>) = returning(1) {
 		val infusion = ctx.getEnum<Infusion>("infusion")
 		
 		updateHeldItem(ctx) { stack, list ->
-			if (!list.has(infusion)){
+			if (!list.has(infusion)) {
 				throw NOT_PRESENT.create()
 			}
 			

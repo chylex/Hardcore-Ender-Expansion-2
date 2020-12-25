@@ -1,4 +1,5 @@
 package chylex.hee.test.mechanics.energy
+
 import chylex.hee.game.mechanics.energy.IEnergyQuantity.Floating
 import chylex.hee.game.mechanics.energy.IEnergyQuantity.Internal
 import chylex.hee.game.mechanics.energy.IEnergyQuantity.Units
@@ -9,15 +10,15 @@ import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 
-class TestEnergyQuantity{
-	@Nested inner class Equality{
-		@Test fun `same representations of same amounts are equal`(){
+class TestEnergyQuantity {
+	@Nested inner class Equality {
+		@Test fun `same representations of same amounts are equal`() {
 			assertEquals(Internal(25_000_000), Internal(25_000_000))
 			assertEquals(Floating(25F), Floating(25F))
 			assertEquals(Units(500), Units(500))
 		}
 		
-		@Test fun `different representations of same amounts are equal`(){
+		@Test fun `different representations of same amounts are equal`() {
 			assertEquals(Internal(25_000_000), Floating(25F))
 			assertEquals(Internal(25_000_000), Units(500))
 			
@@ -28,13 +29,13 @@ class TestEnergyQuantity{
 			assertEquals(Units(500), Floating(25F))
 		}
 		
-		@Test fun `same representations of different amounts are not equal`(){
+		@Test fun `same representations of different amounts are not equal`() {
 			assertNotEquals(Internal(25_000_000), Internal(25_050_000))
 			assertNotEquals(Floating(25F), Floating(25.05F))
 			assertNotEquals(Units(500), Units(501))
 		}
 		
-		@Test fun `different representations of different amounts are not equal`(){
+		@Test fun `different representations of different amounts are not equal`() {
 			assertNotEquals(Internal(25_000_000), Floating(25.05F))
 			assertNotEquals(Internal(25_000_000), Units(501))
 			
@@ -46,8 +47,8 @@ class TestEnergyQuantity{
 		}
 	}
 	
-	@Nested inner class Comparisons{
-		@Test fun `comparing amounts using same representations works`(){
+	@Nested inner class Comparisons {
+		@Test fun `comparing amounts using same representations works`() {
 			assertTrue(Internal(25_000_000) < Internal(25_050_000))
 			assertTrue(Floating(25F) < Floating(25.05F))
 			assertTrue(Units(500) < Units(501))
@@ -57,7 +58,7 @@ class TestEnergyQuantity{
 			assertFalse(Units(500) > Units(501))
 		}
 		
-		@Test fun `comparing amounts using different representations works`(){
+		@Test fun `comparing amounts using different representations works`() {
 			assertTrue(Internal(25_000_000) < Floating(25.05F))
 			assertTrue(Internal(25_000_000) < Units(501))
 			
@@ -78,44 +79,44 @@ class TestEnergyQuantity{
 		}
 	}
 	
-	@Nested inner class ConstructorValidation{
-		@Test fun `values below minimum are clamped correctly`(){
+	@Nested inner class ConstructorValidation {
+		@Test fun `values below minimum are clamped correctly`() {
 			assertEquals(Internal(0), Internal(-1))
 			assertEquals(Floating(0F), Floating(-1F))
 			assertEquals(Units(0), Units(-1))
 		}
 		
-		@Test fun `values above maximum are clamped correctly`(){
+		@Test fun `values above maximum are clamped correctly`() {
 			assertEquals(Internal(100_000_000), Internal(100_000_001))
 			assertEquals(Floating(100F), Floating(100.01F))
 			assertEquals(Units(2000), Units(2001))
 		}
 	}
 	
-	@Nested inner class Conversions{
-		@Test fun `conversion to 'Internal' returns correct value`(){
+	@Nested inner class Conversions {
+		@Test fun `conversion to 'Internal' returns correct value`() {
 			assertEquals(1_100_000, Floating(1.1F).internal.value)
 			assertEquals(1_100_000, Units(22).internal.value)
 		}
 		
-		@Test fun `conversion to 'Floating' returns correct value`(){
+		@Test fun `conversion to 'Floating' returns correct value`() {
 			assertEquals(1.1F, Internal(1_100_000).floating.value)
 			assertEquals(1.1F, Units(22).floating.value)
 		}
 		
-		@Test fun `conversion to 'Units' returns correct value`(){
+		@Test fun `conversion to 'Units' returns correct value`() {
 			assertEquals(22, Internal(1_100_000).units.value)
 			assertEquals(22, Floating(1.1F).units.value)
 		}
 		
-		@Test fun `conversion to 'Units' rounds down if needed`(){
+		@Test fun `conversion to 'Units' rounds down if needed`() {
 			assertEquals(22, Internal(1_109_999).units.value)
 			assertEquals(22, Floating(1.109999F).units.value)
 		}
 	}
 	
-	@Nested inner class ArithmeticOperations{
-		@Test fun `addition and subtraction with same representations have correct results`(){
+	@Nested inner class ArithmeticOperations {
+		@Test fun `addition and subtraction with same representations have correct results`() {
 			assertEquals(Internal(40_000_000), Internal(30_000_000) + Internal(10_000_000))
 			assertEquals(Internal(20_000_000), Internal(30_000_000) - Internal(10_000_000))
 			
@@ -126,7 +127,7 @@ class TestEnergyQuantity{
 			assertEquals(Units(400), Units(600) - Units(200))
 		}
 		
-		@Test fun `addition and subtraction with different representations have correct results`(){
+		@Test fun `addition and subtraction with different representations have correct results`() {
 			assertEquals(Internal(40_000_000), Internal(30_000_000) + Floating(10F))
 			assertEquals(Internal(20_000_000), Internal(30_000_000) - Floating(10F))
 			assertEquals(Internal(40_000_000), Internal(30_000_000) + Units(200))
@@ -143,7 +144,7 @@ class TestEnergyQuantity{
 			assertEquals(Internal(20_000_000), Units(600) - Floating(10F))
 		}
 		
-		@Test fun `addition and subtraction with 'Units' preserve 'Internal' and 'Floating' precision`(){
+		@Test fun `addition and subtraction with 'Units' preserve 'Internal' and 'Floating' precision`() {
 			assertEquals(Internal(5_105_000), Internal(5_055_000) + Units(1))
 			assertEquals(Internal(5_005_000), Internal(5_055_000) - Units(1))
 			
@@ -151,7 +152,7 @@ class TestEnergyQuantity{
 			assertEquals(Floating(5.005F), Floating(5.055F) - Units(1))
 		}
 		
-		@Test fun `scalar multiplication with same representations has correct results`(){
+		@Test fun `scalar multiplication with same representations has correct results`() {
 			assertEquals(Internal(5_000_000), Internal(2_500_000) * 2F)
 			assertEquals(Internal(1_250_000), Internal(2_500_000) * 0.5F)
 			

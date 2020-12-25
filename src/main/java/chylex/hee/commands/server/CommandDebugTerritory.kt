@@ -1,4 +1,5 @@
 package chylex.hee.commands.server
+
 import chylex.hee.HEE
 import chylex.hee.commands.ICommand
 import chylex.hee.commands.executes
@@ -22,10 +23,10 @@ import net.minecraft.command.Commands.literal
 import net.minecraft.util.text.StringTextComponent
 import java.util.Random
 
-object CommandDebugTerritory : ICommand{
+object CommandDebugTerritory : ICommand {
 	override val name = "territory"
 	
-	override fun register(builder: ArgumentBuilder<CommandSource, *>){
+	override fun register(builder: ArgumentBuilder<CommandSource, *>) {
 		val execRegenerate = this::executeRegenerate
 		
 		builder.then(
@@ -35,19 +36,19 @@ object CommandDebugTerritory : ICommand{
 		)
 	}
 	
-	private fun executeRegenerate(ctx: CommandContext<CommandSource>, hasSeedArg: Boolean): Int{
-		with(ctx.source){
+	private fun executeRegenerate(ctx: CommandContext<CommandSource>, hasSeedArg: Boolean): Int {
+		with(ctx.source) {
 			val world = ctx.source.world
 			val pos = Pos(ctx.source.pos)
 			val instance = TerritoryInstance.fromPos(pos)
 			val seed = if (hasSeedArg) ctx.getLong("seed") else null
 			
-			if (world.dimension.type !== HEE.dim){
+			if (world.dimension.type !== HEE.dim) {
 				sendFeedback(StringTextComponent("Invalid dimension."), false)
 				return 0
 			}
 			
-			if (instance == null){
+			if (instance == null) {
 				sendFeedback(StringTextComponent("Invalid territory position."), false)
 				return 0
 			}
@@ -71,14 +72,14 @@ object CommandDebugTerritory : ICommand{
 			val startChunkBlockZ = startChunkZ * 16
 			
 			for(chunkX in startChunkX until (startChunkX + chunks))
-			for(chunkZ in startChunkZ until (startChunkZ + chunks)){
+			for(chunkZ in startChunkZ until (startChunkZ + chunks)) {
 				val chunk = world.getChunk(chunkX, chunkZ)
 				
-				for(entity in chunk.entityLists.flatMap { it }.filter { it !is EntityPlayer }){
+				for(entity in chunk.entityLists.flatMap { it }.filter { it !is EntityPlayer }) {
 					entity.remove()
 				}
 				
-				for(tilePos in chunk.tileEntitiesPos){
+				for(tilePos in chunk.tileEntitiesPos) {
 					world.removeTileEntity(tilePos)
 				}
 				
@@ -86,18 +87,18 @@ object CommandDebugTerritory : ICommand{
 				val chunkBlockZ = chunkZ * 16
 				val internalOffset = Pos(chunkBlockX - startChunkBlockX, 0, chunkBlockZ - startChunkBlockZ)
 				
-				for(blockY in 0 until height) for(blockX in 0..15) for(blockZ in 0..15){
+				for(blockY in 0 until height) for(blockX in 0..15) for(blockZ in 0..15) {
 					val state = constructed.getState(internalOffset.add(blockX, blockY, blockZ))
 					
 					Pos(chunkBlockX + blockX, bottomOffset + blockY, chunkBlockZ + blockZ).let {
-						if (it.getState(world) != state){
+						if (it.getState(world) != state) {
 							it.setState(world, state, FLAG_SYNC_CLIENT or FLAG_REPLACE_NO_DROPS)
 						}
 					}
 				}
 			}
 			
-			for((triggerPos, trigger) in constructed.getTriggers()){
+			for((triggerPos, trigger) in constructed.getTriggers()) {
 				trigger.realize(world, triggerPos.add(startChunkBlockX, bottomOffset, startChunkBlockZ), Transform.NONE)
 			}
 			

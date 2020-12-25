@@ -1,4 +1,5 @@
 package chylex.hee.game.particle.spawner
+
 import chylex.hee.HEE
 import chylex.hee.system.forge.Side
 import chylex.hee.system.forge.Sided
@@ -8,18 +9,18 @@ import net.minecraft.particles.BasicParticleType
 import net.minecraft.particles.ParticleType
 import net.minecraft.world.World
 
-interface IParticleMaker<T>{
+interface IParticleMaker<T> {
 	@Sided(Side.CLIENT)
 	fun create(world: World, posX: Double, posY: Double, posZ: Double, motX: Double, motY: Double, motZ: Double, data: T?): Particle
 	
-	abstract class WithData<T> : IParticleMaker<T>{
+	abstract class WithData<T> : IParticleMaker<T> {
 		protected lateinit var sprite: IAnimatedSprite
 		
 		val makeType: ParticleType<*>
-			get(){
+			get() {
 				val type = BasicParticleType(false)
 				
-				HEE.proxy.registerParticle(type, this){
+				HEE.proxy.registerParticle(type, this) {
 					sprite = it
 				}
 				
@@ -27,9 +28,9 @@ interface IParticleMaker<T>{
 			}
 	}
 	
-	abstract class Simple : WithData<Unit>(){
+	abstract class Simple : WithData<Unit>() {
 		@Sided(Side.CLIENT)
-		final override fun create(world: World, posX: Double, posY: Double, posZ: Double, motX: Double, motY: Double, motZ: Double, data: Unit?): Particle{
+		final override fun create(world: World, posX: Double, posY: Double, posZ: Double, motX: Double, motY: Double, motZ: Double, data: Unit?): Particle {
 			return create(world, posX, posY, posZ, motX, motY, motZ)
 		}
 		

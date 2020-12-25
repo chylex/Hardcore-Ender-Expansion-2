@@ -1,4 +1,5 @@
 package chylex.hee.game.item
+
 import chylex.hee.game.block.entity.TileEntityEnergyCluster
 import chylex.hee.game.inventory.heeTag
 import chylex.hee.game.inventory.heeTagOrNull
@@ -49,31 +50,31 @@ import java.util.Random
 import kotlin.math.max
 import kotlin.math.pow
 
-abstract class ItemAbstractEnergyUser(properties: Properties) : Item(properties){
-	companion object{
+abstract class ItemAbstractEnergyUser(properties: Properties) : Item(properties) {
+	companion object {
 		private const val ENERGY_LEVEL_TAG = "EnergyLevel"
 		
 		private const val CLUSTER_POS_TAG = "ClusterPos"
 		private const val CLUSTER_TICK_OFFSET_TAG = "ClusterTick"
 		
-		private fun removeClusterTags(nbt: TagCompound){
+		private fun removeClusterTags(nbt: TagCompound) {
 			nbt.remove(CLUSTER_POS_TAG)
 			nbt.remove(CLUSTER_TICK_OFFSET_TAG)
 		}
 		
-		class FxChargeData(private val cluster: TileEntityEnergyCluster, private val player: EntityPlayer) : IFxData{
+		class FxChargeData(private val cluster: TileEntityEnergyCluster, private val player: EntityPlayer) : IFxData {
 			override fun write(buffer: PacketBuffer) = buffer.use {
 				writePos(cluster.pos)
 				writeInt(player.entityId)
 			}
 		}
 		
-		val FX_CHARGE = object : IFxHandler<FxChargeData>{
+		val FX_CHARGE = object : IFxHandler<FxChargeData> {
 			private var particleSkipCounter = 0
 			
 			@Suppress("UNUSED_PARAMETER")
-			private fun particleSkipTest(distanceSq: Double, particleSetting: ParticleSetting, rand: Random): Boolean{
-				return when(particleSetting){
+			private fun particleSkipTest(distanceSq: Double, particleSetting: ParticleSetting, rand: Random): Boolean {
+				return when(particleSetting) {
 					ALL       -> false
 					DECREASED -> ++particleSkipCounter % 2 != 0
 					MINIMAL   -> ++particleSkipCounter % 3 != 0
@@ -96,9 +97,9 @@ abstract class ItemAbstractEnergyUser(properties: Properties) : Item(properties)
 		}
 	}
 	
-	init{
+	init {
 		@Suppress("DEPRECATION")
-		require(maxStackSize == 1){ "energy item must have a maximum stack size of 1" }
+		require(maxStackSize == 1) { "energy item must have a maximum stack size of 1" }
 	}
 	
 	protected abstract fun getEnergyCapacity(stack: ItemStack): Units
@@ -106,16 +107,16 @@ abstract class ItemAbstractEnergyUser(properties: Properties) : Item(properties)
 	
 	// Energy storage
 	
-	private fun calculateInternalEnergyCapacity(stack: ItemStack): Int{
+	private fun calculateInternalEnergyCapacity(stack: ItemStack): Int {
 		return getEnergyCapacity(stack).value * getEnergyPerUse(stack).denominator
 	}
 	
-	private fun getEnergyLevel(stack: ItemStack): Int{
+	private fun getEnergyLevel(stack: ItemStack): Int {
 		return stack.heeTagOrNull?.getShort(ENERGY_LEVEL_TAG)?.toInt() ?: 0
 	}
 	
-	private fun offsetEnergyLevel(stack: ItemStack, byAmount: Int): Boolean{
-		with(stack.heeTag){
+	private fun offsetEnergyLevel(stack: ItemStack, byAmount: Int): Boolean {
+		with(stack.heeTag) {
 			val prevLevel = getShort(ENERGY_LEVEL_TAG)
 			val newLevel = (prevLevel + byAmount).coerceIn(0, calculateInternalEnergyCapacity(stack)).toShort()
 			
@@ -126,33 +127,43 @@ abstract class ItemAbstractEnergyUser(properties: Properties) : Item(properties)
 	
 	// Energy handling
 	
-	fun hasAnyEnergy    (stack: ItemStack) = getEnergyLevel(stack) > 0
-	fun hasMaximumEnergy(stack: ItemStack) = getEnergyLevel(stack) >= calculateInternalEnergyCapacity(stack)
+	fun hasAnyEnergy(stack: ItemStack): Boolean {
+		return getEnergyLevel(stack) > 0
+	}
 	
-	open fun chargeEnergyUnit(stack: ItemStack) = offsetEnergyLevel(stack, getEnergyPerUse(stack).denominator)
-	open fun useEnergyUnit   (stack: ItemStack) = offsetEnergyLevel(stack, -getEnergyPerUse(stack).numerator) // TODO add FX when all Energy is used
+	fun hasMaximumEnergy(stack: ItemStack): Boolean {
+		return getEnergyLevel(stack) >= calculateInternalEnergyCapacity(stack)
+	}
 	
-	fun useEnergyUnit(entity: Entity, stack: ItemStack): Boolean{
+	open fun chargeEnergyUnit(stack: ItemStack): Boolean {
+		return offsetEnergyLevel(stack, getEnergyPerUse(stack).denominator)
+	}
+	
+	open fun useEnergyUnit(stack: ItemStack): Boolean {
+		return offsetEnergyLevel(stack, -getEnergyPerUse(stack).numerator) // TODO add FX when all Energy is used
+	}
+	
+	fun useEnergyUnit(entity: Entity, stack: ItemStack): Boolean {
 		return (entity is EntityPlayer && entity.abilities.isCreativeMode) || useEnergyUnit(stack)
 	}
 	
-	fun getEnergyChargeLevel(stack: ItemStack): IEnergyQuantity{
+	fun getEnergyChargeLevel(stack: ItemStack): IEnergyQuantity {
 		return Units(getEnergyLevel(stack) / getEnergyPerUse(stack).denominator)
 	}
 	
-	fun setEnergyChargeLevel(stack: ItemStack, level: IEnergyQuantity){
+	fun setEnergyChargeLevel(stack: ItemStack, level: IEnergyQuantity) {
 		val internalCapacity = calculateInternalEnergyCapacity(stack)
 		stack.heeTag.putShort(ENERGY_LEVEL_TAG, (level.units.value * getEnergyPerUse(stack).denominator).coerceIn(0, internalCapacity).toShort())
 	}
 	
-	fun setEnergyChargePercentage(stack: ItemStack, percentage: Float){
+	fun setEnergyChargePercentage(stack: ItemStack, percentage: Float) {
 		val internalCapacity = calculateInternalEnergyCapacity(stack)
 		stack.heeTag.putShort(ENERGY_LEVEL_TAG, (internalCapacity * percentage).floorToInt().coerceIn(0, internalCapacity).toShort())
 	}
 	
 	// Energy charging
 	
-	override fun onItemUse(context: ItemUseContext): ActionResultType{
+	override fun onItemUse(context: ItemUseContext): ActionResultType {
 		val player = context.player ?: return FAIL
 		val world = context.world
 		val pos = context.pos
@@ -160,18 +171,18 @@ abstract class ItemAbstractEnergyUser(properties: Properties) : Item(properties)
 		val tile = pos.getTile<TileEntityEnergyCluster>(world)
 		val stack = player.getHeldItem(context.hand)
 		
-		if (tile == null || !player.canPlayerEdit(pos, context.face, stack)){
+		if (tile == null || !player.canPlayerEdit(pos, context.face, stack)) {
 			return FAIL
 		}
-		else if (world.isRemote){
+		else if (world.isRemote) {
 			return SUCCESS
 		}
 		
-		with(stack.heeTag){
-			if (hasKey(CLUSTER_POS_TAG)){
+		with(stack.heeTag) {
+			if (hasKey(CLUSTER_POS_TAG)) {
 				removeClusterTags(this)
 			}
-			else if (pos.distanceTo(player) <= player.getAttribute(EntityPlayer.REACH_DISTANCE).value){
+			else if (pos.distanceTo(player) <= player.getAttribute(EntityPlayer.REACH_DISTANCE).value) {
 				putPos(CLUSTER_POS_TAG, pos)
 				putByte(CLUSTER_TICK_OFFSET_TAG, (4L - (world.totalTime % 4L)).toByte())
 			}
@@ -180,26 +191,26 @@ abstract class ItemAbstractEnergyUser(properties: Properties) : Item(properties)
 		return SUCCESS
 	}
 	
-	override fun inventoryTick(stack: ItemStack, world: World, entity: Entity, itemSlot: Int, isSelected: Boolean){
-		if (world.isRemote || entity !is EntityPlayer){
+	override fun inventoryTick(stack: ItemStack, world: World, entity: Entity, itemSlot: Int, isSelected: Boolean) {
+		if (world.isRemote || entity !is EntityPlayer) {
 			return
 		}
 		
-		with(stack.heeTagOrNull ?: return){
-			if (hasKey(CLUSTER_POS_TAG) && (world.totalTime + getByte(CLUSTER_TICK_OFFSET_TAG)) % 3L == 0L){
+		with(stack.heeTagOrNull ?: return) {
+			if (hasKey(CLUSTER_POS_TAG) && (world.totalTime + getByte(CLUSTER_TICK_OFFSET_TAG)) % 3L == 0L) {
 				val pos = getPos(CLUSTER_POS_TAG)
 				val tile = pos.getTile<TileEntityEnergyCluster>(world)
 				
 				if ((isSelected || entity.getHeldItem(OFF_HAND) === stack) &&
-					getShort(ENERGY_LEVEL_TAG) < calculateInternalEnergyCapacity(stack) &&
-					pos.distanceTo(entity) <= entity.getAttribute(EntityPlayer.REACH_DISTANCE).value &&
-					tile != null &&
-					tile.drainEnergy(Units(1))
-				){
+				    getShort(ENERGY_LEVEL_TAG) < calculateInternalEnergyCapacity(stack) &&
+				    pos.distanceTo(entity) <= entity.getAttribute(EntityPlayer.REACH_DISTANCE).value &&
+				    tile != null &&
+				    tile.drainEnergy(Units(1))
+				) {
 					chargeEnergyUnit(stack)
 					PacketClientFX(FX_CHARGE, FxChargeData(tile, entity)).sendToAllAround(tile, 32.0)
 				}
-				else{
+				else {
 					removeClusterTags(this)
 				}
 			}
@@ -212,20 +223,20 @@ abstract class ItemAbstractEnergyUser(properties: Properties) : Item(properties)
 	
 	override fun getDurabilityForDisplay(stack: ItemStack) = 1.0 - (getEnergyLevel(stack).toDouble() / calculateInternalEnergyCapacity(stack))
 	
-	override fun getRGBDurabilityForDisplay(stack: ItemStack): Int{
+	override fun getRGBDurabilityForDisplay(stack: ItemStack): Int {
 		val level = 1F - getDurabilityForDisplay(stack).pow(2.0).toFloat()
 		return MathHelper.hsvToRGB(max(0F, 0.62F + 0.15F * level), 0.45F + 0.15F * level, 0.8F + 0.2F * level)
 	}
 	
-	override fun shouldCauseReequipAnimation(oldStack: ItemStack, newStack: ItemStack, slotChanged: Boolean): Boolean{
+	override fun shouldCauseReequipAnimation(oldStack: ItemStack, newStack: ItemStack, slotChanged: Boolean): Boolean {
 		return slotChanged && super.shouldCauseReequipAnimation(oldStack, newStack, slotChanged)
 	}
 	
 	@Sided(Side.CLIENT)
-	override fun addInformation(stack: ItemStack, world: World?, lines: MutableList<ITextComponent>, flags: ITooltipFlag){
+	override fun addInformation(stack: ItemStack, world: World?, lines: MutableList<ITextComponent>, flags: ITooltipFlag) {
 		super.addInformation(stack, world, lines, flags)
 		
-		if (flags.isAdvanced){
+		if (flags.isAdvanced) {
 			lines.add(TranslationTextComponent("item.tooltip.hee.energy.level", getEnergyLevel(stack), calculateInternalEnergyCapacity(stack)))
 		}
 		

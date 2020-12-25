@@ -1,4 +1,5 @@
 package chylex.hee.game.particle
+
 import chylex.hee.game.particle.data.ParticleDataColorLifespanScale
 import chylex.hee.game.particle.spawner.IParticleMaker
 import chylex.hee.system.color.IntColor
@@ -12,14 +13,14 @@ import net.minecraft.client.particle.Particle
 import net.minecraft.world.World
 import java.util.Random
 
-object ParticleCorruptedEnergy : IParticleMaker.Simple(){
+object ParticleCorruptedEnergy : IParticleMaker.Simple() {
 	private val rand = Random()
 	
-	private object Color : IRandomColor{
-		override fun next(rand: Random): IntColor{
+	private object Color : IRandomColor {
+		override fun next(rand: Random): IntColor {
 			val color = ParticleTeleport.DefaultColor.next(rand)
 			
-			if (rand.nextInt(3) != 0){
+			if (rand.nextInt(3) != 0) {
 				return color
 			}
 			
@@ -36,7 +37,7 @@ object ParticleCorruptedEnergy : IParticleMaker.Simple(){
 	private val DATA = ParticleDataColorLifespanScale.Generator(Color, lifespan = 8..12, scale = (2.5F)..(5.0F))
 	
 	@Sided(Side.CLIENT)
-	override fun create(world: World, posX: Double, posY: Double, posZ: Double, motX: Double, motY: Double, motZ: Double): Particle{
+	override fun create(world: World, posX: Double, posY: Double, posZ: Double, motX: Double, motY: Double, motZ: Double): Particle {
 		return ParticleTeleport.create(world, posX, posY, posZ, motX, motY, motZ, DATA.generate(rand))
 	}
 }

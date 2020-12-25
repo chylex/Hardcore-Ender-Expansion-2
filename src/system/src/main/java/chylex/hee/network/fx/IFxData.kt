@@ -1,6 +1,7 @@
 package chylex.hee.network.fx
+
 import net.minecraft.network.PacketBuffer
 
-interface IFxData{
+interface IFxData {
 	fun write(buffer: PacketBuffer)
 }

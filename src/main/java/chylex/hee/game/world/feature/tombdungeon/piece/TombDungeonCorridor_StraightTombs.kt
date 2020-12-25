@@ -1,4 +1,5 @@
 package chylex.hee.game.world.feature.tombdungeon.piece
+
 import chylex.hee.game.world.Pos
 import chylex.hee.game.world.feature.tombdungeon.connection.TombDungeonConnection
 import chylex.hee.game.world.feature.tombdungeon.connection.TombDungeonConnectionType.CORRIDOR
@@ -14,12 +15,12 @@ import chylex.hee.system.migration.Facing.WEST
 import chylex.hee.system.random.nextItem
 import java.util.Random
 
-class TombDungeonCorridor_StraightTombs(entranceSpacing: Int, configuration: Configuration, tombsPerSide: Int, private val tombConstructor: (Boolean) -> TombDungeonAbstractPiece, override val isFancy: Boolean) : TombDungeonAbstractPiece(), ITombDungeonPieceWithTombs{
-	enum class Configuration{
+class TombDungeonCorridor_StraightTombs(entranceSpacing: Int, configuration: Configuration, tombsPerSide: Int, private val tombConstructor: (Boolean) -> TombDungeonAbstractPiece, override val isFancy: Boolean) : TombDungeonAbstractPiece(), ITombDungeonPieceWithTombs {
+	enum class Configuration {
 		WEST, EAST, BOTH;
 		
-		companion object{
-			fun random(rand: Random): Configuration{
+		companion object {
+			fun random(rand: Random): Configuration {
 				return if (rand.nextInt(3) != 0)
 					BOTH
 				else
@@ -38,30 +39,30 @@ class TombDungeonCorridor_StraightTombs(entranceSpacing: Int, configuration: Con
 		
 		val offset = entranceSpacing / 2
 		
-		for(tombIndex in 0 until tombsPerSide){
-			if (configuration == Configuration.WEST || configuration == Configuration.BOTH){
+		for(tombIndex in 0 until tombsPerSide) {
+			if (configuration == Configuration.WEST || configuration == Configuration.BOTH) {
 				it.add(TombDungeonConnection(TOMB_ENTRANCE_OUTSIDE, Pos(0, 0, offset + (tombIndex * entranceSpacing)), WEST))
 			}
 			
-			if (configuration == Configuration.EAST || configuration == Configuration.BOTH){
+			if (configuration == Configuration.EAST || configuration == Configuration.BOTH) {
 				it.add(TombDungeonConnection(TOMB_ENTRANCE_OUTSIDE, Pos(size.maxX, 0, offset + (tombIndex * entranceSpacing)), EAST))
 			}
 		}
 	}.toTypedArray()
 	
-	override fun generate(world: IStructureWorld, instance: Instance){
+	override fun generate(world: IStructureWorld, instance: Instance) {
 		super.generate(world, instance)
 		
 		world.placeCube(Pos(1, 1, 1), Pos(size.maxX - 1, size.maxY - 1, size.maxZ - 1), Air)
 		
-		if (world.rand.nextInt(5) == 0){
+		if (world.rand.nextInt(5) == 0) {
 			placeCrumblingCeiling(world, instance, 1)
 		}
 		
 		placeCobwebs(world, instance)
 	}
 	
-	override fun constructTomb(): TombDungeonAbstractPiece{
+	override fun constructTomb(): TombDungeonAbstractPiece {
 		return tombConstructor(isFancy)
 	}
 }

@@ -1,4 +1,5 @@
 package chylex.hee.game.item.infusion
+
 import chylex.hee.game.item.infusion.InfusionRecipe.Ingredients.Companion.item
 import chylex.hee.game.item.infusion.InfusionRecipe.Ingredients.Companion.tag
 import chylex.hee.init.ModBlocks.ENDIUM_BLOCK
@@ -33,7 +34,7 @@ import net.minecraftforge.common.Tags.Items.SLIMEBALLS
 import net.minecraftforge.common.Tags.Items.STRING
 import java.util.Collections
 
-enum class InfusionRecipe(val infusion: Infusion, val rate: Int, val updates: Int, val ingredients: Array<out Ingredient>){
+enum class InfusionRecipe(val infusion: Infusion, val rate: Int, val updates: Int, val ingredients: Array<out Ingredient>) {
 	POWER   (Infusion.POWER,    Rate(10), Updates(10), Ingredients(2 to tag(GUNPOWDER))),
 	FIRE    (Infusion.FIRE,     Rate(10), Updates(10), Ingredients(item(FIRE_CHARGE), item(FLINT))),
 	TRAP    (Infusion.TRAP,     Rate(10), Updates(10), Ingredients(item(REDSTONE_TORCH), tag(GEMS_QUARTZ))),
@@ -41,12 +42,12 @@ enum class InfusionRecipe(val infusion: Infusion, val rate: Int, val updates: In
 	PHASING (Infusion.PHASING,  Rate(10), Updates(10), Ingredients(item(ENDER_PEARL), item(VOID_ESSENCE))),
 	SLOW    (Infusion.SLOW,     Rate(10), Updates(10), Ingredients(tag(FEATHERS), item(SCUTE))),
 	RIDING  (Infusion.RIDING,   Rate(10), Updates(10), Ingredients(item(LEAD), tag(NUGGETS_IRON))),
-	
+
 	VIGOR   (Infusion.VIGOR,    Rate(3), Updates(100), Ingredients(item(AMELIOR), item(ENCHANTED_CLAW), item(ENDIUM_INGOT), item(GLOWSTONE_DUST))),
 	CAPACITY(Infusion.CAPACITY, Rate(5), Updates( 36), Ingredients(item(ENDIUM_BLOCK), item(ALTERATION_NEXUS))),
 	DISTANCE(Infusion.DISTANCE, Rate(5), Updates( 36), Ingredients(item(DRAGON_SCALE), tag(STRING))),
 	SPEED   (Infusion.SPEED,    Rate(5), Updates( 36), Ingredients(item(BLAZE_POWDER), item(REDSTONE_BLOCK))),
-	
+
 	STABILITY(Infusion.STABILITY, Rate(3), Updates(75), Ingredients(2 to item(AURICION), 1 to item(AMELIOR), 1 to item(ENDIUM_INGOT))),
 	SAFETY   (Infusion.SAFETY,    Rate(3), Updates(75), Ingredients(3 to item(REVITALIZATION_SUBSTANCE), 1 to item(ECTOPLASM)));
 	
@@ -59,11 +60,11 @@ enum class InfusionRecipe(val infusion: Infusion, val rate: Int, val updates: In
 	private class Rate(val rate: Int)
 	private class Updates(val updates: Int)
 	
-	private class Ingredients(vararg val ingredients: Ingredient){
+	private class Ingredients(vararg val ingredients: Ingredient) {
 		constructor(vararg ingredients: Pair<Int, Ingredient>) : this(*ingredients.flatMap { (amount, ingredient) -> Collections.nCopies(amount, ingredient) }.toTypedArray())
 		
 		@Suppress("NOTHING_TO_INLINE")
-		companion object{
+		companion object {
 			inline fun tag(tag: Tag<Item>): Ingredient = Ingredient.fromTag(tag)
 			inline fun item(item: IItemProvider): Ingredient = Ingredient.fromItems(item)
 		}

@@ -1,4 +1,5 @@
 package chylex.hee.datagen.client.util
+
 import chylex.hee.datagen.Callback
 import chylex.hee.datagen.path
 import chylex.hee.datagen.r
@@ -15,7 +16,7 @@ import net.minecraft.util.ResourceLocation
 import net.minecraftforge.client.model.generators.BlockModelBuilder
 import net.minecraftforge.client.model.generators.BlockModelProvider
 
-fun Block.suffixed(suffix: String): Block{
+fun Block.suffixed(suffix: String): Block {
 	return Block(Block.Properties.from(Blocks.AIR)) named this.path + suffix
 }
 
@@ -27,15 +28,15 @@ fun BlockModelProvider.parent(block: Block, parent: ResourceLocation) = safe {
 	this.getBuilder(block.path).parent(getExistingFile(parent))
 }
 
-fun BlockModelProvider.simple(block: Block, parent: ResourceLocation, textureName: String, textureLocation: ResourceLocation = block.r): BlockModelBuilder?{
+fun BlockModelProvider.simple(block: Block, parent: ResourceLocation, textureName: String, textureLocation: ResourceLocation = block.r): BlockModelBuilder? {
 	return this.parent(block, parent).then { texture(textureName, textureLocation) }
 }
 
-fun BlockModelProvider.cube(block: Block, texture: ResourceLocation = block.r): BlockModelBuilder?{
+fun BlockModelProvider.cube(block: Block, texture: ResourceLocation = block.r): BlockModelBuilder? {
 	return this.simple(block, Resource.Vanilla("block/cube_all"), "all", texture)
 }
 
-fun BlockModelProvider.cross(block: Block, texture: ResourceLocation = block.r): BlockModelBuilder?{
+fun BlockModelProvider.cross(block: Block, texture: ResourceLocation = block.r): BlockModelBuilder? {
 	return this.simple(block, Resource.Vanilla("block/cross"), "cross", texture)
 }
 
@@ -47,7 +48,7 @@ fun BlockModelProvider.cubeBottomTop(block: Block, side: ResourceLocation = bloc
 	return this.cubeBottomTop(block.path, side, bottom, top)
 }
 
-fun BlockModelProvider.leaves(block: Block): BlockModelBuilder?{
+fun BlockModelProvider.leaves(block: Block): BlockModelBuilder? {
 	return this.simple(block, Resource.Vanilla("block/leaves"), "all")
 }
 
@@ -55,8 +56,8 @@ fun BlockModelProvider.particle(block: Block, particle: ResourceLocation) = safe
 	this.getBuilder(block.path).texture("particle", particle)
 }
 
-fun BlockModelProvider.multi(block: Block, parent: ResourceLocation, suffixes: Array<String>, callback: BlockModelBuilder.(Callback<Block>) -> Unit){
-	for(suffix in suffixes){
+fun BlockModelProvider.multi(block: Block, parent: ResourceLocation, suffixes: Array<String>, callback: BlockModelBuilder.(Callback<Block>) -> Unit) {
+	for(suffix in suffixes) {
 		val path = block.path + suffix
 		
 		this.safeUnit {
@@ -65,8 +66,8 @@ fun BlockModelProvider.multi(block: Block, parent: ResourceLocation, suffixes: A
 	}
 }
 
-fun BlockModelProvider.multi(block: Block, parent: ResourceLocation, suffixes: IntRange, callback: BlockModelBuilder.(Callback<Block>) -> Unit){
-	multi(block, parent, Array(1 + suffixes.last - suffixes.first){ "_${suffixes.first + it}" }, callback)
+fun BlockModelProvider.multi(block: Block, parent: ResourceLocation, suffixes: IntRange, callback: BlockModelBuilder.(Callback<Block>) -> Unit) {
+	multi(block, parent, Array(1 + suffixes.last - suffixes.first) { "_${suffixes.first + it}" }, callback)
 }
 
 fun BlockModelProvider.wall(block: BlockWall, texture: ResourceLocation) = safeUnit {

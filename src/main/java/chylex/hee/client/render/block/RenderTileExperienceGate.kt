@@ -1,4 +1,5 @@
 package chylex.hee.client.render.block
+
 import chylex.hee.HEE
 import chylex.hee.client.render.gl.RenderStateBuilder
 import chylex.hee.client.render.gl.RenderStateBuilder.Companion.ALPHA_CUTOUT
@@ -28,15 +29,15 @@ import net.minecraftforge.fml.common.Mod.EventBusSubscriber.Bus.MOD
 import org.lwjgl.opengl.GL11
 
 @Sided(Side.CLIENT)
-class RenderTileExperienceGate(dispatcher: TileEntityRendererDispatcher) : TileEntityRenderer<TileEntityExperienceGate>(dispatcher){
+class RenderTileExperienceGate(dispatcher: TileEntityRendererDispatcher) : TileEntityRenderer<TileEntityExperienceGate>(dispatcher) {
 	@SubscribeAllEvents(Side.CLIENT, modid = HEE.ID, bus = MOD)
-	companion object{
+	companion object {
 		private const val SPRITE_COUNT = 40
 		
-		private val TEX = Array(SPRITE_COUNT){ Resource.Custom("block/experience_gate_top_bar_$it") }
+		private val TEX = Array(SPRITE_COUNT) { Resource.Custom("block/experience_gate_top_bar_$it") }
 		private val SPRITES = mutableListOf<TextureAtlasSprite>()
 		
-		private val RENDER_TYPE_BAR = with(RenderStateBuilder()){
+		private val RENDER_TYPE_BAR = with(RenderStateBuilder()) {
 			tex(PlayerContainer.LOCATION_BLOCKS_TEXTURE, mipmap = true)
 			alpha(ALPHA_CUTOUT)
 			shade(SHADE_ENABLED)
@@ -63,31 +64,31 @@ class RenderTileExperienceGate(dispatcher: TileEntityRendererDispatcher) : TileE
 		private val FRAME_OFFSETS = FRAMES.indices.map { index -> 1 + FRAMES.take(index).sumBy { it.size } }.toIntArray()
 		
 		@SubscribeEvent
-		fun onTextureStitchPre(e: TextureStitchEvent.Pre){
-			if (e.map.textureLocation == PlayerContainer.LOCATION_BLOCKS_TEXTURE){
-				with(e){
+		fun onTextureStitchPre(e: TextureStitchEvent.Pre) {
+			if (e.map.textureLocation == PlayerContainer.LOCATION_BLOCKS_TEXTURE) {
+				with(e) {
 					TEX.forEach { addSprite(it) }
 				}
 			}
 		}
 		
 		@SubscribeEvent
-		fun onTextureStitchPost(e: TextureStitchEvent.Post){
-			if (e.map.textureLocation == PlayerContainer.LOCATION_BLOCKS_TEXTURE){
+		fun onTextureStitchPost(e: TextureStitchEvent.Post) {
+			if (e.map.textureLocation == PlayerContainer.LOCATION_BLOCKS_TEXTURE) {
 				SPRITES.clear()
 				
-				with(e.map){
+				with(e.map) {
 					TEX.forEach { SPRITES.add(getSprite(it)) }
 				}
 			}
 		}
 		
-		private fun getTexture(index: Int, frame: Int): TextureAtlasSprite?{
+		private fun getTexture(index: Int, frame: Int): TextureAtlasSprite? {
 			return FRAMES[index].getOrNull((frame - FRAME_OFFSETS[index]).coerceAtMost(FRAMES[index].lastIndex))?.let(SPRITES::getOrNull)
 		}
 	}
 	
-	override fun render(tile: TileEntityExperienceGate, partialTicks: Float, matrix: MatrixStack, buffer: IRenderTypeBuffer, combinedLight: Int, combinedOverlay: Int){
+	override fun render(tile: TileEntityExperienceGate, partialTicks: Float, matrix: MatrixStack, buffer: IRenderTypeBuffer, combinedLight: Int, combinedOverlay: Int) {
 		val world = tile.world ?: return
 		val pos = tile.pos
 		
@@ -109,7 +110,7 @@ class RenderTileExperienceGate(dispatcher: TileEntityRendererDispatcher) : TileE
 		getTexture(7, frame)?.let { builder.renderTextureAt(mat, -1F,  0F, world, pos.add(-1, 1,  0), it, 0b0000, combinedOverlay) }
 	}
 	
-	private fun IVertexBuilder.renderTextureAt(mat: Matrix4f, x: Float, z: Float, world: World, pos: BlockPos, tex: TextureAtlasSprite, rot: Int, overlay: Int){
+	private fun IVertexBuilder.renderTextureAt(mat: Matrix4f, x: Float, z: Float, world: World, pos: BlockPos, tex: TextureAtlasSprite, rot: Int, overlay: Int) {
 		val rotX = (((rot shr 1) and 1) - 0.5F) * 1.002F
 		val rotZ = (((rot shr 2) and 1) - 0.5F) * 1.002F
 		
@@ -118,13 +119,13 @@ class RenderTileExperienceGate(dispatcher: TileEntityRendererDispatcher) : TileE
 		val v1 = tex.minV
 		val v2 = tex.maxV
 		
-		val c = if (rot and 0b1000 != 0){
+		val c = if (rot and 0b1000 != 0) {
 			floatArrayOf(u2, u1, u1, u2, v1, v1, v2, v2)
 		}
-		else if (rot and 0b0001 == 0){
+		else if (rot and 0b0001 == 0) {
 			floatArrayOf(u2, u2, u1, u1, v2, v1, v1, v2)
 		}
-		else{
+		else {
 			floatArrayOf(u2, u1, u1, u2, v2, v2, v1, v1)
 		}
 		

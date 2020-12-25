@@ -1,4 +1,5 @@
 package chylex.hee.game.item
+
 import chylex.hee.game.inventory.size
 import chylex.hee.game.world.BlockEditor
 import chylex.hee.init.ModItems
@@ -24,33 +25,33 @@ import net.minecraft.world.server.ServerWorld
 import net.minecraftforge.common.util.FakePlayerFactory
 import java.util.Random
 
-class ItemCompost(properties: Properties) : Item(properties){
-	companion object{
+class ItemCompost(properties: Properties) : Item(properties) {
+	companion object {
 		private const val BONE_MEAL_EQUIVALENT = 2
 		
-		val FX_USE = object : FxBlockHandler(){
-			override fun handle(pos: BlockPos, world: World, rand: Random){
+		val FX_USE = object : FxBlockHandler() {
+			override fun handle(pos: BlockPos, world: World, rand: Random) {
 				ItemBoneMeal.spawnBonemealParticles(world, pos, 25)
 			}
 		}
 		
-		private fun applyCompost(world: World, pos: BlockPos, player: EntityPlayer? = null): Boolean{
-			if (world !is ServerWorld){
+		private fun applyCompost(world: World, pos: BlockPos, player: EntityPlayer? = null): Boolean {
+			if (world !is ServerWorld) {
 				return false
 			}
 			
 			val simulatedItem = ItemStack(ModItems.COMPOST, BONE_MEAL_EQUIVALENT)
 			
-			repeat(BONE_MEAL_EQUIVALENT){
-				if (player == null){
+			repeat(BONE_MEAL_EQUIVALENT) {
+				if (player == null) {
 					ItemBoneMeal.applyBonemeal(simulatedItem, world, pos, FakePlayerFactory.getMinecraft(world))
 				}
-				else{
+				else {
 					ItemBoneMeal.applyBonemeal(simulatedItem, world, pos, player)
 				}
 			}
 			
-			if (simulatedItem.size == BONE_MEAL_EQUIVALENT){
+			if (simulatedItem.size == BONE_MEAL_EQUIVALENT) {
 				return false
 			}
 			
@@ -59,15 +60,15 @@ class ItemCompost(properties: Properties) : Item(properties){
 		}
 	}
 	
-	init{
-		BlockDispenser.registerDispenseBehavior(this, object : OptionalDispenseBehavior(){
-			override fun dispenseStack(source: IBlockSource, stack: ItemStack): ItemStack{
+	init {
+		BlockDispenser.registerDispenseBehavior(this, object : OptionalDispenseBehavior() {
+			override fun dispenseStack(source: IBlockSource, stack: ItemStack): ItemStack {
 				val world = source.world
 				val pos = source.blockPos.offset(source.blockState[FACING])
 				
 				successful = false
 				
-				if (applyCompost(world, pos)){
+				if (applyCompost(world, pos)) {
 					stack.shrink(1)
 					successful = true
 				}
@@ -77,21 +78,21 @@ class ItemCompost(properties: Properties) : Item(properties){
 		})
 	}
 	
-	override fun onItemUse(context: ItemUseContext): ActionResultType{
+	override fun onItemUse(context: ItemUseContext): ActionResultType {
 		val player = context.player ?: return FAIL
 		val world = context.world
 		val pos = context.pos
 		
 		val heldItem = player.getHeldItem(context.hand)
 		
-		if (!BlockEditor.canEdit(pos, player, heldItem)){
+		if (!BlockEditor.canEdit(pos, player, heldItem)) {
 			return FAIL
 		}
-		else if (world.isRemote){
+		else if (world.isRemote) {
 			return SUCCESS
 		}
 		
-		if (applyCompost(world, pos, player)){
+		if (applyCompost(world, pos, player)) {
 			heldItem.shrink(1)
 			return SUCCESS
 		}

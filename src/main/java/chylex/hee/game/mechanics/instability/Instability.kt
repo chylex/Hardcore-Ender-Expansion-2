@@ -1,4 +1,5 @@
 package chylex.hee.game.mechanics.instability
+
 import chylex.hee.game.mechanics.instability.Instability.InstabilityCapability.Provider
 import chylex.hee.game.mechanics.instability.dimension.DimensionInstabilityEndTerritory
 import chylex.hee.game.mechanics.instability.dimension.DimensionInstabilityGlobal
@@ -25,21 +26,21 @@ import net.minecraftforge.event.AttachCapabilitiesEvent
 import net.minecraftforge.event.TickEvent.Phase
 import net.minecraftforge.event.TickEvent.WorldTickEvent
 
-object Instability{
-	fun register(){
+object Instability {
+	fun register() {
 		CapabilityManager.INSTANCE.register<InstabilityCapability>()
 		MinecraftForge.EVENT_BUS.register(this)
 	}
 	
-	fun get(world: World): IDimensionInstability{
+	fun get(world: World): IDimensionInstability {
 		return world.getCapOrNull(CAP_INSTABILITY)?.dimension ?: DimensionInstabilityNull
 	}
 	
 	// World events
 	
 	@SubscribeEvent
-	fun onWorldTick(e: WorldTickEvent){
-		if (e.phase == Phase.START){
+	fun onWorldTick(e: WorldTickEvent) {
+		if (e.phase == Phase.START) {
 			e.world.getCapOrNull(CAP_INSTABILITY)?.region?.update()
 		}
 	}
@@ -56,14 +57,14 @@ object Instability{
 	private var CAP_INSTABILITY: Capability<InstabilityCapability>? = null
 	
 	@SubscribeEvent
-	fun onAttachCapabilities(e: AttachCapabilitiesEvent<World>){
+	fun onAttachCapabilities(e: AttachCapabilitiesEvent<World>) {
 		val world = e.`object`
 		
-		if (world.isRemote){
+		if (world.isRemote) {
 			return
 		}
 		
-		when(world.dimension){
+		when(world.dimension) {
 			is WorldProviderEndCustom ->
 				e.addCapability(CAP_KEY, Provider(DimensionInstabilityEndTerritory(world), RegionInstability(world, Entry5x5.Constructor)))
 			
@@ -72,7 +73,7 @@ object Instability{
 		}
 	}
 	
-	private class InstabilityCapability private constructor(val dimension: IDimensionInstability, val region: RegionInstability<*>) : INBTSerializable<TagCompound>{
+	private class InstabilityCapability private constructor(val dimension: IDimensionInstability, val region: RegionInstability<*>) : INBTSerializable<TagCompound> {
 		override fun serializeNBT() = TagCompound().apply {
 			put(DIMENSION_TAG, dimension.serializeNBT())
 			put(REGION_TAG, region.serializeNBT())

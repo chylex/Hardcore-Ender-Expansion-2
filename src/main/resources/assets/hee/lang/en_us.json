@@ -6,7 +6,7 @@
   "block.hee.endium_block": "Endium Block",
   "block.hee.endersol": "Endersol",
   "block.hee.humus": "Humus",
-
+  
   "block.hee.gloomrock": "Gloomrock",
   "block.hee.gloomrock_bricks": "Gloomrock Bricks",
   "block.hee.gloomrock_brick_slab": "Gloomrock Brick Slab",
@@ -24,7 +24,7 @@
   "block.hee.gloomrock_smooth_magenta": "Magenta Gloomrock",
   "block.hee.gloomrock_smooth_white": "White Gloomrock",
   "block.hee.gloomtorch": "Gloomtorch",
-
+  
   "block.hee.dusty_stone": "Dusty Stone",
   "block.hee.dusty_stone_cracked": "Cracked Dusty Stone",
   "block.hee.dusty_stone_damaged": "Damaged Dusty Stone",
@@ -33,7 +33,7 @@
   "block.hee.dusty_stone_decoration": "Dusty Stone Decoration",
   "block.hee.dusty_stone_brick_stairs": "Dusty Stone Brick Stairs",
   "block.hee.dusty_stone_brick_slab": "Dusty Stone Brick Slab",
-
+  
   "block.hee.obsidian_stairs": "Obsidian Stairs",
   "block.hee.obsidian_falling": "Falling Obsidian",
   "block.hee.obsidian_smooth": "Smooth Obsidian",
@@ -43,37 +43,37 @@
   "block.hee.obsidian_chiseled_lit": "Chiseled Obsidian (Lit)",
   "block.hee.obsidian_pillar_lit": "Obsidian Pillar (Lit)",
   "block.hee.obsidian_tower_top": "Obsidian Tower Top",
-
+  
   "block.hee.end_stone_infested": "Infested End Stone",
   "block.hee.end_stone_burned": "Burned End Stone",
   "block.hee.end_stone_enchanted": "Enchanted End Stone",
-
+  
   "block.hee.dark_loam": "Dark Loam",
   "block.hee.dark_loam_slab": "Dark Loam Slab",
-
+  
   "block.hee.grave_dirt": "Grave Dirt",
   "block.hee.grave_dirt_loot": "Grave Dirt (Loot)",
   "block.hee.grave_dirt_spiderling": "Grave Dirt (Spiderling)",
-
+  
   "block.hee.whitebark_log": "Whitebark Log",
   "block.hee.whitebark": "Whitebark",
   "block.hee.whitebark_planks": "Whitebark Planks",
   "block.hee.whitebark_stairs": "Whitebark Stairs",
   "block.hee.whitebark_slab": "Whitebark Slab",
-
+  
   "block.hee.miners_burial_block_plain": "Miner's Burial Block",
   "block.hee.miners_burial_block_chiseled": "Miner's Burial Block (Chiseled)",
   "block.hee.miners_burial_block_pillar": "Miner's Burial Block (Pillar)",
   "block.hee.miners_burial_block_jail": "Miner's Burial Block (Jail)",
   "block.hee.miners_burial_altar": "Miner's Burial Altar",
-
+  
   "block.hee.jar_o_dust": "Jar o' Dust",
   "block.hee.jar_o_dust.tooltip.entry": "§7%sx %s",
   "block.hee.dark_chest": "Dark Chest",
   "block.hee.loot_chest": "Loot Chest",
   "block.hee.loot_chest.tooltip": "§5§o(Editable in creative mode)",
   "block.hee.loot_chest.error_has_loot_table": "Cannot edit a Loot Chest that uses a predefined loot table",
-
+  
   "block.hee.puzzle_block_wall": "Puzzle Block (Wall)",
   "block.hee.puzzle_block_plain": "Puzzle Block (Plain)",
   "block.hee.puzzle_block_burst_3": "Puzzle Block (Burst 3x3)",
@@ -82,18 +82,18 @@
   "block.hee.puzzle_block_redirect_2": "Puzzle Block (Redirect 2)",
   "block.hee.puzzle_block_redirect_4": "Puzzle Block (Redirect 4)",
   "block.hee.puzzle_block_teleport": "Puzzle Block (Teleport)",
-
+  
   "block.hee.experience_gate": "Experience Gate",
   "block.hee.experience_gate_controller": "Experience Gate (Controller)",
-
+  
   "block.hee.igneous_plate": "Igneous Plate",
   "block.hee.enhanced_brewing_stand": "Enhanced Brewing Stand",
-
+  
   "block.hee.end_powder_ore": "End Powder Ore",
   "block.hee.endium_ore": "Endium Ore",
   "block.hee.stardust_ore": "Stardust Ore",
   "block.hee.igneous_rock_ore": "Igneous Rock Ore",
-
+  
   "block.hee.autumn_leaves_red": "Autumn Leaves (Red)",
   "block.hee.autumn_leaves_brown": "Autumn Leaves (Brown)",
   "block.hee.autumn_leaves_orange": "Autumn Leaves (Orange)",
@@ -106,43 +106,43 @@
   "block.hee.potted_autumn_sapling_brown": "Potted Autumn Sapling (Brown)",
   "block.hee.potted_autumn_sapling_orange": "Potted Autumn Sapling (Orange)",
   "block.hee.potted_autumn_sapling_yellowgreen": "Potted Autumn Sapling (Yellow-Green)",
-
+  
   "block.hee.death_flower": "Death Flower",
   "block.hee.death_flower_healed": "Healed Death Flower",
   "block.hee.death_flower_withered": "Withered Death Flower",
   "block.hee.potted_death_flower": "Potted Death Flower",
   "block.hee.potted_death_flower_healed": "Potted Healed Death Flower",
   "block.hee.potted_death_flower_withered": "Potted Withered Death Flower",
-
+  
   "block.hee.ancient_cobweb": "Ancient Cobweb",
   "block.hee.dry_vines": "Dry Vines",
   "block.hee.enderman_head": "Enderman Head",
-
+  
   "block.hee.end_portal_inner": "End Portal",
   "block.hee.end_portal_frame": "End Portal Frame",
   "block.hee.end_portal_acceptor": "End Portal Acceptor",
   "block.hee.void_portal_inner": "Void Portal",
   "block.hee.void_portal_frame": "Void Portal Frame",
   "block.hee.void_portal_storage": "Void Portal Storage",
-
+  
   "block.hee.energy_cluster": "Energy Cluster",
-
+  
   "block.hee.table_pedestal": "Table Pedestal",
   "block.hee.table_base": "Table Base",
   "block.hee.accumulation_table": "Accumulation Table",
   "block.hee.experience_table": "Experience Table",
   "block.hee.infusion_table": "Infusion Table",
-
+  
   "block.hee.eternal_fire": "Eternal Fire",
   "block.hee.scaffolding": "Scaffolding",
-
+  
   "block.hee.shulker_box": "Shulker Box",
   "block.hee.small_shulker_box": "Small Shulker Box",
   "block.hee.medium_shulker_box": "Medium Shulker Box",
   "block.hee.large_shulker_box": "Large Shulker Box",
-
+  
   "block.tooltip.hee.table.tier": "§7Tier %s",
-
+  
   "item.hee.ancient_dust": "Ancient Dust",
   "item.hee.ethereum": "Ethereum",
   "item.hee.end_powder": "End Powder",
@@ -159,7 +159,7 @@
   "item.hee.instability_orb": "Instability Orb",
   "item.hee.ectoplasm": "Ectoplasm",
   "item.hee.enchanted_claw": "Enchanted Claw",
-
+  
   "item.hee.alteration_nexus": "Alteration Nexus",
   "item.hee.void_essence": "Void Essence",
   "item.hee.obsidian_rod": "Obsidian Rod",
@@ -170,21 +170,21 @@
   "item.hee.amelior": "Amelior",
   "item.hee.revitalization_substance": "Revitalization Substance",
   "item.hee.binding_essence": "Binding Essence",
-
+  
   "item.hee.eye_of_ender": "Eye of Ender",
   "item.hee.compost": "Compost",
   "item.hee.void_salad.single": "Void Salad",
   "item.hee.void_salad.double": "Void Void Salad",
   "item.hee.void_salad.mega": "Mega Void Salad",
-
+  
   "item.hee.accumulation_table_core": "Accumulation Table Core",
   "item.hee.experience_table_core": "Experience Table Core",
   "item.hee.infusion_table_core": "Infusion Table Core",
-
+  
   "item.hee.table_link": "Table Link",
   "item.hee.knowledge_note": "Knowledge Note",
   "item.hee.experience_bottle.tooltip": "§a%s §2experience",
-
+  
   "item.hee.void_miner": "Void Miner",
   "item.hee.void_bucket": "Void Bucket",
   "item.hee.scorching_pickaxe": "Scorching Pickaxe",
@@ -192,15 +192,15 @@
   "item.hee.scorching_axe": "Scorching Axe",
   "item.hee.scorching_sword": "Scorching Sword",
   "item.hee.flint_and_infernium": "Flint and Infernium",
-
+  
   "item.hee.ender_goo_bucket": "Ender Goo Bucket",
   "item.hee.purified_ender_goo_bucket": "Purified Ender Goo Bucket",
-
+  
   "item.hee.energy_oracle": "Energy Oracle",
   "item.hee.energy_receptacle": "Energy Receptacle",
   "item.hee.energy_receptacle.tooltip.empty": "§9Empty",
   "item.hee.energy_receptacle.tooltip.holding": "§9Holding §3%s§9 Energy",
-
+  
   "item.hee.spatial_dash_gem": "Spatial Dash Gem",
   "item.hee.linking_gem": "Linking Gem",
   "item.hee.portal_token.normal": "Portal Token",
@@ -218,7 +218,7 @@
   "item.hee.portal_token.tooltip.creative.teleport": "§6Hold and right-click to teleport (creative)",
   "item.hee.portal_token.tooltip.advanced": "§7Index: %s",
   "item.hee.blank_token": "Blank Token",
-
+  
   "item.hee.trinket_pouch": "Trinket Pouch",
   "item.hee.trinket_pouch.tooltip": "§7Right-click to open",
   "item.hee.amulet_of_recovery": "Amulet of Recovery",
@@ -227,37 +227,37 @@
   "item.hee.ring_of_preservation": "Ring of Preservation",
   "item.hee.talisman_of_griefing": "Talisman of Griefing",
   "item.hee.scale_of_freefall": "Scale of Freefall",
-
+  
   "item.hee.ender_eye_spawn_egg": "Ender Eye Spawn Egg",
-  "item.hee.angry_enderman_spawn_egg":"Angry Enderman Spawn Egg",
+  "item.hee.angry_enderman_spawn_egg": "Angry Enderman Spawn Egg",
   "item.hee.blobby_spawn_egg": "Blobby Spawn Egg",
   "item.hee.endermite_instability_spawn_egg": "Endermite Spawn Egg (Instability)",
   "item.hee.spiderling_spawn_egg": "Spiderling Spawn Egg",
   "item.hee.undread_spawn_egg": "Undread Spawn Egg",
   "item.hee.vampire_bat_spawn_egg": "Vampire Bat Spawn Egg",
-
+  
   "item.hee.chorus_berry": "Chorus Berry",
   "item.hee.shulker_box.tooltip": "§7Right-click to open",
-
+  
   "item.tooltip.hee.energy.level": "§9Energy: §3%s§9 / §3%s",
   "item.tooltip.hee.energy.uses": "§9Uses Left: §3%s",
-
+  
   "item.tooltip.hee.trinket.in_slot.charged": "§aActive",
   "item.tooltip.hee.trinket.in_slot.uncharged": "§cMust be recharged",
   "item.tooltip.hee.trinket.not_in_slot.charged": "§cMust be placed in Trinket slot",
   "item.tooltip.hee.trinket.not_in_slot.uncharged": "§cMust be charged and placed in Trinket slot",
-
+  
   "item.tooltip.hee.table_core.tooltip": "§7Minimum Tier: %s",
-
+  
   "fluid.hee.ender_goo": "Ender Goo",
   "fluid.hee.purified_ender_goo": "Purified Ender Goo",
-
+  
   "hee.infusions.list.title": "§aInfusions",
   "hee.infusions.list.item": "§2- %s",
   "hee.infusions.list.none": "§7None",
   "hee.infusions.applicable.title": "§aApplicable To",
   "hee.infusions.applicable.item": "§2- %s §3[%s]",
-
+  
   "hee.infusion.power": "Power",
   "hee.infusion.fire": "Fire",
   "hee.infusion.trap": "Trap",
@@ -273,13 +273,13 @@
   "hee.infusion.stability": "Stability",
   "hee.infusion.safety": "Safety",
   "hee.infusion.expansion": "Expansion",
-
+  
   "itemGroup.hee": "Hardcore Ender Expansion",
-
+  
   "hee.energy.overlay.health": "%s ENERGY CLUSTER",
   "hee.energy.overlay.level": "HOLDING %s OUT OF %s ENERGY",
   "hee.energy.overlay.ignored": "IGNORED",
-
+  
   "hee.energy.health.powered": "POWERED",
   "hee.energy.health.healthy": "HEALTHY",
   "hee.energy.health.weakened": "WEAKENED",
@@ -287,7 +287,7 @@
   "hee.energy.health.damaged": "DAMAGED",
   "hee.energy.health.unstable": "UNSTABLE",
   "hee.energy.health.revitalizing": "REVITALIZING",
-
+  
   "entity.hee.ender_eye": "Ender Eye",
   "entity.hee.angry_enderman": "Angry Enderman",
   "entity.hee.blobby": "Blobby",
@@ -296,33 +296,33 @@
   "entity.hee.undread": "Undread",
   "entity.hee.vampire_bat": "Vampire Bat",
   "entity.hee.ender_pearl": "Ender Pearl",
-
+  
   "effect.hee.lifeless": "Lifeless",
   "effect.hee.purity": "Purity",
   "effect.hee.corruption": "Corruption",
   "effect.hee.banishment": "Banishment",
-
+  
   "item.minecraft.potion.effect.purity": "Potion of Purity",
   "item.minecraft.splash_potion.effect.purity": "Splash Potion of Purity",
   "item.minecraft.lingering_potion.effect.purity": "Lingering Potion of Purity",
   "item.minecraft.tipped_arrow.effect.purity": "Arrow of Purity",
-
+  
   "item.minecraft.potion.effect.corruption": "Potion of Corruption",
   "item.minecraft.splash_potion.effect.corruption": "Splash Potion of Corruption",
   "item.minecraft.lingering_potion.effect.corruption": "Lingering Potion of Corruption",
   "item.minecraft.tipped_arrow.effect.corruption": "Arrow of Corruption",
-
+  
   "item.minecraft.potion.effect.banishment": "Potion of Banishment",
   "item.minecraft.splash_potion.effect.banishment": "Splash Potion of Banishment",
   "item.minecraft.lingering_potion.effect.banishment": "Lingering Potion of Banishment",
   "item.minecraft.tipped_arrow.effect.banishment": "Arrow of Banishment",
-
+  
   "gui.hee.amulet_of_recovery.move_all": "Move All",
   "gui.hee.loot_chest.title": "Loot Chest",
   "gui.hee.loot_chest.title.creative": "Loot Chest (Editing)",
   "gui.hee.portal_token_storage.title": "Portal Tokens",
   "gui.hee.enhanced_brewing_stand.title": "Enhanced Brewing Stand",
-
+  
   "hee.territory.fallback.name": "Unknown",
   "hee.territory.the_hub.name": "The Hub",
   "hee.territory.forgotten_tombs.name": "Forgotten Tombs",
@@ -335,7 +335,7 @@
   "hee.territory.eternal_mists.name": "Eternal Mists",
   "hee.territory.cursed_library.name": "Cursed Library",
   "hee.territory.dragon_lair.name": "Dragon Lair",
-
+  
   "commands.hee.help.info": "shows command list",
   "commands.hee.help.failed": "Page must be between 1 and %s",
   "commands.hee.help.header.client": "§2--- Showing §aclient§2 commands, page %s§2 ---",
@@ -347,12 +347,12 @@
   "commands.hee.help.footer.middle": "§2 / §r",
   "commands.hee.help.footer.next": "next page",
   "commands.hee.help.footer.end": "§2 ---",
-
+  
   "commands.hee.causatum.info": "checks or triggers Ender Causatum stages",
   "commands.hee.causatum.list": "Ender Causatum stages:",
   "commands.hee.causatum.check": "Ender Causatum stage: %s",
   "commands.hee.causatum.set": "Ender Causatum stage updated for %s player(s)",
-
+  
   "commands.hee.infusions.info": "manipulates infusions on held item",
   "commands.hee.infusions.reset_success": "Removed %s infusion(s)",
   "commands.hee.infusions.add_success": "Added %s infusion",
@@ -362,20 +362,20 @@
   "commands.hee.infusions.not_applicable": "Infusion cannot be applied to this item",
   "commands.hee.infusions.already_present": "Infusion is already present on this item",
   "commands.hee.infusions.not_present": "Infusion is not present on this item",
-
+  
   "commands.hee.lootchest.info": "manipulates Loot Chests",
   "commands.hee.lootchest.set_table_success": "Updated loot table",
   "commands.hee.lootchest.remove_table_success": "Removed loot table",
   "commands.hee.lootchest.reset_success": "Reset loot generated for %s player(s)",
   "commands.hee.lootchest.table_not_found": "Loot table not found",
   "commands.hee.lootchest.not_loot_chest": "No Loot Chest at the specified location",
-
+  
   "commands.hee.token.info": "generates a Portal Token item",
   "commands.hee.token.success": "Created Portal Token leading to %s",
-
+  
   "commands.hee.structure.info": "utilities for custom structures",
   "commands.hee.testworld.info": "converts overworld into a test world",
-
+  
   "subtitles.hee.block.cauldron.brew": "Cauldron bubbles",
   "subtitles.hee.block.death_flower.wither": "Death Flower withers",
   "subtitles.hee.block.experience_gate.pickup": "Experience Gate charges",

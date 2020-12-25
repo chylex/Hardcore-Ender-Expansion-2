@@ -1,4 +1,5 @@
 package chylex.hee.game.world.feature.tombdungeon
+
 import chylex.hee.game.block.BlockGraveDirt
 import chylex.hee.game.block.with
 import chylex.hee.game.block.withFacing
@@ -55,7 +56,7 @@ import java.util.Random
 import kotlin.math.max
 import kotlin.math.min
 
-object TombDungeonPieces : IStructureDescription{
+object TombDungeonPieces : IStructureDescription {
 	override val STRUCTURE_SIZE = Size(300, 110, 300)
 	
 	override val STRUCTURE_BUILDER = TombDungeonBuilder
@@ -124,7 +125,7 @@ object TombDungeonPieces : IStructureDescription{
 		
 		add("voidportal.frame", ModBlocks.VOID_PORTAL_FRAME)
 		
-		with(forDevelopment){
+		with(forDevelopment) {
 			add("dustystone.wall", Blocks.LAPIS_BLOCK)
 			add("dustystone.ceiling", Blocks.COAL_BLOCK)
 			add("dustystone.decoration.random", Blocks.DIAMOND_BLOCK)
@@ -133,8 +134,8 @@ object TombDungeonPieces : IStructureDescription{
 		}
 	}
 	
-	override val PALETTE = with(generateCommonPalette()){
-		with(forGeneration){
+	override val PALETTE = with(generateCommonPalette()) {
+		with(forGeneration) {
 			add("dustystone.wall", PALETTE_ENTRY_PLAIN_WALL_CEILING)
 			add("dustystone.ceiling", PALETTE_ENTRY_PLAIN_WALL_CEILING)
 			add("dustystone.decoration.random", PALETTE_ENTRY_PLAIN_DECORATION)
@@ -145,8 +146,8 @@ object TombDungeonPieces : IStructureDescription{
 		build()
 	}
 	
-	val PALETTE_FANCY = with(generateCommonPalette()){
-		with(forGeneration){
+	val PALETTE_FANCY = with(generateCommonPalette()) {
+		with(forGeneration) {
 			add("dustystone.wall", PALETTE_ENTRY_FANCY_WALL)
 			add("dustystone.ceiling", PALETTE_ENTRY_FANCY_CEILING)
 			add("dustystone.decoration.random", PALETTE_ENTRY_FANCY_DECORATION)
@@ -167,16 +168,16 @@ object TombDungeonPieces : IStructureDescription{
 		TombDungeonCorridor_Stairs.End("corridor.stairs.end.nbt")
 	)
 	
-	fun PIECES_STAIRCASE(middle: Int): List<TombDungeonCorridor_Stairs>{
-		return listOf(PIECES_STAIRS[0], *Array(middle){ PIECES_STAIRS[1] }, PIECES_STAIRS[2])
+	fun PIECES_STAIRCASE(middle: Int): List<TombDungeonCorridor_Stairs> {
+		return listOf(PIECES_STAIRS[0], *Array(middle) { PIECES_STAIRS[1] }, PIECES_STAIRS[2])
 	}
 	
-	fun PIECES_MAIN_CORRIDOR(rand: Random, level: TombDungeonLevel, cornerCount: Int, crumblingCorridorCount: Int): MutableList<TombDungeonAbstractPiece>{
+	fun PIECES_MAIN_CORRIDOR(rand: Random, level: TombDungeonLevel, cornerCount: Int, crumblingCorridorCount: Int): MutableList<TombDungeonAbstractPiece> {
 		return mutableListOf<TombDungeonAbstractPiece>().apply {
 			val isFancy = level.isFancy
 			var lengthRemaining = level.getMainCorridorLength(rand)
 			
-			for(attempt in 0..2){
+			for(attempt in 0..2) {
 				val (sideTombSpacing, sideTombGenerator) = level.pickTombGeneratorAndSpacing(rand)
 				
 				val tombsPerSide = rand.nextInt(6, 7) - attempt - min(2, (sideTombSpacing - 3) / 3)
@@ -185,20 +186,20 @@ object TombDungeonPieces : IStructureDescription{
 				val corridor = TombDungeonCorridor_StraightTombs(sideTombSpacing, tombConfiguration, tombsPerSide, sideTombGenerator, isFancy)
 				val length = corridor.size.z
 				
-				if (length <= (lengthRemaining * 4) / 9){
+				if (length <= (lengthRemaining * 4) / 9) {
 					add(corridor)
 					lengthRemaining -= length
 					break
 				}
 			}
 			
-			while(lengthRemaining > 0){
+			while(lengthRemaining > 0) {
 				var nextLength = level.nextMainCorridorSplitLength(rand, lengthRemaining)
 				lengthRemaining -= nextLength
 				
 				val (sideTombSpacing, sideTombGenerator) = level.pickTombGeneratorAndSpacing(rand)
 				
-				if (nextLength >= sideTombSpacing && rand.nextInt(6) != 0){
+				if (nextLength >= sideTombSpacing && rand.nextInt(6) != 0) {
 					val tombsPerSide = max(1, nextLength / sideTombSpacing)
 					val tombConfiguration = TombDungeonCorridor_StraightTombs.Configuration.random(rand)
 					
@@ -208,20 +209,20 @@ object TombDungeonPieces : IStructureDescription{
 					nextLength -= corridor.size.z
 				}
 				
-				if (nextLength > 0){
+				if (nextLength > 0) {
 					add(TombDungeonCorridor_Straight(nextLength, isFancy))
 				}
 			}
 			
-			repeat(cornerCount){
+			repeat(cornerCount) {
 				add(TombDungeonCorridor_Intersection(isFancy))
 			}
 			
-			repeat(crumblingCorridorCount){
-				if (level === TombDungeonLevel.FIRST){
+			repeat(crumblingCorridorCount) {
+				if (level === TombDungeonLevel.FIRST) {
 					add(TombDungeonCorridor_StraightCrumbling(length = rand.nextInt(7, 8), fallHeight = rand.nextInt(4, 6), isFancy = isFancy))
 				}
-				else{
+				else {
 					add(TombDungeonCorridor_StraightCrumbling(length = rand.nextInt(5, 13), fallHeight = rand.nextInt(14, 21), isFancy = isFancy))
 				}
 			}
@@ -230,52 +231,52 @@ object TombDungeonPieces : IStructureDescription{
 		}
 	}
 	
-	fun PIECES_SIDE_CORRIDOR(rand: Random, level: TombDungeonLevel, crumblingCorridorCount: Int, endRoom: TombDungeonAbstractPiece?): MutableList<TombDungeonAbstractPiece>{
+	fun PIECES_SIDE_CORRIDOR(rand: Random, level: TombDungeonLevel, crumblingCorridorCount: Int, endRoom: TombDungeonAbstractPiece?): MutableList<TombDungeonAbstractPiece> {
 		return mutableListOf<TombDungeonAbstractPiece>().apply {
 			val isFancy = level.isFancy
 			
-			repeat(rand.nextInt(0, rand.nextInt(1, 6))){
+			repeat(rand.nextInt(0, rand.nextInt(1, 6))) {
 				val length = rand.nextInt(1, 6)
 				
-				if (length >= 5 && rand.nextBoolean()){
+				if (length >= 5 && rand.nextBoolean()) {
 					val (sideTombSpacing, sideTombGenerator) = level.pickTombGeneratorAndSpacing(rand)
 					add(TombDungeonCorridor_StraightTombs(sideTombSpacing, rand.nextItem(), rand.nextInt(1, 2), sideTombGenerator, isFancy))
 				}
-				else{
+				else {
 					add(TombDungeonCorridor_Straight(length, isFancy))
 				}
 			}
 			
-			repeat(rand.nextInt(0, rand.nextInt(1, 3))){
+			repeat(rand.nextInt(0, rand.nextInt(1, 3))) {
 				add(TombDungeonCorridor_Intersection(isFancy))
 			}
 			
-			repeat(crumblingCorridorCount){
+			repeat(crumblingCorridorCount) {
 				add(TombDungeonCorridor_StraightCrumbling(length = rand.nextInt(5, 16), fallHeight = rand.nextInt(14, 21), isFancy = isFancy))
 			}
 			
 			shuffle(rand)
 			
-			if (endRoom != null){
+			if (endRoom != null) {
 				add(endRoom)
 			}
-			else{
+			else {
 				add(TombDungeonDeadEnd_Tomb(rand.nextInt(2, 4), level.pickTombGeneratorAndSpacing(rand).second, isFancy))
 			}
 		}
 	}
 	
-	fun PIECES_SECRET(rand: Random, amount: Int): MutableList<TombDungeonSecret>{
+	fun PIECES_SECRET(rand: Random, amount: Int): MutableList<TombDungeonSecret> {
 		return mutableListOf<TombDungeonSecret>().apply {
 			addAll(PIECES_SECRET_GUARANTEED)
 			
 			val randomPieces = mutableListOf<TombDungeonSecret>()
 			
-			while(randomPieces.size < amount){
+			while(randomPieces.size < amount) {
 				randomPieces.addAll(PIECES_SECRET_RANDOM)
 			}
 			
-			while(size < amount){
+			while(size < amount) {
 				add(rand.removeItem(randomPieces))
 			}
 		}
@@ -313,35 +314,35 @@ object TombDungeonPieces : IStructureDescription{
 		TombDungeonRoom_Side_Arches("side.arches.nbt", isFancy = true)
 	)
 	
-	private fun TOMB(file: String, entranceY: Int): (Boolean) -> TombDungeonAbstractPiece{
+	private fun TOMB(file: String, entranceY: Int): (Boolean) -> TombDungeonAbstractPiece {
 		return { TombDungeonRoom_Tomb(file, entranceY, allowSecrets = false, isFancy = it) }
 	}
 	
-	private fun TOMB_MASS(width: Int, depth: Int, border: Boolean, split: Boolean): (Boolean) -> TombDungeonAbstractPiece{
+	private fun TOMB_MASS(width: Int, depth: Int, border: Boolean, split: Boolean): (Boolean) -> TombDungeonAbstractPiece {
 		return { TombDungeonRoom_Tomb_Mass(width, depth, border, split, isFancy = it) }
 	}
 	
-	private fun TOMB_MASS_SPACIOUS(file: String): (Boolean) -> TombDungeonAbstractPiece{
+	private fun TOMB_MASS_SPACIOUS(file: String): (Boolean) -> TombDungeonAbstractPiece {
 		return { TombDungeonRoom_Tomb_MassSpacious(file, entranceY = 1, allowSecrets = false, isFancy = it) }
 	}
 	
-	private fun TOMB_MULTI_DEEP(file: String, tombsPerColumn: Int): (Boolean) -> TombDungeonAbstractPiece{
+	private fun TOMB_MULTI_DEEP(file: String, tombsPerColumn: Int): (Boolean) -> TombDungeonAbstractPiece {
 		return { TombDungeonRoom_Tomb_MultiDeep(file, tombsPerColumn, entranceY = 2, allowSecrets = false, isFancy = it) }
 	}
 	
-	private fun TOMB_MULTI_SPACIOUS(file: String, tombsPerColumn: Int): (Boolean) -> TombDungeonAbstractPiece{
+	private fun TOMB_MULTI_SPACIOUS(file: String, tombsPerColumn: Int): (Boolean) -> TombDungeonAbstractPiece {
 		return { TombDungeonRoom_Tomb_MultiSpacious(file, tombsPerColumn, entranceY = 2, allowSecrets = false, isFancy = it) }
 	}
 	
-	private fun TOMB_SINGLE(file: String): (Boolean) -> TombDungeonAbstractPiece{
+	private fun TOMB_SINGLE(file: String): (Boolean) -> TombDungeonAbstractPiece {
 		return { TombDungeonRoom_Tomb_Single(file, entranceY = 2, allowSecrets = false, isFancy = it) }
 	}
 	
-	fun TOMB_RANDOM(rand: Random, options: WeightedList<(Boolean) -> TombDungeonAbstractPiece>): (Boolean) -> TombDungeonAbstractPiece{
+	fun TOMB_RANDOM(rand: Random, options: WeightedList<(Boolean) -> TombDungeonAbstractPiece>): (Boolean) -> TombDungeonAbstractPiece {
 		return { options.generateItem(rand)(it) }
 	}
 	
-	fun TOMB_RANDOM(rand: Random, vararg options: WeightedList<(Boolean) -> TombDungeonAbstractPiece>): (Boolean) -> TombDungeonAbstractPiece{
+	fun TOMB_RANDOM(rand: Random, vararg options: WeightedList<(Boolean) -> TombDungeonAbstractPiece>): (Boolean) -> TombDungeonAbstractPiece {
 		return { rand.nextItem(options).generateItem(rand)(it) }
 	}
 	

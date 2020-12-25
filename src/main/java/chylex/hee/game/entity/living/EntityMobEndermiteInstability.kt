@@ -1,4 +1,5 @@
 package chylex.hee.game.entity.living
+
 import chylex.hee.game.mechanics.instability.Instability
 import chylex.hee.game.world.Pos
 import chylex.hee.game.world.isPeaceful
@@ -17,40 +18,40 @@ import net.minecraft.util.DamageSource
 import net.minecraft.util.ResourceLocation
 import net.minecraft.world.World
 
-class EntityMobEndermiteInstability(type: EntityType<EntityMobEndermiteInstability>, world: World) : EntityMobEndermite(type, world), IImmuneToCorruptedEnergy{
+class EntityMobEndermiteInstability(type: EntityType<EntityMobEndermiteInstability>, world: World) : EntityMobEndermite(type, world), IImmuneToCorruptedEnergy {
 	constructor(world: World) : this(ModEntities.ENDERMITE_INSTABILITY, world)
 	
-	private companion object{
+	private companion object {
 		private const val EXPLODE_TAG = "Explode"
 	}
 	
 	private var spawnCorruptedEnergy = false
 	
-	override fun livingTick(){
+	override fun livingTick() {
 		super.livingTick()
 		
-		if (world.isPeaceful && attackTarget != null){
+		if (world.isPeaceful && attackTarget != null) {
 			super.setAttackTarget(null)
 		}
 	}
 	
-	override fun setAttackTarget(newTarget: EntityLivingBase?){
-		if (!world.isPeaceful){
+	override fun setAttackTarget(newTarget: EntityLivingBase?) {
+		if (!world.isPeaceful) {
 			super.setAttackTarget(newTarget)
 		}
 	}
 	
-	override fun onDeath(cause: DamageSource){
+	override fun onDeath(cause: DamageSource) {
 		super.onDeath(cause)
 		spawnCorruptedEnergy = true
 	}
 	
-	override fun isDespawnPeaceful(): Boolean{
+	override fun isDespawnPeaceful(): Boolean {
 		return false
 	}
 	
-	override fun remove(){
-		if (!world.isRemote && spawnCorruptedEnergy && isAlive){
+	override fun remove() {
+		if (!world.isRemote && spawnCorruptedEnergy && isAlive) {
 			val pos = Pos(this)
 			
 			Instability.get(world).triggerRelief(20u, pos)
@@ -60,7 +61,7 @@ class EntityMobEndermiteInstability(type: EntityType<EntityMobEndermiteInstabili
 		super.remove()
 	}
 	
-	override fun getLootTable(): ResourceLocation{
+	override fun getLootTable(): ResourceLocation {
 		return Resource.Custom("entities/endermite_instability")
 	}
 	
@@ -81,7 +82,7 @@ class EntityMobEndermiteInstability(type: EntityType<EntityMobEndermiteInstabili
 	// Client side
 	
 	@Sided(Side.CLIENT)
-	override fun isInRangeToRenderDist(distanceSq: Double): Boolean{
+	override fun isInRangeToRenderDist(distanceSq: Double): Boolean {
 		return distanceSq < square(96.0)
 	}
 }

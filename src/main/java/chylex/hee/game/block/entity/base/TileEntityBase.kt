@@ -1,4 +1,5 @@
 package chylex.hee.game.block.entity.base
+
 import chylex.hee.game.block.entity.base.TileEntityBase.Context.NETWORK
 import chylex.hee.game.block.entity.base.TileEntityBase.Context.STORAGE
 import chylex.hee.game.world.getState
@@ -10,14 +11,14 @@ import net.minecraft.network.play.server.SUpdateTileEntityPacket
 import net.minecraft.tileentity.TileEntity
 import net.minecraft.tileentity.TileEntityType
 
-abstract class TileEntityBase(type: TileEntityType<out TileEntityBase>) : TileEntity(type){
-	protected companion object{
+abstract class TileEntityBase(type: TileEntityType<out TileEntityBase>) : TileEntity(type) {
+	protected companion object {
 		const val FLAG_MARK_DIRTY = 128
 	}
 	
 	// Synchronization
 	
-	protected fun <T> Notifying(initialValue: T, notifyFlags: Int) = NotifyOnChange(initialValue){
+	protected fun <T> Notifying(initialValue: T, notifyFlags: Int) = NotifyOnChange(initialValue) {
 		-> notifyUpdate(notifyFlags)
 	}
 	
@@ -27,13 +28,13 @@ abstract class TileEntityBase(type: TileEntityType<out TileEntityBase>) : TileEn
 	protected var isLoaded = false
 		private set
 	
-	final override fun onLoad(){
+	final override fun onLoad() {
 		super.onLoad()
 		isLoaded = true
 	}
 	
-	protected fun notifyUpdate(flags: Int){
-		if (super.world == null || wrld.isRemote || !isLoaded){
+	protected fun notifyUpdate(flags: Int) {
+		if (super.world == null || wrld.isRemote || !isLoaded) {
 			return
 		}
 		
@@ -42,14 +43,14 @@ abstract class TileEntityBase(type: TileEntityType<out TileEntityBase>) : TileEn
 		
 		wrld.notifyBlockUpdate(pos, state, state, flags and FLAG_MARK_DIRTY.inv())
 		
-		if (flags and FLAG_MARK_DIRTY != 0){
+		if (flags and FLAG_MARK_DIRTY != 0) {
 			markDirty()
 		}
 	}
 	
 	// NBT
 	
-	protected enum class Context{
+	protected enum class Context {
 		STORAGE, NETWORK
 	}
 	
@@ -58,33 +59,33 @@ abstract class TileEntityBase(type: TileEntityType<out TileEntityBase>) : TileEn
 	
 	// NBT: Storage
 	
-	final override fun write(nbt: TagCompound): TagCompound{
+	final override fun write(nbt: TagCompound): TagCompound {
 		return super.write(nbt).also { writeNBT(it.heeTag, STORAGE) }
 	}
 	
-	final override fun read(nbt: TagCompound){
+	final override fun read(nbt: TagCompound) {
 		super.read(nbt)
 		readNBT(nbt.heeTag, STORAGE)
 	}
 	
 	// NBT: Network load (Note: do not use super.getUpdateTag/handleUpdateTag to prevent a duplicate client-side call)
 	
-	final override fun getUpdateTag(): TagCompound{
+	final override fun getUpdateTag(): TagCompound {
 		return super.write(TagCompound()).also { writeNBT(it.heeTag, NETWORK) }
 	}
 	
-	final override fun handleUpdateTag(nbt: TagCompound){
+	final override fun handleUpdateTag(nbt: TagCompound) {
 		super.read(nbt)
 		readNBT(nbt.heeTag, NETWORK)
 	}
 	
 	// NBT: Network update
 	
-	override fun getUpdatePacket(): SUpdateTileEntityPacket{
+	override fun getUpdatePacket(): SUpdateTileEntityPacket {
 		return SUpdateTileEntityPacket(pos, 0, TagCompound().also { writeNBT(it, NETWORK) })
 	}
 	
-	override fun onDataPacket(net: NetworkManager, packet: SUpdateTileEntityPacket){
+	override fun onDataPacket(net: NetworkManager, packet: SUpdateTileEntityPacket) {
 		readNBT(packet.nbtCompound, NETWORK)
 	}
 }

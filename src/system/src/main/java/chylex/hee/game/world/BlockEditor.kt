@@ -1,4 +1,5 @@
 package chylex.hee.game.world
+
 import chylex.hee.system.migration.EntityPlayer
 import chylex.hee.system.migration.EntityPlayerMP
 import chylex.hee.system.migration.Facing.UP
@@ -13,35 +14,35 @@ import net.minecraft.util.SoundCategory
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.shapes.ISelectionContext
 
-object BlockEditor{
+object BlockEditor {
 	
 	// Utilities
 	
-	fun canEdit(pos: BlockPos, player: EntityPlayer, stack: ItemStack): Boolean{
+	fun canEdit(pos: BlockPos, player: EntityPlayer, stack: ItemStack): Boolean {
 		return player.canPlayerEdit(pos.offset(UP), UP, stack)
 	}
 	
-	fun canBreak(pos: BlockPos, player: EntityPlayer): Boolean{
+	fun canBreak(pos: BlockPos, player: EntityPlayer): Boolean {
 		val world = player.world
 		return (pos.isAir(world) || pos.getHardness(world) >= 0F) && player.abilities.allowEdit
 	}
 	
 	// Placement
 	
-	private fun placeInternal(state: BlockState, player: EntityPlayer, stack: ItemStack, targetPos: BlockPos, clickedFacing: Direction): BlockPos?{
+	private fun placeInternal(state: BlockState, player: EntityPlayer, stack: ItemStack, targetPos: BlockPos, clickedFacing: Direction): BlockPos? {
 		val block = state.block
 		val world = player.world
 		
 		if (!player.canPlayerEdit(targetPos, clickedFacing, stack) ||
-			!state.isValidPosition(world, targetPos) ||
-			!world.func_226663_a_(state, targetPos, ISelectionContext.dummy()) // RENAME checks entity collisions
-		){
+		    !state.isValidPosition(world, targetPos) ||
+		    !world.func_226663_a_(state, targetPos, ISelectionContext.dummy()) // RENAME checks entity collisions
+		) {
 			return null
 		}
 		
 		targetPos.setState(world, state)
 		
-		if (player is EntityPlayerMP){
+		if (player is EntityPlayerMP) {
 			CriteriaTriggers.PLACED_BLOCK.trigger(player, targetPos, stack)
 		}
 		
@@ -52,11 +53,11 @@ object BlockEditor{
 		return targetPos
 	}
 	
-	fun place(block: Block, player: EntityPlayer, stack: ItemStack, context: ItemUseContext): BlockPos?{
+	fun place(block: Block, player: EntityPlayer, stack: ItemStack, context: ItemUseContext): BlockPos? {
 		val world = context.world
 		val blockContext = BlockItemUseContext(context)
 		
-		if (context.pos.getState(world).isReplaceable(blockContext)){
+		if (context.pos.getState(world).isReplaceable(blockContext)) {
 			blockContext.replacingClickedOnBlock()
 		}
 		

@@ -1,4 +1,5 @@
 package chylex.hee.game.mechanics.table.process
+
 import chylex.hee.game.block.entity.TileEntityTablePedestal
 import chylex.hee.game.block.entity.base.TileEntityBaseTable
 import chylex.hee.game.inventory.size
@@ -14,10 +15,10 @@ import chylex.hee.system.serialization.putPos
 import net.minecraft.item.ItemStack
 import net.minecraft.util.math.BlockPos
 
-class ProcessSupportingItemHolder(private val table: TileEntityBaseTable, pos: BlockPos) : ITableProcess{
+class ProcessSupportingItemHolder(private val table: TileEntityBaseTable, pos: BlockPos) : ITableProcess {
 	constructor(table: TileEntityBaseTable, nbt: TagCompound) : this(table, nbt.getPos(PEDESTAL_POS_TAG))
 	
-	private companion object{
+	private companion object {
 		private const val PEDESTAL_POS_TAG = "PedestalPos"
 	}
 	
@@ -34,30 +35,30 @@ class ProcessSupportingItemHolder(private val table: TileEntityBaseTable, pos: B
 	
 	// Handling
 	
-	override fun initialize(){
+	override fun initialize() {
 		pedestalTile!!.updateProcessStatus(SUPPORTING_ITEM)
 	}
 	
-	override fun revalidate(): Boolean{
+	override fun revalidate(): Boolean {
 		return pedestalTile?.hasInputItem == true
 	}
 	
-	override fun tick(context: ITableContext){}
+	override fun tick(context: ITableContext) {}
 	
-	override fun dispose(){
+	override fun dispose() {
 		pedestalTile?.updateProcessStatus(null)
 	}
 	
 	// Methods
 	
-	fun useItem(getRequiredAmount: (ItemStack) -> Int): ItemStack?{
+	fun useItem(getRequiredAmount: (ItemStack) -> Int): ItemStack? {
 		val tile = pedestalTile ?: return null
 		val input = tile.itemInputCopy
 		
 		val testCopy = input.copy()
 		val useAmount = getRequiredAmount(testCopy)
 		
-		if (useAmount == 0 || input.size < useAmount){
+		if (useAmount == 0 || input.size < useAmount) {
 			return null
 		}
 		
@@ -73,5 +74,5 @@ class ProcessSupportingItemHolder(private val table: TileEntityBaseTable, pos: B
 		putPos(PEDESTAL_POS_TAG, pedestals[0])
 	}
 	
-	override fun deserializeNBT(nbt: TagCompound){}
+	override fun deserializeNBT(nbt: TagCompound) {}
 }

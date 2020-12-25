@@ -1,10 +1,11 @@
 package chylex.hee.system.facades
+
 import net.minecraft.block.Block
 import net.minecraft.item.Item
 import net.minecraft.stats.Stat
 import net.minecraft.stats.Stats
 
-object Stats{
+object Stats {
 	fun harvestBlock(block: Block): Stat<Block> = Stats.BLOCK_MINED.get(block)
 	fun useItem(item: Item): Stat<Item> = Stats.ITEM_USED.get(item)
 	

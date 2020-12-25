@@ -1,4 +1,5 @@
 package chylex.hee.client.render.item
+
 import chylex.hee.system.forge.Side
 import chylex.hee.system.forge.Sided
 import com.mojang.blaze3d.matrix.MatrixStack
@@ -9,8 +10,8 @@ import net.minecraft.item.ItemStack
 import net.minecraft.tileentity.TileEntity
 
 @Sided(Side.CLIENT)
-class RenderItemTileEntitySimple<T : TileEntity>(val tile: T) : ItemStackTileEntityRenderer(){
-	override fun render(stack: ItemStack, matrix: MatrixStack, buffer: IRenderTypeBuffer, combinedLight: Int, combinedOverlay: Int){
+class RenderItemTileEntitySimple<T : TileEntity>(val tile: T) : ItemStackTileEntityRenderer() {
+	override fun render(stack: ItemStack, matrix: MatrixStack, buffer: IRenderTypeBuffer, combinedLight: Int, combinedOverlay: Int) {
 		TileEntityRendererDispatcher.instance.renderItem(tile, matrix, buffer, combinedLight, combinedOverlay)
 	}
 }

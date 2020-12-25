@@ -1,4 +1,5 @@
 package chylex.hee.game.block
+
 import chylex.hee.client.render.block.IBlockLayerCutout
 import chylex.hee.game.block.IBlockDeathFlowerDecaying.Companion.LEVEL
 import chylex.hee.game.block.properties.BlockBuilder
@@ -30,9 +31,9 @@ import java.util.Random
 
 class BlockFlowerPotDeathFlowerDecaying(
 	builder: BlockBuilder,
-	flower: Block
-) : BlockFlowerPot(supply(Blocks.FLOWER_POT as BlockFlowerPot) /* prevents adding to flower->pot map */, supply(flower), builder.p), IBlockDeathFlowerDecaying, IBlockLayerCutout{
-	override fun fillStateContainer(container: Builder<Block, BlockState>){
+	flower: Block,
+) : BlockFlowerPot(supply(Blocks.FLOWER_POT as BlockFlowerPot) /* prevents adding to flower->pot map */, supply(flower), builder.p), IBlockDeathFlowerDecaying, IBlockLayerCutout {
+	override fun fillStateContainer(container: Builder<Block, BlockState>) {
 		container.add(LEVEL)
 	}
 	
@@ -45,47 +46,47 @@ class BlockFlowerPotDeathFlowerDecaying(
 	override val witheredFlowerBlock
 		get() = ModBlocks.POTTED_DEATH_FLOWER_WITHERED
 	
-	override fun tickRate(world: IWorldReader): Int{
+	override fun tickRate(world: IWorldReader): Int {
 		return implTickRate()
 	}
 	
-	private fun getDrop(state: BlockState): ItemStack{
+	private fun getDrop(state: BlockState): ItemStack {
 		return ItemStack(func_220276_d() /* RENAME getFlower */).also { ItemDeathFlower.setDeathLevel(it, state[LEVEL]) }
 	}
 	
-	override fun getDrops(state: BlockState, context: LootContext.Builder): MutableList<ItemStack>{
+	override fun getDrops(state: BlockState, context: LootContext.Builder): MutableList<ItemStack> {
 		return mutableListOf(ItemStack(Blocks.FLOWER_POT), getDrop(state))
 	}
 	
-	override fun getPickBlock(state: BlockState, target: RayTraceResult, world: IBlockReader, pos: BlockPos, player: EntityPlayer): ItemStack{
+	override fun getPickBlock(state: BlockState, target: RayTraceResult, world: IBlockReader, pos: BlockPos, player: EntityPlayer): ItemStack {
 		return getDrop(state)
 	}
 	
-	override fun onBlockAdded(state: BlockState, world: World, pos: BlockPos, oldState: BlockState, isMoving: Boolean){
+	override fun onBlockAdded(state: BlockState, world: World, pos: BlockPos, oldState: BlockState, isMoving: Boolean) {
 		@Suppress("DEPRECATION")
 		super.onBlockAdded(state, world, pos, oldState, isMoving)
 		implOnBlockAdded(world, pos)
 	}
 	
-	override fun tick(state: BlockState, world: ServerWorld, pos: BlockPos, rand: Random){
+	override fun tick(state: BlockState, world: ServerWorld, pos: BlockPos, rand: Random) {
 		@Suppress("DEPRECATION")
 		super.tick(state, world, pos, rand)
 		implUpdateTick(world, pos, state, rand)
 	}
 	
-	override fun onBlockActivated(state: BlockState, world: World, pos: BlockPos, player: EntityPlayer, hand: Hand, hit: BlockRayTraceResult): ActionResultType{
+	override fun onBlockActivated(state: BlockState, world: World, pos: BlockPos, player: EntityPlayer, hand: Hand, hit: BlockRayTraceResult): ActionResultType {
 		val heldItem = player.getHeldItem(hand)
 		
-		if (heldItem.item === ModItems.END_POWDER){
+		if (heldItem.item === ModItems.END_POWDER) {
 			return PASS
 		}
 		
 		val drop = getDrop(state)
 		
-		if (heldItem.isEmpty){
+		if (heldItem.isEmpty) {
 			player.setHeldItem(hand, drop)
 		}
-		else if (!player.addItemStackToInventory(drop)){
+		else if (!player.addItemStackToInventory(drop)) {
 			player.dropItem(drop, false)
 		}
 		

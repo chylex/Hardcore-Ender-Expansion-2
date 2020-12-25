@@ -1,4 +1,5 @@
 package chylex.hee.game.entity.living
+
 import chylex.hee.game.entity.CustomCreatureType
 import chylex.hee.game.entity.living.ai.AttackMelee
 import chylex.hee.game.entity.living.ai.ForceWanderTiming
@@ -29,11 +30,11 @@ import net.minecraft.world.Difficulty.PEACEFUL
 import net.minecraft.world.World
 import net.minecraftforge.fml.network.NetworkHooks
 
-open class EntityMobEndermite(type: EntityType<out EntityMobEndermite>, world: World) : EntityEndermite(type, world){
+open class EntityMobEndermite(type: EntityType<out EntityMobEndermite>, world: World) : EntityEndermite(type, world) {
 	@Suppress("unused")
 	constructor(world: World) : this(ModEntities.ENDERMITE, world)
 	
-	private companion object{
+	private companion object {
 		private val DAMAGE_GENERAL = Damage(DIFFICULTY_SCALING, PEACEFUL_EXCLUSION, *ALL_PROTECTIONS)
 		
 		private const val AGE_TAG = "Age"
@@ -43,7 +44,7 @@ open class EntityMobEndermite(type: EntityType<out EntityMobEndermite>, world: W
 	private var realLifetime = 0
 	private var idleDespawnTimer: Short = 0
 	
-	override fun registerAttributes(){
+	override fun registerAttributes() {
 		super.registerAttributes()
 		
 		getAttribute(MAX_HEALTH).baseValue = 8.0
@@ -52,7 +53,7 @@ open class EntityMobEndermite(type: EntityType<out EntityMobEndermite>, world: W
 		experienceValue = 3
 	}
 	
-	override fun registerGoals(){
+	override fun registerGoals() {
 		val aiWander = WanderLand(this, movementSpeed = 1.0, chancePerTick = 50)
 		
 		goalSelector.addGoal(1, Swim(this))
@@ -65,65 +66,65 @@ open class EntityMobEndermite(type: EntityType<out EntityMobEndermite>, world: W
 		targetSelector.addGoal(2, TargetNearby<EntityPlayer>(this, chancePerTick = 10, checkSight = true, easilyReachableOnly = false))
 	}
 	
-	override fun createSpawnPacket(): IPacket<*>{
+	override fun createSpawnPacket(): IPacket<*> {
 		return NetworkHooks.getEntitySpawningPacket(this)
 	}
 	
-	override fun livingTick(){
+	override fun livingTick() {
 		idleTime = 0
 		lifetime = 0
 		++realLifetime
 		super.livingTick()
 	}
 	
-	override fun attackEntityAsMob(entity: Entity): Boolean{
+	override fun attackEntityAsMob(entity: Entity): Boolean {
 		return DAMAGE_GENERAL.dealToFrom(entity, this)
 	}
 	
-	override fun getLootTable(): ResourceLocation{
+	override fun getLootTable(): ResourceLocation {
 		return Resource.Custom("entities/endermite_natural")
 	}
 	
-	override fun getCreatureAttribute(): CreatureAttribute{
+	override fun getCreatureAttribute(): CreatureAttribute {
 		return CustomCreatureType.ENDER
 	}
 	
-	override fun checkDespawn(){
-		if (world.difficulty == PEACEFUL && isDespawnPeaceful){
+	override fun checkDespawn() {
+		if (world.difficulty == PEACEFUL && isDespawnPeaceful) {
 			remove()
 			return
 		}
 		
-		if (isNoDespawnRequired || preventDespawn()){
+		if (isNoDespawnRequired || preventDespawn()) {
 			return
 		}
 		
 		val closest = world.getClosestPlayer(this, -1.0)
 		
-		if (closest == null){
+		if (closest == null) {
 			return
 		}
 		
 		val distance = closest.getDistanceSq(this)
 		
-		if (distance > square(128)){
+		if (distance > square(128)) {
 			remove()
 		}
-		else if (distance > square(32)){
-			if (++idleDespawnTimer >= 900 || (realLifetime % 20 == 0 && rng.nextInt(50) == 0)){
+		else if (distance > square(32)) {
+			if (++idleDespawnTimer >= 900 || (realLifetime % 20 == 0 && rng.nextInt(50) == 0)) {
 				remove()
 			}
 		}
-		else{
+		else {
 			idleDespawnTimer = 0
 		}
 	}
 	
-	override fun canDespawn(distanceToClosestPlayerSq: Double): Boolean{
+	override fun canDespawn(distanceToClosestPlayerSq: Double): Boolean {
 		return realLifetime > 1800
 	}
 	
-	override fun preventDespawn(): Boolean{
+	override fun preventDespawn(): Boolean {
 		return super.preventDespawn() || realLifetime <= 1800
 	}
 	

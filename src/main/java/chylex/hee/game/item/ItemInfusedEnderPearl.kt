@@ -1,4 +1,5 @@
 package chylex.hee.game.item
+
 import chylex.hee.game.entity.posVec
 import chylex.hee.game.entity.projectile.EntityProjectileEnderPearl
 import chylex.hee.game.item.infusion.IInfusableItem
@@ -22,15 +23,15 @@ import net.minecraft.util.SoundCategory
 import net.minecraft.util.text.ITextComponent
 import net.minecraft.world.World
 
-class ItemInfusedEnderPearl(properties: Properties) : ItemEnderPearl(properties), IInfusableItem{
-	override fun onItemRightClick(world: World, player: EntityPlayer, hand: Hand): ActionResult<ItemStack>{
+class ItemInfusedEnderPearl(properties: Properties) : ItemEnderPearl(properties), IInfusableItem {
+	override fun onItemRightClick(world: World, player: EntityPlayer, hand: Hand): ActionResult<ItemStack> {
 		val heldItem = player.getHeldItem(hand)
 		
-		if (!player.abilities.isCreativeMode){
+		if (!player.abilities.isCreativeMode) {
 			heldItem.shrink(1)
 		}
 		
-		if (!world.isRemote){
+		if (!world.isRemote) {
 			world.addEntity(EntityProjectileEnderPearl(player, InfusionTag.getList(heldItem)))
 		}
 		
@@ -42,22 +43,22 @@ class ItemInfusedEnderPearl(properties: Properties) : ItemEnderPearl(properties)
 		return ActionResult(SUCCESS, heldItem)
 	}
 	
-	override fun canApplyInfusion(infusion: Infusion): Boolean{
+	override fun canApplyInfusion(infusion: Infusion): Boolean {
 		return ItemAbstractInfusable.onCanApplyInfusion(this, infusion)
 	}
 	
-	override fun getTranslationKey(): String{
+	override fun getTranslationKey(): String {
 		return Items.ENDER_PEARL.translationKey
 	}
 	
 	@Sided(Side.CLIENT)
-	override fun addInformation(stack: ItemStack, world: World?, lines: MutableList<ITextComponent>, flags: ITooltipFlag){
+	override fun addInformation(stack: ItemStack, world: World?, lines: MutableList<ITextComponent>, flags: ITooltipFlag) {
 		super.addInformation(stack, world, lines, flags)
 		ItemAbstractInfusable.onAddInformation(stack, lines)
 	}
 	
 	@Sided(Side.CLIENT)
-	override fun hasEffect(stack: ItemStack): Boolean{
+	override fun hasEffect(stack: ItemStack): Boolean {
 		return super.hasEffect(stack) || ItemAbstractInfusable.onHasEffect(stack)
 	}
 }

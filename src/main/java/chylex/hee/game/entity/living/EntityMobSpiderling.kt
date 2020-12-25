@@ -1,4 +1,5 @@
 package chylex.hee.game.entity.living
+
 import chylex.hee.game.entity.EntityData
 import chylex.hee.game.entity.OPERATION_MUL_INCR_INDIVIDUAL
 import chylex.hee.game.entity.living.ai.AIAttackLeap
@@ -86,10 +87,10 @@ import kotlin.math.log10
 import kotlin.math.roundToInt
 import kotlin.math.sin
 
-class EntityMobSpiderling(type: EntityType<EntityMobSpiderling>, world: World) : EntityMob(type, world), ILightStartleHandler{
+class EntityMobSpiderling(type: EntityType<EntityMobSpiderling>, world: World) : EntityMob(type, world), ILightStartleHandler {
 	constructor(world: World) : this(ModEntities.SPIDERLING, world)
 	
-	companion object{
+	companion object {
 		private val DAMAGE_GENERAL = Damage(DIFFICULTY_SCALING, PEACEFUL_EXCLUSION, *ALL_PROTECTIONS)
 		private val FALL_CRIT_DAMAGE = AttributeModifier("Fall crit damage", 0.5, OPERATION_MUL_INCR_INDIVIDUAL)
 		
@@ -102,17 +103,17 @@ class EntityMobSpiderling(type: EntityType<EntityMobSpiderling>, world: World) :
 		private const val SLEEP_STATE_TAG = "SleepState"
 		private const val LIGHT_STARTLE_RESET_TIME_TAG = "LightStartleResetTime"
 		
-		private fun findTopBlockMaxY(world: World, pos: BlockPos): Double?{
+		private fun findTopBlockMaxY(world: World, pos: BlockPos): Double? {
 			var lastTop: Double? = null
 			
-			for(y in 0..3){
+			for(y in 0..3) {
 				val testPos = pos.up(y)
 				val testBox = testPos.getState(world).getCollisionShape(world, testPos)
 				
-				if (testBox.isEmpty){
+				if (testBox.isEmpty) {
 					return lastTop?.let { it + testPos.y - 1 }
 				}
-				else{
+				else {
 					lastTop = testBox.boundingBox.maxY
 				}
 			}
@@ -144,16 +145,16 @@ class EntityMobSpiderling(type: EntityType<EntityMobSpiderling>, world: World) :
 	
 	// Initialization
 	
-	init{
+	init {
 		stepHeight = 0F
 	}
 	
-	override fun registerData(){
+	override fun registerData() {
 		super.registerData()
 		dataManager.register(DATA_SLEEPING, true)
 	}
 	
-	override fun registerAttributes(){
+	override fun registerAttributes() {
 		super.registerAttributes()
 		
 		getAttribute(MAX_HEALTH).baseValue = rand.nextInt(11, 13).toDouble()
@@ -164,7 +165,7 @@ class EntityMobSpiderling(type: EntityType<EntityMobSpiderling>, world: World) :
 		experienceValue = 2
 	}
 	
-	override fun registerGoals(){
+	override fun registerGoals() {
 		aiMovement = AIToggle()
 		aiMovement.enabled = false
 		
@@ -181,17 +182,17 @@ class EntityMobSpiderling(type: EntityType<EntityMobSpiderling>, world: World) :
 		targetSelector.addGoal(2, TargetNearby(this, chancePerTick = 18, checkSight = true, easilyReachableOnly = false, targetPredicate = ::isPlayerNearbyForAttack), aiMovement)
 	}
 	
-	override fun createSpawnPacket(): IPacket<*>{
+	override fun createSpawnPacket(): IPacket<*> {
 		return NetworkHooks.getEntitySpawningPacket(this)
 	}
 	
 	// Behavior (General)
 	
-	override fun livingTick(){
+	override fun livingTick() {
 		super.livingTick()
 		
-		if (world.isRemote){
-			if (ticksExisted == 1){ // fix first tick body rotation delay
+		if (world.isRemote) {
+			if (ticksExisted == 1) { // fix first tick body rotation delay
 				rotationYaw = rotationYawHead
 				setRenderYawOffset(rotationYawHead)
 			}
@@ -199,66 +200,66 @@ class EntityMobSpiderling(type: EntityType<EntityMobSpiderling>, world: World) :
 			return
 		}
 		
-		if (world.isPeaceful && attackTarget != null){
+		if (world.isPeaceful && attackTarget != null) {
 			super.setAttackTarget(null)
 			lightStartleResetTime = 0L
 		}
 		
-		if (wakeUpDelayAI > 0){
-			if (--wakeUpDelayAI == 0){
+		if (wakeUpDelayAI > 0) {
+			if (--wakeUpDelayAI == 0) {
 				aiMovement.enabled = true
 			}
 		}
-		else if (wakeUpTimer > 0){
-			if (--wakeUpTimer == 0){
+		else if (wakeUpTimer > 0) {
+			if (--wakeUpTimer == 0) {
 				wakeUp(instant = false, preventSleep = false)
 			}
 		}
-		else if (ticksExisted % 4 == 0){
-			if (isSleeping){
-				if (wakeUpTimer == 0){
+		else if (ticksExisted % 4 == 0) {
+			if (isSleeping) {
+				if (wakeUpTimer == 0) {
 					val nearestPlayer = findPlayerInSight(maxDistance = 8.0, maxDiffY = 3)
 					
-					if (nearestPlayer != null){
+					if (nearestPlayer != null) {
 						onDisturbed()
 					}
 				}
 			}
-			else if (canSleepAgain && navigator.noPath() && rand.nextInt(6) == 0){
-				if (findPlayerInSight(maxDistance = 16.0, maxDiffY = 6) == null){
+			else if (canSleepAgain && navigator.noPath() && rand.nextInt(6) == 0) {
+				if (findPlayerInSight(maxDistance = 16.0, maxDiffY = 6) == null) {
 					isSleepingProp = true
 					aiMovement.enabled = false
 				}
 			}
 		}
 		
-		if (onGround){
+		if (onGround) {
 			getAttribute(ATTACK_DAMAGE).tryRemoveModifier(FALL_CRIT_DAMAGE)
 		}
 		
-		if (jumpCooldown > 0){
+		if (jumpCooldown > 0) {
 			--jumpCooldown
 		}
 		
-		if (jumpCooldown == 0 && onGround && ticksExisted % 3 == 0){
-			if (navigator.noPath()){
+		if (jumpCooldown == 0 && onGround && ticksExisted % 3 == 0) {
+			if (navigator.noPath()) {
 				jumpCooldown = 10
 			}
-			else{
+			else {
 				val start = posVec.addY(0.5)
 				val target = Vec(moveHelper.x, start.y, moveHelper.z)
 				
 				val direction = start.directionTowards(target)
 				val obstacle = world.rayTraceBlocks(RayTraceContext(start, start.add(direction.scale(3.0)), BlockMode.COLLIDER, FluidMode.NONE, this))
 				
-				if (obstacle.type == Type.BLOCK){
+				if (obstacle.type == Type.BLOCK) {
 					val topY = findTopBlockMaxY(world, obstacle.pos)
 					
-					if (topY != null){
+					if (topY != null) {
 						val diffY = (topY - posY).coerceIn(0.5, 2.5)
 						val jumpMotion = (0.514 * log10(diffY + 0.35)) + 0.416 // goes roughly from 0.38 for half a block, to 0.65 for two and a half blocks
 						
-						if (!collidedHorizontally){
+						if (!collidedHorizontally) {
 							val strafeMotionMp = 0.2 + (jumpMotion - BASE_JUMP_MOTION)
 							motion = motion.add(direction.x * strafeMotionMp, 0.0, direction.z * strafeMotionMp)
 						}
@@ -275,87 +276,87 @@ class EntityMobSpiderling(type: EntityType<EntityMobSpiderling>, world: World) :
 		}
 	}
 	
-	private fun onDisturbed(){
-		if (!isSleeping || wakeUpTimer != 0){
+	private fun onDisturbed() {
+		if (!isSleeping || wakeUpTimer != 0) {
 			return
 		}
 		
 		wakeUpTimer = 5 * rand.nextInt(1, 12)
 		
-		for(nearbySpiderling in world.selectExistingEntities.inRange<EntityMobSpiderling>(posVec, 3.5)){
-			if (nearbySpiderling !== this){
+		for(nearbySpiderling in world.selectExistingEntities.inRange<EntityMobSpiderling>(posVec, 3.5)) {
+			if (nearbySpiderling !== this) {
 				nearbySpiderling.onDisturbed()
 			}
 		}
 	}
 	
-	private fun wakeUp(instant: Boolean, preventSleep: Boolean){
-		if (isSleeping){
+	private fun wakeUp(instant: Boolean, preventSleep: Boolean) {
+		if (isSleeping) {
 			isSleepingProp = false
 			wakeUpDelayAI = if (instant) 1 else rand.nextInt(25, 40)
 			
-			if (preventSleep){
+			if (preventSleep) {
 				canSleepAgain = false
 			}
 		}
 	}
 	
-	override fun setFire(seconds: Int){
+	override fun setFire(seconds: Int) {
 		wakeUp(instant = true, preventSleep = true)
 		super.setFire(seconds)
 	}
 	
-	override fun isPotionApplicable(effect: EffectInstance): Boolean{
+	override fun isPotionApplicable(effect: EffectInstance): Boolean {
 		return effect.potion != Potions.POISON && super.isPotionApplicable(effect)
 	}
 	
 	// Behavior (Light)
 	
-	override fun onLightStartled(): Boolean{
+	override fun onLightStartled(): Boolean {
 		wakeUp(instant = false, preventSleep = true)
 		
-		if (world.totalTime < lightStartleResetTime){
+		if (world.totalTime < lightStartleResetTime) {
 			return false
 		}
 		
 		lightStartleResetTime = 0L
 		
-		if (attackTarget == null){
+		if (attackTarget == null) {
 			attackTarget = world.getClosestPlayer(this@EntityMobSpiderling, 10.0)
 		}
 		
 		return true
 	}
 	
-	override fun onDarknessReached(){
-		val peaceChance = when(world.difficulty){
+	override fun onDarknessReached() {
+		val peaceChance = when(world.difficulty) {
 			HARD   -> 0.25F
 			NORMAL -> 0.75F
 			else   -> 1F
 		}
 		
-		if (rand.nextFloat() < peaceChance){
+		if (rand.nextFloat() < peaceChance) {
 			attackTarget = null
 		}
 	}
 	
 	// Targeting
 	
-	private fun isPlayerNearbyForAttack(player: EntityPlayer): Boolean{
+	private fun isPlayerNearbyForAttack(player: EntityPlayer): Boolean {
 		return getDistanceSq(player) < square(1.75)
 	}
 	
-	private fun findPlayerInSight(maxDistance: Double, maxDiffY: Int): EntityPlayer?{
+	private fun findPlayerInSight(maxDistance: Double, maxDiffY: Int): EntityPlayer? {
 		return world.selectVulnerableEntities.inRange<EntityPlayer>(posVec, maxDistance).firstOrNull {
 			abs(posY - it.posY).roundToInt() <= maxDiffY && canEntityBeSeen(it)
 		}
 	}
 	
-	override fun setAttackTarget(newTarget: EntityLivingBase?){
-		if (!world.isPeaceful && newTarget !== attackTarget){
+	override fun setAttackTarget(newTarget: EntityLivingBase?) {
+		if (!world.isPeaceful && newTarget !== attackTarget) {
 			super.setAttackTarget(newTarget)
 			
-			if (attackTarget == null && lightStartleResetTime == 0L){
+			if (attackTarget == null && lightStartleResetTime == 0L) {
 				lightStartleResetTime = world.totalTime + (30L * 20L)
 			}
 		}
@@ -363,57 +364,57 @@ class EntityMobSpiderling(type: EntityType<EntityMobSpiderling>, world: World) :
 	
 	// Movement
 	
-	override fun createNavigator(world: World): PathNavigator{
+	override fun createNavigator(world: World): PathNavigator {
 		return PathNavigateGroundUnrestricted(this, world)
 	}
 	
-	override fun getBlockPathWeight(pos: BlockPos): Float{
+	override fun getBlockPathWeight(pos: BlockPos): Float {
 		return 25F - world.getLightFor(BLOCK, pos) - (world.getLightFor(SKY, pos) * 0.5F)
 	}
 	
-	override fun jump(){ // POLISH could improve by making the motion less smooth when starting the jump, somehow
-		if (jumpCooldown == 0){
+	override fun jump() { // POLISH could improve by making the motion less smooth when starting the jump, somehow
+		if (jumpCooldown == 0) {
 			getAttribute(ATTACK_DAMAGE).tryApplyModifier(FALL_CRIT_DAMAGE)
 			super.jump()
 		}
 	}
 	
-	override fun getJumpUpwardsMotion(): Float{
+	override fun getJumpUpwardsMotion(): Float {
 		return BASE_JUMP_MOTION
 	}
 	
-	override fun getMaxFallHeight(): Int{
+	override fun getMaxFallHeight(): Int {
 		return 256
 	}
 	
-	override fun setMotionMultiplier(state: BlockState, mp: Vec3d){
-		if (state.block !is BlockWeb){
+	override fun setMotionMultiplier(state: BlockState, mp: Vec3d) {
+		if (state.block !is BlockWeb) {
 			super.setMotionMultiplier(state, mp)
 		}
 	}
 	
 	// Damage
 	
-	override fun attackEntityFrom(source: DamageSource, amount: Float): Boolean{
-		if (source === DamageSource.FALL){
+	override fun attackEntityFrom(source: DamageSource, amount: Float): Boolean {
+		if (source === DamageSource.FALL) {
 			return false
 		}
 		
 		wakeUp(instant = true, preventSleep = true)
 		
-		if (!super.attackEntityFrom(source, if (source.isFireDamage) amount * 1.25F else amount)){
+		if (!super.attackEntityFrom(source, if (source.isFireDamage) amount * 1.25F else amount)) {
 			return false
 		}
 		
 		val player = source.trueSource as? EntityPlayer
 		
-		if (!isBeingSwept && player != null && player.getHeldItem(MAIN_HAND).item.let { it is ItemSword || it is ItemAxe }){
+		if (!isBeingSwept && player != null && player.getHeldItem(MAIN_HAND).item.let { it is ItemSword || it is ItemAxe }) {
 			val yaw = player.rotationYaw.toDouble().toRadians()
 			val xRatio = sin(yaw)
 			val zRatio = -cos(yaw)
 			
-			for(nearby in world.selectEntities.inRange<EntityMobSpiderling>(posVec, 2.0)){
-				if (nearby !== this){
+			for(nearby in world.selectEntities.inRange<EntityMobSpiderling>(posVec, 2.0)) {
+				if (nearby !== this) {
 					nearby.isBeingSwept = true
 					nearby.knockBack(player, 0.4F, xRatio, zRatio)
 					nearby.attackEntityFrom(DamageSource.causePlayerDamage(player), amount * rand.nextFloat(0.75F, 1F))
@@ -425,18 +426,18 @@ class EntityMobSpiderling(type: EntityType<EntityMobSpiderling>, world: World) :
 		return true
 	}
 	
-	override fun attackEntityAsMob(entity: Entity): Boolean{
-		if (goalSelector.runningGoals.anyMatch { it.goal is AIAttackLeap }){
+	override fun attackEntityAsMob(entity: Entity): Boolean {
+		if (goalSelector.runningGoals.anyMatch { it.goal is AIAttackLeap }) {
 			getAttribute(ATTACK_DAMAGE).tryApplyModifier(FALL_CRIT_DAMAGE)
 		}
 		
-		if (!DAMAGE_GENERAL.dealToFrom(entity, this)){
+		if (!DAMAGE_GENERAL.dealToFrom(entity, this)) {
 			return false
 		}
 		
 		canSleepAgain = false
 		
-		if (isBurning && world.difficulty >= NORMAL){
+		if (isBurning && world.difficulty >= NORMAL) {
 			entity.setFire(3)
 		}
 		
@@ -445,51 +446,51 @@ class EntityMobSpiderling(type: EntityType<EntityMobSpiderling>, world: World) :
 	
 	// Despawning
 	
-	override fun isDespawnPeaceful(): Boolean{
+	override fun isDespawnPeaceful(): Boolean {
 		return false
 	}
 	
 	// Properties
 	
-	override fun getLootTable(): ResourceLocation{
+	override fun getLootTable(): ResourceLocation {
 		return LOOT_TABLE
 	}
 	
-	override fun getExperiencePoints(player: EntityPlayer): Int{
+	override fun getExperiencePoints(player: EntityPlayer): Int {
 		return rand.nextInt(0, experienceValue)
 	}
 	
-	override fun getCreatureAttribute(): CreatureAttribute{
+	override fun getCreatureAttribute(): CreatureAttribute {
 		return CreatureAttribute.ARTHROPOD
 	}
 	
-	override fun isSleeping(): Boolean{
+	override fun isSleeping(): Boolean {
 		return isSleepingProp
 	}
 	
-	override fun playAmbientSound(){
-		if (!isSleeping && rand.nextInt(5) <= 1){
+	override fun playAmbientSound() {
+		if (!isSleeping && rand.nextInt(5) <= 1) {
 			super.playAmbientSound()
 		}
 	}
 	
-	override fun playStepSound(pos: BlockPos, state: BlockState){
+	override fun playStepSound(pos: BlockPos, state: BlockState) {
 		playSound(Sounds.ENTITY_SPIDER_STEP, 0.15F, soundPitch)
 	}
 	
-	public override fun getAmbientSound(): SoundEvent{
+	public override fun getAmbientSound(): SoundEvent {
 		return Sounds.ENTITY_SPIDER_AMBIENT
 	}
 	
-	public override fun getHurtSound(source: DamageSource): SoundEvent{
+	public override fun getHurtSound(source: DamageSource): SoundEvent {
 		return Sounds.ENTITY_SPIDER_HURT
 	}
 	
-	public override fun getDeathSound(): SoundEvent{
+	public override fun getDeathSound(): SoundEvent {
 		return Sounds.ENTITY_SPIDER_DEATH
 	}
 	
-	public override fun getSoundPitch(): Float{
+	public override fun getSoundPitch(): Float {
 		return rand.nextFloat(1.2F, 1.5F)
 	}
 	
@@ -498,10 +499,10 @@ class EntityMobSpiderling(type: EntityType<EntityMobSpiderling>, world: World) :
 	override fun writeAdditional(nbt: TagCompound) = nbt.heeTag.use {
 		super.writeAdditional(nbt)
 		
-		putInt(SLEEP_STATE_TAG, when{
-			isSleeping -> 2
+		putInt(SLEEP_STATE_TAG, when {
+			isSleeping    -> 2
 			canSleepAgain -> 1
-			else -> 0
+			else          -> 0
 		})
 		
 		putLong(LIGHT_STARTLE_RESET_TIME_TAG, lightStartleResetTime)
@@ -512,7 +513,7 @@ class EntityMobSpiderling(type: EntityType<EntityMobSpiderling>, world: World) :
 		
 		val sleepState = getInt(SLEEP_STATE_TAG)
 		
-		if (sleepState != 2){
+		if (sleepState != 2) {
 			wakeUp(instant = true, preventSleep = sleepState != 1)
 		}
 		

@@ -1,4 +1,5 @@
 package chylex.hee.commands.server
+
 import chylex.hee.commands.ICommand
 import chylex.hee.commands.executes
 import chylex.hee.commands.getInt
@@ -14,10 +15,10 @@ import net.minecraft.command.Commands.argument
 import net.minecraft.command.Commands.literal
 import net.minecraft.util.text.StringTextComponent
 
-object CommandDebugInstability : ICommand{
+object CommandDebugInstability : ICommand {
 	override val name = "instability"
 	
-	override fun register(builder: ArgumentBuilder<CommandSource, *>){
+	override fun register(builder: ArgumentBuilder<CommandSource, *>) {
 		val execModify = this::executeModify
 		val instabilityAmountArg = integer(UShort.MIN_VALUE.toInt(), UShort.MAX_VALUE.toInt())
 		
@@ -34,27 +35,27 @@ object CommandDebugInstability : ICommand{
 		)
 	}
 	
-	private fun executeCheck(ctx: CommandContext<CommandSource>): Int{
+	private fun executeCheck(ctx: CommandContext<CommandSource>): Int {
 		val instability = getInstability(ctx) ?: return 0
 		
-		with(ctx.source){
+		with(ctx.source) {
 			sendFeedback(StringTextComponent("Instability level: " + instability.getLevel(Pos(pos))), false)
 			return 1
 		}
 	}
 	
-	private fun executeModify(ctx: CommandContext<CommandSource>, add: Boolean): Int{
+	private fun executeModify(ctx: CommandContext<CommandSource>, add: Boolean): Int {
 		val instability = getInstability(ctx) ?: return 0
 		val amount = ctx.getInt("amount")
 		
-		with(ctx.source){
+		with(ctx.source) {
 			val pos = Pos(pos)
 			
-			if (add){
+			if (add) {
 				instability.resetActionMultiplier(pos)
 				instability.triggerAction(amount.toUShort(), pos)
 			}
-			else{
+			else {
 				instability.triggerRelief(amount.toUShort(), pos)
 			}
 			
@@ -63,11 +64,11 @@ object CommandDebugInstability : ICommand{
 		}
 	}
 	
-	private fun getInstability(ctx: CommandContext<CommandSource>): IDimensionInstability?{
-		with(ctx.source){
+	private fun getInstability(ctx: CommandContext<CommandSource>): IDimensionInstability? {
+		with(ctx.source) {
 			val instability = Instability.get(world)
 			
-			if (instability === DimensionInstabilityNull){
+			if (instability === DimensionInstabilityNull) {
 				sendFeedback(StringTextComponent("Invalid dimension."), false)
 				return null
 			}

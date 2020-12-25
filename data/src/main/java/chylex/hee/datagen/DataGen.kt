@@ -1,4 +1,5 @@
 package chylex.hee.datagen
+
 import chylex.hee.HEE
 import chylex.hee.datagen.client.BlockItemModels
 import chylex.hee.datagen.client.BlockModels
@@ -13,21 +14,21 @@ import net.minecraftforge.fml.common.Mod.EventBusSubscriber.Bus.MOD
 import net.minecraftforge.fml.event.lifecycle.GatherDataEvent
 
 @SubscribeAllEvents(modid = HEE.ID, bus = MOD)
-object DataGen{
+object DataGen {
 	@SubscribeEvent
-	fun register(e: GatherDataEvent){
+	fun register(e: GatherDataEvent) {
 		val modid = HEE.ID
 		val helper = e.existingFileHelper
 		
-		with(e.generator){
-			if (e.includeClient()){
+		with(e.generator) {
+			if (e.includeClient()) {
 				addProvider(BlockStates(this, modid, helper))
 				addProvider(BlockModels(this, modid, helper))
 				addProvider(BlockItemModels(this, modid, helper))
 				addProvider(ItemModels(this, modid, helper))
 			}
 			
-			if (e.includeServer()){
+			if (e.includeServer()) {
 				addProvider(BlockLootTables(this))
 				addProvider(BlockTags(this))
 				addProvider(ItemTags(this))

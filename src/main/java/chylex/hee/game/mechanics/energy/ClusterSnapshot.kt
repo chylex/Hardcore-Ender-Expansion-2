@@ -1,4 +1,5 @@
 package chylex.hee.game.mechanics.energy
+
 import chylex.hee.game.mechanics.energy.IClusterHealth.HealthOverride
 import chylex.hee.game.mechanics.energy.IClusterHealth.HealthStatus
 import chylex.hee.game.mechanics.energy.IClusterHealth.HealthStatus.HEALTHY
@@ -12,9 +13,9 @@ class ClusterSnapshot(
 	val energyCapacity: IEnergyQuantity,
 	val healthStatus: HealthStatus,
 	val healthOverride: HealthOverride?,
-	val color: ClusterColor
-){
-	private companion object{
+	val color: ClusterColor,
+) {
+	private companion object {
 		private const val ENERGY_LEVEL_TAG = "EnergyLevel"
 		private const val ENERGY_CAPACITY_TAG = "EnergyCapacity"
 		private const val HEALTH_STATUS_TAG = "HealthStatus"

@@ -1,4 +1,5 @@
 package chylex.hee.game.world.feature.tombdungeon.piece
+
 import chylex.hee.game.world.Pos
 import chylex.hee.game.world.feature.tombdungeon.connection.TombDungeonConnection
 import chylex.hee.game.world.feature.tombdungeon.connection.TombDungeonConnectionType.ROOM_ENTRANCE
@@ -17,7 +18,7 @@ import chylex.hee.system.random.nextInt
 import chylex.hee.system.random.nextItem
 import net.minecraft.util.math.BlockPos
 
-class TombDungeonRoom_Main_Maze(file: String, isFancy: Boolean) : TombDungeonRoom(file, isFancy){
+class TombDungeonRoom_Main_Maze(file: String, isFancy: Boolean) : TombDungeonRoom(file, isFancy) {
 	override val secretAttachWeight = 3
 	
 	override val connections = arrayOf<IStructurePieceConnection>(
@@ -29,7 +30,7 @@ class TombDungeonRoom_Main_Maze(file: String, isFancy: Boolean) : TombDungeonRoo
 		TombDungeonConnection(ROOM_ENTRANCE, Pos(0, 0, 6), WEST)
 	)
 	
-	override fun generate(world: IStructureWorld, instance: Instance){
+	override fun generate(world: IStructureWorld, instance: Instance) {
 		super.generate(world, instance)
 		
 		val rand = world.rand
@@ -38,27 +39,27 @@ class TombDungeonRoom_Main_Maze(file: String, isFancy: Boolean) : TombDungeonRoo
 		
 		placeCrumblingCeiling(world, instance, rand.nextInt(0, 3))
 		
-		if (rand.nextBoolean()){
+		if (rand.nextBoolean()) {
 			world.placeWalls(Pos(1, 1, 4), Pos(3, top, 4), brick)
 			world.placeWalls(Pos(5, 1, 8), Pos(7, top, 8), Air)
 		}
 		
-		if (rand.nextBoolean()){
+		if (rand.nextBoolean()) {
 			world.placeWalls(Pos(12, 1, maxZ - 3), Pos(12, top, maxZ - 1), brick)
 			world.placeWalls(Pos(4, 1, maxZ - 11), Pos(4, top, maxZ - 9), Air)
 		}
 		
-		if (rand.nextBoolean()){
+		if (rand.nextBoolean()) {
 			world.placeWalls(Pos(1, 1, 16), Pos(3, top, 16), brick)
 			world.placeWalls(Pos(16, 1, 21), Pos(16, top, 23), brick)
 			world.placeWalls(Pos(10, 1, 20), Pos(12, top, 20), Air)
 		}
 		
-		if (rand.nextBoolean()){
+		if (rand.nextBoolean()) {
 			world.placeWalls(Pos(maxX - 3, 1, 4), Pos(maxX - 1, top, 4), brick)
 		}
 		
-		if (rand.nextBoolean()){
+		if (rand.nextBoolean()) {
 			world.placeWalls(Pos(maxX - 7, 1, maxZ - 4), Pos(maxX - 5, top, maxZ - 4), brick)
 			world.placeWalls(Pos(maxX - 12, 1, maxZ - 3), Pos(maxX - 12, top, maxZ - 1), Air)
 		}
@@ -73,17 +74,17 @@ class TombDungeonRoom_Main_Maze(file: String, isFancy: Boolean) : TombDungeonRoo
 			PosXZ(maxX - 2, 19)
 		)
 		
-		repeat(rand.nextInt(2, 3)){
-			for(attempt in 1..5){
-				if (tryPlaceChest(world, instance, rand.nextItem(chestPositions).withY(1))){
+		repeat(rand.nextInt(2, 3)) {
+			for(attempt in 1..5) {
+				if (tryPlaceChest(world, instance, rand.nextItem(chestPositions).withY(1))) {
 					break
 				}
 			}
 		}
 	}
 	
-	private fun tryPlaceChest(world: IStructureWorld, instance: Instance, pos: BlockPos): Boolean{
-		if (!world.isAir(pos)){
+	private fun tryPlaceChest(world: IStructureWorld, instance: Instance, pos: BlockPos): Boolean {
+		if (!world.isAir(pos)) {
 			return false
 		}
 		

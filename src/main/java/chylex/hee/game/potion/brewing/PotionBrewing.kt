@@ -1,4 +1,5 @@
 package chylex.hee.game.potion.brewing
+
 import chylex.hee.game.potion.brewing.PotionTypeInfo.Duration
 import chylex.hee.init.ModItems
 import chylex.hee.init.ModPotions
@@ -8,7 +9,7 @@ import net.minecraft.item.ItemStack
 import net.minecraft.item.Items
 import net.minecraft.potion.PotionUtils
 
-object PotionBrewing{
+object PotionBrewing {
 	const val INFINITE_DURATION = 32767
 	const val INFINITE_DURATION_THRESHOLD = 32147 // values >= this threshold should be considered infinite
 	
@@ -71,10 +72,10 @@ object PotionBrewing{
 		Potions.BLINDNESS      to Potions.GLOWING
 	)
 	
-	fun unpack(stack: ItemStack): PotionTypeInfo.Instance?{
+	fun unpack(stack: ItemStack): PotionTypeInfo.Instance? {
 		val effects = PotionUtils.getEffectsFromStack(stack)
 		
-		if (effects.size != 1){
+		if (effects.size != 1) {
 			return null
 		}
 		
@@ -84,17 +85,17 @@ object PotionBrewing{
 		return INFO[potion]?.Instance(stack, effect)
 	}
 	
-	fun isAltered(stack: ItemStack): Boolean{
+	fun isAltered(stack: ItemStack): Boolean {
 		return unpack(stack) != null || (PotionItems.isPotion(stack) && PotionUtils.getEffectsFromStack(stack).isEmpty())
 	}
 	
 	// Utilities
 	
-	private infix fun Int.min(seconds: Int): Int{
+	private infix fun Int.min(seconds: Int): Int {
 		return ((this * 60) + seconds) * 20
 	}
 	
-	private infix fun Int.min(seconds: Double): Int{
+	private infix fun Int.min(seconds: Double): Int {
 		return (((this * 60) + seconds) * 20).floorToInt()
 	}
 }

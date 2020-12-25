@@ -1,4 +1,5 @@
 package chylex.hee.game.entity.living.behavior
+
 import chylex.hee.client.MC
 import chylex.hee.game.block.entity.TileEntitySpawnerObsidianTower
 import chylex.hee.game.entity.effect.EntityTerritoryLightningBolt
@@ -57,54 +58,54 @@ import net.minecraftforge.common.util.INBTSerializable
 import java.util.Random
 import kotlin.math.min
 
-sealed class EnderEyePhase : INBTSerializable<TagCompound>{
+sealed class EnderEyePhase : INBTSerializable<TagCompound> {
 	open fun tick(entity: EntityBossEnderEye) = this
 	
 	override fun serializeNBT() = TagCompound()
-	override fun deserializeNBT(nbt: TagCompound){}
+	override fun deserializeNBT(nbt: TagCompound) {}
 	
-	sealed class SleepingPhase : EnderEyePhase(){
+	sealed class SleepingPhase : EnderEyePhase() {
 		abstract fun wakeUp(): EnderEyePhase
 		
-		object Hibernated : SleepingPhase(){
+		object Hibernated : SleepingPhase() {
 			override fun wakeUp() = OpenEye()
 		}
 		
-		object Sleeping : SleepingPhase(){
+		object Sleeping : SleepingPhase() {
 			override fun wakeUp() = Attacking()
 		}
 	}
 	
-	class OpenEye : EnderEyePhase(){
-		private companion object{
+	class OpenEye : EnderEyePhase() {
+		private companion object {
 			private const val TIMER_TAG = "Timer"
 		}
 		
 		private var timer: Byte = 35
 		
-		override fun tick(entity: EntityBossEnderEye): EnderEyePhase{
+		override fun tick(entity: EntityBossEnderEye): EnderEyePhase {
 			--timer
 			
-			if (timer == 15.toByte()){
-				for(nearby in entity.world.selectExistingEntities.allInRange(entity.posVec, 8.0)){
-					if (nearby !== entity){
+			if (timer == 15.toByte()) {
+				for(nearby in entity.world.selectExistingEntities.allInRange(entity.posVec, 8.0)) {
+					if (nearby !== entity) {
 						entity.performBlastKnockback(nearby, 0.75F)
 					}
 				}
 				
 				Sounds.ENTITY_GENERIC_EXPLODE.playServer(entity.world, entity.posVec, SoundCategory.HOSTILE, volume = 0.5F) // TODO knockback fx
 			}
-			else if (timer < 0){
+			else if (timer < 0) {
 				val totalSpawners = entity.totalSpawners.toInt()
 				
-				if (totalSpawners == 0 || entity.dimension != DimensionType.THE_END){
+				if (totalSpawners == 0 || entity.dimension != DimensionType.THE_END) {
 					return Floating.withScreech(entity, 0)
 				}
 				
 				val instance = TerritoryInstance.fromPos(entity)
 				val territory = instance?.territory
 				
-				if (territory != TerritoryType.OBSIDIAN_TOWERS){
+				if (territory != TerritoryType.OBSIDIAN_TOWERS) {
 					return Floating.withScreech(entity, 0)
 				}
 				
@@ -117,35 +118,35 @@ sealed class EnderEyePhase : INBTSerializable<TagCompound>{
 				val glowstonePositionGroups = mutableMapOf<BlockPos, MutableList<BlockPos>>()
 				
 				for(chunkX in startChunkX until (startChunkX + chunks))
-				for(chunkZ in startChunkZ until (startChunkZ + chunks)){
+				for(chunkZ in startChunkZ until (startChunkZ + chunks)) {
 					val chunk = world.getChunk(chunkX, chunkZ)
 					
-					for((pos, tile) in chunk.tileEntityMap){
-						if (tile is TileEntitySpawnerObsidianTower){
+					for((pos, tile) in chunk.tileEntityMap) {
+						if (tile is TileEntitySpawnerObsidianTower) {
 							remainingSpawners.add(pos)
 						}
 					}
 					
 					for(entityList in chunk.entityLists)
-					for(trigger in entityList.getByClass(EntityTechnicalTrigger::class.java)){
-						if (trigger.triggerType == OBSIDIAN_TOWER_TOP_GLOWSTONE){
+					for(trigger in entityList.getByClass(EntityTechnicalTrigger::class.java)) {
+						if (trigger.triggerType == OBSIDIAN_TOWER_TOP_GLOWSTONE) {
 							val pos = Pos(trigger)
 							
 							glowstonePositions.add(pos)
 							
 							val group = glowstonePositionGroups.entries.find { it.key.distanceSqTo(pos) < square(20) }
 							
-							if (group == null){
+							if (group == null) {
 								glowstonePositionGroups[pos] = mutableListOf(pos)
 							}
-							else{
+							else {
 								group.value.add(pos)
 							}
 						}
 					}
 				}
 				
-				val percentage = when(val count = remainingSpawners.size){
+				val percentage = when(val count = remainingSpawners.size) {
 					0             -> 0
 					totalSpawners -> 100
 					else          -> 1 + ((count.toFloat() / totalSpawners) * 99F).floorToInt()
@@ -170,9 +171,9 @@ sealed class EnderEyePhase : INBTSerializable<TagCompound>{
 		private val remainingSpawnerPositions: MutableList<BlockPos>,
 		private val towerGlowstonePositions: MutableList<BlockPos>,
 		private val remainingLightningPositions: MutableList<BlockPos>,
-		private var spawnerPercentage: Byte
-	) : EnderEyePhase(){
-		private companion object{
+		private var spawnerPercentage: Byte,
+	) : EnderEyePhase() {
+		private companion object {
 			private const val TIMER_TAG = "Timer"
 			private const val SPAWNER_PERCENTAGE = "SpawnerPercentage"
 			private const val SPAWNER_POSITIONS = "SpawnerPositions"
@@ -182,60 +183,60 @@ sealed class EnderEyePhase : INBTSerializable<TagCompound>{
 		
 		private var timer: Byte = 120
 		
-		override fun tick(entity: EntityBossEnderEye): EnderEyePhase{
+		override fun tick(entity: EntityBossEnderEye): EnderEyePhase {
 			--timer
 			
-			if (timer in 30..100){
-				if (timer % 3 == 0){
+			if (timer in 30..100) {
+				if (timer % 3 == 0) {
 					val rand = entity.rng
 					
 					rand.removeItemOrNull(remainingSpawnerPositions)?.let { pos ->
 						breakSpawner(entity, pos)
 						
-						if (timer % 6 == 0 && rand.nextInt(10) < 6){
+						if (timer % 6 == 0 && rand.nextInt(10) < 6) {
 							playSpawnerBreakSound(entity)
 						}
 					}
 				}
 				
-				if ((101 - timer) % 18 == 0){
+				if ((101 - timer) % 18 == 0) {
 					entity.rng.removeItemOrNull(remainingLightningPositions)?.let {
 						EntityTerritoryLightningBolt(entity.world, it.x + 0.5, it.y.toDouble(), it.z + 0.5).spawnInTerritory()
 					}
 				}
 			}
-			else if (timer == 29.toByte()){
+			else if (timer == 29.toByte()) {
 				playSpawnerBreakSound(entity)
 				remainingSpawnerPositions.forEach { breakSpawner(entity, it) }
 				remainingSpawnerPositions.clear()
 			}
-			else if (timer < 0){
+			else if (timer < 0) {
 				return Floating.withScreech(entity, spawnerPercentage.toInt())
 			}
 			
 			return this
 		}
 		
-		private fun breakSpawner(entity: EntityBossEnderEye, pos: BlockPos){
+		private fun breakSpawner(entity: EntityBossEnderEye, pos: BlockPos) {
 			val world = entity.world
 			
-			if (pos.getTile<TileEntitySpawnerObsidianTower>(world) != null){
+			if (pos.getTile<TileEntitySpawnerObsidianTower>(world) != null) {
 				pos.breakBlock(world, drops = false)
 				
-				repeat(3){
+				repeat(3) {
 					entity.rng.nextItemOrNull(towerGlowstonePositions)?.let(entity.spawnerParticles::add)
 				}
 			}
 		}
 		
-		private fun playSpawnerBreakSound(entity: EntityBossEnderEye){
+		private fun playSpawnerBreakSound(entity: EntityBossEnderEye) {
 			val rand = entity.rng
 			
 			val (offX, offY, offZ) = rand.nextVector2(xz = rand.nextFloat(7.0, 11.0), y = rand.nextFloat(-3.0, 2.0))
 			val soundType = ModBlocks.SPAWNER_OBSIDIAN_TOWERS.defaultState.soundType
 			
-			for(player in entity.world.players){
-				if (player.getDistanceSq(entity) < square(32.0)){
+			for(player in entity.world.players) {
+				if (player.getDistanceSq(entity) < square(32.0)) {
 					soundType.breakSound.playPlayer(player, player.posX + offX, player.posY + offY, player.posZ + offZ, SoundCategory.BLOCKS, soundType.volume * 1.6F, soundType.pitch * 0.95F)
 				}
 			}
@@ -265,15 +266,15 @@ sealed class EnderEyePhase : INBTSerializable<TagCompound>{
 		}
 	}
 	
-	class Floating(remainingSpawnerPercentage: Int) : EnderEyePhase(){
-		companion object{
+	class Floating(remainingSpawnerPercentage: Int) : EnderEyePhase() {
+		companion object {
 			private const val CURRENT_TAG = "Current"
 			private const val TARGET_TAG = "Target"
 			
-			fun withScreech(entity: EntityBossEnderEye, remainingSpawnerPercentage: Int): Floating{
+			fun withScreech(entity: EntityBossEnderEye, remainingSpawnerPercentage: Int): Floating {
 				// TODO screech on first tick
 				
-				//val (sound, volume) = when(screechSpawnerPercentage){
+				//val (sound, volume) = when(screechSpawnerPercentage) {
 				//	0 ->
 				//	100 ->
 				//	else ->
@@ -281,8 +282,8 @@ sealed class EnderEyePhase : INBTSerializable<TagCompound>{
 				return Floating(remainingSpawnerPercentage)
 			}
 			
-			val FX_FINISH = object : FxEntityHandler(){
-				override fun handle(entity: Entity, rand: Random){
+			val FX_FINISH = object : FxEntityHandler() {
+				override fun handle(entity: Entity, rand: Random) {
 					val world = entity.world
 					val state = ModBlocks.OBSIDIAN_SMOOTH.defaultState
 					
@@ -291,7 +292,7 @@ sealed class EnderEyePhase : INBTSerializable<TagCompound>{
 					val h = entity.height * 0.62F
 					val pos = Pos(entity)
 					
-					repeat(35){
+					repeat(35) {
 						MC.particleManager.addEffect(DiggingParticle(world, x + rand.nextFloat(-w, w), y + rand.nextFloat(-h, h), z + rand.nextFloat(-w, w), 0.0, 0.0, 0.0, state).setBlockPos(pos))
 					}
 					
@@ -303,8 +304,8 @@ sealed class EnderEyePhase : INBTSerializable<TagCompound>{
 		private var animatedSpawnerPercentage = -15F
 		private var targetSpawnerPercentage = remainingSpawnerPercentage.toFloat()
 		
-		override fun tick(entity: EntityBossEnderEye): EnderEyePhase{
-			if (animatedSpawnerPercentage < targetSpawnerPercentage){
+		override fun tick(entity: EntityBossEnderEye): EnderEyePhase {
+			if (animatedSpawnerPercentage < targetSpawnerPercentage) {
 				animatedSpawnerPercentage = min(animatedSpawnerPercentage + 0.55F, targetSpawnerPercentage)
 			}
 			
@@ -315,8 +316,8 @@ sealed class EnderEyePhase : INBTSerializable<TagCompound>{
 			entity.health = 150F + min(150F, 150F * 1.06F * currentPercentageFloat)
 			
 			val prevDemonLevel = entity.demonLevel
-			val newDemonLevel = when(currentPercentage){
-				100 -> EntityBossEnderEye.DEMON_EYE_LEVEL
+			val newDemonLevel = when(currentPercentage) {
+				      100 -> EntityBossEnderEye.DEMON_EYE_LEVEL
 				in 78..99 -> 5
 				in 57..77 -> 4
 				in 37..56 -> 3
@@ -325,13 +326,13 @@ sealed class EnderEyePhase : INBTSerializable<TagCompound>{
 				else      -> 0
 			}.toByte()
 			
-			if (newDemonLevel != prevDemonLevel){
+			if (newDemonLevel != prevDemonLevel) {
 				entity.updateDemonLevel(newDemonLevel)
 				Sounds.BLOCK_ANVIL_PLACE.playServer(entity.world, entity.posVec, SoundCategory.HOSTILE, volume = 0.3F, pitch = 0.5F + (newDemonLevel * 0.15F))
 				// TODO custom sound
 			}
 			
-			if (animatedSpawnerPercentage >= targetSpawnerPercentage){
+			if (animatedSpawnerPercentage >= targetSpawnerPercentage) {
 				entity.realMaxHealth = entity.health
 				entity.motionY = 0.0
 				PacketClientFX(FX_FINISH, FxEntityData(entity)).sendToAllAround(entity, 32.0)
@@ -339,20 +340,20 @@ sealed class EnderEyePhase : INBTSerializable<TagCompound>{
 				val world = entity.world
 				val pos = Pos(entity)
 				
-				for(yOffset in 1..5){
+				for(yOffset in 1..5) {
 					val obsidianPos = pos.down(yOffset)
 					
-					if (obsidianPos.isAir(world)){
+					if (obsidianPos.isAir(world)) {
 						continue
 					}
 					
-					if (obsidianPos.getBlock(world) === ModBlocks.OBSIDIAN_TOWER_TOP){
+					if (obsidianPos.getBlock(world) === ModBlocks.OBSIDIAN_TOWER_TOP) {
 						obsidianPos.breakBlock(world, false)
 					}
 					
 					val ladderPos = obsidianPos.down().offset(entity.horizontalFacing, 7)
 					
-					if (ladderPos.getBlock(world) === Blocks.LADDER){
+					if (ladderPos.getBlock(world) === Blocks.LADDER) {
 						ladderPos.setBlock(world, Blocks.OBSIDIAN)
 					}
 					
@@ -376,28 +377,28 @@ sealed class EnderEyePhase : INBTSerializable<TagCompound>{
 		}
 	}
 	
-	class Staring : EnderEyePhase(){
+	class Staring : EnderEyePhase() {
 		private var timer = 55
 		private var slerpProgress = 0F
 		
 		private lateinit var startRot: Quaternion
 		private lateinit var targetRot: Quaternion
 		
-		override fun tick(entity: EntityBossEnderEye): EnderEyePhase{
+		override fun tick(entity: EntityBossEnderEye): EnderEyePhase {
 			val target = entity.attackTarget ?: entity.forceFindNewTarget()
 			
-			if (target == null || --timer < 0){
+			if (target == null || --timer < 0) {
 				return Attacking()
 			}
 			
-			if (!::startRot.isInitialized){
+			if (!::startRot.isInitialized) {
 				startRot = Quaternion.fromYawPitch(entity.rotationYawHead, entity.rotationPitch)
 			}
 			
-			if (timer < 50){
+			if (timer < 50) {
 				targetRot = entity.lookPosVec.directionTowards(target.lookPosVec).let { Quaternion.fromYawPitch(it.toYaw(), it.toPitch()) }
 				
-				if (slerpProgress < 1F){
+				if (slerpProgress < 1F) {
 					slerpProgress += 0.025F
 				}
 				
@@ -410,17 +411,17 @@ sealed class EnderEyePhase : INBTSerializable<TagCompound>{
 		}
 	}
 	
-	class Attacking : EnderEyePhase(){
+	class Attacking : EnderEyePhase() {
 		private val defaultAttack = Melee()
 		
 		var currentAttack: EnderEyeAttack = defaultAttack
 		
-		override fun tick(entity: EntityBossEnderEye): EnderEyePhase{
-			if (!currentAttack.tick(entity)){
-				if (currentAttack === defaultAttack){
+		override fun tick(entity: EntityBossEnderEye): EnderEyePhase {
+			if (!currentAttack.tick(entity)) {
+				if (currentAttack === defaultAttack) {
 					currentAttack = LaserEye()
 				}
-				else{
+				else {
 					currentAttack = defaultAttack.also { it.reset(entity) }
 				}
 			}

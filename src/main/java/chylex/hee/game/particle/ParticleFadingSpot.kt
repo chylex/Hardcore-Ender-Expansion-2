@@ -1,4 +1,5 @@
 package chylex.hee.game.particle
+
 import chylex.hee.game.particle.base.ParticleBaseFloating
 import chylex.hee.game.particle.data.ParticleDataColorLifespanScale
 import chylex.hee.game.particle.spawner.IParticleMaker
@@ -12,44 +13,44 @@ import net.minecraft.client.particle.IParticleRenderType.PARTICLE_SHEET_TRANSLUC
 import net.minecraft.client.particle.Particle
 import net.minecraft.world.World
 
-object ParticleFadingSpot : IParticleMaker.WithData<ParticleDataColorLifespanScale>(){
+object ParticleFadingSpot : IParticleMaker.WithData<ParticleDataColorLifespanScale>() {
 	@Sided(Side.CLIENT)
-	override fun create(world: World, posX: Double, posY: Double, posZ: Double, motX: Double, motY: Double, motZ: Double, data: ParticleDataColorLifespanScale?): Particle{
+	override fun create(world: World, posX: Double, posY: Double, posZ: Double, motX: Double, motY: Double, motZ: Double, data: ParticleDataColorLifespanScale?): Particle {
 		return Instance(world, posX, posY, posZ, motX, motY, motZ, data)
 	}
 	
 	fun Data(
 		color: IRandomColor,
 		lifespan: IntRange,
-		scale: ClosedFloatingPointRange<Float>
+		scale: ClosedFloatingPointRange<Float>,
 	) = ParticleDataColorLifespanScale.Generator(color, lifespan, scale)
 	
 	fun Data(
 		color: IntColor,
 		lifespan: IntRange,
-		scale: ClosedFloatingPointRange<Float>
+		scale: ClosedFloatingPointRange<Float>,
 	) = ParticleDataColorLifespanScale.Generator(IRandomColor.Static(color), lifespan, scale)
 	
 	fun Data(
 		color: IntColor,
 		lifespan: Int,
-		scale: Float
+		scale: Float,
 	) = ParticleDataColorLifespanScale.Generator(IRandomColor.Static(color), lifespan..lifespan, scale..scale)
 	
 	@Sided(Side.CLIENT)
-	private class Instance(world: World, posX: Double, posY: Double, posZ: Double, motX: Double, motY: Double, motZ: Double, data: ParticleDataColorLifespanScale?) : ParticleBaseFloating(world, posX, posY, posZ, motX, motY, motZ){
+	private class Instance(world: World, posX: Double, posY: Double, posZ: Double, motX: Double, motY: Double, motZ: Double, data: ParticleDataColorLifespanScale?) : ParticleBaseFloating(world, posX, posY, posZ, motX, motY, motZ) {
 		private val alphaPerTick: Float
 		private val scalePerTick: Float
 		
-		init{
+		init {
 			selectSpriteRandomly(ParticleFadingSpot.sprite)
 			
-			if (data == null){
+			if (data == null) {
 				alphaPerTick = 0F
 				scalePerTick = 0F
 				setExpired()
 			}
-			else{
+			else {
 				loadColor(data.color)
 				particleScale = data.scale
 				
@@ -60,14 +61,14 @@ object ParticleFadingSpot : IParticleMaker.WithData<ParticleDataColorLifespanSca
 			}
 		}
 		
-		override fun tick(){
+		override fun tick() {
 			super.tick()
 			
 			particleAlpha -= alphaPerTick
 			particleScale -= scalePerTick
 		}
 		
-		override fun getRenderType(): IParticleRenderType{
+		override fun getRenderType(): IParticleRenderType {
 			return PARTICLE_SHEET_TRANSLUCENT
 		}
 	}

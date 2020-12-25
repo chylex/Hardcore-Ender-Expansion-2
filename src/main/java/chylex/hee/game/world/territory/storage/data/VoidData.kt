@@ -1,4 +1,5 @@
 package chylex.hee.game.world.territory.storage.data
+
 import chylex.hee.game.world.territory.TerritoryVoid
 import chylex.hee.game.world.territory.storage.TerritoryStorageComponent
 import chylex.hee.system.delegate.NotifyOnChange
@@ -8,8 +9,8 @@ import chylex.hee.system.serialization.getLongOrNull
 import chylex.hee.system.serialization.use
 import kotlin.math.min
 
-class VoidData(markDirty : () -> Unit) : TerritoryStorageComponent(){
-	private companion object{
+class VoidData(markDirty: () -> Unit) : TerritoryStorageComponent() {
+	private companion object {
 		private const val FACTOR_TAG = "Factor"
 		private const val IS_CORRUPTING_TAG = "IsCorrupting"
 		private const val LAST_CORRUPTION_TIME = "LastCorruptionTime"
@@ -27,8 +28,8 @@ class VoidData(markDirty : () -> Unit) : TerritoryStorageComponent(){
 	
 	private var lastCorruptionTime = Long.MIN_VALUE
 	
-	fun startCorrupting(): Boolean{
-		if (isCorrupting){
+	fun startCorrupting(): Boolean {
+		if (isCorrupting) {
 			return false
 		}
 		
@@ -37,14 +38,14 @@ class VoidData(markDirty : () -> Unit) : TerritoryStorageComponent(){
 		return true
 	}
 	
-	fun onCorruptionTick(currentTime: Long){
-		if (lastCorruptionTime != Long.MIN_VALUE){
+	fun onCorruptionTick(currentTime: Long) {
+		if (lastCorruptionTime != Long.MIN_VALUE) {
 			val timeDifference = currentTime - lastCorruptionTime
 			
 			// if the data has not been updated for longer than one tick,
 			// it means no players have been in the territory so we catch up
 			
-			if (timeDifference > 1L){
+			if (timeDifference > 1L) {
 				voidFactor = min(voidFactor + CORRUPTION_PER_TICK_EMPTY * (timeDifference - 1L), TerritoryVoid.RARE_TERRITORY_MAX_CORRUPTION_FACTOR)
 			}
 		}
@@ -54,11 +55,11 @@ class VoidData(markDirty : () -> Unit) : TerritoryStorageComponent(){
 	}
 	
 	override fun serializeNBT() = TagCompound().apply {
-		if (voidFactor != TerritoryVoid.OUTSIDE_VOID_FACTOR){
+		if (voidFactor != TerritoryVoid.OUTSIDE_VOID_FACTOR) {
 			putFloat(FACTOR_TAG, voidFactor)
 		}
 		
-		if (isCorrupting){
+		if (isCorrupting) {
 			putBoolean(IS_CORRUPTING_TAG, true)
 			putLong(LAST_CORRUPTION_TIME, lastCorruptionTime)
 		}

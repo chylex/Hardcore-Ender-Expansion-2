@@ -1,4 +1,5 @@
 package chylex.hee.game.entity.living
+
 import chylex.hee.HEE
 import chylex.hee.game.entity.living.ai.AITargetEyeContact
 import chylex.hee.game.entity.living.ai.AIToggle
@@ -68,11 +69,11 @@ import kotlin.math.abs
 import kotlin.math.min
 import kotlin.math.pow
 
-class EntityMobEnderman(type: EntityType<EntityMobEnderman>, world: World) : EntityMobAbstractEnderman(type, world){
+class EntityMobEnderman(type: EntityType<EntityMobEnderman>, world: World) : EntityMobAbstractEnderman(type, world) {
 	constructor(world: World) : this(ModEntities.ENDERMAN, world)
 	
 	@SubscribeAllEvents(modid = HEE.ID)
-	companion object{
+	companion object {
 		private const val TELEPORT_HANDLER_TAG = "Teleport"
 		private const val WATER_HANDLER_TAG = "Water"
 		private const val CAN_PICK_UP_BLOCKS_TAG = "CanPickUpBlocks"
@@ -100,14 +101,14 @@ class EntityMobEnderman(type: EntityType<EntityMobEnderman>, world: World) : Ent
 		// Projectile event
 		
 		@SubscribeEvent
-		fun onProjectileImpact(e: ProjectileImpactEvent){
+		fun onProjectileImpact(e: ProjectileImpactEvent) {
 			val enderman = (e.rayTraceResult as? EntityRayTraceResult)?.entity
 			
-			if (enderman !is EntityMobEnderman){
+			if (enderman !is EntityMobEnderman) {
 				return
 			}
 			
-			if (enderman.world.isRemote){
+			if (enderman.world.isRemote) {
 				e.isCanceled = true // stops arrows from bouncing off (and other projectiles from reacting to the canceled hit)
 				return
 			}
@@ -115,7 +116,7 @@ class EntityMobEnderman(type: EntityType<EntityMobEnderman>, world: World) : Ent
 			val projectile = e.entity
 			val tp = enderman.teleportHandler
 			
-			e.isCanceled = when(projectile){
+			e.isCanceled = when(projectile) {
 				is EntityPotion ->
 					tp.teleportRandom(TELEPORT_RANGE_AVOID_BATTLE)
 				
@@ -129,35 +130,35 @@ class EntityMobEnderman(type: EntityType<EntityMobEnderman>, world: World) : Ent
 					tp.teleportRandom(TELEPORT_RANGE_AVOID_BATTLE)
 			}
 			
-			enderman.revengeTarget = when(projectile){
+			enderman.revengeTarget = when(projectile) {
 				is EntityThrowable -> projectile.thrower
-				is EntityArrow -> projectile.shooter as? EntityLivingBase
-				else -> return
+				is EntityArrow     -> projectile.shooter as? EntityLivingBase
+				else               -> return
 			}
 		}
 		
 		// Biome spawns
 		
-		private fun isBiomeBlacklisted(biome: Biome): Boolean{
+		private fun isBiomeBlacklisted(biome: Biome): Boolean {
 			return biome.category.let { it == Category.NETHER || it == Category.THEEND }
 		}
 		
-		private fun isEndermanEntry(entry: SpawnListEntry): Boolean{
+		private fun isEndermanEntry(entry: SpawnListEntry): Boolean {
 			return entry.entityType == EntityType.ENDERMAN
 		}
 		
-		fun setupBiomeSpawns(){
-			for(biome in ForgeRegistries.BIOMES){
+		fun setupBiomeSpawns() {
+			for(biome in ForgeRegistries.BIOMES) {
 				val monsters = biome.getSpawns(MONSTER)
 				
-				if (isBiomeBlacklisted(biome)){
+				if (isBiomeBlacklisted(biome)) {
 					monsters.removeAll(::isEndermanEntry)
 				}
-				else{
+				else {
 					val totalWeight = monsters.sumBy { it.itemWeight }                              // default 515
 					val endermanWeight = monsters.filter(::isEndermanEntry).sumBy { it.itemWeight } // default 10
 					
-					if (endermanWeight > 0){
+					if (endermanWeight > 0) {
 						val newSingleWeight = (2 * endermanWeight) + (totalWeight / 20) // should be about 45 for most biomes
 						val newGroupWeight = (2 * endermanWeight) / 3                   // should be about 4 for most biomes
 						
@@ -171,23 +172,23 @@ class EntityMobEnderman(type: EntityType<EntityMobEnderman>, world: World) : Ent
 		
 		// Spawn conditions
 		
-		fun canSpawnAt(type: EntityType<out EntityLiving>, world: IWorld, reason: SpawnReason, pos: BlockPos, rand: Random): Boolean{
+		fun canSpawnAt(type: EntityType<out EntityLiving>, world: IWorld, reason: SpawnReason, pos: BlockPos, rand: Random): Boolean {
 			return world.difficulty != Difficulty.PEACEFUL && checkSpawnLightLevel(world, pos, rand) && canSpawnOn(type, world, reason, pos, rand)
 		}
 		
-		private fun checkSpawnLightLevel(world: IWorld, pos: BlockPos, rand: Random): Boolean{
-			if (world.world.isRainingAt(pos)){
+		private fun checkSpawnLightLevel(world: IWorld, pos: BlockPos, rand: Random): Boolean {
+			if (world.world.isRainingAt(pos)) {
 				return false
 			}
 			
-			if (world.getLightFor(BLOCK, pos) >= rand.nextInt(4, 8)){
+			if (world.getLightFor(BLOCK, pos) >= rand.nextInt(4, 8)) {
 				return false
 			}
 			
 			return !world.dimension.isSurfaceWorld || checkSkylightLevel(world, rand)
 		}
 		
-		private fun checkSkylightLevel(world: IWorld, rand: Random): Boolean{
+		private fun checkSkylightLevel(world: IWorld, rand: Random): Boolean {
 			val skylight = world.skylightSubtracted // goes from 0 (day) to 11 (night)
 			val endermen = world.selectEntities.inDimension<EntityMobEnderman>().size
 			
@@ -216,7 +217,7 @@ class EntityMobEnderman(type: EntityType<EntityMobEnderman>, world: World) : Ent
 	private var wasFirstKill = false
 	
 	override val teleportCooldown
-		get() = when(trackedCausatumStage){
+		get() = when(trackedCausatumStage) {
 			null       -> rand.nextInt(20 * 5, 20 * 10)
 			S0_INITIAL -> rand.nextInt(20 * 7, 20 *  8)
 			else       -> rand.nextInt(20 * 4, 20 *  5)
@@ -224,7 +225,7 @@ class EntityMobEnderman(type: EntityType<EntityMobEnderman>, world: World) : Ent
 	
 	// Initialization
 	
-	override fun registerAttributes(){
+	override fun registerAttributes() {
 		super.registerAttributes()
 		
 		getAttribute(MAX_HEALTH).baseValue = 40.0
@@ -234,7 +235,7 @@ class EntityMobEnderman(type: EntityType<EntityMobEnderman>, world: World) : Ent
 		experienceValue = 10
 	}
 	
-	override fun registerGoals(){
+	override fun registerGoals() {
 		teleportHandler = EndermanTeleportHandler(this)
 		waterHandler = EndermanWaterHandler(this, takeDamageAfterWetTicks = 80)
 		blockHandler = EndermanBlockHandler(this)
@@ -259,47 +260,47 @@ class EntityMobEnderman(type: EntityType<EntityMobEnderman>, world: World) : Ent
 	
 	// Behavior
 	
-	override fun livingTick(){
+	override fun livingTick() {
 		super.livingTick()
 		
-		if (!world.isRemote){
+		if (!world.isRemote) {
 			teleportHandler.update()
 			waterHandler.update()
 			
-			if (heldBlockTimer > 0 && --heldBlockTimer == 0.toShort()){
-				if (heldBlockDespawns || !blockHandler.tryPlaceBlock(allowPlayerProximity = false)){
+			if (heldBlockTimer > 0 && --heldBlockTimer == 0.toShort()) {
+				if (heldBlockDespawns || !blockHandler.tryPlaceBlock(allowPlayerProximity = false)) {
 					teleportHandler.teleportOutOfWorld(force = rand.nextBoolean())
 				}
 			}
 			
-			if (idleTime > 150 && ticksExisted % 15 == 0){
+			if (idleTime > 150 && ticksExisted % 15 == 0) {
 				var despawnChance = 300
 				despawnChance -= 15 * (11 - world.skylightSubtracted) // skylightSubtracted goes from 0 (day) to 11 (night)
 				despawnChance -= if (heldBlockState != null) 75 else 0
 				despawnChance /= if (isWet) 8 else 1
 				
-				if (rand.nextInt(despawnChance) == 0){
+				if (rand.nextInt(despawnChance) == 0) {
 					teleportHandler.teleportOutOfWorld()
 				}
 			}
 			
-			if (attackTarget != null && !aiAttackTarget.enabled && !aiWatchTargetInShock.isWatching){
+			if (attackTarget != null && !aiAttackTarget.enabled && !aiWatchTargetInShock.isWatching) {
 				attackTarget = null
 			}
 			
-			if (teleportAfterStare){
-				if (!aiWatchTargetInShock.isWatching){
+			if (teleportAfterStare) {
+				if (!aiWatchTargetInShock.isWatching) {
 					teleportAfterStare = false
 					
-					if (rand.nextFloat() < teleportAfterStareDelayedChance){
+					if (rand.nextFloat() < teleportAfterStareDelayedChance) {
 						teleportHandler.teleportDelayed(rand.nextInt(20, 50), ::teleportBehindTarget)
 					}
-					else{
+					else {
 						teleportBehindTarget()
 					}
 				}
 			}
-			else if (idleTime > 50 && teleportHandler.checkCooldownSilent() && rand.nextInt(300) == 0){
+			else if (idleTime > 50 && teleportHandler.checkCooldownSilent() && rand.nextInt(300) == 0) {
 				val xzDistance = if (attackTarget == null)
 					TELEPORT_RANGE_RANDOM_IDLE
 				else
@@ -310,21 +311,21 @@ class EntityMobEnderman(type: EntityType<EntityMobEnderman>, world: World) : Ent
 		}
 	}
 	
-	override fun notifyDataManagerChange(key: DataParameter<*>){
+	override fun notifyDataManagerChange(key: DataParameter<*>) {
 		super.notifyDataManagerChange(key)
 		
-		if (key === SCREAMING && world.isRemote && isAggro){
+		if (key === SCREAMING && world.isRemote && isAggro) {
 			// TODO sound fx
 		}
 	}
 	
-	override fun setHeldBlockState(state: BlockState?){
+	override fun setHeldBlockState(state: BlockState?) {
 		super.setHeldBlockState(state)
 		
-		if (state == null){
+		if (state == null) {
 			heldBlockTimer = 0
 		}
-		else{
+		else {
 			val seconds = rand.nextInt(5, 45)
 			
 			heldBlockTimer = (20 * seconds).toShort()
@@ -334,57 +335,57 @@ class EntityMobEnderman(type: EntityType<EntityMobEnderman>, world: World) : Ent
 	
 	// Battle (Interactions)
 	
-	private fun canTriggerEyeContact(target: EntityPlayer): Boolean{
-		return when(EnderCausatum.getStage(target)){
+	private fun canTriggerEyeContact(target: EntityPlayer): Boolean {
+		return when(EnderCausatum.getStage(target)) {
 			S0_INITIAL -> getDistanceSq(target) <= square(32)
-			else -> true
+			else       -> true
 		}
 	}
 	
-	private fun beginStare(durationTicks: Int){
+	private fun beginStare(durationTicks: Int) {
 		aiWatchTargetInShock.startWatching(durationTicks)
 		aiWatchTargetInShock.tick() // forces look update for teleportation
 		idleTime = 0
 	}
 	
-	private fun beginDeathStare(delayedTeleportChance: Float){
+	private fun beginDeathStare(delayedTeleportChance: Float) {
 		beginStare(rand.nextInt(35, 55))
 		teleportAfterStare = true
 		teleportAfterStareDelayedChance = delayedTeleportChance
 	}
 	
-	private fun beginScaredStare(){
+	private fun beginScaredStare() {
 		beginStare(rand.nextInt(120, 200))
 	}
 	
-	private fun forceDropHeldBlock(){
-		if (!blockHandler.tryPlaceBlock(allowPlayerProximity = true)){
+	private fun forceDropHeldBlock() {
+		if (!blockHandler.tryPlaceBlock(allowPlayerProximity = true)) {
 			blockHandler.dropBlockAsItem()
 		}
 	}
 	
-	private fun teleportBehindTarget(): Boolean{
+	private fun teleportBehindTarget(): Boolean {
 		forceDropHeldBlock()
 		return attackTarget?.let { teleportHandler.teleportAround(it, (-80F)..(80F), (-7.0)..(-2.0)) } ?: false
 	}
 	
 	// Battle (Targeting)
 	
-	override fun setAttackTarget(newTarget: EntityLivingBase?){
-		if (attackTarget === newTarget){
+	override fun setAttackTarget(newTarget: EntityLivingBase?) {
+		if (attackTarget === newTarget) {
 			return
 		}
 		
-		if (newTarget == null){
+		if (newTarget == null) {
 			super.setAttackTarget(null)
 			trackedCausatumStage = null
 			isAggro = false
 		}
-		else if (newTarget is EntityPlayer){
+		else if (newTarget is EntityPlayer) {
 			val currentStage = trackedCausatumStage
 			val newTargetStage = EnderCausatum.getStage(newTarget)
 			
-			if (currentStage == null && newTargetStage == S0_INITIAL && teleportHandler.teleportRandom(TELEPORT_RANGE_AVOID_BATTLE)){
+			if (currentStage == null && newTargetStage == S0_INITIAL && teleportHandler.teleportRandom(TELEPORT_RANGE_AVOID_BATTLE)) {
 				return
 			}
 			
@@ -392,19 +393,19 @@ class EntityMobEnderman(type: EntityType<EntityMobEnderman>, world: World) : Ent
 			
 			trackedCausatumStage = maxOf(newTargetStage, currentStage ?: newTargetStage)
 			
-			if (trackedCausatumStage == S0_INITIAL){
+			if (trackedCausatumStage == S0_INITIAL) {
 				aiAttackTarget.enabled = false
 			}
-			else{
+			else {
 				aiAttackTarget.enabled = true
 				isAggro = true
 			}
 			
-			if (targetSelector.runningGoals.anyMatch { it.goal is AITargetEyeContact<*> }){
-				if (trackedCausatumStage == S0_INITIAL){
+			if (targetSelector.runningGoals.anyMatch { it.goal is AITargetEyeContact<*> }) {
+				if (trackedCausatumStage == S0_INITIAL) {
 					beginScaredStare()
 				}
-				else{
+				else {
 					beginDeathStare(0.4F)
 				}
 			}
@@ -413,8 +414,8 @@ class EntityMobEnderman(type: EntityType<EntityMobEnderman>, world: World) : Ent
 		}
 	}
 	
-	override fun setRevengeTarget(entity: EntityLivingBase?){
-		if (attackTarget == null && entity is EntityPlayer && rng.nextInt(4) == 0 && canEntityBeSeen(entity) && getDistanceSq(entity) < square(32)){
+	override fun setRevengeTarget(entity: EntityLivingBase?) {
+		if (attackTarget == null && entity is EntityPlayer && rng.nextInt(4) == 0 && canEntityBeSeen(entity) && getDistanceSq(entity) < square(32)) {
 			attackTarget = entity
 			beginDeathStare(0.85F)
 		}
@@ -422,52 +423,52 @@ class EntityMobEnderman(type: EntityType<EntityMobEnderman>, world: World) : Ent
 	
 	// Battle (Damage)
 	
-	override fun attackEntityFrom(source: DamageSource, amount: Float): Boolean{
-		if (!world.isRemote){
+	override fun attackEntityFrom(source: DamageSource, amount: Float): Boolean {
+		if (!world.isRemote) {
 			val attacker = source.immediateSource as? EntityPlayer
 			
-			if (attacker != null){
-				if (trackedCausatumStage == S0_INITIAL || EnderCausatum.getStage(attacker) == S0_INITIAL){
+			if (attacker != null) {
+				if (trackedCausatumStage == S0_INITIAL || EnderCausatum.getStage(attacker) == S0_INITIAL) {
 					trackedCausatumStage = S0_INITIAL // prevents teleport from setting attackTarget
 					attackTarget = attacker
 					beginScaredStare()
 					forceDropHeldBlock()
 					
-					if (teleportHandler.teleportRandom(TELEPORT_RANGE_AVOID_BATTLE)){
+					if (teleportHandler.teleportRandom(TELEPORT_RANGE_AVOID_BATTLE)) {
 						return false
 					}
 				}
-				else if (attackTarget == null){
+				else if (attackTarget == null) {
 					attackTarget = attacker
 					forceDropHeldBlock()
 					
-					if (teleportHandler.teleportDelayed(rand.nextInt(25, 55), ::teleportBehindTarget)){
+					if (teleportHandler.teleportDelayed(rand.nextInt(25, 55), ::teleportBehindTarget)) {
 						return false
 					}
 				}
 			}
 		}
 		
-		if (!super.attackEntityFrom(source, amount)){
+		if (!super.attackEntityFrom(source, amount)) {
 			return false
 		}
 		
-		if (trackedCausatumStage == S0_INITIAL){
+		if (trackedCausatumStage == S0_INITIAL) {
 			beginScaredStare()
 		}
-		else{
+		else {
 			aiWatchTargetInShock.stopWatching()
 		}
 		
-		if (TELEPORT_AFTER_DAMAGE.contains(source)){
-			if (health < rand.nextFloat(6F, 12F) || !teleportHandler.teleportRandom(TELEPORT_RANGE_AVOID_BATTLE)){
+		if (TELEPORT_AFTER_DAMAGE.contains(source)) {
+			if (health < rand.nextFloat(6F, 12F) || !teleportHandler.teleportRandom(TELEPORT_RANGE_AVOID_BATTLE)) {
 				teleportHandler.teleportOutOfWorld()
 			}
 		}
-		else if (source is IndirectEntityDamageSource){
+		else if (source is IndirectEntityDamageSource) {
 			teleportHandler.teleportRandom(TELEPORT_RANGE_AVOID_BATTLE)
 			
-			if (revengeTarget == null){
+			if (revengeTarget == null) {
 				revengeTarget = source.trueSource as? EntityLivingBase
 			}
 		}
@@ -475,19 +476,19 @@ class EntityMobEnderman(type: EntityType<EntityMobEnderman>, world: World) : Ent
 		return true
 	}
 	
-	override fun onDeath(cause: DamageSource){
-		if (dead){
+	override fun onDeath(cause: DamageSource) {
+		if (dead) {
 			return
 		}
 		
 		val attacker = cause.trueSource as? EntityPlayer ?: attackingPlayer
 		
-		if (attacker != null){
-			if (EnderCausatum.triggerStage(attacker, CausatumStage.S1_KILLED_ENDERMAN)){
+		if (attacker != null) {
+			if (EnderCausatum.triggerStage(attacker, CausatumStage.S1_KILLED_ENDERMAN)) {
 				// TODO achievement after the event finishes & compendium
 				
-				for(player in world.selectEntities.inRange<EntityPlayer>(posVec, 32.0)){
-					if (player !== attacker && abs(player.posY - posY) < 8.0){
+				for(player in world.selectEntities.inRange<EntityPlayer>(posVec, 32.0)) {
+					if (player !== attacker && abs(player.posY - posY) < 8.0) {
 						EnderCausatum.triggerStage(player, CausatumStage.S1_KILLED_ENDERMAN)
 					}
 				}
@@ -501,7 +502,7 @@ class EntityMobEnderman(type: EntityType<EntityMobEnderman>, world: World) : Ent
 				
 				wasFirstKill = true
 			}
-			else{
+			else {
 				// TODO achievement
 			}
 		}
@@ -511,17 +512,17 @@ class EntityMobEnderman(type: EntityType<EntityMobEnderman>, world: World) : Ent
 	
 	// Spawning & despawning
 	
-	override fun getBlockPathWeight(pos: BlockPos): Float{
+	override fun getBlockPathWeight(pos: BlockPos): Float {
 		return 1F
 	}
 	
-	override fun canDespawn(distanceToClosestPlayerSq: Double): Boolean{
+	override fun canDespawn(distanceToClosestPlayerSq: Double): Boolean {
 		return super.canDespawn(distanceToClosestPlayerSq) && !teleportHandler.preventDespawn
 	}
 	
 	// Properties
 	
-	override fun getLootTable(): ResourceLocation{
+	override fun getLootTable(): ResourceLocation {
 		return if (wasFirstKill)
 			Resource.Custom("entities/enderman_first_kill")
 		else

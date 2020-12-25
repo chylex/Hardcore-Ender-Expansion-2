@@ -1,11 +1,12 @@
 package chylex.hee.game.mechanics.instability.region.entry.types
+
 import chylex.hee.game.mechanics.instability.region.entry.IRegionEntry
 import chylex.hee.game.mechanics.instability.region.entry.IRegionEntryConstructor
 import chylex.hee.system.math.shlong
 import net.minecraft.util.math.BlockPos
 
-inline class Entry5x5(override val compacted: Long) : IRegionEntry{
-	private companion object{
+inline class Entry5x5(override val compacted: Long) : IRegionEntry {
+	private companion object {
 		private const val MASK_X = 0x00000_FFFFFL
 		private const val MASK_Z = 0xFFFFF_00000L
 		private const val MASK_XZ = MASK_X or MASK_Z
@@ -20,14 +21,14 @@ inline class Entry5x5(override val compacted: Long) : IRegionEntry{
 		
 		// methods must be public, otherwise some weird interaction between them and inline classes generates invalid bytecode
 		
-		fun fromRegion(regionX: Int, regionZ: Int): Entry5x5{
+		fun fromRegion(regionX: Int, regionZ: Int): Entry5x5 {
 			val bitsX = (regionX shlong BIT_OFFSET_X) and MASK_X
 			val bitsZ = (regionZ shlong BIT_OFFSET_Z) and MASK_Z
 			
 			return Entry5x5(bitsX or bitsZ)
 		}
 		
-		fun fixNegativeCoord(coord: Int): Int{
+		fun fixNegativeCoord(coord: Int): Int {
 			return if (coord > 0x7FFFF)
 				-(0xFFFFF - coord)
 			else
@@ -35,12 +36,12 @@ inline class Entry5x5(override val compacted: Long) : IRegionEntry{
 		}
 	}
 	
-	object Constructor : IRegionEntryConstructor<Entry5x5>{
-		override fun fromCompacted(compacted: Long): Entry5x5{
+	object Constructor : IRegionEntryConstructor<Entry5x5> {
+		override fun fromCompacted(compacted: Long): Entry5x5 {
 			return Entry5x5(compacted)
 		}
 		
-		override fun fromPos(pos: BlockPos): Entry5x5{
+		override fun fromPos(pos: BlockPos): Entry5x5 {
 			val regionX = getRegionCoord(pos.x)
 			
 			val offsetZ = if (regionX % 2 == 0) 0 else REGION_Z_OFFSET_BLOCKS
@@ -49,7 +50,7 @@ inline class Entry5x5(override val compacted: Long) : IRegionEntry{
 			return fromRegion(regionX, regionZ)
 		}
 		
-		private fun getRegionCoord(coord: Int): Int{
+		private fun getRegionCoord(coord: Int): Int {
 			return if (coord < 0)
 				((coord + 1) / REGION_BLOCKS) - 1
 			else
@@ -72,7 +73,7 @@ inline class Entry5x5(override val compacted: Long) : IRegionEntry{
 		get() = (compacted shr BIT_OFFSET_POINTS).toInt()
 	
 	override val adjacent: Sequence<Entry5x5>
-		get(){
+		get() {
 			val x = this.x
 			val z = this.z
 			
@@ -88,11 +89,11 @@ inline class Entry5x5(override val compacted: Long) : IRegionEntry{
 			)
 		}
 	
-	override fun withPoints(points: Int): Entry5x5{
+	override fun withPoints(points: Int): Entry5x5 {
 		return Entry5x5((compacted and MASK_XZ) or (points shlong BIT_OFFSET_POINTS))
 	}
 	
-	override fun toString(): String{
+	override fun toString(): String {
 		return "Entry5x5 (x = ${fixNegativeCoord(x)}, z = ${fixNegativeCoord(z)}, points = $points, key = $key, compacted = $compacted)"
 	}
 	
@@ -102,10 +103,10 @@ inline class Entry5x5(override val compacted: Long) : IRegionEntry{
 		val e = Entry5x5.Constructor.fromPos(pos)
 		pos.setState(world, Blocks.WOOL.defaultState.withProperty(COLOR, DyeColor.values()[(e.x + 4 * e.z) % 16]))
 		
-		if (Entry5x5.Constructor.fromPos(Pos(0, 0, 0)).adjacent.any { it.key == e.key }){
+		if (Entry5x5.Constructor.fromPos(Pos(0, 0, 0)).adjacent.any { it.key == e.key }) {
 			pos.up().setBlock(world, Blocks.ACACIA_FENCE)
 		}
-		else{
+		else {
 			pos.up().setAir(world)
 		}
 	}*/

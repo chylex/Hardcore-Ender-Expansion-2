@@ -1,8 +1,9 @@
 package chylex.hee.commands
+
 import com.mojang.brigadier.builder.ArgumentBuilder
 import net.minecraft.command.CommandSource
 
-interface ICommand{
+interface ICommand {
 	val name: String
 	
 	@JvmDefault

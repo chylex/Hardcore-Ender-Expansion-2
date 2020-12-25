@@ -1,4 +1,5 @@
 package chylex.hee.game.item.infusion
+
 import chylex.hee.game.inventory.nbtOrNull
 import chylex.hee.game.inventory.size
 import chylex.hee.game.item.infusion.Infusion.Colors.Companion.Gray
@@ -21,7 +22,7 @@ enum class Infusion(
 	val primaryColor: IntColor,
 	val secondaryColor: IntColor,
 	val targetItems: Array<out Item>
-){
+) {
 	POWER   ("power",    Colors(primary = Hcl( 15, l = 60F), secondary = Gray(144u)),                 Matching(Blocks.TNT, ModBlocks.INFUSED_TNT)),
 	FIRE    ("fire",     Colors(primary = Hue( 35), secondary = Gray(144u)),                          Matching(Blocks.TNT, ModBlocks.INFUSED_TNT)),
 	TRAP    ("trap",     Colors(primary = Hue(340), secondary = Gray(144u)),                          Matching(Blocks.TNT, ModBlocks.INFUSED_TNT)),
@@ -45,27 +46,27 @@ enum class Infusion(
 	
 	constructor(name: String, colors: Colors, matching: Matching) : this("hee.infusion.${name}", colors.primary, colors.secondary, matching.items)
 	
-	private class Colors(val primary: IntColor, val secondary: IntColor){
+	private class Colors(val primary: IntColor, val secondary: IntColor) {
 		@Suppress("NOTHING_TO_INLINE", "FunctionName")
-		companion object{
+		companion object {
 			inline fun Hcl(hue: Int, c: Float = 100F, l: Float = 75F) = HCL(hue.toDouble(), c, l)
 			inline fun Hue(hue: Int) = Hcl(hue)
 			inline fun Gray(brightness: UByte) = RGB(brightness)
 		}
 	}
 	
-	private class Matching(vararg val items: Item){
+	private class Matching(vararg val items: Item) {
 		constructor(vararg items: IItemProvider) : this(*items.map { it.asItem() }.toTypedArray())
 	}
 	
 	// Infusion logic
 	
-	companion object{
-		fun byName(name: String): Infusion{
+	companion object {
+		fun byName(name: String): Infusion {
 			return valueOf(name.toUpperCase(Locale.ROOT))
 		}
 		
-		fun isInfusable(item: Item): Boolean{
+		fun isInfusable(item: Item): Boolean {
 			return item is IInfusableItem || TRANSFORMATIONS.any { it.first === item }
 		}
 		
@@ -76,26 +77,26 @@ enum class Infusion(
 		)
 	}
 	
-	fun tryInfuse(stack: ItemStack): ItemStack?{
+	fun tryInfuse(stack: ItemStack): ItemStack? {
 		val originalItem = stack.item
 		
-		if (originalItem is IInfusableItem){
+		if (originalItem is IInfusableItem) {
 			return tryInfuseTransformed(stack, originalItem, originalItem)
 		}
 		
 		val transformedItem = TRANSFORMATIONS.find { it.first === originalItem }?.second
 		
-		if (transformedItem is IInfusableItem){
+		if (transformedItem is IInfusableItem) {
 			return tryInfuseTransformed(stack, transformedItem, transformedItem)
 		}
 		
 		return null
 	}
 	
-	private fun tryInfuseTransformed(stack: ItemStack, transformedItem: Item, transformedInfusable: IInfusableItem): ItemStack?{
+	private fun tryInfuseTransformed(stack: ItemStack, transformedItem: Item, transformedInfusable: IInfusableItem): ItemStack? {
 		val list = InfusionTag.getList(stack)
 		
-		if (list.has(this) || !transformedInfusable.canApplyInfusion(this)){
+		if (list.has(this) || !transformedInfusable.canApplyInfusion(this)) {
 			return null
 		}
 		

@@ -1,4 +1,5 @@
 package chylex.hee.client.render.entity
+
 import chylex.hee.client.render.gl.DF_ONE_MINUS_SRC_ALPHA
 import chylex.hee.client.render.gl.RenderStateBuilder
 import chylex.hee.client.render.gl.RenderStateBuilder.Companion.CULL_DISABLED
@@ -27,8 +28,8 @@ import org.lwjgl.opengl.GL11
 import java.util.Random
 
 @Sided(Side.CLIENT)
-open class RenderEntityMobAbstractEnderman(manager: EntityRendererManager) : EndermanRenderer(manager){
-	private fun RENDER_TYPE_CLONE(tex: ResourceLocation) = with(RenderStateBuilder()){
+open class RenderEntityMobAbstractEnderman(manager: EntityRendererManager) : EndermanRenderer(manager) {
+	private fun RENDER_TYPE_CLONE(tex: ResourceLocation) = with(RenderStateBuilder()) {
 		tex(tex)
 		blend(SF_SRC_ALPHA, DF_ONE_MINUS_SRC_ALPHA)
 		lighting(LIGHTING_ENABLED)
@@ -44,9 +45,9 @@ open class RenderEntityMobAbstractEnderman(manager: EntityRendererManager) : End
 	private val originalLayerList: List<LayerRenderer<EntityEnderman, EndermanModel<EntityEnderman>>>
 	private var isRenderingClone = false
 	
-	init{
-		entityModel = object : EndermanModel<EntityEnderman>(0F){
-			override fun render(matrix: MatrixStack, builder: IVertexBuilder, combinedLight: Int, combinedOverlay: Int, red: Float, green: Float, blue: Float, alpha: Float){
+	init {
+		entityModel = object : EndermanModel<EntityEnderman>(0F) {
+			override fun render(matrix: MatrixStack, builder: IVertexBuilder, combinedLight: Int, combinedOverlay: Int, red: Float, green: Float, blue: Float, alpha: Float) {
 				super.render(matrix, builder, combinedLight, combinedOverlay, red, green, blue, if (isRenderingClone) rand.nextFloat(0.05F, 0.3F) else alpha)
 			}
 		}
@@ -54,12 +55,12 @@ open class RenderEntityMobAbstractEnderman(manager: EntityRendererManager) : End
 		originalLayerList = ArrayList(layerRenderers)
 	}
 	
-	override fun render(entity: EntityEnderman, yaw: Float, partialTicks: Float, matrix: MatrixStack, buffer: IRenderTypeBuffer, combinedLight: Int){
-		if (entity !is EntityMobAbstractEnderman){
+	override fun render(entity: EntityEnderman, yaw: Float, partialTicks: Float, matrix: MatrixStack, buffer: IRenderTypeBuffer, combinedLight: Int) {
+		if (entity !is EntityMobAbstractEnderman) {
 			return
 		}
 		
-		if (entity.isShaking){
+		if (entity.isShaking) {
 			rand.setSeed(entity.world.totalTime)
 			
 			matrix.push()
@@ -67,13 +68,13 @@ open class RenderEntityMobAbstractEnderman(manager: EntityRendererManager) : End
 			super.render(entity, yaw, partialTicks, matrix, buffer, combinedLight)
 			matrix.pop()
 		}
-		else{
+		else {
 			super.render(entity, yaw, partialTicks, matrix, buffer, combinedLight)
 		}
 		
 		val cloneCount = getCloneCount(entity)
 		
-		if (cloneCount > 0){
+		if (cloneCount > 0) {
 			rand.setSeed(entity.world.totalTime * 2L / 3L)
 			
 			val prevPrevYaw = entity.prevRotationYawHead
@@ -85,8 +86,8 @@ open class RenderEntityMobAbstractEnderman(manager: EntityRendererManager) : End
 			isRenderingClone = true
 			layerRenderers.clear()
 			
-			repeat(cloneCount){
-				if (rand.nextInt(3) == 0){
+			repeat(cloneCount) {
+				if (rand.nextInt(3) == 0) {
 					entity.rotationYawHead += rand.nextFloat(-45F, 45F)
 					entity.prevRotationYawHead = entity.rotationYawHead
 					
@@ -111,11 +112,11 @@ open class RenderEntityMobAbstractEnderman(manager: EntityRendererManager) : End
 		}
 	}
 	
-	protected open fun getCloneCount(entity: EntityMobAbstractEnderman): Int{
+	protected open fun getCloneCount(entity: EntityMobAbstractEnderman): Int {
 		return if (entity.hurtTime == 0 && entity.isAggro) 2 else 0
 	}
 	
-	override fun func_230042_a_(entity: EntityEnderman, isVisible: Boolean, isTranslucent: Boolean): RenderType?{
+	override fun func_230042_a_(entity: EntityEnderman, isVisible: Boolean, isTranslucent: Boolean): RenderType? {
 		return if (isRenderingClone)
 			RENDER_TYPE_CLONE(getEntityTexture(entity))
 		else

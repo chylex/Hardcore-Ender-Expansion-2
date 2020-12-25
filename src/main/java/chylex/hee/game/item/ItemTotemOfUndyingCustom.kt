@@ -1,4 +1,5 @@
 package chylex.hee.game.item
+
 import chylex.hee.client.MC
 import chylex.hee.game.entity.living.EntityMobVillagerDying
 import chylex.hee.game.entity.posVec
@@ -32,31 +33,31 @@ import net.minecraft.util.Hand
 import net.minecraft.world.World
 import net.minecraftforge.event.entity.living.LivingDeathEvent
 
-class ItemTotemOfUndyingCustom(properties: Properties) : ItemAbstractTrinket(properties){
-	private companion object{
+class ItemTotemOfUndyingCustom(properties: Properties) : ItemAbstractTrinket(properties) {
+	private companion object {
 		private const val SHAKING_TAG = "Shaking"
 	}
 	
-	init{
-		addPropertyOverride(Resource.Custom("is_shaking")){
-			stack, _, _ -> if (stack.heeTagOrNull.hasKey(SHAKING_TAG)) 1F else 0F
+	init {
+		addPropertyOverride(Resource.Custom("is_shaking")) { stack, _, _ ->
+			if (stack.heeTagOrNull.hasKey(SHAKING_TAG)) 1F else 0F
 		}
 		
 		MinecraftForgeEventBus.register(this)
 	}
 	
-	override fun getTranslationKey(): String{
+	override fun getTranslationKey(): String {
 		return Items.TOTEM_OF_UNDYING.translationKey
 	}
 	
 	// Trinket handling
 	
-	override fun canPlaceIntoTrinketSlot(stack: ItemStack): Boolean{
+	override fun canPlaceIntoTrinketSlot(stack: ItemStack): Boolean {
 		return !stack.isDamaged
 	}
 	
 	@Sided(Side.CLIENT)
-	override fun spawnClientTrinketBreakFX(target: Entity){
+	override fun spawnClientTrinketBreakFX(target: Entity) {
 		MC.particleManager.emitParticleAtEntity(target, ParticleTypes.TOTEM_OF_UNDYING, 30)
 		Sounds.ITEM_TOTEM_USE.playClient(target.posVec, target.soundCategory)
 	}
@@ -64,19 +65,19 @@ class ItemTotemOfUndyingCustom(properties: Properties) : ItemAbstractTrinket(pro
 	// Death logic
 	
 	@SubscribeEvent(EventPriority.HIGHEST)
-	fun onLivingDeath(e: LivingDeathEvent){
-		if (e.source.canHarmInCreative()){
+	fun onLivingDeath(e: LivingDeathEvent) {
+		if (e.source.canHarmInCreative()) {
 			return
 		}
 		
 		val player = e.entity as? EntityPlayer ?: return
 		val trinketHandler = TrinketHandler.get(player)
 		
-		if (e.source == DamageSource.FALL && trinketHandler.isItemActive(ModItems.SCALE_OF_FREEFALL)){
+		if (e.source == DamageSource.FALL && trinketHandler.isItemActive(ModItems.SCALE_OF_FREEFALL)) {
 			return
 		}
 		
-		trinketHandler.transformIfActive(this){
+		trinketHandler.transformIfActive(this) {
 			it.damage = it.maxDamage
 			
 			player.health = 1F
@@ -89,30 +90,30 @@ class ItemTotemOfUndyingCustom(properties: Properties) : ItemAbstractTrinket(pro
 	
 	// Villager logic
 	
-	override fun inventoryTick(stack: ItemStack, world: World, entity: Entity, itemSlot: Int, isSelected: Boolean){
-		if (world.isRemote || world.totalTime % 10L != 0L || canPlaceIntoTrinketSlot(stack) || entity !is EntityPlayer){
+	override fun inventoryTick(stack: ItemStack, world: World, entity: Entity, itemSlot: Int, isSelected: Boolean) {
+		if (world.isRemote || world.totalTime % 10L != 0L || canPlaceIntoTrinketSlot(stack) || entity !is EntityPlayer) {
 			return
 		}
 		
 		val isNearVillager = world.selectExistingEntities.inRange<EntityVillager>(entity.posVec, entity.getAttribute(REACH_DISTANCE).value).isNotEmpty()
 		val wasNearVillager = stack.heeTagOrNull.hasKey(SHAKING_TAG)
 		
-		if (isNearVillager && !wasNearVillager){
+		if (isNearVillager && !wasNearVillager) {
 			stack.heeTag.putBoolean(SHAKING_TAG, true)
 		}
-		else if (!isNearVillager && wasNearVillager){
+		else if (!isNearVillager && wasNearVillager) {
 			stack.heeTag.remove(SHAKING_TAG)
 		}
 	}
 	
-	override fun itemInteractionForEntity(stack: ItemStack, player: EntityPlayer, target: EntityLivingBase, hand: Hand): Boolean{
-		if (target !is EntityVillager || !player.isSneaking || canPlaceIntoTrinketSlot(stack)){
+	override fun itemInteractionForEntity(stack: ItemStack, player: EntityPlayer, target: EntityLivingBase, hand: Hand): Boolean {
+		if (target !is EntityVillager || !player.isSneaking || canPlaceIntoTrinketSlot(stack)) {
 			return false
 		}
 		
 		val world = target.world
 		
-		if (world.isRemote){
+		if (world.isRemote) {
 			return true
 		}
 		
@@ -135,7 +136,7 @@ class ItemTotemOfUndyingCustom(properties: Properties) : ItemAbstractTrinket(pro
 	
 	// Client side
 	
-	override fun shouldCauseReequipAnimation(oldStack: ItemStack, newStack: ItemStack, slotChanged: Boolean): Boolean{
+	override fun shouldCauseReequipAnimation(oldStack: ItemStack, newStack: ItemStack, slotChanged: Boolean): Boolean {
 		return slotChanged && super.shouldCauseReequipAnimation(oldStack, newStack, slotChanged)
 	}
 }

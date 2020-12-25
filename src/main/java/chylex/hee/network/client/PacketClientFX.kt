@@ -1,4 +1,5 @@
 package chylex.hee.network.client
+
 import chylex.hee.game.block.BlockDragonEggOverride
 import chylex.hee.game.block.BlockEnderGooPurified
 import chylex.hee.game.block.BlockPuzzleLogic
@@ -38,8 +39,8 @@ import io.netty.buffer.ByteBuf
 import net.minecraft.network.PacketBuffer
 import java.util.Random
 
-class PacketClientFX<T : IFxData>() : BaseClientPacket(){
-	private companion object{
+class PacketClientFX<T : IFxData>() : BaseClientPacket() {
+	private companion object {
 		private val RAND = Random()
 		
 		private val HANDLERS = arrayOf(
@@ -84,7 +85,7 @@ class PacketClientFX<T : IFxData>() : BaseClientPacket(){
 	
 	// Instance
 	
-	constructor(handler: IFxHandler<T>, data: T) : this(){
+	constructor(handler: IFxHandler<T>, data: T) : this() {
 		this.handler = handler
 		this.data = data
 	}
@@ -94,28 +95,28 @@ class PacketClientFX<T : IFxData>() : BaseClientPacket(){
 	
 	private var buffer: ByteBuf? = null
 	
-	override fun write(buffer: PacketBuffer){
+	override fun write(buffer: PacketBuffer) {
 		buffer.writeInt(HANDLERS.indexOf(handler))
 		data.write(buffer)
 	}
 	
 	@Suppress("UNCHECKED_CAST")
-	override fun read(buffer: PacketBuffer){
+	override fun read(buffer: PacketBuffer) {
 		val index = buffer.readInt()
 		
-		if (index == -1){
-			if (Debug.enabled){
+		if (index == -1) {
+			if (Debug.enabled) {
 				throw IndexOutOfBoundsException("could not find FX handler")
 			}
 		}
-		else{
+		else {
 			this.handler = HANDLERS[index] as IFxHandler<T>
 			this.buffer = buffer.slice()
 		}
 	}
 	
 	@Sided(Side.CLIENT)
-	override fun handle(player: EntityPlayerSP){
+	override fun handle(player: EntityPlayerSP) {
 		buffer?.let { handler.handle(PacketBuffer(it), player.world, RAND) }
 	}
 }

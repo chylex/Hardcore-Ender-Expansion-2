@@ -1,4 +1,5 @@
 package chylex.hee.game.item
+
 import chylex.hee.client.model.ModelHelper
 import chylex.hee.game.block.entity.TileEntityEnergyCluster
 import chylex.hee.game.entity.item.EntityItemRevitalizationSubstance
@@ -36,8 +37,8 @@ import net.minecraft.util.math.BlockPos
 import net.minecraft.world.World
 import java.util.Random
 
-class ItemRevitalizationSubstance(properties: Properties) : Item(properties){
-	companion object{
+class ItemRevitalizationSubstance(properties: Properties) : Item(properties) {
+	companion object {
 		private val PARTICLE_FAIL = ParticleSpawnerCustom(
 			type = ParticleSmokeCustom,
 			data = ParticleSmokeCustom.Data(scale = 0.4F),
@@ -45,7 +46,7 @@ class ItemRevitalizationSubstance(properties: Properties) : Item(properties){
 			mot = Gaussian(0.01F)
 		)
 		
-		class FxUseData(private val pos: BlockPos, private val player: EntityPlayer, private val hand: Hand) : IFxData{
+		class FxUseData(private val pos: BlockPos, private val player: EntityPlayer, private val hand: Hand) : IFxData {
 			override fun write(buffer: PacketBuffer) = buffer.use {
 				writePos(pos)
 				writeInt(player.entityId)
@@ -53,7 +54,7 @@ class ItemRevitalizationSubstance(properties: Properties) : Item(properties){
 			}
 		}
 		
-		val FX_FAIL = object : IFxHandler<FxUseData>{
+		val FX_FAIL = object : IFxHandler<FxUseData> {
 			override fun handle(buffer: PacketBuffer, world: World, rand: Random) = buffer.use {
 				val blockPos = readPos().center
 				
@@ -69,23 +70,23 @@ class ItemRevitalizationSubstance(properties: Properties) : Item(properties){
 		}
 	}
 	
-	override fun onItemUse(context: ItemUseContext): ActionResultType{
+	override fun onItemUse(context: ItemUseContext): ActionResultType {
 		val player = context.player ?: return FAIL
 		val world = context.world
 		val pos = context.pos
 		
-		if (world.isRemote){
+		if (world.isRemote) {
 			return FAIL // disable animation
 		}
 		
 		val cluster = pos.getTile<TileEntityEnergyCluster>(world) ?: return FAIL
 		
-		if (cluster.currentHealth != REVITALIZING){
-			if (cluster.addRevitalizationSubstance()){
+		if (cluster.currentHealth != REVITALIZING) {
+			if (cluster.addRevitalizationSubstance()) {
 				player.getHeldItem(context.hand).shrink(1)
 				ModSounds.ITEM_REVITALIZATION_SUBSTANCE_USE_SUCCESS.playServer(world, pos, SoundCategory.BLOCKS, volume = 0.5F)
 			}
-			else{
+			else {
 				PacketClientFX(FX_FAIL, FxUseData(pos, player, context.hand)).sendToAllAround(player, 24.0)
 			}
 		}
@@ -93,11 +94,11 @@ class ItemRevitalizationSubstance(properties: Properties) : Item(properties){
 		return SUCCESS
 	}
 	
-	override fun hasCustomEntity(stack: ItemStack): Boolean{
+	override fun hasCustomEntity(stack: ItemStack): Boolean {
 		return true
 	}
 	
-	override fun createEntity(world: World, replacee: Entity, stack: ItemStack): Entity{
+	override fun createEntity(world: World, replacee: Entity, stack: ItemStack): Entity {
 		return EntityItemRevitalizationSubstance(world, stack, replacee)
 	}
 }

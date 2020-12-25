@@ -1,4 +1,5 @@
 package chylex.hee.game.block
+
 import chylex.hee.game.block.fluid.FlowingFluid5.Companion.FLOW_DISTANCE
 import chylex.hee.game.block.fluid.FluidEnderGooPurified
 import chylex.hee.game.block.properties.Materials
@@ -35,8 +36,8 @@ import java.util.Random
 import kotlin.math.max
 import kotlin.math.pow
 
-open class BlockEnderGooPurified : BlockAbstractGoo(FluidEnderGooPurified, Materials.PURIFIED_ENDER_GOO){
-	companion object{
+open class BlockEnderGooPurified : BlockAbstractGoo(FluidEnderGooPurified, Materials.PURIFIED_ENDER_GOO) {
+	companion object {
 		private val PARTICLE_DATA = ParticleSmokeCustom.Data(color = RGB(210, 148, 237), scale = 1F)
 		
 		private val PARTICLE_STATIONARY = ParticleSpawnerCustom(
@@ -60,8 +61,8 @@ open class BlockEnderGooPurified : BlockAbstractGoo(FluidEnderGooPurified, Mater
 			mot = Constant(0.025F, UP) + InBox(0.01F, 0.01F, 0.01F)
 		)
 		
-		val FX_PLACE = object : FxBlockHandler(){
-			override fun handle(pos: BlockPos, world: World, rand: Random){
+		val FX_PLACE = object : FxBlockHandler() {
+			override fun handle(pos: BlockPos, world: World, rand: Random) {
 				PARTICLE_PLACE.spawn(Point(pos, rand.nextInt(5, 6)), rand)
 			}
 		}
@@ -72,42 +73,42 @@ open class BlockEnderGooPurified : BlockAbstractGoo(FluidEnderGooPurified, Mater
 		
 		// Status effects
 		
-		private fun updateGooEffects(entity: EntityLivingBase, totalTicks: Int){
+		private fun updateGooEffects(entity: EntityLivingBase, totalTicks: Int) {
 			val currentTime = entity.world.totalTime
 			val rand = entity.rng
 			
-			if (totalTicks > 25 && currentTime % 40L == 0L){
+			if (totalTicks > 25 && currentTime % 40L == 0L) {
 				val effect = rand.nextItemOrNull(entity.activePotionEffects.filter { it.potion.effectType == HARMFUL && it.duration in MIN_DURATION..INFINITE_DURATION_THRESHOLD })
 				
-				if (effect != null){
+				if (effect != null) {
 					effect.duration = max(MIN_DURATION, effect.duration - (effect.duration * 0.2F).floorToInt().coerceIn(MIN_DURATION_REDUCTION, MAX_DURATION_REDUCTION))
 					
-					if (entity is EntityPlayer){
+					if (entity is EntityPlayer) {
 						PacketClientPotionDuration(effect.potion, effect.duration).sendToPlayer(entity)
 					}
 				}
 			}
 			
-			if (totalTicks > 35 && currentTime % 93L == 0L){
-				val healChance = when{
+			if (totalTicks > 35 && currentTime % 93L == 0L) {
+				val healChance = when {
 					totalTicks <  400 -> 0.4F
 					totalTicks < 1000 -> 0.6F
 					else              -> 0.75F
 				}
 				
-				if (rand.nextFloat() < healChance){
+				if (rand.nextFloat() < healChance) {
 					entity.heal(1F)
 				}
 			}
 			
-			if (totalTicks > 40 && currentTime % 116L == 0L && entity is EntityPlayer){
-				val satisfactionChance = when{
+			if (totalTicks > 40 && currentTime % 116L == 0L && entity is EntityPlayer) {
+				val satisfactionChance = when {
 					totalTicks <  400 -> 0.06F
 					totalTicks < 1000 -> 0.12F
 					else              -> 0.24F
 				}
 				
-				if (rand.nextFloat() < satisfactionChance){
+				if (rand.nextFloat() < satisfactionChance) {
 					entity.foodStats.addStats(1, 0F)
 				}
 			}
@@ -121,26 +122,26 @@ open class BlockEnderGooPurified : BlockAbstractGoo(FluidEnderGooPurified, Mater
 	
 	// Behavior
 	
-	override fun tickRate(world: IWorldReader): Int{
+	override fun tickRate(world: IWorldReader): Int {
 		return 16
 	}
 	
-	override fun onInsideGoo(entity: Entity){
-		if (entity is EntityLivingBase){
+	override fun onInsideGoo(entity: Entity) {
+		if (entity is EntityLivingBase) {
 			updateGooEffects(entity, trackTick(entity, MAX_COLLISION_TICK_COUNTER))
 		}
 	}
 	
-	override fun modifyMotion(entity: Entity, level: Int){
+	override fun modifyMotion(entity: Entity, level: Int) {
 		val strength = ((FLOW_DISTANCE - level) / FLOW_DISTANCE.toFloat()).pow(1.25F)
 		entity.motion = entity.motion.scaleXZ(0.95 - (0.45 * strength))
 	}
 	
-	override fun onBlockAdded(state: BlockState, world: World, pos: BlockPos, oldState: BlockState, isMoving: Boolean){
+	override fun onBlockAdded(state: BlockState, world: World, pos: BlockPos, oldState: BlockState, isMoving: Boolean) {
 		@Suppress("DEPRECATION")
 		super.onBlockAdded(state, world, pos, oldState, isMoving)
 		
-		if (!state.fluidState.isSource){
+		if (!state.fluidState.isSource) {
 			PacketClientFX(FX_PLACE, FxBlockData(pos)).sendToAllAround(world, pos, 16.0)
 		}
 	}
@@ -148,8 +149,8 @@ open class BlockEnderGooPurified : BlockAbstractGoo(FluidEnderGooPurified, Mater
 	// Client side
 	
 	@Sided(Side.CLIENT)
-	override fun animateTick(state: BlockState, world: World, pos: BlockPos, rand: Random){
-		if (rand.nextInt(4) == 0){
+	override fun animateTick(state: BlockState, world: World, pos: BlockPos, rand: Random) {
+		if (rand.nextInt(4) == 0) {
 			val particle = if (state[LEVEL] == 0)
 				PARTICLE_STATIONARY
 			else

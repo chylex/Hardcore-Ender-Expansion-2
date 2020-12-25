@@ -1,4 +1,5 @@
 package chylex.hee.game.world.feature.energyshrine.piece
+
 import chylex.hee.game.world.Pos
 import chylex.hee.game.world.feature.energyshrine.connection.EnergyShrineConnection
 import chylex.hee.game.world.feature.energyshrine.connection.EnergyShrineConnectionType.ROOM
@@ -12,22 +13,22 @@ import chylex.hee.system.random.nextItem
 import net.minecraft.item.DyeColor
 import java.util.Random
 
-class EnergyShrineRoom_Secondary_Dormitory(file: String) : EnergyShrineRoom_Generic(file){
+class EnergyShrineRoom_Secondary_Dormitory(file: String) : EnergyShrineRoom_Generic(file) {
 	override val connections = arrayOf<IStructurePieceConnection>(
 		EnergyShrineConnection(ROOM, Pos(3, 0, maxZ), SOUTH)
 	)
 	
-	override fun generate(world: IStructureWorld, instance: Instance){
+	override fun generate(world: IStructureWorld, instance: Instance) {
 		super.generate(world, instance)
 		
 		val rand = world.rand
 		val mirror = instance.transform.mirror
 		
-		for((index, color) in generateBedColors(rand, mirror).withIndex()){
+		for((index, color) in generateBedColors(rand, mirror).withIndex()) {
 			world.addTrigger(Pos(6 + index, 1, 5), BedStructureTrigger(SOUTH, color))
 		}
 		
-		for((index, color) in generateBedColors(rand, mirror).withIndex()){
+		for((index, color) in generateBedColors(rand, mirror).withIndex()) {
 			world.addTrigger(Pos(6 + index, 3, 5), BedStructureTrigger(SOUTH, color))
 		}
 		
@@ -35,24 +36,24 @@ class EnergyShrineRoom_Secondary_Dormitory(file: String) : EnergyShrineRoom_Gene
 		placeWallBanner(world, instance, Pos(4, 2, 4), WEST)
 	}
 	
-	private fun generateBedColors(rand: Random, mirror: Boolean): Array<DyeColor>{
-		if (rand.nextInt(1332) == 0){
+	private fun generateBedColors(rand: Random, mirror: Boolean): Array<DyeColor> {
+		if (rand.nextInt(1332) == 0) {
 			return arrayOf(DyeColor.RED, DyeColor.ORANGE, DyeColor.YELLOW, DyeColor.LIME, DyeColor.LIGHT_BLUE, DyeColor.BLUE, DyeColor.PURPLE).apply {
-				if (!mirror){
+				if (!mirror) {
 					reverse()
 				}
 			}
 		}
 		
-		val colors = Array(7){ DyeColor.LIGHT_GRAY }
+		val colors = Array(7) { DyeColor.LIGHT_GRAY }
 		
 		val param1 = rand.nextInt(0, 1)
 		val param2 = rand.nextInt(0, 1)
 		
-		repeat(rand.nextInt(1 + param1, 2 + param2)){
+		repeat(rand.nextInt(1 + param1, 2 + param2)) {
 			val color = rand.nextItem<DyeColor>()
 			
-			repeat(rand.nextInt(2 - param1, 3 - param2)){
+			repeat(rand.nextInt(2 - param1, 3 - param2)) {
 				colors[rand.nextInt(colors.size)] = color
 			}
 		}

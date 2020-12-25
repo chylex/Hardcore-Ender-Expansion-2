@@ -1,4 +1,5 @@
 package chylex.hee.client.render.entity
+
 import chylex.hee.client.MC
 import chylex.hee.client.render.gl.scale
 import chylex.hee.game.entity.living.EntityMobVillagerDying
@@ -22,11 +23,11 @@ import java.util.Random
 import kotlin.math.min
 
 @Sided(Side.CLIENT)
-class RenderEntityMobVillagerDying(manager: EntityRendererManager) : MobRenderer<EntityMobVillagerDying, VillagerModel<EntityMobVillagerDying>>(manager, Model, 0.5F){
-	private object Model : VillagerModel<EntityMobVillagerDying>(0F){
+class RenderEntityMobVillagerDying(manager: EntityRendererManager) : MobRenderer<EntityMobVillagerDying, VillagerModel<EntityMobVillagerDying>>(manager, Model, 0.5F) {
+	private object Model : VillagerModel<EntityMobVillagerDying>(0F) {
 		private val overrideOverlay = OverlayTexture.getPackedUV(OverlayTexture.getU(0F), OverlayTexture.getV(false)) // disable red hurt overlay
 		
-		override fun render(matrix: MatrixStack, builder: IVertexBuilder, combinedLight: Int, combinedOverlay: Int, red: Float, green: Float, blue: Float, alpha: Float){
+		override fun render(matrix: MatrixStack, builder: IVertexBuilder, combinedLight: Int, combinedOverlay: Int, red: Float, green: Float, blue: Float, alpha: Float) {
 			super.render(matrix, builder, combinedLight, overrideOverlay, red, green, blue, alpha)
 		}
 	}
@@ -34,13 +35,13 @@ class RenderEntityMobVillagerDying(manager: EntityRendererManager) : MobRenderer
 	private val rand = Random()
 	private val texture = Resource.Vanilla("textures/entity/villager/villager.png")
 	
-	init{
+	init {
 		addLayer(HeadLayer(this))
 		addLayer(VillagerLevelPendantLayer(this, MC.instance.resourceManager as IReloadableResourceManager, "villager"))
 		addLayer(CrossedArmsItemLayer(this))
 	}
 	
-	override fun render(entity: EntityMobVillagerDying, yaw: Float, partialTicks: Float, matrix: MatrixStack, buffer: IRenderTypeBuffer, combinedLight: Int){
+	override fun render(entity: EntityMobVillagerDying, yaw: Float, partialTicks: Float, matrix: MatrixStack, buffer: IRenderTypeBuffer, combinedLight: Int) {
 		rand.setSeed(entity.world.totalTime)
 		val mp = min(1F, entity.deathTime / 50F) * 0.005F
 		
@@ -50,18 +51,18 @@ class RenderEntityMobVillagerDying(manager: EntityRendererManager) : MobRenderer
 		matrix.pop()
 	}
 	
-	override fun getEntityTexture(entity: EntityMobVillagerDying): ResourceLocation{
+	override fun getEntityTexture(entity: EntityMobVillagerDying): ResourceLocation {
 		return texture
 	}
 	
-	override fun preRenderCallback(entity: EntityMobVillagerDying, matrix: MatrixStack, partialTicks: Float){
+	override fun preRenderCallback(entity: EntityMobVillagerDying, matrix: MatrixStack, partialTicks: Float) {
 		val scale: Float
 		
-		if (entity.isChild){
+		if (entity.isChild) {
 			scale = 0.46875F
 			shadowSize = 0.25F
 		}
-		else{
+		else {
 			scale = 0.9375F
 			shadowSize = 0.5F
 		}
@@ -69,7 +70,7 @@ class RenderEntityMobVillagerDying(manager: EntityRendererManager) : MobRenderer
 		matrix.scale(scale)
 	}
 	
-	override fun getDeathMaxRotation(entity: EntityMobVillagerDying): Float{
+	override fun getDeathMaxRotation(entity: EntityMobVillagerDying): Float {
 		return 0F
 	}
 }

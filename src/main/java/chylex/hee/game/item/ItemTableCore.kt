@@ -1,4 +1,5 @@
 package chylex.hee.game.item
+
 import chylex.hee.game.block.BlockAbstractTableTile
 import chylex.hee.game.block.BlockTableBase
 import chylex.hee.game.world.BlockEditor
@@ -19,24 +20,24 @@ import net.minecraft.util.text.ITextComponent
 import net.minecraft.util.text.TranslationTextComponent
 import net.minecraft.world.World
 
-class ItemTableCore(private val tableBlocks: Array<BlockAbstractTableTile<*>>, properties: Properties) : Item(properties){
-	override fun onItemUse(context: ItemUseContext): ActionResultType{
+class ItemTableCore(private val tableBlocks: Array<BlockAbstractTableTile<*>>, properties: Properties) : Item(properties) {
+	override fun onItemUse(context: ItemUseContext): ActionResultType {
 		val player = context.player ?: return FAIL
 		val world = context.world
 		val pos = context.pos
 		
 		val heldItem = player.getHeldItem(context.hand)
 		
-		if (!BlockEditor.canEdit(pos, player, heldItem)){
+		if (!BlockEditor.canEdit(pos, player, heldItem)) {
 			return FAIL
 		}
 		
 		val block = pos.getBlock(world)
 		
-		if (block is BlockTableBase){
+		if (block is BlockTableBase) {
 			val table = tableBlocks.find { it.tier == block.tier } ?: return FAIL
 			
-			if (!world.isRemote){
+			if (!world.isRemote) {
 				pos.breakBlock(world, false)
 				pos.setBlock(world, table)
 			}
@@ -49,7 +50,7 @@ class ItemTableCore(private val tableBlocks: Array<BlockAbstractTableTile<*>>, p
 	}
 	
 	@Sided(Side.CLIENT)
-	override fun addInformation(stack: ItemStack, world: World?, lines: MutableList<ITextComponent>, flags: ITooltipFlag){
+	override fun addInformation(stack: ItemStack, world: World?, lines: MutableList<ITextComponent>, flags: ITooltipFlag) {
 		lines.add(TranslationTextComponent("item.tooltip.hee.table_core.tooltip", tableBlocks.minOf { it.tier }))
 	}
 }

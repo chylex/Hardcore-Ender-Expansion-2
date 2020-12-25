@@ -1,4 +1,5 @@
 package chylex.hee.client.model.entity
+
 import chylex.hee.client.MC
 import chylex.hee.client.model.FACE_FRONT
 import chylex.hee.client.model.beginBox
@@ -17,7 +18,7 @@ import net.minecraft.client.renderer.entity.model.EntityModel
 import net.minecraft.client.renderer.model.ModelRenderer
 
 @Sided(Side.CLIENT)
-object ModelEntityMobBlobby : EntityModel<EntityMobBlobby>(){
+object ModelEntityMobBlobby : EntityModel<EntityMobBlobby>() {
 	const val GLOBAL_SCALE = 8F / 9F
 	
 	private const val SIZE_BODY = 9
@@ -34,7 +35,7 @@ object ModelEntityMobBlobby : EntityModel<EntityMobBlobby>(){
 	private var g = 255F
 	private var b = 55F
 	
-	init{
+	init {
 		textureWidth = 128
 		textureHeight = 256
 		
@@ -54,7 +55,7 @@ object ModelEntityMobBlobby : EntityModel<EntityMobBlobby>(){
 		}
 	}
 	
-	override fun setLivingAnimations(entity: EntityMobBlobby, limbSwing: Float, limbSwingAmount: Float, partialTicks: Float){
+	override fun setLivingAnimations(entity: EntityMobBlobby, limbSwing: Float, limbSwingAmount: Float, partialTicks: Float) {
 		entity.color.let {
 			r = it.redF
 			g = it.greenF
@@ -62,14 +63,14 @@ object ModelEntityMobBlobby : EntityModel<EntityMobBlobby>(){
 		}
 	}
 	
-	override fun setRotationAngles(entity: EntityMobBlobby, limbSwing: Float, limbSwingAmount: Float, age: Float, headYaw: Float, headPitch: Float){
+	override fun setRotationAngles(entity: EntityMobBlobby, limbSwing: Float, limbSwingAmount: Float, age: Float, headYaw: Float, headPitch: Float) {
 		val vecBlobbyLook = Vec3.fromYaw(entity.rotationYawHead)
 		val vecCameraDiff = MC.renderManager.info.projectedView.subtract(entity.posVec).normalize()
 		
 		isPlayerInFront = vecBlobbyLook.dotProduct(vecCameraDiff) > 0.0
 	}
 	
-	override fun render(matrix: MatrixStack, builder: IVertexBuilder, combinedLight: Int, combinedOverlay: Int, red: Float, green: Float, blue: Float, alpha: Float){
+	override fun render(matrix: MatrixStack, builder: IVertexBuilder, combinedLight: Int, combinedOverlay: Int, red: Float, green: Float, blue: Float, alpha: Float) {
 		matrix.translateY(-0.001)
 		
 		matrix.push()

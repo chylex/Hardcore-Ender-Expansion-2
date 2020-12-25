@@ -1,4 +1,5 @@
 package chylex.hee.game.world.feature.stronghold.piece
+
 import chylex.hee.game.entity.living.EntityMobSilverfish
 import chylex.hee.game.entity.posVec
 import chylex.hee.game.entity.selectVulnerableEntities
@@ -23,29 +24,29 @@ import net.minecraft.world.World
 import java.util.Random
 import kotlin.math.min
 
-class StrongholdRoom_Trap_CornerHoles(file: String) : StrongholdAbstractPieceFromFile(file, StrongholdPieceType.ROOM){
-	class Trigger : ITriggerHandler{
-		private companion object{
+class StrongholdRoom_Trap_CornerHoles(file: String) : StrongholdAbstractPieceFromFile(file, StrongholdPieceType.ROOM) {
+	class Trigger : ITriggerHandler {
+		private companion object {
 			private const val SPAWNS_LEFT_TAG = "SpawnsLeft"
 		}
 		
 		private var spawnsLeft = -1
 		
-		override fun check(world: World): Boolean{
+		override fun check(world: World): Boolean {
 			return !world.isRemote && !world.isPeaceful
 		}
 		
-		override fun update(entity: EntityTechnicalTrigger){
+		override fun update(entity: EntityTechnicalTrigger) {
 			val world = entity.world
 			val rand = world.rand
 			
-			if (spawnsLeft == -1){
+			if (spawnsLeft == -1) {
 				val area = entity.boundingBox.grow(3.5, 0.0, 3.5).expand(0.0, 2.0, 0.0)
 				
-				if (world.selectVulnerableEntities.inBox<EntityPlayer>(area).isEmpty()){
+				if (world.selectVulnerableEntities.inBox<EntityPlayer>(area).isEmpty()) {
 					return
 				}
-				else{
+				else {
 					spawnsLeft = rand.nextInt(5, 7) + ((world.difficulty.id - 1) * 2)
 				}
 			}
@@ -53,7 +54,7 @@ class StrongholdRoom_Trap_CornerHoles(file: String) : StrongholdAbstractPieceFro
 			val targetArea = entity.boundingBox.grow(6.0, 0.0, 6.0).expand(0.0, 4.0, 0.0)
 			val targets = world.selectVulnerableEntities.inBox<EntityPlayer>(targetArea)
 			
-			repeat(min(spawnsLeft, rand.nextInt(1, 3))){
+			repeat(min(spawnsLeft, rand.nextInt(1, 3))) {
 				val (x, y, z) = entity.posVec.add(
 					4.5 * (if (rand.nextBoolean()) 1 else -1),
 					2.0,
@@ -72,12 +73,12 @@ class StrongholdRoom_Trap_CornerHoles(file: String) : StrongholdAbstractPieceFro
 				--spawnsLeft
 			}
 			
-			if (spawnsLeft == 0){
+			if (spawnsLeft == 0) {
 				entity.remove()
 			}
 		}
 		
-		override fun nextTimer(rand: Random): Int{
+		override fun nextTimer(rand: Random): Int {
 			return if (spawnsLeft == -1)
 				10
 			else
@@ -93,7 +94,7 @@ class StrongholdRoom_Trap_CornerHoles(file: String) : StrongholdAbstractPieceFro
 		}
 	}
 	
-	override fun generate(world: IStructureWorld, instance: Instance){
+	override fun generate(world: IStructureWorld, instance: Instance) {
 		super.generate(world, instance)
 		world.addTrigger(Pos(centerX, 1, centerZ), EntityStructureTrigger(STRONGHOLD_TRAP_CORNER_HOLES))
 	}

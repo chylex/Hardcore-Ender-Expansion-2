@@ -1,4 +1,5 @@
 package chylex.hee.network.client
+
 import chylex.hee.network.BaseClientPacket
 import chylex.hee.system.forge.Side
 import chylex.hee.system.forge.Sided
@@ -9,8 +10,8 @@ import chylex.hee.system.serialization.writeVec
 import net.minecraft.network.PacketBuffer
 import net.minecraft.util.math.Vec3d
 
-class PacketClientMoveYourAss() : BaseClientPacket(){
-	constructor(position: Vec3d) : this(){
+class PacketClientMoveYourAss() : BaseClientPacket() {
+	constructor(position: Vec3d) : this() {
 		this.position = position
 	}
 	
@@ -25,7 +26,7 @@ class PacketClientMoveYourAss() : BaseClientPacket(){
 	}
 	
 	@Sided(Side.CLIENT)
-	override fun handle(player: EntityPlayerSP){
+	override fun handle(player: EntityPlayerSP) {
 		player.stopRiding()
 		player.setLocationAndAngles(position.x, position.y, position.z, player.rotationYaw, player.rotationPitch)
 	}

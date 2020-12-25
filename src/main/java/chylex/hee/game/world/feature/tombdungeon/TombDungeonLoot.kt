@@ -1,4 +1,5 @@
 package chylex.hee.game.world.feature.tombdungeon
+
 import chylex.hee.game.inventory.getStack
 import chylex.hee.game.inventory.setStack
 import chylex.hee.game.inventory.size
@@ -27,8 +28,8 @@ import java.util.EnumMap
 import java.util.Random
 import kotlin.math.roundToInt
 
-object TombDungeonLoot{
-	private enum class LootType(val weight: Int, val limit: Int, val table: ResourceLocation){
+object TombDungeonLoot {
+	private enum class LootType(val weight: Int, val limit: Int, val table: ResourceLocation) {
 		ARMOR       (weight = 10, limit = 4, table = Resource.Custom("chests/forgottentombs_set_armor")),
 		WEAPONS     (weight = 10, limit = 2, table = Resource.Custom("chests/forgottentombs_set_weapons")),
 		TOOLS       (weight =  5, limit = 2, table = Resource.Custom("chests/forgottentombs_set_tools")),
@@ -38,19 +39,19 @@ object TombDungeonLoot{
 		
 		// TODO add modded resources
 		
-		fun generateItem(rand: Random): ItemStack{
+		fun generateItem(rand: Random): ItemStack {
 			val overworld = Environment.getDimension(DimensionType.OVERWORLD)
 			val table = Environment.getLootTable(table)
 			
 			return table.generate(LootContext.Builder(overworld).withRandom(rand).build(LootParameterSets.EMPTY)).firstOrNull() ?: ItemStack.EMPTY
 		}
 		
-		fun isCompatible(stack: ItemStack, generated: List<ItemStack>): Boolean{
-			when(this){
+		fun isCompatible(stack: ItemStack, generated: List<ItemStack>): Boolean {
+			when(this) {
 				ARMOR -> {
 					val slot = getArmorSlot(stack) ?: return true
 					
-					if (generated.any { getArmorSlot(it) === slot }){
+					if (generated.any { getArmorSlot(it) === slot }) {
 						return false
 					}
 					
@@ -66,10 +67,10 @@ object TombDungeonLoot{
 				}
 				
 				RESOURCES -> {
-					val testStack = when(stack.item){
+					val testStack = when(stack.item) {
 						Items.IRON_NUGGET -> ItemStack(Items.IRON_INGOT)
 						Items.GOLD_NUGGET -> ItemStack(Items.GOLD_INGOT)
-						else -> stack
+						else              -> stack
 					}
 					
 					return generated.any {
@@ -87,21 +88,21 @@ object TombDungeonLoot{
 	
 	// Item helpers
 	
-	private fun getArmorSlot(stack: ItemStack): EquipmentSlotType?{
+	private fun getArmorSlot(stack: ItemStack): EquipmentSlotType? {
 		return (stack.item as? ItemArmor)?.equipmentSlot
 	}
 	
-	private fun getArmorMaterial(stack: ItemStack): IArmorMaterial?{
+	private fun getArmorMaterial(stack: ItemStack): IArmorMaterial? {
 		return (stack.item as? ItemArmor)?.armorMaterial
 	}
 	
-	private fun getToolTier(stack: ItemStack): IItemTier?{
+	private fun getToolTier(stack: ItemStack): IItemTier? {
 		return (stack.item as? ItemTiered)?.tier
 	}
 	
 	// Generation
 	
-	private fun determineAmount(rand: Random, level: TombDungeonLevel, secret: Boolean): Int{
+	private fun determineAmount(rand: Random, level: TombDungeonLevel, secret: Boolean): Int {
 		val amount = 1 + (rand.nextBiasedFloat(5F) * (3F + (level.ordinal * 0.5F))).roundToInt()
 		
 		return if (secret)
@@ -112,19 +113,19 @@ object TombDungeonLoot{
 			amount
 	}
 	
-	private fun determineLootTypes(rand: Random, amount: Int): List<LootType>{
-		if (amount == 1){
+	private fun determineLootTypes(rand: Random, amount: Int): List<LootType> {
+		if (amount == 1) {
 			return listOf(WEIGHTED_LOOT_TYPES.generateItem(rand))
 		}
 		
 		val types = EnumMap<LootType, Int>(LootType::class.java)
 		
-		repeat(amount){
-			for(attempt in 1..10){
+		repeat(amount) {
+			for(attempt in 1..10) {
 				val nextType = WEIGHTED_LOOT_TYPES.generateItem(rand)
 				val currentAmount = types.getOrDefault(nextType, 0)
 				
-				if (currentAmount + 1 <= nextType.limit){
+				if (currentAmount + 1 <= nextType.limit) {
 					types[nextType] = currentAmount + 1
 					break
 				}
@@ -134,17 +135,17 @@ object TombDungeonLoot{
 		return types.flatMap { (type, amount) -> Collections.nCopies(amount, type) }.sortedBy { it.ordinal }
 	}
 	
-	fun generate(chest: IInventory, rand: Random, level: TombDungeonLevel, secret: Boolean){
+	fun generate(chest: IInventory, rand: Random, level: TombDungeonLevel, secret: Boolean) {
 		val amount = determineAmount(rand, level, secret)
 		val generatedTypes = determineLootTypes(rand, amount)
 		val generatedItems = ArrayList<ItemStack>(amount)
 		
-		for(type in generatedTypes){
-			for(attempt in 1..10){
+		for(type in generatedTypes) {
+			for(attempt in 1..10) {
 				val stack = type.generateItem(rand)
 				
-				if (type.isCompatible(stack, generatedItems)){
-					if (secret && stack.isDamageable){
+				if (type.isCompatible(stack, generatedItems)) {
+					if (secret && stack.isDamageable) {
 						stack.damage -= ((stack.damage * 0.1F) + (stack.maxDamage * 0.2F)).roundToInt()
 					}
 					
@@ -154,25 +155,25 @@ object TombDungeonLoot{
 			}
 		}
 		
-		while(generatedItems.size < amount){ // sometimes a compatibility check may fail repeatedly, so just fill it up with whatever
+		while(generatedItems.size < amount) { // sometimes a compatibility check may fail repeatedly, so just fill it up with whatever
 			generatedItems.add(LootType.MISCELLANOUS.generateItem(rand))
 		}
 		
-		for(stack in generatedItems){
-			for(attempt in 1..50){
+		for(stack in generatedItems) {
+			for(attempt in 1..50) {
 				val slot = rand.nextInt(chest.size)
 				
-				if (chest.getStack(slot).isEmpty){
+				if (chest.getStack(slot).isEmpty) {
 					chest.setStack(slot, stack)
 					break
 				}
 			}
 		}
 		
-		repeat(rand.nextInt(0, (2 * (TombDungeonLevel.LAST.ordinal - level.ordinal)))){
+		repeat(rand.nextInt(0, (2 * (TombDungeonLevel.LAST.ordinal - level.ordinal)))) {
 			val slot = rand.nextInt(chest.size)
 			
-			if (chest.getStack(slot).isEmpty){
+			if (chest.getStack(slot).isEmpty) {
 				chest.setStack(slot, ItemStack(ModBlocks.ANCIENT_COBWEB))
 			}
 		}

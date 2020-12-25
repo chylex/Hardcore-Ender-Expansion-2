@@ -1,4 +1,5 @@
 package chylex.hee.system.migration
+
 import net.minecraft.enchantment.Enchantments
 import net.minecraft.potion.Effect
 import net.minecraft.potion.Effects

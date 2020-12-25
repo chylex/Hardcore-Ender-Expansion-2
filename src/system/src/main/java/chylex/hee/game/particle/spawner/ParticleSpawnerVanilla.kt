@@ -1,4 +1,5 @@
 package chylex.hee.game.particle.spawner
+
 import chylex.hee.client.MC
 import chylex.hee.game.particle.spawner.properties.IOffset
 import chylex.hee.game.particle.spawner.properties.IOffset.MutableOffsetPoint
@@ -12,18 +13,18 @@ class ParticleSpawnerVanilla(
 	private val pos: IOffset = None,
 	private val mot: IOffset = None,
 	private val ignoreRangeLimit: Boolean = false,
-	hideOnMinimalSetting: Boolean = true
-) : IParticleSpawner{
+	hideOnMinimalSetting: Boolean = true,
+) : IParticleSpawner {
 	private val particleID = type
 	private val showSomeParticlesEvenOnMinimalSetting = !hideOnMinimalSetting
 	
 	private val tmpOffsetPos = MutableOffsetPoint()
 	private val tmpOffsetMot = MutableOffsetPoint()
 	
-	override fun spawn(shape: IShape, rand: Random){
+	override fun spawn(shape: IShape, rand: Random) {
 		val renderer = MC.instance.worldRenderer
 		
-		for(point in shape.points){
+		for(point in shape.points) {
 			pos.next(tmpOffsetPos, rand)
 			mot.next(tmpOffsetMot, rand)
 			

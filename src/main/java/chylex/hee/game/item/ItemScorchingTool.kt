@@ -1,4 +1,5 @@
 package chylex.hee.game.item
+
 import chylex.hee.game.block.logic.IBlockHarvestDropsOverride
 import chylex.hee.game.block.logic.IBlockHarvestToolCheck
 import chylex.hee.game.inventory.doDamage
@@ -28,21 +29,21 @@ import net.minecraftforge.common.ToolType
 class ItemScorchingTool(
 	properties: Properties,
 	private val toolType: ToolType,
-	attackSpeed: Float
-) : ItemTool(0F, attackSpeed, SCORCHING_TOOL, emptySet(), properties.addToolType(toolType, SCORCHING_TOOL.harvestLevel)), IScorchingItem, IBlockHarvestDropsOverride, ICustomRepairBehavior by ScorchingHelper.Repair(SCORCHING_TOOL){
+	attackSpeed: Float,
+) : ItemTool(0F, attackSpeed, SCORCHING_TOOL, emptySet(), properties.addToolType(toolType, SCORCHING_TOOL.harvestLevel)), IScorchingItem, IBlockHarvestDropsOverride, ICustomRepairBehavior by ScorchingHelper.Repair(SCORCHING_TOOL) {
 	override val material
 		get() = SCORCHING_TOOL
 	
 	// Mining behavior
 	
-	override fun canMine(state: BlockState): Boolean{
+	override fun canMine(state: BlockState): Boolean {
 		val block = state.block
 		
-		if (!ScorchingFortune.canSmelt(Environment.getDimension(DimensionType.OVERWORLD), block)){
+		if (!ScorchingFortune.canSmelt(Environment.getDimension(DimensionType.OVERWORLD), block)) {
 			return false
 		}
 		
-		if (block is IBlockHarvestToolCheck){
+		if (block is IBlockHarvestToolCheck) {
 			return block.canHarvestUsing(toolType, material.harvestLevel)
 		}
 		
@@ -50,20 +51,20 @@ class ItemScorchingTool(
 		return harvestTool == null || (toolType == harvestTool && material.harvestLevel >= block.getHarvestLevel(state))
 	}
 	
-	override fun getDestroySpeed(stack: ItemStack, state: BlockState): Float{
+	override fun getDestroySpeed(stack: ItemStack, state: BlockState): Float {
 		return if (canMine(state))
 			efficiency
 		else
 			0.25F
 	}
 	
-	override fun onBlockDestroyed(stack: ItemStack, world: World, state: BlockState, pos: BlockPos, entity: EntityLivingBase): Boolean{
-		if (!world.isRemote && state.getBlockHardness(world, pos) != 0F){
-			if (canMine(state)){
+	override fun onBlockDestroyed(stack: ItemStack, world: World, state: BlockState, pos: BlockPos, entity: EntityLivingBase): Boolean {
+		if (!world.isRemote && state.getBlockHardness(world, pos) != 0F) {
+			if (canMine(state)) {
 				stack.doDamage(1, entity, MAIN_HAND)
 				PacketClientFX(FX_BLOCK_BREAK, FxBlockData(pos)).sendToAllAround(world, pos, 32.0)
 			}
-			else{
+			else {
 				stack.doDamage(2, entity, MAIN_HAND)
 			}
 		}
@@ -71,11 +72,11 @@ class ItemScorchingTool(
 		return true
 	}
 	
-	override fun onHarvestDrops(state: BlockState, world: World, pos: BlockPos){
-		if (canMine(state)){
+	override fun onHarvestDrops(state: BlockState, world: World, pos: BlockPos) {
+		if (canMine(state)) {
 			val fortuneStack = ScorchingFortune.createSmeltedStack(world, state.block, world.rand)
 			
-			if (fortuneStack.isNotEmpty){
+			if (fortuneStack.isNotEmpty) {
 				Block.spawnAsEntity(world, pos, fortuneStack)
 			}
 		}
@@ -83,7 +84,7 @@ class ItemScorchingTool(
 	
 	// Hitting behavior
 	
-	override fun hitEntity(stack: ItemStack, target: EntityLivingBase, attacker: EntityLivingBase): Boolean{
+	override fun hitEntity(stack: ItemStack, target: EntityLivingBase, attacker: EntityLivingBase): Boolean {
 		target.setFire(1)
 		PacketClientFX(FX_ENTITY_HIT, FxEntityData(target)).sendToAllAround(target, 32.0)
 		
@@ -93,7 +94,7 @@ class ItemScorchingTool(
 	
 	// Repair handling
 	
-	override fun getIsRepairable(toRepair: ItemStack, repairWith: ItemStack): Boolean{
+	override fun getIsRepairable(toRepair: ItemStack, repairWith: ItemStack): Boolean {
 		return ScorchingHelper.onGetIsRepairable(this, repairWith)
 	}
 }

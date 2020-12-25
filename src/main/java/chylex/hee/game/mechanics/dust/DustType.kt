@@ -1,4 +1,5 @@
 package chylex.hee.game.mechanics.dust
+
 import chylex.hee.init.ModItems
 import chylex.hee.system.color.IntColor
 import chylex.hee.system.color.IntColor.Companion.RGB
@@ -6,7 +7,7 @@ import net.minecraft.item.Item
 import net.minecraft.item.ItemStack
 import net.minecraft.item.Items
 
-enum class DustType(val key: String, val item: Item, val color: IntArray){
+enum class DustType(val key: String, val item: Item, val color: IntArray) {
 	STARDUST("stardust", ModItems.STARDUST, RGB(255, 255, 72)),
 	END_POWDER("end_powder", ModItems.END_POWDER, RGB(131, 7, 189)),
 	ANCIENT_DUST("ancient_dust", ModItems.ANCIENT_DUST, RGB(147, 166, 169)),
@@ -21,8 +22,8 @@ enum class DustType(val key: String, val item: Item, val color: IntArray){
 	val maxStackSize
 		get() = item.maxStackSize
 	
-	companion object{
-		fun fromStack(stack: ItemStack): DustType?{
+	companion object {
+		fun fromStack(stack: ItemStack): DustType? {
 			return values().firstOrNull { it.item === stack.item }
 		}
 	}

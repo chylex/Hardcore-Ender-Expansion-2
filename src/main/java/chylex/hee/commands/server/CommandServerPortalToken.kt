@@ -1,4 +1,5 @@
 package chylex.hee.commands.server
+
 import chylex.hee.commands.CommandExecutionFunctionCtx
 import chylex.hee.commands.ICommand
 import chylex.hee.commands.arguments.EnumArgument.Companion.enum
@@ -15,10 +16,10 @@ import net.minecraft.command.CommandSource
 import net.minecraft.command.Commands.argument
 import net.minecraft.util.text.TranslationTextComponent
 
-object CommandServerPortalToken : ICommand, CommandExecutionFunctionCtx<Boolean>{
+object CommandServerPortalToken : ICommand, CommandExecutionFunctionCtx<Boolean> {
 	override val name = "token"
 	
-	override fun register(builder: ArgumentBuilder<CommandSource, *>){
+	override fun register(builder: ArgumentBuilder<CommandSource, *>) {
 		builder.then(
 			argument("territory", enum<TerritoryType>()).executes(this, false).then(
 				argument("type", enum<TokenType>()).executes(this, true)
@@ -26,11 +27,11 @@ object CommandServerPortalToken : ICommand, CommandExecutionFunctionCtx<Boolean>
 		)
 	}
 	
-	override fun invoke(ctx: CommandContext<CommandSource>, hasType: Boolean) = returning(1){
+	override fun invoke(ctx: CommandContext<CommandSource>, hasType: Boolean) = returning(1) {
 		val territory = ctx.getEnum<TerritoryType>("territory")
 		val type = if (hasType) ctx.getEnum("type") else TokenType.NORMAL
 		
-		with(ctx.source){
+		with(ctx.source) {
 			asPlayer().addItemStackToInventory(ModItems.PORTAL_TOKEN.forTerritory(type, territory))
 			sendFeedback(message("success", TranslationTextComponent(territory.translationKey)), true)
 		}

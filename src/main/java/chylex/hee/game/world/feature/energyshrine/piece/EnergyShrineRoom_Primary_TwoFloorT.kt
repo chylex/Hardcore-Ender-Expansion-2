@@ -1,4 +1,5 @@
 package chylex.hee.game.world.feature.energyshrine.piece
+
 import chylex.hee.game.block.withFacing
 import chylex.hee.game.world.Pos
 import chylex.hee.game.world.feature.energyshrine.EnergyShrinePieces
@@ -13,14 +14,14 @@ import chylex.hee.system.migration.Facing.NORTH
 import chylex.hee.system.migration.Facing.SOUTH
 import chylex.hee.system.migration.Facing.WEST
 
-class EnergyShrineRoom_Primary_TwoFloorT(file: String) : EnergyShrineRoom_Generic(file){
+class EnergyShrineRoom_Primary_TwoFloorT(file: String) : EnergyShrineRoom_Generic(file) {
 	override val connections = arrayOf<IStructurePieceConnection>(
 		EnergyShrineConnection(ROOM, Pos(centerX, 0, maxZ), SOUTH),
 		EnergyShrineConnection(ROOM, Pos(maxX, 5, 2), EAST),
 		EnergyShrineConnection(ROOM, Pos(0, 5, 3), WEST)
 	)
 	
-	override fun generate(world: IStructureWorld, instance: Instance){
+	override fun generate(world: IStructureWorld, instance: Instance) {
 		super.generate(world, instance)
 		
 		val cornerBlock = getContext(instance).cornerBlock

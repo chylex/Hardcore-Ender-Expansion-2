@@ -1,9 +1,10 @@
 package chylex.hee.game.block.properties
+
 import net.minecraft.block.material.Material
 import net.minecraft.block.material.MaterialColor
 import net.minecraft.block.material.PushReaction
 
-class CustomMaterial{
+class CustomMaterial {
 	var solid = true
 	private var liquid = false
 	
@@ -16,20 +17,20 @@ class CustomMaterial{
 	
 	private var pushReaction = PushReaction.NORMAL
 	
-	fun destroyWhenPushed(){
+	fun destroyWhenPushed() {
 		pushReaction = PushReaction.DESTROY
 	}
 	
-	fun blockWhenPushed(){
+	fun blockWhenPushed() {
 		pushReaction = PushReaction.BLOCK
 	}
 	
-	fun makeTransparent(){
+	fun makeTransparent() {
 		solid = false
 		blocksMovement = false
 	}
 	
-	fun makeLiquid(){
+	fun makeLiquid() {
 		solid = false
 		liquid = true
 		replaceable = true
@@ -39,11 +40,11 @@ class CustomMaterial{
 	
 	// Building
 	
-	fun build(): Material{
+	fun build(): Material {
 		return Material(MaterialColor.AIR, liquid, solid, blocksMovement, blocksMovement && !translucent, !requiresTool, flammable, replaceable, pushReaction)
 	}
 	
-	inline fun build(block: CustomMaterial.() -> Unit): Material{
+	inline fun build(block: CustomMaterial.() -> Unit): Material {
 		block()
 		return build()
 	}

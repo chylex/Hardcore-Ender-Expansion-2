@@ -1,4 +1,5 @@
 package chylex.hee.game.world.feature.energyshrine.piece
+
 import chylex.hee.game.block.withFacing
 import chylex.hee.game.world.Pos
 import chylex.hee.game.world.feature.energyshrine.connection.EnergyShrineConnection
@@ -14,14 +15,14 @@ import chylex.hee.system.migration.Facing.SOUTH
 import chylex.hee.system.migration.Facing.WEST
 import net.minecraft.block.Blocks
 
-class EnergyShrineRoom_Primary_SplitT(file: String) : EnergyShrineRoom_Generic(file){
+class EnergyShrineRoom_Primary_SplitT(file: String) : EnergyShrineRoom_Generic(file) {
 	override val connections = arrayOf<IStructurePieceConnection>(
 		EnergyShrineConnection(ROOM, Pos(centerX, 0, maxZ), SOUTH),
 		EnergyShrineConnection(ROOM, Pos(centerX - 1, 0, 0), NORTH),
 		EnergyShrineConnection(ROOM, Pos(0, 0, centerZ), WEST)
 	)
 	
-	override fun generate(world: IStructureWorld, instance: Instance){
+	override fun generate(world: IStructureWorld, instance: Instance) {
 		super.generate(world, instance)
 		
 		val rand = world.rand
@@ -38,7 +39,7 @@ class EnergyShrineRoom_Primary_SplitT(file: String) : EnergyShrineRoom_Generic(f
 			 5 to Air
 		)
 		
-		for(z in 3..(maxZ - 3)){
+		for(z in 3..(maxZ - 3)) {
 			placeDecoration(world, Pos(maxX - 1, 2, z), decorations.removeItem(rand))
 		}
 		

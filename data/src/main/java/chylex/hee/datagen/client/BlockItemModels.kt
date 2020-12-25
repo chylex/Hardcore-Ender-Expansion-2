@@ -1,4 +1,5 @@
 package chylex.hee.datagen.client
+
 import chylex.hee.datagen.client.util.block
 import chylex.hee.datagen.client.util.multi
 import chylex.hee.datagen.client.util.override
@@ -13,8 +14,8 @@ import net.minecraft.data.DataGenerator
 import net.minecraftforge.client.model.generators.ExistingFileHelper
 import net.minecraftforge.client.model.generators.ItemModelProvider
 
-class BlockItemModels(generator: DataGenerator, modid: String, existingFileHelper: ExistingFileHelper) : ItemModelProvider(generator, modid, existingFileHelper){
-	override fun registerModels(){
+class BlockItemModels(generator: DataGenerator, modid: String, existingFileHelper: ExistingFileHelper) : ItemModelProvider(generator, modid, existingFileHelper) {
+	override fun registerModels() {
 		
 		// Blocks: Building (Uncategorized)
 		
@@ -85,12 +86,12 @@ class BlockItemModels(generator: DataGenerator, modid: String, existingFileHelpe
 		// Blocks: Decorative (Plants)
 		
 		simple(ModBlocks.DEATH_FLOWER_DECAYING, ModBlocks.DEATH_FLOWER_DECAYING.r("_1")).then {
-			override(ModBlocks.DEATH_FLOWER_DECAYING.asItem().r("_2")){ predicate(Resource.Custom("death_level"), 4F) }
-			override(ModBlocks.DEATH_FLOWER_DECAYING.asItem().r("_3")){ predicate(Resource.Custom("death_level"), 8F) }
-			override(ModBlocks.DEATH_FLOWER_DECAYING.asItem().r("_4")){ predicate(Resource.Custom("death_level"), 12F) }
+			override(ModBlocks.DEATH_FLOWER_DECAYING.asItem().r("_2")) { predicate(Resource.Custom("death_level"), 4F) }
+			override(ModBlocks.DEATH_FLOWER_DECAYING.asItem().r("_3")) { predicate(Resource.Custom("death_level"), 8F) }
+			override(ModBlocks.DEATH_FLOWER_DECAYING.asItem().r("_4")) { predicate(Resource.Custom("death_level"), 12F) }
 		}
 		
-		multi(ModBlocks.DEATH_FLOWER_DECAYING, Resource.Vanilla("item/generated"), 1..4){
+		multi(ModBlocks.DEATH_FLOWER_DECAYING, Resource.Vanilla("item/generated"), 1..4) {
 			texture("layer0", Resource.Custom("block/" + it.path))
 		}
 		

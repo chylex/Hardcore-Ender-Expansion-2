@@ -1,4 +1,5 @@
 package chylex.hee.game.block.entity.base
+
 import chylex.hee.game.block.entity.base.TileEntityBase.Context.NETWORK
 import chylex.hee.game.world.FLAG_SKIP_RENDER
 import chylex.hee.game.world.FLAG_SYNC_CLIENT
@@ -28,8 +29,8 @@ import net.minecraft.util.SoundCategory
 import net.minecraft.util.SoundEvent
 import net.minecraft.util.text.ITextComponent
 
-abstract class TileEntityBaseChest(type: TileEntityType<out TileEntityBaseChest>) : TileEntityBase(type), IChestLid, ITickableTileEntity, INamedContainerProvider, INameable{
-	private companion object{
+abstract class TileEntityBaseChest(type: TileEntityType<out TileEntityBaseChest>) : TileEntityBase(type), IChestLid, ITickableTileEntity, INamedContainerProvider, INameable {
+	private companion object {
 		private const val CUSTOM_NAME_TAG = "CustomName"
 		private const val VIEWER_COUNT_TAG = "ViewerCount"
 	}
@@ -51,25 +52,25 @@ abstract class TileEntityBaseChest(type: TileEntityType<out TileEntityBaseChest>
 	// Animation
 	
 	@Sided(Side.CLIENT)
-	override fun getLidAngle(partialTicks: Float): Float{
+	override fun getLidAngle(partialTicks: Float): Float {
 		return lidAngle.get(partialTicks)
 	}
 	
-	final override fun tick(){
+	final override fun tick() {
 		val currentLidAngle = lidAngle.currentValue
 		var newLidAngle = currentLidAngle
 		
-		if (viewerCount > 0 && currentLidAngle < 1F){
+		if (viewerCount > 0 && currentLidAngle < 1F) {
 			newLidAngle = (currentLidAngle + 0.1F).coerceAtMost(1F)
 			
-			if (currentLidAngle == 0F){
+			if (currentLidAngle == 0F) {
 				playChestSound(soundOpening)
 			}
 		}
-		else if (viewerCount == 0 && currentLidAngle > 0F){
+		else if (viewerCount == 0 && currentLidAngle > 0F) {
 			newLidAngle = (currentLidAngle - 0.1F).coerceAtLeast(0F)
 			
-			if (currentLidAngle >= 0.5F && newLidAngle < 0.5F){
+			if (currentLidAngle >= 0.5F && newLidAngle < 0.5F) {
 				playChestSound(soundClosing)
 			}
 		}
@@ -77,34 +78,34 @@ abstract class TileEntityBaseChest(type: TileEntityType<out TileEntityBaseChest>
 		lidAngle.update(newLidAngle)
 	}
 	
-	protected open fun playChestSound(sound: SoundEvent){
+	protected open fun playChestSound(sound: SoundEvent) {
 		sound.playServer(wrld, pos, SoundCategory.BLOCKS, volume = 0.5F, pitch = wrld.rand.nextFloat(0.9F, 1.0F))
 	}
 	
 	// Inventory handling
 	
-	fun isUsableByPlayer(player: EntityPlayer): Boolean{
+	fun isUsableByPlayer(player: EntityPlayer): Boolean {
 		return pos.getTile<TileEntityBaseChest>(wrld) === this && pos.distanceSqTo(player) <= 64
 	}
 	
-	protected fun createChestInventory(wrapped: IInventory): IInventory{
-		return object : IInventory by wrapped{
-			override fun openInventory(player: EntityPlayer){
+	protected fun createChestInventory(wrapped: IInventory): IInventory {
+		return object : IInventory by wrapped {
+			override fun openInventory(player: EntityPlayer) {
 				wrapped.openInventory(player)
 				++viewerCount
 			}
 			
-			override fun closeInventory(player: EntityPlayer){
+			override fun closeInventory(player: EntityPlayer) {
 				wrapped.closeInventory(player)
 				--viewerCount
 			}
 			
-			override fun markDirty(){
+			override fun markDirty() {
 				wrapped.markDirty()
 				this@TileEntityBaseChest.markDirty()
 			}
 			
-			override fun isUsableByPlayer(player: EntityPlayer): Boolean{
+			override fun isUsableByPlayer(player: EntityPlayer): Boolean {
 				return this@TileEntityBaseChest.isUsableByPlayer(player)
 			}
 		}
@@ -112,23 +113,23 @@ abstract class TileEntityBaseChest(type: TileEntityType<out TileEntityBaseChest>
 	
 	// Custom name
 	
-	final override fun hasCustomName(): Boolean{
+	final override fun hasCustomName(): Boolean {
 		return customName != null
 	}
 	
-	final override fun getName(): ITextComponent{
+	final override fun getName(): ITextComponent {
 		return customName ?: defaultName
 	}
 	
-	final override fun getCustomName(): ITextComponent?{
+	final override fun getCustomName(): ITextComponent? {
 		return customName
 	}
 	
-	final override fun getDisplayName(): ITextComponent{
+	final override fun getDisplayName(): ITextComponent {
 		return name
 	}
 	
-	fun setCustomName(customName: ITextComponent){
+	fun setCustomName(customName: ITextComponent) {
 		this.customName = customName
 	}
 	
@@ -139,7 +140,7 @@ abstract class TileEntityBaseChest(type: TileEntityType<out TileEntityBaseChest>
 			putString(CUSTOM_NAME_TAG, ITextComponent.Serializer.toJson(it))
 		}
 		
-		if (context == NETWORK){
+		if (context == NETWORK) {
 			putShort(VIEWER_COUNT_TAG, viewerCount.toShort())
 		}
 	}
@@ -147,7 +148,7 @@ abstract class TileEntityBaseChest(type: TileEntityType<out TileEntityBaseChest>
 	override fun readNBT(nbt: TagCompound, context: Context) = nbt.use {
 		customName = getStringOrNull(CUSTOM_NAME_TAG)?.let(ITextComponent.Serializer::fromJson)
 		
-		if (context == NETWORK){
+		if (context == NETWORK) {
 			viewerCount = getShort(VIEWER_COUNT_TAG).toInt()
 		}
 	}

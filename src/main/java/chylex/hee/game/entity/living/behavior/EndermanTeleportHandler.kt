@@ -1,4 +1,5 @@
 package chylex.hee.game.entity.living.behavior
+
 import chylex.hee.HEE
 import chylex.hee.game.entity.Teleporter
 import chylex.hee.game.entity.Teleporter.Companion.FxTeleportData
@@ -58,8 +59,8 @@ import java.util.UUID
 import kotlin.math.min
 import kotlin.math.sqrt
 
-class EndermanTeleportHandler(private val enderman: EntityMobAbstractEnderman) : INBTSerializable<TagCompound>{
-	companion object{
+class EndermanTeleportHandler(private val enderman: EntityMobAbstractEnderman) : INBTSerializable<TagCompound> {
+	companion object {
 		private const val DEFAULT_RESTORE_Y = -256.0
 		
 		private const val COOLDOWN_TAG = "Cooldown"
@@ -84,15 +85,15 @@ class EndermanTeleportHandler(private val enderman: EntityMobAbstractEnderman) :
 			hideOnMinimalSetting = false
 		)
 		
-		val FX_TELEPORT_FAIL = object : FxEntityHandler(){
-			override fun handle(entity: Entity, rand: Random){
+		val FX_TELEPORT_FAIL = object : FxEntityHandler() {
+			override fun handle(entity: Entity, rand: Random) {
 				PARTICLE_TELEPORT_FAIL(entity).spawn(Point(entity, heightMp = 0.5F, amount = 55), rand)
 				ModSounds.MOB_ENDERMAN_TELEPORT_FAIL.playClient(entity.posVec, SoundCategory.HOSTILE, volume = 2.5F)
 			}
 		}
 		
-		val FX_TELEPORT_OUT_OF_WORLD = object : FxEntityHandler(){
-			override fun handle(entity: Entity, rand: Random){
+		val FX_TELEPORT_OUT_OF_WORLD = object : FxEntityHandler() {
+			override fun handle(entity: Entity, rand: Random) {
 				val player = HEE.proxy.getClientSidePlayer() ?: return
 				
 				val startPoint = entity.posVec
@@ -104,13 +105,13 @@ class EndermanTeleportHandler(private val enderman: EntityMobAbstractEnderman) :
 				
 				PARTICLE_TELEPORT_OUT_OF_WORLD.spawn(Line(startPoint, endPoint, 0.5), rand)
 				
-				repeat(2){
+				repeat(2) {
 					ModSounds.MOB_ENDERMAN_TELEPORT_OUT.playClient(soundPoint, SoundCategory.HOSTILE, if (it == 0) volume else volume * 0.75F)
 				}
 			}
 		}
 		
-		private fun sendDelayedTeleportFX(entity: Entity){
+		private fun sendDelayedTeleportFX(entity: Entity) {
 			val point = entity.posVec.addY(entity.height.toDouble())
 			FxTeleportData(point, point, entity.width, entity.height, Sounds.ENTITY_ENDERMAN_TELEPORT, entity.soundCategory, soundVolume = 0.8F).send(entity.world)
 		}
@@ -132,22 +133,22 @@ class EndermanTeleportHandler(private val enderman: EntityMobAbstractEnderman) :
 	
 	private var lastDodged: UUID? = null
 	
-	fun update(){
-		if (tpCooldown > 0){
+	fun update() {
+		if (tpCooldown > 0) {
 			--tpCooldown
 		}
 		
-		if (failCooldown > 0){
+		if (failCooldown > 0) {
 			--failCooldown
 		}
 		
-		if (tpDelayTicks > 0 && --tpDelayTicks == 0){
+		if (tpDelayTicks > 0 && --tpDelayTicks == 0) {
 			enderman.setNoAI(false)
 			enderman.setPositionAndUpdate(enderman.posX, tpDelayRestoreY, enderman.posZ)
 			
 			tpDelayedReappearing = true
 			
-			if (tpDelayedCallback?.invoke() != true){
+			if (tpDelayedCallback?.invoke() != true) {
 				enderman.remove()
 			}
 			
@@ -159,20 +160,20 @@ class EndermanTeleportHandler(private val enderman: EntityMobAbstractEnderman) :
 	
 	// Helpers
 	
-	fun checkCooldownSilent(): Boolean{
+	fun checkCooldownSilent(): Boolean {
 		return tpCooldown == 0 && tpDelayTicks == 0
 	}
 	
-	private fun checkCooldown(): Boolean{
-		if (tpDelayTicks > 0){
+	private fun checkCooldown(): Boolean {
+		if (tpDelayTicks > 0) {
 			return false
 		}
 		
-		if (tpCooldown == 0){
+		if (tpCooldown == 0) {
 			return true
 		}
 		
-		if (failCooldown == 0.toByte()){
+		if (failCooldown == 0.toByte()) {
 			PacketClientFX(FX_TELEPORT_FAIL, FxEntityData(enderman)).sendToAllAround(enderman, 16.0)
 			failCooldown = rand.nextInt(26, 34).toByte()
 		}
@@ -180,10 +181,10 @@ class EndermanTeleportHandler(private val enderman: EntityMobAbstractEnderman) :
 		return false
 	}
 	
-	private fun checkPositionSuitable(target: Vec3d): Boolean{
+	private fun checkPositionSuitable(target: Vec3d): Boolean {
 		val pos = Pos(target)
 		
-		if (!pos.isLoaded(world) || !pos.down().blocksMovement(world)){
+		if (!pos.isLoaded(world) || !pos.down().blocksMovement(world)) {
 			return false
 		}
 		
@@ -202,11 +203,11 @@ class EndermanTeleportHandler(private val enderman: EntityMobAbstractEnderman) :
 		return enderman.canTeleportTo(aabb)
 	}
 	
-	private fun teleportCheckLocation(teleporter: Teleporter, target: Vec3d): Boolean{
+	private fun teleportCheckLocation(teleporter: Teleporter, target: Vec3d): Boolean {
 		return checkPositionSuitable(target) && teleporter.toLocation(enderman, target)
 	}
 	
-	private fun getPositionInsideBlock(target: BlockPos): Vec3d{
+	private fun getPositionInsideBlock(target: BlockPos): Vec3d {
 		val xzMaxOffset = 0.5F - (enderman.width * 0.5F)
 		
 		return Vec(
@@ -216,19 +217,19 @@ class EndermanTeleportHandler(private val enderman: EntityMobAbstractEnderman) :
 		)
 	}
 	
-	private fun findTop(target: BlockPos, maxDecreaseY: Int): BlockPos?{
-		return target.offsetUntilExcept(DOWN, 0..maxDecreaseY){ it.blocksMovement(world) }
+	private fun findTop(target: BlockPos, maxDecreaseY: Int): BlockPos? {
+		return target.offsetUntilExcept(DOWN, 0..maxDecreaseY) { it.blocksMovement(world) }
 	}
 	
 	// General teleports
 	
-	fun teleportTo(target: Vec3d): Boolean{
-		if (!checkCooldown()){
+	fun teleportTo(target: Vec3d): Boolean {
+		if (!checkCooldown()) {
 			return false
 		}
 		
-		if (tpDelayedReappearing){
-			if (teleportCheckLocation(TELEPORTER_SILENT, target)){
+		if (tpDelayedReappearing) {
+			if (teleportCheckLocation(TELEPORTER_SILENT, target)) {
 				sendDelayedTeleportFX(enderman)
 				tpDelayedReappearing = false
 				
@@ -239,7 +240,7 @@ class EndermanTeleportHandler(private val enderman: EntityMobAbstractEnderman) :
 			return false
 		}
 		
-		if (teleportCheckLocation(TELEPORTER_GENERAL, target)){
+		if (teleportCheckLocation(TELEPORTER_GENERAL, target)) {
 			tpCooldown = enderman.teleportCooldown
 			return true
 		}
@@ -247,25 +248,25 @@ class EndermanTeleportHandler(private val enderman: EntityMobAbstractEnderman) :
 		return false
 	}
 	
-	fun teleportTo(target: BlockPos): Boolean{
+	fun teleportTo(target: BlockPos): Boolean {
 		return teleportTo(getPositionInsideBlock(target))
 	}
 	
-	fun teleportAround(target: Entity, angleRange: ClosedFloatingPointRange<Float>, distanceRange: ClosedFloatingPointRange<Double>): Boolean{
-		if (!checkCooldown()){
+	fun teleportAround(target: Entity, angleRange: ClosedFloatingPointRange<Float>, distanceRange: ClosedFloatingPointRange<Double>): Boolean {
+		if (!checkCooldown()) {
 			return false
 		}
 		
 		val targetVec = target.posVec
 		
-		for(attempt in 1..50){
+		for(attempt in 1..50) {
 			val dir = Vec3.fromYaw(target.rotationYaw + rand.nextFloat(angleRange))
 			val distance = rand.nextFloat(distanceRange)
 			
 			val offsetVec = targetVec.add(dir.scale(distance))
 			val targetPos = findTop(Pos(offsetVec).add(0, rand.nextInt(-4, 8), 0), maxDecreaseY = 4)
 			
-			if (targetPos != null && teleportTo(targetPos)){
+			if (targetPos != null && teleportTo(targetPos)) {
 				return true
 			}
 		}
@@ -273,18 +274,18 @@ class EndermanTeleportHandler(private val enderman: EntityMobAbstractEnderman) :
 		return false
 	}
 	
-	fun teleportRandom(distanceRange: ClosedFloatingPointRange<Double>): Boolean{
-		if (!checkCooldown()){
+	fun teleportRandom(distanceRange: ClosedFloatingPointRange<Double>): Boolean {
+		if (!checkCooldown()) {
 			return false
 		}
 		
 		val endermanPos = Pos(enderman)
 		
-		for(attempt in 1..25){
+		for(attempt in 1..25) {
 			val (x, y, z) = rand.nextVector2(xz = rand.nextFloat(distanceRange), y = rand.nextFloat(-24.0, 48.0))
 			val targetPos = findTop(endermanPos.add(x, y, z), maxDecreaseY = 24)
 			
-			if (targetPos != null && teleportTo(targetPos)){
+			if (targetPos != null && teleportTo(targetPos)) {
 				return true
 			}
 		}
@@ -294,8 +295,8 @@ class EndermanTeleportHandler(private val enderman: EntityMobAbstractEnderman) :
 	
 	// Special teleports
 	
-	fun teleportDelayed(delayTicks: Int, callback: () -> Boolean): Boolean{
-		if (enderman.isAIDisabled || !checkCooldown()){
+	fun teleportDelayed(delayTicks: Int, callback: () -> Boolean): Boolean {
+		if (enderman.isAIDisabled || !checkCooldown()) {
 			return false
 		}
 		
@@ -312,10 +313,10 @@ class EndermanTeleportHandler(private val enderman: EntityMobAbstractEnderman) :
 		return true
 	}
 	
-	fun teleportDodge(dodge: Entity): Boolean{
+	fun teleportDodge(dodge: Entity): Boolean {
 		val uuid = dodge.uniqueID
 		
-		if (uuid == lastDodged){
+		if (uuid == lastDodged) {
 			return false
 		}
 		
@@ -329,15 +330,15 @@ class EndermanTeleportHandler(private val enderman: EntityMobAbstractEnderman) :
 			endermanPos.add(perpendicularVec.scale(it * dodgeDist)).squareDistanceTo(dodgePos) + (rand.nextDouble() * 0.1)
 		})
 		
-		for(attempt in 1..3){
+		for(attempt in 1..3) {
 			val basePos = endermanPos
-				.add(perpendicularVec.scale(dir * rand.nextFloat(dodgeDist, dodgeDist + 0.4))
-				.add(rand.nextVector2(xz = rand.nextFloat(0.0, 0.15), y = 1.5)))
+				.add(perpendicularVec.scale(dir * rand.nextFloat(dodgeDist, dodgeDist + 0.4)))
+				.add(rand.nextVector2(xz = rand.nextFloat(0.0, 0.15), y = 1.5))
 			
-			for(offset in 0..2){
+			for(offset in 0..2) {
 				val targetPos = Vec(basePos.x, basePos.y.floorToInt() - offset + 0.01, basePos.z)
 				
-				if (teleportCheckLocation(TELEPORTER_WEAK, targetPos)){
+				if (teleportCheckLocation(TELEPORTER_WEAK, targetPos)) {
 					lastDodged = uuid
 					return true
 				}
@@ -347,22 +348,22 @@ class EndermanTeleportHandler(private val enderman: EntityMobAbstractEnderman) :
 		return false
 	}
 	
-	fun teleportTowards(target: Entity, angleRange: ClosedFloatingPointRange<Float>, distanceRange: ClosedFloatingPointRange<Double>): Boolean{
-		if (!checkCooldown()){
+	fun teleportTowards(target: Entity, angleRange: ClosedFloatingPointRange<Float>, distanceRange: ClosedFloatingPointRange<Double>): Boolean {
+		if (!checkCooldown()) {
 			return false
 		}
 		
 		val endermanVec = enderman.posVec
 		val diffVec = endermanVec.directionTowards(target.posVec)
 		
-		for(attempt in 1..50){
+		for(attempt in 1..50) {
 			val dir = diffVec.rotateYaw(rand.nextFloat(angleRange).toRadians())
 			val distance = rand.nextFloat(distanceRange)
 			
 			val offsetVec = endermanVec.add(dir.scale(distance))
 			val targetPos = findTop(Pos(offsetVec).add(0, rand.nextInt(-4, 8), 0), maxDecreaseY = 4)
 			
-			if (targetPos != null && teleportCheckLocation(TELEPORTER_WEAK, getPositionInsideBlock(targetPos))){
+			if (targetPos != null && teleportCheckLocation(TELEPORTER_WEAK, getPositionInsideBlock(targetPos))) {
 				return true
 			}
 		}
@@ -370,8 +371,8 @@ class EndermanTeleportHandler(private val enderman: EntityMobAbstractEnderman) :
 		return false
 	}
 	
-	fun teleportOutOfWorld(force: Boolean = false): Boolean{
-		if (!force && !checkCooldown()){
+	fun teleportOutOfWorld(force: Boolean = false): Boolean {
+		if (!force && !checkCooldown()) {
 			return false
 		}
 		

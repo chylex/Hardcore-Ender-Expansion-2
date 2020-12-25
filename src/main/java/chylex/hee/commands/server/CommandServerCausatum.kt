@@ -1,4 +1,5 @@
 package chylex.hee.commands.server
+
 import chylex.hee.commands.ICommand
 import chylex.hee.commands.arguments.EnumArgument.Companion.enum
 import chylex.hee.commands.executes
@@ -18,10 +19,10 @@ import net.minecraft.command.arguments.EntityArgument.players
 import net.minecraft.util.text.StringTextComponent
 import java.util.Locale
 
-object CommandServerCausatum : ICommand{
+object CommandServerCausatum : ICommand {
 	override val name = "causatum"
 	
-	override fun register(builder: ArgumentBuilder<CommandSource, *>){
+	override fun register(builder: ArgumentBuilder<CommandSource, *>) {
 		val execCheck = this::executeCheck
 		val execSet = this::executeSet
 		
@@ -44,18 +45,18 @@ object CommandServerCausatum : ICommand{
 		)
 	}
 	
-	private fun executeList(ctx: CommandContext<CommandSource>) = returning(1){
-		with(ctx.source){
+	private fun executeList(ctx: CommandContext<CommandSource>) = returning(1) {
+		with(ctx.source) {
 			sendFeedback(message("list"), false)
 			
-			for(stage in CausatumStage.values()){
+			for(stage in CausatumStage.values()) {
 				sendFeedback(StringTextComponent(stage.name.toLowerCase(Locale.ENGLISH)), false)
 			}
 		}
 	}
 	
-	private fun executeCheck(ctx: CommandContext<CommandSource>, hasPlayerParameter: Boolean): Int{
-		with(ctx.source){
+	private fun executeCheck(ctx: CommandContext<CommandSource>, hasPlayerParameter: Boolean): Int {
+		with(ctx.source) {
 			val player = if (hasPlayerParameter) EntityArgument.getPlayer(ctx, "player") else asPlayer()
 			val stage = EnderCausatum.getStage(player)
 			
@@ -64,13 +65,13 @@ object CommandServerCausatum : ICommand{
 		}
 	}
 	
-	private fun executeSet(ctx: CommandContext<CommandSource>, hasPlayerParameter: Boolean): Int{
+	private fun executeSet(ctx: CommandContext<CommandSource>, hasPlayerParameter: Boolean): Int {
 		val newStage = ctx.getEnum<CausatumStage>("stage")
 		
-		with(ctx.source){
+		with(ctx.source) {
 			val players = if (hasPlayerParameter) EntityArgument.getPlayers(ctx, "players") else listOf(asPlayer())
 			
-			for(player in players){
+			for(player in players) {
 				EnderCausatum.triggerStage(player, newStage, force = true)
 			}
 			

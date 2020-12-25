@@ -1,4 +1,5 @@
 package chylex.hee.network.client
+
 import chylex.hee.network.BaseClientPacket
 import chylex.hee.system.forge.Side
 import chylex.hee.system.forge.Sided
@@ -8,8 +9,8 @@ import chylex.hee.system.serialization.use
 import net.minecraft.entity.Entity
 import net.minecraft.network.PacketBuffer
 
-class PacketClientRotateInstantly() : BaseClientPacket(){
-	constructor(entity: Entity, yaw: Float, pitch: Float) : this(){
+class PacketClientRotateInstantly() : BaseClientPacket() {
+	constructor(entity: Entity, yaw: Float, pitch: Float) : this() {
 		this.entityId = entity.entityId
 		this.yaw = yaw
 		this.pitch = pitch
@@ -32,13 +33,13 @@ class PacketClientRotateInstantly() : BaseClientPacket(){
 	}
 	
 	@Sided(Side.CLIENT)
-	override fun handle(player: EntityPlayerSP){
+	override fun handle(player: EntityPlayerSP) {
 		entityId?.let(player.world::getEntityByID)?.let {
 			it.setPositionAndRotation(it.posX, it.posY, it.posZ, yaw!!, pitch!!)
 			it.setRenderYawOffset(yaw!!)
 			it.rotationYawHead = yaw!!
 			
-			if (it is EntityLivingBase){
+			if (it is EntityLivingBase) {
 				it.prevRenderYawOffset = it.renderYawOffset
 			}
 		}

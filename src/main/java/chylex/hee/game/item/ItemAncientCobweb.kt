@@ -1,4 +1,5 @@
 package chylex.hee.game.item
+
 import chylex.hee.game.block.BlockAncientCobweb
 import chylex.hee.game.entity.motionY
 import chylex.hee.game.inventory.size
@@ -20,17 +21,17 @@ import net.minecraft.world.storage.loot.LootParameterSets
 import net.minecraft.world.storage.loot.LootParameters
 import kotlin.math.min
 
-class ItemAncientCobweb(private val block: BlockAncientCobweb, properties: Properties) : ItemBlock(block, properties){
-	override fun inventoryTick(stack: ItemStack, world: World, entity: Entity, itemSlot: Int, isSelected: Boolean){
-		if (world.isRemote || world.totalTime % 4L != 0L){
+class ItemAncientCobweb(private val block: BlockAncientCobweb, properties: Properties) : ItemBlock(block, properties) {
+	override fun inventoryTick(stack: ItemStack, world: World, entity: Entity, itemSlot: Int, isSelected: Boolean) {
+		if (world.isRemote || world.totalTime % 4L != 0L) {
 			return
 		}
 		
-		if (!(isSelected || (entity is EntityLivingBase && entity.getHeldItem(OFF_HAND) === stack))){
+		if (!(isSelected || (entity is EntityLivingBase && entity.getHeldItem(OFF_HAND) === stack))) {
 			return
 		}
 		
-		if (entity is EntityPlayer && (entity.isCreative || entity.isSpectator)){
+		if (entity is EntityPlayer && (entity.isCreative || entity.isSpectator)) {
 			return
 		}
 		
@@ -45,11 +46,11 @@ class ItemAncientCobweb(private val block: BlockAncientCobweb, properties: Prope
 		val itemsDisintegrated = min(stack.size, world.rand.nextInt(0, 2))
 		stack.shrink(itemsDisintegrated)
 		
-		repeat(itemsDisintegrated){
+		repeat(itemsDisintegrated) {
 			val drops = lootTable.generate(lootContext)
 			val front = entity.positionVector.add(entity.lookVec.scale(0.6))
 			
-			for(drop in drops){
+			for(drop in drops) {
 				EntityItem(world, front.x, entity.posY + entity.height * 0.45, front.z, drop).apply {
 					motionY = 0.0
 					setDefaultPickupDelay()

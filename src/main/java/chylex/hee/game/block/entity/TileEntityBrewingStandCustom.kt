@@ -1,4 +1,5 @@
 package chylex.hee.game.block.entity
+
 import chylex.hee.game.container.ContainerBrewingStandCustom
 import chylex.hee.game.inventory.getStack
 import chylex.hee.game.inventory.isNotEmpty
@@ -44,8 +45,8 @@ import net.minecraftforge.event.ForgeEventFactory
 import java.util.Arrays
 import java.util.Random
 
-class TileEntityBrewingStandCustom : TileEntityBrewingStand(){
-	companion object{
+class TileEntityBrewingStandCustom : TileEntityBrewingStand() {
+	companion object {
 		val SLOTS_POTIONS = 0..2
 		const val SLOT_REAGENT = 3
 		const val SLOT_MODIFIER = 4
@@ -55,7 +56,7 @@ class TileEntityBrewingStandCustom : TileEntityBrewingStand(){
 		
 		private val POTION_SLOTS = SLOTS_POTIONS.toList().toIntArray()
 		
-		fun canInsertIntoReagentSlot(stack: ItemStack, isEnhanced: Boolean): Boolean{
+		fun canInsertIntoReagentSlot(stack: ItemStack, isEnhanced: Boolean): Boolean {
 			return if (stack.item === ModItems.END_POWDER)
 				isEnhanced
 			else if (stack.item === ModItems.AMELIOR)
@@ -64,7 +65,7 @@ class TileEntityBrewingStandCustom : TileEntityBrewingStand(){
 				PotionItems.isReagent(stack)
 		}
 		
-		fun canInsertIntoModifierSlot(stack: ItemStack): Boolean{
+		fun canInsertIntoModifierSlot(stack: ItemStack): Boolean {
 			return PotionItems.isModifier(stack)
 		}
 		
@@ -74,8 +75,8 @@ class TileEntityBrewingStandCustom : TileEntityBrewingStand(){
 			pos = InBox(-0.325F, 0.325F, -0.4F, 0.25F, -0.3F, 0.325F)
 		)
 		
-		val FX_AMELIORATE = object : FxBlockHandler(){
-			override fun handle(pos: BlockPos, world: World, rand: Random){
+		val FX_AMELIORATE = object : FxBlockHandler() {
+			override fun handle(pos: BlockPos, world: World, rand: Random) {
 				PARTICLE_AMELIORATE.spawn(Point(pos, 21), rand)
 				Sounds.BLOCK_BREWING_STAND_BREW.playClient(pos, SoundCategory.BLOCKS, volume = 1.35F, pitch = 1.1F)
 			}
@@ -90,7 +91,9 @@ class TileEntityBrewingStandCustom : TileEntityBrewingStand(){
 	
 	var brewTime
 		get() = field_213954_a.get(0)
-		set(value){ field_213954_a.set(0, value) }
+		set(value) {
+			field_213954_a.set(0, value)
+		}
 	
 	private var prevReagentItem: Item? = null
 	private var prevFilledSlots: BooleanArray? = null
@@ -98,52 +101,52 @@ class TileEntityBrewingStandCustom : TileEntityBrewingStand(){
 	private var playersViewingGUI = 0
 	private var ameliorTimer = 0
 	
-	override fun getType(): TileEntityType<*>{
+	override fun getType(): TileEntityType<*> {
 		return ModTileEntities.BREWING_STAND
 	}
 	
-	override fun tick(){
+	override fun tick() {
 		val canBrew = canBrew()
 		
-		if (brewTime > 0){
-			if (!canBrew || prevReagentItem != getStackInSlot(SLOT_REAGENT).item){
+		if (brewTime > 0) {
+			if (!canBrew || prevReagentItem != getStackInSlot(SLOT_REAGENT).item) {
 				brewTime = 0
 				prevReagentItem = null
 				markDirty()
 			}
-			else if (--brewTime == 0){
+			else if (--brewTime == 0) {
 				doBrew()
 				markDirty()
 			}
-			else if (isEnhanced && brewTime > 2){
+			else if (isEnhanced && brewTime > 2) {
 				--brewTime // double brewing speed
 			}
 		}
-		else if (canBrew){
+		else if (canBrew) {
 			brewTime = 400
 			prevReagentItem = getStack(SLOT_REAGENT).item
 			markDirty()
 		}
 		
-		if (!wrld.isRemote){
+		if (!wrld.isRemote) {
 			val filledSlots = createFilledSlotsArray()
 			
-			if (!Arrays.equals(prevFilledSlots, filledSlots)){
+			if (!Arrays.equals(prevFilledSlots, filledSlots)) {
 				prevFilledSlots = filledSlots
 				
 				val state = pos.getState(wrld)
 				
-				if (state.block is BlockBrewingStand){
-					pos.setState(wrld, filledSlots.zip(BlockBrewingStand.HAS_BOTTLE).fold(state){ acc, (on, prop) -> acc.with(prop, on) }, FLAG_SYNC_CLIENT)
+				if (state.block is BlockBrewingStand) {
+					pos.setState(wrld, filledSlots.zip(BlockBrewingStand.HAS_BOTTLE).fold(state) { acc, (on, prop) -> acc.with(prop, on) }, FLAG_SYNC_CLIENT)
 				}
 			}
 			
-			if (!isEnhanced && getStack(SLOT_REAGENT).item === ModItems.AMELIOR && playersViewingGUI == 0){
-				if (++ameliorTimer > 25){
+			if (!isEnhanced && getStack(SLOT_REAGENT).item === ModItems.AMELIOR && playersViewingGUI == 0) {
+				if (++ameliorTimer > 25) {
 					getStack(SLOT_REAGENT).shrink(1)
 					
 					val prevState = pos.getState(wrld)
-					val newState = prevState.properties.fold(ModBlocks.ENHANCED_BREWING_STAND.defaultState){ acc, prop -> EraseGenerics.copyProperty(acc, prevState, prop) }
+					val newState = prevState.properties.fold(ModBlocks.ENHANCED_BREWING_STAND.defaultState) { acc, prop -> EraseGenerics.copyProperty(acc, prevState, prop) }
 					
 					pos.setState(wrld, newState, FLAG_SYNC_CLIENT)
 					markDirty()
@@ -151,7 +154,7 @@ class TileEntityBrewingStandCustom : TileEntityBrewingStand(){
 					PacketClientFX(FX_AMELIORATE, FxBlockData(pos)).sendToAllAround(this, 24.0)
 				}
 			}
-			else if (ameliorTimer > 0){
+			else if (ameliorTimer > 0) {
 				ameliorTimer = 0
 			}
 		}
@@ -159,53 +162,53 @@ class TileEntityBrewingStandCustom : TileEntityBrewingStand(){
 	
 	// Brewing
 	
-	private fun canBrew(): Boolean{
-		if (POTION_SLOTS.all { brewingItemStacks[it].isEmpty }){
+	private fun canBrew(): Boolean {
+		if (POTION_SLOTS.all { brewingItemStacks[it].isEmpty }) {
 			return false
 		}
 		
 		val reagent = getStack(SLOT_REAGENT)
 		val endPowder = reagent.item === ModItems.END_POWDER
 		
-		if (endPowder){
-			if (!isEnhanced){
+		if (endPowder) {
+			if (!isEnhanced) {
 				return false
 			}
 		}
-		else if (POTION_SLOTS.any { slot -> brewingItemStacks[slot].let { it.isNotEmpty && !BrewingRecipeRegistry.hasOutput(it, reagent) } }){
+		else if (POTION_SLOTS.any { slot -> brewingItemStacks[slot].let { it.isNotEmpty && !BrewingRecipeRegistry.hasOutput(it, reagent) } }) {
 			return false
 		}
 		
 		val modifier = PotionItems.findModifier(getStack(SLOT_MODIFIER))
 		
-		if (modifier != null){
+		if (modifier != null) {
 			val simulatedInputs = NonNullList.create<ItemStack>()
 			
-			for(stack in brewingItemStacks){
+			for(stack in brewingItemStacks) {
 				simulatedInputs.add(stack.copy())
 			}
 			
 			BrewingRecipeRegistry.brewPotions(simulatedInputs, reagent, POTION_SLOTS)
 			
-			if (POTION_SLOTS.any { slot -> simulatedInputs[slot].let { it.isNotEmpty && !modifier.check(it) } }){
+			if (POTION_SLOTS.any { slot -> simulatedInputs[slot].let { it.isNotEmpty && !modifier.check(it) } }) {
 				return false
 			}
 		}
-		else if (endPowder){
+		else if (endPowder) {
 			return false
 		}
 		
 		return true
 	}
 	
-	private fun doBrew(){
-		if (ForgeEventFactory.onPotionAttemptBrew(brewingItemStacks)){
+	private fun doBrew() {
+		if (ForgeEventFactory.onPotionAttemptBrew(brewingItemStacks)) {
 			return
 		}
 		
 		val reagent = getStack(SLOT_REAGENT)
 		
-		if (reagent.item !== ModItems.END_POWDER){
+		if (reagent.item !== ModItems.END_POWDER) {
 			BrewingRecipeRegistry.brewPotions(brewingItemStacks, reagent, POTION_SLOTS)
 		}
 		
@@ -213,11 +216,11 @@ class TileEntityBrewingStandCustom : TileEntityBrewingStand(){
 		
 		val modifier = PotionItems.findModifier(getStack(SLOT_MODIFIER))
 		
-		if (modifier != null){
-			for(slot in POTION_SLOTS){
+		if (modifier != null) {
+			for(slot in POTION_SLOTS) {
 				val potion = brewingItemStacks[slot]
 				
-				if (potion.isNotEmpty){
+				if (potion.isNotEmpty) {
 					brewingItemStacks[slot] = modifier.apply(potion)
 				}
 			}
@@ -225,63 +228,63 @@ class TileEntityBrewingStandCustom : TileEntityBrewingStand(){
 			useIngredient(SLOT_MODIFIER)
 		}
 		
-		if (!wrld.isRemote){
+		if (!wrld.isRemote) {
 			Sounds.BLOCK_BREWING_STAND_BREW.playServer(wrld, pos, SoundCategory.BLOCKS)
 		}
 		
 		ForgeEventFactory.onPotionBrewed(brewingItemStacks)
 	}
 	
-	private fun useIngredient(slot: Int){
+	private fun useIngredient(slot: Int) {
 		val stack = getStack(slot)
 		val item = stack.item
 		
 		stack.shrink(1)
 		
-		if (item.hasContainerItem(stack)){
+		if (item.hasContainerItem(stack)) {
 			val container = item.getContainerItem(stack)
 			
-			if (stack.isNotEmpty){
+			if (stack.isNotEmpty) {
 				InventoryHelper.spawnItemStack(wrld, pos.x.toDouble(), pos.y.toDouble(), pos.z.toDouble(), container)
 			}
-			else{
+			else {
 				setStack(slot, container)
 			}
 		}
-		else{
+		else {
 			setStack(slot, stack)
 		}
 	}
 	
 	// Container
 	
-	override fun openInventory(player: EntityPlayer){
+	override fun openInventory(player: EntityPlayer) {
 		super.openInventory(player)
 		++playersViewingGUI
 	}
 	
-	override fun closeInventory(player: EntityPlayer){
+	override fun closeInventory(player: EntityPlayer) {
 		super.closeInventory(player)
 		--playersViewingGUI
 	}
 	
-	override fun canInsertItem(index: Int, stack: ItemStack, direction: Direction?): Boolean{
+	override fun canInsertItem(index: Int, stack: ItemStack, direction: Direction?): Boolean {
 		return super.canInsertItem(index, stack, direction) && (stack.item !== ModItems.AMELIOR || getStack(index).isEmpty) // try to limit Amelior stack to 1 item, it's mostly futile though
 	}
 	
-	override fun isItemValidForSlot(index: Int, stack: ItemStack): Boolean{
-		return when(index){
-			SLOT_REAGENT -> canInsertIntoReagentSlot(stack, isEnhanced)
+	override fun isItemValidForSlot(index: Int, stack: ItemStack): Boolean {
+		return when(index) {
+			SLOT_REAGENT  -> canInsertIntoReagentSlot(stack, isEnhanced)
 			SLOT_MODIFIER -> canInsertIntoModifierSlot(stack)
-			else -> super.isItemValidForSlot(index, stack)
+			else          -> super.isItemValidForSlot(index, stack)
 		}
 	}
 	
-	override fun createMenu(id: Int, inventory: PlayerInventory): Container{
+	override fun createMenu(id: Int, inventory: PlayerInventory): Container {
 		return ContainerBrewingStandCustom(id, inventory, this, field_213954_a, this)
 	}
 	
-	override fun getDefaultName(): ITextComponent{
+	override fun getDefaultName(): ITextComponent {
 		return if (isEnhanced)
 			TranslationTextComponent("gui.hee.enhanced_brewing_stand.title")
 		else

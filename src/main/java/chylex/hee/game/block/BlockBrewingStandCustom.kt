@@ -1,4 +1,5 @@
 package chylex.hee.game.block
+
 import chylex.hee.client.render.block.IBlockLayerCutout
 import chylex.hee.game.block.entity.TileEntityBrewingStandCustom
 import chylex.hee.game.block.properties.BlockBuilder
@@ -19,22 +20,22 @@ import net.minecraft.util.math.BlockRayTraceResult
 import net.minecraft.world.IBlockReader
 import net.minecraft.world.World
 
-open class BlockBrewingStandCustom(builder: BlockBuilder) : BlockBrewingStand(builder.p), IBlockLayerCutout{
-	override fun createTileEntity(state: BlockState, world: IBlockReader): TileEntity{
+open class BlockBrewingStandCustom(builder: BlockBuilder) : BlockBrewingStand(builder.p), IBlockLayerCutout {
+	override fun createTileEntity(state: BlockState, world: IBlockReader): TileEntity {
 		return TileEntityBrewingStandCustom()
 	}
 	
-	override fun onBlockActivated(state: BlockState, world: World, pos: BlockPos, player: EntityPlayer, hand: Hand, hit: BlockRayTraceResult): ActionResultType{
-		if (world.isRemote){
+	override fun onBlockActivated(state: BlockState, world: World, pos: BlockPos, player: EntityPlayer, hand: Hand, hit: BlockRayTraceResult): ActionResultType {
+		if (world.isRemote) {
 			return SUCCESS
 		}
 		
 		val tile = pos.getTile<TileEntityBrewingStand>(world)
 		
-		if (tile is TileEntityBrewingStandCustom){
+		if (tile is TileEntityBrewingStandCustom) {
 			ModContainers.open(player, tile, pos)
 		}
-		else{
+		else {
 			// POLISH maybe make the tile entity upgrade smoother but this is fine lol
 			pos.breakBlock(world, false)
 			pos.setBlock(world, this)

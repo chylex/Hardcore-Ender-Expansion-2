@@ -1,4 +1,5 @@
 package chylex.hee.game.world.feature.tombdungeon.piece
+
 import chylex.hee.game.block.BlockGraveDirt
 import chylex.hee.game.world.Pos
 import chylex.hee.game.world.feature.tombdungeon.TombDungeonPieces
@@ -12,7 +13,7 @@ import chylex.hee.game.world.structure.piece.IStructurePieceConnection
 import chylex.hee.init.ModBlocks
 import chylex.hee.system.migration.Facing.SOUTH
 
-class TombDungeonRoom_Tomb_Mass(width: Int, depth: Int, private val border: Boolean, private val split: Boolean, override val isFancy: Boolean) : TombDungeonAbstractPiece(){
+class TombDungeonRoom_Tomb_Mass(width: Int, depth: Int, private val border: Boolean, private val split: Boolean, override val isFancy: Boolean) : TombDungeonAbstractPiece() {
 	override val size = Size(width + 2, 6, depth + 2)
 	
 	override val sidePathAttachWeight = 0
@@ -23,11 +24,11 @@ class TombDungeonRoom_Tomb_Mass(width: Int, depth: Int, private val border: Bool
 		TombDungeonConnection(TOMB_ENTRANCE_INSIDE, Pos(size.centerX, secretAttachY, size.maxZ), SOUTH)
 	)
 	
-	init{
-		require(width % 2 != 0){ "mass tomb width must not be even" }
+	init {
+		require(width % 2 != 0) { "mass tomb width must not be even" }
 	}
 	
-	override fun generate(world: IStructureWorld, instance: Instance){
+	override fun generate(world: IStructureWorld, instance: Instance) {
 		super.generate(world, instance)
 		
 		val centerX = size.centerX
@@ -41,14 +42,14 @@ class TombDungeonRoom_Tomb_Mass(width: Int, depth: Int, private val border: Bool
 		world.placeCube(Pos(1, 2, 1), Pos(maxX - 1, maxY - 1, maxZ - 1), Air)
 		world.placeCube(Pos(distance, 1, distance), Pos(maxX - distance, 1, maxZ - distance), palette.thenSetting(BlockGraveDirt.FULL, false))
 		
-		if (border){
+		if (border) {
 			world.placeWalls(Pos(1, 1, 1), Pos(maxX - 1, 1, maxZ - 1), Single(ModBlocks.DUSTY_STONE))
 		}
 		
-		if (split){
+		if (split) {
 			world.placeCube(Pos(centerX, 1, distance), Pos(centerX, 1, maxZ - distance), Single(ModBlocks.DUSTY_STONE))
 		}
-		else{
+		else {
 			world.setBlock(Pos(centerX, 1, maxZ - 1), ModBlocks.DUSTY_STONE)
 		}
 		

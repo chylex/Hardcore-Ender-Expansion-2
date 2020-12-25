@@ -1,4 +1,5 @@
 package chylex.hee.game.world.feature.obsidiantower
+
 import chylex.hee.game.world.feature.obsidiantower.ObsidianTowerSpawnerLevel.LEVEL_1
 import chylex.hee.game.world.math.Size.Alignment.CENTER
 import chylex.hee.game.world.math.Size.Alignment.MIN
@@ -12,8 +13,8 @@ import chylex.hee.system.random.nextItem
 import net.minecraft.util.Rotation
 import java.util.Random
 
-class ObsidianTowerBuilder(private val arrangement: ObsidianTowerRoomArrangement, private val rotation: Rotation? = null) : IStructureBuilder{
-	override fun build(rand: Random): IStructureBuild?{
+class ObsidianTowerBuilder(private val arrangement: ObsidianTowerRoomArrangement, private val rotation: Rotation? = null) : IStructureBuilder {
+	override fun build(rand: Random): IStructureBuild? {
 		val transform1 = Transform(rotation = rotation ?: rand.nextItem(), mirror = false)
 		val transform2 = transform1.copy(rotation = transform1.rotation.add(Rotation.CLOCKWISE_180))
 		
@@ -27,11 +28,11 @@ class ObsidianTowerBuilder(private val arrangement: ObsidianTowerRoomArrangement
 		
 		val roomListMapping = arrangement.levels.map { it.first }.associateWith { it.toMutableList() }
 		
-		for(floor in 0..floors){
-			val piece = when(floor){
+		for(floor in 0..floors) {
+			val piece = when(floor) {
 				floors -> arrangement.topPiece
-				0 -> ObsidianTowerPieces.PIECE_LEVEL_BOTTOM
-				else -> ObsidianTowerPieces.PIECE_LEVEL_MIDDLE
+				0      -> ObsidianTowerPieces.PIECE_LEVEL_BOTTOM
+				else   -> ObsidianTowerPieces.PIECE_LEVEL_MIDDLE
 			}
 			
 			val transform = if (floor % 2 == 0) transform1 else transform2
@@ -39,7 +40,7 @@ class ObsidianTowerBuilder(private val arrangement: ObsidianTowerRoomArrangement
 			
 			build.addPiece(piece.MutableInstance(transform), floorPos.subtract(piece.size.getPos(CENTER, MIN, CENTER)))
 			
-			if (floor < floors){
+			if (floor < floors) {
 				val (originalRoomList, spawnerLevel) = arrangement.levels[floor]
 				val roomList = roomListMapping.getValue(originalRoomList)
 				

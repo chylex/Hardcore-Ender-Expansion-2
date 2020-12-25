@@ -1,4 +1,5 @@
 package chylex.hee.game.block
+
 import chylex.hee.game.block.entity.TileEntityEnergyCluster
 import chylex.hee.game.block.properties.BlockBuilder
 import chylex.hee.game.mechanics.energy.IEnergyQuantity
@@ -34,51 +35,51 @@ import net.minecraft.world.World
 import net.minecraft.world.server.ServerWorld
 import kotlin.math.pow
 
-class BlockEnergyCluster(builder: BlockBuilder) : BlockSimpleShaped(builder, AxisAlignedBB(0.2, 0.2, 0.2, 0.8, 0.8, 0.8)){
-	companion object{
-		fun createSmallLeak(world: World, pos: BlockPos, amount: IEnergyQuantity, causeInstability: Boolean = false){
+class BlockEnergyCluster(builder: BlockBuilder) : BlockSimpleShaped(builder, AxisAlignedBB(0.2, 0.2, 0.2, 0.8, 0.8, 0.8)) {
+	companion object {
+		fun createSmallLeak(world: World, pos: BlockPos, amount: IEnergyQuantity, causeInstability: Boolean = false) {
 			val units = amount.units.value.toFloat()
 			val corruptedEnergyLevel = (2F + (units.pow(0.74F) / 9F)).ceilToInt()
 			
 			ModBlocks.CORRUPTED_ENERGY.spawnCorruptedEnergy(world, pos, corruptedEnergyLevel)
 			
-			if (causeInstability){
+			if (causeInstability) {
 				Instability.get(world).triggerAction((10 + 2 * corruptedEnergyLevel).toUShort(), pos)
 			}
 		}
 		
-		fun createFullLeak(world: World, pos: BlockPos, amount: IEnergyQuantity){
+		fun createFullLeak(world: World, pos: BlockPos, amount: IEnergyQuantity) {
 			val units = amount.units.value.toFloat()
 			
 			val corruptedEnergyRadius = 1.5 + (units.pow(0.77F) / 70F)
 			val corruptedEnergyLevel = (2F + (units.pow(0.74F) / 9F)).ceilToInt()
 			
-			for(testPos in pos.allInCenteredSphereMutable(corruptedEnergyRadius)){
+			for(testPos in pos.allInCenteredSphereMutable(corruptedEnergyRadius)) {
 				ModBlocks.CORRUPTED_ENERGY.spawnCorruptedEnergy(world, testPos, corruptedEnergyLevel)
 			}
 		}
 	}
 	
-	override fun hasTileEntity(state: BlockState): Boolean{
+	override fun hasTileEntity(state: BlockState): Boolean {
 		return true
 	}
 	
-	override fun createTileEntity(state: BlockState, world: IBlockReader): TileEntity{
+	override fun createTileEntity(state: BlockState, world: IBlockReader): TileEntity {
 		return TileEntityEnergyCluster()
 	}
 	
-	override fun onBlockHarvested(world: World, pos: BlockPos, state: BlockState, player: EntityPlayer){
-		if (player.abilities.isCreativeMode && !player.isSneaking){
+	override fun onBlockHarvested(world: World, pos: BlockPos, state: BlockState, player: EntityPlayer) {
+		if (player.abilities.isCreativeMode && !player.isSneaking) {
 			pos.getTile<TileEntityEnergyCluster>(world)?.breakWithoutExplosion = true
 		}
 	}
 	
-	override fun onReplaced(state: BlockState, world: World, pos: BlockPos, newState: BlockState, isMoving: Boolean){
+	override fun onReplaced(state: BlockState, world: World, pos: BlockPos, newState: BlockState, isMoving: Boolean) {
 		val tile = pos.getTile<TileEntityEnergyCluster>(world) ?: return
 		@Suppress("DEPRECATION")
 		super.onReplaced(state, world, pos, newState, isMoving) // removes the tile entity
 		
-		if (tile.breakWithoutExplosion){
+		if (tile.breakWithoutExplosion) {
 			return
 		}
 		
@@ -93,13 +94,13 @@ class BlockEnergyCluster(builder: BlockBuilder) : BlockSimpleShaped(builder, Axi
 		Instability.get(world).triggerAction((100F + units.pow(0.785F)).ceilToInt().toUShort(), pos)
 		createFullLeak(world, pos, level)
 		
-		repeat(ethereumToDrop){
+		repeat(ethereumToDrop) {
 			spawnAsEntity(world, pos, ItemStack(ModItems.ETHEREUM))
 		}
 	}
 	
-	override fun onEntityCollision(state: BlockState, world: World, pos: BlockPos, entity: Entity){
-		if (entity is IProjectile){
+	override fun onEntityCollision(state: BlockState, world: World, pos: BlockPos, entity: Entity) {
+		if (entity is IProjectile) {
 			pos.removeBlock(world)
 		}
 	}
@@ -109,7 +110,7 @@ class BlockEnergyCluster(builder: BlockBuilder) : BlockSimpleShaped(builder, Axi
 	@Sided(Side.CLIENT) override fun addRunningEffects(state: BlockState, world: World, pos: BlockPos, entity: Entity) = true
 	@Sided(Side.CLIENT) override fun addLandingEffects(state: BlockState, world: ServerWorld, pos: BlockPos, stateAgain: BlockState, entity: EntityLivingBase, particleAmount: Int) = true
 	
-	override fun getCollisionShape(state: BlockState, world: IBlockReader, pos: BlockPos, context: ISelectionContext): VoxelShape{
+	override fun getCollisionShape(state: BlockState, world: IBlockReader, pos: BlockPos, context: ISelectionContext): VoxelShape {
 		return VoxelShapes.empty()
 	}
 	

@@ -1,9 +1,10 @@
 package chylex.hee.game.world.structure
+
 import chylex.hee.game.world.math.Transform
 import net.minecraft.util.math.BlockPos
 import net.minecraft.world.IWorld
 
-interface IStructureTrigger{
+interface IStructureTrigger {
 	fun setup(world: IStructureWorld, pos: BlockPos, transform: Transform)
 	fun realize(world: IWorld, pos: BlockPos, transform: Transform)
 	
@@ -14,7 +15,7 @@ interface IStructureTrigger{
 		get() = this
 	
 	@JvmDefault
-	fun rewrapInstance(trigger: IStructureTrigger): IStructureTrigger{
+	fun rewrapInstance(trigger: IStructureTrigger): IStructureTrigger {
 		return trigger
 	}
 }

@@ -1,4 +1,5 @@
 package chylex.hee.game.recipe
+
 import chylex.hee.game.inventory.nonEmptySlots
 import chylex.hee.game.inventory.size
 import chylex.hee.init.ModItems
@@ -6,16 +7,16 @@ import net.minecraft.inventory.CraftingInventory
 import net.minecraft.item.ItemStack
 import net.minecraft.world.World
 
-object RecipePortalTokenDuplication : RecipeBaseDynamic(){
-	override fun canFit(width: Int, height: Int): Boolean{
+object RecipePortalTokenDuplication : RecipeBaseDynamic() {
+	override fun canFit(width: Int, height: Int): Boolean {
 		return (width * height) >= 2
 	}
 	
-	override fun matches(inv: CraftingInventory, world: World): Boolean{
+	override fun matches(inv: CraftingInventory, world: World): Boolean {
 		return determineDuplicationInfo(inv) != null
 	}
 	
-	override fun getCraftingResult(inv: CraftingInventory): ItemStack{
+	override fun getCraftingResult(inv: CraftingInventory): ItemStack {
 		val (blankTokenCount, originalToken) = determineDuplicationInfo(inv) ?: return ItemStack.EMPTY
 		
 		return originalToken.copy().also {
@@ -27,15 +28,15 @@ object RecipePortalTokenDuplication : RecipeBaseDynamic(){
 	
 	private data class DuplicationInfo(val blankTokenCount: Int, val originalToken: ItemStack)
 	
-	private fun determineDuplicationInfo(inv: CraftingInventory): DuplicationInfo?{
+	private fun determineDuplicationInfo(inv: CraftingInventory): DuplicationInfo? {
 		var originalToken: ItemStack? = null
 		var blankTokenCount = 0
 		
-		for((_, stack) in inv.nonEmptySlots){
+		for((_, stack) in inv.nonEmptySlots) {
 			val item = stack.item
 			
-			if (item === ModItems.PORTAL_TOKEN){
-				if (originalToken != null || !ModItems.PORTAL_TOKEN.hasTerritoryInstance(stack)){
+			if (item === ModItems.PORTAL_TOKEN) {
+				if (originalToken != null || !ModItems.PORTAL_TOKEN.hasTerritoryInstance(stack)) {
 					return null
 				}
 				
@@ -43,7 +44,7 @@ object RecipePortalTokenDuplication : RecipeBaseDynamic(){
 				continue
 			}
 			
-			if (item == ModItems.BLANK_TOKEN){
+			if (item == ModItems.BLANK_TOKEN) {
 				++blankTokenCount
 				continue
 			}
@@ -51,7 +52,7 @@ object RecipePortalTokenDuplication : RecipeBaseDynamic(){
 			return null
 		}
 		
-		if (originalToken == null || blankTokenCount == 0){
+		if (originalToken == null || blankTokenCount == 0) {
 			return null
 		}
 		

@@ -1,4 +1,5 @@
 package chylex.hee.init
+
 import chylex.hee.HEE
 import chylex.hee.game.container.ContainerAmuletOfRecovery
 import chylex.hee.game.container.ContainerBrewingStandCustom
@@ -28,7 +29,7 @@ import net.minecraftforge.fml.network.IContainerFactory
 import net.minecraftforge.fml.network.NetworkHooks
 
 @SubscribeAllEvents(modid = HEE.ID, bus = MOD)
-object ModContainers{
+object ModContainers {
 	@JvmField val AMULET_OF_RECOVERY       = build<ContainerAmuletOfRecovery>() named "amulet_of_recovery"
 	@JvmField val BREWING_STAND            = build<ContainerBrewingStandCustom>() named "brewing_stand"
 	@JvmField val LOOT_CHEST               = build<ContainerLootChest>() named "loot_chest"
@@ -38,28 +39,28 @@ object ModContainers{
 	@JvmField val TRINKET_POUCH            = build<ContainerTrinketPouch>() named "trinket_pouch"
 	
 	@SubscribeEvent
-	fun onRegister(e: RegistryEvent.Register<ContainerType<*>>){
+	fun onRegister(e: RegistryEvent.Register<ContainerType<*>>) {
 		e.registerAllFields(this)
 	}
 	
 	// Open
 	
-	fun open(player: EntityPlayer, container: INamedContainerProvider){
+	fun open(player: EntityPlayer, container: INamedContainerProvider) {
 		(player as? EntityPlayerMP)?.let { NetworkHooks.openGui(it, container) }
 	}
 	
-	fun open(player: EntityPlayer, container: INamedContainerProvider, parameter: Int){
-		(player as? EntityPlayerMP)?.let { NetworkHooks.openGui(it, container){ buffer -> buffer.writeVarInt(parameter) } }
+	fun open(player: EntityPlayer, container: INamedContainerProvider, parameter: Int) {
+		(player as? EntityPlayerMP)?.let { NetworkHooks.openGui(it, container) { buffer -> buffer.writeVarInt(parameter) } }
 	}
 	
-	fun open(player: EntityPlayer, container: INamedContainerProvider, parameter: BlockPos){
-		(player as? EntityPlayerMP)?.let { NetworkHooks.openGui(it, container){ buffer -> buffer.writePos(parameter) } }
+	fun open(player: EntityPlayer, container: INamedContainerProvider, parameter: BlockPos) {
+		(player as? EntityPlayerMP)?.let { NetworkHooks.openGui(it, container) { buffer -> buffer.writePos(parameter) } }
 	}
 	
 	// Utilities
 	
 	@Suppress("UNCHECKED_CAST")
-	private inline fun <reified T : Container> build(): ContainerType<T>{
+	private inline fun <reified T : Container> build(): ContainerType<T> {
 		val handle = ObjectConstructors.generic<T, Container, IContainerFactory<T>>("create", Int::class.java, PlayerInventory::class.java, PacketBuffer::class.java)
 		return IForgeContainerType.create(handle.invokeExact() as IContainerFactory<T>)
 	}

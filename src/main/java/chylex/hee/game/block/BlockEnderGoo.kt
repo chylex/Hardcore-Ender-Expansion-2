@@ -1,4 +1,5 @@
 package chylex.hee.game.block
+
 import chylex.hee.game.block.fluid.FlowingFluid5.Companion.FLOW_DISTANCE
 import chylex.hee.game.block.fluid.FluidEnderGoo
 import chylex.hee.game.block.properties.Materials
@@ -31,8 +32,8 @@ import net.minecraft.world.World
 import java.util.Random
 import kotlin.math.pow
 
-open class BlockEnderGoo : BlockAbstractGoo(FluidEnderGoo, Materials.ENDER_GOO){
-	private companion object{
+open class BlockEnderGoo : BlockAbstractGoo(FluidEnderGoo, Materials.ENDER_GOO) {
+	private companion object {
 		private val PARTICLE_STATIONARY = ParticleSpawnerCustom(
 			type = ParticleEnderGoo,
 			pos = Constant(0.25F, UP) + InBox(0.5F, 0.05F, 0.5F),
@@ -56,41 +57,41 @@ open class BlockEnderGoo : BlockAbstractGoo(FluidEnderGoo, Materials.ENDER_GOO){
 		
 		// Status effects
 		
-		private fun addGooEffect(entity: EntityLivingBase, type: Potion, durationTicks: Int, level: Int = 0){
+		private fun addGooEffect(entity: EntityLivingBase, type: Potion, durationTicks: Int, level: Int = 0) {
 			val existingEffect = entity.getActivePotionEffect(type)
 			
-			if (existingEffect == null || (level >= existingEffect.amplifier && durationTicks > existingEffect.duration + 30)){
+			if (existingEffect == null || (level >= existingEffect.amplifier && durationTicks > existingEffect.duration + 30)) {
 				entity.addPotionEffect(type.makeEffect(durationTicks, level, isAmbient = true, showParticles = true))
 			}
 		}
 		
-		private fun updateGooEffects(entity: EntityLivingBase, totalTicks: Int){
+		private fun updateGooEffects(entity: EntityLivingBase, totalTicks: Int) {
 			addGooEffect(entity, ModPotions.LIFELESS, PERSISTENT_EFFECT_DURATION_TICKS)
 			
-			if (totalTicks >= 20 * 5){
+			if (totalTicks >= 20 * 5) {
 				var miningFatigueLevel = 0
 				
-				if (totalTicks >= 20 * 12){
+				if (totalTicks >= 20 * 12) {
 					var weaknessLevel = 0
 					var weaknessDuration = 80 + 20 * ((totalTicks - (20 * 12)) / 25)
 					
-					if (totalTicks >= 20 * 20){
+					if (totalTicks >= 20 * 20) {
 						var poisonChancePercent = 1
 						
-						if (totalTicks >= 20 * 35){
+						if (totalTicks >= 20 * 35) {
 							miningFatigueLevel++
 							weaknessDuration += 20 * ((totalTicks - (20 * 35)) / 25)
 							
-							if (totalTicks >= 20 * 50){
+							if (totalTicks >= 20 * 50) {
 								poisonChancePercent = 2
 								
-								if (totalTicks >= 20 * 70){
+								if (totalTicks >= 20 * 70) {
 									weaknessLevel++
 								}
 							}
 						}
 						
-						if (entity.rng.nextInt(100) < poisonChancePercent && !entity.isPotionActive(Potions.POISON)){
+						if (entity.rng.nextInt(100) < poisonChancePercent && !entity.isPotionActive(Potions.POISON)) {
 							addGooEffect(entity, Potions.POISON, 80 + (totalTicks - 20 * 20) / 10)
 						}
 					}
@@ -110,31 +111,31 @@ open class BlockEnderGoo : BlockAbstractGoo(FluidEnderGoo, Materials.ENDER_GOO){
 	
 	// Behavior
 	
-	override fun tickRate(world: IWorldReader): Int{
+	override fun tickRate(world: IWorldReader): Int {
 		return 18
 	}
 	
-	override fun onInsideGoo(entity: Entity){
-		if (entity is EntityLivingBase && !CustomCreatureType.isEnder(entity)){
+	override fun onInsideGoo(entity: Entity) {
+		if (entity is EntityLivingBase && !CustomCreatureType.isEnder(entity)) {
 			updateGooEffects(entity, trackTick(entity, MAX_COLLISION_TICK_COUNTER))
 		}
-		else if (entity is EntityItem && entity.lifespan > 0){
+		else if (entity is EntityItem && entity.lifespan > 0) {
 			--entity.lifespan
 		}
 	}
 	
-	override fun modifyMotion(entity: Entity, level: Int){
+	override fun modifyMotion(entity: Entity, level: Int) {
 		val world = entity.world
 		val strength = ((FLOW_DISTANCE - level) / FLOW_DISTANCE.toFloat()).pow(1.75F)
 		
-		if (world.isRemote){
+		if (world.isRemote) {
 			val rand = world.rand
 			
-			if (rand.nextFloat() < strength){
+			if (rand.nextFloat() < strength) {
 				val motionMp = 12.5
 				val posVec = entity.posVec.add(entity.motionX * motionMp, 0.0, entity.motionZ * motionMp)
 				
-				if (Pos(posVec).getBlock(world) === this){
+				if (Pos(posVec).getBlock(world) === this) {
 					PARTICLE_COLLISION.spawn(Point(posVec, 2), rand) // only triggered for the client player itself
 				}
 			}
@@ -150,8 +151,8 @@ open class BlockEnderGoo : BlockAbstractGoo(FluidEnderGoo, Materials.ENDER_GOO){
 	// Client side
 	
 	@Sided(Side.CLIENT)
-	override fun animateTick(state: BlockState, world: World, pos: BlockPos, rand: Random){
-		if (rand.nextBoolean()){
+	override fun animateTick(state: BlockState, world: World, pos: BlockPos, rand: Random) {
+		if (rand.nextBoolean()) {
 			val particle = if (state[LEVEL] == 0)
 				PARTICLE_STATIONARY
 			else

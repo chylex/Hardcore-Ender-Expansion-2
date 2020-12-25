@@ -1,9 +1,10 @@
 package chylex.hee.game.world.structure.palette
+
 import net.minecraft.block.Blocks
 import net.minecraft.item.DyeColor
 import java.util.EnumMap
 
-object ColoredBlocks{
+object ColoredBlocks {
 	val CARPET = EnumMap(mapOf(
 		DyeColor.WHITE      to Blocks.WHITE_CARPET,
 		DyeColor.ORANGE     to Blocks.ORANGE_CARPET,

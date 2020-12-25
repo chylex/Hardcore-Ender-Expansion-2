@@ -1,12 +1,13 @@
 package chylex.hee.game.mechanics.table.process.serializer
+
 import chylex.hee.game.block.entity.base.TileEntityBaseTable
 import chylex.hee.game.mechanics.table.interfaces.ITableProcess
 import chylex.hee.game.mechanics.table.interfaces.ITableProcessSerializer
 import chylex.hee.system.serialization.TagCompound
 
-class MultiProcessSerializer(private vararg val mappings: Mapping) : ITableProcessSerializer{
-	companion object{
-		inline fun <reified T : ITableProcess> Mapping(key: String, noinline constructor: (TileEntityBaseTable, TagCompound) -> T): Mapping{
+class MultiProcessSerializer(private vararg val mappings: Mapping) : ITableProcessSerializer {
+	companion object {
+		inline fun <reified T : ITableProcess> Mapping(key: String, noinline constructor: (TileEntityBaseTable, TagCompound) -> T): Mapping {
 			return Mapping(key, T::class.java, BasicProcessSerializer(constructor))
 		}
 		
@@ -23,7 +24,7 @@ class MultiProcessSerializer(private vararg val mappings: Mapping) : ITableProce
 		put(DATA_TAG, mapping.serializer.writeToNBT(process))
 	}
 	
-	override fun readFromNBT(table: TileEntityBaseTable, nbt: TagCompound): ITableProcess{
+	override fun readFromNBT(table: TileEntityBaseTable, nbt: TagCompound): ITableProcess {
 		return mappings
 			.first { it.key == nbt.getString(TYPE_TAG) }
 			.serializer

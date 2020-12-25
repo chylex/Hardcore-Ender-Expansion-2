@@ -1,4 +1,5 @@
 package chylex.hee.datagen.client.util
+
 import chylex.hee.datagen.r
 import chylex.hee.datagen.safeUnit
 import chylex.hee.system.migration.BlockLog
@@ -10,7 +11,7 @@ import net.minecraft.util.ResourceLocation
 import net.minecraftforge.client.model.generators.BlockStateProvider
 import net.minecraftforge.client.model.generators.ModelFile.UncheckedModelFile
 
-private fun BlockStateProvider.simpleBlockItem(block: Block){
+private fun BlockStateProvider.simpleBlockItem(block: Block) {
 	this.simpleBlockItem(block, UncheckedModelFile(block.r))
 }
 

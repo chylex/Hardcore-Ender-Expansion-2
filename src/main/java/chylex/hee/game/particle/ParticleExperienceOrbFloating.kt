@@ -1,4 +1,5 @@
 package chylex.hee.game.particle
+
 import chylex.hee.game.particle.base.ParticleBase
 import chylex.hee.game.particle.data.ParticleDataColorLifespanScale
 import chylex.hee.game.particle.spawner.IParticleMaker
@@ -17,16 +18,16 @@ import kotlin.math.cos
 import kotlin.math.sign
 import kotlin.math.sin
 
-object ParticleExperienceOrbFloating : IParticleMaker.WithData<ParticleDataColorLifespanScale>(){
+object ParticleExperienceOrbFloating : IParticleMaker.WithData<ParticleDataColorLifespanScale>() {
 	private val rand = Random()
 	
 	@Sided(Side.CLIENT)
-	override fun create(world: World, posX: Double, posY: Double, posZ: Double, motX: Double, motY: Double, motZ: Double, data: ParticleDataColorLifespanScale?): Particle{
+	override fun create(world: World, posX: Double, posY: Double, posZ: Double, motX: Double, motY: Double, motZ: Double, data: ParticleDataColorLifespanScale?): Particle {
 		return Instance(world, posX, posY, posZ, motY, data ?: DEFAULT_DATA.generate(rand))
 	}
 	
 	fun Data(
-		lifespan: Int
+		lifespan: Int,
 	) = ParticleDataColorLifespanScale.Generator(DEFAULT_COLOR, lifespan..lifespan, 1F..1F)
 	
 	val DEFAULT_COLOR = IRandomColor { RGB(nextInt(0, 255), 255, nextInt(0, 51)) }
@@ -34,10 +35,10 @@ object ParticleExperienceOrbFloating : IParticleMaker.WithData<ParticleDataColor
 	private val DEFAULT_DATA = Data(lifespan = 100)
 	
 	@Sided(Side.CLIENT)
-	class Instance(world: World, posX: Double, posY: Double, posZ: Double, motY: Double, data: ParticleDataColorLifespanScale) : ParticleBase(world, posX, posY, posZ, 0.0, 0.0, 0.0){
+	class Instance(world: World, posX: Double, posY: Double, posZ: Double, motY: Double, data: ParticleDataColorLifespanScale) : ParticleBase(world, posX, posY, posZ, 0.0, 0.0, 0.0) {
 		private val motionOffset: Double
 		
-		init{
+		init {
 			selectSpriteRandomly(ParticleExperienceOrbFloating.sprite)
 			
 			loadColor(data.color)
@@ -49,13 +50,13 @@ object ParticleExperienceOrbFloating : IParticleMaker.WithData<ParticleDataColor
 			motionOffset = rand.nextFloat(-PI, PI)
 		}
 		
-		override fun tick(){
+		override fun tick() {
 			super.tick()
 			
 			motionX = sin(motionOffset + sign(motionOffset) * (age / 8.0)) * 0.02
 			motionZ = cos(motionOffset + sign(motionOffset) * (age / 8.0)) * 0.02
 			
-			if (age > maxAge - 10){
+			if (age > maxAge - 10) {
 				particleAlpha -= 0.1F
 			}
 		}

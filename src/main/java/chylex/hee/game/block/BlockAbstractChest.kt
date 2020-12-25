@@ -1,4 +1,5 @@
 package chylex.hee.game.block
+
 import chylex.hee.game.block.entity.base.TileEntityBaseChest
 import chylex.hee.game.block.properties.BlockBuilder
 import chylex.hee.game.entity.living.ai.AIOcelotSitOverride.IOcelotCanSitOn
@@ -39,20 +40,20 @@ import net.minecraft.world.IBlockReader
 import net.minecraft.world.IWorldReader
 import net.minecraft.world.World
 
-abstract class BlockAbstractChest<T : TileEntityBaseChest>(builder: BlockBuilder) : AbstractChestBlock<T>(builder.p, supply(null)), IOcelotCanSitOn{
-	private companion object{
+abstract class BlockAbstractChest<T : TileEntityBaseChest>(builder: BlockBuilder) : AbstractChestBlock<T>(builder.p, supply(null)), IOcelotCanSitOn {
+	private companion object {
 		private val AABB = AxisAlignedBB(0.0625, 0.0, 0.0625, 0.9375, 0.875, 0.9375).asVoxelShape
 	}
 	
-	init{
+	init {
 		defaultState = stateContainer.baseState.withFacing(NORTH)
 	}
 	
-	override fun fillStateContainer(container: Builder<Block, BlockState>){
+	override fun fillStateContainer(container: Builder<Block, BlockState>) {
 		container.add(FACING)
 	}
 	
-	override fun getShape(state: BlockState, world: IBlockReader, pos: BlockPos, context: ISelectionContext): VoxelShape{
+	override fun getShape(state: BlockState, world: IBlockReader, pos: BlockPos, context: ISelectionContext): VoxelShape {
 		return AABB
 	}
 	
@@ -60,47 +61,47 @@ abstract class BlockAbstractChest<T : TileEntityBaseChest>(builder: BlockBuilder
 	
 	abstract fun createTileEntity(): T
 	
-	override fun hasTileEntity(state: BlockState): Boolean{
+	override fun hasTileEntity(state: BlockState): Boolean {
 		return true
 	}
 	
-	final override fun createTileEntity(state: BlockState, world: IBlockReader): TileEntity{
+	final override fun createTileEntity(state: BlockState, world: IBlockReader): TileEntity {
 		return createTileEntity()
 	}
 	
-	final override fun createNewTileEntity(world: IBlockReader): TileEntity{
+	final override fun createNewTileEntity(world: IBlockReader): TileEntity {
 		return createTileEntity()
 	}
 	
 	@Sided(Side.CLIENT)
-	override fun combine(state: BlockState, world: World, pos: BlockPos, unknown: Boolean): ICallbackWrapper<out TileEntityChest>{
+	override fun combine(state: BlockState, world: World, pos: BlockPos, unknown: Boolean): ICallbackWrapper<out TileEntityChest> {
 		return (Blocks.ENDER_CHEST as AbstractChestBlock<*>).combine(state, world, pos, unknown) // UPDATE reduce hackiness
 	}
 	
 	// Placement and interaction
 	
-	override fun getStateForPlacement(context: BlockItemUseContext): BlockState{
+	override fun getStateForPlacement(context: BlockItemUseContext): BlockState {
 		return this.withFacing(context.placementHorizontalFacing.opposite)
 	}
 	
-	final override fun onBlockPlacedBy(world: World, pos: BlockPos, state: BlockState, placer: EntityLivingBase?, stack: ItemStack){
-		if (stack.hasDisplayName()){
+	final override fun onBlockPlacedBy(world: World, pos: BlockPos, state: BlockState, placer: EntityLivingBase?, stack: ItemStack) {
+		if (stack.hasDisplayName()) {
 			pos.getTile<TileEntityBaseChest>(world)?.setCustomName(stack.displayName)
 		}
 	}
 	
-	final override fun onBlockActivated(state: BlockState, world: World, pos: BlockPos, player: EntityPlayer, hand: Hand, hit: BlockRayTraceResult): ActionResultType{
-		if (world.isRemote){
+	final override fun onBlockActivated(state: BlockState, world: World, pos: BlockPos, player: EntityPlayer, hand: Hand, hit: BlockRayTraceResult): ActionResultType {
+		if (world.isRemote) {
 			return SUCCESS
 		}
 		
 		val posAbove = pos.up()
 		
-		if (posAbove.getState(world).isNormalCube(world, posAbove)){
+		if (posAbove.getState(world).isNormalCube(world, posAbove)) {
 			return SUCCESS
 		}
 		
-		if (world.selectExistingEntities.inBox<EntityCat>(AxisAlignedBB(posAbove)).any { it.isSitting }){
+		if (world.selectExistingEntities.inBox<EntityCat>(AxisAlignedBB(posAbove)).any { it.isSitting }) {
 			return SUCCESS
 		}
 		
@@ -108,7 +109,7 @@ abstract class BlockAbstractChest<T : TileEntityBaseChest>(builder: BlockBuilder
 		return SUCCESS
 	}
 	
-	protected open fun openChest(world: World, pos: BlockPos, player: EntityPlayer){
+	protected open fun openChest(world: World, pos: BlockPos, player: EntityPlayer) {
 		pos.getTile<TileEntityBaseChest>(world)?.let {
 			ModContainers.open(player, it, pos)
 		}
@@ -116,17 +117,17 @@ abstract class BlockAbstractChest<T : TileEntityBaseChest>(builder: BlockBuilder
 	
 	// Ocelot behavior
 	
-	override fun canOcelotSitOn(world: IWorldReader, pos: BlockPos): Boolean{
+	override fun canOcelotSitOn(world: IWorldReader, pos: BlockPos): Boolean {
 		return pos.getTile<TileEntityBaseChest>(world)?.isLidClosed == true
 	}
 	
 	// State handling
 	
-	override fun rotate(state: BlockState, rot: Rotation): BlockState{
+	override fun rotate(state: BlockState, rot: Rotation): BlockState {
 		return state.withFacing(rot.rotate(state[FACING]))
 	}
 	
-	override fun mirror(state: BlockState, mirror: Mirror): BlockState{
+	override fun mirror(state: BlockState, mirror: Mirror): BlockState {
 		return state.withFacing(mirror.mirror(state[FACING]))
 	}
 	
