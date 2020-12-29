@@ -4,6 +4,7 @@ import chylex.hee.client.MC
 import chylex.hee.client.render.gl.DF_ONE
 import chylex.hee.client.render.gl.DF_ONE_MINUS_SRC_ALPHA
 import chylex.hee.client.render.gl.RenderStateBuilder
+import chylex.hee.client.render.gl.RenderStateBuilder.Companion.FOG_BLACK
 import chylex.hee.client.render.gl.RenderStateBuilder.Companion.FOG_ENABLED
 import chylex.hee.client.render.gl.SF_SRC_ALPHA
 import chylex.hee.game.block.BlockAbstractPortal
@@ -55,7 +56,7 @@ abstract class RenderTileAbstractPortal<T : TileEntityPortalInner, C : IPortalCo
 		private val RENDER_TYPE_LAYER = Array(16) {
 			with(RenderStateBuilder()) {
 				tex(TEX_PARTICLE_LAYER)
-				fog(FOG_ENABLED)
+				fog(FOG_BLACK)
 				blend(SF_SRC_ALPHA, DF_ONE)
 				buildType("hee:portal_layer_${it}", DefaultVertexFormats.POSITION_COLOR_TEX, GL11.GL_QUADS, bufferSize = 256)
 			}
