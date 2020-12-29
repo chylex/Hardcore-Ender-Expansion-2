@@ -58,6 +58,7 @@ import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.EntityRayTraceResult
 import net.minecraft.world.Difficulty
 import net.minecraft.world.IWorld
+import net.minecraft.world.IWorldReader
 import net.minecraft.world.LightType.BLOCK
 import net.minecraft.world.World
 import net.minecraft.world.biome.Biome
@@ -513,7 +514,7 @@ class EntityMobEnderman(type: EntityType<EntityMobEnderman>, world: World) : Ent
 	
 	// Spawning & despawning
 	
-	override fun getBlockPathWeight(pos: BlockPos): Float {
+	override fun getBlockPathWeight(pos: BlockPos, world: IWorldReader): Float {
 		return 1F
 	}
 	

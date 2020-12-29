@@ -76,6 +76,7 @@ import net.minecraft.util.math.RayTraceResult.Type
 import net.minecraft.util.math.Vec3d
 import net.minecraft.world.Difficulty.HARD
 import net.minecraft.world.Difficulty.NORMAL
+import net.minecraft.world.IWorldReader
 import net.minecraft.world.LightType.BLOCK
 import net.minecraft.world.LightType.SKY
 import net.minecraft.world.World
@@ -368,7 +369,7 @@ class EntityMobSpiderling(type: EntityType<EntityMobSpiderling>, world: World) :
 		return PathNavigateGroundUnrestricted(this, world)
 	}
 	
-	override fun getBlockPathWeight(pos: BlockPos): Float {
+	override fun getBlockPathWeight(pos: BlockPos, world: IWorldReader): Float {
 		return 25F - world.getLightFor(BLOCK, pos) - (world.getLightFor(SKY, pos) * 0.5F)
 	}
 	
