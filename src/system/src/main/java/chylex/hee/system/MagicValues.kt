@@ -1,8 +1,5 @@
 package chylex.hee.system
 
-import chylex.hee.game.block.asVoxelShape
-import net.minecraft.util.math.AxisAlignedBB
-
 // UPDATE 1.15
 
 /**
@@ -15,14 +12,6 @@ object MagicValues {
 	 * Found in [LivingEntity.onDeathUpdate][net.minecraft.entity.LivingEntity.onDeathUpdate].
 	 */
 	const val DEATH_TIME_MAX = 20
-	
-	/**
-	 * How much an entity's collision box is reduced before checking for block collisions.
-	 *
-	 * Found in [Entity.doBlockCollisions][net.minecraft.entity.Entity.doBlockCollisions].
-	 */
-	const val BLOCK_COLLISION_SHRINK = 0.001
-	val BLOCK_COLLISION_SHRINK_SHAPE = AxisAlignedBB(0.0, 0.0, 0.0, 1.0, 1.0 - (2.0 * BLOCK_COLLISION_SHRINK), 1.0).asVoxelShape
 	
 	/**
 	 * Default player damage added to [IItemTier.getAttackDamage][net.minecraft.item.IItemTier.getAttackDamage].

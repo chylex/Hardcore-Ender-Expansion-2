@@ -1,5 +1,6 @@
 package chylex.hee.game.block
 
+import chylex.hee.game.block.logic.IFullBlockCollisionHandler
 import chylex.hee.game.block.properties.BlockBuilder
 import chylex.hee.game.world.Pos
 import chylex.hee.game.world.allInBox
@@ -10,7 +11,6 @@ import chylex.hee.game.world.setAir
 import chylex.hee.game.world.setBlock
 import chylex.hee.game.world.totalTime
 import chylex.hee.init.ModBlocks
-import chylex.hee.system.MagicValues
 import chylex.hee.system.facades.Facing4
 import chylex.hee.system.math.floorToInt
 import chylex.hee.system.migration.EntityFallingBlock
@@ -23,16 +23,12 @@ import net.minecraft.enchantment.EnchantmentHelper
 import net.minecraft.enchantment.Enchantments
 import net.minecraft.entity.Entity
 import net.minecraft.util.math.BlockPos
-import net.minecraft.util.math.shapes.EntitySelectionContext
-import net.minecraft.util.math.shapes.ISelectionContext
-import net.minecraft.util.math.shapes.VoxelShape
-import net.minecraft.util.math.shapes.VoxelShapes
 import net.minecraft.world.IBlockReader
 import net.minecraft.world.World
 import net.minecraft.world.server.ServerWorld
 import java.util.Random
 
-class BlockDustyStoneUnstable(builder: BlockBuilder) : BlockDustyStone(builder) {
+class BlockDustyStoneUnstable(builder: BlockBuilder) : BlockDustyStone(builder), IFullBlockCollisionHandler {
 	override fun canHarvestBlock(state: BlockState, world: IBlockReader, pos: BlockPos, player: EntityPlayer): Boolean {
 		return player.getHeldItem(MAIN_HAND).let { EnchantmentHelper.getEnchantmentLevel(Enchantments.SILK_TOUCH, it) == 0 || isPickaxeOrShovel(it) }
 	}
@@ -65,18 +61,11 @@ class BlockDustyStoneUnstable(builder: BlockBuilder) : BlockDustyStone(builder) 
 		}
 	}
 	
-	override fun getCollisionShape(state: BlockState, world: IBlockReader, pos: BlockPos, context: ISelectionContext): VoxelShape {
-		return if (context is EntitySelectionContext && context.entity is EntityLivingBase)
-			MagicValues.BLOCK_COLLISION_SHRINK_SHAPE
-		else
-			VoxelShapes.fullCube()
-	}
-	
 	override fun causesSuffocation(state: BlockState, world: IBlockReader, pos: BlockPos): Boolean {
 		return false // prevents sliding off the block
 	}
 	
-	override fun onEntityCollision(state: BlockState, world: World, pos: BlockPos, entity: Entity) {
+	override fun onEntityCollisionAbove(world: World, pos: BlockPos, entity: Entity) {
 		if (!world.isRemote && world.totalTime % 4L == 0L && !(entity.height <= 0.5F || (entity.height <= 1F && entity.width <= 0.5F)) && isNonCreative(entity)) {
 			if (!doCrumbleTest(world, pos)) {
 				return
