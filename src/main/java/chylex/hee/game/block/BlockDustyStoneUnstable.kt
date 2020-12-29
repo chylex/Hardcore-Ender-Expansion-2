@@ -29,6 +29,25 @@ import net.minecraft.world.server.ServerWorld
 import java.util.Random
 
 class BlockDustyStoneUnstable(builder: BlockBuilder) : BlockDustyStone(builder), IFullBlockCollisionHandler {
+	companion object {
+		fun getCrumbleStartPos(world: IBlockReader, pos: BlockPos): BlockPos? {
+			for(offset in 1..8) {
+				val testPos = pos.down(offset)
+				val isDustyStone = testPos.getBlock(world) is BlockDustyStoneUnstable
+				
+				if (!isDustyStone) {
+					if (!testPos.isTopSolid(world)) {
+						return testPos.up()
+					}
+					
+					break
+				}
+			}
+			
+			return null
+		}
+	}
+	
 	override fun canHarvestBlock(state: BlockState, world: IBlockReader, pos: BlockPos, player: EntityPlayer): Boolean {
 		return player.getHeldItem(MAIN_HAND).let { EnchantmentHelper.getEnchantmentLevel(Enchantments.SILK_TOUCH, it) == 0 || isPickaxeOrShovel(it) }
 	}
@@ -119,21 +138,9 @@ class BlockDustyStoneUnstable(builder: BlockBuilder) : BlockDustyStone(builder),
 	}
 	
 	private fun doCrumbleTest(world: World, pos: BlockPos): Boolean {
-		for(offset in 1..8) {
-			val testPos = pos.down(offset)
-			val isDustyStone = testPos.getBlock(world) is BlockDustyStoneUnstable
-			
-			if (!isDustyStone) {
-				if (!testPos.isTopSolid(world)) {
-					succeedCrumbleTest(world, testPos.up())
-					return true
-				}
-				
-				break
-			}
-		}
-		
-		return false
+		val crumblePos = getCrumbleStartPos(world, pos) ?: return false
+		succeedCrumbleTest(world, crumblePos)
+		return true
 	}
 	
 	private fun succeedCrumbleTest(world: World, pos: BlockPos) {

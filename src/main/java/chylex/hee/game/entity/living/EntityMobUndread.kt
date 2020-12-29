@@ -1,16 +1,20 @@
 package chylex.hee.game.entity.living
 
+import chylex.hee.game.block.BlockDustyStoneUnstable
 import chylex.hee.game.entity.living.ai.AttackMelee
 import chylex.hee.game.entity.living.ai.Swim
 import chylex.hee.game.entity.living.ai.TargetAttacker
 import chylex.hee.game.entity.living.ai.TargetNearby
 import chylex.hee.game.entity.living.ai.WanderLand
 import chylex.hee.game.entity.living.ai.WatchIdle
+import chylex.hee.game.entity.living.path.PathNavigateGroundCustomProcessor
 import chylex.hee.game.entity.motionY
 import chylex.hee.game.mechanics.damage.Damage
 import chylex.hee.game.mechanics.damage.IDamageProcessor.Companion.ALL_PROTECTIONS_WITH_SHIELD
 import chylex.hee.game.mechanics.damage.IDamageProcessor.Companion.DIFFICULTY_SCALING
 import chylex.hee.game.mechanics.damage.IDamageProcessor.Companion.PEACEFUL_EXCLUSION
+import chylex.hee.game.world.Pos
+import chylex.hee.game.world.getBlock
 import chylex.hee.init.ModEntities
 import chylex.hee.init.ModSounds
 import chylex.hee.system.MagicValues.DEATH_TIME_MAX
@@ -31,11 +35,15 @@ import net.minecraft.entity.SharedMonsterAttributes.FOLLOW_RANGE
 import net.minecraft.entity.SharedMonsterAttributes.MAX_HEALTH
 import net.minecraft.entity.SharedMonsterAttributes.MOVEMENT_SPEED
 import net.minecraft.network.IPacket
+import net.minecraft.pathfinding.PathNavigator
+import net.minecraft.pathfinding.PathNodeType
+import net.minecraft.pathfinding.WalkNodeProcessor
 import net.minecraft.util.DamageSource
 import net.minecraft.util.Hand
 import net.minecraft.util.ResourceLocation
 import net.minecraft.util.SoundEvent
 import net.minecraft.util.math.BlockPos
+import net.minecraft.world.IBlockReader
 import net.minecraft.world.World
 import net.minecraftforge.fml.network.NetworkHooks
 import kotlin.math.abs
@@ -80,6 +88,28 @@ class EntityMobUndread(type: EntityType<EntityMobUndread>, world: World) : Entit
 	
 	override fun attackEntityAsMob(entity: Entity): Boolean {
 		return DAMAGE_GENERAL.dealToFrom(entity, this)
+	}
+	
+	override fun createNavigator(world: World): PathNavigator {
+		return object : PathNavigateGroundCustomProcessor(this, world) {
+			override fun createNodeProcessor() = NodeProcessor()
+		}
+	}
+	
+	private class NodeProcessor : WalkNodeProcessor() {
+		override fun getPathNodeType(world: IBlockReader, x: Int, y: Int, z: Int): PathNodeType {
+			if (entity.attackTarget != null) {
+				return super.getPathNodeType(world, x, y, z)
+			}
+			
+			val posBelow = Pos(x, y, z).down()
+			
+			if (posBelow.getBlock(world) !is BlockDustyStoneUnstable || BlockDustyStoneUnstable.getCrumbleStartPos(world, posBelow) == null) {
+				return super.getPathNodeType(world, x, y, z)
+			}
+			
+			return PathNodeType.BLOCKED
+		}
 	}
 	
 	override fun getLootTable(): ResourceLocation {
