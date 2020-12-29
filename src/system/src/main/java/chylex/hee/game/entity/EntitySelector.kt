@@ -9,13 +9,6 @@ import java.util.function.Predicate
 
 @Suppress("NOTHING_TO_INLINE")
 class EntitySelector(private val world: IEntityReader, private val predicate: Predicate<in Entity>) {
-	companion object {
-		val INFINITE_AABB = AxisAlignedBB(
-			Double.NEGATIVE_INFINITY, Double.NEGATIVE_INFINITY, Double.NEGATIVE_INFINITY,
-			Double.POSITIVE_INFINITY, Double.POSITIVE_INFINITY, Double.POSITIVE_INFINITY
-		)
-	}
-	
 	fun <T : Entity> inBox(cls: Class<T>, aabb: AxisAlignedBB): List<T> {
 		return world.getEntitiesWithinAABB(cls, aabb, predicate)
 	}
@@ -29,13 +22,11 @@ class EntitySelector(private val world: IEntityReader, private val predicate: Pr
 	
 	// Reified
 	
-	inline fun <reified T : Entity> inDimension() = inBox(T::class.java, INFINITE_AABB)
 	inline fun <reified T : Entity> inBox(aabb: AxisAlignedBB) = inBox(T::class.java, aabb)
 	inline fun <reified T : Entity> inRange(point: Vec3d, range: Double) = inRange(T::class.java, point, range)
 	
 	// General
 	
-	inline fun allInDimension() = inBox(Entity::class.java, INFINITE_AABB)
 	inline fun allInBox(aabb: AxisAlignedBB) = inBox(Entity::class.java, aabb)
 	inline fun allInRange(point: Vec3d, range: Double) = inRange(Entity::class.java, point, range)
 }

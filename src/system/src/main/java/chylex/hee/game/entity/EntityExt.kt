@@ -8,6 +8,8 @@ import chylex.hee.system.serialization.getOrCreateCompound
 import chylex.hee.system.serialization.heeTag
 import chylex.hee.system.serialization.heeTagOrNull
 import com.google.common.base.Predicates
+import com.google.common.collect.Iterables
+import net.minecraft.client.world.ClientWorld
 import net.minecraft.enchantment.ProtectionEnchantment
 import net.minecraft.entity.Entity
 import net.minecraft.entity.ai.attributes.AttributeModifier
@@ -17,6 +19,8 @@ import net.minecraft.entity.player.PlayerEntity.PERSISTED_NBT_TAG
 import net.minecraft.util.EntityPredicates
 import net.minecraft.util.math.Vec3d
 import net.minecraft.world.IEntityReader
+import net.minecraft.world.IWorld
+import net.minecraft.world.server.ServerWorld
 
 // Properties
 
@@ -138,6 +142,16 @@ fun Entity.isAnyVulnerablePlayerWithinRange(range: Double): Boolean {
 private val predicateAliveAndNotSpectating = EntityPredicates.IS_ALIVE.and(EntityPredicates.NOT_SPECTATING)
 private val predicateAliveAndTargetable = EntityPredicates.IS_ALIVE.and(EntityPredicates.CAN_AI_TARGET)
 private val predicateAlwaysTrue = Predicates.alwaysTrue<Entity>()
+
+/**
+ * Selects all entities in the dimension.
+ */
+val IWorld.selectAllEntities: Iterable<Entity>
+	get() = when(this) {
+		is ClientWorld -> this.allEntities
+		is ServerWorld -> Iterables.concat(Iterable(this.entities::iterator), this.globalEntities)
+		else           -> emptyList()
+	}
 
 /**
  * Selects all entities which are not spectators.

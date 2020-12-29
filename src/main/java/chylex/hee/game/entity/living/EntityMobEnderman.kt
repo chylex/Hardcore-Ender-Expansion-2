@@ -16,6 +16,7 @@ import chylex.hee.game.entity.living.behavior.EndermanTeleportHandler
 import chylex.hee.game.entity.living.behavior.EndermanWaterHandler
 import chylex.hee.game.entity.posVec
 import chylex.hee.game.entity.projectile.EntityProjectileSpatialDash
+import chylex.hee.game.entity.selectAllEntities
 import chylex.hee.game.entity.selectEntities
 import chylex.hee.game.entity.technical.EntityTechnicalCausatumEvent
 import chylex.hee.game.mechanics.causatum.CausatumStage
@@ -190,7 +191,7 @@ class EntityMobEnderman(type: EntityType<EntityMobEnderman>, world: World) : Ent
 		
 		private fun checkSkylightLevel(world: IWorld, rand: Random): Boolean {
 			val skylight = world.skylightSubtracted // goes from 0 (day) to 11 (night)
-			val endermen = world.selectEntities.inDimension<EntityMobEnderman>().size
+			val endermen = world.selectAllEntities.count { it is EntityMobEnderman }
 			
 			val extra = min(5, world.players.count { !it.isSpectator } - 1) // TODO use chunk set for better precision
 			
