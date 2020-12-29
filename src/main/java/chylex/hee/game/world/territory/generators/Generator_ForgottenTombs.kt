@@ -72,14 +72,16 @@ object Generator_ForgottenTombs : ITerritoryGenerator {
 		return TerritoryGenerationInfo(spawnPoint)
 	}
 	
-	private object EntranceCave {
+	object EntranceCave {
 		const val RADIUS_XZ = 65
 		const val RADIUS_Y = 35
 		
 		private const val EXTRA_ELEVATION = 2
 		
+		const val ELLIPSOID_Y_OFFSET = (2 * RADIUS_Y) - EXTRA_ELEVATION
+		
 		fun generate(world: SegmentedWorld, rand: Random, size: Size): BlockPos {
-			val ellipsoidBottom = size.maxY + EXTRA_ELEVATION - (2 * RADIUS_Y)
+			val ellipsoidBottom = size.maxY - ELLIPSOID_Y_OFFSET
 			val ellipsoidCenter = Pos(size.centerX, ellipsoidBottom + RADIUS_Y, size.centerZ + (size.z / 6))
 			
 			Cutout.generate(world, rand, ellipsoidCenter)
