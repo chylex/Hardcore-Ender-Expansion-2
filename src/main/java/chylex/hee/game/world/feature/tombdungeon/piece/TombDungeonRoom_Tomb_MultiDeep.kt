@@ -8,7 +8,7 @@ import chylex.hee.system.migration.Facing.WEST
 import chylex.hee.system.random.nextInt
 import chylex.hee.system.random.nextRounded
 
-class TombDungeonRoom_Tomb_MultiDeep(file: String, private val tombsPerColumn: Int, entranceY: Int, allowSecrets: Boolean, isFancy: Boolean) : TombDungeonRoom_Tomb(file, entranceY, allowSecrets, isFancy) {
+class TombDungeonRoom_Tomb_MultiDeep(file: String, private val tombsPerColumn: Int, entranceY: Int, isFancy: Boolean) : TombDungeonRoom_Tomb(file, entranceY, allowSecrets = false, isFancy) {
 	override fun generate(world: IStructureWorld, instance: Instance) {
 		super.generate(world, instance)
 		
@@ -26,6 +26,15 @@ class TombDungeonRoom_Tomb_MultiDeep(file: String, private val tombsPerColumn: I
 			if (world.getBlock(pos) is BlockGraveDirt) {
 				placeChest(world, instance, pos, facing)
 			}
+		}
+		
+		if (rand.nextBoolean()) {
+			placeJars(world, instance, (0 until tombsPerColumn).flatMap {
+				listOf(
+					Pos(centerX - 4, 3, 4 + (2 * it)),
+					Pos(centerX + 4, 3, 4 + (2 * it))
+				)
+			})
 		}
 	}
 }

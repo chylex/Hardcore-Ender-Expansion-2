@@ -6,7 +6,7 @@ import chylex.hee.game.world.feature.tombdungeon.connection.TombDungeonConnectio
 import chylex.hee.game.world.structure.piece.IStructurePieceConnection
 import chylex.hee.system.migration.Facing.SOUTH
 
-open class TombDungeonRoom_Tomb(file: String, entranceY: Int, allowSecrets: Boolean, isFancy: Boolean) : TombDungeonRoom(file, isFancy) {
+abstract class TombDungeonRoom_Tomb(file: String, entranceY: Int, allowSecrets: Boolean, isFancy: Boolean) : TombDungeonRoom(file, isFancy) {
 	final override val secretAttachWeight = if (allowSecrets) 2 else 0
 	final override val secretAttachY = entranceY
 	

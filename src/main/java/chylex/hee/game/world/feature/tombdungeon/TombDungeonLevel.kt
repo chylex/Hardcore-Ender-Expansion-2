@@ -23,12 +23,12 @@ import java.util.Random
 import kotlin.math.max
 import kotlin.math.min
 
-enum class TombDungeonLevel(val isFancy: Boolean, private val corridorFactor: Int, val mainRooms: IntRange, val sideRooms: IntRange) {
-	FIRST (isFancy = false, corridorFactor = 1, mainRooms = 0..0, sideRooms = 0..0),
-	SECOND(isFancy = false, corridorFactor = 5, mainRooms = 1..1, sideRooms = 1..1),
-	THIRD (isFancy = false, corridorFactor = 2, mainRooms = 0..0, sideRooms = 2..3),
-	FOURTH(isFancy = true,  corridorFactor = 4, mainRooms = 2..2, sideRooms = 1..1),
-	LAST  (isFancy = true,  corridorFactor = 6, mainRooms = 1..1, sideRooms = 0..1);
+enum class TombDungeonLevel(val isFancy: Boolean, private val corridorFactor: Int, val mainRooms: IntRange, val sideRooms: IntRange, val dustPerRoom: IntRange) {
+	FIRST (isFancy = false, corridorFactor = 1, mainRooms = 0..0, sideRooms = 0..0, dustPerRoom =  8..15),
+	SECOND(isFancy = false, corridorFactor = 5, mainRooms = 1..1, sideRooms = 1..1, dustPerRoom =  9..21),
+	THIRD (isFancy = false, corridorFactor = 2, mainRooms = 0..0, sideRooms = 2..3, dustPerRoom = 10..32),
+	FOURTH(isFancy = true,  corridorFactor = 4, mainRooms = 2..2, sideRooms = 1..1, dustPerRoom = 15..40),
+	LAST  (isFancy = true,  corridorFactor = 6, mainRooms = 1..1, sideRooms = 0..1, dustPerRoom = 20..48);
 	
 	fun getMainCorridorLength(rand: Random): Int {
 		return rand.nextInt(45 + (corridorFactor * 2), 57) + (2 * (6 - corridorFactor)) + ((corridorFactor - 1) * rand.nextFloat(12.5F, 14.2F)).floorToInt() + (if (this == LAST) 10 else 0)

@@ -1,7 +1,10 @@
 package chylex.hee.game.world.feature.tombdungeon.piece
 
+import chylex.hee.game.block.entity.TileEntityJarODust
 import chylex.hee.game.block.with
 import chylex.hee.game.block.withFacing
+import chylex.hee.game.mechanics.dust.DustLayers
+import chylex.hee.game.mechanics.dust.DustType
 import chylex.hee.game.world.Pos
 import chylex.hee.game.world.distanceSqTo
 import chylex.hee.game.world.feature.tombdungeon.TombDungeonLevel
@@ -13,11 +16,14 @@ import chylex.hee.game.world.structure.IStructureWorld
 import chylex.hee.game.world.structure.piece.StructurePiece
 import chylex.hee.game.world.structure.trigger.TileEntityStructureTrigger
 import chylex.hee.init.ModBlocks
+import chylex.hee.system.collection.MutableWeightedList.Companion.mutableWeightedListOf
 import chylex.hee.system.facades.Facing6
 import chylex.hee.system.math.floorToInt
 import chylex.hee.system.migration.BlockSlab
 import chylex.hee.system.migration.TileEntityChest
 import chylex.hee.system.random.nextInt
+import chylex.hee.system.random.nextItem
+import chylex.hee.system.random.nextRounded
 import net.minecraft.block.Blocks
 import net.minecraft.state.properties.SlabType
 import net.minecraft.util.Direction
@@ -113,5 +119,47 @@ abstract class TombDungeonAbstractPiece : StructurePiece<TombDungeonLevel>() {
 		val chest = TileEntityChest().apply { TombDungeonLoot.generate(this, world.rand, level, secret) }
 		
 		world.addTrigger(pos, TileEntityStructureTrigger(Blocks.CHEST.withFacing(facing), chest))
+	}
+	
+	protected fun placeJars(world: IStructureWorld, instance: Instance, availablePositions: List<BlockPos>) {
+		val rand = world.rand
+		val level = instance.context ?: TombDungeonLevel.FIRST
+		
+		val jars = availablePositions
+			.filter(world::isAir)
+			.ifEmpty { return }
+			.shuffled(rand)
+			.take(1 + rand.nextRounded(0.34F) + rand.nextRounded(0.27F))
+			.map { it to DustLayers(TileEntityJarODust.DUST_CAPACITY) }
+		
+		var dustAmount = rand.nextInt(level.dustPerRoom)
+		val dustTypeCount = if (level.isFancy)
+			1 + rand.nextRounded(0.4F) + rand.nextRounded(0.25F)
+		else
+			1 + rand.nextRounded(0.3F)
+		
+		val dustTypePool = mutableWeightedListOf(
+			8 to DustType.SUGAR,
+			8 to DustType.GUNPOWDER,
+			7 to DustType.ANCIENT_DUST,
+			7 to DustType.REDSTONE,
+			6 to DustType.END_POWDER,
+		)
+		
+		val dustTypes = Array(dustTypeCount) {
+			dustTypePool.removeItem(rand)!!
+		}
+		
+		while(dustAmount > 0) {
+			val takenAmount = if (dustAmount <= 24) dustAmount else rand.nextInt(12, dustAmount - 12)
+			dustAmount -= takenAmount
+			rand.nextItem(jars).second.addDust(rand.nextItem(dustTypes), takenAmount)
+		}
+		
+		for((jarPos, jarLayers) in jars) {
+			if (jarLayers.contents.isNotEmpty()) {
+				world.addTrigger(jarPos, TileEntityStructureTrigger(ModBlocks.JAR_O_DUST, TileEntityJarODust().apply { layers.deserializeNBT(jarLayers.serializeNBT()) }))
+			}
+		}
 	}
 }

@@ -21,12 +21,13 @@ import chylex.hee.game.world.feature.tombdungeon.piece.TombDungeonRoom_Side_Cros
 import chylex.hee.game.world.feature.tombdungeon.piece.TombDungeonRoom_Side_CrossroadsLounge
 import chylex.hee.game.world.feature.tombdungeon.piece.TombDungeonRoom_Side_Fountain
 import chylex.hee.game.world.feature.tombdungeon.piece.TombDungeonRoom_Side_Shelves
-import chylex.hee.game.world.feature.tombdungeon.piece.TombDungeonRoom_Tomb
 import chylex.hee.game.world.feature.tombdungeon.piece.TombDungeonRoom_Tomb_Mass
 import chylex.hee.game.world.feature.tombdungeon.piece.TombDungeonRoom_Tomb_MassSpacious
 import chylex.hee.game.world.feature.tombdungeon.piece.TombDungeonRoom_Tomb_MultiDeep
+import chylex.hee.game.world.feature.tombdungeon.piece.TombDungeonRoom_Tomb_MultiNarrow
 import chylex.hee.game.world.feature.tombdungeon.piece.TombDungeonRoom_Tomb_MultiSpacious
-import chylex.hee.game.world.feature.tombdungeon.piece.TombDungeonRoom_Tomb_Single
+import chylex.hee.game.world.feature.tombdungeon.piece.TombDungeonRoom_Tomb_SingleNarrow
+import chylex.hee.game.world.feature.tombdungeon.piece.TombDungeonRoom_Tomb_SingleSpacious
 import chylex.hee.game.world.feature.tombdungeon.piece.TombDungeonSecret
 import chylex.hee.game.world.feature.tombdungeon.piece.TombDungeonSecret_CornerShelf
 import chylex.hee.game.world.feature.tombdungeon.piece.TombDungeonSecret_LootChest
@@ -314,28 +315,32 @@ object TombDungeonPieces : IStructureDescription {
 		TombDungeonRoom_Side_Arches("side.arches.nbt", isFancy = true)
 	)
 	
-	private fun TOMB(file: String, entranceY: Int): (Boolean) -> TombDungeonAbstractPiece {
-		return { TombDungeonRoom_Tomb(file, entranceY, allowSecrets = false, isFancy = it) }
-	}
-	
 	private fun TOMB_MASS(width: Int, depth: Int, border: Boolean, split: Boolean): (Boolean) -> TombDungeonAbstractPiece {
 		return { TombDungeonRoom_Tomb_Mass(width, depth, border, split, isFancy = it) }
 	}
 	
 	private fun TOMB_MASS_SPACIOUS(file: String): (Boolean) -> TombDungeonAbstractPiece {
-		return { TombDungeonRoom_Tomb_MassSpacious(file, entranceY = 1, allowSecrets = false, isFancy = it) }
+		return { TombDungeonRoom_Tomb_MassSpacious(file, entranceY = 1, isFancy = it) }
+	}
+	
+	private fun TOMB_MULTI_NARROW(file: String, tombsPerColumn: Int): (Boolean) -> TombDungeonAbstractPiece {
+		return { TombDungeonRoom_Tomb_MultiNarrow(file, tombsPerColumn, entranceY = 1, isFancy = it) }
 	}
 	
 	private fun TOMB_MULTI_DEEP(file: String, tombsPerColumn: Int): (Boolean) -> TombDungeonAbstractPiece {
-		return { TombDungeonRoom_Tomb_MultiDeep(file, tombsPerColumn, entranceY = 2, allowSecrets = false, isFancy = it) }
+		return { TombDungeonRoom_Tomb_MultiDeep(file, tombsPerColumn, entranceY = 2, isFancy = it) }
 	}
 	
 	private fun TOMB_MULTI_SPACIOUS(file: String, tombsPerColumn: Int): (Boolean) -> TombDungeonAbstractPiece {
-		return { TombDungeonRoom_Tomb_MultiSpacious(file, tombsPerColumn, entranceY = 2, allowSecrets = false, isFancy = it) }
+		return { TombDungeonRoom_Tomb_MultiSpacious(file, tombsPerColumn, entranceY = 2, isFancy = it) }
 	}
 	
-	private fun TOMB_SINGLE(file: String): (Boolean) -> TombDungeonAbstractPiece {
-		return { TombDungeonRoom_Tomb_Single(file, entranceY = 2, allowSecrets = false, isFancy = it) }
+	private fun TOMB_SINGLE_NARROW(file: String): (Boolean) -> TombDungeonAbstractPiece {
+		return { TombDungeonRoom_Tomb_SingleNarrow(file, entranceY = 2, isFancy = it) }
+	}
+	
+	private fun TOMB_SINGLE_SPACIOUS(file: String): (Boolean) -> TombDungeonAbstractPiece {
+		return { TombDungeonRoom_Tomb_SingleSpacious(file, entranceY = 2, isFancy = it) }
 	}
 	
 	fun TOMB_RANDOM(rand: Random, options: WeightedList<(Boolean) -> TombDungeonAbstractPiece>): (Boolean) -> TombDungeonAbstractPiece {
@@ -395,10 +400,10 @@ object TombDungeonPieces : IStructureDescription {
 	)
 	
 	val PIECE_TOMB_RANDOM_MULTI_NARROW = weightedListOf(
-		1 to TOMB("tomb.multi.narrow_4x2.nbt", entranceY = 1),
-		3 to TOMB("tomb.multi.narrow_5x2.nbt", entranceY = 1),
-		3 to TOMB("tomb.multi.narrow_6x2.nbt", entranceY = 1),
-		2 to TOMB("tomb.multi.narrow_7x2.nbt", entranceY = 1)
+		1 to TOMB_MULTI_NARROW("tomb.multi.narrow_4x2.nbt", tombsPerColumn = 4),
+		3 to TOMB_MULTI_NARROW("tomb.multi.narrow_5x2.nbt", tombsPerColumn = 5),
+		3 to TOMB_MULTI_NARROW("tomb.multi.narrow_6x2.nbt", tombsPerColumn = 6),
+		2 to TOMB_MULTI_NARROW("tomb.multi.narrow_7x2.nbt", tombsPerColumn = 7)
 	)
 	
 	val PIECE_TOMB_RANDOM_MULTI_DEEP_SHORT = weightedListOf(
@@ -420,8 +425,8 @@ object TombDungeonPieces : IStructureDescription {
 		2 to TOMB_MULTI_SPACIOUS("tomb.multi.spacious_7x2.nbt", tombsPerColumn = 7)
 	)
 	
-	val PIECE_TOMB_SINGLE_NARROW   = TOMB_SINGLE("tomb.single.narrow.nbt")
-	val PIECE_TOMB_SINGLE_SPACIOUS = TOMB_SINGLE("tomb.single.spacious.nbt")
+	val PIECE_TOMB_SINGLE_NARROW   = TOMB_SINGLE_NARROW("tomb.single.narrow.nbt")
+	val PIECE_TOMB_SINGLE_SPACIOUS = TOMB_SINGLE_SPACIOUS("tomb.single.spacious.nbt")
 	
 	override val ALL_PIECES
 		get() = arrayOf(

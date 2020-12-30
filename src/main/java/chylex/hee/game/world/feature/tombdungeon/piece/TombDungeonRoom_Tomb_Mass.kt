@@ -31,6 +31,7 @@ class TombDungeonRoom_Tomb_Mass(width: Int, depth: Int, private val border: Bool
 	override fun generate(world: IStructureWorld, instance: Instance) {
 		super.generate(world, instance)
 		
+		val rand = world.rand
 		val centerX = size.centerX
 		val maxX = size.maxX
 		val maxY = size.maxY
@@ -51,6 +52,10 @@ class TombDungeonRoom_Tomb_Mass(width: Int, depth: Int, private val border: Bool
 		}
 		else {
 			world.setBlock(Pos(centerX, 1, maxZ - 1), ModBlocks.DUSTY_STONE)
+		}
+		
+		if (rand.nextInt(6) == 0 && (border || split)) {
+			placeJars(world, instance, listOf(Pos(centerX, 2, 1)))
 		}
 		
 		placeCobwebs(world, instance)

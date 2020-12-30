@@ -4,7 +4,7 @@ import chylex.hee.game.world.Pos
 import chylex.hee.game.world.structure.IStructureWorld
 import chylex.hee.system.migration.Facing.SOUTH
 
-class TombDungeonRoom_Tomb_Single(file: String, entranceY: Int, allowSecrets: Boolean, isFancy: Boolean) : TombDungeonRoom_Tomb(file, entranceY, allowSecrets, isFancy) {
+open class TombDungeonRoom_Tomb_SingleNarrow(file: String, entranceY: Int, isFancy: Boolean) : TombDungeonRoom_Tomb(file, entranceY, allowSecrets = false, isFancy) {
 	override fun generate(world: IStructureWorld, instance: Instance) {
 		super.generate(world, instance)
 		
