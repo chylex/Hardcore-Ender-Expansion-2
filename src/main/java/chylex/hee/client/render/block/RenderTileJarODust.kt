@@ -35,6 +35,7 @@ import net.minecraftforge.client.model.ModelLoader
 import net.minecraftforge.client.model.data.EmptyModelData
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber.Bus.MOD
 import org.lwjgl.opengl.GL11
+import kotlin.math.sqrt
 
 @Sided(Side.CLIENT)
 class RenderTileJarODust(dispatcher: TileEntityRendererDispatcher) : TileEntityRenderer<TileEntityJarODust>(dispatcher) {
@@ -54,8 +55,10 @@ class RenderTileJarODust(dispatcher: TileEntityRendererDispatcher) : TileEntityR
 		
 		private val AABB = BlockJarODust.AABB
 		
-		private const val EPSILON_Y = 0.025
+		private const val EPSILON_Y_BOTTOM = 0.02
+		private const val EPSILON_Y_TOP = 0.04
 		private const val EPSILON_XZ = 0.005
+		private const val FIRST_LAYER_HEIGHT = 0.0325
 		
 		@SubscribeEvent
 		fun onTextureStitchPre(e: TextureStitchEvent.Pre) {
@@ -73,7 +76,8 @@ class RenderTileJarODust(dispatcher: TileEntityRendererDispatcher) : TileEntityR
 		
 		private fun renderLayers(layers: DustLayers, matrix: MatrixStack, buffer: IRenderTypeBuffer, combinedLight: Int, combinedOverlay: Int, renderBottom: Boolean) {
 			val contents = layers.contents.takeUnless { it.isEmpty() } ?: return
-			val unit = AABB.let { it.maxY - it.minY - (EPSILON_Y * 2) } / layers.totalCapacity
+			val squish = 0.775F + (0.225F * sqrt(contents.sumBy { it.second.toInt() }.toDouble() / layers.totalCapacity))
+			val unit = AABB.let { it.maxY - it.minY - EPSILON_Y_BOTTOM - EPSILON_Y_TOP - FIRST_LAYER_HEIGHT } / layers.totalCapacity / squish
 			
 			val builder = buffer.getBuffer(RENDER_TYPE_LAYERS)
 			val mat = matrix.last.matrix
@@ -96,12 +100,12 @@ class RenderTileJarODust(dispatcher: TileEntityRendererDispatcher) : TileEntityR
 				val (dustType, dustAmount) = info
 				
 				val color = dustType.color
-				val height = dustAmount * unit
+				val height = (if (index == 0) FIRST_LAYER_HEIGHT else 0.0) + (dustAmount * unit)
 				
 				val texMin = minU + ((0.01 + relY * TEX_MP) * texHalfSize).toFloat()
 				val texMax = minU + ((0.01 + (relY + height) * TEX_MP) * texHalfSize).toFloat()
 				
-				val minY = (relY + AABB.minY + EPSILON_Y).toFloat()
+				val minY = (relY + AABB.minY + EPSILON_Y_BOTTOM).toFloat()
 				val maxY = (minY + height).toFloat()
 				
 				val sideR = (color[0] / 1.125F).floorToInt().coerceAtLeast(0)
