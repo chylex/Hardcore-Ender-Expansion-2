@@ -74,7 +74,7 @@ class RenderTileJarODust(dispatcher: TileEntityRendererDispatcher) : TileEntityR
 			}
 		}
 		
-		private fun renderLayers(layers: DustLayers, matrix: MatrixStack, buffer: IRenderTypeBuffer, combinedLight: Int, combinedOverlay: Int, renderBottom: Boolean) {
+		private fun renderLayers(layers: DustLayers, matrix: MatrixStack, buffer: IRenderTypeBuffer, combinedLight: Int, combinedOverlay: Int) {
 			val contents = layers.contents.takeUnless { it.isEmpty() } ?: return
 			val squish = 0.775F + (0.225F * sqrt(contents.sumBy { it.second.toInt() }.toDouble() / layers.totalCapacity))
 			val unit = AABB.let { it.maxY - it.minY - EPSILON_Y_BOTTOM - EPSILON_Y_TOP - FIRST_LAYER_HEIGHT } / layers.totalCapacity / squish
@@ -134,7 +134,7 @@ class RenderTileJarODust(dispatcher: TileEntityRendererDispatcher) : TileEntityR
 					pos(mat, minX, maxY, maxZ).color(sideR, sideG, sideB, 255).tex(texMax, minV).lightmap(combinedLight).overlay(combinedOverlay).endVertex()
 				}
 				
-				if (index == 0 && renderBottom) {
+				if (index == 0) {
 					val bottomR = color[0]
 					val bottomG = color[1]
 					val bottomB = color[2]
@@ -166,7 +166,7 @@ class RenderTileJarODust(dispatcher: TileEntityRendererDispatcher) : TileEntityR
 	}
 	
 	override fun render(tile: TileEntityJarODust, partialTicks: Float, matrix: MatrixStack, buffer: IRenderTypeBuffer, combinedLight: Int, combinedOverlay: Int) {
-		renderLayers(tile.layers, matrix, buffer, combinedLight, combinedOverlay, renderBottom = false)
+		renderLayers(tile.layers, matrix, buffer, combinedLight, combinedOverlay)
 	}
 	
 	@SubscribeAllEvents(Side.CLIENT, modid = HEE.ID, bus = MOD)
@@ -191,7 +191,7 @@ class RenderTileJarODust(dispatcher: TileEntityRendererDispatcher) : TileEntityR
 			
 			if (nbt != null) {
 				layers.deserializeNBT(nbt)
-				renderLayers(layers, matrix, buffer, combinedLight, combinedOverlay, renderBottom = true)
+				renderLayers(layers, matrix, buffer, combinedLight, combinedOverlay)
 			}
 			
 			MC.instance.blockRendererDispatcher.blockModelRenderer.renderModel(matrix.last, buffer.getBuffer(Atlases.getTranslucentCullBlockType()), null, MODEL, 1F, 1F, 1F, combinedLight, combinedOverlay, EmptyModelData.INSTANCE)
