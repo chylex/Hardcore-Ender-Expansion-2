@@ -68,7 +68,10 @@ data class Transform(val rotation: Rotation, val mirror: Boolean) {
 	
 	operator fun invoke(entity: Entity) {
 		entity.rotationYaw = entity.getRotatedYaw(rotation)
-		entity.rotationYaw = entity.getMirroredYaw(mirroring)
+		
+		if (mirror) {
+			entity.rotationYaw = -entity.rotationYaw
+		}
 	}
 	
 	operator fun invoke(tile: TileEntity) {
