@@ -1,5 +1,7 @@
 package chylex.hee.game.world.feature.tombdungeon
 
+import chylex.hee.game.world.feature.tombdungeon.TombDungeonLevel.MobAmount.HIGH
+import chylex.hee.game.world.feature.tombdungeon.TombDungeonLevel.MobAmount.MEDIUM
 import chylex.hee.game.world.feature.tombdungeon.TombDungeonPieces.PIECE_TOMB_RANDOM_MASS_5X_BASIC
 import chylex.hee.game.world.feature.tombdungeon.TombDungeonPieces.PIECE_TOMB_RANDOM_MASS_5X_BORDER
 import chylex.hee.game.world.feature.tombdungeon.TombDungeonPieces.PIECE_TOMB_RANDOM_MASS_5X_SPLIT
@@ -100,5 +102,62 @@ enum class TombDungeonLevel(val isFancy: Boolean, private val corridorFactor: In
 				else    -> 11 to TOMB_RANDOM(rand, PIECE_TOMB_RANDOM_MULTI_SPACIOUS)
 			}
 		}
+	}
+	
+	fun pickUndreadAndSpiderlingSpawns(rand: Random, amount: MobAmount): Pair<Int, Int> {
+		val m = if (amount >= MEDIUM) 1 else 0
+		val h = if (amount >= HIGH) 1 else 0
+		
+		return when(this) {
+			FIRST -> when(rand.nextInt(0, 3)) {
+				0    -> MOBS(undreads = rand.nextInt(0, h), spiderlings = 1 + m)
+				1    -> MOBS(undreads = rand.nextInt(0, h), spiderlings = 2 + m)
+				2    -> MOBS(undreads = 1 + h,              spiderlings = 0 + rand.nextInt(0, m))
+				else -> MOBS(undreads = 1 + h,              spiderlings = 1 + rand.nextInt(0, m))
+			}
+			
+			SECOND -> when(rand.nextInt(0, 3)) {
+				0    -> MOBS(undreads = rand.nextInt(0, m + h),         spiderlings = 1 + rand.nextInt(0, m + h))
+				1    -> MOBS(undreads = 1 + rand.nextInt(0, m + h),     spiderlings = rand.nextInt(0, m + h))
+				2    -> MOBS(undreads = 1 + m + rand.nextInt(h, h * 2), spiderlings = 0)
+				else -> MOBS(undreads = 1 + h,                          spiderlings = 1 + m + rand.nextInt(h, h * 3))
+			}
+			
+			// TODO
+			
+			else -> 0 to 0
+		}
+		
+		/*
+		
+import chylex.hee.game.world.feature.tombdungeon.TombDungeonLevel
+import chylex.hee.game.world.feature.tombdungeon.TombDungeonLevel.MobAmount
+import chylex.hee.system.math.floorToInt
+import com.google.common.collect.Comparators
+import java.util.Random
+
+val rand = Random()
+val level = TombDungeonLevel.FIRST
+val reps = 100000
+
+MobAmount.values().map { amount ->
+	"\n\n" + amount.name + "\n" + "-".repeat(amount.name.length) + "\n" + (1..reps)
+		.map { level.pickUndreadAndSpiderlingSpawns(rand, amount) }
+		.groupingBy { it }
+		.eachCount()
+		.entries
+		.map { ((it.value * 100.0) / reps).floorToInt() to it.key }
+		.sortedWith(compareBy({ it.first }, { it.second.first }, { it.second.second }))
+		.map { "U = ${it.second.first}, S = ${it.second.second} ... ${it.first} %" }
+		.joinToString("\n")
+}.joinToString("\n")
+	
+		 */
+	}
+	
+	private fun MOBS(undreads: Int, spiderlings: Int) = undreads to spiderlings
+	
+	enum class MobAmount {
+		LOW, MEDIUM, HIGH
 	}
 }

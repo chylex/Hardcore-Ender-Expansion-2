@@ -1,9 +1,13 @@
 package chylex.hee.game.world.feature.tombdungeon.piece
 
 import chylex.hee.game.world.Pos
+import chylex.hee.game.world.feature.tombdungeon.TombDungeonLevel.MobAmount
 import chylex.hee.game.world.structure.IStructureWorld
 
 class TombDungeonRoom_Tomb_SingleSpacious(file: String, entranceY: Int, isFancy: Boolean) : TombDungeonRoom_Tomb_SingleNarrow(file, entranceY, isFancy) {
+	override val mobAmount: MobAmount?
+		get() = null
+	
 	override fun generate(world: IStructureWorld, instance: Instance) {
 		super.generate(world, instance)
 		

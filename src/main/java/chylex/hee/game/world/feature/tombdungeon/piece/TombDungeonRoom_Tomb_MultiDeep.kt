@@ -2,6 +2,7 @@ package chylex.hee.game.world.feature.tombdungeon.piece
 
 import chylex.hee.game.block.BlockGraveDirt
 import chylex.hee.game.world.Pos
+import chylex.hee.game.world.feature.tombdungeon.TombDungeonLevel.MobAmount
 import chylex.hee.game.world.structure.IStructureWorld
 import chylex.hee.system.migration.Facing.EAST
 import chylex.hee.system.migration.Facing.WEST
@@ -9,6 +10,13 @@ import chylex.hee.system.random.nextInt
 import chylex.hee.system.random.nextRounded
 
 class TombDungeonRoom_Tomb_MultiDeep(file: String, private val tombsPerColumn: Int, entranceY: Int, isFancy: Boolean) : TombDungeonRoom_Tomb(file, entranceY, allowSecrets = false, isFancy) {
+	override val mobAmount
+		get() = when {
+			tombsPerColumn <= 5 -> MobAmount.LOW
+			tombsPerColumn <= 7 -> MobAmount.MEDIUM
+			else                -> MobAmount.HIGH
+		}
+	
 	override fun generate(world: IStructureWorld, instance: Instance) {
 		super.generate(world, instance)
 		
