@@ -1,0 +1,74 @@
+Index: src/main/resources/hee.mixins.json
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>{\n  \"required\": true,\n  \"minVersion\": \"0.8\",\n  \"package\": \"chylex.hee.mixin\",\n  \"compatibilityLevel\": \"JAVA_8\",\n  \"mixins\": [\n    \"HookAnvilRepair\",\n    \"HookBlockDrops\",\n    \"HookChorusFlowerSoil\",\n    \"HookChorusPlantSoil\",\n    \"HookEffectCorruption\",\n    \"HookEffectInstanceCorruption\",\n    \"HookEndBiome\",\n    \"HookEndermanParticles\",\n    \"HookEndermiteParticles\",\n    \"HookEntityHelmetBreaking\",\n    \"HookEntityPotionCorruption\",\n    \"HookFireSpread\",\n    \"HookItemEntityLavaCheck\",\n    \"HookLightMapColors\",\n    \"HookPlayerInventoryArmorBreaking\",\n    \"HookPotionCreativeMenu\",\n    \"HookThornsArmorBreaking\"\n  ],\n  \"injectors\": {\n    \"defaultRequire\": 1\n  }\n}\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/main/resources/hee.mixins.json b/src/main/resources/hee.mixins.json
+--- a/src/main/resources/hee.mixins.json	(revision 7f9202bceb9aa7b8fac24437a2190a87857573a7)
++++ b/src/main/resources/hee.mixins.json	(date 1608060366293)
+@@ -3,25 +3,7 @@
+   "minVersion": "0.8",
+   "package": "chylex.hee.mixin",
+   "compatibilityLevel": "JAVA_8",
+-  "mixins": [
+-    "HookAnvilRepair",
+-    "HookBlockDrops",
+-    "HookChorusFlowerSoil",
+-    "HookChorusPlantSoil",
+-    "HookEffectCorruption",
+-    "HookEffectInstanceCorruption",
+-    "HookEndBiome",
+-    "HookEndermanParticles",
+-    "HookEndermiteParticles",
+-    "HookEntityHelmetBreaking",
+-    "HookEntityPotionCorruption",
+-    "HookFireSpread",
+-    "HookItemEntityLavaCheck",
+-    "HookLightMapColors",
+-    "HookPlayerInventoryArmorBreaking",
+-    "HookPotionCreativeMenu",
+-    "HookThornsArmorBreaking"
+-  ],
++  "mixins": [ "HookAnvilRepair", "HookBlockDrops", "HookChorusFlowerSoil", "HookChorusPlantSoil", "HookEffectCorruption", "HookEffectInstanceCorruption", "HookElytraBreaking", "HookEndBiome", "HookEndermanParticles", "HookEndermiteParticles", "HookEntityHelmetBreaking", "HookEntityPotionCorruption", "HookFireSpread", "HookItemEntityLavaCheck", "HookLightMapColors", "HookPlayerInventoryArmorBreaking", "HookPotionCreativeMenu", "HookThornsArmorBreaking" ],
+   "injectors": {
+     "defaultRequire": 1
+   }
+Index: src/main/java/chylex/hee/mixin/HookElytraBreaking.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/main/java/chylex/hee/mixin/HookElytraBreaking.java b/src/main/java/chylex/hee/mixin/HookElytraBreaking.java
+new file mode 100644
+--- /dev/null	(date 1608060322378)
++++ b/src/main/java/chylex/hee/mixin/HookElytraBreaking.java	(date 1608060322378)
+@@ -0,0 +1,27 @@
++package chylex.hee.mixin;
++
++import chylex.hee.init.ModItems;
++import net.minecraft.entity.LivingEntity;
++import net.minecraft.entity.player.PlayerEntity;
++import net.minecraft.item.ElytraItem;
++import net.minecraft.item.ItemStack;
++import org.spongepowered.asm.mixin.Mixin;
++import org.spongepowered.asm.mixin.injection.At;
++import org.spongepowered.asm.mixin.injection.Redirect;
++import java.util.function.Consumer;
++
++@Mixin(ElytraItem.class)
++public abstract class HookElytraBreaking{
++	@Redirect(
++		method = "elytraFlightTick",
++		at = @At(value = "INVOKE", target = "Lnet/minecraft/item/ItemStack;damageItem(ILnet/minecraft/entity/LivingEntity;Ljava/util/function/Consumer;)V")
++	)
++	public void damageItem(final ItemStack stack, final int amount, final LivingEntity entity, final Consumer<LivingEntity> onBroken){
++		final ItemStack originalStack = stack.copy();
++		stack.damageItem(amount, entity, onBroken);
++		
++		if (ElytraItem.isUsable(originalStack) && !ElytraItem.isUsable(stack) && entity instanceof PlayerEntity){
++			ModItems.RING_OF_PRESERVATION.onArmorDestroyed((PlayerEntity)entity, originalStack, stack);
++		}
++	}
++}

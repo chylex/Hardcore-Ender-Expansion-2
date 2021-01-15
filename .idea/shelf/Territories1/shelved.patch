@@ -1,0 +1,119 @@
+Index: src/main/java/chylex/hee/game/world/territory/TerritoryTicker.kt
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- src/main/java/chylex/hee/game/world/territory/TerritoryTicker.kt	(date 1590584304209)
++++ src/main/java/chylex/hee/game/world/territory/TerritoryTicker.kt	(date 1590584304209)
+@@ -0,0 +1,54 @@
++package chylex.hee.game.world.territory
++import chylex.hee.HEE
++import chylex.hee.system.migration.forge.SubscribeAllEvents
++import chylex.hee.system.migration.forge.SubscribeEvent
++import chylex.hee.system.util.totalTime
++import net.minecraft.world.World
++import net.minecraftforge.event.world.WorldEvent
++
++@SubscribeAllEvents(modid = HEE.ID)
++object TerritoryTicker{
++	private val active = mutableMapOf<TerritoryInstance, Entry>()
++	
++	private class Entry{
++		var lastTickTime = -1L
++	}
++	
++	fun onWorldTick(world: World){
++		val currentTime = world.totalTime
++		
++		if (currentTime % 600L == 0L){
++			active.values.removeAll { currentTime - it.lastTickTime > 1L }
++		}
++		
++		for(player in world.players){
++			val instance = TerritoryInstance.fromPos(player)
++			
++			if (instance == null){
++				continue
++			}
++			
++			val entry = active.getOrPut(instance){ Entry() }
++			
++			if (entry.lastTickTime == currentTime){
++				continue
++			}
++			
++			entry.lastTickTime = currentTime
++			// TODO update
++		}
++	}
++	
++	@SubscribeEvent
++	fun onWorldUnload(e: WorldEvent.Save){
++		if (e.world.dimension.type !== HEE.dim){
++			return
++		}
++		
++		for((instance, entry) in active){
++			// TODO save
++		}
++		
++		active.clear()
++	}
++}
+Index: src/main/java/chylex/hee/game/block/BlockDustyStoneUnstable.kt
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package chylex.hee.game.block\r\nimport chylex.hee.game.block.info.BlockBuilder\r\nimport chylex.hee.init.ModBlocks\r\nimport chylex.hee.system.migration.Hand.MAIN_HAND\r\nimport chylex.hee.system.migration.MagicValues\r\nimport chylex.hee.system.migration.vanilla.EntityFallingBlock\r\nimport chylex.hee.system.migration.vanilla.EntityLivingBase\r\nimport chylex.hee.system.migration.vanilla.EntityPlayer\r\nimport chylex.hee.system.util.Pos\r\nimport chylex.hee.system.util.allInBox\r\nimport chylex.hee.system.util.facades.Facing4\r\nimport chylex.hee.system.util.floorToInt\r\nimport chylex.hee.system.util.getBlock\r\nimport chylex.hee.system.util.getState\r\nimport chylex.hee.system.util.isTopSolid\r\nimport chylex.hee.system.util.nextInt\r\nimport chylex.hee.system.util.setAir\r\nimport chylex.hee.system.util.setBlock\r\nimport chylex.hee.system.util.totalTime\r\nimport net.minecraft.block.BlockState\r\nimport net.minecraft.enchantment.EnchantmentHelper\r\nimport net.minecraft.enchantment.Enchantments\r\nimport net.minecraft.entity.Entity\r\nimport net.minecraft.entity.player.PlayerEntity\r\nimport net.minecraft.util.math.BlockPos\r\nimport net.minecraft.util.math.shapes.EntitySelectionContext\r\nimport net.minecraft.util.math.shapes.ISelectionContext\r\nimport net.minecraft.util.math.shapes.VoxelShape\r\nimport net.minecraft.util.math.shapes.VoxelShapes\r\nimport net.minecraft.world.IBlockReader\r\nimport net.minecraft.world.World\r\nimport java.util.Random\r\n\r\nclass BlockDustyStoneUnstable(builder: BlockBuilder) : BlockDustyStone(builder){\r\n\toverride fun canHarvestBlock(state: BlockState, world: IBlockReader, pos: BlockPos, player: PlayerEntity): Boolean{\r\n\t\treturn player.getHeldItem(MAIN_HAND).let { EnchantmentHelper.getEnchantmentLevel(Enchantments.SILK_TOUCH, it) == 0 || isPickaxeOrShovel(it) }\r\n\t}\r\n\t\r\n\toverride fun tick(state: BlockState, world: World, pos: BlockPos, rand: Random){\r\n\t\t// TODO fx\r\n\t\t\r\n\t\tif (state.block === ModBlocks.DUSTY_STONE_DAMAGED){\r\n\t\t\tworld.addEntity(EntityFallingBlock(world, pos.x + 0.5, pos.y.toDouble(), pos.z + 0.5, state))\r\n\t\t\t\r\n\t\t\tfor(facing in Facing4){\r\n\t\t\t\tval adjacentPos = pos.offset(facing)\r\n\t\t\t\t\r\n\t\t\t\tif (adjacentPos.getBlock(world) is BlockDustyStoneUnstable){\r\n\t\t\t\t\tdoCrumbleTest(world, adjacentPos)\r\n\t\t\t\t}\r\n\t\t\t}\r\n\t\t\t\r\n\t\t\tif (pos.up().getBlock(world) is BlockDustyStoneUnstable){\r\n\t\t\t\tsucceedCrumbleTest(world, pos.up())\r\n\t\t\t}\r\n\t\t}\r\n\t\telse if (state.block === ModBlocks.DUSTY_STONE_CRACKED){\r\n\t\t\tpos.setBlock(world, ModBlocks.DUSTY_STONE_DAMAGED)\r\n\t\t\tsucceedCrumbleTest(world, pos)\r\n\t\t}\r\n\t\telse{\r\n\t\t\tpos.setBlock(world, ModBlocks.DUSTY_STONE_CRACKED)\r\n\t\t\tsucceedCrumbleTest(world, pos)\r\n\t\t}\r\n\t}\r\n\t\r\n\toverride fun getCollisionShape(state: BlockState, world: IBlockReader, pos: BlockPos, context: ISelectionContext): VoxelShape{\r\n\t\treturn if (context is EntitySelectionContext && context.entity is EntityLivingBase)\r\n\t\t\tMagicValues.BLOCK_COLLISION_SHRINK_SHAPE\r\n\t\telse\r\n\t\t\tVoxelShapes.fullCube()\r\n\t}\r\n\t\r\n\toverride fun causesSuffocation(state: BlockState, world: IBlockReader, pos: BlockPos): Boolean{\r\n\t\treturn false // prevents sliding off the block\r\n\t}\r\n\t\r\n\toverride fun onEntityCollision(state: BlockState, world: World, pos: BlockPos, entity: Entity){\r\n\t\tif (!world.isRemote && world.totalTime % 4L == 0L && !(entity.height <= 0.5F || (entity.height <= 1F && entity.width <= 0.5F)) && isNonCreative(entity)){\r\n\t\t\tif (!doCrumbleTest(world, pos)){\r\n\t\t\t\treturn\r\n\t\t\t}\r\n\t\t\t\r\n\t\t\tfor(facing in Facing4){\r\n\t\t\t\tval adjacentPos = pos.offset(facing)\r\n\t\t\t\t\r\n\t\t\t\tif (adjacentPos.getBlock(world) is BlockDustyStoneUnstable){\r\n\t\t\t\t\tdoCrumbleTest(world, adjacentPos)\r\n\t\t\t\t}\r\n\t\t\t}\r\n\t\t}\r\n\t}\r\n\t\r\n\toverride fun onFallenUpon(world: World, pos: BlockPos, entity: Entity, fallDistance: Float){\r\n\t\tif (!world.isRemote && entity is EntityLivingBase && fallDistance > 1.3F && isNonCreative(entity)){\r\n\t\t\tval rand = world.rand\r\n\t\t\tval aabb = entity.boundingBox\r\n\t\t\tval y = pos.y\r\n\t\t\t\r\n\t\t\tval minX = (aabb.minX + 0.001).floorToInt()\r\n\t\t\tval maxX = (aabb.maxX - 0.001).floorToInt()\r\n\t\t\tval minZ = (aabb.minZ + 0.001).floorToInt()\r\n\t\t\tval maxZ = (aabb.maxZ - 0.001).floorToInt()\r\n\t\t\t\r\n\t\t\tfor(testPos in Pos(minX, y, minZ).allInBox(Pos(maxX, y, maxZ))){\r\n\t\t\t\tval state = testPos.getState(world)\r\n\t\t\t\t\r\n\t\t\t\tif (state.block !is BlockDustyStoneUnstable){\r\n\t\t\t\t\tcontinue\r\n\t\t\t\t}\r\n\t\t\t\t\r\n\t\t\t\tif (rand.nextBoolean()){\r\n\t\t\t\t\tworld.playEvent(2001, testPos, getStateId(state))\r\n\t\t\t\t\ttestPos.setAir(world)\r\n\t\t\t\t}\r\n\t\t\t\telse{\r\n\t\t\t\t\tdoCrumbleTest(world, testPos)\r\n\t\t\t\t}\r\n\t\t\t}\r\n\t\t\t\r\n\t\t\t// TODO would like to avoid damaging the player if all blocks break and accumulate fall distance, but the caller resets it\r\n\t\t}\r\n\t\t\r\n\t\tsuper.onFallenUpon(world, pos, entity, fallDistance)\r\n\t}\r\n\t\r\n\tprivate fun isNonCreative(entity: Entity): Boolean{\r\n\t\treturn entity !is EntityPlayer || !entity.isCreative\r\n\t}\r\n\t\r\n\tprivate fun doCrumbleTest(world: World, pos: BlockPos): Boolean{\r\n\t\tfor(offset in 1..8){\r\n\t\t\tval testPos = pos.down(offset)\r\n\t\t\tval isDustyStone = testPos.getBlock(world) is BlockDustyStoneUnstable\r\n\t\t\t\r\n\t\t\tif (!isDustyStone){\r\n\t\t\t\tif (!testPos.isTopSolid(world)){\r\n\t\t\t\t\tsucceedCrumbleTest(world, testPos.up())\r\n\t\t\t\t\treturn true\r\n\t\t\t\t}\r\n\t\t\t\t\r\n\t\t\t\tbreak\r\n\t\t\t}\r\n\t\t}\r\n\t\t\r\n\t\treturn false\r\n\t}\r\n\t\r\n\tprivate fun succeedCrumbleTest(world: World, pos: BlockPos){\r\n\t\tval rand = world.rand\r\n\t\tval block = pos.getBlock(world)\r\n\t\t\r\n\t\tval delay = if (block === ModBlocks.DUSTY_STONE_DAMAGED)\r\n\t\t\trand.nextInt(6, 10)\r\n\t\telse if (block === ModBlocks.DUSTY_STONE_CRACKED)\r\n\t\t\trand.nextInt(9, 13)\r\n\t\telse\r\n\t\t\trand.nextInt(12, 15)\r\n\t\t\r\n\t\tworld.pendingBlockTicks.scheduleTick(pos, block, delay)\r\n\t}\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- src/main/java/chylex/hee/game/block/BlockDustyStoneUnstable.kt	(revision f6f631f6f3dc9b347b19db913cf2be4535813fc7)
++++ src/main/java/chylex/hee/game/block/BlockDustyStoneUnstable.kt	(date 1590584304217)
+@@ -26,7 +26,6 @@
+ import net.minecraft.util.math.shapes.EntitySelectionContext
+ import net.minecraft.util.math.shapes.ISelectionContext
+ import net.minecraft.util.math.shapes.VoxelShape
+-import net.minecraft.util.math.shapes.VoxelShapes
+ import net.minecraft.world.IBlockReader
+ import net.minecraft.world.World
+ import java.util.Random
+@@ -68,7 +67,7 @@
+ 		return if (context is EntitySelectionContext && context.entity is EntityLivingBase)
+ 			MagicValues.BLOCK_COLLISION_SHRINK_SHAPE
+ 		else
+-			VoxelShapes.fullCube()
++			MagicValues.BLOCK_COLLISION_SHRINK_SHAPE //VoxelShapes.fullCube()
+ 	}
+ 	
+ 	override fun causesSuffocation(state: BlockState, world: IBlockReader, pos: BlockPos): Boolean{
+Index: src/main/java/chylex/hee/game/world/WorldProviderEndCustom.kt
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package chylex.hee.game.world\r\nimport chylex.hee.HEE\r\nimport chylex.hee.client.render.territory.AbstractEnvironmentRenderer\r\nimport chylex.hee.client.render.territory.EmptyRenderer\r\nimport chylex.hee.client.render.util.GL\r\nimport chylex.hee.client.render.util.GL.FOG_EXP2\r\nimport chylex.hee.game.mechanics.portal.SpawnInfo\r\nimport chylex.hee.game.world.provider.DragonFightManagerNull\r\nimport chylex.hee.game.world.provider.WorldBorderNull\r\nimport chylex.hee.game.world.territory.TerritoryInstance\r\nimport chylex.hee.game.world.territory.TerritoryInstance.Companion.THE_HUB_INSTANCE\r\nimport chylex.hee.game.world.territory.TerritoryTicker\r\nimport chylex.hee.game.world.territory.TerritoryVoid\r\nimport chylex.hee.proxy.ModCommonProxy\r\nimport chylex.hee.system.migration.forge.Side\r\nimport chylex.hee.system.migration.forge.Sided\r\nimport chylex.hee.system.util.Pos\r\nimport chylex.hee.system.util.xz\r\nimport net.minecraft.block.Blocks\r\nimport net.minecraft.util.math.BlockPos\r\nimport net.minecraft.util.math.Vec3d\r\nimport net.minecraft.world.World\r\nimport net.minecraft.world.biome.Biome\r\nimport net.minecraft.world.biome.Biomes\r\nimport net.minecraft.world.biome.provider.SingleBiomeProvider\r\nimport net.minecraft.world.biome.provider.SingleBiomeProviderSettings\r\nimport net.minecraft.world.dimension.DimensionType\r\nimport net.minecraft.world.dimension.EndDimension\r\nimport net.minecraft.world.gen.ChunkGenerator\r\nimport net.minecraft.world.gen.EndGenerationSettings\r\nimport net.minecraft.world.server.ServerWorld\r\nimport net.minecraftforge.client.IRenderHandler\r\nimport java.util.function.BiFunction\r\n\r\nclass WorldProviderEndCustom(world: World, type: DimensionType) : EndDimension(world, type){\r\n\tcompanion object{\r\n\t\tconst val DEFAULT_CELESTIAL_ANGLE = 0.5F\r\n\t\tconst val DEFAULT_SUN_BRIGHTNESS = 1F\r\n\t\tconst val DEFAULT_SKY_LIGHT = 0\r\n\t\t\r\n\t\tconst val SAVE_FOLDER = \"DIM-HEE\"\r\n\t\tval CONSTRUCTOR = BiFunction(::WorldProviderEndCustom)\r\n\t\t\r\n\t\tfun register(){\r\n\t\t\twith(HEE.dim){\r\n\t\t\t\tdirectory = SAVE_FOLDER\r\n\t\t\t\tfactory = CONSTRUCTOR\r\n\t\t\t\thasSkyLight = true\r\n\t\t\t}\r\n\t\t}\r\n\t\t\r\n\t\tvar debugMode = false\r\n\t\t\r\n\t\tprivate val CLIENT_SIDE_SPAWN_POINT = Pos(THE_HUB_INSTANCE.centerPoint).xz.withY(255)\r\n\t}\r\n\t\r\n\tprivate var clientProxy: ModCommonProxy? = null\r\n\t\r\n\tprivate val clientEnvironment\r\n\t\tget() = clientProxy?.getClientSidePlayer()?.let(TerritoryInstance.Companion::fromPos)?.territory?.desc?.environment\r\n\t\r\n\tinit{\r\n\t\twhen(val w = this.world){\r\n\t\t\tis ServerWorld -> {\r\n\t\t\t\tdragonFightManager = DragonFightManagerNull(w, this)\r\n\t\t\t}\r\n\t\t\t\r\n\t\t\telse -> {\r\n\t\t\t\tclientProxy = HEE.proxy\r\n\t\t\t}\r\n\t\t}\r\n\t}\r\n\t\r\n\toverride fun createChunkGenerator(): ChunkGenerator<EndGenerationSettings>{\r\n\t\tval settings = EndGenerationSettings().apply {\r\n\t\t\tdefaultBlock = Blocks.END_STONE.defaultState\r\n\t\t\tdefaultFluid = Blocks.AIR.defaultState\r\n\t\t\tspawnPos = CLIENT_SIDE_SPAWN_POINT\r\n\t\t}\r\n\t\t\r\n\t\treturn ChunkGeneratorEndCustom(world, SingleBiomeProvider(SingleBiomeProviderSettings().setBiome(Biomes.THE_END)), settings)\r\n\t}\r\n\t\r\n\toverride fun getBiome(pos: BlockPos): Biome{\r\n\t\treturn Biomes.THE_END // prevents client from falling back to Plains and rendering rain while loading\r\n\t}\r\n\t\r\n\t// Spawn point\r\n\t\r\n\tfun getSpawnInfo(): SpawnInfo{\r\n\t\treturn THE_HUB_INSTANCE.prepareSpawnPoint(null, clearanceRadius = 1)\r\n\t}\r\n\t\r\n\toverride fun getSpawnPoint(): BlockPos{\r\n\t\treturn if (world.isRemote)\r\n\t\t\tCLIENT_SIDE_SPAWN_POINT\r\n\t\telse\r\n\t\t\tTHE_HUB_INSTANCE.getSpawnPoint()\r\n\t}\r\n\t\r\n\toverride fun getSpawnCoordinate(): BlockPos?{\r\n\t\treturn null\r\n\t}\r\n\t\r\n\t// Behavior properties\r\n\t\r\n\toverride fun tick(){ // stops triggering a few seconds after all players leave the dimension (if still loaded)\r\n\t\tif (!debugMode){\r\n\t\t\tTerritoryVoid.onWorldTick(world as ServerWorld)\r\n\t\t}\r\n\t}\r\n\t\r\n\toverride fun updateWeather(defaultLogic: Runnable){\r\n\t\tworld.prevRainingStrength = 0F\r\n\t\tworld.rainingStrength = 0F\r\n\t\t\r\n\t\tworld.prevThunderingStrength = 0F\r\n\t\tworld.thunderingStrength = 0F\r\n\t}\r\n\t\r\n\toverride fun createWorldBorder() = WorldBorderNull()\r\n\t\r\n\t// TODO shitton of things to play around with, also test if default values work on server\r\n\t\r\n\t// Visual properties (Light)\r\n\t\r\n\toverride fun getLightmapColors(partialTicks: Float, sunBrightness: Float, skyLight: Float, blockLight: Float, colors: FloatArray){\r\n\t\tclientEnvironment?.let { it.lightmap.update(colors, sunBrightness, skyLight.coerceAtMost(it.skyLight / 16F), blockLight, partialTicks) }\r\n\t}\r\n\t\r\n\toverride fun getLightBrightnessTable(): FloatArray{\r\n\t\treturn clientEnvironment?.lightBrightnessTable ?: super.getLightBrightnessTable()\r\n\t}\r\n\t\r\n\toverride fun calculateCelestialAngle(worldTime: Long, partialTicks: Float): Float{\r\n\t\treturn clientEnvironment?.celestialAngle ?: DEFAULT_CELESTIAL_ANGLE\r\n\t}\r\n\t\r\n\t@Sided(Side.CLIENT)\r\n\toverride fun getSunBrightness(partialTicks: Float): Float{\r\n\t\treturn clientEnvironment?.sunBrightness ?: DEFAULT_SUN_BRIGHTNESS\r\n\t}\r\n\t\r\n\t// Visual Properties (Sky)\r\n\t\r\n\t@Sided(Side.CLIENT)\r\n\toverride fun isSkyColored(): Boolean{\r\n\t\treturn true\r\n\t}\r\n\t\r\n\t@Sided(Side.CLIENT)\r\n\toverride fun getSkyRenderer(): IRenderHandler?{\r\n\t\treturn clientEnvironment?.renderer ?: EmptyRenderer\r\n\t}\r\n\t\r\n\t@Sided(Side.CLIENT)\r\n\toverride fun getSkyColor(pos: BlockPos, partialTicks: Float): Vec3d{\r\n\t\treturn clientEnvironment?.fogColor ?: Vec3d.ZERO // return fog color because vanilla blends fog into sky color based on chunk render distance\r\n\t}\r\n\t\r\n\t// Visual properties (Fog)\r\n\t\r\n\t@Sided(Side.CLIENT)\r\n\toverride fun getFogColor(celestialAngle: Float, partialTicks: Float): Vec3d{\r\n\t\treturn clientEnvironment?.fogColor ?: Vec3d.ZERO\r\n\t}\r\n\t\r\n\t@Sided(Side.CLIENT)\r\n\toverride fun doesXZShowFog(x: Int, z: Int): Boolean{\r\n\t\tif (debugMode){\r\n\t\t\treturn false\r\n\t\t}\r\n\t\t\r\n\t\tval density = clientEnvironment?.let {\r\n\t\t\t(it.fogDensity * AbstractEnvironmentRenderer.currentFogDensityMp) + (it.fogRenderDistanceModifier * AbstractEnvironmentRenderer.currentRenderDistanceMp)\r\n\t\t}\r\n\t\t\r\n\t\tGL.setFogMode(FOG_EXP2)\r\n\t\tGL.setFogDensity(density ?: 0F)\r\n\t\treturn true\r\n\t}\r\n\t\r\n\t@Sided(Side.CLIENT)\r\n\toverride fun getVoidFogYFactor(): Double{\r\n\t\treturn 1.0\r\n\t}\r\n\t\r\n\t// Neutralization\r\n\t\r\n\toverride fun setSpawnPoint(pos: BlockPos){}\r\n\t\r\n\t@Sided(Side.CLIENT)\r\n\toverride fun setSkyRenderer(renderer: IRenderHandler){}\r\n\t\r\n\t@Sided(Side.CLIENT)\r\n\toverride fun setCloudRenderer(renderer: IRenderHandler){}\r\n\t\r\n\t@Sided(Side.CLIENT)\r\n\toverride fun setWeatherRenderer(renderer: IRenderHandler){}\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- src/main/java/chylex/hee/game/world/WorldProviderEndCustom.kt	(revision f6f631f6f3dc9b347b19db913cf2be4535813fc7)
++++ src/main/java/chylex/hee/game/world/WorldProviderEndCustom.kt	(date 1590782255480)
+@@ -59,6 +59,9 @@
+ 	private val clientEnvironment
+ 		get() = clientProxy?.getClientSidePlayer()?.let(TerritoryInstance.Companion::fromPos)?.territory?.desc?.environment
+ 	
++	private val serverWorld
++		get() = world as ServerWorld
++	
+ 	init{
+ 		when(val w = this.world){
+ 			is ServerWorld -> {
+@@ -105,8 +108,10 @@
+ 	// Behavior properties
+ 	
+ 	override fun tick(){ // stops triggering a few seconds after all players leave the dimension (if still loaded)
++		TerritoryTicker.onWorldTick(serverWorld)
++		
+ 		if (!debugMode){
+-			TerritoryVoid.onWorldTick(world as ServerWorld)
++			TerritoryVoid.onWorldTick(serverWorld)
+ 		}
+ 	}
+ 	

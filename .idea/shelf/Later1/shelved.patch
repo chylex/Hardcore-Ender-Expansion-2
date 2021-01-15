@@ -1,0 +1,81 @@
+Index: src/main/java/chylex/hee/game/world/territory/tickers/VoidTicker.kt
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package chylex.hee.game.world.territory.tickers\nimport chylex.hee.HEE\nimport chylex.hee.game.world.territory.ITerritoryTicker\nimport chylex.hee.game.world.territory.TerritoryInstance\nimport chylex.hee.game.world.territory.TerritoryVoid\nimport chylex.hee.game.world.territory.storage.TerritoryGlobalStorage\nimport chylex.hee.game.world.territory.storage.data.VoidData\nimport chylex.hee.game.world.totalTime\nimport chylex.hee.system.forge.EventPriority\nimport chylex.hee.system.forge.SubscribeAllEvents\nimport chylex.hee.system.forge.SubscribeEvent\nimport chylex.hee.system.migration.EntityPlayer\nimport net.minecraft.entity.effect.LightningBoltEntity\nimport net.minecraft.world.World\nimport net.minecraft.world.server.ServerWorld\nimport net.minecraftforge.event.entity.living.LivingDeathEvent\n\nclass VoidTicker(private val data: VoidData) : ITerritoryTicker{\n\t@SubscribeAllEvents(modid = HEE.ID)\n\tcompanion object{\n\t\t@SubscribeEvent(EventPriority.LOWEST)\n\t\tfun onLivingDeath(e: LivingDeathEvent){\n\t\t\tval player = (e.entity as? EntityPlayer)?.takeIf { !it.world.isRemote && it.dimension == HEE.dim } ?: return\n\t\t\t\n\t\t\tval instance = TerritoryInstance.fromPos(player) ?: return\n\t\t\tval voidData = TerritoryGlobalStorage.get().forInstance(instance)?.getComponent<VoidData>() ?: return\n\t\t\t\n\t\t\tif (voidData.startCorrupting()){\n\t\t\t\tval world = player.world as ServerWorld\n\t\t\t\tworld.addLightningBolt(LightningBoltEntity(world, player.posX, player.posY, player.posZ, true))\n\t\t\t}\n\t\t}\n\t}\n\t\n\toverride var resendClientEnvironmentPacketOnWorldTick = Long.MIN_VALUE\n\t\n\toverride fun tick(world: World){\n\t\tif (!data.isCorrupting || data.voidFactor >= TerritoryVoid.RARE_TERRITORY_MAX_CORRUPTION_FACTOR){\n\t\t\treturn\n\t\t}\n\t\t\n\t\tval currentTime = world.totalTime\n\t\t\n\t\tdata.onCorruptionTick(currentTime)\n\t\t\n\t\tif (currentTime % 10L == 0L){\n\t\t\tresendClientEnvironmentPacketOnWorldTick = currentTime\n\t\t}\n\t}\n}\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/main/java/chylex/hee/game/world/territory/tickers/VoidTicker.kt b/src/main/java/chylex/hee/game/world/territory/tickers/VoidTicker.kt
+--- a/src/main/java/chylex/hee/game/world/territory/tickers/VoidTicker.kt	(revision d901f1b2f4637bf5ea0f230e876f39d24a76f54b)
++++ b/src/main/java/chylex/hee/game/world/territory/tickers/VoidTicker.kt	(date 1604452537666)
+@@ -20,7 +20,7 @@
+ 	companion object{
+ 		@SubscribeEvent(EventPriority.LOWEST)
+ 		fun onLivingDeath(e: LivingDeathEvent){
+-			val player = (e.entity as? EntityPlayer)?.takeIf { !it.world.isRemote && it.dimension == HEE.dim } ?: return
++			val player = (e.entity as? EntityPlayer)?.takeIf { !it.world.isRemote && it.dimension === HEE.dim } ?: return
+ 			
+ 			val instance = TerritoryInstance.fromPos(player) ?: return
+ 			val voidData = TerritoryGlobalStorage.get().forInstance(instance)?.getComponent<VoidData>() ?: return
+Index: src/system/src/main/java/chylex/hee/system/serialization/ByteBufExt.kt
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>@file:Suppress(\"NOTHING_TO_INLINE\")\n\npackage chylex.hee.system.serialization\nimport chylex.hee.game.world.Pos\nimport chylex.hee.system.math.floorToInt\nimport io.netty.buffer.ByteBuf\nimport io.netty.buffer.ByteBufInputStream\nimport io.netty.buffer.ByteBufOutputStream\nimport net.minecraft.nbt.CompressedStreamTools\nimport net.minecraft.nbt.NBTSizeTracker\nimport net.minecraft.network.PacketBuffer\nimport net.minecraft.util.math.BlockPos\nimport net.minecraft.util.math.Vec3d\n\ninline fun <T : PacketBuffer> T.use(block: T.() -> Unit){\n\tblock()\n}\n\n// BlockPos\n\ninline fun PacketBuffer.writePos(pos: BlockPos){\n\tthis.writeLong(pos.toLong())\n}\n\ninline fun PacketBuffer.readPos(): BlockPos{\n\treturn Pos(this.readLong())\n}\n\n// Vec3d (Full)\n\nfun PacketBuffer.writeVec(vec: Vec3d){\n\tthis.writeDouble(vec.x)\n\tthis.writeDouble(vec.y)\n\tthis.writeDouble(vec.z)\n}\n\nfun PacketBuffer.readVec(): Vec3d{\n\treturn Vec3d(readDouble(), readDouble(), readDouble())\n}\n\n// Vec3d (Float)\n\nfun PacketBuffer.writeFloatVec(vec: Vec3d){\n\tthis.writeFloat(vec.x.toFloat())\n\tthis.writeFloat(vec.y.toFloat())\n\tthis.writeFloat(vec.z.toFloat())\n}\n\nfun PacketBuffer.readFloatVec(): Vec3d{\n\treturn Vec3d(readFloat().toDouble(), readFloat().toDouble(), readFloat().toDouble())\n}\n\n// Vec3d (Compact)\n\nfun PacketBuffer.writeCompactVec(vec: Vec3d){\n\tthis.writeInt((vec.x * 8.0).floorToInt())\n\tthis.writeInt((vec.y * 8.0).floorToInt())\n\tthis.writeInt((vec.z * 8.0).floorToInt())\n}\n\nfun PacketBuffer.readCompactVec(): Vec3d{\n\treturn Vec3d(readInt() * 0.125, readInt() * 0.125, readInt() * 0.125)\n}\n\n// NBT\n\ninline fun ByteBuf.writeTag(tag: TagCompound){\n\tCompressedStreamTools.write(tag, ByteBufOutputStream(this))\n}\n\ninline fun ByteBuf.readTag(): TagCompound{\n\treturn CompressedStreamTools.read(ByteBufInputStream(this), NBTSizeTracker(2097152L))\n}\n\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/system/src/main/java/chylex/hee/system/serialization/ByteBufExt.kt b/src/system/src/main/java/chylex/hee/system/serialization/ByteBufExt.kt
+--- a/src/system/src/main/java/chylex/hee/system/serialization/ByteBufExt.kt	(revision d901f1b2f4637bf5ea0f230e876f39d24a76f54b)
++++ b/src/system/src/main/java/chylex/hee/system/serialization/ByteBufExt.kt	(date 1604452562376)
+@@ -64,11 +64,10 @@
+ 
+ // NBT
+ 
+-inline fun ByteBuf.writeTag(tag: TagCompound){
++fun ByteBuf.writeTag(tag: TagCompound){
+ 	CompressedStreamTools.write(tag, ByteBufOutputStream(this))
+ }
+ 
+-inline fun ByteBuf.readTag(): TagCompound{
++fun ByteBuf.readTag(): TagCompound{
+ 	return CompressedStreamTools.read(ByteBufInputStream(this), NBTSizeTracker(2097152L))
+ }
+-
+Index: src/system/src/main/java/chylex/hee/client/render/gl/RenderStateBuilder.kt
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package chylex.hee.client.render.gl\nimport com.mojang.blaze3d.platform.GlStateManager.DestFactor\nimport com.mojang.blaze3d.platform.GlStateManager.SourceFactor\nimport com.mojang.blaze3d.systems.RenderSystem\nimport net.minecraft.client.renderer.RenderState\nimport net.minecraft.client.renderer.RenderState.AlphaState\nimport net.minecraft.client.renderer.RenderState.CullState\nimport net.minecraft.client.renderer.RenderState.DiffuseLightingState\nimport net.minecraft.client.renderer.RenderState.FogState\nimport net.minecraft.client.renderer.RenderState.LayerState\nimport net.minecraft.client.renderer.RenderState.LightmapState\nimport net.minecraft.client.renderer.RenderState.LineState\nimport net.minecraft.client.renderer.RenderState.OverlayState\nimport net.minecraft.client.renderer.RenderState.ShadeModelState\nimport net.minecraft.client.renderer.RenderState.TextureState\nimport net.minecraft.client.renderer.RenderState.TexturingState\nimport net.minecraft.client.renderer.RenderState.TransparencyState\nimport net.minecraft.client.renderer.RenderState.WriteMaskState\nimport net.minecraft.client.renderer.RenderType\nimport net.minecraft.client.renderer.RenderType.State\nimport net.minecraft.client.renderer.vertex.VertexFormat\nimport net.minecraft.util.ResourceLocation\nimport java.util.OptionalDouble\n\nclass RenderStateBuilder{\n\tprivate val state = State.getBuilder()\n\t\n\tfun tex(location: ResourceLocation, blur: Boolean = false, mipmap: Boolean = false){\n\t\tstate.texture(TextureState(location, blur, mipmap))\n\t}\n\t\n\tfun texturing(texturing: TexturingState){\n\t\tstate.texturing(texturing)\n\t}\n\t\n\tfun layering(layering: LayerState){\n\t\tstate.layer(layering)\n\t}\n\t\n\tfun blend(blend: TransparencyState){\n\t\tstate.transparency(blend)\n\t}\n\t\n\tfun blend(src: SourceFactor, dst: DestFactor){\n\t\tstate.transparency(TransparencyState(\"hee:blend_${src.name}_${dst.name}\",\n\t\t\t{ RenderSystem.enableBlend(); RenderSystem.blendFunc(src, dst) },\n\t\t\t{ RenderSystem.disableBlend() }\n\t\t))\n\t}\n\t\n\tfun blend(srgb: SourceFactor, drgb: DestFactor, sa: SourceFactor, da: DestFactor){\n\t\tstate.transparency(TransparencyState(\"hee:blend_${srgb.name}_${drgb.name}_${sa.name}_${da.name}\",\n\t\t\t{ RenderSystem.enableBlend(); RenderSystem.blendFuncSeparate(srgb, drgb, sa, da) },\n\t\t\t{ RenderSystem.disableBlend() }\n\t\t))\n\t}\n\t\n\tfun lighting(lighting: DiffuseLightingState){\n\t\tstate.diffuseLighting(lighting)\n\t}\n\t\n\tfun shade(shade: ShadeModelState){\n\t\tstate.shadeModel(shade)\n\t}\n\t\n\tfun alpha(alpha: AlphaState){\n\t\tstate.alpha(alpha)\n\t}\n\t\n\tfun alpha(greaterThan: Float){\n\t\tstate.alpha(AlphaState(greaterThan))\n\t}\n\t\n\tfun fog(fog: FogState){\n\t\tstate.fog(fog)\n\t}\n\t\n\tfun cull(cull: CullState){\n\t\tstate.cull(cull)\n\t}\n\t\n\tfun lightmap(lightmap: LightmapState){\n\t\tstate.lightmap(lightmap)\n\t}\n\t\n\tfun overlay(overlay: OverlayState){\n\t\tstate.overlay(overlay)\n\t}\n\t\n\tfun mask(mask: WriteMaskState){\n\t\tstate.writeMask(mask)\n\t}\n\t\n\tfun line(thickness: Double){\n\t\tstate.line(LineState(OptionalDouble.of(thickness)))\n\t}\n\t\n\tfun build(affectsOutline: Boolean = false): State{\n\t\treturn state.build(affectsOutline)\n\t}\n\t\n\tfun buildType(name: String, vertexFormat: VertexFormat, drawMode: Int, bufferSize: Int, useDelegate: Boolean = false, needsSorting: Boolean = true, affectsOutline: Boolean = false): RenderType{\n\t\t@Suppress(\"INACCESSIBLE_TYPE\")\n\t\treturn RenderType.makeType(name, vertexFormat, drawMode, bufferSize, useDelegate, needsSorting, build(affectsOutline))\n\t}\n\t\n\t/*\n\t * TextureState texture = RenderState.NO_TEXTURE;\n\t * TransparencyState transparency = RenderState.NO_TRANSPARENCY;\n\t * DiffuseLightingState diffuseLighting = RenderState.DIFFUSE_LIGHTING_DISABLED;\n\t * ShadeModelState shadeModel = RenderState.SHADE_DISABLED;\n\t * AlphaState alpha = RenderState.ZERO_ALPHA;\n\t * DepthTestState depthTest = RenderState.DEPTH_LEQUAL;\n\t * CullState cull = RenderState.CULL_ENABLED;\n\t * LightmapState lightmap = RenderState.LIGHTMAP_DISABLED;\n\t * OverlayState overlay = RenderState.OVERLAY_DISABLED;\n\t * FogState fog = RenderState.FOG;\n\t * LayerState layer = RenderState.NO_LAYERING;\n\t * TargetState target = RenderState.MAIN_TARGET;\n\t * TexturingState texturing = RenderState.DEFAULT_TEXTURING;\n\t * WriteMaskState writeMask = RenderState.COLOR_DEPTH_WRITE;\n\t * LineState line = RenderState.DEFAULT_LINE;\n\t */\n\t\n\t@Suppress(\"NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS\")\n\tcompanion object : RenderState(null, null, null){\n\t\tval LAYERING_NONE:       LayerState get() = NO_LAYERING\n\t\tval LAYERING_PROJECTION: LayerState get() = PROJECTION_LAYERING\n\t\t\n\t\tval BLEND_NONE: TransparencyState get() = NO_TRANSPARENCY\n\t\t\n\t\tval LIGHTING_ENABLED:  DiffuseLightingState get() = DIFFUSE_LIGHTING_ENABLED\n\t\tval LIGHTING_DISABLED: DiffuseLightingState get() = DIFFUSE_LIGHTING_DISABLED\n\t\t\n\t\tval SHADE_ENABLED:  ShadeModelState get() = RenderState.SHADE_ENABLED\n\t\tval SHADE_DISABLED: ShadeModelState get() = RenderState.SHADE_DISABLED\n\t\t\n\t\tval ALPHA_NONE:   AlphaState get() = ZERO_ALPHA\n\t\tval ALPHA_CUTOUT: AlphaState get() = DEFAULT_ALPHA\n\t\t\n\t\tval FOG_DISABLED: FogState get() = NO_FOG\n\t\tval FOG_ENABLED:  FogState get() = FOG\n\t\tval FOG_BLACK:    FogState get() = BLACK_FOG\n\t\t\n\t\tval CULL_DISABLED: CullState get() = RenderState.CULL_DISABLED\n\t\tval CULL_ENABLED:  CullState get() = RenderState.CULL_ENABLED\n\t\t\n\t\tval LIGHTMAP_DISABLED: LightmapState get() = RenderState.LIGHTMAP_DISABLED\n\t\tval LIGHTMAP_ENABLED:  LightmapState get() = RenderState.LIGHTMAP_ENABLED\n\t\t\n\t\tval OVERLAY_DISABLED: OverlayState get() = RenderState.OVERLAY_DISABLED\n\t\tval OVERLAY_ENABLED:  OverlayState get() = RenderState.OVERLAY_ENABLED\n\t\t\n\t\tval MASK_COLOR:       WriteMaskState get() = COLOR_WRITE\n\t\tval MASK_DEPTH:       WriteMaskState get() = DEPTH_WRITE\n\t\tval MASK_COLOR_DEPTH: WriteMaskState get() = COLOR_DEPTH_WRITE\n\t}\n}\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/system/src/main/java/chylex/hee/client/render/gl/RenderStateBuilder.kt b/src/system/src/main/java/chylex/hee/client/render/gl/RenderStateBuilder.kt
+--- a/src/system/src/main/java/chylex/hee/client/render/gl/RenderStateBuilder.kt	(revision d901f1b2f4637bf5ea0f230e876f39d24a76f54b)
++++ b/src/system/src/main/java/chylex/hee/client/render/gl/RenderStateBuilder.kt	(date 1602444393223)
+@@ -5,6 +5,7 @@
+ import net.minecraft.client.renderer.RenderState
+ import net.minecraft.client.renderer.RenderState.AlphaState
+ import net.minecraft.client.renderer.RenderState.CullState
++import net.minecraft.client.renderer.RenderState.DepthTestState
+ import net.minecraft.client.renderer.RenderState.DiffuseLightingState
+ import net.minecraft.client.renderer.RenderState.FogState
+ import net.minecraft.client.renderer.RenderState.LayerState
+@@ -79,6 +80,10 @@
+ 		state.cull(cull)
+ 	}
+ 	
++	fun depth(depth: DepthTestState){
++		state.depthTest(depth)
++	}
++	
+ 	fun lightmap(lightmap: LightmapState){
+ 		state.lightmap(lightmap)
+ 	}
+@@ -145,6 +150,8 @@
+ 		val CULL_DISABLED: CullState get() = RenderState.CULL_DISABLED
+ 		val CULL_ENABLED:  CullState get() = RenderState.CULL_ENABLED
+ 		
++		val DEPTH_ALWAYS: DepthTestState get() = RenderState.DEPTH_ALWAYS
++		
+ 		val LIGHTMAP_DISABLED: LightmapState get() = RenderState.LIGHTMAP_DISABLED
+ 		val LIGHTMAP_ENABLED:  LightmapState get() = RenderState.LIGHTMAP_ENABLED
+ 		

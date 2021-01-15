@@ -1,0 +1,14 @@
+<changelist name="Territories" date="1593174807954" recycled="false">
+  <option name="PATH" value="$PROJECT_DIR$/.idea/shelf/Territories/shelved.patch" />
+  <option name="DESCRIPTION" value="Territories" />
+  <binary>
+    <option name="BEFORE_PATH" />
+    <option name="AFTER_PATH" value="src/main/resources/assets/hee/textures/environment/end_sky_blurry.png" />
+    <option name="SHELVED_PATH" value="$PROJECT_DIR$/.idea/shelf/Territories/end_sky_blurry.png" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" />
+    <option name="AFTER_PATH" value="src/main/resources/assets/hee/textures/environment/end_sky_smooth.png" />
+    <option name="SHELVED_PATH" value="$PROJECT_DIR$/.idea/shelf/Territories/end_sky_smooth.png" />
+  </binary>
+</changelist>

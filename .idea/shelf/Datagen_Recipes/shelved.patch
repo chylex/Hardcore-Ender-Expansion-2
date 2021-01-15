@@ -1,0 +1,79 @@
+Index: data/src/main/java/chylex/hee/datagen/DataGen.kt
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package chylex.hee.datagen\nimport chylex.hee.HEE\nimport chylex.hee.datagen.client.BlockItemModels\nimport chylex.hee.datagen.client.BlockModels\nimport chylex.hee.datagen.client.BlockStates\nimport chylex.hee.datagen.client.ItemModels\nimport chylex.hee.system.forge.SubscribeAllEvents\nimport chylex.hee.system.forge.SubscribeEvent\nimport net.minecraftforge.fml.common.Mod.EventBusSubscriber.Bus.MOD\nimport net.minecraftforge.fml.event.lifecycle.GatherDataEvent\n\n@SubscribeAllEvents(modid = HEE.ID, bus = MOD)\nobject DataGen{\n\t@SubscribeEvent\n\tfun register(e: GatherDataEvent){\n\t\tval modid = HEE.ID\n\t\tval helper = e.existingFileHelper\n\t\t\n\t\twith(e.generator){\n\t\t\tif (e.includeClient()){\n\t\t\t\taddProvider(BlockStates(this, modid, helper))\n\t\t\t\taddProvider(BlockModels(this, modid, helper))\n\t\t\t\taddProvider(BlockItemModels(this, modid, helper))\n\t\t\t\taddProvider(ItemModels(this, modid, helper))\n\t\t\t}\n\t\t}\n\t}\n}\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- a/data/src/main/java/chylex/hee/datagen/DataGen.kt	(revision f8888e0a3b33898551301124a0879cea12fc1f06)
++++ b/data/src/main/java/chylex/hee/datagen/DataGen.kt	(date 1601732788951)
+@@ -4,6 +4,7 @@
+ import chylex.hee.datagen.client.BlockModels
+ import chylex.hee.datagen.client.BlockStates
+ import chylex.hee.datagen.client.ItemModels
++import chylex.hee.datagen.server.Recipes
+ import chylex.hee.system.forge.SubscribeAllEvents
+ import chylex.hee.system.forge.SubscribeEvent
+ import net.minecraftforge.fml.common.Mod.EventBusSubscriber.Bus.MOD
+@@ -23,6 +24,10 @@
+ 				addProvider(BlockItemModels(this, modid, helper))
+ 				addProvider(ItemModels(this, modid, helper))
+ 			}
++			
++			if (e.includeServer()){
++				addProvider(Recipes(this))
++			}
+ 		}
+ 	}
+ }
+Index: data/src/main/java/chylex/hee/datagen/server/Recipes.kt
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- /dev/null	(date 1601733265753)
++++ b/data/src/main/java/chylex/hee/datagen/server/Recipes.kt	(date 1601733265753)
+@@ -0,0 +1,15 @@
++package chylex.hee.datagen.server
++import chylex.hee.datagen.server.util.ingredients
++import chylex.hee.datagen.server.util.shapeless
++import chylex.hee.init.ModItems
++import net.minecraft.data.DataGenerator
++import net.minecraft.data.IFinishedRecipe
++import net.minecraft.data.RecipeProvider
++import net.minecraft.item.Items
++import java.util.function.Consumer
++
++class Recipes(generator: DataGenerator) : RecipeProvider(generator){
++	override fun registerRecipes(consumer: Consumer<IFinishedRecipe>) = with(consumer){
++		shapeless(ModItems.ALTERATION_NEXUS, 1){ ingredients(Items.DIAMOND, Items.ENDER_EYE, ModItems.ANCIENT_DUST, ModItems.ETHEREUM) }
++	}
++}
+Index: data/src/main/java/chylex/hee/datagen/server/util/RecipeProviderExt.kt
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- /dev/null	(date 1601733249382)
++++ b/data/src/main/java/chylex/hee/datagen/server/util/RecipeProviderExt.kt	(date 1601733249382)
+@@ -0,0 +1,20 @@
++package chylex.hee.datagen.server.util
++import net.minecraft.data.IFinishedRecipe
++import net.minecraft.data.ShapedRecipeBuilder
++import net.minecraft.data.ShapelessRecipeBuilder
++import net.minecraft.util.IItemProvider
++import java.util.function.Consumer
++
++fun Consumer<IFinishedRecipe>.shaped(result: IItemProvider, amount: Int, callback: ShapedRecipeBuilder.() -> Unit){
++	ShapedRecipeBuilder(result, amount).apply(callback).build(this)
++}
++
++fun Consumer<IFinishedRecipe>.shapeless(result: IItemProvider, amount: Int, callback: ShapelessRecipeBuilder.() -> Unit){
++	ShapelessRecipeBuilder(result, amount).apply(callback).build(this)
++}
++
++fun ShapelessRecipeBuilder.ingredients(vararg ingredients: IItemProvider){
++	for(ingredient in ingredients){
++		this.addIngredient(ingredient)
++	}
++}

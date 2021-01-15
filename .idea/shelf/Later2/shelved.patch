@@ -1,0 +1,19 @@
+Index: src/system/src/main/java/chylex/hee/game/entity/EntitySelector.kt
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package chylex.hee.game.entity\n\nimport chylex.hee.system.math.square\nimport net.minecraft.entity.Entity\nimport net.minecraft.util.math.AxisAlignedBB\nimport net.minecraft.util.math.Vec3d\nimport net.minecraft.world.IEntityReader\nimport java.util.function.Predicate\n\n@Suppress(\"NOTHING_TO_INLINE\")\nclass EntitySelector(private val world: IEntityReader, private val predicate: Predicate<in Entity>) {\n\tfun <T : Entity> inBox(cls: Class<T>, aabb: AxisAlignedBB): List<T> {\n\t\treturn world.getEntitiesWithinAABB(cls, aabb, predicate)\n\t}\n\t\n\tfun <T : Entity> inRange(cls: Class<T>, point: Vec3d, range: Double): List<T> {\n\t\tval aabb = AxisAlignedBB(point.x - range, point.y - range, point.z - range, point.x + range, point.y + range, point.z + range)\n\t\tval rangeSq = square(range)\n\t\t\n\t\treturn world.getEntitiesWithinAABB(cls, aabb) { predicate.test(it) && it!!.posVec.squareDistanceTo(point) <= rangeSq }\n\t}\n\t\n\t// Reified\n\t\n\tinline fun <reified T : Entity> inBox(aabb: AxisAlignedBB) = inBox(T::class.java, aabb)\n\tinline fun <reified T : Entity> inRange(point: Vec3d, range: Double) = inRange(T::class.java, point, range)\n\t\n\t// General\n\t\n\tinline fun allInBox(aabb: AxisAlignedBB) = inBox(Entity::class.java, aabb)\n\tinline fun allInRange(point: Vec3d, range: Double) = inRange(Entity::class.java, point, range)\n}\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/system/src/main/java/chylex/hee/game/entity/EntitySelector.kt b/src/system/src/main/java/chylex/hee/game/entity/EntitySelector.kt
+--- a/src/system/src/main/java/chylex/hee/game/entity/EntitySelector.kt	(revision 276df769798cbd4fd8154c5ebca0001dd8639545)
++++ b/src/system/src/main/java/chylex/hee/game/entity/EntitySelector.kt	(date 1609259090000)
+@@ -20,6 +20,8 @@
+ 		return world.getEntitiesWithinAABB(cls, aabb) { predicate.test(it) && it!!.posVec.squareDistanceTo(point) <= rangeSq }
+ 	}
+ 	
++	// TODO only loaded? fuck
++	
+ 	// Reified
+ 	
+ 	inline fun <reified T : Entity> inBox(aabb: AxisAlignedBB) = inBox(T::class.java, aabb)

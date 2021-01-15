@@ -1,0 +1,47 @@
+Index: data/src/main/java/chylex/hee/datagen/server/Recipes.kt
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- /dev/null	(date 1601740133630)
++++ b/data/src/main/java/chylex/hee/datagen/server/Recipes.kt	(date 1601740133630)
+@@ -0,0 +1,11 @@
++package chylex.hee.datagen.server
++import net.minecraft.data.DataGenerator
++import net.minecraft.data.IFinishedRecipe
++import net.minecraft.data.RecipeProvider
++import java.util.function.Consumer
++
++class Recipes(generator: DataGenerator) : RecipeProvider(generator){
++	override fun registerRecipes(consumer: Consumer<IFinishedRecipe>) = with(consumer){
++		// shapeless(ModItems.ALTERATION_NEXUS, 1){ ingredients(Items.DIAMOND, Items.ENDER_EYE, ModItems.ANCIENT_DUST, ModItems.ETHEREUM) }
++	}
++}
+Index: data/src/main/java/chylex/hee/datagen/server/util/RecipeProviderExt.kt
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- /dev/null	(date 1601734823610)
++++ b/data/src/main/java/chylex/hee/datagen/server/util/RecipeProviderExt.kt	(date 1601734823610)
+@@ -0,0 +1,20 @@
++package chylex.hee.datagen.server.util
++import net.minecraft.data.IFinishedRecipe
++import net.minecraft.data.ShapedRecipeBuilder
++import net.minecraft.data.ShapelessRecipeBuilder
++import net.minecraft.util.IItemProvider
++import java.util.function.Consumer
++
++fun Consumer<IFinishedRecipe>.shaped(result: IItemProvider, amount: Int, callback: ShapedRecipeBuilder.() -> Unit){
++	ShapedRecipeBuilder(result, amount).apply(callback).build(this)
++}
++
++fun Consumer<IFinishedRecipe>.shapeless(result: IItemProvider, amount: Int, callback: ShapelessRecipeBuilder.() -> Unit){
++	ShapelessRecipeBuilder(result, amount).apply(callback).build(this)
++}
++
++fun ShapelessRecipeBuilder.ingredients(vararg ingredients: IItemProvider){
++	for(ingredient in ingredients){
++		this.addIngredient(ingredient)
++	}
++}

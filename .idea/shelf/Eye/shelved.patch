@@ -1,0 +1,723 @@
+Index: src/main/java/chylex/hee/client/model/entity/ModelEntityBossEnderEye.kt
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package chylex.hee.client.model.entity\nimport chylex.hee.client.model.FACE_FRONT\nimport chylex.hee.client.model.beginBox\nimport chylex.hee.client.model.retainFace\nimport chylex.hee.game.entity.living.EntityBossEnderEye\nimport chylex.hee.system.forge.Side\nimport chylex.hee.system.forge.Sided\nimport chylex.hee.system.math.toRadians\nimport com.mojang.blaze3d.matrix.MatrixStack\nimport com.mojang.blaze3d.vertex.IVertexBuilder\nimport net.minecraft.client.renderer.entity.model.EntityModel\nimport net.minecraft.client.renderer.model.ModelRenderer\n\n@Sided(Side.CLIENT)\nobject ModelEntityBossEnderEye : EntityModel<EntityBossEnderEye>(){\n\tconst val SCALE = 16F / 18F\n\t\n\tprivate val head: ModelRenderer\n\tprivate val eyes: Array<ModelRenderer>\n\tprivate val arms: ModelRenderer\n\t\n\tprivate var eyeState = 0\n\t\n\tinit{\n\t\ttextureWidth = 128\n\t\ttextureHeight = 64\n\t\t\n\t\thead = ModelRenderer(this).apply {\n\t\t\tsetRotationPoint(0F, 15F, 0F)\n\t\t\tbeginBox.offset(-9F, -9F, -9F).size(18, 18, 18).tex(0, 0).add()\n\t\t}\n\t\t\n\t\teyes = Array(8){\n\t\t\tModelRenderer(this).apply {\n\t\t\t\tsetRotationPoint(0F, 15F, 0F)\n\t\t\t\tbeginBox.offset(-8F, -8F, -9F).size(16, 16, 1).tex(-1 + (16 * it), 47).add()\n\t\t\t\tcubeList[0].retainFace(FACE_FRONT)\n\t\t\t}\n\t\t}\n\t\t\n\t\tarms = ModelRenderer(this).apply {\n\t\t\tsetRotationPoint(0F, 15.5F, -0.5F)\n\t\t\tbeginBox.offset(-12F, -1.5F, -1.5F).size(3, 27, 3).tex(73, 0).add()\n\t\t\tbeginBox.offset(  9F, -1.5F, -1.5F).size(3, 27, 3).tex(73, 0).mirror().add()\n\t\t}\n\t}\n\t\n\toverride fun setLivingAnimations(entity: EntityBossEnderEye, limbSwing: Float, limbSwingAmount: Float, partialTicks: Float){\n\t\tarms.rotateAngleX = entity.clientArmAngle.get(partialTicks).toRadians()\n\t\t\n\t\teyeState = when{\n\t\t\tentity.isSleeping -> 0\n\t\t\tentity.isDemonEye -> 7\n\t\t\telse -> entity.demonLevel + 1\n\t\t}\n\t}\n\t\n\toverride fun setRotationAngles(entity: EntityBossEnderEye, limbSwing: Float, limbSwingAmount: Float, age: Float, headYaw: Float, headPitch: Float){\n\t\thead.rotateAngleX = headPitch.toRadians()\n\t}\n\t\n\toverride fun render(matrix: MatrixStack, builder: IVertexBuilder, combinedLight: Int, combinedOverlay: Int, red: Float, green: Float, blue: Float, alpha: Float){\n\t\thead.render(matrix, builder, combinedLight, combinedOverlay, red, green, blue, alpha)\n\t\teyes[eyeState].also { it.rotateAngleX = head.rotateAngleX }.render(matrix, builder, combinedLight, combinedOverlay, red, green, blue, alpha)\n\t\tarms.render(matrix, builder, combinedLight, combinedOverlay, red, green, blue, alpha)\n\t}\n}\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/main/java/chylex/hee/client/model/entity/ModelEntityBossEnderEye.kt b/src/main/java/chylex/hee/client/model/entity/ModelEntityBossEnderEye.kt
+--- a/src/main/java/chylex/hee/client/model/entity/ModelEntityBossEnderEye.kt	(revision d901f1b2f4637bf5ea0f230e876f39d24a76f54b)
++++ b/src/main/java/chylex/hee/client/model/entity/ModelEntityBossEnderEye.kt	(date 1605307653169)
+@@ -49,7 +49,8 @@
+ 		arms.rotateAngleX = entity.clientArmAngle.get(partialTicks).toRadians()
+ 		
+ 		eyeState = when{
+-			entity.isSleeping -> 0
++			entity.eyeState == EntityBossEnderEye.EYE_CLOSED -> 0
++			entity.eyeState == EntityBossEnderEye.EYE_LASER -> 7
+ 			entity.isDemonEye -> 7
+ 			else -> entity.demonLevel + 1
+ 		}
+Index: src/main/java/chylex/hee/client/render/entity/RenderEntityBossEnderEye.kt
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package chylex.hee.client.render.entity\nimport chylex.hee.client.model.entity.ModelEntityBossEnderEye\nimport chylex.hee.client.model.entity.ModelEntityBossEnderEye.SCALE\nimport chylex.hee.client.render.gl.scale\nimport chylex.hee.game.entity.living.EntityBossEnderEye\nimport chylex.hee.system.facades.Resource\nimport chylex.hee.system.forge.Side\nimport chylex.hee.system.forge.Sided\nimport com.mojang.blaze3d.matrix.MatrixStack\nimport net.minecraft.client.renderer.entity.EntityRendererManager\nimport net.minecraft.client.renderer.entity.MobRenderer\nimport net.minecraft.util.ResourceLocation\n\n@Sided(Side.CLIENT)\nclass RenderEntityBossEnderEye(manager: EntityRendererManager) : MobRenderer<EntityBossEnderEye, ModelEntityBossEnderEye>(manager, ModelEntityBossEnderEye, SCALE){\n\tprivate val texture = Resource.Custom(\"textures/entity/ender_eye.png\")\n\t\n\toverride fun preRenderCallback(entity: EntityBossEnderEye, matrix: MatrixStack, partialTicks: Float){\n\t\tmatrix.scale(SCALE)\n\t\tsuper.preRenderCallback(entity, matrix, partialTicks)\n\t}\n\t\n\toverride fun getEntityTexture(entity: EntityBossEnderEye): ResourceLocation{\n\t\treturn texture\n\t}\n}\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/main/java/chylex/hee/client/render/entity/RenderEntityBossEnderEye.kt b/src/main/java/chylex/hee/client/render/entity/RenderEntityBossEnderEye.kt
+--- a/src/main/java/chylex/hee/client/render/entity/RenderEntityBossEnderEye.kt	(revision d901f1b2f4637bf5ea0f230e876f39d24a76f54b)
++++ b/src/main/java/chylex/hee/client/render/entity/RenderEntityBossEnderEye.kt	(date 1605227315178)
+@@ -1,6 +1,7 @@
+ package chylex.hee.client.render.entity
+ import chylex.hee.client.model.entity.ModelEntityBossEnderEye
+ import chylex.hee.client.model.entity.ModelEntityBossEnderEye.SCALE
++import chylex.hee.client.render.entity.layer.LayerEnderEyeLaser
+ import chylex.hee.client.render.gl.scale
+ import chylex.hee.game.entity.living.EntityBossEnderEye
+ import chylex.hee.system.facades.Resource
+@@ -15,6 +16,10 @@
+ class RenderEntityBossEnderEye(manager: EntityRendererManager) : MobRenderer<EntityBossEnderEye, ModelEntityBossEnderEye>(manager, ModelEntityBossEnderEye, SCALE){
+ 	private val texture = Resource.Custom("textures/entity/ender_eye.png")
+ 	
++	init{
++		addLayer(LayerEnderEyeLaser(this))
++	}
++	
+ 	override fun preRenderCallback(entity: EntityBossEnderEye, matrix: MatrixStack, partialTicks: Float){
+ 		matrix.scale(SCALE)
+ 		super.preRenderCallback(entity, matrix, partialTicks)
+Index: src/system/src/main/java/chylex/hee/game/entity/living/controller/EntityLookSlerp.kt
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package chylex.hee.game.entity.living.controller\nimport chylex.hee.game.entity.lookPosVec\nimport chylex.hee.system.math.Quaternion\nimport chylex.hee.system.math.directionTowards\nimport chylex.hee.system.math.toPitch\nimport chylex.hee.system.math.toRadians\nimport chylex.hee.system.math.toYaw\nimport chylex.hee.system.migration.EntityLiving\nimport net.minecraft.entity.Entity\nimport net.minecraft.entity.ai.controller.LookController\nimport net.minecraft.util.math.Vec3d\nimport kotlin.math.cos\n\nclass EntityLookSlerp(entity: EntityLiving, private val adjustmentSpeed: Float, maxInstantAngle: Float) : LookController(entity){\n\tprivate val maxInstantAngleCos = cos(maxInstantAngle.toRadians())\n\t\n\toverride fun setLookPosition(x: Double, y: Double, z: Double, deltaYaw: Float, deltaPitch: Float){\n\t\tposX = x\n\t\tposY = y\n\t\tposZ = z\n\t\tisLooking = true\n\t}\n\t\n\toverride fun setLookPositionWithEntity(entity: Entity, deltaYaw: Float, deltaPitch: Float){\n\t\tentity.lookPosVec.let { setLookPosition(it.x, it.y, it.z, deltaYaw, deltaPitch) }\n\t}\n\t\n\toverride fun tick(){\n\t\tif (isLooking){\n\t\t\tisLooking = false\n\t\t\t\n\t\t\tval dir = mob.lookPosVec.directionTowards(Vec3d(posX, posY, posZ))\n\t\t\t\n\t\t\tif (Vec3d.fromPitchYaw(mob.rotationPitch, mob.rotationYawHead).dotProduct(dir) >= maxInstantAngleCos){\n\t\t\t\tmob.rotationYawHead = dir.toYaw()\n\t\t\t\tmob.rotationPitch = dir.toPitch()\n\t\t\t}\n\t\t\telse{\n\t\t\t\tval current = Quaternion.fromYawPitch(mob.rotationYawHead, mob.rotationPitch)\n\t\t\t\tval target = Quaternion.fromYawPitch(dir.toYaw(), dir.toPitch())\n\t\t\t\t\n\t\t\t\tval next = current.slerp(target, adjustmentSpeed)\n\t\t\t\tmob.rotationYawHead = next.rotationYaw\n\t\t\t\tmob.rotationPitch = next.rotationPitch\n\t\t\t}\n\t\t}\n\t}\n}\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/system/src/main/java/chylex/hee/game/entity/living/controller/EntityLookSlerp.kt b/src/system/src/main/java/chylex/hee/game/entity/living/controller/EntityLookSlerp.kt
+--- a/src/system/src/main/java/chylex/hee/game/entity/living/controller/EntityLookSlerp.kt	(revision d901f1b2f4637bf5ea0f230e876f39d24a76f54b)
++++ b/src/system/src/main/java/chylex/hee/game/entity/living/controller/EntityLookSlerp.kt	(date 1605456375600)
+@@ -11,8 +11,21 @@
+ import net.minecraft.util.math.Vec3d
+ import kotlin.math.cos
+ 
+-class EntityLookSlerp(entity: EntityLiving, private val adjustmentSpeed: Float, maxInstantAngle: Float) : LookController(entity){
+-	private val maxInstantAngleCos = cos(maxInstantAngle.toRadians())
++class EntityLookSlerp(entity: EntityLiving, private var adjustmentSpeed: Float, maxInstantAngle: Float) : LookController(entity){
++	private val originalAdjustmentSpeed = adjustmentSpeed
++	private var originalMaxInstantAngleCos = cos(maxInstantAngle.toRadians())
++	
++	private var maxInstantAngleCos = originalMaxInstantAngleCos
++	
++	fun setRotationParams(adjustmentSpeed: Float, maxInstantAngle: Float){
++		this.adjustmentSpeed = adjustmentSpeed
++		this.maxInstantAngleCos = cos(maxInstantAngle.toRadians())
++	}
++	
++	fun restoreRotationParams(){
++		adjustmentSpeed = originalAdjustmentSpeed
++		maxInstantAngleCos = originalMaxInstantAngleCos
++	}
+ 	
+ 	override fun setLookPosition(x: Double, y: Double, z: Double, deltaYaw: Float, deltaPitch: Float){
+ 		posX = x
+Index: src/main/java/chylex/hee/game/entity/living/behavior/EnderEyePhase.kt
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package chylex.hee.game.entity.living.behavior\nimport chylex.hee.client.MC\nimport chylex.hee.game.block.entity.TileEntitySpawnerObsidianTower\nimport chylex.hee.game.entity.effect.EntityTerritoryLightningBolt\nimport chylex.hee.game.entity.living.EntityBossEnderEye\nimport chylex.hee.game.entity.living.behavior.EnderEyeAttack.Melee\nimport chylex.hee.game.entity.lookPosVec\nimport chylex.hee.game.entity.motionY\nimport chylex.hee.game.entity.posVec\nimport chylex.hee.game.entity.selectExistingEntities\nimport chylex.hee.game.entity.technical.EntityTechnicalTrigger\nimport chylex.hee.game.entity.technical.EntityTechnicalTrigger.Types.OBSIDIAN_TOWER_TOP_GLOWSTONE\nimport chylex.hee.game.world.Pos\nimport chylex.hee.game.world.breakBlock\nimport chylex.hee.game.world.component1\nimport chylex.hee.game.world.component2\nimport chylex.hee.game.world.distanceSqTo\nimport chylex.hee.game.world.getBlock\nimport chylex.hee.game.world.getTile\nimport chylex.hee.game.world.isAir\nimport chylex.hee.game.world.playClient\nimport chylex.hee.game.world.playPlayer\nimport chylex.hee.game.world.playServer\nimport chylex.hee.game.world.setBlock\nimport chylex.hee.game.world.territory.TerritoryInstance\nimport chylex.hee.game.world.territory.TerritoryType\nimport chylex.hee.init.ModBlocks\nimport chylex.hee.network.client.PacketClientFX\nimport chylex.hee.network.fx.FxEntityData\nimport chylex.hee.network.fx.FxEntityHandler\nimport chylex.hee.system.math.Quaternion\nimport chylex.hee.system.math.addY\nimport chylex.hee.system.math.component1\nimport chylex.hee.system.math.component2\nimport chylex.hee.system.math.component3\nimport chylex.hee.system.math.directionTowards\nimport chylex.hee.system.math.floorToInt\nimport chylex.hee.system.math.square\nimport chylex.hee.system.math.toPitch\nimport chylex.hee.system.math.toYaw\nimport chylex.hee.system.migration.Sounds\nimport chylex.hee.system.random.nextFloat\nimport chylex.hee.system.random.nextItem\nimport chylex.hee.system.random.nextItemOrNull\nimport chylex.hee.system.random.nextVector2\nimport chylex.hee.system.random.removeItemOrNull\nimport chylex.hee.system.serialization.TagCompound\nimport chylex.hee.system.serialization.use\nimport net.minecraft.block.Blocks\nimport net.minecraft.client.particle.DiggingParticle\nimport net.minecraft.entity.Entity\nimport net.minecraft.util.SoundCategory\nimport net.minecraft.util.math.BlockPos\nimport net.minecraft.world.dimension.DimensionType\nimport net.minecraftforge.common.util.INBTSerializable\nimport java.util.Random\nimport kotlin.math.min\n\nsealed class EnderEyePhase : INBTSerializable<TagCompound>{\n\topen fun tick(entity: EntityBossEnderEye) = this\n\t\n\toverride fun serializeNBT() = TagCompound()\n\toverride fun deserializeNBT(nbt: TagCompound){}\n\t\n\tobject Hibernated : EnderEyePhase()\n\t\n\tclass OpenEye : EnderEyePhase(){\n\t\tprivate companion object{\n\t\t\tprivate const val TIMER_TAG = \"Timer\"\n\t\t}\n\t\t\n\t\tprivate var timer: Byte = 35\n\t\t\n\t\toverride fun tick(entity: EntityBossEnderEye): EnderEyePhase{\n\t\t\t--timer\n\t\t\t\n\t\t\tif (timer == 15.toByte()){\n\t\t\t\tfor(nearby in entity.world.selectExistingEntities.allInRange(entity.posVec, 8.0)){\n\t\t\t\t\tif (nearby !== entity){\n\t\t\t\t\t\tentity.performBlastKnockback(nearby, 0.75F)\n\t\t\t\t\t}\n\t\t\t\t}\n\t\t\t\t\n\t\t\t\tSounds.ENTITY_GENERIC_EXPLODE.playServer(entity.world, entity.posVec, SoundCategory.HOSTILE, volume = 0.5F) // TODO knockback fx\n\t\t\t}\n\t\t\telse if (timer < 0){\n\t\t\t\tval totalSpawners = entity.totalSpawners.toInt()\n\t\t\t\t\n\t\t\t\tif (totalSpawners == 0 || entity.dimension != DimensionType.THE_END){\n\t\t\t\t\treturn Floating.withScreech(entity, 0)\n\t\t\t\t}\n\t\t\t\t\n\t\t\t\tval instance = TerritoryInstance.fromPos(entity)\n\t\t\t\tval territory = instance?.territory\n\t\t\t\t\n\t\t\t\tif (territory != TerritoryType.OBSIDIAN_TOWERS){\n\t\t\t\t\treturn Floating.withScreech(entity, 0)\n\t\t\t\t}\n\t\t\t\t\n\t\t\t\tval chunks = instance.territory.chunks\n\t\t\t\tval (startChunkX, startChunkZ) = instance.topLeftChunk\n\t\t\t\t\n\t\t\t\tval world = entity.world\n\t\t\t\tval remainingSpawners = mutableListOf<BlockPos>()\n\t\t\t\tval glowstonePositions = mutableListOf<BlockPos>()\n\t\t\t\tval glowstonePositionGroups = mutableMapOf<BlockPos, MutableList<BlockPos>>()\n\t\t\t\t\n\t\t\t\tfor(chunkX in startChunkX until (startChunkX + chunks))\n\t\t\t\tfor(chunkZ in startChunkZ until (startChunkZ + chunks)){\n\t\t\t\t\tval chunk = world.getChunk(chunkX, chunkZ)\n\t\t\t\t\t\n\t\t\t\t\tfor((pos, tile) in chunk.tileEntityMap){\n\t\t\t\t\t\tif (tile is TileEntitySpawnerObsidianTower){\n\t\t\t\t\t\t\tremainingSpawners.add(pos)\n\t\t\t\t\t\t}\n\t\t\t\t\t}\n\t\t\t\t\t\n\t\t\t\t\tfor(entityList in chunk.entityLists)\n\t\t\t\t\tfor(trigger in entityList.getByClass(EntityTechnicalTrigger::class.java)){\n\t\t\t\t\t\tif (trigger.triggerType == OBSIDIAN_TOWER_TOP_GLOWSTONE){\n\t\t\t\t\t\t\tval pos = Pos(trigger)\n\t\t\t\t\t\t\t\n\t\t\t\t\t\t\tglowstonePositions.add(pos)\n\t\t\t\t\t\t\t\n\t\t\t\t\t\t\tval group = glowstonePositionGroups.entries.find { it.key.distanceSqTo(pos) < square(20) }\n\t\t\t\t\t\t\t\n\t\t\t\t\t\t\tif (group == null){\n\t\t\t\t\t\t\t\tglowstonePositionGroups[pos] = mutableListOf(pos)\n\t\t\t\t\t\t\t}\n\t\t\t\t\t\t\telse{\n\t\t\t\t\t\t\t\tgroup.value.add(pos)\n\t\t\t\t\t\t\t}\n\t\t\t\t\t\t}\n\t\t\t\t\t}\n\t\t\t\t}\n\t\t\t\t\n\t\t\t\tval percentage = when(val count = remainingSpawners.size){\n\t\t\t\t\t0             -> 0\n\t\t\t\t\ttotalSpawners -> 100\n\t\t\t\t\telse          -> 1 + ((count.toFloat() / totalSpawners) * 99F).floorToInt()\n\t\t\t\t}\n\t\t\t\t\n\t\t\t\treturn Spawners(remainingSpawners, glowstonePositions, glowstonePositionGroups.flatMap { listOf(entity.rng.nextItem(it.value)) }.toMutableList(), percentage.toByte())\n\t\t\t}\n\t\t\t\n\t\t\treturn this\n\t\t}\n\t\t\n\t\toverride fun serializeNBT() = TagCompound().apply {\n\t\t\tputByte(TIMER_TAG, timer)\n\t\t}\n\t\t\n\t\toverride fun deserializeNBT(nbt: TagCompound) = nbt.use {\n\t\t\ttimer = getByte(TIMER_TAG)\n\t\t}\n\t}\n\t\n\tclass Spawners(\n\t\tprivate val remainingSpawnerPositions: MutableList<BlockPos>,\n\t\tprivate val towerGlowstonePositions: MutableList<BlockPos>,\n\t\tprivate val remainingLightningPositions: MutableList<BlockPos>,\n\t\tprivate var spawnerPercentage: Byte\n\t) : EnderEyePhase(){\n\t\tprivate companion object{\n\t\t\tprivate const val TIMER_TAG = \"Timer\"\n\t\t\tprivate const val SPAWNER_PERCENTAGE = \"SpawnerPercentage\"\n\t\t\tprivate const val SPAWNER_POSITIONS = \"SpawnerPositions\"\n\t\t\tprivate const val GLOWSTONE_POSITIONS = \"GlowstonePositions\"\n\t\t\tprivate const val LIGHTNING_POSITIONS = \"LightningPositions\"\n\t\t}\n\t\t\n\t\tprivate var timer: Byte = 120\n\t\t\n\t\toverride fun tick(entity: EntityBossEnderEye): EnderEyePhase{\n\t\t\t--timer\n\t\t\t\n\t\t\tif (timer in 30..100){\n\t\t\t\tif (timer % 3 == 0){\n\t\t\t\t\tval rand = entity.rng\n\t\t\t\t\t\n\t\t\t\t\trand.removeItemOrNull(remainingSpawnerPositions)?.let { pos ->\n\t\t\t\t\t\tbreakSpawner(entity, pos)\n\t\t\t\t\t\t\n\t\t\t\t\t\tif (timer % 6 == 0 && rand.nextInt(10) < 6){\n\t\t\t\t\t\t\tplaySpawnerBreakSound(entity)\n\t\t\t\t\t\t}\n\t\t\t\t\t}\n\t\t\t\t}\n\t\t\t\t\n\t\t\t\tif ((101 - timer) % 18 == 0){\n\t\t\t\t\tentity.rng.removeItemOrNull(remainingLightningPositions)?.let {\n\t\t\t\t\t\tEntityTerritoryLightningBolt(entity.world, it.x + 0.5, it.y.toDouble(), it.z + 0.5).spawnInTerritory()\n\t\t\t\t\t}\n\t\t\t\t}\n\t\t\t}\n\t\t\telse if (timer == 29.toByte()){\n\t\t\t\tplaySpawnerBreakSound(entity)\n\t\t\t\tremainingSpawnerPositions.forEach { breakSpawner(entity, it) }\n\t\t\t\tremainingSpawnerPositions.clear()\n\t\t\t}\n\t\t\telse if (timer < 0){\n\t\t\t\treturn Floating.withScreech(entity, spawnerPercentage.toInt())\n\t\t\t}\n\t\t\t\n\t\t\treturn this\n\t\t}\n\t\t\n\t\tprivate fun breakSpawner(entity: EntityBossEnderEye, pos: BlockPos){\n\t\t\tval world = entity.world\n\t\t\t\n\t\t\tif (pos.getTile<TileEntitySpawnerObsidianTower>(world) != null){\n\t\t\t\tpos.breakBlock(world, drops = false)\n\t\t\t\t\n\t\t\t\trepeat(3){\n\t\t\t\t\tentity.rng.nextItemOrNull(towerGlowstonePositions)?.let(entity.spawnerParticles::add)\n\t\t\t\t}\n\t\t\t}\n\t\t}\n\t\t\n\t\tprivate fun playSpawnerBreakSound(entity: EntityBossEnderEye){\n\t\t\tval rand = entity.rng\n\t\t\t\n\t\t\tval (offX, offY, offZ) = rand.nextVector2(xz = rand.nextFloat(7.0, 11.0), y = rand.nextFloat(-3.0, 2.0))\n\t\t\tval soundType = ModBlocks.SPAWNER_OBSIDIAN_TOWERS.defaultState.soundType\n\t\t\t\n\t\t\tfor(player in entity.world.players){\n\t\t\t\tif (player.getDistanceSq(entity) < square(32.0)){\n\t\t\t\t\tsoundType.breakSound.playPlayer(player, player.posX + offX, player.posY + offY, player.posZ + offZ, SoundCategory.BLOCKS, soundType.volume * 1.6F, soundType.pitch * 0.95F)\n\t\t\t\t}\n\t\t\t}\n\t\t}\n\t\t\n\t\toverride fun serializeNBT() = TagCompound().apply {\n\t\t\tputByte(TIMER_TAG, timer)\n\t\t\tputByte(SPAWNER_PERCENTAGE, spawnerPercentage)\n\t\t\t\n\t\t\tputLongArray(SPAWNER_POSITIONS, remainingSpawnerPositions.map(BlockPos::toLong))\n\t\t\tputLongArray(GLOWSTONE_POSITIONS, towerGlowstonePositions.map(BlockPos::toLong))\n\t\t\tputLongArray(LIGHTNING_POSITIONS, remainingLightningPositions.map(BlockPos::toLong))\n\t\t}\n\t\t\n\t\toverride fun deserializeNBT(nbt: TagCompound) = nbt.use {\n\t\t\ttimer = getByte(TIMER_TAG)\n\t\t\tspawnerPercentage = getByte(SPAWNER_PERCENTAGE)\n\t\t\t\n\t\t\tremainingSpawnerPositions.clear()\n\t\t\tremainingSpawnerPositions.addAll(getLongArray(SPAWNER_POSITIONS).map(BlockPos::fromLong))\n\t\t\t\n\t\t\ttowerGlowstonePositions.clear()\n\t\t\ttowerGlowstonePositions.addAll(getLongArray(GLOWSTONE_POSITIONS).map(BlockPos::fromLong))\n\t\t\t\n\t\t\tremainingLightningPositions.clear()\n\t\t\tremainingLightningPositions.addAll(getLongArray(LIGHTNING_POSITIONS).map(BlockPos::fromLong))\n\t\t}\n\t}\n\t\n\tclass Floating(remainingSpawnerPercentage: Int) : EnderEyePhase(){\n\t\tcompanion object{\n\t\t\tprivate const val CURRENT_TAG = \"Current\"\n\t\t\tprivate const val TARGET_TAG = \"Target\"\n\t\t\t\n\t\t\tfun withScreech(entity: EntityBossEnderEye, remainingSpawnerPercentage: Int): Floating{\n\t\t\t\t// TODO screech on first tick\n\t\t\t\t\n\t\t\t\t//val (sound, volume) = when(screechSpawnerPercentage){\n\t\t\t\t//\t0 ->\n\t\t\t\t//\t100 ->\n\t\t\t\t//\telse ->\n\t\t\t\t//}\n\t\t\t\treturn Floating(remainingSpawnerPercentage)\n\t\t\t}\n\t\t\t\n\t\t\tval FX_FINISH = object : FxEntityHandler(){\n\t\t\t\toverride fun handle(entity: Entity, rand: Random){\n\t\t\t\t\tval world = entity.world\n\t\t\t\t\tval state = ModBlocks.OBSIDIAN_SMOOTH.defaultState\n\t\t\t\t\t\n\t\t\t\t\tval (x, y, z) = entity.posVec.addY(entity.height * 0.5)\n\t\t\t\t\tval w = entity.width * 0.62F\n\t\t\t\t\tval h = entity.height * 0.62F\n\t\t\t\t\tval pos = Pos(entity)\n\t\t\t\t\t\n\t\t\t\t\trepeat(35){\n\t\t\t\t\t\tMC.particleManager.addEffect(DiggingParticle(world, x + rand.nextFloat(-w, w), y + rand.nextFloat(-h, h), z + rand.nextFloat(-w, w), 0.0, 0.0, 0.0, state).setBlockPos(pos))\n\t\t\t\t\t}\n\t\t\t\t\t\n\t\t\t\t\tstate.soundType.breakSound.playClient(entity.posVec, SoundCategory.HOSTILE)\n\t\t\t\t}\n\t\t\t}\n\t\t}\n\t\t\n\t\tprivate var animatedSpawnerPercentage = -15F\n\t\tprivate var targetSpawnerPercentage = remainingSpawnerPercentage.toFloat()\n\t\t\n\t\toverride fun tick(entity: EntityBossEnderEye): EnderEyePhase{\n\t\t\tif (animatedSpawnerPercentage < targetSpawnerPercentage){\n\t\t\t\tanimatedSpawnerPercentage = min(animatedSpawnerPercentage + 0.55F, targetSpawnerPercentage)\n\t\t\t}\n\t\t\t\n\t\t\tval currentPercentage = animatedSpawnerPercentage.floorToInt().coerceAtLeast(0)\n\t\t\tval currentPercentageFloat = currentPercentage / 100F\n\t\t\t\n\t\t\tentity.motionY = 0.015 - (currentPercentageFloat * 0.013)\n\t\t\tentity.health = 150F + min(150F, 150F * 1.06F * currentPercentageFloat)\n\t\t\t\n\t\t\tval prevDemonLevel = entity.demonLevel\n\t\t\tval newDemonLevel = when(currentPercentage){\n\t\t\t\t100 -> EntityBossEnderEye.DEMON_EYE_LEVEL\n\t\t\t\tin 78..99 -> 5\n\t\t\t\tin 57..77 -> 4\n\t\t\t\tin 37..56 -> 3\n\t\t\t\tin 18..36 -> 2\n\t\t\t\tin  1..17 -> 1\n\t\t\t\telse      -> 0\n\t\t\t}.toByte()\n\t\t\t\n\t\t\tif (newDemonLevel != prevDemonLevel){\n\t\t\t\tentity.updateDemonLevel(newDemonLevel)\n\t\t\t\tSounds.BLOCK_ANVIL_PLACE.playServer(entity.world, entity.posVec, SoundCategory.HOSTILE, volume = 0.3F, pitch = 0.5F + (newDemonLevel * 0.15F))\n\t\t\t\t// TODO custom sound\n\t\t\t}\n\t\t\t\n\t\t\tif (animatedSpawnerPercentage >= targetSpawnerPercentage){\n\t\t\t\tentity.realMaxHealth = entity.health\n\t\t\t\tentity.motionY = 0.0\n\t\t\t\tPacketClientFX(FX_FINISH, FxEntityData(entity)).sendToAllAround(entity, 32.0)\n\t\t\t\t\n\t\t\t\tval world = entity.world\n\t\t\t\tval pos = Pos(entity)\n\t\t\t\t\n\t\t\t\tfor(yOffset in 1..5){\n\t\t\t\t\tval obsidianPos = pos.down(yOffset)\n\t\t\t\t\t\n\t\t\t\t\tif (obsidianPos.isAir(world)){\n\t\t\t\t\t\tcontinue\n\t\t\t\t\t}\n\t\t\t\t\t\n\t\t\t\t\tif (obsidianPos.getBlock(world) === ModBlocks.OBSIDIAN_TOWER_TOP){\n\t\t\t\t\t\tobsidianPos.breakBlock(world, false)\n\t\t\t\t\t}\n\t\t\t\t\t\n\t\t\t\t\tval ladderPos = obsidianPos.down().offset(entity.horizontalFacing, 7)\n\t\t\t\t\t\n\t\t\t\t\tif (ladderPos.getBlock(world) === Blocks.LADDER){\n\t\t\t\t\t\tladderPos.setBlock(world, Blocks.OBSIDIAN)\n\t\t\t\t\t}\n\t\t\t\t\t\n\t\t\t\t\tbreak\n\t\t\t\t}\n\t\t\t\t\n\t\t\t\treturn Staring()\n\t\t\t}\n\t\t\t\n\t\t\treturn this\n\t\t}\n\t\t\n\t\toverride fun serializeNBT() = TagCompound().apply {\n\t\t\tputFloat(CURRENT_TAG, animatedSpawnerPercentage)\n\t\t\tputFloat(TARGET_TAG, targetSpawnerPercentage)\n\t\t}\n\t\t\n\t\toverride fun deserializeNBT(nbt: TagCompound) = nbt.use {\n\t\t\tanimatedSpawnerPercentage = getFloat(CURRENT_TAG)\n\t\t\ttargetSpawnerPercentage = getFloat(TARGET_TAG)\n\t\t}\n\t}\n\t\n\tclass Staring : EnderEyePhase(){\n\t\tprivate var timer = 55\n\t\tprivate var slerpProgress = 0F\n\t\t\n\t\tprivate lateinit var startRot: Quaternion\n\t\tprivate lateinit var targetRot: Quaternion\n\t\t\n\t\toverride fun tick(entity: EntityBossEnderEye): EnderEyePhase{\n\t\t\tval target = entity.attackTarget ?: entity.forceFindNewTarget()\n\t\t\t\n\t\t\tif (target == null || --timer < 0){\n\t\t\t\treturn Ready()\n\t\t\t}\n\t\t\t\n\t\t\tif (!::startRot.isInitialized){\n\t\t\t\tstartRot = Quaternion.fromYawPitch(entity.rotationYawHead, entity.rotationPitch)\n\t\t\t}\n\t\t\t\n\t\t\tif (timer < 50){\n\t\t\t\ttargetRot = entity.lookPosVec.directionTowards(target.lookPosVec).let { Quaternion.fromYawPitch(it.toYaw(), it.toPitch()) }\n\t\t\t\t\n\t\t\t\tif (slerpProgress < 1F){\n\t\t\t\t\tslerpProgress += 0.025F\n\t\t\t\t}\n\t\t\t\t\n\t\t\t\tval next = startRot.slerp(targetRot, slerpProgress)\n\t\t\t\tentity.rotationYawHead = next.rotationYaw\n\t\t\t\tentity.rotationPitch = next.rotationPitch\n\t\t\t}\n\t\t\t\n\t\t\treturn this\n\t\t}\n\t}\n\t\n\tclass Ready : EnderEyePhase(){\n\t\tprivate val defaultAttack = Melee()\n\t\t\n\t\tvar currentAttack: EnderEyeAttack = defaultAttack\n\t\t\n\t\toverride fun tick(entity: EntityBossEnderEye): EnderEyePhase{\n\t\t\tif (entity.isSleeping || !currentAttack.tick(entity)){\n\t\t\t\tcurrentAttack = defaultAttack.also { it.reset(entity) }\n\t\t\t}\n\t\t\t\n\t\t\treturn this\n\t\t}\n\t}\n}\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/main/java/chylex/hee/game/entity/living/behavior/EnderEyePhase.kt b/src/main/java/chylex/hee/game/entity/living/behavior/EnderEyePhase.kt
+--- a/src/main/java/chylex/hee/game/entity/living/behavior/EnderEyePhase.kt	(revision d901f1b2f4637bf5ea0f230e876f39d24a76f54b)
++++ b/src/main/java/chylex/hee/game/entity/living/behavior/EnderEyePhase.kt	(date 1605121117459)
+@@ -3,6 +3,7 @@
+ import chylex.hee.game.block.entity.TileEntitySpawnerObsidianTower
+ import chylex.hee.game.entity.effect.EntityTerritoryLightningBolt
+ import chylex.hee.game.entity.living.EntityBossEnderEye
++import chylex.hee.game.entity.living.behavior.EnderEyeAttack.LaserEye
+ import chylex.hee.game.entity.living.behavior.EnderEyeAttack.Melee
+ import chylex.hee.game.entity.lookPosVec
+ import chylex.hee.game.entity.motionY
+@@ -62,7 +63,17 @@
+ 	override fun serializeNBT() = TagCompound()
+ 	override fun deserializeNBT(nbt: TagCompound){}
+ 	
+-	object Hibernated : EnderEyePhase()
++	sealed class SleepingPhase : EnderEyePhase(){
++		abstract fun wakeUp(): EnderEyePhase
++		
++		object Hibernated : SleepingPhase(){
++			override fun wakeUp() = OpenEye()
++		}
++		
++		object Sleeping : SleepingPhase(){
++			override fun wakeUp() = Attacking()
++		}
++	}
+ 	
+ 	class OpenEye : EnderEyePhase(){
+ 		private companion object{
+@@ -376,7 +387,7 @@
+ 			val target = entity.attackTarget ?: entity.forceFindNewTarget()
+ 			
+ 			if (target == null || --timer < 0){
+-				return Ready()
++				return Attacking()
+ 			}
+ 			
+ 			if (!::startRot.isInitialized){
+@@ -399,14 +410,19 @@
+ 		}
+ 	}
+ 	
+-	class Ready : EnderEyePhase(){
++	class Attacking : EnderEyePhase(){
+ 		private val defaultAttack = Melee()
+ 		
+ 		var currentAttack: EnderEyeAttack = defaultAttack
+ 		
+ 		override fun tick(entity: EntityBossEnderEye): EnderEyePhase{
+-			if (entity.isSleeping || !currentAttack.tick(entity)){
+-				currentAttack = defaultAttack.also { it.reset(entity) }
++			if (!currentAttack.tick(entity)){
++				if (currentAttack === defaultAttack){
++					currentAttack = LaserEye()
++				}
++				else{
++					currentAttack = defaultAttack.also { it.reset(entity) }
++				}
+ 			}
+ 			
+ 			return this
+Index: src/main/java/chylex/hee/game/entity/living/behavior/EnderEyeAttack.kt
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package chylex.hee.game.entity.living.behavior\nimport chylex.hee.game.entity.living.EntityBossEnderEye\nimport chylex.hee.game.entity.lookDirVec\nimport chylex.hee.game.entity.lookPosVec\nimport chylex.hee.game.entity.motionX\nimport chylex.hee.game.entity.motionZ\nimport chylex.hee.game.entity.selectVulnerableEntities\nimport chylex.hee.game.mechanics.damage.Damage\nimport chylex.hee.game.world.totalTime\nimport chylex.hee.network.client.PacketClientLaunchInstantly\nimport chylex.hee.system.math.Vec3\nimport chylex.hee.system.math.addY\nimport chylex.hee.system.math.directionTowards\nimport chylex.hee.system.math.square\nimport chylex.hee.system.math.toRadians\nimport chylex.hee.system.math.withY\nimport chylex.hee.system.migration.EntityLivingBase\nimport chylex.hee.system.migration.EntityPlayer\nimport chylex.hee.system.random.nextFloat\nimport net.minecraft.util.math.AxisAlignedBB\nimport java.util.UUID\nimport kotlin.math.abs\nimport kotlin.math.cos\n\nsealed class EnderEyeAttack{\n\tabstract val damageType: Damage\n\tabstract val damageMultiplier: Float\n\tabstract val canTakeKnockback: Boolean\n\tabstract fun tick(entity: EntityBossEnderEye): Boolean\n\t\n\tclass Melee : EnderEyeAttack(){\n\t\toverride val damageType\n\t\t\tget() = EntityBossEnderEye.DAMAGE_MELEE\n\t\t\n\t\toverride val damageMultiplier\n\t\t\tget() = 1F\n\t\t\n\t\toverride val canTakeKnockback = true\n\t\tprivate var movementSpeed = 1.0\n\t\tprivate var lastAttackTime = 0L\n\t\t\n\t\toverride fun tick(entity: EntityBossEnderEye): Boolean = with(entity){\n\t\t\tval target = attackTarget ?: forceFindNewTarget()\n\t\t\t\n\t\t\tif (target == null){\n\t\t\t\tarmPosition = EntityBossEnderEye.ARMS_LIMP\n\t\t\t\taiMoveSpeed = 0F\n\t\t\t\tsetRotateTarget(null)\n\t\t\t}\n\t\t\telse{\n\t\t\t\tarmPosition = EntityBossEnderEye.ARMS_HUG\n\t\t\t\tlookController.setLookPositionWithEntity(target, 0F, 0F)\n\t\t\t\tsetRotateTarget(target)\n\t\t\t\t\n\t\t\t\tval currentVec = lookPosVec\n\t\t\t\tval targetVec = target.lookPosVec\n\t\t\t\tval distSq = targetVec.squareDistanceTo(currentVec)\n\t\t\t\t\n\t\t\t\tif (distSq > square(6.0 - ((movementSpeed - 1.0) / 1.5))){\n\t\t\t\t\tif (movementSpeed < 3.5){\n\t\t\t\t\t\tmovementSpeed = (movementSpeed + 0.1).coerceAtMost(3.5)\n\t\t\t\t\t}\n\t\t\t\t\t\n\t\t\t\t\tnavigator.tryMoveToXYZ(targetVec.x, targetVec.y + (movementSpeed - 1.0) * 0.6, targetVec.z, movementSpeed)\n\t\t\t\t}\n\t\t\t\telse if (distSq > square(1.2)){\n\t\t\t\t\tif (movementSpeed > 1.0){\n\t\t\t\t\t\tmovementSpeed = (movementSpeed - 0.3).coerceAtLeast(1.0)\n\t\t\t\t\t}\n\t\t\t\t\t\n\t\t\t\t\tnavigator.tryMoveToXYZ(targetVec.x, targetVec.y, targetVec.z, movementSpeed)\n\t\t\t\t}\n\t\t\t\telse{\n\t\t\t\t\tif (currentVec.directionTowards(targetVec).dotProduct(motion.normalize()) > 0.0){\n\t\t\t\t\t\tmotion = motion.scale(0.4)\n\t\t\t\t\t}\n\t\t\t\t}\n\t\t\t\t\n\t\t\t\tif (distSq < square(1.4)){\n\t\t\t\t\tval currentTime = world.totalTime\n\t\t\t\t\t\n\t\t\t\t\tif (currentTime - lastAttackTime >= 20L){\n\t\t\t\t\t\tlastAttackTime = currentTime\n\t\t\t\t\t\tattackEntityAsMob(target)\n\t\t\t\t\t}\n\t\t\t\t}\n\t\t\t}\n\t\t\t\n\t\t\treturn true\n\t\t}\n\t\t\n\t\tfun reset(entity: EntityBossEnderEye){\n\t\t\tmovementSpeed = 1.0\n\t\t\tlastAttackTime = entity.world.totalTime\n\t\t}\n\t}\n\t\n\tclass KnockbackDash : EnderEyeAttack(){\n\t\toverride val damageType\n\t\t\tget() = EntityBossEnderEye.DAMAGE_DASH\n\t\t\n\t\toverride val damageMultiplier\n\t\t\tget() = 2F\n\t\t\n\t\toverride val canTakeKnockback = false\n\t\t\n\t\tprivate var isSlowingDown = true\n\t\tprivate var attackTimer = 0\n\t\tprivate var attackRepeats = 0\n\t\tprivate val hitEntities = mutableSetOf<UUID>()\n\t\t\n\t\toverride fun tick(entity: EntityBossEnderEye): Boolean = with(entity){\n\t\t\tval target = attackTarget ?: return false\n\t\t\t\n\t\t\tif (isSlowingDown){\n\t\t\t\tarmPosition = EntityBossEnderEye.ARMS_ATTACK\n\t\t\t\taiMoveSpeed = 0F\n\t\t\t\tsetRotateTarget(target)\n\t\t\t\t\n\t\t\t\tif (motion.withY(0.0).lengthSquared() < square(0.05)){\n\t\t\t\t\tif (attackRepeats == 0){\n\t\t\t\t\t\tisSlowingDown = false\n\t\t\t\t\t}\n\t\t\t\t\telse{\n\t\t\t\t\t\tval lookDir = lookDirVec\n\t\t\t\t\t\tval targetDir = target.lookPosVec.subtract(lookPosVec).normalize()\n\t\t\t\t\t\t\n\t\t\t\t\t\tif (abs(lookDir.dotProduct(targetDir)) > cos(10.0.toRadians())){\n\t\t\t\t\t\t\tisSlowingDown = false\n\t\t\t\t\t\t}\n\t\t\t\t\t}\n\t\t\t\t}\n\t\t\t}\n\t\t\telse{\n\t\t\t\tarmPosition = EntityBossEnderEye.ARMS_HUG\n\t\t\t\tsetRotateTarget(null)\n\t\t\t\t\n\t\t\t\tif (attackTimer == 0){\n\t\t\t\t\tmotion = target.lookPosVec.subtract(lookPosVec).scale(rng.nextFloat(0.15, 0.18))\n\t\t\t\t\tattackTimer = 1\n\t\t\t\t}\n\t\t\t\t\n\t\t\t\tif (hitEntities.isNotEmpty()){\n\t\t\t\t\t++attackTimer\n\t\t\t\t}\n\t\t\t\t\n\t\t\t\tif (attackTimer == 24 || motion.withY(0.0).lengthSquared() < square(0.15)){\n\t\t\t\t\tif (health < realMaxHealth * 0.5F && attackRepeats == 0){\n\t\t\t\t\t\t++attackRepeats\n\t\t\t\t\t\tisSlowingDown = true\n\t\t\t\t\t\tattackTimer = 0\n\t\t\t\t\t\thitEntities.clear()\n\t\t\t\t\t\treturn true\n\t\t\t\t\t}\n\t\t\t\t\t\n\t\t\t\t\treturn false\n\t\t\t\t}\n\t\t\t\t\n\t\t\t\tcauseDamageInFront(this)\n\t\t\t}\n\t\t\t\n\t\t\treturn true\n\t\t}\n\t\t\n\t\tprivate fun causeDamageInFront(entity: EntityBossEnderEye) = with(entity){\n\t\t\tval frontHurtCenter = lookPosVec.add(lookDirVec.scale(width * 0.75))\n\t\t\tval frontHurtDist = width * 0.6\n\t\t\t\n\t\t\tfor(hitEntity in world.selectVulnerableEntities.inBox<EntityLivingBase>(AxisAlignedBB(frontHurtCenter, frontHurtCenter).grow(frontHurtDist))){\n\t\t\t\tif (hitEntity.isNonBoss && !hitEntities.contains(hitEntity.uniqueID) && attackEntityAsMob(hitEntity)){\n\t\t\t\t\tval multiplier = when{\n\t\t\t\t\t\thitEntity.isActiveItemStackBlocking -> 0.25\n\t\t\t\t\t\thitEntity.isSneaking -> 0.75\n\t\t\t\t\t\telse -> 1.0\n\t\t\t\t\t}\n\t\t\t\t\t\n\t\t\t\t\tval knockback = Vec3.fromXZ(motionX, motionZ).normalize().scale(0.975 * multiplier).addY(0.075 * multiplier)\n\t\t\t\t\t\n\t\t\t\t\thitEntity.addVelocity(knockback.x, knockback.y, knockback.z)\n\t\t\t\t\thitEntities.add(hitEntity.uniqueID)\n\t\t\t\t\t\n\t\t\t\t\tif (hitEntity is EntityPlayer){\n\t\t\t\t\t\tPacketClientLaunchInstantly(hitEntity, hitEntity.motion).sendToPlayer(hitEntity)\n\t\t\t\t\t}\n\t\t\t\t}\n\t\t\t}\n\t\t}\n\t}\n}\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/main/java/chylex/hee/game/entity/living/behavior/EnderEyeAttack.kt b/src/main/java/chylex/hee/game/entity/living/behavior/EnderEyeAttack.kt
+--- a/src/main/java/chylex/hee/game/entity/living/behavior/EnderEyeAttack.kt	(revision d901f1b2f4637bf5ea0f230e876f39d24a76f54b)
++++ b/src/main/java/chylex/hee/game/entity/living/behavior/EnderEyeAttack.kt	(date 1605472512682)
+@@ -5,7 +5,7 @@
+ import chylex.hee.game.entity.motionX
+ import chylex.hee.game.entity.motionZ
+ import chylex.hee.game.entity.selectVulnerableEntities
+-import chylex.hee.game.mechanics.damage.Damage
++import chylex.hee.game.mechanics.damage.IDamageDealer
+ import chylex.hee.game.world.totalTime
+ import chylex.hee.network.client.PacketClientLaunchInstantly
+ import chylex.hee.system.math.Vec3
+@@ -17,22 +17,27 @@
+ import chylex.hee.system.migration.EntityLivingBase
+ import chylex.hee.system.migration.EntityPlayer
+ import chylex.hee.system.random.nextFloat
++import chylex.hee.system.random.nextInt
+ import net.minecraft.util.math.AxisAlignedBB
+ import java.util.UUID
+ import kotlin.math.abs
+ import kotlin.math.cos
+ 
+ sealed class EnderEyeAttack{
+-	abstract val damageType: Damage
+-	abstract val damageMultiplier: Float
++	abstract val dealtDamageType: IDamageDealer
++	abstract val dealtDamageMultiplier: Float
++	abstract val dealtKnockbackMultiplier: Float
+ 	abstract val canTakeKnockback: Boolean
+ 	abstract fun tick(entity: EntityBossEnderEye): Boolean
+ 	
+ 	class Melee : EnderEyeAttack(){
+-		override val damageType
++		override val dealtDamageType
+ 			get() = EntityBossEnderEye.DAMAGE_MELEE
+ 		
+-		override val damageMultiplier
++		override val dealtDamageMultiplier
++			get() = 1F
++		
++		override val dealtKnockbackMultiplier
+ 			get() = 1F
+ 		
+ 		override val canTakeKnockback = true
+@@ -84,6 +89,10 @@
+ 						attackEntityAsMob(target)
+ 					}
+ 				}
++				
++				if (rng.nextInt(50) == 0){ // TODO
++					return false // triggers another attack
++				}
+ 			}
+ 			
+ 			return true
+@@ -95,13 +104,78 @@
+ 		}
+ 	}
+ 	
++	class LaserEye : EnderEyeAttack(){
++		override val dealtDamageType
++			get() = EntityBossEnderEye.DAMAGE_LASER
++		
++		override val dealtDamageMultiplier
++			get() = 0.75F
++		
++		override val dealtKnockbackMultiplier
++			get() = 0F
++		
++		override val canTakeKnockback = true
++		
++		private var closedEyeTimer = 18
++		private var laserTicksLeft = 200
++		
++		override fun tick(entity: EntityBossEnderEye): Boolean = with(entity){
++			if (closedEyeTimer > 0){
++				--closedEyeTimer
++				armPosition = EntityBossEnderEye.ARMS_LIMP
++				eyeState = EntityBossEnderEye.EYE_CLOSED
++				navigator.clearPath()
++				setRotateTarget(null)
++				return true
++			}
++			
++			if (laserTicksLeft == 0){
++				eyeState = EntityBossEnderEye.EYE_OPEN
++				slerpLookController.restoreRotationParams()
++				return false
++			}
++			
++			val target = attackTarget ?: forceFindNewTarget()
++			
++			if (target == null || --laserTicksLeft <= rng.nextInt(0, 30)){
++				laserTicksLeft = 0
++				closedEyeTimer = 15
++				setRotateTarget(null)
++				return true
++			}
++			
++			armPosition = EntityBossEnderEye.ARMS_ATTACK
++			eyeState = EntityBossEnderEye.EYE_LASER
++			
++			setRotateTarget(target)
++			slerpLookController.setRotationParams(0.005F + square((200 - laserTicksLeft) * 0.0045F).coerceAtMost(0.5F), 1F)
++			
++			val laserStart = lookPosVec
++			val laserEnd = getLaserHit(1F)
++			val laserLen = laserEnd.distanceTo(laserStart)
++			
++			for(testEntity in world.selectVulnerableEntities.inBox<EntityLivingBase>(boundingBox.grow(laserLen))){
++				if (testEntity.boundingBox.rayTrace(laserStart, laserEnd).isPresent){
++					attackEntityAsMob(testEntity)
++				}
++			}
++			
++			return true
++		}
++		
++		// TODO could switch to a different target randomly if it's within view, could test on an armor stand
++	}
++	
+ 	class KnockbackDash : EnderEyeAttack(){
+-		override val damageType
++		override val dealtDamageType
+ 			get() = EntityBossEnderEye.DAMAGE_DASH
+ 		
+-		override val damageMultiplier
++		override val dealtDamageMultiplier
+ 			get() = 2F
+ 		
++		override val dealtKnockbackMultiplier
++			get() = 1F // additional knockback is dealt manually per entity
++		
+ 		override val canTakeKnockback = false
+ 		
+ 		private var isSlowingDown = true
+Index: src/main/java/chylex/hee/client/render/entity/layer/LayerEnderEyeLaser.kt
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/main/java/chylex/hee/client/render/entity/layer/LayerEnderEyeLaser.kt b/src/main/java/chylex/hee/client/render/entity/layer/LayerEnderEyeLaser.kt
+new file mode 100644
+--- /dev/null	(date 1605464986430)
++++ b/src/main/java/chylex/hee/client/render/entity/layer/LayerEnderEyeLaser.kt	(date 1605464986430)
+@@ -0,0 +1,82 @@
++package chylex.hee.client.render.entity.layer
++import chylex.hee.client.model.entity.ModelEntityBossEnderEye
++import chylex.hee.client.render.gl.RenderStateBuilder
++import chylex.hee.client.render.gl.RenderStateBuilder.Companion.LIGHTMAP_ENABLED
++import chylex.hee.client.render.gl.RenderStateBuilder.Companion.SHADE_ENABLED
++import chylex.hee.client.render.gl.rotateX
++import chylex.hee.client.render.gl.rotateZ
++import chylex.hee.client.render.gl.translateY
++import chylex.hee.client.render.gl.translateZ
++import chylex.hee.game.entity.living.EntityBossEnderEye
++import chylex.hee.game.world.totalTime
++import chylex.hee.system.forge.Side
++import chylex.hee.system.forge.Sided
++import com.mojang.blaze3d.matrix.MatrixStack
++import com.mojang.blaze3d.vertex.IVertexBuilder
++import net.minecraft.client.renderer.IRenderTypeBuffer
++import net.minecraft.client.renderer.entity.IEntityRenderer
++import net.minecraft.client.renderer.entity.layers.LayerRenderer
++import net.minecraft.client.renderer.tileentity.BeaconTileEntityRenderer
++import net.minecraft.client.renderer.vertex.DefaultVertexFormats
++import org.lwjgl.opengl.GL11
++
++@Sided(Side.CLIENT)
++class LayerEnderEyeLaser(entity: IEntityRenderer<EntityBossEnderEye, ModelEntityBossEnderEye>) : LayerRenderer<EntityBossEnderEye, ModelEntityBossEnderEye>(entity){
++	private val renderType = with(RenderStateBuilder()){
++		tex(BeaconTileEntityRenderer.TEXTURE_BEACON_BEAM)
++		shade(SHADE_ENABLED)
++		lightmap(LIGHTMAP_ENABLED)
++		buildType("hee:ender_eye_laser", DefaultVertexFormats.POSITION_COLOR_TEX, drawMode = GL11.GL_QUADS, bufferSize = 256)
++	}
++	
++	override fun render(matrix: MatrixStack, buffer: IRenderTypeBuffer, combinedLight: Int, entity: EntityBossEnderEye, limbSwing: Float, limbSwingAmount: Float, partialTicks: Float, age: Float, headYaw: Float, headPitch: Float){
++		if (entity.eyeState != EntityBossEnderEye.EYE_LASER){
++			return
++		}
++		
++		val builder = buffer.getBuffer(renderType)
++		val rotation = Math.floorMod(entity.world.totalTime, 12L) + partialTicks
++		
++		matrix.push()
++		matrix.translateY(0.935) // ???
++		matrix.rotateX(headPitch)
++		matrix.translateZ(-(entity.width * 0.5) - 0.0125)
++		matrix.rotateZ(rotation * 7.5F * 1F)
++		
++		val hw = 0.04F
++		val len = entity.getLaserLength(partialTicks)
++		val tex = len * 1500F
++		val mat = matrix.last.matrix
++		
++		builder.pos(mat, -hw, -hw,   0F).color().tex(0F, 0F).endVertex()
++		builder.pos(mat, -hw, -hw, -len).color().tex(0F, tex).endVertex()
++		builder.pos(mat,  hw, -hw, -len).color().tex(1F, tex).endVertex()
++		builder.pos(mat,  hw, -hw,   0F).color().tex(1F, 0F).endVertex()
++		
++		builder.pos(mat, -hw,  hw,   0F).color().tex(0F, 0F).endVertex()
++		builder.pos(mat, -hw,  hw, -len).color().tex(0F, tex).endVertex()
++		builder.pos(mat, -hw, -hw, -len).color().tex(1F, tex).endVertex()
++		builder.pos(mat, -hw, -hw,   0F).color().tex(1F, 0F).endVertex()
++		
++		builder.pos(mat, hw, -hw,   0F).color().tex(0F, 0F).endVertex()
++		builder.pos(mat, hw, -hw, -len).color().tex(0F, tex).endVertex()
++		builder.pos(mat, hw,  hw, -len).color().tex(1F, tex).endVertex()
++		builder.pos(mat, hw,  hw,   0F).color().tex(1F, 0F).endVertex()
++		
++		builder.pos(mat,  hw, hw,   0F).color().tex(0F, 0F).endVertex()
++		builder.pos(mat,  hw, hw, -len).color().tex(0F, tex).endVertex()
++		builder.pos(mat, -hw, hw, -len).color().tex(1F, tex).endVertex()
++		builder.pos(mat, -hw, hw,   0F).color().tex(1F, 0F).endVertex()
++		
++		builder.pos(mat, -hw, -hw, -len).color().tex(0F, 0F).endVertex()
++		builder.pos(mat, -hw,  hw, -len).color().tex(0F, 0F).endVertex()
++		builder.pos(mat,  hw,  hw, -len).color().tex(0F, 0F).endVertex()
++		builder.pos(mat,  hw, -hw, -len).color().tex(0F, 0F).endVertex()
++		
++		matrix.pop()
++	}
++	
++	private fun IVertexBuilder.color(): IVertexBuilder{
++		return this.color(0.99F, 0.11F, 0.08F, 1F)
++	}
++}
+Index: src/main/java/chylex/hee/game/entity/living/EntityBossEnderEye.kt
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package chylex.hee.game.entity.living\nimport chylex.hee.game.entity.CustomCreatureType\nimport chylex.hee.game.entity.EntityData\nimport chylex.hee.game.entity.living.behavior.EnderEyeAttack.KnockbackDash\nimport chylex.hee.game.entity.living.behavior.EnderEyeAttack.Melee\nimport chylex.hee.game.entity.living.behavior.EnderEyePhase\nimport chylex.hee.game.entity.living.behavior.EnderEyePhase.Floating\nimport chylex.hee.game.entity.living.behavior.EnderEyePhase.Hibernated\nimport chylex.hee.game.entity.living.behavior.EnderEyePhase.OpenEye\nimport chylex.hee.game.entity.living.behavior.EnderEyePhase.Ready\nimport chylex.hee.game.entity.living.behavior.EnderEyePhase.Spawners\nimport chylex.hee.game.entity.living.behavior.EnderEyePhase.Staring\nimport chylex.hee.game.entity.living.behavior.EnderEyeSpawnerParticles\nimport chylex.hee.game.entity.living.controller.EntityBodyHeadOnly\nimport chylex.hee.game.entity.living.controller.EntityLookSlerp\nimport chylex.hee.game.entity.living.controller.EntityMoveFlyingForward\nimport chylex.hee.game.entity.living.path.PathNavigateFlyingPreferBeeLineOrStrafe\nimport chylex.hee.game.entity.motionY\nimport chylex.hee.game.entity.posVec\nimport chylex.hee.game.entity.selectVulnerableEntities\nimport chylex.hee.game.entity.technical.EntityTechnicalTrigger\nimport chylex.hee.game.entity.technical.EntityTechnicalTrigger.Types.OBSIDIAN_TOWER_DEATH_ANIMATION\nimport chylex.hee.game.mechanics.damage.Damage\nimport chylex.hee.game.mechanics.damage.IDamageProcessor.Companion.ALL_PROTECTIONS\nimport chylex.hee.game.mechanics.damage.IDamageProcessor.Companion.ARMOR_PROTECTION\nimport chylex.hee.game.mechanics.damage.IDamageProcessor.Companion.DIFFICULTY_SCALING\nimport chylex.hee.game.mechanics.damage.IDamageProcessor.Companion.ENCHANTMENT_PROTECTION\nimport chylex.hee.game.mechanics.damage.IDamageProcessor.Companion.FIRE_TYPE\nimport chylex.hee.game.mechanics.damage.IDamageProcessor.Companion.NUDITY_DANGER\nimport chylex.hee.game.mechanics.damage.IDamageProcessor.Companion.RAPID_DAMAGE\nimport chylex.hee.game.potion.PotionBanishment\nimport chylex.hee.game.world.Pos\nimport chylex.hee.game.world.totalTime\nimport chylex.hee.init.ModEntities\nimport chylex.hee.init.ModSounds\nimport chylex.hee.network.client.PacketClientLaunchInstantly\nimport chylex.hee.system.facades.Resource\nimport chylex.hee.system.forge.Side\nimport chylex.hee.system.forge.Sided\nimport chylex.hee.system.math.LerpedFloat\nimport chylex.hee.system.math.Vec3\nimport chylex.hee.system.math.directionTowards\nimport chylex.hee.system.math.floorToInt\nimport chylex.hee.system.math.scale\nimport chylex.hee.system.math.withY\nimport chylex.hee.system.migration.EntityFlying\nimport chylex.hee.system.migration.EntityLivingBase\nimport chylex.hee.system.migration.EntityPlayer\nimport chylex.hee.system.migration.EntityPlayerMP\nimport chylex.hee.system.random.nextFloat\nimport chylex.hee.system.random.nextInt\nimport chylex.hee.system.random.nextItemOrNull\nimport chylex.hee.system.serialization.TagCompound\nimport chylex.hee.system.serialization.getPosOrNull\nimport chylex.hee.system.serialization.heeTag\nimport chylex.hee.system.serialization.putPos\nimport chylex.hee.system.serialization.use\nimport net.minecraft.block.material.PushReaction\nimport net.minecraft.entity.CreatureAttribute\nimport net.minecraft.entity.Entity\nimport net.minecraft.entity.EntitySize\nimport net.minecraft.entity.EntityType\nimport net.minecraft.entity.ILivingEntityData\nimport net.minecraft.entity.Pose\nimport net.minecraft.entity.SharedMonsterAttributes.ATTACK_DAMAGE\nimport net.minecraft.entity.SharedMonsterAttributes.FLYING_SPEED\nimport net.minecraft.entity.SharedMonsterAttributes.FOLLOW_RANGE\nimport net.minecraft.entity.SharedMonsterAttributes.MAX_HEALTH\nimport net.minecraft.entity.SpawnReason\nimport net.minecraft.entity.ai.controller.BodyController\nimport net.minecraft.entity.monster.IMob\nimport net.minecraft.nbt.CompoundNBT\nimport net.minecraft.network.IPacket\nimport net.minecraft.network.datasync.DataSerializers\nimport net.minecraft.pathfinding.PathNavigator\nimport net.minecraft.util.DamageSource\nimport net.minecraft.util.ResourceLocation\nimport net.minecraft.util.math.AxisAlignedBB\nimport net.minecraft.util.math.BlockPos\nimport net.minecraft.util.math.Vec3d\nimport net.minecraft.util.text.ITextComponent\nimport net.minecraft.world.BossInfo\nimport net.minecraft.world.DifficultyInstance\nimport net.minecraft.world.IWorld\nimport net.minecraft.world.World\nimport net.minecraft.world.server.ServerBossInfo\nimport net.minecraftforge.common.ForgeHooks\nimport net.minecraftforge.fml.network.NetworkHooks\nimport kotlin.math.abs\n\nclass EntityBossEnderEye(type: EntityType<EntityBossEnderEye>, world: World) : EntityFlying(type, world), IMob{\n\tconstructor(world: World) : this(ModEntities.ENDER_EYE, world)\n\t\n\tconstructor(world: World, totalSpawners: Int) : this(world){\n\t\tthis.totalSpawners = totalSpawners.toShort()\n\t}\n\t\n\tcompanion object{\n\t\tval DAMAGE_MELEE = Damage(DIFFICULTY_SCALING, ARMOR_PROTECTION(false), ENCHANTMENT_PROTECTION)\n\t\tval DAMAGE_LASER = Damage(FIRE_TYPE(5), DIFFICULTY_SCALING, *ALL_PROTECTIONS, NUDITY_DANGER, RAPID_DAMAGE(2))\n\t\tval DAMAGE_DASH = Damage(DIFFICULTY_SCALING, ARMOR_PROTECTION(false))\n\t\t\n\t\tprivate val DATA_SLEEPING = EntityData.register<EntityBossEnderEye, Boolean>(DataSerializers.BOOLEAN)\n\t\tprivate val DATA_DEMON_LEVEL = EntityData.register<EntityBossEnderEye, Byte>(DataSerializers.BYTE)\n\t\tprivate val DATA_ARM_POSITION = EntityData.register<EntityBossEnderEye, Byte>(DataSerializers.BYTE)\n\t\tprivate val DATA_ROTATE_TARGET_ID = EntityData.register<EntityBossEnderEye, Int>(DataSerializers.VARINT)\n\t\t\n\t\tprivate val DEMON_LEVEL_DMG = arrayOf(1.0F, 1.15F, 1.3F, 1.5F, 1.75F, 2.0F)\n\t\tprivate val DEMON_LEVEL_XP  = arrayOf(1.0F, 1.2F,  1.5F, 1.8F, 2.0F,  2.2F)\n\t\t\n\t\tprivate const val KNOCKBACK_MP = 0.15\n\t\t\n\t\tprivate const val TOWER_CENTER_POS_TAG = \"TowerCenter\"\n\t\tprivate const val TOTAL_SPAWNERS_TAG = \"TotalSpawners\"\n\t\tprivate const val SPAWNER_PARTICLES_TAG = \"SpawnerParticles\"\n\t\tprivate const val REAL_MAX_HEALTH_TAG = \"RealMaxHealth\"\n\t\tprivate const val SLEEPING_TAG = \"Sleeping\"\n\t\tprivate const val DEMON_LEVEL_TAG = \"DemonLevel\"\n\t\tprivate const val PHASE_TAG = \"Phase\"\n\t\tprivate const val PHASE_DATA_TAG = \"PhaseData\"\n\t\t\n\t\tconst val DEMON_EYE_LEVEL = 99.toByte()\n\t\t\n\t\tconst val ARMS_LIMP: Byte = 0\n\t\tconst val ARMS_HUG: Byte = 1\n\t\tconst val ARMS_ATTACK: Byte = 2\n\t}\n\t\n\t// Instance\n\t\n\tprivate val bossInfo = ServerBossInfo(displayName, BossInfo.Color.PINK, BossInfo.Overlay.PROGRESS).apply { isVisible = false }\n\t\n\tvar totalSpawners: Short = 0\n\t\tprivate set\n\t\n\tvar realMaxHealth = 0F\n\t\n\tvar isSleepingProp by EntityData(DATA_SLEEPING)\n\t\tprivate set\n\t\n\tvar demonLevel by EntityData(DATA_DEMON_LEVEL)\n\t\tprivate set\n\t\n\tval isDemonEye\n\t\tget() = demonLevel == DEMON_EYE_LEVEL\n\t\n\tvar armPosition by EntityData(DATA_ARM_POSITION)\n\tval clientArmAngle = LerpedFloat(0F)\n\t\n\tprivate var rotateTargetId by EntityData(DATA_ROTATE_TARGET_ID)\n\t\n\tval spawnerParticles = EnderEyeSpawnerParticles(this)\n\t\n\tprivate val damageMultiplier\n\t\tget() = if (isDemonEye) 2.5F else DEMON_LEVEL_DMG.getOrElse(demonLevel.toInt()){ 1F }\n\t\n\tprivate val experienceMultiplier\n\t\tget() = if (isDemonEye) 6F else DEMON_LEVEL_XP.getOrElse(demonLevel.toInt()){ 1F }\n\t\n\tprivate var bossPhase: EnderEyePhase = Hibernated\n\tprivate var towerCenterPos: BlockPos? = null\n\tprivate var fallAsleepTimer = 0\n\tprivate var knockbackDashChance = 5 // slightly higher chance of knockback after fight (re)starts\n\tprivate var lastKnockbackDashTime = 0L\n\t\n\tinit{\n\t\tmoveController = EntityMoveFlyingForward(this)\n\t\tlookController = EntityLookSlerp(this, adjustmentSpeed = 0.5F, maxInstantAngle = 5F)\n\t\t\n\t\thealth = maxHealth * 0.5F\n\t\tbossInfo.percent = 0.5F\n\t}\n\t\n\toverride fun registerData(){\n\t\tsuper.registerData()\n\t\tdataManager.register(DATA_SLEEPING, true)\n\t\tdataManager.register(DATA_DEMON_LEVEL, 0)\n\t\tdataManager.register(DATA_ARM_POSITION, ARMS_LIMP)\n\t\tdataManager.register(DATA_ROTATE_TARGET_ID, Int.MIN_VALUE)\n\t}\n\t\n\toverride fun registerAttributes(){\n\t\tsuper.registerAttributes()\n\t\t\n\t\tattributes.registerAttribute(ATTACK_DAMAGE)\n\t\tattributes.registerAttribute(FLYING_SPEED)\n\t\t\n\t\tgetAttribute(MAX_HEALTH).baseValue = 300.0\n\t\tgetAttribute(ATTACK_DAMAGE).baseValue = 4.0\n\t\tgetAttribute(FLYING_SPEED).baseValue = 0.093\n\t\tgetAttribute(FOLLOW_RANGE).baseValue = 16.0\n\t\t\n\t\texperienceValue = 50\n\t}\n\t\n\tprivate fun updateDemonLevelAttributes(){\n\t\tgetAttribute(ATTACK_DAMAGE).baseValue = 4.0 * damageMultiplier\n\t\texperienceValue = (50 * experienceMultiplier).floorToInt()\n\t}\n\t\n\toverride fun createSpawnPacket(): IPacket<*>{\n\t\treturn NetworkHooks.getEntitySpawningPacket(this)\n\t}\n\t\n\toverride fun livingTick(){\n\t\tval isSleeping = isSleeping\n\t\t\n\t\tif (isSleeping){\n\t\t\tbossInfo.isVisible = false\n\t\t}\n\t\telse{\n\t\t\tbossInfo.isVisible = true\n\t\t\tbossInfo.percent = health / maxHealth\n\t\t}\n\t\t\n\t\tif (world.isRemote){\n\t\t\tval currentArmAngle = clientArmAngle.currentValue\n\t\t\tval targetArmAngle = when(armPosition){\n\t\t\t\tARMS_ATTACK -> rotationPitch - 180F\n\t\t\t\tARMS_HUG -> rotationPitch - 90F\n\t\t\t\telse -> 0F\n\t\t\t}\n\t\t\t\n\t\t\tif (abs(targetArmAngle - currentArmAngle) < 5F){\n\t\t\t\tclientArmAngle.update(targetArmAngle)\n\t\t\t}\n\t\t\telse{\n\t\t\t\tclientArmAngle.update(currentArmAngle + ((targetArmAngle - currentArmAngle) * 0.6F).coerceIn(-25F, 25F))\n\t\t\t}\n\t\t}\n\t\telse{\n\t\t\tif (ticksExisted == 1){\n\t\t\t\tupdateDemonLevelAttributes()\n\t\t\t}\n\t\t\t\n\t\t\tval currentTarget = attackTarget\n\t\t\t\n\t\t\tif (currentTarget == null){\n\t\t\t\tif (!isSleeping && (bossPhase is Ready && ++fallAsleepTimer > rand.nextInt(35, 75))){\n\t\t\t\t\tisSleepingProp = true\n\t\t\t\t\tattackTarget = null\n\t\t\t\t}\n\t\t\t}\n\t\t\telse if (!currentTarget.isAlive || (currentTarget is EntityPlayer && (currentTarget.isCreative || currentTarget.isSpectator))){\n\t\t\t\tattackTarget = null\n\t\t\t\tsetRotateTarget(null)\n\t\t\t}\n\t\t\t\n\t\t\tbossPhase = bossPhase.tick(this)\n\t\t\tspawnerParticles.tick()\n\t\t}\n\t\t\n\t\tif (!isSleeping){\n\t\t\trotateTargetId.takeIf { it != Int.MIN_VALUE }?.let(world::getEntityByID)?.let {\n\t\t\t\tlookController.setLookPositionWithEntity(it, 0F, 0F)\n\t\t\t\tlookController.tick() // reduces rotation latency\n\t\t\t}\n\t\t}\n\t\t\n\t\tsuper.livingTick()\n\t}\n\t\n\t// Spawning\n\t\n\toverride fun onInitialSpawn(world: IWorld, difficulty: DifficultyInstance, reason: SpawnReason, data: ILivingEntityData?, nbt: CompoundNBT?): ILivingEntityData?{\n\t\tval yaw = ((rotationYaw + 45F).toInt() / 90) * 90F\n\t\t\n\t\tsetPositionAndRotation(posX, posY, posZ, yaw, 0F)\n\t\trotationYawHead = yaw\n\t\t\n\t\treturn super.onInitialSpawn(world, difficulty, reason, data, nbt)\n\t}\n\t\n\tprivate fun wakeUp(source: DamageSource){\n\t\tif (!(isSleeping || bossPhase == Hibernated)){\n\t\t\treturn\n\t\t}\n\t\t\n\t\tisSleepingProp = false\n\t\tfallAsleepTimer = 0\n\t\t\n\t\tif (bossPhase !is Ready){\n\t\t\tbossPhase = OpenEye()\n\t\t\ttowerCenterPos = Pos(this).down(2).offset(horizontalFacing, 3)\n\t\t}\n\t\t\n\t\tplayHurtSound(source)\n\t\tattackTarget = source.trueSource as? EntityPlayer\n\t}\n\t\n\tfun updateDemonLevel(newLevel: Byte){\n\t\tdemonLevel = newLevel\n\t\tupdateDemonLevelAttributes()\n\t}\n\t\n\toverride fun canDespawn(distanceToClosestPlayerSq: Double): Boolean{\n\t\treturn false\n\t}\n\t\n\toverride fun preventDespawn(): Boolean{\n\t\treturn true\n\t}\n\t\n\t// Battle\n\t\n\tfun forceFindNewTarget(): EntityPlayer?{\n\t\tval attacker = revengeTarget as? EntityPlayer\n\t\t\n\t\tif (attacker != null){\n\t\t\trevengeTarget = null\n\t\t\treturn attacker\n\t\t}\n\t\t\n\t\tval range = getAttribute(FOLLOW_RANGE).value\n\t\tval targets = world.selectVulnerableEntities.inRange<EntityPlayer>(posVec, range).filter(::canEntityBeSeen)\n\t\t\n\t\treturn rng.nextItemOrNull(targets).also { attackTarget = it }\n\t}\n\t\n\toverride fun setAttackTarget(newTarget: EntityLivingBase?){\n\t\tsuper.setAttackTarget(newTarget)\n\t\t\n\t\tif (attackTarget != null){\n\t\t\tfallAsleepTimer = 0\n\t\t}\n\t}\n\t\n\tfun setRotateTarget(target: EntityLivingBase?){\n\t\trotateTargetId = target?.entityId ?: Int.MIN_VALUE\n\t}\n\t\n\toverride fun attackEntityAsMob(entity: Entity): Boolean{\n\t\tval attack = (bossPhase as? Ready)?.currentAttack ?: return false\n\t\tval amount = getAttribute(ATTACK_DAMAGE).value.toFloat() * attack.damageMultiplier\n\t\treturn attack.damageType.dealToFrom(amount, entity, this)\n\t}\n\t\n\toverride fun attackEntityFrom(source: DamageSource, amount: Float): Boolean{\n\t\tif (isInvulnerableTo(source) || amount < 6F){\n\t\t\tif (source.immediateSource is EntityPlayer || source.isProjectile){\n\t\t\t\tplaySound(ModSounds.MOB_ENDER_EYE_HIT_FAIL, 0.8F, rand.nextFloat(0.6F, 0.8F))\n\t\t\t}\n\t\t\t\n\t\t\treturn false\n\t\t}\n\t\t\n\t\twakeUp(source)\n\t\t\n\t\tif (isDemonEye && (amount < 8.5F || !PotionBanishment.canBanish(this, source))){\n\t\t\tplaySound(ModSounds.MOB_ENDER_EYE_HIT_FAIL, 1F, rand.nextFloat(1F, 1.7F))\n\t\t\treturn false\n\t\t}\n\t\t\n\t\tif (bossPhase is Ready && super.attackEntityFrom(source, amount - 2F)){\n\t\t\tif (knockbackDashChance > 2 && world.totalTime - lastKnockbackDashTime >= 50L && rand.nextInt(3) != 0){\n\t\t\t\tknockbackDashChance--\n\t\t\t}\n\t\t\t\n\t\t\treturn true\n\t\t}\n\t\t\n\t\treturn false\n\t}\n\t\n\toverride fun isInvulnerableTo(source: DamageSource): Boolean{\n\t\treturn super.isInvulnerableTo(source) || source.isProjectile || source.immediateSource !is EntityPlayer\n\t}\n\t\n\tfun performBlastKnockback(target: Entity, strength: Float){\n\t\tval ratio = Vec3.fromXZ(target.posX, target.posZ).directionTowards(Vec3.fromXZ(posX, posZ)).scale(strength)\n\t\t\n\t\tif (target is EntityLivingBase){\n\t\t\ttarget.knockBack(this, strength, ratio.x, ratio.z)\n\t\t\t\n\t\t\tif (target is EntityPlayer){\n\t\t\t\tPacketClientLaunchInstantly(target, target.motion).sendToPlayer(target)\n\t\t\t}\n\t\t}\n\t\telse{\n\t\t\ttarget.addVelocity(ratio.x, strength.toDouble(), ratio.z)\n\t\t}\n\t}\n\t\n\toverride fun onDeath(cause: DamageSource){\n\t\tval wasDead = dead\n\t\tsuper.onDeath(cause)\n\t\t\n\t\tif (!wasDead && dead && !world.isRemote){\n\t\t\tval centerPos = towerCenterPos!!\n\t\t\t\n\t\t\t// TODO screech\n\t\t\t\n\t\t\tEntityTechnicalTrigger(world, OBSIDIAN_TOWER_DEATH_ANIMATION).apply {\n\t\t\t\tsetLocationAndAngles(centerPos.x + 0.5, centerPos.y + 0.5, centerPos.z + 0.5, 0F, 0F)\n\t\t\t\tworld.addEntity(this)\n\t\t\t}\n\t\t}\n\t}\n\t\n\t// Movement\n\t\n\toverride fun createNavigator(world: World): PathNavigator{\n\t\treturn PathNavigateFlyingPreferBeeLineOrStrafe(this, world)\n\t}\n\t\n\toverride fun createBodyController(): BodyController{\n\t\treturn EntityBodyHeadOnly(this)\n\t}\n\t\n\toverride fun moveRelative(friction: Float, dir: Vec3d){\n\t\tsuper.moveRelative(EntityMoveFlyingForward.AIR_FRICTION, dir)\n\t}\n\t\n\toverride fun canBePushed(): Boolean{\n\t\treturn false\n\t}\n\t\n\toverride fun getPushReaction(): PushReaction{\n\t\treturn PushReaction.BLOCK\n\t}\n\t\n\toverride fun getCollisionBoundingBox(): AxisAlignedBB?{\n\t\treturn boundingBox.takeIf { isAlive && isSleeping }\n\t}\n\t\n\toverride fun collideWithEntity(entity: Entity){}\n\toverride fun applyEntityCollision(entity: Entity){}\n\t\n\toverride fun addVelocity(x: Double, y: Double, z: Double){\n\t\tsuper.addVelocity(x * KNOCKBACK_MP, y * KNOCKBACK_MP, z * KNOCKBACK_MP)\n\t}\n\t\n\toverride fun knockBack(entity: Entity, strength: Float, xRatio: Double, zRatio: Double){\n\t\tval bossPhase = bossPhase\n\t\t\n\t\tif (isSleeping || bossPhase !is Ready || !bossPhase.currentAttack.canTakeKnockback){\n\t\t\treturn\n\t\t}\n\t\t\n\t\tif (bossPhase.currentAttack is Melee && rand.nextInt(knockbackDashChance) == 0){\n\t\t\tsuper.knockBack(entity, strength * 1.4F, xRatio, zRatio)\n\t\t\tbossPhase.currentAttack = KnockbackDash()\n\t\t\tknockbackDashChance = 7\n\t\t\tlastKnockbackDashTime = world.totalTime\n\t\t}\n\t\telse if (!ForgeHooks.onLivingKnockBack(this, entity, strength, xRatio, zRatio).isCanceled){\n\t\t\tmotion = motion.add(Vec3.fromXZ(-xRatio, -zRatio).normalize().scale(KNOCKBACK_MP).withY(0.005))\n\t\t\t\n\t\t\tif (motionY > 0.05){\n\t\t\t\tmotionY = 0.05\n\t\t\t}\n\t\t}\n\t}\n\t\n\t// Boss info\n\t\n\toverride fun addTrackingPlayer(player: EntityPlayerMP){\n\t\tsuper.addTrackingPlayer(player)\n\t\tbossInfo.addPlayer(player)\n\t}\n\t\n\toverride fun removeTrackingPlayer(player: EntityPlayerMP){\n\t\tsuper.removeTrackingPlayer(player)\n\t\tbossInfo.removePlayer(player)\n\t}\n\t\n\toverride fun setCustomName(name: ITextComponent?){\n\t\tsuper.setCustomName(name)\n\t\tbossInfo.name = displayName\n\t}\n\t\n\t// Client (disable server-side rotation)\n\t\n\t@Sided(Side.CLIENT)\n\toverride fun setPositionAndRotationDirect(x: Double, y: Double, z: Double, yaw: Float, pitch: Float, posRotationIncrements: Int, teleport: Boolean){\n\t\tif (rotateTargetId == Int.MIN_VALUE){\n\t\t\tsuper.setPositionAndRotationDirect(x, y, z, yaw, pitch, posRotationIncrements, teleport)\n\t\t}\n\t\telse{\n\t\t\tsetPosition(x, y, z)\n\t\t}\n\t}\n\t\n\t@Sided(Side.CLIENT)\n\toverride fun setHeadRotation(yaw: Float, pitch: Int){\n\t\tif (rotateTargetId == Int.MIN_VALUE){\n\t\t\tsuper.setHeadRotation(yaw, pitch)\n\t\t}\n\t}\n\t\n\t// Properties\n\t\n\toverride fun getLootTable(): ResourceLocation{\n\t\treturn Resource.Custom(\"entities/ender_eye\") // TODO demon eye\n\t}\n\t\n\toverride fun getCreatureAttribute(): CreatureAttribute{\n\t\treturn if (isDemonEye)\n\t\t\tCustomCreatureType.DEMON\n\t\telse\n\t\t\tCustomCreatureType.ENDER\n\t}\n\t\n\toverride fun getStandingEyeHeight(pose: Pose, size: EntitySize): Float{\n\t\treturn size.height * 0.5F\n\t}\n\t\n\toverride fun isSleeping(): Boolean{\n\t\treturn isSleepingProp\n\t}\n\t\n\toverride fun isNonBoss(): Boolean{\n\t\treturn false\n\t}\n\t\n\t// Serialization\n\t\n\toverride fun writeAdditional(nbt: TagCompound) = nbt.heeTag.use {\n\t\tsuper.writeAdditional(nbt)\n\t\t\n\t\ttowerCenterPos?.let {\n\t\t\tputPos(TOWER_CENTER_POS_TAG, it)\n\t\t}\n\t\t\n\t\tputShort(TOTAL_SPAWNERS_TAG, totalSpawners)\n\t\tput(SPAWNER_PARTICLES_TAG, spawnerParticles.serializeNBT())\n\t\t\n\t\tputFloat(REAL_MAX_HEALTH_TAG, realMaxHealth)\n\t\tputBoolean(SLEEPING_TAG, isSleeping)\n\t\tputByte(DEMON_LEVEL_TAG, demonLevel)\n\t\t\n\t\tputString(PHASE_TAG, when(bossPhase){\n\t\t\tHibernated -> \"Hibernated\"\n\t\t\tis OpenEye -> \"OpenEye\"\n\t\t\tis Spawners -> \"Spawners\"\n\t\t\tis Floating -> \"Floating\"\n\t\t\tis Staring -> \"Staring\"\n\t\t\tis Ready -> \"Ready\"\n\t\t})\n\t\t\n\t\tput(PHASE_DATA_TAG, bossPhase.serializeNBT())\n\t}\n\t\n\toverride fun readAdditional(nbt: TagCompound) = nbt.heeTag.use {\n\t\tsuper.readAdditional(nbt)\n\t\t\n\t\ttowerCenterPos = getPosOrNull(TOWER_CENTER_POS_TAG)\n\t\t\n\t\ttotalSpawners = getShort(TOTAL_SPAWNERS_TAG)\n\t\tspawnerParticles.deserializeNBT(getCompound(SPAWNER_PARTICLES_TAG))\n\t\t\n\t\trealMaxHealth = getFloat(REAL_MAX_HEALTH_TAG)\n\t\tisSleepingProp = getBoolean(SLEEPING_TAG)\n\t\tdemonLevel = getByte(DEMON_LEVEL_TAG)\n\t\t\n\t\tbossPhase = when(getString(PHASE_TAG)){\n\t\t\t\"Hibernated\" -> Hibernated\n\t\t\t\"OpenEye\" -> OpenEye()\n\t\t\t\"Spawners\" -> Spawners(mutableListOf(), mutableListOf(), mutableListOf(), 0)\n\t\t\t\"Floating\" -> Floating(0)\n\t\t\t\"Staring\" -> Staring()\n\t\t\telse -> Ready()\n\t\t}\n\t\t\n\t\tbossPhase.deserializeNBT(getCompound(PHASE_DATA_TAG))\n\t}\n}\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/main/java/chylex/hee/game/entity/living/EntityBossEnderEye.kt b/src/main/java/chylex/hee/game/entity/living/EntityBossEnderEye.kt
+--- a/src/main/java/chylex/hee/game/entity/living/EntityBossEnderEye.kt	(revision d901f1b2f4637bf5ea0f230e876f39d24a76f54b)
++++ b/src/main/java/chylex/hee/game/entity/living/EntityBossEnderEye.kt	(date 1605472306445)
+@@ -4,10 +4,12 @@
+ import chylex.hee.game.entity.living.behavior.EnderEyeAttack.KnockbackDash
+ import chylex.hee.game.entity.living.behavior.EnderEyeAttack.Melee
+ import chylex.hee.game.entity.living.behavior.EnderEyePhase
++import chylex.hee.game.entity.living.behavior.EnderEyePhase.Attacking
+ import chylex.hee.game.entity.living.behavior.EnderEyePhase.Floating
+-import chylex.hee.game.entity.living.behavior.EnderEyePhase.Hibernated
+ import chylex.hee.game.entity.living.behavior.EnderEyePhase.OpenEye
+-import chylex.hee.game.entity.living.behavior.EnderEyePhase.Ready
++import chylex.hee.game.entity.living.behavior.EnderEyePhase.SleepingPhase
++import chylex.hee.game.entity.living.behavior.EnderEyePhase.SleepingPhase.Hibernated
++import chylex.hee.game.entity.living.behavior.EnderEyePhase.SleepingPhase.Sleeping
+ import chylex.hee.game.entity.living.behavior.EnderEyePhase.Spawners
+ import chylex.hee.game.entity.living.behavior.EnderEyePhase.Staring
+ import chylex.hee.game.entity.living.behavior.EnderEyeSpawnerParticles
+@@ -28,6 +30,7 @@
+ import chylex.hee.game.mechanics.damage.IDamageProcessor.Companion.FIRE_TYPE
+ import chylex.hee.game.mechanics.damage.IDamageProcessor.Companion.NUDITY_DANGER
+ import chylex.hee.game.mechanics.damage.IDamageProcessor.Companion.RAPID_DAMAGE
++import chylex.hee.game.mechanics.damage.special.FallbackDamage
+ import chylex.hee.game.potion.PotionBanishment
+ import chylex.hee.game.world.Pos
+ import chylex.hee.game.world.totalTime
+@@ -88,7 +91,7 @@
+ import net.minecraftforge.fml.network.NetworkHooks
+ import kotlin.math.abs
+ 
+-class EntityBossEnderEye(type: EntityType<EntityBossEnderEye>, world: World) : EntityFlying(type, world), IMob{
++class EntityBossEnderEye(type: EntityType<EntityBossEnderEye>, world: World) : EntityFlying(type, world), IMob, IKnockbackMultiplier{
+ 	constructor(world: World) : this(ModEntities.ENDER_EYE, world)
+ 	
+ 	constructor(world: World, totalSpawners: Int) : this(world){
+@@ -97,11 +100,15 @@
+ 	
+ 	companion object{
+ 		val DAMAGE_MELEE = Damage(DIFFICULTY_SCALING, ARMOR_PROTECTION(false), ENCHANTMENT_PROTECTION)
+-		val DAMAGE_LASER = Damage(FIRE_TYPE(5), DIFFICULTY_SCALING, *ALL_PROTECTIONS, NUDITY_DANGER, RAPID_DAMAGE(2))
+ 		val DAMAGE_DASH = Damage(DIFFICULTY_SCALING, ARMOR_PROTECTION(false))
++		val DAMAGE_LASER = FallbackDamage(
++			Damage(FIRE_TYPE(5), DIFFICULTY_SCALING, *ALL_PROTECTIONS, NUDITY_DANGER, RAPID_DAMAGE(2)) to 1.0,
++			Damage(DIFFICULTY_SCALING, *ALL_PROTECTIONS, NUDITY_DANGER, RAPID_DAMAGE(2)) to 0.5
++		)
+ 		
+ 		private val DATA_SLEEPING = EntityData.register<EntityBossEnderEye, Boolean>(DataSerializers.BOOLEAN)
+ 		private val DATA_DEMON_LEVEL = EntityData.register<EntityBossEnderEye, Byte>(DataSerializers.BYTE)
++		private val DATA_EYE_STATE = EntityData.register<EntityBossEnderEye, Byte>(DataSerializers.BYTE)
+ 		private val DATA_ARM_POSITION = EntityData.register<EntityBossEnderEye, Byte>(DataSerializers.BYTE)
+ 		private val DATA_ROTATE_TARGET_ID = EntityData.register<EntityBossEnderEye, Int>(DataSerializers.VARINT)
+ 		
+@@ -121,9 +128,15 @@
+ 		
+ 		const val DEMON_EYE_LEVEL = 99.toByte()
+ 		
++		const val EYE_CLOSED: Byte = 0
++		const val EYE_OPEN: Byte = 1
++		const val EYE_LASER: Byte = 2
++		
+ 		const val ARMS_LIMP: Byte = 0
+ 		const val ARMS_HUG: Byte = 1
+ 		const val ARMS_ATTACK: Byte = 2
++		
++		const val LASER_DISTANCE = 32.0
+ 	}
+ 	
+ 	// Instance
+@@ -135,7 +148,7 @@
+ 	
+ 	var realMaxHealth = 0F
+ 	
+-	var isSleepingProp by EntityData(DATA_SLEEPING)
++	var isSleepingClientProp by EntityData(DATA_SLEEPING)
+ 		private set
+ 	
+ 	var demonLevel by EntityData(DATA_DEMON_LEVEL)
+@@ -144,12 +157,14 @@
+ 	val isDemonEye
+ 		get() = demonLevel == DEMON_EYE_LEVEL
+ 	
++	var eyeState by EntityData(DATA_EYE_STATE)
+ 	var armPosition by EntityData(DATA_ARM_POSITION)
+ 	val clientArmAngle = LerpedFloat(0F)
+ 	
+ 	private var rotateTargetId by EntityData(DATA_ROTATE_TARGET_ID)
+ 	
+ 	val spawnerParticles = EnderEyeSpawnerParticles(this)
++	val slerpLookController: EntityLookSlerp
+ 	
+ 	private val damageMultiplier
+ 		get() = if (isDemonEye) 2.5F else DEMON_LEVEL_DMG.getOrElse(demonLevel.toInt()){ 1F }
+@@ -157,6 +172,8 @@
+ 	private val experienceMultiplier
+ 		get() = if (isDemonEye) 6F else DEMON_LEVEL_XP.getOrElse(demonLevel.toInt()){ 1F }
+ 	
++	override var lastHitKnockbackMultiplier = 1F
++	
+ 	private var bossPhase: EnderEyePhase = Hibernated
+ 	private var towerCenterPos: BlockPos? = null
+ 	private var fallAsleepTimer = 0
+@@ -165,7 +182,8 @@
+ 	
+ 	init{
+ 		moveController = EntityMoveFlyingForward(this)
+-		lookController = EntityLookSlerp(this, adjustmentSpeed = 0.5F, maxInstantAngle = 5F)
++		slerpLookController = EntityLookSlerp(this, adjustmentSpeed = 0.5F, maxInstantAngle = 5F)
++		lookController = slerpLookController
+ 		
+ 		health = maxHealth * 0.5F
+ 		bossInfo.percent = 0.5F
+@@ -175,6 +193,7 @@
+ 		super.registerData()
+ 		dataManager.register(DATA_SLEEPING, true)
+ 		dataManager.register(DATA_DEMON_LEVEL, 0)
++		dataManager.register(DATA_EYE_STATE, EYE_CLOSED)
+ 		dataManager.register(DATA_ARM_POSITION, ARMS_LIMP)
+ 		dataManager.register(DATA_ROTATE_TARGET_ID, Int.MIN_VALUE)
+ 	}
+@@ -236,9 +255,12 @@
+ 			val currentTarget = attackTarget
+ 			
+ 			if (currentTarget == null){
+-				if (!isSleeping && (bossPhase is Ready && ++fallAsleepTimer > rand.nextInt(35, 75))){
+-					isSleepingProp = true
++				if (!isSleeping && (bossPhase is Attacking && ++fallAsleepTimer > rand.nextInt(35, 75))){
++					eyeState = EYE_CLOSED
++					armPosition = ARMS_LIMP
+ 					attackTarget = null
++					bossPhase = Sleeping
++					setRotateTarget(null)
+ 				}
+ 			}
+ 			else if (!currentTarget.isAlive || (currentTarget is EntityPlayer && (currentTarget.isCreative || currentTarget.isSpectator))){
+@@ -248,9 +270,13 @@
+ 			
+ 			bossPhase = bossPhase.tick(this)
+ 			spawnerParticles.tick()
++			
++			if (isSleepingClientProp != isSleeping){
++				isSleepingClientProp = isSleeping
++			}
+ 		}
+ 		
+-		if (!isSleeping){
++		if (!isSleeping && (!world.isRemote || !isRotationDelegatedToServer())){
+ 			rotateTargetId.takeIf { it != Int.MIN_VALUE }?.let(world::getEntityByID)?.let {
+ 				lookController.setLookPositionWithEntity(it, 0F, 0F)
+ 				lookController.tick() // reduces rotation latency
+@@ -272,20 +298,17 @@
+ 	}
+ 	
+ 	private fun wakeUp(source: DamageSource){
+-		if (!(isSleeping || bossPhase == Hibernated)){
+-			return
++		val phase = bossPhase as? SleepingPhase ?: return
++		
++		if (towerCenterPos == null){
++			towerCenterPos = Pos(this).down(2).offset(horizontalFacing, 3)
+ 		}
+ 		
+-		isSleepingProp = false
++		bossPhase = phase.wakeUp()
+ 		fallAsleepTimer = 0
+-		
+-		if (bossPhase !is Ready){
+-			bossPhase = OpenEye()
+-			towerCenterPos = Pos(this).down(2).offset(horizontalFacing, 3)
+-		}
+-		
++		eyeState = EYE_OPEN
++		attackTarget = source.trueSource as? EntityPlayer
+ 		playHurtSound(source)
+-		attackTarget = source.trueSource as? EntityPlayer
+ 	}
+ 	
+ 	fun updateDemonLevel(newLevel: Byte){
+@@ -330,9 +353,13 @@
+ 	}
+ 	
+ 	override fun attackEntityAsMob(entity: Entity): Boolean{
+-		val attack = (bossPhase as? Ready)?.currentAttack ?: return false
+-		val amount = getAttribute(ATTACK_DAMAGE).value.toFloat() * attack.damageMultiplier
+-		return attack.damageType.dealToFrom(amount, entity, this)
++		val attack = (bossPhase as? Attacking)?.currentAttack ?: return false
++		
++		lastHitKnockbackMultiplier = attack.dealtKnockbackMultiplier
++		val type = attack.dealtDamageType
++		val amount = getAttribute(ATTACK_DAMAGE).value.toFloat() * attack.dealtDamageMultiplier
++		
++		return type.dealToFrom(amount, entity, this)
+ 	}
+ 	
+ 	override fun attackEntityFrom(source: DamageSource, amount: Float): Boolean{
+@@ -346,12 +373,12 @@
+ 		
+ 		wakeUp(source)
+ 		
+-		if (isDemonEye && (amount < 8.5F || !PotionBanishment.canBanish(this, source))){
++		if ((isDemonEye || eyeState == EYE_LASER) && (amount < 8.5F || !PotionBanishment.canBanish(this, source))){
+ 			playSound(ModSounds.MOB_ENDER_EYE_HIT_FAIL, 1F, rand.nextFloat(1F, 1.7F))
+ 			return false
+ 		}
+ 		
+-		if (bossPhase is Ready && super.attackEntityFrom(source, amount - 2F)){
++		if (bossPhase is Attacking && super.attackEntityFrom(source, amount - 2F)){
+ 			if (knockbackDashChance > 2 && world.totalTime - lastKnockbackDashTime >= 50L && rand.nextInt(3) != 0){
+ 				knockbackDashChance--
+ 			}
+@@ -381,6 +408,14 @@
+ 		}
+ 	}
+ 	
++	fun getLaserHit(partialTicks: Float): Vec3d{
++		return entity.pick(LASER_DISTANCE, partialTicks, false).hitVec
++	}
++	
++	fun getLaserLength(partialTicks: Float): Float{
++		return getLaserHit(partialTicks).distanceTo(getEyePosition(partialTicks)).toFloat()
++	}
++	
+ 	override fun onDeath(cause: DamageSource){
+ 		val wasDead = dead
+ 		super.onDeath(cause)
+@@ -433,7 +468,7 @@
+ 	override fun knockBack(entity: Entity, strength: Float, xRatio: Double, zRatio: Double){
+ 		val bossPhase = bossPhase
+ 		
+-		if (isSleeping || bossPhase !is Ready || !bossPhase.currentAttack.canTakeKnockback){
++		if (isSleeping || bossPhase !is Attacking || !bossPhase.currentAttack.canTakeKnockback){
+ 			return
+ 		}
+ 		
+@@ -469,11 +504,15 @@
+ 		bossInfo.name = displayName
+ 	}
+ 	
+-	// Client (disable server-side rotation)
++	// Client (disable server-side rotation and tweak render distance)
++	
++	private fun isRotationDelegatedToServer(): Boolean{
++		return rotateTargetId == Int.MIN_VALUE || eyeState == EYE_LASER
++	}
+ 	
+ 	@Sided(Side.CLIENT)
+ 	override fun setPositionAndRotationDirect(x: Double, y: Double, z: Double, yaw: Float, pitch: Float, posRotationIncrements: Int, teleport: Boolean){
+-		if (rotateTargetId == Int.MIN_VALUE){
++		if (isRotationDelegatedToServer()){
+ 			super.setPositionAndRotationDirect(x, y, z, yaw, pitch, posRotationIncrements, teleport)
+ 		}
+ 		else{
+@@ -483,11 +522,24 @@
+ 	
+ 	@Sided(Side.CLIENT)
+ 	override fun setHeadRotation(yaw: Float, pitch: Int){
+-		if (rotateTargetId == Int.MIN_VALUE){
++		if (isRotationDelegatedToServer()){
+ 			super.setHeadRotation(yaw, pitch)
+ 		}
+ 	}
+ 	
++	@Sided(Side.CLIENT)
++	override fun isInRangeToRenderDist(distance: Double): Boolean{
++		return eyeState == EYE_LASER || super.isInRangeToRenderDist(distance)
++	}
++	
++	@Sided(Side.CLIENT)
++	override fun getRenderBoundingBox(): AxisAlignedBB{
++		return if (eyeState == EYE_LASER)
++			super.getRenderBoundingBox().grow(LASER_DISTANCE)
++		else
++			super.getRenderBoundingBox()
++	}
++	
+ 	// Properties
+ 	
+ 	override fun getLootTable(): ResourceLocation{
+@@ -506,7 +558,7 @@
+ 	}
+ 	
+ 	override fun isSleeping(): Boolean{
+-		return isSleepingProp
++		return if (world.isRemote) isSleepingClientProp else bossPhase is SleepingPhase
+ 	}
+ 	
+ 	override fun isNonBoss(): Boolean{
+@@ -530,12 +582,13 @@
+ 		putByte(DEMON_LEVEL_TAG, demonLevel)
+ 		
+ 		putString(PHASE_TAG, when(bossPhase){
+-			Hibernated -> "Hibernated"
+-			is OpenEye -> "OpenEye"
+-			is Spawners -> "Spawners"
+-			is Floating -> "Floating"
+-			is Staring -> "Staring"
+-			is Ready -> "Ready"
++			Hibernated   -> "Hibernated"
++			is OpenEye   -> "OpenEye"
++			is Spawners  -> "Spawners"
++			is Floating  -> "Floating"
++			is Staring   -> "Staring"
++			Sleeping     -> "Sleeping"
++			is Attacking -> "Attacking"
+ 		})
+ 		
+ 		put(PHASE_DATA_TAG, bossPhase.serializeNBT())
+@@ -550,16 +603,16 @@
+ 		spawnerParticles.deserializeNBT(getCompound(SPAWNER_PARTICLES_TAG))
+ 		
+ 		realMaxHealth = getFloat(REAL_MAX_HEALTH_TAG)
+-		isSleepingProp = getBoolean(SLEEPING_TAG)
+ 		demonLevel = getByte(DEMON_LEVEL_TAG)
+ 		
+ 		bossPhase = when(getString(PHASE_TAG)){
+ 			"Hibernated" -> Hibernated
+-			"OpenEye" -> OpenEye()
+-			"Spawners" -> Spawners(mutableListOf(), mutableListOf(), mutableListOf(), 0)
+-			"Floating" -> Floating(0)
+-			"Staring" -> Staring()
+-			else -> Ready()
++			"OpenEye"    -> OpenEye()
++			"Spawners"   -> Spawners(mutableListOf(), mutableListOf(), mutableListOf(), 0)
++			"Floating"   -> Floating(0)
++			"Staring"    -> Staring()
++			"Sleeping"   -> Sleeping
++			else         -> Attacking()
+ 		}
+ 		
+ 		bossPhase.deserializeNBT(getCompound(PHASE_DATA_TAG))

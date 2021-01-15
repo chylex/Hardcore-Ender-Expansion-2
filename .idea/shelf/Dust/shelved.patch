@@ -1,0 +1,210 @@
+Index: src/main/java/chylex/hee/game/world/territory/descriptions/Territory_ForgottenTombs.kt
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package chylex.hee.game.world.territory.descriptions\r\nimport chylex.hee.client.render.territory.components.SkyPlaneTopFoggy\r\nimport chylex.hee.client.render.territory.lightmaps.ILightmap\r\nimport chylex.hee.client.render.territory.lightmaps.ILightmap.Companion.calcLightFactor\r\nimport chylex.hee.client.util.MC\r\nimport chylex.hee.game.particle.ParticleDust\r\nimport chylex.hee.game.particle.spawner.ParticleSpawnerCustom\r\nimport chylex.hee.game.particle.util.IOffset.Constant\r\nimport chylex.hee.game.particle.util.IOffset.InBox\r\nimport chylex.hee.game.particle.util.IShape.Point\r\nimport chylex.hee.game.world.territory.ITerritoryDescription\r\nimport chylex.hee.game.world.territory.properties.TerritoryColors\r\nimport chylex.hee.game.world.territory.properties.TerritoryEnvironment\r\nimport chylex.hee.system.migration.forge.Side\r\nimport chylex.hee.system.migration.forge.Sided\r\nimport chylex.hee.system.migration.vanilla.EntityPlayer\r\nimport chylex.hee.system.migration.vanilla.Potions\r\nimport chylex.hee.system.util.Pos\r\nimport chylex.hee.system.util.allInCenteredBoxMutable\r\nimport chylex.hee.system.util.color.IRandomColor.Companion.IRandomColor\r\nimport chylex.hee.system.util.color.IntColor.Companion.RGB\r\nimport chylex.hee.system.util.facades.Resource\r\nimport chylex.hee.system.util.isAir\r\nimport chylex.hee.system.util.lookPosVec\r\nimport chylex.hee.system.util.math.LerpedFloat\r\nimport chylex.hee.system.util.nextFloat\r\nimport chylex.hee.system.util.nextInt\r\nimport chylex.hee.system.util.offsetTowards\r\nimport net.minecraft.util.Direction.DOWN\r\nimport net.minecraft.util.math.Vec3d\r\nimport net.minecraft.world.LightType.BLOCK\r\nimport net.minecraft.world.LightType.SKY\r\nimport java.util.Random\r\nimport kotlin.math.max\r\nimport kotlin.math.pow\r\n\r\nobject Territory_ForgottenTombs : ITerritoryDescription{\r\n\toverride val colors = object : TerritoryColors(){\r\n\t\toverride val tokenTop    = RGB(211, 212, 152)\r\n\t\toverride val tokenBottom = RGB(160, 151, 116)\r\n\t\t\r\n\t\toverride val portalSeed = 410L\r\n\t\t\r\n\t\toverride fun nextPortalColor(rand: Random, color: FloatArray){\r\n\t\t\tif (rand.nextBoolean()){\r\n\t\t\t\tcolor[0] = rand.nextFloat(0.65F, 0.9F)\r\n\t\t\t\tcolor[1] = rand.nextFloat(0.45F, 0.7F)\r\n\t\t\t\tcolor[2] = rand.nextFloat(0.15F, 0.4F)\r\n\t\t\t}\r\n\t\t\telse{\r\n\t\t\t\tcolor.fill(rand.nextFloat(0.95F, 1F))\r\n\t\t\t}\r\n\t\t}\r\n\t}\r\n\t\r\n\tprivate const val MAX_FOG_DENSITY = 0.069F\r\n\t\r\n\toverride val environment = object : TerritoryEnvironment(){\r\n\t\toverride val fogColor\r\n\t\t\tget() = (fogDensity / 0.275F).let { Vec3d(0.15 + it, 0.08 + it, 0.03) }\r\n\t\t\r\n\t\toverride val fogDensity\r\n\t\t\tget() = currentFogDensity.get(MC.partialTicks)\r\n\t\t\r\n\t\toverride val fogRenderDistanceModifier = 0.003F\r\n\t\t\r\n\t\toverride val skyLight = 15\r\n\t\t\r\n\t\toverride val voidRadiusMpXZ = 1.35F\r\n\t\toverride val voidRadiusMpY = 0.975F\r\n\t\toverride val voidCenterOffset = Vec3d(0.0, -8.0, 0.0)\r\n\t\t\r\n\t\toverride val renderer = SkyPlaneTopFoggy(\r\n\t\t\ttexture = Resource.Custom(\"textures/environment/stars.png\"),\r\n\t\t\tcolor = Vec3d(0.58, 0.58, 0.54),\r\n\t\t\trescale = 29.0,\r\n\t\t\tdistance = 65.0,\r\n\t\t\twidth = 300.0\r\n\t\t)\r\n\t\t\r\n\t\toverride val lightmap = object : ILightmap{\r\n\t\t\toverride fun update(colors: FloatArray, sunBrightness: Float, skyLight: Float, blockLight: Float, partialTicks: Float){\r\n\t\t\t\tval blockFactor = calcLightFactor(blockLight)\r\n\t\t\t\t\r\n\t\t\t\tcolors[0] = (blockLight * 0.9F) + skyLight + 0.12F\r\n\t\t\t\tcolors[1] = (blockFactor * 0.7F) + (skyLight * 0.8F) + 0.08F\r\n\t\t\t\tcolors[2] = (blockFactor * 0.5F) + (skyLight * 1.2F) + (0.09F * nightVisionFactor)\r\n\t\t\t}\r\n\t\t}\r\n\t\t\r\n\t\tprivate val currentFogDensity = LerpedFloat(MAX_FOG_DENSITY)\r\n\t\tprivate var nightVisionFactor = 0F\r\n\t\t\r\n\t\t@Sided(Side.CLIENT)\r\n\t\toverride fun setupClient(player: EntityPlayer){\r\n\t\t\ttickClient(player)\r\n\t\t\tcurrentFogDensity.updateImmediately(MAX_FOG_DENSITY * 0.8F)\r\n\t\t}\r\n\t\t\r\n\t\t@Sided(Side.CLIENT)\r\n\t\toverride fun tickClient(player: EntityPlayer){\r\n\t\t\tval world = player.world\r\n\t\t\tval pos = Pos(player.lookPosVec)\r\n\t\t\t\r\n\t\t\tvar levelBlock = 0\r\n\t\t\tvar levelSky = 0\r\n\t\t\t\r\n\t\t\tfor(offset in pos.allInCenteredBoxMutable(1, 1, 1)){\r\n\t\t\t\tlevelBlock = max(levelBlock, world.getLightFor(BLOCK, offset))\r\n\t\t\t\tlevelSky = max(levelSky, world.getLightFor(SKY, offset))\r\n\t\t\t}\r\n\t\t\t\r\n\t\t\tval light = max(levelBlock / 15F, levelSky / 12F)\r\n\t\t\t\r\n\t\t\tval prev = currentFogDensity.currentValue\r\n\t\t\tval next = MAX_FOG_DENSITY - (light.pow(0.2F) * 0.85F * MAX_FOG_DENSITY)\r\n\t\t\tval speed = if (next > prev) 0.025F else 0.055F\r\n\t\t\t\r\n\t\t\tcurrentFogDensity.update(offsetTowards(prev, next, speed))\r\n\t\t\tnightVisionFactor = if (player.isPotionActive(Potions.NIGHT_VISION)) 1F else 0F\r\n\t\t}\r\n\t}\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- src/main/java/chylex/hee/game/world/territory/descriptions/Territory_ForgottenTombs.kt	(revision 4432a4840ce7f06d06d1bf33a925e813ea4018ad)
++++ src/main/java/chylex/hee/game/world/territory/descriptions/Territory_ForgottenTombs.kt	(date 1590772730613)
+@@ -55,6 +55,13 @@
+ 	
+ 	private const val MAX_FOG_DENSITY = 0.069F
+ 	
++	private val PARTICLE_DUST get()/*TODO*/= ParticleSpawnerCustom(
++		type = ParticleDust,
++		data = ParticleDust.Data(color = IRandomColor { RGB(nextInt(90, 100), nextInt(80, 90), 5) }, lifespan = 100..125, scale = (0.16F)..(0.19F)),
++		pos = Constant(0.4F, DOWN) + InBox(0.75F, 0.1F, 0.75F),
++		maxRange = 48.0
++	)
++	
+ 	override val environment = object : TerritoryEnvironment(){
+ 		override val fogColor
+ 			get() = (fogDensity / 0.275F).let { Vec3d(0.15 + it, 0.08 + it, 0.03) }
+@@ -118,6 +125,29 @@
+ 			
+ 			currentFogDensity.update(offsetTowards(prev, next, speed))
+ 			nightVisionFactor = if (player.isPotionActive(Potions.NIGHT_VISION)) 1F else 0F
++			
++			if (MC.instance.isGamePaused){
++				return
++			}
++			
++			val rand = world.rand
++			
++			repeat(10){
++				val dist = rand.nextInt(5, 33)
++				
++				for(attempt in 1..10){
++					val testPos = pos.add(
++						rand.nextInt(-dist, dist),
++						rand.nextInt(-dist / 3, dist / 3),
++						rand.nextInt(-dist, dist)
++					)
++					
++					if (testPos.isAir(world) && (rand.nextInt(10) == 0 || !testPos.down().isAir(world))){
++						PARTICLE_DUST.spawn(Point(testPos, rand.nextInt(1, 3)), rand)
++						break
++					}
++				}
++			}
+ 		}
+ 	}
+ }
+Index: src/main/resources/assets/hee/particles/dust.json
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- src/main/resources/assets/hee/particles/dust.json	(date 1590584303524)
++++ src/main/resources/assets/hee/particles/dust.json	(date 1590584303524)
+@@ -0,0 +1,5 @@
++{
++  "textures": [
++    "hee:pixel"
++  ]
++}
+Index: src/main/java/chylex/hee/game/particle/ParticleDust.kt
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- src/main/java/chylex/hee/game/particle/ParticleDust.kt	(date 1590584303535)
++++ src/main/java/chylex/hee/game/particle/ParticleDust.kt	(date 1590584303535)
+@@ -0,0 +1,111 @@
++package chylex.hee.game.particle
++import chylex.hee.game.particle.base.ParticleBase
++import chylex.hee.game.particle.data.ParticleDataColorLifespanScale
++import chylex.hee.game.particle.spawner.IParticleMaker
++import chylex.hee.system.migration.forge.Side
++import chylex.hee.system.migration.forge.Sided
++import chylex.hee.system.util.Pos
++import chylex.hee.system.util.addY
++import chylex.hee.system.util.color.IRandomColor
++import chylex.hee.system.util.isLoaded
++import chylex.hee.system.util.nextVector
++import chylex.hee.system.util.selectExistingEntities
++import chylex.hee.system.util.square
++import chylex.hee.system.util.withY
++import net.minecraft.client.particle.IParticleRenderType
++import net.minecraft.client.particle.IParticleRenderType.PARTICLE_SHEET_TRANSLUCENT
++import net.minecraft.client.particle.Particle
++import net.minecraft.util.math.Vec3d
++import net.minecraft.world.LightType.BLOCK
++import net.minecraft.world.LightType.SKY
++import net.minecraft.world.World
++import kotlin.math.max
++import kotlin.math.min
++import kotlin.math.sqrt
++
++object ParticleDust : IParticleMaker.WithData<ParticleDataColorLifespanScale>(){
++	@Sided(Side.CLIENT)
++	override fun create(world: World, posX: Double, posY: Double, posZ: Double, motX: Double, motY: Double, motZ: Double, data: ParticleDataColorLifespanScale?): Particle{
++		return Instance(world, posX, posY, posZ, motX, motY, motZ, data)
++	}
++	
++	fun Data(
++		color: IRandomColor,
++		lifespan: IntRange,
++		scale: ClosedFloatingPointRange<Float>
++	) = ParticleDataColorLifespanScale.Generator(color, lifespan, scale)
++	
++	@Sided(Side.CLIENT)
++	private class Instance(world: World, posX: Double, posY: Double, posZ: Double, motX: Double, motY: Double, motZ: Double, data: ParticleDataColorLifespanScale?) : ParticleBase(world, posX, posY, posZ, motX, motY, motZ){
++		init{
++			selectSpriteRandomly(ParticleDust.sprite)
++			particleAlpha = 0F
++			
++			if (data == null){
++				setExpired()
++			}
++			else{
++				loadColor(data.color)
++				particleScale = data.scale
++				
++				particleGravity = 0.005F
++				motionVec = rand.nextVector(0.004)
++				
++				maxAge = data.lifespan
++			}
++		}
++		
++		override fun tick(){
++			super.tick()
++			
++			if (age < 8){
++				particleAlpha = min(1F, particleAlpha + 0.15F)
++			}
++			else if (age > maxAge - 8){
++				particleAlpha = max(0F, particleAlpha - 0.15F)
++			}
++			
++			if (age % 2 == 0){
++				for(entity in world.selectExistingEntities.allInRange(Vec3d(posX, posY, posZ), 1.75)){
++					var mot = entity.motion
++					
++					if (mot.y < 0.0 && entity.onGround){
++						mot = mot.withY(0.0)
++					}
++					
++					val lenSq = mot.lengthSquared()
++					
++					if (lenSq > square(0.01)){
++						val len = sqrt(lenSq).coerceAtMost(0.25)
++						
++						motionVec = motionVec
++							.add(mot.normalize().scale(-(0.04 + (0.08 * len))))
++							.add(motionVec.scale(0.05))
++							.add(rand.nextVector(0.3 * len).addY(0.01))
++					}
++				}
++			}
++			
++			if (motionVec.lengthSquared() > square(0.01)){
++				motionVec = motionVec.scale(0.91)
++			}
++		}
++		
++		override fun getBrightnessForRender(partialTick: Float): Int{
++			val pos = Pos(posX, posY, posZ) // TODO interp?
++			
++			if (!pos.isLoaded(world)){
++				return 0
++			}
++			
++			val sky = world.getLightFor(SKY, pos).coerceAtLeast(4)
++			val block = world.getLightFor(BLOCK, pos).coerceAtLeast(4)
++			
++			return (sky shl 20) or (block shl 4)
++		}
++		
++		override fun getRenderType(): IParticleRenderType{
++			return PARTICLE_SHEET_TRANSLUCENT
++		}
++	}
++}
+Index: src/main/java/chylex/hee/init/ModParticles.kt
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package chylex.hee.init\r\nimport chylex.hee.HEE\r\nimport chylex.hee.client.util.MC\r\nimport chylex.hee.game.particle.ParticleBubbleCustom\r\nimport chylex.hee.game.particle.ParticleDeathFlowerHeal\r\nimport chylex.hee.game.particle.ParticleEnderGoo\r\nimport chylex.hee.game.particle.ParticleEnergyCluster\r\nimport chylex.hee.game.particle.ParticleEnergyClusterRevitalization\r\nimport chylex.hee.game.particle.ParticleEnergyTableDrain\r\nimport chylex.hee.game.particle.ParticleEnergyTransferToPedestal\r\nimport chylex.hee.game.particle.ParticleEnergyTransferToPlayer\r\nimport chylex.hee.game.particle.ParticleExperienceOrbFloating\r\nimport chylex.hee.game.particle.ParticleFadingSpot\r\nimport chylex.hee.game.particle.ParticleFlameCustom\r\nimport chylex.hee.game.particle.ParticleGlitter\r\nimport chylex.hee.game.particle.ParticleGrowingSpot\r\nimport chylex.hee.game.particle.ParticleSmokeCustom\r\nimport chylex.hee.game.particle.ParticleSpellCustom\r\nimport chylex.hee.game.particle.ParticleTeleport\r\nimport chylex.hee.game.particle.ParticleVoid\r\nimport chylex.hee.game.particle.spawner.IParticleMaker\r\nimport chylex.hee.system.migration.forge.Side\r\nimport chylex.hee.system.migration.forge.Sided\r\nimport chylex.hee.system.migration.forge.SubscribeAllEvents\r\nimport chylex.hee.system.migration.forge.SubscribeEvent\r\nimport chylex.hee.system.util.named\r\nimport net.minecraft.client.particle.IAnimatedSprite\r\nimport net.minecraft.client.particle.IParticleFactory\r\nimport net.minecraft.client.particle.ParticleManager.IParticleMetaFactory\r\nimport net.minecraft.particles.BasicParticleType\r\nimport net.minecraft.particles.ParticleType\r\nimport net.minecraftforge.client.event.ParticleFactoryRegisterEvent\r\nimport net.minecraftforge.event.RegistryEvent\r\nimport net.minecraftforge.fml.common.Mod.EventBusSubscriber.Bus.MOD\r\n\r\n@SubscribeAllEvents(modid = HEE.ID, bus = MOD)\r\nobject ModParticles{\r\n\t@SubscribeEvent\r\n\tfun onRegister(e: RegistryEvent.Register<ParticleType<*>>){\r\n\t\twith(e.registry){\r\n\t\t\tregister(ParticleBubbleCustom.makeType named \"bubble\")\r\n\t\t\tregister(ParticleDeathFlowerHeal.makeType named \"death_flower_heal\")\r\n\t\t\tregister(ParticleEnderGoo.makeType named \"ender_goo\")\r\n\t\t\tregister(ParticleEnergyCluster.makeType named \"energy_cluster\")\r\n\t\t\tregister(ParticleEnergyClusterRevitalization.makeType named \"energy_cluster_revitalization\")\r\n\t\t\tregister(ParticleEnergyTableDrain.makeType named \"energy_table_drain\")\r\n\t\t\tregister(ParticleEnergyTransferToPedestal.makeType named \"energy_transfer_to_pedestal\")\r\n\t\t\tregister(ParticleEnergyTransferToPlayer.makeType named \"energy_transfer_to_player\")\r\n\t\t\tregister(ParticleExperienceOrbFloating.makeType named \"experience_orb_floating\")\r\n\t\t\tregister(ParticleFadingSpot.makeType named \"fading_spot\")\r\n\t\t\tregister(ParticleFlameCustom.makeType named \"flame\")\r\n\t\t\tregister(ParticleGlitter.makeType named \"glitter\")\r\n\t\t\tregister(ParticleGrowingSpot.makeType named \"growing_spot\")\r\n\t\t\tregister(ParticleSmokeCustom.makeType named \"smoke\")\r\n\t\t\tregister(ParticleSpellCustom.makeType named \"spell\")\r\n\t\t\tregister(ParticleTeleport.makeType named \"teleport\")\r\n\t\t\tregister(ParticleVoid.makeType named \"void\")\r\n\t\t}\r\n\t}\r\n\t\r\n\t@Sided(Side.CLIENT)\r\n\t@SubscribeAllEvents(Side.CLIENT, modid = HEE.ID, bus = MOD)\r\n\tobject Client{\r\n\t\tprivate val factories = mutableListOf<Runnable>()\r\n\t\t\r\n\t\tfun addFactory(type: BasicParticleType, maker: IParticleMaker<*>, callback: (IAnimatedSprite) -> Unit){\r\n\t\t\tfactories.add(Runnable {\r\n\t\t\t\tMC.particleManager.registerFactory(type, IParticleMetaFactory {\r\n\t\t\t\t\tcallback(it)\r\n\t\t\t\t\t\r\n\t\t\t\t\tIParticleFactory<BasicParticleType> { _, world, posX, posY, posZ, motX, motY, motZ ->\r\n\t\t\t\t\t\tmaker.create(world, posX, posY, posZ, motX, motY, motZ, null)\r\n\t\t\t\t\t}\r\n\t\t\t\t})\r\n\t\t\t})\r\n\t\t}\r\n\t\t\r\n\t\t@SubscribeEvent\r\n\t\tfun onRegisterFactories(@Suppress(\"UNUSED_PARAMETER\") e: ParticleFactoryRegisterEvent){\r\n\t\t\tfor(factory in factories){\r\n\t\t\t\tfactory.run()\r\n\t\t\t}\r\n\t\t\t\r\n\t\t\tfactories.clear()\r\n\t\t}\r\n\t}\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- src/main/java/chylex/hee/init/ModParticles.kt	(revision 4432a4840ce7f06d06d1bf33a925e813ea4018ad)
++++ src/main/java/chylex/hee/init/ModParticles.kt	(date 1590584303531)
+@@ -3,6 +3,7 @@
+ import chylex.hee.client.util.MC
+ import chylex.hee.game.particle.ParticleBubbleCustom
+ import chylex.hee.game.particle.ParticleDeathFlowerHeal
++import chylex.hee.game.particle.ParticleDust
+ import chylex.hee.game.particle.ParticleEnderGoo
+ import chylex.hee.game.particle.ParticleEnergyCluster
+ import chylex.hee.game.particle.ParticleEnergyClusterRevitalization
+@@ -40,6 +41,7 @@
+ 		with(e.registry){
+ 			register(ParticleBubbleCustom.makeType named "bubble")
+ 			register(ParticleDeathFlowerHeal.makeType named "death_flower_heal")
++			register(ParticleDust.makeType named "dust")
+ 			register(ParticleEnderGoo.makeType named "ender_goo")
+ 			register(ParticleEnergyCluster.makeType named "energy_cluster")
+ 			register(ParticleEnergyClusterRevitalization.makeType named "energy_cluster_revitalization")

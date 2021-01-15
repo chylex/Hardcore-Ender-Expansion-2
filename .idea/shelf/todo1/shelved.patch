@@ -1,0 +1,182 @@
+Index: data/src/main/java/chylex/hee/datagen/DataGen.kt
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package chylex.hee.datagen\nimport chylex.hee.HEE\nimport chylex.hee.datagen.client.BlockItemModels\nimport chylex.hee.datagen.client.BlockModels\nimport chylex.hee.datagen.client.ItemModels\nimport chylex.hee.system.forge.SubscribeAllEvents\nimport chylex.hee.system.forge.SubscribeEvent\nimport net.minecraftforge.fml.common.Mod.EventBusSubscriber.Bus.MOD\nimport net.minecraftforge.fml.event.lifecycle.GatherDataEvent\n\n@SubscribeAllEvents(modid = HEE.ID, bus = MOD)\nobject DataGen{\n\t@SubscribeEvent\n\tfun register(e: GatherDataEvent){\n\t\tval modid = HEE.ID\n\t\tval helper = e.existingFileHelper\n\t\t\n\t\twith(e.generator){\n\t\t\tif (e.includeClient()){\n\t\t\t\taddProvider(BlockModels(this, modid, helper))\n\t\t\t\taddProvider(BlockItemModels(this, modid, helper))\n\t\t\t\taddProvider(ItemModels(this, modid, helper))\n\t\t\t}\n\t\t}\n\t}\n}\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- data/src/main/java/chylex/hee/datagen/DataGen.kt	(revision 1dbb881c095df45b318e907be47db1c6e2ec09bc)
++++ data/src/main/java/chylex/hee/datagen/DataGen.kt	(date 1601710235408)
+@@ -2,6 +2,7 @@
+ import chylex.hee.HEE
+ import chylex.hee.datagen.client.BlockItemModels
+ import chylex.hee.datagen.client.BlockModels
++import chylex.hee.datagen.client.BlockStates
+ import chylex.hee.datagen.client.ItemModels
+ import chylex.hee.system.forge.SubscribeAllEvents
+ import chylex.hee.system.forge.SubscribeEvent
+@@ -17,6 +18,7 @@
+ 		
+ 		with(e.generator){
+ 			if (e.includeClient()){
++				addProvider(BlockStates(this, modid, helper))
+ 				addProvider(BlockModels(this, modid, helper))
+ 				addProvider(BlockItemModels(this, modid, helper))
+ 				addProvider(ItemModels(this, modid, helper))
+Index: data/src/main/java/chylex/hee/datagen/DataGenExt.kt
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package chylex.hee.datagen\nimport chylex.hee.HEE\nimport chylex.hee.system.facades.Resource\nimport net.minecraft.block.Block\nimport net.minecraft.item.Item\nimport net.minecraft.util.IItemProvider\nimport net.minecraft.util.ResourceLocation\nimport net.minecraftforge.client.model.generators.ModelBuilder\nimport net.minecraftforge.client.model.generators.ModelProvider\nimport net.minecraftforge.registries.IForgeRegistryEntry\n\nval IForgeRegistryEntry<*>.path: String\n\tget() = registryName!!.path\n\nval IForgeRegistryEntry<*>.isVanilla\n\tget() = Resource.isVanilla(registryName!!)\n\nval IItemProvider.r\n\tget() = when(this){\n\t\tis Block -> resource(\"block/\" + this.path, this.isVanilla)\n\t\tis Item  -> resource(\"item/\" + this.path, this.isVanilla)\n\t\telse     -> throw IllegalArgumentException()\n\t}\n\nfun IItemProvider.r(suffix: String): ResourceLocation{\n\treturn when(this){\n\t\tis Block -> resource(\"block/\" + this.path + suffix, this.isVanilla)\n\t\tis Item  -> resource(\"item/\" + this.path + suffix, this.isVanilla)\n\t\telse     -> throw IllegalArgumentException()\n\t}\n}\n\nfun resource(path: String, vanilla: Boolean): ResourceLocation{\n\treturn if (vanilla) Resource.Vanilla(path) else Resource.Custom(path)\n}\n\ninline fun <T : ModelBuilder<T>, U : ModelProvider<T>> U?.safeUnit(callback: U.() -> Unit){\n\ttry{\n\t\tthis?.callback()\n\t}catch(e: Exception){\n\t\tHEE.log.error(\"[DataGen] \" + e.message)\n\t}\n}\n\ninline fun <T : ModelBuilder<T>, U : ModelProvider<T>> U?.safe(callback: U.() -> T): T?{\n\treturn try{\n\t\tthis?.callback()\n\t}catch(e: Exception){\n\t\tHEE.log.error(\"[DataGen] \" + e.message)\n\t\tnull\n\t}\n}\n\ninline fun <T : ModelBuilder<T>> T?.then(callback: T.() -> T): T?{\n\treturn try{\n\t\tthis?.callback()\n\t}catch(e: Exception){\n\t\tHEE.log.error(\"[DataGen] \" + e.message)\n\t\tnull\n\t}\n}\n\nclass Callback<T>(val item: T, val suffix: String, val path: String){\n\toverride fun toString() = path\n}\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- data/src/main/java/chylex/hee/datagen/DataGenExt.kt	(revision 1dbb881c095df45b318e907be47db1c6e2ec09bc)
++++ data/src/main/java/chylex/hee/datagen/DataGenExt.kt	(date 1601710235396)
+@@ -2,6 +2,7 @@
+ import chylex.hee.HEE
+ import chylex.hee.system.facades.Resource
+ import net.minecraft.block.Block
++import net.minecraft.data.IDataProvider
+ import net.minecraft.item.Item
+ import net.minecraft.util.IItemProvider
+ import net.minecraft.util.ResourceLocation
+@@ -34,6 +35,14 @@
+ 	return if (vanilla) Resource.Vanilla(path) else Resource.Custom(path)
+ }
+ 
++inline fun <T : IDataProvider> T?.safeUnit(callback: T.() -> Unit){
++	try{
++		this?.callback()
++	}catch(e: Exception){
++		HEE.log.error("[DataGen] " + e.message)
++	}
++}
++
+ inline fun <T : ModelBuilder<T>, U : ModelProvider<T>> U?.safeUnit(callback: U.() -> Unit){
+ 	try{
+ 		this?.callback()
+Index: data/src/main/java/chylex/hee/datagen/client/BlockStates.kt
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- data/src/main/java/chylex/hee/datagen/client/BlockStates.kt	(date 1601710902096)
++++ data/src/main/java/chylex/hee/datagen/client/BlockStates.kt	(date 1601710902096)
+@@ -0,0 +1,45 @@
++package chylex.hee.datagen.client
++import chylex.hee.datagen.client.util.cube
++import chylex.hee.datagen.client.util.stairs
++import chylex.hee.init.ModBlocks
++import net.minecraft.block.Blocks
++import net.minecraft.data.DataGenerator
++import net.minecraftforge.client.model.generators.BlockStateProvider
++import net.minecraftforge.client.model.generators.ExistingFileHelper
++
++class BlockStates(generator: DataGenerator, modid: String, existingFileHelper: ExistingFileHelper) : BlockStateProvider(generator, modid, existingFileHelper){
++	override fun registerStatesAndModels(){
++		
++		// Blocks: Building (Gloomrock)
++		
++		cube(ModBlocks.GLOOMROCK)
++		cube(ModBlocks.GLOOMROCK_BRICKS)
++		stairs(ModBlocks.GLOOMROCK_BRICK_STAIRS, ModBlocks.GLOOMROCK_BRICKS)
++		cube(ModBlocks.GLOOMROCK_SMOOTH)
++		cube(ModBlocks.GLOOMROCK_SMOOTH_RED)
++		cube(ModBlocks.GLOOMROCK_SMOOTH_ORANGE)
++		cube(ModBlocks.GLOOMROCK_SMOOTH_YELLOW)
++		cube(ModBlocks.GLOOMROCK_SMOOTH_GREEN)
++		cube(ModBlocks.GLOOMROCK_SMOOTH_CYAN)
++		cube(ModBlocks.GLOOMROCK_SMOOTH_BLUE)
++		cube(ModBlocks.GLOOMROCK_SMOOTH_PURPLE)
++		cube(ModBlocks.GLOOMROCK_SMOOTH_MAGENTA)
++		cube(ModBlocks.GLOOMROCK_SMOOTH_WHITE)
++		
++		// Blocks: Building (Dusty Stone)
++		
++		cube(ModBlocks.DUSTY_STONE)
++		cube(ModBlocks.DUSTY_STONE_CRACKED)
++		cube(ModBlocks.DUSTY_STONE_DAMAGED)
++		cube(ModBlocks.DUSTY_STONE_BRICKS)
++		cube(ModBlocks.DUSTY_STONE_CRACKED_BRICKS)
++		cube(ModBlocks.DUSTY_STONE_DECORATION)
++		stairs(ModBlocks.DUSTY_STONE_BRICK_STAIRS, ModBlocks.DUSTY_STONE_BRICKS)
++		
++		// Blocks: Building (Obsidian)
++		
++		stairs(ModBlocks.OBSIDIAN_STAIRS, Blocks.OBSIDIAN)
++		cube(ModBlocks.OBSIDIAN_SMOOTH)
++		cube(ModBlocks.OBSIDIAN_CHISELED)
++	}
++}
+Index: data/src/main/java/chylex/hee/datagen/client/util/BlockStateProviderExt.kt
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- data/src/main/java/chylex/hee/datagen/client/util/BlockStateProviderExt.kt	(date 1601710885013)
++++ data/src/main/java/chylex/hee/datagen/client/util/BlockStateProviderExt.kt	(date 1601710885013)
+@@ -0,0 +1,14 @@
++package chylex.hee.datagen.client.util
++import chylex.hee.datagen.r
++import chylex.hee.datagen.safeUnit
++import chylex.hee.system.migration.BlockStairs
++import net.minecraft.block.Block
++import net.minecraftforge.client.model.generators.BlockStateProvider
++
++fun BlockStateProvider.cube(block: Block) = safeUnit {
++	this.simpleBlock(block)
++}
++
++fun BlockStateProvider.stairs(stairBlock: BlockStairs, fullBlock: Block) = safeUnit {
++	this.stairsBlock(stairBlock, fullBlock.r)
++}
+Index: data/src/main/java/chylex/hee/datagen/client/BlockModels.kt
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package chylex.hee.datagen.client\nimport chylex.hee.datagen.client.util.cauldron\nimport chylex.hee.datagen.client.util.cross\nimport chylex.hee.datagen.client.util.cube\nimport chylex.hee.datagen.client.util.cubeBottomTop\nimport chylex.hee.datagen.client.util.cubeColumn\nimport chylex.hee.datagen.client.util.flowerPot\nimport chylex.hee.datagen.client.util.leaves\nimport chylex.hee.datagen.client.util.multi\nimport chylex.hee.datagen.client.util.parent\nimport chylex.hee.datagen.client.util.particle\nimport chylex.hee.datagen.client.util.portalFrame\nimport chylex.hee.datagen.client.util.simple\nimport chylex.hee.datagen.client.util.slab\nimport chylex.hee.datagen.client.util.stairs\nimport chylex.hee.datagen.client.util.suffixed\nimport chylex.hee.datagen.client.util.table\nimport chylex.hee.datagen.client.util.wall\nimport chylex.hee.datagen.r\nimport chylex.hee.datagen.then\nimport chylex.hee.init.ModBlocks\nimport chylex.hee.system.facades.Resource\nimport net.minecraft.block.Blocks\nimport net.minecraft.data.DataGenerator\nimport net.minecraftforge.client.model.generators.BlockModelProvider\nimport net.minecraftforge.client.model.generators.ExistingFileHelper\n\nclass BlockModels(generator: DataGenerator, modid: String, existingFileHelper: ExistingFileHelper) : BlockModelProvider(generator, modid, existingFileHelper){\n\toverride fun registerModels(){\n\t\t\n\t\t// Blocks: Building (Uncategorized)\n\t\t\n\t\tcube(ModBlocks.ETHEREAL_LANTERN)\n\t\twall(ModBlocks.STONE_BRICK_WALL, Blocks.STONE_BRICKS.r)\n\t\tsimple(ModBlocks.STONE_BRICK_WALL.suffixed(\"_inventory\"), Resource.Vanilla(\"block/wall_inventory\"), \"wall\", Blocks.STONE_BRICKS.r)\n\t\tcube(ModBlocks.VANTABLOCK)\n\t\tcube(ModBlocks.ENDIUM_BLOCK)\n\t\tcubeColumn(ModBlocks.ENDERSOL)\n\t\tcubeBottomTop(ModBlocks.ENDERSOL.suffixed(\"_merge_1\"), ModBlocks.ENDERSOL.r(\"_merge_1\"), Blocks.END_STONE.r, ModBlocks.ENDERSOL.r(\"_top\"))\n\t\tcubeBottomTop(ModBlocks.ENDERSOL.suffixed(\"_merge_2\"), ModBlocks.ENDERSOL.r(\"_merge_2\"), Blocks.END_STONE.r, ModBlocks.ENDERSOL.r(\"_top\"))\n\t\tcube(ModBlocks.HUMUS)\n\t\tcubeBottomTop(ModBlocks.HUMUS.suffixed(\"_merge\"), ModBlocks.HUMUS.r(\"_merge\"), ModBlocks.ENDERSOL.r(\"_top\"), ModBlocks.HUMUS.r)\n\t\t\n\t\t// Blocks: Building (Gloomrock)\n\t\t\n\t\tcube(ModBlocks.GLOOMROCK)\n\t\tcube(ModBlocks.GLOOMROCK_BRICKS)\n\t\tstairs(ModBlocks.GLOOMROCK_BRICK_STAIRS, ModBlocks.GLOOMROCK_BRICKS)\n\t\tslab(ModBlocks.GLOOMROCK_BRICK_SLAB, ModBlocks.GLOOMROCK_BRICKS)\n\t\tcube(ModBlocks.GLOOMROCK_SMOOTH)\n\t\tstairs(ModBlocks.GLOOMROCK_SMOOTH_STAIRS, ModBlocks.GLOOMROCK_SMOOTH, side = ModBlocks.GLOOMROCK_SMOOTH_SLAB.r(\"_side\"))\n\t\tslab(ModBlocks.GLOOMROCK_SMOOTH_SLAB, ModBlocks.GLOOMROCK_SMOOTH, side = ModBlocks.GLOOMROCK_SMOOTH_SLAB.r(\"_side\"))\n\t\tcube(ModBlocks.GLOOMROCK_SMOOTH_RED)\n\t\tcube(ModBlocks.GLOOMROCK_SMOOTH_ORANGE)\n\t\tcube(ModBlocks.GLOOMROCK_SMOOTH_YELLOW)\n\t\tcube(ModBlocks.GLOOMROCK_SMOOTH_GREEN)\n\t\tcube(ModBlocks.GLOOMROCK_SMOOTH_CYAN)\n\t\tcube(ModBlocks.GLOOMROCK_SMOOTH_BLUE)\n\t\tcube(ModBlocks.GLOOMROCK_SMOOTH_PURPLE)\n\t\tcube(ModBlocks.GLOOMROCK_SMOOTH_MAGENTA)\n\t\tcube(ModBlocks.GLOOMROCK_SMOOTH_WHITE)\n\t\t\n\t\t// Blocks: Building (Dusty Stone)\n\t\t\n\t\tcube(ModBlocks.DUSTY_STONE)\n\t\tcube(ModBlocks.DUSTY_STONE_CRACKED)\n\t\tcube(ModBlocks.DUSTY_STONE_DAMAGED)\n\t\tcube(ModBlocks.DUSTY_STONE_BRICKS)\n\t\tcube(ModBlocks.DUSTY_STONE_CRACKED_BRICKS)\n\t\tcube(ModBlocks.DUSTY_STONE_DECORATION)\n\t\tstairs(ModBlocks.DUSTY_STONE_BRICK_STAIRS, ModBlocks.DUSTY_STONE_BRICKS)\n\t\tslab(ModBlocks.DUSTY_STONE_BRICK_SLAB, ModBlocks.DUSTY_STONE_BRICKS)\n\t\t\n\t\t// Blocks: Building (Obsidian)\n\t\t\n\t\tstairs(ModBlocks.OBSIDIAN_STAIRS, Blocks.OBSIDIAN)\n\t\tcube(ModBlocks.OBSIDIAN_FALLING, Blocks.OBSIDIAN.r)\n\t\tcube(ModBlocks.OBSIDIAN_SMOOTH)\n\t\tcube(ModBlocks.OBSIDIAN_CHISELED)\n\t\tcubeColumn(ModBlocks.OBSIDIAN_PILLAR)\n\t\t\n\t\t// Blocks: Building (End Stone)\n\t\t\n\t\tcubeBottomTop(ModBlocks.END_STONE_INFESTED, bottom = Blocks.END_STONE.r).then {\n\t\t\ttexture(\"particle\", ModBlocks.END_STONE_INFESTED.r(\"_top\"))\n\t\t}\n\t\tcubeBottomTop(ModBlocks.END_STONE_BURNED, bottom = Blocks.END_STONE.r).then {\n\t\t\ttexture(\"particle\", ModBlocks.END_STONE_BURNED.r(\"_top\"))\n\t\t}\n\t\tcubeBottomTop(ModBlocks.END_STONE_ENCHANTED, bottom = Blocks.END_STONE.r).then {\n\t\t\ttexture(\"particle\", ModBlocks.END_STONE_ENCHANTED.r(\"_top\"))\n\t\t}\n\t\t\n\t\t// Blocks: Building (Dark Loam)\n\t\t\n\t\tcube(ModBlocks.DARK_LOAM)\n\t\tslab(ModBlocks.DARK_LOAM_SLAB, ModBlocks.DARK_LOAM)\n\t\t\n\t\t// Blocks: Building (Grave Dirt)\n\t\t\n\t\tcube(ModBlocks.GRAVE_DIRT_PLAIN.suffixed(\"_full\"), ModBlocks.GRAVE_DIRT_PLAIN.r).then {\n\t\t\ttexture(\"particle\", ModBlocks.GRAVE_DIRT_PLAIN.r)\n\t\t}\n\t\tmulti(ModBlocks.GRAVE_DIRT_LOOT, Resource.Custom(\"block/grave_dirt_low\"), 1..6){\n\t\t\ttexture(\"top\", Resource.Custom(\"block/$it\"))\n\t\t}\n\t\t\n\t\t// Blocks: Building (Wood)\n\t\t\n\t\tcubeColumn(ModBlocks.WHITEBARK_LOG, side = ModBlocks.WHITEBARK_LOG.r(\"_side\"))\n\t\tcube(ModBlocks.WHITEBARK, ModBlocks.WHITEBARK_LOG.r(\"_side\"))\n\t\tcube(ModBlocks.WHITEBARK_PLANKS)\n\t\tstairs(ModBlocks.WHITEBARK_STAIRS, ModBlocks.WHITEBARK_PLANKS)\n\t\tslab(ModBlocks.WHITEBARK_SLAB, ModBlocks.WHITEBARK_PLANKS)\n\t\t\n\t\t// Blocks: Building (Miner's Burial)\n\t\t\n\t\tcube(ModBlocks.MINERS_BURIAL_BLOCK_PLAIN)\n\t\tcube(ModBlocks.MINERS_BURIAL_BLOCK_CHISELED)\n\t\tcubeColumn(ModBlocks.MINERS_BURIAL_BLOCK_PILLAR)\n\t\tcube(ModBlocks.MINERS_BURIAL_BLOCK_JAIL)\n\t\t\n\t\t// Blocks: Fluids\n\t\t\n\t\tparticle(ModBlocks.ENDER_GOO, ModBlocks.ENDER_GOO.r(\"_still\"))\n\t\tparticle(ModBlocks.PURIFIED_ENDER_GOO, ModBlocks.PURIFIED_ENDER_GOO.r(\"_still\"))\n\t\tcauldron(ModBlocks.CAULDRON_ENDER_GOO, ModBlocks.ENDER_GOO.r(\"_still\"))\n\t\tcauldron(ModBlocks.CAULDRON_PURIFIED_ENDER_GOO, ModBlocks.PURIFIED_ENDER_GOO.r(\"_still\"))\n\t\tcauldron(ModBlocks.CAULDRON_DRAGONS_BREATH, Resource.Custom(\"block/dragons_breath_still\"))\n\t\t\n\t\t// Blocks: Interactive (Storage)\n\t\t\n\t\tparticle(ModBlocks.DARK_CHEST, ModBlocks.GLOOMROCK_SMOOTH.r)\n\t\tparent(ModBlocks.LOOT_CHEST, Resource.Vanilla(\"block/block\")).then {\n\t\t\ttexture(\"particle\", ModBlocks.LOOT_CHEST.r(\"_particle\"))\n\t\t}\n\t\t\n\t\t// Blocks: Interactive (Puzzle)\n\t\t\n\t\tcube(ModBlocks.PUZZLE_WALL, Resource.Custom(\"block/puzzle_wall\"))\n\t\tarrayOf(\"active\", \"disabled\", \"inactive\").forEach {\n\t\t\tparent(\"puzzle_base_$it\", Resource.Vanilla(\"block/cube_all\")).then {\n\t\t\t\ttexture(\"all\", Resource.Custom(\"block/puzzle_base_$it\"))\n\t\t\t}\n\t\t}\n\t\tarrayOf(\"burst_3\", \"burst_5\", \"redirect_1e\", \"redirect_1n\", \"redirect_1s\", \"redirect_1w\", \"redirect_2ew\", \"redirect_2ns\", \"redirect_4\", \"teleport\").forEach {\n\t\t\tparent(\"puzzle_overlay_$it\", Resource.Custom(\"block/puzzle_overlay\")).then {\n\t\t\t\ttexture(\"overlay\", Resource.Custom(\"block/puzzle_overlay_$it\"))\n\t\t\t}\n\t\t}\n\t\t\n\t\t// Blocks: Interactive (Gates)\n\t\t\n\t\tcubeBottomTop(ModBlocks.EXPERIENCE_GATE, top = ModBlocks.EXPERIENCE_GATE.r(\"_bottom\"))\n\t\tmulti(ModBlocks.EXPERIENCE_GATE, ModBlocks.EXPERIENCE_GATE.r, arrayOf(\"_rd1\", \"_rd2\", \"_ud\")){\n\t\t\ttexture(\"top\", Resource.Custom(\"block/experience_gate_top\" + it.suffix))\n\t\t}\n\t\tcubeBottomTop(ModBlocks.EXPERIENCE_GATE_CONTROLLER, ModBlocks.EXPERIENCE_GATE.r(\"_side\"), ModBlocks.EXPERIENCE_GATE.r(\"_bottom\"), ModBlocks.EXPERIENCE_GATE.r(\"_top_controller\"))\n\t\t\n\t\t// Blocks: Interactive (Uncategorized)\n\t\t\n\t\tcubeBottomTop(ModBlocks.INFUSED_TNT, Blocks.TNT.r(\"_side\"), Blocks.TNT.r(\"_bottom\"), Blocks.TNT.r(\"_top\"))\n\t\tparticle(ModBlocks.IGNEOUS_PLATE, ModBlocks.IGNEOUS_PLATE.r)\n\t\tparent(ModBlocks.ENHANCED_BREWING_STAND, Blocks.BREWING_STAND.r).then {\n\t\t\ttexture(\"particle\", Blocks.BREWING_STAND.r)\n\t\t\ttexture(\"base\", Blocks.BREWING_STAND.r(\"_base\"))\n\t\t\ttexture(\"stand\", ModBlocks.ENHANCED_BREWING_STAND.r)\n\t\t}\n\t\t\n\t\t// Blocks: Ores\n\t\t\n\t\tcube(ModBlocks.END_POWDER_ORE)\n\t\tcube(ModBlocks.ENDIUM_ORE)\n\t\tparent(ModBlocks.STARDUST_ORE, Resource.Custom(\"block/cube_overlay\")).then {\n\t\t\ttexture(\"particle\", ModBlocks.STARDUST_ORE.r(\"_particle\"))\n\t\t\ttexture(\"base\", Blocks.END_STONE.r)\n\t\t}\n\t\tcube(ModBlocks.IGNEOUS_ROCK_ORE)\n\t\t\n\t\t// Blocks: Decorative (Trees)\n\t\t\n\t\tcross(ModBlocks.WHITEBARK_SAPLING_AUTUMN_RED)\n\t\tcross(ModBlocks.WHITEBARK_SAPLING_AUTUMN_BROWN)\n\t\tcross(ModBlocks.WHITEBARK_SAPLING_AUTUMN_ORANGE)\n\t\tcross(ModBlocks.WHITEBARK_SAPLING_AUTUMN_YELLOWGREEN)\n\t\tleaves(ModBlocks.WHITEBARK_LEAVES_AUTUMN_RED)\n\t\tleaves(ModBlocks.WHITEBARK_LEAVES_AUTUMN_BROWN)\n\t\tleaves(ModBlocks.WHITEBARK_LEAVES_AUTUMN_ORANGE)\n\t\tleaves(ModBlocks.WHITEBARK_LEAVES_AUTUMN_YELLOWGREEN)\n\t\tflowerPot(ModBlocks.POTTED_WHITEBARK_SAPLING_AUTUMN_RED, ModBlocks.WHITEBARK_SAPLING_AUTUMN_RED)\n\t\tflowerPot(ModBlocks.POTTED_WHITEBARK_SAPLING_AUTUMN_BROWN, ModBlocks.WHITEBARK_SAPLING_AUTUMN_BROWN)\n\t\tflowerPot(ModBlocks.POTTED_WHITEBARK_SAPLING_AUTUMN_ORANGE, ModBlocks.WHITEBARK_SAPLING_AUTUMN_ORANGE)\n\t\tflowerPot(ModBlocks.POTTED_WHITEBARK_SAPLING_AUTUMN_YELLOWGREEN, ModBlocks.WHITEBARK_SAPLING_AUTUMN_YELLOWGREEN)\n\t\t\n\t\t// Blocks: Decorative (Plants)\n\t\t\n\t\tmulti(ModBlocks.DEATH_FLOWER_DECAYING, Resource.Vanilla(\"block/cross\"), 1..4){\n\t\t\ttexture(\"cross\", Resource.Custom(\"block/$it\"))\n\t\t}\n\t\tcross(ModBlocks.DEATH_FLOWER_HEALED)\n\t\tcross(ModBlocks.DEATH_FLOWER_WITHERED)\n\t\tmulti(ModBlocks.POTTED_DEATH_FLOWER_DECAYING, Resource.Vanilla(\"block/flower_pot_cross\"), 1..4){\n\t\t\ttexture(\"plant\", Resource.Custom(\"block/death_flower\" + it.suffix))\n\t\t}\n\t\tflowerPot(ModBlocks.POTTED_DEATH_FLOWER_HEALED, ModBlocks.DEATH_FLOWER_HEALED)\n\t\tflowerPot(ModBlocks.POTTED_DEATH_FLOWER_WITHERED, ModBlocks.DEATH_FLOWER_WITHERED)\n\t\t\n\t\t// Blocks: Decorative (Uncategorized)\n\t\t\n\t\tcross(ModBlocks.ANCIENT_COBWEB)\n\t\t\n\t\t// Blocks: Portals\n\t\t\n\t\tportalFrame(ModBlocks.END_PORTAL_FRAME, ModBlocks.END_PORTAL_FRAME.r(\"_side\"), ModBlocks.END_PORTAL_FRAME.r(\"_top_plain\"))\n\t\tportalFrame(ModBlocks.END_PORTAL_ACCEPTOR, ModBlocks.END_PORTAL_FRAME.r(\"_side\"), ModBlocks.END_PORTAL_FRAME.r(\"_top_acceptor\"))\n\t\tportalFrame(ModBlocks.VOID_PORTAL_FRAME, ModBlocks.VOID_PORTAL_FRAME.r(\"_side\"), ModBlocks.VOID_PORTAL_FRAME.r(\"_top_plain\"))\n\t\tportalFrame(ModBlocks.VOID_PORTAL_STORAGE, ModBlocks.VOID_PORTAL_FRAME.r(\"_side\"), ModBlocks.VOID_PORTAL_FRAME.r(\"_top_storage\"))\n\t\tportalFrame(ModBlocks.VOID_PORTAL_FRAME_CRAFTED, ModBlocks.VOID_PORTAL_FRAME.r(\"_side\"), ModBlocks.VOID_PORTAL_FRAME.r(\"_top_plain\"))\n\t\tportalFrame(ModBlocks.VOID_PORTAL_STORAGE_CRAFTED, ModBlocks.VOID_PORTAL_FRAME.r(\"_side\"), ModBlocks.VOID_PORTAL_FRAME.r(\"_top_storage\"))\n\t\t\n\t\t// Blocks: Energy\n\t\t\n\t\tcross(ModBlocks.CORRUPTED_ENERGY, Blocks.BARRIER.asItem().r).then { ao(false) }\n\t\t\n\t\t// Blocks: Tables\n\t\t\n\t\tfor(tier in 1..3){\n\t\t\tparent(\"table_tier_$tier\", Resource.Custom(\"block/table\")).then {\n\t\t\t\ttexture(\"particle\", \"hee:block/table_base\")\n\t\t\t\ttexture(\"bottom\", \"hee:block/table_base\")\n\t\t\t\ttexture(\"top\", \"hee:block/table_base\")\n\t\t\t\ttexture(\"side\", \"hee:block/table_base_side_$tier\")\n\t\t\t}\n\t\t}\n\t\tparent(ModBlocks.TABLE_BASE_TIER_1, Resource.Custom(\"block/table_tier_1\")).then { Resource.Custom(\"block/transparent\").let {\n\t\t\ttexture(\"overlay_top\", it)\n\t\t\ttexture(\"overlay_side\", it)\n\t\t}}\n\t\tparent(ModBlocks.TABLE_BASE_TIER_2, Resource.Custom(\"block/table_tier_2\")).then { Resource.Custom(\"block/transparent\").let {\n\t\t\ttexture(\"overlay_top\", it)\n\t\t\ttexture(\"overlay_side\", it)\n\t\t}}\n\t\tparent(ModBlocks.TABLE_BASE_TIER_3, Resource.Custom(\"block/table_tier_3\")).then { Resource.Custom(\"block/transparent\").let {\n\t\t\ttexture(\"overlay_top\", it)\n\t\t\ttexture(\"overlay_side\", it)\n\t\t}}\n\t\ttable(ModBlocks.ACCUMULATION_TABLE_TIER_1)\n\t\ttable(ModBlocks.ACCUMULATION_TABLE_TIER_2)\n\t\ttable(ModBlocks.ACCUMULATION_TABLE_TIER_3)\n\t\ttable(ModBlocks.EXPERIENCE_TABLE_TIER_1)\n\t\ttable(ModBlocks.EXPERIENCE_TABLE_TIER_2)\n\t\ttable(ModBlocks.EXPERIENCE_TABLE_TIER_3)\n\t\ttable(ModBlocks.INFUSION_TABLE_TIER_1)\n\t\ttable(ModBlocks.INFUSION_TABLE_TIER_2)\n\t\ttable(ModBlocks.INFUSION_TABLE_TIER_3)\n\t}\n}\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- data/src/main/java/chylex/hee/datagen/client/BlockModels.kt	(revision 1dbb881c095df45b318e907be47db1c6e2ec09bc)
++++ data/src/main/java/chylex/hee/datagen/client/BlockModels.kt	(date 1601710902103)
+@@ -43,40 +43,17 @@
+ 		
+ 		// Blocks: Building (Gloomrock)
+ 		
+-		cube(ModBlocks.GLOOMROCK)
+-		cube(ModBlocks.GLOOMROCK_BRICKS)
+-		stairs(ModBlocks.GLOOMROCK_BRICK_STAIRS, ModBlocks.GLOOMROCK_BRICKS)
+ 		slab(ModBlocks.GLOOMROCK_BRICK_SLAB, ModBlocks.GLOOMROCK_BRICKS)
+-		cube(ModBlocks.GLOOMROCK_SMOOTH)
+ 		stairs(ModBlocks.GLOOMROCK_SMOOTH_STAIRS, ModBlocks.GLOOMROCK_SMOOTH, side = ModBlocks.GLOOMROCK_SMOOTH_SLAB.r("_side"))
+ 		slab(ModBlocks.GLOOMROCK_SMOOTH_SLAB, ModBlocks.GLOOMROCK_SMOOTH, side = ModBlocks.GLOOMROCK_SMOOTH_SLAB.r("_side"))
+-		cube(ModBlocks.GLOOMROCK_SMOOTH_RED)
+-		cube(ModBlocks.GLOOMROCK_SMOOTH_ORANGE)
+-		cube(ModBlocks.GLOOMROCK_SMOOTH_YELLOW)
+-		cube(ModBlocks.GLOOMROCK_SMOOTH_GREEN)
+-		cube(ModBlocks.GLOOMROCK_SMOOTH_CYAN)
+-		cube(ModBlocks.GLOOMROCK_SMOOTH_BLUE)
+-		cube(ModBlocks.GLOOMROCK_SMOOTH_PURPLE)
+-		cube(ModBlocks.GLOOMROCK_SMOOTH_MAGENTA)
+-		cube(ModBlocks.GLOOMROCK_SMOOTH_WHITE)
+ 		
+ 		// Blocks: Building (Dusty Stone)
+ 		
+-		cube(ModBlocks.DUSTY_STONE)
+-		cube(ModBlocks.DUSTY_STONE_CRACKED)
+-		cube(ModBlocks.DUSTY_STONE_DAMAGED)
+-		cube(ModBlocks.DUSTY_STONE_BRICKS)
+-		cube(ModBlocks.DUSTY_STONE_CRACKED_BRICKS)
+-		cube(ModBlocks.DUSTY_STONE_DECORATION)
+-		stairs(ModBlocks.DUSTY_STONE_BRICK_STAIRS, ModBlocks.DUSTY_STONE_BRICKS)
+ 		slab(ModBlocks.DUSTY_STONE_BRICK_SLAB, ModBlocks.DUSTY_STONE_BRICKS)
+ 		
+ 		// Blocks: Building (Obsidian)
+ 		
+-		stairs(ModBlocks.OBSIDIAN_STAIRS, Blocks.OBSIDIAN)
+ 		cube(ModBlocks.OBSIDIAN_FALLING, Blocks.OBSIDIAN.r)
+-		cube(ModBlocks.OBSIDIAN_SMOOTH)
+-		cube(ModBlocks.OBSIDIAN_CHISELED)
+ 		cubeColumn(ModBlocks.OBSIDIAN_PILLAR)
+ 		
+ 		// Blocks: Building (End Stone)

@@ -1,0 +1,24 @@
+Index: src/main/java/chylex/hee/game/block/BlockDustyStoneUnstable.kt
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- a/src/main/java/chylex/hee/game/block/BlockDustyStoneUnstable.kt	(revision f6f631f6f3dc9b347b19db913cf2be4535813fc7)
++++ b/src/main/java/chylex/hee/game/block/BlockDustyStoneUnstable.kt	(date 1590584304217)
+@@ -26,7 +26,6 @@
+ import net.minecraft.util.math.shapes.EntitySelectionContext
+ import net.minecraft.util.math.shapes.ISelectionContext
+ import net.minecraft.util.math.shapes.VoxelShape
+-import net.minecraft.util.math.shapes.VoxelShapes
+ import net.minecraft.world.IBlockReader
+ import net.minecraft.world.World
+ import java.util.Random
+@@ -68,7 +67,7 @@
+ 		return if (context is EntitySelectionContext && context.entity is EntityLivingBase)
+ 			MagicValues.BLOCK_COLLISION_SHRINK_SHAPE
+ 		else
+-			VoxelShapes.fullCube()
++			MagicValues.BLOCK_COLLISION_SHRINK_SHAPE //VoxelShapes.fullCube()
+ 	}
+ 	
+ 	override fun causesSuffocation(state: BlockState, world: IBlockReader, pos: BlockPos): Boolean{
