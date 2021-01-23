@@ -1,4 +1,4 @@
-package chylex.hee.test.mechanics.energy
+package chylex.hee.test.unit.mechanics.energy
 
 import chylex.hee.game.mechanics.energy.IEnergyQuantity.Floating
 import chylex.hee.game.mechanics.energy.IEnergyQuantity.Internal

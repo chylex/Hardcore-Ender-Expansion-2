@@ -1,4 +1,4 @@
-package chylex.hee.test.mechanics.damage
+package chylex.hee.test.unit.mechanics.damage
 
 import chylex.hee.game.mechanics.damage.DamageProperties
 import chylex.hee.game.mechanics.damage.DamageType

@@ -1,4 +1,4 @@
-package chylex.hee.test.system.util
+package chylex.hee.test.unit.system
 
 import chylex.hee.game.inventory.cleanupNBT
 import chylex.hee.game.inventory.heeTag
