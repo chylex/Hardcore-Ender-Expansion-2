@@ -137,19 +137,19 @@ class EntityMobUndread(type: EntityType<EntityMobUndread>, world: World) : Entit
 		super.onDeathUpdate()
 	}
 	
-	override fun playStepSound(pos: BlockPos, state: BlockState) {
+	public override fun playStepSound(pos: BlockPos, state: BlockState) {
 		playSound(Sounds.ENTITY_ZOMBIE_STEP, rand.nextFloat(0.4F, 0.5F), rand.nextFloat(0.9F, 1F))
 	}
 	
-	override fun getHurtSound(source: DamageSource): SoundEvent {
+	public override fun getHurtSound(source: DamageSource): SoundEvent {
 		return ModSounds.MOB_UNDREAD_HURT
 	}
 	
-	override fun getDeathSound(): SoundEvent {
+	public override fun getDeathSound(): SoundEvent {
 		return ModSounds.MOB_UNDREAD_DEATH
 	}
 	
-	override fun getSoundPitch(): Float {
+	public override fun getSoundPitch(): Float {
 		return rand.nextFloat(0.8F, 1F)
 	}
 }

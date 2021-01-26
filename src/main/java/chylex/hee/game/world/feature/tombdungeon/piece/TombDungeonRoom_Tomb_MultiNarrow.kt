@@ -1,9 +1,17 @@
 package chylex.hee.game.world.feature.tombdungeon.piece
 
 import chylex.hee.game.world.Pos
+import chylex.hee.game.world.feature.tombdungeon.TombDungeonLevel.MobAmount
 import chylex.hee.game.world.structure.IStructureWorld
 
 class TombDungeonRoom_Tomb_MultiNarrow(file: String, private val tombsPerColumn: Int, entranceY: Int, isFancy: Boolean) : TombDungeonRoom_Tomb(file, entranceY, allowSecrets = false, isFancy) {
+	override val mobAmount
+		get() = when {
+			tombsPerColumn <= 5 -> MobAmount.LOW
+			tombsPerColumn <= 7 -> MobAmount.MEDIUM
+			else                -> MobAmount.HIGH
+		}
+	
 	override fun generate(world: IStructureWorld, instance: Instance) {
 		super.generate(world, instance)
 		

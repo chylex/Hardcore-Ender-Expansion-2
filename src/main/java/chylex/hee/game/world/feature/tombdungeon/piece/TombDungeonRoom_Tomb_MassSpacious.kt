@@ -2,11 +2,15 @@ package chylex.hee.game.world.feature.tombdungeon.piece
 
 import chylex.hee.game.world.Pos
 import chylex.hee.game.world.feature.tombdungeon.TombDungeonLevel
+import chylex.hee.game.world.feature.tombdungeon.TombDungeonLevel.MobAmount
 import chylex.hee.game.world.structure.IStructureWorld
 import chylex.hee.system.migration.Facing.NORTH
 import chylex.hee.system.random.nextInt
 
 class TombDungeonRoom_Tomb_MassSpacious(file: String, entranceY: Int, isFancy: Boolean) : TombDungeonRoom_Tomb(file, entranceY, allowSecrets = false, isFancy) {
+	override val mobAmount
+		get() = MobAmount.MEDIUM
+	
 	override fun generate(world: IStructureWorld, instance: Instance) {
 		super.generate(world, instance)
 		
