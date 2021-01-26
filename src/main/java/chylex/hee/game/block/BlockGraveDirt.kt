@@ -25,6 +25,7 @@ import chylex.hee.system.random.nextFloat
 import chylex.hee.system.random.nextInt
 import net.minecraft.block.Block
 import net.minecraft.block.BlockState
+import net.minecraft.entity.EntityType
 import net.minecraft.item.BlockItemUseContext
 import net.minecraft.item.ItemStack
 import net.minecraft.state.StateContainer.Builder
@@ -86,6 +87,12 @@ open class BlockGraveDirt(builder: BlockBuilder) : BlockSimpleShaped(builder, Ax
 			VoxelShapes.fullCube()
 		else
 			super.getShape(state, source, pos, context)
+	}
+	
+	// Mobs
+	
+	override fun canEntitySpawn(state: BlockState, worldIn: IBlockReader, pos: BlockPos, type: EntityType<*>): Boolean {
+		return true
 	}
 	
 	// Explosions

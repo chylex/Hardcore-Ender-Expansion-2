@@ -28,6 +28,7 @@ import chylex.hee.game.item.ItemTableLink
 import chylex.hee.game.mechanics.scorching.ScorchingHelper
 import chylex.hee.game.mechanics.table.TableParticleHandler
 import chylex.hee.game.potion.PotionBanishment
+import chylex.hee.game.world.feature.tombdungeon.piece.TombDungeonRoom_Tomb
 import chylex.hee.network.BaseClientPacket
 import chylex.hee.network.fx.IFxData
 import chylex.hee.network.fx.IFxHandler
@@ -79,7 +80,9 @@ class PacketClientFX<T : IFxData>() : BaseClientPacket() {
 			EnderEyeSpawnerParticles.FX_PARTICLE,
 			EndermanTeleportHandler.FX_TELEPORT_FAIL,
 			EndermanTeleportHandler.FX_TELEPORT_OUT_OF_WORLD,
-			PotionBanishment.FX_BANISH
+			PotionBanishment.FX_BANISH,
+			TombDungeonRoom_Tomb.MobSpawnerTrigger.FX_SPAWN_UNDREAD,
+			TombDungeonRoom_Tomb.MobSpawnerTrigger.FX_SPAWN_SPIDERLING,
 		)
 	}
 	

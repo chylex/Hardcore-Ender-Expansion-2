@@ -1,5 +1,7 @@
 package chylex.hee.game.world.feature.tombdungeon
 
+import chylex.hee.game.world.feature.tombdungeon.TombDungeonLevel.MobAmount.HIGH
+import chylex.hee.game.world.feature.tombdungeon.TombDungeonLevel.MobAmount.MEDIUM
 import chylex.hee.game.world.feature.tombdungeon.TombDungeonPieces.PIECE_TOMB_RANDOM_MASS_5X_BASIC
 import chylex.hee.game.world.feature.tombdungeon.TombDungeonPieces.PIECE_TOMB_RANDOM_MASS_5X_BORDER
 import chylex.hee.game.world.feature.tombdungeon.TombDungeonPieces.PIECE_TOMB_RANDOM_MASS_5X_SPLIT
@@ -19,6 +21,7 @@ import chylex.hee.game.world.feature.tombdungeon.piece.TombDungeonAbstractPiece
 import chylex.hee.system.math.floorToInt
 import chylex.hee.system.random.nextFloat
 import chylex.hee.system.random.nextInt
+import chylex.hee.system.random.nextRounded
 import java.util.Random
 import kotlin.math.max
 import kotlin.math.min
@@ -100,5 +103,47 @@ enum class TombDungeonLevel(val isFancy: Boolean, private val corridorFactor: In
 				else    -> 11 to TOMB_RANDOM(rand, PIECE_TOMB_RANDOM_MULTI_SPACIOUS)
 			}
 		}
+	}
+	
+	fun pickUndreadAndSpiderlingSpawns(rand: Random, amount: MobAmount): Pair<Int, Int> {
+		val m = if (amount >= MEDIUM) 1 else 0
+		val h = if (amount >= HIGH) 1 else 0
+		
+		return when(this) {
+			FIRST -> when(rand.nextInt(0, 3)) {
+				0    -> MOBS(undreads = rand.nextRounded(0.2F),     spiderlings = 1 + m + rand.nextInt(0, h))
+				1    -> MOBS(undreads = rand.nextRounded(0.3F * m), spiderlings = 1 + h + rand.nextInt(0, m))
+				2    -> MOBS(undreads = rand.nextRounded(0.3F * h), spiderlings = 2 + m)
+				else -> MOBS(undreads = 0,                          spiderlings = 1 + rand.nextInt(0, 1 + m))
+			}
+			
+			SECOND -> when(rand.nextInt(0, 3)) {
+				0    -> MOBS(undreads = rand.nextRounded(0.3F),     spiderlings = 1 + m + rand.nextInt(0, h))
+				1    -> MOBS(undreads = rand.nextRounded(0.4F * m), spiderlings = 1 + rand.nextInt(0, 2 * m))
+				else -> MOBS(undreads = 0,                          spiderlings = rand.nextRounded(1.8F + (m * 0.55F) + (h * 0.55F)))
+			}
+			
+			THIRD -> when(rand.nextInt(0, 2)) {
+				0    -> MOBS(undreads = rand.nextInt(0, 1 + h), spiderlings = rand.nextRounded(1.4F + (m * 0.5F)) + rand.nextInt(0, m))
+				1    -> MOBS(undreads = rand.nextInt(0, 1 + m), spiderlings = rand.nextRounded(1.2F) + rand.nextInt(0, 2 * h))
+				else -> MOBS(undreads = rand.nextInt(0, 1 + m), spiderlings = 2 + rand.nextInt(0, m + h))
+			}
+			
+			FOURTH -> when(rand.nextInt(0, 5)) {
+				in 0..1 -> MOBS(undreads = 1 + rand.nextInt(h, 3 + h), spiderlings = rand.nextRounded(0.4F * m) + rand.nextInt(0, m + h))
+				else    -> MOBS(undreads = 2 + rand.nextInt(m, 2 * m), spiderlings = rand.nextRounded(0.3F + (m * 0.1F) + (h * 0.3F)))
+			}
+			
+			else -> when(rand.nextInt(0, 2)) {
+				0    -> MOBS(undreads = 1 + h + rand.nextInt(m, 1 + (m * 2)) + rand.nextInt(h, 1 + h), spiderlings = rand.nextInt(0, m))
+				else -> MOBS(undreads = 2 + h + rand.nextInt(m, 2 * m),                                spiderlings = rand.nextRounded(0.2F + (m * 0.2F)))
+			}
+		}
+	}
+	
+	private fun MOBS(undreads: Int, spiderlings: Int) = undreads to spiderlings
+	
+	enum class MobAmount {
+		LOW, MEDIUM, HIGH
 	}
 }

@@ -2,9 +2,11 @@ package chylex.hee.game.world.feature.tombdungeon.piece
 
 import chylex.hee.game.world.Pos
 import chylex.hee.game.world.feature.tombdungeon.TombDungeonLevel
+import chylex.hee.game.world.feature.tombdungeon.TombDungeonLevel.MobAmount
 import chylex.hee.game.world.structure.IStructureWorld
 import chylex.hee.system.migration.Facing.NORTH
 import chylex.hee.system.random.nextInt
+import java.util.Random
 
 class TombDungeonRoom_Tomb_MassSpacious(file: String, entranceY: Int, isFancy: Boolean) : TombDungeonRoom_Tomb(file, entranceY, allowSecrets = false, isFancy) {
 	override fun generate(world: IStructureWorld, instance: Instance) {
@@ -31,5 +33,9 @@ class TombDungeonRoom_Tomb_MassSpacious(file: String, entranceY: Int, isFancy: B
 			
 			placeJars(world, instance, listOf(Pos(jarX, 3, maxZ - 2)))
 		}
+	}
+	
+	override fun getSpawnerTriggerMobAmount(rand: Random, level: TombDungeonLevel): MobAmount? {
+		return MobAmount.HIGH.takeIf { rand.nextInt(11) < (if (level <= TombDungeonLevel.SECOND) 7 else 4) }
 	}
 }

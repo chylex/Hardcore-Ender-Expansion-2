@@ -2,11 +2,14 @@ package chylex.hee.game.world.feature.tombdungeon.piece
 
 import chylex.hee.game.block.BlockGraveDirt
 import chylex.hee.game.world.Pos
+import chylex.hee.game.world.feature.tombdungeon.TombDungeonLevel
+import chylex.hee.game.world.feature.tombdungeon.TombDungeonLevel.MobAmount
 import chylex.hee.game.world.structure.IStructureWorld
 import chylex.hee.system.migration.Facing.EAST
 import chylex.hee.system.migration.Facing.WEST
 import chylex.hee.system.random.nextInt
 import chylex.hee.system.random.nextRounded
+import java.util.Random
 
 class TombDungeonRoom_Tomb_MultiSpacious(file: String, private val tombsPerColumn: Int, entranceY: Int, isFancy: Boolean) : TombDungeonRoom_Tomb(file, entranceY, allowSecrets = false, isFancy) {
 	override fun generate(world: IStructureWorld, instance: Instance) {
@@ -35,6 +38,17 @@ class TombDungeonRoom_Tomb_MultiSpacious(file: String, private val tombsPerColum
 					Pos(centerX + 4, 4, 3 + (3 * it))
 				)
 			})
+		}
+	}
+	
+	override fun getSpawnerTriggerMobAmount(rand: Random, level: TombDungeonLevel): MobAmount? {
+		if (rand.nextInt(10) >= 6) {
+			return null
+		}
+		
+		return when {
+			tombsPerColumn <= 6 -> MobAmount.MEDIUM
+			else                -> MobAmount.HIGH
 		}
 	}
 }

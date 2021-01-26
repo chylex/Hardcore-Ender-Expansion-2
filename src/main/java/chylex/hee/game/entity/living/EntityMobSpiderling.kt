@@ -56,11 +56,15 @@ import net.minecraft.block.BlockState
 import net.minecraft.entity.CreatureAttribute
 import net.minecraft.entity.Entity
 import net.minecraft.entity.EntityType
+import net.minecraft.entity.ILivingEntityData
 import net.minecraft.entity.SharedMonsterAttributes.ATTACK_DAMAGE
 import net.minecraft.entity.SharedMonsterAttributes.FOLLOW_RANGE
 import net.minecraft.entity.SharedMonsterAttributes.MAX_HEALTH
 import net.minecraft.entity.SharedMonsterAttributes.MOVEMENT_SPEED
+import net.minecraft.entity.SpawnReason
+import net.minecraft.entity.SpawnReason.SPAWNER
 import net.minecraft.entity.ai.attributes.AttributeModifier
+import net.minecraft.nbt.CompoundNBT
 import net.minecraft.network.IPacket
 import net.minecraft.network.datasync.DataSerializers
 import net.minecraft.pathfinding.PathNavigator
@@ -76,6 +80,8 @@ import net.minecraft.util.math.RayTraceResult.Type
 import net.minecraft.util.math.Vec3d
 import net.minecraft.world.Difficulty.HARD
 import net.minecraft.world.Difficulty.NORMAL
+import net.minecraft.world.DifficultyInstance
+import net.minecraft.world.IWorld
 import net.minecraft.world.IWorldReader
 import net.minecraft.world.LightType.BLOCK
 import net.minecraft.world.LightType.SKY
@@ -213,7 +219,7 @@ class EntityMobSpiderling(type: EntityType<EntityMobSpiderling>, world: World) :
 		}
 		else if (wakeUpTimer > 0) {
 			if (--wakeUpTimer == 0) {
-				wakeUp(instant = false, preventSleep = false)
+				wakeUp(preventSleep = false)
 			}
 		}
 		else if (ticksExisted % 4 == 0) {
@@ -291,10 +297,18 @@ class EntityMobSpiderling(type: EntityType<EntityMobSpiderling>, world: World) :
 		}
 	}
 	
-	private fun wakeUp(instant: Boolean, preventSleep: Boolean) {
+	fun wakeUpInstantly(preventSleep: Boolean) {
+		wakeUp(preventSleep, aiDelayTicks = 1)
+	}
+	
+	fun wakeUp(preventSleep: Boolean) {
+		wakeUp(preventSleep, aiDelayTicks = rand.nextInt(25, 40))
+	}
+	
+	fun wakeUp(preventSleep: Boolean, aiDelayTicks: Int) {
 		if (isSleeping) {
 			isSleepingProp = false
-			wakeUpDelayAI = if (instant) 1 else rand.nextInt(25, 40)
+			wakeUpDelayAI = aiDelayTicks
 			
 			if (preventSleep) {
 				canSleepAgain = false
@@ -303,7 +317,7 @@ class EntityMobSpiderling(type: EntityType<EntityMobSpiderling>, world: World) :
 	}
 	
 	override fun setFire(seconds: Int) {
-		wakeUp(instant = true, preventSleep = true)
+		wakeUpInstantly(preventSleep = true)
 		super.setFire(seconds)
 	}
 	
@@ -314,7 +328,7 @@ class EntityMobSpiderling(type: EntityType<EntityMobSpiderling>, world: World) :
 	// Behavior (Light)
 	
 	override fun onLightStartled(): Boolean {
-		wakeUp(instant = false, preventSleep = true)
+		wakeUp(preventSleep = true)
 		
 		if (world.totalTime < lightStartleResetTime) {
 			return false
@@ -401,7 +415,7 @@ class EntityMobSpiderling(type: EntityType<EntityMobSpiderling>, world: World) :
 			return false
 		}
 		
-		wakeUp(instant = true, preventSleep = true)
+		wakeUpInstantly(preventSleep = true)
 		
 		if (!super.attackEntityFrom(source, if (source.isFireDamage) amount * 1.25F else amount)) {
 			return false
@@ -443,6 +457,16 @@ class EntityMobSpiderling(type: EntityType<EntityMobSpiderling>, world: World) :
 		}
 		
 		return true
+	}
+	
+	// Spawning
+	
+	override fun onInitialSpawn(world: IWorld, difficulty: DifficultyInstance, reason: SpawnReason, data: ILivingEntityData?, nbt: CompoundNBT?): ILivingEntityData? {
+		if (reason == SPAWNER) {
+			wakeUpInstantly(preventSleep = true)
+		}
+		
+		return super.onInitialSpawn(world, difficulty, reason, data, nbt)
 	}
 	
 	// Despawning
@@ -515,7 +539,7 @@ class EntityMobSpiderling(type: EntityType<EntityMobSpiderling>, world: World) :
 		val sleepState = getInt(SLEEP_STATE_TAG)
 		
 		if (sleepState != 2) {
-			wakeUp(instant = true, preventSleep = sleepState != 1)
+			wakeUpInstantly(preventSleep = sleepState != 1)
 		}
 		
 		lightStartleResetTime = getLong(LIGHT_STARTLE_RESET_TIME_TAG)
