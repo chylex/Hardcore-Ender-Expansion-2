@@ -22,7 +22,6 @@ import net.minecraft.block.BlockState
 import net.minecraft.enchantment.EnchantmentHelper
 import net.minecraft.enchantment.Enchantments
 import net.minecraft.entity.Entity
-import net.minecraft.entity.EntitySpawnPlacementRegistry.PlacementType
 import net.minecraft.entity.EntityType
 import net.minecraft.util.math.BlockPos
 import net.minecraft.world.IBlockReader
@@ -135,8 +134,8 @@ class BlockDustyStoneUnstable(builder: BlockBuilder) : BlockDustyStone(builder),
 		super.onFallenUpon(world, pos, entity, fallDistance)
 	}
 	
-	override fun canCreatureSpawn(state: BlockState, world: IBlockReader, pos: BlockPos, placementType: PlacementType, entityType: EntityType<*>?): Boolean {
-		return super.canCreatureSpawn(state, world, pos, placementType, entityType) && getCrumbleStartPos(world, pos) == null
+	override fun canEntitySpawn(state: BlockState, world: IBlockReader, pos: BlockPos, entityType: EntityType<*>): Boolean {
+		return super.canEntitySpawn(state, world, pos, entityType) && getCrumbleStartPos(world, pos) == null
 	}
 	
 	private fun isNonCreative(entity: Entity): Boolean {
