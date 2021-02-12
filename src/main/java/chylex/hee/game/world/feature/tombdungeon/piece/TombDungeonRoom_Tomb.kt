@@ -207,6 +207,10 @@ abstract class TombDungeonRoom_Tomb(file: String, entranceY: Int, allowSecrets: 
 							attackTarget = target
 							onGround = true // allow instant pathfinding in MeleeAttackGoal
 							
+							if (this is EntityMobSpiderling) {
+								wakeUp(instant = true, preventSleep = true)
+							}
+							
 							onInitialSpawn(world, world.getDifficultyForLocation(bestPos), STRUCTURE, null, null)
 							world.addEntity(this)
 							

@@ -194,7 +194,7 @@ object Territory_ForgottenTombs : ITerritoryDescription {
 				
 				val players = instance.players.filter { it.isAlive && !it.isSpectator }
 				
-				if (players.isEmpty()) {
+				if (players.isEmpty()||true) {
 					return
 				}
 				

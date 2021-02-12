@@ -48,7 +48,11 @@ class PathNavigateGroundUnrestricted(entity: EntityLiving, world: World) : Groun
 	
 	override fun tick() {
 		if (!super.noPath()) {
-			super.tick()
+			try {
+				super.tick()
+			} catch(e: Exception) {
+				println(e) // TODO
+			}
 		}
 		else if (overrideSpeed > 0.0) {
 			val entityPos = entity.posVec

@@ -56,11 +56,15 @@ import net.minecraft.block.BlockState
 import net.minecraft.entity.CreatureAttribute
 import net.minecraft.entity.Entity
 import net.minecraft.entity.EntityType
+import net.minecraft.entity.ILivingEntityData
 import net.minecraft.entity.SharedMonsterAttributes.ATTACK_DAMAGE
 import net.minecraft.entity.SharedMonsterAttributes.FOLLOW_RANGE
 import net.minecraft.entity.SharedMonsterAttributes.MAX_HEALTH
 import net.minecraft.entity.SharedMonsterAttributes.MOVEMENT_SPEED
+import net.minecraft.entity.SpawnReason
+import net.minecraft.entity.SpawnReason.SPAWNER
 import net.minecraft.entity.ai.attributes.AttributeModifier
+import net.minecraft.nbt.CompoundNBT
 import net.minecraft.network.IPacket
 import net.minecraft.network.datasync.DataSerializers
 import net.minecraft.pathfinding.PathNavigator
@@ -76,6 +80,8 @@ import net.minecraft.util.math.RayTraceResult.Type
 import net.minecraft.util.math.Vec3d
 import net.minecraft.world.Difficulty.HARD
 import net.minecraft.world.Difficulty.NORMAL
+import net.minecraft.world.DifficultyInstance
+import net.minecraft.world.IWorld
 import net.minecraft.world.IWorldReader
 import net.minecraft.world.LightType.BLOCK
 import net.minecraft.world.LightType.SKY
@@ -291,7 +297,7 @@ class EntityMobSpiderling(type: EntityType<EntityMobSpiderling>, world: World) :
 		}
 	}
 	
-	private fun wakeUp(instant: Boolean, preventSleep: Boolean) {
+	fun wakeUp(instant: Boolean, preventSleep: Boolean) {
 		if (isSleeping) {
 			isSleepingProp = false
 			wakeUpDelayAI = if (instant) 1 else rand.nextInt(25, 40)
@@ -443,6 +449,16 @@ class EntityMobSpiderling(type: EntityType<EntityMobSpiderling>, world: World) :
 		}
 		
 		return true
+	}
+	
+	// Spawning
+	
+	override fun onInitialSpawn(world: IWorld, difficulty: DifficultyInstance, reason: SpawnReason, data: ILivingEntityData?, nbt: CompoundNBT?): ILivingEntityData? {
+		if (reason == SPAWNER) {
+			wakeUp(instant = true, preventSleep = true)
+		}
+		
+		return super.onInitialSpawn(world, difficulty, reason, data, nbt)
 	}
 	
 	// Despawning
