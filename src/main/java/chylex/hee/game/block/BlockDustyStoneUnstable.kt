@@ -47,6 +47,14 @@ class BlockDustyStoneUnstable(builder: BlockBuilder) : BlockDustyStone(builder),
 			
 			return null
 		}
+		
+		private fun isNonCreative(entity: Entity): Boolean {
+			return entity !is EntityPlayer || !entity.isCreative
+		}
+		
+		private fun isLightMob(entity: Entity): Boolean {
+			return entity.height <= 0.5F || (entity.height <= 1F && entity.width <= 0.5F)
+		}
 	}
 	
 	override fun canHarvestBlock(state: BlockState, world: IBlockReader, pos: BlockPos, player: EntityPlayer): Boolean {
@@ -86,7 +94,7 @@ class BlockDustyStoneUnstable(builder: BlockBuilder) : BlockDustyStone(builder),
 	}
 	
 	override fun onEntityCollisionAbove(world: World, pos: BlockPos, entity: Entity) {
-		if (!world.isRemote && world.totalTime % 4L == 0L && !(entity.height <= 0.5F || (entity.height <= 1F && entity.width <= 0.5F)) && isNonCreative(entity)) {
+		if (!world.isRemote && world.totalTime % 4L == 0L && !isLightMob(entity) && isNonCreative(entity)) {
 			if (!doCrumbleTest(world, pos)) {
 				return
 			}
@@ -102,7 +110,7 @@ class BlockDustyStoneUnstable(builder: BlockBuilder) : BlockDustyStone(builder),
 	}
 	
 	override fun onFallenUpon(world: World, pos: BlockPos, entity: Entity, fallDistance: Float) {
-		if (!world.isRemote && entity is EntityLivingBase && fallDistance > 1.3F && isNonCreative(entity)) {
+		if (!world.isRemote && entity is EntityLivingBase && fallDistance > (if (isLightMob(entity)) 3.3F else 1.3F) && isNonCreative(entity)) {
 			val rand = world.rand
 			val aabb = entity.boundingBox
 			val y = pos.y
@@ -136,10 +144,6 @@ class BlockDustyStoneUnstable(builder: BlockBuilder) : BlockDustyStone(builder),
 	
 	override fun canEntitySpawn(state: BlockState, world: IBlockReader, pos: BlockPos, entityType: EntityType<*>): Boolean {
 		return super.canEntitySpawn(state, world, pos, entityType) && getCrumbleStartPos(world, pos) == null
-	}
-	
-	private fun isNonCreative(entity: Entity): Boolean {
-		return entity !is EntityPlayer || !entity.isCreative
 	}
 	
 	private fun doCrumbleTest(world: World, pos: BlockPos): Boolean {
