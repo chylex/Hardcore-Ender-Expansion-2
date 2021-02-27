@@ -7,8 +7,8 @@ import chylex.hee.game.particle.spawner.ParticleSpawnerCustom
 import chylex.hee.game.particle.spawner.properties.IShape.Point
 import chylex.hee.game.world.bottomCenter
 import chylex.hee.network.client.PacketClientFX
-import chylex.hee.network.fx.IFxData
-import chylex.hee.network.fx.IFxHandler
+import chylex.hee.network.fx.FxVecData
+import chylex.hee.network.fx.FxVecHandler
 import chylex.hee.system.color.IntColor.Companion.RGB
 import chylex.hee.system.math.Vec
 import chylex.hee.system.math.Vec3
@@ -21,10 +21,7 @@ import chylex.hee.system.serialization.NBTList.Companion.putList
 import chylex.hee.system.serialization.NBTObjectList
 import chylex.hee.system.serialization.TagCompound
 import chylex.hee.system.serialization.getListOfCompounds
-import chylex.hee.system.serialization.readVec
 import chylex.hee.system.serialization.use
-import chylex.hee.system.serialization.writeVec
-import net.minecraft.network.PacketBuffer
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.Vec3d
 import net.minecraft.world.World
@@ -50,15 +47,9 @@ class EnderEyeSpawnerParticles(private val entity: EntityBossEnderEye) : INBTSer
 			hideOnMinimalSetting = false
 		)
 		
-		class ParticleData(private val point: Vec3d) : IFxData {
-			override fun write(buffer: PacketBuffer) = buffer.use {
-				writeVec(point)
-			}
-		}
-		
-		val FX_PARTICLE = object : IFxHandler<ParticleData> {
-			override fun handle(buffer: PacketBuffer, world: World, rand: Random) = buffer.use {
-				PARTICLE_TICK.spawn(Point(readVec(), 2), rand)
+		val FX_PARTICLE = object : FxVecHandler() {
+			override fun handle(world: World, rand: Random, vec: Vec3d) {
+				PARTICLE_TICK.spawn(Point(vec, 2), rand)
 			}
 		}
 	}
@@ -95,7 +86,7 @@ class EnderEyeSpawnerParticles(private val entity: EntityBossEnderEye) : INBTSer
 					else           -> 1.0
 				}
 				
-				PacketClientFX(FX_PARTICLE, ParticleData(pos.addY(sqrt(progressCurvePoint) * 6.0))).sendToAllAround(entity.world, pos, 256.0)
+				PacketClientFX(FX_PARTICLE, FxVecData(pos.addY(sqrt(progressCurvePoint) * 6.0))).sendToAllAround(entity.world, pos, 256.0)
 			}
 			
 			if (distSq > prevDistSq || distSq < square(0.15)) {

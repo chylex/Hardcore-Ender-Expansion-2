@@ -21,6 +21,7 @@ import chylex.hee.game.world.structure.trigger.EntityStructureTrigger
 import chylex.hee.game.world.territory.TerritoryType
 import chylex.hee.init.ModBlocks
 import chylex.hee.network.client.PacketClientFX
+import chylex.hee.network.fx.FxVecData
 import chylex.hee.system.facades.Facing4
 import chylex.hee.system.math.addY
 import chylex.hee.system.math.offsetTowards
@@ -145,9 +146,8 @@ abstract class ObsidianTowerLevel_Top(file: String) : ObsidianTowerLevel_General
 							
 							val offsetProgress = chargeAnim.pow(0.8F).toDouble()
 							val particlePos = start.center.offsetTowards(tokenHolder.posVec.addY(tokenHolder.height * 0.5), offsetProgress).addY(progressCurvePoint * 6.0)
-							val particleData = EnderEyeSpawnerParticles.Companion.ParticleData(particlePos)
 							
-							PacketClientFX(EnderEyeSpawnerParticles.FX_PARTICLE, particleData).sendToAllAround(entity.world, pos, 256.0)
+							PacketClientFX(EnderEyeSpawnerParticles.FX_PARTICLE, FxVecData(particlePos)).sendToAllAround(entity.world, pos, 256.0)
 						}
 						
 						if (chargeAnim == 1F) {
