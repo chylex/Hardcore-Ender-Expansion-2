@@ -28,7 +28,6 @@ import chylex.hee.system.math.angleBetween
 import chylex.hee.system.math.floorToInt
 import chylex.hee.system.math.over
 import chylex.hee.system.math.toDegrees
-import chylex.hee.system.migration.ActionResult.FAIL
 import chylex.hee.system.migration.ActionResult.SUCCESS
 import chylex.hee.system.migration.EntityLivingBase
 import chylex.hee.system.migration.EntityPlayer
@@ -150,17 +149,13 @@ class ItemEnergyOracle(properties: Properties) : ItemAbstractEnergyUser(properti
 		return ItemAbstractInfusable.onCanApplyInfusion(this, infusion)
 	}
 	
-	override fun onItemUse(context: ItemUseContext): ActionResultType {
-		val player = context.player ?: return FAIL
-		val world = context.world
-		val pos = context.pos
-		
+	override fun useOnBlock(world: World, pos: BlockPos, player: EntityPlayer, item: ItemStack, ctx: ItemUseContext): ActionResultType? {
 		if (player.isSneaking && pos.getTile<TileEntityEnergyCluster>(world) != null) {
 			if (world.isRemote) {
 				return SUCCESS
 			}
 			
-			val heldItem = player.getHeldItem(context.hand)
+			val heldItem = player.getHeldItem(ctx.hand)
 			val entry = pos.toLong()
 			
 			with(heldItem.heeTag) {
@@ -176,7 +171,7 @@ class ItemEnergyOracle(properties: Properties) : ItemAbstractEnergyUser(properti
 			return SUCCESS
 		}
 		
-		return super.onItemUse(context)
+		return super.useOnBlock(world, pos, player, item, ctx)
 	}
 	
 	override fun inventoryTick(stack: ItemStack, world: World, entity: Entity, itemSlot: Int, isSelected: Boolean) {

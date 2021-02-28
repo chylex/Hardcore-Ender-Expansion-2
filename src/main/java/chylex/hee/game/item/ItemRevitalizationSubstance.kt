@@ -3,6 +3,7 @@ package chylex.hee.game.item
 import chylex.hee.client.model.ModelHelper
 import chylex.hee.game.block.entity.TileEntityEnergyCluster
 import chylex.hee.game.entity.item.EntityItemRevitalizationSubstance
+import chylex.hee.game.item.components.UseOnBlockComponent
 import chylex.hee.game.mechanics.energy.IClusterHealth.HealthOverride.REVITALIZING
 import chylex.hee.game.particle.ParticleSmokeCustom
 import chylex.hee.game.particle.spawner.ParticleSpawnerCustom
@@ -26,7 +27,6 @@ import chylex.hee.system.serialization.readPos
 import chylex.hee.system.serialization.use
 import chylex.hee.system.serialization.writePos
 import net.minecraft.entity.Entity
-import net.minecraft.item.Item
 import net.minecraft.item.ItemStack
 import net.minecraft.item.ItemUseContext
 import net.minecraft.network.PacketBuffer
@@ -37,7 +37,7 @@ import net.minecraft.util.math.BlockPos
 import net.minecraft.world.World
 import java.util.Random
 
-class ItemRevitalizationSubstance(properties: Properties) : Item(properties) {
+class ItemRevitalizationSubstance(properties: Properties) : ItemWithComponents(properties), UseOnBlockComponent {
 	companion object {
 		private val PARTICLE_FAIL = ParticleSpawnerCustom(
 			type = ParticleSmokeCustom,
@@ -70,11 +70,11 @@ class ItemRevitalizationSubstance(properties: Properties) : Item(properties) {
 		}
 	}
 	
-	override fun onItemUse(context: ItemUseContext): ActionResultType {
-		val player = context.player ?: return FAIL
-		val world = context.world
-		val pos = context.pos
-		
+	init {
+		components.attach(this)
+	}
+	
+	override fun useOnBlock(world: World, pos: BlockPos, player: EntityPlayer, item: ItemStack, ctx: ItemUseContext): ActionResultType? {
 		if (world.isRemote) {
 			return FAIL // disable animation
 		}
@@ -83,11 +83,11 @@ class ItemRevitalizationSubstance(properties: Properties) : Item(properties) {
 		
 		if (cluster.currentHealth != REVITALIZING) {
 			if (cluster.addRevitalizationSubstance()) {
-				player.getHeldItem(context.hand).shrink(1)
+				player.getHeldItem(ctx.hand).shrink(1)
 				ModSounds.ITEM_REVITALIZATION_SUBSTANCE_USE_SUCCESS.playServer(world, pos, SoundCategory.BLOCKS, volume = 0.5F)
 			}
 			else {
-				PacketClientFX(FX_FAIL, FxUseData(pos, player, context.hand)).sendToAllAround(player, 24.0)
+				PacketClientFX(FX_FAIL, FxUseData(pos, player, ctx.hand)).sendToAllAround(player, 24.0)
 			}
 		}
 		

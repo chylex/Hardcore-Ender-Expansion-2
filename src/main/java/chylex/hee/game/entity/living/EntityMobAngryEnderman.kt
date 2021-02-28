@@ -76,8 +76,8 @@ class EntityMobAngryEnderman(type: EntityType<EntityMobAngryEnderman>, world: Wo
 	}
 	
 	override fun updateAITasks() {
-		teleportHandler.update()
-		waterHandler.update()
+		teleportHandler.tickServer()
+		waterHandler.tickServer()
 		
 		val currentTarget = attackTarget
 		

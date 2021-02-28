@@ -13,7 +13,7 @@ import net.minecraft.util.text.StringTextComponent
 import net.minecraft.util.text.TranslationTextComponent
 import net.minecraft.world.World
 
-abstract class ItemAbstractInfusable(properties: Properties) : Item(properties), IInfusableItem {
+abstract class ItemAbstractInfusable(properties: Properties) : ItemWithComponents(properties), IInfusableItem {
 	companion object {
 		fun onCanApplyInfusion(item: Item, infusion: Infusion): Boolean {
 			return infusion.targetItems.contains(item)

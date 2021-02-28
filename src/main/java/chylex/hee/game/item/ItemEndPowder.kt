@@ -2,27 +2,27 @@ package chylex.hee.game.item
 
 import chylex.hee.game.block.IBlockDeathFlowerDecaying
 import chylex.hee.game.entity.item.EntityItemCauldronTrigger
+import chylex.hee.game.item.components.UseOnBlockComponent
 import chylex.hee.game.world.BlockEditor
 import chylex.hee.game.world.getBlock
 import chylex.hee.system.migration.ActionResult.FAIL
 import chylex.hee.system.migration.ActionResult.PASS
 import chylex.hee.system.migration.ActionResult.SUCCESS
+import chylex.hee.system.migration.EntityPlayer
 import net.minecraft.entity.Entity
-import net.minecraft.item.Item
 import net.minecraft.item.ItemStack
 import net.minecraft.item.ItemUseContext
 import net.minecraft.util.ActionResultType
+import net.minecraft.util.math.BlockPos
 import net.minecraft.world.World
 
-class ItemEndPowder(properties: Properties) : Item(properties) {
-	override fun onItemUse(context: ItemUseContext): ActionResultType {
-		val player = context.player ?: return FAIL
-		val world = context.world
-		val pos = context.pos
-		
-		val heldItem = player.getHeldItem(context.hand)
-		
-		if (!BlockEditor.canEdit(pos, player, heldItem)) {
+class ItemEndPowder(properties: Properties) : ItemWithComponents(properties), UseOnBlockComponent {
+	init {
+		components.attach(this)
+	}
+	
+	override fun useOnBlock(world: World, pos: BlockPos, player: EntityPlayer, item: ItemStack, ctx: ItemUseContext): ActionResultType? {
+		if (!BlockEditor.canEdit(pos, player, item)) {
 			return FAIL
 		}
 		
@@ -33,7 +33,7 @@ class ItemEndPowder(properties: Properties) : Item(properties) {
 				block.healDeathFlower(world, pos)
 			}
 			
-			heldItem.shrink(1)
+			item.shrink(1)
 			return SUCCESS
 		}
 		

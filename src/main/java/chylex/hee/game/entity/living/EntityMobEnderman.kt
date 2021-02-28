@@ -26,6 +26,10 @@ import chylex.hee.game.mechanics.causatum.events.CausatumEventEndermanKill
 import chylex.hee.game.world.playServer
 import chylex.hee.init.ModEntities
 import chylex.hee.init.ModSounds
+import chylex.hee.system.component.EntityComponents
+import chylex.hee.system.component.general.deserializeFrom
+import chylex.hee.system.component.general.serializeTo
+import chylex.hee.system.component.general.tick
 import chylex.hee.system.facades.Resource
 import chylex.hee.system.forge.SubscribeAllEvents
 import chylex.hee.system.forge.SubscribeEvent
@@ -76,8 +80,6 @@ class EntityMobEnderman(type: EntityType<EntityMobEnderman>, world: World) : Ent
 	
 	@SubscribeAllEvents(modid = HEE.ID)
 	companion object {
-		private const val TELEPORT_HANDLER_TAG = "Teleport"
-		private const val WATER_HANDLER_TAG = "Water"
 		private const val CAN_PICK_UP_BLOCKS_TAG = "CanPickUpBlocks"
 		private const val HELD_BLOCK_TIMER_TAG = "HeldBlockTimer"
 		private const val HELD_BLOCK_DESPAWNS_TAG = "HeldBlockDespawns"
@@ -202,8 +204,9 @@ class EntityMobEnderman(type: EntityType<EntityMobEnderman>, world: World) : Ent
 	
 	// Instance
 	
+	private lateinit var components: EntityComponents
+	
 	private lateinit var teleportHandler: EndermanTeleportHandler
-	private lateinit var waterHandler: EndermanWaterHandler
 	private lateinit var blockHandler: EndermanBlockHandler
 	
 	private lateinit var aiAttackTarget: AIToggle
@@ -227,6 +230,13 @@ class EntityMobEnderman(type: EntityType<EntityMobEnderman>, world: World) : Ent
 	
 	// Initialization
 	
+	override fun registerData() {
+		super.registerData()
+		
+		components = EntityComponents()
+		components.attach(EndermanWaterHandler(this, takeDamageAfterWetTicks = 80))
+	}
+	
 	override fun registerAttributes() {
 		super.registerAttributes()
 		
@@ -238,8 +248,7 @@ class EntityMobEnderman(type: EntityType<EntityMobEnderman>, world: World) : Ent
 	}
 	
 	override fun registerGoals() {
-		teleportHandler = EndermanTeleportHandler(this)
-		waterHandler = EndermanWaterHandler(this, takeDamageAfterWetTicks = 80)
+		teleportHandler = EndermanTeleportHandler(this).also(components::attach)
 		blockHandler = EndermanBlockHandler(this)
 		
 		aiWatchTargetInShock = AIWatchTargetInShock(this, maxDistance = 72.0)
@@ -265,10 +274,9 @@ class EntityMobEnderman(type: EntityType<EntityMobEnderman>, world: World) : Ent
 	override fun livingTick() {
 		super.livingTick()
 		
+		components.tick(this)
+		
 		if (!world.isRemote) {
-			teleportHandler.update()
-			waterHandler.update()
-			
 			if (heldBlockTimer > 0 && --heldBlockTimer == 0.toShort()) {
 				if (heldBlockDespawns || !blockHandler.tryPlaceBlock(allowPlayerProximity = false)) {
 					teleportHandler.teleportOutOfWorld(force = rand.nextBoolean())
@@ -536,8 +544,7 @@ class EntityMobEnderman(type: EntityType<EntityMobEnderman>, world: World) : Ent
 	override fun writeAdditional(nbt: TagCompound) = nbt.heeTag.use {
 		super.writeAdditional(nbt)
 		
-		put(TELEPORT_HANDLER_TAG, teleportHandler.serializeNBT())
-		put(WATER_HANDLER_TAG, waterHandler.serializeNBT())
+		components.serializeTo(this)
 		
 		putBoolean(CAN_PICK_UP_BLOCKS_TAG, aiPickUpBlocks.enabled)
 		putShort(HELD_BLOCK_TIMER_TAG, heldBlockTimer)
@@ -547,8 +554,7 @@ class EntityMobEnderman(type: EntityType<EntityMobEnderman>, world: World) : Ent
 	override fun readAdditional(nbt: TagCompound) = nbt.heeTag.use {
 		super.readAdditional(nbt)
 		
-		teleportHandler.deserializeNBT(getCompound(TELEPORT_HANDLER_TAG))
-		waterHandler.deserializeNBT(getCompound(WATER_HANDLER_TAG))
+		components.deserializeFrom(this)
 		
 		aiPickUpBlocks.enabled = getBoolean(CAN_PICK_UP_BLOCKS_TAG)
 		heldBlockTimer = getShort(HELD_BLOCK_TIMER_TAG)

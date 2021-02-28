@@ -4,15 +4,16 @@ import chylex.hee.game.entity.OPERATION_MUL_INCR_INDIVIDUAL
 import chylex.hee.game.entity.living.EntityMobAbstractEnderman
 import chylex.hee.game.entity.tryApplyModifier
 import chylex.hee.game.entity.tryRemoveModifier
+import chylex.hee.system.component.general.SerializableComponent
+import chylex.hee.system.component.general.TickableComponent
 import chylex.hee.system.random.nextInt
 import chylex.hee.system.serialization.TagCompound
 import chylex.hee.system.serialization.use
 import net.minecraft.entity.SharedMonsterAttributes.ATTACK_DAMAGE
 import net.minecraft.entity.ai.attributes.AttributeModifier
 import net.minecraft.util.DamageSource
-import net.minecraftforge.common.util.INBTSerializable
 
-class EndermanWaterHandler(private val enderman: EntityMobAbstractEnderman, private val takeDamageAfterWetTicks: Int) : INBTSerializable<TagCompound> {
+class EndermanWaterHandler(private val enderman: EntityMobAbstractEnderman, private val takeDamageAfterWetTicks: Int) : TickableComponent, SerializableComponent {
 	private companion object {
 		private val DEBUFF_WEAKNESS = AttributeModifier("Water weakness", -0.5, OPERATION_MUL_INCR_INDIVIDUAL)
 		
@@ -20,10 +21,13 @@ class EndermanWaterHandler(private val enderman: EntityMobAbstractEnderman, priv
 		private const val DEBUFF_TICKS_TAG = "DebuffTicks"
 	}
 	
+	override val serializationKey
+		get() = "Water"
+	
 	private var wetCounter = 0
 	private var debuffTicks = 0
 	
-	fun update() {
+	override fun tickServer() {
 		val isWet = enderman.isWet
 		
 		if (isWet) {

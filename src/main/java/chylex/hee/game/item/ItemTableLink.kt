@@ -12,6 +12,7 @@ import chylex.hee.game.item.ItemTableLink.Companion.SoundType.LINK_FAIL
 import chylex.hee.game.item.ItemTableLink.Companion.SoundType.LINK_OUTPUT
 import chylex.hee.game.item.ItemTableLink.Companion.SoundType.LINK_RESTART
 import chylex.hee.game.item.ItemTableLink.Companion.SoundType.LINK_SUCCESS
+import chylex.hee.game.item.components.UseOnBlockComponent
 import chylex.hee.game.world.getBlock
 import chylex.hee.game.world.getTile
 import chylex.hee.game.world.playClient
@@ -26,6 +27,7 @@ import chylex.hee.system.forge.Sided
 import chylex.hee.system.migration.ActionResult.FAIL
 import chylex.hee.system.migration.ActionResult.SUCCESS
 import chylex.hee.system.migration.EntityItem
+import chylex.hee.system.migration.EntityPlayer
 import chylex.hee.system.random.nextFloat
 import chylex.hee.system.serialization.getPos
 import chylex.hee.system.serialization.hasKey
@@ -34,7 +36,6 @@ import chylex.hee.system.serialization.readPos
 import chylex.hee.system.serialization.use
 import chylex.hee.system.serialization.writePos
 import net.minecraft.entity.Entity
-import net.minecraft.item.Item
 import net.minecraft.item.ItemStack
 import net.minecraft.item.ItemUseContext
 import net.minecraft.network.PacketBuffer
@@ -44,7 +45,7 @@ import net.minecraft.util.math.BlockPos
 import net.minecraft.world.World
 import java.util.Random
 
-class ItemTableLink(properties: Properties) : Item(properties) {
+class ItemTableLink(properties: Properties) : ItemWithComponents(properties), UseOnBlockComponent {
 	companion object {
 		private const val POS_TAG = "StoredPos"
 		private const val TIME_TAG = "StoredTime"
@@ -106,11 +107,11 @@ class ItemTableLink(properties: Properties) : Item(properties) {
 		}
 	}
 	
-	override fun onItemUse(context: ItemUseContext): ActionResultType {
-		val player = context.player ?: return FAIL
-		val world = context.world
-		val pos = context.pos
-		
+	init {
+		components.attach(this)
+	}
+	
+	override fun useOnBlock(world: World, pos: BlockPos, player: EntityPlayer, item: ItemStack, ctx: ItemUseContext): ActionResultType? {
 		if (!player.isSneaking || !isValidTarget(world, pos)) {
 			val pedestal = pos.getTile<TileEntityTablePedestal>(world)
 			
@@ -131,7 +132,7 @@ class ItemTableLink(properties: Properties) : Item(properties) {
 			return SUCCESS
 		}
 		
-		val heldItem = player.getHeldItem(context.hand)
+		val heldItem = player.getHeldItem(ctx.hand)
 		var newStoredPos = pos
 		var soundType = LINK_RESTART
 		

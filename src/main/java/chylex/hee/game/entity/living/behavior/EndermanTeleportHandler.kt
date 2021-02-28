@@ -29,6 +29,8 @@ import chylex.hee.network.client.PacketClientFX
 import chylex.hee.network.fx.FxEntityData
 import chylex.hee.network.fx.FxEntityHandler
 import chylex.hee.system.color.IntColor.Companion.RGB
+import chylex.hee.system.component.general.SerializableComponent
+import chylex.hee.system.component.general.TickableComponent
 import chylex.hee.system.math.Vec
 import chylex.hee.system.math.Vec3
 import chylex.hee.system.math.addY
@@ -53,13 +55,12 @@ import net.minecraft.util.SoundCategory
 import net.minecraft.util.math.AxisAlignedBB
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.Vec3d
-import net.minecraftforge.common.util.INBTSerializable
 import java.util.Random
 import java.util.UUID
 import kotlin.math.min
 import kotlin.math.sqrt
 
-class EndermanTeleportHandler(private val enderman: EntityMobAbstractEnderman) : INBTSerializable<TagCompound> {
+class EndermanTeleportHandler(private val enderman: EntityMobAbstractEnderman) : TickableComponent, SerializableComponent {
 	companion object {
 		private const val DEFAULT_RESTORE_Y = -256.0
 		
@@ -117,6 +118,9 @@ class EndermanTeleportHandler(private val enderman: EntityMobAbstractEnderman) :
 		}
 	}
 	
+	override val serializationKey
+		get() = "Teleport"
+	
 	val preventDespawn
 		get() = tpDelayTicks > 0
 	
@@ -133,7 +137,7 @@ class EndermanTeleportHandler(private val enderman: EntityMobAbstractEnderman) :
 	
 	private var lastDodged: UUID? = null
 	
-	fun update() {
+	override fun tickServer() {
 		if (tpCooldown > 0) {
 			--tpCooldown
 		}

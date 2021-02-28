@@ -1,6 +1,7 @@
 package chylex.hee.game.item
 
 import chylex.hee.game.inventory.size
+import chylex.hee.game.item.components.UseOnBlockComponent
 import chylex.hee.game.world.BlockEditor
 import chylex.hee.init.ModItems
 import chylex.hee.network.client.PacketClientFX
@@ -15,7 +16,6 @@ import chylex.hee.system.migration.ItemBoneMeal
 import net.minecraft.block.DispenserBlock.FACING
 import net.minecraft.dispenser.IBlockSource
 import net.minecraft.dispenser.OptionalDispenseBehavior
-import net.minecraft.item.Item
 import net.minecraft.item.ItemStack
 import net.minecraft.item.ItemUseContext
 import net.minecraft.util.ActionResultType
@@ -25,7 +25,7 @@ import net.minecraft.world.server.ServerWorld
 import net.minecraftforge.common.util.FakePlayerFactory
 import java.util.Random
 
-class ItemCompost(properties: Properties) : Item(properties) {
+class ItemCompost(properties: Properties) : ItemWithComponents(properties) {
 	companion object {
 		private const val BONE_MEAL_EQUIVALENT = 2
 		
@@ -61,6 +61,24 @@ class ItemCompost(properties: Properties) : Item(properties) {
 	}
 	
 	init {
+		components.attach(object : UseOnBlockComponent {
+			override fun useOnBlock(world: World, pos: BlockPos, player: EntityPlayer, item: ItemStack, ctx: ItemUseContext): ActionResultType {
+				if (!BlockEditor.canEdit(pos, player, item)) {
+					return FAIL
+				}
+				else if (world.isRemote) {
+					return SUCCESS
+				}
+				
+				if (applyCompost(world, pos, player)) {
+					item.shrink(1)
+					return SUCCESS
+				}
+				
+				return PASS
+			}
+		})
+		
 		BlockDispenser.registerDispenseBehavior(this, object : OptionalDispenseBehavior() {
 			override fun dispenseStack(source: IBlockSource, stack: ItemStack): ItemStack {
 				val world = source.world
@@ -76,27 +94,5 @@ class ItemCompost(properties: Properties) : Item(properties) {
 				return stack
 			}
 		})
-	}
-	
-	override fun onItemUse(context: ItemUseContext): ActionResultType {
-		val player = context.player ?: return FAIL
-		val world = context.world
-		val pos = context.pos
-		
-		val heldItem = player.getHeldItem(context.hand)
-		
-		if (!BlockEditor.canEdit(pos, player, heldItem)) {
-			return FAIL
-		}
-		else if (world.isRemote) {
-			return SUCCESS
-		}
-		
-		if (applyCompost(world, pos, player)) {
-			heldItem.shrink(1)
-			return SUCCESS
-		}
-		
-		return PASS
 	}
 }

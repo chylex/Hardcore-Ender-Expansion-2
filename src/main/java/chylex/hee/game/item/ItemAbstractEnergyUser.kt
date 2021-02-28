@@ -3,6 +3,7 @@ package chylex.hee.game.item
 import chylex.hee.game.block.entity.TileEntityEnergyCluster
 import chylex.hee.game.inventory.heeTag
 import chylex.hee.game.inventory.heeTagOrNull
+import chylex.hee.game.item.components.UseOnBlockComponent
 import chylex.hee.game.mechanics.energy.IEnergyQuantity
 import chylex.hee.game.mechanics.energy.IEnergyQuantity.Units
 import chylex.hee.game.particle.ParticleEnergyTransferToPlayer
@@ -36,11 +37,11 @@ import chylex.hee.system.serialization.use
 import chylex.hee.system.serialization.writePos
 import net.minecraft.client.util.ITooltipFlag
 import net.minecraft.entity.Entity
-import net.minecraft.item.Item
 import net.minecraft.item.ItemStack
 import net.minecraft.item.ItemUseContext
 import net.minecraft.network.PacketBuffer
 import net.minecraft.util.ActionResultType
+import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.MathHelper
 import net.minecraft.util.text.ITextComponent
 import net.minecraft.util.text.TranslationTextComponent
@@ -50,7 +51,7 @@ import java.util.Random
 import kotlin.math.max
 import kotlin.math.pow
 
-abstract class ItemAbstractEnergyUser(properties: Properties) : Item(properties) {
+abstract class ItemAbstractEnergyUser(properties: Properties) : ItemWithComponents(properties), UseOnBlockComponent {
 	companion object {
 		private const val ENERGY_LEVEL_TAG = "EnergyLevel"
 		
@@ -100,6 +101,8 @@ abstract class ItemAbstractEnergyUser(properties: Properties) : Item(properties)
 	init {
 		@Suppress("DEPRECATION")
 		require(maxStackSize == 1) { "energy item must have a maximum stack size of 1" }
+		
+		components.attach(this)
 	}
 	
 	protected abstract fun getEnergyCapacity(stack: ItemStack): Units
@@ -163,15 +166,11 @@ abstract class ItemAbstractEnergyUser(properties: Properties) : Item(properties)
 	
 	// Energy charging
 	
-	override fun onItemUse(context: ItemUseContext): ActionResultType {
-		val player = context.player ?: return FAIL
-		val world = context.world
-		val pos = context.pos
-		
+	override fun useOnBlock(world: World, pos: BlockPos, player: EntityPlayer, item: ItemStack, ctx: ItemUseContext): ActionResultType? {
 		val tile = pos.getTile<TileEntityEnergyCluster>(world)
-		val stack = player.getHeldItem(context.hand)
+		val stack = player.getHeldItem(ctx.hand)
 		
-		if (tile == null || !player.canPlayerEdit(pos, context.face, stack)) {
+		if (tile == null || !player.canPlayerEdit(pos, ctx.face, stack)) {
 			return FAIL
 		}
 		else if (world.isRemote) {

@@ -2,33 +2,33 @@ package chylex.hee.game.item
 
 import chylex.hee.game.block.BlockAbstractTableTile
 import chylex.hee.game.block.BlockTableBase
+import chylex.hee.game.item.components.UseOnBlockComponent
 import chylex.hee.game.world.BlockEditor
 import chylex.hee.game.world.breakBlock
 import chylex.hee.game.world.getBlock
 import chylex.hee.game.world.setBlock
 import chylex.hee.system.forge.Side
 import chylex.hee.system.forge.Sided
+import chylex.hee.system.migration.EntityPlayer
 import net.minecraft.client.util.ITooltipFlag
-import net.minecraft.item.Item
 import net.minecraft.item.ItemStack
 import net.minecraft.item.ItemUseContext
 import net.minecraft.util.ActionResultType
 import net.minecraft.util.ActionResultType.FAIL
 import net.minecraft.util.ActionResultType.PASS
 import net.minecraft.util.ActionResultType.SUCCESS
+import net.minecraft.util.math.BlockPos
 import net.minecraft.util.text.ITextComponent
 import net.minecraft.util.text.TranslationTextComponent
 import net.minecraft.world.World
 
-class ItemTableCore(private val tableBlocks: Array<BlockAbstractTableTile<*>>, properties: Properties) : Item(properties) {
-	override fun onItemUse(context: ItemUseContext): ActionResultType {
-		val player = context.player ?: return FAIL
-		val world = context.world
-		val pos = context.pos
-		
-		val heldItem = player.getHeldItem(context.hand)
-		
-		if (!BlockEditor.canEdit(pos, player, heldItem)) {
+class ItemTableCore(private val tableBlocks: Array<BlockAbstractTableTile<*>>, properties: Properties) : ItemWithComponents(properties), UseOnBlockComponent {
+	init {
+		components.attach(this)
+	}
+	
+	override fun useOnBlock(world: World, pos: BlockPos, player: EntityPlayer, item: ItemStack, ctx: ItemUseContext): ActionResultType {
+		if (!BlockEditor.canEdit(pos, player, item)) {
 			return FAIL
 		}
 		
@@ -42,7 +42,7 @@ class ItemTableCore(private val tableBlocks: Array<BlockAbstractTableTile<*>>, p
 				pos.setBlock(world, table)
 			}
 			
-			heldItem.shrink(1)
+			item.shrink(1)
 			return SUCCESS
 		}
 		

@@ -9,6 +9,7 @@ import chylex.hee.game.entity.item.EntityTokenHolder
 import chylex.hee.game.entity.selectExistingEntities
 import chylex.hee.game.inventory.heeTag
 import chylex.hee.game.inventory.heeTagOrNull
+import chylex.hee.game.item.components.UseOnBlockComponent
 import chylex.hee.game.mechanics.portal.DimensionTeleporter
 import chylex.hee.game.mechanics.portal.EntityPortalContact
 import chylex.hee.game.world.BlockEditor
@@ -34,7 +35,6 @@ import chylex.hee.system.serialization.putEnum
 import net.minecraft.client.renderer.color.IItemColor
 import net.minecraft.client.util.ITooltipFlag
 import net.minecraft.entity.Entity
-import net.minecraft.item.Item
 import net.minecraft.item.ItemGroup
 import net.minecraft.item.ItemStack
 import net.minecraft.item.ItemUseContext
@@ -43,13 +43,14 @@ import net.minecraft.util.ActionResultType
 import net.minecraft.util.Hand
 import net.minecraft.util.NonNullList
 import net.minecraft.util.math.AxisAlignedBB
+import net.minecraft.util.math.BlockPos
 import net.minecraft.util.text.ITextComponent
 import net.minecraft.util.text.StringTextComponent
 import net.minecraft.util.text.TranslationTextComponent
 import net.minecraft.world.World
 import net.minecraft.world.dimension.DimensionType
 
-class ItemPortalToken(properties: Properties) : Item(properties) {
+class ItemPortalToken(properties: Properties) : ItemWithComponents(properties), UseOnBlockComponent {
 	companion object {
 		private const val TYPE_TAG = "Type"
 		private const val TERRITORY_TYPE_TAG = "Territory"
@@ -72,6 +73,8 @@ class ItemPortalToken(properties: Properties) : Item(properties) {
 	}
 	
 	init {
+		components.attach(this)
+		
 		addPropertyOverride(Resource.Custom("token_type")) { stack, _, _ ->
 			getTokenType(stack).propertyValue + (if (stack.heeTagOrNull.hasKey(IS_CORRUPTED_TAG)) 0.5F else 0F)
 		}
@@ -178,10 +181,7 @@ class ItemPortalToken(properties: Properties) : Item(properties) {
 		return ActionResult(SUCCESS, heldItem)
 	}
 	
-	override fun onItemUse(context: ItemUseContext): ActionResultType {
-		val player = context.player ?: return FAIL
-		val world = context.world
-		
+	override fun useOnBlock(world: World, pos: BlockPos, player: EntityPlayer, item: ItemStack, ctx: ItemUseContext): ActionResultType {
 		if (!player.isCreative || player.isSneaking) {
 			return PASS
 		}
@@ -190,16 +190,14 @@ class ItemPortalToken(properties: Properties) : Item(properties) {
 			return SUCCESS
 		}
 		
-		val targetPos = context.pos.up()
+		val targetPos = pos.up()
+		val territoryType = getTerritoryType(item)
 		
-		val heldItem = player.getHeldItem(context.hand)
-		val territoryType = getTerritoryType(heldItem)
-		
-		if (territoryType == null || context.face != UP || !BlockEditor.canEdit(targetPos, player, heldItem) || world.selectExistingEntities.inBox<EntityTokenHolder>(AxisAlignedBB(targetPos)).any()) {
+		if (territoryType == null || ctx.face != UP || !BlockEditor.canEdit(targetPos, player, item) || world.selectExistingEntities.inBox<EntityTokenHolder>(AxisAlignedBB(targetPos)).any()) {
 			return FAIL
 		}
 		
-		world.addEntity(EntityTokenHolder(world, targetPos, getTokenType(heldItem), territoryType))
+		world.addEntity(EntityTokenHolder(world, targetPos, getTokenType(item), territoryType))
 		return SUCCESS
 	}
 	

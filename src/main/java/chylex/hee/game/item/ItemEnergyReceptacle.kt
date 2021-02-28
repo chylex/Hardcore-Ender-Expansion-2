@@ -4,6 +4,7 @@ import chylex.hee.client.color.NO_TINT
 import chylex.hee.game.block.entity.TileEntityEnergyCluster
 import chylex.hee.game.inventory.heeTag
 import chylex.hee.game.inventory.heeTagOrNull
+import chylex.hee.game.item.components.UseOnBlockComponent
 import chylex.hee.game.item.infusion.Infusion.SAFETY
 import chylex.hee.game.item.infusion.Infusion.STABILITY
 import chylex.hee.game.item.infusion.InfusionList
@@ -27,10 +28,10 @@ import chylex.hee.system.forge.Side
 import chylex.hee.system.forge.Sided
 import chylex.hee.system.migration.ActionResult.FAIL
 import chylex.hee.system.migration.ActionResult.SUCCESS
+import chylex.hee.system.migration.EntityPlayer
 import chylex.hee.system.serialization.TagCompound
 import chylex.hee.system.serialization.getIntegerOrNull
 import chylex.hee.system.serialization.hasKey
-import chylex.hee.system.serialization.use
 import net.minecraft.client.renderer.color.IItemColor
 import net.minecraft.client.util.ITooltipFlag
 import net.minecraft.entity.Entity
@@ -43,7 +44,7 @@ import net.minecraft.util.text.TranslationTextComponent
 import net.minecraft.world.World
 import kotlin.math.pow
 
-class ItemEnergyReceptacle(properties: Properties) : ItemAbstractInfusable(properties) {
+class ItemEnergyReceptacle(properties: Properties) : ItemAbstractInfusable(properties), UseOnBlockComponent {
 	private companion object {
 		private const val CLUSTER_SNAPSHOT_TAG = "Cluster"
 		private const val UPDATE_TIME_TAG = "UpdateTime"
@@ -105,18 +106,14 @@ class ItemEnergyReceptacle(properties: Properties) : ItemAbstractInfusable(prope
 		}
 		
 		// POLISH tweak animation
+		
+		components.attach(this)
 	}
 	
-	override fun onItemUse(context: ItemUseContext): ActionResultType {
-		val player = context.player ?: return FAIL
-		val world = context.world
-		val pos = context.pos
-		
-		val stack = player.getHeldItem(context.hand)
-		
-		stack.heeTag.use {
+	override fun useOnBlock(world: World, pos: BlockPos, player: EntityPlayer, item: ItemStack, ctx: ItemUseContext): ActionResultType? {
+		with(item.heeTag) {
 			if (hasKey(CLUSTER_SNAPSHOT_TAG)) {
-				val finalPos = BlockEditor.place(ModBlocks.ENERGY_CLUSTER, player, stack, context)
+				val finalPos = BlockEditor.place(ModBlocks.ENERGY_CLUSTER, player, item, ctx)
 				
 				if (world.isRemote) {
 					return SUCCESS
@@ -126,7 +123,7 @@ class ItemEnergyReceptacle(properties: Properties) : ItemAbstractInfusable(prope
 					finalPos.getTile<TileEntityEnergyCluster>(world)?.let {
 						it.loadClusterSnapshot(ClusterSnapshot(getCompound(CLUSTER_SNAPSHOT_TAG)), inactive = false)
 						
-						if (shouldLoseHealth(it, this, InfusionTag.getList(stack))) {
+						if (shouldLoseHealth(it, this, InfusionTag.getList(item))) {
 							it.deteriorateHealth()
 						}
 					}
@@ -141,7 +138,7 @@ class ItemEnergyReceptacle(properties: Properties) : ItemAbstractInfusable(prope
 					return SUCCESS
 				}
 			}
-			else if (BlockEditor.canEdit(pos, player, stack)) {
+			else if (BlockEditor.canEdit(pos, player, item)) {
 				if (world.isRemote) {
 					return SUCCESS
 				}
