@@ -48,6 +48,7 @@ class PathNavigateGroundUnrestricted(entity: EntityLiving, world: World) : Groun
 	
 	override fun tick() {
 		if (!super.noPath()) {
+			overrideSpeed = 0.0
 			super.tick()
 		}
 		else if (overrideSpeed > 0.0) {
