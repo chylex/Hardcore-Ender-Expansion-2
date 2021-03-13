@@ -14,11 +14,9 @@ import net.minecraft.world.World
 import java.util.Random
 
 object ParticleCorruptedEnergy : IParticleMaker.Simple() {
-	private val rand = Random()
-	
 	private object Color : IRandomColor {
 		override fun next(rand: Random): IntColor {
-			val color = ParticleTeleport.DefaultColor.next(rand)
+			val color = ParticleTeleport.defaultColor.next(rand)
 			
 			if (rand.nextInt(3) != 0) {
 				return color

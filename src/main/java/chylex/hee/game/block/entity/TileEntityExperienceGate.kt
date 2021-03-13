@@ -73,14 +73,14 @@ class TileEntityExperienceGate(type: TileEntityType<TileEntityExperienceGate>) :
 		
 		private val PARTICLE_TICK = ParticleSpawnerCustom(
 			type = ParticleSmokeCustom,
-			data = ParticleSmokeCustom.Data(ParticleExperienceOrbFloating.DEFAULT_COLOR, lifespan = 29..30, scale = 0.825F),
+			data = ParticleSmokeCustom.Data(ParticleExperienceOrbFloating.defaultColor, lifespan = 29..30, scale = 0.825F),
 			pos = PARTICLE_TICK_POS,
 			mot = InBox(0F, 0F, 0.07F, 0.08F, 0F, 0F)
 		)
 		
 		private val PARTICLE_TICK_SLOW = ParticleSpawnerCustom(
 			type = ParticleSmokeCustom,
-			data = ParticleSmokeCustom.Data(ParticleExperienceOrbFloating.DEFAULT_COLOR, lifespan = 39..40, scale = 0.825F),
+			data = ParticleSmokeCustom.Data(ParticleExperienceOrbFloating.defaultColor, lifespan = 39..40, scale = 0.825F),
 			pos = PARTICLE_TICK_POS,
 			mot = InBox(0F, 0F, 0.015F, 0.025F, 0F, 0F)
 		)

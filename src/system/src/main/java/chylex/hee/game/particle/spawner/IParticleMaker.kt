@@ -8,12 +8,20 @@ import net.minecraft.client.particle.Particle
 import net.minecraft.particles.BasicParticleType
 import net.minecraft.particles.ParticleType
 import net.minecraft.world.World
+import java.util.Random
 
 interface IParticleMaker<T> {
 	@Sided(Side.CLIENT)
 	fun create(world: World, posX: Double, posY: Double, posZ: Double, motX: Double, motY: Double, motZ: Double, data: T?): Particle
 	
+	private companion object {
+		val rand = Random()
+	}
+	
 	abstract class WithData<T> : IParticleMaker<T> {
+		protected val rand
+			get() = IParticleMaker.rand
+		
 		protected lateinit var sprite: IAnimatedSprite
 		
 		val makeType: ParticleType<*>
