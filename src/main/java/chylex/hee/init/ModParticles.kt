@@ -3,8 +3,10 @@ package chylex.hee.init
 import chylex.hee.HEE
 import chylex.hee.client.MC
 import chylex.hee.game.particle.ParticleBubbleCustom
+import chylex.hee.game.particle.ParticleCriticalHitCustom
 import chylex.hee.game.particle.ParticleDeathFlowerHeal
 import chylex.hee.game.particle.ParticleDust
+import chylex.hee.game.particle.ParticleEnchantedHitCustom
 import chylex.hee.game.particle.ParticleEnderGoo
 import chylex.hee.game.particle.ParticleEnergyCluster
 import chylex.hee.game.particle.ParticleEnergyClusterRevitalization
@@ -41,8 +43,10 @@ object ModParticles {
 	fun onRegister(e: RegistryEvent.Register<ParticleType<*>>) {
 		with(e.registry) {
 			register(ParticleBubbleCustom.makeType named "bubble")
+			register(ParticleCriticalHitCustom.makeType named "critical_hit")
 			register(ParticleDeathFlowerHeal.makeType named "death_flower_heal")
 			register(ParticleDust.makeType named "dust")
+			register(ParticleEnchantedHitCustom.makeType named "enchanted_hit")
 			register(ParticleEnderGoo.makeType named "ender_goo")
 			register(ParticleEnergyCluster.makeType named "energy_cluster")
 			register(ParticleEnergyClusterRevitalization.makeType named "energy_cluster_revitalization")
