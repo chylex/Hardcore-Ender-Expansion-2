@@ -1,6 +1,7 @@
 package chylex.hee.game.world.feature.stronghold.piece
 
 import chylex.hee.game.entity.living.EntityMobSilverfish
+import chylex.hee.game.entity.posVec
 import chylex.hee.game.entity.selectVulnerableEntities
 import chylex.hee.game.entity.technical.EntityTechnicalTrigger
 import chylex.hee.game.entity.technical.EntityTechnicalTrigger.ITriggerHandler
@@ -14,6 +15,8 @@ import chylex.hee.game.world.isAir
 import chylex.hee.game.world.isPeaceful
 import chylex.hee.game.world.structure.IStructureWorld
 import chylex.hee.game.world.structure.trigger.EntityStructureTrigger
+import chylex.hee.network.client.PacketClientFX
+import chylex.hee.network.fx.FxVecData
 import chylex.hee.system.facades.Facing4
 import chylex.hee.system.migration.EntityPlayer
 import chylex.hee.system.random.nextFloat
@@ -54,10 +57,10 @@ class StrongholdRoom_Trap_TallIntersection(file: String) : StrongholdAbstractPie
 					EntityMobSilverfish(world).apply {
 						setLocationAndAngles(testPos.x + 0.5, testPos.y.toDouble(), testPos.z + 0.5, rand.nextFloat(0F, 360F), 0F)
 						delayHideInBlockAI(20 * 30)
-						world.addEntity(this)
-						
-						spawnExplosionParticle()
 						attackTarget = rand.nextItem(targets)
+						
+						world.addEntity(this)
+						PacketClientFX(EntityMobSilverfish.FX_SPAWN_PARTICLE, FxVecData(posVec)).sendToAllAround(this, 8.0)
 					}
 					
 					if (--spawnsLeft == 0) {

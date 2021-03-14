@@ -2,6 +2,7 @@ package chylex.hee.game.world.feature.stronghold.piece
 
 import chylex.hee.game.block.with
 import chylex.hee.game.entity.living.EntityMobSilverfish
+import chylex.hee.game.entity.posVec
 import chylex.hee.game.entity.selectVulnerableEntities
 import chylex.hee.game.entity.technical.EntityTechnicalTrigger
 import chylex.hee.game.entity.technical.EntityTechnicalTrigger.ITriggerHandler
@@ -21,6 +22,9 @@ import chylex.hee.game.world.structure.IStructureWorld
 import chylex.hee.game.world.structure.piece.IStructurePieceConnection
 import chylex.hee.game.world.structure.trigger.EntityStructureTrigger
 import chylex.hee.game.world.structure.trigger.LootChestStructureTrigger
+import chylex.hee.network.client.PacketClientFX
+import chylex.hee.network.fx.FxVecData
+import chylex.hee.system.math.addY
 import chylex.hee.system.math.component1
 import chylex.hee.system.math.component2
 import chylex.hee.system.math.component3
@@ -57,7 +61,7 @@ class StrongholdRoom_Trap_Prison(file: String) : StrongholdAbstractPieceFromFile
 			val world = entity.world
 			val facing = entity.horizontalFacing
 			
-			val pos1 = Pos(entity)
+			val pos1 = Pos(entity).offset(facing.rotateY(), 2)
 			val pos2 = pos1.offset(facing, 7).offset(facing.rotateYCCW(), 4).offset(UP, 2)
 			
 			val (x1, y1, z1) = pos1.center
@@ -87,10 +91,10 @@ class StrongholdRoom_Trap_Prison(file: String) : StrongholdAbstractPieceFromFile
 						
 						EntityMobSilverfish(world).apply {
 							setLocationAndAngles(testPos.x + 0.5, testPos.y.toDouble(), testPos.z + 0.5, rand.nextFloat(0F, 360F), 0F)
-							world.addEntity(this)
-							
-							spawnExplosionParticle()
 							attackTarget = rand.nextItemOrNull(targets)
+							
+							world.addEntity(this)
+							PacketClientFX(EntityMobSilverfish.FX_SPAWN_PARTICLE, FxVecData(posVec.addY(0.35))).sendToAllAround(this, 8.0)
 						}
 						
 						--spawnsLeft
@@ -124,7 +128,7 @@ class StrongholdRoom_Trap_Prison(file: String) : StrongholdAbstractPieceFromFile
 	
 	override fun generate(world: IStructureWorld, instance: Instance) {
 		super.generate(world, instance)
-		world.addTrigger(Pos(1, 1, 5), EntityStructureTrigger(STRONGHOLD_TRAP_PRISON, EAST))
+		world.addTrigger(Pos(1, 1, 3), EntityStructureTrigger(STRONGHOLD_TRAP_PRISON, EAST))
 		
 		val rand = world.rand
 		

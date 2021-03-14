@@ -18,6 +18,7 @@ import chylex.hee.game.mechanics.damage.IDamageProcessor.Companion.PEACEFUL_EXCL
 import chylex.hee.game.mechanics.damage.IDamageProcessor.Companion.PEACEFUL_KNOCKBACK
 import chylex.hee.game.mechanics.damage.IDamageProcessor.Companion.RAPID_DAMAGE
 import chylex.hee.init.ModEntities
+import chylex.hee.network.fx.FxVecHandler
 import chylex.hee.system.facades.Resource
 import chylex.hee.system.forge.EventPriority
 import chylex.hee.system.forge.SubscribeAllEvents
@@ -39,9 +40,11 @@ import net.minecraft.network.IPacket
 import net.minecraft.util.DamageSource
 import net.minecraft.util.EntityDamageSource
 import net.minecraft.util.ResourceLocation
+import net.minecraft.util.math.Vec3d
 import net.minecraft.world.World
 import net.minecraftforge.event.entity.EntityJoinWorldEvent
 import net.minecraftforge.fml.network.NetworkHooks
+import java.util.Random
 import kotlin.math.floor
 
 class EntityMobSilverfish(type: EntityType<EntityMobSilverfish>, world: World) : EntitySilverfish(type, world), ICritTracker {
@@ -53,6 +56,15 @@ class EntityMobSilverfish(type: EntityType<EntityMobSilverfish>, world: World) :
 		private val DAMAGE_HAUNTWOOD_FOREST = Damage(DIFFICULTY_SCALING, PEACEFUL_KNOCKBACK, *ALL_PROTECTIONS, RAPID_DAMAGE(5))
 		
 		private const val HIDE_DELAY_TAG = "HideDelay"
+		
+		val FX_SPAWN_PARTICLE = object : FxVecHandler() {
+			override fun handle(world: World, rand: Random, vec: Vec3d) {
+				EntityMobSilverfish(world).apply {
+					setLocationAndAngles(vec.x, vec.y, vec.z, 0F, 0F)
+					spawnExplosionParticle()
+				}
+			}
+		}
 		
 		@SubscribeEvent(EventPriority.LOWEST)
 		fun onEntityJoinWorld(e: EntityJoinWorldEvent) {

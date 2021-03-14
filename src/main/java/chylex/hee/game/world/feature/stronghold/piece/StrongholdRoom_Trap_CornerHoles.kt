@@ -11,6 +11,8 @@ import chylex.hee.game.world.feature.stronghold.StrongholdPieceType
 import chylex.hee.game.world.isPeaceful
 import chylex.hee.game.world.structure.IStructureWorld
 import chylex.hee.game.world.structure.trigger.EntityStructureTrigger
+import chylex.hee.network.client.PacketClientFX
+import chylex.hee.network.fx.FxVecData
 import chylex.hee.system.math.component1
 import chylex.hee.system.math.component2
 import chylex.hee.system.math.component3
@@ -64,10 +66,11 @@ class StrongholdRoom_Trap_CornerHoles(file: String) : StrongholdAbstractPieceFro
 				EntityMobSilverfish(world).apply {
 					setLocationAndAngles(x, y, z, rand.nextFloat(0F, 360F), 0F)
 					delayHideInBlockAI(20 * 30)
-					world.addEntity(this)
-					
 					fallDistance = 1.5F
 					attackTarget = rand.nextItemOrNull(targets)
+					
+					world.addEntity(this)
+					PacketClientFX(EntityMobSilverfish.FX_SPAWN_PARTICLE, FxVecData(posVec)).sendToAllAround(this, 8.0)
 				}
 				
 				--spawnsLeft
