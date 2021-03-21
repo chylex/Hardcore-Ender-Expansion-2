@@ -11,6 +11,7 @@ inline fun Vec(x: Double, y: Double, z: Double) = Vec3d(x, y, z)
 
 object Vec3 {
 	val ZERO: Vec3d = Vec3d.ZERO
+	val ONE = xyz(1.0)
 	
 	inline fun xz(x: Double, z: Double): Vec3d {
 		return Vec(x, 0.0, z)

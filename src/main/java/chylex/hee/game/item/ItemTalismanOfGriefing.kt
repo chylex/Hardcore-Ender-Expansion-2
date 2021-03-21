@@ -136,8 +136,6 @@ class ItemTalismanOfGriefing(properties: Properties) : ItemAbstractTrinket(prope
 					with(ExplosionBuilder()) {
 						this.destroyBlocks = false
 						this.damageEntities = false
-						this.knockbackEntities = true
-						
 						clone(explosion, source = null)
 					}
 					

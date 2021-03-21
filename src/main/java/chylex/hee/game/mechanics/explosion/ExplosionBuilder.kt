@@ -8,6 +8,7 @@ import chylex.hee.game.world.isFullBlock
 import chylex.hee.game.world.playServer
 import chylex.hee.game.world.setBlock
 import chylex.hee.system.math.Vec
+import chylex.hee.system.math.Vec3
 import chylex.hee.system.math.component1
 import chylex.hee.system.math.component2
 import chylex.hee.system.math.component3
@@ -49,7 +50,7 @@ class ExplosionBuilder {
 	var blockFireChance = 3
 	
 	var damageEntities = true
-	var knockbackEntities = true
+	var knockbackMultiplier = Vec3.ONE
 	
 	fun trigger(world: World, source: Entity? = null, x: Double, y: Double, z: Double, strength: Float) {
 		if (world.isRemote) {
@@ -145,7 +146,7 @@ class ExplosionBuilder {
 		
 		private fun determineAffectedEntitiesAndKnockback() {
 			val damageEntities = builder.damageEntities
-			val knockbackEntities = builder.knockbackEntities
+			val knockbackEntities = builder.knockbackMultiplier != Vec3.ZERO
 			
 			if (!damageEntities && !knockbackEntities) {
 				return
@@ -193,9 +194,9 @@ class ExplosionBuilder {
 				
 				if (knockbackEntities) {
 					val knockbackPower = (entity as? EntityLivingBase)?.let { ProtectionEnchantment.getBlastDamageReduction(it, blastPower) } ?: blastPower
-					val knockbackVec = centerVec.directionTowards(lookPosVec).scale(knockbackPower)
+					val knockbackVec = centerVec.directionTowards(lookPosVec).mul(builder.knockbackMultiplier.scale(knockbackPower))
 					
-					entity.motion = entity.motion.mul(knockbackVec)
+					entity.motion = entity.motion.add(knockbackVec)
 					
 					if (entity is EntityPlayer) {
 						playerKnockbackMap[entity] = knockbackVec // vanilla uses blastPower instead of knockbackPower here, bug?
