@@ -103,13 +103,13 @@ class PacketClientFX<T : IFxData>() : BaseClientPacket() {
 	private var buffer: ByteBuf? = null
 	
 	override fun write(buffer: PacketBuffer) {
-		buffer.writeInt(HANDLERS.indexOf(handler))
+		buffer.writeByte(HANDLERS.indexOf(handler))
 		data.write(buffer)
 	}
 	
 	@Suppress("UNCHECKED_CAST")
 	override fun read(buffer: PacketBuffer) {
-		val index = buffer.readInt()
+		val index = buffer.readByte().toInt()
 		
 		if (index == -1) {
 			if (Debug.enabled) {
