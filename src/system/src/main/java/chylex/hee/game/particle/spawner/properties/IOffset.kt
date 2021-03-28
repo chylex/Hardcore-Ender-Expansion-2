@@ -4,6 +4,7 @@ import chylex.hee.system.random.nextFloat
 import chylex.hee.system.random.nextVector
 import net.minecraft.entity.Entity
 import net.minecraft.util.Direction
+import net.minecraft.util.math.Vec3d
 import java.util.Random
 
 interface IOffset {
@@ -34,6 +35,12 @@ interface IOffset {
 			offsetX = offset * towards.xOffset,
 			offsetY = offset * towards.yOffset,
 			offsetZ = offset * towards.zOffset
+		)
+		
+		constructor(offset: Vec3d) : this(
+			offsetX = offset.x.toFloat(),
+			offsetY = offset.y.toFloat(),
+			offsetZ = offset.z.toFloat()
 		)
 		
 		override fun next(out: MutableOffsetPoint, rand: Random) {
@@ -74,6 +81,39 @@ interface IOffset {
 			out.x = rand.nextFloat(minX, maxX)
 			out.y = rand.nextFloat(minY, maxY)
 			out.z = rand.nextFloat(minZ, maxZ)
+		}
+	}
+	
+	class OutlineBox(
+		private val minX: Float,
+		private val maxX: Float,
+		private val minY: Float,
+		private val maxY: Float,
+		private val minZ: Float,
+		private val maxZ: Float,
+	) : IOffset {
+		constructor(maxOffsetX: Float, maxOffsetY: Float, maxOffsetZ: Float) : this(
+			minX = -maxOffsetX,
+			maxX = +maxOffsetX,
+			minY = -maxOffsetY,
+			maxY = +maxOffsetY,
+			minZ = -maxOffsetZ,
+			maxZ = +maxOffsetZ
+		)
+		
+		override fun next(out: MutableOffsetPoint, rand: Random) {
+			out.x = rand.nextFloat(minX, maxX)
+			out.y = rand.nextFloat(minY, maxY)
+			out.z = rand.nextFloat(minZ, maxZ)
+			
+			when(rand.nextInt(6)) {
+				0 -> out.x = minX
+				1 -> out.x = maxX
+				2 -> out.y = minY
+				3 -> out.y = maxY
+				4 -> out.z = minZ
+				5 -> out.z = maxZ
+			}
 		}
 	}
 	
