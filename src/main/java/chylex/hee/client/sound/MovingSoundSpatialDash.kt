@@ -1,11 +1,14 @@
 package chylex.hee.client.sound
 
 import chylex.hee.game.entity.projectile.EntityProjectileSpatialDash
+import chylex.hee.system.forge.Side
+import chylex.hee.system.forge.Sided
 import chylex.hee.system.migration.Sounds
 import chylex.hee.system.random.nextFloat
 import net.minecraft.client.audio.TickableSound
 import net.minecraft.util.SoundCategory
 
+@Sided(Side.CLIENT)
 class MovingSoundSpatialDash(private val entity: EntityProjectileSpatialDash) : TickableSound(Sounds.ITEM_ELYTRA_FLYING, SoundCategory.PLAYERS) {
 	init {
 		volume = 0.9F
