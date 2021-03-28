@@ -20,6 +20,7 @@ import chylex.hee.game.entity.living.EntityMobSilverfish
 import chylex.hee.game.entity.living.behavior.EnderEyePhase
 import chylex.hee.game.entity.living.behavior.EnderEyeSpawnerParticles
 import chylex.hee.game.entity.living.behavior.EndermanTeleportHandler
+import chylex.hee.game.entity.living.behavior.UndreadDustEffects
 import chylex.hee.game.entity.projectile.EntityProjectileSpatialDash
 import chylex.hee.game.entity.technical.EntityTechnicalIgneousPlateLogic
 import chylex.hee.game.item.ItemAbstractEnergyUser
@@ -83,6 +84,7 @@ class PacketClientFX<T : IFxData>() : BaseClientPacket() {
 			EndermanTeleportHandler.FX_TELEPORT_FAIL,
 			EndermanTeleportHandler.FX_TELEPORT_OUT_OF_WORLD,
 			PotionBanishment.FX_BANISH,
+			UndreadDustEffects.FX_CURSE,
 			TombDungeonRoom_Tomb.MobSpawnerTrigger.FX_SPAWN_UNDREAD,
 			TombDungeonRoom_Tomb.MobSpawnerTrigger.FX_SPAWN_SPIDERLING,
 		)

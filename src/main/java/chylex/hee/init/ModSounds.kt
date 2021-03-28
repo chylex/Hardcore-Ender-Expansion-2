@@ -50,6 +50,8 @@ object ModSounds {
 	@JvmField val MOB_ENDERMAN_TELEPORT_OUT  = sound("mob.enderman.teleport.out")
 	@JvmField val MOB_UNDREAD_DEATH          = sound("mob.undread.death")
 	@JvmField val MOB_UNDREAD_HURT           = sound("mob.undread.hurt")
+	@JvmField val MOB_UNDREAD_CURSE          = sound("mob.undread.curse")
+	@JvmField val MOB_UNDREAD_FUSE           = sound("mob.undread.fuse")
 	@JvmField val MOB_VILLAGER_TOTEM_DEATH   = sound("mob.villager.totem_death")
 	@JvmField val MOB_VILLAGER_TOTEM_DYING   = sound("mob.villager.totem_dying")
 	

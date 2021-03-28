@@ -134,6 +134,14 @@
     "sounds": [ "hee:mob/undread_death" ],
     "subtitle": "subtitles.hee.mob.undread.death"
   },
+  "mob.undread.curse": {
+    "sounds": [ "hee:mob/undread_curse" ],
+    "subtitle": "subtitles.hee.mob.undread.curse"
+  },
+  "mob.undread.fuse": {
+    "sounds": [ "hee:mob/undread_fuse" ],
+    "subtitle": "subtitles.hee.mob.undread.fuse"
+  },
   "mob.villager.totem_dying": {
     "sounds": [ "hee:mob/villager_totem_dying" ]
   },

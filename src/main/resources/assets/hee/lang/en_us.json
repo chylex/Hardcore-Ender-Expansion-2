@@ -407,5 +407,7 @@
   "subtitles.hee.mob.enderman.teleport.fail": "Enderman panics",
   "subtitles.hee.mob.enderman.teleport.out": "Enderman escapes",
   "subtitles.hee.mob.undread.hurt": "Undread hurts",
-  "subtitles.hee.mob.undread.death": "Undread dies"
+  "subtitles.hee.mob.undread.death": "Undread dies",
+  "subtitles.hee.mob.undread.curse": "Undread curses",
+  "subtitles.hee.mob.undread.fuse": "Undread smokes"
 }

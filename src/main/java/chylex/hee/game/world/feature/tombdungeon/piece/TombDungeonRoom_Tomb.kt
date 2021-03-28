@@ -1,15 +1,20 @@
 package chylex.hee.game.world.feature.tombdungeon.piece
 
 import chylex.hee.game.block.BlockGraveDirt
+import chylex.hee.game.block.entity.TileEntityJarODust
 import chylex.hee.game.entity.living.EntityMobSpiderling
 import chylex.hee.game.entity.living.EntityMobUndread
+import chylex.hee.game.entity.living.behavior.UndreadDustEffects
 import chylex.hee.game.entity.posVec
 import chylex.hee.game.entity.selectExistingEntities
 import chylex.hee.game.entity.selectVulnerableEntities
 import chylex.hee.game.entity.technical.EntityTechnicalTrigger
 import chylex.hee.game.entity.technical.EntityTechnicalTrigger.ITriggerHandler
 import chylex.hee.game.entity.technical.EntityTechnicalTrigger.Types.TOMB_DUNGEON_UNDREAD_SPAWNER
+import chylex.hee.game.mechanics.dust.DustType
 import chylex.hee.game.world.Pos
+import chylex.hee.game.world.center
+import chylex.hee.game.world.closestTile
 import chylex.hee.game.world.distanceSqTo
 import chylex.hee.game.world.feature.tombdungeon.TombDungeonLevel
 import chylex.hee.game.world.feature.tombdungeon.TombDungeonLevel.MobAmount
@@ -44,6 +49,7 @@ import chylex.hee.system.random.nextInt
 import chylex.hee.system.random.nextItem
 import chylex.hee.system.serialization.TagCompound
 import chylex.hee.system.serialization.use
+import com.google.common.collect.Sets
 import net.minecraft.entity.EntitySpawnPlacementRegistry
 import net.minecraft.entity.SpawnReason.STRUCTURE
 import net.minecraft.util.Direction.Axis
@@ -191,6 +197,7 @@ abstract class TombDungeonRoom_Tomb(file: String, entranceY: Int, allowSecrets: 
 						val z = bestPos.z + rand.nextFloat(0.35, 0.65)
 						val vec = Vec(x, y, z)
 						val target = rand.nextItem(nearbyPlayers)
+						val difficulty = world.getDifficultyForLocation(bestPos)
 						
 						entityType.create(world)?.apply {
 							setLocationAndAngles(x, y, z, vec.directionTowards(target.posVec).toYaw(), 0F)
@@ -198,14 +205,23 @@ abstract class TombDungeonRoom_Tomb(file: String, entranceY: Int, allowSecrets: 
 							attackTarget = target
 							onGround = true // allow instant pathfinding in MeleeAttackGoal
 							
-							if (this is EntityMobSpiderling) {
+							if (this is EntityMobUndread) {
+								val jarArea = aabb.grow(1.0)
+								val closestJar = bestPos.closestTile<TileEntityJarODust>(world, 18.0) { jarArea.contains(it.pos.center) }
+								
+								val dusts = closestJar?.let { jar ->
+									UndreadDustEffects(Sets.newEnumSet(jar.layers.contents.map { it.first }, DustType::class.java))
+								}
+								
+								onInitialSpawn(world, difficulty, STRUCTURE, dusts, null)
+							}
+							else if (this is EntityMobSpiderling) {
 								wakeUp(preventSleep = true, aiDelayTicks = if (rand.nextInt(10) == 0) rand.nextInt(4, 6) else rand.nextInt(11, 18))
+								onInitialSpawn(world, difficulty, STRUCTURE, null, null)
 							}
 							
-							onInitialSpawn(world, world.getDifficultyForLocation(bestPos), STRUCTURE, null, null)
-							world.addEntity(this)
-							
 							PacketClientFX(spawnParticle, FxVecData(vec)).sendToAllAround(this, 24.0)
+							world.addEntity(this)
 						}
 					}
 				}

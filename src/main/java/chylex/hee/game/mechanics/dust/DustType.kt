@@ -23,8 +23,12 @@ enum class DustType(val key: String, val item: Item, val color: IntArray) {
 		get() = item.maxStackSize
 	
 	companion object {
+		fun fromKey(key: String): DustType? {
+			return values().find { it.key == key }
+		}
+		
 		fun fromStack(stack: ItemStack): DustType? {
-			return values().firstOrNull { it.item === stack.item }
+			return values().find { it.item === stack.item }
 		}
 	}
 }

@@ -7,6 +7,7 @@ import chylex.hee.game.entity.living.ai.TargetAttacker
 import chylex.hee.game.entity.living.ai.TargetNearby
 import chylex.hee.game.entity.living.ai.WanderLand
 import chylex.hee.game.entity.living.ai.WatchIdle
+import chylex.hee.game.entity.living.behavior.UndreadDustEffects
 import chylex.hee.game.entity.living.path.PathNavigateGroundCustomProcessor
 import chylex.hee.game.entity.motionY
 import chylex.hee.game.mechanics.damage.Damage
@@ -24,17 +25,28 @@ import chylex.hee.system.migration.EntityMob
 import chylex.hee.system.migration.EntityPlayer
 import chylex.hee.system.migration.Sounds
 import chylex.hee.system.random.nextFloat
+import chylex.hee.system.serialization.NBTList.Companion.putList
+import chylex.hee.system.serialization.TagCompound
+import chylex.hee.system.serialization.getListOfStrings
+import chylex.hee.system.serialization.heeTag
+import chylex.hee.system.serialization.readTag
+import chylex.hee.system.serialization.use
+import chylex.hee.system.serialization.writeTag
 import net.minecraft.block.BlockState
 import net.minecraft.entity.CreatureAttribute
 import net.minecraft.entity.Entity
 import net.minecraft.entity.EntitySize
 import net.minecraft.entity.EntityType
+import net.minecraft.entity.ILivingEntityData
 import net.minecraft.entity.Pose
 import net.minecraft.entity.SharedMonsterAttributes.ATTACK_DAMAGE
 import net.minecraft.entity.SharedMonsterAttributes.FOLLOW_RANGE
 import net.minecraft.entity.SharedMonsterAttributes.MAX_HEALTH
 import net.minecraft.entity.SharedMonsterAttributes.MOVEMENT_SPEED
+import net.minecraft.entity.SpawnReason
+import net.minecraft.nbt.CompoundNBT
 import net.minecraft.network.IPacket
+import net.minecraft.network.PacketBuffer
 import net.minecraft.pathfinding.PathNavigator
 import net.minecraft.pathfinding.PathNodeType
 import net.minecraft.pathfinding.WalkNodeProcessor
@@ -43,19 +55,26 @@ import net.minecraft.util.Hand
 import net.minecraft.util.ResourceLocation
 import net.minecraft.util.SoundEvent
 import net.minecraft.util.math.BlockPos
+import net.minecraft.world.DifficultyInstance
 import net.minecraft.world.IBlockReader
+import net.minecraft.world.IWorld
 import net.minecraft.world.World
+import net.minecraftforge.fml.common.registry.IEntityAdditionalSpawnData
 import net.minecraftforge.fml.network.NetworkHooks
 import kotlin.math.abs
 import kotlin.math.max
 
-class EntityMobUndread(type: EntityType<EntityMobUndread>, world: World) : EntityMob(type, world) {
+class EntityMobUndread(type: EntityType<EntityMobUndread>, world: World) : EntityMob(type, world), IEntityAdditionalSpawnData {
 	@Suppress("unused")
 	constructor(world: World) : this(ModEntities.UNDREAD, world)
 	
 	private companion object {
 		private val DAMAGE_GENERAL = Damage(DIFFICULTY_SCALING, PEACEFUL_EXCLUSION, *ALL_PROTECTIONS_WITH_SHIELD)
+		
+		private const val DUSTS_TAG = "Dusts"
 	}
+	
+	private var dustEffects = UndreadDustEffects.NONE
 	
 	override fun registerAttributes() {
 		super.registerAttributes()
@@ -82,12 +101,46 @@ class EntityMobUndread(type: EntityType<EntityMobUndread>, world: World) : Entit
 		return NetworkHooks.getEntitySpawningPacket(this)
 	}
 	
+	override fun writeSpawnData(buffer: PacketBuffer) = buffer.use {
+		writeTag(TagCompound().apply { putList(DUSTS_TAG, dustEffects.serializeNBT()) })
+	}
+	
+	override fun readSpawnData(buffer: PacketBuffer) = buffer.use {
+		dustEffects = UndreadDustEffects.fromNBT(readTag().getListOfStrings(DUSTS_TAG))
+	}
+	
+	override fun tick() {
+		super.tick()
+		
+		if (world.isRemote && isAlive) {
+			dustEffects.tickClient(this)
+		}
+	}
+	
 	private fun isPlayerNearby(player: EntityPlayer): Boolean {
 		return abs(posY - player.posY) <= 3 && getDistanceSq(player) < square(16)
 	}
 	
 	override fun attackEntityAsMob(entity: Entity): Boolean {
-		return DAMAGE_GENERAL.dealToFrom(entity, this)
+		return dustEffects.onAttack(this) || DAMAGE_GENERAL.dealToFrom(entity, this)
+	}
+	
+	override fun attackEntityFrom(source: DamageSource, amount: Float): Boolean {
+		val newAmount = dustEffects.onHit(this, amount)
+		if (newAmount <= 0F) {
+			return false
+		}
+		
+		if (super.attackEntityFrom(source, newAmount)) {
+			dustEffects.onHurt(this, source)
+			return true
+		}
+		
+		return false
+	}
+	
+	public override fun createRunningParticles() {
+		super.createRunningParticles()
 	}
 	
 	override fun createNavigator(world: World): PathNavigator {
@@ -126,6 +179,14 @@ class EntityMobUndread(type: EntityType<EntityMobUndread>, world: World) : Entit
 	
 	override fun swingArm(hand: Hand) {}
 	
+	override fun onInitialSpawn(world: IWorld, difficulty: DifficultyInstance, reason: SpawnReason, data: ILivingEntityData?, nbt: CompoundNBT?): ILivingEntityData? {
+		if (data is UndreadDustEffects) {
+			this.dustEffects = data.also { it.applyAttributes(this) }
+		}
+		
+		return super.onInitialSpawn(world, difficulty, reason, data, nbt)
+	}
+	
 	override fun onDeathUpdate() {
 		noClip = true
 		motionY = max(0.05, motionY)
@@ -151,5 +212,15 @@ class EntityMobUndread(type: EntityType<EntityMobUndread>, world: World) : Entit
 	
 	public override fun getSoundPitch(): Float {
 		return rand.nextFloat(0.8F, 1F)
+	}
+	
+	override fun writeAdditional(nbt: TagCompound) = nbt.heeTag.use {
+		super.writeAdditional(nbt)
+		putList(DUSTS_TAG, dustEffects.serializeNBT())
+	}
+	
+	override fun readAdditional(nbt: TagCompound) = nbt.heeTag.use {
+		super.readAdditional(nbt)
+		dustEffects = UndreadDustEffects.fromNBT(getListOfStrings(DUSTS_TAG))
 	}
 }
