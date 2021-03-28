@@ -40,6 +40,10 @@ fun SoundEvent.playPlayer(player: EntityPlayer, x: Double, y: Double, z: Double,
 	(player as EntityPlayerMP).connection.sendPacket(SPlaySoundEffectPacket(this, category, x, y, z, volume, pitch))
 }
 
+fun SoundEvent.playPlayer(player: EntityPlayer, pos: Vec3d, category: SoundCategory, volume: Float = 1F, pitch: Float = 1F) {
+	this.playPlayer(player, pos.x, pos.y, pos.z, category, volume, pitch)
+}
+
 // Universal (client plays the sound, server sends packets to all clients but the specified player)
 
 fun SoundEvent.playUniversal(clientPlayer: EntityPlayer, x: Double, y: Double, z: Double, category: SoundCategory, volume: Float = 1F, pitch: Float = 1F) {
