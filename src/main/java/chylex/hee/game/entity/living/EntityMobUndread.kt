@@ -74,6 +74,9 @@ class EntityMobUndread(type: EntityType<EntityMobUndread>, world: World) : Entit
 		private const val DUSTS_TAG = "Dusts"
 	}
 	
+	val canTriggerDustyStone
+		get() = attackTarget != null
+	
 	private var dustEffects = UndreadDustEffects.NONE
 	
 	override fun registerAttributes() {
@@ -149,14 +152,13 @@ class EntityMobUndread(type: EntityType<EntityMobUndread>, world: World) : Entit
 		}
 	}
 	
-	private class NodeProcessor : WalkNodeProcessor() {
+	private inner class NodeProcessor : WalkNodeProcessor() {
 		override fun getPathNodeType(world: IBlockReader, x: Int, y: Int, z: Int): PathNodeType {
-			if (entity.attackTarget != null) {
+			if (!canTriggerDustyStone) {
 				return super.getPathNodeType(world, x, y, z)
 			}
 			
 			val posBelow = Pos(x, y, z).down()
-			
 			if (posBelow.getBlock(world) !is BlockDustyStoneUnstable || BlockDustyStoneUnstable.getCrumbleStartPos(world, posBelow) == null) {
 				return super.getPathNodeType(world, x, y, z)
 			}

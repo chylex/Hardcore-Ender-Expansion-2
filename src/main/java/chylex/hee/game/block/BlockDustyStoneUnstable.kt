@@ -2,6 +2,7 @@ package chylex.hee.game.block
 
 import chylex.hee.game.block.logic.IFullBlockCollisionHandler
 import chylex.hee.game.block.properties.BlockBuilder
+import chylex.hee.game.entity.living.EntityMobUndread
 import chylex.hee.game.world.Pos
 import chylex.hee.game.world.allInBox
 import chylex.hee.game.world.getBlock
@@ -95,6 +96,10 @@ class BlockDustyStoneUnstable(builder: BlockBuilder) : BlockDustyStone(builder),
 	
 	override fun onEntityCollisionAbove(world: World, pos: BlockPos, entity: Entity) {
 		if (!world.isRemote && world.totalTime % 4L == 0L && !isLightMob(entity) && isNonCreative(entity)) {
+			if (entity is EntityMobUndread && !entity.canTriggerDustyStone) {
+				return // Undread pathfinding should never spawn or walk on unstable Dusty Stone, but it still happens sometimes...
+			}
+			
 			if (!doCrumbleTest(world, pos)) {
 				return
 			}
