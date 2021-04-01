@@ -20,6 +20,7 @@ import chylex.hee.game.world.feature.tombdungeon.TombDungeonLevel
 import chylex.hee.game.world.feature.tombdungeon.TombDungeonLevel.MobAmount
 import chylex.hee.game.world.feature.tombdungeon.connection.TombDungeonConnection
 import chylex.hee.game.world.feature.tombdungeon.connection.TombDungeonConnectionType.TOMB_ENTRANCE_INSIDE
+import chylex.hee.game.world.feature.tombdungeon.connection.TombDungeonConnectionType.TOMB_EXIT
 import chylex.hee.game.world.getBlock
 import chylex.hee.game.world.getState
 import chylex.hee.game.world.isAir
@@ -59,11 +60,15 @@ import net.minecraft.util.math.Vec3d
 import net.minecraft.world.World
 import java.util.Random
 
-abstract class TombDungeonRoom_Tomb(file: String, entranceY: Int, allowSecrets: Boolean, isFancy: Boolean) : TombDungeonRoom(file, isFancy) {
+abstract class TombDungeonRoom_Tomb(file: String, entranceY: Int, allowExit: Boolean, allowSecrets: Boolean, isFancy: Boolean) : TombDungeonRoom(file, isFancy) {
 	final override val secretAttachWeight = if (allowSecrets) 2 else 0
 	final override val secretAttachY = entranceY
 	
-	final override val connections = arrayOf<IStructurePieceConnection>(
+	final override val connections = if (allowExit) arrayOf<IStructurePieceConnection>(
+		TombDungeonConnection(TOMB_ENTRANCE_INSIDE, Pos(centerX, entranceY, maxZ), SOUTH),
+		TombDungeonConnection(TOMB_EXIT, Pos(centerX, entranceY, 0), NORTH)
+	)
+	else arrayOf<IStructurePieceConnection>(
 		TombDungeonConnection(TOMB_ENTRANCE_INSIDE, Pos(centerX, entranceY, maxZ), SOUTH)
 	)
 	
@@ -82,6 +87,10 @@ abstract class TombDungeonRoom_Tomb(file: String, entranceY: Int, allowSecrets: 
 	}
 	
 	protected abstract fun getSpawnerTriggerMobAmount(rand: Random, level: TombDungeonLevel): MobAmount?
+	
+	protected fun isExitConnected(instance: Instance): Boolean {
+		return instance.findAvailableConnections().none { it.type === TOMB_EXIT }
+	}
 	
 	class MobSpawnerTrigger() : ITriggerHandler {
 		companion object {

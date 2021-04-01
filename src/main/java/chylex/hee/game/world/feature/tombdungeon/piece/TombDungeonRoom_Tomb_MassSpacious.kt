@@ -8,7 +8,7 @@ import chylex.hee.system.migration.Facing.NORTH
 import chylex.hee.system.random.nextInt
 import java.util.Random
 
-class TombDungeonRoom_Tomb_MassSpacious(file: String, entranceY: Int, isFancy: Boolean) : TombDungeonRoom_Tomb(file, entranceY, allowSecrets = false, isFancy) {
+class TombDungeonRoom_Tomb_MassSpacious(file: String, entranceY: Int, isFancy: Boolean) : TombDungeonRoom_Tomb(file, entranceY, allowExit = false, allowSecrets = false, isFancy) {
 	override fun generate(world: IStructureWorld, instance: Instance) {
 		super.generate(world, instance)
 		

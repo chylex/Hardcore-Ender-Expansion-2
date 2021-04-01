@@ -14,7 +14,7 @@ import chylex.hee.system.migration.Facing.WEST
 
 class TombDungeonCorridor_Intersection(override val isFancy: Boolean) : TombDungeonAbstractPiece() {
 	override val size = Size(5, 5, 5)
-	override val sidePathAttachWeight = 1
+	override val sidePathAttachWeight = 8
 	override val secretAttachWeight = 0
 	
 	override val connections = arrayOf<IStructurePieceConnection>(

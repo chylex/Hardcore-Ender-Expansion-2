@@ -7,7 +7,7 @@ import chylex.hee.game.world.structure.IStructureWorld
 import chylex.hee.system.migration.Facing.SOUTH
 import java.util.Random
 
-abstract class TombDungeonRoom_Tomb_Single(file: String, entranceY: Int, isFancy: Boolean) : TombDungeonRoom_Tomb(file, entranceY, allowSecrets = false, isFancy) {
+abstract class TombDungeonRoom_Tomb_Single(file: String, entranceY: Int, isFancy: Boolean) : TombDungeonRoom_Tomb(file, entranceY, allowExit = false, allowSecrets = false, isFancy) {
 	override fun generate(world: IStructureWorld, instance: Instance) {
 		super.generate(world, instance)
 		

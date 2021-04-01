@@ -34,7 +34,7 @@ enum class TombDungeonLevel(val isFancy: Boolean, private val corridorFactor: In
 	LAST  (isFancy = true,  corridorFactor = 6, mainRooms = 1..1, sideRooms = 0..1, dustPerRoom = 20..48);
 	
 	fun getMainCorridorLength(rand: Random): Int {
-		return rand.nextInt(45 + (corridorFactor * 2), 57) + (2 * (6 - corridorFactor)) + ((corridorFactor - 1) * rand.nextFloat(12.5F, 14.2F)).floorToInt() + (if (this == LAST) 10 else 0)
+		return rand.nextInt(45 + (corridorFactor * 2), 57) + (2 * (6 - corridorFactor)) + ((corridorFactor - 1) * rand.nextFloat(12.5F, 14.2F)).floorToInt() + (if (this == LAST) 13 else 0)
 	}
 	
 	fun nextMainCorridorSplitLength(rand: Random, remaining: Int): Int {
@@ -54,9 +54,9 @@ enum class TombDungeonLevel(val isFancy: Boolean, private val corridorFactor: In
 	
 	fun getTombCount(rand: Random): Int {
 		return if (this == LAST)
-			rand.nextInt(10, 15)
+			rand.nextInt(18, 21)
 		else
-			rand.nextInt(5, 7) + (ordinal / 2) + (rand.nextInt(2, 3) * ordinal)
+			rand.nextInt(5, 7) + ((ordinal + 1) / 2) + (rand.nextInt(2, 3) * ordinal)
 	}
 	
 	fun pickTombGeneratorAndSpacing(rand: Random): Pair<Int, (Boolean) -> TombDungeonAbstractPiece> {
@@ -78,7 +78,7 @@ enum class TombDungeonLevel(val isFancy: Boolean, private val corridorFactor: In
 				else    ->  7 to TOMB_RANDOM(rand, PIECE_TOMB_RANDOM_MASS_5X_BORDER)
 			}
 			
-			THIRD -> when(rand.nextInt(0, 7)) {
+			THIRD -> when(rand.nextInt(0, 8)) {
 				0       -> 11 to TOMB_RANDOM(rand, PIECE_TOMB_RANDOM_MASS_SPACIOUS)
 				in 1..2 -> 11 to PIECE_TOMB_RANDOM_MASS_SPACIOUS.generateItem(rand)
 				3       ->  9 to TOMB_RANDOM(rand, PIECE_TOMB_RANDOM_MULTI_NARROW)
@@ -97,10 +97,11 @@ enum class TombDungeonLevel(val isFancy: Boolean, private val corridorFactor: In
 				else    ->  5 to PIECE_TOMB_SINGLE_NARROW
 			}
 			
-			else -> when(rand.nextInt(0, 7)) {
-				in 0..2 ->  7 to PIECE_TOMB_SINGLE_SPACIOUS
-				in 3..6 ->  5 to PIECE_TOMB_SINGLE_NARROW
-				else    -> 11 to TOMB_RANDOM(rand, PIECE_TOMB_RANDOM_MULTI_SPACIOUS)
+			else -> when(rand.nextInt(0, 11)) {
+				in 0..3  ->  7 to PIECE_TOMB_SINGLE_SPACIOUS
+				in 4..8  ->  5 to PIECE_TOMB_SINGLE_NARROW
+				in 9..10 -> 11 to TOMB_RANDOM(rand, PIECE_TOMB_RANDOM_MULTI_SPACIOUS)
+				else     -> 11 to TOMB_RANDOM(rand, PIECE_TOMB_RANDOM_MULTI_DEEP_LONG)
 			}
 		}
 	}

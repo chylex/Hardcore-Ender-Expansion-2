@@ -9,25 +9,40 @@ import chylex.hee.system.migration.Facing.EAST
 import chylex.hee.system.migration.Facing.WEST
 import chylex.hee.system.random.nextInt
 import chylex.hee.system.random.nextRounded
+import net.minecraft.util.Mirror
 import java.util.Random
 
-class TombDungeonRoom_Tomb_MultiDeep(file: String, private val tombsPerColumn: Int, entranceY: Int, isFancy: Boolean) : TombDungeonRoom_Tomb(file, entranceY, allowSecrets = false, isFancy) {
+class TombDungeonRoom_Tomb_MultiDeep(file: String, private val tombsPerColumn: Int, entranceY: Int, isFancy: Boolean) : TombDungeonRoom_Tomb(file, entranceY, allowExit = true, allowSecrets = false, isFancy) {
+	override val sidePathAttachWeight = 6
+	
 	override fun generate(world: IStructureWorld, instance: Instance) {
 		super.generate(world, instance)
 		
 		val rand = world.rand
-		val chests = rand.nextInt(0, (tombsPerColumn * 2) / 5) * rand.nextRounded(0.66F)
+		val chests = rand.nextInt(0, (tombsPerColumn * 2) / 5) * rand.nextRounded(0.85F)
 		
 		repeat(chests) {
 			val (offset, facing) = if (rand.nextBoolean())
-				-3 to EAST
+				-1 to EAST
 			else
-				3 to WEST
+				1 to WEST
 			
-			val pos = Pos(centerX + offset, 1, 4 + (2 * rand.nextInt(tombsPerColumn)))
-			
-			if (world.getBlock(pos) is BlockGraveDirt) {
-				placeChest(world, instance, pos, facing)
+			if (rand.nextInt(7) <= 1) {
+				val pos = Pos(centerX + (3 * offset), 1, 4 + (2 * rand.nextInt(tombsPerColumn)))
+				if (world.getBlock(pos) is BlockGraveDirt) {
+					placeChest(world, instance, pos, facing)
+					
+					if (rand.nextInt(9) == 0) {
+						world.setAir(pos.add(0, 1, 0))
+						world.setAir(pos.add(-offset, 1, 0))
+					}
+				}
+			}
+			else {
+				val pos = Pos(centerX + (4 * offset), 3, 4 + (2 * rand.nextInt(tombsPerColumn)))
+				if (world.isAir(pos)) {
+					placeChest(world, instance, pos, facing)
+				}
 			}
 		}
 		
@@ -39,6 +54,12 @@ class TombDungeonRoom_Tomb_MultiDeep(file: String, private val tombsPerColumn: I
 				)
 			})
 		}
+		
+		if (isExitConnected(instance)) {
+			for (x in 1 until maxX) for (y in 3..6) for (z in 0..2) {
+				world.setState(Pos(x, y, z), world.getState(Pos(x, y, maxZ - z)).mirror(Mirror.LEFT_RIGHT))
+			}
+		}
 	}
 	
 	override fun getSpawnerTriggerMobAmount(rand: Random, level: TombDungeonLevel): MobAmount? {
@@ -47,7 +68,10 @@ class TombDungeonRoom_Tomb_MultiDeep(file: String, private val tombsPerColumn: I
 		}
 		
 		return when {
-			tombsPerColumn <= 6 -> MobAmount.MEDIUM
+			tombsPerColumn <= 4 -> if (rand.nextBoolean()) MobAmount.LOW else MobAmount.MEDIUM
+			tombsPerColumn <= 5 -> if (rand.nextInt(3) != 0) MobAmount.MEDIUM else MobAmount.HIGH
+			tombsPerColumn <= 6 -> if (rand.nextInt(2) != 0) MobAmount.MEDIUM else MobAmount.HIGH
+			tombsPerColumn <= 7 -> if (rand.nextInt(4) == 0) MobAmount.MEDIUM else MobAmount.HIGH
 			else                -> MobAmount.HIGH
 		}
 	}

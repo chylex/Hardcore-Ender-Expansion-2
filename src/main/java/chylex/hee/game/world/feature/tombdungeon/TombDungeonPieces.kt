@@ -178,7 +178,7 @@ object TombDungeonPieces : IStructureDescription {
 			val isFancy = level.isFancy
 			var lengthRemaining = level.getMainCorridorLength(rand)
 			
-			for(attempt in 0..2) {
+			for (attempt in 0..2) {
 				val (sideTombSpacing, sideTombGenerator) = level.pickTombGeneratorAndSpacing(rand)
 				
 				val tombsPerSide = rand.nextInt(6, 7) - attempt - min(2, (sideTombSpacing - 3) / 3)
@@ -194,7 +194,7 @@ object TombDungeonPieces : IStructureDescription {
 				}
 			}
 			
-			while(lengthRemaining > 0) {
+			while (lengthRemaining > 0) {
 				var nextLength = level.nextMainCorridorSplitLength(rand, lengthRemaining)
 				lengthRemaining -= nextLength
 				
@@ -236,7 +236,7 @@ object TombDungeonPieces : IStructureDescription {
 		return mutableListOf<TombDungeonAbstractPiece>().apply {
 			val isFancy = level.isFancy
 			
-			repeat(rand.nextInt(0, rand.nextInt(1, 6))) {
+			repeat(rand.nextInt(0, rand.nextInt(1, 5))) {
 				val length = rand.nextInt(1, 6)
 				
 				if (length >= 5 && rand.nextBoolean()) {
@@ -258,6 +258,10 @@ object TombDungeonPieces : IStructureDescription {
 			
 			shuffle(rand)
 			
+			if (isEmpty() || get(0).let { it is TombDungeonCorridor_Straight && it.size.z < 4 }) {
+				add(0, TombDungeonCorridor_Straight(3, isFancy))
+			}
+			
 			if (endRoom != null) {
 				add(endRoom)
 			}
@@ -273,11 +277,11 @@ object TombDungeonPieces : IStructureDescription {
 			
 			val randomPieces = mutableListOf<TombDungeonSecret>()
 			
-			while(randomPieces.size < amount) {
+			while (randomPieces.size < amount) {
 				randomPieces.addAll(PIECES_SECRET_RANDOM)
 			}
 			
-			while(size < amount) {
+			while (size < amount) {
 				add(rand.removeItem(randomPieces))
 			}
 		}

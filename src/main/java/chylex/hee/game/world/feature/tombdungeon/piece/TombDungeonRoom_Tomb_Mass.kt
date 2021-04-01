@@ -7,6 +7,7 @@ import chylex.hee.game.world.feature.tombdungeon.TombDungeonLevel.MobAmount
 import chylex.hee.game.world.feature.tombdungeon.TombDungeonPieces
 import chylex.hee.game.world.feature.tombdungeon.connection.TombDungeonConnection
 import chylex.hee.game.world.feature.tombdungeon.connection.TombDungeonConnectionType.TOMB_ENTRANCE_INSIDE
+import chylex.hee.game.world.feature.tombdungeon.connection.TombDungeonConnectionType.TOMB_EXIT
 import chylex.hee.game.world.feature.tombdungeon.piece.TombDungeonRoom_Tomb.MobSpawnerTrigger
 import chylex.hee.game.world.generation.IBlockPicker.Single
 import chylex.hee.game.world.generation.IBlockPicker.Single.Air
@@ -14,16 +15,21 @@ import chylex.hee.game.world.math.Size
 import chylex.hee.game.world.structure.IStructureWorld
 import chylex.hee.game.world.structure.piece.IStructurePieceConnection
 import chylex.hee.init.ModBlocks
+import chylex.hee.system.migration.Facing.NORTH
 import chylex.hee.system.migration.Facing.SOUTH
 
 class TombDungeonRoom_Tomb_Mass(width: Int, depth: Int, private val border: Boolean, private val split: Boolean, override val isFancy: Boolean) : TombDungeonAbstractPiece() {
 	override val size = Size(width + 2, 6, depth + 2)
 	
-	override val sidePathAttachWeight = 0
+	override val sidePathAttachWeight = 6
 	override val secretAttachWeight = 2
 	override val secretAttachY = 1
 	
-	override val connections = arrayOf<IStructurePieceConnection>(
+	override val connections = if (border || split) arrayOf<IStructurePieceConnection>(
+		TombDungeonConnection(TOMB_ENTRANCE_INSIDE, Pos(size.centerX, secretAttachY, size.maxZ), SOUTH),
+		TombDungeonConnection(TOMB_EXIT, Pos(size.centerX, secretAttachY, 0), NORTH)
+	)
+	else arrayOf<IStructurePieceConnection>(
 		TombDungeonConnection(TOMB_ENTRANCE_INSIDE, Pos(size.centerX, secretAttachY, size.maxZ), SOUTH)
 	)
 	
@@ -59,7 +65,7 @@ class TombDungeonRoom_Tomb_Mass(width: Int, depth: Int, private val border: Bool
 			world.setBlock(Pos(centerX, 1, maxZ - 1), ModBlocks.DUSTY_STONE)
 		}
 		
-		if (rand.nextInt(6) == 0 && (border || split)) {
+		if (rand.nextInt(6) == 0 && (border || split) && instance.findAvailableConnections().any { it.type === TOMB_EXIT }) {
 			placeJars(world, instance, listOf(Pos(centerX, 2, 1)))
 			
 			if (level != null && rand.nextInt(9) != 0) {

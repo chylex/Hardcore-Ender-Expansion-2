@@ -8,7 +8,7 @@ import chylex.hee.init.ModBlocks
 
 enum class TombDungeonConnectionType : IStructurePieceConnectionType {
 	CORRIDOR {
-		override fun canBeAttachedTo(target: IStructurePieceConnectionType) = target == CORRIDOR || target == ROOM_ENTRANCE || target == STAIR_BOTTOM
+		override fun canBeAttachedTo(target: IStructurePieceConnectionType) = target == CORRIDOR || target == TOMB_EXIT || target == ROOM_ENTRANCE || target == STAIR_BOTTOM
 	},
 	
 	STAIR_BOTTOM {
@@ -28,13 +28,15 @@ enum class TombDungeonConnectionType : IStructurePieceConnectionType {
 	
 	TOMB_ENTRANCE_INSIDE {
 		override fun canBeAttachedTo(target: IStructurePieceConnectionType) = target == TOMB_ENTRANCE_OUTSIDE
-		
 		override fun placeConnection(world: IStructureWorld, connection: IStructurePieceConnection) {
-			val offset = connection.offset
-			
-			world.setBlock(offset, ModBlocks.DUSTY_STONE)
-			world.setAir(offset.up(1))
-			world.setAir(offset.up(2))
+			placeSimpleHole(world, connection)
+		}
+	},
+	
+	TOMB_EXIT {
+		override fun canBeAttachedTo(target: IStructurePieceConnectionType) = target == CORRIDOR
+		override fun placeConnection(world: IStructureWorld, connection: IStructurePieceConnection) {
+			placeSimpleHole(world, connection)
 		}
 	},
 	
@@ -55,5 +57,13 @@ enum class TombDungeonConnectionType : IStructurePieceConnectionType {
 		val addZ = perpendicular.zOffset
 		
 		world.placeCube(offset.add(-addX, 1, -addZ), offset.add(addX, 3, addZ), Air)
+	}
+	
+	protected fun placeSimpleHole(world: IStructureWorld, connection: IStructurePieceConnection) {
+		val offset = connection.offset
+		
+		world.setBlock(offset, ModBlocks.DUSTY_STONE)
+		world.setAir(offset.up(1))
+		world.setAir(offset.up(2))
 	}
 }

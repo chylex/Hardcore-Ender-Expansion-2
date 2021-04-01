@@ -154,7 +154,7 @@ object TombDungeonBuilder : IStructureBuilder {
 					
 					val targetPieces = build
 						.generatedPieces
-						.subList(firstCorridorIndex, lastCorridorIndex + 1)
+						.drop(firstCorridorIndex - 1)
 						.filter { it.instance.hasAvailableConnections }
 						.mapNotNull { (it.instance.owner as? TombDungeonAbstractPiece)?.sidePathAttachWeight?.takeIf { weight -> weight > 0 }?.let { weight -> weight to it } }
 						.takeIf { it.isNotEmpty() }
