@@ -3,17 +3,21 @@ package chylex.hee.game.world.math
 import chylex.hee.game.world.Pos
 import chylex.hee.game.world.max
 import chylex.hee.game.world.min
+import chylex.hee.system.math.Vec
 import net.minecraft.util.math.BlockPos
 
 class BoundingBox(pos1: BlockPos, pos2: BlockPos) {
 	val min = pos1.min(pos2)
 	val max = pos1.max(pos2)
 	
-	val center: BlockPos
+	val size
+		get() = Size(max.x - min.x + 1, max.y - min.y + 1, max.z - min.z + 1)
+	
+	val center
 		get() = Pos((min.x + max.x) / 2, (min.y + max.y) / 2, (min.z + max.z) / 2)
 	
-	val size: Size
-		get() = Size(max.x - min.x + 1, max.y - min.y + 1, max.z - min.z + 1)
+	val centerVec
+		get() = Vec((min.x + max.x + 1) * 0.5, (min.y + max.y + 1) * 0.5, (min.z + max.z + 1) * 0.5)
 	
 	fun intersects(bb: BoundingBox): Boolean {
 		return !(

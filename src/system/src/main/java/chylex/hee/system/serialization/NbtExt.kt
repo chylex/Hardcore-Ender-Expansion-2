@@ -10,6 +10,7 @@ import chylex.hee.game.world.Pos
 import net.minecraft.inventory.IInventory
 import net.minecraft.item.ItemStack
 import net.minecraft.nbt.INBT
+import net.minecraft.util.math.AxisAlignedBB
 import net.minecraft.util.math.BlockPos
 import net.minecraftforge.common.util.Constants.NBT
 import java.util.Locale
@@ -116,6 +117,32 @@ fun TagCompound.getPos(key: String): BlockPos {
 		Pos(this.getLong(key))
 	else
 		BlockPos.ZERO
+}
+
+// AABB
+
+fun TagCompound.putAABB(key: String, aabb: AxisAlignedBB) {
+	this.put(key, TagCompound().apply {
+		putDouble("x1", aabb.minX)
+		putDouble("x2", aabb.maxX)
+		putDouble("y1", aabb.minY)
+		putDouble("y2", aabb.maxY)
+		putDouble("z1", aabb.minZ)
+		putDouble("z2", aabb.maxZ)
+	})
+}
+
+fun TagCompound.getAABBOrNull(key: String): AxisAlignedBB? {
+	return this.getCompoundOrNull(key)?.let {
+		AxisAlignedBB(
+			getDouble("x1"),
+			getDouble("x2"),
+			getDouble("y1"),
+			getDouble("y2"),
+			getDouble("z1"),
+			getDouble("z2")
+		)
+	}
 }
 
 // UUID

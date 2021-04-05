@@ -1,41 +1,60 @@
 package chylex.hee.game.world.feature.tombdungeon.piece
 
+import chylex.hee.game.block.BlockGraveDirt
 import chylex.hee.game.block.BlockVoidPortalInner
 import chylex.hee.game.block.with
 import chylex.hee.game.entity.item.EntityTokenHolder
+import chylex.hee.game.entity.posVec
+import chylex.hee.game.entity.technical.EntityTechnicalTrigger
+import chylex.hee.game.entity.technical.EntityTechnicalTrigger.ITriggerHandler
+import chylex.hee.game.entity.technical.EntityTechnicalTrigger.Types.TOMB_DUNGEON_END
 import chylex.hee.game.item.ItemPortalToken.TokenType.NORMAL
 import chylex.hee.game.world.Pos
+import chylex.hee.game.world.allInBoxMutable
 import chylex.hee.game.world.allInCenteredBox
+import chylex.hee.game.world.feature.tombdungeon.TombDungeonPieces
 import chylex.hee.game.world.feature.tombdungeon.connection.TombDungeonConnection
 import chylex.hee.game.world.feature.tombdungeon.connection.TombDungeonConnectionType.ROOM_ENTRANCE
+import chylex.hee.game.world.floodFill
 import chylex.hee.game.world.generation.IBlockPicker.Single.Air
+import chylex.hee.game.world.getBlock
+import chylex.hee.game.world.math.BoundingBox
 import chylex.hee.game.world.structure.IStructureWorld
 import chylex.hee.game.world.structure.piece.IStructurePieceConnection
 import chylex.hee.game.world.structure.trigger.EntityStructureTrigger
 import chylex.hee.game.world.structure.trigger.TileEntityStructureTrigger
+import chylex.hee.game.world.territory.TerritoryInstance
 import chylex.hee.game.world.territory.TerritoryType.OBSIDIAN_TOWERS
+import chylex.hee.game.world.territory.storage.data.ForgottenTombsEndData
 import chylex.hee.init.ModBlocks
+import chylex.hee.system.facades.Facing4
+import chylex.hee.system.math.addY
+import chylex.hee.system.migration.Facing.AXIS_X
 import chylex.hee.system.migration.Facing.EAST
 import chylex.hee.system.migration.Facing.NORTH
 import chylex.hee.system.migration.Facing.SOUTH
 import chylex.hee.system.migration.Facing.WEST
+import chylex.hee.system.random.nextInt
 import chylex.hee.system.serialization.TagCompound
 import net.minecraft.util.Direction
+import net.minecraft.util.Rotation
 import net.minecraft.util.math.BlockPos
+import net.minecraft.world.World
+import java.util.Random
 import kotlin.math.abs
 
 class TombDungeonRoom_End(file: String) : TombDungeonRoom(file, isFancy = true) {
 	override val secretAttachWeight = 0
 	
 	override val connections = arrayOf<IStructurePieceConnection>(
-		TombDungeonConnection(ROOM_ENTRANCE, Pos(centerX, 6, maxZ), SOUTH)
+		TombDungeonConnection(ROOM_ENTRANCE, Pos(centerX, maxY - 8, maxZ), SOUTH)
 	)
 	
 	override fun generate(world: IStructureWorld, instance: Instance) {
 		world.placeCube(Pos(1, 2, 1), Pos(maxX - 1, maxY - 1, maxZ - 1), Air)
 		super.generate(world, instance)
 		
-		val portalCenter = Pos(centerX, 1, centerZ - 12)
+		val portalCenter = Pos(centerX, 1, 24)
 		val tombOffset = portalCenter.up(2)
 		
 		for(pos in portalCenter.allInCenteredBox(1, 0, 1)) {
@@ -43,14 +62,18 @@ class TombDungeonRoom_End(file: String) : TombDungeonRoom(file, isFancy = true) 
 		}
 		
 		val tombs = arrayOf(
-			Tomb(offsetX1 = -10, offsetZ1 = -2, offsetX2 = -9, offsetZ2 =  2),
-			Tomb(offsetX1 =   9, offsetZ1 = -2, offsetX2 = 10, offsetZ2 =  2),
-			Tomb(offsetX1 =   3, offsetZ1 = -9, offsetX2 =  7, offsetZ2 = -8),
-			Tomb(offsetX1 =  -7, offsetZ1 = -9, offsetX2 = -3, offsetZ2 = -8)
+			Tomb(offsetX1 = -10, offsetX2 = -9, offsetZ1 = -2, offsetZ2 =  2),
+			Tomb(offsetX1 =   9, offsetX2 = 10, offsetZ1 = -2, offsetZ2 =  2),
+			Tomb(offsetX1 = -10, offsetX2 = -9, offsetZ1 = 10, offsetZ2 = 14),
+			Tomb(offsetX1 =   9, offsetX2 = 10, offsetZ1 = 10, offsetZ2 = 14),
+			Tomb(offsetX1 =  -2, offsetX2 =  2, offsetZ1 = 20, offsetZ2 = 21)
 		)
 		
 		placeTokenHolders(world, tombs, tombOffset)
 		placeChests(world, instance, tombs, tombOffset)
+		placeHoles(world, tombs, tombOffset)
+		
+		world.addTrigger(Pos(centerX, 0, centerZ), EntityStructureTrigger(TOMB_DUNGEON_END))
 	}
 	
 	override fun placeCobwebs(world: IStructureWorld, chancePerXZ: Float) {}
@@ -102,7 +125,70 @@ class TombDungeonRoom_End(file: String) : TombDungeonRoom(file, isFancy = true) 
 		}
 	}
 	
-	private class Tomb(val offsetX1: Int, val offsetZ1: Int, val offsetX2: Int, val offsetZ2: Int) {
+	private fun placeHoles(world: IStructureWorld, tombs: Array<Tomb>, tombOffset: BlockPos) {
+		val rand = world.rand
+		val tombsWithHoles = tombs.flatMap { listOf(it, it) }.shuffled(rand).take(rand.nextInt(5, 6))
+		
+		for (tomb in tombsWithHoles) {
+			if (tomb.isShortX) {
+				world.setAir(tombOffset.add(
+					if (rand.nextBoolean()) tomb.offsetX1 - 1 else tomb.offsetX2 + 1,
+					rand.nextInt(0, 1),
+					rand.nextInt(tomb.offsetZ1 + 1, tomb.offsetZ2 - 1)
+				))
+			}
+			else {
+				world.setAir(tombOffset.add(
+					rand.nextInt(tomb.offsetX1 + 1, tomb.offsetX2 - 1),
+					rand.nextInt(0, 1),
+					if (rand.nextBoolean()) tomb.offsetZ1 - 1 else tomb.offsetZ2 + 1
+				))
+			}
+		}
+	}
+	
+	private class Tomb(val offsetX1: Int, val offsetX2: Int, val offsetZ1: Int, val offsetZ2: Int) {
 		val isShortX = abs(offsetX1 - offsetX2) < abs(offsetZ1 - offsetZ2)
+	}
+	
+	class Trigger : ITriggerHandler {
+		override fun check(world: World): Boolean {
+			return !world.isRemote
+		}
+		
+		override fun update(entity: EntityTechnicalTrigger) {
+			val instance = TerritoryInstance.fromPos(entity) ?: return
+			val data = instance.getStorageComponent<ForgottenTombsEndData>() ?: return
+			val world = entity.world
+			
+			val roomSize = TombDungeonPieces.PIECE_ROOM_END.size
+			val roomAABB = roomSize
+				.rotate(if (entity.horizontalFacing.axis == AXIS_X) Rotation.CLOCKWISE_90 else Rotation.NONE)
+				.toCenteredBoundingBox(entity.posVec.addY(roomSize.y * 0.5))
+			
+			val graveDirtAreas = mutableListOf<BoundingBox>()
+			val graveDirtBlocks = mutableSetOf<BlockPos>()
+			
+			val roomMinPos = Pos(roomAABB.minX, roomAABB.minY, roomAABB.minZ)
+			val roomMaxPos = Pos(roomAABB.maxX, roomAABB.maxY, roomAABB.maxZ)
+			
+			for (pos in roomMinPos.allInBoxMutable(roomMaxPos)) {
+				if (!graveDirtBlocks.contains(pos) && pos.getBlock(world) is BlockGraveDirt) {
+					val area = pos.floodFill(Facing4, limit = 25) { it.getBlock(world) is BlockGraveDirt }
+					val minPos = area.minWithOrNull(compareBy(BlockPos::getX, BlockPos::getZ))
+					val maxPos = area.maxWithOrNull(compareBy(BlockPos::getX, BlockPos::getZ))
+					
+					graveDirtAreas.add(BoundingBox(minPos!!, maxPos!!))
+					graveDirtBlocks.addAll(area)
+				}
+			}
+			
+			data.setupRoom(roomAABB, graveDirtAreas)
+			entity.remove()
+		}
+		
+		override fun nextTimer(rand: Random): Int {
+			return 10
+		}
 	}
 }

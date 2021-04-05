@@ -9,6 +9,7 @@ import chylex.hee.game.world.feature.stronghold.piece.StrongholdRoom_Main_Portal
 import chylex.hee.game.world.feature.stronghold.piece.StrongholdRoom_Trap_CornerHoles
 import chylex.hee.game.world.feature.stronghold.piece.StrongholdRoom_Trap_Prison
 import chylex.hee.game.world.feature.stronghold.piece.StrongholdRoom_Trap_TallIntersection
+import chylex.hee.game.world.feature.tombdungeon.piece.TombDungeonRoom_End
 import chylex.hee.game.world.feature.tombdungeon.piece.TombDungeonRoom_Tomb
 import chylex.hee.init.ModEntities
 import chylex.hee.system.delegate.NotifyOnChange
@@ -68,6 +69,7 @@ class EntityTechnicalTrigger(type: EntityType<EntityTechnicalTrigger>, world: Wo
 		ENERGY_SHRINE_GENERATOR({ EnergyShrineGenerator.GeneratorTrigger }),
 		ENERGY_SHRINE_GLOBAL({ EnergyShrineRoom_Main_Start.Particles }),
 		TOMB_DUNGEON_UNDREAD_SPAWNER(TombDungeonRoom_Tomb::MobSpawnerTrigger),
+		TOMB_DUNGEON_END(TombDungeonRoom_End::Trigger),
 		OBSIDIAN_TOWER_TOP_GLOWSTONE(ObsidianTowerLevel_Top::GlowstoneTrigger),
 		OBSIDIAN_TOWER_DEATH_ANIMATION(ObsidianTowerLevel_Top::DeathAnimationTrigger)
 	}

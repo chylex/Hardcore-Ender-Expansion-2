@@ -1,20 +1,23 @@
 package chylex.hee.game.world.territory.storage
 
+import chylex.hee.game.world.territory.storage.data.ForgottenTombsEndData
 import chylex.hee.game.world.territory.storage.data.VoidData
 import chylex.hee.system.serialization.TagCompound
 import net.minecraftforge.common.util.INBTSerializable
 
 abstract class TerritoryStorageComponent : INBTSerializable<TagCompound> {
 	companion object {
-		val VOID_DATA = VoidData::class.java to "Void"
+		private val CLASS_TO_STRING = mutableMapOf<Class<out TerritoryStorageComponent>, String>()
+		private val STRING_TO_INSTANCE = mutableMapOf<String, (() -> Unit) -> TerritoryStorageComponent>()
 		
-		private val CLASS_TO_STRING = mapOf<Class<out TerritoryStorageComponent>, String>(
-			VOID_DATA
-		)
+		private inline fun <reified T : TerritoryStorageComponent> register(name: String, noinline constructor: (() -> Unit) -> T): Pair<Class<T>, String> {
+			require(CLASS_TO_STRING.put(T::class.java, name) == null)
+			require(STRING_TO_INSTANCE.put(name, constructor) == null)
+			return T::class.java to name
+		}
 		
-		private val STRING_TO_INSTANCE = mapOf<String, (() -> Unit) -> TerritoryStorageComponent>(
-			"Void" to ::VoidData
-		)
+		val VOID_DATA = register("Void", ::VoidData)
+		val FORGOTTEN_TOMBS_END_DATA = register("ForgottenTombsEnd", ::ForgottenTombsEndData)
 		
 		fun getComponentName(component: TerritoryStorageComponent): String? {
 			return CLASS_TO_STRING[component.javaClass]

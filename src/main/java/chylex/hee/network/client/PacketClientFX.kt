@@ -17,6 +17,7 @@ import chylex.hee.game.entity.item.EntityItemIgneousRock
 import chylex.hee.game.entity.item.EntityItemRevitalizationSubstance
 import chylex.hee.game.entity.item.EntityTokenHolder
 import chylex.hee.game.entity.living.EntityMobSilverfish
+import chylex.hee.game.entity.living.EntityMobUndread
 import chylex.hee.game.entity.living.behavior.EnderEyePhase
 import chylex.hee.game.entity.living.behavior.EnderEyeSpawnerParticles
 import chylex.hee.game.entity.living.behavior.EndermanTeleportHandler
@@ -75,6 +76,7 @@ class PacketClientFX<T : IFxData>() : BaseClientPacket() {
 			EntityItemIgneousRock.FX_ENTITY_BURN,
 			EntityItemRevitalizationSubstance.FX_REVITALIZE_GOO,
 			EntityMobSilverfish.FX_SPAWN_PARTICLE,
+			EntityMobUndread.FX_END_DISAPPEAR,
 			EntityProjectileSpatialDash.FX_EXPIRE,
 			EntityTechnicalIgneousPlateLogic.FX_COOLING,
 			EntityTechnicalIgneousPlateLogic.FX_OVERHEAT,

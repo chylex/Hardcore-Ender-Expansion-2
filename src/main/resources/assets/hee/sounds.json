@@ -1,4 +1,8 @@
 {
+  "ambient.forgotten_tombs.end_trigger": {
+    "sounds": [ "hee:ambient/forgotten_tombs_end_trigger" ],
+    "subtitle": "subtitles.hee.ambient.forgotten_tombs.end_trigger"
+  },
   "block.cauldron.brew": {
     "sounds": [ "minecraft:block/brewing_stand/brew1", "minecraft:block/brewing_stand/brew2" ],
     "subtitle": "subtitles.hee.block.cauldron.brew"

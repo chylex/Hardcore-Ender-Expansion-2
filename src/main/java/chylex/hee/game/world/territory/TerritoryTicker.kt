@@ -31,14 +31,12 @@ object TerritoryTicker {
 		
 		for(player in world.players) {
 			val instance = TerritoryInstance.fromPos(player)
-			
 			if (instance == null) {
 				lastTerritory.remove(player.uniqueID)
 				continue
 			}
 			
 			val storage = TerritoryGlobalStorage.get().forInstance(instance)
-			
 			if (storage == null) {
 				continue
 			}

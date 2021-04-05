@@ -10,21 +10,38 @@ import chylex.hee.game.entity.living.ai.WatchIdle
 import chylex.hee.game.entity.living.behavior.UndreadDustEffects
 import chylex.hee.game.entity.living.path.PathNavigateGroundCustomProcessor
 import chylex.hee.game.entity.motionY
+import chylex.hee.game.entity.posVec
 import chylex.hee.game.mechanics.damage.Damage
 import chylex.hee.game.mechanics.damage.IDamageProcessor.Companion.ALL_PROTECTIONS_WITH_SHIELD
 import chylex.hee.game.mechanics.damage.IDamageProcessor.Companion.DIFFICULTY_SCALING
 import chylex.hee.game.mechanics.damage.IDamageProcessor.Companion.PEACEFUL_EXCLUSION
+import chylex.hee.game.particle.ParticleSmokeCustom
+import chylex.hee.game.particle.spawner.ParticleSpawnerCustom
+import chylex.hee.game.particle.spawner.properties.IOffset.InBox
+import chylex.hee.game.particle.spawner.properties.IShape.Point
 import chylex.hee.game.world.Pos
 import chylex.hee.game.world.getBlock
+import chylex.hee.game.world.playClient
+import chylex.hee.game.world.territory.TerritoryInstance
+import chylex.hee.game.world.territory.storage.data.ForgottenTombsEndData
+import chylex.hee.init.ModBlocks
 import chylex.hee.init.ModEntities
 import chylex.hee.init.ModSounds
+import chylex.hee.network.client.PacketClientFX
+import chylex.hee.network.fx.FxVecData
+import chylex.hee.network.fx.FxVecHandler
 import chylex.hee.system.MagicValues.DEATH_TIME_MAX
+import chylex.hee.system.color.IntColor.Companion.RGB
 import chylex.hee.system.facades.Resource
+import chylex.hee.system.math.floorToInt
 import chylex.hee.system.math.square
 import chylex.hee.system.migration.EntityMob
 import chylex.hee.system.migration.EntityPlayer
+import chylex.hee.system.migration.Potions
 import chylex.hee.system.migration.Sounds
+import chylex.hee.system.random.IRandomColor.Companion.IRandomColor
 import chylex.hee.system.random.nextFloat
+import chylex.hee.system.random.nextInt
 import chylex.hee.system.serialization.NBTList.Companion.putList
 import chylex.hee.system.serialization.TagCompound
 import chylex.hee.system.serialization.getListOfStrings
@@ -53,14 +70,17 @@ import net.minecraft.pathfinding.WalkNodeProcessor
 import net.minecraft.util.DamageSource
 import net.minecraft.util.Hand
 import net.minecraft.util.ResourceLocation
+import net.minecraft.util.SoundCategory
 import net.minecraft.util.SoundEvent
 import net.minecraft.util.math.BlockPos
+import net.minecraft.util.math.Vec3d
 import net.minecraft.world.DifficultyInstance
 import net.minecraft.world.IBlockReader
 import net.minecraft.world.IWorld
 import net.minecraft.world.World
 import net.minecraftforge.fml.common.registry.IEntityAdditionalSpawnData
 import net.minecraftforge.fml.network.NetworkHooks
+import java.util.Random
 import kotlin.math.abs
 import kotlin.math.max
 
@@ -68,14 +88,31 @@ class EntityMobUndread(type: EntityType<EntityMobUndread>, world: World) : Entit
 	@Suppress("unused")
 	constructor(world: World) : this(ModEntities.UNDREAD, world)
 	
-	private companion object {
+	companion object {
 		private val DAMAGE_GENERAL = Damage(DIFFICULTY_SCALING, PEACEFUL_EXCLUSION, *ALL_PROTECTIONS_WITH_SHIELD)
 		
 		private const val DUSTS_TAG = "Dusts"
+		private const val FORGOTTEN_TOMBS_END_TAG = "ForgottenTombsEnd"
+		
+		val FX_END_DISAPPEAR = object : FxVecHandler() {
+			override fun handle(world: World, rand: Random, vec: Vec3d) {
+				PARTICLE_END_DISAPPEAR.spawn(Point(vec, rand.nextInt(19, 24)), rand)
+				ModSounds.MOB_UNDREAD_DEATH.playClient(vec, SoundCategory.HOSTILE, volume = 0.7F, pitch = rand.nextFloat(0.8F, 1F))
+			}
+		}
+		
+		private val PARTICLE_END_DISAPPEAR = ParticleSpawnerCustom(
+			type = ParticleSmokeCustom,
+			data = ParticleSmokeCustom.Data(color = IRandomColor { RGB(nextInt(180, 215).toUByte()) }, lifespan = 5..18, scale = (1.41F)..(1.87F)),
+			pos = ModEntities.UNDREAD.size.let { val w = (it.width * 0.5F) + 0.1F; InBox(-w, w, 0F, it.height + 0.1F, -w, w) },
+			maxRange = 64.0
+		)
 	}
 	
 	val shouldTriggerDustyStone
 		get() = attackTarget != null
+	
+	var isForgottenTombsEnd = false
 	
 	private var dustEffects = UndreadDustEffects.NONE
 	
@@ -115,13 +152,29 @@ class EntityMobUndread(type: EntityType<EntityMobUndread>, world: World) : Entit
 	override fun tick() {
 		super.tick()
 		
-		if (world.isRemote && isAlive) {
-			dustEffects.tickClient(this)
+		if (isAlive) {
+			if (world.isRemote) {
+				dustEffects.tickClient(this)
+			}
+			else if (rand.nextInt(130) == 0 && TerritoryInstance.fromPos(this)?.getStorageComponent<ForgottenTombsEndData>()?.isPortalActivated == true) {
+				PacketClientFX(FX_END_DISAPPEAR, FxVecData(posVec)).sendToAllAround(this, 64.0)
+				remove()
+			}
 		}
 	}
 	
 	private fun isPlayerNearby(player: EntityPlayer): Boolean {
-		return abs(posY - player.posY) <= 3 && getDistanceSq(player) < square(16)
+		val maxYDiff = if (isForgottenTombsEnd) 15 else 3
+		if (abs(posY - player.posY) > maxYDiff) {
+			return false
+		}
+		
+		val maxDistance = if (isForgottenTombsEnd) getAttribute(FOLLOW_RANGE).value.floorToInt() else 16
+		if (getDistanceSq(player) > square(maxDistance)) {
+			return false
+		}
+		
+		return true
 	}
 	
 	override fun attackEntityAsMob(entity: Entity): Boolean {
@@ -135,11 +188,22 @@ class EntityMobUndread(type: EntityType<EntityMobUndread>, world: World) : Entit
 		}
 		
 		if (super.attackEntityFrom(source, newAmount)) {
+			if (isForgottenTombsEnd) {
+				removePotionEffect(Potions.SLOW_FALLING)
+			}
+			
 			dustEffects.onHurt(this, source)
 			return true
 		}
 		
 		return false
+	}
+	
+	override fun getMaxFallHeight(): Int {
+		return if (getActivePotionEffect(Potions.SLOW_FALLING) != null)
+			Int.MAX_VALUE
+		else
+			super.getMaxFallHeight()
 	}
 	
 	public override fun createRunningParticles() {
@@ -154,16 +218,19 @@ class EntityMobUndread(type: EntityType<EntityMobUndread>, world: World) : Entit
 	
 	private inner class NodeProcessor : WalkNodeProcessor() {
 		override fun getPathNodeType(world: IBlockReader, x: Int, y: Int, z: Int): PathNodeType {
-			if (shouldTriggerDustyStone) {
-				return super.getPathNodeType(world, x, y, z)
-			}
-			
 			val posBelow = Pos(x, y, z).down()
-			if (posBelow.getBlock(world) !is BlockDustyStoneUnstable || BlockDustyStoneUnstable.getCrumbleStartPos(world, posBelow) == null) {
-				return super.getPathNodeType(world, x, y, z)
+			if (posBelow.getBlock(world) === ModBlocks.VOID_PORTAL_FRAME) {
+				return if (attackTarget.let { it == null || getDistanceSq(it) > square(4) })
+					PathNodeType.DANGER_OTHER
+				else
+					PathNodeType.BLOCKED
 			}
 			
-			return PathNodeType.BLOCKED
+			if (!shouldTriggerDustyStone && posBelow.getBlock(world) is BlockDustyStoneUnstable && BlockDustyStoneUnstable.getCrumbleStartPos(world, posBelow) != null) {
+				return PathNodeType.BLOCKED
+			}
+			
+			return super.getPathNodeType(world, x, y, z)
 		}
 	}
 	
@@ -200,6 +267,18 @@ class EntityMobUndread(type: EntityType<EntityMobUndread>, world: World) : Entit
 		super.onDeathUpdate()
 	}
 	
+	@Suppress("DEPRECATION")
+	override fun remove(keepData: Boolean) {
+		val wasRemoved = removed
+		super.remove(keepData)
+		
+		if (removed && !wasRemoved && isForgottenTombsEnd) {
+			TerritoryInstance.fromPos(this)
+				?.getStorageComponent<ForgottenTombsEndData>()
+				?.onUndreadDied()
+		}
+	}
+	
 	public override fun playStepSound(pos: BlockPos, state: BlockState) {
 		playSound(Sounds.ENTITY_ZOMBIE_STEP, rand.nextFloat(0.4F, 0.5F), rand.nextFloat(0.9F, 1F))
 	}
@@ -218,11 +297,18 @@ class EntityMobUndread(type: EntityType<EntityMobUndread>, world: World) : Entit
 	
 	override fun writeAdditional(nbt: TagCompound) = nbt.heeTag.use {
 		super.writeAdditional(nbt)
+		
 		putList(DUSTS_TAG, dustEffects.serializeNBT())
+		
+		if (isForgottenTombsEnd) {
+			putBoolean(FORGOTTEN_TOMBS_END_TAG, true)
+		}
 	}
 	
 	override fun readAdditional(nbt: TagCompound) = nbt.heeTag.use {
 		super.readAdditional(nbt)
+		
 		dustEffects = UndreadDustEffects.fromNBT(getListOfStrings(DUSTS_TAG))
+		isForgottenTombsEnd = getBoolean(FORGOTTEN_TOMBS_END_TAG)
 	}
 }

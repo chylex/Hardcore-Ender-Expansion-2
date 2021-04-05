@@ -12,6 +12,8 @@ import net.minecraftforge.fml.common.Mod.EventBusSubscriber.Bus.MOD
 
 @SubscribeAllEvents(modid = HEE.ID, bus = MOD)
 object ModSounds {
+	@JvmField val AMBIENT_FORGOTTEN_TOMBS_END_TRIGGER = sound("ambient.forgotten_tombs.end_trigger")
+	
 	@JvmField val BLOCK_CAULDRON_BREW              = sound("block.cauldron.brew")
 	@JvmField val BLOCK_DEATH_FLOWER_WITHER        = sound("block.death_flower.wither")
 	@JvmField val BLOCK_EXPERIENCE_GATE_PICKUP     = sound("block.experience_gate.pickup")
