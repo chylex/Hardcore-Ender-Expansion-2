@@ -63,9 +63,9 @@ class UndreadDustEffects(private val dustTypes: EnumSet<DustType>) : ILivingEnti
 		}
 		
 		private val STAT_MULTIPLIERS = mapOf(
-			1 to 1.0,
-			2 to 0.6,
-			3 to 0.4
+			1 to 1.00,
+			2 to 0.75,
+			3 to 0.50
 		)
 		
 		private val SPECIAL_MULTIPLIERS = mapOf(
