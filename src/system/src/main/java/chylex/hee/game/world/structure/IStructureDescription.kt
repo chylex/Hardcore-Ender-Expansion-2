@@ -12,7 +12,7 @@ import net.minecraft.world.server.ServerWorld
 interface IStructureDescription {
 	val STRUCTURE_SIZE: Size
 	
-	val STRUCTURE_BUILDER: IStructureBuilder
+	val STRUCTURE_BUILDER: IStructureBuilder<*>
 	val STRUCTURE_LOCATOR: (ServerWorld, PosXZ) -> BlockPos?
 	
 	val PALETTE: Palette

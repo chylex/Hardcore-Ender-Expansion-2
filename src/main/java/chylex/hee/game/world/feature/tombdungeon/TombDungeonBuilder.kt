@@ -1,5 +1,6 @@
 package chylex.hee.game.world.feature.tombdungeon
 
+import chylex.hee.game.world.feature.tombdungeon.TombDungeonBuilder.TombDungeonBuild
 import chylex.hee.game.world.feature.tombdungeon.TombDungeonPieces.STRUCTURE_SIZE
 import chylex.hee.game.world.feature.tombdungeon.connection.TombDungeonConnection
 import chylex.hee.game.world.feature.tombdungeon.connection.TombDungeonConnectionType.SECRET_CONNECTOR
@@ -35,10 +36,12 @@ import org.apache.commons.lang3.mutable.MutableInt
 import java.util.Random
 import kotlin.math.min
 
-object TombDungeonBuilder : IStructureBuilder {
+object TombDungeonBuilder : IStructureBuilder<TombDungeonBuild> {
 	val ENTRANCE_POS: BlockPos = STRUCTURE_SIZE.getPos(CENTER, MAX, MAX).add(-TombDungeonStart.size.centerX, -TombDungeonStart.size.y, -STRUCTURE_SIZE.x / 3)
 	
-	override fun build(rand: Random): IStructureBuild? {
+	class TombDungeonBuild(val bedrockHeights: List<Int>, delegate: IStructureBuild) : IStructureBuild by delegate
+	
+	override fun build(rand: Random): TombDungeonBuild? {
 		val startingPiece = TombDungeonStart.MutableInstance(Transform.NONE)
 		val startingPiecePos = ENTRANCE_POS
 		
@@ -205,7 +208,7 @@ object TombDungeonBuilder : IStructureBuilder {
 			return null
 		}
 		
-		return build.freeze()
+		return TombDungeonBuild(emptyList(), build.freeze()) // TODO where the fuck did the code go
 	}
 	
 	private class Process(build: StructureBuild<StructurePiece<TombDungeonLevel>.MutableInstance>, rand: Random) : ProcessBase<StructurePiece<TombDungeonLevel>.MutableInstance>(build, rand) {

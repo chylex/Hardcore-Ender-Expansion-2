@@ -34,7 +34,7 @@ import java.util.Random
 import kotlin.math.max
 import kotlin.math.min
 
-object StrongholdBuilder : IStructureBuilder {
+object StrongholdBuilder : IStructureBuilder<IStructureBuild> {
 	fun buildWithEyeOfEnderTarget(rand: Random): Pair<IStructureBuild, BlockPos?>? {
 		val build = StructureBuild(STRUCTURE_SIZE, rand.nextItem(PIECES_START).StrongholdInst(distanceToPortal = 0, facingFromPortal = null, transform = rand.nextItem(Transform.ALL)))
 		val process = Process(build, rand)

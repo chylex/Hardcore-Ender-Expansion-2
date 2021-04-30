@@ -114,6 +114,17 @@ abstract class TombDungeonAbstractPiece : StructurePiece<TombDungeonLevel>() {
 		}
 	}
 	
+	protected fun placeWallTorch(world: IStructureWorld, pos: BlockPos, facing: Direction) {
+		if (!world.isAir(pos)) {
+			return
+		}
+		
+		val wall = world.getBlock(pos.offset(facing.opposite))
+		if (wall == ModBlocks.DUSTY_STONE || wall == ModBlocks.DUSTY_STONE_BRICKS || wall == ModBlocks.DUSTY_STONE_BRICK_STAIRS) {
+			world.placeBlock(pos, Single(Blocks.REDSTONE_WALL_TORCH.withFacing(facing)))
+		}
+	}
+	
 	protected fun placeChest(world: IStructureWorld, instance: Instance, pos: BlockPos, facing: Direction, secret: Boolean = false) {
 		val level = instance.context ?: TombDungeonLevel.FIRST
 		val chest = TileEntityChest().apply { TombDungeonLoot.generate(this, world.rand, level, secret) }

@@ -1,10 +1,8 @@
 package chylex.hee.game.world.feature.tombdungeon.piece
 
-import chylex.hee.game.block.withFacing
 import chylex.hee.game.world.Pos
 import chylex.hee.game.world.feature.tombdungeon.connection.TombDungeonConnection
 import chylex.hee.game.world.feature.tombdungeon.connection.TombDungeonConnectionType.CORRIDOR
-import chylex.hee.game.world.generation.IBlockPicker.Single
 import chylex.hee.game.world.generation.IBlockPicker.Single.Air
 import chylex.hee.game.world.math.Size
 import chylex.hee.game.world.structure.IStructureWorld
@@ -13,7 +11,6 @@ import chylex.hee.system.migration.Facing.EAST
 import chylex.hee.system.migration.Facing.NORTH
 import chylex.hee.system.migration.Facing.SOUTH
 import chylex.hee.system.migration.Facing.WEST
-import net.minecraft.block.Blocks
 
 class TombDungeonCorridor_Straight(length: Int, override val isFancy: Boolean) : TombDungeonAbstractPiece() {
 	override val size = Size(5, 5, length)
@@ -50,10 +47,10 @@ class TombDungeonCorridor_Straight(length: Int, override val isFancy: Boolean) :
 				
 				val type = rand.nextInt(2)
 				if (type == 0 || rand.nextInt(13) == 0) {
-					world.placeBlock(Pos(1, 2, z), Single(Blocks.REDSTONE_WALL_TORCH.withFacing(EAST)))
+					placeWallTorch(world, Pos(1, 2, z), EAST)
 				}
 				if (type == 1 || rand.nextInt(13) == 0) {
-					world.placeBlock(Pos(size.maxX - 1, 2, z), Single(Blocks.REDSTONE_WALL_TORCH.withFacing(WEST)))
+					placeWallTorch(world, Pos(size.maxX - 1, 2, z), WEST)
 				}
 			}
 		}

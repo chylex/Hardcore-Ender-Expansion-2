@@ -22,7 +22,7 @@ import chylex.hee.system.random.nextItemOrNull
 import chylex.hee.system.random.removeItemOrNull
 import java.util.Random
 
-object EnergyShrineBuilder : IStructureBuilder {
+object EnergyShrineBuilder : IStructureBuilder<IStructureBuild> {
 	override fun build(rand: Random): IStructureBuild? {
 		val remainingRooms = EnergyShrinePieces.generateRoomConfiguration(rand, targetMainPathRoomAmount = rand.nextInt(3, 4))
 		val remainingCorridors = EnergyShrinePieces.generateCorridorConfiguration(rand, remainingRooms)

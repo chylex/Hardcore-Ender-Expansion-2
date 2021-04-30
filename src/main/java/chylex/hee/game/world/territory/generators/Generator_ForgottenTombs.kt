@@ -67,7 +67,7 @@ object Generator_ForgottenTombs : ITerritoryGenerator {
 		PortalGenerator.VoidPortalReturnActive.place(world, spawnPoint)
 		
 		val entrancePoint = TombDungeonEntrance.generate(world, rand, spawnPoint)
-		TombDungeon.generate(world, rand, entrancePoint)
+		TombDungeon.generate(world, size, rand, entrancePoint)
 		
 		return TerritoryGenerationInfo(spawnPoint)
 	}
@@ -350,12 +350,19 @@ object Generator_ForgottenTombs : ITerritoryGenerator {
 	}
 	
 	private object TombDungeon {
-		fun generate(world: SegmentedWorld, rand: Random, entrance: BlockPos) {
+		fun generate(world: SegmentedWorld, size: Size, rand: Random, entrance: BlockPos) {
 			for(attempt in 1..1000) {
 				val build = TombDungeonBuilder.build(rand)
 				
 				if (build != null) {
-					build.generate(OffsetStructureWorld(world, entrance.up().subtract(TombDungeonBuilder.ENTRANCE_POS).subtract(TombDungeonStart.size.centerPos)))
+					val offset = entrance.up().subtract(TombDungeonBuilder.ENTRANCE_POS).subtract(TombDungeonStart.size.centerPos)
+					
+					for (y in build.bedrockHeights) {
+						val offsetY = offset.y + y
+						world.placeCube(Pos(0, offsetY - 1, 0), Pos(size.maxX, offsetY + 1, size.maxZ), Single(Blocks.BEDROCK))
+					}
+					
+					build.generate(OffsetStructureWorld(world, offset))
 					return
 				}
 			}

@@ -72,8 +72,16 @@ object TombDungeonPieces : IStructureDescription {
 	)
 	
 	val PALETTE_ENTRY_FANCY_WALL = Weighted(
-		94 to ModBlocks.DUSTY_STONE_BRICKS,
-		 6 to ModBlocks.DUSTY_STONE_CRACKED_BRICKS
+		932 to ModBlocks.DUSTY_STONE_BRICKS.defaultState,
+		 52 to ModBlocks.DUSTY_STONE_CRACKED_BRICKS.defaultState,
+		  2 to ModBlocks.DUSTY_STONE_BRICK_STAIRS.with(BlockStairs.HALF, Half.BOTTOM).withFacing(NORTH),
+		  2 to ModBlocks.DUSTY_STONE_BRICK_STAIRS.with(BlockStairs.HALF, Half.BOTTOM).withFacing(SOUTH),
+		  2 to ModBlocks.DUSTY_STONE_BRICK_STAIRS.with(BlockStairs.HALF, Half.BOTTOM).withFacing(EAST),
+		  2 to ModBlocks.DUSTY_STONE_BRICK_STAIRS.with(BlockStairs.HALF, Half.BOTTOM).withFacing(WEST),
+		  2 to ModBlocks.DUSTY_STONE_BRICK_STAIRS.with(BlockStairs.HALF, Half.TOP).withFacing(NORTH),
+		  2 to ModBlocks.DUSTY_STONE_BRICK_STAIRS.with(BlockStairs.HALF, Half.TOP).withFacing(SOUTH),
+		  2 to ModBlocks.DUSTY_STONE_BRICK_STAIRS.with(BlockStairs.HALF, Half.TOP).withFacing(EAST),
+		  2 to ModBlocks.DUSTY_STONE_BRICK_STAIRS.with(BlockStairs.HALF, Half.TOP).withFacing(WEST),
 	)
 	
 	val PALETTE_ENTRY_FANCY_CEILING = Weighted(

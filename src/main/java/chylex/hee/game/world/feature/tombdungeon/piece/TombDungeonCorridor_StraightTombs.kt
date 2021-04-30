@@ -1,11 +1,9 @@
 package chylex.hee.game.world.feature.tombdungeon.piece
 
-import chylex.hee.game.block.withFacing
 import chylex.hee.game.world.Pos
 import chylex.hee.game.world.feature.tombdungeon.connection.TombDungeonConnection
 import chylex.hee.game.world.feature.tombdungeon.connection.TombDungeonConnectionType.CORRIDOR
 import chylex.hee.game.world.feature.tombdungeon.connection.TombDungeonConnectionType.TOMB_ENTRANCE_OUTSIDE
-import chylex.hee.game.world.generation.IBlockPicker.Single
 import chylex.hee.game.world.generation.IBlockPicker.Single.Air
 import chylex.hee.game.world.math.Size
 import chylex.hee.game.world.structure.IStructureWorld
@@ -15,7 +13,6 @@ import chylex.hee.system.migration.Facing.NORTH
 import chylex.hee.system.migration.Facing.SOUTH
 import chylex.hee.system.migration.Facing.WEST
 import chylex.hee.system.random.nextItem
-import net.minecraft.block.Blocks
 import java.util.Random
 
 class TombDungeonCorridor_StraightTombs(entranceSpacing: Int, configuration: Configuration, tombsPerSide: Int, private val tombConstructor: (Boolean) -> TombDungeonAbstractPiece, override val isFancy: Boolean) : TombDungeonAbstractPiece(), ITombDungeonPieceWithTombs {
@@ -72,12 +69,12 @@ class TombDungeonCorridor_StraightTombs(entranceSpacing: Int, configuration: Con
 			val type = rand.nextInt(2)
 			if (type == 0 || rand.nextInt(13) == 0) {
 				if (connections.find { it.offset.z == z && it.facing === WEST }.let { it == null || !instance.isConnectionUsed(it) }) {
-					world.placeBlock(Pos(1, 2, z), Single(Blocks.REDSTONE_WALL_TORCH.withFacing(EAST)))
+					placeWallTorch(world, Pos(1, 2, z), EAST)
 				}
 			}
 			if (type == 1 || rand.nextInt(13) == 0) {
 				if (connections.find { it.offset.z == z && it.facing === EAST }.let { it == null || !instance.isConnectionUsed(it) }) {
-					world.placeBlock(Pos(size.maxX - 1, 2, z), Single(Blocks.REDSTONE_WALL_TORCH.withFacing(WEST)))
+					placeWallTorch(world, Pos(size.maxX - 1, 2, z), WEST)
 				}
 			}
 		}

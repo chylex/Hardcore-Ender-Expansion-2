@@ -7,8 +7,8 @@ import chylex.hee.system.facades.Rotation4
 import chylex.hee.system.random.nextItem
 import java.util.Random
 
-interface IStructureBuilder {
-	fun build(rand: Random): IStructureBuild?
+interface IStructureBuilder<T : IStructureBuild> {
+	fun build(rand: Random): T?
 	
 	abstract class ProcessBase<T : StructurePiece<*>.MutableInstance>(protected val build: StructureBuild<T>, protected val rand: Random) {
 		protected fun baseAddPiece(mode: AddMode, targetPiece: PositionedPiece<T>, targetConnection: IStructurePieceConnection, generatedPieceConstructor: (Transform) -> T): PositionedPiece<T>? {
