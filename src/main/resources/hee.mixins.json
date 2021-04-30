@@ -2,6 +2,7 @@
   "required": true,
   "minVersion": "0.8",
   "package": "chylex.hee.mixin",
+  "refmap": "hee.refmap.json",
   "compatibilityLevel": "JAVA_8",
   "mixins": [
     "HookAnvilRepair",

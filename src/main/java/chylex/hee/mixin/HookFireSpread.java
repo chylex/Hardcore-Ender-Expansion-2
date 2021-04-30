@@ -13,7 +13,7 @@ import java.util.Random;
 
 @Mixin(FireBlock.class)
 public abstract class HookFireSpread{
-	@Inject(method = "tryCatchFire", at = @At("HEAD"), cancellable = true)
+	@Inject(method = "tryCatchFire", at = @At("HEAD"), cancellable = true, remap = false)
 	private void beforeCatchFire(final World world, final BlockPos pos, final int chance, final Random rand, final int age, final Direction face, final CallbackInfo ci){
 		final Block block = world.getBlockState(pos).getBlock();
 		
