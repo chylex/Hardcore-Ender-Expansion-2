@@ -10,6 +10,7 @@ import chylex.hee.game.world.territory.TerritoryType.Companion.CHUNK_MARGIN
 import chylex.hee.game.world.territory.TerritoryType.Companion.CHUNK_X_OFFSET
 import chylex.hee.game.world.territory.TerritoryType.THE_HUB
 import chylex.hee.game.world.territory.storage.TerritoryGlobalStorage
+import chylex.hee.game.world.territory.storage.TerritoryStorageComponent
 import chylex.hee.proxy.Environment
 import chylex.hee.system.math.floorToInt
 import chylex.hee.system.migration.EntityItem
@@ -120,6 +121,9 @@ data class TerritoryInstance(val territory: TerritoryType, val index: Int) {
 	val players
 		get() = endWorld.players.filter { this == fromPos(it) }
 	
+	val storage
+		get() = TerritoryGlobalStorage.get().forInstance(this)
+	
 	fun generatesChunk(chunkX: Int, chunkZ: Int): Boolean {
 		val (startX, startZ) = topLeftChunk
 		return chunkX >= startX && chunkZ >= startZ && chunkX < startX + chunks && chunkZ < startZ + chunks
@@ -129,16 +133,20 @@ data class TerritoryInstance(val territory: TerritoryType, val index: Int) {
 		setSeed(nextLong() xor (66L * index) + (ordinal * nextInt()))
 	}
 	
+	inline fun <reified T : TerritoryStorageComponent> getStorageComponent(): T? {
+		return storage?.getComponent(T::class.java)
+	}
+	
 	fun getSpawnPoint(): BlockPos {
-		return TerritoryGlobalStorage.get().forInstance(this)?.loadSpawn() ?: fallbackSpawnPoint
+		return storage?.loadSpawn() ?: fallbackSpawnPoint
 	}
 	
 	fun getSpawnPoint(player: EntityPlayer): BlockPos {
-		return TerritoryGlobalStorage.get().forInstance(this)?.loadSpawnForPlayer(player) ?: fallbackSpawnPoint
+		return storage?.loadSpawnForPlayer(player) ?: fallbackSpawnPoint
 	}
 	
 	fun updateSpawnPoint(player: EntityPlayer, pos: BlockPos) {
-		TerritoryGlobalStorage.get().forInstance(this)?.updateSpawnForPlayer(player, pos)
+		storage?.updateSpawnForPlayer(player, pos)
 	}
 	
 	fun prepareSpawnPoint(entity: Entity?, clearanceRadius: Int): SpawnInfo {
@@ -149,7 +157,7 @@ data class TerritoryInstance(val territory: TerritoryType, val index: Int) {
 		BlockAbstractPortal.ensurePlatform(world, spawnPoint, territory.gen.groundBlock, clearanceRadius)
 		
 		territory.desc.prepareSpawnPoint(world, spawnPoint, this)
-		return SpawnInfo(spawnPoint, TerritoryGlobalStorage.get().forInstance(this)?.spawnYaw)
+		return SpawnInfo(spawnPoint, storage?.spawnYaw)
 	}
 	
 	@Suppress("UNNECESSARY_SAFE_CALL")

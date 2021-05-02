@@ -141,7 +141,7 @@ class ItemPortalToken(properties: Properties) : Item(properties) {
 		val index = getTerritoryIndex(stack) ?: return
 		val territory = getTerritoryType(stack) ?: return
 		
-		if (TerritoryGlobalStorage.get().forInstance(TerritoryInstance(territory, index))?.getComponent<VoidData>()?.isCorrupting == true) {
+		if (TerritoryInstance(territory, index).getStorageComponent<VoidData>()?.isCorrupting == true) {
 			stack.heeTag.putBoolean(IS_CORRUPTED_TAG, true)
 		}
 	}

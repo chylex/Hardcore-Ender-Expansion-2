@@ -14,7 +14,6 @@ import chylex.hee.game.particle.spawner.ParticleSpawnerCustom
 import chylex.hee.game.particle.spawner.properties.IShape.Point
 import chylex.hee.game.world.Pos
 import chylex.hee.game.world.getBlock
-import chylex.hee.game.world.territory.storage.TerritoryGlobalStorage
 import chylex.hee.game.world.territory.storage.data.VoidData
 import chylex.hee.game.world.totalTime
 import chylex.hee.system.color.IntColor.Companion.RGB
@@ -93,7 +92,7 @@ object TerritoryVoid {
 		val outsideVoidFactor = if (world.isRemote)
 			CLIENT_VOID_DATA.voidFactor
 		else
-			TerritoryGlobalStorage.get().forInstance(instance)?.getComponent<VoidData>()?.voidFactor ?: OUTSIDE_VOID_FACTOR
+			instance.getStorageComponent<VoidData>()?.voidFactor ?: OUTSIDE_VOID_FACTOR
 		
 		if (edge == null) {
 			return outsideVoidFactor

@@ -4,7 +4,6 @@ import chylex.hee.HEE
 import chylex.hee.game.world.territory.ITerritoryTicker
 import chylex.hee.game.world.territory.TerritoryInstance
 import chylex.hee.game.world.territory.TerritoryVoid
-import chylex.hee.game.world.territory.storage.TerritoryGlobalStorage
 import chylex.hee.game.world.territory.storage.data.VoidData
 import chylex.hee.game.world.totalTime
 import chylex.hee.system.forge.EventPriority
@@ -22,9 +21,8 @@ class VoidTicker(private val data: VoidData) : ITerritoryTicker {
 		@SubscribeEvent(EventPriority.LOWEST)
 		fun onLivingDeath(e: LivingDeathEvent) {
 			val player = (e.entity as? EntityPlayer)?.takeIf { !it.world.isRemote && it.dimension === HEE.dim } ?: return
-			
 			val instance = TerritoryInstance.fromPos(player) ?: return
-			val voidData = TerritoryGlobalStorage.get().forInstance(instance)?.getComponent<VoidData>() ?: return
+			val voidData = instance.getStorageComponent<VoidData>() ?: return
 			
 			if (voidData.startCorrupting()) {
 				val world = player.world as ServerWorld
