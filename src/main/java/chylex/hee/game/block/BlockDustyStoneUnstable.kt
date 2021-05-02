@@ -96,7 +96,7 @@ class BlockDustyStoneUnstable(builder: BlockBuilder) : BlockDustyStone(builder),
 	
 	override fun onEntityCollisionAbove(world: World, pos: BlockPos, entity: Entity) {
 		if (!world.isRemote && world.totalTime % 4L == 0L && !isLightMob(entity) && isNonCreative(entity)) {
-			if (entity is EntityMobUndread && !entity.canTriggerDustyStone) {
+			if (entity is EntityMobUndread && !entity.shouldTriggerDustyStone) {
 				return // Undread pathfinding should never spawn or walk on unstable Dusty Stone, but it still happens sometimes...
 			}
 			

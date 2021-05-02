@@ -74,7 +74,7 @@ class EntityMobUndread(type: EntityType<EntityMobUndread>, world: World) : Entit
 		private const val DUSTS_TAG = "Dusts"
 	}
 	
-	val canTriggerDustyStone
+	val shouldTriggerDustyStone
 		get() = attackTarget != null
 	
 	private var dustEffects = UndreadDustEffects.NONE
@@ -154,7 +154,7 @@ class EntityMobUndread(type: EntityType<EntityMobUndread>, world: World) : Entit
 	
 	private inner class NodeProcessor : WalkNodeProcessor() {
 		override fun getPathNodeType(world: IBlockReader, x: Int, y: Int, z: Int): PathNodeType {
-			if (!canTriggerDustyStone) {
+			if (shouldTriggerDustyStone) {
 				return super.getPathNodeType(world, x, y, z)
 			}
 			
