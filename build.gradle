@@ -1,30 +1,26 @@
 ext {
-	mc_version = "1.15.2"
-	forge_version = "31.2.50"
+	mc_version = "1.16.5"
+	forge_version = "36.1.32"
 	mixin_version = "0.8.2"
-	mapping_version = "20200626-1.15.1"
-	kotlin_mod_version = "1.11.0"
+	mapping_version = "20210309-1.16.5"
+	kotlin_mod_version = "1.13.0"
 }
 
 buildscript {
 	ext {
-		kotlin_version = "1.4.32"
+		kotlin_version = "1.5.20"
 	}
 	
 	repositories {
-		jcenter()
 		mavenCentral()
 		maven { url = "https://files.minecraftforge.net/maven" }
 		maven { url = "https://repo.spongepowered.org/maven" }
 	}
 	
 	dependencies {
-		classpath(group: "net.minecraftforge.gradle", name: "ForgeGradle", version: "3.+", changing: true) {
-			exclude group: "trove", module: "trove"
-		}
-		
-		classpath "org.spongepowered:mixingradle:0.7-SNAPSHOT"
-		classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:" + kotlin_version
+		classpath group: "net.minecraftforge.gradle", name: "ForgeGradle", version: "4.1.+", changing: true
+		classpath group: "org.spongepowered", name: "mixingradle", version: "0.7-SNAPSHOT"
+		classpath group: "org.jetbrains.kotlin", name: "kotlin-gradle-plugin", version: kotlin_version
 	}
 }
 
@@ -76,15 +72,14 @@ allprojects {
 	tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile) {
 		kotlinOptions {
 			jvmTarget = "1.8"
-			apiVersion = "1.4"
-			languageVersion = "1.4"
+			apiVersion = "1.5"
+			languageVersion = "1.5"
 			useIR = true
 			freeCompilerArgs = [
 				"-Xno-call-assertions",
 				"-Xno-param-assertions",
 				"-Xno-receiver-assertions",
 				"-Xjvm-default=all",
-				"-Xuse-experimental=kotlin.ExperimentalUnsignedTypes",
 				"-Xuse-experimental=kotlin.contracts.ExperimentalContracts",
 				"-XXLanguage:+InlineClasses"
 			]
