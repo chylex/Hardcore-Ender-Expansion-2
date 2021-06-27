@@ -23,6 +23,7 @@ import net.minecraft.block.BlockState
 import net.minecraft.enchantment.EnchantmentHelper
 import net.minecraft.enchantment.Enchantments
 import net.minecraft.entity.Entity
+import net.minecraft.entity.EntitySpawnPlacementRegistry.PlacementType
 import net.minecraft.entity.EntityType
 import net.minecraft.util.math.BlockPos
 import net.minecraft.world.IBlockReader
@@ -90,10 +91,6 @@ class BlockDustyStoneUnstable(builder: BlockBuilder) : BlockDustyStone(builder),
 		}
 	}
 	
-	override fun causesSuffocation(state: BlockState, world: IBlockReader, pos: BlockPos): Boolean {
-		return false // prevents sliding off the block
-	}
-	
 	override fun onEntityCollisionAbove(world: World, pos: BlockPos, entity: Entity) {
 		if (!world.isRemote && world.totalTime % 4L == 0L && !isLightMob(entity) && isNonCreative(entity)) {
 			if (entity is EntityMobUndread && !entity.shouldTriggerDustyStone) {
@@ -147,8 +144,8 @@ class BlockDustyStoneUnstable(builder: BlockBuilder) : BlockDustyStone(builder),
 		super.onFallenUpon(world, pos, entity, fallDistance)
 	}
 	
-	override fun canEntitySpawn(state: BlockState, world: IBlockReader, pos: BlockPos, entityType: EntityType<*>): Boolean {
-		return super.canEntitySpawn(state, world, pos, entityType) && getCrumbleStartPos(world, pos) == null
+	override fun canCreatureSpawn(state: BlockState, world: IBlockReader, pos: BlockPos, type: PlacementType?, entityType: EntityType<*>?): Boolean {
+		return super.canCreatureSpawn(state, world, pos, type, entityType) && getCrumbleStartPos(world, pos) == null
 	}
 	
 	private fun doCrumbleTest(world: World, pos: BlockPos): Boolean {

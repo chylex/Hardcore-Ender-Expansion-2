@@ -2,6 +2,7 @@ package chylex.hee.game.entity.living
 
 import chylex.hee.game.entity.CustomCreatureType
 import chylex.hee.game.entity.EntityData
+import chylex.hee.game.entity.getAttributeInstance
 import chylex.hee.game.entity.tryRemoveModifier
 import chylex.hee.game.mechanics.damage.Damage
 import chylex.hee.game.mechanics.damage.IDamageProcessor.Companion.ALL_PROTECTIONS_WITH_SHIELD
@@ -16,7 +17,7 @@ import net.minecraft.entity.Entity
 import net.minecraft.entity.EntitySize
 import net.minecraft.entity.EntityType
 import net.minecraft.entity.Pose
-import net.minecraft.entity.SharedMonsterAttributes.MOVEMENT_SPEED
+import net.minecraft.entity.ai.attributes.Attributes.MOVEMENT_SPEED
 import net.minecraft.network.IPacket
 import net.minecraft.network.datasync.DataSerializers
 import net.minecraft.util.DamageSource
@@ -61,7 +62,7 @@ abstract class EntityMobAbstractEnderman(type: EntityType<out EntityMobAbstractE
 		isAggro = prevAggressive
 		
 		if (newTarget != null) {
-			getAttribute(MOVEMENT_SPEED).tryRemoveModifier(ATTACKING_SPEED_BOOST) // vanilla adds speed boost attribute in this case
+			getAttributeInstance(MOVEMENT_SPEED).tryRemoveModifier(ATTACKING_SPEED_BOOST) // vanilla adds speed boost attribute in this case
 		}
 	}
 	
@@ -84,7 +85,7 @@ abstract class EntityMobAbstractEnderman(type: EntityType<out EntityMobAbstractE
 	}
 	
 	open fun canTeleportTo(aabb: AxisAlignedBB): Boolean {
-		return world.hasNoCollisions(null, aabb, emptySet()) && !world.containsAnyLiquid(aabb)
+		return world.hasNoCollisions(this, aabb) && !world.containsAnyLiquid(aabb)
 	}
 	
 	override fun teleportRandomly(): Boolean {

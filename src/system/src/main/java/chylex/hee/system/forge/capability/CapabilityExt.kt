@@ -22,6 +22,6 @@ fun <T> ICapabilityProvider.getCapOrNull(capability: Capability<T>?, facing: Dir
 	return this.getCapability(capability!!, facing).orElse(null)
 }
 
-fun <T> LazyOptional(impl: T): LazyOptional<T> {
+fun <T : Any> LazyOptional(impl: T): LazyOptional<T> {
 	return LazyOptional.of { impl }
 }

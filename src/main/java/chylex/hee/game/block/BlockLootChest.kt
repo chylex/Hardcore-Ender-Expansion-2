@@ -8,6 +8,7 @@ import chylex.hee.system.forge.Sided
 import chylex.hee.system.migration.EntityPlayer
 import net.minecraft.client.util.ITooltipFlag
 import net.minecraft.item.ItemStack
+import net.minecraft.util.Util
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.text.ITextComponent
 import net.minecraft.util.text.TranslationTextComponent
@@ -19,7 +20,7 @@ class BlockLootChest(builder: BlockBuilder) : BlockAbstractChest<TileEntityLootC
 	
 	override fun openChest(world: World, pos: BlockPos, player: EntityPlayer) {
 		if (player.isCreative && pos.getTile<TileEntityLootChest>(world)?.hasLootTable == true) {
-			player.sendMessage(TranslationTextComponent("block.hee.loot_chest.error_has_loot_table"))
+			player.sendMessage(TranslationTextComponent("block.hee.loot_chest.error_has_loot_table"), Util.DUMMY_UUID)
 		}
 		else {
 			super.openChest(world, pos, player)

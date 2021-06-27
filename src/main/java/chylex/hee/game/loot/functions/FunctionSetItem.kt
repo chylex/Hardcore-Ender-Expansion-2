@@ -1,6 +1,6 @@
 package chylex.hee.game.loot.functions
 
-import chylex.hee.system.facades.Resource
+import chylex.hee.init.ModLoot
 import chylex.hee.system.forge.getIfExists
 import chylex.hee.system.random.nextItem
 import com.google.gson.JsonArray
@@ -10,16 +10,21 @@ import com.google.gson.JsonParseException
 import com.google.gson.JsonSerializationContext
 import net.minecraft.item.Item
 import net.minecraft.item.ItemStack
+import net.minecraft.loot.LootContext
+import net.minecraft.loot.LootFunction
+import net.minecraft.loot.LootFunctionType
+import net.minecraft.loot.conditions.ILootCondition
+import net.minecraft.tags.ITag.INamedTag
 import net.minecraft.tags.ItemTags
-import net.minecraft.tags.Tag
 import net.minecraft.util.ResourceLocation
-import net.minecraft.world.storage.loot.LootContext
-import net.minecraft.world.storage.loot.LootFunction
-import net.minecraft.world.storage.loot.conditions.ILootCondition
 import net.minecraftforge.registries.ForgeRegistries
 
 sealed class FunctionSetItem(conditions: Array<ILootCondition>) : LootFunction(conditions) {
 	abstract fun serialize(json: JsonObject, context: JsonSerializationContext)
+	
+	override fun getFunctionType(): LootFunctionType {
+		return ModLoot.FUNCTION_SET_ITEM
+	}
 	
 	private class FromList(conditions: Array<ILootCondition>, private val items: Array<String>) : FunctionSetItem(conditions) {
 		override fun doApply(stack: ItemStack, context: LootContext): ItemStack {
@@ -33,7 +38,7 @@ sealed class FunctionSetItem(conditions: Array<ILootCondition>) : LootFunction(c
 		}
 	}
 	
-	private class FromTag(conditions: Array<ILootCondition>, private val tag: Tag<Item>) : FunctionSetItem(conditions) {
+	private class FromTag(conditions: Array<ILootCondition>, private val tag: INamedTag<Item>) : FunctionSetItem(conditions) {
 		override fun doApply(stack: ItemStack, context: LootContext): ItemStack {
 			return ItemStack.read(stack.serializeNBT().apply {
 				putString("id", tag.getRandomElement(context.random).registryName.toString())
@@ -41,11 +46,11 @@ sealed class FunctionSetItem(conditions: Array<ILootCondition>) : LootFunction(c
 		}
 		
 		override fun serialize(json: JsonObject, context: JsonSerializationContext) {
-			json.addProperty("tag", tag.id.toString())
+			json.addProperty("tag", tag.name.toString())
 		}
 	}
 	
-	object Serializer : LootFunction.Serializer<FunctionSetItem>(Resource.Custom("set_item"), FunctionSetItem::class.java) {
+	object Serializer : LootFunction.Serializer<FunctionSetItem>() {
 		override fun serialize(json: JsonObject, value: FunctionSetItem, context: JsonSerializationContext) {
 			value.serialize(json, context)
 		}
@@ -59,7 +64,8 @@ sealed class FunctionSetItem(conditions: Array<ILootCondition>) : LootFunction(c
 				
 				json.has("tag") -> {
 					val tag = json.get("tag").asString
-					FromTag(conditions, ItemTags.getCollection().get(ResourceLocation(tag)) ?: throw JsonParseException("Can't find tag: $tag"))
+					val location = ResourceLocation(tag)
+					FromTag(conditions, ItemTags.getAllTags().find { it.name == location } ?: throw JsonParseException("Can't find tag: $tag"))
 				}
 				
 				else -> throw JsonParseException("Missing either 'items' or 'tag' tag.")

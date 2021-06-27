@@ -30,6 +30,7 @@ import net.minecraft.item.Item
 import net.minecraft.item.ItemStack
 import net.minecraft.item.ItemUseContext
 import net.minecraft.util.ActionResultType
+import net.minecraft.util.ActionResultType.PASS
 import net.minecraft.util.Hand
 import net.minecraft.util.SoundCategory
 import net.minecraft.util.math.BlockPos
@@ -95,7 +96,7 @@ class ItemFlintAndInfernium(properties: Properties) : Item(properties) {
 		return SUCCESS
 	}
 	
-	override fun itemInteractionForEntity(stack: ItemStack, player: EntityPlayer, target: EntityLivingBase, hand: Hand): Boolean {
+	override fun itemInteractionForEntity(stack: ItemStack, player: EntityPlayer, target: EntityLivingBase, hand: Hand): ActionResultType {
 		if (target is EntityCreeper) {
 			Sounds.ITEM_FLINTANDSTEEL_USE.playServer(target.world, target.posVec, target.soundCategory, volume = 1.1F, pitch = target.rng.nextFloat(0.4F, 0.5F))
 			player.swingArm(hand)
@@ -103,9 +104,9 @@ class ItemFlintAndInfernium(properties: Properties) : Item(properties) {
 			
 			target.heeTag.putBoolean(CREEPER_INFERNIUM_TAG, true)
 			target.ignite()
-			return true
+			return SUCCESS
 		}
 		
-		return false
+		return PASS
 	}
 }

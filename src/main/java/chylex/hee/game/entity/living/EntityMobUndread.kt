@@ -56,11 +56,8 @@ import net.minecraft.entity.EntitySize
 import net.minecraft.entity.EntityType
 import net.minecraft.entity.ILivingEntityData
 import net.minecraft.entity.Pose
-import net.minecraft.entity.SharedMonsterAttributes.ATTACK_DAMAGE
-import net.minecraft.entity.SharedMonsterAttributes.FOLLOW_RANGE
-import net.minecraft.entity.SharedMonsterAttributes.MAX_HEALTH
-import net.minecraft.entity.SharedMonsterAttributes.MOVEMENT_SPEED
 import net.minecraft.entity.SpawnReason
+import net.minecraft.entity.ai.attributes.Attributes.FOLLOW_RANGE
 import net.minecraft.nbt.CompoundNBT
 import net.minecraft.network.IPacket
 import net.minecraft.network.PacketBuffer
@@ -73,10 +70,10 @@ import net.minecraft.util.ResourceLocation
 import net.minecraft.util.SoundCategory
 import net.minecraft.util.SoundEvent
 import net.minecraft.util.math.BlockPos
-import net.minecraft.util.math.Vec3d
+import net.minecraft.util.math.vector.Vector3d
 import net.minecraft.world.DifficultyInstance
 import net.minecraft.world.IBlockReader
-import net.minecraft.world.IWorld
+import net.minecraft.world.IServerWorld
 import net.minecraft.world.World
 import net.minecraftforge.fml.common.registry.IEntityAdditionalSpawnData
 import net.minecraftforge.fml.network.NetworkHooks
@@ -95,7 +92,7 @@ class EntityMobUndread(type: EntityType<EntityMobUndread>, world: World) : Entit
 		private const val FORGOTTEN_TOMBS_END_TAG = "ForgottenTombsEnd"
 		
 		val FX_END_DISAPPEAR = object : FxVecHandler() {
-			override fun handle(world: World, rand: Random, vec: Vec3d) {
+			override fun handle(world: World, rand: Random, vec: Vector3d) {
 				PARTICLE_END_DISAPPEAR.spawn(Point(vec, rand.nextInt(19, 24)), rand)
 				ModSounds.MOB_UNDREAD_DEATH.playClient(vec, SoundCategory.HOSTILE, volume = 0.7F, pitch = rand.nextFloat(0.8F, 1F))
 			}
@@ -116,14 +113,7 @@ class EntityMobUndread(type: EntityType<EntityMobUndread>, world: World) : Entit
 	
 	private var dustEffects = UndreadDustEffects.NONE
 	
-	override fun registerAttributes() {
-		super.registerAttributes()
-		
-		getAttribute(MAX_HEALTH).baseValue = 12.0
-		getAttribute(ATTACK_DAMAGE).baseValue = 4.0
-		getAttribute(MOVEMENT_SPEED).baseValue = 0.18
-		getAttribute(FOLLOW_RANGE).baseValue = 24.0
-		
+	init {
 		experienceValue = 5
 	}
 	
@@ -169,7 +159,7 @@ class EntityMobUndread(type: EntityType<EntityMobUndread>, world: World) : Entit
 			return false
 		}
 		
-		val maxDistance = if (isForgottenTombsEnd) getAttribute(FOLLOW_RANGE).value.floorToInt() else 16
+		val maxDistance = if (isForgottenTombsEnd) getAttributeValue(FOLLOW_RANGE).floorToInt() else 16
 		if (getDistanceSq(player) > square(maxDistance)) {
 			return false
 		}
@@ -206,8 +196,8 @@ class EntityMobUndread(type: EntityType<EntityMobUndread>, world: World) : Entit
 			super.getMaxFallHeight()
 	}
 	
-	public override fun createRunningParticles() {
-		super.createRunningParticles()
+	public override fun addSprintingEffect() {
+		super.addSprintingEffect()
 	}
 	
 	override fun createNavigator(world: World): PathNavigator {
@@ -217,7 +207,7 @@ class EntityMobUndread(type: EntityType<EntityMobUndread>, world: World) : Entit
 	}
 	
 	private inner class NodeProcessor : WalkNodeProcessor() {
-		override fun getPathNodeType(world: IBlockReader, x: Int, y: Int, z: Int): PathNodeType {
+		override fun getFloorNodeType(world: IBlockReader, x: Int, y: Int, z: Int): PathNodeType {
 			val posBelow = Pos(x, y, z).down()
 			if (posBelow.getBlock(world) === ModBlocks.VOID_PORTAL_FRAME) {
 				return if (attackTarget.let { it == null || getDistanceSq(it) > square(4) })
@@ -230,7 +220,7 @@ class EntityMobUndread(type: EntityType<EntityMobUndread>, world: World) : Entit
 				return PathNodeType.BLOCKED
 			}
 			
-			return super.getPathNodeType(world, x, y, z)
+			return super.getFloorNodeType(world, x, y, z)
 		}
 	}
 	
@@ -248,7 +238,7 @@ class EntityMobUndread(type: EntityType<EntityMobUndread>, world: World) : Entit
 	
 	override fun swingArm(hand: Hand) {}
 	
-	override fun onInitialSpawn(world: IWorld, difficulty: DifficultyInstance, reason: SpawnReason, data: ILivingEntityData?, nbt: CompoundNBT?): ILivingEntityData? {
+	override fun onInitialSpawn(world: IServerWorld, difficulty: DifficultyInstance, reason: SpawnReason, data: ILivingEntityData?, nbt: CompoundNBT?): ILivingEntityData? {
 		if (data is UndreadDustEffects) {
 			this.dustEffects = data.also { it.applyAttributes(this) }
 		}

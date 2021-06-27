@@ -29,7 +29,7 @@ abstract class SunBase : AbstractEnvironmentRenderer() {
 	@Sided(Side.CLIENT)
 	protected open fun setRotation(world: ClientWorld, matrix: MatrixStack, partialTicks: Float) {
 		matrix.rotateY(-90F)
-		matrix.rotateX(world.getCelestialAngle(partialTicks) * 360F)
+		matrix.rotateX(world.func_242415_f(partialTicks) * 360F)
 	}
 	
 	@Sided(Side.CLIENT)

@@ -8,6 +8,7 @@ import chylex.hee.client.gui.GuiLootChest
 import chylex.hee.client.gui.GuiPortalTokenStorage
 import chylex.hee.client.gui.GuiShulkerBox
 import chylex.hee.client.gui.GuiTrinketPouch
+import chylex.hee.client.render.EndDimensionRenderInfo
 import chylex.hee.client.render.block.IBlockLayerCutout
 import chylex.hee.client.render.block.IBlockLayerCutoutMipped
 import chylex.hee.client.render.block.IBlockLayerTranslucent
@@ -84,10 +85,13 @@ import chylex.hee.game.entity.projectile.EntityProjectileSpatialDash
 import chylex.hee.game.entity.technical.EntityTechnicalBase
 import chylex.hee.game.entity.technical.EntityTechnicalIgneousPlateLogic
 import chylex.hee.game.item.ItemBindingEssence
+import chylex.hee.game.item.ItemDeathFlower
 import chylex.hee.game.item.ItemEnergyOracle
 import chylex.hee.game.item.ItemEnergyReceptacle
 import chylex.hee.game.item.ItemPortalToken
+import chylex.hee.game.item.ItemTotemOfUndyingCustom
 import chylex.hee.game.item.ItemVoidBucket
+import chylex.hee.game.item.ItemVoidSalad
 import chylex.hee.system.facades.Resource
 import chylex.hee.system.forge.Side
 import chylex.hee.system.forge.SubscribeAllEvents
@@ -115,8 +119,12 @@ import net.minecraft.entity.Entity
 import net.minecraft.entity.EntityType
 import net.minecraft.inventory.container.Container
 import net.minecraft.inventory.container.ContainerType
+import net.minecraft.item.IItemPropertyGetter
+import net.minecraft.item.ItemModelsProperties
 import net.minecraft.tileentity.TileEntity
 import net.minecraft.tileentity.TileEntityType
+import net.minecraft.util.IItemProvider
+import net.minecraft.util.ResourceLocation
 import net.minecraftforge.client.event.ColorHandlerEvent
 import net.minecraftforge.fml.client.registry.ClientRegistry
 import net.minecraftforge.fml.client.registry.IRenderFactory
@@ -135,6 +143,10 @@ object ModRendering {
 	@Suppress("unused", "UNUSED_PARAMETER")
 	fun onRegisterRenderers(e: FMLClientSetupEvent) {
 		
+		// dimension
+		
+		EndDimensionRenderInfo.register()
+		
 		// blocks
 		
 		for(block in getRegistryEntries<Block>(ModBlocks)) {
@@ -152,6 +164,17 @@ object ModRendering {
 		
 		RenderTypeLookup.setRenderLayer(FluidEnderGooPurified.still, RenderType.getSolid())
 		RenderTypeLookup.setRenderLayer(FluidEnderGooPurified.flowing, RenderType.getSolid()) // UPDATE should be translucent but it's not rendering
+		
+		// properties
+		
+		ModBlocks.DEATH_FLOWER_DECAYING.registerProperty(Resource.Custom("death_level"), ItemDeathFlower.DEATH_LEVEL_PROPERTY)
+		
+		ModItems.ENERGY_ORACLE.registerProperty(Resource.Custom("activity_intensity"), ItemEnergyOracle.ACTIVITY_INTENSITY_PROPERTY)
+		ModItems.ENERGY_RECEPTACLE.registerProperty(Resource.Custom("has_cluster"), ItemEnergyReceptacle.HAS_CLUSTER_PROPERTY)
+		ModItems.PORTAL_TOKEN.registerProperty(Resource.Custom("token_type"), ItemPortalToken.TOKEN_TYPE_PROPERTY)
+		ModItems.TOTEM_OF_UNDYING.registerProperty(Resource.Custom("is_shaking"), ItemTotemOfUndyingCustom.IS_SHAKING_PROPERTY)
+		ModItems.VOID_BUCKET.registerProperty(Resource.Custom("void_bucket_cooldown"), ItemVoidBucket.VOID_BUCKET_COOLDOWN_PROPERTY)
+		ModItems.VOID_SALAD.registerProperty(Resource.Custom("void_salad_type"), ItemVoidSalad.VOID_SALAD_TYPE_PROPERTY)
 		
 		// screens
 		
@@ -253,6 +276,10 @@ object ModRendering {
 	// Utilities
 	
 	private fun <T : ItemStackTileEntityRenderer> callable(obj: T) = Callable<ItemStackTileEntityRenderer> { obj }
+	
+	private fun IItemProvider.registerProperty(location: ResourceLocation, getter: IItemPropertyGetter){
+		ItemModelsProperties.registerProperty(this.asItem(), location, getter)
+	}
 	
 	private inline fun <reified T : ContainerScreen<U>, U : Container> registerScreen(type: ContainerType<out U>, constructor: IScreenFactory<U, T>) {
 		ScreenManager.registerFactory(type, constructor)

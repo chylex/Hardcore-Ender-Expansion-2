@@ -10,7 +10,6 @@ import chylex.hee.network.client.PacketClientTeleportInstantly
 import chylex.hee.network.client.PacketClientTerritoryEnvironment
 import chylex.hee.network.client.PacketClientTrinketBreak
 import chylex.hee.network.client.PacketClientUpdateExperience
-import chylex.hee.network.client.PacketClientWeather
 import chylex.hee.network.server.PacketServerContainerEvent
 import chylex.hee.network.server.PacketServerOpenInventoryItem
 import chylex.hee.network.server.PacketServerShiftClickTrinket
@@ -29,7 +28,6 @@ object ModPackets {
 			build<PacketClientTerritoryEnvironment>(),
 			build<PacketClientTrinketBreak>(),
 			build<PacketClientUpdateExperience>(),
-			build<PacketClientWeather>(),
 			
 			build<PacketServerContainerEvent>(),
 			build<PacketServerOpenInventoryItem>(),

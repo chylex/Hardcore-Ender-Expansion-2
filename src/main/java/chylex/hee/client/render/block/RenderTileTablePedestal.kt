@@ -24,7 +24,6 @@ import chylex.hee.system.random.nextFloat
 import com.mojang.blaze3d.matrix.MatrixStack
 import net.minecraft.client.renderer.IRenderTypeBuffer
 import net.minecraft.client.renderer.ItemRenderer
-import net.minecraft.client.renderer.Matrix4f
 import net.minecraft.client.renderer.model.IBakedModel
 import net.minecraft.client.renderer.model.ItemCameraTransforms.TransformType.GROUND
 import net.minecraft.client.renderer.texture.OverlayTexture
@@ -33,6 +32,7 @@ import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats
 import net.minecraft.item.Item
 import net.minecraft.item.ItemStack
+import net.minecraft.util.math.vector.Matrix4f
 import org.lwjgl.opengl.GL11
 import java.util.Collections
 import java.util.Random

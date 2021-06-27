@@ -17,8 +17,8 @@ abstract class AIBaseTargetFiltered<T : EntityLivingBase>(
 	mutexBits: EnumSet<Flag> = EnumSet.of(MOVE),
 ) : AIBaseTarget<T>(entity, checkSight, easilyReachableOnly, mutexBits) {
 	private val basicEntityPredicate = EntityPredicate().apply {
-		if (checkSight) {
-			setLineOfSiteRequired()
+		if (!checkSight) {
+			setIgnoresLineOfSight()
 		}
 	}
 	

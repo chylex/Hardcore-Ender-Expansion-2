@@ -18,6 +18,7 @@ import chylex.hee.game.world.getTile
 import chylex.hee.game.world.isAir
 import chylex.hee.game.world.playClient
 import chylex.hee.game.world.setBlock
+import chylex.hee.game.world.spawn
 import chylex.hee.init.ModEntities
 import chylex.hee.init.ModSounds
 import chylex.hee.network.client.PacketClientFX
@@ -26,9 +27,6 @@ import chylex.hee.network.fx.FxBlockHandler
 import chylex.hee.network.fx.IFxData
 import chylex.hee.network.fx.IFxHandler
 import chylex.hee.system.math.Vec3
-import chylex.hee.system.math.component1
-import chylex.hee.system.math.component2
-import chylex.hee.system.math.component3
 import chylex.hee.system.math.floorToInt
 import chylex.hee.system.migration.Facing.UP
 import chylex.hee.system.migration.Sounds
@@ -62,6 +60,7 @@ import kotlin.math.min
 import kotlin.math.pow
 
 class EntityTechnicalIgneousPlateLogic(type: EntityType<EntityTechnicalIgneousPlateLogic>, world: World) : Entity(type, world) {
+	@Suppress("unused")
 	constructor(world: World) : this(ModEntities.IGNEOUS_PLATE_LOGIC, world)
 	
 	companion object {
@@ -88,12 +87,7 @@ class EntityTechnicalIgneousPlateLogic(type: EntityType<EntityTechnicalIgneousPl
 		
 		fun createForFurnace(furnace: TileEntityFurnace) {
 			if (findLogicEntity(furnace) == null) {
-				val (x, y, z) = furnace.pos.center
-				
-				EntityTechnicalIgneousPlateLogic(furnace.world!!).apply {
-					setLocationAndAngles(x, y, z, 0F, 0F)
-					world.addEntity(this)
-				}
+				furnace.world!!.spawn(ModEntities.IGNEOUS_PLATE_LOGIC, furnace.pos.center)
 			}
 		}
 		
@@ -215,7 +209,7 @@ class EntityTechnicalIgneousPlateLogic(type: EntityType<EntityTechnicalIgneousPl
 				return
 			}
 			
-			val speedMultiplier = (plates.sumByDouble { it.potential } / plates.size) * 2.0 * plates.size.toDouble().pow(0.793)
+			val speedMultiplier = (plates.sumByDouble(TileEntityIgneousPlate::potential) / plates.size) * 2.0 * plates.size.toDouble().pow(0.793)
 			increaseFurnaceTicks(furnace, speedMultiplier - 1.0)
 			
 			if (speedMultiplier < 2.1) {

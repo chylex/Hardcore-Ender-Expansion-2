@@ -10,7 +10,7 @@ fun main() {
 	val biasSoftener = 3F
 	
 	val rand = Random()
-	val generator = RandomBiasedValueRange(min..max, highestChanceValue, biasSoftener)
+	val generator = RandomBiasedValueRange(min, max, highestChanceValue, biasSoftener)
 	val reps = 100000
 	
 	val results = (1..reps).map { generator.generateInt(rand) }

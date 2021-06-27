@@ -1,5 +1,5 @@
 {
-  "parent": "block/slab",
+  "parent": "minecraft:block/slab",
   "textures": {
     "side": "hee:block/gloomrock_smooth_slab_side",
     "bottom": "hee:block/gloomrock_smooth",

@@ -11,6 +11,7 @@ import chylex.hee.game.block.BlockVoidPortalInner.Type.RETURN_INACTIVE
 import chylex.hee.game.block.entity.TileEntityPortalInner
 import chylex.hee.game.block.with
 import chylex.hee.game.entity.OPERATION_MUL_INCR_GROUPED
+import chylex.hee.game.entity.getAttributeInstance
 import chylex.hee.game.entity.item.EntityTokenHolder
 import chylex.hee.game.entity.living.EntityMobUndread
 import chylex.hee.game.entity.living.behavior.UndreadDustEffects
@@ -27,6 +28,7 @@ import chylex.hee.game.potion.makeEffect
 import chylex.hee.game.world.Pos
 import chylex.hee.game.world.allInBoxMutable
 import chylex.hee.game.world.allInCenteredBoxMutable
+import chylex.hee.game.world.bottomCenter
 import chylex.hee.game.world.breakBlock
 import chylex.hee.game.world.center
 import chylex.hee.game.world.distanceSqTo
@@ -38,6 +40,7 @@ import chylex.hee.game.world.math.BoundingBox
 import chylex.hee.game.world.offsetUntil
 import chylex.hee.game.world.playPlayer
 import chylex.hee.game.world.setState
+import chylex.hee.game.world.spawn
 import chylex.hee.game.world.territory.ITerritoryDescription
 import chylex.hee.game.world.territory.ITerritoryTicker
 import chylex.hee.game.world.territory.TerritoryDifficulty
@@ -75,12 +78,11 @@ import chylex.hee.system.random.nextItem
 import chylex.hee.system.random.nextItemOrNull
 import chylex.hee.system.random.nextRounded
 import com.google.common.collect.Sets
-import net.minecraft.client.renderer.Vector3f
 import net.minecraft.entity.EntitySpawnPlacementRegistry
-import net.minecraft.entity.SharedMonsterAttributes.FOLLOW_RANGE
 import net.minecraft.entity.SpawnReason.NATURAL
 import net.minecraft.entity.SpawnReason.STRUCTURE
 import net.minecraft.entity.ai.attributes.AttributeModifier
+import net.minecraft.entity.ai.attributes.Attributes.FOLLOW_RANGE
 import net.minecraft.util.Direction.UP
 import net.minecraft.util.SoundCategory
 import net.minecraft.util.math.AxisAlignedBB
@@ -88,10 +90,12 @@ import net.minecraft.util.math.RayTraceContext
 import net.minecraft.util.math.RayTraceContext.BlockMode
 import net.minecraft.util.math.RayTraceContext.FluidMode
 import net.minecraft.util.math.RayTraceResult.Type
+import net.minecraft.util.math.vector.Vector3f
 import net.minecraft.world.Difficulty.PEACEFUL
 import net.minecraft.world.LightType.BLOCK
 import net.minecraft.world.LightType.SKY
 import net.minecraft.world.World
+import net.minecraft.world.server.ServerWorld
 import java.util.Random
 import java.util.UUID
 import kotlin.math.abs
@@ -230,7 +234,7 @@ object Territory_ForgottenTombs : ITerritoryDescription {
 		val endData = entry.registerComponent(TerritoryStorageComponent.FORGOTTEN_TOMBS_END_DATA)
 		
 		tickers.add(object : ITerritoryTicker {
-			override fun tick(world: World) {
+			override fun tick(world: ServerWorld) {
 				if (world.difficulty == PEACEFUL || endData.isPortalActivated || world.totalTime % 20L != 0L) {
 					return
 				}
@@ -273,7 +277,7 @@ object Territory_ForgottenTombs : ITerritoryDescription {
 							rand.nextInt(-8, 8),
 							rand.nextInt(-19, 19)
 						).offsetUntil(UP, -5..3) {
-							EntitySpawnPlacementRegistry.func_223515_a(ModEntities.UNDREAD, world, NATURAL, it, rand) &&
+							EntitySpawnPlacementRegistry.canSpawnEntity(ModEntities.UNDREAD, world, NATURAL, it, rand) &&
 							world.hasNoCollisions(ModEntities.UNDREAD.getBoundingBoxWithSizeApplied(it.x + 0.5, it.y.toDouble(), it.z + 0.5))
 						}
 						
@@ -285,11 +289,7 @@ object Territory_ForgottenTombs : ITerritoryDescription {
 							continue
 						}
 						
-						EntityMobUndread(world).apply {
-							setLocationAndAngles(testPos.x + 0.5, testPos.y.toDouble(), testPos.z + 0.5, rand.nextFloat(0F, 360F), 0F)
-							world.addEntity(this)
-						}
-						
+						world.spawn(ModEntities.UNDREAD, testPos.bottomCenter, yaw = rand.nextFloat(0F, 360F))
 						break
 					}
 				}
@@ -297,7 +297,7 @@ object Territory_ForgottenTombs : ITerritoryDescription {
 		})
 		
 		tickers.add(object : ITerritoryTicker {
-			override fun tick(world: World) {
+			override fun tick(world: ServerWorld) {
 				val ticks = endData.endSequenceTicks?.takeIf { it != Int.MAX_VALUE } ?: return
 				val aabb = endData.roomAABB ?: return
 				
@@ -348,7 +348,7 @@ object Territory_ForgottenTombs : ITerritoryDescription {
 				}
 			}
 			
-			private fun spawnUndreads(world: World, targets: List<EntityPlayer>, bb: BoundingBox, amount: Int) {
+			private fun spawnUndreads(world: ServerWorld, targets: List<EntityPlayer>, bb: BoundingBox, amount: Int) {
 				for (pos in bb.min.allInBoxMutable(bb.max)) {
 					if (pos.getBlock(world) is BlockGraveDirt) {
 						pos.breakBlock(world, drops = false)
@@ -383,7 +383,7 @@ object Territory_ForgottenTombs : ITerritoryDescription {
 					val undread = EntityMobUndread(world).apply {
 						isForgottenTombsEnd = true
 						attackTarget = rand.nextItemOrNull(targets)
-						getAttribute(FOLLOW_RANGE).applyModifier(undreadFollowRangeModifier)
+						getAttributeInstance(FOLLOW_RANGE).applyPersistentModifier(undreadFollowRangeModifier)
 						addPotionEffect(Potions.SLOW_FALLING.makeEffect(Int.MAX_VALUE, 0, showParticles = false))
 						enablePersistence()
 					}

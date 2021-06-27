@@ -3,7 +3,7 @@ package chylex.hee.game.entity.living.ai
 import chylex.hee.system.migration.EntityCreature
 import net.minecraft.entity.ai.RandomPositionGenerator
 import net.minecraft.entity.ai.goal.RandomWalkingGoal
-import net.minecraft.util.math.Vec3d
+import net.minecraft.util.math.vector.Vector3d
 
 open class AIWanderLand(
 	entity: EntityCreature,
@@ -15,7 +15,7 @@ open class AIWanderLand(
 	protected inline val entity: EntityCreature
 		get() = creature
 	
-	override fun getPosition(): Vec3d? {
+	override fun getPosition(): Vector3d? {
 		return RandomPositionGenerator.getLandPos(entity, maxDistanceXZ, maxDistanceY) ?: RandomPositionGenerator.findRandomTarget(entity, maxDistanceXZ, maxDistanceY)
 	}
 }

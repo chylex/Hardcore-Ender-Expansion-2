@@ -1,14 +1,15 @@
 package chylex.hee.game.entity.living.behavior
 
 import chylex.hee.game.entity.OPERATION_MUL_INCR_INDIVIDUAL
+import chylex.hee.game.entity.getAttributeInstance
 import chylex.hee.game.entity.living.EntityMobAbstractEnderman
-import chylex.hee.game.entity.tryApplyModifier
+import chylex.hee.game.entity.tryApplyNonPersistentModifier
 import chylex.hee.game.entity.tryRemoveModifier
 import chylex.hee.system.random.nextInt
 import chylex.hee.system.serialization.TagCompound
 import chylex.hee.system.serialization.use
-import net.minecraft.entity.SharedMonsterAttributes.ATTACK_DAMAGE
 import net.minecraft.entity.ai.attributes.AttributeModifier
+import net.minecraft.entity.ai.attributes.Attributes.ATTACK_DAMAGE
 import net.minecraft.util.DamageSource
 import net.minecraftforge.common.util.INBTSerializable
 
@@ -53,11 +54,11 @@ class EndermanWaterHandler(private val enderman: EntityMobAbstractEnderman, priv
 	private fun updateDebuff() {
 		if (debuffTicks > 0) {
 			enderman.isShaking = true
-			enderman.getAttribute(ATTACK_DAMAGE).tryApplyModifier(DEBUFF_WEAKNESS)
+			enderman.getAttributeInstance(ATTACK_DAMAGE).tryApplyNonPersistentModifier(DEBUFF_WEAKNESS)
 		}
 		else {
 			enderman.isShaking = false
-			enderman.getAttribute(ATTACK_DAMAGE).tryRemoveModifier(DEBUFF_WEAKNESS)
+			enderman.getAttributeInstance(ATTACK_DAMAGE).tryRemoveModifier(DEBUFF_WEAKNESS)
 		}
 	}
 	

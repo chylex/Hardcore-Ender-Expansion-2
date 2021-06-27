@@ -1,5 +1,5 @@
 {
-    "parent": "block/fire_up_alt",
+    "parent": "block/fire_up_alt0",
     "textures": {
         "particle": "hee:block/eternal_fire_0",
         "fire": "hee:block/eternal_fire_0"

@@ -1,6 +1,8 @@
 package chylex.hee.game.entity.living.behavior
 
+import chylex.hee.HEE
 import chylex.hee.game.entity.isAnyVulnerablePlayerWithinRange
+import chylex.hee.game.entity.isInOverworldDimension
 import chylex.hee.game.entity.living.EntityMobAbstractEnderman
 import chylex.hee.game.entity.living.ai.AIPickUpBlock.IBlockPickUpHandler
 import chylex.hee.game.entity.living.behavior.EndermanBlockHandler.TargetBlockType.FULL
@@ -16,7 +18,9 @@ import chylex.hee.game.world.isAir
 import chylex.hee.game.world.isFullBlock
 import chylex.hee.game.world.playServer
 import chylex.hee.game.world.setState
-import chylex.hee.system.facades.Resource
+import chylex.hee.system.forge.EventPriority
+import chylex.hee.system.forge.SubscribeAllEvents
+import chylex.hee.system.forge.SubscribeEvent
 import chylex.hee.system.math.Vec3
 import chylex.hee.system.math.addY
 import chylex.hee.system.math.component1
@@ -39,39 +43,35 @@ import net.minecraft.util.math.RayTraceContext.FluidMode
 import net.minecraft.util.math.RayTraceResult.Type
 import net.minecraft.world.LightType.BLOCK
 import net.minecraft.world.World
-import net.minecraft.world.biome.Biome
-import net.minecraft.world.dimension.DimensionType
-import net.minecraftforge.registries.ForgeRegistries
+import net.minecraftforge.event.TagsUpdatedEvent
 
 class EndermanBlockHandler(private val enderman: EntityMobAbstractEnderman) : IBlockPickUpHandler {
+	@SubscribeAllEvents(modid = HEE.ID)
 	companion object {
 		private val SEARCH_AREA = AxisAlignedBB(-15.0, -2.0, -15.0, 15.0, 1.0, 15.0)
 		
 		private lateinit var GENERIC_CARRIABLE_BLOCKS: Tag<Block>
-		private val BIOME_CARRIABLE_BLOCKS = mutableMapOf<Biome, BlockState>()
 		
-		fun setupCarriableBlocks() {
-			GENERIC_CARRIABLE_BLOCKS = Tag.Builder<Block>()
-				.add(BlockTags.SMALL_FLOWERS)
-				.add(Blocks.GRASS_BLOCK)
-				.add(Blocks.DIRT)
-				.add(Blocks.COARSE_DIRT)
-				.add(Blocks.PODZOL)
-				.add(BlockTags.SAND)
-				.add(Blocks.CLAY)
-				.add(Blocks.PUMPKIN)
-				.add(Blocks.MELON)
-				.add(BlockTags.SAPLINGS)
-				.add(Blocks.TALL_GRASS)
-				.add(Blocks.LARGE_FERN)
-				.add(Blocks.SUNFLOWER)
-				.add(Blocks.LILAC)
-				.add(Blocks.ROSE_BUSH)
-				.add(Blocks.PEONY)
-				.build(Resource.Custom("enderman_carriable"))
-			
-			BIOME_CARRIABLE_BLOCKS.clear()
-			ForgeRegistries.BIOMES.associateWithTo(BIOME_CARRIABLE_BLOCKS) { it.surfaceBuilderConfig.top }
+		@SubscribeEvent(priority = EventPriority.LOWEST)
+		fun onTagsUpdated(e: TagsUpdatedEvent) {
+			GENERIC_CARRIABLE_BLOCKS = Tag.getTagFromContents(setOf(
+				*BlockTags.SAND.allElements.toTypedArray(),
+				*BlockTags.SAPLINGS.allElements.toTypedArray(),
+				*BlockTags.SMALL_FLOWERS.allElements.toTypedArray(),
+				Blocks.CLAY,
+				Blocks.COARSE_DIRT,
+				Blocks.DIRT,
+				Blocks.GRASS_BLOCK,
+				Blocks.LARGE_FERN,
+				Blocks.LILAC,
+				Blocks.MELON,
+				Blocks.PEONY,
+				Blocks.PODZOL,
+				Blocks.PUMPKIN,
+				Blocks.ROSE_BUSH,
+				Blocks.SUNFLOWER,
+				Blocks.TALL_GRASS,
+			))
 		}
 	}
 	
@@ -94,7 +94,7 @@ class EndermanBlockHandler(private val enderman: EntityMobAbstractEnderman) : IB
 	}
 	
 	override fun onBeginSearch(): BlockPos? {
-		if (enderman.dimension != DimensionType.OVERWORLD || isPlayerInProximity()) {
+		if (!enderman.isInOverworldDimension || isPlayerInProximity()) {
 			return null
 		}
 		
@@ -140,7 +140,7 @@ class EndermanBlockHandler(private val enderman: EntityMobAbstractEnderman) : IB
 		
 		val state = pos.getState(world)
 		
-		if (!state.isIn(GENERIC_CARRIABLE_BLOCKS) && state !== BIOME_CARRIABLE_BLOCKS[world.getBiome(pos)]) {
+		if (!state.isIn(GENERIC_CARRIABLE_BLOCKS) && state !== world.getBiome(pos).generationSettings.surfaceBuilderConfig.top) {
 			return false
 		}
 		

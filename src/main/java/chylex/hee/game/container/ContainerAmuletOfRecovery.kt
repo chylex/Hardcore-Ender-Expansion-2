@@ -42,6 +42,7 @@ class ContainerAmuletOfRecovery(id: Int, private val player: EntityPlayer, hand:
 		}
 	}
 	
+	@Suppress("ConvertLambdaToReference")
 	override fun detectAndSendChanges() {
 		slotChangeListener.restart(listeners) { super.detectAndSendChanges() }?.let(amuletInventory::validatePlayerItemOnModification)
 	}

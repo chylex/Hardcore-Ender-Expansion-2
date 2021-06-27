@@ -7,22 +7,17 @@ import net.minecraft.block.BlockState
 import net.minecraft.util.Direction
 import net.minecraft.util.math.BlockPos
 import net.minecraft.world.IWorld
-import net.minecraft.world.IWorldReader
 import net.minecraft.world.World
 import net.minecraft.world.server.ServerWorld
 import java.util.Random
 
 class BlockFallingObsidian(builder: BlockBuilder) : BlockSimple(builder) {
-	override fun tickRate(world: IWorldReader): Int {
-		return 2
-	}
-	
 	override fun onBlockAdded(state: BlockState, world: World, pos: BlockPos, oldState: BlockState, isMoving: Boolean) {
-		world.pendingBlockTicks.scheduleTick(pos, this, tickRate(world))
+		world.pendingBlockTicks.scheduleTick(pos, this, 2)
 	}
 	
 	override fun updatePostPlacement(state: BlockState, facing: Direction, neighborState: BlockState, world: IWorld, pos: BlockPos, neighborPos: BlockPos): BlockState {
-		world.pendingBlockTicks.scheduleTick(pos, this, tickRate(world))
+		world.pendingBlockTicks.scheduleTick(pos, this, 2)
 		@Suppress("DEPRECATION")
 		return super.updatePostPlacement(state, facing, neighborState, world, pos, neighborPos)
 	}

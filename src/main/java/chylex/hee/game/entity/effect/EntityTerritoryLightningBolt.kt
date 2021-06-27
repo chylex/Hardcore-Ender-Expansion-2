@@ -1,11 +1,8 @@
 package chylex.hee.game.entity.effect
 
-import chylex.hee.game.entity.posVec
 import chylex.hee.game.world.playPlayer
 import chylex.hee.game.world.territory.TerritoryInstance
 import chylex.hee.init.ModEntities
-import chylex.hee.network.client.PacketClientWeather
-import chylex.hee.network.client.PacketClientWeather.Types.TERRITORY_LIGHTNING_BOLT
 import chylex.hee.system.forge.Side
 import chylex.hee.system.forge.Sided
 import chylex.hee.system.random.nextFloat
@@ -16,7 +13,6 @@ import net.minecraft.network.IPacket
 import net.minecraft.util.SoundCategory
 import net.minecraft.util.SoundEvents
 import net.minecraft.world.World
-import net.minecraft.world.server.ServerWorld
 import net.minecraftforge.fml.network.NetworkHooks
 
 class EntityTerritoryLightningBolt(type: EntityType<*>, world: World) : Entity(type, world) {
@@ -70,10 +66,7 @@ class EntityTerritoryLightningBolt(type: EntityType<*>, world: World) : Entity(t
 	}
 	
 	fun spawnInTerritory() {
-		(world as ServerWorld).globalEntities.add(this)
-		
-		val packet = PacketClientWeather(TERRITORY_LIGHTNING_BOLT, posVec)
-		TerritoryInstance.fromPos(this)?.players?.forEach(packet::sendToPlayer)
+		world.addEntity(this)
 	}
 	
 	override fun getSoundCategory(): SoundCategory {

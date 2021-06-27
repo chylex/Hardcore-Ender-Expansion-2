@@ -18,7 +18,7 @@ import chylex.hee.system.serialization.putAABB
 import net.minecraft.util.SoundCategory
 import net.minecraft.util.math.AxisAlignedBB
 import net.minecraft.util.math.BlockPos
-import net.minecraft.util.math.Vec3d
+import net.minecraft.util.math.vector.Vector3d
 import net.minecraft.world.Difficulty.EASY
 import net.minecraft.world.Difficulty.HARD
 import net.minecraft.world.Difficulty.NORMAL
@@ -54,7 +54,7 @@ class ForgottenTombsEndData(markDirty: () -> Unit) : TerritoryStorageComponent()
 		roomAABB = aabb
 	}
 	
-	fun startEndSequence(world: World, instance: TerritoryInstance, soundPos: Vec3d) {
+	fun startEndSequence(world: World, instance: TerritoryInstance, soundPos: Vector3d) {
 		if (endSequenceTicks == null) {
 			endSequenceTicks = 0
 			

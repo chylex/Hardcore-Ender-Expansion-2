@@ -3,6 +3,7 @@ package chylex.hee.game.entity.living.behavior
 import chylex.hee.client.MC
 import chylex.hee.game.block.entity.TileEntitySpawnerObsidianTower
 import chylex.hee.game.entity.effect.EntityTerritoryLightningBolt
+import chylex.hee.game.entity.isInEndDimension
 import chylex.hee.game.entity.living.EntityBossEnderEye
 import chylex.hee.game.entity.living.behavior.EnderEyeAttack.LaserEye
 import chylex.hee.game.entity.living.behavior.EnderEyeAttack.Melee
@@ -50,10 +51,10 @@ import chylex.hee.system.serialization.TagCompound
 import chylex.hee.system.serialization.use
 import net.minecraft.block.Blocks
 import net.minecraft.client.particle.DiggingParticle
+import net.minecraft.client.world.ClientWorld
 import net.minecraft.entity.Entity
 import net.minecraft.util.SoundCategory
 import net.minecraft.util.math.BlockPos
-import net.minecraft.world.dimension.DimensionType
 import net.minecraftforge.common.util.INBTSerializable
 import java.util.Random
 import kotlin.math.min
@@ -98,7 +99,7 @@ sealed class EnderEyePhase : INBTSerializable<TagCompound> {
 			else if (timer < 0) {
 				val totalSpawners = entity.totalSpawners.toInt()
 				
-				if (totalSpawners == 0 || entity.dimension != DimensionType.THE_END) {
+				if (totalSpawners == 0 || !entity.isInEndDimension) {
 					return Floating.withScreech(entity, 0)
 				}
 				
@@ -201,7 +202,8 @@ sealed class EnderEyePhase : INBTSerializable<TagCompound> {
 				
 				if ((101 - timer) % 18 == 0) {
 					entity.rng.removeItemOrNull(remainingLightningPositions)?.let {
-						EntityTerritoryLightningBolt(entity.world, it.x + 0.5, it.y.toDouble(), it.z + 0.5).spawnInTerritory()
+						val world = entity.world
+						world.addEntity(EntityTerritoryLightningBolt(world, it.x + 0.5, it.y.toDouble(), it.z + 0.5))
 					}
 				}
 			}
@@ -284,7 +286,7 @@ sealed class EnderEyePhase : INBTSerializable<TagCompound> {
 			
 			val FX_FINISH = object : FxEntityHandler() {
 				override fun handle(entity: Entity, rand: Random) {
-					val world = entity.world
+					val world = entity.world as ClientWorld
 					val state = ModBlocks.OBSIDIAN_SMOOTH.defaultState
 					
 					val (x, y, z) = entity.posVec.addY(entity.height * 0.5)

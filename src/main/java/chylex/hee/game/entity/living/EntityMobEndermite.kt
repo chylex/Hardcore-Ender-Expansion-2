@@ -22,8 +22,6 @@ import chylex.hee.system.serialization.use
 import net.minecraft.entity.CreatureAttribute
 import net.minecraft.entity.Entity
 import net.minecraft.entity.EntityType
-import net.minecraft.entity.SharedMonsterAttributes.ATTACK_DAMAGE
-import net.minecraft.entity.SharedMonsterAttributes.MAX_HEALTH
 import net.minecraft.network.IPacket
 import net.minecraft.util.ResourceLocation
 import net.minecraft.world.Difficulty.PEACEFUL
@@ -44,12 +42,7 @@ open class EntityMobEndermite(type: EntityType<out EntityMobEndermite>, world: W
 	private var realLifetime = 0
 	private var idleDespawnTimer: Short = 0
 	
-	override fun registerAttributes() {
-		super.registerAttributes()
-		
-		getAttribute(MAX_HEALTH).baseValue = 8.0
-		getAttribute(ATTACK_DAMAGE).baseValue = 2.0
-		
+	init {
 		experienceValue = 3
 	}
 	

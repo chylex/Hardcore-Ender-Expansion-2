@@ -1,11 +1,13 @@
 package chylex.hee.game.loot.tables
 
-import chylex.hee.game.loot.LootTablePatcher.poolsExt
 import net.minecraft.item.ItemStack
-import net.minecraft.world.storage.loot.LootTable
+import net.minecraft.loot.LootParameterSet
+import net.minecraft.loot.LootPool
+import net.minecraft.loot.LootTable
+import net.minecraft.loot.functions.ILootFunction
 import java.util.Random
 
-class NoStackSplittingLootTable(wrapped: LootTable) : LootTable(wrapped.parameterSet, wrapped.poolsExt.toTypedArray(), wrapped.functions) {
+class NoStackSplittingLootTable(parameterSet: LootParameterSet, pools: Array<out LootPool>, functions: Array<out ILootFunction>) : LootTable(parameterSet, pools, functions) {
 	override fun shuffleItems(stacks: MutableList<ItemStack>, emptySlotCount: Int, rand: Random) {
 		stacks.shuffle(rand)
 	}

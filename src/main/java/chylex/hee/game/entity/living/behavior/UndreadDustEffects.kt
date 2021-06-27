@@ -4,6 +4,7 @@ import chylex.hee.client.MC
 import chylex.hee.client.sound.UndreadFuseSound
 import chylex.hee.game.entity.OPERATION_ADD
 import chylex.hee.game.entity.OPERATION_MUL_INCR_INDIVIDUAL
+import chylex.hee.game.entity.getAttributeInstance
 import chylex.hee.game.entity.living.EntityMobUndread
 import chylex.hee.game.entity.posVec
 import chylex.hee.game.mechanics.dust.DustType
@@ -43,11 +44,11 @@ import chylex.hee.system.serialization.NBTObjectList
 import com.google.common.collect.Sets
 import net.minecraft.entity.Entity
 import net.minecraft.entity.ILivingEntityData
-import net.minecraft.entity.SharedMonsterAttributes.ATTACK_DAMAGE
-import net.minecraft.entity.SharedMonsterAttributes.ATTACK_KNOCKBACK
-import net.minecraft.entity.SharedMonsterAttributes.MAX_HEALTH
-import net.minecraft.entity.SharedMonsterAttributes.MOVEMENT_SPEED
 import net.minecraft.entity.ai.attributes.AttributeModifier
+import net.minecraft.entity.ai.attributes.Attributes.ATTACK_DAMAGE
+import net.minecraft.entity.ai.attributes.Attributes.ATTACK_KNOCKBACK
+import net.minecraft.entity.ai.attributes.Attributes.MAX_HEALTH
+import net.minecraft.entity.ai.attributes.Attributes.MOVEMENT_SPEED
 import net.minecraft.util.DamageSource
 import net.minecraft.util.SoundCategory
 import java.util.EnumSet
@@ -77,17 +78,17 @@ class UndreadDustEffects(private val dustTypes: EnumSet<DustType>) : ILivingEnti
 		private val ATTRIBUTES = STAT_MULTIPLIERS.mapValues { (count, mp) ->
 			mapOf(
 				DustType.END_POWDER to mapOf(
-					MAX_HEALTH     to AttributeModifier(UUID.fromString("D8083013-0F87-4B8F-A45A-0DF66FB22D11"), "Undread End Powder health $count", (3.00 * mp) - 1.0, OPERATION_MUL_INCR_INDIVIDUAL).setSaved(true),
-					MOVEMENT_SPEED to AttributeModifier(UUID.fromString("E4610BDE-9D6C-46EC-B95F-2A2FF7B6FACF"), "Undread End Powder speed $count",  (0.75 * mp) - 1.0, OPERATION_MUL_INCR_INDIVIDUAL).setSaved(true),
+					MAX_HEALTH     to AttributeModifier(UUID.fromString("D8083013-0F87-4B8F-A45A-0DF66FB22D11"), "Undread End Powder health $count", (3.00 * mp) - 1.0, OPERATION_MUL_INCR_INDIVIDUAL),
+					MOVEMENT_SPEED to AttributeModifier(UUID.fromString("E4610BDE-9D6C-46EC-B95F-2A2FF7B6FACF"), "Undread End Powder speed $count",  (0.75 * mp) - 1.0, OPERATION_MUL_INCR_INDIVIDUAL),
 				),
 				
 				DustType.REDSTONE to mapOf(
-					ATTACK_DAMAGE    to AttributeModifier(UUID.fromString("1C26CF5A-4FA0-4357-A87C-1F0AE69F5B1A"), "Undread Redstone damage $count",    (1.75 * mp) - 1.0, OPERATION_MUL_INCR_INDIVIDUAL).setSaved(true),
-					ATTACK_KNOCKBACK to AttributeModifier(UUID.fromString("7619AFD6-DC12-42B8-BA77-8427F1CF891A"), "Undread Redstone knockback $count", (2.40 * mp),       OPERATION_ADD).setSaved(true), // 0.4 + (0.5 * ATTACK_KNOCKBACK) = 1.6 (4x)
+					ATTACK_DAMAGE    to AttributeModifier(UUID.fromString("1C26CF5A-4FA0-4357-A87C-1F0AE69F5B1A"), "Undread Redstone damage $count",    (1.75 * mp) - 1.0, OPERATION_MUL_INCR_INDIVIDUAL),
+					ATTACK_KNOCKBACK to AttributeModifier(UUID.fromString("7619AFD6-DC12-42B8-BA77-8427F1CF891A"), "Undread Redstone knockback $count", (2.40 * mp),       OPERATION_ADD), // 0.4 + (0.5 * ATTACK_KNOCKBACK) = 1.6 (4x)
 				),
 				
 				DustType.SUGAR to mapOf(
-					MOVEMENT_SPEED to AttributeModifier(UUID.fromString("3EE0A661-9824-4AA4-B62D-04A24A4DA99A"), "Undread Sugar speed $count", (1.88 * mp) - 1.0, OPERATION_MUL_INCR_INDIVIDUAL).setSaved(true)
+					MOVEMENT_SPEED to AttributeModifier(UUID.fromString("3EE0A661-9824-4AA4-B62D-04A24A4DA99A"), "Undread Sugar speed $count", (1.88 * mp) - 1.0, OPERATION_MUL_INCR_INDIVIDUAL)
 				)
 			)
 		}
@@ -167,7 +168,7 @@ class UndreadDustEffects(private val dustTypes: EnumSet<DustType>) : ILivingEnti
 		}
 		
 		if (dustTypes.contains(DustType.SUGAR)) {
-			entity.createRunningParticles()
+			entity.addSprintingEffect()
 		}
 	}
 	
@@ -178,7 +179,7 @@ class UndreadDustEffects(private val dustTypes: EnumSet<DustType>) : ILivingEnti
 			val modifiers = ATTRIBUTES.getValue(count)[dustType] ?: continue
 			
 			for((attribute, modifier) in modifiers) {
-				entity.getAttribute(attribute).applyModifier(modifier)
+				entity.getAttributeInstance(attribute).applyPersistentModifier(modifier)
 			}
 		}
 		

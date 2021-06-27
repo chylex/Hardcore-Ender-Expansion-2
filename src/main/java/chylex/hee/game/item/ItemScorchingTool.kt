@@ -23,7 +23,6 @@ import net.minecraft.block.BlockState
 import net.minecraft.item.ItemStack
 import net.minecraft.util.math.BlockPos
 import net.minecraft.world.World
-import net.minecraft.world.dimension.DimensionType
 import net.minecraftforge.common.ToolType
 
 class ItemScorchingTool(
@@ -39,7 +38,7 @@ class ItemScorchingTool(
 	override fun canMine(state: BlockState): Boolean {
 		val block = state.block
 		
-		if (!ScorchingFortune.canSmelt(Environment.getDimension(DimensionType.OVERWORLD), block)) {
+		if (!ScorchingFortune.canSmelt(Environment.getDimension(World.OVERWORLD), block)) {
 			return false
 		}
 		

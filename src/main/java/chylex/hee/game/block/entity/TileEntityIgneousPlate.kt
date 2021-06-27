@@ -18,6 +18,7 @@ import chylex.hee.game.world.removeBlock
 import chylex.hee.init.ModBlocks
 import chylex.hee.init.ModTileEntities
 import chylex.hee.system.math.LerpedDouble
+import chylex.hee.system.math.Vec3
 import chylex.hee.system.math.floorToInt
 import chylex.hee.system.migration.BlockFurnace
 import chylex.hee.system.migration.Facing.AXIS_Y
@@ -30,7 +31,6 @@ import chylex.hee.system.serialization.use
 import net.minecraft.item.ItemStack
 import net.minecraft.tileentity.TileEntityType
 import net.minecraft.util.Direction
-import net.minecraft.util.math.Vec3d
 import kotlin.math.abs
 import kotlin.math.max
 import kotlin.math.min
@@ -106,7 +106,7 @@ class TileEntityIgneousPlate(type: TileEntityType<TileEntityIgneousPlate>) : Til
 		val rand = wrld.rand
 		
 		EntityItemFreshlyCooked(wrld, pos.center, ItemStack(ModBlocks.IGNEOUS_PLATE)).apply {
-			motion = Vec3d(facing.directionVec).scale(rand.nextFloat(2.5, 3.0)).add(rand.nextFloat(-0.2, 0.2), rand.nextFloat(0.1, 0.2), rand.nextFloat(-0.2, 0.2))
+			motion = Vec3.from(facing.directionVec).scale(rand.nextFloat(2.5, 3.0)).add(rand.nextFloat(-0.2, 0.2), rand.nextFloat(0.1, 0.2), rand.nextFloat(-0.2, 0.2))
 			wrld.addEntity(this)
 		}
 		

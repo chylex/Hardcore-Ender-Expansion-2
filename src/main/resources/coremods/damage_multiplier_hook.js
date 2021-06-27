@@ -7,14 +7,14 @@ function initializeCoreMod(){
     var attackEntityAsMobName = "func_70652_k";
     var attackEntityAsMobDesc = "(Lnet/minecraft/entity/Entity;)Z";
 
-    var attackDamageField = api.mapField("field_111264_e");
+    var attackDamageField = api.mapField("field_233823_f_");
 
     var applyHook = function(method, instructions){
         for(var index = 0, count = instructions.size() - 3; index < count; index++){
             var instr = instructions.get(index);
 
             if (instr.opcode == op.GETSTATIC && instr.name == attackDamageField){
-                instr = instructions.get(index + 3);
+                instr = instructions.get(index + 2);
 
                 if (instr.opcode == op.D2F){
                     instructions.insert(instr, makeInstructions(function(node){

@@ -8,6 +8,7 @@ import chylex.hee.system.color.IntColor.Companion.RGBA
 import chylex.hee.system.facades.Resource
 import chylex.hee.system.forge.Side
 import chylex.hee.system.forge.Sided
+import com.mojang.blaze3d.matrix.MatrixStack
 import net.minecraft.entity.player.PlayerInventory
 import net.minecraft.util.text.ITextComponent
 
@@ -24,19 +25,19 @@ class GuiTrinketPouch(container: ContainerTrinketPouch, inventory: PlayerInvento
 		hiddenSlots = ContainerTrinketPouch.MAX_SLOTS - (container as ContainerBaseCustomInventory<*>).containerInventory.size
 	}
 	
-	override fun drawGuiContainerBackgroundLayer(partialTicks: Float, mouseX: Int, mouseY: Int) {
-		super.drawGuiContainerBackgroundLayer(partialTicks, mouseX, mouseY)
+	override fun drawGuiContainerBackgroundLayer(matrix: MatrixStack, partialTicks: Float, mouseX: Int, mouseY: Int) {
+		super.drawGuiContainerBackgroundLayer(matrix, partialTicks, mouseX, mouseY)
 		
 		val middleSlot = ContainerTrinketPouch.MAX_SLOTS / 2
 		
 		repeat(hiddenSlots) {
-			renderSlotCover(middleSlot + ((ContainerTrinketPouch.MAX_SLOTS - it) / 2) * (if (it % 2 == 0) -1 else 1))
+			renderSlotCover(matrix, middleSlot + ((ContainerTrinketPouch.MAX_SLOTS - it) / 2) * (if (it % 2 == 0) -1 else 1))
 		}
 	}
 	
-	private fun renderSlotCover(index: Int) {
+	private fun renderSlotCover(matrix: MatrixStack, index: Int) {
 		val x = guiLeft + 44 + (index * 18)
 		val y = guiTop + 18
-		fill(x, y, x + 16, y + 16, hiddenSlotColor)
+		fill(matrix, x, y, x + 16, y + 16, hiddenSlotColor)
 	}
 }

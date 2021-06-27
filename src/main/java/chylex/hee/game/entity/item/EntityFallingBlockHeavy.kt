@@ -163,7 +163,7 @@ open class EntityFallingBlockHeavy(type: EntityType<out EntityFallingBlockHeavy>
 				val block = state.block
 				
 				if (block is BlockFalling) {
-					block.onEndFalling(world, pos, state, collidingWith)
+					block.onEndFalling(world, pos, state, collidingWith, this)
 				}
 				
 				if (tileEntityData != null && block.hasTileEntity(state)) {
@@ -176,7 +176,7 @@ open class EntityFallingBlockHeavy(type: EntityType<out EntityFallingBlockHeavy>
 							}
 						}
 						
-						it.read(nbt)
+						it.read(state, nbt)
 						it.markDirty()
 					}
 				}

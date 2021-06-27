@@ -89,7 +89,7 @@ class TileEntityBrewingStandCustom : TileEntityBrewingStand() {
 	val isEnhanced
 		get() = blockState.block === ModBlocks.ENHANCED_BREWING_STAND
 	
-	var brewTime
+	private var brewTime
 		get() = field_213954_a.get(0)
 		set(value) {
 			field_213954_a.set(0, value)

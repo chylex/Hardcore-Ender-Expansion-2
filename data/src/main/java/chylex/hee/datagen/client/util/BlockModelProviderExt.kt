@@ -10,6 +10,7 @@ import chylex.hee.game.block.BlockAbstractTable
 import chylex.hee.system.facades.Resource
 import chylex.hee.system.forge.named
 import chylex.hee.system.migration.BlockWall
+import net.minecraft.block.AbstractBlock
 import net.minecraft.block.Block
 import net.minecraft.block.Blocks
 import net.minecraft.util.ResourceLocation
@@ -17,7 +18,7 @@ import net.minecraftforge.client.model.generators.BlockModelBuilder
 import net.minecraftforge.client.model.generators.BlockModelProvider
 
 fun Block.suffixed(suffix: String): Block {
-	return Block(Block.Properties.from(Blocks.AIR)) named this.path + suffix
+	return Block(AbstractBlock.Properties.from(Blocks.AIR)) named this.path + suffix
 }
 
 fun BlockModelProvider.parent(path: String, parent: ResourceLocation) = safe {
@@ -73,6 +74,7 @@ fun BlockModelProvider.multi(block: Block, parent: ResourceLocation, suffixes: I
 fun BlockModelProvider.wall(block: BlockWall, texture: ResourceLocation) = safeUnit {
 	wallPost(block.path + "_post", texture)
 	wallSide(block.path + "_side", texture)
+	wallSideTall(block.path + "_side_tall", texture)
 }
 
 fun BlockModelProvider.cauldron(block: Block, water: ResourceLocation) = safeUnit {

@@ -1,7 +1,7 @@
 package chylex.hee.datagen.server.util
 
-import net.minecraft.tags.Tag
+import net.minecraft.data.TagsProvider
 
-fun <T> Tag.Builder<T>.add(items: List<T>) {
+fun <T> TagsProvider.Builder<T>.add(items: List<T>) {
 	items.forEach(this::add)
 }

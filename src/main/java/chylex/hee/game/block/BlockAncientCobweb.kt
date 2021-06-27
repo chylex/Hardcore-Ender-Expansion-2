@@ -15,6 +15,7 @@ import chylex.hee.system.migration.ItemShears
 import chylex.hee.system.migration.ItemSword
 import net.minecraft.block.BlockState
 import net.minecraft.entity.Entity
+import net.minecraft.util.Direction
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.shapes.ISelectionContext
 import net.minecraft.util.math.shapes.VoxelShape
@@ -49,6 +50,14 @@ class BlockAncientCobweb(builder: BlockBuilder) : BlockWeb(builder.p), IBlockLay
 	
 	override fun tick(state: BlockState, world: ServerWorld, pos: BlockPos, rand: Random) {
 		pos.breakBlock(world, true)
+	}
+	
+	override fun getFlammability(state: BlockState, world: IBlockReader, pos: BlockPos, face: Direction): Int {
+		return 300
+	}
+	
+	override fun getFireSpreadSpeed(state: BlockState, world: IBlockReader, pos: BlockPos, face: Direction): Int {
+		return 100
 	}
 	
 	override fun onEntityCollision(state: BlockState, world: World, pos: BlockPos, entity: Entity) {

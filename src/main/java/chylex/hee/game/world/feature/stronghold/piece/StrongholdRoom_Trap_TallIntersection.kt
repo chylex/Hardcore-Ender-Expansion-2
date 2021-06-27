@@ -7,14 +7,17 @@ import chylex.hee.game.entity.technical.EntityTechnicalTrigger
 import chylex.hee.game.entity.technical.EntityTechnicalTrigger.ITriggerHandler
 import chylex.hee.game.entity.technical.EntityTechnicalTrigger.Types.STRONGHOLD_TRAP_TALL_INTERSECTION
 import chylex.hee.game.world.Pos
+import chylex.hee.game.world.bottomCenter
 import chylex.hee.game.world.breakBlock
 import chylex.hee.game.world.feature.stronghold.StrongholdPieceType
 import chylex.hee.game.world.feature.stronghold.StrongholdPieces
 import chylex.hee.game.world.getBlock
 import chylex.hee.game.world.isAir
 import chylex.hee.game.world.isPeaceful
+import chylex.hee.game.world.spawn
 import chylex.hee.game.world.structure.IStructureWorld
 import chylex.hee.game.world.structure.trigger.EntityStructureTrigger
+import chylex.hee.init.ModEntities
 import chylex.hee.network.client.PacketClientFX
 import chylex.hee.network.fx.FxVecData
 import chylex.hee.system.facades.Facing4
@@ -54,12 +57,9 @@ class StrongholdRoom_Trap_TallIntersection(file: String) : StrongholdAbstractPie
 				if (StrongholdPieces.isStoneBrick(testPos.getBlock(world)) && Facing4.any { testPos.offset(it).isAir(world) }) {
 					testPos.breakBlock(world, false)
 					
-					EntityMobSilverfish(world).apply {
-						setLocationAndAngles(testPos.x + 0.5, testPos.y.toDouble(), testPos.z + 0.5, rand.nextFloat(0F, 360F), 0F)
+					world.spawn(ModEntities.SILVERFISH, testPos.bottomCenter, yaw = rand.nextFloat(0F, 360F)) {
 						delayHideInBlockAI(20 * 30)
 						attackTarget = rand.nextItem(targets)
-						
-						world.addEntity(this)
 						PacketClientFX(EntityMobSilverfish.FX_SPAWN_PARTICLE, FxVecData(posVec)).sendToAllAround(this, 8.0)
 					}
 					

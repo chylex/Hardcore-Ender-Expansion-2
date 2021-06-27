@@ -4,7 +4,7 @@ import chylex.hee.client.MC
 import chylex.hee.client.render.gl.DF_ONE
 import chylex.hee.client.render.gl.DF_ZERO
 import chylex.hee.client.render.gl.RenderStateBuilder
-import chylex.hee.client.render.gl.RenderStateBuilder.Companion.LAYERING_PROJECTION
+import chylex.hee.client.render.gl.RenderStateBuilder.Companion.LAYERING_OFFSET_Z
 import chylex.hee.client.render.gl.RenderStateBuilder.Companion.MASK_COLOR
 import chylex.hee.client.render.gl.SF_ONE_MINUS_SRC_ALPHA
 import chylex.hee.client.render.gl.SF_SRC_ALPHA
@@ -143,7 +143,7 @@ object Debug {
 				private val RENDER_TYPE_LINE = with(RenderStateBuilder()) {
 					line(2.25)
 					blend(SF_SRC_ALPHA, DF_ONE, SF_ONE_MINUS_SRC_ALPHA, DF_ZERO)
-					layering(LAYERING_PROJECTION)
+					layering(LAYERING_OFFSET_Z)
 					mask(MASK_COLOR)
 					buildType("hee:debug_line", DefaultVertexFormats.POSITION_COLOR, GL11.GL_LINES, bufferSize = 256)
 				}

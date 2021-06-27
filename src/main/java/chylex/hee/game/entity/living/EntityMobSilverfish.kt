@@ -33,14 +33,11 @@ import net.minecraft.block.Block
 import net.minecraft.block.BlockState
 import net.minecraft.entity.Entity
 import net.minecraft.entity.EntityType
-import net.minecraft.entity.SharedMonsterAttributes.ATTACK_DAMAGE
-import net.minecraft.entity.SharedMonsterAttributes.FOLLOW_RANGE
-import net.minecraft.entity.SharedMonsterAttributes.MAX_HEALTH
 import net.minecraft.network.IPacket
 import net.minecraft.util.DamageSource
 import net.minecraft.util.EntityDamageSource
 import net.minecraft.util.ResourceLocation
-import net.minecraft.util.math.Vec3d
+import net.minecraft.util.math.vector.Vector3d
 import net.minecraft.world.World
 import net.minecraftforge.event.entity.EntityJoinWorldEvent
 import net.minecraftforge.fml.network.NetworkHooks
@@ -58,7 +55,7 @@ class EntityMobSilverfish(type: EntityType<EntityMobSilverfish>, world: World) :
 		private const val HIDE_DELAY_TAG = "HideDelay"
 		
 		val FX_SPAWN_PARTICLE = object : FxVecHandler() {
-			override fun handle(world: World, rand: Random, vec: Vec3d) {
+			override fun handle(world: World, rand: Random, vec: Vector3d) {
 				EntityMobSilverfish(world).apply {
 					setLocationAndAngles(vec.x, vec.y, vec.z, 0F, 0F)
 					spawnExplosionParticle()
@@ -95,13 +92,7 @@ class EntityMobSilverfish(type: EntityType<EntityMobSilverfish>, world: World) :
 	
 	override var wasLastHitCritical = false
 	
-	override fun registerAttributes() {
-		super.registerAttributes()
-		
-		getAttribute(MAX_HEALTH).baseValue = 8.0
-		getAttribute(ATTACK_DAMAGE).baseValue = 2.0
-		getAttribute(FOLLOW_RANGE).baseValue = 12.0
-		
+	init {
 		experienceValue = 3
 	}
 	

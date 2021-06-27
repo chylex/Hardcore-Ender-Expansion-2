@@ -16,13 +16,13 @@ import chylex.hee.system.math.Vec
 import chylex.hee.system.math.Vec3
 import chylex.hee.system.math.addY
 import net.minecraft.client.particle.Particle
+import net.minecraft.client.world.ClientWorld
 import net.minecraft.util.math.BlockPos
-import net.minecraft.util.math.Vec3d
-import net.minecraft.world.World
+import net.minecraft.util.math.vector.Vector3d
 
 object ParticleEnergyTransferToPedestal : IParticleMaker.WithData<Data>() {
 	@Sided(Side.CLIENT)
-	override fun create(world: World, posX: Double, posY: Double, posZ: Double, motX: Double, motY: Double, motZ: Double, data: Data?): Particle {
+	override fun create(world: ClientWorld, posX: Double, posY: Double, posZ: Double, motX: Double, motY: Double, motZ: Double, data: Data?): Particle {
 		return Instance(world, posX, posY, posZ, data)
 	}
 	
@@ -32,8 +32,8 @@ object ParticleEnergyTransferToPedestal : IParticleMaker.WithData<Data>() {
 	) : IParticleData.Self<Data>()
 	
 	@Sided(Side.CLIENT)
-	class Instance(world: World, posX: Double, posY: Double, posZ: Double, data: Data?) : ParticleBaseEnergyTransfer(world, posX, posY, posZ) {
-		override val targetPos: Vec3d
+	class Instance(world: ClientWorld, posX: Double, posY: Double, posZ: Double, data: Data?) : ParticleBaseEnergyTransfer(world, posX, posY, posZ) {
+		override val targetPos: Vector3d
 		
 		init {
 			selectSpriteRandomly(ParticleEnergyTransferToPedestal.sprite)

@@ -2,6 +2,7 @@ package chylex.hee.game.potion
 
 import chylex.hee.HEE
 import chylex.hee.game.entity.CustomCreatureType
+import chylex.hee.game.entity.isBoss
 import chylex.hee.game.entity.living.EntityBossEnderEye
 import chylex.hee.game.entity.posVec
 import chylex.hee.game.entity.selectExistingEntities
@@ -43,7 +44,7 @@ import chylex.hee.system.migration.Potion
 import chylex.hee.system.migration.Potions
 import net.minecraft.entity.CreatureAttribute.UNDEAD
 import net.minecraft.entity.Entity
-import net.minecraft.entity.ai.attributes.AbstractAttributeMap
+import net.minecraft.entity.ai.attributes.AttributeModifierManager
 import net.minecraft.particles.ParticleTypes.EXPLOSION
 import net.minecraft.potion.EffectType.BENEFICIAL
 import net.minecraft.util.DamageSource
@@ -116,7 +117,7 @@ object PotionBanishment : Potion(BENEFICIAL, RGB(253, 253, 253).i) {
 			damageEvent?.let { it.amount *= 2F }
 		}
 		else if (kind == GENERIC_SHADOW) {
-			if (entity.isNonBoss) {
+			if (!entity.isBoss) {
 				PacketClientFX(FX_BANISH, FxEntityData(entity)).sendToAllAround(entity, 24.0)
 				entity.remove()
 				
@@ -125,7 +126,7 @@ object PotionBanishment : Potion(BENEFICIAL, RGB(253, 253, 253).i) {
 				for(nearby in entity.world.selectExistingEntities.allInRange(entity.posVec, 6.0)) {
 					if (nearby is EntityLivingBase) {
 						val (prevX, prevY, prevZ) = nearby.motion
-						nearby.knockBack(entity, 1.25F, entity.posX - nearby.posX, entity.posZ - nearby.posZ)
+						nearby.applyKnockback(1.25F, entity.posX - nearby.posX, entity.posZ - nearby.posZ)
 						val (newX, newY, newZ) = nearby.motion
 						
 						nearby.motion = Vec(prevX * 0.1 + newX, max(prevY, newY + 0.1), prevZ * 0.1 + newZ)
@@ -175,7 +176,7 @@ object PotionBanishment : Potion(BENEFICIAL, RGB(253, 253, 253).i) {
 		}
 	}
 	
-	override fun applyAttributesModifiersToEntity(entity: EntityLivingBase, attributes: AbstractAttributeMap, amplifier: Int) {
+	override fun applyAttributesModifiersToEntity(entity: EntityLivingBase, attributes: AttributeModifierManager, amplifier: Int) {
 		super.applyAttributesModifiersToEntity(entity, attributes, amplifier)
 		banish(entity, null)
 	}

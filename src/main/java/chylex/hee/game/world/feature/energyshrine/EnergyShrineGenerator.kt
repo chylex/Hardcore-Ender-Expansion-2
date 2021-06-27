@@ -24,7 +24,7 @@ import chylex.hee.system.migration.Facing.DOWN
 import chylex.hee.system.migration.Facing.UP
 import chylex.hee.system.random.nextInt
 import net.minecraft.util.math.BlockPos
-import net.minecraft.world.IWorld
+import net.minecraft.world.ISeedReader
 import net.minecraft.world.World
 import net.minecraft.world.gen.Heightmap.Type.MOTION_BLOCKING_NO_LEAVES
 import net.minecraft.world.gen.Heightmap.Type.OCEAN_FLOOR
@@ -180,7 +180,7 @@ object EnergyShrineGenerator : OverworldFeature() {
 		return null
 	}
 	
-	override fun place(world: IWorld, rand: Random, pos: BlockPos, chunkX: Int, chunkZ: Int): Boolean {
+	override fun place(world: ISeedReader, rand: Random, pos: BlockPos, chunkX: Int, chunkZ: Int): Boolean {
 		val wrld = world.world as ServerWorld
 		val centerXZ = findSpawnMatchingChunk(wrld, chunkX, chunkZ) ?: return false
 		

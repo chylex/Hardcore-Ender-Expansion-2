@@ -292,8 +292,6 @@ class TileEntityExperienceGate(type: TileEntityType<TileEntityExperienceGate>) :
 	
 	// Rendering
 	
-	override fun hasFastRenderer() = true
-	
 	@Sided(Side.CLIENT)
 	override fun getRenderBoundingBox(): AxisAlignedBB {
 		return AxisAlignedBB(pos.add(-1, 0, -1), pos.add(2, 0, 2))

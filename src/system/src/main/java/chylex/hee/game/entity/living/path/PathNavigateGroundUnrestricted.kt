@@ -19,7 +19,7 @@ class PathNavigateGroundUnrestricted(entity: EntityLiving, world: World) : Groun
 	}
 	
 	override fun tryMoveToXYZ(x: Double, y: Double, z: Double, speed: Double): Boolean {
-		val path = getPathToPos(x, y, z, 1)
+		val path = pathfind(x, y, z, 1)
 		
 		if (path != null) {
 			overrideSpeed = 0.0
@@ -33,7 +33,7 @@ class PathNavigateGroundUnrestricted(entity: EntityLiving, world: World) : Groun
 	}
 	
 	override fun tryMoveToEntityLiving(entity: Entity, speed: Double): Boolean {
-		val path = getPathToEntity(entity, 1)
+		val path = pathfind(entity, 1)
 		
 		if (path != null) {
 			overrideSpeed = 0.0

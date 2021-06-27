@@ -4,7 +4,7 @@ import chylex.hee.game.entity.motionX
 import chylex.hee.game.entity.motionZ
 import chylex.hee.system.math.toDegrees
 import chylex.hee.system.migration.EntityLiving
-import net.minecraft.entity.SharedMonsterAttributes.FLYING_SPEED
+import net.minecraft.entity.ai.attributes.Attributes.FLYING_SPEED
 import net.minecraft.entity.ai.controller.MovementController
 import net.minecraft.entity.ai.controller.MovementController.Action.MOVE_TO
 import net.minecraft.entity.ai.controller.MovementController.Action.WAIT
@@ -20,7 +20,7 @@ class EntityMoveFlyingBat(entity: EntityLiving) : MovementController(entity) {
 		
 		action = WAIT
 		
-		val finalSpeed = mob.getAttribute(FLYING_SPEED).value * speed
+		val finalSpeed = mob.getAttributeValue(FLYING_SPEED) * speed
 		
 		mob.motion = mob.motion.let {
 			it.add(

@@ -10,7 +10,6 @@ import chylex.hee.game.mechanics.damage.IDamageDealer.Companion.TITLE_STARVE
 import chylex.hee.game.mechanics.damage.IDamageProcessor.Companion.MAGIC_TYPE
 import chylex.hee.game.mechanics.damage.IDamageProcessor.Companion.NON_LETHAL
 import chylex.hee.game.potion.makeEffect
-import chylex.hee.system.facades.Resource
 import chylex.hee.system.forge.SubscribeAllEvents
 import chylex.hee.system.forge.SubscribeEvent
 import chylex.hee.system.migration.EntityLivingBase
@@ -21,6 +20,7 @@ import chylex.hee.system.random.nextFloat
 import chylex.hee.system.serialization.getEnum
 import chylex.hee.system.serialization.putEnum
 import net.minecraft.item.Food
+import net.minecraft.item.IItemPropertyGetter
 import net.minecraft.item.Item
 import net.minecraft.item.ItemStack
 import net.minecraft.item.Items
@@ -37,6 +37,18 @@ class ItemVoidSalad(properties: Properties) : Item(properties) {
 		private const val TYPE_TAG = "Type"
 		
 		val FOOD: Food = Food.Builder().hunger(0).saturation(0F).setAlwaysEdible().build()
+		
+		val VOID_SALAD_TYPE_PROPERTY = IItemPropertyGetter { stack, _, _ ->
+			getSaladType(stack).ordinal.toFloat()
+		}
+		
+		fun setSaladType(stack: ItemStack, type: Type) {
+			stack.heeTag.putEnum(TYPE_TAG, type)
+		}
+		
+		fun getSaladType(stack: ItemStack): Type {
+			return stack.heeTagOrNull?.getEnum<Type>(TYPE_TAG) ?: Type.SINGLE
+		}
 		
 		@SubscribeEvent
 		fun onPlayerClone(e: PlayerEvent.Clone) {
@@ -59,20 +71,6 @@ class ItemVoidSalad(properties: Properties) : Item(properties) {
 	
 	enum class Type {
 		SINGLE, DOUBLE, MEGA
-	}
-	
-	init {
-		addPropertyOverride(Resource.Custom("void_salad_type")) { stack, _, _ ->
-			getSaladType(stack).ordinal.toFloat()
-		}
-	}
-	
-	fun getSaladType(stack: ItemStack): Type {
-		return stack.heeTagOrNull?.getEnum<Type>(TYPE_TAG) ?: Type.SINGLE
-	}
-	
-	fun setSaladType(stack: ItemStack, type: Type) {
-		stack.heeTag.putEnum(TYPE_TAG, type)
 	}
 	
 	override fun getUseDuration(stack: ItemStack): Int {

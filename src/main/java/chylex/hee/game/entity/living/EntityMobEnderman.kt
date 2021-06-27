@@ -27,6 +27,7 @@ import chylex.hee.game.world.playServer
 import chylex.hee.init.ModEntities
 import chylex.hee.init.ModSounds
 import chylex.hee.system.facades.Resource
+import chylex.hee.system.forge.EventPriority
 import chylex.hee.system.forge.SubscribeAllEvents
 import chylex.hee.system.forge.SubscribeEvent
 import chylex.hee.system.math.square
@@ -45,9 +46,6 @@ import chylex.hee.system.serialization.use
 import net.minecraft.block.BlockState
 import net.minecraft.entity.EntityClassification.MONSTER
 import net.minecraft.entity.EntityType
-import net.minecraft.entity.SharedMonsterAttributes.ATTACK_DAMAGE
-import net.minecraft.entity.SharedMonsterAttributes.FOLLOW_RANGE
-import net.minecraft.entity.SharedMonsterAttributes.MAX_HEALTH
 import net.minecraft.entity.SpawnReason
 import net.minecraft.network.datasync.DataParameter
 import net.minecraft.util.DamageSource
@@ -61,11 +59,10 @@ import net.minecraft.world.IWorld
 import net.minecraft.world.IWorldReader
 import net.minecraft.world.LightType.BLOCK
 import net.minecraft.world.World
-import net.minecraft.world.biome.Biome
 import net.minecraft.world.biome.Biome.Category
-import net.minecraft.world.biome.Biome.SpawnListEntry
+import net.minecraft.world.biome.MobSpawnInfo
 import net.minecraftforge.event.entity.ProjectileImpactEvent
-import net.minecraftforge.registries.ForgeRegistries
+import net.minecraftforge.event.world.BiomeLoadingEvent
 import java.util.Random
 import kotlin.math.abs
 import kotlin.math.min
@@ -93,7 +90,6 @@ class EntityMobEnderman(type: EntityType<EntityMobEnderman>, world: World) : Ent
 			DamageSource.IN_WALL,
 			DamageSource.LAVA,
 			DamageSource.LIGHTNING_BOLT,
-			DamageSource.FIREWORKS
 		)
 		
 		private val TELEPORT_RANGE_AVOID_BATTLE = (12.0)..(24.0)
@@ -133,7 +129,7 @@ class EntityMobEnderman(type: EntityType<EntityMobEnderman>, world: World) : Ent
 			}
 			
 			enderman.revengeTarget = when(projectile) {
-				is EntityThrowable -> projectile.thrower
+				is EntityThrowable -> projectile.shooter as? EntityLivingBase
 				is EntityArrow     -> projectile.shooter as? EntityLivingBase
 				else               -> return
 			}
@@ -141,33 +137,32 @@ class EntityMobEnderman(type: EntityType<EntityMobEnderman>, world: World) : Ent
 		
 		// Biome spawns
 		
-		private fun isBiomeBlacklisted(biome: Biome): Boolean {
-			return biome.category.let { it == Category.NETHER || it == Category.THEEND }
+		private fun isBiomeBlacklisted(biomeCategory: Category): Boolean {
+			return biomeCategory == Category.NETHER || biomeCategory == Category.THEEND
 		}
 		
-		private fun isEndermanEntry(entry: SpawnListEntry): Boolean {
-			return entry.entityType == EntityType.ENDERMAN
+		private fun isEndermanEntry(entry: MobSpawnInfo.Spawners): Boolean {
+			return entry.type == EntityType.ENDERMAN
 		}
 		
-		fun setupBiomeSpawns() {
-			for(biome in ForgeRegistries.BIOMES) {
-				val monsters = biome.getSpawns(MONSTER)
+		@SubscribeEvent(priority = EventPriority.NORMAL)
+		fun onBiomeLoading(e: BiomeLoadingEvent) {
+			val spawns = e.spawns.getSpawner(MONSTER)
+			
+			if (isBiomeBlacklisted(e.category)) {
+				spawns.removeAll(::isEndermanEntry)
+			}
+			else {
+				val totalWeight = spawns.sumOf { it.itemWeight }                              // default 515
+				val endermanWeight = spawns.filter(::isEndermanEntry).sumOf { it.itemWeight } // default 10
 				
-				if (isBiomeBlacklisted(biome)) {
-					monsters.removeAll(::isEndermanEntry)
-				}
-				else {
-					val totalWeight = monsters.sumBy { it.itemWeight }                              // default 515
-					val endermanWeight = monsters.filter(::isEndermanEntry).sumBy { it.itemWeight } // default 10
+				if (endermanWeight > 0) {
+					val newSingleWeight = (2 * endermanWeight) + (totalWeight / 20) // should be about 45 for most biomes
+					val newGroupWeight = (2 * endermanWeight) / 3                   // should be about 4 for most biomes
 					
-					if (endermanWeight > 0) {
-						val newSingleWeight = (2 * endermanWeight) + (totalWeight / 20) // should be about 45 for most biomes
-						val newGroupWeight = (2 * endermanWeight) / 3                   // should be about 4 for most biomes
-						
-						monsters.removeAll(::isEndermanEntry)
-						monsters.add(SpawnListEntry(ModEntities.ENDERMAN, newSingleWeight, 1, 1))
-						monsters.add(SpawnListEntry(ModEntities.ENDERMAN, newGroupWeight, 2, 3))
-					}
+					spawns.removeAll(::isEndermanEntry)
+					spawns.add(MobSpawnInfo.Spawners(ModEntities.ENDERMAN, newSingleWeight, 1, 1))
+					spawns.add(MobSpawnInfo.Spawners(ModEntities.ENDERMAN, newGroupWeight, 2, 3))
 				}
 			}
 		}
@@ -179,7 +174,7 @@ class EntityMobEnderman(type: EntityType<EntityMobEnderman>, world: World) : Ent
 		}
 		
 		private fun checkSpawnLightLevel(world: IWorld, pos: BlockPos, rand: Random): Boolean {
-			if (world.world.isRainingAt(pos)) {
+			if (world is World && world.isRainingAt(pos)) {
 				return false
 			}
 			
@@ -187,7 +182,7 @@ class EntityMobEnderman(type: EntityType<EntityMobEnderman>, world: World) : Ent
 				return false
 			}
 			
-			return !world.dimension.isSurfaceWorld || checkSkylightLevel(world, rand)
+			return !world.dimensionType.isNatural || checkSkylightLevel(world, rand)
 		}
 		
 		private fun checkSkylightLevel(world: IWorld, rand: Random): Boolean {
@@ -227,13 +222,7 @@ class EntityMobEnderman(type: EntityType<EntityMobEnderman>, world: World) : Ent
 	
 	// Initialization
 	
-	override fun registerAttributes() {
-		super.registerAttributes()
-		
-		getAttribute(MAX_HEALTH).baseValue = 40.0
-		getAttribute(ATTACK_DAMAGE).baseValue = 5.0
-		getAttribute(FOLLOW_RANGE).baseValue = 64.0
-		
+	init {
 		experienceValue = 10
 	}
 	

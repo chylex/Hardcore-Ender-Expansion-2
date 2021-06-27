@@ -25,6 +25,7 @@ object FluidEnderGooPurified : FluidBase(
 	override fun props(properties: Properties): Properties = with(properties) {
 		block { ModBlocks.PURIFIED_ENDER_GOO }
 		bucket { ModItems.PURIFIED_ENDER_GOO_BUCKET }
+		tickRate(16)
 	}
 	
 	override fun constructFlowingFluid(properties: Properties) = FlowingFluid5(properties)

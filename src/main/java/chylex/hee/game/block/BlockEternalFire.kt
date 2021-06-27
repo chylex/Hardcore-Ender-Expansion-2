@@ -36,7 +36,6 @@ import net.minecraft.util.Direction
 import net.minecraft.util.SoundCategory
 import net.minecraft.util.math.BlockPos
 import net.minecraft.world.GameRules.DO_FIRE_TICK
-import net.minecraft.world.IWorldReader
 import net.minecraft.world.World
 import net.minecraft.world.server.ServerWorld
 import net.minecraftforge.common.MinecraftForge
@@ -54,8 +53,11 @@ class BlockEternalFire(builder: BlockBuilder) : BlockFire(builder.p), IBlockLaye
 		MinecraftForge.EVENT_BUS.register(this)
 	}
 	
-	override fun tickRate(world: IWorldReader) = super.tickRate(world) * 2
 	override fun canDie(world: World, pos: BlockPos) = false
+	
+	override fun onBlockAdded(state: BlockState, world: World, pos: BlockPos, oldState: BlockState, isMoving: Boolean) {
+		world.pendingBlockTicks.scheduleTick(pos, this, 2 * getTickCooldown(world.rand))
+	}
 	
 	override fun tick(state: BlockState, world: ServerWorld, pos: BlockPos, rand: Random) {
 		if (!world.gameRules.getBoolean(DO_FIRE_TICK) || !world.isAreaLoaded(pos, 2)) {
@@ -66,7 +68,7 @@ class BlockEternalFire(builder: BlockBuilder) : BlockFire(builder.p), IBlockLaye
 			pos.removeBlock(world)
 		}
 		
-		world.pendingBlockTicks.scheduleTick(pos, this, tickRate(world) + rand.nextInt(10))
+		world.pendingBlockTicks.scheduleTick(pos, this, (2 * getTickCooldown(rand)) + rand.nextInt(10))
 		
 		val baseChance = if (world.isBlockinHighHumidity(pos))
 			250

@@ -15,7 +15,6 @@ interface ITableContext {
 	fun triggerWorkParticle()
 	fun markProcessFinished()
 	
-	@JvmDefault
 	fun requestUseSupportingItem(item: Item, amount: Int): Pair<BlockPos, ItemStack>? {
 		return this.requestUseSupportingItem { if (it.item === item) amount else 0 }
 	}

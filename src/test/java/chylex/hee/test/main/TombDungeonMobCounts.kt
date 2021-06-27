@@ -29,7 +29,7 @@ fun main() {
 				.sortedWith(compareBy({ -it.first }, { -it.second.first }, { -it.second.second }))
 			
 			println(results.joinToString("\n") { "    U = ${it.second.first}     S = ${it.second.second}     ${it.first.toString().padStart(2)} %" })
-			println("    U ~ ${"%.1f".format(ROOT, results.sumBy { it.second.first * it.first } * 0.01)}   S ~ ${"%.1f".format(ROOT, results.sumBy { it.second.second * it.first } * 0.01)}")
+			println("    U ~ ${"%.1f".format(ROOT, results.sumOf { it.second.first * it.first } * 0.01)}   S ~ ${"%.1f".format(ROOT, results.sumOf { it.second.second * it.first } * 0.01)}")
 		}
 	}
 }

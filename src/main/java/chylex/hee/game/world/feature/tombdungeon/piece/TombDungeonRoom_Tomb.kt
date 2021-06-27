@@ -26,6 +26,7 @@ import chylex.hee.game.world.getState
 import chylex.hee.game.world.isAir
 import chylex.hee.game.world.offsetWhile
 import chylex.hee.game.world.playClient
+import chylex.hee.game.world.spawn
 import chylex.hee.game.world.structure.IStructureWorld
 import chylex.hee.game.world.structure.piece.IStructurePieceConnection
 import chylex.hee.game.world.structure.trigger.EntityStructureTrigger
@@ -56,8 +57,9 @@ import net.minecraft.entity.SpawnReason.STRUCTURE
 import net.minecraft.util.Direction.Axis
 import net.minecraft.util.math.AxisAlignedBB
 import net.minecraft.util.math.BlockPos
-import net.minecraft.util.math.Vec3d
+import net.minecraft.util.math.vector.Vector3d
 import net.minecraft.world.World
+import net.minecraft.world.server.ServerWorld
 import java.util.Random
 
 abstract class TombDungeonRoom_Tomb(file: String, entranceY: Int, allowExit: Boolean, allowSecrets: Boolean, isFancy: Boolean) : TombDungeonRoom(file, isFancy) {
@@ -108,7 +110,7 @@ abstract class TombDungeonRoom_Tomb(file: String, entranceY: Int, allowExit: Boo
 			}
 			
 			val FX_SPAWN_UNDREAD = object : FxVecHandler() {
-				override fun handle(world: World, rand: Random, vec: Vec3d) {
+				override fun handle(world: World, rand: Random, vec: Vector3d) {
 					EntityMobUndread(world).apply {
 						setLocationAndAngles(vec.x, vec.y, vec.z, 0F, 0F)
 						spawnExplosionParticle()
@@ -118,7 +120,7 @@ abstract class TombDungeonRoom_Tomb(file: String, entranceY: Int, allowExit: Boo
 			}
 			
 			val FX_SPAWN_SPIDERLING = object : FxVecHandler() {
-				override fun handle(world: World, rand: Random, vec: Vec3d) {
+				override fun handle(world: World, rand: Random, vec: Vector3d) {
 					EntityMobSpiderling(world).apply {
 						setLocationAndAngles(vec.x, vec.y, vec.z, 0F, 0F)
 						spawnExplosionParticle()
@@ -145,7 +147,7 @@ abstract class TombDungeonRoom_Tomb(file: String, entranceY: Int, allowExit: Boo
 		}
 		
 		override fun update(entity: EntityTechnicalTrigger) {
-			val world = entity.world
+			val world = entity.world as? ServerWorld ?: return
 			val facing = entity.horizontalFacing
 			val vecF = Vec3.fromYaw(facing.horizontalAngle)
 			val vecL = Vec3.fromYaw(facing.rotateYCCW().horizontalAngle)
@@ -182,7 +184,7 @@ abstract class TombDungeonRoom_Tomb(file: String, entranceY: Int, allowExit: Boo
 						
 						val collisionCheckAABB = entityType.getBoundingBoxWithSizeApplied(pos.x + 0.5, pos.y.toDouble(), pos.z + 0.5).grow(0.2, 0.0, 0.2)
 						
-						if (EntitySpawnPlacementRegistry.func_223515_a(entityType, world, STRUCTURE, pos, rand) &&
+						if (EntitySpawnPlacementRegistry.canSpawnEntity(entityType, world, STRUCTURE, pos, rand) &&
 							world.hasNoCollisions(collisionCheckAABB) &&
 							world.selectExistingEntities.inBox<EntityLivingBase>(collisionCheckAABB.grow(0.4, 0.0, 0.4)).isEmpty() &&
 							world.players.none { pos.distanceSqTo(it) < square(minPlayerDist) }
@@ -208,11 +210,10 @@ abstract class TombDungeonRoom_Tomb(file: String, entranceY: Int, allowExit: Boo
 						val target = rand.nextItem(nearbyPlayers)
 						val difficulty = world.getDifficultyForLocation(bestPos)
 						
-						entityType.create(world)?.apply {
-							setLocationAndAngles(x, y, z, vec.directionTowards(target.posVec).toYaw(), 0F)
+						world.spawn(entityType, vec, vec.directionTowards(target.posVec).toYaw()) {
 							rotationYawHead = rotationYaw
 							attackTarget = target
-							onGround = true // allow instant pathfinding in MeleeAttackGoal
+							isOnGround = true // allow instant pathfinding in MeleeAttackGoal
 							
 							if (this is EntityMobUndread) {
 								val jarArea = aabb.grow(1.0)
@@ -230,7 +231,6 @@ abstract class TombDungeonRoom_Tomb(file: String, entranceY: Int, allowExit: Boo
 							}
 							
 							PacketClientFX(spawnParticle, FxVecData(vec)).sendToAllAround(this, 24.0)
-							world.addEntity(this)
 						}
 					}
 				}

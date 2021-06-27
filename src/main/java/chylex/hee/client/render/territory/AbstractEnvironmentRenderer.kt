@@ -14,11 +14,11 @@ import net.minecraft.client.renderer.RenderHelper
 import net.minecraft.client.renderer.Tessellator
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats
 import net.minecraft.client.world.ClientWorld
-import net.minecraftforge.client.SkyRenderHandler
+import net.minecraftforge.client.ISkyRenderHandler
 import org.lwjgl.opengl.GL11.GL_QUADS
 import kotlin.math.pow
 
-abstract class AbstractEnvironmentRenderer : SkyRenderHandler {
+abstract class AbstractEnvironmentRenderer : ISkyRenderHandler {
 	companion object {
 		val currentSkyAlpha
 			@Sided(Side.CLIENT)

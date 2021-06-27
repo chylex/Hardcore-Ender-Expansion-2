@@ -1,15 +1,15 @@
 {
   "variants": {
     "axis=x": {
-      "model": "hee:block/obsidian_pillar",
+      "model": "hee:block/obsidian_pillar_lit_horizontal",
       "x": 90,
       "y": 90
     },
     "axis=y": {
-      "model": "hee:block/obsidian_pillar"
+      "model": "hee:block/obsidian_pillar_lit"
     },
     "axis=z": {
-      "model": "hee:block/obsidian_pillar",
+      "model": "hee:block/obsidian_pillar_lit_horizontal",
       "x": 90
     }
   }

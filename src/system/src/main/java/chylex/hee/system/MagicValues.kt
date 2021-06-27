@@ -40,7 +40,7 @@ object MagicValues {
 	const val FURNACE_FUEL_SLOT = 1
 	
 	/**
-	 * Found in [SetContents.doApply][net.minecraft.world.storage.loot.functions.SetContents.doApply].
+	 * Found in [SetContents.doApply][net.minecraft.loot.functions.SetContents.doApply].
 	 */
 	const val TILE_ENTITY_TAG = "BlockEntityTag"
 }

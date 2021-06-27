@@ -21,12 +21,12 @@ class UndreadFuseSound(private val undread: EntityMobUndread) : TickableSound(Mo
 	
 	override fun tick() {
 		if (undread.isAlive) {
-			x = undread.posX.toFloat()
-			y = undread.posY.toFloat()
-			z = undread.posZ.toFloat()
+			x = undread.posX
+			y = undread.posY
+			z = undread.posZ
 		}
 		else {
-			donePlaying = true
+			finishPlaying()
 		}
 	}
 }

@@ -81,7 +81,7 @@ data class TerritoryInstance(val territory: TerritoryType, val index: Int) {
 		}
 		
 		val endWorld: ServerWorld
-			get() = Environment.getServer().getWorld(HEE.dim)
+			get() = Environment.getDimension(HEE.dim)
 	}
 	
 	private val ordinal
@@ -95,9 +95,9 @@ data class TerritoryInstance(val territory: TerritoryType, val index: Int) {
 	
 	val topLeftChunk by lazy(LazyThreadSafetyMode.PUBLICATION) {
 		val chunkOffX = if ((index / 2) % 2 == 0)
-			(0 until ordinal).sumBy { CHUNK_MARGIN + TerritoryType.ALL[it].chunks } // positive x
+			(0 until ordinal).sumOf { CHUNK_MARGIN + TerritoryType.ALL[it].chunks } // positive x
 		else
-			-(1..ordinal).sumBy { CHUNK_MARGIN + TerritoryType.ALL[it].chunks } // negative x
+			-(1..ordinal).sumOf { CHUNK_MARGIN + TerritoryType.ALL[it].chunks } // negative x
 		
 		val distZ = if (index % 2 == 0)
 			index / 4
@@ -110,13 +110,13 @@ data class TerritoryInstance(val territory: TerritoryType, val index: Int) {
 	}
 	
 	private val bottomCenterPos: BlockPos
-		get() = topLeftChunk.getBlock(chunks * 8, territory.height.first, chunks * 8)
+		get() = topLeftChunk.asBlockPos().add(chunks * 8, territory.height.first, chunks * 8)
 	
 	private val fallbackSpawnPoint: BlockPos
 		get() = bottomCenterPos.let { endWorld.getHeight(MOTION_BLOCKING, it) }.up()
 	
 	val centerPoint
-		get() = topLeftChunk.getBlock(chunks * 8, territory.height.let { (it.first + it.last) / 2 }, chunks * 8).center
+		get() = topLeftChunk.asBlockPos().add(chunks * 8, territory.height.let { (it.first + it.last) / 2 }, chunks * 8).center
 	
 	val players
 		get() = endWorld.players.filter { this == fromPos(it) }

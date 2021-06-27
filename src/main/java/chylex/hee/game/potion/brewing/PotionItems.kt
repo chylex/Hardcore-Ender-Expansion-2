@@ -23,7 +23,7 @@ object PotionItems {
 		BrewConvertBottle.IntoSplash,
 		BrewConvertBottle.IntoLingering,
 		BrewReversal
-	).associateBy { it.ingredient }
+	).associateBy(IBrewingModifier::ingredient)
 	
 	fun getBottle(item: Item, type: PotionType): ItemStack {
 		return PotionUtils.addPotionToItemStack(ItemStack(item), type)

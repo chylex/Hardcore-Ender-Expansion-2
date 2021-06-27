@@ -3,10 +3,9 @@ package chylex.hee.game.world.generation
 import chylex.hee.HEE
 import chylex.hee.game.world.territory.TerritoryInstance
 import com.google.common.cache.CacheBuilder
-import net.minecraft.world.World
 import java.util.concurrent.TimeUnit
 
-class TerritoryGenerationCache(private val world: World) {
+class TerritoryGenerationCache(private val seed: Long) {
 	private val cache = CacheBuilder
 		.newBuilder()
 		.initialCapacity(4)
@@ -19,7 +18,7 @@ class TerritoryGenerationCache(private val world: World) {
 		val territory = instance.territory
 		
 		val timeStart = System.currentTimeMillis()
-		val generated = territory.generate(instance.createRandom(world.seed))
+		val generated = territory.generate(instance.createRandom(seed))
 		val timeEnd = System.currentTimeMillis()
 		
 		HEE.log.info("[TerritoryGenerationCache] generated ${territory.name} in ${timeEnd - timeStart} ms")

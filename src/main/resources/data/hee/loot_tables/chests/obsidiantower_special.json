@@ -1,16 +1,11 @@
 {
   "type": "minecraft:chest",
+  "hee:patch": "no_stack_splitting",
   "pools": [
 
     {
-      "rolls": 0,
-      "name": "table#hee:stack_splitting=off",
-      "entries": []
-    },
-
-    {
-      "rolls": { "min": 5, "max": 7 },
-      "name": "pool#hee:rolls_type=biased;6;10",
+      "rolls": { "type": "hee:biased_range", "min": 5, "max": 7, "highestChanceValue": 6, "biasSoftener": 10 },
+      "name": "pool",
       "entries": [
         { "type": "item", "name": "hee:endium_nugget", "weight": 18, "functions": [{ "function": "set_count", "count": { "min": 4, "max": 9 } }], "entryName": "endium_nugget" },
         { "type": "item", "name": "hee:stardust", "weight": 12, "functions": [{ "function": "set_count", "count": { "min": 3, "max": 7 } }], "entryName": "stardust" },

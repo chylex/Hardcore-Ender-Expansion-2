@@ -9,7 +9,7 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 @Mixin(ChorusFlowerBlock.class)
 public abstract class HookChorusFlowerSoil{
 	@Redirect(
-		method = "tick",
+		method = "randomTick",
 		at = @At(value = "FIELD", target = "Lnet/minecraft/block/Blocks;END_STONE:Lnet/minecraft/block/Block;"),
 		require = 2
 	)

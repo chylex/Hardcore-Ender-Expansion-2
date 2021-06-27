@@ -6,6 +6,8 @@ import chylex.hee.game.world.getState
 import chylex.hee.system.delegate.NotifyOnChange
 import chylex.hee.system.serialization.TagCompound
 import chylex.hee.system.serialization.heeTag
+import net.minecraft.block.BlockState
+import net.minecraft.nbt.CompoundNBT
 import net.minecraft.network.NetworkManager
 import net.minecraft.network.play.server.SUpdateTileEntityPacket
 import net.minecraft.tileentity.TileEntity
@@ -63,8 +65,8 @@ abstract class TileEntityBase(type: TileEntityType<out TileEntityBase>) : TileEn
 		return super.write(nbt).also { writeNBT(it.heeTag, STORAGE) }
 	}
 	
-	final override fun read(nbt: TagCompound) {
-		super.read(nbt)
+	final override fun read(state: BlockState, nbt: CompoundNBT) {
+		super.read(state, nbt)
 		readNBT(nbt.heeTag, STORAGE)
 	}
 	
@@ -74,8 +76,8 @@ abstract class TileEntityBase(type: TileEntityType<out TileEntityBase>) : TileEn
 		return super.write(TagCompound()).also { writeNBT(it.heeTag, NETWORK) }
 	}
 	
-	final override fun handleUpdateTag(nbt: TagCompound) {
-		super.read(nbt)
+	final override fun handleUpdateTag(state: BlockState, nbt: CompoundNBT) {
+		super.handleUpdateTag(state, nbt)
 		readNBT(nbt.heeTag, NETWORK)
 	}
 	

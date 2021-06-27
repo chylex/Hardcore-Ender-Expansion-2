@@ -15,7 +15,6 @@ import chylex.hee.system.math.floorToInt
 import com.mojang.blaze3d.matrix.MatrixStack
 import com.mojang.blaze3d.vertex.IVertexBuilder
 import net.minecraft.client.renderer.IRenderTypeBuffer
-import net.minecraft.client.renderer.Matrix4f
 import net.minecraft.client.renderer.WorldRenderer
 import net.minecraft.client.renderer.texture.TextureAtlasSprite
 import net.minecraft.client.renderer.tileentity.TileEntityRenderer
@@ -23,6 +22,7 @@ import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats
 import net.minecraft.inventory.container.PlayerContainer
 import net.minecraft.util.math.BlockPos
+import net.minecraft.util.math.vector.Matrix4f
 import net.minecraft.world.World
 import net.minecraftforge.client.event.TextureStitchEvent
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber.Bus.MOD
@@ -60,14 +60,14 @@ class RenderTileExperienceGate(dispatcher: TileEntityRendererDispatcher) : TileE
 			intArrayOf(3, 4)
 		)
 		
-		private val FRAME_COUNT = 1 + FRAMES.sumBy { it.size }
-		private val FRAME_OFFSETS = FRAMES.indices.map { index -> 1 + FRAMES.take(index).sumBy { it.size } }.toIntArray()
+		private val FRAME_COUNT = 1 + FRAMES.sumOf(IntArray::size)
+		private val FRAME_OFFSETS = FRAMES.indices.map { index -> 1 + FRAMES.take(index).sumOf(IntArray::size) }.toIntArray()
 		
 		@SubscribeEvent
 		fun onTextureStitchPre(e: TextureStitchEvent.Pre) {
 			if (e.map.textureLocation == PlayerContainer.LOCATION_BLOCKS_TEXTURE) {
 				with(e) {
-					TEX.forEach { addSprite(it) }
+					TEX.forEach(this::addSprite)
 				}
 			}
 		}

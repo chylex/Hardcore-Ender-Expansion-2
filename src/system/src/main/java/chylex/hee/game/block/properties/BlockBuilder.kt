@@ -1,6 +1,7 @@
 package chylex.hee.game.block.properties
 
-import net.minecraft.block.Block
+import net.minecraft.block.AbstractBlock
+import net.minecraft.block.AbstractBlock.IPositionPredicate
 import net.minecraft.block.SoundType
 import net.minecraft.block.material.Material
 import net.minecraft.block.material.MaterialColor
@@ -22,7 +23,11 @@ class BlockBuilder(val material: Material, var color: MaterialColor, var sound: 
 	}
 	
 	var isSolid = true
+	var isOpaque: Boolean? = null
+	var suffocates: Boolean? = null
+	var blocksVision: Boolean? = null
 	
+	var requiresTool: Boolean = false
 	var harvestTool: Pair<Int, ToolType?> = Pair(-1, null)
 	var harvestHardness: Float = 0F
 	var explosionResistance: Float = 0F
@@ -33,26 +38,34 @@ class BlockBuilder(val material: Material, var color: MaterialColor, var sound: 
 	var randomTicks: Boolean = false
 	var noDrops: Boolean = false
 	
-	val p: Block.Properties
-		get() = Block.Properties.create(material, color).apply {
+	val p: AbstractBlock.Properties
+		get() = AbstractBlock.Properties.create(material, color).also { props ->
 			val (level, tool) = harvestTool
 			
 			if (tool != null) {
-				harvestTool(tool)
-				harvestLevel(level)
+				props.harvestTool(tool)
+				props.harvestLevel(level)
 			}
 			
-			hardnessAndResistance(harvestHardness, explosionResistance)
-			lightValue(lightLevel)
-			slipperiness(slipperiness)
-			sound(sound)
+			if (requiresTool) {
+				props.setRequiresTool()
+			}
+			
+			props.hardnessAndResistance(harvestHardness, explosionResistance)
+			props.setLightLevel { lightLevel }
+			props.slipperiness(slipperiness)
+			props.sound(sound)
 			
 			if (!isSolid) {
-				notSolid()
+				props.notSolid()
 			}
 			
+			isOpaque?.let { props.setOpaque(always(it)) }
+			suffocates?.let { props.setSuffocates(always(it)) }
+			blocksVision?.let { props.setBlocksVision(always(it)) }
+			
 			if (!material.blocksMovement()) {
-				doesNotBlockMovement()
+				props.doesNotBlockMovement()
 				
 				if (isSolid) {
 					throw UnsupportedOperationException("[BlockBuilder] cannot create a block that does not block movement and is solid at the same time")
@@ -60,11 +73,11 @@ class BlockBuilder(val material: Material, var color: MaterialColor, var sound: 
 			}
 			
 			if (randomTicks) {
-				tickRandomly()
+				props.tickRandomly()
 			}
 			
 			if (noDrops) {
-				noDrops()
+				props.noDrops()
 			}
 		}
 	
@@ -82,5 +95,9 @@ class BlockBuilder(val material: Material, var color: MaterialColor, var sound: 
 	companion object {
 		const val INDESTRUCTIBLE_HARDNESS = -1F
 		const val INDESTRUCTIBLE_RESISTANCE = 3600000F
+		
+		private fun always(value: Boolean): IPositionPredicate {
+			return IPositionPredicate { _, _, _ -> value }
+		}
 	}
 }

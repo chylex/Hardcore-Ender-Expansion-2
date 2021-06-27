@@ -3,7 +3,7 @@ package chylex.hee.game.entity
 import chylex.hee.system.math.square
 import net.minecraft.entity.Entity
 import net.minecraft.util.math.AxisAlignedBB
-import net.minecraft.util.math.Vec3d
+import net.minecraft.util.math.vector.Vector3d
 import net.minecraft.world.IEntityReader
 import java.util.function.Predicate
 
@@ -13,7 +13,7 @@ class EntitySelector(private val world: IEntityReader, private val predicate: Pr
 		return world.getEntitiesWithinAABB(cls, aabb, predicate)
 	}
 	
-	fun <T : Entity> inRange(cls: Class<T>, point: Vec3d, range: Double): List<T> {
+	fun <T : Entity> inRange(cls: Class<T>, point: Vector3d, range: Double): List<T> {
 		val aabb = AxisAlignedBB(point.x - range, point.y - range, point.z - range, point.x + range, point.y + range, point.z + range)
 		val rangeSq = square(range)
 		
@@ -23,10 +23,10 @@ class EntitySelector(private val world: IEntityReader, private val predicate: Pr
 	// Reified
 	
 	inline fun <reified T : Entity> inBox(aabb: AxisAlignedBB) = inBox(T::class.java, aabb)
-	inline fun <reified T : Entity> inRange(point: Vec3d, range: Double) = inRange(T::class.java, point, range)
+	inline fun <reified T : Entity> inRange(point: Vector3d, range: Double) = inRange(T::class.java, point, range)
 	
 	// General
 	
 	inline fun allInBox(aabb: AxisAlignedBB) = inBox(Entity::class.java, aabb)
-	inline fun allInRange(point: Vec3d, range: Double) = inRange(Entity::class.java, point, range)
+	inline fun allInRange(point: Vector3d, range: Double) = inRange(Entity::class.java, point, range)
 }

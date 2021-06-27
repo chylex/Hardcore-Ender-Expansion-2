@@ -22,7 +22,7 @@ import chylex.hee.system.facades.Resource
 import net.minecraft.block.Blocks
 import net.minecraft.data.DataGenerator
 import net.minecraftforge.client.model.generators.BlockModelProvider
-import net.minecraftforge.client.model.generators.ExistingFileHelper
+import net.minecraftforge.common.data.ExistingFileHelper
 
 class BlockModels(generator: DataGenerator, modid: String, existingFileHelper: ExistingFileHelper) : BlockModelProvider(generator, modid, existingFileHelper) {
 	override fun registerModels() {

@@ -1,5 +1,5 @@
 {
-  "parent": "block/cube_column",
+  "parent": "minecraft:block/cube_column",
   "textures": {
     "side": "hee:block/miners_burial_block_pillar_side",
     "end": "hee:block/miners_burial_block_pillar_end"

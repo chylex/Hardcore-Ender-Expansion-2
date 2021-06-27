@@ -100,7 +100,7 @@ abstract class BlockAbstractPortal(builder: BlockBuilder) : BlockSimpleShaped(bu
 	protected abstract fun onEntityInside(world: World, pos: BlockPos, entity: Entity)
 	
 	final override fun onEntityCollision(state: BlockState, world: World, pos: BlockPos, entity: Entity) {
-		if (!world.isRemote && !entity.isPassenger && !entity.isBeingRidden && entity.isNonBoss && entity.posY <= pos.y + 0.05) {
+		if (!world.isRemote && !entity.isPassenger && !entity.isBeingRidden && entity.canChangeDimension() && entity.posY <= pos.y + 0.05) {
 			onEntityInside(world, pos, entity)
 		}
 	}

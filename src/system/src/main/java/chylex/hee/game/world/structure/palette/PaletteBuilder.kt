@@ -7,7 +7,7 @@ import com.google.common.collect.HashBiMap
 import com.google.common.collect.ImmutableBiMap
 import net.minecraft.block.Block
 import net.minecraft.block.BlockState
-import net.minecraft.state.IProperty
+import net.minecraft.state.Property
 import org.apache.commons.lang3.StringUtils
 
 sealed class PaletteBuilder {
@@ -30,7 +30,7 @@ sealed class PaletteBuilder {
 	
 	// Add variants
 	
-	fun add(key: String, baseState: BlockState, propertyMappings: List<Pair<IProperty<*>, Map<String, *>>>) {
+	fun add(key: String, baseState: BlockState, propertyMappings: List<Pair<Property<*>, Map<String, *>>>) {
 		fun process(index: Int, currentKey: String, currentState: BlockState) {
 			if (index == propertyMappings.size) {
 				add(currentKey, currentState)
@@ -47,15 +47,15 @@ sealed class PaletteBuilder {
 		process(0, key, baseState)
 	}
 	
-	fun add(key: String, block: Block, propertyMappings: List<Pair<IProperty<*>, Map<String, *>>>) {
+	fun add(key: String, block: Block, propertyMappings: List<Pair<Property<*>, Map<String, *>>>) {
 		add(key, block.defaultState, propertyMappings)
 	}
 	
-	fun <T : Comparable<T>> add(key: String, baseState: BlockState, propertyMapping: Pair<IProperty<T>, Map<String, T>>) {
+	fun <T : Comparable<T>> add(key: String, baseState: BlockState, propertyMapping: Pair<Property<T>, Map<String, T>>) {
 		add(key, baseState, listOf(propertyMapping))
 	}
 	
-	fun <T : Comparable<T>> add(key: String, block: Block, propertyMapping: Pair<IProperty<T>, Map<String, T>>) {
+	fun <T : Comparable<T>> add(key: String, block: Block, propertyMapping: Pair<Property<T>, Map<String, T>>) {
 		add(key, block.defaultState, listOf(propertyMapping))
 	}
 	

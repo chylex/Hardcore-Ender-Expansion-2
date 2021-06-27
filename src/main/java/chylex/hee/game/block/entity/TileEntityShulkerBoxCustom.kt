@@ -10,6 +10,7 @@ import chylex.hee.system.serialization.getEnum
 import chylex.hee.system.serialization.heeTag
 import chylex.hee.system.serialization.heeTagOrNull
 import chylex.hee.system.serialization.putEnum
+import net.minecraft.block.BlockState
 import net.minecraft.entity.player.PlayerInventory
 import net.minecraft.inventory.container.Container
 import net.minecraft.item.ItemStack
@@ -76,8 +77,8 @@ class TileEntityShulkerBoxCustom : TileEntityShulkerBox() {
 		return super.write(TagCompound()).also(::writeCustomNBT)
 	}
 	
-	override fun handleUpdateTag(nbt: TagCompound) {
-		super.read(nbt)
+	override fun handleUpdateTag(state: BlockState, nbt: TagCompound) {
+		super.read(state, nbt)
 		readCustomNBT(nbt)
 	}
 	

@@ -50,13 +50,13 @@ class PathNavigateFlyingPreferBeeLineOrStrafe(entity: EntityLiving, world: World
 		
 		val moveHelper = entity.moveHelper
 		
-		if (entity.collided && entity.motion.lengthSquared() < square(moveSpeed * 0.1)) {
+		if ((entity.collidedHorizontally || entity.collidedVertically) && entity.motion.lengthSquared() < square(moveSpeed * 0.1)) {
 			strafeDirReset = 35
 			
 			if (strafeDir == 0) {
 				strafeDir = 1
 				
-				val path = getPathToPos(moveTarget.x, moveTarget.y, moveTarget.z, 1)
+				val path = pathfind(moveTarget.x, moveTarget.y, moveTarget.z, 1)
 				
 				if (path != null && !path.isFinished) {
 					val point = path.getPathPointFromIndex(0)

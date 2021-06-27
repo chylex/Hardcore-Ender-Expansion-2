@@ -1,18 +1,19 @@
 package chylex.hee.game.loot.functions
 
 import chylex.hee.game.item.infusion.Infusion
-import chylex.hee.system.facades.Resource
+import chylex.hee.init.ModLoot
 import chylex.hee.system.random.removeItemOrNull
 import com.google.gson.JsonArray
 import com.google.gson.JsonDeserializationContext
 import com.google.gson.JsonObject
 import com.google.gson.JsonSerializationContext
 import net.minecraft.item.ItemStack
+import net.minecraft.loot.LootContext
+import net.minecraft.loot.LootFunction
+import net.minecraft.loot.LootFunctionType
+import net.minecraft.loot.RandomValueRange
+import net.minecraft.loot.conditions.ILootCondition
 import net.minecraft.util.JSONUtils
-import net.minecraft.world.storage.loot.LootContext
-import net.minecraft.world.storage.loot.LootFunction
-import net.minecraft.world.storage.loot.RandomValueRange
-import net.minecraft.world.storage.loot.conditions.ILootCondition
 
 class FunctionInfuse(conditions: Array<ILootCondition>, private val picks: Array<Infusion>, private val amount: RandomValueRange) : LootFunction(conditions) {
 	override fun doApply(stack: ItemStack, context: LootContext): ItemStack {
@@ -26,7 +27,11 @@ class FunctionInfuse(conditions: Array<ILootCondition>, private val picks: Array
 		return finalStack
 	}
 	
-	object Serializer : LootFunction.Serializer<FunctionInfuse>(Resource.Custom("infuse"), FunctionInfuse::class.java) {
+	override fun getFunctionType(): LootFunctionType {
+		return ModLoot.FUNCTION_INFUSE
+	}
+	
+	object Serializer : LootFunction.Serializer<FunctionInfuse>() {
 		override fun serialize(json: JsonObject, value: FunctionInfuse, context: JsonSerializationContext) {
 			json.add("picks", JsonArray().apply { value.picks.forEach { add(it.name) } })
 			json.add("amount", context.serialize(value.amount))

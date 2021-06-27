@@ -26,8 +26,9 @@ import chylex.hee.system.forge.Side
 import chylex.hee.system.forge.SubscribeAllEvents
 import chylex.hee.system.forge.SubscribeEvent
 import net.minecraft.client.gui.AbstractGui
-import net.minecraft.client.resources.I18n
+import net.minecraft.util.text.ITextComponent
 import net.minecraft.util.text.TextFormatting
+import net.minecraft.util.text.TranslationTextComponent
 import net.minecraftforge.client.event.DrawHighlightEvent
 import net.minecraftforge.client.event.EntityViewRenderEvent.FogDensity
 import net.minecraftforge.client.event.RenderGameOverlayEvent
@@ -65,7 +66,7 @@ object OverlayRenderer {
 		val player = MC.player ?: return
 		val inside = MC.gameRenderer.activeRenderInfo.blockAtCamera.material
 		
-		if ((inside === Materials.ENDER_GOO || inside === Materials.PURIFIED_ENDER_GOO) && MC.settings.thirdPersonView == 0 && !player.isSpectator) {
+		if ((inside === Materials.ENDER_GOO || inside === Materials.PURIFIED_ENDER_GOO) && MC.settings.pointOfView.func_243192_a() /* RENAME isFirstPerson */ && !player.isSpectator) {
 			val window = MC.window
 			val brightness = player.brightness
 			
@@ -79,7 +80,7 @@ object OverlayRenderer {
 				GL.bindTexture(TEX_PURIFIED_ENDER_GOO_OVERLAY)
 			}
 			
-			MC.instance.ingameGUI.blit(0, 0, 0, 0, window.scaledWidth, window.scaledHeight)
+			MC.instance.ingameGUI.blit(e.matrixStack, 0, 0, 0, 0, window.scaledWidth, window.scaledHeight)
 			
 			GL.color(1F, 1F, 1F, 1F)
 		}
@@ -89,21 +90,21 @@ object OverlayRenderer {
 	
 	@SubscribeEvent
 	fun onRenderText(@Suppress("UNUSED_PARAMETER") e: RenderGameOverlayEvent.Text) {
-		fun drawTextOffScreenCenter(x: Int, y: Int, line: Int, text: String, color: IntColor) {
+		fun drawTextOffScreenCenter(x: Int, y: Int, line: Int, text: ITextComponent, color: IntColor) {
 			val window = MC.window
 			
 			with(MC.fontRenderer) {
 				val centerX = x + (window.scaledWidth / 2)
 				val centerY = y + (window.scaledHeight / 2) + (line * (LINE_SPACING + FONT_HEIGHT))
 				
-				val textWidth = getStringWidth(text)
+				val textWidth = getStringPropertyWidth(text)
 				val textHeight = FONT_HEIGHT
 				
 				val offsetX = -(textWidth / 2)
 				val offsetY = -(textHeight / 2)
 				
-				AbstractGui.fill(centerX + offsetX - BORDER_SIZE, centerY + offsetY - BORDER_SIZE, centerX - offsetX + BORDER_SIZE - 1, centerY - offsetY + BORDER_SIZE - 1, RGBA(0u, 0.6F).i)
-				drawStringWithShadow(text, (centerX + offsetX).toFloat(), (centerY + offsetY).toFloat(), color.i)
+				AbstractGui.fill(e.matrixStack, centerX + offsetX - BORDER_SIZE, centerY + offsetY - BORDER_SIZE, centerX - offsetX + BORDER_SIZE - 1, centerY - offsetY + BORDER_SIZE - 1, RGBA(0u, 0.6F).i)
+				drawTextWithShadow(e.matrixStack, text, (centerX + offsetX).toFloat(), (centerY + offsetY).toFloat(), color.i)
 			}
 		}
 		
@@ -121,14 +122,14 @@ object OverlayRenderer {
 			val firstLine = if (isIgnored) -1 else 0
 			
 			val health = it.currentHealth
-			drawTextOffScreenCenter(0, -40, firstLine, I18n.format("hee.energy.overlay.health", health), health.textColor)
+			drawTextOffScreenCenter(0, -40, firstLine, TranslationTextComponent("hee.energy.overlay.health", health), health.textColor)
 			
 			val level = getQuantityString(it.energyLevel)
 			val capacity = getQuantityString(it.energyRegenCapacity)
-			drawTextOffScreenCenter(0, -40, firstLine + 1, I18n.format("hee.energy.overlay.level", level, capacity), RGB(220u))
+			drawTextOffScreenCenter(0, -40, firstLine + 1, TranslationTextComponent("hee.energy.overlay.level", level, capacity), RGB(220u))
 			
 			if (isIgnored) {
-				drawTextOffScreenCenter(0, -40, firstLine + 2, I18n.format("hee.energy.overlay.ignored"), RGB(160u))
+				drawTextOffScreenCenter(0, -40, firstLine + 2, TranslationTextComponent("hee.energy.overlay.ignored"), RGB(160u))
 			}
 		}
 	}

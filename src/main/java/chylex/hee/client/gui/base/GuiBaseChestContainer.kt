@@ -6,6 +6,7 @@ import chylex.hee.system.color.IntColor.Companion.RGB
 import chylex.hee.system.facades.Resource
 import chylex.hee.system.forge.Side
 import chylex.hee.system.forge.Sided
+import com.mojang.blaze3d.matrix.MatrixStack
 import net.minecraft.client.gui.screen.inventory.ContainerScreen
 import net.minecraft.entity.player.PlayerInventory
 import net.minecraft.inventory.container.ChestContainer
@@ -24,25 +25,25 @@ abstract class GuiBaseChestContainer<T : ChestContainer>(container: T, inventory
 		ySize = 114 + (containerRows * 18)
 	}
 	
-	override fun render(mouseX: Int, mouseY: Int, partialTicks: Float) {
-		renderBackground()
-		super.render(mouseX, mouseY, partialTicks)
-		renderHoveredToolTip(mouseX, mouseY)
+	override fun render(matrix: MatrixStack, mouseX: Int, mouseY: Int, partialTicks: Float) {
+		renderBackground(matrix)
+		super.render(matrix, mouseX, mouseY, partialTicks)
+		renderHoveredTooltip(matrix, mouseX, mouseY)
 	}
 	
-	override fun drawGuiContainerBackgroundLayer(partialTicks: Float, mouseX: Int, mouseY: Int) {
+	override fun drawGuiContainerBackgroundLayer(matrix: MatrixStack, partialTicks: Float, mouseX: Int, mouseY: Int) {
 		val x = (width - xSize) / 2
 		val y = (height - ySize) / 2
 		val heightContainer = 17 + (containerRows * 18)
 		
 		GL.color(1F, 1F, 1F, 1F)
 		GL.bindTexture(TEX_BACKGROUND)
-		blit(x, y, 0, 0, xSize, heightContainer)
-		blit(x, y + heightContainer, 0, 126, xSize, 96)
+		blit(matrix, x, y, 0, 0, xSize, heightContainer)
+		blit(matrix, x, y + heightContainer, 0, 126, xSize, 96)
 	}
 	
-	override fun drawGuiContainerForegroundLayer(mouseX: Int, mouseY: Int) {
-		font.drawString(title.formattedText, 8F, 6F, COLOR_TEXT)
-		font.drawString(playerInventory.displayName.formattedText, 8F, ySize - 94F, COLOR_TEXT)
+	override fun drawGuiContainerForegroundLayer(matrix: MatrixStack, mouseX: Int, mouseY: Int) {
+		font.drawText(matrix, title, 8F, 6F, COLOR_TEXT)
+		font.drawText(matrix, playerInventory.displayName, 8F, ySize - 94F, COLOR_TEXT)
 	}
 }

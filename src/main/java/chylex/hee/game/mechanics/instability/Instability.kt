@@ -8,7 +8,7 @@ import chylex.hee.game.mechanics.instability.dimension.IDimensionInstability
 import chylex.hee.game.mechanics.instability.dimension.components.EndermiteSpawnLogicOverworld
 import chylex.hee.game.mechanics.instability.region.RegionInstability
 import chylex.hee.game.mechanics.instability.region.entry.types.Entry5x5
-import chylex.hee.game.world.WorldProviderEndCustom
+import chylex.hee.game.world.isEndDimension
 import chylex.hee.system.facades.Resource
 import chylex.hee.system.forge.SubscribeEvent
 import chylex.hee.system.forge.capability.CapabilityProvider
@@ -64,12 +64,11 @@ object Instability {
 			return
 		}
 		
-		when(world.dimension) {
-			is WorldProviderEndCustom ->
-				e.addCapability(CAP_KEY, Provider(DimensionInstabilityEndTerritory(world), RegionInstability(world, Entry5x5.Constructor)))
-			
-			else ->
-				e.addCapability(CAP_KEY, Provider(DimensionInstabilityGlobal(world, EndermiteSpawnLogicOverworld), RegionInstability(world, Entry5x5.Constructor)))
+		if (world.isEndDimension) {
+			e.addCapability(CAP_KEY, Provider(DimensionInstabilityEndTerritory(world), RegionInstability(world, Entry5x5.Constructor)))
+		}
+		else {
+			e.addCapability(CAP_KEY, Provider(DimensionInstabilityGlobal(world, EndermiteSpawnLogicOverworld), RegionInstability(world, Entry5x5.Constructor)))
 		}
 	}
 	

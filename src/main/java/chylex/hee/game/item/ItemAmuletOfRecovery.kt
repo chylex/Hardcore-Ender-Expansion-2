@@ -46,6 +46,7 @@ import net.minecraft.item.Rarity
 import net.minecraft.util.ActionResult
 import net.minecraft.util.Hand
 import net.minecraft.util.NonNullList
+import net.minecraft.util.Util
 import net.minecraft.util.text.ITextComponent
 import net.minecraft.util.text.StringTextComponent
 import net.minecraft.util.text.TextFormatting.DARK_RED
@@ -146,8 +147,8 @@ class ItemAmuletOfRecovery(properties: Properties) : ItemAbstractEnergyUser(prop
 								sumOfFilteredTagSizes += 2500
 								HEE.log.error("[ItemAmuletOfRecovery] failed processing NBT data when calculating Energy cost", e)
 								
-								errorMessenger.sendMessage(TranslationTextComponent("item.hee.amulet_of_recovery.cost_error").applyTextStyle(RED))
-								e.message?.let { errorMessenger.sendMessage(StringTextComponent(it).applyTextStyle(DARK_RED)) }
+								errorMessenger.sendMessage(TranslationTextComponent("item.hee.amulet_of_recovery.cost_error").mergeStyle(RED), Util.DUMMY_UUID)
+								e.message?.let { errorMessenger.sendMessage(StringTextComponent(it).mergeStyle(DARK_RED), Util.DUMMY_UUID) }
 							}
 							
 							buffer.clear()

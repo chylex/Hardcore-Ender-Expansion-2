@@ -56,6 +56,7 @@ import chylex.hee.system.migration.ItemSpawnEgg
 import net.minecraft.item.Item
 import net.minecraft.item.ItemGroup
 import net.minecraft.item.Items
+import net.minecraft.tags.ItemTags
 import net.minecraftforge.event.RegistryEvent
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber.Bus.MOD
 
@@ -182,6 +183,11 @@ object ModItems {
 			register(ItemEyeOfEnderOverride(defaultProps).apply { override(Items.ENDER_EYE) })
 			register(ItemTotemOfUndyingOverride(toolProps).apply { override(Items.TOTEM_OF_UNDYING, newCreativeTab = null) })
 		}
+		
+		// tags
+		
+		ItemTags.createOptional(Resource.Custom("experience_bottles"))
+		ItemTags.createOptional(Resource.Custom("gloomrock_colors"))
 		
 		// dispenser behavior
 		

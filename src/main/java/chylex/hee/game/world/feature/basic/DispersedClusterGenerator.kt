@@ -13,7 +13,7 @@ import chylex.hee.init.ModBlocks
 import chylex.hee.system.random.nextInt
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.ChunkPos
-import net.minecraft.world.IWorld
+import net.minecraft.world.ISeedReader
 import java.util.Random
 
 object DispersedClusterGenerator : OverworldFeature() {
@@ -33,7 +33,7 @@ object DispersedClusterGenerator : OverworldFeature() {
 		)
 	}
 	
-	override fun place(world: IWorld, rand: Random, pos: BlockPos, chunkX: Int, chunkZ: Int): Boolean {
+	override fun place(world: ISeedReader, rand: Random, pos: BlockPos, chunkX: Int, chunkZ: Int): Boolean {
 		val (targetChunkX, targetChunkZ) = findSpawnAt(world.seed, chunkX, chunkZ) ?: return false
 		
 		if (chunkX != targetChunkX || chunkZ != targetChunkZ) {

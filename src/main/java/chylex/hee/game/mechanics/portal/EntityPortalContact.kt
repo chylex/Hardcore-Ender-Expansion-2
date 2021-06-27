@@ -10,13 +10,13 @@ object EntityPortalContact {
 			return false
 		}
 		
-		if (entity.timeUntilPortal == 0 && entity.ticksExisted > 1) {
-			entity.timeUntilPortal = DELAY
+		if (entity.portalCooldown == 0 && entity.ticksExisted > 1) {
+			entity.portalCooldown = DELAY
 			return true
 		}
 		
-		if (entity.timeUntilPortal < DELAY) {
-			entity.timeUntilPortal = DELAY
+		if (entity.portalCooldown < DELAY) {
+			entity.portalCooldown = DELAY
 		}
 		
 		return false

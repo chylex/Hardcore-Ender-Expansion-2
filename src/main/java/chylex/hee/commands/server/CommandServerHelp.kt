@@ -14,6 +14,7 @@ import com.mojang.brigadier.context.CommandContext
 import net.minecraft.command.CommandException
 import net.minecraft.command.CommandSource
 import net.minecraft.command.Commands.argument
+import net.minecraft.util.text.IFormattableTextComponent
 import net.minecraft.util.text.ITextComponent
 import net.minecraft.util.text.StringTextComponent
 import net.minecraft.util.text.TextFormatting.DARK_GREEN
@@ -86,7 +87,7 @@ object CommandServerHelp : ICommand, CommandExecutionFunctionCtx<Boolean> {
 		
 		send(source, emptyLine)
 		send(source, TranslationTextComponent(headerKey, currentPage, totalPages).also {
-			it.style.color = GREEN // required to set a custom color on tokens
+			it.style.setFormatting(GREEN) // required to set a custom color on tokens
 		})
 		send(source, emptyLine)
 		
@@ -101,7 +102,7 @@ object CommandServerHelp : ICommand, CommandExecutionFunctionCtx<Boolean> {
 			send(source, chainTextComponents(
 				StringTextComponent("  "),
 				TranslationTextComponent("commands.hee.${name}.info").also {
-					it.style.color = GRAY
+					it.style.setFormatting(GRAY)
 				}
 			))
 		}
@@ -114,7 +115,7 @@ object CommandServerHelp : ICommand, CommandExecutionFunctionCtx<Boolean> {
 	}
 	
 	private fun sendInteractiveNavigation(source: CommandSource, currentPage: Int, totalPages: Int?) {
-		val components = mutableListOf<ITextComponent>()
+		val components = mutableListOf<IFormattableTextComponent>()
 		
 		if (totalPages == null) {
 			components.add(TranslationTextComponent("commands.hee.help.footer.admin").also {
@@ -152,15 +153,15 @@ object CommandServerHelp : ICommand, CommandExecutionFunctionCtx<Boolean> {
 		
 		if (page != null) {
 			style.clickEvent = ClickEvent(RUN_COMMAND, "/${ModCommands.ROOT} help $page")
-			style.color = GREEN
-			style.underlined = true
+			style.setFormatting(GREEN)
+			style.setUnderlined(true)
 		}
 		else {
-			style.color = DARK_GREEN
+			style.setFormatting(DARK_GREEN)
 		}
 	}
 	
-	private fun chainTextComponents(vararg components: ITextComponent): ITextComponent {
-		return components.reduce(ITextComponent::appendSibling)
+	private fun chainTextComponents(vararg components: IFormattableTextComponent): IFormattableTextComponent {
+		return components.reduce(IFormattableTextComponent::appendSibling)
 	}
 }

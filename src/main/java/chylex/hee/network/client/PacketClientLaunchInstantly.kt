@@ -9,16 +9,16 @@ import chylex.hee.system.serialization.use
 import chylex.hee.system.serialization.writeFloatVec
 import net.minecraft.entity.Entity
 import net.minecraft.network.PacketBuffer
-import net.minecraft.util.math.Vec3d
+import net.minecraft.util.math.vector.Vector3d
 
 class PacketClientLaunchInstantly() : BaseClientPacket() {
-	constructor(entity: Entity, motion: Vec3d) : this() {
+	constructor(entity: Entity, motion: Vector3d) : this() {
 		this.entityId = entity.entityId
 		this.motion = motion
 	}
 	
 	private var entityId: Int? = null
-	private lateinit var motion: Vec3d
+	private lateinit var motion: Vector3d
 	
 	override fun write(buffer: PacketBuffer) = buffer.use {
 		writeInt(entityId!!)

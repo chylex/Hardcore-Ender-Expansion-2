@@ -46,7 +46,7 @@ import net.minecraft.block.Blocks
 object ObsidianTowerPieces : IStructureDescription {
 	fun calculateStructureSize(floors: Int) = Size(
 		PIECES_BASE.maxOf { it.size.x },
-		PIECES_BASE.sumBy { it.size.y } + ((floors - 2) * PIECE_LEVEL_MIDDLE.size.y),
+		PIECES_BASE.sumOf { it.size.y } + ((floors - 2) * PIECE_LEVEL_MIDDLE.size.y),
 		PIECES_BASE.maxOf { it.size.z }
 	)
 	

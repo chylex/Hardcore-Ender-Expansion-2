@@ -26,11 +26,11 @@ import chylex.hee.system.random.nextItem
 import chylex.hee.system.random.removeItemOrNull
 import net.minecraft.block.Blocks
 import net.minecraft.item.ItemStack
+import net.minecraft.loot.LootContext
+import net.minecraft.loot.LootParameterSets
 import net.minecraft.util.Direction
 import net.minecraft.util.math.BlockPos
-import net.minecraft.world.dimension.DimensionType
-import net.minecraft.world.storage.loot.LootContext
-import net.minecraft.world.storage.loot.LootParameterSets
+import net.minecraft.world.World
 
 abstract class ObsidianTowerRoom_General(file: String, val guaranteesSpawnersOnLevel1: Boolean = false) : ObsidianTowerAbstractPieceFromFile<ObsidianTowerRoomData>(file) {
 	private companion object {
@@ -113,7 +113,7 @@ abstract class ObsidianTowerRoom_General(file: String, val guaranteesSpawnersOnL
 	}
 	
 	protected fun placeFurnace(world: IStructureWorld, pos: BlockPos, facing: Direction) {
-		val overworld = Environment.getDimension(DimensionType.OVERWORLD)
+		val overworld = Environment.getDimension(World.OVERWORLD)
 		val table = Environment.getLootTable(ObsidianTowerPieces.LOOT_FUEL)
 		
 		val fuel = table.generate(LootContext.Builder(overworld).withRandom(world.rand).build(LootParameterSets.EMPTY)).firstOrNull() ?: ItemStack.EMPTY

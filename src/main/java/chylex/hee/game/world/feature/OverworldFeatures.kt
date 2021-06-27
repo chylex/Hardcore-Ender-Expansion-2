@@ -12,46 +12,57 @@ import chylex.hee.system.forge.EventPriority
 import chylex.hee.system.forge.SubscribeAllEvents
 import chylex.hee.system.forge.SubscribeEvent
 import chylex.hee.system.forge.named
+import chylex.hee.system.migration.supply
 import net.minecraft.util.SharedSeedRandom
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.ChunkPos
-import net.minecraft.world.IWorld
+import net.minecraft.util.registry.WorldGenRegistries
+import net.minecraft.util.registry.WorldGenRegistries.CONFIGURED_FEATURE
+import net.minecraft.world.DimensionType
+import net.minecraft.world.ISeedReader
 import net.minecraft.world.World
-import net.minecraft.world.dimension.DimensionType
 import net.minecraft.world.gen.ChunkGenerator
-import net.minecraft.world.gen.GenerationSettings
 import net.minecraft.world.gen.GenerationStage.Decoration.TOP_LAYER_MODIFICATION
 import net.minecraft.world.gen.feature.ConfiguredFeature
 import net.minecraft.world.gen.feature.Feature
 import net.minecraft.world.gen.feature.IFeatureConfig.NO_FEATURE_CONFIG
 import net.minecraft.world.gen.feature.NoFeatureConfig
+import net.minecraft.world.gen.feature.structure.StructureFeatures
 import net.minecraft.world.server.ServerWorld
 import net.minecraftforge.event.RegistryEvent
+import net.minecraftforge.event.world.BiomeLoadingEvent
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber.Bus.MOD
-import net.minecraftforge.registries.ForgeRegistries
 import java.util.Random
-import java.util.function.Function
 
 @SubscribeAllEvents(modid = HEE.ID, bus = MOD)
 object OverworldFeatures {
 	@SubscribeEvent(priority = EventPriority.LOWEST)
-	fun onRegister(e: RegistryEvent.Register<Feature<*>>) {
+	fun onRegisterFeatures(e: RegistryEvent.Register<Feature<*>>) {
 		with(e.registry) {
 			register(DispersedClusterGenerator named "dispersed_clusters")
 			register(EnergyShrineGenerator named "energy_shrine")
 			register(StrongholdGenerator named "stronghold")
 		}
-		
-		for(biome in ForgeRegistries.BIOMES) {
-			biome.addFeature(TOP_LAYER_MODIFICATION, DispersedClusterGenerator.feature)
-			biome.addFeature(TOP_LAYER_MODIFICATION, EnergyShrineGenerator.feature)
-			biome.addFeature(TOP_LAYER_MODIFICATION, StrongholdGenerator.feature)
-		}
 	}
 	
-	fun setupVanillaOverrides() {
-		for(biome in ForgeRegistries.BIOMES) {
-			biome.structures.remove(Feature.STRONGHOLD)
+	fun registerConfiguredFeatures() {
+		WorldGenRegistries.register(CONFIGURED_FEATURE, DispersedClusterGenerator.registryName!!, DispersedClusterGenerator.feature)
+		WorldGenRegistries.register(CONFIGURED_FEATURE, EnergyShrineGenerator.registryName!!, EnergyShrineGenerator.feature)
+		WorldGenRegistries.register(CONFIGURED_FEATURE, StrongholdGenerator.registryName!!, StrongholdGenerator.feature)
+	}
+	
+	@SubscribeEvent(priority = EventPriority.NORMAL)
+	fun onBiomeLoading(e: BiomeLoadingEvent) {
+		with (e.generation) {
+			getFeatures(TOP_LAYER_MODIFICATION).addAll(arrayOf(
+				supply(DispersedClusterGenerator.feature),
+				supply(EnergyShrineGenerator.feature),
+				supply(StrongholdGenerator.feature),
+			))
+			
+			structures.removeAll {
+				it.get() == StructureFeatures.STRONGHOLD
+			}
 		}
 	}
 	
@@ -73,15 +84,15 @@ object OverworldFeatures {
 		}
 	}
 	
-	abstract class OverworldFeature : Feature<NoFeatureConfig>(Function { NoFeatureConfig.deserialize(it) }) {
+	abstract class OverworldFeature : Feature<NoFeatureConfig>(NoFeatureConfig.CODEC) {
 		val feature
 			get() = ConfiguredFeature(this, NO_FEATURE_CONFIG)
 		
-		final override fun place(world: IWorld, generator: ChunkGenerator<out GenerationSettings>, rand: Random, pos: BlockPos, config: NoFeatureConfig): Boolean {
-			return world.dimension.type == DimensionType.OVERWORLD && place(world, rand, pos, pos.x shr 4, pos.z shr 4)
+		final override fun generate(world: ISeedReader, generator: ChunkGenerator, rand: Random, pos: BlockPos, config: NoFeatureConfig): Boolean {
+			return world.dimensionType == DimensionType.OVERWORLD && place(world, rand, pos, pos.x shr 4, pos.z shr 4)
 		}
 		
-		protected abstract fun place(world: IWorld, rand: Random, pos: BlockPos, chunkX: Int, chunkZ: Int): Boolean
+		protected abstract fun place(world: ISeedReader, rand: Random, pos: BlockPos, chunkX: Int, chunkZ: Int): Boolean
 	}
 	
 	abstract class GeneratorTriggerBase : ITriggerHandler {

@@ -5,7 +5,7 @@ import net.minecraft.entity.ai.controller.LookController
 
 class EntityLookWhileJumping(mob: EntityLiving) : LookController(mob) {
 	override fun tick() {
-		if (mob.onGround) {
+		if (mob.isOnGround) {
 			isLooking = false
 		}
 		else {

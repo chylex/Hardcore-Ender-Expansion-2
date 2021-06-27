@@ -23,10 +23,10 @@ import chylex.hee.system.random.nextVector
 import net.minecraft.client.particle.IParticleRenderType
 import net.minecraft.client.particle.IParticleRenderType.PARTICLE_SHEET_TRANSLUCENT
 import net.minecraft.client.particle.Particle
+import net.minecraft.client.world.ClientWorld
 import net.minecraft.util.math.AxisAlignedBB
 import net.minecraft.world.LightType.BLOCK
 import net.minecraft.world.LightType.SKY
-import net.minecraft.world.World
 import kotlin.math.cos
 import kotlin.math.max
 import kotlin.math.min
@@ -35,7 +35,7 @@ import kotlin.math.sqrt
 
 object ParticleDust : IParticleMaker.WithData<Data>() {
 	@Sided(Side.CLIENT)
-	override fun create(world: World, posX: Double, posY: Double, posZ: Double, motX: Double, motY: Double, motZ: Double, data: Data?): Particle {
+	override fun create(world: ClientWorld, posX: Double, posY: Double, posZ: Double, motX: Double, motY: Double, motZ: Double, data: Data?): Particle {
 		return Instance(world, posX, posY, posZ, motX, motY, motZ, data)
 	}
 	
@@ -48,7 +48,7 @@ object ParticleDust : IParticleMaker.WithData<Data>() {
 	private const val COLLISION_SIZE = 1.9
 	
 	@Sided(Side.CLIENT)
-	private class Instance(world: World, posX: Double, posY: Double, posZ: Double, motX: Double, motY: Double, motZ: Double, data: Data?) : ParticleBase(world, posX, posY, posZ, motX, motY, motZ) {
+	private class Instance(world: ClientWorld, posX: Double, posY: Double, posZ: Double, motX: Double, motY: Double, motZ: Double, data: Data?) : ParticleBase(world, posX, posY, posZ, motX, motY, motZ) {
 		private val preSkyLightColor: IntColor?
 		private var chaosVec = Vec3.ZERO
 		
@@ -95,7 +95,7 @@ object ParticleDust : IParticleMaker.WithData<Data>() {
 			for(entity in world.selectExistingEntities.allInBox(aabb)) {
 				var mot = entity.motion
 				
-				if (mot.y < 0.0 && entity.onGround) {
+				if (mot.y < 0.0 && entity.isOnGround) {
 					mot = mot.withY(0.0)
 				}
 				

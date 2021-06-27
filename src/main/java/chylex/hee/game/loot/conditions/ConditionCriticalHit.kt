@@ -1,10 +1,11 @@
 package chylex.hee.game.loot.conditions
 
 import chylex.hee.game.entity.living.ICritTracker
-import chylex.hee.system.facades.Resource
-import net.minecraft.world.storage.loot.LootContext
-import net.minecraft.world.storage.loot.LootParameter
-import net.minecraft.world.storage.loot.LootParameters
+import chylex.hee.init.ModLoot
+import net.minecraft.loot.LootConditionType
+import net.minecraft.loot.LootContext
+import net.minecraft.loot.LootParameter
+import net.minecraft.loot.LootParameters
 
 class ConditionCriticalHit(override val expectedValue: Boolean) : ILootConditionBoolean {
 	override fun isTrue(context: LootContext): Boolean {
@@ -15,7 +16,11 @@ class ConditionCriticalHit(override val expectedValue: Boolean) : ILootCondition
 		return mutableSetOf(LootParameters.LAST_DAMAGE_PLAYER, LootParameters.THIS_ENTITY)
 	}
 	
-	object Serializer : ILootConditionBoolean.Serializer<ConditionCriticalHit>(Resource.Custom("killed_by_critical_hit"), ConditionCriticalHit::class.java) {
+	override fun getConditionType(): LootConditionType {
+		return ModLoot.CONDITION_CRITICAL_HIT
+	}
+	
+	object Serializer : ILootConditionBoolean.Serializer<ConditionCriticalHit>() {
 		override fun construct(expectedValue: Boolean) = ConditionCriticalHit(expectedValue)
 	}
 }

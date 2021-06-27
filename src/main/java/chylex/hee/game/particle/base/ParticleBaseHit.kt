@@ -1,8 +1,8 @@
 package chylex.hee.game.particle.base
 
-import net.minecraft.world.World
+import net.minecraft.client.world.ClientWorld
 
-abstract class ParticleBaseHit(world: World, posX: Double, posY: Double, posZ: Double, motX: Double, motY: Double, motZ: Double) : ParticleBase(world, posX, posY, posZ, motX, motY, motZ) {
+abstract class ParticleBaseHit(world: ClientWorld, posX: Double, posY: Double, posZ: Double, motX: Double, motY: Double, motZ: Double) : ParticleBase(world, posX, posY, posZ, motX, motY, motZ) {
 	init {
 		maxAge = (6.0 / (Math.random() * 0.8 + 0.6)).toInt().coerceAtLeast(1)
 		canCollide = false

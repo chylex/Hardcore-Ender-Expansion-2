@@ -6,7 +6,7 @@ import chylex.hee.game.world.structure.IStructureTrigger
 import chylex.hee.game.world.structure.IStructureWorld
 import net.minecraft.block.BlockState
 import net.minecraft.util.math.BlockPos
-import net.minecraft.world.IWorld
+import net.minecraft.world.IServerWorld
 
 class TransformedStructureWorld(private val wrapped: IStructureWorld, private val size: Size, private val transform: Transform) : IStructureWorld {
 	override val rand = wrapped.rand
@@ -34,7 +34,7 @@ class TransformedStructureWorld(private val wrapped: IStructureWorld, private va
 			wrappedInstance.setup(world, pos, this.transform.applyTo(transform))
 		}
 		
-		override fun realize(world: IWorld, pos: BlockPos, transform: Transform) {
+		override fun realize(world: IServerWorld, pos: BlockPos, transform: Transform) {
 			wrappedInstance.realize(world, pos, this.transform.applyTo(transform))
 		}
 		

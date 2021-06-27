@@ -12,8 +12,7 @@ object StructureFiles {
 	
 	private fun loadFromJar(path: String): StructureFile {
 		val stream = javaClass.getResourceAsStream("/data/${HEE.ID}/structure/$path")
-		val nbt = DataInputStream(stream).use(CompressedStreamTools::read)
-		
+		val nbt = DataInputStream(stream!!).use(CompressedStreamTools::read)
 		return StructureFile(nbt)
 	}
 	

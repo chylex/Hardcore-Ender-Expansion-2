@@ -21,7 +21,7 @@ class AITargetEyeContact<T : EntityLivingBase>(
 	fieldOfView: Float,
 	headRadius: Float,
 	private val minStareTicks: Int,
-) : AIBaseTargetFiltered<T>(entity, true, easilyReachableOnly, targetClass, targetPredicate) {
+) : AIBaseTargetFiltered<T>(entity, checkSight = true, easilyReachableOnly, targetClass, targetPredicate) {
 	private val fieldOfViewCos = cos((fieldOfView / 2F).toRadians())
 	private val headRadiusSq = square(headRadius)
 	private val headCenterOffset = headRadius * 0.5 // kinda arbitrary

@@ -17,9 +17,9 @@ import net.minecraft.world.Difficulty.PEACEFUL
 import kotlin.math.nextUp
 
 interface IDamageProcessor {
-	@JvmDefault fun setup(properties: DamageProperties.Writer) {}
-	@JvmDefault fun modifyDamage(amount: Float, target: Entity, properties: DamageProperties.Reader) = amount
-	@JvmDefault fun afterDamage(target: Entity, properties: DamageProperties.Reader) {}
+	fun setup(properties: DamageProperties.Writer) {}
+	fun modifyDamage(amount: Float, target: Entity, properties: DamageProperties.Reader) = amount
+	fun afterDamage(target: Entity, properties: DamageProperties.Reader) {}
 	
 	companion object {
 		

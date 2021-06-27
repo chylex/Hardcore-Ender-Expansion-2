@@ -2,6 +2,7 @@ package chylex.hee.game.entity.living
 
 import chylex.hee.game.entity.CustomCreatureType
 import chylex.hee.game.entity.EntityData
+import chylex.hee.game.entity.getAttributeInstance
 import chylex.hee.game.entity.living.behavior.EnderEyeAttack.KnockbackDash
 import chylex.hee.game.entity.living.behavior.EnderEyeAttack.Melee
 import chylex.hee.game.entity.living.behavior.EnderEyePhase
@@ -69,11 +70,9 @@ import net.minecraft.entity.EntitySize
 import net.minecraft.entity.EntityType
 import net.minecraft.entity.ILivingEntityData
 import net.minecraft.entity.Pose
-import net.minecraft.entity.SharedMonsterAttributes.ATTACK_DAMAGE
-import net.minecraft.entity.SharedMonsterAttributes.FLYING_SPEED
-import net.minecraft.entity.SharedMonsterAttributes.FOLLOW_RANGE
-import net.minecraft.entity.SharedMonsterAttributes.MAX_HEALTH
 import net.minecraft.entity.SpawnReason
+import net.minecraft.entity.ai.attributes.Attributes.ATTACK_DAMAGE
+import net.minecraft.entity.ai.attributes.Attributes.FOLLOW_RANGE
 import net.minecraft.entity.ai.controller.BodyController
 import net.minecraft.entity.monster.IMob
 import net.minecraft.nbt.CompoundNBT
@@ -84,11 +83,11 @@ import net.minecraft.util.DamageSource
 import net.minecraft.util.ResourceLocation
 import net.minecraft.util.math.AxisAlignedBB
 import net.minecraft.util.math.BlockPos
-import net.minecraft.util.math.Vec3d
+import net.minecraft.util.math.vector.Vector3d
 import net.minecraft.util.text.ITextComponent
 import net.minecraft.world.BossInfo
 import net.minecraft.world.DifficultyInstance
-import net.minecraft.world.IWorld
+import net.minecraft.world.IServerWorld
 import net.minecraft.world.World
 import net.minecraft.world.server.ServerBossInfo
 import net.minecraftforge.common.ForgeHooks
@@ -197,6 +196,8 @@ class EntityBossEnderEye(type: EntityType<EntityBossEnderEye>, world: World) : E
 		
 		health = maxHealth * 0.5F
 		bossInfo.percent = 0.5F
+		
+		experienceValue = 50
 	}
 	
 	override fun registerData() {
@@ -209,22 +210,8 @@ class EntityBossEnderEye(type: EntityType<EntityBossEnderEye>, world: World) : E
 		dataManager.register(DATA_ROTATE_TARGET_SPEED, DEFAULT_SLERP_ADJUSTMENT_SPEED)
 	}
 	
-	override fun registerAttributes() {
-		super.registerAttributes()
-		
-		attributes.registerAttribute(ATTACK_DAMAGE)
-		attributes.registerAttribute(FLYING_SPEED)
-		
-		getAttribute(MAX_HEALTH).baseValue = 300.0
-		getAttribute(ATTACK_DAMAGE).baseValue = 4.0
-		getAttribute(FLYING_SPEED).baseValue = 0.093
-		getAttribute(FOLLOW_RANGE).baseValue = 16.0
-		
-		experienceValue = 50
-	}
-	
 	private fun updateDemonLevelAttributes() {
-		getAttribute(ATTACK_DAMAGE).baseValue = 4.0 * damageMultiplier
+		getAttributeInstance(ATTACK_DAMAGE).baseValue = 4.0 * damageMultiplier
 		experienceValue = (50 * experienceMultiplier).floorToInt()
 	}
 	
@@ -237,7 +224,7 @@ class EntityBossEnderEye(type: EntityType<EntityBossEnderEye>, world: World) : E
 		
 		if (world.isRemote) {
 			val currentArmAngle = clientArmAngle.currentValue
-			val targetArmAngle = when(armPosition) {
+			val targetArmAngle = when (armPosition) {
 				ARMS_ATTACK -> rotationPitch - 180F
 				ARMS_HUG    -> rotationPitch - 90F
 				else        -> 0F
@@ -282,8 +269,8 @@ class EntityBossEnderEye(type: EntityType<EntityBossEnderEye>, world: World) : E
 			else {
 				val distanceFromTargetSq = getDistanceSq(currentTarget)
 				
-				if (distanceFromTargetSq > square(getAttribute(FOLLOW_RANGE).value * 0.75)) {
-					val closerRange = getAttribute(FOLLOW_RANGE).value * 0.375
+				if (distanceFromTargetSq > square(getAttributeValue(FOLLOW_RANGE) * 0.75)) {
+					val closerRange = getAttributeValue(FOLLOW_RANGE) * 0.375
 					val closerCandidate = rand.nextItemOrNull(world.selectVulnerableEntities.inRange<EntityPlayer>(posVec, closerRange).filter(::canEntityBeSeen))
 					
 					if (closerCandidate != null) {
@@ -319,7 +306,7 @@ class EntityBossEnderEye(type: EntityType<EntityBossEnderEye>, world: World) : E
 		rotationYawHead = rotationYaw
 	}
 	
-	override fun onInitialSpawn(world: IWorld, difficulty: DifficultyInstance, reason: SpawnReason, data: ILivingEntityData?, nbt: CompoundNBT?): ILivingEntityData? {
+	override fun onInitialSpawn(world: IServerWorld, difficulty: DifficultyInstance, reason: SpawnReason, data: ILivingEntityData?, nbt: CompoundNBT?): ILivingEntityData? {
 		val yaw = ((rotationYaw + 45F).toInt() / 90) * 90F
 		setPositionAndRotation(posX, posY, posZ, yaw, 0F)
 		
@@ -388,7 +375,7 @@ class EntityBossEnderEye(type: EntityType<EntityBossEnderEye>, world: World) : E
 			return attacker
 		}
 		
-		val range = getAttribute(FOLLOW_RANGE).value
+		val range = getAttributeValue(FOLLOW_RANGE)
 		val targets = world.selectVulnerableEntities.inRange<EntityPlayer>(posVec, range).filter(::canEntityBeSeen)
 		
 		return rng.nextItemOrNull(targets).also { attackTarget = it }
@@ -412,7 +399,7 @@ class EntityBossEnderEye(type: EntityType<EntityBossEnderEye>, world: World) : E
 		
 		lastHitKnockbackMultiplier = attack.dealtKnockbackMultiplier
 		val type = attack.dealtDamageType
-		val amount = getAttribute(ATTACK_DAMAGE).value.toFloat() * attack.dealtDamageMultiplier
+		val amount = getAttributeValue(ATTACK_DAMAGE).toFloat() * attack.dealtDamageMultiplier
 		
 		return type.dealToFrom(amount, entity, this)
 	}
@@ -452,7 +439,7 @@ class EntityBossEnderEye(type: EntityType<EntityBossEnderEye>, world: World) : E
 		val ratio = Vec3.xz(target.posX, target.posZ).directionTowards(Vec3.xz(posX, posZ)).scale(strength)
 		
 		if (target is EntityLivingBase) {
-			target.knockBack(this, strength, ratio.x, ratio.z)
+			target.applyKnockback(strength, ratio.x, ratio.z)
 			
 			if (target is EntityPlayer) {
 				PacketClientLaunchInstantly(target, target.motion).sendToPlayer(target)
@@ -463,7 +450,7 @@ class EntityBossEnderEye(type: EntityType<EntityBossEnderEye>, world: World) : E
 		}
 	}
 	
-	fun getLaserHit(partialTicks: Float): Vec3d {
+	fun getLaserHit(partialTicks: Float): Vector3d {
 		return entity.pick(LASER_DISTANCE, partialTicks, false).hitVec
 	}
 	
@@ -497,7 +484,7 @@ class EntityBossEnderEye(type: EntityType<EntityBossEnderEye>, world: World) : E
 		return EntityBodyHeadOnly(this)
 	}
 	
-	override fun moveRelative(friction: Float, dir: Vec3d) {
+	override fun moveRelative(friction: Float, dir: Vector3d) {
 		super.moveRelative(EntityMoveFlyingForward.AIR_FRICTION, dir)
 	}
 	
@@ -509,8 +496,8 @@ class EntityBossEnderEye(type: EntityType<EntityBossEnderEye>, world: World) : E
 		return PushReaction.BLOCK
 	}
 	
-	override fun getCollisionBoundingBox(): AxisAlignedBB? {
-		return boundingBox.takeIf { isAlive && isSleeping }
+	override fun func_241845_aY(): Boolean { // RENAME canBeCollidedWith
+		return isAlive && isSleeping
 	}
 	
 	override fun collideWithEntity(entity: Entity) {}
@@ -520,7 +507,7 @@ class EntityBossEnderEye(type: EntityType<EntityBossEnderEye>, world: World) : E
 		super.addVelocity(x * KNOCKBACK_MP, y * KNOCKBACK_MP, z * KNOCKBACK_MP)
 	}
 	
-	override fun knockBack(entity: Entity, strength: Float, xRatio: Double, zRatio: Double) {
+	override fun applyKnockback(strength: Float, ratioX: Double, ratioZ: Double) {
 		val bossPhase = bossPhase
 		
 		if (isSleeping || bossPhase !is Attacking || !bossPhase.currentAttack.canTakeKnockback) {
@@ -528,13 +515,13 @@ class EntityBossEnderEye(type: EntityType<EntityBossEnderEye>, world: World) : E
 		}
 		
 		if (bossPhase.currentAttack is Melee && rand.nextInt(knockbackDashChance) == 0 && lastKnockbackDashTime != world.totalTime) {
-			super.knockBack(entity, strength * 1.4F, xRatio, zRatio)
+			super.applyKnockback(strength * 1.4F, ratioX, ratioZ)
 			bossPhase.currentAttack = KnockbackDash()
 			knockbackDashChance = 7
 			lastKnockbackDashTime = world.totalTime
 		}
-		else if (!ForgeHooks.onLivingKnockBack(this, entity, strength, xRatio, zRatio).isCanceled) {
-			motion = motion.add(Vec3.xz(-xRatio, -zRatio).normalize().scale(KNOCKBACK_MP).withY(0.005))
+		else if (!ForgeHooks.onLivingKnockBack(this, strength, ratioX, ratioZ).isCanceled) {
+			motion = motion.add(Vec3.xz(-ratioX, -ratioZ).normalize().scale(KNOCKBACK_MP).withY(0.005))
 			
 			if (motionY > 0.05) {
 				motionY = 0.05
@@ -616,7 +603,7 @@ class EntityBossEnderEye(type: EntityType<EntityBossEnderEye>, world: World) : E
 		return if (world.isRemote) isSleepingClientProp else bossPhase is SleepingPhase
 	}
 	
-	override fun isNonBoss(): Boolean {
+	override fun canChangeDimension(): Boolean {
 		return false
 	}
 	
@@ -636,7 +623,7 @@ class EntityBossEnderEye(type: EntityType<EntityBossEnderEye>, world: World) : E
 		putBoolean(SLEEPING_TAG, isSleeping)
 		putByte(DEMON_LEVEL_TAG, demonLevel)
 		
-		putString(PHASE_TAG, when(bossPhase) {
+		putString(PHASE_TAG, when (bossPhase) {
 			Hibernated   -> "Hibernated"
 			is OpenEye   -> "OpenEye"
 			is Spawners  -> "Spawners"
@@ -660,7 +647,7 @@ class EntityBossEnderEye(type: EntityType<EntityBossEnderEye>, world: World) : E
 		realMaxHealth = getFloat(REAL_MAX_HEALTH_TAG)
 		demonLevel = getByte(DEMON_LEVEL_TAG)
 		
-		bossPhase = when(getString(PHASE_TAG)) {
+		bossPhase = when (getString(PHASE_TAG)) {
 			"Hibernated" -> Hibernated
 			"OpenEye"    -> OpenEye()
 			"Spawners"   -> Spawners(mutableListOf(), mutableListOf(), mutableListOf(), 0)

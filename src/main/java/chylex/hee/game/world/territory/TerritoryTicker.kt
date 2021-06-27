@@ -1,6 +1,7 @@
 package chylex.hee.game.world.territory
 
 import chylex.hee.HEE
+import chylex.hee.game.world.isEndDimension
 import chylex.hee.game.world.territory.storage.TerritoryGlobalStorage
 import chylex.hee.game.world.totalTime
 import chylex.hee.network.client.PacketClientTerritoryEnvironment
@@ -8,6 +9,7 @@ import chylex.hee.system.forge.EventPriority
 import chylex.hee.system.forge.SubscribeAllEvents
 import chylex.hee.system.forge.SubscribeEvent
 import net.minecraft.world.World
+import net.minecraft.world.server.ServerWorld
 import net.minecraftforge.event.entity.player.PlayerEvent.PlayerChangedDimensionEvent
 import net.minecraftforge.event.entity.player.PlayerEvent.PlayerLoggedOutEvent
 import net.minecraftforge.event.world.WorldEvent
@@ -22,7 +24,7 @@ object TerritoryTicker {
 		var lastTickTime = -1L
 	}
 	
-	fun onWorldTick(world: World) {
+	fun onWorldTick(world: ServerWorld) {
 		val currentTime = world.totalTime
 		
 		if (currentTime % 600L == 0L) {
@@ -60,11 +62,9 @@ object TerritoryTicker {
 	
 	@SubscribeEvent
 	fun onWorldSave(e: WorldEvent.Save) {
-		if (e.world.dimension.type !== HEE.dim) {
-			return
+		if (e.world.let { it is World && it.isEndDimension }) {
+			active.clear()
 		}
-		
-		active.clear()
 	}
 	
 	@SubscribeEvent(priority = EventPriority.LOWEST)

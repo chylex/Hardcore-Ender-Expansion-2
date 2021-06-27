@@ -14,8 +14,8 @@ import net.minecraft.util.Rotation.COUNTERCLOCKWISE_90
 import net.minecraft.util.Rotation.NONE
 import net.minecraft.util.math.AxisAlignedBB
 import net.minecraft.util.math.BlockPos
-import net.minecraft.util.math.Vec3d
-import net.minecraft.util.math.Vec3i
+import net.minecraft.util.math.vector.Vector3d
+import net.minecraft.util.math.vector.Vector3i
 
 data class Size(val x: Int, val y: Int, val z: Int) {
 	constructor(xyz: Int) : this(xyz, xyz, xyz)
@@ -62,7 +62,7 @@ data class Size(val x: Int, val y: Int, val z: Int) {
 		CLOCKWISE_90, COUNTERCLOCKWISE_90 -> Size(z, y, x)
 	}
 	
-	fun expand(by: Vec3i): Size {
+	fun expand(by: Vector3i): Size {
 		return Size(x + by.x, y + by.y, z + by.z)
 	}
 	
@@ -70,7 +70,7 @@ data class Size(val x: Int, val y: Int, val z: Int) {
 		return BoundingBox(offset, offset.add(maxX, maxY, maxZ))
 	}
 	
-	fun toCenteredBoundingBox(offset: Vec3d): AxisAlignedBB {
+	fun toCenteredBoundingBox(offset: Vector3d): AxisAlignedBB {
 		val (x, y, z) = offset
 		return AxisAlignedBB(x - centerX, y - centerY, z - centerZ, x + centerX, y + centerY, z + centerZ)
 	}

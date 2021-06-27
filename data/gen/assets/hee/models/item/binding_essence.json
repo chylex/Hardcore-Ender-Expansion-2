@@ -1,5 +1,5 @@
 {
-  "parent": "item/generated",
+  "parent": "minecraft:item/generated",
   "textures": {
     "layer0": "hee:item/binding_essence_primary",
     "layer1": "hee:item/binding_essence_secondary",

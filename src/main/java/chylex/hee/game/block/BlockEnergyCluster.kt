@@ -2,6 +2,7 @@ package chylex.hee.game.block
 
 import chylex.hee.game.block.entity.TileEntityEnergyCluster
 import chylex.hee.game.block.properties.BlockBuilder
+import chylex.hee.game.mechanics.energy.IClusterGenerator
 import chylex.hee.game.mechanics.energy.IEnergyQuantity
 import chylex.hee.game.mechanics.instability.Instability
 import chylex.hee.game.world.allInCenteredSphereMutable
@@ -20,7 +21,7 @@ import net.minecraft.block.BlockRenderType.INVISIBLE
 import net.minecraft.block.BlockState
 import net.minecraft.client.particle.ParticleManager
 import net.minecraft.entity.Entity
-import net.minecraft.entity.IProjectile
+import net.minecraft.entity.projectile.ProjectileEntity
 import net.minecraft.item.ItemStack
 import net.minecraft.tileentity.TileEntity
 import net.minecraft.util.math.AxisAlignedBB
@@ -33,6 +34,7 @@ import net.minecraft.world.Explosion.Mode
 import net.minecraft.world.IBlockReader
 import net.minecraft.world.World
 import net.minecraft.world.server.ServerWorld
+import java.util.Random
 import kotlin.math.pow
 
 class BlockEnergyCluster(builder: BlockBuilder) : BlockSimpleShaped(builder, AxisAlignedBB(0.2, 0.2, 0.2, 0.8, 0.8, 0.8)) {
@@ -65,7 +67,7 @@ class BlockEnergyCluster(builder: BlockBuilder) : BlockSimpleShaped(builder, Axi
 	}
 	
 	override fun createTileEntity(state: BlockState, world: IBlockReader): TileEntity {
-		return TileEntityEnergyCluster()
+		return TileEntityEnergyCluster().also { it.loadClusterSnapshot(IClusterGenerator.ENERGY_SHRINE.generate(Random()), inactive = false) }
 	}
 	
 	override fun onBlockHarvested(world: World, pos: BlockPos, state: BlockState, player: EntityPlayer) {
@@ -100,7 +102,7 @@ class BlockEnergyCluster(builder: BlockBuilder) : BlockSimpleShaped(builder, Axi
 	}
 	
 	override fun onEntityCollision(state: BlockState, world: World, pos: BlockPos, entity: Entity) {
-		if (entity is IProjectile) {
+		if (entity is ProjectileEntity) {
 			pos.removeBlock(world)
 		}
 	}

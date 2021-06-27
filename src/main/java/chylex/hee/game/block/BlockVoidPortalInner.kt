@@ -1,6 +1,5 @@
 package chylex.hee.game.block
 
-import chylex.hee.HEE
 import chylex.hee.game.block.BlockVoidPortalInner.Type.HUB
 import chylex.hee.game.block.BlockVoidPortalInner.Type.RETURN_ACTIVE
 import chylex.hee.game.block.entity.TileEntityPortalInner
@@ -9,6 +8,7 @@ import chylex.hee.game.block.properties.BlockBuilder
 import chylex.hee.game.block.properties.Property
 import chylex.hee.game.entity.Teleporter
 import chylex.hee.game.entity.Teleporter.FxRange.Silent
+import chylex.hee.game.entity.isInEndDimension
 import chylex.hee.game.mechanics.causatum.EnderCausatum
 import chylex.hee.game.mechanics.portal.DimensionTeleporter
 import chylex.hee.game.mechanics.portal.EntityPortalContact
@@ -39,7 +39,6 @@ import net.minecraft.util.IStringSerializable
 import net.minecraft.util.math.BlockPos
 import net.minecraft.world.IBlockReader
 import net.minecraft.world.World
-import net.minecraft.world.dimension.DimensionType
 
 class BlockVoidPortalInner(builder: BlockBuilder) : BlockAbstractPortal(builder) {
 	companion object {
@@ -72,7 +71,7 @@ class BlockVoidPortalInner(builder: BlockBuilder) : BlockAbstractPortal(builder)
 		RETURN_ACTIVE("return_active"),
 		RETURN_INACTIVE("return_inactive");
 		
-		override fun getName(): String {
+		override fun getString(): String {
 			return serializableName
 		}
 	}
@@ -146,14 +145,14 @@ class BlockVoidPortalInner(builder: BlockBuilder) : BlockAbstractPortal(builder)
 				val info = pos.closestTickingTile<TileEntityVoidPortalStorage>(world, MAX_DISTANCE_FROM_FRAME)?.prepareSpawnPoint(entity)
 				
 				if (info != null) {
-					if (entity.dimension === HEE.dim) {
+					if (entity.isInEndDimension) {
 						DimensionTeleporter.LastHubPortal.updateForEntity(entity, null)
 						updateSpawnPortal(entity, pos)
 						teleportEntity(entity, info)
 					}
 					else {
 						DimensionTeleporter.LastHubPortal.updateForEntity(entity, pos)
-						DimensionTeleporter.changeDimension(entity, DimensionType.THE_END, DimensionTeleporter.EndTerritoryPortal(info))
+						DimensionTeleporter.changeDimension(entity, World.THE_END, DimensionTeleporter.EndTerritoryPortal(info))
 					}
 				}
 			}

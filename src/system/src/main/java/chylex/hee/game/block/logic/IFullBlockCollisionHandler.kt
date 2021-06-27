@@ -23,7 +23,7 @@ interface IFullBlockCollisionHandler {
 				val world = e.world
 				
 				for(entity in world.selectAllEntities) {
-					if (entity.onGround) {
+					if (entity.isOnGround) {
 						val pos = Pos(entity.posX, entity.posY - 0.01, entity.posZ)
 						val block = pos.getBlock(world)
 						

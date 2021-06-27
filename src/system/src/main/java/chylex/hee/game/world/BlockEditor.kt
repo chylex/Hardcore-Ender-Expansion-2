@@ -35,7 +35,7 @@ object BlockEditor {
 		
 		if (!player.canPlayerEdit(targetPos, clickedFacing, stack) ||
 		    !state.isValidPosition(world, targetPos) ||
-		    !world.func_226663_a_(state, targetPos, ISelectionContext.dummy()) // RENAME checks entity collisions
+		    !world.placedBlockCollides(state, targetPos, ISelectionContext.dummy())
 		) {
 			return null
 		}

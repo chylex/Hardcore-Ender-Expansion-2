@@ -5,7 +5,7 @@ import chylex.hee.system.math.Vec3
 import chylex.hee.system.math.addY
 import chylex.hee.system.math.ceilToInt
 import chylex.hee.system.math.floorToInt
-import net.minecraft.util.math.Vec3d
+import net.minecraft.util.math.vector.Vector3d
 import java.util.Random
 import kotlin.math.abs
 import kotlin.math.pow
@@ -160,13 +160,13 @@ fun Random.nextItem(collection: IntArray, default: Int): Int {
 /**
  * Returns a random point inside a sphere, represented by a vector.
  */
-fun Random.nextVector(scale: Double): Vec3d {
+fun Random.nextVector(scale: Double): Vector3d {
 	return Vec(this.nextDouble() * 2.0 - 1.0, this.nextDouble() * 2.0 - 1.0, this.nextDouble() * 2.0 - 1.0).normalize().scale(scale)
 }
 
 /**
  * Returns a random point inside a circle, represented by the XZ components of a vector, with its Y component equal to [y].
  */
-fun Random.nextVector2(xz: Double, y: Double): Vec3d {
+fun Random.nextVector2(xz: Double, y: Double): Vector3d {
 	return Vec3.xz(this.nextDouble() * 2.0 - 1.0, this.nextDouble() * 2.0 - 1.0).normalize().scale(xz).addY(y)
 }

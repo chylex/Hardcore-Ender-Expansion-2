@@ -14,6 +14,8 @@ import chylex.hee.game.mechanics.damage.Damage
 import chylex.hee.game.mechanics.damage.IDamageProcessor.Companion.ALL_PROTECTIONS_WITH_SHIELD
 import chylex.hee.game.mechanics.damage.IDamageProcessor.Companion.PEACEFUL_EXCLUSION
 import chylex.hee.game.world.Pos
+import chylex.hee.game.world.getBlocksInside
+import chylex.hee.game.world.isAir
 import chylex.hee.init.ModEntities
 import chylex.hee.system.forge.EventPriority
 import chylex.hee.system.forge.SubscribeAllEvents
@@ -39,9 +41,9 @@ import net.minecraft.util.math.EntityRayTraceResult
 import net.minecraft.util.math.RayTraceContext
 import net.minecraft.util.math.RayTraceResult
 import net.minecraft.util.math.RayTraceResult.Type
-import net.minecraft.util.math.Vec3d
 import net.minecraft.util.math.shapes.VoxelShape
 import net.minecraft.util.math.shapes.VoxelShapes
+import net.minecraft.util.math.vector.Vector3d
 import net.minecraft.world.IBlockReader
 import net.minecraft.world.World
 import net.minecraftforge.event.entity.EntityJoinWorldEvent
@@ -50,20 +52,18 @@ import net.minecraftforge.fml.common.registry.IEntityAdditionalSpawnData
 import net.minecraftforge.fml.network.NetworkHooks
 
 class EntityProjectileEnderPearl(type: EntityType<EntityProjectileEnderPearl>, world: World) : EntityEnderPearl(type, world), IEntityAdditionalSpawnData {
-	constructor(thrower: EntityLivingBase, infusions: InfusionList) : this(ModEntities.ENDER_PEARL, thrower.world) {
-		owner = thrower
-		ownerId = thrower.uniqueID
-		
+	constructor(thrower: Entity, infusions: InfusionList) : this(ModEntities.ENDER_PEARL, thrower.world) {
+		shooter = thrower
 		loadInfusions(infusions)
 		setPosition(thrower.posX, thrower.posY + thrower.eyeHeight - 0.1F, thrower.posZ)
-		shoot(thrower, thrower.rotationPitch, thrower.rotationYaw, 0F, 1.5F, 1F)
+		setDirectionAndMovement(thrower, thrower.rotationPitch, thrower.rotationYaw, 0F, 1.5F, 1F)
 	}
 	
 	@SubscribeAllEvents(modid = HEE.ID)
 	companion object {
 		private val DAMAGE_HIT_ENTITY = Damage(PEACEFUL_EXCLUSION, *ALL_PROTECTIONS_WITH_SHIELD)
 		
-		class RayTraceIndestructible(startVec: Vec3d, endVec: Vec3d, entity: Entity) : RayTraceContext(startVec, endVec, BlockMode.COLLIDER, FluidMode.NONE, entity) {
+		class RayTraceIndestructible(startVec: Vector3d, endVec: Vector3d, entity: Entity) : RayTraceContext(startVec, endVec, BlockMode.COLLIDER, FluidMode.NONE, entity) {
 			override fun getBlockShape(state: BlockState, world: IBlockReader, pos: BlockPos): VoxelShape {
 				return if (state.getBlockHardness(world, pos) == INDESTRUCTIBLE_HARDNESS)
 					VoxelShapes.fullCube()
@@ -80,7 +80,7 @@ class EntityProjectileEnderPearl(type: EntityType<EntityProjectileEnderPearl>, w
 			
 			if (original is EntityEnderPearl && original !is EntityProjectileEnderPearl) {
 				e.isCanceled = true
-				e.world.addEntity(EntityProjectileEnderPearl(original.thrower!!, InfusionList.EMPTY))
+				e.world.addEntity(EntityProjectileEnderPearl(original.shooter!!, InfusionList.EMPTY))
 			}
 		}
 		
@@ -107,7 +107,7 @@ class EntityProjectileEnderPearl(type: EntityType<EntityProjectileEnderPearl>, w
 		this.noClip = infusions.has(PHASING)
 		
 		if (infusions.has(RIDING)) {
-			thrower?.startRiding(this, true)
+			shooter?.startRiding(this, true)
 		}
 	}
 	
@@ -134,8 +134,8 @@ class EntityProjectileEnderPearl(type: EntityType<EntityProjectileEnderPearl>, w
 		loadInfusions(list)
 	}
 	
-	override fun shoot(thrower: Entity, rotationPitch: Float, rotationYaw: Float, pitchOffset: Float, velocity: Float, inaccuracy: Float) {
-		super.shoot(thrower, rotationPitch, rotationYaw, pitchOffset, velocity, inaccuracy)
+	override fun shoot(x: Double, y: Double, z: Double, velocity: Float, inaccuracy: Float) {
+		super.shoot(x, y, z, velocity, inaccuracy)
 		
 		if (infusions.has(SLOW)) {
 			motion = motion.scale(0.1)
@@ -161,7 +161,7 @@ class EntityProjectileEnderPearl(type: EntityType<EntityProjectileEnderPearl>, w
 				hasPhasingFinished = true
 				posVec = prevPos
 			}
-			else if (!world.checkBlockCollision(boundingBox.grow(0.15, 0.15, 0.15))) {
+			else if (boundingBox.grow(0.15, 0.15, 0.15).getBlocksInside().all { it.isAir(world) }) {
 				hasPhasingFinished = true
 			}
 			
@@ -177,7 +177,7 @@ class EntityProjectileEnderPearl(type: EntityType<EntityProjectileEnderPearl>, w
 			return
 		}
 		
-		val thrower: EntityLivingBase? = thrower
+		val thrower: Entity? = shooter
 		val hitEntity: Entity? = (result as? EntityRayTraceResult)?.entity
 		
 		if (hitEntity != null && hitEntity === thrower) {
@@ -199,7 +199,7 @@ class EntityProjectileEnderPearl(type: EntityType<EntityProjectileEnderPearl>, w
 					teleport.toLocation(thrower, posVec)
 				}
 			}
-			else if (thrower != null) {
+			else if (thrower is EntityLivingBase) {
 				teleport.toLocation(thrower, posVec)
 			}
 		}
@@ -208,7 +208,7 @@ class EntityProjectileEnderPearl(type: EntityType<EntityProjectileEnderPearl>, w
 	override fun removePassenger(passenger: Entity) {
 		super.removePassenger(passenger)
 		
-		if (passenger === thrower && isAlive) {
+		if (passenger === shooter && isAlive) {
 			onImpact(BlockRayTraceResult.createMiss(posVec, UP, Pos(this)))
 		}
 	}

@@ -21,10 +21,7 @@ import chylex.hee.system.serialization.heeTag
 import chylex.hee.system.serialization.use
 import net.minecraft.entity.EntityPredicate
 import net.minecraft.entity.EntityType
-import net.minecraft.entity.SharedMonsterAttributes.ATTACK_DAMAGE
-import net.minecraft.entity.SharedMonsterAttributes.FOLLOW_RANGE
-import net.minecraft.entity.SharedMonsterAttributes.MAX_HEALTH
-import net.minecraft.entity.SharedMonsterAttributes.MOVEMENT_SPEED
+import net.minecraft.entity.ai.attributes.Attributes.FOLLOW_RANGE
 import net.minecraft.util.ResourceLocation
 import net.minecraft.util.math.AxisAlignedBB
 import net.minecraft.util.math.RayTraceContext
@@ -52,14 +49,7 @@ class EntityMobAngryEnderman(type: EntityType<EntityMobAngryEnderman>, world: Wo
 	override val teleportCooldown = 35
 	private var despawnCooldown = 300
 	
-	override fun registerAttributes() {
-		super.registerAttributes()
-		
-		getAttribute(MAX_HEALTH).baseValue = 40.0
-		getAttribute(ATTACK_DAMAGE).baseValue = 7.0
-		getAttribute(MOVEMENT_SPEED).baseValue = 0.315
-		getAttribute(FOLLOW_RANGE).baseValue = 32.0
-		
+	init {
 		experienceValue = 7
 	}
 	
@@ -84,11 +74,11 @@ class EntityMobAngryEnderman(type: EntityType<EntityMobAngryEnderman>, world: Wo
 		if (currentTarget != null) {
 			val distanceSq = getDistanceSq(currentTarget)
 			
-			if (distanceSq > square(getAttribute(FOLLOW_RANGE).value * 0.75) && !entitySenses.canSee(currentTarget)) {
+			if (distanceSq > square(getAttributeValue(FOLLOW_RANGE) * 0.75) && !entitySenses.canSee(currentTarget)) {
 				attackTarget = null
 			}
 			else if (distanceSq > AGGRO_DISTANCE_SQ) {
-				val predicate = EntityPredicate().setLineOfSiteRequired()
+				val predicate = EntityPredicate()
 				
 				val alternativeTarget = world
 					.selectVulnerableEntities

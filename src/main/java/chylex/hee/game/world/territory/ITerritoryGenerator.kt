@@ -9,11 +9,9 @@ import net.minecraft.block.Blocks
 interface ITerritoryGenerator {
 	val segmentSize: Size
 	
-	@JvmDefault
 	val defaultBlock: Block
 		get() = Blocks.AIR
 	
-	@JvmDefault
 	val groundBlock: Block
 		get() = Blocks.END_STONE
 	

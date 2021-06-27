@@ -52,7 +52,7 @@ import net.minecraft.entity.Entity
 import net.minecraft.util.SoundCategory
 import net.minecraft.util.math.AxisAlignedBB
 import net.minecraft.util.math.BlockPos
-import net.minecraft.util.math.Vec3d
+import net.minecraft.util.math.vector.Vector3d
 import net.minecraftforge.common.util.INBTSerializable
 import java.util.Random
 import java.util.UUID
@@ -181,7 +181,7 @@ class EndermanTeleportHandler(private val enderman: EntityMobAbstractEnderman) :
 		return false
 	}
 	
-	private fun checkPositionSuitable(target: Vec3d): Boolean {
+	private fun checkPositionSuitable(target: Vector3d): Boolean {
 		val pos = Pos(target)
 		
 		if (!pos.isLoaded(world) || !pos.down().blocksMovement(world)) {
@@ -203,11 +203,11 @@ class EndermanTeleportHandler(private val enderman: EntityMobAbstractEnderman) :
 		return enderman.canTeleportTo(aabb)
 	}
 	
-	private fun teleportCheckLocation(teleporter: Teleporter, target: Vec3d): Boolean {
+	private fun teleportCheckLocation(teleporter: Teleporter, target: Vector3d): Boolean {
 		return checkPositionSuitable(target) && teleporter.toLocation(enderman, target)
 	}
 	
-	private fun getPositionInsideBlock(target: BlockPos): Vec3d {
+	private fun getPositionInsideBlock(target: BlockPos): Vector3d {
 		val xzMaxOffset = 0.5F - (enderman.width * 0.5F)
 		
 		return Vec(
@@ -223,7 +223,7 @@ class EndermanTeleportHandler(private val enderman: EntityMobAbstractEnderman) :
 	
 	// General teleports
 	
-	fun teleportTo(target: Vec3d): Boolean {
+	fun teleportTo(target: Vector3d): Boolean {
 		if (!checkCooldown()) {
 			return false
 		}
@@ -259,7 +259,7 @@ class EndermanTeleportHandler(private val enderman: EntityMobAbstractEnderman) :
 		
 		val targetVec = target.posVec
 		
-		for(attempt in 1..50) {
+		for (attempt in 1..50) {
 			val dir = Vec3.fromYaw(target.rotationYaw + rand.nextFloat(angleRange))
 			val distance = rand.nextFloat(distanceRange)
 			
@@ -281,7 +281,7 @@ class EndermanTeleportHandler(private val enderman: EntityMobAbstractEnderman) :
 		
 		val endermanPos = Pos(enderman)
 		
-		for(attempt in 1..25) {
+		for (attempt in 1..25) {
 			val (x, y, z) = rand.nextVector2(xz = rand.nextFloat(distanceRange), y = rand.nextFloat(-24.0, 48.0))
 			val targetPos = findTop(endermanPos.add(x, y, z), maxDecreaseY = 24)
 			
@@ -330,12 +330,12 @@ class EndermanTeleportHandler(private val enderman: EntityMobAbstractEnderman) :
 			endermanPos.add(perpendicularVec.scale(it * dodgeDist)).squareDistanceTo(dodgePos) + (rand.nextDouble() * 0.1)
 		})
 		
-		for(attempt in 1..3) {
+		for (attempt in 1..3) {
 			val basePos = endermanPos
 				.add(perpendicularVec.scale(dir * rand.nextFloat(dodgeDist, dodgeDist + 0.4)))
 				.add(rand.nextVector2(xz = rand.nextFloat(0.0, 0.15), y = 1.5))
 			
-			for(offset in 0..2) {
+			for (offset in 0..2) {
 				val targetPos = Vec(basePos.x, basePos.y.floorToInt() - offset + 0.01, basePos.z)
 				
 				if (teleportCheckLocation(TELEPORTER_WEAK, targetPos)) {
@@ -356,7 +356,7 @@ class EndermanTeleportHandler(private val enderman: EntityMobAbstractEnderman) :
 		val endermanVec = enderman.posVec
 		val diffVec = endermanVec.directionTowards(target.posVec)
 		
-		for(attempt in 1..50) {
+		for (attempt in 1..50) {
 			val dir = diffVec.rotateYaw(rand.nextFloat(angleRange).toRadians())
 			val distance = rand.nextFloat(distanceRange)
 			

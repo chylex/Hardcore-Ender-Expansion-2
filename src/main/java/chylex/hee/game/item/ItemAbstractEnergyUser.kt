@@ -1,6 +1,7 @@
 package chylex.hee.game.item
 
 import chylex.hee.game.block.entity.TileEntityEnergyCluster
+import chylex.hee.game.entity.REACH_DISTANCE
 import chylex.hee.game.inventory.heeTag
 import chylex.hee.game.inventory.heeTagOrNull
 import chylex.hee.game.mechanics.energy.IEnergyQuantity
@@ -182,7 +183,7 @@ abstract class ItemAbstractEnergyUser(properties: Properties) : Item(properties)
 			if (hasKey(CLUSTER_POS_TAG)) {
 				removeClusterTags(this)
 			}
-			else if (pos.distanceTo(player) <= player.getAttribute(EntityPlayer.REACH_DISTANCE).value) {
+			else if (pos.distanceTo(player) <= player.getAttributeValue(REACH_DISTANCE)) {
 				putPos(CLUSTER_POS_TAG, pos)
 				putByte(CLUSTER_TICK_OFFSET_TAG, (4L - (world.totalTime % 4L)).toByte())
 			}
@@ -203,7 +204,7 @@ abstract class ItemAbstractEnergyUser(properties: Properties) : Item(properties)
 				
 				if ((isSelected || entity.getHeldItem(OFF_HAND) === stack) &&
 				    getShort(ENERGY_LEVEL_TAG) < calculateInternalEnergyCapacity(stack) &&
-				    pos.distanceTo(entity) <= entity.getAttribute(EntityPlayer.REACH_DISTANCE).value &&
+				    pos.distanceTo(entity) <= entity.getAttributeValue(REACH_DISTANCE) &&
 				    tile != null &&
 				    tile.drainEnergy(Units(1))
 				) {

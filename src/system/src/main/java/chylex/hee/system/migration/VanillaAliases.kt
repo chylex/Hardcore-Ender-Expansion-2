@@ -6,7 +6,6 @@ import net.minecraft.potion.Effects
 import net.minecraft.potion.Potion
 import net.minecraft.potion.Potions
 import net.minecraft.util.SoundEvents
-import net.minecraft.util.math.BlockPos
 
 typealias Sounds = SoundEvents
 typealias Potion = Effect
@@ -14,8 +13,6 @@ typealias Potions = Effects
 typealias PotionType = Potion
 typealias PotionTypes = Potions
 typealias Enchantments = Enchantments
-
-typealias MutableBlockPos = BlockPos.Mutable
 
 typealias BlockAbstractGlass = net.minecraft.block.AbstractGlassBlock
 typealias BlockBed = net.minecraft.block.BedBlock
@@ -44,7 +41,6 @@ typealias BlockFurnace = net.minecraft.block.FurnaceBlock
 typealias BlockHorizontal = net.minecraft.block.HorizontalBlock
 typealias BlockHorizontalFace = net.minecraft.block.HorizontalFaceBlock
 typealias BlockLeaves = net.minecraft.block.LeavesBlock
-typealias BlockLog = net.minecraft.block.LogBlock
 typealias BlockMobSpawner = net.minecraft.block.SpawnerBlock
 typealias BlockRedstoneWire = net.minecraft.block.RedstoneWireBlock
 typealias BlockReed = net.minecraft.block.SugarCaneBlock

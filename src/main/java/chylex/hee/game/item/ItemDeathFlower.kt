@@ -8,12 +8,12 @@ import chylex.hee.game.inventory.heeTagOrNull
 import chylex.hee.game.world.getBlock
 import chylex.hee.game.world.setState
 import chylex.hee.init.ModBlocks
-import chylex.hee.system.facades.Resource
 import chylex.hee.system.facades.Stats
 import chylex.hee.system.migration.ItemBlock
 import chylex.hee.system.serialization.getIntegerOrNull
 import net.minecraft.block.Block
 import net.minecraft.block.Blocks
+import net.minecraft.item.IItemPropertyGetter
 import net.minecraft.item.ItemGroup
 import net.minecraft.item.ItemStack
 import net.minecraft.item.ItemUseContext
@@ -26,18 +26,16 @@ class ItemDeathFlower(block: Block, properties: Properties) : ItemBlock(block, p
 	companion object {
 		private const val LEVEL_TAG = "DeathLevel"
 		
+		val DEATH_LEVEL_PROPERTY = IItemPropertyGetter { stack, _, _ ->
+			getDeathLevel(stack).toFloat()
+		}
+		
 		fun getDeathLevel(stack: ItemStack): Int {
 			return stack.heeTagOrNull?.getIntegerOrNull(LEVEL_TAG) ?: IBlockDeathFlowerDecaying.MIN_LEVEL
 		}
 		
 		fun setDeathLevel(stack: ItemStack, level: Int) {
 			stack.heeTag.putInt(LEVEL_TAG, level)
-		}
-	}
-	
-	init {
-		addPropertyOverride(Resource.Custom("death_level")) { stack, _, _ ->
-			getDeathLevel(stack).toFloat()
 		}
 	}
 	

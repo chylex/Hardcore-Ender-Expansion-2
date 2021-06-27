@@ -12,7 +12,7 @@ import chylex.hee.init.ModBlocks
 import net.minecraft.block.Blocks
 import net.minecraft.data.DataGenerator
 import net.minecraftforge.client.model.generators.BlockStateProvider
-import net.minecraftforge.client.model.generators.ExistingFileHelper
+import net.minecraftforge.common.data.ExistingFileHelper
 
 class BlockStates(generator: DataGenerator, modid: String, existingFileHelper: ExistingFileHelper) : BlockStateProvider(generator, modid, existingFileHelper) {
 	override fun registerStatesAndModels() {

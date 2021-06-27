@@ -5,14 +5,14 @@ import chylex.hee.system.forge.Side
 import chylex.hee.system.forge.Sided
 import net.minecraft.client.particle.IAnimatedSprite
 import net.minecraft.client.particle.Particle
+import net.minecraft.client.world.ClientWorld
 import net.minecraft.particles.BasicParticleType
 import net.minecraft.particles.ParticleType
-import net.minecraft.world.World
 import java.util.Random
 
 interface IParticleMaker<T> {
 	@Sided(Side.CLIENT)
-	fun create(world: World, posX: Double, posY: Double, posZ: Double, motX: Double, motY: Double, motZ: Double, data: T?): Particle
+	fun create(world: ClientWorld, posX: Double, posY: Double, posZ: Double, motX: Double, motY: Double, motZ: Double, data: T?): Particle
 	
 	private companion object {
 		val rand = Random()
@@ -38,11 +38,11 @@ interface IParticleMaker<T> {
 	
 	abstract class Simple : WithData<Unit>() {
 		@Sided(Side.CLIENT)
-		final override fun create(world: World, posX: Double, posY: Double, posZ: Double, motX: Double, motY: Double, motZ: Double, data: Unit?): Particle {
+		final override fun create(world: ClientWorld, posX: Double, posY: Double, posZ: Double, motX: Double, motY: Double, motZ: Double, data: Unit?): Particle {
 			return create(world, posX, posY, posZ, motX, motY, motZ)
 		}
 		
 		@Sided(Side.CLIENT)
-		abstract fun create(world: World, posX: Double, posY: Double, posZ: Double, motX: Double, motY: Double, motZ: Double): Particle
+		abstract fun create(world: ClientWorld, posX: Double, posY: Double, posZ: Double, motX: Double, motY: Double, motZ: Double): Particle
 	}
 }

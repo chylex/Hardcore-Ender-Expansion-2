@@ -17,12 +17,10 @@ import net.minecraftforge.fml.network.NetworkHooks
 
 class EntityProjectileExperienceBottle(type: EntityType<out EntityXPBottle>, world: World) : EntityXPBottle(type, world) {
 	constructor(thrower: EntityLivingBase, stack: ItemStack) : this(ModEntities.EXPERIENCE_BOTTLE, thrower.world) {
-		owner = thrower
-		ownerId = thrower.uniqueID
-		
+		shooter = thrower
 		item = stack
 		setPosition(thrower.posX, thrower.posY + thrower.eyeHeight - 0.1F, thrower.posZ)
-		shoot(thrower, thrower.rotationPitch, thrower.rotationYaw, -20F, 0.7F, 1F)
+		setDirectionAndMovement(thrower, thrower.rotationPitch, thrower.rotationYaw, -20F, 0.7F, 1F)
 	}
 	
 	constructor(world: World, x: Double, y: Double, z: Double, stack: ItemStack) : this(ModEntities.EXPERIENCE_BOTTLE, world) {

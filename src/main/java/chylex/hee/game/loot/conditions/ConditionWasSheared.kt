@@ -1,10 +1,11 @@
 package chylex.hee.game.loot.conditions
 
-import chylex.hee.system.facades.Resource
+import chylex.hee.init.ModLoot
 import chylex.hee.system.migration.ItemShears
-import net.minecraft.world.storage.loot.LootContext
-import net.minecraft.world.storage.loot.LootParameter
-import net.minecraft.world.storage.loot.LootParameters
+import net.minecraft.loot.LootConditionType
+import net.minecraft.loot.LootContext
+import net.minecraft.loot.LootParameter
+import net.minecraft.loot.LootParameters
 
 class ConditionWasSheared(override val expectedValue: Boolean) : ILootConditionBoolean {
 	override fun isTrue(context: LootContext): Boolean {
@@ -15,7 +16,11 @@ class ConditionWasSheared(override val expectedValue: Boolean) : ILootConditionB
 		return mutableSetOf(LootParameters.TOOL)
 	}
 	
-	object Serializer : ILootConditionBoolean.Serializer<ConditionWasSheared>(Resource.Custom("was_sheared"), ConditionWasSheared::class.java) {
+	override fun getConditionType(): LootConditionType {
+		return ModLoot.CONDITION_WAS_SHEARED
+	}
+	
+	object Serializer : ILootConditionBoolean.Serializer<ConditionWasSheared>() {
 		override fun construct(expectedValue: Boolean) = ConditionWasSheared(expectedValue)
 	}
 }
