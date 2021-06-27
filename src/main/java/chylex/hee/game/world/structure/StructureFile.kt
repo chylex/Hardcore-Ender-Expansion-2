@@ -19,7 +19,8 @@ import it.unimi.dsi.fastutil.ints.IntArrayList
 import net.minecraft.block.BlockState
 import net.minecraft.block.Blocks
 import net.minecraft.util.math.BlockPos
-import net.minecraft.world.World
+import net.minecraft.world.IServerWorld
+import java.util.Random
 
 class StructureFile(nbt: TagCompound) {
 	private val palette: Array<String>
@@ -66,8 +67,8 @@ class StructureFile(nbt: TagCompound) {
 		
 		private val SKIP_BLOCK_STATE = ModBlocks.SCAFFOLDING.defaultState
 		
-		fun spawn(world: World, offset: BlockPos, piece: IStructurePieceFromFile, palette: Palette) {
-			return spawn(WorldToStructureWorldAdapter(world, world.rand, offset), piece, palette)
+		fun spawn(world: IServerWorld, offset: BlockPos, piece: IStructurePieceFromFile, palette: Palette, rand: Random) {
+			return spawn(WorldToStructureWorldAdapter(world, rand, offset), piece, palette)
 		}
 		
 		fun spawn(world: IStructureWorld, generator: IStructurePieceFromFile, palette: Palette) {
@@ -79,8 +80,8 @@ class StructureFile(nbt: TagCompound) {
 			world.finalize()
 		}
 		
-		fun save(world: World, box: BoundingBox, palette: Palette): Pair<TagCompound, Set<BlockState>> {
-			return save(WorldToStructureWorldAdapter(world, world.rand, box.min), box.size, palette)
+		fun save(world: IServerWorld, box: BoundingBox, palette: Palette, rand: Random): Pair<TagCompound, Set<BlockState>> {
+			return save(WorldToStructureWorldAdapter(world, rand, box.min), box.size, palette)
 		}
 		
 		fun save(world: IStructureWorld, size: Size, palette: Palette): Pair<TagCompound, Set<BlockState>> {

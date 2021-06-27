@@ -101,7 +101,7 @@ abstract class BlockAbstractChest<T : TileEntityBaseChest>(builder: BlockBuilder
 			return SUCCESS
 		}
 		
-		if (world.selectExistingEntities.inBox<EntityCat>(AxisAlignedBB(posAbove)).any { it.isSitting }) {
+		if (world.selectExistingEntities.inBox<EntityCat>(AxisAlignedBB(posAbove)).any { it.isEntitySleeping }) {
 			return SUCCESS
 		}
 		

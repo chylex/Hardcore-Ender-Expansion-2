@@ -35,11 +35,11 @@ object PotionBrewing {
 		PotionTypeInfo(Potions.INVISIBILITY,    Duration(baseTicks = 1 min 20, stepTicks = 1 min 16,  maxSteps = 4), maxLevel = 1),
 		PotionTypeInfo(ModPotions.BANISHMENT,   Duration(baseTicks = 0 min 15, stepTicks = 0 min 10,  maxSteps = 3), maxLevel = 1),
 		PotionTypeInfo(Potions.GLOWING,         Duration(baseTicks = 0 min 12, stepTicks = 0 min 8,   maxSteps = 3), maxLevel = 1)
-	).associateBy { it.potion }
+	).associateBy(PotionTypeInfo::potion)
 	
 	// TODO register levitation type and other custom potions
 	
-	// UPDATE 1.15 check new potions
+	// UPDATE 1.16 check new potions
 	
 	val AWKWARD = mapOf(
 		Items.GLISTERING_MELON_SLICE to Potions.INSTANT_HEALTH,

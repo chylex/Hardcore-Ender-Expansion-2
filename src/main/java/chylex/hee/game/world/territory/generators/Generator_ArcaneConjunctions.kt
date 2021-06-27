@@ -56,7 +56,7 @@ import chylex.hee.system.random.nextVector
 import chylex.hee.system.random.removeItem
 import net.minecraft.block.Blocks
 import net.minecraft.util.math.BlockPos
-import net.minecraft.util.math.Vec3d
+import net.minecraft.util.math.vector.Vector3d
 import java.util.Random
 import kotlin.collections.set
 import kotlin.math.PI
@@ -384,7 +384,7 @@ object Generator_ArcaneConjunctions : ITerritoryGenerator {
 			baseRadiusY = max(2.4 + extra, outerRadius * (0.7 + (verticality * 0.2)))
 		}
 		
-		private fun getCenterPoint(progress: Double): Vec3d {
+		private fun getCenterPoint(progress: Double): Vector3d {
 			return center1.offsetTowards(center2, progress).add(
 				swirlMpX * sin(progress * swirlFreqX),
 				swirlMpY * sin(progress * swirlFreqY),
@@ -392,13 +392,13 @@ object Generator_ArcaneConjunctions : ITerritoryGenerator {
 			)
 		}
 		
-		private inline fun forEachPoint(callback: (Vec3d) -> Unit) {
+		private inline fun forEachPoint(callback: (Vector3d) -> Unit) {
 			val startOffset = blob1.radius - (outerRadius * 2.0)
 			val endOffset = length - (blob2.radius - (outerRadius * 2.0))
 			
 			// can sometimes start/end a path a bit too far, but it's kinda cute
 			
-			for(offset in (10 * startOffset).roundToInt()..(10 * endOffset).roundToInt() step 4) {
+			for (offset in (10 * startOffset).roundToInt()..(10 * endOffset).roundToInt() step 4) {
 				callback(getCenterPoint((offset / 10.0) / length))
 			}
 		}
@@ -406,7 +406,7 @@ object Generator_ArcaneConjunctions : ITerritoryGenerator {
 		inline fun forEachOuterBlock(callback: (BlockPos) -> Unit) = forEachPoint {
 			val center = Pos(it)
 			
-			for((x, y, z) in BlockPos.ZERO.allInCenteredBoxMutable(baseRadiusXZ, baseRadiusY, baseRadiusXZ)) {
+			for ((x, y, z) in BlockPos.ZERO.allInCenteredBoxMutable(baseRadiusXZ, baseRadiusY, baseRadiusXZ)) {
 				if (square(abs(x) / baseRadiusXZ) + square(abs(y) / baseRadiusY) + square(abs(z) / baseRadiusXZ) <= 1F) {
 					callback(center.add(x, y, z))
 				}
@@ -416,7 +416,7 @@ object Generator_ArcaneConjunctions : ITerritoryGenerator {
 		inline fun forEachInnerBlock(rand: Random, callback: (BlockPos) -> Unit) = forEachPoint {
 			val center = Pos(it)
 			
-			for((x, y, z) in BlockPos.ZERO.allInCenteredBoxMutable(baseRadiusXZ, baseRadiusY, baseRadiusXZ)) {
+			for ((x, y, z) in BlockPos.ZERO.allInCenteredBoxMutable(baseRadiusXZ, baseRadiusY, baseRadiusXZ)) {
 				val subtractRadius = outerThickness + rand.nextFloat(0.0, 0.2)
 				val radXZ = baseRadiusXZ - subtractRadius
 				val radY = baseRadiusY - subtractRadius
@@ -432,7 +432,7 @@ object Generator_ArcaneConjunctions : ITerritoryGenerator {
 			val p1 = getCenterPoint(progress)
 			val p2 = getCenterPoint(progress + (1.0 / length))
 			
-			val offset: Vec3d
+			val offset: Vector3d
 			val radius: Double
 			
 			if (rand.nextInt(9) == 0) {
@@ -450,7 +450,7 @@ object Generator_ArcaneConjunctions : ITerritoryGenerator {
 		}
 	}
 	
-	private class Hole(val origin: Vec3d, val offset: Vec3d, val radius: Double) {
+	private class Hole(val origin: Vector3d, val offset: Vector3d, val radius: Double) {
 		fun generate(world: SegmentedWorld) {
 			for(pos in Pos(origin.add(offset)).allInCenteredSphereMutable(radius)) {
 				if (world.isInside(pos) && world.getBlock(pos) === Blocks.END_STONE) {

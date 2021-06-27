@@ -15,7 +15,7 @@ class AIWatchIdleJumping(private val entity: EntityLiving, private val chancePer
 	}
 	
 	override fun shouldExecute(): Boolean {
-		return entity.onGround && entity.rng.nextFloat() < chancePerTick
+		return entity.isOnGround && entity.rng.nextFloat() < chancePerTick
 	}
 	
 	override fun shouldContinueExecuting(): Boolean {
@@ -29,7 +29,7 @@ class AIWatchIdleJumping(private val entity: EntityLiving, private val chancePer
 	
 	override fun tick() {
 		if (delayTicksRemaining > 0) {
-			if (!entity.onGround) {
+			if (!entity.isOnGround) {
 				delayTicksRemaining = 0
 			}
 			else if (--delayTicksRemaining == 0) {
@@ -40,7 +40,7 @@ class AIWatchIdleJumping(private val entity: EntityLiving, private val chancePer
 		else {
 			super.tick()
 			
-			if (entity.onGround) {
+			if (entity.isOnGround) {
 				delayTicksRemaining = 0
 			}
 		}

@@ -13,11 +13,11 @@ import chylex.hee.system.migration.Facing.SOUTH
 import net.minecraft.entity.Entity
 import net.minecraft.util.Direction
 import net.minecraft.util.math.BlockPos
-import net.minecraft.util.math.Vec3d
-import net.minecraft.world.IWorld
+import net.minecraft.util.math.vector.Vector3d
+import net.minecraft.world.IServerWorld
 import net.minecraft.world.World
 
-class EntityStructureTrigger private constructor(private val entityConstructor: (World) -> Entity, private val entityLocator: (BlockPos, Transform) -> Vec3d) : IStructureTrigger {
+class EntityStructureTrigger private constructor(private val entityConstructor: (World) -> Entity, private val entityLocator: (BlockPos, Transform) -> Vector3d) : IStructureTrigger {
 	constructor(
 		entityConstructor: (World) -> Entity,
 		yOffset: Double,
@@ -48,7 +48,7 @@ class EntityStructureTrigger private constructor(private val entityConstructor: 
 	
 	override fun setup(world: IStructureWorld, pos: BlockPos, transform: Transform) {}
 	
-	override fun realize(world: IWorld, pos: BlockPos, transform: Transform) {
+	override fun realize(world: IServerWorld, pos: BlockPos, transform: Transform) {
 		val (x, y, z) = entityLocator(pos, transform)
 		
 		entityConstructor(world.world).apply {

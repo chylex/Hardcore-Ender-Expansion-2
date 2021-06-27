@@ -1,16 +1,11 @@
 {
   "type": "minecraft:chest",
+  "hee:patch": "no_stack_splitting",
   "pools": [
 
     {
-      "rolls": 0,
-      "name": "table#hee:stack_splitting=off",
-      "entries": []
-    },
-
-    {
-      "rolls": { "min": 9, "max": 11 },
-      "name": "pool#hee:rolls_type=biased;10;5",
+      "rolls": { "type": "hee:biased_range", "min": 9, "max": 11, "highestChanceValue": 10, "biasSoftener": 5 },
+      "name": "pool",
       "entries": [
         { "type": "item", "name": "minecraft:paper", "weight": 50, "functions": [{ "function": "set_count", "count": { "min": 1, "max": 3 } }], "entryName": "paper" },
         { "type": "item", "name": "minecraft:book", "weight": 45, "functions": [{ "function": "set_count", "count": { "min": 1, "max": 2 } }], "entryName": "book" },

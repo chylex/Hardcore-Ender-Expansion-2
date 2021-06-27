@@ -5,6 +5,7 @@ import net.minecraft.util.SharedSeedRandom
 import net.minecraft.world.gen.PerlinNoiseGenerator
 import net.minecraft.world.gen.SimplexNoiseGenerator
 import java.util.Random
+import java.util.stream.IntStream
 import kotlin.math.abs
 import kotlin.math.pow
 import kotlin.math.roundToInt
@@ -95,7 +96,7 @@ sealed class NoiseGenerator(private val xScale: Double, private val zScale: Doub
 	class NewPerlin(rand: Random, private val xScale: Double, private val zScale: Double, octaves: Int) : NoiseGenerator(xScale, zScale) {
 		constructor(rand: Random, scale: Double, octaves: Int) : this(rand, scale, scale, octaves)
 		
-		private val generator = PerlinNoiseGenerator(SharedSeedRandom(rand.nextLong()), octaves - 1, 0)
+		private val generator = PerlinNoiseGenerator(SharedSeedRandom(rand.nextLong()), IntStream.rangeClosed(-octaves + 1, 0))
 		override fun getRawValue(x: Double, z: Double) = generator.noiseAt(x / xScale, z / zScale, false)
 	}
 }

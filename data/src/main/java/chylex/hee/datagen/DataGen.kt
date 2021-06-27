@@ -29,9 +29,10 @@ object DataGen {
 			}
 			
 			if (e.includeServer()) {
+				val blockTags = BlockTags(this, modid, helper)
 				addProvider(BlockLootTables(this))
-				addProvider(BlockTags(this))
-				addProvider(ItemTags(this))
+				addProvider(blockTags)
+				addProvider(ItemTags(this, blockTags, modid, helper))
 			}
 		}
 	}

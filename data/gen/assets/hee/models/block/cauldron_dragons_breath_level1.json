@@ -1,5 +1,5 @@
 {
-  "parent": "block/cauldron_level1",
+  "parent": "minecraft:block/cauldron_level1",
   "textures": {
     "water": "hee:block/dragons_breath_still"
   }

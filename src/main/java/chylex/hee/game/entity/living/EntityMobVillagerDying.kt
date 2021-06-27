@@ -19,25 +19,29 @@ import chylex.hee.system.migration.EntityVillager
 import chylex.hee.system.random.nextFloat
 import chylex.hee.system.random.nextItem
 import chylex.hee.system.serialization.TagCompound
+import chylex.hee.system.serialization.getDecodedOrNull
 import chylex.hee.system.serialization.heeTag
-import chylex.hee.system.serialization.readTag
+import chylex.hee.system.serialization.putEncoded
+import chylex.hee.system.serialization.readDecoded
 import chylex.hee.system.serialization.use
-import chylex.hee.system.serialization.writeTag
-import com.mojang.datafixers.Dynamic
+import chylex.hee.system.serialization.writeEncoded
+import net.minecraft.entity.AgeableEntity
 import net.minecraft.entity.EntityType
 import net.minecraft.entity.merchant.villager.VillagerData
 import net.minecraft.entity.villager.IVillagerDataHolder
-import net.minecraft.nbt.NBTDynamicOps
 import net.minecraft.network.IPacket
 import net.minecraft.network.PacketBuffer
+import net.minecraft.util.ActionResultType.PASS
 import net.minecraft.util.Hand
 import net.minecraft.util.SoundCategory
 import net.minecraft.world.World
+import net.minecraft.world.server.ServerWorld
 import net.minecraftforge.fml.common.registry.IEntityAdditionalSpawnData
 import net.minecraftforge.fml.network.NetworkHooks
 import java.util.Random
 
 class EntityMobVillagerDying(type: EntityType<EntityMobVillagerDying>, world: World) : EntityAgeable(type, world), IVillagerDataHolder, IEntityAdditionalSpawnData {
+	@Suppress("unused")
 	constructor(world: World) : this(ModEntities.VILLAGER_DYING, world)
 	
 	private companion object {
@@ -71,13 +75,8 @@ class EntityMobVillagerDying(type: EntityType<EntityMobVillagerDying>, world: Wo
 	
 	init {
 		isInvulnerable = true
-		setNoGravity(true)
-	}
-	
-	override fun registerAttributes() {
-		super.registerAttributes()
-		
 		experienceValue = 0
+		setNoGravity(true)
 	}
 	
 	fun copyVillagerDataFrom(villager: EntityVillager) {
@@ -98,7 +97,7 @@ class EntityMobVillagerDying(type: EntityType<EntityMobVillagerDying>, world: Wo
 	}
 	
 	override fun writeSpawnData(buffer: PacketBuffer) = buffer.use {
-		writeTag(villagerData.serialize(NBTDynamicOps.INSTANCE) as TagCompound)
+		writeEncoded(villager, VillagerData.CODEC)
 		writeVarInt(deathTime)
 		
 		writeFloat(renderYawOffset)
@@ -107,7 +106,7 @@ class EntityMobVillagerDying(type: EntityType<EntityMobVillagerDying>, world: Wo
 	}
 	
 	override fun readSpawnData(buffer: PacketBuffer) = buffer.use {
-		villager = VillagerData(Dynamic(NBTDynamicOps.INSTANCE, buffer.readTag()))
+		villager = readDecoded(VillagerData.CODEC)
 		deathTime = readVarInt()
 		
 		renderYawOffset = readFloat()
@@ -160,19 +159,19 @@ class EntityMobVillagerDying(type: EntityType<EntityMobVillagerDying>, world: Wo
 	override fun writeAdditional(nbt: TagCompound) = nbt.heeTag.use {
 		super.writeAdditional(nbt)
 		
-		put(VILLAGER_TAG, villagerData.serialize(NBTDynamicOps.INSTANCE))
+		putEncoded(VILLAGER_TAG, villager, VillagerData.CODEC)
 	}
 	
 	override fun readAdditional(nbt: TagCompound) = nbt.heeTag.use {
 		super.readAdditional(nbt)
 		
-		villager = VillagerData(Dynamic(NBTDynamicOps.INSTANCE, getCompound(VILLAGER_TAG)))
+		villager = getDecodedOrNull(VILLAGER_TAG, VillagerData.CODEC)
 	}
 	
-	override fun processInteract(player: EntityPlayer, hand: Hand) = true
+	override fun processInitialInteract(player: EntityPlayer, hand: Hand) = PASS
 	override fun canBeLeashedTo(player: EntityPlayer) = false
 	
-	override fun createChild(ageable: EntityAgeable): EntityAgeable? = null
+	override fun createChild(world: ServerWorld, mate: AgeableEntity): AgeableEntity? = null
 	override fun ageUp(growthSeconds: Int, updateForcedAge: Boolean) {}
 	
 	override fun attackable() = false

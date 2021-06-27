@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:block/cube_column_horizontal",
+  "textures": {
+    "side": "hee:block/whitebark_log",
+    "end": "hee:block/whitebark_log_top"
+  }
+}

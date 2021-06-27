@@ -7,9 +7,11 @@ import chylex.hee.game.inventory.isNotEmpty
 import chylex.hee.game.inventory.nonEmptySlots
 import chylex.hee.game.inventory.setStack
 import chylex.hee.game.world.Pos
+import com.mojang.serialization.Codec
 import net.minecraft.inventory.IInventory
 import net.minecraft.item.ItemStack
 import net.minecraft.nbt.INBT
+import net.minecraft.nbt.NBTDynamicOps
 import net.minecraft.util.math.AxisAlignedBB
 import net.minecraft.util.math.BlockPos
 import net.minecraftforge.common.util.Constants.NBT
@@ -53,6 +55,20 @@ val TagCompound.heeTag
 
 val TagCompound.heeTagOrNull
 	get() = this.getCompoundOrNull(HEE_TAG_NAME)
+
+// Codecs
+
+fun <T> TagCompound.putEncoded(key: String, value: T, codec: Codec<T>) {
+	codec.encodeStart(NBTDynamicOps.INSTANCE, value).resultOrPartial(HEE.log::error).ifPresent {
+		this@putEncoded.put(key, it)
+	}
+}
+
+fun <T> TagCompound.getDecodedOrNull(key: String, codec: Codec<T>): T? {
+	return this.get(key)?.let {
+		codec.parse(NBTDynamicOps.INSTANCE, it).resultOrPartial(HEE.log::error).orElse(null)
+	}
+}
 
 // ItemStacks
 
@@ -162,7 +178,7 @@ inline fun TagCompound.getUUID(key: String): UUID {
 // Enums
 
 inline fun <reified T : Enum<T>> TagCompound.putEnum(key: String, value: T?) {
-	this.putString(key, value?.name?.toLowerCase(Locale.ROOT) ?: "")
+	this.putString(key, value?.name?.lowercase(Locale.ROOT) ?: "")
 }
 
 inline fun <reified T : Enum<T>> TagCompound.getEnum(key: String): T? {
@@ -173,7 +189,7 @@ inline fun <reified T : Enum<T>> TagCompound.getEnum(key: String): T? {
 	}
 	
 	return try {
-		java.lang.Enum.valueOf(T::class.java, value.toUpperCase(Locale.ROOT))
+		java.lang.Enum.valueOf(T::class.java, value.uppercase(Locale.ROOT))
 	} catch(e: IllegalArgumentException) {
 		null
 	}
@@ -390,10 +406,10 @@ class NBTEnumList<T : Enum<T>>(private val cls: Class<T>, tagList: TagList) : NB
 	}
 	
 	override fun convert(element: T): NBTBase {
-		return TagString.valueOf(element.name.toLowerCase(Locale.ROOT))
+		return TagString.valueOf(element.name.lowercase(Locale.ROOT))
 	}
 	
 	override fun get(index: Int): T {
-		return java.lang.Enum.valueOf(cls, tagList.getString(index).toUpperCase(Locale.ROOT))
+		return java.lang.Enum.valueOf(cls, tagList.getString(index).uppercase(Locale.ROOT))
 	}
 }

@@ -56,14 +56,14 @@ enum class Infusion(
 	}
 	
 	private class Matching(vararg val items: Item) {
-		constructor(vararg items: IItemProvider) : this(*items.map { it.asItem() }.toTypedArray())
+		constructor(vararg items: IItemProvider) : this(*items.map(IItemProvider::asItem).toTypedArray())
 	}
 	
 	// Infusion logic
 	
 	companion object {
 		fun byName(name: String): Infusion {
-			return valueOf(name.toUpperCase(Locale.ROOT))
+			return valueOf(name.uppercase(Locale.ROOT))
 		}
 		
 		fun isInfusable(item: Item): Boolean {

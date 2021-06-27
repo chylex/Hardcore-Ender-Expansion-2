@@ -30,6 +30,7 @@ class ContainerTrinketPouch(id: Int, player: EntityPlayer, slot: Int) : Containe
 		}
 	}
 	
+	@Suppress("ConvertLambdaToReference")
 	override fun detectAndSendChanges() {
 		slotChangeListener.restart(listeners) { super.detectAndSendChanges() }?.let(containerInventory::validatePlayerItemOnModification)
 	}

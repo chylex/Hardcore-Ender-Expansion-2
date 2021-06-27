@@ -36,7 +36,7 @@ class EnumArgument<T : Enum<T>>(private val enumClass: Class<T>) : ArgumentType<
 	}
 	
 	private fun name(element: T): String {
-		return element.name.toLowerCase(Locale.ENGLISH)
+		return element.name.lowercase(Locale.ENGLISH)
 	}
 	
 	override fun parse(reader: StringReader): T {

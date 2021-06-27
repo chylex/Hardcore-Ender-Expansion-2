@@ -15,25 +15,27 @@ import chylex.hee.game.mechanics.energy.IEnergyQuantity.Floating
 import chylex.hee.game.mechanics.energy.IEnergyQuantity.Internal
 import chylex.hee.game.world.BlockEditor
 import chylex.hee.game.world.Pos
-import chylex.hee.game.world.WorldProviderEndCustom
 import chylex.hee.game.world.breakBlock
 import chylex.hee.game.world.getTile
+import chylex.hee.game.world.isEndDimension
 import chylex.hee.game.world.territory.TerritoryInstance
 import chylex.hee.game.world.totalTime
 import chylex.hee.init.ModBlocks
 import chylex.hee.system.color.IntColor.Companion.RGB
-import chylex.hee.system.facades.Resource
 import chylex.hee.system.forge.Side
 import chylex.hee.system.forge.Sided
 import chylex.hee.system.migration.ActionResult.FAIL
 import chylex.hee.system.migration.ActionResult.SUCCESS
 import chylex.hee.system.serialization.TagCompound
+import chylex.hee.system.serialization.getDecodedOrNull
 import chylex.hee.system.serialization.getIntegerOrNull
 import chylex.hee.system.serialization.hasKey
+import chylex.hee.system.serialization.putEncoded
 import chylex.hee.system.serialization.use
 import net.minecraft.client.renderer.color.IItemColor
 import net.minecraft.client.util.ITooltipFlag
 import net.minecraft.entity.Entity
+import net.minecraft.item.IItemPropertyGetter
 import net.minecraft.item.ItemStack
 import net.minecraft.item.ItemUseContext
 import net.minecraft.util.ActionResultType
@@ -44,7 +46,7 @@ import net.minecraft.world.World
 import kotlin.math.pow
 
 class ItemEnergyReceptacle(properties: Properties) : ItemAbstractInfusable(properties) {
-	private companion object {
+	companion object {
 		private const val CLUSTER_SNAPSHOT_TAG = "Cluster"
 		private const val UPDATE_TIME_TAG = "UpdateTime"
 		private const val RENDER_COLOR_TAG = "RenderColor"
@@ -55,6 +57,10 @@ class ItemEnergyReceptacle(properties: Properties) : ItemAbstractInfusable(prope
 		
 		private const val ENERGY_LOSS_TICK_RATE = 10L
 		private const val ITEM_COOLDOWN = 16
+		
+		val HAS_CLUSTER_PROPERTY = IItemPropertyGetter { stack, _, _ ->
+			if (stack.heeTagOrNull.hasKey(CLUSTER_SNAPSHOT_TAG)) 1F else 0F // POLISH tweak animation
+		}
 		
 		private fun calculateNewEnergyLevel(snapshot: ClusterSnapshot, elapsedTicks: Long, infusions: InfusionList): IEnergyQuantity {
 			// TODO make sure Table Pedestals keep updating the item, or at least perform an update just before the infusion
@@ -67,13 +73,11 @@ class ItemEnergyReceptacle(properties: Properties) : ItemAbstractInfusable(prope
 		}
 		
 		private fun hasMovedTooFar(nbt: TagCompound, currentWorld: World, currentPos: BlockPos): Boolean {
-			val dimension = currentWorld.dimension
-			
-			if (dimension.type.id != nbt.getInt(INITIAL_DIMENSION_TAG)) {
+			if (currentWorld.dimensionKey != nbt.getDecodedOrNull(INITIAL_DIMENSION_TAG, World.CODEC)) {
 				return true
 			}
 			
-			if (dimension is WorldProviderEndCustom && TerritoryInstance.fromPos(currentPos) != nbt.getIntegerOrNull(INITIAL_TERRITORY_TAG)?.let(TerritoryInstance.Companion::fromHash)) {
+			if (currentWorld.isEndDimension && TerritoryInstance.fromPos(currentPos) != nbt.getIntegerOrNull(INITIAL_TERRITORY_TAG)?.let(TerritoryInstance.Companion::fromHash)) {
 				return true
 			}
 			
@@ -97,14 +101,6 @@ class ItemEnergyReceptacle(properties: Properties) : ItemAbstractInfusable(prope
 			
 			return false
 		}
-	}
-	
-	init {
-		addPropertyOverride(Resource.Custom("has_cluster")) { stack, _, _ ->
-			if (stack.heeTagOrNull.hasKey(CLUSTER_SNAPSHOT_TAG)) 1F else 0F
-		}
-		
-		// POLISH tweak animation
 	}
 	
 	override fun onItemUse(context: ItemUseContext): ActionResultType {
@@ -149,17 +145,15 @@ class ItemEnergyReceptacle(properties: Properties) : ItemAbstractInfusable(prope
 				val cluster = pos.getTile<TileEntityEnergyCluster>(world)
 				
 				if (cluster != null && cluster.tryDisturb()) {
-					val dimension = world.dimension
-					
 					put(CLUSTER_SNAPSHOT_TAG, cluster.getClusterSnapshot().tag)
 					
 					putLong(UPDATE_TIME_TAG, world.totalTime)
 					putInt(RENDER_COLOR_TAG, cluster.color.primary(75F, 80F).i)
 					
 					putInt(INITIAL_LEVEL_TAG, cluster.energyLevel.internal.value)
-					putInt(INITIAL_DIMENSION_TAG, dimension.type.id)
+					putEncoded(INITIAL_DIMENSION_TAG, world.dimensionKey, World.CODEC)
 					
-					if (dimension is WorldProviderEndCustom) {
+					if (world.isEndDimension) {
 						TerritoryInstance.fromPos(pos)?.let { putInt(INITIAL_TERRITORY_TAG, it.hash) }
 					}
 					

@@ -2,6 +2,7 @@ package chylex.hee.game.entity.living
 
 import chylex.hee.game.entity.EntityData
 import chylex.hee.game.entity.OPERATION_MUL_INCR_INDIVIDUAL
+import chylex.hee.game.entity.getAttributeInstance
 import chylex.hee.game.entity.living.ai.AIAttackLeap
 import chylex.hee.game.entity.living.ai.AIToggle
 import chylex.hee.game.entity.living.ai.AIToggle.Companion.addGoal
@@ -22,7 +23,7 @@ import chylex.hee.game.entity.posVec
 import chylex.hee.game.entity.selectEntities
 import chylex.hee.game.entity.selectExistingEntities
 import chylex.hee.game.entity.selectVulnerableEntities
-import chylex.hee.game.entity.tryApplyModifier
+import chylex.hee.game.entity.tryApplyNonPersistentModifier
 import chylex.hee.game.entity.tryRemoveModifier
 import chylex.hee.game.mechanics.damage.Damage
 import chylex.hee.game.mechanics.damage.IDamageProcessor.Companion.ALL_PROTECTIONS
@@ -57,13 +58,11 @@ import net.minecraft.entity.CreatureAttribute
 import net.minecraft.entity.Entity
 import net.minecraft.entity.EntityType
 import net.minecraft.entity.ILivingEntityData
-import net.minecraft.entity.SharedMonsterAttributes.ATTACK_DAMAGE
-import net.minecraft.entity.SharedMonsterAttributes.FOLLOW_RANGE
-import net.minecraft.entity.SharedMonsterAttributes.MAX_HEALTH
-import net.minecraft.entity.SharedMonsterAttributes.MOVEMENT_SPEED
 import net.minecraft.entity.SpawnReason
 import net.minecraft.entity.SpawnReason.SPAWNER
 import net.minecraft.entity.ai.attributes.AttributeModifier
+import net.minecraft.entity.ai.attributes.Attributes.ATTACK_DAMAGE
+import net.minecraft.entity.ai.attributes.Attributes.MAX_HEALTH
 import net.minecraft.nbt.CompoundNBT
 import net.minecraft.network.IPacket
 import net.minecraft.network.datasync.DataSerializers
@@ -77,11 +76,11 @@ import net.minecraft.util.math.RayTraceContext
 import net.minecraft.util.math.RayTraceContext.BlockMode
 import net.minecraft.util.math.RayTraceContext.FluidMode
 import net.minecraft.util.math.RayTraceResult.Type
-import net.minecraft.util.math.Vec3d
+import net.minecraft.util.math.vector.Vector3d
 import net.minecraft.world.Difficulty.HARD
 import net.minecraft.world.Difficulty.NORMAL
 import net.minecraft.world.DifficultyInstance
-import net.minecraft.world.IWorld
+import net.minecraft.world.IServerWorld
 import net.minecraft.world.IWorldReader
 import net.minecraft.world.LightType.BLOCK
 import net.minecraft.world.LightType.SKY
@@ -154,22 +153,15 @@ class EntityMobSpiderling(type: EntityType<EntityMobSpiderling>, world: World) :
 	
 	init {
 		stepHeight = 0F
+		experienceValue = 2
+		
+		getAttributeInstance(MAX_HEALTH).baseValue = rand.nextInt(11, 13).toDouble()
+		health = maxHealth
 	}
 	
 	override fun registerData() {
 		super.registerData()
 		dataManager.register(DATA_SLEEPING, true)
-	}
-	
-	override fun registerAttributes() {
-		super.registerAttributes()
-		
-		getAttribute(MAX_HEALTH).baseValue = rand.nextInt(11, 13).toDouble()
-		getAttribute(ATTACK_DAMAGE).baseValue = 1.5
-		getAttribute(MOVEMENT_SPEED).baseValue = 0.32
-		getAttribute(FOLLOW_RANGE).baseValue = 20.0
-		
-		experienceValue = 2
 	}
 	
 	override fun registerGoals() {
@@ -241,7 +233,7 @@ class EntityMobSpiderling(type: EntityType<EntityMobSpiderling>, world: World) :
 		}
 		
 		if (onGround) {
-			getAttribute(ATTACK_DAMAGE).tryRemoveModifier(FALL_CRIT_DAMAGE)
+			getAttributeInstance(ATTACK_DAMAGE).tryRemoveModifier(FALL_CRIT_DAMAGE)
 		}
 		
 		if (jumpCooldown > 0) {
@@ -276,7 +268,7 @@ class EntityMobSpiderling(type: EntityType<EntityMobSpiderling>, world: World) :
 						ForgeHooks.onLivingJump(this)
 						
 						jumpCooldown = rand.nextInt(18, 22)
-						getAttribute(ATTACK_DAMAGE).tryApplyModifier(FALL_CRIT_DAMAGE)
+						getAttributeInstance(ATTACK_DAMAGE).tryApplyNonPersistentModifier(FALL_CRIT_DAMAGE)
 					}
 				}
 			}
@@ -389,7 +381,7 @@ class EntityMobSpiderling(type: EntityType<EntityMobSpiderling>, world: World) :
 	
 	override fun jump() { // POLISH could improve by making the motion less smooth when starting the jump, somehow
 		if (jumpCooldown == 0) {
-			getAttribute(ATTACK_DAMAGE).tryApplyModifier(FALL_CRIT_DAMAGE)
+			getAttributeInstance(ATTACK_DAMAGE).tryApplyNonPersistentModifier(FALL_CRIT_DAMAGE)
 			super.jump()
 		}
 	}
@@ -402,7 +394,7 @@ class EntityMobSpiderling(type: EntityType<EntityMobSpiderling>, world: World) :
 		return 256
 	}
 	
-	override fun setMotionMultiplier(state: BlockState, mp: Vec3d) {
+	override fun setMotionMultiplier(state: BlockState, mp: Vector3d) {
 		if (state.block !is BlockWeb) {
 			super.setMotionMultiplier(state, mp)
 		}
@@ -431,7 +423,7 @@ class EntityMobSpiderling(type: EntityType<EntityMobSpiderling>, world: World) :
 			for(nearby in world.selectEntities.inRange<EntityMobSpiderling>(posVec, 2.0)) {
 				if (nearby !== this) {
 					nearby.isBeingSwept = true
-					nearby.knockBack(player, 0.4F, xRatio, zRatio)
+					nearby.applyKnockback(0.4F, xRatio, zRatio)
 					nearby.attackEntityFrom(DamageSource.causePlayerDamage(player), amount * rand.nextFloat(0.75F, 1F))
 					nearby.isBeingSwept = false
 				}
@@ -443,7 +435,7 @@ class EntityMobSpiderling(type: EntityType<EntityMobSpiderling>, world: World) :
 	
 	override fun attackEntityAsMob(entity: Entity): Boolean {
 		if (goalSelector.runningGoals.anyMatch { it.goal is AIAttackLeap }) {
-			getAttribute(ATTACK_DAMAGE).tryApplyModifier(FALL_CRIT_DAMAGE)
+			getAttributeInstance(ATTACK_DAMAGE).tryApplyNonPersistentModifier(FALL_CRIT_DAMAGE)
 		}
 		
 		if (!DAMAGE_GENERAL.dealToFrom(entity, this)) {
@@ -461,7 +453,7 @@ class EntityMobSpiderling(type: EntityType<EntityMobSpiderling>, world: World) :
 	
 	// Spawning
 	
-	override fun onInitialSpawn(world: IWorld, difficulty: DifficultyInstance, reason: SpawnReason, data: ILivingEntityData?, nbt: CompoundNBT?): ILivingEntityData? {
+	override fun onInitialSpawn(world: IServerWorld, difficulty: DifficultyInstance, reason: SpawnReason, data: ILivingEntityData?, nbt: CompoundNBT?): ILivingEntityData? {
 		if (reason == SPAWNER) {
 			wakeUpInstantly(preventSleep = true)
 		}

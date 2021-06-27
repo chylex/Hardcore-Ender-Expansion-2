@@ -21,6 +21,7 @@ import com.mojang.blaze3d.matrix.MatrixStack
 import net.minecraft.client.renderer.Atlases
 import net.minecraft.client.renderer.IRenderTypeBuffer
 import net.minecraft.client.renderer.model.IBakedModel
+import net.minecraft.client.renderer.model.ItemCameraTransforms.TransformType
 import net.minecraft.client.renderer.texture.TextureAtlasSprite
 import net.minecraft.client.renderer.tileentity.ItemStackTileEntityRenderer
 import net.minecraft.client.renderer.tileentity.TileEntityRenderer
@@ -76,7 +77,7 @@ class RenderTileJarODust(dispatcher: TileEntityRendererDispatcher) : TileEntityR
 		
 		private fun renderLayers(layers: DustLayers, matrix: MatrixStack, buffer: IRenderTypeBuffer, combinedLight: Int, combinedOverlay: Int) {
 			val contents = layers.contents.takeUnless { it.isEmpty() } ?: return
-			val squish = 0.775F + (0.225F * sqrt(contents.sumBy { it.second.toInt() }.toDouble() / layers.totalCapacity))
+			val squish = 0.775F + (0.225F * sqrt(contents.sumOf { it.second.toInt() }.toDouble() / layers.totalCapacity))
 			val unit = AABB.let { it.maxY - it.minY - EPSILON_Y_BOTTOM - EPSILON_Y_TOP - FIRST_LAYER_HEIGHT } / layers.totalCapacity / squish
 			
 			val builder = buffer.getBuffer(RENDER_TYPE_LAYERS)
@@ -186,7 +187,7 @@ class RenderTileJarODust(dispatcher: TileEntityRendererDispatcher) : TileEntityR
 		
 		private val layers = DustLayers(TileEntityJarODust.DUST_CAPACITY)
 		
-		override fun render(stack: ItemStack, matrix: MatrixStack, buffer: IRenderTypeBuffer, combinedLight: Int, combinedOverlay: Int) {
+		override fun func_239207_a_(stack: ItemStack, transformType: TransformType, matrix: MatrixStack, buffer: IRenderTypeBuffer, combinedLight: Int, combinedOverlay: Int) {
 			val nbt = stack.heeTagOrNull?.getListOfCompounds(TileEntityJarODust.LAYERS_TAG)
 			
 			if (nbt != null) {

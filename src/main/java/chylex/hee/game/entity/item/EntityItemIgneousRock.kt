@@ -82,7 +82,7 @@ import net.minecraft.util.DamageSource
 import net.minecraft.util.Direction
 import net.minecraft.util.SoundCategory
 import net.minecraft.util.math.BlockPos
-import net.minecraft.util.math.Vec3d
+import net.minecraft.util.math.vector.Vector3d
 import net.minecraft.world.World
 import net.minecraft.world.server.ServerWorld
 import java.util.Random
@@ -225,7 +225,7 @@ class EntityItemIgneousRock : EntityItemNoBob {
 		if (isInLava) {
 			lifespan -= 3
 			
-			handleFluidAcceleration(FluidTags.LAVA)
+			handleFluidAcceleration(FluidTags.LAVA, 0.014)
 			motion = motion.scaleXZ(0.9)
 		}
 		
@@ -239,7 +239,7 @@ class EntityItemIgneousRock : EntityItemNoBob {
 		}
 	}
 	
-	override fun move(type: MoverType, by: Vec3d) {
+	override fun move(type: MoverType, by: Vector3d) {
 		if (isInLava) {
 			super.move(type, by.mul(0.2, 0.01, 0.2))
 		}

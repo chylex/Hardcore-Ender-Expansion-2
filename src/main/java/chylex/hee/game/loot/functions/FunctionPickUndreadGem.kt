@@ -1,9 +1,9 @@
 package chylex.hee.game.loot.functions
 
 import chylex.hee.game.inventory.size
+import chylex.hee.init.ModLoot
 import chylex.hee.system.collection.WeightedList
 import chylex.hee.system.collection.WeightedList.Companion.weightedListOf
-import chylex.hee.system.facades.Resource
 import com.google.common.collect.ImmutableBiMap
 import com.google.gson.JsonDeserializationContext
 import com.google.gson.JsonObject
@@ -11,9 +11,10 @@ import com.google.gson.JsonSerializationContext
 import net.minecraft.item.Item
 import net.minecraft.item.ItemStack
 import net.minecraft.item.Items
-import net.minecraft.world.storage.loot.LootContext
-import net.minecraft.world.storage.loot.LootFunction
-import net.minecraft.world.storage.loot.conditions.ILootCondition
+import net.minecraft.loot.LootContext
+import net.minecraft.loot.LootFunction
+import net.minecraft.loot.LootFunctionType
+import net.minecraft.loot.conditions.ILootCondition
 
 class FunctionPickUndreadGem(conditions: Array<ILootCondition>, private val items: WeightedList<Item>) : LootFunction(conditions) {
 	private companion object {
@@ -39,7 +40,11 @@ class FunctionPickUndreadGem(conditions: Array<ILootCondition>, private val item
 		return ItemStack(items.generateItem(context.random), stack.size)
 	}
 	
-	object Serializer : LootFunction.Serializer<FunctionPickUndreadGem>(Resource.Custom("pick_undread_gem"), FunctionPickUndreadGem::class.java) {
+	override fun getFunctionType(): LootFunctionType {
+		return ModLoot.FUNCTION_PICK_UNDREAD_GEM
+	}
+	
+	object Serializer : LootFunction.Serializer<FunctionPickUndreadGem>() {
 		override fun serialize(json: JsonObject, value: FunctionPickUndreadGem, context: JsonSerializationContext) {
 			json.addProperty("type", NAMES.inverse().getValue(value.items))
 		}

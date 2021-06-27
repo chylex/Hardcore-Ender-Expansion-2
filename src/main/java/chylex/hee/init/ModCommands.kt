@@ -18,7 +18,7 @@ import chylex.hee.system.forge.SubscribeAllEvents
 import chylex.hee.system.forge.SubscribeEvent
 import net.minecraft.command.Commands.literal
 import net.minecraft.command.arguments.ArgumentTypes
-import net.minecraftforge.fml.event.server.FMLServerStartingEvent
+import net.minecraftforge.event.RegisterCommandsEvent
 
 @SubscribeAllEvents(modid = HEE.ID)
 object ModCommands {
@@ -46,13 +46,13 @@ object ModCommands {
 	}
 	
 	@SubscribeEvent
-	fun onServerStart(e: FMLServerStartingEvent) {
+	fun onServerStart(e: RegisterCommandsEvent) {
 		val baseCommand = literal(ROOT).executes(CommandServerHelp, false)
 		
 		for(command in admin + debug) {
 			baseCommand.then(literal(command.name).requires { it.hasPermissionLevel(command.permissionLevel) }.apply(command::register))
 		}
 		
-		e.commandDispatcher.register(baseCommand)
+		e.dispatcher.register(baseCommand)
 	}
 }

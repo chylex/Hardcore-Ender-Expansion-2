@@ -7,7 +7,7 @@ import chylex.hee.game.world.generation.IBlockPlacer
 import chylex.hee.game.world.generation.SegmentedWorld
 import chylex.hee.system.random.nextFloat
 import net.minecraft.util.math.BlockPos
-import net.minecraft.util.math.Vec3d
+import net.minecraft.util.math.vector.Vector3d
 import kotlin.math.abs
 import kotlin.math.pow
 
@@ -28,7 +28,7 @@ class CaveCarverEllipsoid(
 		maxRandomRadiusReduction: Float = 0F,
 	) : this(radiusMpX, radiusMpY, radiusMpZ, powerXYZ, powerXYZ, powerXYZ, maxRandomRadiusReduction)
 	
-	override fun carve(world: SegmentedWorld, center: Vec3d, radius: Double, placer: IBlockPlacer): Boolean {
+	override fun carve(world: SegmentedWorld, center: Vector3d, radius: Double, placer: IBlockPlacer): Boolean {
 		val rand = world.rand
 		
 		val radiusX = radius * radiusMpX

@@ -6,6 +6,7 @@ import com.google.gson.JsonObject
 import com.mojang.brigadier.StringReader
 import com.mojang.brigadier.arguments.ArgumentType
 import com.mojang.brigadier.context.CommandContext
+import com.mojang.brigadier.exceptions.CommandSyntaxException.BUILT_IN_EXCEPTIONS
 import com.mojang.brigadier.suggestion.Suggestions
 import com.mojang.brigadier.suggestion.SuggestionsBuilder
 import net.minecraft.command.ISuggestionProvider
@@ -45,7 +46,7 @@ class ValidatedStringArgument(private val strings: Set<String>) : ArgumentType<S
 	}
 	
 	override fun parse(reader: StringReader): String {
-		return reader.readUnquotedString().takeIf(strings::contains) ?: throw IllegalArgumentException()
+		return reader.readUnquotedString().takeIf(strings::contains) ?: throw BUILT_IN_EXCEPTIONS.dispatcherUnknownArgument().create()
 	}
 	
 	override fun <S : Any?> listSuggestions(context: CommandContext<S>, builder: SuggestionsBuilder): CompletableFuture<Suggestions> {

@@ -5,7 +5,6 @@ import net.minecraft.util.math.BlockPos
 import java.util.Random
 
 interface IBlobPopulator {
-	@JvmDefault
 	val expandSizeBy: BlockPos
 		get() = BlockPos.ZERO
 	

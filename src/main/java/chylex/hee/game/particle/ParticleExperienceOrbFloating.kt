@@ -10,7 +10,7 @@ import chylex.hee.system.random.IRandomColor.Companion.IRandomColor
 import chylex.hee.system.random.nextFloat
 import chylex.hee.system.random.nextInt
 import net.minecraft.client.particle.Particle
-import net.minecraft.world.World
+import net.minecraft.client.world.ClientWorld
 import kotlin.math.PI
 import kotlin.math.cos
 import kotlin.math.sign
@@ -18,7 +18,7 @@ import kotlin.math.sin
 
 object ParticleExperienceOrbFloating : ParticleDataColorLifespanScale.ParticleMaker() {
 	@Sided(Side.CLIENT)
-	override fun create(world: World, posX: Double, posY: Double, posZ: Double, motX: Double, motY: Double, motZ: Double, data: ParticleDataColorLifespanScale?): Particle {
+	override fun create(world: ClientWorld, posX: Double, posY: Double, posZ: Double, motX: Double, motY: Double, motZ: Double, data: ParticleDataColorLifespanScale?): Particle {
 		return Instance(world, posX, posY, posZ, motY, data.orDefault)
 	}
 	
@@ -27,7 +27,7 @@ object ParticleExperienceOrbFloating : ParticleDataColorLifespanScale.ParticleMa
 	override val defaultScale = 1F..1F
 	
 	@Sided(Side.CLIENT)
-	class Instance(world: World, posX: Double, posY: Double, posZ: Double, motY: Double, data: ParticleDataColorLifespanScale) : ParticleBase(world, posX, posY, posZ, 0.0, 0.0, 0.0) {
+	class Instance(world: ClientWorld, posX: Double, posY: Double, posZ: Double, motY: Double, data: ParticleDataColorLifespanScale) : ParticleBase(world, posX, posY, posZ, 0.0, 0.0, 0.0) {
 		private val motionOffset: Double
 		
 		init {

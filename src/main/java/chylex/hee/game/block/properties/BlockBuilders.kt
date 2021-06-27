@@ -13,18 +13,19 @@ import net.minecraft.block.SoundType
 import net.minecraft.block.material.Material
 import net.minecraft.block.material.MaterialColor
 
+@Suppress("ConvertLambdaToReference")
 object BlockBuilders {
 	
 	// Building (Uncategorized)
 	
-	val buildEtherealLantern = BlockBuilder(Materials.SOLID_NO_TOOL, MaterialColor.BLUE_TERRACOTTA, SoundType.GLASS).apply {
+	val buildEtherealLantern = BlockBuilder(Materials.SOLID, MaterialColor.BLUE_TERRACOTTA, SoundType.GLASS).apply {
 		harvestTool = Pair(WOOD, PICKAXE)
 		harvestHardness = 0.9F
 		explosionResistance = 0.9F
 		lightLevel = 15
 	}
 	
-	val buildGraveDirt = BlockBuilder(Materials.SOLID_NO_TOOL, MaterialColor.DIRT, SoundType.GROUND).apply {
+	val buildGraveDirt = BlockBuilder(Materials.SOLID, MaterialColor.DIRT, SoundType.GROUND).apply {
 		harvestTool = Pair(WOOD, SHOVEL)
 		harvestHardness = 1.25F
 		explosionResistance = 1.25F
@@ -32,30 +33,34 @@ object BlockBuilders {
 	
 	val buildInfusedGlass = BlockBuilder(Materials.INFUSED_GLASS, MaterialColor.ADOBE /* RENAME ORANGE */, SoundType.GLASS).apply {
 		isSolid = false
+		requiresTool = true
 		harvestTool = Pair(WOOD, PICKAXE)
 		harvestHardness = 0.5F
 		explosionResistance = 0.3F
 	}
 	
-	val buildVantablock = BlockBuilder(Materials.SOLID_WITH_TOOL, MaterialColor.BLACK, SoundType.CLOTH).apply {
+	val buildVantablock = BlockBuilder(Materials.SOLID, MaterialColor.BLACK, SoundType.CLOTH).apply {
+		requiresTool = true
 		harvestTool = Pair(IRON, PICKAXE)
 		harvestHardness = 10.0F
 		explosionResistance = 0.6F
 	}
 	
-	val buildEndiumBlock = BlockBuilder(Materials.SOLID_WITH_TOOL, MaterialColor.LAPIS, SoundType.METAL).apply {
+	val buildEndiumBlock = BlockBuilder(Materials.SOLID, MaterialColor.LAPIS, SoundType.METAL).apply {
+		requiresTool = true
 		harvestTool = Pair(IRON, PICKAXE)
 		harvestHardness = 6.2F
 		explosionResistance = 12.0F
 	}
 	
-	val buildEnderSol = BlockBuilder(Materials.SOLID_WITH_TOOL, MaterialColor.WOOD, SoundType.GROUND.clone(pitch = 0.85F)).apply {
+	val buildEnderSol = BlockBuilder(Materials.SOLID, MaterialColor.WOOD, SoundType.GROUND.clone(pitch = 0.85F)).apply {
+		requiresTool = true
 		harvestTool = Pair(WOOD, SHOVEL)
 		harvestHardness = 1.9F
 		explosionResistance = 1.9F
 	}
 	
-	val buildHumus = BlockBuilder(Materials.SOLID_NO_TOOL, MaterialColor.BLACK, SoundType.GROUND).apply {
+	val buildHumus = BlockBuilder(Materials.SOLID, MaterialColor.BLACK, SoundType.GROUND).apply {
 		harvestTool = Pair(WOOD, SHOVEL)
 		harvestHardness = 0.3F
 		explosionResistance = 0.3F
@@ -64,7 +69,8 @@ object BlockBuilders {
 	
 	// Building (Gloomrock)
 	
-	val buildGloomrock = BlockBuilder(Materials.SOLID_WITH_TOOL, MaterialColor.BLACK, SoundType.STONE).apply {
+	val buildGloomrock = BlockBuilder(Materials.SOLID, MaterialColor.BLACK, SoundType.STONE).apply {
+		requiresTool = true
 		harvestTool = Pair(WOOD, PICKAXE)
 		harvestHardness = 1.6F
 		explosionResistance = 4.2F
@@ -80,14 +86,15 @@ object BlockBuilders {
 		explosionResistance = 4.8F
 	}
 	
-	val buildGloomtorch = BlockBuilder(Materials.SOLID_NO_TOOL, MaterialColor.BLACK, SoundType.STONE).apply {
+	val buildGloomtorch = BlockBuilder(Materials.SOLID, MaterialColor.BLACK, SoundType.STONE).apply {
 		explosionResistance = 0.3F
 		lightLevel = 13
 	}
 	
 	// Building (Dusty Stone)
 	
-	val buildDustyStone = BlockBuilder(Materials.SOLID_NO_TOOL, MaterialColor.DIRT, SoundType.STONE).apply {
+	val buildDustyStone = BlockBuilder(Materials.SOLID, MaterialColor.DIRT, SoundType.STONE).apply {
+		suffocates = false // prevents sliding off the block
 		harvestTool = Pair(WOOD, PICKAXE) // + shovel
 		harvestHardness = 1.1F
 		explosionResistance = 0.3F
@@ -110,7 +117,8 @@ object BlockBuilders {
 	
 	// Building (Obsidian)
 	
-	val buildObsidian = BlockBuilder(Materials.SOLID_WITH_TOOL, MaterialColor.BLACK, SoundType.STONE).apply {
+	val buildObsidian = BlockBuilder(Materials.SOLID, MaterialColor.BLACK, SoundType.STONE).apply {
+		requiresTool = true
 		harvestTool = Pair(DIAMOND, PICKAXE)
 		harvestHardness = 50F
 		explosionResistance = 1200F
@@ -131,7 +139,8 @@ object BlockBuilders {
 	
 	// Building (End Stone)
 	
-	val buildEndStone = BlockBuilder(Materials.SOLID_WITH_TOOL, MaterialColor.SAND, SoundType.STONE).apply {
+	val buildEndStone = BlockBuilder(Materials.SOLID, MaterialColor.SAND, SoundType.STONE).apply {
+		requiresTool = true
 		harvestTool = Pair(WOOD, PICKAXE)
 		harvestHardness = 3.0F
 		explosionResistance = 9.0F
@@ -139,7 +148,7 @@ object BlockBuilders {
 	
 	// Building (Dark Loam)
 	
-	val buildDarkLoam = BlockBuilder(Materials.SOLID_NO_TOOL, MaterialColor.BLACK, SoundType.GROUND).apply {
+	val buildDarkLoam = BlockBuilder(Materials.SOLID, MaterialColor.BLACK, SoundType.GROUND).apply {
 		harvestTool = Pair(WOOD, SHOVEL)
 		harvestHardness = 0.6F
 		explosionResistance = 0.6F
@@ -159,7 +168,8 @@ object BlockBuilders {
 	
 	// Building (Miner's Burial)
 	
-	val buildMinersBurial = BlockBuilder(Materials.SOLID_WITH_TOOL, MaterialColor.RED, SoundType.STONE).apply {
+	val buildMinersBurial = BlockBuilder(Materials.SOLID, MaterialColor.RED, SoundType.STONE).apply {
+		requiresTool = true
 		harvestTool = Pair(WOOD, PICKAXE)
 		harvestHardness = 0.6F
 		explosionResistance = 120F
@@ -183,14 +193,14 @@ object BlockBuilders {
 		explosionResistance = 0F
 	}
 	
-	val buildLootChest = BlockBuilder(Materials.SOLID_NO_TOOL, MaterialColor.BLACK, SoundType.METAL).apply {
+	val buildLootChest = BlockBuilder(Materials.SOLID, MaterialColor.BLACK, SoundType.METAL).apply {
 		makeIndestructible()
 		lightLevel = 13
 	}
 	
 	// Interactive (Puzzle)
 	
-	val buildPuzzleLogic = BlockBuilder(Materials.SOLID_NO_TOOL, MaterialColor.ADOBE /* RENAME ORANGE */, SoundType.STONE).apply {
+	val buildPuzzleLogic = BlockBuilder(Materials.SOLID, MaterialColor.ADOBE /* RENAME ORANGE */, SoundType.STONE).apply {
 		makeIndestructible()
 	}
 	
@@ -200,7 +210,7 @@ object BlockBuilders {
 	
 	// Interactive (Gates)
 	
-	val buildExperienceGate = BlockBuilder(Materials.SOLID_NO_TOOL, MaterialColor.GREEN, SoundType.METAL).apply {
+	val buildExperienceGate = BlockBuilder(Materials.SOLID, MaterialColor.GREEN, SoundType.METAL).apply {
 		makeIndestructible()
 		lightLevel = 5
 	}
@@ -218,7 +228,9 @@ object BlockBuilders {
 	
 	// Ores
 	
-	private val buildEndOre = BlockBuilder(Materials.SOLID_WITH_TOOL, MaterialColor.SAND, SoundType.STONE)
+	private val buildEndOre = BlockBuilder(Materials.SOLID, MaterialColor.SAND, SoundType.STONE).apply {
+		requiresTool = true
+	}
 	
 	val buildEndPowderOre = buildEndOre.clone {
 		harvestTool = Pair(STONE, PICKAXE)
@@ -311,11 +323,12 @@ object BlockBuilders {
 		lightLevel = 15
 	}
 	
-	val buildPortalFrame = BlockBuilder(Materials.SOLID_WITH_TOOL, MaterialColor.SAND, SoundType.STONE).apply {
+	val buildPortalFrame = BlockBuilder(Materials.SOLID, MaterialColor.SAND, SoundType.STONE).apply {
 		makeIndestructible()
 	}
 	
-	val buildPortalFrameCrafted = BlockBuilder(Materials.SOLID_WITH_TOOL, MaterialColor.SAND, SoundType.STONE).apply {
+	val buildPortalFrameCrafted = BlockBuilder(Materials.SOLID, MaterialColor.SAND, SoundType.STONE).apply {
+		requiresTool = true
 		harvestTool = Pair(DIAMOND, PICKAXE)
 		harvestHardness = 1.7F
 		explosionResistance = 1.7F
@@ -342,7 +355,8 @@ object BlockBuilders {
 		explosionResistance *= 0.5F
 	}
 	
-	val buildTable = BlockBuilder(Materials.SOLID_WITH_TOOL, MaterialColor.GRAY, SoundType.METAL).apply {
+	val buildTable = BlockBuilder(Materials.SOLID, MaterialColor.GRAY, SoundType.METAL).apply {
+		requiresTool = true
 		harvestTool = Pair(STONE, PICKAXE)
 		harvestHardness = 20.0F
 		explosionResistance = 15.0F
@@ -361,6 +375,9 @@ object BlockBuilders {
 	val buildScaffolding = BlockBuilder(Materials.SCAFFOLDING, MaterialColor.AIR, SoundType.STONE).apply {
 		makeIndestructible()
 		isSolid = false
+		isOpaque = false
+		suffocates = false
+		blocksVision = false
 	}
 	
 	// Overrides

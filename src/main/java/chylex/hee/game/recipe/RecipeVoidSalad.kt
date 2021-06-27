@@ -1,6 +1,7 @@
 package chylex.hee.game.recipe
 
 import chylex.hee.game.inventory.nonEmptySlots
+import chylex.hee.game.item.ItemVoidSalad
 import chylex.hee.game.item.ItemVoidSalad.Type
 import chylex.hee.init.ModItems
 import com.google.common.collect.Iterators
@@ -33,9 +34,9 @@ object RecipeVoidSalad : RecipeBaseDynamic() {
 		val isRightVoidSalad = isSingleVoidSalad(getStackInRowAndColumn(inv, bowlRow - 1, 2))
 		
 		return when {
-			isLeftVoidSalad && isRightVoidSalad -> ItemStack(ModItems.VOID_SALAD).also { ModItems.VOID_SALAD.setSaladType(it, Type.MEGA) }
-			isLeftVoidSalad || isRightVoidSalad -> ItemStack(ModItems.VOID_SALAD).also { ModItems.VOID_SALAD.setSaladType(it, Type.DOUBLE) }
-			else                                -> ItemStack(ModItems.VOID_SALAD).also { ModItems.VOID_SALAD.setSaladType(it, Type.SINGLE) }
+			isLeftVoidSalad && isRightVoidSalad -> ItemStack(ModItems.VOID_SALAD).also { ItemVoidSalad.setSaladType(it, Type.MEGA) }
+			isLeftVoidSalad || isRightVoidSalad -> ItemStack(ModItems.VOID_SALAD).also { ItemVoidSalad.setSaladType(it, Type.DOUBLE) }
+			else                                -> ItemStack(ModItems.VOID_SALAD).also { ItemVoidSalad.setSaladType(it, Type.SINGLE) }
 		}
 	}
 	
@@ -48,6 +49,6 @@ object RecipeVoidSalad : RecipeBaseDynamic() {
 	}
 	
 	private fun isSingleVoidSalad(stack: ItemStack): Boolean {
-		return stack.item === ModItems.VOID_SALAD && ModItems.VOID_SALAD.getSaladType(stack) == Type.SINGLE
+		return stack.item === ModItems.VOID_SALAD && ItemVoidSalad.getSaladType(stack) == Type.SINGLE
 	}
 }

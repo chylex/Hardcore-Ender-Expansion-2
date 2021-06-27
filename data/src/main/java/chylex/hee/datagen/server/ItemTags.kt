@@ -1,13 +1,15 @@
 package chylex.hee.datagen.server
 
 import chylex.hee.init.ModItems
+import net.minecraft.data.BlockTagsProvider
 import net.minecraft.data.DataGenerator
 import net.minecraft.data.ItemTagsProvider
 import net.minecraft.tags.BlockTags
 import net.minecraft.tags.ItemTags
 import net.minecraftforge.common.Tags
+import net.minecraftforge.common.data.ExistingFileHelper
 
-class ItemTags(generator: DataGenerator) : ItemTagsProvider(generator) {
+class ItemTags(dataGenerator: DataGenerator, blockTagProvider: BlockTagsProvider, modId: String, existingFileHelper: ExistingFileHelper?) : ItemTagsProvider(dataGenerator, blockTagProvider, modId, existingFileHelper) {
 	override fun registerTags() {
 		copy(BlockTags.LEAVES, ItemTags.LEAVES)
 		copy(BlockTags.LOGS, ItemTags.LOGS)
@@ -26,11 +28,11 @@ class ItemTags(generator: DataGenerator) : ItemTagsProvider(generator) {
 		copy(Tags.Blocks.ORES, Tags.Items.ORES)
 		copy(Tags.Blocks.STORAGE_BLOCKS, Tags.Items.STORAGE_BLOCKS)
 		
-		getBuilder(Tags.Items.DUSTS).add(ModItems.ANCIENT_DUST, ModItems.END_POWDER, ModItems.STARDUST)
-		getBuilder(Tags.Items.ENDER_PEARLS).add(ModItems.INFUSED_ENDER_PEARL)
-		getBuilder(Tags.Items.HEADS).add(ModItems.ENDERMAN_HEAD)
-		getBuilder(Tags.Items.INGOTS).add(ModItems.ENDIUM_INGOT, ModItems.INFERNIUM_INGOT, ModItems.DIRTY_INFERNIUM_INGOT)
-		getBuilder(Tags.Items.NUGGETS).add(ModItems.ENDIUM_NUGGET)
-		getBuilder(Tags.Items.RODS).add(ModItems.OBSIDIAN_ROD)
+		getOrCreateBuilder(Tags.Items.DUSTS).add(ModItems.ANCIENT_DUST, ModItems.END_POWDER, ModItems.STARDUST)
+		getOrCreateBuilder(Tags.Items.ENDER_PEARLS).add(ModItems.INFUSED_ENDER_PEARL)
+		getOrCreateBuilder(Tags.Items.HEADS).add(ModItems.ENDERMAN_HEAD)
+		getOrCreateBuilder(Tags.Items.INGOTS).add(ModItems.ENDIUM_INGOT, ModItems.INFERNIUM_INGOT, ModItems.DIRTY_INFERNIUM_INGOT)
+		getOrCreateBuilder(Tags.Items.NUGGETS).add(ModItems.ENDIUM_NUGGET)
+		getOrCreateBuilder(Tags.Items.RODS).add(ModItems.OBSIDIAN_ROD)
 	}
 }

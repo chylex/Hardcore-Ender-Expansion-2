@@ -14,6 +14,7 @@ class ContainerShulkerBoxInInventory(id: Int, player: EntityPlayer, private val 
 	
 	private val slotChangeListener = DetectSlotChangeListener()
 	
+	@Suppress("ConvertLambdaToReference")
 	override fun detectAndSendChanges() {
 		slotChangeListener.restart(listeners) { super.detectAndSendChanges() }?.let(boxInventory::validatePlayerItemOnModification)
 	}

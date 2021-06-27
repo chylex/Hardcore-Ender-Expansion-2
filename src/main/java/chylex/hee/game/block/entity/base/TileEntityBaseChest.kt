@@ -146,7 +146,7 @@ abstract class TileEntityBaseChest(type: TileEntityType<out TileEntityBaseChest>
 	}
 	
 	override fun readNBT(nbt: TagCompound, context: Context) = nbt.use {
-		customName = getStringOrNull(CUSTOM_NAME_TAG)?.let(ITextComponent.Serializer::fromJson)
+		customName = getStringOrNull(CUSTOM_NAME_TAG)?.let(ITextComponent.Serializer::getComponentFromJson)
 		
 		if (context == NETWORK) {
 			viewerCount = getShort(VIEWER_COUNT_TAG).toInt()

@@ -17,6 +17,11 @@ open class SlotTrinketItem(trinketHandler: IItemHandler, slotIndex: Int, x: Int,
 		setBackground(ModAtlases.ATLAS_GUIS, TEX_SLOT_OVERLAY)
 	}
 	
-	override fun isItemValid(stack: ItemStack) = (stack.item as? ITrinketItem)?.canPlaceIntoTrinketSlot(stack) == true
-	override fun getSlotStackLimit() = 1
+	override fun isItemValid(stack: ItemStack): Boolean {
+		return (stack.item as? ITrinketItem)?.canPlaceIntoTrinketSlot(stack) == true
+	}
+	
+	override fun getSlotStackLimit(): Int {
+		return 1
+	}
 }

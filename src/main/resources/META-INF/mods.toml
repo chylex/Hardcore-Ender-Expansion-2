@@ -2,6 +2,7 @@ modLoader = "kotlinforforge"
 loaderVersion = "[1,)"
 
 authors = "https://hee.chylex.com/authors"
+license = "TODO" # TODO
 issueTrackerURL = "https://github.com/chylex/Hardcore-Ender-Expansion-2/issues"
 
 [[mods]]

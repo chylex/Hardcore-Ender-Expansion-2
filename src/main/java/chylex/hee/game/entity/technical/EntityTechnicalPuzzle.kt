@@ -37,7 +37,7 @@ import net.minecraft.util.math.RayTraceContext
 import net.minecraft.util.math.RayTraceContext.BlockMode
 import net.minecraft.util.math.RayTraceContext.FluidMode
 import net.minecraft.util.math.RayTraceResult.Type
-import net.minecraft.util.math.Vec3d
+import net.minecraft.util.math.vector.Vector3d
 import net.minecraft.world.World
 import kotlin.math.cos
 
@@ -173,7 +173,7 @@ class EntityTechnicalPuzzle(type: EntityType<EntityTechnicalPuzzle>, world: Worl
 		}
 	}
 	
-	private fun isPointInPlayerView(point: Vec3d): Boolean {
+	private fun isPointInPlayerView(point: Vector3d): Boolean {
 		return world.players.any {
 			val lookPos = it.lookPosVec
 			val lookDir = it.lookDirVec

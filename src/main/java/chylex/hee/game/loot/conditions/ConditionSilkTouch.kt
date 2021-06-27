@@ -1,11 +1,12 @@
 package chylex.hee.game.loot.conditions
 
-import chylex.hee.system.facades.Resource
+import chylex.hee.init.ModLoot
 import net.minecraft.enchantment.EnchantmentHelper
 import net.minecraft.enchantment.Enchantments
-import net.minecraft.world.storage.loot.LootContext
-import net.minecraft.world.storage.loot.LootParameter
-import net.minecraft.world.storage.loot.LootParameters
+import net.minecraft.loot.LootConditionType
+import net.minecraft.loot.LootContext
+import net.minecraft.loot.LootParameter
+import net.minecraft.loot.LootParameters
 
 class ConditionSilkTouch(override val expectedValue: Boolean) : ILootConditionBoolean {
 	override fun isTrue(context: LootContext): Boolean {
@@ -16,7 +17,11 @@ class ConditionSilkTouch(override val expectedValue: Boolean) : ILootConditionBo
 		return mutableSetOf(LootParameters.TOOL)
 	}
 	
-	object Serializer : ILootConditionBoolean.Serializer<ConditionSilkTouch>(Resource.Custom("has_silk_touch"), ConditionSilkTouch::class.java) {
+	override fun getConditionType(): LootConditionType {
+		return ModLoot.CONDITION_SILK_TOUCH
+	}
+	
+	object Serializer : ILootConditionBoolean.Serializer<ConditionSilkTouch>() {
 		override fun construct(expectedValue: Boolean) = ConditionSilkTouch(expectedValue)
 	}
 }

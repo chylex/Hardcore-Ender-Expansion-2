@@ -1,0 +1,6 @@
+{
+  "conditions": [
+    { "condition": "minecraft:block_state_property", "block": "minecraft:potatoes" },
+    { "condition": "hee:planted_on_humus", "value": true }
+  ]
+}

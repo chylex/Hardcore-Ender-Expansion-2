@@ -23,7 +23,7 @@ import chylex.hee.system.serialization.TagCompound
 import chylex.hee.system.serialization.getListOfCompounds
 import chylex.hee.system.serialization.use
 import net.minecraft.util.math.BlockPos
-import net.minecraft.util.math.Vec3d
+import net.minecraft.util.math.vector.Vector3d
 import net.minecraft.world.World
 import net.minecraftforge.common.util.INBTSerializable
 import java.util.Random
@@ -48,13 +48,13 @@ class EnderEyeSpawnerParticles(private val entity: EntityBossEnderEye) : INBTSer
 		)
 		
 		val FX_PARTICLE = object : FxVecHandler() {
-			override fun handle(world: World, rand: Random, vec: Vec3d) {
+			override fun handle(world: World, rand: Random, vec: Vector3d) {
 				PARTICLE_TICK.spawn(Point(vec, 2), rand)
 			}
 		}
 	}
 	
-	private class ParticleInstance(pos: Vec3d, delay: Int, private var originalDistanceXZ: Float) : INBTSerializable<TagCompound> {
+	private class ParticleInstance(pos: Vector3d, delay: Int, private var originalDistanceXZ: Float) : INBTSerializable<TagCompound> {
 		constructor() : this(Vec3.ZERO, 0, 0F)
 		
 		var pos = pos

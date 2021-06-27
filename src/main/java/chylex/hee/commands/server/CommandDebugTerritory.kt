@@ -1,6 +1,5 @@
 package chylex.hee.commands.server
 
-import chylex.hee.HEE
 import chylex.hee.commands.ICommand
 import chylex.hee.commands.executes
 import chylex.hee.commands.getLong
@@ -10,6 +9,7 @@ import chylex.hee.game.world.Pos
 import chylex.hee.game.world.component1
 import chylex.hee.game.world.component2
 import chylex.hee.game.world.getState
+import chylex.hee.game.world.isEndDimension
 import chylex.hee.game.world.math.Transform
 import chylex.hee.game.world.setState
 import chylex.hee.game.world.territory.TerritoryInstance
@@ -43,7 +43,7 @@ object CommandDebugTerritory : ICommand {
 			val instance = TerritoryInstance.fromPos(pos)
 			val seed = if (hasSeedArg) ctx.getLong("seed") else null
 			
-			if (world.dimension.type !== HEE.dim) {
+			if (!world.isEndDimension) {
 				sendFeedback(StringTextComponent("Invalid dimension."), false)
 				return 0
 			}

@@ -3,7 +3,7 @@ package chylex.hee.game.entity.living.behavior
 import chylex.hee.game.entity.living.EntityMobBlobby
 import chylex.hee.game.entity.living.ai.AIPickUpItemDetour.IItemPickupHandler
 import chylex.hee.game.entity.posVec
-import chylex.hee.game.inventory.isNotEmpty
+import chylex.hee.game.inventory.nullIfEmpty
 import chylex.hee.game.world.playServer
 import chylex.hee.system.migration.Sounds
 import chylex.hee.system.random.nextFloat
@@ -65,7 +65,7 @@ class BlobbyItemPickupHandler(private val blobby: EntityMobBlobby) : IItemPickup
 	}
 	
 	override fun onPickUp(stack: ItemStack) {
-		blobby.heldItem.takeIf { it.isNotEmpty }?.let(blobby::entityDropItem)
+		blobby.heldItem.nullIfEmpty?.let(blobby::entityDropItem)
 		blobby.heldItem = stack
 		
 		Sounds.ENTITY_ITEM_PICKUP.playServer(blobby.world, blobby.posVec, SoundCategory.NEUTRAL, volume = 0.22F, pitch = rand.nextFloat(0.6F, 3.4F))

@@ -25,6 +25,8 @@ import chylex.hee.game.block.BlockEternalFire
 import chylex.hee.game.block.BlockExperienceGateController
 import chylex.hee.game.block.BlockExperienceGateOutline
 import chylex.hee.game.block.BlockFallingObsidian
+import chylex.hee.game.block.BlockFlammableSlab
+import chylex.hee.game.block.BlockFlammableStairs
 import chylex.hee.game.block.BlockFlowerPotCustom
 import chylex.hee.game.block.BlockFlowerPotDeathFlowerDecaying
 import chylex.hee.game.block.BlockGloomrock
@@ -45,7 +47,6 @@ import chylex.hee.game.block.BlockShulkerBoxOverride
 import chylex.hee.game.block.BlockSimple
 import chylex.hee.game.block.BlockSimpleMergingBottom
 import chylex.hee.game.block.BlockSimpleShaped
-import chylex.hee.game.block.BlockSimpleWithMapColor
 import chylex.hee.game.block.BlockSkullCustom
 import chylex.hee.game.block.BlockSlabCustom
 import chylex.hee.game.block.BlockSpawnerObsidianTowers
@@ -58,8 +59,10 @@ import chylex.hee.game.block.BlockVoidPortalCrafted
 import chylex.hee.game.block.BlockVoidPortalInner
 import chylex.hee.game.block.BlockVoidPortalStorage
 import chylex.hee.game.block.BlockVoidPortalStorageCrafted
+import chylex.hee.game.block.BlockWhitebark
 import chylex.hee.game.block.BlockWhitebarkLeaves
 import chylex.hee.game.block.BlockWhitebarkLog
+import chylex.hee.game.block.BlockWhitebarkPlanks
 import chylex.hee.game.block.BlockWhitebarkSapling
 import chylex.hee.game.block.entity.TileEntityAccumulationTable
 import chylex.hee.game.block.entity.TileEntityExperienceTable
@@ -136,11 +139,11 @@ import chylex.hee.system.forge.SubscribeAllEvents
 import chylex.hee.system.forge.SubscribeEvent
 import chylex.hee.system.forge.named
 import chylex.hee.system.forge.useVanillaName
-import chylex.hee.system.migration.BlockFire
 import chylex.hee.system.migration.BlockWall
 import chylex.hee.system.migration.Facing.NORTH
 import chylex.hee.system.migration.Facing.SOUTH
 import chylex.hee.system.migration.ItemBlock
+import net.minecraft.block.AbstractBlock
 import net.minecraft.block.Block
 import net.minecraft.block.Blocks
 import net.minecraft.block.material.MaterialColor
@@ -157,7 +160,7 @@ object ModBlocks {
 	// Blocks: Building (Uncategorized)
 	
 	@JvmField val ETHEREAL_LANTERN = BlockSimple(buildEtherealLantern) named "ethereal_lantern"
-	@JvmField val STONE_BRICK_WALL = BlockWall(Block.Properties.from(Blocks.STONE_BRICKS)) named "stone_brick_wall"
+	@JvmField val STONE_BRICK_WALL = BlockWall(AbstractBlock.Properties.from(Blocks.STONE_BRICKS)) named "stone_brick_wall"
 	@JvmField val INFUSED_GLASS    = BlockInfusedGlass(buildInfusedGlass) named "infused_glass"
 	@JvmField val VANTABLOCK       = BlockSimple(buildVantablock) named "vantablock"
 	@JvmField val ENDIUM_BLOCK     = BlockEndium(buildEndiumBlock) named "endium_block"
@@ -209,9 +212,9 @@ object ModBlocks {
 	
 	// Blocks: Building (End Stone)
 	
-	@JvmField val END_STONE_INFESTED  = BlockSimpleWithMapColor(buildEndStone, MaterialColor.RED) named "end_stone_infested"
-	@JvmField val END_STONE_BURNED    = BlockSimpleWithMapColor(buildEndStone, MaterialColor.ADOBE /* RENAME ORANGE */) named "end_stone_burned"
-	@JvmField val END_STONE_ENCHANTED = BlockSimpleWithMapColor(buildEndStone, MaterialColor.PURPLE) named "end_stone_enchanted"
+	@JvmField val END_STONE_INFESTED  = BlockSimple(buildEndStone.clone { color = MaterialColor.RED }) named "end_stone_infested"
+	@JvmField val END_STONE_BURNED    = BlockSimple(buildEndStone.clone { color = MaterialColor.ADOBE /* RENAME ORANGE */ }) named "end_stone_burned"
+	@JvmField val END_STONE_ENCHANTED = BlockSimple(buildEndStone.clone { color = MaterialColor.PURPLE }) named "end_stone_enchanted"
 	
 	// Blocks: Building (Dark Loam)
 	
@@ -227,10 +230,10 @@ object ModBlocks {
 	// Blocks: Building (Wood)
 	
 	@JvmField val WHITEBARK_LOG    = BlockWhitebarkLog(buildWhitebark) named "whitebark_log"
-	@JvmField val WHITEBARK        = BlockSimple(buildWhitebark) named "whitebark"
-	@JvmField val WHITEBARK_PLANKS = BlockSimple(buildWhitebarkPlanks) named "whitebark_planks"
-	@JvmField val WHITEBARK_STAIRS = BlockStairsCustom(WHITEBARK_PLANKS) named "whitebark_stairs"
-	@JvmField val WHITEBARK_SLAB   = BlockSlabCustom(buildWhitebarkPlanks) named "whitebark_slab"
+	@JvmField val WHITEBARK        = BlockWhitebark(buildWhitebark) named "whitebark"
+	@JvmField val WHITEBARK_PLANKS = BlockWhitebarkPlanks(buildWhitebarkPlanks) named "whitebark_planks"
+	@JvmField val WHITEBARK_STAIRS = BlockFlammableStairs(WHITEBARK_PLANKS) named "whitebark_stairs"
+	@JvmField val WHITEBARK_SLAB   = BlockFlammableSlab(buildWhitebarkPlanks) named "whitebark_slab"
 	
 	// Blocks: Building (Miner's Burial)
 	
@@ -291,10 +294,10 @@ object ModBlocks {
 	@JvmField val WHITEBARK_SAPLING_AUTUMN_ORANGE      = BlockWhitebarkSapling(buildWhitebarkSapling, AutumnTreeGenerator.Orange) named "autumn_sapling_orange"
 	@JvmField val WHITEBARK_SAPLING_AUTUMN_YELLOWGREEN = BlockWhitebarkSapling(buildWhitebarkSapling, AutumnTreeGenerator.YellowGreen) named "autumn_sapling_yellowgreen"
 	
-	@JvmField val WHITEBARK_LEAVES_AUTUMN_RED         = BlockWhitebarkLeaves(buildWhitebarkLeaves, MaterialColor.RED) named "autumn_leaves_red"
-	@JvmField val WHITEBARK_LEAVES_AUTUMN_BROWN       = BlockWhitebarkLeaves(buildWhitebarkLeaves, MaterialColor.BROWN_TERRACOTTA) named "autumn_leaves_brown"
-	@JvmField val WHITEBARK_LEAVES_AUTUMN_ORANGE      = BlockWhitebarkLeaves(buildWhitebarkLeaves, MaterialColor.ADOBE /* RENAME ORANGE */) named "autumn_leaves_orange"
-	@JvmField val WHITEBARK_LEAVES_AUTUMN_YELLOWGREEN = BlockWhitebarkLeaves(buildWhitebarkLeaves, MaterialColor.YELLOW) named "autumn_leaves_yellowgreen"
+	@JvmField val WHITEBARK_LEAVES_AUTUMN_RED         = BlockWhitebarkLeaves(buildWhitebarkLeaves.clone { color = MaterialColor.RED }) named "autumn_leaves_red"
+	@JvmField val WHITEBARK_LEAVES_AUTUMN_BROWN       = BlockWhitebarkLeaves(buildWhitebarkLeaves.clone { color = MaterialColor.BROWN_TERRACOTTA }) named "autumn_leaves_brown"
+	@JvmField val WHITEBARK_LEAVES_AUTUMN_ORANGE      = BlockWhitebarkLeaves(buildWhitebarkLeaves.clone { color = MaterialColor.ADOBE /* RENAME ORANGE */ }) named "autumn_leaves_orange"
+	@JvmField val WHITEBARK_LEAVES_AUTUMN_YELLOWGREEN = BlockWhitebarkLeaves(buildWhitebarkLeaves.clone { color = MaterialColor.YELLOW }) named "autumn_leaves_yellowgreen"
 	
 	@JvmField val POTTED_WHITEBARK_SAPLING_AUTUMN_RED         = BlockFlowerPotCustom(buildFlowerPot, WHITEBARK_SAPLING_AUTUMN_RED) named "potted_autumn_sapling_red"
 	@JvmField val POTTED_WHITEBARK_SAPLING_AUTUMN_BROWN       = BlockFlowerPotCustom(buildFlowerPot, WHITEBARK_SAPLING_AUTUMN_BROWN) named "potted_autumn_sapling_brown"
@@ -553,7 +556,7 @@ object ModBlocks {
 			register(BlockDragonEggOverride(buildDragonEgg).apply { override(Blocks.DRAGON_EGG) { ItemDragonEgg(it, itemBlockDefaultProps) } })
 			
 			for(block in BlockShulkerBoxOverride.ALL_BLOCKS) {
-				register(BlockShulkerBoxOverride(Block.Properties.from(block), block.color).apply {
+				register(BlockShulkerBoxOverride(AbstractBlock.Properties.from(block), block.color).apply {
 					override(block) { ItemShulkerBoxOverride(it, Item.Properties().maxStackSize(1).group(ItemGroup.DECORATIONS)) }
 				})
 			}
@@ -564,26 +567,6 @@ object ModBlocks {
 	fun onRegisterItemBlocks(e: RegistryEvent.Register<Item>) {
 		temporaryItemBlocks.forEach(e.registry::register)
 		temporaryItemBlocks.clear()
-		
-		// fire
-		
-		with(Blocks.FIRE as BlockFire) {
-			setFireInfo(WHITEBARK_LOG, 5, 5)
-			setFireInfo(WHITEBARK, 5, 5)
-			setFireInfo(WHITEBARK_PLANKS, 5, 20)
-			setFireInfo(WHITEBARK_STAIRS, 5, 20)
-			setFireInfo(WHITEBARK_SLAB, 5, 20)
-			
-			setFireInfo(WHITEBARK_LEAVES_AUTUMN_RED, 30, 60)
-			setFireInfo(WHITEBARK_LEAVES_AUTUMN_BROWN, 30, 60)
-			setFireInfo(WHITEBARK_LEAVES_AUTUMN_ORANGE, 30, 60)
-			setFireInfo(WHITEBARK_LEAVES_AUTUMN_YELLOWGREEN, 30, 60)
-			
-			setFireInfo(INFUSED_TNT, 15, 100)
-			
-			setFireInfo(ANCIENT_COBWEB, 100, 300)
-			setFireInfo(DRY_VINES, 100, 300)
-		}
 		
 		// vanilla modifications
 		

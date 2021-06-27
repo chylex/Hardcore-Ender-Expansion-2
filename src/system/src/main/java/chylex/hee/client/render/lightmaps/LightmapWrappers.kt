@@ -1,6 +1,6 @@
 package chylex.hee.client.render.lightmaps
 
-import net.minecraft.client.renderer.Vector3f
+import net.minecraft.util.math.vector.Vector3f
 import kotlin.math.max
 
 fun ILightmap.mergeSkyLightIntoBlockLight() = object : ILightmap {

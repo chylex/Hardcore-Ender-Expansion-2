@@ -1,7 +1,10 @@
 package chylex.hee
 
 import chylex.hee.proxy.ISidedProxy
-import net.minecraft.world.dimension.DimensionType
+import chylex.hee.system.facades.Resource
+import net.minecraft.util.RegistryKey
+import net.minecraft.util.registry.Registry
+import net.minecraft.world.World
 import org.apache.logging.log4j.LogManager
 import org.apache.logging.log4j.Logger
 
@@ -12,5 +15,5 @@ object HEE {
 	lateinit var proxy: ISidedProxy
 	
 	val log: Logger = LogManager.getLogger("HardcoreEnderExpansion")
-	val dim: DimensionType = DimensionType.THE_END
+	val dim: RegistryKey<World> = RegistryKey.getOrCreateKey(Registry.WORLD_KEY, Resource.Custom("end"))
 }

@@ -8,7 +8,6 @@ interface IInventoryFromPlayerItem : IInventory {
 	val player: EntityPlayer
 	fun tryUpdatePlayerItem(): Boolean
 	
-	@JvmDefault
 	fun validatePlayerItemOnModification(modifiedSlot: Int) {
 		if (!player.world.isRemote && !tryUpdatePlayerItem()) {
 			if (modifiedSlot < size) {

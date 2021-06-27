@@ -8,7 +8,7 @@ import chylex.hee.game.world.math.Size
 import chylex.hee.system.math.ceilToInt
 import net.minecraft.block.Blocks
 import net.minecraft.util.math.BlockPos
-import net.minecraft.util.math.Vec3d
+import net.minecraft.util.math.vector.Vector3d
 
 class CaveGenerator(
 	private val carver: ICaveCarver,
@@ -17,7 +17,7 @@ class CaveGenerator(
 	private val stepSize: Double,
 	private val maxConsecutiveFails: Int = Int.MAX_VALUE,
 ) {
-	fun generate(world: SegmentedWorld, start: Vec3d, length: Double, pather: ICavePather): Int {
+	fun generate(world: SegmentedWorld, start: Vector3d, length: Double, pather: ICavePather): Int {
 		val rand = world.rand
 		val worldBox = world.worldSize.toBoundingBox(BlockPos.ZERO)
 		

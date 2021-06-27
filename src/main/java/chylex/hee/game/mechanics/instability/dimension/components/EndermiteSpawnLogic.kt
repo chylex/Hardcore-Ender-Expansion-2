@@ -1,12 +1,13 @@
 package chylex.hee.game.mechanics.instability.dimension.components
 
-import chylex.hee.game.entity.living.EntityMobEndermiteInstability
 import chylex.hee.game.potion.makeEffect
 import chylex.hee.game.world.Pos
 import chylex.hee.game.world.blocksMovement
 import chylex.hee.game.world.center
 import chylex.hee.game.world.isTopSolid
 import chylex.hee.game.world.offsetUntil
+import chylex.hee.game.world.spawn
+import chylex.hee.init.ModEntities
 import chylex.hee.system.migration.Facing.UP
 import chylex.hee.system.migration.Potions
 import chylex.hee.system.random.nextFloat
@@ -33,10 +34,8 @@ abstract class EndermiteSpawnLogic {
 			val finalPos = randomPos.offsetUntil(UP, -8..8) { !it.blocksMovement(world) && it.down().isTopSolid(world) }
 			
 			if (finalPos != null) {
-				EntityMobEndermiteInstability(world).apply {
-					setLocationAndAngles(finalPos.x + 0.5, finalPos.y + 0.01, finalPos.z + 0.5, rand.nextFloat(0F, 360F), 0F)
+				world.spawn(ModEntities.ENDERMITE_INSTABILITY, finalPos.x + 0.5, finalPos.y + 0.01, finalPos.z + 0.5, yaw = rand.nextFloat(0F, 360F)) {
 					addPotionEffect(Potions.RESISTANCE.makeEffect(20, 5, isAmbient = false, showParticles = false))
-					world.addEntity(this)
 				}
 				
 				// TODO particles and spawn sound

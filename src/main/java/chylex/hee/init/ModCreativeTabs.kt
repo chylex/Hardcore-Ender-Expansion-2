@@ -10,11 +10,7 @@ import net.minecraft.item.ItemStack
 import net.minecraft.util.NonNullList
 
 object ModCreativeTabs {
-	lateinit var main: OrderedCreativeTab
-	
-	fun initialize() {
-		main = OrderedCreativeTab("hee")
-	}
+	val main = OrderedCreativeTab("hee")
 	
 	class OrderedCreativeTab(label: String) : ItemGroup(label) {
 		private val itemOrder = Reference2ShortOpenHashMap<Item>().apply { defaultReturnValue(Short.MAX_VALUE) }

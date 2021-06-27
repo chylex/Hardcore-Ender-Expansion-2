@@ -9,13 +9,12 @@ import chylex.hee.game.entity.technical.EntityTechnicalTrigger.Types.STRONGHOLD_
 import chylex.hee.game.world.Pos
 import chylex.hee.game.world.feature.stronghold.StrongholdPieceType
 import chylex.hee.game.world.isPeaceful
+import chylex.hee.game.world.spawn
 import chylex.hee.game.world.structure.IStructureWorld
 import chylex.hee.game.world.structure.trigger.EntityStructureTrigger
+import chylex.hee.init.ModEntities
 import chylex.hee.network.client.PacketClientFX
 import chylex.hee.network.fx.FxVecData
-import chylex.hee.system.math.component1
-import chylex.hee.system.math.component2
-import chylex.hee.system.math.component3
 import chylex.hee.system.migration.EntityPlayer
 import chylex.hee.system.random.nextFloat
 import chylex.hee.system.random.nextInt
@@ -57,19 +56,16 @@ class StrongholdRoom_Trap_CornerHoles(file: String) : StrongholdAbstractPieceFro
 			val targets = world.selectVulnerableEntities.inBox<EntityPlayer>(targetArea)
 			
 			repeat(min(spawnsLeft, rand.nextInt(1, 3))) {
-				val (x, y, z) = entity.posVec.add(
+				val spawnPos = entity.posVec.add(
 					4.5 * (if (rand.nextBoolean()) 1 else -1),
 					2.0,
 					4.5 * (if (rand.nextBoolean()) 1 else -1)
 				)
 				
-				EntityMobSilverfish(world).apply {
-					setLocationAndAngles(x, y, z, rand.nextFloat(0F, 360F), 0F)
+				world.spawn(ModEntities.SILVERFISH, spawnPos, yaw = rand.nextFloat(0F, 360F)) {
 					delayHideInBlockAI(20 * 30)
 					fallDistance = 1.5F
 					attackTarget = rand.nextItemOrNull(targets)
-					
-					world.addEntity(this)
 					PacketClientFX(EntityMobSilverfish.FX_SPAWN_PARTICLE, FxVecData(posVec)).sendToAllAround(this, 8.0)
 				}
 				

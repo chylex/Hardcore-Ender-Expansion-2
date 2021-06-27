@@ -19,10 +19,10 @@ import net.minecraft.item.IArmorMaterial
 import net.minecraft.item.IItemTier
 import net.minecraft.item.ItemStack
 import net.minecraft.item.Items
+import net.minecraft.loot.LootContext
+import net.minecraft.loot.LootParameterSets
 import net.minecraft.util.ResourceLocation
-import net.minecraft.world.dimension.DimensionType
-import net.minecraft.world.storage.loot.LootContext
-import net.minecraft.world.storage.loot.LootParameterSets
+import net.minecraft.world.World
 import java.util.Collections
 import java.util.EnumMap
 import java.util.Random
@@ -40,7 +40,7 @@ object TombDungeonLoot {
 		// TODO add modded resources
 		
 		fun generateItem(rand: Random): ItemStack {
-			val overworld = Environment.getDimension(DimensionType.OVERWORLD)
+			val overworld = Environment.getDimension(World.OVERWORLD)
 			val table = Environment.getLootTable(table)
 			
 			return table.generate(LootContext.Builder(overworld).withRandom(rand).build(LootParameterSets.EMPTY)).firstOrNull() ?: ItemStack.EMPTY

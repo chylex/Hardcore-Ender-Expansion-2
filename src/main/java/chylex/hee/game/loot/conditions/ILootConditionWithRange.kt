@@ -3,15 +3,15 @@ package chylex.hee.game.loot.conditions
 import com.google.gson.JsonDeserializationContext
 import com.google.gson.JsonObject
 import com.google.gson.JsonSerializationContext
+import net.minecraft.loot.ILootSerializer
+import net.minecraft.loot.conditions.ILootCondition
 import net.minecraft.util.JSONUtils
-import net.minecraft.util.ResourceLocation
-import net.minecraft.world.storage.loot.conditions.ILootCondition
 
 interface ILootConditionWithRange : ILootCondition {
 	val minLevel: Int
 	val maxLevel: Int
 	
-	abstract class Serializer<T : ILootConditionWithRange>(key: ResourceLocation, cls: Class<T>) : ILootCondition.AbstractSerializer<T>(key, cls) {
+	abstract class Serializer<T : ILootConditionWithRange> : ILootSerializer<T> {
 		private companion object {
 			private const val MIN_LEVEL = 0
 			private const val MAX_LEVEL = Int.MAX_VALUE

@@ -16,17 +16,14 @@ interface ITerritoryDescription {
 	val colors: TerritoryColors
 	val environment: TerritoryEnvironment
 	
-	@JvmDefault
 	val tokenHolders: TerritoryTokenHolders
 		get() = TerritoryTokenHolders.Default
 	
-	@JvmDefault
 	fun initialize(instance: TerritoryInstance, entry: TerritoryEntry, tickers: MutableList<ITerritoryTicker>) {
 		if (entry.type == RARE) {
 			tickers.add(VoidTicker(entry.registerComponent(TerritoryStorageComponent.VOID_DATA)))
 		}
 	}
 	
-	@JvmDefault
 	fun prepareSpawnPoint(world: World, spawnPoint: BlockPos, instance: TerritoryInstance) {}
 }

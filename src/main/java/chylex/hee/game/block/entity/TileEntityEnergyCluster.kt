@@ -363,9 +363,4 @@ class TileEntityEnergyCluster(type: TileEntityType<TileEntityEnergyCluster>) : T
 			particle = Pair(particleSpawner, Point(pos, 1))
 		}
 	}
-	
-	// Rendering
-	
-	override fun hasFastRenderer() = true
-	override fun canRenderBreaking() = false
 }

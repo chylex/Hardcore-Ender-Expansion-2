@@ -2,7 +2,6 @@ package chylex.hee.datagen.client.util
 
 import chylex.hee.datagen.r
 import chylex.hee.datagen.safeUnit
-import chylex.hee.system.migration.BlockLog
 import chylex.hee.system.migration.BlockRotatedPillar
 import chylex.hee.system.migration.BlockSlab
 import chylex.hee.system.migration.BlockStairs
@@ -47,7 +46,7 @@ fun BlockStateProvider.slab(slabBlock: BlockSlab, fullBlock: Block, side: Resour
 	this.simpleBlockItem(slabBlock)
 }
 
-fun BlockStateProvider.log(block: BlockLog) = safeUnit {
+fun BlockStateProvider.log(block: BlockRotatedPillar) = safeUnit {
 	this.logBlock(block)
 	this.simpleBlockItem(block)
 }
@@ -59,6 +58,6 @@ fun BlockStateProvider.pillar(block: BlockRotatedPillar) = safeUnit {
 
 fun BlockStateProvider.pillar(block: BlockRotatedPillar, model: Block) = safeUnit {
 	val modelFile = UncheckedModelFile(model.r)
-	this.axisBlock(block, modelFile)
+	this.axisBlock(block, model.r)
 	this.simpleBlockItem(block, modelFile)
 }

@@ -11,7 +11,6 @@ import chylex.hee.game.world.allInCenteredBox
 import chylex.hee.game.world.getFluidState
 import chylex.hee.game.world.setAir
 import chylex.hee.system.color.IntColor.Companion.RGB
-import chylex.hee.system.facades.Resource
 import chylex.hee.system.facades.Stats
 import chylex.hee.system.migration.ActionResult.FAIL
 import chylex.hee.system.migration.ActionResult.PASS
@@ -24,8 +23,9 @@ import net.minecraft.client.renderer.color.IItemColor
 import net.minecraft.enchantment.Enchantment
 import net.minecraft.enchantment.Enchantments
 import net.minecraft.entity.Entity
+import net.minecraft.fluid.FluidState
 import net.minecraft.fluid.Fluids
-import net.minecraft.fluid.IFluidState
+import net.minecraft.item.IItemPropertyGetter
 import net.minecraft.item.ItemStack
 import net.minecraft.util.ActionResult
 import net.minecraft.util.Hand
@@ -37,13 +37,17 @@ import net.minecraft.world.World
 import java.util.Collections
 
 class ItemVoidBucket(properties: Properties) : ItemAbstractVoidTool(properties, VOID_BUCKET) {
-	private companion object {
+	companion object {
 		private const val COOLDOWN_TAG = "Cooldown"
 		private const val COLOR_TAG = "Color"
 		
 		private const val COOLDOWN_TICKS = 13
 		
-		private fun getFluidColor(state: IFluidState) = when {
+		val VOID_BUCKET_COOLDOWN_PROPERTY = IItemPropertyGetter { stack, _, _ ->
+			(stack.heeTagOrNull?.getByte(COOLDOWN_TAG) ?: 0) / COOLDOWN_TICKS.toFloat()
+		}
+		
+		private fun getFluidColor(state: FluidState) = when {
 			state.isEmpty                           -> 0
 			state.fluid.isEquivalentTo(Fluids.LAVA) -> RGB(205, 90, 17).i
 			else                                    -> state.fluid.attributes.color
@@ -51,12 +55,6 @@ class ItemVoidBucket(properties: Properties) : ItemAbstractVoidTool(properties, 
 		
 		private fun isModifiableFluid(world: World, pos: BlockPos, player: EntityPlayer, stack: ItemStack): Boolean {
 			return !pos.getFluidState(world).isEmpty && world.isBlockModifiable(player, pos) && BlockEditor.canEdit(pos, player, stack)
-		}
-	}
-	
-	init {
-		addPropertyOverride(Resource.Custom("void_bucket_cooldown")) { stack, _, _ ->
-			(stack.heeTagOrNull?.getByte(COOLDOWN_TAG) ?: 0) / COOLDOWN_TICKS.toFloat()
 		}
 	}
 	

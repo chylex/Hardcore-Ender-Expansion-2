@@ -19,12 +19,12 @@ class MovingSoundSpatialDash(private val entity: EntityProjectileSpatialDash) : 
 	
 	override fun tick() {
 		if (!entity.isAlive) {
-			donePlaying = true
+			finishPlaying()
 			return
 		}
 		
-		x = entity.posX.toFloat()
-		y = entity.posY.toFloat()
-		z = entity.posZ.toFloat()
+		x = entity.posX
+		y = entity.posY
+		z = entity.posZ
 	}
 }

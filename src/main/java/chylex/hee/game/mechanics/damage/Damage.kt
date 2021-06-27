@@ -6,7 +6,7 @@ import chylex.hee.system.migration.EntityLivingBase
 import net.minecraft.enchantment.EnchantmentHelper
 import net.minecraft.entity.Entity
 import net.minecraft.entity.LivingEntity
-import net.minecraft.entity.SharedMonsterAttributes.ATTACK_KNOCKBACK
+import net.minecraft.entity.ai.attributes.Attributes.ATTACK_KNOCKBACK
 import kotlin.math.cos
 import kotlin.math.sin
 
@@ -25,10 +25,10 @@ class Damage(private vararg val processors: IDamageProcessor) : IDamageDealer {
 		}
 		
 		if (directSource is EntityLivingBase && target is LivingEntity) {
-			val extraKnockback = directSource.getAttribute(ATTACK_KNOCKBACK).value + EnchantmentHelper.getKnockbackModifier(directSource)
+			val extraKnockback = directSource.getAttributeValue(ATTACK_KNOCKBACK) + EnchantmentHelper.getKnockbackModifier(directSource)
 			if (extraKnockback > 0F) {
 				val yawRad = directSource.rotationYaw.toDouble().toRadians()
-				target.knockBack(directSource, extraKnockback.toFloat() * 0.5F, sin(yawRad), -cos(yawRad))
+				target.applyKnockback(extraKnockback.toFloat() * 0.5F, sin(yawRad), -cos(yawRad))
 				directSource.motion = directSource.motion.mul(0.6, 1.0, 0.6)
 			}
 		}

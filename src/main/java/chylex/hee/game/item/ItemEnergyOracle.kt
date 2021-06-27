@@ -21,7 +21,6 @@ import chylex.hee.game.world.isLoaded
 import chylex.hee.game.world.totalTime
 import chylex.hee.init.ModItems
 import chylex.hee.system.color.HCL
-import chylex.hee.system.facades.Resource
 import chylex.hee.system.forge.Side
 import chylex.hee.system.forge.Sided
 import chylex.hee.system.math.angleBetween
@@ -47,6 +46,7 @@ import it.unimi.dsi.fastutil.longs.LongCollection
 import net.minecraft.client.renderer.color.IItemColor
 import net.minecraft.client.util.ITooltipFlag
 import net.minecraft.entity.Entity
+import net.minecraft.item.IItemPropertyGetter
 import net.minecraft.item.ItemStack
 import net.minecraft.item.ItemUseContext
 import net.minecraft.util.ActionResultType
@@ -55,7 +55,7 @@ import net.minecraft.util.text.ITextComponent
 import net.minecraft.world.World
 
 class ItemEnergyOracle(properties: Properties) : ItemAbstractEnergyUser(properties), IInfusableItem {
-	private companion object {
+	companion object {
 		private const val ORACLE_IDENTIFIER_TAG = "ID"
 		private const val ORACLE_LAST_SLOT_TAG = "Slot"
 		
@@ -103,10 +103,8 @@ class ItemEnergyOracle(properties: Properties) : ItemAbstractEnergyUser(properti
 				0.5F // tracking
 			}
 		}
-	}
-	
-	init {
-		addPropertyOverride(Resource.Custom("activity_intensity")) { stack, _, entity ->
+		
+		val ACTIVITY_INTENSITY_PROPERTY = IItemPropertyGetter { stack, _, entity ->
 			getActivityIntensityProp(stack, entity)
 		}
 	}
@@ -202,7 +200,7 @@ class ItemEnergyOracle(properties: Properties) : ItemAbstractEnergyUser(properti
 			if (ignoreList != null && ignoreList.any { isClusterEntryInvalid(world, it) }) {
 				val newIgnoreList = LongArrayList(ignoreList.size - 1)
 				
-				for(entry in ignoreList) {
+				for (entry in ignoreList) {
 					if (!isClusterEntryInvalid(world, entry)) {
 						newIgnoreList.add(entry)
 					}
@@ -358,7 +356,7 @@ class ItemEnergyOracle(properties: Properties) : ItemAbstractEnergyUser(properti
 			val tag = stack.heeTagOrNull ?: return INACTIVE_INT
 			val player = MC.player
 			
-			if (player == null || !MC.renderManager.renderShadow) { // do not render on player model in inventory // UPDATE 1.15 (make sure RenderManager.renderShadow is still only set in InventoryScreen)
+			if (player == null || !MC.renderManager.renderShadow) { // do not render on player model in inventory // UPDATE 1.16 (make sure RenderManager.renderShadow is still only set in InventoryScreen)
 				return INACTIVE_INT
 			}
 			

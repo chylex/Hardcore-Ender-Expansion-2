@@ -1,5 +1,7 @@
 package chylex.hee.game.entity
 
+import chylex.hee.game.world.isEndDimension
+import chylex.hee.game.world.isOverworldDimension
 import chylex.hee.system.math.Vec
 import chylex.hee.system.migration.EntityItem
 import chylex.hee.system.migration.EntityLivingBase
@@ -8,24 +10,29 @@ import chylex.hee.system.serialization.getOrCreateCompound
 import chylex.hee.system.serialization.heeTag
 import chylex.hee.system.serialization.heeTagOrNull
 import com.google.common.base.Predicates
-import com.google.common.collect.Iterables
 import net.minecraft.client.world.ClientWorld
 import net.minecraft.enchantment.ProtectionEnchantment
 import net.minecraft.entity.Entity
+import net.minecraft.entity.EntityType
+import net.minecraft.entity.LivingEntity
+import net.minecraft.entity.ai.attributes.Attribute
 import net.minecraft.entity.ai.attributes.AttributeModifier
 import net.minecraft.entity.ai.attributes.AttributeModifier.Operation
-import net.minecraft.entity.ai.attributes.IAttributeInstance
+import net.minecraft.entity.ai.attributes.AttributeModifierMap.MutableAttribute
+import net.minecraft.entity.ai.attributes.ModifiableAttributeInstance
 import net.minecraft.entity.player.PlayerEntity.PERSISTED_NBT_TAG
 import net.minecraft.util.EntityPredicates
-import net.minecraft.util.math.Vec3d
+import net.minecraft.util.math.vector.Vector3d
 import net.minecraft.world.IEntityReader
 import net.minecraft.world.IWorld
 import net.minecraft.world.server.ServerWorld
+import net.minecraftforge.common.ForgeMod
+import net.minecraftforge.event.entity.EntityAttributeCreationEvent
 
 // Properties
 
-var Entity.posVec: Vec3d
-	get() = this.positionVector
+var Entity.posVec: Vector3d
+	get() = this.positionVec
 	set(value) = this.setRawPosition(value.x, value.y, value.z)
 
 var Entity.positionX
@@ -58,11 +65,20 @@ var Entity.motionZ
 		this.motion = Vec(motion.x, motion.y, value)
 	}
 
-val Entity.lookPosVec: Vec3d
+val Entity.lookPosVec: Vector3d
 	get() = this.getEyePosition(1F)
 
-val Entity.lookDirVec: Vec3d
+val Entity.lookDirVec: Vector3d
 	get() = this.getLook(1F)
+
+val Entity.isBoss
+	get() = !this.canChangeDimension() // TODO better impl?
+
+val Entity.isInOverworldDimension
+	get() = this.world.isOverworldDimension
+
+val Entity.isInEndDimension
+	get() = this.world.isEndDimension
 
 // Methods
 
@@ -70,7 +86,7 @@ fun Entity.setFireTicks(ticks: Int) {
 	val prevFire = this.fire
 	this.setFire(ticks / 20) // in case something overrides it
 	
-	val finalTicks = when(this) {
+	val finalTicks = when (this) {
 		is EntityLivingBase -> ProtectionEnchantment.getFireTimeForEntity(this, ticks)
 		else                -> ticks
 	}
@@ -108,7 +124,15 @@ val Entity.heeTagPersistent
 val Entity.heeTagPersistentOrNull
 	get() = this.persistentData.getCompoundOrNull(PERSISTED_NBT_TAG)?.heeTagOrNull
 
-// Attributes
+// Attributes (Forge)
+
+val ENTITY_GRAVITY
+	get() = ForgeMod.ENTITY_GRAVITY.get()
+
+val REACH_DISTANCE
+	get() = ForgeMod.REACH_DISTANCE.get()
+
+// Attributes (Operations)
 
 /** Performs operation: base + x + y */
 val OPERATION_ADD = Operation.ADDITION
@@ -121,16 +145,36 @@ val OPERATION_MUL_INCR_INDIVIDUAL = Operation.MULTIPLY_TOTAL
 
 // Attributes (Helpers)
 
-fun IAttributeInstance.tryApplyModifier(modifier: AttributeModifier) {
+fun LivingEntity.getAttributeInstance(attribute: Attribute): ModifiableAttributeInstance {
+	return this.getAttribute(attribute)!!
+}
+
+fun ModifiableAttributeInstance.tryApplyPersistentModifier(modifier: AttributeModifier) {
 	if (!this.hasModifier(modifier)) {
-		this.applyModifier(modifier)
+		this.applyPersistentModifier(modifier)
 	}
 }
 
-fun IAttributeInstance.tryRemoveModifier(modifier: AttributeModifier) {
+fun ModifiableAttributeInstance.tryApplyNonPersistentModifier(modifier: AttributeModifier) {
+	if (!this.hasModifier(modifier)) {
+		this.applyNonPersistentModifier(modifier)
+	}
+}
+
+fun ModifiableAttributeInstance.tryRemoveModifier(modifier: AttributeModifier) {
 	if (this.hasModifier(modifier)) {
 		this.removeModifier(modifier)
 	}
+}
+
+fun MutableAttribute.with(vararg attributeValues: Pair<Attribute, Double>) = apply {
+	for ((attribute, value) in attributeValues) {
+		this.createMutableAttribute(attribute, value)
+	}
+}
+
+operator fun EntityAttributeCreationEvent.set(entityType: EntityType<out LivingEntity>, attributeBuilder: MutableAttribute) {
+	this.put(entityType, attributeBuilder.create())
 }
 
 // Selectors
@@ -147,9 +191,9 @@ private val predicateAlwaysTrue = Predicates.alwaysTrue<Entity>()
  * Selects all entities in the dimension.
  */
 val IWorld.selectAllEntities: Iterable<Entity>
-	get() = when(this) {
+	get() = when (this) {
 		is ClientWorld -> this.allEntities
-		is ServerWorld -> Iterables.concat(Iterable(this.entities::iterator), this.globalEntities)
+		is ServerWorld -> this.entitiesIteratable
 		else           -> emptyList()
 	}
 

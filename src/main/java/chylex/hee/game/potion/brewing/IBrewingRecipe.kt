@@ -3,7 +3,6 @@ package chylex.hee.game.potion.brewing
 import net.minecraft.item.ItemStack
 
 interface IBrewingRecipe : net.minecraftforge.common.brewing.IBrewingRecipe {
-	@JvmDefault
 	override fun getOutput(input: ItemStack, ingredient: ItemStack): ItemStack {
 		return if (isIngredient(ingredient) && isInput(input))
 			brew(input, ingredient)

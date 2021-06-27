@@ -1,6 +1,7 @@
 package chylex.hee.game.mechanics.explosion
 
 import chylex.hee.game.entity.lookPosVec
+import chylex.hee.game.world.center
 import chylex.hee.game.world.getFluidState
 import chylex.hee.game.world.getState
 import chylex.hee.game.world.isAir
@@ -26,6 +27,8 @@ import net.minecraft.enchantment.Enchantments
 import net.minecraft.enchantment.ProtectionEnchantment
 import net.minecraft.entity.Entity
 import net.minecraft.item.ItemStack
+import net.minecraft.loot.LootContext
+import net.minecraft.loot.LootParameters
 import net.minecraft.network.play.server.SExplosionPacket
 import net.minecraft.util.DamageSource
 import net.minecraft.util.SoundCategory
@@ -34,8 +37,6 @@ import net.minecraft.util.math.BlockPos
 import net.minecraft.world.Explosion
 import net.minecraft.world.World
 import net.minecraft.world.server.ServerWorld
-import net.minecraft.world.storage.loot.LootContext
-import net.minecraft.world.storage.loot.LootParameters
 import net.minecraftforge.event.ForgeEventFactory
 import java.util.Random
 import kotlin.math.floor
@@ -118,8 +119,8 @@ class ExplosionBuilder {
 								
 								if (!state.isAir(world, pos) || !fluid.isEmpty) {
 									val blockResistance = max(
-										state.getExplosionResistance(world, pos, source, this),
-										fluid.getExplosionResistance(world, pos, source, this)
+										state.getExplosionResistance(world, pos, this),
+										fluid.getExplosionResistance(world, pos, this)
 									)
 									
 									val finalResistance = source?.getExplosionResistance(this, world, pos, state, fluid, blockResistance) ?: blockResistance
@@ -228,7 +229,7 @@ class ExplosionBuilder {
 							
 							LootContext.Builder(world)
 								.withRandom(world.rand)
-								.withParameter(LootParameters.POSITION, pos)
+								.withParameter(LootParameters.ORIGIN, pos.center)
 								.withParameter(LootParameters.TOOL, miningTool)
 								.withParameter(LootParameters.EXPLOSION_RADIUS, modifiedRadius)
 								.withNullableParameter(LootParameters.BLOCK_ENTITY, tile)

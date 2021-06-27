@@ -56,14 +56,14 @@ class TileEntityExperienceTable(type: TileEntityType<TileEntityExperienceTable>)
 		val item = stack.item
 		
 		if (item === Items.EXPERIENCE_BOTTLE) {
-			return Process(this, pedestalPos, experience = (0 until stack.size).sumBy { 3 + rand.nextInt(5) + rand.nextInt(5) }, updates = 1, usesBottle = false)
+			return Process(this, pedestalPos, experience = (0 until stack.size).sumOf { 3 + rand.nextInt(5) + rand.nextInt(5) }, updates = 1, usesBottle = false)
 		}
 		else if (item === ModItems.EXPERIENCE_BOTTLE) {
 			return Process(this, pedestalPos, experience = stack.size * ModItems.EXPERIENCE_BOTTLE.getExperienceAmountPerItem(stack), updates = 0, usesBottle = false)
 		}
 		else if (item === Items.ENCHANTED_BOOK) {
 			val enchantments = EnchantmentHelper.getEnchantments(stack)
-			val experience = enchantments.entries.sumBy { (ench, level) -> (1F + (level.toFloat() / ench.maxLevel)).pow(1.5F + (level.coerceAtMost(5) * 0.5F)).floorToInt() }
+			val experience = enchantments.entries.sumOf { (ench, level) -> (1F + (level.toFloat() / ench.maxLevel)).pow(1.5F + (level.coerceAtMost(5) * 0.5F)).floorToInt() }
 			val updates = 1 + enchantments.values.sum()
 			
 			return Process(this, pedestalPos, experience, updates)

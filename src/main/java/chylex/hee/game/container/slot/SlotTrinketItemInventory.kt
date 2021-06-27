@@ -3,7 +3,6 @@ package chylex.hee.game.container.slot
 import chylex.hee.HEE
 import chylex.hee.client.MC
 import chylex.hee.client.render.gl.GL
-import chylex.hee.game.container.slot.SlotTrinketItemInventory.Client.isRenderingGUI
 import chylex.hee.network.server.PacketServerShiftClickTrinket
 import chylex.hee.system.facades.Resource
 import chylex.hee.system.forge.EventPriority
@@ -11,13 +10,14 @@ import chylex.hee.system.forge.Side
 import chylex.hee.system.forge.Sided
 import chylex.hee.system.forge.SubscribeAllEvents
 import chylex.hee.system.forge.SubscribeEvent
+import com.mojang.blaze3d.matrix.MatrixStack
 import net.minecraft.client.gui.AbstractGui
 import net.minecraft.client.gui.screen.Screen
 import net.minecraft.client.gui.screen.inventory.InventoryScreen
 import net.minecraft.client.renderer.RenderHelper
 import net.minecraft.inventory.container.Slot
+import net.minecraftforge.client.event.GuiContainerEvent
 import net.minecraftforge.client.event.GuiScreenEvent
-import net.minecraftforge.client.event.GuiScreenEvent.DrawScreenEvent
 import net.minecraftforge.items.IItemHandler
 
 class SlotTrinketItemInventory(trinketHandler: IItemHandler, slotNumber: Int) : SlotTrinketItem(trinketHandler, 0, -2000, -2000) {
@@ -48,12 +48,12 @@ class SlotTrinketItemInventory(trinketHandler: IItemHandler, slotNumber: Int) : 
 			return false // TODO figure out creative inventory
 		}
 		
-		if (isRenderingGUI) {
-			isRenderingGUI = false
-			
+		val matrix = Client.renderMatrixStack
+		if (matrix != null) {
+			Client.renderMatrixStack = null
 			RenderHelper.disableStandardItemLighting()
 			GL.bindTexture(TEX_SLOT_BACKGROUND)
-			AbstractGui.blit(xPos - 1, yPos - 1, 18, 18, 0F, 0F, 18, 18, TEX_SLOT_W, TEX_SLOT_H)
+			AbstractGui.blit(matrix, xPos - 1, yPos - 1, 18, 18, 0F, 0F, 18, 18, TEX_SLOT_W, TEX_SLOT_H)
 		}
 		
 		return true
@@ -112,16 +112,16 @@ class SlotTrinketItemInventory(trinketHandler: IItemHandler, slotNumber: Int) : 
 		
 		// Texture rendering
 		
-		var isRenderingGUI = false
+		var renderMatrixStack: MatrixStack? = null
 		
 		@SubscribeEvent(EventPriority.LOWEST)
-		fun onDrawGuiScreenPre(@Suppress("UNUSED_PARAMETER") e: DrawScreenEvent.Pre) {
-			isRenderingGUI = true
+		fun onDrawGuiScreenPre(e: GuiContainerEvent.DrawBackground) {
+			renderMatrixStack = e.matrixStack
 		}
 		
 		@SubscribeEvent
-		fun onDrawGuiScreenPre(@Suppress("UNUSED_PARAMETER") e: DrawScreenEvent.Post) {
-			isRenderingGUI = false
+		fun onDrawGuiScreenPre(@Suppress("UNUSED_PARAMETER") e: GuiContainerEvent.DrawForeground) {
+			renderMatrixStack = null
 		}
 	}
 }

@@ -7,12 +7,12 @@ import chylex.hee.system.math.Vec
 import net.minecraft.client.particle.IParticleRenderType
 import net.minecraft.client.particle.IParticleRenderType.PARTICLE_SHEET_OPAQUE
 import net.minecraft.client.particle.SpriteTexturedParticle
-import net.minecraft.util.math.Vec3d
-import net.minecraft.world.World
+import net.minecraft.client.world.ClientWorld
+import net.minecraft.util.math.vector.Vector3d
 
 @Sided(Side.CLIENT)
-abstract class ParticleBase(world: World, posX: Double, posY: Double, posZ: Double, motX: Double, motY: Double, motZ: Double) : SpriteTexturedParticle(world, posX, posY, posZ, motX, motY, motZ) {
-	protected var motionVec: Vec3d
+abstract class ParticleBase(world: ClientWorld, posX: Double, posY: Double, posZ: Double, motX: Double, motY: Double, motZ: Double) : SpriteTexturedParticle(world, posX, posY, posZ, motX, motY, motZ) {
+	protected var motionVec: Vector3d
 		get() = Vec(motionX, motionY, motionZ)
 		set(value) {
 			motionX = value.x

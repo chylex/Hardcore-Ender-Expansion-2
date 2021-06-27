@@ -27,10 +27,15 @@ import chylex.hee.system.random.nextFloat
 import chylex.hee.system.random.nextInt
 import net.minecraft.block.Block
 import net.minecraft.block.BlockState
+import net.minecraft.block.SoundType
+import net.minecraft.entity.EntitySpawnPlacementRegistry.PlacementType
 import net.minecraft.entity.EntityType
 import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.item.BlockItemUseContext
 import net.minecraft.item.ItemStack
+import net.minecraft.loot.LootContext
+import net.minecraft.loot.LootParameterSets
+import net.minecraft.loot.LootParameters
 import net.minecraft.state.StateContainer.Builder
 import net.minecraft.tileentity.TileEntity
 import net.minecraft.util.DamageSource
@@ -47,16 +52,13 @@ import net.minecraft.world.IBlockReader
 import net.minecraft.world.IWorld
 import net.minecraft.world.World
 import net.minecraft.world.server.ServerWorld
-import net.minecraft.world.storage.loot.LootContext
-import net.minecraft.world.storage.loot.LootParameterSets
-import net.minecraft.world.storage.loot.LootParameters
 import java.util.Random
 
 open class BlockGraveDirt(builder: BlockBuilder) : BlockSimpleShaped(builder, AxisAlignedBB(0.0, 0.0, 0.0, 1.0, 0.9375, 1.0)) {
 	companion object {
 		val FULL = Property.bool("full")
 		
-		private fun makeSpiderling(world: World, pos: BlockPos, yaw: Float): EntityMobSpiderling {
+		private fun makeSpiderling(world: World, pos: BlockPos, yaw: Float = 0F): EntityMobSpiderling {
 			return EntityMobSpiderling(world).apply {
 				setLocationAndAngles(pos.x + 0.5, pos.y + 0.01, pos.z + 0.5, yaw, 0F)
 			}
@@ -65,7 +67,7 @@ open class BlockGraveDirt(builder: BlockBuilder) : BlockSimpleShaped(builder, Ax
 	
 	// Instance
 	
-	val soundType
+	val soundType: SoundType
 		get() = soundType
 	
 	init {
@@ -93,12 +95,13 @@ open class BlockGraveDirt(builder: BlockBuilder) : BlockSimpleShaped(builder, Ax
 		return if (state[FULL])
 			VoxelShapes.fullCube()
 		else
+			@Suppress("DEPRECATION")
 			super.getShape(state, source, pos, context)
 	}
 	
 	// Mobs
 	
-	override fun canEntitySpawn(state: BlockState, worldIn: IBlockReader, pos: BlockPos, type: EntityType<*>): Boolean {
+	override fun canCreatureSpawn(state: BlockState, world: IBlockReader, pos: BlockPos, type: PlacementType?, entityType: EntityType<*>?): Boolean {
 		return true
 	}
 	
@@ -128,7 +131,7 @@ open class BlockGraveDirt(builder: BlockBuilder) : BlockSimpleShaped(builder, Ax
 		if (world is ServerWorld) {
 			LootContext.Builder(world)
 				.withRandom(world.rand)
-				.withParameter(LootParameters.POSITION, pos)
+				.withParameter(LootParameters.ORIGIN, pos.center)
 				.withParameter(LootParameters.EXPLOSION_RADIUS, explosion.size)
 				.withParameter(LootParameters.TOOL, ItemStack.EMPTY)
 				.withNullableParameter(LootParameters.BLOCK_ENTITY, null)
@@ -143,21 +146,20 @@ open class BlockGraveDirt(builder: BlockBuilder) : BlockSimpleShaped(builder, Ax
 		private var clientLastSpiderlingSound = 0L
 		
 		override fun updatePostPlacement(state: BlockState, facing: Direction, neighborState: BlockState, world: IWorld, pos: BlockPos, neighborPos: BlockPos): BlockState {
-			if (!world.isRemote && !world.isPeaceful && facing == UP && neighborState.block is BlockFire) {
-				val wrld = world.world
-				
-				makeSpiderling(wrld, neighborPos, yaw = wrld.rand.nextFloat()).apply {
+			if (!world.isRemote && !world.isPeaceful && facing == UP && neighborState.block is BlockFire && world is World) {
+				makeSpiderling(world, neighborPos, yaw = world.rand.nextFloat()).apply {
 					health = maxHealth * rng.nextFloat(0.5F, 1F)
 					
 					setFire(rng.nextInt(6, 7))
-					getHurtSound(DamageSource.IN_FIRE).playServer(wrld, neighborPos, soundCategory, volume = 1.2F, pitch = soundPitch)
+					getHurtSound(DamageSource.IN_FIRE).playServer(world, neighborPos, soundCategory, volume = 1.2F, pitch = soundPitch)
 					
-					wrld.addEntity(this)
+					world.addEntity(this)
 				}
 				
 				return ModBlocks.GRAVE_DIRT_PLAIN.defaultState
 			}
 			
+			@Suppress("DEPRECATION")
 			return super.updatePostPlacement(state, facing, neighborState, world, pos, neighborPos)
 		}
 		
@@ -176,7 +178,7 @@ open class BlockGraveDirt(builder: BlockBuilder) : BlockSimpleShaped(builder, Ax
 			super.onExplosionDestroy(world, pos, explosion)
 			
 			if (world.isRemote) {
-				makeSpiderling(world, pos, yaw = 0F).apply {
+				makeSpiderling(world, pos).apply {
 					spawnExplosionParticle()
 					deathSound.playClient(pos, soundCategory, volume = 0.8F, pitch = soundPitch)
 				}
@@ -201,7 +203,7 @@ open class BlockGraveDirt(builder: BlockBuilder) : BlockSimpleShaped(builder, Ax
 					val volumeRand = Random(pos.toLong())
 					val volume = 0.05F + (0.25F * volumeRand.nextBiasedFloat(1F))
 					
-					makeSpiderling(world, pos, yaw = 0F).apply {
+					makeSpiderling(world, pos).apply {
 						ambientSound.playClient(pos, soundCategory, volume, pitch = rand.nextFloat(0.4F, 0.6F))
 					}
 				}

@@ -41,7 +41,6 @@ import net.minecraft.entity.Entity
 import net.minecraft.state.StateContainer.Builder
 import net.minecraft.util.math.BlockPos
 import net.minecraft.world.IBlockReader
-import net.minecraft.world.IWorldReader
 import net.minecraft.world.World
 import net.minecraft.world.server.ServerWorld
 import java.util.Random
@@ -123,10 +122,6 @@ class BlockCorruptedEnergy(builder: BlockBuilder) : BlockSimple(builder) {
 	}
 	
 	// Tick handling
-	
-	override fun tickRate(world: IWorldReader): Int {
-		return MAX_TICK_RATE
-	}
 	
 	override fun onBlockAdded(state: BlockState, world: World, pos: BlockPos, oldState: BlockState, isMoving: Boolean) {
 		world.pendingBlockTicks.scheduleTick(pos, this, tickRateForLevel(state[LEVEL]))

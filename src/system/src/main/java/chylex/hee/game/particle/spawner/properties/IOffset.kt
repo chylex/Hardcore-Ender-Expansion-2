@@ -4,7 +4,7 @@ import chylex.hee.system.random.nextFloat
 import chylex.hee.system.random.nextVector
 import net.minecraft.entity.Entity
 import net.minecraft.util.Direction
-import net.minecraft.util.math.Vec3d
+import net.minecraft.util.math.vector.Vector3d
 import java.util.Random
 
 interface IOffset {
@@ -37,7 +37,7 @@ interface IOffset {
 			offsetZ = offset * towards.zOffset
 		)
 		
-		constructor(offset: Vec3d) : this(
+		constructor(offset: Vector3d) : this(
 			offsetX = offset.x.toFloat(),
 			offsetY = offset.y.toFloat(),
 			offsetZ = offset.z.toFloat()

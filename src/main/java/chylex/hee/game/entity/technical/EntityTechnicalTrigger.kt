@@ -47,8 +47,8 @@ class EntityTechnicalTrigger(type: EntityType<EntityTechnicalTrigger>, world: Wo
 		fun update(entity: EntityTechnicalTrigger)
 		fun nextTimer(rand: Random): Int
 		
-		@JvmDefault override fun serializeNBT() = TagCompound()
-		@JvmDefault override fun deserializeNBT(nbt: TagCompound) {}
+		override fun serializeNBT() = TagCompound()
+		override fun deserializeNBT(nbt: TagCompound) {}
 	}
 	
 	// Known handlers

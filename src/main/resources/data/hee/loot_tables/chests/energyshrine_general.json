@@ -1,12 +1,7 @@
 {
   "type": "minecraft:chest",
+  "hee:patch": "no_stack_splitting",
   "pools": [
-
-    {
-      "rolls": 0,
-      "name": "table#hee:stack_splitting=off",
-      "entries": []
-    },
 
     {
       "rolls": { "min": 2, "max": 7 },

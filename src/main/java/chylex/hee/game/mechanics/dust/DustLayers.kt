@@ -30,7 +30,7 @@ class DustLayers(val totalCapacity: Int) {
 		get() = layers
 	
 	val remainingCapacity
-		get() = totalCapacity - layers.sumBy { it.second.toInt() }
+		get() = totalCapacity - layers.sumOf { it.second.toInt() }
 	
 	// Update handling
 	

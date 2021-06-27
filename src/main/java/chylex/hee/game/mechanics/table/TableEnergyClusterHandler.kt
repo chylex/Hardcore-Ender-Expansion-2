@@ -16,10 +16,10 @@ import net.minecraft.block.BlockState
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.RayTraceContext
 import net.minecraft.util.math.RayTraceResult.Type
-import net.minecraft.util.math.Vec3d
 import net.minecraft.util.math.shapes.ISelectionContext
 import net.minecraft.util.math.shapes.VoxelShape
 import net.minecraft.util.math.shapes.VoxelShapes
+import net.minecraft.util.math.vector.Vector3d
 import net.minecraft.world.IBlockReader
 import net.minecraftforge.common.util.INBTSerializable
 
@@ -46,7 +46,7 @@ class TableEnergyClusterHandler(private val table: TileEntityBaseTable, maxDista
 	
 	// Behavior
 	
-	private inner class RayTraceObstacles(startVec: Vec3d, endVec: Vec3d) : RayTraceContext(startVec, endVec, BlockMode.COLLIDER, FluidMode.NONE, null) {
+	private inner class RayTraceObstacles(startVec: Vector3d, endVec: Vector3d) : RayTraceContext(startVec, endVec, BlockMode.COLLIDER, FluidMode.NONE, null) {
 		override fun getBlockShape(state: BlockState, world: IBlockReader, pos: BlockPos): VoxelShape {
 			val block = state.block
 			

@@ -9,6 +9,7 @@ import chylex.hee.game.world.getBlock
 import chylex.hee.game.world.math.BoundingBox
 import chylex.hee.game.world.offsetUntilExcept
 import chylex.hee.game.world.structure.StructureFile
+import chylex.hee.proxy.Environment
 import chylex.hee.system.Debug
 import chylex.hee.system.forge.Side
 import chylex.hee.system.forge.Sided
@@ -27,6 +28,7 @@ import net.minecraft.util.ActionResultType.FAIL
 import net.minecraft.util.ActionResultType.SUCCESS
 import net.minecraft.util.Direction
 import net.minecraft.util.Hand
+import net.minecraft.util.Util
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.BlockRayTraceResult
 import net.minecraft.util.math.shapes.ISelectionContext
@@ -46,7 +48,7 @@ class BlockScaffolding(builder: BlockBuilder) : BlockSimple(builder), IBlockLaye
 			val palette = CommandClientScaffolding.currentPalette
 			
 			if (palette == null) {
-				player.sendMessage(StringTextComponent("No structure set."))
+				player.sendMessage(StringTextComponent("No structure set."), Util.DUMMY_UUID)
 				return FAIL
 			}
 			
@@ -54,27 +56,27 @@ class BlockScaffolding(builder: BlockBuilder) : BlockSimple(builder), IBlockLaye
 			val maxPos = minPos?.let { findMaxPos(world, it) }
 			
 			if (minPos == null || maxPos == null) {
-				player.sendMessage(StringTextComponent("Could not find structure boundaries."))
+				player.sendMessage(StringTextComponent("Could not find structure boundaries."), Util.DUMMY_UUID)
 				return FAIL
 			}
 			
 			val box = BoundingBox(minPos, maxPos)
 			
-			val (structureTag, missingMappings) = StructureFile.save(world, box, palette)
+			val (structureTag, missingMappings) = StructureFile.save(Environment.getDimension(world.dimensionKey), box, palette, world.rand)
 			val structureFile = Files.createTempDirectory("HardcoreEnderExpansion_Structure_").resolve(CommandClientScaffolding.currentFile).toFile()
 			
 			CompressedStreamTools.write(structureTag, structureFile)
 			Debug.setClipboardContents(structureFile)
 			
 			if (missingMappings.isNotEmpty()) {
-				player.sendMessage(StringTextComponent("Missing mappings for states:"))
+				player.sendMessage(StringTextComponent("Missing mappings for states:"), Util.DUMMY_UUID)
 				
 				for(missingMapping in missingMappings) {
-					player.sendMessage(StringTextComponent(" - ${TextFormatting.GRAY}$missingMapping"))
+					player.sendMessage(StringTextComponent(" - ${TextFormatting.GRAY}$missingMapping"), Util.DUMMY_UUID)
 				}
 			}
 			
-			player.sendMessage(StringTextComponent("Generated structure file of ${box.size}."))
+			player.sendMessage(StringTextComponent("Generated structure file of ${box.size}."), Util.DUMMY_UUID)
 			return SUCCESS
 		}
 		
@@ -108,9 +110,6 @@ class BlockScaffolding(builder: BlockBuilder) : BlockSimple(builder), IBlockLaye
 	}
 	
 	// Visuals and physics
-	
-	override fun isNormalCube(state: BlockState, world: IBlockReader, pos: BlockPos) = false
-	override fun causesSuffocation(state: BlockState, world: IBlockReader, pos: BlockPos) = false
 	
 	override fun getShape(state: BlockState, world: IBlockReader, pos: BlockPos, context: ISelectionContext): VoxelShape {
 		return if (enableShape)

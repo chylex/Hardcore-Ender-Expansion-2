@@ -12,7 +12,7 @@ import java.util.function.Consumer;
 @Mixin(PlayerInventory.class)
 public abstract class HookPlayerInventoryArmorBreaking{
 	@Redirect(
-		method = "damageArmor",
+		method = "func_234563_a_", // RENAME damageArmor
 		at = @At(value = "INVOKE", target = "Lnet/minecraft/item/ItemStack;damageItem(ILnet/minecraft/entity/LivingEntity;Ljava/util/function/Consumer;)V")
 	)
 	public void damageItem(final ItemStack stack, final int amount, final LivingEntity entity, final Consumer<LivingEntity> onBroken){

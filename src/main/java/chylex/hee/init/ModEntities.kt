@@ -1,6 +1,8 @@
 package chylex.hee.init
 
 import chylex.hee.HEE
+import chylex.hee.game.entity.DefaultEntityAttributes
+import chylex.hee.game.entity.ENTITY_GRAVITY
 import chylex.hee.game.entity.effect.EntityTerritoryLightningBolt
 import chylex.hee.game.entity.item.EntityFallingBlockHeavy
 import chylex.hee.game.entity.item.EntityFallingObsidian
@@ -27,10 +29,12 @@ import chylex.hee.game.entity.projectile.EntityProjectileEnderPearl
 import chylex.hee.game.entity.projectile.EntityProjectileExperienceBottle
 import chylex.hee.game.entity.projectile.EntityProjectileEyeOfEnder
 import chylex.hee.game.entity.projectile.EntityProjectileSpatialDash
+import chylex.hee.game.entity.set
 import chylex.hee.game.entity.technical.EntityTechnicalCausatumEvent
 import chylex.hee.game.entity.technical.EntityTechnicalIgneousPlateLogic
 import chylex.hee.game.entity.technical.EntityTechnicalPuzzle
 import chylex.hee.game.entity.technical.EntityTechnicalTrigger
+import chylex.hee.game.entity.with
 import chylex.hee.network.data.ColorDataSerializer
 import chylex.hee.system.forge.EventPriority
 import chylex.hee.system.forge.SubscribeAllEvents
@@ -52,12 +56,18 @@ import net.minecraft.entity.EntitySpawnPlacementRegistry.PlacementType
 import net.minecraft.entity.EntityType
 import net.minecraft.entity.EntityType.IFactory
 import net.minecraft.entity.MobEntity
+import net.minecraft.entity.ai.attributes.Attributes.ATTACK_DAMAGE
+import net.minecraft.entity.ai.attributes.Attributes.FLYING_SPEED
+import net.minecraft.entity.ai.attributes.Attributes.FOLLOW_RANGE
+import net.minecraft.entity.ai.attributes.Attributes.MAX_HEALTH
+import net.minecraft.entity.ai.attributes.Attributes.MOVEMENT_SPEED
 import net.minecraft.entity.monster.MonsterEntity
 import net.minecraft.network.datasync.DataSerializers
 import net.minecraft.world.World
 import net.minecraft.world.gen.Heightmap.Type
 import net.minecraftforge.common.MinecraftForge
 import net.minecraftforge.event.RegistryEvent
+import net.minecraftforge.event.entity.EntityAttributeCreationEvent
 import net.minecraftforge.event.entity.EntityJoinWorldEvent
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber.Bus.MOD
 
@@ -101,7 +111,7 @@ object ModEntities {
 	@JvmField val TECHNICAL_TRIGGER   = build<EntityTechnicalTrigger>(MISC).size(0F, 0F).immuneToFire().tracker(256, Int.MAX_VALUE, false).name("technical_trigger")
 	
 	@SubscribeEvent
-	fun onRegister(e: RegistryEvent.Register<EntityType<*>>) {
+	fun onRegisterTypes(e: RegistryEvent.Register<EntityType<*>>) {
 		e.registerAllFields(this)
 		
 		// data
@@ -127,6 +137,79 @@ object ModEntities {
 		MinecraftForge.EVENT_BUS.register(this)
 	}
 	
+	@SubscribeEvent
+	fun onRegisterAttributes(attributes: EntityAttributeCreationEvent) {
+		attributes[ENDER_EYE] = DefaultEntityAttributes.hostileMob.with(
+			MAX_HEALTH to 300.0,
+			ATTACK_DAMAGE to 4.0,
+			FLYING_SPEED to 0.093,
+			FOLLOW_RANGE to 16.0,
+		)
+		
+		attributes[ANGRY_ENDERMAN] = DefaultEntityAttributes.hostileMob.with(
+			MAX_HEALTH to 40.0,
+			ATTACK_DAMAGE to 7.0,
+			MOVEMENT_SPEED to 0.315,
+			FOLLOW_RANGE to 32.0,
+		)
+		
+		attributes[BLOBBY] = DefaultEntityAttributes.peacefulMob.with(
+			MAX_HEALTH to 8.0,
+			MOVEMENT_SPEED to 0.19,
+			FOLLOW_RANGE to 44.0,
+			ENTITY_GRAVITY to ENTITY_GRAVITY.defaultValue * 0.725,
+		)
+		
+		attributes[ENDERMAN] = DefaultEntityAttributes.hostileMob.with(
+			MAX_HEALTH to 40.0,
+			ATTACK_DAMAGE to 5.0,
+			MOVEMENT_SPEED to 0.3,
+			FOLLOW_RANGE to 64.0,
+		)
+		
+		attributes[ENDERMAN_MUPPET] = DefaultEntityAttributes.hostileMob.with(
+			MAX_HEALTH to 40.0,
+			MOVEMENT_SPEED to 0.0,
+		)
+		
+		attributes[ENDERMITE] = DefaultEntityAttributes.endermite.with(
+			MAX_HEALTH to 8.0,
+			ATTACK_DAMAGE to 2.0,
+		)
+		
+		attributes[ENDERMITE_INSTABILITY] = DefaultEntityAttributes.endermite.with(
+			MAX_HEALTH to 8.0,
+			ATTACK_DAMAGE to 2.0,
+		)
+		
+		attributes[SILVERFISH] = DefaultEntityAttributes.silverfish.with(
+			MAX_HEALTH to 8.0,
+			ATTACK_DAMAGE to 2.0,
+			FOLLOW_RANGE to 12.0,
+		)
+		
+		attributes[SPIDERLING] = DefaultEntityAttributes.hostileMob.with(
+			ATTACK_DAMAGE to 1.5,
+			MOVEMENT_SPEED to 0.32,
+			FOLLOW_RANGE to 20.0,
+		)
+		
+		attributes[UNDREAD] = DefaultEntityAttributes.hostileMob.with(
+			MAX_HEALTH to 12.0,
+			ATTACK_DAMAGE to 4.0,
+			MOVEMENT_SPEED to 0.18,
+			FOLLOW_RANGE to 24.0,
+		)
+		
+		attributes[VAMPIRE_BAT] = DefaultEntityAttributes.peacefulMob.with(
+			FOLLOW_RANGE to 14.5,
+			ATTACK_DAMAGE to 0.0,
+			FLYING_SPEED to 0.1
+		)
+		
+		attributes[VILLAGER_DYING] = DefaultEntityAttributes.peacefulMob
+	}
+	
 	// Vanilla modifications
 	
 	private fun replaceVanillaFactories() {
@@ -141,7 +224,7 @@ object ModEntities {
 		val original = e.entity
 		
 		// if a mod creates the entity manually instead of the factory, it must still be replaced
-		val overriden = when(original.javaClass) {
+		val overriden = when (original.javaClass) {
 			EntityEnderman::class.java   -> EntityMobEnderman(world)
 			EntityEndermite::class.java  -> EntityMobEndermite(world)
 			EntitySilverfish::class.java -> EntityMobSilverfish(world)

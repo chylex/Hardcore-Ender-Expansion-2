@@ -21,6 +21,7 @@ import chylex.hee.system.migration.Facing.SOUTH
 import chylex.hee.system.migration.Facing.UP
 import chylex.hee.system.migration.Facing.WEST
 import net.minecraft.block.Block
+import net.minecraft.block.WallHeight
 import net.minecraft.state.properties.DoubleBlockHalf
 import net.minecraft.state.properties.Half
 import net.minecraft.state.properties.SlabType
@@ -108,10 +109,10 @@ object PaletteMappings {
 		Pair(it, it.fold(block.with(BlockWall.UP, false)) { state, chr ->
 			when(chr) {
 				'u'  -> state.with(BlockWall.UP, true)
-				'n'  -> state.with(BlockWall.NORTH, true)
-				's'  -> state.with(BlockWall.SOUTH, true)
-				'e'  -> state.with(BlockWall.EAST, true)
-				'w'  -> state.with(BlockWall.WEST, true)
+				'n'  -> state.with(BlockWall.WALL_HEIGHT_NORTH, WallHeight.LOW)
+				's'  -> state.with(BlockWall.WALL_HEIGHT_SOUTH, WallHeight.LOW)
+				'e'  -> state.with(BlockWall.WALL_HEIGHT_EAST, WallHeight.LOW)
+				'w'  -> state.with(BlockWall.WALL_HEIGHT_WEST, WallHeight.LOW)
 				else -> throw IllegalStateException()
 			}
 		})

@@ -1,16 +1,10 @@
 package chylex.hee.game.block.properties
 
+@Suppress("ConvertLambdaToReference")
 object Materials {
-	val SOLID_NO_TOOL = CustomMaterial().build {
-		requiresTool = false
-	}
-	
-	val SOLID_WITH_TOOL = CustomMaterial().build {
-		requiresTool = true
-	}
+	val SOLID = CustomMaterial().build()
 	
 	val INFUSED_GLASS = CustomMaterial().build {
-		requiresTool = true
 		translucent = true
 	}
 	
@@ -43,7 +37,6 @@ object Materials {
 	}
 	
 	val JAR_O_DUST = CustomMaterial().build {
-		requiresTool = false
 		destroyWhenPushed()
 	}
 	

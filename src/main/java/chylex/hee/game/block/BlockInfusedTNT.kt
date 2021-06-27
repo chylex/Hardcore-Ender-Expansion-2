@@ -19,8 +19,10 @@ import chylex.hee.system.migration.Sounds
 import net.minecraft.block.Block
 import net.minecraft.block.BlockState
 import net.minecraft.block.Blocks
-import net.minecraft.fluid.IFluidState
+import net.minecraft.fluid.FluidState
 import net.minecraft.item.ItemStack
+import net.minecraft.loot.LootContext
+import net.minecraft.loot.LootParameters
 import net.minecraft.state.StateContainer.Builder
 import net.minecraft.tileentity.TileEntity
 import net.minecraft.util.Direction
@@ -32,8 +34,6 @@ import net.minecraft.world.Explosion
 import net.minecraft.world.IBlockReader
 import net.minecraft.world.World
 import net.minecraft.world.server.ServerWorld
-import net.minecraft.world.storage.loot.LootContext
-import net.minecraft.world.storage.loot.LootParameters
 import java.util.Random
 
 class BlockInfusedTNT : BlockTNT(Properties.from(Blocks.TNT)), IBlockFireCatchOverride {
@@ -68,7 +68,7 @@ class BlockInfusedTNT : BlockTNT(Properties.from(Blocks.TNT)), IBlockFireCatchOv
 		pos.getTile<TileEntityInfusedTNT>(world)?.infusions = InfusionTag.getList(stack)
 	}
 	
-	private fun getDrop(tile: TileEntityInfusedTNT): ItemStack? {
+	private fun getDrop(tile: TileEntityInfusedTNT): ItemStack {
 		return ItemStack(this).also { InfusionTag.setList(it, tile.infusions) }
 	}
 	
@@ -95,7 +95,7 @@ class BlockInfusedTNT : BlockTNT(Properties.from(Blocks.TNT)), IBlockFireCatchOv
 		super.onBlockAdded(state, world, pos, Blocks.AIR.defaultState, false)
 	}
 	
-	override fun removedByPlayer(state: BlockState, world: World, pos: BlockPos, player: EntityPlayer, willHarvest: Boolean, fluid: IFluidState): Boolean {
+	override fun removedByPlayer(state: BlockState, world: World, pos: BlockPos, player: EntityPlayer, willHarvest: Boolean, fluid: FluidState): Boolean {
 		if (pos.getTile<TileEntityInfusedTNT>(world)?.infusions?.has(TRAP) == true && !player.isCreative) {
 			catchFire(state, world, pos, null, player)
 			pos.removeBlock(world)
@@ -103,6 +103,16 @@ class BlockInfusedTNT : BlockTNT(Properties.from(Blocks.TNT)), IBlockFireCatchOv
 		}
 		
 		return super.removedByPlayer(state, world, pos, player, willHarvest, fluid)
+	}
+	
+	// Fire
+	
+	override fun getFlammability(state: BlockState, world: IBlockReader, pos: BlockPos, face: Direction): Int {
+		return 100
+	}
+	
+	override fun getFireSpreadSpeed(state: BlockState, world: IBlockReader, pos: BlockPos, face: Direction): Int {
+		return 15
 	}
 	
 	// TNT overrides
@@ -121,7 +131,7 @@ class BlockInfusedTNT : BlockTNT(Properties.from(Blocks.TNT)), IBlockFireCatchOv
 			return
 		}
 		
-		// UPDATE 1.15 check if FireBlock still removes the TNT block and tile entity before calling this
+		// UPDATE 1.16 check if FireBlock still removes the TNT block and tile entity before calling this
 		igniteTNT(world, pos, state, igniter, ignoreTrap = false)
 	}
 	

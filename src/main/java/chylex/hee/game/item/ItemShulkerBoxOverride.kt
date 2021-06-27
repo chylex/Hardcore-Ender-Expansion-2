@@ -189,7 +189,7 @@ class ItemShulkerBoxOverride(block: Block, properties: Properties) : ItemBlock(b
 			val inventory = NonNullList.withSize(BoxSize.LARGE.slots, ItemStack.EMPTY)
 			ItemStackHelper.loadAllItems(contentsTag, inventory)
 			
-			if (inventory.any { it.isNotEmpty }) {
+			if (inventory.any(ItemStack::isNotEmpty)) {
 				val counts = Object2IntOpenHashMap<String>()
 				
 				for(invStack in inventory) {
@@ -201,11 +201,11 @@ class ItemShulkerBoxOverride(block: Block, properties: Properties) : ItemBlock(b
 				val sorted = counts.object2IntEntrySet().sortedWith(compareBy({ -it.intValue }, { it.key }))
 				
 				for((name, count) in sorted.take(TOOLTIP_ENTRY_COUNT)) {
-					lines.add(StringTextComponent("%s x%d".format(name, count)).applyTextStyle(GRAY))
+					lines.add(StringTextComponent("%s x%d".format(name, count)).mergeStyle(GRAY))
 				}
 				
 				if (sorted.size > TOOLTIP_ENTRY_COUNT) {
-					lines.add(TranslationTextComponent("container.shulkerBox.more", sorted.size - TOOLTIP_ENTRY_COUNT).applyTextStyles(GRAY, ITALIC))
+					lines.add(TranslationTextComponent("container.shulkerBox.more", sorted.size - TOOLTIP_ENTRY_COUNT).mergeStyle(GRAY, ITALIC))
 				}
 			}
 		}

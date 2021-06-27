@@ -1,12 +1,7 @@
 {
   "type": "minecraft:chest",
+  "hee:patch": "custom_stack_sorting",
   "pools": [
-
-    {
-      "rolls": 0,
-      "name": "table#hee:stack_sorting=on",
-      "entries": []
-    },
 
     {
       "rolls": 1,

@@ -54,6 +54,7 @@ data class Transform(val rotation: Rotation, val mirror: Boolean) {
 	}
 	
 	operator fun invoke(state: BlockState): BlockState {
+		@Suppress("DEPRECATION")
 		val transformed = state.rotate(rotation).mirror(mirroring)
 		
 		if (mirror) {

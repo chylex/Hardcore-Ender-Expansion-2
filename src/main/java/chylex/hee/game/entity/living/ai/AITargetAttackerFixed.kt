@@ -13,7 +13,7 @@ import net.minecraft.util.math.AxisAlignedBB
 import java.util.EnumSet
 
 class AITargetAttackerFixed(entity: EntityLiving, private val callReinforcements: Boolean, checkSight: Boolean = true, nearbyOnly: Boolean = false) : TargetGoal(entity, checkSight, nearbyOnly) {
-	private val entityPredicate = EntityPredicate().setLineOfSiteRequired().setUseInvisibilityCheck()
+	private val entityPredicate = EntityPredicate().setUseInvisibilityCheck()
 	private var revengeTimerOld = 0
 	
 	init {

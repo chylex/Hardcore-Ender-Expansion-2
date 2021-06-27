@@ -20,6 +20,9 @@ inline var ItemStack.size: Int
 inline val ItemStack.isNotEmpty
 	get() = !isEmpty
 
+val ItemStack.nullIfEmpty
+	get() = this.takeIf(ItemStack::isNotEmpty)
+
 // Copy
 
 inline fun ItemStack.copyIf(predicate: (ItemStack) -> Boolean): ItemStack {

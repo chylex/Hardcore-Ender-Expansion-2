@@ -17,10 +17,10 @@ import chylex.hee.system.migration.BlockVine
 import net.minecraft.block.Block
 import net.minecraft.block.BlockState
 import net.minecraft.util.math.BlockPos
-import net.minecraft.world.World
+import net.minecraft.world.IServerWorld
 import java.util.Random
 
-class WorldToStructureWorldAdapter(private val world: World, override val rand: Random, private val offset: BlockPos) : IStructureWorld {
+class WorldToStructureWorldAdapter(private val world: IServerWorld, override val rand: Random, private val offset: BlockPos) : IStructureWorld {
 	private fun requiresSecondPass(block: Block) = when(block) {
 		is BlockVine,
 		is BlockTorch,

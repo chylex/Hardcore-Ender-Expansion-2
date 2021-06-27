@@ -61,7 +61,6 @@ interface IBlockDeathFlowerDecaying {
 	val healedFlowerBlock: Block
 	val witheredFlowerBlock: Block
 	
-	@JvmDefault
 	fun healDeathFlower(world: World, pos: BlockPos) {
 		val state = pos.getState(world)
 		val newDecayLevel = state[LEVEL] - world.rand.nextInt(1, 2)
@@ -76,24 +75,16 @@ interface IBlockDeathFlowerDecaying {
 		PacketClientFX(FX_HEAL, FxHealData(pos, newDecayLevel)).sendToAllAround(world, pos, 64.0)
 	}
 	
-	@JvmDefault
-	fun implTickRate(): Int {
-		return 1600
-	}
-	
-	@JvmDefault
 	fun implOnBlockAdded(world: World, pos: BlockPos) {
-		val tickRate = implTickRate()
-		world.pendingBlockTicks.scheduleTick(pos, thisAsBlock, world.rand.nextInt(tickRate / 4, tickRate))
+		world.pendingBlockTicks.scheduleTick(pos, thisAsBlock, world.rand.nextInt(TICK_RATE / 4, TICK_RATE))
 	}
 	
-	@JvmDefault
 	fun implUpdateTick(world: World, pos: BlockPos, state: BlockState, rand: Random) {
 		if (pos.getBlock(world) !== thisAsBlock || world !is ServerWorld) {
 			return
 		}
 		
-		world.pendingBlockTicks.scheduleTick(pos, thisAsBlock, implTickRate())
+		world.pendingBlockTicks.scheduleTick(pos, thisAsBlock, TICK_RATE)
 		
 		if (world.isPeaceful) {
 			return
@@ -170,6 +161,8 @@ interface IBlockDeathFlowerDecaying {
 		const val MAX_LEVEL = 14
 		
 		val LEVEL = Property.int("level", MIN_LEVEL..MAX_LEVEL)
+		
+		private const val TICK_RATE = 1600
 		
 		private const val WITHER_FLOWER_RADIUS = 4
 		private const val WITHER_PLAYER_RADIUS = 1024.0

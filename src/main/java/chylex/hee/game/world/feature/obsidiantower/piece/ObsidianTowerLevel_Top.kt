@@ -15,6 +15,7 @@ import chylex.hee.game.world.center
 import chylex.hee.game.world.getBlock
 import chylex.hee.game.world.math.Transform
 import chylex.hee.game.world.setAir
+import chylex.hee.game.world.spawn
 import chylex.hee.game.world.structure.IStructureTrigger
 import chylex.hee.game.world.structure.IStructureWorld
 import chylex.hee.game.world.structure.trigger.EntityStructureTrigger
@@ -25,13 +26,13 @@ import chylex.hee.network.fx.FxVecData
 import chylex.hee.system.facades.Facing4
 import chylex.hee.system.math.addY
 import chylex.hee.system.math.offsetTowards
-import chylex.hee.system.migration.EntityLightningBolt
 import chylex.hee.system.serialization.TagCompound
 import chylex.hee.system.serialization.use
 import net.minecraft.block.Blocks
+import net.minecraft.entity.EntityType
 import net.minecraft.util.math.AxisAlignedBB
 import net.minecraft.util.math.BlockPos
-import net.minecraft.world.IWorld
+import net.minecraft.world.IServerWorld
 import net.minecraft.world.World
 import net.minecraft.world.server.ServerWorld
 import java.util.Random
@@ -71,7 +72,7 @@ abstract class ObsidianTowerLevel_Top(file: String) : ObsidianTowerLevel_General
 		
 		class PlaceholderTrigger : IStructureTrigger {
 			override fun setup(world: IStructureWorld, pos: BlockPos, transform: Transform) {}
-			override fun realize(world: IWorld, pos: BlockPos, transform: Transform) {}
+			override fun realize(world: IServerWorld, pos: BlockPos, transform: Transform) {}
 		}
 	}
 	
@@ -111,7 +112,7 @@ abstract class ObsidianTowerLevel_Top(file: String) : ObsidianTowerLevel_General
 			val pos = Pos(entity)
 			
 			if (stage == STAGE_LIGHTNING) {
-				world.addLightningBolt(EntityLightningBolt(world, entity.posX, entity.posY + 0.49, entity.posZ, true))
+				world.spawn(EntityType.LIGHTNING_BOLT, entity.posX, entity.posY + 0.49, entity.posZ) { setEffectOnly(true) }
 				
 				for(testPos in pos.allInCenteredBox(4, 0, 4)) {
 					if (testPos.getBlock(world) === Blocks.OBSIDIAN) {

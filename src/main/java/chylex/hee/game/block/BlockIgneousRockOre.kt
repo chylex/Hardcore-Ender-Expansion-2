@@ -18,7 +18,7 @@ import chylex.hee.system.migration.ItemTool
 import net.minecraft.block.BlockState
 import net.minecraft.enchantment.EnchantmentHelper
 import net.minecraft.enchantment.Enchantments
-import net.minecraft.fluid.IFluidState
+import net.minecraft.fluid.FluidState
 import net.minecraft.item.ItemStack
 import net.minecraft.particles.ParticleTypes.LAVA
 import net.minecraft.tileentity.TileEntity
@@ -66,7 +66,7 @@ class BlockIgneousRockOre(builder: BlockBuilder) : BlockSimple(builder) {
 		}
 	}
 	
-	override fun removedByPlayer(state: BlockState, world: World, pos: BlockPos, player: EntityPlayer, willHarvest: Boolean, fluid: IFluidState): Boolean {
+	override fun removedByPlayer(state: BlockState, world: World, pos: BlockPos, player: EntityPlayer, willHarvest: Boolean, fluid: FluidState): Boolean {
 		val heldItem = player.getHeldItem(MAIN_HAND)
 		
 		if ((getToolHarvestLevel(heldItem) ?: 0) < super.getHarvestLevel(state) || EnchantmentHelper.getEnchantmentLevel(Enchantments.SILK_TOUCH, player.getHeldItem(MAIN_HAND)) == 0) {

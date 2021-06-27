@@ -20,7 +20,7 @@ import net.minecraft.block.BlockRenderType.INVISIBLE
 import net.minecraft.block.BlockState
 import net.minecraft.client.particle.ParticleManager
 import net.minecraft.entity.Entity
-import net.minecraft.entity.IProjectile
+import net.minecraft.entity.projectile.ProjectileEntity
 import net.minecraft.item.ItemStack
 import net.minecraft.tileentity.TileEntity
 import net.minecraft.util.math.AxisAlignedBB
@@ -100,7 +100,7 @@ class BlockEnergyCluster(builder: BlockBuilder) : BlockSimpleShaped(builder, Axi
 	}
 	
 	override fun onEntityCollision(state: BlockState, world: World, pos: BlockPos, entity: Entity) {
-		if (entity is IProjectile) {
+		if (entity is ProjectileEntity) {
 			pos.removeBlock(world)
 		}
 	}

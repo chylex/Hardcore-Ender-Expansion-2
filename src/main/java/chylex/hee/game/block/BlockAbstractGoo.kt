@@ -17,11 +17,9 @@ import chylex.hee.system.serialization.getLongOrNull
 import chylex.hee.system.serialization.getOrCreateCompound
 import net.minecraft.block.BlockState
 import net.minecraft.block.material.Material
-import net.minecraft.block.material.MaterialColor
 import net.minecraft.entity.Entity
 import net.minecraft.util.math.BlockPos
-import net.minecraft.util.math.Vec3d
-import net.minecraft.world.IBlockReader
+import net.minecraft.util.math.vector.Vector3d
 import net.minecraft.world.IWorldReader
 import net.minecraft.world.World
 
@@ -51,7 +49,7 @@ abstract class BlockAbstractGoo(
 			
 			var lowestLevel = Int.MAX_VALUE
 			
-			for(testPos in posMin.allInBoxMutable(posMax)) {
+			for (testPos in posMin.allInBoxMutable(posMax)) {
 				val level = testPos.getState(world).takeIf { it.block === this }?.let { FlowingFluid5.stateToLevel(it) } ?: continue
 				
 				if (level < lowestLevel) {
@@ -99,12 +97,8 @@ abstract class BlockAbstractGoo(
 	abstract fun onInsideGoo(entity: Entity)
 	abstract fun modifyMotion(entity: Entity, level: Int)
 	
-	override fun getMaterialColor(state: BlockState, world: IBlockReader, pos: BlockPos): MaterialColor {
-		return fluid.mapColor
-	}
-	
 	@Sided(Side.CLIENT)
-	override fun getFogColor(state: BlockState, world: IWorldReader, pos: BlockPos, entity: Entity, originalColor: Vec3d, partialTicks: Float): Vec3d {
+	override fun getFogColor(state: BlockState, world: IWorldReader, pos: BlockPos, entity: Entity, originalColor: Vector3d, partialTicks: Float): Vector3d {
 		return fluid.fogColor
 	}
 }

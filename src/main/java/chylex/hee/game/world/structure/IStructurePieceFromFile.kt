@@ -7,12 +7,12 @@ interface IStructurePieceFromFile : IStructurePiece {
 	val palette: Palette
 	val generator: IStructureGenerator
 	
-	@JvmDefault val maxX get() = size.maxX
-	@JvmDefault val maxY get() = size.maxY
-	@JvmDefault val maxZ get() = size.maxZ
-	@JvmDefault val centerX get() = size.centerX
-	@JvmDefault val centerY get() = size.centerY
-	@JvmDefault val centerZ get() = size.centerZ
+	val maxX get() = size.maxX
+	val maxY get() = size.maxY
+	val maxZ get() = size.maxZ
+	val centerX get() = size.centerX
+	val centerY get() = size.centerY
+	val centerZ get() = size.centerZ
 	
 	class Delegate(override val path: String, override val palette: Palette) : IStructurePieceFromFile {
 		override val generator = StructureFiles.loadWithCache(path).Generator(palette.mappingForGeneration)

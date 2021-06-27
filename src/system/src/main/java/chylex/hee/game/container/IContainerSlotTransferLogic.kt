@@ -9,7 +9,6 @@ import net.minecraft.item.ItemStack
 interface IContainerSlotTransferLogic {
 	fun bridgeMergeItemStack(stack: ItemStack, startIndex: Int, endIndex: Int, reverseDirection: Boolean): Boolean
 	
-	@JvmDefault
 	fun implTransferStackInSlot(inventorySlots: List<Slot>, containerInventory: IInventory, player: EntityPlayer, index: Int): ItemStack {
 		val slot = inventorySlots[index]
 		

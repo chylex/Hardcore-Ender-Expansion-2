@@ -5,6 +5,7 @@ import chylex.hee.client.MC
 import chylex.hee.client.color.NO_TINT
 import chylex.hee.client.gui.GuiPortalTokenStorage
 import chylex.hee.game.block.BlockVoidPortalInner
+import chylex.hee.game.entity.isInEndDimension
 import chylex.hee.game.entity.item.EntityTokenHolder
 import chylex.hee.game.entity.selectExistingEntities
 import chylex.hee.game.inventory.heeTag
@@ -17,9 +18,7 @@ import chylex.hee.game.world.territory.TerritoryType
 import chylex.hee.game.world.territory.properties.TerritoryColors
 import chylex.hee.game.world.territory.storage.TerritoryGlobalStorage
 import chylex.hee.game.world.territory.storage.data.VoidData
-import chylex.hee.init.ModItems
 import chylex.hee.system.color.IntColor.Companion.RGB
-import chylex.hee.system.facades.Resource
 import chylex.hee.system.forge.Side
 import chylex.hee.system.forge.Sided
 import chylex.hee.system.migration.ActionResult.FAIL
@@ -34,6 +33,7 @@ import chylex.hee.system.serialization.putEnum
 import net.minecraft.client.renderer.color.IItemColor
 import net.minecraft.client.util.ITooltipFlag
 import net.minecraft.entity.Entity
+import net.minecraft.item.IItemPropertyGetter
 import net.minecraft.item.Item
 import net.minecraft.item.ItemGroup
 import net.minecraft.item.ItemStack
@@ -47,7 +47,6 @@ import net.minecraft.util.text.ITextComponent
 import net.minecraft.util.text.StringTextComponent
 import net.minecraft.util.text.TranslationTextComponent
 import net.minecraft.world.World
-import net.minecraft.world.dimension.DimensionType
 
 class ItemPortalToken(properties: Properties) : Item(properties) {
 	companion object {
@@ -57,6 +56,22 @@ class ItemPortalToken(properties: Properties) : Item(properties) {
 		private const val IS_CORRUPTED_TAG = "IsCorrupted"
 		
 		const val MAX_STACK_SIZE = 16
+		
+		val TOKEN_TYPE_PROPERTY = IItemPropertyGetter { stack, _, _ ->
+			getTokenType(stack).propertyValue + (if (stack.heeTagOrNull.hasKey(IS_CORRUPTED_TAG)) 0.5F else 0F)
+		}
+		
+		fun getTokenType(stack: ItemStack): TokenType {
+			return stack.heeTagOrNull?.getEnum<TokenType>(TYPE_TAG) ?: TokenType.NORMAL
+		}
+		
+		fun getTerritoryType(stack: ItemStack): TerritoryType? {
+			return stack.heeTagOrNull?.getEnum<TerritoryType>(TERRITORY_TYPE_TAG)
+		}
+		
+		private fun getTerritoryIndex(stack: ItemStack): Int? {
+			return stack.heeTagOrNull?.getIntegerOrNull(TERRITORY_INDEX_TAG)
+		}
 	}
 	
 	enum class TokenType(val propertyValue: Float, private val translationKeySuffix: String) {
@@ -71,12 +86,6 @@ class ItemPortalToken(properties: Properties) : Item(properties) {
 			get() = "item.hee.portal_token.$translationKeySuffix.concrete"
 	}
 	
-	init {
-		addPropertyOverride(Resource.Custom("token_type")) { stack, _, _ ->
-			getTokenType(stack).propertyValue + (if (stack.heeTagOrNull.hasKey(IS_CORRUPTED_TAG)) 0.5F else 0F)
-		}
-	}
-	
 	// Token construction
 	
 	fun forTerritory(type: TokenType, territory: TerritoryType) = ItemStack(this).also {
@@ -87,18 +96,6 @@ class ItemPortalToken(properties: Properties) : Item(properties) {
 	}
 	
 	// Token data
-	
-	fun getTokenType(stack: ItemStack): TokenType {
-		return stack.heeTagOrNull?.getEnum<TokenType>(TYPE_TAG) ?: TokenType.NORMAL
-	}
-	
-	fun getTerritoryType(stack: ItemStack): TerritoryType? {
-		return stack.heeTagOrNull?.getEnum<TerritoryType>(TERRITORY_TYPE_TAG)
-	}
-	
-	private fun getTerritoryIndex(stack: ItemStack): Int? {
-		return stack.heeTagOrNull?.getIntegerOrNull(TERRITORY_INDEX_TAG)
-	}
 	
 	private fun remapInstanceIndex(instance: TerritoryInstance, tokenType: TokenType, entity: Entity): TerritoryInstance? {
 		if (tokenType != TokenType.SOLITARY) {
@@ -168,11 +165,11 @@ class ItemPortalToken(properties: Properties) : Item(properties) {
 		EntityPortalContact.shouldTeleport(player) // ignore the result but prevent immediately teleporting back
 		val spawnInfo = instance.prepareSpawnPoint(player, clearanceRadius = 1)
 		
-		if (player.dimension === HEE.dim) {
+		if (player.isInEndDimension) {
 			BlockVoidPortalInner.teleportEntity(player, spawnInfo)
 		}
 		else {
-			DimensionTeleporter.changeDimension(player, DimensionType.THE_END, DimensionTeleporter.EndTerritoryPortal(spawnInfo))
+			DimensionTeleporter.changeDimension(player, HEE.dim, DimensionTeleporter.EndTerritoryPortal(spawnInfo))
 		}
 		
 		return ActionResult(SUCCESS, heldItem)
@@ -246,7 +243,7 @@ class ItemPortalToken(properties: Properties) : Item(properties) {
 		if ((MC.currentScreen as? GuiPortalTokenStorage)?.canActivateToken(stack) == true) {
 			lines.add(TranslationTextComponent("item.hee.portal_token.tooltip.activate"))
 		}
-		else if (MC.player?.let { it.isCreative && it.dimension === HEE.dim } == true) {
+		else if (MC.player?.let { it.isCreative && it.isInEndDimension } == true) {
 			lines.add(TranslationTextComponent("item.hee.portal_token.tooltip.creative.${if (hasTerritoryInstance(stack)) "teleport" else "generate"}"))
 		}
 		
@@ -262,7 +259,7 @@ class ItemPortalToken(properties: Properties) : Item(properties) {
 		private val WHITE = RGB(255u).i
 		
 		private fun getColors(stack: ItemStack): TerritoryColors? {
-			return ModItems.PORTAL_TOKEN.getTerritoryType(stack)?.desc?.colors
+			return getTerritoryType(stack)?.desc?.colors
 		}
 		
 		override fun getColor(stack: ItemStack, tintIndex: Int) = when(tintIndex) {

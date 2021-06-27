@@ -4,19 +4,21 @@ package chylex.hee.game.block
 
 import chylex.hee.system.migration.BlockDirectional
 import chylex.hee.system.migration.BlockHorizontal
+import chylex.hee.system.migration.supply
 import net.minecraft.block.Block
 import net.minecraft.block.BlockState
 import net.minecraft.block.SoundType
-import net.minecraft.state.IProperty
+import net.minecraft.state.Property
 import net.minecraft.util.Direction
 import net.minecraft.util.SoundEvent
 import net.minecraft.util.math.AxisAlignedBB
 import net.minecraft.util.math.shapes.VoxelShape
 import net.minecraft.util.math.shapes.VoxelShapes
+import net.minecraftforge.common.util.ForgeSoundType
 
 // Properties
 
-inline fun <T : Comparable<T>, V : T> Block.with(property: IProperty<T>, value: V): BlockState {
+inline fun <T : Comparable<T>, V : T> Block.with(property: Property<T>, value: V): BlockState {
 	return this.defaultState.with(property, value)
 }
 
@@ -28,7 +30,7 @@ fun SoundType.clone(
 	placeSound: SoundEvent = this.placeSound,
 	hitSound: SoundEvent = this.hitSound,
 	fallSound: SoundEvent = this.fallSound,
-) = SoundType(volume, pitch, breakSound, stepSound, placeSound, hitSound, fallSound)
+) = ForgeSoundType(volume, pitch, supply(breakSound), supply(stepSound), supply(placeSound), supply(hitSound), supply(fallSound))
 
 // Shapes
 

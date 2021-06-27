@@ -32,7 +32,7 @@ import chylex.hee.system.migration.Potions
 import chylex.hee.system.migration.Sounds
 import chylex.hee.system.random.nextFloat
 import net.minecraft.block.BlockState
-import net.minecraft.entity.SharedMonsterAttributes
+import net.minecraft.entity.ai.attributes.Attributes.ATTACK_DAMAGE
 import net.minecraft.item.ItemStack
 import net.minecraft.util.DamageSource
 import net.minecraftforge.event.entity.living.LivingDamageEvent
@@ -109,7 +109,7 @@ class ItemScorchingSword(
 				else
 					DamageSource.causeMobDamage(attacker)
 				
-				entity.knockBack(attacker, 0.4F, sin(yaw.toRadians()), -cos(yaw.toRadians()))
+				entity.applyKnockback(0.4F, sin(yaw.toRadians()), -cos(yaw.toRadians()))
 				entity.setFireTicks((type.fire / rand.nextFloat(1.6F, 2.4F)).floorToInt())
 				entity.attackEntityFrom(source, sweepDamage)
 				
@@ -145,12 +145,7 @@ class ItemScorchingSword(
 	}
 	
 	private fun isPassive(target: EntityLivingBase): Boolean {
-		@Suppress("SENSELESS_COMPARISON")
-		if (target.getAttribute(SharedMonsterAttributes.ATTACK_DAMAGE) != null) {
-			return false
-		}
-		
-		return target is EntityAnimal || target is EntityAmbientCreature || target is EntitySquid
+		return !target.attributeManager.let { it.hasAttributeInstance(ATTACK_DAMAGE) && it.getAttributeBaseValue(ATTACK_DAMAGE) > 0.0 } && (target is EntityAnimal || target is EntityAmbientCreature || target is EntitySquid)
 	}
 	
 	private fun getTargetType(target: EntityLivingBase) = when {

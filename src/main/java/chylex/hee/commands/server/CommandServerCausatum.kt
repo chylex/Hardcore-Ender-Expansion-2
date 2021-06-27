@@ -50,7 +50,7 @@ object CommandServerCausatum : ICommand {
 			sendFeedback(message("list"), false)
 			
 			for(stage in CausatumStage.values()) {
-				sendFeedback(StringTextComponent(stage.name.toLowerCase(Locale.ENGLISH)), false)
+				sendFeedback(StringTextComponent(stage.name.lowercase(Locale.ENGLISH)), false)
 			}
 		}
 	}
@@ -60,7 +60,7 @@ object CommandServerCausatum : ICommand {
 			val player = if (hasPlayerParameter) EntityArgument.getPlayer(ctx, "player") else asPlayer()
 			val stage = EnderCausatum.getStage(player)
 			
-			sendFeedback(message("check", stage.name.toLowerCase(Locale.ENGLISH)), false)
+			sendFeedback(message("check", stage.name.lowercase(Locale.ENGLISH)), false)
 			return stage.ordinal
 		}
 	}

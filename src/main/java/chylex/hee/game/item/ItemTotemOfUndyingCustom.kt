@@ -1,7 +1,7 @@
 package chylex.hee.game.item
 
 import chylex.hee.client.MC
-import chylex.hee.game.entity.living.EntityMobVillagerDying
+import chylex.hee.game.entity.REACH_DISTANCE
 import chylex.hee.game.entity.posVec
 import chylex.hee.game.entity.selectExistingEntities
 import chylex.hee.game.inventory.heeTag
@@ -9,10 +9,11 @@ import chylex.hee.game.inventory.heeTagOrNull
 import chylex.hee.game.mechanics.trinket.TrinketHandler
 import chylex.hee.game.potion.makeEffect
 import chylex.hee.game.world.playClient
+import chylex.hee.game.world.spawn
 import chylex.hee.game.world.totalTime
+import chylex.hee.init.ModEntities
 import chylex.hee.init.ModItems
 import chylex.hee.system.compatibility.MinecraftForgeEventBus
-import chylex.hee.system.facades.Resource
 import chylex.hee.system.forge.EventPriority
 import chylex.hee.system.forge.Side
 import chylex.hee.system.forge.Sided
@@ -24,25 +25,28 @@ import chylex.hee.system.migration.Potions
 import chylex.hee.system.migration.Sounds
 import chylex.hee.system.serialization.hasKey
 import net.minecraft.entity.Entity
-import net.minecraft.entity.player.PlayerEntity.REACH_DISTANCE
+import net.minecraft.item.IItemPropertyGetter
 import net.minecraft.item.ItemStack
 import net.minecraft.item.Items
 import net.minecraft.particles.ParticleTypes
+import net.minecraft.util.ActionResultType
+import net.minecraft.util.ActionResultType.FAIL
+import net.minecraft.util.ActionResultType.SUCCESS
 import net.minecraft.util.DamageSource
 import net.minecraft.util.Hand
 import net.minecraft.world.World
 import net.minecraftforge.event.entity.living.LivingDeathEvent
 
 class ItemTotemOfUndyingCustom(properties: Properties) : ItemAbstractTrinket(properties) {
-	private companion object {
+	companion object {
 		private const val SHAKING_TAG = "Shaking"
+		
+		val IS_SHAKING_PROPERTY = IItemPropertyGetter { stack, _, _ ->
+			if (stack.heeTagOrNull.hasKey(SHAKING_TAG)) 1F else 0F
+		}
 	}
 	
 	init {
-		addPropertyOverride(Resource.Custom("is_shaking")) { stack, _, _ ->
-			if (stack.heeTagOrNull.hasKey(SHAKING_TAG)) 1F else 0F
-		}
-		
 		MinecraftForgeEventBus.register(this)
 	}
 	
@@ -95,7 +99,7 @@ class ItemTotemOfUndyingCustom(properties: Properties) : ItemAbstractTrinket(pro
 			return
 		}
 		
-		val isNearVillager = world.selectExistingEntities.inRange<EntityVillager>(entity.posVec, entity.getAttribute(REACH_DISTANCE).value).isNotEmpty()
+		val isNearVillager = world.selectExistingEntities.inRange<EntityVillager>(entity.posVec, entity.getAttributeValue(REACH_DISTANCE)).isNotEmpty()
 		val wasNearVillager = stack.heeTagOrNull.hasKey(SHAKING_TAG)
 		
 		if (isNearVillager && !wasNearVillager) {
@@ -106,15 +110,15 @@ class ItemTotemOfUndyingCustom(properties: Properties) : ItemAbstractTrinket(pro
 		}
 	}
 	
-	override fun itemInteractionForEntity(stack: ItemStack, player: EntityPlayer, target: EntityLivingBase, hand: Hand): Boolean {
+	override fun itemInteractionForEntity(stack: ItemStack, player: EntityPlayer, target: EntityLivingBase, hand: Hand): ActionResultType {
 		if (target !is EntityVillager || !player.isSneaking || canPlaceIntoTrinketSlot(stack)) {
-			return false
+			return FAIL
 		}
 		
 		val world = target.world
 		
 		if (world.isRemote) {
-			return true
+			return SUCCESS
 		}
 		
 		stack.damage -= if (target.isChild) 2 else 1
@@ -123,15 +127,14 @@ class ItemTotemOfUndyingCustom(properties: Properties) : ItemAbstractTrinket(pro
 		player.setHeldItem(hand, stack)
 		player.cooldownTracker.setCooldown(this, 64)
 		
-		EntityMobVillagerDying(world).apply {
+		world.spawn(ModEntities.VILLAGER_DYING) {
 			copyLocationAndAnglesFrom(target)
 			copyVillagerDataFrom(target)
-			world.addEntity(this)
 			// POLISH improve freezing during movement
 		}
 		
 		target.remove()
-		return true
+		return SUCCESS
 	}
 	
 	// Client side

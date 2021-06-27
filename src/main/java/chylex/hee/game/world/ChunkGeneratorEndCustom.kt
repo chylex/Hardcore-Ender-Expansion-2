@@ -4,26 +4,49 @@ import chylex.hee.game.world.generation.TerritoryGenerationCache
 import chylex.hee.game.world.generation.TerritoryGenerationInfo
 import chylex.hee.game.world.math.Transform
 import chylex.hee.game.world.territory.TerritoryInstance
+import chylex.hee.system.facades.Resource
+import chylex.hee.system.forge.Side
+import chylex.hee.system.forge.Sided
+import com.mojang.serialization.Codec
 import net.minecraft.block.BlockState
 import net.minecraft.entity.EntityClassification
 import net.minecraft.util.math.BlockPos
+import net.minecraft.util.registry.DynamicRegistries
+import net.minecraft.util.registry.Registry
+import net.minecraft.util.registry.RegistryLookupCodec
+import net.minecraft.world.Blockreader
+import net.minecraft.world.IBlockReader
+import net.minecraft.world.ISeedReader
 import net.minecraft.world.IWorld
-import net.minecraft.world.World
 import net.minecraft.world.biome.Biome
-import net.minecraft.world.biome.Biome.SpawnListEntry
 import net.minecraft.world.biome.BiomeManager
-import net.minecraft.world.biome.provider.BiomeProvider
+import net.minecraft.world.biome.Biomes
+import net.minecraft.world.biome.MobSpawnInfo.Spawners
+import net.minecraft.world.biome.provider.SingleBiomeProvider
 import net.minecraft.world.chunk.IChunk
 import net.minecraft.world.gen.ChunkGenerator
-import net.minecraft.world.gen.EndGenerationSettings
+import net.minecraft.world.gen.GenerationStage.Carving
 import net.minecraft.world.gen.Heightmap.Type
 import net.minecraft.world.gen.WorldGenRegion
-import net.minecraft.world.gen.feature.IFeatureConfig
-import net.minecraft.world.gen.feature.structure.Structure
+import net.minecraft.world.gen.feature.structure.StructureManager
 import net.minecraft.world.gen.feature.template.TemplateManager
+import net.minecraft.world.gen.settings.DimensionStructuresSettings
 
-class ChunkGeneratorEndCustom(world: World, biomeProvider: BiomeProvider, settings: EndGenerationSettings) : ChunkGenerator<EndGenerationSettings>(world, biomeProvider, settings) {
-	private val territoryCache = TerritoryGenerationCache(world)
+class ChunkGeneratorEndCustom(private val biomeRegistry: Registry<Biome>) : ChunkGenerator(SingleBiomeProvider(biomeRegistry.getOrThrow(Biomes.THE_END)), DimensionStructuresSettings(false)) {
+	companion object {
+		private val CODEC: Codec<ChunkGeneratorEndCustom> = RegistryLookupCodec.getLookUpCodec(Registry.BIOME_KEY).xmap(::ChunkGeneratorEndCustom, ChunkGeneratorEndCustom::biomeRegistry).codec()
+		
+		fun registerCodec() {
+			Registry.register(Registry.CHUNK_GENERATOR_CODEC, Resource.Custom("end"), CODEC)
+		}
+	}
+	
+	private lateinit var territoryCache: TerritoryGenerationCache
+	
+	fun setSeed(seed: Long) {
+		check(!::territoryCache.isInitialized) { "[ChunkGeneratorEndCustom] cannot set seed twice" }
+		territoryCache = TerritoryGenerationCache(seed)
+	}
 	
 	// Instances
 	
@@ -49,7 +72,7 @@ class ChunkGeneratorEndCustom(world: World, biomeProvider: BiomeProvider, settin
 	
 	// Generation & population
 	
-	override fun makeBase(world: IWorld, chunk: IChunk) {}
+	override fun func_230352_b_(world: IWorld, structureManager: StructureManager, chunk: IChunk) {} // RENAME noise
 	
 	override fun generateSurface(region: WorldGenRegion, chunk: IChunk) {
 		val (chunkX, chunkZ) = chunk.pos
@@ -66,28 +89,30 @@ class ChunkGeneratorEndCustom(world: World, biomeProvider: BiomeProvider, settin
 			val bottomOffset = territory.height.first
 			val internalOffset = getInternalOffset(chunkX, chunkZ, instance)
 			
-			for(blockX in 0..15) for(blockZ in 0..15) {
-				for(blockY in 0 until bottomOffset) {
+			for (blockX in 0..15) for (blockZ in 0..15) {
+				for (blockY in 0 until bottomOffset) {
 					setState(chunk, blockX, blockY, blockZ, defaultState)
 				}
 				
-				for(blockY in height until 256) {
+				for (blockY in height until 256) {
 					setState(chunk, blockX, blockY, blockZ, defaultState)
 				}
 			}
 			
-			for(blockY in 0 until height) for(blockX in 0..15) for(blockZ in 0..15) {
+			for (blockY in 0 until height) for (blockX in 0..15) for (blockZ in 0..15) {
 				setState(chunk, blockX, bottomOffset + blockY, blockZ, constructed.getState(internalOffset.add(blockX, blockY, blockZ)))
 			}
 		}
 		else {
-			for(blockY in 0 until 256) for(blockX in 0..15) for(blockZ in 0..15) {
+			for (blockY in 0 until 256) for (blockX in 0..15) for (blockZ in 0..15) {
 				setState(chunk, blockX, blockY, blockZ, defaultState)
 			}
 		}
 	}
 	
-	override fun decorate(region: WorldGenRegion) {
+	override fun func_230350_a_(seed: Long, biomeManager: BiomeManager, chunk: IChunk, carving: Carving) {} // RENAME carvers
+	
+	override fun func_230351_a_(region: WorldGenRegion, structureManager: StructureManager) { // RENAME decorate
 		val chunkX = region.mainChunkX
 		val chunkZ = region.mainChunkZ
 		
@@ -97,7 +122,7 @@ class ChunkGeneratorEndCustom(world: World, biomeProvider: BiomeProvider, settin
 		val startOffset = Pos(chunkX * 16, instance.territory.height.first, chunkZ * 16)
 		val internalOffset = getInternalOffset(chunkX, chunkZ, instance)
 		
-		for((pos, trigger) in constructed.getTriggers()) {
+		for ((pos, trigger) in constructed.getTriggers()) {
 			val blockOffset = pos.subtract(internalOffset)
 			
 			if (blockOffset.x in 0..15 && blockOffset.z in 0..15) {
@@ -106,28 +131,33 @@ class ChunkGeneratorEndCustom(world: World, biomeProvider: BiomeProvider, settin
 		}
 	}
 	
-	override fun getPossibleCreatures(type: EntityClassification, pos: BlockPos): List<SpawnListEntry> {
-		return emptyList() // TODO could be a good idea to use this instead of a custom spawner
+	override fun func_230353_a_(biome: Biome, structureManager: StructureManager, type: EntityClassification, pos: BlockPos): MutableList<Spawners> { // RENAME getPossibleCreatures
+		return mutableListOf() // TODO could be a good idea to use this instead of a custom spawner
 	}
 	
 	override fun getGroundHeight(): Int {
 		return 128
 	}
 	
-	// Neutralization
+	// Properties
 	
-	override fun func_222529_a(x: Int, z: Int, heightmapType: Type): Int { // RENAME getHeightAt
+	override fun func_230347_a_(): Codec<out ChunkGenerator> {
+		return CODEC
+	}
+	
+	@Sided(Side.CLIENT)
+	override fun func_230349_a_(seed: Long): ChunkGenerator {
+		return ChunkGeneratorEndCustom(biomeRegistry).apply { setSeed(seed) }
+	}
+	
+	override fun getHeight(x: Int, z: Int, heightmapType: Type): Int {
 		return 256 // return a position outside the world, nothing should be calling this
 	}
 	
-	override fun hasStructure(biome: Biome, structure: Structure<out IFeatureConfig>): Boolean {
-		return false
+	override fun func_230348_a_(x: Int, z: Int): IBlockReader {
+		return Blockreader(emptyArray())
 	}
 	
-	override fun findNearestStructure(world: World, name: String, pos: BlockPos, radius: Int, skipExistingChunks: Boolean): BlockPos? {
-		return null
-	}
-	
-	override fun generateStructures(biomes: BiomeManager, chunk: IChunk, generator: ChunkGenerator<*>, templates: TemplateManager) {}
-	override fun generateStructureStarts(world: IWorld, chunk: IChunk) {}
+	override fun func_242707_a(registries: DynamicRegistries, structureManager: StructureManager, chunk: IChunk, templateManager: TemplateManager, seed: Long) {} // RENAME generateStructureStarts
+	override fun func_235953_a_(p_235953_1_: ISeedReader, p_235953_2_: StructureManager, p_235953_3_: IChunk) {} // RENAME generateStructureReferences
 }

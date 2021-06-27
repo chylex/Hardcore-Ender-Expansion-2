@@ -9,11 +9,11 @@ import chylex.hee.system.random.IRandomColor.Companion.IRandomColor
 import chylex.hee.system.random.nextFloat
 import net.minecraft.client.particle.Particle
 import net.minecraft.client.particle.SmokeParticle
-import net.minecraft.world.World
+import net.minecraft.client.world.ClientWorld
 
 object ParticleSmokeCustom : ParticleDataColorLifespanScale.ParticleMaker() {
 	@Sided(Side.CLIENT)
-	override fun create(world: World, posX: Double, posY: Double, posZ: Double, motX: Double, motY: Double, motZ: Double, data: ParticleDataColorLifespanScale?): Particle {
+	override fun create(world: ClientWorld, posX: Double, posY: Double, posZ: Double, motX: Double, motY: Double, motZ: Double, data: ParticleDataColorLifespanScale?): Particle {
 		return Instance(world, posX, posY, posZ, motX, motY, motZ, data.orDefault)
 	}
 	
@@ -23,7 +23,7 @@ object ParticleSmokeCustom : ParticleDataColorLifespanScale.ParticleMaker() {
 	
 	@Sided(Side.CLIENT)
 	private class Instance(
-		world: World, posX: Double, posY: Double, posZ: Double, motX: Double, motY: Double, motZ: Double, data: ParticleDataColorLifespanScale,
+		world: ClientWorld, posX: Double, posY: Double, posZ: Double, motX: Double, motY: Double, motZ: Double, data: ParticleDataColorLifespanScale,
 	) : SmokeParticle(
 		world, posX, posY, posZ, motX, motY, motZ, data.scale, sprite
 	) {

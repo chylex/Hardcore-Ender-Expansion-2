@@ -14,12 +14,12 @@ import chylex.hee.system.forge.Side
 import chylex.hee.system.forge.Sided
 import chylex.hee.system.math.square
 import net.minecraft.client.particle.Particle
-import net.minecraft.world.World
+import net.minecraft.client.world.ClientWorld
 import java.util.Random
 
 object ParticleEnergyCluster : IParticleMaker.WithData<ParticleDataColorScale>() {
 	@Sided(Side.CLIENT)
-	override fun create(world: World, posX: Double, posY: Double, posZ: Double, motX: Double, motY: Double, motZ: Double, data: ParticleDataColorScale?): Particle {
+	override fun create(world: ClientWorld, posX: Double, posY: Double, posZ: Double, motX: Double, motY: Double, motZ: Double, data: ParticleDataColorScale?): Particle {
 		return Instance(world, posX, posY, posZ, motX, motY, motZ, data)
 	}
 	
@@ -52,7 +52,7 @@ object ParticleEnergyCluster : IParticleMaker.WithData<ParticleDataColorScale>()
 	private const val FADE_OUT_DURATION = 10
 	
 	@Sided(Side.CLIENT)
-	private class Instance(world: World, posX: Double, posY: Double, posZ: Double, motX: Double, motY: Double, motZ: Double, data: ParticleDataColorScale?) : ParticleBaseEnergy(world, posX, posY, posZ, motX, motY, motZ) {
+	private class Instance(world: ClientWorld, posX: Double, posY: Double, posZ: Double, motX: Double, motY: Double, motZ: Double, data: ParticleDataColorScale?) : ParticleBaseEnergy(world, posX, posY, posZ, motX, motY, motZ) {
 		private val clusterPos = Pos(posX, posY, posZ)
 		
 		private val alphaMultiplier = when(MC.particleSetting) {

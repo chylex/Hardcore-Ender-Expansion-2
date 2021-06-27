@@ -1,5 +1,5 @@
 {
-  "parent": "item/generated",
+  "parent": "minecraft:item/generated",
   "textures": {
     "layer0": "hee:item/energy_oracle",
     "layer1": "hee:item/energy_oracle_indicator_inactive"

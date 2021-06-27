@@ -4,6 +4,7 @@ import chylex.hee.game.container.ContainerBrewingStandCustom
 import chylex.hee.game.inventory.getStack
 import chylex.hee.game.inventory.isNotEmpty
 import chylex.hee.game.inventory.setStack
+import chylex.hee.game.inventory.size
 import chylex.hee.game.particle.ParticleSmokeCustom
 import chylex.hee.game.particle.spawner.ParticleSpawnerCustom
 import chylex.hee.game.particle.spawner.properties.IOffset.InBox
@@ -51,8 +52,14 @@ class TileEntityBrewingStandCustom : TileEntityBrewingStand() {
 		const val SLOT_REAGENT = 3
 		const val SLOT_MODIFIER = 4
 		
-		const val TOTAL_SLOTS = 5
-		const val TOTAL_FIELDS = 2 // UPDATE 1.15
+		val TOTAL_SLOTS: Int
+		val TOTAL_FIELDS: Int
+		
+		init {
+			val testTile = TileEntityBrewingStandCustom()
+			TOTAL_SLOTS = testTile.size
+			TOTAL_FIELDS = testTile.field_213954_a.size()
+		}
 		
 		private val POTION_SLOTS = SLOTS_POTIONS.toList().toIntArray()
 		
@@ -89,7 +96,7 @@ class TileEntityBrewingStandCustom : TileEntityBrewingStand() {
 	val isEnhanced
 		get() = blockState.block === ModBlocks.ENHANCED_BREWING_STAND
 	
-	var brewTime
+	private var brewTime
 		get() = field_213954_a.get(0)
 		set(value) {
 			field_213954_a.set(0, value)

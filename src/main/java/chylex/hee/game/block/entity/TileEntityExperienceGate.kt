@@ -101,7 +101,7 @@ class TileEntityExperienceGate(type: TileEntityType<TileEntityExperienceGate>) :
 		val FX_CONSUME = object : FxEntityHandler() {
 			override fun handle(entity: Entity, rand: Random) {
 				val offset = if (entity is EntityItem && entity !is EntityItemNoBob) {
-					0.35 + (sin((entity.age + 1.0) / 10.0 + entity.hoverStart) * 0.1) // UPDATE 1.15 (taken from ItemRenderer)
+					0.35 + (sin((entity.age + 1.0) / 10.0 + entity.hoverStart) * 0.1) // UPDATE 1.16 (taken from ItemRenderer)
 				}
 				else {
 					entity.height * 0.5
@@ -291,8 +291,6 @@ class TileEntityExperienceGate(type: TileEntityType<TileEntityExperienceGate>) :
 	}
 	
 	// Rendering
-	
-	override fun hasFastRenderer() = true
 	
 	@Sided(Side.CLIENT)
 	override fun getRenderBoundingBox(): AxisAlignedBB {

@@ -2,12 +2,12 @@
 
 package chylex.hee.game.world
 
+import chylex.hee.game.entity.posVec
 import chylex.hee.game.world.math.PosXZ
 import chylex.hee.system.math.Vec
 import chylex.hee.system.math.ceilToInt
 import chylex.hee.system.math.square
 import chylex.hee.system.migration.Facing.UP
-import chylex.hee.system.migration.MutableBlockPos
 import com.google.common.base.Function
 import com.google.common.collect.Iterables
 import net.minecraft.block.Block
@@ -15,12 +15,13 @@ import net.minecraft.block.BlockState
 import net.minecraft.block.Blocks
 import net.minecraft.block.material.Material
 import net.minecraft.entity.Entity
-import net.minecraft.fluid.IFluidState
+import net.minecraft.fluid.FluidState
 import net.minecraft.tileentity.TileEntity
 import net.minecraft.util.Direction
+import net.minecraft.util.math.AxisAlignedBB
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.ChunkPos
-import net.minecraft.util.math.Vec3d
+import net.minecraft.util.math.vector.Vector3d
 import net.minecraft.world.IBlockReader
 import net.minecraft.world.IWorldReader
 import net.minecraft.world.IWorldWriter
@@ -30,12 +31,17 @@ import java.util.Stack
 import kotlin.math.max
 import kotlin.math.min
 import kotlin.math.sqrt
+import kotlin.streams.toList
 
 inline fun Pos(x: Int, y: Int, z: Int) = BlockPos(x, y, z)
 inline fun Pos(x: Double, y: Double, z: Double) = BlockPos(x, y, z)
-inline fun Pos(vector: Vec3d) = BlockPos(vector)
-inline fun Pos(entity: Entity) = BlockPos(entity)
+inline fun Pos(vector: Vector3d) = BlockPos(vector)
+inline fun Pos(entity: Entity) = BlockPos(entity.posVec)
 inline fun Pos(packed: Long): BlockPos = BlockPos.fromLong(packed)
+
+inline fun MutablePos() = BlockPos.Mutable()
+inline fun MutablePos(pos: BlockPos) = BlockPos.Mutable(pos.x, pos.y, pos.z)
+inline fun MutablePos(x: Int, y: Int, z: Int) = BlockPos.Mutable(x, y, z)
 
 inline val BlockPos.xz
 	get() = PosXZ(this)
@@ -89,7 +95,7 @@ inline fun BlockPos.isLoaded(world: IWorldReader): Boolean {
 	return world.isBlockLoaded(this)
 }
 
-inline fun BlockPos.getFluidState(world: IBlockReader): IFluidState {
+inline fun BlockPos.getFluidState(world: IBlockReader): FluidState {
 	return world.getFluidState(this)
 }
 
@@ -191,13 +197,13 @@ inline fun BlockPos.offsetWhile(facing: Direction, offsetRange: IntProgression, 
 // Areas (Box)
 
 private val makeImmutable = Function<BlockPos, BlockPos> { pos -> pos!!.toImmutable() }
-private val castMutable = Function<BlockPos, MutableBlockPos> { pos -> pos as MutableBlockPos }
+private val castMutable = Function<BlockPos, BlockPos.Mutable> { pos -> pos as BlockPos.Mutable }
 
 fun BlockPos.allInBox(otherBound: BlockPos): Iterable<BlockPos> {
 	return Iterables.transform(BlockPos.getAllInBoxMutable(this, otherBound), makeImmutable)
 }
 
-fun BlockPos.allInBoxMutable(otherBound: BlockPos): Iterable<MutableBlockPos> {
+fun BlockPos.allInBoxMutable(otherBound: BlockPos): Iterable<BlockPos.Mutable> {
 	return Iterables.transform(BlockPos.getAllInBoxMutable(this, otherBound), castMutable)
 }
 
@@ -205,7 +211,7 @@ fun BlockPos.allInCenteredBox(offsetX: Int, offsetY: Int, offsetZ: Int): Iterabl
 	return Iterables.transform(BlockPos.getAllInBoxMutable(this.x - offsetX, this.y - offsetY, this.z - offsetZ, this.x + offsetX, this.y + offsetY, this.z + offsetZ), makeImmutable)
 }
 
-fun BlockPos.allInCenteredBoxMutable(offsetX: Int, offsetY: Int, offsetZ: Int): Iterable<MutableBlockPos> {
+fun BlockPos.allInCenteredBoxMutable(offsetX: Int, offsetY: Int, offsetZ: Int): Iterable<BlockPos.Mutable> {
 	return Iterables.transform(BlockPos.getAllInBoxMutable(this.x - offsetX, this.y - offsetY, this.z - offsetZ, this.x + offsetX, this.y + offsetY, this.z + offsetZ), castMutable)
 }
 
@@ -213,7 +219,7 @@ fun BlockPos.allInCenteredBox(offsetX: Double, offsetY: Double, offsetZ: Double)
 	return this.allInCenteredBox(offsetX.ceilToInt(), offsetY.ceilToInt(), offsetZ.ceilToInt())
 }
 
-fun BlockPos.allInCenteredBoxMutable(offsetX: Double, offsetY: Double, offsetZ: Double): Iterable<MutableBlockPos> {
+fun BlockPos.allInCenteredBoxMutable(offsetX: Double, offsetY: Double, offsetZ: Double): Iterable<BlockPos.Mutable> {
 	return this.allInCenteredBoxMutable(offsetX.ceilToInt(), offsetY.ceilToInt(), offsetZ.ceilToInt())
 }
 
@@ -234,7 +240,7 @@ fun BlockPos.allInCenteredSphere(radius: Double): Iterable<BlockPos> {
 	return this.allInCenteredSphereInternal(square(radius), this.allInCenteredBox(radius, radius, radius))
 }
 
-fun BlockPos.allInCenteredSphereMutable(radius: Double): Iterable<MutableBlockPos> {
+fun BlockPos.allInCenteredSphereMutable(radius: Double): Iterable<BlockPos.Mutable> {
 	return this.allInCenteredSphereInternal(square(radius), this.allInCenteredBoxMutable(radius, radius, radius))
 }
 
@@ -242,8 +248,14 @@ fun BlockPos.allInCenteredSphere(radius: Int, avoidNipples: Boolean = false): It
 	return this.allInCenteredSphereInternal(getSphereRadiusSq(radius, avoidNipples), this.allInCenteredBox(radius, radius, radius))
 }
 
-fun BlockPos.allInCenteredSphereMutable(radius: Int, avoidNipples: Boolean = false): Iterable<MutableBlockPos> {
+fun BlockPos.allInCenteredSphereMutable(radius: Int, avoidNipples: Boolean = false): Iterable<BlockPos.Mutable> {
 	return this.allInCenteredSphereInternal(getSphereRadiusSq(radius, avoidNipples), this.allInCenteredBoxMutable(radius, radius, radius))
+}
+
+// Areas (AABB)
+
+fun AxisAlignedBB.getBlocksInside(): Iterable<BlockPos> {
+	return BlockPos.getAllInBox(this).map(makeImmutable).toList()
 }
 
 // Areas (Flood-Fill)
@@ -298,7 +310,7 @@ fun BlockPos.distanceSqTo(pos: BlockPos): Double {
 	return distanceSqTo(pos.x, pos.y, pos.z)
 }
 
-fun BlockPos.distanceSqTo(vec: Vec3d): Double {
+fun BlockPos.distanceSqTo(vec: Vector3d): Double {
 	return square(vec.x - (this.x + 0.5)) + square(vec.y - (this.y + 0.5)) + square(vec.z - (this.z + 0.5))
 }
 
@@ -308,7 +320,7 @@ fun BlockPos.distanceSqTo(entity: Entity): Double {
 
 inline fun BlockPos.distanceTo(x: Int, y: Int, z: Int) = sqrt(distanceSqTo(x, y, z))
 inline fun BlockPos.distanceTo(pos: BlockPos) = sqrt(distanceSqTo(pos))
-inline fun BlockPos.distanceTo(vec: Vec3d) = sqrt(distanceSqTo(vec))
+inline fun BlockPos.distanceTo(vec: Vector3d) = sqrt(distanceSqTo(vec))
 inline fun BlockPos.distanceTo(entity: Entity) = sqrt(distanceSqTo(entity))
 
 // Distance utilities

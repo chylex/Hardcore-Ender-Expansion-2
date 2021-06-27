@@ -1,16 +1,11 @@
 {
   "type": "minecraft:chest",
+  "hee:patch": "no_stack_splitting",
   "pools": [
 
     {
-      "rolls": 0,
-      "name": "table#hee:stack_splitting=off",
-      "entries": []
-    },
-
-    {
-      "rolls": { "min": 3, "max": 10 },
-      "name": "pool#hee:rolls_type=biased;6.5;3",
+      "rolls": { "type": "hee:biased_range", "min": 3, "max": 10, "highestChanceValue": 6.5, "biasSoftener": 3 },
+      "name": "pool",
       "entries": [
         { "type": "item", "name": "minecraft:iron_ingot", "weight": 100, "functions": [{ "function": "set_count", "count": { "min": 1, "max": 5 } }], "entryName": "iron_ingot" },
         { "type": "item", "name": "hee:ethereum", "weight": 95, "functions": [{ "function": "set_count", "count": { "min": 1, "max": 2 } }], "entryName": "ethereum" },

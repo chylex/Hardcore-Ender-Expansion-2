@@ -59,6 +59,6 @@ class InfusionList private constructor(private val infusions: ImmutableSet<Infus
 		return if (infusions.isEmpty())
 			EmptyIterator.get()
 		else
-			infusions.sortedBy { it.ordinal }.iterator()
+			infusions.sortedBy(Infusion::ordinal).iterator()
 	}
 }

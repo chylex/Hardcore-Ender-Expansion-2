@@ -1,6 +1,7 @@
 package chylex.hee.game.block
 
 import chylex.hee.game.block.entity.TileEntityIgneousPlate
+import chylex.hee.game.block.logic.IBlockDynamicHardness
 import chylex.hee.game.block.properties.BlockBuilder
 import chylex.hee.game.block.properties.Property
 import chylex.hee.game.entity.technical.EntityTechnicalIgneousPlateLogic
@@ -42,7 +43,7 @@ import net.minecraft.world.IWorld
 import net.minecraft.world.IWorldReader
 import net.minecraft.world.World
 
-class BlockIgneousPlate(builder: BlockBuilder) : BlockSimple(builder) {
+class BlockIgneousPlate(builder: BlockBuilder) : BlockSimple(builder), IBlockDynamicHardness {
 	companion object {
 		val FACING_NOT_DOWN = Property.facing("facing", Facing6.minusElement(DOWN))
 		
@@ -117,7 +118,7 @@ class BlockIgneousPlate(builder: BlockBuilder) : BlockSimple(builder) {
 	
 	// Interactions
 	
-	override fun getBlockHardness(state: BlockState, world: IBlockReader, pos: BlockPos): Float {
+	override fun getBlockHardness(world: IBlockReader, pos: BlockPos, state: BlockState, originalHardness: Float): Float {
 		val tile = pos.getTile<TileEntityIgneousPlate>(world) ?: return 0F
 		
 		return when {

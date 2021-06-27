@@ -9,6 +9,7 @@ import net.minecraft.block.Block
 import net.minecraft.block.BlockState
 import net.minecraft.tileentity.TileEntity
 import net.minecraft.util.math.BlockPos
+import net.minecraft.world.IServerWorld
 import net.minecraft.world.IWorld
 import net.minecraft.world.World
 
@@ -31,13 +32,13 @@ class TileEntityStructureTrigger(private val state: BlockState, private val nbt:
 		world.setState(pos, transform(state))
 	}
 	
-	override fun realize(world: IWorld, pos: BlockPos, transform: Transform) {
+	override fun realize(world: IServerWorld, pos: BlockPos, transform: Transform) {
 		if (pos.getBlock(world) !== state.block) {
 			return
 		}
 		
 		addTileSafe(world, pos, state.createTileEntity(world)!!.also {
-			it.read(nbt)
+			it.read(state, nbt)
 			it.pos = pos
 			transform(it)
 		})

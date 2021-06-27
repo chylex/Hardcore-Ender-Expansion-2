@@ -4,14 +4,12 @@ import chylex.hee.game.block.BlockBrewingStandCustom
 import chylex.hee.game.block.BlockEndPortalOverride
 import chylex.hee.game.block.BlockShulkerBoxOverride
 import chylex.hee.game.block.properties.CustomPlantType
-import chylex.hee.game.entity.living.EntityMobEnderman
-import chylex.hee.game.entity.living.behavior.EndermanBlockHandler
 import chylex.hee.game.item.ItemShulkerBoxOverride
 import chylex.hee.game.item.properties.CustomRarity
 import chylex.hee.game.mechanics.causatum.EnderCausatum
 import chylex.hee.game.mechanics.instability.Instability
 import chylex.hee.game.mechanics.trinket.TrinketHandler
-import chylex.hee.game.world.WorldProviderEndCustom
+import chylex.hee.game.world.ChunkGeneratorEndCustom
 import chylex.hee.game.world.feature.OverworldFeatures
 import chylex.hee.game.world.territory.storage.TokenPlayerStorage
 import chylex.hee.init.ModCreativeTabs
@@ -26,7 +24,6 @@ import chylex.hee.system.Debug
 import chylex.hee.system.forge.SubscribeAllEvents
 import chylex.hee.system.forge.SubscribeEvent
 import net.minecraft.block.Blocks
-import net.minecraft.world.dimension.DimensionType
 import net.minecraftforge.fml.DistExecutor
 import net.minecraftforge.fml.DistExecutor.SafeSupplier
 import net.minecraftforge.fml.ModLoadingContext
@@ -52,9 +49,7 @@ object Mod {
 		
 		CustomRarity
 		CustomPlantType
-		
-		ModCreativeTabs.initialize()
-		WorldProviderEndCustom.register()
+		ModCreativeTabs
 	}
 	
 	@SubscribeEvent
@@ -65,7 +60,12 @@ object Mod {
 	@SubscribeEvent
 	fun onCommonSetup(@Suppress("UNUSED_PARAMETER") e: FMLCommonSetupEvent) {
 		NetworkManager.initialize(ModPackets.ALL)
-		ModLoot.initialize()
+		ModLoot
+		
+		e.enqueueWork {
+			OverworldFeatures.registerConfiguredFeatures()
+			ChunkGeneratorEndCustom.registerCodec()
+		}
 		
 		TrinketHandler.register()
 		EnderCausatum.register()
@@ -75,11 +75,8 @@ object Mod {
 	
 	@SubscribeEvent
 	fun onLoadComplete(@Suppress("UNUSED_PARAMETER") e: FMLLoadCompleteEvent) {
-		EntityMobEnderman.setupBiomeSpawns()
-		EndermanBlockHandler.setupCarriableBlocks()
 		ModPotions.setupVanillaOverrides()
 		ModTileEntities.setupVanillaValidBlocks()
-		OverworldFeatures.setupVanillaOverrides()
 		IntegrityCheck.verify()
 	}
 	
@@ -92,10 +89,6 @@ object Mod {
 				crashIfFalse(block.javaClass === BlockShulkerBoxOverride::class.java, "invalid Shulker Box block: ${block.javaClass}")
 				crashIfFalse(block.asItem().javaClass === ItemShulkerBoxOverride::class.java, "invalid Shulker Box item: ${block.asItem().javaClass}")
 			}
-			
-			crashIfFalse(DimensionType.THE_END.directory == WorldProviderEndCustom.SAVE_FOLDER, "invalid End dimension save directory: ${DimensionType.THE_END.directory}")
-			crashIfFalse(DimensionType.THE_END.factory === WorldProviderEndCustom.CONSTRUCTOR, "invalid End dimension factory: ${DimensionType.THE_END.factory}")
-			crashIfFalse(DimensionType.THE_END.hasSkyLight, "invalid End dimension property: hasSkyLight != true")
 		}
 		
 		// Utilities

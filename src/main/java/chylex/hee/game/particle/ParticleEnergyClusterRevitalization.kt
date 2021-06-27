@@ -16,12 +16,12 @@ import chylex.hee.system.math.offsetTowards
 import chylex.hee.system.random.nextFloat
 import chylex.hee.system.random.nextVector
 import net.minecraft.client.particle.Particle
-import net.minecraft.util.math.Vec3d
-import net.minecraft.world.World
+import net.minecraft.client.world.ClientWorld
+import net.minecraft.util.math.vector.Vector3d
 
 object ParticleEnergyClusterRevitalization : IParticleMaker.Simple() {
 	@Sided(Side.CLIENT)
-	override fun create(world: World, posX: Double, posY: Double, posZ: Double, motX: Double, motY: Double, motZ: Double): Particle {
+	override fun create(world: ClientWorld, posX: Double, posY: Double, posZ: Double, motX: Double, motY: Double, motZ: Double): Particle {
 		return Instance(world, posX, posY, posZ, motX, motY, motZ)
 	}
 	
@@ -32,7 +32,7 @@ object ParticleEnergyClusterRevitalization : IParticleMaker.Simple() {
 	private const val FADE_OUT_DURATION = 15
 	
 	@Sided(Side.CLIENT)
-	private class Instance(world: World, posX: Double, posY: Double, posZ: Double, motX: Double, motY: Double, motZ: Double) : ParticleBaseEnergy(world, posX, posY, posZ, motX, motY, motZ) {
+	private class Instance(world: ClientWorld, posX: Double, posY: Double, posZ: Double, motX: Double, motY: Double, motZ: Double) : ParticleBaseEnergy(world, posX, posY, posZ, motX, motY, motZ) {
 		private val clusterPos = Pos(posX, posY, posZ)
 		
 		private val isRevitalizing: Boolean
@@ -78,7 +78,7 @@ object ParticleEnergyClusterRevitalization : IParticleMaker.Simple() {
 			particleAlpha = interpolateAge(BASE_ALPHA, FADE_IN_DURATION, FADE_OUT_DURATION)
 			
 			val posVec = Vec(posX, posY, posZ)
-			val newPos: Vec3d
+			val newPos: Vector3d
 			
 			if (isRevitalizing && age > TOTAL_LIFESPAN - FADE_OUT_DURATION) {
 				newPos = posVec.offsetTowards(clusterPos.center, 1.0 - (TOTAL_LIFESPAN - age).toDouble() / TOTAL_LIFESPAN)

@@ -1,8 +1,8 @@
 {
-  "parent": "block/brewing_stand",
+  "parent": "minecraft:block/brewing_stand",
   "textures": {
-    "particle": "block/brewing_stand",
-    "base": "block/brewing_stand_base",
+    "particle": "minecraft:block/brewing_stand",
+    "base": "minecraft:block/brewing_stand_base",
     "stand": "hee:block/enhanced_brewing_stand"
   }
 }

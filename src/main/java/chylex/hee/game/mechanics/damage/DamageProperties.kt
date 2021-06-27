@@ -10,7 +10,7 @@ import chylex.hee.system.migration.Hand.MAIN_HAND
 import net.minecraft.entity.Entity
 import net.minecraft.item.ItemStack
 import net.minecraft.util.DamageSource
-import net.minecraft.util.math.Vec3d
+import net.minecraft.util.math.vector.Vector3d
 import net.minecraft.util.text.ITextComponent
 import net.minecraft.util.text.TranslationTextComponent
 import net.minecraftforge.event.entity.living.LivingDamageEvent
@@ -93,7 +93,7 @@ class DamageProperties {
 		override fun getImmediateSource(): Entity? = directSource
 		override fun getTrueSource(): Entity? = remoteSource
 		
-		override fun getDamageLocation(): Vec3d? = // UPDATE 1.15 (make sure this is still only used for shield checking)
+		override fun getDamageLocation(): Vector3d? = // UPDATE 1.16 (make sure this is still only used for shield checking)
 			if (ignoreShield)
 				null
 			else

@@ -14,6 +14,7 @@ import net.minecraft.block.Block
 import net.minecraft.block.BlockState
 import net.minecraft.block.Blocks
 import net.minecraft.item.ItemStack
+import net.minecraft.loot.LootContext
 import net.minecraft.state.StateContainer.Builder
 import net.minecraft.util.ActionResultType
 import net.minecraft.util.ActionResultType.PASS
@@ -23,10 +24,8 @@ import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.BlockRayTraceResult
 import net.minecraft.util.math.RayTraceResult
 import net.minecraft.world.IBlockReader
-import net.minecraft.world.IWorldReader
 import net.minecraft.world.World
 import net.minecraft.world.server.ServerWorld
-import net.minecraft.world.storage.loot.LootContext
 import java.util.Random
 
 class BlockFlowerPotDeathFlowerDecaying(
@@ -46,12 +45,8 @@ class BlockFlowerPotDeathFlowerDecaying(
 	override val witheredFlowerBlock
 		get() = ModBlocks.POTTED_DEATH_FLOWER_WITHERED
 	
-	override fun tickRate(world: IWorldReader): Int {
-		return implTickRate()
-	}
-	
 	private fun getDrop(state: BlockState): ItemStack {
-		return ItemStack(func_220276_d() /* RENAME getFlower */).also { ItemDeathFlower.setDeathLevel(it, state[LEVEL]) }
+		return ItemStack(flower).also { ItemDeathFlower.setDeathLevel(it, state[LEVEL]) }
 	}
 	
 	override fun getDrops(state: BlockState, context: LootContext.Builder): MutableList<ItemStack> {

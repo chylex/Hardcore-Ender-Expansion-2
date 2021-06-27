@@ -43,7 +43,7 @@ class BlockGloomtorch(builder: BlockBuilder) : BlockDirectional(builder.p), IBlo
 		)
 		
 		private fun canPlaceGloomtorchAt(world: IWorldReader, pos: BlockPos, facing: Direction): Boolean {
-			return BlockHorizontalFace.func_220185_b(world, pos, facing.opposite)
+			return BlockHorizontalFace.isSideSolidForDirection(world, pos, facing.opposite)
 		}
 	}
 	

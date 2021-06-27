@@ -1,6 +1,6 @@
 package chylex.hee.system
 
-// UPDATE 1.15
+// UPDATE 1.16
 
 /**
  * Contains magic numbers and other constants which cannot be easily accessed using code, and must be reviewed before updating Minecraft versions.
@@ -16,7 +16,7 @@ object MagicValues {
 	/**
 	 * Default player damage added to [IItemTier.getAttackDamage][net.minecraft.item.IItemTier.getAttackDamage].
 	 *
-	 * Found in [PlayerEntity.registerAttributes][net.minecraft.entity.player.PlayerEntity.registerAttributes] (+ 1F).
+	 * Found in [PlayerEntity.registerAttributes][net.minecraft.entity.player.PlayerEntity.func_234570_el_] (+ 1F).
 	 */
 	const val PLAYER_HAND_DAMAGE = 1F
 	
@@ -40,7 +40,7 @@ object MagicValues {
 	const val FURNACE_FUEL_SLOT = 1
 	
 	/**
-	 * Found in [SetContents.doApply][net.minecraft.world.storage.loot.functions.SetContents.doApply].
+	 * Found in [SetContents.doApply][net.minecraft.loot.functions.SetContents.doApply].
 	 */
 	const val TILE_ENTITY_TAG = "BlockEntityTag"
 }

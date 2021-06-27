@@ -3,6 +3,7 @@ package chylex.hee.game.entity.living.controller
 import chylex.hee.game.entity.lookPosVec
 import chylex.hee.system.math.Quaternion
 import chylex.hee.system.math.Vec
+import chylex.hee.system.math.Vec3
 import chylex.hee.system.math.directionTowards
 import chylex.hee.system.math.toPitch
 import chylex.hee.system.math.toRadians
@@ -10,7 +11,6 @@ import chylex.hee.system.math.toYaw
 import chylex.hee.system.migration.EntityLiving
 import net.minecraft.entity.Entity
 import net.minecraft.entity.ai.controller.LookController
-import net.minecraft.util.math.Vec3d
 import kotlin.math.cos
 
 class EntityLookSlerp(entity: EntityLiving, private var adjustmentSpeed: Float, maxInstantAngle: Float) : LookController(entity) {
@@ -43,7 +43,7 @@ class EntityLookSlerp(entity: EntityLiving, private var adjustmentSpeed: Float, 
 			
 			val dir = mob.lookPosVec.directionTowards(Vec(posX, posY, posZ))
 			
-			if (Vec3d.fromPitchYaw(mob.rotationPitch, mob.rotationYawHead).dotProduct(dir) >= maxInstantAngleCos) {
+			if (Vec3.fromPitchYaw(mob.rotationPitch, mob.rotationYawHead).dotProduct(dir) >= maxInstantAngleCos) {
 				mob.rotationYawHead = dir.toYaw()
 				mob.rotationPitch = dir.toPitch()
 			}

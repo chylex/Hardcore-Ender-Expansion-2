@@ -1,6 +1,5 @@
 package chylex.hee.game.entity.item
 
-import chylex.hee.game.block.asVoxelShape
 import chylex.hee.game.block.properties.BlockBuilder.Companion.INDESTRUCTIBLE_HARDNESS
 import chylex.hee.game.entity.motionY
 import chylex.hee.game.item.ItemFlintAndInfernium
@@ -34,7 +33,6 @@ import chylex.hee.system.serialization.use
 import net.minecraft.block.BlockState
 import net.minecraft.block.Blocks
 import net.minecraft.block.material.Material
-import net.minecraft.entity.Entity
 import net.minecraft.entity.EntityType
 import net.minecraft.entity.MoverType
 import net.minecraft.entity.MoverType.SELF
@@ -42,26 +40,21 @@ import net.minecraft.inventory.Inventory
 import net.minecraft.item.ItemStack
 import net.minecraft.item.Items
 import net.minecraft.item.crafting.IRecipeType.SMELTING
+import net.minecraft.loot.LootContext
+import net.minecraft.loot.LootParameterSets
+import net.minecraft.loot.LootParameters
+import net.minecraft.loot.LootTables
 import net.minecraft.network.IPacket
 import net.minecraft.particles.ParticleTypes.SMOKE
-import net.minecraft.util.ReuseableStream
 import net.minecraft.util.math.BlockPos
-import net.minecraft.util.math.Vec3d
-import net.minecraft.util.math.shapes.IBooleanFunction
-import net.minecraft.util.math.shapes.ISelectionContext
-import net.minecraft.util.math.shapes.VoxelShapes
+import net.minecraft.util.math.vector.Vector3d
 import net.minecraft.world.Explosion
 import net.minecraft.world.IWorldReader
 import net.minecraft.world.World
 import net.minecraft.world.chunk.ChunkStatus
 import net.minecraft.world.chunk.IChunk
 import net.minecraft.world.server.ServerWorld
-import net.minecraft.world.storage.loot.LootContext
-import net.minecraft.world.storage.loot.LootParameterSets
-import net.minecraft.world.storage.loot.LootParameters
-import net.minecraft.world.storage.loot.LootTables
 import net.minecraftforge.fml.network.NetworkHooks
-import java.util.stream.Stream
 import kotlin.math.PI
 import kotlin.math.cos
 import kotlin.math.sin
@@ -78,11 +71,11 @@ class EntityInfusedTNT : EntityTNTPrimed {
 		
 		// EntityItem construction
 		
-		private val constructRawItem: (World, Vec3d, ItemStack) -> EntityItem = { world, pos, stack ->
+		private val constructRawItem: (World, Vector3d, ItemStack) -> EntityItem = { world, pos, stack ->
 			EntityItem(world, pos.x, pos.y, pos.z, stack)
 		}
 		
-		private val constructCookedItem: (World, Vec3d, ItemStack) -> EntityItem = { world, pos, stack ->
+		private val constructCookedItem: (World, Vector3d, ItemStack) -> EntityItem = { world, pos, stack ->
 			world.recipeManager.getRecipe(SMELTING, Inventory(stack), world).orElse(null).let {
 				if (it == null)
 					constructRawItem(world, pos, stack)
@@ -124,7 +117,7 @@ class EntityInfusedTNT : EntityTNTPrimed {
 		return NetworkHooks.getEntitySpawningPacket(this)
 	}
 	
-	override fun getTntPlacedBy(): EntityLivingBase? {
+	override fun getIgniter(): EntityLivingBase? {
 		return igniter
 	}
 	
@@ -154,14 +147,14 @@ class EntityInfusedTNT : EntityTNTPrimed {
 			blowUp()
 		}
 		else {
-			handleWaterMovement()
+			func_233566_aG_() // RENAME handleWaterMovement
 			PARTICLE_TICK.spawn(Point(posX, posY + 0.5, posZ, 1), rand)
 		}
 	}
 	
 	// Phasing
 	
-	override fun move(type: MoverType, by: Vec3d) {
+	override fun move(type: MoverType, by: Vector3d) {
 		val wasNoclip = noClip
 		
 		noClip = false
@@ -178,58 +171,33 @@ class EntityInfusedTNT : EntityTNTPrimed {
 		}
 	}
 	
-	override fun getAllowedMovement(motion: Vec3d): Vec3d {
-		if (infusions.has(PHASING)) {
-			if (motion.lengthSquared() == 0.0) {
-				return motion
+	fun getWorldReaderForCollisions(): IWorldReader {
+		if (!infusions.has(PHASING)) {
+			return world
+		}
+		
+		return object : IWorldReader by world {
+			private fun returnOnlyIndestructible(state: BlockState, pos: BlockPos): BlockState {
+				return if (state.getBlockHardness(world, pos) == INDESTRUCTIBLE_HARDNESS)
+					state
+				else
+					Blocks.AIR.defaultState
 			}
 			
-			val aabb = boundingBox
-			val context = ISelectionContext.forEntity(this)
+			override fun getBlockState(pos: BlockPos): BlockState {
+				return returnOnlyIndestructible(pos.getState(world), pos)
+			}
 			
-			val borderShape = world.worldBorder.shape
-			val borderStream = if (VoxelShapes.compare(borderShape, aabb.shrink(1.0E-7).asVoxelShape, IBooleanFunction.AND))
-				Stream.empty()
-			else
-				Stream.of(borderShape)
-			
-			val shapeStream = world.getEmptyCollisionShapes(this, aabb.expand(motion), emptySet())
-			val stream = ReuseableStream(Stream.concat(shapeStream, borderStream))
-			
-			val indestructibleOnlyWorld = object : IWorldReader by world {
-				private fun returnOnlyIndestructible(state: BlockState, pos: BlockPos): BlockState {
-					return if (state.getBlockHardness(world, pos) == INDESTRUCTIBLE_HARDNESS)
-						state
-					else
-						Blocks.AIR.defaultState
-				}
+			override fun getChunk(x: Int, z: Int, requiredStatus: ChunkStatus, nonNull: Boolean): IChunk? {
+				val chunk = world.getChunk(x, z, requiredStatus, nonNull) ?: return null
 				
-				override fun getBlockState(pos: BlockPos): BlockState {
-					return returnOnlyIndestructible(pos.getState(world), pos)
-				}
-				
-				override fun getChunk(x: Int, z: Int, requiredStatus: ChunkStatus, nonNull: Boolean): IChunk? {
-					val chunk = world.getChunk(x, z, requiredStatus, nonNull) ?: return null
-					
-					return object : IChunk by chunk {
-						override fun getBlockState(pos: BlockPos): BlockState {
-							return returnOnlyIndestructible(chunk.getBlockState(pos), pos)
-						}
+				return object : IChunk by chunk {
+					override fun getBlockState(pos: BlockPos): BlockState {
+						return returnOnlyIndestructible(chunk.getBlockState(pos), pos)
 					}
 				}
 			}
-			
-			val movingX = motion.x == 0.0
-			val movingY = motion.y == 0.0
-			val movingZ = motion.z == 0.0
-			
-			return if ((!movingX || !movingY) && (!movingX || !movingZ) && (!movingY || !movingZ))
-				Entity.collideBoundingBox(motion, aabb, ReuseableStream(Stream.concat(stream.createStream(), indestructibleOnlyWorld.getCollisionShapes(this, aabb.expand(motion)))))
-			else
-				Entity.getAllowedMovement(motion, aabb, indestructibleOnlyWorld, context, stream)
 		}
-		
-		return super.getAllowedMovement(motion)
 	}
 	
 	// Explosion handling
@@ -277,7 +245,7 @@ class EntityInfusedTNT : EntityTNTPrimed {
 		var totalCountedBlocks = 0
 		val foundWaterBlocks = mutableListOf<BlockPos>()
 		
-		for(pos in position.allInCenteredSphereMutable(WATER_CHECK_RADIUS)) {
+		for (pos in position.allInCenteredSphereMutable(WATER_CHECK_RADIUS)) {
 			++totalCountedBlocks
 			
 			if (pos.getMaterial(world) === Material.WATER) {
@@ -297,14 +265,14 @@ class EntityInfusedTNT : EntityTNTPrimed {
 			val lootTable = Environment.getLootTable(LootTables.GAMEPLAY_FISHING)
 			val lootContext = LootContext.Builder(world as ServerWorld)
 				.withRandom(rand)
-				.withParameter(LootParameters.POSITION, position)
+				.withParameter(LootParameters.ORIGIN, position.center)
 				.withParameter(LootParameters.TOOL, ItemStack(Items.FISHING_ROD))
 				.build(LootParameterSets.FISHING)
 			
 			val constructItemEntity = if (cook) constructCookedItem else constructRawItem
 			
 			repeat(rand.nextRounded(dropAmount)) {
-				for(droppedItem in lootTable.generate(lootContext)) { // there's ItemFishedEvent but it needs the hook entity...
+				for (droppedItem in lootTable.generate(lootContext)) { // there's ItemFishedEvent but it needs the hook entity...
 					val dropPos = rand.nextItem(foundWaterBlocks).center.add(
 						rand.nextFloat(-0.25, 0.25),
 						rand.nextFloat(-0.25, 0.25),

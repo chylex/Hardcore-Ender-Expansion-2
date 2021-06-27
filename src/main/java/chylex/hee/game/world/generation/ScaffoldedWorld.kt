@@ -5,7 +5,6 @@ import chylex.hee.game.world.generation.segments.SegmentFull
 import chylex.hee.game.world.math.Size
 import chylex.hee.game.world.structure.IStructureWorld
 import chylex.hee.init.ModBlocks
-import chylex.hee.system.migration.MutableBlockPos
 import com.google.common.collect.Iterables
 import net.minecraft.block.BlockState
 import net.minecraft.util.math.BlockPos
@@ -20,7 +19,7 @@ class ScaffoldedWorld(rand: Random, size: Size) : SegmentedWorld(rand, size, siz
 	val allPositionsMutable
 		get() = worldSize.minPos.allInBoxMutable(worldSize.maxPos)
 	
-	val usedPositionsMutable: Iterable<MutableBlockPos>
+	val usedPositionsMutable: Iterable<BlockPos.Mutable>
 		get() = Iterables.filter(allPositionsMutable) { !isUnused(it!!) }
 	
 	override fun isAir(pos: BlockPos): Boolean {

@@ -2,7 +2,7 @@ package chylex.hee.game.block
 
 import chylex.hee.HEE
 import chylex.hee.game.block.properties.BlockBuilder
-import chylex.hee.game.inventory.isNotEmpty
+import chylex.hee.game.inventory.nullIfEmpty
 import chylex.hee.game.world.Pos
 import chylex.hee.game.world.getBlock
 import chylex.hee.game.world.playUniversal
@@ -64,7 +64,7 @@ abstract class BlockAbstractCauldron(builder: BlockBuilder) : BlockCauldron(buil
 	}
 	
 	final override fun onBlockActivated(state: BlockState, world: World, pos: BlockPos, player: EntityPlayer, hand: Hand, hit: BlockRayTraceResult): ActionResultType {
-		val item = player.getHeldItem(hand).takeIf { it.isNotEmpty }?.item
+		val item = player.getHeldItem(hand).nullIfEmpty?.item
 		
 		if (item == null) {
 			return PASS

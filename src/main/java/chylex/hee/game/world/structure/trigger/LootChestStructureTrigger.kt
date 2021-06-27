@@ -8,12 +8,12 @@ import chylex.hee.game.world.structure.IStructureWorld
 import chylex.hee.system.migration.TileEntityLockableLoot
 import net.minecraft.util.ResourceLocation
 import net.minecraft.util.math.BlockPos
-import net.minecraft.world.IWorld
+import net.minecraft.world.IServerWorld
 
 class LootChestStructureTrigger(private val resource: ResourceLocation, private val seed: Long) : IStructureTrigger {
 	override fun setup(world: IStructureWorld, pos: BlockPos, transform: Transform) {}
 	
-	override fun realize(world: IWorld, pos: BlockPos, transform: Transform) {
+	override fun realize(world: IServerWorld, pos: BlockPos, transform: Transform) {
 		val tile = pos.getState(world).createTileEntity(world)
 		
 		if (tile !is TileEntityLockableLoot) {

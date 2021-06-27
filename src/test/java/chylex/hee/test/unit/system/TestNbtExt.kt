@@ -184,7 +184,7 @@ class TestNbtExt {
 	
 	@Nested inner class NBTPrimitiveLists {
 		@Nested inner class Properties {
-			@Test fun `'isEmpty" returns true for empty tags`() {
+			@Test fun `'isEmpty' returns true for empty tags`() {
 				val list = TagCompound().getListOfPrimitives("key")
 				assertTrue(list.isEmpty)
 			}

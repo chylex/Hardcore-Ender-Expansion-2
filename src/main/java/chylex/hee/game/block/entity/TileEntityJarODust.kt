@@ -46,10 +46,6 @@ class TileEntityJarODust(type: TileEntityType<TileEntityJarODust>) : TileEntityB
 		return super.getCapability(capability, facing)
 	}
 	
-	// Rendering
-	
-	override fun hasFastRenderer() = true
-	
 	// Serialization
 	
 	override fun writeNBT(nbt: TagCompound, context: Context) = nbt.use {

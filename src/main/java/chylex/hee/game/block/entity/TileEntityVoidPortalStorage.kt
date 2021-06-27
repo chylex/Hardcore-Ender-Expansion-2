@@ -10,6 +10,7 @@ import chylex.hee.game.block.entity.base.TileEntityBasePortalController.Foregrou
 import chylex.hee.game.block.entity.base.TileEntityBasePortalController.ForegroundRenderState.Visible
 import chylex.hee.game.container.ContainerPortalTokenStorage
 import chylex.hee.game.inventory.ItemStackHandlerInventory
+import chylex.hee.game.item.ItemPortalToken
 import chylex.hee.game.mechanics.portal.SpawnInfo
 import chylex.hee.game.world.FLAG_SKIP_RENDER
 import chylex.hee.game.world.FLAG_SYNC_CLIENT
@@ -88,7 +89,7 @@ class TileEntityVoidPortalStorage(type: TileEntityType<TileEntityVoidPortalStora
 	private var clientTime = 0
 	
 	fun activateToken(stack: ItemStack) {
-		currentInstanceFactory = ModItems.PORTAL_TOKEN.getTerritoryType(stack)?.let { TerritoryInstanceFactory(it, stack) }
+		currentInstanceFactory = ItemPortalToken.getTerritoryType(stack)?.let { TerritoryInstanceFactory(it, stack) }
 		remainingTime = ACTIVATION_DURATION_TICKS
 	}
 	

@@ -14,7 +14,7 @@ import chylex.hee.system.random.nextInt
 import net.minecraft.block.BlockState
 import net.minecraft.entity.ai.goal.Goal
 import net.minecraft.util.math.BlockPos
-import net.minecraft.util.math.Vec3d
+import net.minecraft.util.math.vector.Vector3d
 
 class AIPickUpBlock(
 	private val entity: EntityCreature,
@@ -29,7 +29,7 @@ class AIPickUpBlock(
 	
 	private var timeOfNextAttempt = entity.world.totalTime + entity.rng.nextInt(ticksPerAttempt / 2, ticksPerAttempt)
 	
-	private var targetNavPos: Vec3d? = null
+	private var targetNavPos: Vector3d? = null
 	private var targetBlockPos: BlockPos? = null
 	private var targetBlockState: BlockState? = null
 	

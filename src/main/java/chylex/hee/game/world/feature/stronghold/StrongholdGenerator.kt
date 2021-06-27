@@ -24,7 +24,7 @@ import chylex.hee.system.serialization.putPos
 import chylex.hee.system.serialization.use
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.ChunkPos
-import net.minecraft.world.IWorld
+import net.minecraft.world.ISeedReader
 import net.minecraft.world.server.ServerWorld
 import net.minecraft.world.storage.WorldSavedData
 import java.util.Random
@@ -153,7 +153,7 @@ object StrongholdGenerator : OverworldFeature() {
 	
 	// Generation
 	
-	override fun place(world: IWorld, rand: Random, pos: BlockPos, chunkX: Int, chunkZ: Int): Boolean {
+	override fun place(world: ISeedReader, rand: Random, pos: BlockPos, chunkX: Int, chunkZ: Int): Boolean {
 		val spawnPos = findSpawnAt(world.seed, chunkX, chunkZ) ?: return false
 		
 		if (ChunkPos(spawnPos).let { it.x != chunkX || it.z != chunkZ }) {

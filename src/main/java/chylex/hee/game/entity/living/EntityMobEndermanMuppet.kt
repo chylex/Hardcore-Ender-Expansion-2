@@ -15,8 +15,6 @@ import chylex.hee.system.serialization.heeTag
 import chylex.hee.system.serialization.putEnum
 import chylex.hee.system.serialization.use
 import net.minecraft.entity.EntityType
-import net.minecraft.entity.SharedMonsterAttributes.MAX_HEALTH
-import net.minecraft.entity.SharedMonsterAttributes.MOVEMENT_SPEED
 import net.minecraft.world.World
 
 class EntityMobEndermanMuppet(type: EntityType<EntityMobEndermanMuppet>, world: World) : EntityMobAbstractEnderman(type, world) {
@@ -38,12 +36,7 @@ class EntityMobEndermanMuppet(type: EntityType<EntityMobEndermanMuppet>, world: 
 	override val teleportCooldown = Int.MAX_VALUE
 	private var type = INVALID
 	
-	override fun registerAttributes() {
-		super.registerAttributes()
-		
-		getAttribute(MAX_HEALTH).baseValue = 40.0
-		getAttribute(MOVEMENT_SPEED).baseValue = 0.0
-		
+	init {
 		experienceValue = 0
 	}
 	

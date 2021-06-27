@@ -18,18 +18,18 @@ import chylex.hee.system.random.nextVector
 import net.minecraft.client.particle.IParticleRenderType
 import net.minecraft.client.particle.IParticleRenderType.PARTICLE_SHEET_TRANSLUCENT
 import net.minecraft.client.particle.Particle
-import net.minecraft.world.World
+import net.minecraft.client.world.ClientWorld
 import kotlin.math.max
 import kotlin.math.min
 
 object ParticleVoid : IParticleMaker.Simple() {
 	@Sided(Side.CLIENT)
-	override fun create(world: World, posX: Double, posY: Double, posZ: Double, motX: Double, motY: Double, motZ: Double): Particle {
+	override fun create(world: ClientWorld, posX: Double, posY: Double, posZ: Double, motX: Double, motY: Double, motZ: Double): Particle {
 		return Instance(world, posX, posY, posZ, motX, motY, motZ)
 	}
 	
 	@Sided(Side.CLIENT)
-	private class Instance(world: World, posX: Double, posY: Double, posZ: Double, motX: Double, motY: Double, motZ: Double) : ParticleBaseFloating(world, posX, posY, posZ, motX, motY, motZ) {
+	private class Instance(world: ClientWorld, posX: Double, posY: Double, posZ: Double, motX: Double, motY: Double, motZ: Double) : ParticleBaseFloating(world, posX, posY, posZ, motX, motY, motZ) {
 		init {
 			selectSpriteRandomly(ParticleVoid.sprite)
 			

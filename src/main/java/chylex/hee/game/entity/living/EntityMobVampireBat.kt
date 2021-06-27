@@ -1,6 +1,6 @@
 package chylex.hee.game.entity.living
 
-import chylex.hee.HEE
+import chylex.hee.game.entity.getAttributeInstance
 import chylex.hee.game.entity.isAnyVulnerablePlayerWithinRange
 import chylex.hee.game.entity.living.EntityMobVampireBat.BehaviorType.HOSTILE
 import chylex.hee.game.entity.living.EntityMobVampireBat.BehaviorType.NEUTRAL
@@ -26,6 +26,7 @@ import chylex.hee.game.world.center
 import chylex.hee.game.world.getBlock
 import chylex.hee.game.world.getState
 import chylex.hee.game.world.isAir
+import chylex.hee.game.world.isEndDimension
 import chylex.hee.game.world.isPeaceful
 import chylex.hee.game.world.playClient
 import chylex.hee.game.world.territory.TerritoryType
@@ -57,22 +58,21 @@ import chylex.hee.system.serialization.use
 import net.minecraft.entity.Entity
 import net.minecraft.entity.EntityType
 import net.minecraft.entity.ILivingEntityData
-import net.minecraft.entity.SharedMonsterAttributes.ATTACK_DAMAGE
-import net.minecraft.entity.SharedMonsterAttributes.FLYING_SPEED
-import net.minecraft.entity.SharedMonsterAttributes.FOLLOW_RANGE
-import net.minecraft.entity.SharedMonsterAttributes.MAX_HEALTH
 import net.minecraft.entity.SpawnReason
+import net.minecraft.entity.ai.attributes.Attributes.ATTACK_DAMAGE
+import net.minecraft.entity.ai.attributes.Attributes.FOLLOW_RANGE
+import net.minecraft.entity.ai.attributes.Attributes.MAX_HEALTH
 import net.minecraft.entity.monster.IMob
 import net.minecraft.nbt.CompoundNBT
 import net.minecraft.network.IPacket
 import net.minecraft.util.SoundCategory
 import net.minecraft.util.math.AxisAlignedBB
 import net.minecraft.util.math.BlockPos
-import net.minecraft.util.math.Vec3d
+import net.minecraft.util.math.vector.Vector3d
 import net.minecraft.world.Difficulty.HARD
 import net.minecraft.world.Difficulty.NORMAL
 import net.minecraft.world.DifficultyInstance
-import net.minecraft.world.IWorld
+import net.minecraft.world.IServerWorld
 import net.minecraft.world.LightType.BLOCK
 import net.minecraft.world.World
 import net.minecraftforge.fml.network.NetworkHooks
@@ -86,7 +86,7 @@ class EntityMobVampireBat(type: EntityType<EntityMobVampireBat>, world: World) :
 		private const val MIN_ATTACK_COOLDOWN = 30
 		
 		private val DAMAGE_GENERAL = Damage(PEACEFUL_EXCLUSION, *ALL_PROTECTIONS_WITH_SHIELD, STATUS {
-			when(it.world.difficulty) {
+			when (it.world.difficulty) {
 				NORMAL -> if (it.rng.nextInt(12) == 0) Potions.POISON.makeEffect(it.rng.nextInt(40,  80)) else null
 				HARD   -> if (it.rng.nextInt( 7) == 0) Potions.POISON.makeEffect(it.rng.nextInt(50, 100)) else null
 				else   -> null
@@ -110,9 +110,9 @@ class EntityMobVampireBat(type: EntityType<EntityMobVampireBat>, world: World) :
 	// Instance
 	
 	private var behaviorType = NEUTRAL
-	private var prevTargetPos: Vec3d? = null
+	private var prevTargetPos: Vector3d? = null
 	
-	private val nextTargetPos: Vec3d
+	private val nextTargetPos: Vector3d
 		get() {
 			val currentTarget = attackTarget
 			
@@ -155,32 +155,21 @@ class EntityMobVampireBat(type: EntityType<EntityMobVampireBat>, world: World) :
 	
 	init {
 		moveController = EntityMoveFlyingBat(this)
-	}
-	
-	override fun registerAttributes() {
-		super.registerAttributes()
-		
-		attributes.registerAttribute(ATTACK_DAMAGE)
-		attributes.registerAttribute(FLYING_SPEED)
-		
-		getAttribute(FOLLOW_RANGE).baseValue = 14.5
-		getAttribute(FLYING_SPEED).baseValue = 0.1
 		updateHostilityAttributes()
+		health = maxHealth
 	}
 	
 	private fun updateHostilityAttributes() {
 		if (behaviorType == PASSIVE) {
-			getAttribute(MAX_HEALTH).baseValue = 6.0
-			getAttribute(ATTACK_DAMAGE).baseValue = 0.0
+			getAttributeInstance(MAX_HEALTH).baseValue = 6.0
+			getAttributeInstance(ATTACK_DAMAGE).baseValue = 0.0
 			experienceValue = 0
 		}
 		else {
-			getAttribute(MAX_HEALTH).baseValue = 4.0
-			getAttribute(ATTACK_DAMAGE).baseValue = 3.0
+			getAttributeInstance(MAX_HEALTH).baseValue = 4.0
+			getAttributeInstance(ATTACK_DAMAGE).baseValue = 3.0
 			experienceValue = 1
 		}
-		
-		health = maxHealth
 	}
 	
 	override fun createSpawnPacket(): IPacket<*> {
@@ -218,7 +207,7 @@ class EntityMobVampireBat(type: EntityType<EntityMobVampireBat>, world: World) :
 				tryPickNextTarget()
 			}
 		}
-		else if (getDistanceSq(currentTarget) > square(getAttribute(FOLLOW_RANGE).value) || (attackTimer > 0 && --attackTimer == 0)) {
+		else if (getDistanceSq(currentTarget) > square(getAttributeValue(FOLLOW_RANGE)) || (attackTimer > 0 && --attackTimer == 0)) {
 			attackTarget = null
 		}
 	}
@@ -278,7 +267,7 @@ class EntityMobVampireBat(type: EntityType<EntityMobVampireBat>, world: World) :
 			return
 		}
 		
-		for(attempt in 1..10) {
+		for (attempt in 1..10) {
 			val pos = Pos(lookPosVec.add(rand.nextVector(rand.nextFloat(0.5, 3.0))))
 			
 			if (canSleepAt(pos) && world.getLightFor(BLOCK, pos) <= 2) {
@@ -349,7 +338,7 @@ class EntityMobVampireBat(type: EntityType<EntityMobVampireBat>, world: World) :
 			beginAttackCooldown()
 		}
 		else {
-			attackTimer = when(behaviorType) {
+			attackTimer = when (behaviorType) {
 				NEUTRAL -> rand.nextInt(40, rand.nextInt(80, 120))
 				HOSTILE -> rand.nextInt(80, 160)
 				else    -> 0
@@ -361,7 +350,7 @@ class EntityMobVampireBat(type: EntityType<EntityMobVampireBat>, world: World) :
 	}
 	
 	private fun beginAttackCooldown() {
-		attackCooldown = when(behaviorType) {
+		attackCooldown = when (behaviorType) {
 			NEUTRAL -> rand.nextInt(500, 1800)
 			HOSTILE -> rand.nextInt(90, 150)
 			else    -> MIN_ATTACK_COOLDOWN
@@ -374,10 +363,10 @@ class EntityMobVampireBat(type: EntityType<EntityMobVampireBat>, world: World) :
 	
 	// Spawning
 	
-	override fun onInitialSpawn(world: IWorld, difficulty: DifficultyInstance, reason: SpawnReason, data: ILivingEntityData?, nbt: CompoundNBT?): ILivingEntityData? {
+	override fun onInitialSpawn(world: IServerWorld, difficulty: DifficultyInstance, reason: SpawnReason, data: ILivingEntityData?, nbt: CompoundNBT?): ILivingEntityData? {
 		// TODO use onInitialSpawn for territory generation, call enablePersistence to stop despawning
 		
-		if (world.dimension.type === HEE.dim) {
+		if (world.world.isEndDimension) {
 			when(TerritoryType.fromX(posX.floorToInt())) {
 				else -> {}
 			}

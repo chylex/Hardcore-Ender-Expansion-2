@@ -2,7 +2,7 @@ package chylex.hee.client.render.lightmaps
 
 import chylex.hee.client.render.lightmaps.ILightmap.Companion.calcLightFactor
 import chylex.hee.client.render.lightmaps.ILightmap.Companion.calcLightSqFactor
-import net.minecraft.client.renderer.Vector3f
+import net.minecraft.util.math.vector.Vector3f
 
 object OverworldLightmap : ILightmap {
 	override fun update(colors: Vector3f, sunBrightness: Float, skyLight: Float, blockLight: Float, partialTicks: Float) {

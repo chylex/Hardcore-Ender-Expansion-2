@@ -1,5 +1,6 @@
 package chylex.hee.game.entity.living.behavior
 
+import chylex.hee.game.entity.isBoss
 import chylex.hee.game.entity.living.EntityBossEnderEye
 import chylex.hee.game.entity.lookDirVec
 import chylex.hee.game.entity.lookPosVec
@@ -43,7 +44,7 @@ sealed class EnderEyeAttack {
 			get() = 1F
 		
 		override val canTakeKnockback = true
-		private var movementSpeed = 1.0
+		private var currentSpeed = 1.0
 		private var lastAttackTime = 0L
 		private var laserEyeTicksRemaining = 260
 		
@@ -64,19 +65,19 @@ sealed class EnderEyeAttack {
 				val targetVec = target.lookPosVec
 				val distSq = targetVec.squareDistanceTo(currentVec)
 				
-				if (distSq > square(6.0 - ((movementSpeed - 1.0) / 1.5))) {
-					if (movementSpeed < 3.5) {
-						movementSpeed = (movementSpeed + 0.1).coerceAtMost(3.5)
+				if (distSq > square(6.0 - ((currentSpeed - 1.0) / 1.5))) {
+					if (currentSpeed < 3.5) {
+						currentSpeed = (currentSpeed + 0.1).coerceAtMost(3.5)
 					}
 					
-					navigator.tryMoveToXYZ(targetVec.x, targetVec.y + (movementSpeed - 1.0) * 0.6, targetVec.z, movementSpeed)
+					navigator.tryMoveToXYZ(targetVec.x, targetVec.y + (currentSpeed - 1.0) * 0.6, targetVec.z, currentSpeed)
 				}
 				else if (distSq > square(1.2)) {
-					if (movementSpeed > 1.0) {
-						movementSpeed = (movementSpeed - 0.3).coerceAtLeast(1.0)
+					if (currentSpeed > 1.0) {
+						currentSpeed = (currentSpeed - 0.3).coerceAtLeast(1.0)
 					}
 					
-					navigator.tryMoveToXYZ(targetVec.x, targetVec.y, targetVec.z, movementSpeed)
+					navigator.tryMoveToXYZ(targetVec.x, targetVec.y, targetVec.z, currentSpeed)
 				}
 				else {
 					if (currentVec.directionTowards(targetVec).dotProduct(motion.normalize()) > 0.0) {
@@ -103,7 +104,7 @@ sealed class EnderEyeAttack {
 		}
 		
 		fun reset(entity: EntityBossEnderEye) {
-			movementSpeed = 1.0
+			currentSpeed = 1.0
 			lastAttackTime = entity.world.totalTime
 			laserEyeTicksRemaining = laserEyeTicksRemaining.coerceAtLeast(35)
 		}
@@ -267,7 +268,7 @@ sealed class EnderEyeAttack {
 			val frontHurtDist = width * 0.6
 			
 			for(hitEntity in world.selectVulnerableEntities.inBox<EntityLivingBase>(AxisAlignedBB(frontHurtCenter, frontHurtCenter).grow(frontHurtDist))) {
-				if (hitEntity.isNonBoss && !hitEntities.contains(hitEntity.uniqueID) && attackEntityAsMob(hitEntity)) {
+				if (!hitEntity.isBoss && !hitEntities.contains(hitEntity.uniqueID) && attackEntityAsMob(hitEntity)) {
 					val multiplier = when {
 						hitEntity.isActiveItemStackBlocking -> 0.25
 						hitEntity.isSneaking                -> 0.75
