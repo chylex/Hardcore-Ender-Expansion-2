@@ -2,8 +2,8 @@ package chylex.hee.game.block
 
 import chylex.hee.client.render.block.IBlockLayerCutout
 import chylex.hee.game.block.properties.BlockBuilder
-import chylex.hee.system.math.ceilToInt
 import chylex.hee.system.random.nextBiasedFloat
+import chylex.hee.util.math.ceilToInt
 import net.minecraft.block.BlockState
 import net.minecraft.util.math.BlockPos
 import net.minecraft.world.IWorldReader

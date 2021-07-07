@@ -3,18 +3,17 @@ package chylex.hee.game.mechanics.energy
 import chylex.hee.game.block.entity.TileEntityEnergyCluster
 import chylex.hee.game.mechanics.energy.IEnergyQuantity.Internal
 import chylex.hee.game.mechanics.energy.IEnergyQuantity.Units
-import chylex.hee.game.world.breakBlock
-import chylex.hee.game.world.component1
-import chylex.hee.game.world.component2
-import chylex.hee.game.world.component3
-import chylex.hee.game.world.totalTime
+import chylex.hee.game.world.util.breakBlock
 import chylex.hee.init.ModItems
-import chylex.hee.system.delegate.NotifyOnChange
-import chylex.hee.system.math.floorToInt
-import chylex.hee.system.migration.EntityItem
 import chylex.hee.system.random.nextFloat
-import chylex.hee.system.serialization.TagCompound
-import chylex.hee.system.serialization.use
+import chylex.hee.util.delegate.NotifyOnChange
+import chylex.hee.util.math.component1
+import chylex.hee.util.math.component2
+import chylex.hee.util.math.component3
+import chylex.hee.util.math.floorToInt
+import chylex.hee.util.nbt.TagCompound
+import chylex.hee.util.nbt.use
+import net.minecraft.entity.item.ItemEntity
 import net.minecraft.item.ItemStack
 import net.minecraftforge.common.util.INBTSerializable
 import kotlin.math.pow
@@ -47,7 +46,7 @@ class RevitalizationHandler(private val cluster: TileEntityEnergyCluster) : INBT
 			return
 		}
 		
-		val currentTime = cluster.wrld.totalTime
+		val currentTime = cluster.wrld.gameTime
 		val timeDiff = currentTime - lastDrainTime
 		
 		if (timeDiff < DRAIN_RATE_TICKS) {
@@ -56,7 +55,7 @@ class RevitalizationHandler(private val cluster: TileEntityEnergyCluster) : INBT
 		
 		lastDrainTime = currentTime
 		
-		for(cycle in 1..(timeDiff / DRAIN_RATE_TICKS)) {
+		for (cycle in 1..(timeDiff / DRAIN_RATE_TICKS)) {
 			if (cluster.energyLevel <= drainTarget) {
 				cluster.revitalizeHealth()
 				
@@ -96,7 +95,7 @@ class RevitalizationHandler(private val cluster: TileEntityEnergyCluster) : INBT
 			
 			val (x, y, z) = cluster.pos
 			
-			EntityItem(world, x + rand.nextFloat(0.25, 0.75), y + rand.nextFloat(0.25, 0.75), z + rand.nextFloat(0.25, 0.75), ItemStack(ModItems.REVITALIZATION_SUBSTANCE, substance.toInt())).apply {
+			ItemEntity(world, x + rand.nextFloat(0.25, 0.75), y + rand.nextFloat(0.25, 0.75), z + rand.nextFloat(0.25, 0.75), ItemStack(ModItems.REVITALIZATION_SUBSTANCE, substance.toInt())).apply {
 				setDefaultPickupDelay()
 				world.addEntity(this)
 			}
@@ -114,7 +113,7 @@ class RevitalizationHandler(private val cluster: TileEntityEnergyCluster) : INBT
 			val durationTicks = 20F * (50F + (30F * sqrt(capacityUnits))) / (0.25F + (0.75F * cluster.currentHealth.regenAmountMp))
 			val toDrain = cluster.energyBaseCapacity * 0.5F
 			
-			lastDrainTime = cluster.wrld.totalTime
+			lastDrainTime = cluster.wrld.gameTime
 			drainAmount = maxOf(Internal(1), toDrain * (DRAIN_RATE_TICKS / durationTicks)).internal
 			drainTarget = maxOf(Units(0), cluster.energyLevel - toDrain).units
 			return true

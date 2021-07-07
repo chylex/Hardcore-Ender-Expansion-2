@@ -3,28 +3,27 @@ package chylex.hee.game.block
 import chylex.hee.client.render.block.IBlockLayerTranslucent
 import chylex.hee.game.block.entity.TileEntityJarODust
 import chylex.hee.game.block.properties.BlockBuilder
-import chylex.hee.game.inventory.heeTag
-import chylex.hee.game.inventory.heeTagOrNull
-import chylex.hee.game.inventory.size
+import chylex.hee.game.fx.util.playServer
+import chylex.hee.game.item.util.size
 import chylex.hee.game.mechanics.dust.DustLayers
 import chylex.hee.game.mechanics.dust.DustLayers.Side.BOTTOM
 import chylex.hee.game.mechanics.dust.DustLayers.Side.TOP
 import chylex.hee.game.mechanics.dust.DustType
-import chylex.hee.game.world.center
-import chylex.hee.game.world.getTile
-import chylex.hee.game.world.isTopSolid
-import chylex.hee.game.world.playServer
+import chylex.hee.game.world.util.getTile
+import chylex.hee.game.world.util.isTopSolid
 import chylex.hee.init.ModSounds
-import chylex.hee.system.forge.Side
-import chylex.hee.system.forge.Sided
-import chylex.hee.system.migration.EntityLivingBase
-import chylex.hee.system.migration.EntityPlayer
-import chylex.hee.system.migration.Facing.DOWN
-import chylex.hee.system.serialization.NBTList.Companion.putList
-import chylex.hee.system.serialization.getListOfCompounds
+import chylex.hee.system.heeTag
+import chylex.hee.system.heeTagOrNull
+import chylex.hee.util.forge.Side
+import chylex.hee.util.forge.Sided
+import chylex.hee.util.math.center
+import chylex.hee.util.nbt.getListOfCompounds
+import chylex.hee.util.nbt.putList
 import net.minecraft.block.BlockState
 import net.minecraft.block.Blocks
 import net.minecraft.client.util.ITooltipFlag
+import net.minecraft.entity.LivingEntity
+import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.item.ItemStack
 import net.minecraft.loot.LootContext
 import net.minecraft.loot.LootParameters
@@ -33,6 +32,7 @@ import net.minecraft.util.ActionResultType
 import net.minecraft.util.ActionResultType.PASS
 import net.minecraft.util.ActionResultType.SUCCESS
 import net.minecraft.util.Direction
+import net.minecraft.util.Direction.DOWN
 import net.minecraft.util.Hand
 import net.minecraft.util.SoundCategory
 import net.minecraft.util.math.AxisAlignedBB
@@ -90,7 +90,7 @@ class BlockJarODust(builder: BlockBuilder) : BlockSimpleShaped(builder, AABB), I
 			super.updatePostPlacement(state, facing, neighborState, world, pos, neighborPos)
 	}
 	
-	override fun onBlockPlacedBy(world: World, pos: BlockPos, state: BlockState, placer: EntityLivingBase?, stack: ItemStack) {
+	override fun onBlockPlacedBy(world: World, pos: BlockPos, state: BlockState, placer: LivingEntity?, stack: ItemStack) {
 		val list = stack.heeTagOrNull?.getListOfCompounds(TileEntityJarODust.LAYERS_TAG)
 		
 		if (list != null) {
@@ -113,7 +113,7 @@ class BlockJarODust(builder: BlockBuilder) : BlockSimpleShaped(builder, AABB), I
 			mutableListOf()
 	}
 	
-	override fun getPickBlock(state: BlockState, target: RayTraceResult, world: IBlockReader, pos: BlockPos, player: EntityPlayer): ItemStack {
+	override fun getPickBlock(state: BlockState, target: RayTraceResult, world: IBlockReader, pos: BlockPos, player: PlayerEntity): ItemStack {
 		return pos.getTile<TileEntityJarODust>(world)?.let(::getDrop) ?: ItemStack(this)
 	}
 	
@@ -136,7 +136,7 @@ class BlockJarODust(builder: BlockBuilder) : BlockSimpleShaped(builder, AABB), I
 	
 	// Interaction
 	
-	override fun onBlockActivated(state: BlockState, world: World, pos: BlockPos, player: EntityPlayer, hand: Hand, hit: BlockRayTraceResult): ActionResultType {
+	override fun onBlockActivated(state: BlockState, world: World, pos: BlockPos, player: PlayerEntity, hand: Hand, hit: BlockRayTraceResult): ActionResultType {
 		val heldItem = player.getHeldItem(hand)
 		
 		val result = if (heldItem.isEmpty)
@@ -147,7 +147,7 @@ class BlockJarODust(builder: BlockBuilder) : BlockSimpleShaped(builder, AABB), I
 		return if (result) SUCCESS else PASS
 	}
 	
-	private fun tryExtractDust(world: World, pos: BlockPos, player: EntityPlayer, hand: Hand): Boolean {
+	private fun tryExtractDust(world: World, pos: BlockPos, player: PlayerEntity, hand: Hand): Boolean {
 		if (world.isRemote) {
 			return true
 		}
@@ -161,7 +161,7 @@ class BlockJarODust(builder: BlockBuilder) : BlockSimpleShaped(builder, AABB), I
 		return true
 	}
 	
-	private fun tryInsertDust(world: World, pos: BlockPos, player: EntityPlayer, stack: ItemStack): Boolean {
+	private fun tryInsertDust(world: World, pos: BlockPos, player: PlayerEntity, stack: ItemStack): Boolean {
 		val dustType = DustType.fromStack(stack) ?: return false
 		
 		if (world.isRemote) {
@@ -191,7 +191,7 @@ class BlockJarODust(builder: BlockBuilder) : BlockSimpleShaped(builder, AABB), I
 				.entries
 				.sortedWith(compareBy({ -it.value }, { it.key.key }))
 			
-			for((dustType, dustAmount) in entries) {
+			for ((dustType, dustAmount) in entries) {
 				lines.add(TranslationTextComponent("block.hee.jar_o_dust.tooltip.entry", dustAmount, TranslationTextComponent(dustType.item.translationKey)))
 			}
 		}

@@ -2,10 +2,10 @@ package chylex.hee.game.block.entity.base
 
 import chylex.hee.game.block.entity.base.TileEntityBase.Context.NETWORK
 import chylex.hee.game.block.entity.base.TileEntityBase.Context.STORAGE
-import chylex.hee.game.world.getState
-import chylex.hee.system.delegate.NotifyOnChange
-import chylex.hee.system.serialization.TagCompound
-import chylex.hee.system.serialization.heeTag
+import chylex.hee.game.world.util.getState
+import chylex.hee.system.heeTag
+import chylex.hee.util.delegate.NotifyOnChange
+import chylex.hee.util.nbt.TagCompound
 import net.minecraft.block.BlockState
 import net.minecraft.nbt.CompoundNBT
 import net.minecraft.network.NetworkManager

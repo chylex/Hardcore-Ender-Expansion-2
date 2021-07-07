@@ -1,36 +1,36 @@
 package chylex.hee.game.entity.living.behavior
 
 import chylex.hee.HEE
-import chylex.hee.game.entity.isAnyVulnerablePlayerWithinRange
-import chylex.hee.game.entity.isInOverworldDimension
 import chylex.hee.game.entity.living.EntityMobAbstractEnderman
 import chylex.hee.game.entity.living.ai.AIPickUpBlock.IBlockPickUpHandler
 import chylex.hee.game.entity.living.behavior.EndermanBlockHandler.TargetBlockType.FULL
 import chylex.hee.game.entity.living.behavior.EndermanBlockHandler.TargetBlockType.NONE
 import chylex.hee.game.entity.living.behavior.EndermanBlockHandler.TargetBlockType.TRANSPARENT
-import chylex.hee.game.entity.lookPosVec
-import chylex.hee.game.entity.posVec
-import chylex.hee.game.world.Pos
-import chylex.hee.game.world.center
-import chylex.hee.game.world.getMaterial
-import chylex.hee.game.world.getState
-import chylex.hee.game.world.isAir
-import chylex.hee.game.world.isFullBlock
-import chylex.hee.game.world.playServer
-import chylex.hee.game.world.setState
-import chylex.hee.system.forge.EventPriority
-import chylex.hee.system.forge.SubscribeAllEvents
-import chylex.hee.system.forge.SubscribeEvent
-import chylex.hee.system.math.Vec3
-import chylex.hee.system.math.addY
-import chylex.hee.system.math.component1
-import chylex.hee.system.math.component2
-import chylex.hee.system.math.component3
-import chylex.hee.system.migration.EntityItem
+import chylex.hee.game.entity.util.isAnyVulnerablePlayerWithinRange
+import chylex.hee.game.entity.util.lookPosVec
+import chylex.hee.game.entity.util.posVec
+import chylex.hee.game.fx.util.playServer
+import chylex.hee.game.world.isInOverworldDimension
+import chylex.hee.game.world.util.getMaterial
+import chylex.hee.game.world.util.getState
+import chylex.hee.game.world.util.isAir
+import chylex.hee.game.world.util.isFullBlock
+import chylex.hee.game.world.util.setState
 import chylex.hee.system.random.nextFloat
+import chylex.hee.util.forge.EventPriority
+import chylex.hee.util.forge.SubscribeAllEvents
+import chylex.hee.util.forge.SubscribeEvent
+import chylex.hee.util.math.Pos
+import chylex.hee.util.math.Vec3
+import chylex.hee.util.math.addY
+import chylex.hee.util.math.center
+import chylex.hee.util.math.component1
+import chylex.hee.util.math.component2
+import chylex.hee.util.math.component3
 import net.minecraft.block.Block
 import net.minecraft.block.BlockState
 import net.minecraft.block.Blocks
+import net.minecraft.entity.item.ItemEntity
 import net.minecraft.item.ItemStack
 import net.minecraft.tags.BlockTags
 import net.minecraft.tags.Tag
@@ -98,7 +98,7 @@ class EndermanBlockHandler(private val enderman: EntityMobAbstractEnderman) : IB
 			return null
 		}
 		
-		val targetType = when(rand.nextInt(100)) {
+		val targetType = when (rand.nextInt(100)) {
 			0       -> FULL
 			in 1..5 -> TRANSPARENT
 			else    -> NONE
@@ -110,7 +110,7 @@ class EndermanBlockHandler(private val enderman: EntityMobAbstractEnderman) : IB
 		
 		val searchArea = SEARCH_AREA.offset(enderman.posVec)
 		
-		for(attempt in 1..75) {
+		for (attempt in 1..75) {
 			val pos = Pos(
 				rand.nextFloat(searchArea.minX, searchArea.maxX),
 				rand.nextFloat(searchArea.minY, searchArea.maxY),
@@ -167,7 +167,7 @@ class EndermanBlockHandler(private val enderman: EntityMobAbstractEnderman) : IB
 		val endermanVec = enderman.posVec
 		val endermanPos = Pos(endermanVec)
 		
-		for(attempt in 1..20) {
+		for (attempt in 1..20) {
 			val dir = Vec3.fromYaw(enderman.rotationYaw + rand.nextFloat(-60F, 60F))
 			val pos = Pos(endermanVec.add(dir.scale(rand.nextFloat(0.5, 2.0))))
 			
@@ -193,7 +193,7 @@ class EndermanBlockHandler(private val enderman: EntityMobAbstractEnderman) : IB
 		
 		val (x, y, z) = enderman.posVec.addY(0.55).add(Vec3.fromYaw(enderman.rotationYaw).scale(0.8))
 		
-		EntityItem(world, x, y, z, ItemStack(block)).apply {
+		ItemEntity(world, x, y, z, ItemStack(block)).apply {
 			motion = Vec3.ZERO
 			setDefaultPickupDelay()
 			world.addEntity(this)

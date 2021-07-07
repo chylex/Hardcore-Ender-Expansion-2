@@ -1,38 +1,38 @@
 package chylex.hee.game.entity.item
 
-import chylex.hee.game.entity.EntityData
-import chylex.hee.game.entity.lookPosVec
-import chylex.hee.game.entity.posVec
+import chylex.hee.game.entity.util.EntityData
+import chylex.hee.game.entity.util.lookPosVec
+import chylex.hee.game.entity.util.posVec
+import chylex.hee.game.fx.FxEntityData
+import chylex.hee.game.fx.FxEntityHandler
+import chylex.hee.game.fx.util.playClient
 import chylex.hee.game.item.ItemPortalToken.TokenType
 import chylex.hee.game.particle.ParticleSmokeCustom
 import chylex.hee.game.particle.spawner.ParticleSpawnerCustom
 import chylex.hee.game.particle.spawner.properties.IOffset.InSphere
 import chylex.hee.game.particle.spawner.properties.IShape.Point
-import chylex.hee.game.world.playClient
-import chylex.hee.game.world.territory.TerritoryInstance
-import chylex.hee.game.world.territory.TerritoryType
-import chylex.hee.game.world.totalTime
+import chylex.hee.game.territory.TerritoryType
+import chylex.hee.game.territory.system.TerritoryInstance
 import chylex.hee.init.ModEntities
 import chylex.hee.init.ModItems
 import chylex.hee.init.ModSounds
 import chylex.hee.network.client.PacketClientFX
 import chylex.hee.network.client.PacketClientLaunchInstantly
-import chylex.hee.network.fx.FxEntityData
-import chylex.hee.network.fx.FxEntityHandler
-import chylex.hee.system.forge.Side
-import chylex.hee.system.forge.Sided
-import chylex.hee.system.math.LerpedFloat
-import chylex.hee.system.math.addY
-import chylex.hee.system.math.directionTowards
-import chylex.hee.system.math.square
-import chylex.hee.system.migration.EntityPlayer
-import chylex.hee.system.serialization.TagCompound
-import chylex.hee.system.serialization.getEnum
-import chylex.hee.system.serialization.heeTag
-import chylex.hee.system.serialization.putEnum
-import chylex.hee.system.serialization.use
+import chylex.hee.system.heeTag
+import chylex.hee.util.buffer.use
+import chylex.hee.util.forge.Side
+import chylex.hee.util.forge.Sided
+import chylex.hee.util.math.LerpedFloat
+import chylex.hee.util.math.addY
+import chylex.hee.util.math.directionTowards
+import chylex.hee.util.math.square
+import chylex.hee.util.nbt.TagCompound
+import chylex.hee.util.nbt.getEnum
+import chylex.hee.util.nbt.putEnum
+import chylex.hee.util.nbt.use
 import net.minecraft.entity.Entity
 import net.minecraft.entity.EntityType
+import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.network.IPacket
 import net.minecraft.network.PacketBuffer
 import net.minecraft.network.datasync.DataSerializers
@@ -77,7 +77,7 @@ class EntityTokenHolder(type: EntityType<EntityTokenHolder>, world: World) : Ent
 	}
 	
 	private val nextRotation
-		get() = ((world.totalTime * 3L) % 360L).toFloat()
+		get() = ((world.gameTime * 3L) % 360L).toFloat()
 	
 	val renderRotation = LerpedFloat(nextRotation)
 	val renderCharge = LerpedFloat(1F)
@@ -146,7 +146,7 @@ class EntityTokenHolder(type: EntityType<EntityTokenHolder>, world: World) : Ent
 		PacketClientFX(FX_BREAK, FxEntityData(this)).sendToAllAround(this, 24.0)
 	}
 	
-	fun forceDropTokenTowards(player: EntityPlayer) {
+	fun forceDropTokenTowards(player: PlayerEntity) {
 		forceDropToken(posVec.directionTowards(player.lookPosVec).scale(0.5).addY(0.1))
 	}
 	
@@ -155,7 +155,7 @@ class EntityTokenHolder(type: EntityType<EntityTokenHolder>, world: World) : Ent
 			return false
 		}
 		
-		val player = source.immediateSource as? EntityPlayer ?: return false
+		val player = source.immediateSource as? PlayerEntity ?: return false
 		
 		if (player.abilities.isCreativeMode && player.isSneaking) {
 			remove()

@@ -1,10 +1,10 @@
 package chylex.hee.game.particle
 
 import chylex.hee.game.particle.data.ParticleDataColorScale
-import chylex.hee.system.color.IntColor.Companion.RGB
-import chylex.hee.system.forge.Side
-import chylex.hee.system.forge.Sided
-import chylex.hee.system.random.IRandomColor
+import chylex.hee.util.color.IColorGenerator
+import chylex.hee.util.color.RGB
+import chylex.hee.util.forge.Side
+import chylex.hee.util.forge.Sided
 import net.minecraft.client.particle.Particle
 import net.minecraft.client.particle.SpellParticle
 import net.minecraft.client.world.ClientWorld
@@ -15,7 +15,7 @@ object ParticleSpellCustom : ParticleDataColorScale.ParticleMaker() {
 		return Instance(world, posX, posY, posZ, motX, motY, motZ, data)
 	}
 	
-	override val defaultColor = IRandomColor.Static(RGB(0u))
+	override val defaultColor: IColorGenerator = RGB(0u)
 	override val defaultScale = (1F)..(1F)
 	
 	@Sided(Side.CLIENT)

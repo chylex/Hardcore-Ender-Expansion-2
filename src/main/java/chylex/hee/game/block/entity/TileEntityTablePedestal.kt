@@ -1,14 +1,17 @@
 package chylex.hee.game.block.entity
 
-import chylex.hee.HEE
+import chylex.hee.client.util.MC
 import chylex.hee.game.block.BlockTablePedestal
 import chylex.hee.game.block.BlockTablePedestal.Companion.IS_LINKED
 import chylex.hee.game.block.entity.base.TileEntityBase
 import chylex.hee.game.block.entity.base.TileEntityBase.Context.NETWORK
 import chylex.hee.game.block.entity.base.TileEntityBase.Context.STORAGE
 import chylex.hee.game.block.entity.base.TileEntityBaseTable
-import chylex.hee.game.entity.posVec
-import chylex.hee.game.inventory.isNotEmpty
+import chylex.hee.game.entity.util.posVec
+import chylex.hee.game.fx.FxBlockData
+import chylex.hee.game.fx.FxBlockHandler
+import chylex.hee.game.fx.util.playClient
+import chylex.hee.game.item.util.isNotEmpty
 import chylex.hee.game.mechanics.table.PedestalInventoryHandler
 import chylex.hee.game.mechanics.table.PedestalStatusIndicator
 import chylex.hee.game.mechanics.table.PedestalStatusIndicator.Contents.NONE
@@ -24,38 +27,34 @@ import chylex.hee.game.particle.spawner.ParticleSpawnerCustom
 import chylex.hee.game.particle.spawner.properties.IOffset.Constant
 import chylex.hee.game.particle.spawner.properties.IOffset.InBox
 import chylex.hee.game.particle.spawner.properties.IShape.Point
-import chylex.hee.game.world.FLAG_RENDER_IMMEDIATE
-import chylex.hee.game.world.FLAG_SYNC_CLIENT
-import chylex.hee.game.world.getState
-import chylex.hee.game.world.getTile
-import chylex.hee.game.world.isLoaded
-import chylex.hee.game.world.playClient
-import chylex.hee.game.world.setState
-import chylex.hee.game.world.totalTime
+import chylex.hee.game.world.util.FLAG_RENDER_IMMEDIATE
+import chylex.hee.game.world.util.FLAG_SYNC_CLIENT
+import chylex.hee.game.world.util.getState
+import chylex.hee.game.world.util.getTile
+import chylex.hee.game.world.util.isLoaded
+import chylex.hee.game.world.util.setState
 import chylex.hee.init.ModBlocks
 import chylex.hee.init.ModItems
 import chylex.hee.init.ModTileEntities
 import chylex.hee.network.client.PacketClientFX
-import chylex.hee.network.fx.FxBlockData
-import chylex.hee.network.fx.FxBlockHandler
-import chylex.hee.system.color.IntColor
-import chylex.hee.system.delegate.NotifyOnChange
-import chylex.hee.system.forge.Side
-import chylex.hee.system.forge.Sided
-import chylex.hee.system.migration.EntityItem
-import chylex.hee.system.migration.Facing.DOWN
-import chylex.hee.system.migration.Sounds
 import chylex.hee.system.random.nextFloat
-import chylex.hee.system.serialization.TagCompound
-import chylex.hee.system.serialization.getIntegerOrNull
-import chylex.hee.system.serialization.getPosOrNull
-import chylex.hee.system.serialization.putPos
-import chylex.hee.system.serialization.use
+import chylex.hee.util.color.IntColor
+import chylex.hee.util.delegate.NotifyOnChange
+import chylex.hee.util.forge.Side
+import chylex.hee.util.forge.Sided
+import chylex.hee.util.nbt.TagCompound
+import chylex.hee.util.nbt.getIntegerOrNull
+import chylex.hee.util.nbt.getPosOrNull
+import chylex.hee.util.nbt.putPos
+import chylex.hee.util.nbt.use
+import net.minecraft.entity.item.ItemEntity
 import net.minecraft.entity.player.PlayerInventory
 import net.minecraft.item.ItemStack
 import net.minecraft.tileentity.TileEntityType
 import net.minecraft.util.Direction
+import net.minecraft.util.Direction.DOWN
 import net.minecraft.util.SoundCategory
+import net.minecraft.util.SoundEvents
 import net.minecraft.util.math.AxisAlignedBB
 import net.minecraft.util.math.BlockPos
 import net.minecraft.world.World
@@ -75,10 +74,10 @@ class TileEntityTablePedestal(type: TileEntityType<TileEntityTablePedestal>) : T
 		
 		val FX_ITEM_UPDATE = object : FxBlockHandler() {
 			override fun handle(pos: BlockPos, world: World, rand: Random) {
-				val player = HEE.proxy.getClientSidePlayer() ?: return
+				val player = MC.player ?: return
 				
 				PARTICLE_ITEM_UPDATE.spawn(Point(pos.up(), 12), rand)
-				Sounds.ENTITY_ITEM_PICKUP.playClient(player.posVec, SoundCategory.PLAYERS, volume = 0.22F, pitch = rand.nextFloat(0.6F, 3.4F))
+				SoundEvents.ENTITY_ITEM_PICKUP.playClient(player.posVec, SoundCategory.PLAYERS, volume = 0.22F, pitch = rand.nextFloat(0.6F, 3.4F))
 			}
 		}
 		
@@ -137,7 +136,7 @@ class TileEntityTablePedestal(type: TileEntityType<TileEntityTablePedestal>) : T
 		private set
 	
 	val outputComparatorStrength
-		get() = when(statusIndicator.process ?: statusIndicator.contents) {
+		get() = when (statusIndicator.process ?: statusIndicator.contents) {
 			PAUSED                      -> 2
 			WORKING                     -> 3
 			BLOCKED                     -> 4
@@ -165,7 +164,7 @@ class TileEntityTablePedestal(type: TileEntityType<TileEntityTablePedestal>) : T
 	}
 	
 	private fun spawnSmokeParticles() {
-		val currentTime = wrld.totalTime
+		val currentTime = wrld.gameTime
 		
 		if (lastSmokeTime != currentTime) {
 			lastSmokeTime = currentTime
@@ -210,7 +209,7 @@ class TileEntityTablePedestal(type: TileEntityType<TileEntityTablePedestal>) : T
 	private fun spawnTableLinkAt(pos: BlockPos) {
 		val rand = wrld.rand
 		
-		EntityItem(wrld, pos.x + rand.nextFloat(0.25, 0.75), pos.y + rand.nextFloat(0.25, 0.75), pos.z + rand.nextFloat(0.25, 0.75), ItemStack(ModItems.TABLE_LINK)).apply {
+		ItemEntity(wrld, pos.x + rand.nextFloat(0.25, 0.75), pos.y + rand.nextFloat(0.25, 0.75), pos.z + rand.nextFloat(0.25, 0.75), ItemStack(ModItems.TABLE_LINK)).apply {
 			setDefaultPickupDelay()
 			throwerId = BlockTablePedestal.DROPPED_ITEM_THROWER
 			wrld.addEntity(this)
@@ -286,7 +285,7 @@ class TileEntityTablePedestal(type: TileEntityType<TileEntityTablePedestal>) : T
 		
 		if (updateInputModCounter) {
 			++inputModCounter
-			inputModTime = wrld.totalTime
+			inputModTime = wrld.gameTime
 		}
 	}
 	

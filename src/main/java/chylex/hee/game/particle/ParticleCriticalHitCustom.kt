@@ -2,11 +2,11 @@ package chylex.hee.game.particle
 
 import chylex.hee.game.particle.base.ParticleBaseHit
 import chylex.hee.game.particle.data.ParticleDataColorLifespanScale
-import chylex.hee.system.color.IntColor.Companion.RGB
-import chylex.hee.system.forge.Side
-import chylex.hee.system.forge.Sided
-import chylex.hee.system.random.IRandomColor.Companion.IRandomColor
 import chylex.hee.system.random.nextInt
+import chylex.hee.util.color.IColorGenerator
+import chylex.hee.util.color.RGB
+import chylex.hee.util.forge.Side
+import chylex.hee.util.forge.Sided
 import net.minecraft.client.particle.Particle
 import net.minecraft.client.world.ClientWorld
 
@@ -16,7 +16,7 @@ object ParticleCriticalHitCustom : ParticleDataColorLifespanScale.ParticleMaker(
 		return Instance(world, posX, posY, posZ, motX, motY, motZ, data.orDefault)
 	}
 	
-	override val defaultColor = IRandomColor { RGB(nextInt(153, 230).toUByte()) }
+	override val defaultColor = IColorGenerator { RGB(nextInt(153, 230).toUByte()) }
 	override val defaultLifespan = (-1)..(-1)
 	override val defaultScale = (1F)..(1F)
 	

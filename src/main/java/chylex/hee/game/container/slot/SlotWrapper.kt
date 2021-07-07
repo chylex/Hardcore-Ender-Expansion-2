@@ -1,8 +1,8 @@
 package chylex.hee.game.container.slot
 
-import chylex.hee.system.forge.Side
-import chylex.hee.system.forge.Sided
-import chylex.hee.system.migration.EntityPlayer
+import chylex.hee.util.forge.Side
+import chylex.hee.util.forge.Sided
+import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.inventory.container.CraftingResultSlot
 import net.minecraft.inventory.container.FurnaceResultSlot
 import net.minecraft.inventory.container.MerchantResultSlot
@@ -27,7 +27,7 @@ abstract class SlotWrapper(private val wrapped: Slot) : Slot(wrapped.inventory, 
 	
 	override fun isItemValid(stack: ItemStack) = wrapped.isItemValid(stack)
 	override fun getItemStackLimit(stack: ItemStack) = wrapped.getItemStackLimit(stack)
-	override fun canTakeStack(player: EntityPlayer) = wrapped.canTakeStack(player)
+	override fun canTakeStack(player: PlayerEntity) = wrapped.canTakeStack(player)
 	override fun getSlotStackLimit() = wrapped.slotStackLimit
 	
 	override fun getHasStack() = wrapped.hasStack
@@ -35,7 +35,7 @@ abstract class SlotWrapper(private val wrapped: Slot) : Slot(wrapped.inventory, 
 	override fun putStack(stack: ItemStack) = wrapped.putStack(stack)
 	override fun decrStackSize(amount: Int): ItemStack = wrapped.decrStackSize(amount)
 	
-	override fun onTake(player: EntityPlayer, stack: ItemStack): ItemStack = wrapped.onTake(player, stack)
+	override fun onTake(player: PlayerEntity, stack: ItemStack): ItemStack = wrapped.onTake(player, stack)
 	override fun onSlotChange(modified: ItemStack, original: ItemStack) = wrapped.onSlotChange(modified, original)
 	override fun onSlotChanged() = wrapped.onSlotChanged()
 	

@@ -1,34 +1,34 @@
 package chylex.hee.game.entity.living
 
+import chylex.hee.game.Resource
 import chylex.hee.game.entity.CustomCreatureType
+import chylex.hee.game.entity.damage.Damage
+import chylex.hee.game.entity.damage.IDamageProcessor.Companion.ALL_PROTECTIONS
+import chylex.hee.game.entity.damage.IDamageProcessor.Companion.DIFFICULTY_SCALING
+import chylex.hee.game.entity.damage.IDamageProcessor.Companion.PEACEFUL_EXCLUSION
 import chylex.hee.game.entity.living.ai.AttackMelee
 import chylex.hee.game.entity.living.ai.ForceWanderTiming
 import chylex.hee.game.entity.living.ai.Swim
 import chylex.hee.game.entity.living.ai.TargetAttacker
 import chylex.hee.game.entity.living.ai.TargetNearby
 import chylex.hee.game.entity.living.ai.WanderLand
-import chylex.hee.game.mechanics.damage.Damage
-import chylex.hee.game.mechanics.damage.IDamageProcessor.Companion.ALL_PROTECTIONS
-import chylex.hee.game.mechanics.damage.IDamageProcessor.Companion.DIFFICULTY_SCALING
-import chylex.hee.game.mechanics.damage.IDamageProcessor.Companion.PEACEFUL_EXCLUSION
 import chylex.hee.init.ModEntities
-import chylex.hee.system.facades.Resource
-import chylex.hee.system.math.square
-import chylex.hee.system.migration.EntityEndermite
-import chylex.hee.system.migration.EntityPlayer
-import chylex.hee.system.serialization.TagCompound
-import chylex.hee.system.serialization.heeTag
-import chylex.hee.system.serialization.use
+import chylex.hee.system.heeTag
+import chylex.hee.util.math.square
+import chylex.hee.util.nbt.TagCompound
+import chylex.hee.util.nbt.use
 import net.minecraft.entity.CreatureAttribute
 import net.minecraft.entity.Entity
 import net.minecraft.entity.EntityType
+import net.minecraft.entity.monster.EndermiteEntity
+import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.network.IPacket
 import net.minecraft.util.ResourceLocation
 import net.minecraft.world.Difficulty.PEACEFUL
 import net.minecraft.world.World
 import net.minecraftforge.fml.network.NetworkHooks
 
-open class EntityMobEndermite(type: EntityType<out EntityMobEndermite>, world: World) : EntityEndermite(type, world) {
+open class EntityMobEndermite(type: EntityType<out EntityMobEndermite>, world: World) : EndermiteEntity(type, world) {
 	@Suppress("unused")
 	constructor(world: World) : this(ModEntities.ENDERMITE, world)
 	
@@ -56,7 +56,7 @@ open class EntityMobEndermite(type: EntityType<out EntityMobEndermite>, world: W
 		// no watching AI because it makes Endermites spazz out
 		
 		targetSelector.addGoal(1, TargetAttacker(this, callReinforcements = true))
-		targetSelector.addGoal(2, TargetNearby<EntityPlayer>(this, chancePerTick = 10, checkSight = true, easilyReachableOnly = false))
+		targetSelector.addGoal(2, TargetNearby<PlayerEntity>(this, chancePerTick = 10, checkSight = true, easilyReachableOnly = false))
 	}
 	
 	override fun createSpawnPacket(): IPacket<*> {

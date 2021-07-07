@@ -1,15 +1,15 @@
 package chylex.hee.game.container.slot
 
 import chylex.hee.HEE
-import chylex.hee.client.MC
-import chylex.hee.client.render.gl.GL
+import chylex.hee.client.render.util.GL
+import chylex.hee.client.util.MC
+import chylex.hee.game.Resource
 import chylex.hee.network.server.PacketServerShiftClickTrinket
-import chylex.hee.system.facades.Resource
-import chylex.hee.system.forge.EventPriority
-import chylex.hee.system.forge.Side
-import chylex.hee.system.forge.Sided
-import chylex.hee.system.forge.SubscribeAllEvents
-import chylex.hee.system.forge.SubscribeEvent
+import chylex.hee.util.forge.EventPriority
+import chylex.hee.util.forge.Side
+import chylex.hee.util.forge.Sided
+import chylex.hee.util.forge.SubscribeAllEvents
+import chylex.hee.util.forge.SubscribeEvent
 import com.mojang.blaze3d.matrix.MatrixStack
 import net.minecraft.client.gui.AbstractGui
 import net.minecraft.client.gui.screen.Screen

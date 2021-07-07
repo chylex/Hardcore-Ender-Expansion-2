@@ -1,21 +1,21 @@
 package chylex.hee.game.block
 
+import chylex.hee.game.MagicValues
 import chylex.hee.game.block.entity.TileEntityShulkerBoxCustom
-import chylex.hee.game.inventory.nbt
-import chylex.hee.game.world.getTile
+import chylex.hee.game.item.util.nbt
+import chylex.hee.game.world.util.getTile
 import chylex.hee.init.ModContainers
-import chylex.hee.system.MagicValues
-import chylex.hee.system.facades.Stats
-import chylex.hee.system.migration.BlockShulkerBox
-import chylex.hee.system.migration.EntityPlayer
-import chylex.hee.system.migration.TileEntityShulkerBox
-import chylex.hee.system.serialization.TagCompound
+import chylex.hee.util.nbt.TagCompound
 import net.minecraft.block.BlockState
+import net.minecraft.block.ShulkerBoxBlock
+import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.inventory.container.INamedContainerProvider
 import net.minecraft.item.DyeColor
 import net.minecraft.item.ItemStack
 import net.minecraft.loot.LootContext.Builder
 import net.minecraft.loot.LootParameters
+import net.minecraft.stats.Stats
+import net.minecraft.tileentity.ShulkerBoxTileEntity
 import net.minecraft.tileentity.ShulkerBoxTileEntity.AnimationStatus.CLOSED
 import net.minecraft.tileentity.TileEntity
 import net.minecraft.util.ActionResultType
@@ -30,10 +30,10 @@ import net.minecraft.world.IBlockReader
 import net.minecraft.world.World
 import java.util.stream.IntStream
 
-class BlockShulkerBoxOverride(properties: Properties, color: DyeColor?) : BlockShulkerBox(color, properties) {
+class BlockShulkerBoxOverride(properties: Properties, color: DyeColor?) : ShulkerBoxBlock(color, properties) {
 	companion object {
 		val ALL_BLOCKS
-			get() = listOf(null, *DyeColor.values()).map { BlockShulkerBox.getBlockByColor(it) as BlockShulkerBox }
+			get() = listOf(null, *DyeColor.values()).map { getBlockByColor(it) as ShulkerBoxBlock }
 	}
 	
 	enum class BoxSize(val slots: Int, val translationKey: String) { // TODO add some that distinguishes them in the model/texture
@@ -55,7 +55,7 @@ class BlockShulkerBoxOverride(properties: Properties, color: DyeColor?) : BlockS
 	override fun getDrops(state: BlockState, builder: Builder): MutableList<ItemStack> {
 		val tile = builder.get(LootParameters.BLOCK_ENTITY)
 		
-		if (tile !is TileEntityShulkerBox) {
+		if (tile !is ShulkerBoxTileEntity) {
 			return mutableListOf()
 		}
 		
@@ -64,15 +64,15 @@ class BlockShulkerBoxOverride(properties: Properties, color: DyeColor?) : BlockS
 		})
 	}
 	
-	override fun onBlockActivated(state: BlockState, world: World, pos: BlockPos, player: EntityPlayer, hand: Hand, hit: BlockRayTraceResult): ActionResultType {
+	override fun onBlockActivated(state: BlockState, world: World, pos: BlockPos, player: PlayerEntity, hand: Hand, hit: BlockRayTraceResult): ActionResultType {
 		if (world.isRemote || player.isSpectator) {
 			return SUCCESS
 		}
 		
-		pos.getTile<TileEntityShulkerBox>(world)?.let {
+		pos.getTile<ShulkerBoxTileEntity>(world)?.let {
 			val facing = state.get(FACING)
 			
-			val isNotBlocked = when(it.animationStatus) {
+			val isNotBlocked = when (it.animationStatus) {
 				CLOSED -> VoxelShapes
 					.fullCube()
 					.boundingBox

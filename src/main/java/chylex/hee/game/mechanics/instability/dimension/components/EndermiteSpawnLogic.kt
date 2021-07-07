@@ -1,17 +1,17 @@
 package chylex.hee.game.mechanics.instability.dimension.components
 
-import chylex.hee.game.potion.makeEffect
-import chylex.hee.game.world.Pos
-import chylex.hee.game.world.blocksMovement
-import chylex.hee.game.world.center
-import chylex.hee.game.world.isTopSolid
-import chylex.hee.game.world.offsetUntil
-import chylex.hee.game.world.spawn
+import chylex.hee.game.potion.util.makeInstance
+import chylex.hee.game.world.util.blocksMovement
+import chylex.hee.game.world.util.isTopSolid
+import chylex.hee.game.world.util.offsetUntil
+import chylex.hee.game.world.util.spawn
 import chylex.hee.init.ModEntities
-import chylex.hee.system.migration.Facing.UP
-import chylex.hee.system.migration.Potions
 import chylex.hee.system.random.nextFloat
 import chylex.hee.system.random.nextVector
+import chylex.hee.util.math.Pos
+import chylex.hee.util.math.center
+import net.minecraft.potion.Effects
+import net.minecraft.util.Direction.UP
 import net.minecraft.util.math.BlockPos
 import net.minecraft.world.World
 import net.minecraft.world.server.ServerWorld
@@ -35,7 +35,7 @@ abstract class EndermiteSpawnLogic {
 			
 			if (finalPos != null) {
 				world.spawn(ModEntities.ENDERMITE_INSTABILITY, finalPos.x + 0.5, finalPos.y + 0.01, finalPos.z + 0.5, yaw = rand.nextFloat(0F, 360F)) {
-					addPotionEffect(Potions.RESISTANCE.makeEffect(20, 5, isAmbient = false, showParticles = false))
+					addPotionEffect(Effects.RESISTANCE.makeInstance(20, 5, isAmbient = false, showParticles = false))
 				}
 				
 				// TODO particles and spawn sound

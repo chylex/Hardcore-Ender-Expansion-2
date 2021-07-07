@@ -17,8 +17,8 @@ import chylex.hee.datagen.client.util.table
 import chylex.hee.datagen.client.util.wall
 import chylex.hee.datagen.r
 import chylex.hee.datagen.then
+import chylex.hee.game.Resource
 import chylex.hee.init.ModBlocks
-import chylex.hee.system.facades.Resource
 import net.minecraft.block.Blocks
 import net.minecraft.data.DataGenerator
 import net.minecraftforge.client.model.generators.BlockModelProvider
@@ -177,7 +177,7 @@ class BlockModels(generator: DataGenerator, modid: String, existingFileHelper: E
 		
 		// Blocks: Tables
 		
-		for(tier in 1..3) {
+		for (tier in 1..3) {
 			parent("table_tier_$tier", Resource.Custom("block/table")).then {
 				texture("particle", "hee:block/table_base")
 				texture("bottom", "hee:block/table_base")

@@ -5,13 +5,13 @@ import chylex.hee.game.particle.spawner.properties.IOffset.Constant
 import chylex.hee.game.particle.spawner.properties.IOffset.InBox
 import chylex.hee.game.particle.spawner.properties.IShape.Point
 import chylex.hee.init.ModEntities
-import chylex.hee.system.math.square
-import chylex.hee.system.migration.Facing.UP
-import chylex.hee.system.serialization.use
+import chylex.hee.util.buffer.use
+import chylex.hee.util.math.square
 import net.minecraft.entity.EntityType
 import net.minecraft.item.ItemStack
 import net.minecraft.network.PacketBuffer
 import net.minecraft.particles.ParticleTypes.SMOKE
+import net.minecraft.util.Direction.UP
 import net.minecraft.util.math.vector.Vector3d
 import net.minecraft.world.World
 import net.minecraftforge.fml.common.registry.IEntityAdditionalSpawnData

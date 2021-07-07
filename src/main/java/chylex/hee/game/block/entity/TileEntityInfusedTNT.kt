@@ -5,7 +5,7 @@ import chylex.hee.game.block.entity.base.TileEntityBase.Context.STORAGE
 import chylex.hee.game.item.infusion.InfusionList
 import chylex.hee.game.item.infusion.InfusionTag
 import chylex.hee.init.ModTileEntities
-import chylex.hee.system.serialization.TagCompound
+import chylex.hee.util.nbt.TagCompound
 import net.minecraft.tileentity.TileEntityType
 
 class TileEntityInfusedTNT(type: TileEntityType<TileEntityInfusedTNT>) : TileEntityBase(type) {

@@ -3,11 +3,11 @@ package chylex.hee.client.render.entity
 import chylex.hee.client.model.entity.ModelEntityBossEnderEye
 import chylex.hee.client.model.entity.ModelEntityBossEnderEye.SCALE
 import chylex.hee.client.render.entity.layer.LayerEnderEyeLaser
-import chylex.hee.client.render.gl.scale
+import chylex.hee.client.render.util.scale
+import chylex.hee.game.Resource
 import chylex.hee.game.entity.living.EntityBossEnderEye
-import chylex.hee.system.facades.Resource
-import chylex.hee.system.forge.Side
-import chylex.hee.system.forge.Sided
+import chylex.hee.util.forge.Side
+import chylex.hee.util.forge.Sided
 import com.mojang.blaze3d.matrix.MatrixStack
 import net.minecraft.client.renderer.entity.EntityRendererManager
 import net.minecraft.client.renderer.entity.MobRenderer

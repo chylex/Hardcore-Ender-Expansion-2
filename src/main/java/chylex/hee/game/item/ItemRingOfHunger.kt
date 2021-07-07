@@ -2,13 +2,13 @@ package chylex.hee.game.item
 
 import chylex.hee.game.mechanics.trinket.TrinketHandler
 import chylex.hee.game.potion.brewing.PotionBrewing.INFINITE_DURATION_THRESHOLD
-import chylex.hee.game.potion.makeEffect
-import chylex.hee.system.compatibility.MinecraftForgeEventBus
-import chylex.hee.system.forge.EventPriority
-import chylex.hee.system.forge.SubscribeEvent
-import chylex.hee.system.math.ceilToInt
-import chylex.hee.system.migration.EntityPlayer
-import chylex.hee.system.migration.Potion
+import chylex.hee.game.potion.util.makeInstance
+import chylex.hee.system.MinecraftForgeEventBus
+import chylex.hee.util.forge.EventPriority
+import chylex.hee.util.forge.SubscribeEvent
+import chylex.hee.util.math.ceilToInt
+import net.minecraft.entity.player.PlayerEntity
+import net.minecraft.potion.Effect
 import net.minecraft.potion.EffectInstance
 import net.minecraft.potion.EffectType.HARMFUL
 import net.minecraftforge.event.TickEvent.Phase
@@ -19,7 +19,7 @@ import java.util.UUID
 import kotlin.math.min
 
 class ItemRingOfHunger(properties: Properties) : ItemAbstractTrinket(properties) {
-	private val foodUseTracker = mutableMapOf<UUID, Map<Potion, EffectInstance>>()
+	private val foodUseTracker = mutableMapOf<UUID, Map<Effect, EffectInstance>>()
 	
 	init {
 		MinecraftForgeEventBus.register(this)
@@ -55,10 +55,10 @@ class ItemRingOfHunger(properties: Properties) : ItemAbstractTrinket(properties)
 	
 	@SubscribeEvent(EventPriority.LOWEST)
 	fun onLivingUseItemTick(e: LivingEntityUseItemEvent.Tick) {
-		val player = e.entity as? EntityPlayer ?: return
+		val player = e.entity as? PlayerEntity ?: return
 		
 		if (!player.world.isRemote && e.item.item.isFood && e.duration <= 1) {
-			foodUseTracker[player.uniqueID] = player.activePotionMap.mapValues { (type, effect) -> type.makeEffect(effect.duration, effect.amplifier) }
+			foodUseTracker[player.uniqueID] = player.activePotionMap.mapValues { (type, effect) -> type.makeInstance(effect.duration, effect.amplifier) }
 		}
 	}
 	
@@ -66,10 +66,10 @@ class ItemRingOfHunger(properties: Properties) : ItemAbstractTrinket(properties)
 	fun onLivingUseItemFinish(e: LivingEntityUseItemEvent.Finish) {
 		val prevEffects = foodUseTracker.remove(e.entity.uniqueID) ?: return
 		
-		TrinketHandler.get(e.entity as EntityPlayer).transformIfActive(this) {
+		TrinketHandler.get(e.entity as PlayerEntity).transformIfActive(this) {
 			var restoredDurability = 0F
 			
-			for((type, effect) in e.entityLiving.activePotionMap) {
+			for ((type, effect) in e.entityLiving.activePotionMap) {
 				if (type.effectType == HARMFUL) {
 					if (effect.duration >= INFINITE_DURATION_THRESHOLD) {
 						restoredDurability = it.maxDamage.toFloat()

@@ -2,21 +2,23 @@ package chylex.hee.game.block
 
 import chylex.hee.client.render.block.IBlockLayerCutout
 import chylex.hee.game.block.properties.BlockBuilder
-import chylex.hee.system.facades.Facing6
-import chylex.hee.system.migration.BlockDirectional
-import chylex.hee.system.migration.BlockHorizontalFace
-import chylex.hee.system.migration.Facing.DOWN
-import chylex.hee.system.migration.Facing.EAST
-import chylex.hee.system.migration.Facing.NORTH
-import chylex.hee.system.migration.Facing.SOUTH
-import chylex.hee.system.migration.Facing.UP
-import chylex.hee.system.migration.Facing.WEST
+import chylex.hee.game.block.util.asVoxelShape
+import chylex.hee.game.block.util.withFacing
+import chylex.hee.game.world.util.Facing6
 import net.minecraft.block.Block
 import net.minecraft.block.BlockState
 import net.minecraft.block.Blocks
+import net.minecraft.block.DirectionalBlock
+import net.minecraft.block.HorizontalFaceBlock
 import net.minecraft.item.BlockItemUseContext
 import net.minecraft.state.StateContainer.Builder
 import net.minecraft.util.Direction
+import net.minecraft.util.Direction.DOWN
+import net.minecraft.util.Direction.EAST
+import net.minecraft.util.Direction.NORTH
+import net.minecraft.util.Direction.SOUTH
+import net.minecraft.util.Direction.UP
+import net.minecraft.util.Direction.WEST
 import net.minecraft.util.Mirror
 import net.minecraft.util.Rotation
 import net.minecraft.util.math.AxisAlignedBB
@@ -27,7 +29,7 @@ import net.minecraft.world.IBlockReader
 import net.minecraft.world.IWorld
 import net.minecraft.world.IWorldReader
 
-class BlockGloomtorch(builder: BlockBuilder) : BlockDirectional(builder.p), IBlockLayerCutout {
+class BlockGloomtorch(builder: BlockBuilder) : DirectionalBlock(builder.p), IBlockLayerCutout {
 	private companion object {
 		private const val BB_SIDE_MIN = 0.421875
 		private const val BB_SIDE_MAX = 0.578125
@@ -43,7 +45,7 @@ class BlockGloomtorch(builder: BlockBuilder) : BlockDirectional(builder.p), IBlo
 		)
 		
 		private fun canPlaceGloomtorchAt(world: IWorldReader, pos: BlockPos, facing: Direction): Boolean {
-			return BlockHorizontalFace.isSideSolidForDirection(world, pos, facing.opposite)
+			return HorizontalFaceBlock.isSideSolidForDirection(world, pos, facing.opposite)
 		}
 	}
 	

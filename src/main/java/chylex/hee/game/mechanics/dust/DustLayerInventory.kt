@@ -1,6 +1,6 @@
 package chylex.hee.game.mechanics.dust
 
-import chylex.hee.game.inventory.size
+import chylex.hee.game.item.util.size
 import chylex.hee.game.mechanics.dust.DustLayers.Side.BOTTOM
 import net.minecraft.item.ItemStack
 import net.minecraftforge.items.IItemHandler

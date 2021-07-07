@@ -2,23 +2,22 @@ package chylex.hee.game.block
 
 import chylex.hee.game.block.entity.TileEntityInfusedTNT
 import chylex.hee.game.block.logic.IBlockFireCatchOverride
-import chylex.hee.game.block.properties.Property
+import chylex.hee.game.block.util.Property
 import chylex.hee.game.entity.item.EntityInfusedTNT
-import chylex.hee.game.entity.posVec
+import chylex.hee.game.entity.util.posVec
+import chylex.hee.game.fx.util.playServer
 import chylex.hee.game.item.infusion.Infusion.TRAP
 import chylex.hee.game.item.infusion.InfusionTag
-import chylex.hee.game.world.breakBlock
-import chylex.hee.game.world.getState
-import chylex.hee.game.world.getTile
-import chylex.hee.game.world.playServer
-import chylex.hee.game.world.removeBlock
-import chylex.hee.system.migration.BlockTNT
-import chylex.hee.system.migration.EntityLivingBase
-import chylex.hee.system.migration.EntityPlayer
-import chylex.hee.system.migration.Sounds
+import chylex.hee.game.world.util.breakBlock
+import chylex.hee.game.world.util.getState
+import chylex.hee.game.world.util.getTile
+import chylex.hee.game.world.util.removeBlock
 import net.minecraft.block.Block
 import net.minecraft.block.BlockState
 import net.minecraft.block.Blocks
+import net.minecraft.block.TNTBlock
+import net.minecraft.entity.LivingEntity
+import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.fluid.FluidState
 import net.minecraft.item.ItemStack
 import net.minecraft.loot.LootContext
@@ -28,6 +27,7 @@ import net.minecraft.tileentity.TileEntity
 import net.minecraft.util.Direction
 import net.minecraft.util.Direction.UP
 import net.minecraft.util.SoundCategory
+import net.minecraft.util.SoundEvents
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.RayTraceResult
 import net.minecraft.world.Explosion
@@ -36,7 +36,7 @@ import net.minecraft.world.World
 import net.minecraft.world.server.ServerWorld
 import java.util.Random
 
-class BlockInfusedTNT : BlockTNT(Properties.from(Blocks.TNT)), IBlockFireCatchOverride {
+class BlockInfusedTNT : TNTBlock(Properties.from(Blocks.TNT)), IBlockFireCatchOverride {
 	companion object {
 		val INFERNIUM = Property.bool("infernium")
 	}
@@ -64,7 +64,7 @@ class BlockInfusedTNT : BlockTNT(Properties.from(Blocks.TNT)), IBlockFireCatchOv
 	
 	// Placement & drops
 	
-	override fun onBlockPlacedBy(world: World, pos: BlockPos, state: BlockState, placer: EntityLivingBase?, stack: ItemStack) {
+	override fun onBlockPlacedBy(world: World, pos: BlockPos, state: BlockState, placer: LivingEntity?, stack: ItemStack) {
 		pos.getTile<TileEntityInfusedTNT>(world)?.infusions = InfusionTag.getList(stack)
 	}
 	
@@ -81,7 +81,7 @@ class BlockInfusedTNT : BlockTNT(Properties.from(Blocks.TNT)), IBlockFireCatchOv
 			mutableListOf()
 	}
 	
-	override fun getPickBlock(state: BlockState, target: RayTraceResult, world: IBlockReader, pos: BlockPos, player: EntityPlayer): ItemStack {
+	override fun getPickBlock(state: BlockState, target: RayTraceResult, world: IBlockReader, pos: BlockPos, player: PlayerEntity): ItemStack {
 		return pos.getTile<TileEntityInfusedTNT>(world)?.let(::getDrop) ?: ItemStack(this)
 	}
 	
@@ -95,7 +95,7 @@ class BlockInfusedTNT : BlockTNT(Properties.from(Blocks.TNT)), IBlockFireCatchOv
 		super.onBlockAdded(state, world, pos, Blocks.AIR.defaultState, false)
 	}
 	
-	override fun removedByPlayer(state: BlockState, world: World, pos: BlockPos, player: EntityPlayer, willHarvest: Boolean, fluid: FluidState): Boolean {
+	override fun removedByPlayer(state: BlockState, world: World, pos: BlockPos, player: PlayerEntity, willHarvest: Boolean, fluid: FluidState): Boolean {
 		if (pos.getTile<TileEntityInfusedTNT>(world)?.infusions?.has(TRAP) == true && !player.isCreative) {
 			catchFire(state, world, pos, null, player)
 			pos.removeBlock(world)
@@ -126,7 +126,7 @@ class BlockInfusedTNT : BlockTNT(Properties.from(Blocks.TNT)), IBlockFireCatchOv
 		}
 	}
 	
-	override fun catchFire(state: BlockState, world: World, pos: BlockPos, face: Direction?, igniter: EntityLivingBase?) {
+	override fun catchFire(state: BlockState, world: World, pos: BlockPos, face: Direction?, igniter: LivingEntity?) {
 		if (world.isRemote) {
 			return
 		}
@@ -153,7 +153,7 @@ class BlockInfusedTNT : BlockTNT(Properties.from(Blocks.TNT)), IBlockFireCatchOv
 		// disable super call and spawn TNT in onBlockExploded before the tile entity is removed
 	}
 	
-	fun igniteTNT(world: World, pos: BlockPos, state: BlockState, igniter: EntityLivingBase?, ignoreTrap: Boolean) {
+	fun igniteTNT(world: World, pos: BlockPos, state: BlockState, igniter: LivingEntity?, ignoreTrap: Boolean) {
 		val infusions = pos.getTile<TileEntityInfusedTNT>(world)?.infusions
 		
 		if (infusions != null) {
@@ -162,7 +162,7 @@ class BlockInfusedTNT : BlockTNT(Properties.from(Blocks.TNT)), IBlockFireCatchOv
 			}
 			else {
 				EntityInfusedTNT(world, pos, infusions, igniter, state[INFERNIUM]).apply {
-					Sounds.ENTITY_TNT_PRIMED.playServer(world, posVec, SoundCategory.BLOCKS)
+					SoundEvents.ENTITY_TNT_PRIMED.playServer(world, posVec, SoundCategory.BLOCKS)
 					world.addEntity(this)
 				}
 			}

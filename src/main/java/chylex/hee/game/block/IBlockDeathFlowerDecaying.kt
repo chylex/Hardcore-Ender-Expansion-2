@@ -1,52 +1,53 @@
 package chylex.hee.game.block
 
-import chylex.hee.game.block.properties.Property
+import chylex.hee.game.block.util.Property
 import chylex.hee.game.entity.Teleporter
 import chylex.hee.game.entity.Teleporter.FxRange.Extended
 import chylex.hee.game.entity.living.EntityMobAngryEnderman
 import chylex.hee.game.entity.living.EntityMobEnderman
-import chylex.hee.game.entity.posVec
-import chylex.hee.game.entity.selectExistingEntities
+import chylex.hee.game.entity.util.posVec
+import chylex.hee.game.entity.util.selectExistingEntities
+import chylex.hee.game.fx.FxBlockData
+import chylex.hee.game.fx.FxBlockHandler
+import chylex.hee.game.fx.IFxData
+import chylex.hee.game.fx.IFxHandler
+import chylex.hee.game.fx.util.playClient
+import chylex.hee.game.fx.util.playServer
 import chylex.hee.game.particle.ParticleDeathFlowerHeal
 import chylex.hee.game.particle.spawner.ParticleSpawnerCustom
 import chylex.hee.game.particle.spawner.properties.IOffset.Constant
 import chylex.hee.game.particle.spawner.properties.IOffset.Gaussian
 import chylex.hee.game.particle.spawner.properties.IOffset.InBox
 import chylex.hee.game.particle.spawner.properties.IShape.Point
-import chylex.hee.game.potion.makeEffect
-import chylex.hee.game.world.allInCenteredSphereMutable
-import chylex.hee.game.world.blocksMovement
-import chylex.hee.game.world.center
-import chylex.hee.game.world.getBlock
-import chylex.hee.game.world.getState
-import chylex.hee.game.world.isPeaceful
-import chylex.hee.game.world.offsetUntilExcept
-import chylex.hee.game.world.perDimensionData
-import chylex.hee.game.world.playClient
-import chylex.hee.game.world.playServer
-import chylex.hee.game.world.setBlock
-import chylex.hee.game.world.setState
+import chylex.hee.game.potion.util.makeInstance
+import chylex.hee.game.world.util.allInCenteredSphereMutable
+import chylex.hee.game.world.util.blocksMovement
+import chylex.hee.game.world.util.getBlock
+import chylex.hee.game.world.util.getState
+import chylex.hee.game.world.util.isPeaceful
+import chylex.hee.game.world.util.offsetUntilExcept
+import chylex.hee.game.world.util.perDimensionData
+import chylex.hee.game.world.util.setBlock
+import chylex.hee.game.world.util.setState
 import chylex.hee.init.ModSounds
 import chylex.hee.network.client.PacketClientFX
-import chylex.hee.network.fx.FxBlockData
-import chylex.hee.network.fx.FxBlockHandler
-import chylex.hee.network.fx.IFxData
-import chylex.hee.network.fx.IFxHandler
-import chylex.hee.system.migration.EntityPlayer
-import chylex.hee.system.migration.Facing.DOWN
-import chylex.hee.system.migration.Potions
-import chylex.hee.system.migration.Sounds
 import chylex.hee.system.random.nextFloat
 import chylex.hee.system.random.nextInt
 import chylex.hee.system.random.removeItem
-import chylex.hee.system.serialization.TagCompound
-import chylex.hee.system.serialization.readPos
-import chylex.hee.system.serialization.use
-import chylex.hee.system.serialization.writePos
+import chylex.hee.util.buffer.readPos
+import chylex.hee.util.buffer.use
+import chylex.hee.util.buffer.writePos
+import chylex.hee.util.math.center
+import chylex.hee.util.nbt.TagCompound
+import chylex.hee.util.nbt.use
 import net.minecraft.block.Block
 import net.minecraft.block.BlockState
+import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.network.PacketBuffer
+import net.minecraft.potion.Effects
+import net.minecraft.util.Direction.DOWN
 import net.minecraft.util.SoundCategory
+import net.minecraft.util.SoundEvents
 import net.minecraft.util.math.BlockPos
 import net.minecraft.world.World
 import net.minecraft.world.server.ServerWorld
@@ -96,7 +97,7 @@ interface IBlockDeathFlowerDecaying {
 			pos.setState(world, state.with(LEVEL, currentDecayLevel + 1))
 		}
 		else if (currentDecayLevel == MAX_LEVEL && rand.nextInt(8) == 0 && (world.dayTime % 24000L) in 15600..20400) {
-			for(testPos in pos.allInCenteredSphereMutable(WITHER_FLOWER_RADIUS, avoidNipples = true)) {
+			for (testPos in pos.allInCenteredSphereMutable(WITHER_FLOWER_RADIUS, avoidNipples = true)) {
 				val block = testPos.getBlock(world)
 				
 				if (block is IBlockDeathFlowerDecaying) {
@@ -111,7 +112,7 @@ interface IBlockDeathFlowerDecaying {
 					val enderman = EntityMobAngryEnderman(world)
 					val yaw = rand.nextFloat(0F, 360F)
 					
-					for(attempt in 1..64) {
+					for (attempt in 1..64) {
 						val testPos = pos.add(
 							rand.nextInt(1, 6) * (if (rand.nextBoolean()) 1 else -1),
 							rand.nextInt(1, 4),
@@ -131,15 +132,15 @@ interface IBlockDeathFlowerDecaying {
 					}
 				}
 				
-				Sounds.ENTITY_ENDERMAN_TELEPORT.playServer(world, center, SoundCategory.HOSTILE, volume = 1.25F)
+				SoundEvents.ENTITY_ENDERMAN_TELEPORT.playServer(world, center, SoundCategory.HOSTILE, volume = 1.25F)
 				
 				val broadcastSoundPacket = PacketClientFX(FX_WITHER, FxBlockData(pos))
 				
-				for(player in world.selectExistingEntities.inRange<EntityPlayer>(center, WITHER_PLAYER_RADIUS)) {
+				for (player in world.selectExistingEntities.inRange<PlayerEntity>(center, WITHER_PLAYER_RADIUS)) {
 					val distanceMp = center.distanceTo(player.posVec) / WITHER_PLAYER_RADIUS
 					val witherSeconds = 30 - (25 * distanceMp).roundToInt()
 					
-					player.addPotionEffect(Potions.WITHER.makeEffect(20 * witherSeconds))
+					player.addPotionEffect(Effects.WITHER.makeInstance(20 * witherSeconds))
 					broadcastSoundPacket.sendToPlayer(player)
 				}
 			}

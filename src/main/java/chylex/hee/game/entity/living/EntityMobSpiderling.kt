@@ -1,8 +1,10 @@
 package chylex.hee.game.entity.living
 
-import chylex.hee.game.entity.EntityData
-import chylex.hee.game.entity.OPERATION_MUL_INCR_INDIVIDUAL
-import chylex.hee.game.entity.getAttributeInstance
+import chylex.hee.game.Resource
+import chylex.hee.game.entity.damage.Damage
+import chylex.hee.game.entity.damage.IDamageProcessor.Companion.ALL_PROTECTIONS
+import chylex.hee.game.entity.damage.IDamageProcessor.Companion.DIFFICULTY_SCALING
+import chylex.hee.game.entity.damage.IDamageProcessor.Companion.PEACEFUL_EXCLUSION
 import chylex.hee.game.entity.living.ai.AIAttackLeap
 import chylex.hee.game.entity.living.ai.AIToggle
 import chylex.hee.game.entity.living.ai.AIToggle.Companion.addGoal
@@ -18,59 +20,56 @@ import chylex.hee.game.entity.living.ai.WanderOnFirePanic
 import chylex.hee.game.entity.living.ai.WatchClosest
 import chylex.hee.game.entity.living.ai.WatchIdle
 import chylex.hee.game.entity.living.path.PathNavigateGroundUnrestricted
-import chylex.hee.game.entity.motionY
-import chylex.hee.game.entity.posVec
-import chylex.hee.game.entity.selectEntities
-import chylex.hee.game.entity.selectExistingEntities
-import chylex.hee.game.entity.selectVulnerableEntities
-import chylex.hee.game.entity.tryApplyNonPersistentModifier
-import chylex.hee.game.entity.tryRemoveModifier
-import chylex.hee.game.mechanics.damage.Damage
-import chylex.hee.game.mechanics.damage.IDamageProcessor.Companion.ALL_PROTECTIONS
-import chylex.hee.game.mechanics.damage.IDamageProcessor.Companion.DIFFICULTY_SCALING
-import chylex.hee.game.mechanics.damage.IDamageProcessor.Companion.PEACEFUL_EXCLUSION
-import chylex.hee.game.world.getState
-import chylex.hee.game.world.isPeaceful
-import chylex.hee.game.world.totalTime
+import chylex.hee.game.entity.util.EntityData
+import chylex.hee.game.entity.util.OP_MUL_INCR_INDIVIDUAL
+import chylex.hee.game.entity.util.getAttributeInstance
+import chylex.hee.game.entity.util.motionY
+import chylex.hee.game.entity.util.posVec
+import chylex.hee.game.entity.util.selectEntities
+import chylex.hee.game.entity.util.selectExistingEntities
+import chylex.hee.game.entity.util.selectVulnerableEntities
+import chylex.hee.game.entity.util.tryApplyNonPersistentModifier
+import chylex.hee.game.entity.util.tryRemoveModifier
+import chylex.hee.game.world.util.getState
+import chylex.hee.game.world.util.isPeaceful
 import chylex.hee.init.ModEntities
-import chylex.hee.system.facades.Resource
-import chylex.hee.system.math.Vec
-import chylex.hee.system.math.addY
-import chylex.hee.system.math.directionTowards
-import chylex.hee.system.math.square
-import chylex.hee.system.math.toRadians
-import chylex.hee.system.migration.BlockWeb
-import chylex.hee.system.migration.EntityLivingBase
-import chylex.hee.system.migration.EntityMob
-import chylex.hee.system.migration.EntityPlayer
-import chylex.hee.system.migration.Hand.MAIN_HAND
-import chylex.hee.system.migration.ItemAxe
-import chylex.hee.system.migration.ItemSword
-import chylex.hee.system.migration.Potions
-import chylex.hee.system.migration.Sounds
+import chylex.hee.system.heeTag
 import chylex.hee.system.random.nextFloat
 import chylex.hee.system.random.nextInt
-import chylex.hee.system.serialization.TagCompound
-import chylex.hee.system.serialization.heeTag
-import chylex.hee.system.serialization.use
+import chylex.hee.util.math.Vec
+import chylex.hee.util.math.addY
+import chylex.hee.util.math.directionTowards
+import chylex.hee.util.math.square
+import chylex.hee.util.math.toRadians
+import chylex.hee.util.nbt.TagCompound
+import chylex.hee.util.nbt.use
 import net.minecraft.block.BlockState
+import net.minecraft.block.WebBlock
 import net.minecraft.entity.CreatureAttribute
 import net.minecraft.entity.Entity
 import net.minecraft.entity.EntityType
 import net.minecraft.entity.ILivingEntityData
+import net.minecraft.entity.LivingEntity
 import net.minecraft.entity.SpawnReason
 import net.minecraft.entity.SpawnReason.SPAWNER
 import net.minecraft.entity.ai.attributes.AttributeModifier
 import net.minecraft.entity.ai.attributes.Attributes.ATTACK_DAMAGE
 import net.minecraft.entity.ai.attributes.Attributes.MAX_HEALTH
+import net.minecraft.entity.monster.MonsterEntity
+import net.minecraft.entity.player.PlayerEntity
+import net.minecraft.item.AxeItem
+import net.minecraft.item.SwordItem
 import net.minecraft.nbt.CompoundNBT
 import net.minecraft.network.IPacket
 import net.minecraft.network.datasync.DataSerializers
 import net.minecraft.pathfinding.PathNavigator
 import net.minecraft.potion.EffectInstance
+import net.minecraft.potion.Effects
 import net.minecraft.util.DamageSource
+import net.minecraft.util.Hand.MAIN_HAND
 import net.minecraft.util.ResourceLocation
 import net.minecraft.util.SoundEvent
+import net.minecraft.util.SoundEvents
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.RayTraceContext
 import net.minecraft.util.math.RayTraceContext.BlockMode
@@ -93,12 +92,12 @@ import kotlin.math.log10
 import kotlin.math.roundToInt
 import kotlin.math.sin
 
-class EntityMobSpiderling(type: EntityType<EntityMobSpiderling>, world: World) : EntityMob(type, world), ILightStartleHandler {
+class EntityMobSpiderling(type: EntityType<EntityMobSpiderling>, world: World) : MonsterEntity(type, world), ILightStartleHandler {
 	constructor(world: World) : this(ModEntities.SPIDERLING, world)
 	
 	companion object {
 		private val DAMAGE_GENERAL = Damage(DIFFICULTY_SCALING, PEACEFUL_EXCLUSION, *ALL_PROTECTIONS)
-		private val FALL_CRIT_DAMAGE = AttributeModifier("Fall crit damage", 0.5, OPERATION_MUL_INCR_INDIVIDUAL)
+		private val FALL_CRIT_DAMAGE = AttributeModifier("Fall crit damage", 0.5, OP_MUL_INCR_INDIVIDUAL)
 		
 		private val DATA_SLEEPING = EntityData.register<EntityMobSpiderling, Boolean>(DataSerializers.BOOLEAN)
 		
@@ -112,7 +111,7 @@ class EntityMobSpiderling(type: EntityType<EntityMobSpiderling>, world: World) :
 		private fun findTopBlockMaxY(world: World, pos: BlockPos): Double? {
 			var lastTop: Double? = null
 			
-			for(y in 0..3) {
+			for (y in 0..3) {
 				val testPos = pos.up(y)
 				val testBox = testPos.getState(world).getCollisionShape(world, testPos)
 				
@@ -173,8 +172,8 @@ class EntityMobSpiderling(type: EntityType<EntityMobSpiderling>, world: World) :
 		goalSelector.addGoal(3, WanderLightStartle(this, movementSpeed = 1.2, minBlockLightIncrease = 3, minCombinedLightDecrease = 6, searchAttempts = 1000, maxDistanceXZ = 15, maxDistanceY = 2, handler = this))
 		goalSelector.addGoal(4, AttackLeap(this, triggerDistance = (1.5)..(3.5), triggerChance = 0.75F, triggerCooldown = 45, leapStrengthXZ = (0.9)..(1.1), leapStrengthY = (0.4)..(0.5)), aiMovement)
 		goalSelector.addGoal(5, AttackMelee(this, movementSpeed = 1.1, chaseAfterLosingSight = true), aiMovement)
-		goalSelector.addGoal(6, WanderLandStopNear<EntityPlayer>(this, movementSpeed = 0.9, chancePerTick = 30, detectDistance = 7.5), aiMovement)
-		goalSelector.addGoal(7, WatchClosest<EntityPlayer>(this, maxDistance = 3.5F), aiMovement)
+		goalSelector.addGoal(6, WanderLandStopNear<PlayerEntity>(this, movementSpeed = 0.9, chancePerTick = 30, detectDistance = 7.5), aiMovement)
+		goalSelector.addGoal(7, WatchClosest<PlayerEntity>(this, maxDistance = 3.5F), aiMovement)
 		goalSelector.addGoal(8, WatchIdle(this), aiMovement)
 		
 		targetSelector.addGoal(1, TargetAttacker(this, callReinforcements = false))
@@ -282,7 +281,7 @@ class EntityMobSpiderling(type: EntityType<EntityMobSpiderling>, world: World) :
 		
 		wakeUpTimer = 5 * rand.nextInt(1, 12)
 		
-		for(nearbySpiderling in world.selectExistingEntities.inRange<EntityMobSpiderling>(posVec, 3.5)) {
+		for (nearbySpiderling in world.selectExistingEntities.inRange<EntityMobSpiderling>(posVec, 3.5)) {
 			if (nearbySpiderling !== this) {
 				nearbySpiderling.onDisturbed()
 			}
@@ -314,7 +313,7 @@ class EntityMobSpiderling(type: EntityType<EntityMobSpiderling>, world: World) :
 	}
 	
 	override fun isPotionApplicable(effect: EffectInstance): Boolean {
-		return effect.potion != Potions.POISON && super.isPotionApplicable(effect)
+		return effect.potion != Effects.POISON && super.isPotionApplicable(effect)
 	}
 	
 	// Behavior (Light)
@@ -322,7 +321,7 @@ class EntityMobSpiderling(type: EntityType<EntityMobSpiderling>, world: World) :
 	override fun onLightStartled(): Boolean {
 		wakeUp(preventSleep = true)
 		
-		if (world.totalTime < lightStartleResetTime) {
+		if (world.gameTime < lightStartleResetTime) {
 			return false
 		}
 		
@@ -336,7 +335,7 @@ class EntityMobSpiderling(type: EntityType<EntityMobSpiderling>, world: World) :
 	}
 	
 	override fun onDarknessReached() {
-		val peaceChance = when(world.difficulty) {
+		val peaceChance = when (world.difficulty) {
 			HARD   -> 0.25F
 			NORMAL -> 0.75F
 			else   -> 1F
@@ -349,22 +348,22 @@ class EntityMobSpiderling(type: EntityType<EntityMobSpiderling>, world: World) :
 	
 	// Targeting
 	
-	private fun isPlayerNearbyForAttack(player: EntityPlayer): Boolean {
+	private fun isPlayerNearbyForAttack(player: PlayerEntity): Boolean {
 		return getDistanceSq(player) < square(1.75)
 	}
 	
-	private fun findPlayerInSight(maxDistance: Double, maxDiffY: Int): EntityPlayer? {
-		return world.selectVulnerableEntities.inRange<EntityPlayer>(posVec, maxDistance).firstOrNull {
+	private fun findPlayerInSight(maxDistance: Double, maxDiffY: Int): PlayerEntity? {
+		return world.selectVulnerableEntities.inRange<PlayerEntity>(posVec, maxDistance).firstOrNull {
 			abs(posY - it.posY).roundToInt() <= maxDiffY && canEntityBeSeen(it)
 		}
 	}
 	
-	override fun setAttackTarget(newTarget: EntityLivingBase?) {
+	override fun setAttackTarget(newTarget: LivingEntity?) {
 		if (!world.isPeaceful && newTarget !== attackTarget) {
 			super.setAttackTarget(newTarget)
 			
 			if (attackTarget == null && lightStartleResetTime == 0L) {
-				lightStartleResetTime = world.totalTime + (30L * 20L)
+				lightStartleResetTime = world.gameTime + (30L * 20L)
 			}
 		}
 	}
@@ -395,7 +394,7 @@ class EntityMobSpiderling(type: EntityType<EntityMobSpiderling>, world: World) :
 	}
 	
 	override fun setMotionMultiplier(state: BlockState, mp: Vector3d) {
-		if (state.block !is BlockWeb) {
+		if (state.block !is WebBlock) {
 			super.setMotionMultiplier(state, mp)
 		}
 	}
@@ -413,14 +412,14 @@ class EntityMobSpiderling(type: EntityType<EntityMobSpiderling>, world: World) :
 			return false
 		}
 		
-		val player = source.trueSource as? EntityPlayer
+		val player = source.trueSource as? PlayerEntity
 		
-		if (!isBeingSwept && player != null && player.getHeldItem(MAIN_HAND).item.let { it is ItemSword || it is ItemAxe }) {
+		if (!isBeingSwept && player != null && player.getHeldItem(MAIN_HAND).item.let { it is SwordItem || it is AxeItem }) {
 			val yaw = player.rotationYaw.toDouble().toRadians()
 			val xRatio = sin(yaw)
 			val zRatio = -cos(yaw)
 			
-			for(nearby in world.selectEntities.inRange<EntityMobSpiderling>(posVec, 2.0)) {
+			for (nearby in world.selectEntities.inRange<EntityMobSpiderling>(posVec, 2.0)) {
 				if (nearby !== this) {
 					nearby.isBeingSwept = true
 					nearby.applyKnockback(0.4F, xRatio, zRatio)
@@ -473,7 +472,7 @@ class EntityMobSpiderling(type: EntityType<EntityMobSpiderling>, world: World) :
 		return LOOT_TABLE
 	}
 	
-	override fun getExperiencePoints(player: EntityPlayer): Int {
+	override fun getExperiencePoints(player: PlayerEntity): Int {
 		return rand.nextInt(0, experienceValue)
 	}
 	
@@ -492,19 +491,19 @@ class EntityMobSpiderling(type: EntityType<EntityMobSpiderling>, world: World) :
 	}
 	
 	override fun playStepSound(pos: BlockPos, state: BlockState) {
-		playSound(Sounds.ENTITY_SPIDER_STEP, 0.15F, soundPitch)
+		playSound(SoundEvents.ENTITY_SPIDER_STEP, 0.15F, soundPitch)
 	}
 	
 	public override fun getAmbientSound(): SoundEvent {
-		return Sounds.ENTITY_SPIDER_AMBIENT
+		return SoundEvents.ENTITY_SPIDER_AMBIENT
 	}
 	
 	public override fun getHurtSound(source: DamageSource): SoundEvent {
-		return Sounds.ENTITY_SPIDER_HURT
+		return SoundEvents.ENTITY_SPIDER_HURT
 	}
 	
 	public override fun getDeathSound(): SoundEvent {
-		return Sounds.ENTITY_SPIDER_DEATH
+		return SoundEvents.ENTITY_SPIDER_DEATH
 	}
 	
 	public override fun getSoundPitch(): Float {

@@ -1,26 +1,26 @@
 package chylex.hee.game.mechanics.table
 
 import chylex.hee.game.block.BlockTablePedestal
-import chylex.hee.game.inventory.InvReverseWrapper
-import chylex.hee.game.inventory.copyIfNotEmpty
-import chylex.hee.game.inventory.createSnapshot
-import chylex.hee.game.inventory.isNotEmpty
-import chylex.hee.game.inventory.mergeStackProperly
-import chylex.hee.game.inventory.nonEmptySlots
-import chylex.hee.game.inventory.restoreSnapshot
-import chylex.hee.game.inventory.size
+import chylex.hee.game.inventory.util.InvReverseWrapper
+import chylex.hee.game.inventory.util.createSnapshot
+import chylex.hee.game.inventory.util.mergeStackProperly
+import chylex.hee.game.inventory.util.nonEmptySlots
+import chylex.hee.game.inventory.util.restoreSnapshot
+import chylex.hee.game.item.util.copyIfNotEmpty
+import chylex.hee.game.item.util.isNotEmpty
+import chylex.hee.game.item.util.size
 import chylex.hee.init.ModItems
-import chylex.hee.system.forge.capability.LazyOptional
-import chylex.hee.system.migration.EntityItem
 import chylex.hee.system.random.nextFloat
 import chylex.hee.system.random.nextVector2
-import chylex.hee.system.serialization.TagCompound
-import chylex.hee.system.serialization.getStack
-import chylex.hee.system.serialization.loadInventory
-import chylex.hee.system.serialization.putStack
-import chylex.hee.system.serialization.saveInventory
-import chylex.hee.system.serialization.use
+import chylex.hee.util.forge.capability.LazyOptional
+import chylex.hee.util.nbt.TagCompound
+import chylex.hee.util.nbt.getStack
+import chylex.hee.util.nbt.loadInventory
+import chylex.hee.util.nbt.putStack
+import chylex.hee.util.nbt.saveInventory
+import chylex.hee.util.nbt.use
 import com.google.common.collect.Iterators
+import net.minecraft.entity.item.ItemEntity
 import net.minecraft.entity.player.PlayerInventory
 import net.minecraft.inventory.Inventory
 import net.minecraft.item.ItemStack
@@ -57,7 +57,7 @@ class PedestalInventoryHandler(private val updateCallback: (Boolean) -> Unit) : 
 				add(itemInput)
 			}
 			
-			for((_, stack) in itemOutput.nonEmptySlots) {
+			for ((_, stack) in itemOutput.nonEmptySlots) {
 				add(stack)
 			}
 		}
@@ -120,9 +120,9 @@ class PedestalInventoryHandler(private val updateCallback: (Boolean) -> Unit) : 
 		if (merging.item === ModItems.EXPERIENCE_BOTTLE) {
 			val bottle = ModItems.EXPERIENCE_BOTTLE
 			
-			for((_, stack) in itemOutput.nonEmptySlots) {
+			for ((_, stack) in itemOutput.nonEmptySlots) {
 				if (stack.item === bottle) {
-					while(bottle.mergeBottles(merging, stack) && bottle.isFullOfExperience(stack)) {
+					while (bottle.mergeBottles(merging, stack) && bottle.isFullOfExperience(stack)) {
 						val moved = stack.copy().also { it.size = 1 }
 						
 						stack.shrink(1)
@@ -154,7 +154,7 @@ class PedestalInventoryHandler(private val updateCallback: (Boolean) -> Unit) : 
 	fun moveOutputToPlayerInventory(inventory: PlayerInventory): Boolean {
 		var hasTransferedAnything = false
 		
-		for((_, stack) in itemOutput.nonEmptySlots) {
+		for ((_, stack) in itemOutput.nonEmptySlots) {
 			val prevStackSize = stack.size
 			
 			if (inventory.addItemStackToInventory(stack) || stack.size != prevStackSize) { // addItemStackToInventory returns false if combined w/ existing slot
@@ -209,7 +209,7 @@ class PedestalInventoryHandler(private val updateCallback: (Boolean) -> Unit) : 
 			motionXZ = rand.nextFloat(0.032, 0.034)
 		}
 		
-		EntityItem(world, pos.x + offsetX, pos.y - 1.0 + BlockTablePedestal.ITEM_SPAWN_OFFSET_Y, pos.z + offsetZ, stack).apply {
+		ItemEntity(world, pos.x + offsetX, pos.y - 1.0 + BlockTablePedestal.ITEM_SPAWN_OFFSET_Y, pos.z + offsetZ, stack).apply {
 			setNoPickupDelay()
 			motion = rand.nextVector2(motionXZ, rand.nextFloat(0.152, 0.155))
 			throwerId = BlockTablePedestal.DROPPED_ITEM_THROWER

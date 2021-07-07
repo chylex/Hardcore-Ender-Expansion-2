@@ -2,13 +2,13 @@ package chylex.hee.game.potion.brewing.recipes
 
 import chylex.hee.game.potion.brewing.IBrewingRecipe
 import chylex.hee.game.potion.brewing.PotionItems
-import chylex.hee.system.migration.PotionTypes
 import net.minecraft.item.ItemStack
 import net.minecraft.item.Items
+import net.minecraft.potion.Potions
 
 object BrewWaterToAwkward : IBrewingRecipe {
 	override fun isInput(input: ItemStack): Boolean {
-		return PotionItems.checkBottle(input, PotionTypes.WATER)
+		return PotionItems.checkBottle(input, Potions.WATER)
 	}
 	
 	override fun isIngredient(ingredient: ItemStack): Boolean {
@@ -16,6 +16,6 @@ object BrewWaterToAwkward : IBrewingRecipe {
 	}
 	
 	override fun brew(input: ItemStack, ingredient: ItemStack): ItemStack {
-		return PotionItems.getBottle(input.item, PotionTypes.AWKWARD)
+		return PotionItems.getBottle(input.item, Potions.AWKWARD)
 	}
 }

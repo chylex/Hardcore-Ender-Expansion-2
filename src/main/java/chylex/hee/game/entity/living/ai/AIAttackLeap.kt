@@ -1,24 +1,23 @@
 package chylex.hee.game.entity.living.ai
 
-import chylex.hee.game.entity.motionX
-import chylex.hee.game.entity.motionZ
-import chylex.hee.game.world.totalTime
-import chylex.hee.system.math.Vec3
-import chylex.hee.system.math.addXZ
-import chylex.hee.system.math.directionTowards
-import chylex.hee.system.math.square
-import chylex.hee.system.math.withY
-import chylex.hee.system.migration.EntityCreature
-import chylex.hee.system.migration.EntityLivingBase
-import chylex.hee.system.migration.Hand.MAIN_HAND
+import chylex.hee.game.entity.util.motionX
+import chylex.hee.game.entity.util.motionZ
 import chylex.hee.system.random.nextFloat
+import chylex.hee.util.math.Vec3
+import chylex.hee.util.math.addXZ
+import chylex.hee.util.math.directionTowards
+import chylex.hee.util.math.square
+import chylex.hee.util.math.withY
+import net.minecraft.entity.CreatureEntity
+import net.minecraft.entity.LivingEntity
 import net.minecraft.entity.ai.goal.Goal
 import net.minecraft.entity.ai.goal.Goal.Flag.JUMP
 import net.minecraft.entity.ai.goal.Goal.Flag.MOVE
+import net.minecraft.util.Hand.MAIN_HAND
 import java.util.EnumSet
 
 class AIAttackLeap(
-	private val entity: EntityCreature,
+	private val entity: CreatureEntity,
 	triggerDistance: ClosedFloatingPointRange<Double>,
 	private val triggerChance: Float,
 	private val triggerCooldown: Int,
@@ -27,7 +26,7 @@ class AIAttackLeap(
 ) : Goal() {
 	private val triggerDistanceSq = square(triggerDistance.start)..square(triggerDistance.endInclusive)
 	
-	private var leapTarget: EntityLivingBase? = null
+	private var leapTarget: LivingEntity? = null
 	private var lastLeapTime = 0L
 	private var hasAttacked = false
 	
@@ -41,7 +40,7 @@ class AIAttackLeap(
 		}
 		
 		val target = entity.attackTarget ?: return false
-		val currentTime = entity.world.totalTime
+		val currentTime = entity.world.gameTime
 		
 		if (currentTime - lastLeapTime < triggerCooldown) {
 			return false
@@ -77,7 +76,7 @@ class AIAttackLeap(
 			(diff.z * strengthXZ) + (entity.motionZ * 0.1)
 		)
 		
-		lastLeapTime = entity.world.totalTime
+		lastLeapTime = entity.world.gameTime
 	}
 	
 	override fun tick() {

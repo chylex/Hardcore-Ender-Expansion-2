@@ -1,15 +1,15 @@
 package chylex.hee.game.mechanics.causatum
 
+import chylex.hee.game.Resource
+import chylex.hee.game.entity.player.PlayerCapabilityHandler
+import chylex.hee.game.entity.player.PlayerCapabilityHandler.IPlayerPersistentCapability
 import chylex.hee.game.mechanics.causatum.EnderCausatum.CausatumCapability.Provider
-import chylex.hee.system.facades.Resource
-import chylex.hee.system.forge.capability.CapabilityProvider
-import chylex.hee.system.forge.capability.PlayerCapabilityHandler
-import chylex.hee.system.forge.capability.PlayerCapabilityHandler.IPlayerPersistentCapability
-import chylex.hee.system.forge.capability.getCap
-import chylex.hee.system.forge.capability.register
-import chylex.hee.system.migration.EntityPlayer
-import chylex.hee.system.serialization.TagCompound
-import chylex.hee.system.serialization.use
+import chylex.hee.util.forge.capability.CapabilityProvider
+import chylex.hee.util.forge.capability.getCap
+import chylex.hee.util.forge.capability.register
+import chylex.hee.util.nbt.TagCompound
+import chylex.hee.util.nbt.use
+import net.minecraft.entity.player.PlayerEntity
 import net.minecraftforge.common.capabilities.Capability
 import net.minecraftforge.common.capabilities.CapabilityInject
 import net.minecraftforge.common.capabilities.CapabilityManager
@@ -21,11 +21,11 @@ object EnderCausatum {
 		PlayerCapabilityHandler.register(Handler)
 	}
 	
-	fun getStage(player: EntityPlayer): CausatumStage {
+	fun getStage(player: PlayerEntity): CausatumStage {
 		return Handler.retrieve(player).stage
 	}
 	
-	fun triggerStage(player: EntityPlayer, newStage: CausatumStage, force: Boolean = false): Boolean {
+	fun triggerStage(player: PlayerEntity, newStage: CausatumStage, force: Boolean = false): Boolean {
 		with(Handler.retrieve(player)) {
 			if (newStage > stage || force) {
 				stage = newStage
@@ -40,8 +40,8 @@ object EnderCausatum {
 	
 	private object Handler : IPlayerPersistentCapability<CausatumCapability> {
 		override val key = Resource.Custom("causatum")
-		override fun provide(player: EntityPlayer) = Provider()
-		override fun retrieve(player: EntityPlayer) = player.getCap(CAP_CAUSATUM)
+		override fun provide(player: PlayerEntity) = Provider()
+		override fun retrieve(player: PlayerEntity) = player.getCap(CAP_CAUSATUM)
 	}
 	
 	private const val STAGE_TAG = "Stage"

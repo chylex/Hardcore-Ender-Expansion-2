@@ -1,21 +1,21 @@
 package chylex.hee.init
 
 import chylex.hee.HEE
-import chylex.hee.commands.arguments.EnumArgument
-import chylex.hee.commands.arguments.ValidatedStringArgument
-import chylex.hee.commands.executes
-import chylex.hee.commands.server.CommandDebugInstability
-import chylex.hee.commands.server.CommandDebugStructure
-import chylex.hee.commands.server.CommandDebugTerritory
-import chylex.hee.commands.server.CommandDebugTestWorld
-import chylex.hee.commands.server.CommandServerCausatum
-import chylex.hee.commands.server.CommandServerHelp
-import chylex.hee.commands.server.CommandServerInfusions
-import chylex.hee.commands.server.CommandServerLootChest
-import chylex.hee.commands.server.CommandServerPortalToken
+import chylex.hee.game.command.argument.EnumArgument
+import chylex.hee.game.command.argument.ValidatedStringArgument
+import chylex.hee.game.command.server.CommandDebugInstability
+import chylex.hee.game.command.server.CommandDebugStructure
+import chylex.hee.game.command.server.CommandDebugTerritory
+import chylex.hee.game.command.server.CommandDebugTestWorld
+import chylex.hee.game.command.server.CommandServerCausatum
+import chylex.hee.game.command.server.CommandServerHelp
+import chylex.hee.game.command.server.CommandServerInfusions
+import chylex.hee.game.command.server.CommandServerLootChest
+import chylex.hee.game.command.server.CommandServerPortalToken
+import chylex.hee.game.command.util.executes
 import chylex.hee.system.Debug
-import chylex.hee.system.forge.SubscribeAllEvents
-import chylex.hee.system.forge.SubscribeEvent
+import chylex.hee.util.forge.SubscribeAllEvents
+import chylex.hee.util.forge.SubscribeEvent
 import net.minecraft.command.Commands.literal
 import net.minecraft.command.arguments.ArgumentTypes
 import net.minecraftforge.event.RegisterCommandsEvent
@@ -49,7 +49,7 @@ object ModCommands {
 	fun onServerStart(e: RegisterCommandsEvent) {
 		val baseCommand = literal(ROOT).executes(CommandServerHelp, false)
 		
-		for(command in admin + debug) {
+		for (command in admin + debug) {
 			baseCommand.then(literal(command.name).requires { it.hasPermissionLevel(command.permissionLevel) }.apply(command::register))
 		}
 		

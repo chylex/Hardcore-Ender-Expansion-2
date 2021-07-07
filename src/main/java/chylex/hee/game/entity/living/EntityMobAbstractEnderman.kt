@@ -1,23 +1,23 @@
 package chylex.hee.game.entity.living
 
 import chylex.hee.game.entity.CustomCreatureType
-import chylex.hee.game.entity.EntityData
-import chylex.hee.game.entity.getAttributeInstance
-import chylex.hee.game.entity.tryRemoveModifier
-import chylex.hee.game.mechanics.damage.Damage
-import chylex.hee.game.mechanics.damage.IDamageProcessor.Companion.ALL_PROTECTIONS_WITH_SHIELD
-import chylex.hee.game.mechanics.damage.IDamageProcessor.Companion.DIFFICULTY_SCALING
-import chylex.hee.game.mechanics.damage.IDamageProcessor.Companion.NUDITY_DANGER
-import chylex.hee.game.mechanics.damage.IDamageProcessor.Companion.PEACEFUL_EXCLUSION
-import chylex.hee.system.migration.EntityArrow
-import chylex.hee.system.migration.EntityEnderman
-import chylex.hee.system.migration.EntityLivingBase
+import chylex.hee.game.entity.damage.Damage
+import chylex.hee.game.entity.damage.IDamageProcessor.Companion.ALL_PROTECTIONS_WITH_SHIELD
+import chylex.hee.game.entity.damage.IDamageProcessor.Companion.DIFFICULTY_SCALING
+import chylex.hee.game.entity.damage.IDamageProcessor.Companion.NUDITY_DANGER
+import chylex.hee.game.entity.damage.IDamageProcessor.Companion.PEACEFUL_EXCLUSION
+import chylex.hee.game.entity.util.EntityData
+import chylex.hee.game.entity.util.getAttributeInstance
+import chylex.hee.game.entity.util.tryRemoveModifier
 import net.minecraft.entity.CreatureAttribute
 import net.minecraft.entity.Entity
 import net.minecraft.entity.EntitySize
 import net.minecraft.entity.EntityType
+import net.minecraft.entity.LivingEntity
 import net.minecraft.entity.Pose
 import net.minecraft.entity.ai.attributes.Attributes.MOVEMENT_SPEED
+import net.minecraft.entity.monster.EndermanEntity
+import net.minecraft.entity.projectile.AbstractArrowEntity
 import net.minecraft.network.IPacket
 import net.minecraft.network.datasync.DataSerializers
 import net.minecraft.util.DamageSource
@@ -28,7 +28,7 @@ import net.minecraft.util.text.ITextComponent
 import net.minecraft.world.World
 import net.minecraftforge.fml.network.NetworkHooks
 
-abstract class EntityMobAbstractEnderman(type: EntityType<out EntityMobAbstractEnderman>, world: World) : EntityEnderman(type, world) {
+abstract class EntityMobAbstractEnderman(type: EntityType<out EntityMobAbstractEnderman>, world: World) : EndermanEntity(type, world) {
 	private companion object {
 		private val DATA_SHAKING = EntityData.register<EntityMobAbstractEnderman, Boolean>(DataSerializers.BOOLEAN)
 		private val DAMAGE_GENERAL = Damage(DIFFICULTY_SCALING, PEACEFUL_EXCLUSION, *ALL_PROTECTIONS_WITH_SHIELD, NUDITY_DANGER)
@@ -52,7 +52,7 @@ abstract class EntityMobAbstractEnderman(type: EntityType<out EntityMobAbstractE
 	
 	override fun updateAITasks() {} // blocks vanilla water damage & sunlight behavior
 	
-	override fun setAttackTarget(newTarget: EntityLivingBase?) {
+	override fun setAttackTarget(newTarget: LivingEntity?) {
 		if (attackTarget === newTarget) {
 			return
 		}
@@ -71,7 +71,7 @@ abstract class EntityMobAbstractEnderman(type: EntityType<out EntityMobAbstractE
 			val result = super.attackEntityFrom(FakeIndirectDamageSource(source), amount)
 			
 			if (result) {
-				(source.immediateSource as? EntityArrow)?.remove() // of course vanilla hardcodes not destroying arrows with Endermen...
+				(source.immediateSource as? AbstractArrowEntity)?.remove() // of course vanilla hardcodes not destroying arrows with Endermen...
 			}
 			
 			return result
@@ -118,6 +118,6 @@ abstract class EntityMobAbstractEnderman(type: EntityType<out EntityMobAbstractE
 		override fun isDamageAbsolute() = source.isDamageAbsolute
 		override fun canHarmInCreative() = source.canHarmInCreative()
 		
-		override fun getDeathMessage(victim: EntityLivingBase): ITextComponent? = source.getDeathMessage(victim)
+		override fun getDeathMessage(victim: LivingEntity): ITextComponent? = source.getDeathMessage(victim)
 	}
 }

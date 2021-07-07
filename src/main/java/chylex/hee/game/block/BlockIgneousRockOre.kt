@@ -1,27 +1,27 @@
 package chylex.hee.game.block
 
 import chylex.hee.game.block.properties.BlockBuilder
-import chylex.hee.game.inventory.doDamage
-import chylex.hee.game.mechanics.damage.Damage
-import chylex.hee.game.mechanics.damage.IDamageDealer.Companion.TITLE_IN_FIRE
-import chylex.hee.game.mechanics.damage.IDamageProcessor.Companion.FIRE_TYPE
-import chylex.hee.game.mechanics.damage.IDamageProcessor.Companion.PEACEFUL_EXCLUSION
+import chylex.hee.game.entity.damage.Damage
+import chylex.hee.game.entity.damage.IDamageDealer.Companion.TITLE_IN_FIRE
+import chylex.hee.game.entity.damage.IDamageProcessor.Companion.FIRE_TYPE
+import chylex.hee.game.entity.damage.IDamageProcessor.Companion.PEACEFUL_EXCLUSION
+import chylex.hee.game.item.util.doDamage
 import chylex.hee.game.particle.spawner.ParticleSpawnerVanilla
 import chylex.hee.game.particle.spawner.properties.IOffset.InBox
 import chylex.hee.game.particle.spawner.properties.IShape.Point
-import chylex.hee.system.forge.Side
-import chylex.hee.system.forge.Sided
-import chylex.hee.system.forge.SubscribeEvent
-import chylex.hee.system.migration.EntityPlayer
-import chylex.hee.system.migration.Hand.MAIN_HAND
-import chylex.hee.system.migration.ItemTool
+import chylex.hee.util.forge.Side
+import chylex.hee.util.forge.Sided
+import chylex.hee.util.forge.SubscribeEvent
 import net.minecraft.block.BlockState
 import net.minecraft.enchantment.EnchantmentHelper
 import net.minecraft.enchantment.Enchantments
+import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.fluid.FluidState
 import net.minecraft.item.ItemStack
+import net.minecraft.item.ToolItem
 import net.minecraft.particles.ParticleTypes.LAVA
 import net.minecraft.tileentity.TileEntity
+import net.minecraft.util.Hand.MAIN_HAND
 import net.minecraft.util.math.BlockPos
 import net.minecraft.world.IBlockReader
 import net.minecraft.world.IWorldReader
@@ -40,7 +40,7 @@ class BlockIgneousRockOre(builder: BlockBuilder) : BlockSimple(builder) {
 		)
 		
 		private fun getToolHarvestLevel(stack: ItemStack): Int? {
-			return (stack.item as? ItemTool)?.tier?.harvestLevel
+			return (stack.item as? ToolItem)?.tier?.harvestLevel
 		}
 	}
 	
@@ -54,7 +54,7 @@ class BlockIgneousRockOre(builder: BlockBuilder) : BlockSimple(builder) {
 	
 	// Custom harvesting handling
 	
-	override fun harvestBlock(world: World, player: EntityPlayer, pos: BlockPos, state: BlockState, tile: TileEntity?, stack: ItemStack) {
+	override fun harvestBlock(world: World, player: PlayerEntity, pos: BlockPos, state: BlockState, tile: TileEntity?, stack: ItemStack) {
 		val heldItem = player.getHeldItem(MAIN_HAND)
 		val tierDifference = getToolHarvestLevel(heldItem)?.let { super.getHarvestLevel(state) - it } ?: return
 		
@@ -66,7 +66,7 @@ class BlockIgneousRockOre(builder: BlockBuilder) : BlockSimple(builder) {
 		}
 	}
 	
-	override fun removedByPlayer(state: BlockState, world: World, pos: BlockPos, player: EntityPlayer, willHarvest: Boolean, fluid: FluidState): Boolean {
+	override fun removedByPlayer(state: BlockState, world: World, pos: BlockPos, player: PlayerEntity, willHarvest: Boolean, fluid: FluidState): Boolean {
 		val heldItem = player.getHeldItem(MAIN_HAND)
 		
 		if ((getToolHarvestLevel(heldItem) ?: 0) < super.getHarvestLevel(state) || EnchantmentHelper.getEnchantmentLevel(Enchantments.SILK_TOUCH, player.getHeldItem(MAIN_HAND)) == 0) {
@@ -88,7 +88,7 @@ class BlockIgneousRockOre(builder: BlockBuilder) : BlockSimple(builder) {
 	}
 	
 	override fun getHarvestLevel(state: BlockState) = 0 // use super.getHarvestLevel for the real value
-	override fun canHarvestBlock(state: BlockState, world: IBlockReader, pos: BlockPos, player: EntityPlayer): Boolean = true
+	override fun canHarvestBlock(state: BlockState, world: IBlockReader, pos: BlockPos, player: PlayerEntity): Boolean = true
 	
 	// Client side
 	

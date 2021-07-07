@@ -3,11 +3,11 @@ package chylex.hee.init
 import chylex.hee.HEE
 import chylex.hee.client.render.block.RenderTileDarkChest
 import chylex.hee.client.render.block.RenderTileLootChest
+import chylex.hee.game.Resource
 import chylex.hee.game.container.slot.SlotTrinketItem
-import chylex.hee.system.facades.Resource
-import chylex.hee.system.forge.Side
-import chylex.hee.system.forge.SubscribeAllEvents
-import chylex.hee.system.forge.SubscribeEvent
+import chylex.hee.util.forge.Side
+import chylex.hee.util.forge.SubscribeAllEvents
+import chylex.hee.util.forge.SubscribeEvent
 import net.minecraft.util.ResourceLocation
 import net.minecraftforge.client.event.TextureStitchEvent
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber.Bus.MOD

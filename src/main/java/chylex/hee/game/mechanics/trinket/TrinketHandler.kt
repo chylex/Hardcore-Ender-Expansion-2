@@ -1,24 +1,24 @@
 package chylex.hee.game.mechanics.trinket
 
+import chylex.hee.game.Resource
 import chylex.hee.game.container.slot.SlotTrinketItemInventory
+import chylex.hee.game.entity.player.PlayerCapabilityHandler
+import chylex.hee.game.entity.player.PlayerCapabilityHandler.IPlayerCapability
 import chylex.hee.game.mechanics.trinket.TrinketHandler.TrinketCapability.Provider
 import chylex.hee.network.client.PacketClientTrinketBreak
-import chylex.hee.system.facades.Resource
-import chylex.hee.system.facades.Stats
-import chylex.hee.system.forge.EventPriority
-import chylex.hee.system.forge.SubscribeEvent
-import chylex.hee.system.forge.capability.CapabilityProvider
-import chylex.hee.system.forge.capability.PlayerCapabilityHandler
-import chylex.hee.system.forge.capability.PlayerCapabilityHandler.IPlayerCapability
-import chylex.hee.system.forge.capability.getCapOrNull
-import chylex.hee.system.forge.capability.register
-import chylex.hee.system.migration.EntityPlayer
-import chylex.hee.system.serialization.TagCompound
-import chylex.hee.system.serialization.readStack
-import chylex.hee.system.serialization.use
-import chylex.hee.system.serialization.writeStack
+import chylex.hee.util.forge.EventPriority
+import chylex.hee.util.forge.SubscribeEvent
+import chylex.hee.util.forge.capability.CapabilityProvider
+import chylex.hee.util.forge.capability.getCapOrNull
+import chylex.hee.util.forge.capability.register
+import chylex.hee.util.nbt.TagCompound
+import chylex.hee.util.nbt.readStack
+import chylex.hee.util.nbt.use
+import chylex.hee.util.nbt.writeStack
+import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.item.Item
 import net.minecraft.item.ItemStack
+import net.minecraft.stats.Stats
 import net.minecraft.world.GameRules.KEEP_INVENTORY
 import net.minecraftforge.common.MinecraftForge
 import net.minecraftforge.common.capabilities.Capability
@@ -36,7 +36,7 @@ object TrinketHandler {
 		MinecraftForge.EVENT_BUS.register(this)
 	}
 	
-	fun get(player: EntityPlayer): ITrinketHandler {
+	fun get(player: PlayerEntity): ITrinketHandler {
 		val currentItem = getTrinketSlotItem(player)
 		val handlerProvider = currentItem.item as? ITrinketHandlerProvider
 		
@@ -46,22 +46,22 @@ object TrinketHandler {
 			InternalHandlerFor(player)
 	}
 	
-	fun getTrinketSlotItem(player: EntityPlayer): ItemStack {
+	fun getTrinketSlotItem(player: PlayerEntity): ItemStack {
 		return player.getCapOrNull(CAP_TRINKET_SLOT)?.item ?: ItemStack.EMPTY
 	}
 	
-	fun isInTrinketSlot(player: EntityPlayer, stack: ItemStack): Boolean {
+	fun isInTrinketSlot(player: PlayerEntity, stack: ItemStack): Boolean {
 		return getTrinketSlotItem(player) === stack || get(player).isInTrinketSlot(stack)
 	}
 	
-	fun playTrinketBreakFX(player: EntityPlayer, item: Item) {
-		player.addStat(Stats.useItem(item))
+	fun playTrinketBreakFX(player: PlayerEntity, item: Item) {
+		player.addStat(Stats.ITEM_USED[item])
 		PacketClientTrinketBreak(player, item).sendToAllAround(player, 32.0)
 	}
 	
 	// Default handler implementation
 	
-	private class InternalHandlerFor(private val player: EntityPlayer) : ITrinketHandler {
+	private class InternalHandlerFor(private val player: PlayerEntity) : ITrinketHandler {
 		override fun isInTrinketSlot(stack: ItemStack): Boolean {
 			return getTrinketSlotItem(player) === stack
 		}
@@ -91,14 +91,14 @@ object TrinketHandler {
 	
 	private object Handler : IPlayerCapability {
 		override val key = Resource.Custom("trinket")
-		override fun provide(player: EntityPlayer) = Provider()
+		override fun provide(player: PlayerEntity) = Provider()
 	}
 	
 	@JvmStatic
 	@CapabilityInject(TrinketCapability::class)
 	private var CAP_TRINKET_SLOT: Capability<TrinketCapability>? = null
 	
-	private fun setTrinketSlotItem(player: EntityPlayer, stack: ItemStack) {
+	private fun setTrinketSlotItem(player: PlayerEntity, stack: ItemStack) {
 		player.getCapOrNull(CAP_TRINKET_SLOT)?.item = stack
 	}
 	
@@ -106,7 +106,7 @@ object TrinketHandler {
 	fun onEntityJoinWorld(e: EntityJoinWorldEvent) {
 		val entity = e.entity
 		
-		if (entity is EntityPlayer) {
+		if (entity is PlayerEntity) {
 			val handler = entity.getCapOrNull(CAP_TRINKET_SLOT) ?: return
 			
 			with(entity.container) {
@@ -120,7 +120,7 @@ object TrinketHandler {
 	
 	@SubscribeEvent(EventPriority.HIGHEST)
 	fun onPlayerDrops(e: LivingDropsEvent) {
-		val player = e.entity as? EntityPlayer
+		val player = e.entity as? PlayerEntity
 		
 		if (player == null) {
 			return

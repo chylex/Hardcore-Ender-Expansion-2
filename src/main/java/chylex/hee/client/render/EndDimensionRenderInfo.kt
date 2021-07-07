@@ -1,9 +1,9 @@
 package chylex.hee.client.render
 
-import chylex.hee.system.facades.Resource
-import chylex.hee.system.forge.Side
-import chylex.hee.system.forge.Sided
-import chylex.hee.system.math.Vec3
+import chylex.hee.game.Resource
+import chylex.hee.util.forge.Side
+import chylex.hee.util.forge.Sided
+import chylex.hee.util.math.Vec3
 import net.minecraft.client.world.DimensionRenderInfo
 import net.minecraft.util.math.vector.Vector3d
 import net.minecraftforge.client.ICloudRenderHandler
@@ -17,7 +17,7 @@ object EndDimensionRenderInfo : DimensionRenderInfo.End() {
 		field_239208_a_[Resource.Custom("end")] = this
 	}
 	
-	private val cloudRenderHandler = ICloudRenderHandler { _, _, _, _, _, _,_, _ -> }
+	private val cloudRenderHandler = ICloudRenderHandler { _, _, _, _, _, _, _, _ -> }
 	private val weatherRenderHandler = IWeatherRenderHandler { _, _, _, _, _, _, _, _ -> }
 	private val weatherParticleRenderHandler = IWeatherParticleRenderHandler { _, _, _, _ -> }
 	

@@ -9,13 +9,14 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Redirect;
 
 @Mixin(PotionItem.class)
-public abstract class HookPotionCreativeMenu{
+@SuppressWarnings("MethodMayBeStatic")
+public abstract class HookPotionCreativeMenu {
 	@Redirect(method = "fillItemGroup", at = @At(value = "INVOKE", target = "Lnet/minecraft/util/NonNullList;add(Ljava/lang/Object;)Z"))
-	private boolean onItemsListAdd(final NonNullList<ItemStack> items, final Object stack){
-		if (ModPotions.excludeFromCreativeMenu(PotionUtils.getPotionFromItem((ItemStack)stack))){
+	private boolean onItemsListAdd(final NonNullList<ItemStack> items, final Object stack) {
+		if (ModPotions.excludeFromCreativeMenu(PotionUtils.getPotionFromItem((ItemStack)stack))) {
 			return false;
 		}
-		else{
+		else {
 			return items.add((ItemStack)stack);
 		}
 	}

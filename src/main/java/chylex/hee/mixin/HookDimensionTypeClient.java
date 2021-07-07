@@ -8,6 +8,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(DimensionType.class)
+@SuppressWarnings("MethodMayBeStatic")
 public abstract class HookDimensionTypeClient {
 	@Inject(method = "getCelestrialAngleByTime", at = @At("HEAD"), cancellable = true)
 	private void replaceCelestialAngle(final long dayTime, final CallbackInfoReturnable<Float> ci) {

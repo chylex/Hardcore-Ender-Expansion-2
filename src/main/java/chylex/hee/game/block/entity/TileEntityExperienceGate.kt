@@ -2,55 +2,54 @@ package chylex.hee.game.block.entity
 
 import chylex.hee.game.block.entity.base.TileEntityBase
 import chylex.hee.game.block.entity.base.TileEntityBase.Context.NETWORK
+import chylex.hee.game.entity.damage.Damage
+import chylex.hee.game.entity.damage.IDamageProcessor.Companion.IGNORE_INVINCIBILITY
+import chylex.hee.game.entity.damage.IDamageProcessor.Companion.MAGIC_TYPE
+import chylex.hee.game.entity.damage.IDamageProcessor.Companion.PEACEFUL_KNOCKBACK
 import chylex.hee.game.entity.item.EntityItemNoBob
 import chylex.hee.game.entity.item.EntityTokenHolder
-import chylex.hee.game.entity.posVec
-import chylex.hee.game.entity.selectEntities
-import chylex.hee.game.entity.selectExistingEntities
-import chylex.hee.game.entity.selectVulnerableEntities
-import chylex.hee.game.inventory.size
-import chylex.hee.game.mechanics.damage.Damage
-import chylex.hee.game.mechanics.damage.IDamageProcessor.Companion.IGNORE_INVINCIBILITY
-import chylex.hee.game.mechanics.damage.IDamageProcessor.Companion.MAGIC_TYPE
-import chylex.hee.game.mechanics.damage.IDamageProcessor.Companion.PEACEFUL_KNOCKBACK
+import chylex.hee.game.entity.util.posVec
+import chylex.hee.game.entity.util.selectEntities
+import chylex.hee.game.entity.util.selectExistingEntities
+import chylex.hee.game.entity.util.selectVulnerableEntities
+import chylex.hee.game.fx.FxEntityData
+import chylex.hee.game.fx.FxEntityHandler
+import chylex.hee.game.fx.util.playClient
+import chylex.hee.game.fx.util.playServer
+import chylex.hee.game.item.util.size
 import chylex.hee.game.particle.ParticleExperienceOrbFloating
 import chylex.hee.game.particle.ParticleSmokeCustom
 import chylex.hee.game.particle.spawner.ParticleSpawnerCustom
 import chylex.hee.game.particle.spawner.properties.IOffset.Constant
 import chylex.hee.game.particle.spawner.properties.IOffset.InBox
 import chylex.hee.game.particle.spawner.properties.IShape.Point
-import chylex.hee.game.world.FLAG_SYNC_CLIENT
-import chylex.hee.game.world.component1
-import chylex.hee.game.world.component2
-import chylex.hee.game.world.component3
-import chylex.hee.game.world.playClient
-import chylex.hee.game.world.playServer
-import chylex.hee.game.world.totalTime
+import chylex.hee.game.world.util.FLAG_SYNC_CLIENT
 import chylex.hee.init.ModItems
 import chylex.hee.init.ModSounds
 import chylex.hee.init.ModTileEntities
 import chylex.hee.network.client.PacketClientFX
 import chylex.hee.network.client.PacketClientUpdateExperience
-import chylex.hee.network.fx.FxEntityData
-import chylex.hee.network.fx.FxEntityHandler
-import chylex.hee.system.color.IntColor.Companion.RGB
-import chylex.hee.system.forge.Side
-import chylex.hee.system.forge.Sided
-import chylex.hee.system.math.Vec3
-import chylex.hee.system.math.addY
-import chylex.hee.system.math.floorToInt
-import chylex.hee.system.migration.EntityItem
-import chylex.hee.system.migration.EntityPlayer
-import chylex.hee.system.migration.EntityXPOrb
-import chylex.hee.system.migration.Facing.UP
 import chylex.hee.system.random.nextFloat
 import chylex.hee.system.random.nextInt
-import chylex.hee.system.serialization.TagCompound
-import chylex.hee.system.serialization.use
+import chylex.hee.util.color.RGB
+import chylex.hee.util.forge.Side
+import chylex.hee.util.forge.Sided
+import chylex.hee.util.math.Vec3
+import chylex.hee.util.math.addY
+import chylex.hee.util.math.component1
+import chylex.hee.util.math.component2
+import chylex.hee.util.math.component3
+import chylex.hee.util.math.floorToInt
+import chylex.hee.util.nbt.TagCompound
+import chylex.hee.util.nbt.use
 import net.minecraft.entity.Entity
+import net.minecraft.entity.item.ExperienceOrbEntity
+import net.minecraft.entity.item.ItemEntity
+import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.item.Items
 import net.minecraft.tileentity.ITickableTileEntity
 import net.minecraft.tileentity.TileEntityType
+import net.minecraft.util.Direction.UP
 import net.minecraft.util.SoundCategory
 import net.minecraft.util.math.AxisAlignedBB
 import java.util.Random
@@ -100,7 +99,7 @@ class TileEntityExperienceGate(type: TileEntityType<TileEntityExperienceGate>) :
 		
 		val FX_CONSUME = object : FxEntityHandler() {
 			override fun handle(entity: Entity, rand: Random) {
-				val offset = if (entity is EntityItem && entity !is EntityItemNoBob) {
+				val offset = if (entity is ItemEntity && entity !is EntityItemNoBob) {
 					0.35 + (sin((entity.age + 1.0) / 10.0 + entity.hoverStart) * 0.1) // UPDATE 1.16 (taken from ItemRenderer)
 				}
 				else {
@@ -114,13 +113,13 @@ class TileEntityExperienceGate(type: TileEntityType<TileEntityExperienceGate>) :
 			}
 		}
 		
-		private fun tryDrainXp(player: EntityPlayer, amount: Float): Boolean = with(player) {
+		private fun tryDrainXp(player: PlayerEntity, amount: Float): Boolean = with(player) {
 			val xpDrainFloat = amount / xpBarCap()
 			
 			if (experienceLevel > 0 || experience >= xpDrainFloat) {
 				experience -= xpDrainFloat
 				
-				while(experience < 0F) {
+				while (experience < 0F) {
 					val mp = experience * xpBarCap()
 					val level = experienceLevel
 					
@@ -143,7 +142,7 @@ class TileEntityExperienceGate(type: TileEntityType<TileEntityExperienceGate>) :
 	// Instance
 	
 	private var experience by Notifying(0F, FLAG_SYNC_CLIENT or FLAG_MARK_DIRTY)
-	private val playerExtraction = WeakHashMap<EntityPlayer, PlayerExtractionData>()
+	private val playerExtraction = WeakHashMap<PlayerEntity, PlayerExtractionData>()
 	private var clientLoaded = false
 	
 	private val entityDetectionArea
@@ -168,7 +167,7 @@ class TileEntityExperienceGate(type: TileEntityType<TileEntityExperienceGate>) :
 				--particlePauseTimer
 			}
 			else if (experience < TARGET_XP) {
-				if (wrld.selectVulnerableEntities.inBox<EntityPlayer>(entityDetectionArea).any()) {
+				if (wrld.selectVulnerableEntities.inBox<PlayerEntity>(entityDetectionArea).any()) {
 					PARTICLE_TICK_SLOW.spawn(Point(pos, rand.nextInt(1, 2)), rand)
 				}
 				else {
@@ -199,8 +198,8 @@ class TileEntityExperienceGate(type: TileEntityType<TileEntityExperienceGate>) :
 				}
 			}
 		}
-		else if (wrld.totalTime % 4L == 0L) {
-			for(orb in wrld.selectEntities.inBox<EntityXPOrb>(entityDetectionArea)) { // makes throwing xp bottles into the gate a bit nicer
+		else if (wrld.gameTime % 4L == 0L) {
+			for (orb in wrld.selectEntities.inBox<ExperienceOrbEntity>(entityDetectionArea)) { // makes throwing xp bottles into the gate a bit nicer
 				if (orb.ticksExisted > 6) {
 					onCollision(orb)
 				}
@@ -210,7 +209,7 @@ class TileEntityExperienceGate(type: TileEntityType<TileEntityExperienceGate>) :
 	
 	// Collision
 	
-	private fun calculateXpLimit(player: EntityPlayer): Float {
+	private fun calculateXpLimit(player: PlayerEntity): Float {
 		val xpBarCap = player.xpBarCap()
 		val xpDrainLimit = minOf(10F, TARGET_XP - experience, 0.2F * xpBarCap)
 		
@@ -220,12 +219,12 @@ class TileEntityExperienceGate(type: TileEntityType<TileEntityExperienceGate>) :
 			xpDrainLimit
 	}
 	
-	fun onCollision(player: EntityPlayer) {
+	fun onCollision(player: PlayerEntity) {
 		if (!canStartDraining || player.isCreative || player.isSpectator) {
 			return
 		}
 		
-		val currentTime = wrld.totalTime
+		val currentTime = wrld.gameTime
 		
 		val extractionData = playerExtraction[player]?.takeIf {
 			currentTime - it.lastTriggerTime < 10L
@@ -251,7 +250,7 @@ class TileEntityExperienceGate(type: TileEntityType<TileEntityExperienceGate>) :
 		}
 	}
 	
-	fun onCollision(entity: EntityItem) {
+	fun onCollision(entity: ItemEntity) {
 		if (!canStartDraining) {
 			return
 		}
@@ -274,7 +273,7 @@ class TileEntityExperienceGate(type: TileEntityType<TileEntityExperienceGate>) :
 		entity.remove()
 	}
 	
-	fun onCollision(orb: EntityXPOrb) {
+	fun onCollision(orb: ExperienceOrbEntity) {
 		if (!canStartDraining) {
 			return
 		}

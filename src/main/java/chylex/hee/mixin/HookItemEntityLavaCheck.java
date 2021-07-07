@@ -11,7 +11,7 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.Slice;
 
 @Mixin(ItemEntity.class)
-public abstract class HookItemEntityLavaCheck{
+public abstract class HookItemEntityLavaCheck {
 	@Redirect(
 		method = "tick",
 		at = @At(value = "INVOKE", target = "Lnet/minecraft/fluid/FluidState;isTagged(Lnet/minecraft/tags/ITag;)Z"),
@@ -20,10 +20,10 @@ public abstract class HookItemEntityLavaCheck{
 			to = @At(value = "FIELD", target = "Lnet/minecraft/util/SoundEvents;ENTITY_GENERIC_BURN:Lnet/minecraft/util/SoundEvent;")
 		)
 	)
-	public boolean cancelLavaCheck(final FluidState state, final ITag<Fluid> tag){
+	public boolean cancelLavaCheck(final FluidState state, final ITag<Fluid> tag) {
 		final ItemEntity item = (ItemEntity)(Object)this;
 		
-		if (item instanceof EntityItemIgneousRock && tag == FluidTags.LAVA){
+		if (item instanceof EntityItemIgneousRock && tag == FluidTags.LAVA) {
 			return false;
 		}
 		

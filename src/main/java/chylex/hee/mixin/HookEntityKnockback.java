@@ -9,6 +9,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Redirect;
 
 @Mixin(LivingEntity.class)
+@SuppressWarnings("MethodMayBeStatic")
 public abstract class HookEntityKnockback {
 	@Redirect(method = "attackEntityFrom", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/LivingEntity;applyKnockback(FDD)V"), require = 1)
 	private void replaceKnockbackStrength(final LivingEntity target, final float strength, final double ratioX, final double ratioZ, final DamageSource source, final float amount) {

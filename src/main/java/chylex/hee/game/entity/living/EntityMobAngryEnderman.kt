@@ -1,5 +1,6 @@
 package chylex.hee.game.entity.living
 
+import chylex.hee.game.Resource
 import chylex.hee.game.entity.living.ai.AttackMelee
 import chylex.hee.game.entity.living.ai.Swim
 import chylex.hee.game.entity.living.ai.TargetAttacker
@@ -7,21 +8,20 @@ import chylex.hee.game.entity.living.ai.TargetNearby
 import chylex.hee.game.entity.living.ai.WanderLand
 import chylex.hee.game.entity.living.behavior.EndermanTeleportHandler
 import chylex.hee.game.entity.living.behavior.EndermanWaterHandler
-import chylex.hee.game.entity.lookPosVec
-import chylex.hee.game.entity.posVec
-import chylex.hee.game.entity.selectVulnerableEntities
+import chylex.hee.game.entity.util.lookPosVec
+import chylex.hee.game.entity.util.posVec
+import chylex.hee.game.entity.util.selectVulnerableEntities
 import chylex.hee.init.ModEntities
-import chylex.hee.system.facades.Resource
-import chylex.hee.system.math.Vec
-import chylex.hee.system.math.offsetTowards
-import chylex.hee.system.math.square
-import chylex.hee.system.migration.EntityPlayer
-import chylex.hee.system.serialization.TagCompound
-import chylex.hee.system.serialization.heeTag
-import chylex.hee.system.serialization.use
+import chylex.hee.system.heeTag
+import chylex.hee.util.math.Vec
+import chylex.hee.util.math.lerp
+import chylex.hee.util.math.square
+import chylex.hee.util.nbt.TagCompound
+import chylex.hee.util.nbt.use
 import net.minecraft.entity.EntityPredicate
 import net.minecraft.entity.EntityType
 import net.minecraft.entity.ai.attributes.Attributes.FOLLOW_RANGE
+import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.util.ResourceLocation
 import net.minecraft.util.math.AxisAlignedBB
 import net.minecraft.util.math.RayTraceContext
@@ -62,7 +62,7 @@ class EntityMobAngryEnderman(type: EntityType<EntityMobAngryEnderman>, world: Wo
 		goalSelector.addGoal(3, WanderLand(this, movementSpeed = 0.8, chancePerTick = 90))
 		
 		targetSelector.addGoal(1, TargetAttacker(this, callReinforcements = false))
-		targetSelector.addGoal(2, TargetNearby<EntityPlayer>(this, chancePerTick = 1, checkSight = false, easilyReachableOnly = false) { getDistanceSq(it) < AGGRO_DISTANCE_SQ })
+		targetSelector.addGoal(2, TargetNearby<PlayerEntity>(this, chancePerTick = 1, checkSight = false, easilyReachableOnly = false) { getDistanceSq(it) < AGGRO_DISTANCE_SQ })
 	}
 	
 	override fun updateAITasks() {
@@ -82,7 +82,7 @@ class EntityMobAngryEnderman(type: EntityType<EntityMobAngryEnderman>, world: Wo
 				
 				val alternativeTarget = world
 					.selectVulnerableEntities
-					.inRange<EntityPlayer>(posVec, AGGRO_DISTANCE.toDouble())
+					.inRange<PlayerEntity>(posVec, AGGRO_DISTANCE.toDouble())
 					.filter { predicate.canTarget(this, it) }
 					.minByOrNull(::getDistanceSq)
 				
@@ -102,7 +102,7 @@ class EntityMobAngryEnderman(type: EntityType<EntityMobAngryEnderman>, world: Wo
 		}
 		
 		val currentTarget = attackTarget ?: return false
-		val teleportPos = Vec(offsetTowards(aabb.minX, aabb.maxX, 0.5), aabb.minY + eyeHeight.toDouble(), offsetTowards(aabb.minZ, aabb.maxZ, 0.5))
+		val teleportPos = Vec(lerp(aabb.minX, aabb.maxX, 0.5), aabb.minY + eyeHeight.toDouble(), lerp(aabb.minZ, aabb.maxZ, 0.5))
 		
 		return world.rayTraceBlocks(RayTraceContext(teleportPos, currentTarget.lookPosVec, BlockMode.COLLIDER, FluidMode.NONE, this)).type == Type.MISS
 	}

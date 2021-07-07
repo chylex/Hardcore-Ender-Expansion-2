@@ -1,13 +1,13 @@
 package chylex.hee.game.entity.living.ai
 
-import chylex.hee.system.migration.EntityLiving
+import net.minecraft.entity.MobEntity
 import net.minecraft.entity.ai.goal.Goal.Flag.JUMP
 import net.minecraft.entity.ai.goal.Goal.Flag.LOOK
 import net.minecraft.entity.ai.goal.Goal.Flag.MOVE
 import net.minecraft.entity.ai.goal.LookRandomlyGoal
 import java.util.EnumSet
 
-class AIWatchIdleJumping(private val entity: EntityLiving, private val chancePerTick: Float = 0.02F, private val delayTicks: Int) : LookRandomlyGoal(entity) {
+class AIWatchIdleJumping(private val entity: MobEntity, private val chancePerTick: Float = 0.02F, private val delayTicks: Int) : LookRandomlyGoal(entity) {
 	private var delayTicksRemaining = 0
 	
 	init {

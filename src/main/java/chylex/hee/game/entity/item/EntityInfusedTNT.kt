@@ -1,7 +1,8 @@
 package chylex.hee.game.entity.item
 
+import chylex.hee.game.Environment
 import chylex.hee.game.block.properties.BlockBuilder.Companion.INDESTRUCTIBLE_HARDNESS
-import chylex.hee.game.entity.motionY
+import chylex.hee.game.entity.util.motionY
 import chylex.hee.game.item.ItemFlintAndInfernium
 import chylex.hee.game.item.infusion.Infusion.FIRE
 import chylex.hee.game.item.infusion.Infusion.HARMLESS
@@ -10,32 +11,31 @@ import chylex.hee.game.item.infusion.Infusion.PHASING
 import chylex.hee.game.item.infusion.Infusion.POWER
 import chylex.hee.game.item.infusion.InfusionList
 import chylex.hee.game.item.infusion.InfusionTag
-import chylex.hee.game.mechanics.explosion.ExplosionBuilder
 import chylex.hee.game.particle.spawner.ParticleSpawnerVanilla
 import chylex.hee.game.particle.spawner.properties.IShape.Point
-import chylex.hee.game.world.allInCenteredSphereMutable
-import chylex.hee.game.world.center
-import chylex.hee.game.world.getMaterial
-import chylex.hee.game.world.getState
+import chylex.hee.game.world.explosion.ExplosionBuilder
+import chylex.hee.game.world.util.allInCenteredSphereMutable
+import chylex.hee.game.world.util.getMaterial
+import chylex.hee.game.world.util.getState
 import chylex.hee.init.ModEntities
-import chylex.hee.proxy.Environment
-import chylex.hee.system.math.Vec
-import chylex.hee.system.math.remapRange
-import chylex.hee.system.migration.EntityItem
-import chylex.hee.system.migration.EntityLivingBase
-import chylex.hee.system.migration.EntityTNTPrimed
+import chylex.hee.system.heeTag
 import chylex.hee.system.random.nextFloat
 import chylex.hee.system.random.nextItem
 import chylex.hee.system.random.nextRounded
-import chylex.hee.system.serialization.TagCompound
-import chylex.hee.system.serialization.heeTag
-import chylex.hee.system.serialization.use
+import chylex.hee.util.math.Vec
+import chylex.hee.util.math.center
+import chylex.hee.util.math.remapRange
+import chylex.hee.util.nbt.TagCompound
+import chylex.hee.util.nbt.use
 import net.minecraft.block.BlockState
 import net.minecraft.block.Blocks
 import net.minecraft.block.material.Material
 import net.minecraft.entity.EntityType
+import net.minecraft.entity.LivingEntity
 import net.minecraft.entity.MoverType
 import net.minecraft.entity.MoverType.SELF
+import net.minecraft.entity.item.ItemEntity
+import net.minecraft.entity.item.TNTEntity
 import net.minecraft.inventory.Inventory
 import net.minecraft.item.ItemStack
 import net.minecraft.item.Items
@@ -59,7 +59,7 @@ import kotlin.math.PI
 import kotlin.math.cos
 import kotlin.math.sin
 
-class EntityInfusedTNT : EntityTNTPrimed {
+class EntityInfusedTNT : TNTEntity {
 	private companion object {
 		private const val WATER_CHECK_RADIUS = 4
 		private const val PHASING_INSTANT_FUSE_TICKS = 3
@@ -71,11 +71,11 @@ class EntityInfusedTNT : EntityTNTPrimed {
 		
 		// EntityItem construction
 		
-		private val constructRawItem: (World, Vector3d, ItemStack) -> EntityItem = { world, pos, stack ->
-			EntityItem(world, pos.x, pos.y, pos.z, stack)
+		private val constructRawItem: (World, Vector3d, ItemStack) -> ItemEntity = { world, pos, stack ->
+			ItemEntity(world, pos.x, pos.y, pos.z, stack)
 		}
 		
-		private val constructCookedItem: (World, Vector3d, ItemStack) -> EntityItem = { world, pos, stack ->
+		private val constructCookedItem: (World, Vector3d, ItemStack) -> ItemEntity = { world, pos, stack ->
 			world.recipeManager.getRecipe(SMELTING, Inventory(stack), world).orElse(null).let {
 				if (it == null)
 					constructRawItem(world, pos, stack)
@@ -85,7 +85,7 @@ class EntityInfusedTNT : EntityTNTPrimed {
 		}
 	}
 	
-	private var igniter: EntityLivingBase? = null
+	private var igniter: LivingEntity? = null
 	private var infusions = InfusionList.EMPTY
 	private var hasInferniumPower = false
 	private var hasPhasedIntoWall = false
@@ -93,7 +93,7 @@ class EntityInfusedTNT : EntityTNTPrimed {
 	@Suppress("unused")
 	constructor(type: EntityType<EntityInfusedTNT>, world: World) : super(type, world)
 	
-	constructor(world: World, pos: BlockPos, infusions: InfusionList, igniter: EntityLivingBase?, infernium: Boolean) : this(ModEntities.INFUSED_TNT, world) {
+	constructor(world: World, pos: BlockPos, infusions: InfusionList, igniter: LivingEntity?, infernium: Boolean) : this(ModEntities.INFUSED_TNT, world) {
 		setPosition(pos.x + 0.5, pos.y.toDouble(), pos.z + 0.5)
 		prevPosX = posX
 		prevPosY = posY
@@ -117,7 +117,7 @@ class EntityInfusedTNT : EntityTNTPrimed {
 		return NetworkHooks.getEntitySpawningPacket(this)
 	}
 	
-	override fun getIgniter(): EntityLivingBase? {
+	override fun getIgniter(): LivingEntity? {
 		return igniter
 	}
 	

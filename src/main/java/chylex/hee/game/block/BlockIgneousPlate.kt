@@ -3,33 +3,34 @@ package chylex.hee.game.block
 import chylex.hee.game.block.entity.TileEntityIgneousPlate
 import chylex.hee.game.block.logic.IBlockDynamicHardness
 import chylex.hee.game.block.properties.BlockBuilder
-import chylex.hee.game.block.properties.Property
+import chylex.hee.game.block.util.FURNACE_FACING
+import chylex.hee.game.block.util.Property
+import chylex.hee.game.block.util.asVoxelShape
 import chylex.hee.game.entity.technical.EntityTechnicalIgneousPlateLogic
-import chylex.hee.game.world.getState
-import chylex.hee.game.world.getTile
-import chylex.hee.system.facades.Facing6
-import chylex.hee.system.migration.BlockFurnace
-import chylex.hee.system.migration.EntityPlayer
-import chylex.hee.system.migration.Facing.DOWN
-import chylex.hee.system.migration.Facing.EAST
-import chylex.hee.system.migration.Facing.NORTH
-import chylex.hee.system.migration.Facing.SOUTH
-import chylex.hee.system.migration.Facing.UP
-import chylex.hee.system.migration.Facing.WEST
-import chylex.hee.system.migration.TileEntityFurnace
+import chylex.hee.game.world.util.Facing6
+import chylex.hee.game.world.util.getState
+import chylex.hee.game.world.util.getTile
 import net.minecraft.block.Block
 import net.minecraft.block.BlockRenderType.ENTITYBLOCK_ANIMATED
 import net.minecraft.block.BlockState
 import net.minecraft.block.Blocks
+import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.item.BlockItemUseContext
 import net.minecraft.item.ItemStack
 import net.minecraft.item.Items
 import net.minecraft.state.StateContainer.Builder
+import net.minecraft.tileentity.FurnaceTileEntity
 import net.minecraft.tileentity.TileEntity
 import net.minecraft.util.ActionResultType
 import net.minecraft.util.ActionResultType.PASS
 import net.minecraft.util.ActionResultType.SUCCESS
 import net.minecraft.util.Direction
+import net.minecraft.util.Direction.DOWN
+import net.minecraft.util.Direction.EAST
+import net.minecraft.util.Direction.NORTH
+import net.minecraft.util.Direction.SOUTH
+import net.minecraft.util.Direction.UP
+import net.minecraft.util.Direction.WEST
 import net.minecraft.util.Hand
 import net.minecraft.util.Mirror
 import net.minecraft.util.Rotation
@@ -64,9 +65,9 @@ class BlockIgneousPlate(builder: BlockBuilder) : BlockSimple(builder), IBlockDyn
 			val state = furnacePos.getState(world)
 			
 			return (
-				state.properties.contains(BlockFurnace.FACING) &&
-				state[BlockFurnace.FACING] != facing &&
-				furnacePos.getTile<TileEntityFurnace>(world) != null
+				state.properties.contains(FURNACE_FACING) &&
+				state[FURNACE_FACING] != facing &&
+				furnacePos.getTile<FurnaceTileEntity>(world) != null
 			)
 		}
 	}
@@ -105,7 +106,7 @@ class BlockIgneousPlate(builder: BlockBuilder) : BlockSimple(builder), IBlockDyn
 	}
 	
 	override fun onBlockAdded(state: BlockState, world: World, pos: BlockPos, oldState: BlockState, isMoving: Boolean) {
-		pos.offset(state[FACING_NOT_DOWN].opposite).getTile<TileEntityFurnace>(world)?.let(EntityTechnicalIgneousPlateLogic.Companion::createForFurnace)
+		pos.offset(state[FACING_NOT_DOWN].opposite).getTile<FurnaceTileEntity>(world)?.let(EntityTechnicalIgneousPlateLogic.Companion::createForFurnace)
 	}
 	
 	override fun updatePostPlacement(state: BlockState, facing: Direction, neighborState: BlockState, world: IWorld, pos: BlockPos, neighborPos: BlockPos): BlockState {
@@ -128,7 +129,7 @@ class BlockIgneousPlate(builder: BlockBuilder) : BlockSimple(builder), IBlockDyn
 		}
 	}
 	
-	override fun onBlockActivated(state: BlockState, world: World, pos: BlockPos, player: EntityPlayer, hand: Hand, hit: BlockRayTraceResult): ActionResultType {
+	override fun onBlockActivated(state: BlockState, world: World, pos: BlockPos, player: PlayerEntity, hand: Hand, hit: BlockRayTraceResult): ActionResultType {
 		val heldItem = player.getHeldItem(hand)
 		
 		if (heldItem.item === Items.WATER_BUCKET) {
@@ -143,7 +144,7 @@ class BlockIgneousPlate(builder: BlockBuilder) : BlockSimple(builder), IBlockDyn
 	}
 	
 	fun tryCoolPlate(world: World, pos: BlockPos, state: BlockState): Boolean {
-		return pos.offset(state[FACING_NOT_DOWN].opposite).getTile<TileEntityFurnace>(world)?.let(EntityTechnicalIgneousPlateLogic.Companion::triggerCooling) == true
+		return pos.offset(state[FACING_NOT_DOWN].opposite).getTile<FurnaceTileEntity>(world)?.let(EntityTechnicalIgneousPlateLogic.Companion::triggerCooling) == true
 	}
 	
 	// State handling

@@ -12,8 +12,8 @@ import chylex.hee.game.mechanics.table.process.ProcessManyPedestals.State.Work
 import chylex.hee.game.mechanics.table.process.ProcessOnePedestal
 import chylex.hee.game.mechanics.table.process.serializer.BasicProcessSerializer
 import chylex.hee.init.ModTileEntities
-import chylex.hee.system.color.IntColor.Companion.RGB
-import chylex.hee.system.serialization.TagCompound
+import chylex.hee.util.color.RGB
+import chylex.hee.util.nbt.TagCompound
 import net.minecraft.item.ItemStack
 import net.minecraft.tileentity.TileEntityType
 import net.minecraft.util.math.BlockPos
@@ -30,7 +30,7 @@ class TileEntityAccumulationTable(type: TileEntityType<TileEntityAccumulationTab
 	override fun createNewProcesses(unassignedPedestals: List<TileEntityTablePedestal>): List<ITableProcess> {
 		val newProcesses = ArrayList<Process>(1)
 		
-		for(pedestal in unassignedPedestals) {
+		for (pedestal in unassignedPedestals) {
 			if (pedestal.itemInputCopy.item is ItemAbstractEnergyUser) {
 				newProcesses.add(Process(this, pedestal.pos))
 			}

@@ -1,19 +1,19 @@
 package chylex.hee.game.entity.living
 
+import chylex.hee.game.Resource
 import chylex.hee.game.mechanics.instability.Instability
-import chylex.hee.game.world.Pos
-import chylex.hee.game.world.isPeaceful
+import chylex.hee.game.world.util.isPeaceful
 import chylex.hee.init.ModBlocks
 import chylex.hee.init.ModEntities
-import chylex.hee.system.facades.Resource
-import chylex.hee.system.forge.Side
-import chylex.hee.system.forge.Sided
-import chylex.hee.system.math.square
-import chylex.hee.system.migration.EntityLivingBase
-import chylex.hee.system.serialization.TagCompound
-import chylex.hee.system.serialization.heeTag
-import chylex.hee.system.serialization.use
+import chylex.hee.system.heeTag
+import chylex.hee.util.forge.Side
+import chylex.hee.util.forge.Sided
+import chylex.hee.util.math.Pos
+import chylex.hee.util.math.square
+import chylex.hee.util.nbt.TagCompound
+import chylex.hee.util.nbt.use
 import net.minecraft.entity.EntityType
+import net.minecraft.entity.LivingEntity
 import net.minecraft.util.DamageSource
 import net.minecraft.util.ResourceLocation
 import net.minecraft.world.World
@@ -35,7 +35,7 @@ class EntityMobEndermiteInstability(type: EntityType<EntityMobEndermiteInstabili
 		}
 	}
 	
-	override fun setAttackTarget(newTarget: EntityLivingBase?) {
+	override fun setAttackTarget(newTarget: LivingEntity?) {
 		if (!world.isPeaceful) {
 			super.setAttackTarget(newTarget)
 		}

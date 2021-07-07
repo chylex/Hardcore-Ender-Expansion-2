@@ -1,23 +1,22 @@
 package chylex.hee.game.entity.living.ai
 
-import chylex.hee.game.entity.posVec
-import chylex.hee.game.world.bottomCenter
-import chylex.hee.game.world.breakBlock
-import chylex.hee.game.world.getState
-import chylex.hee.game.world.totalTime
-import chylex.hee.system.math.component1
-import chylex.hee.system.math.component2
-import chylex.hee.system.math.component3
-import chylex.hee.system.math.square
-import chylex.hee.system.migration.EntityCreature
+import chylex.hee.game.entity.util.posVec
+import chylex.hee.game.world.util.breakBlock
+import chylex.hee.game.world.util.getState
 import chylex.hee.system.random.nextInt
+import chylex.hee.util.math.bottomCenter
+import chylex.hee.util.math.component1
+import chylex.hee.util.math.component2
+import chylex.hee.util.math.component3
+import chylex.hee.util.math.square
 import net.minecraft.block.BlockState
+import net.minecraft.entity.CreatureEntity
 import net.minecraft.entity.ai.goal.Goal
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.vector.Vector3d
 
 class AIPickUpBlock(
-	private val entity: EntityCreature,
+	private val entity: CreatureEntity,
 	private val ticksPerAttempt: Int,
 	private val handler: IBlockPickUpHandler,
 ) : Goal() {
@@ -27,7 +26,7 @@ class AIPickUpBlock(
 		fun onBlockReached(state: BlockState)
 	}
 	
-	private var timeOfNextAttempt = entity.world.totalTime + entity.rng.nextInt(ticksPerAttempt / 2, ticksPerAttempt)
+	private var timeOfNextAttempt = entity.world.gameTime + entity.rng.nextInt(ticksPerAttempt / 2, ticksPerAttempt)
 	
 	private var targetNavPos: Vector3d? = null
 	private var targetBlockPos: BlockPos? = null
@@ -40,7 +39,7 @@ class AIPickUpBlock(
 		
 		val world = entity.world
 		
-		if (world.totalTime < timeOfNextAttempt) {
+		if (world.gameTime < timeOfNextAttempt) {
 			return false
 		}
 		
@@ -87,7 +86,7 @@ class AIPickUpBlock(
 	}
 	
 	override fun resetTask() {
-		timeOfNextAttempt = entity.world.totalTime + ticksPerAttempt
+		timeOfNextAttempt = entity.world.gameTime + ticksPerAttempt
 		targetBlockPos = null
 		targetBlockState = null
 	}

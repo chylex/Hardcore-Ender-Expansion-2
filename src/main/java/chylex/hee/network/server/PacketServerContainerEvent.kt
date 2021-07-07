@@ -2,8 +2,8 @@ package chylex.hee.network.server
 
 import chylex.hee.HEE
 import chylex.hee.network.BaseServerPacket
-import chylex.hee.system.migration.EntityPlayerMP
-import chylex.hee.system.serialization.use
+import chylex.hee.util.buffer.use
+import net.minecraft.entity.player.ServerPlayerEntity
 import net.minecraft.network.PacketBuffer
 
 class PacketServerContainerEvent() : BaseServerPacket() {
@@ -27,7 +27,7 @@ class PacketServerContainerEvent() : BaseServerPacket() {
 		eventId = readByte()
 	}
 	
-	override fun handle(player: EntityPlayerMP) {
+	override fun handle(player: ServerPlayerEntity) {
 		val container = player.openContainer
 		
 		if (container is IContainerWithEvents) {

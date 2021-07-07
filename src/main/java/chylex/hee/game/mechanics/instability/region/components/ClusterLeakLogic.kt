@@ -5,12 +5,12 @@ import chylex.hee.game.block.entity.TileEntityEnergyCluster.LeakType
 import chylex.hee.game.mechanics.energy.IClusterHealth.HealthStatus.HEALTHY
 import chylex.hee.game.mechanics.energy.IClusterHealth.HealthStatus.TIRED
 import chylex.hee.game.mechanics.energy.IClusterHealth.HealthStatus.WEAKENED
-import chylex.hee.game.world.bottomCenter
-import chylex.hee.game.world.spawn
-import chylex.hee.system.collection.WeightedList
-import chylex.hee.system.math.ceilToInt
+import chylex.hee.game.world.util.spawn
 import chylex.hee.system.random.nextInt
 import chylex.hee.system.random.removeItem
+import chylex.hee.util.collection.WeightedList
+import chylex.hee.util.math.bottomCenter
+import chylex.hee.util.math.ceilToInt
 import net.minecraft.entity.EntityType
 import net.minecraft.world.gen.Heightmap.Type.MOTION_BLOCKING
 import net.minecraft.world.server.ServerWorld
@@ -35,15 +35,15 @@ internal object ClusterLeakLogic {
 		do {
 			val remainingGroups = LEAK_GROUPS.toMutableList().apply { shuffle(rand) }
 			
-			while(remainingClusters.isNotEmpty() && remainingGroups.isNotEmpty()) {
+			while (remainingClusters.isNotEmpty() && remainingGroups.isNotEmpty()) {
 				val cluster = rand.removeItem(remainingClusters)
 				val group = rand.removeItem(remainingGroups)
 				
 				assignedClusters.add(cluster to group)
 			}
-		} while(remainingClusters.isNotEmpty())
+		} while (remainingClusters.isNotEmpty())
 		
-		for((cluster, group) in assignedClusters) {
+		for ((cluster, group) in assignedClusters) {
 			val percent = group + rand.nextInt(-5, 4)
 			cluster.leakEnergy(cluster.energyLevel.units * (percent * 0.01F), LeakType.INSTABILITY)
 		}
@@ -51,7 +51,7 @@ internal object ClusterLeakLogic {
 	
 	private fun performDeterioration(clusters: List<TileEntityEnergyCluster>, rand: Random) {
 		val canDeteriorate = clusters.mapNotNull {
-			val healthFactor = when(it.currentHealth) {
+			val healthFactor = when (it.currentHealth) {
 				HEALTHY  -> 13
 				WEAKENED ->  4
 				TIRED    ->  1

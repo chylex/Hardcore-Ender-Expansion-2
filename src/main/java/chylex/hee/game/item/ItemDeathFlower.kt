@@ -1,31 +1,33 @@
 package chylex.hee.game.item
 
+import chylex.hee.game.Resource
 import chylex.hee.game.block.IBlockDeathFlowerDecaying
 import chylex.hee.game.block.IBlockDeathFlowerDecaying.Companion.LEVEL
-import chylex.hee.game.block.with
-import chylex.hee.game.inventory.heeTag
-import chylex.hee.game.inventory.heeTagOrNull
-import chylex.hee.game.world.getBlock
-import chylex.hee.game.world.setState
+import chylex.hee.game.block.util.with
+import chylex.hee.game.item.util.ItemProperty
+import chylex.hee.game.world.util.getBlock
+import chylex.hee.game.world.util.setState
 import chylex.hee.init.ModBlocks
-import chylex.hee.system.facades.Stats
-import chylex.hee.system.migration.ItemBlock
-import chylex.hee.system.serialization.getIntegerOrNull
+import chylex.hee.system.heeTag
+import chylex.hee.system.heeTagOrNull
+import chylex.hee.util.nbt.getIntegerOrNull
 import net.minecraft.block.Block
 import net.minecraft.block.Blocks
+import net.minecraft.item.BlockItem
 import net.minecraft.item.ItemGroup
 import net.minecraft.item.ItemStack
 import net.minecraft.item.ItemUseContext
+import net.minecraft.stats.Stats
 import net.minecraft.util.ActionResultType
 import net.minecraft.util.ActionResultType.PASS
 import net.minecraft.util.ActionResultType.SUCCESS
 import net.minecraft.util.NonNullList
 
-class ItemDeathFlower(block: Block, properties: Properties) : ItemBlock(block, properties) {
+class ItemDeathFlower(block: Block, properties: Properties) : BlockItem(block, properties) {
 	companion object {
 		private const val LEVEL_TAG = "DeathLevel"
 		
-		val DEATH_LEVEL_PROPERTY = ItemProperty("death_level") { stack ->
+		val DEATH_LEVEL_PROPERTY = ItemProperty(Resource.Custom("death_level")) { stack ->
 			getDeathLevel(stack).toFloat()
 		}
 		
@@ -50,7 +52,7 @@ class ItemDeathFlower(block: Block, properties: Properties) : ItemBlock(block, p
 				stack.shrink(1)
 			}
 			
-			player.addStat(Stats.FLOWER_POTTED)
+			player.addStat(Stats.POT_FLOWER)
 			return SUCCESS
 		}
 		

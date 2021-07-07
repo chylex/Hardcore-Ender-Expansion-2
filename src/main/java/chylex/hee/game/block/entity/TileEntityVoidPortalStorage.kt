@@ -9,24 +9,24 @@ import chylex.hee.game.block.entity.base.TileEntityBasePortalController.Foregrou
 import chylex.hee.game.block.entity.base.TileEntityBasePortalController.ForegroundRenderState.Invisible
 import chylex.hee.game.block.entity.base.TileEntityBasePortalController.ForegroundRenderState.Visible
 import chylex.hee.game.container.ContainerPortalTokenStorage
-import chylex.hee.game.inventory.ItemStackHandlerInventory
+import chylex.hee.game.inventory.util.ItemStackHandlerInventory
 import chylex.hee.game.item.ItemPortalToken
-import chylex.hee.game.mechanics.portal.SpawnInfo
-import chylex.hee.game.world.FLAG_SKIP_RENDER
-import chylex.hee.game.world.FLAG_SYNC_CLIENT
-import chylex.hee.game.world.isAnyPlayerWithinRange
-import chylex.hee.game.world.territory.TerritoryInstance
-import chylex.hee.game.world.territory.TerritoryType
-import chylex.hee.game.world.territory.storage.TokenPlayerStorage
+import chylex.hee.game.territory.TerritoryType
+import chylex.hee.game.territory.system.TerritoryInstance
+import chylex.hee.game.territory.system.storage.PlayerTokenStorage
+import chylex.hee.game.world.server.SpawnInfo
+import chylex.hee.game.world.util.FLAG_SKIP_RENDER
+import chylex.hee.game.world.util.FLAG_SYNC_CLIENT
+import chylex.hee.game.world.util.isAnyPlayerWithinRange
 import chylex.hee.init.ModItems
 import chylex.hee.init.ModTileEntities
-import chylex.hee.system.math.square
-import chylex.hee.system.migration.EntityPlayer
-import chylex.hee.system.serialization.TagCompound
-import chylex.hee.system.serialization.getEnum
-import chylex.hee.system.serialization.putEnum
-import chylex.hee.system.serialization.use
+import chylex.hee.util.math.square
+import chylex.hee.util.nbt.TagCompound
+import chylex.hee.util.nbt.getEnum
+import chylex.hee.util.nbt.putEnum
+import chylex.hee.util.nbt.use
 import net.minecraft.entity.Entity
+import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.entity.player.PlayerInventory
 import net.minecraft.inventory.container.Container
 import net.minecraft.inventory.container.INamedContainerProvider
@@ -63,7 +63,7 @@ class TileEntityVoidPortalStorage(type: TileEntityType<TileEntityVoidPortalStora
 	// Client animation
 	
 	override val serverRenderState
-		get() = when(currentInstanceFactory) {
+		get() = when (currentInstanceFactory) {
 			null -> Invisible
 			else ->
 				if (remainingTime > ACTIVATION_DURATION_TICKS - FADE_IN_DURATION_TICKS)
@@ -103,8 +103,8 @@ class TileEntityVoidPortalStorage(type: TileEntityType<TileEntityVoidPortalStora
 		return TranslationTextComponent("gui.hee.portal_token_storage.title")
 	}
 	
-	override fun createMenu(id: Int, inventory: PlayerInventory, player: EntityPlayer): Container {
-		return ContainerPortalTokenStorage(id, player, ItemStackHandlerInventory(TokenPlayerStorage.forPlayer(player)), this)
+	override fun createMenu(id: Int, inventory: PlayerInventory, player: PlayerEntity): Container {
+		return ContainerPortalTokenStorage(id, player, ItemStackHandlerInventory(PlayerTokenStorage.forPlayer(player)), this)
 	}
 	
 	// Overrides

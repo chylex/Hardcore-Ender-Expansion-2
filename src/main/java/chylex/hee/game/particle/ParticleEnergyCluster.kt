@@ -1,18 +1,19 @@
 package chylex.hee.game.particle
 
-import chylex.hee.client.MC
-import chylex.hee.game.particle.ParticleSetting.ALL
-import chylex.hee.game.particle.ParticleSetting.DECREASED
-import chylex.hee.game.particle.ParticleSetting.MINIMAL
+import chylex.hee.client.util.MC
+import chylex.hee.game.fx.util.ParticleSetting
+import chylex.hee.game.fx.util.ParticleSetting.ALL
+import chylex.hee.game.fx.util.ParticleSetting.DECREASED
+import chylex.hee.game.fx.util.ParticleSetting.MINIMAL
 import chylex.hee.game.particle.base.ParticleBaseEnergy
 import chylex.hee.game.particle.data.ParticleDataColorScale
 import chylex.hee.game.particle.spawner.IParticleMaker
-import chylex.hee.game.world.Pos
-import chylex.hee.game.world.getBlock
+import chylex.hee.game.world.util.getBlock
 import chylex.hee.init.ModBlocks
-import chylex.hee.system.forge.Side
-import chylex.hee.system.forge.Sided
-import chylex.hee.system.math.square
+import chylex.hee.util.forge.Side
+import chylex.hee.util.forge.Sided
+import chylex.hee.util.math.Pos
+import chylex.hee.util.math.square
 import net.minecraft.client.particle.Particle
 import net.minecraft.client.world.ClientWorld
 import java.util.Random
@@ -37,7 +38,7 @@ object ParticleEnergyCluster : IParticleMaker.WithData<ParticleDataColorScale>()
 		return { distanceSq, particleSetting, _ ->
 			++counter
 			
-			(distanceSq > MAX_DISTANCE_SQ) || (distanceSq > LQ_DISTANCE_SQ && counter % 4 == 0) || when(particleSetting) {
+			(distanceSq > MAX_DISTANCE_SQ) || (distanceSq > LQ_DISTANCE_SQ && counter % 4 == 0) || when (particleSetting) {
 				ALL       -> false
 				DECREASED -> counter % 3 == 0
 				MINIMAL   -> counter % 2 == 0
@@ -55,7 +56,7 @@ object ParticleEnergyCluster : IParticleMaker.WithData<ParticleDataColorScale>()
 	private class Instance(world: ClientWorld, posX: Double, posY: Double, posZ: Double, motX: Double, motY: Double, motZ: Double, data: ParticleDataColorScale?) : ParticleBaseEnergy(world, posX, posY, posZ, motX, motY, motZ) {
 		private val clusterPos = Pos(posX, posY, posZ)
 		
-		private val alphaMultiplier = when(MC.particleSetting) {
+		private val alphaMultiplier = when (MC.particleSetting) {
 			ALL       -> 0.32F
 			DECREASED -> 0.46F
 			MINIMAL   -> 0.58F

@@ -1,7 +1,7 @@
 package chylex.hee.client.render.entity
 
-import chylex.hee.system.forge.Side
-import chylex.hee.system.forge.Sided
+import chylex.hee.util.forge.Side
+import chylex.hee.util.forge.Sided
 import net.minecraft.client.renderer.culling.ClippingHelper
 import net.minecraft.client.renderer.entity.EntityRenderer
 import net.minecraft.client.renderer.entity.EntityRendererManager

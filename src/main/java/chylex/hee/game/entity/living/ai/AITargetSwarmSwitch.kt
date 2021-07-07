@@ -1,14 +1,14 @@
 package chylex.hee.game.entity.living.ai
 
-import chylex.hee.game.entity.posVec
-import chylex.hee.game.entity.selectExistingEntities
-import chylex.hee.system.migration.EntityCreature
-import chylex.hee.system.migration.EntityLivingBase
+import chylex.hee.game.entity.util.posVec
+import chylex.hee.game.entity.util.selectExistingEntities
 import chylex.hee.system.random.nextItemOrNull
+import net.minecraft.entity.CreatureEntity
+import net.minecraft.entity.LivingEntity
 import java.util.EnumSet
 
-class AITargetSwarmSwitch<T : EntityLivingBase>(
-	entity: EntityCreature,
+class AITargetSwarmSwitch<T : LivingEntity>(
+	entity: CreatureEntity,
 	checkSight: Boolean,
 	easilyReachableOnly: Boolean,
 	targetClass: Class<T>,

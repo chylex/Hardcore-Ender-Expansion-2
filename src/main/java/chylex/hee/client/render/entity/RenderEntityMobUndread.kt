@@ -1,10 +1,10 @@
 package chylex.hee.client.render.entity
 
 import chylex.hee.client.model.entity.ModelEntityMobUndread
+import chylex.hee.game.Resource
 import chylex.hee.game.entity.living.EntityMobUndread
-import chylex.hee.system.facades.Resource
-import chylex.hee.system.forge.Side
-import chylex.hee.system.forge.Sided
+import chylex.hee.util.forge.Side
+import chylex.hee.util.forge.Sided
 import com.mojang.blaze3d.matrix.MatrixStack
 import net.minecraft.client.renderer.entity.BipedRenderer
 import net.minecraft.client.renderer.entity.EntityRendererManager

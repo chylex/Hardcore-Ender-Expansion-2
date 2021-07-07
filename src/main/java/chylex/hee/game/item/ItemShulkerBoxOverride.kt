@@ -1,52 +1,52 @@
 package chylex.hee.game.item
 
 import chylex.hee.HEE
-import chylex.hee.client.MC
+import chylex.hee.client.util.MC
+import chylex.hee.game.MagicValues
 import chylex.hee.game.block.BlockShulkerBoxOverride.BoxSize
 import chylex.hee.game.block.entity.TileEntityShulkerBoxCustom
 import chylex.hee.game.container.ContainerShulkerBoxInInventory
-import chylex.hee.game.inventory.IInventoryFromPlayerItem
-import chylex.hee.game.inventory.allSlots
-import chylex.hee.game.inventory.getStack
-import chylex.hee.game.inventory.isNotEmpty
-import chylex.hee.game.inventory.nbt
-import chylex.hee.game.inventory.nbtOrNull
-import chylex.hee.game.inventory.nonEmptySlots
-import chylex.hee.game.inventory.setStack
-import chylex.hee.game.inventory.size
+import chylex.hee.game.inventory.util.IInventoryFromPlayerItem
+import chylex.hee.game.inventory.util.allSlots
+import chylex.hee.game.inventory.util.getStack
+import chylex.hee.game.inventory.util.nonEmptySlots
+import chylex.hee.game.inventory.util.setStack
+import chylex.hee.game.inventory.util.size
+import chylex.hee.game.item.util.isNotEmpty
+import chylex.hee.game.item.util.nbt
+import chylex.hee.game.item.util.nbtOrNull
 import chylex.hee.init.ModContainers
 import chylex.hee.network.server.PacketServerOpenInventoryItem
-import chylex.hee.system.MagicValues
-import chylex.hee.system.collection.find
-import chylex.hee.system.facades.Stats
-import chylex.hee.system.forge.EventPriority
-import chylex.hee.system.forge.Side
-import chylex.hee.system.forge.Sided
-import chylex.hee.system.forge.SubscribeAllEvents
-import chylex.hee.system.forge.SubscribeEvent
-import chylex.hee.system.migration.ActionResult.PASS
-import chylex.hee.system.migration.ActionResult.SUCCESS
-import chylex.hee.system.migration.EntityPlayer
-import chylex.hee.system.migration.ItemBlock
-import chylex.hee.system.serialization.getCompoundOrNull
-import chylex.hee.system.serialization.getEnum
-import chylex.hee.system.serialization.getOrCreateCompound
-import chylex.hee.system.serialization.heeTag
-import chylex.hee.system.serialization.heeTagOrNull
-import chylex.hee.system.serialization.putEnum
+import chylex.hee.system.heeTag
+import chylex.hee.system.heeTagOrNull
+import chylex.hee.util.collection.find
+import chylex.hee.util.forge.EventPriority
+import chylex.hee.util.forge.Side
+import chylex.hee.util.forge.Sided
+import chylex.hee.util.forge.SubscribeAllEvents
+import chylex.hee.util.forge.SubscribeEvent
+import chylex.hee.util.nbt.getCompoundOrNull
+import chylex.hee.util.nbt.getEnum
+import chylex.hee.util.nbt.getOrCreateCompound
+import chylex.hee.util.nbt.putEnum
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap
 import net.minecraft.block.Block
 import net.minecraft.client.gui.screen.Screen
 import net.minecraft.client.gui.screen.inventory.InventoryScreen
 import net.minecraft.client.util.ITooltipFlag
+import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.entity.player.PlayerInventory
 import net.minecraft.inventory.Inventory
 import net.minecraft.inventory.ItemStackHelper
 import net.minecraft.inventory.container.Container
 import net.minecraft.inventory.container.INamedContainerProvider
+import net.minecraft.item.BlockItem
 import net.minecraft.item.ItemGroup
 import net.minecraft.item.ItemStack
+import net.minecraft.stats.Stats
 import net.minecraft.util.ActionResult
+import net.minecraft.util.ActionResultType.PASS
+import net.minecraft.util.ActionResultType.SUCCESS
 import net.minecraft.util.Hand
 import net.minecraft.util.NonNullList
 import net.minecraft.util.text.ITextComponent
@@ -57,7 +57,7 @@ import net.minecraft.util.text.TranslationTextComponent
 import net.minecraft.world.World
 import net.minecraftforge.client.event.GuiScreenEvent
 
-class ItemShulkerBoxOverride(block: Block, properties: Properties) : ItemBlock(block, properties) {
+class ItemShulkerBoxOverride(block: Block, properties: Properties) : BlockItem(block, properties) {
 	companion object {
 		private const val TOOLTIP_ENTRY_COUNT = 5
 		
@@ -83,12 +83,12 @@ class ItemShulkerBoxOverride(block: Block, properties: Properties) : ItemBlock(b
 			return stack.displayName
 		}
 		
-		override fun createMenu(id: Int, inventory: PlayerInventory, player: EntityPlayer): Container {
+		override fun createMenu(id: Int, inventory: PlayerInventory, player: PlayerEntity): Container {
 			return ContainerShulkerBoxInInventory(id, player, slot)
 		}
 	}
 	
-	class Inv(override val player: EntityPlayer, boxSize: BoxSize, private val inventorySlot: Int) : Inventory(boxSize.slots), IInventoryFromPlayerItem {
+	class Inv(override val player: PlayerEntity, boxSize: BoxSize, private val inventorySlot: Int) : Inventory(boxSize.slots), IInventoryFromPlayerItem {
 		private val boxStack
 			get() = player.inventory.getStack(inventorySlot)
 		
@@ -113,7 +113,7 @@ class ItemShulkerBoxOverride(block: Block, properties: Properties) : ItemBlock(b
 			}
 			
 			NonNullList.withSize(size, ItemStack.EMPTY).also {
-				for((slot, stack) in allSlots) {
+				for ((slot, stack) in allSlots) {
 					it[slot] = stack
 				}
 				
@@ -132,7 +132,7 @@ class ItemShulkerBoxOverride(block: Block, properties: Properties) : ItemBlock(b
 	
 	override fun fillItemGroup(group: ItemGroup, items: NonNullList<ItemStack>) {
 		if (isInGroup(group)) {
-			for(boxSize in BoxSize.values()) {
+			for (boxSize in BoxSize.values()) {
 				items.add(ItemStack(this).also { setBoxSize(it, boxSize) })
 			}
 		}
@@ -140,7 +140,7 @@ class ItemShulkerBoxOverride(block: Block, properties: Properties) : ItemBlock(b
 	
 	// Use handling
 	
-	override fun onItemRightClick(world: World, player: EntityPlayer, hand: Hand): ActionResult<ItemStack> {
+	override fun onItemRightClick(world: World, player: PlayerEntity, hand: Hand): ActionResult<ItemStack> {
 		val stack = player.getHeldItem(hand)
 		val slot = player.inventory.nonEmptySlots.find { it.stack === stack }
 		
@@ -192,7 +192,7 @@ class ItemShulkerBoxOverride(block: Block, properties: Properties) : ItemBlock(b
 			if (inventory.any(ItemStack::isNotEmpty)) {
 				val counts = Object2IntOpenHashMap<String>()
 				
-				for(invStack in inventory) {
+				for (invStack in inventory) {
 					if (invStack.isNotEmpty) {
 						counts.addTo(invStack.displayName.string, invStack.count)
 					}
@@ -200,7 +200,7 @@ class ItemShulkerBoxOverride(block: Block, properties: Properties) : ItemBlock(b
 				
 				val sorted = counts.object2IntEntrySet().sortedWith(compareBy({ -it.intValue }, { it.key }))
 				
-				for((name, count) in sorted.take(TOOLTIP_ENTRY_COUNT)) {
+				for ((name, count) in sorted.take(TOOLTIP_ENTRY_COUNT)) {
 					lines.add(StringTextComponent("%s x%d".format(name, count)).mergeStyle(GRAY))
 				}
 				

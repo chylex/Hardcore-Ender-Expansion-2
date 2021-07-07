@@ -1,9 +1,9 @@
 package chylex.hee.game.loot.functions
 
-import chylex.hee.game.inventory.size
+import chylex.hee.game.item.util.size
 import chylex.hee.init.ModLoot
-import chylex.hee.system.collection.WeightedList
-import chylex.hee.system.collection.WeightedList.Companion.weightedListOf
+import chylex.hee.util.collection.WeightedList
+import chylex.hee.util.collection.weightedListOf
 import com.google.common.collect.ImmutableBiMap
 import com.google.gson.JsonDeserializationContext
 import com.google.gson.JsonObject

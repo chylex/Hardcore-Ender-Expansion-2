@@ -3,32 +3,31 @@ package chylex.hee.game.block
 import chylex.hee.game.block.fluid.FlowingFluid5.Companion.FLOW_DISTANCE
 import chylex.hee.game.block.fluid.FluidEnderGooPurified
 import chylex.hee.game.block.properties.Materials
+import chylex.hee.game.fx.FxBlockData
+import chylex.hee.game.fx.FxBlockHandler
 import chylex.hee.game.particle.ParticleSmokeCustom
 import chylex.hee.game.particle.spawner.ParticleSpawnerCustom
 import chylex.hee.game.particle.spawner.properties.IOffset.Constant
 import chylex.hee.game.particle.spawner.properties.IOffset.InBox
 import chylex.hee.game.particle.spawner.properties.IShape.Point
-import chylex.hee.game.potion.PotionPurity.MIN_DURATION
+import chylex.hee.game.potion.PurityEffect.MIN_DURATION
 import chylex.hee.game.potion.brewing.PotionBrewing.INFINITE_DURATION_THRESHOLD
-import chylex.hee.game.world.totalTime
 import chylex.hee.network.client.PacketClientFX
 import chylex.hee.network.client.PacketClientPotionDuration
-import chylex.hee.network.fx.FxBlockData
-import chylex.hee.network.fx.FxBlockHandler
-import chylex.hee.system.color.IntColor.Companion.RGB
-import chylex.hee.system.forge.Side
-import chylex.hee.system.forge.Sided
-import chylex.hee.system.math.floorToInt
-import chylex.hee.system.math.scaleXZ
-import chylex.hee.system.migration.EntityLivingBase
-import chylex.hee.system.migration.EntityPlayer
-import chylex.hee.system.migration.Facing.DOWN
-import chylex.hee.system.migration.Facing.UP
 import chylex.hee.system.random.nextInt
 import chylex.hee.system.random.nextItemOrNull
+import chylex.hee.util.color.RGB
+import chylex.hee.util.forge.Side
+import chylex.hee.util.forge.Sided
+import chylex.hee.util.math.floorToInt
+import chylex.hee.util.math.scaleXZ
 import net.minecraft.block.BlockState
 import net.minecraft.entity.Entity
+import net.minecraft.entity.LivingEntity
+import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.potion.EffectType.HARMFUL
+import net.minecraft.util.Direction.DOWN
+import net.minecraft.util.Direction.UP
 import net.minecraft.util.math.BlockPos
 import net.minecraft.world.World
 import java.util.Random
@@ -72,8 +71,8 @@ open class BlockEnderGooPurified : BlockAbstractGoo(FluidEnderGooPurified, Mater
 		
 		// Status effects
 		
-		private fun updateGooEffects(entity: EntityLivingBase, totalTicks: Int) {
-			val currentTime = entity.world.totalTime
+		private fun updateGooEffects(entity: LivingEntity, totalTicks: Int) {
+			val currentTime = entity.world.gameTime
 			val rand = entity.rng
 			
 			if (totalTicks > 25 && currentTime % 40L == 0L) {
@@ -82,7 +81,7 @@ open class BlockEnderGooPurified : BlockAbstractGoo(FluidEnderGooPurified, Mater
 				if (effect != null) {
 					effect.duration = max(MIN_DURATION, effect.duration - (effect.duration * 0.2F).floorToInt().coerceIn(MIN_DURATION_REDUCTION, MAX_DURATION_REDUCTION))
 					
-					if (entity is EntityPlayer) {
+					if (entity is PlayerEntity) {
 						PacketClientPotionDuration(effect.potion, effect.duration).sendToPlayer(entity)
 					}
 				}
@@ -100,7 +99,7 @@ open class BlockEnderGooPurified : BlockAbstractGoo(FluidEnderGooPurified, Mater
 				}
 			}
 			
-			if (totalTicks > 40 && currentTime % 116L == 0L && entity is EntityPlayer) {
+			if (totalTicks > 40 && currentTime % 116L == 0L && entity is PlayerEntity) {
 				val satisfactionChance = when {
 					totalTicks <  400 -> 0.06F
 					totalTicks < 1000 -> 0.12F
@@ -122,7 +121,7 @@ open class BlockEnderGooPurified : BlockAbstractGoo(FluidEnderGooPurified, Mater
 	// Behavior
 	
 	override fun onInsideGoo(entity: Entity) {
-		if (entity is EntityLivingBase) {
+		if (entity is LivingEntity) {
 			updateGooEffects(entity, trackTick(entity, MAX_COLLISION_TICK_COUNTER))
 		}
 	}

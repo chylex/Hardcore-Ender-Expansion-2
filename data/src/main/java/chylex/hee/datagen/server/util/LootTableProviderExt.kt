@@ -1,8 +1,8 @@
 package chylex.hee.datagen.server.util
 
-import chylex.hee.system.migration.BlockFlowerPot
 import com.mojang.datafixers.util.Pair
 import net.minecraft.block.Block
+import net.minecraft.block.FlowerPotBlock
 import net.minecraft.data.DataGenerator
 import net.minecraft.data.LootTableProvider
 import net.minecraft.data.loot.BlockLootTables
@@ -38,7 +38,7 @@ abstract class BlockLootTableProvider(generator: DataGenerator) : LootTableProvi
 		final override fun accept(consumer: BiConsumer<ResourceLocation?, Builder?>) {
 			addTables()
 			
-			for((location, table) in lootTables) {
+			for ((location, table) in lootTables) {
 				consumer.accept(location, table)
 			}
 			
@@ -61,7 +61,7 @@ abstract class BlockLootTableProvider(generator: DataGenerator) : LootTableProvi
 			registerLootTable(block, func)
 		}
 		
-		protected fun dropFlowerPot(block: BlockFlowerPot) {
+		protected fun dropFlowerPot(block: FlowerPotBlock) {
 			registerFlowerPot(block)
 		}
 		

@@ -1,8 +1,8 @@
 package chylex.hee.client.render.entity
 
 import chylex.hee.game.entity.effect.EntityTerritoryLightningBolt
-import chylex.hee.system.forge.Side
-import chylex.hee.system.forge.Sided
+import chylex.hee.util.forge.Side
+import chylex.hee.util.forge.Sided
 import com.mojang.blaze3d.matrix.MatrixStack
 import com.mojang.blaze3d.vertex.IVertexBuilder
 import net.minecraft.client.renderer.IRenderTypeBuffer
@@ -25,7 +25,7 @@ class RenderEntityTerritoryLightningBolt(manager: EntityRendererManager) : Entit
 		run {
 			val rand = Random(entity.boltVertex)
 			
-			for(i in 7 downTo 0) {
+			for (i in 7 downTo 0) {
 				xCoords[i] = xOffset
 				zCoords[i] = zOffset
 				xOffset += rand.nextInt(11) - 5
@@ -36,17 +36,17 @@ class RenderEntityTerritoryLightningBolt(manager: EntityRendererManager) : Entit
 		val builder = buffer.getBuffer(RenderType.getLightning())
 		val mat = matrix.last.matrix
 		
-		for(iter in 0..3) {
+		for (iter in 0..3) {
 			val rand = Random(entity.boltVertex)
 			
-			for(branch in 0..2) {
+			for (branch in 0..2) {
 				val i1 = 7 - branch
 				val i2 = if (branch > 0) i1 - 2 else 0
 				
 				var x = xCoords[i1] - xOffset
 				var z = zCoords[i1] - zOffset
 				
-				for(y in i1 downTo i2) {
+				for (y in i1 downTo i2) {
 					val origX = x
 					val origZ = z
 					

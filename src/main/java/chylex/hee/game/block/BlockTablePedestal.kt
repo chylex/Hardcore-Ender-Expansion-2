@@ -4,20 +4,21 @@ import chylex.hee.client.color.NO_TINT
 import chylex.hee.client.render.block.IBlockLayerCutout
 import chylex.hee.game.block.entity.TileEntityTablePedestal
 import chylex.hee.game.block.properties.BlockBuilder
-import chylex.hee.game.block.properties.Property
-import chylex.hee.game.inventory.copyIf
+import chylex.hee.game.block.util.Property
+import chylex.hee.game.block.util.asVoxelShape
+import chylex.hee.game.item.util.copyIf
 import chylex.hee.game.mechanics.table.PedestalStatusIndicator
-import chylex.hee.game.world.getState
-import chylex.hee.game.world.getTile
+import chylex.hee.game.world.util.getState
+import chylex.hee.game.world.util.getTile
 import chylex.hee.init.ModItems
-import chylex.hee.system.forge.Side
-import chylex.hee.system.forge.Sided
-import chylex.hee.system.migration.EntityItem
-import chylex.hee.system.migration.EntityPlayer
+import chylex.hee.util.forge.Side
+import chylex.hee.util.forge.Sided
 import net.minecraft.block.Block
 import net.minecraft.block.BlockState
 import net.minecraft.client.renderer.color.IBlockColor
 import net.minecraft.entity.Entity
+import net.minecraft.entity.item.ItemEntity
+import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.state.StateContainer.Builder
 import net.minecraft.tileentity.TileEntity
 import net.minecraft.util.ActionResultType
@@ -82,7 +83,7 @@ class BlockTablePedestal(builder: BlockBuilder) : BlockSimpleShaped(builder, COM
 		
 		val COLLISION_SHAPE: VoxelShape = COLLISION_BOXES.map(AxisAlignedBB::asVoxelShape).reduce { acc, next -> VoxelShapes.or(acc, next) }
 		
-		private fun isInsidePickupArea(pos: BlockPos, entity: EntityItem): Boolean {
+		private fun isInsidePickupArea(pos: BlockPos, entity: ItemEntity): Boolean {
 			return (entity.posY - pos.y) >= PICKUP_TOP_Y && abs(pos.x + 0.5 - entity.posX) <= PICKUP_DIST_XZ && abs(pos.z + 0.5 - entity.posZ) <= PICKUP_DIST_XZ
 		}
 		
@@ -116,7 +117,7 @@ class BlockTablePedestal(builder: BlockBuilder) : BlockSimpleShaped(builder, COM
 			return
 		}
 		
-		if (entity is EntityItem && entity.age >= 5 && isInsidePickupArea(pos, entity) && entity.throwerId != DROPPED_ITEM_THROWER) {
+		if (entity is ItemEntity && entity.age >= 5 && isInsidePickupArea(pos, entity) && entity.throwerId != DROPPED_ITEM_THROWER) {
 			val stack = entity.item
 			
 			if (pos.getTile<TileEntityTablePedestal>(world)?.addToInput(stack) == true) {
@@ -128,18 +129,18 @@ class BlockTablePedestal(builder: BlockBuilder) : BlockSimpleShaped(builder, COM
 				}
 			}
 		}
-		else if (entity is EntityPlayer && entity.posY >= pos.y && !entity.isCreative) {
+		else if (entity is PlayerEntity && entity.posY >= pos.y && !entity.isCreative) {
 			pos.getTile<TileEntityTablePedestal>(world)?.moveOutputToPlayerInventory(entity.inventory)
 		}
 	}
 	
-	override fun onBlockClicked(state: BlockState, world: World, pos: BlockPos, player: EntityPlayer) {
+	override fun onBlockClicked(state: BlockState, world: World, pos: BlockPos, player: PlayerEntity) {
 		if (!world.isRemote) {
 			pos.getTile<TileEntityTablePedestal>(world)?.dropAllItems()
 		}
 	}
 	
-	override fun onBlockActivated(state: BlockState, world: World, pos: BlockPos, player: EntityPlayer, hand: Hand, hit: BlockRayTraceResult): ActionResultType {
+	override fun onBlockActivated(state: BlockState, world: World, pos: BlockPos, player: PlayerEntity, hand: Hand, hit: BlockRayTraceResult): ActionResultType {
 		if (world.isRemote) {
 			return SUCCESS
 		}
@@ -169,7 +170,7 @@ class BlockTablePedestal(builder: BlockBuilder) : BlockSimpleShaped(builder, COM
 		return SUCCESS
 	}
 	
-	override fun onBlockHarvested(world: World, pos: BlockPos, state: BlockState, player: EntityPlayer) {
+	override fun onBlockHarvested(world: World, pos: BlockPos, state: BlockState, player: PlayerEntity) {
 		if (!world.isRemote && player.isCreative) {
 			pos.getTile<TileEntityTablePedestal>(world)?.onPedestalDestroyed(dropTableLink = false)
 		}
@@ -216,7 +217,7 @@ class BlockTablePedestal(builder: BlockBuilder) : BlockSimpleShaped(builder, COM
 				return NO_TINT
 			}
 			
-			return when(tintIndex) {
+			return when (tintIndex) {
 				1    -> pos.getTile<TileEntityTablePedestal>(world)?.tableIndicatorColor?.i ?: NO_TINT
 				2    -> pos.getTile<TileEntityTablePedestal>(world)?.statusIndicatorColorClient ?: PedestalStatusIndicator.Contents.NONE.color.i
 				else -> NO_TINT

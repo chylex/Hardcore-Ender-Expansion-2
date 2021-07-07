@@ -1,0 +1,31 @@
+buildscript {
+	repositories {
+		mavenCentral()
+		maven { url = "https://files.minecraftforge.net/maven" }
+	}
+	
+	dependencies {
+		classpath group: "net.minecraftforge.gradle", name: "ForgeGradle", version: forge_gradle_version, changing: true
+		classpath group: "org.jetbrains.kotlin", name: "kotlin-gradle-plugin", version: kotlin_version
+	}
+}
+
+apply plugin: "net.minecraftforge.gradle"
+
+minecraft {
+	mappings channel: "snapshot", version: rootProject.mapping_version
+	setAccessTransformers(rootProject.access_transformers)
+}
+
+dependencies {
+	minecraft "net.minecraftforge:forge:" + mc_version + "-" + forge_version
+	implementation project(":util")
+}
+
+jar {
+	manifest {
+		attributes([
+			"FMLModType": "LIBRARY"
+		])
+	}
+}

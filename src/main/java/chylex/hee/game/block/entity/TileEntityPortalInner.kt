@@ -1,14 +1,14 @@
 package chylex.hee.game.block.entity
 
 import chylex.hee.init.ModTileEntities
-import chylex.hee.system.forge.Side
-import chylex.hee.system.forge.Sided
-import chylex.hee.system.math.square
-import chylex.hee.system.migration.TileEntityEndPortal
+import chylex.hee.util.forge.Side
+import chylex.hee.util.forge.Sided
+import chylex.hee.util.math.square
+import net.minecraft.tileentity.EndPortalTileEntity
 import net.minecraft.tileentity.TileEntityType
 import net.minecraft.util.math.AxisAlignedBB
 
-sealed class TileEntityPortalInner(type: TileEntityType<out TileEntityPortalInner>) : TileEntityEndPortal(type) {
+sealed class TileEntityPortalInner(type: TileEntityType<out TileEntityPortalInner>) : EndPortalTileEntity(type) {
 	@Sided(Side.CLIENT)
 	override fun getMaxRenderDistanceSquared() = square(180.0)
 	

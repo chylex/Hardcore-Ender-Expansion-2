@@ -13,7 +13,7 @@ import chylex.hee.network.client.PacketClientUpdateExperience
 import chylex.hee.network.server.PacketServerContainerEvent
 import chylex.hee.network.server.PacketServerOpenInventoryItem
 import chylex.hee.network.server.PacketServerShiftClickTrinket
-import chylex.hee.system.reflection.ObjectConstructors
+import chylex.hee.util.lang.ObjectConstructors
 import java.util.function.Supplier
 
 object ModPackets {

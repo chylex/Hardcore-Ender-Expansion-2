@@ -1,24 +1,24 @@
 package chylex.hee.game.item
 
-import chylex.hee.game.inventory.size
-import chylex.hee.game.world.BlockEditor
+import chylex.hee.game.block.util.DISPENSER_FACING
+import chylex.hee.game.fx.FxBlockData
+import chylex.hee.game.fx.FxBlockHandler
+import chylex.hee.game.item.util.size
+import chylex.hee.game.world.util.BlockEditor
 import chylex.hee.init.ModItems
 import chylex.hee.network.client.PacketClientFX
-import chylex.hee.network.fx.FxBlockData
-import chylex.hee.network.fx.FxBlockHandler
-import chylex.hee.system.migration.ActionResult.FAIL
-import chylex.hee.system.migration.ActionResult.PASS
-import chylex.hee.system.migration.ActionResult.SUCCESS
-import chylex.hee.system.migration.BlockDispenser
-import chylex.hee.system.migration.EntityPlayer
-import chylex.hee.system.migration.ItemBoneMeal
-import net.minecraft.block.DispenserBlock.FACING
+import net.minecraft.block.DispenserBlock
 import net.minecraft.dispenser.IBlockSource
 import net.minecraft.dispenser.OptionalDispenseBehavior
+import net.minecraft.entity.player.PlayerEntity
+import net.minecraft.item.BoneMealItem
 import net.minecraft.item.Item
 import net.minecraft.item.ItemStack
 import net.minecraft.item.ItemUseContext
 import net.minecraft.util.ActionResultType
+import net.minecraft.util.ActionResultType.FAIL
+import net.minecraft.util.ActionResultType.PASS
+import net.minecraft.util.ActionResultType.SUCCESS
 import net.minecraft.util.math.BlockPos
 import net.minecraft.world.World
 import net.minecraft.world.server.ServerWorld
@@ -31,11 +31,11 @@ class ItemCompost(properties: Properties) : Item(properties) {
 		
 		val FX_USE = object : FxBlockHandler() {
 			override fun handle(pos: BlockPos, world: World, rand: Random) {
-				ItemBoneMeal.spawnBonemealParticles(world, pos, 25)
+				BoneMealItem.spawnBonemealParticles(world, pos, 25)
 			}
 		}
 		
-		private fun applyCompost(world: World, pos: BlockPos, player: EntityPlayer? = null): Boolean {
+		private fun applyCompost(world: World, pos: BlockPos, player: PlayerEntity? = null): Boolean {
 			if (world !is ServerWorld) {
 				return false
 			}
@@ -44,10 +44,10 @@ class ItemCompost(properties: Properties) : Item(properties) {
 			
 			repeat(BONE_MEAL_EQUIVALENT) {
 				if (player == null) {
-					ItemBoneMeal.applyBonemeal(simulatedItem, world, pos, FakePlayerFactory.getMinecraft(world))
+					BoneMealItem.applyBonemeal(simulatedItem, world, pos, FakePlayerFactory.getMinecraft(world))
 				}
 				else {
-					ItemBoneMeal.applyBonemeal(simulatedItem, world, pos, player)
+					BoneMealItem.applyBonemeal(simulatedItem, world, pos, player)
 				}
 			}
 			
@@ -61,10 +61,10 @@ class ItemCompost(properties: Properties) : Item(properties) {
 	}
 	
 	init {
-		BlockDispenser.registerDispenseBehavior(this, object : OptionalDispenseBehavior() {
+		DispenserBlock.registerDispenseBehavior(this, object : OptionalDispenseBehavior() {
 			override fun dispenseStack(source: IBlockSource, stack: ItemStack): ItemStack {
 				val world = source.world
-				val pos = source.blockPos.offset(source.blockState[FACING])
+				val pos = source.blockPos.offset(source.blockState[DISPENSER_FACING])
 				
 				isSuccessful = false
 				

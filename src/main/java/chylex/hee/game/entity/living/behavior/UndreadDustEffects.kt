@@ -1,14 +1,16 @@
 package chylex.hee.game.entity.living.behavior
 
-import chylex.hee.client.MC
 import chylex.hee.client.sound.UndreadFuseSound
-import chylex.hee.game.entity.OPERATION_ADD
-import chylex.hee.game.entity.OPERATION_MUL_INCR_INDIVIDUAL
-import chylex.hee.game.entity.getAttributeInstance
+import chylex.hee.client.util.MC
 import chylex.hee.game.entity.living.EntityMobUndread
-import chylex.hee.game.entity.posVec
+import chylex.hee.game.entity.util.OP_ADD
+import chylex.hee.game.entity.util.OP_MUL_INCR_INDIVIDUAL
+import chylex.hee.game.entity.util.getAttributeInstance
+import chylex.hee.game.entity.util.posVec
+import chylex.hee.game.fx.FxEntityData
+import chylex.hee.game.fx.FxEntityHandler
+import chylex.hee.game.fx.util.playPlayer
 import chylex.hee.game.mechanics.dust.DustType
-import chylex.hee.game.mechanics.explosion.ExplosionBuilder
 import chylex.hee.game.particle.ParticleCriticalHitCustom
 import chylex.hee.game.particle.ParticleEnchantedHitCustom
 import chylex.hee.game.particle.ParticleSmokeCustom
@@ -18,29 +20,24 @@ import chylex.hee.game.particle.spawner.properties.IOffset.Gaussian
 import chylex.hee.game.particle.spawner.properties.IOffset.InBox
 import chylex.hee.game.particle.spawner.properties.IOffset.OutlineBox
 import chylex.hee.game.particle.spawner.properties.IShape.Point
-import chylex.hee.game.potion.makeEffect
-import chylex.hee.game.world.playPlayer
+import chylex.hee.game.potion.util.makeInstance
+import chylex.hee.game.world.explosion.ExplosionBuilder
 import chylex.hee.init.ModEntities
 import chylex.hee.init.ModSounds
 import chylex.hee.network.client.PacketClientFX
-import chylex.hee.network.fx.FxEntityData
-import chylex.hee.network.fx.FxEntityHandler
-import chylex.hee.system.color.IntColor.Companion.RGB
-import chylex.hee.system.forge.Side
-import chylex.hee.system.forge.Sided
-import chylex.hee.system.math.Vec
-import chylex.hee.system.math.Vec3
-import chylex.hee.system.math.addY
-import chylex.hee.system.math.ceilToInt
-import chylex.hee.system.math.withY
-import chylex.hee.system.migration.EntityPlayer
-import chylex.hee.system.migration.Potions
-import chylex.hee.system.random.IRandomColor
-import chylex.hee.system.random.IRandomColor.Companion.IRandomColor
 import chylex.hee.system.random.nextFloat
 import chylex.hee.system.random.nextInt
 import chylex.hee.system.random.nextRounded
-import chylex.hee.system.serialization.NBTObjectList
+import chylex.hee.util.color.IColorGenerator
+import chylex.hee.util.color.RGB
+import chylex.hee.util.forge.Side
+import chylex.hee.util.forge.Sided
+import chylex.hee.util.math.Vec
+import chylex.hee.util.math.Vec3
+import chylex.hee.util.math.addY
+import chylex.hee.util.math.ceilToInt
+import chylex.hee.util.math.withY
+import chylex.hee.util.nbt.NBTObjectList
 import com.google.common.collect.Sets
 import net.minecraft.entity.Entity
 import net.minecraft.entity.ILivingEntityData
@@ -49,6 +46,8 @@ import net.minecraft.entity.ai.attributes.Attributes.ATTACK_DAMAGE
 import net.minecraft.entity.ai.attributes.Attributes.ATTACK_KNOCKBACK
 import net.minecraft.entity.ai.attributes.Attributes.MAX_HEALTH
 import net.minecraft.entity.ai.attributes.Attributes.MOVEMENT_SPEED
+import net.minecraft.entity.player.PlayerEntity
+import net.minecraft.potion.Effects
 import net.minecraft.util.DamageSource
 import net.minecraft.util.SoundCategory
 import java.util.EnumSet
@@ -78,25 +77,25 @@ class UndreadDustEffects(private val dustTypes: EnumSet<DustType>) : ILivingEnti
 		private val ATTRIBUTES = STAT_MULTIPLIERS.mapValues { (count, mp) ->
 			mapOf(
 				DustType.END_POWDER to mapOf(
-					MAX_HEALTH     to AttributeModifier(UUID.fromString("D8083013-0F87-4B8F-A45A-0DF66FB22D11"), "Undread End Powder health $count", (3.00 * mp) - 1.0, OPERATION_MUL_INCR_INDIVIDUAL),
-					MOVEMENT_SPEED to AttributeModifier(UUID.fromString("E4610BDE-9D6C-46EC-B95F-2A2FF7B6FACF"), "Undread End Powder speed $count",  (0.75 * mp) - 1.0, OPERATION_MUL_INCR_INDIVIDUAL),
+					MAX_HEALTH     to AttributeModifier(UUID.fromString("D8083013-0F87-4B8F-A45A-0DF66FB22D11"), "Undread End Powder health $count", (3.00 * mp) - 1.0, OP_MUL_INCR_INDIVIDUAL),
+					MOVEMENT_SPEED to AttributeModifier(UUID.fromString("E4610BDE-9D6C-46EC-B95F-2A2FF7B6FACF"), "Undread End Powder speed $count",  (0.75 * mp) - 1.0, OP_MUL_INCR_INDIVIDUAL),
 				),
 				
 				DustType.REDSTONE to mapOf(
-					ATTACK_DAMAGE    to AttributeModifier(UUID.fromString("1C26CF5A-4FA0-4357-A87C-1F0AE69F5B1A"), "Undread Redstone damage $count",    (1.75 * mp) - 1.0, OPERATION_MUL_INCR_INDIVIDUAL),
-					ATTACK_KNOCKBACK to AttributeModifier(UUID.fromString("7619AFD6-DC12-42B8-BA77-8427F1CF891A"), "Undread Redstone knockback $count", (2.40 * mp),       OPERATION_ADD), // 0.4 + (0.5 * ATTACK_KNOCKBACK) = 1.6 (4x)
+					ATTACK_DAMAGE    to AttributeModifier(UUID.fromString("1C26CF5A-4FA0-4357-A87C-1F0AE69F5B1A"), "Undread Redstone damage $count",    (1.75 * mp) - 1.0, OP_MUL_INCR_INDIVIDUAL),
+					ATTACK_KNOCKBACK to AttributeModifier(UUID.fromString("7619AFD6-DC12-42B8-BA77-8427F1CF891A"), "Undread Redstone knockback $count", (2.40 * mp),       OP_ADD), // 0.4 + (0.5 * ATTACK_KNOCKBACK) = 1.6 (4x)
 				),
 				
 				DustType.SUGAR to mapOf(
-					MOVEMENT_SPEED to AttributeModifier(UUID.fromString("3EE0A661-9824-4AA4-B62D-04A24A4DA99A"), "Undread Sugar speed $count", (1.88 * mp) - 1.0, OPERATION_MUL_INCR_INDIVIDUAL)
+					MOVEMENT_SPEED to AttributeModifier(UUID.fromString("3EE0A661-9824-4AA4-B62D-04A24A4DA99A"), "Undread Sugar speed $count", (1.88 * mp) - 1.0, OP_MUL_INCR_INDIVIDUAL)
 				)
 			)
 		}
 		
-		private val PARTICLE_END_POWDER_DATA = ParticleEnchantedHitCustom.Data(color = IRandomColor { RGB(nextInt(68, 96), nextInt(138, 202), nextInt(198, 244)) }, lifespan = 17..32, scale = (0.078F)..(0.092F))
+		private val PARTICLE_END_POWDER_DATA = ParticleEnchantedHitCustom.Data(color = IColorGenerator { RGB(nextInt(68, 96), nextInt(138, 202), nextInt(198, 244)) }, lifespan = 17..32, scale = (0.078F)..(0.092F))
 		private val PARTICLE_END_POWDER_POS = ModEntities.UNDREAD.size.let { OutlineBox(it.width * 0.55F, it.height * 0.5F, it.width * 0.55F) } + InBox(-0.1F, 0.1F, 0F, 0.1F, -0.1F, 0.1F)
 		
-		private val PARTICLE_ANCIENT_DUST_DATA = ParticleCriticalHitCustom.Data(color = IRandomColor { RGB(nextInt(110, 148).toUByte()) }, lifespan = 12..24, scale = (0.062F)..(0.072F))
+		private val PARTICLE_ANCIENT_DUST_DATA = ParticleCriticalHitCustom.Data(color = IColorGenerator { RGB(nextInt(110, 148).toUByte()) }, lifespan = 12..24, scale = (0.062F)..(0.072F))
 		private val PARTICLE_ANCIENT_DUST = ParticleSpawnerCustom(
 			type = ParticleCriticalHitCustom,
 			data = PARTICLE_ANCIENT_DUST_DATA,
@@ -106,13 +105,13 @@ class UndreadDustEffects(private val dustTypes: EnumSet<DustType>) : ILivingEnti
 		
 		private val PARTICLE_GUNPOWDER = ParticleSpawnerCustom(
 			type = ParticleSmokeCustom,
-			data = ParticleSmokeCustom.Data(color = IRandomColor { if (nextBoolean()) RGB(40u) else RGB(220u) }, lifespan = 20, scale = 0.65F),
+			data = ParticleSmokeCustom.Data(color = IColorGenerator { if (nextBoolean()) RGB(40u) else RGB(220u) }, lifespan = 20, scale = 0.65F),
 			pos = InBox(0.32F, 0.25F, 0.32F)
 		)
 		
 		private val PARTICLE_REDSTONE = ParticleSpawnerCustom(
 			type = ParticleSmokeCustom,
-			data = ParticleSmokeCustom.Data(color = IRandomColor.Static(RGB(255, 0, 0)), lifespan = 9..14, scale = (0.32F)..(0.44F)),
+			data = ParticleSmokeCustom.Data(color = RGB(255, 0, 0), lifespan = 9..14, scale = (0.32F)..(0.44F)),
 			pos = InBox(0.22F),
 			mot = InBox(0F, 0F, 0F, 0.002F, 0F, 0F)
 		)
@@ -175,10 +174,10 @@ class UndreadDustEffects(private val dustTypes: EnumSet<DustType>) : ILivingEnti
 	fun applyAttributes(entity: EntityMobUndread) {
 		val count = dustCountForMultipliers
 		
-		for(dustType in dustTypes) {
+		for (dustType in dustTypes) {
 			val modifiers = ATTRIBUTES.getValue(count)[dustType] ?: continue
 			
-			for((attribute, modifier) in modifiers) {
+			for ((attribute, modifier) in modifiers) {
 				entity.getAttributeInstance(attribute).applyPersistentModifier(modifier)
 			}
 		}
@@ -204,18 +203,18 @@ class UndreadDustEffects(private val dustTypes: EnumSet<DustType>) : ILivingEnti
 	}
 	
 	fun onHurt(entity: EntityMobUndread, source: DamageSource) {
-		val attacker = source.immediateSource as? EntityPlayer
+		val attacker = source.immediateSource as? PlayerEntity
 		if (attacker != null && dustTypes.contains(DustType.ANCIENT_DUST)) {
-			val weakness = attacker.getActivePotionEffect(Potions.WEAKNESS)
+			val weakness = attacker.getActivePotionEffect(Effects.WEAKNESS)
 			if (weakness == null || weakness.duration <= 50) {
-				attacker.addPotionEffect(Potions.WEAKNESS.makeEffect(100))
+				attacker.addPotionEffect(Effects.WEAKNESS.makeInstance(100))
 			}
 			else if (weakness.amplifier < 2) {
-				attacker.addPotionEffect(Potions.WEAKNESS.makeEffect(100, weakness.amplifier + 1))
+				attacker.addPotionEffect(Effects.WEAKNESS.makeInstance(100, weakness.amplifier + 1))
 			}
 			else {
-				attacker.addPotionEffect(Potions.WEAKNESS.makeEffect(100, weakness.amplifier))
-				attacker.addPotionEffect(Potions.BLINDNESS.makeEffect((400 * SPECIAL_MULTIPLIERS.getValue(dustCountForMultipliers)).ceilToInt()))
+				attacker.addPotionEffect(Effects.WEAKNESS.makeInstance(100, weakness.amplifier))
+				attacker.addPotionEffect(Effects.BLINDNESS.makeInstance((400 * SPECIAL_MULTIPLIERS.getValue(dustCountForMultipliers)).ceilToInt()))
 			}
 			
 			ModSounds.MOB_UNDREAD_CURSE.playPlayer(attacker, attacker.posVec, SoundCategory.HOSTILE, volume = 0.85F, pitch = attacker.rng.nextFloat(0.9F, 1F))

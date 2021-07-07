@@ -1,27 +1,27 @@
 package chylex.hee.client.render.block
 
-import chylex.hee.client.MC
-import chylex.hee.client.render.gl.DF_ONE
-import chylex.hee.client.render.gl.DF_ONE_MINUS_SRC_ALPHA
-import chylex.hee.client.render.gl.RenderStateBuilder
-import chylex.hee.client.render.gl.RenderStateBuilder.Companion.FOG_BLACK
-import chylex.hee.client.render.gl.RenderStateBuilder.Companion.FOG_ENABLED
-import chylex.hee.client.render.gl.SF_SRC_ALPHA
+import chylex.hee.client.render.RenderStateBuilder
+import chylex.hee.client.render.RenderStateBuilder.Companion.FOG_BLACK
+import chylex.hee.client.render.RenderStateBuilder.Companion.FOG_ENABLED
+import chylex.hee.client.render.util.DF_ONE
+import chylex.hee.client.render.util.DF_ONE_MINUS_SRC_ALPHA
+import chylex.hee.client.render.util.SF_SRC_ALPHA
+import chylex.hee.client.util.MC
+import chylex.hee.game.Resource
 import chylex.hee.game.block.BlockAbstractPortal
 import chylex.hee.game.block.BlockAbstractPortal.IPortalController
 import chylex.hee.game.block.entity.TileEntityPortalInner
-import chylex.hee.game.world.center
-import chylex.hee.game.world.getTile
-import chylex.hee.game.world.offsetWhile
-import chylex.hee.system.facades.Facing4
-import chylex.hee.system.facades.Resource
-import chylex.hee.system.forge.Side
-import chylex.hee.system.forge.Sided
-import chylex.hee.system.math.component1
-import chylex.hee.system.math.component2
-import chylex.hee.system.math.component3
-import chylex.hee.system.math.square
-import chylex.hee.system.math.toRadians
+import chylex.hee.game.world.util.Facing4
+import chylex.hee.game.world.util.getTile
+import chylex.hee.game.world.util.offsetWhile
+import chylex.hee.util.forge.Side
+import chylex.hee.util.forge.Sided
+import chylex.hee.util.math.center
+import chylex.hee.util.math.component1
+import chylex.hee.util.math.component2
+import chylex.hee.util.math.component3
+import chylex.hee.util.math.square
+import chylex.hee.util.math.toRadians
 import com.mojang.blaze3d.matrix.MatrixStack
 import com.mojang.blaze3d.vertex.IVertexBuilder
 import net.minecraft.client.renderer.IRenderTypeBuffer
@@ -104,7 +104,7 @@ abstract class RenderTileAbstractPortal<T : TileEntityPortalInner, C : IPortalCo
 		
 		var dist = -1
 		
-		for(facing in Facing4) {
+		for (facing in Facing4) {
 			val testPos = pos.offsetWhile(facing, 1 until BlockAbstractPortal.MAX_SIZE) { it.getTile<TileEntityPortalInner>(world) != null }
 			val testDist = abs((testPos.x - pos.x) + (testPos.z - pos.z))
 			
@@ -144,7 +144,7 @@ abstract class RenderTileAbstractPortal<T : TileEntityPortalInner, C : IPortalCo
 		val (x, y, z) = diff
 		val layerCount = getLayerCount((x * x) + (y * y) + (z * z))
 		
-		for(layer in 1..15) {
+		for (layer in 1..15) {
 			val layerIndexRev = 16 - layer
 			val colorMultiplier = 1F / (layerIndexRev + 1F)
 			

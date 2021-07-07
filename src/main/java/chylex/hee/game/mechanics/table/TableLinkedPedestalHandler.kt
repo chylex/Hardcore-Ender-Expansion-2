@@ -2,14 +2,14 @@ package chylex.hee.game.mechanics.table
 
 import chylex.hee.game.block.entity.TileEntityTablePedestal
 import chylex.hee.game.block.entity.base.TileEntityBaseTable
-import chylex.hee.game.world.Pos
-import chylex.hee.game.world.distanceSqTo
-import chylex.hee.game.world.getTile
-import chylex.hee.system.math.square
-import chylex.hee.system.serialization.TagCompound
-import chylex.hee.system.serialization.getPosOrNull
-import chylex.hee.system.serialization.putPos
-import chylex.hee.system.serialization.use
+import chylex.hee.game.world.util.distanceSqTo
+import chylex.hee.game.world.util.getTile
+import chylex.hee.util.math.Pos
+import chylex.hee.util.math.square
+import chylex.hee.util.nbt.TagCompound
+import chylex.hee.util.nbt.getPosOrNull
+import chylex.hee.util.nbt.putPos
+import chylex.hee.util.nbt.use
 import net.minecraft.util.math.BlockPos
 import net.minecraftforge.common.util.INBTSerializable
 

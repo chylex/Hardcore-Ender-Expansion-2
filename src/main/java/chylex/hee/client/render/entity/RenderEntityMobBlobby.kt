@@ -1,24 +1,23 @@
 package chylex.hee.client.render.entity
 
-import chylex.hee.client.MC
-import chylex.hee.client.model.ModelHelper
 import chylex.hee.client.model.entity.ModelEntityMobBlobby
 import chylex.hee.client.model.entity.ModelEntityMobBlobby.GLOBAL_SCALE
-import chylex.hee.client.model.getQuads
-import chylex.hee.client.render.gl.rotateX
-import chylex.hee.client.render.gl.rotateY
-import chylex.hee.client.render.gl.rotateZ
-import chylex.hee.client.render.gl.scale
-import chylex.hee.client.render.gl.scaleY
-import chylex.hee.client.render.gl.translateY
+import chylex.hee.client.model.util.ModelHelper
+import chylex.hee.client.model.util.getQuads
+import chylex.hee.client.render.util.rotateX
+import chylex.hee.client.render.util.rotateY
+import chylex.hee.client.render.util.rotateZ
+import chylex.hee.client.render.util.scale
+import chylex.hee.client.render.util.scaleY
+import chylex.hee.client.render.util.translateY
+import chylex.hee.client.util.MC
+import chylex.hee.game.Resource
 import chylex.hee.game.entity.living.EntityMobBlobby
-import chylex.hee.game.inventory.isNotEmpty
-import chylex.hee.system.facades.Facing6
-import chylex.hee.system.facades.Resource
-import chylex.hee.system.forge.Side
-import chylex.hee.system.forge.Sided
-import chylex.hee.system.migration.ItemBlock
+import chylex.hee.game.item.util.isNotEmpty
+import chylex.hee.game.world.util.Facing6
 import chylex.hee.system.random.nextFloat
+import chylex.hee.util.forge.Side
+import chylex.hee.util.forge.Sided
 import com.mojang.blaze3d.matrix.MatrixStack
 import com.mojang.blaze3d.vertex.IVertexBuilder
 import net.minecraft.block.AbstractChestBlock
@@ -32,6 +31,7 @@ import net.minecraft.client.renderer.model.IBakedModel
 import net.minecraft.client.renderer.model.ItemCameraTransforms.TransformType
 import net.minecraft.client.renderer.model.ItemCameraTransforms.TransformType.GROUND
 import net.minecraft.client.renderer.texture.OverlayTexture
+import net.minecraft.item.BlockItem
 import net.minecraft.item.ItemStack
 import net.minecraft.util.Direction
 import net.minecraft.util.ResourceLocation
@@ -108,7 +108,7 @@ class RenderEntityMobBlobby(manager: EntityRendererManager) : MobRenderer<Entity
 		matrix.translate(-0.5, entity.height * scale * 0.5 - modelYOff, -0.5)
 		
 		if (model.isBuiltInRenderer) {
-			val overrideType = when((stack.item as? ItemBlock)?.block) {
+			val overrideType = when ((stack.item as? BlockItem)?.block) {
 				is AbstractChestBlock<*> -> RenderType.getEntityTranslucentCull(Atlases.CHEST_ATLAS)
 				else                     -> null // POLISH implement more special cases
 			}
@@ -125,7 +125,7 @@ class RenderEntityMobBlobby(manager: EntityRendererManager) : MobRenderer<Entity
 		else {
 			val builder = buffer.getBuffer(Atlases.getItemEntityTranslucentCullType())
 			
-			for(facing in Facing6) {
+			for (facing in Facing6) {
 				renderItemQuads(stack, model, facing, matrix, builder, combinedLight)
 			}
 			

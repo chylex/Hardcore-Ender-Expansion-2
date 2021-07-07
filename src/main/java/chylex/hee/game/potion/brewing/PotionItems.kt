@@ -1,16 +1,16 @@
 package chylex.hee.game.potion.brewing
 
-import chylex.hee.game.inventory.nbtOrNull
+import chylex.hee.game.item.util.nbtOrNull
 import chylex.hee.game.potion.brewing.modifiers.BrewConvertBottle
 import chylex.hee.game.potion.brewing.modifiers.BrewIncreaseDuration
 import chylex.hee.game.potion.brewing.modifiers.BrewIncreaseLevel
 import chylex.hee.game.potion.brewing.modifiers.BrewReversal
-import chylex.hee.system.migration.ItemPotion
-import chylex.hee.system.migration.Potion
-import chylex.hee.system.migration.PotionType
-import chylex.hee.system.serialization.hasKey
+import chylex.hee.util.nbt.hasKey
 import net.minecraft.item.Item
 import net.minecraft.item.ItemStack
+import net.minecraft.item.PotionItem
+import net.minecraft.potion.Effect
+import net.minecraft.potion.Potion
 import net.minecraft.potion.PotionUtils
 import net.minecraftforge.common.brewing.BrewingRecipeRegistry
 
@@ -25,12 +25,12 @@ object PotionItems {
 		BrewReversal
 	).associateBy(IBrewingModifier::ingredient)
 	
-	fun getBottle(item: Item, type: PotionType): ItemStack {
-		return PotionUtils.addPotionToItemStack(ItemStack(item), type)
+	fun getBottle(item: Item, potion: Potion): ItemStack {
+		return PotionUtils.addPotionToItemStack(ItemStack(item), potion)
 	}
 	
-	fun getBottle(item: Item, potion: Potion, withBaseEffect: Boolean): ItemStack {
-		val type = PotionTypeMap.getTypeOrWater(potion)
+	fun getBottle(item: Item, effect: Effect, withBaseEffect: Boolean): ItemStack {
+		val type = PotionTypeMap.getPotionOrWater(effect)
 		
 		return if (withBaseEffect)
 			getBottle(item, type)
@@ -38,12 +38,12 @@ object PotionItems {
 			getBottle(item, PotionTypeMap.findNoEffectOverride(type))
 	}
 	
-	fun checkBottle(stack: ItemStack, type: PotionType): Boolean {
-		return isPotion(stack) && PotionUtils.getPotionFromItem(stack) === type && !stack.nbtOrNull.hasKey(CUSTOM_EFFECTS_TAG)
+	fun checkBottle(stack: ItemStack, potion: Potion): Boolean {
+		return isPotion(stack) && PotionUtils.getPotionFromItem(stack) === potion && !stack.nbtOrNull.hasKey(CUSTOM_EFFECTS_TAG)
 	}
 	
 	fun isPotion(stack: ItemStack): Boolean {
-		return stack.item is ItemPotion
+		return stack.item is PotionItem
 	}
 	
 	fun isReagent(stack: ItemStack): Boolean {

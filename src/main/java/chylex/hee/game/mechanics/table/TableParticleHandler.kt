@@ -2,6 +2,8 @@ package chylex.hee.game.mechanics.table
 
 import chylex.hee.game.block.entity.TileEntityEnergyCluster
 import chylex.hee.game.block.entity.base.TileEntityBaseTable
+import chylex.hee.game.fx.IFxData
+import chylex.hee.game.fx.IFxHandler
 import chylex.hee.game.particle.ParticleEnergyTableDrain
 import chylex.hee.game.particle.ParticleEnergyTransferToPedestal
 import chylex.hee.game.particle.base.ParticleBaseEnergy.ClusterParticleDataGenerator
@@ -10,20 +12,17 @@ import chylex.hee.game.particle.spawner.properties.IOffset.InBox
 import chylex.hee.game.particle.spawner.properties.IOffset.InSphere
 import chylex.hee.game.particle.spawner.properties.IShape.Line
 import chylex.hee.game.particle.spawner.properties.IShape.Point
-import chylex.hee.game.world.center
-import chylex.hee.game.world.getBlock
-import chylex.hee.game.world.getTile
-import chylex.hee.game.world.totalTime
+import chylex.hee.game.world.util.getBlock
+import chylex.hee.game.world.util.getTile
 import chylex.hee.init.ModBlocks
 import chylex.hee.network.client.PacketClientFX
-import chylex.hee.network.fx.IFxData
-import chylex.hee.network.fx.IFxHandler
-import chylex.hee.system.math.directionTowards
-import chylex.hee.system.math.floorToInt
 import chylex.hee.system.random.nextFloat
-import chylex.hee.system.serialization.readPos
-import chylex.hee.system.serialization.use
-import chylex.hee.system.serialization.writePos
+import chylex.hee.util.buffer.readPos
+import chylex.hee.util.buffer.use
+import chylex.hee.util.buffer.writePos
+import chylex.hee.util.math.center
+import chylex.hee.util.math.directionTowards
+import chylex.hee.util.math.floorToInt
 import net.minecraft.network.PacketBuffer
 import net.minecraft.util.math.BlockPos
 import net.minecraft.world.World
@@ -51,7 +50,7 @@ class TableParticleHandler(private val table: TileEntityBaseTable) {
 				writeByte(travelTime)
 				writeByte(targetPositions.size)
 				
-				for(pos in targetPositions) {
+				for (pos in targetPositions) {
 					writeLong(pos.toLong())
 				}
 			}
@@ -112,7 +111,7 @@ class TableParticleHandler(private val table: TileEntityBaseTable) {
 	
 	fun tick(processTickRate: Int) {
 		val particleRate = getParticleRate(processTickRate)
-		val modTick = table.wrld.totalTime % particleRate
+		val modTick = table.wrld.gameTime % particleRate
 		
 		if (modTick == 0L) {
 			lastDrainedCluster?.let {

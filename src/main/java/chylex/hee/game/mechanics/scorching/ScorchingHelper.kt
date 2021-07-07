@@ -1,6 +1,8 @@
 package chylex.hee.game.mechanics.scorching
 
 import chylex.hee.HEE
+import chylex.hee.game.fx.FxBlockHandler
+import chylex.hee.game.fx.FxEntityHandler
 import chylex.hee.game.item.repair.ICustomRepairBehavior
 import chylex.hee.game.item.repair.RepairInstance
 import chylex.hee.game.particle.ParticleFlameCustom
@@ -9,18 +11,16 @@ import chylex.hee.game.particle.spawner.properties.IOffset.Constant
 import chylex.hee.game.particle.spawner.properties.IOffset.InBox
 import chylex.hee.game.particle.spawner.properties.IShape.Point
 import chylex.hee.init.ModItems
-import chylex.hee.network.fx.FxBlockHandler
-import chylex.hee.network.fx.FxEntityHandler
-import chylex.hee.system.forge.EventPriority
-import chylex.hee.system.forge.EventResult
-import chylex.hee.system.forge.SubscribeAllEvents
-import chylex.hee.system.forge.SubscribeEvent
-import chylex.hee.system.migration.EntityPlayer
-import chylex.hee.system.migration.Facing.UP
-import chylex.hee.system.migration.Hand.MAIN_HAND
+import chylex.hee.util.forge.EventPriority
+import chylex.hee.util.forge.EventResult
+import chylex.hee.util.forge.SubscribeAllEvents
+import chylex.hee.util.forge.SubscribeEvent
 import net.minecraft.entity.Entity
+import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.item.IItemTier
 import net.minecraft.item.ItemStack
+import net.minecraft.util.Direction.UP
+import net.minecraft.util.Hand.MAIN_HAND
 import net.minecraft.util.math.BlockPos
 import net.minecraft.world.World
 import net.minecraftforge.event.entity.player.CriticalHitEvent
@@ -55,7 +55,7 @@ object ScorchingHelper {
 	
 	// Helpers
 	
-	private fun getHeldScorchingTool(player: EntityPlayer): IScorchingItem? {
+	private fun getHeldScorchingTool(player: PlayerEntity): IScorchingItem? {
 		return player.getHeldItem(MAIN_HAND).item as? IScorchingItem
 	}
 	

@@ -1,43 +1,41 @@
 package chylex.hee.game.block
 
-import chylex.hee.HEE
 import chylex.hee.client.color.NO_TINT
 import chylex.hee.client.render.block.IBlockLayerCutout
+import chylex.hee.client.util.MC
 import chylex.hee.game.block.BlockPuzzleLogic.State.ACTIVE
 import chylex.hee.game.block.BlockPuzzleLogic.State.DISABLED
 import chylex.hee.game.block.BlockPuzzleLogic.State.INACTIVE
 import chylex.hee.game.block.properties.BlockBuilder
-import chylex.hee.game.block.properties.Property
-import chylex.hee.game.entity.posVec
+import chylex.hee.game.block.util.Property
+import chylex.hee.game.block.util.withFacing
+import chylex.hee.game.entity.util.posVec
+import chylex.hee.game.fx.FxBlockData
+import chylex.hee.game.fx.FxBlockHandler
+import chylex.hee.game.fx.FxEntityHandler
+import chylex.hee.game.fx.util.playClient
 import chylex.hee.game.particle.ParticleSmokeCustom
 import chylex.hee.game.particle.spawner.ParticleSpawnerCustom
 import chylex.hee.game.particle.spawner.properties.IOffset.Constant
 import chylex.hee.game.particle.spawner.properties.IOffset.InBox
 import chylex.hee.game.particle.spawner.properties.IOffset.InSphere
 import chylex.hee.game.particle.spawner.properties.IShape.Point
-import chylex.hee.game.world.Pos
-import chylex.hee.game.world.allInBox
-import chylex.hee.game.world.allInCenteredBox
-import chylex.hee.game.world.distanceSqTo
-import chylex.hee.game.world.floodFill
-import chylex.hee.game.world.getBlock
-import chylex.hee.game.world.getState
-import chylex.hee.game.world.math.BoundingBox
-import chylex.hee.game.world.playClient
-import chylex.hee.game.world.setState
-import chylex.hee.game.world.totalTime
+import chylex.hee.game.world.util.Facing4
+import chylex.hee.game.world.util.allInBox
+import chylex.hee.game.world.util.allInCenteredBox
+import chylex.hee.game.world.util.distanceSqTo
+import chylex.hee.game.world.util.floodFill
+import chylex.hee.game.world.util.getBlock
+import chylex.hee.game.world.util.getState
+import chylex.hee.game.world.util.setState
 import chylex.hee.init.ModSounds
 import chylex.hee.network.client.PacketClientFX
-import chylex.hee.network.fx.FxBlockData
-import chylex.hee.network.fx.FxBlockHandler
-import chylex.hee.network.fx.FxEntityHandler
-import chylex.hee.system.color.IntColor.Companion.RGB
-import chylex.hee.system.facades.Facing4
-import chylex.hee.system.forge.Side
-import chylex.hee.system.forge.Sided
-import chylex.hee.system.migration.Facing.NORTH
-import chylex.hee.system.migration.Facing.UP
 import chylex.hee.system.random.nextFloat
+import chylex.hee.util.color.RGB
+import chylex.hee.util.forge.Side
+import chylex.hee.util.forge.Sided
+import chylex.hee.util.math.BoundingBox
+import chylex.hee.util.math.Pos
 import net.minecraft.block.Block
 import net.minecraft.block.BlockState
 import net.minecraft.block.HorizontalBlock.HORIZONTAL_FACING
@@ -46,6 +44,8 @@ import net.minecraft.entity.Entity
 import net.minecraft.item.BlockItemUseContext
 import net.minecraft.state.StateContainer.Builder
 import net.minecraft.util.Direction
+import net.minecraft.util.Direction.NORTH
+import net.minecraft.util.Direction.UP
 import net.minecraft.util.IStringSerializable
 import net.minecraft.util.SoundCategory
 import net.minecraft.util.math.BlockPos
@@ -78,7 +78,7 @@ sealed class BlockPuzzleLogic(builder: BlockBuilder) : BlockSimple(builder), IBl
 			override fun handle(pos: BlockPos, world: World, rand: Random) {
 				PARTICLE_TOGGLE.spawn(Point(pos, 5), rand)
 				
-				val currentTime = world.totalTime
+				val currentTime = world.gameTime
 				
 				if (currentTime - lastClientClickSoundTime > UPDATE_RATE / 2) {
 					lastClientClickSoundTime = currentTime
@@ -89,12 +89,12 @@ sealed class BlockPuzzleLogic(builder: BlockBuilder) : BlockSimple(builder), IBl
 		
 		val FX_SOLVE_TOGGLE = object : FxBlockHandler() {
 			override fun handle(pos: BlockPos, world: World, rand: Random) {
-				val player = HEE.proxy.getClientSidePlayer() ?: return
+				val player = MC.player ?: return
 				
 				var closest = pos
 				var closestDistSq = pos.distanceSqTo(player)
 				
-				for(testPos in pos.floodFill(Facing4) { it.getBlock(world) is BlockPuzzleLogic }) {
+				for (testPos in pos.floodFill(Facing4) { it.getBlock(world) is BlockPuzzleLogic }) {
 					PARTICLE_TOGGLE.spawn(Point(testPos, 3), rand)
 					
 					val distSq = testPos.distanceSqTo(player)
@@ -128,14 +128,14 @@ sealed class BlockPuzzleLogic(builder: BlockBuilder) : BlockSimple(builder), IBl
 			val rects = mutableListOf<BoundingBox>()
 			val remainingBlocks = allBlocks.toMutableSet()
 			
-			while(remainingBlocks.isNotEmpty()) {
+			while (remainingBlocks.isNotEmpty()) {
 				val startPos = remainingBlocks.first()
 				val y = startPos.y
 				
 				var coordPos = startPos
 				var coordNeg = startPos
 				
-				while(true) {
+				while (true) {
 					val prevCoordPos = coordPos
 					val prevCoordNeg = coordNeg
 					
@@ -180,7 +180,7 @@ sealed class BlockPuzzleLogic(builder: BlockBuilder) : BlockSimple(builder), IBl
 		DISABLED("disabled");
 		
 		val toggled
-			get() = when(this) {
+			get() = when (this) {
 				ACTIVE   -> INACTIVE
 				INACTIVE -> ACTIVE
 				DISABLED -> DISABLED
@@ -250,7 +250,7 @@ sealed class BlockPuzzleLogic(builder: BlockBuilder) : BlockSimple(builder), IBl
 	
 	class Redirect(builder: BlockBuilder, private val directions: Array<Direction>) : BlockPuzzleLogic(builder) {
 		init {
-			defaultState = stateContainer.baseState.with(STATE, ACTIVE).with(HORIZONTAL_FACING, NORTH)
+			defaultState = stateContainer.baseState.with(STATE, ACTIVE).withFacing(NORTH)
 		}
 		
 		override fun fillStateContainer(container: Builder<Block, BlockState>) {
@@ -294,7 +294,7 @@ sealed class BlockPuzzleLogic(builder: BlockBuilder) : BlockSimple(builder), IBl
 				return RGB(104, 58, 16).i // make the color slightly more visible in inventory
 			}
 			
-			return when(state[STATE]) {
+			return when (state[STATE]) {
 				ACTIVE   -> RGB(117,  66,  19).i
 				INACTIVE -> RGB(212, 157, 102).i
 				DISABLED -> RGB( 58,  40,  23).i

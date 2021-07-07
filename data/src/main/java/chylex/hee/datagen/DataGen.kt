@@ -8,8 +8,8 @@ import chylex.hee.datagen.client.ItemModels
 import chylex.hee.datagen.server.BlockLootTables
 import chylex.hee.datagen.server.BlockTags
 import chylex.hee.datagen.server.ItemTags
-import chylex.hee.system.forge.SubscribeAllEvents
-import chylex.hee.system.forge.SubscribeEvent
+import chylex.hee.util.forge.SubscribeAllEvents
+import net.minecraftforge.eventbus.api.SubscribeEvent
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber.Bus.MOD
 import net.minecraftforge.fml.event.lifecycle.GatherDataEvent
 

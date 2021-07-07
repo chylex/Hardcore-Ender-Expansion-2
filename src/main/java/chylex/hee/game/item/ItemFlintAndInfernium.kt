@@ -2,37 +2,37 @@ package chylex.hee.game.item
 
 import chylex.hee.HEE
 import chylex.hee.game.block.BlockInfusedTNT
-import chylex.hee.game.entity.heeTag
-import chylex.hee.game.entity.heeTagOrNull
-import chylex.hee.game.entity.posVec
-import chylex.hee.game.inventory.doDamage
-import chylex.hee.game.world.BlockEditor
-import chylex.hee.game.world.FLAG_NONE
-import chylex.hee.game.world.getBlock
-import chylex.hee.game.world.getState
-import chylex.hee.game.world.playServer
-import chylex.hee.game.world.removeBlock
-import chylex.hee.game.world.setBlock
+import chylex.hee.game.entity.util.posVec
+import chylex.hee.game.fx.util.playServer
+import chylex.hee.game.item.util.doDamage
+import chylex.hee.game.world.util.BlockEditor
+import chylex.hee.game.world.util.FLAG_NONE
+import chylex.hee.game.world.util.getBlock
+import chylex.hee.game.world.util.getState
+import chylex.hee.game.world.util.removeBlock
+import chylex.hee.game.world.util.setBlock
 import chylex.hee.init.ModBlocks
-import chylex.hee.system.compatibility.MinecraftForgeEventBus
-import chylex.hee.system.forge.EventPriority
-import chylex.hee.system.forge.SubscribeAllEvents
-import chylex.hee.system.forge.SubscribeEvent
-import chylex.hee.system.migration.ActionResult.FAIL
-import chylex.hee.system.migration.ActionResult.SUCCESS
-import chylex.hee.system.migration.EntityCreeper
-import chylex.hee.system.migration.EntityLivingBase
-import chylex.hee.system.migration.EntityPlayer
-import chylex.hee.system.migration.Sounds
+import chylex.hee.system.MinecraftForgeEventBus
+import chylex.hee.system.heeTag
+import chylex.hee.system.heeTagOrNull
 import chylex.hee.system.random.nextFloat
+import chylex.hee.util.forge.EventPriority
+import chylex.hee.util.forge.SubscribeAllEvents
+import chylex.hee.util.forge.SubscribeEvent
 import net.minecraft.block.Blocks
+import net.minecraft.entity.LivingEntity
+import net.minecraft.entity.monster.CreeperEntity
+import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.item.Item
 import net.minecraft.item.ItemStack
 import net.minecraft.item.ItemUseContext
 import net.minecraft.util.ActionResultType
+import net.minecraft.util.ActionResultType.FAIL
 import net.minecraft.util.ActionResultType.PASS
+import net.minecraft.util.ActionResultType.SUCCESS
 import net.minecraft.util.Hand
 import net.minecraft.util.SoundCategory
+import net.minecraft.util.SoundEvents
 import net.minecraft.util.math.BlockPos
 import net.minecraft.world.World
 import net.minecraftforge.event.world.ExplosionEvent
@@ -47,7 +47,7 @@ class ItemFlintAndInfernium(properties: Properties) : Item(properties) {
 		@SubscribeEvent(EventPriority.HIGHEST)
 		fun onExplosionStart(e: ExplosionEvent.Start) {
 			val explosion = e.explosion
-			val creeper = explosion.explosivePlacedBy as? EntityCreeper
+			val creeper = explosion.explosivePlacedBy as? CreeperEntity
 			
 			if (creeper?.heeTagOrNull?.getBoolean(CREEPER_INFERNIUM_TAG) == true) {
 				explosion.size *= EXPLOSION_MULTIPLIER
@@ -59,7 +59,7 @@ class ItemFlintAndInfernium(properties: Properties) : Item(properties) {
 		MinecraftForgeEventBus.register(this)
 	}
 	
-	fun igniteTNT(world: World, pos: BlockPos, player: EntityPlayer?, ignoreTrap: Boolean) {
+	fun igniteTNT(world: World, pos: BlockPos, player: PlayerEntity?, ignoreTrap: Boolean) {
 		if (pos.getBlock(world) === Blocks.TNT) {
 			pos.setBlock(world, ModBlocks.INFUSED_TNT, FLAG_NONE)
 		}
@@ -89,16 +89,16 @@ class ItemFlintAndInfernium(properties: Properties) : Item(properties) {
 				BlockEditor.place(ModBlocks.ETERNAL_FIRE, player, heldItem, context) ?: return FAIL
 			}
 			
-			Sounds.ITEM_FLINTANDSTEEL_USE.playServer(world, pos, SoundCategory.BLOCKS, volume = 1.1F, pitch = world.rand.nextFloat(0.4F, 0.5F))
+			SoundEvents.ITEM_FLINTANDSTEEL_USE.playServer(world, pos, SoundCategory.BLOCKS, volume = 1.1F, pitch = world.rand.nextFloat(0.4F, 0.5F))
 			heldItem.doDamage(1, player, context.hand)
 		}
 		
 		return SUCCESS
 	}
 	
-	override fun itemInteractionForEntity(stack: ItemStack, player: EntityPlayer, target: EntityLivingBase, hand: Hand): ActionResultType {
-		if (target is EntityCreeper) {
-			Sounds.ITEM_FLINTANDSTEEL_USE.playServer(target.world, target.posVec, target.soundCategory, volume = 1.1F, pitch = target.rng.nextFloat(0.4F, 0.5F))
+	override fun itemInteractionForEntity(stack: ItemStack, player: PlayerEntity, target: LivingEntity, hand: Hand): ActionResultType {
+		if (target is CreeperEntity) {
+			SoundEvents.ITEM_FLINTANDSTEEL_USE.playServer(target.world, target.posVec, target.soundCategory, volume = 1.1F, pitch = target.rng.nextFloat(0.4F, 0.5F))
 			player.swingArm(hand)
 			player.getHeldItem(hand).doDamage(1, player, hand)
 			

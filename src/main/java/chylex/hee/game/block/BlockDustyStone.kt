@@ -2,23 +2,23 @@ package chylex.hee.game.block
 
 import chylex.hee.game.block.logic.IBlockHarvestToolCheck
 import chylex.hee.game.block.properties.BlockBuilder
-import chylex.hee.game.item.Tool.Type.PICKAXE
-import chylex.hee.game.item.Tool.Type.SHOVEL
+import chylex.hee.game.item.util.Tool.Type.PICKAXE
+import chylex.hee.game.item.util.Tool.Type.SHOVEL
 import chylex.hee.game.particle.ParticleDust
 import chylex.hee.game.particle.spawner.ParticleSpawnerCustom
 import chylex.hee.game.particle.spawner.properties.IOffset.Constant
 import chylex.hee.game.particle.spawner.properties.IOffset.InBox
 import chylex.hee.game.particle.spawner.properties.IShape.Point
-import chylex.hee.game.world.getState
-import chylex.hee.game.world.isFullBlock
-import chylex.hee.system.forge.Side
-import chylex.hee.system.forge.Sided
-import chylex.hee.system.migration.EntityPlayer
-import chylex.hee.system.migration.Facing.DOWN
+import chylex.hee.game.world.util.getState
+import chylex.hee.game.world.util.isFullBlock
 import chylex.hee.system.random.nextInt
+import chylex.hee.util.forge.Side
+import chylex.hee.util.forge.Sided
 import net.minecraft.block.BlockState
 import net.minecraft.client.particle.ParticleManager
+import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.item.ItemStack
+import net.minecraft.util.Direction.DOWN
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.BlockRayTraceResult
 import net.minecraft.util.math.RayTraceResult
@@ -36,7 +36,7 @@ abstract class BlockDustyStone(builder: BlockBuilder) : BlockSimple(builder), IB
 		)
 	}
 	
-	abstract override fun canHarvestBlock(state: BlockState, world: IBlockReader, pos: BlockPos, player: EntityPlayer): Boolean
+	abstract override fun canHarvestBlock(state: BlockState, world: IBlockReader, pos: BlockPos, player: PlayerEntity): Boolean
 	
 	override fun canHarvestUsing(toolClass: ToolType, toolLevel: Int): Boolean {
 		return isToolEffective(defaultState, toolClass) && toolLevel >= 0
@@ -46,7 +46,7 @@ abstract class BlockDustyStone(builder: BlockBuilder) : BlockSimple(builder), IB
 		return tool == PICKAXE || tool == SHOVEL
 	}
 	
-	protected fun isPickaxeOrShovel(player: EntityPlayer, stack: ItemStack): Boolean {
+	protected fun isPickaxeOrShovel(player: PlayerEntity, stack: ItemStack): Boolean {
 		return stack.item.let {
 			it.getHarvestLevel(stack, PICKAXE, player, defaultState) >= 0 ||
 			it.getHarvestLevel(stack, SHOVEL,  player, defaultState) >= 0

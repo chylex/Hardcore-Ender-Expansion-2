@@ -1,7 +1,7 @@
 package chylex.hee.game.entity.living.ai
 
-import chylex.hee.system.math.square
-import chylex.hee.system.migration.EntityCreature
+import chylex.hee.util.math.square
+import net.minecraft.entity.CreatureEntity
 import net.minecraft.entity.ai.goal.Goal
 import net.minecraft.entity.ai.goal.Goal.Flag.LOOK
 import net.minecraft.entity.ai.goal.Goal.Flag.MOVE
@@ -9,7 +9,7 @@ import java.util.EnumSet
 import kotlin.math.max
 
 class AIWatchTargetInShock(
-	private val entity: EntityCreature,
+	private val entity: CreatureEntity,
 	maxDistance: Double,
 ) : Goal() {
 	val isWatching

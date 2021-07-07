@@ -2,32 +2,34 @@ package chylex.hee.game.block
 
 import chylex.hee.game.block.entity.base.TileEntityBaseChest
 import chylex.hee.game.block.properties.BlockBuilder
+import chylex.hee.game.block.util.asVoxelShape
+import chylex.hee.game.block.util.withFacing
 import chylex.hee.game.entity.living.ai.AIOcelotSitOverride.IOcelotCanSitOn
-import chylex.hee.game.entity.selectExistingEntities
-import chylex.hee.game.world.getState
-import chylex.hee.game.world.getTile
+import chylex.hee.game.entity.util.selectExistingEntities
+import chylex.hee.game.world.util.getState
+import chylex.hee.game.world.util.getTile
 import chylex.hee.init.ModContainers
-import chylex.hee.system.forge.Side
-import chylex.hee.system.forge.Sided
-import chylex.hee.system.migration.EntityCat
-import chylex.hee.system.migration.EntityLivingBase
-import chylex.hee.system.migration.EntityPlayer
-import chylex.hee.system.migration.Facing.NORTH
-import chylex.hee.system.migration.TileEntityChest
-import chylex.hee.system.migration.supply
+import chylex.hee.util.forge.Side
+import chylex.hee.util.forge.Sided
+import chylex.hee.util.forge.supply
 import net.minecraft.block.AbstractChestBlock
 import net.minecraft.block.Block
 import net.minecraft.block.BlockRenderType.ENTITYBLOCK_ANIMATED
 import net.minecraft.block.BlockState
 import net.minecraft.block.Blocks
 import net.minecraft.block.ChestBlock.FACING
+import net.minecraft.entity.LivingEntity
+import net.minecraft.entity.passive.CatEntity
+import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.item.BlockItemUseContext
 import net.minecraft.item.ItemStack
 import net.minecraft.state.StateContainer.Builder
+import net.minecraft.tileentity.ChestTileEntity
 import net.minecraft.tileentity.TileEntity
 import net.minecraft.tileentity.TileEntityMerger.ICallbackWrapper
 import net.minecraft.util.ActionResultType
 import net.minecraft.util.ActionResultType.SUCCESS
+import net.minecraft.util.Direction.NORTH
 import net.minecraft.util.Hand
 import net.minecraft.util.Mirror
 import net.minecraft.util.Rotation
@@ -74,7 +76,7 @@ abstract class BlockAbstractChest<T : TileEntityBaseChest>(builder: BlockBuilder
 	}
 	
 	@Sided(Side.CLIENT)
-	override fun combine(state: BlockState, world: World, pos: BlockPos, unknown: Boolean): ICallbackWrapper<out TileEntityChest> {
+	override fun combine(state: BlockState, world: World, pos: BlockPos, unknown: Boolean): ICallbackWrapper<out ChestTileEntity> {
 		return (Blocks.ENDER_CHEST as AbstractChestBlock<*>).combine(state, world, pos, unknown) // UPDATE reduce hackiness
 	}
 	
@@ -84,13 +86,13 @@ abstract class BlockAbstractChest<T : TileEntityBaseChest>(builder: BlockBuilder
 		return this.withFacing(context.placementHorizontalFacing.opposite)
 	}
 	
-	final override fun onBlockPlacedBy(world: World, pos: BlockPos, state: BlockState, placer: EntityLivingBase?, stack: ItemStack) {
+	final override fun onBlockPlacedBy(world: World, pos: BlockPos, state: BlockState, placer: LivingEntity?, stack: ItemStack) {
 		if (stack.hasDisplayName()) {
 			pos.getTile<TileEntityBaseChest>(world)?.setCustomName(stack.displayName)
 		}
 	}
 	
-	final override fun onBlockActivated(state: BlockState, world: World, pos: BlockPos, player: EntityPlayer, hand: Hand, hit: BlockRayTraceResult): ActionResultType {
+	final override fun onBlockActivated(state: BlockState, world: World, pos: BlockPos, player: PlayerEntity, hand: Hand, hit: BlockRayTraceResult): ActionResultType {
 		if (world.isRemote) {
 			return SUCCESS
 		}
@@ -101,7 +103,7 @@ abstract class BlockAbstractChest<T : TileEntityBaseChest>(builder: BlockBuilder
 			return SUCCESS
 		}
 		
-		if (world.selectExistingEntities.inBox<EntityCat>(AxisAlignedBB(posAbove)).any { it.isEntitySleeping }) {
+		if (world.selectExistingEntities.inBox<CatEntity>(AxisAlignedBB(posAbove)).any { it.isEntitySleeping }) {
 			return SUCCESS
 		}
 		
@@ -109,7 +111,7 @@ abstract class BlockAbstractChest<T : TileEntityBaseChest>(builder: BlockBuilder
 		return SUCCESS
 	}
 	
-	protected open fun openChest(world: World, pos: BlockPos, player: EntityPlayer) {
+	protected open fun openChest(world: World, pos: BlockPos, player: PlayerEntity) {
 		pos.getTile<TileEntityBaseChest>(world)?.let {
 			ModContainers.open(player, it, pos)
 		}

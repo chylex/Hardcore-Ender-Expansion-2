@@ -1,8 +1,8 @@
 package chylex.hee.game.mechanics.dust
 
-import chylex.hee.game.inventory.size
-import chylex.hee.system.serialization.NBTObjectList
-import chylex.hee.system.serialization.TagCompound
+import chylex.hee.game.item.util.size
+import chylex.hee.util.nbt.NBTObjectList
+import chylex.hee.util.nbt.TagCompound
 import net.minecraft.item.ItemStack
 import kotlin.math.min
 
@@ -101,7 +101,7 @@ class DustLayers(val totalCapacity: Int) {
 	// Serialization
 	
 	fun serializeNBT() = NBTObjectList<TagCompound>().apply {
-		for((dustType, dustAmount) in layers) {
+		for ((dustType, dustAmount) in layers) {
 			append(TagCompound().also {
 				it.putString(TYPE_TAG, dustType.key)
 				it.putShort(AMOUNT_TAG, dustAmount)
@@ -112,7 +112,7 @@ class DustLayers(val totalCapacity: Int) {
 	fun deserializeNBT(nbt: NBTObjectList<TagCompound>) = with(nbt) {
 		layers.clear()
 		
-		for(tag in this) {
+		for (tag in this) {
 			val dustType = tag.getString(TYPE_TAG)
 			val dustAmount = tag.getShort(AMOUNT_TAG)
 			

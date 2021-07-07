@@ -4,55 +4,54 @@ import chylex.hee.game.block.entity.base.TileEntityBase.Context.STORAGE
 import chylex.hee.game.block.entity.base.TileEntityBaseSpawner
 import chylex.hee.game.entity.living.EntityMobAngryEnderman
 import chylex.hee.game.entity.living.EntityMobEnderman
-import chylex.hee.game.entity.selectVulnerableEntities
+import chylex.hee.game.entity.util.selectVulnerableEntities
+import chylex.hee.game.fx.FxBlockData
+import chylex.hee.game.fx.FxBlockHandler
+import chylex.hee.game.fx.util.playClient
 import chylex.hee.game.particle.ParticleSpellCustom
 import chylex.hee.game.particle.spawner.ParticleSpawnerCustom
 import chylex.hee.game.particle.spawner.ParticleSpawnerVanilla
 import chylex.hee.game.particle.spawner.properties.IOffset.Constant
 import chylex.hee.game.particle.spawner.properties.IOffset.InBox
 import chylex.hee.game.particle.spawner.properties.IShape.Point
-import chylex.hee.game.potion.clone
-import chylex.hee.game.world.Pos
-import chylex.hee.game.world.breakBlock
-import chylex.hee.game.world.component1
-import chylex.hee.game.world.component2
-import chylex.hee.game.world.component3
-import chylex.hee.game.world.feature.obsidiantower.ObsidianTowerRoomData
-import chylex.hee.game.world.feature.obsidiantower.ObsidianTowerSpawnerLevel
-import chylex.hee.game.world.getState
-import chylex.hee.game.world.isAnyPlayerWithinRange
-import chylex.hee.game.world.isPeaceful
-import chylex.hee.game.world.playClient
-import chylex.hee.game.world.totalTime
+import chylex.hee.game.potion.util.clone
+import chylex.hee.game.world.generation.feature.obsidiantower.ObsidianTowerRoomData
+import chylex.hee.game.world.generation.feature.obsidiantower.ObsidianTowerSpawnerLevel
+import chylex.hee.game.world.util.breakBlock
+import chylex.hee.game.world.util.getState
+import chylex.hee.game.world.util.isAnyPlayerWithinRange
+import chylex.hee.game.world.util.isPeaceful
 import chylex.hee.init.ModSounds
 import chylex.hee.init.ModTileEntities
 import chylex.hee.network.client.PacketClientFX
-import chylex.hee.network.fx.FxBlockData
-import chylex.hee.network.fx.FxBlockHandler
-import chylex.hee.system.color.IntColor
-import chylex.hee.system.forge.EventResult
-import chylex.hee.system.math.square
-import chylex.hee.system.migration.EntityLiving
-import chylex.hee.system.migration.EntityPlayer
-import chylex.hee.system.migration.Facing.DOWN
 import chylex.hee.system.random.nextFloat
 import chylex.hee.system.random.nextInt
 import chylex.hee.system.random.nextItemOrNull
-import chylex.hee.system.serialization.NBTList.Companion.putList
-import chylex.hee.system.serialization.NBTObjectList
-import chylex.hee.system.serialization.TagCompound
-import chylex.hee.system.serialization.getEnum
-import chylex.hee.system.serialization.getListOfCompounds
-import chylex.hee.system.serialization.getPos
-import chylex.hee.system.serialization.putEnum
-import chylex.hee.system.serialization.putPos
-import chylex.hee.system.serialization.use
+import chylex.hee.util.color.IntColor
+import chylex.hee.util.forge.EventResult
+import chylex.hee.util.math.Pos
+import chylex.hee.util.math.component1
+import chylex.hee.util.math.component2
+import chylex.hee.util.math.component3
+import chylex.hee.util.math.square
+import chylex.hee.util.nbt.NBTObjectList
+import chylex.hee.util.nbt.TagCompound
+import chylex.hee.util.nbt.getEnum
+import chylex.hee.util.nbt.getListOfCompounds
+import chylex.hee.util.nbt.getPos
+import chylex.hee.util.nbt.putEnum
+import chylex.hee.util.nbt.putList
+import chylex.hee.util.nbt.putPos
+import chylex.hee.util.nbt.use
 import net.minecraft.entity.Entity
+import net.minecraft.entity.MobEntity
 import net.minecraft.entity.SpawnReason
+import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.particles.ParticleTypes.EXPLOSION
 import net.minecraft.particles.ParticleTypes.SMOKE
 import net.minecraft.potion.EffectInstance
 import net.minecraft.tileentity.TileEntityType
+import net.minecraft.util.Direction.DOWN
 import net.minecraft.util.SoundCategory
 import net.minecraft.util.math.AxisAlignedBB
 import net.minecraft.util.math.BlockPos
@@ -128,7 +127,7 @@ class TileEntitySpawnerObsidianTower(type: TileEntityType<TileEntitySpawnerObsid
 	
 	override fun tickClient() {
 		val rand = wrld.rand
-		val time = wrld.totalTime
+		val time = wrld.gameTime
 		
 		if (time % 3L == 0L && rand.nextInt(max(2, 5 - effects.size)) == 0) {
 			val color = rand.nextItemOrNull(effects)?.let { IntColor(it.potion.liquidColor) }
@@ -160,7 +159,7 @@ class TileEntitySpawnerObsidianTower(type: TileEntityType<TileEntitySpawnerObsid
 		
 		val searchArea = AxisAlignedBB(floorCenter).expand(0.0, SPAWN_AREA_BOX_HEIGHT, 0.0).grow(SPAWN_AREA_BOX_RANGE_XZ, 0.0, SPAWN_AREA_BOX_RANGE_XZ)
 		
-		if (getEntitiesInSpawnArea<EntityPlayer>(searchArea).none()) {
+		if (getEntitiesInSpawnArea<PlayerEntity>(searchArea).none()) {
 			startSpawnCooldown(resetSpawnCooldown)
 			return
 		}
@@ -203,7 +202,7 @@ class TileEntitySpawnerObsidianTower(type: TileEntityType<TileEntitySpawnerObsid
 		return wrld.selectVulnerableEntities.inBox<T>(searchArea).filter(::isEntityInRange)
 	}
 	
-	private fun canEntitySpawn(entity: EntityLiving): Boolean {
+	private fun canEntitySpawn(entity: MobEntity): Boolean {
 		val posBelow = Pos(entity).down()
 		
 		return (
@@ -218,13 +217,13 @@ class TileEntitySpawnerObsidianTower(type: TileEntityType<TileEntitySpawnerObsid
 		val (x, y, z) = floorCenter
 		val enderman = EntityMobAngryEnderman(wrld)
 		
-		for(attempt in 1..50) {
+		for (attempt in 1..50) {
 			enderman.setPosition(x + 0.5 + rand.nextFloat(-SPAWN_AREA_BOX_RANGE_XZ, SPAWN_AREA_BOX_RANGE_XZ), y + 0.01, z + 0.5 + rand.nextFloat(-SPAWN_AREA_BOX_RANGE_XZ, SPAWN_AREA_BOX_RANGE_XZ))
 			
 			if (canEntitySpawn(enderman)) {
 				enderman.setLocationAndAngles(enderman.posX, enderman.posY, enderman.posZ, rand.nextFloat(0F, 360F), 0F)
 				
-				for(effect in effects) {
+				for (effect in effects) {
 					enderman.addPotionEffect(effect.clone())
 				}
 				

@@ -1,10 +1,10 @@
 package chylex.hee.test.unit.mechanics.damage
 
-import chylex.hee.game.mechanics.damage.DamageProperties
-import chylex.hee.game.mechanics.damage.DamageType
-import chylex.hee.system.migration.EntitySnowball
+import chylex.hee.game.entity.damage.DamageProperties
+import chylex.hee.game.entity.damage.DamageType
 import net.minecraft.entity.Entity
 import net.minecraft.entity.EntityType
+import net.minecraft.entity.projectile.SnowballEntity
 import net.minecraft.util.DamageSource
 import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.Assertions.assertNotNull
@@ -82,7 +82,7 @@ class TestDamageProperties {
 			assertTrue(createDamageSource().isDamageAbsolute)
 			assertFalse(createDamageSource().isDifficultyScaled)
 			@Suppress("NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS")
-			assertNull(createDamageSource(EntitySnowball(EntityType.SNOWBALL, null)).damageLocation)
+			assertNull(createDamageSource(SnowballEntity(EntityType.SNOWBALL, null)).damageLocation)
 		}
 		
 		@Test fun `using 'setAllowArmor' updates state correctly`() = with(DamageProperties()) {
@@ -93,7 +93,7 @@ class TestDamageProperties {
 			
 			assertFalse(createDamageSource().isUnblockable)
 			@Suppress("NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS")
-			assertNull(createDamageSource(EntitySnowball(EntityType.SNOWBALL, null)).damageLocation)
+			assertNull(createDamageSource(SnowballEntity(EntityType.SNOWBALL, null)).damageLocation)
 		}
 		
 		@Test fun `using 'setAllowArmorAndShield' updates state correctly`() = with(DamageProperties()) {
@@ -104,7 +104,7 @@ class TestDamageProperties {
 			
 			assertFalse(createDamageSource().isUnblockable)
 			@Suppress("NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS")
-			assertNotNull(createDamageSource(EntitySnowball(EntityType.SNOWBALL, null)).damageLocation)
+			assertNotNull(createDamageSource(SnowballEntity(EntityType.SNOWBALL, null)).damageLocation)
 		}
 		
 		@Test fun `using 'setDealCreative' updates state correctly`() = with(DamageProperties()) {

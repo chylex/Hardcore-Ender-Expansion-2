@@ -1,25 +1,24 @@
 package chylex.hee.game.entity.living.behavior
 
-import chylex.hee.game.entity.isBoss
+import chylex.hee.game.entity.damage.IDamageDealer
 import chylex.hee.game.entity.living.EntityBossEnderEye
-import chylex.hee.game.entity.lookDirVec
-import chylex.hee.game.entity.lookPosVec
-import chylex.hee.game.entity.motionX
-import chylex.hee.game.entity.motionZ
-import chylex.hee.game.entity.selectVulnerableEntities
-import chylex.hee.game.mechanics.damage.IDamageDealer
-import chylex.hee.game.world.totalTime
+import chylex.hee.game.entity.living.MobTypes
+import chylex.hee.game.entity.util.lookDirVec
+import chylex.hee.game.entity.util.lookPosVec
+import chylex.hee.game.entity.util.motionX
+import chylex.hee.game.entity.util.motionZ
+import chylex.hee.game.entity.util.selectVulnerableEntities
 import chylex.hee.network.client.PacketClientLaunchInstantly
-import chylex.hee.system.math.Vec3
-import chylex.hee.system.math.addY
-import chylex.hee.system.math.directionTowards
-import chylex.hee.system.math.square
-import chylex.hee.system.math.toRadians
-import chylex.hee.system.math.withY
-import chylex.hee.system.migration.EntityLivingBase
-import chylex.hee.system.migration.EntityPlayer
 import chylex.hee.system.random.nextFloat
 import chylex.hee.system.random.nextInt
+import chylex.hee.util.math.Vec3
+import chylex.hee.util.math.addY
+import chylex.hee.util.math.directionTowards
+import chylex.hee.util.math.square
+import chylex.hee.util.math.toRadians
+import chylex.hee.util.math.withY
+import net.minecraft.entity.LivingEntity
+import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.util.math.AxisAlignedBB
 import java.util.UUID
 import kotlin.math.abs
@@ -86,7 +85,7 @@ sealed class EnderEyeAttack {
 				}
 				
 				if (distSq < square(1.4)) {
-					val currentTime = world.totalTime
+					val currentTime = world.gameTime
 					
 					if (currentTime - lastAttackTime >= 20L) {
 						lastAttackTime = currentTime
@@ -105,7 +104,7 @@ sealed class EnderEyeAttack {
 		
 		fun reset(entity: EntityBossEnderEye) {
 			currentSpeed = 1.0
-			lastAttackTime = entity.world.totalTime
+			lastAttackTime = entity.world.gameTime
 			laserEyeTicksRemaining = laserEyeTicksRemaining.coerceAtLeast(35)
 		}
 	}
@@ -163,7 +162,7 @@ sealed class EnderEyeAttack {
 			val laserEnd = getLaserHit(1F)
 			val laserLen = laserEnd.distanceTo(laserStart)
 			
-			for(testEntity in world.selectVulnerableEntities.inBox<EntityLivingBase>(boundingBox.grow(laserLen))) {
+			for (testEntity in world.selectVulnerableEntities.inBox<LivingEntity>(boundingBox.grow(laserLen))) {
 				if (testEntity.boundingBox.rayTrace(laserStart, laserEnd).isPresent) {
 					attackEntityAsMob(testEntity)
 				}
@@ -181,7 +180,7 @@ sealed class EnderEyeAttack {
 			return true
 		}
 		
-		private fun EntityBossEnderEye.tryFindNewTarget(): EntityLivingBase? {
+		private fun EntityBossEnderEye.tryFindNewTarget(): LivingEntity? {
 			val prevTarget = attackTarget
 			
 			if (forceFindNewTarget() == null) {
@@ -267,8 +266,8 @@ sealed class EnderEyeAttack {
 			val frontHurtCenter = lookPosVec.add(lookDirVec.scale(width * 0.75))
 			val frontHurtDist = width * 0.6
 			
-			for(hitEntity in world.selectVulnerableEntities.inBox<EntityLivingBase>(AxisAlignedBB(frontHurtCenter, frontHurtCenter).grow(frontHurtDist))) {
-				if (!hitEntity.isBoss && !hitEntities.contains(hitEntity.uniqueID) && attackEntityAsMob(hitEntity)) {
+			for (hitEntity in world.selectVulnerableEntities.inBox<LivingEntity>(AxisAlignedBB(frontHurtCenter, frontHurtCenter).grow(frontHurtDist))) {
+				if (!MobTypes.isBoss(hitEntity) && !hitEntities.contains(hitEntity.uniqueID) && attackEntityAsMob(hitEntity)) {
 					val multiplier = when {
 						hitEntity.isActiveItemStackBlocking -> 0.25
 						hitEntity.isSneaking                -> 0.75
@@ -280,7 +279,7 @@ sealed class EnderEyeAttack {
 					hitEntity.addVelocity(knockback.x, knockback.y, knockback.z)
 					hitEntities.add(hitEntity.uniqueID)
 					
-					if (hitEntity is EntityPlayer) {
+					if (hitEntity is PlayerEntity) {
 						PacketClientLaunchInstantly(hitEntity, hitEntity.motion).sendToPlayer(hitEntity)
 					}
 				}

@@ -1,12 +1,12 @@
 package chylex.hee.network.client
 
 import chylex.hee.network.BaseClientPacket
-import chylex.hee.system.forge.Side
-import chylex.hee.system.forge.Sided
-import chylex.hee.system.migration.EntityPlayerSP
-import chylex.hee.system.serialization.readVec
-import chylex.hee.system.serialization.use
-import chylex.hee.system.serialization.writeVec
+import chylex.hee.util.buffer.readVec
+import chylex.hee.util.buffer.use
+import chylex.hee.util.buffer.writeVec
+import chylex.hee.util.forge.Side
+import chylex.hee.util.forge.Sided
+import net.minecraft.client.entity.player.ClientPlayerEntity
 import net.minecraft.network.PacketBuffer
 import net.minecraft.util.math.vector.Vector3d
 
@@ -26,7 +26,7 @@ class PacketClientMoveYourAss() : BaseClientPacket() {
 	}
 	
 	@Sided(Side.CLIENT)
-	override fun handle(player: EntityPlayerSP) {
+	override fun handle(player: ClientPlayerEntity) {
 		player.stopRiding()
 		player.setLocationAndAngles(position.x, position.y, position.z, player.rotationYaw, player.rotationPitch)
 	}

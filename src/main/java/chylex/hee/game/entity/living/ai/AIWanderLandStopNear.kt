@@ -1,12 +1,12 @@
 package chylex.hee.game.entity.living.ai
 
-import chylex.hee.game.entity.posVec
-import chylex.hee.game.entity.selectVulnerableEntities
-import chylex.hee.system.migration.EntityCreature
-import chylex.hee.system.migration.EntityLivingBase
+import chylex.hee.game.entity.util.posVec
+import chylex.hee.game.entity.util.selectVulnerableEntities
+import net.minecraft.entity.CreatureEntity
+import net.minecraft.entity.LivingEntity
 
-class AIWanderLandStopNear<T : EntityLivingBase>(
-	entity: EntityCreature,
+class AIWanderLandStopNear<T : LivingEntity>(
+	entity: CreatureEntity,
 	movementSpeed: Double,
 	chancePerTick: Int,
 	maxDistanceXZ: Int,

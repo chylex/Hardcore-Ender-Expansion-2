@@ -1,7 +1,7 @@
 package chylex.hee.game.potion.brewing.modifiers
 
-import chylex.hee.game.inventory.nbtOrNull
-import chylex.hee.game.inventory.size
+import chylex.hee.game.item.util.nbtOrNull
+import chylex.hee.game.item.util.size
 import chylex.hee.game.potion.brewing.IBrewingModifier
 import chylex.hee.game.potion.brewing.PotionBrewing
 import net.minecraft.item.Item

@@ -2,38 +2,39 @@ package chylex.hee.game.block
 
 import chylex.hee.client.render.block.IBlockLayerCutout
 import chylex.hee.game.block.properties.BlockBuilder
-import chylex.hee.game.mechanics.damage.Damage
-import chylex.hee.game.mechanics.damage.IDamageDealer.Companion.TITLE_IN_FIRE
-import chylex.hee.game.mechanics.damage.IDamageProcessor.Companion.ALL_PROTECTIONS
-import chylex.hee.game.mechanics.damage.IDamageProcessor.Companion.FIRE_TYPE
-import chylex.hee.game.mechanics.damage.IDamageProcessor.Companion.PEACEFUL_EXCLUSION
-import chylex.hee.game.mechanics.damage.IDamageProcessor.Companion.RAPID_DAMAGE
+import chylex.hee.game.block.util.with
+import chylex.hee.game.entity.damage.Damage
+import chylex.hee.game.entity.damage.IDamageDealer.Companion.TITLE_IN_FIRE
+import chylex.hee.game.entity.damage.IDamageProcessor.Companion.ALL_PROTECTIONS
+import chylex.hee.game.entity.damage.IDamageProcessor.Companion.FIRE_TYPE
+import chylex.hee.game.entity.damage.IDamageProcessor.Companion.PEACEFUL_EXCLUSION
+import chylex.hee.game.entity.damage.IDamageProcessor.Companion.RAPID_DAMAGE
+import chylex.hee.game.fx.util.playClient
+import chylex.hee.game.fx.util.playUniversal
 import chylex.hee.game.particle.spawner.ParticleSpawnerVanilla
 import chylex.hee.game.particle.spawner.properties.IShape.Point
-import chylex.hee.game.world.getBlock
-import chylex.hee.game.world.getState
-import chylex.hee.game.world.isTopSolid
-import chylex.hee.game.world.playClient
-import chylex.hee.game.world.playUniversal
-import chylex.hee.game.world.removeBlock
-import chylex.hee.game.world.setState
+import chylex.hee.game.world.util.Facing6
+import chylex.hee.game.world.util.getBlock
+import chylex.hee.game.world.util.getState
+import chylex.hee.game.world.util.isTopSolid
+import chylex.hee.game.world.util.removeBlock
+import chylex.hee.game.world.util.setState
 import chylex.hee.init.ModBlocks
-import chylex.hee.system.facades.Facing6
-import chylex.hee.system.forge.Side
-import chylex.hee.system.forge.Sided
-import chylex.hee.system.forge.SubscribeEvent
-import chylex.hee.system.math.Vec
-import chylex.hee.system.migration.BlockFire
-import chylex.hee.system.migration.Sounds
 import chylex.hee.system.random.nextFloat
 import chylex.hee.system.random.nextInt
 import chylex.hee.system.random.nextItem
+import chylex.hee.util.forge.Side
+import chylex.hee.util.forge.Sided
+import chylex.hee.util.forge.SubscribeEvent
+import chylex.hee.util.math.Vec
 import net.minecraft.block.BlockState
 import net.minecraft.block.Blocks
+import net.minecraft.block.FireBlock
 import net.minecraft.entity.Entity
 import net.minecraft.particles.ParticleTypes.LARGE_SMOKE
 import net.minecraft.util.Direction
 import net.minecraft.util.SoundCategory
+import net.minecraft.util.SoundEvents
 import net.minecraft.util.math.BlockPos
 import net.minecraft.world.GameRules.DO_FIRE_TICK
 import net.minecraft.world.World
@@ -43,7 +44,7 @@ import net.minecraftforge.event.entity.player.PlayerInteractEvent
 import java.util.Random
 import kotlin.math.max
 
-class BlockEternalFire(builder: BlockBuilder) : BlockFire(builder.p), IBlockLayerCutout {
+class BlockEternalFire(builder: BlockBuilder) : FireBlock(builder.p), IBlockLayerCutout {
 	private companion object {
 		private val PARTICLE_SMOKE = ParticleSpawnerVanilla(LARGE_SMOKE)
 		private val DAMAGE_CONTACT = Damage(PEACEFUL_EXCLUSION, *ALL_PROTECTIONS, FIRE_TYPE(12 * 20), RAPID_DAMAGE(5))
@@ -75,7 +76,7 @@ class BlockEternalFire(builder: BlockBuilder) : BlockFire(builder.p), IBlockLaye
 		else
 			300
 		
-		for(facing in Facing6) {
+		for (facing in Facing6) {
 			val offset = pos.offset(facing).takeIf { !world.isRainingAt(it) } ?: continue
 			val chance = baseChance - (if (facing.yOffset == 0) 0 else 50)
 			
@@ -94,7 +95,7 @@ class BlockEternalFire(builder: BlockBuilder) : BlockFire(builder.p), IBlockLaye
 		var flammability = 0
 		
 		if (block.isAir(state, world, pos)) {
-			for(neighborFacing in Facing6) {
+			for (neighborFacing in Facing6) {
 				if (face != neighborFacing) {
 					val neighborPos = pos.offset(neighborFacing)
 					val neighborFlammability = neighborPos.getState(world).getFlammability(world, neighborPos, neighborFacing.opposite)
@@ -132,7 +133,7 @@ class BlockEternalFire(builder: BlockBuilder) : BlockFire(builder.p), IBlockLaye
 		val offsetPos = e.face?.let(e.pos::offset)
 		
 		if (offsetPos?.getBlock(world) === this) {
-			Sounds.BLOCK_FIRE_EXTINGUISH.playUniversal(e.player, offsetPos, SoundCategory.BLOCKS, volume = 0.5F, pitch = world.rand.nextFloat(1.8F, 3.4F))
+			SoundEvents.BLOCK_FIRE_EXTINGUISH.playUniversal(e.player, offsetPos, SoundCategory.BLOCKS, volume = 0.5F, pitch = world.rand.nextFloat(1.8F, 3.4F))
 			offsetPos.removeBlock(world)
 			e.isCanceled = true
 		}
@@ -141,7 +142,7 @@ class BlockEternalFire(builder: BlockBuilder) : BlockFire(builder.p), IBlockLaye
 	@Sided(Side.CLIENT)
 	override fun animateTick(state: BlockState, world: World, pos: BlockPos, rand: Random) {
 		if (rand.nextInt(30) == 0) {
-			Sounds.BLOCK_FIRE_AMBIENT.playClient(pos, SoundCategory.BLOCKS, volume = rand.nextFloat(0.5F, 0.6F), pitch = rand.nextFloat(0.3F, 1F))
+			SoundEvents.BLOCK_FIRE_AMBIENT.playClient(pos, SoundCategory.BLOCKS, volume = rand.nextFloat(0.5F, 0.6F), pitch = rand.nextFloat(0.3F, 1F))
 		}
 		
 		if (rand.nextInt(3) != 0) {
@@ -153,7 +154,7 @@ class BlockEternalFire(builder: BlockBuilder) : BlockFire(builder.p), IBlockLaye
 				), 1), rand)
 			}
 			else {
-				for(attempt in 1..4) {
+				for (attempt in 1..4) {
 					val facing = rand.nextItem(Facing6)
 					
 					if (canCatchFire(world, pos.offset(facing), facing.opposite)) {

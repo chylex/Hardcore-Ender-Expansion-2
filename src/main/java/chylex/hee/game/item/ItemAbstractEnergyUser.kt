@@ -1,47 +1,46 @@
 package chylex.hee.game.item
 
 import chylex.hee.game.block.entity.TileEntityEnergyCluster
-import chylex.hee.game.entity.REACH_DISTANCE
-import chylex.hee.game.inventory.heeTag
-import chylex.hee.game.inventory.heeTagOrNull
+import chylex.hee.game.entity.util.REACH_DISTANCE
+import chylex.hee.game.fx.IFxData
+import chylex.hee.game.fx.IFxHandler
+import chylex.hee.game.fx.util.ParticleSetting
+import chylex.hee.game.fx.util.ParticleSetting.ALL
+import chylex.hee.game.fx.util.ParticleSetting.DECREASED
+import chylex.hee.game.fx.util.ParticleSetting.MINIMAL
 import chylex.hee.game.mechanics.energy.IEnergyQuantity
 import chylex.hee.game.mechanics.energy.IEnergyQuantity.Units
 import chylex.hee.game.particle.ParticleEnergyTransferToPlayer
-import chylex.hee.game.particle.ParticleSetting
-import chylex.hee.game.particle.ParticleSetting.ALL
-import chylex.hee.game.particle.ParticleSetting.DECREASED
-import chylex.hee.game.particle.ParticleSetting.MINIMAL
 import chylex.hee.game.particle.spawner.ParticleSpawnerCustom
 import chylex.hee.game.particle.spawner.properties.IOffset.InBox
 import chylex.hee.game.particle.spawner.properties.IShape.Point
-import chylex.hee.game.world.distanceTo
-import chylex.hee.game.world.getTile
-import chylex.hee.game.world.totalTime
+import chylex.hee.game.world.util.distanceTo
+import chylex.hee.game.world.util.getTile
 import chylex.hee.network.client.PacketClientFX
-import chylex.hee.network.fx.IFxData
-import chylex.hee.network.fx.IFxHandler
-import chylex.hee.system.forge.Side
-import chylex.hee.system.forge.Sided
-import chylex.hee.system.math.ceilToInt
-import chylex.hee.system.math.floorToInt
-import chylex.hee.system.migration.ActionResult.FAIL
-import chylex.hee.system.migration.ActionResult.SUCCESS
-import chylex.hee.system.migration.EntityPlayer
-import chylex.hee.system.migration.Hand.OFF_HAND
-import chylex.hee.system.serialization.TagCompound
-import chylex.hee.system.serialization.getPos
-import chylex.hee.system.serialization.hasKey
-import chylex.hee.system.serialization.putPos
-import chylex.hee.system.serialization.readPos
-import chylex.hee.system.serialization.use
-import chylex.hee.system.serialization.writePos
+import chylex.hee.system.heeTag
+import chylex.hee.system.heeTagOrNull
+import chylex.hee.util.buffer.readPos
+import chylex.hee.util.buffer.use
+import chylex.hee.util.buffer.writePos
+import chylex.hee.util.forge.Side
+import chylex.hee.util.forge.Sided
+import chylex.hee.util.math.ceilToInt
+import chylex.hee.util.math.floorToInt
+import chylex.hee.util.nbt.TagCompound
+import chylex.hee.util.nbt.getPos
+import chylex.hee.util.nbt.hasKey
+import chylex.hee.util.nbt.putPos
 import net.minecraft.client.util.ITooltipFlag
 import net.minecraft.entity.Entity
+import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.item.Item
 import net.minecraft.item.ItemStack
 import net.minecraft.item.ItemUseContext
 import net.minecraft.network.PacketBuffer
 import net.minecraft.util.ActionResultType
+import net.minecraft.util.ActionResultType.FAIL
+import net.minecraft.util.ActionResultType.SUCCESS
+import net.minecraft.util.Hand.OFF_HAND
 import net.minecraft.util.math.MathHelper
 import net.minecraft.util.text.ITextComponent
 import net.minecraft.util.text.TranslationTextComponent
@@ -63,7 +62,7 @@ abstract class ItemAbstractEnergyUser(properties: Properties) : Item(properties)
 			nbt.remove(CLUSTER_TICK_OFFSET_TAG)
 		}
 		
-		class FxChargeData(private val cluster: TileEntityEnergyCluster, private val player: EntityPlayer) : IFxData {
+		class FxChargeData(private val cluster: TileEntityEnergyCluster, private val player: PlayerEntity) : IFxData {
 			override fun write(buffer: PacketBuffer) = buffer.use {
 				writePos(cluster.pos)
 				writeInt(player.entityId)
@@ -75,7 +74,7 @@ abstract class ItemAbstractEnergyUser(properties: Properties) : Item(properties)
 			
 			@Suppress("UNUSED_PARAMETER")
 			private fun particleSkipTest(distanceSq: Double, particleSetting: ParticleSetting, rand: Random): Boolean {
-				return when(particleSetting) {
+				return when (particleSetting) {
 					ALL       -> false
 					DECREASED -> ++particleSkipCounter % 2 != 0
 					MINIMAL   -> ++particleSkipCounter % 3 != 0
@@ -84,7 +83,7 @@ abstract class ItemAbstractEnergyUser(properties: Properties) : Item(properties)
 			
 			override fun handle(buffer: PacketBuffer, world: World, rand: Random) = buffer.use {
 				val cluster = readPos().getTile<TileEntityEnergyCluster>(world) ?: return
-				val player = world.getEntityByID(readInt()) as? EntityPlayer ?: return
+				val player = world.getEntityByID(readInt()) as? PlayerEntity ?: return
 				
 				ParticleSpawnerCustom(
 					type = ParticleEnergyTransferToPlayer,
@@ -145,7 +144,7 @@ abstract class ItemAbstractEnergyUser(properties: Properties) : Item(properties)
 	}
 	
 	fun useEnergyUnit(entity: Entity, stack: ItemStack): Boolean {
-		return (entity is EntityPlayer && entity.abilities.isCreativeMode) || useEnergyUnit(stack)
+		return (entity is PlayerEntity && entity.abilities.isCreativeMode) || useEnergyUnit(stack)
 	}
 	
 	fun getEnergyChargeLevel(stack: ItemStack): IEnergyQuantity {
@@ -185,7 +184,7 @@ abstract class ItemAbstractEnergyUser(properties: Properties) : Item(properties)
 			}
 			else if (pos.distanceTo(player) <= player.getAttributeValue(REACH_DISTANCE)) {
 				putPos(CLUSTER_POS_TAG, pos)
-				putByte(CLUSTER_TICK_OFFSET_TAG, (4L - (world.totalTime % 4L)).toByte())
+				putByte(CLUSTER_TICK_OFFSET_TAG, (4L - (world.gameTime % 4L)).toByte())
 			}
 		}
 		
@@ -193,12 +192,12 @@ abstract class ItemAbstractEnergyUser(properties: Properties) : Item(properties)
 	}
 	
 	override fun inventoryTick(stack: ItemStack, world: World, entity: Entity, itemSlot: Int, isSelected: Boolean) {
-		if (world.isRemote || entity !is EntityPlayer) {
+		if (world.isRemote || entity !is PlayerEntity) {
 			return
 		}
 		
 		with(stack.heeTagOrNull ?: return) {
-			if (hasKey(CLUSTER_POS_TAG) && (world.totalTime + getByte(CLUSTER_TICK_OFFSET_TAG)) % 3L == 0L) {
+			if (hasKey(CLUSTER_POS_TAG) && (world.gameTime + getByte(CLUSTER_TICK_OFFSET_TAG)) % 3L == 0L) {
 				val pos = getPos(CLUSTER_POS_TAG)
 				val tile = pos.getTile<TileEntityEnergyCluster>(world)
 				

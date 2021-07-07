@@ -1,17 +1,17 @@
 package chylex.hee.game.item
 
-import chylex.hee.game.entity.posVec
+import chylex.hee.game.entity.util.posVec
+import chylex.hee.game.fx.util.playClient
 import chylex.hee.game.mechanics.trinket.TrinketHandler
-import chylex.hee.game.world.playClient
 import chylex.hee.init.ModSounds
 import chylex.hee.network.client.PacketClientTrinketBreak
-import chylex.hee.system.compatibility.MinecraftForgeEventBus
-import chylex.hee.system.forge.EventPriority
-import chylex.hee.system.forge.Side
-import chylex.hee.system.forge.Sided
-import chylex.hee.system.forge.SubscribeEvent
-import chylex.hee.system.migration.EntityPlayer
+import chylex.hee.system.MinecraftForgeEventBus
+import chylex.hee.util.forge.EventPriority
+import chylex.hee.util.forge.Side
+import chylex.hee.util.forge.Sided
+import chylex.hee.util.forge.SubscribeEvent
 import net.minecraft.entity.Entity
+import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.item.ItemStack
 import net.minecraft.util.DamageSource
 import net.minecraftforge.event.entity.living.LivingDamageEvent
@@ -40,7 +40,7 @@ class ItemScaleOfFreefall(properties: Properties) : ItemAbstractTrinket(properti
 		
 		val entity = e.entity
 		
-		if (entity is EntityPlayer && TrinketHandler.get(entity).isItemActive(this)) {
+		if (entity is PlayerEntity && TrinketHandler.get(entity).isItemActive(this)) {
 			e.amount *= 0.8F
 		}
 	}
@@ -51,7 +51,7 @@ class ItemScaleOfFreefall(properties: Properties) : ItemAbstractTrinket(properti
 			return
 		}
 		
-		val player = e.entity as? EntityPlayer ?: return
+		val player = e.entity as? PlayerEntity ?: return
 		
 		TrinketHandler.get(player).transformIfActive(this) {
 			++it.damage

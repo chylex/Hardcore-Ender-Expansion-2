@@ -7,10 +7,11 @@ import chylex.hee.game.block.entity.TileEntityBrewingStandCustom.Companion.TOTAL
 import chylex.hee.game.block.entity.TileEntityBrewingStandCustom.Companion.TOTAL_SLOTS
 import chylex.hee.game.container.slot.SlotBrewingModifier
 import chylex.hee.game.container.slot.SlotBrewingReagent
-import chylex.hee.game.world.getTile
+import chylex.hee.game.inventory.util.IContainerSlotTransferLogic
+import chylex.hee.game.world.util.getTile
 import chylex.hee.init.ModContainers
-import chylex.hee.system.migration.EntityPlayer
-import chylex.hee.system.serialization.readPos
+import chylex.hee.util.buffer.readPos
+import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.entity.player.PlayerInventory
 import net.minecraft.inventory.IInventory
 import net.minecraft.inventory.Inventory
@@ -44,11 +45,11 @@ class ContainerBrewingStandCustom(id: Int, inventory: PlayerInventory, private v
 		return mergeItemStack(stack, startIndex, endIndex, reverseDirection)
 	}
 	
-	override fun transferStackInSlot(player: EntityPlayer, index: Int): ItemStack {
+	override fun transferStackInSlot(player: PlayerEntity, index: Int): ItemStack {
 		return implTransferStackInSlot(inventorySlots, brewingStand, player, index)
 	}
 	
-	override fun onContainerClosed(player: EntityPlayer) {
+	override fun onContainerClosed(player: PlayerEntity) {
 		super.onContainerClosed(player)
 		brewingStand.closeInventory(player)
 	}

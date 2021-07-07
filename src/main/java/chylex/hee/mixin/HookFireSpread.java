@@ -12,12 +12,13 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import java.util.Random;
 
 @Mixin(FireBlock.class)
-public abstract class HookFireSpread{
+@SuppressWarnings("MethodMayBeStatic")
+public abstract class HookFireSpread {
 	@Inject(method = "tryCatchFire", at = @At("HEAD"), cancellable = true, remap = false)
-	private void beforeCatchFire(final World world, final BlockPos pos, final int chance, final Random rand, final int age, final Direction face, final CallbackInfo ci){
+	private void beforeCatchFire(final World world, final BlockPos pos, final int chance, final Random rand, final int age, final Direction face, final CallbackInfo ci) {
 		final Block block = world.getBlockState(pos).getBlock();
 		
-		if (block instanceof IBlockFireCatchOverride){
+		if (block instanceof IBlockFireCatchOverride) {
 			((IBlockFireCatchOverride)block).tryCatchFire(world, pos, chance, rand);
 			ci.cancel();
 		}

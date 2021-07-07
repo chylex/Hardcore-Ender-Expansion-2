@@ -1,6 +1,12 @@
 package chylex.hee.game.entity.living
 
+import chylex.hee.game.MagicValues.DEATH_TIME_MAX
+import chylex.hee.game.Resource
 import chylex.hee.game.block.BlockDustyStoneUnstable
+import chylex.hee.game.entity.damage.Damage
+import chylex.hee.game.entity.damage.IDamageProcessor.Companion.ALL_PROTECTIONS_WITH_SHIELD
+import chylex.hee.game.entity.damage.IDamageProcessor.Companion.DIFFICULTY_SCALING
+import chylex.hee.game.entity.damage.IDamageProcessor.Companion.PEACEFUL_EXCLUSION
 import chylex.hee.game.entity.living.ai.AttackMelee
 import chylex.hee.game.entity.living.ai.Swim
 import chylex.hee.game.entity.living.ai.TargetAttacker
@@ -9,46 +15,37 @@ import chylex.hee.game.entity.living.ai.WanderLand
 import chylex.hee.game.entity.living.ai.WatchIdle
 import chylex.hee.game.entity.living.behavior.UndreadDustEffects
 import chylex.hee.game.entity.living.path.PathNavigateGroundCustomProcessor
-import chylex.hee.game.entity.motionY
-import chylex.hee.game.entity.posVec
-import chylex.hee.game.mechanics.damage.Damage
-import chylex.hee.game.mechanics.damage.IDamageProcessor.Companion.ALL_PROTECTIONS_WITH_SHIELD
-import chylex.hee.game.mechanics.damage.IDamageProcessor.Companion.DIFFICULTY_SCALING
-import chylex.hee.game.mechanics.damage.IDamageProcessor.Companion.PEACEFUL_EXCLUSION
+import chylex.hee.game.entity.util.motionY
+import chylex.hee.game.entity.util.posVec
+import chylex.hee.game.fx.FxVecData
+import chylex.hee.game.fx.FxVecHandler
+import chylex.hee.game.fx.util.playClient
 import chylex.hee.game.particle.ParticleSmokeCustom
 import chylex.hee.game.particle.spawner.ParticleSpawnerCustom
 import chylex.hee.game.particle.spawner.properties.IOffset.InBox
 import chylex.hee.game.particle.spawner.properties.IShape.Point
-import chylex.hee.game.world.Pos
-import chylex.hee.game.world.getBlock
-import chylex.hee.game.world.playClient
-import chylex.hee.game.world.territory.TerritoryInstance
-import chylex.hee.game.world.territory.storage.data.ForgottenTombsEndData
+import chylex.hee.game.territory.storage.ForgottenTombsEndData
+import chylex.hee.game.territory.system.TerritoryInstance
+import chylex.hee.game.world.util.getBlock
 import chylex.hee.init.ModBlocks
 import chylex.hee.init.ModEntities
 import chylex.hee.init.ModSounds
 import chylex.hee.network.client.PacketClientFX
-import chylex.hee.network.fx.FxVecData
-import chylex.hee.network.fx.FxVecHandler
-import chylex.hee.system.MagicValues.DEATH_TIME_MAX
-import chylex.hee.system.color.IntColor.Companion.RGB
-import chylex.hee.system.facades.Resource
-import chylex.hee.system.math.floorToInt
-import chylex.hee.system.math.square
-import chylex.hee.system.migration.EntityMob
-import chylex.hee.system.migration.EntityPlayer
-import chylex.hee.system.migration.Potions
-import chylex.hee.system.migration.Sounds
-import chylex.hee.system.random.IRandomColor.Companion.IRandomColor
+import chylex.hee.system.heeTag
 import chylex.hee.system.random.nextFloat
 import chylex.hee.system.random.nextInt
-import chylex.hee.system.serialization.NBTList.Companion.putList
-import chylex.hee.system.serialization.TagCompound
-import chylex.hee.system.serialization.getListOfStrings
-import chylex.hee.system.serialization.heeTag
-import chylex.hee.system.serialization.readTag
-import chylex.hee.system.serialization.use
-import chylex.hee.system.serialization.writeTag
+import chylex.hee.util.buffer.readTag
+import chylex.hee.util.buffer.use
+import chylex.hee.util.buffer.writeTag
+import chylex.hee.util.color.IColorGenerator
+import chylex.hee.util.color.RGB
+import chylex.hee.util.math.Pos
+import chylex.hee.util.math.floorToInt
+import chylex.hee.util.math.square
+import chylex.hee.util.nbt.TagCompound
+import chylex.hee.util.nbt.getListOfStrings
+import chylex.hee.util.nbt.putList
+import chylex.hee.util.nbt.use
 import net.minecraft.block.BlockState
 import net.minecraft.entity.CreatureAttribute
 import net.minecraft.entity.Entity
@@ -58,17 +55,21 @@ import net.minecraft.entity.ILivingEntityData
 import net.minecraft.entity.Pose
 import net.minecraft.entity.SpawnReason
 import net.minecraft.entity.ai.attributes.Attributes.FOLLOW_RANGE
+import net.minecraft.entity.monster.MonsterEntity
+import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.nbt.CompoundNBT
 import net.minecraft.network.IPacket
 import net.minecraft.network.PacketBuffer
 import net.minecraft.pathfinding.PathNavigator
 import net.minecraft.pathfinding.PathNodeType
 import net.minecraft.pathfinding.WalkNodeProcessor
+import net.minecraft.potion.Effects
 import net.minecraft.util.DamageSource
 import net.minecraft.util.Hand
 import net.minecraft.util.ResourceLocation
 import net.minecraft.util.SoundCategory
 import net.minecraft.util.SoundEvent
+import net.minecraft.util.SoundEvents
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.vector.Vector3d
 import net.minecraft.world.DifficultyInstance
@@ -81,7 +82,7 @@ import java.util.Random
 import kotlin.math.abs
 import kotlin.math.max
 
-class EntityMobUndread(type: EntityType<EntityMobUndread>, world: World) : EntityMob(type, world), IEntityAdditionalSpawnData {
+class EntityMobUndread(type: EntityType<EntityMobUndread>, world: World) : MonsterEntity(type, world), IEntityAdditionalSpawnData {
 	@Suppress("unused")
 	constructor(world: World) : this(ModEntities.UNDREAD, world)
 	
@@ -100,7 +101,7 @@ class EntityMobUndread(type: EntityType<EntityMobUndread>, world: World) : Entit
 		
 		private val PARTICLE_END_DISAPPEAR = ParticleSpawnerCustom(
 			type = ParticleSmokeCustom,
-			data = ParticleSmokeCustom.Data(color = IRandomColor { RGB(nextInt(180, 215).toUByte()) }, lifespan = 5..18, scale = (1.41F)..(1.87F)),
+			data = ParticleSmokeCustom.Data(color = IColorGenerator { RGB(nextInt(180, 215).toUByte()) }, lifespan = 5..18, scale = (1.41F)..(1.87F)),
 			pos = ModEntities.UNDREAD.size.let { val w = (it.width * 0.5F) + 0.1F; InBox(-w, w, 0F, it.height + 0.1F, -w, w) },
 			maxRange = 64.0
 		)
@@ -153,7 +154,7 @@ class EntityMobUndread(type: EntityType<EntityMobUndread>, world: World) : Entit
 		}
 	}
 	
-	private fun isPlayerNearby(player: EntityPlayer): Boolean {
+	private fun isPlayerNearby(player: PlayerEntity): Boolean {
 		val maxYDiff = if (isForgottenTombsEnd) 15 else 3
 		if (abs(posY - player.posY) > maxYDiff) {
 			return false
@@ -179,7 +180,7 @@ class EntityMobUndread(type: EntityType<EntityMobUndread>, world: World) : Entit
 		
 		if (super.attackEntityFrom(source, newAmount)) {
 			if (isForgottenTombsEnd) {
-				removePotionEffect(Potions.SLOW_FALLING)
+				removePotionEffect(Effects.SLOW_FALLING)
 			}
 			
 			dustEffects.onHurt(this, source)
@@ -190,7 +191,7 @@ class EntityMobUndread(type: EntityType<EntityMobUndread>, world: World) : Entit
 	}
 	
 	override fun getMaxFallHeight(): Int {
-		return if (getActivePotionEffect(Potions.SLOW_FALLING) != null)
+		return if (getActivePotionEffect(Effects.SLOW_FALLING) != null)
 			Int.MAX_VALUE
 		else
 			super.getMaxFallHeight()
@@ -270,7 +271,7 @@ class EntityMobUndread(type: EntityType<EntityMobUndread>, world: World) : Entit
 	}
 	
 	public override fun playStepSound(pos: BlockPos, state: BlockState) {
-		playSound(Sounds.ENTITY_ZOMBIE_STEP, rand.nextFloat(0.4F, 0.5F), rand.nextFloat(0.9F, 1F))
+		playSound(SoundEvents.ENTITY_ZOMBIE_STEP, rand.nextFloat(0.4F, 0.5F), rand.nextFloat(0.9F, 1F))
 	}
 	
 	public override fun getHurtSound(source: DamageSource): SoundEvent {

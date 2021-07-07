@@ -1,9 +1,9 @@
 package chylex.hee.init
 
-import chylex.hee.system.forge.Side
-import chylex.hee.system.forge.Sided
-import chylex.hee.system.migration.ItemBlock
+import chylex.hee.util.forge.Side
+import chylex.hee.util.forge.Sided
 import it.unimi.dsi.fastutil.objects.Reference2ShortOpenHashMap
+import net.minecraft.item.BlockItem
 import net.minecraft.item.Item
 import net.minecraft.item.ItemGroup
 import net.minecraft.item.ItemStack
@@ -30,7 +30,7 @@ object ModCreativeTabs {
 			items.sortWith(compareBy(
 				{ it.item === ModItems.BINDING_ESSENCE },
 				{ it.item === ModItems.PORTAL_TOKEN },
-				{ it.item is ItemBlock },
+				{ it.item is BlockItem },
 				{ itemOrder.getShort(it.item) }
 			))
 		}

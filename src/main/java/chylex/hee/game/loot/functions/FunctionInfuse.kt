@@ -20,7 +20,7 @@ class FunctionInfuse(conditions: Array<ILootCondition>, private val picks: Array
 		val availableInfusions = picks.toMutableList()
 		var finalStack = stack
 		
-		for(count in 1..(amount.generateInt(context.random))) {
+		for (count in 1..(amount.generateInt(context.random))) {
 			finalStack = context.random.removeItemOrNull(availableInfusions)?.tryInfuse(finalStack) ?: break
 		}
 		

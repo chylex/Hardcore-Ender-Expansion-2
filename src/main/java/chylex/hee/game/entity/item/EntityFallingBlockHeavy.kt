@@ -3,29 +3,29 @@ package chylex.hee.game.entity.item
 import chylex.hee.game.entity.item.EntityFallingBlockHeavy.PlacementResult.FAIL
 import chylex.hee.game.entity.item.EntityFallingBlockHeavy.PlacementResult.RELOCATION
 import chylex.hee.game.entity.item.EntityFallingBlockHeavy.PlacementResult.SUCCESS
-import chylex.hee.game.entity.motionY
-import chylex.hee.game.entity.posVec
-import chylex.hee.game.world.Pos
-import chylex.hee.game.world.breakBlock
-import chylex.hee.game.world.getBlock
-import chylex.hee.game.world.getHardness
-import chylex.hee.game.world.getState
-import chylex.hee.game.world.getTile
-import chylex.hee.game.world.removeBlock
-import chylex.hee.game.world.setState
+import chylex.hee.game.entity.util.motionY
+import chylex.hee.game.entity.util.posVec
+import chylex.hee.game.world.util.breakBlock
+import chylex.hee.game.world.util.getBlock
+import chylex.hee.game.world.util.getHardness
+import chylex.hee.game.world.util.getState
+import chylex.hee.game.world.util.getTile
+import chylex.hee.game.world.util.removeBlock
+import chylex.hee.game.world.util.setState
 import chylex.hee.init.ModEntities
-import chylex.hee.system.math.Vec3
-import chylex.hee.system.math.subtractY
-import chylex.hee.system.migration.BlockFalling
-import chylex.hee.system.migration.EntityFallingBlock
-import chylex.hee.system.serialization.TagCompound
-import chylex.hee.system.serialization.use
+import chylex.hee.util.buffer.use
+import chylex.hee.util.math.Pos
+import chylex.hee.util.math.Vec3
+import chylex.hee.util.math.subtractY
+import chylex.hee.util.nbt.TagCompound
 import net.minecraft.block.Block
 import net.minecraft.block.BlockState
 import net.minecraft.block.Blocks
+import net.minecraft.block.FallingBlock
 import net.minecraft.block.material.Material
 import net.minecraft.entity.EntityType
 import net.minecraft.entity.MoverType.SELF
+import net.minecraft.entity.item.FallingBlockEntity
 import net.minecraft.network.IPacket
 import net.minecraft.network.PacketBuffer
 import net.minecraft.tileentity.TileEntity
@@ -35,7 +35,7 @@ import net.minecraft.world.World
 import net.minecraftforge.fml.common.registry.IEntityAdditionalSpawnData
 import net.minecraftforge.fml.network.NetworkHooks
 
-open class EntityFallingBlockHeavy(type: EntityType<out EntityFallingBlockHeavy>, world: World) : EntityFallingBlock(type, world), IEntityAdditionalSpawnData {
+open class EntityFallingBlockHeavy(type: EntityType<out EntityFallingBlockHeavy>, world: World) : FallingBlockEntity(type, world), IEntityAdditionalSpawnData {
 	constructor(world: World, pos: BlockPos, state: BlockState) : this(ModEntities.FALLING_BLOCK_HEAVY, world, pos, state)
 	
 	@Suppress("LeakingThis")
@@ -61,7 +61,7 @@ open class EntityFallingBlockHeavy(type: EntityType<out EntityFallingBlockHeavy>
 		
 		fun canFallThrough(world: World, pos: BlockPos): Boolean {
 			val state = pos.getState(world)
-			return BlockFalling.canFallThrough(state) || state.material.isReplaceable || (state.getBlockHardness(world, pos) == 0F && state.getCollisionShape(world, pos).isEmpty)
+			return FallingBlock.canFallThrough(state) || state.material.isReplaceable || (state.getBlockHardness(world, pos) == 0F && state.getCollisionShape(world, pos).isEmpty)
 		}
 	}
 	
@@ -162,7 +162,7 @@ open class EntityFallingBlockHeavy(type: EntityType<out EntityFallingBlockHeavy>
 			if (state.isValidPosition(world, pos) && pos.setState(world, state)) {
 				val block = state.block
 				
-				if (block is BlockFalling) {
+				if (block is FallingBlock) {
 					block.onEndFalling(world, pos, state, collidingWith, this)
 				}
 				
@@ -170,7 +170,7 @@ open class EntityFallingBlockHeavy(type: EntityType<out EntityFallingBlockHeavy>
 					pos.getTile<TileEntity>(world)?.let {
 						val nbt = it.write(TagCompound())
 						
-						for(key in tileEntityData.keySet()) {
+						for (key in tileEntityData.keySet()) {
 							if (key !in ignoredTileKeys) {
 								nbt.put(key, tileEntityData.getCompound(key).copy())
 							}

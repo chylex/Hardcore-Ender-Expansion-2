@@ -1,6 +1,7 @@
 package chylex.hee.init
 
 import chylex.hee.HEE
+import chylex.hee.game.Resource
 import chylex.hee.game.loot.conditions.ConditionCriticalHit
 import chylex.hee.game.loot.conditions.ConditionFortune
 import chylex.hee.game.loot.conditions.ConditionLooting
@@ -14,10 +15,9 @@ import chylex.hee.game.loot.functions.FunctionSetItem
 import chylex.hee.game.loot.modifiers.ModifierHarvestPotatoesOnHumus
 import chylex.hee.game.loot.rng.RandomBiasedValueRange
 import chylex.hee.game.loot.rng.RandomRoundingValue
-import chylex.hee.system.facades.Resource
-import chylex.hee.system.forge.SubscribeAllEvents
-import chylex.hee.system.forge.SubscribeEvent
-import chylex.hee.system.forge.named
+import chylex.hee.system.named
+import chylex.hee.util.forge.SubscribeAllEvents
+import chylex.hee.util.forge.SubscribeEvent
 import net.minecraft.loot.ILootSerializer
 import net.minecraft.loot.LootConditionType
 import net.minecraft.loot.LootFunctionType

@@ -4,11 +4,11 @@ import chylex.hee.game.block.BlockAbstractPortal
 import chylex.hee.game.block.BlockAbstractPortal.IPortalController
 import chylex.hee.game.block.entity.TileEntityEndPortalAcceptor
 import chylex.hee.game.block.entity.TileEntityPortalInner
-import chylex.hee.game.world.closestTickingTile
 import chylex.hee.game.world.isEndDimension
-import chylex.hee.system.forge.Side
-import chylex.hee.system.forge.Sided
-import chylex.hee.system.math.LerpedFloat
+import chylex.hee.game.world.util.closestTickingTile
+import chylex.hee.util.forge.Side
+import chylex.hee.util.forge.Sided
+import chylex.hee.util.math.LerpedFloat
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher
 import net.minecraft.util.math.BlockPos
 import net.minecraft.world.World

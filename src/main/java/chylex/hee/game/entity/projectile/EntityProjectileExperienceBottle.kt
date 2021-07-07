@@ -1,22 +1,22 @@
 package chylex.hee.game.entity.projectile
 
-import chylex.hee.game.world.Pos
 import chylex.hee.init.ModEntities
 import chylex.hee.init.ModItems
-import chylex.hee.system.migration.EntityLivingBase
-import chylex.hee.system.migration.EntityXPBottle
-import chylex.hee.system.migration.EntityXPOrb
-import chylex.hee.system.migration.PotionTypes
+import chylex.hee.util.math.Pos
 import net.minecraft.entity.EntityType
+import net.minecraft.entity.LivingEntity
+import net.minecraft.entity.item.ExperienceBottleEntity
+import net.minecraft.entity.item.ExperienceOrbEntity
 import net.minecraft.item.ItemStack
 import net.minecraft.network.IPacket
 import net.minecraft.potion.PotionUtils
+import net.minecraft.potion.Potions
 import net.minecraft.util.math.RayTraceResult
 import net.minecraft.world.World
 import net.minecraftforge.fml.network.NetworkHooks
 
-class EntityProjectileExperienceBottle(type: EntityType<out EntityXPBottle>, world: World) : EntityXPBottle(type, world) {
-	constructor(thrower: EntityLivingBase, stack: ItemStack) : this(ModEntities.EXPERIENCE_BOTTLE, thrower.world) {
+class EntityProjectileExperienceBottle(type: EntityType<out ExperienceBottleEntity>, world: World) : ExperienceBottleEntity(type, world) {
+	constructor(thrower: LivingEntity, stack: ItemStack) : this(ModEntities.EXPERIENCE_BOTTLE, thrower.world) {
 		shooter = thrower
 		item = stack
 		setPosition(thrower.posX, thrower.posY + thrower.eyeHeight - 0.1F, thrower.posZ)
@@ -34,14 +34,14 @@ class EntityProjectileExperienceBottle(type: EntityType<out EntityXPBottle>, wor
 	
 	override fun onImpact(result: RayTraceResult) {
 		if (!world.isRemote) {
-			world.playEvent(2002, Pos(this), PotionUtils.getPotionColor(PotionTypes.WATER))
+			world.playEvent(2002, Pos(this), PotionUtils.getPotionColor(Potions.WATER))
 			
 			var experience = ModItems.EXPERIENCE_BOTTLE.getExperienceAmountPerItem(item)
 			
-			while(experience > 0) {
-				EntityXPOrb.getXPSplit(experience).also {
+			while (experience > 0) {
+				ExperienceOrbEntity.getXPSplit(experience).also {
 					experience -= it
-					world.addEntity(EntityXPOrb(world, posX, posY, posZ, it))
+					world.addEntity(ExperienceOrbEntity(world, posX, posY, posZ, it))
 				}
 			}
 			

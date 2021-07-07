@@ -1,37 +1,37 @@
 package chylex.hee.game.mechanics.causatum.events
 
-import chylex.hee.game.entity.SerializedEntity
 import chylex.hee.game.entity.Teleporter.Companion.FxTeleportData
 import chylex.hee.game.entity.living.EntityMobEnderman
 import chylex.hee.game.entity.living.EntityMobEndermanMuppet
 import chylex.hee.game.entity.living.EntityMobEndermanMuppet.Type.FIRST_KILL
-import chylex.hee.game.entity.lookDirVec
-import chylex.hee.game.entity.lookPosVec
-import chylex.hee.game.entity.posVec
 import chylex.hee.game.entity.technical.EntityTechnicalCausatumEvent
 import chylex.hee.game.entity.technical.EntityTechnicalCausatumEvent.ICausatumEventHandler
-import chylex.hee.game.world.Pos
-import chylex.hee.game.world.blocksMovement
-import chylex.hee.game.world.offsetUntil
-import chylex.hee.system.math.Vec
-import chylex.hee.system.math.Vec3
-import chylex.hee.system.math.addY
-import chylex.hee.system.math.component1
-import chylex.hee.system.math.component2
-import chylex.hee.system.math.component3
-import chylex.hee.system.math.square
-import chylex.hee.system.migration.EntityPlayer
-import chylex.hee.system.migration.Facing.DOWN
-import chylex.hee.system.migration.Sounds
+import chylex.hee.game.entity.util.SerializedEntity
+import chylex.hee.game.entity.util.lookDirVec
+import chylex.hee.game.entity.util.lookPosVec
+import chylex.hee.game.entity.util.posVec
+import chylex.hee.game.world.util.blocksMovement
+import chylex.hee.game.world.util.offsetUntil
 import chylex.hee.system.random.nextFloat
 import chylex.hee.system.random.nextInt
 import chylex.hee.system.random.nextVector2
 import chylex.hee.system.random.removeItemOrNull
-import chylex.hee.system.serialization.NBTList.Companion.putList
-import chylex.hee.system.serialization.NBTObjectList
-import chylex.hee.system.serialization.TagCompound
-import chylex.hee.system.serialization.getListOfCompounds
-import chylex.hee.system.serialization.use
+import chylex.hee.util.math.Pos
+import chylex.hee.util.math.Vec
+import chylex.hee.util.math.Vec3
+import chylex.hee.util.math.addY
+import chylex.hee.util.math.component1
+import chylex.hee.util.math.component2
+import chylex.hee.util.math.component3
+import chylex.hee.util.math.square
+import chylex.hee.util.nbt.NBTObjectList
+import chylex.hee.util.nbt.TagCompound
+import chylex.hee.util.nbt.getListOfCompounds
+import chylex.hee.util.nbt.putList
+import chylex.hee.util.nbt.use
+import net.minecraft.entity.player.PlayerEntity
+import net.minecraft.util.Direction.DOWN
+import net.minecraft.util.SoundEvents
 import net.minecraft.util.math.vector.Vector3d
 import net.minecraft.world.World
 
@@ -48,7 +48,7 @@ class CausatumEventEndermanKill() : ICausatumEventHandler {
 		private const val DESPAWN_START_TIME = 270
 	}
 	
-	constructor(enderman: EntityMobEnderman, killer: EntityPlayer) : this() {
+	constructor(enderman: EntityMobEnderman, killer: PlayerEntity) : this() {
 		this.deathPos = enderman.posVec
 		this.killer.set(killer)
 	}
@@ -98,7 +98,7 @@ class CausatumEventEndermanKill() : ICausatumEventHandler {
 			with(it.get(world) as? EntityMobEndermanMuppet ?: return@removeAll true) {
 				lookController.setLookPosition(lookX, lookY, lookZ)
 				
-				if (lastDamageSource?.trueSource is EntityPlayer || world.getClosestPlayer(this, 2.0) != null) {
+				if (lastDamageSource?.trueSource is PlayerEntity || world.getClosestPlayer(this, 2.0) != null) {
 					if (timer < DESPAWN_START_TIME) {
 						timer = DESPAWN_START_TIME
 					}
@@ -133,7 +133,7 @@ class CausatumEventEndermanKill() : ICausatumEventHandler {
 					val endPoint = muppet.posVec.addY(muppet.height * 0.5)
 					val startPoint = endPoint.addY(64.0)
 					
-					FxTeleportData(startPoint, endPoint, muppet.width, muppet.height, Sounds.ENTITY_ENDERMAN_TELEPORT, muppet.soundCategory, soundVolume = 0.7F).send(world)
+					FxTeleportData(startPoint, endPoint, muppet.width, muppet.height, SoundEvents.ENTITY_ENDERMAN_TELEPORT, muppet.soundCategory, soundVolume = 0.7F).send(world)
 					
 					val (lookX, lookY, lookZ) = getLookPos(world)
 					

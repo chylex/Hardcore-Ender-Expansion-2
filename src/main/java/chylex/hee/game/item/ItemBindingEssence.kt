@@ -1,13 +1,13 @@
 package chylex.hee.game.item
 
 import chylex.hee.client.color.NO_TINT
+import chylex.hee.game.Resource
 import chylex.hee.game.item.infusion.Infusion
 import chylex.hee.game.item.infusion.InfusionList
 import chylex.hee.game.item.infusion.InfusionTag
-import chylex.hee.system.color.IntColor.Companion.RGB
-import chylex.hee.system.facades.Resource
-import chylex.hee.system.forge.Side
-import chylex.hee.system.forge.Sided
+import chylex.hee.util.color.RGB
+import chylex.hee.util.forge.Side
+import chylex.hee.util.forge.Sided
 import net.minecraft.client.renderer.color.IItemColor
 import net.minecraft.client.util.ITooltipFlag
 import net.minecraft.item.ItemGroup
@@ -28,7 +28,7 @@ class ItemBindingEssence(properties: Properties) : ItemAbstractInfusable(propert
 		if (isInGroup(tab)) {
 			items.add(ItemStack(this))
 			
-			for(infusion in Infusion.values()) {
+			for (infusion in Infusion.values()) {
 				items.add(ItemStack(this).also { InfusionTag.setList(it, InfusionList(infusion)) })
 			}
 		}
@@ -58,7 +58,7 @@ class ItemBindingEssence(properties: Properties) : ItemAbstractInfusable(propert
 		lines.add(StringTextComponent(""))
 		lines.add(TranslationTextComponent("hee.infusions.applicable.title"))
 		
-		for((item, count) in applicableTo) {
+		for ((item, count) in applicableTo) {
 			lines.add(TranslationTextComponent("hee.infusions.applicable.item", item.getDisplayName(ItemStack(item)), count))
 		}
 	}
@@ -79,7 +79,7 @@ class ItemBindingEssence(properties: Properties) : ItemAbstractInfusable(propert
 				return EMPTY
 			}
 			
-			return when(tintIndex) {
+			return when (tintIndex) {
 				0    -> list[0].primaryColor.i
 				1    -> (list.getOrNull(1)?.primaryColor ?: list[0].secondaryColor).i
 				2    -> (list.getOrNull(2)?.primaryColor ?: list.getOrNull(1)?.secondaryColor ?: list[0].primaryColor).i

@@ -1,27 +1,27 @@
 package chylex.hee.game.entity.living.behavior
 
 import chylex.hee.game.entity.living.EntityBossEnderEye
-import chylex.hee.game.entity.lookPosVec
+import chylex.hee.game.entity.util.lookPosVec
+import chylex.hee.game.fx.FxVecData
+import chylex.hee.game.fx.FxVecHandler
 import chylex.hee.game.particle.ParticleSmokeCustom
 import chylex.hee.game.particle.spawner.ParticleSpawnerCustom
 import chylex.hee.game.particle.spawner.properties.IShape.Point
-import chylex.hee.game.world.bottomCenter
 import chylex.hee.network.client.PacketClientFX
-import chylex.hee.network.fx.FxVecData
-import chylex.hee.network.fx.FxVecHandler
-import chylex.hee.system.color.IntColor.Companion.RGB
-import chylex.hee.system.math.Vec
-import chylex.hee.system.math.Vec3
-import chylex.hee.system.math.addY
-import chylex.hee.system.math.square
-import chylex.hee.system.math.subtractY
-import chylex.hee.system.random.IRandomColor.Companion.IRandomColor
 import chylex.hee.system.random.nextInt
-import chylex.hee.system.serialization.NBTList.Companion.putList
-import chylex.hee.system.serialization.NBTObjectList
-import chylex.hee.system.serialization.TagCompound
-import chylex.hee.system.serialization.getListOfCompounds
-import chylex.hee.system.serialization.use
+import chylex.hee.util.color.IColorGenerator
+import chylex.hee.util.color.RGB
+import chylex.hee.util.math.Vec
+import chylex.hee.util.math.Vec3
+import chylex.hee.util.math.addY
+import chylex.hee.util.math.bottomCenter
+import chylex.hee.util.math.square
+import chylex.hee.util.math.subtractY
+import chylex.hee.util.nbt.NBTObjectList
+import chylex.hee.util.nbt.TagCompound
+import chylex.hee.util.nbt.getListOfCompounds
+import chylex.hee.util.nbt.putList
+import chylex.hee.util.nbt.use
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.vector.Vector3d
 import net.minecraft.world.World
@@ -42,7 +42,7 @@ class EnderEyeSpawnerParticles(private val entity: EntityBossEnderEye) : INBTSer
 		
 		private val PARTICLE_TICK = ParticleSpawnerCustom(
 			type = ParticleSmokeCustom,
-			data = ParticleSmokeCustom.Data(color = IRandomColor { RGB(nextInt(160, 220), nextInt(0, 30), nextInt(20, 50)) }, lifespan = 7..19, scale = 0.666F),
+			data = ParticleSmokeCustom.Data(color = IColorGenerator { RGB(nextInt(160, 220), nextInt(0, 30), nextInt(20, 50)) }, lifespan = 7..19, scale = 0.666F),
 			maxRange = 256.0,
 			hideOnMinimalSetting = false
 		)
@@ -127,7 +127,7 @@ class EnderEyeSpawnerParticles(private val entity: EntityBossEnderEye) : INBTSer
 		val center = start.bottomCenter
 		var delay = 0
 		
-		for(particle in particles) {
+		for (particle in particles) {
 			if (center.squareDistanceTo(particle.pos) < square(0.8)) {
 				delay = particle.delay + 15
 			}

@@ -1,6 +1,13 @@
 package chylex.hee.game.entity.living
 
 import chylex.hee.HEE
+import chylex.hee.game.Resource
+import chylex.hee.game.entity.damage.Damage
+import chylex.hee.game.entity.damage.IDamageProcessor.Companion.ALL_PROTECTIONS
+import chylex.hee.game.entity.damage.IDamageProcessor.Companion.DIFFICULTY_SCALING
+import chylex.hee.game.entity.damage.IDamageProcessor.Companion.PEACEFUL_EXCLUSION
+import chylex.hee.game.entity.damage.IDamageProcessor.Companion.PEACEFUL_KNOCKBACK
+import chylex.hee.game.entity.damage.IDamageProcessor.Companion.RAPID_DAMAGE
 import chylex.hee.game.entity.living.ai.AISummonFromBlock
 import chylex.hee.game.entity.living.ai.AITargetSwarmSwitch
 import chylex.hee.game.entity.living.ai.AttackMelee
@@ -11,28 +18,21 @@ import chylex.hee.game.entity.living.ai.TargetAttacker
 import chylex.hee.game.entity.living.ai.TargetRandom
 import chylex.hee.game.entity.living.ai.TargetSwarmSwitch
 import chylex.hee.game.entity.living.ai.Wander
-import chylex.hee.game.mechanics.damage.Damage
-import chylex.hee.game.mechanics.damage.IDamageProcessor.Companion.ALL_PROTECTIONS
-import chylex.hee.game.mechanics.damage.IDamageProcessor.Companion.DIFFICULTY_SCALING
-import chylex.hee.game.mechanics.damage.IDamageProcessor.Companion.PEACEFUL_EXCLUSION
-import chylex.hee.game.mechanics.damage.IDamageProcessor.Companion.PEACEFUL_KNOCKBACK
-import chylex.hee.game.mechanics.damage.IDamageProcessor.Companion.RAPID_DAMAGE
+import chylex.hee.game.fx.FxVecHandler
 import chylex.hee.init.ModEntities
-import chylex.hee.network.fx.FxVecHandler
-import chylex.hee.system.facades.Resource
-import chylex.hee.system.forge.EventPriority
-import chylex.hee.system.forge.SubscribeAllEvents
-import chylex.hee.system.forge.SubscribeEvent
-import chylex.hee.system.migration.BlockSilverfish
-import chylex.hee.system.migration.EntityPlayer
-import chylex.hee.system.migration.EntitySilverfish
-import chylex.hee.system.serialization.TagCompound
-import chylex.hee.system.serialization.heeTag
-import chylex.hee.system.serialization.use
+import chylex.hee.system.heeTag
+import chylex.hee.util.forge.EventPriority
+import chylex.hee.util.forge.SubscribeAllEvents
+import chylex.hee.util.forge.SubscribeEvent
+import chylex.hee.util.nbt.TagCompound
+import chylex.hee.util.nbt.use
 import net.minecraft.block.Block
 import net.minecraft.block.BlockState
+import net.minecraft.block.SilverfishBlock
 import net.minecraft.entity.Entity
 import net.minecraft.entity.EntityType
+import net.minecraft.entity.monster.SilverfishEntity
+import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.network.IPacket
 import net.minecraft.util.DamageSource
 import net.minecraft.util.EntityDamageSource
@@ -44,7 +44,7 @@ import net.minecraftforge.fml.network.NetworkHooks
 import java.util.Random
 import kotlin.math.floor
 
-class EntityMobSilverfish(type: EntityType<EntityMobSilverfish>, world: World) : EntitySilverfish(type, world), ICritTracker {
+class EntityMobSilverfish(type: EntityType<EntityMobSilverfish>, world: World) : SilverfishEntity(type, world), ICritTracker {
 	constructor(world: World) : this(ModEntities.SILVERFISH, world)
 	
 	@SubscribeAllEvents(modid = HEE.ID)
@@ -67,7 +67,7 @@ class EntityMobSilverfish(type: EntityType<EntityMobSilverfish>, world: World) :
 		fun onEntityJoinWorld(e: EntityJoinWorldEvent) {
 			val entity = e.entity
 			
-			if (entity::class.java === EntitySilverfish::class.java) {
+			if (entity::class.java === SilverfishEntity::class.java) {
 				e.isCanceled = true
 				
 				val world = e.world
@@ -86,7 +86,7 @@ class EntityMobSilverfish(type: EntityType<EntityMobSilverfish>, world: World) :
 	}
 	
 	private lateinit var aiSummonFromBlock: AISummonFromBlock
-	private lateinit var aiTargetSwarmSwitch: AITargetSwarmSwitch<EntityPlayer>
+	private lateinit var aiTargetSwarmSwitch: AITargetSwarmSwitch<PlayerEntity>
 	
 	private var hideInBlockDelayTicks = 120
 	
@@ -108,7 +108,7 @@ class EntityMobSilverfish(type: EntityType<EntityMobSilverfish>, world: World) :
 		aiTargetSwarmSwitch = TargetSwarmSwitch(this, rangeMultiplier = 0.5F, checkSight = true, easilyReachableOnly = false)
 		
 		targetSelector.addGoal(1, TargetAttacker(this, callReinforcements = true))
-		targetSelector.addGoal(2, TargetRandom<EntityPlayer>(this, chancePerTick = 5, checkSight = true, easilyReachableOnly = false))
+		targetSelector.addGoal(2, TargetRandom<PlayerEntity>(this, chancePerTick = 5, checkSight = true, easilyReachableOnly = false))
 		targetSelector.addGoal(3, aiTargetSwarmSwitch)
 	}
 	
@@ -133,12 +133,12 @@ class EntityMobSilverfish(type: EntityType<EntityMobSilverfish>, world: World) :
 	}
 	
 	private fun isSilverfishBlock(block: Block): Boolean {
-		return block is BlockSilverfish
+		return block is SilverfishBlock
 	}
 	
 	private fun tryHideInBlock(state: BlockState): BlockState? {
-		return if (BlockSilverfish.canContainSilverfish(state) && hideInBlockDelayTicks == 0)
-			BlockSilverfish.infest(state.block)
+		return if (SilverfishBlock.canContainSilverfish(state) && hideInBlockDelayTicks == 0)
+			SilverfishBlock.infest(state.block)
 		else
 			null
 	}

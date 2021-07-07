@@ -1,6 +1,6 @@
 package chylex.hee.game.recipe
 
-import chylex.hee.game.inventory.nonEmptySlots
+import chylex.hee.game.inventory.util.nonEmptySlots
 import chylex.hee.game.item.ItemVoidSalad
 import chylex.hee.game.item.ItemVoidSalad.Type
 import chylex.hee.init.ModItems

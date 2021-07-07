@@ -1,19 +1,17 @@
 package chylex.hee.client.render.entity
 
-import chylex.hee.client.render.gl.DF_ONE_MINUS_SRC_ALPHA
-import chylex.hee.client.render.gl.RenderStateBuilder
-import chylex.hee.client.render.gl.RenderStateBuilder.Companion.CULL_DISABLED
-import chylex.hee.client.render.gl.RenderStateBuilder.Companion.LIGHTING_ENABLED
-import chylex.hee.client.render.gl.RenderStateBuilder.Companion.LIGHTMAP_ENABLED
-import chylex.hee.client.render.gl.RenderStateBuilder.Companion.MASK_COLOR
-import chylex.hee.client.render.gl.RenderStateBuilder.Companion.OVERLAY_DISABLED
-import chylex.hee.client.render.gl.SF_SRC_ALPHA
+import chylex.hee.client.render.RenderStateBuilder
+import chylex.hee.client.render.RenderStateBuilder.Companion.CULL_DISABLED
+import chylex.hee.client.render.RenderStateBuilder.Companion.LIGHTING_ENABLED
+import chylex.hee.client.render.RenderStateBuilder.Companion.LIGHTMAP_ENABLED
+import chylex.hee.client.render.RenderStateBuilder.Companion.MASK_COLOR
+import chylex.hee.client.render.RenderStateBuilder.Companion.OVERLAY_DISABLED
+import chylex.hee.client.render.util.DF_ONE_MINUS_SRC_ALPHA
+import chylex.hee.client.render.util.SF_SRC_ALPHA
 import chylex.hee.game.entity.living.EntityMobAbstractEnderman
-import chylex.hee.game.world.totalTime
-import chylex.hee.system.forge.Side
-import chylex.hee.system.forge.Sided
-import chylex.hee.system.migration.EntityEnderman
 import chylex.hee.system.random.nextFloat
+import chylex.hee.util.forge.Side
+import chylex.hee.util.forge.Sided
 import com.mojang.blaze3d.matrix.MatrixStack
 import com.mojang.blaze3d.vertex.IVertexBuilder
 import net.minecraft.client.renderer.IRenderTypeBuffer
@@ -23,6 +21,7 @@ import net.minecraft.client.renderer.entity.EntityRendererManager
 import net.minecraft.client.renderer.entity.layers.LayerRenderer
 import net.minecraft.client.renderer.entity.model.EndermanModel
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats
+import net.minecraft.entity.monster.EndermanEntity
 import net.minecraft.util.ResourceLocation
 import org.lwjgl.opengl.GL11
 import java.util.Random
@@ -42,11 +41,11 @@ open class RenderEntityMobAbstractEnderman(manager: EntityRendererManager) : End
 	}
 	
 	private val rand = Random()
-	private val originalLayerList: List<LayerRenderer<EntityEnderman, EndermanModel<EntityEnderman>>>
+	private val originalLayerList: List<LayerRenderer<EndermanEntity, EndermanModel<EndermanEntity>>>
 	private var isRenderingClone = false
 	
 	init {
-		entityModel = object : EndermanModel<EntityEnderman>(0F) {
+		entityModel = object : EndermanModel<EndermanEntity>(0F) {
 			override fun render(matrix: MatrixStack, builder: IVertexBuilder, combinedLight: Int, combinedOverlay: Int, red: Float, green: Float, blue: Float, alpha: Float) {
 				super.render(matrix, builder, combinedLight, combinedOverlay, red, green, blue, if (isRenderingClone) rand.nextFloat(0.05F, 0.3F) else alpha)
 			}
@@ -55,13 +54,13 @@ open class RenderEntityMobAbstractEnderman(manager: EntityRendererManager) : End
 		originalLayerList = ArrayList(layerRenderers)
 	}
 	
-	override fun render(entity: EntityEnderman, yaw: Float, partialTicks: Float, matrix: MatrixStack, buffer: IRenderTypeBuffer, combinedLight: Int) {
+	override fun render(entity: EndermanEntity, yaw: Float, partialTicks: Float, matrix: MatrixStack, buffer: IRenderTypeBuffer, combinedLight: Int) {
 		if (entity !is EntityMobAbstractEnderman) {
 			return
 		}
 		
 		if (entity.isShaking) {
-			rand.setSeed(entity.world.totalTime)
+			rand.setSeed(entity.world.gameTime)
 			
 			matrix.push()
 			matrix.translate(rand.nextGaussian() * 0.01, rand.nextGaussian() * 0.01, rand.nextGaussian() * 0.01)
@@ -75,7 +74,7 @@ open class RenderEntityMobAbstractEnderman(manager: EntityRendererManager) : End
 		val cloneCount = getCloneCount(entity)
 		
 		if (cloneCount > 0) {
-			rand.setSeed(entity.world.totalTime * 2L / 3L)
+			rand.setSeed(entity.world.gameTime * 2L / 3L)
 			
 			val prevPrevYaw = entity.prevRotationYawHead
 			val prevYaw = entity.rotationYawHead
@@ -116,7 +115,7 @@ open class RenderEntityMobAbstractEnderman(manager: EntityRendererManager) : End
 		return if (entity.hurtTime == 0 && entity.isAggro) 2 else 0
 	}
 	
-	override fun func_230496_a_(entity: EntityEnderman, isVisible: Boolean, isTranslucent: Boolean, isOutline: Boolean): RenderType? {
+	override fun func_230496_a_(entity: EndermanEntity, isVisible: Boolean, isTranslucent: Boolean, isOutline: Boolean): RenderType? {
 		return if (isRenderingClone)
 			RENDER_TYPE_CLONE(getEntityTexture(entity))
 		else

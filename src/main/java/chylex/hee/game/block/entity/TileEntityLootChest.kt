@@ -1,23 +1,23 @@
 package chylex.hee.game.block.entity
 
 import chylex.hee.HEE
+import chylex.hee.game.Environment
 import chylex.hee.game.block.entity.base.TileEntityBase.Context.STORAGE
 import chylex.hee.game.block.entity.base.TileEntityBaseChest
 import chylex.hee.game.container.ContainerLootChest
-import chylex.hee.game.inventory.nonEmptySlots
-import chylex.hee.game.inventory.setStack
-import chylex.hee.game.world.center
-import chylex.hee.game.world.playServer
+import chylex.hee.game.fx.util.playServer
+import chylex.hee.game.inventory.util.nonEmptySlots
+import chylex.hee.game.inventory.util.setStack
 import chylex.hee.init.ModSounds
 import chylex.hee.init.ModTileEntities
-import chylex.hee.proxy.Environment
-import chylex.hee.system.migration.EntityPlayer
-import chylex.hee.system.serialization.TagCompound
-import chylex.hee.system.serialization.getStringOrNull
-import chylex.hee.system.serialization.hasInventory
-import chylex.hee.system.serialization.loadInventory
-import chylex.hee.system.serialization.saveInventory
-import chylex.hee.system.serialization.use
+import chylex.hee.util.math.center
+import chylex.hee.util.nbt.TagCompound
+import chylex.hee.util.nbt.getStringOrNull
+import chylex.hee.util.nbt.hasInventory
+import chylex.hee.util.nbt.loadInventory
+import chylex.hee.util.nbt.saveInventory
+import chylex.hee.util.nbt.use
+import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.entity.player.PlayerInventory
 import net.minecraft.inventory.IInventory
 import net.minecraft.inventory.Inventory
@@ -48,12 +48,12 @@ class TileEntityLootChest(type: TileEntityType<TileEntityLootChest>) : TileEntit
 		private fun createInventory() = Inventory(SLOT_COUNT)
 		
 		private fun createInventoryClone(source: IInventory) = createInventory().also {
-			for((slot, stack) in source.nonEmptySlots) {
+			for ((slot, stack) in source.nonEmptySlots) {
 				it.setStack(slot, stack.copy())
 			}
 		}
 		
-		fun getClientTitle(player: EntityPlayer, text: ITextComponent): ITextComponent {
+		fun getClientTitle(player: PlayerEntity, text: ITextComponent): ITextComponent {
 			return if (player.abilities.isCreativeMode)
 				TranslationTextComponent("gui.hee.loot_chest.title.creative")
 			else
@@ -90,18 +90,18 @@ class TileEntityLootChest(type: TileEntityType<TileEntityLootChest>) : TileEntit
 	
 	// Sided inventory handling
 	
-	override fun createMenu(id: Int, inventory: PlayerInventory, player: EntityPlayer): Container {
+	override fun createMenu(id: Int, inventory: PlayerInventory, player: PlayerEntity): Container {
 		return ContainerLootChest(id, player, createChestInventory(getInventoryForServer(player)))
 	}
 	
-	private fun getInventoryForServer(player: EntityPlayer): IInventory {
+	private fun getInventoryForServer(player: PlayerEntity): IInventory {
 		return if (player.isCreative)
 			sourceInventory
 		else
 			playerInventories.getOrPut(player.uniqueID) { generateNewLoot(player) }
 	}
 	
-	private fun generateNewLoot(player: EntityPlayer): IInventory {
+	private fun generateNewLoot(player: PlayerEntity): IInventory {
 		val lootTable = sourceLootTable
 		
 		if (lootTable == null) {
@@ -135,7 +135,7 @@ class TileEntityLootChest(type: TileEntityType<TileEntityLootChest>) : TileEntit
 			}
 			
 			put(PLAYER_INV_TAG, TagCompound().also {
-				for((uuid, inventory) in playerInventories) {
+				for ((uuid, inventory) in playerInventories) {
 					it.saveInventory(uuid.toString(), inventory)
 				}
 			})
@@ -154,10 +154,10 @@ class TileEntityLootChest(type: TileEntityType<TileEntityLootChest>) : TileEntit
 			}
 			
 			with(getCompound(PLAYER_INV_TAG)) {
-				for(key in keySet()) {
+				for (key in keySet()) {
 					val uuid = try {
 						UUID.fromString(key)
-					} catch(e: Exception) {
+					} catch (e: Exception) {
 						HEE.log.error("[TileEntityLootChest] could not parse UUID: $key")
 						continue
 					}

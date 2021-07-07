@@ -3,17 +3,17 @@ package chylex.hee.game.entity.living
 import chylex.hee.game.entity.living.EntityMobEndermanMuppet.Type.FIRST_KILL
 import chylex.hee.game.entity.living.EntityMobEndermanMuppet.Type.INVALID
 import chylex.hee.game.entity.living.behavior.EndermanTeleportHandler
-import chylex.hee.game.entity.posVec
-import chylex.hee.game.entity.selectExistingEntities
 import chylex.hee.game.entity.technical.EntityTechnicalCausatumEvent
+import chylex.hee.game.entity.util.posVec
+import chylex.hee.game.entity.util.selectExistingEntities
 import chylex.hee.game.mechanics.causatum.events.CausatumEventEndermanKill
-import chylex.hee.game.world.Pos
 import chylex.hee.init.ModEntities
-import chylex.hee.system.serialization.TagCompound
-import chylex.hee.system.serialization.getEnum
-import chylex.hee.system.serialization.heeTag
-import chylex.hee.system.serialization.putEnum
-import chylex.hee.system.serialization.use
+import chylex.hee.system.heeTag
+import chylex.hee.util.math.Pos
+import chylex.hee.util.nbt.TagCompound
+import chylex.hee.util.nbt.getEnum
+import chylex.hee.util.nbt.putEnum
+import chylex.hee.util.nbt.use
 import net.minecraft.entity.EntityType
 import net.minecraft.world.World
 

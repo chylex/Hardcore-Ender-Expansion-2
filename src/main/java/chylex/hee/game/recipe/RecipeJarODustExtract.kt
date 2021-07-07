@@ -1,7 +1,7 @@
 package chylex.hee.game.recipe
 
-import chylex.hee.game.inventory.nonEmptySlots
-import chylex.hee.game.inventory.size
+import chylex.hee.game.inventory.util.nonEmptySlots
+import chylex.hee.game.inventory.util.size
 import chylex.hee.game.mechanics.dust.DustLayers.Side.BOTTOM
 import chylex.hee.init.ModBlocks
 import net.minecraft.inventory.CraftingInventory

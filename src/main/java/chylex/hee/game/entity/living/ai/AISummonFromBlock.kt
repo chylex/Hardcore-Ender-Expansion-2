@@ -1,16 +1,16 @@
 package chylex.hee.game.entity.living.ai
 
-import chylex.hee.game.world.breakBlock
-import chylex.hee.game.world.getBlock
-import chylex.hee.game.world.isPeaceful
-import chylex.hee.system.migration.EntityCreature
+import chylex.hee.game.world.util.breakBlock
+import chylex.hee.game.world.util.getBlock
+import chylex.hee.game.world.util.isPeaceful
 import chylex.hee.system.random.nextInt
 import net.minecraft.block.Block
+import net.minecraft.entity.CreatureEntity
 import net.minecraft.entity.ai.goal.Goal
 import net.minecraft.world.GameRules.MOB_GRIEFING
 
 class AISummonFromBlock(
-	private val entity: EntityCreature,
+	private val entity: CreatureEntity,
 	private val searchAttempts: Int,
 	private val searchDistance: Int,
 	private val searchingFor: (Block) -> Boolean,

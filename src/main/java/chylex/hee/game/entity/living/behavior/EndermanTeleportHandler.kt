@@ -1,15 +1,18 @@
 package chylex.hee.game.entity.living.behavior
 
-import chylex.hee.HEE
+import chylex.hee.client.util.MC
 import chylex.hee.game.entity.Teleporter
 import chylex.hee.game.entity.Teleporter.Companion.FxTeleportData
 import chylex.hee.game.entity.Teleporter.FxRange.Extended
 import chylex.hee.game.entity.Teleporter.FxRange.Silent
 import chylex.hee.game.entity.living.EntityMobAbstractEnderman
-import chylex.hee.game.entity.lookPosVec
-import chylex.hee.game.entity.motionX
-import chylex.hee.game.entity.motionZ
-import chylex.hee.game.entity.posVec
+import chylex.hee.game.entity.util.lookPosVec
+import chylex.hee.game.entity.util.motionX
+import chylex.hee.game.entity.util.motionZ
+import chylex.hee.game.entity.util.posVec
+import chylex.hee.game.fx.FxEntityData
+import chylex.hee.game.fx.FxEntityHandler
+import chylex.hee.game.fx.util.playClient
 import chylex.hee.game.particle.ParticleFadingSpot
 import chylex.hee.game.particle.ParticleTeleport
 import chylex.hee.game.particle.spawner.ParticleSpawnerCustom
@@ -18,38 +21,35 @@ import chylex.hee.game.particle.spawner.properties.IOffset.Gaussian
 import chylex.hee.game.particle.spawner.properties.IOffset.InBox
 import chylex.hee.game.particle.spawner.properties.IShape.Line
 import chylex.hee.game.particle.spawner.properties.IShape.Point
-import chylex.hee.game.potion.makeEffect
-import chylex.hee.game.world.Pos
-import chylex.hee.game.world.blocksMovement
-import chylex.hee.game.world.isLoaded
-import chylex.hee.game.world.offsetUntilExcept
-import chylex.hee.game.world.playClient
+import chylex.hee.game.potion.util.makeInstance
+import chylex.hee.game.world.util.blocksMovement
+import chylex.hee.game.world.util.isLoaded
+import chylex.hee.game.world.util.offsetUntilExcept
 import chylex.hee.init.ModSounds
 import chylex.hee.network.client.PacketClientFX
-import chylex.hee.network.fx.FxEntityData
-import chylex.hee.network.fx.FxEntityHandler
-import chylex.hee.system.color.IntColor.Companion.RGB
-import chylex.hee.system.math.Vec
-import chylex.hee.system.math.Vec3
-import chylex.hee.system.math.addY
-import chylex.hee.system.math.component1
-import chylex.hee.system.math.component2
-import chylex.hee.system.math.component3
-import chylex.hee.system.math.directionTowards
-import chylex.hee.system.math.floorToInt
-import chylex.hee.system.math.toRadians
-import chylex.hee.system.math.withY
-import chylex.hee.system.migration.Facing.DOWN
-import chylex.hee.system.migration.Facing.UP
-import chylex.hee.system.migration.Potions
-import chylex.hee.system.migration.Sounds
 import chylex.hee.system.random.nextFloat
 import chylex.hee.system.random.nextInt
 import chylex.hee.system.random.nextVector2
-import chylex.hee.system.serialization.TagCompound
-import chylex.hee.system.serialization.use
+import chylex.hee.util.color.RGB
+import chylex.hee.util.math.Pos
+import chylex.hee.util.math.Vec
+import chylex.hee.util.math.Vec3
+import chylex.hee.util.math.addY
+import chylex.hee.util.math.component1
+import chylex.hee.util.math.component2
+import chylex.hee.util.math.component3
+import chylex.hee.util.math.directionTowards
+import chylex.hee.util.math.floorToInt
+import chylex.hee.util.math.toRadians
+import chylex.hee.util.math.withY
+import chylex.hee.util.nbt.TagCompound
+import chylex.hee.util.nbt.use
 import net.minecraft.entity.Entity
+import net.minecraft.potion.Effects
+import net.minecraft.util.Direction.DOWN
+import net.minecraft.util.Direction.UP
 import net.minecraft.util.SoundCategory
+import net.minecraft.util.SoundEvents
 import net.minecraft.util.math.AxisAlignedBB
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.vector.Vector3d
@@ -94,7 +94,7 @@ class EndermanTeleportHandler(private val enderman: EntityMobAbstractEnderman) :
 		
 		val FX_TELEPORT_OUT_OF_WORLD = object : FxEntityHandler() {
 			override fun handle(entity: Entity, rand: Random) {
-				val player = HEE.proxy.getClientSidePlayer() ?: return
+				val player = MC.player ?: return
 				
 				val startPoint = entity.posVec
 				val endPoint = startPoint.addY(256.0)
@@ -113,7 +113,7 @@ class EndermanTeleportHandler(private val enderman: EntityMobAbstractEnderman) :
 		
 		private fun sendDelayedTeleportFX(entity: Entity) {
 			val point = entity.posVec.addY(entity.height.toDouble())
-			FxTeleportData(point, point, entity.width, entity.height, Sounds.ENTITY_ENDERMAN_TELEPORT, entity.soundCategory, soundVolume = 0.8F).send(entity.world)
+			FxTeleportData(point, point, entity.width, entity.height, SoundEvents.ENTITY_ENDERMAN_TELEPORT, entity.soundCategory, soundVolume = 0.8F).send(entity.world)
 		}
 	}
 	
@@ -307,7 +307,7 @@ class EndermanTeleportHandler(private val enderman: EntityMobAbstractEnderman) :
 		tpDelayRestoreY = enderman.posY
 		
 		enderman.setNoAI(true)
-		enderman.addPotionEffect(Potions.INVISIBILITY.makeEffect(delayTicks, enderman.getActivePotionEffect(Potions.INVISIBILITY)?.amplifier ?: 0, isAmbient = true, showParticles = false))
+		enderman.addPotionEffect(Effects.INVISIBILITY.makeInstance(delayTicks, enderman.getActivePotionEffect(Effects.INVISIBILITY)?.amplifier ?: 0, isAmbient = true, showParticles = false))
 		enderman.setPositionAndUpdate(enderman.posX, 4095.0, enderman.posZ)
 		
 		return true

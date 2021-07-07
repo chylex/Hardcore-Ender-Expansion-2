@@ -1,10 +1,10 @@
 package chylex.hee.network.client
 
 import chylex.hee.network.BaseClientPacket
-import chylex.hee.system.forge.Side
-import chylex.hee.system.forge.Sided
-import chylex.hee.system.migration.EntityPlayerSP
-import chylex.hee.system.serialization.use
+import chylex.hee.util.buffer.use
+import chylex.hee.util.forge.Side
+import chylex.hee.util.forge.Sided
+import net.minecraft.client.entity.player.ClientPlayerEntity
 import net.minecraft.network.PacketBuffer
 
 class PacketClientUpdateExperience() : BaseClientPacket() {
@@ -23,7 +23,7 @@ class PacketClientUpdateExperience() : BaseClientPacket() {
 	}
 	
 	@Sided(Side.CLIENT)
-	override fun handle(player: EntityPlayerSP) {
+	override fun handle(player: ClientPlayerEntity) {
 		player.experience = experience!!
 	}
 }

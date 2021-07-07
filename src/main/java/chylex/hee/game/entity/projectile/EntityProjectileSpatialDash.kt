@@ -1,11 +1,13 @@
 package chylex.hee.game.entity.projectile
 
-import chylex.hee.HEE
-import chylex.hee.client.MC
 import chylex.hee.client.sound.MovingSoundSpatialDash
-import chylex.hee.game.entity.SerializedEntity
+import chylex.hee.client.util.MC
 import chylex.hee.game.entity.Teleporter
-import chylex.hee.game.entity.posVec
+import chylex.hee.game.entity.util.SerializedEntity
+import chylex.hee.game.entity.util.posVec
+import chylex.hee.game.fx.IFxData
+import chylex.hee.game.fx.IFxHandler
+import chylex.hee.game.fx.util.playClient
 import chylex.hee.game.particle.ParticleFadingSpot
 import chylex.hee.game.particle.ParticleSmokeCustom
 import chylex.hee.game.particle.spawner.ParticleSpawnerCustom
@@ -13,40 +15,38 @@ import chylex.hee.game.particle.spawner.properties.IOffset.Gaussian
 import chylex.hee.game.particle.spawner.properties.IOffset.InBox
 import chylex.hee.game.particle.spawner.properties.IShape.Line
 import chylex.hee.game.particle.spawner.properties.IShape.Point
-import chylex.hee.game.world.BlockEditor
-import chylex.hee.game.world.Pos
-import chylex.hee.game.world.blocksMovement
-import chylex.hee.game.world.distanceSqTo
-import chylex.hee.game.world.playClient
+import chylex.hee.game.world.util.BlockEditor
+import chylex.hee.game.world.util.blocksMovement
+import chylex.hee.game.world.util.distanceSqTo
 import chylex.hee.init.ModEntities
 import chylex.hee.init.ModSounds
 import chylex.hee.network.client.PacketClientFX
-import chylex.hee.network.fx.IFxData
-import chylex.hee.network.fx.IFxHandler
-import chylex.hee.system.color.IntColor.Companion.RGB
-import chylex.hee.system.math.Vec
-import chylex.hee.system.math.Vec3
-import chylex.hee.system.math.ceilToInt
-import chylex.hee.system.math.component1
-import chylex.hee.system.math.component2
-import chylex.hee.system.math.component3
-import chylex.hee.system.math.directionTowards
-import chylex.hee.system.math.offsetTowards
-import chylex.hee.system.math.scale
-import chylex.hee.system.math.square
-import chylex.hee.system.migration.EntityLivingBase
-import chylex.hee.system.migration.EntityPlayer
-import chylex.hee.system.random.IRandomColor.Companion.IRandomColor
+import chylex.hee.system.heeTag
 import chylex.hee.system.random.nextInt
-import chylex.hee.system.serialization.TagCompound
-import chylex.hee.system.serialization.heeTag
-import chylex.hee.system.serialization.readCompactVec
-import chylex.hee.system.serialization.use
-import chylex.hee.system.serialization.writeCompactVec
+import chylex.hee.util.buffer.readCompactVec
+import chylex.hee.util.buffer.use
+import chylex.hee.util.buffer.writeCompactVec
+import chylex.hee.util.color.IColorGenerator
+import chylex.hee.util.color.RGB
+import chylex.hee.util.math.Pos
+import chylex.hee.util.math.Vec
+import chylex.hee.util.math.Vec3
+import chylex.hee.util.math.ceilToInt
+import chylex.hee.util.math.component1
+import chylex.hee.util.math.component2
+import chylex.hee.util.math.component3
+import chylex.hee.util.math.directionTowards
+import chylex.hee.util.math.lerp
+import chylex.hee.util.math.scale
+import chylex.hee.util.math.square
+import chylex.hee.util.nbt.TagCompound
+import chylex.hee.util.nbt.use
 import net.minecraft.entity.Entity
 import net.minecraft.entity.EntityType
+import net.minecraft.entity.LivingEntity
 import net.minecraft.entity.MoverType
 import net.minecraft.entity.MoverType.SELF
+import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.entity.projectile.ProjectileEntity
 import net.minecraft.entity.projectile.ProjectileHelper
 import net.minecraft.network.IPacket
@@ -67,7 +67,7 @@ import net.minecraftforge.fml.network.NetworkHooks
 import java.util.Random
 
 class EntityProjectileSpatialDash(type: EntityType<EntityProjectileSpatialDash>, world: World) : ProjectileEntity(type, world) {
-	constructor(world: World, owner: EntityLivingBase, speedMp: Float, distanceMp: Float) : this(ModEntities.SPATIAL_DASH, world) {
+	constructor(world: World, owner: LivingEntity, speedMp: Float, distanceMp: Float) : this(ModEntities.SPATIAL_DASH, world) {
 		this.owner = SerializedEntity(owner)
 		this.setPosition(owner.posX, owner.posY + owner.eyeHeight - 0.1, owner.posZ)
 		
@@ -94,7 +94,7 @@ class EntityProjectileSpatialDash(type: EntityType<EntityProjectileSpatialDash>,
 		
 		private val PARTICLE_TICK = ParticleSpawnerCustom(
 			type = ParticleFadingSpot,
-			data = ParticleFadingSpot.Data(color = IRandomColor { RGB(nextInt(30, 70), nextInt(70, 130), nextInt(100, 200)) }, lifespan = 20..25, scale = (0.1F)..(0.12F)),
+			data = ParticleFadingSpot.Data(color = IColorGenerator { RGB(nextInt(30, 70), nextInt(70, 130), nextInt(100, 200)) }, lifespan = 20..25, scale = (0.1F)..(0.12F)),
 			pos = InBox(0.2F),
 			mot = Gaussian(0.008F),
 			maxRange = 64.0
@@ -117,7 +117,7 @@ class EntityProjectileSpatialDash(type: EntityType<EntityProjectileSpatialDash>,
 		
 		val FX_EXPIRE = object : IFxHandler<FxExpireData> {
 			override fun handle(buffer: PacketBuffer, world: World, rand: Random) = buffer.use {
-				val player = HEE.proxy.getClientSidePlayer() ?: return
+				val player = MC.player ?: return
 				val playerPos = player.posVec
 				
 				val point = readCompactVec()
@@ -130,7 +130,7 @@ class EntityProjectileSpatialDash(type: EntityType<EntityProjectileSpatialDash>,
 						point
 					}
 					else {
-						playerPos.add(playerPos.directionTowards(point).scale(offsetTowards(10.0, distance, 0.04))) // makes the sound audible even at max distance of ~100 blocks
+						playerPos.add(playerPos.directionTowards(point).scale(lerp(10.0, distance, 0.04))) // makes the sound audible even at max distance of ~100 blocks
 					}
 				}
 				else {
@@ -161,11 +161,11 @@ class EntityProjectileSpatialDash(type: EntityType<EntityProjectileSpatialDash>,
 			return pos.blocksMovement(world) && !pos.up().blocksMovement(world) && !pos.up(2).blocksMovement(world)
 		}
 		
-		private fun handleBlockHit(entity: EntityLivingBase, hit: Vector3d, motion: Vector3d, pos: BlockPos) {
+		private fun handleBlockHit(entity: LivingEntity, hit: Vector3d, motion: Vector3d, pos: BlockPos) {
 			if (canTeleportPlayerOnTop(pos, entity.world)) {
 				TELEPORT.toBlock(entity, pos.up())
 			}
-			else if (!(entity is EntityPlayer && BlockEditor.canBreak(pos, entity))) {
+			else if (!(entity is PlayerEntity && BlockEditor.canBreak(pos, entity))) {
 				handleGenericHit(entity, hit, motion)
 			}
 			else if (!teleportEntityNear(entity, hit.add(motion.normalize().scale(1.74)), false)) {
@@ -173,11 +173,11 @@ class EntityProjectileSpatialDash(type: EntityType<EntityProjectileSpatialDash>,
 			}
 		}
 		
-		private fun handleGenericHit(entity: EntityLivingBase, hit: Vector3d, motion: Vector3d) {
+		private fun handleGenericHit(entity: LivingEntity, hit: Vector3d, motion: Vector3d) {
 			teleportEntityNear(entity, hit.add(motion.normalize().scale(-1.26)), true)
 		}
 		
-		private fun teleportEntityNear(entity: EntityLivingBase, target: Vector3d, fallback: Boolean): Boolean {
+		private fun teleportEntityNear(entity: LivingEntity, target: Vector3d, fallback: Boolean): Boolean {
 			val world = entity.world
 			
 			val finalBlock = TELEPORT_OFFSETS
@@ -241,7 +241,7 @@ class EntityProjectileSpatialDash(type: EntityType<EntityProjectileSpatialDash>,
 			if (hitObject != null && hitObject.type != Type.MISS) {
 				val ownerEntity = owner.get(world)
 				
-				if (ownerEntity is EntityLivingBase && ownerEntity.world === world) {
+				if (ownerEntity is LivingEntity && ownerEntity.world === world) {
 					if (hitObject is BlockRayTraceResult) {
 						handleBlockHit(ownerEntity, hitObject.hitVec, motion, hitObject.pos)
 					}
@@ -292,7 +292,7 @@ class EntityProjectileSpatialDash(type: EntityType<EntityProjectileSpatialDash>,
 		PacketClientFX(FX_EXPIRE, FxExpireData(expirePos, ownerEntity)).let {
 			it.sendToAllAround(this, 32.0)
 			
-			if (ownerEntity is EntityPlayer && expirePos.squareDistanceTo(ownerEntity.posVec) > square(32)) {
+			if (ownerEntity is PlayerEntity && expirePos.squareDistanceTo(ownerEntity.posVec) > square(32)) {
 				it.sendToPlayer(ownerEntity)
 			}
 		}

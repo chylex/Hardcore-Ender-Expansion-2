@@ -4,15 +4,12 @@ import chylex.hee.game.block.entity.TileEntityEnergyCluster
 import chylex.hee.game.entity.living.EntityMobEndermiteInstability
 import chylex.hee.game.mechanics.instability.region.components.ClusterLeakLogic
 import chylex.hee.game.mechanics.instability.region.components.EndermiteTeleportLogic
-import chylex.hee.game.mechanics.instability.region.entry.IRegionEntry
-import chylex.hee.game.mechanics.instability.region.entry.IRegionEntryConstructor
-import chylex.hee.game.mechanics.instability.region.entry.RegionEntryMap
-import chylex.hee.game.world.Pos
-import chylex.hee.system.math.floorToInt
 import chylex.hee.system.random.nextInt
-import chylex.hee.system.serialization.TagCompound
-import chylex.hee.system.serialization.TagLongArray
-import chylex.hee.system.serialization.use
+import chylex.hee.util.math.Pos
+import chylex.hee.util.math.floorToInt
+import chylex.hee.util.nbt.TagCompound
+import chylex.hee.util.nbt.TagLongArray
+import chylex.hee.util.nbt.use
 import net.minecraft.world.World
 import net.minecraft.world.server.ServerWorld
 import net.minecraftforge.common.util.INBTSerializable
@@ -58,12 +55,12 @@ class RegionInstability<T : IRegionEntry>(private val world: World, private val 
 	// Ticking
 	
 	private fun tickRecount() {
-		for((region, endermites) in groupEndermitesByRegion()) {
+		for ((region, endermites) in groupEndermitesByRegion()) {
 			val baseCount = (endermites.size + 2) / 3
 			
 			addInstabilityPoints(region, baseCount * 10)
 			
-			for(adjacent in region.adjacent) {
+			for (adjacent in region.adjacent) {
 				@Suppress("UNCHECKED_CAST")
 				addInstabilityPoints(adjacent as T, baseCount * 3)
 			}
@@ -73,7 +70,7 @@ class RegionInstability<T : IRegionEntry>(private val world: World, private val 
 	private fun tickTriggered() {
 		val groups = groupEndermitesByRegion()
 		
-		for(region in triggered.regions) {
+		for (region in triggered.regions) {
 			val endermites = groups[region]
 			
 			if (endermites != null && endermites.isNotEmpty()) {
@@ -94,7 +91,7 @@ class RegionInstability<T : IRegionEntry>(private val world: World, private val 
 					
 					multiplyInstabilityPoints(region, 0F)
 					
-					for(adjacent in region.adjacent) {
+					for (adjacent in region.adjacent) {
 						@Suppress("UNCHECKED_CAST")
 						multiplyInstabilityPoints(adjacent as T, 0.25F)
 					}

@@ -2,12 +2,12 @@ package chylex.hee.init
 
 import chylex.hee.HEE
 import chylex.hee.client.color.asItem
-import chylex.hee.client.gui.GuiAmuletOfRecovery
-import chylex.hee.client.gui.GuiBrewingStandCustom
-import chylex.hee.client.gui.GuiLootChest
-import chylex.hee.client.gui.GuiPortalTokenStorage
-import chylex.hee.client.gui.GuiShulkerBox
-import chylex.hee.client.gui.GuiTrinketPouch
+import chylex.hee.client.gui.screen.GuiAmuletOfRecovery
+import chylex.hee.client.gui.screen.GuiBrewingStandCustom
+import chylex.hee.client.gui.screen.GuiLootChest
+import chylex.hee.client.gui.screen.GuiPortalTokenStorage
+import chylex.hee.client.gui.screen.GuiShulkerBox
+import chylex.hee.client.gui.screen.GuiTrinketPouch
 import chylex.hee.client.render.EndDimensionRenderInfo
 import chylex.hee.client.render.block.IBlockLayerCutout
 import chylex.hee.client.render.block.IBlockLayerCutoutMipped
@@ -40,6 +40,7 @@ import chylex.hee.client.render.entity.RenderEntitySprite
 import chylex.hee.client.render.entity.RenderEntityTerritoryLightningBolt
 import chylex.hee.client.render.entity.RenderEntityTokenHolder
 import chylex.hee.client.render.item.RenderItemTileEntitySimple
+import chylex.hee.game.Resource
 import chylex.hee.game.block.BlockDryVines
 import chylex.hee.game.block.BlockPuzzleLogic
 import chylex.hee.game.block.BlockTablePedestal
@@ -92,12 +93,11 @@ import chylex.hee.game.item.ItemPortalToken
 import chylex.hee.game.item.ItemTotemOfUndyingCustom
 import chylex.hee.game.item.ItemVoidBucket
 import chylex.hee.game.item.ItemVoidSalad
-import chylex.hee.system.facades.Resource
-import chylex.hee.system.forge.Side
-import chylex.hee.system.forge.SubscribeAllEvents
-import chylex.hee.system.forge.SubscribeEvent
-import chylex.hee.system.forge.getRegistryEntries
-import chylex.hee.system.reflection.ObjectConstructors
+import chylex.hee.system.getRegistryEntries
+import chylex.hee.util.forge.Side
+import chylex.hee.util.forge.SubscribeAllEvents
+import chylex.hee.util.forge.SubscribeEvent
+import chylex.hee.util.lang.ObjectConstructors
 import net.minecraft.block.Block
 import net.minecraft.client.gui.ScreenManager
 import net.minecraft.client.gui.ScreenManager.IScreenFactory
@@ -119,12 +119,8 @@ import net.minecraft.entity.Entity
 import net.minecraft.entity.EntityType
 import net.minecraft.inventory.container.Container
 import net.minecraft.inventory.container.ContainerType
-import net.minecraft.item.IItemPropertyGetter
-import net.minecraft.item.ItemModelsProperties
 import net.minecraft.tileentity.TileEntity
 import net.minecraft.tileentity.TileEntityType
-import net.minecraft.util.IItemProvider
-import net.minecraft.util.ResourceLocation
 import net.minecraftforge.client.event.ColorHandlerEvent
 import net.minecraftforge.fml.client.registry.ClientRegistry
 import net.minecraftforge.fml.client.registry.IRenderFactory
@@ -149,8 +145,8 @@ object ModRendering {
 		
 		// blocks
 		
-		for(block in getRegistryEntries<Block>(ModBlocks)) {
-			when(block) {
+		for (block in getRegistryEntries<Block>(ModBlocks)) {
+			when (block) {
 				is IBlockLayerCutout       -> RenderTypeLookup.setRenderLayer(block, RenderType.getCutout())
 				is IBlockLayerCutoutMipped -> RenderTypeLookup.setRenderLayer(block, RenderType.getCutoutMipped())
 				is IBlockLayerTranslucent  -> RenderTypeLookup.setRenderLayer(block, RenderType.getTranslucent())
@@ -257,7 +253,7 @@ object ModRendering {
 				register(ItemPortalToken.Color, ModItems.PORTAL_TOKEN)
 				register(ItemVoidBucket.Color, ModItems.VOID_BUCKET)
 				
-				for(block in arrayOf(
+				for (block in arrayOf(
 					ModBlocks.PUZZLE_BURST_3,
 					ModBlocks.PUZZLE_BURST_5,
 					ModBlocks.PUZZLE_REDIRECT_1,
@@ -275,10 +271,6 @@ object ModRendering {
 	// Utilities
 	
 	private fun <T : ItemStackTileEntityRenderer> callable(obj: T) = Callable<ItemStackTileEntityRenderer> { obj }
-	
-	private fun IItemProvider.registerProperty(location: ResourceLocation, getter: IItemPropertyGetter){
-		ItemModelsProperties.registerProperty(this.asItem(), location, getter)
-	}
 	
 	private inline fun <reified T : ContainerScreen<U>, U : Container> registerScreen(type: ContainerType<out U>, constructor: IScreenFactory<U, T>) {
 		ScreenManager.registerFactory(type, constructor)

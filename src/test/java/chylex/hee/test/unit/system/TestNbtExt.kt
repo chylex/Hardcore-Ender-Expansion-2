@@ -1,30 +1,28 @@
 package chylex.hee.test.unit.system
 
-import chylex.hee.game.inventory.cleanupNBT
-import chylex.hee.game.inventory.heeTag
-import chylex.hee.game.inventory.heeTagOrNull
-import chylex.hee.game.inventory.nbt
-import chylex.hee.game.inventory.nbtOrNull
-import chylex.hee.system.serialization.NBTBase
-import chylex.hee.system.serialization.NBTList.Companion.putList
-import chylex.hee.system.serialization.NBTObjectList
-import chylex.hee.system.serialization.NBTPrimitiveList
-import chylex.hee.system.serialization.TagByte
-import chylex.hee.system.serialization.TagCompound
-import chylex.hee.system.serialization.TagDouble
-import chylex.hee.system.serialization.TagFloat
-import chylex.hee.system.serialization.TagInt
-import chylex.hee.system.serialization.TagList
-import chylex.hee.system.serialization.TagLong
-import chylex.hee.system.serialization.TagShort
-import chylex.hee.system.serialization.getListOfByteArrays
-import chylex.hee.system.serialization.getListOfCompounds
-import chylex.hee.system.serialization.getListOfIntArrays
-import chylex.hee.system.serialization.getListOfPrimitives
-import chylex.hee.system.serialization.getListOfStrings
-import chylex.hee.system.serialization.hasKey
-import chylex.hee.system.serialization.heeTag
-import chylex.hee.system.serialization.heeTagOrNull
+import chylex.hee.game.item.util.cleanupNBT
+import chylex.hee.game.item.util.nbt
+import chylex.hee.game.item.util.nbtOrNull
+import chylex.hee.system.heeTag
+import chylex.hee.system.heeTagOrNull
+import chylex.hee.util.nbt.NBTBase
+import chylex.hee.util.nbt.NBTObjectList
+import chylex.hee.util.nbt.NBTPrimitiveList
+import chylex.hee.util.nbt.TagByte
+import chylex.hee.util.nbt.TagCompound
+import chylex.hee.util.nbt.TagDouble
+import chylex.hee.util.nbt.TagFloat
+import chylex.hee.util.nbt.TagInt
+import chylex.hee.util.nbt.TagList
+import chylex.hee.util.nbt.TagLong
+import chylex.hee.util.nbt.TagShort
+import chylex.hee.util.nbt.getListOfByteArrays
+import chylex.hee.util.nbt.getListOfCompounds
+import chylex.hee.util.nbt.getListOfIntArrays
+import chylex.hee.util.nbt.getListOfPrimitives
+import chylex.hee.util.nbt.getListOfStrings
+import chylex.hee.util.nbt.hasKey
+import chylex.hee.util.nbt.putList
 import net.minecraft.item.ItemStack
 import net.minecraft.item.Items
 import net.minecraft.util.registry.Bootstrap
@@ -358,7 +356,7 @@ class TestNbtExt {
 				with(TagCompound()) {
 					val list = getListOfPrimitives("key")
 					
-					for(element in testValues) {
+					for (element in testValues) {
 						callAppend(list, element)
 					}
 					

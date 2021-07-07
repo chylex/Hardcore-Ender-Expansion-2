@@ -2,20 +2,20 @@ package chylex.hee.game.block
 
 import chylex.hee.client.render.block.IBlockLayerCutout
 import chylex.hee.game.block.properties.BlockBuilder
-import chylex.hee.game.world.breakBlock
-import chylex.hee.system.forge.SubscribeEvent
-import chylex.hee.system.math.Vec3
-import chylex.hee.system.migration.BlockWeb
-import chylex.hee.system.migration.EntityItem
-import chylex.hee.system.migration.EntityLivingBase
-import chylex.hee.system.migration.EntityMob
-import chylex.hee.system.migration.EntityPlayer
-import chylex.hee.system.migration.Hand.MAIN_HAND
-import chylex.hee.system.migration.ItemShears
-import chylex.hee.system.migration.ItemSword
+import chylex.hee.game.world.util.breakBlock
+import chylex.hee.util.forge.SubscribeEvent
+import chylex.hee.util.math.Vec3
 import net.minecraft.block.BlockState
+import net.minecraft.block.WebBlock
 import net.minecraft.entity.Entity
+import net.minecraft.entity.LivingEntity
+import net.minecraft.entity.item.ItemEntity
+import net.minecraft.entity.monster.MonsterEntity
+import net.minecraft.entity.player.PlayerEntity
+import net.minecraft.item.ShearsItem
+import net.minecraft.item.SwordItem
 import net.minecraft.util.Direction
+import net.minecraft.util.Hand.MAIN_HAND
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.shapes.ISelectionContext
 import net.minecraft.util.math.shapes.VoxelShape
@@ -27,7 +27,7 @@ import net.minecraftforge.common.MinecraftForge
 import net.minecraftforge.event.entity.player.PlayerEvent.BreakSpeed
 import java.util.Random
 
-class BlockAncientCobweb(builder: BlockBuilder) : BlockWeb(builder.p), IBlockLayerCutout {
+class BlockAncientCobweb(builder: BlockBuilder) : WebBlock(builder.p), IBlockLayerCutout {
 	init {
 		MinecraftForge.EVENT_BUS.register(this)
 	}
@@ -40,10 +40,10 @@ class BlockAncientCobweb(builder: BlockBuilder) : BlockWeb(builder.p), IBlockLay
 		
 		val item = e.player.getHeldItem(MAIN_HAND).item
 		
-		if (item is ItemSword) {
+		if (item is SwordItem) {
 			e.newSpeed = e.originalSpeed * 15.8F
 		}
-		else if (item is ItemShears) {
+		else if (item is ShearsItem) {
 			e.newSpeed = e.originalSpeed * 5.6F
 		}
 	}
@@ -61,15 +61,15 @@ class BlockAncientCobweb(builder: BlockBuilder) : BlockWeb(builder.p), IBlockLay
 	}
 	
 	override fun onEntityCollision(state: BlockState, world: World, pos: BlockPos, entity: Entity) {
-		if (entity is EntityItem) {
+		if (entity is ItemEntity) {
 			entity.setMotionMultiplier(state, Vec3.xyz(0.6))
 		}
 		else if (!world.isRemote) {
-			val canBreak = when(entity) {
-				is EntityPlayer     -> !entity.abilities.isFlying
-				is EntityMob        -> entity.attackTarget != null && (entity.width * entity.height) > 0.5F
-				is EntityLivingBase -> false
-				else                -> true
+			val canBreak = when (entity) {
+				is PlayerEntity  -> !entity.abilities.isFlying
+				is MonsterEntity -> entity.attackTarget != null && (entity.width * entity.height) > 0.5F
+				is LivingEntity  -> false
+				else             -> true
 			}
 			
 			if (canBreak) {

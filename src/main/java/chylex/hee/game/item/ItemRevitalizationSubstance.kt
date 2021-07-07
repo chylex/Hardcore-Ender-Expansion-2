@@ -1,36 +1,36 @@
 package chylex.hee.game.item
 
-import chylex.hee.client.model.ModelHelper
+import chylex.hee.client.model.util.ModelHelper
 import chylex.hee.game.block.entity.TileEntityEnergyCluster
 import chylex.hee.game.entity.item.EntityItemRevitalizationSubstance
+import chylex.hee.game.fx.IFxData
+import chylex.hee.game.fx.IFxHandler
+import chylex.hee.game.fx.util.playClient
+import chylex.hee.game.fx.util.playServer
 import chylex.hee.game.mechanics.energy.IClusterHealth.HealthOverride.REVITALIZING
 import chylex.hee.game.particle.ParticleSmokeCustom
 import chylex.hee.game.particle.spawner.ParticleSpawnerCustom
 import chylex.hee.game.particle.spawner.properties.IOffset.Gaussian
 import chylex.hee.game.particle.spawner.properties.IOffset.InBox
 import chylex.hee.game.particle.spawner.properties.IShape.Line
-import chylex.hee.game.world.center
-import chylex.hee.game.world.getTile
-import chylex.hee.game.world.playClient
-import chylex.hee.game.world.playServer
+import chylex.hee.game.world.util.getTile
 import chylex.hee.init.ModSounds
 import chylex.hee.network.client.PacketClientFX
-import chylex.hee.network.fx.IFxData
-import chylex.hee.network.fx.IFxHandler
-import chylex.hee.system.math.directionTowards
-import chylex.hee.system.migration.ActionResult.FAIL
-import chylex.hee.system.migration.ActionResult.SUCCESS
-import chylex.hee.system.migration.EntityPlayer
 import chylex.hee.system.random.nextFloat
-import chylex.hee.system.serialization.readPos
-import chylex.hee.system.serialization.use
-import chylex.hee.system.serialization.writePos
+import chylex.hee.util.buffer.readPos
+import chylex.hee.util.buffer.use
+import chylex.hee.util.buffer.writePos
+import chylex.hee.util.math.center
+import chylex.hee.util.math.directionTowards
 import net.minecraft.entity.Entity
+import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.item.Item
 import net.minecraft.item.ItemStack
 import net.minecraft.item.ItemUseContext
 import net.minecraft.network.PacketBuffer
 import net.minecraft.util.ActionResultType
+import net.minecraft.util.ActionResultType.FAIL
+import net.minecraft.util.ActionResultType.SUCCESS
 import net.minecraft.util.Hand
 import net.minecraft.util.SoundCategory
 import net.minecraft.util.math.BlockPos
@@ -46,7 +46,7 @@ class ItemRevitalizationSubstance(properties: Properties) : Item(properties) {
 			mot = Gaussian(0.01F)
 		)
 		
-		class FxUseData(private val pos: BlockPos, private val player: EntityPlayer, private val hand: Hand) : IFxData {
+		class FxUseData(private val pos: BlockPos, private val player: PlayerEntity, private val hand: Hand) : IFxData {
 			override fun write(buffer: PacketBuffer) = buffer.use {
 				writePos(pos)
 				writeInt(player.entityId)
@@ -58,7 +58,7 @@ class ItemRevitalizationSubstance(properties: Properties) : Item(properties) {
 			override fun handle(buffer: PacketBuffer, world: World, rand: Random) = buffer.use {
 				val blockPos = readPos().center
 				
-				val player = world.getEntityByID(readInt()) as? EntityPlayer ?: return
+				val player = world.getEntityByID(readInt()) as? PlayerEntity ?: return
 				val hand = Hand.values().getOrNull(readByte().toInt()) ?: return
 				
 				val handPos = ModelHelper.getHandPosition(player, hand)

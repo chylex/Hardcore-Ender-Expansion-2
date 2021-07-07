@@ -1,42 +1,42 @@
 package chylex.hee.game.block.entity
 
+import chylex.hee.game.block.util.BREWING_STAND_HAS_BOTTLE
+import chylex.hee.game.block.util.BlockStateGenerics
 import chylex.hee.game.container.ContainerBrewingStandCustom
-import chylex.hee.game.inventory.getStack
-import chylex.hee.game.inventory.isNotEmpty
-import chylex.hee.game.inventory.setStack
-import chylex.hee.game.inventory.size
+import chylex.hee.game.fx.FxBlockData
+import chylex.hee.game.fx.FxBlockHandler
+import chylex.hee.game.fx.util.playClient
+import chylex.hee.game.fx.util.playServer
+import chylex.hee.game.inventory.util.getStack
+import chylex.hee.game.inventory.util.setStack
+import chylex.hee.game.inventory.util.size
+import chylex.hee.game.item.util.isNotEmpty
 import chylex.hee.game.particle.ParticleSmokeCustom
 import chylex.hee.game.particle.spawner.ParticleSpawnerCustom
 import chylex.hee.game.particle.spawner.properties.IOffset.InBox
 import chylex.hee.game.particle.spawner.properties.IShape.Point
 import chylex.hee.game.potion.brewing.PotionItems
-import chylex.hee.game.world.FLAG_SYNC_CLIENT
-import chylex.hee.game.world.getState
-import chylex.hee.game.world.playClient
-import chylex.hee.game.world.playServer
-import chylex.hee.game.world.setState
+import chylex.hee.game.world.util.FLAG_SYNC_CLIENT
+import chylex.hee.game.world.util.getState
+import chylex.hee.game.world.util.setState
 import chylex.hee.init.ModBlocks
 import chylex.hee.init.ModItems
 import chylex.hee.init.ModTileEntities
 import chylex.hee.network.client.PacketClientFX
-import chylex.hee.network.fx.FxBlockData
-import chylex.hee.network.fx.FxBlockHandler
-import chylex.hee.system.color.IntColor.Companion.RGB
-import chylex.hee.system.compatibility.EraseGenerics
-import chylex.hee.system.migration.BlockBrewingStand
-import chylex.hee.system.migration.EntityPlayer
-import chylex.hee.system.migration.Sounds
-import chylex.hee.system.migration.TileEntityBrewingStand
-import chylex.hee.system.random.IRandomColor
+import chylex.hee.util.color.RGB
+import net.minecraft.block.BrewingStandBlock
+import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.entity.player.PlayerInventory
 import net.minecraft.inventory.InventoryHelper
 import net.minecraft.inventory.container.Container
 import net.minecraft.item.Item
 import net.minecraft.item.ItemStack
+import net.minecraft.tileentity.BrewingStandTileEntity
 import net.minecraft.tileentity.TileEntityType
 import net.minecraft.util.Direction
 import net.minecraft.util.NonNullList
 import net.minecraft.util.SoundCategory
+import net.minecraft.util.SoundEvents
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.text.ITextComponent
 import net.minecraft.util.text.TranslationTextComponent
@@ -46,7 +46,7 @@ import net.minecraftforge.event.ForgeEventFactory
 import java.util.Arrays
 import java.util.Random
 
-class TileEntityBrewingStandCustom : TileEntityBrewingStand() {
+class TileEntityBrewingStandCustom : BrewingStandTileEntity() {
 	companion object {
 		val SLOTS_POTIONS = 0..2
 		const val SLOT_REAGENT = 3
@@ -78,14 +78,14 @@ class TileEntityBrewingStandCustom : TileEntityBrewingStand() {
 		
 		private val PARTICLE_AMELIORATE = ParticleSpawnerCustom(
 			type = ParticleSmokeCustom,
-			data = ParticleSmokeCustom.Data(IRandomColor.Static(RGB(180, 46, 214)), lifespan = 10..18, scale = 0.9F),
+			data = ParticleSmokeCustom.Data(RGB(180, 46, 214), lifespan = 10..18, scale = 0.9F),
 			pos = InBox(-0.325F, 0.325F, -0.4F, 0.25F, -0.3F, 0.325F)
 		)
 		
 		val FX_AMELIORATE = object : FxBlockHandler() {
 			override fun handle(pos: BlockPos, world: World, rand: Random) {
 				PARTICLE_AMELIORATE.spawn(Point(pos, 21), rand)
-				Sounds.BLOCK_BREWING_STAND_BREW.playClient(pos, SoundCategory.BLOCKS, volume = 1.35F, pitch = 1.1F)
+				SoundEvents.BLOCK_BREWING_STAND_BREW.playClient(pos, SoundCategory.BLOCKS, volume = 1.35F, pitch = 1.1F)
 			}
 		}
 	}
@@ -116,7 +116,7 @@ class TileEntityBrewingStandCustom : TileEntityBrewingStand() {
 		val canBrew = canBrew()
 		
 		if (brewTime > 0) {
-			if (!canBrew || prevReagentItem != getStackInSlot(SLOT_REAGENT).item) {
+			if (!canBrew || prevReagentItem != getStack(SLOT_REAGENT).item) {
 				brewTime = 0
 				prevReagentItem = null
 				markDirty()
@@ -143,8 +143,8 @@ class TileEntityBrewingStandCustom : TileEntityBrewingStand() {
 				
 				val state = pos.getState(wrld)
 				
-				if (state.block is BlockBrewingStand) {
-					pos.setState(wrld, filledSlots.zip(BlockBrewingStand.HAS_BOTTLE).fold(state) { acc, (on, prop) -> acc.with(prop, on) }, FLAG_SYNC_CLIENT)
+				if (state.block is BrewingStandBlock) {
+					pos.setState(wrld, filledSlots.zip(BREWING_STAND_HAS_BOTTLE).fold(state) { acc, (on, prop) -> acc.with(prop, on) }, FLAG_SYNC_CLIENT)
 				}
 			}
 			
@@ -153,7 +153,7 @@ class TileEntityBrewingStandCustom : TileEntityBrewingStand() {
 					getStack(SLOT_REAGENT).shrink(1)
 					
 					val prevState = pos.getState(wrld)
-					val newState = prevState.properties.fold(ModBlocks.ENHANCED_BREWING_STAND.defaultState) { acc, prop -> EraseGenerics.copyProperty(acc, prevState, prop) }
+					val newState = prevState.properties.fold(ModBlocks.ENHANCED_BREWING_STAND.defaultState) { acc, prop -> BlockStateGenerics.copyProperty(acc, prevState, prop) }
 					
 					pos.setState(wrld, newState, FLAG_SYNC_CLIENT)
 					markDirty()
@@ -191,7 +191,7 @@ class TileEntityBrewingStandCustom : TileEntityBrewingStand() {
 		if (modifier != null) {
 			val simulatedInputs = NonNullList.create<ItemStack>()
 			
-			for(stack in brewingItemStacks) {
+			for (stack in brewingItemStacks) {
 				simulatedInputs.add(stack.copy())
 			}
 			
@@ -224,7 +224,7 @@ class TileEntityBrewingStandCustom : TileEntityBrewingStand() {
 		val modifier = PotionItems.findModifier(getStack(SLOT_MODIFIER))
 		
 		if (modifier != null) {
-			for(slot in POTION_SLOTS) {
+			for (slot in POTION_SLOTS) {
 				val potion = brewingItemStacks[slot]
 				
 				if (potion.isNotEmpty) {
@@ -236,7 +236,7 @@ class TileEntityBrewingStandCustom : TileEntityBrewingStand() {
 		}
 		
 		if (!wrld.isRemote) {
-			Sounds.BLOCK_BREWING_STAND_BREW.playServer(wrld, pos, SoundCategory.BLOCKS)
+			SoundEvents.BLOCK_BREWING_STAND_BREW.playServer(wrld, pos, SoundCategory.BLOCKS)
 		}
 		
 		ForgeEventFactory.onPotionBrewed(brewingItemStacks)
@@ -265,12 +265,12 @@ class TileEntityBrewingStandCustom : TileEntityBrewingStand() {
 	
 	// Container
 	
-	override fun openInventory(player: EntityPlayer) {
+	override fun openInventory(player: PlayerEntity) {
 		super.openInventory(player)
 		++playersViewingGUI
 	}
 	
-	override fun closeInventory(player: EntityPlayer) {
+	override fun closeInventory(player: PlayerEntity) {
 		super.closeInventory(player)
 		--playersViewingGUI
 	}
@@ -280,7 +280,7 @@ class TileEntityBrewingStandCustom : TileEntityBrewingStand() {
 	}
 	
 	override fun isItemValidForSlot(index: Int, stack: ItemStack): Boolean {
-		return when(index) {
+		return when (index) {
 			SLOT_REAGENT  -> canInsertIntoReagentSlot(stack, isEnhanced)
 			SLOT_MODIFIER -> canInsertIntoModifierSlot(stack)
 			else          -> super.isItemValidForSlot(index, stack)

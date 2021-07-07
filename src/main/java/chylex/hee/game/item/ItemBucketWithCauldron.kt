@@ -1,31 +1,32 @@
 package chylex.hee.game.item
 
 import chylex.hee.game.block.BlockAbstractCauldron
-import chylex.hee.game.block.with
-import chylex.hee.game.world.getState
-import chylex.hee.game.world.playServer
-import chylex.hee.game.world.playUniversal
-import chylex.hee.game.world.setState
-import chylex.hee.system.facades.Stats
-import chylex.hee.system.migration.ActionResult.SUCCESS
-import chylex.hee.system.migration.BlockCauldron
-import chylex.hee.system.migration.ItemBucket
-import chylex.hee.system.migration.Sounds
-import chylex.hee.system.migration.supply
+import chylex.hee.game.block.util.CAULDRON_LEVEL
+import chylex.hee.game.block.util.with
+import chylex.hee.game.fx.util.playServer
+import chylex.hee.game.fx.util.playUniversal
+import chylex.hee.game.world.util.getState
+import chylex.hee.game.world.util.setState
+import chylex.hee.util.forge.supply
 import net.minecraft.block.Blocks
+import net.minecraft.block.CauldronBlock
 import net.minecraft.fluid.Fluid
+import net.minecraft.item.BucketItem
 import net.minecraft.item.ItemStack
 import net.minecraft.item.ItemUseContext
 import net.minecraft.item.Items
+import net.minecraft.stats.Stats
 import net.minecraft.util.ActionResultType
+import net.minecraft.util.ActionResultType.SUCCESS
 import net.minecraft.util.SoundCategory
+import net.minecraft.util.SoundEvents
 
-open class ItemBucketWithCauldron(fluid: Fluid, private val cauldronBlock: BlockCauldron, properties: Properties) : ItemBucket(supply(fluid), properties) {
+open class ItemBucketWithCauldron(fluid: Fluid, private val cauldronBlock: CauldronBlock, properties: Properties) : BucketItem(supply(fluid), properties) {
 	override fun onItemUse(context: ItemUseContext): ActionResultType {
 		val world = context.world
 		val pos = context.pos
 		
-		if (pos.getState(world).let { it.block === Blocks.CAULDRON && it[BlockCauldron.LEVEL] == 0 }) {
+		if (pos.getState(world).let { it.block === Blocks.CAULDRON && it[CAULDRON_LEVEL] == 0 }) {
 			val player = context.player
 			
 			if (!world.isRemote) {
@@ -34,17 +35,17 @@ open class ItemBucketWithCauldron(fluid: Fluid, private val cauldronBlock: Block
 						player.setHeldItem(context.hand, ItemStack(Items.BUCKET))
 					}
 					
-					player.addStat(Stats.CAULDRON_FILLED)
+					player.addStat(Stats.FILL_CAULDRON)
 				}
 				
-				pos.setState(world, cauldronBlock.with(BlockCauldron.LEVEL, BlockAbstractCauldron.MAX_LEVEL))
+				pos.setState(world, cauldronBlock.with(CAULDRON_LEVEL, BlockAbstractCauldron.MAX_LEVEL))
 			}
 			
 			if (player == null) {
-				Sounds.ITEM_BUCKET_EMPTY.playServer(world, pos, SoundCategory.BLOCKS)
+				SoundEvents.ITEM_BUCKET_EMPTY.playServer(world, pos, SoundCategory.BLOCKS)
 			}
 			else {
-				Sounds.ITEM_BUCKET_EMPTY.playUniversal(player, pos, SoundCategory.BLOCKS)
+				SoundEvents.ITEM_BUCKET_EMPTY.playUniversal(player, pos, SoundCategory.BLOCKS)
 			}
 			
 			return SUCCESS

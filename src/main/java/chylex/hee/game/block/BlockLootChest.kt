@@ -2,11 +2,11 @@ package chylex.hee.game.block
 
 import chylex.hee.game.block.entity.TileEntityLootChest
 import chylex.hee.game.block.properties.BlockBuilder
-import chylex.hee.game.world.getTile
-import chylex.hee.system.forge.Side
-import chylex.hee.system.forge.Sided
-import chylex.hee.system.migration.EntityPlayer
+import chylex.hee.game.world.util.getTile
+import chylex.hee.util.forge.Side
+import chylex.hee.util.forge.Sided
 import net.minecraft.client.util.ITooltipFlag
+import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.item.ItemStack
 import net.minecraft.util.Util
 import net.minecraft.util.math.BlockPos
@@ -18,7 +18,7 @@ import net.minecraft.world.World
 class BlockLootChest(builder: BlockBuilder) : BlockAbstractChest<TileEntityLootChest>(builder) {
 	override fun createTileEntity() = TileEntityLootChest()
 	
-	override fun openChest(world: World, pos: BlockPos, player: EntityPlayer) {
+	override fun openChest(world: World, pos: BlockPos, player: PlayerEntity) {
 		if (player.isCreative && pos.getTile<TileEntityLootChest>(world)?.hasLootTable == true) {
 			player.sendMessage(TranslationTextComponent("block.hee.loot_chest.error_has_loot_table"), Util.DUMMY_UUID)
 		}

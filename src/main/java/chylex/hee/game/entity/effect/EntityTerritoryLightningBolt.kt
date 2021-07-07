@@ -1,12 +1,12 @@
 package chylex.hee.game.entity.effect
 
-import chylex.hee.game.world.playPlayer
-import chylex.hee.game.world.territory.TerritoryInstance
+import chylex.hee.game.fx.util.playPlayer
+import chylex.hee.game.territory.system.TerritoryInstance
 import chylex.hee.init.ModEntities
-import chylex.hee.system.forge.Side
-import chylex.hee.system.forge.Sided
 import chylex.hee.system.random.nextFloat
-import chylex.hee.system.serialization.TagCompound
+import chylex.hee.util.forge.Side
+import chylex.hee.util.forge.Sided
+import chylex.hee.util.nbt.TagCompound
 import net.minecraft.entity.Entity
 import net.minecraft.entity.EntityType
 import net.minecraft.network.IPacket

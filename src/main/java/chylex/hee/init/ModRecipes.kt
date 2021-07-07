@@ -1,6 +1,7 @@
 package chylex.hee.init
 
 import chylex.hee.HEE
+import chylex.hee.game.Resource
 import chylex.hee.game.recipe.NullRecipe
 import chylex.hee.game.recipe.RecipeBindingEssence
 import chylex.hee.game.recipe.RecipeEndPowderRepair
@@ -13,10 +14,9 @@ import chylex.hee.game.recipe.RecipeVoidSalad
 import chylex.hee.game.recipe.ShapedRecipeWithEnergy
 import chylex.hee.game.recipe.factories.IngredientFullEnergy
 import chylex.hee.game.recipe.factories.IngredientNoInfusions
-import chylex.hee.system.facades.Resource
-import chylex.hee.system.forge.SubscribeAllEvents
-import chylex.hee.system.forge.SubscribeEvent
-import chylex.hee.system.forge.named
+import chylex.hee.system.named
+import chylex.hee.util.forge.SubscribeAllEvents
+import chylex.hee.util.forge.SubscribeEvent
 import net.minecraft.item.crafting.IRecipeSerializer
 import net.minecraftforge.common.crafting.CraftingHelper
 import net.minecraftforge.event.RegistryEvent

@@ -1,9 +1,9 @@
 package chylex.hee.game.particle.base
 
-import chylex.hee.system.color.IntColor
-import chylex.hee.system.forge.Side
-import chylex.hee.system.forge.Sided
-import chylex.hee.system.math.Vec
+import chylex.hee.util.color.IntColor
+import chylex.hee.util.forge.Side
+import chylex.hee.util.forge.Sided
+import chylex.hee.util.math.Vec
 import net.minecraft.client.particle.IParticleRenderType
 import net.minecraft.client.particle.IParticleRenderType.PARTICLE_SHEET_OPAQUE
 import net.minecraft.client.particle.SpriteTexturedParticle

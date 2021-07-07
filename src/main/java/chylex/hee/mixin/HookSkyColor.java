@@ -10,6 +10,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(ClientWorld.class)
+@SuppressWarnings("MethodMayBeStatic")
 public abstract class HookSkyColor {
 	@Inject(method = "getSkyColor", at = @At("HEAD"), cancellable = true)
 	private void replaceSkyColor(final BlockPos pos, final float partialTicks, final CallbackInfoReturnable<Vector3d> ci) {

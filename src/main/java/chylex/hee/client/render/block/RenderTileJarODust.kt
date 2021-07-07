@@ -1,22 +1,22 @@
 package chylex.hee.client.render.block
 
 import chylex.hee.HEE
-import chylex.hee.client.MC
-import chylex.hee.client.render.gl.RenderStateBuilder
-import chylex.hee.client.render.gl.RenderStateBuilder.Companion.LIGHTMAP_ENABLED
-import chylex.hee.client.render.gl.RenderStateBuilder.Companion.SHADE_ENABLED
+import chylex.hee.client.render.RenderStateBuilder
+import chylex.hee.client.render.RenderStateBuilder.Companion.LIGHTMAP_ENABLED
+import chylex.hee.client.render.RenderStateBuilder.Companion.SHADE_ENABLED
+import chylex.hee.client.util.MC
+import chylex.hee.game.Resource
 import chylex.hee.game.block.BlockJarODust
 import chylex.hee.game.block.entity.TileEntityJarODust
-import chylex.hee.game.inventory.heeTagOrNull
 import chylex.hee.game.mechanics.dust.DustLayers
-import chylex.hee.system.facades.Resource
-import chylex.hee.system.forge.Side
-import chylex.hee.system.forge.Sided
-import chylex.hee.system.forge.SubscribeAllEvents
-import chylex.hee.system.forge.SubscribeEvent
-import chylex.hee.system.math.floorToInt
-import chylex.hee.system.math.offsetTowards
-import chylex.hee.system.serialization.getListOfCompounds
+import chylex.hee.system.heeTagOrNull
+import chylex.hee.util.forge.Side
+import chylex.hee.util.forge.Sided
+import chylex.hee.util.forge.SubscribeAllEvents
+import chylex.hee.util.forge.SubscribeEvent
+import chylex.hee.util.math.floorToInt
+import chylex.hee.util.math.lerp
+import chylex.hee.util.nbt.getListOfCompounds
 import com.mojang.blaze3d.matrix.MatrixStack
 import net.minecraft.client.renderer.Atlases
 import net.minecraft.client.renderer.IRenderTypeBuffer
@@ -90,14 +90,14 @@ class RenderTileJarODust(dispatcher: TileEntityRendererDispatcher) : TileEntityR
 			val maxZ = (AABB.maxZ - EPSILON_XZ).toFloat()
 			
 			val minU = SPRITE_LAYER.minU
-			val maxU = SPRITE_LAYER.let { offsetTowards(it.minU, it.maxU, 0.5F) }.toFloat() // texture is 16x32 to support repeating pattern
+			val maxU = SPRITE_LAYER.let { lerp(it.minU, it.maxU, 0.5F) }.toFloat() // texture is 16x32 to support repeating pattern
 			val minV = SPRITE_LAYER.minV
 			val maxV = SPRITE_LAYER.maxV
 			val texHalfSize = (maxU - minU)
 			
 			var relY = 0.0
 			
-			for((index, info) in contents.withIndex()) {
+			for ((index, info) in contents.withIndex()) {
 				val (dustType, dustAmount) = info
 				
 				val color = dustType.color

@@ -10,7 +10,7 @@ object EndermiteSpawnLogicOverworld : EndermiteSpawnLogic() {
 		var hostileMobCount = 0
 		var endermiteCount = 0
 		
-		for(entity in world.entities) {
+		for (entity in world.entities) {
 			if (entity is IMob) {
 				if (++hostileMobCount > 150) {
 					return false

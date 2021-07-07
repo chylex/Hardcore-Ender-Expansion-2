@@ -1,29 +1,29 @@
 package chylex.hee.game.particle
 
-import chylex.hee.game.entity.lookDirVec
-import chylex.hee.game.entity.selectExistingEntities
+import chylex.hee.game.entity.util.lookDirVec
+import chylex.hee.game.entity.util.selectExistingEntities
 import chylex.hee.game.particle.ParticleDust.Data
 import chylex.hee.game.particle.base.ParticleBase
 import chylex.hee.game.particle.data.IParticleData
 import chylex.hee.game.particle.spawner.IParticleMaker
-import chylex.hee.game.world.Pos
-import chylex.hee.game.world.isLoaded
-import chylex.hee.system.color.IntColor
-import chylex.hee.system.color.IntColor.Companion.RGB
-import chylex.hee.system.forge.Side
-import chylex.hee.system.forge.Sided
-import chylex.hee.system.math.Vec3
-import chylex.hee.system.math.square
-import chylex.hee.system.math.toRadians
-import chylex.hee.system.math.withY
-import chylex.hee.system.migration.EntityLivingBase
+import chylex.hee.game.world.util.isLoaded
 import chylex.hee.system.random.nextFloat
 import chylex.hee.system.random.nextInt
 import chylex.hee.system.random.nextVector
+import chylex.hee.util.color.IntColor
+import chylex.hee.util.color.RGB
+import chylex.hee.util.forge.Side
+import chylex.hee.util.forge.Sided
+import chylex.hee.util.math.Pos
+import chylex.hee.util.math.Vec3
+import chylex.hee.util.math.square
+import chylex.hee.util.math.toRadians
+import chylex.hee.util.math.withY
 import net.minecraft.client.particle.IParticleRenderType
 import net.minecraft.client.particle.IParticleRenderType.PARTICLE_SHEET_TRANSLUCENT
 import net.minecraft.client.particle.Particle
 import net.minecraft.client.world.ClientWorld
+import net.minecraft.entity.LivingEntity
 import net.minecraft.util.math.AxisAlignedBB
 import net.minecraft.world.LightType.BLOCK
 import net.minecraft.world.LightType.SKY
@@ -92,7 +92,7 @@ object ParticleDust : IParticleMaker.WithData<Data>() {
 				posZ + COLLISION_SIZE
 			)
 			
-			for(entity in world.selectExistingEntities.allInBox(aabb)) {
+			for (entity in world.selectExistingEntities.allInBox(aabb)) {
 				var mot = entity.motion
 				
 				if (mot.y < 0.0 && entity.isOnGround) {
@@ -109,7 +109,7 @@ object ParticleDust : IParticleMaker.WithData<Data>() {
 						.add(rand.nextVector(0.05 * len))
 				}
 				
-				if (entity is EntityLivingBase && entity.isSwingInProgress) {
+				if (entity is LivingEntity && entity.isSwingInProgress) {
 					val strength = if (entity.getHeldItem(entity.swingingHand).isEmpty) 0.07 else 0.13
 					
 					chaosVec = chaosVec

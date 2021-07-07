@@ -14,14 +14,14 @@ import chylex.hee.game.mechanics.table.interfaces.ITableContext
 import chylex.hee.game.mechanics.table.interfaces.ITableProcess
 import chylex.hee.game.mechanics.table.interfaces.ITableProcessSerializer
 import chylex.hee.game.mechanics.table.process.ProcessSupportingItemHolder
-import chylex.hee.game.world.getState
-import chylex.hee.game.world.getTile
-import chylex.hee.system.color.IntColor
-import chylex.hee.system.delegate.NotifyOnChange
-import chylex.hee.system.serialization.NBTList.Companion.putList
-import chylex.hee.system.serialization.TagCompound
-import chylex.hee.system.serialization.getListOfCompounds
-import chylex.hee.system.serialization.use
+import chylex.hee.game.world.util.getState
+import chylex.hee.game.world.util.getTile
+import chylex.hee.util.color.IntColor
+import chylex.hee.util.delegate.NotifyOnChange
+import chylex.hee.util.nbt.TagCompound
+import chylex.hee.util.nbt.getListOfCompounds
+import chylex.hee.util.nbt.putList
+import chylex.hee.util.nbt.use
 import net.minecraft.item.ItemStack
 import net.minecraft.tileentity.TileEntityType
 import net.minecraft.util.math.BlockPos
@@ -91,7 +91,7 @@ abstract class TileEntityBaseTable(type: TileEntityType<out TileEntityBaseTable>
 		val state = pos.getState(wrld)
 		val block = state.block as BlockAbstractTable
 		
-		maxInputPedestals = when(block.tier - block.firstTier) {
+		maxInputPedestals = when (block.tier - block.firstTier) {
 			2    -> 7
 			1    -> 5
 			0    -> 3
@@ -184,7 +184,7 @@ abstract class TileEntityBaseTable(type: TileEntityType<out TileEntityBaseTable>
 				return false
 			}
 			
-			while(storedDust < amount) {
+			while (storedDust < amount) {
 				if (jar.layers.removeDust(DustLayers.Side.BOTTOM, dustType, 1).isEmpty) {
 					return false
 				}
@@ -205,7 +205,7 @@ abstract class TileEntityBaseTable(type: TileEntityType<out TileEntityBaseTable>
 		}
 		
 		override fun requestUseSupportingItem(getRequiredAmount: (ItemStack) -> Int): Pair<BlockPos, ItemStack>? {
-			for(foundProcess in currentProcesses) {
+			for (foundProcess in currentProcesses) {
 				if (foundProcess is ProcessSupportingItemHolder) {
 					val consumed = foundProcess.useItem(getRequiredAmount)
 					

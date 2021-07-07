@@ -2,13 +2,13 @@ package chylex.hee.game.particle
 
 import chylex.hee.game.particle.base.ParticleBase
 import chylex.hee.game.particle.data.ParticleDataColorLifespanScale
-import chylex.hee.system.color.IntColor.Companion.RGB
-import chylex.hee.system.forge.Side
-import chylex.hee.system.forge.Sided
-import chylex.hee.system.math.Vec3
-import chylex.hee.system.random.IRandomColor.Companion.IRandomColor
 import chylex.hee.system.random.nextFloat
 import chylex.hee.system.random.nextInt
+import chylex.hee.util.color.IColorGenerator
+import chylex.hee.util.color.RGB
+import chylex.hee.util.forge.Side
+import chylex.hee.util.forge.Sided
+import chylex.hee.util.math.Vec3
 import net.minecraft.client.particle.Particle
 import net.minecraft.client.world.ClientWorld
 import kotlin.math.PI
@@ -22,7 +22,7 @@ object ParticleExperienceOrbFloating : ParticleDataColorLifespanScale.ParticleMa
 		return Instance(world, posX, posY, posZ, motY, data.orDefault)
 	}
 	
-	override val defaultColor = IRandomColor { RGB(nextInt(0, 255), 255, nextInt(0, 51)) }
+	override val defaultColor = IColorGenerator { RGB(nextInt(0, 255), 255, nextInt(0, 51)) }
 	override val defaultLifespan = 100..100
 	override val defaultScale = 1F..1F
 	

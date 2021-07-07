@@ -2,43 +2,41 @@ package chylex.hee.game.entity.technical
 
 import chylex.hee.game.block.BlockIgneousPlate
 import chylex.hee.game.block.entity.TileEntityIgneousPlate
-import chylex.hee.game.entity.EntityData
 import chylex.hee.game.entity.item.EntityItemFreshlyCooked
-import chylex.hee.game.entity.selectEntities
-import chylex.hee.game.inventory.isNotEmpty
-import chylex.hee.game.inventory.nonEmptySlots
+import chylex.hee.game.entity.util.EntityData
+import chylex.hee.game.entity.util.selectEntities
+import chylex.hee.game.fx.FxBlockData
+import chylex.hee.game.fx.FxBlockHandler
+import chylex.hee.game.fx.IFxData
+import chylex.hee.game.fx.IFxHandler
+import chylex.hee.game.fx.util.playClient
+import chylex.hee.game.inventory.util.nonEmptySlots
+import chylex.hee.game.item.util.isNotEmpty
 import chylex.hee.game.particle.spawner.ParticleSpawnerVanilla
 import chylex.hee.game.particle.spawner.properties.IOffset.Constant
 import chylex.hee.game.particle.spawner.properties.IOffset.InBox
 import chylex.hee.game.particle.spawner.properties.IShape.Point
-import chylex.hee.game.world.Pos
-import chylex.hee.game.world.allInCenteredBox
-import chylex.hee.game.world.center
-import chylex.hee.game.world.getTile
-import chylex.hee.game.world.isAir
-import chylex.hee.game.world.playClient
-import chylex.hee.game.world.setBlock
-import chylex.hee.game.world.spawn
+import chylex.hee.game.world.util.allInCenteredBox
+import chylex.hee.game.world.util.getTile
+import chylex.hee.game.world.util.isAir
+import chylex.hee.game.world.util.setBlock
+import chylex.hee.game.world.util.spawn
 import chylex.hee.init.ModEntities
 import chylex.hee.init.ModSounds
 import chylex.hee.network.client.PacketClientFX
-import chylex.hee.network.fx.FxBlockData
-import chylex.hee.network.fx.FxBlockHandler
-import chylex.hee.network.fx.IFxData
-import chylex.hee.network.fx.IFxHandler
-import chylex.hee.system.math.Vec3
-import chylex.hee.system.math.floorToInt
-import chylex.hee.system.migration.Facing.UP
-import chylex.hee.system.migration.Sounds
-import chylex.hee.system.migration.TileEntityFurnace
+import chylex.hee.system.heeTag
 import chylex.hee.system.random.nextFloat
 import chylex.hee.system.random.nextInt
 import chylex.hee.system.random.nextItemOrNull
-import chylex.hee.system.serialization.TagCompound
-import chylex.hee.system.serialization.heeTag
-import chylex.hee.system.serialization.readPos
-import chylex.hee.system.serialization.use
-import chylex.hee.system.serialization.writePos
+import chylex.hee.util.buffer.readPos
+import chylex.hee.util.buffer.use
+import chylex.hee.util.buffer.writePos
+import chylex.hee.util.math.Pos
+import chylex.hee.util.math.Vec3
+import chylex.hee.util.math.center
+import chylex.hee.util.math.floorToInt
+import chylex.hee.util.nbt.TagCompound
+import chylex.hee.util.nbt.use
 import net.minecraft.block.Blocks
 import net.minecraft.entity.Entity
 import net.minecraft.entity.EntityType
@@ -49,7 +47,10 @@ import net.minecraft.network.datasync.DataSerializers
 import net.minecraft.particles.ParticleTypes.CLOUD
 import net.minecraft.particles.ParticleTypes.LARGE_SMOKE
 import net.minecraft.particles.ParticleTypes.SMOKE
+import net.minecraft.tileentity.FurnaceTileEntity
+import net.minecraft.util.Direction.UP
 import net.minecraft.util.SoundCategory
+import net.minecraft.util.SoundEvents
 import net.minecraft.util.math.AxisAlignedBB
 import net.minecraft.util.math.BlockPos
 import net.minecraft.world.World
@@ -74,29 +75,29 @@ class EntityTechnicalIgneousPlateLogic(type: EntityType<EntityTechnicalIgneousPl
 		private const val EXTRA_TICKS_TAG = "ExtraTicks"
 		private const val OVERHEAT_LEVEL_TAG = "OverheatLevel"
 		
-		private fun getAttachedPlates(furnace: TileEntityFurnace): List<TileEntityIgneousPlate> {
+		private fun getAttachedPlates(furnace: FurnaceTileEntity): List<TileEntityIgneousPlate> {
 			val world = furnace.world ?: return emptyList()
 			val pos = furnace.pos
 			
 			return BlockIgneousPlate.FACING_NOT_DOWN.allowedValues.mapNotNull { pos.offset(it).getTile<TileEntityIgneousPlate>(world)?.takeIf { plate -> plate.isAttachedTo(furnace) } }
 		}
 		
-		private fun findLogicEntity(furnace: TileEntityFurnace): EntityTechnicalIgneousPlateLogic? {
+		private fun findLogicEntity(furnace: FurnaceTileEntity): EntityTechnicalIgneousPlateLogic? {
 			return furnace.world?.selectEntities?.inBox<EntityTechnicalIgneousPlateLogic>(AxisAlignedBB(furnace.pos))?.firstOrNull()
 		}
 		
-		fun createForFurnace(furnace: TileEntityFurnace) {
+		fun createForFurnace(furnace: FurnaceTileEntity) {
 			if (findLogicEntity(furnace) == null) {
 				furnace.world!!.spawn(ModEntities.IGNEOUS_PLATE_LOGIC, furnace.pos.center)
 			}
 		}
 		
-		fun getOverheatingPercentage(furnace: TileEntityFurnace): Float {
+		fun getOverheatingPercentage(furnace: FurnaceTileEntity): Float {
 			val entity = findLogicEntity(furnace) ?: return 0F
 			return entity.overheatLevel / OVERHEAT_LEVEL_LIMIT
 		}
 		
-		fun triggerCooling(furnace: TileEntityFurnace): Boolean {
+		fun triggerCooling(furnace: FurnaceTileEntity): Boolean {
 			val entity = findLogicEntity(furnace) ?: return false
 			val prevOverheat = entity.overheatLevel
 			
@@ -110,7 +111,7 @@ class EntityTechnicalIgneousPlateLogic(type: EntityType<EntityTechnicalIgneousPl
 			
 			entity.overheatLevel = newOverheat
 			
-			for(plate in getAttachedPlates(furnace)) {
+			for (plate in getAttachedPlates(furnace)) {
 				plate.reduceSpeed(plateSpeedReduction)
 			}
 			
@@ -122,7 +123,7 @@ class EntityTechnicalIgneousPlateLogic(type: EntityType<EntityTechnicalIgneousPl
 			val rand = world.rand
 			val target = pos.center.add(rand.nextFloat(-0.24, 0.24), 0.0, rand.nextFloat(-0.24, 0.24))
 			
-			while(stack.isNotEmpty) {
+			while (stack.isNotEmpty) {
 				EntityItemFreshlyCooked(world, target, stack.split(rand.nextInt(10, 20))).apply {
 					motion = Vec3.ZERO
 					world.addEntity(this)
@@ -157,7 +158,7 @@ class EntityTechnicalIgneousPlateLogic(type: EntityType<EntityTechnicalIgneousPl
 				val pos = buffer.readPos()
 				val amount = buffer.readFloat()
 				
-				pos.getTile<TileEntityFurnace>(world)?.let(::getAttachedPlates)?.forEach {
+				pos.getTile<FurnaceTileEntity>(world)?.let(::getAttachedPlates)?.forEach {
 					PARTICLE_COOLING.spawn(Point(it.pos, 5 + (10 * amount).floorToInt()), rand)
 				}
 				
@@ -169,7 +170,7 @@ class EntityTechnicalIgneousPlateLogic(type: EntityType<EntityTechnicalIgneousPl
 			override fun handle(pos: BlockPos, world: World, rand: Random) {
 				PARTICLE_OVERHEAT.spawn(Point(pos, 50), rand)
 				PARTICLE_OVERHEAT_CLOUD.spawn(Point(pos, 15), rand)
-				Sounds.ENTITY_GENERIC_EXPLODE.playClient(pos, SoundCategory.BLOCKS, volume = 2F, pitch = 1F)
+				SoundEvents.ENTITY_GENERIC_EXPLODE.playClient(pos, SoundCategory.BLOCKS, volume = 2F, pitch = 1F)
 			}
 		}
 	}
@@ -195,7 +196,7 @@ class EntityTechnicalIgneousPlateLogic(type: EntityType<EntityTechnicalIgneousPl
 		super.tick()
 		
 		if (!world.isRemote && world.isAreaLoaded(position, 1)) {
-			val furnace = Pos(this).getTile<TileEntityFurnace>(world)
+			val furnace = Pos(this).getTile<FurnaceTileEntity>(world)
 			
 			if (furnace == null) {
 				remove()
@@ -228,10 +229,10 @@ class EntityTechnicalIgneousPlateLogic(type: EntityType<EntityTechnicalIgneousPl
 	
 	// Furnace handling
 	
-	private fun increaseFurnaceTicks(furnace: TileEntityFurnace, amount: Double) {
+	private fun increaseFurnaceTicks(furnace: FurnaceTileEntity, amount: Double) {
 		extraTicks += max(0.0, amount)
 		
-		while(extraTicks >= 1.0) {
+		while (extraTicks >= 1.0) {
 			extraTicks -= 1.0
 			
 			if (furnace.isBurning) {
@@ -245,11 +246,11 @@ class EntityTechnicalIgneousPlateLogic(type: EntityType<EntityTechnicalIgneousPl
 		}
 	}
 	
-	private fun increaseHeatLevel(furnace: TileEntityFurnace, amount: Float) {
+	private fun increaseHeatLevel(furnace: FurnaceTileEntity, amount: Float) {
 		overheatLevel += max(0F, amount)
 		
 		if (overheatLevel > OVERHEAT_LEVEL_LIMIT) {
-			for(plate in getAttachedPlates(furnace)) {
+			for (plate in getAttachedPlates(furnace)) {
 				plate.blastOff()
 			}
 			
@@ -258,7 +259,7 @@ class EntityTechnicalIgneousPlateLogic(type: EntityType<EntityTechnicalIgneousPl
 			
 			val ingredientSlots = furnace.getSlotsForFace(UP)
 			
-			for((slot, stack) in furnace.nonEmptySlots) {
+			for ((slot, stack) in furnace.nonEmptySlots) {
 				if (slot in ingredientSlots) {
 					stack.shrink(1)
 				}
@@ -268,7 +269,7 @@ class EntityTechnicalIgneousPlateLogic(type: EntityType<EntityTechnicalIgneousPl
 			
 			furnace.clear()
 			
-			if (furnace.javaClass === TileEntityFurnace::class.java) {
+			if (furnace.javaClass === FurnaceTileEntity::class.java) {
 				repeat(5) {
 					dropOverheatItem(world, rand.nextItemOrNull(freePositions) ?: pos, ItemStack(Blocks.COBBLESTONE))
 				}

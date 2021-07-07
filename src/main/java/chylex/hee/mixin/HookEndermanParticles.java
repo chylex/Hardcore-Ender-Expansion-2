@@ -9,7 +9,7 @@ import org.spongepowered.asm.mixin.injection.ModifyConstant;
 import org.spongepowered.asm.mixin.injection.Slice;
 
 @Mixin(EndermanEntity.class)
-public abstract class HookEndermanParticles{
+public abstract class HookEndermanParticles {
 	@ModifyConstant(
 		method = "livingTick",
 		constant = @Constant(intValue = 2, ordinal = 0),
@@ -18,16 +18,16 @@ public abstract class HookEndermanParticles{
 			to = @At(value = "INVOKE", target = "Lnet/minecraft/world/World;addParticle(Lnet/minecraft/particles/IParticleData;DDDDDD)V")
 		)
 	)
-	private int getLivingTickParticleCount(final int originalValue){
+	private int getLivingTickParticleCount(final int originalValue) {
 		final EndermanEntity me = (EndermanEntity)(Object)this;
 		
-		if (me instanceof EntityMobAngryEnderman){
+		if (me instanceof EntityMobAngryEnderman) {
 			return 0;
 		}
-		else if (me instanceof EntityMobEnderman){
+		else if (me instanceof EntityMobEnderman) {
 			return ((EntityMobEnderman)me).isAggro() ? 0 : 2;
 		}
-		else{
+		else {
 			return 2;
 		}
 	}

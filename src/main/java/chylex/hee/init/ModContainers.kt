@@ -8,15 +8,15 @@ import chylex.hee.game.container.ContainerPortalTokenStorage
 import chylex.hee.game.container.ContainerShulkerBox
 import chylex.hee.game.container.ContainerShulkerBoxInInventory
 import chylex.hee.game.container.ContainerTrinketPouch
-import chylex.hee.system.forge.SubscribeAllEvents
-import chylex.hee.system.forge.SubscribeEvent
-import chylex.hee.system.forge.named
-import chylex.hee.system.forge.registerAllFields
-import chylex.hee.system.migration.EntityPlayer
-import chylex.hee.system.migration.EntityPlayerMP
-import chylex.hee.system.reflection.ObjectConstructors
-import chylex.hee.system.serialization.writePos
+import chylex.hee.system.named
+import chylex.hee.system.registerAllFields
+import chylex.hee.util.buffer.writePos
+import chylex.hee.util.forge.SubscribeAllEvents
+import chylex.hee.util.forge.SubscribeEvent
+import chylex.hee.util.lang.ObjectConstructors
+import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.entity.player.PlayerInventory
+import net.minecraft.entity.player.ServerPlayerEntity
 import net.minecraft.inventory.container.Container
 import net.minecraft.inventory.container.ContainerType
 import net.minecraft.inventory.container.INamedContainerProvider
@@ -45,16 +45,16 @@ object ModContainers {
 	
 	// Open
 	
-	fun open(player: EntityPlayer, container: INamedContainerProvider) {
-		(player as? EntityPlayerMP)?.let { NetworkHooks.openGui(it, container) }
+	fun open(player: PlayerEntity, container: INamedContainerProvider) {
+		(player as? ServerPlayerEntity)?.let { NetworkHooks.openGui(it, container) }
 	}
 	
-	fun open(player: EntityPlayer, container: INamedContainerProvider, parameter: Int) {
-		(player as? EntityPlayerMP)?.let { NetworkHooks.openGui(it, container) { buffer -> buffer.writeVarInt(parameter) } }
+	fun open(player: PlayerEntity, container: INamedContainerProvider, parameter: Int) {
+		(player as? ServerPlayerEntity)?.let { NetworkHooks.openGui(it, container) { buffer -> buffer.writeVarInt(parameter) } }
 	}
 	
-	fun open(player: EntityPlayer, container: INamedContainerProvider, parameter: BlockPos) {
-		(player as? EntityPlayerMP)?.let { NetworkHooks.openGui(it, container) { buffer -> buffer.writePos(parameter) } }
+	fun open(player: PlayerEntity, container: INamedContainerProvider, parameter: BlockPos) {
+		(player as? ServerPlayerEntity)?.let { NetworkHooks.openGui(it, container) { buffer -> buffer.writePos(parameter) } }
 	}
 	
 	// Utilities

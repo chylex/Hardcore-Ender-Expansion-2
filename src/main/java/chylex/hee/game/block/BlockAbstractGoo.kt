@@ -2,22 +2,21 @@ package chylex.hee.game.block
 
 import chylex.hee.game.block.fluid.FlowingFluid5
 import chylex.hee.game.block.fluid.FluidBase
-import chylex.hee.game.block.logic.BlockCollisionLimiter
-import chylex.hee.game.entity.heeTag
-import chylex.hee.game.world.Pos
-import chylex.hee.game.world.allInBoxMutable
-import chylex.hee.game.world.getState
-import chylex.hee.game.world.totalTime
-import chylex.hee.system.forge.Side
-import chylex.hee.system.forge.Sided
-import chylex.hee.system.migration.BlockFlowingFluid
-import chylex.hee.system.migration.EntityPlayer
-import chylex.hee.system.migration.supply
-import chylex.hee.system.serialization.getLongOrNull
-import chylex.hee.system.serialization.getOrCreateCompound
+import chylex.hee.game.block.util.BlockCollisionLimiter
+import chylex.hee.game.world.util.allInBoxMutable
+import chylex.hee.game.world.util.getState
+import chylex.hee.system.heeTag
+import chylex.hee.util.forge.Side
+import chylex.hee.util.forge.Sided
+import chylex.hee.util.forge.supply
+import chylex.hee.util.math.Pos
+import chylex.hee.util.nbt.getLongOrNull
+import chylex.hee.util.nbt.getOrCreateCompound
 import net.minecraft.block.BlockState
+import net.minecraft.block.FlowingFluidBlock
 import net.minecraft.block.material.Material
 import net.minecraft.entity.Entity
+import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.vector.Vector3d
 import net.minecraft.world.IWorldReader
@@ -26,7 +25,7 @@ import net.minecraft.world.World
 abstract class BlockAbstractGoo(
 	private val fluid: FluidBase,
 	material: Material,
-) : BlockFlowingFluid(supply(fluid.still), Properties.create(material, fluid.mapColor).hardnessAndResistance(fluid.resistance).doesNotBlockMovement().noDrops()) {
+) : FlowingFluidBlock(supply(fluid.still), Properties.create(material, fluid.mapColor).hardnessAndResistance(fluid.resistance).doesNotBlockMovement().noDrops()) {
 	protected companion object {
 		private const val LAST_TIME_TAG = "Time"
 		private const val TOTAL_TICKS_TAG = "Ticks"
@@ -62,7 +61,7 @@ abstract class BlockAbstractGoo(
 					onInsideGoo(entity)
 				}
 				
-				if (!(entity is EntityPlayer && entity.abilities.isFlying)) {
+				if (!(entity is PlayerEntity && entity.abilities.isFlying)) {
 					modifyMotion(entity, lowestLevel)
 				}
 			}
@@ -71,7 +70,7 @@ abstract class BlockAbstractGoo(
 	
 	protected fun trackTick(entity: Entity, maxTicks: Int): Int {
 		val world = entity.world
-		val currentWorldTime = world.totalTime
+		val currentWorldTime = world.gameTime
 		
 		with(entity.heeTag.getOrCreateCompound(tickTrackingKey)) {
 			val lastWorldTime = getLongOrNull(LAST_TIME_TAG) ?: (currentWorldTime - 1)

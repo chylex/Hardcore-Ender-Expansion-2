@@ -12,16 +12,15 @@ import chylex.hee.game.mechanics.table.interfaces.ITableProcess
 import chylex.hee.game.mechanics.table.process.ProcessManyPedestals.State.Cancel
 import chylex.hee.game.mechanics.table.process.ProcessManyPedestals.State.Output
 import chylex.hee.game.mechanics.table.process.ProcessManyPedestals.State.Work
-import chylex.hee.game.world.Pos
-import chylex.hee.game.world.getTile
-import chylex.hee.game.world.totalTime
-import chylex.hee.system.serialization.NBTItemStackList
-import chylex.hee.system.serialization.NBTList.Companion.putList
-import chylex.hee.system.serialization.TagCompound
-import chylex.hee.system.serialization.getListOfItemStacks
-import chylex.hee.system.serialization.getPos
-import chylex.hee.system.serialization.putPos
-import chylex.hee.system.serialization.use
+import chylex.hee.game.world.util.getTile
+import chylex.hee.util.math.Pos
+import chylex.hee.util.nbt.NBTItemStackList
+import chylex.hee.util.nbt.TagCompound
+import chylex.hee.util.nbt.getListOfItemStacks
+import chylex.hee.util.nbt.getPos
+import chylex.hee.util.nbt.putList
+import chylex.hee.util.nbt.putPos
+import chylex.hee.util.nbt.use
 import net.minecraft.item.ItemStack
 import net.minecraft.util.math.BlockPos
 
@@ -63,7 +62,7 @@ abstract class ProcessManyPedestals(private val table: TileEntityBaseTable, pos:
 	protected abstract fun onWorkTick(context: ITableContext, inputs: Array<ItemStack>): State
 	
 	final override fun initialize() {
-		for(index in pedestals.indices) {
+		for (index in pedestals.indices) {
 			val tile = getTile(index)!!
 			lastInputStacks[index] = tile.itemInputCopy
 			lastInputModCounters[index] = tile.inputModCounter
@@ -82,7 +81,7 @@ abstract class ProcessManyPedestals(private val table: TileEntityBaseTable, pos:
 			return false
 		}
 		
-		for(index in tiles.indices) {
+		for (index in tiles.indices) {
 			lastInputStacks[index] = newInputs[index]
 			lastInputModCounters[index] = tiles[index].inputModCounter
 		}
@@ -93,9 +92,9 @@ abstract class ProcessManyPedestals(private val table: TileEntityBaseTable, pos:
 	final override fun tick(context: ITableContext) {
 		val tiles = Array(pedestals.size) { getTile(it)!! }
 		
-		when(val state = currentState) {
+		when (val state = currentState) {
 			is Work -> {
-				val currentTime = table.wrld.totalTime
+				val currentTime = table.wrld.gameTime
 				
 				if (context.isPaused || tiles.any { currentTime - it.inputModTime < 20L }) {
 					setStatusIndicator(tiles, PAUSED)
@@ -107,7 +106,7 @@ abstract class ProcessManyPedestals(private val table: TileEntityBaseTable, pos:
 					val inputs = Array(tiles.size) { tiles[it].itemInputCopy }
 					val newState = onWorkTick(context, inputs)
 					
-					for((index, tile) in tiles.withIndex()) {
+					for ((index, tile) in tiles.withIndex()) {
 						if (tile.replaceInput(inputs[index], silent = true)) {
 							lastInputStacks[index] = tile.itemInputCopy
 							lastInputModCounters[index] = tile.inputModCounter
@@ -115,7 +114,7 @@ abstract class ProcessManyPedestals(private val table: TileEntityBaseTable, pos:
 					}
 					
 					if (newState is Work) {
-						setStatusIndicator(tiles, when(newState) {
+						setStatusIndicator(tiles, when (newState) {
 							Work.Success -> WORKING.also { context.triggerWorkParticle() }
 							Work.Blocked -> BLOCKED
 						})
@@ -130,7 +129,7 @@ abstract class ProcessManyPedestals(private val table: TileEntityBaseTable, pos:
 					setStatusIndicator(tiles, PAUSED)
 				}
 				else if (state.pedestal.getTile<TileEntityTablePedestal>(table.wrld)?.let(context::getOutputPedestal)?.addToOutput(state.stacks) == true) {
-					for(tile in tiles) {
+					for (tile in tiles) {
 						tile.replaceInput(tile.itemInputCopy.apply(whenFinished::transform), silent = false)
 					}
 					
@@ -179,7 +178,7 @@ abstract class ProcessManyPedestals(private val table: TileEntityBaseTable, pos:
 		
 		val state = currentState
 		
-		putString(STATE_TAG, when(state) {
+		putString(STATE_TAG, when (state) {
 			is Work   -> "Work"
 			is Output -> "Output".also { putList("OutputItems", state.tag); putPos("TargetPedestal", state.pedestal) }
 			Cancel    -> ""
@@ -189,7 +188,7 @@ abstract class ProcessManyPedestals(private val table: TileEntityBaseTable, pos:
 	override fun deserializeNBT(nbt: TagCompound) = nbt.use {
 		getListOfItemStacks(LAST_INPUTS_TAG).forEachIndexed { index, stack -> lastInputStacks[index] = stack }
 		
-		currentState = when(getString(STATE_TAG)) {
+		currentState = when (getString(STATE_TAG)) {
 			"Work"   -> Work.Success
 			"Output" -> Output(getListOfItemStacks("OutputItems"), getPos("TargetPedestal"))
 			else     -> Cancel

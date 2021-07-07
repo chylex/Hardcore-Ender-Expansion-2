@@ -1,6 +1,6 @@
 package chylex.hee.game.recipe
 
-import chylex.hee.game.inventory.nonEmptySlots
+import chylex.hee.game.inventory.util.nonEmptySlots
 import chylex.hee.init.ModItems
 import net.minecraft.inventory.CraftingInventory
 import net.minecraft.item.ItemStack
@@ -32,7 +32,7 @@ object RecipeScaleOfFreefallRepair : RecipeBaseDynamic() {
 		var dragonScaleCount = 0
 		var dragonScaleLimit = 0
 		
-		for((_, stack) in inv.nonEmptySlots) {
+		for ((_, stack) in inv.nonEmptySlots) {
 			val item = stack.item
 			
 			if (item === ModItems.DRAGON_SCALE) {

@@ -1,10 +1,10 @@
 package chylex.hee.client.render.block
 
+import chylex.hee.game.Resource
 import chylex.hee.game.block.entity.TileEntityLootChest
 import chylex.hee.init.ModAtlases
-import chylex.hee.system.facades.Resource
-import chylex.hee.system.forge.Side
-import chylex.hee.system.forge.Sided
+import chylex.hee.util.forge.Side
+import chylex.hee.util.forge.Sided
 import net.minecraft.client.renderer.model.RenderMaterial
 import net.minecraft.client.renderer.tileentity.ChestTileEntityRenderer
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher
@@ -15,10 +15,6 @@ class RenderTileLootChest(dispatcher: TileEntityRendererDispatcher) : ChestTileE
 	companion object {
 		val TEX = Resource.Custom("entity/loot_chest")
 		private val MAT = RenderMaterial(ModAtlases.ATLAS_TILES, TEX)
-	}
-	
-	init {
-		isChristmas = false
 	}
 	
 	override fun getMaterial(tile: TileEntityLootChest, type: ChestType): RenderMaterial {

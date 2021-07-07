@@ -2,7 +2,7 @@ package chylex.hee.game.block
 
 import chylex.hee.game.block.entity.TileEntityExperienceGate
 import chylex.hee.game.block.properties.BlockBuilder
-import chylex.hee.game.world.getTile
+import chylex.hee.game.world.util.getTile
 import net.minecraft.block.BlockState
 import net.minecraft.tileentity.TileEntity
 import net.minecraft.util.math.BlockPos

@@ -1,7 +1,7 @@
 package chylex.hee.datagen
 
 import chylex.hee.HEE
-import chylex.hee.system.facades.Resource
+import chylex.hee.game.Resource
 import net.minecraft.block.Block
 import net.minecraft.data.IDataProvider
 import net.minecraft.item.Item
@@ -18,14 +18,14 @@ val IForgeRegistryEntry<*>.isVanilla
 	get() = Resource.isVanilla(registryName!!)
 
 val IItemProvider.r
-	get() = when(this) {
+	get() = when (this) {
 		is Block -> resource("block/" + this.path, this.isVanilla)
 		is Item  -> resource("item/" + this.path, this.isVanilla)
 		else     -> throw IllegalArgumentException()
 	}
 
 fun IItemProvider.r(suffix: String): ResourceLocation {
-	return when(this) {
+	return when (this) {
 		is Block -> resource("block/" + this.path + suffix, this.isVanilla)
 		is Item  -> resource("item/" + this.path + suffix, this.isVanilla)
 		else     -> throw IllegalArgumentException()
@@ -39,7 +39,7 @@ fun resource(path: String, vanilla: Boolean): ResourceLocation {
 inline fun <T : IDataProvider> T?.safeUnit(callback: T.() -> Unit) {
 	try {
 		this?.callback()
-	} catch(e: Exception) {
+	} catch (e: Exception) {
 		HEE.log.error("[DataGen] " + e.message)
 	}
 }
@@ -47,7 +47,7 @@ inline fun <T : IDataProvider> T?.safeUnit(callback: T.() -> Unit) {
 inline fun <T : ModelBuilder<T>, U : ModelProvider<T>> U?.safeUnit(callback: U.() -> Unit) {
 	try {
 		this?.callback()
-	} catch(e: Exception) {
+	} catch (e: Exception) {
 		HEE.log.error("[DataGen] " + e.message)
 	}
 }
@@ -55,7 +55,7 @@ inline fun <T : ModelBuilder<T>, U : ModelProvider<T>> U?.safeUnit(callback: U.(
 inline fun <T : ModelBuilder<T>, U : ModelProvider<T>> U?.safe(callback: U.() -> T): T? {
 	return try {
 		this?.callback()
-	} catch(e: Exception) {
+	} catch (e: Exception) {
 		HEE.log.error("[DataGen] " + e.message)
 		null
 	}
@@ -64,7 +64,7 @@ inline fun <T : ModelBuilder<T>, U : ModelProvider<T>> U?.safe(callback: U.() ->
 inline fun <T : ModelBuilder<T>> T?.then(callback: T.() -> T): T? {
 	return try {
 		this?.callback()
-	} catch(e: Exception) {
+	} catch (e: Exception) {
 		HEE.log.error("[DataGen] " + e.message)
 		null
 	}

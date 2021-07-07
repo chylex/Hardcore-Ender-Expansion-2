@@ -1,6 +1,7 @@
 package chylex.hee.init
 
 import chylex.hee.HEE
+import chylex.hee.game.Resource
 import chylex.hee.game.block.dispenser.DispenseEndermanHead
 import chylex.hee.game.block.dispenser.DispenseExperienceBottle
 import chylex.hee.game.block.dispenser.DispenseWaterExtinguishIgneousPlate
@@ -40,22 +41,21 @@ import chylex.hee.game.item.ItemTrinketPouch
 import chylex.hee.game.item.ItemVoidBucket
 import chylex.hee.game.item.ItemVoidMiner
 import chylex.hee.game.item.ItemVoidSalad
-import chylex.hee.game.item.Tool.Type.AXE
-import chylex.hee.game.item.Tool.Type.PICKAXE
-import chylex.hee.game.item.Tool.Type.SHOVEL
-import chylex.hee.game.world.territory.TerritoryType
+import chylex.hee.game.item.util.Tool.Type.AXE
+import chylex.hee.game.item.util.Tool.Type.PICKAXE
+import chylex.hee.game.item.util.Tool.Type.SHOVEL
+import chylex.hee.game.territory.TerritoryType
 import chylex.hee.init.ModCreativeTabs.OrderedCreativeTab
-import chylex.hee.system.color.IntColor.Companion.RGB
-import chylex.hee.system.facades.Resource
-import chylex.hee.system.forge.SubscribeAllEvents
-import chylex.hee.system.forge.SubscribeEvent
-import chylex.hee.system.forge.registerAllFields
-import chylex.hee.system.forge.useVanillaName
-import chylex.hee.system.migration.BlockDispenser
-import chylex.hee.system.migration.ItemSpawnEgg
+import chylex.hee.system.registerAllFields
+import chylex.hee.system.useVanillaName
+import chylex.hee.util.color.RGB
+import chylex.hee.util.forge.SubscribeAllEvents
+import chylex.hee.util.forge.SubscribeEvent
+import net.minecraft.block.DispenserBlock
 import net.minecraft.item.Item
 import net.minecraft.item.ItemGroup
 import net.minecraft.item.Items
+import net.minecraft.item.SpawnEggItem
 import net.minecraft.tags.ItemTags
 import net.minecraftforge.event.RegistryEvent
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber.Bus.MOD
@@ -158,13 +158,13 @@ object ModItems {
 	
 	// Items: Spawn Eggs
 	
-	@JvmField val SPAWN_ENDER_EYE             = ItemSpawnEgg(ModEntities.ENDER_EYE, RGB(22u).i, RGB(219, 58, 115).i, baseProps) named "ender_eye_spawn_egg"
-	@JvmField val SPAWN_ANGRY_ENDERMAN        = ItemSpawnEgg(ModEntities.ANGRY_ENDERMAN, RGB(21u).i, RGB(111, 75, 36).i, baseProps) named "angry_enderman_spawn_egg"
-	@JvmField val SPAWN_BLOBBY                = ItemSpawnEgg(ModEntities.BLOBBY, RGB(103, 140, 94).i, RGB(255u).i, baseProps) named "blobby_spawn_egg"
-	@JvmField val SPAWN_ENDERMITE_INSTABILITY = ItemSpawnEgg(ModEntities.ENDERMITE_INSTABILITY, RGB(21u).i, RGB(94, 122, 108).i, baseProps) named "endermite_instability_spawn_egg"
-	@JvmField val SPAWN_SPIDERLING            = ItemSpawnEgg(ModEntities.SPIDERLING, RGB(32, 30, 16).i, RGB(182, 25, 0).i, baseProps) named "spiderling_spawn_egg"
-	@JvmField val SPAWN_UNDREAD               = ItemSpawnEgg(ModEntities.UNDREAD, TerritoryType.FORGOTTEN_TOMBS.desc.colors.tokenTop.i, TerritoryType.FORGOTTEN_TOMBS.desc.colors.tokenBottom.i, baseProps) named "undread_spawn_egg"
-	@JvmField val SPAWN_VAMPIRE_BAT           = ItemSpawnEgg(ModEntities.VAMPIRE_BAT, RGB(76, 62, 48).i, RGB(66, 16, 15).i, baseProps) named "vampire_bat_spawn_egg"
+	@JvmField val SPAWN_ENDER_EYE             = SpawnEggItem(ModEntities.ENDER_EYE, RGB(22u).i, RGB(219, 58, 115).i, baseProps) named "ender_eye_spawn_egg"
+	@JvmField val SPAWN_ANGRY_ENDERMAN        = SpawnEggItem(ModEntities.ANGRY_ENDERMAN, RGB(21u).i, RGB(111, 75, 36).i, baseProps) named "angry_enderman_spawn_egg"
+	@JvmField val SPAWN_BLOBBY                = SpawnEggItem(ModEntities.BLOBBY, RGB(103, 140, 94).i, RGB(255u).i, baseProps) named "blobby_spawn_egg"
+	@JvmField val SPAWN_ENDERMITE_INSTABILITY = SpawnEggItem(ModEntities.ENDERMITE_INSTABILITY, RGB(21u).i, RGB(94, 122, 108).i, baseProps) named "endermite_instability_spawn_egg"
+	@JvmField val SPAWN_SPIDERLING            = SpawnEggItem(ModEntities.SPIDERLING, RGB(32, 30, 16).i, RGB(182, 25, 0).i, baseProps) named "spiderling_spawn_egg"
+	@JvmField val SPAWN_UNDREAD               = SpawnEggItem(ModEntities.UNDREAD, TerritoryType.FORGOTTEN_TOMBS.desc.colors.tokenTop.i, TerritoryType.FORGOTTEN_TOMBS.desc.colors.tokenBottom.i, baseProps) named "undread_spawn_egg"
+	@JvmField val SPAWN_VAMPIRE_BAT           = SpawnEggItem(ModEntities.VAMPIRE_BAT, RGB(76, 62, 48).i, RGB(66, 16, 15).i, baseProps) named "vampire_bat_spawn_egg"
 	
 	// Registry
 	
@@ -191,9 +191,9 @@ object ModItems {
 		
 		// dispenser behavior
 		
-		BlockDispenser.registerDispenseBehavior(ENDERMAN_HEAD, DispenseEndermanHead)
-		BlockDispenser.registerDispenseBehavior(EXPERIENCE_BOTTLE, DispenseExperienceBottle)
-		BlockDispenser.registerDispenseBehavior(Items.WATER_BUCKET, DispenseWaterExtinguishIgneousPlate(BlockDispenser.DISPENSE_BEHAVIOR_REGISTRY[Items.WATER_BUCKET]))
+		DispenserBlock.registerDispenseBehavior(ENDERMAN_HEAD, DispenseEndermanHead)
+		DispenserBlock.registerDispenseBehavior(EXPERIENCE_BOTTLE, DispenseExperienceBottle)
+		DispenserBlock.registerDispenseBehavior(Items.WATER_BUCKET, DispenseWaterExtinguishIgneousPlate(DispenserBlock.DISPENSE_BEHAVIOR_REGISTRY[Items.WATER_BUCKET]))
 	}
 	
 	// Utilities

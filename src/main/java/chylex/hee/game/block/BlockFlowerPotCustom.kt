@@ -2,14 +2,14 @@ package chylex.hee.game.block
 
 import chylex.hee.client.render.block.IBlockLayerCutout
 import chylex.hee.game.block.properties.BlockBuilder
-import chylex.hee.system.migration.BlockFlowerPot
-import chylex.hee.system.migration.supply
+import chylex.hee.util.forge.supply
 import net.minecraft.block.Block
 import net.minecraft.block.Blocks
+import net.minecraft.block.FlowerPotBlock
 
-open class BlockFlowerPotCustom(builder: BlockBuilder, flower: Block) : BlockFlowerPot(supply(Blocks.FLOWER_POT as BlockFlowerPot), supply(flower), builder.p), IBlockLayerCutout {
+open class BlockFlowerPotCustom(builder: BlockBuilder, flower: Block) : FlowerPotBlock(supply(Blocks.FLOWER_POT as FlowerPotBlock), supply(flower), builder.p), IBlockLayerCutout {
 	init {
 		@Suppress("LeakingThis")
-		(Blocks.FLOWER_POT as BlockFlowerPot).addPlant(flower.registryName!!, supply(this))
+		(Blocks.FLOWER_POT as FlowerPotBlock).addPlant(flower.registryName!!, supply(this))
 	}
 }

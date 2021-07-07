@@ -1,19 +1,19 @@
 package chylex.hee.client.render.block
 
-import chylex.hee.client.MC
-import chylex.hee.client.model.ModelHelper
-import chylex.hee.client.model.getQuads
-import chylex.hee.client.render.gl.rotateY
+import chylex.hee.client.model.util.ModelHelper
+import chylex.hee.client.model.util.getQuads
+import chylex.hee.client.render.util.rotateY
+import chylex.hee.client.util.MC
 import chylex.hee.game.block.entity.TileEntityJarODust
 import chylex.hee.game.block.entity.base.TileEntityBaseTable
-import chylex.hee.game.entity.lookPosVec
+import chylex.hee.game.entity.util.lookPosVec
 import chylex.hee.game.mechanics.dust.DustLayers
-import chylex.hee.game.world.center
-import chylex.hee.game.world.getTile
-import chylex.hee.system.forge.Side
-import chylex.hee.system.forge.Sided
-import chylex.hee.system.math.Vec3
-import chylex.hee.system.math.addY
+import chylex.hee.game.world.util.getTile
+import chylex.hee.util.forge.Side
+import chylex.hee.util.forge.Sided
+import chylex.hee.util.math.Vec3
+import chylex.hee.util.math.addY
+import chylex.hee.util.math.center
 import com.mojang.blaze3d.matrix.MatrixStack
 import net.minecraft.client.renderer.IRenderTypeBuffer
 import net.minecraft.client.renderer.ItemRenderer
@@ -60,7 +60,7 @@ class RenderTileTable(dispatcher: TileEntityRendererDispatcher) : TileEntityRend
 		val mat = matrix.last
 		val builder = ItemRenderer.getBuffer(buffer, RenderTypeLookup.func_239219_a_(itemStack, true), true /* isItem */, false /* hasGlint */)
 		
-		for(quad in itemModel.getQuads()) {
+		for (quad in itemModel.getQuads()) {
 			builder.addVertexData(mat, quad, COLOR_SHADE, COLOR_SHADE, COLOR_SHADE, COLOR_ALPHA, LIGHT, OverlayTexture.NO_OVERLAY)
 		}
 		

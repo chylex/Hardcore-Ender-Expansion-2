@@ -7,13 +7,14 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Redirect;
 
 @Mixin(ChorusFlowerBlock.class)
-public abstract class HookChorusFlowerSoil{
+@SuppressWarnings("MethodMayBeStatic")
+public abstract class HookChorusFlowerSoil {
 	@Redirect(
 		method = "randomTick",
 		at = @At(value = "FIELD", target = "Lnet/minecraft/block/Blocks;END_STONE:Lnet/minecraft/block/Block;"),
 		require = 2
 	)
-	private Block replaceInTick(){
+	private Block replaceInTick() {
 		return ModBlocks.HUMUS;
 	}
 	
@@ -22,7 +23,7 @@ public abstract class HookChorusFlowerSoil{
 		at = @At(value = "FIELD", target = "Lnet/minecraft/block/Blocks;END_STONE:Lnet/minecraft/block/Block;"),
 		require = 1
 	)
-	private Block replaceInIsValidPosition(){
+	private Block replaceInIsValidPosition() {
 		return ModBlocks.HUMUS;
 	}
 }

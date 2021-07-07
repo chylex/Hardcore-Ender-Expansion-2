@@ -1,13 +1,13 @@
 package chylex.hee.game.block.entity
 
 import chylex.hee.init.ModTileEntities
-import chylex.hee.system.forge.Side
-import chylex.hee.system.forge.Sided
-import chylex.hee.system.migration.TileEntityChest
+import chylex.hee.util.forge.Side
+import chylex.hee.util.forge.Sided
+import net.minecraft.tileentity.ChestTileEntity
 import net.minecraft.tileentity.TileEntityType
 import net.minecraft.util.math.AxisAlignedBB
 
-class TileEntityDarkChest(type: TileEntityType<TileEntityDarkChest>) : TileEntityChest(type) {
+class TileEntityDarkChest(type: TileEntityType<TileEntityDarkChest>) : ChestTileEntity(type) {
 	constructor() : this(ModTileEntities.DARK_CHEST)
 	
 	@Sided(Side.CLIENT)

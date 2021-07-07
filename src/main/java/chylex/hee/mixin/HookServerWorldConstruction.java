@@ -1,7 +1,7 @@
 package chylex.hee.mixin;
 
 import chylex.hee.HEE;
-import chylex.hee.game.world.ServerWorldEndCustom;
+import chylex.hee.game.world.server.ServerWorldEndCustom;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.RegistryKey;
 import net.minecraft.world.DimensionType;

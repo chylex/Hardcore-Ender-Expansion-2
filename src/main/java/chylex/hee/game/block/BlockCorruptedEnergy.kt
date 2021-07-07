@@ -5,39 +5,40 @@ import chylex.hee.game.block.BlockCorruptedEnergy.SpawnResult.PASSTHROUGH
 import chylex.hee.game.block.BlockCorruptedEnergy.SpawnResult.SUCCESS
 import chylex.hee.game.block.entity.TileEntityEnergyCluster
 import chylex.hee.game.block.properties.BlockBuilder
-import chylex.hee.game.block.properties.Property
+import chylex.hee.game.block.util.Property
+import chylex.hee.game.block.util.with
 import chylex.hee.game.entity.CustomCreatureType
+import chylex.hee.game.entity.damage.CombinedDamage
+import chylex.hee.game.entity.damage.Damage
+import chylex.hee.game.entity.damage.IDamageDealer.Companion.TITLE_MAGIC
+import chylex.hee.game.entity.damage.IDamageProcessor.Companion.ARMOR_PROTECTION
+import chylex.hee.game.entity.damage.IDamageProcessor.Companion.DIFFICULTY_SCALING
+import chylex.hee.game.entity.damage.IDamageProcessor.Companion.ENCHANTMENT_PROTECTION
+import chylex.hee.game.entity.damage.IDamageProcessor.Companion.MAGIC_TYPE
+import chylex.hee.game.entity.damage.IDamageProcessor.Companion.NUDITY_DANGER
+import chylex.hee.game.entity.damage.IDamageProcessor.Companion.RAPID_DAMAGE
 import chylex.hee.game.entity.living.IImmuneToCorruptedEnergy
-import chylex.hee.game.mechanics.damage.Damage
-import chylex.hee.game.mechanics.damage.IDamageDealer.Companion.TITLE_MAGIC
-import chylex.hee.game.mechanics.damage.IDamageProcessor.Companion.ARMOR_PROTECTION
-import chylex.hee.game.mechanics.damage.IDamageProcessor.Companion.DIFFICULTY_SCALING
-import chylex.hee.game.mechanics.damage.IDamageProcessor.Companion.ENCHANTMENT_PROTECTION
-import chylex.hee.game.mechanics.damage.IDamageProcessor.Companion.MAGIC_TYPE
-import chylex.hee.game.mechanics.damage.IDamageProcessor.Companion.NUDITY_DANGER
-import chylex.hee.game.mechanics.damage.IDamageProcessor.Companion.RAPID_DAMAGE
-import chylex.hee.game.mechanics.damage.special.CombinedDamage
 import chylex.hee.game.particle.ParticleCorruptedEnergy
 import chylex.hee.game.particle.spawner.ParticleSpawnerCustom
 import chylex.hee.game.particle.spawner.properties.IOffset.InBox
 import chylex.hee.game.particle.spawner.properties.IShape.Point
-import chylex.hee.game.world.FLAG_NONE
-import chylex.hee.game.world.FLAG_SYNC_CLIENT
-import chylex.hee.game.world.getState
-import chylex.hee.game.world.getTile
-import chylex.hee.game.world.removeBlock
-import chylex.hee.game.world.setState
+import chylex.hee.game.world.util.FLAG_NONE
+import chylex.hee.game.world.util.FLAG_SYNC_CLIENT
+import chylex.hee.game.world.util.Facing6
+import chylex.hee.game.world.util.getState
+import chylex.hee.game.world.util.getTile
+import chylex.hee.game.world.util.removeBlock
+import chylex.hee.game.world.util.setState
 import chylex.hee.init.ModBlocks
-import chylex.hee.system.facades.Facing6
-import chylex.hee.system.forge.Side
-import chylex.hee.system.forge.Sided
-import chylex.hee.system.migration.EntityLivingBase
 import chylex.hee.system.random.nextInt
 import chylex.hee.system.random.removeItem
+import chylex.hee.util.forge.Side
+import chylex.hee.util.forge.Sided
 import net.minecraft.block.Block
 import net.minecraft.block.BlockRenderType.INVISIBLE
 import net.minecraft.block.BlockState
 import net.minecraft.entity.Entity
+import net.minecraft.entity.LivingEntity
 import net.minecraft.state.StateContainer.Builder
 import net.minecraft.util.math.BlockPos
 import net.minecraft.world.IBlockReader
@@ -69,7 +70,7 @@ class BlockCorruptedEnergy(builder: BlockBuilder) : BlockSimple(builder) {
 			return (MAX_TICK_RATE - (level / 2)).coerceAtLeast(MIN_TICK_RATE)
 		}
 		
-		private fun isEntityTolerant(entity: EntityLivingBase): Boolean {
+		private fun isEntityTolerant(entity: LivingEntity): Boolean {
 			return CustomCreatureType.isDemon(entity) || CustomCreatureType.isShadow(entity) || entity is IImmuneToCorruptedEnergy
 		}
 	}
@@ -173,7 +174,7 @@ class BlockCorruptedEnergy(builder: BlockBuilder) : BlockSimple(builder) {
 	}
 	
 	override fun onEntityCollision(state: BlockState, world: World, pos: BlockPos, entity: Entity) {
-		if (!world.isRemote && entity is EntityLivingBase && !isEntityTolerant(entity)) {
+		if (!world.isRemote && entity is LivingEntity && !isEntityTolerant(entity)) {
 			CombinedDamage(
 				DAMAGE_PART_NORMAL to 0.75F,
 				DAMAGE_PART_MAGIC to (0.75F + state[LEVEL] / 10F)

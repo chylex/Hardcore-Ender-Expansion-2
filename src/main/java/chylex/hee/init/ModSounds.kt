@@ -1,11 +1,11 @@
 package chylex.hee.init
 
 import chylex.hee.HEE
-import chylex.hee.system.facades.Resource
-import chylex.hee.system.forge.SubscribeAllEvents
-import chylex.hee.system.forge.SubscribeEvent
-import chylex.hee.system.forge.named
-import chylex.hee.system.forge.registerAllFields
+import chylex.hee.game.Resource
+import chylex.hee.system.named
+import chylex.hee.system.registerAllFields
+import chylex.hee.util.forge.SubscribeAllEvents
+import chylex.hee.util.forge.SubscribeEvent
 import net.minecraft.util.SoundEvent
 import net.minecraftforge.event.RegistryEvent
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber.Bus.MOD

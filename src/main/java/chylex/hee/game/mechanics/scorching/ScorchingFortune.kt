@@ -1,16 +1,16 @@
 package chylex.hee.game.mechanics.scorching
 
-import chylex.hee.game.inventory.copyIfNotEmpty
-import chylex.hee.game.inventory.isNotEmpty
-import chylex.hee.game.inventory.size
-import chylex.hee.game.world.center
+import chylex.hee.game.Environment
+import chylex.hee.game.item.util.copyIfNotEmpty
+import chylex.hee.game.item.util.isNotEmpty
+import chylex.hee.game.item.util.size
 import chylex.hee.init.ModBlocks
-import chylex.hee.proxy.Environment
-import chylex.hee.system.migration.ItemBlock
 import chylex.hee.system.random.nextRounded
+import chylex.hee.util.math.center
 import net.minecraft.block.Block
 import net.minecraft.block.Blocks
 import net.minecraft.inventory.Inventory
+import net.minecraft.item.BlockItem
 import net.minecraft.item.ItemStack
 import net.minecraft.item.Items
 import net.minecraft.item.crafting.IRecipeType
@@ -145,7 +145,7 @@ object ScorchingFortune {
 		val smelted = getSmeltingResult(world, block)
 		
 		if (smelted.isNotEmpty && !FORTUNE_BLACKLISTED.contains(block)) {
-			val fortuneSpec = FORTUNE_HARDCODED[block] ?: if (smelted.item is ItemBlock) null else createGeneralFortuneSpec(world, block)
+			val fortuneSpec = FORTUNE_HARDCODED[block] ?: if (smelted.item is BlockItem) null else createGeneralFortuneSpec(world, block)
 			
 			if (fortuneSpec != null) {
 				smelted.size = fortuneSpec.nextDropAmount(rand)

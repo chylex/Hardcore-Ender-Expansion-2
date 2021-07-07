@@ -1,11 +1,11 @@
 package chylex.hee.game.entity.living.ai
 
-import chylex.hee.game.world.Pos
-import chylex.hee.game.world.bottomCenter
-import chylex.hee.game.world.distanceTo
-import chylex.hee.game.world.isAir
-import chylex.hee.system.migration.EntityCreature
+import chylex.hee.game.world.util.distanceTo
+import chylex.hee.game.world.util.isAir
 import chylex.hee.system.random.nextInt
+import chylex.hee.util.math.Pos
+import chylex.hee.util.math.bottomCenter
+import net.minecraft.entity.CreatureEntity
 import net.minecraft.pathfinding.Path
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.vector.Vector3d
@@ -13,7 +13,7 @@ import net.minecraft.world.LightType.BLOCK
 import net.minecraft.world.LightType.SKY
 
 class AIWanderLightStartle(
-	entity: EntityCreature,
+	entity: CreatureEntity,
 	movementSpeed: Double,
 	private val minBlockLightIncrease: Int,
 	private val minCombinedLightDecrease: Int,

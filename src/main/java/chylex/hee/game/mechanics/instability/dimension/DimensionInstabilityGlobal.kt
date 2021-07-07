@@ -1,12 +1,11 @@
 package chylex.hee.game.mechanics.instability.dimension
 
 import chylex.hee.game.mechanics.instability.dimension.components.EndermiteSpawnLogic
-import chylex.hee.game.world.totalTime
-import chylex.hee.system.math.ceilToInt
-import chylex.hee.system.math.floorToInt
-import chylex.hee.system.math.remapRange
-import chylex.hee.system.serialization.TagCompound
-import chylex.hee.system.serialization.use
+import chylex.hee.util.math.ceilToInt
+import chylex.hee.util.math.floorToInt
+import chylex.hee.util.math.remapRange
+import chylex.hee.util.nbt.TagCompound
+import chylex.hee.util.nbt.use
 import net.minecraft.util.math.BlockPos
 import net.minecraft.world.World
 import net.minecraft.world.server.ServerWorld
@@ -55,7 +54,7 @@ open class DimensionInstabilityGlobal(private val world: World, private val ende
 	}
 	
 	override fun triggerAction(amount: UShort, pos: BlockPos) {
-		val currentTime = world.totalTime
+		val currentTime = world.gameTime
 		val ticksSinceLastAction = currentTime - lastActionTime
 		val ticksSinceEndermiteSpawn = currentTime - lastEndermiteSpawnTime
 		

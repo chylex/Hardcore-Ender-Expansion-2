@@ -1,6 +1,6 @@
 package chylex.hee.game.particle
 
-import chylex.hee.client.model.ModelHelper
+import chylex.hee.client.model.util.ModelHelper
 import chylex.hee.game.block.entity.TileEntityEnergyCluster
 import chylex.hee.game.item.ItemAbstractEnergyUser
 import chylex.hee.game.particle.ParticleEnergyTransferToPlayer.TransferData
@@ -8,14 +8,14 @@ import chylex.hee.game.particle.base.ParticleBaseEnergyTransfer
 import chylex.hee.game.particle.data.IParticleData
 import chylex.hee.game.particle.data.ParticleDataColorScale
 import chylex.hee.game.particle.spawner.IParticleMaker
-import chylex.hee.system.forge.Side
-import chylex.hee.system.forge.Sided
-import chylex.hee.system.math.Vec3
-import chylex.hee.system.migration.EntityPlayer
-import chylex.hee.system.migration.Hand.MAIN_HAND
-import chylex.hee.system.migration.Hand.OFF_HAND
+import chylex.hee.util.forge.Side
+import chylex.hee.util.forge.Sided
+import chylex.hee.util.math.Vec3
 import net.minecraft.client.particle.Particle
 import net.minecraft.client.world.ClientWorld
+import net.minecraft.entity.player.PlayerEntity
+import net.minecraft.util.Hand.MAIN_HAND
+import net.minecraft.util.Hand.OFF_HAND
 import net.minecraft.util.math.vector.Vector3d
 import java.lang.ref.WeakReference
 import java.util.Random
@@ -28,7 +28,7 @@ object ParticleEnergyTransferToPlayer : IParticleMaker.WithData<TransferData?>()
 	
 	class Data(
 		cluster: TileEntityEnergyCluster,
-		player: EntityPlayer,
+		player: PlayerEntity,
 		val speed: Double,
 	) : IParticleData<TransferData?> {
 		private val clusterDataGenerator = cluster.particleDataGenerator
@@ -39,7 +39,7 @@ object ParticleEnergyTransferToPlayer : IParticleMaker.WithData<TransferData?>()
 		}
 	}
 	
-	class TransferData(val cluster: ParticleDataColorScale, val player: WeakReference<EntityPlayer>, val speed: Double)
+	class TransferData(val cluster: ParticleDataColorScale, val player: WeakReference<PlayerEntity>, val speed: Double)
 	
 	@Sided(Side.CLIENT)
 	class Instance(world: ClientWorld, posX: Double, posY: Double, posZ: Double, data: TransferData?) : ParticleBaseEnergyTransfer(world, posX, posY, posZ) {
@@ -47,7 +47,7 @@ object ParticleEnergyTransferToPlayer : IParticleMaker.WithData<TransferData?>()
 			get() = newTargetPos
 		
 		private val speed: Double
-		private val player: WeakReference<EntityPlayer>?
+		private val player: WeakReference<PlayerEntity>?
 		private var newTargetPos = Vec3.ZERO
 		
 		init {

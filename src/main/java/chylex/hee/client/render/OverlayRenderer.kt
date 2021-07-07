@@ -1,30 +1,30 @@
 package chylex.hee.client.render
 
 import chylex.hee.HEE
-import chylex.hee.client.MC
-import chylex.hee.client.render.gl.DF_ONE_MINUS_SRC_ALPHA
-import chylex.hee.client.render.gl.DF_ZERO
-import chylex.hee.client.render.gl.FOG_EXP
-import chylex.hee.client.render.gl.GL
-import chylex.hee.client.render.gl.SF_ONE
-import chylex.hee.client.render.gl.SF_SRC_ALPHA
+import chylex.hee.client.render.util.DF_ONE_MINUS_SRC_ALPHA
+import chylex.hee.client.render.util.DF_ZERO
+import chylex.hee.client.render.util.GL
+import chylex.hee.client.render.util.SF_ONE
+import chylex.hee.client.render.util.SF_SRC_ALPHA
+import chylex.hee.client.util.MC
+import chylex.hee.game.Resource
 import chylex.hee.game.block.BlockAbstractPortal
 import chylex.hee.game.block.entity.TileEntityEnergyCluster
 import chylex.hee.game.block.properties.Materials
 import chylex.hee.game.mechanics.energy.IEnergyQuantity
 import chylex.hee.game.mechanics.energy.IEnergyQuantity.Companion.MAX_POSSIBLE_VALUE
 import chylex.hee.game.mechanics.energy.IEnergyQuantity.Companion.displayString
-import chylex.hee.game.world.getBlock
-import chylex.hee.game.world.getTile
+import chylex.hee.game.world.util.getBlock
+import chylex.hee.game.world.util.getTile
 import chylex.hee.init.ModBlocks
 import chylex.hee.init.ModItems
-import chylex.hee.system.color.IntColor
-import chylex.hee.system.color.IntColor.Companion.RGB
-import chylex.hee.system.color.IntColor.Companion.RGBA
-import chylex.hee.system.facades.Resource
-import chylex.hee.system.forge.Side
-import chylex.hee.system.forge.SubscribeAllEvents
-import chylex.hee.system.forge.SubscribeEvent
+import chylex.hee.util.color.IntColor
+import chylex.hee.util.color.RGB
+import chylex.hee.util.color.RGBA
+import chylex.hee.util.forge.Side
+import chylex.hee.util.forge.SubscribeAllEvents
+import chylex.hee.util.forge.SubscribeEvent
+import com.mojang.blaze3d.platform.GlStateManager.FogMode.EXP
 import net.minecraft.client.gui.AbstractGui
 import net.minecraft.util.text.ITextComponent
 import net.minecraft.util.text.TextFormatting
@@ -51,7 +51,7 @@ object OverlayRenderer {
 		val inside = e.info.blockAtCamera.material
 		
 		if (inside === Materials.ENDER_GOO || inside === Materials.PURIFIED_ENDER_GOO) {
-			GL.setFogMode(FOG_EXP)
+			GL.setFogMode(EXP)
 			e.density = if (inside === Materials.ENDER_GOO) 0.66F else 0.06F
 			e.isCanceled = true // otherwise the event is ignored
 		}

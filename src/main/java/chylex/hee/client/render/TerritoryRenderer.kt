@@ -1,38 +1,38 @@
 package chylex.hee.client.render
 
 import chylex.hee.HEE
-import chylex.hee.client.MC
-import chylex.hee.client.render.gl.DF_ONE_MINUS_SRC_ALPHA
-import chylex.hee.client.render.gl.DF_ZERO
-import chylex.hee.client.render.gl.FOG_EXP2
-import chylex.hee.client.render.gl.GL
-import chylex.hee.client.render.gl.SF_ONE
-import chylex.hee.client.render.gl.SF_SRC_ALPHA
-import chylex.hee.client.render.territory.AbstractEnvironmentRenderer
-import chylex.hee.game.entity.isInEndDimension
-import chylex.hee.game.entity.lookDirVec
-import chylex.hee.game.entity.posVec
+import chylex.hee.client.render.util.DF_ONE_MINUS_SRC_ALPHA
+import chylex.hee.client.render.util.DF_ZERO
+import chylex.hee.client.render.util.GL
+import chylex.hee.client.render.util.SF_ONE
+import chylex.hee.client.render.util.SF_SRC_ALPHA
+import chylex.hee.client.util.MC
+import chylex.hee.game.entity.util.lookDirVec
+import chylex.hee.game.entity.util.posVec
 import chylex.hee.game.particle.ParticleVoid
 import chylex.hee.game.particle.spawner.ParticleSpawnerCustom
 import chylex.hee.game.particle.spawner.properties.IOffset.InBox
 import chylex.hee.game.particle.spawner.properties.IShape.Point
-import chylex.hee.game.world.territory.TerritoryType
-import chylex.hee.game.world.territory.TerritoryVoid
-import chylex.hee.game.world.territory.properties.TerritoryEnvironment
+import chylex.hee.game.territory.TerritoryType
+import chylex.hee.game.territory.TerritoryVoid
+import chylex.hee.game.territory.system.properties.TerritoryEnvironment
+import chylex.hee.game.world.isInEndDimension
 import chylex.hee.system.Debug
-import chylex.hee.system.color.IntColor
-import chylex.hee.system.color.IntColor.Companion.RGB
-import chylex.hee.system.forge.EventPriority
-import chylex.hee.system.forge.Side
-import chylex.hee.system.forge.SubscribeAllEvents
-import chylex.hee.system.forge.SubscribeEvent
-import chylex.hee.system.math.LerpedFloat
-import chylex.hee.system.math.floorToInt
-import chylex.hee.system.math.scale
-import chylex.hee.system.migration.EntityPlayer
+import chylex.hee.util.color.IntColor
+import chylex.hee.util.color.RGB
+import chylex.hee.util.forge.EventPriority
+import chylex.hee.util.forge.Side
+import chylex.hee.util.forge.SubscribeAllEvents
+import chylex.hee.util.forge.SubscribeEvent
+import chylex.hee.util.math.LerpedFloat
+import chylex.hee.util.math.floorToInt
+import chylex.hee.util.math.remapRange
+import chylex.hee.util.math.scale
 import com.mojang.blaze3d.matrix.MatrixStack
+import com.mojang.blaze3d.platform.GlStateManager.FogMode.EXP2
 import net.minecraft.client.resources.I18n
 import net.minecraft.entity.Entity
+import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.util.math.vector.Vector3f
 import net.minecraftforge.client.event.EntityViewRenderEvent.RenderFogEvent
 import net.minecraftforge.client.event.RenderGameOverlayEvent
@@ -116,29 +116,40 @@ object TerritoryRenderer {
 		}
 	}
 	
+	// Fog rendering
+	
+	private val currentFogDensityMp
+		get() = 1F + (9F * remapRange(currentVoidFactor, (-0.5F)..(1F), (0F)..(1F)).coerceIn(0F, 1F).pow(1.5F))
+	
+	private val currentRenderDistanceMp
+		get() = MC.settings.renderDistanceChunks.let { if (it > 12) 0F else (1F - (it / 16.5F)).pow((it - 1) * 0.25F) }
+	
 	@SubscribeEvent(priority = EventPriority.LOWEST)
 	fun onFog(@Suppress("UNUSED_PARAMETER") e: RenderFogEvent) {
 		val player = MC.player?.takeIf(Entity::isInEndDimension) ?: return
 		val territory = TerritoryType.fromPos(player)
 		
 		if (territory == null || TerritoryVoid.debug) {
-			GL.setFogMode(FOG_EXP2)
+			GL.setFogMode(EXP2)
 			GL.setFogDensity(0F)
 		}
 		else {
 			val env = territory.desc.environment
-			val density = env.fogDensity * AbstractEnvironmentRenderer.currentFogDensityMp
-			val modifier = env.fogRenderDistanceModifier * AbstractEnvironmentRenderer.currentRenderDistanceMp
+			val density = env.fogDensity * currentFogDensityMp
+			val modifier = env.fogRenderDistanceModifier * currentRenderDistanceMp
 			
-			GL.setFogMode(FOG_EXP2)
+			GL.setFogMode(EXP2)
 			GL.setFogDensity(density + modifier)
 		}
 	}
 	
 	// Void handling
 	
-	val VOID_FACTOR_VALUE
+	val currentVoidFactor
 		get() = Void.voidFactor.get(MC.partialTicks)
+	
+	val currentSkyAlpha
+		get() = remapRange(currentVoidFactor, (-1F)..(0.5F), (1F)..(0F)).coerceIn(0F, 1F)
 	
 	private object Void {
 		private val VOID_PARTICLE = ParticleSpawnerCustom(
@@ -154,7 +165,7 @@ object TerritoryRenderer {
 			}
 		}
 		
-		fun tick(player: EntityPlayer) {
+		fun tick(player: PlayerEntity) {
 			val factor = TerritoryVoid.getVoidFactor(player).also(voidFactor::update)
 			
 			if (factor == TerritoryVoid.OUTSIDE_VOID_FACTOR || MC.instance.isGamePaused) {

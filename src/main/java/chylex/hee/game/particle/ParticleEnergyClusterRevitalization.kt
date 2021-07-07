@@ -5,16 +5,16 @@ import chylex.hee.game.mechanics.energy.IClusterHealth.HealthOverride.REVITALIZI
 import chylex.hee.game.mechanics.energy.IEnergyQuantity
 import chylex.hee.game.particle.base.ParticleBaseEnergy
 import chylex.hee.game.particle.spawner.IParticleMaker
-import chylex.hee.game.world.Pos
-import chylex.hee.game.world.center
-import chylex.hee.game.world.getTile
-import chylex.hee.system.color.IntColor.Companion.RGB
-import chylex.hee.system.forge.Side
-import chylex.hee.system.forge.Sided
-import chylex.hee.system.math.Vec
-import chylex.hee.system.math.offsetTowards
+import chylex.hee.game.world.util.getTile
 import chylex.hee.system.random.nextFloat
 import chylex.hee.system.random.nextVector
+import chylex.hee.util.color.RGB
+import chylex.hee.util.forge.Side
+import chylex.hee.util.forge.Sided
+import chylex.hee.util.math.Pos
+import chylex.hee.util.math.Vec
+import chylex.hee.util.math.center
+import chylex.hee.util.math.lerpTowards
 import net.minecraft.client.particle.Particle
 import net.minecraft.client.world.ClientWorld
 import net.minecraft.util.math.vector.Vector3d
@@ -81,10 +81,10 @@ object ParticleEnergyClusterRevitalization : IParticleMaker.Simple() {
 			val newPos: Vector3d
 			
 			if (isRevitalizing && age > TOTAL_LIFESPAN - FADE_OUT_DURATION) {
-				newPos = posVec.offsetTowards(clusterPos.center, 1.0 - (TOTAL_LIFESPAN - age).toDouble() / TOTAL_LIFESPAN)
+				newPos = posVec.lerpTowards(clusterPos.center, 1.0 - (TOTAL_LIFESPAN - age).toDouble() / TOTAL_LIFESPAN)
 			}
 			else {
-				motionTarget = motionTarget.offsetTowards(motionOffset, 0.1).normalize()
+				motionTarget = motionTarget.lerpTowards(motionOffset, 0.1).normalize()
 				motionOffset = motionOffset.add(rand.nextVector(if (isRevitalizing) 0.04 else 0.01)).normalize()
 				
 				newPos = clusterPos.center.add(motionTarget.scale(targetDistance))

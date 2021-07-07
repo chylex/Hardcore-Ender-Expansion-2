@@ -1,43 +1,45 @@
 package chylex.hee.game.item
 
+import chylex.hee.HEE
 import chylex.hee.client.color.NO_TINT
+import chylex.hee.game.Resource
 import chylex.hee.game.block.entity.TileEntityEnergyCluster
-import chylex.hee.game.inventory.heeTag
-import chylex.hee.game.inventory.heeTagOrNull
 import chylex.hee.game.item.infusion.Infusion.SAFETY
 import chylex.hee.game.item.infusion.Infusion.STABILITY
 import chylex.hee.game.item.infusion.InfusionList
 import chylex.hee.game.item.infusion.InfusionTag
+import chylex.hee.game.item.util.ItemProperty
 import chylex.hee.game.mechanics.energy.ClusterSnapshot
 import chylex.hee.game.mechanics.energy.IEnergyQuantity
 import chylex.hee.game.mechanics.energy.IEnergyQuantity.Companion.displayString
 import chylex.hee.game.mechanics.energy.IEnergyQuantity.Floating
 import chylex.hee.game.mechanics.energy.IEnergyQuantity.Internal
-import chylex.hee.game.world.BlockEditor
-import chylex.hee.game.world.Pos
-import chylex.hee.game.world.breakBlock
-import chylex.hee.game.world.getTile
+import chylex.hee.game.territory.system.TerritoryInstance
 import chylex.hee.game.world.isEndDimension
-import chylex.hee.game.world.territory.TerritoryInstance
-import chylex.hee.game.world.totalTime
+import chylex.hee.game.world.util.BlockEditor
+import chylex.hee.game.world.util.breakBlock
+import chylex.hee.game.world.util.getTile
 import chylex.hee.init.ModBlocks
-import chylex.hee.system.color.IntColor.Companion.RGB
-import chylex.hee.system.forge.Side
-import chylex.hee.system.forge.Sided
-import chylex.hee.system.migration.ActionResult.FAIL
-import chylex.hee.system.migration.ActionResult.SUCCESS
-import chylex.hee.system.serialization.TagCompound
-import chylex.hee.system.serialization.getDecodedOrNull
-import chylex.hee.system.serialization.getIntegerOrNull
-import chylex.hee.system.serialization.hasKey
-import chylex.hee.system.serialization.putEncoded
-import chylex.hee.system.serialization.use
+import chylex.hee.system.heeTag
+import chylex.hee.system.heeTagOrNull
+import chylex.hee.util.color.RGB
+import chylex.hee.util.forge.Side
+import chylex.hee.util.forge.Sided
+import chylex.hee.util.math.Pos
+import chylex.hee.util.nbt.TagCompound
+import chylex.hee.util.nbt.getDecodedOrNull
+import chylex.hee.util.nbt.getIntegerOrNull
+import chylex.hee.util.nbt.hasKey
+import chylex.hee.util.nbt.putEncoded
+import chylex.hee.util.nbt.use
 import net.minecraft.client.renderer.color.IItemColor
 import net.minecraft.client.util.ITooltipFlag
 import net.minecraft.entity.Entity
 import net.minecraft.item.ItemStack
 import net.minecraft.item.ItemUseContext
 import net.minecraft.util.ActionResultType
+import net.minecraft.util.ActionResultType.FAIL
+import net.minecraft.util.ActionResultType.SUCCESS
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.text.ITextComponent
 import net.minecraft.util.text.TranslationTextComponent
@@ -57,7 +59,7 @@ class ItemEnergyReceptacle(properties: Properties) : ItemAbstractInfusable(prope
 		private const val ENERGY_LOSS_TICK_RATE = 10L
 		private const val ITEM_COOLDOWN = 16
 		
-		val HAS_CLUSTER_PROPERTY = ItemProperty("has_cluster") { stack ->
+		val HAS_CLUSTER_PROPERTY = ItemProperty(Resource.Custom("has_cluster")) { stack ->
 			if (stack.heeTagOrNull.hasKey(CLUSTER_SNAPSHOT_TAG)) 1F else 0F // POLISH tweak animation
 		}
 		
@@ -72,7 +74,7 @@ class ItemEnergyReceptacle(properties: Properties) : ItemAbstractInfusable(prope
 		}
 		
 		private fun hasMovedTooFar(nbt: TagCompound, currentWorld: World, currentPos: BlockPos): Boolean {
-			if (currentWorld.dimensionKey != nbt.getDecodedOrNull(INITIAL_DIMENSION_TAG, World.CODEC)) {
+			if (currentWorld.dimensionKey != nbt.getDecodedOrNull(INITIAL_DIMENSION_TAG, World.CODEC, HEE.log)) {
 				return true
 			}
 			
@@ -146,11 +148,11 @@ class ItemEnergyReceptacle(properties: Properties) : ItemAbstractInfusable(prope
 				if (cluster != null && cluster.tryDisturb()) {
 					put(CLUSTER_SNAPSHOT_TAG, cluster.getClusterSnapshot().tag)
 					
-					putLong(UPDATE_TIME_TAG, world.totalTime)
+					putLong(UPDATE_TIME_TAG, world.gameTime)
 					putInt(RENDER_COLOR_TAG, cluster.color.primary(75F, 80F).i)
 					
 					putInt(INITIAL_LEVEL_TAG, cluster.energyLevel.internal.value)
-					putEncoded(INITIAL_DIMENSION_TAG, world.dimensionKey, World.CODEC)
+					putEncoded(INITIAL_DIMENSION_TAG, world.dimensionKey, World.CODEC, HEE.log)
 					
 					if (world.isEndDimension) {
 						TerritoryInstance.fromPos(pos)?.let { putInt(INITIAL_TERRITORY_TAG, it.hash) }
@@ -178,7 +180,7 @@ class ItemEnergyReceptacle(properties: Properties) : ItemAbstractInfusable(prope
 				return
 			}
 			
-			val currentTime = world.totalTime
+			val currentTime = world.gameTime
 			val ticksElapsed = currentTime - getLong(UPDATE_TIME_TAG)
 			
 			if (ticksElapsed < ENERGY_LOSS_TICK_RATE) {
@@ -212,7 +214,7 @@ class ItemEnergyReceptacle(properties: Properties) : ItemAbstractInfusable(prope
 			}
 			else {
 				val snapshot = ClusterSnapshot(tag.getCompound(CLUSTER_SNAPSHOT_TAG))
-				val level = calculateNewEnergyLevel(snapshot, world.totalTime - tag.getLong(UPDATE_TIME_TAG), InfusionTag.getList(stack))
+				val level = calculateNewEnergyLevel(snapshot, world.gameTime - tag.getLong(UPDATE_TIME_TAG), InfusionTag.getList(stack))
 				
 				lines.add(TranslationTextComponent("item.hee.energy_receptacle.tooltip.holding", level.displayString))
 			}
@@ -225,7 +227,7 @@ class ItemEnergyReceptacle(properties: Properties) : ItemAbstractInfusable(prope
 	object Color : IItemColor {
 		private val WHITE = RGB(255u).i
 		
-		override fun getColor(stack: ItemStack, tintIndex: Int) = when(tintIndex) {
+		override fun getColor(stack: ItemStack, tintIndex: Int) = when (tintIndex) {
 			1    -> stack.heeTagOrNull?.getInt(RENDER_COLOR_TAG) ?: WHITE
 			else -> NO_TINT
 		}

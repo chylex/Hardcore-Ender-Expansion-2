@@ -12,13 +12,13 @@ import chylex.hee.game.block.entity.base.TileEntityBasePortalController.Foregrou
 import chylex.hee.game.block.entity.base.TileEntityBasePortalController.ForegroundRenderState.Visible
 import chylex.hee.game.mechanics.energy.IEnergyQuantity
 import chylex.hee.game.mechanics.energy.IEnergyQuantity.Units
-import chylex.hee.game.world.FLAG_SKIP_RENDER
-import chylex.hee.game.world.FLAG_SYNC_CLIENT
-import chylex.hee.game.world.breakBlock
-import chylex.hee.game.world.getTile
+import chylex.hee.game.world.util.FLAG_SKIP_RENDER
+import chylex.hee.game.world.util.FLAG_SYNC_CLIENT
+import chylex.hee.game.world.util.breakBlock
+import chylex.hee.game.world.util.getTile
 import chylex.hee.init.ModTileEntities
-import chylex.hee.system.serialization.TagCompound
-import chylex.hee.system.serialization.use
+import chylex.hee.util.nbt.TagCompound
+import chylex.hee.util.nbt.use
 import net.minecraft.tileentity.TileEntityType
 
 class TileEntityEndPortalAcceptor(type: TileEntityType<TileEntityEndPortalAcceptor>) : TileEntityBasePortalController(type) {
@@ -41,7 +41,7 @@ class TileEntityEndPortalAcceptor(type: TileEntityType<TileEntityEndPortalAccept
 	// Client animation
 	
 	override val serverRenderState
-		get() = when(chargeState) {
+		get() = when (chargeState) {
 			IDLE, WAITING -> Invisible
 			CHARGING      -> Animating(chargedEnergy.units.value.toFloat() / ENERGY_REQUIRED.units.value)
 			FINISHED      -> Visible
@@ -84,7 +84,7 @@ class TileEntityEndPortalAcceptor(type: TileEntityType<TileEntityEndPortalAccept
 		val cluster = posAbove.getTile<TileEntityEnergyCluster>(wrld)
 		
 		if (cluster == null) {
-			newChargeState = when(chargeState) {
+			newChargeState = when (chargeState) {
 				FINISHED -> FINISHED
 				IDLE     -> IDLE
 				WAITING  -> IDLE
@@ -97,7 +97,7 @@ class TileEntityEndPortalAcceptor(type: TileEntityType<TileEntityEndPortalAccept
 			}
 		}
 		else {
-			newChargeState = when(chargeState) {
+			newChargeState = when (chargeState) {
 				FINISHED -> FINISHED
 				IDLE     -> WAITING
 				

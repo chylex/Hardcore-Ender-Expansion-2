@@ -1,27 +1,27 @@
 package chylex.hee.game.potion.brewing
 
-import chylex.hee.game.inventory.nbt
-import chylex.hee.game.potion.makeEffect
-import chylex.hee.system.math.floorToInt
-import chylex.hee.system.migration.Potion
+import chylex.hee.game.item.util.nbt
+import chylex.hee.game.potion.util.makeInstance
+import chylex.hee.util.math.floorToInt
 import net.minecraft.item.ItemStack
+import net.minecraft.potion.Effect
 import net.minecraft.potion.EffectInstance
 import net.minecraft.potion.PotionUtils
 import kotlin.math.abs
 
 class PotionTypeInfo(
-	val potion: Potion,
+	val effect: Effect,
 	private val duration: Duration? = null,
 	private val maxLevel: Int,
 ) {
 	val baseEffect
-		get() = potion.makeEffect(duration?.baseTicks ?: 0, 0)
+		get() = effect.makeInstance(duration?.baseTicks ?: 0, 0)
 	
 	val vanillaOverrideStrongEffect
-		get() = potion.makeEffect(duration?.getDuration(0, 1) ?: 0, 1)
+		get() = effect.makeInstance(duration?.getDuration(0, 1) ?: 0, 1)
 	
 	val vanillaOverrideLongEffect
-		get() = potion.makeEffect(duration?.getDuration(1, 0) ?: 0, 0)
+		get() = effect.makeInstance(duration?.getDuration(1, 0) ?: 0, 0)
 	
 	class Duration(val baseTicks: Int, val stepTicks: Int, val maxSteps: Int) {
 		private fun getBaseDuration(steps: Int): Int {
@@ -56,11 +56,11 @@ class PotionTypeInfo(
 		}
 	}
 	
-	inner class Instance(private val stack: ItemStack, private val effect: EffectInstance) {
-		private val durationSteps = duration?.getSteps(effect.duration, amplifier) ?: 0
+	inner class Instance(private val stack: ItemStack, private val instance: EffectInstance) {
+		private val durationSteps = duration?.getSteps(instance.duration, amplifier) ?: 0
 		
 		private val amplifier
-			get() = effect.amplifier
+			get() = instance.amplifier
 		
 		val canIncreaseLevel
 			get() = (amplifier + 1) < maxLevel
@@ -69,7 +69,7 @@ class PotionTypeInfo(
 			get() = duration?.let { durationSteps < it.maxSteps }
 		
 		val canReverse
-			get() = PotionBrewing.REVERSAL.containsKey(potion)
+			get() = PotionBrewing.REVERSAL.containsKey(effect)
 		
 		val withIncreasedLevel
 			get() = createNewEffect(durationSteps, amplifier + 1)
@@ -79,7 +79,7 @@ class PotionTypeInfo(
 		
 		val afterReversal: ItemStack?
 			get() {
-				val reversed = PotionBrewing.REVERSAL[potion] ?: return null
+				val reversed = PotionBrewing.REVERSAL[effect] ?: return null
 				val info = PotionBrewing.INFO[reversed] ?: return null
 				
 				if (durationSteps == 0 && amplifier == 0) {
@@ -87,14 +87,14 @@ class PotionTypeInfo(
 				}
 				
 				val newItem = PotionItems.getBottle(stack.item, reversed, withBaseEffect = false)
-				val newEffect = reversed.makeEffect(0, 0, effect.isAmbient, effect.doesShowParticles())
+				val newEffect = reversed.makeInstance(0, 0, instance.isAmbient, instance.doesShowParticles())
 				
 				return info.Instance(newItem, newEffect).createNewEffect(durationSteps, newEffect.amplifier)
 			}
 		
 		private fun createNewEffect(durationSteps: Int, amplifier: Int): ItemStack {
 			val newDuration = duration?.getDuration(durationSteps, amplifier) ?: 0
-			val newEffect = potion.makeEffect(newDuration, amplifier, effect.isAmbient, effect.doesShowParticles())
+			val newEffect = effect.makeInstance(newDuration, amplifier, instance.isAmbient, instance.doesShowParticles())
 			
 			return with(stack.copy()) {
 				nbt.remove(PotionItems.CUSTOM_EFFECTS_TAG)

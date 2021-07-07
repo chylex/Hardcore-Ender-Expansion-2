@@ -24,7 +24,7 @@ abstract class TileEntityBaseTableWithSupportingItem(type: TileEntityType<out Ti
 		val newProcesses = ArrayList<ITableProcess>(1)
 		var hasSupportingItem = hasSupportingItem
 		
-		for(pedestal in unassignedPedestals) {
+		for (pedestal in unassignedPedestals) {
 			if (isSupportingItem(pedestal.itemInputCopy)) {
 				newProcesses.add(ProcessSupportingItemHolder(this, pedestal.pos))
 				hasSupportingItem = true

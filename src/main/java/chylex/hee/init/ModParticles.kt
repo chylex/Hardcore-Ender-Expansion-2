@@ -1,7 +1,7 @@
 package chylex.hee.init
 
 import chylex.hee.HEE
-import chylex.hee.client.MC
+import chylex.hee.client.util.MC
 import chylex.hee.game.particle.ParticleBubbleCustom
 import chylex.hee.game.particle.ParticleCriticalHitCustom
 import chylex.hee.game.particle.ParticleDeathFlowerHeal
@@ -23,11 +23,11 @@ import chylex.hee.game.particle.ParticleSpellCustom
 import chylex.hee.game.particle.ParticleTeleport
 import chylex.hee.game.particle.ParticleVoid
 import chylex.hee.game.particle.spawner.IParticleMaker
-import chylex.hee.system.forge.Side
-import chylex.hee.system.forge.Sided
-import chylex.hee.system.forge.SubscribeAllEvents
-import chylex.hee.system.forge.SubscribeEvent
-import chylex.hee.system.forge.named
+import chylex.hee.system.named
+import chylex.hee.util.forge.Side
+import chylex.hee.util.forge.Sided
+import chylex.hee.util.forge.SubscribeAllEvents
+import chylex.hee.util.forge.SubscribeEvent
 import net.minecraft.client.particle.IAnimatedSprite
 import net.minecraft.client.particle.IParticleFactory
 import net.minecraft.client.particle.ParticleManager.IParticleMetaFactory
@@ -35,33 +35,49 @@ import net.minecraft.particles.BasicParticleType
 import net.minecraft.particles.ParticleType
 import net.minecraftforge.client.event.ParticleFactoryRegisterEvent
 import net.minecraftforge.event.RegistryEvent
+import net.minecraftforge.fml.DistExecutor
+import net.minecraftforge.fml.DistExecutor.SafeRunnable
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber.Bus.MOD
+import net.minecraftforge.registries.IForgeRegistry
 
 @SubscribeAllEvents(modid = HEE.ID, bus = MOD)
 object ModParticles {
 	@SubscribeEvent
 	fun onRegister(e: RegistryEvent.Register<ParticleType<*>>) {
 		with(e.registry) {
-			register(ParticleBubbleCustom.makeType named "bubble")
-			register(ParticleCriticalHitCustom.makeType named "critical_hit")
-			register(ParticleDeathFlowerHeal.makeType named "death_flower_heal")
-			register(ParticleDust.makeType named "dust")
-			register(ParticleEnchantedHitCustom.makeType named "enchanted_hit")
-			register(ParticleEnderGoo.makeType named "ender_goo")
-			register(ParticleEnergyCluster.makeType named "energy_cluster")
-			register(ParticleEnergyClusterRevitalization.makeType named "energy_cluster_revitalization")
-			register(ParticleEnergyTableDrain.makeType named "energy_table_drain")
-			register(ParticleEnergyTransferToPedestal.makeType named "energy_transfer_to_pedestal")
-			register(ParticleEnergyTransferToPlayer.makeType named "energy_transfer_to_player")
-			register(ParticleExperienceOrbFloating.makeType named "experience_orb_floating")
-			register(ParticleFadingSpot.makeType named "fading_spot")
-			register(ParticleFlameCustom.makeType named "flame")
-			register(ParticleGlitter.makeType named "glitter")
-			register(ParticleGrowingSpot.makeType named "growing_spot")
-			register(ParticleSmokeCustom.makeType named "smoke")
-			register(ParticleSpellCustom.makeType named "spell")
-			register(ParticleTeleport.makeType named "teleport")
-			register(ParticleVoid.makeType named "void")
+			register(ParticleBubbleCustom, "bubble")
+			register(ParticleCriticalHitCustom, "critical_hit")
+			register(ParticleDeathFlowerHeal, "death_flower_heal")
+			register(ParticleDust, "dust")
+			register(ParticleEnchantedHitCustom, "enchanted_hit")
+			register(ParticleEnderGoo, "ender_goo")
+			register(ParticleEnergyCluster, "energy_cluster")
+			register(ParticleEnergyClusterRevitalization, "energy_cluster_revitalization")
+			register(ParticleEnergyTableDrain, "energy_table_drain")
+			register(ParticleEnergyTransferToPedestal, "energy_transfer_to_pedestal")
+			register(ParticleEnergyTransferToPlayer, "energy_transfer_to_player")
+			register(ParticleExperienceOrbFloating, "experience_orb_floating")
+			register(ParticleFadingSpot, "fading_spot")
+			register(ParticleFlameCustom, "flame")
+			register(ParticleGlitter, "glitter")
+			register(ParticleGrowingSpot, "growing_spot")
+			register(ParticleSmokeCustom, "smoke")
+			register(ParticleSpellCustom, "spell")
+			register(ParticleTeleport, "teleport")
+			register(ParticleVoid, "void")
+		}
+	}
+	
+	private fun IForgeRegistry<ParticleType<*>>.register(particle: IParticleMaker.WithData<*>, name: String) {
+		val type = BasicParticleType(false)
+		this.register(type named name)
+		
+		DistExecutor.safeRunWhenOn(Side.CLIENT) {
+			SafeRunnable {
+				Client.addFactory(type, particle) {
+					particle.sprite = it
+				}
+			}
 		}
 	}
 	
@@ -84,10 +100,7 @@ object ModParticles {
 		
 		@SubscribeEvent
 		fun onRegisterFactories(@Suppress("UNUSED_PARAMETER") e: ParticleFactoryRegisterEvent) {
-			for(factory in factories) {
-				factory.run()
-			}
-			
+			factories.forEach(Runnable::run)
 			factories.clear()
 		}
 	}

@@ -1,9 +1,9 @@
 package chylex.hee.client.model.entity
 
 import chylex.hee.game.entity.living.EntityMobUndread
-import chylex.hee.system.forge.Side
-import chylex.hee.system.forge.Sided
-import chylex.hee.system.math.toRadians
+import chylex.hee.util.forge.Side
+import chylex.hee.util.forge.Sided
+import chylex.hee.util.math.toRadians
 import net.minecraft.client.renderer.entity.model.AbstractZombieModel
 
 @Sided(Side.CLIENT)

@@ -3,33 +3,33 @@ package chylex.hee.game.block
 import chylex.hee.game.block.properties.BlockBuilder
 import chylex.hee.game.entity.Teleporter.Companion.FxTeleportData
 import chylex.hee.game.entity.item.EntityFallingBlockHeavy
+import chylex.hee.game.fx.FxBlockData
+import chylex.hee.game.fx.FxBlockHandler
+import chylex.hee.game.fx.util.playClient
 import chylex.hee.game.particle.ParticleTeleport
 import chylex.hee.game.particle.spawner.ParticleSpawnerCustom
 import chylex.hee.game.particle.spawner.properties.IOffset.InBox
 import chylex.hee.game.particle.spawner.properties.IShape.Point
-import chylex.hee.game.world.blocksMovement
-import chylex.hee.game.world.center
-import chylex.hee.game.world.getState
-import chylex.hee.game.world.isAir
-import chylex.hee.game.world.offsetUntil
-import chylex.hee.game.world.playClient
-import chylex.hee.game.world.removeBlock
-import chylex.hee.game.world.setState
+import chylex.hee.game.world.util.blocksMovement
+import chylex.hee.game.world.util.getState
+import chylex.hee.game.world.util.isAir
+import chylex.hee.game.world.util.offsetUntil
+import chylex.hee.game.world.util.removeBlock
+import chylex.hee.game.world.util.setState
 import chylex.hee.init.ModSounds
 import chylex.hee.network.client.PacketClientFX
-import chylex.hee.network.fx.FxBlockData
-import chylex.hee.network.fx.FxBlockHandler
-import chylex.hee.system.math.Vec3
-import chylex.hee.system.migration.BlockDragonEgg
-import chylex.hee.system.migration.EntityItem
-import chylex.hee.system.migration.EntityPlayer
-import chylex.hee.system.migration.Facing.DOWN
 import chylex.hee.system.random.nextInt
+import chylex.hee.util.math.Vec3
+import chylex.hee.util.math.center
 import net.minecraft.block.BlockState
 import net.minecraft.block.Blocks
+import net.minecraft.block.DragonEggBlock
+import net.minecraft.entity.item.ItemEntity
+import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.item.ItemStack
 import net.minecraft.util.ActionResultType
 import net.minecraft.util.ActionResultType.SUCCESS
+import net.minecraft.util.Direction.DOWN
 import net.minecraft.util.Hand
 import net.minecraft.util.SoundCategory
 import net.minecraft.util.math.BlockPos
@@ -40,7 +40,7 @@ import net.minecraft.world.gen.Heightmap.Type.OCEAN_FLOOR
 import net.minecraft.world.server.ServerWorld
 import java.util.Random
 
-class BlockDragonEggOverride(builder: BlockBuilder) : BlockDragonEgg(builder.p) {
+class BlockDragonEggOverride(builder: BlockBuilder) : DragonEggBlock(builder.p) {
 	companion object {
 		private val PARTICLE_BREAK = ParticleSpawnerCustom(
 			type = ParticleTeleport,
@@ -70,7 +70,7 @@ class BlockDragonEggOverride(builder: BlockBuilder) : BlockDragonEgg(builder.p) 
 		}
 	}
 	
-	override fun onBlockActivated(state: BlockState, world: World, pos: BlockPos, player: EntityPlayer, hand: Hand, hit: BlockRayTraceResult): ActionResultType {
+	override fun onBlockActivated(state: BlockState, world: World, pos: BlockPos, player: PlayerEntity, hand: Hand, hit: BlockRayTraceResult): ActionResultType {
 		val realState = pos.getState(world)
 		
 		if (world.isRemote || realState.block !== this) {
@@ -113,7 +113,7 @@ class BlockDragonEggOverride(builder: BlockBuilder) : BlockDragonEgg(builder.p) 
 		return SUCCESS
 	}
 	
-	override fun onBlockClicked(state: BlockState, world: World, pos: BlockPos, player: EntityPlayer) {
+	override fun onBlockClicked(state: BlockState, world: World, pos: BlockPos, player: PlayerEntity) {
 		if (world.isRemote || state.block !== this) {
 			return
 		}
@@ -122,7 +122,7 @@ class BlockDragonEggOverride(builder: BlockBuilder) : BlockDragonEgg(builder.p) 
 		PacketClientFX(FX_BREAK, FxBlockData(pos)).sendToAllAround(world, pos, 32.0)
 		
 		if (world.gameRules.getBoolean(DO_TILE_DROPS) && !world.restoringBlockSnapshots) {
-			EntityItem(world, pos.x + 0.5, pos.y.toDouble(), pos.z + 0.5, ItemStack(this)).apply {
+			ItemEntity(world, pos.x + 0.5, pos.y.toDouble(), pos.z + 0.5, ItemStack(this)).apply {
 				motion = Vec3.ZERO
 				setDefaultPickupDelay()
 				world.addEntity(this)

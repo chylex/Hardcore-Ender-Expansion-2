@@ -1,11 +1,11 @@
 package chylex.hee.game.item
 
-import chylex.hee.client.MC
+import chylex.hee.client.util.MC
 import chylex.hee.game.item.properties.CustomRarity
 import chylex.hee.game.mechanics.trinket.ITrinketItem
 import chylex.hee.game.mechanics.trinket.TrinketHandler
-import chylex.hee.system.forge.Side
-import chylex.hee.system.forge.Sided
+import chylex.hee.util.forge.Side
+import chylex.hee.util.forge.Sided
 import net.minecraft.client.util.ITooltipFlag
 import net.minecraft.item.Item
 import net.minecraft.item.ItemStack

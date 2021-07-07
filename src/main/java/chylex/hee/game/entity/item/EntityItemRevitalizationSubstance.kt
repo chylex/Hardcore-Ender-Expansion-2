@@ -1,28 +1,28 @@
 package chylex.hee.game.entity.item
 
-import chylex.hee.client.MC
+import chylex.hee.client.util.MC
 import chylex.hee.game.block.BlockEnderGooPurified
-import chylex.hee.game.block.with
-import chylex.hee.game.entity.posVec
-import chylex.hee.game.inventory.size
-import chylex.hee.game.world.Pos
-import chylex.hee.game.world.allInCenteredSphereMutable
-import chylex.hee.game.world.center
-import chylex.hee.game.world.getBlock
-import chylex.hee.game.world.getState
-import chylex.hee.game.world.playClient
-import chylex.hee.game.world.setState
+import chylex.hee.game.block.util.FLUID_LEVEL
+import chylex.hee.game.block.util.with
+import chylex.hee.game.entity.util.posVec
+import chylex.hee.game.fx.IFxData
+import chylex.hee.game.fx.IFxHandler
+import chylex.hee.game.fx.util.playClient
+import chylex.hee.game.item.util.size
+import chylex.hee.game.world.util.allInCenteredSphereMutable
+import chylex.hee.game.world.util.getBlock
+import chylex.hee.game.world.util.getState
+import chylex.hee.game.world.util.setState
 import chylex.hee.init.ModBlocks
 import chylex.hee.init.ModEntities
 import chylex.hee.init.ModSounds
 import chylex.hee.network.client.PacketClientFX
-import chylex.hee.network.fx.IFxData
-import chylex.hee.network.fx.IFxHandler
-import chylex.hee.system.math.directionTowards
-import chylex.hee.system.migration.BlockFlowingFluid
-import chylex.hee.system.serialization.readPos
-import chylex.hee.system.serialization.use
-import chylex.hee.system.serialization.writePos
+import chylex.hee.util.buffer.readPos
+import chylex.hee.util.buffer.use
+import chylex.hee.util.buffer.writePos
+import chylex.hee.util.math.Pos
+import chylex.hee.util.math.center
+import chylex.hee.util.math.directionTowards
 import net.minecraft.block.BlockState
 import net.minecraft.entity.Entity
 import net.minecraft.entity.EntityType
@@ -74,7 +74,7 @@ class EntityItemRevitalizationSubstance : EntityItemBase {
 		}
 		
 		private inline fun forEachGoo(world: World, center: BlockPos, radius: Float, callback: (BlockPos, BlockState) -> Unit) {
-			for(pos in center.allInCenteredSphereMutable(radius.toDouble())) {
+			for (pos in center.allInCenteredSphereMutable(radius.toDouble())) {
 				val state = pos.getState(world)
 				
 				if (state.block === ModBlocks.ENDER_GOO) {
@@ -104,7 +104,7 @@ class EntityItemRevitalizationSubstance : EntityItemBase {
 				PacketClientFX(FX_REVITALIZE_GOO, FxRevitalizeGooData(center, radius)).sendToAllAround(this, 24.0)
 				
 				forEachGoo(world, center, radius) { pos, state ->
-					pos.setState(world, ModBlocks.PURIFIED_ENDER_GOO.with(BlockFlowingFluid.LEVEL, state[BlockFlowingFluid.LEVEL]))
+					pos.setState(world, ModBlocks.PURIFIED_ENDER_GOO.with(FLUID_LEVEL, state[FLUID_LEVEL]))
 				}
 			}
 		}

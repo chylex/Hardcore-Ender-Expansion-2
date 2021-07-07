@@ -2,25 +2,25 @@ package chylex.hee.game.block
 
 import chylex.hee.client.render.block.IBlockLayerTranslucent
 import chylex.hee.game.block.properties.BlockBuilder
-import chylex.hee.game.block.properties.Property
-import chylex.hee.game.world.getBlock
-import chylex.hee.system.facades.Facing6
-import chylex.hee.system.migration.BlockAbstractGlass
-import chylex.hee.system.migration.Facing.DOWN
-import chylex.hee.system.migration.Facing.EAST
-import chylex.hee.system.migration.Facing.NORTH
-import chylex.hee.system.migration.Facing.SOUTH
-import chylex.hee.system.migration.Facing.UP
-import chylex.hee.system.migration.Facing.WEST
+import chylex.hee.game.block.util.Property
+import chylex.hee.game.world.util.Facing6
+import chylex.hee.game.world.util.getBlock
+import net.minecraft.block.AbstractGlassBlock
 import net.minecraft.block.Block
 import net.minecraft.block.BlockState
 import net.minecraft.item.BlockItemUseContext
 import net.minecraft.state.StateContainer.Builder
 import net.minecraft.util.Direction
+import net.minecraft.util.Direction.DOWN
+import net.minecraft.util.Direction.EAST
+import net.minecraft.util.Direction.NORTH
+import net.minecraft.util.Direction.SOUTH
+import net.minecraft.util.Direction.UP
+import net.minecraft.util.Direction.WEST
 import net.minecraft.util.math.BlockPos
 import net.minecraft.world.IWorld
 
-class BlockInfusedGlass(builder: BlockBuilder) : BlockAbstractGlass(builder.p), IBlockLayerTranslucent {
+class BlockInfusedGlass(builder: BlockBuilder) : AbstractGlassBlock(builder.p), IBlockLayerTranslucent {
 	companion object {
 		val CONNECT_DOWN = Property.bool("connect_d")
 		val CONNECT_UP = Property.bool("connect_u")

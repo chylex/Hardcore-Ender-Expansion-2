@@ -1,25 +1,24 @@
 package chylex.hee.game.item
 
-import chylex.hee.game.inventory.cleanupNBT
-import chylex.hee.game.inventory.heeTag
-import chylex.hee.game.inventory.heeTagOrNull
-import chylex.hee.game.world.totalTime
-import chylex.hee.system.migration.Enchantments
-import chylex.hee.system.migration.EntityPlayerMP
-import chylex.hee.system.migration.ItemElytra
-import chylex.hee.system.serialization.TagCompound
-import chylex.hee.system.serialization.hasKey
-import chylex.hee.system.serialization.use
+import chylex.hee.game.item.util.cleanupNBT
+import chylex.hee.system.heeTag
+import chylex.hee.system.heeTagOrNull
+import chylex.hee.util.nbt.TagCompound
+import chylex.hee.util.nbt.hasKey
+import chylex.hee.util.nbt.use
 import net.minecraft.advancements.CriteriaTriggers
 import net.minecraft.enchantment.EnchantmentHelper
+import net.minecraft.enchantment.Enchantments
 import net.minecraft.entity.Entity
+import net.minecraft.entity.player.ServerPlayerEntity
 import net.minecraft.inventory.EquipmentSlotType.CHEST
+import net.minecraft.item.ElytraItem
 import net.minecraft.item.ItemStack
 import net.minecraft.world.World
 import kotlin.math.min
 import kotlin.math.sqrt
 
-class ItemElytraOverride(properties: Properties) : ItemElytra(properties) {
+class ItemElytraOverride(properties: Properties) : ElytraItem(properties) {
 	private companion object {
 		private const val COUNTER_TAG = "Counter"
 		private const val LAST_POS_TAG = "LastPos"
@@ -50,7 +49,7 @@ class ItemElytraOverride(properties: Properties) : ItemElytra(properties) {
 	}
 	
 	override fun inventoryTick(stack: ItemStack, world: World, entity: Entity, itemSlot: Int, isSelected: Boolean) {
-		if (world.isRemote || entity !is EntityPlayerMP) {
+		if (world.isRemote || entity !is ServerPlayerEntity) {
 			return
 		}
 		
@@ -60,11 +59,11 @@ class ItemElytraOverride(properties: Properties) : ItemElytra(properties) {
 					putFloat(COUNTER_TAG, 0F)
 					put(LAST_POS_TAG, createPositionTag(entity))
 				}
-				else if (world.totalTime % 20L == 0L) {
+				else if (world.gameTime % 20L == 0L) {
 					var newCounter = getFloat(COUNTER_TAG) + calculateCounterIncrement(entity, getCompound(LAST_POS_TAG))
 					val damageAfter = 1F + (0.33F * EnchantmentHelper.getEnchantmentLevel(Enchantments.UNBREAKING, stack))
 					
-					while(newCounter >= damageAfter && isUsable(stack)) {
+					while (newCounter >= damageAfter && isUsable(stack)) {
 						newCounter -= damageAfter
 						
 						val newDamage = stack.damage + 1

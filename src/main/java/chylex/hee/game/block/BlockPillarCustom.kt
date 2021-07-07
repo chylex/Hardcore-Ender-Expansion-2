@@ -1,6 +1,6 @@
 package chylex.hee.game.block
 
 import chylex.hee.game.block.properties.BlockBuilder
-import chylex.hee.system.migration.BlockRotatedPillar
+import net.minecraft.block.RotatedPillarBlock
 
-class BlockPillarCustom(builder: BlockBuilder) : BlockRotatedPillar(builder.p)
+class BlockPillarCustom(builder: BlockBuilder) : RotatedPillarBlock(builder.p)

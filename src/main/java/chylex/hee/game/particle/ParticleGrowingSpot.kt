@@ -2,11 +2,11 @@ package chylex.hee.game.particle
 
 import chylex.hee.game.particle.base.ParticleBaseFloating
 import chylex.hee.game.particle.data.ParticleDataColorLifespanScale
-import chylex.hee.system.color.IntColor.Companion.RGB
-import chylex.hee.system.forge.Side
-import chylex.hee.system.forge.Sided
-import chylex.hee.system.random.IRandomColor
 import chylex.hee.system.random.nextFloat
+import chylex.hee.util.color.IColorGenerator
+import chylex.hee.util.color.RGB
+import chylex.hee.util.forge.Side
+import chylex.hee.util.forge.Sided
 import net.minecraft.client.particle.IParticleRenderType
 import net.minecraft.client.particle.IParticleRenderType.PARTICLE_SHEET_TRANSLUCENT
 import net.minecraft.client.particle.Particle
@@ -19,7 +19,7 @@ object ParticleGrowingSpot : ParticleDataColorLifespanScale.ParticleMaker() {
 		return Instance(world, posX, posY, posZ, motX, motY, motZ, data)
 	}
 	
-	override val defaultColor = IRandomColor.Static(RGB(0u))
+	override val defaultColor: IColorGenerator = RGB(0u)
 	override val defaultLifespan = 0..0
 	override val defaultScale = 1F..1F
 	

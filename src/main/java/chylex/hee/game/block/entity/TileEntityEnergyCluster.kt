@@ -29,19 +29,18 @@ import chylex.hee.game.particle.spawner.ParticleSpawnerCustom
 import chylex.hee.game.particle.spawner.properties.IOffset.InBox
 import chylex.hee.game.particle.spawner.properties.IShape
 import chylex.hee.game.particle.spawner.properties.IShape.Point
-import chylex.hee.game.world.FLAG_SKIP_RENDER
-import chylex.hee.game.world.FLAG_SYNC_CLIENT
-import chylex.hee.game.world.allInCenteredBox
-import chylex.hee.game.world.breakBlock
-import chylex.hee.game.world.isAir
-import chylex.hee.game.world.isAnyPlayerWithinRange
-import chylex.hee.game.world.totalTime
+import chylex.hee.game.world.util.FLAG_SKIP_RENDER
+import chylex.hee.game.world.util.FLAG_SYNC_CLIENT
+import chylex.hee.game.world.util.allInCenteredBox
+import chylex.hee.game.world.util.breakBlock
+import chylex.hee.game.world.util.isAir
+import chylex.hee.game.world.util.isAnyPlayerWithinRange
 import chylex.hee.init.ModTileEntities
-import chylex.hee.system.math.ceilToInt
 import chylex.hee.system.random.nextFloat
 import chylex.hee.system.random.nextInt
-import chylex.hee.system.serialization.TagCompound
-import chylex.hee.system.serialization.use
+import chylex.hee.util.math.ceilToInt
+import chylex.hee.util.nbt.TagCompound
+import chylex.hee.util.nbt.use
 import net.minecraft.tileentity.ITickableTileEntity
 import net.minecraft.tileentity.TileEntityType
 import net.minecraft.util.math.BlockPos
@@ -104,7 +103,7 @@ class TileEntityEnergyCluster(type: TileEntityType<TileEntityEnergyCluster>) : T
 		get() = proximityHandler.affectedByProximity
 	
 	val wasUsedRecently
-		get() = wrld.totalTime - lastUseTick < 20L
+		get() = wrld.gameTime - lastUseTick < 20L
 	
 	// Fields
 	
@@ -139,7 +138,7 @@ class TileEntityEnergyCluster(type: TileEntityType<TileEntityEnergyCluster>) : T
 		energyLevel -= quantity
 		ticksToRegen = 20 + (40F / currentHealth.regenSpeedMp).ceilToInt()
 		
-		lastUseTick = wrld.totalTime
+		lastUseTick = wrld.gameTime
 		isInactive = false
 		
 		return tryDisturb()
@@ -248,7 +247,7 @@ class TileEntityEnergyCluster(type: TileEntityType<TileEntityEnergyCluster>) : T
 	
 	override fun tick() {
 		if (wrld.isRemote) {
-			if (wrld.totalTime % 3L == 0L) {
+			if (wrld.gameTime % 3L == 0L) {
 				particle?.let { it.first.spawn(it.second, wrld.rand) }
 			}
 			
@@ -261,8 +260,8 @@ class TileEntityEnergyCluster(type: TileEntityType<TileEntityEnergyCluster>) : T
 		}
 		
 		if (isInactive) {
-			if (wrld.totalTime % 80L == 0L) {
-				val activationRange = when(internalHealthStatus) {
+			if (wrld.gameTime % 80L == 0L) {
+				val activationRange = when (internalHealthStatus) {
 					UNSTABLE -> 48.0
 					DAMAGED  -> 32.0
 					else     -> 24.0

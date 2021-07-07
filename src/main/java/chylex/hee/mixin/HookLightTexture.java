@@ -12,6 +12,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
 @Mixin(LightTexture.class)
+@SuppressWarnings("MethodMayBeStatic")
 public abstract class HookLightTexture {
 	@Inject(
 		method = "updateLightmap",

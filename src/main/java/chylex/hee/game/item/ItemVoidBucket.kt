@@ -1,32 +1,34 @@
 package chylex.hee.game.item
 
 import chylex.hee.client.color.NO_TINT
-import chylex.hee.game.inventory.cleanupNBT
-import chylex.hee.game.inventory.doDamage
-import chylex.hee.game.inventory.heeTag
-import chylex.hee.game.inventory.heeTagOrNull
+import chylex.hee.game.Resource
 import chylex.hee.game.item.properties.CustomToolMaterial.VOID_BUCKET
-import chylex.hee.game.world.BlockEditor
-import chylex.hee.game.world.allInCenteredBox
-import chylex.hee.game.world.getFluidState
-import chylex.hee.game.world.setAir
-import chylex.hee.system.color.IntColor.Companion.RGB
-import chylex.hee.system.facades.Stats
-import chylex.hee.system.migration.ActionResult.FAIL
-import chylex.hee.system.migration.ActionResult.PASS
-import chylex.hee.system.migration.ActionResult.SUCCESS
-import chylex.hee.system.migration.EntityLivingBase
-import chylex.hee.system.migration.EntityPlayer
-import chylex.hee.system.serialization.hasKey
+import chylex.hee.game.item.util.ItemProperty
+import chylex.hee.game.item.util.cleanupNBT
+import chylex.hee.game.item.util.doDamage
+import chylex.hee.game.world.util.BlockEditor
+import chylex.hee.game.world.util.allInCenteredBox
+import chylex.hee.game.world.util.getFluidState
+import chylex.hee.game.world.util.setAir
+import chylex.hee.system.heeTag
+import chylex.hee.system.heeTagOrNull
+import chylex.hee.util.color.RGB
+import chylex.hee.util.nbt.hasKey
 import net.minecraft.block.BlockState
 import net.minecraft.client.renderer.color.IItemColor
 import net.minecraft.enchantment.Enchantment
 import net.minecraft.enchantment.Enchantments
 import net.minecraft.entity.Entity
+import net.minecraft.entity.LivingEntity
+import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.fluid.FluidState
 import net.minecraft.fluid.Fluids
 import net.minecraft.item.ItemStack
+import net.minecraft.stats.Stats
 import net.minecraft.util.ActionResult
+import net.minecraft.util.ActionResultType.FAIL
+import net.minecraft.util.ActionResultType.PASS
+import net.minecraft.util.ActionResultType.SUCCESS
 import net.minecraft.util.Hand
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.BlockRayTraceResult
@@ -42,7 +44,7 @@ class ItemVoidBucket(properties: Properties) : ItemAbstractVoidTool(properties, 
 		
 		private const val COOLDOWN_TICKS = 13
 		
-		val VOID_BUCKET_COOLDOWN_PROPERTY = ItemProperty("void_bucket_cooldown") { stack ->
+		val VOID_BUCKET_COOLDOWN_PROPERTY = ItemProperty(Resource.Custom("void_bucket_cooldown")) { stack ->
 			(stack.heeTagOrNull?.getByte(COOLDOWN_TAG) ?: 0) / COOLDOWN_TICKS.toFloat()
 		}
 		
@@ -52,7 +54,7 @@ class ItemVoidBucket(properties: Properties) : ItemAbstractVoidTool(properties, 
 			else                                    -> state.fluid.attributes.color
 		}
 		
-		private fun isModifiableFluid(world: World, pos: BlockPos, player: EntityPlayer, stack: ItemStack): Boolean {
+		private fun isModifiableFluid(world: World, pos: BlockPos, player: PlayerEntity, stack: ItemStack): Boolean {
 			return !pos.getFluidState(world).isEmpty && world.isBlockModifiable(player, pos) && BlockEditor.canEdit(pos, player, stack)
 		}
 	}
@@ -61,7 +63,7 @@ class ItemVoidBucket(properties: Properties) : ItemAbstractVoidTool(properties, 
 		return 1F
 	}
 	
-	override fun onBlockDestroyed(stack: ItemStack, world: World, state: BlockState, pos: BlockPos, entity: EntityLivingBase): Boolean {
+	override fun onBlockDestroyed(stack: ItemStack, world: World, state: BlockState, pos: BlockPos, entity: LivingEntity): Boolean {
 		return false
 	}
 	
@@ -71,7 +73,7 @@ class ItemVoidBucket(properties: Properties) : ItemAbstractVoidTool(properties, 
 	
 	// Use handling
 	
-	override fun onItemRightClick(world: World, player: EntityPlayer, hand: Hand): ActionResult<ItemStack> {
+	override fun onItemRightClick(world: World, player: PlayerEntity, hand: Hand): ActionResult<ItemStack> {
 		val heldItem = player.getHeldItem(hand)
 		
 		if (heldItem.damage >= heldItem.maxDamage || heldItem.heeTagOrNull.hasKey(COOLDOWN_TAG)) {
@@ -100,7 +102,7 @@ class ItemVoidBucket(properties: Properties) : ItemAbstractVoidTool(properties, 
 			
 			var totalRemoved = 0
 			
-			for(pos in blocksToRemove) {
+			for (pos in blocksToRemove) {
 				if (isModifiableFluid(world, pos, player, heldItem)) {
 					pos.setAir(world)
 					++totalRemoved
@@ -119,7 +121,7 @@ class ItemVoidBucket(properties: Properties) : ItemAbstractVoidTool(properties, 
 		
 		// TODO sound
 		
-		player.addStat(Stats.useItem(this))
+		player.addStat(Stats.ITEM_USED[this])
 		
 		return ActionResult(SUCCESS, heldItem)
 	}
@@ -148,7 +150,7 @@ class ItemVoidBucket(properties: Properties) : ItemAbstractVoidTool(properties, 
 	}
 	
 	object Color : IItemColor {
-		override fun getColor(stack: ItemStack, tintIndex: Int) = when(tintIndex) {
+		override fun getColor(stack: ItemStack, tintIndex: Int) = when (tintIndex) {
 			1    -> stack.heeTagOrNull?.getInt(COLOR_TAG) ?: NO_TINT
 			else -> NO_TINT
 		}

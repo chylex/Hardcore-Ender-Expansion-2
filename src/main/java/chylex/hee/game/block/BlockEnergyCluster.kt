@@ -4,22 +4,22 @@ import chylex.hee.game.block.entity.TileEntityEnergyCluster
 import chylex.hee.game.block.properties.BlockBuilder
 import chylex.hee.game.mechanics.energy.IEnergyQuantity
 import chylex.hee.game.mechanics.instability.Instability
-import chylex.hee.game.world.allInCenteredSphereMutable
-import chylex.hee.game.world.getTile
-import chylex.hee.game.world.removeBlock
+import chylex.hee.game.world.util.allInCenteredSphereMutable
+import chylex.hee.game.world.util.getTile
+import chylex.hee.game.world.util.removeBlock
 import chylex.hee.init.ModBlocks
 import chylex.hee.init.ModItems
-import chylex.hee.system.forge.Side
-import chylex.hee.system.forge.Sided
-import chylex.hee.system.math.ceilToInt
-import chylex.hee.system.math.floorToInt
-import chylex.hee.system.migration.EntityLivingBase
-import chylex.hee.system.migration.EntityPlayer
 import chylex.hee.system.random.nextFloat
+import chylex.hee.util.forge.Side
+import chylex.hee.util.forge.Sided
+import chylex.hee.util.math.ceilToInt
+import chylex.hee.util.math.floorToInt
 import net.minecraft.block.BlockRenderType.INVISIBLE
 import net.minecraft.block.BlockState
 import net.minecraft.client.particle.ParticleManager
 import net.minecraft.entity.Entity
+import net.minecraft.entity.LivingEntity
+import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.entity.projectile.ProjectileEntity
 import net.minecraft.item.ItemStack
 import net.minecraft.tileentity.TileEntity
@@ -54,7 +54,7 @@ class BlockEnergyCluster(builder: BlockBuilder) : BlockSimpleShaped(builder, Axi
 			val corruptedEnergyRadius = 1.5 + (units.pow(0.77F) / 70F)
 			val corruptedEnergyLevel = (2F + (units.pow(0.74F) / 9F)).ceilToInt()
 			
-			for(testPos in pos.allInCenteredSphereMutable(corruptedEnergyRadius)) {
+			for (testPos in pos.allInCenteredSphereMutable(corruptedEnergyRadius)) {
 				ModBlocks.CORRUPTED_ENERGY.spawnCorruptedEnergy(world, testPos, corruptedEnergyLevel)
 			}
 		}
@@ -68,7 +68,7 @@ class BlockEnergyCluster(builder: BlockBuilder) : BlockSimpleShaped(builder, Axi
 		return TileEntityEnergyCluster()
 	}
 	
-	override fun onBlockHarvested(world: World, pos: BlockPos, state: BlockState, player: EntityPlayer) {
+	override fun onBlockHarvested(world: World, pos: BlockPos, state: BlockState, player: PlayerEntity) {
 		if (player.abilities.isCreativeMode && !player.isSneaking) {
 			pos.getTile<TileEntityEnergyCluster>(world)?.breakWithoutExplosion = true
 		}
@@ -108,7 +108,7 @@ class BlockEnergyCluster(builder: BlockBuilder) : BlockSimpleShaped(builder, Axi
 	@Sided(Side.CLIENT) override fun addHitEffects(state: BlockState, world: World, target: RayTraceResult, manager: ParticleManager) = true
 	@Sided(Side.CLIENT) override fun addDestroyEffects(state: BlockState, world: World, pos: BlockPos, manager: ParticleManager) = true
 	@Sided(Side.CLIENT) override fun addRunningEffects(state: BlockState, world: World, pos: BlockPos, entity: Entity) = true
-	@Sided(Side.CLIENT) override fun addLandingEffects(state: BlockState, world: ServerWorld, pos: BlockPos, stateAgain: BlockState, entity: EntityLivingBase, particleAmount: Int) = true
+	@Sided(Side.CLIENT) override fun addLandingEffects(state: BlockState, world: ServerWorld, pos: BlockPos, stateAgain: BlockState, entity: LivingEntity, particleAmount: Int) = true
 	
 	override fun getCollisionShape(state: BlockState, world: IBlockReader, pos: BlockPos, context: ISelectionContext): VoxelShape {
 		return VoxelShapes.empty()

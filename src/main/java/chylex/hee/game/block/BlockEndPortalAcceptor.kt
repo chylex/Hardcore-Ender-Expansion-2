@@ -2,16 +2,16 @@ package chylex.hee.game.block
 
 import chylex.hee.game.block.entity.TileEntityEndPortalAcceptor
 import chylex.hee.game.block.properties.BlockBuilder
-import chylex.hee.game.world.getTile
+import chylex.hee.game.world.util.getTile
 import chylex.hee.init.ModBlocks
-import chylex.hee.system.migration.EntityPlayer
-import chylex.hee.system.migration.Facing.UP
 import net.minecraft.block.BlockState
+import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.tileentity.TileEntity
 import net.minecraft.util.ActionResultType
 import net.minecraft.util.ActionResultType.PASS
 import net.minecraft.util.ActionResultType.SUCCESS
 import net.minecraft.util.Direction
+import net.minecraft.util.Direction.UP
 import net.minecraft.util.Hand
 import net.minecraft.util.math.AxisAlignedBB
 import net.minecraft.util.math.BlockPos
@@ -33,7 +33,7 @@ class BlockEndPortalAcceptor(builder: BlockBuilder, aabb: AxisAlignedBB) : Block
 		BlockAbstractPortal.spawnInnerBlocks(world, pos, ModBlocks.END_PORTAL_FRAME, ModBlocks.END_PORTAL_INNER, minSize = 1)
 	}
 	
-	override fun onBlockActivated(state: BlockState, world: World, pos: BlockPos, player: EntityPlayer, hand: Hand, hit: BlockRayTraceResult): ActionResultType {
+	override fun onBlockActivated(state: BlockState, world: World, pos: BlockPos, player: PlayerEntity, hand: Hand, hit: BlockRayTraceResult): ActionResultType {
 		if (player.isCreative && player.isSneaking) {
 			pos.getTile<TileEntityEndPortalAcceptor>(world)?.toggleChargeFromCreativeMode()
 			return SUCCESS

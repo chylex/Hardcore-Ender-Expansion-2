@@ -4,14 +4,14 @@ import chylex.hee.game.block.BlockAbstractTableTile
 import chylex.hee.game.block.entity.TileEntityEnergyCluster
 import chylex.hee.game.block.entity.base.TileEntityBaseTable
 import chylex.hee.game.mechanics.energy.IEnergyQuantity
-import chylex.hee.game.world.center
-import chylex.hee.game.world.distanceSqTo
-import chylex.hee.game.world.getTile
-import chylex.hee.system.math.square
-import chylex.hee.system.serialization.TagCompound
-import chylex.hee.system.serialization.getPosOrNull
-import chylex.hee.system.serialization.putPos
-import chylex.hee.system.serialization.use
+import chylex.hee.game.world.util.distanceSqTo
+import chylex.hee.game.world.util.getTile
+import chylex.hee.util.math.center
+import chylex.hee.util.math.square
+import chylex.hee.util.nbt.TagCompound
+import chylex.hee.util.nbt.getPosOrNull
+import chylex.hee.util.nbt.putPos
+import chylex.hee.util.nbt.use
 import net.minecraft.block.BlockState
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.RayTraceContext
@@ -89,7 +89,7 @@ class TableEnergyClusterHandler(private val table: TileEntityBaseTable, maxDista
 	private fun findNewCluster(): TileEntityEnergyCluster? {
 		val candidates = ArrayList<TileEntityEnergyCluster>(4)
 		
-		for(tile in table.wrld.tickableTileEntities) {
+		for (tile in table.wrld.tickableTileEntities) {
 			if (tile is TileEntityEnergyCluster && isValidCandidate(tile)) {
 				candidates.add(tile)
 			}

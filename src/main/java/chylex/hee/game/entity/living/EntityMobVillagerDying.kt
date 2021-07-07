@@ -1,6 +1,8 @@
 package chylex.hee.game.entity.living
 
-import chylex.hee.game.entity.posVec
+import chylex.hee.HEE
+import chylex.hee.game.entity.util.posVec
+import chylex.hee.game.fx.util.playClient
 import chylex.hee.game.particle.ParticleGrowingSpot
 import chylex.hee.game.particle.ParticleSmokeCustom
 import chylex.hee.game.particle.spawner.ParticleSpawnerCustom
@@ -8,26 +10,25 @@ import chylex.hee.game.particle.spawner.properties.IOffset
 import chylex.hee.game.particle.spawner.properties.IOffset.InBox
 import chylex.hee.game.particle.spawner.properties.IOffset.MutableOffsetPoint
 import chylex.hee.game.particle.spawner.properties.IShape.Point
-import chylex.hee.game.world.playClient
+import chylex.hee.game.world.util.Facing4
 import chylex.hee.init.ModEntities
 import chylex.hee.init.ModSounds
-import chylex.hee.system.color.IntColor.Companion.RGB
-import chylex.hee.system.facades.Facing4
-import chylex.hee.system.migration.EntityAgeable
-import chylex.hee.system.migration.EntityPlayer
-import chylex.hee.system.migration.EntityVillager
+import chylex.hee.system.heeTag
 import chylex.hee.system.random.nextFloat
 import chylex.hee.system.random.nextItem
-import chylex.hee.system.serialization.TagCompound
-import chylex.hee.system.serialization.getDecodedOrNull
-import chylex.hee.system.serialization.heeTag
-import chylex.hee.system.serialization.putEncoded
-import chylex.hee.system.serialization.readDecoded
-import chylex.hee.system.serialization.use
-import chylex.hee.system.serialization.writeEncoded
+import chylex.hee.util.buffer.readDecoded
+import chylex.hee.util.buffer.use
+import chylex.hee.util.buffer.writeEncoded
+import chylex.hee.util.color.RGB
+import chylex.hee.util.nbt.TagCompound
+import chylex.hee.util.nbt.getDecodedOrNull
+import chylex.hee.util.nbt.putEncoded
+import chylex.hee.util.nbt.use
 import net.minecraft.entity.AgeableEntity
 import net.minecraft.entity.EntityType
 import net.minecraft.entity.merchant.villager.VillagerData
+import net.minecraft.entity.merchant.villager.VillagerEntity
+import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.entity.villager.IVillagerDataHolder
 import net.minecraft.network.IPacket
 import net.minecraft.network.PacketBuffer
@@ -40,7 +41,7 @@ import net.minecraftforge.fml.common.registry.IEntityAdditionalSpawnData
 import net.minecraftforge.fml.network.NetworkHooks
 import java.util.Random
 
-class EntityMobVillagerDying(type: EntityType<EntityMobVillagerDying>, world: World) : EntityAgeable(type, world), IVillagerDataHolder, IEntityAdditionalSpawnData {
+class EntityMobVillagerDying(type: EntityType<EntityMobVillagerDying>, world: World) : AgeableEntity(type, world), IVillagerDataHolder, IEntityAdditionalSpawnData {
 	@Suppress("unused")
 	constructor(world: World) : this(ModEntities.VILLAGER_DYING, world)
 	
@@ -79,7 +80,7 @@ class EntityMobVillagerDying(type: EntityType<EntityMobVillagerDying>, world: Wo
 		setNoGravity(true)
 	}
 	
-	fun copyVillagerDataFrom(villager: EntityVillager) {
+	fun copyVillagerDataFrom(villager: VillagerEntity) {
 		setGrowingAge(villager.growingAge)
 		this.villager = villager.villagerData
 		
@@ -97,7 +98,7 @@ class EntityMobVillagerDying(type: EntityType<EntityMobVillagerDying>, world: Wo
 	}
 	
 	override fun writeSpawnData(buffer: PacketBuffer) = buffer.use {
-		writeEncoded(villager, VillagerData.CODEC)
+		writeEncoded(villager, VillagerData.CODEC, HEE.log)
 		writeVarInt(deathTime)
 		
 		writeFloat(renderYawOffset)
@@ -106,7 +107,7 @@ class EntityMobVillagerDying(type: EntityType<EntityMobVillagerDying>, world: Wo
 	}
 	
 	override fun readSpawnData(buffer: PacketBuffer) = buffer.use {
-		villager = readDecoded(VillagerData.CODEC)
+		villager = readDecoded(VillagerData.CODEC, HEE.log)
 		deathTime = readVarInt()
 		
 		renderYawOffset = readFloat()
@@ -159,17 +160,17 @@ class EntityMobVillagerDying(type: EntityType<EntityMobVillagerDying>, world: Wo
 	override fun writeAdditional(nbt: TagCompound) = nbt.heeTag.use {
 		super.writeAdditional(nbt)
 		
-		putEncoded(VILLAGER_TAG, villager, VillagerData.CODEC)
+		putEncoded(VILLAGER_TAG, villager, VillagerData.CODEC, HEE.log)
 	}
 	
 	override fun readAdditional(nbt: TagCompound) = nbt.heeTag.use {
 		super.readAdditional(nbt)
 		
-		villager = getDecodedOrNull(VILLAGER_TAG, VillagerData.CODEC)
+		villager = getDecodedOrNull(VILLAGER_TAG, VillagerData.CODEC, HEE.log)
 	}
 	
-	override fun processInitialInteract(player: EntityPlayer, hand: Hand) = PASS
-	override fun canBeLeashedTo(player: EntityPlayer) = false
+	override fun processInitialInteract(player: PlayerEntity, hand: Hand) = PASS
+	override fun canBeLeashedTo(player: PlayerEntity) = false
 	
 	override fun createChild(world: ServerWorld, mate: AgeableEntity): AgeableEntity? = null
 	override fun ageUp(growthSeconds: Int, updateForcedAge: Boolean) {}

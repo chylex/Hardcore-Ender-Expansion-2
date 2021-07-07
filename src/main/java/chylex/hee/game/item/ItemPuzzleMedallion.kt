@@ -1,16 +1,16 @@
 package chylex.hee.game.item
 
 import chylex.hee.game.block.entity.TileEntityMinersBurialAltar
-import chylex.hee.game.world.BlockEditor
-import chylex.hee.game.world.getTile
-import chylex.hee.game.world.playUniversal
+import chylex.hee.game.fx.util.playUniversal
+import chylex.hee.game.world.util.BlockEditor
+import chylex.hee.game.world.util.getTile
 import chylex.hee.init.ModSounds
-import chylex.hee.system.migration.ActionResult.FAIL
-import chylex.hee.system.migration.ActionResult.PASS
-import chylex.hee.system.migration.ActionResult.SUCCESS
 import net.minecraft.item.Item
 import net.minecraft.item.ItemUseContext
 import net.minecraft.util.ActionResultType
+import net.minecraft.util.ActionResultType.FAIL
+import net.minecraft.util.ActionResultType.PASS
+import net.minecraft.util.ActionResultType.SUCCESS
 import net.minecraft.util.SoundCategory
 
 class ItemPuzzleMedallion(properties: Properties) : Item(properties) {

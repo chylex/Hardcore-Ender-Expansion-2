@@ -1,21 +1,20 @@
 package chylex.hee.game.item
 
-import chylex.hee.game.entity.posVec
-import chylex.hee.game.mechanics.damage.DamageProperties
-import chylex.hee.game.mechanics.damage.DamageType
-import chylex.hee.game.mechanics.damage.IDamageProcessor.Companion.ENCHANTMENT_PROTECTION
-import chylex.hee.game.mechanics.damage.IDamageProcessor.Companion.POTION_PROTECTION
-import chylex.hee.game.mechanics.explosion.ExplosionBuilder
+import chylex.hee.game.entity.damage.DamageProperties
+import chylex.hee.game.entity.damage.DamageType
+import chylex.hee.game.entity.damage.IDamageProcessor.Companion.ENCHANTMENT_PROTECTION
+import chylex.hee.game.entity.damage.IDamageProcessor.Companion.POTION_PROTECTION
+import chylex.hee.game.entity.util.posVec
 import chylex.hee.game.mechanics.trinket.TrinketHandler
-import chylex.hee.game.world.totalTime
-import chylex.hee.system.compatibility.MinecraftForgeEventBus
-import chylex.hee.system.forge.SubscribeEvent
-import chylex.hee.system.math.ceilToInt
-import chylex.hee.system.math.square
-import chylex.hee.system.migration.EntityLivingBase
-import chylex.hee.system.migration.EntityPlayer
+import chylex.hee.game.world.explosion.ExplosionBuilder
+import chylex.hee.system.MinecraftForgeEventBus
+import chylex.hee.util.forge.SubscribeEvent
+import chylex.hee.util.math.ceilToInt
+import chylex.hee.util.math.square
 import net.minecraft.entity.Entity
+import net.minecraft.entity.LivingEntity
 import net.minecraft.entity.ai.attributes.Attributes.ARMOR_TOUGHNESS
+import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.item.ItemStack
 import net.minecraft.util.CombatRules
 import net.minecraft.util.Hand
@@ -40,7 +39,7 @@ class ItemTalismanOfGriefing(properties: Properties) : ItemAbstractTrinket(prope
 			}
 		}.Reader()
 		
-		private fun getBlastDamageAfterCalculations(explosion: Explosion, player: EntityPlayer): Float {
+		private fun getBlastDamageAfterCalculations(explosion: Explosion, player: PlayerEntity): Float {
 			val pos = explosion.position
 			val radius = explosion.size
 			
@@ -58,7 +57,7 @@ class ItemTalismanOfGriefing(properties: Properties) : ItemAbstractTrinket(prope
 			return finalDamage
 		}
 		
-		private fun getNormalDifficultyEquivalentDamage(amount: Float, currentDifficulty: Difficulty) = when(currentDifficulty) {
+		private fun getNormalDifficultyEquivalentDamage(amount: Float, currentDifficulty: Difficulty) = when (currentDifficulty) {
 			PEACEFUL -> 0F
 			EASY     -> max(amount, (amount - 1F) * 2F)
 			NORMAL   -> amount
@@ -78,7 +77,7 @@ class ItemTalismanOfGriefing(properties: Properties) : ItemAbstractTrinket(prope
 	}
 	
 	private fun markEntitiesForTalismanRepair(explosion: Explosion, entities: List<Entity>) {
-		val currentTime = explosion.world.totalTime
+		val currentTime = explosion.world.gameTime
 		val recentlyExploded = lastRepairMarkEntities.get()
 		
 		if (lastRepairMarkTime.get() != currentTime) {
@@ -86,8 +85,8 @@ class ItemTalismanOfGriefing(properties: Properties) : ItemAbstractTrinket(prope
 			recentlyExploded.clear()
 		}
 		
-		for(entity in entities) {
-			if (entity is EntityLivingBase) {
+		for (entity in entities) {
+			if (entity is LivingEntity) {
 				recentlyExploded.add(entity.uniqueID)
 			}
 		}
@@ -111,15 +110,15 @@ class ItemTalismanOfGriefing(properties: Properties) : ItemAbstractTrinket(prope
 		
 		val source = explosion.explosivePlacedBy
 		
-		if (source == null || source is EntityPlayer) { // TODO large fireballs don't set explosion source
+		if (source == null || source is PlayerEntity) { // TODO large fireballs don't set explosion source
 			return
 		}
 		
 		val diameter = radius * 2F
 		val position = explosion.position
 		
-		for(entity in entities) {
-			if (entity is EntityPlayer && !entity.isImmuneToExplosions && entity.posVec.distanceTo(position) <= diameter) {
+		for (entity in entities) {
+			if (entity is PlayerEntity && !entity.isImmuneToExplosions && entity.posVec.distanceTo(position) <= diameter) {
 				val trinketHandler = TrinketHandler.get(entity)
 				
 				if (trinketHandler.isItemActive(this)) {
@@ -154,7 +153,7 @@ class ItemTalismanOfGriefing(properties: Properties) : ItemAbstractTrinket(prope
 		val entity = e.entityLiving
 		val world = entity.world
 		
-		if (lastRepairMarkTime.get() != world.totalTime || !lastRepairMarkEntities.get().remove(entity.uniqueID)) {
+		if (lastRepairMarkTime.get() != world.gameTime || !lastRepairMarkEntities.get().remove(entity.uniqueID)) {
 			return
 		}
 		
@@ -167,7 +166,7 @@ class ItemTalismanOfGriefing(properties: Properties) : ItemAbstractTrinket(prope
 			return
 		}
 		
-		for(hand in Hand.values()) {
+		for (hand in Hand.values()) {
 			val heldItem = entity.getHeldItem(hand)
 			
 			if (heldItem.item === this) {

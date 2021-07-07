@@ -4,15 +4,15 @@ import chylex.hee.client.render.block.IBlockLayerCutout
 import chylex.hee.game.block.IBlockDeathFlowerDecaying.Companion.LEVEL
 import chylex.hee.game.block.properties.BlockBuilder
 import chylex.hee.game.item.ItemDeathFlower
-import chylex.hee.game.world.setBlock
+import chylex.hee.game.world.util.setBlock
 import chylex.hee.init.ModBlocks
 import chylex.hee.init.ModItems
-import chylex.hee.system.migration.BlockFlowerPot
-import chylex.hee.system.migration.EntityPlayer
-import chylex.hee.system.migration.supply
+import chylex.hee.util.forge.supply
 import net.minecraft.block.Block
 import net.minecraft.block.BlockState
 import net.minecraft.block.Blocks
+import net.minecraft.block.FlowerPotBlock
+import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.item.ItemStack
 import net.minecraft.loot.LootContext
 import net.minecraft.state.StateContainer.Builder
@@ -31,7 +31,7 @@ import java.util.Random
 class BlockFlowerPotDeathFlowerDecaying(
 	builder: BlockBuilder,
 	flower: Block,
-) : BlockFlowerPot(supply(Blocks.FLOWER_POT as BlockFlowerPot) /* prevents adding to flower->pot map */, supply(flower), builder.p), IBlockDeathFlowerDecaying, IBlockLayerCutout {
+) : FlowerPotBlock(supply(Blocks.FLOWER_POT as FlowerPotBlock) /* prevents adding to flower->pot map */, supply(flower), builder.p), IBlockDeathFlowerDecaying, IBlockLayerCutout {
 	override fun fillStateContainer(container: Builder<Block, BlockState>) {
 		container.add(LEVEL)
 	}
@@ -53,7 +53,7 @@ class BlockFlowerPotDeathFlowerDecaying(
 		return mutableListOf(ItemStack(Blocks.FLOWER_POT), getDrop(state))
 	}
 	
-	override fun getPickBlock(state: BlockState, target: RayTraceResult, world: IBlockReader, pos: BlockPos, player: EntityPlayer): ItemStack {
+	override fun getPickBlock(state: BlockState, target: RayTraceResult, world: IBlockReader, pos: BlockPos, player: PlayerEntity): ItemStack {
 		return getDrop(state)
 	}
 	
@@ -69,7 +69,7 @@ class BlockFlowerPotDeathFlowerDecaying(
 		implUpdateTick(world, pos, state, rand)
 	}
 	
-	override fun onBlockActivated(state: BlockState, world: World, pos: BlockPos, player: EntityPlayer, hand: Hand, hit: BlockRayTraceResult): ActionResultType {
+	override fun onBlockActivated(state: BlockState, world: World, pos: BlockPos, player: PlayerEntity, hand: Hand, hit: BlockRayTraceResult): ActionResultType {
 		val heldItem = player.getHeldItem(hand)
 		
 		if (heldItem.item === ModItems.END_POWDER) {

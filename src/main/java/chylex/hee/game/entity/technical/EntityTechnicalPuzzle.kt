@@ -1,36 +1,35 @@
 package chylex.hee.game.entity.technical
 
 import chylex.hee.game.block.BlockPuzzleLogic
-import chylex.hee.game.entity.lookDirVec
-import chylex.hee.game.entity.lookPosVec
-import chylex.hee.game.entity.selectEntities
-import chylex.hee.game.world.Pos
-import chylex.hee.game.world.getBlock
-import chylex.hee.game.world.getState
-import chylex.hee.game.world.setState
-import chylex.hee.game.world.totalTime
+import chylex.hee.game.entity.util.lookDirVec
+import chylex.hee.game.entity.util.lookPosVec
+import chylex.hee.game.entity.util.selectEntities
+import chylex.hee.game.fx.FxBlockData
+import chylex.hee.game.fx.FxEntityData
+import chylex.hee.game.world.util.getBlock
+import chylex.hee.game.world.util.getState
+import chylex.hee.game.world.util.setState
 import chylex.hee.init.ModEntities
 import chylex.hee.init.ModItems
 import chylex.hee.network.client.PacketClientFX
-import chylex.hee.network.fx.FxBlockData
-import chylex.hee.network.fx.FxEntityData
-import chylex.hee.system.math.Vec
-import chylex.hee.system.math.Vec3
-import chylex.hee.system.math.square
-import chylex.hee.system.math.toRadians
-import chylex.hee.system.migration.EntityItem
-import chylex.hee.system.migration.Facing.DOWN
+import chylex.hee.system.heeTag
 import chylex.hee.system.random.nextItem
-import chylex.hee.system.serialization.TagCompound
-import chylex.hee.system.serialization.getEnum
-import chylex.hee.system.serialization.getPos
-import chylex.hee.system.serialization.heeTag
-import chylex.hee.system.serialization.putEnum
-import chylex.hee.system.serialization.putPos
-import chylex.hee.system.serialization.use
+import chylex.hee.util.math.Pos
+import chylex.hee.util.math.Vec
+import chylex.hee.util.math.Vec3
+import chylex.hee.util.math.square
+import chylex.hee.util.math.toRadians
+import chylex.hee.util.nbt.TagCompound
+import chylex.hee.util.nbt.getEnum
+import chylex.hee.util.nbt.getPos
+import chylex.hee.util.nbt.putEnum
+import chylex.hee.util.nbt.putPos
+import chylex.hee.util.nbt.use
 import net.minecraft.entity.EntityType
+import net.minecraft.entity.item.ItemEntity
 import net.minecraft.item.ItemStack
 import net.minecraft.util.Direction
+import net.minecraft.util.Direction.DOWN
 import net.minecraft.util.math.AxisAlignedBB
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.RayTraceContext
@@ -68,7 +67,7 @@ class EntityTechnicalPuzzle(type: EntityType<EntityTechnicalPuzzle>, world: Worl
 		
 		val pos = Pos(this)
 		
-		if (world.isAreaLoaded(pos, BlockPuzzleLogic.MAX_SIZE) && ticksExisted > 5 && world.totalTime % BlockPuzzleLogic.UPDATE_RATE == 0L) {
+		if (world.isAreaLoaded(pos, BlockPuzzleLogic.MAX_SIZE) && ticksExisted > 5 && world.gameTime % BlockPuzzleLogic.UPDATE_RATE == 0L) {
 			moveToBlockAndToggle(pos)
 		}
 	}
@@ -100,7 +99,7 @@ class EntityTechnicalPuzzle(type: EntityType<EntityTechnicalPuzzle>, world: Worl
 					remove()
 				}
 				
-				for(index in 1 until nextChains.size) {
+				for (index in 1 until nextChains.size) {
 					EntityTechnicalPuzzle(world).apply {
 						if (startChain(nextChains[index].first, nextChains[index].second)) {
 							world.addEntity(this)
@@ -161,7 +160,7 @@ class EntityTechnicalPuzzle(type: EntityType<EntityTechnicalPuzzle>, world: Worl
 			
 			val pickedCandidate = rand.nextItem(candidatesOutsidePickupRange)
 			
-			val medallion = EntityItem(world, pickedCandidate.x, pickedCandidate.y, pickedCandidate.z, ItemStack(ModItems.PUZZLE_MEDALLION)).apply {
+			val medallion = ItemEntity(world, pickedCandidate.x, pickedCandidate.y, pickedCandidate.z, ItemStack(ModItems.PUZZLE_MEDALLION)).apply {
 				motion = Vec3.ZERO
 				world.addEntity(this)
 			}

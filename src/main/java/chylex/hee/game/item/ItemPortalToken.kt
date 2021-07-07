@@ -1,44 +1,46 @@
 package chylex.hee.game.item
 
 import chylex.hee.HEE
-import chylex.hee.client.MC
 import chylex.hee.client.color.NO_TINT
-import chylex.hee.client.gui.GuiPortalTokenStorage
+import chylex.hee.client.gui.screen.GuiPortalTokenStorage
+import chylex.hee.client.util.MC
+import chylex.hee.game.Resource
 import chylex.hee.game.block.BlockVoidPortalInner
-import chylex.hee.game.entity.isInEndDimension
 import chylex.hee.game.entity.item.EntityTokenHolder
-import chylex.hee.game.entity.selectExistingEntities
-import chylex.hee.game.inventory.heeTag
-import chylex.hee.game.inventory.heeTagOrNull
-import chylex.hee.game.mechanics.portal.DimensionTeleporter
-import chylex.hee.game.mechanics.portal.EntityPortalContact
-import chylex.hee.game.world.BlockEditor
-import chylex.hee.game.world.territory.TerritoryInstance
-import chylex.hee.game.world.territory.TerritoryType
-import chylex.hee.game.world.territory.properties.TerritoryColors
-import chylex.hee.game.world.territory.storage.TerritoryGlobalStorage
-import chylex.hee.game.world.territory.storage.data.VoidData
-import chylex.hee.system.color.IntColor.Companion.RGB
-import chylex.hee.system.forge.Side
-import chylex.hee.system.forge.Sided
-import chylex.hee.system.migration.ActionResult.FAIL
-import chylex.hee.system.migration.ActionResult.PASS
-import chylex.hee.system.migration.ActionResult.SUCCESS
-import chylex.hee.system.migration.EntityPlayer
-import chylex.hee.system.migration.Facing.UP
-import chylex.hee.system.serialization.getEnum
-import chylex.hee.system.serialization.getIntegerOrNull
-import chylex.hee.system.serialization.hasKey
-import chylex.hee.system.serialization.putEnum
+import chylex.hee.game.entity.util.EntityPortalContact
+import chylex.hee.game.entity.util.selectExistingEntities
+import chylex.hee.game.item.util.ItemProperty
+import chylex.hee.game.territory.TerritoryType
+import chylex.hee.game.territory.storage.VoidData
+import chylex.hee.game.territory.system.TerritoryInstance
+import chylex.hee.game.territory.system.properties.TerritoryColors
+import chylex.hee.game.territory.system.storage.TerritoryGlobalStorage
+import chylex.hee.game.world.isInEndDimension
+import chylex.hee.game.world.server.DimensionTeleporter
+import chylex.hee.game.world.util.BlockEditor
+import chylex.hee.system.heeTag
+import chylex.hee.system.heeTagOrNull
+import chylex.hee.util.color.RGB
+import chylex.hee.util.forge.Side
+import chylex.hee.util.forge.Sided
+import chylex.hee.util.nbt.getEnum
+import chylex.hee.util.nbt.getIntegerOrNull
+import chylex.hee.util.nbt.hasKey
+import chylex.hee.util.nbt.putEnum
 import net.minecraft.client.renderer.color.IItemColor
 import net.minecraft.client.util.ITooltipFlag
 import net.minecraft.entity.Entity
+import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.item.Item
 import net.minecraft.item.ItemGroup
 import net.minecraft.item.ItemStack
 import net.minecraft.item.ItemUseContext
 import net.minecraft.util.ActionResult
 import net.minecraft.util.ActionResultType
+import net.minecraft.util.ActionResultType.FAIL
+import net.minecraft.util.ActionResultType.PASS
+import net.minecraft.util.ActionResultType.SUCCESS
+import net.minecraft.util.Direction.UP
 import net.minecraft.util.Hand
 import net.minecraft.util.NonNullList
 import net.minecraft.util.math.AxisAlignedBB
@@ -56,7 +58,7 @@ class ItemPortalToken(properties: Properties) : Item(properties) {
 		
 		const val MAX_STACK_SIZE = 16
 		
-		val TOKEN_TYPE_PROPERTY = ItemProperty("token_type") { stack ->
+		val TOKEN_TYPE_PROPERTY = ItemProperty(Resource.Custom("token_type")) { stack ->
 			getTokenType(stack).propertyValue + (if (stack.heeTagOrNull.hasKey(IS_CORRUPTED_TAG)) 0.5F else 0F)
 		}
 		
@@ -101,7 +103,7 @@ class ItemPortalToken(properties: Properties) : Item(properties) {
 			return instance
 		}
 		
-		return if (entity is EntityPlayer)
+		return if (entity is PlayerEntity)
 			TerritoryGlobalStorage.get().remapSolitaryIndex(instance, entity)
 		else
 			null
@@ -144,7 +146,7 @@ class ItemPortalToken(properties: Properties) : Item(properties) {
 	
 	// Creative mode
 	
-	override fun onItemRightClick(world: World, player: EntityPlayer, hand: Hand): ActionResult<ItemStack> {
+	override fun onItemRightClick(world: World, player: PlayerEntity, hand: Hand): ActionResult<ItemStack> {
 		val heldItem = player.getHeldItem(hand)
 		val territory = getTerritoryType(heldItem)
 		
@@ -215,7 +217,7 @@ class ItemPortalToken(properties: Properties) : Item(properties) {
 	
 	override fun fillItemGroup(tab: ItemGroup, items: NonNullList<ItemStack>) {
 		if (isInGroup(tab)) {
-			for(territory in TerritoryType.ALL) {
+			for (territory in TerritoryType.ALL) {
 				if (!territory.isSpawn) {
 					items.add(forTerritory(TokenType.NORMAL, territory))
 				}
@@ -261,7 +263,7 @@ class ItemPortalToken(properties: Properties) : Item(properties) {
 			return getTerritoryType(stack)?.desc?.colors
 		}
 		
-		override fun getColor(stack: ItemStack, tintIndex: Int) = when(tintIndex) {
+		override fun getColor(stack: ItemStack, tintIndex: Int) = when (tintIndex) {
 			1    -> getColors(stack)?.tokenTop?.i ?: WHITE
 			2    -> getColors(stack)?.tokenBottom?.i ?: WHITE
 			else -> NO_TINT

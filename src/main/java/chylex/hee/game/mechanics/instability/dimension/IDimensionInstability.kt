@@ -1,6 +1,6 @@
 package chylex.hee.game.mechanics.instability.dimension
 
-import chylex.hee.system.serialization.TagCompound
+import chylex.hee.util.nbt.TagCompound
 import net.minecraft.util.math.BlockPos
 import net.minecraftforge.common.util.INBTSerializable
 

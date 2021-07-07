@@ -1,34 +1,34 @@
 package chylex.hee.network.client
 
 import chylex.hee.network.BaseClientPacket
-import chylex.hee.system.forge.Side
-import chylex.hee.system.forge.Sided
-import chylex.hee.system.migration.EntityPlayerSP
-import chylex.hee.system.migration.Potion
-import chylex.hee.system.serialization.use
+import chylex.hee.util.buffer.use
+import chylex.hee.util.forge.Side
+import chylex.hee.util.forge.Sided
+import net.minecraft.client.entity.player.ClientPlayerEntity
 import net.minecraft.network.PacketBuffer
+import net.minecraft.potion.Effect
 
 class PacketClientPotionDuration() : BaseClientPacket() {
-	constructor(potion: Potion, newDuration: Int) : this() {
-		this.potion = potion
+	constructor(effect: Effect, newDuration: Int) : this() {
+		this.effect = effect
 		this.newDuration = newDuration
 	}
 	
-	private var potion: Potion? = null
+	private var effect: Effect? = null
 	private var newDuration: Int? = null
 	
 	override fun write(buffer: PacketBuffer) = buffer.use {
-		writeRegistryId(potion!!)
+		writeRegistryId(effect!!)
 		writeInt(newDuration!!)
 	}
 	
 	override fun read(buffer: PacketBuffer) = buffer.use {
-		potion = readRegistryIdSafe(Potion::class.java)
+		effect = readRegistryIdSafe(Effect::class.java)
 		newDuration = readInt()
 	}
 	
 	@Sided(Side.CLIENT)
-	override fun handle(player: EntityPlayerSP) {
-		potion?.let(player::getActivePotionEffect)?.duration = newDuration!!
+	override fun handle(player: ClientPlayerEntity) {
+		effect?.let(player::getActivePotionEffect)?.duration = newDuration!!
 	}
 }

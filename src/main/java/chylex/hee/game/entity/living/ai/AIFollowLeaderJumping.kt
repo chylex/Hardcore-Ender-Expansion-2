@@ -1,16 +1,16 @@
 package chylex.hee.game.entity.living.ai
 
 import chylex.hee.game.entity.living.EntityMobBlobby
-import chylex.hee.game.entity.lookDirVec
-import chylex.hee.system.math.Vec3
-import chylex.hee.system.math.offsetTowards
-import chylex.hee.system.math.scale
-import chylex.hee.system.math.square
-import chylex.hee.system.math.toRadians
-import chylex.hee.system.math.withY
+import chylex.hee.game.entity.util.lookDirVec
 import chylex.hee.system.random.nextFloat
 import chylex.hee.system.random.nextInt
 import chylex.hee.system.random.nextVector2
+import chylex.hee.util.math.Vec3
+import chylex.hee.util.math.lerpTowards
+import chylex.hee.util.math.scale
+import chylex.hee.util.math.square
+import chylex.hee.util.math.toRadians
+import chylex.hee.util.math.withY
 import net.minecraft.entity.ai.goal.Goal
 import net.minecraft.entity.ai.goal.Goal.Flag.JUMP
 import net.minecraft.entity.ai.goal.Goal.Flag.MOVE
@@ -57,7 +57,7 @@ class AIFollowLeaderJumping(private val entity: EntityMobBlobby) : Goal() {
 				targetOffset = rand.nextVector2(xz = baseDist * rand.nextFloat(0.01, 0.29), y = 0.0).add(yawVec.scale(baseDist * (10F + abs(yawRot)) * 0.014F))
 			}
 			else {
-				offset = offset.offsetTowards(targetOffset, 0.005)
+				offset = offset.lerpTowards(targetOffset, 0.005)
 			}
 			
 			stoppedTicks = 0

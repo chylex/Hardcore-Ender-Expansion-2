@@ -1,11 +1,11 @@
 package chylex.hee.game.recipe
 
-import chylex.hee.game.inventory.enchantmentList
-import chylex.hee.game.inventory.nonEmptySlots
-import chylex.hee.game.inventory.size
+import chylex.hee.game.inventory.util.nonEmptySlots
+import chylex.hee.game.item.util.enchantmentList
+import chylex.hee.game.item.util.size
 import chylex.hee.init.ModItems
-import chylex.hee.system.math.shlong
 import chylex.hee.system.random.nextItem
+import chylex.hee.util.math.shlong
 import net.minecraft.enchantment.Enchantment
 import net.minecraft.inventory.CraftingInventory
 import net.minecraft.item.ItemStack
@@ -57,7 +57,7 @@ object RecipeEndPowderRepair : RecipeBaseDynamic() {
 		var repairItem1: ItemStack? = null
 		var repairItem2: ItemStack? = null
 		
-		for((_, stack) in inv.nonEmptySlots) {
+		for ((_, stack) in inv.nonEmptySlots) {
 			if (stack.item === ModItems.END_POWDER) {
 				++endPowderCount
 				continue

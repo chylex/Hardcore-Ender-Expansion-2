@@ -3,13 +3,13 @@ package chylex.hee.game.particle
 import chylex.hee.game.particle.ParticleDeathFlowerHeal.Data
 import chylex.hee.game.particle.data.IParticleData
 import chylex.hee.game.particle.spawner.IParticleMaker
-import chylex.hee.system.color.IntColor.Companion.RGB
-import chylex.hee.system.forge.Side
-import chylex.hee.system.forge.Sided
-import chylex.hee.system.math.component1
-import chylex.hee.system.math.component2
-import chylex.hee.system.math.component3
-import chylex.hee.system.math.offsetTowards
+import chylex.hee.util.color.RGB
+import chylex.hee.util.forge.Side
+import chylex.hee.util.forge.Sided
+import chylex.hee.util.math.component1
+import chylex.hee.util.math.component2
+import chylex.hee.util.math.component3
+import chylex.hee.util.math.lerpTowards
 import net.minecraft.client.particle.Particle
 import net.minecraft.client.particle.SuspendedTownParticle
 import net.minecraft.client.world.ClientWorld
@@ -36,7 +36,7 @@ object ParticleDeathFlowerHeal : IParticleMaker.WithData<Data>() {
 				maxAge /= 2
 			}
 			
-			val (r, g, b) = COLOR_MIN.offsetTowards(COLOR_MAX, level.toDouble())
+			val (r, g, b) = COLOR_MIN.lerpTowards(COLOR_MAX, level.toDouble())
 			
 			particleRed = r.toFloat()
 			particleGreen = g.toFloat()

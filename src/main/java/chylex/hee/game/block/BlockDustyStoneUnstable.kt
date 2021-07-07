@@ -3,28 +3,27 @@ package chylex.hee.game.block
 import chylex.hee.game.block.logic.IFullBlockCollisionHandler
 import chylex.hee.game.block.properties.BlockBuilder
 import chylex.hee.game.entity.living.EntityMobUndread
-import chylex.hee.game.world.Pos
-import chylex.hee.game.world.allInBox
-import chylex.hee.game.world.getBlock
-import chylex.hee.game.world.getState
-import chylex.hee.game.world.isTopSolid
-import chylex.hee.game.world.setAir
-import chylex.hee.game.world.setBlock
-import chylex.hee.game.world.totalTime
+import chylex.hee.game.world.util.Facing4
+import chylex.hee.game.world.util.allInBox
+import chylex.hee.game.world.util.getBlock
+import chylex.hee.game.world.util.getState
+import chylex.hee.game.world.util.isTopSolid
+import chylex.hee.game.world.util.setAir
+import chylex.hee.game.world.util.setBlock
 import chylex.hee.init.ModBlocks
-import chylex.hee.system.facades.Facing4
-import chylex.hee.system.math.floorToInt
-import chylex.hee.system.migration.EntityFallingBlock
-import chylex.hee.system.migration.EntityLivingBase
-import chylex.hee.system.migration.EntityPlayer
-import chylex.hee.system.migration.Hand.MAIN_HAND
 import chylex.hee.system.random.nextInt
+import chylex.hee.util.math.Pos
+import chylex.hee.util.math.floorToInt
 import net.minecraft.block.BlockState
 import net.minecraft.enchantment.EnchantmentHelper
 import net.minecraft.enchantment.Enchantments
 import net.minecraft.entity.Entity
 import net.minecraft.entity.EntitySpawnPlacementRegistry.PlacementType
 import net.minecraft.entity.EntityType
+import net.minecraft.entity.LivingEntity
+import net.minecraft.entity.item.FallingBlockEntity
+import net.minecraft.entity.player.PlayerEntity
+import net.minecraft.util.Hand.MAIN_HAND
 import net.minecraft.util.math.BlockPos
 import net.minecraft.world.IBlockReader
 import net.minecraft.world.World
@@ -34,7 +33,7 @@ import java.util.Random
 class BlockDustyStoneUnstable(builder: BlockBuilder) : BlockDustyStone(builder), IFullBlockCollisionHandler {
 	companion object {
 		fun getCrumbleStartPos(world: IBlockReader, pos: BlockPos): BlockPos? {
-			for(offset in 1..8) {
+			for (offset in 1..8) {
 				val testPos = pos.down(offset)
 				val isDustyStone = testPos.getBlock(world) is BlockDustyStoneUnstable
 				
@@ -51,7 +50,7 @@ class BlockDustyStoneUnstable(builder: BlockBuilder) : BlockDustyStone(builder),
 		}
 		
 		private fun isNonCreative(entity: Entity): Boolean {
-			return entity !is EntityPlayer || !entity.isCreative
+			return entity !is PlayerEntity || !entity.isCreative
 		}
 		
 		private fun isLightMob(entity: Entity): Boolean {
@@ -59,7 +58,7 @@ class BlockDustyStoneUnstable(builder: BlockBuilder) : BlockDustyStone(builder),
 		}
 	}
 	
-	override fun canHarvestBlock(state: BlockState, world: IBlockReader, pos: BlockPos, player: EntityPlayer): Boolean {
+	override fun canHarvestBlock(state: BlockState, world: IBlockReader, pos: BlockPos, player: PlayerEntity): Boolean {
 		return player.getHeldItem(MAIN_HAND).let { EnchantmentHelper.getEnchantmentLevel(Enchantments.SILK_TOUCH, it) == 0 || isPickaxeOrShovel(player, it) }
 	}
 	
@@ -67,9 +66,9 @@ class BlockDustyStoneUnstable(builder: BlockBuilder) : BlockDustyStone(builder),
 		// TODO fx
 		
 		if (state.block === ModBlocks.DUSTY_STONE_DAMAGED) {
-			world.addEntity(EntityFallingBlock(world, pos.x + 0.5, pos.y.toDouble(), pos.z + 0.5, state))
+			world.addEntity(FallingBlockEntity(world, pos.x + 0.5, pos.y.toDouble(), pos.z + 0.5, state))
 			
-			for(facing in Facing4) {
+			for (facing in Facing4) {
 				val adjacentPos = pos.offset(facing)
 				
 				if (adjacentPos.getBlock(world) is BlockDustyStoneUnstable) {
@@ -92,7 +91,7 @@ class BlockDustyStoneUnstable(builder: BlockBuilder) : BlockDustyStone(builder),
 	}
 	
 	override fun onEntityCollisionAbove(world: World, pos: BlockPos, entity: Entity) {
-		if (!world.isRemote && world.totalTime % 4L == 0L && !isLightMob(entity) && isNonCreative(entity)) {
+		if (!world.isRemote && world.gameTime % 4L == 0L && !isLightMob(entity) && isNonCreative(entity)) {
 			if (entity is EntityMobUndread && !entity.shouldTriggerDustyStone) {
 				return // Undread pathfinding should never spawn or walk on unstable Dusty Stone, but it still happens sometimes...
 			}
@@ -101,7 +100,7 @@ class BlockDustyStoneUnstable(builder: BlockBuilder) : BlockDustyStone(builder),
 				return
 			}
 			
-			for(facing in Facing4) {
+			for (facing in Facing4) {
 				val adjacentPos = pos.offset(facing)
 				
 				if (adjacentPos.getBlock(world) is BlockDustyStoneUnstable) {
@@ -112,7 +111,7 @@ class BlockDustyStoneUnstable(builder: BlockBuilder) : BlockDustyStone(builder),
 	}
 	
 	override fun onFallenUpon(world: World, pos: BlockPos, entity: Entity, fallDistance: Float) {
-		if (!world.isRemote && entity is EntityLivingBase && fallDistance > (if (isLightMob(entity)) 3.3F else 1.3F) && isNonCreative(entity)) {
+		if (!world.isRemote && entity is LivingEntity && fallDistance > (if (isLightMob(entity)) 3.3F else 1.3F) && isNonCreative(entity)) {
 			val rand = world.rand
 			val aabb = entity.boundingBox
 			val y = pos.y
@@ -122,7 +121,7 @@ class BlockDustyStoneUnstable(builder: BlockBuilder) : BlockDustyStone(builder),
 			val minZ = (aabb.minZ + 0.001).floorToInt()
 			val maxZ = (aabb.maxZ - 0.001).floorToInt()
 			
-			for(testPos in Pos(minX, y, minZ).allInBox(Pos(maxX, y, maxZ))) {
+			for (testPos in Pos(minX, y, minZ).allInBox(Pos(maxX, y, maxZ))) {
 				val state = testPos.getState(world)
 				
 				if (state.block !is BlockDustyStoneUnstable) {

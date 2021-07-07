@@ -1,7 +1,6 @@
 package chylex.hee.mixin;
 
 import chylex.hee.game.block.logic.IBlockDynamicHardness;
-import chylex.hee.game.world.PosExtKt;
 import net.minecraft.block.AbstractBlock.AbstractBlockState;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -13,10 +12,11 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(AbstractBlockState.class)
+@SuppressWarnings("MethodMayBeStatic")
 public abstract class HookBlockHardness {
 	@Inject(method = "getBlockHardness", at = @At("RETURN"), cancellable = true)
 	private void getBlockHardness(final IBlockReader world, final BlockPos pos, final CallbackInfoReturnable<Float> ci) {
-		final BlockState state = PosExtKt.getState(pos, world);
+		final BlockState state = world.getBlockState(pos);
 		final Block block = state.getBlock();
 		
 		if (block instanceof IBlockDynamicHardness) {

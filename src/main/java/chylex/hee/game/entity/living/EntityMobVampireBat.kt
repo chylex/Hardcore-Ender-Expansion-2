@@ -1,71 +1,70 @@
 package chylex.hee.game.entity.living
 
-import chylex.hee.game.entity.getAttributeInstance
-import chylex.hee.game.entity.isAnyVulnerablePlayerWithinRange
+import chylex.hee.game.entity.damage.Damage
+import chylex.hee.game.entity.damage.IDamageProcessor.Companion.ALL_PROTECTIONS_WITH_SHIELD
+import chylex.hee.game.entity.damage.IDamageProcessor.Companion.PEACEFUL_EXCLUSION
+import chylex.hee.game.entity.damage.IDamageProcessor.Companion.STATUS
 import chylex.hee.game.entity.living.EntityMobVampireBat.BehaviorType.HOSTILE
 import chylex.hee.game.entity.living.EntityMobVampireBat.BehaviorType.NEUTRAL
 import chylex.hee.game.entity.living.EntityMobVampireBat.BehaviorType.PASSIVE
 import chylex.hee.game.entity.living.controller.EntityMoveFlyingBat
-import chylex.hee.game.entity.lookPosVec
-import chylex.hee.game.entity.posVec
-import chylex.hee.game.entity.positionY
-import chylex.hee.game.entity.selectEntities
-import chylex.hee.game.entity.selectVulnerableEntities
-import chylex.hee.game.mechanics.damage.Damage
-import chylex.hee.game.mechanics.damage.IDamageProcessor.Companion.ALL_PROTECTIONS_WITH_SHIELD
-import chylex.hee.game.mechanics.damage.IDamageProcessor.Companion.PEACEFUL_EXCLUSION
-import chylex.hee.game.mechanics.damage.IDamageProcessor.Companion.STATUS
+import chylex.hee.game.entity.util.getAttributeInstance
+import chylex.hee.game.entity.util.isAnyVulnerablePlayerWithinRange
+import chylex.hee.game.entity.util.lookPosVec
+import chylex.hee.game.entity.util.posVec
+import chylex.hee.game.entity.util.selectEntities
+import chylex.hee.game.entity.util.selectVulnerableEntities
+import chylex.hee.game.entity.util.setY
+import chylex.hee.game.fx.util.playClient
 import chylex.hee.game.particle.ParticleSmokeCustom
 import chylex.hee.game.particle.spawner.ParticleSpawnerCustom
 import chylex.hee.game.particle.spawner.properties.IOffset.InBox
 import chylex.hee.game.particle.spawner.properties.IShape.Point
-import chylex.hee.game.potion.makeEffect
-import chylex.hee.game.world.Pos
-import chylex.hee.game.world.bottomCenter
-import chylex.hee.game.world.center
-import chylex.hee.game.world.getBlock
-import chylex.hee.game.world.getState
-import chylex.hee.game.world.isAir
+import chylex.hee.game.potion.util.makeInstance
+import chylex.hee.game.territory.TerritoryType
 import chylex.hee.game.world.isEndDimension
-import chylex.hee.game.world.isPeaceful
-import chylex.hee.game.world.playClient
-import chylex.hee.game.world.territory.TerritoryType
-import chylex.hee.game.world.totalTime
+import chylex.hee.game.world.util.getBlock
+import chylex.hee.game.world.util.getState
+import chylex.hee.game.world.util.isAir
+import chylex.hee.game.world.util.isPeaceful
 import chylex.hee.init.ModEntities
-import chylex.hee.system.color.IntColor.Companion.RGB
-import chylex.hee.system.math.Vec
-import chylex.hee.system.math.Vec3
-import chylex.hee.system.math.addY
-import chylex.hee.system.math.ceilToInt
-import chylex.hee.system.math.floorToInt
-import chylex.hee.system.math.square
-import chylex.hee.system.migration.BlockChorusPlant
-import chylex.hee.system.migration.EntityBat
-import chylex.hee.system.migration.EntityLivingBase
-import chylex.hee.system.migration.EntityPlayer
-import chylex.hee.system.migration.Potions
-import chylex.hee.system.migration.Sounds
-import chylex.hee.system.random.IRandomColor.Companion.IRandomColor
+import chylex.hee.system.heeTag
 import chylex.hee.system.random.nextFloat
 import chylex.hee.system.random.nextInt
 import chylex.hee.system.random.nextItemOrNull
 import chylex.hee.system.random.nextVector
-import chylex.hee.system.serialization.TagCompound
-import chylex.hee.system.serialization.getEnum
-import chylex.hee.system.serialization.heeTag
-import chylex.hee.system.serialization.putEnum
-import chylex.hee.system.serialization.use
+import chylex.hee.util.color.IColorGenerator
+import chylex.hee.util.color.RGB
+import chylex.hee.util.math.Pos
+import chylex.hee.util.math.Vec
+import chylex.hee.util.math.Vec3
+import chylex.hee.util.math.addY
+import chylex.hee.util.math.bottomCenter
+import chylex.hee.util.math.ceilToInt
+import chylex.hee.util.math.center
+import chylex.hee.util.math.floorToInt
+import chylex.hee.util.math.square
+import chylex.hee.util.nbt.TagCompound
+import chylex.hee.util.nbt.getEnum
+import chylex.hee.util.nbt.putEnum
+import chylex.hee.util.nbt.use
+import net.minecraft.block.ChorusPlantBlock
 import net.minecraft.entity.Entity
 import net.minecraft.entity.EntityType
 import net.minecraft.entity.ILivingEntityData
+import net.minecraft.entity.LivingEntity
 import net.minecraft.entity.SpawnReason
 import net.minecraft.entity.ai.attributes.Attributes.ATTACK_DAMAGE
 import net.minecraft.entity.ai.attributes.Attributes.FOLLOW_RANGE
 import net.minecraft.entity.ai.attributes.Attributes.MAX_HEALTH
 import net.minecraft.entity.monster.IMob
+import net.minecraft.entity.passive.BatEntity
+import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.nbt.CompoundNBT
 import net.minecraft.network.IPacket
+import net.minecraft.potion.Effects
 import net.minecraft.util.SoundCategory
+import net.minecraft.util.SoundEvents
 import net.minecraft.util.math.AxisAlignedBB
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.vector.Vector3d
@@ -78,7 +77,7 @@ import net.minecraft.world.World
 import net.minecraftforge.fml.network.NetworkHooks
 import kotlin.math.cos
 
-class EntityMobVampireBat(type: EntityType<EntityMobVampireBat>, world: World) : EntityBat(type, world), IMob, IKnockbackMultiplier {
+class EntityMobVampireBat(type: EntityType<EntityMobVampireBat>, world: World) : BatEntity(type, world), IMob, IKnockbackMultiplier {
 	@Suppress("unused")
 	constructor(world: World) : this(ModEntities.VAMPIRE_BAT, world)
 	
@@ -87,8 +86,8 @@ class EntityMobVampireBat(type: EntityType<EntityMobVampireBat>, world: World) :
 		
 		private val DAMAGE_GENERAL = Damage(PEACEFUL_EXCLUSION, *ALL_PROTECTIONS_WITH_SHIELD, STATUS {
 			when (it.world.difficulty) {
-				NORMAL -> if (it.rng.nextInt(12) == 0) Potions.POISON.makeEffect(it.rng.nextInt(40,  80)) else null
-				HARD   -> if (it.rng.nextInt( 7) == 0) Potions.POISON.makeEffect(it.rng.nextInt(50, 100)) else null
+				NORMAL -> if (it.rng.nextInt(12) == 0) Effects.POISON.makeInstance(it.rng.nextInt(40,  80)) else null
+				HARD   -> if (it.rng.nextInt( 7) == 0) Effects.POISON.makeInstance(it.rng.nextInt(50, 100)) else null
 				else   -> null
 			}
 		})
@@ -98,7 +97,7 @@ class EntityMobVampireBat(type: EntityType<EntityMobVampireBat>, world: World) :
 		
 		private val PARTICLE_TICK = ParticleSpawnerCustom(
 			type = ParticleSmokeCustom,
-			data = ParticleSmokeCustom.Data(color = IRandomColor { RGB(nextInt(60, 162), nextInt(7, 71), nextInt(1, 19)) }, scale = 0.475F),
+			data = ParticleSmokeCustom.Data(color = IColorGenerator { RGB(nextInt(60, 162), nextInt(7, 71), nextInt(1, 19)) }, scale = 0.475F),
 			pos = InBox(0.175F)
 		)
 	}
@@ -181,8 +180,8 @@ class EntityMobVampireBat(type: EntityType<EntityMobVampireBat>, world: World) :
 	override fun tick() {
 		super.tick()
 		
-		if (isBatHanging && Pos(this).up().getBlock(world) is BlockChorusPlant) {
-			positionY = posY.floorToInt() + 1.25 - height // POLISH some variations of chorus plants are extra thicc
+		if (isBatHanging && Pos(this).up().getBlock(world) is ChorusPlantBlock) {
+			setY(posY.floorToInt() + 1.25 - height) // POLISH some variations of chorus plants are extra thicc
 		}
 	}
 	
@@ -226,7 +225,7 @@ class EntityMobVampireBat(type: EntityType<EntityMobVampireBat>, world: World) :
 			
 			val currentTarget = attackTarget
 			
-			if (currentTarget != null && world.totalTime - lastAttackHit >= 20L) {
+			if (currentTarget != null && world.gameTime - lastAttackHit >= 20L) {
 				val centerY = posY + height * 0.5
 				val maxSqDistXZ = square(width * 2F) + currentTarget.width
 				
@@ -235,7 +234,7 @@ class EntityMobVampireBat(type: EntityType<EntityMobVampireBat>, world: World) :
 				    square(posX - currentTarget.posX) + square(posZ - currentTarget.posZ) < maxSqDistXZ &&
 				    attackEntityAsMob(currentTarget)
 				) {
-					lastAttackHit = world.totalTime
+					lastAttackHit = world.gameTime
 				}
 			}
 			
@@ -263,7 +262,7 @@ class EntityMobVampireBat(type: EntityType<EntityMobVampireBat>, world: World) :
 	// Sleep
 	
 	private fun tryPickNextSleepPos() {
-		if (behaviorType == HOSTILE || (behaviorType == NEUTRAL && world.selectVulnerableEntities.inRange<EntityPlayer>(posVec, 32.0).any())) {
+		if (behaviorType == HOSTILE || (behaviorType == NEUTRAL && world.selectVulnerableEntities.inRange<PlayerEntity>(posVec, 32.0).any())) {
 			return
 		}
 		
@@ -289,11 +288,11 @@ class EntityMobVampireBat(type: EntityType<EntityMobVampireBat>, world: World) :
 	private fun canHangUnderBlock(pos: BlockPos): Boolean {
 		val state = pos.getState(world)
 		
-		if (!state.isNormalCube(world, pos) && state.block !is BlockChorusPlant) {
+		if (!state.isNormalCube(world, pos) && state.block !is ChorusPlantBlock) {
 			return false
 		}
 		
-		return world.selectEntities.inBox<EntityBat>(AxisAlignedBB(pos)).none { it.isBatHanging && it !== this }
+		return world.selectEntities.inBox<BatEntity>(AxisAlignedBB(pos)).none { it.isBatHanging && it !== this }
 	}
 	
 	private fun isHangingDisturbed(): Boolean {
@@ -302,7 +301,7 @@ class EntityMobVampireBat(type: EntityType<EntityMobVampireBat>, world: World) :
 	
 	override fun setIsBatHanging(isHanging: Boolean) {
 		if (world.isRemote && isBatHanging && !isHanging) {
-			Sounds.ENTITY_BAT_TAKEOFF.playClient(posVec, SoundCategory.NEUTRAL, volume = 0.05F, pitch = rand.nextFloat(0.8F, 1.2F))
+			SoundEvents.ENTITY_BAT_TAKEOFF.playClient(posVec, SoundCategory.NEUTRAL, volume = 0.05F, pitch = rand.nextFloat(0.8F, 1.2F))
 		}
 		
 		super.setIsBatHanging(isHanging)
@@ -312,17 +311,17 @@ class EntityMobVampireBat(type: EntityType<EntityMobVampireBat>, world: World) :
 	
 	private fun tryPickNextTarget() {
 		if (behaviorType == HOSTILE) {
-			attackTarget = rand.nextItemOrNull(world.selectVulnerableEntities.inRange<EntityPlayer>(posVec, 12.0).filter(::canEntityBeSeen))
+			attackTarget = rand.nextItemOrNull(world.selectVulnerableEntities.inRange<PlayerEntity>(posVec, 12.0).filter(::canEntityBeSeen))
 		}
 		else if (behaviorType == NEUTRAL && rand.nextInt(210) == 0) {
-			attackTarget = rand.nextItemOrNull(world.selectVulnerableEntities.inRange<EntityPlayer>(posVec, 7.0).filter(::canEntityBeSeen))
+			attackTarget = rand.nextItemOrNull(world.selectVulnerableEntities.inRange<PlayerEntity>(posVec, 7.0).filter(::canEntityBeSeen))
 		}
 		else {
 			attackCooldown = 1
 		}
 	}
 	
-	override fun setAttackTarget(newTarget: EntityLivingBase?) {
+	override fun setAttackTarget(newTarget: LivingEntity?) {
 		if (attackTarget === newTarget) {
 			return
 		}

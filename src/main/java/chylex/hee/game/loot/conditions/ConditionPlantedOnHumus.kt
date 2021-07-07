@@ -1,9 +1,9 @@
 package chylex.hee.game.loot.conditions
 
-import chylex.hee.game.world.Pos
-import chylex.hee.game.world.getBlock
+import chylex.hee.game.world.util.getBlock
 import chylex.hee.init.ModBlocks
 import chylex.hee.init.ModLoot
+import chylex.hee.util.math.Pos
 import net.minecraft.loot.LootConditionType
 import net.minecraft.loot.LootContext
 import net.minecraft.loot.LootParameter

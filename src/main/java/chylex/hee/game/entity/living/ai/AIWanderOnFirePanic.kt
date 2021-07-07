@@ -1,18 +1,18 @@
 package chylex.hee.game.entity.living.ai
 
-import chylex.hee.game.world.Pos
-import chylex.hee.game.world.center
-import chylex.hee.game.world.getMaterial
-import chylex.hee.game.world.offsetUntilExcept
-import chylex.hee.system.migration.EntityCreature
-import chylex.hee.system.migration.Facing.UP
+import chylex.hee.game.world.util.getMaterial
+import chylex.hee.game.world.util.offsetUntilExcept
 import chylex.hee.system.random.nextInt
+import chylex.hee.util.math.Pos
+import chylex.hee.util.math.center
 import net.minecraft.block.material.Material
+import net.minecraft.entity.CreatureEntity
 import net.minecraft.entity.ai.RandomPositionGenerator
+import net.minecraft.util.Direction.UP
 import net.minecraft.util.math.vector.Vector3d
 
 class AIWanderOnFirePanic(
-	entity: EntityCreature,
+	entity: CreatureEntity,
 	movementSpeed: Double,
 	private val searchWaterChance: (() -> Float)? = null,
 	private val maxWaterDistanceXZ: Int,

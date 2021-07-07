@@ -2,10 +2,10 @@ package chylex.hee.game.entity.technical
 
 import chylex.hee.game.mechanics.causatum.events.CausatumEventEndermanKill
 import chylex.hee.init.ModEntities
-import chylex.hee.system.serialization.TagCompound
-import chylex.hee.system.serialization.getStringOrNull
-import chylex.hee.system.serialization.heeTag
-import chylex.hee.system.serialization.use
+import chylex.hee.system.heeTag
+import chylex.hee.util.nbt.TagCompound
+import chylex.hee.util.nbt.getStringOrNull
+import chylex.hee.util.nbt.use
 import com.google.common.collect.HashBiMap
 import net.minecraft.entity.EntityType
 import net.minecraft.world.World

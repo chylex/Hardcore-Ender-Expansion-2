@@ -1,5 +1,6 @@
 package chylex.hee.game.mechanics.instability
 
+import chylex.hee.game.Resource
 import chylex.hee.game.mechanics.instability.Instability.InstabilityCapability.Provider
 import chylex.hee.game.mechanics.instability.dimension.DimensionInstabilityEndTerritory
 import chylex.hee.game.mechanics.instability.dimension.DimensionInstabilityGlobal
@@ -7,15 +8,14 @@ import chylex.hee.game.mechanics.instability.dimension.DimensionInstabilityNull
 import chylex.hee.game.mechanics.instability.dimension.IDimensionInstability
 import chylex.hee.game.mechanics.instability.dimension.components.EndermiteSpawnLogicOverworld
 import chylex.hee.game.mechanics.instability.region.RegionInstability
-import chylex.hee.game.mechanics.instability.region.entry.types.Entry5x5
+import chylex.hee.game.mechanics.instability.region.entry.Entry5x5
 import chylex.hee.game.world.isEndDimension
-import chylex.hee.system.facades.Resource
-import chylex.hee.system.forge.SubscribeEvent
-import chylex.hee.system.forge.capability.CapabilityProvider
-import chylex.hee.system.forge.capability.getCapOrNull
-import chylex.hee.system.forge.capability.register
-import chylex.hee.system.serialization.TagCompound
-import chylex.hee.system.serialization.use
+import chylex.hee.util.forge.SubscribeEvent
+import chylex.hee.util.forge.capability.CapabilityProvider
+import chylex.hee.util.forge.capability.getCapOrNull
+import chylex.hee.util.forge.capability.register
+import chylex.hee.util.nbt.TagCompound
+import chylex.hee.util.nbt.use
 import net.minecraft.world.World
 import net.minecraftforge.common.MinecraftForge
 import net.minecraftforge.common.capabilities.Capability

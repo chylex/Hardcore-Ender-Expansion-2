@@ -1,16 +1,16 @@
 package chylex.hee.game.block
 
-import chylex.hee.client.MC
 import chylex.hee.client.render.block.IBlockLayerCutout
+import chylex.hee.client.util.MC
 import chylex.hee.game.block.properties.BlockBuilder
-import chylex.hee.game.world.territory.TerritoryType
-import chylex.hee.system.color.IntColor
-import chylex.hee.system.forge.Side
-import chylex.hee.system.forge.Sided
-import chylex.hee.system.migration.BlockVine
-import chylex.hee.system.migration.EntityLivingBase
+import chylex.hee.game.territory.TerritoryType
+import chylex.hee.util.color.IntColor
+import chylex.hee.util.forge.Side
+import chylex.hee.util.forge.Sided
 import net.minecraft.block.BlockState
+import net.minecraft.block.VineBlock
 import net.minecraft.client.renderer.color.IBlockColor
+import net.minecraft.entity.LivingEntity
 import net.minecraft.util.Direction
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.registry.Registry
@@ -23,13 +23,13 @@ import net.minecraft.world.biome.Biomes
 import net.minecraft.world.server.ServerWorld
 import java.util.Random
 
-class BlockDryVines(builder: BlockBuilder) : BlockVine(builder.p), IBlockLayerCutout {
+class BlockDryVines(builder: BlockBuilder) : VineBlock(builder.p), IBlockLayerCutout {
 	
 	// Custom behavior
 	
 	override fun tick(state: BlockState, world: ServerWorld, pos: BlockPos, rand: Random) {}
 	
-	override fun isLadder(state: BlockState, world: IWorldReader, pos: BlockPos, entity: EntityLivingBase): Boolean {
+	override fun isLadder(state: BlockState, world: IWorldReader, pos: BlockPos, entity: LivingEntity): Boolean {
 		return !entity.isOnGround
 	}
 	

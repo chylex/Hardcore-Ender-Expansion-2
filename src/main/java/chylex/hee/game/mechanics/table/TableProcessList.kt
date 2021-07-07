@@ -4,8 +4,8 @@ import chylex.hee.game.block.entity.TileEntityTablePedestal
 import chylex.hee.game.block.entity.base.TileEntityBaseTable
 import chylex.hee.game.mechanics.table.interfaces.ITableProcess
 import chylex.hee.game.mechanics.table.interfaces.ITableProcessSerializer
-import chylex.hee.system.serialization.NBTObjectList
-import chylex.hee.system.serialization.TagCompound
+import chylex.hee.util.nbt.NBTObjectList
+import chylex.hee.util.nbt.TagCompound
 
 class TableProcessList : Iterable<ITableProcess> {
 	val isNotEmpty
@@ -43,7 +43,7 @@ class TableProcessList : Iterable<ITableProcess> {
 	private inline fun removeIf(predicate: (ITableProcess) -> Boolean): Boolean {
 		var removedAny = false
 		
-		for(index in currentProcesses.indices.reversed()) {
+		for (index in currentProcesses.indices.reversed()) {
 			val process = currentProcesses[index]
 			
 			if (predicate(process)) {

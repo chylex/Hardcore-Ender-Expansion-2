@@ -5,8 +5,8 @@ import chylex.hee.datagen.path
 import chylex.hee.datagen.r
 import chylex.hee.datagen.safe
 import chylex.hee.datagen.safeUnit
-import chylex.hee.system.facades.Resource
-import chylex.hee.system.forge.named
+import chylex.hee.game.Resource
+import chylex.hee.system.named
 import net.minecraft.block.Block
 import net.minecraft.item.Item
 import net.minecraft.util.IItemProvider
@@ -23,7 +23,7 @@ fun Item.suffixed(suffix: String): Item {
 private val ItemModelProvider.generated
 	get() = getExistingFile(Resource.Vanilla("item/generated"))
 
-private fun IItemProvider.path() = when(this) {
+private fun IItemProvider.path() = when (this) {
 	is Block -> this.path
 	is Item  -> this.path
 	else     -> throw IllegalArgumentException()
@@ -48,7 +48,7 @@ fun ItemModelProvider.simple(item: IItemProvider, texture: ResourceLocation = it
 fun ItemModelProvider.layers(item: Item, layers: Array<String>) = safe {
 	var builder = this.getBuilder(item.path).parent(generated)
 	
-	for((index, layer) in layers.withIndex()) {
+	for ((index, layer) in layers.withIndex()) {
 		builder = builder.texture("layer$index", Resource.Custom("item/$layer"))
 	}
 	
@@ -56,7 +56,7 @@ fun ItemModelProvider.layers(item: Item, layers: Array<String>) = safe {
 }
 
 fun ItemModelProvider.multi(item: IItemProvider, parent: ResourceLocation, suffixes: Array<String>, callback: ItemModelBuilder.(Callback<IItemProvider>) -> Unit) {
-	for(suffix in suffixes) {
+	for (suffix in suffixes) {
 		val path = item.path() + suffix
 		
 		this.safeUnit {

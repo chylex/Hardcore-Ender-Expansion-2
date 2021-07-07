@@ -2,12 +2,20 @@ ext {
 	mc_version = "1.16.5"
 	forge_version = "36.1.32"
 	mixin_version = "0.8.2"
-	mapping_version = "20210309-1.16.5"
 	kotlin_mod_version = "1.13.0"
+	mapping_version = "20210309-1.16.5"
+	
+	access_transformers = [
+		new File(rootProject.projectDir, "src/main/resources/META-INF/accesstransformer_main.cfg"),
+		new File(project(":system").projectDir, "src/main/resources/META-INF/accesstransformer_system.cfg"),
+		new File(project(":util").projectDir, "src/main/resources/META-INF/accesstransformer_util.cfg"),
+	]
 }
 
 buildscript {
 	ext {
+		forge_gradle_version = "4.1.+"
+		mixin_gradle_version = "0.7-SNAPSHOT"
 		kotlin_version = "1.5.20"
 	}
 	
@@ -18,8 +26,8 @@ buildscript {
 	}
 	
 	dependencies {
-		classpath group: "net.minecraftforge.gradle", name: "ForgeGradle", version: "4.1.+", changing: true
-		classpath group: "org.spongepowered", name: "mixingradle", version: "0.7-SNAPSHOT"
+		classpath group: "net.minecraftforge.gradle", name: "ForgeGradle", version: forge_gradle_version, changing: true
+		classpath group: "org.spongepowered", name: "mixingradle", version: mixin_gradle_version
 		classpath group: "org.jetbrains.kotlin", name: "kotlin-gradle-plugin", version: kotlin_version
 	}
 }
@@ -29,7 +37,7 @@ apply plugin: "org.spongepowered.mixin"
 apply plugin: "eclipse"
 apply plugin: "idea"
 
-if (file("run/mods_deobf.gradle").exists()){
+if (file("run/mods_deobf.gradle").exists()) {
 	apply from: "run/mods_deobf.gradle"
 }
 
@@ -46,12 +54,14 @@ archivesBaseName = metaName.replaceAll("\\s", "")
 
 idea {
 	module {
-		[".idea", ".settings", ".gradle", "build", "gradle", "out", "run", "src/main/kotlin", "src/test/kotlin"].each {
+		[".idea", ".settings", ".gradle", "build", "gradle", "run"].each {
 			excludeDirs += file(it)
 		}
 		
 		["out", "src/main/kotlin", "src/test/kotlin"].each {
-			excludeDirs += file("src/system/" + it)
+			excludeDirs += file(it)
+			excludeDirs += file("modules/system/" + it)
+			excludeDirs += file("modules/util/" + it)
 		}
 		
 		["src/main/kotlin", "src/test/kotlin"].each {
@@ -87,10 +97,9 @@ allprojects {
 	}
 	
 	repositories {
-		maven {
-			name = "kotlinforforge"
-			url = "https://thedarkcolour.github.io/KotlinForForge"
-		}
+		mavenCentral()
+		maven { url = "https://files.minecraftforge.net/maven" }
+		maven { url = "https://thedarkcolour.github.io/KotlinForForge" }
 	}
 	
 	dependencies {
@@ -99,7 +108,7 @@ allprojects {
 		implementation "org.jetbrains.kotlin:kotlin-reflect"
 	}
 	
-	if (file("$buildDir/classes").exists()){
+	if (file("$buildDir/classes").exists()) {
 		file("$buildDir/classes/java/main").mkdirs() // Forge complains when the java folder is missing
 	}
 }
@@ -115,8 +124,7 @@ sourceSets {
 
 minecraft {
 	mappings channel: "snapshot", version: rootProject.mapping_version
-	
-	accessTransformer = file("src/main/resources/META-INF/accesstransformer.cfg")
+	setAccessTransformers(rootProject.access_transformers)
 	
 	runs {
 		client {
@@ -131,6 +139,7 @@ minecraft {
 				hee {
 					source sourceSets.main
 					source project(":system").sourceSets.main
+					source project(":util").sourceSets.main
 				}
 			}
 		}
@@ -147,6 +156,7 @@ minecraft {
 				hee {
 					source sourceSets.main
 					source project(":system").sourceSets.main
+					source project(":util").sourceSets.main
 				}
 			}
 		}
@@ -164,6 +174,7 @@ minecraft {
 				hee {
 					source sourceSets.main
 					source project(":system").sourceSets.main
+					source project(":util").sourceSets.main
 					source project(":datagen").sourceSets.main
 				}
 			}
@@ -179,9 +190,11 @@ dependencies {
 	minecraft "net.minecraftforge:forge:" + mc_version + "-" + forge_version
 	
 	implementation project(":system")
+	implementation project(":util")
 	implementation "thedarkcolour:kotlinforforge:" + kotlin_mod_version
 	
 	testImplementation project(":system")
+	testImplementation project(":util")
 	testImplementation "org.junit.jupiter:junit-jupiter-api:5.3.0-RC1"
 	
 	if (System.getProperty("idea.sync.active") != "true") {
@@ -197,9 +210,11 @@ test {
 jar {
 	archiveName = archivesBaseName + "-" + mc_version + "-v" + version + ".jar"
 	
-	from(project(":system").sourceSets.main.output) {
-		exclude "META-INF"
-		exclude "pack.mcmeta"
+	["system", "util"].each {
+		from(project(":" + it).sourceSets.main.output) {
+			exclude "pack.mcmeta"
+			exclude "META-INF/*.kotlin_module"
+		}
 	}
 	
 	from("./data/gen") {

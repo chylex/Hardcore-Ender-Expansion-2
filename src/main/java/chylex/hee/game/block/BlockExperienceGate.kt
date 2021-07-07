@@ -3,29 +3,29 @@ package chylex.hee.game.block
 import chylex.hee.game.block.entity.TileEntityExperienceGate
 import chylex.hee.game.block.logic.IFullBlockCollisionHandler
 import chylex.hee.game.block.properties.BlockBuilder
-import chylex.hee.game.world.Pos
-import chylex.hee.game.world.allInCenteredBox
-import chylex.hee.game.world.getBlock
-import chylex.hee.game.world.getTile
-import chylex.hee.game.world.offsetWhile
-import chylex.hee.game.world.setBlock
+import chylex.hee.game.world.util.allInCenteredBox
+import chylex.hee.game.world.util.getBlock
+import chylex.hee.game.world.util.getTile
+import chylex.hee.game.world.util.offsetWhile
+import chylex.hee.game.world.util.setBlock
 import chylex.hee.init.ModBlocks
-import chylex.hee.system.migration.EntityItem
-import chylex.hee.system.migration.EntityPlayer
-import chylex.hee.system.migration.EntityXPOrb
-import chylex.hee.system.migration.Facing.EAST
-import chylex.hee.system.migration.Facing.NORTH
-import chylex.hee.system.migration.Facing.SOUTH
-import chylex.hee.system.migration.Facing.WEST
+import chylex.hee.util.math.Pos
 import net.minecraft.block.BlockState
 import net.minecraft.entity.Entity
+import net.minecraft.entity.item.ExperienceOrbEntity
+import net.minecraft.entity.item.ItemEntity
+import net.minecraft.entity.player.PlayerEntity
+import net.minecraft.util.Direction.EAST
+import net.minecraft.util.Direction.NORTH
+import net.minecraft.util.Direction.SOUTH
+import net.minecraft.util.Direction.WEST
 import net.minecraft.util.math.BlockPos
 import net.minecraft.world.IBlockReader
 import net.minecraft.world.World
 
 abstract class BlockExperienceGate(builder: BlockBuilder) : BlockSimple(builder), IFullBlockCollisionHandler {
 	protected open fun findController(world: IBlockReader, pos: BlockPos): TileEntityExperienceGate? {
-		for(offset in pos.allInCenteredBox(1, 0, 1)) {
+		for (offset in pos.allInCenteredBox(1, 0, 1)) {
 			val tile = offset.getTile<TileEntityExperienceGate>(world)
 			
 			if (tile != null) {
@@ -53,10 +53,10 @@ abstract class BlockExperienceGate(builder: BlockBuilder) : BlockSimple(builder)
 	
 	override fun onEntityCollisionAbove(world: World, pos: BlockPos, entity: Entity) {
 		if (!world.isRemote && entity.ticksExisted > 10 && entity.isAlive) {
-			when(entity) {
-				is EntityPlayer -> findController(world, pos)?.onCollision(entity)
-				is EntityItem   -> findController(world, pos)?.onCollision(entity)
-				is EntityXPOrb  -> findController(world, pos)?.onCollision(entity)
+			when (entity) {
+				is PlayerEntity        -> findController(world, pos)?.onCollision(entity)
+				is ItemEntity          -> findController(world, pos)?.onCollision(entity)
+				is ExperienceOrbEntity -> findController(world, pos)?.onCollision(entity)
 			}
 		}
 	}

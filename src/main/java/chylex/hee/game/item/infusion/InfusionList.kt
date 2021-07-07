@@ -1,9 +1,9 @@
 package chylex.hee.game.item.infusion
 
 import chylex.hee.game.item.infusion.Infusion.VIGOR
-import chylex.hee.system.collection.EmptyIterator
-import chylex.hee.system.math.square
-import chylex.hee.system.serialization.NBTEnumList
+import chylex.hee.util.collection.EmptyIterator
+import chylex.hee.util.math.square
+import chylex.hee.util.nbt.NBTEnumList
 import com.google.common.collect.ImmutableSet
 import com.google.common.collect.Sets
 
@@ -48,7 +48,7 @@ class InfusionList private constructor(private val infusions: ImmutableSet<Infus
 	}
 	
 	fun calculateLevelMultiplier(infusion: Infusion, multiplier: Float): Float {
-		return when(determineLevel(infusion)) {
+		return when (determineLevel(infusion)) {
 			2    -> square(multiplier)
 			1    -> multiplier
 			else -> 1F

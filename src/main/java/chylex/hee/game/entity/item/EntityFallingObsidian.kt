@@ -1,31 +1,30 @@
 package chylex.hee.game.entity.item
 
+import chylex.hee.game.entity.damage.Damage
+import chylex.hee.game.entity.damage.IDamageDealer.Companion.TITLE_FALLING_BLOCK
+import chylex.hee.game.entity.damage.IDamageProcessor.Companion.ARMOR_PROTECTION
+import chylex.hee.game.entity.damage.IDamageProcessor.Companion.ENCHANTMENT_PROTECTION
+import chylex.hee.game.entity.damage.IDamageProcessor.Companion.PEACEFUL_EXCLUSION
 import chylex.hee.game.entity.item.EntityFallingBlockHeavy.PlacementResult.FAIL
 import chylex.hee.game.entity.item.EntityFallingBlockHeavy.PlacementResult.RELOCATION
 import chylex.hee.game.entity.item.EntityFallingBlockHeavy.PlacementResult.SUCCESS
-import chylex.hee.game.entity.selectVulnerableEntities
-import chylex.hee.game.mechanics.damage.Damage
-import chylex.hee.game.mechanics.damage.IDamageDealer.Companion.TITLE_FALLING_BLOCK
-import chylex.hee.game.mechanics.damage.IDamageProcessor.Companion.ARMOR_PROTECTION
-import chylex.hee.game.mechanics.damage.IDamageProcessor.Companion.ENCHANTMENT_PROTECTION
-import chylex.hee.game.mechanics.damage.IDamageProcessor.Companion.PEACEFUL_EXCLUSION
-import chylex.hee.game.world.Pos
-import chylex.hee.game.world.allInCenteredBox
-import chylex.hee.game.world.distanceSqTo
-import chylex.hee.game.world.playClient
-import chylex.hee.game.world.totalTime
+import chylex.hee.game.entity.util.selectVulnerableEntities
+import chylex.hee.game.fx.IFxData
+import chylex.hee.game.fx.IFxHandler
+import chylex.hee.game.fx.util.playClient
+import chylex.hee.game.world.util.allInCenteredBox
+import chylex.hee.game.world.util.distanceSqTo
 import chylex.hee.init.ModEntities
 import chylex.hee.init.ModSounds
 import chylex.hee.network.client.PacketClientFX
-import chylex.hee.network.fx.IFxData
-import chylex.hee.network.fx.IFxHandler
-import chylex.hee.system.migration.EntityLivingBase
 import chylex.hee.system.random.nextFloat
-import chylex.hee.system.serialization.readPos
-import chylex.hee.system.serialization.use
-import chylex.hee.system.serialization.writePos
+import chylex.hee.util.buffer.readPos
+import chylex.hee.util.buffer.use
+import chylex.hee.util.buffer.writePos
+import chylex.hee.util.math.Pos
 import net.minecraft.block.BlockState
 import net.minecraft.entity.EntityType
+import net.minecraft.entity.LivingEntity
 import net.minecraft.network.PacketBuffer
 import net.minecraft.util.SoundCategory
 import net.minecraft.util.math.BlockPos
@@ -71,9 +70,9 @@ class EntityFallingObsidian : EntityFallingBlockHeavy {
 		if (!world.isRemote && pos != lastFallPos) {
 			if (pos.y < lastFallPos.y && fallDistance >= 1F) {
 				val damageAmount = 5F * (ln(2F * (1.2F + fallDistance)) - 1F).pow(1.8F)
-				val worldTime = world.totalTime
+				val worldTime = world.gameTime
 				
-				for(entity in world.selectVulnerableEntities.inBox<EntityLivingBase>(boundingBox)) {
+				for (entity in world.selectVulnerableEntities.inBox<LivingEntity>(boundingBox)) {
 					val uuid = entity.uniqueID
 					
 					if (entityDamageTime[uuid]?.takeUnless { worldTime - it > 40 } == null) {

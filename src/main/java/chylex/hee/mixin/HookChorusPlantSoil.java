@@ -7,13 +7,14 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Redirect;
 
 @Mixin(ChorusPlantBlock.class)
-public abstract class HookChorusPlantSoil{
+@SuppressWarnings("MethodMayBeStatic")
+public abstract class HookChorusPlantSoil {
 	@Redirect(
 		method = "makeConnections",
 		at = @At(value = "FIELD", target = "Lnet/minecraft/block/Blocks;END_STONE:Lnet/minecraft/block/Block;"),
 		require = 1
 	)
-	private Block replaceInMakeConnections(){
+	private Block replaceInMakeConnections() {
 		return ModBlocks.HUMUS;
 	}
 	
@@ -22,7 +23,7 @@ public abstract class HookChorusPlantSoil{
 		at = @At(value = "FIELD", target = "Lnet/minecraft/block/Blocks;END_STONE:Lnet/minecraft/block/Block;"),
 		require = 1
 	)
-	private Block replaceInUpdatePostPlacement(){
+	private Block replaceInUpdatePostPlacement() {
 		return ModBlocks.HUMUS;
 	}
 	
@@ -31,7 +32,7 @@ public abstract class HookChorusPlantSoil{
 		at = @At(value = "FIELD", target = "Lnet/minecraft/block/Blocks;END_STONE:Lnet/minecraft/block/Block;"),
 		require = 2
 	)
-	private Block replaceInIsValidPosition(){
+	private Block replaceInIsValidPosition() {
 		return ModBlocks.HUMUS;
 	}
 }

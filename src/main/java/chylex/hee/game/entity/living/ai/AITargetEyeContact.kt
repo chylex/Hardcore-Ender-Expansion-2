@@ -1,20 +1,19 @@
 package chylex.hee.game.entity.living.ai
 
-import chylex.hee.game.entity.lookDirVec
-import chylex.hee.game.entity.lookPosVec
-import chylex.hee.game.world.totalTime
-import chylex.hee.system.math.square
-import chylex.hee.system.math.toRadians
-import chylex.hee.system.migration.EntityCreature
-import chylex.hee.system.migration.EntityLivingBase
+import chylex.hee.game.entity.util.lookDirVec
+import chylex.hee.game.entity.util.lookPosVec
+import chylex.hee.util.math.square
+import chylex.hee.util.math.toRadians
 import it.unimi.dsi.fastutil.objects.Object2LongArrayMap
 import net.minecraft.block.Blocks
+import net.minecraft.entity.CreatureEntity
+import net.minecraft.entity.LivingEntity
 import net.minecraft.inventory.EquipmentSlotType.HEAD
 import kotlin.math.abs
 import kotlin.math.cos
 
-class AITargetEyeContact<T : EntityLivingBase>(
-	entity: EntityCreature,
+class AITargetEyeContact<T : LivingEntity>(
+	entity: CreatureEntity,
 	easilyReachableOnly: Boolean,
 	targetClass: Class<T>,
 	targetPredicate: ((T) -> Boolean)?,
@@ -38,9 +37,9 @@ class AITargetEyeContact<T : EntityLivingBase>(
 		
 		stareStarts.keys.retainAll(foundTargets)
 		
-		val currentTime = entity.world.totalTime
+		val currentTime = entity.world.gameTime
 		
-		for(target in foundTargets) {
+		for (target in foundTargets) {
 			val stareStart = stareStarts.getLong(target)
 			
 			if (stareStart == Long.MIN_VALUE) {

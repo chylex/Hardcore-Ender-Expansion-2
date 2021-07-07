@@ -1,7 +1,7 @@
 package chylex.hee.game.particle.base
 
-import chylex.hee.system.forge.Side
-import chylex.hee.system.forge.Sided
+import chylex.hee.util.forge.Side
+import chylex.hee.util.forge.Sided
 import net.minecraft.client.world.ClientWorld
 import net.minecraft.util.math.vector.Vector3d
 

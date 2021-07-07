@@ -3,8 +3,8 @@ package chylex.hee.game.item
 import chylex.hee.game.item.infusion.IInfusableItem
 import chylex.hee.game.item.infusion.Infusion
 import chylex.hee.game.item.infusion.InfusionTag
-import chylex.hee.system.forge.Side
-import chylex.hee.system.forge.Sided
+import chylex.hee.util.forge.Side
+import chylex.hee.util.forge.Sided
 import net.minecraft.client.util.ITooltipFlag
 import net.minecraft.item.Item
 import net.minecraft.item.ItemStack
@@ -28,7 +28,7 @@ abstract class ItemAbstractInfusable(properties: Properties) : Item(properties),
 			lines.add(TranslationTextComponent("hee.infusions.list.title"))
 			
 			if (InfusionTag.hasAny(stack)) {
-				for(infusion in InfusionTag.getList(stack)) {
+				for (infusion in InfusionTag.getList(stack)) {
 					lines.add(TranslationTextComponent("hee.infusions.list.item", TranslationTextComponent(infusion.translationKey)))
 				}
 			}

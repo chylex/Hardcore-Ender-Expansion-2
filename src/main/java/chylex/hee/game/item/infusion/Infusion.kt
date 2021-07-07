@@ -1,15 +1,15 @@
 package chylex.hee.game.item.infusion
 
-import chylex.hee.game.inventory.nbtOrNull
-import chylex.hee.game.inventory.size
 import chylex.hee.game.item.infusion.Infusion.Colors.Companion.Gray
 import chylex.hee.game.item.infusion.Infusion.Colors.Companion.Hcl
 import chylex.hee.game.item.infusion.Infusion.Colors.Companion.Hue
+import chylex.hee.game.item.util.nbtOrNull
+import chylex.hee.game.item.util.size
 import chylex.hee.init.ModBlocks
 import chylex.hee.init.ModItems
-import chylex.hee.system.color.IntColor
-import chylex.hee.system.color.IntColor.Companion.HCL
-import chylex.hee.system.color.IntColor.Companion.RGB
+import chylex.hee.util.color.HCL
+import chylex.hee.util.color.IntColor
+import chylex.hee.util.color.RGB
 import net.minecraft.block.Blocks
 import net.minecraft.item.Item
 import net.minecraft.item.ItemStack
@@ -21,7 +21,7 @@ enum class Infusion(
 	val translationKey: String,
 	val primaryColor: IntColor,
 	val secondaryColor: IntColor,
-	val targetItems: Array<out Item>
+	val targetItems: Array<out Item>,
 ) {
 	POWER   ("power",    Colors(primary = Hcl( 15, l = 60F), secondary = Gray(144u)),                 Matching(Blocks.TNT, ModBlocks.INFUSED_TNT)),
 	FIRE    ("fire",     Colors(primary = Hue( 35), secondary = Gray(144u)),                          Matching(Blocks.TNT, ModBlocks.INFUSED_TNT)),

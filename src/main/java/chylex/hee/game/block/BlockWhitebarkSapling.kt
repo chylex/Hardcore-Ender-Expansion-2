@@ -2,11 +2,12 @@ package chylex.hee.game.block
 
 import chylex.hee.client.render.block.IBlockLayerCutout
 import chylex.hee.game.block.properties.BlockBuilder
-import chylex.hee.game.block.properties.Property
-import chylex.hee.game.world.FLAG_SKIP_RENDER
-import chylex.hee.game.world.feature.basic.trees.WhitebarkTreeGenerator
-import chylex.hee.game.world.generation.WorldToStructureWorldAdapter
-import chylex.hee.game.world.setState
+import chylex.hee.game.block.util.Property
+import chylex.hee.game.block.util.asVoxelShape
+import chylex.hee.game.world.generation.feature.basic.WhitebarkTreeGenerator
+import chylex.hee.game.world.generation.util.WorldToStructureWorldAdapter
+import chylex.hee.game.world.util.FLAG_SKIP_RENDER
+import chylex.hee.game.world.util.setState
 import chylex.hee.init.ModBlocks
 import net.minecraft.block.Block
 import net.minecraft.block.BlockState

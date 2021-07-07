@@ -1,6 +1,7 @@
 package chylex.hee.init
 
 import chylex.hee.HEE
+import chylex.hee.game.Resource
 import chylex.hee.game.block.BlockAncientCobweb
 import chylex.hee.game.block.BlockBrewingStandCustom
 import chylex.hee.game.block.BlockCauldronWithDragonsBreath
@@ -132,24 +133,23 @@ import chylex.hee.game.item.ItemDeathFlower
 import chylex.hee.game.item.ItemDragonEgg
 import chylex.hee.game.item.ItemInfusedTNT
 import chylex.hee.game.item.ItemShulkerBoxOverride
-import chylex.hee.game.world.feature.basic.trees.types.AutumnTreeGenerator
+import chylex.hee.game.world.generation.feature.basic.AutumnTreeGenerator
 import chylex.hee.init.ModCreativeTabs.OrderedCreativeTab
-import chylex.hee.system.facades.Resource
-import chylex.hee.system.forge.SubscribeAllEvents
-import chylex.hee.system.forge.SubscribeEvent
-import chylex.hee.system.forge.named
-import chylex.hee.system.forge.useVanillaName
-import chylex.hee.system.migration.BlockWall
-import chylex.hee.system.migration.Facing.NORTH
-import chylex.hee.system.migration.Facing.SOUTH
-import chylex.hee.system.migration.ItemBlock
+import chylex.hee.system.named
+import chylex.hee.system.useVanillaName
+import chylex.hee.util.forge.SubscribeAllEvents
+import chylex.hee.util.forge.SubscribeEvent
 import net.minecraft.block.AbstractBlock
 import net.minecraft.block.Block
 import net.minecraft.block.Blocks
+import net.minecraft.block.WallBlock
 import net.minecraft.block.material.MaterialColor
 import net.minecraft.fluid.Fluid
+import net.minecraft.item.BlockItem
 import net.minecraft.item.Item
 import net.minecraft.item.ItemGroup
+import net.minecraft.util.Direction.NORTH
+import net.minecraft.util.Direction.SOUTH
 import net.minecraft.util.math.AxisAlignedBB
 import net.minecraftforge.event.RegistryEvent
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber.Bus.MOD
@@ -160,7 +160,7 @@ object ModBlocks {
 	// Blocks: Building (Uncategorized)
 	
 	@JvmField val ETHEREAL_LANTERN = BlockSimple(buildEtherealLantern) named "ethereal_lantern"
-	@JvmField val STONE_BRICK_WALL = BlockWall(AbstractBlock.Properties.from(Blocks.STONE_BRICKS)) named "stone_brick_wall"
+	@JvmField val STONE_BRICK_WALL = WallBlock(AbstractBlock.Properties.from(Blocks.STONE_BRICKS)) named "stone_brick_wall"
 	@JvmField val INFUSED_GLASS    = BlockInfusedGlass(buildInfusedGlass) named "infused_glass"
 	@JvmField val VANTABLOCK       = BlockSimple(buildVantablock) named "vantablock"
 	@JvmField val ENDIUM_BLOCK     = BlockEndium(buildEndiumBlock) named "endium_block"
@@ -374,10 +374,10 @@ object ModBlocks {
 	private val itemBlockDefaultProps = itemBlockBaseProps
 	private val itemBlockPropsHidden = Item.Properties()
 	
-	private val basicItemBlock = { block: Block -> ItemBlock(block, itemBlockDefaultProps) }
-	private val hiddenItemBlock = { block: Block -> ItemBlock(block, itemBlockPropsHidden) }
+	private val basicItemBlock = { block: Block -> BlockItem(block, itemBlockDefaultProps) }
+	private val hiddenItemBlock = { block: Block -> BlockItem(block, itemBlockPropsHidden) }
 	
-	private fun fuelItemBlock(burnTicks: Int): (Block) -> ItemBlock {
+	private fun fuelItemBlock(burnTicks: Int): (Block) -> BlockItem {
 		return { block -> ItemBlockFuel(block, itemBlockDefaultProps, burnTicks) }
 	}
 	
@@ -468,9 +468,9 @@ object ModBlocks {
 			register(CAULDRON_PURIFIED_ENDER_GOO)
 			register(CAULDRON_DRAGONS_BREATH)
 			
-			register(JAR_O_DUST with { ItemBlock(it, itemBlockBaseProps.maxStackSize(1).setISTER { ModRendering.RENDER_ITEM_JAR_O_DUST }) })
-			register(DARK_CHEST with { ItemBlock(it, itemBlockBaseProps.setISTER { ModRendering.RENDER_ITEM_DARK_CHEST }) })
-			register(LOOT_CHEST with { ItemBlock(it, itemBlockBaseProps.setISTER { ModRendering.RENDER_ITEM_LOOT_CHEST }) })
+			register(JAR_O_DUST with { BlockItem(it, itemBlockBaseProps.maxStackSize(1).setISTER { ModRendering.RENDER_ITEM_JAR_O_DUST }) })
+			register(DARK_CHEST with { BlockItem(it, itemBlockBaseProps.setISTER { ModRendering.RENDER_ITEM_DARK_CHEST }) })
+			register(LOOT_CHEST with { BlockItem(it, itemBlockBaseProps.setISTER { ModRendering.RENDER_ITEM_LOOT_CHEST }) })
 			
 			register(PUZZLE_WALL with basicItemBlock)
 			register(PUZZLE_PLAIN with basicItemBlock)
@@ -552,10 +552,10 @@ object ModBlocks {
 		
 		with(e.registry) {
 			register(BlockEndPortalOverride(buildEndPortalOverride).apply { override(Blocks.END_PORTAL) { null } })
-			register(BlockBrewingStandCustom(buildBrewingStand).apply { override(Blocks.BREWING_STAND) { ItemBlock(it, Item.Properties().group(ItemGroup.BREWING)) } })
+			register(BlockBrewingStandCustom(buildBrewingStand).apply { override(Blocks.BREWING_STAND) { BlockItem(it, Item.Properties().group(ItemGroup.BREWING)) } })
 			register(BlockDragonEggOverride(buildDragonEgg).apply { override(Blocks.DRAGON_EGG) { ItemDragonEgg(it, itemBlockDefaultProps) } })
 			
-			for(block in BlockShulkerBoxOverride.ALL_BLOCKS) {
+			for (block in BlockShulkerBoxOverride.ALL_BLOCKS) {
 				register(BlockShulkerBoxOverride(AbstractBlock.Properties.from(block), block.color).apply {
 					override(block) { ItemShulkerBoxOverride(it, Item.Properties().maxStackSize(1).group(ItemGroup.DECORATIONS)) }
 				})
@@ -575,14 +575,14 @@ object ModBlocks {
 	
 	// Utilities
 	
-	private val temporaryItemBlocks = mutableListOf<ItemBlock>()
+	private val temporaryItemBlocks = mutableListOf<BlockItem>()
 	
-	private inline fun Block.override(vanillaBlock: Block, itemBlockConstructor: ((Block) -> ItemBlock?)) {
+	private inline fun Block.override(vanillaBlock: Block, itemBlockConstructor: ((Block) -> BlockItem?)) {
 		this.useVanillaName(vanillaBlock)
 		itemBlockConstructor(this)?.let { with(it) }
 	}
 	
-	private infix fun Block.with(itemBlock: ItemBlock) = apply {
+	private infix fun Block.with(itemBlock: BlockItem) = apply {
 		if (Resource.isVanilla(this.registryName!!)) {
 			itemBlock.useVanillaName(this)
 		}
@@ -594,7 +594,7 @@ object ModBlocks {
 		(itemBlock.group as? OrderedCreativeTab)?.registerOrder(itemBlock)
 	}
 	
-	private infix fun <T : Block> T.with(itemBlockConstructor: (T) -> ItemBlock): Block {
+	private infix fun <T : Block> T.with(itemBlockConstructor: (T) -> BlockItem): Block {
 		return with(itemBlockConstructor(this))
 	}
 }

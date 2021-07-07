@@ -1,34 +1,34 @@
 package chylex.hee.game.item
 
-import chylex.hee.game.entity.posVec
 import chylex.hee.game.entity.projectile.EntityProjectileExperienceBottle
-import chylex.hee.game.inventory.heeTag
-import chylex.hee.game.inventory.heeTagOrNull
-import chylex.hee.game.inventory.size
-import chylex.hee.game.world.playServer
-import chylex.hee.system.facades.Stats
-import chylex.hee.system.forge.Side
-import chylex.hee.system.forge.Sided
-import chylex.hee.system.migration.ActionResult.SUCCESS
-import chylex.hee.system.migration.EntityPlayer
-import chylex.hee.system.migration.ItemExpBottle
-import chylex.hee.system.migration.Sounds
+import chylex.hee.game.entity.util.posVec
+import chylex.hee.game.fx.util.playServer
+import chylex.hee.game.item.util.size
+import chylex.hee.system.heeTag
+import chylex.hee.system.heeTagOrNull
 import chylex.hee.system.random.nextFloat
+import chylex.hee.util.forge.Side
+import chylex.hee.util.forge.Sided
 import net.minecraft.client.util.ITooltipFlag
+import net.minecraft.entity.player.PlayerEntity
+import net.minecraft.item.ExperienceBottleItem
 import net.minecraft.item.ItemGroup
 import net.minecraft.item.ItemStack
 import net.minecraft.item.Items
 import net.minecraft.item.Rarity
+import net.minecraft.stats.Stats
 import net.minecraft.util.ActionResult
+import net.minecraft.util.ActionResultType.SUCCESS
 import net.minecraft.util.Hand
 import net.minecraft.util.NonNullList
 import net.minecraft.util.SoundCategory
+import net.minecraft.util.SoundEvents
 import net.minecraft.util.text.ITextComponent
 import net.minecraft.util.text.TranslationTextComponent
 import net.minecraft.world.World
 import kotlin.math.min
 
-class ItemExperienceBottleCustom(builder: Properties) : ItemExpBottle(builder) {
+class ItemExperienceBottleCustom(builder: Properties) : ExperienceBottleItem(builder) {
 	companion object {
 		private const val EXPERIENCE_TAG = "Experience"
 		
@@ -56,7 +56,7 @@ class ItemExperienceBottleCustom(builder: Properties) : ItemExpBottle(builder) {
 		val stacks = mutableListOf<ItemStack>()
 		var remaining = experience
 		
-		while(remaining > 0) {
+		while (remaining > 0) {
 			val xp = min(remaining, MAX_EXPERIENCE)
 			
 			remaining -= xp
@@ -92,7 +92,7 @@ class ItemExperienceBottleCustom(builder: Properties) : ItemExpBottle(builder) {
 		return Rarity.UNCOMMON
 	}
 	
-	override fun onItemRightClick(world: World, player: EntityPlayer, hand: Hand): ActionResult<ItemStack> {
+	override fun onItemRightClick(world: World, player: PlayerEntity, hand: Hand): ActionResult<ItemStack> {
 		val heldItem = player.getHeldItem(hand)
 		val originalItem = heldItem.copy()
 		
@@ -102,10 +102,10 @@ class ItemExperienceBottleCustom(builder: Properties) : ItemExpBottle(builder) {
 		
 		if (!world.isRemote) {
 			world.addEntity(EntityProjectileExperienceBottle(player, originalItem))
-			Sounds.ENTITY_EXPERIENCE_BOTTLE_THROW.playServer(world, player.posVec, SoundCategory.NEUTRAL, volume = 0.5F, pitch = 0.4F / random.nextFloat(0.8F, 1.2F))
+			SoundEvents.ENTITY_EXPERIENCE_BOTTLE_THROW.playServer(world, player.posVec, SoundCategory.NEUTRAL, volume = 0.5F, pitch = 0.4F / random.nextFloat(0.8F, 1.2F))
 		}
 		
-		player.addStat(Stats.useItem(this))
+		player.addStat(Stats.ITEM_USED[this])
 		
 		return ActionResult(SUCCESS, heldItem)
 	}

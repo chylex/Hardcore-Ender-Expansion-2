@@ -10,12 +10,13 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 import java.util.function.Consumer;
 
 @Mixin(PlayerInventory.class)
-public abstract class HookPlayerInventoryArmorBreaking{
+@SuppressWarnings("MethodMayBeStatic")
+public abstract class HookPlayerInventoryArmorBreaking {
 	@Redirect(
 		method = "func_234563_a_", // RENAME damageArmor
 		at = @At(value = "INVOKE", target = "Lnet/minecraft/item/ItemStack;damageItem(ILnet/minecraft/entity/LivingEntity;Ljava/util/function/Consumer;)V")
 	)
-	public void damageItem(final ItemStack stack, final int amount, final LivingEntity entity, final Consumer<LivingEntity> onBroken){
+	public void damageItem(final ItemStack stack, final int amount, final LivingEntity entity, final Consumer<LivingEntity> onBroken) {
 		ModItems.RING_OF_PRESERVATION.handleArmorDamage(entity, stack, amount, onBroken);
 	}
 }

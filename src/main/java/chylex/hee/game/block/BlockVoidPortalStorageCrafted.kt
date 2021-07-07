@@ -2,8 +2,8 @@ package chylex.hee.game.block
 
 import chylex.hee.game.block.properties.BlockBuilder
 import chylex.hee.init.ModBlocks
-import chylex.hee.system.migration.EntityPlayer
 import net.minecraft.block.BlockState
+import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.tileentity.TileEntity
 import net.minecraft.util.ActionResultType
 import net.minecraft.util.Hand
@@ -26,7 +26,7 @@ class BlockVoidPortalStorageCrafted(builder: BlockBuilder, aabb: AxisAlignedBB) 
 		BlockAbstractPortal.spawnInnerBlocks(world, pos, ModBlocks.VOID_PORTAL_FRAME_CRAFTED, ModBlocks.VOID_PORTAL_INNER, minSize = 3)
 	}
 	
-	override fun onBlockActivated(state: BlockState, world: World, pos: BlockPos, player: EntityPlayer, hand: Hand, hit: BlockRayTraceResult): ActionResultType {
+	override fun onBlockActivated(state: BlockState, world: World, pos: BlockPos, player: PlayerEntity, hand: Hand, hit: BlockRayTraceResult): ActionResultType {
 		@Suppress("DEPRECATION")
 		return ModBlocks.VOID_PORTAL_STORAGE.onBlockActivated(state, world, pos, player, hand, hit)
 	}

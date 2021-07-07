@@ -1,7 +1,6 @@
 package chylex.hee.game.entity.living
 
-import chylex.hee.game.entity.EntityData
-import chylex.hee.game.entity.getAttributeInstance
+import chylex.hee.game.Resource
 import chylex.hee.game.entity.living.ai.AIToggle
 import chylex.hee.game.entity.living.ai.AIToggle.Companion.addGoal
 import chylex.hee.game.entity.living.ai.AIWatchDyingLeader
@@ -16,42 +15,40 @@ import chylex.hee.game.entity.living.controller.EntityBodyHeadOnly
 import chylex.hee.game.entity.living.controller.EntityLookWhileJumping
 import chylex.hee.game.entity.living.controller.EntityMoveJumping
 import chylex.hee.game.entity.living.path.PathNavigateGroundPreferBeeLine
-import chylex.hee.game.entity.posVec
-import chylex.hee.game.entity.selectEntities
-import chylex.hee.game.entity.selectExistingEntities
-import chylex.hee.game.inventory.isNotEmpty
-import chylex.hee.game.world.Pos
-import chylex.hee.game.world.blocksMovement
+import chylex.hee.game.entity.util.EntityData
+import chylex.hee.game.entity.util.getAttributeInstance
+import chylex.hee.game.entity.util.posVec
+import chylex.hee.game.entity.util.selectEntities
+import chylex.hee.game.entity.util.selectExistingEntities
+import chylex.hee.game.item.util.isNotEmpty
+import chylex.hee.game.world.util.blocksMovement
 import chylex.hee.init.ModEntities
 import chylex.hee.init.ModItems
-import chylex.hee.network.data.ColorDataSerializer
-import chylex.hee.system.color.IntColor
-import chylex.hee.system.color.IntColor.Companion.HCL
-import chylex.hee.system.color.IntColor.Companion.RGB
-import chylex.hee.system.facades.Resource
-import chylex.hee.system.math.LerpedFloat
-import chylex.hee.system.math.Vec3
-import chylex.hee.system.math.addY
-import chylex.hee.system.math.ceilToInt
-import chylex.hee.system.math.offsetTowards
-import chylex.hee.system.math.scale
-import chylex.hee.system.math.square
-import chylex.hee.system.math.withY
-import chylex.hee.system.migration.EntityCreature
-import chylex.hee.system.migration.EntityPlayer
-import chylex.hee.system.migration.ItemSword
-import chylex.hee.system.migration.Sounds
+import chylex.hee.system.heeTag
 import chylex.hee.system.random.nextFloat
 import chylex.hee.system.random.nextInt
 import chylex.hee.system.random.nextItem
 import chylex.hee.system.random.nextVector2
-import chylex.hee.system.serialization.TagCompound
-import chylex.hee.system.serialization.getFloatOrNull
-import chylex.hee.system.serialization.getIntegerOrNull
-import chylex.hee.system.serialization.getStack
-import chylex.hee.system.serialization.heeTag
-import chylex.hee.system.serialization.putStack
-import chylex.hee.system.serialization.use
+import chylex.hee.util.color.ColorDataSerializer
+import chylex.hee.util.color.HCL
+import chylex.hee.util.color.IntColor
+import chylex.hee.util.color.RGB
+import chylex.hee.util.math.LerpedFloat
+import chylex.hee.util.math.Pos
+import chylex.hee.util.math.Vec3
+import chylex.hee.util.math.addY
+import chylex.hee.util.math.ceilToInt
+import chylex.hee.util.math.lerp
+import chylex.hee.util.math.scale
+import chylex.hee.util.math.square
+import chylex.hee.util.math.withY
+import chylex.hee.util.nbt.TagCompound
+import chylex.hee.util.nbt.getFloatOrNull
+import chylex.hee.util.nbt.getIntegerOrNull
+import chylex.hee.util.nbt.getStack
+import chylex.hee.util.nbt.putStack
+import chylex.hee.util.nbt.use
+import net.minecraft.entity.CreatureEntity
 import net.minecraft.entity.Entity
 import net.minecraft.entity.EntitySize
 import net.minecraft.entity.EntityType
@@ -62,7 +59,9 @@ import net.minecraft.entity.SpawnReason.SPAWN_EGG
 import net.minecraft.entity.ai.attributes.Attributes.FOLLOW_RANGE
 import net.minecraft.entity.ai.attributes.Attributes.MAX_HEALTH
 import net.minecraft.entity.ai.controller.BodyController
+import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.item.ItemStack
+import net.minecraft.item.SwordItem
 import net.minecraft.item.UseAction.SPEAR
 import net.minecraft.nbt.CompoundNBT
 import net.minecraft.network.IPacket
@@ -75,6 +74,7 @@ import net.minecraft.util.Hand.MAIN_HAND
 import net.minecraft.util.Hand.OFF_HAND
 import net.minecraft.util.ResourceLocation
 import net.minecraft.util.SoundEvent
+import net.minecraft.util.SoundEvents
 import net.minecraft.world.DifficultyInstance
 import net.minecraft.world.IServerWorld
 import net.minecraft.world.World
@@ -82,7 +82,7 @@ import net.minecraftforge.fml.network.NetworkHooks
 import java.util.Random
 import kotlin.math.abs
 
-class EntityMobBlobby(type: EntityType<out EntityCreature>, world: World) : EntityCreature(type, world) {
+class EntityMobBlobby(type: EntityType<out CreatureEntity>, world: World) : CreatureEntity(type, world) {
 	@Suppress("unused")
 	constructor(world: World) : this(ModEntities.BLOBBY, world)
 	
@@ -125,7 +125,7 @@ class EntityMobBlobby(type: EntityType<out EntityCreature>, world: World) : Enti
 			
 			private val jumpDelay = genRand.nextInt(0, 5).let { (genRand.nextInt(8, 10) + it)..(genRand.nextInt(11, 14) + it) }
 			private val jumpSpeedMp = 1F + (0.025 + (genRand.nextGaussian() * 0.2)).coerceIn(-0.2, 0.3).toFloat()
-			private val jumpHeightMp = offsetTowards(jumpSpeedMp, 1F, 0.4F) + abs(genRand.nextGaussian() * 0.3).coerceAtMost(0.6).toFloat()
+			private val jumpHeightMp = lerp(jumpSpeedMp, 1F, 0.4F) + abs(genRand.nextGaussian() * 0.3).coerceAtMost(0.6).toFloat()
 			
 			fun setupLeader(blobby: EntityMobBlobby) {
 				blobby.groupId = groupId
@@ -261,18 +261,18 @@ class EntityMobBlobby(type: EntityType<out EntityCreature>, world: World) : Enti
 		val newGroupLimit = rand.nextInt(1, rand.nextInt(1, originalGroup.size))
 		val newGroups = Array(newGroupLimit) { mutableListOf<EntityMobBlobby>() }
 		
-		for(peer in originalGroup) {
+		for (peer in originalGroup) {
 			rand.nextItem(newGroups).add(peer)
 		}
 		
-		for(group in newGroups) {
+		for (group in newGroups) {
 			if (group.isEmpty()) {
 				continue
 			}
 			
 			val newId = rand.nextLong()
 			
-			for(blobby in group) {
+			for (blobby in group) {
 				blobby.groupId = newId
 			}
 			
@@ -300,16 +300,16 @@ class EntityMobBlobby(type: EntityType<out EntityCreature>, world: World) : Enti
 				squishTarget = -0.15F
 			}
 			
-			renderSquishClient.update(offsetTowards(renderSquishClient.currentValue, squishTarget, 0.6F))
+			renderSquishClient.update(lerp(renderSquishClient.currentValue, squishTarget, 0.6F))
 			squishTarget *= 0.75F
 		}
 		else {
 			itemPickupHandler.update()
 			
-			if (ticksExisted % 20 == 0 && heldItem.let { it.item is ItemSword || it.useAction == SPEAR }) {
+			if (ticksExisted % 20 == 0 && heldItem.let { it.item is SwordItem || it.useAction == SPEAR }) {
 				val dangerousItemName = heldItem.item.registryName!!.toString()
 				
-				for(blobby in world.selectEntities.inRange<EntityMobBlobby>(posVec, 12.0)) {
+				for (blobby in world.selectEntities.inRange<EntityMobBlobby>(posVec, 12.0)) {
 					if (blobby === this || blobby.canEntityBeSeen(this)) {
 						blobby.itemPickupHandler.banItem(dangerousItemName)
 					}
@@ -429,7 +429,7 @@ class EntityMobBlobby(type: EntityType<out EntityCreature>, world: World) : Enti
 		if (reason == SPAWN_EGG) {
 			val probableSpawningPlayer = world
 				.selectExistingEntities
-				.inRange<EntityPlayer>(posVec, 10.0)
+				.inRange<PlayerEntity>(posVec, 10.0)
 				.filter { it.getHeldItem(MAIN_HAND).item === ModItems.SPAWN_BLOBBY || it.getHeldItem(OFF_HAND).item === ModItems.SPAWN_BLOBBY }
 				.minByOrNull(::getDistanceSq)
 			
@@ -457,7 +457,7 @@ class EntityMobBlobby(type: EntityType<out EntityCreature>, world: World) : Enti
 		return LOOT_TABLE
 	}
 	
-	override fun getExperiencePoints(player: EntityPlayer): Int {
+	override fun getExperiencePoints(player: PlayerEntity): Int {
 		return rand.nextInt(0, experienceValue)
 	}
 	
@@ -474,11 +474,11 @@ class EntityMobBlobby(type: EntityType<out EntityCreature>, world: World) : Enti
 	}
 	
 	override fun getHurtSound(source: DamageSource): SoundEvent {
-		return Sounds.ENTITY_SLIME_HURT_SMALL
+		return SoundEvents.ENTITY_SLIME_HURT_SMALL
 	}
 	
 	override fun getDeathSound(): SoundEvent {
-		return Sounds.ENTITY_SLIME_DEATH_SMALL
+		return SoundEvents.ENTITY_SLIME_DEATH_SMALL
 	}
 	
 	override fun isInRangeToRenderDist(distanceSq: Double): Boolean {

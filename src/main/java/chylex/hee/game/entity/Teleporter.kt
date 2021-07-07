@@ -1,48 +1,49 @@
 package chylex.hee.game.entity
 
-import chylex.hee.HEE
+import chylex.hee.client.util.MC
 import chylex.hee.game.entity.Teleporter.FxRange.Extended
 import chylex.hee.game.entity.Teleporter.FxRange.Normal
 import chylex.hee.game.entity.Teleporter.FxRange.Silent
-import chylex.hee.game.mechanics.damage.Damage
-import chylex.hee.game.mechanics.damage.IDamageDealer.Companion.TITLE_FALL
-import chylex.hee.game.mechanics.damage.IDamageProcessor.Companion.MAGIC_TYPE
+import chylex.hee.game.entity.damage.Damage
+import chylex.hee.game.entity.damage.IDamageDealer.Companion.TITLE_FALL
+import chylex.hee.game.entity.damage.IDamageProcessor.Companion.MAGIC_TYPE
+import chylex.hee.game.entity.util.posVec
+import chylex.hee.game.fx.IFxData
+import chylex.hee.game.fx.IFxHandler
+import chylex.hee.game.fx.util.playClient
 import chylex.hee.game.mechanics.instability.Instability
 import chylex.hee.game.particle.ParticleTeleport
 import chylex.hee.game.particle.spawner.ParticleSpawnerCustom
 import chylex.hee.game.particle.spawner.properties.IOffset.InBox
 import chylex.hee.game.particle.spawner.properties.IShape.Line
-import chylex.hee.game.world.Pos
-import chylex.hee.game.world.blocksMovement
-import chylex.hee.game.world.center
-import chylex.hee.game.world.playClient
+import chylex.hee.game.world.util.blocksMovement
 import chylex.hee.init.ModSounds
 import chylex.hee.network.client.PacketClientFX
 import chylex.hee.network.client.PacketClientMoveYourAss
 import chylex.hee.network.client.PacketClientRotateInstantly
 import chylex.hee.network.client.PacketClientTeleportInstantly
-import chylex.hee.network.fx.IFxData
-import chylex.hee.network.fx.IFxHandler
-import chylex.hee.system.math.Vec
-import chylex.hee.system.math.addY
-import chylex.hee.system.math.directionTowards
-import chylex.hee.system.math.floorToInt
-import chylex.hee.system.math.offsetTowards
-import chylex.hee.system.math.subtractY
-import chylex.hee.system.migration.EntityCreature
-import chylex.hee.system.migration.EntityEnderman
-import chylex.hee.system.migration.EntityLivingBase
-import chylex.hee.system.migration.EntityPlayer
-import chylex.hee.system.migration.EntityPlayerMP
-import chylex.hee.system.migration.Sounds
 import chylex.hee.system.random.nextFloat
 import chylex.hee.system.random.nextVector
-import chylex.hee.system.serialization.readCompactVec
-import chylex.hee.system.serialization.use
-import chylex.hee.system.serialization.writeCompactVec
+import chylex.hee.util.buffer.readCompactVec
+import chylex.hee.util.buffer.use
+import chylex.hee.util.buffer.writeCompactVec
+import chylex.hee.util.math.Pos
+import chylex.hee.util.math.Vec
+import chylex.hee.util.math.addY
+import chylex.hee.util.math.center
+import chylex.hee.util.math.directionTowards
+import chylex.hee.util.math.floorToInt
+import chylex.hee.util.math.lerpTowards
+import chylex.hee.util.math.subtractY
+import net.minecraft.entity.CreatureEntity
+import net.minecraft.entity.LivingEntity
+import net.minecraft.entity.monster.EndermanEntity
+import net.minecraft.entity.player.PlayerEntity
+import net.minecraft.entity.player.ServerPlayerEntity
 import net.minecraft.network.PacketBuffer
 import net.minecraft.util.SoundCategory
 import net.minecraft.util.SoundEvent
+import net.minecraft.util.SoundEvents
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.vector.Vector3d
 import net.minecraft.world.World
@@ -90,7 +91,7 @@ class Teleporter(
 			}
 			
 			fun send(world: World) {
-				val middlePoint = startPoint.offsetTowards(endPoint, 0.5)
+				val middlePoint = startPoint.lerpTowards(endPoint, 0.5)
 				val traveledDistance = startPoint.distanceTo(endPoint)
 				
 				PacketClientFX(FX_TELEPORT, this).sendToAllAround(world, middlePoint, (traveledDistance * 0.5) + 32F + extraRange)
@@ -99,7 +100,7 @@ class Teleporter(
 		
 		val FX_TELEPORT = object : IFxHandler<FxTeleportData> {
 			override fun handle(buffer: PacketBuffer, world: World, rand: Random) = buffer.use {
-				val player = HEE.proxy.getClientSidePlayer() ?: return
+				val player = MC.player ?: return
 				val playerPos = player.posVec
 				
 				val startPoint = readCompactVec()
@@ -147,7 +148,7 @@ class Teleporter(
 	
 	// Target
 	
-	fun toLocation(entity: EntityLivingBase, position: Vector3d, soundCategory: SoundCategory = entity.soundCategory): Boolean {
+	fun toLocation(entity: LivingEntity, position: Vector3d, soundCategory: SoundCategory = entity.soundCategory): Boolean {
 		val event = EnderTeleportEvent(entity, position.x, position.y, position.z, damageDealt)
 		
 		if (postEvent && MinecraftForge.EVENT_BUS.post(event)) {
@@ -157,12 +158,12 @@ class Teleporter(
 		if (entity.isPassenger) {
 			entity.stopRiding()
 			
-			if (entity is EntityPlayerMP) {
+			if (entity is ServerPlayerEntity) {
 				PacketClientMoveYourAss(position).sendToPlayer(entity) // dismounting client ignores any attempts at teleporting
 			}
 		}
 		
-		if (entity.isSleeping && entity is EntityPlayer) {
+		if (entity.isSleeping && entity is PlayerEntity) {
 			entity.stopSleepInBed(true, true)
 		}
 		
@@ -174,14 +175,14 @@ class Teleporter(
 		entity.setPositionAndUpdate(newPos.x, newPos.y, newPos.z)
 		
 		if (effectRange != Silent) {
-			val extraRange = when(effectRange) {
+			val extraRange = when (effectRange) {
 				is Extended -> effectRange.extraRange
 				else        -> 0F
 			}
 			
-			val soundEvent = when(entity) {
-				is EntityPlayer   -> ModSounds.ENTITY_PLAYER_TELEPORT
-				is EntityEnderman -> Sounds.ENTITY_ENDERMAN_TELEPORT
+			val soundEvent = when (entity) {
+				is PlayerEntity   -> ModSounds.ENTITY_PLAYER_TELEPORT
+				is EndermanEntity -> SoundEvents.ENTITY_ENDERMAN_TELEPORT
 				else              -> ModSounds.ENTITY_GENERIC_TELEPORT
 			}
 			
@@ -197,7 +198,7 @@ class Teleporter(
 			DAMAGE.dealTo(damageDealt, entity, damageTitle)
 		}
 		
-		if (entity is EntityCreature) {
+		if (entity is CreatureEntity) {
 			if (resetPathfinding) {
 				entity.navigator.clearPath()
 			}
@@ -224,7 +225,7 @@ class Teleporter(
 		return true
 	}
 	
-	fun nearLocation(entity: EntityLivingBase, rand: Random, position: Vector3d, distance: ClosedFloatingPointRange<Double>, attempts: Int, soundCategory: SoundCategory = entity.soundCategory): Boolean {
+	fun nearLocation(entity: LivingEntity, rand: Random, position: Vector3d, distance: ClosedFloatingPointRange<Double>, attempts: Int, soundCategory: SoundCategory = entity.soundCategory): Boolean {
 		val world = entity.world
 		val originalPos = entity.posVec
 		val originalBox = entity.boundingBox
@@ -241,11 +242,11 @@ class Teleporter(
 		return false
 	}
 	
-	fun nearLocation(entity: EntityLivingBase, position: Vector3d, distance: ClosedFloatingPointRange<Double>, attempts: Int, soundCategory: SoundCategory = entity.soundCategory): Boolean {
+	fun nearLocation(entity: LivingEntity, position: Vector3d, distance: ClosedFloatingPointRange<Double>, attempts: Int, soundCategory: SoundCategory = entity.soundCategory): Boolean {
 		return nearLocation(entity, entity.rng, position, distance, attempts, soundCategory)
 	}
 	
-	fun toBlock(entity: EntityLivingBase, position: BlockPos, soundCategory: SoundCategory = entity.soundCategory): Boolean {
+	fun toBlock(entity: LivingEntity, position: BlockPos, soundCategory: SoundCategory = entity.soundCategory): Boolean {
 		return toLocation(entity, position.center.subtractY(0.49), soundCategory)
 	}
 }

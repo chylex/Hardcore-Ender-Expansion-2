@@ -2,9 +2,9 @@ package chylex.hee.game.block
 
 import chylex.hee.game.block.entity.base.TileEntityBaseTable
 import chylex.hee.game.block.properties.BlockBuilder
-import chylex.hee.game.world.getTile
-import chylex.hee.system.migration.EntityPlayer
+import chylex.hee.game.world.util.getTile
 import net.minecraft.block.BlockState
+import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.tileentity.TileEntity
 import net.minecraft.util.math.BlockPos
 import net.minecraft.world.IBlockReader
@@ -27,7 +27,7 @@ abstract class BlockAbstractTableTile<T : TileEntityBaseTable>(builder: BlockBui
 		return createTileEntity()
 	}
 	
-	override fun onBlockHarvested(world: World, pos: BlockPos, state: BlockState, player: EntityPlayer) {
+	override fun onBlockHarvested(world: World, pos: BlockPos, state: BlockState, player: PlayerEntity) {
 		if (!world.isRemote && player.isCreative) {
 			pos.getTile<TileEntityBaseTable>(world)?.onTableDestroyed(dropTableLink = false)
 		}

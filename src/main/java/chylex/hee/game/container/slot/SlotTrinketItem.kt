@@ -1,8 +1,8 @@
 package chylex.hee.game.container.slot
 
+import chylex.hee.game.Resource
 import chylex.hee.game.mechanics.trinket.ITrinketItem
 import chylex.hee.init.ModAtlases
-import chylex.hee.system.facades.Resource
 import net.minecraft.item.ItemStack
 import net.minecraftforge.items.IItemHandler
 import net.minecraftforge.items.SlotItemHandler

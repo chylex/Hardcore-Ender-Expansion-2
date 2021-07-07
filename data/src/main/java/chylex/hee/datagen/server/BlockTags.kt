@@ -3,13 +3,13 @@ package chylex.hee.datagen.server
 import chylex.hee.datagen.server.util.add
 import chylex.hee.game.block.BlockWhitebarkSapling
 import chylex.hee.init.ModBlocks
-import chylex.hee.system.forge.getRegistryEntries
-import chylex.hee.system.migration.BlockFlowerPot
-import chylex.hee.system.migration.BlockLeaves
-import chylex.hee.system.migration.BlockSlab
-import chylex.hee.system.migration.BlockStairs
-import chylex.hee.system.migration.BlockWall
+import chylex.hee.system.getRegistryEntries
 import net.minecraft.block.Block
+import net.minecraft.block.FlowerPotBlock
+import net.minecraft.block.LeavesBlock
+import net.minecraft.block.SlabBlock
+import net.minecraft.block.StairsBlock
+import net.minecraft.block.WallBlock
 import net.minecraft.data.BlockTagsProvider
 import net.minecraft.data.DataGenerator
 import net.minecraft.tags.BlockTags
@@ -21,16 +21,16 @@ class BlockTags(generator: DataGenerator, modId: String, existingFileHelper: Exi
 	
 	override fun registerTags() {
 		getOrCreateBuilder(BlockTags.BAMBOO_PLANTABLE_ON).add(ModBlocks.HUMUS)
-		getOrCreateBuilder(BlockTags.FLOWER_POTS).add(blocks.filterIsInstance<BlockFlowerPot>())
+		getOrCreateBuilder(BlockTags.FLOWER_POTS).add(blocks.filterIsInstance<FlowerPotBlock>())
 		getOrCreateBuilder(BlockTags.IMPERMEABLE).add(ModBlocks.INFUSED_GLASS)
-		getOrCreateBuilder(BlockTags.LEAVES).add(blocks.filterIsInstance<BlockLeaves>())
+		getOrCreateBuilder(BlockTags.LEAVES).add(blocks.filterIsInstance<LeavesBlock>())
 		getOrCreateBuilder(BlockTags.LOGS).add(ModBlocks.WHITEBARK_LOG, ModBlocks.WHITEBARK)
 		getOrCreateBuilder(BlockTags.PORTALS).add(ModBlocks.END_PORTAL_INNER, ModBlocks.VOID_PORTAL_INNER)
 		getOrCreateBuilder(BlockTags.PLANKS).add(ModBlocks.WHITEBARK_PLANKS)
 		getOrCreateBuilder(BlockTags.SAPLINGS).add(blocks.filterIsInstance<BlockWhitebarkSapling>())
-		getOrCreateBuilder(BlockTags.SLABS).add(blocks.filterIsInstance<BlockSlab>())
-		getOrCreateBuilder(BlockTags.STAIRS).add(blocks.filterIsInstance<BlockStairs>())
-		getOrCreateBuilder(BlockTags.WALLS).add(blocks.filterIsInstance<BlockWall>())
+		getOrCreateBuilder(BlockTags.SLABS).add(blocks.filterIsInstance<SlabBlock>())
+		getOrCreateBuilder(BlockTags.STAIRS).add(blocks.filterIsInstance<StairsBlock>())
+		getOrCreateBuilder(BlockTags.WALLS).add(blocks.filterIsInstance<WallBlock>())
 		getOrCreateBuilder(BlockTags.WOODEN_SLABS).add(ModBlocks.WHITEBARK_SLAB)
 		getOrCreateBuilder(BlockTags.WOODEN_STAIRS).add(ModBlocks.WHITEBARK_STAIRS)
 		

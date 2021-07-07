@@ -14,16 +14,16 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(Block.class)
-public abstract class HookBlockDrops{
+public abstract class HookBlockDrops {
 	@Inject(
 		method = "spawnDrops(Lnet/minecraft/block/BlockState;Lnet/minecraft/world/World;Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/tileentity/TileEntity;Lnet/minecraft/entity/Entity;Lnet/minecraft/item/ItemStack;)V",
 		at = @At("HEAD"),
 		cancellable = true
 	)
-	private static void beforeCheckHarvest(final BlockState state, final World world, final BlockPos pos, final TileEntity tileEntity, final Entity entity, final ItemStack stack, final CallbackInfo ci){
+	private static void beforeCheckHarvest(final BlockState state, final World world, final BlockPos pos, final TileEntity tileEntity, final Entity entity, final ItemStack stack, final CallbackInfo ci) {
 		final Item item = stack.getItem();
 		
-		if (item instanceof IBlockHarvestDropsOverride){
+		if (item instanceof IBlockHarvestDropsOverride) {
 			((IBlockHarvestDropsOverride)item).onHarvestDrops(state, world, pos);
 			ci.cancel();
 		}

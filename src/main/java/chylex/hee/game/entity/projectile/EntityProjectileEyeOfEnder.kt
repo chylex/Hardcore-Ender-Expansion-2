@@ -1,10 +1,11 @@
 package chylex.hee.game.entity.projectile
 
-import chylex.hee.game.entity.lookDirVec
-import chylex.hee.game.entity.lookPosVec
-import chylex.hee.game.entity.motionX
-import chylex.hee.game.entity.motionZ
-import chylex.hee.game.entity.posVec
+import chylex.hee.game.entity.util.lookDirVec
+import chylex.hee.game.entity.util.lookPosVec
+import chylex.hee.game.entity.util.motionX
+import chylex.hee.game.entity.util.motionZ
+import chylex.hee.game.entity.util.posVec
+import chylex.hee.game.fx.util.playClient
 import chylex.hee.game.particle.ParticleGlitter
 import chylex.hee.game.particle.spawner.ParticleSpawnerCustom
 import chylex.hee.game.particle.spawner.ParticleSpawnerVanilla
@@ -12,49 +13,49 @@ import chylex.hee.game.particle.spawner.properties.IOffset.Constant
 import chylex.hee.game.particle.spawner.properties.IOffset.InBox
 import chylex.hee.game.particle.spawner.properties.IOffset.InSphere
 import chylex.hee.game.particle.spawner.properties.IShape.Point
-import chylex.hee.game.world.Pos
-import chylex.hee.game.world.getState
-import chylex.hee.game.world.offsetUntil
-import chylex.hee.game.world.playClient
+import chylex.hee.game.world.util.getState
+import chylex.hee.game.world.util.offsetUntil
 import chylex.hee.init.ModEntities
-import chylex.hee.system.color.IntColor
-import chylex.hee.system.color.IntColor.Companion.RGB
-import chylex.hee.system.forge.Side
-import chylex.hee.system.forge.Sided
-import chylex.hee.system.math.LerpedDouble
-import chylex.hee.system.math.Vec3
-import chylex.hee.system.math.addY
-import chylex.hee.system.math.component1
-import chylex.hee.system.math.component2
-import chylex.hee.system.math.component3
-import chylex.hee.system.math.offsetTowards
-import chylex.hee.system.math.scale
-import chylex.hee.system.math.square
-import chylex.hee.system.math.subtractY
-import chylex.hee.system.migration.BlockFlowingFluid
-import chylex.hee.system.migration.EntityItem
-import chylex.hee.system.migration.EntityLivingBase
-import chylex.hee.system.migration.Facing.DOWN
-import chylex.hee.system.migration.Facing.UP
-import chylex.hee.system.migration.Sounds
-import chylex.hee.system.random.IRandomColor
+import chylex.hee.system.heeTag
 import chylex.hee.system.random.nextInt
-import chylex.hee.system.serialization.TagCompound
-import chylex.hee.system.serialization.getPosOrNull
-import chylex.hee.system.serialization.heeTag
-import chylex.hee.system.serialization.putPos
-import chylex.hee.system.serialization.readPos
-import chylex.hee.system.serialization.use
-import chylex.hee.system.serialization.writePos
+import chylex.hee.util.buffer.readPos
+import chylex.hee.util.buffer.use
+import chylex.hee.util.buffer.writePos
+import chylex.hee.util.color.IColorGenerator
+import chylex.hee.util.color.IntColor
+import chylex.hee.util.color.RGB
+import chylex.hee.util.forge.Side
+import chylex.hee.util.forge.Sided
+import chylex.hee.util.math.LerpedDouble
+import chylex.hee.util.math.Pos
+import chylex.hee.util.math.Vec3
+import chylex.hee.util.math.addY
+import chylex.hee.util.math.component1
+import chylex.hee.util.math.component2
+import chylex.hee.util.math.component3
+import chylex.hee.util.math.lerp
+import chylex.hee.util.math.scale
+import chylex.hee.util.math.square
+import chylex.hee.util.math.subtractY
+import chylex.hee.util.nbt.TagCompound
+import chylex.hee.util.nbt.getPosOrNull
+import chylex.hee.util.nbt.putPos
+import chylex.hee.util.nbt.use
 import net.minecraft.block.BlockState
+import net.minecraft.block.FlowingFluidBlock
 import net.minecraft.entity.Entity
 import net.minecraft.entity.EntityType
+import net.minecraft.entity.LivingEntity
+import net.minecraft.entity.item.ItemEntity
 import net.minecraft.item.ItemStack
 import net.minecraft.item.Items
 import net.minecraft.network.IPacket
 import net.minecraft.network.PacketBuffer
 import net.minecraft.particles.ParticleTypes.SMOKE
+import net.minecraft.util.Direction.DOWN
+import net.minecraft.util.Direction.UP
 import net.minecraft.util.SoundCategory
+import net.minecraft.util.SoundEvents
 import net.minecraft.util.math.BlockPos
 import net.minecraft.world.World
 import net.minecraft.world.gen.Heightmap.Type.WORLD_SURFACE
@@ -64,7 +65,7 @@ import java.util.Random
 import kotlin.math.sin
 
 class EntityProjectileEyeOfEnder(type: EntityType<EntityProjectileEyeOfEnder>, world: World) : Entity(type, world), IEntityAdditionalSpawnData {
-	constructor(thrower: EntityLivingBase, targetPos: BlockPos?) : this(ModEntities.EYE_OF_ENDER, thrower.world) {
+	constructor(thrower: LivingEntity, targetPos: BlockPos?) : this(ModEntities.EYE_OF_ENDER, thrower.world) {
 		this.posVec = thrower.lookPosVec.subtractY(height * 0.5).add(thrower.lookDirVec.scale(1.5))
 		this.targetPos = targetPos
 	}
@@ -109,7 +110,7 @@ class EntityProjectileEyeOfEnder(type: EntityType<EntityProjectileEyeOfEnder>, w
 			maxRange = 64.0
 		)
 		
-		private object GlitterColorTick : IRandomColor {
+		private object GlitterColorTick : IColorGenerator {
 			override fun next(rand: Random): IntColor {
 				return if (rand.nextInt(3) == 0)
 					RGB(rand.nextInt(76, 128), rand.nextInt(64, 76), rand.nextInt(128, 192))
@@ -118,7 +119,7 @@ class EntityProjectileEyeOfEnder(type: EntityType<EntityProjectileEyeOfEnder>, w
 			}
 		}
 		
-		private object GlitterColorDestroy : IRandomColor {
+		private object GlitterColorDestroy : IColorGenerator {
 			override fun next(rand: Random): IntColor {
 				return if (rand.nextInt(3) == 0)
 					RGB(rand.nextInt(102, 153), rand.nextInt(64, 76), rand.nextInt(153, 216))
@@ -128,7 +129,7 @@ class EntityProjectileEyeOfEnder(type: EntityType<EntityProjectileEyeOfEnder>, w
 		}
 		
 		private fun shouldFloatAbove(state: BlockState): Boolean {
-			return state.material.blocksMovement() || state.block is BlockFlowingFluid
+			return state.material.blocksMovement() || state.block is FlowingFluidBlock
 		}
 	}
 	
@@ -282,12 +283,12 @@ class EntityProjectileEyeOfEnder(type: EntityType<EntityProjectileEyeOfEnder>, w
 		}
 		
 		val (newX, _, newZ) = posVec.add(motion.scale(speed))
-		val newY = offsetTowards(posY, targetY, 0.03 * ySpeedMp)
+		val newY = lerp(posY, targetY, 0.03 * ySpeedMp)
 		setPosition(newX, newY, newZ)
 	}
 	
 	private fun dropEye() {
-		EntityItem(world, posX, posY + nextRenderBobOffset - 0.25, posZ, ItemStack(Items.ENDER_EYE)).apply {
+		ItemEntity(world, posX, posY + nextRenderBobOffset - 0.25, posZ, ItemStack(Items.ENDER_EYE)).apply {
 			setDefaultPickupDelay()
 			world.addEntity(this)
 		}
@@ -303,7 +304,7 @@ class EntityProjectileEyeOfEnder(type: EntityType<EntityProjectileEyeOfEnder>, w
 			
 			PARTICLE_SMOKE.spawn(Point(pos, 18), rand)
 			PARTICLE_GLITTER_DESTROY.spawn(Point(pos, 50), rand)
-			Sounds.ENTITY_ENDER_EYE_DEATH.playClient(pos, SoundCategory.NEUTRAL)
+			SoundEvents.ENTITY_ENDER_EYE_DEATH.playClient(pos, SoundCategory.NEUTRAL)
 		}
 	}
 	

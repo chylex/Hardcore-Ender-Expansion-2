@@ -1,7 +1,7 @@
 package chylex.hee.game.mechanics.trinket
 
-import chylex.hee.system.forge.Side
-import chylex.hee.system.forge.Sided
+import chylex.hee.util.forge.Side
+import chylex.hee.util.forge.Sided
 import net.minecraft.entity.Entity
 import net.minecraft.item.ItemStack
 

@@ -2,34 +2,33 @@ package chylex.hee.game.block.entity.base
 
 import chylex.hee.HEE
 import chylex.hee.game.block.entity.base.TileEntityBase.Context.STORAGE
-import chylex.hee.game.entity.OPERATION_MUL_INCR_INDIVIDUAL
-import chylex.hee.game.entity.getAttributeInstance
-import chylex.hee.game.entity.heeTag
-import chylex.hee.game.entity.heeTagOrNull
-import chylex.hee.game.inventory.size
+import chylex.hee.game.entity.util.OP_MUL_INCR_INDIVIDUAL
+import chylex.hee.game.entity.util.getAttributeInstance
+import chylex.hee.game.fx.FxEntityData
+import chylex.hee.game.fx.FxEntityHandler
+import chylex.hee.game.item.util.size
 import chylex.hee.game.particle.ParticleSmokeCustom
 import chylex.hee.game.particle.spawner.ParticleSpawnerCustom
 import chylex.hee.game.particle.spawner.properties.IOffset.InBox
 import chylex.hee.game.particle.spawner.properties.IShape.Point
-import chylex.hee.game.world.totalTime
 import chylex.hee.network.client.PacketClientFX
-import chylex.hee.network.fx.FxEntityData
-import chylex.hee.network.fx.FxEntityHandler
-import chylex.hee.system.color.IntColor.Companion.RGB
-import chylex.hee.system.forge.EventPriority
-import chylex.hee.system.forge.SubscribeAllEvents
-import chylex.hee.system.forge.SubscribeEvent
-import chylex.hee.system.math.LerpedFloat
-import chylex.hee.system.math.ceilToInt
-import chylex.hee.system.migration.EntityLiving
-import chylex.hee.system.random.IRandomColor.Companion.IRandomColor
+import chylex.hee.system.heeTag
+import chylex.hee.system.heeTagOrNull
 import chylex.hee.system.random.nextFloat
 import chylex.hee.system.random.nextInt
-import chylex.hee.system.serialization.TagCompound
-import chylex.hee.system.serialization.getPosOrNull
-import chylex.hee.system.serialization.putPos
-import chylex.hee.system.serialization.use
+import chylex.hee.util.color.IColorGenerator
+import chylex.hee.util.color.RGB
+import chylex.hee.util.forge.EventPriority
+import chylex.hee.util.forge.SubscribeAllEvents
+import chylex.hee.util.forge.SubscribeEvent
+import chylex.hee.util.math.LerpedFloat
+import chylex.hee.util.math.ceilToInt
+import chylex.hee.util.nbt.TagCompound
+import chylex.hee.util.nbt.getPosOrNull
+import chylex.hee.util.nbt.putPos
+import chylex.hee.util.nbt.use
 import net.minecraft.entity.Entity
+import net.minecraft.entity.MobEntity
 import net.minecraft.entity.ai.attributes.AttributeModifier
 import net.minecraft.entity.ai.attributes.Attributes.FLYING_SPEED
 import net.minecraft.entity.ai.attributes.Attributes.MAX_HEALTH
@@ -50,10 +49,10 @@ abstract class TileEntityBaseSpawner(type: TileEntityType<out TileEntityBaseSpaw
 		private const val NEXT_SPAWN_COOLDOWN_TAG = "NextSpawnCooldown"
 		
 		private const val ENTITY_TAINTED_TAG = "Tainted"
-		private val BUFF_HEALTH = AttributeModifier(UUID.fromString("2A023243-1D08-4955-8056-C35959129CDF"), "Tainted health buff", 1.0, OPERATION_MUL_INCR_INDIVIDUAL)
-		private val DEBUFF_SPEED = AttributeModifier(UUID.fromString("9BEF400C-05DD-49A7-91E1-036EF7B73766"), "Tainted speed debuff", -0.33, OPERATION_MUL_INCR_INDIVIDUAL)
+		private val BUFF_HEALTH = AttributeModifier(UUID.fromString("2A023243-1D08-4955-8056-C35959129CDF"), "Tainted health buff", 1.0, OP_MUL_INCR_INDIVIDUAL)
+		private val DEBUFF_SPEED = AttributeModifier(UUID.fromString("9BEF400C-05DD-49A7-91E1-036EF7B73766"), "Tainted speed debuff", -0.33, OP_MUL_INCR_INDIVIDUAL)
 		
-		private val PARTICLE_TAINT_COLOR = IRandomColor { RGB(nextInt(4, 40).toUByte()) }
+		private val PARTICLE_TAINT_COLOR = IColorGenerator { RGB(nextInt(4, 40).toUByte()) }
 		
 		private val PARTICLE_TAINT_BLOCK = ParticleSpawnerCustom(
 			type = ParticleSmokeCustom,
@@ -76,7 +75,7 @@ abstract class TileEntityBaseSpawner(type: TileEntityType<out TileEntityBaseSpaw
 			val entity = e.entityLiving
 			val world = entity.world
 			
-			if (!world.isRemote && world.totalTime % 3L == 0L && entity.heeTagOrNull?.getBoolean(ENTITY_TAINTED_TAG) == true) {
+			if (!world.isRemote && world.gameTime % 3L == 0L && entity.heeTagOrNull?.getBoolean(ENTITY_TAINTED_TAG) == true) {
 				PacketClientFX(FX_TAINT_TICK, FxEntityData(entity)).sendToAllAround(entity, 9.0)
 			}
 		}
@@ -179,7 +178,7 @@ abstract class TileEntityBaseSpawner(type: TileEntityType<out TileEntityBaseSpaw
 	}
 	
 	@Suppress("UNNECESSARY_SAFE_CALL")
-	protected fun spawnMob(entity: EntityLiving) {
+	protected fun spawnMob(entity: MobEntity) {
 		if (isTainted) {
 			entity.heeTag.putBoolean(ENTITY_TAINTED_TAG, true)
 			entity.getAttributeInstance(MAX_HEALTH)?.applyPersistentModifier(BUFF_HEALTH)

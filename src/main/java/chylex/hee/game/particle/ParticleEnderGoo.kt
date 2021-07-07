@@ -3,11 +3,11 @@ package chylex.hee.game.particle
 import chylex.hee.game.block.fluid.FluidEnderGoo
 import chylex.hee.game.particle.base.ParticleBaseFloating
 import chylex.hee.game.particle.spawner.IParticleMaker
-import chylex.hee.system.forge.Side
-import chylex.hee.system.forge.Sided
-import chylex.hee.system.math.toRadians
 import chylex.hee.system.random.nextFloat
 import chylex.hee.system.random.nextInt
+import chylex.hee.util.forge.Side
+import chylex.hee.util.forge.Sided
+import chylex.hee.util.math.toRadians
 import net.minecraft.client.particle.Particle
 import net.minecraft.client.world.ClientWorld
 import kotlin.math.PI

@@ -5,9 +5,9 @@ import chylex.hee.game.block.IBlockDeathFlowerDecaying.Companion.LEVEL
 import chylex.hee.game.block.properties.BlockBuilder
 import chylex.hee.game.item.ItemDeathFlower
 import chylex.hee.init.ModBlocks
-import chylex.hee.system.migration.EntityPlayer
 import net.minecraft.block.Block
 import net.minecraft.block.BlockState
+import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.item.BlockItemUseContext
 import net.minecraft.item.ItemStack
 import net.minecraft.loot.LootContext
@@ -45,7 +45,7 @@ class BlockDeathFlowerDecaying(builder: BlockBuilder) : BlockEndPlant(builder), 
 		return mutableListOf(getDrop(state))
 	}
 	
-	override fun getPickBlock(state: BlockState, target: RayTraceResult, world: IBlockReader, pos: BlockPos, player: EntityPlayer): ItemStack {
+	override fun getPickBlock(state: BlockState, target: RayTraceResult, world: IBlockReader, pos: BlockPos, player: PlayerEntity): ItemStack {
 		return getDrop(state)
 	}
 	

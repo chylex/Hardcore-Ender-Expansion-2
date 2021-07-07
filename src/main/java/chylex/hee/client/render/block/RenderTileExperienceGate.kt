@@ -1,17 +1,17 @@
 package chylex.hee.client.render.block
 
 import chylex.hee.HEE
-import chylex.hee.client.render.gl.RenderStateBuilder
-import chylex.hee.client.render.gl.RenderStateBuilder.Companion.ALPHA_CUTOUT
-import chylex.hee.client.render.gl.RenderStateBuilder.Companion.LIGHTMAP_ENABLED
-import chylex.hee.client.render.gl.RenderStateBuilder.Companion.SHADE_ENABLED
+import chylex.hee.client.render.RenderStateBuilder
+import chylex.hee.client.render.RenderStateBuilder.Companion.ALPHA_CUTOUT
+import chylex.hee.client.render.RenderStateBuilder.Companion.LIGHTMAP_ENABLED
+import chylex.hee.client.render.RenderStateBuilder.Companion.SHADE_ENABLED
+import chylex.hee.game.Resource
 import chylex.hee.game.block.entity.TileEntityExperienceGate
-import chylex.hee.system.facades.Resource
-import chylex.hee.system.forge.Side
-import chylex.hee.system.forge.Sided
-import chylex.hee.system.forge.SubscribeAllEvents
-import chylex.hee.system.forge.SubscribeEvent
-import chylex.hee.system.math.floorToInt
+import chylex.hee.util.forge.Side
+import chylex.hee.util.forge.Sided
+import chylex.hee.util.forge.SubscribeAllEvents
+import chylex.hee.util.forge.SubscribeEvent
+import chylex.hee.util.math.floorToInt
 import com.mojang.blaze3d.matrix.MatrixStack
 import com.mojang.blaze3d.vertex.IVertexBuilder
 import net.minecraft.client.renderer.IRenderTypeBuffer

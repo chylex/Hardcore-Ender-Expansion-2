@@ -1,32 +1,32 @@
 package chylex.hee.game.block
 
-import chylex.hee.HEE
 import chylex.hee.client.render.block.IBlockLayerCutout
-import chylex.hee.commands.client.CommandClientScaffolding
+import chylex.hee.game.Environment
 import chylex.hee.game.block.properties.BlockBuilder
-import chylex.hee.game.world.Pos
-import chylex.hee.game.world.getBlock
-import chylex.hee.game.world.math.BoundingBox
-import chylex.hee.game.world.offsetUntilExcept
-import chylex.hee.game.world.structure.StructureFile
-import chylex.hee.proxy.Environment
+import chylex.hee.game.command.client.CommandClientScaffolding
+import chylex.hee.game.world.generation.structure.file.StructureFile
+import chylex.hee.game.world.generation.util.WorldToStructureWorldAdapter
+import chylex.hee.game.world.util.getBlock
+import chylex.hee.game.world.util.offsetUntilExcept
 import chylex.hee.system.Debug
-import chylex.hee.system.forge.Side
-import chylex.hee.system.forge.Sided
-import chylex.hee.system.migration.EntityPlayer
-import chylex.hee.system.migration.Facing.DOWN
-import chylex.hee.system.migration.Facing.EAST
-import chylex.hee.system.migration.Facing.NORTH
-import chylex.hee.system.migration.Facing.SOUTH
-import chylex.hee.system.migration.Facing.UP
-import chylex.hee.system.migration.Facing.WEST
+import chylex.hee.util.forge.Side
+import chylex.hee.util.forge.Sided
+import chylex.hee.util.math.BoundingBox
+import chylex.hee.util.math.Pos
 import net.minecraft.block.BlockState
 import net.minecraft.block.Blocks
+import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.nbt.CompressedStreamTools
 import net.minecraft.util.ActionResultType
 import net.minecraft.util.ActionResultType.FAIL
 import net.minecraft.util.ActionResultType.SUCCESS
 import net.minecraft.util.Direction
+import net.minecraft.util.Direction.DOWN
+import net.minecraft.util.Direction.EAST
+import net.minecraft.util.Direction.NORTH
+import net.minecraft.util.Direction.SOUTH
+import net.minecraft.util.Direction.UP
+import net.minecraft.util.Direction.WEST
 import net.minecraft.util.Hand
 import net.minecraft.util.Util
 import net.minecraft.util.math.BlockPos
@@ -43,7 +43,7 @@ import java.nio.file.Files
 class BlockScaffolding(builder: BlockBuilder) : BlockSimple(builder), IBlockLayerCutout {
 	var enableShape = true
 	
-	override fun onBlockActivated(state: BlockState, world: World, pos: BlockPos, player: EntityPlayer, hand: Hand, hit: BlockRayTraceResult): ActionResultType {
+	override fun onBlockActivated(state: BlockState, world: World, pos: BlockPos, player: PlayerEntity, hand: Hand, hit: BlockRayTraceResult): ActionResultType {
 		if (world.isRemote && player.isSneaking && !player.abilities.isFlying && Debug.enabled) {
 			val palette = CommandClientScaffolding.currentPalette
 			
@@ -61,8 +61,9 @@ class BlockScaffolding(builder: BlockBuilder) : BlockSimple(builder), IBlockLaye
 			}
 			
 			val box = BoundingBox(minPos, maxPos)
+			val serverWorld = Environment.getDimension(world.dimensionKey)
 			
-			val (structureTag, missingMappings) = StructureFile.save(Environment.getDimension(world.dimensionKey), box, palette, world.rand)
+			val (structureTag, missingMappings) = StructureFile.save(WorldToStructureWorldAdapter(serverWorld, serverWorld.rand, box.min), box.size, palette, this)
 			val structureFile = Files.createTempDirectory("HardcoreEnderExpansion_Structure_").resolve(CommandClientScaffolding.currentFile).toFile()
 			
 			CompressedStreamTools.write(structureTag, structureFile)
@@ -71,7 +72,7 @@ class BlockScaffolding(builder: BlockBuilder) : BlockSimple(builder), IBlockLaye
 			if (missingMappings.isNotEmpty()) {
 				player.sendMessage(StringTextComponent("Missing mappings for states:"), Util.DUMMY_UUID)
 				
-				for(missingMapping in missingMappings) {
+				for (missingMapping in missingMappings) {
 					player.sendMessage(StringTextComponent(" - ${TextFormatting.GRAY}$missingMapping"), Util.DUMMY_UUID)
 				}
 			}
@@ -119,7 +120,7 @@ class BlockScaffolding(builder: BlockBuilder) : BlockSimple(builder), IBlockLaye
 	}
 	
 	override fun getCollisionShape(state: BlockState, world: IBlockReader, pos: BlockPos, context: ISelectionContext): VoxelShape {
-		val player = HEE.proxy.getClientSidePlayer()
+		val player = Environment.getClientSidePlayer()
 		
 		return if ((player == null || !player.abilities.isFlying) && enableShape)
 			VoxelShapes.fullCube()
@@ -128,7 +129,7 @@ class BlockScaffolding(builder: BlockBuilder) : BlockSimple(builder), IBlockLaye
 	}
 	
 	override fun getRaytraceShape(state: BlockState, world: IBlockReader, pos: BlockPos): VoxelShape {
-		val player = HEE.proxy.getClientSidePlayer()
+		val player = Environment.getClientSidePlayer()
 		
 		return if ((player == null || player.isSneaking || player.abilities.isFlying) && enableShape)
 			VoxelShapes.fullCube()

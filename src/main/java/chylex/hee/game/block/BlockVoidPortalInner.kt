@@ -5,34 +5,34 @@ import chylex.hee.game.block.BlockVoidPortalInner.Type.RETURN_ACTIVE
 import chylex.hee.game.block.entity.TileEntityPortalInner
 import chylex.hee.game.block.entity.TileEntityVoidPortalStorage
 import chylex.hee.game.block.properties.BlockBuilder
-import chylex.hee.game.block.properties.Property
+import chylex.hee.game.block.util.Property
 import chylex.hee.game.entity.Teleporter
 import chylex.hee.game.entity.Teleporter.FxRange.Silent
-import chylex.hee.game.entity.isInEndDimension
+import chylex.hee.game.entity.util.EntityPortalContact
 import chylex.hee.game.mechanics.causatum.EnderCausatum
-import chylex.hee.game.mechanics.portal.DimensionTeleporter
-import chylex.hee.game.mechanics.portal.EntityPortalContact
-import chylex.hee.game.mechanics.portal.SpawnInfo
-import chylex.hee.game.world.Pos
-import chylex.hee.game.world.center
-import chylex.hee.game.world.closestTickingTile
-import chylex.hee.game.world.floodFill
-import chylex.hee.game.world.getBlock
-import chylex.hee.game.world.getState
-import chylex.hee.game.world.max
-import chylex.hee.game.world.min
-import chylex.hee.game.world.offsetUntil
-import chylex.hee.game.world.setAir
-import chylex.hee.game.world.territory.TerritoryInstance
-import chylex.hee.game.world.territory.TerritoryType
-import chylex.hee.system.facades.Facing4
-import chylex.hee.system.math.Vec3
-import chylex.hee.system.math.subtractY
-import chylex.hee.system.migration.EntityLivingBase
-import chylex.hee.system.migration.EntityPlayer
+import chylex.hee.game.territory.TerritoryType
+import chylex.hee.game.territory.system.TerritoryInstance
+import chylex.hee.game.world.isInEndDimension
+import chylex.hee.game.world.server.DimensionTeleporter
+import chylex.hee.game.world.server.SpawnInfo
+import chylex.hee.game.world.util.Facing4
+import chylex.hee.game.world.util.closestTickingTile
+import chylex.hee.game.world.util.floodFill
+import chylex.hee.game.world.util.getBlock
+import chylex.hee.game.world.util.getState
+import chylex.hee.game.world.util.max
+import chylex.hee.game.world.util.min
+import chylex.hee.game.world.util.offsetUntil
+import chylex.hee.game.world.util.setAir
+import chylex.hee.util.math.Pos
+import chylex.hee.util.math.Vec3
+import chylex.hee.util.math.center
+import chylex.hee.util.math.subtractY
 import net.minecraft.block.Block
 import net.minecraft.block.BlockState
 import net.minecraft.entity.Entity
+import net.minecraft.entity.LivingEntity
+import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.state.StateContainer.Builder
 import net.minecraft.tileentity.TileEntity
 import net.minecraft.util.IStringSerializable
@@ -49,8 +49,8 @@ class BlockVoidPortalInner(builder: BlockBuilder) : BlockAbstractPortal(builder)
 		fun teleportEntity(entity: Entity, info: SpawnInfo) {
 			val targetVec = info.pos.center.subtractY(0.45)
 			
-			if (entity is EntityLivingBase) {
-				if (entity is EntityPlayer) {
+			if (entity is LivingEntity) {
+				if (entity is PlayerEntity) {
 					TerritoryType.fromPos(info.pos)?.let { EnderCausatum.triggerStage(entity, it.stage) }
 				}
 				
@@ -103,7 +103,7 @@ class BlockVoidPortalInner(builder: BlockBuilder) : BlockAbstractPortal(builder)
 	
 	override fun neighborChanged(state: BlockState, world: World, pos: BlockPos, neighborBlock: Block, neighborPos: BlockPos, isMoving: Boolean) {
 		if (neighborBlock is BlockVoidPortalCrafted && neighborPos.getBlock(world) !is BlockVoidPortalCrafted) {
-			for(portalPos in pos.floodFill(Facing4) { it.getBlock(world) === this }) {
+			for (portalPos in pos.floodFill(Facing4) { it.getBlock(world) === this }) {
 				portalPos.setAir(world)
 			}
 		}
@@ -125,7 +125,7 @@ class BlockVoidPortalInner(builder: BlockBuilder) : BlockAbstractPortal(builder)
 	}
 	
 	private fun updateSpawnPortal(entity: Entity, pos: BlockPos) {
-		if (entity !is EntityPlayer) {
+		if (entity !is PlayerEntity) {
 			return
 		}
 		
@@ -160,7 +160,7 @@ class BlockVoidPortalInner(builder: BlockBuilder) : BlockAbstractPortal(builder)
 			RETURN_ACTIVE -> {
 				if (!DimensionTeleporter.LastHubPortal.tryOverrideTeleport(entity)) {
 					updateSpawnPortal(entity, pos)
-					teleportEntity(entity, TerritoryInstance.THE_HUB_INSTANCE.prepareSpawnPoint(entity as? EntityPlayer, clearanceRadius = 2))
+					teleportEntity(entity, TerritoryInstance.THE_HUB_INSTANCE.prepareSpawnPoint(entity as? PlayerEntity, clearanceRadius = 2))
 				}
 			}
 			

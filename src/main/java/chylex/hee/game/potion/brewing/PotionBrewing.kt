@@ -3,10 +3,10 @@ package chylex.hee.game.potion.brewing
 import chylex.hee.game.potion.brewing.PotionTypeInfo.Duration
 import chylex.hee.init.ModItems
 import chylex.hee.init.ModPotions
-import chylex.hee.system.math.floorToInt
-import chylex.hee.system.migration.Potions
+import chylex.hee.util.math.floorToInt
 import net.minecraft.item.ItemStack
 import net.minecraft.item.Items
+import net.minecraft.potion.Effects
 import net.minecraft.potion.PotionUtils
 
 object PotionBrewing {
@@ -14,62 +14,62 @@ object PotionBrewing {
 	const val INFINITE_DURATION_THRESHOLD = 32147 // values >= this threshold should be considered infinite
 	
 	val INFO = arrayOf(
-		PotionTypeInfo(Potions.INSTANT_HEALTH,  maxLevel = 2),
-		PotionTypeInfo(Potions.FIRE_RESISTANCE, Duration(baseTicks = 3 min 20, stepTicks = 3 min 10,    maxSteps = 4), maxLevel = 1),
-		PotionTypeInfo(Potions.REGENERATION,    Duration(baseTicks = 0 min 30, stepTicks = 0 min 30,    maxSteps = 3), maxLevel = 3),
-		PotionTypeInfo(Potions.STRENGTH,        Duration(baseTicks = 2 min 30, stepTicks = 2 min 15,    maxSteps = 4), maxLevel = 3),
-		PotionTypeInfo(Potions.SPEED,           Duration(baseTicks = 2 min 30, stepTicks = 2 min 15,    maxSteps = 4), maxLevel = 3),
-		PotionTypeInfo(Potions.NIGHT_VISION,    Duration(baseTicks = 3 min 20, stepTicks = 3 min 10,    maxSteps = 4), maxLevel = 1),
-		PotionTypeInfo(Potions.WATER_BREATHING, Duration(baseTicks = 3 min 20, stepTicks = 3 min 10,    maxSteps = 4), maxLevel = 1),
-		PotionTypeInfo(Potions.JUMP_BOOST,      Duration(baseTicks = 2 min 30, stepTicks = 2 min 15,    maxSteps = 4), maxLevel = 3),
-		PotionTypeInfo(Potions.POISON,          Duration(baseTicks = 0 min 30, stepTicks = 0 min 30,    maxSteps = 3), maxLevel = 2),
-		PotionTypeInfo(Potions.SLOW_FALLING,    Duration(baseTicks = 1 min 15, stepTicks = 1 min 15,    maxSteps = 3), maxLevel = 1),
-		PotionTypeInfo(Potions.LEVITATION,      Duration(baseTicks = 0 min 30, stepTicks = 0 min 30,    maxSteps = 3), maxLevel = 2),
+		PotionTypeInfo(Effects.INSTANT_HEALTH,  maxLevel = 2),
+		PotionTypeInfo(Effects.FIRE_RESISTANCE, Duration(baseTicks = 3 min 20, stepTicks = 3 min 10,    maxSteps = 4), maxLevel = 1),
+		PotionTypeInfo(Effects.REGENERATION,    Duration(baseTicks = 0 min 30, stepTicks = 0 min 30,    maxSteps = 3), maxLevel = 3),
+		PotionTypeInfo(Effects.STRENGTH,        Duration(baseTicks = 2 min 30, stepTicks = 2 min 15,    maxSteps = 4), maxLevel = 3),
+		PotionTypeInfo(Effects.SPEED,           Duration(baseTicks = 2 min 30, stepTicks = 2 min 15,    maxSteps = 4), maxLevel = 3),
+		PotionTypeInfo(Effects.NIGHT_VISION,    Duration(baseTicks = 3 min 20, stepTicks = 3 min 10,    maxSteps = 4), maxLevel = 1),
+		PotionTypeInfo(Effects.WATER_BREATHING, Duration(baseTicks = 3 min 20, stepTicks = 3 min 10,    maxSteps = 4), maxLevel = 1),
+		PotionTypeInfo(Effects.JUMP_BOOST,      Duration(baseTicks = 2 min 30, stepTicks = 2 min 15,    maxSteps = 4), maxLevel = 3),
+		PotionTypeInfo(Effects.POISON,          Duration(baseTicks = 0 min 30, stepTicks = 0 min 30,    maxSteps = 3), maxLevel = 2),
+		PotionTypeInfo(Effects.SLOW_FALLING,    Duration(baseTicks = 1 min 15, stepTicks = 1 min 15,    maxSteps = 3), maxLevel = 1),
+		PotionTypeInfo(Effects.LEVITATION,      Duration(baseTicks = 0 min 30, stepTicks = 0 min 30,    maxSteps = 3), maxLevel = 2),
 		PotionTypeInfo(ModPotions.PURITY,       Duration(baseTicks = 2 min 30, stepTicks = 2 min 15,    maxSteps = 4), maxLevel = 3),
 		PotionTypeInfo(ModPotions.CORRUPTION,   Duration(baseTicks = 0 min 20, stepTicks = 0 min 13.34, maxSteps = 3), maxLevel = 1),
-		PotionTypeInfo(Potions.BLINDNESS,       Duration(baseTicks = 0 min 20, stepTicks = 0 min 13.34, maxSteps = 3), maxLevel = 1),
-		PotionTypeInfo(Potions.WEAKNESS,        Duration(baseTicks = 1 min 15, stepTicks = 1 min 15,    maxSteps = 3), maxLevel = 3),
+		PotionTypeInfo(Effects.BLINDNESS,       Duration(baseTicks = 0 min 20, stepTicks = 0 min 13.34, maxSteps = 3), maxLevel = 1),
+		PotionTypeInfo(Effects.WEAKNESS,        Duration(baseTicks = 1 min 15, stepTicks = 1 min 15,    maxSteps = 3), maxLevel = 3),
 		
-		PotionTypeInfo(Potions.INSTANT_DAMAGE,  maxLevel = 2),
-		PotionTypeInfo(Potions.SLOWNESS,        Duration(baseTicks = 1 min 15, stepTicks = 1 min 7.5, maxSteps = 4), maxLevel = 3),
-		PotionTypeInfo(Potions.INVISIBILITY,    Duration(baseTicks = 1 min 20, stepTicks = 1 min 16,  maxSteps = 4), maxLevel = 1),
+		PotionTypeInfo(Effects.INSTANT_DAMAGE,  maxLevel = 2),
+		PotionTypeInfo(Effects.SLOWNESS,        Duration(baseTicks = 1 min 15, stepTicks = 1 min 7.5, maxSteps = 4), maxLevel = 3),
+		PotionTypeInfo(Effects.INVISIBILITY,    Duration(baseTicks = 1 min 20, stepTicks = 1 min 16,  maxSteps = 4), maxLevel = 1),
 		PotionTypeInfo(ModPotions.BANISHMENT,   Duration(baseTicks = 0 min 15, stepTicks = 0 min 10,  maxSteps = 3), maxLevel = 1),
-		PotionTypeInfo(Potions.GLOWING,         Duration(baseTicks = 0 min 12, stepTicks = 0 min 8,   maxSteps = 3), maxLevel = 1)
-	).associateBy(PotionTypeInfo::potion)
+		PotionTypeInfo(Effects.GLOWING,         Duration(baseTicks = 0 min 12, stepTicks = 0 min 8,   maxSteps = 3), maxLevel = 1)
+	).associateBy(PotionTypeInfo::effect)
 	
 	// TODO register levitation type and other custom potions
 	
 	// UPDATE 1.16 check new potions
 	
 	val AWKWARD = mapOf(
-		Items.GLISTERING_MELON_SLICE to Potions.INSTANT_HEALTH,
-		Items.MAGMA_CREAM            to Potions.FIRE_RESISTANCE,
-		Items.GHAST_TEAR             to Potions.REGENERATION,
-		Items.BLAZE_POWDER           to Potions.STRENGTH,
-		Items.SUGAR                  to Potions.SPEED,
-		Items.GOLDEN_CARROT          to Potions.NIGHT_VISION,
-		Items.PUFFERFISH             to Potions.WATER_BREATHING,
-		Items.RABBIT_FOOT            to Potions.JUMP_BOOST,
-		Items.SPIDER_EYE             to Potions.POISON,
-		Items.PHANTOM_MEMBRANE       to Potions.SLOW_FALLING,
-		ModItems.DRAGON_SCALE        to Potions.LEVITATION,
+		Items.GLISTERING_MELON_SLICE to Effects.INSTANT_HEALTH,
+		Items.MAGMA_CREAM            to Effects.FIRE_RESISTANCE,
+		Items.GHAST_TEAR             to Effects.REGENERATION,
+		Items.BLAZE_POWDER           to Effects.STRENGTH,
+		Items.SUGAR                  to Effects.SPEED,
+		Items.GOLDEN_CARROT          to Effects.NIGHT_VISION,
+		Items.PUFFERFISH             to Effects.WATER_BREATHING,
+		Items.RABBIT_FOOT            to Effects.JUMP_BOOST,
+		Items.SPIDER_EYE             to Effects.POISON,
+		Items.PHANTOM_MEMBRANE       to Effects.SLOW_FALLING,
+		ModItems.DRAGON_SCALE        to Effects.LEVITATION,
 		ModItems.PURITY_EXTRACT      to ModPotions.PURITY,
 		ModItems.INSTABILITY_ORB     to ModPotions.CORRUPTION
-		// TODO ModItems.MURKY_CRYSTAL       to Potions.BLINDNESS
+		// TODO ModItems.MURKY_CRYSTAL       to Effects.BLINDNESS
 	)
 	
 	val WATER = mapOf(
-		Items.FERMENTED_SPIDER_EYE to Potions.WEAKNESS
+		Items.FERMENTED_SPIDER_EYE to Effects.WEAKNESS
 	)
 	
 	val REVERSAL = mapOf(
-		Potions.INSTANT_HEALTH to Potions.INSTANT_DAMAGE,
-		Potions.POISON         to Potions.INSTANT_DAMAGE,
-		Potions.SPEED          to Potions.SLOWNESS,
-		Potions.JUMP_BOOST     to Potions.SLOWNESS,
-		Potions.NIGHT_VISION   to Potions.INVISIBILITY,
+		Effects.INSTANT_HEALTH to Effects.INSTANT_DAMAGE,
+		Effects.POISON         to Effects.INSTANT_DAMAGE,
+		Effects.SPEED          to Effects.SLOWNESS,
+		Effects.JUMP_BOOST     to Effects.SLOWNESS,
+		Effects.NIGHT_VISION   to Effects.INVISIBILITY,
 		ModPotions.CORRUPTION  to ModPotions.BANISHMENT,
-		Potions.BLINDNESS      to Potions.GLOWING
+		Effects.BLINDNESS      to Effects.GLOWING
 	)
 	
 	fun unpack(stack: ItemStack): PotionTypeInfo.Instance? {

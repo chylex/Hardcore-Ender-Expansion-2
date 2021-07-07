@@ -3,6 +3,7 @@ package chylex.hee.game.block.entity
 import chylex.hee.client.model.block.ModelBlockIgneousPlate.ANIMATION_PERIOD
 import chylex.hee.game.block.BlockIgneousPlate
 import chylex.hee.game.block.entity.base.TileEntityBaseSpecialFirstTick
+import chylex.hee.game.block.util.FURNACE_LIT
 import chylex.hee.game.entity.item.EntityItemFreshlyCooked
 import chylex.hee.game.entity.technical.EntityTechnicalIgneousPlateLogic
 import chylex.hee.game.particle.ParticleFlameCustom
@@ -11,26 +12,25 @@ import chylex.hee.game.particle.spawner.ParticleSpawnerCustom
 import chylex.hee.game.particle.spawner.properties.IOffset.Constant
 import chylex.hee.game.particle.spawner.properties.IOffset.InBox
 import chylex.hee.game.particle.spawner.properties.IShape.Point
-import chylex.hee.game.world.center
-import chylex.hee.game.world.getState
-import chylex.hee.game.world.getTile
-import chylex.hee.game.world.removeBlock
+import chylex.hee.game.world.util.getState
+import chylex.hee.game.world.util.getTile
+import chylex.hee.game.world.util.removeBlock
 import chylex.hee.init.ModBlocks
 import chylex.hee.init.ModTileEntities
-import chylex.hee.system.math.LerpedDouble
-import chylex.hee.system.math.Vec3
-import chylex.hee.system.math.floorToInt
-import chylex.hee.system.migration.BlockFurnace
-import chylex.hee.system.migration.Facing.AXIS_Y
-import chylex.hee.system.migration.Facing.DOWN
-import chylex.hee.system.migration.Facing.UP
-import chylex.hee.system.migration.TileEntityFurnace
 import chylex.hee.system.random.nextFloat
-import chylex.hee.system.serialization.TagCompound
-import chylex.hee.system.serialization.use
+import chylex.hee.util.math.LerpedDouble
+import chylex.hee.util.math.Vec3
+import chylex.hee.util.math.center
+import chylex.hee.util.math.floorToInt
+import chylex.hee.util.nbt.TagCompound
+import chylex.hee.util.nbt.use
 import net.minecraft.item.ItemStack
+import net.minecraft.tileentity.FurnaceTileEntity
 import net.minecraft.tileentity.TileEntityType
 import net.minecraft.util.Direction
+import net.minecraft.util.Direction.Axis
+import net.minecraft.util.Direction.DOWN
+import net.minecraft.util.Direction.UP
 import kotlin.math.abs
 import kotlin.math.max
 import kotlin.math.min
@@ -48,7 +48,7 @@ class TileEntityIgneousPlate(type: TileEntityType<TileEntityIgneousPlate>) : Til
 		
 		private const val PROGRESS_TAG = "Progress"
 		
-		private fun createPositionOffset(facing: Direction, offset: Float) = if (facing.axis == AXIS_Y)
+		private fun createPositionOffset(facing: Direction, offset: Float) = if (facing.axis == Axis.Y)
 			InBox(offset, 0F, offset)
 		else
 			InBox(offset * abs(facing.zOffset), offset, offset * abs(facing.xOffset))
@@ -82,7 +82,7 @@ class TileEntityIgneousPlate(type: TileEntityType<TileEntityIgneousPlate>) : Til
 		get() = overheatingPercentage > 0F
 	
 	private val overheatingPercentage
-		get() = pos.offset(facing.opposite).getTile<TileEntityFurnace>(wrld)?.let { EntityTechnicalIgneousPlateLogic.getOverheatingPercentage(it) } ?: 0F
+		get() = pos.offset(facing.opposite).getTile<FurnaceTileEntity>(wrld)?.let { EntityTechnicalIgneousPlateLogic.getOverheatingPercentage(it) } ?: 0F
 	
 	private var facing = DOWN
 	private var progress = 0.0
@@ -93,7 +93,7 @@ class TileEntityIgneousPlate(type: TileEntityType<TileEntityIgneousPlate>) : Til
 	val clientThrustAnimation = LerpedDouble(0.0)
 	private var animation = 0.0
 	
-	fun isAttachedTo(furnace: TileEntityFurnace): Boolean {
+	fun isAttachedTo(furnace: FurnaceTileEntity): Boolean {
 		return pos.offset(facing.opposite) == furnace.pos
 	}
 	
@@ -124,10 +124,10 @@ class TileEntityIgneousPlate(type: TileEntityType<TileEntityIgneousPlate>) : Til
 			return
 		}
 		
-		val furnace = pos.offset(facing.opposite).getTile<TileEntityFurnace>(wrld) ?: return
+		val furnace = pos.offset(facing.opposite).getTile<FurnaceTileEntity>(wrld) ?: return
 		
 		val isBurning = if (wrld.isRemote)
-			furnace.blockState[BlockFurnace.LIT]
+			furnace.blockState[FURNACE_LIT]
 		else
 			furnace.isBurning
 		

@@ -2,19 +2,19 @@ package chylex.hee.game.entity.living.behavior
 
 import chylex.hee.game.entity.living.EntityMobBlobby
 import chylex.hee.game.entity.living.ai.AIPickUpItemDetour.IItemPickupHandler
-import chylex.hee.game.entity.posVec
-import chylex.hee.game.inventory.nullIfEmpty
-import chylex.hee.game.world.playServer
-import chylex.hee.system.migration.Sounds
+import chylex.hee.game.entity.util.posVec
+import chylex.hee.game.fx.util.playServer
+import chylex.hee.game.item.util.nullIfEmpty
 import chylex.hee.system.random.nextFloat
 import chylex.hee.system.random.nextInt
-import chylex.hee.system.serialization.NBTList.Companion.putList
-import chylex.hee.system.serialization.NBTObjectList
-import chylex.hee.system.serialization.TagCompound
-import chylex.hee.system.serialization.getListOfStrings
-import chylex.hee.system.serialization.use
+import chylex.hee.util.nbt.NBTObjectList
+import chylex.hee.util.nbt.TagCompound
+import chylex.hee.util.nbt.getListOfStrings
+import chylex.hee.util.nbt.putList
+import chylex.hee.util.nbt.use
 import net.minecraft.item.ItemStack
 import net.minecraft.util.SoundCategory
+import net.minecraft.util.SoundEvents
 import net.minecraftforge.common.Tags
 import net.minecraftforge.common.util.INBTSerializable
 
@@ -68,7 +68,7 @@ class BlobbyItemPickupHandler(private val blobby: EntityMobBlobby) : IItemPickup
 		blobby.heldItem.nullIfEmpty?.let(blobby::entityDropItem)
 		blobby.heldItem = stack
 		
-		Sounds.ENTITY_ITEM_PICKUP.playServer(blobby.world, blobby.posVec, SoundCategory.NEUTRAL, volume = 0.22F, pitch = rand.nextFloat(0.6F, 3.4F))
+		SoundEvents.ENTITY_ITEM_PICKUP.playServer(blobby.world, blobby.posVec, SoundCategory.NEUTRAL, volume = 0.22F, pitch = rand.nextFloat(0.6F, 3.4F))
 		
 		delay = rand.nextInt(10, 3800)
 		catchUpBonusTicks = rand.nextInt(80, 90)

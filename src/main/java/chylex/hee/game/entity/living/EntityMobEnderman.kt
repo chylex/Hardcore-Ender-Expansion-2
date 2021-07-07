@@ -1,6 +1,7 @@
 package chylex.hee.game.entity.living
 
 import chylex.hee.HEE
+import chylex.hee.game.Resource
 import chylex.hee.game.entity.living.ai.AITargetEyeContact
 import chylex.hee.game.entity.living.ai.AIToggle
 import chylex.hee.game.entity.living.ai.AIToggle.Companion.addGoal
@@ -14,39 +15,38 @@ import chylex.hee.game.entity.living.ai.WatchIdle
 import chylex.hee.game.entity.living.behavior.EndermanBlockHandler
 import chylex.hee.game.entity.living.behavior.EndermanTeleportHandler
 import chylex.hee.game.entity.living.behavior.EndermanWaterHandler
-import chylex.hee.game.entity.posVec
 import chylex.hee.game.entity.projectile.EntityProjectileSpatialDash
-import chylex.hee.game.entity.selectAllEntities
-import chylex.hee.game.entity.selectEntities
 import chylex.hee.game.entity.technical.EntityTechnicalCausatumEvent
+import chylex.hee.game.entity.util.posVec
+import chylex.hee.game.entity.util.selectAllEntities
+import chylex.hee.game.entity.util.selectEntities
+import chylex.hee.game.fx.util.playServer
 import chylex.hee.game.mechanics.causatum.CausatumStage
 import chylex.hee.game.mechanics.causatum.CausatumStage.S0_INITIAL
 import chylex.hee.game.mechanics.causatum.EnderCausatum
 import chylex.hee.game.mechanics.causatum.events.CausatumEventEndermanKill
-import chylex.hee.game.world.playServer
 import chylex.hee.init.ModEntities
 import chylex.hee.init.ModSounds
-import chylex.hee.system.facades.Resource
-import chylex.hee.system.forge.EventPriority
-import chylex.hee.system.forge.SubscribeAllEvents
-import chylex.hee.system.forge.SubscribeEvent
-import chylex.hee.system.math.square
-import chylex.hee.system.migration.EntityArrow
-import chylex.hee.system.migration.EntityLiving
-import chylex.hee.system.migration.EntityLivingBase
-import chylex.hee.system.migration.EntityLlamaSpit
-import chylex.hee.system.migration.EntityPlayer
-import chylex.hee.system.migration.EntityPotion
-import chylex.hee.system.migration.EntityThrowable
+import chylex.hee.system.heeTag
 import chylex.hee.system.random.nextFloat
 import chylex.hee.system.random.nextInt
-import chylex.hee.system.serialization.TagCompound
-import chylex.hee.system.serialization.heeTag
-import chylex.hee.system.serialization.use
+import chylex.hee.util.forge.EventPriority
+import chylex.hee.util.forge.SubscribeAllEvents
+import chylex.hee.util.forge.SubscribeEvent
+import chylex.hee.util.math.square
+import chylex.hee.util.nbt.TagCompound
+import chylex.hee.util.nbt.use
 import net.minecraft.block.BlockState
 import net.minecraft.entity.EntityClassification.MONSTER
 import net.minecraft.entity.EntityType
+import net.minecraft.entity.LivingEntity
+import net.minecraft.entity.MobEntity
 import net.minecraft.entity.SpawnReason
+import net.minecraft.entity.player.PlayerEntity
+import net.minecraft.entity.projectile.AbstractArrowEntity
+import net.minecraft.entity.projectile.LlamaSpitEntity
+import net.minecraft.entity.projectile.PotionEntity
+import net.minecraft.entity.projectile.ThrowableEntity
 import net.minecraft.network.datasync.DataParameter
 import net.minecraft.util.DamageSource
 import net.minecraft.util.IndirectEntityDamageSource
@@ -114,13 +114,13 @@ class EntityMobEnderman(type: EntityType<EntityMobEnderman>, world: World) : Ent
 			val projectile = e.entity
 			val tp = enderman.teleportHandler
 			
-			e.isCanceled = when(projectile) {
-				is EntityPotion ->
+			e.isCanceled = when (projectile) {
+				is PotionEntity ->
 					tp.teleportRandom(TELEPORT_RANGE_AVOID_BATTLE)
 				
-				is EntityArrow,
-				is EntityLlamaSpit,
-				is EntityThrowable,
+				is AbstractArrowEntity,
+				is LlamaSpitEntity,
+				is ThrowableEntity,
 				is EntityProjectileSpatialDash ->
 					tp.teleportDodge(projectile)
 				
@@ -128,10 +128,10 @@ class EntityMobEnderman(type: EntityType<EntityMobEnderman>, world: World) : Ent
 					tp.teleportRandom(TELEPORT_RANGE_AVOID_BATTLE)
 			}
 			
-			enderman.revengeTarget = when(projectile) {
-				is EntityThrowable -> projectile.shooter as? EntityLivingBase
-				is EntityArrow     -> projectile.shooter as? EntityLivingBase
-				else               -> return
+			enderman.revengeTarget = when (projectile) {
+				is ThrowableEntity     -> projectile.shooter as? LivingEntity
+				is AbstractArrowEntity -> projectile.shooter as? LivingEntity
+				else                   -> return
 			}
 		}
 		
@@ -169,7 +169,7 @@ class EntityMobEnderman(type: EntityType<EntityMobEnderman>, world: World) : Ent
 		
 		// Spawn conditions
 		
-		fun canSpawnAt(type: EntityType<out EntityLiving>, world: IWorld, reason: SpawnReason, pos: BlockPos, rand: Random): Boolean {
+		fun canSpawnAt(type: EntityType<out MobEntity>, world: IWorld, reason: SpawnReason, pos: BlockPos, rand: Random): Boolean {
 			return world.difficulty != Difficulty.PEACEFUL && checkSpawnLightLevel(world, pos, rand) && canSpawnOn(type, world, reason, pos, rand)
 		}
 		
@@ -214,7 +214,7 @@ class EntityMobEnderman(type: EntityType<EntityMobEnderman>, world: World) : Ent
 	private var wasFirstKill = false
 	
 	override val teleportCooldown
-		get() = when(trackedCausatumStage) {
+		get() = when (trackedCausatumStage) {
 			null       -> rand.nextInt(20 * 5, 20 * 10)
 			S0_INITIAL -> rand.nextInt(20 * 7, 20 *  8)
 			else       -> rand.nextInt(20 * 4, 20 *  5)
@@ -326,8 +326,8 @@ class EntityMobEnderman(type: EntityType<EntityMobEnderman>, world: World) : Ent
 	
 	// Battle (Interactions)
 	
-	private fun canTriggerEyeContact(target: EntityPlayer): Boolean {
-		return when(EnderCausatum.getStage(target)) {
+	private fun canTriggerEyeContact(target: PlayerEntity): Boolean {
+		return when (EnderCausatum.getStage(target)) {
 			S0_INITIAL -> getDistanceSq(target) <= square(32)
 			else       -> true
 		}
@@ -362,7 +362,7 @@ class EntityMobEnderman(type: EntityType<EntityMobEnderman>, world: World) : Ent
 	
 	// Battle (Targeting)
 	
-	override fun setAttackTarget(newTarget: EntityLivingBase?) {
+	override fun setAttackTarget(newTarget: LivingEntity?) {
 		if (attackTarget === newTarget) {
 			return
 		}
@@ -372,7 +372,7 @@ class EntityMobEnderman(type: EntityType<EntityMobEnderman>, world: World) : Ent
 			trackedCausatumStage = null
 			isAggro = false
 		}
-		else if (newTarget is EntityPlayer) {
+		else if (newTarget is PlayerEntity) {
 			val currentStage = trackedCausatumStage
 			val newTargetStage = EnderCausatum.getStage(newTarget)
 			
@@ -405,8 +405,8 @@ class EntityMobEnderman(type: EntityType<EntityMobEnderman>, world: World) : Ent
 		}
 	}
 	
-	override fun setRevengeTarget(entity: EntityLivingBase?) {
-		if (attackTarget == null && entity is EntityPlayer && rng.nextInt(4) == 0 && canEntityBeSeen(entity) && getDistanceSq(entity) < square(32)) {
+	override fun setRevengeTarget(entity: LivingEntity?) {
+		if (attackTarget == null && entity is PlayerEntity && rng.nextInt(4) == 0 && canEntityBeSeen(entity) && getDistanceSq(entity) < square(32)) {
 			attackTarget = entity
 			beginDeathStare(0.85F)
 		}
@@ -416,7 +416,7 @@ class EntityMobEnderman(type: EntityType<EntityMobEnderman>, world: World) : Ent
 	
 	override fun attackEntityFrom(source: DamageSource, amount: Float): Boolean {
 		if (!world.isRemote) {
-			val attacker = source.immediateSource as? EntityPlayer
+			val attacker = source.immediateSource as? PlayerEntity
 			
 			if (attacker != null) {
 				if (trackedCausatumStage == S0_INITIAL || EnderCausatum.getStage(attacker) == S0_INITIAL) {
@@ -460,7 +460,7 @@ class EntityMobEnderman(type: EntityType<EntityMobEnderman>, world: World) : Ent
 			teleportHandler.teleportRandom(TELEPORT_RANGE_AVOID_BATTLE)
 			
 			if (revengeTarget == null) {
-				revengeTarget = source.trueSource as? EntityLivingBase
+				revengeTarget = source.trueSource as? LivingEntity
 			}
 		}
 		
@@ -472,13 +472,13 @@ class EntityMobEnderman(type: EntityType<EntityMobEnderman>, world: World) : Ent
 			return
 		}
 		
-		val attacker = cause.trueSource as? EntityPlayer ?: attackingPlayer
+		val attacker = cause.trueSource as? PlayerEntity ?: attackingPlayer
 		
 		if (attacker != null) {
 			if (EnderCausatum.triggerStage(attacker, CausatumStage.S1_KILLED_ENDERMAN)) {
 				// TODO achievement after the event finishes & compendium
 				
-				for(player in world.selectEntities.inRange<EntityPlayer>(posVec, 32.0)) {
+				for (player in world.selectEntities.inRange<PlayerEntity>(posVec, 32.0)) {
 					if (player !== attacker && abs(player.posY - posY) < 8.0) {
 						EnderCausatum.triggerStage(player, CausatumStage.S1_KILLED_ENDERMAN)
 					}

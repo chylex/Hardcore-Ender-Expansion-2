@@ -1,32 +1,32 @@
 package chylex.hee.game.block.entity.base
 
 import chylex.hee.game.block.entity.base.TileEntityBase.Context.NETWORK
-import chylex.hee.game.world.FLAG_SKIP_RENDER
-import chylex.hee.game.world.FLAG_SYNC_CLIENT
-import chylex.hee.game.world.distanceSqTo
-import chylex.hee.game.world.getState
-import chylex.hee.game.world.getTile
-import chylex.hee.game.world.playServer
-import chylex.hee.system.forge.Side
-import chylex.hee.system.forge.Sided
-import chylex.hee.system.math.LerpedFloat
-import chylex.hee.system.migration.EntityPlayer
-import chylex.hee.system.migration.Facing.UP
-import chylex.hee.system.migration.Sounds
+import chylex.hee.game.block.util.CHEST_FACING
+import chylex.hee.game.fx.util.playServer
+import chylex.hee.game.world.util.FLAG_SKIP_RENDER
+import chylex.hee.game.world.util.FLAG_SYNC_CLIENT
+import chylex.hee.game.world.util.distanceSqTo
+import chylex.hee.game.world.util.getState
+import chylex.hee.game.world.util.getTile
 import chylex.hee.system.random.nextFloat
-import chylex.hee.system.serialization.TagCompound
-import chylex.hee.system.serialization.getStringOrNull
-import chylex.hee.system.serialization.use
-import net.minecraft.block.ChestBlock.FACING
+import chylex.hee.util.forge.Side
+import chylex.hee.util.forge.Sided
+import chylex.hee.util.math.LerpedFloat
+import chylex.hee.util.nbt.TagCompound
+import chylex.hee.util.nbt.getStringOrNull
+import chylex.hee.util.nbt.use
+import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.inventory.IInventory
 import net.minecraft.inventory.container.INamedContainerProvider
 import net.minecraft.tileentity.IChestLid
 import net.minecraft.tileentity.ITickableTileEntity
 import net.minecraft.tileentity.TileEntityType
 import net.minecraft.util.Direction
+import net.minecraft.util.Direction.UP
 import net.minecraft.util.INameable
 import net.minecraft.util.SoundCategory
 import net.minecraft.util.SoundEvent
+import net.minecraft.util.SoundEvents
 import net.minecraft.util.text.ITextComponent
 
 @Sided(value = Side.CLIENT, _interface = IChestLid::class)
@@ -37,14 +37,14 @@ abstract class TileEntityBaseChest(type: TileEntityType<out TileEntityBaseChest>
 	}
 	
 	val facing: Direction
-		get() = world?.let { pos.getState(it)[FACING] } ?: UP
+		get() = world?.let { pos.getState(it)[CHEST_FACING] } ?: UP
 	
 	val isLidClosed: Boolean
 		get() = viewerCount == 0
 	
 	protected abstract val defaultName: ITextComponent
-	protected open val soundOpening: SoundEvent = Sounds.BLOCK_CHEST_OPEN
-	protected open val soundClosing: SoundEvent = Sounds.BLOCK_CHEST_CLOSE
+	protected open val soundOpening: SoundEvent = SoundEvents.BLOCK_CHEST_OPEN
+	protected open val soundClosing: SoundEvent = SoundEvents.BLOCK_CHEST_CLOSE
 	
 	private val lidAngle = LerpedFloat(0F)
 	private var viewerCount by Notifying(0, FLAG_SYNC_CLIENT or FLAG_SKIP_RENDER)
@@ -85,18 +85,18 @@ abstract class TileEntityBaseChest(type: TileEntityType<out TileEntityBaseChest>
 	
 	// Inventory handling
 	
-	fun isUsableByPlayer(player: EntityPlayer): Boolean {
+	fun isUsableByPlayer(player: PlayerEntity): Boolean {
 		return pos.getTile<TileEntityBaseChest>(wrld) === this && pos.distanceSqTo(player) <= 64
 	}
 	
 	protected fun createChestInventory(wrapped: IInventory): IInventory {
 		return object : IInventory by wrapped {
-			override fun openInventory(player: EntityPlayer) {
+			override fun openInventory(player: PlayerEntity) {
 				wrapped.openInventory(player)
 				++viewerCount
 			}
 			
-			override fun closeInventory(player: EntityPlayer) {
+			override fun closeInventory(player: PlayerEntity) {
 				wrapped.closeInventory(player)
 				--viewerCount
 			}
@@ -106,7 +106,7 @@ abstract class TileEntityBaseChest(type: TileEntityType<out TileEntityBaseChest>
 				this@TileEntityBaseChest.markDirty()
 			}
 			
-			override fun isUsableByPlayer(player: EntityPlayer): Boolean {
+			override fun isUsableByPlayer(player: PlayerEntity): Boolean {
 				return this@TileEntityBaseChest.isUsableByPlayer(player)
 			}
 		}

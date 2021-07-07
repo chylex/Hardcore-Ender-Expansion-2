@@ -1,18 +1,18 @@
 package chylex.hee.game.entity.living.ai
 
-import chylex.hee.game.entity.posVec
-import chylex.hee.system.math.component1
-import chylex.hee.system.math.component2
-import chylex.hee.system.math.component3
-import chylex.hee.system.migration.EntityLiving
-import chylex.hee.system.migration.EntityTameable
+import chylex.hee.game.entity.util.posVec
+import chylex.hee.util.math.component1
+import chylex.hee.util.math.component2
+import chylex.hee.util.math.component3
 import net.minecraft.entity.EntityPredicate
+import net.minecraft.entity.MobEntity
 import net.minecraft.entity.ai.goal.Goal.Flag.TARGET
 import net.minecraft.entity.ai.goal.TargetGoal
+import net.minecraft.entity.passive.TameableEntity
 import net.minecraft.util.math.AxisAlignedBB
 import java.util.EnumSet
 
-class AITargetAttackerFixed(entity: EntityLiving, private val callReinforcements: Boolean, checkSight: Boolean = true, nearbyOnly: Boolean = false) : TargetGoal(entity, checkSight, nearbyOnly) {
+class AITargetAttackerFixed(entity: MobEntity, private val callReinforcements: Boolean, checkSight: Boolean = true, nearbyOnly: Boolean = false) : TargetGoal(entity, checkSight, nearbyOnly) {
 	private val entityPredicate = EntityPredicate().setUseInvisibilityCheck()
 	private var revengeTimerOld = 0
 	
@@ -52,8 +52,8 @@ class AITargetAttackerFixed(entity: EntityLiving, private val callReinforcements
 		val friendlies = goalOwner.world.getLoadedEntitiesWithinAABB(goalOwner.javaClass, AxisAlignedBB(x, y, z, x + 1.0, y + 1.0, z + 1.0).grow(maxDistance, 10.0, maxDistance))
 		val target = goalOwner.revengeTarget ?: return
 		
-		for(friendly in friendlies) {
-			if (friendly !== goalOwner && friendly.attackTarget == null && (goalOwner !is EntityTameable || goalOwner.owner === (friendly as EntityTameable).owner) && !friendly.isOnSameTeam(target)) {
+		for (friendly in friendlies) {
+			if (friendly !== goalOwner && friendly.attackTarget == null && (goalOwner !is TameableEntity || goalOwner.owner === (friendly as TameableEntity).owner) && !friendly.isOnSameTeam(target)) {
 				friendly.attackTarget = target
 			}
 		}

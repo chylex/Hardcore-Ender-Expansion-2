@@ -6,13 +6,13 @@ import chylex.hee.datagen.r
 import chylex.hee.datagen.safe
 import chylex.hee.datagen.safeUnit
 import chylex.hee.datagen.then
+import chylex.hee.game.Resource
 import chylex.hee.game.block.BlockAbstractTable
-import chylex.hee.system.facades.Resource
-import chylex.hee.system.forge.named
-import chylex.hee.system.migration.BlockWall
+import chylex.hee.system.named
 import net.minecraft.block.AbstractBlock
 import net.minecraft.block.Block
 import net.minecraft.block.Blocks
+import net.minecraft.block.WallBlock
 import net.minecraft.util.ResourceLocation
 import net.minecraftforge.client.model.generators.BlockModelBuilder
 import net.minecraftforge.client.model.generators.BlockModelProvider
@@ -58,7 +58,7 @@ fun BlockModelProvider.particle(block: Block, particle: ResourceLocation) = safe
 }
 
 fun BlockModelProvider.multi(block: Block, parent: ResourceLocation, suffixes: Array<String>, callback: BlockModelBuilder.(Callback<Block>) -> Unit) {
-	for(suffix in suffixes) {
+	for (suffix in suffixes) {
 		val path = block.path + suffix
 		
 		this.safeUnit {
@@ -71,7 +71,7 @@ fun BlockModelProvider.multi(block: Block, parent: ResourceLocation, suffixes: I
 	multi(block, parent, Array(1 + suffixes.last - suffixes.first) { "_${suffixes.first + it}" }, callback)
 }
 
-fun BlockModelProvider.wall(block: BlockWall, texture: ResourceLocation) = safeUnit {
+fun BlockModelProvider.wall(block: WallBlock, texture: ResourceLocation) = safeUnit {
 	wallPost(block.path + "_post", texture)
 	wallSide(block.path + "_side", texture)
 	wallSideTall(block.path + "_side_tall", texture)

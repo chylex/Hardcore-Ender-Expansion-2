@@ -2,41 +2,38 @@ package chylex.hee.game.item
 
 import chylex.hee.HEE
 import chylex.hee.game.container.ContainerAmuletOfRecovery
-import chylex.hee.game.entity.heeTag
-import chylex.hee.game.entity.heeTagOrNull
-import chylex.hee.game.inventory.IInventoryFromPlayerItem
-import chylex.hee.game.inventory.allSlots
-import chylex.hee.game.inventory.enchantmentMap
-import chylex.hee.game.inventory.getStack
-import chylex.hee.game.inventory.heeTag
-import chylex.hee.game.inventory.heeTagOrNull
-import chylex.hee.game.inventory.isNotEmpty
-import chylex.hee.game.inventory.nbtOrNull
-import chylex.hee.game.inventory.setStack
+import chylex.hee.game.inventory.util.IInventoryFromPlayerItem
+import chylex.hee.game.inventory.util.allSlots
+import chylex.hee.game.inventory.util.getStack
+import chylex.hee.game.inventory.util.setStack
+import chylex.hee.game.item.util.enchantmentMap
+import chylex.hee.game.item.util.isNotEmpty
+import chylex.hee.game.item.util.nbtOrNull
 import chylex.hee.game.mechanics.energy.IEnergyQuantity.Units
 import chylex.hee.game.mechanics.trinket.ITrinketItem
 import chylex.hee.game.mechanics.trinket.TrinketHandler
 import chylex.hee.init.ModContainers
-import chylex.hee.system.compatibility.MinecraftForgeEventBus
-import chylex.hee.system.forge.EventPriority
-import chylex.hee.system.forge.Side
-import chylex.hee.system.forge.Sided
-import chylex.hee.system.forge.SubscribeEvent
-import chylex.hee.system.math.over
-import chylex.hee.system.migration.ActionResult.SUCCESS
-import chylex.hee.system.migration.EntityPlayer
-import chylex.hee.system.serialization.NBTItemStackList
-import chylex.hee.system.serialization.NBTList.Companion.putList
-import chylex.hee.system.serialization.getIntegerOrNull
-import chylex.hee.system.serialization.getListOfCompounds
-import chylex.hee.system.serialization.getListOfItemStacks
-import chylex.hee.system.serialization.getStack
-import chylex.hee.system.serialization.hasKey
-import chylex.hee.system.serialization.putStack
-import chylex.hee.system.serialization.writeTag
+import chylex.hee.system.MinecraftForgeEventBus
+import chylex.hee.system.heeTag
+import chylex.hee.system.heeTagOrNull
+import chylex.hee.util.buffer.writeTag
+import chylex.hee.util.forge.EventPriority
+import chylex.hee.util.forge.Side
+import chylex.hee.util.forge.Sided
+import chylex.hee.util.forge.SubscribeEvent
+import chylex.hee.util.math.over
+import chylex.hee.util.nbt.NBTItemStackList
+import chylex.hee.util.nbt.getIntegerOrNull
+import chylex.hee.util.nbt.getListOfCompounds
+import chylex.hee.util.nbt.getListOfItemStacks
+import chylex.hee.util.nbt.getStack
+import chylex.hee.util.nbt.hasKey
+import chylex.hee.util.nbt.putList
+import chylex.hee.util.nbt.putStack
 import io.netty.buffer.Unpooled
 import net.minecraft.client.util.ITooltipFlag
 import net.minecraft.command.ICommandSource
+import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.entity.player.PlayerInventory
 import net.minecraft.inventory.Inventory
 import net.minecraft.inventory.container.Container
@@ -44,6 +41,7 @@ import net.minecraft.inventory.container.INamedContainerProvider
 import net.minecraft.item.ItemStack
 import net.minecraft.item.Rarity
 import net.minecraft.util.ActionResult
+import net.minecraft.util.ActionResultType.SUCCESS
 import net.minecraft.util.Hand
 import net.minecraft.util.NonNullList
 import net.minecraft.util.Util
@@ -86,7 +84,7 @@ class ItemAmuletOfRecovery(properties: Properties) : ItemAbstractEnergyUser(prop
 			return stack.heeTagOrNull.hasKey(CONTENTS_TAG)
 		}
 		
-		private fun processPlayerInventory(player: EntityPlayer, block: (inventory: NonNullList<ItemStack>, vanillaSlot: Int, savedSlot: Int) -> Unit) {
+		private fun processPlayerInventory(player: PlayerEntity, block: (inventory: NonNullList<ItemStack>, vanillaSlot: Int, savedSlot: Int) -> Unit) {
 			with(player.inventory) {
 				SLOTS_MAIN.forEachIndexed    { vanillaSlot, savedSlot -> block(mainInventory, vanillaSlot, savedSlot) }
 				SLOTS_ARMOR.forEachIndexed   { vanillaSlot, savedSlot -> block(armorInventory, vanillaSlot, savedSlot) }
@@ -94,7 +92,7 @@ class ItemAmuletOfRecovery(properties: Properties) : ItemAbstractEnergyUser(prop
 			}
 		}
 		
-		private fun movePlayerInventoryToTrinket(player: EntityPlayer, trinketItem: ItemStack) {
+		private fun movePlayerInventoryToTrinket(player: PlayerEntity, trinketItem: ItemStack) {
 			val saved = Array<ItemStack>(SLOT_COUNT) { ItemStack.EMPTY }
 			
 			fun moveFromInventory(sourceInventory: NonNullList<ItemStack>, sourceSlot: Int, savedSlot: Int) {
@@ -115,7 +113,7 @@ class ItemAmuletOfRecovery(properties: Properties) : ItemAbstractEnergyUser(prop
 			var sumOfFilteredTagSizes = 0
 			
 			with(trinketItem.heeTag) {
-				for(stack in getListOfItemStacks(CONTENTS_TAG)) {
+				for (stack in getListOfItemStacks(CONTENTS_TAG)) {
 					if (stack.isNotEmpty) {
 						sumOfSlots += 1
 						sumOfSizes += stack.count
@@ -144,7 +142,7 @@ class ItemAmuletOfRecovery(properties: Properties) : ItemAbstractEnergyUser(prop
 							try {
 								buffer.writeTag(nbtCopy)
 								sumOfFilteredTagSizes += buffer.writerIndex().coerceAtMost(2500)
-							} catch(e: Exception) {
+							} catch (e: Exception) {
 								sumOfFilteredTagSizes += 2500
 								HEE.log.error("[ItemAmuletOfRecovery] failed processing NBT data when calculating Energy cost", e)
 								
@@ -168,12 +166,12 @@ class ItemAmuletOfRecovery(properties: Properties) : ItemAbstractEnergyUser(prop
 			return stack.displayName
 		}
 		
-		override fun createMenu(id: Int, inventory: PlayerInventory, player: EntityPlayer): Container {
+		override fun createMenu(id: Int, inventory: PlayerInventory, player: PlayerEntity): Container {
 			return ContainerAmuletOfRecovery(id, player, hand)
 		}
 	}
 	
-	class Inv(override val player: EntityPlayer, private val itemHeldIn: Hand) : Inventory(SLOT_COUNT), IInventoryFromPlayerItem {
+	class Inv(override val player: PlayerEntity, private val itemHeldIn: Hand) : Inventory(SLOT_COUNT), IInventoryFromPlayerItem {
 		init {
 			val heldItem = player.getHeldItem(itemHeldIn)
 			
@@ -208,7 +206,7 @@ class ItemAmuletOfRecovery(properties: Properties) : ItemAbstractEnergyUser(prop
 			var isEmpty = true
 			val newList = NBTItemStackList()
 			
-			for((_, stack) in allSlots) {
+			for ((_, stack) in allSlots) {
 				newList.append(stack)
 				
 				if (stack.isNotEmpty) {
@@ -259,7 +257,7 @@ class ItemAmuletOfRecovery(properties: Properties) : ItemAbstractEnergyUser(prop
 		return true
 	}
 	
-	override fun onItemRightClick(world: World, player: EntityPlayer, hand: Hand): ActionResult<ItemStack> {
+	override fun onItemRightClick(world: World, player: PlayerEntity, hand: Hand): ActionResult<ItemStack> {
 		val stack = player.getHeldItem(hand)
 		
 		if (!hasAnyContents(stack) || !hasMaximumEnergy(stack)) {
@@ -274,7 +272,7 @@ class ItemAmuletOfRecovery(properties: Properties) : ItemAbstractEnergyUser(prop
 	
 	@SubscribeEvent(EventPriority.HIGH)
 	fun onLivingDeath(e: LivingDeathEvent) {
-		val player = e.entityLiving as? EntityPlayer ?: return
+		val player = e.entityLiving as? PlayerEntity ?: return
 		val world = player.world
 		
 		if (world.isRemote || world.gameRules.getBoolean(KEEP_INVENTORY)) {
@@ -297,7 +295,7 @@ class ItemAmuletOfRecovery(properties: Properties) : ItemAbstractEnergyUser(prop
 		val player = e.entity
 		val drops = e.drops
 		
-		if (player.world.isRemote || player !is EntityPlayer || drops.isEmpty()) {
+		if (player.world.isRemote || player !is PlayerEntity || drops.isEmpty()) {
 			return
 		}
 		
@@ -305,7 +303,7 @@ class ItemAmuletOfRecovery(properties: Properties) : ItemAbstractEnergyUser(prop
 			val list = getListOfItemStacks(CONTENTS_TAG).takeIf { it.size >= SLOT_COUNT } ?: return
 			val iter = drops.iterator()
 			
-			for(slot in BACKFILL_SLOT_ORDER) {
+			for (slot in BACKFILL_SLOT_ORDER) {
 				if (list.get(slot).isEmpty) {
 					list.set(slot, iter.next().item)
 					iter.remove()

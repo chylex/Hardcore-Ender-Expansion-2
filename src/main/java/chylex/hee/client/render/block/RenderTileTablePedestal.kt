@@ -1,26 +1,26 @@
 package chylex.hee.client.render.block
 
-import chylex.hee.client.MC
-import chylex.hee.client.model.ModelHelper
-import chylex.hee.client.render.gl.DF_ONE_MINUS_SRC_ALPHA
-import chylex.hee.client.render.gl.DF_ZERO
-import chylex.hee.client.render.gl.RenderStateBuilder
-import chylex.hee.client.render.gl.RenderStateBuilder.Companion.ALPHA_NONE
-import chylex.hee.client.render.gl.RenderStateBuilder.Companion.CULL_DISABLED
-import chylex.hee.client.render.gl.RenderStateBuilder.Companion.LIGHTING_ENABLED
-import chylex.hee.client.render.gl.RenderStateBuilder.Companion.MASK_COLOR
-import chylex.hee.client.render.gl.SF_ONE
-import chylex.hee.client.render.gl.SF_SRC_ALPHA
-import chylex.hee.client.render.gl.rotateY
-import chylex.hee.client.render.gl.translateZ
+import chylex.hee.client.model.util.ModelHelper
+import chylex.hee.client.render.RenderStateBuilder
+import chylex.hee.client.render.RenderStateBuilder.Companion.ALPHA_NONE
+import chylex.hee.client.render.RenderStateBuilder.Companion.CULL_DISABLED
+import chylex.hee.client.render.RenderStateBuilder.Companion.LIGHTING_ENABLED
+import chylex.hee.client.render.RenderStateBuilder.Companion.MASK_COLOR
+import chylex.hee.client.render.util.DF_ONE_MINUS_SRC_ALPHA
+import chylex.hee.client.render.util.DF_ZERO
+import chylex.hee.client.render.util.SF_ONE
+import chylex.hee.client.render.util.SF_SRC_ALPHA
+import chylex.hee.client.render.util.rotateY
+import chylex.hee.client.render.util.translateZ
+import chylex.hee.client.util.MC
+import chylex.hee.game.Resource
 import chylex.hee.game.block.BlockTablePedestal
 import chylex.hee.game.block.entity.TileEntityTablePedestal
-import chylex.hee.game.inventory.size
-import chylex.hee.system.facades.Resource
-import chylex.hee.system.forge.Side
-import chylex.hee.system.forge.Sided
-import chylex.hee.system.math.toRadians
+import chylex.hee.game.item.util.size
 import chylex.hee.system.random.nextFloat
+import chylex.hee.util.forge.Side
+import chylex.hee.util.forge.Sided
+import chylex.hee.util.math.toRadians
 import com.mojang.blaze3d.matrix.MatrixStack
 import net.minecraft.client.renderer.IRenderTypeBuffer
 import net.minecraft.client.renderer.ItemRenderer
@@ -96,7 +96,7 @@ class RenderTileTablePedestal(dispatcher: TileEntityRendererDispatcher) : TileEn
 		else
 			0F
 		
-		for((index, stack) in stacks.withIndex()) {
+		for ((index, stack) in stacks.withIndex()) {
 			renderItemStack(matrix, buffer, itemRenderer, stack, index, itemRotation, baseSeed, offsetAngleIndices, shadowAlpha, combinedLight)
 		}
 	}

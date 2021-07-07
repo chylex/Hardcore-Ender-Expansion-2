@@ -1,8 +1,16 @@
 package chylex.hee.game.entity.living
 
+import chylex.hee.game.Resource
 import chylex.hee.game.entity.CustomCreatureType
-import chylex.hee.game.entity.EntityData
-import chylex.hee.game.entity.getAttributeInstance
+import chylex.hee.game.entity.damage.Damage
+import chylex.hee.game.entity.damage.FallbackDamage
+import chylex.hee.game.entity.damage.IDamageProcessor.Companion.ALL_PROTECTIONS
+import chylex.hee.game.entity.damage.IDamageProcessor.Companion.ARMOR_PROTECTION
+import chylex.hee.game.entity.damage.IDamageProcessor.Companion.DIFFICULTY_SCALING
+import chylex.hee.game.entity.damage.IDamageProcessor.Companion.ENCHANTMENT_PROTECTION
+import chylex.hee.game.entity.damage.IDamageProcessor.Companion.FIRE_TYPE
+import chylex.hee.game.entity.damage.IDamageProcessor.Companion.NUDITY_DANGER
+import chylex.hee.game.entity.damage.IDamageProcessor.Companion.RAPID_DAMAGE
 import chylex.hee.game.entity.living.behavior.EnderEyeAttack.KnockbackDash
 import chylex.hee.game.entity.living.behavior.EnderEyeAttack.Melee
 import chylex.hee.game.entity.living.behavior.EnderEyePhase
@@ -19,62 +27,53 @@ import chylex.hee.game.entity.living.controller.EntityBodyHeadOnly
 import chylex.hee.game.entity.living.controller.EntityLookSlerp
 import chylex.hee.game.entity.living.controller.EntityMoveFlyingForward
 import chylex.hee.game.entity.living.path.PathNavigateFlyingPreferBeeLineOrStrafe
-import chylex.hee.game.entity.motionY
-import chylex.hee.game.entity.posVec
-import chylex.hee.game.entity.selectVulnerableEntities
 import chylex.hee.game.entity.technical.EntityTechnicalTrigger
 import chylex.hee.game.entity.technical.EntityTechnicalTrigger.Types.OBSIDIAN_TOWER_DEATH_ANIMATION
-import chylex.hee.game.mechanics.damage.Damage
-import chylex.hee.game.mechanics.damage.IDamageProcessor.Companion.ALL_PROTECTIONS
-import chylex.hee.game.mechanics.damage.IDamageProcessor.Companion.ARMOR_PROTECTION
-import chylex.hee.game.mechanics.damage.IDamageProcessor.Companion.DIFFICULTY_SCALING
-import chylex.hee.game.mechanics.damage.IDamageProcessor.Companion.ENCHANTMENT_PROTECTION
-import chylex.hee.game.mechanics.damage.IDamageProcessor.Companion.FIRE_TYPE
-import chylex.hee.game.mechanics.damage.IDamageProcessor.Companion.NUDITY_DANGER
-import chylex.hee.game.mechanics.damage.IDamageProcessor.Companion.RAPID_DAMAGE
-import chylex.hee.game.mechanics.damage.special.FallbackDamage
-import chylex.hee.game.potion.PotionBanishment
-import chylex.hee.game.world.Pos
-import chylex.hee.game.world.center
-import chylex.hee.game.world.totalTime
+import chylex.hee.game.entity.util.EntityData
+import chylex.hee.game.entity.util.getAttributeInstance
+import chylex.hee.game.entity.util.motionY
+import chylex.hee.game.entity.util.posVec
+import chylex.hee.game.entity.util.selectVulnerableEntities
+import chylex.hee.game.potion.BanishmentEffect
 import chylex.hee.init.ModEntities
 import chylex.hee.init.ModSounds
 import chylex.hee.network.client.PacketClientLaunchInstantly
-import chylex.hee.system.facades.Resource
-import chylex.hee.system.forge.Side
-import chylex.hee.system.forge.Sided
-import chylex.hee.system.math.LerpedFloat
-import chylex.hee.system.math.Vec3
-import chylex.hee.system.math.directionTowards
-import chylex.hee.system.math.floorToInt
-import chylex.hee.system.math.scale
-import chylex.hee.system.math.square
-import chylex.hee.system.math.toYaw
-import chylex.hee.system.math.withY
-import chylex.hee.system.migration.EntityFlying
-import chylex.hee.system.migration.EntityLivingBase
-import chylex.hee.system.migration.EntityPlayer
-import chylex.hee.system.migration.EntityPlayerMP
+import chylex.hee.system.heeTag
 import chylex.hee.system.random.nextFloat
 import chylex.hee.system.random.nextInt
 import chylex.hee.system.random.nextItemOrNull
-import chylex.hee.system.serialization.TagCompound
-import chylex.hee.system.serialization.getPosOrNull
-import chylex.hee.system.serialization.heeTag
-import chylex.hee.system.serialization.putPos
-import chylex.hee.system.serialization.use
+import chylex.hee.util.forge.Side
+import chylex.hee.util.forge.Sided
+import chylex.hee.util.math.LerpedFloat
+import chylex.hee.util.math.Pos
+import chylex.hee.util.math.Vec3
+import chylex.hee.util.math.center
+import chylex.hee.util.math.directionTowards
+import chylex.hee.util.math.floorToInt
+import chylex.hee.util.math.scale
+import chylex.hee.util.math.square
+import chylex.hee.util.math.toYaw
+import chylex.hee.util.math.withY
+import chylex.hee.util.nbt.TagCompound
+import chylex.hee.util.nbt.getPosOrNull
+import chylex.hee.util.nbt.putPos
+import chylex.hee.util.nbt.use
 import net.minecraft.block.material.PushReaction
 import net.minecraft.entity.CreatureAttribute
 import net.minecraft.entity.Entity
 import net.minecraft.entity.EntitySize
 import net.minecraft.entity.EntityType
+import net.minecraft.entity.FlyingEntity
 import net.minecraft.entity.ILivingEntityData
+import net.minecraft.entity.LivingEntity
 import net.minecraft.entity.Pose
 import net.minecraft.entity.SpawnReason
 import net.minecraft.entity.ai.attributes.Attributes.ATTACK_DAMAGE
 import net.minecraft.entity.ai.attributes.Attributes.FOLLOW_RANGE
 import net.minecraft.entity.ai.controller.BodyController
 import net.minecraft.entity.monster.IMob
+import net.minecraft.entity.player.PlayerEntity
+import net.minecraft.entity.player.ServerPlayerEntity
 import net.minecraft.nbt.CompoundNBT
 import net.minecraft.network.IPacket
 import net.minecraft.network.datasync.DataSerializers
@@ -95,7 +94,7 @@ import net.minecraftforge.fml.network.NetworkHooks
 import kotlin.math.abs
 import kotlin.math.min
 
-class EntityBossEnderEye(type: EntityType<EntityBossEnderEye>, world: World) : EntityFlying(type, world), IMob, IKnockbackMultiplier {
+class EntityBossEnderEye(type: EntityType<EntityBossEnderEye>, world: World) : FlyingEntity(type, world), IMob, IKnockbackMultiplier {
 	constructor(world: World) : this(ModEntities.ENDER_EYE, world)
 	
 	constructor(world: World, totalSpawners: Int) : this(world) {
@@ -262,7 +261,7 @@ class EntityBossEnderEye(type: EntityType<EntityBossEnderEye>, world: World) : E
 					fallAsleep()
 				}
 			}
-			else if (!currentTarget.isAlive || (currentTarget is EntityPlayer && (currentTarget.isCreative || currentTarget.isSpectator))) {
+			else if (!currentTarget.isAlive || (currentTarget is PlayerEntity && (currentTarget.isCreative || currentTarget.isSpectator))) {
 				attackTarget = null
 				setRotateTarget(null)
 			}
@@ -271,7 +270,7 @@ class EntityBossEnderEye(type: EntityType<EntityBossEnderEye>, world: World) : E
 				
 				if (distanceFromTargetSq > square(getAttributeValue(FOLLOW_RANGE) * 0.75)) {
 					val closerRange = getAttributeValue(FOLLOW_RANGE) * 0.375
-					val closerCandidate = rand.nextItemOrNull(world.selectVulnerableEntities.inRange<EntityPlayer>(posVec, closerRange).filter(::canEntityBeSeen))
+					val closerCandidate = rand.nextItemOrNull(world.selectVulnerableEntities.inRange<PlayerEntity>(posVec, closerRange).filter(::canEntityBeSeen))
 					
 					if (closerCandidate != null) {
 						attackTarget = closerCandidate
@@ -323,8 +322,8 @@ class EntityBossEnderEye(type: EntityType<EntityBossEnderEye>, world: World) : E
 		bossPhase = phase.wakeUp()
 		eyeState = EYE_OPEN
 		fallAsleepTimer = 0
-		lastKnockbackDashTime = world.totalTime
-		attackTarget = source.trueSource as? EntityPlayer
+		lastKnockbackDashTime = world.gameTime
+		attackTarget = source.trueSource as? PlayerEntity
 		
 		playHurtSound(source)
 		return
@@ -367,8 +366,8 @@ class EntityBossEnderEye(type: EntityType<EntityBossEnderEye>, world: World) : E
 	
 	// Battle
 	
-	fun forceFindNewTarget(): EntityLivingBase? {
-		val attacker = revengeTarget as? EntityPlayer
+	fun forceFindNewTarget(): LivingEntity? {
+		val attacker = revengeTarget as? PlayerEntity
 		
 		if (attacker != null) {
 			revengeTarget = null
@@ -376,12 +375,12 @@ class EntityBossEnderEye(type: EntityType<EntityBossEnderEye>, world: World) : E
 		}
 		
 		val range = getAttributeValue(FOLLOW_RANGE)
-		val targets = world.selectVulnerableEntities.inRange<EntityPlayer>(posVec, range).filter(::canEntityBeSeen)
+		val targets = world.selectVulnerableEntities.inRange<PlayerEntity>(posVec, range).filter(::canEntityBeSeen)
 		
 		return rng.nextItemOrNull(targets).also { attackTarget = it }
 	}
 	
-	override fun setAttackTarget(newTarget: EntityLivingBase?) {
+	override fun setAttackTarget(newTarget: LivingEntity?) {
 		super.setAttackTarget(newTarget)
 		
 		if (attackTarget != null) {
@@ -389,7 +388,7 @@ class EntityBossEnderEye(type: EntityType<EntityBossEnderEye>, world: World) : E
 		}
 	}
 	
-	fun setRotateTarget(target: EntityLivingBase?, speed: Float = DEFAULT_SLERP_ADJUSTMENT_SPEED) {
+	fun setRotateTarget(target: LivingEntity?, speed: Float = DEFAULT_SLERP_ADJUSTMENT_SPEED) {
 		rotateTargetId = target?.entityId ?: Int.MIN_VALUE
 		rotateTargetSpeed = speed
 	}
@@ -406,7 +405,7 @@ class EntityBossEnderEye(type: EntityType<EntityBossEnderEye>, world: World) : E
 	
 	override fun attackEntityFrom(source: DamageSource, amount: Float): Boolean {
 		if (isInvulnerableTo(source) || amount < 6F) {
-			if (source.immediateSource is EntityPlayer || source.isProjectile) {
+			if (source.immediateSource is PlayerEntity || source.isProjectile) {
 				playSound(ModSounds.MOB_ENDER_EYE_HIT_FAIL, 0.8F, rand.nextFloat(0.6F, 0.8F))
 			}
 			
@@ -415,13 +414,13 @@ class EntityBossEnderEye(type: EntityType<EntityBossEnderEye>, world: World) : E
 		
 		wakeUp(source)
 		
-		if ((isDemonEye || eyeState == EYE_LASER) && (amount < 8.5F || !PotionBanishment.canBanish(this, source))) {
+		if ((isDemonEye || eyeState == EYE_LASER) && (amount < 8.5F || !BanishmentEffect.canBanish(this, source))) {
 			playSound(ModSounds.MOB_ENDER_EYE_HIT_FAIL, 1F, rand.nextFloat(1F, 1.7F))
 			return false
 		}
 		
 		if (bossPhase is Attacking && super.attackEntityFrom(source, amount - 2F)) {
-			if (knockbackDashChance > 2 && world.totalTime - lastKnockbackDashTime >= 50L && rand.nextInt(3) != 0) {
+			if (knockbackDashChance > 2 && world.gameTime - lastKnockbackDashTime >= 50L && rand.nextInt(3) != 0) {
 				knockbackDashChance--
 			}
 			
@@ -432,16 +431,16 @@ class EntityBossEnderEye(type: EntityType<EntityBossEnderEye>, world: World) : E
 	}
 	
 	override fun isInvulnerableTo(source: DamageSource): Boolean {
-		return super.isInvulnerableTo(source) || source.isProjectile || source.immediateSource !is EntityPlayer
+		return super.isInvulnerableTo(source) || source.isProjectile || source.immediateSource !is PlayerEntity
 	}
 	
 	fun performBlastKnockback(target: Entity, strength: Float) {
 		val ratio = Vec3.xz(target.posX, target.posZ).directionTowards(Vec3.xz(posX, posZ)).scale(strength)
 		
-		if (target is EntityLivingBase) {
+		if (target is LivingEntity) {
 			target.applyKnockback(strength, ratio.x, ratio.z)
 			
-			if (target is EntityPlayer) {
+			if (target is PlayerEntity) {
 				PacketClientLaunchInstantly(target, target.motion).sendToPlayer(target)
 			}
 		}
@@ -514,11 +513,11 @@ class EntityBossEnderEye(type: EntityType<EntityBossEnderEye>, world: World) : E
 			return
 		}
 		
-		if (bossPhase.currentAttack is Melee && rand.nextInt(knockbackDashChance) == 0 && lastKnockbackDashTime != world.totalTime) {
+		if (bossPhase.currentAttack is Melee && rand.nextInt(knockbackDashChance) == 0 && lastKnockbackDashTime != world.gameTime) {
 			super.applyKnockback(strength * 1.4F, ratioX, ratioZ)
 			bossPhase.currentAttack = KnockbackDash()
 			knockbackDashChance = 7
-			lastKnockbackDashTime = world.totalTime
+			lastKnockbackDashTime = world.gameTime
 		}
 		else if (!ForgeHooks.onLivingKnockBack(this, strength, ratioX, ratioZ).isCanceled) {
 			motion = motion.add(Vec3.xz(-ratioX, -ratioZ).normalize().scale(KNOCKBACK_MP).withY(0.005))
@@ -531,12 +530,12 @@ class EntityBossEnderEye(type: EntityType<EntityBossEnderEye>, world: World) : E
 	
 	// Boss info
 	
-	override fun addTrackingPlayer(player: EntityPlayerMP) {
+	override fun addTrackingPlayer(player: ServerPlayerEntity) {
 		super.addTrackingPlayer(player)
 		bossInfo.addPlayer(player)
 	}
 	
-	override fun removeTrackingPlayer(player: EntityPlayerMP) {
+	override fun removeTrackingPlayer(player: ServerPlayerEntity) {
 		super.removeTrackingPlayer(player)
 		bossInfo.removePlayer(player)
 	}

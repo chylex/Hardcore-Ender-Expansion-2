@@ -1,5 +1,6 @@
 package chylex.hee
 
+import chylex.hee.client.VanillaResourceOverrides
 import chylex.hee.game.block.BlockBrewingStandCustom
 import chylex.hee.game.block.BlockEndPortalOverride
 import chylex.hee.game.block.BlockShulkerBoxOverride
@@ -9,23 +10,22 @@ import chylex.hee.game.item.properties.CustomRarity
 import chylex.hee.game.mechanics.causatum.EnderCausatum
 import chylex.hee.game.mechanics.instability.Instability
 import chylex.hee.game.mechanics.trinket.TrinketHandler
-import chylex.hee.game.world.ChunkGeneratorEndCustom
-import chylex.hee.game.world.feature.OverworldFeatures
-import chylex.hee.game.world.territory.storage.TokenPlayerStorage
+import chylex.hee.game.territory.system.storage.PlayerTokenStorage
+import chylex.hee.game.world.generation.EndChunkGenerator
+import chylex.hee.game.world.generation.OverworldFeatures
 import chylex.hee.init.ModCreativeTabs
 import chylex.hee.init.ModLoot
 import chylex.hee.init.ModPackets
 import chylex.hee.init.ModPotions
 import chylex.hee.init.ModTileEntities
 import chylex.hee.network.NetworkManager
-import chylex.hee.proxy.ModClientProxy
-import chylex.hee.proxy.ModCommonProxy
 import chylex.hee.system.Debug
-import chylex.hee.system.forge.SubscribeAllEvents
-import chylex.hee.system.forge.SubscribeEvent
+import chylex.hee.util.forge.Side
+import chylex.hee.util.forge.SubscribeAllEvents
+import chylex.hee.util.forge.SubscribeEvent
 import net.minecraft.block.Blocks
 import net.minecraftforge.fml.DistExecutor
-import net.minecraftforge.fml.DistExecutor.SafeSupplier
+import net.minecraftforge.fml.DistExecutor.SafeRunnable
 import net.minecraftforge.fml.ModLoadingContext
 import net.minecraftforge.fml.common.Mod
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber.Bus.MOD
@@ -42,10 +42,9 @@ object Mod {
 		}
 		
 		@Suppress("ConvertLambdaToReference")
-		HEE.proxy = DistExecutor.safeRunForDist(
-			{ SafeSupplier { ModClientProxy() } },
-			{ SafeSupplier { ModCommonProxy() } }
-		)
+		DistExecutor.safeRunWhenOn(Side.CLIENT) {
+			SafeRunnable { VanillaResourceOverrides.register() }
+		}
 		
 		CustomRarity
 		CustomPlantType
@@ -64,13 +63,13 @@ object Mod {
 		
 		e.enqueueWork {
 			OverworldFeatures.registerConfiguredFeatures()
-			ChunkGeneratorEndCustom.registerCodec()
+			EndChunkGenerator.registerCodec()
 		}
 		
 		TrinketHandler.register()
 		EnderCausatum.register()
 		Instability.register()
-		TokenPlayerStorage.register()
+		PlayerTokenStorage.register()
 	}
 	
 	@SubscribeEvent
@@ -85,7 +84,7 @@ object Mod {
 			crashIfFalse(Blocks.END_PORTAL::class.java === BlockEndPortalOverride::class.java, "invalid End Portal block: ${Blocks.END_PORTAL::class.java}")
 			crashIfFalse(Blocks.BREWING_STAND::class.java === BlockBrewingStandCustom::class.java, "invalid Brewing Stand block: ${Blocks.BREWING_STAND::class.java}")
 			
-			for(block in BlockShulkerBoxOverride.ALL_BLOCKS) {
+			for (block in BlockShulkerBoxOverride.ALL_BLOCKS) {
 				crashIfFalse(block.javaClass === BlockShulkerBoxOverride::class.java, "invalid Shulker Box block: ${block.javaClass}")
 				crashIfFalse(block.asItem().javaClass === ItemShulkerBoxOverride::class.java, "invalid Shulker Box item: ${block.asItem().javaClass}")
 			}

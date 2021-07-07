@@ -2,16 +2,16 @@ package chylex.hee.game.item
 
 import chylex.hee.game.block.IBlockDeathFlowerDecaying
 import chylex.hee.game.entity.item.EntityItemCauldronTrigger
-import chylex.hee.game.world.BlockEditor
-import chylex.hee.game.world.getBlock
-import chylex.hee.system.migration.ActionResult.FAIL
-import chylex.hee.system.migration.ActionResult.PASS
-import chylex.hee.system.migration.ActionResult.SUCCESS
+import chylex.hee.game.world.util.BlockEditor
+import chylex.hee.game.world.util.getBlock
 import net.minecraft.entity.Entity
 import net.minecraft.item.Item
 import net.minecraft.item.ItemStack
 import net.minecraft.item.ItemUseContext
 import net.minecraft.util.ActionResultType
+import net.minecraft.util.ActionResultType.FAIL
+import net.minecraft.util.ActionResultType.PASS
+import net.minecraft.util.ActionResultType.SUCCESS
 import net.minecraft.world.World
 
 class ItemEndPowder(properties: Properties) : Item(properties) {

@@ -1,0 +1,91 @@
+package chylex.hee.game.entity.living.path
+
+import chylex.hee.game.entity.living.controller.EntityMoveFlyingForward
+import chylex.hee.game.entity.util.lookDirVec
+import chylex.hee.game.entity.util.lookPosVec
+import chylex.hee.game.entity.util.posVec
+import chylex.hee.util.math.Vec
+import chylex.hee.util.math.Vec3
+import chylex.hee.util.math.directionTowards
+import chylex.hee.util.math.sign
+import chylex.hee.util.math.square
+import chylex.hee.util.math.withY
+import net.minecraft.entity.Entity
+import net.minecraft.entity.MobEntity
+import net.minecraft.pathfinding.FlyingPathNavigator
+import net.minecraft.world.World
+
+class PathNavigateFlyingPreferBeeLineOrStrafe(entity: MobEntity, world: World) : FlyingPathNavigator(entity, world) {
+	private var moveTarget = Vec3.ZERO
+	private var moveSpeed = 0.0
+	
+	private val isBeelining
+		get() = moveSpeed > 0.0
+	
+	private var strafeDir = 0
+	private var strafeDirReset = 0
+	
+	override fun noPath(): Boolean {
+		return super.noPath() && moveSpeed == 0.0
+	}
+	
+	override fun tryMoveToXYZ(x: Double, y: Double, z: Double, speed: Double): Boolean {
+		return tryBeelineTo(x, y, z, speed) || super.tryMoveToXYZ(x, y, z, speed)
+	}
+	
+	override fun tryMoveToEntityLiving(target: Entity, speed: Double): Boolean {
+		return tryBeelineTo(target.posX, target.posY, target.posZ, speed) || super.tryMoveToEntityLiving(target, speed)
+	}
+	
+	private fun tryBeelineTo(x: Double, y: Double, z: Double, speed: Double): Boolean {
+		moveTarget = Vec(x, y, z)
+		moveSpeed = speed
+		return true
+	}
+	
+	override fun tick() {
+		if (!isBeelining) {
+			return
+		}
+		
+		val moveHelper = entity.moveHelper
+		
+		if ((entity.collidedHorizontally || entity.collidedVertically) && entity.motion.lengthSquared() < square(moveSpeed * 0.1)) {
+			strafeDirReset = 35
+			
+			if (strafeDir == 0) {
+				strafeDir = 1
+				
+				val path = pathfind(moveTarget.x, moveTarget.y, moveTarget.z, 1)
+				
+				if (path != null && !path.isFinished) {
+					val point = path.getPathPointFromIndex(0)
+					val pointDir = entity.lookPosVec.withY(0.0).directionTowards(Vec3.xz(point.x + 0.5, point.z + 0.5))
+					
+					strafeDir = entity.lookDirVec.sign(pointDir)
+				}
+			}
+			
+			val strafe = moveTarget.subtract(entity.posVec).withY(0.0).normalize().crossProduct(Vec3.y(strafeDir))
+			val target = entity.posVec.withY(moveTarget.y).add(strafe)
+			
+			moveHelper.setMoveTo(target.x, target.y, target.z, moveSpeed)
+			(moveHelper as? EntityMoveFlyingForward)?.strafe()
+			
+			// TODO improve vertical movement for short obstacles and eventually change the strategy completely for more open spaces
+		}
+		else {
+			moveHelper.setMoveTo(moveTarget.x, moveTarget.y, moveTarget.z, moveSpeed)
+			
+			if (strafeDirReset > 0 && --strafeDirReset == 0) {
+				strafeDir = 0
+			}
+		}
+	}
+	
+	override fun clearPath() {
+		super.clearPath()
+		moveTarget = Vec3.ZERO
+		moveSpeed = 0.0
+	}
+}

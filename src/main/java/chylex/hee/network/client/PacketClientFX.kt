@@ -24,22 +24,22 @@ import chylex.hee.game.entity.living.behavior.EndermanTeleportHandler
 import chylex.hee.game.entity.living.behavior.UndreadDustEffects
 import chylex.hee.game.entity.projectile.EntityProjectileSpatialDash
 import chylex.hee.game.entity.technical.EntityTechnicalIgneousPlateLogic
+import chylex.hee.game.fx.IFxData
+import chylex.hee.game.fx.IFxHandler
 import chylex.hee.game.item.ItemAbstractEnergyUser
 import chylex.hee.game.item.ItemCompost
 import chylex.hee.game.item.ItemRevitalizationSubstance
 import chylex.hee.game.item.ItemTableLink
 import chylex.hee.game.mechanics.scorching.ScorchingHelper
 import chylex.hee.game.mechanics.table.TableParticleHandler
-import chylex.hee.game.potion.PotionBanishment
-import chylex.hee.game.world.feature.tombdungeon.piece.TombDungeonRoom_Tomb
+import chylex.hee.game.potion.BanishmentEffect
+import chylex.hee.game.world.generation.feature.tombdungeon.piece.TombDungeonRoom_Tomb
 import chylex.hee.network.BaseClientPacket
-import chylex.hee.network.fx.IFxData
-import chylex.hee.network.fx.IFxHandler
 import chylex.hee.system.Debug
-import chylex.hee.system.forge.Side
-import chylex.hee.system.forge.Sided
-import chylex.hee.system.migration.EntityPlayerSP
+import chylex.hee.util.forge.Side
+import chylex.hee.util.forge.Sided
 import io.netty.buffer.ByteBuf
+import net.minecraft.client.entity.player.ClientPlayerEntity
 import net.minecraft.network.PacketBuffer
 import java.util.Random
 
@@ -85,7 +85,7 @@ class PacketClientFX<T : IFxData>() : BaseClientPacket() {
 			EnderEyeSpawnerParticles.FX_PARTICLE,
 			EndermanTeleportHandler.FX_TELEPORT_FAIL,
 			EndermanTeleportHandler.FX_TELEPORT_OUT_OF_WORLD,
-			PotionBanishment.FX_BANISH,
+			BanishmentEffect.FX_BANISH,
 			UndreadDustEffects.FX_CURSE,
 			TombDungeonRoom_Tomb.MobSpawnerTrigger.FX_SPAWN_UNDREAD,
 			TombDungeonRoom_Tomb.MobSpawnerTrigger.FX_SPAWN_SPIDERLING,
@@ -125,7 +125,7 @@ class PacketClientFX<T : IFxData>() : BaseClientPacket() {
 	}
 	
 	@Sided(Side.CLIENT)
-	override fun handle(player: EntityPlayerSP) {
+	override fun handle(player: ClientPlayerEntity) {
 		buffer?.let { handler.handle(PacketBuffer(it), player.world, RAND) }
 	}
 }

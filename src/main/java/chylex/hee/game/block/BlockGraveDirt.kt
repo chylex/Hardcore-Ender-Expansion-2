@@ -1,32 +1,30 @@
 package chylex.hee.game.block
 
-import chylex.hee.client.MC
+import chylex.hee.client.util.MC
+import chylex.hee.game.Environment
 import chylex.hee.game.block.properties.BlockBuilder
-import chylex.hee.game.block.properties.Property
+import chylex.hee.game.block.util.Property
+import chylex.hee.game.block.util.with
 import chylex.hee.game.entity.living.EntityMobSpiderling
-import chylex.hee.game.entity.posVec
-import chylex.hee.game.world.center
-import chylex.hee.game.world.getBlock
-import chylex.hee.game.world.isPeaceful
-import chylex.hee.game.world.playClient
-import chylex.hee.game.world.playServer
-import chylex.hee.game.world.territory.TerritoryInstance
-import chylex.hee.game.world.territory.storage.data.ForgottenTombsEndData
-import chylex.hee.game.world.totalTime
+import chylex.hee.game.entity.util.posVec
+import chylex.hee.game.fx.util.playClient
+import chylex.hee.game.fx.util.playServer
+import chylex.hee.game.territory.storage.ForgottenTombsEndData
+import chylex.hee.game.territory.system.TerritoryInstance
+import chylex.hee.game.world.util.getBlock
+import chylex.hee.game.world.util.isPeaceful
 import chylex.hee.init.ModBlocks
-import chylex.hee.proxy.Environment
-import chylex.hee.system.forge.Side
-import chylex.hee.system.forge.Sided
-import chylex.hee.system.math.floorToInt
-import chylex.hee.system.math.toYaw
-import chylex.hee.system.migration.BlockFire
-import chylex.hee.system.migration.EntityPlayer
-import chylex.hee.system.migration.Facing.UP
 import chylex.hee.system.random.nextBiasedFloat
 import chylex.hee.system.random.nextFloat
 import chylex.hee.system.random.nextInt
+import chylex.hee.util.forge.Side
+import chylex.hee.util.forge.Sided
+import chylex.hee.util.math.center
+import chylex.hee.util.math.floorToInt
+import chylex.hee.util.math.toYaw
 import net.minecraft.block.Block
 import net.minecraft.block.BlockState
+import net.minecraft.block.FireBlock
 import net.minecraft.block.SoundType
 import net.minecraft.entity.EntitySpawnPlacementRegistry.PlacementType
 import net.minecraft.entity.EntityType
@@ -40,6 +38,7 @@ import net.minecraft.state.StateContainer.Builder
 import net.minecraft.tileentity.TileEntity
 import net.minecraft.util.DamageSource
 import net.minecraft.util.Direction
+import net.minecraft.util.Direction.UP
 import net.minecraft.util.math.AxisAlignedBB
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.shapes.ISelectionContext
@@ -146,7 +145,7 @@ open class BlockGraveDirt(builder: BlockBuilder) : BlockSimpleShaped(builder, Ax
 		private var clientLastSpiderlingSound = 0L
 		
 		override fun updatePostPlacement(state: BlockState, facing: Direction, neighborState: BlockState, world: IWorld, pos: BlockPos, neighborPos: BlockPos): BlockState {
-			if (!world.isRemote && !world.isPeaceful && facing == UP && neighborState.block is BlockFire && world is World) {
+			if (!world.isRemote && !world.isPeaceful && facing == UP && neighborState.block is FireBlock && world is World) {
 				makeSpiderling(world, neighborPos, yaw = world.rand.nextFloat()).apply {
 					health = maxHealth * rng.nextFloat(0.5F, 1F)
 					
@@ -163,7 +162,7 @@ open class BlockGraveDirt(builder: BlockBuilder) : BlockSimpleShaped(builder, Ax
 			return super.updatePostPlacement(state, facing, neighborState, world, pos, neighborPos)
 		}
 		
-		override fun harvestBlock(world: World, player: EntityPlayer, pos: BlockPos, state: BlockState, tile: TileEntity?, stack: ItemStack) {
+		override fun harvestBlock(world: World, player: PlayerEntity, pos: BlockPos, state: BlockState, tile: TileEntity?, stack: ItemStack) {
 			super.harvestBlock(world, player, pos, state, tile, stack)
 			
 			if (!world.isPeaceful) {
@@ -186,7 +185,7 @@ open class BlockGraveDirt(builder: BlockBuilder) : BlockSimpleShaped(builder, Ax
 			else if (world is ServerWorld && world.gameRules.getBoolean(DO_MOB_LOOT)) {
 				val lootContext = LootContext.Builder(world).withRandom(world.rand).build(LootParameterSets.EMPTY)
 				
-				for(drop in Environment.getLootTable(EntityMobSpiderling.LOOT_TABLE).generate(lootContext)) {
+				for (drop in Environment.getLootTable(EntityMobSpiderling.LOOT_TABLE).generate(lootContext)) {
 					spawnAsEntity(world, pos, drop)
 				}
 			}
@@ -194,11 +193,11 @@ open class BlockGraveDirt(builder: BlockBuilder) : BlockSimpleShaped(builder, Ax
 		
 		@Sided(Side.CLIENT)
 		override fun animateTick(state: BlockState, world: World, pos: BlockPos, rand: Random) {
-			if (!world.isPeaceful && world.totalTime - clientLastSpiderlingSound > 27L) {
+			if (!world.isPeaceful && world.gameTime - clientLastSpiderlingSound > 27L) {
 				val distanceSq = MC.player?.getDistanceSq(pos.center) ?: 0.0
 				
 				if (rand.nextInt(10 + ((distanceSq.floorToInt() * 4) / 5)) == 0) {
-					clientLastSpiderlingSound = world.totalTime
+					clientLastSpiderlingSound = world.gameTime
 					
 					val volumeRand = Random(pos.toLong())
 					val volume = 0.05F + (0.25F * volumeRand.nextBiasedFloat(1F))

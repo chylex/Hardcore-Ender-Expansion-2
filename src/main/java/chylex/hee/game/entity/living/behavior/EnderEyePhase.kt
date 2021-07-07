@@ -1,59 +1,57 @@
 package chylex.hee.game.entity.living.behavior
 
-import chylex.hee.client.MC
+import chylex.hee.client.util.MC
 import chylex.hee.game.block.entity.TileEntitySpawnerObsidianTower
 import chylex.hee.game.entity.effect.EntityTerritoryLightningBolt
-import chylex.hee.game.entity.isInEndDimension
 import chylex.hee.game.entity.living.EntityBossEnderEye
 import chylex.hee.game.entity.living.behavior.EnderEyeAttack.LaserEye
 import chylex.hee.game.entity.living.behavior.EnderEyeAttack.Melee
-import chylex.hee.game.entity.lookPosVec
-import chylex.hee.game.entity.motionY
-import chylex.hee.game.entity.posVec
-import chylex.hee.game.entity.selectExistingEntities
 import chylex.hee.game.entity.technical.EntityTechnicalTrigger
 import chylex.hee.game.entity.technical.EntityTechnicalTrigger.Types.OBSIDIAN_TOWER_TOP_GLOWSTONE
-import chylex.hee.game.world.Pos
-import chylex.hee.game.world.breakBlock
-import chylex.hee.game.world.component1
-import chylex.hee.game.world.component2
-import chylex.hee.game.world.distanceSqTo
-import chylex.hee.game.world.getBlock
-import chylex.hee.game.world.getTile
-import chylex.hee.game.world.isAir
-import chylex.hee.game.world.playClient
-import chylex.hee.game.world.playPlayer
-import chylex.hee.game.world.playServer
-import chylex.hee.game.world.setBlock
-import chylex.hee.game.world.territory.TerritoryInstance
-import chylex.hee.game.world.territory.TerritoryType
+import chylex.hee.game.entity.util.lookPosVec
+import chylex.hee.game.entity.util.motionY
+import chylex.hee.game.entity.util.posVec
+import chylex.hee.game.entity.util.selectExistingEntities
+import chylex.hee.game.fx.FxEntityData
+import chylex.hee.game.fx.FxEntityHandler
+import chylex.hee.game.fx.util.playClient
+import chylex.hee.game.fx.util.playPlayer
+import chylex.hee.game.fx.util.playServer
+import chylex.hee.game.territory.TerritoryType
+import chylex.hee.game.territory.system.TerritoryInstance
+import chylex.hee.game.world.isInEndDimension
+import chylex.hee.game.world.util.breakBlock
+import chylex.hee.game.world.util.distanceSqTo
+import chylex.hee.game.world.util.getBlock
+import chylex.hee.game.world.util.getTile
+import chylex.hee.game.world.util.isAir
+import chylex.hee.game.world.util.setBlock
 import chylex.hee.init.ModBlocks
 import chylex.hee.network.client.PacketClientFX
-import chylex.hee.network.fx.FxEntityData
-import chylex.hee.network.fx.FxEntityHandler
-import chylex.hee.system.math.Quaternion
-import chylex.hee.system.math.addY
-import chylex.hee.system.math.component1
-import chylex.hee.system.math.component2
-import chylex.hee.system.math.component3
-import chylex.hee.system.math.directionTowards
-import chylex.hee.system.math.floorToInt
-import chylex.hee.system.math.square
-import chylex.hee.system.math.toPitch
-import chylex.hee.system.math.toYaw
-import chylex.hee.system.migration.Sounds
 import chylex.hee.system.random.nextFloat
 import chylex.hee.system.random.nextItem
 import chylex.hee.system.random.nextItemOrNull
 import chylex.hee.system.random.nextVector2
 import chylex.hee.system.random.removeItemOrNull
-import chylex.hee.system.serialization.TagCompound
-import chylex.hee.system.serialization.use
+import chylex.hee.util.math.Pos
+import chylex.hee.util.math.Quaternion
+import chylex.hee.util.math.addY
+import chylex.hee.util.math.component1
+import chylex.hee.util.math.component2
+import chylex.hee.util.math.component3
+import chylex.hee.util.math.directionTowards
+import chylex.hee.util.math.floorToInt
+import chylex.hee.util.math.square
+import chylex.hee.util.math.toPitch
+import chylex.hee.util.math.toYaw
+import chylex.hee.util.nbt.TagCompound
+import chylex.hee.util.nbt.use
 import net.minecraft.block.Blocks
 import net.minecraft.client.particle.DiggingParticle
 import net.minecraft.client.world.ClientWorld
 import net.minecraft.entity.Entity
 import net.minecraft.util.SoundCategory
+import net.minecraft.util.SoundEvents
 import net.minecraft.util.math.BlockPos
 import net.minecraftforge.common.util.INBTSerializable
 import java.util.Random
@@ -88,13 +86,13 @@ sealed class EnderEyePhase : INBTSerializable<TagCompound> {
 			--timer
 			
 			if (timer == 15.toByte()) {
-				for(nearby in entity.world.selectExistingEntities.allInRange(entity.posVec, 8.0)) {
+				for (nearby in entity.world.selectExistingEntities.allInRange(entity.posVec, 8.0)) {
 					if (nearby !== entity) {
 						entity.performBlastKnockback(nearby, 0.75F)
 					}
 				}
 				
-				Sounds.ENTITY_GENERIC_EXPLODE.playServer(entity.world, entity.posVec, SoundCategory.HOSTILE, volume = 0.5F) // TODO knockback fx
+				SoundEvents.ENTITY_GENERIC_EXPLODE.playServer(entity.world, entity.posVec, SoundCategory.HOSTILE, volume = 0.5F) // TODO knockback fx
 			}
 			else if (timer < 0) {
 				val totalSpawners = entity.totalSpawners.toInt()
@@ -118,18 +116,18 @@ sealed class EnderEyePhase : INBTSerializable<TagCompound> {
 				val glowstonePositions = mutableListOf<BlockPos>()
 				val glowstonePositionGroups = mutableMapOf<BlockPos, MutableList<BlockPos>>()
 				
-				for(chunkX in startChunkX until (startChunkX + chunks))
-				for(chunkZ in startChunkZ until (startChunkZ + chunks)) {
+				for (chunkX in startChunkX until (startChunkX + chunks))
+				for (chunkZ in startChunkZ until (startChunkZ + chunks)) {
 					val chunk = world.getChunk(chunkX, chunkZ)
 					
-					for((pos, tile) in chunk.tileEntityMap) {
+					for ((pos, tile) in chunk.tileEntityMap) {
 						if (tile is TileEntitySpawnerObsidianTower) {
 							remainingSpawners.add(pos)
 						}
 					}
 					
-					for(entityList in chunk.entityLists)
-					for(trigger in entityList.getByClass(EntityTechnicalTrigger::class.java)) {
+					for (entityList in chunk.entityLists)
+					for (trigger in entityList.getByClass(EntityTechnicalTrigger::class.java)) {
 						if (trigger.triggerType == OBSIDIAN_TOWER_TOP_GLOWSTONE) {
 							val pos = Pos(trigger)
 							
@@ -147,7 +145,7 @@ sealed class EnderEyePhase : INBTSerializable<TagCompound> {
 					}
 				}
 				
-				val percentage = when(val count = remainingSpawners.size) {
+				val percentage = when (val count = remainingSpawners.size) {
 					0             -> 0
 					totalSpawners -> 100
 					else          -> 1 + ((count.toFloat() / totalSpawners) * 99F).floorToInt()
@@ -237,7 +235,7 @@ sealed class EnderEyePhase : INBTSerializable<TagCompound> {
 			val (offX, offY, offZ) = rand.nextVector2(xz = rand.nextFloat(7.0, 11.0), y = rand.nextFloat(-3.0, 2.0))
 			val soundType = ModBlocks.SPAWNER_OBSIDIAN_TOWERS.defaultState.soundType
 			
-			for(player in entity.world.players) {
+			for (player in entity.world.players) {
 				if (player.getDistanceSq(entity) < square(32.0)) {
 					soundType.breakSound.playPlayer(player, player.posX + offX, player.posY + offY, player.posZ + offZ, SoundCategory.BLOCKS, soundType.volume * 1.6F, soundType.pitch * 0.95F)
 				}
@@ -330,7 +328,7 @@ sealed class EnderEyePhase : INBTSerializable<TagCompound> {
 			
 			if (newDemonLevel != prevDemonLevel) {
 				entity.updateDemonLevel(newDemonLevel)
-				Sounds.BLOCK_ANVIL_PLACE.playServer(entity.world, entity.posVec, SoundCategory.HOSTILE, volume = 0.3F, pitch = 0.5F + (newDemonLevel * 0.15F))
+				SoundEvents.BLOCK_ANVIL_PLACE.playServer(entity.world, entity.posVec, SoundCategory.HOSTILE, volume = 0.3F, pitch = 0.5F + (newDemonLevel * 0.15F))
 				// TODO custom sound
 			}
 			
@@ -342,7 +340,7 @@ sealed class EnderEyePhase : INBTSerializable<TagCompound> {
 				val world = entity.world
 				val pos = Pos(entity)
 				
-				for(yOffset in 1..5) {
+				for (yOffset in 1..5) {
 					val obsidianPos = pos.down(yOffset)
 					
 					if (obsidianPos.isAir(world)) {

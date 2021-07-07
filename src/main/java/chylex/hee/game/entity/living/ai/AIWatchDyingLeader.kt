@@ -1,8 +1,8 @@
 package chylex.hee.game.entity.living.ai
 
 import chylex.hee.game.entity.living.EntityMobBlobby
-import chylex.hee.game.entity.lookPosVec
-import chylex.hee.system.math.Vec3
+import chylex.hee.game.entity.util.lookPosVec
+import chylex.hee.util.math.Vec3
 import net.minecraft.entity.ai.goal.Goal
 import net.minecraft.entity.ai.goal.Goal.Flag.LOOK
 import net.minecraft.entity.ai.goal.Goal.Flag.MOVE

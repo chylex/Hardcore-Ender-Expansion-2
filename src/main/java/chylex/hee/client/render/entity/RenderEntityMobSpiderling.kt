@@ -1,14 +1,14 @@
 package chylex.hee.client.render.entity
 
 import chylex.hee.client.render.entity.layer.LayerSpiderlingEyes
-import chylex.hee.client.render.gl.scale
+import chylex.hee.client.render.util.scale
+import chylex.hee.game.Resource
 import chylex.hee.game.entity.living.EntityMobSpiderling
-import chylex.hee.game.world.Pos
-import chylex.hee.game.world.isLoaded
-import chylex.hee.system.facades.Resource
-import chylex.hee.system.forge.Side
-import chylex.hee.system.forge.Sided
-import chylex.hee.system.math.floorToInt
+import chylex.hee.game.world.util.isLoaded
+import chylex.hee.util.forge.Side
+import chylex.hee.util.forge.Sided
+import chylex.hee.util.math.Pos
+import chylex.hee.util.math.floorToInt
 import com.mojang.blaze3d.matrix.MatrixStack
 import net.minecraft.client.renderer.LightTexture
 import net.minecraft.client.renderer.entity.EntityRendererManager

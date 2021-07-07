@@ -2,8 +2,8 @@ package chylex.hee.network.server
 
 import chylex.hee.game.container.slot.SlotTrinketItemInventory
 import chylex.hee.network.BaseServerPacket
-import chylex.hee.system.migration.EntityPlayerMP
-import chylex.hee.system.serialization.use
+import chylex.hee.util.buffer.use
+import net.minecraft.entity.player.ServerPlayerEntity
 import net.minecraft.item.ItemStack
 import net.minecraft.network.PacketBuffer
 
@@ -22,7 +22,7 @@ class PacketServerShiftClickTrinket() : BaseServerPacket() {
 		sourceSlot = readInt()
 	}
 	
-	override fun handle(player: EntityPlayerMP) {
+	override fun handle(player: ServerPlayerEntity) {
 		player.markPlayerActive()
 		
 		val allSlots = player.container.inventorySlots

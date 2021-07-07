@@ -1,18 +1,18 @@
 package chylex.hee.game.item
 
-import chylex.hee.game.inventory.size
 import chylex.hee.game.item.repair.ICustomRepairBehavior
 import chylex.hee.game.item.repair.RepairHandler
 import chylex.hee.game.item.repair.RepairInstance
-import chylex.hee.system.color.IntColor.Companion.RGB
-import chylex.hee.system.migration.EntityLivingBase
-import chylex.hee.system.migration.ItemTool
+import chylex.hee.game.item.util.size
+import chylex.hee.util.color.RGB
+import net.minecraft.entity.LivingEntity
 import net.minecraft.item.IItemTier
 import net.minecraft.item.ItemStack
+import net.minecraft.item.ToolItem
 import kotlin.math.min
 
-abstract class ItemAbstractVoidTool(properties: Properties, tier: IItemTier) : ItemTool(0F, -2.8F, tier, emptySet(), properties), ICustomRepairBehavior {
-	override fun hitEntity(stack: ItemStack, target: EntityLivingBase, attacker: EntityLivingBase): Boolean {
+abstract class ItemAbstractVoidTool(properties: Properties, tier: IItemTier) : ToolItem(0F, -2.8F, tier, emptySet(), properties), ICustomRepairBehavior {
+	override fun hitEntity(stack: ItemStack, target: LivingEntity, attacker: LivingEntity): Boolean {
 		return false
 	}
 	

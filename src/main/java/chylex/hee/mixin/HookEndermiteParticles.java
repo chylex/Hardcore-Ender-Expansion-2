@@ -7,7 +7,8 @@ import org.spongepowered.asm.mixin.injection.ModifyConstant;
 import org.spongepowered.asm.mixin.injection.Slice;
 
 @Mixin(EndermiteEntity.class)
-public abstract class HookEndermiteParticles{
+@SuppressWarnings("MethodMayBeStatic")
+public abstract class HookEndermiteParticles {
 	@ModifyConstant(
 		method = "livingTick",
 		constant = @Constant(intValue = 2, ordinal = 0),
@@ -16,7 +17,7 @@ public abstract class HookEndermiteParticles{
 			to = @At(value = "INVOKE", target = "Lnet/minecraft/world/World;addParticle(Lnet/minecraft/particles/IParticleData;DDDDDD)V")
 		)
 	)
-	private int getLivingTickParticleCount(final int originalValue){
+	private int getLivingTickParticleCount(final int originalValue) {
 		return 0;
 	}
 }

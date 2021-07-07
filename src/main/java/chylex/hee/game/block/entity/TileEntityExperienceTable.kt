@@ -2,9 +2,9 @@ package chylex.hee.game.block.entity
 
 import chylex.hee.game.block.entity.base.TileEntityBaseTable
 import chylex.hee.game.block.entity.base.TileEntityBaseTableWithSupportingItem
-import chylex.hee.game.inventory.setStack
-import chylex.hee.game.inventory.size
+import chylex.hee.game.inventory.util.setStack
 import chylex.hee.game.item.ItemExperienceBottleCustom
+import chylex.hee.game.item.util.size
 import chylex.hee.game.mechanics.dust.DustType
 import chylex.hee.game.mechanics.energy.IEnergyQuantity.Units
 import chylex.hee.game.mechanics.table.interfaces.ITableContext
@@ -17,15 +17,15 @@ import chylex.hee.game.mechanics.table.process.serializer.MultiProcessSerializer
 import chylex.hee.game.mechanics.table.process.serializer.MultiProcessSerializer.Companion.Mapping
 import chylex.hee.init.ModItems
 import chylex.hee.init.ModTileEntities
-import chylex.hee.system.color.IntColor.Companion.RGB
-import chylex.hee.system.math.ceilToInt
-import chylex.hee.system.math.floorToInt
-import chylex.hee.system.math.over
-import chylex.hee.system.migration.ItemBlock
 import chylex.hee.system.random.nextFloat
-import chylex.hee.system.serialization.TagCompound
+import chylex.hee.util.color.RGB
+import chylex.hee.util.math.ceilToInt
+import chylex.hee.util.math.floorToInt
+import chylex.hee.util.math.over
+import chylex.hee.util.nbt.TagCompound
 import net.minecraft.enchantment.EnchantmentHelper
 import net.minecraft.inventory.Inventory
+import net.minecraft.item.BlockItem
 import net.minecraft.item.ItemStack
 import net.minecraft.item.Items
 import net.minecraft.item.crafting.IRecipeType
@@ -68,10 +68,10 @@ class TileEntityExperienceTable(type: TileEntityType<TileEntityExperienceTable>)
 			
 			return Process(this, pedestalPos, experience, updates)
 		}
-		else if (item is ItemBlock) {
+		else if (item is BlockItem) {
 			val block = item.block
 			
-			for(attempt in 1..50) {
+			for (attempt in 1..50) {
 				val experience = block.getExpDrop(block.defaultState, world, pedestalPos, 0, 0)
 				
 				if (experience > 0) {

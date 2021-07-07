@@ -2,19 +2,19 @@ package chylex.hee.game.particle
 
 import chylex.hee.game.particle.base.ParticleBaseFloating
 import chylex.hee.game.particle.spawner.IParticleMaker
-import chylex.hee.game.world.territory.TerritoryInstance
-import chylex.hee.game.world.territory.TerritoryVoid
-import chylex.hee.system.forge.Side
-import chylex.hee.system.forge.Sided
-import chylex.hee.system.math.Vec
-import chylex.hee.system.math.addY
-import chylex.hee.system.math.ceilToInt
-import chylex.hee.system.math.directionTowards
-import chylex.hee.system.math.floorToInt
-import chylex.hee.system.math.offsetTowards
-import chylex.hee.system.math.scale
+import chylex.hee.game.territory.TerritoryVoid
+import chylex.hee.game.territory.system.TerritoryInstance
 import chylex.hee.system.random.nextFloat
 import chylex.hee.system.random.nextVector
+import chylex.hee.util.forge.Side
+import chylex.hee.util.forge.Sided
+import chylex.hee.util.math.Vec
+import chylex.hee.util.math.addY
+import chylex.hee.util.math.ceilToInt
+import chylex.hee.util.math.directionTowards
+import chylex.hee.util.math.floorToInt
+import chylex.hee.util.math.lerpTowards
+import chylex.hee.util.math.scale
 import net.minecraft.client.particle.IParticleRenderType
 import net.minecraft.client.particle.IParticleRenderType.PARTICLE_SHEET_TRANSLUCENT
 import net.minecraft.client.particle.Particle
@@ -62,7 +62,7 @@ object ParticleVoid : IParticleMaker.Simple() {
 					setExpired()
 				}
 				else {
-					motionVec = motionVec.offsetTowards(posVec.directionTowards(center.add(rand.nextVector(64.0))), voidFactor * 0.15)
+					motionVec = motionVec.lerpTowards(posVec.directionTowards(center.add(rand.nextVector(64.0))), voidFactor * 0.15)
 				}
 			}
 		}

@@ -2,12 +2,12 @@ package chylex.hee.game.item
 
 import chylex.hee.game.block.BlockAbstractTableTile
 import chylex.hee.game.block.BlockTableBase
-import chylex.hee.game.world.BlockEditor
-import chylex.hee.game.world.breakBlock
-import chylex.hee.game.world.getBlock
-import chylex.hee.game.world.setBlock
-import chylex.hee.system.forge.Side
-import chylex.hee.system.forge.Sided
+import chylex.hee.game.world.util.BlockEditor
+import chylex.hee.game.world.util.breakBlock
+import chylex.hee.game.world.util.getBlock
+import chylex.hee.game.world.util.setBlock
+import chylex.hee.util.forge.Side
+import chylex.hee.util.forge.Sided
 import net.minecraft.client.util.ITooltipFlag
 import net.minecraft.item.Item
 import net.minecraft.item.ItemStack

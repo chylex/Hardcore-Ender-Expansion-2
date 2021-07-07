@@ -2,9 +2,9 @@ package chylex.hee.game.block.entity
 
 import chylex.hee.game.block.entity.base.TileEntityBaseTable
 import chylex.hee.game.block.entity.base.TileEntityBaseTableWithSupportingItem.Companion.SUPPORTING_ITEM_MAPPINGS
-import chylex.hee.game.inventory.size
 import chylex.hee.game.item.infusion.Infusion
 import chylex.hee.game.item.infusion.InfusionRecipe
+import chylex.hee.game.item.util.size
 import chylex.hee.game.mechanics.dust.DustType
 import chylex.hee.game.mechanics.energy.IEnergyQuantity.Units
 import chylex.hee.game.mechanics.table.interfaces.ITableContext
@@ -17,11 +17,11 @@ import chylex.hee.game.mechanics.table.process.ProcessSupportingItemHolder
 import chylex.hee.game.mechanics.table.process.serializer.MultiProcessSerializer
 import chylex.hee.game.mechanics.table.process.serializer.MultiProcessSerializer.Companion.Mapping
 import chylex.hee.init.ModTileEntities
-import chylex.hee.system.color.IntColor.Companion.RGB
-import chylex.hee.system.math.over
-import chylex.hee.system.serialization.TagCompound
-import chylex.hee.system.serialization.getEnum
-import chylex.hee.system.serialization.putEnum
+import chylex.hee.util.color.RGB
+import chylex.hee.util.math.over
+import chylex.hee.util.nbt.TagCompound
+import chylex.hee.util.nbt.getEnum
+import chylex.hee.util.nbt.putEnum
 import net.minecraft.item.ItemStack
 import net.minecraft.tileentity.TileEntityType
 import net.minecraft.util.math.BlockPos
@@ -41,7 +41,7 @@ class TileEntityInfusionTable(type: TileEntityType<TileEntityInfusionTable>) : T
 	override fun createNewProcesses(unassignedPedestals: List<TileEntityTablePedestal>): List<ITableProcess> {
 		val newProcesses = ArrayList<ITableProcess>(1)
 		
-		while(true) {
+		while (true) {
 			val process = tryAssignProcess(unassignedPedestals.filter { it.hasInputItem && checkNotUsed(newProcesses, it) })
 			
 			if (process == null) {
@@ -52,7 +52,7 @@ class TileEntityInfusionTable(type: TileEntityType<TileEntityInfusionTable>) : T
 			}
 		}
 		
-		for(pedestal in unassignedPedestals) {
+		for (pedestal in unassignedPedestals) {
 			if (pedestal.hasInputItem && checkNotUsed(newProcesses, pedestal)) {
 				val stack = pedestal.itemInputCopy
 				
@@ -70,14 +70,14 @@ class TileEntityInfusionTable(type: TileEntityType<TileEntityInfusionTable>) : T
 	}
 	
 	private fun tryAssignProcess(ingredientPedestals: List<TileEntityTablePedestal>): ITableProcess? {
-		for(recipe in InfusionRecipe.values()) {
+		for (recipe in InfusionRecipe.values()) {
 			val ingredients = recipe.ingredients
 			
 			if (ingredientPedestals.size >= ingredients.size) {
 				val usedPedestals = ArrayList<BlockPos>(ingredients.size)
 				val remainingIngredients = ingredients.toMutableList()
 				
-				for(pedestal in ingredientPedestals) {
+				for (pedestal in ingredientPedestals) {
 					val index = remainingIngredients.indexOfFirst { it.test(pedestal.itemInputCopy) }
 					
 					if (index != -1) {

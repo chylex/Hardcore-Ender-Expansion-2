@@ -1,28 +1,28 @@
 package chylex.hee.game.item
 
 import chylex.hee.game.entity.Teleporter
-import chylex.hee.game.entity.posVec
-import chylex.hee.game.mechanics.damage.Damage
-import chylex.hee.game.mechanics.damage.IDamageDealer.Companion.TITLE_MAGIC
-import chylex.hee.game.mechanics.damage.IDamageProcessor.Companion.MAGIC_TYPE
-import chylex.hee.game.mechanics.damage.IDamageProcessor.Companion.PEACEFUL_EXCLUSION
-import chylex.hee.game.potion.makeEffect
-import chylex.hee.game.world.blocksMovement
-import chylex.hee.game.world.distanceSqTo
-import chylex.hee.game.world.offsetUntilExcept
-import chylex.hee.game.world.playUniversal
-import chylex.hee.system.facades.Stats
-import chylex.hee.system.migration.EntityLivingBase
-import chylex.hee.system.migration.EntityPlayer
-import chylex.hee.system.migration.EntityPlayerMP
-import chylex.hee.system.migration.Facing.DOWN
-import chylex.hee.system.migration.Potions
+import chylex.hee.game.entity.damage.Damage
+import chylex.hee.game.entity.damage.IDamageDealer.Companion.TITLE_MAGIC
+import chylex.hee.game.entity.damage.IDamageProcessor.Companion.MAGIC_TYPE
+import chylex.hee.game.entity.damage.IDamageProcessor.Companion.PEACEFUL_EXCLUSION
+import chylex.hee.game.entity.util.posVec
+import chylex.hee.game.fx.util.playUniversal
+import chylex.hee.game.potion.util.makeInstance
+import chylex.hee.game.world.util.blocksMovement
+import chylex.hee.game.world.util.distanceSqTo
+import chylex.hee.game.world.util.offsetUntilExcept
 import chylex.hee.system.random.nextFloat
 import chylex.hee.system.random.nextInt
 import net.minecraft.advancements.CriteriaTriggers
+import net.minecraft.entity.LivingEntity
+import net.minecraft.entity.player.PlayerEntity
+import net.minecraft.entity.player.ServerPlayerEntity
 import net.minecraft.item.Food
 import net.minecraft.item.Item
 import net.minecraft.item.ItemStack
+import net.minecraft.potion.Effects
+import net.minecraft.stats.Stats
+import net.minecraft.util.Direction.DOWN
 import net.minecraft.util.SoundCategory
 import net.minecraft.util.SoundEvents
 import net.minecraft.world.World
@@ -39,7 +39,7 @@ class ItemChorusBerry(properties: Properties) : Item(properties) {
 		
 		val FOOD: Food = Food.Builder().hunger(0).saturation(0F).setAlwaysEdible().build()
 		
-		private fun teleportEntity(entity: EntityLivingBase, strength: Int, rand: Random): Boolean {
+		private fun teleportEntity(entity: LivingEntity, strength: Int, rand: Random): Boolean {
 			val world = entity.world
 			val playerPos = entity.position
 			
@@ -49,7 +49,7 @@ class ItemChorusBerry(properties: Properties) : Item(properties) {
 			val teleportYMin = -teleportDistance
 			var teleportYMax = -teleportDistance / 4
 			
-			while(teleportYMax <= teleportDistance) {
+			while (teleportYMax <= teleportDistance) {
 				val targetPos = playerPos.add(
 					rand.nextInt(-teleportDistance, teleportDistance),
 					rand.nextInt(teleportYMin, teleportYMax),
@@ -75,21 +75,21 @@ class ItemChorusBerry(properties: Properties) : Item(properties) {
 		return "item.hee.chorus_berry"
 	}
 	
-	override fun onItemUseFinish(stack: ItemStack, world: World, entity: EntityLivingBase): ItemStack {
+	override fun onItemUseFinish(stack: ItemStack, world: World, entity: LivingEntity): ItemStack {
 		val rand = world.rand
 		
-		if (entity is EntityPlayer) {
-			entity.addStat(Stats.useItem(this))
+		if (entity is PlayerEntity) {
+			entity.addStat(Stats.ITEM_USED[this])
 			entity.getEatSound(stack).playUniversal(entity, entity.posVec, SoundCategory.NEUTRAL, volume = 1F, pitch = rand.nextFloat(0.6F, 1.4F))
 			SoundEvents.ENTITY_PLAYER_BURP.playUniversal(entity, entity.posVec, SoundCategory.PLAYERS, volume = 0.5F, pitch = rand.nextFloat(0.9F, 1.0F))
 		}
 		
 		if (!world.isRemote) {
-			if (entity is EntityPlayerMP) {
+			if (entity is ServerPlayerEntity) {
 				CriteriaTriggers.CONSUME_ITEM.trigger(entity, stack)
 			}
 			
-			val foodStats = (entity as? EntityPlayer)?.foodStats
+			val foodStats = (entity as? PlayerEntity)?.foodStats
 			
 			val hungerRestored = rand.nextInt(1, 3)
 			val hungerOvercharge = if (foodStats == null) hungerRestored else (foodStats.foodLevel + hungerRestored - 20).coerceAtLeast(0)
@@ -98,14 +98,14 @@ class ItemChorusBerry(properties: Properties) : Item(properties) {
 				foodStats?.addStats(hungerRestored, 3.5F)
 				
 				if (rand.nextInt(4) == 0) {
-					entity.addPotionEffect(Potions.WEAKNESS.makeEffect(20 * 60, 1))
+					entity.addPotionEffect(Effects.WEAKNESS.makeInstance(20 * 60, 1))
 				}
 			}
 			else {
 				foodStats?.addStats(hungerRestored, 16.5F)
 				
 				if (rand.nextInt(4) != 0) {
-					entity.addPotionEffect(Potions.WEAKNESS.makeEffect(20 * (90 + hungerOvercharge * 30), 1))
+					entity.addPotionEffect(Effects.WEAKNESS.makeInstance(20 * (90 + hungerOvercharge * 30), 1))
 				}
 				
 				if (!teleportEntity(entity, hungerOvercharge, rand)) {

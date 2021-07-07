@@ -2,11 +2,11 @@ package chylex.hee.game.block
 
 import chylex.hee.game.block.entity.TileEntityVoidPortalStorage
 import chylex.hee.game.block.properties.BlockBuilder
-import chylex.hee.game.world.getTile
+import chylex.hee.game.world.util.getTile
 import chylex.hee.init.ModBlocks
 import chylex.hee.init.ModContainers
-import chylex.hee.system.migration.EntityPlayer
 import net.minecraft.block.BlockState
+import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.tileentity.TileEntity
 import net.minecraft.util.ActionResultType
 import net.minecraft.util.ActionResultType.SUCCESS
@@ -30,7 +30,7 @@ class BlockVoidPortalStorage(builder: BlockBuilder, aabb: AxisAlignedBB) : Block
 		BlockAbstractPortal.spawnInnerBlocks(world, pos, ModBlocks.VOID_PORTAL_FRAME, ModBlocks.VOID_PORTAL_INNER, minSize = 1)
 	}
 	
-	override fun onBlockActivated(state: BlockState, world: World, pos: BlockPos, player: EntityPlayer, hand: Hand, hit: BlockRayTraceResult): ActionResultType {
+	override fun onBlockActivated(state: BlockState, world: World, pos: BlockPos, player: PlayerEntity, hand: Hand, hit: BlockRayTraceResult): ActionResultType {
 		if (world.isRemote) {
 			return SUCCESS
 		}

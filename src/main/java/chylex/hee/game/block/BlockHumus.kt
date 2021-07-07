@@ -1,21 +1,21 @@
 package chylex.hee.game.block
 
 import chylex.hee.game.block.properties.BlockBuilder
-import chylex.hee.game.world.breakBlock
-import chylex.hee.game.world.center
-import chylex.hee.game.world.getBlock
-import chylex.hee.game.world.getState
-import chylex.hee.system.migration.BlockBush
-import chylex.hee.system.migration.BlockReed
-import chylex.hee.system.migration.BlockSapling
-import chylex.hee.system.migration.Facing.UP
+import chylex.hee.game.world.util.breakBlock
+import chylex.hee.game.world.util.getBlock
+import chylex.hee.game.world.util.getState
+import chylex.hee.util.math.center
 import net.minecraft.block.Block
 import net.minecraft.block.BlockState
+import net.minecraft.block.BushBlock
+import net.minecraft.block.SaplingBlock
+import net.minecraft.block.SugarCaneBlock
 import net.minecraft.entity.Entity
 import net.minecraft.item.ItemStack
 import net.minecraft.loot.LootContext
 import net.minecraft.loot.LootParameters
 import net.minecraft.util.Direction
+import net.minecraft.util.Direction.UP
 import net.minecraft.util.math.BlockPos
 import net.minecraft.world.Explosion
 import net.minecraft.world.IBlockReader
@@ -48,9 +48,9 @@ class BlockHumus(builder: BlockBuilder, mergeBottom: Block) : BlockSimpleMerging
 		return (
 			type == PlantType.CROP ||
 			type == PlantType.PLAINS ||
-			plant is BlockSapling ||
-			plant is BlockReed ||
-			(plant is BlockBush && super.canSustainPlant(state, world, pos, direction, plant)) // UPDATE 1.16 (check if BlockBush still returns before plantType switch in super method)
+			plant is SaplingBlock ||
+			plant is SugarCaneBlock ||
+			(plant is BushBlock && super.canSustainPlant(state, world, pos, direction, plant)) // UPDATE 1.16 (check if BlockBush still returns before plantType switch in super method)
 		)
 	}
 	

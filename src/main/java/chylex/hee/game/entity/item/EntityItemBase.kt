@@ -1,17 +1,17 @@
 package chylex.hee.game.entity.item
 
-import chylex.hee.game.entity.cloneFrom
-import chylex.hee.system.migration.EntityItem
+import chylex.hee.game.entity.util.cloneFrom
 import chylex.hee.system.random.nextFloat
 import net.minecraft.entity.Entity
 import net.minecraft.entity.EntityType
+import net.minecraft.entity.item.ItemEntity
 import net.minecraft.item.ItemStack
 import net.minecraft.network.IPacket
 import net.minecraft.util.math.vector.Vector3d
 import net.minecraft.world.World
 import net.minecraftforge.fml.network.NetworkHooks
 
-abstract class EntityItemBase(type: EntityType<out EntityItemBase>, world: World) : EntityItem(type, world) {
+abstract class EntityItemBase(type: EntityType<out EntityItemBase>, world: World) : ItemEntity(type, world) {
 	constructor(type: EntityType<out EntityItemBase>, world: World, stack: ItemStack, replacee: Entity) : this(type, world) {
 		this.cloneFrom(replacee)
 		item = stack

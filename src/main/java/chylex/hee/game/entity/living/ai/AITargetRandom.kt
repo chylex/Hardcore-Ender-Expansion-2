@@ -1,11 +1,11 @@
 package chylex.hee.game.entity.living.ai
 
-import chylex.hee.system.migration.EntityCreature
-import chylex.hee.system.migration.EntityLivingBase
 import chylex.hee.system.random.nextItemOrNull
+import net.minecraft.entity.CreatureEntity
+import net.minecraft.entity.LivingEntity
 
-class AITargetRandom<T : EntityLivingBase>(
-	entity: EntityCreature,
+class AITargetRandom<T : LivingEntity>(
+	entity: CreatureEntity,
 	checkSight: Boolean,
 	easilyReachableOnly: Boolean,
 	targetClass: Class<T>,

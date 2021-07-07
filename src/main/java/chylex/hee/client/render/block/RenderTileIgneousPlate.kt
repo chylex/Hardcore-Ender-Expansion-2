@@ -1,35 +1,35 @@
 package chylex.hee.client.render.block
 
 import chylex.hee.client.model.block.ModelBlockIgneousPlate
-import chylex.hee.client.render.gl.RenderStateBuilder
-import chylex.hee.client.render.gl.RenderStateBuilder.Companion.BLEND_NONE
-import chylex.hee.client.render.gl.RenderStateBuilder.Companion.LIGHTING_DISABLED
-import chylex.hee.client.render.gl.RenderStateBuilder.Companion.LIGHTMAP_ENABLED
-import chylex.hee.client.render.gl.RenderStateBuilder.Companion.OVERLAY_ENABLED
-import chylex.hee.client.render.gl.rotateX
-import chylex.hee.client.render.gl.rotateY
-import chylex.hee.client.render.gl.translateX
-import chylex.hee.client.render.gl.translateZ
+import chylex.hee.client.render.RenderStateBuilder
+import chylex.hee.client.render.RenderStateBuilder.Companion.BLEND_NONE
+import chylex.hee.client.render.RenderStateBuilder.Companion.LIGHTING_DISABLED
+import chylex.hee.client.render.RenderStateBuilder.Companion.LIGHTMAP_ENABLED
+import chylex.hee.client.render.RenderStateBuilder.Companion.OVERLAY_ENABLED
+import chylex.hee.client.render.util.rotateX
+import chylex.hee.client.render.util.rotateY
+import chylex.hee.client.render.util.translateX
+import chylex.hee.client.render.util.translateZ
+import chylex.hee.game.Resource
 import chylex.hee.game.block.BlockIgneousPlate
 import chylex.hee.game.block.entity.TileEntityIgneousPlate
-import chylex.hee.game.world.getState
+import chylex.hee.game.world.util.getState
 import chylex.hee.init.ModBlocks
-import chylex.hee.system.color.IntColor.Companion.RGB
-import chylex.hee.system.facades.Resource
-import chylex.hee.system.forge.Side
-import chylex.hee.system.forge.Sided
-import chylex.hee.system.math.floorToInt
-import chylex.hee.system.math.offsetTowards
-import chylex.hee.system.migration.Facing.EAST
-import chylex.hee.system.migration.Facing.NORTH
-import chylex.hee.system.migration.Facing.UP
-import chylex.hee.system.migration.Facing.WEST
+import chylex.hee.util.color.RGB
+import chylex.hee.util.forge.Side
+import chylex.hee.util.forge.Sided
+import chylex.hee.util.math.floorToInt
+import chylex.hee.util.math.lerpTowards
 import com.mojang.blaze3d.matrix.MatrixStack
 import net.minecraft.client.renderer.IRenderTypeBuffer
 import net.minecraft.client.renderer.RenderType
 import net.minecraft.client.renderer.tileentity.TileEntityRenderer
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats
+import net.minecraft.util.Direction.EAST
+import net.minecraft.util.Direction.NORTH
+import net.minecraft.util.Direction.UP
+import net.minecraft.util.Direction.WEST
 import net.minecraft.util.math.vector.Vector3d
 import org.lwjgl.opengl.GL11
 
@@ -58,7 +58,7 @@ class RenderTileIgneousPlate(dispatcher: TileEntityRendererDispatcher) : TileEnt
 			val index = combinedHeat.floorToInt().coerceIn(0, COLOR_TRANSITIONS.lastIndex - 1)
 			val progress = combinedHeat.toDouble() - index
 			
-			return COLOR_TRANSITIONS[index].offsetTowards(COLOR_TRANSITIONS[index + 1], progress)
+			return COLOR_TRANSITIONS[index].lerpTowards(COLOR_TRANSITIONS[index + 1], progress)
 		}
 	}
 	

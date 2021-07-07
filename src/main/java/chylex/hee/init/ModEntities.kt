@@ -1,8 +1,6 @@
 package chylex.hee.init
 
 import chylex.hee.HEE
-import chylex.hee.game.entity.DefaultEntityAttributes
-import chylex.hee.game.entity.ENTITY_GRAVITY
 import chylex.hee.game.entity.effect.EntityTerritoryLightningBolt
 import chylex.hee.game.entity.item.EntityFallingBlockHeavy
 import chylex.hee.game.entity.item.EntityFallingObsidian
@@ -29,23 +27,22 @@ import chylex.hee.game.entity.projectile.EntityProjectileEnderPearl
 import chylex.hee.game.entity.projectile.EntityProjectileExperienceBottle
 import chylex.hee.game.entity.projectile.EntityProjectileEyeOfEnder
 import chylex.hee.game.entity.projectile.EntityProjectileSpatialDash
-import chylex.hee.game.entity.set
 import chylex.hee.game.entity.technical.EntityTechnicalCausatumEvent
 import chylex.hee.game.entity.technical.EntityTechnicalIgneousPlateLogic
 import chylex.hee.game.entity.technical.EntityTechnicalPuzzle
 import chylex.hee.game.entity.technical.EntityTechnicalTrigger
-import chylex.hee.game.entity.with
-import chylex.hee.network.data.ColorDataSerializer
-import chylex.hee.system.forge.EventPriority
-import chylex.hee.system.forge.SubscribeAllEvents
-import chylex.hee.system.forge.SubscribeEvent
-import chylex.hee.system.forge.named
-import chylex.hee.system.forge.registerAllFields
-import chylex.hee.system.migration.EntityEnderman
-import chylex.hee.system.migration.EntityEndermite
-import chylex.hee.system.migration.EntitySilverfish
-import chylex.hee.system.reflection.ObjectConstructors
-import chylex.hee.system.serialization.TagCompound
+import chylex.hee.game.entity.util.DefaultEntityAttributes
+import chylex.hee.game.entity.util.ENTITY_GRAVITY
+import chylex.hee.game.entity.util.set
+import chylex.hee.game.entity.util.with
+import chylex.hee.system.named
+import chylex.hee.system.registerAllFields
+import chylex.hee.util.color.ColorDataSerializer
+import chylex.hee.util.forge.EventPriority
+import chylex.hee.util.forge.SubscribeAllEvents
+import chylex.hee.util.forge.SubscribeEvent
+import chylex.hee.util.lang.ObjectConstructors
+import chylex.hee.util.nbt.TagCompound
 import net.minecraft.entity.Entity
 import net.minecraft.entity.EntityClassification
 import net.minecraft.entity.EntityClassification.CREATURE
@@ -61,7 +58,10 @@ import net.minecraft.entity.ai.attributes.Attributes.FLYING_SPEED
 import net.minecraft.entity.ai.attributes.Attributes.FOLLOW_RANGE
 import net.minecraft.entity.ai.attributes.Attributes.MAX_HEALTH
 import net.minecraft.entity.ai.attributes.Attributes.MOVEMENT_SPEED
+import net.minecraft.entity.monster.EndermanEntity
+import net.minecraft.entity.monster.EndermiteEntity
 import net.minecraft.entity.monster.MonsterEntity
+import net.minecraft.entity.monster.SilverfishEntity
 import net.minecraft.network.datasync.DataSerializers
 import net.minecraft.world.World
 import net.minecraft.world.gen.Heightmap.Type
@@ -225,9 +225,9 @@ object ModEntities {
 		
 		// if a mod creates the entity manually instead of the factory, it must still be replaced
 		val overriden = when (original.javaClass) {
-			EntityEnderman::class.java   -> EntityMobEnderman(world)
-			EntityEndermite::class.java  -> EntityMobEndermite(world)
-			EntitySilverfish::class.java -> EntityMobSilverfish(world)
+			EndermanEntity::class.java   -> EntityMobEnderman(world)
+			EndermiteEntity::class.java  -> EntityMobEndermite(world)
+			SilverfishEntity::class.java -> EntityMobSilverfish(world)
 			else                         -> return
 		}
 		

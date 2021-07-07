@@ -2,16 +2,16 @@ package chylex.hee.game.item
 
 import chylex.hee.game.item.infusion.IInfusableItem
 import chylex.hee.game.item.infusion.Infusion
-import chylex.hee.system.forge.Side
-import chylex.hee.system.forge.Sided
-import chylex.hee.system.migration.ItemBlock
+import chylex.hee.util.forge.Side
+import chylex.hee.util.forge.Sided
 import net.minecraft.block.Block
 import net.minecraft.client.util.ITooltipFlag
+import net.minecraft.item.BlockItem
 import net.minecraft.item.ItemStack
 import net.minecraft.util.text.ITextComponent
 import net.minecraft.world.World
 
-class ItemInfusedTNT(block: Block, properties: Properties) : ItemBlock(block, properties), IInfusableItem {
+class ItemInfusedTNT(block: Block, properties: Properties) : BlockItem(block, properties), IInfusableItem {
 	override fun canApplyInfusion(infusion: Infusion): Boolean {
 		return ItemAbstractInfusable.onCanApplyInfusion(this, infusion)
 	}

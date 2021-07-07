@@ -3,13 +3,13 @@ package chylex.hee.game.potion.brewing.recipes
 import chylex.hee.game.potion.brewing.IBrewingRecipe
 import chylex.hee.game.potion.brewing.PotionBrewing
 import chylex.hee.game.potion.brewing.PotionItems
-import chylex.hee.system.migration.Potion
-import chylex.hee.system.migration.PotionType
-import chylex.hee.system.migration.PotionTypes
 import net.minecraft.item.Item
 import net.minecraft.item.ItemStack
+import net.minecraft.potion.Effect
+import net.minecraft.potion.Potion
+import net.minecraft.potion.Potions
 
-sealed class BrewBasicEffects(private val base: PotionType, private val registry: Map<Item, Potion>) : IBrewingRecipe {
+sealed class BrewBasicEffects(private val base: Potion, private val registry: Map<Item, Effect>) : IBrewingRecipe {
 	override fun isInput(input: ItemStack): Boolean {
 		return PotionItems.checkBottle(input, base)
 	}
@@ -22,13 +22,13 @@ sealed class BrewBasicEffects(private val base: PotionType, private val registry
 		val entry = registry.entries.first { matchesReagent(ingredient, it.key) }
 		val info = PotionBrewing.INFO[entry.value] ?: return ItemStack.EMPTY
 		
-		return PotionItems.getBottle(input.item, info.potion, withBaseEffect = true)
+		return PotionItems.getBottle(input.item, info.effect, withBaseEffect = true)
 	}
 	
 	private fun matchesReagent(ingredient: ItemStack, item: Item): Boolean {
 		return ingredient.item === item
 	}
 	
-	object FromWater : BrewBasicEffects(PotionTypes.WATER, PotionBrewing.WATER)
-	object FromAwkward : BrewBasicEffects(PotionTypes.AWKWARD, PotionBrewing.AWKWARD)
+	object FromWater : BrewBasicEffects(Potions.WATER, PotionBrewing.WATER)
+	object FromAwkward : BrewBasicEffects(Potions.AWKWARD, PotionBrewing.AWKWARD)
 }

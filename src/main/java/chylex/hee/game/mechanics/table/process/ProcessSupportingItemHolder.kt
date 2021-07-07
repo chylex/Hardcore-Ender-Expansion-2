@@ -2,16 +2,16 @@ package chylex.hee.game.mechanics.table.process
 
 import chylex.hee.game.block.entity.TileEntityTablePedestal
 import chylex.hee.game.block.entity.base.TileEntityBaseTable
-import chylex.hee.game.inventory.size
+import chylex.hee.game.item.util.size
 import chylex.hee.game.mechanics.energy.IEnergyQuantity.Units
 import chylex.hee.game.mechanics.table.PedestalStatusIndicator.Process.SUPPORTING_ITEM
 import chylex.hee.game.mechanics.table.interfaces.ITableContext
 import chylex.hee.game.mechanics.table.interfaces.ITableProcess
 import chylex.hee.game.mechanics.table.interfaces.ITableProcess.Companion.NO_DUST
-import chylex.hee.game.world.getTile
-import chylex.hee.system.serialization.TagCompound
-import chylex.hee.system.serialization.getPos
-import chylex.hee.system.serialization.putPos
+import chylex.hee.game.world.util.getTile
+import chylex.hee.util.nbt.TagCompound
+import chylex.hee.util.nbt.getPos
+import chylex.hee.util.nbt.putPos
 import net.minecraft.item.ItemStack
 import net.minecraft.util.math.BlockPos
 

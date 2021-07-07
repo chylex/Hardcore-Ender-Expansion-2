@@ -1,58 +1,59 @@
 package chylex.hee.game.block.entity
 
-import chylex.hee.client.MC
+import chylex.hee.client.util.MC
 import chylex.hee.game.block.entity.base.TileEntityBase
 import chylex.hee.game.block.entity.base.TileEntityBase.Context.STORAGE
-import chylex.hee.game.block.with
+import chylex.hee.game.block.util.ROTATED_PILLAR_AXIS
+import chylex.hee.game.block.util.with
 import chylex.hee.game.entity.item.EntityTokenHolder
-import chylex.hee.game.entity.lookPosVec
-import chylex.hee.game.entity.selectExistingEntities
-import chylex.hee.game.inventory.size
+import chylex.hee.game.entity.util.lookPosVec
+import chylex.hee.game.entity.util.selectExistingEntities
+import chylex.hee.game.fx.IFxData
+import chylex.hee.game.fx.IFxHandler
+import chylex.hee.game.fx.util.playClient
 import chylex.hee.game.item.ItemPortalToken.TokenType
+import chylex.hee.game.item.util.size
 import chylex.hee.game.particle.ParticleSmokeCustom
 import chylex.hee.game.particle.spawner.ParticleSpawnerCustom
 import chylex.hee.game.particle.spawner.properties.IOffset.InBox
 import chylex.hee.game.particle.spawner.properties.IShape.Point
-import chylex.hee.game.world.FLAG_SYNC_CLIENT
-import chylex.hee.game.world.Pos
-import chylex.hee.game.world.center
-import chylex.hee.game.world.getHardness
-import chylex.hee.game.world.playClient
-import chylex.hee.game.world.setState
-import chylex.hee.game.world.territory.TerritoryType
+import chylex.hee.game.territory.TerritoryType
+import chylex.hee.game.world.util.FLAG_SYNC_CLIENT
+import chylex.hee.game.world.util.getHardness
+import chylex.hee.game.world.util.setState
 import chylex.hee.init.ModBlocks
 import chylex.hee.init.ModItems
 import chylex.hee.init.ModSounds
 import chylex.hee.init.ModTileEntities
 import chylex.hee.network.client.PacketClientFX
-import chylex.hee.network.fx.IFxData
-import chylex.hee.network.fx.IFxHandler
-import chylex.hee.system.collection.MutableWeightedList.Companion.mutableWeightedListOf
-import chylex.hee.system.collection.WeightedList.Companion.weightedListOf
-import chylex.hee.system.color.IntColor.Companion.RGB
-import chylex.hee.system.math.Vec
-import chylex.hee.system.math.addY
-import chylex.hee.system.math.directionTowards
-import chylex.hee.system.math.square
-import chylex.hee.system.migration.BlockRotatedPillar
-import chylex.hee.system.migration.EntityItem
-import chylex.hee.system.migration.EntityPlayer
-import chylex.hee.system.migration.Facing
 import chylex.hee.system.random.nextInt
 import chylex.hee.system.random.nextItem
-import chylex.hee.system.serialization.NBTItemStackList
-import chylex.hee.system.serialization.NBTList.Companion.putList
-import chylex.hee.system.serialization.TagCompound
-import chylex.hee.system.serialization.getListOfItemStacks
-import chylex.hee.system.serialization.readCompactVec
-import chylex.hee.system.serialization.use
-import chylex.hee.system.serialization.writeCompactVec
+import chylex.hee.util.buffer.readCompactVec
+import chylex.hee.util.buffer.use
+import chylex.hee.util.buffer.writeCompactVec
+import chylex.hee.util.collection.mutableWeightedListOf
+import chylex.hee.util.collection.weightedListOf
+import chylex.hee.util.color.RGB
+import chylex.hee.util.math.Pos
+import chylex.hee.util.math.Vec
+import chylex.hee.util.math.addY
+import chylex.hee.util.math.center
+import chylex.hee.util.math.directionTowards
+import chylex.hee.util.math.square
+import chylex.hee.util.nbt.NBTItemStackList
+import chylex.hee.util.nbt.TagCompound
+import chylex.hee.util.nbt.getListOfItemStacks
+import chylex.hee.util.nbt.putList
+import chylex.hee.util.nbt.use
+import net.minecraft.entity.item.ItemEntity
+import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.item.Item
 import net.minecraft.item.ItemStack
 import net.minecraft.item.Items
 import net.minecraft.network.PacketBuffer
 import net.minecraft.tileentity.ITickableTileEntity
 import net.minecraft.tileentity.TileEntityType
+import net.minecraft.util.Direction.Axis
 import net.minecraft.util.SoundCategory
 import net.minecraft.util.math.AxisAlignedBB
 import net.minecraft.util.math.vector.Vector3d
@@ -123,7 +124,7 @@ class TileEntityMinersBurialAltar(type: TileEntityType<TileEntityMinersBurialAlt
 			override fun handle(buffer: PacketBuffer, world: World, rand: Random) = buffer.use {
 				val pos = readCompactVec()
 				
-				when(readByte()) {
+				when (readByte()) {
 					REDEEM_TYPE_TOKEN -> {
 						PARTICLE_SPAWN.spawn(Point(pos, 9), rand)
 					}
@@ -134,7 +135,7 @@ class TileEntityMinersBurialAltar(type: TileEntityType<TileEntityMinersBurialAlt
 					}
 					
 					REDEEM_TYPE_FINISHED -> {
-						for(y in 0 until PILLAR_HEIGHT) {
+						for (y in 0 until PILLAR_HEIGHT) {
 							MC.particleManager.addBlockDestroyEffects(Pos(pos).up(y), ModBlocks.MINERS_BURIAL_BLOCK_PILLAR.defaultState)
 						}
 						
@@ -183,9 +184,9 @@ class TileEntityMinersBurialAltar(type: TileEntityType<TileEntityMinersBurialAlt
 		
 		if (redeemType == REDEEM_TYPE_FINISHED) {
 			if (--redeemTick < 0) {
-				val pillar = ModBlocks.MINERS_BURIAL_BLOCK_PILLAR.with(BlockRotatedPillar.AXIS, Facing.AXIS_Y)
+				val pillar = ModBlocks.MINERS_BURIAL_BLOCK_PILLAR.with(ROTATED_PILLAR_AXIS, Axis.Y)
 				
-				for(y in 1 until PILLAR_HEIGHT) {
+				for (y in 1 until PILLAR_HEIGHT) {
 					val offsetPos = pos.up(y)
 					
 					if (offsetPos.getHardness(wrld) >= 0F) {
@@ -208,7 +209,7 @@ class TileEntityMinersBurialAltar(type: TileEntityType<TileEntityMinersBurialAlt
 				notifyUpdate(FLAG_SYNC_CLIENT)
 			}
 			else if (redeemTick > MEDALLION_ANIM_TOTAL_DURATION && (tickRedeemSequence(redeemTick - 1 - MEDALLION_ANIM_TOTAL_DURATION, closestPlayer) || redeemTick == Int.MAX_VALUE)) {
-				for(tile in wrld.tickableTileEntities) {
+				for (tile in wrld.tickableTileEntities) {
 					if (tile is TileEntityMinersBurialAltar && tile !== this && isGrouped(tile)) {
 						tile.redeemType = ((redeemType + 1) % 3).toByte()
 						tile.markDirty()
@@ -222,7 +223,7 @@ class TileEntityMinersBurialAltar(type: TileEntityType<TileEntityMinersBurialAlt
 		}
 	}
 	
-	private fun tickRedeemSequence(tick: Int, closestPlayer: EntityPlayer): Boolean {
+	private fun tickRedeemSequence(tick: Int, closestPlayer: PlayerEntity): Boolean {
 		if (redeemType == REDEEM_TYPE_TOKEN) {
 			if (tick in 1..38) {
 				return false
@@ -270,7 +271,7 @@ class TileEntityMinersBurialAltar(type: TileEntityType<TileEntityMinersBurialAlt
 				val rand = wrld.rand
 				val mainTables = ITEM_DROP_TABLES_MAIN.map { it.mutableCopy() }
 				
-				for(table in mainTables) {
+				for (table in mainTables) {
 					table.removeItem(rand)?.let(::addItemDrop)
 				}
 				
@@ -311,7 +312,7 @@ class TileEntityMinersBurialAltar(type: TileEntityType<TileEntityMinersBurialAlt
 				val fxPos = spawnPos.addY(0.375)
 				PacketClientFX(FX_SPAWN, FxSpawnData(fxPos, redeemType)).sendToAllAround(wrld, fxPos, 16.0)
 				
-				EntityItem(wrld, spawnPos.x, spawnPos.y, spawnPos.z, split).apply {
+				ItemEntity(wrld, spawnPos.x, spawnPos.y, spawnPos.z, split).apply {
 					motion = spawnMot
 					setNoPickupDelay()
 					wrld.addEntity(this)

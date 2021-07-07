@@ -1,12 +1,12 @@
 package chylex.hee.client.render.entity
 
-import chylex.hee.client.MC
-import chylex.hee.client.model.ModelHelper
-import chylex.hee.client.render.gl.rotateY
-import chylex.hee.client.render.gl.translateY
+import chylex.hee.client.model.util.ModelHelper
+import chylex.hee.client.render.util.rotateY
+import chylex.hee.client.render.util.translateY
+import chylex.hee.client.util.MC
 import chylex.hee.game.entity.projectile.EntityProjectileEyeOfEnder
-import chylex.hee.system.forge.Side
-import chylex.hee.system.forge.Sided
+import chylex.hee.util.forge.Side
+import chylex.hee.util.forge.Sided
 import com.mojang.blaze3d.matrix.MatrixStack
 import net.minecraft.client.renderer.IRenderTypeBuffer
 import net.minecraft.client.renderer.entity.EntityRenderer

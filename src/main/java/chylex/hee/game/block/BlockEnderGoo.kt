@@ -4,28 +4,28 @@ import chylex.hee.game.block.fluid.FlowingFluid5.Companion.FLOW_DISTANCE
 import chylex.hee.game.block.fluid.FluidEnderGoo
 import chylex.hee.game.block.properties.Materials
 import chylex.hee.game.entity.CustomCreatureType
-import chylex.hee.game.entity.motionX
-import chylex.hee.game.entity.motionZ
-import chylex.hee.game.entity.posVec
+import chylex.hee.game.entity.util.motionX
+import chylex.hee.game.entity.util.motionZ
+import chylex.hee.game.entity.util.posVec
 import chylex.hee.game.particle.ParticleEnderGoo
 import chylex.hee.game.particle.spawner.ParticleSpawnerCustom
 import chylex.hee.game.particle.spawner.properties.IOffset.Constant
 import chylex.hee.game.particle.spawner.properties.IOffset.InBox
 import chylex.hee.game.particle.spawner.properties.IShape.Point
-import chylex.hee.game.potion.makeEffect
-import chylex.hee.game.world.Pos
-import chylex.hee.game.world.getBlock
+import chylex.hee.game.potion.util.makeInstance
+import chylex.hee.game.world.util.getBlock
 import chylex.hee.init.ModPotions
-import chylex.hee.system.forge.Side
-import chylex.hee.system.forge.Sided
-import chylex.hee.system.migration.EntityItem
-import chylex.hee.system.migration.EntityLivingBase
-import chylex.hee.system.migration.Facing.DOWN
-import chylex.hee.system.migration.Facing.UP
-import chylex.hee.system.migration.Potion
-import chylex.hee.system.migration.Potions
+import chylex.hee.util.forge.Side
+import chylex.hee.util.forge.Sided
+import chylex.hee.util.math.Pos
 import net.minecraft.block.BlockState
 import net.minecraft.entity.Entity
+import net.minecraft.entity.LivingEntity
+import net.minecraft.entity.item.ItemEntity
+import net.minecraft.potion.Effect
+import net.minecraft.potion.Effects
+import net.minecraft.util.Direction.DOWN
+import net.minecraft.util.Direction.UP
 import net.minecraft.util.math.BlockPos
 import net.minecraft.world.World
 import java.util.Random
@@ -56,15 +56,15 @@ open class BlockEnderGoo : BlockAbstractGoo(FluidEnderGoo, Materials.ENDER_GOO) 
 		
 		// Status effects
 		
-		private fun addGooEffect(entity: EntityLivingBase, type: Potion, durationTicks: Int, level: Int = 0) {
-			val existingEffect = entity.getActivePotionEffect(type)
+		private fun addGooEffect(entity: LivingEntity, effect: Effect, durationTicks: Int, level: Int = 0) {
+			val existingEffect = entity.getActivePotionEffect(effect)
 			
 			if (existingEffect == null || (level >= existingEffect.amplifier && durationTicks > existingEffect.duration + 30)) {
-				entity.addPotionEffect(type.makeEffect(durationTicks, level, isAmbient = true, showParticles = true))
+				entity.addPotionEffect(effect.makeInstance(durationTicks, level, isAmbient = true, showParticles = true))
 			}
 		}
 		
-		private fun updateGooEffects(entity: EntityLivingBase, totalTicks: Int) {
+		private fun updateGooEffects(entity: LivingEntity, totalTicks: Int) {
 			addGooEffect(entity, ModPotions.LIFELESS, PERSISTENT_EFFECT_DURATION_TICKS)
 			
 			if (totalTicks >= 20 * 5) {
@@ -90,15 +90,15 @@ open class BlockEnderGoo : BlockAbstractGoo(FluidEnderGoo, Materials.ENDER_GOO) 
 							}
 						}
 						
-						if (entity.rng.nextInt(100) < poisonChancePercent && !entity.isPotionActive(Potions.POISON)) {
-							addGooEffect(entity, Potions.POISON, 80 + (totalTicks - 20 * 20) / 10)
+						if (entity.rng.nextInt(100) < poisonChancePercent && !entity.isPotionActive(Effects.POISON)) {
+							addGooEffect(entity, Effects.POISON, 80 + (totalTicks - 20 * 20) / 10)
 						}
 					}
 					
-					addGooEffect(entity, Potions.WEAKNESS, weaknessDuration.coerceAtMost((20 * 60 * 3) + 19), weaknessLevel)
+					addGooEffect(entity, Effects.WEAKNESS, weaknessDuration.coerceAtMost((20 * 60 * 3) + 19), weaknessLevel)
 				}
 				
-				addGooEffect(entity, Potions.MINING_FATIGUE, PERSISTENT_EFFECT_DURATION_TICKS, miningFatigueLevel)
+				addGooEffect(entity, Effects.MINING_FATIGUE, PERSISTENT_EFFECT_DURATION_TICKS, miningFatigueLevel)
 			}
 		}
 	}
@@ -111,10 +111,10 @@ open class BlockEnderGoo : BlockAbstractGoo(FluidEnderGoo, Materials.ENDER_GOO) 
 	// Behavior
 	
 	override fun onInsideGoo(entity: Entity) {
-		if (entity is EntityLivingBase && !CustomCreatureType.isEnder(entity)) {
+		if (entity is LivingEntity && !CustomCreatureType.isEnder(entity)) {
 			updateGooEffects(entity, trackTick(entity, MAX_COLLISION_TICK_COUNTER))
 		}
-		else if (entity is EntityItem && entity.lifespan > 0) {
+		else if (entity is ItemEntity && entity.lifespan > 0) {
 			--entity.lifespan
 		}
 	}

@@ -8,8 +8,8 @@ import chylex.hee.datagen.client.util.simple
 import chylex.hee.datagen.client.util.suffixed
 import chylex.hee.datagen.r
 import chylex.hee.datagen.then
+import chylex.hee.game.Resource
 import chylex.hee.init.ModItems
-import chylex.hee.system.facades.Resource
 import net.minecraft.data.DataGenerator
 import net.minecraft.item.Items
 import net.minecraftforge.client.model.generators.ItemModelProvider

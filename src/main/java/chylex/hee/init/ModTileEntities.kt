@@ -20,11 +20,11 @@ import chylex.hee.game.block.entity.TileEntityShulkerBoxCustom
 import chylex.hee.game.block.entity.TileEntitySpawnerObsidianTower
 import chylex.hee.game.block.entity.TileEntityTablePedestal
 import chylex.hee.game.block.entity.TileEntityVoidPortalStorage
-import chylex.hee.system.forge.SubscribeAllEvents
-import chylex.hee.system.forge.SubscribeEvent
-import chylex.hee.system.forge.named
-import chylex.hee.system.forge.registerAllFields
-import chylex.hee.system.reflection.ObjectConstructors
+import chylex.hee.system.named
+import chylex.hee.system.registerAllFields
+import chylex.hee.util.forge.SubscribeAllEvents
+import chylex.hee.util.forge.SubscribeEvent
+import chylex.hee.util.lang.ObjectConstructors
 import com.google.common.collect.ImmutableSet
 import net.minecraft.block.Block
 import net.minecraft.block.Blocks
@@ -61,7 +61,7 @@ object ModTileEntities {
 	}
 	
 	fun setupVanillaValidBlocks() {
-		for(block in arrayOf(BREWING_STAND, TileEntityType.BREWING_STAND)) {
+		for (block in arrayOf(BREWING_STAND, TileEntityType.BREWING_STAND)) {
 			with(block) {
 				validBlocks = ImmutableSet.builder<Block>()
 					.addAll(validBlocks)
@@ -70,7 +70,7 @@ object ModTileEntities {
 			}
 		}
 		
-		for(block in arrayOf(SHULKER_BOX, TileEntityType.SHULKER_BOX)) {
+		for (block in arrayOf(SHULKER_BOX, TileEntityType.SHULKER_BOX)) {
 			with(block) {
 				validBlocks = ImmutableSet.builder<Block>()
 					.addAll(validBlocks)

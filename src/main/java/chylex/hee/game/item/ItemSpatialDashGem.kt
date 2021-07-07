@@ -8,17 +8,17 @@ import chylex.hee.game.item.infusion.Infusion.DISTANCE
 import chylex.hee.game.item.infusion.Infusion.SPEED
 import chylex.hee.game.item.infusion.InfusionTag
 import chylex.hee.game.mechanics.energy.IEnergyQuantity.Units
-import chylex.hee.system.facades.Stats
-import chylex.hee.system.forge.Side
-import chylex.hee.system.forge.Sided
-import chylex.hee.system.math.floorToInt
-import chylex.hee.system.math.over
-import chylex.hee.system.migration.ActionResult.FAIL
-import chylex.hee.system.migration.ActionResult.SUCCESS
-import chylex.hee.system.migration.EntityPlayer
+import chylex.hee.util.forge.Side
+import chylex.hee.util.forge.Sided
+import chylex.hee.util.math.floorToInt
+import chylex.hee.util.math.over
 import net.minecraft.client.util.ITooltipFlag
+import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.item.ItemStack
+import net.minecraft.stats.Stats
 import net.minecraft.util.ActionResult
+import net.minecraft.util.ActionResultType.FAIL
+import net.minecraft.util.ActionResultType.SUCCESS
 import net.minecraft.util.Hand
 import net.minecraft.util.text.ITextComponent
 import net.minecraft.world.World
@@ -42,7 +42,7 @@ class ItemSpatialDashGem(properties: Properties) : ItemAbstractEnergyUser(proper
 		return ItemAbstractInfusable.onCanApplyInfusion(this, infusion)
 	}
 	
-	override fun onItemRightClick(world: World, player: EntityPlayer, hand: Hand): ActionResult<ItemStack> {
+	override fun onItemRightClick(world: World, player: PlayerEntity, hand: Hand): ActionResult<ItemStack> {
 		val heldItem = player.getHeldItem(hand)
 		
 		if (!useEnergyUnit(player, heldItem)) {
@@ -52,7 +52,7 @@ class ItemSpatialDashGem(properties: Properties) : ItemAbstractEnergyUser(proper
 		if (!world.isRemote) {
 			val infusions = InfusionTag.getList(heldItem)
 			
-			val speedMp = when(infusions.determineLevel(SPEED)) {
+			val speedMp = when (infusions.determineLevel(SPEED)) {
 				2    -> INSTANT_SPEED_MP
 				1    -> 1.75F
 				else -> 1F
@@ -64,7 +64,7 @@ class ItemSpatialDashGem(properties: Properties) : ItemAbstractEnergyUser(proper
 		}
 		
 		player.cooldownTracker.setCooldown(this, 24)
-		player.addStat(Stats.useItem(this))
+		player.addStat(Stats.ITEM_USED[this])
 		
 		return ActionResult(SUCCESS, heldItem)
 	}

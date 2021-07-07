@@ -4,13 +4,12 @@ import chylex.hee.game.block.entity.TileEntityEnergyCluster
 import chylex.hee.game.block.entity.TileEntityEnergyCluster.LeakType
 import chylex.hee.game.mechanics.energy.IEnergyQuantity.Units
 import chylex.hee.game.mechanics.instability.Instability
-import chylex.hee.game.world.component1
-import chylex.hee.game.world.component2
-import chylex.hee.game.world.totalTime
-import chylex.hee.system.math.ceilToInt
 import chylex.hee.system.random.nextInt
-import chylex.hee.system.serialization.TagCompound
-import chylex.hee.system.serialization.use
+import chylex.hee.util.math.ceilToInt
+import chylex.hee.util.math.component1
+import chylex.hee.util.math.component2
+import chylex.hee.util.nbt.TagCompound
+import chylex.hee.util.nbt.use
 import net.minecraft.util.math.ChunkPos
 import net.minecraftforge.common.util.INBTSerializable
 import java.util.Random
@@ -83,7 +82,7 @@ class ProximityHandler(private val cluster: TileEntityEnergyCluster) : INBTSeria
 		
 		val world = cluster.wrld
 		
-		if (world.totalTime % INSTABILITY_INTERVAL_TICKS == 0L) {
+		if (world.gameTime % INSTABILITY_INTERVAL_TICKS == 0L) {
 			val pos = cluster.pos
 			
 			with(Instability.get(world)) {

@@ -4,17 +4,17 @@ import chylex.hee.HEE
 import chylex.hee.game.block.entity.TileEntityEndPortalAcceptor
 import chylex.hee.game.block.entity.TileEntityPortalInner
 import chylex.hee.game.block.properties.BlockBuilder
+import chylex.hee.game.entity.util.EntityPortalContact
 import chylex.hee.game.mechanics.causatum.CausatumStage
 import chylex.hee.game.mechanics.causatum.EnderCausatum
-import chylex.hee.game.mechanics.portal.DimensionTeleporter
-import chylex.hee.game.mechanics.portal.EntityPortalContact
-import chylex.hee.game.world.Pos
-import chylex.hee.game.world.closestTickingTile
 import chylex.hee.game.world.isEndDimension
+import chylex.hee.game.world.server.DimensionTeleporter
+import chylex.hee.game.world.util.closestTickingTile
 import chylex.hee.init.ModBlocks
-import chylex.hee.system.migration.EntityPlayer
+import chylex.hee.util.math.Pos
 import net.minecraft.block.BlockState
 import net.minecraft.entity.Entity
+import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.tileentity.TileEntity
 import net.minecraft.util.math.BlockPos
 import net.minecraft.world.IBlockReader
@@ -41,7 +41,7 @@ class BlockEndPortalInner(builder: BlockBuilder) : BlockAbstractPortal(builder) 
 					DimensionTeleporter.LastEndPortal.updateForEntity(entity, Pos((min.x + max.x) / 2, pos.y, (min.z + max.z) / 2))
 				}
 				
-				if (entity is EntityPlayer) {
+				if (entity is PlayerEntity) {
 					EnderCausatum.triggerStage(entity, CausatumStage.S2_ENTERED_END)
 				}
 				

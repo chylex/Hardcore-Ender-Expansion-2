@@ -29,6 +29,7 @@
     "HookDimensionTypeClient",
     "HookFogCheck",
     "HookFogDistance",
+    "HookInventoryScreenEntity",
     "HookLightTexture",
     "HookResourcePackOrder",
     "HookSkyColor",

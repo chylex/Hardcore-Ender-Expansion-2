@@ -1,7 +1,7 @@
 package chylex.hee.test.main
 
-import chylex.hee.game.world.feature.tombdungeon.TombDungeonLevel
-import chylex.hee.game.world.feature.tombdungeon.TombDungeonLevel.MobAmount
+import chylex.hee.game.world.generation.feature.tombdungeon.TombDungeonLevel
+import chylex.hee.game.world.generation.feature.tombdungeon.TombDungeonLevel.MobAmount
 import java.util.Locale.ROOT
 import java.util.Random
 import kotlin.math.roundToInt
@@ -9,13 +9,13 @@ import kotlin.math.roundToInt
 fun main() {
 	val rand = Random()
 	
-	for(level in TombDungeonLevel.values()) {
+	for (level in TombDungeonLevel.values()) {
 		val reps = 100000
 		
 		println()
 		println("== ${level.name} ${"=".repeat(24 - level.name.length)}")
 		
-		for(amount in MobAmount.values()) {
+		for (amount in MobAmount.values()) {
 			println()
 			println("   ${amount.name}")
 			println()

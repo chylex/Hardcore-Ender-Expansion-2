@@ -8,9 +8,9 @@ import chylex.hee.game.mechanics.energy.IClusterHealth.HealthStatus.UNSTABLE
 import chylex.hee.game.mechanics.energy.IClusterHealth.HealthStatus.WEAKENED
 import chylex.hee.game.mechanics.energy.IEnergyQuantity.Floating
 import chylex.hee.game.mechanics.energy.IEnergyQuantity.Units
-import chylex.hee.system.collection.WeightedList
-import chylex.hee.system.collection.WeightedList.Companion.weightedListOf
 import chylex.hee.system.random.nextFloat
+import chylex.hee.util.collection.WeightedList
+import chylex.hee.util.collection.weightedListOf
 import java.util.Random
 
 interface IClusterGenerator {

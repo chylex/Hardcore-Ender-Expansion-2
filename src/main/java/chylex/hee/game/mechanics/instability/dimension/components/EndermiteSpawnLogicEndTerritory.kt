@@ -1,7 +1,7 @@
 package chylex.hee.game.mechanics.instability.dimension.components
 
 import chylex.hee.game.entity.living.EntityMobEndermiteInstability
-import chylex.hee.game.world.territory.TerritoryInstance
+import chylex.hee.game.territory.system.TerritoryInstance
 import net.minecraft.entity.monster.IMob
 import net.minecraft.util.math.BlockPos
 import net.minecraft.world.server.ServerWorld
@@ -13,7 +13,7 @@ object EndermiteSpawnLogicEndTerritory : EndermiteSpawnLogic() {
 		var hostileMobCount = 0
 		var endermiteCount = 0
 		
-		for(entity in world.entities) {
+		for (entity in world.entities) {
 			if (entity is IMob) {
 				if (++hostileMobCount > 150) {
 					return false

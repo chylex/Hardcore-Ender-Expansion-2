@@ -12,7 +12,8 @@
           <set>
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/data" />
-            <option value="$PROJECT_DIR$/src/system" />
+            <option value="$PROJECT_DIR$/modules/system" />
+            <option value="$PROJECT_DIR$/modules/util" />
           </set>
         </option>
       </GradleProjectSettings>

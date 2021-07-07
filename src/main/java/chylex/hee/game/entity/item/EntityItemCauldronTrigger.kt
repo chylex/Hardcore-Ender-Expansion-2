@@ -1,36 +1,35 @@
 package chylex.hee.game.entity.item
 
 import chylex.hee.game.block.BlockAbstractCauldron
-import chylex.hee.game.block.with
-import chylex.hee.game.entity.selectEntities
-import chylex.hee.game.inventory.size
+import chylex.hee.game.block.util.CAULDRON_LEVEL
+import chylex.hee.game.block.util.with
+import chylex.hee.game.entity.util.selectEntities
+import chylex.hee.game.fx.FxBlockData
+import chylex.hee.game.fx.FxBlockHandler
+import chylex.hee.game.fx.util.playClient
+import chylex.hee.game.item.util.size
 import chylex.hee.game.particle.ParticleBubbleCustom
 import chylex.hee.game.particle.spawner.ParticleSpawnerCustom
 import chylex.hee.game.particle.spawner.properties.IOffset.Constant
 import chylex.hee.game.particle.spawner.properties.IOffset.InBox
 import chylex.hee.game.particle.spawner.properties.IShape.Point
-import chylex.hee.game.world.Pos
-import chylex.hee.game.world.getState
-import chylex.hee.game.world.playClient
-import chylex.hee.game.world.setBlock
-import chylex.hee.game.world.setState
-import chylex.hee.game.world.totalTime
+import chylex.hee.game.world.util.getState
+import chylex.hee.game.world.util.setBlock
+import chylex.hee.game.world.util.setState
 import chylex.hee.init.ModBlocks
 import chylex.hee.init.ModEntities
 import chylex.hee.init.ModItems
 import chylex.hee.init.ModSounds
 import chylex.hee.network.client.PacketClientFX
-import chylex.hee.network.fx.FxBlockData
-import chylex.hee.network.fx.FxBlockHandler
-import chylex.hee.system.math.Vec3
-import chylex.hee.system.migration.EntityItem
-import chylex.hee.system.migration.Facing.UP
+import chylex.hee.util.math.Pos
+import chylex.hee.util.math.Vec3
 import net.minecraft.block.Blocks
-import net.minecraft.block.CauldronBlock.LEVEL
 import net.minecraft.entity.Entity
 import net.minecraft.entity.EntityType
+import net.minecraft.entity.item.ItemEntity
 import net.minecraft.item.Item
 import net.minecraft.item.ItemStack
+import net.minecraft.util.Direction.UP
 import net.minecraft.util.SoundCategory
 import net.minecraft.util.math.AxisAlignedBB
 import net.minecraft.util.math.BlockPos
@@ -73,21 +72,21 @@ class EntityItemCauldronTrigger : EntityItemBase {
 	override fun tick() {
 		super.tick()
 		
-		if (!world.isRemote && world.totalTime % 5L == 0L) {
+		if (!world.isRemote && world.gameTime % 5L == 0L) {
 			val pos = Pos(this)
 			val state = pos.getState(world)
 			val block = state.block
 			
 			if (block === Blocks.CAULDRON) {
-				if (state[LEVEL] > 0 && tryUseIngredients(RECIPE_DRAGONS_BREATH)) {
-					pos.setState(world, ModBlocks.CAULDRON_DRAGONS_BREATH.with(LEVEL, state[LEVEL]))
+				if (state[CAULDRON_LEVEL] > 0 && tryUseIngredients(RECIPE_DRAGONS_BREATH)) {
+					pos.setState(world, ModBlocks.CAULDRON_DRAGONS_BREATH.with(CAULDRON_LEVEL, state[CAULDRON_LEVEL]))
 				}
 			}
 			else if (block === ModBlocks.CAULDRON_PURIFIED_ENDER_GOO) {
-				if (state[LEVEL] == BlockAbstractCauldron.MAX_LEVEL && tryUseIngredients(RECIPE_PURITY_EXTRACT)) {
+				if (state[CAULDRON_LEVEL] == BlockAbstractCauldron.MAX_LEVEL && tryUseIngredients(RECIPE_PURITY_EXTRACT)) {
 					pos.setBlock(world, Blocks.CAULDRON)
 					
-					EntityItem(world, pos.x + 0.5, pos.y + 0.4, pos.z + 0.5, ItemStack(ModItems.PURITY_EXTRACT)).apply {
+					ItemEntity(world, pos.x + 0.5, pos.y + 0.4, pos.z + 0.5, ItemStack(ModItems.PURITY_EXTRACT)).apply {
 						motion = Vec3.ZERO
 						setDefaultPickupDelay()
 						world.addEntity(this)
@@ -99,7 +98,7 @@ class EntityItemCauldronTrigger : EntityItemBase {
 	
 	private fun tryUseIngredients(list: Array<Pair<Item, Int>>): Boolean {
 		val pos = Pos(this)
-		val itemEntities = world.selectEntities.inBox<EntityItem>(AxisAlignedBB(pos))
+		val itemEntities = world.selectEntities.inBox<ItemEntity>(AxisAlignedBB(pos))
 		
 		if (itemEntities.size < list.size) {
 			return false
@@ -111,7 +110,7 @@ class EntityItemCauldronTrigger : EntityItemBase {
 			return false
 		}
 		
-		for(itemEntity in itemEntities) {
+		for (itemEntity in itemEntities) {
 			val stack = itemEntity.item
 			val item = stack.item
 			
@@ -126,10 +125,10 @@ class EntityItemCauldronTrigger : EntityItemBase {
 		return true
 	}
 	
-	private fun validateIngredients(itemEntities: List<EntityItem>, remainingIngredients: Map<Item, Int>): Boolean {
+	private fun validateIngredients(itemEntities: List<ItemEntity>, remainingIngredients: Map<Item, Int>): Boolean {
 		val testIngredients = HashMap(remainingIngredients)
 		
-		for(itemEntity in itemEntities) {
+		for (itemEntity in itemEntities) {
 			if (itemEntity.ticksExisted < 15) {
 				continue
 			}

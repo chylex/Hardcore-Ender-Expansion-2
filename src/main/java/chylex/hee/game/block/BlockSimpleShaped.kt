@@ -1,6 +1,7 @@
 package chylex.hee.game.block
 
 import chylex.hee.game.block.properties.BlockBuilder
+import chylex.hee.game.block.util.asVoxelShape
 import net.minecraft.block.BlockState
 import net.minecraft.util.math.AxisAlignedBB
 import net.minecraft.util.math.BlockPos

@@ -1,20 +1,21 @@
 package chylex.hee.game.block
 
 import chylex.hee.game.block.properties.BlockBuilder
-import chylex.hee.game.world.allInBox
-import chylex.hee.game.world.allInBoxMutable
-import chylex.hee.game.world.distanceTo
-import chylex.hee.game.world.getBlock
-import chylex.hee.game.world.isAir
-import chylex.hee.game.world.isTopSolid
-import chylex.hee.game.world.max
-import chylex.hee.game.world.min
-import chylex.hee.game.world.offsetUntil
-import chylex.hee.game.world.setAir
-import chylex.hee.game.world.setBlock
-import chylex.hee.system.facades.Facing4
-import chylex.hee.system.math.LerpedFloat
-import chylex.hee.system.math.floorToInt
+import chylex.hee.game.block.util.asVoxelShape
+import chylex.hee.game.world.util.Facing4
+import chylex.hee.game.world.util.allInBox
+import chylex.hee.game.world.util.allInBoxMutable
+import chylex.hee.game.world.util.distanceTo
+import chylex.hee.game.world.util.getBlock
+import chylex.hee.game.world.util.isAir
+import chylex.hee.game.world.util.isTopSolid
+import chylex.hee.game.world.util.max
+import chylex.hee.game.world.util.min
+import chylex.hee.game.world.util.offsetUntil
+import chylex.hee.game.world.util.setAir
+import chylex.hee.game.world.util.setBlock
+import chylex.hee.util.math.LerpedFloat
+import chylex.hee.util.math.floorToInt
 import net.minecraft.block.Block
 import net.minecraft.block.BlockRenderType.INVISIBLE
 import net.minecraft.block.BlockState
@@ -41,7 +42,7 @@ abstract class BlockAbstractPortal(builder: BlockBuilder) : BlockSimpleShaped(bu
 			val mirrorRange = 1..(MAX_SIZE + 1)
 			val halfRange = 1..(1 + (MAX_SIZE / 2))
 			
-			for(facing in Facing4) {
+			for (facing in Facing4) {
 				val mirrorPos = controllerPos.offsetUntil(facing, mirrorRange) { it.getBlock(world) === frameBlock } ?: continue
 				val centerPos = controllerPos.offset(facing, controllerPos.distanceTo(mirrorPos).floorToInt() / 2)
 				
@@ -73,13 +74,13 @@ abstract class BlockAbstractPortal(builder: BlockBuilder) : BlockSimpleShaped(bu
 		}
 		
 		fun ensureClearance(world: World, spawnPos: BlockPos, radius: Int) {
-			for(pos in spawnPos.add(-radius, 1, -radius).allInBox(spawnPos.add(radius, 2, radius))) {
+			for (pos in spawnPos.add(-radius, 1, -radius).allInBox(spawnPos.add(radius, 2, radius))) {
 				pos.setAir(world)
 			}
 		}
 		
 		fun ensurePlatform(world: World, spawnPos: BlockPos, block: Block, radius: Int) {
-			for(pos in spawnPos.add(-radius, -1, -radius).allInBox(spawnPos.add(radius, -1, radius))) {
+			for (pos in spawnPos.add(-radius, -1, -radius).allInBox(spawnPos.add(radius, -1, radius))) {
 				if (!pos.isTopSolid(world)) {
 					pos.setBlock(world, block)
 				}

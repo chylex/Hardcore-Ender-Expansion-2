@@ -1,18 +1,17 @@
 package chylex.hee.client.render.entity.layer
 
 import chylex.hee.client.model.entity.ModelEntityBossEnderEye
-import chylex.hee.client.render.gl.RenderStateBuilder
-import chylex.hee.client.render.gl.RenderStateBuilder.Companion.CULL_DISABLED
-import chylex.hee.client.render.gl.RenderStateBuilder.Companion.LIGHTMAP_ENABLED
-import chylex.hee.client.render.gl.RenderStateBuilder.Companion.SHADE_ENABLED
-import chylex.hee.client.render.gl.rotateX
-import chylex.hee.client.render.gl.rotateZ
-import chylex.hee.client.render.gl.translateY
-import chylex.hee.client.render.gl.translateZ
+import chylex.hee.client.render.RenderStateBuilder
+import chylex.hee.client.render.RenderStateBuilder.Companion.CULL_DISABLED
+import chylex.hee.client.render.RenderStateBuilder.Companion.LIGHTMAP_ENABLED
+import chylex.hee.client.render.RenderStateBuilder.Companion.SHADE_ENABLED
+import chylex.hee.client.render.util.rotateX
+import chylex.hee.client.render.util.rotateZ
+import chylex.hee.client.render.util.translateY
+import chylex.hee.client.render.util.translateZ
 import chylex.hee.game.entity.living.EntityBossEnderEye
-import chylex.hee.game.world.totalTime
-import chylex.hee.system.forge.Side
-import chylex.hee.system.forge.Sided
+import chylex.hee.util.forge.Side
+import chylex.hee.util.forge.Sided
 import com.mojang.blaze3d.matrix.MatrixStack
 import com.mojang.blaze3d.vertex.IVertexBuilder
 import net.minecraft.client.renderer.IRenderTypeBuffer
@@ -38,7 +37,7 @@ class LayerEnderEyeLaser(entity: IEntityRenderer<EntityBossEnderEye, ModelEntity
 		}
 		
 		val builder = buffer.getBuffer(renderType)
-		val rotation = Math.floorMod(entity.world.totalTime, 12L) + partialTicks
+		val rotation = Math.floorMod(entity.world.gameTime, 12L) + partialTicks
 		
 		matrix.push()
 		matrix.translateY(0.935) // ???

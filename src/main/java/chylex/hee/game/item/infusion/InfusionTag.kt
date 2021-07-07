@@ -1,11 +1,11 @@
 package chylex.hee.game.item.infusion
 
-import chylex.hee.game.inventory.heeTag
-import chylex.hee.game.inventory.heeTagOrNull
-import chylex.hee.system.serialization.NBTList.Companion.putList
-import chylex.hee.system.serialization.TagCompound
-import chylex.hee.system.serialization.getListOfEnums
-import chylex.hee.system.serialization.hasKey
+import chylex.hee.system.heeTag
+import chylex.hee.system.heeTagOrNull
+import chylex.hee.util.nbt.TagCompound
+import chylex.hee.util.nbt.getListOfEnums
+import chylex.hee.util.nbt.hasKey
+import chylex.hee.util.nbt.putList
 import net.minecraft.item.ItemStack
 
 object InfusionTag {

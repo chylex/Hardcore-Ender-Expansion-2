@@ -2,13 +2,13 @@ package chylex.hee.game.particle
 
 import chylex.hee.game.particle.base.ParticleBaseFloating
 import chylex.hee.game.particle.data.ParticleDataColorLifespanScale
-import chylex.hee.system.color.IntColor
-import chylex.hee.system.color.IntColor.Companion.RGB
-import chylex.hee.system.forge.Side
-import chylex.hee.system.forge.Sided
-import chylex.hee.system.math.floorToInt
-import chylex.hee.system.random.IRandomColor
 import chylex.hee.system.random.nextFloat
+import chylex.hee.util.color.IColorGenerator
+import chylex.hee.util.color.IntColor
+import chylex.hee.util.color.RGB
+import chylex.hee.util.forge.Side
+import chylex.hee.util.forge.Sided
+import chylex.hee.util.math.floorToInt
 import net.minecraft.client.particle.Particle
 import net.minecraft.client.world.ClientWorld
 import java.util.Random
@@ -19,7 +19,7 @@ object ParticleTeleport : ParticleDataColorLifespanScale.ParticleMaker() {
 		return Instance(world, posX, posY, posZ, motX, motY, motZ, data.orDefault)
 	}
 	
-	override val defaultColor = object : IRandomColor {
+	override val defaultColor = object : IColorGenerator {
 		override fun next(rand: Random): IntColor {
 			val blue = rand.nextFloat(0.4F, 1.0F)
 			val green = blue * 0.3F

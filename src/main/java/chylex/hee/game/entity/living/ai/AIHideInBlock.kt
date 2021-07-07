@@ -1,18 +1,18 @@
 package chylex.hee.game.entity.living.ai
 
-import chylex.hee.game.entity.posVec
-import chylex.hee.game.world.Pos
-import chylex.hee.game.world.getState
-import chylex.hee.game.world.setState
-import chylex.hee.system.facades.Facing6
-import chylex.hee.system.math.addY
-import chylex.hee.system.migration.EntityCreature
+import chylex.hee.game.entity.util.posVec
+import chylex.hee.game.world.util.Facing6
+import chylex.hee.game.world.util.getState
+import chylex.hee.game.world.util.setState
 import chylex.hee.system.random.nextItem
+import chylex.hee.util.math.Pos
+import chylex.hee.util.math.addY
 import net.minecraft.block.BlockState
+import net.minecraft.entity.CreatureEntity
 import net.minecraft.world.GameRules.MOB_GRIEFING
 
 class AIHideInBlock(
-	private val entity: EntityCreature,
+	private val entity: CreatureEntity,
 	private val chancePerTick: Int,
 	private val tryHideInBlock: (BlockState) -> BlockState?,
 ) : AIBaseContinuous() {

@@ -1,14 +1,14 @@
 package chylex.hee.game.block.properties
 
-import chylex.hee.game.block.clone
 import chylex.hee.game.block.properties.BlockBuilder.Companion.INDESTRUCTIBLE_HARDNESS
-import chylex.hee.game.item.Tool.Level.DIAMOND
-import chylex.hee.game.item.Tool.Level.IRON
-import chylex.hee.game.item.Tool.Level.STONE
-import chylex.hee.game.item.Tool.Level.WOOD
-import chylex.hee.game.item.Tool.Type.AXE
-import chylex.hee.game.item.Tool.Type.PICKAXE
-import chylex.hee.game.item.Tool.Type.SHOVEL
+import chylex.hee.game.block.util.clone
+import chylex.hee.game.item.util.Tool.Level.DIAMOND
+import chylex.hee.game.item.util.Tool.Level.IRON
+import chylex.hee.game.item.util.Tool.Level.STONE
+import chylex.hee.game.item.util.Tool.Level.WOOD
+import chylex.hee.game.item.util.Tool.Type.AXE
+import chylex.hee.game.item.util.Tool.Type.PICKAXE
+import chylex.hee.game.item.util.Tool.Type.SHOVEL
 import net.minecraft.block.SoundType
 import net.minecraft.block.material.Material
 import net.minecraft.block.material.MaterialColor

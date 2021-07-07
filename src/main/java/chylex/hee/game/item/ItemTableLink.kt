@@ -3,42 +3,41 @@ package chylex.hee.game.item
 import chylex.hee.game.block.BlockAbstractTableTile
 import chylex.hee.game.block.entity.TileEntityTablePedestal
 import chylex.hee.game.block.entity.base.TileEntityBaseTable
-import chylex.hee.game.entity.cloneFrom
-import chylex.hee.game.inventory.cleanupNBT
-import chylex.hee.game.inventory.heeTag
-import chylex.hee.game.inventory.heeTagOrNull
-import chylex.hee.game.inventory.isNotEmpty
+import chylex.hee.game.entity.util.cloneFrom
+import chylex.hee.game.fx.IFxData
+import chylex.hee.game.fx.IFxHandler
+import chylex.hee.game.fx.util.playClient
 import chylex.hee.game.item.ItemTableLink.Companion.SoundType.LINK_FAIL
 import chylex.hee.game.item.ItemTableLink.Companion.SoundType.LINK_OUTPUT
 import chylex.hee.game.item.ItemTableLink.Companion.SoundType.LINK_RESTART
 import chylex.hee.game.item.ItemTableLink.Companion.SoundType.LINK_SUCCESS
-import chylex.hee.game.world.getBlock
-import chylex.hee.game.world.getTile
-import chylex.hee.game.world.playClient
-import chylex.hee.game.world.totalTime
+import chylex.hee.game.item.util.cleanupNBT
+import chylex.hee.game.item.util.isNotEmpty
+import chylex.hee.game.world.util.getBlock
+import chylex.hee.game.world.util.getTile
 import chylex.hee.init.ModBlocks
 import chylex.hee.init.ModSounds
 import chylex.hee.network.client.PacketClientFX
-import chylex.hee.network.fx.IFxData
-import chylex.hee.network.fx.IFxHandler
-import chylex.hee.system.forge.Side
-import chylex.hee.system.forge.Sided
-import chylex.hee.system.migration.ActionResult.FAIL
-import chylex.hee.system.migration.ActionResult.SUCCESS
-import chylex.hee.system.migration.EntityItem
+import chylex.hee.system.heeTag
+import chylex.hee.system.heeTagOrNull
 import chylex.hee.system.random.nextFloat
-import chylex.hee.system.serialization.getPos
-import chylex.hee.system.serialization.hasKey
-import chylex.hee.system.serialization.putPos
-import chylex.hee.system.serialization.readPos
-import chylex.hee.system.serialization.use
-import chylex.hee.system.serialization.writePos
+import chylex.hee.util.buffer.readPos
+import chylex.hee.util.buffer.use
+import chylex.hee.util.buffer.writePos
+import chylex.hee.util.forge.Side
+import chylex.hee.util.forge.Sided
+import chylex.hee.util.nbt.getPos
+import chylex.hee.util.nbt.hasKey
+import chylex.hee.util.nbt.putPos
 import net.minecraft.entity.Entity
+import net.minecraft.entity.item.ItemEntity
 import net.minecraft.item.Item
 import net.minecraft.item.ItemStack
 import net.minecraft.item.ItemUseContext
 import net.minecraft.network.PacketBuffer
 import net.minecraft.util.ActionResultType
+import net.minecraft.util.ActionResultType.FAIL
+import net.minecraft.util.ActionResultType.SUCCESS
 import net.minecraft.util.SoundCategory
 import net.minecraft.util.math.BlockPos
 import net.minecraft.world.World
@@ -66,7 +65,7 @@ class ItemTableLink(properties: Properties) : Item(properties) {
 			override fun handle(buffer: PacketBuffer, world: World, rand: Random) = buffer.use {
 				val pos = readPos()
 				
-				when(SoundType.values().getOrNull(readByte().toInt())) {
+				when (SoundType.values().getOrNull(readByte().toInt())) {
 					LINK_SUCCESS -> ModSounds.ITEM_TABLE_LINK_USE_SUCCESS.playClient(pos, SoundCategory.PLAYERS, pitch = rand.nextFloat(0.49F, 0.51F))
 					LINK_RESTART -> ModSounds.ITEM_TABLE_LINK_USE_SPECIAL.playClient(pos, SoundCategory.PLAYERS, pitch = rand.nextFloat(0.69F, 0.71F))
 					LINK_OUTPUT  -> ModSounds.ITEM_TABLE_LINK_USE_SPECIAL.playClient(pos, SoundCategory.PLAYERS, volume = 0.9F, pitch = 0.63F)
@@ -157,7 +156,7 @@ class ItemTableLink(properties: Properties) : Item(properties) {
 			
 			if (heldItem.isNotEmpty) {
 				putPos(POS_TAG, newStoredPos)
-				putLong(TIME_TAG, world.totalTime)
+				putLong(TIME_TAG, world.gameTime)
 			}
 			
 			PacketClientFX(FX_USE, FxUseData(pos, soundType)).sendToAllAround(world, pos, 16.0)
@@ -167,13 +166,13 @@ class ItemTableLink(properties: Properties) : Item(properties) {
 	}
 	
 	override fun inventoryTick(stack: ItemStack, world: World, entity: Entity, itemSlot: Int, isSelected: Boolean) {
-		if (world.isRemote || world.totalTime % 10L != 0L) {
+		if (world.isRemote || world.gameTime % 10L != 0L) {
 			return
 		}
 		
 		val tag = stack.heeTagOrNull
 		
-		if (tag.hasKey(TIME_TAG) && world.totalTime - tag.getLong(TIME_TAG) >= RESET_TIME_TICKS) {
+		if (tag.hasKey(TIME_TAG) && world.gameTime - tag.getLong(TIME_TAG) >= RESET_TIME_TICKS) {
 			removeLinkingTags(stack)
 		}
 	}
@@ -184,7 +183,7 @@ class ItemTableLink(properties: Properties) : Item(properties) {
 	
 	override fun createEntity(world: World, replacee: Entity, stack: ItemStack): Entity {
 		val cleanStack = stack.copy().apply(::removeLinkingTags)
-		return EntityItem(world, replacee.posX, replacee.posY, replacee.posZ, cleanStack).apply { cloneFrom(replacee) }
+		return ItemEntity(world, replacee.posX, replacee.posY, replacee.posZ, cleanStack).apply { cloneFrom(replacee) }
 	}
 	
 	@Sided(Side.CLIENT)

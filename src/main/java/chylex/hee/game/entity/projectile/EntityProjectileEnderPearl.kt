@@ -3,38 +3,39 @@ package chylex.hee.game.entity.projectile
 import chylex.hee.HEE
 import chylex.hee.game.block.properties.BlockBuilder.Companion.INDESTRUCTIBLE_HARDNESS
 import chylex.hee.game.entity.Teleporter
-import chylex.hee.game.entity.posVec
+import chylex.hee.game.entity.damage.Damage
+import chylex.hee.game.entity.damage.IDamageProcessor.Companion.ALL_PROTECTIONS_WITH_SHIELD
+import chylex.hee.game.entity.damage.IDamageProcessor.Companion.PEACEFUL_EXCLUSION
+import chylex.hee.game.entity.util.posVec
 import chylex.hee.game.item.infusion.Infusion.HARMLESS
 import chylex.hee.game.item.infusion.Infusion.PHASING
 import chylex.hee.game.item.infusion.Infusion.RIDING
 import chylex.hee.game.item.infusion.Infusion.SLOW
 import chylex.hee.game.item.infusion.InfusionList
 import chylex.hee.game.item.infusion.InfusionTag
-import chylex.hee.game.mechanics.damage.Damage
-import chylex.hee.game.mechanics.damage.IDamageProcessor.Companion.ALL_PROTECTIONS_WITH_SHIELD
-import chylex.hee.game.mechanics.damage.IDamageProcessor.Companion.PEACEFUL_EXCLUSION
-import chylex.hee.game.world.Pos
-import chylex.hee.game.world.getBlocksInside
-import chylex.hee.game.world.isAir
+import chylex.hee.game.world.util.getBlocksInside
+import chylex.hee.game.world.util.isAir
 import chylex.hee.init.ModEntities
-import chylex.hee.system.forge.EventPriority
-import chylex.hee.system.forge.SubscribeAllEvents
-import chylex.hee.system.forge.SubscribeEvent
-import chylex.hee.system.math.subtractY
-import chylex.hee.system.migration.EntityEnderPearl
-import chylex.hee.system.migration.EntityLivingBase
-import chylex.hee.system.migration.EntityPlayerMP
-import chylex.hee.system.migration.Facing.DOWN
-import chylex.hee.system.migration.Facing.UP
-import chylex.hee.system.serialization.TagCompound
-import chylex.hee.system.serialization.heeTag
-import chylex.hee.system.serialization.use
+import chylex.hee.system.heeTag
+import chylex.hee.util.buffer.use
+import chylex.hee.util.forge.EventPriority
+import chylex.hee.util.forge.SubscribeAllEvents
+import chylex.hee.util.forge.SubscribeEvent
+import chylex.hee.util.math.Pos
+import chylex.hee.util.math.subtractY
+import chylex.hee.util.nbt.TagCompound
+import chylex.hee.util.nbt.use
 import net.minecraft.block.BlockState
 import net.minecraft.entity.Entity
 import net.minecraft.entity.EntityType
+import net.minecraft.entity.LivingEntity
+import net.minecraft.entity.item.EnderPearlEntity
+import net.minecraft.entity.player.ServerPlayerEntity
 import net.minecraft.network.IPacket
 import net.minecraft.network.PacketBuffer
 import net.minecraft.util.DamageSource
+import net.minecraft.util.Direction.DOWN
+import net.minecraft.util.Direction.UP
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.BlockRayTraceResult
 import net.minecraft.util.math.EntityRayTraceResult
@@ -51,7 +52,7 @@ import net.minecraftforge.event.entity.living.LivingAttackEvent
 import net.minecraftforge.fml.common.registry.IEntityAdditionalSpawnData
 import net.minecraftforge.fml.network.NetworkHooks
 
-class EntityProjectileEnderPearl(type: EntityType<EntityProjectileEnderPearl>, world: World) : EntityEnderPearl(type, world), IEntityAdditionalSpawnData {
+class EntityProjectileEnderPearl(type: EntityType<EntityProjectileEnderPearl>, world: World) : EnderPearlEntity(type, world), IEntityAdditionalSpawnData {
 	constructor(thrower: Entity, infusions: InfusionList) : this(ModEntities.ENDER_PEARL, thrower.world) {
 		shooter = thrower
 		loadInfusions(infusions)
@@ -78,7 +79,7 @@ class EntityProjectileEnderPearl(type: EntityType<EntityProjectileEnderPearl>, w
 		fun onEntityJoinWorld(e: EntityJoinWorldEvent) {
 			val original = e.entity
 			
-			if (original is EntityEnderPearl && original !is EntityProjectileEnderPearl) {
+			if (original is EnderPearlEntity && original !is EntityProjectileEnderPearl) {
 				e.isCanceled = true
 				e.world.addEntity(EntityProjectileEnderPearl(original.shooter!!, InfusionList.EMPTY))
 			}
@@ -194,12 +195,12 @@ class EntityProjectileEnderPearl(type: EntityType<EntityProjectileEnderPearl>, w
 			val damage = if (infusions.has(HARMLESS)) 0F else 1F + world.difficulty.id
 			val teleport = Teleporter(damageDealt = damage, causedInstability = 20u)
 			
-			if (thrower is EntityPlayerMP) {
+			if (thrower is ServerPlayerEntity) {
 				if (thrower.connection.networkManager.isChannelOpen && thrower.world === world) {
 					teleport.toLocation(thrower, posVec)
 				}
 			}
-			else if (thrower is EntityLivingBase) {
+			else if (thrower is LivingEntity) {
 				teleport.toLocation(thrower, posVec)
 			}
 		}

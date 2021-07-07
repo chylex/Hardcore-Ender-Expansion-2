@@ -1,55 +1,55 @@
 package chylex.hee.game.potion.brewing
 
-import chylex.hee.game.potion.PotionBanishment
-import chylex.hee.game.potion.PotionCorruption
-import chylex.hee.game.potion.PotionPurity
-import chylex.hee.system.migration.Potion
-import chylex.hee.system.migration.PotionType
-import chylex.hee.system.migration.PotionTypes
-import chylex.hee.system.migration.Potions
+import chylex.hee.game.potion.BanishmentEffect
+import chylex.hee.game.potion.CorruptionEffect
+import chylex.hee.game.potion.PurityEffect
+import net.minecraft.potion.Effect
+import net.minecraft.potion.Effects
+import net.minecraft.potion.Potion
+import net.minecraft.potion.Potions
 
 object PotionTypeMap {
 	private val TYPE_MAPPING = mapOf(
-		Potions.NIGHT_VISION    to PotionTypes.NIGHT_VISION,
-		Potions.INVISIBILITY    to PotionTypes.INVISIBILITY,
-		Potions.JUMP_BOOST      to PotionTypes.LEAPING,
-		Potions.FIRE_RESISTANCE to PotionTypes.FIRE_RESISTANCE,
-		Potions.SPEED           to PotionTypes.SWIFTNESS,
-		Potions.SLOWNESS        to PotionTypes.SLOWNESS,
-		Potions.WATER_BREATHING to PotionTypes.WATER_BREATHING,
-		Potions.INSTANT_HEALTH  to PotionTypes.HEALING,
-		Potions.INSTANT_DAMAGE  to PotionTypes.HARMING,
-		Potions.POISON          to PotionTypes.POISON,
-		Potions.REGENERATION    to PotionTypes.REGENERATION,
-		Potions.STRENGTH        to PotionTypes.STRENGTH,
-		Potions.WEAKNESS        to PotionTypes.WEAKNESS,
-		PotionPurity            to makeType(PotionPurity),
-		PotionCorruption        to makeType(PotionCorruption),
-		PotionBanishment        to makeType(PotionBanishment)
+		Effects.NIGHT_VISION    to Potions.NIGHT_VISION,
+		Effects.INVISIBILITY    to Potions.INVISIBILITY,
+		Effects.JUMP_BOOST      to Potions.LEAPING,
+		Effects.FIRE_RESISTANCE to Potions.FIRE_RESISTANCE,
+		Effects.SPEED           to Potions.SWIFTNESS,
+		Effects.SLOWNESS        to Potions.SLOWNESS,
+		Effects.WATER_BREATHING to Potions.WATER_BREATHING,
+		Effects.INSTANT_HEALTH  to Potions.HEALING,
+		Effects.INSTANT_DAMAGE  to Potions.HARMING,
+		Effects.POISON          to Potions.POISON,
+		Effects.REGENERATION    to Potions.REGENERATION,
+		Effects.STRENGTH        to Potions.STRENGTH,
+		Effects.WEAKNESS        to Potions.WEAKNESS,
+		PurityEffect            to makePotion(PurityEffect),
+		CorruptionEffect        to makePotion(CorruptionEffect),
+		BanishmentEffect        to makePotion(BanishmentEffect)
 	)
 	
-	private val TYPE_NO_EFFECT_OVERRIDES = mutableMapOf<PotionType, PotionType>()
+	private val TYPE_NO_EFFECT_OVERRIDES = mutableMapOf<Potion, Potion>()
 	
 	val ALTERED_TYPES
 		get() = TYPE_MAPPING.values
 	
-	private fun makeType(potion: Potion): PotionType {
-		return PotionType(PotionBrewing.INFO.getValue(potion).baseEffect)
+	private fun makePotion(effect: Effect): Potion {
+		return Potion(PotionBrewing.INFO.getValue(effect).baseEffect)
 	}
 	
-	fun getType(potion: Potion): PotionType {
-		return TYPE_MAPPING.getValue(potion)
+	fun getPotion(effect: Effect): Potion {
+		return TYPE_MAPPING.getValue(effect)
 	}
 	
-	fun getTypeOrWater(potion: Potion): PotionType {
-		return TYPE_MAPPING.getOrDefault(potion, PotionTypes.WATER)
+	fun getPotionOrWater(effect: Effect): Potion {
+		return TYPE_MAPPING.getOrDefault(effect, Potions.WATER)
 	}
 	
-	fun registerNoEffectOverride(original: PotionType, override: PotionType) {
+	fun registerNoEffectOverride(original: Potion, override: Potion) {
 		TYPE_NO_EFFECT_OVERRIDES[original] = override
 	}
 	
-	fun findNoEffectOverride(type: PotionType): PotionType {
-		return TYPE_NO_EFFECT_OVERRIDES[type] ?: type
+	fun findNoEffectOverride(potion: Potion): Potion {
+		return TYPE_NO_EFFECT_OVERRIDES[potion] ?: potion
 	}
 }

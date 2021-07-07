@@ -5,9 +5,9 @@ import chylex.hee.game.block.entity.base.TileEntityBase.Context.NETWORK
 import chylex.hee.game.block.entity.base.TileEntityBasePortalController.ForegroundRenderState.Animating
 import chylex.hee.game.block.entity.base.TileEntityBasePortalController.ForegroundRenderState.Invisible
 import chylex.hee.game.block.entity.base.TileEntityBasePortalController.ForegroundRenderState.Visible
-import chylex.hee.system.math.LerpedFloat
-import chylex.hee.system.serialization.TagCompound
-import chylex.hee.system.serialization.use
+import chylex.hee.util.math.LerpedFloat
+import chylex.hee.util.nbt.TagCompound
+import chylex.hee.util.nbt.use
 import net.minecraft.tileentity.TileEntityType
 import kotlin.math.max
 import kotlin.math.min
@@ -33,7 +33,7 @@ abstract class TileEntityBasePortalController(type: TileEntityType<out TileEntit
 	override val clientPortalOffset = LerpedFloat(0F)
 	
 	private fun updateAnimation() {
-		when(clientRenderState) {
+		when (clientRenderState) {
 			Invisible    -> clientAnimationProgress.update(max(0F, clientAnimationProgress - clientAnimationFadeOutSpeed))
 			is Animating -> clientAnimationProgress.update(min(1F, clientAnimationProgress + clientAnimationFadeInSpeed))
 		}
@@ -49,7 +49,7 @@ abstract class TileEntityBasePortalController(type: TileEntityType<out TileEntit
 	
 	override fun writeNBT(nbt: TagCompound, context: Context) = nbt.use {
 		if (context == NETWORK) {
-			putString(RENDER_STATE_TAG, when(val state = serverRenderState) {
+			putString(RENDER_STATE_TAG, when (val state = serverRenderState) {
 				is Animating -> "Animating".also { putFloat(RENDER_PROGRESS_TAG, state.progress) }
 				Visible      -> "Visible"
 				Invisible    -> ""
@@ -59,7 +59,7 @@ abstract class TileEntityBasePortalController(type: TileEntityType<out TileEntit
 	
 	override fun readNBT(nbt: TagCompound, context: Context) = nbt.use {
 		if (context == NETWORK) {
-			clientRenderState = when(getString(RENDER_STATE_TAG)) {
+			clientRenderState = when (getString(RENDER_STATE_TAG)) {
 				"Animating" -> Animating(getFloat(RENDER_PROGRESS_TAG))
 				"Visible"   -> Visible
 				else        -> Invisible

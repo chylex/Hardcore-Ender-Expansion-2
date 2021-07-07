@@ -1,10 +1,10 @@
 package chylex.hee.game.item.properties
 
-import chylex.hee.game.item.Tool.Level.DIAMOND
-import chylex.hee.game.item.Tool.Level.IRON
-import chylex.hee.game.item.Tool.Level.WOOD
+import chylex.hee.game.MagicValues
+import chylex.hee.game.item.util.Tool.Level.DIAMOND
+import chylex.hee.game.item.util.Tool.Level.IRON
+import chylex.hee.game.item.util.Tool.Level.WOOD
 import chylex.hee.init.ModItems
-import chylex.hee.system.MagicValues
 import net.minecraft.item.IItemTier
 import net.minecraft.item.crafting.Ingredient
 

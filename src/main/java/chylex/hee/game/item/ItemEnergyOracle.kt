@@ -1,53 +1,54 @@
 package chylex.hee.game.item
 
-import chylex.hee.client.MC
 import chylex.hee.client.color.ColorTransition
 import chylex.hee.client.color.NO_TINT
+import chylex.hee.client.util.MC
+import chylex.hee.game.Resource
 import chylex.hee.game.block.entity.TileEntityEnergyCluster
-import chylex.hee.game.inventory.heeTag
-import chylex.hee.game.inventory.heeTagOrNull
 import chylex.hee.game.item.infusion.IInfusableItem
 import chylex.hee.game.item.infusion.Infusion
 import chylex.hee.game.item.infusion.Infusion.CAPACITY
 import chylex.hee.game.item.infusion.Infusion.DISTANCE
 import chylex.hee.game.item.infusion.InfusionTag
+import chylex.hee.game.item.util.ItemProperty
 import chylex.hee.game.mechanics.energy.IEnergyQuantity.Units
-import chylex.hee.game.world.Pos
-import chylex.hee.game.world.center
-import chylex.hee.game.world.closestTickingTile
-import chylex.hee.game.world.distanceTo
-import chylex.hee.game.world.getTile
-import chylex.hee.game.world.isLoaded
-import chylex.hee.game.world.totalTime
+import chylex.hee.game.world.util.closestTickingTile
+import chylex.hee.game.world.util.distanceTo
+import chylex.hee.game.world.util.getTile
+import chylex.hee.game.world.util.isLoaded
 import chylex.hee.init.ModItems
-import chylex.hee.system.color.HCL
-import chylex.hee.system.forge.Side
-import chylex.hee.system.forge.Sided
-import chylex.hee.system.math.angleBetween
-import chylex.hee.system.math.floorToInt
-import chylex.hee.system.math.over
-import chylex.hee.system.math.toDegrees
-import chylex.hee.system.migration.ActionResult.FAIL
-import chylex.hee.system.migration.ActionResult.SUCCESS
-import chylex.hee.system.migration.EntityPlayer
-import chylex.hee.system.migration.Hand.MAIN_HAND
-import chylex.hee.system.migration.Hand.OFF_HAND
-import chylex.hee.system.serialization.TagCompound
-import chylex.hee.system.serialization.getIntegerOrNull
-import chylex.hee.system.serialization.getLongArrayOrNull
-import chylex.hee.system.serialization.getPos
-import chylex.hee.system.serialization.getPosOrNull
-import chylex.hee.system.serialization.hasKey
-import chylex.hee.system.serialization.putPos
+import chylex.hee.system.heeTag
+import chylex.hee.system.heeTagOrNull
+import chylex.hee.util.color.space.HCL
+import chylex.hee.util.forge.Side
+import chylex.hee.util.forge.Sided
+import chylex.hee.util.math.Pos
+import chylex.hee.util.math.angleBetween
+import chylex.hee.util.math.center
+import chylex.hee.util.math.floorToInt
+import chylex.hee.util.math.over
+import chylex.hee.util.math.toDegrees
+import chylex.hee.util.nbt.TagCompound
+import chylex.hee.util.nbt.getIntegerOrNull
+import chylex.hee.util.nbt.getLongArrayOrNull
+import chylex.hee.util.nbt.getPos
+import chylex.hee.util.nbt.getPosOrNull
+import chylex.hee.util.nbt.hasKey
+import chylex.hee.util.nbt.putPos
 import it.unimi.dsi.fastutil.longs.LongAVLTreeSet
 import it.unimi.dsi.fastutil.longs.LongArrayList
 import it.unimi.dsi.fastutil.longs.LongCollection
 import net.minecraft.client.renderer.color.IItemColor
 import net.minecraft.client.util.ITooltipFlag
 import net.minecraft.entity.Entity
+import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.item.ItemStack
 import net.minecraft.item.ItemUseContext
 import net.minecraft.util.ActionResultType
+import net.minecraft.util.ActionResultType.FAIL
+import net.minecraft.util.ActionResultType.SUCCESS
+import net.minecraft.util.Hand.MAIN_HAND
+import net.minecraft.util.Hand.OFF_HAND
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.text.ITextComponent
 import net.minecraft.world.World
@@ -82,10 +83,10 @@ class ItemEnergyOracle(properties: Properties) : ItemAbstractEnergyUser(properti
 		}
 		
 		private fun isPlayerHolding(entity: Entity?, stack: ItemStack): Boolean {
-			return entity is EntityPlayer && (entity.getHeldItem(MAIN_HAND) === stack || entity.getHeldItem(OFF_HAND) === stack)
+			return entity is PlayerEntity && (entity.getHeldItem(MAIN_HAND) === stack || entity.getHeldItem(OFF_HAND) === stack)
 		}
 		
-		val ACTIVITY_INTENSITY_PROPERTY = ItemProperty("activity_intensity") { stack, entity ->
+		val ACTIVITY_INTENSITY_PROPERTY = ItemProperty(Resource.Custom("activity_intensity")) { stack, entity ->
 			val tag = stack.heeTagOrNull
 			
 			if (tag == null || !isPlayerHolding(entity, stack)) {
@@ -124,7 +125,7 @@ class ItemEnergyOracle(properties: Properties) : ItemAbstractEnergyUser(properti
 		return Pos(entry).let { it.isLoaded(world) && it.getTile<TileEntityEnergyCluster>(world) == null }
 	}
 	
-	fun isClusterIgnored(player: EntityPlayer, pos: BlockPos): Boolean {
+	fun isClusterIgnored(player: PlayerEntity, pos: BlockPos): Boolean {
 		val entry = pos.toLong()
 		
 		return (
@@ -179,7 +180,7 @@ class ItemEnergyOracle(properties: Properties) : ItemAbstractEnergyUser(properti
 		}
 		
 		val tag = stack.heeTag
-		val currentTime = world.totalTime
+		val currentTime = world.gameTime
 		
 		// unique identifier
 		
@@ -276,6 +277,9 @@ class ItemEnergyOracle(properties: Properties) : ItemAbstractEnergyUser(properti
 	
 	@Sided(Side.CLIENT)
 	object Color : IItemColor {
+		@JvmField
+		var isRenderingInventoryEntity = false
+		
 		private val INACTIVE  = HCL(0.0, 0F,   2.8F)
 		private val SEARCHING = HCL(0.0, 0F,  68.0F)
 		private val PROXIMITY = HCL(0.0, 0F, 100.0F)
@@ -311,7 +315,7 @@ class ItemEnergyOracle(properties: Properties) : ItemAbstractEnergyUser(properti
 			}
 		}
 		
-		private fun determineNextColor(stack: ItemStack, tag: TagCompound, player: EntityPlayer): HCL {
+		private fun determineNextColor(stack: ItemStack, tag: TagCompound, player: PlayerEntity): HCL {
 			if (!ModItems.ENERGY_ORACLE.hasAnyEnergy(stack)) {
 				return INACTIVE
 			}
@@ -350,7 +354,7 @@ class ItemEnergyOracle(properties: Properties) : ItemAbstractEnergyUser(properti
 			val tag = stack.heeTagOrNull ?: return INACTIVE_INT
 			val player = MC.player
 			
-			if (player == null || !MC.renderManager.renderShadow) { // do not render on player model in inventory // UPDATE 1.16 (make sure RenderManager.renderShadow is still only set in InventoryScreen)
+			if (player == null || isRenderingInventoryEntity) {
 				return INACTIVE_INT
 			}
 			

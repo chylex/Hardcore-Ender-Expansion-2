@@ -1,6 +1,6 @@
 package chylex.hee.game.loot.modifiers
 
-import chylex.hee.game.inventory.size
+import chylex.hee.game.item.util.size
 import com.google.gson.JsonObject
 import net.minecraft.item.ItemStack
 import net.minecraft.item.Items

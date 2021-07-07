@@ -3,26 +3,26 @@ package chylex.hee.game.block.entity
 import chylex.hee.game.block.BlockShulkerBoxOverride.BoxSize
 import chylex.hee.game.container.ContainerShulkerBox
 import chylex.hee.init.ModTileEntities
-import chylex.hee.system.delegate.NotifyOnChange
-import chylex.hee.system.migration.TileEntityShulkerBox
-import chylex.hee.system.serialization.TagCompound
-import chylex.hee.system.serialization.getEnum
-import chylex.hee.system.serialization.heeTag
-import chylex.hee.system.serialization.heeTagOrNull
-import chylex.hee.system.serialization.putEnum
+import chylex.hee.system.heeTag
+import chylex.hee.system.heeTagOrNull
+import chylex.hee.util.delegate.NotifyOnChange
+import chylex.hee.util.nbt.TagCompound
+import chylex.hee.util.nbt.getEnum
+import chylex.hee.util.nbt.putEnum
 import net.minecraft.block.BlockState
 import net.minecraft.entity.player.PlayerInventory
 import net.minecraft.inventory.container.Container
 import net.minecraft.item.ItemStack
 import net.minecraft.network.NetworkManager
 import net.minecraft.network.play.server.SUpdateTileEntityPacket
+import net.minecraft.tileentity.ShulkerBoxTileEntity
 import net.minecraft.tileentity.TileEntityType
 import net.minecraft.util.Direction
 import net.minecraft.util.NonNullList
 import net.minecraft.util.text.ITextComponent
 import net.minecraft.util.text.TranslationTextComponent
 
-class TileEntityShulkerBoxCustom : TileEntityShulkerBox() {
+class TileEntityShulkerBoxCustom : ShulkerBoxTileEntity() {
 	companion object {
 		const val BOX_SIZE_TAG = "BoxSize"
 	}
@@ -30,7 +30,7 @@ class TileEntityShulkerBoxCustom : TileEntityShulkerBox() {
 	var boxSize by NotifyOnChange(BoxSize.LARGE) { newValue ->
 		val newItems = NonNullList.withSize(newValue.slots, ItemStack.EMPTY)
 		
-		for(slot in 0 until newValue.slots) {
+		for (slot in 0 until newValue.slots) {
 			newItems[slot] = items[slot]
 		}
 		

@@ -3,7 +3,7 @@ package chylex.hee.game.recipe.factories
 import chylex.hee.game.item.ItemAbstractEnergyUser
 import chylex.hee.game.item.infusion.InfusionTag
 import chylex.hee.game.recipe.factories.IngredientFullEnergy.Instance
-import chylex.hee.system.forge.getIfExists
+import chylex.hee.system.getIfExists
 import com.google.gson.JsonObject
 import com.google.gson.JsonSyntaxException
 import net.minecraft.item.Item
