@@ -167,14 +167,13 @@ object ModRendering {
 		
 		// properties
 		
-		ModBlocks.DEATH_FLOWER_DECAYING.registerProperty(Resource.Custom("death_level"), ItemDeathFlower.DEATH_LEVEL_PROPERTY)
-		
-		ModItems.ENERGY_ORACLE.registerProperty(Resource.Custom("activity_intensity"), ItemEnergyOracle.ACTIVITY_INTENSITY_PROPERTY)
-		ModItems.ENERGY_RECEPTACLE.registerProperty(Resource.Custom("has_cluster"), ItemEnergyReceptacle.HAS_CLUSTER_PROPERTY)
-		ModItems.PORTAL_TOKEN.registerProperty(Resource.Custom("token_type"), ItemPortalToken.TOKEN_TYPE_PROPERTY)
-		ModItems.TOTEM_OF_UNDYING.registerProperty(Resource.Custom("is_shaking"), ItemTotemOfUndyingCustom.IS_SHAKING_PROPERTY)
-		ModItems.VOID_BUCKET.registerProperty(Resource.Custom("void_bucket_cooldown"), ItemVoidBucket.VOID_BUCKET_COOLDOWN_PROPERTY)
-		ModItems.VOID_SALAD.registerProperty(Resource.Custom("void_salad_type"), ItemVoidSalad.VOID_SALAD_TYPE_PROPERTY)
+		ItemDeathFlower.DEATH_LEVEL_PROPERTY.register(ModBlocks.DEATH_FLOWER_DECAYING)
+		ItemEnergyOracle.ACTIVITY_INTENSITY_PROPERTY.register(ModItems.ENERGY_ORACLE)
+		ItemEnergyReceptacle.HAS_CLUSTER_PROPERTY.register(ModItems.ENERGY_RECEPTACLE)
+		ItemPortalToken.TOKEN_TYPE_PROPERTY.register(ModItems.PORTAL_TOKEN)
+		ItemTotemOfUndyingCustom.IS_SHAKING_PROPERTY.register(ModItems.TOTEM_OF_UNDYING)
+		ItemVoidBucket.VOID_BUCKET_COOLDOWN_PROPERTY.register(ModItems.VOID_BUCKET)
+		ItemVoidSalad.VOID_SALAD_TYPE_PROPERTY.register(ModItems.VOID_SALAD)
 		
 		// screens
 		

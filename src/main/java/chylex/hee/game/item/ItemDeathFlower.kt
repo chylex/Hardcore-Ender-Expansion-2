@@ -13,7 +13,6 @@ import chylex.hee.system.migration.ItemBlock
 import chylex.hee.system.serialization.getIntegerOrNull
 import net.minecraft.block.Block
 import net.minecraft.block.Blocks
-import net.minecraft.item.IItemPropertyGetter
 import net.minecraft.item.ItemGroup
 import net.minecraft.item.ItemStack
 import net.minecraft.item.ItemUseContext
@@ -26,7 +25,7 @@ class ItemDeathFlower(block: Block, properties: Properties) : ItemBlock(block, p
 	companion object {
 		private const val LEVEL_TAG = "DeathLevel"
 		
-		val DEATH_LEVEL_PROPERTY = IItemPropertyGetter { stack, _, _ ->
+		val DEATH_LEVEL_PROPERTY = ItemProperty("death_level") { stack ->
 			getDeathLevel(stack).toFloat()
 		}
 		

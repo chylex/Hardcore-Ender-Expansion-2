@@ -29,7 +29,6 @@ import chylex.hee.system.math.over
 import chylex.hee.system.math.toDegrees
 import chylex.hee.system.migration.ActionResult.FAIL
 import chylex.hee.system.migration.ActionResult.SUCCESS
-import chylex.hee.system.migration.EntityLivingBase
 import chylex.hee.system.migration.EntityPlayer
 import chylex.hee.system.migration.Hand.MAIN_HAND
 import chylex.hee.system.migration.Hand.OFF_HAND
@@ -46,7 +45,6 @@ import it.unimi.dsi.fastutil.longs.LongCollection
 import net.minecraft.client.renderer.color.IItemColor
 import net.minecraft.client.util.ITooltipFlag
 import net.minecraft.entity.Entity
-import net.minecraft.item.IItemPropertyGetter
 import net.minecraft.item.ItemStack
 import net.minecraft.item.ItemUseContext
 import net.minecraft.util.ActionResultType
@@ -87,10 +85,10 @@ class ItemEnergyOracle(properties: Properties) : ItemAbstractEnergyUser(properti
 			return entity is EntityPlayer && (entity.getHeldItem(MAIN_HAND) === stack || entity.getHeldItem(OFF_HAND) === stack)
 		}
 		
-		private fun getActivityIntensityProp(stack: ItemStack, entity: EntityLivingBase?): Float {
+		val ACTIVITY_INTENSITY_PROPERTY = ItemProperty("activity_intensity") { stack, entity ->
 			val tag = stack.heeTagOrNull
 			
-			return if (tag == null || !isPlayerHolding(entity, stack)) {
+			if (tag == null || !isPlayerHolding(entity, stack)) {
 				0.0F // inactive
 			}
 			else if (!tag.hasKey(TRACKED_CLUSTER_HUE_TAG)) {
@@ -102,10 +100,6 @@ class ItemEnergyOracle(properties: Properties) : ItemAbstractEnergyUser(properti
 			else {
 				0.5F // tracking
 			}
-		}
-		
-		val ACTIVITY_INTENSITY_PROPERTY = IItemPropertyGetter { stack, _, entity ->
-			getActivityIntensityProp(stack, entity)
 		}
 	}
 	

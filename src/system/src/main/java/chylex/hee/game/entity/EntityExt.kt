@@ -192,8 +192,8 @@ private val predicateAlwaysTrue = Predicates.alwaysTrue<Entity>()
  */
 val IWorld.selectAllEntities: Iterable<Entity>
 	get() = when (this) {
-		is ClientWorld -> this.allEntities
 		is ServerWorld -> this.entitiesIteratable
+		is ClientWorld -> this.allEntities
 		else           -> emptyList()
 	}
 

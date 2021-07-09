@@ -1,6 +1,5 @@
 package chylex.hee.game.block
 
-import chylex.hee.client.MC.player
 import chylex.hee.game.block.logic.IBlockHarvestToolCheck
 import chylex.hee.game.block.properties.BlockBuilder
 import chylex.hee.game.item.Tool.Type.PICKAXE
@@ -47,7 +46,7 @@ abstract class BlockDustyStone(builder: BlockBuilder) : BlockSimple(builder), IB
 		return tool == PICKAXE || tool == SHOVEL
 	}
 	
-	protected fun isPickaxeOrShovel(stack: ItemStack): Boolean {
+	protected fun isPickaxeOrShovel(player: EntityPlayer, stack: ItemStack): Boolean {
 		return stack.item.let {
 			it.getHarvestLevel(stack, PICKAXE, player, defaultState) >= 0 ||
 			it.getHarvestLevel(stack, SHOVEL,  player, defaultState) >= 0

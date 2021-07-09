@@ -9,7 +9,6 @@
     "HookBlockHardness",
     "HookChorusFlowerSoil",
     "HookChorusPlantSoil",
-    "HookDimensionType",
     "HookEffectCorruption",
     "HookEffectInstanceCorruption",
     "HookEndermanParticles",
@@ -19,16 +18,19 @@
     "HookEntityKnockback",
     "HookEntityPotionCorruption",
     "HookFireSpread",
-    "HookFogCheck",
-    "HookFogDistance",
     "HookItemEntityLavaCheck",
-    "HookLightTexture",
     "HookLootTableDeserialization",
     "HookPlayerInventoryArmorBreaking",
     "HookPotionCreativeMenu",
     "HookServerWorldConstruction",
+    "HookThornsArmorBreaking"
+  ],
+  "client": [
+    "HookDimensionTypeClient",
+    "HookFogCheck",
+    "HookFogDistance",
+    "HookLightTexture",
     "HookSkyColor",
-    "HookThornsArmorBreaking",
     "HookUselessExperimentalWorldWarning"
   ],
   "injectors": {

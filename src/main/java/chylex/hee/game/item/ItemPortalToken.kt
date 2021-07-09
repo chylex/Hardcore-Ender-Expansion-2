@@ -33,7 +33,6 @@ import chylex.hee.system.serialization.putEnum
 import net.minecraft.client.renderer.color.IItemColor
 import net.minecraft.client.util.ITooltipFlag
 import net.minecraft.entity.Entity
-import net.minecraft.item.IItemPropertyGetter
 import net.minecraft.item.Item
 import net.minecraft.item.ItemGroup
 import net.minecraft.item.ItemStack
@@ -57,7 +56,7 @@ class ItemPortalToken(properties: Properties) : Item(properties) {
 		
 		const val MAX_STACK_SIZE = 16
 		
-		val TOKEN_TYPE_PROPERTY = IItemPropertyGetter { stack, _, _ ->
+		val TOKEN_TYPE_PROPERTY = ItemProperty("token_type") { stack ->
 			getTokenType(stack).propertyValue + (if (stack.heeTagOrNull.hasKey(IS_CORRUPTED_TAG)) 0.5F else 0F)
 		}
 		

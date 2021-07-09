@@ -9,6 +9,6 @@ import net.minecraft.world.IBlockReader
 
 class BlockDustyStoneBricks(builder: BlockBuilder) : BlockDustyStone(builder) {
 	override fun canHarvestBlock(state: BlockState, world: IBlockReader, pos: BlockPos, player: EntityPlayer): Boolean {
-		return isPickaxeOrShovel(player.getHeldItem(MAIN_HAND))
+		return isPickaxeOrShovel(player, player.getHeldItem(MAIN_HAND))
 	}
 }

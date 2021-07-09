@@ -35,7 +35,6 @@ import chylex.hee.system.serialization.use
 import net.minecraft.client.renderer.color.IItemColor
 import net.minecraft.client.util.ITooltipFlag
 import net.minecraft.entity.Entity
-import net.minecraft.item.IItemPropertyGetter
 import net.minecraft.item.ItemStack
 import net.minecraft.item.ItemUseContext
 import net.minecraft.util.ActionResultType
@@ -58,7 +57,7 @@ class ItemEnergyReceptacle(properties: Properties) : ItemAbstractInfusable(prope
 		private const val ENERGY_LOSS_TICK_RATE = 10L
 		private const val ITEM_COOLDOWN = 16
 		
-		val HAS_CLUSTER_PROPERTY = IItemPropertyGetter { stack, _, _ ->
+		val HAS_CLUSTER_PROPERTY = ItemProperty("has_cluster") { stack ->
 			if (stack.heeTagOrNull.hasKey(CLUSTER_SNAPSHOT_TAG)) 1F else 0F // POLISH tweak animation
 		}
 		

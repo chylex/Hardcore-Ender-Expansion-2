@@ -25,7 +25,6 @@ import chylex.hee.system.migration.Potions
 import chylex.hee.system.migration.Sounds
 import chylex.hee.system.serialization.hasKey
 import net.minecraft.entity.Entity
-import net.minecraft.item.IItemPropertyGetter
 import net.minecraft.item.ItemStack
 import net.minecraft.item.Items
 import net.minecraft.particles.ParticleTypes
@@ -41,7 +40,7 @@ class ItemTotemOfUndyingCustom(properties: Properties) : ItemAbstractTrinket(pro
 	companion object {
 		private const val SHAKING_TAG = "Shaking"
 		
-		val IS_SHAKING_PROPERTY = IItemPropertyGetter { stack, _, _ ->
+		val IS_SHAKING_PROPERTY = ItemProperty("is_shaking") { stack ->
 			if (stack.heeTagOrNull.hasKey(SHAKING_TAG)) 1F else 0F
 		}
 	}

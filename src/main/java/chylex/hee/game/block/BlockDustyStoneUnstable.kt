@@ -60,7 +60,7 @@ class BlockDustyStoneUnstable(builder: BlockBuilder) : BlockDustyStone(builder),
 	}
 	
 	override fun canHarvestBlock(state: BlockState, world: IBlockReader, pos: BlockPos, player: EntityPlayer): Boolean {
-		return player.getHeldItem(MAIN_HAND).let { EnchantmentHelper.getEnchantmentLevel(Enchantments.SILK_TOUCH, it) == 0 || isPickaxeOrShovel(it) }
+		return player.getHeldItem(MAIN_HAND).let { EnchantmentHelper.getEnchantmentLevel(Enchantments.SILK_TOUCH, it) == 0 || isPickaxeOrShovel(player, it) }
 	}
 	
 	override fun tick(state: BlockState, world: ServerWorld, pos: BlockPos, rand: Random) {

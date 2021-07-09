@@ -20,7 +20,6 @@ import chylex.hee.system.random.nextFloat
 import chylex.hee.system.serialization.getEnum
 import chylex.hee.system.serialization.putEnum
 import net.minecraft.item.Food
-import net.minecraft.item.IItemPropertyGetter
 import net.minecraft.item.Item
 import net.minecraft.item.ItemStack
 import net.minecraft.item.Items
@@ -38,7 +37,7 @@ class ItemVoidSalad(properties: Properties) : Item(properties) {
 		
 		val FOOD: Food = Food.Builder().hunger(0).saturation(0F).setAlwaysEdible().build()
 		
-		val VOID_SALAD_TYPE_PROPERTY = IItemPropertyGetter { stack, _, _ ->
+		val VOID_SALAD_TYPE_PROPERTY = ItemProperty("void_salad_type") { stack ->
 			getSaladType(stack).ordinal.toFloat()
 		}
 		

@@ -25,7 +25,6 @@ import net.minecraft.enchantment.Enchantments
 import net.minecraft.entity.Entity
 import net.minecraft.fluid.FluidState
 import net.minecraft.fluid.Fluids
-import net.minecraft.item.IItemPropertyGetter
 import net.minecraft.item.ItemStack
 import net.minecraft.util.ActionResult
 import net.minecraft.util.Hand
@@ -43,7 +42,7 @@ class ItemVoidBucket(properties: Properties) : ItemAbstractVoidTool(properties, 
 		
 		private const val COOLDOWN_TICKS = 13
 		
-		val VOID_BUCKET_COOLDOWN_PROPERTY = IItemPropertyGetter { stack, _, _ ->
+		val VOID_BUCKET_COOLDOWN_PROPERTY = ItemProperty("void_bucket_cooldown") { stack ->
 			(stack.heeTagOrNull?.getByte(COOLDOWN_TAG) ?: 0) / COOLDOWN_TICKS.toFloat()
 		}
 		
