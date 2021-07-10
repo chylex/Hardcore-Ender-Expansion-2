@@ -77,7 +77,7 @@ abstract class TileEntityBase(type: TileEntityType<out TileEntityBase>) : TileEn
 	}
 	
 	final override fun handleUpdateTag(state: BlockState, nbt: CompoundNBT) {
-		super.handleUpdateTag(state, nbt)
+		super.read(state, nbt)
 		readNBT(nbt.heeTag, NETWORK)
 	}
 	
