@@ -15,6 +15,8 @@ import net.minecraftforge.fml.packs.ResourcePackLoader
 import java.util.function.Consumer
 
 object VanillaResourceOverrides : IPackFinder {
+	const val PACK_NAME = "Hardcore Ender Expansion 2"
+	
 	fun register() {
 		// Minecraft is null when running datagen, but I cannot move this to FMLClientSetupEvent because it only runs after all resource packs are initialized
 		with(Minecraft.getInstance() ?: return) {
@@ -26,11 +28,11 @@ object VanillaResourceOverrides : IPackFinder {
 		val delegate = ResourcePackLoader.getResourcePackFor(HEE.ID).get()
 		val supplier = supply<IResourcePack>(Pack(delegate))
 		
-		output.accept(ResourcePackInfo.createResourcePack("HEE 2", true /* isAlwaysEnabled */, supplier, factory, Priority.TOP, IPackNameDecorator.BUILTIN)!!)
+		output.accept(ResourcePackInfo.createResourcePack(PACK_NAME, true /* isAlwaysEnabled */, supplier, factory, Priority.TOP, IPackNameDecorator.BUILTIN)!!)
 	}
 	
 	private class Pack(delegate: IResourcePack) : IResourcePack by delegate {
-		override fun getName() = "Hardcore Ender Expansion 2"
+		override fun getName() = PACK_NAME
 		override fun isHidden() = true // minecraft doesn't remember the order across restarts anyway
 		
 		override fun getResourceNamespaces(type: ResourcePackType): MutableSet<String> {

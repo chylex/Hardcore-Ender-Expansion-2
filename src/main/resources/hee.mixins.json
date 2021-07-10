@@ -30,6 +30,7 @@
     "HookFogCheck",
     "HookFogDistance",
     "HookLightTexture",
+    "HookResourcePackOrder",
     "HookSkyColor",
     "HookUselessExperimentalWorldWarning"
   ],
