@@ -29,6 +29,7 @@ import net.minecraft.world.gen.feature.IFeatureConfig.NO_FEATURE_CONFIG
 import net.minecraft.world.gen.feature.NoFeatureConfig
 import net.minecraft.world.gen.feature.structure.StructureFeatures
 import net.minecraft.world.server.ServerWorld
+import net.minecraftforge.common.MinecraftForge
 import net.minecraftforge.event.RegistryEvent
 import net.minecraftforge.event.world.BiomeLoadingEvent
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber.Bus.MOD
@@ -36,6 +37,10 @@ import java.util.Random
 
 @SubscribeAllEvents(modid = HEE.ID, bus = MOD)
 object OverworldFeatures {
+	init {
+		MinecraftForge.EVENT_BUS.register(this)
+	}
+	
 	@SubscribeEvent(priority = EventPriority.LOWEST)
 	fun onRegisterFeatures(e: RegistryEvent.Register<Feature<*>>) {
 		with(e.registry) {
