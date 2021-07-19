@@ -1,14 +1,13 @@
 package chylex.hee.game.item
 
-import chylex.hee.client.color.NO_TINT
 import chylex.hee.game.Resource
 import chylex.hee.game.item.infusion.Infusion
 import chylex.hee.game.item.infusion.InfusionList
 import chylex.hee.game.item.infusion.InfusionTag
+import chylex.hee.game.item.properties.ItemTint
 import chylex.hee.util.color.RGB
 import chylex.hee.util.forge.Side
 import chylex.hee.util.forge.Sided
-import net.minecraft.client.renderer.color.IItemColor
 import net.minecraft.client.util.ITooltipFlag
 import net.minecraft.item.ItemGroup
 import net.minecraft.item.ItemStack
@@ -68,11 +67,14 @@ class ItemBindingEssence(properties: Properties) : ItemAbstractInfusable(propert
 		return false
 	}
 	
-	@Sided(Side.CLIENT)
-	object Color : IItemColor {
+	override val tint: ItemTint
+		get() = Tint
+	
+	private object Tint : ItemTint() {
 		private val EMPTY = RGB(255u).i
 		
-		override fun getColor(stack: ItemStack, tintIndex: Int): Int {
+		@Sided(Side.CLIENT)
+		override fun tint(stack: ItemStack, tintIndex: Int): Int {
 			val list = InfusionTag.getList(stack).toList()
 			
 			if (list.isEmpty()) {

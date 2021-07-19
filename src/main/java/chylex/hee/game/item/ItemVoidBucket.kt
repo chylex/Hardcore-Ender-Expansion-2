@@ -1,8 +1,8 @@
 package chylex.hee.game.item
 
-import chylex.hee.client.color.NO_TINT
 import chylex.hee.game.Resource
 import chylex.hee.game.item.properties.CustomToolMaterial.VOID_BUCKET
+import chylex.hee.game.item.properties.ItemTint
 import chylex.hee.game.item.util.ItemProperty
 import chylex.hee.game.item.util.cleanupNBT
 import chylex.hee.game.item.util.doDamage
@@ -13,9 +13,10 @@ import chylex.hee.game.world.util.setAir
 import chylex.hee.system.heeTag
 import chylex.hee.system.heeTagOrNull
 import chylex.hee.util.color.RGB
+import chylex.hee.util.forge.Side
+import chylex.hee.util.forge.Sided
 import chylex.hee.util.nbt.hasKey
 import net.minecraft.block.BlockState
-import net.minecraft.client.renderer.color.IItemColor
 import net.minecraft.enchantment.Enchantment
 import net.minecraft.enchantment.Enchantments
 import net.minecraft.entity.Entity
@@ -149,8 +150,12 @@ class ItemVoidBucket(properties: Properties) : ItemAbstractVoidTool(properties, 
 		return slotChanged && super.shouldCauseReequipAnimation(oldStack, newStack, slotChanged)
 	}
 	
-	object Color : IItemColor {
-		override fun getColor(stack: ItemStack, tintIndex: Int) = when (tintIndex) {
+	override val tint: ItemTint
+		get() = Tint
+	
+	private object Tint : ItemTint() {
+		@Sided(Side.CLIENT)
+		override fun tint(stack: ItemStack, tintIndex: Int) = when (tintIndex) {
 			1    -> stack.heeTagOrNull?.getInt(COLOR_TAG) ?: NO_TINT
 			else -> NO_TINT
 		}

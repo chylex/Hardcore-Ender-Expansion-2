@@ -38,7 +38,8 @@ infix fun <T : IForgeRegistryEntry<*>> T.named(registryName: String) = apply {
 inline fun <reified T : IForgeRegistryEntry<T>> getRegistryEntries(obj: Any): List<T> {
 	return obj.javaClass
 		.fields
-		.filter { T::class.java.isAssignableFrom(it.type) }.map { it.get(null) as T }
+		.filter { T::class.java.isAssignableFrom(it.type) }
+		.map { it.get(null) as T }
 		.ifEmpty { throw IllegalStateException("[RegistryExt] no registry entries found in $obj") }
 }
 

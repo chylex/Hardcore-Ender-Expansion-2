@@ -1,12 +1,12 @@
 package chylex.hee.game.block
 
-import chylex.hee.client.color.NO_TINT
 import chylex.hee.client.render.block.IBlockLayerCutout
 import chylex.hee.client.util.MC
 import chylex.hee.game.block.BlockPuzzleLogic.State.ACTIVE
 import chylex.hee.game.block.BlockPuzzleLogic.State.DISABLED
 import chylex.hee.game.block.BlockPuzzleLogic.State.INACTIVE
 import chylex.hee.game.block.properties.BlockBuilder
+import chylex.hee.game.block.properties.BlockTint
 import chylex.hee.game.block.util.Property
 import chylex.hee.game.block.util.withFacing
 import chylex.hee.game.entity.util.posVec
@@ -39,7 +39,6 @@ import chylex.hee.util.math.Pos
 import net.minecraft.block.Block
 import net.minecraft.block.BlockState
 import net.minecraft.block.HorizontalBlock.HORIZONTAL_FACING
-import net.minecraft.client.renderer.color.IBlockColor
 import net.minecraft.entity.Entity
 import net.minecraft.item.BlockItemUseContext
 import net.minecraft.state.StateContainer.Builder
@@ -283,9 +282,12 @@ sealed class BlockPuzzleLogic(builder: BlockBuilder) : BlockSimple(builder), IBl
 	
 	// Client side
 	
-	@Sided(Side.CLIENT)
-	object Color : IBlockColor {
-		override fun getColor(state: BlockState, world: IBlockDisplayReader?, pos: BlockPos?, tintIndex: Int): Int {
+	override val tint: BlockTint
+		get() = Tint
+	
+	private object Tint : BlockTint() {
+		@Sided(Side.CLIENT)
+		override fun tint(state: BlockState, world: IBlockDisplayReader?, pos: BlockPos?, tintIndex: Int): Int {
 			if (tintIndex != 1) {
 				return NO_TINT
 			}

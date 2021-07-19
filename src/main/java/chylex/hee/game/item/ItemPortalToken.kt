@@ -1,7 +1,6 @@
 package chylex.hee.game.item
 
 import chylex.hee.HEE
-import chylex.hee.client.color.NO_TINT
 import chylex.hee.client.gui.screen.GuiPortalTokenStorage
 import chylex.hee.client.util.MC
 import chylex.hee.game.Resource
@@ -9,6 +8,7 @@ import chylex.hee.game.block.BlockVoidPortalInner
 import chylex.hee.game.entity.item.EntityTokenHolder
 import chylex.hee.game.entity.util.EntityPortalContact
 import chylex.hee.game.entity.util.selectExistingEntities
+import chylex.hee.game.item.properties.ItemTint
 import chylex.hee.game.item.util.ItemProperty
 import chylex.hee.game.territory.TerritoryType
 import chylex.hee.game.territory.storage.VoidData
@@ -27,11 +27,9 @@ import chylex.hee.util.nbt.getEnum
 import chylex.hee.util.nbt.getIntegerOrNull
 import chylex.hee.util.nbt.hasKey
 import chylex.hee.util.nbt.putEnum
-import net.minecraft.client.renderer.color.IItemColor
 import net.minecraft.client.util.ITooltipFlag
 import net.minecraft.entity.Entity
 import net.minecraft.entity.player.PlayerEntity
-import net.minecraft.item.Item
 import net.minecraft.item.ItemGroup
 import net.minecraft.item.ItemStack
 import net.minecraft.item.ItemUseContext
@@ -49,7 +47,7 @@ import net.minecraft.util.text.StringTextComponent
 import net.minecraft.util.text.TranslationTextComponent
 import net.minecraft.world.World
 
-class ItemPortalToken(properties: Properties) : Item(properties) {
+class ItemPortalToken(properties: Properties) : HeeItem(properties) {
 	companion object {
 		private const val TYPE_TAG = "Type"
 		private const val TERRITORY_TYPE_TAG = "Territory"
@@ -255,15 +253,18 @@ class ItemPortalToken(properties: Properties) : Item(properties) {
 		super.addInformation(stack, world, lines, flags)
 	}
 	
-	@Sided(Side.CLIENT)
-	object Color : IItemColor {
+	override val tint: ItemTint
+		get() = Tint
+	
+	private object Tint : ItemTint() {
 		private val WHITE = RGB(255u).i
 		
 		private fun getColors(stack: ItemStack): TerritoryColors? {
 			return getTerritoryType(stack)?.desc?.colors
 		}
 		
-		override fun getColor(stack: ItemStack, tintIndex: Int) = when (tintIndex) {
+		@Sided(Side.CLIENT)
+		override fun tint(stack: ItemStack, tintIndex: Int) = when (tintIndex) {
 			1    -> getColors(stack)?.tokenTop?.i ?: WHITE
 			2    -> getColors(stack)?.tokenBottom?.i ?: WHITE
 			else -> NO_TINT

@@ -33,7 +33,6 @@ import chylex.hee.util.nbt.putPos
 import net.minecraft.client.util.ITooltipFlag
 import net.minecraft.entity.Entity
 import net.minecraft.entity.player.PlayerEntity
-import net.minecraft.item.Item
 import net.minecraft.item.ItemStack
 import net.minecraft.item.ItemUseContext
 import net.minecraft.network.PacketBuffer
@@ -50,7 +49,7 @@ import java.util.Random
 import kotlin.math.max
 import kotlin.math.pow
 
-abstract class ItemAbstractEnergyUser(properties: Properties) : Item(properties) {
+abstract class ItemAbstractEnergyUser(properties: Properties) : HeeItem(properties) {
 	companion object {
 		private const val ENERGY_LEVEL_TAG = "EnergyLevel"
 		

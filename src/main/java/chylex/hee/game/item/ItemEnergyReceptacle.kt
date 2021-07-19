@@ -1,13 +1,13 @@
 package chylex.hee.game.item
 
 import chylex.hee.HEE
-import chylex.hee.client.color.NO_TINT
 import chylex.hee.game.Resource
 import chylex.hee.game.block.entity.TileEntityEnergyCluster
 import chylex.hee.game.item.infusion.Infusion.SAFETY
 import chylex.hee.game.item.infusion.Infusion.STABILITY
 import chylex.hee.game.item.infusion.InfusionList
 import chylex.hee.game.item.infusion.InfusionTag
+import chylex.hee.game.item.properties.ItemTint
 import chylex.hee.game.item.util.ItemProperty
 import chylex.hee.game.mechanics.energy.ClusterSnapshot
 import chylex.hee.game.mechanics.energy.IEnergyQuantity
@@ -32,7 +32,6 @@ import chylex.hee.util.nbt.getIntegerOrNull
 import chylex.hee.util.nbt.hasKey
 import chylex.hee.util.nbt.putEncoded
 import chylex.hee.util.nbt.use
-import net.minecraft.client.renderer.color.IItemColor
 import net.minecraft.client.util.ITooltipFlag
 import net.minecraft.entity.Entity
 import net.minecraft.item.ItemStack
@@ -223,11 +222,14 @@ class ItemEnergyReceptacle(properties: Properties) : ItemAbstractInfusable(prope
 		super.addInformation(stack, world, lines, flags)
 	}
 	
-	@Sided(Side.CLIENT)
-	object Color : IItemColor {
+	override val tint: ItemTint
+		get() = Tint
+	
+	private object Tint : ItemTint() {
 		private val WHITE = RGB(255u).i
 		
-		override fun getColor(stack: ItemStack, tintIndex: Int) = when (tintIndex) {
+		@Sided(Side.CLIENT)
+		override fun tint(stack: ItemStack, tintIndex: Int) = when (tintIndex) {
 			1    -> stack.heeTagOrNull?.getInt(RENDER_COLOR_TAG) ?: WHITE
 			else -> NO_TINT
 		}

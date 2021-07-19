@@ -7,7 +7,6 @@ import chylex.hee.game.mechanics.trinket.TrinketHandler
 import chylex.hee.util.forge.Side
 import chylex.hee.util.forge.Sided
 import net.minecraft.client.util.ITooltipFlag
-import net.minecraft.item.Item
 import net.minecraft.item.ItemStack
 import net.minecraft.item.Rarity
 import net.minecraft.util.text.ITextComponent
@@ -15,7 +14,7 @@ import net.minecraft.util.text.StringTextComponent
 import net.minecraft.util.text.TranslationTextComponent
 import net.minecraft.world.World
 
-open class ItemAbstractTrinket(properties: Properties) : Item(properties), ITrinketItem {
+open class ItemAbstractTrinket(properties: Properties) : HeeItem(properties), ITrinketItem {
 	companion object {
 		fun onGetRarity(): Rarity {
 			return CustomRarity.TRINKET

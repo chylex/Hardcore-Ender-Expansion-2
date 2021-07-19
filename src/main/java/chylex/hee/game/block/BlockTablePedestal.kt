@@ -1,9 +1,9 @@
 package chylex.hee.game.block
 
-import chylex.hee.client.color.NO_TINT
 import chylex.hee.client.render.block.IBlockLayerCutout
 import chylex.hee.game.block.entity.TileEntityTablePedestal
 import chylex.hee.game.block.properties.BlockBuilder
+import chylex.hee.game.block.properties.BlockTint
 import chylex.hee.game.block.util.Property
 import chylex.hee.game.block.util.asVoxelShape
 import chylex.hee.game.item.util.copyIf
@@ -15,7 +15,7 @@ import chylex.hee.util.forge.Side
 import chylex.hee.util.forge.Sided
 import net.minecraft.block.Block
 import net.minecraft.block.BlockState
-import net.minecraft.client.renderer.color.IBlockColor
+import net.minecraft.client.renderer.color.IItemColor
 import net.minecraft.entity.Entity
 import net.minecraft.entity.item.ItemEntity
 import net.minecraft.entity.player.PlayerEntity
@@ -210,9 +210,12 @@ class BlockTablePedestal(builder: BlockBuilder) : BlockSimpleShaped(builder, COM
 	
 	// Client side
 	
-	@Sided(Side.CLIENT)
-	object Color : IBlockColor {
-		override fun getColor(state: BlockState, world: IBlockDisplayReader?, pos: BlockPos?, tintIndex: Int): Int {
+	override val tint: BlockTint
+		get() = Tint
+	
+	private object Tint : BlockTint() {
+		@Sided(Side.CLIENT)
+		override fun tint(state: BlockState, world: IBlockDisplayReader?, pos: BlockPos?, tintIndex: Int): Int {
 			if (world == null || pos == null) {
 				return NO_TINT
 			}
@@ -222,6 +225,10 @@ class BlockTablePedestal(builder: BlockBuilder) : BlockSimpleShaped(builder, COM
 				2    -> pos.getTile<TileEntityTablePedestal>(world)?.statusIndicatorColorClient ?: PedestalStatusIndicator.Contents.NONE.color.i
 				else -> NO_TINT
 			}
+		}
+		
+		override fun forItem(block: Block): IItemColor? {
+			return null
 		}
 	}
 }

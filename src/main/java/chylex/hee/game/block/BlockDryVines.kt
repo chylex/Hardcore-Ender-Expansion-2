@@ -3,13 +3,13 @@ package chylex.hee.game.block
 import chylex.hee.client.render.block.IBlockLayerCutout
 import chylex.hee.client.util.MC
 import chylex.hee.game.block.properties.BlockBuilder
+import chylex.hee.game.block.properties.BlockTint
 import chylex.hee.game.territory.TerritoryType
 import chylex.hee.util.color.IntColor
 import chylex.hee.util.forge.Side
 import chylex.hee.util.forge.Sided
 import net.minecraft.block.BlockState
 import net.minecraft.block.VineBlock
-import net.minecraft.client.renderer.color.IBlockColor
 import net.minecraft.entity.LivingEntity
 import net.minecraft.util.Direction
 import net.minecraft.util.math.BlockPos
@@ -23,7 +23,7 @@ import net.minecraft.world.biome.Biomes
 import net.minecraft.world.server.ServerWorld
 import java.util.Random
 
-class BlockDryVines(builder: BlockBuilder) : VineBlock(builder.p), IBlockLayerCutout {
+class BlockDryVines(builder: BlockBuilder) : VineBlock(builder.p), IBlockLayerCutout, IHeeBlock {
 	
 	// Custom behavior
 	
@@ -43,8 +43,10 @@ class BlockDryVines(builder: BlockBuilder) : VineBlock(builder.p), IBlockLayerCu
 	
 	// Client side
 	
-	@Sided(Side.CLIENT)
-	object Color : IBlockColor {
+	override val tint: BlockTint
+		get() = Tint
+	
+	private object Tint : BlockTint() {
 		private val DEFAULT = dryify(FoliageColors.getDefault())
 		
 		private fun dryify(color: Int): Int {
@@ -56,16 +58,17 @@ class BlockDryVines(builder: BlockBuilder) : VineBlock(builder.p), IBlockLayerCu
 			).i
 		}
 		
-		override fun getColor(state: BlockState, uselessWorld: IBlockDisplayReader?, pos: BlockPos?, tintIndex: Int): Int {
-			val world = MC.world
+		@Sided(Side.CLIENT)
+		override fun tint(state: BlockState, world: IBlockDisplayReader?, pos: BlockPos?, tintIndex: Int): Int {
+			val realWorld = MC.world
 			
-			if (world == null || pos == null) {
+			if (realWorld == null || pos == null) {
 				return DEFAULT
 			}
 			
-			val biomeRegistry = world.func_241828_r().getRegistry(Registry.BIOME_KEY) // RENAME getRegistries
-			val fromTerritory = world.getBiome(pos).takeIf { biomeRegistry.getKey(it) == Biomes.THE_END }?.let { TerritoryType.fromPos(pos) }?.let { it.desc.colors.dryVines }
-			return fromTerritory ?: dryify(BiomeColors.getFoliageColor(world, pos))
+			val biomeRegistry = realWorld.func_241828_r().getRegistry(Registry.BIOME_KEY) // RENAME getRegistries
+			val fromTerritory = realWorld.getBiome(pos).takeIf { biomeRegistry.getKey(it) == Biomes.THE_END }?.let { TerritoryType.fromPos(pos) }?.let { it.desc.colors.dryVines }
+			return fromTerritory ?: dryify(BiomeColors.getFoliageColor(realWorld, pos))
 		}
 	}
 }

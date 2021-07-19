@@ -1,7 +1,6 @@
 package chylex.hee.game.item
 
 import chylex.hee.client.color.ColorTransition
-import chylex.hee.client.color.NO_TINT
 import chylex.hee.client.util.MC
 import chylex.hee.game.Resource
 import chylex.hee.game.block.entity.TileEntityEnergyCluster
@@ -10,6 +9,7 @@ import chylex.hee.game.item.infusion.Infusion
 import chylex.hee.game.item.infusion.Infusion.CAPACITY
 import chylex.hee.game.item.infusion.Infusion.DISTANCE
 import chylex.hee.game.item.infusion.InfusionTag
+import chylex.hee.game.item.properties.ItemTint
 import chylex.hee.game.item.util.ItemProperty
 import chylex.hee.game.mechanics.energy.IEnergyQuantity.Units
 import chylex.hee.game.world.util.closestTickingTile
@@ -38,7 +38,6 @@ import chylex.hee.util.nbt.putPos
 import it.unimi.dsi.fastutil.longs.LongAVLTreeSet
 import it.unimi.dsi.fastutil.longs.LongArrayList
 import it.unimi.dsi.fastutil.longs.LongCollection
-import net.minecraft.client.renderer.color.IItemColor
 import net.minecraft.client.util.ITooltipFlag
 import net.minecraft.entity.Entity
 import net.minecraft.entity.player.PlayerEntity
@@ -275,8 +274,10 @@ class ItemEnergyOracle(properties: Properties) : ItemAbstractEnergyUser(properti
 		return super.hasEffect(stack) // infusion glint is way too strong and obscures the core
 	}
 	
-	@Sided(Side.CLIENT)
-	object Color : IItemColor {
+	override val tint: ItemTint
+		get() = Tint
+	
+	object Tint : ItemTint() {
 		@JvmField
 		var isRenderingInventoryEntity = false
 		
@@ -346,7 +347,8 @@ class ItemEnergyOracle(properties: Properties) : ItemAbstractEnergyUser(properti
 			return HCL(clusterHue.toDouble(), level, (25 + level * 3) / 4)
 		}
 		
-		override fun getColor(stack: ItemStack, tintIndex: Int): Int {
+		@Sided(Side.CLIENT)
+		override fun tint(stack: ItemStack, tintIndex: Int): Int {
 			if (tintIndex != 1) {
 				return NO_TINT
 			}

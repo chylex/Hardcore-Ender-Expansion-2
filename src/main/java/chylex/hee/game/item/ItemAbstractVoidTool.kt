@@ -11,7 +11,7 @@ import net.minecraft.item.ItemStack
 import net.minecraft.item.ToolItem
 import kotlin.math.min
 
-abstract class ItemAbstractVoidTool(properties: Properties, tier: IItemTier) : ToolItem(0F, -2.8F, tier, emptySet(), properties), ICustomRepairBehavior {
+abstract class ItemAbstractVoidTool(properties: Properties, tier: IItemTier) : ToolItem(0F, -2.8F, tier, emptySet(), properties), IHeeItem, ICustomRepairBehavior {
 	override fun hitEntity(stack: ItemStack, target: LivingEntity, attacker: LivingEntity): Boolean {
 		return false
 	}

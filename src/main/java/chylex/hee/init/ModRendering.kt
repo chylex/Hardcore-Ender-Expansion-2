@@ -1,7 +1,6 @@
 package chylex.hee.init
 
 import chylex.hee.HEE
-import chylex.hee.client.color.asItem
 import chylex.hee.client.gui.screen.GuiAmuletOfRecovery
 import chylex.hee.client.gui.screen.GuiBrewingStandCustom
 import chylex.hee.client.gui.screen.GuiLootChest
@@ -41,9 +40,7 @@ import chylex.hee.client.render.entity.RenderEntityTerritoryLightningBolt
 import chylex.hee.client.render.entity.RenderEntityTokenHolder
 import chylex.hee.client.render.item.RenderItemTileEntitySimple
 import chylex.hee.game.Resource
-import chylex.hee.game.block.BlockDryVines
-import chylex.hee.game.block.BlockPuzzleLogic
-import chylex.hee.game.block.BlockTablePedestal
+import chylex.hee.game.block.IHeeBlock
 import chylex.hee.game.block.entity.TileEntityDarkChest
 import chylex.hee.game.block.entity.TileEntityExperienceGate
 import chylex.hee.game.block.entity.TileEntityIgneousPlate
@@ -85,7 +82,7 @@ import chylex.hee.game.entity.projectile.EntityProjectileEyeOfEnder
 import chylex.hee.game.entity.projectile.EntityProjectileSpatialDash
 import chylex.hee.game.entity.technical.EntityTechnicalBase
 import chylex.hee.game.entity.technical.EntityTechnicalIgneousPlateLogic
-import chylex.hee.game.item.ItemBindingEssence
+import chylex.hee.game.item.IHeeItem
 import chylex.hee.game.item.ItemDeathFlower
 import chylex.hee.game.item.ItemEnergyOracle
 import chylex.hee.game.item.ItemEnergyReceptacle
@@ -119,6 +116,7 @@ import net.minecraft.entity.Entity
 import net.minecraft.entity.EntityType
 import net.minecraft.inventory.container.Container
 import net.minecraft.inventory.container.ContainerType
+import net.minecraft.item.Item
 import net.minecraft.tileentity.TileEntity
 import net.minecraft.tileentity.TileEntityType
 import net.minecraftforge.client.event.ColorHandlerEvent
@@ -241,29 +239,21 @@ object ModRendering {
 	
 	@SubscribeEvent
 	fun onRegisterBlockItemColors(e: ColorHandlerEvent.Item) {
-		with(e.blockColors) {
-			with(e.itemColors) {
-				register(BlockDryVines.Color, ModBlocks.DRY_VINES)
-				register(BlockDryVines.Color.asItem(ModBlocks.DRY_VINES), ModBlocks.DRY_VINES)
-				register(BlockTablePedestal.Color, ModBlocks.TABLE_PEDESTAL)
-				
-				register(ItemBindingEssence.Color, ModItems.BINDING_ESSENCE)
-				register(ItemEnergyOracle.Color, ModItems.ENERGY_ORACLE)
-				register(ItemEnergyReceptacle.Color, ModItems.ENERGY_RECEPTACLE)
-				register(ItemPortalToken.Color, ModItems.PORTAL_TOKEN)
-				register(ItemVoidBucket.Color, ModItems.VOID_BUCKET)
-				
-				for (block in arrayOf(
-					ModBlocks.PUZZLE_BURST_3,
-					ModBlocks.PUZZLE_BURST_5,
-					ModBlocks.PUZZLE_REDIRECT_1,
-					ModBlocks.PUZZLE_REDIRECT_2,
-					ModBlocks.PUZZLE_REDIRECT_4,
-					ModBlocks.PUZZLE_TELEPORT
-				)) {
-					register(BlockPuzzleLogic.Color, block)
-					register(BlockPuzzleLogic.Color.asItem(block), block)
-				}
+		val blockColors = e.blockColors
+		val itemColors = e.itemColors
+		
+		for (block in getRegistryEntries<Block>(ModBlocks)) {
+			val blockTint = (block as? IHeeBlock)?.tint
+			if (blockTint != null) {
+				blockColors.register(blockTint, block)
+				blockTint.forItem(block)?.let { itemColors.register(it, block) }
+			}
+		}
+		
+		for (item in getRegistryEntries<Item>(ModItems)) {
+			val itemTint = (item as? IHeeItem)?.tint
+			if (itemTint != null) {
+				itemColors.register(itemTint, item)
 			}
 		}
 	}

@@ -12,11 +12,11 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public abstract class HookInventoryScreenEntity {
 	@Inject(method = "drawEntityOnScreen", at = @At("HEAD"))
 	private static void onStartedRenderingEntity(final int posX, final int posY, final int scale, final float mouseX, final float mouseY, final LivingEntity livingEntity, final CallbackInfo ci) {
-		ItemEnergyOracle.Color.isRenderingInventoryEntity = true;
+		ItemEnergyOracle.Tint.isRenderingInventoryEntity = true;
 	}
 	
 	@Inject(method = "drawEntityOnScreen", at = @At("RETURN"))
 	private static void onFinishedRenderingEntity(final int posX, final int posY, final int scale, final float mouseX, final float mouseY, final LivingEntity livingEntity, final CallbackInfo ci) {
-		ItemEnergyOracle.Color.isRenderingInventoryEntity = false;
+		ItemEnergyOracle.Tint.isRenderingInventoryEntity = false;
 	}
 }
