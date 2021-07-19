@@ -167,8 +167,8 @@ object ModRendering {
 		ItemEnergyReceptacle.HAS_CLUSTER_PROPERTY.register(ModItems.ENERGY_RECEPTACLE)
 		ItemPortalToken.TOKEN_TYPE_PROPERTY.register(ModItems.PORTAL_TOKEN)
 		ItemTotemOfUndyingCustom.IS_SHAKING_PROPERTY.register(ModItems.TOTEM_OF_UNDYING)
-		ItemVoidBucket.VOID_BUCKET_COOLDOWN_PROPERTY.register(ModItems.VOID_BUCKET)
-		ItemVoidSalad.VOID_SALAD_TYPE_PROPERTY.register(ModItems.VOID_SALAD)
+		ItemVoidBucket.COOLDOWN_PROPERTY.register(ModItems.VOID_BUCKET)
+		ItemVoidSalad.SALAD_TYPE_PROPERTY.register(ModItems.VOID_SALAD)
 		
 		// screens
 		

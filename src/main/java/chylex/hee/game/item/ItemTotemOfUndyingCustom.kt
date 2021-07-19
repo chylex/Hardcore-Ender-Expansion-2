@@ -50,7 +50,7 @@ class ItemTotemOfUndyingCustom(properties: Properties) : ItemAbstractTrinket(pro
 	override val model
 		get() = ItemModel.WithOverrides(
 			ItemModel.Simple,
-			Resource.Custom("is_shaking") to mapOf(
+			IS_SHAKING_PROPERTY to mapOf(
 				1F to ItemModel.Suffixed("_shaking")
 			)
 		)

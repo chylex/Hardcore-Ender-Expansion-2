@@ -1,10 +1,14 @@
 package chylex.hee.game.block
 
+import chylex.hee.game.Resource.location
 import chylex.hee.game.block.BlockCorruptedEnergy.SpawnResult.FAIL
 import chylex.hee.game.block.BlockCorruptedEnergy.SpawnResult.PASSTHROUGH
 import chylex.hee.game.block.BlockCorruptedEnergy.SpawnResult.SUCCESS
 import chylex.hee.game.block.entity.TileEntityEnergyCluster
 import chylex.hee.game.block.properties.BlockBuilder
+import chylex.hee.game.block.properties.BlockModel
+import chylex.hee.game.block.properties.BlockStateModel
+import chylex.hee.game.block.properties.BlockStatePreset
 import chylex.hee.game.block.util.Property
 import chylex.hee.game.block.util.with
 import chylex.hee.game.entity.CustomCreatureType
@@ -37,6 +41,7 @@ import chylex.hee.util.forge.Sided
 import net.minecraft.block.Block
 import net.minecraft.block.BlockRenderType.INVISIBLE
 import net.minecraft.block.BlockState
+import net.minecraft.block.Blocks
 import net.minecraft.entity.Entity
 import net.minecraft.entity.LivingEntity
 import net.minecraft.state.StateContainer.Builder
@@ -46,7 +51,7 @@ import net.minecraft.world.World
 import net.minecraft.world.server.ServerWorld
 import java.util.Random
 
-class BlockCorruptedEnergy(builder: BlockBuilder) : BlockSimple(builder) {
+class BlockCorruptedEnergy(builder: BlockBuilder) : HeeBlock(builder) {
 	companion object {
 		private const val MIN_LEVEL = 0
 		private const val MAX_LEVEL = 20
@@ -74,6 +79,9 @@ class BlockCorruptedEnergy(builder: BlockBuilder) : BlockSimple(builder) {
 			return CustomCreatureType.isDemon(entity) || CustomCreatureType.isShadow(entity) || entity is IImmuneToCorruptedEnergy
 		}
 	}
+	
+	override val model
+		get() = BlockStateModel(BlockStatePreset.Simple, BlockModel.NoAmbientOcclusion(BlockModel.Cross(Blocks.BARRIER.asItem().location)))
 	
 	override fun fillStateContainer(container: Builder<Block, BlockState>) {
 		container.add(LEVEL)

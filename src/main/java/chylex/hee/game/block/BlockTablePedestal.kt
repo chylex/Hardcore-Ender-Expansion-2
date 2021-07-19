@@ -3,9 +3,11 @@ package chylex.hee.game.block
 import chylex.hee.game.block.entity.TileEntityTablePedestal
 import chylex.hee.game.block.properties.BlockBuilder
 import chylex.hee.game.block.properties.BlockRenderLayer.CUTOUT
+import chylex.hee.game.block.properties.BlockStateModels
 import chylex.hee.game.block.properties.BlockTint
 import chylex.hee.game.block.util.Property
 import chylex.hee.game.block.util.asVoxelShape
+import chylex.hee.game.item.properties.ItemModel
 import chylex.hee.game.item.util.copyIf
 import chylex.hee.game.mechanics.table.PedestalStatusIndicator
 import chylex.hee.game.world.util.getState
@@ -93,6 +95,9 @@ class BlockTablePedestal(builder: BlockBuilder) : BlockSimpleShaped(builder, COM
 	}
 	
 	// Instance
+	
+	override val model
+		get() = BlockStateModels.ItemOnly(ItemModel.AsBlock)
 	
 	override val renderLayer
 		get() = CUTOUT

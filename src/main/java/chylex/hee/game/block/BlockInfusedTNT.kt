@@ -1,7 +1,9 @@
 package chylex.hee.game.block
 
+import chylex.hee.game.Resource.location
 import chylex.hee.game.block.entity.TileEntityInfusedTNT
 import chylex.hee.game.block.logic.IBlockFireCatchOverride
+import chylex.hee.game.block.properties.BlockModel
 import chylex.hee.game.block.util.Property
 import chylex.hee.game.entity.item.EntityInfusedTNT
 import chylex.hee.game.entity.util.posVec
@@ -36,10 +38,17 @@ import net.minecraft.world.World
 import net.minecraft.world.server.ServerWorld
 import java.util.Random
 
-class BlockInfusedTNT : TNTBlock(Properties.from(Blocks.TNT)), IBlockFireCatchOverride {
+class BlockInfusedTNT : TNTBlock(Properties.from(Blocks.TNT)), IHeeBlock, IBlockFireCatchOverride {
 	companion object {
 		val INFERNIUM = Property.bool("infernium")
 	}
+	
+	override val model
+		get() = BlockModel.CubeBottomTop(
+			side   = Blocks.TNT.location("_side"),
+			bottom = Blocks.TNT.location("_bottom"),
+			top    = Blocks.TNT.location("_top"),
+		)
 	
 	init {
 		defaultState = defaultState.with(INFERNIUM, false)

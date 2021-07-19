@@ -2,6 +2,7 @@ package chylex.hee.game.block
 
 import chylex.hee.game.block.entity.TileEntityVoidPortalStorage
 import chylex.hee.game.block.properties.BlockBuilder
+import chylex.hee.game.block.properties.BlockModel
 import chylex.hee.game.world.util.getTile
 import chylex.hee.init.ModBlocks
 import chylex.hee.init.ModContainers
@@ -11,13 +12,15 @@ import net.minecraft.tileentity.TileEntity
 import net.minecraft.util.ActionResultType
 import net.minecraft.util.ActionResultType.SUCCESS
 import net.minecraft.util.Hand
-import net.minecraft.util.math.AxisAlignedBB
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.BlockRayTraceResult
 import net.minecraft.world.IBlockReader
 import net.minecraft.world.World
 
-class BlockVoidPortalStorage(builder: BlockBuilder, aabb: AxisAlignedBB) : BlockSimpleShaped(builder, aabb) {
+class BlockVoidPortalStorage(builder: BlockBuilder) : BlockPortalFrame(builder) {
+	override val model
+		get() = BlockModel.PortalFrame(ModBlocks.VOID_PORTAL_FRAME, "storage")
+	
 	override fun hasTileEntity(state: BlockState): Boolean {
 		return true
 	}

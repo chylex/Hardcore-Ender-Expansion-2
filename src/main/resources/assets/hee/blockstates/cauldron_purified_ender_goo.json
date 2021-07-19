@@ -1,8 +1,0 @@
-{
-  "variants": {
-    "level=0": { "model": "block/cauldron" },
-    "level=1": { "model": "hee:block/cauldron_purified_ender_goo_level1" },
-    "level=2": { "model": "hee:block/cauldron_purified_ender_goo_level2" },
-    "level=3": { "model": "hee:block/cauldron_purified_ender_goo_level3" }
-  }
-}

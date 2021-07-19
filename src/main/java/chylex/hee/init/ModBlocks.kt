@@ -18,8 +18,10 @@ import chylex.hee.game.block.BlockEndPortalAcceptor
 import chylex.hee.game.block.BlockEndPortalInner
 import chylex.hee.game.block.BlockEndPortalOverride
 import chylex.hee.game.block.BlockEndPowderOre
+import chylex.hee.game.block.BlockEndStoneCustom
 import chylex.hee.game.block.BlockEnderGoo
 import chylex.hee.game.block.BlockEnderGooPurified
+import chylex.hee.game.block.BlockEndersol
 import chylex.hee.game.block.BlockEndium
 import chylex.hee.game.block.BlockEnergyCluster
 import chylex.hee.game.block.BlockEternalFire
@@ -31,6 +33,8 @@ import chylex.hee.game.block.BlockFlammableStairs
 import chylex.hee.game.block.BlockFlowerPotCustom
 import chylex.hee.game.block.BlockFlowerPotDeathFlowerDecaying
 import chylex.hee.game.block.BlockGloomrock
+import chylex.hee.game.block.BlockGloomrockSmoothSlab
+import chylex.hee.game.block.BlockGloomrockSmoothStairs
 import chylex.hee.game.block.BlockGloomtorch
 import chylex.hee.game.block.BlockGraveDirt
 import chylex.hee.game.block.BlockHumus
@@ -41,13 +45,13 @@ import chylex.hee.game.block.BlockInfusedTNT
 import chylex.hee.game.block.BlockJarODust
 import chylex.hee.game.block.BlockLootChest
 import chylex.hee.game.block.BlockMinersBurialAltar
+import chylex.hee.game.block.BlockObsidianCubeLit
+import chylex.hee.game.block.BlockObsidianPillarLit
 import chylex.hee.game.block.BlockPillarCustom
+import chylex.hee.game.block.BlockPortalFrame
 import chylex.hee.game.block.BlockPuzzleLogic
 import chylex.hee.game.block.BlockScaffolding
 import chylex.hee.game.block.BlockShulkerBoxOverride
-import chylex.hee.game.block.BlockSimple
-import chylex.hee.game.block.BlockSimpleMergingBottom
-import chylex.hee.game.block.BlockSimpleShaped
 import chylex.hee.game.block.BlockSkullCustom
 import chylex.hee.game.block.BlockSlabCustom
 import chylex.hee.game.block.BlockSpawnerObsidianTowers
@@ -60,11 +64,13 @@ import chylex.hee.game.block.BlockVoidPortalCrafted
 import chylex.hee.game.block.BlockVoidPortalInner
 import chylex.hee.game.block.BlockVoidPortalStorage
 import chylex.hee.game.block.BlockVoidPortalStorageCrafted
+import chylex.hee.game.block.BlockWallCustom
 import chylex.hee.game.block.BlockWhitebark
 import chylex.hee.game.block.BlockWhitebarkLeaves
 import chylex.hee.game.block.BlockWhitebarkLog
 import chylex.hee.game.block.BlockWhitebarkPlanks
 import chylex.hee.game.block.BlockWhitebarkSapling
+import chylex.hee.game.block.HeeBlock
 import chylex.hee.game.block.entity.TileEntityAccumulationTable
 import chylex.hee.game.block.entity.TileEntityExperienceTable
 import chylex.hee.game.block.entity.TileEntityInfusionTable
@@ -142,15 +148,11 @@ import chylex.hee.util.forge.SubscribeEvent
 import net.minecraft.block.AbstractBlock
 import net.minecraft.block.Block
 import net.minecraft.block.Blocks
-import net.minecraft.block.WallBlock
 import net.minecraft.block.material.MaterialColor
 import net.minecraft.fluid.Fluid
 import net.minecraft.item.BlockItem
 import net.minecraft.item.Item
 import net.minecraft.item.ItemGroup
-import net.minecraft.util.Direction.NORTH
-import net.minecraft.util.Direction.SOUTH
-import net.minecraft.util.math.AxisAlignedBB
 import net.minecraftforge.event.RegistryEvent
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber.Bus.MOD
 
@@ -159,12 +161,12 @@ object ModBlocks {
 	
 	// Blocks: Building (Uncategorized)
 	
-	@JvmField val ETHEREAL_LANTERN = BlockSimple(buildEtherealLantern) named "ethereal_lantern"
-	@JvmField val STONE_BRICK_WALL = WallBlock(AbstractBlock.Properties.from(Blocks.STONE_BRICKS)) named "stone_brick_wall"
+	@JvmField val ETHEREAL_LANTERN = HeeBlock(buildEtherealLantern) named "ethereal_lantern"
+	@JvmField val STONE_BRICK_WALL = BlockWallCustom(Blocks.STONE_BRICKS) named "stone_brick_wall"
 	@JvmField val INFUSED_GLASS    = BlockInfusedGlass(buildInfusedGlass) named "infused_glass"
-	@JvmField val VANTABLOCK       = BlockSimple(buildVantablock) named "vantablock"
+	@JvmField val VANTABLOCK       = HeeBlock(buildVantablock) named "vantablock"
 	@JvmField val ENDIUM_BLOCK     = BlockEndium(buildEndiumBlock) named "endium_block"
-	@JvmField val ENDERSOL         = BlockSimpleMergingBottom(buildEnderSol, mergeBottom = Blocks.END_STONE) named "endersol"
+	@JvmField val ENDERSOL         = BlockEndersol(buildEnderSol, mergeBottom = Blocks.END_STONE) named "endersol"
 	@JvmField val HUMUS            = BlockHumus(buildHumus, mergeBottom = ENDERSOL) named "humus"
 	
 	// Blocks: Building (Gloomrock)
@@ -172,10 +174,10 @@ object ModBlocks {
 	@JvmField val GLOOMROCK                = BlockGloomrock(buildGloomrock) named "gloomrock"
 	@JvmField val GLOOMROCK_BRICKS         = BlockGloomrock(buildGloomrockBricks) named "gloomrock_bricks"
 	@JvmField val GLOOMROCK_BRICK_STAIRS   = BlockStairsCustom(GLOOMROCK_BRICKS) named "gloomrock_brick_stairs"
-	@JvmField val GLOOMROCK_BRICK_SLAB     = BlockSlabCustom(buildGloomrockBricks) named "gloomrock_brick_slab"
+	@JvmField val GLOOMROCK_BRICK_SLAB     = BlockSlabCustom(GLOOMROCK_BRICKS) named "gloomrock_brick_slab"
 	@JvmField val GLOOMROCK_SMOOTH         = BlockGloomrock(buildGloomrockSmooth) named "gloomrock_smooth"
-	@JvmField val GLOOMROCK_SMOOTH_STAIRS  = BlockStairsCustom(GLOOMROCK_SMOOTH) named "gloomrock_smooth_stairs"
-	@JvmField val GLOOMROCK_SMOOTH_SLAB    = BlockSlabCustom(buildGloomrockSmooth) named "gloomrock_smooth_slab"
+	@JvmField val GLOOMROCK_SMOOTH_STAIRS  = BlockGloomrockSmoothStairs(GLOOMROCK_SMOOTH) named "gloomrock_smooth_stairs"
+	@JvmField val GLOOMROCK_SMOOTH_SLAB    = BlockGloomrockSmoothSlab(GLOOMROCK_SMOOTH) named "gloomrock_smooth_slab"
 	@JvmField val GLOOMROCK_SMOOTH_RED     = BlockGloomrock(buildGloomrockSmooth) named "gloomrock_smooth_red"
 	@JvmField val GLOOMROCK_SMOOTH_ORANGE  = BlockGloomrock(buildGloomrockSmooth) named "gloomrock_smooth_orange"
 	@JvmField val GLOOMROCK_SMOOTH_YELLOW  = BlockGloomrock(buildGloomrockSmooth) named "gloomrock_smooth_yellow"
@@ -196,35 +198,35 @@ object ModBlocks {
 	@JvmField val DUSTY_STONE_CRACKED_BRICKS = BlockDustyStoneBricks(buildDustyStoneBricks) named "dusty_stone_cracked_bricks"
 	@JvmField val DUSTY_STONE_DECORATION     = BlockDustyStoneBricks(buildDustyStoneBricks) named "dusty_stone_decoration"
 	@JvmField val DUSTY_STONE_BRICK_STAIRS   = BlockStairsCustom(DUSTY_STONE_BRICKS) named "dusty_stone_brick_stairs"
-	@JvmField val DUSTY_STONE_BRICK_SLAB     = BlockSlabCustom(buildDustyStoneBricks) named "dusty_stone_brick_slab"
+	@JvmField val DUSTY_STONE_BRICK_SLAB     = BlockSlabCustom(DUSTY_STONE_BRICKS) named "dusty_stone_brick_slab"
 	
 	// Blocks: Building (Obsidian)
 	
 	@JvmField val OBSIDIAN_STAIRS       = BlockStairsCustom(Blocks.OBSIDIAN) named "obsidian_stairs"
 	@JvmField val OBSIDIAN_FALLING      = BlockFallingObsidian(buildObsidian) named "obsidian_falling"
-	@JvmField val OBSIDIAN_SMOOTH       = BlockSimple(buildObsidianVariation) named "obsidian_smooth"
-	@JvmField val OBSIDIAN_CHISELED     = BlockSimple(buildObsidianVariation) named "obsidian_chiseled"
+	@JvmField val OBSIDIAN_SMOOTH       = HeeBlock(buildObsidianVariation) named "obsidian_smooth"
+	@JvmField val OBSIDIAN_CHISELED     = HeeBlock(buildObsidianVariation) named "obsidian_chiseled"
 	@JvmField val OBSIDIAN_PILLAR       = BlockPillarCustom(buildObsidianVariation) named "obsidian_pillar"
-	@JvmField val OBSIDIAN_SMOOTH_LIT   = BlockSimple(buildObsidianVariationLit) named "obsidian_smooth_lit"
-	@JvmField val OBSIDIAN_CHISELED_LIT = BlockSimple(buildObsidianVariationLit) named "obsidian_chiseled_lit"
-	@JvmField val OBSIDIAN_PILLAR_LIT   = BlockPillarCustom(buildObsidianVariationLit) named "obsidian_pillar_lit"
-	@JvmField val OBSIDIAN_TOWER_TOP    = BlockSimple(buildObsidianTowerTop) named "obsidian_tower_top"
+	@JvmField val OBSIDIAN_SMOOTH_LIT   = BlockObsidianCubeLit(buildObsidianVariationLit, OBSIDIAN_SMOOTH) named "obsidian_smooth_lit"
+	@JvmField val OBSIDIAN_CHISELED_LIT = BlockObsidianCubeLit(buildObsidianVariationLit, OBSIDIAN_CHISELED) named "obsidian_chiseled_lit"
+	@JvmField val OBSIDIAN_PILLAR_LIT   = BlockObsidianPillarLit(buildObsidianVariationLit) named "obsidian_pillar_lit"
+	@JvmField val OBSIDIAN_TOWER_TOP    = BlockObsidianCubeLit(buildObsidianTowerTop, OBSIDIAN_CHISELED) named "obsidian_tower_top"
 	
 	// Blocks: Building (End Stone)
 	
-	@JvmField val END_STONE_INFESTED  = BlockSimple(buildEndStone.clone { color = MaterialColor.RED }) named "end_stone_infested"
-	@JvmField val END_STONE_BURNED    = BlockSimple(buildEndStone.clone { color = MaterialColor.ADOBE /* RENAME ORANGE */ }) named "end_stone_burned"
-	@JvmField val END_STONE_ENCHANTED = BlockSimple(buildEndStone.clone { color = MaterialColor.PURPLE }) named "end_stone_enchanted"
+	@JvmField val END_STONE_INFESTED  = BlockEndStoneCustom(buildEndStone, MaterialColor.RED) named "end_stone_infested"
+	@JvmField val END_STONE_BURNED    = BlockEndStoneCustom(buildEndStone, MaterialColor.ADOBE /* RENAME ORANGE */) named "end_stone_burned"
+	@JvmField val END_STONE_ENCHANTED = BlockEndStoneCustom(buildEndStone, MaterialColor.PURPLE) named "end_stone_enchanted"
 	
 	// Blocks: Building (Dark Loam)
 	
-	@JvmField val DARK_LOAM      = BlockSimple(buildDarkLoam) named "dark_loam"
-	@JvmField val DARK_LOAM_SLAB = BlockSlabCustom(buildDarkLoam) named "dark_loam_slab"
+	@JvmField val DARK_LOAM      = HeeBlock(buildDarkLoam) named "dark_loam"
+	@JvmField val DARK_LOAM_SLAB = BlockSlabCustom(DARK_LOAM) named "dark_loam_slab"
 	
 	// Blocks: Building (Grave Dirt)
 	
-	@JvmField val GRAVE_DIRT_PLAIN      = BlockGraveDirt(buildGraveDirt) named "grave_dirt"
-	@JvmField val GRAVE_DIRT_LOOT       = BlockGraveDirt(buildGraveDirt) named "grave_dirt_loot"
+	@JvmField val GRAVE_DIRT_PLAIN      = BlockGraveDirt.Plain(buildGraveDirt) named "grave_dirt"
+	@JvmField val GRAVE_DIRT_LOOT       = BlockGraveDirt.Loot(buildGraveDirt) named "grave_dirt_loot"
 	@JvmField val GRAVE_DIRT_SPIDERLING = BlockGraveDirt.Spiderling(buildGraveDirt) named "grave_dirt_spiderling"
 	
 	// Blocks: Building (Wood)
@@ -233,14 +235,14 @@ object ModBlocks {
 	@JvmField val WHITEBARK        = BlockWhitebark(buildWhitebark) named "whitebark"
 	@JvmField val WHITEBARK_PLANKS = BlockWhitebarkPlanks(buildWhitebarkPlanks) named "whitebark_planks"
 	@JvmField val WHITEBARK_STAIRS = BlockFlammableStairs(WHITEBARK_PLANKS) named "whitebark_stairs"
-	@JvmField val WHITEBARK_SLAB   = BlockFlammableSlab(buildWhitebarkPlanks) named "whitebark_slab"
+	@JvmField val WHITEBARK_SLAB   = BlockFlammableSlab(WHITEBARK_PLANKS) named "whitebark_slab"
 	
 	// Blocks: Building (Miner's Burial)
 	
-	@JvmField val MINERS_BURIAL_BLOCK_PLAIN    = BlockSimple(buildMinersBurial) named "miners_burial_block_plain"
-	@JvmField val MINERS_BURIAL_BLOCK_CHISELED = BlockSimple(buildMinersBurial) named "miners_burial_block_chiseled"
+	@JvmField val MINERS_BURIAL_BLOCK_PLAIN    = HeeBlock(buildMinersBurial) named "miners_burial_block_plain"
+	@JvmField val MINERS_BURIAL_BLOCK_CHISELED = HeeBlock(buildMinersBurial) named "miners_burial_block_chiseled"
 	@JvmField val MINERS_BURIAL_BLOCK_PILLAR   = BlockPillarCustom(buildMinersBurial) named "miners_burial_block_pillar"
-	@JvmField val MINERS_BURIAL_BLOCK_JAIL     = BlockSimple(buildMinersBurialIndestructible) named "miners_burial_block_jail"
+	@JvmField val MINERS_BURIAL_BLOCK_JAIL     = HeeBlock(buildMinersBurialIndestructible) named "miners_burial_block_jail"
 	@JvmField val MINERS_BURIAL_ALTAR          = BlockMinersBurialAltar(buildMinersBurialIndestructible) named "miners_burial_altar"
 	
 	// Blocks: Fluids
@@ -260,12 +262,12 @@ object ModBlocks {
 	
 	// Blocks: Interactive (Puzzle)
 	
-	@JvmField val PUZZLE_WALL       = BlockSimple(buildPuzzleWall) named "puzzle_block_wall"
+	@JvmField val PUZZLE_WALL       = HeeBlock(buildPuzzleWall) named "puzzle_block_wall"
 	@JvmField val PUZZLE_PLAIN      = BlockPuzzleLogic.Plain(buildPuzzleLogic) named "puzzle_block_plain"
 	@JvmField val PUZZLE_BURST_3    = BlockPuzzleLogic.Burst(buildPuzzleLogic, radius = 1) named "puzzle_block_burst_3"
 	@JvmField val PUZZLE_BURST_5    = BlockPuzzleLogic.Burst(buildPuzzleLogic, radius = 2) named "puzzle_block_burst_5"
-	@JvmField val PUZZLE_REDIRECT_1 = BlockPuzzleLogic.Redirect(buildPuzzleLogic, arrayOf(NORTH)) named "puzzle_block_redirect_1"
-	@JvmField val PUZZLE_REDIRECT_2 = BlockPuzzleLogic.Redirect(buildPuzzleLogic, arrayOf(NORTH, SOUTH)) named "puzzle_block_redirect_2"
+	@JvmField val PUZZLE_REDIRECT_1 = BlockPuzzleLogic.RedirectSome.R1(buildPuzzleLogic) named "puzzle_block_redirect_1"
+	@JvmField val PUZZLE_REDIRECT_2 = BlockPuzzleLogic.RedirectSome.R2(buildPuzzleLogic) named "puzzle_block_redirect_2"
 	@JvmField val PUZZLE_REDIRECT_4 = BlockPuzzleLogic.RedirectAll(buildPuzzleLogic) named "puzzle_block_redirect_4"
 	@JvmField val PUZZLE_TELEPORT   = BlockPuzzleLogic.Teleport(buildPuzzleLogic) named "puzzle_block_teleport"
 	
@@ -327,18 +329,16 @@ object ModBlocks {
 	
 	// Blocks: Portals
 	
-	private val portalFrameAABB = AxisAlignedBB(0.0, 0.0, 0.0, 1.0, 0.8125, 1.0)
-	
 	@JvmField val END_PORTAL_INNER    = BlockEndPortalInner(buildPortalInner) named "end_portal_inner"
-	@JvmField val END_PORTAL_FRAME    = BlockSimpleShaped(buildPortalFrame, portalFrameAABB) named "end_portal_frame"
-	@JvmField val END_PORTAL_ACCEPTOR = BlockEndPortalAcceptor(buildPortalFrame, portalFrameAABB) named "end_portal_acceptor"
+	@JvmField val END_PORTAL_FRAME    = BlockPortalFrame(buildPortalFrame) named "end_portal_frame"
+	@JvmField val END_PORTAL_ACCEPTOR = BlockEndPortalAcceptor(buildPortalFrame) named "end_portal_acceptor"
 	
 	@JvmField val VOID_PORTAL_INNER   = BlockVoidPortalInner(buildPortalInner) named "void_portal_inner"
-	@JvmField val VOID_PORTAL_FRAME   = BlockSimpleShaped(buildPortalFrame, portalFrameAABB) named "void_portal_frame"
-	@JvmField val VOID_PORTAL_STORAGE = BlockVoidPortalStorage(buildPortalFrame, portalFrameAABB) named "void_portal_storage"
+	@JvmField val VOID_PORTAL_FRAME   = BlockPortalFrame(buildPortalFrame) named "void_portal_frame"
+	@JvmField val VOID_PORTAL_STORAGE = BlockVoidPortalStorage(buildPortalFrame) named "void_portal_storage"
 	
-	@JvmField val VOID_PORTAL_FRAME_CRAFTED   = BlockVoidPortalCrafted(buildPortalFrameCrafted, portalFrameAABB) named "void_portal_frame_crafted"
-	@JvmField val VOID_PORTAL_STORAGE_CRAFTED = BlockVoidPortalStorageCrafted(buildPortalFrameCrafted, portalFrameAABB) named "void_portal_storage_crafted"
+	@JvmField val VOID_PORTAL_FRAME_CRAFTED   = BlockVoidPortalCrafted(buildPortalFrameCrafted) named "void_portal_frame_crafted"
+	@JvmField val VOID_PORTAL_STORAGE_CRAFTED = BlockVoidPortalStorageCrafted(buildPortalFrameCrafted) named "void_portal_storage_crafted"
 	
 	// Blocks: Energy
 	

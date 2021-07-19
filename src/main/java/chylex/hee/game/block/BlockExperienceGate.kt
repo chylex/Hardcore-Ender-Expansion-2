@@ -23,7 +23,7 @@ import net.minecraft.util.math.BlockPos
 import net.minecraft.world.IBlockReader
 import net.minecraft.world.World
 
-abstract class BlockExperienceGate(builder: BlockBuilder) : BlockSimple(builder), IFullBlockCollisionHandler {
+abstract class BlockExperienceGate(builder: BlockBuilder) : HeeBlock(builder), IFullBlockCollisionHandler {
 	protected open fun findController(world: IBlockReader, pos: BlockPos): TileEntityExperienceGate? {
 		for (offset in pos.allInCenteredBox(1, 0, 1)) {
 			val tile = offset.getTile<TileEntityExperienceGate>(world)

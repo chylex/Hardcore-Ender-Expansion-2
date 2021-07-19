@@ -1,12 +1,17 @@
 package chylex.hee.game.block
 
+import chylex.hee.game.Resource.location
 import chylex.hee.game.block.entity.TileEntityIgneousPlate
 import chylex.hee.game.block.logic.IBlockDynamicHardness
 import chylex.hee.game.block.properties.BlockBuilder
+import chylex.hee.game.block.properties.BlockModel
+import chylex.hee.game.block.properties.BlockStateModel
+import chylex.hee.game.block.properties.BlockStatePreset
 import chylex.hee.game.block.util.FURNACE_FACING
 import chylex.hee.game.block.util.Property
 import chylex.hee.game.block.util.asVoxelShape
 import chylex.hee.game.entity.technical.EntityTechnicalIgneousPlateLogic
+import chylex.hee.game.item.properties.ItemModel
 import chylex.hee.game.world.util.Facing6
 import chylex.hee.game.world.util.getState
 import chylex.hee.game.world.util.getTile
@@ -44,7 +49,7 @@ import net.minecraft.world.IWorld
 import net.minecraft.world.IWorldReader
 import net.minecraft.world.World
 
-class BlockIgneousPlate(builder: BlockBuilder) : BlockSimple(builder), IBlockDynamicHardness {
+class BlockIgneousPlate(builder: BlockBuilder) : HeeBlock(builder), IBlockDynamicHardness {
 	companion object {
 		val FACING_NOT_DOWN = Property.facing("facing", Facing6.minusElement(DOWN))
 		
@@ -71,6 +76,9 @@ class BlockIgneousPlate(builder: BlockBuilder) : BlockSimple(builder), IBlockDyn
 			)
 		}
 	}
+	
+	override val model
+		get() = BlockStateModel(BlockStatePreset.Simple, BlockModel.ParticleOnly(this.location), ItemModel.Simple)
 	
 	init {
 		defaultState = stateContainer.baseState.with(FACING_NOT_DOWN, UP)

@@ -1,6 +1,10 @@
 package chylex.hee.game.block
 
-import chylex.hee.game.block.properties.BlockBuilder
+import chylex.hee.game.block.properties.BlockStateModels
+import net.minecraft.block.Block
 import net.minecraft.block.SlabBlock
 
-open class BlockSlabCustom(builder: BlockBuilder) : SlabBlock(builder.p)
+open class BlockSlabCustom(private val fullBlock: Block) : SlabBlock(Properties.from(fullBlock)), IHeeBlock {
+	override val model
+		get() = BlockStateModels.Slab(fullBlock)
+}

@@ -1,12 +1,12 @@
 package chylex.hee.game.block
 
-import chylex.hee.game.block.properties.BlockBuilder
+import net.minecraft.block.Block
 import net.minecraft.block.BlockState
 import net.minecraft.util.Direction
 import net.minecraft.util.math.BlockPos
 import net.minecraft.world.IBlockReader
 
-class BlockFlammableSlab(builder: BlockBuilder) : BlockSlabCustom(builder) {
+class BlockFlammableSlab(fullBlock: Block) : BlockSlabCustom(fullBlock) {
 	override fun getFlammability(state: BlockState, world: IBlockReader, pos: BlockPos, face: Direction): Int {
 		return 20
 	}

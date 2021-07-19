@@ -46,7 +46,7 @@ class ItemVoidBucket(properties: Properties) : ItemAbstractVoidTool(properties, 
 		
 		private const val COOLDOWN_TICKS = 13
 		
-		val VOID_BUCKET_COOLDOWN_PROPERTY = ItemProperty(Resource.Custom("void_bucket_cooldown")) { stack ->
+		val COOLDOWN_PROPERTY = ItemProperty(Resource.Custom("void_bucket_cooldown")) { stack ->
 			(stack.heeTagOrNull?.getByte(COOLDOWN_TAG) ?: 0) / COOLDOWN_TICKS.toFloat()
 		}
 		
@@ -64,7 +64,7 @@ class ItemVoidBucket(properties: Properties) : ItemAbstractVoidTool(properties, 
 	override val model
 		get() = ItemModel.WithOverrides(
 			ItemModel.Simple,
-			Resource.Custom("void_bucket_cooldown") to mapOf(
+			COOLDOWN_PROPERTY to mapOf(
 				0.01F to ItemModel.Suffixed("_fluid_level_1", ItemModel.Layers("void_bucket", "void_bucket_fluid_level_1")),
 				0.30F to ItemModel.Suffixed("_fluid_level_2", ItemModel.Layers("void_bucket", "void_bucket_fluid_level_2")),
 				0.50F to ItemModel.Suffixed("_fluid_level_3", ItemModel.Layers("void_bucket", "void_bucket_fluid_level_3")),

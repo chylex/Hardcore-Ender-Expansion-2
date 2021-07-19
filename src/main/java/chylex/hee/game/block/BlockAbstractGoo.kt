@@ -2,6 +2,7 @@ package chylex.hee.game.block
 
 import chylex.hee.game.block.fluid.FlowingFluid5
 import chylex.hee.game.block.fluid.FluidBase
+import chylex.hee.game.block.properties.BlockStateModels
 import chylex.hee.game.block.util.BlockCollisionLimiter
 import chylex.hee.game.world.util.allInBoxMutable
 import chylex.hee.game.world.util.getState
@@ -25,11 +26,14 @@ import net.minecraft.world.World
 abstract class BlockAbstractGoo(
 	private val fluid: FluidBase,
 	material: Material,
-) : FlowingFluidBlock(supply(fluid.still), Properties.create(material, fluid.mapColor).hardnessAndResistance(fluid.resistance).doesNotBlockMovement().noDrops()) {
+) : FlowingFluidBlock(supply(fluid.still), Properties.create(material, fluid.mapColor).hardnessAndResistance(fluid.resistance).doesNotBlockMovement().noDrops()), IHeeBlock {
 	protected companion object {
 		private const val LAST_TIME_TAG = "Time"
 		private const val TOTAL_TICKS_TAG = "Ticks"
 	}
+	
+	override val model
+		get() = BlockStateModels.Fluid
 	
 	// Initialization
 	

@@ -37,7 +37,7 @@ class ItemVoidSalad(properties: Properties) : HeeItem(properties) {
 		
 		val FOOD: Food = Food.Builder().hunger(0).saturation(0F).setAlwaysEdible().build()
 		
-		val VOID_SALAD_TYPE_PROPERTY = ItemProperty(Resource.Custom("void_salad_type")) { stack ->
+		val SALAD_TYPE_PROPERTY = ItemProperty(Resource.Custom("void_salad_type")) { stack ->
 			getSaladType(stack).ordinal.toFloat()
 		}
 		
@@ -75,7 +75,7 @@ class ItemVoidSalad(properties: Properties) : HeeItem(properties) {
 	override val model: ItemModel
 		get() = ItemModel.WithOverrides(
 			ItemModel.Simple,
-			Resource.Custom("void_salad_type") to mapOf(
+			SALAD_TYPE_PROPERTY to mapOf(
 				1F to ItemModel.Named("void_void_salad"),
 				2F to ItemModel.Named("mega_void_salad"),
 			)

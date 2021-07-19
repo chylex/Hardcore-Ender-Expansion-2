@@ -10,7 +10,7 @@ import net.minecraft.util.text.ITextComponent
 import net.minecraft.util.text.TranslationTextComponent
 import net.minecraft.world.IBlockReader
 
-abstract class BlockAbstractTable(builder: BlockBuilder, val tier: Int, val firstTier: Int) : BlockSimple(builder) {
+abstract class BlockAbstractTable(builder: BlockBuilder, val tier: Int, val firstTier: Int) : HeeBlock(builder) {
 	override val renderLayer
 		get() = CUTOUT
 	

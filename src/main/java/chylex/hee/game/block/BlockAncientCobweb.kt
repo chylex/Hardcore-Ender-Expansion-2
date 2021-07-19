@@ -2,6 +2,7 @@ package chylex.hee.game.block
 
 import chylex.hee.game.block.properties.BlockBuilder
 import chylex.hee.game.block.properties.BlockRenderLayer.CUTOUT
+import chylex.hee.game.block.properties.BlockStateModels
 import chylex.hee.game.world.util.breakBlock
 import chylex.hee.util.forge.SubscribeEvent
 import chylex.hee.util.math.Vec3
@@ -28,6 +29,9 @@ import net.minecraftforge.event.entity.player.PlayerEvent.BreakSpeed
 import java.util.Random
 
 class BlockAncientCobweb(builder: BlockBuilder) : WebBlock(builder.p), IHeeBlock {
+	override val model
+		get() = BlockStateModels.Cross
+	
 	override val renderLayer
 		get() = CUTOUT
 	

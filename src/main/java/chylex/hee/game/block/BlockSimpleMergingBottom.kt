@@ -1,6 +1,7 @@
 package chylex.hee.game.block
 
 import chylex.hee.game.block.properties.BlockBuilder
+import chylex.hee.game.block.properties.IBlockStateModel
 import chylex.hee.game.block.util.Property
 import chylex.hee.game.block.util.with
 import chylex.hee.game.world.util.getBlock
@@ -13,10 +14,12 @@ import net.minecraft.util.Direction.DOWN
 import net.minecraft.util.math.BlockPos
 import net.minecraft.world.IWorld
 
-open class BlockSimpleMergingBottom(builder: BlockBuilder, private val mergeBottom: Block) : BlockSimple(builder) {
+sealed class BlockSimpleMergingBottom(builder: BlockBuilder, private val mergeBottom: Block) : HeeBlock(builder) {
 	companion object {
 		val MERGE = Property.bool("merge")
 	}
+	
+	abstract override val model: IBlockStateModel
 	
 	init {
 		defaultState = stateContainer.baseState.with(MERGE, false)

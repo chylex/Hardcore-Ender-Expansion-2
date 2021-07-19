@@ -107,7 +107,7 @@ class ItemEnergyReceptacle(properties: Properties) : ItemAbstractInfusable(prope
 	override val model
 		get() = ItemModel.WithOverrides(
 			ItemModel.Simple,
-			Resource.Custom("has_cluster") to mapOf(
+			HAS_CLUSTER_PROPERTY to mapOf(
 				1F to ItemModel.Suffixed("_with_cluster", ItemModel.Layers("energy_receptacle", "energy_receptacle_cluster"))
 			)
 		)

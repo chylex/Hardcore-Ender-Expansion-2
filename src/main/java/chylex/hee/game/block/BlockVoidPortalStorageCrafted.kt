@@ -7,13 +7,15 @@ import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.tileentity.TileEntity
 import net.minecraft.util.ActionResultType
 import net.minecraft.util.Hand
-import net.minecraft.util.math.AxisAlignedBB
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.BlockRayTraceResult
 import net.minecraft.world.IBlockReader
 import net.minecraft.world.World
 
-class BlockVoidPortalStorageCrafted(builder: BlockBuilder, aabb: AxisAlignedBB) : BlockVoidPortalCrafted(builder, aabb) {
+class BlockVoidPortalStorageCrafted(builder: BlockBuilder) : BlockVoidPortalCrafted(builder) {
+	override val model
+		get() = ModBlocks.VOID_PORTAL_STORAGE.model
+	
 	override fun hasTileEntity(state: BlockState): Boolean {
 		return true
 	}

@@ -30,7 +30,7 @@ import net.minecraftforge.common.MinecraftForge
 import net.minecraftforge.event.world.BlockEvent.BreakEvent
 import java.util.Random
 
-class BlockIgneousRockOre(builder: BlockBuilder) : BlockSimple(builder) {
+class BlockIgneousRockOre(builder: BlockBuilder) : HeeBlock(builder) {
 	private companion object {
 		private val DAMAGE_MINING = Damage(FIRE_TYPE(15), PEACEFUL_EXCLUSION)
 		

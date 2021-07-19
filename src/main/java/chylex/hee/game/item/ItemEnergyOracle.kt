@@ -107,7 +107,7 @@ class ItemEnergyOracle(properties: Properties) : ItemAbstractEnergyUser(properti
 	override val model
 		get() = ItemModel.WithOverrides(
 			ItemModel.Layers("energy_oracle", "energy_oracle_indicator_inactive"),
-			Resource.Custom("activity_intensity") to mapOf(
+			ACTIVITY_INTENSITY_PROPERTY to mapOf(
 				0.5F to ItemModel.Suffixed("_active_mild", ItemModel.Layers("energy_oracle", "energy_oracle_indicator_active_mild")),
 				1.0F to ItemModel.Suffixed("_active_full", ItemModel.Layers("energy_oracle", "energy_oracle_indicator_active_full")),
 			)

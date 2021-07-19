@@ -1,7 +1,0 @@
-{
-    "parent": "block/fire_floor1",
-    "textures": {
-        "particle": "hee:block/eternal_fire_1",
-        "fire": "hee:block/eternal_fire_1"
-    }
-}

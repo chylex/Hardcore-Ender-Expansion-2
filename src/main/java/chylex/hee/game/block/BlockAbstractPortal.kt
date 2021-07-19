@@ -1,6 +1,9 @@
 package chylex.hee.game.block
 
 import chylex.hee.game.block.properties.BlockBuilder
+import chylex.hee.game.block.properties.BlockModel
+import chylex.hee.game.block.properties.BlockStateModel
+import chylex.hee.game.block.properties.BlockStatePreset
 import chylex.hee.game.block.util.asVoxelShape
 import chylex.hee.game.world.util.Facing4
 import chylex.hee.game.world.util.allInBox
@@ -19,6 +22,7 @@ import chylex.hee.util.math.floorToInt
 import net.minecraft.block.Block
 import net.minecraft.block.BlockRenderType.INVISIBLE
 import net.minecraft.block.BlockState
+import net.minecraft.block.Blocks
 import net.minecraft.entity.Entity
 import net.minecraft.tileentity.TileEntity
 import net.minecraft.util.math.AxisAlignedBB
@@ -92,6 +96,9 @@ abstract class BlockAbstractPortal(builder: BlockBuilder) : BlockSimpleShaped(bu
 		val clientAnimationProgress: LerpedFloat
 		val clientPortalOffset: LerpedFloat
 	}
+	
+	final override val model
+		get() = BlockStateModel(BlockStatePreset.SimpleFrom(Blocks.END_PORTAL), BlockModel.Manual)
 	
 	override fun hasTileEntity(state: BlockState): Boolean {
 		return true

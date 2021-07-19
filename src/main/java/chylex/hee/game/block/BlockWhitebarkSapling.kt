@@ -1,7 +1,6 @@
 package chylex.hee.game.block
 
 import chylex.hee.game.block.properties.BlockBuilder
-import chylex.hee.game.block.properties.BlockRenderLayer.CUTOUT
 import chylex.hee.game.block.util.Property
 import chylex.hee.game.block.util.asVoxelShape
 import chylex.hee.game.world.generation.feature.basic.WhitebarkTreeGenerator
@@ -30,9 +29,6 @@ class BlockWhitebarkSapling(builder: BlockBuilder, private val generator: Whiteb
 	}
 	
 	// Instance
-	
-	override val renderLayer
-		get() = CUTOUT
 	
 	init {
 		defaultState = stateContainer.baseState.with(STAGE, 0)

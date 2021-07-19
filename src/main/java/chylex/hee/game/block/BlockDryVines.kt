@@ -3,12 +3,15 @@ package chylex.hee.game.block
 import chylex.hee.client.util.MC
 import chylex.hee.game.block.properties.BlockBuilder
 import chylex.hee.game.block.properties.BlockRenderLayer.CUTOUT
+import chylex.hee.game.block.properties.BlockStateModels
 import chylex.hee.game.block.properties.BlockTint
+import chylex.hee.game.item.properties.ItemModel
 import chylex.hee.game.territory.TerritoryType
 import chylex.hee.util.color.IntColor
 import chylex.hee.util.forge.Side
 import chylex.hee.util.forge.Sided
 import net.minecraft.block.BlockState
+import net.minecraft.block.Blocks
 import net.minecraft.block.VineBlock
 import net.minecraft.entity.LivingEntity
 import net.minecraft.util.Direction
@@ -24,6 +27,9 @@ import net.minecraft.world.server.ServerWorld
 import java.util.Random
 
 class BlockDryVines(builder: BlockBuilder) : VineBlock(builder.p), IHeeBlock {
+	override val model
+		get() = BlockStateModels.ItemOnly(ItemModel.Copy(Blocks.VINE))
+	
 	override val renderLayer
 		get() = CUTOUT
 	

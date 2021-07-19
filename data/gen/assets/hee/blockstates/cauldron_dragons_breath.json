@@ -1,0 +1,16 @@
+{
+  "variants": {
+    "level=0": {
+      "model": "minecraft:block/cauldron"
+    },
+    "level=1": {
+      "model": "hee:block/cauldron_dragons_breath_level1"
+    },
+    "level=2": {
+      "model": "hee:block/cauldron_dragons_breath_level2"
+    },
+    "level=3": {
+      "model": "hee:block/cauldron_dragons_breath_level3"
+    }
+  }
+}

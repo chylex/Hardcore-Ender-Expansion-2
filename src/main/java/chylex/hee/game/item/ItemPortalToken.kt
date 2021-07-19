@@ -89,7 +89,7 @@ class ItemPortalToken(properties: Properties) : HeeItem(properties) {
 	override val model: ItemModel
 		get() = ItemModel.WithOverrides(
 			ItemModel.Layers("portal_token_outline", "portal_token_color_top", "portal_token_color_bottom"),
-			Resource.Custom("token_type") to mapOf(
+			TOKEN_TYPE_PROPERTY to mapOf(
 				1.0F to ItemModel.Suffixed("_rare", ItemModel.Layers(
 					"portal_token_outline",
 					"portal_token_color_top",

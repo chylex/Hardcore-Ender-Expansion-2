@@ -1,7 +1,11 @@
 package chylex.hee.game.block
 
+import chylex.hee.game.Resource.location
 import chylex.hee.game.block.properties.BlockBuilder
+import chylex.hee.game.block.properties.BlockModel
 import chylex.hee.game.block.properties.BlockRenderLayer.CUTOUT
+import chylex.hee.game.block.properties.BlockStateModel
+import chylex.hee.game.block.properties.BlockStatePreset
 import chylex.hee.game.block.util.with
 import chylex.hee.game.entity.damage.Damage
 import chylex.hee.game.entity.damage.IDamageDealer.Companion.TITLE_IN_FIRE
@@ -48,7 +52,25 @@ class BlockEternalFire(builder: BlockBuilder) : FireBlock(builder.p), IHeeBlock 
 	private companion object {
 		private val PARTICLE_SMOKE = ParticleSpawnerVanilla(LARGE_SMOKE)
 		private val DAMAGE_CONTACT = Damage(PEACEFUL_EXCLUSION, *ALL_PROTECTIONS, FIRE_TYPE(12 * 20), RAPID_DAMAGE(5))
+		
+		private fun getModelVariations(): List<Pair<String, Int>> {
+			return listOf("floor", "side", "side_alt", "up", "up_alt").flatMap { listOf(it to 0, it to 1) }
+		}
 	}
+	
+	override val model
+		get() = BlockStateModel(
+			BlockStatePreset.None,
+			BlockModel.Multi(getModelVariations().map { (name, alt) ->
+				BlockModel.Suffixed("_$name$alt", BlockModel.WithTextures(
+					BlockModel.FromParent(Blocks.FIRE.location("_$name$alt")),
+					mapOf(
+						"particle" to this.location("_$alt"),
+						"fire" to this.location("_$alt"),
+					)
+				))
+			})
+		)
 	
 	override val renderLayer
 		get() = CUTOUT

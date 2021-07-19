@@ -2,8 +2,10 @@ package chylex.hee.game.block
 
 import chylex.hee.game.block.properties.BlockBuilder
 import chylex.hee.game.block.properties.BlockRenderLayer.CUTOUT
+import chylex.hee.game.block.properties.BlockStateModels
 import chylex.hee.game.block.util.asVoxelShape
 import chylex.hee.game.block.util.withFacing
+import chylex.hee.game.item.properties.ItemModel
 import chylex.hee.game.world.util.Facing6
 import net.minecraft.block.Block
 import net.minecraft.block.BlockState
@@ -48,6 +50,9 @@ class BlockGloomtorch(builder: BlockBuilder) : DirectionalBlock(builder.p), IHee
 			return HorizontalFaceBlock.isSideSolidForDirection(world, pos, facing.opposite)
 		}
 	}
+	
+	override val model
+		get() = BlockStateModels.ItemOnly(ItemModel.Simple, asItem = true)
 	
 	override val renderLayer
 		get() = CUTOUT

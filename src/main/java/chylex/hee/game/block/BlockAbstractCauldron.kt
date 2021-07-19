@@ -27,7 +27,7 @@ import net.minecraft.util.math.BlockRayTraceResult
 import net.minecraft.world.World
 import net.minecraftforge.event.entity.player.EntityItemPickupEvent
 
-abstract class BlockAbstractCauldron(builder: BlockBuilder) : CauldronBlock(builder.p) {
+abstract class BlockAbstractCauldron(builder: BlockBuilder) : CauldronBlock(builder.p), IHeeBlock {
 	@SubscribeAllEvents(modid = HEE.ID)
 	companion object {
 		const val MAX_LEVEL = 3

@@ -1,28 +1,38 @@
 package chylex.hee.datagen.client
 
+import chylex.hee.datagen.client.util.block
 import chylex.hee.datagen.client.util.layers
 import chylex.hee.datagen.client.util.override
 import chylex.hee.datagen.client.util.parent
 import chylex.hee.datagen.client.util.simple
 import chylex.hee.datagen.client.util.suffixed
-import chylex.hee.datagen.r
+import chylex.hee.datagen.then
 import chylex.hee.game.Resource
+import chylex.hee.game.Resource.location
+import chylex.hee.game.block.IHeeBlock
 import chylex.hee.game.item.IHeeItem
 import chylex.hee.game.item.properties.ItemModel
+import chylex.hee.game.item.properties.ItemModel.AsBlock
+import chylex.hee.game.item.properties.ItemModel.Copy
+import chylex.hee.game.item.properties.ItemModel.FromParent
+import chylex.hee.game.item.properties.ItemModel.Layers
 import chylex.hee.game.item.properties.ItemModel.Multi
+import chylex.hee.game.item.properties.ItemModel.Named
+import chylex.hee.game.item.properties.ItemModel.Simple
 import chylex.hee.game.item.properties.ItemModel.SingleItemModel
-import chylex.hee.game.item.properties.ItemModel.SingleItemModel.Copy
-import chylex.hee.game.item.properties.ItemModel.SingleItemModel.Layers
-import chylex.hee.game.item.properties.ItemModel.SingleItemModel.Named
-import chylex.hee.game.item.properties.ItemModel.SingleItemModel.Simple
-import chylex.hee.game.item.properties.ItemModel.SingleItemModel.Skull
-import chylex.hee.game.item.properties.ItemModel.SingleItemModel.SpawnEgg
-import chylex.hee.game.item.properties.ItemModel.SingleItemModel.Suffixed
+import chylex.hee.game.item.properties.ItemModel.Skull
+import chylex.hee.game.item.properties.ItemModel.SpawnEgg
+import chylex.hee.game.item.properties.ItemModel.Suffixed
+import chylex.hee.game.item.properties.ItemModel.Wall
 import chylex.hee.game.item.properties.ItemModel.WithOverrides
+import chylex.hee.game.item.properties.ItemModel.WithTextures
+import chylex.hee.init.ModBlocks
 import chylex.hee.init.ModItems
 import chylex.hee.system.getRegistryEntries
+import net.minecraft.block.Block
 import net.minecraft.data.DataGenerator
 import net.minecraft.item.Item
+import net.minecraft.util.IItemProvider
 import net.minecraftforge.client.model.generators.ItemModelBuilder
 import net.minecraftforge.client.model.generators.ItemModelProvider
 import net.minecraftforge.common.data.ExistingFileHelper
@@ -30,45 +40,69 @@ import net.minecraftforge.common.data.ExistingFileHelper
 class ItemModels(generator: DataGenerator, modid: String, existingFileHelper: ExistingFileHelper) : ItemModelProvider(generator, modid, existingFileHelper) {
 	override fun registerModels() {
 		for (item in getRegistryEntries<Item>(ModItems)) {
-			(item as? IHeeItem)?.model?.let { registerModel(item, it) {} }
+			(item as? IHeeItem)?.model?.let {
+				registerModel(item, it)
+			}
+		}
+		
+		for (block in getRegistryEntries<Block>(ModBlocks)) {
+			(block as? IHeeBlock)?.model?.itemModel?.let {
+				registerModel(if (it.asItem) block.asItem() else block, it.model)
+			}
 		}
 	}
 	
-	private fun registerModel(item: Item, model: ItemModel, callback: ItemModelBuilder.() -> Unit) {
+	private fun registerModel(item: IItemProvider, model: ItemModel) {
+		registerModel(item, model) { it }
+	}
+	
+	private fun registerModel(item: IItemProvider, model: ItemModel, callback: (ItemModelBuilder) -> ItemModelBuilder) {
 		when (model) {
 			is SingleItemModel -> registerSingleModel(item, model, callback)
 			
-			is Multi -> {
-				for (it in model.models) {
-					registerModel(item, it, callback)
-				}
+			is WithTextures -> registerModel(item, model.baseModel) {
+				model.textures.entries.fold(callback(it)) { builder, (name, location) -> builder.texture(name, location) }
 			}
 			
-			is WithOverrides -> {
-				registerModel(item, model.baseModel) {
-					callback()
-					for ((propertyKey, valueMap) in model.overrides) {
-						for ((propertyValue, overrideModel) in valueMap) {
-							registerSingleModel(item, overrideModel) {}
-							override(overrideModel.getLocation(item)) {
-								predicate(propertyKey, propertyValue)
-							}
+			is WithOverrides -> registerModel(item, model.baseModel) {
+				var builder = callback(it)
+				
+				for ((property, valueMap) in model.overrides) {
+					for ((value, overrideModel) in valueMap) {
+						registerSingleModel(item, overrideModel)
+						builder = builder.override(overrideModel.getLocation(item.asItem())) {
+							predicate(property.name, value)
 						}
 					}
+				}
+				
+				builder
+			}
+			
+			is Multi -> {
+				for (innerModel in model.models) {
+					registerModel(item, innerModel, callback)
 				}
 			}
 		}
 	}
 	
-	private fun registerSingleModel(item: Item, model: SingleItemModel, callback: ItemModelBuilder.() -> Unit) {
+	private fun registerSingleModel(item: IItemProvider, model: SingleItemModel) {
+		registerSingleModel(item, model) { it }
+	}
+	
+	private fun registerSingleModel(item: IItemProvider, model: SingleItemModel, callback: (ItemModelBuilder) -> ItemModelBuilder) {
 		when (model) {
-			Simple      -> simple(item)?.let(callback)
-			Skull       -> parent(item, Resource.Vanilla("item/template_skull"))?.let(callback)
-			SpawnEgg    -> parent(item, Resource.Vanilla("item/template_spawn_egg"))?.let(callback)
-			is Copy     -> simple(item, model.item.r)?.let(callback)
-			is Layers   -> layers(item, model.layers)?.let(callback)
-			is Named    -> simple(model.name)?.let(callback)
-			is Suffixed -> registerModel(item.suffixed(model.suffix), model.wrapped, callback)
+			Simple        -> simple(item)?.then(callback)
+			AsBlock       -> block(item as Block)?.then(callback)
+			Skull         -> parent(item, Resource.Vanilla("item/template_skull"))?.then(callback)
+			SpawnEgg      -> parent(item, Resource.Vanilla("item/template_spawn_egg"))?.then(callback)
+			Wall          -> parent(item, item.suffixed("_inventory").location)?.then(callback)
+			is Copy       -> simple(item, model.item.location)?.then(callback)
+			is Layers     -> layers(item, model.layers)?.then(callback)
+			is Named      -> simple(model.name)?.then(callback)
+			is FromParent -> parent(item, model.parent)?.then(callback)
+			is Suffixed   -> registerModel(item.suffixed(model.suffix), model.wrapped, callback)
 		}
 	}
 }

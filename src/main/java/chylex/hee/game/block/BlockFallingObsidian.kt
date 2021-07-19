@@ -1,9 +1,11 @@
 package chylex.hee.game.block
 
 import chylex.hee.game.block.properties.BlockBuilder
+import chylex.hee.game.block.properties.BlockStateModels
 import chylex.hee.game.entity.item.EntityFallingBlockHeavy
 import chylex.hee.game.entity.item.EntityFallingObsidian
 import net.minecraft.block.BlockState
+import net.minecraft.block.Blocks
 import net.minecraft.util.Direction
 import net.minecraft.util.math.BlockPos
 import net.minecraft.world.IWorld
@@ -11,7 +13,10 @@ import net.minecraft.world.World
 import net.minecraft.world.server.ServerWorld
 import java.util.Random
 
-class BlockFallingObsidian(builder: BlockBuilder) : BlockSimple(builder) {
+class BlockFallingObsidian(builder: BlockBuilder) : HeeBlock(builder) {
+	override val model
+		get() = BlockStateModels.Cube(Blocks.OBSIDIAN)
+	
 	override fun onBlockAdded(state: BlockState, world: World, pos: BlockPos, oldState: BlockState, isMoving: Boolean) {
 		world.pendingBlockTicks.scheduleTick(pos, this, 2)
 	}

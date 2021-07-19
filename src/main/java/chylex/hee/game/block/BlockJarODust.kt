@@ -2,7 +2,10 @@ package chylex.hee.game.block
 
 import chylex.hee.game.block.entity.TileEntityJarODust
 import chylex.hee.game.block.properties.BlockBuilder
+import chylex.hee.game.block.properties.BlockModel
 import chylex.hee.game.block.properties.BlockRenderLayer.TRANSLUCENT
+import chylex.hee.game.block.properties.BlockStateModel
+import chylex.hee.game.block.properties.BlockStatePreset
 import chylex.hee.game.fx.util.playServer
 import chylex.hee.game.item.util.size
 import chylex.hee.game.mechanics.dust.DustLayers
@@ -51,6 +54,9 @@ class BlockJarODust(builder: BlockBuilder) : BlockSimpleShaped(builder, AABB) {
 	companion object {
 		val AABB = AxisAlignedBB(0.1875, 0.0, 0.1875, 0.8125, 0.84375, 0.8125)
 	}
+	
+	override val model
+		get() = BlockStateModel(BlockStatePreset.Simple, BlockModel.Manual)
 	
 	override val renderLayer
 		get() = TRANSLUCENT

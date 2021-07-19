@@ -2,6 +2,7 @@ package chylex.hee.game.block
 
 import chylex.hee.game.block.entity.base.TileEntityBaseChest
 import chylex.hee.game.block.properties.BlockBuilder
+import chylex.hee.game.block.properties.IBlockStateModel
 import chylex.hee.game.block.util.asVoxelShape
 import chylex.hee.game.block.util.withFacing
 import chylex.hee.game.entity.living.ai.AIOcelotSitOverride.IOcelotCanSitOn
@@ -42,10 +43,12 @@ import net.minecraft.world.IBlockReader
 import net.minecraft.world.IWorldReader
 import net.minecraft.world.World
 
-abstract class BlockAbstractChest<T : TileEntityBaseChest>(builder: BlockBuilder) : AbstractChestBlock<T>(builder.p, supply(null)), IOcelotCanSitOn {
+abstract class BlockAbstractChest<T : TileEntityBaseChest>(builder: BlockBuilder) : AbstractChestBlock<T>(builder.p, supply(null)), IHeeBlock, IOcelotCanSitOn {
 	private companion object {
 		private val AABB = AxisAlignedBB(0.0625, 0.0, 0.0625, 0.9375, 0.875, 0.9375).asVoxelShape
 	}
+	
+	abstract override val model: IBlockStateModel
 	
 	init {
 		defaultState = stateContainer.baseState.withFacing(NORTH)

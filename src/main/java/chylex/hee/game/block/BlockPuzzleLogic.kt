@@ -1,12 +1,17 @@
 package chylex.hee.game.block
 
 import chylex.hee.client.util.MC
+import chylex.hee.game.Resource
 import chylex.hee.game.block.BlockPuzzleLogic.State.ACTIVE
 import chylex.hee.game.block.BlockPuzzleLogic.State.DISABLED
 import chylex.hee.game.block.BlockPuzzleLogic.State.INACTIVE
 import chylex.hee.game.block.properties.BlockBuilder
+import chylex.hee.game.block.properties.BlockModel
 import chylex.hee.game.block.properties.BlockRenderLayer.CUTOUT
+import chylex.hee.game.block.properties.BlockStateModel
+import chylex.hee.game.block.properties.BlockStatePreset
 import chylex.hee.game.block.properties.BlockTint
+import chylex.hee.game.block.properties.IBlockStateModel
 import chylex.hee.game.block.util.Property
 import chylex.hee.game.block.util.withFacing
 import chylex.hee.game.entity.util.posVec
@@ -14,6 +19,7 @@ import chylex.hee.game.fx.FxBlockData
 import chylex.hee.game.fx.FxBlockHandler
 import chylex.hee.game.fx.FxEntityHandler
 import chylex.hee.game.fx.util.playClient
+import chylex.hee.game.item.properties.ItemModel
 import chylex.hee.game.particle.ParticleSmokeCustom
 import chylex.hee.game.particle.spawner.ParticleSpawnerCustom
 import chylex.hee.game.particle.spawner.properties.IOffset.Constant
@@ -44,6 +50,7 @@ import net.minecraft.item.BlockItemUseContext
 import net.minecraft.state.StateContainer.Builder
 import net.minecraft.util.Direction
 import net.minecraft.util.Direction.NORTH
+import net.minecraft.util.Direction.SOUTH
 import net.minecraft.util.Direction.UP
 import net.minecraft.util.IStringSerializable
 import net.minecraft.util.SoundCategory
@@ -52,7 +59,7 @@ import net.minecraft.world.IBlockDisplayReader
 import net.minecraft.world.World
 import java.util.Random
 
-sealed class BlockPuzzleLogic(builder: BlockBuilder) : BlockSimple(builder) {
+sealed class BlockPuzzleLogic(builder: BlockBuilder) : HeeBlock(builder) {
 	companion object {
 		val STATE = Property.enum<State>("state")
 		
@@ -171,6 +178,31 @@ sealed class BlockPuzzleLogic(builder: BlockBuilder) : BlockSimple(builder) {
 		private fun makePair(pos: BlockPos, facing: Direction): Pair<BlockPos, Direction> {
 			return pos.offset(facing) to facing
 		}
+		
+		private fun createPlainModel() = BlockStateModel(
+			BlockStatePreset.None,
+			BlockModel.Multi(arrayOf("active", "disabled", "inactive").map {
+				BlockModel.WithTextures(
+					BlockModel.Parent("puzzle_base_$it", Resource.Vanilla("block/cube_all")),
+					mapOf("all" to Resource.Custom("block/puzzle_base_$it"))
+				)
+			}),
+			ItemModel.FromParent(Resource.Custom("block/puzzle_base_active"))
+		)
+		
+		private fun createOverlayModel(itemSuffix: String, blockSuffixes: List<String> = listOf(itemSuffix)) = BlockStateModel(
+			BlockStatePreset.None,
+			BlockModel.Multi(blockSuffixes.map {
+				BlockModel.WithTextures(
+					BlockModel.Parent("puzzle_overlay_$it", Resource.Custom("block/puzzle_overlay")),
+					mapOf("overlay" to Resource.Custom("block/puzzle_overlay_$it"))
+				)
+			}),
+			ItemModel.WithTextures(
+				ItemModel.FromParent(Resource.Custom("block/puzzle_block_inventory")),
+				mapOf("top" to Resource.Custom("block/puzzle_overlay_$itemSuffix"))
+			)
+		)
 	}
 	
 	enum class State(private val serializableName: String) : IStringSerializable {
@@ -189,6 +221,8 @@ sealed class BlockPuzzleLogic(builder: BlockBuilder) : BlockSimple(builder) {
 			return serializableName
 		}
 	}
+	
+	abstract override val model: IBlockStateModel
 	
 	override val renderLayer
 		get() = CUTOUT
@@ -229,12 +263,18 @@ sealed class BlockPuzzleLogic(builder: BlockBuilder) : BlockSimple(builder) {
 	// Variations
 	
 	class Plain(builder: BlockBuilder) : BlockPuzzleLogic(builder) {
+		override val model
+			get() = createPlainModel()
+		
 		override fun getNextChains(world: World, pos: BlockPos, facing: Direction): List<Pair<BlockPos, Direction>> {
 			return listOf(makePair(pos, facing))
 		}
 	}
 	
 	class Burst(builder: BlockBuilder, private val radius: Int) : BlockPuzzleLogic(builder) {
+		override val model
+			get() = createOverlayModel("burst_" + (1 + (radius * 2)))
+		
 		private fun toggleAndChain(world: World, pos: BlockPos, facing: Direction): List<Pair<BlockPos, Direction>> {
 			val state = pos.getState(world)
 			val block = state.block
@@ -250,7 +290,13 @@ sealed class BlockPuzzleLogic(builder: BlockBuilder) : BlockSimple(builder) {
 		}
 	}
 	
-	class Redirect(builder: BlockBuilder, private val directions: Array<Direction>) : BlockPuzzleLogic(builder) {
+	sealed class RedirectSome private constructor(builder: BlockBuilder, private val blockDirections: Array<String>, private val itemDirection: String, private val directions: Array<Direction>) : BlockPuzzleLogic(builder) {
+		class R1(builder: BlockBuilder) : RedirectSome(builder, arrayOf("n", "s", "e", "w"), "n", arrayOf(NORTH))
+		class R2(builder: BlockBuilder) : RedirectSome(builder, arrayOf("ns", "ew"), "ns", arrayOf(NORTH, SOUTH))
+		
+		override val model
+			get() = createOverlayModel("redirect_" + directions.size + itemDirection, blockDirections.map { "redirect_" + directions.size + it })
+		
 		init {
 			defaultState = stateContainer.baseState.with(STATE, ACTIVE).withFacing(NORTH)
 		}
@@ -272,12 +318,18 @@ sealed class BlockPuzzleLogic(builder: BlockBuilder) : BlockSimple(builder) {
 	}
 	
 	class RedirectAll(builder: BlockBuilder) : BlockPuzzleLogic(builder) {
+		override val model
+			get() = createOverlayModel("redirect_4")
+		
 		override fun getNextChains(world: World, pos: BlockPos, facing: Direction): List<Pair<BlockPos, Direction>> {
 			return Facing4.filter { it != facing.opposite }.map { makePair(pos, it) }
 		}
 	}
 	
 	class Teleport(builder: BlockBuilder) : BlockPuzzleLogic(builder) {
+		override val model
+			get() = createOverlayModel("teleport")
+		
 		override fun getNextChains(world: World, pos: BlockPos, facing: Direction): List<Pair<BlockPos, Direction>> {
 			return findAllBlocks(world, pos).filter { it != pos && it.getBlock(world) is Teleport }.map { makePair(it, facing) }
 		}

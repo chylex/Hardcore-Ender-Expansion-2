@@ -1,8 +1,12 @@
 package chylex.hee.game.block
 
+import chylex.hee.game.Resource.location
 import chylex.hee.game.block.IBlockDeathFlowerDecaying.Companion.LEVEL
 import chylex.hee.game.block.properties.BlockBuilder
+import chylex.hee.game.block.properties.BlockModel
 import chylex.hee.game.block.properties.BlockRenderLayer.CUTOUT
+import chylex.hee.game.block.properties.BlockStateModel
+import chylex.hee.game.block.properties.BlockStatePreset
 import chylex.hee.game.item.ItemDeathFlower
 import chylex.hee.game.world.util.setBlock
 import chylex.hee.init.ModBlocks
@@ -32,6 +36,14 @@ class BlockFlowerPotDeathFlowerDecaying(
 	builder: BlockBuilder,
 	flower: Block,
 ) : FlowerPotBlock(supply(Blocks.FLOWER_POT as FlowerPotBlock) /* prevents adding to flower->pot map */, supply(flower), builder.p), IHeeBlock, IBlockDeathFlowerDecaying {
+	override val model
+		get() = BlockStateModel(
+			BlockStatePreset.None,
+			BlockModel.Multi((1..4).map {
+				BlockModel.Suffixed("_$it", BlockModel.PottedPlant(ModBlocks.DEATH_FLOWER_DECAYING.location("_$it")))
+			})
+		)
+	
 	override val renderLayer
 		get() = CUTOUT
 	

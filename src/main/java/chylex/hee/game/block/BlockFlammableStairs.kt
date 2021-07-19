@@ -6,7 +6,7 @@ import net.minecraft.util.Direction
 import net.minecraft.util.math.BlockPos
 import net.minecraft.world.IBlockReader
 
-class BlockFlammableStairs(block: Block) : BlockStairsCustom(block) {
+class BlockFlammableStairs(fullBlock: Block) : BlockStairsCustom(fullBlock) {
 	override fun getFlammability(state: BlockState, world: IBlockReader, pos: BlockPos, face: Direction): Int {
 		return 20
 	}

@@ -1,7 +1,7 @@
 {
   "variants": {
     "": {
-      "model": "hee:block/obsidian_falling"
+      "model": "minecraft:block/obsidian"
     }
   }
 }

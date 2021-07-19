@@ -8,7 +8,7 @@ import net.minecraft.item.ItemStack
 import net.minecraft.util.IItemProvider
 import net.minecraft.util.ResourceLocation
 
-abstract class ItemProperty(private val name: ResourceLocation) {
+abstract class ItemProperty(val name: ResourceLocation) {
 	abstract fun getValue(stack: ItemStack, entity: LivingEntity?): Float
 	
 	@Sided(Side.CLIENT)

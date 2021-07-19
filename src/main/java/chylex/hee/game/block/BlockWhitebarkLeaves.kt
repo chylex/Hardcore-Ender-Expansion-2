@@ -1,6 +1,7 @@
 package chylex.hee.game.block
 
 import chylex.hee.game.block.properties.BlockBuilder
+import chylex.hee.game.block.properties.BlockModel
 import chylex.hee.game.block.properties.BlockRenderLayer.CUTOUT
 import net.minecraft.block.BlockState
 import net.minecraft.block.LeavesBlock
@@ -17,6 +18,9 @@ import net.minecraft.world.IBlockReader
 import net.minecraft.world.World
 
 class BlockWhitebarkLeaves(builder: BlockBuilder) : LeavesBlock(builder.p), IHeeBlock {
+	override val model
+		get() = BlockModel.Leaves
+	
 	override val renderLayer
 		get() = CUTOUT
 	

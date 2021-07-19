@@ -1,8 +1,11 @@
 package chylex.hee.game.block
 
+import chylex.hee.game.Resource
 import chylex.hee.game.block.properties.BlockBuilder
 import chylex.hee.game.block.properties.BlockRenderLayer.TRANSLUCENT
+import chylex.hee.game.block.properties.BlockStateModels
 import chylex.hee.game.block.util.Property
+import chylex.hee.game.item.properties.ItemModel
 import chylex.hee.game.world.util.Facing6
 import chylex.hee.game.world.util.getBlock
 import net.minecraft.block.AbstractGlassBlock
@@ -38,6 +41,9 @@ class BlockInfusedGlass(builder: BlockBuilder) : AbstractGlassBlock(builder.p), 
 			WEST to CONNECT_WEST
 		)
 	}
+	
+	override val model
+		get() = BlockStateModels.ItemOnly(ItemModel.FromParent(Resource.Custom("block/infused_glass_c0")))
 	
 	override val renderLayer
 		get() = TRANSLUCENT

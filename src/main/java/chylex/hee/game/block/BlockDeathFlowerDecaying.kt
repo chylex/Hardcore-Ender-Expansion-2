@@ -1,9 +1,13 @@
 package chylex.hee.game.block
 
+import chylex.hee.game.Resource.location
 import chylex.hee.game.block.IBlockDeathFlowerDecaying.Companion.LEVEL
 import chylex.hee.game.block.properties.BlockBuilder
-import chylex.hee.game.block.properties.BlockRenderLayer.CUTOUT
+import chylex.hee.game.block.properties.BlockModel
+import chylex.hee.game.block.properties.BlockStateModel
+import chylex.hee.game.block.properties.BlockStatePreset
 import chylex.hee.game.item.ItemDeathFlower
+import chylex.hee.game.item.properties.ItemModel
 import chylex.hee.init.ModBlocks
 import net.minecraft.block.Block
 import net.minecraft.block.BlockState
@@ -19,9 +23,24 @@ import net.minecraft.world.World
 import net.minecraft.world.server.ServerWorld
 import java.util.Random
 
-class BlockDeathFlowerDecaying(builder: BlockBuilder) : BlockEndPlant(builder), IHeeBlock, IBlockDeathFlowerDecaying {
-	override val renderLayer
-		get() = CUTOUT
+class BlockDeathFlowerDecaying(builder: BlockBuilder) : BlockEndPlant(builder), IBlockDeathFlowerDecaying {
+	override val model
+		get() = BlockStateModel(
+			BlockStatePreset.None,
+			BlockModel.Multi((1..4).map {
+				BlockModel.Suffixed("_$it", BlockModel.Cross(this.location("_$it")))
+			}),
+			ItemModel.Multi(
+				ItemModel.Suffixed("_1"),
+				ItemModel.WithOverrides(
+					ItemModel.Layers("death_flower_1"),
+					ItemDeathFlower.DEATH_LEVEL_PROPERTY to mapOf(
+						4F to ItemModel.Suffixed("_2"),
+						8F to ItemModel.Suffixed("_3"),
+						12F to ItemModel.Suffixed("_4"),
+					)
+				))
+		)
 	
 	override fun fillStateContainer(container: Builder<Block, BlockState>) {
 		container.add(LEVEL)

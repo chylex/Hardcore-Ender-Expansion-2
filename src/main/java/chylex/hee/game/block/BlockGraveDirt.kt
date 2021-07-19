@@ -2,13 +2,21 @@ package chylex.hee.game.block
 
 import chylex.hee.client.util.MC
 import chylex.hee.game.Environment
+import chylex.hee.game.Resource
+import chylex.hee.game.Resource.location
 import chylex.hee.game.block.properties.BlockBuilder
+import chylex.hee.game.block.properties.BlockModel
+import chylex.hee.game.block.properties.BlockStateModel
+import chylex.hee.game.block.properties.BlockStateModels
+import chylex.hee.game.block.properties.BlockStatePreset
+import chylex.hee.game.block.properties.IBlockStateModel
 import chylex.hee.game.block.util.Property
 import chylex.hee.game.block.util.with
 import chylex.hee.game.entity.living.EntityMobSpiderling
 import chylex.hee.game.entity.util.posVec
 import chylex.hee.game.fx.util.playClient
 import chylex.hee.game.fx.util.playServer
+import chylex.hee.game.item.properties.ItemModel
 import chylex.hee.game.territory.storage.ForgottenTombsEndData
 import chylex.hee.game.territory.system.TerritoryInstance
 import chylex.hee.game.world.util.getBlock
@@ -53,7 +61,7 @@ import net.minecraft.world.World
 import net.minecraft.world.server.ServerWorld
 import java.util.Random
 
-open class BlockGraveDirt(builder: BlockBuilder) : BlockSimpleShaped(builder, AxisAlignedBB(0.0, 0.0, 0.0, 1.0, 0.9375, 1.0)) {
+sealed class BlockGraveDirt(builder: BlockBuilder) : BlockSimpleShaped(builder, AxisAlignedBB(0.0, 0.0, 0.0, 1.0, 0.9375, 1.0)) {
 	companion object {
 		val FULL = Property.bool("full")
 		
@@ -65,6 +73,9 @@ open class BlockGraveDirt(builder: BlockBuilder) : BlockSimpleShaped(builder, Ax
 	}
 	
 	// Instance
+	
+	override val model: IBlockStateModel
+		get() = BlockStateModels.ItemOnly(ItemModel.FromParent(Resource.Custom("block/grave_dirt_low")))
 	
 	val soundType: SoundType
 		get() = soundType
@@ -140,6 +151,32 @@ open class BlockGraveDirt(builder: BlockBuilder) : BlockSimpleShaped(builder, Ax
 	}
 	
 	// Variations
+	
+	class Plain(builder: BlockBuilder) : BlockGraveDirt(builder) {
+		override val model
+			get() = BlockStateModel(
+				BlockStatePreset.None,
+				BlockModel.Suffixed("_full", BlockModel.WithTextures(
+					BlockModel.Cube(this.location),
+					mapOf("particle" to this.location)
+				)),
+				ItemModel.FromParent(Resource.Custom("block/grave_dirt_low"))
+			)
+	}
+	
+	class Loot(builder: BlockBuilder) : BlockGraveDirt(builder) {
+		override val model
+			get() = BlockStateModel(
+				BlockStatePreset.None,
+				BlockModel.Multi((1..6).map {
+					BlockModel.Suffixed("_$it", BlockModel.WithTextures(
+						BlockModel.FromParent(Resource.Custom("block/grave_dirt_low")),
+						mapOf("top" to Resource.Custom("block/grave_dirt_loot_$it"))
+					))
+				}),
+				ItemModel.FromParent(Resource.Custom("block/grave_dirt_loot_4"))
+			)
+	}
 	
 	class Spiderling(builder: BlockBuilder) : BlockGraveDirt(builder) {
 		private var clientLastSpiderlingSound = 0L

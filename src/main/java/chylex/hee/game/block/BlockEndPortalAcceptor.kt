@@ -2,6 +2,7 @@ package chylex.hee.game.block
 
 import chylex.hee.game.block.entity.TileEntityEndPortalAcceptor
 import chylex.hee.game.block.properties.BlockBuilder
+import chylex.hee.game.block.properties.BlockModel
 import chylex.hee.game.world.util.getTile
 import chylex.hee.init.ModBlocks
 import net.minecraft.block.BlockState
@@ -13,14 +14,16 @@ import net.minecraft.util.ActionResultType.SUCCESS
 import net.minecraft.util.Direction
 import net.minecraft.util.Direction.UP
 import net.minecraft.util.Hand
-import net.minecraft.util.math.AxisAlignedBB
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.BlockRayTraceResult
 import net.minecraft.world.IBlockReader
 import net.minecraft.world.IWorld
 import net.minecraft.world.World
 
-class BlockEndPortalAcceptor(builder: BlockBuilder, aabb: AxisAlignedBB) : BlockSimpleShaped(builder, aabb) {
+class BlockEndPortalAcceptor(builder: BlockBuilder) : BlockPortalFrame(builder) {
+	override val model
+		get() = BlockModel.PortalFrame(ModBlocks.END_PORTAL_FRAME, "acceptor")
+	
 	override fun hasTileEntity(state: BlockState): Boolean {
 		return true
 	}

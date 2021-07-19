@@ -27,7 +27,7 @@ import net.minecraft.world.World
 import net.minecraftforge.common.ToolType
 import java.util.Random
 
-abstract class BlockDustyStone(builder: BlockBuilder) : BlockSimple(builder), IBlockHarvestToolCheck {
+abstract class BlockDustyStone(builder: BlockBuilder) : HeeBlock(builder), IBlockHarvestToolCheck {
 	private companion object {
 		private val PARTICLE_DUST = ParticleSpawnerCustom(
 			type = ParticleDust,

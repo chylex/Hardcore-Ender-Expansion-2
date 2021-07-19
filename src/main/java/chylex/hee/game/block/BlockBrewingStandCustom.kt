@@ -1,13 +1,20 @@
 package chylex.hee.game.block
 
+import chylex.hee.game.Resource.location
 import chylex.hee.game.block.entity.TileEntityBrewingStandCustom
 import chylex.hee.game.block.properties.BlockBuilder
+import chylex.hee.game.block.properties.BlockItemModel
+import chylex.hee.game.block.properties.BlockModel
 import chylex.hee.game.block.properties.BlockRenderLayer.CUTOUT
+import chylex.hee.game.block.properties.BlockStateModel
+import chylex.hee.game.block.properties.BlockStatePreset
+import chylex.hee.game.item.properties.ItemModel
 import chylex.hee.game.world.util.breakBlock
 import chylex.hee.game.world.util.getTile
 import chylex.hee.game.world.util.setBlock
 import chylex.hee.init.ModContainers
 import net.minecraft.block.BlockState
+import net.minecraft.block.Blocks
 import net.minecraft.block.BrewingStandBlock
 import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.tileentity.BrewingStandTileEntity
@@ -21,7 +28,18 @@ import net.minecraft.world.IBlockReader
 import net.minecraft.world.World
 
 open class BlockBrewingStandCustom(builder: BlockBuilder) : BrewingStandBlock(builder.p), IHeeBlock {
-	override val renderLayer
+	final override val model
+		get() = BlockStateModel(
+			BlockStatePreset.None,
+			BlockModel.WithTextures(BlockModel.FromParent(Blocks.BREWING_STAND), mapOf(
+				"particle" to Blocks.BREWING_STAND.location,
+				"base" to Blocks.BREWING_STAND.location("_base"),
+				"stand" to this.location,
+			)),
+			BlockItemModel(ItemModel.Simple, asItem = true)
+		)
+	
+	final override val renderLayer
 		get() = CUTOUT
 	
 	override fun createTileEntity(state: BlockState, world: IBlockReader): TileEntity {

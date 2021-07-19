@@ -1,9 +1,15 @@
 package chylex.hee.game.block
 
+import chylex.hee.game.Resource.location
 import chylex.hee.game.block.properties.BlockBuilder
+import chylex.hee.game.block.properties.BlockModel
+import chylex.hee.game.block.properties.BlockStateModel
+import chylex.hee.game.block.properties.BlockStatePreset
+import chylex.hee.game.item.properties.ItemModel
 import chylex.hee.game.world.util.breakBlock
 import chylex.hee.game.world.util.getBlock
 import chylex.hee.game.world.util.getState
+import chylex.hee.init.ModBlocks
 import chylex.hee.util.math.center
 import net.minecraft.block.Block
 import net.minecraft.block.BlockState
@@ -27,6 +33,20 @@ import net.minecraftforge.common.PlantType
 import java.util.Random
 
 class BlockHumus(builder: BlockBuilder, mergeBottom: Block) : BlockSimpleMergingBottom(builder, mergeBottom) {
+	override val model
+		get() = BlockStateModel(
+			BlockStatePreset.None,
+			BlockModel.Multi(
+				BlockModel.Cube,
+				BlockModel.Suffixed("_merge", BlockModel.CubeBottomTop(
+					side   = this.location("_merge"),
+					bottom = ModBlocks.ENDERSOL.location("_top"),
+					top    = this.location,
+				))
+			),
+			ItemModel.AsBlock
+		)
+	
 	override fun randomTick(state: BlockState, world: ServerWorld, pos: BlockPos, rand: Random) {
 		@Suppress("DEPRECATION")
 		super.randomTick(state, world, pos, rand)

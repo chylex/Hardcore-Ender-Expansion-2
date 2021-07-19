@@ -1,7 +1,6 @@
 package chylex.hee.datagen
 
 import chylex.hee.HEE
-import chylex.hee.datagen.client.BlockItemModels
 import chylex.hee.datagen.client.BlockModels
 import chylex.hee.datagen.client.BlockStates
 import chylex.hee.datagen.client.ItemModels
@@ -22,9 +21,8 @@ object DataGen {
 		
 		with(e.generator) {
 			if (e.includeClient()) {
-				addProvider(BlockStates(this, modid, helper))
 				addProvider(BlockModels(this, modid, helper))
-				addProvider(BlockItemModels(this, modid, helper))
+				addProvider(BlockStates(this, modid, helper))
 				addProvider(ItemModels(this, modid, helper))
 			}
 			

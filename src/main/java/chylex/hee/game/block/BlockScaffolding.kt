@@ -2,6 +2,7 @@ package chylex.hee.game.block
 
 import chylex.hee.game.Environment
 import chylex.hee.game.block.properties.BlockBuilder
+import chylex.hee.game.block.properties.BlockModel
 import chylex.hee.game.block.properties.BlockRenderLayer.CUTOUT
 import chylex.hee.game.command.client.CommandClientScaffolding
 import chylex.hee.game.world.generation.structure.file.StructureFile
@@ -40,8 +41,11 @@ import net.minecraft.world.IBlockReader
 import net.minecraft.world.World
 import java.nio.file.Files
 
-class BlockScaffolding(builder: BlockBuilder) : BlockSimple(builder) {
+class BlockScaffolding(builder: BlockBuilder) : HeeBlock(builder) {
 	var enableShape = true
+	
+	override val model
+		get() = BlockModel.Manual
 	
 	override val renderLayer
 		get() = CUTOUT

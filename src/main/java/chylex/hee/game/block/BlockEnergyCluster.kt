@@ -2,6 +2,8 @@ package chylex.hee.game.block
 
 import chylex.hee.game.block.entity.TileEntityEnergyCluster
 import chylex.hee.game.block.properties.BlockBuilder
+import chylex.hee.game.block.properties.BlockStateModels
+import chylex.hee.game.item.properties.ItemModel
 import chylex.hee.game.mechanics.energy.IEnergyQuantity
 import chylex.hee.game.mechanics.instability.Instability
 import chylex.hee.game.world.util.allInCenteredSphereMutable
@@ -59,6 +61,9 @@ class BlockEnergyCluster(builder: BlockBuilder) : BlockSimpleShaped(builder, Axi
 			}
 		}
 	}
+	
+	override val model
+		get() = BlockStateModels.ItemOnly(ItemModel.Simple)
 	
 	override fun hasTileEntity(state: BlockState): Boolean {
 		return true
