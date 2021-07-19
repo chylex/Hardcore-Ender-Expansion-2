@@ -1,8 +1,8 @@
 package chylex.hee.game.block
 
-import chylex.hee.client.render.block.IBlockLayerCutout
 import chylex.hee.game.block.IBlockDeathFlowerDecaying.Companion.LEVEL
 import chylex.hee.game.block.properties.BlockBuilder
+import chylex.hee.game.block.properties.BlockRenderLayer.CUTOUT
 import chylex.hee.game.item.ItemDeathFlower
 import chylex.hee.init.ModBlocks
 import net.minecraft.block.Block
@@ -19,7 +19,10 @@ import net.minecraft.world.World
 import net.minecraft.world.server.ServerWorld
 import java.util.Random
 
-class BlockDeathFlowerDecaying(builder: BlockBuilder) : BlockEndPlant(builder), IBlockDeathFlowerDecaying, IBlockLayerCutout {
+class BlockDeathFlowerDecaying(builder: BlockBuilder) : BlockEndPlant(builder), IHeeBlock, IBlockDeathFlowerDecaying {
+	override val renderLayer
+		get() = CUTOUT
+	
 	override fun fillStateContainer(container: Builder<Block, BlockState>) {
 		container.add(LEVEL)
 	}

@@ -1,8 +1,8 @@
 package chylex.hee.game.block
 
-import chylex.hee.client.render.block.IBlockLayerCutout
 import chylex.hee.game.Environment
 import chylex.hee.game.block.properties.BlockBuilder
+import chylex.hee.game.block.properties.BlockRenderLayer.CUTOUT
 import chylex.hee.game.command.client.CommandClientScaffolding
 import chylex.hee.game.world.generation.structure.file.StructureFile
 import chylex.hee.game.world.generation.util.WorldToStructureWorldAdapter
@@ -40,8 +40,11 @@ import net.minecraft.world.IBlockReader
 import net.minecraft.world.World
 import java.nio.file.Files
 
-class BlockScaffolding(builder: BlockBuilder) : BlockSimple(builder), IBlockLayerCutout {
+class BlockScaffolding(builder: BlockBuilder) : BlockSimple(builder) {
 	var enableShape = true
+	
+	override val renderLayer
+		get() = CUTOUT
 	
 	override fun onBlockActivated(state: BlockState, world: World, pos: BlockPos, player: PlayerEntity, hand: Hand, hit: BlockRayTraceResult): ActionResultType {
 		if (world.isRemote && player.isSneaking && !player.abilities.isFlying && Debug.enabled) {

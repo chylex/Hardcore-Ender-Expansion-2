@@ -8,9 +8,6 @@ import chylex.hee.client.gui.screen.GuiPortalTokenStorage
 import chylex.hee.client.gui.screen.GuiShulkerBox
 import chylex.hee.client.gui.screen.GuiTrinketPouch
 import chylex.hee.client.render.EndDimensionRenderInfo
-import chylex.hee.client.render.block.IBlockLayerCutout
-import chylex.hee.client.render.block.IBlockLayerCutoutMipped
-import chylex.hee.client.render.block.IBlockLayerTranslucent
 import chylex.hee.client.render.block.RenderTileDarkChest
 import chylex.hee.client.render.block.RenderTileEndPortal
 import chylex.hee.client.render.block.RenderTileExperienceGate
@@ -54,6 +51,9 @@ import chylex.hee.game.block.entity.base.TileEntityBaseSpawner
 import chylex.hee.game.block.entity.base.TileEntityBaseTable
 import chylex.hee.game.block.fluid.FluidEnderGoo
 import chylex.hee.game.block.fluid.FluidEnderGooPurified
+import chylex.hee.game.block.properties.BlockRenderLayer.CUTOUT
+import chylex.hee.game.block.properties.BlockRenderLayer.CUTOUT_MIPPED
+import chylex.hee.game.block.properties.BlockRenderLayer.TRANSLUCENT
 import chylex.hee.game.block.properties.CustomSkull
 import chylex.hee.game.entity.effect.EntityTerritoryLightningBolt
 import chylex.hee.game.entity.item.EntityFallingBlockHeavy
@@ -144,10 +144,11 @@ object ModRendering {
 		// blocks
 		
 		for (block in getRegistryEntries<Block>(ModBlocks)) {
-			when (block) {
-				is IBlockLayerCutout       -> RenderTypeLookup.setRenderLayer(block, RenderType.getCutout())
-				is IBlockLayerCutoutMipped -> RenderTypeLookup.setRenderLayer(block, RenderType.getCutoutMipped())
-				is IBlockLayerTranslucent  -> RenderTypeLookup.setRenderLayer(block, RenderType.getTranslucent())
+			when ((block as? IHeeBlock)?.renderLayer) {
+				CUTOUT        -> RenderTypeLookup.setRenderLayer(block, RenderType.getCutout())
+				CUTOUT_MIPPED -> RenderTypeLookup.setRenderLayer(block, RenderType.getCutoutMipped())
+				TRANSLUCENT   -> RenderTypeLookup.setRenderLayer(block, RenderType.getTranslucent())
+				else          -> continue
 			}
 		}
 		

@@ -1,7 +1,7 @@
 package chylex.hee.game.block
 
-import chylex.hee.client.render.block.IBlockLayerCutout
 import chylex.hee.game.block.properties.BlockBuilder
+import chylex.hee.game.block.properties.BlockRenderLayer.CUTOUT
 import chylex.hee.game.block.util.Property
 import chylex.hee.game.block.util.asVoxelShape
 import chylex.hee.game.world.generation.feature.basic.WhitebarkTreeGenerator
@@ -23,13 +23,16 @@ import net.minecraft.world.World
 import net.minecraft.world.server.ServerWorld
 import java.util.Random
 
-class BlockWhitebarkSapling(builder: BlockBuilder, private val generator: WhitebarkTreeGenerator<*>) : BlockEndPlant(builder), IGrowable, IBlockLayerCutout {
+class BlockWhitebarkSapling(builder: BlockBuilder, private val generator: WhitebarkTreeGenerator<*>) : BlockEndPlant(builder), IHeeBlock, IGrowable {
 	companion object {
 		val STAGE = Property.int("stage", 0..2)
 		val AABB = AxisAlignedBB(0.1, 0.0, 0.1, 0.9, 0.8, 0.9).asVoxelShape
 	}
 	
 	// Instance
+	
+	override val renderLayer
+		get() = CUTOUT
 	
 	init {
 		defaultState = stateContainer.baseState.with(STAGE, 0)

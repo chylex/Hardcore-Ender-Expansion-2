@@ -1,7 +1,7 @@
 package chylex.hee.game.block
 
-import chylex.hee.client.render.block.IBlockLayerCutout
 import chylex.hee.game.block.properties.BlockBuilder
+import chylex.hee.game.block.properties.BlockRenderLayer.CUTOUT
 import chylex.hee.game.block.util.asVoxelShape
 import chylex.hee.game.block.util.withFacing
 import chylex.hee.game.world.util.Facing6
@@ -29,7 +29,7 @@ import net.minecraft.world.IBlockReader
 import net.minecraft.world.IWorld
 import net.minecraft.world.IWorldReader
 
-class BlockGloomtorch(builder: BlockBuilder) : DirectionalBlock(builder.p), IBlockLayerCutout {
+class BlockGloomtorch(builder: BlockBuilder) : DirectionalBlock(builder.p), IHeeBlock {
 	private companion object {
 		private const val BB_SIDE_MIN = 0.421875
 		private const val BB_SIDE_MAX = 0.578125
@@ -48,6 +48,9 @@ class BlockGloomtorch(builder: BlockBuilder) : DirectionalBlock(builder.p), IBlo
 			return HorizontalFaceBlock.isSideSolidForDirection(world, pos, facing.opposite)
 		}
 	}
+	
+	override val renderLayer
+		get() = CUTOUT
 	
 	init {
 		defaultState = stateContainer.baseState.withFacing(UP)

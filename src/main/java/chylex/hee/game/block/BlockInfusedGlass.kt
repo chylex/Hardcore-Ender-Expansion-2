@@ -1,7 +1,7 @@
 package chylex.hee.game.block
 
-import chylex.hee.client.render.block.IBlockLayerTranslucent
 import chylex.hee.game.block.properties.BlockBuilder
+import chylex.hee.game.block.properties.BlockRenderLayer.TRANSLUCENT
 import chylex.hee.game.block.util.Property
 import chylex.hee.game.world.util.Facing6
 import chylex.hee.game.world.util.getBlock
@@ -20,7 +20,7 @@ import net.minecraft.util.Direction.WEST
 import net.minecraft.util.math.BlockPos
 import net.minecraft.world.IWorld
 
-class BlockInfusedGlass(builder: BlockBuilder) : AbstractGlassBlock(builder.p), IBlockLayerTranslucent {
+class BlockInfusedGlass(builder: BlockBuilder) : AbstractGlassBlock(builder.p), IHeeBlock {
 	companion object {
 		val CONNECT_DOWN = Property.bool("connect_d")
 		val CONNECT_UP = Property.bool("connect_u")
@@ -38,6 +38,9 @@ class BlockInfusedGlass(builder: BlockBuilder) : AbstractGlassBlock(builder.p), 
 			WEST to CONNECT_WEST
 		)
 	}
+	
+	override val renderLayer
+		get() = TRANSLUCENT
 	
 	init {
 		defaultState = Facing6.fold(stateContainer.baseState) { acc, facing -> acc.with(CONNECT_MAPPINGS.getValue(facing), false) }

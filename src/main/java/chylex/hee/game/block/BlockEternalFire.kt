@@ -1,7 +1,7 @@
 package chylex.hee.game.block
 
-import chylex.hee.client.render.block.IBlockLayerCutout
 import chylex.hee.game.block.properties.BlockBuilder
+import chylex.hee.game.block.properties.BlockRenderLayer.CUTOUT
 import chylex.hee.game.block.util.with
 import chylex.hee.game.entity.damage.Damage
 import chylex.hee.game.entity.damage.IDamageDealer.Companion.TITLE_IN_FIRE
@@ -44,11 +44,14 @@ import net.minecraftforge.event.entity.player.PlayerInteractEvent
 import java.util.Random
 import kotlin.math.max
 
-class BlockEternalFire(builder: BlockBuilder) : FireBlock(builder.p), IBlockLayerCutout {
+class BlockEternalFire(builder: BlockBuilder) : FireBlock(builder.p), IHeeBlock {
 	private companion object {
 		private val PARTICLE_SMOKE = ParticleSpawnerVanilla(LARGE_SMOKE)
 		private val DAMAGE_CONTACT = Damage(PEACEFUL_EXCLUSION, *ALL_PROTECTIONS, FIRE_TYPE(12 * 20), RAPID_DAMAGE(5))
 	}
+	
+	override val renderLayer
+		get() = CUTOUT
 	
 	init {
 		MinecraftForge.EVENT_BUS.register(this)

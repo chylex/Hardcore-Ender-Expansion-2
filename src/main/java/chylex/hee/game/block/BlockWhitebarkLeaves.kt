@@ -1,7 +1,7 @@
 package chylex.hee.game.block
 
-import chylex.hee.client.render.block.IBlockLayerCutout
 import chylex.hee.game.block.properties.BlockBuilder
+import chylex.hee.game.block.properties.BlockRenderLayer.CUTOUT
 import net.minecraft.block.BlockState
 import net.minecraft.block.LeavesBlock
 import net.minecraft.entity.EntitySpawnPlacementRegistry.PlacementType
@@ -16,7 +16,10 @@ import net.minecraft.util.math.BlockPos
 import net.minecraft.world.IBlockReader
 import net.minecraft.world.World
 
-class BlockWhitebarkLeaves(builder: BlockBuilder) : LeavesBlock(builder.p), IBlockLayerCutout {
+class BlockWhitebarkLeaves(builder: BlockBuilder) : LeavesBlock(builder.p), IHeeBlock {
+	override val renderLayer
+		get() = CUTOUT
+	
 	override fun harvestBlock(world: World, player: PlayerEntity, pos: BlockPos, state: BlockState, tile: TileEntity?, stack: ItemStack) {
 		if (!world.isRemote && stack.item === Items.SHEARS) {
 			player.addStat(Stats.BLOCK_MINED[this])

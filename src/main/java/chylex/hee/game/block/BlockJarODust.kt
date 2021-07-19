@@ -1,8 +1,8 @@
 package chylex.hee.game.block
 
-import chylex.hee.client.render.block.IBlockLayerTranslucent
 import chylex.hee.game.block.entity.TileEntityJarODust
 import chylex.hee.game.block.properties.BlockBuilder
+import chylex.hee.game.block.properties.BlockRenderLayer.TRANSLUCENT
 import chylex.hee.game.fx.util.playServer
 import chylex.hee.game.item.util.size
 import chylex.hee.game.mechanics.dust.DustLayers
@@ -47,10 +47,13 @@ import net.minecraft.world.IWorld
 import net.minecraft.world.IWorldReader
 import net.minecraft.world.World
 
-class BlockJarODust(builder: BlockBuilder) : BlockSimpleShaped(builder, AABB), IBlockLayerTranslucent {
+class BlockJarODust(builder: BlockBuilder) : BlockSimpleShaped(builder, AABB) {
 	companion object {
 		val AABB = AxisAlignedBB(0.1875, 0.0, 0.1875, 0.8125, 0.84375, 0.8125)
 	}
+	
+	override val renderLayer
+		get() = TRANSLUCENT
 	
 	override fun hasTileEntity(state: BlockState): Boolean {
 		return true

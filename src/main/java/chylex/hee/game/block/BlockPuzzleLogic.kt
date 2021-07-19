@@ -1,11 +1,11 @@
 package chylex.hee.game.block
 
-import chylex.hee.client.render.block.IBlockLayerCutout
 import chylex.hee.client.util.MC
 import chylex.hee.game.block.BlockPuzzleLogic.State.ACTIVE
 import chylex.hee.game.block.BlockPuzzleLogic.State.DISABLED
 import chylex.hee.game.block.BlockPuzzleLogic.State.INACTIVE
 import chylex.hee.game.block.properties.BlockBuilder
+import chylex.hee.game.block.properties.BlockRenderLayer.CUTOUT
 import chylex.hee.game.block.properties.BlockTint
 import chylex.hee.game.block.util.Property
 import chylex.hee.game.block.util.withFacing
@@ -52,7 +52,7 @@ import net.minecraft.world.IBlockDisplayReader
 import net.minecraft.world.World
 import java.util.Random
 
-sealed class BlockPuzzleLogic(builder: BlockBuilder) : BlockSimple(builder), IBlockLayerCutout {
+sealed class BlockPuzzleLogic(builder: BlockBuilder) : BlockSimple(builder) {
 	companion object {
 		val STATE = Property.enum<State>("state")
 		
@@ -189,6 +189,9 @@ sealed class BlockPuzzleLogic(builder: BlockBuilder) : BlockSimple(builder), IBl
 			return serializableName
 		}
 	}
+	
+	override val renderLayer
+		get() = CUTOUT
 	
 	init {
 		defaultState = stateContainer.baseState.with(STATE, ACTIVE)
