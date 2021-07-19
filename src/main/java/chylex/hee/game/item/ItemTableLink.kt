@@ -31,7 +31,6 @@ import chylex.hee.util.nbt.hasKey
 import chylex.hee.util.nbt.putPos
 import net.minecraft.entity.Entity
 import net.minecraft.entity.item.ItemEntity
-import net.minecraft.item.Item
 import net.minecraft.item.ItemStack
 import net.minecraft.item.ItemUseContext
 import net.minecraft.network.PacketBuffer
@@ -43,7 +42,7 @@ import net.minecraft.util.math.BlockPos
 import net.minecraft.world.World
 import java.util.Random
 
-class ItemTableLink(properties: Properties) : Item(properties) {
+class ItemTableLink(properties: Properties) : HeeItem(properties) {
 	companion object {
 		private const val POS_TAG = "StoredPos"
 		private const val TIME_TAG = "StoredTime"

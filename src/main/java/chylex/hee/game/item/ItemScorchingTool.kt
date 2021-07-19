@@ -29,7 +29,7 @@ class ItemScorchingTool(
 	properties: Properties,
 	private val toolType: ToolType,
 	attackSpeed: Float,
-) : ToolItem(0F, attackSpeed, SCORCHING_TOOL, emptySet(), properties.addToolType(toolType, SCORCHING_TOOL.harvestLevel)), IScorchingItem, IBlockHarvestDropsOverride, ICustomRepairBehavior by ScorchingHelper.Repair(SCORCHING_TOOL) {
+) : ToolItem(0F, attackSpeed, SCORCHING_TOOL, emptySet(), properties.addToolType(toolType, SCORCHING_TOOL.harvestLevel)), IHeeItem, IScorchingItem, IBlockHarvestDropsOverride, ICustomRepairBehavior by ScorchingHelper.Repair(SCORCHING_TOOL) {
 	override val material
 		get() = SCORCHING_TOOL
 	

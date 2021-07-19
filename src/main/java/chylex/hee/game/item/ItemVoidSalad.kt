@@ -6,6 +6,7 @@ import chylex.hee.game.entity.damage.Damage
 import chylex.hee.game.entity.damage.IDamageDealer.Companion.TITLE_STARVE
 import chylex.hee.game.entity.damage.IDamageProcessor.Companion.MAGIC_TYPE
 import chylex.hee.game.entity.damage.IDamageProcessor.Companion.NON_LETHAL
+import chylex.hee.game.item.properties.ItemModel
 import chylex.hee.game.item.util.ItemProperty
 import chylex.hee.game.potion.util.makeInstance
 import chylex.hee.system.heeTag
@@ -18,7 +19,6 @@ import chylex.hee.util.nbt.putEnum
 import net.minecraft.entity.LivingEntity
 import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.item.Food
-import net.minecraft.item.Item
 import net.minecraft.item.ItemStack
 import net.minecraft.item.Items
 import net.minecraft.potion.Effects
@@ -26,7 +26,7 @@ import net.minecraft.util.SoundEvents
 import net.minecraft.world.World
 import net.minecraftforge.event.entity.player.PlayerEvent
 
-class ItemVoidSalad(properties: Properties) : Item(properties) {
+class ItemVoidSalad(properties: Properties) : HeeItem(properties) {
 	@SubscribeAllEvents(modid = HEE.ID)
 	companion object {
 		private val DAMAGE_SAFE = Damage(MAGIC_TYPE, NON_LETHAL)
@@ -71,6 +71,15 @@ class ItemVoidSalad(properties: Properties) : Item(properties) {
 	enum class Type {
 		SINGLE, DOUBLE, MEGA
 	}
+	
+	override val model: ItemModel
+		get() = ItemModel.WithOverrides(
+			ItemModel.Simple,
+			Resource.Custom("void_salad_type") to mapOf(
+				1F to ItemModel.Named("void_void_salad"),
+				2F to ItemModel.Named("mega_void_salad"),
+			)
+		)
 	
 	override fun getUseDuration(stack: ItemStack): Int {
 		return 70

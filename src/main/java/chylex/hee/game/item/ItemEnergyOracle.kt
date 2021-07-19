@@ -9,6 +9,7 @@ import chylex.hee.game.item.infusion.Infusion
 import chylex.hee.game.item.infusion.Infusion.CAPACITY
 import chylex.hee.game.item.infusion.Infusion.DISTANCE
 import chylex.hee.game.item.infusion.InfusionTag
+import chylex.hee.game.item.properties.ItemModel
 import chylex.hee.game.item.properties.ItemTint
 import chylex.hee.game.item.util.ItemProperty
 import chylex.hee.game.mechanics.energy.IEnergyQuantity.Units
@@ -102,6 +103,15 @@ class ItemEnergyOracle(properties: Properties) : ItemAbstractEnergyUser(properti
 			}
 		}
 	}
+	
+	override val model
+		get() = ItemModel.WithOverrides(
+			ItemModel.Layers("energy_oracle", "energy_oracle_indicator_inactive"),
+			Resource.Custom("activity_intensity") to mapOf(
+				0.5F to ItemModel.Suffixed("_active_mild", ItemModel.Layers("energy_oracle", "energy_oracle_indicator_active_mild")),
+				1.0F to ItemModel.Suffixed("_active_full", ItemModel.Layers("energy_oracle", "energy_oracle_indicator_active_full")),
+			)
+		)
 	
 	// Energy properties
 	

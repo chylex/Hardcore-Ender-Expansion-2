@@ -2,6 +2,7 @@ package chylex.hee.game.item
 
 import chylex.hee.game.Resource
 import chylex.hee.game.item.properties.CustomToolMaterial.VOID_BUCKET
+import chylex.hee.game.item.properties.ItemModel
 import chylex.hee.game.item.properties.ItemTint
 import chylex.hee.game.item.util.ItemProperty
 import chylex.hee.game.item.util.cleanupNBT
@@ -59,6 +60,17 @@ class ItemVoidBucket(properties: Properties) : ItemAbstractVoidTool(properties, 
 			return !pos.getFluidState(world).isEmpty && world.isBlockModifiable(player, pos) && BlockEditor.canEdit(pos, player, stack)
 		}
 	}
+	
+	override val model
+		get() = ItemModel.WithOverrides(
+			ItemModel.Simple,
+			Resource.Custom("void_bucket_cooldown") to mapOf(
+				0.01F to ItemModel.Suffixed("_fluid_level_1", ItemModel.Layers("void_bucket", "void_bucket_fluid_level_1")),
+				0.30F to ItemModel.Suffixed("_fluid_level_2", ItemModel.Layers("void_bucket", "void_bucket_fluid_level_2")),
+				0.50F to ItemModel.Suffixed("_fluid_level_3", ItemModel.Layers("void_bucket", "void_bucket_fluid_level_3")),
+				0.70F to ItemModel.Suffixed("_fluid_level_4", ItemModel.Layers("void_bucket", "void_bucket_fluid_level_4")),
+			)
+		)
 	
 	override fun getDestroySpeed(stack: ItemStack, state: BlockState): Float {
 		return 1F

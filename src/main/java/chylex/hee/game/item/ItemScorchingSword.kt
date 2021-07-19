@@ -43,7 +43,7 @@ import kotlin.math.sin
 
 class ItemScorchingSword(
 	properties: Properties,
-) : SwordItem(SCORCHING_SWORD, 0, -2.4F, properties), IScorchingItem, ICustomRepairBehavior by ScorchingHelper.Repair(SCORCHING_SWORD) {
+) : SwordItem(SCORCHING_SWORD, 0, -2.4F, properties), IHeeItem, IScorchingItem, ICustomRepairBehavior by ScorchingHelper.Repair(SCORCHING_SWORD) {
 	override val material
 		get() = SCORCHING_SWORD
 	

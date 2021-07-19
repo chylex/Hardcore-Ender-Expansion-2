@@ -5,7 +5,6 @@ import chylex.hee.game.entity.item.EntityItemCauldronTrigger
 import chylex.hee.game.world.util.BlockEditor
 import chylex.hee.game.world.util.getBlock
 import net.minecraft.entity.Entity
-import net.minecraft.item.Item
 import net.minecraft.item.ItemStack
 import net.minecraft.item.ItemUseContext
 import net.minecraft.util.ActionResultType
@@ -14,7 +13,7 @@ import net.minecraft.util.ActionResultType.PASS
 import net.minecraft.util.ActionResultType.SUCCESS
 import net.minecraft.world.World
 
-class ItemEndPowder(properties: Properties) : Item(properties) {
+class ItemEndPowder(properties: Properties) : HeeItem(properties) {
 	override fun onItemUse(context: ItemUseContext): ActionResultType {
 		val player = context.player ?: return FAIL
 		val world = context.world

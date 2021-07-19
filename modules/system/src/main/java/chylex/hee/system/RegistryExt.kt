@@ -9,6 +9,12 @@ import net.minecraftforge.fml.ModLoadingContext
 import net.minecraftforge.registries.IForgeRegistry
 import net.minecraftforge.registries.IForgeRegistryEntry
 
+val IForgeRegistryEntry<*>.path: String
+	get() = registryName!!.path
+
+val IForgeRegistryEntry<*>.isVanilla
+	get() = Resource.isVanilla(registryName!!)
+
 fun <T> IForgeRegistryEntry<T>.useVanillaName(from: IForgeRegistryEntry<*>) {
 	val name = from.registryName!!
 	HEE.log.info("Overriding vanilla ${this.registryType.simpleName}: ${name.path}")

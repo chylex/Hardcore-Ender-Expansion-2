@@ -6,6 +6,7 @@ import chylex.hee.game.inventory.util.IInventoryFromPlayerItem
 import chylex.hee.game.inventory.util.allSlots
 import chylex.hee.game.inventory.util.getStack
 import chylex.hee.game.inventory.util.setStack
+import chylex.hee.game.item.properties.ItemModel
 import chylex.hee.game.item.util.enchantmentMap
 import chylex.hee.game.item.util.isNotEmpty
 import chylex.hee.game.item.util.nbtOrNull
@@ -224,6 +225,12 @@ class ItemAmuletOfRecovery(properties: Properties) : ItemAbstractEnergyUser(prop
 			return true
 		}
 	}
+	
+	override val model
+		get() = ItemModel.Multi(
+			ItemModel.Simple,
+			ItemModel.Suffixed("_held")
+		)
 	
 	// Initialization
 	

@@ -7,6 +7,7 @@ import chylex.hee.game.block.dispenser.DispenseExperienceBottle
 import chylex.hee.game.block.dispenser.DispenseWaterExtinguishIgneousPlate
 import chylex.hee.game.block.fluid.FluidEnderGoo
 import chylex.hee.game.block.fluid.FluidEnderGooPurified
+import chylex.hee.game.item.HeeItem
 import chylex.hee.game.item.ItemAmuletOfRecovery
 import chylex.hee.game.item.ItemBindingEssence
 import chylex.hee.game.item.ItemBlockHead
@@ -32,6 +33,7 @@ import chylex.hee.game.item.ItemScaleOfFreefall
 import chylex.hee.game.item.ItemScorchingSword
 import chylex.hee.game.item.ItemScorchingTool
 import chylex.hee.game.item.ItemSpatialDashGem
+import chylex.hee.game.item.ItemSpawnEgg
 import chylex.hee.game.item.ItemTableCore
 import chylex.hee.game.item.ItemTableLink
 import chylex.hee.game.item.ItemTalismanOfGriefing
@@ -55,11 +57,11 @@ import net.minecraft.block.DispenserBlock
 import net.minecraft.item.Item
 import net.minecraft.item.ItemGroup
 import net.minecraft.item.Items
-import net.minecraft.item.SpawnEggItem
 import net.minecraft.tags.ItemTags
 import net.minecraftforge.event.RegistryEvent
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber.Bus.MOD
 
+@Suppress("unused")
 @SubscribeAllEvents(modid = HEE.ID, bus = MOD)
 object ModItems {
 	private val baseProps
@@ -70,33 +72,33 @@ object ModItems {
 	
 	// Items: Raw Resources
 	
-	@JvmField val ETHEREUM          = Item(defaultProps) named "ethereum"
-	@JvmField val ANCIENT_DUST      = Item(defaultProps) named "ancient_dust"
+	@JvmField val ETHEREUM          = HeeItem(defaultProps) named "ethereum"
+	@JvmField val ANCIENT_DUST      = HeeItem(defaultProps) named "ancient_dust"
 	@JvmField val END_POWDER        = ItemEndPowder(defaultProps) named "end_powder"
-	@JvmField val STARDUST          = Item(defaultProps) named "stardust"
-	@JvmField val ENDIUM_INGOT      = Item(defaultProps) named "endium_ingot"
-	@JvmField val ENDIUM_NUGGET     = Item(defaultProps) named "endium_nugget"
-	@JvmField val OBSIDIAN_FRAGMENT = Item(defaultProps) named "obsidian_fragment"
+	@JvmField val STARDUST          = HeeItem(defaultProps) named "stardust"
+	@JvmField val ENDIUM_INGOT      = HeeItem(defaultProps) named "endium_ingot"
+	@JvmField val ENDIUM_NUGGET     = HeeItem(defaultProps) named "endium_nugget"
+	@JvmField val OBSIDIAN_FRAGMENT = HeeItem(defaultProps) named "obsidian_fragment"
 	@JvmField val IGNEOUS_ROCK      = ItemIgneousRock(defaultProps) named "igneous_rock"
 	@JvmField val PUZZLE_MEDALLION  = ItemPuzzleMedallion(defaultProps) named "puzzle_medallion"
-	@JvmField val INFERNIUM         = Item(defaultProps) named "infernium"
-	@JvmField val INFERNIUM_INGOT   = Item(defaultProps) named "infernium_ingot"
-	@JvmField val AURICION          = Item(defaultProps) named "auricion"
-	@JvmField val DRAGON_SCALE      = Item(defaultProps) named "dragon_scale"
-	@JvmField val INSTABILITY_ORB   = Item(defaultProps) named "instability_orb"
-	@JvmField val ECTOPLASM         = Item(defaultProps) named "ectoplasm"
-	@JvmField val ENCHANTED_CLAW    = Item(defaultProps) named "enchanted_claw"
+	@JvmField val INFERNIUM         = HeeItem(defaultProps) named "infernium"
+	@JvmField val INFERNIUM_INGOT   = HeeItem(defaultProps) named "infernium_ingot"
+	@JvmField val AURICION          = HeeItem(defaultProps) named "auricion"
+	@JvmField val DRAGON_SCALE      = HeeItem(defaultProps) named "dragon_scale"
+	@JvmField val INSTABILITY_ORB   = HeeItem(defaultProps) named "instability_orb"
+	@JvmField val ECTOPLASM         = HeeItem(defaultProps) named "ectoplasm"
+	@JvmField val ENCHANTED_CLAW    = HeeItem(defaultProps) named "enchanted_claw"
 	
 	// Items: Manufactured Resources
 	
-	@JvmField val ALTERATION_NEXUS         = Item(defaultProps) named "alteration_nexus"
-	@JvmField val VOID_ESSENCE             = Item(defaultProps) named "void_essence"
-	@JvmField val OBSIDIAN_ROD             = Item(defaultProps) named "obsidian_rod"
-	@JvmField val PURITY_EXTRACT           = Item(defaultProps) named "purity_extract"
-	@JvmField val STATIC_CORE              = Item(defaultProps) named "static_core"
-	@JvmField val TICKING_CORE             = Item(defaultProps) named "ticking_core"
-	@JvmField val DIRTY_INFERNIUM_INGOT    = Item(defaultProps) named "dirty_infernium_ingot"
-	@JvmField val AMELIOR                  = Item(defaultProps) named "amelior"
+	@JvmField val ALTERATION_NEXUS         = HeeItem(defaultProps) named "alteration_nexus"
+	@JvmField val VOID_ESSENCE             = HeeItem(defaultProps) named "void_essence"
+	@JvmField val OBSIDIAN_ROD             = HeeItem(defaultProps) named "obsidian_rod"
+	@JvmField val PURITY_EXTRACT           = HeeItem(defaultProps) named "purity_extract"
+	@JvmField val STATIC_CORE              = HeeItem(defaultProps) named "static_core"
+	@JvmField val TICKING_CORE             = HeeItem(defaultProps) named "ticking_core"
+	@JvmField val DIRTY_INFERNIUM_INGOT    = HeeItem(defaultProps) named "dirty_infernium_ingot"
+	@JvmField val AMELIOR                  = HeeItem(defaultProps) named "amelior"
 	@JvmField val REVITALIZATION_SUBSTANCE = ItemRevitalizationSubstance(baseProps.maxStackSize(16)) named "revitalization_substance"
 	@JvmField val BINDING_ESSENCE          = ItemBindingEssence(baseProps.maxStackSize(16)) named "binding_essence"
 	
@@ -114,7 +116,7 @@ object ModItems {
 	// Items: Utilities
 	
 	@JvmField val TABLE_LINK        = ItemTableLink(defaultProps) named "table_link"
-	@JvmField val KNOWLEDGE_NOTE    = Item(defaultProps) named "knowledge_note" // TODO
+	@JvmField val KNOWLEDGE_NOTE    = HeeItem(defaultProps) named "knowledge_note" // TODO
 	@JvmField val ENDERMAN_HEAD     = ItemBlockHead(ModBlocks.ENDERMAN_HEAD, ModBlocks.ENDERMAN_WALL_HEAD, defaultProps) named "enderman_head"
 	@JvmField val EXPERIENCE_BOTTLE = ItemExperienceBottleCustom(defaultProps) named "experience_bottle"
 	
@@ -144,7 +146,7 @@ object ModItems {
 	@JvmField val SPATIAL_DASH_GEM    = ItemSpatialDashGem(toolProps) named "spatial_dash_gem"
 	@JvmField val LINKING_GEM         = ItemSpatialDashGem(toolProps) named "linking_gem" // TODO
 	@JvmField val PORTAL_TOKEN        = ItemPortalToken(baseProps.maxStackSize(ItemPortalToken.MAX_STACK_SIZE)) named "portal_token"
-	@JvmField val BLANK_TOKEN         = Item(baseProps.maxStackSize(ItemPortalToken.MAX_STACK_SIZE)) named "blank_token"
+	@JvmField val BLANK_TOKEN         = HeeItem(baseProps.maxStackSize(ItemPortalToken.MAX_STACK_SIZE)) named "blank_token"
 	
 	// Items: Trinkets
 	
@@ -158,13 +160,13 @@ object ModItems {
 	
 	// Items: Spawn Eggs
 	
-	@JvmField val SPAWN_ENDER_EYE             = SpawnEggItem(ModEntities.ENDER_EYE, RGB(22u).i, RGB(219, 58, 115).i, baseProps) named "ender_eye_spawn_egg"
-	@JvmField val SPAWN_ANGRY_ENDERMAN        = SpawnEggItem(ModEntities.ANGRY_ENDERMAN, RGB(21u).i, RGB(111, 75, 36).i, baseProps) named "angry_enderman_spawn_egg"
-	@JvmField val SPAWN_BLOBBY                = SpawnEggItem(ModEntities.BLOBBY, RGB(103, 140, 94).i, RGB(255u).i, baseProps) named "blobby_spawn_egg"
-	@JvmField val SPAWN_ENDERMITE_INSTABILITY = SpawnEggItem(ModEntities.ENDERMITE_INSTABILITY, RGB(21u).i, RGB(94, 122, 108).i, baseProps) named "endermite_instability_spawn_egg"
-	@JvmField val SPAWN_SPIDERLING            = SpawnEggItem(ModEntities.SPIDERLING, RGB(32, 30, 16).i, RGB(182, 25, 0).i, baseProps) named "spiderling_spawn_egg"
-	@JvmField val SPAWN_UNDREAD               = SpawnEggItem(ModEntities.UNDREAD, TerritoryType.FORGOTTEN_TOMBS.desc.colors.tokenTop.i, TerritoryType.FORGOTTEN_TOMBS.desc.colors.tokenBottom.i, baseProps) named "undread_spawn_egg"
-	@JvmField val SPAWN_VAMPIRE_BAT           = SpawnEggItem(ModEntities.VAMPIRE_BAT, RGB(76, 62, 48).i, RGB(66, 16, 15).i, baseProps) named "vampire_bat_spawn_egg"
+	@JvmField val SPAWN_ENDER_EYE             = ItemSpawnEgg(ModEntities.ENDER_EYE, RGB(22u), RGB(219, 58, 115), baseProps) named "ender_eye_spawn_egg"
+	@JvmField val SPAWN_ANGRY_ENDERMAN        = ItemSpawnEgg(ModEntities.ANGRY_ENDERMAN, RGB(21u), RGB(111, 75, 36), baseProps) named "angry_enderman_spawn_egg"
+	@JvmField val SPAWN_BLOBBY                = ItemSpawnEgg(ModEntities.BLOBBY, RGB(103, 140, 94), RGB(255u), baseProps) named "blobby_spawn_egg"
+	@JvmField val SPAWN_ENDERMITE_INSTABILITY = ItemSpawnEgg(ModEntities.ENDERMITE_INSTABILITY, RGB(21u), RGB(94, 122, 108), baseProps) named "endermite_instability_spawn_egg"
+	@JvmField val SPAWN_SPIDERLING            = ItemSpawnEgg(ModEntities.SPIDERLING, RGB(32, 30, 16), RGB(182, 25, 0), baseProps) named "spiderling_spawn_egg"
+	@JvmField val SPAWN_UNDREAD               = ItemSpawnEgg(ModEntities.UNDREAD, TerritoryType.FORGOTTEN_TOMBS.desc.colors.tokenTop, TerritoryType.FORGOTTEN_TOMBS.desc.colors.tokenBottom, baseProps) named "undread_spawn_egg"
+	@JvmField val SPAWN_VAMPIRE_BAT           = ItemSpawnEgg(ModEntities.VAMPIRE_BAT, RGB(76, 62, 48), RGB(66, 16, 15), baseProps) named "vampire_bat_spawn_egg"
 	
 	// Registry
 	

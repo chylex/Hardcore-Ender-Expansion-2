@@ -21,7 +21,7 @@ import net.minecraft.util.ActionResultType.SUCCESS
 import net.minecraft.util.SoundCategory
 import net.minecraft.util.SoundEvents
 
-open class ItemBucketWithCauldron(fluid: Fluid, private val cauldronBlock: CauldronBlock, properties: Properties) : BucketItem(supply(fluid), properties) {
+open class ItemBucketWithCauldron(fluid: Fluid, private val cauldronBlock: CauldronBlock, properties: Properties) : BucketItem(supply(fluid), properties), IHeeItem {
 	override fun onItemUse(context: ItemUseContext): ActionResultType {
 		val world = context.world
 		val pos = context.pos

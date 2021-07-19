@@ -1,7 +1,6 @@
 package chylex.hee.datagen.client.util
 
 import chylex.hee.datagen.Callback
-import chylex.hee.datagen.path
 import chylex.hee.datagen.r
 import chylex.hee.datagen.safe
 import chylex.hee.datagen.safeUnit
@@ -9,6 +8,7 @@ import chylex.hee.datagen.then
 import chylex.hee.game.Resource
 import chylex.hee.game.block.BlockAbstractTable
 import chylex.hee.system.named
+import chylex.hee.system.path
 import net.minecraft.block.AbstractBlock
 import net.minecraft.block.Block
 import net.minecraft.block.Blocks
@@ -57,17 +57,17 @@ fun BlockModelProvider.particle(block: Block, particle: ResourceLocation) = safe
 	this.getBuilder(block.path).texture("particle", particle)
 }
 
-fun BlockModelProvider.multi(block: Block, parent: ResourceLocation, suffixes: Array<String>, callback: BlockModelBuilder.(Callback<Block>) -> Unit) {
+fun BlockModelProvider.multi(block: Block, parent: ResourceLocation, suffixes: Array<String>, callback: BlockModelBuilder.(Callback) -> Unit) {
 	for (suffix in suffixes) {
 		val path = block.path + suffix
 		
 		this.safeUnit {
-			this.getBuilder(path).parent(getExistingFile(parent)).callback(Callback(block, suffix, path))
+			this.getBuilder(path).parent(getExistingFile(parent)).callback(Callback(suffix, path))
 		}
 	}
 }
 
-fun BlockModelProvider.multi(block: Block, parent: ResourceLocation, suffixes: IntRange, callback: BlockModelBuilder.(Callback<Block>) -> Unit) {
+fun BlockModelProvider.multi(block: Block, parent: ResourceLocation, suffixes: IntRange, callback: BlockModelBuilder.(Callback) -> Unit) {
 	multi(block, parent, Array(1 + suffixes.last - suffixes.first) { "_${suffixes.first + it}" }, callback)
 }
 

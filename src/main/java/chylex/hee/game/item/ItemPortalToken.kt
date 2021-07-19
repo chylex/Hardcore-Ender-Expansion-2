@@ -8,6 +8,7 @@ import chylex.hee.game.block.BlockVoidPortalInner
 import chylex.hee.game.entity.item.EntityTokenHolder
 import chylex.hee.game.entity.util.EntityPortalContact
 import chylex.hee.game.entity.util.selectExistingEntities
+import chylex.hee.game.item.properties.ItemModel
 import chylex.hee.game.item.properties.ItemTint
 import chylex.hee.game.item.util.ItemProperty
 import chylex.hee.game.territory.TerritoryType
@@ -84,6 +85,32 @@ class ItemPortalToken(properties: Properties) : HeeItem(properties) {
 		val concreteTranslationKey
 			get() = "item.hee.portal_token.$translationKeySuffix.concrete"
 	}
+	
+	override val model: ItemModel
+		get() = ItemModel.WithOverrides(
+			ItemModel.Layers("portal_token_outline", "portal_token_color_top", "portal_token_color_bottom"),
+			Resource.Custom("token_type") to mapOf(
+				1.0F to ItemModel.Suffixed("_rare", ItemModel.Layers(
+					"portal_token_outline",
+					"portal_token_color_top",
+					"portal_token_color_bottom",
+					"portal_token_border_rare"
+				)),
+				1.5F to ItemModel.Suffixed("_rare_corrupted", ItemModel.Layers(
+					"portal_token_outline",
+					"portal_token_color_top",
+					"portal_token_color_bottom",
+					"portal_token_border_rare",
+					"portal_token_corruption"
+				)),
+				2.0F to ItemModel.Suffixed("_solitary", ItemModel.Layers(
+					"portal_token_outline",
+					"portal_token_color_top",
+					"portal_token_color_bottom",
+					"portal_token_border_solitary"
+				)),
+			)
+		)
 	
 	// Token construction
 	

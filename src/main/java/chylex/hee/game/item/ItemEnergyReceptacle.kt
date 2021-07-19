@@ -7,6 +7,7 @@ import chylex.hee.game.item.infusion.Infusion.SAFETY
 import chylex.hee.game.item.infusion.Infusion.STABILITY
 import chylex.hee.game.item.infusion.InfusionList
 import chylex.hee.game.item.infusion.InfusionTag
+import chylex.hee.game.item.properties.ItemModel
 import chylex.hee.game.item.properties.ItemTint
 import chylex.hee.game.item.util.ItemProperty
 import chylex.hee.game.mechanics.energy.ClusterSnapshot
@@ -102,6 +103,14 @@ class ItemEnergyReceptacle(properties: Properties) : ItemAbstractInfusable(prope
 			return false
 		}
 	}
+	
+	override val model
+		get() = ItemModel.WithOverrides(
+			ItemModel.Simple,
+			Resource.Custom("has_cluster") to mapOf(
+				1F to ItemModel.Suffixed("_with_cluster", ItemModel.Layers("energy_receptacle", "energy_receptacle_cluster"))
+			)
+		)
 	
 	override fun onItemUse(context: ItemUseContext): ActionResultType {
 		val player = context.player ?: return FAIL

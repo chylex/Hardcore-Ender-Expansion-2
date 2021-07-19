@@ -4,6 +4,7 @@ import chylex.hee.game.Resource
 import chylex.hee.game.item.infusion.Infusion
 import chylex.hee.game.item.infusion.InfusionList
 import chylex.hee.game.item.infusion.InfusionTag
+import chylex.hee.game.item.properties.ItemModel
 import chylex.hee.game.item.properties.ItemTint
 import chylex.hee.util.color.RGB
 import chylex.hee.util.forge.Side
@@ -19,6 +20,14 @@ import net.minecraft.util.text.TranslationTextComponent
 import net.minecraft.world.World
 
 class ItemBindingEssence(properties: Properties) : ItemAbstractInfusable(properties) {
+	override val model
+		get() = ItemModel.Layers(
+			"binding_essence_primary",
+			"binding_essence_secondary",
+			"binding_essence_tertiary",
+			"binding_essence_quaternary"
+		)
+	
 	override fun canApplyInfusion(infusion: Infusion): Boolean {
 		return true
 	}

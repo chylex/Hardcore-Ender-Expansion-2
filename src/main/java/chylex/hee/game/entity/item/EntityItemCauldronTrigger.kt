@@ -43,13 +43,13 @@ class EntityItemCauldronTrigger : EntityItemBase {
 	constructor(world: World, stack: ItemStack, replacee: Entity) : super(ModEntities.ITEM_CAULDRON_TRIGGER, world, stack, replacee)
 	
 	companion object {
-		private val RECIPE_DRAGONS_BREATH = arrayOf(
+		private val RECIPE_DRAGONS_BREATH = arrayOf<Pair<Item, Int>>(
 			ModItems.END_POWDER to 1,
 			ModItems.ANCIENT_DUST to 1,
 			ModItems.DRAGON_SCALE to 1
 		)
 		
-		private val RECIPE_PURITY_EXTRACT = arrayOf(
+		private val RECIPE_PURITY_EXTRACT = arrayOf<Pair<Item, Int>>(
 			ModItems.END_POWDER to 3,
 			ModItems.VOID_ESSENCE to 1
 		)

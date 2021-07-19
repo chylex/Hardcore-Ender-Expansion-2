@@ -3,6 +3,7 @@ package chylex.hee.game.item
 import chylex.hee.game.entity.projectile.EntityProjectileExperienceBottle
 import chylex.hee.game.entity.util.posVec
 import chylex.hee.game.fx.util.playServer
+import chylex.hee.game.item.properties.ItemModel
 import chylex.hee.game.item.util.size
 import chylex.hee.system.heeTag
 import chylex.hee.system.heeTagOrNull
@@ -28,12 +29,15 @@ import net.minecraft.util.text.TranslationTextComponent
 import net.minecraft.world.World
 import kotlin.math.min
 
-class ItemExperienceBottleCustom(builder: Properties) : ExperienceBottleItem(builder) {
+class ItemExperienceBottleCustom(builder: Properties) : ExperienceBottleItem(builder), IHeeItem {
 	companion object {
 		private const val EXPERIENCE_TAG = "Experience"
 		
 		const val MAX_EXPERIENCE = 25
 	}
+	
+	override val model
+		get() = ItemModel.Copy(Items.EXPERIENCE_BOTTLE)
 	
 	private fun setExperienceAmount(stack: ItemStack, amount: Int) {
 		if (amount == 0) {

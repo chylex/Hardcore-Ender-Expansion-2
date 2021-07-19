@@ -1,12 +1,12 @@
 package chylex.hee.datagen.client.util
 
 import chylex.hee.datagen.Callback
-import chylex.hee.datagen.path
 import chylex.hee.datagen.r
 import chylex.hee.datagen.safe
 import chylex.hee.datagen.safeUnit
 import chylex.hee.game.Resource
 import chylex.hee.system.named
+import chylex.hee.system.path
 import net.minecraft.block.Block
 import net.minecraft.item.Item
 import net.minecraft.util.IItemProvider
@@ -45,7 +45,7 @@ fun ItemModelProvider.simple(item: IItemProvider, texture: ResourceLocation = it
 	this.build(item).parent(generated).texture("layer0", texture)
 }
 
-fun ItemModelProvider.layers(item: Item, layers: Array<String>) = safe {
+fun ItemModelProvider.layers(item: Item, layers: Array<out String>) = safe {
 	var builder = this.getBuilder(item.path).parent(generated)
 	
 	for ((index, layer) in layers.withIndex()) {
@@ -55,17 +55,17 @@ fun ItemModelProvider.layers(item: Item, layers: Array<String>) = safe {
 	builder
 }
 
-fun ItemModelProvider.multi(item: IItemProvider, parent: ResourceLocation, suffixes: Array<String>, callback: ItemModelBuilder.(Callback<IItemProvider>) -> Unit) {
+fun ItemModelProvider.multi(item: IItemProvider, parent: ResourceLocation, suffixes: Array<String>, callback: ItemModelBuilder.(Callback) -> Unit) {
 	for (suffix in suffixes) {
 		val path = item.path() + suffix
 		
 		this.safeUnit {
-			this.getBuilder(path).parent(getExistingFile(parent)).callback(Callback(item, suffix, path))
+			this.getBuilder(path).parent(getExistingFile(parent)).callback(Callback(suffix, path))
 		}
 	}
 }
 
-fun ItemModelProvider.multi(item: IItemProvider, parent: ResourceLocation, suffixes: IntRange, callback: ItemModelBuilder.(Callback<IItemProvider>) -> Unit) {
+fun ItemModelProvider.multi(item: IItemProvider, parent: ResourceLocation, suffixes: IntRange, callback: ItemModelBuilder.(Callback) -> Unit) {
 	multi(item, parent, Array(1 + suffixes.last - suffixes.first) { "_${suffixes.first + it}" }, callback)
 }
 

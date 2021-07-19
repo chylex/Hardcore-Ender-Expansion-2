@@ -5,7 +5,6 @@ import chylex.hee.game.fx.util.playUniversal
 import chylex.hee.game.world.util.BlockEditor
 import chylex.hee.game.world.util.getTile
 import chylex.hee.init.ModSounds
-import net.minecraft.item.Item
 import net.minecraft.item.ItemUseContext
 import net.minecraft.util.ActionResultType
 import net.minecraft.util.ActionResultType.FAIL
@@ -13,7 +12,7 @@ import net.minecraft.util.ActionResultType.PASS
 import net.minecraft.util.ActionResultType.SUCCESS
 import net.minecraft.util.SoundCategory
 
-class ItemPuzzleMedallion(properties: Properties) : Item(properties) {
+class ItemPuzzleMedallion(properties: Properties) : HeeItem(properties) {
 	override fun onItemUse(context: ItemUseContext): ActionResultType {
 		val player = context.player ?: return FAIL
 		val world = context.world

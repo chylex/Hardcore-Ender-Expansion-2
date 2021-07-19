@@ -2,6 +2,8 @@ package chylex.hee.datagen
 
 import chylex.hee.HEE
 import chylex.hee.game.Resource
+import chylex.hee.system.isVanilla
+import chylex.hee.system.path
 import net.minecraft.block.Block
 import net.minecraft.data.IDataProvider
 import net.minecraft.item.Item
@@ -9,13 +11,6 @@ import net.minecraft.util.IItemProvider
 import net.minecraft.util.ResourceLocation
 import net.minecraftforge.client.model.generators.ModelBuilder
 import net.minecraftforge.client.model.generators.ModelProvider
-import net.minecraftforge.registries.IForgeRegistryEntry
-
-val IForgeRegistryEntry<*>.path: String
-	get() = registryName!!.path
-
-val IForgeRegistryEntry<*>.isVanilla
-	get() = Resource.isVanilla(registryName!!)
 
 val IItemProvider.r
 	get() = when (this) {
@@ -70,6 +65,6 @@ inline fun <T : ModelBuilder<T>> T?.then(callback: T.() -> T): T? {
 	}
 }
 
-class Callback<T>(val item: T, val suffix: String, val path: String) {
+class Callback(val suffix: String, val path: String) {
 	override fun toString() = path
 }

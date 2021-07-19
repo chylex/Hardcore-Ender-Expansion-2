@@ -6,6 +6,7 @@ import chylex.hee.game.fx.util.playServer
 import chylex.hee.game.item.infusion.IInfusableItem
 import chylex.hee.game.item.infusion.Infusion
 import chylex.hee.game.item.infusion.InfusionTag
+import chylex.hee.game.item.properties.ItemModel
 import chylex.hee.system.random.nextFloat
 import chylex.hee.util.forge.Side
 import chylex.hee.util.forge.Sided
@@ -23,7 +24,10 @@ import net.minecraft.util.SoundEvents
 import net.minecraft.util.text.ITextComponent
 import net.minecraft.world.World
 
-class ItemInfusedEnderPearl(properties: Properties) : EnderPearlItem(properties), IInfusableItem {
+class ItemInfusedEnderPearl(properties: Properties) : EnderPearlItem(properties), IHeeItem, IInfusableItem {
+	override val model
+		get() = ItemModel.Copy(Items.ENDER_PEARL)
+	
 	override fun onItemRightClick(world: World, player: PlayerEntity, hand: Hand): ActionResult<ItemStack> {
 		val heldItem = player.getHeldItem(hand)
 		

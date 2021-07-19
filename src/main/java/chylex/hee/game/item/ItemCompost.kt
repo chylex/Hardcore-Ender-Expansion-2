@@ -12,7 +12,6 @@ import net.minecraft.dispenser.IBlockSource
 import net.minecraft.dispenser.OptionalDispenseBehavior
 import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.item.BoneMealItem
-import net.minecraft.item.Item
 import net.minecraft.item.ItemStack
 import net.minecraft.item.ItemUseContext
 import net.minecraft.util.ActionResultType
@@ -25,7 +24,7 @@ import net.minecraft.world.server.ServerWorld
 import net.minecraftforge.common.util.FakePlayerFactory
 import java.util.Random
 
-class ItemCompost(properties: Properties) : Item(properties) {
+class ItemCompost(properties: Properties) : HeeItem(properties) {
 	companion object {
 		private const val BONE_MEAL_EQUIVALENT = 2
 		

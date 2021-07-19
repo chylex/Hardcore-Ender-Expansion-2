@@ -23,7 +23,6 @@ import net.minecraft.block.Blocks
 import net.minecraft.entity.LivingEntity
 import net.minecraft.entity.monster.CreeperEntity
 import net.minecraft.entity.player.PlayerEntity
-import net.minecraft.item.Item
 import net.minecraft.item.ItemStack
 import net.minecraft.item.ItemUseContext
 import net.minecraft.util.ActionResultType
@@ -37,7 +36,7 @@ import net.minecraft.util.math.BlockPos
 import net.minecraft.world.World
 import net.minecraftforge.event.world.ExplosionEvent
 
-class ItemFlintAndInfernium(properties: Properties) : Item(properties) {
+class ItemFlintAndInfernium(properties: Properties) : HeeItem(properties) {
 	@SubscribeAllEvents(modid = HEE.ID)
 	companion object {
 		private const val CREEPER_INFERNIUM_TAG = "Infernium"

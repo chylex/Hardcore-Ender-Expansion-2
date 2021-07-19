@@ -24,7 +24,6 @@ import chylex.hee.util.math.center
 import chylex.hee.util.math.directionTowards
 import net.minecraft.entity.Entity
 import net.minecraft.entity.player.PlayerEntity
-import net.minecraft.item.Item
 import net.minecraft.item.ItemStack
 import net.minecraft.item.ItemUseContext
 import net.minecraft.network.PacketBuffer
@@ -37,7 +36,7 @@ import net.minecraft.util.math.BlockPos
 import net.minecraft.world.World
 import java.util.Random
 
-class ItemRevitalizationSubstance(properties: Properties) : Item(properties) {
+class ItemRevitalizationSubstance(properties: Properties) : HeeItem(properties) {
 	companion object {
 		private val PARTICLE_FAIL = ParticleSpawnerCustom(
 			type = ParticleSmokeCustom,

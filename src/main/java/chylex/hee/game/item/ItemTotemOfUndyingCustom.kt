@@ -6,6 +6,7 @@ import chylex.hee.game.entity.util.REACH_DISTANCE
 import chylex.hee.game.entity.util.posVec
 import chylex.hee.game.entity.util.selectExistingEntities
 import chylex.hee.game.fx.util.playClient
+import chylex.hee.game.item.properties.ItemModel
 import chylex.hee.game.item.util.ItemProperty
 import chylex.hee.game.mechanics.trinket.TrinketHandler
 import chylex.hee.game.potion.util.makeInstance
@@ -45,6 +46,14 @@ class ItemTotemOfUndyingCustom(properties: Properties) : ItemAbstractTrinket(pro
 			if (stack.heeTagOrNull.hasKey(SHAKING_TAG)) 1F else 0F
 		}
 	}
+	
+	override val model
+		get() = ItemModel.WithOverrides(
+			ItemModel.Simple,
+			Resource.Custom("is_shaking") to mapOf(
+				1F to ItemModel.Suffixed("_shaking")
+			)
+		)
 	
 	init {
 		MinecraftForgeEventBus.register(this)
