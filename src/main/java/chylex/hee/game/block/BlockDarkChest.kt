@@ -3,6 +3,7 @@ package chylex.hee.game.block
 import chylex.hee.game.Resource.location
 import chylex.hee.game.block.entity.TileEntityDarkChest
 import chylex.hee.game.block.properties.BlockBuilder
+import chylex.hee.game.block.properties.BlockDrop
 import chylex.hee.game.block.properties.BlockStateModels
 import chylex.hee.game.entity.living.ai.AIOcelotSitOverride.IOcelotCanSitOn
 import chylex.hee.init.ModBlocks
@@ -20,6 +21,9 @@ import java.util.function.Supplier
 class BlockDarkChest(builder: BlockBuilder) : ChestBlock(builder.p, Supplier<TileEntityType<out ChestTileEntity>> { ModTileEntities.DARK_CHEST }), IHeeBlock, IOcelotCanSitOn {
 	override val model
 		get() = BlockStateModels.Chest(ModBlocks.GLOOMROCK_SMOOTH.location)
+	
+	override val drop
+		get() = BlockDrop.NamedTile
 	
 	override fun createTileEntity(state: BlockState, world: IBlockReader): TileEntity {
 		return TileEntityDarkChest()

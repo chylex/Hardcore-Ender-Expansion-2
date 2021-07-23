@@ -5,6 +5,7 @@ import chylex.hee.game.Environment
 import chylex.hee.game.Resource
 import chylex.hee.game.Resource.location
 import chylex.hee.game.block.properties.BlockBuilder
+import chylex.hee.game.block.properties.BlockDrop
 import chylex.hee.game.block.properties.BlockModel
 import chylex.hee.game.block.properties.BlockStateModel
 import chylex.hee.game.block.properties.BlockStateModels
@@ -76,6 +77,9 @@ sealed class BlockGraveDirt(builder: BlockBuilder) : BlockSimpleShaped(builder, 
 	
 	override val model: IBlockStateModel
 		get() = BlockStateModels.ItemOnly(ItemModel.FromParent(Resource.Custom("block/grave_dirt_low")))
+	
+	final override val drop
+		get() = BlockDrop.Manual
 	
 	val soundType: SoundType
 		get() = soundType

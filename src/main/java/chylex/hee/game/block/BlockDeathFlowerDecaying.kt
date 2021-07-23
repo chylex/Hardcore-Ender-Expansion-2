@@ -3,6 +3,7 @@ package chylex.hee.game.block
 import chylex.hee.game.Resource.location
 import chylex.hee.game.block.IBlockDeathFlowerDecaying.Companion.LEVEL
 import chylex.hee.game.block.properties.BlockBuilder
+import chylex.hee.game.block.properties.BlockDrop
 import chylex.hee.game.block.properties.BlockModel
 import chylex.hee.game.block.properties.BlockStateModel
 import chylex.hee.game.block.properties.BlockStatePreset
@@ -41,6 +42,9 @@ class BlockDeathFlowerDecaying(builder: BlockBuilder) : BlockEndPlant(builder), 
 					)
 				))
 		)
+	
+	override val drop
+		get() = BlockDrop.Manual
 	
 	override fun fillStateContainer(container: Builder<Block, BlockState>) {
 		container.add(LEVEL)

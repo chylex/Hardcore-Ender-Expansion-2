@@ -1,6 +1,7 @@
 package chylex.hee.game.block
 
 import chylex.hee.game.block.properties.BlockBuilder
+import chylex.hee.game.block.properties.BlockDrop
 import chylex.hee.game.block.properties.BlockModel
 import chylex.hee.game.block.properties.BlockRenderLayer.CUTOUT
 import net.minecraft.block.BlockState
@@ -23,6 +24,9 @@ class BlockWhitebarkLeaves(builder: BlockBuilder) : LeavesBlock(builder.p), IHee
 	
 	override val renderLayer
 		get() = CUTOUT
+	
+	override val drop
+		get() = BlockDrop.Manual
 	
 	override fun harvestBlock(world: World, player: PlayerEntity, pos: BlockPos, state: BlockState, tile: TileEntity?, stack: ItemStack) {
 		if (!world.isRemote && stack.item === Items.SHEARS) {

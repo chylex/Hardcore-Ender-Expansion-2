@@ -3,6 +3,7 @@ package chylex.hee.game.block
 import chylex.hee.game.Resource.location
 import chylex.hee.game.block.entity.TileEntityLootChest
 import chylex.hee.game.block.properties.BlockBuilder
+import chylex.hee.game.block.properties.BlockDrop
 import chylex.hee.game.block.properties.BlockStateModels
 import chylex.hee.game.world.util.getTile
 import chylex.hee.util.forge.Side
@@ -20,6 +21,9 @@ import net.minecraft.world.World
 class BlockLootChest(builder: BlockBuilder) : BlockAbstractChest<TileEntityLootChest>(builder) {
 	override val model
 		get() = BlockStateModels.Chest(this.location("_particle"))
+	
+	override val drop
+		get() = BlockDrop.Nothing
 	
 	override fun createTileEntity() = TileEntityLootChest()
 	

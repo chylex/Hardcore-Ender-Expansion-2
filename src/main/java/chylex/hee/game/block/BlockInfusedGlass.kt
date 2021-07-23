@@ -2,6 +2,7 @@ package chylex.hee.game.block
 
 import chylex.hee.game.Resource
 import chylex.hee.game.block.properties.BlockBuilder
+import chylex.hee.game.block.properties.BlockDrop
 import chylex.hee.game.block.properties.BlockRenderLayer.TRANSLUCENT
 import chylex.hee.game.block.properties.BlockStateModels
 import chylex.hee.game.block.util.Property
@@ -47,6 +48,9 @@ class BlockInfusedGlass(builder: BlockBuilder) : AbstractGlassBlock(builder.p), 
 	
 	override val renderLayer
 		get() = TRANSLUCENT
+	
+	override val drop
+		get() = BlockDrop.Manual
 	
 	init {
 		defaultState = Facing6.fold(stateContainer.baseState) { acc, facing -> acc.with(CONNECT_MAPPINGS.getValue(facing), false) }

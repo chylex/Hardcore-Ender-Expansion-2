@@ -3,6 +3,7 @@ package chylex.hee.game.block
 import chylex.hee.game.Resource
 import chylex.hee.game.Resource.location
 import chylex.hee.game.block.properties.BlockBuilder
+import chylex.hee.game.block.properties.BlockDrop
 import chylex.hee.game.block.properties.BlockModel
 import chylex.hee.game.block.properties.BlockRenderLayer.CUTOUT
 import chylex.hee.game.block.properties.BlockStateModel
@@ -28,6 +29,9 @@ class BlockStardustOre(builder: BlockBuilder) : HeeBlock(builder) {
 	
 	override val renderLayer
 		get() = CUTOUT
+	
+	override val drop
+		get() = BlockDrop.Manual
 	
 	override fun getExpDrop(state: BlockState, world: IWorldReader, pos: BlockPos, fortune: Int, silktouch: Int): Int {
 		return (((world as? World)?.rand ?: RANDOM).nextBiasedFloat(4F) * 6F).ceilToInt()

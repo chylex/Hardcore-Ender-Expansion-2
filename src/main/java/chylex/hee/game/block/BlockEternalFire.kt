@@ -2,6 +2,7 @@ package chylex.hee.game.block
 
 import chylex.hee.game.Resource.location
 import chylex.hee.game.block.properties.BlockBuilder
+import chylex.hee.game.block.properties.BlockDrop
 import chylex.hee.game.block.properties.BlockModel
 import chylex.hee.game.block.properties.BlockRenderLayer.CUTOUT
 import chylex.hee.game.block.properties.BlockStateModel
@@ -74,6 +75,9 @@ class BlockEternalFire(builder: BlockBuilder) : FireBlock(builder.p), IHeeBlock 
 	
 	override val renderLayer
 		get() = CUTOUT
+	
+	override val drop
+		get() = BlockDrop.Nothing
 	
 	init {
 		MinecraftForge.EVENT_BUS.register(this)

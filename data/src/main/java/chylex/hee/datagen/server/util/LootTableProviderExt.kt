@@ -2,7 +2,6 @@ package chylex.hee.datagen.server.util
 
 import com.mojang.datafixers.util.Pair
 import net.minecraft.block.Block
-import net.minecraft.block.FlowerPotBlock
 import net.minecraft.data.DataGenerator
 import net.minecraft.data.LootTableProvider
 import net.minecraft.data.loot.BlockLootTables
@@ -11,7 +10,6 @@ import net.minecraft.loot.LootParameterSets
 import net.minecraft.loot.LootTable
 import net.minecraft.loot.LootTable.Builder
 import net.minecraft.loot.ValidationTracker
-import net.minecraft.util.IItemProvider
 import net.minecraft.util.ResourceLocation
 import java.util.function.BiConsumer
 import java.util.function.Consumer
@@ -33,7 +31,7 @@ abstract class BlockLootTableProvider(generator: DataGenerator) : LootTableProvi
 	protected abstract class RegistrationConsumer : BlockLootTables() {
 		private val lootTables = mutableMapOf<ResourceLocation, Builder>()
 		
-		override fun addTables() {}
+		abstract override fun addTables()
 		
 		final override fun accept(consumer: BiConsumer<ResourceLocation?, Builder?>) {
 			addTables()
@@ -47,22 +45,6 @@ abstract class BlockLootTableProvider(generator: DataGenerator) : LootTableProvi
 		
 		final override fun registerLootTable(block: Block, table: Builder) {
 			check(lootTables.put(block.lootTable, table) == null)
-		}
-		
-		protected fun dropSelf(block: Block) {
-			registerDropSelfLootTable(block)
-		}
-		
-		protected fun dropOther(block: Block, drop: IItemProvider) {
-			registerDropping(block, drop)
-		}
-		
-		protected fun dropFunc(block: Block, func: (Block) -> Builder) {
-			registerLootTable(block, func)
-		}
-		
-		protected fun dropFlowerPot(block: FlowerPotBlock) {
-			registerFlowerPot(block)
 		}
 		
 		protected companion object {

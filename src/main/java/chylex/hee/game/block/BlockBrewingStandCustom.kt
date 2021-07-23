@@ -3,6 +3,7 @@ package chylex.hee.game.block
 import chylex.hee.game.Resource.location
 import chylex.hee.game.block.entity.TileEntityBrewingStandCustom
 import chylex.hee.game.block.properties.BlockBuilder
+import chylex.hee.game.block.properties.BlockDrop
 import chylex.hee.game.block.properties.BlockItemModel
 import chylex.hee.game.block.properties.BlockModel
 import chylex.hee.game.block.properties.BlockRenderLayer.CUTOUT
@@ -41,6 +42,9 @@ open class BlockBrewingStandCustom(builder: BlockBuilder) : BrewingStandBlock(bu
 	
 	final override val renderLayer
 		get() = CUTOUT
+	
+	final override val drop
+		get() = BlockDrop.NamedTile
 	
 	override fun createTileEntity(state: BlockState, world: IBlockReader): TileEntity {
 		return TileEntityBrewingStandCustom()

@@ -2,6 +2,7 @@ package chylex.hee.game.block
 
 import chylex.hee.HEE
 import chylex.hee.game.block.properties.BlockBuilder
+import chylex.hee.game.block.properties.BlockDrop
 import chylex.hee.game.fx.util.playUniversal
 import chylex.hee.game.item.util.nullIfEmpty
 import chylex.hee.game.world.util.getBlock
@@ -42,6 +43,9 @@ abstract class BlockAbstractCauldron(builder: BlockBuilder) : CauldronBlock(buil
 			}
 		}
 	}
+	
+	final override val drop
+		get() = BlockDrop.OneOf(Blocks.CAULDRON)
 	
 	protected abstract fun createFilledBucket(): ItemStack?
 	protected abstract fun createFilledBottle(): ItemStack?

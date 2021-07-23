@@ -1,6 +1,7 @@
 package chylex.hee.game.block
 
 import chylex.hee.game.block.properties.BlockBuilder
+import chylex.hee.game.block.properties.BlockDrop
 import chylex.hee.game.entity.damage.Damage
 import chylex.hee.game.entity.damage.IDamageDealer.Companion.TITLE_IN_FIRE
 import chylex.hee.game.entity.damage.IDamageProcessor.Companion.FIRE_TYPE
@@ -43,6 +44,9 @@ class BlockIgneousRockOre(builder: BlockBuilder) : HeeBlock(builder) {
 			return (stack.item as? ToolItem)?.tier?.harvestLevel
 		}
 	}
+	
+	override val drop
+		get() = BlockDrop.Manual
 	
 	init {
 		MinecraftForge.EVENT_BUS.register(this)

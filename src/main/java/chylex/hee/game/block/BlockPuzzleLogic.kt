@@ -224,7 +224,7 @@ sealed class BlockPuzzleLogic(builder: BlockBuilder) : HeeBlock(builder) {
 	
 	abstract override val model: IBlockStateModel
 	
-	override val renderLayer
+	final override val renderLayer
 		get() = CUTOUT
 	
 	init {

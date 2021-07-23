@@ -2,6 +2,7 @@ package chylex.hee.game.block
 
 import chylex.hee.game.block.entity.TileEntitySpawnerObsidianTower
 import chylex.hee.game.block.properties.BlockBuilder
+import chylex.hee.game.block.properties.BlockDrop
 import chylex.hee.game.block.properties.BlockModel
 import chylex.hee.game.block.properties.BlockRenderLayer.CUTOUT
 import chylex.hee.game.block.properties.BlockStateModel
@@ -20,6 +21,9 @@ class BlockSpawnerObsidianTowers(builder: BlockBuilder) : SpawnerBlock(builder.p
 	
 	override val renderLayer
 		get() = CUTOUT
+	
+	override val drop
+		get() = BlockDrop.Nothing
 	
 	override fun createTileEntity(state: BlockState, world: IBlockReader): TileEntity {
 		return TileEntitySpawnerObsidianTower()

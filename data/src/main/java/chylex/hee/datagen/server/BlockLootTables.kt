@@ -1,99 +1,43 @@
 package chylex.hee.datagen.server
 
+import chylex.hee.HEE
 import chylex.hee.datagen.server.util.BlockLootTableProvider
+import chylex.hee.game.block.IHeeBlock
+import chylex.hee.game.block.properties.BlockDrop
+import chylex.hee.game.block.properties.BlockDrop.FlowerPot
+import chylex.hee.game.block.properties.BlockDrop.Manual
+import chylex.hee.game.block.properties.BlockDrop.NamedTile
+import chylex.hee.game.block.properties.BlockDrop.Nothing
+import chylex.hee.game.block.properties.BlockDrop.OneOf
+import chylex.hee.game.block.properties.BlockDrop.Self
 import chylex.hee.init.ModBlocks
-import chylex.hee.init.ModItems
-import net.minecraft.block.Blocks
+import chylex.hee.system.getRegistryEntries
+import net.minecraft.block.Block
+import net.minecraft.block.FlowerPotBlock
 import net.minecraft.data.DataGenerator
+import net.minecraft.loot.LootTables
 
 class BlockLootTables(generator: DataGenerator) : BlockLootTableProvider(generator) {
 	override val consumer = object : RegistrationConsumer() {
 		override fun addTables() {
-			dropSelf(ModBlocks.ACCUMULATION_TABLE_TIER_1)
-			dropSelf(ModBlocks.ACCUMULATION_TABLE_TIER_2)
-			dropSelf(ModBlocks.ACCUMULATION_TABLE_TIER_3)
-			dropSelf(ModBlocks.DARK_LOAM)
-			dropSelf(ModBlocks.DARK_LOAM_SLAB)
-			dropSelf(ModBlocks.DEATH_FLOWER_HEALED)
-			dropSelf(ModBlocks.DEATH_FLOWER_WITHERED)
-			dropSelf(ModBlocks.DUSTY_STONE_BRICKS)
-			dropSelf(ModBlocks.DUSTY_STONE_BRICK_SLAB)
-			dropSelf(ModBlocks.DUSTY_STONE_BRICK_STAIRS)
-			dropSelf(ModBlocks.DUSTY_STONE_CRACKED_BRICKS)
-			dropSelf(ModBlocks.ENDIUM_BLOCK)
-			dropSelf(ModBlocks.ENDIUM_ORE)
-			dropSelf(ModBlocks.END_STONE_BURNED)
-			dropSelf(ModBlocks.END_STONE_ENCHANTED)
-			dropSelf(ModBlocks.END_STONE_INFESTED)
-			dropSelf(ModBlocks.ETHEREAL_LANTERN)
-			dropSelf(ModBlocks.EXPERIENCE_TABLE_TIER_1)
-			dropSelf(ModBlocks.EXPERIENCE_TABLE_TIER_2)
-			dropSelf(ModBlocks.EXPERIENCE_TABLE_TIER_3)
-			dropSelf(ModBlocks.GLOOMROCK)
-			dropSelf(ModBlocks.GLOOMROCK_BRICKS)
-			dropSelf(ModBlocks.GLOOMROCK_BRICK_SLAB)
-			dropSelf(ModBlocks.GLOOMROCK_BRICK_STAIRS)
-			dropSelf(ModBlocks.GLOOMROCK_SMOOTH)
-			dropSelf(ModBlocks.GLOOMROCK_SMOOTH_BLUE)
-			dropSelf(ModBlocks.GLOOMROCK_SMOOTH_CYAN)
-			dropSelf(ModBlocks.GLOOMROCK_SMOOTH_GREEN)
-			dropSelf(ModBlocks.GLOOMROCK_SMOOTH_MAGENTA)
-			dropSelf(ModBlocks.GLOOMROCK_SMOOTH_ORANGE)
-			dropSelf(ModBlocks.GLOOMROCK_SMOOTH_PURPLE)
-			dropSelf(ModBlocks.GLOOMROCK_SMOOTH_RED)
-			dropSelf(ModBlocks.GLOOMROCK_SMOOTH_SLAB)
-			dropSelf(ModBlocks.GLOOMROCK_SMOOTH_STAIRS)
-			dropSelf(ModBlocks.GLOOMROCK_SMOOTH_WHITE)
-			dropSelf(ModBlocks.GLOOMROCK_SMOOTH_YELLOW)
-			dropSelf(ModBlocks.GLOOMTORCH)
-			dropSelf(ModBlocks.IGNEOUS_PLATE)
-			dropSelf(ModBlocks.INFUSION_TABLE_TIER_1)
-			dropSelf(ModBlocks.INFUSION_TABLE_TIER_2)
-			dropSelf(ModBlocks.INFUSION_TABLE_TIER_3)
-			dropSelf(ModBlocks.MINERS_BURIAL_BLOCK_CHISELED)
-			dropSelf(ModBlocks.MINERS_BURIAL_BLOCK_PILLAR)
-			dropSelf(ModBlocks.MINERS_BURIAL_BLOCK_PLAIN)
-			dropSelf(ModBlocks.OBSIDIAN_CHISELED)
-			dropSelf(ModBlocks.OBSIDIAN_CHISELED_LIT)
-			dropSelf(ModBlocks.OBSIDIAN_PILLAR)
-			dropSelf(ModBlocks.OBSIDIAN_PILLAR_LIT)
-			dropSelf(ModBlocks.OBSIDIAN_SMOOTH)
-			dropSelf(ModBlocks.OBSIDIAN_SMOOTH_LIT)
-			dropSelf(ModBlocks.OBSIDIAN_STAIRS)
-			dropSelf(ModBlocks.STONE_BRICK_WALL)
-			dropSelf(ModBlocks.TABLE_BASE_TIER_1)
-			dropSelf(ModBlocks.TABLE_BASE_TIER_2)
-			dropSelf(ModBlocks.TABLE_BASE_TIER_3)
-			dropSelf(ModBlocks.TABLE_PEDESTAL)
-			dropSelf(ModBlocks.VANTABLOCK)
-			dropSelf(ModBlocks.VOID_PORTAL_FRAME_CRAFTED)
-			dropSelf(ModBlocks.VOID_PORTAL_STORAGE_CRAFTED)
-			dropSelf(ModBlocks.WHITEBARK)
-			dropSelf(ModBlocks.WHITEBARK_LOG)
-			dropSelf(ModBlocks.WHITEBARK_PLANKS)
-			dropSelf(ModBlocks.WHITEBARK_SAPLING_AUTUMN_BROWN)
-			dropSelf(ModBlocks.WHITEBARK_SAPLING_AUTUMN_ORANGE)
-			dropSelf(ModBlocks.WHITEBARK_SAPLING_AUTUMN_RED)
-			dropSelf(ModBlocks.WHITEBARK_SAPLING_AUTUMN_YELLOWGREEN)
-			dropSelf(ModBlocks.WHITEBARK_SLAB)
-			dropSelf(ModBlocks.WHITEBARK_STAIRS)
+			for (block in getRegistryEntries<Block>(ModBlocks)) {
+				(block as? IHeeBlock)?.let { registerDrop(block, it.drop) }
+			}
+		}
+		
+		private fun registerDrop(block: Block, drop: BlockDrop) {
+			if (block.lootTable == LootTables.EMPTY && drop != Nothing) {
+				HEE.log.error("[BlockLootTables] block has empty loot table but declares drops: " + block.registryName)
+				return
+			}
 			
-			dropFunc(ModBlocks.DARK_CHEST, withName)
-			dropFunc(ModBlocks.ENHANCED_BREWING_STAND, withName)
-			
-			dropOther(ModBlocks.CAULDRON_DRAGONS_BREATH, Blocks.CAULDRON)
-			dropOther(ModBlocks.CAULDRON_ENDER_GOO, Blocks.CAULDRON)
-			dropOther(ModBlocks.CAULDRON_PURIFIED_ENDER_GOO, Blocks.CAULDRON)
-			dropOther(ModBlocks.ENDERMAN_HEAD, ModItems.ENDERMAN_HEAD)
-			dropOther(ModBlocks.ENDERMAN_WALL_HEAD, ModItems.ENDERMAN_HEAD)
-			dropOther(ModBlocks.OBSIDIAN_FALLING, Blocks.OBSIDIAN)
-			
-			dropFlowerPot(ModBlocks.POTTED_DEATH_FLOWER_HEALED)
-			dropFlowerPot(ModBlocks.POTTED_DEATH_FLOWER_WITHERED)
-			dropFlowerPot(ModBlocks.POTTED_WHITEBARK_SAPLING_AUTUMN_BROWN)
-			dropFlowerPot(ModBlocks.POTTED_WHITEBARK_SAPLING_AUTUMN_ORANGE)
-			dropFlowerPot(ModBlocks.POTTED_WHITEBARK_SAPLING_AUTUMN_YELLOWGREEN)
-			dropFlowerPot(ModBlocks.POTTED_WHITEBARK_SAPLING_AUTUMN_RED)
+			when (drop) {
+				Nothing, Manual -> return
+				Self            -> registerDropSelfLootTable(block)
+				NamedTile       -> registerLootTable(block, withName)
+				FlowerPot       -> registerFlowerPot(block as FlowerPotBlock)
+				is OneOf        -> registerDropping(block, drop.item)
+			}
 		}
 	}
 }

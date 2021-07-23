@@ -2,6 +2,7 @@ package chylex.hee.game.block
 
 import chylex.hee.game.block.fluid.FlowingFluid5
 import chylex.hee.game.block.fluid.FluidBase
+import chylex.hee.game.block.properties.BlockDrop
 import chylex.hee.game.block.properties.BlockStateModels
 import chylex.hee.game.block.util.BlockCollisionLimiter
 import chylex.hee.game.world.util.allInBoxMutable
@@ -32,8 +33,11 @@ abstract class BlockAbstractGoo(
 		private const val TOTAL_TICKS_TAG = "Ticks"
 	}
 	
-	override val model
+	final override val model
 		get() = BlockStateModels.Fluid
+	
+	final override val drop
+		get() = BlockDrop.Nothing
 	
 	// Initialization
 	

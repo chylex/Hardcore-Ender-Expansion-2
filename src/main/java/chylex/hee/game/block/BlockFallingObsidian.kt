@@ -1,6 +1,7 @@
 package chylex.hee.game.block
 
 import chylex.hee.game.block.properties.BlockBuilder
+import chylex.hee.game.block.properties.BlockDrop
 import chylex.hee.game.block.properties.BlockStateModels
 import chylex.hee.game.entity.item.EntityFallingBlockHeavy
 import chylex.hee.game.entity.item.EntityFallingObsidian
@@ -16,6 +17,9 @@ import java.util.Random
 class BlockFallingObsidian(builder: BlockBuilder) : HeeBlock(builder) {
 	override val model
 		get() = BlockStateModels.Cube(Blocks.OBSIDIAN)
+	
+	override val drop
+		get() = BlockDrop.OneOf(Blocks.OBSIDIAN)
 	
 	override fun onBlockAdded(state: BlockState, world: World, pos: BlockPos, oldState: BlockState, isMoving: Boolean) {
 		world.pendingBlockTicks.scheduleTick(pos, this, 2)

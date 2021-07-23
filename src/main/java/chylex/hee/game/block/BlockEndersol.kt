@@ -2,6 +2,7 @@ package chylex.hee.game.block
 
 import chylex.hee.game.Resource.location
 import chylex.hee.game.block.properties.BlockBuilder
+import chylex.hee.game.block.properties.BlockDrop
 import chylex.hee.game.block.properties.BlockModel
 import chylex.hee.game.block.properties.BlockStateModel
 import chylex.hee.game.block.properties.BlockStatePreset
@@ -20,4 +21,7 @@ class BlockEndersol(builder: BlockBuilder, mergeBottom: Block) : BlockSimpleMerg
 			),
 			ItemModel.AsBlock
 		)
+	
+	override val drop
+		get() = BlockDrop.Manual
 }

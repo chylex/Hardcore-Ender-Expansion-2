@@ -3,6 +3,7 @@ package chylex.hee.game.block
 import chylex.hee.game.Resource.location
 import chylex.hee.game.block.entity.TileEntityInfusedTNT
 import chylex.hee.game.block.logic.IBlockFireCatchOverride
+import chylex.hee.game.block.properties.BlockDrop
 import chylex.hee.game.block.properties.BlockModel
 import chylex.hee.game.block.util.Property
 import chylex.hee.game.entity.item.EntityInfusedTNT
@@ -49,6 +50,9 @@ class BlockInfusedTNT : TNTBlock(Properties.from(Blocks.TNT)), IHeeBlock, IBlock
 			bottom = Blocks.TNT.location("_bottom"),
 			top    = Blocks.TNT.location("_top"),
 		)
+	
+	override val drop
+		get() = BlockDrop.Manual
 	
 	init {
 		defaultState = defaultState.with(INFERNIUM, false)

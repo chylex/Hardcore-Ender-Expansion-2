@@ -2,6 +2,7 @@ package chylex.hee.game.block
 
 import chylex.hee.client.util.MC
 import chylex.hee.game.block.properties.BlockBuilder
+import chylex.hee.game.block.properties.BlockDrop
 import chylex.hee.game.block.properties.BlockRenderLayer.CUTOUT
 import chylex.hee.game.block.properties.BlockStateModels
 import chylex.hee.game.block.properties.BlockTint
@@ -32,6 +33,9 @@ class BlockDryVines(builder: BlockBuilder) : VineBlock(builder.p), IHeeBlock {
 	
 	override val renderLayer
 		get() = CUTOUT
+	
+	override val drop
+		get() = BlockDrop.Manual
 	
 	// Custom behavior
 	

@@ -2,6 +2,7 @@ package chylex.hee.game.block
 
 import chylex.hee.game.block.logic.IFullBlockCollisionHandler
 import chylex.hee.game.block.properties.BlockBuilder
+import chylex.hee.game.block.properties.BlockDrop
 import chylex.hee.game.entity.living.EntityMobUndread
 import chylex.hee.game.world.util.Facing4
 import chylex.hee.game.world.util.allInBox
@@ -57,6 +58,9 @@ class BlockDustyStoneUnstable(builder: BlockBuilder) : BlockDustyStone(builder),
 			return entity.height <= 0.5F || (entity.height <= 1F && entity.width <= 0.5F)
 		}
 	}
+	
+	override val drop
+		get() = BlockDrop.Manual
 	
 	override fun canHarvestBlock(state: BlockState, world: IBlockReader, pos: BlockPos, player: PlayerEntity): Boolean {
 		return player.getHeldItem(MAIN_HAND).let { EnchantmentHelper.getEnchantmentLevel(Enchantments.SILK_TOUCH, it) == 0 || isPickaxeOrShovel(player, it) }

@@ -2,6 +2,7 @@ package chylex.hee.game.block
 
 import chylex.hee.game.block.entity.TileEntityJarODust
 import chylex.hee.game.block.properties.BlockBuilder
+import chylex.hee.game.block.properties.BlockDrop
 import chylex.hee.game.block.properties.BlockModel
 import chylex.hee.game.block.properties.BlockRenderLayer.TRANSLUCENT
 import chylex.hee.game.block.properties.BlockStateModel
@@ -60,6 +61,9 @@ class BlockJarODust(builder: BlockBuilder) : BlockSimpleShaped(builder, AABB) {
 	
 	override val renderLayer
 		get() = TRANSLUCENT
+	
+	override val drop
+		get() = BlockDrop.Manual
 	
 	override fun hasTileEntity(state: BlockState): Boolean {
 		return true

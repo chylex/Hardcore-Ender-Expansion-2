@@ -1,6 +1,7 @@
 package chylex.hee.game.block
 
 import chylex.hee.game.block.properties.BlockBuilder
+import chylex.hee.game.block.properties.BlockDrop
 import chylex.hee.game.block.properties.BlockRenderLayer.CUTOUT
 import chylex.hee.game.block.properties.BlockStateModels
 import chylex.hee.util.forge.supply
@@ -14,6 +15,9 @@ open class BlockFlowerPotCustom(builder: BlockBuilder, flower: Block) : FlowerPo
 	
 	final override val renderLayer
 		get() = CUTOUT
+	
+	final override val drop
+		get() = BlockDrop.FlowerPot
 	
 	init {
 		@Suppress("LeakingThis")

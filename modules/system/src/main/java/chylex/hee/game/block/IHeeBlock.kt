@@ -1,5 +1,6 @@
 package chylex.hee.game.block
 
+import chylex.hee.game.block.properties.BlockDrop
 import chylex.hee.game.block.properties.BlockModel
 import chylex.hee.game.block.properties.BlockRenderLayer
 import chylex.hee.game.block.properties.BlockRenderLayer.SOLID
@@ -15,4 +16,7 @@ interface IHeeBlock {
 	
 	val tint: BlockTint?
 		get() = null
+	
+	val drop: BlockDrop
+		get() = BlockDrop.Self
 }
