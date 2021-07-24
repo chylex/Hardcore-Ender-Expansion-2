@@ -16,6 +16,7 @@ import net.minecraft.block.Blocks
 import net.minecraft.util.math.BlockPos
 import net.minecraft.world.IWorldReader
 import net.minecraft.world.World
+import net.minecraftforge.common.Tags
 
 class BlockStardustOre(builder: BlockBuilder) : HeeBlock(builder) {
 	override val model
@@ -32,6 +33,9 @@ class BlockStardustOre(builder: BlockBuilder) : HeeBlock(builder) {
 	
 	override val drop
 		get() = BlockDrop.Manual
+	
+	override val tags
+		get() = listOf(Tags.Blocks.ORES)
 	
 	override fun getExpDrop(state: BlockState, world: IWorldReader, pos: BlockPos, fortune: Int, silktouch: Int): Int {
 		return (((world as? World)?.rand ?: RANDOM).nextBiasedFloat(4F) * 6F).ceilToInt()

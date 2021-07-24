@@ -14,6 +14,7 @@ import net.minecraft.block.Block
 import net.minecraft.block.BlockState
 import net.minecraft.item.BlockItemUseContext
 import net.minecraft.state.StateContainer.Builder
+import net.minecraft.tags.BlockTags
 import net.minecraft.util.Direction
 import net.minecraft.util.Direction.DOWN
 import net.minecraft.util.Direction.EAST
@@ -23,6 +24,7 @@ import net.minecraft.util.Direction.UP
 import net.minecraft.util.Direction.WEST
 import net.minecraft.util.math.BlockPos
 import net.minecraft.world.IWorld
+import net.minecraftforge.common.Tags
 
 class BlockInfusedGlass(builder: BlockBuilder) : AbstractGlassBlock(builder.p), IHeeBlock {
 	companion object {
@@ -51,6 +53,9 @@ class BlockInfusedGlass(builder: BlockBuilder) : AbstractGlassBlock(builder.p), 
 	
 	override val drop
 		get() = BlockDrop.Manual
+	
+	override val tags
+		get() = listOf(BlockTags.IMPERMEABLE, Tags.Blocks.GLASS)
 	
 	init {
 		defaultState = Facing6.fold(stateContainer.baseState) { acc, facing -> acc.with(CONNECT_MAPPINGS.getValue(facing), false) }

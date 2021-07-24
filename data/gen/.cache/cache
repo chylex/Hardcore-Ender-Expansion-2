@@ -481,7 +481,7 @@ aa8696fc83d73951a890f55cd7c2b9c9abb3f611 assets/hee/models/item/whitebark_log.js
 2903a69c4cd7c37db3891af9c0736568ccc3acff data/forge/tags/blocks/chests.json
 3260d80138f7c357d2efbda403e8d0e6a957d75b data/forge/tags/blocks/end_stones.json
 424e2e03cf62f23f4496468a97b9f0df060df9fe data/forge/tags/blocks/glass.json
-f87bf8e15aea2ca3068935be41828e61a22e6ef8 data/forge/tags/blocks/obsidian.json
+763fefed687a3383a23e481415837b08a931661f data/forge/tags/blocks/obsidian.json
 83ea3831e8edbb4cab7f4a997b6e78b74d273493 data/forge/tags/blocks/ores.json
 9a1109a26cfd5f396d8e080f77d8277f130f299d data/forge/tags/blocks/storage_blocks.json
 2903a69c4cd7c37db3891af9c0736568ccc3acff data/forge/tags/items/chests.json
@@ -492,7 +492,7 @@ d3fbc7a0a7d1a6cd5b4a2d6604a4625c57b57a9a data/forge/tags/items/ender_pearls.json
 ff2ba2285b4163d5d08376c6d99477f96273310c data/forge/tags/items/heads.json
 144c342bc93a719b95e99b4d9493ed29885bf71b data/forge/tags/items/ingots.json
 b187118e591990e8c0397058318592c587c3dcff data/forge/tags/items/nuggets.json
-f87bf8e15aea2ca3068935be41828e61a22e6ef8 data/forge/tags/items/obsidian.json
+763fefed687a3383a23e481415837b08a931661f data/forge/tags/items/obsidian.json
 83ea3831e8edbb4cab7f4a997b6e78b74d273493 data/forge/tags/items/ores.json
 ebdc7d4617021fcc8582e3a17b42d4a815d9e021 data/forge/tags/items/rods.json
 9a1109a26cfd5f396d8e080f77d8277f130f299d data/forge/tags/items/storage_blocks.json
@@ -584,6 +584,7 @@ f5996244831ab38fe1fae2f304bbd7825d6ad98b data/minecraft/tags/blocks/bamboo_plant
 424e2e03cf62f23f4496468a97b9f0df060df9fe data/minecraft/tags/blocks/impermeable.json
 4557912145f8c53493f249ef3961d02e156891e4 data/minecraft/tags/blocks/leaves.json
 4ea74ec750ba7360a7843a0d4a604ac7b35dfa96 data/minecraft/tags/blocks/logs.json
+4ea74ec750ba7360a7843a0d4a604ac7b35dfa96 data/minecraft/tags/blocks/logs_that_burn.json
 697395021049c8cccfac2486c52eb6664cc5bad6 data/minecraft/tags/blocks/planks.json
 10fff7e5092ddc68cc1611ad4605dc4d6608e227 data/minecraft/tags/blocks/portals.json
 6f73d4c0d7c0f2650b498f35a60e8fe9c280c765 data/minecraft/tags/blocks/saplings.json
@@ -594,6 +595,7 @@ eb69de8447077a713baaab7e10184ec283c25516 data/minecraft/tags/blocks/slabs.json
 3bf587d2f806c14a76a10db8f43386552382c381 data/minecraft/tags/blocks/wooden_stairs.json
 4557912145f8c53493f249ef3961d02e156891e4 data/minecraft/tags/items/leaves.json
 4ea74ec750ba7360a7843a0d4a604ac7b35dfa96 data/minecraft/tags/items/logs.json
+4ea74ec750ba7360a7843a0d4a604ac7b35dfa96 data/minecraft/tags/items/logs_that_burn.json
 697395021049c8cccfac2486c52eb6664cc5bad6 data/minecraft/tags/items/planks.json
 6f73d4c0d7c0f2650b498f35a60e8fe9c280c765 data/minecraft/tags/items/saplings.json
 eb69de8447077a713baaab7e10184ec283c25516 data/minecraft/tags/items/slabs.json

@@ -13,7 +13,7 @@ import net.minecraft.util.ActionResultType.PASS
 import net.minecraft.util.ActionResultType.SUCCESS
 import net.minecraft.world.World
 
-class ItemEndPowder(properties: Properties) : HeeItem(properties) {
+class ItemEndPowder(properties: Properties) : ItemDust(properties) {
 	override fun onItemUse(context: ItemUseContext): ActionResultType {
 		val player = context.player ?: return FAIL
 		val world = context.world

@@ -5,18 +5,15 @@ import chylex.hee.game.block.IBlockDeathFlowerDecaying.Companion.LEVEL
 import chylex.hee.game.block.properties.BlockBuilder
 import chylex.hee.game.block.properties.BlockDrop
 import chylex.hee.game.block.properties.BlockModel
-import chylex.hee.game.block.properties.BlockRenderLayer.CUTOUT
 import chylex.hee.game.block.properties.BlockStateModel
 import chylex.hee.game.block.properties.BlockStatePreset
 import chylex.hee.game.item.ItemDeathFlower
 import chylex.hee.game.world.util.setBlock
 import chylex.hee.init.ModBlocks
 import chylex.hee.init.ModItems
-import chylex.hee.util.forge.supply
 import net.minecraft.block.Block
 import net.minecraft.block.BlockState
 import net.minecraft.block.Blocks
-import net.minecraft.block.FlowerPotBlock
 import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.item.ItemStack
 import net.minecraft.loot.LootContext
@@ -33,10 +30,7 @@ import net.minecraft.world.World
 import net.minecraft.world.server.ServerWorld
 import java.util.Random
 
-class BlockFlowerPotDeathFlowerDecaying(
-	builder: BlockBuilder,
-	flower: Block,
-) : FlowerPotBlock(supply(Blocks.FLOWER_POT as FlowerPotBlock) /* prevents adding to flower->pot map */, supply(flower), builder.p), IHeeBlock, IBlockDeathFlowerDecaying {
+class BlockFlowerPotDeathFlowerDecaying(builder: BlockBuilder, flower: Block) : BlockFlowerPotCustom(builder, flower), IBlockDeathFlowerDecaying {
 	override val model
 		get() = BlockStateModel(
 			BlockStatePreset.None,
@@ -44,9 +38,6 @@ class BlockFlowerPotDeathFlowerDecaying(
 				BlockModel.Suffixed("_$it", BlockModel.PottedPlant(ModBlocks.DEATH_FLOWER_DECAYING.location("_$it")))
 			})
 		)
-	
-	override val renderLayer
-		get() = CUTOUT
 	
 	override val drop
 		get() = BlockDrop.Manual

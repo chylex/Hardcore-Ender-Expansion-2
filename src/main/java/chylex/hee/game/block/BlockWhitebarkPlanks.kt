@@ -2,11 +2,15 @@ package chylex.hee.game.block
 
 import chylex.hee.game.block.properties.BlockBuilder
 import net.minecraft.block.BlockState
+import net.minecraft.tags.BlockTags
 import net.minecraft.util.Direction
 import net.minecraft.util.math.BlockPos
 import net.minecraft.world.IBlockReader
 
 class BlockWhitebarkPlanks(builder: BlockBuilder) : HeeBlock(builder) {
+	override val tags
+		get() = listOf(BlockTags.PLANKS)
+	
 	override fun getFlammability(state: BlockState, world: IBlockReader, pos: BlockPos, face: Direction): Int {
 		return 20
 	}

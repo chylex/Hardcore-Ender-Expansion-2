@@ -16,6 +16,7 @@ import net.minecraft.tileentity.TileEntityType
 import net.minecraft.util.math.BlockPos
 import net.minecraft.world.IBlockReader
 import net.minecraft.world.IWorldReader
+import net.minecraftforge.common.Tags
 import java.util.function.Supplier
 
 class BlockDarkChest(builder: BlockBuilder) : ChestBlock(builder.p, Supplier<TileEntityType<out ChestTileEntity>> { ModTileEntities.DARK_CHEST }), IHeeBlock, IOcelotCanSitOn {
@@ -24,6 +25,9 @@ class BlockDarkChest(builder: BlockBuilder) : ChestBlock(builder.p, Supplier<Til
 	
 	override val drop
 		get() = BlockDrop.NamedTile
+	
+	override val tags
+		get() = listOf(Tags.Blocks.CHESTS)
 	
 	override fun createTileEntity(state: BlockState, world: IBlockReader): TileEntity {
 		return TileEntityDarkChest()

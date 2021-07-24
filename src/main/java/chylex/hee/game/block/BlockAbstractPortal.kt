@@ -24,6 +24,7 @@ import net.minecraft.block.BlockRenderType.INVISIBLE
 import net.minecraft.block.BlockState
 import net.minecraft.block.Blocks
 import net.minecraft.entity.Entity
+import net.minecraft.tags.BlockTags
 import net.minecraft.tileentity.TileEntity
 import net.minecraft.util.math.AxisAlignedBB
 import net.minecraft.util.math.BlockPos
@@ -99,6 +100,9 @@ abstract class BlockAbstractPortal(builder: BlockBuilder) : BlockSimpleShaped(bu
 	
 	final override val model
 		get() = BlockStateModel(BlockStatePreset.SimpleFrom(Blocks.END_PORTAL), BlockModel.Manual)
+	
+	final override val tags
+		get() = listOf(BlockTags.PORTALS)
 	
 	override fun hasTileEntity(state: BlockState): Boolean {
 		return true

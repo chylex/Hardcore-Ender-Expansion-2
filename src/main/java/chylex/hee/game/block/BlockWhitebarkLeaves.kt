@@ -12,6 +12,7 @@ import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.item.ItemStack
 import net.minecraft.item.Items
 import net.minecraft.stats.Stats
+import net.minecraft.tags.BlockTags
 import net.minecraft.tileentity.TileEntity
 import net.minecraft.util.Direction
 import net.minecraft.util.math.BlockPos
@@ -27,6 +28,9 @@ class BlockWhitebarkLeaves(builder: BlockBuilder) : LeavesBlock(builder.p), IHee
 	
 	override val drop
 		get() = BlockDrop.Manual
+	
+	override val tags
+		get() = listOf(BlockTags.LEAVES)
 	
 	override fun harvestBlock(world: World, player: PlayerEntity, pos: BlockPos, state: BlockState, tile: TileEntity?, stack: ItemStack) {
 		if (!world.isRemote && stack.item === Items.SHEARS) {

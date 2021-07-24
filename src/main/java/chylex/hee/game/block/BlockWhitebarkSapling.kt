@@ -13,6 +13,7 @@ import net.minecraft.block.BlockState
 import net.minecraft.block.Blocks
 import net.minecraft.block.IGrowable
 import net.minecraft.state.StateContainer.Builder
+import net.minecraft.tags.BlockTags
 import net.minecraft.util.math.AxisAlignedBB
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.shapes.ISelectionContext
@@ -29,6 +30,9 @@ class BlockWhitebarkSapling(builder: BlockBuilder, private val generator: Whiteb
 	}
 	
 	// Instance
+	
+	override val tags
+		get() = listOf(BlockTags.SAPLINGS)
 	
 	init {
 		defaultState = stateContainer.baseState.with(STAGE, 0)

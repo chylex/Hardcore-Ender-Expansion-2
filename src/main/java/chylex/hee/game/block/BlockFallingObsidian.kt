@@ -12,6 +12,7 @@ import net.minecraft.util.math.BlockPos
 import net.minecraft.world.IWorld
 import net.minecraft.world.World
 import net.minecraft.world.server.ServerWorld
+import net.minecraftforge.common.Tags
 import java.util.Random
 
 class BlockFallingObsidian(builder: BlockBuilder) : HeeBlock(builder) {
@@ -20,6 +21,9 @@ class BlockFallingObsidian(builder: BlockBuilder) : HeeBlock(builder) {
 	
 	override val drop
 		get() = BlockDrop.OneOf(Blocks.OBSIDIAN)
+	
+	override val tags
+		get() = listOf(Tags.Blocks.OBSIDIAN)
 	
 	override fun onBlockAdded(state: BlockState, world: World, pos: BlockPos, oldState: BlockState, isMoving: Boolean) {
 		world.pendingBlockTicks.scheduleTick(pos, this, 2)

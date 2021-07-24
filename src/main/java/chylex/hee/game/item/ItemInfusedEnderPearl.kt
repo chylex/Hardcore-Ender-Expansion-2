@@ -23,10 +23,14 @@ import net.minecraft.util.SoundCategory
 import net.minecraft.util.SoundEvents
 import net.minecraft.util.text.ITextComponent
 import net.minecraft.world.World
+import net.minecraftforge.common.Tags
 
 class ItemInfusedEnderPearl(properties: Properties) : EnderPearlItem(properties), IHeeItem, IInfusableItem {
 	override val model
 		get() = ItemModel.Copy(Items.ENDER_PEARL)
+	
+	override val tags
+		get() = listOf(Tags.Items.ENDER_PEARLS)
 	
 	override fun onItemRightClick(world: World, player: PlayerEntity, hand: Hand): ActionResult<ItemStack> {
 		val heldItem = player.getHeldItem(hand)

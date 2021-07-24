@@ -28,6 +28,7 @@ import net.minecraft.world.IBlockReader
 import net.minecraft.world.IWorldReader
 import net.minecraft.world.World
 import net.minecraftforge.common.MinecraftForge
+import net.minecraftforge.common.Tags
 import net.minecraftforge.event.world.BlockEvent.BreakEvent
 import java.util.Random
 
@@ -47,6 +48,9 @@ class BlockIgneousRockOre(builder: BlockBuilder) : HeeBlock(builder) {
 	
 	override val drop
 		get() = BlockDrop.Manual
+	
+	override val tags
+		get() = listOf(Tags.Blocks.ORES)
 	
 	init {
 		MinecraftForge.EVENT_BUS.register(this)

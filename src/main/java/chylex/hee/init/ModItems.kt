@@ -14,6 +14,7 @@ import chylex.hee.game.item.ItemBlockHead
 import chylex.hee.game.item.ItemBucketWithCauldron
 import chylex.hee.game.item.ItemChorusBerry
 import chylex.hee.game.item.ItemCompost
+import chylex.hee.game.item.ItemDust
 import chylex.hee.game.item.ItemElytraOverride
 import chylex.hee.game.item.ItemEndPowder
 import chylex.hee.game.item.ItemEnergyOracle
@@ -23,12 +24,15 @@ import chylex.hee.game.item.ItemEyeOfEnderOverride
 import chylex.hee.game.item.ItemFlintAndInfernium
 import chylex.hee.game.item.ItemIgneousRock
 import chylex.hee.game.item.ItemInfusedEnderPearl
+import chylex.hee.game.item.ItemIngot
+import chylex.hee.game.item.ItemNugget
 import chylex.hee.game.item.ItemPortalToken
 import chylex.hee.game.item.ItemPurifiedEnderGooBucket
 import chylex.hee.game.item.ItemPuzzleMedallion
 import chylex.hee.game.item.ItemRevitalizationSubstance
 import chylex.hee.game.item.ItemRingOfHunger
 import chylex.hee.game.item.ItemRingOfPreservation
+import chylex.hee.game.item.ItemRod
 import chylex.hee.game.item.ItemScaleOfFreefall
 import chylex.hee.game.item.ItemScorchingSword
 import chylex.hee.game.item.ItemScorchingTool
@@ -73,16 +77,16 @@ object ModItems {
 	// Items: Raw Resources
 	
 	@JvmField val ETHEREUM          = HeeItem(defaultProps) named "ethereum"
-	@JvmField val ANCIENT_DUST      = HeeItem(defaultProps) named "ancient_dust"
+	@JvmField val ANCIENT_DUST      = ItemDust(defaultProps) named "ancient_dust"
 	@JvmField val END_POWDER        = ItemEndPowder(defaultProps) named "end_powder"
-	@JvmField val STARDUST          = HeeItem(defaultProps) named "stardust"
-	@JvmField val ENDIUM_INGOT      = HeeItem(defaultProps) named "endium_ingot"
-	@JvmField val ENDIUM_NUGGET     = HeeItem(defaultProps) named "endium_nugget"
+	@JvmField val STARDUST          = ItemDust(defaultProps) named "stardust"
+	@JvmField val ENDIUM_INGOT      = ItemIngot(defaultProps) named "endium_ingot"
+	@JvmField val ENDIUM_NUGGET     = ItemNugget(defaultProps) named "endium_nugget"
 	@JvmField val OBSIDIAN_FRAGMENT = HeeItem(defaultProps) named "obsidian_fragment"
 	@JvmField val IGNEOUS_ROCK      = ItemIgneousRock(defaultProps) named "igneous_rock"
 	@JvmField val PUZZLE_MEDALLION  = ItemPuzzleMedallion(defaultProps) named "puzzle_medallion"
 	@JvmField val INFERNIUM         = HeeItem(defaultProps) named "infernium"
-	@JvmField val INFERNIUM_INGOT   = HeeItem(defaultProps) named "infernium_ingot"
+	@JvmField val INFERNIUM_INGOT   = ItemIngot(defaultProps) named "infernium_ingot"
 	@JvmField val AURICION          = HeeItem(defaultProps) named "auricion"
 	@JvmField val DRAGON_SCALE      = HeeItem(defaultProps) named "dragon_scale"
 	@JvmField val INSTABILITY_ORB   = HeeItem(defaultProps) named "instability_orb"
@@ -93,11 +97,11 @@ object ModItems {
 	
 	@JvmField val ALTERATION_NEXUS         = HeeItem(defaultProps) named "alteration_nexus"
 	@JvmField val VOID_ESSENCE             = HeeItem(defaultProps) named "void_essence"
-	@JvmField val OBSIDIAN_ROD             = HeeItem(defaultProps) named "obsidian_rod"
+	@JvmField val OBSIDIAN_ROD             = ItemRod(defaultProps) named "obsidian_rod"
 	@JvmField val PURITY_EXTRACT           = HeeItem(defaultProps) named "purity_extract"
 	@JvmField val STATIC_CORE              = HeeItem(defaultProps) named "static_core"
 	@JvmField val TICKING_CORE             = HeeItem(defaultProps) named "ticking_core"
-	@JvmField val DIRTY_INFERNIUM_INGOT    = HeeItem(defaultProps) named "dirty_infernium_ingot"
+	@JvmField val DIRTY_INFERNIUM_INGOT    = ItemIngot(defaultProps) named "dirty_infernium_ingot"
 	@JvmField val AMELIOR                  = HeeItem(defaultProps) named "amelior"
 	@JvmField val REVITALIZATION_SUBSTANCE = ItemRevitalizationSubstance(baseProps.maxStackSize(16)) named "revitalization_substance"
 	@JvmField val BINDING_ESSENCE          = ItemBindingEssence(baseProps.maxStackSize(16)) named "binding_essence"

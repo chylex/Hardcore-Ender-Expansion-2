@@ -45,8 +45,8 @@ import chylex.hee.game.block.BlockInfusedTNT
 import chylex.hee.game.block.BlockJarODust
 import chylex.hee.game.block.BlockLootChest
 import chylex.hee.game.block.BlockMinersBurialAltar
-import chylex.hee.game.block.BlockObsidianCubeLit
-import chylex.hee.game.block.BlockObsidianPillarLit
+import chylex.hee.game.block.BlockObsidianCube
+import chylex.hee.game.block.BlockObsidianPillar
 import chylex.hee.game.block.BlockPillarCustom
 import chylex.hee.game.block.BlockPortalFrame
 import chylex.hee.game.block.BlockPuzzleLogic
@@ -165,7 +165,7 @@ object ModBlocks {
 	@JvmField val STONE_BRICK_WALL = BlockWallCustom(Blocks.STONE_BRICKS) named "stone_brick_wall"
 	@JvmField val INFUSED_GLASS    = BlockInfusedGlass(buildInfusedGlass) named "infused_glass"
 	@JvmField val VANTABLOCK       = HeeBlock(buildVantablock) named "vantablock"
-	@JvmField val ENDIUM_BLOCK     = BlockEndium(buildEndiumBlock) named "endium_block"
+	@JvmField val ENDIUM_BLOCK     = BlockEndium.Block(buildEndiumBlock) named "endium_block"
 	@JvmField val ENDERSOL         = BlockEndersol(buildEnderSol, mergeBottom = Blocks.END_STONE) named "endersol"
 	@JvmField val HUMUS            = BlockHumus(buildHumus, mergeBottom = ENDERSOL) named "humus"
 	
@@ -204,13 +204,13 @@ object ModBlocks {
 	
 	@JvmField val OBSIDIAN_STAIRS       = BlockStairsCustom(Blocks.OBSIDIAN) named "obsidian_stairs"
 	@JvmField val OBSIDIAN_FALLING      = BlockFallingObsidian(buildObsidian) named "obsidian_falling"
-	@JvmField val OBSIDIAN_SMOOTH       = HeeBlock(buildObsidianVariation) named "obsidian_smooth"
-	@JvmField val OBSIDIAN_CHISELED     = HeeBlock(buildObsidianVariation) named "obsidian_chiseled"
-	@JvmField val OBSIDIAN_PILLAR       = BlockPillarCustom(buildObsidianVariation) named "obsidian_pillar"
-	@JvmField val OBSIDIAN_SMOOTH_LIT   = BlockObsidianCubeLit(buildObsidianVariationLit, OBSIDIAN_SMOOTH) named "obsidian_smooth_lit"
-	@JvmField val OBSIDIAN_CHISELED_LIT = BlockObsidianCubeLit(buildObsidianVariationLit, OBSIDIAN_CHISELED) named "obsidian_chiseled_lit"
-	@JvmField val OBSIDIAN_PILLAR_LIT   = BlockObsidianPillarLit(buildObsidianVariationLit) named "obsidian_pillar_lit"
-	@JvmField val OBSIDIAN_TOWER_TOP    = BlockObsidianCubeLit(buildObsidianTowerTop, OBSIDIAN_CHISELED) named "obsidian_tower_top"
+	@JvmField val OBSIDIAN_SMOOTH       = BlockObsidianCube(buildObsidianVariation) named "obsidian_smooth"
+	@JvmField val OBSIDIAN_CHISELED     = BlockObsidianCube(buildObsidianVariation) named "obsidian_chiseled"
+	@JvmField val OBSIDIAN_PILLAR       = BlockObsidianPillar(buildObsidianVariation) named "obsidian_pillar"
+	@JvmField val OBSIDIAN_SMOOTH_LIT   = BlockObsidianCube.Lit(buildObsidianVariationLit, OBSIDIAN_SMOOTH) named "obsidian_smooth_lit"
+	@JvmField val OBSIDIAN_CHISELED_LIT = BlockObsidianCube.Lit(buildObsidianVariationLit, OBSIDIAN_CHISELED) named "obsidian_chiseled_lit"
+	@JvmField val OBSIDIAN_PILLAR_LIT   = BlockObsidianPillar.Lit(buildObsidianVariationLit, OBSIDIAN_PILLAR) named "obsidian_pillar_lit"
+	@JvmField val OBSIDIAN_TOWER_TOP    = BlockObsidianCube.Lit(buildObsidianTowerTop, OBSIDIAN_CHISELED) named "obsidian_tower_top"
 	
 	// Blocks: Building (End Stone)
 	
@@ -285,7 +285,7 @@ object ModBlocks {
 	// Blocks: Ores
 	
 	@JvmField val END_POWDER_ORE   = BlockEndPowderOre(buildEndPowderOre) named "end_powder_ore"
-	@JvmField val ENDIUM_ORE       = BlockEndium(buildEndiumOre) named "endium_ore"
+	@JvmField val ENDIUM_ORE       = BlockEndium.Ore(buildEndiumOre) named "endium_ore"
 	@JvmField val STARDUST_ORE     = BlockStardustOre(buildStardustOre) named "stardust_ore"
 	@JvmField val IGNEOUS_ROCK_ORE = BlockIgneousRockOre(buildIgneousRockOre) named "igneous_rock_ore"
 	

@@ -21,6 +21,7 @@ import net.minecraft.entity.Entity
 import net.minecraft.item.ItemStack
 import net.minecraft.loot.LootContext
 import net.minecraft.loot.LootParameters
+import net.minecraft.tags.BlockTags
 import net.minecraft.util.Direction
 import net.minecraft.util.Direction.UP
 import net.minecraft.util.math.BlockPos
@@ -50,6 +51,9 @@ class BlockHumus(builder: BlockBuilder, mergeBottom: Block) : BlockSimpleMerging
 	
 	override val drop
 		get() = BlockDrop.Manual
+	
+	override val tags
+		get() = listOf(BlockTags.BAMBOO_PLANTABLE_ON)
 	
 	override fun randomTick(state: BlockState, world: ServerWorld, pos: BlockPos, rand: Random) {
 		@Suppress("DEPRECATION")

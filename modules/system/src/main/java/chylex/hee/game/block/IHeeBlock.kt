@@ -6,6 +6,8 @@ import chylex.hee.game.block.properties.BlockRenderLayer
 import chylex.hee.game.block.properties.BlockRenderLayer.SOLID
 import chylex.hee.game.block.properties.BlockTint
 import chylex.hee.game.block.properties.IBlockStateModel
+import net.minecraft.block.Block
+import net.minecraft.tags.ITag.INamedTag
 
 interface IHeeBlock {
 	val model: IBlockStateModel
@@ -19,4 +21,7 @@ interface IHeeBlock {
 	
 	val drop: BlockDrop
 		get() = BlockDrop.Self
+	
+	val tags: List<INamedTag<Block>>
+		get() = emptyList()
 }
