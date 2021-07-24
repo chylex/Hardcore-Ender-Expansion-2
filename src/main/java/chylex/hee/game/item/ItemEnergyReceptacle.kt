@@ -112,6 +112,9 @@ class ItemEnergyReceptacle(properties: Properties) : ItemAbstractInfusable(prope
 			)
 		)
 	
+	override val properties
+		get() = listOf(HAS_CLUSTER_PROPERTY)
+	
 	override fun onItemUse(context: ItemUseContext): ActionResultType {
 		val player = context.player ?: return FAIL
 		val world = context.world

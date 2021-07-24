@@ -72,6 +72,9 @@ class ItemVoidBucket(properties: Properties) : ItemAbstractVoidTool(properties, 
 			)
 		)
 	
+	override val properties
+		get() = listOf(COOLDOWN_PROPERTY)
+	
 	override fun getDestroySpeed(stack: ItemStack, state: BlockState): Float {
 		return 1F
 	}

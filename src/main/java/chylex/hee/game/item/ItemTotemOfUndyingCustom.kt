@@ -55,6 +55,9 @@ class ItemTotemOfUndyingCustom(properties: Properties) : ItemAbstractTrinket(pro
 			)
 		)
 	
+	override val properties
+		get() = listOf(IS_SHAKING_PROPERTY)
+	
 	init {
 		MinecraftForgeEventBus.register(this)
 	}

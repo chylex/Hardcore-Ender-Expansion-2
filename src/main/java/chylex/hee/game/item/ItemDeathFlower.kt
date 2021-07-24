@@ -23,7 +23,7 @@ import net.minecraft.util.ActionResultType.PASS
 import net.minecraft.util.ActionResultType.SUCCESS
 import net.minecraft.util.NonNullList
 
-class ItemDeathFlower(block: Block, properties: Properties) : BlockItem(block, properties) {
+class ItemDeathFlower(block: Block, properties: Properties) : BlockItem(block, properties), IHeeItem {
 	companion object {
 		private const val LEVEL_TAG = "DeathLevel"
 		
@@ -39,6 +39,9 @@ class ItemDeathFlower(block: Block, properties: Properties) : BlockItem(block, p
 			stack.heeTag.putInt(LEVEL_TAG, level)
 		}
 	}
+	
+	override val properties
+		get() = listOf(DEATH_LEVEL_PROPERTY)
 	
 	override fun onItemUseFirst(stack: ItemStack, context: ItemUseContext): ActionResultType {
 		val player = context.player

@@ -112,6 +112,9 @@ class ItemPortalToken(properties: Properties) : HeeItem(properties) {
 			)
 		)
 	
+	override val properties
+		get() = listOf(TOKEN_TYPE_PROPERTY)
+	
 	// Token construction
 	
 	fun forTerritory(type: TokenType, territory: TerritoryType) = ItemStack(this).also {

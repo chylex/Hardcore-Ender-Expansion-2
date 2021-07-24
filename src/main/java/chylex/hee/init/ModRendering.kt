@@ -83,13 +83,6 @@ import chylex.hee.game.entity.projectile.EntityProjectileSpatialDash
 import chylex.hee.game.entity.technical.EntityTechnicalBase
 import chylex.hee.game.entity.technical.EntityTechnicalIgneousPlateLogic
 import chylex.hee.game.item.IHeeItem
-import chylex.hee.game.item.ItemDeathFlower
-import chylex.hee.game.item.ItemEnergyOracle
-import chylex.hee.game.item.ItemEnergyReceptacle
-import chylex.hee.game.item.ItemPortalToken
-import chylex.hee.game.item.ItemTotemOfUndyingCustom
-import chylex.hee.game.item.ItemVoidBucket
-import chylex.hee.game.item.ItemVoidSalad
 import chylex.hee.system.getRegistryEntries
 import chylex.hee.util.forge.Side
 import chylex.hee.util.forge.SubscribeAllEvents
@@ -162,13 +155,13 @@ object ModRendering {
 		
 		// properties
 		
-		ItemDeathFlower.DEATH_LEVEL_PROPERTY.register(ModBlocks.DEATH_FLOWER_DECAYING)
-		ItemEnergyOracle.ACTIVITY_INTENSITY_PROPERTY.register(ModItems.ENERGY_ORACLE)
-		ItemEnergyReceptacle.HAS_CLUSTER_PROPERTY.register(ModItems.ENERGY_RECEPTACLE)
-		ItemPortalToken.TOKEN_TYPE_PROPERTY.register(ModItems.PORTAL_TOKEN)
-		ItemTotemOfUndyingCustom.IS_SHAKING_PROPERTY.register(ModItems.TOTEM_OF_UNDYING)
-		ItemVoidBucket.COOLDOWN_PROPERTY.register(ModItems.VOID_BUCKET)
-		ItemVoidSalad.SALAD_TYPE_PROPERTY.register(ModItems.VOID_SALAD)
+		for (block in getRegistryEntries<Block>(ModBlocks)) {
+			registerProperties(block.asItem())
+		}
+		
+		for (item in getRegistryEntries<Item>(ModItems)) {
+			registerProperties(item)
+		}
 		
 		// screens
 		
@@ -262,6 +255,15 @@ object ModRendering {
 	// Utilities
 	
 	private fun <T : ItemStackTileEntityRenderer> callable(obj: T) = Callable<ItemStackTileEntityRenderer> { obj }
+	
+	private fun registerProperties(item: Item) {
+		val properties = (item as? IHeeItem)?.properties
+		if (!properties.isNullOrEmpty()) {
+			for (property in properties) {
+				property.register(item)
+			}
+		}
+	}
 	
 	private inline fun <reified T : ContainerScreen<U>, U : Container> registerScreen(type: ContainerType<out U>, constructor: IScreenFactory<U, T>) {
 		ScreenManager.registerFactory(type, constructor)

@@ -81,6 +81,9 @@ class ItemVoidSalad(properties: Properties) : HeeItem(properties) {
 			)
 		)
 	
+	override val properties
+		get() = listOf(SALAD_TYPE_PROPERTY)
+	
 	override fun getUseDuration(stack: ItemStack): Int {
 		return 70
 	}

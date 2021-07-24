@@ -113,6 +113,9 @@ class ItemEnergyOracle(properties: Properties) : ItemAbstractEnergyUser(properti
 			)
 		)
 	
+	override val properties
+		get() = listOf(ACTIVITY_INTENSITY_PROPERTY)
+	
 	// Energy properties
 	
 	override fun getEnergyCapacity(stack: ItemStack) =
