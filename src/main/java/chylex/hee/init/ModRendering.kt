@@ -32,6 +32,7 @@ import chylex.hee.client.render.entity.RenderEntityMobVampireBat
 import chylex.hee.client.render.entity.RenderEntityMobVillagerDying
 import chylex.hee.client.render.entity.RenderEntityNothing
 import chylex.hee.client.render.entity.RenderEntityProjectileEyeOfEnder
+import chylex.hee.client.render.entity.RenderEntitySprite
 import chylex.hee.client.render.entity.RenderEntityTerritoryLightningBolt
 import chylex.hee.client.render.entity.RenderEntityTokenHolder
 import chylex.hee.client.render.item.RenderItemTileEntitySimple
@@ -70,6 +71,7 @@ import net.minecraft.client.renderer.tileentity.TileEntityRenderer
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher
 import net.minecraft.entity.Entity
 import net.minecraft.entity.EntityType
+import net.minecraft.entity.IRendersAsItem
 import net.minecraft.inventory.container.Container
 import net.minecraft.inventory.container.ContainerType
 import net.minecraft.item.Item
@@ -140,36 +142,36 @@ object ModRendering {
 		
 		// entities
 		
-		registerEntity<EntityBossEnderEye, RenderEntityBossEnderEye>(ModEntities.ENDER_EYE)
-		registerEntity<EntityFallingBlockHeavy, FallingBlockRenderer>(ModEntities.FALLING_BLOCK_HEAVY)
-		registerEntity<EntityFallingObsidian, FallingBlockRenderer>(ModEntities.FALLING_OBSIDIAN)
-		registerEntity<EntityInfusedTNT, TNTRenderer>(ModEntities.INFUSED_TNT)
-		registerEntity<EntityItemCauldronTrigger, RenderEntityItem>(ModEntities.ITEM_CAULDRON_TRIGGER)
-		registerEntity<EntityItemFreshlyCooked, RenderEntityItem>(ModEntities.ITEM_FRESHLY_COOKED)
-		registerEntity<EntityItemIgneousRock, RenderEntityItemNoBob>(ModEntities.ITEM_IGNEOUS_ROCK)
-		registerEntity<EntityItemNoBob, RenderEntityItem>(ModEntities.ITEM_NO_BOB)
-		registerEntity<EntityItemRevitalizationSubstance, RenderEntityItem>(ModEntities.ITEM_REVITALIZATION_SUBSTANCE)
-		registerEntity<EntityMobAbstractEnderman, RenderEntityMobAbstractEnderman>(ModEntities.ENDERMAN)
-		registerEntity<EntityMobAbstractEnderman, RenderEntityMobAbstractEnderman>(ModEntities.ENDERMAN_MUPPET)
-		registerEntity<EntityMobAngryEnderman, RenderEntityMobAngryEnderman>(ModEntities.ANGRY_ENDERMAN)
-		registerEntity<EntityMobBlobby, RenderEntityMobBlobby>(ModEntities.BLOBBY)
-		registerEntity<EntityMobEndermite, EndermiteRenderer>(ModEntities.ENDERMITE)
-		registerEntity<EntityMobEndermiteInstability, EndermiteRenderer>(ModEntities.ENDERMITE_INSTABILITY)
-		registerEntity<EntityMobSilverfish, SilverfishRenderer>(ModEntities.SILVERFISH)
-		registerEntity<EntityMobSpiderling, RenderEntityMobSpiderling>(ModEntities.SPIDERLING)
-		registerEntity<EntityMobUndread, RenderEntityMobUndread>(ModEntities.UNDREAD)
-		registerEntity<EntityMobVampireBat, RenderEntityMobVampireBat>(ModEntities.VAMPIRE_BAT)
-		registerEntity<EntityMobVillagerDying, RenderEntityMobVillagerDying>(ModEntities.VILLAGER_DYING)
-		registerEntity<EntityProjectileEnderPearl, RenderEntitySprite<EntityProjectileEnderPearl>>(ModEntities.ENDER_PEARL)
-		registerEntity<EntityProjectileExperienceBottle, RenderEntitySprite<EntityProjectileExperienceBottle>>(ModEntities.EXPERIENCE_BOTTLE)
-		registerEntity<EntityProjectileEyeOfEnder, RenderEntityProjectileEyeOfEnder>(ModEntities.EYE_OF_ENDER)
-		registerEntity<EntityProjectileSpatialDash, RenderEntityNothing>(ModEntities.SPATIAL_DASH)
-		registerEntity<EntityTechnicalBase, RenderEntityNothing>(ModEntities.CAUSATUM_EVENT)
-		registerEntity<EntityTechnicalBase, RenderEntityNothing>(ModEntities.TECHNICAL_PUZZLE)
-		registerEntity<EntityTechnicalBase, RenderEntityNothing>(ModEntities.TECHNICAL_TRIGGER)
-		registerEntity<EntityTechnicalIgneousPlateLogic, RenderEntityNothing>(ModEntities.IGNEOUS_PLATE_LOGIC)
-		registerEntity<EntityTerritoryLightningBolt, RenderEntityTerritoryLightningBolt>(ModEntities.TERRITORY_LIGHTNING_BOLT)
-		registerEntity<EntityTokenHolder, RenderEntityTokenHolder>(ModEntities.TOKEN_HOLDER)
+		ModEntities.ANGRY_ENDERMAN.render(RenderEntityMobAngryEnderman::class.java)
+		ModEntities.BLOBBY.render(RenderEntityMobBlobby::class.java)
+		ModEntities.CAUSATUM_EVENT.render(RenderEntityNothing::class.java)
+		ModEntities.ENDERMAN.render(RenderEntityMobAbstractEnderman::class.java)
+		ModEntities.ENDERMAN_MUPPET.render(RenderEntityMobAbstractEnderman::class.java)
+		ModEntities.ENDERMITE.render(EndermiteRenderer::class.java)
+		ModEntities.ENDERMITE_INSTABILITY.render(EndermiteRenderer::class.java)
+		ModEntities.ENDER_EYE.render(RenderEntityBossEnderEye::class.java)
+		ModEntities.ENDER_PEARL.renderSprite()
+		ModEntities.EXPERIENCE_BOTTLE.renderSprite()
+		ModEntities.EYE_OF_ENDER.render(RenderEntityProjectileEyeOfEnder::class.java)
+		ModEntities.FALLING_BLOCK_HEAVY.render(FallingBlockRenderer::class.java)
+		ModEntities.FALLING_OBSIDIAN.render(FallingBlockRenderer::class.java)
+		ModEntities.IGNEOUS_PLATE_LOGIC.render(RenderEntityNothing::class.java)
+		ModEntities.INFUSED_TNT.render(TNTRenderer::class.java)
+		ModEntities.ITEM_CAULDRON_TRIGGER.render(RenderEntityItem::class.java)
+		ModEntities.ITEM_FRESHLY_COOKED.render(RenderEntityItem::class.java)
+		ModEntities.ITEM_IGNEOUS_ROCK.render(RenderEntityItemNoBob::class.java)
+		ModEntities.ITEM_NO_BOB.render(RenderEntityItem::class.java)
+		ModEntities.ITEM_REVITALIZATION_SUBSTANCE.render(RenderEntityItem::class.java)
+		ModEntities.SILVERFISH.render(SilverfishRenderer::class.java)
+		ModEntities.SPATIAL_DASH.render(RenderEntityNothing::class.java)
+		ModEntities.SPIDERLING.render(RenderEntityMobSpiderling::class.java)
+		ModEntities.TECHNICAL_PUZZLE.render(RenderEntityNothing::class.java)
+		ModEntities.TECHNICAL_TRIGGER.render(RenderEntityNothing::class.java)
+		ModEntities.TERRITORY_LIGHTNING_BOLT.render(RenderEntityTerritoryLightningBolt::class.java)
+		ModEntities.TOKEN_HOLDER.render(RenderEntityTokenHolder::class.java)
+		ModEntities.UNDREAD.render(RenderEntityMobUndread::class.java)
+		ModEntities.VAMPIRE_BAT.render(RenderEntityMobVampireBat::class.java)
+		ModEntities.VILLAGER_DYING.render(RenderEntityMobVillagerDying::class.java)
 		
 		// tile entities
 		
@@ -236,6 +238,17 @@ object ModRendering {
 	private inline fun <reified T : Entity, reified U : EntityRenderer<in T>> registerEntity(type: EntityType<out T>) {
 		val handle = ObjectConstructors.generic<U, EntityRenderer<in T>, IRenderFactory<T>>("createRenderFor", EntityRendererManager::class.java)
 		RenderingRegistry.registerEntityRenderingHandler(type, handle.invokeExact() as IRenderFactory<T>)
+	}
+	
+	@Suppress("UNCHECKED_CAST")
+	private fun <T : Entity> EntityType<T>.render(renderer: Class<out EntityRenderer<in T>>) {
+		val handle = ObjectConstructors.generic(renderer, EntityRenderer::class.java, IRenderFactory::class.java, "createRenderFor", EntityRendererManager::class.java)
+		RenderingRegistry.registerEntityRenderingHandler(this, handle.invokeExact() as IRenderFactory<T>)
+	}
+	
+	@Suppress("UNCHECKED_CAST")
+	private inline fun <reified T> EntityType<T>.renderSprite() where T : Entity, T : IRendersAsItem {
+		registerEntity<T, RenderEntitySprite<T>>(this)
 	}
 	
 	private fun <T : TileEntity> TileEntityType<T>.render(renderer: Class<out TileEntityRenderer<in T>>) {

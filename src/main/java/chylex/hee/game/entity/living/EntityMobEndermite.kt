@@ -2,6 +2,7 @@ package chylex.hee.game.entity.living
 
 import chylex.hee.game.Resource
 import chylex.hee.game.entity.CustomCreatureType
+import chylex.hee.game.entity.IHeeMobEntityType
 import chylex.hee.game.entity.damage.Damage
 import chylex.hee.game.entity.damage.IDamageProcessor.Companion.ALL_PROTECTIONS
 import chylex.hee.game.entity.damage.IDamageProcessor.Companion.DIFFICULTY_SCALING
@@ -12,6 +13,10 @@ import chylex.hee.game.entity.living.ai.Swim
 import chylex.hee.game.entity.living.ai.TargetAttacker
 import chylex.hee.game.entity.living.ai.TargetNearby
 import chylex.hee.game.entity.living.ai.WanderLand
+import chylex.hee.game.entity.properties.EntitySize
+import chylex.hee.game.entity.properties.EntitySpawnPlacement
+import chylex.hee.game.entity.util.DefaultEntityAttributes
+import chylex.hee.game.entity.util.with
 import chylex.hee.init.ModEntities
 import chylex.hee.system.heeTag
 import chylex.hee.util.math.square
@@ -19,7 +24,10 @@ import chylex.hee.util.nbt.TagCompound
 import chylex.hee.util.nbt.use
 import net.minecraft.entity.CreatureAttribute
 import net.minecraft.entity.Entity
+import net.minecraft.entity.EntityClassification
 import net.minecraft.entity.EntityType
+import net.minecraft.entity.ai.attributes.Attributes.ATTACK_DAMAGE
+import net.minecraft.entity.ai.attributes.Attributes.MAX_HEALTH
 import net.minecraft.entity.monster.EndermiteEntity
 import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.network.IPacket
@@ -32,7 +40,26 @@ open class EntityMobEndermite(type: EntityType<out EntityMobEndermite>, world: W
 	@Suppress("unused")
 	constructor(world: World) : this(ModEntities.ENDERMITE, world)
 	
-	private companion object {
+	open class BaseType<T : EntityMobEndermite> : IHeeMobEntityType<T> {
+		final override val classification
+			get() = EntityClassification.MONSTER
+		
+		final override val size
+			get() = EntitySize(0.425F, 0.325F)
+		
+		override val attributes
+			get() = DefaultEntityAttributes.endermite.with(
+				MAX_HEALTH    to 8.0,
+				ATTACK_DAMAGE to 2.0,
+			)
+		
+		final override val placement
+			get() = EntitySpawnPlacement.hostile<T>()
+	}
+	
+	companion object {
+		val TYPE = BaseType<EntityMobEndermite>()
+		
 		private val DAMAGE_GENERAL = Damage(DIFFICULTY_SCALING, PEACEFUL_EXCLUSION, *ALL_PROTECTIONS)
 		
 		private const val AGE_TAG = "Age"

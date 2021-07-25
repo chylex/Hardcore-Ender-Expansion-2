@@ -41,6 +41,8 @@ class EntityItemRevitalizationSubstance : EntityItemBase {
 	constructor(world: World, stack: ItemStack, replacee: Entity) : super(ModEntities.ITEM_REVITALIZATION_SUBSTANCE, world, stack, replacee)
 	
 	companion object {
+		val TYPE = BaseType<EntityItemRevitalizationSubstance>()
+		
 		private const val MAX_RADIUS = 8.5F
 		
 		class FxRevitalizeGooData(private val center: BlockPos, private val radius: Float) : IFxData {

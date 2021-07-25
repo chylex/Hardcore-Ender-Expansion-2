@@ -11,4 +11,8 @@ open class EntityItemNoBob : EntityItemBase {
 	constructor(type: EntityType<out EntityItemNoBob>, world: World) : super(type, world)
 	constructor(type: EntityType<out EntityItemNoBob>, world: World, stack: ItemStack, replacee: Entity) : super(type, world, stack, replacee)
 	constructor(world: World, stack: ItemStack, replacee: Entity) : this(ModEntities.ITEM_NO_BOB, world, stack, replacee)
+	
+	companion object {
+		val TYPE = BaseType<EntityItemNoBob>()
+	}
 }

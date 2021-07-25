@@ -1,6 +1,7 @@
 package chylex.hee.game.entity.living
 
 import chylex.hee.game.Resource
+import chylex.hee.game.entity.IHeeMobEntityType
 import chylex.hee.game.entity.damage.Damage
 import chylex.hee.game.entity.damage.IDamageProcessor.Companion.ALL_PROTECTIONS
 import chylex.hee.game.entity.damage.IDamageProcessor.Companion.DIFFICULTY_SCALING
@@ -20,6 +21,9 @@ import chylex.hee.game.entity.living.ai.WanderOnFirePanic
 import chylex.hee.game.entity.living.ai.WatchClosest
 import chylex.hee.game.entity.living.ai.WatchIdle
 import chylex.hee.game.entity.living.path.PathNavigateGroundUnrestricted
+import chylex.hee.game.entity.properties.EntitySize
+import chylex.hee.game.entity.properties.EntitySpawnPlacement
+import chylex.hee.game.entity.util.DefaultEntityAttributes
 import chylex.hee.game.entity.util.EntityData
 import chylex.hee.game.entity.util.OP_MUL_INCR_INDIVIDUAL
 import chylex.hee.game.entity.util.getAttributeInstance
@@ -30,6 +34,7 @@ import chylex.hee.game.entity.util.selectExistingEntities
 import chylex.hee.game.entity.util.selectVulnerableEntities
 import chylex.hee.game.entity.util.tryApplyNonPersistentModifier
 import chylex.hee.game.entity.util.tryRemoveModifier
+import chylex.hee.game.entity.util.with
 import chylex.hee.game.world.util.getState
 import chylex.hee.game.world.util.isPeaceful
 import chylex.hee.init.ModEntities
@@ -47,6 +52,7 @@ import net.minecraft.block.BlockState
 import net.minecraft.block.WebBlock
 import net.minecraft.entity.CreatureAttribute
 import net.minecraft.entity.Entity
+import net.minecraft.entity.EntityClassification
 import net.minecraft.entity.EntityType
 import net.minecraft.entity.ILivingEntityData
 import net.minecraft.entity.LivingEntity
@@ -54,7 +60,9 @@ import net.minecraft.entity.SpawnReason
 import net.minecraft.entity.SpawnReason.SPAWNER
 import net.minecraft.entity.ai.attributes.AttributeModifier
 import net.minecraft.entity.ai.attributes.Attributes.ATTACK_DAMAGE
+import net.minecraft.entity.ai.attributes.Attributes.FOLLOW_RANGE
 import net.minecraft.entity.ai.attributes.Attributes.MAX_HEALTH
+import net.minecraft.entity.ai.attributes.Attributes.MOVEMENT_SPEED
 import net.minecraft.entity.monster.MonsterEntity
 import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.item.AxeItem
@@ -74,7 +82,7 @@ import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.RayTraceContext
 import net.minecraft.util.math.RayTraceContext.BlockMode
 import net.minecraft.util.math.RayTraceContext.FluidMode
-import net.minecraft.util.math.RayTraceResult.Type
+import net.minecraft.util.math.RayTraceResult
 import net.minecraft.util.math.vector.Vector3d
 import net.minecraft.world.Difficulty.HARD
 import net.minecraft.world.Difficulty.NORMAL
@@ -94,6 +102,27 @@ import kotlin.math.sin
 
 class EntityMobSpiderling(type: EntityType<EntityMobSpiderling>, world: World) : MonsterEntity(type, world), ILightStartleHandler {
 	constructor(world: World) : this(ModEntities.SPIDERLING, world)
+	
+	object Type : IHeeMobEntityType<EntityMobSpiderling> {
+		override val classification
+			get() = EntityClassification.MONSTER
+		
+		override val size
+			get() = EntitySize(0.675F, 0.45F)
+		
+		override val tracker
+			get() = super.tracker.copy(updateInterval = 2)
+		
+		override val attributes
+			get() = DefaultEntityAttributes.hostileMob.with(
+				ATTACK_DAMAGE  to 1.5,
+				MOVEMENT_SPEED to 0.32,
+				FOLLOW_RANGE   to 20.0,
+			)
+		
+		override val placement
+			get() = EntitySpawnPlacement.hostile<EntityMobSpiderling>()
+	}
 	
 	companion object {
 		private val DAMAGE_GENERAL = Damage(DIFFICULTY_SCALING, PEACEFUL_EXCLUSION, *ALL_PROTECTIONS)
@@ -250,7 +279,7 @@ class EntityMobSpiderling(type: EntityType<EntityMobSpiderling>, world: World) :
 				val direction = start.directionTowards(target)
 				val obstacle = world.rayTraceBlocks(RayTraceContext(start, start.add(direction.scale(3.0)), BlockMode.COLLIDER, FluidMode.NONE, this))
 				
-				if (obstacle.type == Type.BLOCK) {
+				if (obstacle.type == RayTraceResult.Type.BLOCK) {
 					val topY = findTopBlockMaxY(world, obstacle.pos)
 					
 					if (topY != null) {

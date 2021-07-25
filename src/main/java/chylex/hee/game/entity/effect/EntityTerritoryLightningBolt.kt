@@ -1,5 +1,8 @@
 package chylex.hee.game.entity.effect
 
+import chylex.hee.game.entity.IHeeEntityType
+import chylex.hee.game.entity.properties.EntitySize
+import chylex.hee.game.entity.properties.EntityTrackerInfo
 import chylex.hee.game.fx.util.playPlayer
 import chylex.hee.game.territory.system.TerritoryInstance
 import chylex.hee.init.ModEntities
@@ -18,6 +21,17 @@ import net.minecraftforge.fml.network.NetworkHooks
 class EntityTerritoryLightningBolt(type: EntityType<*>, world: World) : Entity(type, world) {
 	constructor(world: World, x: Double, y: Double, z: Double) : this(ModEntities.TERRITORY_LIGHTNING_BOLT, world) {
 		setLocationAndAngles(x, y, z, 0F, 0F)
+	}
+	
+	object Type : IHeeEntityType<EntityTerritoryLightningBolt> {
+		override val size
+			get() = EntitySize(0F)
+		
+		override val tracker
+			get() = EntityTrackerInfo(trackingRange = 16, updateInterval = 3, receiveVelocityUpdates = false)
+		
+		override val disableSerialization
+			get() = true
 	}
 	
 	private var lightningState = 2

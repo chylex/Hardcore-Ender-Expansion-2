@@ -2,7 +2,10 @@ package chylex.hee.game.entity.projectile
 
 import chylex.hee.client.sound.MovingSoundSpatialDash
 import chylex.hee.client.util.MC
+import chylex.hee.game.entity.IHeeEntityType
 import chylex.hee.game.entity.Teleporter
+import chylex.hee.game.entity.properties.EntitySize
+import chylex.hee.game.entity.properties.EntityTrackerInfo
 import chylex.hee.game.entity.util.SerializedEntity
 import chylex.hee.game.entity.util.posVec
 import chylex.hee.game.fx.IFxData
@@ -59,7 +62,6 @@ import net.minecraft.util.math.RayTraceContext
 import net.minecraft.util.math.RayTraceContext.BlockMode
 import net.minecraft.util.math.RayTraceContext.FluidMode
 import net.minecraft.util.math.RayTraceResult
-import net.minecraft.util.math.RayTraceResult.Type
 import net.minecraft.util.math.vector.Vector3d
 import net.minecraft.world.World
 import net.minecraftforge.event.ForgeEventFactory
@@ -79,6 +81,14 @@ class EntityProjectileSpatialDash(type: EntityType<EntityProjectileSpatialDash>,
 		
 		this.lifespan = (realDistance / realSpeed).ceilToInt().toShort()
 		this.range = realDistance
+	}
+	
+	object Type : IHeeEntityType<EntityProjectileSpatialDash> {
+		override val size
+			get() = EntitySize(0.2F)
+		
+		override val tracker
+			get() = EntityTrackerInfo.Defaults.PROJECTILE
 	}
 	
 	companion object {
@@ -238,7 +248,7 @@ class EntityProjectileSpatialDash(type: EntityType<EntityProjectileSpatialDash>,
 		if (!world.isRemote) {
 			val hitObject = determineHitObject()
 			
-			if (hitObject != null && hitObject.type != Type.MISS) {
+			if (hitObject != null && hitObject.type != RayTraceResult.Type.MISS) {
 				val ownerEntity = owner.get(world)
 				
 				if (ownerEntity is LivingEntity && ownerEntity.world === world) {
@@ -269,7 +279,7 @@ class EntityProjectileSpatialDash(type: EntityType<EntityProjectileSpatialDash>,
 		val currentPos = posVec
 		val nextPos = currentPos.add(cappedMotionVec)
 		
-		val blockResult = world.rayTraceBlocks(RayTraceContext(currentPos, nextPos, BlockMode.COLLIDER, FluidMode.NONE, this)).takeIf { it.type == Type.BLOCK }
+		val blockResult = world.rayTraceBlocks(RayTraceContext(currentPos, nextPos, BlockMode.COLLIDER, FluidMode.NONE, this)).takeIf { it.type == RayTraceResult.Type.BLOCK }
 		
 		val ownerEntity = owner.get(world)
 		val tracedNextPos = blockResult?.hitVec ?: nextPos

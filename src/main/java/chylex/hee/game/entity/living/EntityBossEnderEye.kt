@@ -2,6 +2,7 @@ package chylex.hee.game.entity.living
 
 import chylex.hee.game.Resource
 import chylex.hee.game.entity.CustomCreatureType
+import chylex.hee.game.entity.IHeeMobEntityType
 import chylex.hee.game.entity.damage.Damage
 import chylex.hee.game.entity.damage.FallbackDamage
 import chylex.hee.game.entity.damage.IDamageProcessor.Companion.ALL_PROTECTIONS
@@ -27,13 +28,17 @@ import chylex.hee.game.entity.living.controller.EntityBodyHeadOnly
 import chylex.hee.game.entity.living.controller.EntityLookSlerp
 import chylex.hee.game.entity.living.controller.EntityMoveFlyingForward
 import chylex.hee.game.entity.living.path.PathNavigateFlyingPreferBeeLineOrStrafe
+import chylex.hee.game.entity.properties.EntitySize
+import chylex.hee.game.entity.properties.EntityTrackerInfo
 import chylex.hee.game.entity.technical.EntityTechnicalTrigger
 import chylex.hee.game.entity.technical.EntityTechnicalTrigger.Types.OBSIDIAN_TOWER_DEATH_ANIMATION
+import chylex.hee.game.entity.util.DefaultEntityAttributes
 import chylex.hee.game.entity.util.EntityData
 import chylex.hee.game.entity.util.getAttributeInstance
 import chylex.hee.game.entity.util.motionY
 import chylex.hee.game.entity.util.posVec
 import chylex.hee.game.entity.util.selectVulnerableEntities
+import chylex.hee.game.entity.util.with
 import chylex.hee.game.potion.BanishmentEffect
 import chylex.hee.init.ModEntities
 import chylex.hee.init.ModSounds
@@ -61,7 +66,7 @@ import chylex.hee.util.nbt.use
 import net.minecraft.block.material.PushReaction
 import net.minecraft.entity.CreatureAttribute
 import net.minecraft.entity.Entity
-import net.minecraft.entity.EntitySize
+import net.minecraft.entity.EntityClassification
 import net.minecraft.entity.EntityType
 import net.minecraft.entity.FlyingEntity
 import net.minecraft.entity.ILivingEntityData
@@ -69,7 +74,9 @@ import net.minecraft.entity.LivingEntity
 import net.minecraft.entity.Pose
 import net.minecraft.entity.SpawnReason
 import net.minecraft.entity.ai.attributes.Attributes.ATTACK_DAMAGE
+import net.minecraft.entity.ai.attributes.Attributes.FLYING_SPEED
 import net.minecraft.entity.ai.attributes.Attributes.FOLLOW_RANGE
+import net.minecraft.entity.ai.attributes.Attributes.MAX_HEALTH
 import net.minecraft.entity.ai.controller.BodyController
 import net.minecraft.entity.monster.IMob
 import net.minecraft.entity.player.PlayerEntity
@@ -100,6 +107,28 @@ class EntityBossEnderEye(type: EntityType<EntityBossEnderEye>, world: World) : F
 	constructor(world: World, totalSpawners: Int) : this(world) {
 		this.totalSpawners = totalSpawners.toShort()
 		this.rotationYaw = 0F
+	}
+	
+	object Type : IHeeMobEntityType<EntityBossEnderEye> {
+		override val classification
+			get() = EntityClassification.MONSTER
+		
+		override val size
+			get() = EntitySize(1.1F, 1F)
+		
+		override val tracker
+			get() = EntityTrackerInfo(trackingRange = 160, updateInterval = 1, receiveVelocityUpdates = true)
+		
+		override val attributes
+			get() = DefaultEntityAttributes.hostileMob.with(
+				MAX_HEALTH    to 300.0,
+				ATTACK_DAMAGE to 4.0,
+				FLYING_SPEED  to 0.093,
+				FOLLOW_RANGE  to 16.0,
+			)
+		
+		override val isImmuneToFire
+			get() = true
 	}
 	
 	companion object {
@@ -594,7 +623,7 @@ class EntityBossEnderEye(type: EntityType<EntityBossEnderEye>, world: World) : F
 			CustomCreatureType.ENDER
 	}
 	
-	override fun getStandingEyeHeight(pose: Pose, size: EntitySize): Float {
+	override fun getStandingEyeHeight(pose: Pose, size: net.minecraft.entity.EntitySize): Float {
 		return size.height * 0.5F
 	}
 	

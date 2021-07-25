@@ -2,7 +2,10 @@ package chylex.hee.game.entity.technical
 
 import chylex.hee.game.block.BlockIgneousPlate
 import chylex.hee.game.block.entity.TileEntityIgneousPlate
+import chylex.hee.game.entity.IHeeEntityType
 import chylex.hee.game.entity.item.EntityItemFreshlyCooked
+import chylex.hee.game.entity.properties.EntitySize
+import chylex.hee.game.entity.properties.EntityTrackerInfo
 import chylex.hee.game.entity.util.EntityData
 import chylex.hee.game.entity.util.selectEntities
 import chylex.hee.game.fx.FxBlockData
@@ -63,6 +66,17 @@ import kotlin.math.pow
 class EntityTechnicalIgneousPlateLogic(type: EntityType<EntityTechnicalIgneousPlateLogic>, world: World) : Entity(type, world) {
 	@Suppress("unused")
 	constructor(world: World) : this(ModEntities.IGNEOUS_PLATE_LOGIC, world)
+	
+	object Type : IHeeEntityType<EntityTechnicalIgneousPlateLogic> {
+		override val size
+			get() = EntitySize(0F)
+		
+		override val tracker
+			get() = EntityTrackerInfo(trackingRange = 2, updateInterval = 10, receiveVelocityUpdates = false)
+		
+		override val isImmuneToFire
+			get() = true
+	}
 	
 	companion object {
 		private const val FIELD_COOK_TIME_CURRENT = 2

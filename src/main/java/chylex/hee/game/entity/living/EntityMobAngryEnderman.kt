@@ -8,9 +8,12 @@ import chylex.hee.game.entity.living.ai.TargetNearby
 import chylex.hee.game.entity.living.ai.WanderLand
 import chylex.hee.game.entity.living.behavior.EndermanTeleportHandler
 import chylex.hee.game.entity.living.behavior.EndermanWaterHandler
+import chylex.hee.game.entity.properties.EntitySpawnPlacement
+import chylex.hee.game.entity.util.DefaultEntityAttributes
 import chylex.hee.game.entity.util.lookPosVec
 import chylex.hee.game.entity.util.posVec
 import chylex.hee.game.entity.util.selectVulnerableEntities
+import chylex.hee.game.entity.util.with
 import chylex.hee.init.ModEntities
 import chylex.hee.system.heeTag
 import chylex.hee.util.math.Vec
@@ -20,19 +23,35 @@ import chylex.hee.util.nbt.TagCompound
 import chylex.hee.util.nbt.use
 import net.minecraft.entity.EntityPredicate
 import net.minecraft.entity.EntityType
+import net.minecraft.entity.ai.attributes.Attributes.ATTACK_DAMAGE
 import net.minecraft.entity.ai.attributes.Attributes.FOLLOW_RANGE
+import net.minecraft.entity.ai.attributes.Attributes.MAX_HEALTH
+import net.minecraft.entity.ai.attributes.Attributes.MOVEMENT_SPEED
 import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.util.ResourceLocation
 import net.minecraft.util.math.AxisAlignedBB
 import net.minecraft.util.math.RayTraceContext
 import net.minecraft.util.math.RayTraceContext.BlockMode
 import net.minecraft.util.math.RayTraceContext.FluidMode
-import net.minecraft.util.math.RayTraceResult.Type
+import net.minecraft.util.math.RayTraceResult
 import net.minecraft.world.Difficulty.PEACEFUL
 import net.minecraft.world.World
 
 class EntityMobAngryEnderman(type: EntityType<EntityMobAngryEnderman>, world: World) : EntityMobAbstractEnderman(type, world) {
 	constructor(world: World) : this(ModEntities.ANGRY_ENDERMAN, world)
+	
+	object Type : BaseType<EntityMobAngryEnderman>() {
+		override val attributes
+			get() = DefaultEntityAttributes.hostileMob.with(
+				MAX_HEALTH     to 40.0,
+				ATTACK_DAMAGE  to 7.0,
+				MOVEMENT_SPEED to 0.315,
+				FOLLOW_RANGE   to 32.0,
+			)
+		
+		override val placement
+			get() = EntitySpawnPlacement.hostile<EntityMobAngryEnderman>()
+	}
 	
 	private companion object {
 		private const val TELEPORT_HANDLER_TAG = "Teleport"
@@ -104,7 +123,7 @@ class EntityMobAngryEnderman(type: EntityType<EntityMobAngryEnderman>, world: Wo
 		val currentTarget = attackTarget ?: return false
 		val teleportPos = Vec(lerp(aabb.minX, aabb.maxX, 0.5), aabb.minY + eyeHeight.toDouble(), lerp(aabb.minZ, aabb.maxZ, 0.5))
 		
-		return world.rayTraceBlocks(RayTraceContext(teleportPos, currentTarget.lookPosVec, BlockMode.COLLIDER, FluidMode.NONE, this)).type == Type.MISS
+		return world.rayTraceBlocks(RayTraceContext(teleportPos, currentTarget.lookPosVec, BlockMode.COLLIDER, FluidMode.NONE, this)).type == RayTraceResult.Type.MISS
 	}
 	
 	override fun getLootTable(): ResourceLocation {

@@ -3,7 +3,7 @@ package chylex.hee.game.mechanics.causatum.events
 import chylex.hee.game.entity.Teleporter.Companion.FxTeleportData
 import chylex.hee.game.entity.living.EntityMobEnderman
 import chylex.hee.game.entity.living.EntityMobEndermanMuppet
-import chylex.hee.game.entity.living.EntityMobEndermanMuppet.Type.FIRST_KILL
+import chylex.hee.game.entity.living.EntityMobEndermanMuppet.MuppetType.FIRST_KILL
 import chylex.hee.game.entity.technical.EntityTechnicalCausatumEvent
 import chylex.hee.game.entity.technical.EntityTechnicalCausatumEvent.ICausatumEventHandler
 import chylex.hee.game.entity.util.SerializedEntity

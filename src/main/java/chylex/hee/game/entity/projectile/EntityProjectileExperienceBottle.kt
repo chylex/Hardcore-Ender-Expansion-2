@@ -1,5 +1,8 @@
 package chylex.hee.game.entity.projectile
 
+import chylex.hee.game.entity.IHeeEntityType
+import chylex.hee.game.entity.properties.EntitySize
+import chylex.hee.game.entity.properties.EntityTrackerInfo
 import chylex.hee.init.ModEntities
 import chylex.hee.init.ModItems
 import chylex.hee.util.math.Pos
@@ -26,6 +29,14 @@ class EntityProjectileExperienceBottle(type: EntityType<out ExperienceBottleEnti
 	constructor(world: World, x: Double, y: Double, z: Double, stack: ItemStack) : this(ModEntities.EXPERIENCE_BOTTLE, world) {
 		item = stack
 		setPosition(x, y, z)
+	}
+	
+	object Type : IHeeEntityType<EntityProjectileExperienceBottle> {
+		override val size
+			get() = EntitySize(0.25F)
+		
+		override val tracker
+			get() = EntityTrackerInfo.Defaults.PROJECTILE.copy(receiveVelocityUpdates = false)
 	}
 	
 	override fun createSpawnPacket(): IPacket<*> {

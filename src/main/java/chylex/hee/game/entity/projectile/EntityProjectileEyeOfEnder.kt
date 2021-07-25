@@ -1,5 +1,8 @@
 package chylex.hee.game.entity.projectile
 
+import chylex.hee.game.entity.IHeeEntityType
+import chylex.hee.game.entity.properties.EntitySize
+import chylex.hee.game.entity.properties.EntityTrackerInfo
 import chylex.hee.game.entity.util.lookDirVec
 import chylex.hee.game.entity.util.lookPosVec
 import chylex.hee.game.entity.util.motionX
@@ -68,6 +71,14 @@ class EntityProjectileEyeOfEnder(type: EntityType<EntityProjectileEyeOfEnder>, w
 	constructor(thrower: LivingEntity, targetPos: BlockPos?) : this(ModEntities.EYE_OF_ENDER, thrower.world) {
 		this.posVec = thrower.lookPosVec.subtractY(height * 0.5).add(thrower.lookDirVec.scale(1.5))
 		this.targetPos = targetPos
+	}
+	
+	object Type : IHeeEntityType<EntityProjectileEyeOfEnder> {
+		override val size
+			get() = EntitySize(0.5F, 1F)
+		
+		override val tracker
+			get() = EntityTrackerInfo.Defaults.PROJECTILE.copy(updateInterval = 60, receiveVelocityUpdates = false)
 	}
 	
 	private companion object {

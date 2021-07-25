@@ -35,7 +35,7 @@ import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.RayTraceContext
 import net.minecraft.util.math.RayTraceContext.BlockMode
 import net.minecraft.util.math.RayTraceContext.FluidMode
-import net.minecraft.util.math.RayTraceResult.Type
+import net.minecraft.util.math.RayTraceResult
 import net.minecraft.util.math.vector.Vector3d
 import net.minecraft.world.World
 import kotlin.math.cos
@@ -43,7 +43,9 @@ import kotlin.math.cos
 class EntityTechnicalPuzzle(type: EntityType<EntityTechnicalPuzzle>, world: World) : EntityTechnicalBase(type, world) {
 	constructor(world: World) : this(ModEntities.TECHNICAL_PUZZLE, world)
 	
-	private companion object {
+	companion object {
+		val TYPE = BaseType<EntityTechnicalPuzzle>()
+		
 		private const val START_POS_TAG = "StartPos"
 		private const val FACING_TAG = "Facing"
 	}
@@ -179,7 +181,7 @@ class EntityTechnicalPuzzle(type: EntityType<EntityTechnicalPuzzle>, world: Worl
 			val pointDir = point.subtract(lookPos).normalize()
 			
 			lookDir.dotProduct(pointDir) > cos(80.0.toRadians()) &&
-			world.rayTraceBlocks(RayTraceContext(lookPos, point, BlockMode.COLLIDER, FluidMode.NONE, this)).type == Type.MISS
+			world.rayTraceBlocks(RayTraceContext(lookPos, point, BlockMode.COLLIDER, FluidMode.NONE, this)).type == RayTraceResult.Type.MISS
 		}
 	}
 	

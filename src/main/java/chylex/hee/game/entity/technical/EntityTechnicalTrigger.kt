@@ -1,5 +1,6 @@
 package chylex.hee.game.entity.technical
 
+import chylex.hee.game.entity.properties.EntityTrackerInfo
 import chylex.hee.game.entity.technical.EntityTechnicalTrigger.Types.INVALID
 import chylex.hee.game.world.generation.feature.energyshrine.EnergyShrineGenerator
 import chylex.hee.game.world.generation.feature.energyshrine.piece.EnergyShrineRoom_Main_Start
@@ -33,6 +34,11 @@ class EntityTechnicalTrigger(type: EntityType<EntityTechnicalTrigger>, world: Wo
 	
 	constructor(world: World, type: Types, nbt: TagCompound) : this(world, type) {
 		handler.deserializeNBT(nbt)
+	}
+	
+	object Type : BaseType<EntityTechnicalTrigger>() {
+		override val tracker
+			get() = EntityTrackerInfo.Defaults.TECHNICAL.copy(trackingRange = 16)
 	}
 	
 	private companion object {

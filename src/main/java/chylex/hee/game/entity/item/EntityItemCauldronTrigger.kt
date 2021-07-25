@@ -43,16 +43,7 @@ class EntityItemCauldronTrigger : EntityItemBase {
 	constructor(world: World, stack: ItemStack, replacee: Entity) : super(ModEntities.ITEM_CAULDRON_TRIGGER, world, stack, replacee)
 	
 	companion object {
-		private val RECIPE_DRAGONS_BREATH = arrayOf<Pair<Item, Int>>(
-			ModItems.END_POWDER to 1,
-			ModItems.ANCIENT_DUST to 1,
-			ModItems.DRAGON_SCALE to 1
-		)
-		
-		private val RECIPE_PURITY_EXTRACT = arrayOf<Pair<Item, Int>>(
-			ModItems.END_POWDER to 3,
-			ModItems.VOID_ESSENCE to 1
-		)
+		val TYPE = BaseType<EntityItemCauldronTrigger>()
 		
 		private val PARTICLE_RECIPE_FINISH = ParticleSpawnerCustom(
 			type = ParticleBubbleCustom,
@@ -69,6 +60,19 @@ class EntityItemCauldronTrigger : EntityItemBase {
 		}
 	}
 	
+	private object Recipes {
+		val DRAGONS_BREATH = arrayOf<Pair<Item, Int>>(
+			ModItems.END_POWDER to 1,
+			ModItems.ANCIENT_DUST to 1,
+			ModItems.DRAGON_SCALE to 1,
+		)
+		
+		val PURITY_EXTRACT = arrayOf<Pair<Item, Int>>(
+			ModItems.END_POWDER to 3,
+			ModItems.VOID_ESSENCE to 1,
+		)
+	}
+	
 	override fun tick() {
 		super.tick()
 		
@@ -78,12 +82,12 @@ class EntityItemCauldronTrigger : EntityItemBase {
 			val block = state.block
 			
 			if (block === Blocks.CAULDRON) {
-				if (state[CAULDRON_LEVEL] > 0 && tryUseIngredients(RECIPE_DRAGONS_BREATH)) {
+				if (state[CAULDRON_LEVEL] > 0 && tryUseIngredients(Recipes.DRAGONS_BREATH)) {
 					pos.setState(world, ModBlocks.CAULDRON_DRAGONS_BREATH.with(CAULDRON_LEVEL, state[CAULDRON_LEVEL]))
 				}
 			}
 			else if (block === ModBlocks.CAULDRON_PURIFIED_ENDER_GOO) {
-				if (state[CAULDRON_LEVEL] == BlockAbstractCauldron.MAX_LEVEL && tryUseIngredients(RECIPE_PURITY_EXTRACT)) {
+				if (state[CAULDRON_LEVEL] == BlockAbstractCauldron.MAX_LEVEL && tryUseIngredients(Recipes.PURITY_EXTRACT)) {
 					pos.setBlock(world, Blocks.CAULDRON)
 					
 					ItemEntity(world, pos.x + 0.5, pos.y + 0.4, pos.z + 0.5, ItemStack(ModItems.PURITY_EXTRACT)).apply {

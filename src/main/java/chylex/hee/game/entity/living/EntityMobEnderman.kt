@@ -16,10 +16,13 @@ import chylex.hee.game.entity.living.behavior.EndermanBlockHandler
 import chylex.hee.game.entity.living.behavior.EndermanTeleportHandler
 import chylex.hee.game.entity.living.behavior.EndermanWaterHandler
 import chylex.hee.game.entity.projectile.EntityProjectileSpatialDash
+import chylex.hee.game.entity.properties.EntitySpawnPlacement
 import chylex.hee.game.entity.technical.EntityTechnicalCausatumEvent
+import chylex.hee.game.entity.util.DefaultEntityAttributes
 import chylex.hee.game.entity.util.posVec
 import chylex.hee.game.entity.util.selectAllEntities
 import chylex.hee.game.entity.util.selectEntities
+import chylex.hee.game.entity.util.with
 import chylex.hee.game.fx.util.playServer
 import chylex.hee.game.mechanics.causatum.CausatumStage
 import chylex.hee.game.mechanics.causatum.CausatumStage.S0_INITIAL
@@ -38,10 +41,15 @@ import chylex.hee.util.nbt.TagCompound
 import chylex.hee.util.nbt.use
 import net.minecraft.block.BlockState
 import net.minecraft.entity.EntityClassification.MONSTER
+import net.minecraft.entity.EntitySpawnPlacementRegistry.PlacementType
 import net.minecraft.entity.EntityType
 import net.minecraft.entity.LivingEntity
 import net.minecraft.entity.MobEntity
 import net.minecraft.entity.SpawnReason
+import net.minecraft.entity.ai.attributes.Attributes.ATTACK_DAMAGE
+import net.minecraft.entity.ai.attributes.Attributes.FOLLOW_RANGE
+import net.minecraft.entity.ai.attributes.Attributes.MAX_HEALTH
+import net.minecraft.entity.ai.attributes.Attributes.MOVEMENT_SPEED
 import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.entity.projectile.AbstractArrowEntity
 import net.minecraft.entity.projectile.LlamaSpitEntity
@@ -61,6 +69,7 @@ import net.minecraft.world.LightType.BLOCK
 import net.minecraft.world.World
 import net.minecraft.world.biome.Biome.Category
 import net.minecraft.world.biome.MobSpawnInfo
+import net.minecraft.world.gen.Heightmap
 import net.minecraftforge.event.entity.ProjectileImpactEvent
 import net.minecraftforge.event.world.BiomeLoadingEvent
 import java.util.Random
@@ -70,6 +79,19 @@ import kotlin.math.pow
 
 class EntityMobEnderman(type: EntityType<EntityMobEnderman>, world: World) : EntityMobAbstractEnderman(type, world) {
 	constructor(world: World) : this(ModEntities.ENDERMAN, world)
+	
+	object Type : BaseType<EntityMobEnderman>() {
+		override val attributes
+			get() = DefaultEntityAttributes.hostileMob.with(
+				MAX_HEALTH     to 40.0,
+				ATTACK_DAMAGE  to 5.0,
+				MOVEMENT_SPEED to 0.3,
+				FOLLOW_RANGE   to 64.0,
+			)
+		
+		override val placement: EntitySpawnPlacement<EntityMobEnderman>
+			get() = EntitySpawnPlacement(PlacementType.ON_GROUND, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, Companion::canSpawnAt)
+	}
 	
 	@SubscribeAllEvents(modid = HEE.ID)
 	companion object {

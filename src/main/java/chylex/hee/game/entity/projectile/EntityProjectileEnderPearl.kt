@@ -2,10 +2,13 @@ package chylex.hee.game.entity.projectile
 
 import chylex.hee.HEE
 import chylex.hee.game.block.properties.BlockBuilder.Companion.INDESTRUCTIBLE_HARDNESS
+import chylex.hee.game.entity.IHeeEntityType
 import chylex.hee.game.entity.Teleporter
 import chylex.hee.game.entity.damage.Damage
 import chylex.hee.game.entity.damage.IDamageProcessor.Companion.ALL_PROTECTIONS_WITH_SHIELD
 import chylex.hee.game.entity.damage.IDamageProcessor.Companion.PEACEFUL_EXCLUSION
+import chylex.hee.game.entity.properties.EntitySize
+import chylex.hee.game.entity.properties.EntityTrackerInfo
 import chylex.hee.game.entity.util.posVec
 import chylex.hee.game.item.infusion.Infusion.HARMLESS
 import chylex.hee.game.item.infusion.Infusion.PHASING
@@ -41,7 +44,6 @@ import net.minecraft.util.math.BlockRayTraceResult
 import net.minecraft.util.math.EntityRayTraceResult
 import net.minecraft.util.math.RayTraceContext
 import net.minecraft.util.math.RayTraceResult
-import net.minecraft.util.math.RayTraceResult.Type
 import net.minecraft.util.math.shapes.VoxelShape
 import net.minecraft.util.math.shapes.VoxelShapes
 import net.minecraft.util.math.vector.Vector3d
@@ -58,6 +60,14 @@ class EntityProjectileEnderPearl(type: EntityType<EntityProjectileEnderPearl>, w
 		loadInfusions(infusions)
 		setPosition(thrower.posX, thrower.posY + thrower.eyeHeight - 0.1F, thrower.posZ)
 		setDirectionAndMovement(thrower, thrower.rotationPitch, thrower.rotationYaw, 0F, 1.5F, 1F)
+	}
+	
+	object Type : IHeeEntityType<EntityProjectileEnderPearl> {
+		override val size
+			get() = EntitySize(0.35F)
+		
+		override val tracker
+			get() = EntityTrackerInfo.Defaults.PROJECTILE
 	}
 	
 	@SubscribeAllEvents(modid = HEE.ID)
@@ -158,7 +168,7 @@ class EntityProjectileEnderPearl(type: EntityType<EntityProjectileEnderPearl>, w
 		}
 		
 		if (!world.isRemote && infusions.has(PHASING) && hasPhasedIntoWall) {
-			if (world.rayTraceBlocks(RayTraceIndestructible(prevPos, prevPos.add(prevMot), this)).type == Type.BLOCK) {
+			if (world.rayTraceBlocks(RayTraceIndestructible(prevPos, prevPos.add(prevMot), this)).type == RayTraceResult.Type.BLOCK) {
 				hasPhasingFinished = true
 				posVec = prevPos
 			}

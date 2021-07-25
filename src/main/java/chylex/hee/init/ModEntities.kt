@@ -1,6 +1,8 @@
 package chylex.hee.init
 
 import chylex.hee.HEE
+import chylex.hee.game.entity.IHeeEntityType
+import chylex.hee.game.entity.IHeeMobEntityType
 import chylex.hee.game.entity.effect.EntityTerritoryLightningBolt
 import chylex.hee.game.entity.item.EntityFallingBlockHeavy
 import chylex.hee.game.entity.item.EntityFallingObsidian
@@ -31,10 +33,7 @@ import chylex.hee.game.entity.technical.EntityTechnicalCausatumEvent
 import chylex.hee.game.entity.technical.EntityTechnicalIgneousPlateLogic
 import chylex.hee.game.entity.technical.EntityTechnicalPuzzle
 import chylex.hee.game.entity.technical.EntityTechnicalTrigger
-import chylex.hee.game.entity.util.DefaultEntityAttributes
-import chylex.hee.game.entity.util.ENTITY_GRAVITY
 import chylex.hee.game.entity.util.set
-import chylex.hee.game.entity.util.with
 import chylex.hee.system.named
 import chylex.hee.system.registerAllFields
 import chylex.hee.util.color.ColorDataSerializer
@@ -44,27 +43,15 @@ import chylex.hee.util.forge.SubscribeEvent
 import chylex.hee.util.lang.ObjectConstructors
 import chylex.hee.util.nbt.TagCompound
 import net.minecraft.entity.Entity
-import net.minecraft.entity.EntityClassification
-import net.minecraft.entity.EntityClassification.CREATURE
-import net.minecraft.entity.EntityClassification.MISC
-import net.minecraft.entity.EntityClassification.MONSTER
 import net.minecraft.entity.EntitySpawnPlacementRegistry
-import net.minecraft.entity.EntitySpawnPlacementRegistry.PlacementType
 import net.minecraft.entity.EntityType
 import net.minecraft.entity.EntityType.IFactory
 import net.minecraft.entity.MobEntity
-import net.minecraft.entity.ai.attributes.Attributes.ATTACK_DAMAGE
-import net.minecraft.entity.ai.attributes.Attributes.FLYING_SPEED
-import net.minecraft.entity.ai.attributes.Attributes.FOLLOW_RANGE
-import net.minecraft.entity.ai.attributes.Attributes.MAX_HEALTH
-import net.minecraft.entity.ai.attributes.Attributes.MOVEMENT_SPEED
 import net.minecraft.entity.monster.EndermanEntity
 import net.minecraft.entity.monster.EndermiteEntity
-import net.minecraft.entity.monster.MonsterEntity
 import net.minecraft.entity.monster.SilverfishEntity
 import net.minecraft.network.datasync.DataSerializers
 import net.minecraft.world.World
-import net.minecraft.world.gen.Heightmap.Type
 import net.minecraftforge.common.MinecraftForge
 import net.minecraftforge.event.RegistryEvent
 import net.minecraftforge.event.entity.EntityAttributeCreationEvent
@@ -73,65 +60,64 @@ import net.minecraftforge.fml.common.Mod.EventBusSubscriber.Bus.MOD
 
 @SubscribeAllEvents(modid = HEE.ID, bus = MOD)
 object ModEntities {
-	@JvmField val TERRITORY_LIGHTNING_BOLT = build<EntityTerritoryLightningBolt>(MISC).size(0F, 0F).tracker(256, 3, false).disableSerialization().name("territory_lightning_bolt")
+	private val allTypes = mutableMapOf<EntityType<*>, IHeeEntityType<*>>()
+	private val mobTypes = mutableListOf<MobEntry<*>>()
 	
-	@JvmField val ITEM_CAULDRON_TRIGGER         = build<EntityItemCauldronTrigger>(MISC).size(0.25F, 0.25F).tracker(64, 3, true).name("item_cauldron_trigger")
-	@JvmField val ITEM_FRESHLY_COOKED           = build<EntityItemFreshlyCooked>(MISC).size(0.25F, 0.25F).tracker(64, 3, true).name("item_freshly_cooked")
-	@JvmField val ITEM_IGNEOUS_ROCK             = build<EntityItemIgneousRock>(MISC).size(0.25F, 0.25F).immuneToFire().tracker(64, 3, true).name("item_igneous_rock")
-	@JvmField val ITEM_NO_BOB                   = build<EntityItemNoBob>(MISC).size(0.25F, 0.25F).tracker(64, 3, true).name("item_no_bob")
-	@JvmField val ITEM_REVITALIZATION_SUBSTANCE = build<EntityItemRevitalizationSubstance>(MISC).size(0.25F, 0.25F).tracker(64, 3, true).name("item_revitalization_substance")
+	@JvmField val TERRITORY_LIGHTNING_BOLT = build(EntityTerritoryLightningBolt.Type) named "territory_lightning_bolt"
 	
-	@JvmField val FALLING_BLOCK_HEAVY = build<EntityFallingBlockHeavy>(MISC).size(0.98F, 0.98F).tracker(160, 20, true).name("falling_block_heavy")
-	@JvmField val FALLING_OBSIDIAN    = build<EntityFallingObsidian>(MISC).size(0.98F, 0.98F).tracker(160, 20, true).name("falling_obsidian")
-	@JvmField val INFUSED_TNT         = build<EntityInfusedTNT>(MISC).size(0.98F, 0.98F).tracker(160, 10, true).name("infused_tnt")
-	@JvmField val TOKEN_HOLDER        = build<EntityTokenHolder>(MISC).size(0.55F, 0.675F).tracker(128, 60, false).name("token_holder")
+	@JvmField val ITEM_CAULDRON_TRIGGER         = build(EntityItemCauldronTrigger.TYPE) named "item_cauldron_trigger"
+	@JvmField val ITEM_FRESHLY_COOKED           = build(EntityItemFreshlyCooked.TYPE) named "item_freshly_cooked"
+	@JvmField val ITEM_IGNEOUS_ROCK             = build(EntityItemIgneousRock.Type) named "item_igneous_rock"
+	@JvmField val ITEM_NO_BOB                   = build(EntityItemNoBob.TYPE) named "item_no_bob"
+	@JvmField val ITEM_REVITALIZATION_SUBSTANCE = build(EntityItemRevitalizationSubstance.TYPE) named "item_revitalization_substance"
 	
-	@JvmField val ENDER_EYE = build<EntityBossEnderEye>(MONSTER).size(1.1F, 1F).immuneToFire().tracker(160, 1, true).name("ender_eye")
+	@JvmField val FALLING_BLOCK_HEAVY = build(EntityFallingBlockHeavy.TYPE) named "falling_block_heavy"
+	@JvmField val FALLING_OBSIDIAN    = build(EntityFallingObsidian.TYPE) named "falling_obsidian"
+	@JvmField val INFUSED_TNT         = build(EntityInfusedTNT.Type) named "infused_tnt"
+	@JvmField val TOKEN_HOLDER        = build(EntityTokenHolder.Type) named "token_holder"
 	
-	@JvmField val ANGRY_ENDERMAN        = build<EntityMobAngryEnderman>(MONSTER).size(0.6F, 2.9F).tracker(80, 3, true).name("angry_enderman")
-	@JvmField val BLOBBY                = build<EntityMobBlobby>(CREATURE).size(0.5F, 0.5F).tracker(80, 3, true).name("blobby")
-	@JvmField val ENDERMAN              = build<EntityMobEnderman>(MONSTER).size(0.6F, 2.9F).tracker(80, 3, true).name("enderman")
-	@JvmField val ENDERMAN_MUPPET       = build<EntityMobEndermanMuppet>(MISC).size(0.6F, 2.9F).tracker(96, 3, false).name("enderman_muppet")
-	@JvmField val ENDERMITE             = build<EntityMobEndermite>(MONSTER).size(0.425F, 0.325F).tracker(80, 3, true).name("endermite")
-	@JvmField val ENDERMITE_INSTABILITY = build<EntityMobEndermiteInstability>(MONSTER).size(0.425F, 0.325F).tracker(96, 3, true).name("endermite_instability")
-	@JvmField val SILVERFISH            = build<EntityMobSilverfish>(MONSTER).size(0.575F, 0.35F).tracker(80, 3, true).name("silverfish")
-	@JvmField val SPIDERLING            = build<EntityMobSpiderling>(MONSTER).size(0.675F, 0.45F).tracker(80, 2, true).name("spiderling")
-	@JvmField val UNDREAD               = build<EntityMobUndread>(MONSTER).size(0.625F, 1.925F).tracker(80, 3, true).name("undread")
-	@JvmField val VAMPIRE_BAT           = build<EntityMobVampireBat>(MONSTER).size(0.5F, 0.9F).tracker(80, 3, true).name("vampire_bat")
-	@JvmField val VILLAGER_DYING        = build<EntityMobVillagerDying>(MISC).size(0.6F, 1.95F).tracker(80, 3, false).name("villager_dying")
+	@JvmField val ENDER_EYE = build(EntityBossEnderEye.Type) named "ender_eye"
 	
-	@JvmField val ENDER_PEARL       = build<EntityProjectileEnderPearl>(MISC).size(0.35F, 0.35F).tracker(64, 10, true).name("ender_pearl")
-	@JvmField val EXPERIENCE_BOTTLE = build<EntityProjectileExperienceBottle>(MISC).size(0.25F, 0.25F).tracker(64, 10, false).name("experience_bottle")
-	@JvmField val EYE_OF_ENDER      = build<EntityProjectileEyeOfEnder>(MISC).size(0.5F, 1F).tracker(64, 60, false).name("eye_of_ender")
-	@JvmField val SPATIAL_DASH      = build<EntityProjectileSpatialDash>(MISC).size(0.2F, 0.2F).tracker(64, 10, true).name("spatial_dash")
+	@JvmField val ANGRY_ENDERMAN        = build(EntityMobAngryEnderman.Type) named "angry_enderman"
+	@JvmField val BLOBBY                = build(EntityMobBlobby.Type) named "blobby"
+	@JvmField val ENDERMAN              = build(EntityMobEnderman.Type) named "enderman"
+	@JvmField val ENDERMAN_MUPPET       = build(EntityMobEndermanMuppet.Type) named "enderman_muppet"
+	@JvmField val ENDERMITE             = build(EntityMobEndermite.TYPE) named "endermite"
+	@JvmField val ENDERMITE_INSTABILITY = build(EntityMobEndermiteInstability.Type) named "endermite_instability"
+	@JvmField val SILVERFISH            = build(EntityMobSilverfish.Type) named "silverfish"
+	@JvmField val SPIDERLING            = build(EntityMobSpiderling.Type) named "spiderling"
+	@JvmField val UNDREAD               = build(EntityMobUndread.Type) named "undread"
+	@JvmField val VAMPIRE_BAT           = build(EntityMobVampireBat.Type) named "vampire_bat"
+	@JvmField val VILLAGER_DYING        = build(EntityMobVillagerDying.Type) named "villager_dying"
 	
-	@JvmField val CAUSATUM_EVENT      = build<EntityTechnicalCausatumEvent>(MISC).size(0F, 0F).immuneToFire().tracker(1, Int.MAX_VALUE, false).name("causatum_event")
-	@JvmField val IGNEOUS_PLATE_LOGIC = build<EntityTechnicalIgneousPlateLogic>(MISC).size(0F, 0F).tracker(32, 10, false).name("igneous_plate_logic")
-	@JvmField val TECHNICAL_PUZZLE    = build<EntityTechnicalPuzzle>(MISC).size(0F, 0F).immuneToFire().tracker(1, Int.MAX_VALUE, false).name("technical_puzzle")
-	@JvmField val TECHNICAL_TRIGGER   = build<EntityTechnicalTrigger>(MISC).size(0F, 0F).immuneToFire().tracker(256, Int.MAX_VALUE, false).name("technical_trigger")
+	@JvmField val ENDER_PEARL       = build(EntityProjectileEnderPearl.Type) named "ender_pearl"
+	@JvmField val EXPERIENCE_BOTTLE = build(EntityProjectileExperienceBottle.Type) named "experience_bottle"
+	@JvmField val EYE_OF_ENDER      = build(EntityProjectileEyeOfEnder.Type) named "eye_of_ender"
+	@JvmField val SPATIAL_DASH      = build(EntityProjectileSpatialDash.Type) named "spatial_dash"
+	
+	@JvmField val CAUSATUM_EVENT      = build(EntityTechnicalCausatumEvent.TYPE) named "causatum_event"
+	@JvmField val IGNEOUS_PLATE_LOGIC = build(EntityTechnicalIgneousPlateLogic.Type) named "igneous_plate_logic"
+	@JvmField val TECHNICAL_PUZZLE    = build(EntityTechnicalPuzzle.TYPE) named "technical_puzzle"
+	@JvmField val TECHNICAL_TRIGGER   = build(EntityTechnicalTrigger.Type) named "technical_trigger"
+	
+	private data class MobEntry<T : MobEntity>(val type: EntityType<T>, val properties: IHeeMobEntityType<T>) {
+		fun registerPlacement() {
+			val placement = properties.placement
+			if (placement != null) {
+				EntitySpawnPlacementRegistry.register(type, placement.placementType, placement.heightmapType, placement.predicate)
+			}
+		}
+	}
 	
 	@SubscribeEvent
 	fun onRegisterTypes(e: RegistryEvent.Register<EntityType<*>>) {
 		e.registerAllFields(this)
 		
-		// data
+		for (entry in mobTypes) {
+			entry.registerPlacement()
+		}
 		
 		DataSerializers.registerSerializer(ColorDataSerializer)
-		
-		// spawns
-		
-		val defaultSpawnPredicateHostile = MonsterEntity::canMonsterSpawnInLight
-		val defaultSpawnPredicatePassive = MobEntity::canSpawnOn
-		
-		EntitySpawnPlacementRegistry.register(ANGRY_ENDERMAN, PlacementType.ON_GROUND, Type.MOTION_BLOCKING_NO_LEAVES, defaultSpawnPredicateHostile)
-		EntitySpawnPlacementRegistry.register(BLOBBY, PlacementType.ON_GROUND, Type.MOTION_BLOCKING_NO_LEAVES, defaultSpawnPredicatePassive)
-		EntitySpawnPlacementRegistry.register(ENDERMAN, PlacementType.ON_GROUND, Type.MOTION_BLOCKING_NO_LEAVES, EntityMobEnderman.Companion::canSpawnAt)
-		EntitySpawnPlacementRegistry.register(ENDERMITE, PlacementType.ON_GROUND, Type.MOTION_BLOCKING_NO_LEAVES, defaultSpawnPredicateHostile)
-		EntitySpawnPlacementRegistry.register(ENDERMITE_INSTABILITY, PlacementType.ON_GROUND, Type.MOTION_BLOCKING_NO_LEAVES, defaultSpawnPredicateHostile)
-		EntitySpawnPlacementRegistry.register(SILVERFISH, PlacementType.ON_GROUND, Type.MOTION_BLOCKING_NO_LEAVES, defaultSpawnPredicateHostile)
-		EntitySpawnPlacementRegistry.register(SPIDERLING, PlacementType.ON_GROUND, Type.MOTION_BLOCKING_NO_LEAVES, defaultSpawnPredicateHostile)
-		EntitySpawnPlacementRegistry.register(UNDREAD, PlacementType.ON_GROUND, Type.MOTION_BLOCKING_NO_LEAVES, defaultSpawnPredicateHostile)
-		EntitySpawnPlacementRegistry.register(VAMPIRE_BAT, PlacementType.ON_GROUND, Type.MOTION_BLOCKING_NO_LEAVES, defaultSpawnPredicatePassive)
 		
 		replaceVanillaFactories()
 		MinecraftForge.EVENT_BUS.register(this)
@@ -139,75 +125,9 @@ object ModEntities {
 	
 	@SubscribeEvent
 	fun onRegisterAttributes(attributes: EntityAttributeCreationEvent) {
-		attributes[ENDER_EYE] = DefaultEntityAttributes.hostileMob.with(
-			MAX_HEALTH to 300.0,
-			ATTACK_DAMAGE to 4.0,
-			FLYING_SPEED to 0.093,
-			FOLLOW_RANGE to 16.0,
-		)
-		
-		attributes[ANGRY_ENDERMAN] = DefaultEntityAttributes.hostileMob.with(
-			MAX_HEALTH to 40.0,
-			ATTACK_DAMAGE to 7.0,
-			MOVEMENT_SPEED to 0.315,
-			FOLLOW_RANGE to 32.0,
-		)
-		
-		attributes[BLOBBY] = DefaultEntityAttributes.peacefulMob.with(
-			MAX_HEALTH to 8.0,
-			MOVEMENT_SPEED to 0.19,
-			FOLLOW_RANGE to 44.0,
-			ENTITY_GRAVITY to ENTITY_GRAVITY.defaultValue * 0.725,
-		)
-		
-		attributes[ENDERMAN] = DefaultEntityAttributes.hostileMob.with(
-			MAX_HEALTH to 40.0,
-			ATTACK_DAMAGE to 5.0,
-			MOVEMENT_SPEED to 0.3,
-			FOLLOW_RANGE to 64.0,
-		)
-		
-		attributes[ENDERMAN_MUPPET] = DefaultEntityAttributes.hostileMob.with(
-			MAX_HEALTH to 40.0,
-			MOVEMENT_SPEED to 0.0,
-		)
-		
-		attributes[ENDERMITE] = DefaultEntityAttributes.endermite.with(
-			MAX_HEALTH to 8.0,
-			ATTACK_DAMAGE to 2.0,
-		)
-		
-		attributes[ENDERMITE_INSTABILITY] = DefaultEntityAttributes.endermite.with(
-			MAX_HEALTH to 8.0,
-			ATTACK_DAMAGE to 2.0,
-		)
-		
-		attributes[SILVERFISH] = DefaultEntityAttributes.silverfish.with(
-			MAX_HEALTH to 8.0,
-			ATTACK_DAMAGE to 2.0,
-			FOLLOW_RANGE to 12.0,
-		)
-		
-		attributes[SPIDERLING] = DefaultEntityAttributes.hostileMob.with(
-			ATTACK_DAMAGE to 1.5,
-			MOVEMENT_SPEED to 0.32,
-			FOLLOW_RANGE to 20.0,
-		)
-		
-		attributes[UNDREAD] = DefaultEntityAttributes.hostileMob.with(
-			MAX_HEALTH to 12.0,
-			ATTACK_DAMAGE to 4.0,
-			MOVEMENT_SPEED to 0.18,
-			FOLLOW_RANGE to 24.0,
-		)
-		
-		attributes[VAMPIRE_BAT] = DefaultEntityAttributes.peacefulMob.with(
-			FOLLOW_RANGE to 14.5,
-			ATTACK_DAMAGE to 0.0,
-			FLYING_SPEED to 0.1
-		)
-		
-		attributes[VILLAGER_DYING] = DefaultEntityAttributes.peacefulMob
+		for ((type, properties) in mobTypes) {
+			attributes[type] = properties.attributes
+		}
 	}
 	
 	// Vanilla modifications
@@ -246,16 +166,39 @@ object ModEntities {
 	// Utilities
 	
 	@Suppress("UNCHECKED_CAST")
-	private inline fun <reified T : Entity> build(classification: EntityClassification): EntityType.Builder<T> {
+	private inline fun <reified T : Entity, H : IHeeEntityType<T>> build(type: H): Pair<EntityType.Builder<T>, H> {
 		val handle = ObjectConstructors.generic<T, Entity, IFactory<T>>("create", EntityType::class.java, World::class.java)
-		return EntityType.Builder.create(handle.invokeExact() as IFactory<T>, classification)
+		var builder = EntityType.Builder.create(handle.invokeExact() as IFactory<T>, type.classification)
+		
+		builder = builder.size(type.size.width, type.size.height)
+		builder = builder.setTrackingRange(type.tracker.trackingRange)
+		builder = builder.setUpdateInterval(type.tracker.updateInterval)
+		builder = builder.setShouldReceiveVelocityUpdates(type.tracker.receiveVelocityUpdates)
+		
+		if (type.isImmuneToFire) {
+			builder = builder.immuneToFire()
+		}
+		
+		if (type.disableSerialization) {
+			builder = builder.disableSerialization()
+		}
+		
+		return builder to type
 	}
 	
-	private fun <T : Entity> EntityType.Builder<T>.tracker(trackingRange: Int, updateInterval: Int, receiveVelocityUpdates: Boolean): EntityType.Builder<T> {
-		return this.setTrackingRange(trackingRange).setUpdateInterval(updateInterval).setShouldReceiveVelocityUpdates(receiveVelocityUpdates)
+	private inline infix fun <reified T : Entity> Pair<EntityType.Builder<T>, IHeeEntityType<T>>.named(name: String): EntityType<T> {
+		require(this.second !is IHeeMobEntityType<*>) // sanity check in case this gets called instead of the method below
+		
+		return first.build("hee.$name").also {
+			allTypes[it] = this.second
+		} named name
 	}
 	
-	private fun <T : Entity> EntityType.Builder<T>.name(name: String): EntityType<T> {
-		return this.build("hee.$name") named name
+	@JvmName("namedMob")
+	private inline infix fun <reified T : MobEntity> Pair<EntityType.Builder<T>, IHeeMobEntityType<T>>.named(name: String): EntityType<T> {
+		return first.build("hee.$name").also {
+			allTypes[it] = this.second
+			mobTypes.add(MobEntry(it, this.second))
+		} named name
 	}
 }

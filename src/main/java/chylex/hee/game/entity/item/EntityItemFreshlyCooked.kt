@@ -21,7 +21,9 @@ class EntityItemFreshlyCooked : EntityItemBase, IEntityAdditionalSpawnData {
 	constructor(type: EntityType<EntityItemFreshlyCooked>, world: World) : super(type, world)
 	constructor(world: World, pos: Vector3d, stack: ItemStack) : super(ModEntities.ITEM_FRESHLY_COOKED, world, pos, stack)
 	
-	private companion object {
+	companion object {
+		val TYPE = BaseType<EntityItemFreshlyCooked>()
+		
 		private const val STOP_SMOKING_AFTER_TICKS = 20 * 90
 		
 		private val PARTICLE_TICK = ParticleSpawnerVanilla(

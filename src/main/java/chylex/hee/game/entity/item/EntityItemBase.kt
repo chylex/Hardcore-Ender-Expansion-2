@@ -1,5 +1,8 @@
 package chylex.hee.game.entity.item
 
+import chylex.hee.game.entity.IHeeEntityType
+import chylex.hee.game.entity.properties.EntitySize
+import chylex.hee.game.entity.properties.EntityTrackerInfo
 import chylex.hee.game.entity.util.cloneFrom
 import chylex.hee.system.random.nextFloat
 import net.minecraft.entity.Entity
@@ -24,6 +27,14 @@ abstract class EntityItemBase(type: EntityType<out EntityItemBase>, world: World
 		
 		setPosition(pos.x, pos.y, pos.z)
 		setMotion(rand.nextFloat(-0.1, 0.1), 0.2, rand.nextFloat(-0.1, 0.1))
+	}
+	
+	open class BaseType<T : EntityItemBase> : IHeeEntityType<T> {
+		final override val size
+			get() = EntitySize(0.25F)
+		
+		final override val tracker
+			get() = EntityTrackerInfo.Defaults.ITEM
 	}
 	
 	override fun createSpawnPacket(): IPacket<*> {

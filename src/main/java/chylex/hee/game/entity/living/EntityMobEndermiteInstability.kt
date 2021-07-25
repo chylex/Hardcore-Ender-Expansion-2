@@ -1,6 +1,8 @@
 package chylex.hee.game.entity.living
 
 import chylex.hee.game.Resource
+import chylex.hee.game.entity.util.DefaultEntityAttributes
+import chylex.hee.game.entity.util.with
 import chylex.hee.game.mechanics.instability.Instability
 import chylex.hee.game.world.util.isPeaceful
 import chylex.hee.init.ModBlocks
@@ -14,12 +16,26 @@ import chylex.hee.util.nbt.TagCompound
 import chylex.hee.util.nbt.use
 import net.minecraft.entity.EntityType
 import net.minecraft.entity.LivingEntity
+import net.minecraft.entity.ai.attributes.Attributes.ATTACK_DAMAGE
+import net.minecraft.entity.ai.attributes.Attributes.MAX_HEALTH
 import net.minecraft.util.DamageSource
 import net.minecraft.util.ResourceLocation
 import net.minecraft.world.World
 
 class EntityMobEndermiteInstability(type: EntityType<EntityMobEndermiteInstability>, world: World) : EntityMobEndermite(type, world), IImmuneToCorruptedEnergy {
+	@Suppress("unused")
 	constructor(world: World) : this(ModEntities.ENDERMITE_INSTABILITY, world)
+	
+	object Type : BaseType<EntityMobEndermiteInstability>() {
+		override val tracker
+			get() = super.tracker.copy(trackingRange = 6)
+		
+		override val attributes
+			get() = DefaultEntityAttributes.endermite.with(
+				MAX_HEALTH    to 8.0,
+				ATTACK_DAMAGE to 2.0,
+			)
+	}
 	
 	private companion object {
 		private const val EXPLODE_TAG = "Explode"

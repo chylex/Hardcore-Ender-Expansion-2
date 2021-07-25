@@ -1,5 +1,8 @@
 package chylex.hee.game.entity.item
 
+import chylex.hee.game.entity.IHeeEntityType
+import chylex.hee.game.entity.properties.EntitySize
+import chylex.hee.game.entity.properties.EntityTrackerInfo
 import chylex.hee.game.entity.util.EntityData
 import chylex.hee.game.entity.util.lookPosVec
 import chylex.hee.game.entity.util.posVec
@@ -53,6 +56,14 @@ class EntityTokenHolder(type: EntityType<EntityTokenHolder>, world: World) : Ent
 	
 	constructor(world: World, pos: BlockPos, tokenType: TokenType, territoryType: TerritoryType) : this(world, tokenType, territoryType) {
 		setLocationAndAngles(pos.x + 0.5, pos.y + 0.5, pos.z + 0.5, 0F, 0F)
+	}
+	
+	object Type : IHeeEntityType<EntityTokenHolder> {
+		override val size
+			get() = EntitySize(0.55F, 0.675F)
+		
+		override val tracker
+			get() = EntityTrackerInfo(trackingRange = 8, updateInterval = 60, receiveVelocityUpdates = false)
 	}
 	
 	companion object {

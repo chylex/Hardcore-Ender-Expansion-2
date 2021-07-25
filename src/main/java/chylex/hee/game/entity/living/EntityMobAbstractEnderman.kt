@@ -1,17 +1,19 @@
 package chylex.hee.game.entity.living
 
 import chylex.hee.game.entity.CustomCreatureType
+import chylex.hee.game.entity.IHeeMobEntityType
 import chylex.hee.game.entity.damage.Damage
 import chylex.hee.game.entity.damage.IDamageProcessor.Companion.ALL_PROTECTIONS_WITH_SHIELD
 import chylex.hee.game.entity.damage.IDamageProcessor.Companion.DIFFICULTY_SCALING
 import chylex.hee.game.entity.damage.IDamageProcessor.Companion.NUDITY_DANGER
 import chylex.hee.game.entity.damage.IDamageProcessor.Companion.PEACEFUL_EXCLUSION
+import chylex.hee.game.entity.properties.EntitySize
 import chylex.hee.game.entity.util.EntityData
 import chylex.hee.game.entity.util.getAttributeInstance
 import chylex.hee.game.entity.util.tryRemoveModifier
 import net.minecraft.entity.CreatureAttribute
 import net.minecraft.entity.Entity
-import net.minecraft.entity.EntitySize
+import net.minecraft.entity.EntityClassification
 import net.minecraft.entity.EntityType
 import net.minecraft.entity.LivingEntity
 import net.minecraft.entity.Pose
@@ -29,6 +31,14 @@ import net.minecraft.world.World
 import net.minecraftforge.fml.network.NetworkHooks
 
 abstract class EntityMobAbstractEnderman(type: EntityType<out EntityMobAbstractEnderman>, world: World) : EndermanEntity(type, world) {
+	abstract class BaseType<T : EntityMobAbstractEnderman> : IHeeMobEntityType<T> {
+		override val classification
+			get() = EntityClassification.MONSTER
+		
+		override val size
+			get() = EntitySize(0.6F, 2.9F)
+	}
+	
 	private companion object {
 		private val DATA_SHAKING = EntityData.register<EntityMobAbstractEnderman, Boolean>(DataSerializers.BOOLEAN)
 		private val DAMAGE_GENERAL = Damage(DIFFICULTY_SCALING, PEACEFUL_EXCLUSION, *ALL_PROTECTIONS_WITH_SHIELD, NUDITY_DANGER)
@@ -100,7 +110,7 @@ abstract class EntityMobAbstractEnderman(type: EntityType<out EntityMobAbstractE
 		return CustomCreatureType.ENDER
 	}
 	
-	override fun getStandingEyeHeight(pose: Pose, size: EntitySize): Float {
+	override fun getStandingEyeHeight(pose: Pose, size: net.minecraft.entity.EntitySize): Float {
 		return 2.62F
 	}
 	

@@ -16,7 +16,9 @@ class EntityTechnicalCausatumEvent(type: EntityType<EntityTechnicalCausatumEvent
 		this.handler = handler
 	}
 	
-	private companion object {
+	companion object {
+		val TYPE = BaseType<EntityTechnicalCausatumEvent>()
+		
 		private const val TYPE_TAG = "Type"
 		private const val DATA_TAG = "Data"
 		

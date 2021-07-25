@@ -1,6 +1,10 @@
 package chylex.hee.game.entity.living
 
 import chylex.hee.HEE
+import chylex.hee.game.entity.IHeeMobEntityType
+import chylex.hee.game.entity.properties.EntitySize
+import chylex.hee.game.entity.properties.EntitySpawnPlacement
+import chylex.hee.game.entity.util.DefaultEntityAttributes
 import chylex.hee.game.entity.util.posVec
 import chylex.hee.game.fx.util.playClient
 import chylex.hee.game.particle.ParticleGrowingSpot
@@ -25,6 +29,7 @@ import chylex.hee.util.nbt.getDecodedOrNull
 import chylex.hee.util.nbt.putEncoded
 import chylex.hee.util.nbt.use
 import net.minecraft.entity.AgeableEntity
+import net.minecraft.entity.EntityClassification
 import net.minecraft.entity.EntityType
 import net.minecraft.entity.merchant.villager.VillagerData
 import net.minecraft.entity.merchant.villager.VillagerEntity
@@ -44,6 +49,20 @@ import java.util.Random
 class EntityMobVillagerDying(type: EntityType<EntityMobVillagerDying>, world: World) : AgeableEntity(type, world), IVillagerDataHolder, IEntityAdditionalSpawnData {
 	@Suppress("unused")
 	constructor(world: World) : this(ModEntities.VILLAGER_DYING, world)
+	
+	object Type : IHeeMobEntityType<EntityMobVillagerDying> {
+		override val classification
+			get() = EntityClassification.MISC
+		
+		override val size
+			get() = EntitySize(0.6F, 1.95F)
+		
+		override val attributes
+			get() = DefaultEntityAttributes.peacefulMob
+		
+		override val placement: EntitySpawnPlacement<EntityMobVillagerDying>?
+			get() = null
+	}
 	
 	private companion object {
 		private const val VILLAGER_TAG = "Villager"

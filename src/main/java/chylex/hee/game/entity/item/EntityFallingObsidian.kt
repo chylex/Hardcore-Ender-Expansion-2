@@ -40,6 +40,8 @@ class EntityFallingObsidian : EntityFallingBlockHeavy {
 	constructor(world: World, pos: BlockPos, state: BlockState) : super(ModEntities.FALLING_OBSIDIAN, world, pos, state)
 	
 	companion object {
+		val TYPE = BaseType<EntityFallingObsidian>()
+		
 		private val DAMAGE = Damage(PEACEFUL_EXCLUSION, ARMOR_PROTECTION(false), ENCHANTMENT_PROTECTION)
 		
 		class FxFallData(private val pos: BlockPos, private val volume: Float) : IFxData {

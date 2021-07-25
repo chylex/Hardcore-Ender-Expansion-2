@@ -1,6 +1,7 @@
 package chylex.hee.game.entity.living
 
 import chylex.hee.game.Resource
+import chylex.hee.game.entity.IHeeMobEntityType
 import chylex.hee.game.entity.living.ai.AIToggle
 import chylex.hee.game.entity.living.ai.AIToggle.Companion.addGoal
 import chylex.hee.game.entity.living.ai.AIWatchDyingLeader
@@ -15,11 +16,16 @@ import chylex.hee.game.entity.living.controller.EntityBodyHeadOnly
 import chylex.hee.game.entity.living.controller.EntityLookWhileJumping
 import chylex.hee.game.entity.living.controller.EntityMoveJumping
 import chylex.hee.game.entity.living.path.PathNavigateGroundPreferBeeLine
+import chylex.hee.game.entity.properties.EntitySize
+import chylex.hee.game.entity.properties.EntitySpawnPlacement
+import chylex.hee.game.entity.util.DefaultEntityAttributes
+import chylex.hee.game.entity.util.ENTITY_GRAVITY
 import chylex.hee.game.entity.util.EntityData
 import chylex.hee.game.entity.util.getAttributeInstance
 import chylex.hee.game.entity.util.posVec
 import chylex.hee.game.entity.util.selectEntities
 import chylex.hee.game.entity.util.selectExistingEntities
+import chylex.hee.game.entity.util.with
 import chylex.hee.game.item.util.isNotEmpty
 import chylex.hee.game.world.util.blocksMovement
 import chylex.hee.init.ModEntities
@@ -50,7 +56,7 @@ import chylex.hee.util.nbt.putStack
 import chylex.hee.util.nbt.use
 import net.minecraft.entity.CreatureEntity
 import net.minecraft.entity.Entity
-import net.minecraft.entity.EntitySize
+import net.minecraft.entity.EntityClassification
 import net.minecraft.entity.EntityType
 import net.minecraft.entity.ILivingEntityData
 import net.minecraft.entity.Pose
@@ -58,6 +64,7 @@ import net.minecraft.entity.SpawnReason
 import net.minecraft.entity.SpawnReason.SPAWN_EGG
 import net.minecraft.entity.ai.attributes.Attributes.FOLLOW_RANGE
 import net.minecraft.entity.ai.attributes.Attributes.MAX_HEALTH
+import net.minecraft.entity.ai.attributes.Attributes.MOVEMENT_SPEED
 import net.minecraft.entity.ai.controller.BodyController
 import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.item.ItemStack
@@ -85,6 +92,25 @@ import kotlin.math.abs
 class EntityMobBlobby(type: EntityType<out CreatureEntity>, world: World) : CreatureEntity(type, world) {
 	@Suppress("unused")
 	constructor(world: World) : this(ModEntities.BLOBBY, world)
+	
+	object Type : IHeeMobEntityType<EntityMobBlobby> {
+		override val classification
+			get() = EntityClassification.CREATURE
+		
+		override val size
+			get() = EntitySize(0.5F)
+		
+		override val attributes
+			get() = DefaultEntityAttributes.peacefulMob.with(
+				MAX_HEALTH     to 8.0,
+				MOVEMENT_SPEED to 0.19,
+				FOLLOW_RANGE   to 44.0,
+				ENTITY_GRAVITY to ENTITY_GRAVITY.defaultValue * 0.725,
+			)
+		
+		override val placement
+			get() = EntitySpawnPlacement.passive<EntityMobBlobby>()
+	}
 	
 	companion object {
 		private val DATA_SCALE = EntityData.register<EntityMobBlobby, Float>(DataSerializers.FLOAT)
@@ -461,7 +487,7 @@ class EntityMobBlobby(type: EntityType<out CreatureEntity>, world: World) : Crea
 		return rand.nextInt(0, experienceValue)
 	}
 	
-	override fun getStandingEyeHeight(pose: Pose, size: EntitySize): Float {
+	override fun getStandingEyeHeight(pose: Pose, size: net.minecraft.entity.EntitySize): Float {
 		return size.height * 0.575F
 	}
 	

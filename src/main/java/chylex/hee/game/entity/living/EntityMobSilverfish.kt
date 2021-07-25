@@ -2,6 +2,7 @@ package chylex.hee.game.entity.living
 
 import chylex.hee.HEE
 import chylex.hee.game.Resource
+import chylex.hee.game.entity.IHeeMobEntityType
 import chylex.hee.game.entity.damage.Damage
 import chylex.hee.game.entity.damage.IDamageProcessor.Companion.ALL_PROTECTIONS
 import chylex.hee.game.entity.damage.IDamageProcessor.Companion.DIFFICULTY_SCALING
@@ -18,6 +19,10 @@ import chylex.hee.game.entity.living.ai.TargetAttacker
 import chylex.hee.game.entity.living.ai.TargetRandom
 import chylex.hee.game.entity.living.ai.TargetSwarmSwitch
 import chylex.hee.game.entity.living.ai.Wander
+import chylex.hee.game.entity.properties.EntitySize
+import chylex.hee.game.entity.properties.EntitySpawnPlacement
+import chylex.hee.game.entity.util.DefaultEntityAttributes
+import chylex.hee.game.entity.util.with
 import chylex.hee.game.fx.FxVecHandler
 import chylex.hee.init.ModEntities
 import chylex.hee.system.heeTag
@@ -30,7 +35,11 @@ import net.minecraft.block.Block
 import net.minecraft.block.BlockState
 import net.minecraft.block.SilverfishBlock
 import net.minecraft.entity.Entity
+import net.minecraft.entity.EntityClassification
 import net.minecraft.entity.EntityType
+import net.minecraft.entity.ai.attributes.Attributes.ATTACK_DAMAGE
+import net.minecraft.entity.ai.attributes.Attributes.FOLLOW_RANGE
+import net.minecraft.entity.ai.attributes.Attributes.MAX_HEALTH
 import net.minecraft.entity.monster.SilverfishEntity
 import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.network.IPacket
@@ -46,6 +55,24 @@ import kotlin.math.floor
 
 class EntityMobSilverfish(type: EntityType<EntityMobSilverfish>, world: World) : SilverfishEntity(type, world), ICritTracker {
 	constructor(world: World) : this(ModEntities.SILVERFISH, world)
+	
+	object Type : IHeeMobEntityType<EntityMobSilverfish> {
+		override val classification
+			get() = EntityClassification.MONSTER
+		
+		override val size
+			get() = EntitySize(0.575F, 0.35F)
+		
+		override val attributes
+			get() = DefaultEntityAttributes.silverfish.with(
+				MAX_HEALTH    to 8.0,
+				ATTACK_DAMAGE to 2.0,
+				FOLLOW_RANGE  to 12.0,
+			)
+		
+		override val placement
+			get() = EntitySpawnPlacement.hostile<EntityMobSilverfish>()
+	}
 	
 	@SubscribeAllEvents(modid = HEE.ID)
 	companion object {

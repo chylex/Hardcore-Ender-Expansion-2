@@ -2,6 +2,9 @@ package chylex.hee.game.entity.item
 
 import chylex.hee.game.Environment
 import chylex.hee.game.block.properties.BlockBuilder.Companion.INDESTRUCTIBLE_HARDNESS
+import chylex.hee.game.entity.IHeeEntityType
+import chylex.hee.game.entity.properties.EntitySize
+import chylex.hee.game.entity.properties.EntityTrackerInfo
 import chylex.hee.game.entity.util.motionY
 import chylex.hee.game.item.ItemFlintAndInfernium
 import chylex.hee.game.item.infusion.Infusion.FIRE
@@ -60,6 +63,14 @@ import kotlin.math.cos
 import kotlin.math.sin
 
 class EntityInfusedTNT : TNTEntity {
+	object Type : IHeeEntityType<EntityInfusedTNT> {
+		override val size
+			get() = EntitySize(0.98F)
+		
+		override val tracker
+			get() = EntityTrackerInfo.Defaults.FALLING_BLOCK.copy(updateInterval = 10)
+	}
+	
 	private companion object {
 		private const val WATER_CHECK_RADIUS = 4
 		private const val PHASING_INSTANT_FUSE_TICKS = 3

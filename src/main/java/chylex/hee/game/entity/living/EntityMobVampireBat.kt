@@ -1,5 +1,6 @@
 package chylex.hee.game.entity.living
 
+import chylex.hee.game.entity.IHeeMobEntityType
 import chylex.hee.game.entity.damage.Damage
 import chylex.hee.game.entity.damage.IDamageProcessor.Companion.ALL_PROTECTIONS_WITH_SHIELD
 import chylex.hee.game.entity.damage.IDamageProcessor.Companion.PEACEFUL_EXCLUSION
@@ -8,6 +9,9 @@ import chylex.hee.game.entity.living.EntityMobVampireBat.BehaviorType.HOSTILE
 import chylex.hee.game.entity.living.EntityMobVampireBat.BehaviorType.NEUTRAL
 import chylex.hee.game.entity.living.EntityMobVampireBat.BehaviorType.PASSIVE
 import chylex.hee.game.entity.living.controller.EntityMoveFlyingBat
+import chylex.hee.game.entity.properties.EntitySize
+import chylex.hee.game.entity.properties.EntitySpawnPlacement
+import chylex.hee.game.entity.util.DefaultEntityAttributes
 import chylex.hee.game.entity.util.getAttributeInstance
 import chylex.hee.game.entity.util.isAnyVulnerablePlayerWithinRange
 import chylex.hee.game.entity.util.lookPosVec
@@ -15,6 +19,7 @@ import chylex.hee.game.entity.util.posVec
 import chylex.hee.game.entity.util.selectEntities
 import chylex.hee.game.entity.util.selectVulnerableEntities
 import chylex.hee.game.entity.util.setY
+import chylex.hee.game.entity.util.with
 import chylex.hee.game.fx.util.playClient
 import chylex.hee.game.particle.ParticleSmokeCustom
 import chylex.hee.game.particle.spawner.ParticleSpawnerCustom
@@ -50,11 +55,13 @@ import chylex.hee.util.nbt.putEnum
 import chylex.hee.util.nbt.use
 import net.minecraft.block.ChorusPlantBlock
 import net.minecraft.entity.Entity
+import net.minecraft.entity.EntityClassification
 import net.minecraft.entity.EntityType
 import net.minecraft.entity.ILivingEntityData
 import net.minecraft.entity.LivingEntity
 import net.minecraft.entity.SpawnReason
 import net.minecraft.entity.ai.attributes.Attributes.ATTACK_DAMAGE
+import net.minecraft.entity.ai.attributes.Attributes.FLYING_SPEED
 import net.minecraft.entity.ai.attributes.Attributes.FOLLOW_RANGE
 import net.minecraft.entity.ai.attributes.Attributes.MAX_HEALTH
 import net.minecraft.entity.monster.IMob
@@ -80,6 +87,24 @@ import kotlin.math.cos
 class EntityMobVampireBat(type: EntityType<EntityMobVampireBat>, world: World) : BatEntity(type, world), IMob, IKnockbackMultiplier {
 	@Suppress("unused")
 	constructor(world: World) : this(ModEntities.VAMPIRE_BAT, world)
+	
+	object Type : IHeeMobEntityType<EntityMobVampireBat> {
+		override val classification
+			get() = EntityClassification.MONSTER
+		
+		override val size
+			get() = EntitySize(0.5F, 0.9F)
+		
+		override val attributes
+			get() = DefaultEntityAttributes.peacefulMob.with(
+				FOLLOW_RANGE  to 14.5,
+				ATTACK_DAMAGE to 0.0,
+				FLYING_SPEED  to 0.1
+			)
+		
+		override val placement
+			get() = EntitySpawnPlacement.passive<EntityMobVampireBat>()
+	}
 	
 	private companion object {
 		private const val MIN_ATTACK_COOLDOWN = 30

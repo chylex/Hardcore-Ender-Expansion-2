@@ -1,8 +1,11 @@
 package chylex.hee.game.entity.item
 
+import chylex.hee.game.entity.IHeeEntityType
 import chylex.hee.game.entity.item.EntityFallingBlockHeavy.PlacementResult.FAIL
 import chylex.hee.game.entity.item.EntityFallingBlockHeavy.PlacementResult.RELOCATION
 import chylex.hee.game.entity.item.EntityFallingBlockHeavy.PlacementResult.SUCCESS
+import chylex.hee.game.entity.properties.EntitySize
+import chylex.hee.game.entity.properties.EntityTrackerInfo
 import chylex.hee.game.entity.util.motionY
 import chylex.hee.game.entity.util.posVec
 import chylex.hee.game.world.util.breakBlock
@@ -56,7 +59,17 @@ open class EntityFallingBlockHeavy(type: EntityType<out EntityFallingBlockHeavy>
 		motion = Vec3.ZERO
 	}
 	
+	open class BaseType<T : EntityFallingBlockHeavy> : IHeeEntityType<T> {
+		final override val size
+			get() = EntitySize(0.98F)
+		
+		final override val tracker
+			get() = EntityTrackerInfo.Defaults.FALLING_BLOCK
+	}
+	
 	companion object {
+		val TYPE = BaseType<EntityFallingBlockHeavy>()
+		
 		private val ignoredTileKeys = setOf("x", "y", "z")
 		
 		fun canFallThrough(world: World, pos: BlockPos): Boolean {

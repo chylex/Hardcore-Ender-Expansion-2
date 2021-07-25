@@ -96,6 +96,11 @@ class EntityItemIgneousRock : EntityItemNoBob {
 		throwFacing = Facing4.fromDirection(motion)
 	}
 	
+	object Type : BaseType<EntityItemIgneousRock>() {
+		override val isImmuneToFire
+			get() = true
+	}
+	
 	companion object {
 		private const val BURN_DISTANCE = 3.5
 		private const val BURN_DISTANCE_SQ = BURN_DISTANCE * BURN_DISTANCE

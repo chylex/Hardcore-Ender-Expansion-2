@@ -3,6 +3,7 @@ package chylex.hee.game.entity.living
 import chylex.hee.game.MagicValues.DEATH_TIME_MAX
 import chylex.hee.game.Resource
 import chylex.hee.game.block.BlockDustyStoneUnstable
+import chylex.hee.game.entity.IHeeMobEntityType
 import chylex.hee.game.entity.damage.Damage
 import chylex.hee.game.entity.damage.IDamageProcessor.Companion.ALL_PROTECTIONS_WITH_SHIELD
 import chylex.hee.game.entity.damage.IDamageProcessor.Companion.DIFFICULTY_SCALING
@@ -15,8 +16,12 @@ import chylex.hee.game.entity.living.ai.WanderLand
 import chylex.hee.game.entity.living.ai.WatchIdle
 import chylex.hee.game.entity.living.behavior.UndreadDustEffects
 import chylex.hee.game.entity.living.path.PathNavigateGroundCustomProcessor
+import chylex.hee.game.entity.properties.EntitySize
+import chylex.hee.game.entity.properties.EntitySpawnPlacement
+import chylex.hee.game.entity.util.DefaultEntityAttributes
 import chylex.hee.game.entity.util.motionY
 import chylex.hee.game.entity.util.posVec
+import chylex.hee.game.entity.util.with
 import chylex.hee.game.fx.FxVecData
 import chylex.hee.game.fx.FxVecHandler
 import chylex.hee.game.fx.util.playClient
@@ -49,12 +54,15 @@ import chylex.hee.util.nbt.use
 import net.minecraft.block.BlockState
 import net.minecraft.entity.CreatureAttribute
 import net.minecraft.entity.Entity
-import net.minecraft.entity.EntitySize
+import net.minecraft.entity.EntityClassification
 import net.minecraft.entity.EntityType
 import net.minecraft.entity.ILivingEntityData
 import net.minecraft.entity.Pose
 import net.minecraft.entity.SpawnReason
+import net.minecraft.entity.ai.attributes.Attributes.ATTACK_DAMAGE
 import net.minecraft.entity.ai.attributes.Attributes.FOLLOW_RANGE
+import net.minecraft.entity.ai.attributes.Attributes.MAX_HEALTH
+import net.minecraft.entity.ai.attributes.Attributes.MOVEMENT_SPEED
 import net.minecraft.entity.monster.MonsterEntity
 import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.nbt.CompoundNBT
@@ -85,6 +93,25 @@ import kotlin.math.max
 class EntityMobUndread(type: EntityType<EntityMobUndread>, world: World) : MonsterEntity(type, world), IEntityAdditionalSpawnData {
 	@Suppress("unused")
 	constructor(world: World) : this(ModEntities.UNDREAD, world)
+	
+	object Type : IHeeMobEntityType<EntityMobUndread> {
+		override val classification
+			get() = EntityClassification.MONSTER
+		
+		override val size
+			get() = EntitySize(0.625F, 1.925F)
+		
+		override val attributes
+			get() = DefaultEntityAttributes.hostileMob.with(
+				MAX_HEALTH     to 12.0,
+				ATTACK_DAMAGE  to 4.0,
+				MOVEMENT_SPEED to 0.18,
+				FOLLOW_RANGE   to 24.0,
+			)
+		
+		override val placement
+			get() = EntitySpawnPlacement.hostile<EntityMobUndread>()
+	}
 	
 	companion object {
 		private val DAMAGE_GENERAL = Damage(DIFFICULTY_SCALING, PEACEFUL_EXCLUSION, *ALL_PROTECTIONS_WITH_SHIELD)
@@ -233,7 +260,7 @@ class EntityMobUndread(type: EntityType<EntityMobUndread>, world: World) : Monst
 		return CreatureAttribute.UNDEAD
 	}
 	
-	override fun getStandingEyeHeight(pose: Pose, size: EntitySize): Float {
+	override fun getStandingEyeHeight(pose: Pose, size: net.minecraft.entity.EntitySize): Float {
 		return 1.68F
 	}
 	
