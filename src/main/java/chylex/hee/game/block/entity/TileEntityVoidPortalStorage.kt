@@ -18,6 +18,7 @@ import chylex.hee.game.world.server.SpawnInfo
 import chylex.hee.game.world.util.FLAG_SKIP_RENDER
 import chylex.hee.game.world.util.FLAG_SYNC_CLIENT
 import chylex.hee.game.world.util.isAnyPlayerWithinRange
+import chylex.hee.init.ModBlocks
 import chylex.hee.init.ModItems
 import chylex.hee.init.ModTileEntities
 import chylex.hee.util.math.square
@@ -39,6 +40,11 @@ import kotlin.math.nextUp
 
 class TileEntityVoidPortalStorage(type: TileEntityType<TileEntityVoidPortalStorage>) : TileEntityBasePortalController(type), IVoidPortalController, INamedContainerProvider {
 	constructor() : this(ModTileEntities.VOID_PORTAL_STORAGE)
+	
+	object Type : IHeeTileEntityType<TileEntityVoidPortalStorage> {
+		override val blocks
+			get() = arrayOf(ModBlocks.VOID_PORTAL_STORAGE, ModBlocks.VOID_PORTAL_STORAGE_CRAFTED)
+	}
 	
 	private companion object {
 		private const val ACTIVATION_DURATION_TICKS = 20 * 10

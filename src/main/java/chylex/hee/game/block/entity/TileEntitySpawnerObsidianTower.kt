@@ -21,6 +21,7 @@ import chylex.hee.game.world.util.breakBlock
 import chylex.hee.game.world.util.getState
 import chylex.hee.game.world.util.isAnyPlayerWithinRange
 import chylex.hee.game.world.util.isPeaceful
+import chylex.hee.init.ModBlocks
 import chylex.hee.init.ModSounds
 import chylex.hee.init.ModTileEntities
 import chylex.hee.network.client.PacketClientFX
@@ -62,6 +63,11 @@ import kotlin.math.max
 
 class TileEntitySpawnerObsidianTower(type: TileEntityType<TileEntitySpawnerObsidianTower>) : TileEntityBaseSpawner(type) {
 	constructor() : this(ModTileEntities.SPAWNER_OBSIDIAN_TOWER)
+	
+	object Type : IHeeTileEntityType<TileEntitySpawnerObsidianTower> {
+		override val blocks
+			get() = arrayOf(ModBlocks.SPAWNER_OBSIDIAN_TOWERS)
+	}
 	
 	companion object {
 		private val PARTICLE_SMOKE = ParticleSpawnerVanilla(

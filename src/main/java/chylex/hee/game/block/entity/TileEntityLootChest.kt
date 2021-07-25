@@ -8,6 +8,7 @@ import chylex.hee.game.container.ContainerLootChest
 import chylex.hee.game.fx.util.playServer
 import chylex.hee.game.inventory.util.nonEmptySlots
 import chylex.hee.game.inventory.util.setStack
+import chylex.hee.init.ModBlocks
 import chylex.hee.init.ModSounds
 import chylex.hee.init.ModTileEntities
 import chylex.hee.util.math.center
@@ -36,6 +37,11 @@ import java.util.UUID
 
 class TileEntityLootChest(type: TileEntityType<TileEntityLootChest>) : TileEntityBaseChest(type) {
 	constructor() : this(ModTileEntities.LOOT_CHEST)
+	
+	object Type : IHeeTileEntityType<TileEntityLootChest> {
+		override val blocks
+			get() = arrayOf(ModBlocks.LOOT_CHEST)
+	}
 	
 	companion object {
 		const val ROWS = 3

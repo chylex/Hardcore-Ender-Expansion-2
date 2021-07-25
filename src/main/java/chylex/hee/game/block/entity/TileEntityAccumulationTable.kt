@@ -11,6 +11,7 @@ import chylex.hee.game.mechanics.table.process.ProcessManyPedestals.State.Cancel
 import chylex.hee.game.mechanics.table.process.ProcessManyPedestals.State.Work
 import chylex.hee.game.mechanics.table.process.ProcessOnePedestal
 import chylex.hee.game.mechanics.table.process.serializer.BasicProcessSerializer
+import chylex.hee.init.ModBlocks
 import chylex.hee.init.ModTileEntities
 import chylex.hee.util.color.RGB
 import chylex.hee.util.nbt.TagCompound
@@ -21,6 +22,15 @@ import net.minecraft.util.math.BlockPos
 class TileEntityAccumulationTable(type: TileEntityType<TileEntityAccumulationTable>) : TileEntityBaseTable(type) {
 	@Suppress("unused")
 	constructor() : this(ModTileEntities.ACCUMULATION_TABLE)
+	
+	object Type : IHeeTileEntityType<TileEntityAccumulationTable> {
+		override val blocks
+			get() = arrayOf(
+				ModBlocks.ACCUMULATION_TABLE_TIER_1,
+				ModBlocks.ACCUMULATION_TABLE_TIER_2,
+				ModBlocks.ACCUMULATION_TABLE_TIER_3,
+			)
+	}
 	
 	override val tableIndicatorColor = RGB(220, 89, 55)
 	

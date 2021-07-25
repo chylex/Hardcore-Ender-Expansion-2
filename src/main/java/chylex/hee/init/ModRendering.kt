@@ -32,56 +32,19 @@ import chylex.hee.client.render.entity.RenderEntityMobVampireBat
 import chylex.hee.client.render.entity.RenderEntityMobVillagerDying
 import chylex.hee.client.render.entity.RenderEntityNothing
 import chylex.hee.client.render.entity.RenderEntityProjectileEyeOfEnder
-import chylex.hee.client.render.entity.RenderEntitySprite
 import chylex.hee.client.render.entity.RenderEntityTerritoryLightningBolt
 import chylex.hee.client.render.entity.RenderEntityTokenHolder
 import chylex.hee.client.render.item.RenderItemTileEntitySimple
 import chylex.hee.game.Resource
 import chylex.hee.game.block.IHeeBlock
 import chylex.hee.game.block.entity.TileEntityDarkChest
-import chylex.hee.game.block.entity.TileEntityExperienceGate
-import chylex.hee.game.block.entity.TileEntityIgneousPlate
-import chylex.hee.game.block.entity.TileEntityJarODust
 import chylex.hee.game.block.entity.TileEntityLootChest
-import chylex.hee.game.block.entity.TileEntityMinersBurialAltar
-import chylex.hee.game.block.entity.TileEntityPortalInner
-import chylex.hee.game.block.entity.TileEntityShulkerBoxCustom
-import chylex.hee.game.block.entity.TileEntityTablePedestal
-import chylex.hee.game.block.entity.base.TileEntityBaseSpawner
-import chylex.hee.game.block.entity.base.TileEntityBaseTable
 import chylex.hee.game.block.fluid.FluidEnderGoo
 import chylex.hee.game.block.fluid.FluidEnderGooPurified
 import chylex.hee.game.block.properties.BlockRenderLayer.CUTOUT
 import chylex.hee.game.block.properties.BlockRenderLayer.CUTOUT_MIPPED
 import chylex.hee.game.block.properties.BlockRenderLayer.TRANSLUCENT
 import chylex.hee.game.block.properties.CustomSkull
-import chylex.hee.game.entity.effect.EntityTerritoryLightningBolt
-import chylex.hee.game.entity.item.EntityFallingBlockHeavy
-import chylex.hee.game.entity.item.EntityFallingObsidian
-import chylex.hee.game.entity.item.EntityInfusedTNT
-import chylex.hee.game.entity.item.EntityItemCauldronTrigger
-import chylex.hee.game.entity.item.EntityItemFreshlyCooked
-import chylex.hee.game.entity.item.EntityItemIgneousRock
-import chylex.hee.game.entity.item.EntityItemNoBob
-import chylex.hee.game.entity.item.EntityItemRevitalizationSubstance
-import chylex.hee.game.entity.item.EntityTokenHolder
-import chylex.hee.game.entity.living.EntityBossEnderEye
-import chylex.hee.game.entity.living.EntityMobAbstractEnderman
-import chylex.hee.game.entity.living.EntityMobAngryEnderman
-import chylex.hee.game.entity.living.EntityMobBlobby
-import chylex.hee.game.entity.living.EntityMobEndermite
-import chylex.hee.game.entity.living.EntityMobEndermiteInstability
-import chylex.hee.game.entity.living.EntityMobSilverfish
-import chylex.hee.game.entity.living.EntityMobSpiderling
-import chylex.hee.game.entity.living.EntityMobUndread
-import chylex.hee.game.entity.living.EntityMobVampireBat
-import chylex.hee.game.entity.living.EntityMobVillagerDying
-import chylex.hee.game.entity.projectile.EntityProjectileEnderPearl
-import chylex.hee.game.entity.projectile.EntityProjectileExperienceBottle
-import chylex.hee.game.entity.projectile.EntityProjectileEyeOfEnder
-import chylex.hee.game.entity.projectile.EntityProjectileSpatialDash
-import chylex.hee.game.entity.technical.EntityTechnicalBase
-import chylex.hee.game.entity.technical.EntityTechnicalIgneousPlateLogic
 import chylex.hee.game.item.IHeeItem
 import chylex.hee.system.getRegistryEntries
 import chylex.hee.util.forge.Side
@@ -210,20 +173,20 @@ object ModRendering {
 		
 		// tile entities
 		
-		registerTile<TileEntityBaseSpawner, RenderTileSpawner>(ModTileEntities.SPAWNER_OBSIDIAN_TOWER)
-		registerTile<TileEntityBaseTable, RenderTileTable>(ModTileEntities.ACCUMULATION_TABLE)
-		registerTile<TileEntityBaseTable, RenderTileTable>(ModTileEntities.EXPERIENCE_TABLE)
-		registerTile<TileEntityBaseTable, RenderTileTable>(ModTileEntities.INFUSION_TABLE)
-		registerTile<TileEntityDarkChest, RenderTileDarkChest>(ModTileEntities.DARK_CHEST)
-		registerTile<TileEntityExperienceGate, RenderTileExperienceGate>(ModTileEntities.EXPERIENCE_GATE)
-		registerTile<TileEntityIgneousPlate, RenderTileIgneousPlate>(ModTileEntities.IGNEOUS_PLATE)
-		registerTile<TileEntityJarODust, RenderTileJarODust>(ModTileEntities.JAR_O_DUST)
-		registerTile<TileEntityLootChest, RenderTileLootChest>(ModTileEntities.LOOT_CHEST)
-		registerTile<TileEntityMinersBurialAltar, RenderTileMinersBurialAltar>(ModTileEntities.MINERS_BURIAL_ALTAR)
-		registerTile<TileEntityPortalInner.End, RenderTileEndPortal>(ModTileEntities.END_PORTAL_INNER)
-		registerTile<TileEntityPortalInner.Void, RenderTileVoidPortal>(ModTileEntities.VOID_PORTAL_INNER)
-		registerTile<TileEntityShulkerBoxCustom, RenderTileShulkerBox>(ModTileEntities.SHULKER_BOX)
-		registerTile<TileEntityTablePedestal, RenderTileTablePedestal>(ModTileEntities.TABLE_PEDESTAL)
+		ModTileEntities.SPAWNER_OBSIDIAN_TOWER.render(RenderTileSpawner::class.java)
+		ModTileEntities.ACCUMULATION_TABLE.render(RenderTileTable::class.java)
+		ModTileEntities.EXPERIENCE_TABLE.render(RenderTileTable::class.java)
+		ModTileEntities.INFUSION_TABLE.render(RenderTileTable::class.java)
+		ModTileEntities.DARK_CHEST.render(RenderTileDarkChest::class.java)
+		ModTileEntities.EXPERIENCE_GATE.render(RenderTileExperienceGate::class.java)
+		ModTileEntities.IGNEOUS_PLATE.render(RenderTileIgneousPlate::class.java)
+		ModTileEntities.JAR_O_DUST.render(RenderTileJarODust::class.java)
+		ModTileEntities.LOOT_CHEST.render(RenderTileLootChest::class.java)
+		ModTileEntities.MINERS_BURIAL_ALTAR.render(RenderTileMinersBurialAltar::class.java)
+		ModTileEntities.END_PORTAL_INNER.render(RenderTileEndPortal::class.java)
+		ModTileEntities.VOID_PORTAL_INNER.render(RenderTileVoidPortal::class.java)
+		ModTileEntities.SHULKER_BOX.render(RenderTileShulkerBox::class.java)
+		ModTileEntities.TABLE_PEDESTAL.render(RenderTileTablePedestal::class.java)
 		
 		// miscellaneous
 		
@@ -275,8 +238,7 @@ object ModRendering {
 		RenderingRegistry.registerEntityRenderingHandler(type, handle.invokeExact() as IRenderFactory<T>)
 	}
 	
-	@Suppress("UNCHECKED_CAST")
-	private inline fun <reified T : TileEntity, reified U : TileEntityRenderer<in T>> registerTile(type: TileEntityType<out T>) {
-		ClientRegistry.bindTileEntityRenderer(type, ObjectConstructors.oneArg<U, TileEntityRendererDispatcher>())
+	private fun <T : TileEntity> TileEntityType<T>.render(renderer: Class<out TileEntityRenderer<in T>>) {
+		ClientRegistry.bindTileEntityRenderer(this, ObjectConstructors.oneArg(renderer, TileEntityRendererDispatcher::class.java))
 	}
 }

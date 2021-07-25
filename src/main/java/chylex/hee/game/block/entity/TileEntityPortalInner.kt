@@ -1,5 +1,6 @@
 package chylex.hee.game.block.entity
 
+import chylex.hee.init.ModBlocks
 import chylex.hee.init.ModTileEntities
 import chylex.hee.util.forge.Side
 import chylex.hee.util.forge.Sided
@@ -17,9 +18,19 @@ sealed class TileEntityPortalInner(type: TileEntityType<out TileEntityPortalInne
 	
 	class End(type: TileEntityType<End>) : TileEntityPortalInner(type) {
 		constructor() : this(ModTileEntities.END_PORTAL_INNER)
+		
+		object Type : IHeeTileEntityType<TileEntityPortalInner.End> {
+			override val blocks
+				get() = arrayOf(ModBlocks.END_PORTAL_INNER)
+		}
 	}
 	
 	class Void(type: TileEntityType<Void>) : TileEntityPortalInner(type) {
 		constructor() : this(ModTileEntities.VOID_PORTAL_INNER)
+		
+		object Type : IHeeTileEntityType<TileEntityPortalInner.Void> {
+			override val blocks
+				get() = arrayOf(ModBlocks.VOID_PORTAL_INNER)
+		}
 	}
 }

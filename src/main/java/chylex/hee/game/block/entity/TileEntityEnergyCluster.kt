@@ -35,6 +35,7 @@ import chylex.hee.game.world.util.allInCenteredBox
 import chylex.hee.game.world.util.breakBlock
 import chylex.hee.game.world.util.isAir
 import chylex.hee.game.world.util.isAnyPlayerWithinRange
+import chylex.hee.init.ModBlocks
 import chylex.hee.init.ModTileEntities
 import chylex.hee.system.random.nextFloat
 import chylex.hee.system.random.nextInt
@@ -49,6 +50,11 @@ import kotlin.math.pow
 
 class TileEntityEnergyCluster(type: TileEntityType<TileEntityEnergyCluster>) : TileEntityBase(type), ITickableTileEntity {
 	constructor() : this(ModTileEntities.ENERGY_CLUSTER)
+	
+	object Type : IHeeTileEntityType<TileEntityEnergyCluster> {
+		override val blocks
+			get() = arrayOf(ModBlocks.ENERGY_CLUSTER)
+	}
 	
 	private companion object {
 		private const val DEFAULT_NOTIFY_FLAGS = FLAG_SYNC_CLIENT or FLAG_SKIP_RENDER or FLAG_MARK_DIRTY

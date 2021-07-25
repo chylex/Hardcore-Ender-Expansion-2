@@ -47,6 +47,11 @@ import java.util.Arrays
 import java.util.Random
 
 class TileEntityBrewingStandCustom : BrewingStandTileEntity() {
+	object Type : IHeeTileEntityType<TileEntityBrewingStandCustom> {
+		override val blocks
+			get() = arrayOf(ModBlocks.ENHANCED_BREWING_STAND)
+	}
+	
 	companion object {
 		val SLOTS_POTIONS = 0..2
 		const val SLOT_REAGENT = 3

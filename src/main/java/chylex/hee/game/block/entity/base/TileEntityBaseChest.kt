@@ -29,7 +29,7 @@ import net.minecraft.util.SoundEvent
 import net.minecraft.util.SoundEvents
 import net.minecraft.util.text.ITextComponent
 
-@Sided(value = Side.CLIENT, _interface = IChestLid::class)
+@Sided(Side.CLIENT, _interface = IChestLid::class)
 abstract class TileEntityBaseChest(type: TileEntityType<out TileEntityBaseChest>) : TileEntityBase(type), IChestLid, ITickableTileEntity, INamedContainerProvider, INameable {
 	private companion object {
 		private const val CUSTOM_NAME_TAG = "CustomName"

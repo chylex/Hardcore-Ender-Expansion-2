@@ -24,6 +24,7 @@ import chylex.hee.game.particle.spawner.properties.IOffset.Constant
 import chylex.hee.game.particle.spawner.properties.IOffset.InBox
 import chylex.hee.game.particle.spawner.properties.IShape.Point
 import chylex.hee.game.world.util.FLAG_SYNC_CLIENT
+import chylex.hee.init.ModBlocks
 import chylex.hee.init.ModItems
 import chylex.hee.init.ModSounds
 import chylex.hee.init.ModTileEntities
@@ -59,6 +60,11 @@ import kotlin.math.sin
 
 class TileEntityExperienceGate(type: TileEntityType<TileEntityExperienceGate>) : TileEntityBase(type), ITickableTileEntity {
 	constructor() : this(ModTileEntities.EXPERIENCE_GATE)
+	
+	object Type : IHeeTileEntityType<TileEntityExperienceGate> {
+		override val blocks
+			get() = arrayOf(ModBlocks.EXPERIENCE_GATE_CONTROLLER)
+	}
 	
 	companion object {
 		private val DAMAGE_START_EXTRACTION = Damage(MAGIC_TYPE, PEACEFUL_KNOCKBACK, IGNORE_INVINCIBILITY())

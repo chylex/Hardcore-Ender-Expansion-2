@@ -66,6 +66,11 @@ import java.util.Random
 class TileEntityTablePedestal(type: TileEntityType<TileEntityTablePedestal>) : TileEntityBase(type) {
 	constructor() : this(ModTileEntities.TABLE_PEDESTAL)
 	
+	object Type : IHeeTileEntityType<TileEntityTablePedestal> {
+		override val blocks
+			get() = arrayOf(ModBlocks.TABLE_PEDESTAL)
+	}
+	
 	companion object {
 		private const val TABLE_POS_TAG = "TablePos"
 		private const val INVENTORY_TAG = "Inventory"

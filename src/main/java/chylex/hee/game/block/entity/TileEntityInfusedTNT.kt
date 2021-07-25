@@ -4,12 +4,18 @@ import chylex.hee.game.block.entity.base.TileEntityBase
 import chylex.hee.game.block.entity.base.TileEntityBase.Context.STORAGE
 import chylex.hee.game.item.infusion.InfusionList
 import chylex.hee.game.item.infusion.InfusionTag
+import chylex.hee.init.ModBlocks
 import chylex.hee.init.ModTileEntities
 import chylex.hee.util.nbt.TagCompound
 import net.minecraft.tileentity.TileEntityType
 
 class TileEntityInfusedTNT(type: TileEntityType<TileEntityInfusedTNT>) : TileEntityBase(type) {
 	constructor() : this(ModTileEntities.INFUSED_TNT)
+	
+	object Type : IHeeTileEntityType<TileEntityInfusedTNT> {
+		override val blocks
+			get() = arrayOf(ModBlocks.INFUSED_TNT)
+	}
 	
 	var infusions = InfusionList.EMPTY
 	

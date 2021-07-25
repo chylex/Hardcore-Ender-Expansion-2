@@ -1,5 +1,6 @@
 package chylex.hee.game.block.entity
 
+import chylex.hee.init.ModBlocks
 import chylex.hee.init.ModTileEntities
 import chylex.hee.util.forge.Side
 import chylex.hee.util.forge.Sided
@@ -9,6 +10,11 @@ import net.minecraft.util.math.AxisAlignedBB
 
 class TileEntityDarkChest(type: TileEntityType<TileEntityDarkChest>) : ChestTileEntity(type) {
 	constructor() : this(ModTileEntities.DARK_CHEST)
+	
+	object Type : IHeeTileEntityType<TileEntityDarkChest> {
+		override val blocks
+			get() = arrayOf(ModBlocks.DARK_CHEST)
+	}
 	
 	@Sided(Side.CLIENT)
 	override fun getRenderBoundingBox(): AxisAlignedBB {

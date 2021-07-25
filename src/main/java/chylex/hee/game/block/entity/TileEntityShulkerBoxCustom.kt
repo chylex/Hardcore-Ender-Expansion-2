@@ -1,5 +1,6 @@
 package chylex.hee.game.block.entity
 
+import chylex.hee.game.block.BlockShulkerBoxOverride
 import chylex.hee.game.block.BlockShulkerBoxOverride.BoxSize
 import chylex.hee.game.container.ContainerShulkerBox
 import chylex.hee.init.ModTileEntities
@@ -23,6 +24,11 @@ import net.minecraft.util.text.ITextComponent
 import net.minecraft.util.text.TranslationTextComponent
 
 class TileEntityShulkerBoxCustom : ShulkerBoxTileEntity() {
+	object Type : IHeeTileEntityType<TileEntityShulkerBoxCustom> {
+		override val blocks
+			get() = BlockShulkerBoxOverride.ALL_BLOCKS.toTypedArray()
+	}
+	
 	companion object {
 		const val BOX_SIZE_TAG = "BoxSize"
 	}

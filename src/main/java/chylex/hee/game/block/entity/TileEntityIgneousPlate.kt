@@ -39,6 +39,11 @@ import kotlin.math.pow
 class TileEntityIgneousPlate(type: TileEntityType<TileEntityIgneousPlate>) : TileEntityBaseSpecialFirstTick(type) {
 	constructor() : this(ModTileEntities.IGNEOUS_PLATE)
 	
+	object Type : IHeeTileEntityType<TileEntityIgneousPlate> {
+		override val blocks
+			get() = arrayOf(ModBlocks.IGNEOUS_PLATE)
+	}
+	
 	private companion object {
 		private const val TICKS_TO_HEAT_UP = 1100
 		private const val TICKS_TO_COOL_DOWN = 2600

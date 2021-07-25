@@ -21,9 +21,9 @@ object ObjectConstructors {
 	}
 	
 	@Suppress("UNCHECKED_CAST")
-	inline fun <reified T, reified U> oneArg(): Function<U, T> {
+	fun <T, U> oneArg(constructedType: Class<T>, parameterType: Class<U>): Function<U, T> {
 		val mh = MethodHandles.lookup()
-		val con = mh.unreflectConstructor(T::class.java.getConstructor(U::class.java))
+		val con = mh.unreflectConstructor(constructedType.getConstructor(parameterType))
 		
 		val conType = con.type()
 		val samType = conType.generic()
@@ -34,12 +34,17 @@ object ObjectConstructors {
 	
 	@Suppress("UNCHECKED_CAST")
 	inline fun <reified ConstructedType : ParentType, reified ParentType, reified FactoryType> generic(constructMethodName: String, vararg constructMethodArgs: Class<*>): MethodHandle {
+		return generic(ConstructedType::class.java, ParentType::class.java, FactoryType::class.java, constructMethodName, *constructMethodArgs)
+	}
+	
+	@Suppress("UNCHECKED_CAST")
+	fun <ConstructedType : ParentType, ParentType, FactoryType> generic(constructedType: Class<ConstructedType>, parentType: Class<ParentType>, factoryType: Class<FactoryType>, constructMethodName: String, vararg constructMethodArgs: Class<*>): MethodHandle {
 		val mh = MethodHandles.lookup()
-		val con = mh.unreflectConstructor(ConstructedType::class.java.getConstructor(*constructMethodArgs))
+		val con = mh.unreflectConstructor(constructedType.getConstructor(*constructMethodArgs))
 		
 		val conType = con.type()
-		val samType = conType.changeReturnType(ParentType::class.java)
-		val retType = MethodType.methodType(FactoryType::class.java)
+		val samType = conType.changeReturnType(parentType)
+		val retType = MethodType.methodType(factoryType)
 		
 		return LambdaMetafactory.metafactory(mh, constructMethodName, retType, samType, con, conType).target
 	}

@@ -65,6 +65,11 @@ import kotlin.math.roundToInt
 class TileEntityMinersBurialAltar(type: TileEntityType<TileEntityMinersBurialAltar>) : TileEntityBase(type), ITickableTileEntity {
 	constructor() : this(ModTileEntities.MINERS_BURIAL_ALTAR)
 	
+	object Type : IHeeTileEntityType<TileEntityMinersBurialAltar> {
+		override val blocks
+			get() = arrayOf(ModBlocks.MINERS_BURIAL_ALTAR)
+	}
+	
 	companion object {
 		private const val HAS_MEDALLION_TAG = "HasMedallion"
 		private const val REDEEM_TYPE_TAG = "RedeemType"

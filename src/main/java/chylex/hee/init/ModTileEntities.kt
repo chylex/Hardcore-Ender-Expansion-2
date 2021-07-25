@@ -2,6 +2,7 @@ package chylex.hee.init
 
 import chylex.hee.HEE
 import chylex.hee.game.block.BlockShulkerBoxOverride
+import chylex.hee.game.block.entity.IHeeTileEntityType
 import chylex.hee.game.block.entity.TileEntityAccumulationTable
 import chylex.hee.game.block.entity.TileEntityBrewingStandCustom
 import chylex.hee.game.block.entity.TileEntityDarkChest
@@ -35,25 +36,25 @@ import net.minecraftforge.fml.common.Mod.EventBusSubscriber.Bus.MOD
 
 @SubscribeAllEvents(modid = HEE.ID, bus = MOD)
 object ModTileEntities {
-	@JvmField val ACCUMULATION_TABLE     = build<TileEntityAccumulationTable>(ModBlocks.ACCUMULATION_TABLE_TIER_1, ModBlocks.ACCUMULATION_TABLE_TIER_2, ModBlocks.ACCUMULATION_TABLE_TIER_3) named "accumulation_table"
-	@JvmField val BREWING_STAND          = build<TileEntityBrewingStandCustom>(ModBlocks.ENHANCED_BREWING_STAND) named "brewing_stand"
-	@JvmField val DARK_CHEST             = build<TileEntityDarkChest>(ModBlocks.DARK_CHEST) named "dark_chest"
-	@JvmField val END_PORTAL_ACCEPTOR    = build<TileEntityEndPortalAcceptor>(ModBlocks.END_PORTAL_ACCEPTOR) named "end_portal_acceptor"
-	@JvmField val END_PORTAL_INNER       = build<TileEntityPortalInner.End>(ModBlocks.END_PORTAL_INNER) named "end_portal_inner"
-	@JvmField val ENERGY_CLUSTER         = build<TileEntityEnergyCluster>(ModBlocks.ENERGY_CLUSTER) named "energy_cluster"
-	@JvmField val EXPERIENCE_GATE        = build<TileEntityExperienceGate>(ModBlocks.EXPERIENCE_GATE_CONTROLLER) named "experience_gate"
-	@JvmField val EXPERIENCE_TABLE       = build<TileEntityExperienceTable>(ModBlocks.EXPERIENCE_TABLE_TIER_1, ModBlocks.EXPERIENCE_TABLE_TIER_2, ModBlocks.EXPERIENCE_TABLE_TIER_3) named "experience_table"
-	@JvmField val IGNEOUS_PLATE          = build<TileEntityIgneousPlate>(ModBlocks.IGNEOUS_PLATE) named "igneous_plate"
-	@JvmField val INFUSED_TNT            = build<TileEntityInfusedTNT>(ModBlocks.INFUSED_TNT) named "infused_tnt"
-	@JvmField val INFUSION_TABLE         = build<TileEntityInfusionTable>(ModBlocks.INFUSION_TABLE_TIER_1, ModBlocks.INFUSION_TABLE_TIER_2, ModBlocks.INFUSION_TABLE_TIER_3) named "infusion_table"
-	@JvmField val JAR_O_DUST             = build<TileEntityJarODust>(ModBlocks.JAR_O_DUST) named "jar_o_dust"
-	@JvmField val LOOT_CHEST             = build<TileEntityLootChest>(ModBlocks.LOOT_CHEST) named "loot_chest"
-	@JvmField val MINERS_BURIAL_ALTAR    = build<TileEntityMinersBurialAltar>(ModBlocks.MINERS_BURIAL_ALTAR) named "miners_burial_altar"
-	@JvmField val SHULKER_BOX            = build<TileEntityShulkerBoxCustom>(*BlockShulkerBoxOverride.ALL_BLOCKS.toTypedArray()) named "shulker_box"
-	@JvmField val SPAWNER_OBSIDIAN_TOWER = build<TileEntitySpawnerObsidianTower>(ModBlocks.SPAWNER_OBSIDIAN_TOWERS) named "spawner_obsidian_tower"
-	@JvmField val TABLE_PEDESTAL         = build<TileEntityTablePedestal>(ModBlocks.TABLE_PEDESTAL) named "table_pedestal"
-	@JvmField val VOID_PORTAL_INNER      = build<TileEntityPortalInner.Void>(ModBlocks.VOID_PORTAL_INNER) named "void_portal_inner"
-	@JvmField val VOID_PORTAL_STORAGE    = build<TileEntityVoidPortalStorage>(ModBlocks.VOID_PORTAL_STORAGE, ModBlocks.VOID_PORTAL_STORAGE_CRAFTED) named "void_portal_storage"
+	@JvmField val ACCUMULATION_TABLE     = build(TileEntityAccumulationTable.Type) named "accumulation_table"
+	@JvmField val BREWING_STAND          = build(TileEntityBrewingStandCustom.Type) named "brewing_stand"
+	@JvmField val DARK_CHEST             = build(TileEntityDarkChest.Type) named "dark_chest"
+	@JvmField val END_PORTAL_ACCEPTOR    = build(TileEntityEndPortalAcceptor.Type) named "end_portal_acceptor"
+	@JvmField val END_PORTAL_INNER       = build(TileEntityPortalInner.End.Type) named "end_portal_inner"
+	@JvmField val ENERGY_CLUSTER         = build(TileEntityEnergyCluster.Type) named "energy_cluster"
+	@JvmField val EXPERIENCE_GATE        = build(TileEntityExperienceGate.Type) named "experience_gate"
+	@JvmField val EXPERIENCE_TABLE       = build(TileEntityExperienceTable.Type) named "experience_table"
+	@JvmField val IGNEOUS_PLATE          = build(TileEntityIgneousPlate.Type) named "igneous_plate"
+	@JvmField val INFUSED_TNT            = build(TileEntityInfusedTNT.Type) named "infused_tnt"
+	@JvmField val INFUSION_TABLE         = build(TileEntityInfusionTable.Type) named "infusion_table"
+	@JvmField val JAR_O_DUST             = build(TileEntityJarODust.Type) named "jar_o_dust"
+	@JvmField val LOOT_CHEST             = build(TileEntityLootChest.Type) named "loot_chest"
+	@JvmField val MINERS_BURIAL_ALTAR    = build(TileEntityMinersBurialAltar.Type) named "miners_burial_altar"
+	@JvmField val SHULKER_BOX            = build(TileEntityShulkerBoxCustom.Type) named "shulker_box"
+	@JvmField val SPAWNER_OBSIDIAN_TOWER = build(TileEntitySpawnerObsidianTower.Type) named "spawner_obsidian_tower"
+	@JvmField val TABLE_PEDESTAL         = build(TileEntityTablePedestal.Type) named "table_pedestal"
+	@JvmField val VOID_PORTAL_INNER      = build(TileEntityPortalInner.Void.Type) named "void_portal_inner"
+	@JvmField val VOID_PORTAL_STORAGE    = build(TileEntityVoidPortalStorage.Type) named "void_portal_storage"
 	
 	@SubscribeEvent
 	fun onRegister(e: RegistryEvent.Register<TileEntityType<*>>) {
@@ -61,35 +62,31 @@ object ModTileEntities {
 	}
 	
 	fun setupVanillaValidBlocks() {
-		for (block in arrayOf(BREWING_STAND, TileEntityType.BREWING_STAND)) {
-			with(block) {
-				validBlocks = ImmutableSet.builder<Block>()
-					.addAll(validBlocks)
-					.add(Blocks.BREWING_STAND) // needs the replaced one
-					.build()
-			}
+		arrayOf(BREWING_STAND, TileEntityType.BREWING_STAND).extendValidBlocks {
+			add(Blocks.BREWING_STAND)
 		}
 		
-		for (block in arrayOf(SHULKER_BOX, TileEntityType.SHULKER_BOX)) {
-			with(block) {
-				validBlocks = ImmutableSet.builder<Block>()
-					.addAll(validBlocks)
-					.addAll(BlockShulkerBoxOverride.ALL_BLOCKS) // needs the replaced ones
-					.build()
-			}
+		arrayOf(SHULKER_BOX, TileEntityType.SHULKER_BOX).extendValidBlocks {
+			addAll(BlockShulkerBoxOverride.ALL_BLOCKS)
 		}
 		
-		with(TileEntityType.SKULL) {
-			validBlocks = ImmutableSet.builder<Block>()
-				.addAll(validBlocks)
-				.add(ModBlocks.ENDERMAN_HEAD)
-				.add(ModBlocks.ENDERMAN_WALL_HEAD)
-				.build()
+		TileEntityType.SKULL.extendValidBlocks {
+			add(ModBlocks.ENDERMAN_HEAD, ModBlocks.ENDERMAN_WALL_HEAD)
 		}
 	}
 	
-	private inline fun <reified T : TileEntity> build(vararg blocks: Block): TileEntityType<T> {
+	private inline fun <reified T : TileEntity> build(type: IHeeTileEntityType<T>): TileEntityType<T> {
 		@Suppress("NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS")
-		return TileEntityType.Builder.create(ObjectConstructors.noArgs<T>(), *blocks).build(null)
+		return TileEntityType.Builder.create(ObjectConstructors.noArgs<T>(), *type.blocks).build(null)
+	}
+	
+	private inline fun <T : TileEntity> Array<TileEntityType<out T>>.extendValidBlocks(setCallback: ImmutableSet.Builder<Block>.() -> ImmutableSet.Builder<Block>) {
+		for (tileEntityType in this) {
+			tileEntityType.extendValidBlocks(setCallback)
+		}
+	}
+	
+	private inline fun <T : TileEntity> TileEntityType<T>.extendValidBlocks(setCallback: ImmutableSet.Builder<Block>.() -> ImmutableSet.Builder<Block>) {
+		this.validBlocks = ImmutableSet.builder<Block>().addAll(this.validBlocks).let(setCallback).build()
 	}
 }

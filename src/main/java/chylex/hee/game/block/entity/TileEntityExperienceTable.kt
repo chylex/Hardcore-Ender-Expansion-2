@@ -15,6 +15,7 @@ import chylex.hee.game.mechanics.table.process.ProcessManyPedestals.State.Work
 import chylex.hee.game.mechanics.table.process.ProcessOnePedestal
 import chylex.hee.game.mechanics.table.process.serializer.MultiProcessSerializer
 import chylex.hee.game.mechanics.table.process.serializer.MultiProcessSerializer.Companion.Mapping
+import chylex.hee.init.ModBlocks
 import chylex.hee.init.ModItems
 import chylex.hee.init.ModTileEntities
 import chylex.hee.system.random.nextFloat
@@ -36,6 +37,15 @@ import kotlin.math.pow
 class TileEntityExperienceTable(type: TileEntityType<TileEntityExperienceTable>) : TileEntityBaseTableWithSupportingItem(type) {
 	@Suppress("unused")
 	constructor() : this(ModTileEntities.EXPERIENCE_TABLE)
+	
+	object Type : IHeeTileEntityType<TileEntityExperienceTable> {
+		override val blocks
+			get() = arrayOf(
+				ModBlocks.EXPERIENCE_TABLE_TIER_1,
+				ModBlocks.EXPERIENCE_TABLE_TIER_2,
+				ModBlocks.EXPERIENCE_TABLE_TIER_3,
+			)
+	}
 	
 	override val tableIndicatorColor = RGB(167, 187, 45)
 	override val tableDustType = DustType.STARDUST

@@ -16,6 +16,7 @@ import chylex.hee.game.world.util.FLAG_SKIP_RENDER
 import chylex.hee.game.world.util.FLAG_SYNC_CLIENT
 import chylex.hee.game.world.util.breakBlock
 import chylex.hee.game.world.util.getTile
+import chylex.hee.init.ModBlocks
 import chylex.hee.init.ModTileEntities
 import chylex.hee.util.nbt.TagCompound
 import chylex.hee.util.nbt.use
@@ -23,6 +24,11 @@ import net.minecraft.tileentity.TileEntityType
 
 class TileEntityEndPortalAcceptor(type: TileEntityType<TileEntityEndPortalAcceptor>) : TileEntityBasePortalController(type) {
 	constructor() : this(ModTileEntities.END_PORTAL_ACCEPTOR)
+	
+	object Type : IHeeTileEntityType<TileEntityEndPortalAcceptor> {
+		override val blocks
+			get() = arrayOf(ModBlocks.END_PORTAL_ACCEPTOR)
+	}
 	
 	private companion object {
 		private const val NO_REFRESH = Int.MAX_VALUE

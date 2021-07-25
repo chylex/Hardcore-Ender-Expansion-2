@@ -16,6 +16,7 @@ import chylex.hee.game.mechanics.table.process.ProcessManyPedestals.State.Work
 import chylex.hee.game.mechanics.table.process.ProcessSupportingItemHolder
 import chylex.hee.game.mechanics.table.process.serializer.MultiProcessSerializer
 import chylex.hee.game.mechanics.table.process.serializer.MultiProcessSerializer.Companion.Mapping
+import chylex.hee.init.ModBlocks
 import chylex.hee.init.ModTileEntities
 import chylex.hee.util.color.RGB
 import chylex.hee.util.math.over
@@ -29,6 +30,15 @@ import net.minecraft.util.math.BlockPos
 class TileEntityInfusionTable(type: TileEntityType<TileEntityInfusionTable>) : TileEntityBaseTable(type) {
 	@Suppress("unused")
 	constructor() : this(ModTileEntities.INFUSION_TABLE)
+	
+	object Type : IHeeTileEntityType<TileEntityInfusionTable> {
+		override val blocks
+			get() = arrayOf(
+				ModBlocks.INFUSION_TABLE_TIER_1,
+				ModBlocks.INFUSION_TABLE_TIER_2,
+				ModBlocks.INFUSION_TABLE_TIER_3,
+			)
+	}
 	
 	override val tableIndicatorColor = RGB(45, 139, 184)
 	override val tableDustType = DustType.END_POWDER

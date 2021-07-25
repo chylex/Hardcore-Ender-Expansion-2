@@ -4,6 +4,7 @@ import chylex.hee.game.block.entity.base.TileEntityBase
 import chylex.hee.game.mechanics.dust.DustLayerInventory
 import chylex.hee.game.mechanics.dust.DustLayers
 import chylex.hee.game.world.util.FLAG_SYNC_CLIENT
+import chylex.hee.init.ModBlocks
 import chylex.hee.init.ModTileEntities
 import chylex.hee.util.forge.capability.LazyOptional
 import chylex.hee.util.nbt.TagCompound
@@ -20,6 +21,11 @@ import net.minecraftforge.items.CapabilityItemHandler.ITEM_HANDLER_CAPABILITY
 
 class TileEntityJarODust(type: TileEntityType<TileEntityJarODust>) : TileEntityBase(type) {
 	constructor() : this(ModTileEntities.JAR_O_DUST)
+	
+	object Type : IHeeTileEntityType<TileEntityJarODust> {
+		override val blocks
+			get() = arrayOf(ModBlocks.JAR_O_DUST)
+	}
 	
 	companion object {
 		const val DUST_CAPACITY = 256
