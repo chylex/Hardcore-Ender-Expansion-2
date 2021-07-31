@@ -13,8 +13,8 @@ import net.minecraft.potion.EffectType.HARMFUL
 import net.minecraft.potion.HealthBoostEffect
 
 @SubscribeAllEvents(modid = HEE.ID)
-object CorruptionEffect : Effect(HARMFUL, RGB(1, 1, 1).i) {
-	val TYPE
+object CorruptionEffect : HeeEffect(HARMFUL, RGB(1, 1, 1)) {
+	val POTION
 		get() = PotionTypeMap.getPotion(this)
 	
 	private val pauseAttributeSkipping = ThreadLocal.withInitial { false }

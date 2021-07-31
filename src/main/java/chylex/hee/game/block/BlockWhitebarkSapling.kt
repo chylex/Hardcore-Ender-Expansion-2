@@ -1,5 +1,6 @@
 package chylex.hee.game.block
 
+import chylex.hee.client.text.LocalizationStrategy
 import chylex.hee.game.block.properties.BlockBuilder
 import chylex.hee.game.block.util.Property
 import chylex.hee.game.block.util.asVoxelShape
@@ -23,13 +24,11 @@ import net.minecraft.world.World
 import net.minecraft.world.server.ServerWorld
 import java.util.Random
 
-class BlockWhitebarkSapling(builder: BlockBuilder, private val generator: WhitebarkTreeGenerator<*>) : BlockEndPlant(builder), IHeeBlock, IGrowable {
+open class BlockWhitebarkSapling(builder: BlockBuilder, private val generator: WhitebarkTreeGenerator<*>) : BlockEndPlant(builder), IHeeBlock, IGrowable {
 	companion object {
 		val STAGE = Property.int("stage", 0..2)
 		val AABB = AxisAlignedBB(0.1, 0.0, 0.1, 0.9, 0.8, 0.9).asVoxelShape
 	}
-	
-	// Instance
 	
 	override val tags
 		get() = listOf(BlockTags.SAPLINGS)
@@ -42,19 +41,13 @@ class BlockWhitebarkSapling(builder: BlockBuilder, private val generator: Whiteb
 		container.add(STAGE)
 	}
 	
-	// Bounding box
-	
 	override fun getShape(state: BlockState, world: IBlockReader, pos: BlockPos, context: ISelectionContext): VoxelShape {
 		return AABB
 	}
 	
-	// Placement behavior
-	
 	override fun isValidGround(state: BlockState, world: IBlockReader, pos: BlockPos): Boolean {
 		return state.block.let { it === Blocks.END_STONE || it === ModBlocks.ENDERSOL || it === ModBlocks.HUMUS }
 	}
-	
-	// Growth rules
 	
 	override fun tick(state: BlockState, world: ServerWorld, pos: BlockPos, rand: Random) {
 		@Suppress("DEPRECATION")
@@ -82,5 +75,10 @@ class BlockWhitebarkSapling(builder: BlockBuilder, private val generator: Whiteb
 		else {
 			generator.generate(WorldToStructureWorldAdapter(world, rand, pos), BlockPos.ZERO)
 		}
+	}
+	
+	class Autumn(builder: BlockBuilder, generator: WhitebarkTreeGenerator<*>) : BlockWhitebarkSapling(builder, generator) {
+		override val localization
+			get() = LocalizationStrategy.Parenthesized(LocalizationStrategy.ReplaceWords("Yellowgreen", "Yellow-Green"), wordCount = 1, fromStart = false)
 	}
 }

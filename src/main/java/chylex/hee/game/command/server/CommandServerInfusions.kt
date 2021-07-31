@@ -20,6 +20,20 @@ import net.minecraft.util.text.TranslationTextComponent
 
 object CommandServerInfusions : ICommand {
 	override val name = "infusions"
+	override val description = "manipulates infusions on held item"
+	
+	override val localization
+		get() = mapOf(
+			"reset_success"  to "Removed %s infusion(s)",
+			"add_success"    to "Added %s infusion",
+			"remove_success" to "Removed %s infusion",
+			
+			"no_held_item"      to "No item held in main hand",
+			"nothing_to_remove" to "No infusions present on this item",
+			"not_applicable"    to "Infusion cannot be applied to this item",
+			"already_present"   to "Infusion is already present on this item",
+			"not_present"       to "Infusion is not present on this item",
+		)
 	
 	override fun register(builder: ArgumentBuilder<CommandSource, *>) {
 		builder.then(

@@ -1,5 +1,6 @@
 package chylex.hee.game.entity.living
 
+import chylex.hee.client.text.LocalizationStrategy
 import chylex.hee.game.Resource
 import chylex.hee.game.entity.util.DefaultEntityAttributes
 import chylex.hee.game.entity.util.with
@@ -27,6 +28,9 @@ class EntityMobEndermiteInstability(type: EntityType<EntityMobEndermiteInstabili
 	constructor(world: World) : this(ModEntities.ENDERMITE_INSTABILITY, world)
 	
 	object Type : BaseType<EntityMobEndermiteInstability>() {
+		override val localization
+			get() = LocalizationStrategy.Parenthesized(wordCount = 1)
+		
 		override val tracker
 			get() = super.tracker.copy(trackingRange = 6)
 		
@@ -35,6 +39,9 @@ class EntityMobEndermiteInstability(type: EntityType<EntityMobEndermiteInstabili
 				MAX_HEALTH    to 8.0,
 				ATTACK_DAMAGE to 2.0,
 			)
+		
+		override val spawnEggName
+			get() = "Endermite (Instability)"
 	}
 	
 	private companion object {

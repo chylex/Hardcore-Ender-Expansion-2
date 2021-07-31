@@ -1,5 +1,6 @@
 package chylex.hee.game.item
 
+import chylex.hee.client.text.LocalizationStrategy
 import chylex.hee.client.util.MC
 import chylex.hee.game.Resource
 import chylex.hee.game.entity.util.REACH_DISTANCE
@@ -46,6 +47,9 @@ class ItemTotemOfUndyingCustom(properties: Properties) : ItemAbstractTrinket(pro
 			if (stack.heeTagOrNull.hasKey(SHAKING_TAG)) 1F else 0F
 		}
 	}
+	
+	override val localization
+		get() = LocalizationStrategy.None
 	
 	override val model
 		get() = ItemModel.WithOverrides(

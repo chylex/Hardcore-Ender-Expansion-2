@@ -1,5 +1,6 @@
 package chylex.hee.game.block
 
+import chylex.hee.client.text.LocalizationStrategy
 import chylex.hee.client.util.MC
 import chylex.hee.game.Environment
 import chylex.hee.game.Resource
@@ -169,6 +170,9 @@ sealed class BlockGraveDirt(builder: BlockBuilder) : BlockSimpleShaped(builder, 
 	}
 	
 	class Loot(builder: BlockBuilder) : BlockGraveDirt(builder) {
+		override val localization
+			get() = LocalizationStrategy.Parenthesized(wordCount = 1, fromStart = false)
+		
 		override val model
 			get() = BlockStateModel(
 				BlockStatePreset.None,
@@ -183,6 +187,9 @@ sealed class BlockGraveDirt(builder: BlockBuilder) : BlockSimpleShaped(builder, 
 	}
 	
 	class Spiderling(builder: BlockBuilder) : BlockGraveDirt(builder) {
+		override val localization
+			get() = LocalizationStrategy.Parenthesized(wordCount = 1, fromStart = false)
+		
 		private var clientLastSpiderlingSound = 0L
 		
 		override fun updatePostPlacement(state: BlockState, facing: Direction, neighborState: BlockState, world: IWorld, pos: BlockPos, neighborPos: BlockPos): BlockState {

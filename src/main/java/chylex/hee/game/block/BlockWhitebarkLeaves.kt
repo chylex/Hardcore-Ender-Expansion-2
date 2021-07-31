@@ -1,11 +1,13 @@
 package chylex.hee.game.block
 
+import chylex.hee.client.text.LocalizationStrategy
 import chylex.hee.game.block.properties.BlockBuilder
 import chylex.hee.game.block.properties.BlockDrop
 import chylex.hee.game.block.properties.BlockModel
 import chylex.hee.game.block.properties.BlockRenderLayer.CUTOUT
 import net.minecraft.block.BlockState
 import net.minecraft.block.LeavesBlock
+import net.minecraft.block.material.MaterialColor
 import net.minecraft.entity.EntitySpawnPlacementRegistry.PlacementType
 import net.minecraft.entity.EntityType
 import net.minecraft.entity.player.PlayerEntity
@@ -19,7 +21,7 @@ import net.minecraft.util.math.BlockPos
 import net.minecraft.world.IBlockReader
 import net.minecraft.world.World
 
-class BlockWhitebarkLeaves(builder: BlockBuilder) : LeavesBlock(builder.p), IHeeBlock {
+open class BlockWhitebarkLeaves(builder: BlockBuilder) : LeavesBlock(builder.p), IHeeBlock {
 	override val model
 		get() = BlockModel.Leaves
 	
@@ -51,5 +53,10 @@ class BlockWhitebarkLeaves(builder: BlockBuilder) : LeavesBlock(builder.p), IHee
 	
 	override fun getFireSpreadSpeed(state: BlockState, world: IBlockReader, pos: BlockPos, face: Direction): Int {
 		return 30
+	}
+	
+	class Autumn(builder: BlockBuilder, mapColor: MaterialColor) : BlockWhitebarkLeaves(builder.clone { color = mapColor }) {
+		override val localization
+			get() = LocalizationStrategy.Parenthesized(LocalizationStrategy.ReplaceWords("Yellowgreen", "Yellow-Green"), wordCount = 1, fromStart = false)
 	}
 }

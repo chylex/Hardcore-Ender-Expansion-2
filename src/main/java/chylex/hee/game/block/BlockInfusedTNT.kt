@@ -1,5 +1,6 @@
 package chylex.hee.game.block
 
+import chylex.hee.client.text.LocalizationStrategy
 import chylex.hee.game.Resource.location
 import chylex.hee.game.block.entity.TileEntityInfusedTNT
 import chylex.hee.game.block.logic.IBlockFireCatchOverride
@@ -43,6 +44,9 @@ class BlockInfusedTNT : TNTBlock(Properties.from(Blocks.TNT)), IHeeBlock, IBlock
 	companion object {
 		val INFERNIUM = Property.bool("infernium")
 	}
+	
+	override val localization
+		get() = LocalizationStrategy.None
 	
 	override val model
 		get() = BlockModel.CubeBottomTop(

@@ -1,5 +1,6 @@
 package chylex.hee.game.block
 
+import chylex.hee.client.text.LocalizationStrategy
 import chylex.hee.game.block.logic.IFullBlockCollisionHandler
 import chylex.hee.game.block.properties.BlockBuilder
 import chylex.hee.game.block.properties.BlockDrop
@@ -58,6 +59,9 @@ class BlockDustyStoneUnstable(builder: BlockBuilder) : BlockDustyStone(builder),
 			return entity.height <= 0.5F || (entity.height <= 1F && entity.width <= 0.5F)
 		}
 	}
+	
+	override val localization
+		get() = LocalizationStrategy.MoveToBeginning(wordCount = 1, wordOffset = 2, fromStart = true)
 	
 	override val drop
 		get() = BlockDrop.Manual

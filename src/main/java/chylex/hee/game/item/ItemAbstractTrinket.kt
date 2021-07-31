@@ -16,6 +16,11 @@ import net.minecraft.world.World
 
 open class ItemAbstractTrinket(properties: Properties) : HeeItem(properties), ITrinketItem {
 	companion object {
+		private const val LANG_TOOLTIP_IN_SLOT_CHARGED = "item.tooltip.hee.trinket.in_slot.charged"
+		private const val LANG_TOOLTIP_IN_SLOT_UNCHARGED = "item.tooltip.hee.trinket.in_slot.uncharged"
+		private const val LANG_TOOLTIP_NOT_IN_SLOT_CHARGED = "item.tooltip.hee.trinket.not_in_slot.charged"
+		private const val LANG_TOOLTIP_NOT_IN_SLOT_UNCHARGED = "item.tooltip.hee.trinket.not_in_slot.uncharged"
+		
 		fun onGetRarity(): Rarity {
 			return CustomRarity.TRINKET
 		}
@@ -28,12 +33,26 @@ open class ItemAbstractTrinket(properties: Properties) : HeeItem(properties), IT
 				lines.add(StringTextComponent(""))
 			}
 			
-			val keyInSlot = if (TrinketHandler.isInTrinketSlot(player, stack)) "in_slot" else "not_in_slot"
-			val keyIsCharged = if (trinket.canPlaceIntoTrinketSlot(stack)) "charged" else "uncharged"
+			val inSlot = TrinketHandler.isInTrinketSlot(player, stack)
+			val isCharged = trinket.canPlaceIntoTrinketSlot(stack)
 			
-			lines.add(TranslationTextComponent("item.tooltip.hee.trinket.$keyInSlot.$keyIsCharged"))
+			lines.add(TranslationTextComponent(when {
+				inSlot && isCharged   -> LANG_TOOLTIP_IN_SLOT_CHARGED
+				inSlot && !isCharged  -> LANG_TOOLTIP_IN_SLOT_UNCHARGED
+				!inSlot && isCharged  -> LANG_TOOLTIP_NOT_IN_SLOT_CHARGED
+				!inSlot && !isCharged -> LANG_TOOLTIP_NOT_IN_SLOT_UNCHARGED
+				else                  -> return // ???
+			}))
 		}
 	}
+	
+	override val localizationExtra
+		get() = mapOf(
+			LANG_TOOLTIP_IN_SLOT_CHARGED to "§aActive",
+			LANG_TOOLTIP_IN_SLOT_UNCHARGED to "§cMust be recharged",
+			LANG_TOOLTIP_NOT_IN_SLOT_CHARGED to "§cMust be placed in Trinket slot",
+			LANG_TOOLTIP_NOT_IN_SLOT_UNCHARGED to "§cMust be charged and placed in Trinket slot",
+		)
 	
 	init {
 		@Suppress("DEPRECATION")

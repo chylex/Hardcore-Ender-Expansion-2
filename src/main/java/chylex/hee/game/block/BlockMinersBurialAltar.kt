@@ -1,5 +1,6 @@
 package chylex.hee.game.block
 
+import chylex.hee.client.text.LocalizationStrategy
 import chylex.hee.game.block.entity.TileEntityMinersBurialAltar
 import chylex.hee.game.block.properties.BlockBuilder
 import chylex.hee.game.block.properties.BlockModel
@@ -9,6 +10,9 @@ import net.minecraft.util.math.AxisAlignedBB
 import net.minecraft.world.IBlockReader
 
 class BlockMinersBurialAltar(builder: BlockBuilder) : BlockSimpleShaped(builder, AxisAlignedBB(0.0, 0.0, 0.0, 1.0, 0.75, 1.0)) {
+	override val localization
+		get() = LocalizationStrategy.ReplaceWords("Miners", "Miner's")
+	
 	override val model
 		get() = BlockModel.Manual
 	

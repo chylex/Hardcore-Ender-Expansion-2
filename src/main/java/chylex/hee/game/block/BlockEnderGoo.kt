@@ -14,7 +14,7 @@ import chylex.hee.game.particle.spawner.properties.IOffset.InBox
 import chylex.hee.game.particle.spawner.properties.IShape.Point
 import chylex.hee.game.potion.util.makeInstance
 import chylex.hee.game.world.util.getBlock
-import chylex.hee.init.ModPotions
+import chylex.hee.init.ModEffects
 import chylex.hee.util.forge.Side
 import chylex.hee.util.forge.Sided
 import chylex.hee.util.math.Pos
@@ -65,7 +65,7 @@ open class BlockEnderGoo : BlockAbstractGoo(FluidEnderGoo, Materials.ENDER_GOO) 
 		}
 		
 		private fun updateGooEffects(entity: LivingEntity, totalTicks: Int) {
-			addGooEffect(entity, ModPotions.LIFELESS, PERSISTENT_EFFECT_DURATION_TICKS)
+			addGooEffect(entity, ModEffects.LIFELESS, PERSISTENT_EFFECT_DURATION_TICKS)
 			
 			if (totalTicks >= 20 * 5) {
 				var miningFatigueLevel = 0

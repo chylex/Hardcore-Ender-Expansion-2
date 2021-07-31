@@ -29,6 +29,23 @@ object CommandServerHelp : ICommand, CommandExecutionFunctionCtx<Boolean> {
 	private const val COMMANDS_PER_PAGE = 7
 	
 	override val name = "help"
+	override val description = "shows command list"
+	
+	override val localization
+		get() = mapOf(
+			"failed" to "Page must be between 1 and %s",
+			
+			"header.client" to "§2--- Showing §aclient§2 commands, page %s§2 ---",
+			"header.admin"  to "§2--- Showing §aadmin§2 commands, page %s §2of %s§2 ---",
+			"header.debug"  to "§2--- Showing §adebug§2 commands, page %s §2of %s§2 ---",
+			
+			"footer.start"  to "§2--- Navigate to: §r",
+			"footer.admin"  to "§a§nadmin commands",
+			"footer.prev"   to "previous page",
+			"footer.middle" to "§2 / §r",
+			"footer.next"   to "next page",
+			"footer.end"    to "§2 ---",
+		)
 	
 	override fun register(builder: ArgumentBuilder<CommandSource, *>) {
 		builder.executes(this, false)

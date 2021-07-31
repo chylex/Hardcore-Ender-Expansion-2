@@ -1,5 +1,6 @@
 package chylex.hee.game.block.fluid
 
+import chylex.hee.game.Resource
 import chylex.hee.system.named
 import chylex.hee.util.color.IntColor
 import chylex.hee.util.color.RGB
@@ -17,7 +18,15 @@ import java.util.function.BiFunction
 import java.util.function.Supplier
 
 @Suppress("LeakingThis")
-abstract class FluidBase(fluidName: String, val rgbColor: IntColor, val mapColor: MaterialColor, val resistance: Float, texStill: ResourceLocation, texFlowing: ResourceLocation) {
+abstract class FluidBase(
+	val registryName: String,
+	val localizedName: String,
+	val rgbColor: IntColor,
+	val mapColor: MaterialColor,
+	val resistance: Float,
+	texStill: ResourceLocation = Resource.Custom("block/" + registryName + "_still"),
+	texFlowing: ResourceLocation = Resource.Custom("block/" + registryName + "_flowing"),
+) {
 	val fogColor = rgbColor.asVec
 	
 	lateinit var still: ForgeFlowingFluid.Source
@@ -30,8 +39,8 @@ abstract class FluidBase(fluidName: String, val rgbColor: IntColor, val mapColor
 		val attr = FluidAttributesFixColor.Builder(texStill, texFlowing).color(rgbColor.i).let(::attr)
 		val props = Properties(supplyStill, supplyFlowing, attr).explosionResistance(resistance).let(::props)
 		
-		still = ForgeFlowingFluid.Source(props) named fluidName
-		flowing = constructFlowingFluid(props) named "flowing_$fluidName"
+		still = ForgeFlowingFluid.Source(props) named registryName
+		flowing = constructFlowingFluid(props) named "flowing_$registryName"
 	}
 	
 	abstract fun attr(attributes: Builder): Builder

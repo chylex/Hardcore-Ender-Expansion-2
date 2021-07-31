@@ -1,6 +1,7 @@
 package chylex.hee.game.entity.living
 
 import chylex.hee.HEE
+import chylex.hee.client.text.LocalizationStrategy
 import chylex.hee.game.entity.IHeeMobEntityType
 import chylex.hee.game.entity.properties.EntitySize
 import chylex.hee.game.entity.properties.EntitySpawnPlacement
@@ -51,6 +52,9 @@ class EntityMobVillagerDying(type: EntityType<EntityMobVillagerDying>, world: Wo
 	constructor(world: World) : this(ModEntities.VILLAGER_DYING, world)
 	
 	object Type : IHeeMobEntityType<EntityMobVillagerDying> {
+		override val localization
+			get() = LocalizationStrategy.None
+		
 		override val classification
 			get() = EntityClassification.MISC
 		

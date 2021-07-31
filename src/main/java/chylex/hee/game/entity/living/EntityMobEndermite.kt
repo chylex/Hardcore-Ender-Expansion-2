@@ -1,5 +1,6 @@
 package chylex.hee.game.entity.living
 
+import chylex.hee.client.text.LocalizationStrategy
 import chylex.hee.game.Resource
 import chylex.hee.game.entity.CustomCreatureType
 import chylex.hee.game.entity.IHeeMobEntityType
@@ -57,9 +58,12 @@ open class EntityMobEndermite(type: EntityType<out EntityMobEndermite>, world: W
 			get() = EntitySpawnPlacement.hostile<T>()
 	}
 	
+	object Type : BaseType<EntityMobEndermite>() {
+		override val localization
+			get() = LocalizationStrategy.None
+	}
+	
 	companion object {
-		val TYPE = BaseType<EntityMobEndermite>()
-		
 		private val DAMAGE_GENERAL = Damage(DIFFICULTY_SCALING, PEACEFUL_EXCLUSION, *ALL_PROTECTIONS)
 		
 		private const val AGE_TAG = "Age"

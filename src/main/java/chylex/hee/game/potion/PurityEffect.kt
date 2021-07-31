@@ -6,14 +6,13 @@ import chylex.hee.game.potion.brewing.PotionTypeMap
 import chylex.hee.util.color.RGB
 import chylex.hee.util.math.floorToInt
 import net.minecraft.entity.LivingEntity
-import net.minecraft.potion.Effect
 import net.minecraft.potion.EffectInstance
 import net.minecraft.potion.EffectType.BENEFICIAL
 import net.minecraft.potion.EffectType.HARMFUL
 import net.minecraft.potion.Effects
 import kotlin.math.max
 
-object PurityEffect : Effect(BENEFICIAL, RGB(73, 217, 255).i) {
+object PurityEffect : HeeEffect(BENEFICIAL, RGB(73, 217, 255)) {
 	const val MIN_DURATION = 60 // allow animations to finish, must be > 10
 	
 	val POTION

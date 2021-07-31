@@ -44,7 +44,6 @@ import net.minecraft.entity.item.ItemEntity
 import net.minecraft.entity.monster.ZombieVillagerEntity
 import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.particles.ParticleTypes.EXPLOSION
-import net.minecraft.potion.Effect
 import net.minecraft.potion.EffectType.BENEFICIAL
 import net.minecraft.potion.Effects
 import net.minecraft.util.DamageSource
@@ -54,7 +53,7 @@ import kotlin.math.max
 import kotlin.math.pow
 
 @SubscribeAllEvents(modid = HEE.ID)
-object BanishmentEffect : Effect(BENEFICIAL, RGB(253, 253, 253).i) {
+object BanishmentEffect : HeeEffect(BENEFICIAL, RGB(253, 253, 253)) {
 	private val DAMAGE_BANISH = Damage(FIRE_TYPE(Int.MAX_VALUE), IGNORE_INVINCIBILITY())
 	
 	val FX_BANISH = object : FxEntityHandler() {
@@ -79,7 +78,7 @@ object BanishmentEffect : Effect(BENEFICIAL, RGB(253, 253, 253).i) {
 		}
 	}
 	
-	val TYPE
+	val POTION
 		get() = PotionTypeMap.getPotion(this)
 	
 	enum class EntityKind {

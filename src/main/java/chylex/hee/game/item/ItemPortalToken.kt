@@ -2,6 +2,7 @@ package chylex.hee.game.item
 
 import chylex.hee.HEE
 import chylex.hee.client.gui.screen.GuiPortalTokenStorage
+import chylex.hee.client.text.LocalizationStrategy
 import chylex.hee.client.util.MC
 import chylex.hee.game.Resource
 import chylex.hee.game.block.BlockVoidPortalInner
@@ -15,6 +16,7 @@ import chylex.hee.game.territory.TerritoryType
 import chylex.hee.game.territory.storage.VoidData
 import chylex.hee.game.territory.system.TerritoryInstance
 import chylex.hee.game.territory.system.properties.TerritoryColors
+import chylex.hee.game.territory.system.properties.TerritoryDifficulty
 import chylex.hee.game.territory.system.storage.TerritoryGlobalStorage
 import chylex.hee.game.world.isInEndDimension
 import chylex.hee.game.world.server.DimensionTeleporter
@@ -55,6 +57,11 @@ class ItemPortalToken(properties: Properties) : HeeItem(properties) {
 		private const val TERRITORY_INDEX_TAG = "Index"
 		private const val IS_CORRUPTED_TAG = "IsCorrupted"
 		
+		private const val LANG_TOOLTIP_ACTIVATE = "item.hee.portal_token.tooltip.activate"
+		private const val LANG_TOOLTIP_TERRITORY_INDEX = "item.hee.portal_token.tooltip.advanced"
+		private const val LANG_TOOLTIP_CREATIVE_GENERATE = "item.hee.portal_token.tooltip.creative.generate"
+		private const val LANG_TOOLTIP_CREATIVE_TELEPORT = "item.hee.portal_token.tooltip.creative.teleport"
+		
 		const val MAX_STACK_SIZE = 16
 		
 		val TOKEN_TYPE_PROPERTY = ItemProperty(Resource.Custom("token_type")) { stack ->
@@ -85,6 +92,27 @@ class ItemPortalToken(properties: Properties) : HeeItem(properties) {
 		val concreteTranslationKey
 			get() = "item.hee.portal_token.$translationKeySuffix.concrete"
 	}
+	
+	override val localization
+		get() = LocalizationStrategy.None
+	
+	override val localizationExtra
+		get() = mapOf(
+			TokenType.NORMAL.genericTranslationKey to "Portal Token",
+			TokenType.NORMAL.concreteTranslationKey to "Portal Token (%s)",
+			TokenType.RARE.genericTranslationKey to "Rare Portal Token",
+			TokenType.RARE.concreteTranslationKey to "Rare Portal Token (%s)",
+			TokenType.SOLITARY.genericTranslationKey to "Solitary Portal Token",
+			TokenType.SOLITARY.concreteTranslationKey to "Solitary Portal Token (%s)",
+			TerritoryDifficulty.PEACEFUL.tooltipTranslationKey to "§7«§2 Peaceful §7»",
+			TerritoryDifficulty.NEUTRAL.tooltipTranslationKey to "§7«§e Neutral §7»",
+			TerritoryDifficulty.HOSTILE.tooltipTranslationKey to "§7«§4 Hostile §7»",
+			TerritoryDifficulty.BOSS.tooltipTranslationKey to "§7«§5 Boss §7»",
+			LANG_TOOLTIP_ACTIVATE to "§6Right-click to activate",
+			LANG_TOOLTIP_TERRITORY_INDEX to "§7Index: %s",
+			LANG_TOOLTIP_CREATIVE_GENERATE to "§6Hold and right-click to generate (creative)",
+			LANG_TOOLTIP_CREATIVE_TELEPORT to "§6Hold and right-click to teleport (creative)",
+		)
 	
 	override val model: ItemModel
 		get() = ItemModel.WithOverrides(
@@ -265,15 +293,15 @@ class ItemPortalToken(properties: Properties) : HeeItem(properties) {
 		
 		if (flags.isAdvanced) {
 			getTerritoryIndex(stack)?.let {
-				lines.add(TranslationTextComponent("item.hee.portal_token.tooltip.advanced", it))
+				lines.add(TranslationTextComponent(LANG_TOOLTIP_TERRITORY_INDEX, it))
 			}
 		}
 		
 		if ((MC.currentScreen as? GuiPortalTokenStorage)?.canActivateToken(stack) == true) {
-			lines.add(TranslationTextComponent("item.hee.portal_token.tooltip.activate"))
+			lines.add(TranslationTextComponent(LANG_TOOLTIP_ACTIVATE))
 		}
 		else if (MC.player?.let { it.isCreative && it.isInEndDimension } == true) {
-			lines.add(TranslationTextComponent("item.hee.portal_token.tooltip.creative.${if (hasTerritoryInstance(stack)) "teleport" else "generate"}"))
+			lines.add(TranslationTextComponent(if (hasTerritoryInstance(stack)) LANG_TOOLTIP_CREATIVE_TELEPORT else LANG_TOOLTIP_CREATIVE_GENERATE))
 		}
 		
 		if (lines.size > insertEmptyLineAt) {

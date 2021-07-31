@@ -1,5 +1,6 @@
 package chylex.hee.game.block
 
+import chylex.hee.client.text.LocalizationStrategy
 import chylex.hee.game.block.fluid.FlowingFluid5
 import chylex.hee.game.block.fluid.FluidBase
 import chylex.hee.game.block.properties.BlockDrop
@@ -32,6 +33,9 @@ abstract class BlockAbstractGoo(
 		private const val LAST_TIME_TAG = "Time"
 		private const val TOTAL_TICKS_TAG = "Ticks"
 	}
+	
+	final override val localization
+		get() = LocalizationStrategy.None
 	
 	final override val model
 		get() = BlockStateModels.Fluid

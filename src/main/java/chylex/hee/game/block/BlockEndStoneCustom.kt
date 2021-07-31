@@ -1,5 +1,6 @@
 package chylex.hee.game.block
 
+import chylex.hee.client.text.LocalizationStrategy
 import chylex.hee.game.Resource.location
 import chylex.hee.game.block.properties.BlockBuilder
 import chylex.hee.game.block.properties.BlockModel
@@ -8,6 +9,9 @@ import net.minecraft.block.material.MaterialColor
 import net.minecraftforge.common.Tags
 
 class BlockEndStoneCustom(builder: BlockBuilder, mapColor: MaterialColor) : HeeBlock(builder.clone { color = mapColor }) {
+	override val localization
+		get() = LocalizationStrategy.MoveToBeginning(wordCount = 1)
+	
 	override val model
 		get() = BlockModel.WithTextures(
 			BlockModel.CubeBottomTop(bottom = Blocks.END_STONE.location),

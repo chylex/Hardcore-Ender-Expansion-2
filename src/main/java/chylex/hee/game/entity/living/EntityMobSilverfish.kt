@@ -1,6 +1,7 @@
 package chylex.hee.game.entity.living
 
 import chylex.hee.HEE
+import chylex.hee.client.text.LocalizationStrategy
 import chylex.hee.game.Resource
 import chylex.hee.game.entity.IHeeMobEntityType
 import chylex.hee.game.entity.damage.Damage
@@ -57,6 +58,9 @@ class EntityMobSilverfish(type: EntityType<EntityMobSilverfish>, world: World) :
 	constructor(world: World) : this(ModEntities.SILVERFISH, world)
 	
 	object Type : IHeeMobEntityType<EntityMobSilverfish> {
+		override val localization
+			get() = LocalizationStrategy.None
+		
 		override val classification
 			get() = EntityClassification.MONSTER
 		

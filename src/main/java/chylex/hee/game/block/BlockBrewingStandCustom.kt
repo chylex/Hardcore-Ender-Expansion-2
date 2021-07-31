@@ -1,5 +1,6 @@
 package chylex.hee.game.block
 
+import chylex.hee.client.text.LocalizationStrategy
 import chylex.hee.game.Resource.location
 import chylex.hee.game.block.entity.TileEntityBrewingStandCustom
 import chylex.hee.game.block.properties.BlockBuilder
@@ -72,6 +73,9 @@ open class BlockBrewingStandCustom(builder: BlockBuilder) : BrewingStandBlock(bu
 	}
 	
 	class Override(builder: BlockBuilder) : BlockBrewingStandCustom(builder) {
+		override val localization
+			get() = LocalizationStrategy.None
+		
 		override val model
 			get() = BlockStateModels.Manual
 		

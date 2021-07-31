@@ -1,5 +1,6 @@
 package chylex.hee.game.block
 
+import chylex.hee.client.text.LocalizationStrategy
 import chylex.hee.game.block.properties.BlockBuilder
 import chylex.hee.game.block.properties.BlockDrop
 import chylex.hee.game.block.properties.BlockStateModels
@@ -16,6 +17,9 @@ import net.minecraftforge.common.Tags
 import java.util.Random
 
 class BlockFallingObsidian(builder: BlockBuilder) : HeeBlock(builder) {
+	override val localization
+		get() = LocalizationStrategy.MoveToBeginning(wordCount = 1)
+	
 	override val model
 		get() = BlockStateModels.Cube(Blocks.OBSIDIAN)
 	

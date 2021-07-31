@@ -54,6 +54,8 @@ class ItemTrinketPouch(properties: Properties) : ItemAbstractTrinket(properties)
 		private const val CONTENTS_TAG = "Contents"
 		private const val MOD_COUNTER_TAG = "Version"
 		
+		private const val LANG_TOOLTIP_OPEN = "item.hee.trinket_pouch.tooltip"
+		
 		private fun isStackValid(stack: ItemStack): Boolean {
 			return stack.item is ItemTrinketPouch
 		}
@@ -181,6 +183,9 @@ class ItemTrinketPouch(properties: Properties) : ItemAbstractTrinket(properties)
 	
 	// Instance
 	
+	override val localizationExtra
+		get() = mapOf(LANG_TOOLTIP_OPEN to "§7Right-click to open")
+	
 	init {
 		MinecraftForgeEventBus.register(this)
 	}
@@ -216,7 +221,7 @@ class ItemTrinketPouch(properties: Properties) : ItemAbstractTrinket(properties)
 		super.addInformation(stack, world, lines, flags)
 		
 		if (MC.currentScreen is InventoryScreen) {
-			lines.add(TranslationTextComponent("item.hee.trinket_pouch.tooltip"))
+			lines.add(TranslationTextComponent(LANG_TOOLTIP_OPEN))
 		}
 		
 		ItemAbstractInfusable.onAddInformation(stack, lines)

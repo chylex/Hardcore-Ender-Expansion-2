@@ -1,5 +1,6 @@
 package chylex.hee.game.item
 
+import chylex.hee.client.text.LocalizationStrategy
 import chylex.hee.game.entity.projectile.EntityProjectileEnderPearl
 import chylex.hee.game.entity.util.posVec
 import chylex.hee.game.fx.util.playServer
@@ -26,6 +27,9 @@ import net.minecraft.world.World
 import net.minecraftforge.common.Tags
 
 class ItemInfusedEnderPearl(properties: Properties) : EnderPearlItem(properties), IHeeItem, IInfusableItem {
+	override val localization
+		get() = LocalizationStrategy.None
+	
 	override val model
 		get() = ItemModel.Copy(Items.ENDER_PEARL)
 	

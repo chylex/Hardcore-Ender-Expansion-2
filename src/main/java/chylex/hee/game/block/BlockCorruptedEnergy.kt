@@ -1,5 +1,6 @@
 package chylex.hee.game.block
 
+import chylex.hee.client.text.LocalizationStrategy
 import chylex.hee.game.Resource.location
 import chylex.hee.game.block.BlockCorruptedEnergy.SpawnResult.FAIL
 import chylex.hee.game.block.BlockCorruptedEnergy.SpawnResult.PASSTHROUGH
@@ -79,6 +80,9 @@ class BlockCorruptedEnergy(builder: BlockBuilder) : HeeBlock(builder) {
 			return CustomCreatureType.isDemon(entity) || CustomCreatureType.isShadow(entity) || entity is IImmuneToCorruptedEnergy
 		}
 	}
+	
+	override val localization
+		get() = LocalizationStrategy.None
 	
 	override val model
 		get() = BlockStateModel(BlockStatePreset.Simple, BlockModel.NoAmbientOcclusion(BlockModel.Cross(Blocks.BARRIER.asItem().location)))

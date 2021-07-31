@@ -1,5 +1,6 @@
 package chylex.hee.game.block
 
+import chylex.hee.client.text.LocalizationStrategy
 import chylex.hee.client.util.MC
 import chylex.hee.game.Resource
 import chylex.hee.game.block.BlockPuzzleLogic.State.ACTIVE
@@ -263,6 +264,9 @@ sealed class BlockPuzzleLogic(builder: BlockBuilder) : HeeBlock(builder) {
 	// Variations
 	
 	class Plain(builder: BlockBuilder) : BlockPuzzleLogic(builder) {
+		override val localization
+			get() = LocalizationStrategy.Parenthesized(wordCount = 1, fromStart = false)
+		
 		override val model
 			get() = createPlainModel()
 		
@@ -272,8 +276,14 @@ sealed class BlockPuzzleLogic(builder: BlockBuilder) : HeeBlock(builder) {
 	}
 	
 	class Burst(builder: BlockBuilder, private val radius: Int) : BlockPuzzleLogic(builder) {
+		override val localization
+			get() = LocalizationStrategy.Parenthesized(LocalizationStrategy.ReplaceWords("$diameter", "${diameter}x${diameter}"), wordCount = 2, fromStart = false)
+		
 		override val model
-			get() = createOverlayModel("burst_" + (1 + (radius * 2)))
+			get() = createOverlayModel("burst_$diameter")
+		
+		private val diameter
+			get() = 1 + (radius * 2)
 		
 		private fun toggleAndChain(world: World, pos: BlockPos, facing: Direction): List<Pair<BlockPos, Direction>> {
 			val state = pos.getState(world)
@@ -293,6 +303,9 @@ sealed class BlockPuzzleLogic(builder: BlockBuilder) : HeeBlock(builder) {
 	sealed class RedirectSome private constructor(builder: BlockBuilder, private val blockDirections: Array<String>, private val itemDirection: String, private val directions: Array<Direction>) : BlockPuzzleLogic(builder) {
 		class R1(builder: BlockBuilder) : RedirectSome(builder, arrayOf("n", "s", "e", "w"), "n", arrayOf(NORTH))
 		class R2(builder: BlockBuilder) : RedirectSome(builder, arrayOf("ns", "ew"), "ns", arrayOf(NORTH, SOUTH))
+		
+		override val localization
+			get() = LocalizationStrategy.Parenthesized(wordCount = 2, fromStart = false)
 		
 		override val model
 			get() = createOverlayModel("redirect_" + directions.size + itemDirection, blockDirections.map { "redirect_" + directions.size + it })
@@ -318,6 +331,9 @@ sealed class BlockPuzzleLogic(builder: BlockBuilder) : HeeBlock(builder) {
 	}
 	
 	class RedirectAll(builder: BlockBuilder) : BlockPuzzleLogic(builder) {
+		override val localization
+			get() = LocalizationStrategy.Parenthesized(wordCount = 2, fromStart = false)
+		
 		override val model
 			get() = createOverlayModel("redirect_4")
 		
@@ -327,6 +343,9 @@ sealed class BlockPuzzleLogic(builder: BlockBuilder) : HeeBlock(builder) {
 	}
 	
 	class Teleport(builder: BlockBuilder) : BlockPuzzleLogic(builder) {
+		override val localization
+			get() = LocalizationStrategy.Parenthesized(wordCount = 1, fromStart = false)
+		
 		override val model
 			get() = createOverlayModel("teleport")
 		

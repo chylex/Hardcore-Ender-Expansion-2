@@ -7,6 +7,7 @@ import chylex.hee.game.entity.damage.IDamageProcessor.Companion.MAGIC_TYPE
 import chylex.hee.game.entity.damage.IDamageProcessor.Companion.PEACEFUL_EXCLUSION
 import chylex.hee.game.entity.util.posVec
 import chylex.hee.game.fx.util.playUniversal
+import chylex.hee.game.item.properties.ItemModel
 import chylex.hee.game.potion.util.makeInstance
 import chylex.hee.game.world.util.blocksMovement
 import chylex.hee.game.world.util.distanceSqTo
@@ -28,7 +29,7 @@ import net.minecraft.util.SoundEvents
 import net.minecraft.world.World
 import java.util.Random
 
-class ItemChorusBerry(properties: Properties) : Item(properties) {
+class ItemChorusBerry(properties: Properties) : Item(properties), IHeeItem {
 	companion object {
 		private const val MIN_TELEPORT_DISTANCE = 8
 		private const val MIN_TELEPORT_DISTANCE_SQ = MIN_TELEPORT_DISTANCE * MIN_TELEPORT_DISTANCE
@@ -70,6 +71,9 @@ class ItemChorusBerry(properties: Properties) : Item(properties) {
 			return false
 		}
 	}
+	
+	override val model
+		get() = ItemModel.Manual
 	
 	override fun getTranslationKey(): String {
 		return "item.hee.chorus_berry"

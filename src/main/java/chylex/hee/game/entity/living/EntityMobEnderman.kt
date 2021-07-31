@@ -1,6 +1,7 @@
 package chylex.hee.game.entity.living
 
 import chylex.hee.HEE
+import chylex.hee.client.text.LocalizationStrategy
 import chylex.hee.game.Resource
 import chylex.hee.game.entity.living.ai.AITargetEyeContact
 import chylex.hee.game.entity.living.ai.AIToggle
@@ -81,6 +82,9 @@ class EntityMobEnderman(type: EntityType<EntityMobEnderman>, world: World) : Ent
 	constructor(world: World) : this(ModEntities.ENDERMAN, world)
 	
 	object Type : BaseType<EntityMobEnderman>() {
+		override val localization
+			get() = LocalizationStrategy.None
+		
 		override val attributes
 			get() = DefaultEntityAttributes.hostileMob.with(
 				MAX_HEALTH     to 40.0,

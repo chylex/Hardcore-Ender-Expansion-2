@@ -1,5 +1,6 @@
 package chylex.hee.game.entity.living
 
+import chylex.hee.client.text.LocalizationStrategy
 import chylex.hee.game.entity.living.EntityMobEndermanMuppet.MuppetType.FIRST_KILL
 import chylex.hee.game.entity.living.EntityMobEndermanMuppet.MuppetType.INVALID
 import chylex.hee.game.entity.living.behavior.EndermanTeleportHandler
@@ -28,6 +29,9 @@ class EntityMobEndermanMuppet(type: EntityType<EntityMobEndermanMuppet>, world: 
 	}
 	
 	object Type : BaseType<EntityMobEndermanMuppet>() {
+		override val localization
+			get() = LocalizationStrategy.None
+		
 		override val classification
 			get() = EntityClassification.MISC
 		

@@ -20,6 +20,17 @@ import net.minecraft.loot.LootTable
 
 object CommandServerLootChest : ICommand {
 	override val name = "lootchest"
+	override val description = "manipulates Loot Chests"
+	
+	override val localization
+		get() = mapOf(
+			"set_table_success"    to "Updated loot table",
+			"remove_table_success" to "Removed loot table",
+			"reset_success"        to "Reset loot generated for %s player(s)",
+			
+			"table_not_found" to "Loot table not found",
+			"not_loot_chest"  to "No Loot Chest at the specified location",
+		)
 	
 	override fun register(builder: ArgumentBuilder<CommandSource, *>) {
 		builder.then(

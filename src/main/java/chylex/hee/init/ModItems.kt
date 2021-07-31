@@ -69,6 +69,9 @@ import net.minecraftforge.fml.common.Mod.EventBusSubscriber.Bus.MOD
 @Suppress("unused")
 @SubscribeAllEvents(modid = HEE.ID, bus = MOD)
 object ModItems {
+	val ALL
+		get() = getRegistryEntries<Item>(this) + overrideItems
+	
 	private val baseProps
 		get() = Item.Properties().group(ModCreativeTabs.main)
 	
@@ -204,9 +207,6 @@ object ModItems {
 	}
 	
 	// Utilities
-	
-	val ALL
-		get() = getRegistryEntries<Item>(this) + overrideItems
 	
 	private val overrideItems = mutableListOf<Item>()
 	

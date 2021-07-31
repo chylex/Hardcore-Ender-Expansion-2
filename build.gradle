@@ -162,6 +162,7 @@ minecraft {
 		}
 		
 		data {
+			property "hee.debug", ""
 			args "--mod", "hee"
 			args "--all"
 			args "--output", file("data/gen")

@@ -17,6 +17,7 @@ import net.minecraft.util.text.StringTextComponent
 
 object CommandDebugInstability : ICommand {
 	override val name = "instability"
+	override val description = "utilities for instability"
 	
 	override fun register(builder: ArgumentBuilder<CommandSource, *>) {
 		val execModify = this::executeModify

@@ -19,6 +19,17 @@ import net.minecraft.world.IBlockReader
 import net.minecraft.world.World
 
 class BlockLootChest(builder: BlockBuilder) : BlockAbstractChest<TileEntityLootChest>(builder) {
+	private companion object {
+		private const val LANG_TOOLTIP = "block.hee.loot_chest.tooltip"
+		private const val LANG_EDIT_ERROR_HAS_LOOT_TABLE = "block.hee.loot_chest.error_has_loot_table"
+	}
+	
+	override val localizationExtra
+		get() = mapOf(
+			LANG_TOOLTIP to "§5§o(Editable in creative mode)",
+			LANG_EDIT_ERROR_HAS_LOOT_TABLE to "Cannot edit a Loot Chest that uses a predefined loot table",
+		)
+	
 	override val model
 		get() = BlockStateModels.Chest(this.location("_particle"))
 	
@@ -29,7 +40,7 @@ class BlockLootChest(builder: BlockBuilder) : BlockAbstractChest<TileEntityLootC
 	
 	override fun openChest(world: World, pos: BlockPos, player: PlayerEntity) {
 		if (player.isCreative && pos.getTile<TileEntityLootChest>(world)?.hasLootTable == true) {
-			player.sendMessage(TranslationTextComponent("block.hee.loot_chest.error_has_loot_table"), Util.DUMMY_UUID)
+			player.sendMessage(TranslationTextComponent(LANG_EDIT_ERROR_HAS_LOOT_TABLE), Util.DUMMY_UUID)
 		}
 		else {
 			super.openChest(world, pos, player)
@@ -38,6 +49,6 @@ class BlockLootChest(builder: BlockBuilder) : BlockAbstractChest<TileEntityLootC
 	
 	@Sided(Side.CLIENT)
 	override fun addInformation(stack: ItemStack, world: IBlockReader?, lines: MutableList<ITextComponent>, flags: ITooltipFlag) {
-		lines.add(TranslationTextComponent("block.hee.loot_chest.tooltip"))
+		lines.add(TranslationTextComponent(LANG_TOOLTIP))
 	}
 }

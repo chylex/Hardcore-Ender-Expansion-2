@@ -1,5 +1,6 @@
 package chylex.hee.game.block
 
+import chylex.hee.client.text.LocalizationStrategy
 import chylex.hee.game.block.entity.TileEntityJarODust
 import chylex.hee.game.block.properties.BlockBuilder
 import chylex.hee.game.block.properties.BlockDrop
@@ -55,6 +56,12 @@ class BlockJarODust(builder: BlockBuilder) : BlockSimpleShaped(builder, AABB) {
 	companion object {
 		val AABB = AxisAlignedBB(0.1875, 0.0, 0.1875, 0.8125, 0.84375, 0.8125)
 	}
+	
+	override val localization
+		get() = LocalizationStrategy.ReplaceWords("O", "o'")
+	
+	override val localizationExtra
+		get() = mapOf("block.hee.jar_o_dust.tooltip.entry" to "§7%sx %s")
 	
 	override val model
 		get() = BlockStateModel(BlockStatePreset.Simple, BlockModel.Manual)

@@ -1,8 +1,8 @@
 package chylex.hee.game.potion.brewing
 
 import chylex.hee.game.potion.brewing.PotionTypeInfo.Duration
+import chylex.hee.init.ModEffects
 import chylex.hee.init.ModItems
-import chylex.hee.init.ModPotions
 import chylex.hee.util.math.floorToInt
 import net.minecraft.item.ItemStack
 import net.minecraft.item.Items
@@ -25,15 +25,15 @@ object PotionBrewing {
 		PotionTypeInfo(Effects.POISON,          Duration(baseTicks = 0 min 30, stepTicks = 0 min 30,    maxSteps = 3), maxLevel = 2),
 		PotionTypeInfo(Effects.SLOW_FALLING,    Duration(baseTicks = 1 min 15, stepTicks = 1 min 15,    maxSteps = 3), maxLevel = 1),
 		PotionTypeInfo(Effects.LEVITATION,      Duration(baseTicks = 0 min 30, stepTicks = 0 min 30,    maxSteps = 3), maxLevel = 2),
-		PotionTypeInfo(ModPotions.PURITY,       Duration(baseTicks = 2 min 30, stepTicks = 2 min 15,    maxSteps = 4), maxLevel = 3),
-		PotionTypeInfo(ModPotions.CORRUPTION,   Duration(baseTicks = 0 min 20, stepTicks = 0 min 13.34, maxSteps = 3), maxLevel = 1),
+		PotionTypeInfo(ModEffects.PURITY,       Duration(baseTicks = 2 min 30, stepTicks = 2 min 15,    maxSteps = 4), maxLevel = 3),
+		PotionTypeInfo(ModEffects.CORRUPTION,   Duration(baseTicks = 0 min 20, stepTicks = 0 min 13.34, maxSteps = 3), maxLevel = 1),
 		PotionTypeInfo(Effects.BLINDNESS,       Duration(baseTicks = 0 min 20, stepTicks = 0 min 13.34, maxSteps = 3), maxLevel = 1),
 		PotionTypeInfo(Effects.WEAKNESS,        Duration(baseTicks = 1 min 15, stepTicks = 1 min 15,    maxSteps = 3), maxLevel = 3),
 		
 		PotionTypeInfo(Effects.INSTANT_DAMAGE,  maxLevel = 2),
 		PotionTypeInfo(Effects.SLOWNESS,        Duration(baseTicks = 1 min 15, stepTicks = 1 min 7.5, maxSteps = 4), maxLevel = 3),
 		PotionTypeInfo(Effects.INVISIBILITY,    Duration(baseTicks = 1 min 20, stepTicks = 1 min 16,  maxSteps = 4), maxLevel = 1),
-		PotionTypeInfo(ModPotions.BANISHMENT,   Duration(baseTicks = 0 min 15, stepTicks = 0 min 10,  maxSteps = 3), maxLevel = 1),
+		PotionTypeInfo(ModEffects.BANISHMENT,   Duration(baseTicks = 0 min 15, stepTicks = 0 min 10,  maxSteps = 3), maxLevel = 1),
 		PotionTypeInfo(Effects.GLOWING,         Duration(baseTicks = 0 min 12, stepTicks = 0 min 8,   maxSteps = 3), maxLevel = 1)
 	).associateBy(PotionTypeInfo::effect)
 	
@@ -53,8 +53,8 @@ object PotionBrewing {
 		Items.SPIDER_EYE             to Effects.POISON,
 		Items.PHANTOM_MEMBRANE       to Effects.SLOW_FALLING,
 		ModItems.DRAGON_SCALE        to Effects.LEVITATION,
-		ModItems.PURITY_EXTRACT      to ModPotions.PURITY,
-		ModItems.INSTABILITY_ORB     to ModPotions.CORRUPTION
+		ModItems.PURITY_EXTRACT      to ModEffects.PURITY,
+		ModItems.INSTABILITY_ORB     to ModEffects.CORRUPTION
 		// TODO ModItems.MURKY_CRYSTAL       to Effects.BLINDNESS
 	)
 	
@@ -68,7 +68,7 @@ object PotionBrewing {
 		Effects.SPEED          to Effects.SLOWNESS,
 		Effects.JUMP_BOOST     to Effects.SLOWNESS,
 		Effects.NIGHT_VISION   to Effects.INVISIBILITY,
-		ModPotions.CORRUPTION  to ModPotions.BANISHMENT,
+		ModEffects.CORRUPTION  to ModEffects.BANISHMENT,
 		Effects.BLINDNESS      to Effects.GLOWING
 	)
 	

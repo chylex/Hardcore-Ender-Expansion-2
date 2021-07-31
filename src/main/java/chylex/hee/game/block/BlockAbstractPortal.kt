@@ -1,5 +1,6 @@
 package chylex.hee.game.block
 
+import chylex.hee.client.text.LocalizationStrategy
 import chylex.hee.game.block.properties.BlockBuilder
 import chylex.hee.game.block.properties.BlockModel
 import chylex.hee.game.block.properties.BlockStateModel
@@ -97,6 +98,9 @@ abstract class BlockAbstractPortal(builder: BlockBuilder) : BlockSimpleShaped(bu
 		val clientAnimationProgress: LerpedFloat
 		val clientPortalOffset: LerpedFloat
 	}
+	
+	final override val localization
+		get() = LocalizationStrategy.DeleteWords("Inner")
 	
 	final override val model
 		get() = BlockStateModel(BlockStatePreset.SimpleFrom(Blocks.END_PORTAL), BlockModel.Manual)

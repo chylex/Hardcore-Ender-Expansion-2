@@ -20,6 +20,13 @@ import net.minecraft.util.text.TranslationTextComponent
 import net.minecraft.world.World
 
 class ItemTableCore(private val tableBlocks: Array<BlockAbstractTableTile<*>>, properties: Properties) : HeeItem(properties) {
+	private companion object {
+		private const val LANG_TOOLTIP_TIER = "item.tooltip.hee.table_core.tooltip"
+	}
+	
+	override val localizationExtra
+		get() = mapOf(LANG_TOOLTIP_TIER to "§7Minimum Tier: %s")
+	
 	override fun onItemUse(context: ItemUseContext): ActionResultType {
 		val player = context.player ?: return FAIL
 		val world = context.world
@@ -50,6 +57,6 @@ class ItemTableCore(private val tableBlocks: Array<BlockAbstractTableTile<*>>, p
 	
 	@Sided(Side.CLIENT)
 	override fun addInformation(stack: ItemStack, world: World?, lines: MutableList<ITextComponent>, flags: ITooltipFlag) {
-		lines.add(TranslationTextComponent("item.tooltip.hee.table_core.tooltip", tableBlocks.minOf { it.tier }))
+		lines.add(TranslationTextComponent(LANG_TOOLTIP_TIER, tableBlocks.minOf { it.tier }))
 	}
 }

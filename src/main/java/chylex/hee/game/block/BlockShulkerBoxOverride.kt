@@ -2,6 +2,8 @@ package chylex.hee.game.block
 
 import chylex.hee.game.MagicValues
 import chylex.hee.game.block.entity.TileEntityShulkerBoxCustom
+import chylex.hee.game.block.properties.BlockDrop
+import chylex.hee.game.block.properties.BlockStateModels
 import chylex.hee.game.item.util.nbt
 import chylex.hee.game.world.util.getTile
 import chylex.hee.init.ModContainers
@@ -30,7 +32,7 @@ import net.minecraft.world.IBlockReader
 import net.minecraft.world.World
 import java.util.stream.IntStream
 
-class BlockShulkerBoxOverride(properties: Properties, color: DyeColor?) : ShulkerBoxBlock(color, properties) {
+class BlockShulkerBoxOverride(properties: Properties, color: DyeColor?) : ShulkerBoxBlock(color, properties), IHeeBlock {
 	companion object {
 		val ALL_BLOCKS
 			get() = listOf(null, *DyeColor.values()).map { getBlockByColor(it) as ShulkerBoxBlock }
@@ -43,6 +45,19 @@ class BlockShulkerBoxOverride(properties: Properties, color: DyeColor?) : Shulke
 		
 		val slotIndices: IntArray = IntStream.range(0, slots).toArray()
 	}
+	
+	override val localizationExtra
+		get() = mapOf(
+			BoxSize.SMALL.translationKey to "Small Shulker Box",
+			BoxSize.MEDIUM.translationKey to "Medium Shulker Box",
+			BoxSize.LARGE.translationKey to "Large Shulker Box",
+		)
+	
+	override val model
+		get() = BlockStateModels.Manual
+	
+	override val drop
+		get() = BlockDrop.Manual
 	
 	override fun getTranslationKey(): String {
 		return "block.hee.shulker_box"

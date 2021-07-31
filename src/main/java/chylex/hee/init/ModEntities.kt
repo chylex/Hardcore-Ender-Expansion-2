@@ -63,6 +63,9 @@ object ModEntities {
 	private val allTypes = mutableMapOf<EntityType<*>, IHeeEntityType<*>>()
 	private val mobTypes = mutableListOf<MobEntry<*>>()
 	
+	val ALL: Map<EntityType<*>, IHeeEntityType<*>>
+		get() = allTypes
+	
 	@JvmField val TERRITORY_LIGHTNING_BOLT = build(EntityTerritoryLightningBolt.Type) named "territory_lightning_bolt"
 	
 	@JvmField val ITEM_CAULDRON_TRIGGER         = build(EntityItemCauldronTrigger.TYPE) named "item_cauldron_trigger"
@@ -82,7 +85,7 @@ object ModEntities {
 	@JvmField val BLOBBY                = build(EntityMobBlobby.Type) named "blobby"
 	@JvmField val ENDERMAN              = build(EntityMobEnderman.Type) named "enderman"
 	@JvmField val ENDERMAN_MUPPET       = build(EntityMobEndermanMuppet.Type) named "enderman_muppet"
-	@JvmField val ENDERMITE             = build(EntityMobEndermite.TYPE) named "endermite"
+	@JvmField val ENDERMITE             = build(EntityMobEndermite.Type) named "endermite"
 	@JvmField val ENDERMITE_INSTABILITY = build(EntityMobEndermiteInstability.Type) named "endermite_instability"
 	@JvmField val SILVERFISH            = build(EntityMobSilverfish.Type) named "silverfish"
 	@JvmField val SPIDERLING            = build(EntityMobSpiderling.Type) named "spiderling"
@@ -100,7 +103,11 @@ object ModEntities {
 	@JvmField val TECHNICAL_PUZZLE    = build(EntityTechnicalPuzzle.TYPE) named "technical_puzzle"
 	@JvmField val TECHNICAL_TRIGGER   = build(EntityTechnicalTrigger.Type) named "technical_trigger"
 	
-	private data class MobEntry<T : MobEntity>(val type: EntityType<T>, val properties: IHeeMobEntityType<T>) {
+	fun getHeeType(entityType: EntityType<*>): IHeeEntityType<*>? {
+		return allTypes[entityType]
+	}
+	
+	data class MobEntry<T : MobEntity>(val type: EntityType<T>, val properties: IHeeMobEntityType<T>) {
 		fun registerPlacement() {
 			val placement = properties.placement
 			if (placement != null) {

@@ -15,7 +15,7 @@ import net.minecraft.util.math.BlockPos
 import net.minecraft.world.IBlockReader
 import net.minecraft.world.IEntityReader
 
-class BlockGloomrock(builder: BlockBuilder) : HeeBlock(builder) {
+open class BlockGloomrock(builder: BlockBuilder) : HeeBlock(builder) {
 	override fun canCreatureSpawn(state: BlockState, world: IBlockReader, pos: BlockPos, type: PlacementType?, entityType: EntityType<*>?): Boolean {
 		if (world !is IEntityReader) {
 			HEE.log.warn("[BlockGloomrock] attempted to check spawn on a world != IEntityReader (${world.javaClass})")

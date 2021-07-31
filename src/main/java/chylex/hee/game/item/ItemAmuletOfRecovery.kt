@@ -64,6 +64,8 @@ class ItemAmuletOfRecovery(properties: Properties) : ItemAbstractEnergyUser(prop
 		
 		private const val PLAYER_RESPAWN_ITEM_TAG = "AmuletOfRecovery"
 		
+		private const val LANG_COST_ERROR = "item.hee.amulet_of_recovery.cost_error"
+		
 		private const val SLOT_COUNT = 9 * 5
 		
 		private val SLOTS_MAIN    = ((9 * 0) + 0) until ((9 * 4) + 0)
@@ -147,7 +149,7 @@ class ItemAmuletOfRecovery(properties: Properties) : ItemAbstractEnergyUser(prop
 								sumOfFilteredTagSizes += 2500
 								HEE.log.error("[ItemAmuletOfRecovery] failed processing NBT data when calculating Energy cost", e)
 								
-								errorMessenger.sendMessage(TranslationTextComponent("item.hee.amulet_of_recovery.cost_error").mergeStyle(RED), Util.DUMMY_UUID)
+								errorMessenger.sendMessage(TranslationTextComponent(LANG_COST_ERROR).mergeStyle(RED), Util.DUMMY_UUID)
 								e.message?.let { errorMessenger.sendMessage(StringTextComponent(it).mergeStyle(DARK_RED), Util.DUMMY_UUID) }
 							}
 							
@@ -225,6 +227,9 @@ class ItemAmuletOfRecovery(properties: Properties) : ItemAbstractEnergyUser(prop
 			return true
 		}
 	}
+	
+	override val localizationExtra
+		get() = mapOf(LANG_COST_ERROR to "Error calculating Energy cost for Amulet of Recovery. Please check server logs for the full error and report it.")
 	
 	override val model
 		get() = ItemModel.Multi(

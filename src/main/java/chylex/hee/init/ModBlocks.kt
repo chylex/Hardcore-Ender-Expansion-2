@@ -8,12 +8,12 @@ import chylex.hee.game.block.BlockCauldronWithDragonsBreath
 import chylex.hee.game.block.BlockCauldronWithGoo
 import chylex.hee.game.block.BlockCorruptedEnergy
 import chylex.hee.game.block.BlockDarkChest
+import chylex.hee.game.block.BlockDeathFlower
 import chylex.hee.game.block.BlockDeathFlowerDecaying
 import chylex.hee.game.block.BlockDragonEggOverride
 import chylex.hee.game.block.BlockDryVines
 import chylex.hee.game.block.BlockDustyStoneBricks
 import chylex.hee.game.block.BlockDustyStoneUnstable
-import chylex.hee.game.block.BlockEndPlant
 import chylex.hee.game.block.BlockEndPortalAcceptor
 import chylex.hee.game.block.BlockEndPortalInner
 import chylex.hee.game.block.BlockEndPortalOverride
@@ -31,8 +31,11 @@ import chylex.hee.game.block.BlockFallingObsidian
 import chylex.hee.game.block.BlockFlammableSlab
 import chylex.hee.game.block.BlockFlammableStairs
 import chylex.hee.game.block.BlockFlowerPotCustom
+import chylex.hee.game.block.BlockFlowerPotDeathFlower
 import chylex.hee.game.block.BlockFlowerPotDeathFlowerDecaying
 import chylex.hee.game.block.BlockGloomrock
+import chylex.hee.game.block.BlockGloomrockSmooth
+import chylex.hee.game.block.BlockGloomrockSmoothColored
 import chylex.hee.game.block.BlockGloomrockSmoothSlab
 import chylex.hee.game.block.BlockGloomrockSmoothStairs
 import chylex.hee.game.block.BlockGloomtorch
@@ -45,11 +48,13 @@ import chylex.hee.game.block.BlockInfusedTNT
 import chylex.hee.game.block.BlockJarODust
 import chylex.hee.game.block.BlockLootChest
 import chylex.hee.game.block.BlockMinersBurialAltar
+import chylex.hee.game.block.BlockMinersBurialCube
+import chylex.hee.game.block.BlockMinersBurialPillar
 import chylex.hee.game.block.BlockObsidianCube
 import chylex.hee.game.block.BlockObsidianPillar
-import chylex.hee.game.block.BlockPillarCustom
 import chylex.hee.game.block.BlockPortalFrame
 import chylex.hee.game.block.BlockPuzzleLogic
+import chylex.hee.game.block.BlockPuzzleWall
 import chylex.hee.game.block.BlockScaffolding
 import chylex.hee.game.block.BlockShulkerBoxOverride
 import chylex.hee.game.block.BlockSkullCustom
@@ -159,6 +164,11 @@ import net.minecraftforge.fml.common.Mod.EventBusSubscriber.Bus.MOD
 
 @SubscribeAllEvents(modid = HEE.ID, bus = MOD)
 object ModBlocks {
+	val ALL
+		get() = getRegistryEntries<Block>(this) + overrideBlocks
+	
+	val FLUIDS
+		get() = listOf(FluidEnderGoo, FluidEnderGooPurified)
 	
 	// Blocks: Building (Uncategorized)
 	
@@ -176,18 +186,18 @@ object ModBlocks {
 	@JvmField val GLOOMROCK_BRICKS         = BlockGloomrock(buildGloomrockBricks) named "gloomrock_bricks"
 	@JvmField val GLOOMROCK_BRICK_STAIRS   = BlockStairsCustom(GLOOMROCK_BRICKS) named "gloomrock_brick_stairs"
 	@JvmField val GLOOMROCK_BRICK_SLAB     = BlockSlabCustom(GLOOMROCK_BRICKS) named "gloomrock_brick_slab"
-	@JvmField val GLOOMROCK_SMOOTH         = BlockGloomrock(buildGloomrockSmooth) named "gloomrock_smooth"
+	@JvmField val GLOOMROCK_SMOOTH         = BlockGloomrockSmooth(buildGloomrockSmooth) named "gloomrock_smooth"
 	@JvmField val GLOOMROCK_SMOOTH_STAIRS  = BlockGloomrockSmoothStairs(GLOOMROCK_SMOOTH) named "gloomrock_smooth_stairs"
 	@JvmField val GLOOMROCK_SMOOTH_SLAB    = BlockGloomrockSmoothSlab(GLOOMROCK_SMOOTH) named "gloomrock_smooth_slab"
-	@JvmField val GLOOMROCK_SMOOTH_RED     = BlockGloomrock(buildGloomrockSmooth) named "gloomrock_smooth_red"
-	@JvmField val GLOOMROCK_SMOOTH_ORANGE  = BlockGloomrock(buildGloomrockSmooth) named "gloomrock_smooth_orange"
-	@JvmField val GLOOMROCK_SMOOTH_YELLOW  = BlockGloomrock(buildGloomrockSmooth) named "gloomrock_smooth_yellow"
-	@JvmField val GLOOMROCK_SMOOTH_GREEN   = BlockGloomrock(buildGloomrockSmooth) named "gloomrock_smooth_green"
-	@JvmField val GLOOMROCK_SMOOTH_CYAN    = BlockGloomrock(buildGloomrockSmooth) named "gloomrock_smooth_cyan"
-	@JvmField val GLOOMROCK_SMOOTH_BLUE    = BlockGloomrock(buildGloomrockSmooth) named "gloomrock_smooth_blue"
-	@JvmField val GLOOMROCK_SMOOTH_PURPLE  = BlockGloomrock(buildGloomrockSmooth) named "gloomrock_smooth_purple"
-	@JvmField val GLOOMROCK_SMOOTH_MAGENTA = BlockGloomrock(buildGloomrockSmooth) named "gloomrock_smooth_magenta"
-	@JvmField val GLOOMROCK_SMOOTH_WHITE   = BlockGloomrock(buildGloomrockSmooth) named "gloomrock_smooth_white"
+	@JvmField val GLOOMROCK_SMOOTH_RED     = BlockGloomrockSmoothColored(buildGloomrockSmooth) named "gloomrock_smooth_red"
+	@JvmField val GLOOMROCK_SMOOTH_ORANGE  = BlockGloomrockSmoothColored(buildGloomrockSmooth) named "gloomrock_smooth_orange"
+	@JvmField val GLOOMROCK_SMOOTH_YELLOW  = BlockGloomrockSmoothColored(buildGloomrockSmooth) named "gloomrock_smooth_yellow"
+	@JvmField val GLOOMROCK_SMOOTH_GREEN   = BlockGloomrockSmoothColored(buildGloomrockSmooth) named "gloomrock_smooth_green"
+	@JvmField val GLOOMROCK_SMOOTH_CYAN    = BlockGloomrockSmoothColored(buildGloomrockSmooth) named "gloomrock_smooth_cyan"
+	@JvmField val GLOOMROCK_SMOOTH_BLUE    = BlockGloomrockSmoothColored(buildGloomrockSmooth) named "gloomrock_smooth_blue"
+	@JvmField val GLOOMROCK_SMOOTH_PURPLE  = BlockGloomrockSmoothColored(buildGloomrockSmooth) named "gloomrock_smooth_purple"
+	@JvmField val GLOOMROCK_SMOOTH_MAGENTA = BlockGloomrockSmoothColored(buildGloomrockSmooth) named "gloomrock_smooth_magenta"
+	@JvmField val GLOOMROCK_SMOOTH_WHITE   = BlockGloomrockSmoothColored(buildGloomrockSmooth) named "gloomrock_smooth_white"
 	@JvmField val GLOOMTORCH               = BlockGloomtorch(buildGloomtorch) named "gloomtorch"
 	
 	// Blocks: Building (Dusty Stone)
@@ -196,7 +206,7 @@ object ModBlocks {
 	@JvmField val DUSTY_STONE_CRACKED        = BlockDustyStoneUnstable(buildDustyStoneCracked) named "dusty_stone_cracked"
 	@JvmField val DUSTY_STONE_DAMAGED        = BlockDustyStoneUnstable(buildDustyStoneDamaged) named "dusty_stone_damaged"
 	@JvmField val DUSTY_STONE_BRICKS         = BlockDustyStoneBricks(buildDustyStoneBricks) named "dusty_stone_bricks"
-	@JvmField val DUSTY_STONE_CRACKED_BRICKS = BlockDustyStoneBricks(buildDustyStoneBricks) named "dusty_stone_cracked_bricks"
+	@JvmField val DUSTY_STONE_CRACKED_BRICKS = BlockDustyStoneBricks.Cracked(buildDustyStoneBricks) named "dusty_stone_cracked_bricks"
 	@JvmField val DUSTY_STONE_DECORATION     = BlockDustyStoneBricks(buildDustyStoneBricks) named "dusty_stone_decoration"
 	@JvmField val DUSTY_STONE_BRICK_STAIRS   = BlockStairsCustom(DUSTY_STONE_BRICKS) named "dusty_stone_brick_stairs"
 	@JvmField val DUSTY_STONE_BRICK_SLAB     = BlockSlabCustom(DUSTY_STONE_BRICKS) named "dusty_stone_brick_slab"
@@ -211,7 +221,7 @@ object ModBlocks {
 	@JvmField val OBSIDIAN_SMOOTH_LIT   = BlockObsidianCube.Lit(buildObsidianVariationLit, OBSIDIAN_SMOOTH) named "obsidian_smooth_lit"
 	@JvmField val OBSIDIAN_CHISELED_LIT = BlockObsidianCube.Lit(buildObsidianVariationLit, OBSIDIAN_CHISELED) named "obsidian_chiseled_lit"
 	@JvmField val OBSIDIAN_PILLAR_LIT   = BlockObsidianPillar.Lit(buildObsidianVariationLit, OBSIDIAN_PILLAR) named "obsidian_pillar_lit"
-	@JvmField val OBSIDIAN_TOWER_TOP    = BlockObsidianCube.Lit(buildObsidianTowerTop, OBSIDIAN_CHISELED) named "obsidian_tower_top"
+	@JvmField val OBSIDIAN_TOWER_TOP    = BlockObsidianCube.TowerTop(buildObsidianTowerTop, OBSIDIAN_CHISELED) named "obsidian_tower_top"
 	
 	// Blocks: Building (End Stone)
 	
@@ -240,10 +250,10 @@ object ModBlocks {
 	
 	// Blocks: Building (Miner's Burial)
 	
-	@JvmField val MINERS_BURIAL_BLOCK_PLAIN    = HeeBlock(buildMinersBurial) named "miners_burial_block_plain"
-	@JvmField val MINERS_BURIAL_BLOCK_CHISELED = HeeBlock(buildMinersBurial) named "miners_burial_block_chiseled"
-	@JvmField val MINERS_BURIAL_BLOCK_PILLAR   = BlockPillarCustom(buildMinersBurial) named "miners_burial_block_pillar"
-	@JvmField val MINERS_BURIAL_BLOCK_JAIL     = HeeBlock(buildMinersBurialIndestructible) named "miners_burial_block_jail"
+	@JvmField val MINERS_BURIAL_BLOCK_PLAIN    = BlockMinersBurialCube(buildMinersBurial) named "miners_burial_block_plain"
+	@JvmField val MINERS_BURIAL_BLOCK_CHISELED = BlockMinersBurialCube(buildMinersBurial) named "miners_burial_block_chiseled"
+	@JvmField val MINERS_BURIAL_BLOCK_PILLAR   = BlockMinersBurialPillar(buildMinersBurial) named "miners_burial_block_pillar"
+	@JvmField val MINERS_BURIAL_BLOCK_JAIL     = BlockMinersBurialCube(buildMinersBurialIndestructible) named "miners_burial_block_jail"
 	@JvmField val MINERS_BURIAL_ALTAR          = BlockMinersBurialAltar(buildMinersBurialIndestructible) named "miners_burial_altar"
 	
 	// Blocks: Fluids
@@ -263,7 +273,7 @@ object ModBlocks {
 	
 	// Blocks: Interactive (Puzzle)
 	
-	@JvmField val PUZZLE_WALL       = HeeBlock(buildPuzzleWall) named "puzzle_block_wall"
+	@JvmField val PUZZLE_WALL       = BlockPuzzleWall(buildPuzzleWall) named "puzzle_block_wall"
 	@JvmField val PUZZLE_PLAIN      = BlockPuzzleLogic.Plain(buildPuzzleLogic) named "puzzle_block_plain"
 	@JvmField val PUZZLE_BURST_3    = BlockPuzzleLogic.Burst(buildPuzzleLogic, radius = 1) named "puzzle_block_burst_3"
 	@JvmField val PUZZLE_BURST_5    = BlockPuzzleLogic.Burst(buildPuzzleLogic, radius = 2) named "puzzle_block_burst_5"
@@ -292,15 +302,15 @@ object ModBlocks {
 	
 	// Blocks: Decorative (Trees)
 	
-	@JvmField val WHITEBARK_SAPLING_AUTUMN_RED         = BlockWhitebarkSapling(buildWhitebarkSapling, AutumnTreeGenerator.Red) named "autumn_sapling_red"
-	@JvmField val WHITEBARK_SAPLING_AUTUMN_BROWN       = BlockWhitebarkSapling(buildWhitebarkSapling, AutumnTreeGenerator.Brown) named "autumn_sapling_brown"
-	@JvmField val WHITEBARK_SAPLING_AUTUMN_ORANGE      = BlockWhitebarkSapling(buildWhitebarkSapling, AutumnTreeGenerator.Orange) named "autumn_sapling_orange"
-	@JvmField val WHITEBARK_SAPLING_AUTUMN_YELLOWGREEN = BlockWhitebarkSapling(buildWhitebarkSapling, AutumnTreeGenerator.YellowGreen) named "autumn_sapling_yellowgreen"
+	@JvmField val WHITEBARK_SAPLING_AUTUMN_RED         = BlockWhitebarkSapling.Autumn(buildWhitebarkSapling, AutumnTreeGenerator.Red) named "autumn_sapling_red"
+	@JvmField val WHITEBARK_SAPLING_AUTUMN_BROWN       = BlockWhitebarkSapling.Autumn(buildWhitebarkSapling, AutumnTreeGenerator.Brown) named "autumn_sapling_brown"
+	@JvmField val WHITEBARK_SAPLING_AUTUMN_ORANGE      = BlockWhitebarkSapling.Autumn(buildWhitebarkSapling, AutumnTreeGenerator.Orange) named "autumn_sapling_orange"
+	@JvmField val WHITEBARK_SAPLING_AUTUMN_YELLOWGREEN = BlockWhitebarkSapling.Autumn(buildWhitebarkSapling, AutumnTreeGenerator.YellowGreen) named "autumn_sapling_yellowgreen"
 	
-	@JvmField val WHITEBARK_LEAVES_AUTUMN_RED         = BlockWhitebarkLeaves(buildWhitebarkLeaves.clone { color = MaterialColor.RED }) named "autumn_leaves_red"
-	@JvmField val WHITEBARK_LEAVES_AUTUMN_BROWN       = BlockWhitebarkLeaves(buildWhitebarkLeaves.clone { color = MaterialColor.BROWN_TERRACOTTA }) named "autumn_leaves_brown"
-	@JvmField val WHITEBARK_LEAVES_AUTUMN_ORANGE      = BlockWhitebarkLeaves(buildWhitebarkLeaves.clone { color = MaterialColor.ADOBE /* RENAME ORANGE */ }) named "autumn_leaves_orange"
-	@JvmField val WHITEBARK_LEAVES_AUTUMN_YELLOWGREEN = BlockWhitebarkLeaves(buildWhitebarkLeaves.clone { color = MaterialColor.YELLOW }) named "autumn_leaves_yellowgreen"
+	@JvmField val WHITEBARK_LEAVES_AUTUMN_RED         = BlockWhitebarkLeaves.Autumn(buildWhitebarkLeaves, MaterialColor.RED) named "autumn_leaves_red"
+	@JvmField val WHITEBARK_LEAVES_AUTUMN_BROWN       = BlockWhitebarkLeaves.Autumn(buildWhitebarkLeaves, MaterialColor.BROWN_TERRACOTTA) named "autumn_leaves_brown"
+	@JvmField val WHITEBARK_LEAVES_AUTUMN_ORANGE      = BlockWhitebarkLeaves.Autumn(buildWhitebarkLeaves, MaterialColor.ADOBE /* RENAME ORANGE */) named "autumn_leaves_orange"
+	@JvmField val WHITEBARK_LEAVES_AUTUMN_YELLOWGREEN = BlockWhitebarkLeaves.Autumn(buildWhitebarkLeaves, MaterialColor.YELLOW) named "autumn_leaves_yellowgreen"
 	
 	@JvmField val POTTED_WHITEBARK_SAPLING_AUTUMN_RED         = BlockFlowerPotCustom(buildFlowerPot, WHITEBARK_SAPLING_AUTUMN_RED) named "potted_autumn_sapling_red"
 	@JvmField val POTTED_WHITEBARK_SAPLING_AUTUMN_BROWN       = BlockFlowerPotCustom(buildFlowerPot, WHITEBARK_SAPLING_AUTUMN_BROWN) named "potted_autumn_sapling_brown"
@@ -310,12 +320,12 @@ object ModBlocks {
 	// Blocks: Decorative (Plants)
 	
 	@JvmField val DEATH_FLOWER_DECAYING = BlockDeathFlowerDecaying(buildPlant) named "death_flower"
-	@JvmField val DEATH_FLOWER_HEALED   = BlockEndPlant(buildPlant) named "death_flower_healed"
-	@JvmField val DEATH_FLOWER_WITHERED = BlockEndPlant(buildPlant) named "death_flower_withered"
+	@JvmField val DEATH_FLOWER_HEALED   = BlockDeathFlower(buildPlant) named "death_flower_healed"
+	@JvmField val DEATH_FLOWER_WITHERED = BlockDeathFlower(buildPlant) named "death_flower_withered"
 	
 	@JvmField val POTTED_DEATH_FLOWER_DECAYING = BlockFlowerPotDeathFlowerDecaying(buildFlowerPot, DEATH_FLOWER_DECAYING) named "potted_death_flower"
-	@JvmField val POTTED_DEATH_FLOWER_HEALED   = BlockFlowerPotCustom(buildFlowerPot, DEATH_FLOWER_HEALED) named "potted_death_flower_healed"
-	@JvmField val POTTED_DEATH_FLOWER_WITHERED = BlockFlowerPotCustom(buildFlowerPot, DEATH_FLOWER_WITHERED) named "potted_death_flower_withered"
+	@JvmField val POTTED_DEATH_FLOWER_HEALED   = BlockFlowerPotDeathFlower(buildFlowerPot, DEATH_FLOWER_HEALED) named "potted_death_flower_healed"
+	@JvmField val POTTED_DEATH_FLOWER_WITHERED = BlockFlowerPotDeathFlower(buildFlowerPot, DEATH_FLOWER_WITHERED) named "potted_death_flower_withered"
 	
 	// Blocks: Decorative (Uncategorized)
 	
@@ -575,9 +585,6 @@ object ModBlocks {
 	}
 	
 	// Utilities
-	
-	val ALL
-		get() = getRegistryEntries<Block>(this) + overrideBlocks
 	
 	private val temporaryItemBlocks = mutableListOf<BlockItem>()
 	private val overrideBlocks = mutableListOf<Block>()

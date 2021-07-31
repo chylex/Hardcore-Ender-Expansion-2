@@ -1,5 +1,6 @@
 package chylex.hee.game.entity
 
+import chylex.hee.client.text.LocalizationStrategy
 import chylex.hee.game.entity.properties.EntitySize
 import chylex.hee.game.entity.properties.EntityTrackerInfo
 import net.minecraft.entity.Entity
@@ -7,6 +8,9 @@ import net.minecraft.entity.EntityClassification
 import net.minecraft.entity.EntityClassification.MISC
 
 interface IHeeEntityType<T : Entity> {
+	val localization: LocalizationStrategy
+		get() = LocalizationStrategy.None
+	
 	val classification: EntityClassification
 		get() = MISC
 	

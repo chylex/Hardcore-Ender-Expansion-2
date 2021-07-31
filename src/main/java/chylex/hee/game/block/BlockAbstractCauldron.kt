@@ -1,6 +1,7 @@
 package chylex.hee.game.block
 
 import chylex.hee.HEE
+import chylex.hee.client.text.LocalizationStrategy
 import chylex.hee.game.block.properties.BlockBuilder
 import chylex.hee.game.block.properties.BlockDrop
 import chylex.hee.game.fx.util.playUniversal
@@ -43,6 +44,9 @@ abstract class BlockAbstractCauldron(builder: BlockBuilder) : CauldronBlock(buil
 			}
 		}
 	}
+	
+	final override val localization
+		get() = LocalizationStrategy.None
 	
 	final override val drop
 		get() = BlockDrop.OneOf(Blocks.CAULDRON)

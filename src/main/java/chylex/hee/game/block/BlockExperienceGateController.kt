@@ -1,5 +1,6 @@
 package chylex.hee.game.block
 
+import chylex.hee.client.text.LocalizationStrategy
 import chylex.hee.game.Resource.location
 import chylex.hee.game.block.entity.TileEntityExperienceGate
 import chylex.hee.game.block.properties.BlockBuilder
@@ -12,6 +13,9 @@ import net.minecraft.util.math.BlockPos
 import net.minecraft.world.IBlockReader
 
 class BlockExperienceGateController(builder: BlockBuilder) : BlockExperienceGate(builder) {
+	override val localization
+		get() = LocalizationStrategy.Parenthesized(wordCount = 1, fromStart = false)
+	
 	override val model
 		get() = BlockModel.CubeBottomTop(
 			side   = ModBlocks.EXPERIENCE_GATE.location("_side"),

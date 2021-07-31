@@ -18,6 +18,12 @@ import net.minecraft.util.text.TranslationTextComponent
 
 object CommandServerPortalToken : ICommand, CommandExecutionFunctionCtx<Boolean> {
 	override val name = "token"
+	override val description = "generates a Portal Token item"
+	
+	override val localization
+		get() = mapOf(
+			"success" to "Created Portal Token leading to %s",
+		)
 	
 	override fun register(builder: ArgumentBuilder<CommandSource, *>) {
 		builder.then(

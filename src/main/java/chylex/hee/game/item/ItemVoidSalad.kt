@@ -1,6 +1,7 @@
 package chylex.hee.game.item
 
 import chylex.hee.HEE
+import chylex.hee.client.text.LocalizationStrategy
 import chylex.hee.game.Resource
 import chylex.hee.game.entity.damage.Damage
 import chylex.hee.game.entity.damage.IDamageDealer.Companion.TITLE_STARVE
@@ -68,9 +69,24 @@ class ItemVoidSalad(properties: Properties) : HeeItem(properties) {
 		}
 	}
 	
-	enum class Type {
-		SINGLE, DOUBLE, MEGA
+	enum class Type(private val translationKeySuffix: String) {
+		SINGLE("single"),
+		DOUBLE("double"),
+		MEGA("mega");
+		
+		val translationKey
+			get() = "item.hee.void_salad.$translationKeySuffix"
 	}
+	
+	override val localization
+		get() = LocalizationStrategy.None
+	
+	override val localizationExtra
+		get() = mapOf(
+			Type.SINGLE.translationKey to "Void Salad",
+			Type.DOUBLE.translationKey to "Void Void Salad",
+			Type.MEGA.translationKey to "Mega Void Salad",
+		)
 	
 	override val model: ItemModel
 		get() = ItemModel.WithOverrides(
@@ -124,10 +140,6 @@ class ItemVoidSalad(properties: Properties) : HeeItem(properties) {
 	}
 	
 	override fun getTranslationKey(stack: ItemStack): String {
-		return when (getSaladType(stack)) {
-			Type.SINGLE -> "item.hee.void_salad.single"
-			Type.DOUBLE -> "item.hee.void_salad.double"
-			Type.MEGA   -> "item.hee.void_salad.mega"
-		}
+		return getSaladType(stack).translationKey
 	}
 }

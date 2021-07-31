@@ -8,6 +8,7 @@ import java.util.prefs.Preferences
 
 object CommandClientScaffolding : IClientCommand {
 	override val name = "scaffolding"
+	override val description = "sets current structure palette"
 	
 	private val data
 		get() = Preferences.userRoot().node("chylex-hee-scaffolding")

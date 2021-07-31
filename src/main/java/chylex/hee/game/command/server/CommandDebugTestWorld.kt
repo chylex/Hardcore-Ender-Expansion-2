@@ -9,6 +9,7 @@ import net.minecraft.command.CommandSource
 
 object CommandDebugTestWorld : ICommand, CommandExecutionFunction {
 	override val name = "testworld"
+	override val description = "converts overworld into a test world"
 	
 	override fun register(builder: ArgumentBuilder<CommandSource, *>) {
 		builder.executes(this)

@@ -56,6 +56,9 @@ class ItemEnergyReceptacle(properties: Properties) : ItemAbstractInfusable(prope
 		private const val INITIAL_DIMENSION_TAG = "OrigDim"
 		private const val INITIAL_TERRITORY_TAG = "OrigTerritory"
 		
+		private const val LANG_TOOLTIP_EMPTY = "item.hee.energy_receptacle.tooltip.empty"
+		private const val LANG_TOOLTIP_HOLDING = "item.hee.energy_receptacle.tooltip.holding"
+		
 		private const val ENERGY_LOSS_TICK_RATE = 10L
 		private const val ITEM_COOLDOWN = 16
 		
@@ -103,6 +106,12 @@ class ItemEnergyReceptacle(properties: Properties) : ItemAbstractInfusable(prope
 			return false
 		}
 	}
+	
+	override val localizationExtra
+		get() = mapOf(
+			LANG_TOOLTIP_EMPTY to "§9Empty",
+			LANG_TOOLTIP_HOLDING to "§9Holding §3%s§9 Energy",
+		)
 	
 	override val model
 		get() = ItemModel.WithOverrides(
@@ -221,13 +230,13 @@ class ItemEnergyReceptacle(properties: Properties) : ItemAbstractInfusable(prope
 			val tag = stack.heeTagOrNull
 			
 			if (!tag.hasKey(CLUSTER_SNAPSHOT_TAG)) {
-				lines.add(TranslationTextComponent("item.hee.energy_receptacle.tooltip.empty"))
+				lines.add(TranslationTextComponent(LANG_TOOLTIP_EMPTY))
 			}
 			else {
 				val snapshot = ClusterSnapshot(tag.getCompound(CLUSTER_SNAPSHOT_TAG))
 				val level = calculateNewEnergyLevel(snapshot, world.gameTime - tag.getLong(UPDATE_TIME_TAG), InfusionTag.getList(stack))
 				
-				lines.add(TranslationTextComponent("item.hee.energy_receptacle.tooltip.holding", level.displayString))
+				lines.add(TranslationTextComponent(LANG_TOOLTIP_HOLDING, level.displayString))
 			}
 		}
 		

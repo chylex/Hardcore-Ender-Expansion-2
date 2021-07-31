@@ -1,5 +1,6 @@
 package chylex.hee.game.item
 
+import chylex.hee.client.text.LocalizationStrategy
 import chylex.hee.game.entity.projectile.EntityProjectileExperienceBottle
 import chylex.hee.game.entity.util.posVec
 import chylex.hee.game.fx.util.playServer
@@ -33,8 +34,16 @@ class ItemExperienceBottleCustom(builder: Properties) : ExperienceBottleItem(bui
 	companion object {
 		private const val EXPERIENCE_TAG = "Experience"
 		
+		private const val LANG_TOOLTIP_EXPERIENCE = "item.hee.experience_bottle.tooltip"
+		
 		const val MAX_EXPERIENCE = 25
 	}
+	
+	override val localization
+		get() = LocalizationStrategy.None
+	
+	override val localizationExtra
+		get() = mapOf(LANG_TOOLTIP_EXPERIENCE to "§a%s §2experience")
 	
 	override val model
 		get() = ItemModel.Copy(Items.EXPERIENCE_BOTTLE)
@@ -118,6 +127,6 @@ class ItemExperienceBottleCustom(builder: Properties) : ExperienceBottleItem(bui
 	
 	@Sided(Side.CLIENT)
 	override fun addInformation(stack: ItemStack, world: World?, lines: MutableList<ITextComponent>, flags: ITooltipFlag) {
-		lines.add(TranslationTextComponent("item.hee.experience_bottle.tooltip", getExperienceAmountPerItem(stack)))
+		lines.add(TranslationTextComponent(LANG_TOOLTIP_EXPERIENCE, getExperienceAmountPerItem(stack)))
 	}
 }

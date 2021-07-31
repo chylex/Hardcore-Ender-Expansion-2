@@ -22,7 +22,7 @@ import net.minecraftforge.event.RegisterCommandsEvent
 
 @SubscribeAllEvents(modid = HEE.ID)
 object ModCommands {
-	const val ROOT = "hee"
+	const val ROOT = HEE.ID
 	
 	val admin = listOf(
 		CommandServerHelp,

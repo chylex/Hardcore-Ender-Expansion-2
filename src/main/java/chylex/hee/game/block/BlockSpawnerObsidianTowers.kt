@@ -1,5 +1,6 @@
 package chylex.hee.game.block
 
+import chylex.hee.client.text.LocalizationStrategy
 import chylex.hee.game.block.entity.TileEntitySpawnerObsidianTower
 import chylex.hee.game.block.properties.BlockBuilder
 import chylex.hee.game.block.properties.BlockDrop
@@ -16,6 +17,9 @@ import net.minecraft.world.IBlockReader
 import net.minecraft.world.IWorldReader
 
 class BlockSpawnerObsidianTowers(builder: BlockBuilder) : SpawnerBlock(builder.p), IHeeBlock {
+	override val localization
+		get() = LocalizationStrategy.None
+	
 	override val model
 		get() = BlockStateModel(BlockStatePreset.SimpleFrom(Blocks.SPAWNER), BlockModel.Manual)
 	

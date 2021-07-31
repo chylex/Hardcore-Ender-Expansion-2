@@ -12,6 +12,7 @@ import chylex.hee.game.inventory.util.getStack
 import chylex.hee.game.inventory.util.nonEmptySlots
 import chylex.hee.game.inventory.util.setStack
 import chylex.hee.game.inventory.util.size
+import chylex.hee.game.item.properties.ItemModel
 import chylex.hee.game.item.util.isNotEmpty
 import chylex.hee.game.item.util.nbt
 import chylex.hee.game.item.util.nbtOrNull
@@ -57,9 +58,11 @@ import net.minecraft.util.text.TranslationTextComponent
 import net.minecraft.world.World
 import net.minecraftforge.client.event.GuiScreenEvent
 
-class ItemShulkerBoxOverride(block: Block, properties: Properties) : BlockItem(block, properties) {
+class ItemShulkerBoxOverride(block: Block, properties: Properties) : BlockItem(block, properties), IHeeItem {
 	companion object {
 		private const val TOOLTIP_ENTRY_COUNT = 5
+		
+		private const val LANG_TOOLTIP_OPEN = "item.hee.shulker_box.tooltip"
 		
 		private fun isStackValid(stack: ItemStack): Boolean {
 			return stack.item is ItemShulkerBoxOverride
@@ -124,6 +127,14 @@ class ItemShulkerBoxOverride(block: Block, properties: Properties) : BlockItem(b
 		}
 	}
 	
+	// Instance
+	
+	override val localizationExtra
+		get() = mapOf(LANG_TOOLTIP_OPEN to "§7Right-click to open")
+	
+	override val model
+		get() = ItemModel.Manual
+	
 	// Properties
 	
 	override fun getTranslationKey(stack: ItemStack): String {
@@ -179,7 +190,7 @@ class ItemShulkerBoxOverride(block: Block, properties: Properties) : BlockItem(b
 	@Sided(Side.CLIENT)
 	override fun addInformation(stack: ItemStack, world: World?, lines: MutableList<ITextComponent>, flags: ITooltipFlag) {
 		if (MC.currentScreen is InventoryScreen) {
-			lines.add(TranslationTextComponent("item.hee.shulker_box.tooltip"))
+			lines.add(TranslationTextComponent(LANG_TOOLTIP_OPEN))
 			lines.add(StringTextComponent(""))
 		}
 		

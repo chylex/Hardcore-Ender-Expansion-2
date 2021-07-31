@@ -1,5 +1,6 @@
 package chylex.hee.game.block
 
+import chylex.hee.client.text.LocalizationStrategy
 import chylex.hee.game.block.properties.BlockBuilder
 import chylex.hee.game.block.properties.BlockDrop
 import chylex.hee.game.block.properties.BlockRenderLayer.CUTOUT
@@ -21,6 +22,9 @@ open class BlockFlowerPotCustom protected constructor(
 	builder.p
 ), IHeeBlock {
 	constructor(builder: BlockBuilder, flower: Block) : this(builder, flower, registerPlant = true)
+	
+	override val localization: LocalizationStrategy
+		get() = (flower as? IHeeBlock)?.localization ?: super.localization
 	
 	override val model: IBlockStateModel
 		get() = BlockStateModels.PottedPlant(flower)

@@ -56,6 +56,9 @@ abstract class ItemAbstractEnergyUser(properties: Properties) : HeeItem(properti
 		private const val CLUSTER_POS_TAG = "ClusterPos"
 		private const val CLUSTER_TICK_OFFSET_TAG = "ClusterTick"
 		
+		private const val LANG_TOOLTIP_ENERGY_LEVEL = "item.tooltip.hee.energy.level"
+		private const val LANG_TOOLTIP_ENERGY_USES = "item.tooltip.hee.energy.uses"
+		
 		private fun removeClusterTags(nbt: TagCompound) {
 			nbt.remove(CLUSTER_POS_TAG)
 			nbt.remove(CLUSTER_TICK_OFFSET_TAG)
@@ -95,6 +98,12 @@ abstract class ItemAbstractEnergyUser(properties: Properties) : HeeItem(properti
 			}
 		}
 	}
+	
+	override val localizationExtra
+		get() = mapOf(
+			LANG_TOOLTIP_ENERGY_LEVEL to "§9Energy: §3%s§9 / §3%s",
+			LANG_TOOLTIP_ENERGY_USES to "§9Uses Left: §3%s",
+		)
 	
 	init {
 		@Suppress("DEPRECATION")
@@ -236,9 +245,9 @@ abstract class ItemAbstractEnergyUser(properties: Properties) : HeeItem(properti
 		super.addInformation(stack, world, lines, flags)
 		
 		if (flags.isAdvanced) {
-			lines.add(TranslationTextComponent("item.tooltip.hee.energy.level", getEnergyLevel(stack), calculateInternalEnergyCapacity(stack)))
+			lines.add(TranslationTextComponent(LANG_TOOLTIP_ENERGY_LEVEL, getEnergyLevel(stack), calculateInternalEnergyCapacity(stack)))
 		}
 		
-		lines.add(TranslationTextComponent("item.tooltip.hee.energy.uses", (getEnergyLevel(stack).toDouble() / getEnergyPerUse(stack).numerator).ceilToInt()))
+		lines.add(TranslationTextComponent(LANG_TOOLTIP_ENERGY_USES, (getEnergyLevel(stack).toDouble() / getEnergyPerUse(stack).numerator).ceilToInt()))
 	}
 }

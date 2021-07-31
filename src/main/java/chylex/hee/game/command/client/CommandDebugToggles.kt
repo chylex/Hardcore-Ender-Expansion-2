@@ -9,6 +9,7 @@ import net.minecraft.util.text.StringTextComponent
 
 object CommandDebugToggles : IClientCommand {
 	override val name = "debug"
+	override val description = "access to debug toggles"
 	
 	private var debug = false
 	

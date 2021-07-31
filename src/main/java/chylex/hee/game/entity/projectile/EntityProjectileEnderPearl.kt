@@ -1,6 +1,7 @@
 package chylex.hee.game.entity.projectile
 
 import chylex.hee.HEE
+import chylex.hee.client.text.LocalizationStrategy
 import chylex.hee.game.block.properties.BlockBuilder.Companion.INDESTRUCTIBLE_HARDNESS
 import chylex.hee.game.entity.IHeeEntityType
 import chylex.hee.game.entity.Teleporter
@@ -63,6 +64,9 @@ class EntityProjectileEnderPearl(type: EntityType<EntityProjectileEnderPearl>, w
 	}
 	
 	object Type : IHeeEntityType<EntityProjectileEnderPearl> {
+		override val localization
+			get() = LocalizationStrategy.Default
+		
 		override val size
 			get() = EntitySize(0.35F)
 		

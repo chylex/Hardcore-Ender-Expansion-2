@@ -6,9 +6,10 @@ import chylex.hee.game.world.generation.structure.IStructureWorld
 import chylex.hee.game.world.generation.structure.piece.StructurePiece
 import chylex.hee.init.ModBlocks
 import chylex.hee.util.math.Pos
+import net.minecraft.block.Block
 
 abstract class EnergyShrineAbstractPiece : StructurePiece<EnergyShrineRoomData>() {
-	protected open val ceilingBlock
+	protected open val ceilingBlock: Block
 		get() = ModBlocks.GLOOMROCK_SMOOTH
 	
 	override fun generate(world: IStructureWorld, instance: Instance) {

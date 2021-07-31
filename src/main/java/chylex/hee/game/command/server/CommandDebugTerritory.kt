@@ -25,6 +25,7 @@ import java.util.Random
 
 object CommandDebugTerritory : ICommand {
 	override val name = "territory"
+	override val description = "utilities for territories"
 	
 	override fun register(builder: ArgumentBuilder<CommandSource, *>) {
 		val execRegenerate = this::executeRegenerate

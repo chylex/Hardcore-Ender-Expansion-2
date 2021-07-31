@@ -21,6 +21,14 @@ import java.util.Locale
 
 object CommandServerCausatum : ICommand {
 	override val name = "causatum"
+	override val description = "checks or triggers Ender Causatum stages"
+	
+	override val localization
+		get() = mapOf(
+			"list"  to "Ender Causatum stages:",
+			"check" to "Ender Causatum stage: %s",
+			"set"   to "Ender Causatum stage updated for %s player(s)",
+		)
 	
 	override fun register(builder: ArgumentBuilder<CommandSource, *>) {
 		val execCheck = this::executeCheck

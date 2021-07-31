@@ -4,6 +4,7 @@ import chylex.hee.HEE
 import chylex.hee.datagen.client.BlockModels
 import chylex.hee.datagen.client.BlockStates
 import chylex.hee.datagen.client.ItemModels
+import chylex.hee.datagen.client.LangEnglish
 import chylex.hee.datagen.server.BlockLootTables
 import chylex.hee.datagen.server.BlockTags
 import chylex.hee.datagen.server.ItemTags
@@ -24,6 +25,7 @@ object DataGen {
 				addProvider(BlockModels(this, modid, helper))
 				addProvider(BlockStates(this, modid, helper))
 				addProvider(ItemModels(this, modid, helper))
+				addProvider(LangEnglish(this, modid))
 			}
 			
 			if (e.includeServer()) {

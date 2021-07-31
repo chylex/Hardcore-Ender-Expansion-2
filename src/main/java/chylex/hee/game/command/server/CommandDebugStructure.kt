@@ -40,6 +40,7 @@ object CommandDebugStructure : ICommand {
 	)
 	
 	override val name = "structure"
+	override val description = "utilities for custom structures"
 	
 	override fun register(builder: ArgumentBuilder<CommandSource, *>) {
 		val execPieces = this::executePieces

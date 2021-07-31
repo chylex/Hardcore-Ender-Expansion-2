@@ -4,7 +4,6 @@ import chylex.hee.HEE
 import chylex.hee.game.Resource
 import chylex.hee.game.potion.BanishmentEffect
 import chylex.hee.game.potion.CorruptionEffect
-import chylex.hee.game.potion.LifelessEffect
 import chylex.hee.game.potion.PurityEffect
 import chylex.hee.game.potion.brewing.PotionBrewing
 import chylex.hee.game.potion.brewing.PotionTypeMap
@@ -16,10 +15,10 @@ import chylex.hee.game.potion.brewing.recipes.BrewWaterToThick
 import chylex.hee.game.potion.brewing.recipes.ReinsertPotionItems
 import chylex.hee.system.getIfExists
 import chylex.hee.system.named
+import chylex.hee.system.registerAllFields
 import chylex.hee.util.forge.SubscribeAllEvents
 import chylex.hee.util.forge.SubscribeEvent
 import com.google.common.collect.ImmutableList
-import net.minecraft.potion.Effect
 import net.minecraft.potion.Potion
 import net.minecraftforge.common.brewing.BrewingRecipeRegistry
 import net.minecraftforge.common.brewing.IBrewingRecipe
@@ -29,30 +28,17 @@ import net.minecraftforge.fml.common.Mod.EventBusSubscriber.Bus.MOD
 
 @SubscribeAllEvents(modid = HEE.ID, bus = MOD)
 object ModPotions {
-	val LIFELESS   get() = LifelessEffect
-	val PURITY     get() = PurityEffect
-	val CORRUPTION get() = CorruptionEffect
-	val BANISHMENT get() = BanishmentEffect
-	
 	private const val VANILLA_OVERRIDE_SUFFIX = "_no_effect_override"
 	
-	@SubscribeEvent
-	fun onRegisterEffects(e: RegistryEvent.Register<Effect>) {
-		with(e.registry) {
-			register(LIFELESS named "lifeless")
-			register(PURITY named "purity")
-			register(CORRUPTION named "corruption")
-			register(BANISHMENT named "banishment")
-		}
-	}
+	@JvmField val PURITY = PurityEffect.POTION named "purity"
+	@JvmField val CORRUPTION = CorruptionEffect.POTION named "corruption"
+	@JvmField val BANISHMENT = BanishmentEffect.POTION named "banishment"
 	
 	@SubscribeEvent
 	fun onRegisterPotions(e: RegistryEvent.Register<Potion>) {
+		e.registerAllFields(this)
+		
 		with(e.registry) {
-			register(PurityEffect.POTION named "purity")
-			register(CorruptionEffect.TYPE named "corruption")
-			register(BanishmentEffect.TYPE named "banishment")
-			
 			val alteredTypes = PotionTypeMap.ALTERED_TYPES.map { it.registryName!!.path }.toSet()
 			
 			for (type in this) {
