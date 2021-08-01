@@ -16,6 +16,7 @@ import chylex.hee.game.item.properties.ItemModel.AsBlock
 import chylex.hee.game.item.properties.ItemModel.Copy
 import chylex.hee.game.item.properties.ItemModel.FromParent
 import chylex.hee.game.item.properties.ItemModel.Layers
+import chylex.hee.game.item.properties.ItemModel.Manual
 import chylex.hee.game.item.properties.ItemModel.Multi
 import chylex.hee.game.item.properties.ItemModel.Named
 import chylex.hee.game.item.properties.ItemModel.Simple
@@ -28,10 +29,8 @@ import chylex.hee.game.item.properties.ItemModel.WithOverrides
 import chylex.hee.game.item.properties.ItemModel.WithTextures
 import chylex.hee.init.ModBlocks
 import chylex.hee.init.ModItems
-import chylex.hee.system.getRegistryEntries
 import net.minecraft.block.Block
 import net.minecraft.data.DataGenerator
-import net.minecraft.item.Item
 import net.minecraft.util.IItemProvider
 import net.minecraftforge.client.model.generators.ItemModelBuilder
 import net.minecraftforge.client.model.generators.ItemModelProvider
@@ -39,13 +38,13 @@ import net.minecraftforge.common.data.ExistingFileHelper
 
 class ItemModels(generator: DataGenerator, modid: String, existingFileHelper: ExistingFileHelper) : ItemModelProvider(generator, modid, existingFileHelper) {
 	override fun registerModels() {
-		for (item in getRegistryEntries<Item>(ModItems)) {
+		for (item in ModItems.ALL) {
 			(item as? IHeeItem)?.model?.let {
 				registerModel(item, it)
 			}
 		}
 		
-		for (block in getRegistryEntries<Block>(ModBlocks)) {
+		for (block in ModBlocks.ALL) {
 			(block as? IHeeBlock)?.model?.itemModel?.let {
 				registerModel(if (it.asItem) block.asItem() else block, it.model)
 			}
@@ -93,6 +92,7 @@ class ItemModels(generator: DataGenerator, modid: String, existingFileHelper: Ex
 	
 	private fun registerSingleModel(item: IItemProvider, model: SingleItemModel, callback: (ItemModelBuilder) -> ItemModelBuilder) {
 		when (model) {
+			Manual        -> return
 			Simple        -> simple(item)?.then(callback)
 			AsBlock       -> block(item as Block)?.then(callback)
 			Skull         -> parent(item, Resource.Vanilla("item/template_skull"))?.then(callback)

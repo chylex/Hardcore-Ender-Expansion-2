@@ -2,7 +2,6 @@ package chylex.hee.datagen.server
 
 import chylex.hee.game.item.IHeeItem
 import chylex.hee.init.ModItems
-import chylex.hee.system.getRegistryEntries
 import net.minecraft.data.DataGenerator
 import net.minecraft.data.ItemTagsProvider
 import net.minecraft.item.Item
@@ -18,7 +17,7 @@ class ItemTags(dataGenerator: DataGenerator, private val blockTags: chylex.hee.d
 			itemTags[blockTag.name]?.let { copy(blockTag, it) }
 		}
 		
-		for (item in getRegistryEntries<Item>(ModItems)) {
+		for (item in ModItems.ALL) {
 			val tags = (item as? IHeeItem)?.tags
 			if (!tags.isNullOrEmpty()) {
 				registerTags(item, tags)

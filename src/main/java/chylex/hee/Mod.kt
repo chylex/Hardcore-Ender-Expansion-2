@@ -82,7 +82,7 @@ object Mod {
 	private object IntegrityCheck {
 		fun verify() {
 			crashIfFalse(Blocks.END_PORTAL::class.java === BlockEndPortalOverride::class.java, "invalid End Portal block: ${Blocks.END_PORTAL::class.java}")
-			crashIfFalse(Blocks.BREWING_STAND::class.java === BlockBrewingStandCustom::class.java, "invalid Brewing Stand block: ${Blocks.BREWING_STAND::class.java}")
+			crashIfFalse(Blocks.BREWING_STAND::class.java === BlockBrewingStandCustom.Override::class.java, "invalid Brewing Stand block: ${Blocks.BREWING_STAND::class.java}")
 			
 			for (block in BlockShulkerBoxOverride.ALL_BLOCKS) {
 				crashIfFalse(block.javaClass === BlockShulkerBoxOverride::class.java, "invalid Shulker Box block: ${block.javaClass}")

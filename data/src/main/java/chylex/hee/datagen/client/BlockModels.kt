@@ -28,7 +28,6 @@ import chylex.hee.game.block.properties.BlockModel.Suffixed
 import chylex.hee.game.block.properties.BlockModel.Table
 import chylex.hee.game.block.properties.BlockModel.WithTextures
 import chylex.hee.init.ModBlocks
-import chylex.hee.system.getRegistryEntries
 import net.minecraft.block.Block
 import net.minecraft.data.DataGenerator
 import net.minecraftforge.client.model.generators.BlockModelBuilder
@@ -37,7 +36,7 @@ import net.minecraftforge.common.data.ExistingFileHelper
 
 class BlockModels(generator: DataGenerator, modid: String, existingFileHelper: ExistingFileHelper) : BlockModelProvider(generator, modid, existingFileHelper) {
 	override fun registerModels() {
-		for (block in getRegistryEntries<Block>(ModBlocks)) {
+		for (block in ModBlocks.ALL) {
 			(block as? IHeeBlock)?.model?.let { registerModel(block, it.blockModel) { builder -> builder } }
 		}
 	}

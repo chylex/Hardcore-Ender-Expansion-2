@@ -16,6 +16,7 @@ sealed class ItemModel {
 		}
 	}
 	
+	object Manual : SingleItemModel()
 	object Simple : SingleItemModel()
 	object AsBlock : SingleItemModel()
 	object Skull : SingleItemModel()

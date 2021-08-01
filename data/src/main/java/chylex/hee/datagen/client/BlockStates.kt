@@ -20,7 +20,6 @@ import chylex.hee.game.block.properties.BlockStatePreset.Slab
 import chylex.hee.game.block.properties.BlockStatePreset.Stairs
 import chylex.hee.game.block.properties.BlockStatePreset.Wall
 import chylex.hee.init.ModBlocks
-import chylex.hee.system.getRegistryEntries
 import net.minecraft.block.Block
 import net.minecraft.block.RotatedPillarBlock
 import net.minecraft.block.SlabBlock
@@ -32,7 +31,7 @@ import net.minecraftforge.common.data.ExistingFileHelper
 
 class BlockStates(generator: DataGenerator, modid: String, existingFileHelper: ExistingFileHelper) : BlockStateProvider(generator, modid, existingFileHelper) {
 	override fun registerStatesAndModels() {
-		for (block in getRegistryEntries<Block>(ModBlocks)) {
+		for (block in ModBlocks.ALL) {
 			(block as? IHeeBlock)?.model?.let { registerState(block, it.blockState) }
 		}
 	}

@@ -11,7 +11,6 @@ import chylex.hee.game.block.properties.BlockDrop.Nothing
 import chylex.hee.game.block.properties.BlockDrop.OneOf
 import chylex.hee.game.block.properties.BlockDrop.Self
 import chylex.hee.init.ModBlocks
-import chylex.hee.system.getRegistryEntries
 import net.minecraft.block.Block
 import net.minecraft.block.FlowerPotBlock
 import net.minecraft.data.DataGenerator
@@ -20,7 +19,7 @@ import net.minecraft.loot.LootTables
 class BlockLootTables(generator: DataGenerator) : BlockLootTableProvider(generator) {
 	override val consumer = object : RegistrationConsumer() {
 		override fun addTables() {
-			for (block in getRegistryEntries<Block>(ModBlocks)) {
+			for (block in ModBlocks.ALL) {
 				(block as? IHeeBlock)?.let { registerDrop(block, it.drop) }
 			}
 		}

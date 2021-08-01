@@ -47,12 +47,10 @@ import chylex.hee.game.block.properties.BlockRenderLayer.CUTOUT_MIPPED
 import chylex.hee.game.block.properties.BlockRenderLayer.TRANSLUCENT
 import chylex.hee.game.block.properties.CustomSkull
 import chylex.hee.game.item.IHeeItem
-import chylex.hee.system.getRegistryEntries
 import chylex.hee.util.forge.Side
 import chylex.hee.util.forge.SubscribeAllEvents
 import chylex.hee.util.forge.SubscribeEvent
 import chylex.hee.util.lang.ObjectConstructors
-import net.minecraft.block.Block
 import net.minecraft.client.gui.ScreenManager
 import net.minecraft.client.gui.ScreenManager.IScreenFactory
 import net.minecraft.client.gui.screen.inventory.ContainerScreen
@@ -101,7 +99,7 @@ object ModRendering {
 		
 		// blocks
 		
-		for (block in getRegistryEntries<Block>(ModBlocks)) {
+		for (block in ModBlocks.ALL) {
 			when ((block as? IHeeBlock)?.renderLayer) {
 				CUTOUT        -> RenderTypeLookup.setRenderLayer(block, RenderType.getCutout())
 				CUTOUT_MIPPED -> RenderTypeLookup.setRenderLayer(block, RenderType.getCutoutMipped())
@@ -120,11 +118,11 @@ object ModRendering {
 		
 		// properties
 		
-		for (block in getRegistryEntries<Block>(ModBlocks)) {
+		for (block in ModBlocks.ALL) {
 			registerProperties(block.asItem())
 		}
 		
-		for (item in getRegistryEntries<Item>(ModItems)) {
+		for (item in ModItems.ALL) {
 			registerProperties(item)
 		}
 		
@@ -201,7 +199,7 @@ object ModRendering {
 		val blockColors = e.blockColors
 		val itemColors = e.itemColors
 		
-		for (block in getRegistryEntries<Block>(ModBlocks)) {
+		for (block in ModBlocks.ALL) {
 			val blockTint = (block as? IHeeBlock)?.tint
 			if (blockTint != null) {
 				blockColors.register(blockTint, block)
@@ -209,7 +207,7 @@ object ModRendering {
 			}
 		}
 		
-		for (item in getRegistryEntries<Item>(ModItems)) {
+		for (item in ModItems.ALL) {
 			val itemTint = (item as? IHeeItem)?.tint
 			if (itemTint != null) {
 				itemColors.register(itemTint, item)

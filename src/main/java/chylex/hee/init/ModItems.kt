@@ -52,6 +52,7 @@ import chylex.hee.game.item.util.Tool.Type.PICKAXE
 import chylex.hee.game.item.util.Tool.Type.SHOVEL
 import chylex.hee.game.territory.TerritoryType
 import chylex.hee.init.ModCreativeTabs.OrderedCreativeTab
+import chylex.hee.system.getRegistryEntries
 import chylex.hee.system.registerAllFields
 import chylex.hee.system.useVanillaName
 import chylex.hee.util.color.RGB
@@ -204,9 +205,18 @@ object ModItems {
 	
 	// Utilities
 	
+	val ALL
+		get() = getRegistryEntries<Item>(this) + overrideItems
+	
+	private val overrideItems = mutableListOf<Item>()
+	
 	private infix fun <T : Item> T.named(registryName: String): T = apply {
 		this.registryName = Resource.Custom(registryName)
 		(this.group as? OrderedCreativeTab)?.registerOrder(this)
+	}
+	
+	internal fun registerOverride(item: Item) {
+		overrideItems.add(item)
 	}
 	
 	private fun Item.override(vanillaItem: Item, newCreativeTab: ItemGroup? = ModCreativeTabs.main) {
@@ -216,5 +226,7 @@ object ModItems {
 		if (newCreativeTab is OrderedCreativeTab) {
 			newCreativeTab.registerOrder(this)
 		}
+		
+		registerOverride(this)
 	}
 }

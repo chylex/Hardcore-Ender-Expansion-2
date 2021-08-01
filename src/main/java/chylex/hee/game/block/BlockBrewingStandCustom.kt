@@ -8,7 +8,9 @@ import chylex.hee.game.block.properties.BlockItemModel
 import chylex.hee.game.block.properties.BlockModel
 import chylex.hee.game.block.properties.BlockRenderLayer.CUTOUT
 import chylex.hee.game.block.properties.BlockStateModel
+import chylex.hee.game.block.properties.BlockStateModels
 import chylex.hee.game.block.properties.BlockStatePreset
+import chylex.hee.game.block.properties.IBlockStateModel
 import chylex.hee.game.item.properties.ItemModel
 import chylex.hee.game.world.util.breakBlock
 import chylex.hee.game.world.util.getTile
@@ -29,7 +31,7 @@ import net.minecraft.world.IBlockReader
 import net.minecraft.world.World
 
 open class BlockBrewingStandCustom(builder: BlockBuilder) : BrewingStandBlock(builder.p), IHeeBlock {
-	final override val model
+	override val model: IBlockStateModel
 		get() = BlockStateModel(
 			BlockStatePreset.None,
 			BlockModel.WithTextures(BlockModel.FromParent(Blocks.BREWING_STAND), mapOf(
@@ -43,7 +45,7 @@ open class BlockBrewingStandCustom(builder: BlockBuilder) : BrewingStandBlock(bu
 	final override val renderLayer
 		get() = CUTOUT
 	
-	final override val drop
+	override val drop: BlockDrop
 		get() = BlockDrop.NamedTile
 	
 	override fun createTileEntity(state: BlockState, world: IBlockReader): TileEntity {
@@ -67,5 +69,13 @@ open class BlockBrewingStandCustom(builder: BlockBuilder) : BrewingStandBlock(bu
 		}
 		
 		return SUCCESS
+	}
+	
+	class Override(builder: BlockBuilder) : BlockBrewingStandCustom(builder) {
+		override val model
+			get() = BlockStateModels.Manual
+		
+		override val drop
+			get() = BlockDrop.Manual
 	}
 }

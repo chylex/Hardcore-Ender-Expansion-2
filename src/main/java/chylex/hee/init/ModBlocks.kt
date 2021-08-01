@@ -141,6 +141,7 @@ import chylex.hee.game.item.ItemInfusedTNT
 import chylex.hee.game.item.ItemShulkerBoxOverride
 import chylex.hee.game.world.generation.feature.basic.AutumnTreeGenerator
 import chylex.hee.init.ModCreativeTabs.OrderedCreativeTab
+import chylex.hee.system.getRegistryEntries
 import chylex.hee.system.named
 import chylex.hee.system.useVanillaName
 import chylex.hee.util.forge.SubscribeAllEvents
@@ -552,7 +553,7 @@ object ModBlocks {
 		
 		with(e.registry) {
 			register(BlockEndPortalOverride(buildEndPortalOverride).apply { override(Blocks.END_PORTAL) { null } })
-			register(BlockBrewingStandCustom(buildBrewingStand).apply { override(Blocks.BREWING_STAND) { BlockItem(it, Item.Properties().group(ItemGroup.BREWING)) } })
+			register(BlockBrewingStandCustom.Override(buildBrewingStand).apply { override(Blocks.BREWING_STAND) { BlockItem(it, Item.Properties().group(ItemGroup.BREWING)) } })
 			register(BlockDragonEggOverride(buildDragonEgg).apply { override(Blocks.DRAGON_EGG) { ItemDragonEgg(it, itemBlockDefaultProps) } })
 			
 			for (block in BlockShulkerBoxOverride.ALL_BLOCKS) {
@@ -575,11 +576,16 @@ object ModBlocks {
 	
 	// Utilities
 	
+	val ALL
+		get() = getRegistryEntries<Block>(this) + overrideBlocks
+	
 	private val temporaryItemBlocks = mutableListOf<BlockItem>()
+	private val overrideBlocks = mutableListOf<Block>()
 	
 	private inline fun Block.override(vanillaBlock: Block, itemBlockConstructor: ((Block) -> BlockItem?)) {
 		this.useVanillaName(vanillaBlock)
-		itemBlockConstructor(this)?.let { with(it) }
+		overrideBlocks.add(this)
+		itemBlockConstructor(this)?.let { with(it); ModItems.registerOverride(it) }
 	}
 	
 	private infix fun Block.with(itemBlock: BlockItem) = apply {

@@ -2,7 +2,6 @@ package chylex.hee.datagen.server
 
 import chylex.hee.game.block.IHeeBlock
 import chylex.hee.init.ModBlocks
-import chylex.hee.system.getRegistryEntries
 import net.minecraft.block.Block
 import net.minecraft.data.BlockTagsProvider
 import net.minecraft.data.DataGenerator
@@ -16,7 +15,7 @@ class BlockTags(generator: DataGenerator, modId: String, existingFileHelper: Exi
 		get() = registeredTags
 	
 	override fun registerTags() {
-		for (block in getRegistryEntries<Block>(ModBlocks)) {
+		for (block in ModBlocks.ALL) {
 			val tags = (block as? IHeeBlock)?.tags
 			if (!tags.isNullOrEmpty()) {
 				registerTags(block, tags)
