@@ -104,7 +104,7 @@ object CommandServerHelp : ICommand, CommandExecutionFunctionCtx<Boolean> {
 		
 		send(source, emptyLine)
 		send(source, TranslationTextComponent(headerKey, currentPage, totalPages).also {
-			it.style.setFormatting(GREEN) // required to set a custom color on tokens
+			it.mergeStyle(GREEN) // required to set a custom color on tokens
 		})
 		send(source, emptyLine)
 		
@@ -113,13 +113,13 @@ object CommandServerHelp : ICommand, CommandExecutionFunctionCtx<Boolean> {
 			val usage = entry?.value?.replaceFirst("[$name]", name) ?: name
 			
 			send(source, StringTextComponent(usage).also {
-				it.style.clickEvent = ClickEvent(SUGGEST_COMMAND, "/hee $name")
+				it.style = it.style.setClickEvent(ClickEvent(SUGGEST_COMMAND, "/hee $name"))
 			})
 			
 			send(source, chainTextComponents(
 				StringTextComponent("  "),
 				TranslationTextComponent("commands.hee.${name}.info").also {
-					it.style.setFormatting(GRAY)
+					it.mergeStyle(GRAY)
 				}
 			))
 		}
@@ -136,7 +136,7 @@ object CommandServerHelp : ICommand, CommandExecutionFunctionCtx<Boolean> {
 		
 		if (totalPages == null) {
 			components.add(TranslationTextComponent("commands.hee.help.footer.admin").also {
-				it.style.clickEvent = ClickEvent(RUN_COMMAND, "/hee help ${currentPage + 1}")
+				it.style = it.style.setClickEvent(ClickEvent(RUN_COMMAND, "/hee help ${currentPage + 1}"))
 			})
 		}
 		else {
@@ -144,13 +144,13 @@ object CommandServerHelp : ICommand, CommandExecutionFunctionCtx<Boolean> {
 			val showNext = currentPage < totalPages
 			
 			components.add(TranslationTextComponent("commands.hee.help.footer.prev").also {
-				setupNavigation(it, if (showPrev) currentPage - 1 else null)
+				getNavigationStyle(it, if (showPrev) currentPage - 1 else null)
 			})
 			
 			components.add(TranslationTextComponent("commands.hee.help.footer.middle"))
 			
 			components.add(TranslationTextComponent("commands.hee.help.footer.next").also {
-				setupNavigation(it, if (showNext) currentPage + 1 else null)
+				getNavigationStyle(it, if (showNext) currentPage + 1 else null)
 			})
 		}
 		
@@ -165,16 +165,15 @@ object CommandServerHelp : ICommand, CommandExecutionFunctionCtx<Boolean> {
 		source.sendFeedback(text, false)
 	}
 	
-	private fun setupNavigation(text: ITextComponent, page: Int?) {
-		val style = text.style
-		
-		if (page != null) {
-			style.clickEvent = ClickEvent(RUN_COMMAND, "/${ModCommands.ROOT} help $page")
-			style.setFormatting(GREEN)
-			style.setUnderlined(true)
+	private fun getNavigationStyle(text: IFormattableTextComponent, page: Int?) {
+		if (page == null) {
+			text.mergeStyle(DARK_GREEN)
 		}
 		else {
-			style.setFormatting(DARK_GREEN)
+			text.style = text.style
+				.setClickEvent(ClickEvent(RUN_COMMAND, "/${ModCommands.ROOT} help $page"))
+				.setFormatting(GREEN)
+				.setUnderlined(true)
 		}
 	}
 	
