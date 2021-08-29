@@ -21,7 +21,7 @@ import chylex.hee.game.world.generation.feature.basic.PortalGenerator
 import chylex.hee.game.world.generation.feature.obsidiantower.ObsidianTowerBuilder
 import chylex.hee.game.world.generation.feature.obsidiantower.ObsidianTowerPieces
 import chylex.hee.game.world.generation.feature.obsidiantower.piece.ObsidianTowerLevel_Top
-import chylex.hee.game.world.generation.noise.NoiseGenerator
+import chylex.hee.game.world.generation.noise.Noise2D
 import chylex.hee.game.world.generation.ore.IOreTechnique
 import chylex.hee.game.world.generation.ore.OreGenerator
 import chylex.hee.game.world.generation.ore.impl.OreTechniqueSingle
@@ -275,7 +275,7 @@ object Generator_ObsidianTowers : ITerritoryGenerator {
 			
 			var offset = 0.0
 			val tested = mutableSetOf<BlockPos>()
-			val noise = NoiseGenerator.OldPerlinNormalized(rand, scale = 3.0, octaves = 1)
+			val noise = Noise2D.OldPerlinNormalized(rand, scale = 3.0, octaves = 1)
 			
 			while (offset < dist) {
 				offset += 0.33

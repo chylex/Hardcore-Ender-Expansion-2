@@ -19,7 +19,7 @@ import chylex.hee.game.world.generation.cave.impl.CaveCarverSphere
 import chylex.hee.game.world.generation.cave.impl.CavePatherRotatingBase
 import chylex.hee.game.world.generation.cave.impl.CaveRadiusSine
 import chylex.hee.game.world.generation.feature.basic.PortalGenerator
-import chylex.hee.game.world.generation.noise.NoiseGenerator
+import chylex.hee.game.world.generation.noise.Noise2D
 import chylex.hee.game.world.generation.noise.NoiseValue
 import chylex.hee.game.world.generation.ore.OreGenerator
 import chylex.hee.game.world.generation.ore.impl.OreTechniqueAdjacent
@@ -101,9 +101,9 @@ object Generator_TheHub : ITerritoryGenerator {
 		const val ELEVATION_BOTTOM = 13.0
 		
 		fun generate(world: SegmentedWorld, rand: Random, size: Size) {
-			val noiseIslandTop    = NoiseGenerator.OldPerlinNormalized(rand, scale =  48.0, octaves = 2)
-			val noiseIslandBottom = NoiseGenerator.OldPerlinNormalized(rand, scale = 104.0, octaves = 1)
-			val noiseIslandEdge   = NoiseGenerator.OldPerlinNormalized(rand, scale =  52.0, octaves = 1)
+			val noiseIslandTop    = Noise2D.OldPerlinNormalized(rand, scale =  48.0, octaves = 2)
+			val noiseIslandBottom = Noise2D.OldPerlinNormalized(rand, scale = 104.0, octaves = 1)
+			val noiseIslandEdge   = Noise2D.OldPerlinNormalized(rand, scale =  52.0, octaves = 1)
 			
 			val centerPos = size.centerPos
 			

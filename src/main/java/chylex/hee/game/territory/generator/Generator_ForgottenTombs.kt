@@ -11,7 +11,7 @@ import chylex.hee.game.world.generation.feature.basic.PortalGenerator
 import chylex.hee.game.world.generation.feature.tombdungeon.TombDungeonBuilder
 import chylex.hee.game.world.generation.feature.tombdungeon.TombDungeonPieces
 import chylex.hee.game.world.generation.feature.tombdungeon.piece.TombDungeonStart
-import chylex.hee.game.world.generation.noise.NoiseGenerator
+import chylex.hee.game.world.generation.noise.Noise2D
 import chylex.hee.game.world.generation.ore.OreGenerator
 import chylex.hee.game.world.generation.ore.impl.OreTechniqueAdjacent
 import chylex.hee.game.world.generation.ore.impl.withAdjacentAirCheck
@@ -117,8 +117,8 @@ object Generator_ForgottenTombs : ITerritoryGenerator {
 				val radXZ = RADIUS_XZ.toFloat()
 				val radY = RADIUS_Y.toFloat()
 				
-				val noiseXZ = NoiseGenerator.OldPerlinNormalized(rand, scale = 24.0, octaves = 2)
-				val noiseY = NoiseGenerator.OldPerlinNormalized(rand, scale = 48.0, octaves = 2)
+				val noiseXZ = Noise2D.OldPerlinNormalized(rand, scale = 24.0, octaves = 2)
+				val noiseY = Noise2D.OldPerlinNormalized(rand, scale = 48.0, octaves = 2)
 				
 				for ((x, y, z) in BlockPos.ZERO.allInCenteredBoxMutable(RADIUS_XZ, RADIUS_Y, RADIUS_XZ)) {
 					val normalizedY = remapRange(y.toFloat(), -radY..radY, 0F..1F)

@@ -7,7 +7,7 @@ import java.util.Random
 import java.util.stream.IntStream
 import kotlin.math.pow
 
-sealed class NoiseGenerator(private val xScale: Double, private val zScale: Double) {
+sealed class Noise2D(private val xScale: Double, private val zScale: Double) {
 	
 	// Generation
 	
@@ -27,7 +27,7 @@ sealed class NoiseGenerator(private val xScale: Double, private val zScale: Doub
 	
 	// Implementations
 	
-	open class OldPerlin(rand: Random, private val xScale: Double, private val zScale: Double, octaves: Int) : NoiseGenerator(xScale, zScale) {
+	open class OldPerlin(rand: Random, private val xScale: Double, private val zScale: Double, octaves: Int) : Noise2D(xScale, zScale) {
 		constructor(rand: Random, scale: Double, octaves: Int) : this(rand, scale, scale, octaves)
 		
 		private val noiseLevels = Array(octaves) { SimplexNoiseGenerator(rand) }
@@ -55,7 +55,7 @@ sealed class NoiseGenerator(private val xScale: Double, private val zScale: Doub
 		override fun getRawValue(x: Double, z: Double) = (super.getRawValue(x, z) + normalizationApproxBoundary) / (2 * normalizationApproxBoundary)
 	}
 	
-	class NewPerlin(rand: Random, private val xScale: Double, private val zScale: Double, octaves: Int) : NoiseGenerator(xScale, zScale) {
+	class NewPerlin(rand: Random, private val xScale: Double, private val zScale: Double, octaves: Int) : Noise2D(xScale, zScale) {
 		constructor(rand: Random, scale: Double, octaves: Int) : this(rand, scale, scale, octaves)
 		
 		private val generator = PerlinNoiseGenerator(SharedSeedRandom(rand.nextLong()), IntStream.rangeClosed(-octaves + 1, 0))

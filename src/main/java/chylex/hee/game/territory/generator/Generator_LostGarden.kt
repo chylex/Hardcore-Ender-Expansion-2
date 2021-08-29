@@ -24,7 +24,8 @@ import chylex.hee.game.world.generation.cave.impl.CavePatherRotatingBase
 import chylex.hee.game.world.generation.cave.impl.CaveRadiusSine
 import chylex.hee.game.world.generation.feature.basic.AutumnTreeGenerator
 import chylex.hee.game.world.generation.feature.basic.PortalGenerator
-import chylex.hee.game.world.generation.noise.NoiseGenerator
+import chylex.hee.game.world.generation.noise.Noise2D
+import chylex.hee.game.world.generation.noise.Noise3D
 import chylex.hee.game.world.generation.noise.NoiseValue
 import chylex.hee.game.world.generation.structure.world.ScaffoldedWorld
 import chylex.hee.game.world.generation.structure.world.SegmentedWorld
@@ -186,18 +187,22 @@ object Generator_LostGarden : ITerritoryGenerator {
 	
 	private class Island(val offset: BlockPos, val radius: Double, val height: Double) {
 		fun generate(world: SegmentedWorld, rand: Random) {
-			val noiseXZ = NoiseGenerator.OldPerlinNormalized(rand, scale = 80.0, octaves = 3)
-			val noiseXY = NoiseGenerator.OldPerlinNormalized(rand, scale = 32.0, octaves = 2)
-			val noiseZY = NoiseGenerator.OldPerlinNormalized(rand, scale = 32.0, octaves = 2)
+			val noise3D = Noise3D.SuperSimplex.Terrain(rand).getAreaGenerator(xzFreq = 16.0, yFreq = 8.0, amplitude = 2.0)
 			
-			val noiseValley = NoiseGenerator.OldPerlinNormalized(rand, scale = 136.0, octaves = 1)
-			val noiseThreshold = NoiseGenerator.OldPerlinNormalized(rand, scale = 44.0, octaves = 2)
-			val noiseEndersol = NoiseGenerator.OldPerlinNormalized(rand, scale = 32.0, octaves = 3)
+			val noiseXZ = Noise2D.OldPerlinNormalized(rand, scale = 40.0, octaves = 5)
+			val noiseXY = Noise2D.OldPerlinNormalized(rand, scale = 32.0, octaves = 2)
+			val noiseZY = Noise2D.OldPerlinNormalized(rand, scale = 32.0, octaves = 2)
+			
+			val noiseValley = Noise2D.OldPerlinNormalized(rand, scale = 136.0, octaves = 1)
+			val noiseThreshold = Noise2D.OldPerlinNormalized(rand, scale = 44.0, octaves = 2)
+			val noiseEndersol = Noise2D.OldPerlinNormalized(rand, scale = 32.0, octaves = 3)
 			
 			val maxDistXZ = radius.ceilToInt()
 			val baseDistY = (height * 0.32).ceilToInt()
 			val minDistY = -baseDistY
 			val maxDistY = baseDistY * 2
+			
+			// val noise = noise3D.generate(0, 0, 0, maxDistXZ, maxDistY, maxDistXZ)
 			
 			for (x in -maxDistXZ..maxDistXZ) for (z in -maxDistXZ..maxDistXZ) {
 				val distRatioXZ = square(sqrt((square(x) + square(z)).toDouble()) / radius)
@@ -466,8 +471,8 @@ object Generator_LostGarden : ITerritoryGenerator {
 				val top = xz.withY(size.maxY).offsetUntil(DOWN, offsetRange) { !world.isAir(it) } ?: continue
 				
 				if (center.y - bottom.y > 12 && top.y - center.y > 16) {
-					val noise1 = NoiseGenerator.OldPerlinNormalized(rand, scale = 8.0, octaves = 2)
-					val noise2 = NoiseGenerator.OldPerlinNormalized(rand, xScale = 8.0, zScale = 4.0, octaves = 2)
+					val noise1 = Noise2D.OldPerlinNormalized(rand, scale = 8.0, octaves = 2)
+					val noise2 = Noise2D.OldPerlinNormalized(rand, xScale = 8.0, zScale = 4.0, octaves = 2)
 					
 					val radiusX = rand.nextFloat(11.0, 16.0)
 					val radiusY = rand.nextFloat(7.2, 9.4)

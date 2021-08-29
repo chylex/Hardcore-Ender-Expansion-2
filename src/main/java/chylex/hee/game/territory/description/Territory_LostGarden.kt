@@ -16,7 +16,7 @@ object Territory_LostGarden : ITerritoryDescription {
 		get() = TerritoryDifficulty.PEACEFUL
 	
 	override val colors = object : TerritoryColors() {
-		override val tokenTop    = RGB(148, 169, 54)
+		override val tokenTop    = RGB(148, 169,  54)
 		override val tokenBottom = RGB( 98,  93, 102)
 		
 		override val dryVines = RGB(133, 117, 72).i

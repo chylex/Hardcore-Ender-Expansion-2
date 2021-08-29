@@ -4,11 +4,13 @@ import chylex.hee.game.mechanics.causatum.CausatumStage
 import chylex.hee.game.mechanics.causatum.CausatumStage.S2_ENTERED_END
 import chylex.hee.game.mechanics.causatum.CausatumStage.S3_FINISHED_CURSED_LIBRARY
 import chylex.hee.game.territory.description.Territory_ArcaneConjunctions
+import chylex.hee.game.territory.description.Territory_EnderCity
 import chylex.hee.game.territory.description.Territory_ForgottenTombs
 import chylex.hee.game.territory.description.Territory_LostGarden
 import chylex.hee.game.territory.description.Territory_ObsidianTowers
 import chylex.hee.game.territory.description.Territory_TheHub
 import chylex.hee.game.territory.generator.Generator_ArcaneConjunctions
+import chylex.hee.game.territory.generator.Generator_EnderCity
 import chylex.hee.game.territory.generator.Generator_ForgottenTombs
 import chylex.hee.game.territory.generator.Generator_LostGarden
 import chylex.hee.game.territory.generator.Generator_ObsidianTowers
@@ -79,8 +81,8 @@ enum class TerritoryType(
 	
 	ENDER_CITY(
 		title  = "ender_city",
-		desc   = TerritoryDummy,
-		gen    = GeneratorDummy,
+		desc   = Territory_EnderCity,
+		gen    = Generator_EnderCity,
 		chunks = 52,
 		height = 128 until 256
 	),
