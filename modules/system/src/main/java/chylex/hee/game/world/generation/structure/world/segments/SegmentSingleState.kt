@@ -5,6 +5,10 @@ import net.minecraft.block.Block
 import net.minecraft.block.BlockState
 import net.minecraft.util.math.BlockPos
 
+/**
+ * A segment completely filled with only one type of block state.
+ * When any block state is changed, gets converted to [SegmentMultiState].
+ */
 class SegmentSingleState(private val size: Size, private val fillState: BlockState) : ISegment {
 	constructor(size: Size, block: Block) : this(size, block.defaultState)
 	
@@ -16,6 +20,6 @@ class SegmentSingleState(private val size: Size, private val fillState: BlockSta
 		return if (state == fillState)
 			this
 		else
-			SegmentFull(size, fillState).withState(pos, state)
+			SegmentMultiState(size, fillState).withState(pos, state)
 	}
 }
