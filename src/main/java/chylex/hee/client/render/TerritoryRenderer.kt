@@ -17,7 +17,6 @@ import chylex.hee.game.territory.TerritoryType
 import chylex.hee.game.territory.TerritoryVoid
 import chylex.hee.game.territory.system.properties.TerritoryEnvironment
 import chylex.hee.game.world.isInEndDimension
-import chylex.hee.system.Debug
 import chylex.hee.util.color.IntColor
 import chylex.hee.util.color.RGB
 import chylex.hee.util.forge.EventPriority
@@ -36,7 +35,6 @@ import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.util.math.vector.Vector3f
 import net.minecraftforge.client.event.EntityViewRenderEvent.RenderFogEvent
 import net.minecraftforge.client.event.RenderGameOverlayEvent
-import net.minecraftforge.common.MinecraftForge
 import net.minecraftforge.event.TickEvent.ClientTickEvent
 import net.minecraftforge.event.TickEvent.Phase
 import org.lwjgl.opengl.GL11.GL_GREATER
@@ -159,12 +157,6 @@ object TerritoryRenderer {
 		
 		val voidFactor = LerpedFloat(TerritoryVoid.OUTSIDE_VOID_FACTOR)
 		
-		init {
-			if (Debug.enabled) {
-				MinecraftForge.EVENT_BUS.register(this)
-			}
-		}
-		
 		fun tick(player: PlayerEntity) {
 			val factor = TerritoryVoid.getVoidFactor(player).also(voidFactor::update)
 			
@@ -185,16 +177,6 @@ object TerritoryRenderer {
 		
 		fun reset() {
 			voidFactor.updateImmediately(TerritoryVoid.OUTSIDE_VOID_FACTOR)
-		}
-		
-		@SubscribeEvent
-		fun onRenderGameOverlayText(e: RenderGameOverlayEvent.Text) {
-			if (MC.settings.showDebugInfo && MC.player?.isInEndDimension == true) {
-				with(e.left) {
-					add("")
-					add("End Void Factor: ${"%.3f".format(voidFactor.currentValue)}")
-				}
-			}
 		}
 	}
 	

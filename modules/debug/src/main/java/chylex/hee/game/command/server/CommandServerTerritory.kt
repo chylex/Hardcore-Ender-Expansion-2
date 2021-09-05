@@ -23,7 +23,7 @@ import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.util.text.StringTextComponent
 import java.util.Random
 
-object CommandDebugTerritory : ICommand {
+object CommandServerTerritory : ICommand {
 	override val name = "territory"
 	override val description = "utilities for territories"
 	

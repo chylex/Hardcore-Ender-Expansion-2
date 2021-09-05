@@ -91,7 +91,7 @@ class LangEnglish(generator: DataGenerator, modid: String) : LanguageProvider(ge
 			}
 		}
 		
-		for (command in ClientCommandHandler.nonHelpCommands.values) {
+		for (command in ClientCommandHandler.all.values) {
 			val name = command.name
 			add("commands.hee.$name.info", command.description)
 		}

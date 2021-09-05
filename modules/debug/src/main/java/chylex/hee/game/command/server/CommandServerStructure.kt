@@ -31,7 +31,7 @@ import net.minecraft.util.Rotation
 import net.minecraft.util.text.StringTextComponent
 import java.util.Random
 
-object CommandDebugStructure : ICommand {
+object CommandServerStructure : ICommand {
 	val structureDescriptions = mapOf(
 		"stronghold" to StrongholdPieces,
 		"energyshrine" to EnergyShrinePieces,

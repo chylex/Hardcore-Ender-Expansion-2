@@ -12,6 +12,7 @@
           <set>
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/data" />
+            <option value="$PROJECT_DIR$/modules/debug" />
             <option value="$PROJECT_DIR$/modules/system" />
             <option value="$PROJECT_DIR$/modules/util" />
           </set>

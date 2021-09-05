@@ -7,7 +7,7 @@ import com.mojang.brigadier.builder.ArgumentBuilder
 import com.mojang.brigadier.context.CommandContext
 import net.minecraft.command.CommandSource
 
-object CommandDebugTestWorld : ICommand, CommandExecutionFunction {
+object CommandServerTestWorld : ICommand, CommandExecutionFunction {
 	override val name = "testworld"
 	override val description = "converts overworld into a test world"
 	

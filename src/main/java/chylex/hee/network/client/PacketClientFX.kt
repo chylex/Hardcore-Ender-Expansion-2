@@ -1,5 +1,6 @@
 package chylex.hee.network.client
 
+import chylex.hee.HEE
 import chylex.hee.game.block.BlockDragonEggOverride
 import chylex.hee.game.block.BlockEnderGooPurified
 import chylex.hee.game.block.BlockPuzzleLogic
@@ -35,7 +36,6 @@ import chylex.hee.game.mechanics.table.TableParticleHandler
 import chylex.hee.game.potion.BanishmentEffect
 import chylex.hee.game.world.generation.feature.tombdungeon.piece.TombDungeonRoom_Tomb
 import chylex.hee.network.BaseClientPacket
-import chylex.hee.system.Debug
 import chylex.hee.util.forge.Side
 import chylex.hee.util.forge.Sided
 import io.netty.buffer.ByteBuf
@@ -114,7 +114,7 @@ class PacketClientFX<T : IFxData>() : BaseClientPacket() {
 		val index = buffer.readByte().toInt()
 		
 		if (index == -1) {
-			if (Debug.enabled) {
+			if (HEE.debug) {
 				throw IndexOutOfBoundsException("could not find FX handler")
 			}
 		}

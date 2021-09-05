@@ -15,7 +15,7 @@ import net.minecraft.command.Commands.argument
 import net.minecraft.command.Commands.literal
 import net.minecraft.util.text.StringTextComponent
 
-object CommandDebugInstability : ICommand {
+object CommandServerInstability : ICommand {
 	override val name = "instability"
 	override val description = "utilities for instability"
 	

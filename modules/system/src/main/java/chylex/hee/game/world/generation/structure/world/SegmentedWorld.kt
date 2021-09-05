@@ -6,7 +6,6 @@ import chylex.hee.game.world.generation.structure.IStructureWorld
 import chylex.hee.game.world.generation.structure.world.segments.ISegment
 import chylex.hee.game.world.generation.structure.world.segments.ISegment.Companion.index
 import chylex.hee.game.world.util.Transform
-import chylex.hee.system.Debug
 import chylex.hee.util.math.Pos
 import chylex.hee.util.math.Size
 import chylex.hee.util.math.ceilToInt
@@ -32,7 +31,7 @@ open class SegmentedWorld(override val rand: Random, val worldSize: Size, privat
 		if (!isInside(pos)) {
 			HEE.log.warn("[SegmentedWorld] attempted to access position outside bounds: $pos is outside $worldSize")
 			
-			if (Debug.enabled) {
+			if (HEE.debug) {
 				Thread.dumpStack()
 			}
 			

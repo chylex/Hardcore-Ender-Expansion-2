@@ -60,6 +60,7 @@ idea {
 		
 		["out", "src/main/kotlin", "src/test/kotlin"].each {
 			excludeDirs += file(it)
+			excludeDirs += file("modules/debug/" + it)
 			excludeDirs += file("modules/system/" + it)
 			excludeDirs += file("modules/util/" + it)
 		}
@@ -128,7 +129,6 @@ minecraft {
 	
 	runs {
 		client {
-			property "hee.debug", ""
 			property "mixin.env.remapRefMap", "true"
 			property "mixin.env.refMapRemappingFile", "${projectDir}/build/createSrgToMcp/output.srg"
 			arg "-mixin.config=hee.mixins.json"
@@ -138,6 +138,7 @@ minecraft {
 			mods {
 				hee {
 					source sourceSets.main
+					source project(":debug").sourceSets.main
 					source project(":system").sourceSets.main
 					source project(":util").sourceSets.main
 				}
@@ -145,7 +146,6 @@ minecraft {
 		}
 		
 		server {
-			property "hee.debug", ""
 			property "mixin.env.remapRefMap", "true"
 			property "mixin.env.refMapRemappingFile", "${projectDir}/build/createSrgToMcp/output.srg"
 			arg "-mixin.config=hee.mixins.json"
@@ -155,6 +155,7 @@ minecraft {
 			mods {
 				hee {
 					source sourceSets.main
+					source project(":debug").sourceSets.main
 					source project(":system").sourceSets.main
 					source project(":util").sourceSets.main
 				}
@@ -162,7 +163,6 @@ minecraft {
 		}
 		
 		data {
-			property "hee.debug", ""
 			args "--mod", "hee"
 			args "--all"
 			args "--output", file("data/gen")
@@ -174,6 +174,7 @@ minecraft {
 			mods {
 				hee {
 					source sourceSets.main
+					source project(":debug").sourceSets.main
 					source project(":system").sourceSets.main
 					source project(":util").sourceSets.main
 					source project(":datagen").sourceSets.main
@@ -190,12 +191,12 @@ mixin {
 dependencies {
 	minecraft "net.minecraftforge:forge:" + mc_version + "-" + forge_version
 	
-	implementation project(":system")
 	implementation project(":util")
+	implementation project(":system")
 	implementation "thedarkcolour:kotlinforforge:" + kotlin_mod_version
 	
-	testImplementation project(":system")
 	testImplementation project(":util")
+	testImplementation project(":system")
 	testImplementation "org.junit.jupiter:junit-jupiter-api:5.3.0-RC1"
 	
 	if (System.getProperty("idea.sync.active") != "true") {

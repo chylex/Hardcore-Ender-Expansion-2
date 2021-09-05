@@ -3,17 +3,12 @@ package chylex.hee.init
 import chylex.hee.HEE
 import chylex.hee.game.command.argument.EnumArgument
 import chylex.hee.game.command.argument.ValidatedStringArgument
-import chylex.hee.game.command.server.CommandDebugInstability
-import chylex.hee.game.command.server.CommandDebugStructure
-import chylex.hee.game.command.server.CommandDebugTerritory
-import chylex.hee.game.command.server.CommandDebugTestWorld
 import chylex.hee.game.command.server.CommandServerCausatum
 import chylex.hee.game.command.server.CommandServerHelp
 import chylex.hee.game.command.server.CommandServerInfusions
 import chylex.hee.game.command.server.CommandServerLootChest
 import chylex.hee.game.command.server.CommandServerPortalToken
 import chylex.hee.game.command.util.executes
-import chylex.hee.system.Debug
 import chylex.hee.util.forge.SubscribeAllEvents
 import chylex.hee.util.forge.SubscribeEvent
 import net.minecraft.command.Commands.literal
@@ -32,13 +27,7 @@ object ModCommands {
 		CommandServerPortalToken
 	)
 	
-	val debug = if (Debug.enabled) listOf(
-		CommandDebugInstability,
-		CommandDebugStructure,
-		CommandDebugTerritory,
-		CommandDebugTestWorld
-	)
-	else emptyList()
+	val debug = HEE.debugModule?.serverCommands.orEmpty()
 	
 	init {
 		ArgumentTypes.register("hee:enum", EnumArgument::class.java, EnumArgument.Serializer)

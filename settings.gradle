@@ -1,7 +1,9 @@
-include ":system"
 include ":util"
+include ":system"
+include ":debug"
 include ":datagen"
 
-project(":system").projectDir = file("./modules/system")
 project(":util").projectDir = file("./modules/util")
+project(":system").projectDir = file("./modules/system")
+project(":debug").projectDir = file("./modules/debug")
 project(":datagen").projectDir = file("./data")

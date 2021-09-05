@@ -7,7 +7,6 @@ import chylex.hee.game.world.generation.structure.piece.IStructurePieceConnectio
 import chylex.hee.game.world.generation.structure.piece.StructureBuild.AddMode.APPEND
 import chylex.hee.game.world.generation.structure.piece.StructureBuild.AddMode.MERGE
 import chylex.hee.game.world.generation.structure.world.OffsetStructureWorld
-import chylex.hee.system.Debug
 import chylex.hee.util.math.Size
 import net.minecraft.util.math.BlockPos
 
@@ -83,7 +82,7 @@ class StructureBuild<T : StructurePiece<*>.MutableInstance>(val size: Size) {
 	 * [MERGE] mode allows intersection with [targetPiece] but no other pieces.
 	 */
 	fun addPiece(newPiece: T, newPieceConnection: IStructurePieceConnection, targetPiece: PositionedPiece<T>, targetPieceConnection: IStructurePieceConnection, mode: AddMode = APPEND): PositionedPiece<T>? {
-		if (Debug.enabled && !pieces.contains(targetPiece)) {
+		if (HEE.debug && !pieces.contains(targetPiece)) {
 			HEE.log.error("[StructureBuild] attempted to connect to a piece that is not present in the structure")
 		}
 		

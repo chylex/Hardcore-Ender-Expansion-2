@@ -19,7 +19,7 @@ object MinecraftForgeEventBus {
 		}
 		
 		for (listener in item.javaClass.methods.filter { !Modifier.isStatic(it.modifiers) && it.isAnnotationPresent(SubscribeEvent::class.java) }) {
-			if (Debug.enabled) {
+			if (HEE.debug) {
 				HEE.log.info("[MinecraftForgeEventBus] registering ${listener.parameterTypes.firstOrNull()?.name?.substringAfterLast('.')} for ${item.javaClass.simpleName}")
 			}
 			

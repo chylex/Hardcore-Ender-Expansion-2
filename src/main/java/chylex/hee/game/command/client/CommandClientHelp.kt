@@ -10,6 +10,6 @@ object CommandClientHelp : IClientCommand {
 	override val description = CommandServerHelp.description
 	
 	override fun executeCommand(sender: CommandSource, args: Array<String>) {
-		CommandServerHelp.sendCommandListPage(sender, ClientCommandHandler.nonHelpCommands.keys, emptyMap(), "commands.hee.help.header.client", 1, null)
+		CommandServerHelp.sendCommandListPage(sender, ClientCommandHandler.all.keys, emptyMap(), "commands.hee.help.header.client", 1, null)
 	}
 }

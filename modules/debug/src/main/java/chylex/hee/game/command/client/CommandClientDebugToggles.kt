@@ -1,13 +1,13 @@
 package chylex.hee.game.command.client
 
 import chylex.hee.client.render.TerritoryRenderer
+import chylex.hee.game.block.BlockScaffolding
 import chylex.hee.game.command.IClientCommand
 import chylex.hee.game.territory.TerritoryVoid
-import chylex.hee.init.ModBlocks
 import net.minecraft.command.CommandSource
 import net.minecraft.util.text.StringTextComponent
 
-object CommandDebugToggles : IClientCommand {
+object CommandClientDebugToggles : IClientCommand {
 	override val name = "debug"
 	override val description = "access to debug toggles"
 	
@@ -23,8 +23,8 @@ object CommandDebugToggles : IClientCommand {
 			sender.sendFeedback(StringTextComponent("Territory debugging ${if (debug) "enabled" else "disabled"}."), false)
 		}
 		else if (name == "scaffolding") {
-			ModBlocks.SCAFFOLDING.enableShape = !ModBlocks.SCAFFOLDING.enableShape
-			sender.sendFeedback(StringTextComponent("Scaffolding shape ${if (ModBlocks.SCAFFOLDING.enableShape) "enabled" else "disabled"}."), false)
+			BlockScaffolding.enableShape = !BlockScaffolding.enableShape
+			sender.sendFeedback(StringTextComponent("Scaffolding shape ${if (BlockScaffolding.enableShape) "enabled" else "disabled"}."), false)
 		}
 	}
 }

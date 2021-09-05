@@ -19,7 +19,6 @@ import chylex.hee.init.ModPackets
 import chylex.hee.init.ModPotions
 import chylex.hee.init.ModTileEntities
 import chylex.hee.network.NetworkManager
-import chylex.hee.system.Debug
 import chylex.hee.util.forge.Side
 import chylex.hee.util.forge.SubscribeAllEvents
 import chylex.hee.util.forge.SubscribeEvent
@@ -29,7 +28,6 @@ import net.minecraftforge.fml.DistExecutor.SafeRunnable
 import net.minecraftforge.fml.ModLoadingContext
 import net.minecraftforge.fml.common.Mod
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber.Bus.MOD
-import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent
 import net.minecraftforge.fml.event.lifecycle.FMLLoadCompleteEvent
 
@@ -41,6 +39,10 @@ object Mod {
 			HEE.version = activeContainer.modInfo.version.toString()
 		}
 		
+		try {
+			Class.forName("chylex.hee.debug.Debug")
+		} catch (e: ClassNotFoundException) {}
+		
 		@Suppress("ConvertLambdaToReference")
 		DistExecutor.safeRunWhenOn(Side.CLIENT) {
 			SafeRunnable { VanillaResourceOverrides.register() }
@@ -49,11 +51,6 @@ object Mod {
 		CustomRarity
 		CustomPlantType
 		ModCreativeTabs
-	}
-	
-	@SubscribeEvent
-	fun onClientSetup(@Suppress("UNUSED_PARAMETER") e: FMLClientSetupEvent) {
-		Debug.initializeClient()
 	}
 	
 	@SubscribeEvent

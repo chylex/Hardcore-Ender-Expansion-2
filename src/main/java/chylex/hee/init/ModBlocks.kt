@@ -375,7 +375,7 @@ object ModBlocks {
 	// Blocks: Utilities
 	
 	@JvmField val ETERNAL_FIRE = BlockEternalFire(buildEternalFire) named "eternal_fire"
-	@JvmField val SCAFFOLDING  = BlockScaffolding(buildScaffolding) named "scaffolding"
+	@JvmField val SCAFFOLDING  = BlockScaffolding.create(buildScaffolding) named "scaffolding"
 	
 	// Registry
 	
