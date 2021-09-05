@@ -188,7 +188,7 @@ enum class TerritoryType(
 			}
 		}
 		
-		private object GeneratorDummy : ITerritoryGenerator {
+		object GeneratorDummy : ITerritoryGenerator {
 			override val segmentSize = Size(1)
 			
 			override fun provide(world: SegmentedWorld): TerritoryGenerationInfo {

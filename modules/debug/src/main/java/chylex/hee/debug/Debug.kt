@@ -2,6 +2,7 @@ package chylex.hee.debug
 
 import chylex.hee.HEE
 import chylex.hee.client.BuildStick
+import chylex.hee.client.DebugMenu
 import chylex.hee.client.GameModeToggle
 import chylex.hee.client.TerritoryVoidDebug
 import chylex.hee.game.block.BlockScaffoldingDebug
@@ -56,6 +57,7 @@ internal object Debug : IDebugModule {
 	@Sided(Side.CLIENT)
 	private fun initializeClient() {
 		if (HEE.debug) {
+			MinecraftForge.EVENT_BUS.register(DebugMenu)
 			MinecraftForge.EVENT_BUS.register(BuildStick)
 			MinecraftForge.EVENT_BUS.register(GameModeToggle)
 			MinecraftForge.EVENT_BUS.register(TerritoryVoidDebug)
