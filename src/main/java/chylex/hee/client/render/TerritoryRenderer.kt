@@ -25,6 +25,7 @@ import chylex.hee.util.forge.SubscribeAllEvents
 import chylex.hee.util.forge.SubscribeEvent
 import chylex.hee.util.math.LerpedFloat
 import chylex.hee.util.math.floorToInt
+import chylex.hee.util.math.range
 import chylex.hee.util.math.remapRange
 import chylex.hee.util.math.scale
 import com.mojang.blaze3d.matrix.MatrixStack
@@ -117,7 +118,7 @@ object TerritoryRenderer {
 	// Fog rendering
 	
 	private val currentFogDensityMp
-		get() = 1F + (9F * remapRange(currentVoidFactor, (-0.5F)..(1F), (0F)..(1F)).coerceIn(0F, 1F).pow(1.5F))
+		get() = 1F + (9F * remapRange(currentVoidFactor, range(-0.5F, 1F), range(0F, 1F)).coerceIn(0F, 1F).pow(1.5F))
 	
 	private val currentRenderDistanceMp
 		get() = MC.settings.renderDistanceChunks.let { if (it > 12) 0F else (1F - (it / 16.5F)).pow((it - 1) * 0.25F) }
@@ -147,7 +148,7 @@ object TerritoryRenderer {
 		get() = Void.voidFactor.get(MC.partialTicks)
 	
 	val currentSkyAlpha
-		get() = remapRange(currentVoidFactor, (-1F)..(0.5F), (1F)..(0F)).coerceIn(0F, 1F)
+		get() = remapRange(currentVoidFactor, range(-1F, 0.5F), range(1F, 0F)).coerceIn(0F, 1F)
 	
 	private object Void {
 		private val VOID_PARTICLE = ParticleSpawnerCustom(

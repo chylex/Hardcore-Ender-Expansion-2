@@ -1,5 +1,6 @@
 package chylex.hee.util.random
 
+import chylex.hee.util.math.range
 import chylex.hee.util.math.remapRange
 import java.util.Random
 import kotlin.math.pow
@@ -29,7 +30,7 @@ abstract class RandomDouble private constructor(val min: Double, val max: Double
 		
 		fun Exp(min: Double, max: Double, exp: Double) = object : RandomDouble(min, max) {
 			override fun invoke(rand: Random): Double {
-				return remapRange(rand.nextDouble().pow(exp), (0.0)..(1.0), min..max)
+				return remapRange(rand.nextDouble().pow(exp), range(0F, 1F), range(min.toFloat(), max.toFloat()))
 			}
 		}
 	}

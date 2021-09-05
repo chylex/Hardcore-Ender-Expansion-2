@@ -27,6 +27,7 @@ import chylex.hee.system.random.nextItem
 import chylex.hee.system.random.nextRounded
 import chylex.hee.util.math.Vec
 import chylex.hee.util.math.center
+import chylex.hee.util.math.range
 import chylex.hee.util.math.remapRange
 import chylex.hee.util.nbt.TagCompound
 import chylex.hee.util.nbt.use
@@ -268,9 +269,9 @@ class EntityInfusedTNT : TNTEntity {
 			val waterRatio = foundWaterBlocks.size.toFloat() / totalCountedBlocks
 			
 			val dropAmount = when {
-				waterRatio < 0.1 -> remapRange(waterRatio, (0.0F)..(0.1F), (1.0F)..(1.6F))
-				waterRatio < 0.4 -> remapRange(waterRatio, (0.1F)..(0.4F), (1.6F)..(4.0F))
-				else             -> remapRange(waterRatio, (0.4F)..(1.0F), (4.0F)..(5.8F))
+				waterRatio < 0.1 -> remapRange(waterRatio, range(0.0F, 0.1F), range(1.0F, 1.6F))
+				waterRatio < 0.4 -> remapRange(waterRatio, range(0.1F, 0.4F), range(1.6F, 4.0F))
+				else             -> remapRange(waterRatio, range(0.4F, 1.0F), range(4.0F, 5.8F))
 			}
 			
 			val lootTable = Environment.getLootTable(LootTables.GAMEPLAY_FISHING)

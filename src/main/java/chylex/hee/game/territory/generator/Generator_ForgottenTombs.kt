@@ -33,6 +33,7 @@ import chylex.hee.util.math.Size
 import chylex.hee.util.math.component1
 import chylex.hee.util.math.component2
 import chylex.hee.util.math.component3
+import chylex.hee.util.math.range
 import chylex.hee.util.math.remapRange
 import chylex.hee.util.math.square
 import chylex.hee.util.math.xz
@@ -121,9 +122,9 @@ object Generator_ForgottenTombs : ITerritoryGenerator {
 				val noiseY = NoiseGenerator.OldPerlinNormalized(rand, scale = 48.0, octaves = 2)
 				
 				for ((x, y, z) in BlockPos.ZERO.allInCenteredBoxMutable(RADIUS_XZ, RADIUS_Y, RADIUS_XZ)) {
-					val normalizedY = remapRange(y.toFloat(), -radY..radY, 0F..1F)
+					val normalizedY = remapRange(y.toFloat(), range(-radY, radY), range(0F, 1F))
 					
-					val powerY = remapRange(sqrt(normalizedY), 0F..1F, (4.8F)..(1.6F))
+					val powerY = remapRange(sqrt(normalizedY), range(0F, 1F), range(4.8F, 1.6F))
 					val powerXZ = powerY * 0.8F
 					
 					val corner = 1 + ((abs(x) + abs(z)) / (3F * radXZ)).pow(2F)

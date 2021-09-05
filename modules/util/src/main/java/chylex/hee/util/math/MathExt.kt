@@ -48,15 +48,15 @@ fun lerp(from: Double, to: Double, progress: Double): Double {
 /**
  * Maps a range of values in [from] range to values in [to] range using linear interpolation.
  */
-fun remapRange(value: Float, from: ClosedFloatingPointRange<Float>, to: ClosedFloatingPointRange<Float>): Float {
-	val remappedBetween0And1 = (value - from.start) / (from.endInclusive - from.start)
-	return to.start + remappedBetween0And1 * (to.endInclusive - to.start)
+fun remapRange(value: Float, from: FloatRange, to: FloatRange): Float {
+	val remappedBetween0And1 = (value - from.start) / (from.end - from.start)
+	return to.start + remappedBetween0And1 * (to.end - to.start)
 }
 
 /**
  * Maps a range of values in [from] range to values in [to] range using linear interpolation.
  */
-fun remapRange(value: Double, from: ClosedFloatingPointRange<Double>, to: ClosedFloatingPointRange<Double>): Double {
-	val remappedBetween0And1 = (value - from.start) / (from.endInclusive - from.start)
-	return to.start + remappedBetween0And1 * (to.endInclusive - to.start)
+fun remapRange(value: Double, from: FloatRange, to: FloatRange): Double {
+	val remappedBetween0And1 = (value - from.start) / (from.end - from.start)
+	return to.start + remappedBetween0And1 * (to.end - to.start)
 }

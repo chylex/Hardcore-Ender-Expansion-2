@@ -3,6 +3,7 @@ package chylex.hee.game.mechanics.instability.dimension
 import chylex.hee.game.mechanics.instability.dimension.components.EndermiteSpawnLogic
 import chylex.hee.util.math.ceilToInt
 import chylex.hee.util.math.floorToInt
+import chylex.hee.util.math.range
 import chylex.hee.util.math.remapRange
 import chylex.hee.util.nbt.TagCompound
 import chylex.hee.util.nbt.use
@@ -26,7 +27,7 @@ open class DimensionInstabilityGlobal(private val world: World, private val ende
 		
 		private fun calculateActionMultiplier(ticksSinceEndermiteSpawn: Long): Float {
 			return if (ticksSinceEndermiteSpawn < 300L)
-				remapRange(ticksSinceEndermiteSpawn.toFloat(), (0F)..(300F), (0.2F)..(1F))
+				remapRange(ticksSinceEndermiteSpawn.toFloat(), range(0F, 300F), range(0.2F, 1F))
 			else
 				1F
 		}
