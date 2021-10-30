@@ -2,6 +2,7 @@ package chylex.hee.game.recipe.factories
 
 import chylex.hee.game.item.infusion.IInfusableItem
 import chylex.hee.game.item.infusion.InfusionTag
+import chylex.hee.game.item.interfaces.getHeeInterface
 import chylex.hee.game.recipe.factories.IngredientNoInfusions.Instance
 import chylex.hee.system.getIfExists
 import com.google.gson.JsonObject
@@ -18,7 +19,7 @@ import java.util.stream.Stream
 
 object IngredientNoInfusions : IIngredientSerializer<Instance> {
 	override fun write(buffer: PacketBuffer, ingredient: Instance) {
-		buffer.writeRegistryId(ingredient.item as Item)
+		buffer.writeRegistryId(ingredient.item)
 	}
 	
 	override fun parse(buffer: PacketBuffer): Instance {
@@ -37,14 +38,14 @@ object IngredientNoInfusions : IIngredientSerializer<Instance> {
 	}
 	
 	private fun construct(item: Item): Instance {
-		if (item !is IInfusableItem) {
+		if (item.getHeeInterface<IInfusableItem>() == null) {
 			throw JsonSyntaxException("Item '${item.registryName}' is not infusable")
 		}
 		
 		return Instance(ItemStack(item), item)
 	}
 	
-	class Instance(stack: ItemStack, val item: IInfusableItem) : Ingredient(Stream.of(SingleItemList(stack))) {
+	class Instance(stack: ItemStack, val item: Item) : Ingredient(Stream.of(SingleItemList(stack))) {
 		override fun test(ingredient: ItemStack?): Boolean {
 			return ingredient != null && ingredient.item === item && !InfusionTag.hasAny(ingredient)
 		}

@@ -1,10 +1,13 @@
 package chylex.hee.game.item
 
+import chylex.hee.HEE
+import chylex.hee.game.item.builder.HeeItemBuilder
+import chylex.hee.game.mechanics.trinket.ITrinketItem
 import chylex.hee.game.mechanics.trinket.TrinketHandler
 import chylex.hee.game.potion.brewing.PotionBrewing.INFINITE_DURATION_THRESHOLD
 import chylex.hee.game.potion.util.makeInstance
-import chylex.hee.system.MinecraftForgeEventBus
 import chylex.hee.util.forge.EventPriority
+import chylex.hee.util.forge.SubscribeAllEvents
 import chylex.hee.util.forge.SubscribeEvent
 import chylex.hee.util.math.ceilToInt
 import net.minecraft.entity.player.PlayerEntity
@@ -18,11 +21,16 @@ import net.minecraftforge.fml.LogicalSide
 import java.util.UUID
 import kotlin.math.min
 
-class ItemRingOfHunger(properties: Properties) : ItemAbstractTrinket(properties) {
+@SubscribeAllEvents(modid = HEE.ID)
+object ItemRingOfHunger : HeeItemBuilder() {
+	private val TRINKET = object : ITrinketItem {}
+	
 	private val foodUseTracker = mutableMapOf<UUID, Map<Effect, EffectInstance>>()
 	
 	init {
-		MinecraftForgeEventBus.register(this)
+		includeFrom(ItemAbstractTrinket(TRINKET))
+		
+		maxDamage = 120
 	}
 	
 	@SubscribeEvent
@@ -32,7 +40,7 @@ class ItemRingOfHunger(properties: Properties) : ItemAbstractTrinket(properties)
 			val foodStats = player.foodStats
 			
 			if (foodStats.needFood()) {
-				TrinketHandler.get(player).transformIfActive(this) {
+				TrinketHandler.get(player).transformIfActive(TRINKET) {
 					val chargePercentage = 1F - (it.damage.toFloat() / it.maxDamage)
 					val restoreHungerTo = min(20, (14.6F + (8.1F * chargePercentage)).ceilToInt())
 					
@@ -45,7 +53,7 @@ class ItemRingOfHunger(properties: Properties) : ItemAbstractTrinket(properties)
 						}
 						
 						if (it.damage >= it.maxDamage) {
-							TrinketHandler.playTrinketBreakFX(player, this)
+							TrinketHandler.playTrinketBreakFX(player, it.item)
 						}
 					}
 				}
@@ -66,7 +74,7 @@ class ItemRingOfHunger(properties: Properties) : ItemAbstractTrinket(properties)
 	fun onLivingUseItemFinish(e: LivingEntityUseItemEvent.Finish) {
 		val prevEffects = foodUseTracker.remove(e.entity.uniqueID) ?: return
 		
-		TrinketHandler.get(e.entity as PlayerEntity).transformIfActive(this) {
+		TrinketHandler.get(e.entity as PlayerEntity).transformIfActive(TRINKET) {
 			var restoredDurability = 0F
 			
 			for ((type, effect) in e.entityLiving.activePotionMap) {

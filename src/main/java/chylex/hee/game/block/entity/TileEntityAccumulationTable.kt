@@ -1,7 +1,8 @@
 package chylex.hee.game.block.entity
 
 import chylex.hee.game.block.entity.base.TileEntityBaseTable
-import chylex.hee.game.item.ItemAbstractEnergyUser
+import chylex.hee.game.item.interfaces.getHeeInterface
+import chylex.hee.game.mechanics.energy.IEnergyItem
 import chylex.hee.game.mechanics.energy.IEnergyQuantity.Units
 import chylex.hee.game.mechanics.table.interfaces.ITableContext
 import chylex.hee.game.mechanics.table.interfaces.ITableInputTransformer.Companion.CONSUME_STACK
@@ -41,7 +42,7 @@ class TileEntityAccumulationTable(type: TileEntityType<TileEntityAccumulationTab
 		val newProcesses = ArrayList<Process>(1)
 		
 		for (pedestal in unassignedPedestals) {
-			if (pedestal.itemInputCopy.item is ItemAbstractEnergyUser) {
+			if (pedestal.itemInputCopy.item.getHeeInterface<IEnergyItem>() != null) {
 				newProcesses.add(Process(this, pedestal.pos))
 			}
 		}
@@ -67,13 +68,12 @@ class TileEntityAccumulationTable(type: TileEntityType<TileEntityAccumulationTab
 		}
 		
 		override fun onWorkTick(context: ITableContext, input: ItemStack): State {
-			val item = input.item
-			
-			if (item !is ItemAbstractEnergyUser) {
+			val energy = input.item.getHeeInterface<IEnergyItem>()
+			if (energy == null) {
 				return Cancel
 			}
 			
-			if (item.hasMaximumEnergy(input)) {
+			if (energy.hasMaximumEnergy(input)) {
 				return Output(input)
 			}
 			
@@ -81,7 +81,7 @@ class TileEntityAccumulationTable(type: TileEntityType<TileEntityAccumulationTab
 				return Work.Blocked
 			}
 			
-			item.chargeEnergyUnit(input)
+			energy.chargeUnit(input)
 			return Work.Success
 		}
 	}

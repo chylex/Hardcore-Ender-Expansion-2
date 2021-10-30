@@ -1,6 +1,7 @@
 package chylex.hee.game.item.repair
 
 import chylex.hee.HEE
+import chylex.hee.game.item.interfaces.getHeeInterface
 import chylex.hee.util.forge.SubscribeAllEvents
 import chylex.hee.util.forge.SubscribeEvent
 import net.minecraft.util.text.StringTextComponent
@@ -16,9 +17,10 @@ object RepairHandler {
 		val ingredient = e.right
 		
 		val item = target.item
+		val repairBehavior = item.getHeeInterface() ?: item as? ICustomRepairBehavior
 		
-		if (item is ICustomRepairBehavior && item.getIsRepairable(target, ingredient)) {
-			val instance = RepairInstance(target, ingredient).apply(item::onRepairUpdate)
+		if (repairBehavior != null && item.getIsRepairable(target, ingredient)) {
+			val instance = RepairInstance(target, ingredient).apply(repairBehavior::onRepairUpdate)
 			
 			if (instance.repaired.isEmpty || (instance.experienceCost > MAX_EXPERIENCE_COST && !e.player.let { it != null && it.abilities.isCreativeMode })) {
 				e.isCanceled = true

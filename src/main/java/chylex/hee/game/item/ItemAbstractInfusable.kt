@@ -1,26 +1,17 @@
 package chylex.hee.game.item
 
+import chylex.hee.game.item.builder.HeeItemBuilder
+import chylex.hee.game.item.components.EnchantmentGlintComponent
+import chylex.hee.game.item.components.IItemGlintComponent
+import chylex.hee.game.item.components.ITooltipComponent
 import chylex.hee.game.item.infusion.IInfusableItem
-import chylex.hee.game.item.infusion.Infusion
 import chylex.hee.game.item.infusion.InfusionTag
-import chylex.hee.util.forge.Side
-import chylex.hee.util.forge.Sided
-import net.minecraft.client.util.ITooltipFlag
-import net.minecraft.item.Item
-import net.minecraft.item.ItemStack
-import net.minecraft.util.text.ITextComponent
 import net.minecraft.util.text.StringTextComponent
 import net.minecraft.util.text.TranslationTextComponent
-import net.minecraft.world.World
 
-abstract class ItemAbstractInfusable(properties: Properties) : HeeItem(properties), IInfusableItem {
-	companion object {
-		fun onCanApplyInfusion(item: Item, infusion: Infusion): Boolean {
-			return infusion.targetItems.contains(item)
-		}
-		
-		@Sided(Side.CLIENT)
-		fun onAddInformation(stack: ItemStack, lines: MutableList<ITextComponent>) {
+class ItemAbstractInfusable(infusable: IInfusableItem = IInfusableItem.Default) : HeeItemBuilder() {
+	init {
+		components.tooltip.add(ITooltipComponent { lines, stack, _, _ ->
 			if (lines.size > 1) { // first line is item name
 				lines.add(StringTextComponent(""))
 			}
@@ -35,25 +26,11 @@ abstract class ItemAbstractInfusable(properties: Properties) : HeeItem(propertie
 			else {
 				lines.add(TranslationTextComponent("hee.infusions.list.none"))
 			}
-		}
+		})
 		
-		fun onHasEffect(stack: ItemStack): Boolean {
-			return InfusionTag.hasAny(stack) // POLISH use a custom milder and slower texture
-		}
-	}
-	
-	override fun canApplyInfusion(infusion: Infusion): Boolean {
-		return onCanApplyInfusion(this, infusion)
-	}
-	
-	@Sided(Side.CLIENT)
-	override fun addInformation(stack: ItemStack, world: World?, lines: MutableList<ITextComponent>, flags: ITooltipFlag) {
-		super.addInformation(stack, world, lines, flags)
-		onAddInformation(stack, lines)
-	}
-	
-	@Sided(Side.CLIENT)
-	override fun hasEffect(stack: ItemStack): Boolean {
-		return super.hasEffect(stack) || onHasEffect(stack)
+		// POLISH use a custom milder and slower texture
+		components.glint = IItemGlintComponent.either(EnchantmentGlintComponent, InfusionTag::hasAny)
+		
+		interfaces[IInfusableItem::class.java] = infusable
 	}
 }

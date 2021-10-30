@@ -4,6 +4,7 @@ import chylex.hee.game.Resource
 import chylex.hee.game.container.slot.SlotTrinketItemInventory
 import chylex.hee.game.entity.player.PlayerCapabilityHandler
 import chylex.hee.game.entity.player.PlayerCapabilityHandler.IPlayerCapability
+import chylex.hee.game.item.interfaces.getHeeInterface
 import chylex.hee.game.mechanics.trinket.TrinketHandler.TrinketCapability.Provider
 import chylex.hee.network.client.PacketClientTrinketBreak
 import chylex.hee.util.forge.EventPriority
@@ -38,7 +39,7 @@ object TrinketHandler {
 	
 	fun get(player: PlayerEntity): ITrinketHandler {
 		val currentItem = getTrinketSlotItem(player)
-		val handlerProvider = currentItem.item as? ITrinketHandlerProvider
+		val handlerProvider = currentItem.item.getHeeInterface<ITrinketHandlerProvider>()
 		
 		return if (handlerProvider != null && handlerProvider.canPlaceIntoTrinketSlot(currentItem))
 			handlerProvider.createTrinketHandler(player)
@@ -66,24 +67,23 @@ object TrinketHandler {
 			return getTrinketSlotItem(player) === stack
 		}
 		
-		override fun isItemActive(item: ITrinketItem): Boolean {
-			return getTrinketIfActive(item) != null
+		override fun isTrinketActive(trinket: ITrinketItem): Boolean {
+			return getTrinketIfActive(trinket) != null
 		}
 		
-		override fun transformIfActive(item: ITrinketItem, transformer: (ItemStack) -> Unit) {
-			val trinketItem = getTrinketIfActive(item)
-			
+		override fun transformIfActive(trinket: ITrinketItem, transformer: (ItemStack) -> Unit) {
+			val trinketItem = getTrinketIfActive(trinket)
 			if (trinketItem != null) {
 				transformer(trinketItem) // no need to refresh the stack
 				
-				if (!item.canPlaceIntoTrinketSlot(trinketItem)) {
+				if (!trinket.canPlaceIntoTrinketSlot(trinketItem)) {
 					playTrinketBreakFX(player, trinketItem.item)
 				}
 			}
 		}
 		
-		private fun getTrinketIfActive(item: ITrinketItem): ItemStack? {
-			return getTrinketSlotItem(player).takeIf { it.item === item && item.canPlaceIntoTrinketSlot(it) }
+		private fun getTrinketIfActive(trinket: ITrinketItem): ItemStack? {
+			return getTrinketSlotItem(player).takeIf { it.item.getHeeInterface<ITrinketItem>() === trinket && trinket.canPlaceIntoTrinketSlot(it) }
 		}
 	}
 	

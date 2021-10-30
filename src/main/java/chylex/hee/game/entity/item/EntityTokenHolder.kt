@@ -9,6 +9,7 @@ import chylex.hee.game.entity.util.posVec
 import chylex.hee.game.fx.FxEntityData
 import chylex.hee.game.fx.FxEntityHandler
 import chylex.hee.game.fx.util.playClient
+import chylex.hee.game.item.ItemPortalToken
 import chylex.hee.game.item.ItemPortalToken.TokenType
 import chylex.hee.game.particle.ParticleSmokeCustom
 import chylex.hee.game.particle.spawner.ParticleSpawnerCustom
@@ -17,7 +18,6 @@ import chylex.hee.game.particle.spawner.properties.IShape.Point
 import chylex.hee.game.territory.TerritoryType
 import chylex.hee.game.territory.system.TerritoryInstance
 import chylex.hee.init.ModEntities
-import chylex.hee.init.ModItems
 import chylex.hee.init.ModSounds
 import chylex.hee.network.client.PacketClientFX
 import chylex.hee.network.client.PacketClientLaunchInstantly
@@ -146,8 +146,7 @@ class EntityTokenHolder(type: EntityType<EntityTokenHolder>, world: World) : Ent
 	}
 	
 	fun forceDropToken(motion: Vector3d) {
-		val droppedToken = territoryType?.let { entityDropItem(ModItems.PORTAL_TOKEN.forTerritory(tokenType, it), (height * 0.5F) - 0.25F) }
-		
+		val droppedToken = territoryType?.let { entityDropItem(ItemPortalToken.forTerritory(tokenType, it), (height * 0.5F) - 0.25F) }
 		if (droppedToken != null) {
 			droppedToken.setNoPickupDelay()
 			droppedToken.motion = motion

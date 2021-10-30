@@ -19,7 +19,6 @@ import chylex.hee.game.world.util.FLAG_SKIP_RENDER
 import chylex.hee.game.world.util.FLAG_SYNC_CLIENT
 import chylex.hee.game.world.util.isAnyPlayerWithinRange
 import chylex.hee.init.ModBlocks
-import chylex.hee.init.ModItems
 import chylex.hee.init.ModTileEntities
 import chylex.hee.util.math.square
 import chylex.hee.util.nbt.TagCompound
@@ -62,7 +61,7 @@ class TileEntityVoidPortalStorage(type: TileEntityType<TileEntityVoidPortalStora
 	
 	private class TerritoryInstanceFactory(override val territory: TerritoryType, private val stack: ItemStack) : ITerritoryInstanceFactory {
 		override fun create(entity: Entity): TerritoryInstance? {
-			return ModItems.PORTAL_TOKEN.getOrCreateTerritoryInstance(stack, entity)
+			return ItemPortalToken.getOrCreateTerritoryInstance(stack, entity)
 		}
 	}
 	

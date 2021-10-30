@@ -1,5 +1,6 @@
 package chylex.hee.game.item.properties
 
+import chylex.hee.util.color.RGB
 import chylex.hee.util.forge.Side
 import chylex.hee.util.forge.Sided
 import net.minecraft.client.renderer.color.IItemColor
@@ -9,6 +10,7 @@ import net.minecraft.item.ItemStack
 abstract class ItemTint : IItemColor {
 	protected companion object {
 		const val NO_TINT = -1
+		val WHITE = RGB(255u).i
 	}
 	
 	@Sided(Side.CLIENT)

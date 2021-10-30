@@ -4,7 +4,6 @@ import chylex.hee.game.Resource
 import chylex.hee.game.entity.player.PlayerCapabilityHandler
 import chylex.hee.game.entity.player.PlayerCapabilityHandler.IPlayerPersistentCapability
 import chylex.hee.game.item.ItemPortalToken
-import chylex.hee.game.item.util.nullIfEmpty
 import chylex.hee.game.territory.system.storage.PlayerTokenStorage.TokenStorageCapability.Provider
 import chylex.hee.init.ModItems
 import chylex.hee.util.forge.capability.CapabilityProvider
@@ -29,12 +28,13 @@ object PlayerTokenStorage {
 	fun forPlayer(player: PlayerEntity): ItemStackHandler {
 		return Handler.retrieve(player).also {
 			for (slot in 0 until it.slots) {
-				val stack = it.getStackInSlot(slot).nullIfEmpty ?: continue
-				val token = stack.item as? ItemPortalToken ?: continue
-				
-				token.updateCorruptedState(stack)
+				it.getStackInSlot(slot).takeIf(::isStackValid)?.let(ItemPortalToken::updateCorruptedState)
 			}
 		}
+	}
+	
+	private fun isStackValid(stack: ItemStack): Boolean {
+		return stack.item === ModItems.PORTAL_TOKEN
 	}
 	
 	// Capability handling
@@ -55,7 +55,7 @@ object PlayerTokenStorage {
 		}
 		
 		override fun isItemValid(slot: Int, stack: ItemStack): Boolean {
-			return stack.item === ModItems.PORTAL_TOKEN
+			return isStackValid(stack)
 		}
 		
 		override fun getSlotLimit(slot: Int): Int {

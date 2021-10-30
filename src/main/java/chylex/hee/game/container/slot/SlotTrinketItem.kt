@@ -1,6 +1,7 @@
 package chylex.hee.game.container.slot
 
 import chylex.hee.game.Resource
+import chylex.hee.game.item.interfaces.getHeeInterface
 import chylex.hee.game.mechanics.trinket.ITrinketItem
 import chylex.hee.init.ModAtlases
 import net.minecraft.item.ItemStack
@@ -18,7 +19,7 @@ open class SlotTrinketItem(trinketHandler: IItemHandler, slotIndex: Int, x: Int,
 	}
 	
 	override fun isItemValid(stack: ItemStack): Boolean {
-		return (stack.item as? ITrinketItem)?.canPlaceIntoTrinketSlot(stack) == true
+		return stack.item.getHeeInterface<ITrinketItem>()?.canPlaceIntoTrinketSlot(stack) == true
 	}
 	
 	override fun getSlotStackLimit(): Int {

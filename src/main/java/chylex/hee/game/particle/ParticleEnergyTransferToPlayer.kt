@@ -2,7 +2,8 @@ package chylex.hee.game.particle
 
 import chylex.hee.client.model.util.ModelHelper
 import chylex.hee.game.block.entity.TileEntityEnergyCluster
-import chylex.hee.game.item.ItemAbstractEnergyUser
+import chylex.hee.game.item.interfaces.getHeeInterface
+import chylex.hee.game.mechanics.energy.IEnergyItem
 import chylex.hee.game.particle.ParticleEnergyTransferToPlayer.TransferData
 import chylex.hee.game.particle.base.ParticleBaseEnergyTransfer
 import chylex.hee.game.particle.data.IParticleData
@@ -77,7 +78,7 @@ object ParticleEnergyTransferToPlayer : IParticleMaker.WithData<TransferData?>()
 				return
 			}
 			
-			newTargetPos = ModelHelper.getHandPosition(player, if (player.getHeldItem(MAIN_HAND).item is ItemAbstractEnergyUser) MAIN_HAND else OFF_HAND)
+			newTargetPos = ModelHelper.getHandPosition(player, if (player.getHeldItem(OFF_HAND).item.getHeeInterface<IEnergyItem>() != null) OFF_HAND else MAIN_HAND)
 			
 			setupMotion(speed + (age * 0.005))
 			super.tick()

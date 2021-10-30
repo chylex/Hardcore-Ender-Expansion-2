@@ -6,6 +6,7 @@ import chylex.hee.game.inventory.util.createSnapshot
 import chylex.hee.game.inventory.util.mergeStackProperly
 import chylex.hee.game.inventory.util.nonEmptySlots
 import chylex.hee.game.inventory.util.restoreSnapshot
+import chylex.hee.game.item.ItemExperienceBottleCustom
 import chylex.hee.game.item.util.copyIfNotEmpty
 import chylex.hee.game.item.util.isNotEmpty
 import chylex.hee.game.item.util.size
@@ -118,11 +119,9 @@ class PedestalInventoryHandler(private val updateCallback: (Boolean) -> Unit) : 
 	
 	private fun tryMergeIntoOutput(merging: ItemStack) {
 		if (merging.item === ModItems.EXPERIENCE_BOTTLE) {
-			val bottle = ModItems.EXPERIENCE_BOTTLE
-			
 			for ((_, stack) in itemOutput.nonEmptySlots) {
-				if (stack.item === bottle) {
-					while (bottle.mergeBottles(merging, stack) && bottle.isFullOfExperience(stack)) {
+				if (stack.item === ModItems.EXPERIENCE_BOTTLE) {
+					while (ItemExperienceBottleCustom.mergeBottles(merging, stack) && ItemExperienceBottleCustom.isFullOfExperience(stack)) {
 						val moved = stack.copy().also { it.size = 1 }
 						
 						stack.shrink(1)

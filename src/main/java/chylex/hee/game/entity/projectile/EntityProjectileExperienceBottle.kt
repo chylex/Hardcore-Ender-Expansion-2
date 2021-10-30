@@ -3,8 +3,8 @@ package chylex.hee.game.entity.projectile
 import chylex.hee.game.entity.IHeeEntityType
 import chylex.hee.game.entity.properties.EntitySize
 import chylex.hee.game.entity.properties.EntityTrackerInfo
+import chylex.hee.game.item.ItemExperienceBottleCustom
 import chylex.hee.init.ModEntities
-import chylex.hee.init.ModItems
 import chylex.hee.util.math.Pos
 import net.minecraft.entity.EntityType
 import net.minecraft.entity.LivingEntity
@@ -47,7 +47,7 @@ class EntityProjectileExperienceBottle(type: EntityType<out ExperienceBottleEnti
 		if (!world.isRemote) {
 			world.playEvent(2002, Pos(this), PotionUtils.getPotionColor(Potions.WATER))
 			
-			var experience = ModItems.EXPERIENCE_BOTTLE.getExperienceAmountPerItem(item)
+			var experience = ItemExperienceBottleCustom.getExperienceAmountPerItem(item)
 			
 			while (experience > 0) {
 				ExperienceOrbEntity.getXPSplit(experience).also {

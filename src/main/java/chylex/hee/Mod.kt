@@ -83,7 +83,7 @@ object Mod {
 			
 			for (block in BlockShulkerBoxOverride.ALL_BLOCKS) {
 				crashIfFalse(block.javaClass === BlockShulkerBoxOverride::class.java, "invalid Shulker Box block: ${block.javaClass}")
-				crashIfFalse(block.asItem().javaClass === ItemShulkerBoxOverride::class.java, "invalid Shulker Box item: ${block.asItem().javaClass}")
+				crashIfFalse(ItemShulkerBoxOverride.isItemValid(block.asItem()), "invalid Shulker Box item: ${block.asItem().javaClass}")
 			}
 		}
 		

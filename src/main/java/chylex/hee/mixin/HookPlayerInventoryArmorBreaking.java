@@ -1,6 +1,6 @@
 package chylex.hee.mixin;
 
-import chylex.hee.init.ModItems;
+import chylex.hee.game.item.ItemRingOfPreservation;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ItemStack;
@@ -17,6 +17,6 @@ public abstract class HookPlayerInventoryArmorBreaking {
 		at = @At(value = "INVOKE", target = "Lnet/minecraft/item/ItemStack;damageItem(ILnet/minecraft/entity/LivingEntity;Ljava/util/function/Consumer;)V")
 	)
 	public void damageItem(final ItemStack stack, final int amount, final LivingEntity entity, final Consumer<LivingEntity> onBroken) {
-		ModItems.RING_OF_PRESERVATION.handleArmorDamage(entity, stack, amount, onBroken);
+		ItemRingOfPreservation.handleArmorDamage(entity, stack, amount, onBroken);
 	}
 }

@@ -1,20 +1,12 @@
 package chylex.hee.game.item
 
 import chylex.hee.game.entity.item.EntityItemIgneousRock
-import net.minecraft.entity.Entity
-import net.minecraft.item.ItemStack
-import net.minecraft.world.World
+import chylex.hee.game.item.builder.HeeItemBuilder
+import chylex.hee.game.item.components.IItemEntityComponent
 
-class ItemIgneousRock(properties: Properties) : HeeItem(properties) {
-	override fun getBurnTime(stack: ItemStack): Int {
-		return 1300
-	}
-	
-	override fun hasCustomEntity(stack: ItemStack): Boolean {
-		return true
-	}
-	
-	override fun createEntity(world: World, replacee: Entity, stack: ItemStack): Entity {
-		return EntityItemIgneousRock(world, stack, replacee)
+object ItemIgneousRock : HeeItemBuilder() {
+	init {
+		components.itemEntity = IItemEntityComponent.fromConstructor(::EntityItemIgneousRock)
+		components.furnaceBurnTime = 1300
 	}
 }

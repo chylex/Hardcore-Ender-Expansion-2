@@ -7,9 +7,9 @@ import chylex.hee.game.command.util.CommandExecutionFunctionCtx
 import chylex.hee.game.command.util.executes
 import chylex.hee.game.command.util.getEnum
 import chylex.hee.game.command.util.simpleCommand
+import chylex.hee.game.item.ItemPortalToken
 import chylex.hee.game.item.ItemPortalToken.TokenType
 import chylex.hee.game.territory.TerritoryType
-import chylex.hee.init.ModItems
 import com.mojang.brigadier.builder.ArgumentBuilder
 import com.mojang.brigadier.context.CommandContext
 import net.minecraft.command.CommandSource
@@ -38,7 +38,7 @@ object CommandServerPortalToken : ICommand, CommandExecutionFunctionCtx<Boolean>
 		val type = if (hasType) ctx.getEnum("type") else TokenType.NORMAL
 		
 		with(ctx.source) {
-			asPlayer().addItemStackToInventory(ModItems.PORTAL_TOKEN.forTerritory(type, territory))
+			asPlayer().addItemStackToInventory(ItemPortalToken.forTerritory(type, territory))
 			sendFeedback(message("success", TranslationTextComponent(territory.translationKey)), true)
 		}
 	}

@@ -2,8 +2,8 @@ package chylex.hee.network.server
 
 import chylex.hee.game.container.slot.SlotTrinketItemInventory
 import chylex.hee.game.inventory.util.getStack
-import chylex.hee.game.item.ItemShulkerBoxOverride
-import chylex.hee.game.item.ItemTrinketPouch
+import chylex.hee.game.item.container.IItemWithContainer
+import chylex.hee.game.item.interfaces.getHeeInterface
 import chylex.hee.game.mechanics.trinket.TrinketHandler
 import chylex.hee.init.ModContainers
 import chylex.hee.network.BaseServerPacket
@@ -34,9 +34,9 @@ class PacketServerOpenInventoryItem() : BaseServerPacket() {
 		else
 			player.inventory.getStack(slot)
 		
-		when (stack.item) {
-			is ItemTrinketPouch       -> ModContainers.open(player, ItemTrinketPouch.ContainerProvider(stack, slot), slot)
-			is ItemShulkerBoxOverride -> ModContainers.open(player, ItemShulkerBoxOverride.ContainerProvider(stack, slot), slot)
+		val open = stack.item.getHeeInterface<IItemWithContainer>()
+		if (open != null) {
+			ModContainers.open(player, open.createContainerProvider(stack, slot), slot)
 		}
 	}
 }

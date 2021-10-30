@@ -1,6 +1,6 @@
 package chylex.hee.mixin;
 
-import chylex.hee.init.ModItems;
+import chylex.hee.game.item.ItemRingOfPreservation;
 import net.minecraft.enchantment.ThornsEnchantment;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.ItemStack;
@@ -18,6 +18,6 @@ public abstract class HookThornsArmorBreaking {
 		require = 1
 	)
 	public void damageItem(final ItemStack stack, final int amount, final LivingEntity entity, final Consumer<LivingEntity> onBroken) {
-		ModItems.RING_OF_PRESERVATION.handleArmorDamage(entity, stack, amount, onBroken);
+		ItemRingOfPreservation.handleArmorDamage(entity, stack, amount, onBroken);
 	}
 }

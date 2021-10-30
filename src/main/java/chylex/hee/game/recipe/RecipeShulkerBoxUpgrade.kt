@@ -17,7 +17,7 @@ sealed class RecipeShulkerBoxUpgrade(private val fromSize: BoxSize, private val 
 	
 	override fun matches(inv: CraftingInventory, world: World): Boolean {
 		return (
-			getStackInRowAndColumn(inv, 1, 1).let { it.item is ItemShulkerBoxOverride && ItemShulkerBoxOverride.getBoxSize(it) == fromSize } &&
+			getStackInRowAndColumn(inv, 1, 1).let { ItemShulkerBoxOverride.isItemValid(it.item) && ItemShulkerBoxOverride.getBoxSize(it) == fromSize } &&
 			
 			getStackInRowAndColumn(inv, 0, 0).item === ModItems.ANCIENT_DUST &&
 			getStackInRowAndColumn(inv, 0, 1).item === Items.SHULKER_SHELL &&

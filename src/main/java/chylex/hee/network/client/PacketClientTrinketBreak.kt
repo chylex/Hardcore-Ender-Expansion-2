@@ -1,6 +1,7 @@
 package chylex.hee.network.client
 
 import chylex.hee.client.util.MC
+import chylex.hee.game.item.interfaces.getHeeInterface
 import chylex.hee.game.mechanics.trinket.ITrinketItem
 import chylex.hee.network.BaseClientPacket
 import chylex.hee.util.buffer.use
@@ -38,7 +39,7 @@ class PacketClientTrinketBreak() : BaseClientPacket() {
 				MC.gameRenderer.displayItemActivation(ItemStack(item))
 			}
 			
-			(item as? ITrinketItem)?.spawnClientTrinketBreakFX(it)
+			item.getHeeInterface<ITrinketItem>()?.spawnClientTrinketBreakFX(it)
 		}
 	}
 }

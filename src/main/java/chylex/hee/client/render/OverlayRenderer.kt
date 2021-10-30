@@ -11,13 +11,13 @@ import chylex.hee.game.Resource
 import chylex.hee.game.block.BlockAbstractPortal
 import chylex.hee.game.block.entity.TileEntityEnergyCluster
 import chylex.hee.game.block.properties.Materials
+import chylex.hee.game.mechanics.energy.IClusterOracleItem
 import chylex.hee.game.mechanics.energy.IEnergyQuantity
 import chylex.hee.game.mechanics.energy.IEnergyQuantity.Companion.MAX_POSSIBLE_VALUE
 import chylex.hee.game.mechanics.energy.IEnergyQuantity.Companion.displayString
 import chylex.hee.game.world.util.getBlock
 import chylex.hee.game.world.util.getTile
 import chylex.hee.init.ModBlocks
-import chylex.hee.init.ModItems
 import chylex.hee.util.color.IntColor
 import chylex.hee.util.color.RGB
 import chylex.hee.util.color.RGBA
@@ -118,7 +118,7 @@ object OverlayRenderer {
 					quantity.displayString
 			}
 			
-			val isIgnored = MC.player?.let { player -> ModItems.ENERGY_ORACLE.isClusterIgnored(player, it.pos) } == true
+			val isIgnored = MC.player?.let { player -> IClusterOracleItem.isPositionIgnored(player, it.pos) } == true
 			val firstLine = if (isIgnored) -1 else 0
 			
 			val health = it.currentHealth

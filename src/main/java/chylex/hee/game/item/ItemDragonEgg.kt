@@ -1,18 +1,17 @@
 package chylex.hee.game.item
 
+import chylex.hee.client.text.LocalizationStrategy
 import chylex.hee.game.entity.item.EntityItemNoBob
+import chylex.hee.game.item.builder.HeeBlockItemBuilder
+import chylex.hee.game.item.components.IItemEntityComponent
+import chylex.hee.game.item.properties.ItemModel
 import net.minecraft.block.Block
-import net.minecraft.entity.Entity
-import net.minecraft.item.BlockItem
-import net.minecraft.item.ItemStack
-import net.minecraft.world.World
 
-class ItemDragonEgg(block: Block, properties: Properties) : BlockItem(block, properties) {
-	override fun hasCustomEntity(stack: ItemStack): Boolean {
-		return true
-	}
-	
-	override fun createEntity(world: World, replacee: Entity, stack: ItemStack): Entity {
-		return EntityItemNoBob(world, stack, replacee)
+class ItemDragonEgg(block: Block) : HeeBlockItemBuilder(block) {
+	init {
+		localization = LocalizationStrategy.None
+		model = ItemModel.Manual
+		
+		components.itemEntity = IItemEntityComponent.fromConstructor(::EntityItemNoBob)
 	}
 }

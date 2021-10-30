@@ -139,11 +139,11 @@ import chylex.hee.game.block.properties.BlockBuilders.buildWhitebarkPlanks
 import chylex.hee.game.block.properties.BlockBuilders.buildWhitebarkSapling
 import chylex.hee.game.block.properties.CustomSkull
 import chylex.hee.game.item.ItemAncientCobweb
-import chylex.hee.game.item.ItemBlockFuel
 import chylex.hee.game.item.ItemDeathFlower
 import chylex.hee.game.item.ItemDragonEgg
 import chylex.hee.game.item.ItemInfusedTNT
 import chylex.hee.game.item.ItemShulkerBoxOverride
+import chylex.hee.game.item.builder.HeeBlockItemBuilder
 import chylex.hee.game.world.generation.feature.basic.AutumnTreeGenerator
 import chylex.hee.init.ModCreativeTabs.OrderedCreativeTab
 import chylex.hee.system.getRegistryEntries
@@ -379,17 +379,14 @@ object ModBlocks {
 	
 	// Registry
 	
-	private val itemBlockBaseProps
-		get() = Item.Properties().group(ModCreativeTabs.main)
+	private val itemBlockDefaultProps: Item.Properties.() -> Item.Properties = { group(ModCreativeTabs.main) }
+	private val itemBlockPropsHidden: Item.Properties.() -> Item.Properties = { this }
 	
-	private val itemBlockDefaultProps = itemBlockBaseProps
-	private val itemBlockPropsHidden = Item.Properties()
+	private val basicItemBlock = { block: Block -> BlockItem(block, itemBlockDefaultProps(Item.Properties())) }
+	private val hiddenItemBlock = { block: Block -> BlockItem(block, itemBlockPropsHidden(Item.Properties())) }
 	
-	private val basicItemBlock = { block: Block -> BlockItem(block, itemBlockDefaultProps) }
-	private val hiddenItemBlock = { block: Block -> BlockItem(block, itemBlockPropsHidden) }
-	
-	private fun fuelItemBlock(burnTicks: Int): (Block) -> BlockItem {
-		return { block -> ItemBlockFuel(block, itemBlockDefaultProps, burnTicks) }
+	private fun fuelItemBlock(burnTicks: Int): (Block) -> BlockItem = {
+		HeeBlockItemBuilder(it) { components.furnaceBurnTime = burnTicks }.build { group(ModCreativeTabs.main) }
 	}
 	
 	@SubscribeEvent
@@ -479,9 +476,9 @@ object ModBlocks {
 			register(CAULDRON_PURIFIED_ENDER_GOO)
 			register(CAULDRON_DRAGONS_BREATH)
 			
-			register(JAR_O_DUST with { BlockItem(it, itemBlockBaseProps.maxStackSize(1).setISTER { ModRendering.RENDER_ITEM_JAR_O_DUST }) })
-			register(DARK_CHEST with { BlockItem(it, itemBlockBaseProps.setISTER { ModRendering.RENDER_ITEM_DARK_CHEST }) })
-			register(LOOT_CHEST with { BlockItem(it, itemBlockBaseProps.setISTER { ModRendering.RENDER_ITEM_LOOT_CHEST }) })
+			register(JAR_O_DUST with { BlockItem(it, itemBlockDefaultProps(Item.Properties()).maxStackSize(1).setISTER { ModRendering.RENDER_ITEM_JAR_O_DUST }) })
+			register(DARK_CHEST with { BlockItem(it, itemBlockDefaultProps(Item.Properties()).setISTER { ModRendering.RENDER_ITEM_DARK_CHEST }) })
+			register(LOOT_CHEST with { BlockItem(it, itemBlockDefaultProps(Item.Properties()).setISTER { ModRendering.RENDER_ITEM_LOOT_CHEST }) })
 			
 			register(PUZZLE_WALL with basicItemBlock)
 			register(PUZZLE_PLAIN with basicItemBlock)
@@ -492,7 +489,7 @@ object ModBlocks {
 			register(PUZZLE_REDIRECT_4 with basicItemBlock)
 			register(PUZZLE_TELEPORT with basicItemBlock)
 			
-			register(INFUSED_TNT with ItemInfusedTNT(INFUSED_TNT, itemBlockPropsHidden))
+			register(INFUSED_TNT with { ItemInfusedTNT(it).build() })
 			register(IGNEOUS_PLATE with basicItemBlock)
 			register(ENHANCED_BREWING_STAND with basicItemBlock)
 			register(EXPERIENCE_GATE with basicItemBlock)
@@ -516,14 +513,14 @@ object ModBlocks {
 			register(POTTED_WHITEBARK_SAPLING_AUTUMN_ORANGE)
 			register(POTTED_WHITEBARK_SAPLING_AUTUMN_YELLOWGREEN)
 			
-			register(DEATH_FLOWER_DECAYING with { ItemDeathFlower(it, itemBlockDefaultProps) })
+			register(DEATH_FLOWER_DECAYING with { ItemDeathFlower(it).build(itemBlockDefaultProps) })
 			register(DEATH_FLOWER_HEALED with basicItemBlock)
 			register(DEATH_FLOWER_WITHERED with basicItemBlock)
 			register(POTTED_DEATH_FLOWER_DECAYING)
 			register(POTTED_DEATH_FLOWER_HEALED)
 			register(POTTED_DEATH_FLOWER_WITHERED)
 			
-			register(ANCIENT_COBWEB with { ItemAncientCobweb(it, itemBlockDefaultProps) })
+			register(ANCIENT_COBWEB with { ItemAncientCobweb(it).build(itemBlockDefaultProps) })
 			register(DRY_VINES with basicItemBlock)
 			register(ENDERMAN_HEAD)
 			
@@ -562,13 +559,13 @@ object ModBlocks {
 		// vanilla modifications
 		
 		with(e.registry) {
-			register(BlockEndPortalOverride(buildEndPortalOverride).apply { override(Blocks.END_PORTAL) { null } })
-			register(BlockBrewingStandCustom.Override(buildBrewingStand).apply { override(Blocks.BREWING_STAND) { BlockItem(it, Item.Properties().group(ItemGroup.BREWING)) } })
-			register(BlockDragonEggOverride(buildDragonEgg).apply { override(Blocks.DRAGON_EGG) { ItemDragonEgg(it, itemBlockDefaultProps) } })
+			register(BlockEndPortalOverride(buildEndPortalOverride).override(Blocks.END_PORTAL) { null })
+			register(BlockBrewingStandCustom.Override(buildBrewingStand).override(Blocks.BREWING_STAND) { BlockItem(it, Item.Properties().group(ItemGroup.BREWING)) })
+			register(BlockDragonEggOverride(buildDragonEgg).override(Blocks.DRAGON_EGG) { ItemDragonEgg(it).build(itemBlockDefaultProps) })
 			
 			for (block in BlockShulkerBoxOverride.ALL_BLOCKS) {
-				register(BlockShulkerBoxOverride(AbstractBlock.Properties.from(block), block.color).apply {
-					override(block) { ItemShulkerBoxOverride(it, Item.Properties().maxStackSize(1).group(ItemGroup.DECORATIONS)) }
+				register(BlockShulkerBoxOverride(AbstractBlock.Properties.from(block), block.color).override(block) {
+					ItemShulkerBoxOverride(it).build { group(ItemGroup.DECORATIONS) }
 				})
 			}
 		}
@@ -589,7 +586,7 @@ object ModBlocks {
 	private val temporaryItemBlocks = mutableListOf<BlockItem>()
 	private val overrideBlocks = mutableListOf<Block>()
 	
-	private inline fun Block.override(vanillaBlock: Block, itemBlockConstructor: ((Block) -> BlockItem?)) {
+	private inline fun Block.override(vanillaBlock: Block, itemBlockConstructor: ((Block) -> BlockItem?)) = apply {
 		this.useVanillaName(vanillaBlock)
 		overrideBlocks.add(this)
 		itemBlockConstructor(this)?.let { with(it); ModItems.registerOverride(it) }

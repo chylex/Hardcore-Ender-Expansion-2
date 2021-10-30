@@ -15,6 +15,7 @@ import chylex.hee.game.fx.FxEntityData
 import chylex.hee.game.fx.FxEntityHandler
 import chylex.hee.game.fx.util.playClient
 import chylex.hee.game.inventory.util.setStack
+import chylex.hee.game.item.ItemFlintAndInfernium
 import chylex.hee.game.item.util.isNotEmpty
 import chylex.hee.game.item.util.size
 import chylex.hee.game.particle.ParticleFlameCustom
@@ -39,7 +40,6 @@ import chylex.hee.game.world.util.setBlock
 import chylex.hee.game.world.util.setState
 import chylex.hee.init.ModBlocks
 import chylex.hee.init.ModEntities
-import chylex.hee.init.ModItems
 import chylex.hee.init.ModSounds
 import chylex.hee.network.client.PacketClientFX
 import chylex.hee.system.heeTag
@@ -365,7 +365,7 @@ class EntityItemIgneousRock : EntityItemNoBob {
 				
 				Blocks.TNT,
 				ModBlocks.INFUSED_TNT -> {
-					ModItems.FLINT_AND_INFERNIUM.igniteTNT(world, pos, null, ignoreTrap = true)
+					ItemFlintAndInfernium.igniteTNT(world, pos, null, ignoreTrap = true)
 					return
 				}
 				

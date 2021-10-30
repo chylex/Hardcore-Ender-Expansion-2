@@ -69,7 +69,7 @@ class TileEntityExperienceTable(type: TileEntityType<TileEntityExperienceTable>)
 			return Process(this, pedestalPos, experience = (0 until stack.size).sumOf { 3 + rand.nextInt(5) + rand.nextInt(5) }, updates = 1, usesBottle = false)
 		}
 		else if (item === ModItems.EXPERIENCE_BOTTLE) {
-			return Process(this, pedestalPos, experience = stack.size * ModItems.EXPERIENCE_BOTTLE.getExperienceAmountPerItem(stack), updates = 0, usesBottle = false)
+			return Process(this, pedestalPos, experience = stack.size * ItemExperienceBottleCustom.getExperienceAmountPerItem(stack), updates = 0, usesBottle = false)
 		}
 		else if (item === Items.ENCHANTED_BOOK) {
 			val enchantments = EnchantmentHelper.getEnchantments(stack)
@@ -137,7 +137,7 @@ class TileEntityExperienceTable(type: TileEntityType<TileEntityExperienceTable>)
 					return Work.Blocked
 				}
 				
-				return Output(ModItems.EXPERIENCE_BOTTLE.createBottles(experience).toTypedArray())
+				return Output(ItemExperienceBottleCustom.createBottles(experience).toTypedArray())
 			}
 			
 			if (!context.requestUseResources()) {

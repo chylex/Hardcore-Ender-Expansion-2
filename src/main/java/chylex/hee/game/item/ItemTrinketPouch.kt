@@ -1,5 +1,6 @@
 package chylex.hee.game.item
 
+import chylex.hee.HEE
 import chylex.hee.client.util.MC
 import chylex.hee.game.container.ContainerTrinketPouch
 import chylex.hee.game.container.slot.SlotTrinketItemInventory
@@ -8,10 +9,14 @@ import chylex.hee.game.inventory.util.allSlots
 import chylex.hee.game.inventory.util.getStack
 import chylex.hee.game.inventory.util.nonEmptySlots
 import chylex.hee.game.inventory.util.setStack
-import chylex.hee.game.item.infusion.IInfusableItem
-import chylex.hee.game.item.infusion.Infusion
+import chylex.hee.game.item.builder.HeeItemBuilder
+import chylex.hee.game.item.components.IReequipAnimationComponent
+import chylex.hee.game.item.components.ITooltipComponent
+import chylex.hee.game.item.components.IUseItemOnAirComponent
+import chylex.hee.game.item.container.IItemWithContainer
 import chylex.hee.game.item.infusion.Infusion.EXPANSION
 import chylex.hee.game.item.infusion.InfusionTag
+import chylex.hee.game.item.interfaces.getHeeInterface
 import chylex.hee.game.item.util.isNotEmpty
 import chylex.hee.game.mechanics.trinket.ITrinketHandler
 import chylex.hee.game.mechanics.trinket.ITrinketHandlerProvider
@@ -19,7 +24,6 @@ import chylex.hee.game.mechanics.trinket.ITrinketItem
 import chylex.hee.game.mechanics.trinket.TrinketHandler
 import chylex.hee.init.ModContainers
 import chylex.hee.network.server.PacketServerOpenInventoryItem
-import chylex.hee.system.MinecraftForgeEventBus
 import chylex.hee.system.heeTag
 import chylex.hee.system.heeTagOrNull
 import chylex.hee.util.collection.any
@@ -27,13 +31,13 @@ import chylex.hee.util.collection.find
 import chylex.hee.util.forge.EventPriority
 import chylex.hee.util.forge.Side
 import chylex.hee.util.forge.Sided
+import chylex.hee.util.forge.SubscribeAllEvents
 import chylex.hee.util.forge.SubscribeEvent
 import chylex.hee.util.nbt.NBTItemStackList
 import chylex.hee.util.nbt.getListOfItemStacks
 import chylex.hee.util.nbt.putList
 import net.minecraft.client.gui.screen.Screen
 import net.minecraft.client.gui.screen.inventory.InventoryScreen
-import net.minecraft.client.util.ITooltipFlag
 import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.entity.player.PlayerInventory
 import net.minecraft.inventory.Inventory
@@ -49,25 +53,84 @@ import net.minecraft.util.text.TranslationTextComponent
 import net.minecraft.world.World
 import net.minecraftforge.client.event.GuiScreenEvent
 
-class ItemTrinketPouch(properties: Properties) : ItemAbstractTrinket(properties), ITrinketHandlerProvider, IInfusableItem {
-	private companion object {
-		private const val CONTENTS_TAG = "Contents"
-		private const val MOD_COUNTER_TAG = "Version"
+@SubscribeAllEvents(modid = HEE.ID)
+object ItemTrinketPouch : HeeItemBuilder() {
+	private const val CONTENTS_TAG = "Contents"
+	private const val MOD_COUNTER_TAG = "Version"
+	
+	private const val LANG_TOOLTIP_OPEN = "item.hee.trinket_pouch.tooltip"
+	
+	private val TRINKET = object : ITrinketItem, ITrinketHandlerProvider {
+		override fun createTrinketHandler(player: PlayerEntity): ITrinketHandler {
+			return (player.openContainer as? ContainerTrinketPouch)?.containerInventory ?: Inv(player, SlotTrinketItemInventory.INTERNAL_INDEX) // helpfully updates the opened GUI too
+		}
+	}
+	
+	private val CONTAINER = IItemWithContainer(::ContainerProvider)
+	
+	init {
+		includeFrom(ItemAbstractTrinket(TRINKET))
+		includeFrom(ItemAbstractInfusable())
 		
-		private const val LANG_TOOLTIP_OPEN = "item.hee.trinket_pouch.tooltip"
+		localizationExtra[LANG_TOOLTIP_OPEN] = "§7Right-click to open"
 		
-		private fun isStackValid(stack: ItemStack): Boolean {
-			return stack.item is ItemTrinketPouch
+		maxStackSize = 1
+		
+		components.useOnAir = object : IUseItemOnAirComponent {
+			override fun use(world: World, player: PlayerEntity, hand: Hand, heldItem: ItemStack): ActionResult<ItemStack> {
+				val slot = player.inventory.nonEmptySlots.find { it.stack === heldItem }
+				if (slot == null) {
+					return ActionResult(PASS, heldItem)
+				}
+				
+				ModContainers.open(player, ContainerProvider(heldItem, slot.slot), slot.slot)
+				return ActionResult(SUCCESS, heldItem)
+			}
 		}
 		
-		private fun getInventoryStack(player: PlayerEntity, slot: Int) = when (slot) {
-			SlotTrinketItemInventory.INTERNAL_INDEX -> TrinketHandler.getTrinketSlotItem(player)
-			else                                    -> player.inventory.getStack(slot)
-		}
+		components.tooltip.add(0, ITooltipComponent { lines, _, _, _ ->
+			if (MC.currentScreen is InventoryScreen) {
+				lines.add(TranslationTextComponent(LANG_TOOLTIP_OPEN))
+			}
+		})
 		
-		private fun getSlotCount(stack: ItemStack) = when {
-			InfusionTag.getList(stack).has(EXPANSION) -> 5
-			else                                      -> 3
+		components.reequipAnimation = IReequipAnimationComponent.AnimateIfSlotChanged
+		
+		interfaces[ITrinketHandlerProvider::class.java] = TRINKET
+		interfaces[IItemWithContainer::class.java] = CONTAINER
+	}
+	
+	private fun isStackValid(stack: ItemStack): Boolean {
+		return stack.item.getHeeInterface<IItemWithContainer>() === CONTAINER
+	}
+	
+	private fun getInventoryStack(player: PlayerEntity, slot: Int) = when (slot) {
+		SlotTrinketItemInventory.INTERNAL_INDEX -> TrinketHandler.getTrinketSlotItem(player)
+		else                                    -> player.inventory.getStack(slot)
+	}
+	
+	private fun getSlotCount(stack: ItemStack) = when {
+		InfusionTag.getList(stack).has(EXPANSION) -> 5
+		else                                      -> 3
+	}
+	
+	@Sided(Side.CLIENT)
+	@SubscribeEvent(EventPriority.LOWEST)
+	fun onMouseInputPre(e: GuiScreenEvent.MouseClickedEvent.Pre) {
+		val gui = e.gui
+		
+		if (gui is InventoryScreen && e.button == 1 && !Screen.hasShiftDown()) {
+			val hoveredSlot = gui.slotUnderMouse
+			
+			if (hoveredSlot != null && isStackValid(hoveredSlot.stack)) {
+				val slotIndex = when (hoveredSlot) {
+					is SlotTrinketItemInventory -> SlotTrinketItemInventory.INTERNAL_INDEX
+					else                        -> hoveredSlot.slotIndex
+				}
+				
+				PacketServerOpenInventoryItem(slotIndex).sendToServer()
+				e.isCanceled = true
+			}
 		}
 	}
 	
@@ -156,99 +219,27 @@ class ItemTrinketPouch(properties: Properties) : ItemAbstractTrinket(properties)
 			return getPouchIfValid() != null && nonEmptySlots.any { it.stack === stack }
 		}
 		
-		override fun isItemActive(item: ITrinketItem): Boolean {
-			return getTrinketIfActive(item) != null
+		override fun isTrinketActive(trinket: ITrinketItem): Boolean {
+			return getTrinketIfActive(trinket) != null
 		}
 		
-		override fun transformIfActive(item: ITrinketItem, transformer: (ItemStack) -> Unit) {
-			val trinketItem = getTrinketIfActive(item)
-			
+		override fun transformIfActive(trinket: ITrinketItem, transformer: (ItemStack) -> Unit) {
+			val trinketItem = getTrinketIfActive(trinket)
 			if (trinketItem != null) {
 				transformer(trinketItem)
 				tryUpdatePlayerItem(updateModCounter = true)
 				
-				if (!item.canPlaceIntoTrinketSlot(trinketItem)) {
+				if (!trinket.canPlaceIntoTrinketSlot(trinketItem)) {
 					TrinketHandler.playTrinketBreakFX(player, trinketItem.item)
 				}
 			}
 		}
 		
-		private fun getTrinketIfActive(item: ITrinketItem): ItemStack? {
+		private fun getTrinketIfActive(trinket: ITrinketItem): ItemStack? {
 			return if (getPouchIfValid() == null)
 				null
 			else
-				return nonEmptySlots.find { (_, stack) -> stack.item === item && item.canPlaceIntoTrinketSlot(stack) }?.stack
-		}
-	}
-	
-	// Instance
-	
-	override val localizationExtra
-		get() = mapOf(LANG_TOOLTIP_OPEN to "§7Right-click to open")
-	
-	init {
-		MinecraftForgeEventBus.register(this)
-	}
-	
-	override fun createTrinketHandler(player: PlayerEntity): ITrinketHandler {
-		return (player.openContainer as? ContainerTrinketPouch)?.containerInventory ?: Inv(player, SlotTrinketItemInventory.INTERNAL_INDEX) // helpfully updates the opened GUI too
-	}
-	
-	override fun canApplyInfusion(infusion: Infusion): Boolean {
-		return ItemAbstractInfusable.onCanApplyInfusion(this, infusion)
-	}
-	
-	override fun onItemRightClick(world: World, player: PlayerEntity, hand: Hand): ActionResult<ItemStack> {
-		val stack = player.getHeldItem(hand)
-		val slot = player.inventory.nonEmptySlots.find { it.stack === stack }
-		
-		if (slot == null) {
-			return ActionResult(PASS, stack)
-		}
-		
-		ModContainers.open(player, ContainerProvider(stack, slot.slot), slot.slot)
-		return ActionResult(SUCCESS, stack)
-	}
-	
-	// Client side
-	
-	override fun shouldCauseReequipAnimation(oldStack: ItemStack, newStack: ItemStack, slotChanged: Boolean): Boolean {
-		return slotChanged && super.shouldCauseReequipAnimation(oldStack, newStack, slotChanged)
-	}
-	
-	@Sided(Side.CLIENT)
-	override fun addInformation(stack: ItemStack, world: World?, lines: MutableList<ITextComponent>, flags: ITooltipFlag) {
-		super.addInformation(stack, world, lines, flags)
-		
-		if (MC.currentScreen is InventoryScreen) {
-			lines.add(TranslationTextComponent(LANG_TOOLTIP_OPEN))
-		}
-		
-		ItemAbstractInfusable.onAddInformation(stack, lines)
-	}
-	
-	@Sided(Side.CLIENT)
-	override fun hasEffect(stack: ItemStack): Boolean {
-		return super.hasEffect(stack) || ItemAbstractInfusable.onHasEffect(stack)
-	}
-	
-	@Sided(Side.CLIENT)
-	@SubscribeEvent(EventPriority.LOWEST)
-	fun onMouseInputPre(e: GuiScreenEvent.MouseClickedEvent.Pre) {
-		val gui = e.gui
-		
-		if (gui is InventoryScreen && e.button == 1 && !Screen.hasShiftDown()) {
-			val hoveredSlot = gui.slotUnderMouse
-			
-			if (hoveredSlot != null && hoveredSlot.stack.item === this) {
-				val slotIndex = when (hoveredSlot) {
-					is SlotTrinketItemInventory -> SlotTrinketItemInventory.INTERNAL_INDEX
-					else                        -> hoveredSlot.slotIndex
-				}
-				
-				PacketServerOpenInventoryItem(slotIndex).sendToServer()
-				e.isCanceled = true
-			}
+				return nonEmptySlots.find { (_, stack) -> stack.item.getHeeInterface<ITrinketItem>() === trinket && trinket.canPlaceIntoTrinketSlot(stack) }?.stack
 		}
 	}
 }

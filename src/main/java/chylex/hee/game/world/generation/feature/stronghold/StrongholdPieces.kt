@@ -1,6 +1,7 @@
 package chylex.hee.game.world.generation.feature.stronghold
 
 import chylex.hee.game.Resource
+import chylex.hee.game.item.ItemEnergyOracle
 import chylex.hee.game.mechanics.energy.IEnergyQuantity.Units
 import chylex.hee.game.world.generation.IBlockPicker.Weighted.Companion.Weighted
 import chylex.hee.game.world.generation.feature.stronghold.piece.StrongholdAbstractPiece
@@ -379,7 +380,7 @@ object StrongholdPieces : IStructureDescription {
 		val pickedRooms = mutableListOf<StrongholdRoom_Relic>()
 		
 		for (relicStack in arrayOf(
-			ItemStack(ModItems.ENERGY_ORACLE).also { ModItems.ENERGY_ORACLE.setEnergyChargeLevel(it, Units(30)) },
+			ItemStack(ModItems.ENERGY_ORACLE).also { ItemEnergyOracle.ENERGY.setChargeLevel(it, Units(30)) },
 			ItemStack(ModItems.AMULET_OF_RECOVERY)
 		)) {
 			pickedRooms.add(rand.removeItem(availableRooms)(relicStack))

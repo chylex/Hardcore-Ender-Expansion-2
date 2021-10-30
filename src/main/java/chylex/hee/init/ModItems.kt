@@ -3,7 +3,6 @@ package chylex.hee.init
 import chylex.hee.HEE
 import chylex.hee.game.Resource
 import chylex.hee.game.block.dispenser.DispenseEndermanHead
-import chylex.hee.game.block.dispenser.DispenseExperienceBottle
 import chylex.hee.game.block.dispenser.DispenseWaterExtinguishIgneousPlate
 import chylex.hee.game.block.fluid.FluidEnderGoo
 import chylex.hee.game.block.fluid.FluidEnderGooPurified
@@ -36,6 +35,7 @@ import chylex.hee.game.item.ItemRod
 import chylex.hee.game.item.ItemScaleOfFreefall
 import chylex.hee.game.item.ItemScorchingSword
 import chylex.hee.game.item.ItemScorchingTool
+import chylex.hee.game.item.ItemSimple
 import chylex.hee.game.item.ItemSpatialDashGem
 import chylex.hee.game.item.ItemSpawnEgg
 import chylex.hee.game.item.ItemTableCore
@@ -47,6 +47,7 @@ import chylex.hee.game.item.ItemTrinketPouch
 import chylex.hee.game.item.ItemVoidBucket
 import chylex.hee.game.item.ItemVoidMiner
 import chylex.hee.game.item.ItemVoidSalad
+import chylex.hee.game.item.builder.HeeItemBuilder
 import chylex.hee.game.item.util.Tool.Type.AXE
 import chylex.hee.game.item.util.Tool.Type.PICKAXE
 import chylex.hee.game.item.util.Tool.Type.SHOVEL
@@ -75,58 +76,55 @@ object ModItems {
 	private val baseProps
 		get() = Item.Properties().group(ModCreativeTabs.main)
 	
-	private val defaultProps = baseProps
-	private val toolProps = baseProps.maxStackSize(1)
-	
 	// Items: Raw Resources
 	
-	@JvmField val ETHEREUM          = HeeItem(defaultProps) named "ethereum"
-	@JvmField val ANCIENT_DUST      = ItemDust(defaultProps) named "ancient_dust"
-	@JvmField val END_POWDER        = ItemEndPowder(defaultProps) named "end_powder"
-	@JvmField val STARDUST          = ItemDust(defaultProps) named "stardust"
-	@JvmField val ENDIUM_INGOT      = ItemIngot(defaultProps) named "endium_ingot"
-	@JvmField val ENDIUM_NUGGET     = ItemNugget(defaultProps) named "endium_nugget"
-	@JvmField val OBSIDIAN_FRAGMENT = HeeItem(defaultProps) named "obsidian_fragment"
-	@JvmField val IGNEOUS_ROCK      = ItemIgneousRock(defaultProps) named "igneous_rock"
-	@JvmField val PUZZLE_MEDALLION  = ItemPuzzleMedallion(defaultProps) named "puzzle_medallion"
-	@JvmField val INFERNIUM         = HeeItem(defaultProps) named "infernium"
-	@JvmField val INFERNIUM_INGOT   = ItemIngot(defaultProps) named "infernium_ingot"
-	@JvmField val AURICION          = HeeItem(defaultProps) named "auricion"
-	@JvmField val DRAGON_SCALE      = HeeItem(defaultProps) named "dragon_scale"
-	@JvmField val INSTABILITY_ORB   = HeeItem(defaultProps) named "instability_orb"
-	@JvmField val ECTOPLASM         = HeeItem(defaultProps) named "ectoplasm"
-	@JvmField val ENCHANTED_CLAW    = HeeItem(defaultProps) named "enchanted_claw"
+	@JvmField val ETHEREUM          = ItemSimple named "ethereum"
+	@JvmField val ANCIENT_DUST      = ItemDust named "ancient_dust"
+	@JvmField val END_POWDER        = ItemEndPowder named "end_powder"
+	@JvmField val STARDUST          = ItemDust named "stardust"
+	@JvmField val ENDIUM_INGOT      = ItemIngot named "endium_ingot"
+	@JvmField val ENDIUM_NUGGET     = ItemNugget named "endium_nugget"
+	@JvmField val OBSIDIAN_FRAGMENT = ItemSimple named "obsidian_fragment"
+	@JvmField val IGNEOUS_ROCK      = ItemIgneousRock named "igneous_rock"
+	@JvmField val PUZZLE_MEDALLION  = ItemPuzzleMedallion named "puzzle_medallion"
+	@JvmField val INFERNIUM         = ItemSimple named "infernium"
+	@JvmField val INFERNIUM_INGOT   = ItemIngot named "infernium_ingot"
+	@JvmField val AURICION          = ItemSimple named "auricion"
+	@JvmField val DRAGON_SCALE      = ItemSimple named "dragon_scale"
+	@JvmField val INSTABILITY_ORB   = ItemSimple named "instability_orb"
+	@JvmField val ECTOPLASM         = ItemSimple named "ectoplasm"
+	@JvmField val ENCHANTED_CLAW    = ItemSimple named "enchanted_claw"
 	
 	// Items: Manufactured Resources
 	
-	@JvmField val ALTERATION_NEXUS         = HeeItem(defaultProps) named "alteration_nexus"
-	@JvmField val VOID_ESSENCE             = HeeItem(defaultProps) named "void_essence"
-	@JvmField val OBSIDIAN_ROD             = ItemRod(defaultProps) named "obsidian_rod"
-	@JvmField val PURITY_EXTRACT           = HeeItem(defaultProps) named "purity_extract"
-	@JvmField val STATIC_CORE              = HeeItem(defaultProps) named "static_core"
-	@JvmField val TICKING_CORE             = HeeItem(defaultProps) named "ticking_core"
-	@JvmField val DIRTY_INFERNIUM_INGOT    = ItemIngot(defaultProps) named "dirty_infernium_ingot"
-	@JvmField val AMELIOR                  = HeeItem(defaultProps) named "amelior"
-	@JvmField val REVITALIZATION_SUBSTANCE = ItemRevitalizationSubstance(baseProps.maxStackSize(16)) named "revitalization_substance"
-	@JvmField val BINDING_ESSENCE          = ItemBindingEssence(baseProps.maxStackSize(16)) named "binding_essence"
+	@JvmField val ALTERATION_NEXUS         = ItemSimple named "alteration_nexus"
+	@JvmField val VOID_ESSENCE             = ItemSimple named "void_essence"
+	@JvmField val OBSIDIAN_ROD             = ItemRod named "obsidian_rod"
+	@JvmField val PURITY_EXTRACT           = ItemSimple named "purity_extract"
+	@JvmField val STATIC_CORE              = ItemSimple named "static_core"
+	@JvmField val TICKING_CORE             = ItemSimple named "ticking_core"
+	@JvmField val DIRTY_INFERNIUM_INGOT    = ItemIngot named "dirty_infernium_ingot"
+	@JvmField val AMELIOR                  = ItemSimple named "amelior"
+	@JvmField val REVITALIZATION_SUBSTANCE = ItemRevitalizationSubstance named "revitalization_substance"
+	@JvmField val BINDING_ESSENCE          = ItemBindingEssence named "binding_essence"
 	
 	// Items: Nature & Food
 	
-	@JvmField val COMPOST    = ItemCompost(defaultProps) named "compost"
-	@JvmField val VOID_SALAD = ItemVoidSalad(baseProps.maxStackSize(1).food(ItemVoidSalad.FOOD)) named "void_salad"
+	@JvmField val COMPOST    = ItemCompost named "compost"
+	@JvmField val VOID_SALAD = ItemVoidSalad named "void_salad"
 	
 	// Items: Table Cores
 	
-	@JvmField val ACCUMULATION_TABLE_CORE = ItemTableCore(arrayOf(ModBlocks.ACCUMULATION_TABLE_TIER_1, ModBlocks.ACCUMULATION_TABLE_TIER_2, ModBlocks.ACCUMULATION_TABLE_TIER_3), defaultProps) named "accumulation_table_core"
-	@JvmField val EXPERIENCE_TABLE_CORE   = ItemTableCore(arrayOf(ModBlocks.EXPERIENCE_TABLE_TIER_1, ModBlocks.EXPERIENCE_TABLE_TIER_2, ModBlocks.EXPERIENCE_TABLE_TIER_3), defaultProps) named "experience_table_core"
-	@JvmField val INFUSION_TABLE_CORE     = ItemTableCore(arrayOf(ModBlocks.INFUSION_TABLE_TIER_1, ModBlocks.INFUSION_TABLE_TIER_2, ModBlocks.INFUSION_TABLE_TIER_3), defaultProps) named "infusion_table_core"
+	@JvmField val ACCUMULATION_TABLE_CORE = ItemTableCore(arrayOf(ModBlocks.ACCUMULATION_TABLE_TIER_1, ModBlocks.ACCUMULATION_TABLE_TIER_2, ModBlocks.ACCUMULATION_TABLE_TIER_3)) named "accumulation_table_core"
+	@JvmField val EXPERIENCE_TABLE_CORE   = ItemTableCore(arrayOf(ModBlocks.EXPERIENCE_TABLE_TIER_1, ModBlocks.EXPERIENCE_TABLE_TIER_2, ModBlocks.EXPERIENCE_TABLE_TIER_3)) named "experience_table_core"
+	@JvmField val INFUSION_TABLE_CORE     = ItemTableCore(arrayOf(ModBlocks.INFUSION_TABLE_TIER_1, ModBlocks.INFUSION_TABLE_TIER_2, ModBlocks.INFUSION_TABLE_TIER_3)) named "infusion_table_core"
 	
 	// Items: Utilities
 	
-	@JvmField val TABLE_LINK        = ItemTableLink(defaultProps) named "table_link"
-	@JvmField val KNOWLEDGE_NOTE    = HeeItem(defaultProps) named "knowledge_note" // TODO
-	@JvmField val ENDERMAN_HEAD     = ItemBlockHead(ModBlocks.ENDERMAN_HEAD, ModBlocks.ENDERMAN_WALL_HEAD, defaultProps) named "enderman_head"
-	@JvmField val EXPERIENCE_BOTTLE = ItemExperienceBottleCustom(defaultProps) named "experience_bottle"
+	@JvmField val TABLE_LINK        = ItemTableLink named "table_link"
+	@JvmField val KNOWLEDGE_NOTE    = ItemSimple named "knowledge_note" // TODO
+	@JvmField val ENDERMAN_HEAD     = ItemBlockHead(ModBlocks.ENDERMAN_HEAD, ModBlocks.ENDERMAN_WALL_HEAD, baseProps) named "enderman_head"
+	@JvmField val EXPERIENCE_BOTTLE = ItemExperienceBottleCustom named "experience_bottle"
 	
 	// Items: Tools
 	
@@ -136,7 +134,7 @@ object ModItems {
 	@JvmField val SCORCHING_SHOVEL    = ItemScorchingTool(baseProps.setNoRepair(), SHOVEL, attackSpeed = -3F) named "scorching_shovel"
 	@JvmField val SCORCHING_AXE       = ItemScorchingTool(baseProps.setNoRepair(), AXE, attackSpeed = -3F) named "scorching_axe"
 	@JvmField val SCORCHING_SWORD     = ItemScorchingSword(baseProps.setNoRepair()) named "scorching_sword"
-	@JvmField val FLINT_AND_INFERNIUM = ItemFlintAndInfernium(baseProps.maxDamage(25)) named "flint_and_infernium"
+	@JvmField val FLINT_AND_INFERNIUM = ItemFlintAndInfernium named "flint_and_infernium"
 	
 	// Items: Fluids
 	
@@ -145,26 +143,26 @@ object ModItems {
 	
 	// Items: Energy
 	
-	@JvmField val ENERGY_ORACLE     = ItemEnergyOracle(toolProps) named "energy_oracle"
-	@JvmField val ENERGY_RECEPTACLE = ItemEnergyReceptacle(toolProps) named "energy_receptacle"
+	@JvmField val ENERGY_ORACLE     = ItemEnergyOracle named "energy_oracle"
+	@JvmField val ENERGY_RECEPTACLE = ItemEnergyReceptacle named "energy_receptacle"
 	
 	// Items: Gems & Teleportation
 	
-	@JvmField val INFUSED_ENDER_PEARL = ItemInfusedEnderPearl(Item.Properties().maxStackSize(16)) named "infused_ender_pearl"
-	@JvmField val SPATIAL_DASH_GEM    = ItemSpatialDashGem(toolProps) named "spatial_dash_gem"
-	@JvmField val LINKING_GEM         = ItemSpatialDashGem(toolProps) named "linking_gem" // TODO
-	@JvmField val PORTAL_TOKEN        = ItemPortalToken(baseProps.maxStackSize(ItemPortalToken.MAX_STACK_SIZE)) named "portal_token"
-	@JvmField val BLANK_TOKEN         = HeeItem(baseProps.maxStackSize(ItemPortalToken.MAX_STACK_SIZE)) named "blank_token"
+	@JvmField val INFUSED_ENDER_PEARL = ItemInfusedEnderPearl named "infused_ender_pearl"
+	@JvmField val SPATIAL_DASH_GEM    = ItemSpatialDashGem named "spatial_dash_gem"
+	@JvmField val LINKING_GEM         = ItemSpatialDashGem named "linking_gem" // TODO
+	@JvmField val PORTAL_TOKEN        = ItemPortalToken named "portal_token"
+	@JvmField val BLANK_TOKEN         = ItemPortalToken.BLANK named "blank_token"
 	
 	// Items: Trinkets
 	
-	@JvmField val TRINKET_POUCH        = ItemTrinketPouch(toolProps) named "trinket_pouch"
-	@JvmField val TOTEM_OF_UNDYING     = ItemTotemOfUndyingCustom(baseProps.maxDamage(4)) named "totem_of_undying"
-	@JvmField val AMULET_OF_RECOVERY   = ItemAmuletOfRecovery(toolProps) named "amulet_of_recovery"
-	@JvmField val RING_OF_HUNGER       = ItemRingOfHunger(baseProps.maxDamage(120)) named "ring_of_hunger"
-	@JvmField val RING_OF_PRESERVATION = ItemRingOfPreservation(baseProps.maxDamage(1)) named "ring_of_preservation"
-	@JvmField val TALISMAN_OF_GRIEFING = ItemTalismanOfGriefing(baseProps.maxDamage(25)) named "talisman_of_griefing"
-	@JvmField val SCALE_OF_FREEFALL    = ItemScaleOfFreefall(baseProps.maxDamage(8)) named "scale_of_freefall"
+	@JvmField val TRINKET_POUCH        = ItemTrinketPouch named "trinket_pouch"
+	@JvmField val TOTEM_OF_UNDYING     = ItemTotemOfUndyingCustom named "totem_of_undying"
+	@JvmField val AMULET_OF_RECOVERY   = ItemAmuletOfRecovery named "amulet_of_recovery"
+	@JvmField val RING_OF_HUNGER       = ItemRingOfHunger named "ring_of_hunger"
+	@JvmField val RING_OF_PRESERVATION = ItemRingOfPreservation named "ring_of_preservation"
+	@JvmField val TALISMAN_OF_GRIEFING = ItemTalismanOfGriefing named "talisman_of_griefing"
+	@JvmField val SCALE_OF_FREEFALL    = ItemScaleOfFreefall named "scale_of_freefall"
 	
 	// Items: Spawn Eggs
 	
@@ -188,10 +186,10 @@ object ModItems {
 		Items.ELYTRA.group = null
 		
 		with(e.registry) {
-			register(ItemChorusBerry(baseProps.food(ItemChorusBerry.FOOD)).apply { override(Items.CHORUS_FRUIT) })
-			register(ItemElytraOverride(baseProps.maxDamage(432)).apply { override(Items.ELYTRA) })
-			register(ItemEyeOfEnderOverride(defaultProps).apply { override(Items.ENDER_EYE) })
-			register(ItemTotemOfUndyingOverride(toolProps).apply { override(Items.TOTEM_OF_UNDYING, newCreativeTab = null) })
+			register(ItemChorusBerry.override(Items.CHORUS_FRUIT))
+			register(ItemElytraOverride(baseProps.maxDamage(432)).override(Items.ELYTRA))
+			register(ItemEyeOfEnderOverride(baseProps).override(Items.ENDER_EYE))
+			register(ItemTotemOfUndyingOverride.override(Items.TOTEM_OF_UNDYING, newCreativeTab = null))
 		}
 		
 		// tags
@@ -202,7 +200,6 @@ object ModItems {
 		// dispenser behavior
 		
 		DispenserBlock.registerDispenseBehavior(ENDERMAN_HEAD, DispenseEndermanHead)
-		DispenserBlock.registerDispenseBehavior(EXPERIENCE_BOTTLE, DispenseExperienceBottle)
 		DispenserBlock.registerDispenseBehavior(Items.WATER_BUCKET, DispenseWaterExtinguishIgneousPlate(DispenserBlock.DISPENSE_BEHAVIOR_REGISTRY[Items.WATER_BUCKET]))
 	}
 	
@@ -215,11 +212,15 @@ object ModItems {
 		(this.group as? OrderedCreativeTab)?.registerOrder(this)
 	}
 	
+	private infix fun HeeItemBuilder.named(registryName: String): HeeItem {
+		return this.build { group(ModCreativeTabs.main) } named registryName
+	}
+	
 	internal fun registerOverride(item: Item) {
 		overrideItems.add(item)
 	}
 	
-	private fun Item.override(vanillaItem: Item, newCreativeTab: ItemGroup? = ModCreativeTabs.main) {
+	private fun Item.override(vanillaItem: Item, newCreativeTab: ItemGroup? = ModCreativeTabs.main) = apply {
 		this.useVanillaName(vanillaItem)
 		this.group = newCreativeTab
 		
@@ -228,5 +229,9 @@ object ModItems {
 		}
 		
 		registerOverride(this)
+	}
+	
+	private fun HeeItemBuilder.override(vanilaItem: Item, newCreativeTab: ItemGroup? = ModCreativeTabs.main): Item {
+		return this.build().override(vanilaItem, newCreativeTab)
 	}
 }

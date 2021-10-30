@@ -5,9 +5,11 @@ import chylex.hee.game.entity.damage.DamageType
 import chylex.hee.game.entity.damage.IDamageProcessor.Companion.ENCHANTMENT_PROTECTION
 import chylex.hee.game.entity.damage.IDamageProcessor.Companion.POTION_PROTECTION
 import chylex.hee.game.entity.util.posVec
+import chylex.hee.game.item.builder.HeeItemBuilder
+import chylex.hee.game.item.interfaces.getHeeInterface
+import chylex.hee.game.mechanics.trinket.ITrinketItem
 import chylex.hee.game.mechanics.trinket.TrinketHandler
 import chylex.hee.game.world.explosion.ExplosionBuilder
-import chylex.hee.system.MinecraftForgeEventBus
 import chylex.hee.util.forge.SubscribeEvent
 import chylex.hee.util.math.ceilToInt
 import chylex.hee.util.math.square
@@ -30,51 +32,28 @@ import java.util.UUID
 import kotlin.math.max
 import kotlin.math.min
 
-class ItemTalismanOfGriefing(properties: Properties) : ItemAbstractTrinket(properties) {
-	private companion object {
-		private val BLAST_DAMAGE_PROPERTIES = DamageProperties().apply {
-			with(Writer()) {
-				setAllowArmor()
-				addType(DamageType.BLAST)
-			}
-		}.Reader()
-		
-		private fun getBlastDamageAfterCalculations(explosion: Explosion, player: PlayerEntity): Float {
-			val pos = explosion.position
-			val radius = explosion.size
-			
-			val distanceScaled = player.posVec.distanceTo(pos) / (radius * 2F)
-			
-			val blastPower = (1 - distanceScaled) * Explosion.getBlockDensity(pos, player)
-			val explosionDamage = 1F + ((square(blastPower) + blastPower) * radius * 7).toInt()
-			
-			var finalDamage = explosionDamage
-			
-			finalDamage = CombatRules.getDamageAfterAbsorb(finalDamage, player.totalArmorValue.toFloat(), player.getAttributeValue(ARMOR_TOUGHNESS).toFloat())
-			finalDamage = POTION_PROTECTION.modifyDamage(finalDamage, player, BLAST_DAMAGE_PROPERTIES)
-			finalDamage = ENCHANTMENT_PROTECTION.modifyDamage(finalDamage, player, BLAST_DAMAGE_PROPERTIES)
-			
-			return finalDamage
-		}
-		
-		private fun getNormalDifficultyEquivalentDamage(amount: Float, currentDifficulty: Difficulty) = when (currentDifficulty) {
-			PEACEFUL -> 0F
-			EASY     -> max(amount, (amount - 1F) * 2F)
-			NORMAL   -> amount
-			HARD     -> amount / 1.5F
+object ItemTalismanOfGriefing : HeeItemBuilder() {
+	private val TRINKET = object : ITrinketItem {
+		override fun canPlaceIntoTrinketSlot(stack: ItemStack): Boolean {
+			return stack.damage < stack.maxDamage
 		}
 	}
+	
+	init {
+		includeFrom(ItemAbstractTrinket(TRINKET))
+		
+		maxDamage = 25
+	}
+	
+	private val BLAST_DAMAGE_PROPERTIES = DamageProperties().apply {
+		with(Writer()) {
+			setAllowArmor()
+			addType(DamageType.BLAST)
+		}
+	}.Reader()
 	
 	private val lastRepairMarkTime = ThreadLocal.withInitial { Long.MIN_VALUE }
 	private val lastRepairMarkEntities = ThreadLocal.withInitial { HashSet<UUID>(4) }
-	
-	init {
-		MinecraftForgeEventBus.register(this)
-	}
-	
-	override fun canPlaceIntoTrinketSlot(stack: ItemStack): Boolean {
-		return stack.damage < stack.maxDamage
-	}
 	
 	private fun markEntitiesForTalismanRepair(explosion: Explosion, entities: List<Entity>) {
 		val currentTime = explosion.world.gameTime
@@ -103,13 +82,11 @@ class ItemTalismanOfGriefing(properties: Properties) : ItemAbstractTrinket(prope
 		}
 		
 		val radius = explosion.size
-		
 		if (radius >= 6F) {
 			markEntitiesForTalismanRepair(explosion, entities)
 		}
 		
 		val source = explosion.explosivePlacedBy
-		
 		if (source == null || source is PlayerEntity) { // TODO large fireballs don't set explosion source
 			return
 		}
@@ -120,12 +97,11 @@ class ItemTalismanOfGriefing(properties: Properties) : ItemAbstractTrinket(prope
 		for (entity in entities) {
 			if (entity is PlayerEntity && !entity.isImmuneToExplosions && entity.posVec.distanceTo(position) <= diameter) {
 				val trinketHandler = TrinketHandler.get(entity)
-				
-				if (trinketHandler.isItemActive(this)) {
+				if (trinketHandler.isTrinketActive(TRINKET)) {
 					val finalDamage = getBlastDamageAfterCalculations(explosion, entity)
 					val durabilityTaken = (finalDamage / 10F).ceilToInt().coerceAtMost(3)
 					
-					trinketHandler.transformIfActive(this) {
+					trinketHandler.transformIfActive(TRINKET) {
 						it.damage = min(it.maxDamage, it.damage + durabilityTaken)
 					}
 					
@@ -168,11 +144,35 @@ class ItemTalismanOfGriefing(properties: Properties) : ItemAbstractTrinket(prope
 		
 		for (hand in Hand.values()) {
 			val heldItem = entity.getHeldItem(hand)
-			
-			if (heldItem.item === this) {
+			if (heldItem.item.getHeeInterface<ITrinketItem>() === TRINKET) {
 				heldItem.damage = 0
 				// TODO sound fx
 			}
 		}
+	}
+	
+	private fun getBlastDamageAfterCalculations(explosion: Explosion, player: PlayerEntity): Float {
+		val pos = explosion.position
+		val radius = explosion.size
+		
+		val distanceScaled = player.posVec.distanceTo(pos) / (radius * 2F)
+		
+		val blastPower = (1 - distanceScaled) * Explosion.getBlockDensity(pos, player)
+		val explosionDamage = 1F + ((square(blastPower) + blastPower) * radius * 7).toInt()
+		
+		var finalDamage = explosionDamage
+		
+		finalDamage = CombatRules.getDamageAfterAbsorb(finalDamage, player.totalArmorValue.toFloat(), player.getAttributeValue(ARMOR_TOUGHNESS).toFloat())
+		finalDamage = POTION_PROTECTION.modifyDamage(finalDamage, player, BLAST_DAMAGE_PROPERTIES)
+		finalDamage = ENCHANTMENT_PROTECTION.modifyDamage(finalDamage, player, BLAST_DAMAGE_PROPERTIES)
+		
+		return finalDamage
+	}
+	
+	private fun getNormalDifficultyEquivalentDamage(amount: Float, currentDifficulty: Difficulty) = when (currentDifficulty) {
+		PEACEFUL -> 0F
+		EASY     -> max(amount, (amount - 1F) * 2F)
+		NORMAL   -> amount
+		HARD     -> amount / 1.5F
 	}
 }

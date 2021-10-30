@@ -4,73 +4,47 @@ import chylex.hee.client.text.LocalizationStrategy
 import chylex.hee.game.entity.projectile.EntityProjectileEnderPearl
 import chylex.hee.game.entity.util.posVec
 import chylex.hee.game.fx.util.playServer
-import chylex.hee.game.item.infusion.IInfusableItem
-import chylex.hee.game.item.infusion.Infusion
+import chylex.hee.game.item.builder.HeeItemBuilder
+import chylex.hee.game.item.components.IItemNameComponent
+import chylex.hee.game.item.components.ShootProjectileComponent
 import chylex.hee.game.item.infusion.InfusionTag
 import chylex.hee.game.item.properties.ItemModel
-import chylex.hee.util.forge.Side
-import chylex.hee.util.forge.Sided
 import chylex.hee.util.random.nextFloat
-import net.minecraft.client.util.ITooltipFlag
+import net.minecraft.entity.Entity
 import net.minecraft.entity.player.PlayerEntity
-import net.minecraft.item.EnderPearlItem
 import net.minecraft.item.ItemStack
 import net.minecraft.item.Items
-import net.minecraft.stats.Stats
 import net.minecraft.util.ActionResult
-import net.minecraft.util.ActionResultType.SUCCESS
 import net.minecraft.util.Hand
 import net.minecraft.util.SoundCategory
 import net.minecraft.util.SoundEvents
-import net.minecraft.util.text.ITextComponent
 import net.minecraft.world.World
 import net.minecraftforge.common.Tags
 
-class ItemInfusedEnderPearl(properties: Properties) : EnderPearlItem(properties), IHeeItem, IInfusableItem {
-	override val localization
-		get() = LocalizationStrategy.None
-	
-	override val model
-		get() = ItemModel.Copy(Items.ENDER_PEARL)
-	
-	override val tags
-		get() = listOf(Tags.Items.ENDER_PEARLS)
-	
-	override fun onItemRightClick(world: World, player: PlayerEntity, hand: Hand): ActionResult<ItemStack> {
-		val heldItem = player.getHeldItem(hand)
+object ItemInfusedEnderPearl : HeeItemBuilder() {
+	init {
+		includeFrom(ItemAbstractInfusable())
 		
-		if (!player.abilities.isCreativeMode) {
-			heldItem.shrink(1)
+		localization = LocalizationStrategy.None
+		
+		model = ItemModel.Copy(Items.ENDER_PEARL)
+		
+		tags.add(Tags.Items.ENDER_PEARLS)
+		
+		maxStackSize = 16
+		
+		components.name = IItemNameComponent.of(Items.ENDER_PEARL)
+		
+		components.useOnAir = object : ShootProjectileComponent() {
+			override fun use(world: World, player: PlayerEntity, hand: Hand, heldItem: ItemStack): ActionResult<ItemStack> {
+				SoundEvents.ENTITY_ENDER_PEARL_THROW.playServer(world, player.posVec, SoundCategory.NEUTRAL, volume = 0.5F, pitch = 0.4F / world.rand.nextFloat(0.8F, 1.2F))
+				player.cooldownTracker.setCooldown(heldItem.item, 20)
+				return super.use(world, player, hand, heldItem)
+			}
+			
+			override fun createEntity(world: World, player: PlayerEntity, hand: Hand, heldItem: ItemStack): Entity {
+				return EntityProjectileEnderPearl(player, InfusionTag.getList(heldItem))
+			}
 		}
-		
-		if (!world.isRemote) {
-			world.addEntity(EntityProjectileEnderPearl(player, InfusionTag.getList(heldItem)))
-		}
-		
-		SoundEvents.ENTITY_ENDER_PEARL_THROW.playServer(world, player.posVec, SoundCategory.NEUTRAL, volume = 0.5F, pitch = 0.4F / random.nextFloat(0.8F, 1.2F))
-		
-		player.cooldownTracker.setCooldown(this, 20)
-		player.addStat(Stats.ITEM_USED[this])
-		
-		return ActionResult(SUCCESS, heldItem)
-	}
-	
-	override fun canApplyInfusion(infusion: Infusion): Boolean {
-		return ItemAbstractInfusable.onCanApplyInfusion(this, infusion)
-	}
-	
-	override fun getTranslationKey(): String {
-		return Items.ENDER_PEARL.translationKey
-	}
-	
-	@Sided(Side.CLIENT)
-	override fun addInformation(stack: ItemStack, world: World?, lines: MutableList<ITextComponent>, flags: ITooltipFlag) {
-		super.addInformation(stack, world, lines, flags)
-		ItemAbstractInfusable.onAddInformation(stack, lines)
-	}
-	
-	@Sided(Side.CLIENT)
-	override fun hasEffect(stack: ItemStack): Boolean {
-		return super.hasEffect(stack) || ItemAbstractInfusable.onHasEffect(stack)
 	}
 }

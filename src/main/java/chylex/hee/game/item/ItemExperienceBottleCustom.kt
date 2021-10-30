@@ -1,52 +1,66 @@
 package chylex.hee.game.item
 
 import chylex.hee.client.text.LocalizationStrategy
+import chylex.hee.game.block.dispenser.DispenseExperienceBottle
 import chylex.hee.game.entity.projectile.EntityProjectileExperienceBottle
 import chylex.hee.game.entity.util.posVec
 import chylex.hee.game.fx.util.playServer
+import chylex.hee.game.item.builder.HeeItemBuilder
+import chylex.hee.game.item.components.ICreativeTabComponent
+import chylex.hee.game.item.components.IItemNameComponent
+import chylex.hee.game.item.components.ITooltipComponent
+import chylex.hee.game.item.components.ShootProjectileComponent
 import chylex.hee.game.item.properties.ItemModel
 import chylex.hee.game.item.util.size
+import chylex.hee.init.ModItems
 import chylex.hee.system.heeTag
 import chylex.hee.system.heeTagOrNull
-import chylex.hee.util.forge.Side
-import chylex.hee.util.forge.Sided
 import chylex.hee.util.random.nextFloat
-import net.minecraft.client.util.ITooltipFlag
+import net.minecraft.entity.Entity
 import net.minecraft.entity.player.PlayerEntity
-import net.minecraft.item.ExperienceBottleItem
-import net.minecraft.item.ItemGroup
 import net.minecraft.item.ItemStack
 import net.minecraft.item.Items
 import net.minecraft.item.Rarity
-import net.minecraft.stats.Stats
 import net.minecraft.util.ActionResult
-import net.minecraft.util.ActionResultType.SUCCESS
 import net.minecraft.util.Hand
-import net.minecraft.util.NonNullList
 import net.minecraft.util.SoundCategory
 import net.minecraft.util.SoundEvents
-import net.minecraft.util.text.ITextComponent
 import net.minecraft.util.text.TranslationTextComponent
 import net.minecraft.world.World
 import kotlin.math.min
 
-class ItemExperienceBottleCustom(builder: Properties) : ExperienceBottleItem(builder), IHeeItem {
-	companion object {
-		private const val EXPERIENCE_TAG = "Experience"
+object ItemExperienceBottleCustom : HeeItemBuilder() {
+	private const val EXPERIENCE_TAG = "Experience"
+	
+	private const val LANG_TOOLTIP_EXPERIENCE = "item.hee.experience_bottle.tooltip"
+	
+	const val MAX_EXPERIENCE = 25
+	
+	init {
+		localization = LocalizationStrategy.None
+		localizationExtra[LANG_TOOLTIP_EXPERIENCE] = "§a%s §2experience"
 		
-		private const val LANG_TOOLTIP_EXPERIENCE = "item.hee.experience_bottle.tooltip"
+		model = ItemModel.Copy(Items.EXPERIENCE_BOTTLE)
 		
-		const val MAX_EXPERIENCE = 25
+		components.name = IItemNameComponent.of(Items.EXPERIENCE_BOTTLE)
+		components.tooltip.add(ITooltipComponent { _, stack, _, _ -> TranslationTextComponent(LANG_TOOLTIP_EXPERIENCE, getExperienceAmountPerItem(stack)) })
+		
+		components.rarity = Rarity.UNCOMMON
+		components.creativeTab = ICreativeTabComponent { _, _ -> }
+		
+		components.useOnAir = object : ShootProjectileComponent() {
+			override fun use(world: World, player: PlayerEntity, hand: Hand, heldItem: ItemStack): ActionResult<ItemStack> {
+				SoundEvents.ENTITY_EXPERIENCE_BOTTLE_THROW.playServer(world, player.posVec, SoundCategory.NEUTRAL, volume = 0.5F, pitch = 0.4F / world.rand.nextFloat(0.8F, 1.2F))
+				return super.use(world, player, hand, heldItem)
+			}
+			
+			override fun createEntity(world: World, player: PlayerEntity, hand: Hand, heldItem: ItemStack): Entity {
+				return EntityProjectileExperienceBottle(player, heldItem.copy())
+			}
+		}
+		
+		components.dispenserBehavior = DispenseExperienceBottle
 	}
-	
-	override val localization
-		get() = LocalizationStrategy.None
-	
-	override val localizationExtra
-		get() = mapOf(LANG_TOOLTIP_EXPERIENCE to "§a%s §2experience")
-	
-	override val model
-		get() = ItemModel.Copy(Items.EXPERIENCE_BOTTLE)
 	
 	private fun setExperienceAmount(stack: ItemStack, amount: Int) {
 		if (amount == 0) {
@@ -73,7 +87,7 @@ class ItemExperienceBottleCustom(builder: Properties) : ExperienceBottleItem(bui
 			val xp = min(remaining, MAX_EXPERIENCE)
 			
 			remaining -= xp
-			stacks.add(ItemStack(this).also { setExperienceAmount(it, xp) })
+			stacks.add(ItemStack(ModItems.EXPERIENCE_BOTTLE).also { setExperienceAmount(it, xp) })
 		}
 		
 		return stacks
@@ -95,38 +109,5 @@ class ItemExperienceBottleCustom(builder: Properties) : ExperienceBottleItem(bui
 		setExperienceAmount(from, xpFrom - mergedAmount)
 		setExperienceAmount(into, xpInto + mergedAmount)
 		return true
-	}
-	
-	override fun getTranslationKey(): String {
-		return Items.EXPERIENCE_BOTTLE.translationKey
-	}
-	
-	override fun getRarity(stack: ItemStack): Rarity {
-		return Rarity.UNCOMMON
-	}
-	
-	override fun onItemRightClick(world: World, player: PlayerEntity, hand: Hand): ActionResult<ItemStack> {
-		val heldItem = player.getHeldItem(hand)
-		val originalItem = heldItem.copy()
-		
-		if (!player.abilities.isCreativeMode) {
-			heldItem.shrink(1)
-		}
-		
-		if (!world.isRemote) {
-			world.addEntity(EntityProjectileExperienceBottle(player, originalItem))
-			SoundEvents.ENTITY_EXPERIENCE_BOTTLE_THROW.playServer(world, player.posVec, SoundCategory.NEUTRAL, volume = 0.5F, pitch = 0.4F / random.nextFloat(0.8F, 1.2F))
-		}
-		
-		player.addStat(Stats.ITEM_USED[this])
-		
-		return ActionResult(SUCCESS, heldItem)
-	}
-	
-	override fun fillItemGroup(tab: ItemGroup, items: NonNullList<ItemStack>) {}
-	
-	@Sided(Side.CLIENT)
-	override fun addInformation(stack: ItemStack, world: World?, lines: MutableList<ITextComponent>, flags: ITooltipFlag) {
-		lines.add(TranslationTextComponent(LANG_TOOLTIP_EXPERIENCE, getExperienceAmountPerItem(stack)))
 	}
 }

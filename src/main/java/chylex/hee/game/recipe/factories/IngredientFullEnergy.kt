@@ -1,7 +1,8 @@
 package chylex.hee.game.recipe.factories
 
-import chylex.hee.game.item.ItemAbstractEnergyUser
 import chylex.hee.game.item.infusion.InfusionTag
+import chylex.hee.game.item.interfaces.getHeeInterface
+import chylex.hee.game.mechanics.energy.IEnergyItem
 import chylex.hee.game.recipe.factories.IngredientFullEnergy.Instance
 import chylex.hee.system.getIfExists
 import com.google.gson.JsonObject
@@ -37,20 +38,21 @@ object IngredientFullEnergy : IIngredientSerializer<Instance> {
 	}
 	
 	private fun construct(item: Item): Instance {
-		if (item !is ItemAbstractEnergyUser) {
+		val energy = item.getHeeInterface<IEnergyItem>()
+		if (energy == null) {
 			throw JsonSyntaxException("Item '${item.registryName}' does not use Energy")
 		}
 		
 		val stack = ItemStack(item).also {
-			item.setEnergyChargePercentage(it, 1F)
+			energy.setChargePercentage(it, 1F)
 		}
 		
-		return Instance(stack, item)
+		return Instance(stack, item, energy)
 	}
 	
-	class Instance(stack: ItemStack, val item: ItemAbstractEnergyUser) : Ingredient(Stream.of(SingleItemList(stack))) {
+	class Instance(stack: ItemStack, val item: Item, private val energy: IEnergyItem) : Ingredient(Stream.of(SingleItemList(stack))) {
 		override fun test(ingredient: ItemStack?): Boolean {
-			return ingredient != null && ingredient.item === item && item.hasMaximumEnergy(ingredient) && !InfusionTag.hasAny(ingredient)
+			return ingredient != null && ingredient.item === item && energy.hasMaximumEnergy(ingredient) && !InfusionTag.hasAny(ingredient)
 		}
 		
 		override fun getSerializer() = IngredientFullEnergy

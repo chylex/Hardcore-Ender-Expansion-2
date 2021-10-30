@@ -3,6 +3,7 @@ package chylex.hee.game.item.infusion
 import chylex.hee.game.item.infusion.Infusion.Colors.Companion.Gray
 import chylex.hee.game.item.infusion.Infusion.Colors.Companion.Hcl
 import chylex.hee.game.item.infusion.Infusion.Colors.Companion.Hue
+import chylex.hee.game.item.interfaces.getHeeInterface
 import chylex.hee.game.item.util.nbtOrNull
 import chylex.hee.game.item.util.size
 import chylex.hee.init.ModBlocks
@@ -68,7 +69,7 @@ enum class Infusion(
 		}
 		
 		fun isInfusable(item: Item): Boolean {
-			return item is IInfusableItem || TRANSFORMATIONS.any { it.first === item }
+			return item.getHeeInterface<IInfusableItem>() != null || TRANSFORMATIONS.any { it.first === item }
 		}
 		
 		private val TRANSFORMATIONS = arrayOf(
@@ -80,15 +81,15 @@ enum class Infusion(
 	
 	fun tryInfuse(stack: ItemStack): ItemStack? {
 		val originalItem = stack.item
-		
-		if (originalItem is IInfusableItem) {
-			return tryInfuseTransformed(stack, originalItem, originalItem)
+		val originalInfusable = originalItem.getHeeInterface<IInfusableItem>()
+		if (originalInfusable != null) {
+			return tryInfuseTransformed(stack, originalItem, originalInfusable)
 		}
 		
 		val transformedItem = TRANSFORMATIONS.find { it.first === originalItem }?.second
-		
-		if (transformedItem is IInfusableItem) {
-			return tryInfuseTransformed(stack, transformedItem, transformedItem)
+		val transformedInfusable = transformedItem?.getHeeInterface<IInfusableItem>()
+		if (transformedInfusable != null) {
+			return tryInfuseTransformed(stack, transformedItem, transformedInfusable)
 		}
 		
 		return null
@@ -97,7 +98,7 @@ enum class Infusion(
 	private fun tryInfuseTransformed(stack: ItemStack, transformedItem: Item, transformedInfusable: IInfusableItem): ItemStack? {
 		val list = InfusionTag.getList(stack)
 		
-		if (list.has(this) || !transformedInfusable.canApplyInfusion(this)) {
+		if (list.has(this) || !transformedInfusable.canApplyInfusion(transformedItem, this)) {
 			return null
 		}
 		
