@@ -2,15 +2,15 @@ package chylex.hee.game.entity.living.ai
 
 import chylex.hee.game.entity.living.EntityMobBlobby
 import chylex.hee.game.entity.util.lookDirVec
-import chylex.hee.system.random.nextFloat
-import chylex.hee.system.random.nextInt
-import chylex.hee.system.random.nextVector2
 import chylex.hee.util.math.Vec3
 import chylex.hee.util.math.lerpTowards
 import chylex.hee.util.math.scale
 import chylex.hee.util.math.square
 import chylex.hee.util.math.toRadians
 import chylex.hee.util.math.withY
+import chylex.hee.util.random.nextFloat
+import chylex.hee.util.random.nextInt
+import chylex.hee.util.random.nextVector2
 import net.minecraft.entity.ai.goal.Goal
 import net.minecraft.entity.ai.goal.Goal.Flag.JUMP
 import net.minecraft.entity.ai.goal.Goal.Flag.MOVE

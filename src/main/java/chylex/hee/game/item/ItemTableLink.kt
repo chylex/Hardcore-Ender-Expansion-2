@@ -20,7 +20,6 @@ import chylex.hee.init.ModSounds
 import chylex.hee.network.client.PacketClientFX
 import chylex.hee.system.heeTag
 import chylex.hee.system.heeTagOrNull
-import chylex.hee.system.random.nextFloat
 import chylex.hee.util.buffer.readPos
 import chylex.hee.util.buffer.use
 import chylex.hee.util.buffer.writePos
@@ -29,6 +28,7 @@ import chylex.hee.util.forge.Sided
 import chylex.hee.util.nbt.getPos
 import chylex.hee.util.nbt.hasKey
 import chylex.hee.util.nbt.putPos
+import chylex.hee.util.random.nextFloat
 import net.minecraft.entity.Entity
 import net.minecraft.entity.item.ItemEntity
 import net.minecraft.item.ItemStack

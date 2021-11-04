@@ -13,9 +13,9 @@ import chylex.hee.game.world.util.isTopSolid
 import chylex.hee.game.world.util.setAir
 import chylex.hee.game.world.util.setBlock
 import chylex.hee.init.ModBlocks
-import chylex.hee.system.random.nextInt
 import chylex.hee.util.math.Pos
 import chylex.hee.util.math.floorToInt
+import chylex.hee.util.random.nextInt
 import net.minecraft.block.BlockState
 import net.minecraft.enchantment.EnchantmentHelper
 import net.minecraft.enchantment.Enchantments

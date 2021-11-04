@@ -18,10 +18,10 @@ import chylex.hee.game.world.generation.feature.tombdungeon.TombDungeonPieces.PI
 import chylex.hee.game.world.generation.feature.tombdungeon.TombDungeonPieces.PIECE_TOMB_SINGLE_SPACIOUS
 import chylex.hee.game.world.generation.feature.tombdungeon.TombDungeonPieces.TOMB_RANDOM
 import chylex.hee.game.world.generation.feature.tombdungeon.piece.TombDungeonAbstractPiece
-import chylex.hee.system.random.nextFloat
-import chylex.hee.system.random.nextInt
-import chylex.hee.system.random.nextRounded
 import chylex.hee.util.math.floorToInt
+import chylex.hee.util.random.nextFloat
+import chylex.hee.util.random.nextInt
+import chylex.hee.util.random.nextRounded
 import java.util.Random
 import kotlin.math.max
 import kotlin.math.min

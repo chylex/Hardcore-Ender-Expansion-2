@@ -4,9 +4,9 @@ import chylex.hee.game.block.BlockGraveDirt
 import chylex.hee.game.world.generation.feature.tombdungeon.TombDungeonLevel
 import chylex.hee.game.world.generation.feature.tombdungeon.TombDungeonLevel.MobAmount
 import chylex.hee.game.world.generation.structure.IStructureWorld
-import chylex.hee.system.random.nextInt
-import chylex.hee.system.random.nextRounded
 import chylex.hee.util.math.Pos
+import chylex.hee.util.random.nextInt
+import chylex.hee.util.random.nextRounded
 import net.minecraft.util.Direction.EAST
 import net.minecraft.util.Direction.WEST
 import net.minecraft.util.Mirror

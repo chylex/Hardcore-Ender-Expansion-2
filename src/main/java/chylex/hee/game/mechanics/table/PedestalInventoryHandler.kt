@@ -10,8 +10,6 @@ import chylex.hee.game.item.util.copyIfNotEmpty
 import chylex.hee.game.item.util.isNotEmpty
 import chylex.hee.game.item.util.size
 import chylex.hee.init.ModItems
-import chylex.hee.system.random.nextFloat
-import chylex.hee.system.random.nextVector2
 import chylex.hee.util.forge.capability.LazyOptional
 import chylex.hee.util.nbt.TagCompound
 import chylex.hee.util.nbt.getStack
@@ -19,6 +17,8 @@ import chylex.hee.util.nbt.loadInventory
 import chylex.hee.util.nbt.putStack
 import chylex.hee.util.nbt.saveInventory
 import chylex.hee.util.nbt.use
+import chylex.hee.util.random.nextFloat
+import chylex.hee.util.random.nextVector2
 import com.google.common.collect.Iterators
 import net.minecraft.entity.item.ItemEntity
 import net.minecraft.entity.player.PlayerInventory

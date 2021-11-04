@@ -4,9 +4,9 @@ import chylex.hee.game.block.util.FOUR_WAY_NORTH
 import chylex.hee.game.block.util.FOUR_WAY_SOUTH
 import chylex.hee.game.block.util.with
 import chylex.hee.game.world.generation.structure.IStructureWorld
-import chylex.hee.system.random.nextInt
-import chylex.hee.system.random.removeItem
 import chylex.hee.util.math.PosXZ
+import chylex.hee.util.random.nextInt
+import chylex.hee.util.random.removeItem
 import net.minecraft.block.Blocks
 
 class ObsidianTowerRoom_Regular_SideFenceSpawners(file: String) : ObsidianTowerRoom_General(file, guaranteesSpawnersOnLevel1 = true) {

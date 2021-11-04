@@ -17,8 +17,8 @@ import chylex.hee.game.world.generation.trigger.ObsidianTowerSpawnerStructureTri
 import chylex.hee.game.world.generation.trigger.TileEntityStructureTrigger
 import chylex.hee.game.world.util.allInBoxMutable
 import chylex.hee.init.ModBlocks
-import chylex.hee.system.random.nextItem
-import chylex.hee.system.random.removeItemOrNull
+import chylex.hee.util.random.nextItem
+import chylex.hee.util.random.removeItemOrNull
 import net.minecraft.block.Blocks
 import net.minecraft.item.ItemStack
 import net.minecraft.loot.LootContext

@@ -9,9 +9,9 @@ import chylex.hee.client.render.RenderStateBuilder.Companion.OVERLAY_DISABLED
 import chylex.hee.client.render.util.DF_ONE_MINUS_SRC_ALPHA
 import chylex.hee.client.render.util.SF_SRC_ALPHA
 import chylex.hee.game.entity.living.EntityMobAbstractEnderman
-import chylex.hee.system.random.nextFloat
 import chylex.hee.util.forge.Side
 import chylex.hee.util.forge.Sided
+import chylex.hee.util.random.nextFloat
 import com.mojang.blaze3d.matrix.MatrixStack
 import com.mojang.blaze3d.vertex.IVertexBuilder
 import net.minecraft.client.renderer.IRenderTypeBuffer

@@ -3,12 +3,12 @@ package chylex.hee.game.entity.living.ai
 import chylex.hee.game.entity.util.posVec
 import chylex.hee.game.world.util.breakBlock
 import chylex.hee.game.world.util.getState
-import chylex.hee.system.random.nextInt
 import chylex.hee.util.math.bottomCenter
 import chylex.hee.util.math.component1
 import chylex.hee.util.math.component2
 import chylex.hee.util.math.component3
 import chylex.hee.util.math.square
+import chylex.hee.util.random.nextInt
 import net.minecraft.block.BlockState
 import net.minecraft.entity.CreatureEntity
 import net.minecraft.entity.ai.goal.Goal

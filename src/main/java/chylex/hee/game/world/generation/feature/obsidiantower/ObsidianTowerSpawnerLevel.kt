@@ -2,7 +2,7 @@ package chylex.hee.game.world.generation.feature.obsidiantower
 
 import chylex.hee.game.potion.brewing.PotionBrewing.INFINITE_DURATION
 import chylex.hee.game.potion.util.makeInstance
-import chylex.hee.system.random.nextItem
+import chylex.hee.util.random.nextItem
 import net.minecraft.potion.Effect
 import net.minecraft.potion.EffectInstance
 import net.minecraft.potion.Effects

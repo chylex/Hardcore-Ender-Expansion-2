@@ -4,8 +4,8 @@ import chylex.hee.game.entity.projectile.EntityProjectileEyeOfEnder
 import chylex.hee.game.entity.util.posVec
 import chylex.hee.game.fx.util.playServer
 import chylex.hee.game.world.generation.feature.stronghold.StrongholdGenerator
-import chylex.hee.system.random.nextFloat
 import chylex.hee.util.math.PosXZ
+import chylex.hee.util.random.nextFloat
 import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.item.EnderEyeItem
 import net.minecraft.item.ItemStack

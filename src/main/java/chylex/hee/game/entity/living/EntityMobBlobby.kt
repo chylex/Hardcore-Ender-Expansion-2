@@ -31,10 +31,6 @@ import chylex.hee.game.world.util.blocksMovement
 import chylex.hee.init.ModEntities
 import chylex.hee.init.ModItems
 import chylex.hee.system.heeTag
-import chylex.hee.system.random.nextFloat
-import chylex.hee.system.random.nextInt
-import chylex.hee.system.random.nextItem
-import chylex.hee.system.random.nextVector2
 import chylex.hee.util.color.ColorDataSerializer
 import chylex.hee.util.color.HCL
 import chylex.hee.util.color.IntColor
@@ -54,6 +50,10 @@ import chylex.hee.util.nbt.getIntegerOrNull
 import chylex.hee.util.nbt.getStack
 import chylex.hee.util.nbt.putStack
 import chylex.hee.util.nbt.use
+import chylex.hee.util.random.nextFloat
+import chylex.hee.util.random.nextInt
+import chylex.hee.util.random.nextItem
+import chylex.hee.util.random.nextVector2
 import net.minecraft.entity.CreatureEntity
 import net.minecraft.entity.Entity
 import net.minecraft.entity.EntityClassification

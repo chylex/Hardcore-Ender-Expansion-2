@@ -12,8 +12,8 @@ import chylex.hee.game.potion.util.makeInstance
 import chylex.hee.game.world.util.blocksMovement
 import chylex.hee.game.world.util.distanceSqTo
 import chylex.hee.game.world.util.offsetUntilExcept
-import chylex.hee.system.random.nextFloat
-import chylex.hee.system.random.nextInt
+import chylex.hee.util.random.nextFloat
+import chylex.hee.util.random.nextInt
 import net.minecraft.advancements.CriteriaTriggers
 import net.minecraft.entity.LivingEntity
 import net.minecraft.entity.player.PlayerEntity

@@ -10,7 +10,6 @@ import chylex.hee.game.world.generation.OverworldFeatures.preloadChunks
 import chylex.hee.game.world.generation.structure.piece.IStructureBuild
 import chylex.hee.game.world.generation.util.WorldToStructureWorldAdapter
 import chylex.hee.game.world.util.perDimensionData
-import chylex.hee.system.random.nextInt
 import chylex.hee.util.math.Pos
 import chylex.hee.util.math.PosXZ
 import chylex.hee.util.math.component1
@@ -22,6 +21,7 @@ import chylex.hee.util.nbt.getPos
 import chylex.hee.util.nbt.putList
 import chylex.hee.util.nbt.putPos
 import chylex.hee.util.nbt.use
+import chylex.hee.util.random.nextInt
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.ChunkPos
 import net.minecraft.world.ISeedReader

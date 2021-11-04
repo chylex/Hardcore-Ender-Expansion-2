@@ -4,9 +4,9 @@ import chylex.hee.game.world.generation.feature.energyshrine.connection.EnergySh
 import chylex.hee.game.world.generation.feature.energyshrine.connection.EnergyShrineConnectionType.STAIR_MIDDLE
 import chylex.hee.game.world.generation.feature.energyshrine.connection.EnergyShrineConnectionType.STAIR_TOP
 import chylex.hee.game.world.generation.structure.piece.IStructurePieceConnection
-import chylex.hee.system.random.nextFloat
 import chylex.hee.util.math.Pos
 import chylex.hee.util.math.PosXZ
+import chylex.hee.util.random.nextFloat
 import net.minecraft.util.Direction.EAST
 import net.minecraft.util.Direction.SOUTH
 import java.util.Random

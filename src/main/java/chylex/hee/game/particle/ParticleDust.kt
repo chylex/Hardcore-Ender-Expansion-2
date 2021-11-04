@@ -7,9 +7,6 @@ import chylex.hee.game.particle.base.ParticleBase
 import chylex.hee.game.particle.data.IParticleData
 import chylex.hee.game.particle.spawner.IParticleMaker
 import chylex.hee.game.world.util.isLoaded
-import chylex.hee.system.random.nextFloat
-import chylex.hee.system.random.nextInt
-import chylex.hee.system.random.nextVector
 import chylex.hee.util.color.IntColor
 import chylex.hee.util.color.RGB
 import chylex.hee.util.forge.Side
@@ -19,6 +16,9 @@ import chylex.hee.util.math.Vec3
 import chylex.hee.util.math.square
 import chylex.hee.util.math.toRadians
 import chylex.hee.util.math.withY
+import chylex.hee.util.random.nextFloat
+import chylex.hee.util.random.nextInt
+import chylex.hee.util.random.nextVector
 import net.minecraft.client.particle.IParticleRenderType
 import net.minecraft.client.particle.IParticleRenderType.PARTICLE_SHEET_TRANSLUCENT
 import net.minecraft.client.particle.Particle

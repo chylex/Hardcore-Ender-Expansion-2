@@ -9,8 +9,8 @@ import chylex.hee.game.block.properties.BlockRenderLayer.CUTOUT
 import chylex.hee.game.block.properties.BlockStateModel
 import chylex.hee.game.block.properties.BlockStatePreset
 import chylex.hee.init.ModBlocks
-import chylex.hee.system.random.nextBiasedFloat
 import chylex.hee.util.math.ceilToInt
+import chylex.hee.util.random.nextBiasedFloat
 import net.minecraft.block.BlockState
 import net.minecraft.block.Blocks
 import net.minecraft.util.math.BlockPos

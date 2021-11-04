@@ -1,10 +1,10 @@
 package chylex.hee.game.entity.living.path
 
 import chylex.hee.game.entity.util.posVec
-import chylex.hee.system.random.nextInt
 import chylex.hee.util.math.Vec
 import chylex.hee.util.math.Vec3
 import chylex.hee.util.math.square
+import chylex.hee.util.random.nextInt
 import net.minecraft.entity.Entity
 import net.minecraft.entity.MobEntity
 import net.minecraft.pathfinding.GroundPathNavigator

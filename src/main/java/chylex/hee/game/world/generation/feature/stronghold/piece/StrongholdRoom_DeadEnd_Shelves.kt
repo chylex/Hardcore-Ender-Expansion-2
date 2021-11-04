@@ -10,8 +10,8 @@ import chylex.hee.game.world.generation.feature.stronghold.connection.Stronghold
 import chylex.hee.game.world.generation.structure.IStructureWorld
 import chylex.hee.game.world.generation.structure.piece.IStructurePieceConnection
 import chylex.hee.game.world.generation.trigger.LootChestStructureTrigger
-import chylex.hee.system.random.nextItem
 import chylex.hee.util.math.Pos
+import chylex.hee.util.random.nextItem
 import net.minecraft.block.Blocks
 import net.minecraft.util.Direction.EAST
 import net.minecraft.util.Direction.SOUTH

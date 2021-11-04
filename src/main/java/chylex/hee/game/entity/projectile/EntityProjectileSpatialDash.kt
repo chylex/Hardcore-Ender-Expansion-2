@@ -25,7 +25,6 @@ import chylex.hee.init.ModEntities
 import chylex.hee.init.ModSounds
 import chylex.hee.network.client.PacketClientFX
 import chylex.hee.system.heeTag
-import chylex.hee.system.random.nextInt
 import chylex.hee.util.buffer.readCompactVec
 import chylex.hee.util.buffer.use
 import chylex.hee.util.buffer.writeCompactVec
@@ -44,6 +43,7 @@ import chylex.hee.util.math.scale
 import chylex.hee.util.math.square
 import chylex.hee.util.nbt.TagCompound
 import chylex.hee.util.nbt.use
+import chylex.hee.util.random.nextInt
 import net.minecraft.entity.Entity
 import net.minecraft.entity.EntityType
 import net.minecraft.entity.LivingEntity

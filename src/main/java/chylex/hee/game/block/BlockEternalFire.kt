@@ -25,13 +25,13 @@ import chylex.hee.game.world.util.isTopSolid
 import chylex.hee.game.world.util.removeBlock
 import chylex.hee.game.world.util.setState
 import chylex.hee.init.ModBlocks
-import chylex.hee.system.random.nextFloat
-import chylex.hee.system.random.nextInt
-import chylex.hee.system.random.nextItem
 import chylex.hee.util.forge.Side
 import chylex.hee.util.forge.Sided
 import chylex.hee.util.forge.SubscribeEvent
 import chylex.hee.util.math.Vec
+import chylex.hee.util.random.nextFloat
+import chylex.hee.util.random.nextInt
+import chylex.hee.util.random.nextItem
 import net.minecraft.block.BlockState
 import net.minecraft.block.Blocks
 import net.minecraft.block.FireBlock

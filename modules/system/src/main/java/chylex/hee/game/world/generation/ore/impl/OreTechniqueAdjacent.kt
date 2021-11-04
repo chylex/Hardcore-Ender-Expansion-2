@@ -4,8 +4,8 @@ import chylex.hee.game.world.generation.IBlockPlacer
 import chylex.hee.game.world.generation.ore.IOreTechnique
 import chylex.hee.game.world.generation.structure.world.SegmentedWorld
 import chylex.hee.game.world.util.Facing6
-import chylex.hee.system.random.nextInt
-import chylex.hee.system.random.nextItem
+import chylex.hee.util.random.nextInt
+import chylex.hee.util.random.nextItem
 import net.minecraft.util.math.BlockPos
 import java.util.Random
 import kotlin.math.abs

@@ -16,12 +16,12 @@ import chylex.hee.game.mechanics.scorching.ScorchingHelper
 import chylex.hee.game.mechanics.scorching.ScorchingHelper.FX_ENTITY_HIT
 import chylex.hee.network.client.PacketClientFX
 import chylex.hee.system.MinecraftForgeEventBus
-import chylex.hee.system.random.nextFloat
 import chylex.hee.util.forge.EventPriority
 import chylex.hee.util.forge.SubscribeEvent
 import chylex.hee.util.math.floorToInt
 import chylex.hee.util.math.square
 import chylex.hee.util.math.toRadians
+import chylex.hee.util.random.nextFloat
 import net.minecraft.block.BlockState
 import net.minecraft.entity.LivingEntity
 import net.minecraft.entity.ai.attributes.Attributes.ATTACK_DAMAGE

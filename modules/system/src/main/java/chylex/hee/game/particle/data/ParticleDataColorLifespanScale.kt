@@ -1,10 +1,10 @@
 package chylex.hee.game.particle.data
 
 import chylex.hee.game.particle.spawner.IParticleMaker
-import chylex.hee.system.random.nextFloat
-import chylex.hee.system.random.nextInt
 import chylex.hee.util.color.IColorGenerator
 import chylex.hee.util.color.IntColor
+import chylex.hee.util.random.nextFloat
+import chylex.hee.util.random.nextInt
 import java.util.Random
 
 data class ParticleDataColorLifespanScale(val color: IntColor, val lifespan: Int, val scale: Float) {

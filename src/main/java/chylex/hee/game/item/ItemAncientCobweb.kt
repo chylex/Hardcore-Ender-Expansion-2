@@ -5,8 +5,8 @@ import chylex.hee.game.block.BlockAncientCobweb
 import chylex.hee.game.entity.util.motionY
 import chylex.hee.game.entity.util.posVec
 import chylex.hee.game.item.util.size
-import chylex.hee.system.random.nextInt
 import chylex.hee.util.math.center
+import chylex.hee.util.random.nextInt
 import net.minecraft.entity.Entity
 import net.minecraft.entity.LivingEntity
 import net.minecraft.entity.item.ItemEntity

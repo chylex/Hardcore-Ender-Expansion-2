@@ -34,11 +34,6 @@ import chylex.hee.game.world.util.floodFill
 import chylex.hee.game.world.util.offsetUntil
 import chylex.hee.game.world.util.offsetUntilExcept
 import chylex.hee.init.ModBlocks
-import chylex.hee.system.random.nextFloat
-import chylex.hee.system.random.nextInt
-import chylex.hee.system.random.nextItem
-import chylex.hee.system.random.nextVector
-import chylex.hee.system.random.removeItem
 import chylex.hee.util.math.Pos
 import chylex.hee.util.math.Size
 import chylex.hee.util.math.Vec3
@@ -52,6 +47,11 @@ import chylex.hee.util.math.square
 import chylex.hee.util.random.RandomDouble.Companion.Constant
 import chylex.hee.util.random.RandomInt.Companion.Constant
 import chylex.hee.util.random.RandomInt.Companion.Linear
+import chylex.hee.util.random.nextFloat
+import chylex.hee.util.random.nextInt
+import chylex.hee.util.random.nextItem
+import chylex.hee.util.random.nextVector
+import chylex.hee.util.random.removeItem
 import net.minecraft.block.Blocks
 import net.minecraft.util.Direction.DOWN
 import net.minecraft.util.Direction.UP

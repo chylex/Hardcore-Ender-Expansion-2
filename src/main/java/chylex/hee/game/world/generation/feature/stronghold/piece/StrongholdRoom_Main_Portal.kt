@@ -17,10 +17,10 @@ import chylex.hee.game.world.util.getBlock
 import chylex.hee.game.world.util.isAir
 import chylex.hee.game.world.util.isPeaceful
 import chylex.hee.game.world.util.offsetUntilExcept
-import chylex.hee.system.random.nextFloat
-import chylex.hee.system.random.nextInt
-import chylex.hee.system.random.removeItem
 import chylex.hee.util.math.Pos
+import chylex.hee.util.random.nextFloat
+import chylex.hee.util.random.nextInt
+import chylex.hee.util.random.removeItem
 import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.util.Direction.DOWN
 import net.minecraft.util.Direction.EAST

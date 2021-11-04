@@ -28,11 +28,6 @@ import chylex.hee.game.world.util.isAir
 import chylex.hee.game.world.util.setBlock
 import chylex.hee.init.ModBlocks
 import chylex.hee.network.client.PacketClientFX
-import chylex.hee.system.random.nextFloat
-import chylex.hee.system.random.nextItem
-import chylex.hee.system.random.nextItemOrNull
-import chylex.hee.system.random.nextVector2
-import chylex.hee.system.random.removeItemOrNull
 import chylex.hee.util.math.Pos
 import chylex.hee.util.math.Quaternion
 import chylex.hee.util.math.addY
@@ -46,6 +41,11 @@ import chylex.hee.util.math.toPitch
 import chylex.hee.util.math.toYaw
 import chylex.hee.util.nbt.TagCompound
 import chylex.hee.util.nbt.use
+import chylex.hee.util.random.nextFloat
+import chylex.hee.util.random.nextItem
+import chylex.hee.util.random.nextItemOrNull
+import chylex.hee.util.random.nextVector2
+import chylex.hee.util.random.removeItemOrNull
 import net.minecraft.block.Blocks
 import net.minecraft.client.particle.DiggingParticle
 import net.minecraft.client.world.ClientWorld

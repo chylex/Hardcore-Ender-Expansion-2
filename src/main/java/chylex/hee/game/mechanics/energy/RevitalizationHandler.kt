@@ -5,7 +5,6 @@ import chylex.hee.game.mechanics.energy.IEnergyQuantity.Internal
 import chylex.hee.game.mechanics.energy.IEnergyQuantity.Units
 import chylex.hee.game.world.util.breakBlock
 import chylex.hee.init.ModItems
-import chylex.hee.system.random.nextFloat
 import chylex.hee.util.delegate.NotifyOnChange
 import chylex.hee.util.math.component1
 import chylex.hee.util.math.component2
@@ -13,6 +12,7 @@ import chylex.hee.util.math.component3
 import chylex.hee.util.math.floorToInt
 import chylex.hee.util.nbt.TagCompound
 import chylex.hee.util.nbt.use
+import chylex.hee.util.random.nextFloat
 import net.minecraft.entity.item.ItemEntity
 import net.minecraft.item.ItemStack
 import net.minecraftforge.common.util.INBTSerializable

@@ -9,14 +9,14 @@ import chylex.hee.game.entity.util.motionX
 import chylex.hee.game.entity.util.motionZ
 import chylex.hee.game.entity.util.selectVulnerableEntities
 import chylex.hee.network.client.PacketClientLaunchInstantly
-import chylex.hee.system.random.nextFloat
-import chylex.hee.system.random.nextInt
 import chylex.hee.util.math.Vec3
 import chylex.hee.util.math.addY
 import chylex.hee.util.math.directionTowards
 import chylex.hee.util.math.square
 import chylex.hee.util.math.toRadians
 import chylex.hee.util.math.withY
+import chylex.hee.util.random.nextFloat
+import chylex.hee.util.random.nextInt
 import net.minecraft.entity.LivingEntity
 import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.util.math.AxisAlignedBB

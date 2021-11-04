@@ -24,14 +24,14 @@ import chylex.hee.game.territory.system.TerritoryInstance
 import chylex.hee.game.world.util.getBlock
 import chylex.hee.game.world.util.isPeaceful
 import chylex.hee.init.ModBlocks
-import chylex.hee.system.random.nextBiasedFloat
-import chylex.hee.system.random.nextFloat
-import chylex.hee.system.random.nextInt
 import chylex.hee.util.forge.Side
 import chylex.hee.util.forge.Sided
 import chylex.hee.util.math.center
 import chylex.hee.util.math.floorToInt
 import chylex.hee.util.math.toYaw
+import chylex.hee.util.random.nextBiasedFloat
+import chylex.hee.util.random.nextFloat
+import chylex.hee.util.random.nextInt
 import net.minecraft.block.Block
 import net.minecraft.block.BlockState
 import net.minecraft.block.FireBlock

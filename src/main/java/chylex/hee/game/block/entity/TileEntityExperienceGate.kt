@@ -30,8 +30,6 @@ import chylex.hee.init.ModSounds
 import chylex.hee.init.ModTileEntities
 import chylex.hee.network.client.PacketClientFX
 import chylex.hee.network.client.PacketClientUpdateExperience
-import chylex.hee.system.random.nextFloat
-import chylex.hee.system.random.nextInt
 import chylex.hee.util.color.RGB
 import chylex.hee.util.forge.Side
 import chylex.hee.util.forge.Sided
@@ -43,6 +41,8 @@ import chylex.hee.util.math.component3
 import chylex.hee.util.math.floorToInt
 import chylex.hee.util.nbt.TagCompound
 import chylex.hee.util.nbt.use
+import chylex.hee.util.random.nextFloat
+import chylex.hee.util.random.nextInt
 import net.minecraft.entity.Entity
 import net.minecraft.entity.item.ExperienceOrbEntity
 import net.minecraft.entity.item.ItemEntity

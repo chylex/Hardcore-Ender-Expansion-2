@@ -2,11 +2,11 @@ package chylex.hee.game.world.generation.feature.obsidiantower.piece
 
 import chylex.hee.game.world.generation.feature.obsidiantower.ObsidianTowerSpawnerLevel.LEVEL_1
 import chylex.hee.game.world.generation.structure.IStructureWorld
-import chylex.hee.system.random.nextInt
-import chylex.hee.system.random.nextItem
-import chylex.hee.system.random.removeItem
 import chylex.hee.util.math.Pos
 import chylex.hee.util.math.PosXZ
+import chylex.hee.util.random.nextInt
+import chylex.hee.util.random.nextItem
+import chylex.hee.util.random.removeItem
 import net.minecraft.block.Blocks
 import net.minecraft.util.Direction.EAST
 import net.minecraft.util.Direction.WEST

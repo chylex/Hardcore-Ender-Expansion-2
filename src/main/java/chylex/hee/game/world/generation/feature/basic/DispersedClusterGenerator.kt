@@ -8,9 +8,9 @@ import chylex.hee.game.world.util.getTile
 import chylex.hee.game.world.util.isAir
 import chylex.hee.game.world.util.setBlock
 import chylex.hee.init.ModBlocks
-import chylex.hee.system.random.nextInt
 import chylex.hee.util.math.component1
 import chylex.hee.util.math.component2
+import chylex.hee.util.random.nextInt
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.ChunkPos
 import net.minecraft.world.ISeedReader

@@ -1,7 +1,7 @@
 package chylex.hee.game.particle.spawner.properties
 
-import chylex.hee.system.random.nextFloat
-import chylex.hee.system.random.nextVector
+import chylex.hee.util.random.nextFloat
+import chylex.hee.util.random.nextVector
 import net.minecraft.entity.Entity
 import net.minecraft.util.Direction
 import net.minecraft.util.math.vector.Vector3d

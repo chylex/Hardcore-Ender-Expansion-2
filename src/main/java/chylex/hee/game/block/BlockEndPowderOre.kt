@@ -2,7 +2,7 @@ package chylex.hee.game.block
 
 import chylex.hee.game.block.properties.BlockBuilder
 import chylex.hee.game.block.properties.BlockDrop
-import chylex.hee.system.random.nextInt
+import chylex.hee.util.random.nextInt
 import net.minecraft.block.BlockState
 import net.minecraft.util.math.BlockPos
 import net.minecraft.world.IWorldReader

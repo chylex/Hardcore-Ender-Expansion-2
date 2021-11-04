@@ -6,11 +6,11 @@ import chylex.hee.game.inventory.util.getStack
 import chylex.hee.game.inventory.util.setStack
 import chylex.hee.game.inventory.util.size
 import chylex.hee.init.ModBlocks
-import chylex.hee.system.random.nextBiasedFloat
-import chylex.hee.system.random.nextFloat
-import chylex.hee.system.random.nextInt
 import chylex.hee.util.collection.WeightedList
 import chylex.hee.util.math.floorToInt
+import chylex.hee.util.random.nextBiasedFloat
+import chylex.hee.util.random.nextFloat
+import chylex.hee.util.random.nextInt
 import net.minecraft.inventory.EquipmentSlotType
 import net.minecraft.inventory.IInventory
 import net.minecraft.item.ArmorItem

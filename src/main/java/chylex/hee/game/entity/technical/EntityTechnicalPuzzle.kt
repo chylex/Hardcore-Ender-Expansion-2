@@ -13,7 +13,6 @@ import chylex.hee.init.ModEntities
 import chylex.hee.init.ModItems
 import chylex.hee.network.client.PacketClientFX
 import chylex.hee.system.heeTag
-import chylex.hee.system.random.nextItem
 import chylex.hee.util.math.Pos
 import chylex.hee.util.math.Vec
 import chylex.hee.util.math.Vec3
@@ -25,6 +24,7 @@ import chylex.hee.util.nbt.getPos
 import chylex.hee.util.nbt.putEnum
 import chylex.hee.util.nbt.putPos
 import chylex.hee.util.nbt.use
+import chylex.hee.util.random.nextItem
 import net.minecraft.entity.EntityType
 import net.minecraft.entity.item.ItemEntity
 import net.minecraft.item.ItemStack

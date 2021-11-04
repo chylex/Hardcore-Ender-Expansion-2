@@ -12,10 +12,6 @@ import chylex.hee.game.entity.util.lookPosVec
 import chylex.hee.game.entity.util.posVec
 import chylex.hee.game.world.util.blocksMovement
 import chylex.hee.game.world.util.offsetUntil
-import chylex.hee.system.random.nextFloat
-import chylex.hee.system.random.nextInt
-import chylex.hee.system.random.nextVector2
-import chylex.hee.system.random.removeItemOrNull
 import chylex.hee.util.math.Pos
 import chylex.hee.util.math.Vec
 import chylex.hee.util.math.Vec3
@@ -29,6 +25,10 @@ import chylex.hee.util.nbt.TagCompound
 import chylex.hee.util.nbt.getListOfCompounds
 import chylex.hee.util.nbt.putList
 import chylex.hee.util.nbt.use
+import chylex.hee.util.random.nextFloat
+import chylex.hee.util.random.nextInt
+import chylex.hee.util.random.nextVector2
+import chylex.hee.util.random.removeItemOrNull
 import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.util.Direction.DOWN
 import net.minecraft.util.SoundEvents

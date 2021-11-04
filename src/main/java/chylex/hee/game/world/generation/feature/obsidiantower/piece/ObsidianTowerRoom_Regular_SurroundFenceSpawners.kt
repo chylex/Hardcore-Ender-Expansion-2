@@ -1,9 +1,9 @@
 package chylex.hee.game.world.generation.feature.obsidiantower.piece
 
 import chylex.hee.game.world.generation.structure.IStructureWorld
-import chylex.hee.system.random.nextInt
-import chylex.hee.system.random.removeItem
 import chylex.hee.util.math.PosXZ
+import chylex.hee.util.random.nextInt
+import chylex.hee.util.random.removeItem
 
 class ObsidianTowerRoom_Regular_SurroundFenceSpawners(file: String) : ObsidianTowerRoom_General(file, guaranteesSpawnersOnLevel1 = true) {
 	override fun generateContents(world: IStructureWorld, instance: Instance) {

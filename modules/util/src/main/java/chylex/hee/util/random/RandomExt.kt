@@ -1,4 +1,4 @@
-package chylex.hee.system.random
+package chylex.hee.util.random
 
 import chylex.hee.util.math.Vec
 import chylex.hee.util.math.Vec3

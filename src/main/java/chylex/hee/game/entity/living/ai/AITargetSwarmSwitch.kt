@@ -2,7 +2,7 @@ package chylex.hee.game.entity.living.ai
 
 import chylex.hee.game.entity.util.posVec
 import chylex.hee.game.entity.util.selectExistingEntities
-import chylex.hee.system.random.nextItemOrNull
+import chylex.hee.util.random.nextItemOrNull
 import net.minecraft.entity.CreatureEntity
 import net.minecraft.entity.LivingEntity
 import java.util.EnumSet

@@ -12,7 +12,6 @@ import chylex.hee.game.world.generation.structure.piece.IStructureBuild
 import chylex.hee.game.world.generation.util.WorldToStructureWorldAdapter
 import chylex.hee.game.world.util.blocksMovement
 import chylex.hee.game.world.util.offsetUntil
-import chylex.hee.system.random.nextInt
 import chylex.hee.util.math.BoundingBox
 import chylex.hee.util.math.PosXZ
 import chylex.hee.util.math.Size.Alignment.CENTER
@@ -21,6 +20,7 @@ import chylex.hee.util.math.component1
 import chylex.hee.util.math.component2
 import chylex.hee.util.math.square
 import chylex.hee.util.math.xz
+import chylex.hee.util.random.nextInt
 import net.minecraft.util.Direction.DOWN
 import net.minecraft.util.Direction.UP
 import net.minecraft.util.math.BlockPos

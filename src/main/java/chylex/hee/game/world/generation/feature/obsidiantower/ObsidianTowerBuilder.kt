@@ -7,9 +7,9 @@ import chylex.hee.game.world.generation.structure.piece.StructureBuild
 import chylex.hee.game.world.generation.structure.piece.StructureBuild.AddMode.MERGE
 import chylex.hee.game.world.generation.structure.piece.StructurePiece
 import chylex.hee.game.world.util.Transform
-import chylex.hee.system.random.nextItem
 import chylex.hee.util.math.Size.Alignment.CENTER
 import chylex.hee.util.math.Size.Alignment.MIN
+import chylex.hee.util.random.nextItem
 import net.minecraft.util.Rotation
 import java.util.Random
 

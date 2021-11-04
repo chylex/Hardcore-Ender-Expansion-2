@@ -19,11 +19,11 @@ import chylex.hee.game.world.util.isPeaceful
 import chylex.hee.game.world.util.spawn
 import chylex.hee.init.ModEntities
 import chylex.hee.network.client.PacketClientFX
-import chylex.hee.system.random.nextFloat
-import chylex.hee.system.random.nextInt
-import chylex.hee.system.random.nextItem
 import chylex.hee.util.math.Pos
 import chylex.hee.util.math.bottomCenter
+import chylex.hee.util.random.nextFloat
+import chylex.hee.util.random.nextInt
+import chylex.hee.util.random.nextItem
 import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.world.World
 import java.util.Random

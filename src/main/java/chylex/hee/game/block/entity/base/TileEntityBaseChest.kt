@@ -8,13 +8,13 @@ import chylex.hee.game.world.util.FLAG_SYNC_CLIENT
 import chylex.hee.game.world.util.distanceSqTo
 import chylex.hee.game.world.util.getState
 import chylex.hee.game.world.util.getTile
-import chylex.hee.system.random.nextFloat
 import chylex.hee.util.forge.Side
 import chylex.hee.util.forge.Sided
 import chylex.hee.util.math.LerpedFloat
 import chylex.hee.util.nbt.TagCompound
 import chylex.hee.util.nbt.getStringOrNull
 import chylex.hee.util.nbt.use
+import chylex.hee.util.random.nextFloat
 import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.inventory.IInventory
 import net.minecraft.inventory.container.INamedContainerProvider

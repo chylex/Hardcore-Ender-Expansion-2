@@ -12,14 +12,14 @@ import chylex.hee.game.world.util.distanceSqTo
 import chylex.hee.game.world.util.offsetUntil
 import chylex.hee.game.world.util.spawn
 import chylex.hee.init.ModEntities
-import chylex.hee.system.random.nextFloat
-import chylex.hee.system.random.nextInt
-import chylex.hee.system.random.nextItem
 import chylex.hee.util.math.Pos
 import chylex.hee.util.math.bottomCenter
 import chylex.hee.util.math.center
 import chylex.hee.util.math.floorToInt
 import chylex.hee.util.math.square
+import chylex.hee.util.random.nextFloat
+import chylex.hee.util.random.nextInt
+import chylex.hee.util.random.nextItem
 import net.minecraft.entity.EntitySpawnPlacementRegistry
 import net.minecraft.entity.SpawnReason.NATURAL
 import net.minecraft.util.Direction.UP

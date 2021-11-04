@@ -25,10 +25,6 @@ import chylex.hee.game.world.util.min
 import chylex.hee.game.world.util.spawn
 import chylex.hee.init.ModEntities
 import chylex.hee.network.client.PacketClientFX
-import chylex.hee.system.random.nextFloat
-import chylex.hee.system.random.nextInt
-import chylex.hee.system.random.nextItemOrNull
-import chylex.hee.system.random.nextRounded
 import chylex.hee.util.math.Pos
 import chylex.hee.util.math.addY
 import chylex.hee.util.math.bottomCenter
@@ -38,6 +34,10 @@ import chylex.hee.util.math.component2
 import chylex.hee.util.math.component3
 import chylex.hee.util.nbt.TagCompound
 import chylex.hee.util.nbt.use
+import chylex.hee.util.random.nextFloat
+import chylex.hee.util.random.nextInt
+import chylex.hee.util.random.nextItemOrNull
+import chylex.hee.util.random.nextRounded
 import net.minecraft.block.Blocks
 import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.util.Direction.EAST

@@ -21,13 +21,13 @@ import chylex.hee.game.world.generation.structure.piece.StructurePiece
 import chylex.hee.game.world.util.Facing4
 import chylex.hee.game.world.util.Rotation4
 import chylex.hee.game.world.util.Transform
-import chylex.hee.system.random.nextInt
-import chylex.hee.system.random.nextItem
-import chylex.hee.system.random.removeItem
 import chylex.hee.util.collection.WeightedList
 import chylex.hee.util.collection.mutableWeightedListOf
 import chylex.hee.util.math.Size.Alignment.CENTER
 import chylex.hee.util.math.Size.Alignment.MAX
+import chylex.hee.util.random.nextInt
+import chylex.hee.util.random.nextItem
+import chylex.hee.util.random.removeItem
 import net.minecraft.util.Direction.EAST
 import net.minecraft.util.Direction.NORTH
 import net.minecraft.util.Direction.SOUTH

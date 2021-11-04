@@ -11,8 +11,8 @@ import chylex.hee.game.world.generation.trigger.LootChestStructureTrigger
 import chylex.hee.game.world.util.Facing4
 import chylex.hee.game.world.util.offsetUntil
 import chylex.hee.init.ModBlocks
-import chylex.hee.system.random.nextInt
 import chylex.hee.util.math.Pos
+import chylex.hee.util.random.nextInt
 import net.minecraft.block.Blocks
 import net.minecraft.util.Direction.EAST
 import net.minecraft.util.Direction.NORTH

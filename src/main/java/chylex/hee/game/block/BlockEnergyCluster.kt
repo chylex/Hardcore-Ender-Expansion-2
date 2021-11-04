@@ -11,11 +11,11 @@ import chylex.hee.game.world.util.getTile
 import chylex.hee.game.world.util.removeBlock
 import chylex.hee.init.ModBlocks
 import chylex.hee.init.ModItems
-import chylex.hee.system.random.nextFloat
 import chylex.hee.util.forge.Side
 import chylex.hee.util.forge.Sided
 import chylex.hee.util.math.ceilToInt
 import chylex.hee.util.math.floorToInt
+import chylex.hee.util.random.nextFloat
 import net.minecraft.block.BlockRenderType.INVISIBLE
 import net.minecraft.block.BlockState
 import net.minecraft.client.particle.ParticleManager

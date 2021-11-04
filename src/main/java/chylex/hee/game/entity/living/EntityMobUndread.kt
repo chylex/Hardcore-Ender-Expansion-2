@@ -37,8 +37,6 @@ import chylex.hee.init.ModEntities
 import chylex.hee.init.ModSounds
 import chylex.hee.network.client.PacketClientFX
 import chylex.hee.system.heeTag
-import chylex.hee.system.random.nextFloat
-import chylex.hee.system.random.nextInt
 import chylex.hee.util.buffer.readTag
 import chylex.hee.util.buffer.use
 import chylex.hee.util.buffer.writeTag
@@ -51,6 +49,8 @@ import chylex.hee.util.nbt.TagCompound
 import chylex.hee.util.nbt.getListOfStrings
 import chylex.hee.util.nbt.putList
 import chylex.hee.util.nbt.use
+import chylex.hee.util.random.nextFloat
+import chylex.hee.util.random.nextInt
 import net.minecraft.block.BlockState
 import net.minecraft.entity.CreatureAttribute
 import net.minecraft.entity.Entity

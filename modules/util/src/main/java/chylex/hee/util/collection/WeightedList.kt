@@ -1,6 +1,6 @@
 package chylex.hee.util.collection
 
-import chylex.hee.system.random.nextLong
+import chylex.hee.util.random.nextLong
 import java.util.Random
 
 class WeightedList<T>(val items: List<Pair<Int, T>>) {

@@ -4,12 +4,12 @@ import chylex.hee.game.block.entity.TileEntityEnergyCluster
 import chylex.hee.game.entity.living.EntityMobEndermiteInstability
 import chylex.hee.game.mechanics.instability.region.components.ClusterLeakLogic
 import chylex.hee.game.mechanics.instability.region.components.EndermiteTeleportLogic
-import chylex.hee.system.random.nextInt
 import chylex.hee.util.math.Pos
 import chylex.hee.util.math.floorToInt
 import chylex.hee.util.nbt.TagCompound
 import chylex.hee.util.nbt.TagLongArray
 import chylex.hee.util.nbt.use
+import chylex.hee.util.random.nextInt
 import net.minecraft.world.World
 import net.minecraft.world.server.ServerWorld
 import net.minecraftforge.common.util.INBTSerializable

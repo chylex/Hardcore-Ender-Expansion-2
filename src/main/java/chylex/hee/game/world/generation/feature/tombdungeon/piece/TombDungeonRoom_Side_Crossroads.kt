@@ -9,8 +9,8 @@ import chylex.hee.game.world.generation.feature.tombdungeon.connection.TombDunge
 import chylex.hee.game.world.generation.structure.IStructureWorld
 import chylex.hee.game.world.generation.structure.piece.IStructurePieceConnection
 import chylex.hee.init.ModBlocks
-import chylex.hee.system.random.nextItemOrNull
 import chylex.hee.util.math.Pos
+import chylex.hee.util.random.nextItemOrNull
 import net.minecraft.state.properties.Half
 import net.minecraft.state.properties.SlabType
 import net.minecraft.util.Direction

@@ -16,13 +16,13 @@ import chylex.hee.game.world.generation.trigger.TileEntityStructureTrigger
 import chylex.hee.game.world.util.Facing6
 import chylex.hee.game.world.util.distanceSqTo
 import chylex.hee.init.ModBlocks
-import chylex.hee.system.random.nextInt
-import chylex.hee.system.random.nextItem
-import chylex.hee.system.random.nextRounded
 import chylex.hee.util.collection.mutableWeightedListOf
 import chylex.hee.util.math.Pos
 import chylex.hee.util.math.PosXZ
 import chylex.hee.util.math.floorToInt
+import chylex.hee.util.random.nextInt
+import chylex.hee.util.random.nextItem
+import chylex.hee.util.random.nextRounded
 import net.minecraft.block.Blocks
 import net.minecraft.state.properties.SlabType
 import net.minecraft.tileentity.ChestTileEntity

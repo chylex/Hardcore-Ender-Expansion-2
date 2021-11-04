@@ -14,12 +14,12 @@ import chylex.hee.game.world.generation.structure.piece.StructureBuild.AddMode.A
 import chylex.hee.game.world.generation.structure.piece.StructureBuild.PositionedPiece
 import chylex.hee.game.world.generation.structure.piece.StructurePiece
 import chylex.hee.game.world.util.Transform
-import chylex.hee.system.random.nextInt
-import chylex.hee.system.random.nextItem
-import chylex.hee.system.random.nextItemOrNull
-import chylex.hee.system.random.removeItemOrNull
 import chylex.hee.util.math.Size.Alignment.CENTER
 import chylex.hee.util.math.Size.Alignment.MAX
+import chylex.hee.util.random.nextInt
+import chylex.hee.util.random.nextItem
+import chylex.hee.util.random.nextItemOrNull
+import chylex.hee.util.random.removeItemOrNull
 import java.util.Random
 
 object EnergyShrineBuilder : IStructureBuilder<IStructureBuild> {

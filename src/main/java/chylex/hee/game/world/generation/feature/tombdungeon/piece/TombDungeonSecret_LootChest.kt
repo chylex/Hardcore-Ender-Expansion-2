@@ -10,8 +10,8 @@ import chylex.hee.game.world.generation.structure.piece.IStructurePieceConnectio
 import chylex.hee.game.world.generation.trigger.TileEntityStructureTrigger
 import chylex.hee.init.ModBlocks
 import chylex.hee.init.ModItems
-import chylex.hee.system.random.nextInt
 import chylex.hee.util.math.Pos
+import chylex.hee.util.random.nextInt
 import net.minecraft.item.ItemStack
 import net.minecraft.util.Direction
 import net.minecraft.util.Direction.SOUTH

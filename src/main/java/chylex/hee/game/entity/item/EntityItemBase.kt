@@ -4,7 +4,7 @@ import chylex.hee.game.entity.IHeeEntityType
 import chylex.hee.game.entity.properties.EntitySize
 import chylex.hee.game.entity.properties.EntityTrackerInfo
 import chylex.hee.game.entity.util.cloneFrom
-import chylex.hee.system.random.nextFloat
+import chylex.hee.util.random.nextFloat
 import net.minecraft.entity.Entity
 import net.minecraft.entity.EntityType
 import net.minecraft.entity.item.ItemEntity

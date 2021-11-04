@@ -2,13 +2,13 @@ package chylex.hee.game.particle
 
 import chylex.hee.game.particle.data.ParticleDataColorLifespanScale
 import chylex.hee.game.particle.spawner.IParticleMaker
-import chylex.hee.system.random.nextFloat
 import chylex.hee.util.color.IColorGenerator
 import chylex.hee.util.color.IntColor
 import chylex.hee.util.color.RGB
 import chylex.hee.util.forge.Side
 import chylex.hee.util.forge.Sided
 import chylex.hee.util.math.floorToInt
+import chylex.hee.util.random.nextFloat
 import net.minecraft.client.particle.Particle
 import net.minecraft.client.world.ClientWorld
 import java.util.Random

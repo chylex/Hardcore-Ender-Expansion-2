@@ -14,13 +14,13 @@ import chylex.hee.game.potion.PurityEffect.MIN_DURATION
 import chylex.hee.game.potion.brewing.PotionBrewing.INFINITE_DURATION_THRESHOLD
 import chylex.hee.network.client.PacketClientFX
 import chylex.hee.network.client.PacketClientPotionDuration
-import chylex.hee.system.random.nextInt
-import chylex.hee.system.random.nextItemOrNull
 import chylex.hee.util.color.RGB
 import chylex.hee.util.forge.Side
 import chylex.hee.util.forge.Sided
 import chylex.hee.util.math.floorToInt
 import chylex.hee.util.math.scaleXZ
+import chylex.hee.util.random.nextInt
+import chylex.hee.util.random.nextItemOrNull
 import net.minecraft.block.BlockState
 import net.minecraft.entity.Entity
 import net.minecraft.entity.LivingEntity

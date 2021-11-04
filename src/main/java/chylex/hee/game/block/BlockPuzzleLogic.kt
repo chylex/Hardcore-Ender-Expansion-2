@@ -37,12 +37,12 @@ import chylex.hee.game.world.util.getState
 import chylex.hee.game.world.util.setState
 import chylex.hee.init.ModSounds
 import chylex.hee.network.client.PacketClientFX
-import chylex.hee.system.random.nextFloat
 import chylex.hee.util.color.RGB
 import chylex.hee.util.forge.Side
 import chylex.hee.util.forge.Sided
 import chylex.hee.util.math.BoundingBox
 import chylex.hee.util.math.Pos
+import chylex.hee.util.random.nextFloat
 import net.minecraft.block.Block
 import net.minecraft.block.BlockState
 import net.minecraft.block.HorizontalBlock.HORIZONTAL_FACING

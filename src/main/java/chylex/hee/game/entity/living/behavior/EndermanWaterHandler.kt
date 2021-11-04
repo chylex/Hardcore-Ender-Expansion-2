@@ -5,9 +5,9 @@ import chylex.hee.game.entity.util.OP_MUL_INCR_INDIVIDUAL
 import chylex.hee.game.entity.util.getAttributeInstance
 import chylex.hee.game.entity.util.tryApplyNonPersistentModifier
 import chylex.hee.game.entity.util.tryRemoveModifier
-import chylex.hee.system.random.nextInt
 import chylex.hee.util.nbt.TagCompound
 import chylex.hee.util.nbt.use
+import chylex.hee.util.random.nextInt
 import net.minecraft.entity.ai.attributes.AttributeModifier
 import net.minecraft.entity.ai.attributes.Attributes.ATTACK_DAMAGE
 import net.minecraft.util.DamageSource

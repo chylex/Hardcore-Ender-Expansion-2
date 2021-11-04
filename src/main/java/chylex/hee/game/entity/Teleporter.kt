@@ -22,8 +22,6 @@ import chylex.hee.network.client.PacketClientFX
 import chylex.hee.network.client.PacketClientMoveYourAss
 import chylex.hee.network.client.PacketClientRotateInstantly
 import chylex.hee.network.client.PacketClientTeleportInstantly
-import chylex.hee.system.random.nextFloat
-import chylex.hee.system.random.nextVector
 import chylex.hee.util.buffer.readCompactVec
 import chylex.hee.util.buffer.use
 import chylex.hee.util.buffer.writeCompactVec
@@ -35,6 +33,8 @@ import chylex.hee.util.math.directionTowards
 import chylex.hee.util.math.floorToInt
 import chylex.hee.util.math.lerpTowards
 import chylex.hee.util.math.subtractY
+import chylex.hee.util.random.nextFloat
+import chylex.hee.util.random.nextVector
 import net.minecraft.entity.CreatureEntity
 import net.minecraft.entity.LivingEntity
 import net.minecraft.entity.monster.EndermanEntity

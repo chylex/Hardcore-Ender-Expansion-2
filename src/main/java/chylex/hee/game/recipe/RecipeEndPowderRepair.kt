@@ -4,8 +4,8 @@ import chylex.hee.game.inventory.util.nonEmptySlots
 import chylex.hee.game.item.util.enchantmentList
 import chylex.hee.game.item.util.size
 import chylex.hee.init.ModItems
-import chylex.hee.system.random.nextItem
 import chylex.hee.util.math.shlong
+import chylex.hee.util.random.nextItem
 import net.minecraft.enchantment.Enchantment
 import net.minecraft.inventory.CraftingInventory
 import net.minecraft.item.ItemStack

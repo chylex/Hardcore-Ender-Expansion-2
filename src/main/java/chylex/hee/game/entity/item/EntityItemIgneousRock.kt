@@ -43,10 +43,6 @@ import chylex.hee.init.ModItems
 import chylex.hee.init.ModSounds
 import chylex.hee.network.client.PacketClientFX
 import chylex.hee.system.heeTag
-import chylex.hee.system.random.nextBiasedFloat
-import chylex.hee.system.random.nextFloat
-import chylex.hee.system.random.nextInt
-import chylex.hee.system.random.nextVector
 import chylex.hee.util.math.Pos
 import chylex.hee.util.math.ceilToInt
 import chylex.hee.util.math.floorToInt
@@ -55,6 +51,10 @@ import chylex.hee.util.nbt.TagCompound
 import chylex.hee.util.nbt.getEnum
 import chylex.hee.util.nbt.putEnum
 import chylex.hee.util.nbt.use
+import chylex.hee.util.random.nextBiasedFloat
+import chylex.hee.util.random.nextFloat
+import chylex.hee.util.random.nextInt
+import chylex.hee.util.random.nextVector
 import net.minecraft.block.Block
 import net.minecraft.block.BlockState
 import net.minecraft.block.Blocks

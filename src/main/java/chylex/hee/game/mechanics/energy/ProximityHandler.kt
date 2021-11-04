@@ -4,12 +4,12 @@ import chylex.hee.game.block.entity.TileEntityEnergyCluster
 import chylex.hee.game.block.entity.TileEntityEnergyCluster.LeakType
 import chylex.hee.game.mechanics.energy.IEnergyQuantity.Units
 import chylex.hee.game.mechanics.instability.Instability
-import chylex.hee.system.random.nextInt
 import chylex.hee.util.math.ceilToInt
 import chylex.hee.util.math.component1
 import chylex.hee.util.math.component2
 import chylex.hee.util.nbt.TagCompound
 import chylex.hee.util.nbt.use
+import chylex.hee.util.random.nextInt
 import net.minecraft.util.math.ChunkPos
 import net.minecraftforge.common.util.INBTSerializable
 import java.util.Random

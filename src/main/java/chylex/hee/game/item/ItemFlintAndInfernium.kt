@@ -15,10 +15,10 @@ import chylex.hee.init.ModBlocks
 import chylex.hee.system.MinecraftForgeEventBus
 import chylex.hee.system.heeTag
 import chylex.hee.system.heeTagOrNull
-import chylex.hee.system.random.nextFloat
 import chylex.hee.util.forge.EventPriority
 import chylex.hee.util.forge.SubscribeAllEvents
 import chylex.hee.util.forge.SubscribeEvent
+import chylex.hee.util.random.nextFloat
 import net.minecraft.block.Blocks
 import net.minecraft.entity.LivingEntity
 import net.minecraft.entity.monster.CreeperEntity

@@ -8,9 +8,9 @@ import chylex.hee.game.item.properties.ItemModel
 import chylex.hee.game.item.util.size
 import chylex.hee.system.heeTag
 import chylex.hee.system.heeTagOrNull
-import chylex.hee.system.random.nextFloat
 import chylex.hee.util.forge.Side
 import chylex.hee.util.forge.Sided
+import chylex.hee.util.random.nextFloat
 import net.minecraft.client.util.ITooltipFlag
 import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.item.ExperienceBottleItem

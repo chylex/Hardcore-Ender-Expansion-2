@@ -8,9 +8,9 @@ import chylex.hee.game.world.generation.feature.tombdungeon.TombDungeonLevel
 import chylex.hee.game.world.generation.feature.tombdungeon.TombDungeonLevel.MobAmount
 import chylex.hee.game.world.generation.structure.IStructureWorld
 import chylex.hee.init.ModBlocks
-import chylex.hee.system.random.nextInt
-import chylex.hee.system.random.nextRounded
 import chylex.hee.util.math.Pos
+import chylex.hee.util.random.nextInt
+import chylex.hee.util.random.nextRounded
 import net.minecraft.state.properties.Half
 import net.minecraft.state.properties.StairsShape
 import net.minecraft.util.Direction.EAST

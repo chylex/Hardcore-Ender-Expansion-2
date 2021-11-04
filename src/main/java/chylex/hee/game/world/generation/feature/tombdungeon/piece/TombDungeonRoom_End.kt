@@ -26,11 +26,11 @@ import chylex.hee.game.world.util.allInCenteredBox
 import chylex.hee.game.world.util.floodFill
 import chylex.hee.game.world.util.getBlock
 import chylex.hee.init.ModBlocks
-import chylex.hee.system.random.nextInt
 import chylex.hee.util.math.BoundingBox
 import chylex.hee.util.math.Pos
 import chylex.hee.util.math.addY
 import chylex.hee.util.nbt.TagCompound
+import chylex.hee.util.random.nextInt
 import net.minecraft.util.Direction
 import net.minecraft.util.Direction.Axis
 import net.minecraft.util.Direction.EAST

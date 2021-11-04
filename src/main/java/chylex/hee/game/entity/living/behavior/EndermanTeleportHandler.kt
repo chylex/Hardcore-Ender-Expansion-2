@@ -27,9 +27,6 @@ import chylex.hee.game.world.util.isLoaded
 import chylex.hee.game.world.util.offsetUntilExcept
 import chylex.hee.init.ModSounds
 import chylex.hee.network.client.PacketClientFX
-import chylex.hee.system.random.nextFloat
-import chylex.hee.system.random.nextInt
-import chylex.hee.system.random.nextVector2
 import chylex.hee.util.color.RGB
 import chylex.hee.util.math.Pos
 import chylex.hee.util.math.Vec
@@ -44,6 +41,9 @@ import chylex.hee.util.math.toRadians
 import chylex.hee.util.math.withY
 import chylex.hee.util.nbt.TagCompound
 import chylex.hee.util.nbt.use
+import chylex.hee.util.random.nextFloat
+import chylex.hee.util.random.nextInt
+import chylex.hee.util.random.nextVector2
 import net.minecraft.entity.Entity
 import net.minecraft.potion.Effects
 import net.minecraft.util.Direction.DOWN

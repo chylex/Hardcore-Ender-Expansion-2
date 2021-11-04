@@ -42,12 +42,12 @@ import chylex.hee.game.world.generation.structure.palette.PaletteBuilder
 import chylex.hee.game.world.generation.util.PaletteMappings
 import chylex.hee.init.ModBlocks
 import chylex.hee.init.ModItems
-import chylex.hee.system.random.nextInt
-import chylex.hee.system.random.nextItem
-import chylex.hee.system.random.removeItem
 import chylex.hee.util.collection.MutableWeightedList
 import chylex.hee.util.collection.weightedListOf
 import chylex.hee.util.math.Size
+import chylex.hee.util.random.nextInt
+import chylex.hee.util.random.nextItem
+import chylex.hee.util.random.removeItem
 import net.minecraft.block.Block
 import net.minecraft.block.Blocks
 import net.minecraft.block.SilverfishBlock

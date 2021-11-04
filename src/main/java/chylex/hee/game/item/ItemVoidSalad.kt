@@ -12,11 +12,11 @@ import chylex.hee.game.item.util.ItemProperty
 import chylex.hee.game.potion.util.makeInstance
 import chylex.hee.system.heeTag
 import chylex.hee.system.heeTagOrNull
-import chylex.hee.system.random.nextFloat
 import chylex.hee.util.forge.SubscribeAllEvents
 import chylex.hee.util.forge.SubscribeEvent
 import chylex.hee.util.nbt.getEnum
 import chylex.hee.util.nbt.putEnum
+import chylex.hee.util.random.nextFloat
 import net.minecraft.entity.LivingEntity
 import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.item.Food

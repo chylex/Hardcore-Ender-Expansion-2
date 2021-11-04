@@ -2,7 +2,7 @@ package chylex.hee.game.loot.functions
 
 import chylex.hee.init.ModLoot
 import chylex.hee.system.getIfExists
-import chylex.hee.system.random.nextItem
+import chylex.hee.util.random.nextItem
 import com.google.gson.JsonArray
 import com.google.gson.JsonDeserializationContext
 import com.google.gson.JsonObject

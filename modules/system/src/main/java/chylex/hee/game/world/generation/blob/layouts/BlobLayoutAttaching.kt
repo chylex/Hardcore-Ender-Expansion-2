@@ -3,10 +3,10 @@ package chylex.hee.game.world.generation.blob.layouts
 import chylex.hee.game.world.generation.blob.BlobGenerator
 import chylex.hee.game.world.generation.blob.IBlobLayout
 import chylex.hee.game.world.generation.structure.world.ScaffoldedWorld
-import chylex.hee.system.random.nextVector
 import chylex.hee.util.math.Pos
 import chylex.hee.util.math.Size
 import chylex.hee.util.math.center
+import chylex.hee.util.random.nextVector
 import net.minecraft.util.math.BlockPos
 import java.util.Random
 

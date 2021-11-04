@@ -16,13 +16,13 @@ import chylex.hee.game.world.util.getBlock
 import chylex.hee.game.world.util.getTile
 import chylex.hee.init.ModBlocks
 import chylex.hee.network.client.PacketClientFX
-import chylex.hee.system.random.nextFloat
 import chylex.hee.util.buffer.readPos
 import chylex.hee.util.buffer.use
 import chylex.hee.util.buffer.writePos
 import chylex.hee.util.math.center
 import chylex.hee.util.math.directionTowards
 import chylex.hee.util.math.floorToInt
+import chylex.hee.util.random.nextFloat
 import net.minecraft.network.PacketBuffer
 import net.minecraft.util.math.BlockPos
 import net.minecraft.world.World

@@ -6,10 +6,10 @@ import chylex.hee.game.entity.properties.EntityTrackerInfo
 import chylex.hee.game.fx.util.playPlayer
 import chylex.hee.game.territory.system.TerritoryInstance
 import chylex.hee.init.ModEntities
-import chylex.hee.system.random.nextFloat
 import chylex.hee.util.forge.Side
 import chylex.hee.util.forge.Sided
 import chylex.hee.util.nbt.TagCompound
+import chylex.hee.util.random.nextFloat
 import net.minecraft.entity.Entity
 import net.minecraft.entity.EntityType
 import net.minecraft.network.IPacket

@@ -4,8 +4,8 @@ import chylex.hee.game.world.generation.IBlockPlacer
 import chylex.hee.game.world.generation.cave.ICaveCarver
 import chylex.hee.game.world.generation.structure.world.SegmentedWorld
 import chylex.hee.game.world.util.allInCenteredBoxMutable
-import chylex.hee.system.random.nextFloat
 import chylex.hee.util.math.Pos
+import chylex.hee.util.random.nextFloat
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.vector.Vector3d
 import kotlin.math.abs

@@ -17,10 +17,10 @@ import chylex.hee.game.Resource
 import chylex.hee.game.block.BlockTablePedestal
 import chylex.hee.game.block.entity.TileEntityTablePedestal
 import chylex.hee.game.item.util.size
-import chylex.hee.system.random.nextFloat
 import chylex.hee.util.forge.Side
 import chylex.hee.util.forge.Sided
 import chylex.hee.util.math.toRadians
+import chylex.hee.util.random.nextFloat
 import com.mojang.blaze3d.matrix.MatrixStack
 import net.minecraft.client.renderer.IRenderTypeBuffer
 import net.minecraft.client.renderer.ItemRenderer

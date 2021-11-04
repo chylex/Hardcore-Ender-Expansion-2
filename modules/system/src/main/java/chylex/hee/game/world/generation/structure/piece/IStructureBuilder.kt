@@ -4,7 +4,7 @@ import chylex.hee.game.world.generation.structure.piece.StructureBuild.AddMode
 import chylex.hee.game.world.generation.structure.piece.StructureBuild.PositionedPiece
 import chylex.hee.game.world.util.Rotation4
 import chylex.hee.game.world.util.Transform
-import chylex.hee.system.random.nextItem
+import chylex.hee.util.random.nextItem
 import java.util.Random
 
 interface IStructureBuilder<T : IStructureBuild> {

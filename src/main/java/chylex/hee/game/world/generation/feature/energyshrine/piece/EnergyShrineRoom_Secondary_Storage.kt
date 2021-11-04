@@ -9,9 +9,9 @@ import chylex.hee.game.world.generation.structure.piece.IStructurePieceConnectio
 import chylex.hee.game.world.generation.trigger.LootChestStructureTrigger
 import chylex.hee.game.world.util.allInBoxMutable
 import chylex.hee.init.ModBlocks
-import chylex.hee.system.random.nextInt
-import chylex.hee.system.random.nextItem
 import chylex.hee.util.math.Pos
+import chylex.hee.util.random.nextInt
+import chylex.hee.util.random.nextItem
 import net.minecraft.block.Blocks
 import net.minecraft.util.Direction.NORTH
 import net.minecraft.util.Direction.SOUTH

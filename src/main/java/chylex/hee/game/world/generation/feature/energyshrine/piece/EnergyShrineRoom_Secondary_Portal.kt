@@ -6,8 +6,8 @@ import chylex.hee.game.world.generation.feature.energyshrine.connection.EnergySh
 import chylex.hee.game.world.generation.feature.energyshrine.connection.EnergyShrineConnectionType.ROOM
 import chylex.hee.game.world.generation.structure.IStructureWorld
 import chylex.hee.game.world.generation.structure.piece.IStructurePieceConnection
-import chylex.hee.system.random.nextItem
 import chylex.hee.util.math.Pos
+import chylex.hee.util.random.nextItem
 import net.minecraft.util.Direction.NORTH
 import net.minecraft.util.Direction.SOUTH
 

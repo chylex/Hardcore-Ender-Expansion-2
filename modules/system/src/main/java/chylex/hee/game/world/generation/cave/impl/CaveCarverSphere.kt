@@ -5,9 +5,9 @@ import chylex.hee.game.world.generation.cave.ICaveCarver
 import chylex.hee.game.world.generation.structure.world.SegmentedWorld
 import chylex.hee.game.world.util.allInCenteredBoxMutable
 import chylex.hee.game.world.util.distanceSqTo
-import chylex.hee.system.random.nextFloat
 import chylex.hee.util.math.Pos
 import chylex.hee.util.math.square
+import chylex.hee.util.random.nextFloat
 import net.minecraft.util.math.vector.Vector3d
 
 class CaveCarverSphere(private val maxRandomRadiusReduction: Float) : ICaveCarver {

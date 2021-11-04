@@ -6,10 +6,10 @@ import chylex.hee.game.world.util.isTopSolid
 import chylex.hee.game.world.util.offsetUntil
 import chylex.hee.game.world.util.spawn
 import chylex.hee.init.ModEntities
-import chylex.hee.system.random.nextFloat
-import chylex.hee.system.random.nextVector
 import chylex.hee.util.math.Pos
 import chylex.hee.util.math.center
+import chylex.hee.util.random.nextFloat
+import chylex.hee.util.random.nextVector
 import net.minecraft.potion.Effects
 import net.minecraft.util.Direction.UP
 import net.minecraft.util.math.BlockPos

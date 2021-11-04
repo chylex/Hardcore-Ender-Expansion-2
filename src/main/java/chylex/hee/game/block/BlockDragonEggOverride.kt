@@ -18,9 +18,9 @@ import chylex.hee.game.world.util.removeBlock
 import chylex.hee.game.world.util.setState
 import chylex.hee.init.ModSounds
 import chylex.hee.network.client.PacketClientFX
-import chylex.hee.system.random.nextInt
 import chylex.hee.util.math.Vec3
 import chylex.hee.util.math.center
+import chylex.hee.util.random.nextInt
 import net.minecraft.block.BlockState
 import net.minecraft.block.Blocks
 import net.minecraft.block.DragonEggBlock

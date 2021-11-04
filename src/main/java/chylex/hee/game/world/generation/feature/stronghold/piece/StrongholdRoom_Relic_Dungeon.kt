@@ -3,8 +3,8 @@ package chylex.hee.game.world.generation.feature.stronghold.piece
 import chylex.hee.game.block.util.SKULL_ROTATION
 import chylex.hee.game.block.util.with
 import chylex.hee.game.world.generation.structure.IStructureWorld
-import chylex.hee.system.random.nextInt
 import chylex.hee.util.math.Pos
+import chylex.hee.util.random.nextInt
 import net.minecraft.block.Blocks
 import net.minecraft.item.ItemStack
 

@@ -7,12 +7,12 @@ import chylex.hee.game.world.generation.structure.file.IStructurePieceFromFile
 import chylex.hee.game.world.generation.structure.file.IStructurePieceFromFile.Delegate
 import chylex.hee.game.world.util.Facing6
 import chylex.hee.init.ModBlocks
-import chylex.hee.system.random.nextFloat
-import chylex.hee.system.random.nextInt
-import chylex.hee.system.random.nextItemOrNull
 import chylex.hee.util.math.PosXZ
 import chylex.hee.util.math.ceilToInt
 import chylex.hee.util.math.toRadians
+import chylex.hee.util.random.nextFloat
+import chylex.hee.util.random.nextInt
+import chylex.hee.util.random.nextItemOrNull
 import net.minecraft.util.math.BlockPos
 import java.util.Random
 

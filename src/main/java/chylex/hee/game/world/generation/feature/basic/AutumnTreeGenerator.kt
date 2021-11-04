@@ -7,8 +7,8 @@ import chylex.hee.game.world.generation.structure.world.SegmentedWorld
 import chylex.hee.game.world.util.Facing4
 import chylex.hee.game.world.util.allInCenteredBoxMutable
 import chylex.hee.init.ModBlocks
-import chylex.hee.system.random.nextInt
 import chylex.hee.util.math.Size
+import chylex.hee.util.random.nextInt
 import net.minecraft.util.math.BlockPos
 import java.util.Random
 import kotlin.math.abs

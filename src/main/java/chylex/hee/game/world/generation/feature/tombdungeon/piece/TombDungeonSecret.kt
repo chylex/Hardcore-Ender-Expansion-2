@@ -3,7 +3,7 @@ package chylex.hee.game.world.generation.feature.tombdungeon.piece
 import chylex.hee.game.block.util.withFacing
 import chylex.hee.game.world.generation.structure.IStructureWorld
 import chylex.hee.init.ModBlocks
-import chylex.hee.system.random.nextInt
+import chylex.hee.util.random.nextInt
 import net.minecraft.util.Direction
 import net.minecraft.util.Direction.NORTH
 import net.minecraft.util.math.BlockPos

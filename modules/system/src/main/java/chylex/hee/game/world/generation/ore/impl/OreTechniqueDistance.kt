@@ -3,10 +3,10 @@ package chylex.hee.game.world.generation.ore.impl
 import chylex.hee.game.world.generation.IBlockPlacer
 import chylex.hee.game.world.generation.ore.IOreTechnique
 import chylex.hee.game.world.generation.structure.world.SegmentedWorld
-import chylex.hee.system.random.nextVector
 import chylex.hee.util.math.Pos
 import chylex.hee.util.math.ceilToInt
 import chylex.hee.util.math.center
+import chylex.hee.util.random.nextVector
 import net.minecraft.util.math.BlockPos
 import java.util.Random
 import kotlin.math.pow

@@ -2,11 +2,11 @@ package chylex.hee.game.particle
 
 import chylex.hee.game.particle.base.ParticleBaseHit
 import chylex.hee.game.particle.data.ParticleDataColorLifespanScale
-import chylex.hee.system.random.nextInt
 import chylex.hee.util.color.IColorGenerator
 import chylex.hee.util.color.RGB
 import chylex.hee.util.forge.Side
 import chylex.hee.util.forge.Sided
+import chylex.hee.util.random.nextInt
 import net.minecraft.client.particle.Particle
 import net.minecraft.client.world.ClientWorld
 

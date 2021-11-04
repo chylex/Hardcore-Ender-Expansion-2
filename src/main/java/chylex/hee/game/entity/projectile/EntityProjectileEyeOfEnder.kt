@@ -20,7 +20,6 @@ import chylex.hee.game.world.util.getState
 import chylex.hee.game.world.util.offsetUntil
 import chylex.hee.init.ModEntities
 import chylex.hee.system.heeTag
-import chylex.hee.system.random.nextInt
 import chylex.hee.util.buffer.readPos
 import chylex.hee.util.buffer.use
 import chylex.hee.util.buffer.writePos
@@ -44,6 +43,7 @@ import chylex.hee.util.nbt.TagCompound
 import chylex.hee.util.nbt.getPosOrNull
 import chylex.hee.util.nbt.putPos
 import chylex.hee.util.nbt.use
+import chylex.hee.util.random.nextInt
 import net.minecraft.block.BlockState
 import net.minecraft.block.FlowingFluidBlock
 import net.minecraft.entity.Entity

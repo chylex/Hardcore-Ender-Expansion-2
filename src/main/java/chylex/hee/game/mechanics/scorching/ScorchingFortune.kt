@@ -5,8 +5,8 @@ import chylex.hee.game.item.util.copyIfNotEmpty
 import chylex.hee.game.item.util.isNotEmpty
 import chylex.hee.game.item.util.size
 import chylex.hee.init.ModBlocks
-import chylex.hee.system.random.nextRounded
 import chylex.hee.util.math.center
+import chylex.hee.util.random.nextRounded
 import net.minecraft.block.Block
 import net.minecraft.block.Blocks
 import net.minecraft.inventory.Inventory

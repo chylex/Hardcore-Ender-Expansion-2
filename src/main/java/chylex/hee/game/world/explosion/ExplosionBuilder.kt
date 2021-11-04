@@ -7,7 +7,6 @@ import chylex.hee.game.world.util.getState
 import chylex.hee.game.world.util.isAir
 import chylex.hee.game.world.util.isFullBlock
 import chylex.hee.game.world.util.setBlock
-import chylex.hee.system.random.nextFloat
 import chylex.hee.util.math.Vec
 import chylex.hee.util.math.Vec3
 import chylex.hee.util.math.center
@@ -16,6 +15,7 @@ import chylex.hee.util.math.component2
 import chylex.hee.util.math.component3
 import chylex.hee.util.math.directionTowards
 import chylex.hee.util.math.square
+import chylex.hee.util.random.nextFloat
 import net.minecraft.block.Block
 import net.minecraft.block.Blocks
 import net.minecraft.enchantment.EnchantmentHelper

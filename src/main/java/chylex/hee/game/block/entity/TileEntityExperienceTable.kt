@@ -18,12 +18,12 @@ import chylex.hee.game.mechanics.table.process.serializer.MultiProcessSerializer
 import chylex.hee.init.ModBlocks
 import chylex.hee.init.ModItems
 import chylex.hee.init.ModTileEntities
-import chylex.hee.system.random.nextFloat
 import chylex.hee.util.color.RGB
 import chylex.hee.util.math.ceilToInt
 import chylex.hee.util.math.floorToInt
 import chylex.hee.util.math.over
 import chylex.hee.util.nbt.TagCompound
+import chylex.hee.util.random.nextFloat
 import net.minecraft.enchantment.EnchantmentHelper
 import net.minecraft.inventory.Inventory
 import net.minecraft.item.BlockItem

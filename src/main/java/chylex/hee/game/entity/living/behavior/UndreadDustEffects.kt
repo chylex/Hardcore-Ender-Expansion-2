@@ -25,9 +25,6 @@ import chylex.hee.game.world.explosion.ExplosionBuilder
 import chylex.hee.init.ModEntities
 import chylex.hee.init.ModSounds
 import chylex.hee.network.client.PacketClientFX
-import chylex.hee.system.random.nextFloat
-import chylex.hee.system.random.nextInt
-import chylex.hee.system.random.nextRounded
 import chylex.hee.util.color.IColorGenerator
 import chylex.hee.util.color.RGB
 import chylex.hee.util.forge.Side
@@ -38,6 +35,9 @@ import chylex.hee.util.math.addY
 import chylex.hee.util.math.ceilToInt
 import chylex.hee.util.math.withY
 import chylex.hee.util.nbt.NBTObjectList
+import chylex.hee.util.random.nextFloat
+import chylex.hee.util.random.nextInt
+import chylex.hee.util.random.nextRounded
 import com.google.common.collect.Sets
 import net.minecraft.entity.Entity
 import net.minecraft.entity.ILivingEntityData

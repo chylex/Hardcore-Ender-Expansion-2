@@ -17,10 +17,10 @@ import chylex.hee.game.world.generation.trigger.EntityStructureTrigger
 import chylex.hee.game.world.util.getBlock
 import chylex.hee.game.world.util.getState
 import chylex.hee.game.world.util.offsetUntil
-import chylex.hee.system.random.nextInt
 import chylex.hee.util.color.IColorGenerator
 import chylex.hee.util.color.RGB
 import chylex.hee.util.math.Pos
+import chylex.hee.util.random.nextInt
 import net.minecraft.util.Direction.DOWN
 import net.minecraft.util.Direction.UP
 import net.minecraft.world.World

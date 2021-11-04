@@ -11,9 +11,9 @@ import chylex.hee.game.particle.spawner.properties.IOffset.InBox
 import chylex.hee.game.particle.spawner.properties.IShape.Point
 import chylex.hee.game.world.util.getState
 import chylex.hee.game.world.util.isFullBlock
-import chylex.hee.system.random.nextInt
 import chylex.hee.util.forge.Side
 import chylex.hee.util.forge.Sided
+import chylex.hee.util.random.nextInt
 import net.minecraft.block.BlockState
 import net.minecraft.client.particle.ParticleManager
 import net.minecraft.entity.player.PlayerEntity

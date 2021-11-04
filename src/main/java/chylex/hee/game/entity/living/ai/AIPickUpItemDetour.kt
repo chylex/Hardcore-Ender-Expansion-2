@@ -2,9 +2,9 @@ package chylex.hee.game.entity.living.ai
 
 import chylex.hee.game.entity.util.posVec
 import chylex.hee.game.entity.util.selectExistingEntities
-import chylex.hee.system.random.nextInt
-import chylex.hee.system.random.nextItemOrNull
 import chylex.hee.util.math.square
+import chylex.hee.util.random.nextInt
+import chylex.hee.util.random.nextItemOrNull
 import net.minecraft.entity.MobEntity
 import net.minecraft.entity.ai.goal.Goal
 import net.minecraft.entity.ai.goal.Goal.Flag.JUMP

@@ -6,9 +6,9 @@ import chylex.hee.game.world.generation.feature.tombdungeon.connection.TombDunge
 import chylex.hee.game.world.generation.feature.tombdungeon.connection.TombDungeonConnectionType.TOMB_ENTRANCE_OUTSIDE
 import chylex.hee.game.world.generation.structure.IStructureWorld
 import chylex.hee.game.world.generation.structure.piece.IStructurePieceConnection
-import chylex.hee.system.random.nextItem
 import chylex.hee.util.math.Pos
 import chylex.hee.util.math.Size
+import chylex.hee.util.random.nextItem
 import net.minecraft.util.Direction.EAST
 import net.minecraft.util.Direction.NORTH
 import net.minecraft.util.Direction.SOUTH

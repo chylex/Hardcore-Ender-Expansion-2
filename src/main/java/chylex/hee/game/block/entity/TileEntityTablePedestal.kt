@@ -37,7 +37,6 @@ import chylex.hee.init.ModBlocks
 import chylex.hee.init.ModItems
 import chylex.hee.init.ModTileEntities
 import chylex.hee.network.client.PacketClientFX
-import chylex.hee.system.random.nextFloat
 import chylex.hee.util.color.IntColor
 import chylex.hee.util.delegate.NotifyOnChange
 import chylex.hee.util.forge.Side
@@ -47,6 +46,7 @@ import chylex.hee.util.nbt.getIntegerOrNull
 import chylex.hee.util.nbt.getPosOrNull
 import chylex.hee.util.nbt.putPos
 import chylex.hee.util.nbt.use
+import chylex.hee.util.random.nextFloat
 import net.minecraft.entity.item.ItemEntity
 import net.minecraft.entity.player.PlayerInventory
 import net.minecraft.item.ItemStack

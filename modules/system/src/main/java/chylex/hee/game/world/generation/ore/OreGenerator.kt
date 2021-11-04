@@ -2,9 +2,9 @@ package chylex.hee.game.world.generation.ore
 
 import chylex.hee.game.world.generation.IBlockPlacer
 import chylex.hee.game.world.generation.structure.world.SegmentedWorld
-import chylex.hee.system.random.nextInt
 import chylex.hee.util.math.BoundingBox
 import chylex.hee.util.math.Pos
+import chylex.hee.util.random.nextInt
 import net.minecraft.util.math.BlockPos
 import java.util.Random
 

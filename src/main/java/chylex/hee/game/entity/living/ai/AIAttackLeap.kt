@@ -2,12 +2,12 @@ package chylex.hee.game.entity.living.ai
 
 import chylex.hee.game.entity.util.motionX
 import chylex.hee.game.entity.util.motionZ
-import chylex.hee.system.random.nextFloat
 import chylex.hee.util.math.Vec3
 import chylex.hee.util.math.addXZ
 import chylex.hee.util.math.directionTowards
 import chylex.hee.util.math.square
 import chylex.hee.util.math.withY
+import chylex.hee.util.random.nextFloat
 import net.minecraft.entity.CreatureEntity
 import net.minecraft.entity.LivingEntity
 import net.minecraft.entity.ai.goal.Goal

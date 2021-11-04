@@ -2,9 +2,9 @@ package chylex.hee.game.entity.living.ai
 
 import chylex.hee.game.world.util.distanceTo
 import chylex.hee.game.world.util.isAir
-import chylex.hee.system.random.nextInt
 import chylex.hee.util.math.Pos
 import chylex.hee.util.math.bottomCenter
+import chylex.hee.util.random.nextInt
 import net.minecraft.entity.CreatureEntity
 import net.minecraft.pathfinding.Path
 import net.minecraft.util.math.BlockPos

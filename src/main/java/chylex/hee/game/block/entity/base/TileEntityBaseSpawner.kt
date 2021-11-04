@@ -14,8 +14,6 @@ import chylex.hee.game.particle.spawner.properties.IShape.Point
 import chylex.hee.network.client.PacketClientFX
 import chylex.hee.system.heeTag
 import chylex.hee.system.heeTagOrNull
-import chylex.hee.system.random.nextFloat
-import chylex.hee.system.random.nextInt
 import chylex.hee.util.color.IColorGenerator
 import chylex.hee.util.color.RGB
 import chylex.hee.util.forge.EventPriority
@@ -27,6 +25,8 @@ import chylex.hee.util.nbt.TagCompound
 import chylex.hee.util.nbt.getPosOrNull
 import chylex.hee.util.nbt.putPos
 import chylex.hee.util.nbt.use
+import chylex.hee.util.random.nextFloat
+import chylex.hee.util.random.nextInt
 import net.minecraft.entity.Entity
 import net.minecraft.entity.MobEntity
 import net.minecraft.entity.ai.attributes.AttributeModifier

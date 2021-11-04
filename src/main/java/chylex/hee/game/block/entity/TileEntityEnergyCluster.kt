@@ -37,11 +37,11 @@ import chylex.hee.game.world.util.isAir
 import chylex.hee.game.world.util.isAnyPlayerWithinRange
 import chylex.hee.init.ModBlocks
 import chylex.hee.init.ModTileEntities
-import chylex.hee.system.random.nextFloat
-import chylex.hee.system.random.nextInt
 import chylex.hee.util.math.ceilToInt
 import chylex.hee.util.nbt.TagCompound
 import chylex.hee.util.nbt.use
+import chylex.hee.util.random.nextFloat
+import chylex.hee.util.random.nextInt
 import net.minecraft.tileentity.ITickableTileEntity
 import net.minecraft.tileentity.TileEntityType
 import net.minecraft.util.math.BlockPos

@@ -17,11 +17,11 @@ import chylex.hee.game.world.util.distanceSqTo
 import chylex.hee.init.ModEntities
 import chylex.hee.init.ModSounds
 import chylex.hee.network.client.PacketClientFX
-import chylex.hee.system.random.nextFloat
 import chylex.hee.util.buffer.readPos
 import chylex.hee.util.buffer.use
 import chylex.hee.util.buffer.writePos
 import chylex.hee.util.math.Pos
+import chylex.hee.util.random.nextFloat
 import net.minecraft.block.BlockState
 import net.minecraft.entity.EntityType
 import net.minecraft.entity.LivingEntity

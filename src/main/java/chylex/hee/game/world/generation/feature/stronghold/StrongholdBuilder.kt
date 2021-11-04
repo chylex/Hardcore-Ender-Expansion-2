@@ -22,12 +22,12 @@ import chylex.hee.game.world.generation.structure.piece.StructureBuild.AddMode.A
 import chylex.hee.game.world.generation.structure.piece.StructureBuild.AddMode.MERGE
 import chylex.hee.game.world.generation.structure.piece.StructureBuild.PositionedPiece
 import chylex.hee.game.world.util.Transform
-import chylex.hee.system.random.nextInt
-import chylex.hee.system.random.nextItem
-import chylex.hee.system.random.nextItemOrNull
-import chylex.hee.system.random.removeItemOrNull
 import chylex.hee.util.collection.MutableWeightedList
 import chylex.hee.util.collection.WeightedList
+import chylex.hee.util.random.nextInt
+import chylex.hee.util.random.nextItem
+import chylex.hee.util.random.nextItemOrNull
+import chylex.hee.util.random.removeItemOrNull
 import net.minecraft.util.Direction
 import net.minecraft.util.math.BlockPos
 import java.util.Random

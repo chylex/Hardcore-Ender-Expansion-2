@@ -17,7 +17,6 @@ import chylex.hee.game.world.isEndDimension
 import chylex.hee.game.world.isInEndDimension
 import chylex.hee.game.world.util.getBlock
 import chylex.hee.system.heeTag
-import chylex.hee.system.random.nextFloat
 import chylex.hee.util.color.RGB
 import chylex.hee.util.forge.EventPriority
 import chylex.hee.util.forge.Side
@@ -31,6 +30,7 @@ import chylex.hee.util.math.floorToInt
 import chylex.hee.util.math.range
 import chylex.hee.util.math.remapRange
 import chylex.hee.util.math.square
+import chylex.hee.util.random.nextFloat
 import net.minecraft.entity.Entity
 import net.minecraft.entity.LivingEntity
 import net.minecraft.util.DamageSource

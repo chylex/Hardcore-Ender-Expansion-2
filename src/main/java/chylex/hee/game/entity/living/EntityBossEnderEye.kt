@@ -44,9 +44,6 @@ import chylex.hee.init.ModEntities
 import chylex.hee.init.ModSounds
 import chylex.hee.network.client.PacketClientLaunchInstantly
 import chylex.hee.system.heeTag
-import chylex.hee.system.random.nextFloat
-import chylex.hee.system.random.nextInt
-import chylex.hee.system.random.nextItemOrNull
 import chylex.hee.util.forge.Side
 import chylex.hee.util.forge.Sided
 import chylex.hee.util.math.LerpedFloat
@@ -63,6 +60,9 @@ import chylex.hee.util.nbt.TagCompound
 import chylex.hee.util.nbt.getPosOrNull
 import chylex.hee.util.nbt.putPos
 import chylex.hee.util.nbt.use
+import chylex.hee.util.random.nextFloat
+import chylex.hee.util.random.nextInt
+import chylex.hee.util.random.nextItemOrNull
 import net.minecraft.block.material.PushReaction
 import net.minecraft.entity.CreatureAttribute
 import net.minecraft.entity.Entity

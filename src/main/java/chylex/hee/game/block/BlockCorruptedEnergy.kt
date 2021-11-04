@@ -35,10 +35,10 @@ import chylex.hee.game.world.util.getTile
 import chylex.hee.game.world.util.removeBlock
 import chylex.hee.game.world.util.setState
 import chylex.hee.init.ModBlocks
-import chylex.hee.system.random.nextInt
-import chylex.hee.system.random.removeItem
 import chylex.hee.util.forge.Side
 import chylex.hee.util.forge.Sided
+import chylex.hee.util.random.nextInt
+import chylex.hee.util.random.removeItem
 import net.minecraft.block.Block
 import net.minecraft.block.BlockRenderType.INVISIBLE
 import net.minecraft.block.BlockState

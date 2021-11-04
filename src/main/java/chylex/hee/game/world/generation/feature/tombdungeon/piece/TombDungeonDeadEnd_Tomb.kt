@@ -10,9 +10,9 @@ import chylex.hee.game.world.generation.feature.tombdungeon.connection.TombDunge
 import chylex.hee.game.world.generation.structure.IStructureWorld
 import chylex.hee.game.world.generation.structure.piece.IStructurePieceConnection
 import chylex.hee.init.ModBlocks
-import chylex.hee.system.random.nextInt
 import chylex.hee.util.math.Pos
 import chylex.hee.util.math.Size
+import chylex.hee.util.random.nextInt
 import net.minecraft.block.Blocks
 import net.minecraft.state.properties.SlabType
 import net.minecraft.util.Direction.NORTH

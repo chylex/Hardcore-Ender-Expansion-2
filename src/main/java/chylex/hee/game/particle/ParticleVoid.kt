@@ -4,8 +4,6 @@ import chylex.hee.game.particle.base.ParticleBaseFloating
 import chylex.hee.game.particle.spawner.IParticleMaker
 import chylex.hee.game.territory.TerritoryVoid
 import chylex.hee.game.territory.system.TerritoryInstance
-import chylex.hee.system.random.nextFloat
-import chylex.hee.system.random.nextVector
 import chylex.hee.util.forge.Side
 import chylex.hee.util.forge.Sided
 import chylex.hee.util.math.Vec
@@ -15,6 +13,8 @@ import chylex.hee.util.math.directionTowards
 import chylex.hee.util.math.floorToInt
 import chylex.hee.util.math.lerpTowards
 import chylex.hee.util.math.scale
+import chylex.hee.util.random.nextFloat
+import chylex.hee.util.random.nextVector
 import net.minecraft.client.particle.IParticleRenderType
 import net.minecraft.client.particle.IParticleRenderType.PARTICLE_SHEET_TRANSLUCENT
 import net.minecraft.client.particle.Particle

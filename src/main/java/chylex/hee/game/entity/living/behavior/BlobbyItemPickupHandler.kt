@@ -5,13 +5,13 @@ import chylex.hee.game.entity.living.ai.AIPickUpItemDetour.IItemPickupHandler
 import chylex.hee.game.entity.util.posVec
 import chylex.hee.game.fx.util.playServer
 import chylex.hee.game.item.util.nullIfEmpty
-import chylex.hee.system.random.nextFloat
-import chylex.hee.system.random.nextInt
 import chylex.hee.util.nbt.NBTObjectList
 import chylex.hee.util.nbt.TagCompound
 import chylex.hee.util.nbt.getListOfStrings
 import chylex.hee.util.nbt.putList
 import chylex.hee.util.nbt.use
+import chylex.hee.util.random.nextFloat
+import chylex.hee.util.random.nextInt
 import net.minecraft.item.ItemStack
 import net.minecraft.util.SoundCategory
 import net.minecraft.util.SoundEvents

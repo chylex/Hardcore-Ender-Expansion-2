@@ -6,8 +6,6 @@ import chylex.hee.game.mechanics.energy.IEnergyQuantity
 import chylex.hee.game.particle.base.ParticleBaseEnergy
 import chylex.hee.game.particle.spawner.IParticleMaker
 import chylex.hee.game.world.util.getTile
-import chylex.hee.system.random.nextFloat
-import chylex.hee.system.random.nextVector
 import chylex.hee.util.color.RGB
 import chylex.hee.util.forge.Side
 import chylex.hee.util.forge.Sided
@@ -15,6 +13,8 @@ import chylex.hee.util.math.Pos
 import chylex.hee.util.math.Vec
 import chylex.hee.util.math.center
 import chylex.hee.util.math.lerpTowards
+import chylex.hee.util.random.nextFloat
+import chylex.hee.util.random.nextVector
 import net.minecraft.client.particle.Particle
 import net.minecraft.client.world.ClientWorld
 import net.minecraft.util.math.vector.Vector3d

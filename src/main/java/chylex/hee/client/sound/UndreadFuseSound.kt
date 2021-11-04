@@ -2,9 +2,9 @@ package chylex.hee.client.sound
 
 import chylex.hee.game.entity.living.EntityMobUndread
 import chylex.hee.init.ModSounds
-import chylex.hee.system.random.nextFloat
 import chylex.hee.util.forge.Side
 import chylex.hee.util.forge.Sided
+import chylex.hee.util.random.nextFloat
 import net.minecraft.client.audio.ISound.AttenuationType
 import net.minecraft.client.audio.TickableSound
 import net.minecraft.util.SoundCategory

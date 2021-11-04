@@ -8,7 +8,6 @@ import chylex.hee.game.particle.ParticleSmokeCustom
 import chylex.hee.game.particle.spawner.ParticleSpawnerCustom
 import chylex.hee.game.particle.spawner.properties.IShape.Point
 import chylex.hee.network.client.PacketClientFX
-import chylex.hee.system.random.nextInt
 import chylex.hee.util.color.IColorGenerator
 import chylex.hee.util.color.RGB
 import chylex.hee.util.math.Vec
@@ -22,6 +21,7 @@ import chylex.hee.util.nbt.TagCompound
 import chylex.hee.util.nbt.getListOfCompounds
 import chylex.hee.util.nbt.putList
 import chylex.hee.util.nbt.use
+import chylex.hee.util.random.nextInt
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.vector.Vector3d
 import net.minecraft.world.World

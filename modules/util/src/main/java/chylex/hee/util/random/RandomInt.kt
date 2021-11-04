@@ -1,7 +1,5 @@
 package chylex.hee.util.random
 
-import chylex.hee.system.random.nextBiasedFloat
-import chylex.hee.system.random.nextInt
 import chylex.hee.util.math.floorToInt
 import java.util.Random
 

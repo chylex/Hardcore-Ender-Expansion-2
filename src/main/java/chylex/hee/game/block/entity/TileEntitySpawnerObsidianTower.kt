@@ -25,9 +25,6 @@ import chylex.hee.init.ModBlocks
 import chylex.hee.init.ModSounds
 import chylex.hee.init.ModTileEntities
 import chylex.hee.network.client.PacketClientFX
-import chylex.hee.system.random.nextFloat
-import chylex.hee.system.random.nextInt
-import chylex.hee.system.random.nextItemOrNull
 import chylex.hee.util.color.IntColor
 import chylex.hee.util.forge.EventResult
 import chylex.hee.util.math.Pos
@@ -44,6 +41,9 @@ import chylex.hee.util.nbt.putEnum
 import chylex.hee.util.nbt.putList
 import chylex.hee.util.nbt.putPos
 import chylex.hee.util.nbt.use
+import chylex.hee.util.random.nextFloat
+import chylex.hee.util.random.nextInt
+import chylex.hee.util.random.nextItemOrNull
 import net.minecraft.entity.Entity
 import net.minecraft.entity.MobEntity
 import net.minecraft.entity.SpawnReason

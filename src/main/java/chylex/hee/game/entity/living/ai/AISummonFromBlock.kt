@@ -3,7 +3,7 @@ package chylex.hee.game.entity.living.ai
 import chylex.hee.game.world.util.breakBlock
 import chylex.hee.game.world.util.getBlock
 import chylex.hee.game.world.util.isPeaceful
-import chylex.hee.system.random.nextInt
+import chylex.hee.util.random.nextInt
 import net.minecraft.block.Block
 import net.minecraft.entity.CreatureEntity
 import net.minecraft.entity.ai.goal.Goal

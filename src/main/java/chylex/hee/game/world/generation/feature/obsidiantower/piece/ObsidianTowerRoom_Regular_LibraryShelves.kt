@@ -5,10 +5,10 @@ import chylex.hee.game.block.util.with
 import chylex.hee.game.world.generation.feature.obsidiantower.ObsidianTowerSpawnerLevel.LEVEL_1
 import chylex.hee.game.world.generation.structure.IStructureWorld
 import chylex.hee.init.ModBlocks
-import chylex.hee.system.random.nextInt
-import chylex.hee.system.random.nextItem
 import chylex.hee.util.math.Pos
 import chylex.hee.util.math.PosXZ
+import chylex.hee.util.random.nextInt
+import chylex.hee.util.random.nextItem
 import net.minecraft.block.Blocks
 import net.minecraft.state.properties.SlabType
 import net.minecraft.util.Direction.EAST

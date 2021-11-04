@@ -4,9 +4,9 @@ import chylex.hee.game.entity.util.posVec
 import chylex.hee.game.world.util.Facing6
 import chylex.hee.game.world.util.getState
 import chylex.hee.game.world.util.setState
-import chylex.hee.system.random.nextItem
 import chylex.hee.util.math.Pos
 import chylex.hee.util.math.addY
+import chylex.hee.util.random.nextItem
 import net.minecraft.block.BlockState
 import net.minecraft.entity.CreatureEntity
 import net.minecraft.world.GameRules.MOB_GRIEFING

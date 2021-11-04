@@ -5,8 +5,8 @@ import chylex.hee.game.world.generation.blob.BlobGenerator
 import chylex.hee.game.world.generation.blob.IBlobPopulator
 import chylex.hee.game.world.generation.ore.IOreTechnique
 import chylex.hee.game.world.generation.structure.world.ScaffoldedWorld
-import chylex.hee.system.random.nextInt
 import chylex.hee.util.math.Pos
+import chylex.hee.util.random.nextInt
 import java.util.Random
 
 class BlobPopulatorOre(

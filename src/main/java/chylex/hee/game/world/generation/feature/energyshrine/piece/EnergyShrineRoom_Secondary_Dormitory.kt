@@ -5,9 +5,9 @@ import chylex.hee.game.world.generation.feature.energyshrine.connection.EnergySh
 import chylex.hee.game.world.generation.structure.IStructureWorld
 import chylex.hee.game.world.generation.structure.piece.IStructurePieceConnection
 import chylex.hee.game.world.generation.trigger.BedStructureTrigger
-import chylex.hee.system.random.nextInt
-import chylex.hee.system.random.nextItem
 import chylex.hee.util.math.Pos
+import chylex.hee.util.random.nextInt
+import chylex.hee.util.random.nextItem
 import net.minecraft.item.DyeColor
 import net.minecraft.util.Direction.SOUTH
 import net.minecraft.util.Direction.WEST

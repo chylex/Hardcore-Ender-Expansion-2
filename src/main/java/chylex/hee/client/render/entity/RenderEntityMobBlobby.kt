@@ -15,9 +15,9 @@ import chylex.hee.game.Resource
 import chylex.hee.game.entity.living.EntityMobBlobby
 import chylex.hee.game.item.util.isNotEmpty
 import chylex.hee.game.world.util.Facing6
-import chylex.hee.system.random.nextFloat
 import chylex.hee.util.forge.Side
 import chylex.hee.util.forge.Sided
+import chylex.hee.util.random.nextFloat
 import com.mojang.blaze3d.matrix.MatrixStack
 import com.mojang.blaze3d.vertex.IVertexBuilder
 import net.minecraft.block.AbstractChestBlock

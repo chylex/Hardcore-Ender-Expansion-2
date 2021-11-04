@@ -9,9 +9,9 @@ import chylex.hee.game.world.util.offsetUntil
 import chylex.hee.game.world.util.setBlock
 import chylex.hee.game.world.util.setState
 import chylex.hee.init.ModBlocks
-import chylex.hee.system.random.nextInt
-import chylex.hee.system.random.nextItem
 import chylex.hee.util.math.PosXZ
+import chylex.hee.util.random.nextInt
+import chylex.hee.util.random.nextItem
 import net.minecraft.block.Block
 import net.minecraft.block.BlockState
 import net.minecraft.tags.BlockTags

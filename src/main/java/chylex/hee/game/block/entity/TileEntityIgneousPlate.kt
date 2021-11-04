@@ -17,13 +17,13 @@ import chylex.hee.game.world.util.getTile
 import chylex.hee.game.world.util.removeBlock
 import chylex.hee.init.ModBlocks
 import chylex.hee.init.ModTileEntities
-import chylex.hee.system.random.nextFloat
 import chylex.hee.util.math.LerpedDouble
 import chylex.hee.util.math.Vec3
 import chylex.hee.util.math.center
 import chylex.hee.util.math.floorToInt
 import chylex.hee.util.nbt.TagCompound
 import chylex.hee.util.nbt.use
+import chylex.hee.util.random.nextFloat
 import net.minecraft.item.ItemStack
 import net.minecraft.tileentity.FurnaceTileEntity
 import net.minecraft.tileentity.TileEntityType

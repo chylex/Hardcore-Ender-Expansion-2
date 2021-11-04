@@ -6,11 +6,11 @@ import chylex.hee.game.mechanics.energy.IClusterHealth.HealthStatus.HEALTHY
 import chylex.hee.game.mechanics.energy.IClusterHealth.HealthStatus.TIRED
 import chylex.hee.game.mechanics.energy.IClusterHealth.HealthStatus.WEAKENED
 import chylex.hee.game.world.util.spawn
-import chylex.hee.system.random.nextInt
-import chylex.hee.system.random.removeItem
 import chylex.hee.util.collection.WeightedList
 import chylex.hee.util.math.bottomCenter
 import chylex.hee.util.math.ceilToInt
+import chylex.hee.util.random.nextInt
+import chylex.hee.util.random.removeItem
 import net.minecraft.entity.EntityType
 import net.minecraft.world.gen.Heightmap.Type.MOTION_BLOCKING
 import net.minecraft.world.server.ServerWorld

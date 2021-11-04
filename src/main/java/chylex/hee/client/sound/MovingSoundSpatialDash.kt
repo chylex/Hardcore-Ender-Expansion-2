@@ -1,9 +1,9 @@
 package chylex.hee.client.sound
 
 import chylex.hee.game.entity.projectile.EntityProjectileSpatialDash
-import chylex.hee.system.random.nextFloat
 import chylex.hee.util.forge.Side
 import chylex.hee.util.forge.Sided
+import chylex.hee.util.random.nextFloat
 import net.minecraft.client.audio.TickableSound
 import net.minecraft.util.SoundCategory
 import net.minecraft.util.SoundEvents

@@ -4,7 +4,7 @@ import chylex.hee.game.entity.Teleporter
 import chylex.hee.game.entity.Teleporter.FxRange.Extended
 import chylex.hee.game.entity.living.EntityMobEndermiteInstability
 import chylex.hee.game.entity.util.posVec
-import chylex.hee.system.random.removeItem
+import chylex.hee.util.random.removeItem
 import java.util.Random
 import kotlin.math.min
 

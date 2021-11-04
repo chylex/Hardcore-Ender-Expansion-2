@@ -34,13 +34,6 @@ import chylex.hee.game.world.util.offsetUntil
 import chylex.hee.game.world.util.offsetUntilExcept
 import chylex.hee.game.world.util.offsetWhile
 import chylex.hee.init.ModBlocks
-import chylex.hee.system.random.nextFloat
-import chylex.hee.system.random.nextInt
-import chylex.hee.system.random.nextItem
-import chylex.hee.system.random.nextItemOrNull
-import chylex.hee.system.random.nextVector
-import chylex.hee.system.random.nextVector2
-import chylex.hee.system.random.removeItemOrNull
 import chylex.hee.util.collection.weightedListOf
 import chylex.hee.util.math.Pos
 import chylex.hee.util.math.PosXZ
@@ -60,6 +53,13 @@ import chylex.hee.util.nbt.TagCompound
 import chylex.hee.util.random.RandomDouble.Companion.Linear
 import chylex.hee.util.random.RandomInt.Companion.Biased
 import chylex.hee.util.random.RandomInt.Companion.Linear
+import chylex.hee.util.random.nextFloat
+import chylex.hee.util.random.nextInt
+import chylex.hee.util.random.nextItem
+import chylex.hee.util.random.nextItemOrNull
+import chylex.hee.util.random.nextVector
+import chylex.hee.util.random.nextVector2
+import chylex.hee.util.random.removeItemOrNull
 import net.minecraft.block.Blocks
 import net.minecraft.util.Direction
 import net.minecraft.util.Direction.DOWN

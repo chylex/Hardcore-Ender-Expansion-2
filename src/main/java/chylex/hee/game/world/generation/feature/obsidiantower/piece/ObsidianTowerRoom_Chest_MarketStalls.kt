@@ -1,8 +1,8 @@
 package chylex.hee.game.world.generation.feature.obsidiantower.piece
 
 import chylex.hee.game.world.generation.structure.IStructureWorld
-import chylex.hee.system.random.removeItem
 import chylex.hee.util.math.PosXZ
+import chylex.hee.util.random.removeItem
 import net.minecraft.util.Direction.EAST
 import net.minecraft.util.Direction.WEST
 

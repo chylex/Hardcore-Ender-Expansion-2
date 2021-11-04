@@ -16,7 +16,6 @@ import chylex.hee.game.world.util.getState
 import chylex.hee.game.world.util.isAir
 import chylex.hee.game.world.util.isFullBlock
 import chylex.hee.game.world.util.setState
-import chylex.hee.system.random.nextFloat
 import chylex.hee.util.forge.EventPriority
 import chylex.hee.util.forge.SubscribeAllEvents
 import chylex.hee.util.forge.SubscribeEvent
@@ -27,6 +26,7 @@ import chylex.hee.util.math.center
 import chylex.hee.util.math.component1
 import chylex.hee.util.math.component2
 import chylex.hee.util.math.component3
+import chylex.hee.util.random.nextFloat
 import net.minecraft.block.Block
 import net.minecraft.block.BlockState
 import net.minecraft.block.Blocks

@@ -1,9 +1,9 @@
 package chylex.hee.game.particle.data
 
 import chylex.hee.game.particle.spawner.IParticleMaker
-import chylex.hee.system.random.nextFloat
 import chylex.hee.util.color.IColorGenerator
 import chylex.hee.util.color.IntColor
+import chylex.hee.util.random.nextFloat
 import java.util.Random
 
 data class ParticleDataColorScale(val color: IntColor, val scale: Float) {

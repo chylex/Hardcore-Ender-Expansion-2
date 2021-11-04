@@ -32,9 +32,6 @@ import chylex.hee.game.world.util.offsetWhile
 import chylex.hee.game.world.util.spawn
 import chylex.hee.init.ModEntities
 import chylex.hee.network.client.PacketClientFX
-import chylex.hee.system.random.nextFloat
-import chylex.hee.system.random.nextInt
-import chylex.hee.system.random.nextItem
 import chylex.hee.util.math.Pos
 import chylex.hee.util.math.Vec
 import chylex.hee.util.math.Vec3
@@ -45,6 +42,9 @@ import chylex.hee.util.math.square
 import chylex.hee.util.math.toYaw
 import chylex.hee.util.nbt.TagCompound
 import chylex.hee.util.nbt.use
+import chylex.hee.util.random.nextFloat
+import chylex.hee.util.random.nextInt
+import chylex.hee.util.random.nextItem
 import com.google.common.collect.Sets
 import net.minecraft.block.WebBlock
 import net.minecraft.entity.EntitySpawnPlacementRegistry

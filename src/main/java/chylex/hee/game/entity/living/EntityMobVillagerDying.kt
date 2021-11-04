@@ -19,8 +19,6 @@ import chylex.hee.game.world.util.Facing4
 import chylex.hee.init.ModEntities
 import chylex.hee.init.ModSounds
 import chylex.hee.system.heeTag
-import chylex.hee.system.random.nextFloat
-import chylex.hee.system.random.nextItem
 import chylex.hee.util.buffer.readDecoded
 import chylex.hee.util.buffer.use
 import chylex.hee.util.buffer.writeEncoded
@@ -29,6 +27,8 @@ import chylex.hee.util.nbt.TagCompound
 import chylex.hee.util.nbt.getDecodedOrNull
 import chylex.hee.util.nbt.putEncoded
 import chylex.hee.util.nbt.use
+import chylex.hee.util.random.nextFloat
+import chylex.hee.util.random.nextItem
 import net.minecraft.entity.AgeableEntity
 import net.minecraft.entity.EntityClassification
 import net.minecraft.entity.EntityType

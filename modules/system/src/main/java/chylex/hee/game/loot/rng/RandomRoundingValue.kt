@@ -1,7 +1,7 @@
 package chylex.hee.game.loot.rng
 
 import chylex.hee.game.Resource
-import chylex.hee.system.random.nextRounded
+import chylex.hee.util.random.nextRounded
 import net.minecraft.loot.IRandomRange
 import net.minecraft.util.ResourceLocation
 import java.util.Random

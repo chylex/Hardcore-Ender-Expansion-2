@@ -6,9 +6,9 @@ import chylex.hee.game.territory.system.ITerritoryDescription
 import chylex.hee.game.territory.system.properties.TerritoryColors
 import chylex.hee.game.territory.system.properties.TerritoryDifficulty
 import chylex.hee.game.territory.system.properties.TerritoryEnvironment
-import chylex.hee.system.random.nextFloat
 import chylex.hee.util.color.RGB
 import chylex.hee.util.math.Vec
+import chylex.hee.util.random.nextFloat
 import java.util.Random
 
 object Territory_LostGarden : ITerritoryDescription {

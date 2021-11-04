@@ -39,8 +39,6 @@ import chylex.hee.game.world.util.getState
 import chylex.hee.game.world.util.isPeaceful
 import chylex.hee.init.ModEntities
 import chylex.hee.system.heeTag
-import chylex.hee.system.random.nextFloat
-import chylex.hee.system.random.nextInt
 import chylex.hee.util.math.Vec
 import chylex.hee.util.math.addY
 import chylex.hee.util.math.directionTowards
@@ -48,6 +46,8 @@ import chylex.hee.util.math.square
 import chylex.hee.util.math.toRadians
 import chylex.hee.util.nbt.TagCompound
 import chylex.hee.util.nbt.use
+import chylex.hee.util.random.nextFloat
+import chylex.hee.util.random.nextInt
 import net.minecraft.block.BlockState
 import net.minecraft.block.WebBlock
 import net.minecraft.entity.CreatureAttribute

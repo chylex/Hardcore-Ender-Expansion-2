@@ -6,11 +6,11 @@ import chylex.hee.game.territory.system.TerritoryInstance
 import chylex.hee.game.territory.system.properties.TerritoryColors
 import chylex.hee.game.territory.system.properties.TerritoryDifficulty
 import chylex.hee.game.territory.system.properties.TerritoryEnvironment
-import chylex.hee.system.random.nextFloat
 import chylex.hee.util.color.RGB
 import chylex.hee.util.math.Vec3
 import chylex.hee.util.math.component1
 import chylex.hee.util.math.component2
+import chylex.hee.util.random.nextFloat
 import net.minecraft.util.math.BlockPos
 import net.minecraft.world.World
 import java.util.Random
