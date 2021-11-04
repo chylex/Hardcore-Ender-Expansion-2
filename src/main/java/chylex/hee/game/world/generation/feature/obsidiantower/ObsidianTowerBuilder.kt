@@ -14,7 +14,7 @@ import net.minecraft.util.Rotation
 import java.util.Random
 
 class ObsidianTowerBuilder(private val arrangement: ObsidianTowerRoomArrangement, private val rotation: Rotation? = null) : IStructureBuilder<IStructureBuild> {
-	override fun build(rand: Random): IStructureBuild? {
+	override fun build(rand: Random): IStructureBuild {
 		val transform1 = Transform(rotation = rotation ?: rand.nextItem(), mirror = false)
 		val transform2 = transform1.copy(rotation = transform1.rotation.add(Rotation.CLOCKWISE_180))
 		

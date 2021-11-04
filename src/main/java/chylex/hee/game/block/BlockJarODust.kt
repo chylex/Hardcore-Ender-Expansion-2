@@ -120,7 +120,7 @@ class BlockJarODust(builder: BlockBuilder) : BlockSimpleShaped(builder, AABB) {
 	
 	// Drops
 	
-	private fun getDrop(tile: TileEntityJarODust): ItemStack? {
+	private fun getDrop(tile: TileEntityJarODust): ItemStack {
 		return ItemStack(this).also { setLayersInStack(it, tile.layers) }
 	}
 	

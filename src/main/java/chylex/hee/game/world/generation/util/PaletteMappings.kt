@@ -89,8 +89,8 @@ object PaletteMappings {
 	private val LIST_UP_NSEW
 		get() = arrayOf("u") + LIST_NSEW.map { "u$it" }
 	
-	fun HORIZONTAL_CONNECTIONS(block: Block) = (arrayOf("") + LIST_NSEW).associate {
-		Pair(it, it.fold(block.defaultState) { state, chr ->
+	fun HORIZONTAL_CONNECTIONS(block: Block) = (arrayOf("") + LIST_NSEW).associateWith {
+		it.fold(block.defaultState) { state, chr ->
 			when (chr) {
 				'n'  -> state.with(FOUR_WAY_NORTH, true)
 				's'  -> state.with(FOUR_WAY_SOUTH, true)
@@ -98,11 +98,11 @@ object PaletteMappings {
 				'w'  -> state.with(FOUR_WAY_WEST, true)
 				else -> throw IllegalStateException()
 			}
-		})
+		}
 	}
 	
-	fun WALL_CONNECTIONS(block: Block) = (LIST_NSEW + LIST_UP_NSEW).associate {
-		Pair(it, it.fold(block.with(WallBlock.UP, false)) { state, chr ->
+	fun WALL_CONNECTIONS(block: Block) = (LIST_NSEW + LIST_UP_NSEW).associateWith {
+		it.fold(block.with(WallBlock.UP, false)) { state, chr ->
 			when (chr) {
 				'u'  -> state.with(WallBlock.UP, true)
 				'n'  -> state.with(WallBlock.WALL_HEIGHT_NORTH, WallHeight.LOW)
@@ -111,11 +111,11 @@ object PaletteMappings {
 				'w'  -> state.with(WallBlock.WALL_HEIGHT_WEST, WallHeight.LOW)
 				else -> throw IllegalStateException()
 			}
-		})
+		}
 	}
 	
-	fun VINE_WALLS(block: Block) = (arrayOf("u") + LIST_NSEW).associate {
-		Pair(it, it.fold(block.defaultState) { state, chr ->
+	fun VINE_WALLS(block: Block) = (arrayOf("u") + LIST_NSEW).associateWith {
+		it.fold(block.defaultState) { state, chr ->
 			when (chr) {
 				'u'  -> state.with(VineBlock.UP, true)
 				'n'  -> state.with(VineBlock.NORTH, true)
@@ -124,6 +124,6 @@ object PaletteMappings {
 				'w'  -> state.with(VineBlock.WEST, true)
 				else -> throw IllegalStateException()
 			}
-		})
+		}
 	}
 }

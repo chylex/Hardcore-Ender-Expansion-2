@@ -15,8 +15,8 @@ fun <C, T : ArgumentBuilder<CommandSource, T>> ArgumentBuilder<CommandSource, T>
 }
 
 inline fun simpleCommand(code: () -> Unit): Int {
-	code();
-	return 1;
+	code()
+	return 1
 }
 
 inline fun <reified T : Enum<T>> CommandContext<CommandSource>.getEnum(name: String): T {

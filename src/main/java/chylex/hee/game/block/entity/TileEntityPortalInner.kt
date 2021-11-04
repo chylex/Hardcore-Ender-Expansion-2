@@ -19,7 +19,7 @@ sealed class TileEntityPortalInner(type: TileEntityType<out TileEntityPortalInne
 	class End(type: TileEntityType<End>) : TileEntityPortalInner(type) {
 		constructor() : this(ModTileEntities.END_PORTAL_INNER)
 		
-		object Type : IHeeTileEntityType<TileEntityPortalInner.End> {
+		object Type : IHeeTileEntityType<End> {
 			override val blocks
 				get() = arrayOf(ModBlocks.END_PORTAL_INNER)
 		}
@@ -28,7 +28,7 @@ sealed class TileEntityPortalInner(type: TileEntityType<out TileEntityPortalInne
 	class Void(type: TileEntityType<Void>) : TileEntityPortalInner(type) {
 		constructor() : this(ModTileEntities.VOID_PORTAL_INNER)
 		
-		object Type : IHeeTileEntityType<TileEntityPortalInner.Void> {
+		object Type : IHeeTileEntityType<Void> {
 			override val blocks
 				get() = arrayOf(ModBlocks.VOID_PORTAL_INNER)
 		}

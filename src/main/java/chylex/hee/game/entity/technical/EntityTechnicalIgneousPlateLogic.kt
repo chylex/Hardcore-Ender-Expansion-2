@@ -224,7 +224,7 @@ class EntityTechnicalIgneousPlateLogic(type: EntityType<EntityTechnicalIgneousPl
 				return
 			}
 			
-			val speedMultiplier = (plates.sumByDouble(TileEntityIgneousPlate::potential) / plates.size) * 2.0 * plates.size.toDouble().pow(0.793)
+			val speedMultiplier = (plates.sumOf(TileEntityIgneousPlate::potential) / plates.size) * 2.0 * plates.size.toDouble().pow(0.793)
 			increaseFurnaceTicks(furnace, speedMultiplier - 1.0)
 			
 			if (speedMultiplier < 2.1) {

@@ -14,7 +14,7 @@ class BlockCauldronWithDragonsBreath(builder: BlockBuilder) : BlockAbstractCauld
 		return null
 	}
 	
-	override fun createFilledBottle(): ItemStack? {
+	override fun createFilledBottle(): ItemStack {
 		return ItemStack(Items.DRAGON_BREATH)
 	}
 }

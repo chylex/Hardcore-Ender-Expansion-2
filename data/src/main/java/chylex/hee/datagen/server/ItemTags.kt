@@ -9,7 +9,7 @@ import net.minecraft.tags.ITag.INamedTag
 import net.minecraft.tags.ItemTags
 import net.minecraftforge.common.data.ExistingFileHelper
 
-class ItemTags(dataGenerator: DataGenerator, private val blockTags: chylex.hee.datagen.server.BlockTags, modId: String, existingFileHelper: ExistingFileHelper?) : ItemTagsProvider(dataGenerator, blockTags, modId, existingFileHelper) {
+class ItemTags(dataGenerator: DataGenerator, private val blockTags: BlockTags, modId: String, existingFileHelper: ExistingFileHelper?) : ItemTagsProvider(dataGenerator, blockTags, modId, existingFileHelper) {
 	override fun registerTags() {
 		val itemTags = ItemTags.getAllTags().associateBy { it.name }
 		

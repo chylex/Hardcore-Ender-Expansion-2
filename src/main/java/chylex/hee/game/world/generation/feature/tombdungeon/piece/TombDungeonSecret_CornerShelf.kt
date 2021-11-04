@@ -27,7 +27,7 @@ class TombDungeonSecret_CornerShelf(file: String) : TombDungeonSecret(file) {
 		)
 	}
 	
-	override fun pickChestPosition(rand: Random): Pair<BlockPos, Direction>? {
+	override fun pickChestPosition(rand: Random): Pair<BlockPos, Direction> {
 		return Pos(maxX - 1, 2, 2) to WEST
 	}
 }
