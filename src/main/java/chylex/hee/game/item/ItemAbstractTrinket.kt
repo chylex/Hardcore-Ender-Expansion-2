@@ -10,7 +10,7 @@ import net.minecraft.item.ItemStack
 import net.minecraft.util.text.ITextComponent
 import net.minecraft.util.text.StringTextComponent
 import net.minecraft.util.text.TranslationTextComponent
-import net.minecraft.world.World
+import net.minecraft.world.IBlockReader
 
 class ItemAbstractTrinket(trinket: ITrinketItem) : HeeItemBuilder() {
 	private companion object {
@@ -27,7 +27,7 @@ class ItemAbstractTrinket(trinket: ITrinketItem) : HeeItemBuilder() {
 		localizationExtra[LANG_TOOLTIP_NOT_IN_SLOT_UNCHARGED] = "§cMust be charged and placed in Trinket slot"
 		
 		components.tooltip.add(object : ITooltipComponent {
-			override fun add(lines: MutableList<ITextComponent>, stack: ItemStack, advanced: Boolean, world: World?) {
+			override fun add(lines: MutableList<ITextComponent>, stack: ItemStack, advanced: Boolean, world: IBlockReader?) {
 				val player = MC.player ?: return
 				
 				if (lines.size > 1) { // first line is item name

@@ -37,7 +37,7 @@ import net.minecraftforge.common.data.ExistingFileHelper
 class BlockModels(generator: DataGenerator, modid: String, existingFileHelper: ExistingFileHelper) : BlockModelProvider(generator, modid, existingFileHelper) {
 	override fun registerModels() {
 		for (block in ModBlocks.ALL) {
-			(block as? IHeeBlock)?.model?.let { registerModel(block, it.blockModel) { builder -> builder } }
+			(block as? IHeeBlock)?.let { registerModel(block, it.model.generate(block).blockModel) { builder -> builder } }
 		}
 	}
 	

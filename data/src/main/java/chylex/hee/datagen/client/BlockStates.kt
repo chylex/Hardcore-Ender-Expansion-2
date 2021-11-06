@@ -32,7 +32,7 @@ import net.minecraftforge.common.data.ExistingFileHelper
 class BlockStates(generator: DataGenerator, modid: String, existingFileHelper: ExistingFileHelper) : BlockStateProvider(generator, modid, existingFileHelper) {
 	override fun registerStatesAndModels() {
 		for (block in ModBlocks.ALL) {
-			(block as? IHeeBlock)?.model?.let { registerState(block, it.blockState) }
+			(block as? IHeeBlock)?.let { registerState(block, it.model.generate(block).blockState) }
 		}
 	}
 	

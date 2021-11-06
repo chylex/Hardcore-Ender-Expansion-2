@@ -1,22 +1,23 @@
 package chylex.hee.game.block
 
-import chylex.hee.game.block.properties.BlockBuilder
+import chylex.hee.game.block.builder.HeeBlockBuilder
+import chylex.hee.game.block.components.IBlockExperienceComponent
 import chylex.hee.game.block.properties.BlockDrop
+import chylex.hee.game.block.properties.BlockHardness
+import chylex.hee.game.block.properties.BlockHarvestTool
+import chylex.hee.game.item.util.Tool.Level.STONE
 import chylex.hee.util.random.nextInt
-import net.minecraft.block.BlockState
-import net.minecraft.util.math.BlockPos
-import net.minecraft.world.IWorldReader
-import net.minecraft.world.World
-import net.minecraftforge.common.Tags
+import net.minecraftforge.common.ToolType.PICKAXE
 
-class BlockEndPowderOre(builder: BlockBuilder) : HeeBlock(builder) {
-	override val drop
-		get() = BlockDrop.Manual
-	
-	override val tags
-		get() = listOf(Tags.Blocks.ORES)
-	
-	override fun getExpDrop(state: BlockState, world: IWorldReader, pos: BlockPos, fortune: Int, silktouch: Int): Int {
-		return ((world as? World)?.rand ?: RANDOM).nextInt(1, 2)
+object BlockEndPowderOre : HeeBlockBuilder() {
+	init {
+		includeFrom(BlockEndOre)
+		
+		drop = BlockDrop.Manual
+		
+		tool = BlockHarvestTool.required(STONE, PICKAXE)
+		hardness = BlockHardness(hardness = 2F, resistance = 5.4F)
+		
+		components.experience = IBlockExperienceComponent { rand -> rand.nextInt(1, 2) }
 	}
 }

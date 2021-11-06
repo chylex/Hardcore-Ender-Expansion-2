@@ -83,13 +83,10 @@ class EntityTechnicalPuzzle(type: EntityType<EntityTechnicalPuzzle>, world: Worl
 	}
 	
 	private fun moveToBlockAndToggle(pos: BlockPos) {
-		val block = pos.getBlock(world)
-		
-		if (block is BlockPuzzleLogic) {
+		if (BlockPuzzleLogic.isPuzzleBlock(pos.getBlock(world))) {
 			setPosition(pos)
 			
-			val nextChains = block.onToggled(world, pos, facing)
-			
+			val nextChains = BlockPuzzleLogic.onToggled(world, pos, facing)
 			if (nextChains.isEmpty()) {
 				endChain()
 			}
@@ -125,10 +122,7 @@ class EntityTechnicalPuzzle(type: EntityType<EntityTechnicalPuzzle>, world: Worl
 	}
 	
 	fun startChain(pos: BlockPos, facing: Direction): Boolean {
-		val state = pos.getState(world)
-		val block = state.block
-		
-		if (block !is BlockPuzzleLogic || state[BlockPuzzleLogic.STATE] == BlockPuzzleLogic.State.DISABLED) {
+		if (!BlockPuzzleLogic.isPuzzleBlockEnabled(pos.getState(world))) {
 			return false
 		}
 		

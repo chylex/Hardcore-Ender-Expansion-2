@@ -19,7 +19,7 @@ import net.minecraft.item.Rarity
 import net.minecraft.util.text.ITextComponent
 import net.minecraft.util.text.StringTextComponent
 import net.minecraft.util.text.TranslationTextComponent
-import net.minecraft.world.World
+import net.minecraft.world.IBlockReader
 
 object ItemBindingEssence : HeeItemBuilder() {
 	init {
@@ -57,7 +57,7 @@ object ItemBindingEssence : HeeItemBuilder() {
 		maxStackSize = 16
 		
 		components.tooltip.add(object : ITooltipComponent {
-			override fun add(lines: MutableList<ITextComponent>, stack: ItemStack, advanced: Boolean, world: World?) {
+			override fun add(lines: MutableList<ITextComponent>, stack: ItemStack, advanced: Boolean, world: IBlockReader?) {
 				val list = InfusionTag.getList(stack)
 				if (list.isEmpty) {
 					return

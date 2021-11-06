@@ -1,5 +1,6 @@
 package chylex.hee.game.block.dispenser
 
+import chylex.hee.game.block.BlockIgneousPlate
 import chylex.hee.game.block.util.DISPENSER_FACING
 import chylex.hee.game.world.util.getState
 import chylex.hee.init.ModBlocks
@@ -16,7 +17,7 @@ class DispenseWaterExtinguishIgneousPlate(private val originalBehavior: IDispens
 		val facingState = facingPos.getState(world)
 		
 		if (facingState.block === ModBlocks.IGNEOUS_PLATE) {
-			return if (ModBlocks.IGNEOUS_PLATE.tryCoolPlate(world, facingPos, facingState))
+			return if (BlockIgneousPlate.tryCoolPlate(world, facingPos, facingState))
 				ItemStack(Items.BUCKET)
 			else
 				stack

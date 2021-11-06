@@ -1,9 +1,9 @@
 package chylex.hee.client.render.block
 
 import chylex.hee.game.block.BlockAbstractPortal
-import chylex.hee.game.block.BlockVoidPortalInner.Companion.TYPE
 import chylex.hee.game.block.BlockVoidPortalInner.ITerritoryInstanceFactory
 import chylex.hee.game.block.BlockVoidPortalInner.IVoidPortalController
+import chylex.hee.game.block.BlockVoidPortalInner.TYPE
 import chylex.hee.game.block.BlockVoidPortalInner.Type.HUB
 import chylex.hee.game.block.BlockVoidPortalInner.Type.RETURN_ACTIVE
 import chylex.hee.game.block.entity.TileEntityPortalInner

@@ -1,6 +1,6 @@
 package chylex.hee.game.world.generation.feature.basic
 
-import chylex.hee.game.block.BlockVoidPortalInner.Companion.TYPE
+import chylex.hee.game.block.BlockVoidPortalInner.TYPE
 import chylex.hee.game.block.BlockVoidPortalInner.Type.HUB
 import chylex.hee.game.block.BlockVoidPortalInner.Type.RETURN_ACTIVE
 import chylex.hee.game.block.BlockVoidPortalInner.Type.RETURN_INACTIVE

@@ -1,26 +1,48 @@
 package chylex.hee.game.block
 
-import chylex.hee.game.block.properties.BlockBuilder
-import net.minecraft.block.BlockState
-import net.minecraft.entity.player.PlayerEntity
+import chylex.hee.game.block.builder.HeeBlockBuilder
+import chylex.hee.game.block.components.IBlockHarvestabilityComponent
+import chylex.hee.game.block.properties.BlockHardness
+import chylex.hee.game.block.properties.BlockHarvestTool
+import chylex.hee.game.block.properties.Materials
+import chylex.hee.game.item.util.Tool.Level.IRON
+import chylex.hee.util.forge.EventResult
+import net.minecraft.block.SoundType
+import net.minecraft.block.material.MaterialColor
 import net.minecraft.item.Items
 import net.minecraft.util.Hand.MAIN_HAND
-import net.minecraft.util.math.BlockPos
-import net.minecraft.world.IBlockReader
 import net.minecraftforge.common.Tags
+import net.minecraftforge.common.ToolType.PICKAXE
 
-sealed class BlockEndium(builder: BlockBuilder) : HeeBlock(builder) {
-	override fun canHarvestBlock(state: BlockState, world: IBlockReader, pos: BlockPos, player: PlayerEntity): Boolean {
-		return super.canHarvestBlock(state, world, pos, player) || player.getHeldItem(MAIN_HAND).item === Items.GOLDEN_PICKAXE
+abstract class BlockEndium : HeeBlockBuilder() {
+	init {
+		material = Materials.SOLID
+		tool = BlockHarvestTool.required(IRON, PICKAXE)
+		
+		components.harvestability = IBlockHarvestabilityComponent {
+			if (it.getHeldItem(MAIN_HAND).item === Items.GOLDEN_PICKAXE)
+				EventResult.ALLOW
+			else
+				EventResult.DEFAULT
+		}
 	}
 	
-	class Ore(builder: BlockBuilder) : BlockEndium(builder) {
-		override val tags
-			get() = listOf(Tags.Blocks.ORES)
+	object Ore : BlockEndium() {
+		init {
+			includeFrom(BlockEndOre)
+			
+			hardness = BlockHardness(hardness = 5F, resistance = 9.9F)
+		}
 	}
 	
-	class Block(builder: BlockBuilder) : BlockEndium(builder) {
-		override val tags
-			get() = listOf(Tags.Blocks.STORAGE_BLOCKS)
+	object Block : BlockEndium() {
+		init {
+			color = MaterialColor.LAPIS
+			sound = SoundType.METAL
+			
+			tags.add(Tags.Blocks.STORAGE_BLOCKS)
+			
+			hardness = BlockHardness(hardness = 6.2F, resistance = 12F)
+		}
 	}
 }

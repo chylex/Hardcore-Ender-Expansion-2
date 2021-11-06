@@ -39,15 +39,13 @@ import net.minecraftforge.common.data.ExistingFileHelper
 class ItemModels(generator: DataGenerator, modid: String, existingFileHelper: ExistingFileHelper) : ItemModelProvider(generator, modid, existingFileHelper) {
 	override fun registerModels() {
 		for (item in ModItems.ALL) {
-			(item as? IHeeItem)?.model?.let {
-				registerModel(item, it)
-			}
+			(item as? IHeeItem)?.let { registerModel(item, it.model) }
 		}
 		
 		for (block in ModBlocks.ALL) {
-			(block as? IHeeBlock)?.model?.itemModel?.let {
-				registerModel(if (it.asItem) block.asItem() else block, it.model)
-			}
+			(block as? IHeeBlock)
+				?.let { it.model.generate(block).itemModel }
+				?.let { registerModel(if (it.asItem) block.asItem() else block, it.model) }
 		}
 	}
 	

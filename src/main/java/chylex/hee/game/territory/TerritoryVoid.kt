@@ -3,6 +3,7 @@ package chylex.hee.game.territory
 import chylex.hee.HEE
 import chylex.hee.client.util.MC
 import chylex.hee.game.block.BlockAbstractPortal
+import chylex.hee.game.block.interfaces.getHeeInterface
 import chylex.hee.game.entity.damage.Damage
 import chylex.hee.game.entity.damage.IDamageDealer.Companion.TITLE_WITHER
 import chylex.hee.game.entity.damage.IDamageProcessor.Companion.DEAL_CREATIVE
@@ -149,7 +150,7 @@ object TerritoryVoid {
 				continue
 			}
 			
-			if (entity !is LivingEntity || Pos(entity).getBlock(world) is BlockAbstractPortal) { // protecting entities inside portals should help with server lag frustrations
+			if (entity !is LivingEntity || Pos(entity).getBlock(world).getHeeInterface<BlockAbstractPortal.IInnerPortalBlock>() != null) { // protecting entities inside portals should help with server lag frustrations
 				continue
 			}
 			

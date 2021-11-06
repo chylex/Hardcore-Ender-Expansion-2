@@ -2,7 +2,7 @@ package chylex.hee.game.block
 
 import chylex.hee.debug.PowerShell
 import chylex.hee.game.Environment
-import chylex.hee.game.block.properties.BlockBuilder
+import chylex.hee.game.block.components.IPlayerUseBlockComponent
 import chylex.hee.game.command.client.CommandClientScaffolding
 import chylex.hee.game.world.generation.structure.file.StructureFile
 import chylex.hee.game.world.generation.util.WorldToStructureWorldAdapter
@@ -27,14 +27,13 @@ import net.minecraft.util.Direction.WEST
 import net.minecraft.util.Hand
 import net.minecraft.util.Util
 import net.minecraft.util.math.BlockPos
-import net.minecraft.util.math.BlockRayTraceResult
 import net.minecraft.util.text.StringTextComponent
 import net.minecraft.util.text.TextFormatting
 import net.minecraft.world.World
 import java.nio.file.Files
 
-class BlockScaffoldingDebug(builder: BlockBuilder) : BlockScaffolding(builder) {
-	override fun onBlockActivated(state: BlockState, world: World, pos: BlockPos, player: PlayerEntity, hand: Hand, hit: BlockRayTraceResult): ActionResultType {
+object BlockScaffoldingDebug : IPlayerUseBlockComponent {
+	override fun use(state: BlockState, world: World, pos: BlockPos, player: PlayerEntity, hand: Hand): ActionResultType {
 		if (world.isRemote && player.isSneaking && !player.abilities.isFlying) {
 			val palette = CommandClientScaffolding.currentPalette
 			
@@ -54,7 +53,7 @@ class BlockScaffoldingDebug(builder: BlockBuilder) : BlockScaffolding(builder) {
 			val box = BoundingBox(minPos, maxPos)
 			val serverWorld = Environment.getDimension(world.dimensionKey)
 			
-			val (structureTag, missingMappings) = StructureFile.save(WorldToStructureWorldAdapter(serverWorld, serverWorld.rand, box.min), box.size, palette, this)
+			val (structureTag, missingMappings) = StructureFile.save(WorldToStructureWorldAdapter(serverWorld, serverWorld.rand, box.min), box.size, palette, state.block)
 			val structureFile = Files.createTempDirectory("HardcoreEnderExpansion_Structure_").resolve(CommandClientScaffolding.currentFile).toFile()
 			
 			CompressedStreamTools.write(structureTag, structureFile)

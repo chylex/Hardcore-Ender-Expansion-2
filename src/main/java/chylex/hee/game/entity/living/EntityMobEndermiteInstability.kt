@@ -2,11 +2,11 @@ package chylex.hee.game.entity.living
 
 import chylex.hee.client.text.LocalizationStrategy
 import chylex.hee.game.Resource
+import chylex.hee.game.block.BlockCorruptedEnergy
 import chylex.hee.game.entity.util.DefaultEntityAttributes
 import chylex.hee.game.entity.util.with
 import chylex.hee.game.mechanics.instability.Instability
 import chylex.hee.game.world.util.isPeaceful
-import chylex.hee.init.ModBlocks
 import chylex.hee.init.ModEntities
 import chylex.hee.system.heeTag
 import chylex.hee.util.forge.Side
@@ -78,7 +78,7 @@ class EntityMobEndermiteInstability(type: EntityType<EntityMobEndermiteInstabili
 			val pos = Pos(this)
 			
 			Instability.get(world).triggerRelief(20u, pos)
-			ModBlocks.CORRUPTED_ENERGY.spawnCorruptedEnergy(world, pos, 2)
+			BlockCorruptedEnergy.spawn(world, pos, 2)
 		}
 		
 		super.remove()

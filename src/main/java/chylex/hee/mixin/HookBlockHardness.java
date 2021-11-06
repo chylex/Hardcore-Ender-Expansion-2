@@ -1,5 +1,6 @@
 package chylex.hee.mixin;
 
+import chylex.hee.game.block.interfaces.IBlockWithInterfaces;
 import chylex.hee.game.block.logic.IBlockDynamicHardness;
 import net.minecraft.block.AbstractBlock.AbstractBlockState;
 import net.minecraft.block.Block;
@@ -19,8 +20,13 @@ public abstract class HookBlockHardness {
 		final BlockState state = world.getBlockState(pos);
 		final Block block = state.getBlock();
 		
-		if (block instanceof IBlockDynamicHardness) {
-			ci.setReturnValue(Float.valueOf(((IBlockDynamicHardness)block).getBlockHardness(world, pos, state, ci.getReturnValueF())));
+		if (block instanceof IBlockWithInterfaces) {
+			final IBlockWithInterfaces blockWithInterfaces = (IBlockWithInterfaces)block;
+			final IBlockDynamicHardness dynamicHardness = (IBlockDynamicHardness)blockWithInterfaces.getInterface(IBlockDynamicHardness.class);
+			
+			if (dynamicHardness != null) {
+				ci.setReturnValue(Float.valueOf(dynamicHardness.getBlockHardness(world, pos, state, ci.getReturnValueF())));
+			}
 		}
 	}
 }

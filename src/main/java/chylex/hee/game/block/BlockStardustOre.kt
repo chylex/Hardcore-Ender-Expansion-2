@@ -2,42 +2,43 @@ package chylex.hee.game.block
 
 import chylex.hee.game.Resource
 import chylex.hee.game.Resource.location
-import chylex.hee.game.block.properties.BlockBuilder
+import chylex.hee.game.block.builder.HeeBlockBuilder
+import chylex.hee.game.block.components.IBlockExperienceComponent
 import chylex.hee.game.block.properties.BlockDrop
+import chylex.hee.game.block.properties.BlockHardness
+import chylex.hee.game.block.properties.BlockHarvestTool
 import chylex.hee.game.block.properties.BlockModel
 import chylex.hee.game.block.properties.BlockRenderLayer.CUTOUT
 import chylex.hee.game.block.properties.BlockStateModel
 import chylex.hee.game.block.properties.BlockStatePreset
-import chylex.hee.init.ModBlocks
+import chylex.hee.game.block.properties.IBlockStateModelSupplier
+import chylex.hee.game.item.util.Tool.Level.STONE
+import chylex.hee.game.item.util.Tool.Type.PICKAXE
 import chylex.hee.util.math.ceilToInt
 import chylex.hee.util.random.nextBiasedFloat
-import net.minecraft.block.BlockState
 import net.minecraft.block.Blocks
-import net.minecraft.util.math.BlockPos
-import net.minecraft.world.IWorldReader
-import net.minecraft.world.World
-import net.minecraftforge.common.Tags
 
-class BlockStardustOre(builder: BlockBuilder) : HeeBlock(builder) {
-	override val model
-		get() = BlockStateModel(
-			BlockStatePreset.None,
-			BlockModel.WithTextures(BlockModel.FromParent(Resource.Custom("block/cube_overlay")), mapOf(
-				"particle" to ModBlocks.STARDUST_ORE.location("_particle"),
-				"base" to Blocks.END_STONE.location,
-			))
-		)
-	
-	override val renderLayer
-		get() = CUTOUT
-	
-	override val drop
-		get() = BlockDrop.Manual
-	
-	override val tags
-		get() = listOf(Tags.Blocks.ORES)
-	
-	override fun getExpDrop(state: BlockState, world: IWorldReader, pos: BlockPos, fortune: Int, silktouch: Int): Int {
-		return (((world as? World)?.rand ?: RANDOM).nextBiasedFloat(4F) * 6F).ceilToInt()
+object BlockStardustOre : HeeBlockBuilder() {
+	init {
+		includeFrom(BlockEndOre)
+		
+		model = IBlockStateModelSupplier {
+			BlockStateModel(
+				BlockStatePreset.None,
+				BlockModel.WithTextures(BlockModel.FromParent(Resource.Custom("block/cube_overlay")), mapOf(
+					"particle" to it.location("_particle"),
+					"base" to Blocks.END_STONE.location,
+				))
+			)
+		}
+		
+		renderLayer = CUTOUT
+		
+		drop = BlockDrop.Manual
+		
+		tool = BlockHarvestTool.required(STONE, PICKAXE)
+		hardness = BlockHardness(hardness = 2.8F, resistance = 8.4F)
+		
+		components.experience = IBlockExperienceComponent { rand -> (rand.nextBiasedFloat(4F) * 6F).ceilToInt() }
 	}
 }

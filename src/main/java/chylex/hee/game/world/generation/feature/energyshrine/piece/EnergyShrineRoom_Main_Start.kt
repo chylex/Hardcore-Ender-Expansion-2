@@ -1,7 +1,6 @@
 package chylex.hee.game.world.generation.feature.energyshrine.piece
 
 import chylex.hee.game.Environment
-import chylex.hee.game.block.BlockGloomrock
 import chylex.hee.game.entity.technical.EntityTechnicalTrigger
 import chylex.hee.game.entity.technical.EntityTechnicalTrigger.ITriggerHandler
 import chylex.hee.game.entity.technical.EntityTechnicalTrigger.Types.ENERGY_SHRINE_GLOBAL
@@ -17,6 +16,7 @@ import chylex.hee.game.world.generation.trigger.EntityStructureTrigger
 import chylex.hee.game.world.util.getBlock
 import chylex.hee.game.world.util.getState
 import chylex.hee.game.world.util.offsetUntil
+import chylex.hee.init.ModTags
 import chylex.hee.util.color.IColorGenerator
 import chylex.hee.util.color.RGB
 import chylex.hee.util.math.Pos
@@ -69,11 +69,11 @@ class EnergyShrineRoom_Main_Start(file: String) : EnergyShrineRoom_Generic(file)
 					continue
 				}
 				
-				if (targetPos.offsetUntil(UP, PARTICLE_GLOOMROCK_CHECK_RANGE) { it.getBlock(world) is BlockGloomrock } == null) {
+				if (targetPos.offsetUntil(UP, PARTICLE_GLOOMROCK_CHECK_RANGE) { ModTags.GLOOMROCK_PARTICLES.contains(it.getBlock(world)) } == null) {
 					continue
 				}
 				
-				if (targetPos.offsetUntil(DOWN, PARTICLE_GLOOMROCK_CHECK_RANGE) { it.getBlock(world) is BlockGloomrock } == null) {
+				if (targetPos.offsetUntil(DOWN, PARTICLE_GLOOMROCK_CHECK_RANGE) { ModTags.GLOOMROCK_PARTICLES.contains(it.getBlock(world)) } == null) {
 					continue
 				}
 				

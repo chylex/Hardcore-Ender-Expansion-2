@@ -1,11 +1,15 @@
 package chylex.hee.game.block
 
 import chylex.hee.client.text.LocalizationStrategy
-import chylex.hee.game.block.properties.BlockBuilder
+import chylex.hee.game.block.builder.HeeBlockBuilder
+import chylex.hee.game.block.components.IBlockCollideWithEntityComponent
+import chylex.hee.game.block.components.IBlockEntityComponent
+import chylex.hee.game.block.components.IBlockShapeComponent
+import chylex.hee.game.block.interfaces.IBlockInterface
 import chylex.hee.game.block.properties.BlockModel
 import chylex.hee.game.block.properties.BlockStateModel
 import chylex.hee.game.block.properties.BlockStatePreset
-import chylex.hee.game.block.util.asVoxelShape
+import chylex.hee.game.entity.util.EntityPortalContact
 import chylex.hee.game.world.util.Facing4
 import chylex.hee.game.world.util.allInBox
 import chylex.hee.game.world.util.allInBoxMutable
@@ -24,25 +28,27 @@ import net.minecraft.block.Block
 import net.minecraft.block.BlockRenderType.INVISIBLE
 import net.minecraft.block.BlockState
 import net.minecraft.block.Blocks
+import net.minecraft.block.SoundType
+import net.minecraft.block.material.Material
+import net.minecraft.block.material.MaterialColor
 import net.minecraft.entity.Entity
 import net.minecraft.tags.BlockTags
 import net.minecraft.tileentity.TileEntity
-import net.minecraft.util.math.AxisAlignedBB
 import net.minecraft.util.math.BlockPos
-import net.minecraft.util.math.shapes.ISelectionContext
 import net.minecraft.util.math.shapes.VoxelShape
-import net.minecraft.world.IBlockReader
+import net.minecraft.util.math.shapes.VoxelShapes
 import net.minecraft.world.World
 
-abstract class BlockAbstractPortal(builder: BlockBuilder) : BlockSimpleShaped(builder, AxisAlignedBB(0.0, 0.0, 0.0, 1.0, 0.75, 1.0)) {
+class BlockAbstractPortal(impl: IInnerPortalBlock) : HeeBlockBuilder() {
 	companion object {
 		const val MAX_DISTANCE_FROM_FRAME = 6.0
 		const val MAX_SIZE = 5
 		
-		const val TRANSLATION_SPEED_LONG = 600000L
+		private const val TRANSLATION_SPEED_LONG = 600000L
 		const val TRANSLATION_SPEED_INV = 1.0 / TRANSLATION_SPEED_LONG
 		
-		private val COLLISION_AABB = AxisAlignedBB(0.0, 0.0, 0.0, 1.0, 0.025, 1.0).asVoxelShape
+		private val SHAPE = VoxelShapes.create(0.0, 0.0, 0.0, 1.0, 0.75, 1.0)
+		private val COLLISION_SHAPE = VoxelShapes.create(0.0, 0.0, 0.0, 1.0, 0.025, 1.0)
 		
 		fun findInnerArea(world: World, controllerPos: BlockPos, frameBlock: Block): Pair<BlockPos, BlockPos>? {
 			val mirrorRange = 1..(MAX_SIZE + 1)
@@ -94,36 +100,52 @@ abstract class BlockAbstractPortal(builder: BlockBuilder) : BlockSimpleShaped(bu
 		}
 	}
 	
+	init {
+		includeFrom(BlockIndestructible)
+		
+		localization = LocalizationStrategy.DeleteWords("Inner")
+		
+		model = BlockStateModel(BlockStatePreset.SimpleFrom(Blocks.END_PORTAL), BlockModel.Manual)
+		
+		material = Material.PORTAL
+		color = MaterialColor.BLACK
+		sound = SoundType.STONE
+		light = 15
+		
+		isSolid = false
+		
+		tags.add(BlockTags.PORTALS)
+		
+		components.shape = object : IBlockShapeComponent {
+			override fun getShape(state: BlockState): VoxelShape {
+				return SHAPE
+			}
+			
+			override fun getCollisionShape(state: BlockState): VoxelShape? {
+				return COLLISION_SHAPE
+			}
+		}
+		
+		components.renderType = INVISIBLE
+		
+		components.entity = IBlockEntityComponent(impl::createTileEntity)
+		
+		components.collideWithEntity = IBlockCollideWithEntityComponent { _, world, pos, entity ->
+			if (!world.isRemote && !entity.isPassenger && !entity.isBeingRidden && entity.canChangeDimension() && entity.posY <= pos.y + 0.05 && EntityPortalContact.shouldTeleport(entity)) {
+				impl.teleportEntity(world, pos, entity)
+			}
+		}
+		
+		interfaces[IInnerPortalBlock::class.java] = impl
+	}
+	
+	interface IInnerPortalBlock : IBlockInterface {
+		fun createTileEntity(): TileEntity
+		fun teleportEntity(world: World, pos: BlockPos, entity: Entity)
+	}
+	
 	interface IPortalController {
 		val clientAnimationProgress: LerpedFloat
 		val clientPortalOffset: LerpedFloat
 	}
-	
-	final override val localization
-		get() = LocalizationStrategy.DeleteWords("Inner")
-	
-	final override val model
-		get() = BlockStateModel(BlockStatePreset.SimpleFrom(Blocks.END_PORTAL), BlockModel.Manual)
-	
-	final override val tags
-		get() = listOf(BlockTags.PORTALS)
-	
-	override fun hasTileEntity(state: BlockState): Boolean {
-		return true
-	}
-	
-	abstract override fun createTileEntity(state: BlockState, world: IBlockReader): TileEntity
-	protected abstract fun onEntityInside(world: World, pos: BlockPos, entity: Entity)
-	
-	final override fun onEntityCollision(state: BlockState, world: World, pos: BlockPos, entity: Entity) {
-		if (!world.isRemote && !entity.isPassenger && !entity.isBeingRidden && entity.canChangeDimension() && entity.posY <= pos.y + 0.05) {
-			onEntityInside(world, pos, entity)
-		}
-	}
-	
-	override fun getCollisionShape(state: BlockState, world: IBlockReader, pos: BlockPos, context: ISelectionContext): VoxelShape {
-		return COLLISION_AABB
-	}
-	
-	final override fun getRenderType(state: BlockState) = INVISIBLE
 }

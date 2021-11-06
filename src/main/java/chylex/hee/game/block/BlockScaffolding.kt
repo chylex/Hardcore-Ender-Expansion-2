@@ -2,62 +2,55 @@ package chylex.hee.game.block
 
 import chylex.hee.HEE
 import chylex.hee.game.Environment
-import chylex.hee.game.block.properties.BlockBuilder
+import chylex.hee.game.block.builder.HeeBlockBuilder
+import chylex.hee.game.block.components.IBlockShapeComponent
 import chylex.hee.game.block.properties.BlockModel
 import chylex.hee.game.block.properties.BlockRenderLayer.CUTOUT
-import chylex.hee.util.forge.Side
-import chylex.hee.util.forge.Sided
+import chylex.hee.game.block.properties.Materials
 import net.minecraft.block.BlockState
-import net.minecraft.util.math.BlockPos
-import net.minecraft.util.math.shapes.ISelectionContext
+import net.minecraft.block.SoundType
+import net.minecraft.block.material.MaterialColor
 import net.minecraft.util.math.shapes.VoxelShape
 import net.minecraft.util.math.shapes.VoxelShapes
-import net.minecraft.world.IBlockReader
 
-open class BlockScaffolding protected constructor(builder: BlockBuilder) : HeeBlock(builder) {
-	companion object {
-		var enableShape = true
+object BlockScaffolding : HeeBlockBuilder() {
+	var enableShape = true
+	
+	init {
+		includeFrom(BlockIndestructible)
 		
-		fun create(builder: BlockBuilder): HeeBlock {
-			return HEE.debugModule?.createScaffoldingBlock(builder) ?: BlockScaffolding(builder)
+		model = BlockModel.Manual
+		renderLayer = CUTOUT
+		
+		material = Materials.SCAFFOLDING
+		color = MaterialColor.AIR
+		sound = SoundType.STONE
+		
+		isSolid = false
+		isOpaque = false
+		suffocates = false
+		blocksVision = false
+		
+		components.shape = object : IBlockShapeComponent {
+			override fun getShape(state: BlockState): VoxelShape {
+				return fullCubeIf(enableShape)
+			}
+			
+			override fun getCollisionShape(state: BlockState): VoxelShape {
+				return fullCubeIf(enableShape && Environment.getClientSidePlayer().let { it == null || !it.abilities.isFlying })
+			}
+			
+			override fun getRaytraceShape(state: BlockState): VoxelShape {
+				return fullCubeIf(enableShape && Environment.getClientSidePlayer().let { it == null || it.isSneaking || it.abilities.isFlying })
+			}
+			
+			private fun fullCubeIf(condition: Boolean): VoxelShape {
+				return if (condition) VoxelShapes.fullCube() else VoxelShapes.empty()
+			}
 		}
-	}
-	
-	override val model
-		get() = BlockModel.Manual
-	
-	override val renderLayer
-		get() = CUTOUT
-	
-	// Visuals and physics
-	
-	override fun getShape(state: BlockState, world: IBlockReader, pos: BlockPos, context: ISelectionContext): VoxelShape {
-		return if (enableShape)
-			VoxelShapes.fullCube()
-		else
-			VoxelShapes.empty()
-	}
-	
-	override fun getCollisionShape(state: BlockState, world: IBlockReader, pos: BlockPos, context: ISelectionContext): VoxelShape {
-		val player = Environment.getClientSidePlayer()
 		
-		return if ((player == null || !player.abilities.isFlying) && enableShape)
-			VoxelShapes.fullCube()
-		else
-			VoxelShapes.empty()
-	}
-	
-	override fun getRaytraceShape(state: BlockState, world: IBlockReader, pos: BlockPos): VoxelShape {
-		val player = Environment.getClientSidePlayer()
+		components.ambientOcclusionValue = 1F
 		
-		return if ((player == null || player.isSneaking || player.abilities.isFlying) && enableShape)
-			VoxelShapes.fullCube()
-		else
-			VoxelShapes.empty()
-	}
-	
-	@Sided(Side.CLIENT)
-	override fun getAmbientOcclusionLightValue(state: BlockState, world: IBlockReader, pos: BlockPos): Float {
-		return 1F
+		components.playerUse = HEE.debugModule?.scaffoldingBlockBehavior
 	}
 }

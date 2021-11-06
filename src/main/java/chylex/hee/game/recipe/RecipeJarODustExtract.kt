@@ -1,9 +1,9 @@
 package chylex.hee.game.recipe
 
+import chylex.hee.game.block.BlockJarODust
 import chylex.hee.game.inventory.util.nonEmptySlots
 import chylex.hee.game.inventory.util.size
 import chylex.hee.game.mechanics.dust.DustLayers.Side.BOTTOM
-import chylex.hee.init.ModBlocks
 import net.minecraft.inventory.CraftingInventory
 import net.minecraft.item.ItemStack
 import net.minecraft.util.NonNullList
@@ -33,10 +33,10 @@ object RecipeJarODustExtract : RecipeBaseDynamic() {
 			
 			if (layers != null) {
 				layers.removeDust(BOTTOM)
-				it[first.slot] = first.stack.copy().also { stack -> ModBlocks.JAR_O_DUST.setLayersInStack(stack, layers) }
+				it[first.slot] = first.stack.copy().also { stack -> BlockJarODust.setLayersInStack(stack, layers) }
 			}
 		}
 	}
 	
-	private fun getLayers(stack: ItemStack) = ModBlocks.JAR_O_DUST.getLayersFromStack(stack)
+	private fun getLayers(stack: ItemStack) = BlockJarODust.getLayersFromStack(stack)
 }

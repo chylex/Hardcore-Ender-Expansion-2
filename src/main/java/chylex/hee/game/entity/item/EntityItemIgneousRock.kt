@@ -160,7 +160,7 @@ class EntityItemIgneousRock : EntityItemNoBob {
 		if (!world.isRemote && age > 4 && (world.gameTime - 1L) % BlockPuzzleLogic.UPDATE_RATE == 0L) {
 			val posBelow = currentPos.down()
 			
-			if (posBelow.getBlock(world) is BlockPuzzleLogic) {
+			if (BlockPuzzleLogic.isPuzzleBlock(posBelow.getBlock(world))) {
 				val entity = EntityTechnicalPuzzle(world)
 				
 				if (entity.startChain(posBelow, throwFacing)) {

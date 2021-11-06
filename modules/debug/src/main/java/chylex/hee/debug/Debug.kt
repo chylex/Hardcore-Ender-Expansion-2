@@ -6,8 +6,6 @@ import chylex.hee.client.DebugMenu
 import chylex.hee.client.GameModeToggle
 import chylex.hee.client.TerritoryVoidDebug
 import chylex.hee.game.block.BlockScaffoldingDebug
-import chylex.hee.game.block.HeeBlock
-import chylex.hee.game.block.properties.BlockBuilder
 import chylex.hee.game.command.client.CommandClientDebugToggles
 import chylex.hee.game.command.client.CommandClientScaffolding
 import chylex.hee.game.command.server.CommandServerInstability
@@ -45,9 +43,8 @@ internal object Debug : IDebugModule {
 			CommandServerTestWorld
 		)
 	
-	override fun createScaffoldingBlock(builder: BlockBuilder): HeeBlock {
-		return BlockScaffoldingDebug(builder)
-	}
+	override val scaffoldingBlockBehavior
+		get() = BlockScaffoldingDebug
 	
 	@SubscribeEvent
 	fun onClientSetup(@Suppress("UNUSED_PARAMETER") e: FMLClientSetupEvent) {

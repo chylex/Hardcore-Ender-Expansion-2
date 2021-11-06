@@ -580,6 +580,8 @@ e66091a13a6e7593eb5bd971978d24a5a0e375b3 data/hee/loot_tables/blocks/whitebark.j
 9bd3a9e24162d2c81047b834f8f79d6cabec86be data/hee/loot_tables/blocks/whitebark_planks.json
 7d84dc443a052e349593b71d2c0a523e75396cdf data/hee/loot_tables/blocks/whitebark_slab.json
 83e0b81adb3f9dd488397e8459b95f7b0ce19927 data/hee/loot_tables/blocks/whitebark_stairs.json
+37f3c55266db3db8dc6d22fdbaf3d53243016b77 data/hee/tags/blocks/gloomrock_particles.json
+1a70c674d979a59cea18d92f2227ab8a5ed2ccc7 data/hee/tags/blocks/void_portal_frame_crafted.json
 f5996244831ab38fe1fae2f304bbd7825d6ad98b data/minecraft/tags/blocks/bamboo_plantable_on.json
 479189f9b35a3c8f795539daf6a1809130242c5b data/minecraft/tags/blocks/flower_pots.json
 424e2e03cf62f23f4496468a97b9f0df060df9fe data/minecraft/tags/blocks/impermeable.json

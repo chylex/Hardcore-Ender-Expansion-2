@@ -10,6 +10,7 @@ import chylex.hee.client.util.MC
 import chylex.hee.game.Resource
 import chylex.hee.game.block.BlockAbstractPortal
 import chylex.hee.game.block.entity.TileEntityEnergyCluster
+import chylex.hee.game.block.interfaces.getHeeInterface
 import chylex.hee.game.block.properties.Materials
 import chylex.hee.game.mechanics.energy.IClusterOracleItem
 import chylex.hee.game.mechanics.energy.IEnergyQuantity
@@ -147,7 +148,7 @@ object OverlayRenderer {
 			clusterLookedAt = pos.getTile(world)
 			e.isCanceled = true
 		}
-		else if (block is BlockAbstractPortal) {
+		else if (block.getHeeInterface<BlockAbstractPortal.IInnerPortalBlock>() != null) {
 			e.isCanceled = true
 		}
 	}

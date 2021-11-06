@@ -9,7 +9,6 @@ import chylex.hee.game.mechanics.instability.Instability
 import chylex.hee.game.world.util.allInCenteredSphereMutable
 import chylex.hee.game.world.util.getTile
 import chylex.hee.game.world.util.removeBlock
-import chylex.hee.init.ModBlocks
 import chylex.hee.init.ModItems
 import chylex.hee.util.forge.Side
 import chylex.hee.util.forge.Sided
@@ -43,7 +42,7 @@ class BlockEnergyCluster(builder: BlockBuilder) : BlockSimpleShaped(builder, Axi
 			val units = amount.units.value.toFloat()
 			val corruptedEnergyLevel = (2F + (units.pow(0.74F) / 9F)).ceilToInt()
 			
-			ModBlocks.CORRUPTED_ENERGY.spawnCorruptedEnergy(world, pos, corruptedEnergyLevel)
+			BlockCorruptedEnergy.spawn(world, pos, corruptedEnergyLevel)
 			
 			if (causeInstability) {
 				Instability.get(world).triggerAction((10 + 2 * corruptedEnergyLevel).toUShort(), pos)
@@ -57,7 +56,7 @@ class BlockEnergyCluster(builder: BlockBuilder) : BlockSimpleShaped(builder, Axi
 			val corruptedEnergyLevel = (2F + (units.pow(0.74F) / 9F)).ceilToInt()
 			
 			for (testPos in pos.allInCenteredSphereMutable(corruptedEnergyRadius)) {
-				ModBlocks.CORRUPTED_ENERGY.spawnCorruptedEnergy(world, testPos, corruptedEnergyLevel)
+				BlockCorruptedEnergy.spawn(world, testPos, corruptedEnergyLevel)
 			}
 		}
 	}
