@@ -1,8 +1,6 @@
 package chylex.hee.game.world.generation.noise
 
-import chylex.hee.util.math.FloatRange
-import chylex.hee.util.math.range
-import chylex.hee.util.math.remapRange
+import chylex.hee.util.math.remap
 import kotlin.math.abs
 import kotlin.math.pow
 import kotlin.math.roundToInt
@@ -28,12 +26,12 @@ class NoiseValue(var value: Double) {
 		it.coerceIn(minimum, maximum)
 	}
 	
-	fun remap(oldRange: FloatRange, newRange: FloatRange) = then {
-		remapRange(it, oldRange, newRange)
+	fun remap(fromMin: Double, fromMax: Double, toMin: Double, toMax: Double) = then {
+		it.remap(fromMin, fromMax, toMin, toMax)
 	}
 	
-	fun remap(newRange: FloatRange) = then {
-		remapRange(it, range(0F, 1F), newRange)
+	fun remap(toMin: Double, toMax: Double) = then {
+		it.remap(fromMin = 0.0, fromMax = 1.0, toMin, toMax)
 	}
 	
 	inline fun ifNonZero(block: NoiseValue.() -> Unit) {

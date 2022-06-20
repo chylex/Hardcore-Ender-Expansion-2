@@ -43,8 +43,7 @@ import chylex.hee.util.math.addY
 import chylex.hee.util.math.ceilToInt
 import chylex.hee.util.math.center
 import chylex.hee.util.math.floorToInt
-import chylex.hee.util.math.range
-import chylex.hee.util.math.remapRange
+import chylex.hee.util.math.remap
 import chylex.hee.util.math.scale
 import chylex.hee.util.math.scaleY
 import chylex.hee.util.math.square
@@ -129,7 +128,7 @@ object Generator_TheHub : ITerritoryGenerator {
 					redistribute(0.4)
 					
 					ifNonZero {
-						remap(range(0.2F, 1F))
+						remap(0.2, 1.0)
 						multiply(ELEVATION_BOTTOM)
 					}
 				}
@@ -155,7 +154,7 @@ object Generator_TheHub : ITerritoryGenerator {
 		private fun NoiseValue.distanceReshape(distance: Double) {
 			value = when (distance) {
 				in (0.00)..(0.85) -> value
-				in (0.85)..(1.00) -> value * remapRange(distance, range(0.85F, 1F), range(1F, 0F))
+				in (0.85)..(1.00) -> value * distance.remap(fromMin = 0.85, fromMax = 1.0, toMin = 1.0, toMax = 0.0)
 				else              -> 0.0
 			}
 		}

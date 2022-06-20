@@ -27,8 +27,7 @@ import chylex.hee.util.math.Pos
 import chylex.hee.util.math.ceilToInt
 import chylex.hee.util.math.directionTowards
 import chylex.hee.util.math.floorToInt
-import chylex.hee.util.math.range
-import chylex.hee.util.math.remapRange
+import chylex.hee.util.math.remap
 import chylex.hee.util.math.square
 import chylex.hee.util.random.nextFloat
 import net.minecraft.entity.Entity
@@ -129,7 +128,6 @@ object TerritoryVoid {
 	
 	private const val PLAYER_NEXT_DAMAGE_TIME_TAG = "VoidNextDamageTime"
 	
-	private val FACTOR_DAMAGE_REMAP_FROM = range(0.5F, 3F)
 	private val DAMAGE = Damage(DEAL_CREATIVE, IGNORE_INVINCIBILITY())
 	
 	fun onWorldTick(world: ServerWorld) {
@@ -158,10 +156,10 @@ object TerritoryVoid {
 				val nextDamageTime = getLong(PLAYER_NEXT_DAMAGE_TIME_TAG)
 				
 				if (currentTime >= nextDamageTime) {
-					val amount = remapRange(factor, FACTOR_DAMAGE_REMAP_FROM, range(2F, 6F)).ceilToInt().toFloat()
+					val amount = factor.remap(fromMin = 0.5F, fromMax = 3F, toMin = 2F, toMax = 6F).ceilToInt().toFloat()
 					
 					if (DAMAGE.dealTo(amount, entity, TITLE_WITHER)) {
-						val cooldown = min(30, remapRange(factor, FACTOR_DAMAGE_REMAP_FROM, range(30F, 6F)).floorToInt())
+						val cooldown = min(30, factor.remap(fromMin = 0.5F, fromMax = 3F, toMin = 30F, toMax = 6F).floorToInt())
 						putLong(PLAYER_NEXT_DAMAGE_TIME_TAG, currentTime + cooldown)
 					}
 				}

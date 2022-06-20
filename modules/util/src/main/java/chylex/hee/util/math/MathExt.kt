@@ -46,17 +46,17 @@ fun lerp(from: Double, to: Double, progress: Double): Double {
 }
 
 /**
- * Maps a range of values in [from] range to values in [to] range using linear interpolation.
+ * Remaps a value from the range [[fromMin], [fromMax]] to a value in the range [[toMin], [toMax]] using linear interpolation.
  */
-fun remapRange(value: Float, from: FloatRange, to: FloatRange): Float {
-	val remappedBetween0And1 = (value - from.start) / (from.end - from.start)
-	return to.start + remappedBetween0And1 * (to.end - to.start)
+fun Float.remap(fromMin: Float, fromMax: Float, toMin: Float, toMax: Float): Float {
+	val remappedBetween0And1 = (this - fromMin) / (fromMax - fromMin)
+	return toMin + remappedBetween0And1 * (toMax - toMin)
 }
 
 /**
- * Maps a range of values in [from] range to values in [to] range using linear interpolation.
+ * Remaps a value from the range [[fromMin], [fromMax]] to a value in the range [[toMin], [toMax]] using linear interpolation.
  */
-fun remapRange(value: Double, from: FloatRange, to: FloatRange): Double {
-	val remappedBetween0And1 = (value - from.start) / (from.end - from.start)
-	return to.start + remappedBetween0And1 * (to.end - to.start)
+fun Double.remap(fromMin: Double, fromMax: Double, toMin: Double, toMax: Double): Double {
+	val remappedBetween0And1 = (this - fromMin) / (fromMax - fromMin)
+	return toMin + remappedBetween0And1 * (toMax - toMin)
 }

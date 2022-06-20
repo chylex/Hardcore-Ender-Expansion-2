@@ -46,8 +46,7 @@ import chylex.hee.util.math.Vec
 import chylex.hee.util.math.ceilToInt
 import chylex.hee.util.math.center
 import chylex.hee.util.math.directionTowards
-import chylex.hee.util.math.range
-import chylex.hee.util.math.remapRange
+import chylex.hee.util.math.remap
 import chylex.hee.util.math.square
 import chylex.hee.util.math.toRadians
 import chylex.hee.util.random.RandomInt.Companion.Constant
@@ -415,7 +414,7 @@ object Generator_ObsidianTowers : ITerritoryGenerator {
 		ENDIUM_ORES {
 			override fun beforePillars(world: SegmentedWorld, rand: Random, island: Island) {
 				val piles = if (island.radius >= 5.0)
-					rand.nextRounded(remapRange(island.radius, range(5F, 7F), range(2F, 4F)).toFloat())
+					rand.nextRounded(island.radius.toFloat().remap(fromMin = 5F, fromMax = 7F, toMin = 2F, toMax = 4F))
 				else
 					1
 				

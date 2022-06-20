@@ -48,8 +48,7 @@ import chylex.hee.util.math.addY
 import chylex.hee.util.math.ceilToInt
 import chylex.hee.util.math.center
 import chylex.hee.util.math.floorToInt
-import chylex.hee.util.math.range
-import chylex.hee.util.math.remapRange
+import chylex.hee.util.math.remap
 import chylex.hee.util.math.scale
 import chylex.hee.util.math.scaleY
 import chylex.hee.util.math.square
@@ -208,7 +207,7 @@ object Generator_LostGarden : ITerritoryGenerator {
 				}
 				
 				val edgeMpXZ = if (distRatioXZ > 0.86)
-					remapRange(distRatioXZ.coerceAtMost(1.0), range(0.86F, 1F), range(1F, 0.86F * noiseXZ.getRawValue(-x * 3, -z * 3).toFloat()))
+					distRatioXZ.coerceAtMost(1.0).remap(fromMin = 0.86, fromMax = 1.0, toMin = 1.0, toMax = 0.86 * noiseXZ.getRawValue(-x * 3, -z * 3))
 				else
 					1.0
 				
@@ -218,10 +217,10 @@ object Generator_LostGarden : ITerritoryGenerator {
 				}
 				
 				val valueValley = 1.0 - noiseValley.getValue(x, z) {
-					remap(range(0.5F, 1F), range(0F, 1F))
+					remap(fromMin = 0.5, fromMax = 1.0, toMin = 0.0, toMax = 1.0)
 					coerce()
 					redistribute(0.5)
-					remap(range(0F, 0.75F))
+					remap(0.0, 0.75)
 					
 					if (valueXZ < 0.6) {
 						multiply(valueXZ / 0.6)
@@ -229,7 +228,7 @@ object Generator_LostGarden : ITerritoryGenerator {
 				}
 				
 				val valueThreshold = noiseThreshold.getValue(x, z) {
-					remap(range(0.14F, 0.29F))
+					remap(0.14, 0.29)
 				}
 				
 				val valueTotalXZ = valueXZ * valueValley
@@ -237,7 +236,7 @@ object Generator_LostGarden : ITerritoryGenerator {
 				val edgeMpY = (0.5 - (1.0 - edgeMpXZ))
 				val endersolY = -0.125 + (0.575 * noiseEndersol.getValue(x, z) {
 					if (value > 0.6) {
-						remap(range(0.6F, 1F), range(0.6F, 5F))
+						remap(fromMin = 0.6, fromMax = 1.0, toMin = 0.6, toMax = 5.0)
 					}
 				})
 				
@@ -277,20 +276,20 @@ object Generator_LostGarden : ITerritoryGenerator {
 		
 		private fun NoiseValue.distanceReshapeXZ(distance: Double) {
 			value = when (distance) {
-				in (0.00)..(0.40) -> value * remapRange(distance, range(0F, 0.4F), range(0.8F, 1F))
+				in (0.00)..(0.40) -> value * distance.remap(fromMin = 0.0, fromMax = 0.4, toMin = 0.8, toMax = 1.0)
 				in (0.40)..(0.85) -> value
-				in (0.85)..(1.00) -> value * remapRange(distance, range(0.85F, 1F), range(1F, 0F))
+				in (0.85)..(1.00) -> value * distance.remap(fromMin = 0.85, fromMax = 1.0, toMin = 1.0, toMax = 0.0)
 				else              -> 0.0
 			}
 		}
 		
 		private fun NoiseValue.distanceReshapeY(distance: Double) {
 			value = when (distance) {
-				in (-1.0)..(-0.6) -> value * square(remapRange(distance, range(-1F, -0.5F), range(0F, 1F)))
+				in (-1.0)..(-0.6) -> value * square(distance.remap(fromMin = -1.0, fromMax = -0.5, toMin = 0.0, toMax = 1.0))
 				in (-0.6)..( 0.5) -> value
-				in ( 0.5)..( 0.8) -> value * remapRange(distance, range(0.5F, 0.8F), range(1F, 0.5F))
+				in ( 0.5)..( 0.8) -> value * distance.remap(fromMin = 0.5, fromMax = 0.8, toMin = 1.0, toMax = 0.5)
 				in ( 0.8)..( 1.4) -> value * 0.5
-				in ( 1.4)..( 2.0) -> value * remapRange(distance, range(1.4F, 2F), range(0.5F, 0.1F))
+				in ( 1.4)..( 2.0) -> value * distance.remap(fromMin = 1.4, fromMax = 2.0, toMin = 0.5, toMax = 0.1)
 				else -> 0.0
 			}
 		}
