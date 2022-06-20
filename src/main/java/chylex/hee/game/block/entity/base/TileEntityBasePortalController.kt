@@ -36,6 +36,7 @@ abstract class TileEntityBasePortalController(type: TileEntityType<out TileEntit
 		when (clientRenderState) {
 			Invisible    -> clientAnimationProgress.update(max(0F, clientAnimationProgress - clientAnimationFadeOutSpeed))
 			is Animating -> clientAnimationProgress.update(min(1F, clientAnimationProgress + clientAnimationFadeInSpeed))
+			else         -> {}
 		}
 	}
 	

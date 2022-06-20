@@ -47,6 +47,7 @@ class AITargetAttackerFixed(entity: MobEntity, private val callReinforcements: B
 	
 	private fun alertOthers() {
 		val maxDistance = targetDistance
+		val goalOwner = goalOwner
 		val (x, y, z) = goalOwner.posVec
 		
 		val friendlies = goalOwner.world.getLoadedEntitiesWithinAABB(goalOwner.javaClass, AxisAlignedBB(x, y, z, x + 1.0, y + 1.0, z + 1.0).grow(maxDistance, 10.0, maxDistance))

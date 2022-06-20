@@ -49,13 +49,13 @@ class RenderEntityTokenHolder(manager: EntityRendererManager) : EntityRenderer<E
 		matrix.rotateX(55F)
 		matrix.rotateZ(55F)
 		
-		ModelEntityTokenHolder.render(matrix, buffer.getBuffer(RenderType.getEntityTranslucent(getEntityTexture(entity) ?: textures.getValue(NORMAL))), combinedLight, OverlayTexture.NO_OVERLAY, 1F, 1F, 1F, alpha)
+		ModelEntityTokenHolder.render(matrix, buffer.getBuffer(RenderType.getEntityTranslucent(getEntityTexture(entity))), combinedLight, OverlayTexture.NO_OVERLAY, 1F, 1F, 1F, alpha)
 		
 		matrix.pop()
 		matrix.pop()
 	}
 	
-	override fun getEntityTexture(entity: EntityTokenHolder): ResourceLocation? {
-		return textures[entity.tokenType]
+	override fun getEntityTexture(entity: EntityTokenHolder): ResourceLocation {
+		return textures.getValue(entity.tokenType)
 	}
 }

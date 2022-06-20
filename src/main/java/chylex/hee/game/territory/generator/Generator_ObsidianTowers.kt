@@ -337,7 +337,7 @@ object Generator_ObsidianTowers : ITerritoryGenerator {
 		private fun generate(world: SegmentedWorld, rand: Random, island: Island, builder: ObsidianTowerBuilder) {
 			island.generateBase(world, rand)
 			island.generatePillars(world, rand, amount = (1 + island.radius).ceilToInt(), exclusionRadius = 8.0)
-			builder.build(rand)?.generate(OffsetStructureWorld(world, island.center.subtract(ObsidianTowerPieces.STRUCTURE_SIZE.getPos(CENTER, MIN, CENTER))))
+			builder.build(rand).generate(OffsetStructureWorld(world, island.center.subtract(ObsidianTowerPieces.STRUCTURE_SIZE.getPos(CENTER, MIN, CENTER))))
 		}
 	}
 	

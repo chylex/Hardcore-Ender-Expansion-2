@@ -9,7 +9,7 @@ import net.minecraft.item.crafting.SpecialRecipeSerializer
 abstract class RecipeBaseDynamic : ICraftingRecipe {
 	private val serializer = SpecialRecipeSerializer { this }
 	
-	final override fun getId() = serializer.registryName
+	final override fun getId() = serializer.registryName!!
 	final override fun getSerializer() = serializer
 	
 	final override fun isDynamic() = true

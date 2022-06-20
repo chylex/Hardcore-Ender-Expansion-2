@@ -128,6 +128,6 @@ abstract class EntityMobAbstractEnderman(type: EntityType<out EntityMobAbstractE
 		override fun isDamageAbsolute() = source.isDamageAbsolute
 		override fun canHarmInCreative() = source.canHarmInCreative()
 		
-		override fun getDeathMessage(victim: LivingEntity): ITextComponent? = source.getDeathMessage(victim)
+		override fun getDeathMessage(victim: LivingEntity): ITextComponent = source.getDeathMessage(victim)
 	}
 }

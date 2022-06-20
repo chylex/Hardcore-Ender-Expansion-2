@@ -15,6 +15,7 @@ import net.minecraftforge.common.util.Constants.NBT
 import org.apache.logging.log4j.Logger
 import java.util.Locale
 import java.util.UUID
+import kotlin.contracts.ExperimentalContracts
 import kotlin.contracts.contract
 
 typealias NBTBase      = net.minecraft.nbt.INBT
@@ -54,12 +55,14 @@ inline fun TagCompound.hasKey(key: String, type: Int): Boolean {
 	return this.contains(key, type)
 }
 
+@OptIn(ExperimentalContracts::class)
 @JvmName("isNotNullAndHasKey")
 inline fun TagCompound?.hasKey(key: String): Boolean {
 	contract { returns(true) implies (this@hasKey != null) }
 	return this != null && this.hasKey(key)
 }
 
+@OptIn(ExperimentalContracts::class)
 @JvmName("isNotNullAndHasKey")
 inline fun TagCompound?.hasKey(key: String, type: Int): Boolean {
 	contract { returns(true) implies (this@hasKey != null) }

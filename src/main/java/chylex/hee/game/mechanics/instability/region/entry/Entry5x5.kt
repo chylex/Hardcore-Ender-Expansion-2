@@ -5,7 +5,8 @@ import chylex.hee.game.mechanics.instability.region.IRegionEntryConstructor
 import chylex.hee.util.math.shlong
 import net.minecraft.util.math.BlockPos
 
-inline class Entry5x5(override val compacted: Long) : IRegionEntry {
+@JvmInline
+value class Entry5x5(override val compacted: Long) : IRegionEntry {
 	private companion object {
 		private const val MASK_X = 0x00000_FFFFFL
 		private const val MASK_Z = 0xFFFFF_00000L
