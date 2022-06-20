@@ -18,7 +18,6 @@ import chylex.hee.init.ModEntities
 import chylex.hee.init.ModSounds
 import chylex.hee.network.client.PacketClientFX
 import chylex.hee.util.buffer.readPos
-import chylex.hee.util.buffer.use
 import chylex.hee.util.buffer.writePos
 import chylex.hee.util.math.Pos
 import chylex.hee.util.math.center
@@ -46,16 +45,16 @@ class EntityItemRevitalizationSubstance : EntityItemBase {
 		private const val MAX_RADIUS = 8.5F
 		
 		class FxRevitalizeGooData(private val center: BlockPos, private val radius: Float) : IFxData {
-			override fun write(buffer: PacketBuffer) = buffer.use {
-				writePos(center)
-				writeFloat(radius)
+			override fun write(buffer: PacketBuffer) {
+				buffer.writePos(center)
+				buffer.writeFloat(radius)
 			}
 		}
 		
 		val FX_REVITALIZE_GOO = object : IFxHandler<FxRevitalizeGooData> {
-			override fun handle(buffer: PacketBuffer, world: World, rand: Random) = buffer.use {
-				val center = readPos()
-				val radius = readFloat()
+			override fun handle(buffer: PacketBuffer, world: World, rand: Random) {
+				val center = buffer.readPos()
+				val radius = buffer.readFloat()
 				
 				forEachGoo(world, center, radius) { pos, _ ->
 					BlockEnderGooPurified.FX_PLACE.let {

@@ -7,7 +7,6 @@ import chylex.hee.game.item.interfaces.getHeeInterface
 import chylex.hee.game.mechanics.trinket.TrinketHandler
 import chylex.hee.init.ModContainers
 import chylex.hee.network.BaseServerPacket
-import chylex.hee.util.buffer.use
 import net.minecraft.entity.player.ServerPlayerEntity
 import net.minecraft.network.PacketBuffer
 
@@ -18,12 +17,12 @@ class PacketServerOpenInventoryItem() : BaseServerPacket() {
 	
 	private var slot: Int? = null
 	
-	override fun write(buffer: PacketBuffer) = buffer.use {
-		writeVarInt(slot!!)
+	override fun write(buffer: PacketBuffer) {
+		buffer.writeVarInt(slot!!)
 	}
 	
-	override fun read(buffer: PacketBuffer) = buffer.use {
-		slot = readVarInt()
+	override fun read(buffer: PacketBuffer) {
+		slot = buffer.readVarInt()
 	}
 	
 	override fun handle(player: ServerPlayerEntity) {

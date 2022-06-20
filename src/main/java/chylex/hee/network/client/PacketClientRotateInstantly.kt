@@ -1,7 +1,6 @@
 package chylex.hee.network.client
 
 import chylex.hee.network.BaseClientPacket
-import chylex.hee.util.buffer.use
 import chylex.hee.util.forge.Side
 import chylex.hee.util.forge.Sided
 import net.minecraft.client.entity.player.ClientPlayerEntity
@@ -20,16 +19,16 @@ class PacketClientRotateInstantly() : BaseClientPacket() {
 	private var yaw: Float? = null
 	private var pitch: Float? = null
 	
-	override fun write(buffer: PacketBuffer) = buffer.use {
-		writeInt(entityId!!)
-		writeFloat(yaw!!)
-		writeFloat(pitch!!)
+	override fun write(buffer: PacketBuffer) {
+		buffer.writeInt(entityId!!)
+		buffer.writeFloat(yaw!!)
+		buffer.writeFloat(pitch!!)
 	}
 	
-	override fun read(buffer: PacketBuffer) = buffer.use {
-		entityId = readInt()
-		yaw = readFloat()
-		pitch = readFloat()
+	override fun read(buffer: PacketBuffer) {
+		entityId = buffer.readInt()
+		yaw = buffer.readFloat()
+		pitch = buffer.readFloat()
 	}
 	
 	@Sided(Side.CLIENT)

@@ -2,7 +2,6 @@ package chylex.hee.network.client
 
 import chylex.hee.network.BaseClientPacket
 import chylex.hee.util.buffer.readFloatVec
-import chylex.hee.util.buffer.use
 import chylex.hee.util.buffer.writeFloatVec
 import chylex.hee.util.forge.Side
 import chylex.hee.util.forge.Sided
@@ -20,14 +19,14 @@ class PacketClientLaunchInstantly() : BaseClientPacket() {
 	private var entityId: Int? = null
 	private lateinit var motion: Vector3d
 	
-	override fun write(buffer: PacketBuffer) = buffer.use {
-		writeInt(entityId!!)
-		writeFloatVec(motion)
+	override fun write(buffer: PacketBuffer) {
+		buffer.writeInt(entityId!!)
+		buffer.writeFloatVec(motion)
 	}
 	
-	override fun read(buffer: PacketBuffer) = buffer.use {
-		entityId = readInt()
-		motion = readFloatVec()
+	override fun read(buffer: PacketBuffer) {
+		entityId = buffer.readInt()
+		motion = buffer.readFloatVec()
 	}
 	
 	@Sided(Side.CLIENT)

@@ -18,7 +18,6 @@ import chylex.hee.init.ModEntities
 import chylex.hee.init.ModSounds
 import chylex.hee.network.client.PacketClientFX
 import chylex.hee.util.buffer.readPos
-import chylex.hee.util.buffer.use
 import chylex.hee.util.buffer.writePos
 import chylex.hee.util.math.Pos
 import chylex.hee.util.random.nextFloat
@@ -45,16 +44,16 @@ class EntityFallingObsidian : EntityFallingBlockHeavy {
 		private val DAMAGE = Damage(PEACEFUL_EXCLUSION, ARMOR_PROTECTION(false), ENCHANTMENT_PROTECTION)
 		
 		class FxFallData(private val pos: BlockPos, private val volume: Float) : IFxData {
-			override fun write(buffer: PacketBuffer) = buffer.use {
-				writePos(pos)
-				writeFloat(volume)
+			override fun write(buffer: PacketBuffer) {
+				buffer.writePos(pos)
+				buffer.writeFloat(volume)
 			}
 		}
 		
 		val FX_FALL = object : IFxHandler<FxFallData> {
-			override fun handle(buffer: PacketBuffer, world: World, rand: Random) = buffer.use {
-				val pos = readPos()
-				val volume = readFloat()
+			override fun handle(buffer: PacketBuffer, world: World, rand: Random) {
+				val pos = buffer.readPos()
+				val volume = buffer.readFloat()
 				
 				repeat(2) {
 					ModSounds.BLOCK_OBSIDIAN_LAND.playClient(pos, SoundCategory.BLOCKS, volume = volume, pitch = rand.nextFloat(0.8F, 1.2F))

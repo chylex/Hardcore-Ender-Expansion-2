@@ -5,7 +5,6 @@ import chylex.hee.game.territory.storage.VoidData
 import chylex.hee.game.territory.system.storage.TerritoryEntry
 import chylex.hee.network.BaseClientPacket
 import chylex.hee.util.buffer.readTag
-import chylex.hee.util.buffer.use
 import chylex.hee.util.buffer.writeTag
 import chylex.hee.util.forge.Side
 import chylex.hee.util.forge.Sided
@@ -20,12 +19,12 @@ class PacketClientTerritoryEnvironment() : BaseClientPacket() {
 	
 	private var void: TagCompound? = null
 	
-	override fun write(buffer: PacketBuffer) = buffer.use {
-		writeOptionalTag(void)
+	override fun write(buffer: PacketBuffer) {
+		buffer.writeOptionalTag(void)
 	}
 	
-	override fun read(buffer: PacketBuffer) = buffer.use {
-		void = readOptionalTag()
+	override fun read(buffer: PacketBuffer) {
+		void = buffer.readOptionalTag()
 	}
 	
 	@Sided(Side.CLIENT)

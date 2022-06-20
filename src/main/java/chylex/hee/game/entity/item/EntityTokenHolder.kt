@@ -22,7 +22,8 @@ import chylex.hee.init.ModSounds
 import chylex.hee.network.client.PacketClientFX
 import chylex.hee.network.client.PacketClientLaunchInstantly
 import chylex.hee.system.heeTag
-import chylex.hee.util.buffer.use
+import chylex.hee.util.buffer.readEnum
+import chylex.hee.util.buffer.writeEnum
 import chylex.hee.util.forge.Side
 import chylex.hee.util.forge.Sided
 import chylex.hee.util.math.LerpedFloat
@@ -114,16 +115,16 @@ class EntityTokenHolder(type: EntityType<EntityTokenHolder>, world: World) : Ent
 		dataManager.register(DATA_CHARGE, 1F)
 	}
 	
-	override fun writeSpawnData(buffer: PacketBuffer) = buffer.use {
-		writeByte(tokenType.ordinal)
-		writeShort(territoryType?.ordinal ?: -1)
-		writeFloat(currentCharge)
+	override fun writeSpawnData(buffer: PacketBuffer) {
+		buffer.writeEnum(tokenType)
+		buffer.writeEnum(territoryType)
+		buffer.writeFloat(currentCharge)
 	}
 	
-	override fun readSpawnData(buffer: PacketBuffer) = buffer.use {
-		tokenType = TokenType.values().getOrElse(readByte().toInt()) { TokenType.NORMAL }
-		territoryType = TerritoryType.values().getOrNull(readShort().toInt())
-		renderCharge.updateImmediately(readFloat())
+	override fun readSpawnData(buffer: PacketBuffer) {
+		tokenType = buffer.readEnum<TokenType>() ?: TokenType.NORMAL
+		territoryType = buffer.readEnum<TerritoryType>()
+		renderCharge.updateImmediately(buffer.readFloat())
 	}
 	
 	override fun tick() {

@@ -18,54 +18,65 @@ import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.vector.Vector3d
 import org.apache.logging.log4j.Logger
 
-inline fun <T : PacketBuffer> T.use(block: T.() -> Unit) {
-	block()
-}
-
 // BlockPos
 
-inline fun PacketBuffer.writePos(pos: BlockPos) {
+inline fun ByteBuf.writePos(pos: BlockPos) {
 	this.writeLong(pos.toLong())
 }
 
-inline fun PacketBuffer.readPos(): BlockPos {
+inline fun ByteBuf.readPos(): BlockPos {
 	return Pos(this.readLong())
 }
 
 // Vec3d (Full)
 
-fun PacketBuffer.writeVec(vec: Vector3d) {
+fun ByteBuf.writeVec(vec: Vector3d) {
 	this.writeDouble(vec.x)
 	this.writeDouble(vec.y)
 	this.writeDouble(vec.z)
 }
 
-fun PacketBuffer.readVec(): Vector3d {
-	return Vec(readDouble(), readDouble(), readDouble())
+fun ByteBuf.readVec(): Vector3d {
+	return Vec(this.readDouble(), this.readDouble(), this.readDouble())
 }
 
 // Vec3d (Float)
 
-fun PacketBuffer.writeFloatVec(vec: Vector3d) {
+fun ByteBuf.writeFloatVec(vec: Vector3d) {
 	this.writeFloat(vec.x.toFloat())
 	this.writeFloat(vec.y.toFloat())
 	this.writeFloat(vec.z.toFloat())
 }
 
-fun PacketBuffer.readFloatVec(): Vector3d {
-	return Vec(readFloat().toDouble(), readFloat().toDouble(), readFloat().toDouble())
+fun ByteBuf.readFloatVec(): Vector3d {
+	return Vec(this.readFloat().toDouble(), this.readFloat().toDouble(), this.readFloat().toDouble())
 }
 
 // Vec3d (Compact)
 
-fun PacketBuffer.writeCompactVec(vec: Vector3d) {
+fun ByteBuf.writeCompactVec(vec: Vector3d) {
 	this.writeInt((vec.x * 8.0).floorToInt())
 	this.writeInt((vec.y * 8.0).floorToInt())
 	this.writeInt((vec.z * 8.0).floorToInt())
 }
 
-fun PacketBuffer.readCompactVec(): Vector3d {
-	return Vec(readInt() * 0.125, readInt() * 0.125, readInt() * 0.125)
+fun ByteBuf.readCompactVec(): Vector3d {
+	return Vec(this.readInt() * 0.125, this.readInt() * 0.125, this.readInt() * 0.125)
+}
+
+// Enum
+
+fun <T : Enum<T>> PacketBuffer.writeEnum(value: T?) {
+	this.writeVarInt(value?.ordinal ?: -1)
+}
+
+inline fun <reified T : Enum<T>> PacketBuffer.readEnum(): T? {
+	val ordinal = this.readVarInt()
+	
+	return if (ordinal >= 0)
+		T::class.java.enumConstants.getOrNull(ordinal)
+	else
+		null
 }
 
 // NBT

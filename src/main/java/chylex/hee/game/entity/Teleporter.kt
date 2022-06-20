@@ -23,8 +23,9 @@ import chylex.hee.network.client.PacketClientMoveYourAss
 import chylex.hee.network.client.PacketClientRotateInstantly
 import chylex.hee.network.client.PacketClientTeleportInstantly
 import chylex.hee.util.buffer.readCompactVec
-import chylex.hee.util.buffer.use
+import chylex.hee.util.buffer.readEnum
 import chylex.hee.util.buffer.writeCompactVec
+import chylex.hee.util.buffer.writeEnum
 import chylex.hee.util.math.Pos
 import chylex.hee.util.math.Vec
 import chylex.hee.util.math.addY
@@ -78,16 +79,16 @@ class Teleporter(
 			private val soundVolume: Float,
 			private val extraRange: Float = 0F,
 		) : IFxData {
-			override fun write(buffer: PacketBuffer) = buffer.use {
-				writeCompactVec(startPoint)
-				writeCompactVec(endPoint)
-				writeByte((width * 10F).floorToInt().coerceIn(0, 100))
-				writeByte((height * 10F).floorToInt().coerceIn(0, 100))
+			override fun write(buffer: PacketBuffer) {
+				buffer.writeCompactVec(startPoint)
+				buffer.writeCompactVec(endPoint)
+				buffer.writeByte((width * 10F).floorToInt().coerceIn(0, 100))
+				buffer.writeByte((height * 10F).floorToInt().coerceIn(0, 100))
 				
-				writeRegistryId(soundEvent)
-				writeEnumValue(soundCategory)
-				writeByte((soundVolume * 10F).floorToInt().coerceIn(0, 250))
-				writeByte(extraRange.floorToInt().coerceIn(0, 255))
+				buffer.writeRegistryId(soundEvent)
+				buffer.writeEnum(soundCategory)
+				buffer.writeByte((soundVolume * 10F).floorToInt().coerceIn(0, 250))
+				buffer.writeByte(extraRange.floorToInt().coerceIn(0, 255))
 			}
 			
 			fun send(world: World) {
@@ -99,20 +100,20 @@ class Teleporter(
 		}
 		
 		val FX_TELEPORT = object : IFxHandler<FxTeleportData> {
-			override fun handle(buffer: PacketBuffer, world: World, rand: Random) = buffer.use {
+			override fun handle(buffer: PacketBuffer, world: World, rand: Random) {
 				val player = MC.player ?: return
 				val playerPos = player.posVec
 				
-				val startPoint = readCompactVec()
-				val endPoint = readCompactVec()
+				val startPoint = buffer.readCompactVec()
+				val endPoint = buffer.readCompactVec()
 				
-				val halfWidth = (readByte() / 10F) * 0.5F
-				val halfHeight = (readByte() / 10F) * 0.5F
+				val halfWidth = (buffer.readByte() / 10F) * 0.5F
+				val halfHeight = (buffer.readByte() / 10F) * 0.5F
 				
-				val soundEvent = readRegistryIdSafe(SoundEvent::class.java)
-				val soundCategory = readEnumValue(SoundCategory::class.java)
-				val soundVolume = readByte() / 10F
-				val soundRange = 16F + readByte()
+				val soundEvent = buffer.readRegistryIdSafe(SoundEvent::class.java)
+				val soundCategory = buffer.readEnum() ?: SoundCategory.NEUTRAL
+				val soundVolume = buffer.readByte() / 10F
+				val soundRange = 16F + buffer.readByte()
 				
 				val soundPosition = if (playerPos.squareDistanceTo(startPoint) < playerPos.squareDistanceTo(endPoint))
 					startPoint

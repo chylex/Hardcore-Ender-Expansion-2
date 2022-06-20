@@ -16,7 +16,6 @@ import chylex.hee.game.world.util.getTile
 import chylex.hee.game.world.util.removeBlock
 import chylex.hee.game.world.util.setState
 import chylex.hee.init.ModEntities
-import chylex.hee.util.buffer.use
 import chylex.hee.util.math.Pos
 import chylex.hee.util.math.Vec3
 import chylex.hee.util.math.subtractY
@@ -86,12 +85,12 @@ open class EntityFallingBlockHeavy(type: EntityType<out EntityFallingBlockHeavy>
 		return NetworkHooks.getEntitySpawningPacket(this)
 	}
 	
-	override fun writeSpawnData(buffer: PacketBuffer) = buffer.use {
-		writeInt(fallTile?.let(Block::getStateId) ?: 0)
+	override fun writeSpawnData(buffer: PacketBuffer) {
+		buffer.writeInt(fallTile?.let(Block::getStateId) ?: 0)
 	}
 	
-	override fun readSpawnData(buffer: PacketBuffer) = buffer.use {
-		fallTile = Block.getStateById(readInt())
+	override fun readSpawnData(buffer: PacketBuffer) {
+		fallTile = Block.getStateById(buffer.readInt())
 	}
 	
 	override fun tick() {

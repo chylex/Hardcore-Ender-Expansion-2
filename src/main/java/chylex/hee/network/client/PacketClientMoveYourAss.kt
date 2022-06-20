@@ -2,7 +2,6 @@ package chylex.hee.network.client
 
 import chylex.hee.network.BaseClientPacket
 import chylex.hee.util.buffer.readVec
-import chylex.hee.util.buffer.use
 import chylex.hee.util.buffer.writeVec
 import chylex.hee.util.forge.Side
 import chylex.hee.util.forge.Sided
@@ -17,12 +16,12 @@ class PacketClientMoveYourAss() : BaseClientPacket() {
 	
 	private lateinit var position: Vector3d
 	
-	override fun write(buffer: PacketBuffer) = buffer.use {
-		writeVec(position)
+	override fun write(buffer: PacketBuffer) {
+		buffer.writeVec(position)
 	}
 	
-	override fun read(buffer: PacketBuffer) = buffer.use {
-		position = readVec()
+	override fun read(buffer: PacketBuffer) {
+		position = buffer.readVec()
 	}
 	
 	@Sided(Side.CLIENT)

@@ -27,7 +27,6 @@ import chylex.hee.init.ModSounds
 import chylex.hee.init.ModTileEntities
 import chylex.hee.network.client.PacketClientFX
 import chylex.hee.util.buffer.readCompactVec
-import chylex.hee.util.buffer.use
 import chylex.hee.util.buffer.writeCompactVec
 import chylex.hee.util.collection.mutableWeightedListOf
 import chylex.hee.util.collection.weightedListOf
@@ -119,17 +118,17 @@ class TileEntityMinersBurialAltar(type: TileEntityType<TileEntityMinersBurialAlt
 		)
 		
 		class FxSpawnData(private val pos: Vector3d, private val type: Byte) : IFxData {
-			override fun write(buffer: PacketBuffer) = buffer.use {
-				writeCompactVec(pos)
-				writeByte(type.toInt())
+			override fun write(buffer: PacketBuffer) {
+				buffer.writeCompactVec(pos)
+				buffer.writeByte(type.toInt())
 			}
 		}
 		
 		val FX_SPAWN = object : IFxHandler<FxSpawnData> {
-			override fun handle(buffer: PacketBuffer, world: World, rand: Random) = buffer.use {
-				val pos = readCompactVec()
+			override fun handle(buffer: PacketBuffer, world: World, rand: Random) {
+				val pos = buffer.readCompactVec()
 				
-				when (readByte()) {
+				when (buffer.readByte()) {
 					REDEEM_TYPE_TOKEN -> {
 						PARTICLE_SPAWN.spawn(Point(pos, 9), rand)
 					}

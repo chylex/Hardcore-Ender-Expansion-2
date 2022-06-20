@@ -14,7 +14,6 @@ import chylex.hee.game.world.generation.feature.tombdungeon.piece.TombDungeonRoo
 import chylex.hee.game.world.generation.feature.tombdungeon.piece.TombDungeonRoom_Tomb
 import chylex.hee.init.ModEntities
 import chylex.hee.system.heeTag
-import chylex.hee.util.buffer.use
 import chylex.hee.util.delegate.NotifyOnChange
 import chylex.hee.util.nbt.TagCompound
 import chylex.hee.util.nbt.getEnum
@@ -93,12 +92,12 @@ class EntityTechnicalTrigger(type: EntityType<EntityTechnicalTrigger>, world: Wo
 	
 	override fun registerData() {}
 	
-	override fun writeSpawnData(buffer: PacketBuffer) = buffer.use {
-		writeInt(type.ordinal)
+	override fun writeSpawnData(buffer: PacketBuffer) {
+		buffer.writeInt(type.ordinal)
 	}
 	
-	override fun readSpawnData(buffer: PacketBuffer) = buffer.use {
-		type = Types.values().getOrNull(readInt()) ?: INVALID
+	override fun readSpawnData(buffer: PacketBuffer) {
+		type = Types.values().getOrNull(buffer.readInt()) ?: INVALID
 	}
 	
 	override fun tick() {

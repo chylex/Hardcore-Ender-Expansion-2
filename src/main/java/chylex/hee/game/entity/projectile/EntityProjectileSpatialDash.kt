@@ -26,7 +26,6 @@ import chylex.hee.init.ModSounds
 import chylex.hee.network.client.PacketClientFX
 import chylex.hee.system.heeTag
 import chylex.hee.util.buffer.readCompactVec
-import chylex.hee.util.buffer.use
 import chylex.hee.util.buffer.writeCompactVec
 import chylex.hee.util.color.IColorGenerator
 import chylex.hee.util.color.RGB
@@ -119,19 +118,19 @@ class EntityProjectileSpatialDash(type: EntityType<EntityProjectileSpatialDash>,
 		)
 		
 		class FxExpireData(private val point: Vector3d, private val ownerEntity: Entity?) : IFxData {
-			override fun write(buffer: PacketBuffer) = buffer.use {
-				writeCompactVec(point)
-				writeInt(ownerEntity?.entityId ?: -1)
+			override fun write(buffer: PacketBuffer) {
+				buffer.writeCompactVec(point)
+				buffer.writeInt(ownerEntity?.entityId ?: -1)
 			}
 		}
 		
 		val FX_EXPIRE = object : IFxHandler<FxExpireData> {
-			override fun handle(buffer: PacketBuffer, world: World, rand: Random) = buffer.use {
+			override fun handle(buffer: PacketBuffer, world: World, rand: Random) {
 				val player = MC.player ?: return
 				val playerPos = player.posVec
 				
-				val point = readCompactVec()
-				val forceAudible = readInt() == player.entityId
+				val point = buffer.readCompactVec()
+				val forceAudible = buffer.readInt() == player.entityId
 				
 				val soundPoint = if (forceAudible) {
 					val distance = playerPos.distanceTo(point)

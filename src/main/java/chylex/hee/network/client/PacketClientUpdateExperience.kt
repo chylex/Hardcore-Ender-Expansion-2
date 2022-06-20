@@ -1,7 +1,6 @@
 package chylex.hee.network.client
 
 import chylex.hee.network.BaseClientPacket
-import chylex.hee.util.buffer.use
 import chylex.hee.util.forge.Side
 import chylex.hee.util.forge.Sided
 import net.minecraft.client.entity.player.ClientPlayerEntity
@@ -14,12 +13,12 @@ class PacketClientUpdateExperience() : BaseClientPacket() {
 	
 	private var experience: Float? = null
 	
-	override fun write(buffer: PacketBuffer) = buffer.use {
-		writeFloat(experience!!)
+	override fun write(buffer: PacketBuffer) {
+		buffer.writeFloat(experience!!)
 	}
 	
-	override fun read(buffer: PacketBuffer) = buffer.use {
-		experience = readFloat()
+	override fun read(buffer: PacketBuffer) {
+		experience = buffer.readFloat()
 	}
 	
 	@Sided(Side.CLIENT)

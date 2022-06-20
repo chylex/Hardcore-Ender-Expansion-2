@@ -20,7 +20,6 @@ import chylex.hee.init.ModEntities
 import chylex.hee.init.ModSounds
 import chylex.hee.system.heeTag
 import chylex.hee.util.buffer.readDecoded
-import chylex.hee.util.buffer.use
 import chylex.hee.util.buffer.writeEncoded
 import chylex.hee.util.color.RGB
 import chylex.hee.util.nbt.TagCompound
@@ -120,22 +119,22 @@ class EntityMobVillagerDying(type: EntityType<EntityMobVillagerDying>, world: Wo
 		return NetworkHooks.getEntitySpawningPacket(this)
 	}
 	
-	override fun writeSpawnData(buffer: PacketBuffer) = buffer.use {
-		writeEncoded(villager, VillagerData.CODEC, HEE.log)
-		writeVarInt(deathTime)
+	override fun writeSpawnData(buffer: PacketBuffer) {
+		buffer.writeEncoded(villager, VillagerData.CODEC, HEE.log)
+		buffer.writeVarInt(deathTime)
 		
-		writeFloat(renderYawOffset)
-		writeFloat(rotationYawHead)
-		writeFloat(limbSwing)
+		buffer.writeFloat(renderYawOffset)
+		buffer.writeFloat(rotationYawHead)
+		buffer.writeFloat(limbSwing)
 	}
 	
-	override fun readSpawnData(buffer: PacketBuffer) = buffer.use {
-		villager = readDecoded(VillagerData.CODEC, HEE.log)
-		deathTime = readVarInt()
+	override fun readSpawnData(buffer: PacketBuffer) {
+		villager = buffer.readDecoded(VillagerData.CODEC, HEE.log)
+		deathTime = buffer.readVarInt()
 		
-		renderYawOffset = readFloat()
-		rotationYawHead = readFloat()
-		limbSwing = readFloat()
+		renderYawOffset = buffer.readFloat()
+		rotationYawHead = buffer.readFloat()
+		limbSwing = buffer.readFloat()
 		
 		prevRenderYawOffset = renderYawOffset
 		prevRotationYawHead = rotationYawHead

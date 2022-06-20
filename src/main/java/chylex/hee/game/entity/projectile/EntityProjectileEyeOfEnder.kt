@@ -21,7 +21,6 @@ import chylex.hee.game.world.util.offsetUntil
 import chylex.hee.init.ModEntities
 import chylex.hee.system.heeTag
 import chylex.hee.util.buffer.readPos
-import chylex.hee.util.buffer.use
 import chylex.hee.util.buffer.writePos
 import chylex.hee.util.color.IColorGenerator
 import chylex.hee.util.color.IntColor
@@ -172,13 +171,13 @@ class EntityProjectileEyeOfEnder(type: EntityType<EntityProjectileEyeOfEnder>, w
 		return NetworkHooks.getEntitySpawningPacket(this)
 	}
 	
-	override fun writeSpawnData(buffer: PacketBuffer) = buffer.use {
-		writePos(targetPos ?: BlockPos.ZERO)
-		writeShort(timer)
-		writeFloat(speed)
+	override fun writeSpawnData(buffer: PacketBuffer) {
+		buffer.writePos(targetPos ?: BlockPos.ZERO)
+		buffer.writeShort(timer)
+		buffer.writeFloat(speed)
 	}
 	
-	override fun readSpawnData(buffer: PacketBuffer) = buffer.use {
+	override fun readSpawnData(buffer: PacketBuffer) {
 		targetPos = buffer.readPos().takeIf { it != BlockPos.ZERO }
 		timer = buffer.readShort().toInt()
 		speed = buffer.readFloat()

@@ -27,7 +27,6 @@ import chylex.hee.network.client.PacketClientFX
 import chylex.hee.system.heeTag
 import chylex.hee.system.heeTagOrNull
 import chylex.hee.util.buffer.readPos
-import chylex.hee.util.buffer.use
 import chylex.hee.util.buffer.writePos
 import chylex.hee.util.math.ceilToInt
 import chylex.hee.util.math.floorToInt
@@ -68,9 +67,9 @@ class ItemAbstractEnergyUser(private val impl: IEnergyItem) : HeeItemBuilder() {
 		}
 		
 		class FxChargeData(private val cluster: TileEntityEnergyCluster, private val player: PlayerEntity) : IFxData {
-			override fun write(buffer: PacketBuffer) = buffer.use {
-				writePos(cluster.pos)
-				writeInt(player.entityId)
+			override fun write(buffer: PacketBuffer) {
+				buffer.writePos(cluster.pos)
+				buffer.writeInt(player.entityId)
 			}
 		}
 		
@@ -86,9 +85,9 @@ class ItemAbstractEnergyUser(private val impl: IEnergyItem) : HeeItemBuilder() {
 				}
 			}
 			
-			override fun handle(buffer: PacketBuffer, world: World, rand: Random) = buffer.use {
-				val cluster = readPos().getTile<TileEntityEnergyCluster>(world) ?: return
-				val player = world.getEntityByID(readInt()) as? PlayerEntity ?: return
+			override fun handle(buffer: PacketBuffer, world: World, rand: Random) {
+				val cluster = buffer.readPos().getTile<TileEntityEnergyCluster>(world) ?: return
+				val player = world.getEntityByID(buffer.readInt()) as? PlayerEntity ?: return
 				
 				ParticleSpawnerCustom(
 					type = ParticleEnergyTransferToPlayer,

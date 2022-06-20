@@ -32,7 +32,6 @@ import chylex.hee.game.world.util.setState
 import chylex.hee.init.ModSounds
 import chylex.hee.network.client.PacketClientFX
 import chylex.hee.util.buffer.readPos
-import chylex.hee.util.buffer.use
 import chylex.hee.util.buffer.writePos
 import chylex.hee.util.math.center
 import chylex.hee.util.nbt.TagCompound
@@ -174,9 +173,9 @@ interface IBlockDeathFlowerDecaying {
 		private val PARTICLE_MOT = Gaussian(0.02F)
 		
 		class FxHealData(private val pos: BlockPos, private val newLevel: Int) : IFxData {
-			override fun write(buffer: PacketBuffer) = buffer.use {
-				writePos(pos)
-				writeByte(newLevel)
+			override fun write(buffer: PacketBuffer) {
+				buffer.writePos(pos)
+				buffer.writeByte(newLevel)
 			}
 		}
 		

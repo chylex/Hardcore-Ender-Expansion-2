@@ -5,7 +5,6 @@ import chylex.hee.game.particle.spawner.properties.IOffset.Constant
 import chylex.hee.game.particle.spawner.properties.IOffset.InBox
 import chylex.hee.game.particle.spawner.properties.IShape.Point
 import chylex.hee.init.ModEntities
-import chylex.hee.util.buffer.use
 import chylex.hee.util.math.square
 import net.minecraft.entity.EntityType
 import net.minecraft.item.ItemStack
@@ -33,12 +32,12 @@ class EntityItemFreshlyCooked : EntityItemBase, IEntityAdditionalSpawnData {
 		)
 	}
 	
-	override fun writeSpawnData(buffer: PacketBuffer) = buffer.use {
-		writeShort(age)
+	override fun writeSpawnData(buffer: PacketBuffer) {
+		buffer.writeShort(age)
 	}
 	
-	override fun readSpawnData(buffer: PacketBuffer) = buffer.use {
-		age = readShort().toInt()
+	override fun readSpawnData(buffer: PacketBuffer) {
+		age = buffer.readShort().toInt()
 	}
 	
 	override fun tick() {

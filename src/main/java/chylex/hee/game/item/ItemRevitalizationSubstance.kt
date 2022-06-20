@@ -19,8 +19,9 @@ import chylex.hee.game.particle.spawner.properties.IShape.Line
 import chylex.hee.game.world.util.getTile
 import chylex.hee.init.ModSounds
 import chylex.hee.network.client.PacketClientFX
+import chylex.hee.util.buffer.readEnum
 import chylex.hee.util.buffer.readPos
-import chylex.hee.util.buffer.use
+import chylex.hee.util.buffer.writeEnum
 import chylex.hee.util.buffer.writePos
 import chylex.hee.util.math.center
 import chylex.hee.util.math.directionTowards
@@ -74,19 +75,19 @@ object ItemRevitalizationSubstance : HeeItemBuilder() {
 	)
 	
 	class FxUseData(private val pos: BlockPos, private val player: PlayerEntity, private val hand: Hand) : IFxData {
-		override fun write(buffer: PacketBuffer) = buffer.use {
-			writePos(pos)
-			writeInt(player.entityId)
-			writeByte(hand.ordinal)
+		override fun write(buffer: PacketBuffer) {
+			buffer.writePos(pos)
+			buffer.writeInt(player.entityId)
+			buffer.writeEnum(hand)
 		}
 	}
 	
 	val FX_FAIL = object : IFxHandler<FxUseData> {
-		override fun handle(buffer: PacketBuffer, world: World, rand: Random) = buffer.use {
-			val blockPos = readPos().center
+		override fun handle(buffer: PacketBuffer, world: World, rand: Random) {
+			val blockPos = buffer.readPos().center
 			
-			val player = world.getEntityByID(readInt()) as? PlayerEntity ?: return
-			val hand = Hand.values().getOrNull(readByte().toInt()) ?: return
+			val player = world.getEntityByID(buffer.readInt()) as? PlayerEntity ?: return
+			val hand = buffer.readEnum<Hand>() ?: return
 			
 			val handPos = ModelHelper.getHandPosition(player, hand)
 			val startPoint = handPos.add(handPos.directionTowards(blockPos).scale(0.2))

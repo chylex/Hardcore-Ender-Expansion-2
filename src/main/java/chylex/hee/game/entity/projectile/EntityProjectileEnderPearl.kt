@@ -21,7 +21,6 @@ import chylex.hee.game.world.util.getBlocksInside
 import chylex.hee.game.world.util.isAir
 import chylex.hee.init.ModEntities
 import chylex.hee.system.heeTag
-import chylex.hee.util.buffer.use
 import chylex.hee.util.forge.EventPriority
 import chylex.hee.util.forge.SubscribeAllEvents
 import chylex.hee.util.forge.SubscribeEvent
@@ -130,19 +129,19 @@ class EntityProjectileEnderPearl(type: EntityType<EntityProjectileEnderPearl>, w
 		return NetworkHooks.getEntitySpawningPacket(this)
 	}
 	
-	override fun writeSpawnData(buffer: PacketBuffer) = buffer.use {
-		writeBoolean(infusions.has(HARMLESS))
-		writeBoolean(infusions.has(SLOW))
+	override fun writeSpawnData(buffer: PacketBuffer) {
+		buffer.writeBoolean(infusions.has(HARMLESS))
+		buffer.writeBoolean(infusions.has(SLOW))
 	}
 	
-	override fun readSpawnData(buffer: PacketBuffer) = buffer.use {
+	override fun readSpawnData(buffer: PacketBuffer) {
 		var list = InfusionList.EMPTY
 		
-		if (readBoolean()) {
+		if (buffer.readBoolean()) {
 			list = list.with(HARMLESS)
 		}
 		
-		if (readBoolean()) {
+		if (buffer.readBoolean()) {
 			list = list.with(SLOW)
 		}
 		

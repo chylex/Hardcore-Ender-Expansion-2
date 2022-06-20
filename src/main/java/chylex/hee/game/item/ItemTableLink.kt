@@ -25,8 +25,9 @@ import chylex.hee.init.ModSounds
 import chylex.hee.network.client.PacketClientFX
 import chylex.hee.system.heeTag
 import chylex.hee.system.heeTagOrNull
+import chylex.hee.util.buffer.readEnum
 import chylex.hee.util.buffer.readPos
-import chylex.hee.util.buffer.use
+import chylex.hee.util.buffer.writeEnum
 import chylex.hee.util.buffer.writePos
 import chylex.hee.util.nbt.getPos
 import chylex.hee.util.nbt.hasKey
@@ -145,17 +146,17 @@ object ItemTableLink : HeeItemBuilder() {
 	}
 	
 	class FxUseData(private val pos: BlockPos, private val type: SoundType) : IFxData {
-		override fun write(buffer: PacketBuffer) = buffer.use {
-			writePos(pos)
-			writeByte(type.ordinal)
+		override fun write(buffer: PacketBuffer) {
+			buffer.writePos(pos)
+			buffer.writeEnum(type)
 		}
 	}
 	
 	val FX_USE = object : IFxHandler<FxUseData> {
-		override fun handle(buffer: PacketBuffer, world: World, rand: Random) = buffer.use {
-			val pos = readPos()
+		override fun handle(buffer: PacketBuffer, world: World, rand: Random) {
+			val pos = buffer.readPos()
 			
-			when (SoundType.values().getOrNull(readByte().toInt())) {
+			when (buffer.readEnum<SoundType>()) {
 				LINK_SUCCESS -> ModSounds.ITEM_TABLE_LINK_USE_SUCCESS.playClient(pos, SoundCategory.PLAYERS, pitch = rand.nextFloat(0.49F, 0.51F))
 				LINK_RESTART -> ModSounds.ITEM_TABLE_LINK_USE_SPECIAL.playClient(pos, SoundCategory.PLAYERS, pitch = rand.nextFloat(0.69F, 0.71F))
 				LINK_OUTPUT  -> ModSounds.ITEM_TABLE_LINK_USE_SPECIAL.playClient(pos, SoundCategory.PLAYERS, volume = 0.9F, pitch = 0.63F)

@@ -2,7 +2,6 @@ package chylex.hee.network.server
 
 import chylex.hee.HEE
 import chylex.hee.network.BaseServerPacket
-import chylex.hee.util.buffer.use
 import net.minecraft.entity.player.ServerPlayerEntity
 import net.minecraft.network.PacketBuffer
 
@@ -19,12 +18,12 @@ class PacketServerContainerEvent() : BaseServerPacket() {
 	
 	private var eventId: Byte? = null
 	
-	override fun write(buffer: PacketBuffer) = buffer.use {
-		writeByte(eventId!!.toInt())
+	override fun write(buffer: PacketBuffer) {
+		buffer.writeByte(eventId!!.toInt())
 	}
 	
-	override fun read(buffer: PacketBuffer) = buffer.use {
-		eventId = readByte()
+	override fun read(buffer: PacketBuffer) {
+		eventId = buffer.readByte()
 	}
 	
 	override fun handle(player: ServerPlayerEntity) {

@@ -1,7 +1,6 @@
 package chylex.hee.network.client
 
 import chylex.hee.network.BaseClientPacket
-import chylex.hee.util.buffer.use
 import chylex.hee.util.forge.Side
 import chylex.hee.util.forge.Sided
 import net.minecraft.client.entity.player.ClientPlayerEntity
@@ -17,14 +16,14 @@ class PacketClientPotionDuration() : BaseClientPacket() {
 	private var effect: Effect? = null
 	private var newDuration: Int? = null
 	
-	override fun write(buffer: PacketBuffer) = buffer.use {
-		writeRegistryId(effect!!)
-		writeInt(newDuration!!)
+	override fun write(buffer: PacketBuffer) {
+		buffer.writeRegistryId(effect!!)
+		buffer.writeInt(newDuration!!)
 	}
 	
-	override fun read(buffer: PacketBuffer) = buffer.use {
-		effect = readRegistryIdSafe(Effect::class.java)
-		newDuration = readInt()
+	override fun read(buffer: PacketBuffer) {
+		effect = buffer.readRegistryIdSafe(Effect::class.java)
+		newDuration = buffer.readInt()
 	}
 	
 	@Sided(Side.CLIENT)

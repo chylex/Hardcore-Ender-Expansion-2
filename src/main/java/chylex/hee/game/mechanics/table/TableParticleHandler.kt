@@ -17,7 +17,6 @@ import chylex.hee.game.world.util.getTile
 import chylex.hee.init.ModBlocks
 import chylex.hee.network.client.PacketClientFX
 import chylex.hee.util.buffer.readPos
-import chylex.hee.util.buffer.use
 import chylex.hee.util.buffer.writePos
 import chylex.hee.util.math.center
 import chylex.hee.util.math.directionTowards
@@ -45,24 +44,24 @@ class TableParticleHandler(private val table: TileEntityBaseTable) {
 		private val PARTICLE_CLUSTER_MOT = InBox(0.004F)
 		
 		class FxProcessPedestalsData(private val table: TileEntityBaseTable, private val targetPositions: List<BlockPos>, private val travelTime: Int) : IFxData {
-			override fun write(buffer: PacketBuffer) = buffer.use {
-				writePos(table.pos)
-				writeByte(travelTime)
-				writeByte(targetPositions.size)
+			override fun write(buffer: PacketBuffer) {
+				buffer.writePos(table.pos)
+				buffer.writeByte(travelTime)
+				buffer.writeByte(targetPositions.size)
 				
 				for (pos in targetPositions) {
-					writeLong(pos.toLong())
+					buffer.writeLong(pos.toLong())
 				}
 			}
 		}
 		
 		val FX_PROCESS_PEDESTALS = object : IFxHandler<FxProcessPedestalsData> {
-			override fun handle(buffer: PacketBuffer, world: World, rand: Random) = buffer.use {
-				val table = readPos().getTile<TileEntityBaseTable>(world) ?: return
-				val travelTime = readByte().toInt()
+			override fun handle(buffer: PacketBuffer, world: World, rand: Random) {
+				val table = buffer.readPos().getTile<TileEntityBaseTable>(world) ?: return
+				val travelTime = buffer.readByte().toInt()
 				
-				repeat(readByte().toInt()) {
-					val targetPos = readPos()
+				repeat(buffer.readByte().toInt()) {
+					val targetPos = buffer.readPos()
 					
 					if (targetPos.getBlock(world) === ModBlocks.TABLE_PEDESTAL) {
 						ParticleSpawnerCustom(
@@ -77,16 +76,16 @@ class TableParticleHandler(private val table: TileEntityBaseTable) {
 		}
 		
 		class FxDrainClusterData(private val table: TileEntityBaseTable, private val clusterPos: BlockPos) : IFxData {
-			override fun write(buffer: PacketBuffer) = buffer.use {
-				writePos(clusterPos)
-				writePos(table.pos)
+			override fun write(buffer: PacketBuffer) {
+				buffer.writePos(clusterPos)
+				buffer.writePos(table.pos)
 			}
 		}
 		
 		val FX_DRAIN_CLUSTER = object : IFxHandler<FxDrainClusterData> {
-			override fun handle(buffer: PacketBuffer, world: World, rand: Random) = buffer.use {
-				val cluster = readPos().getTile<TileEntityEnergyCluster>(world) ?: return
-				val table = readPos().getTile<TileEntityBaseTable>(world) ?: return
+			override fun handle(buffer: PacketBuffer, world: World, rand: Random) {
+				val cluster = buffer.readPos().getTile<TileEntityEnergyCluster>(world) ?: return
+				val table = buffer.readPos().getTile<TileEntityBaseTable>(world) ?: return
 				
 				val clusterPos = cluster.pos.center
 				val tablePos = table.pos.center

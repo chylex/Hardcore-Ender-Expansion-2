@@ -38,7 +38,6 @@ import chylex.hee.init.ModSounds
 import chylex.hee.network.client.PacketClientFX
 import chylex.hee.system.heeTag
 import chylex.hee.util.buffer.readTag
-import chylex.hee.util.buffer.use
 import chylex.hee.util.buffer.writeTag
 import chylex.hee.util.color.IColorGenerator
 import chylex.hee.util.color.RGB
@@ -159,12 +158,12 @@ class EntityMobUndread(type: EntityType<EntityMobUndread>, world: World) : Monst
 		return NetworkHooks.getEntitySpawningPacket(this)
 	}
 	
-	override fun writeSpawnData(buffer: PacketBuffer) = buffer.use {
-		writeTag(TagCompound().apply { putList(DUSTS_TAG, dustEffects.serializeNBT()) })
+	override fun writeSpawnData(buffer: PacketBuffer) {
+		buffer.writeTag(TagCompound().apply { putList(DUSTS_TAG, dustEffects.serializeNBT()) })
 	}
 	
-	override fun readSpawnData(buffer: PacketBuffer) = buffer.use {
-		dustEffects = UndreadDustEffects.fromNBT(readTag().getListOfStrings(DUSTS_TAG))
+	override fun readSpawnData(buffer: PacketBuffer) {
+		dustEffects = UndreadDustEffects.fromNBT(buffer.readTag().getListOfStrings(DUSTS_TAG))
 	}
 	
 	override fun tick() {

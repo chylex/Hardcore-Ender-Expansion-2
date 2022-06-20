@@ -29,7 +29,6 @@ import chylex.hee.init.ModSounds
 import chylex.hee.network.client.PacketClientFX
 import chylex.hee.system.heeTag
 import chylex.hee.util.buffer.readPos
-import chylex.hee.util.buffer.use
 import chylex.hee.util.buffer.writePos
 import chylex.hee.util.math.Pos
 import chylex.hee.util.math.Vec3
@@ -161,14 +160,14 @@ class EntityTechnicalIgneousPlateLogic(type: EntityType<EntityTechnicalIgneousPl
 		)
 		
 		class FxCoolingData(private val pos: BlockPos, private val amount: Float) : IFxData {
-			override fun write(buffer: PacketBuffer) = buffer.use {
-				writePos(pos)
-				writeFloat(amount)
+			override fun write(buffer: PacketBuffer) {
+				buffer.writePos(pos)
+				buffer.writeFloat(amount)
 			}
 		}
 		
 		val FX_COOLING = object : IFxHandler<FxCoolingData> {
-			override fun handle(buffer: PacketBuffer, world: World, rand: Random) = buffer.use {
+			override fun handle(buffer: PacketBuffer, world: World, rand: Random) {
 				val pos = buffer.readPos()
 				val amount = buffer.readFloat()
 				
