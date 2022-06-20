@@ -36,7 +36,7 @@ import net.minecraftforge.client.event.RenderGameOverlayEvent
 import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType.HELMET
 
 @SubscribeAllEvents(Side.CLIENT, modid = HEE.ID)
-object OverlayRenderer {
+object OverlayRenderer { // TODO move to appropriate block builders
 	private const val BORDER_SIZE = 4
 	private const val LINE_SPACING = 7
 	

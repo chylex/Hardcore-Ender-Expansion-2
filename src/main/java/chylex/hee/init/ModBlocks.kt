@@ -161,9 +161,9 @@ object ModBlocks {
 	
 	// Blocks: Building (Gloomrock)
 	
-	@JvmField val GLOOMROCK                = BlockGloomrock(buildGloomrock) named "gloomrock"
-	@JvmField val GLOOMROCK_BRICKS         = BlockGloomrock(buildGloomrockBricks) named "gloomrock_bricks"
-	@JvmField val GLOOMROCK_BRICK_STAIRS   = BlockStairsCustom(GLOOMROCK_BRICKS) named "gloomrock_brick_stairs"
+	@JvmField val GLOOMROCK                = BlockGloomrock named "gloomrock"
+	@JvmField val GLOOMROCK_BRICKS         = BlockGloomrock.BRICKS named "gloomrock_bricks"
+	@JvmField val GLOOMROCK_BRICK_STAIRS   = BlockStairsCustom(GLOOMROCK_BRICKS) named "gloomrock_brick_stairs" // TODO tags for all gloomrock?
 	@JvmField val GLOOMROCK_BRICK_SLAB     = BlockSlabCustom(GLOOMROCK_BRICKS) named "gloomrock_brick_slab"
 	@JvmField val GLOOMROCK_SMOOTH         = BlockGloomrock.SMOOTH named "gloomrock_smooth"
 	@JvmField val GLOOMROCK_SMOOTH_STAIRS  = BlockGloomrockSmoothStairs(GLOOMROCK_SMOOTH) named "gloomrock_smooth_stairs"

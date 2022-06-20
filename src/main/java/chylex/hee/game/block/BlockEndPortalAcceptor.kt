@@ -3,8 +3,8 @@ package chylex.hee.game.block
 import chylex.hee.game.block.builder.HeeBlockBuilder
 import chylex.hee.game.block.components.IBlockAddedComponent
 import chylex.hee.game.block.components.IBlockEntityComponent
-import chylex.hee.game.block.components.IBlockNeighborUpdatedComponent
 import chylex.hee.game.block.components.IPlayerUseBlockComponent
+import chylex.hee.game.block.components.ISetBlockStateFromNeighbor
 import chylex.hee.game.block.entity.TileEntityEndPortalAcceptor
 import chylex.hee.game.block.properties.BlockModel
 import chylex.hee.game.world.util.getTile
@@ -31,10 +31,10 @@ object BlockEndPortalAcceptor : HeeBlockBuilder() {
 			BlockAbstractPortal.spawnInnerBlocks(world, pos, ModBlocks.END_PORTAL_FRAME, ModBlocks.END_PORTAL_INNER, minSize = 1)
 		}
 		
-		components.onNeighborUpdated = IBlockNeighborUpdatedComponent { state, pos, world, neighborFacing, _ ->
+		components.setStateFromNeighbor = ISetBlockStateFromNeighbor { state, world, pos, neighborFacing, _ ->
 			if (!world.isRemote && neighborFacing == UP) {
 				pos.getTile<TileEntityEndPortalAcceptor>(world)?.refreshClusterState()
-			}
+			} // TODO neighbor changed?
 			
 			state
 		}
