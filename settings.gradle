@@ -1,3 +1,5 @@
+rootProject.name = "HEE"
+
 include ":util"
 include ":system"
 include ":debug"
