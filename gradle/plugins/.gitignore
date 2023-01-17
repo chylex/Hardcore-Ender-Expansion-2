@@ -1,0 +1,10 @@
+# IntelliJ
+
+/.idea/
+*.iml
+*.ipr
+*.iws
+
+# Gradle
+
+/gradle/wrapper/gradle-wrapper.jar
