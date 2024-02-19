@@ -1,0 +1,26 @@
+modLoader="kotlinforforge"
+loaderVersion = "${kotlinForForgeVersionRange}"
+
+license = "MPL-2.0"
+issueTrackerURL = "https://github.com/chylex/Hardcore-Ender-Expansion-2/issues"
+
+[[mods]]
+modId = "hee"
+displayName = "Hardcore Ender Expansion 2"
+displayURL = "https://hee.chylex.com"
+description = "WIP"
+version = "${version}"
+
+[[dependencies.hee]]
+modId = "minecraft"
+type = "required"
+versionRange = "${minecraftVersionRange}"
+ordering = "NONE"
+side = "BOTH"
+
+[[dependencies.hee]]
+modId = "neoforge"
+type = "required"
+versionRange = "${neoForgeVersionRange}"
+ordering = "NONE"
+side = "BOTH"

@@ -1,0 +1,80 @@
+{
+  "formatVersion": "1.1",
+  "component": {
+    "group": "com.chylex.hee.gradle",
+    "module": "hee-gradle-plugins",
+    "version": "1",
+    "attributes": {
+      "org.gradle.status": "release"
+    }
+  },
+  "createdBy": {
+    "gradle": {
+      "version": "8.6"
+    }
+  },
+  "variants": [
+    {
+      "name": "apiElements",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.jvm.environment": "standard-jvm",
+        "org.gradle.jvm.version": 17,
+        "org.gradle.libraryelements": "jar",
+        "org.gradle.usage": "java-api",
+        "org.jetbrains.kotlin.platform.type": "jvm"
+      },
+      "files": [
+        {
+          "name": "hee-gradle-plugins-1.jar",
+          "url": "hee-gradle-plugins-1.jar",
+          "size": 727705,
+          "sha512": "4d1cd9afa350376ca3f3fe06656ab4ea094719313a6b1b6d929b93ae709d3e94d10926dcd9dfeb2a168138f0832eacfa02a84361a39aa21ec03cc57a8e97a703",
+          "sha256": "1bbf6d006f5c4fdc2aeb843bcaefa9b83a0ca123e5e62e04320764a99d9c5c9d",
+          "sha1": "570451c98782d0208a4f20c6f7e0a00534ef40ed",
+          "md5": "1035eba8627d98cf4db7ab08ae060c50"
+        }
+      ]
+    },
+    {
+      "name": "runtimeElements",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.jvm.environment": "standard-jvm",
+        "org.gradle.jvm.version": 17,
+        "org.gradle.libraryelements": "jar",
+        "org.gradle.usage": "java-runtime",
+        "org.jetbrains.kotlin.platform.type": "jvm"
+      },
+      "dependencies": [
+        {
+          "group": "net.neoforged.gradle",
+          "module": "userdev",
+          "version": {
+            "requires": "7.0.93"
+          }
+        },
+        {
+          "group": "org.jetbrains.kotlin",
+          "module": "kotlin-gradle-plugin",
+          "version": {
+            "requires": "1.9.22"
+          }
+        }
+      ],
+      "files": [
+        {
+          "name": "hee-gradle-plugins-1.jar",
+          "url": "hee-gradle-plugins-1.jar",
+          "size": 727705,
+          "sha512": "4d1cd9afa350376ca3f3fe06656ab4ea094719313a6b1b6d929b93ae709d3e94d10926dcd9dfeb2a168138f0832eacfa02a84361a39aa21ec03cc57a8e97a703",
+          "sha256": "1bbf6d006f5c4fdc2aeb843bcaefa9b83a0ca123e5e62e04320764a99d9c5c9d",
+          "sha1": "570451c98782d0208a4f20c6f7e0a00534ef40ed",
+          "md5": "1035eba8627d98cf4db7ab08ae060c50"
+        }
+      ]
+    }
+  ]
+}
