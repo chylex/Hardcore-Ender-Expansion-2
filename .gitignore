@@ -1,0 +1,15 @@
+# IntelliJ
+
+/.idea/
+*.iml
+*.ipr
+*.iws
+
+# Gradle
+
+.gradle/
+build/
+
+# Game
+
+/run/
