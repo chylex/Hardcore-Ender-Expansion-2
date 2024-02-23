@@ -17,3 +17,6 @@ pluginManagement {
 
 include(":neoforge")
 project(":neoforge").projectDir = file("./src/neoforge")
+
+include(":content")
+project(":content").projectDir = file("./src/content")
