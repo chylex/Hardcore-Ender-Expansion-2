@@ -7,6 +7,10 @@ plugins {
 	id("hee.minecraft")
 }
 
+dependencies {
+	implementation(project(":content"))
+}
+
 runs {
 	configureEach {
 		fun modSource(project: Project) {
@@ -14,6 +18,7 @@ runs {
 		}
 		
 		modSource(project)
+		modSource(project(":content"))
 		
 		workingDirectory = rootProject.layout.projectDirectory.dir("run").asFile
 		systemProperty("forge.logging.console.level", "debug")
