@@ -1,13 +1,14 @@
 package com.chylex.hee
 
 import com.chylex.hee.content.Test
+import com.chylex.hee.core.Constants
+import com.chylex.hee.core.HeeBlock
 import net.neoforged.fml.common.Mod
 
-@Mod(HardcoreEnderExpansion.ID)
+@Mod(Constants.MOD_ID)
 object HardcoreEnderExpansion {
-	const val ID = "hee"
-	
 	init {
 		Test.test()
+		HeeBlock()
 	}
 }

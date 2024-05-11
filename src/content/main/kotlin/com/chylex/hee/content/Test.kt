@@ -1,7 +1,9 @@
 package com.chylex.hee.content
 
+import com.chylex.hee.core.Constants
+
 object Test {
 	fun test() {
-		println("Test")
+		println(Constants.MOD_ID)
 	}
 }

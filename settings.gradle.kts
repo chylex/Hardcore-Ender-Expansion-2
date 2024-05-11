@@ -15,8 +15,7 @@ pluginManagement {
 	}
 }
 
-include(":neoforge")
-project(":neoforge").projectDir = file("./src/neoforge")
-
-include(":content")
-project(":content").projectDir = file("./src/content")
+for (module in listOf("core", "content", "neoforge")) {
+	include(":$module")
+	project(":$module").projectDir = file("./src/$module")
+}

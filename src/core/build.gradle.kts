@@ -3,7 +3,3 @@ plugins {
 	id("hee.library")
 	id("hee.minecraft")
 }
-
-dependencies {
-	implementation(project(":core"))
-}

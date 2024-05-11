@@ -8,6 +8,7 @@ plugins {
 }
 
 dependencies {
+	implementation(project(":core"))
 	implementation(project(":content"))
 }
 
@@ -18,6 +19,7 @@ runs {
 		}
 		
 		modSource(project)
+		modSource(project(":core"))
 		modSource(project(":content"))
 		
 		workingDirectory = rootProject.layout.projectDirectory.dir("run").asFile
